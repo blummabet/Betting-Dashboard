@@ -94,12 +94,25 @@ test('ein schöner ROI ohne Untergrenze ist kein Urteil', () => {
 test('verlierende Eimer kommen gar nicht erst in die Top-Wetten', () => {
   // Beide Betfair-Quellen müssen den Riegel haben — Steam über Match Odds, Zufluss über den
   // Markt, den der Zufluss-Feed mitliefert.
+  // 07.09.2026 (Übersicht-Check): der Riegel hängt an der Risiko-Marke `fade` (tiefe
+  // Unterseite), nicht mehr am Urteil „verliert" — das hieß bis heute dasselbe und stand
+  // damit über Eimern mit ROI +11 % und +32,6 %. Gleiches Verhalten, ehrlicher Name.
   const steam = MD.slice(MD.indexOf("var trS = _mdBfTrack"), MD.indexOf("badge: '💷 Steam'"));
-  assert.match(steam, /trS && trS\.verliert\) return;/, 'der Steam-Kandidat hat keinen Riegel');
+  assert.match(steam, /trS && trS\.fade\)/, 'der Steam-Kandidat hat keinen Riegel');
   assert.match(steam, /_mdBfTrack\(x\.league, 'Match Odds'\)/, 'Steam nimmt den falschen Eimer');
   const flow = MD.slice(MD.indexOf("var trF = _mdBfTrack"), MD.indexOf("badge: '💷 Geld'"));
-  assert.match(flow, /trF && trF\.verliert\) return;/, 'der Zufluss-Kandidat hat keinen Riegel');
+  assert.match(flow, /trF && trF\.fade\)/, 'der Zufluss-Kandidat hat keinen Riegel');
   assert.match(flow, /_mdBfTrack\(x\.league, x\.market\)/, 'Zufluss nimmt den falschen Eimer');
+});
+
+test('der Filter arbeitet nicht mehr still', () => {
+  // Der Board-Dump vom 07.09. zeigte die stärkste Betfair-Bewegung des Tages (Nueva Chicago v
+  // Quilmes, +6,2 pp) in der Steam-Kachel — und NICHT in der Rangliste zwei Blöcke darüber,
+  // die von sich sagt „nicht geprüft, nur sortiert". Beides stimmte für sich; zusammen war es
+  // eine Lüge.
+  assert.match(MD, /_jzGefiltert\.push/, 'die ausgefilterten Zeilen werden nicht gesammelt');
+  assert.match(MD, /ausgefiltert/, 'die Zahl steht nicht in der Kopfzeile');
+  assert.match(MD, /Risiko-Marke, kein/, 'die Fläche sagt nicht, was der Filter wirklich misst');
 });
 
 test('ein tragender Eimer hebt den Rang, ein unbekannter nicht', () => {

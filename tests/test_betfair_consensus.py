@@ -377,6 +377,44 @@ class TestMoneyMap(unittest.TestCase):
         e = self._entry({"Aston Villa": 0.5, "Chelsea": 0.5})
         self.assertIsNone(BC._best_poly_entry(m, [e]))
 
+    # ── 07.09.2026 (Uebersicht-Check): der Fall Al-Ahed ──────────────────────
+    # Die Money Map zeigte fuer ein libanesisches Pokalspiel „Poly $267.964, Konsens 3/3".
+    # Das Geld gehoerte zu Al Hilal v Al Ahli (Saudi Pro League), abgerechnet sechs Tage
+    # vorher. Beide Luecken bekommen hier ihren Test.
+
+    def test_abgerechneter_markt_von_vorgestern_ist_kein_kandidat(self):
+        m = {"home": "Al-Ahed", "away": "Al Ahli Akhaa Aley", "kickoff": "2026-09-07T12:00:00Z"}
+        e = self._entry({"Al Hilal Saudi Club": 0.6, "Al Ahli Saudi Club": 0.4},
+                        resolved=True, resolvedAt="2026-09-01T22:24:14Z")
+        self.assertIsNone(BC._best_poly_entry(m, [e]),
+                          "ein vor dem Anpfiff abgerechneter Markt kann dieses Spiel nicht meinen")
+
+    def test_ohne_zeitstempel_wird_nichts_verworfen(self):
+        # Ein fehlender Stempel ist kein Beleg — ein stiller Ausschluss waere hier so
+        # schaedlich wie der falsche Join.
+        m = {"home": "Paris St-G", "away": "Aston Villa"}
+        e = self._entry({"Paris Saint-Germain": 0.6, "Aston Villa": 0.4}, resolved=True)
+        self.assertIsNotNone(BC._best_poly_entry(m, [e]))
+
+    def test_rueckfall_braucht_ein_token_das_ein_name_sein_kann(self):
+        # „al" ist ein Artikel, kein Name. Ohne die Laengenregel reichte es als Beleg.
+        m = {"home": "Al-Ahed", "away": "Al Ahli Akhaa Aley", "kickoff": "2026-09-07T12:00:00Z"}
+        e = self._entry({"Al Hilal Saudi Club": 0.6, "Al Ahli Saudi Club": 0.4})
+        self.assertIsNone(BC._best_poly_entry(m, [e]))
+
+    def test_echte_abkuerzung_bleibt_erlaubt(self):
+        # Gegenprobe: die Regel darf den Fall nicht toeten, fuer den es den Rueckfall gibt.
+        m = {"home": "Paris St-G", "away": "Aston Villa", "kickoff": "2026-09-07T18:00:00Z"}
+        e = self._entry({"Paris Saint-Germain": 0.60, "Aston Villa": 0.40})
+        self.assertIsNotNone(BC._best_poly_entry(m, [e]))
+
+    def test_allerwelts_tokens_kommen_aus_dem_pool(self):
+        # Keine handgepflegte Stoppwortliste: haeufig ist, was im Pool haeufig ist.
+        pool = [self._entry({"Draw (A vs. B)": 0.1, "A FC": 0.5, "B FC": 0.4}) for _ in range(20)]
+        aw = BC.allerwelts_tokens(pool)
+        self.assertIn("draw", aw)
+        self.assertNotIn("chelsea", aw)
+
     def test_ledger_upsert_pending(self):
         pf = BC.poly_fav({"home": "Bochum", "away": "Union Berlin"}, self._poly())
         led = BC.update_mm_ledger([], [BC.money_map_row(self._g(), pf)], now="2026-08-11T12:00:00+00:00")

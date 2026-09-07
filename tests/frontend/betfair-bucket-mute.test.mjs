@@ -19,7 +19,14 @@ test('gemutet wird auf dem Urteil des Produzenten, nicht auf einer eigenen Schwe
   // 04.09.2026 (Lucas: „geh die verbleibenden Duplikate durch"): das Mute hatte SEINE EIGENE
   // Schwelle (-0,05), während der Rest des Systems bei -0,10 fadete — eine vierte Zahl neben
   // den drei, die ein Test gleichhielt. Jetzt fällt betfair_track_record.py das Urteil einmal.
-  assert.match(JS, /b\.urteil==='verliert'/);
+  // 07.09.2026 (Übersicht-Check): das Urteil „verliert" hing an der UNTERgrenze (≤ −10 %) und
+  // stand damit über Buckets mit ROI +11 % und +32,6 % — 37 der 40 „verliert"-Buckets hatten
+  // eine Obergrenze ÜBER null, also keinen Verlustbeleg. Seither zwei getrennte Dinge:
+  // `urteil==='verliert'` ist der Beleg (Obergrenze unter null), `fade` die Risiko-Marke, an
+  // der Mute und Filter hängen. Das Verhalten ist unverändert — der Name stimmt jetzt.
+  assert.match(JS, /b\.fade\)/);
+  assert.ok(!/b\.urteil==='verliert'\) return \{m:true/.test(JS),
+    'das belegte Urteil darf nicht wieder als Gate benutzt werden');
   assert.ok(!/b\.roiUg<=-0\.05/.test(JS), 'die eigene Schwelle darf nicht zurückkommen');
   assert.ok(!/b\.n>=10 && typeof b\.roi==='number'/.test(JS), 'und der Punktschätzer erst recht nicht');
 });

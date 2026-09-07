@@ -166,6 +166,29 @@ def check_betfair_urteil(ctx):
     ohne_urteil = [v for v in mit_ug if not v.get("urteil")]
     if ohne_urteil:
         fails.append(f"{len(ohne_urteil)} Buckets mit Untergrenze, aber ohne Urteil")
+    # 07.09.2026 (Uebersicht-Check) — der zweite Teil derselben Geschichte. Das Urteil fiel zwar
+    # nur noch an EINER Stelle, aber es fiel falsch: „verliert" haengte an der UNTERgrenze
+    # (<= -10 %), und eine tiefe Untergrenze belegt Unsicherheit, keinen Verlust. Gemessen an
+    # dem Tag: 40 Buckets mit „verliert", **37 davon mit einer Obergrenze ueber null**, 18 mit
+    # positivem Punktschaetzer — bis +32,6 % (Argentinian Primera Nacional | Over/Under 3.5,
+    # n=36, UG -14,3 %, OG +79,5 %). Das Urteil nahm Zeilen aus der Rangliste und mutete
+    # Terminal-Zeilen.
+    #
+    # Dieselbe Regel steht seit dem 07.09. in stake_liga_stufe.kreuz: folgen belegt die
+    # UNTERgrenze ueber null, dagegenhalten die OBERgrenze unter null.
+    falsch = [v for v in blm.values()
+              if v.get("urteil") == "verliert" and isinstance(v.get("roiOg"), (int, float))
+              and v["roiOg"] >= 0]
+    if falsch:
+        beispiel = max(falsch, key=lambda v: v.get("roi") or -9)
+        fails.append(f"{len(falsch)} Buckets mit Urteil „verliert\u201c, deren OBERgrenze ueber "
+                     f"null liegt — das ist kein Verlustbeleg (schlimmster Fall: ROI "
+                     f"{100 * (beispiel.get('roi') or 0):+.1f} %, OG {100 * beispiel['roiOg']:+.1f} %, "
+                     f"n{beispiel.get('n')})")
+    fehlt_og = [v for v in mit_ug if v.get("roiOg") is None and (v.get("n") or 0) >= 30]
+    if len(fehlt_og) == len(mit_ug) and mit_ug:
+        fails.append("kein einziger Bucket traegt eine Obergrenze — ohne sie laesst sich "
+                     "„verliert\u201c gar nicht belegen (Produzent noch nicht neu gelaufen?)")
     return _c("Betfair-Buckets tragen ihr Urteil mit", "error", fails)
 
 
@@ -261,6 +284,45 @@ def check_money_map_meldet_ihre_luecken(ctx):
                              f"Poly-Markt mit BEIDEN Teams existiert — stille Luecke, nicht Abwesenheit")
                 break
     return _c("Money Map meldet ihre Luecken", "error", fails[:8])
+
+
+def check_money_map_poly_gehoert_zum_spiel(ctx):
+    """07.09.2026 (Uebersicht-Check) — die Money Map zeigte fuer **Al-Ahed v Al Ahli Akhaa Aley**
+    (Lebanese FA Cup, live) „Poly $267.964 · Konsens einig auf Al-Ahed · 2/3".
+
+    Das Geld gehoerte zu `spl-hil-ahl-2026-09-01` — Al Hilal gegen Al Ahli (Saudi Pro League),
+    einem Markt, der **sechs Tage vorher abgerechnet** war und im selben Board zwei Kacheln
+    weiter mit $257K unter „Volumen ueber Norm" stand. Der Join lief ueber den
+    Abkuerzungs-Rueckfall: „Al Ahli Akhaa Aley" gegen „Al Ahli Saudi Club" ergab 0,50, „Al-Ahed"
+    gegen „Al Hilal Saudi Club" teilte nur „al" — Summe 0,83 ueber der Rueckfall-Schwelle 0,60.
+
+    Zwei Ursachen, beide in `betfair_consensus` behoben: der Kandidaten-Pool enthielt jeden
+    abgerechneten Snapshot (2.494 von 2.557 — der Close-Feed haelt sie 30 Tage fuer die
+    Auswertung), und der Rueckfall liess ein Zwei-Buchstaben-Token als Beleg gelten.
+
+    Der Guard prueft nicht den Weg, sondern das Ergebnis: der Poly-Outcome-Name einer Zeile
+    muss zu einem der beiden Teams dieser Zeile gehoeren. Ein Konsens aus fremdem Geld ist
+    schlimmer als gar kein Konsens — er sieht nach Bestaetigung aus.
+    """
+    import re as _re
+    import unicodedata as _ud
+
+    def _tok(x):
+        x = _ud.normalize("NFKD", str(x or "")).encode("ascii", "ignore").decode().lower()
+        return {t for t in _re.split(r"[^a-z0-9]+", x) if len(t) >= 3}
+
+    fails = []
+    for r in ((ctx.get("moneyMap") or {}).get("rows") or []):
+        p = r.get("poly") or {}
+        nm = p.get("name")
+        if not nm:
+            continue
+        if _tok(nm) & (_tok(r.get("home")) | _tok(r.get("away"))):
+            continue
+        fails.append(f"{r.get('home')} v {r.get('away')} ({r.get('league')}): Poly-Seite heisst "
+                     f"„{nm}\u201c und gehoert zu keinem der beiden Teams — "
+                     f"${p.get('usd')} fremdes Geld in einer Konsens-Zeile")
+    return _c("Money Map: die Poly-Seite gehoert zum Spiel", "error", fails[:8])
 
 
 def check_stake_kachel_zeigt_das_gemessene_urteil(ctx):
@@ -512,6 +574,7 @@ UEBERSICHT_CHECKS = [
     check_quellen_haben_zeitstempel,
     check_serie_seltenheit_nennt_ihren_nenner,
     check_money_map_meldet_ihre_luecken,
+    check_money_map_poly_gehoert_zum_spiel,
     check_stake_kachel_zeigt_das_gemessene_urteil,
     check_stake_spielklasse,
     check_poly_deckung,

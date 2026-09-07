@@ -201,3 +201,68 @@ class Robustheit(unittest.TestCase):
         for fn in UI.UEBERSICHT_CHECKS:
             self.assertTrue((fn.__doc__ or "").strip(), fn.__name__)
             self.assertIn("2026", fn.__doc__, fn.__name__ + ": kein Datum/Vorfall genannt")
+
+
+class MoneyMapPolyGehoertZumSpiel(unittest.TestCase):
+    """07.09.2026 (Uebersicht-Check): die Money Map zeigte fuer Al-Ahed v Al Ahli Akhaa Aley
+    (Lebanese FA Cup) „Poly $267.964 · Konsens einig auf Al-Ahed · 2/3". Das Geld gehoerte zu
+    Al Hilal v Al Ahli (Saudi Pro League) — einem Markt, der sechs Tage vorher abgerechnet war
+    und im selben Board zwei Kacheln weiter mit $257K stand.
+
+    Ein Konsens aus fremdem Geld ist schlimmer als kein Konsens: er sieht nach Bestaetigung aus.
+    """
+
+    def _ctx(self, poly_name):
+        return {"moneyMap": {"rows": [{"home": "Al-Ahed", "away": "Al Ahli Akhaa Aley",
+                                       "league": "Lebanese FA Cup",
+                                       "betfair": {"side": "home", "eur": 8868},
+                                       "poly": {"side": "home", "name": poly_name,
+                                                "usd": 267964, "sharePct": 97}}]}}
+
+    def test_fremder_poly_name_wird_gemeldet(self):
+        r = UI.check_money_map_poly_gehoert_zum_spiel(self._ctx("Al Hilal Saudi Club"))
+        self.assertEqual(len(r["failures"]), 1)
+        self.assertIn("267964", r["failures"][0])
+
+    def test_der_eigene_name_faellt_nicht_auf(self):
+        r = UI.check_money_map_poly_gehoert_zum_spiel(self._ctx("Al-Ahed"))
+        self.assertEqual(r["failures"], [])
+
+    def test_abkuerzung_gilt_als_derselbe_name(self):
+        # „Al Ahli Akhaa Aley" vs „Akhaa Ahli Aley" — ein Kern-Token genuegt, sonst waere der
+        # Guard ein Namens-Matcher und wuerde bei jeder Schreibweise Fehlalarm schlagen.
+        r = UI.check_money_map_poly_gehoert_zum_spiel(self._ctx("Akhaa Ahli Aley"))
+        self.assertEqual(r["failures"], [])
+
+    def test_zeile_ohne_poly_ist_kein_fall(self):
+        ctx = {"moneyMap": {"rows": [{"home": "A", "away": "B", "poly": None}]}}
+        self.assertEqual(UI.check_money_map_poly_gehoert_zum_spiel(ctx)["failures"], [])
+
+
+class BetfairUrteilBrauchtDieRichtigeGrenze(unittest.TestCase):
+    """07.09.2026 (Uebersicht-Check): 40 Buckets trugen „verliert", 37 davon mit einer
+    Obergrenze ueber null und 18 mit positivem Punktschaetzer — bis +32,6 %."""
+
+    def _ctx(self, **bucket):
+        d = {"n": 36, "roi": 0.111, "roiUg": -0.208, "roiOg": 0.43, "urteil": "verliert"}
+        d.update(bucket)
+        return {"bfTrack": {"global": {"urteil": None},
+                            "byLeagueMarket": {"Argentinian Primera Nacional|Match Odds": d}}}
+
+    def test_verliert_ueber_null_wird_gemeldet(self):
+        r = UI.check_betfair_urteil(self._ctx())
+        self.assertTrue(any("Verlustbeleg" in f for f in r["failures"]), r["failures"])
+
+    def test_belegter_verlust_faellt_nicht_auf(self):
+        r = UI.check_betfair_urteil(self._ctx(roi=-0.30, roiUg=-0.50, roiOg=-0.10))
+        self.assertEqual([f for f in r["failures"] if "Verlustbeleg" in f], [])
+
+    def test_traegt_faellt_nicht_auf(self):
+        r = UI.check_betfair_urteil(self._ctx(roi=0.3, roiUg=0.05, roiOg=0.55, urteil="traegt"))
+        self.assertEqual([f for f in r["failures"] if "Verlustbeleg" in f], [])
+
+    def test_altes_artefakt_ohne_obergrenze_wird_benannt(self):
+        # Rollout-Luecke: der Code ist gefixt, der Produzent noch nicht gelaufen. Das ist ein
+        # eigener Zustand und darf nicht wie „alles in Ordnung" aussehen.
+        r = UI.check_betfair_urteil(self._ctx(roiOg=None))
+        self.assertTrue(any("Obergrenze" in f for f in r["failures"]), r["failures"])

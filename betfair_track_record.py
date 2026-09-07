@@ -545,6 +545,27 @@ def _ug(n, summe, quadratsumme):
     return m - UG_Z * (var ** 0.5) / (n ** 0.5)
 
 
+def _og(n, summe, quadratsumme):
+    """Das Gegenstueck zu _ug: einseitige 95%-OBERgrenze. REIN.
+
+    07.09.2026 (Uebersicht-Check) — sie fehlte, und ohne sie war das Urteil unsymmetrisch:
+    „traegt" verlangte die UNTERgrenze ueber null (richtig), „verliert" verlangte dieselbe
+    UNTERgrenze unter -10 % (falsch). Eine Untergrenze unter null belegt keinen Verlust, sie
+    belegt Unsicherheit. Gemessen an diesem Tag trugen **40 Buckets das Urteil „verliert"** —
+    bei **37 davon lag die Obergrenze ueber null**, bei **18 war der Punktschaetzer positiv**,
+    bis zu +32,6 % (Argentinian Primera Nacional | Over/Under 3.5 Goals, n=36, UG -14,3 %,
+    OG +79,5 %). Das Urteil hat Zaehne: es entfernt Zeilen aus der Rangliste der Uebersicht
+    und blendet Terminal-Zeilen aus.
+    """
+    if n < max(3, UG_MIN_N):
+        return None
+    m = summe / n
+    var = (quadratsumme - n * m * m) / (n - 1)
+    if var <= 0:
+        return None
+    return m + UG_Z * (var ** 0.5) / (n ** 0.5)
+
+
 def _fin(b):
     def rate(w, n):
         return round(w / n, 4) if n else None
@@ -558,14 +579,34 @@ def _fin(b):
     # Das Urteil gehoert dorthin, wo die Zahl entsteht. Hier faellt es EINMAL; die drei
     # Verbraucher lesen nur noch. Die Schwellen wandern als Felder mit, damit die Anzeige sie
     # weiterhin benennen kann („ab -10% dreht es um"), ohne sie selbst zu kennen.
+    _o = _og(b["n"], b["roiSum"], b["roiSqSum"])
+    # 07.09.2026 — zwei verschiedene Aussagen, und sie brauchen verschiedene Grenzen:
+    #   · dem Geld FOLGEN traegt  → UNTERgrenze ueber null.
+    #   · dem Geld DAGEGENhalten  → OBERgrenze unter null.
+    # Beides mit derselben Untergrenze zu entscheiden, war die Asymmetrie, die aus einem
+    # Bucket mit ROI +11 % ein „verliert" gemacht hat. Dieselbe Regel steht seit dem 07.09.
+    # in stake_liga_stufe.kreuz (belegt / belegtGegen) — hier fehlte sie.
     _urteil = None
-    if _u is not None:
-        _urteil = "verliert" if _u <= TR_FADE_ROI else ("traegt" if _u > TR_BOOST_ROI else "neutral")
+    if _u is not None and _u > TR_BOOST_ROI:
+        _urteil = "traegt"
+    elif _o is not None and _o < 0:
+        _urteil = "verliert"
+    elif _u is not None:
+        _urteil = "neutral"
+    # Der alte Ausloeser bleibt — aber unter seinem richtigen Namen. Er sagt „die Unterseite
+    # dieses Buckets ist tief" (Risiko), nicht „hier wird belegt verloren" (Urteil). Wer Geld
+    # bewegt (betfair_money-Fade, Killer-Filter, Terminal-Mute), haengt weiter daran; wer dem
+    # Nutzer etwas ERZAEHLT, nimmt `urteil`.
+    _fade = bool(_u is not None and _u <= TR_FADE_ROI)
     return {"n": b["n"], "wins": b["wins"], "hitRate": rate(b["wins"], b["n"]),
             "roi": round(b["roiSum"] / b["n"], 4) if b["n"] else None,
             # Der Punktschaetzer bleibt sichtbar — er entscheidet nur nichts mehr.
             "roiUg": round(_u, 4) if _u is not None else None,
+            "roiOg": round(_o, 4) if _o is not None else None,
             "ugAb": UG_MIN_N,
+            # Risiko-Marke, kein Urteil (s.o.). Getrennt gehalten, damit niemand sie wieder
+            # als Beleg liest.
+            "fade": _fade,
             # Das Urteil, EINMAL gefaellt (siehe _urteil oben). None = keine Untergrenze,
             # also kein Urteil — und kein Urteil ist etwas anderes als „neutral".
             "urteil": _urteil,

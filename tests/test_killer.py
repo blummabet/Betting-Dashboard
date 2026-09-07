@@ -98,11 +98,25 @@ class Auswahl(unittest.TestCase):
         out = killer.baue(st, cons(), {}, {"streaks": []}, now=NOW, latch_state=LEER)
         self.assertEqual(out["stufe1"] + out["stufe2"], [])
 
-    def test_verlierender_liga_eimer_fliegt_raus(self):
-        tr = {"byLeagueMarket": {"English Premier League|Match Odds": {"n": 40, "roi": -0.22, "roiUg": -0.15}}}
+    def test_eimer_mit_tiefer_unterseite_fliegt_raus(self):
+        # 07.09.2026 (Uebersicht-Check): die Schwelle stand hier zum vierten Mal nachgebaut
+        # (`ug <= -0.10`). Sie kommt jetzt aus dem Artefakt und heisst `fade` — eine
+        # RISIKO-Marke. Das Verhalten ist unveraendert, der Name stimmt.
+        tr = {"byLeagueMarket": {"English Premier League|Match Odds":
+                                 {"n": 40, "roi": -0.22, "roiUg": -0.15, "roiOg": -0.05,
+                                  "urteil": "verliert", "fade": True}}}
         out = killer.baue(state(), cons(), tr, {"streaks": []}, now=NOW, latch_state=LEER)
         self.assertEqual(out["stufe1"] + out["stufe2"], [],
-                         "belegt verlierender Eimer gehoert nicht in eine Empfehlung")
+                         "ein Eimer mit tiefer Unterseite gehoert nicht in eine Empfehlung")
+
+    def test_killer_baut_die_schwelle_nicht_selbst_nach(self):
+        # Dieselben Zahlen OHNE die Marke des Produzenten: der Killer darf daraus kein
+        # eigenes Urteil zimmern — sonst gibt es die Schwelle wieder zweimal.
+        tr = {"byLeagueMarket": {"English Premier League|Match Odds":
+                                 {"n": 40, "roi": -0.22, "roiUg": -0.15}}}
+        out = killer.baue(state(), cons(), tr, {"streaks": []}, now=NOW, latch_state=LEER)
+        self.assertEqual(len(out["stufe1"]), 1,
+                         "ohne Marke des Produzenten kein Veto — die Regel faellt dort, wo die Zahl entsteht")
 
     def test_duenner_liga_eimer_blockiert_nicht(self):
         tr = {"byLeagueMarket": {"English Premier League|Match Odds": {"n": 6, "roi": -0.9}}}

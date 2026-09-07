@@ -143,7 +143,18 @@ def _phase(w: dict) -> str:
 
 
 def _minute(w: dict):
-    """Minuten seit Anpfiff, auch fuer alte Zeilen ohne das Feld."""
+    """Minuten SEIT ANPFIFF (Wanduhr), auch fuer alte Zeilen ohne das Feld.
+
+    07.09.2026 (Uebersicht-Check) — das Feld heisst `spielminute` und ist keine: gerechnet
+    wird ts minus Anpfiff, und darin steckt die Halbzeitpause. Im Bestand standen neun
+    Fussball-Wetten ueber der 100. „Minute", die hoechste bei 115 (Cagliari - Lecce, Serie A,
+    Anpfiff 16:30, Wette 18:24) — das Spiel war da vorbei.
+
+    Der Name bleibt, weil die vorregistrierten Schubladen (live_frueh <= 30, live_spaet > 60)
+    auf genau dieser Groesse angemeldet wurden; sie nachtraeglich umzudefinieren waere eine
+    stille Aenderung an einer laufenden Messung. Die Flaechen beschriften sie jetzt als das,
+    was sie ist: Zeit seit Anpfiff.
+    """
     if w.get("spielminute") is not None:
         return w["spielminute"]
     if _phase(w) != "live":

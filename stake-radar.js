@@ -814,8 +814,11 @@
   var _SR_SCHUBLADEN = [
     ['vor_anpfiff', 'vor Anpfiff', 'Nur hier ist CLV gegen den Schlusskurs überhaupt möglich.'],
     ['live', 'live', '83 % des Feeds — aber ohne Schlusskurs, also nur über die Abrechnung messbar.'],
-    ['live_frueh', 'live, ≤ 30. Min', 'Wenn Live etwas taugt, dann früh.'],
-    ['live_spaet', 'live, > 60. Min', 'Späte Einsätze auf den Führenden sind kein Signal — Gegenprobe.'],
+    // 07.09.2026 (Übersicht-Check): „Min" hiess hier Spielminute, gemessen ist die WANDUHR
+    // seit Anpfiff — die Halbzeitpause zählt mit. Die Schwellen bleiben, wie sie
+    // vorregistriert wurden; nur die Aufschrift sagt jetzt, was gemessen wird.
+    ['live_frueh', 'live, ≤ 30 min nach Anpfiff', 'Wenn Live etwas taugt, dann früh.'],
+    ['live_spaet', 'live, > 60 min nach Anpfiff', 'Späte Einsätze auf den Führenden sind kein Signal — Gegenprobe.'],
     ['einsatz_ab_10k', 'ab $10k', 'Trägt Größe allein etwas? Die Vorlage behauptet ja, ohne Beleg.'],
     ['einsatz_1k_10k', '$1k – $10k', 'Die Vergleichsgruppe dazu.'],
     ['ueber_liga_norm', 'über Liga-Norm', 'Die eigentliche These: auffällig ist relativ.'],

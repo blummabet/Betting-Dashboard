@@ -146,8 +146,16 @@ def _track_urteil(track, league, market):
     ug = d.get("roiUg")
     if not isinstance(ug, (int, float)):
         return None          # kein Urteil — und das ist etwas anderes als „unauffaellig"
+    # 07.09.2026 (Uebersicht-Check): hier stand die Schwelle zum VIERTEN Mal — `ug <= -0.10`,
+    # nachgebaut statt gelesen, genau die Kopie, die der 04.09. beseitigen wollte. Und sie war
+    # inzwischen auch inhaltlich falsch: eine Untergrenze unter -10 % belegt keinen Verlust.
+    # Das Urteil kommt jetzt aus dem Artefakt; `fade` ist die Risiko-Marke, an der der Filter
+    # unten haengt (unveraendertes Verhalten), `verliert` das belegte Urteil.
     return {"n": d["n"], "roi": round(d["roi"], 4), "roiUg": round(ug, 4),
-            "traegt": ug > 0, "verliert": ug <= -0.10}
+            "roiOg": d.get("roiOg"),
+            "traegt": d.get("urteil") == "traegt",
+            "verliert": d.get("urteil") == "verliert",
+            "fade": bool(d.get("fade"))}
 
 
 # 30.08.2026 (Lucas-Checkup, dritte Runde) — der Serien-Chip war in drei Punkten falsch:
@@ -684,8 +692,8 @@ def baue(state=None, consensus=None, track=None, streaks=None, now=None,
         z = zeile(mid, e, sig, spiele.get(str(mid)), track, streaks,
                   gehalten_seit=_gs, wallets=_wallets, now=now)
         tr = z.get("track")
-        if tr and tr["verliert"]:
-            continue                       # belegt verlierender Eimer gehört nicht in eine Empfehlung
+        if tr and tr.get("fade"):
+            continue                       # tiefe Unterseite (Risiko-Marke) — nicht in eine Empfehlung
         zeilen.append(z)
 
     # ── Mitschreiben, nicht filtern (01.09.2026) ─────────────────────────────────────────

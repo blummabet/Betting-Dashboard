@@ -3,6 +3,43 @@
 Stand 07.09.2026 (oberster Block); Liga/WM-Teil darunter Stand 26.06.2026. Lebendige Liste aller offenen Punkte — Liga UND noch nicht umgesetzte WM-Sachen —
 damit wir alles abarbeiten können. ✅ = erledigt (Referenz), ⏳ = offen, 🔒 = blockiert.
 
+## 🔴 Übersicht-Checkup 07.09.2026 abends — vier Funde, alle behoben
+
+1. **Money Map: fremdes Geld in einer Konsens-Zeile.** „Al-Ahed v Al Ahli Akhaa Aley"
+   (Lebanese FA Cup) zeigte Poly **$267.964** und „Konsens 3/3". Das Geld gehörte zu
+   `spl-hil-ahl-2026-09-01` — Al Hilal v Al Ahli, Saudi Pro League, **sechs Tage vorher
+   abgerechnet** und im selben Board zwei Kacheln weiter mit $257K sichtbar. Zwei Ursachen:
+   der Kandidaten-Pool enthielt jeden abgerechneten Snapshot (2.494 von 2.557 — der Close-Feed
+   hält sie 30 Tage für die Auswertung), und der Abkürzungs-Rückfall ließ „al" als gemeinsames
+   Token gelten. → Abgerechnete Märkte, die **vor dem Anpfiff** abgerechnet wurden, fallen aus
+   dem Pool; der Rückfall braucht ein Token, das ein Name sein kann. Guard:
+   `check_money_map_poly_gehoert_zum_spiel`.
+2. **„verliert" war kein Verlustbeleg.** `betfair_track_record` fällte das Urteil an der
+   UNTERgrenze (≤ −10 %) — für „trägt" richtig (UG > 0), für „verliert" falsch. Gemessen:
+   **40 Buckets mit „verliert", 37 davon mit Obergrenze über null, 18 mit positivem
+   Punktschätzer** — bis **+32,6 %** (Argentinian Primera Nacional · Ü/U 3.5, n=36, UG −14,3 %,
+   OG +79,5 %). Das Urteil hat Zähne: es nahm Zeilen aus der Rangliste und mutete
+   Terminal-Zeilen. → `roiOg` wird mitgeschrieben, „verliert" verlangt die Obergrenze unter
+   null; die alte Schwelle lebt als **Risiko-Marke `fade`** weiter, an der alle Gates hängen
+   (Verhalten unverändert). `killer.py` baute die Schwelle zum vierten Mal nach — liest jetzt.
+3. **Die Rangliste filterte still.** Unter „Was ist gerade das Stärkste?" steht „nicht geprüft,
+   nur sortiert" — und darüber lief der Track-Filter. Deshalb fehlte die stärkste
+   Betfair-Bewegung des Tages (Nueva Chicago v Quilmes, **+6,2 pp**), während die Steam-Kachel
+   sie als Nummer 2 führte. → Filter bleibt, wird gezählt und benannt.
+4. **Drei Zahlen, die etwas anderes hießen als sie sind.** Die Signal-Bilanz zeigt `n` =
+   Feuerungen neben zwei Quoten, deren Basis kleiner ist (**66 Feuerungen über 8 Signale ohne
+   Richtung**, bei Kader-Abgängen 21 von 67) → „o. R." steht jetzt dran. Stake zeigte
+   „● 125. Min" für ein Serie-A-Spiel — gemessen ist die **Wanduhr seit Anpfiff**, inklusive
+   Halbzeitpause (9 Fußball-Wetten über der 100.) → heißt jetzt so. Und „Am nächsten dran"
+   listete Schubladen mit n=16–25, während der Satz davor von reifen Schubladen sprach →
+   „Am nächsten an der Mindestzahl (30 Plays) — nicht an einem Beleg".
+
+⚠️ **Rollout:** Fund 1 und 2 wirken erst, wenn `betfair_consensus.py` und
+`betfair_track_record.py` auf dem Runner neu gelaufen sind. Bis dahin melden beide Guards rot —
+das ist der gewünschte Zustand, nicht ein zweiter Fehler.
+
+---
+
 ## ⏳ Offen aus der Session vom 07.09.2026
 
 Reihenfolge ist Absicht: oben, was ohne neue Entscheidung gebaut werden kann.

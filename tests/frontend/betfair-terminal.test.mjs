@@ -55,7 +55,7 @@ function boot() {
   w._bfState.data = { matches: [] };   // sonst triggert renderBetfairRadar einen fetch (kein Netz im Test)
   w._bfState.consensus = consensusFixture();
   w._bfState.hist = histFixture();
-  w._bfState.track = { n: 500, byLeagueMarket: { 'Schwach Liga|Match Odds': { n: 44, roi: -0.12, roiUg: -0.12, urteil: 'verliert', hitRate: 0.30 } } };
+  w._bfState.track = { n: 500, byLeagueMarket: { 'Schwach Liga|Match Odds': { n: 44, roi: -0.12, roiUg: -0.12, roiOg: -0.02, urteil: 'verliert', fade: true, hitRate: 0.30 } } };
   w._bfState.loading = false;
   w._bfState.view = 'terminal';
   return w;
@@ -119,7 +119,7 @@ test('Auto-Mute (P1): kein-Anker & schwacher Bucket werden gemutet, nach unten s
   const board = panel(w);
   assert.match(board, /Nicht handelbar \(gemutet\)/, 'Trenn-Zeile für gemutete Reihen');
   assert.match(board, /🔇 kein Anker/, 'no-anchor-Zeile trägt kein-Anker-Tag');
-  assert.match(board, /🔇 Bucket UG -12% ROI/, 'schwacher-Bucket-Zeile trägt Bucket-Tag');
+  assert.match(board, /🔇 Bucket-Unterseite UG -12% ROI/, 'schwacher-Bucket-Zeile trägt Bucket-Tag');
   // gemutete Zeilen (C/D) stehen unter den handelbaren (Alpha/Gamma)
   assert.ok(board.indexOf('Alpha') < board.indexOf('Epsilon'), 'handelbar vor kein-Anker');
   assert.ok(board.indexOf('Gamma') < board.indexOf('Eta'), 'handelbar vor schwachem Bucket');

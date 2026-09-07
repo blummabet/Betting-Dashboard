@@ -318,3 +318,61 @@ if __name__ == "__main__":
     for f in fns:
         f(); print("ok", f.__name__)
     print("\n%d tests passed" % len(fns))
+
+
+# ── 07.09.2026 (Uebersicht-Check): das Urteil war unsymmetrisch ───────────────
+# „traegt" verlangte die UNTERgrenze ueber null — richtig. „verliert" verlangte dieselbe
+# UNTERgrenze unter -10 % — falsch: eine tiefe Untergrenze belegt Unsicherheit, keinen
+# Verlust. Gemessen an dem Tag trugen 40 Buckets „verliert", 37 davon mit einer Obergrenze
+# UEBER null und 18 mit positivem Punktschaetzer (bis +32,6 %). Das Urteil hat Zaehne: es
+# nahm Zeilen aus der Rangliste der Uebersicht und blendete Terminal-Zeilen aus.
+def _bucket(werte):
+    """Ein Bucket aus einer Renditeliste — dieselbe Form, die _fin erwartet."""
+    return {"n": len(werte), "wins": sum(1 for v in werte if v > 0),
+            "roiSum": sum(werte), "roiSqSum": sum(v * v for v in werte),
+            "nConc": 0, "winsConc": 0, "roiConc": 0.0,
+            "nInflow": 0, "winsInflow": 0, "roiInflow": 0.0,
+            "nBack": 0, "winsBack": 0, "roiBack": 0.0,
+            "nDrift": 0, "winsDrift": 0, "roiDrift": 0.0,
+            "nClvBf": 0, "clvBfSum": 0.0, "beatBf": 0,
+            "nClvPinn": 0, "clvPinnSum": 0.0, "beatPinn": 0}
+
+
+def test_positiver_bucket_mit_breiter_streuung_ist_kein_verlustbeleg():
+    """Der Fall vom 07.09.: Argentinian Primera Nacional | Match Odds, n=36, ROI +11,1 %,
+    UG -20,8 %, OG +43,0 % — und trotzdem stand „verliert" dran."""
+    werte = ([1.0] * 18 + [-1.0] * 18)          # ROI 0, breite Streuung
+    werte[0] = 9.0                              # ein Treffer zieht den Schnitt ins Plus
+    d = T._fin(_bucket(werte))
+    assert d["roi"] > 0
+    assert d["roiUg"] < 0 and d["roiOg"] > 0
+    assert d["urteil"] != "verliert", "eine Obergrenze ueber null ist kein Verlustbeleg"
+
+
+def test_verliert_verlangt_die_obergrenze_unter_null():
+    # Etwas Streuung ist noetig: ohne sie gibt es bewusst keine Grenze („keine Streuung
+    # heisst nicht Gewissheit, sondern zu wenig Daten").
+    d = T._fin(_bucket([-1.0] * 39 + [-0.8]))
+    assert d["roiOg"] is not None and d["roiOg"] < 0
+    assert d["urteil"] == "verliert"
+
+
+def test_traegt_verlangt_weiterhin_die_untergrenze_ueber_null():
+    d = T._fin(_bucket([0.5] * 39 + [0.7]))
+    assert d["roiUg"] > 0 and d["urteil"] == "traegt"
+
+
+def test_fade_bleibt_als_risikomarke_erhalten():
+    """Die alte Schwelle bewegt Geld (betfair_money-Fade, Killer-Filter, Terminal-Mute) —
+    sie wird nicht abgeschafft, sondern richtig benannt. Sonst waere aus einem Namensfehler
+    still eine Verhaltensaenderung geworden."""
+    werte = ([1.0] * 18 + [-1.0] * 18)
+    werte[0] = 9.0
+    d = T._fin(_bucket(werte))
+    assert d["fade"] is True, "tiefe Unterseite bleibt markiert"
+    assert d["urteil"] == "neutral", "aber sie heisst nicht mehr Urteil"
+
+
+def test_ohne_untergrenze_kein_urteil_und_kein_fade():
+    d = T._fin(_bucket([0.2] * 4 + [0.3]))
+    assert d["urteil"] is None and d["fade"] is False and d["roiOg"] is None

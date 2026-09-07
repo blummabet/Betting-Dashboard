@@ -409,15 +409,87 @@ def _poly_key_for(name, keys):
 RUECKFALL_MIN_SUMME = 0.60
 
 
+# ── 07.09.2026 (Uebersicht-Check, Al-Ahed v Al Ahli Akhaa Aley) ──────────────
+# Die Money Map zeigte fuer ein LIBANESISCHES POKALSPIEL „Poly $267.964, Konsens 3/3" — das
+# Geld stammte aus `spl-hil-ahl-2026-09-01`, Al Hilal gegen Al Ahli (Saudi Pro League), einem
+# Markt, der **sechs Tage vorher abgerechnet** war. Zwei Luecken auf einmal:
+#
+#   1. Der Kandidaten-Pool enthaelt jeden abgerechneten Snapshot. Der Close-Feed haelt sie
+#      absichtlich 30 Tage lang (fuer die Treffer-Auswertung, siehe poly_money_broad.py) —
+#      gemessen sind das 2.494 von 2.557 Eintraegen. Jeder Join sucht also gegen ~2.500 fertige
+#      Spiele, und nur der Namens-Score steht dazwischen.
+#   2. Der Abkuerzungs-Rueckfall verlangt „mindestens EIN gemeinsames Token". Hier war es „al" —
+#      und „al" ist kein Name, sondern ein Artikel.
+#
+# Zur zweiten Luecke gehoert eine Fehldiagnose von mir, die hier stehen bleibt, damit sie
+# niemand wiederholt: ich hatte „al" mit 14,6 % der Pool-Eintraege gemessen und daraus eine
+# Haeufigkeitsregel gebaut. Falsch gezaehlt — die 14,6 % kamen daher, dass ich dasselbe Token
+# in den DREI Ausgaengen desselben Marktes dreimal zaehlte. Pro EINTRAG steht „al" in 34 von
+# 2.557 (1,3 %), und eine Schwelle, die 1,3 % faengt, faengt auch echte Vereinsnamen.
+#
+# Was bleibt: die Haeufigkeitsregel raeumt die Struktur-Woerter ab (draw, vs, over, under,
+# score — gemessen 7 Tokens ueber 5 %), und die Laengen-Regel faengt Artikel wie „al". Der
+# eigentliche Fix gegen den Fall von heute ist Nummer 1, nicht Nummer 2.
+_ALLERWELTS_ANTEIL = 0.05          # Token in >=5 % der Pool-EINTRAEGE = nicht unterscheidend
+_KERN_MIN_LEN = 3                  # „al", „fc", „sc" sind keine Namen
+_ALLERWELTS_CACHE = {}
+
+
+def allerwelts_tokens(poly_entries, anteil: float = _ALLERWELTS_ANTEIL) -> set:
+    """Tokens, die im Kandidaten-Pool so haeufig sind, dass sie nichts unterscheiden. REIN."""
+    entries = list(poly_entries or [])
+    if not entries:
+        return set()
+    zaehler = {}
+    for pe in entries:
+        gesehen = set()
+        for name in (pe.get("prices") or {}):
+            gesehen.update(_norm(name))
+        for t in gesehen:
+            zaehler[t] = zaehler.get(t, 0) + 1
+    grenze = max(2, int(len(entries) * anteil))
+    return {t for t, n in zaehler.items() if n >= grenze}
+
+
+def _teilt_kern_token(a, b, allerwelts) -> bool:
+    """Teilen sich zwei Namen ein Token, das ein NAME sein kann — lang genug und im Pool
+    nicht Allerwelt? REIN."""
+    geteilt = (set(_norm(a)) & set(_norm(b))) - set(allerwelts or ())
+    return any(len(t) >= _KERN_MIN_LEN for t in geteilt)
+
+
+def abgerechnet_vor_anpfiff(pe, kickoff) -> bool:
+    """Wurde dieser Poly-Markt abgerechnet, BEVOR dieses Spiel angepfiffen wurde? REIN.
+
+    Dann kann er dieses Spiel nicht meinen — unabhaengig davon, wie gut die Namen passen.
+    Ohne beide Zeitstempel wird NICHTS behauptet (und nichts verworfen): ein fehlender
+    Stempel ist kein Beleg, und ein stiller Ausschluss waere hier so schaedlich wie der
+    falsche Join.
+    """
+    if not pe.get("resolved"):
+        return False
+    ra, ko = _ts(pe.get("resolvedAt")), _ts(kickoff)
+    if ra is None or ko is None:
+        return False
+    return ra < ko
+
+
 def _best_poly_entry(m, poly_entries):
     """Bester Poly-Eintrag zum Betfair-Spiel -> (pe, hk, ak) oder None. Beide Teams muessen matchen."""
     home, away = m.get("home"), m.get("away")
+    kickoff = m.get("kickoff")
+    _cache_key = id(poly_entries)
+    _allerwelts = _ALLERWELTS_CACHE.get(_cache_key)
+    if _allerwelts is None:
+        _allerwelts = _ALLERWELTS_CACHE[_cache_key] = allerwelts_tokens(poly_entries)
     # 05.09.2026: `bsc` war Bestenliste UND Annahmeschwelle in einer Variable (Start 0.99).
     # Damit galt die strenge Direkt-Schwelle auch fuer den Abkuerzungs-Rueckfall, der genau
     # dafuer gebaut wurde, sie zu unterlaufen — er konnte nie zum Zug kommen. Jetzt getrennt:
     # `bsc` rangiert nur noch, angenommen wird gegen `schwelle`.
     best, bsc = None, 0.0
     for pe in poly_entries:
+        if abgerechnet_vor_anpfiff(pe, kickoff):
+            continue          # fertiges Spiel von vorgestern kann dieses hier nicht sein
         keys = list((pe.get("prices") or {}).keys())
         hk, ak = _poly_key_for(home, keys), _poly_key_for(away, keys)
         # 12.08.2026 (Lucas): eine Seite matcht stark, die andere ist bei Poly anders abgekuerzt
@@ -427,13 +499,16 @@ def _best_poly_entry(m, poly_entries):
         team_keys = [k for k in keys if not _ist_nicht_team(k)]
         rueckfall = False
         if len(team_keys) == 2:
+            # 07.09.2026: „mindestens ein gemeinsames Token" reicht nicht — es muss ein
+            # UNTERSCHEIDENDES sein. „Al-Ahed" und „Al Hilal Saudi Club" teilen „al", und
+            # „al" steht in 14,6 % des Pools.
             if hk and not ak:
                 cand = next((k for k in team_keys if k != hk), None)
-                if cand and _name_score(away, cand) > 0:
+                if cand and _teilt_kern_token(away, cand, _allerwelts):
                     ak, rueckfall = cand, True
             elif ak and not hk:
                 cand = next((k for k in team_keys if k != ak), None)
-                if cand and _name_score(home, cand) > 0:
+                if cand and _teilt_kern_token(home, cand, _allerwelts):
                     hk, rueckfall = cand, True
         if hk and ak and hk != ak:
             sc = _name_score(home, hk) + _name_score(away, ak)

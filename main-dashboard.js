@@ -670,8 +670,13 @@
       var blm = (_md.data.bfTrack || {}).byLeagueMarket || {};
       var v = blm[String(league) + '|' + String(market)];
       if (!v || !v.urteil) return null;          // kein Urteil = keine Aussage, nicht „neutral"
-      return { roi: v.roi, roiUg: v.roiUg, n: v.n,
-               traegt: v.urteil === 'traegt', verliert: v.urteil === 'verliert' };
+      // 07.09.2026 (Übersicht-Check): `verliert` hiess bis heute „Untergrenze ≤ −10 %" und
+      // stand damit über Buckets mit ROI +11 % und +32,6 %. Jetzt zwei getrennte Dinge:
+      // `verliert` = belegt (Obergrenze unter null), `fade` = Risiko-Marke (tiefe Unterseite),
+      // an der die Filter hängen. Der Filter unten bleibt derselbe — er sagt es nur endlich.
+      return { roi: v.roi, roiUg: v.roiUg, roiOg: v.roiOg, n: v.n,
+               traegt: v.urteil === 'traegt', verliert: v.urteil === 'verliert',
+               fade: v.fade === true };
     } catch (e) { return null; }
   }
   // ⚡ Sharpe Bewegungen: Vor-Anpfiff-Quotenbewegung (pp). +pp = Quote fällt = Geld drauf, −pp = driftet.
@@ -1045,8 +1050,14 @@
       return '<span class="md-badge" style="background:rgba(57,135,229,.14);color:' + A.blue +
         '">⏱ ' + (h ? h + ' h' : m + ' min') + '</span>';
     }
-    return '<span class="md-badge" style="background:rgba(229,83,75,.14);color:' + A.red +
-      '">● ' + (-m) + '. Min</span>';
+    // 07.09.2026 (Übersicht-Check): hier stand „● 125. Min" über einem Serie-A-Spiel. Kein
+    // Fußballspiel hat eine 125. Minute — gemessen wird die WANDUHR seit Anpfiff, und die
+    // enthält die Halbzeitpause. Neun Fußball-Wetten des Bestands standen über der 100.
+    // „Spielminute" war nie gemessen; sie stand nur so da.
+    var _seit = (-m >= 100) ? (Math.floor(-m / 60) + ':' + ('0' + (-m % 60)).slice(-2) + ' h') : ((-m) + ' min');
+    return '<span class="md-badge" title="Zeit seit Anpfiff — nicht die Spielminute: die ' +
+      'Halbzeitpause zählt mit, und nach ~105 min ist das Spiel vorbei" style="background:rgba(229,83,75,.14);color:' + A.red +
+      '">● seit Anpfiff ' + _seit + '</span>';
   }
 
   function _mdStakeLeer(txt) {
@@ -1585,7 +1596,7 @@
       tile('🎰', 'Stake · größtes Geld', A_STAKE, 'rgba(103,204,145,.14)', 'rgba(103,204,145,.32)',
            'stakeradar', 'Radar', _mdStakeGeldBody(), 185) +
       tile('🚩', 'Stake · über der Norm', A.soft, 'rgba(201,133,0,.14)', 'rgba(201,133,0,.32)',
-           'stakeradar', 'Auffällig', _mdStakeNormBody(), 190) +
+           'stakeradar', 'Über der Norm', _mdStakeNormBody(), 190) +
       tile('⏱', 'Stake · noch spielbar', A.blue, 'rgba(57,135,229,.14)', 'rgba(57,135,229,.32)',
            'stakeradar', 'Spiele', _mdStakeSpielbarBody(), 195) +
       // Reihe 4.5 — Polymarket LIVE (Vollbreite): laufende Wallets + frischer Zufluss
@@ -1761,6 +1772,8 @@
       return sy-sx;
     });
     var pct=function(v){return v==null?'—':Math.round(v)+'%';};
+    // Wie viele Feuerungen tragen KEINE Richtung? n − dafür − gegen.
+    var _ohneRichtung=function(r){ return Math.max(0,(r.fire||0)-(r.supp||0)-(r.opp||0)); };
     // 03.09.2026 (Lucas-Checkup): „🥅 Torjäger n47 · 46% dafür · 75% gegen · −16% ⌀" — die 75%
     // waren drei von vier Fällen, und genau deshalb stand das ⌀ da (der Edge fällt auf
     // „dafür vs. Ø" zurück, wenn die Gegen-Seite unter 5 liegt). Sichtbar war das nur im
@@ -1784,7 +1797,15 @@
       return '<div class="sb-row">'
         +'<span class="sb-dot" style="background:'+tg.c+'"></span>'
         +'<span class="sb-nm">'+L.ic+' '+esc(L.lb)+'</span>'
-        +'<span class="sb-fire">n'+r.fire+'</span>'
+        // 07.09.2026 (Übersicht-Check): „n67 · 60%·35 dafür · 64%·11 gegen" — 35+11 ist 46,
+        // nicht 67. Die 21 Fälle dazwischen (|score| < Schwelle: gefeuert, aber ohne Richtung)
+        // standen nirgends, und das Auge liest n als Basis der beiden Quoten daneben. Über acht
+        // Signale waren das 66 unsichtbare Feuerungen, bei Kader-Abgängen 31 % der Zeile.
+        +'<span class="sb-fire" title="'+r.fire+'× gefeuert'
+          +(_ohneRichtung(r) ? ', davon '+_ohneRichtung(r)+'× ohne Richtung (Score unter der Schwelle) — die zählen in keine der beiden Quoten' : '')
+          +'">n'+r.fire
+          +(_ohneRichtung(r) ? '<i class="sb-n" style="opacity:.7">·'+_ohneRichtung(r)+' o.R.</i>' : '')
+        +'</span>'
         +'<span class="sb-cell" title="Win% wenn das Signal den Pick STÜTZT ('+r.supp+' Fälle)">'+quote(r.suppWinPct,r.supp)+' <i>dafür</i></span>'
         +'<span class="sb-cell" title="Win% wenn das Signal GEGEN den Pick steht ('+r.opp+' Fälle)">'+quote(r.oppWinPct,r.opp)+' <i>gegen</i></span>'
         +'<span class="sb-edge" style="color:'+tg.c+'">'+edgeTxt+'</span>'
@@ -1803,6 +1824,7 @@
       +'<span class="mpc-hint">funktionieren die Signale? · '+b.n+' Picks · Ø '+Math.round(base)+'% Win</span></summary>'
       +'<div class="sb-legend">🟢 trägt belegt bei · 🟡 gemischt (Markt und Geld widersprechen sich) · 🔴 schadet belegt · ⚪ kein Urteil. '
       +'„dafür/gegen" = Win-Quote, wenn das Signal den Pick stützt bzw. dagegen steht — <b>Beschreibung, kein Urteil</b> (eine Trefferquote ohne die Quoten ist keine Zahl). '
+      +'<b>n ist die Zahl der Feuerungen, nicht die Basis der beiden Quoten</b>: ein Signal kann feuern, ohne eine Richtung zu haben (Score unter der Schwelle). Wo das vorkommt, steht „o.R." daneben. '
       +'Zahl rechts = gemessener CLV-Unterschied zu den Picks, auf denen das Signal schwieg, geschichtet nach der Zahl der übrigen Signale; Urteil nur, wenn die 95%-Grenze die Null meidet.</div>'
       +'<div class="sb-list">'+lines+'</div></details>';
   }
@@ -2209,7 +2231,12 @@
       }
       body = '<div class="md-kl-foot" style="border-top:0;padding-top:8px;padding-bottom:2px">'
         + '<b>Heute gibt es nichts, dem man blind folgen darf</b> — ' + _grund + ' '
-        + 'Das ist ein Ergebnis, kein Fehler, und es gilt für alles darunter. Am nächsten dran:</div>'
+        // 07.09.2026 (Übersicht-Check): „Am nächsten dran" stand über drei Schubladen mit
+        // n=25/19/16 — während der Satz davor gerade erklärt hatte, dass zwei REIFE Schubladen
+        // die ROI-Hürde nehmen und an CLV scheitern. Zwei Sätze, zwei Bedeutungen von „dran".
+        // Die Liste ist die Nähe zur MINDESTZAHL; das steht jetzt dran.
+        + 'Das ist ein Ergebnis, kein Fehler, und es gilt für alles darunter. '
+        + 'Am nächsten an der Mindestzahl (' + minN + ' Plays) — nicht an einem Beleg:</div>'
         + (kand.length ? kand.map(function (r) { return _mdFgZeile(r, minN); }).join('')
                        : '<div class="md-kl-foot" style="border-top:0">Noch nicht einmal ein Kandidat — die Bücher sammeln.</div>');
     }
@@ -2526,6 +2553,13 @@
     var _bfFlowMax = ((_md.data.bfOverview && _md.data.bfOverview.flow) || []).reduce(function (a, x) { return Math.max(a, +x.deltaEur || 0); }, 1);
     var _klk = _klKeys(), _klPk = _klNachPolyKey();
     var cand = {};
+    // 07.09.2026 (Übersicht-Check): unter der Rangliste stand „nicht geprüft, nur sortiert" —
+    // und darüber lief ein Filter, der Zeilen aus dem Track-Record still entfernte. Gemessen an
+    // dem Tag: die stärkste Betfair-Bewegung überhaupt (Nueva Chicago v Quilmes, +6,2 pp) fehlte
+    // in der Rangliste, während die Kachel zwei Blöcke weiter sie als Nummer 2 führte. Zwei
+    // Flächen, zwei Antworten, ohne dass eine von beiden es sagte. Der Filter bleibt — er wird
+    // jetzt gezählt und benannt.
+    var _jzGefiltert = [];
     // Reihenfolge-unabhaengiger Spielschluessel aus zwei Teamnamen.
     var mids = function (h, a) {
       if (!h || !a) return null;
@@ -2598,7 +2632,9 @@
       // Steam wird immer aus den Match Odds gerechnet (steam_list liest `mo`) -> Eimer ist
       // Liga × Match Odds.
       var trS = _mdBfTrack(x.league, 'Match Odds');
-      if (trS && trS.verliert) return;   // dem Geld hier zu folgen verliert historisch -> keine Empfehlung
+      // 07.09.2026: an `fade` (tiefe Unterseite), nicht am Urteil — gleiches Verhalten wie
+      // bisher, aber die Zeile verschwindet nicht mehr STILL: sie wird gezählt und unten benannt.
+      if (trS && trS.fade) { _jzGefiltert.push({ m: team(x.home) + vsp + team(x.away), lg: x.league, tr: trS }); return; }
       put({ id: 'b' + mid(x.home, x.away, x.matchId), mk: mid(x.home, x.away, x.matchId), mks: mids(x.home, x.away),
         k: x.kickoff ? Date.parse(String(x.kickoff).replace('Z', '+00:00')) : NaN,
         exotic: ex, src: 'bf', odd: x.odd, pp: pp, moneyIn: moneyIn, tr: trS,
@@ -2613,7 +2649,7 @@
       if (x.dir === 'out') return;                             // 16.08.2026 (Lucas): driftet = kein Back-Rückhalt → nicht als Geld-Top-Wette (bleibt im Frisches-Geld-Radar, dort als „driftet" markiert)
       var ex = exoticLg(x.league, false);
       var trF = _mdBfTrack(x.league, x.market);
-      if (trF && trF.verliert) return;   // s.o. — verlierender Eimer gehört nicht in die Empfehlung
+      if (trF && trF.fade) { _jzGefiltert.push({ m: team(x.home) + vsp + team(x.away), lg: x.league, tr: trF }); return; }
       // 29.08.2026 (Lucas-Checkup): hier stand `k: now`, weil der Zufluss-Feed keinen Anpfiff
       // mitlieferte. Folge: JEDE Betfair-Geld-Zeile zeigte „⏱ 0m" — Liverpool–Forest stand als
       // „Anpfiff jetzt" in der Liste, waehrend der Poly-Block daneben korrekt „in 2h" sagte.
@@ -2760,8 +2796,18 @@
                          mm: 'Money-Map', card: 'Cards' };
     return '<div id="mdJetztBox">' + _mdEbene(3, 'Was ist gerade das Stärkste?', 'Rangliste', null,
       'Disjunktion: das stärkste Einzelsignal über alle Flächen. EINE Quelle genügt — deshalb steht hier auch an einem schwachen Tag etwas.',
-      'bestes Einzelsignal je Fläche — eine Quelle genügt, kein UND · <b>nicht</b> geprüft, nur sortiert',
-      null, '<div class="md-jz-paar">' + body + '</div>',
+      'bestes Einzelsignal je Fläche — eine Quelle genügt, kein UND · <b>nicht</b> geprüft, nur sortiert'
+        + (_jzGefiltert.length ? ' · ' + _jzGefiltert.length + ' Zeile'
+            + (_jzGefiltert.length === 1 ? '' : 'n') + ' ausgefiltert' : ''),
+      null, '<div class="md-jz-paar">' + body + '</div>'
+        + (_jzGefiltert.length ? '<div class="md-kl-foot" title="'
+            + esc(_jzGefiltert.map(function (f) {
+                return f.m + ' (' + f.lg + ', UG ' + Math.round((f.tr.roiUg || 0) * 100) + '% · n' + f.tr.n + ')';
+              }).join(' · '))
+            + '">Nicht gelistet: ' + _jzGefiltert.length + ' Betfair-Zeile'
+            + (_jzGefiltert.length === 1 ? '' : 'n') + ', deren Liga×Markt-Eimer eine tiefe '
+            + 'Unterseite hat (Rendite-Untergrenze ≤ −10 %). Das ist eine <b>Risiko-Marke, kein '
+            + 'Verlustbeleg</b> — die Zeilen stehen weiter im Betfair-Radar.</div>' : ''),
       _mdRegal(items, function (o) { return _quelleLabel[o.src] || o.src; })) + '</div>';
   }
   // ── Die Klammer: „Was kann ich spielen?" ──────────────────────────────────────────────
