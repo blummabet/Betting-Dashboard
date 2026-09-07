@@ -68,11 +68,12 @@
       "label": "Settlement lebt (keine ewig offenen Positionen)",
       "severity": "error",
       "ok": false,
-      "nFail": 3,
+      "nFail": 4,
       "failures": [
         "atp-virtane-dimitro-2026-08-27: seit 11.8 Tagen offen — keine Auflösung gefunden",
         "nor-ffk-bog-2026-09-04-more-markets: seit 3.1 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "spl-sha-hil-2026-09-04-more-markets: seit 3.0 Tagen offen — Auflösung existiert, matcht aber den Key nicht!"
+        "spl-sha-hil-2026-09-04-more-markets: seit 3.1 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
+        "fl1-psg-asm-2026-09-04-more-markets: seit 3.0 Tagen offen — Auflösung existiert, matcht aber den Key nicht!"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
     },
@@ -93,7 +94,7 @@
       "nFail": 5,
       "failures": [
         "98/234 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (42%) — Trefferquote allein trügt",
-        "   0x84cfffc3f1… n=172 Treffer 53% P&L $-7,777,202",
+        "   0x84cfffc3f1… n=173 Treffer 54% P&L $-7,780,260",
         "   0xc3c3b3ef30… n=338 Treffer 51% P&L $-3,974,265",
         "   0xa0f21e6d35… n=72 Treffer 64% P&L $-2,635,720",
         "   0xabb89972b2… n=27 Treffer 67% P&L $-2,563,982"
@@ -138,5 +139,5 @@
     }
   ],
   "nFail": 2,
-  "generatedAt": "2026-09-07T18:07:03.465551+00:00"
+  "generatedAt": "2026-09-07T19:07:18.152703+00:00"
 }
