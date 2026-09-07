@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-07T12:26:04.744445+00:00",
+ "generatedAt": "2026-09-07T12:41:04.258449+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -83,7 +83,7 @@
     "nieAnteil": 0.46,
     "schaetzbar": false
    },
-   "alterTage": 0.6,
+   "alterTage": 0.7,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "top5"
@@ -218,7 +218,7 @@
     "nieAnteil": 0.46,
     "schaetzbar": false
    },
-   "alterTage": 0.6,
+   "alterTage": 0.7,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "top5"
@@ -309,21 +309,21 @@
   {
    "schublade": "Liga · ABWÄGEN",
    "strom": "cards",
-   "n": 84,
+   "n": 87,
    "status": "geprueft",
    "grund": "CLV negativ belegt — der ROI kam aus der Varianz, nicht aus einer Kante",
-   "roi": 0.1537,
-   "roiLb": 0.0024,
-   "clv": -1.515,
-   "clvLb": -2.026,
+   "roi": 0.1524,
+   "roiLb": 0.0038,
+   "clv": -1.558,
+   "clvLb": -2.058,
    "fehltN": 0,
-   "noetigNRoi": 82,
+   "noetigNRoi": 83,
    "noetigNClv": null,
    "entfernung": {
-    "median": 73,
-    "lo": 20,
-    "hi": 1233,
-    "nieAnteil": 0.057,
+    "median": 81,
+    "lo": 19,
+    "hi": 2341,
+    "nieAnteil": 0.048,
     "schaetzbar": false
    },
    "alterTage": 1.0,
@@ -650,6 +650,30 @@
    "datensatz": "MLS"
   },
   {
+   "schublade": "ABWÄGEN · aussortiert",
+   "strom": "cards",
+   "n": 47,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0294,
+   "roiLb": -0.1632,
+   "clv": null,
+   "clvLb": null,
+   "fehltN": 0,
+   "noetigNRoi": 2022,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 170,
+    "lo": 27,
+    "hi": 11896,
+    "nieAnteil": 0.397,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "push_filter",
+   "quelle": "pick_push_ledger.py"
+  },
+  {
    "schublade": "English Sky Bet Championship · Over/Under 3.5 Goals",
    "strom": "betfair",
    "n": 32,
@@ -666,30 +690,6 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
-  },
-  {
-   "schublade": "ABWÄGEN · aussortiert",
-   "strom": "cards",
-   "n": 44,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0234,
-   "roiLb": -0.175,
-   "clv": null,
-   "clvLb": null,
-   "fehltN": 0,
-   "noetigNRoi": 3161,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 215,
-    "lo": 21,
-    "hi": 26119,
-    "nieAnteil": 0.438,
-    "schaetzbar": false
-   },
-   "alterTage": 0.7,
-   "art": "push_filter",
-   "quelle": "pick_push_ledger.py"
   },
   {
    "schublade": "English National League · Match Odds",
@@ -1682,7 +1682,7 @@
    "noetigNRoi": null,
    "noetigNClv": null,
    "entfernung": null,
-   "alterTage": 4.5,
+   "alterTage": 4.6,
    "art": "mix",
    "wert": "bf+money+steam",
    "nAlt": 5,
