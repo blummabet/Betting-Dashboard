@@ -3241,8 +3241,37 @@ function _pwTermWalletOk(r){
 function _pwTermPublicRest(r){
   return !!(r && r.conv>=PW_PUBLIC_MIN_CONV && r.moneyPct>=0.60);
 }
+// 07.09.2026 (Lucas: „was meinst du bei E-Sport? was wuerdest du da aendern?").
+//
+// Gemessen an 621 abgerechneten Plays, getrennt nach dem, was das Tor DURCHLAESST und was es
+// ABWEIST — und zwar nur bei E-Sport:
+//
+//     E-Sport, das durchkommt      n= 69   Treffer 78,3 %   Break-even 73,2 %   Vorsprung +5,1 pp
+//     E-Sport, das ABGEWIESEN wird n=100   Treffer 71,0 %   Break-even 66,0 %   Vorsprung +5,0 pp
+//
+// Zwei Gruppen, die sich nicht ueberschneiden, exakt derselbe Vorsprung. Die Wallet-Bedingung
+// trennt bei E-Sport also NICHTS — sie kostet nur Volumen. (Das passt zum Befund vom 06.09.:
+// ueber 736 Wallets sagt die bisherige Bilanz einer Wallet nichts ueber ihre naechste,
+// r = -0,005.) Deshalb entfaellt sie fuer E-Sport.
+//
+// Was die Preisschwelle dort soll: Aussenseiter unter 55 Cent treffen 40,5 % gegen 46,9 %
+// Break-even — Gift in jeder Kategorie. ⚠️ Diese Schwelle ist ANGEPASST, nicht gefunden: ich
+// habe sie gesetzt, nachdem ich die Zahl gesehen habe. Der E-Sport-Vorsprung repliziert in zwei
+// unabhaengigen Gruppen, die 0,55 nicht. Deshalb laeuft die Regel als vorregistrierte Schublade
+// vorwaerts mit (vorregistrierung.py -> esport_ohne_wallet), und erst DIESE Zahl zaehlt.
+//
+// Rueckgerechnet haette die Regel 89 Plays mehr gebracht: 75,3 % Treffer, +113,01 EUR,
+// ROI +12,7 %, Untergrenze +1,0 % — die erste Menge im System, die ihre eigene Schranke nimmt.
+const PW_ESPORT_FREI_AB_PREIS = 0.55;
+
+function _pwEsportOhneWalletOk(r){
+  if(!r || _pwSportCategory(r.league, r.sport) !== 'E-Sport') return false;
+  const p = +r.price;
+  return isFinite(p) && p >= PW_ESPORT_FREI_AB_PREIS;
+}
 function _pwTermIsPublic(r){
-  return _pwTermPublicRest(r) && _pwTermWalletOk(r);
+  if(!_pwTermPublicRest(r)) return false;
+  return _pwTermWalletOk(r) || _pwEsportOhneWalletOk(r);
 }
 // 06.09.2026 (Lucas: „ich weiss nicht, ob wir da optimale Logik gebaut haben").
 //

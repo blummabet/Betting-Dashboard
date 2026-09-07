@@ -74,6 +74,30 @@ ZUSCHNITTE = {
         "pruef": lambda x: (x.get("moeglich") == 10 and isinstance(x.get("punkte"), int)
                             and x["punkte"] >= 7),
     },
+    "esport_ohne_wallet": {
+        "name": "E-Sport ohne Wallet-Nachweis",
+        "strom": "poly",
+        "quelle": "poly_shortlist_track.json → settled",
+        "zielN": 120,
+        "signatur": ("cat==E-Sport und entryPrice>=0.55 | quelle=poly_shortlist_track.settled | "
+                     "rendite=pnl/stake | clv=clvPP"),
+        "warum": ("Lucas: „was meinst du bei E-Sport? was wuerdest du da aendern?\" Gemessen an 621 "
+                  "abgerechneten Plays, getrennt nach dem, was das Public-Tor DURCHLAESST und was es "
+                  "ABWEIST — beides nur innerhalb E-Sport: durchgelassen n=69, Treffer 78,3 % gegen "
+                  "73,2 % Break-even (+5,1 pp); abgewiesen n=100, Treffer 71,0 % gegen 66,0 % "
+                  "(+5,0 pp). Zwei disjunkte Gruppen, derselbe Vorsprung — die Wallet-Bedingung "
+                  "trennt dort nichts. Rueckgerechnet haette die Lockerung 89 Plays mehr gebracht: "
+                  "75,3 % Treffer, +113,01 EUR, ROI +12,7 %, Untergrenze +1,0 %. "
+                  "⚠️ Der E-Sport-Vorsprung repliziert in zwei unabhaengigen Gruppen — die "
+                  "PREISSCHWELLE 0,55 nicht: die habe ich gesetzt, nachdem ich gesehen habe, dass "
+                  "Aussenseiter darunter 40,5 % gegen 46,9 % treffen. Genau deshalb steht der "
+                  "Zuschnitt hier und nicht als Erfolgsmeldung. Der CLV ist mit -0,65 pp leicht "
+                  "negativ; bei diesem Vorsprung ueber 158 Plays ist das eine Merkwuerdigkeit, "
+                  "kein Veto — aber es gehoert dazugesagt."),
+        "pruef": lambda x: (x.get("cat") == "E-Sport"
+                            and isinstance(x.get("entryPrice"), (int, float))
+                            and x["entryPrice"] >= 0.55),
+    },
     "fade_unter": {
         "name": "Fade-Unter · Ganzspiel-Torlinie",
         "strom": "betfair",

@@ -316,7 +316,15 @@ def soft_consensus(bks: list, home_name: str, away_name: str):
     # Der Median bleibt (er ist der ehrliche „was verlangt der Markt"-Wert und faehrt alle
     # bestehenden Vergleiche weiter); daneben steht ab jetzt das Maximum und WELCHES Buch es
     # bietet — ohne den Buchnamen ist ein Bestpreis nicht nachspielbar.
-    beste = {}          # feld -> (quote, buch)
+    # 07.09.2026 (Lucas: „mit den Quoten dann quasi von Softbookies oder wie?"). Der Bestpreis
+    # darf NUR aus Buechern kommen, bei denen man auch ein Konto haben kann — sonst zeigt das
+    # Board korrekt gerechnete Funde, die beim Anklicken verpuffen. Der Feed liefert
+    # `regions=eu,uk,us` mit bis zu 46 Buechern; das Maximum darueber landet systematisch bei
+    # US-Buchmachern. Der MEDIAN bleibt bewusst ueber ALLE Buecher (er ist die Marktbeschreibung,
+    # nicht der Preis, den man nimmt) — nur das Maximum wird gefiltert. Liste: buecher.py.
+    from buecher import spielbar as _spielbar
+    beste = {}          # feld -> (quote, buch) — nur aus spielbaren Buechern
+    spielbar_n = {}     # feld -> wie viele SPIELBARE Buecher den Ausgang quotiert haben
     books_1x2, n_ou, n_btts = [], 0, 0
     for b in _soft_bookmakers(bks):
         key = (b.get("key") or "").lower()
@@ -326,9 +334,11 @@ def soft_consensus(bks: list, home_name: str, away_name: str):
             if hw and dr and aw:
                 acc["hw"].append(hw); acc["dr"].append(dr); acc["aw"].append(aw)
                 books_1x2.append(key)
-                for _f, _v in (("hw", hw), ("dr", dr), ("aw", aw)):
-                    if _v > (beste.get(_f) or (0, None))[0]:
-                        beste[_f] = (_v, key)
+                if _spielbar(key):
+                    for _f, _v in (("hw", hw), ("dr", dr), ("aw", aw)):
+                        spielbar_n[_f] = spielbar_n.get(_f, 0) + 1
+                        if _v > (beste.get(_f) or (0, None))[0]:
+                            beste[_f] = (_v, key)
         tot = (_market_outcomes(b, "totals") or []) + (_market_outcomes(b, "alternate_totals") or [])
         if tot:
             ou = _extract_ou(tot)
@@ -337,8 +347,10 @@ def soft_consensus(bks: list, home_name: str, away_name: str):
                 for kk, vv in ou.items():
                     if vv:
                         acc[kk].append(vv)
-                        if float(vv) > (beste.get(kk) or (0, None))[0]:
-                            beste[kk] = (float(vv), key)
+                        if _spielbar(key):
+                            spielbar_n[kk] = spielbar_n.get(kk, 0) + 1
+                            if float(vv) > (beste.get(kk) or (0, None))[0]:
+                                beste[kk] = (float(vv), key)
         bt_outs = _market_outcomes(b, "btts")
         if bt_outs:
             bt = _extract_btts(bt_outs)
@@ -347,8 +359,10 @@ def soft_consensus(bks: list, home_name: str, away_name: str):
                 for kk, vv in bt.items():
                     if vv:
                         acc[kk].append(vv)
-                        if float(vv) > (beste.get(kk) or (0, None))[0]:
-                            beste[kk] = (float(vv), key)
+                        if _spielbar(key):
+                            spielbar_n[kk] = spielbar_n.get(kk, 0) + 1
+                            if float(vv) > (beste.get(kk) or (0, None))[0]:
+                                beste[kk] = (float(vv), key)
     pub = {}
     for k, vals in acc.items():
         m = _median_odd(vals)
@@ -358,10 +372,12 @@ def soft_consensus(bks: list, home_name: str, away_name: str):
         # einzigen Buch ist „das Maximum" keine Auswahl, sondern derselbe Preis mit besserem
         # Namen — und genau so entstuende Scheinvalue aus einem Ausreisser-Buch.
         b = beste.get(k)
-        if b and len(vals) >= 2:
+        if b and spielbar_n.get(k, 0) >= 2:
             pub[f"best_{k}"] = round(b[0], 3)
             pub[f"bestBook_{k}"] = b[1]
-            pub[f"nBooks_{k}"] = len(vals)
+            # Anzahl SPIELBARER Buecher — nicht aller. Die Gesamtzahl hier zu schreiben waere
+            # eine Auswahl zu behaupten, die es nicht gab.
+            pub[f"nBooks_{k}"] = spielbar_n.get(k, 0)
     return pub, books_1x2, n_ou, n_btts
 
 

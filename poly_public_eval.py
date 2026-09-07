@@ -39,6 +39,19 @@ OUT_FILE    = BASE / "poly_public_record.json"
 
 STAKE = 10.0            # Einheits-Einsatz je Push (wie im Papier-Depot) — macht ROI vergleichbar
 PENDING_TTL_D = 10      # nie aufgelöst nach 10 Tagen → unaufloesbar (poly_resolutions hält Wochen)
+# Ab wann poly_resolutions.json ueberhaupt sammelt. Davor gesendete Pushes koennen nicht
+# abgerechnet werden — s. report(). Aus den Daten abgelesen: der aelteste `ts` in der Datei.
+AUFLOESUNG_START = "2026-08-24"
+
+
+def _zaehl_cat(rows) -> dict:
+    """Wie viele Pushes je Kategorie GESENDET wurden — unabhaengig davon, ob sie je ein Ergebnis
+    bekommen haben. Genau diese Zahl fehlte, und deshalb sah der Kanal aus wie reiner E-Sport."""
+    out = {}
+    for e in rows:
+        k = str(e.get("cat") or "?")
+        out[k] = out.get(k, 0) + 1
+    return dict(sorted(out.items(), key=lambda x: -x[1]))
 SIG_Z = 1.645           # einseitige 95%-Untergrenze — ein Punktschätzer ist kein Beleg
 
 
@@ -271,6 +284,22 @@ def report(ledger, now=None) -> dict:
         # Getrennt sichtbar: von Hand nachgeprueft, nicht maschinell abgerechnet.
         "korrigiert": sum(1 for e in vor if e.get("korrigiert")),
         "zurueckgenommen": sum(1 for e in vor if e.get("zurueckgenommen")),
+        # 07.09.2026 (Lucas: „im public channel fehlen pushes, laut tracking ist es nur E-Sport").
+        #
+        # Er hat richtig beobachtet, aber ich habe die Ursache zweimal falsch geraten, bevor ich
+        # sie nachgesehen habe. Nicht die Aufloesung ist schuld: alle 23 unaufloesbaren Zeilen
+        # tragen `quelle: retro`, sind also nachtraeglich rekonstruiert und werden hier ohnehin
+        # ausgeschlossen. Von den 8 WIRKLICH gesendeten Pushes sind 0 unaufloesbar.
+        #
+        # Der wahre Grund ist banal und stand nirgends: das Vorwaerts-Buch hat 8 Zeilen, davon
+        # 6 E-Sport und 2 Fussball. Fussball fehlt nicht — das ganze Buch ist winzig, und bei 6:2
+        # sieht es aus wie ein E-Sport-Kanal.
+        #
+        # `gesendetNachCat` zaehlt deshalb, was RAUSGEGANGEN ist, unabhaengig davon, ob es je ein
+        # Ergebnis bekam. Die Bilanz daneben zaehlt nur Abgerechnetes. Wer beide sieht, kann den
+        # Unterschied zwischen „wird nicht gepusht" und „ist noch nicht abgerechnet" erkennen —
+        # genau die Frage, die Lucas gestellt hat.
+        "gesendetNachCat": _zaehl_cat(vor),
         "agg": bilanz(settled),
         "byCat": bilanz_nach(settled, "cat"),
         "byRestock": bilanz_nach(settled, "restock"),

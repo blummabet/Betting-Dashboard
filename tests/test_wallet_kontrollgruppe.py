@@ -80,10 +80,25 @@ class TestEmitterVertrag(unittest.TestCase):
         for fn in ("_pwTermWalletOk", "_pwTermPublicRest", "_pwTermIsPublicOhneWallet"):
             self.assertIn(fn, js, f"{fn} fehlt — dann ist das Tor wieder ein Block")
 
-    def test_public_bleibt_die_konjunktion_seiner_teile(self):
-        """Das echte Public-Gate darf sich durch die Zerlegung NICHT geändert haben."""
+    def test_public_bleibt_aus_seinen_benannten_teilen_gebaut(self):
+        """Die Zerlegung selbst darf nicht verloren gehen — sonst ist das Tor wieder ein Block
+        und die Kontrollgruppe misst nichts mehr.
+
+        07.09.2026: hier stand die Konjunktion als WORTLAUT
+        (`_pwTermPublicRest(r) && _pwTermWalletOk(r)`). Am 07.09. wurde die Wallet-Bedingung für
+        E-Sport gelockert (gemessen: durchgelassenes E-Sport +5,1 pp gegen Break-even,
+        ABGEWIESENES +5,0 pp — sie trennt dort nichts), und der Test schlug an, obwohl genau das
+        beabsichtigt war. Wieder ein Test, der eine Formulierung festhielt statt einer Regel.
+
+        Die Regel, die bleiben muss: `_pwTermPublicRest` ist Pflicht für JEDEN Play, die
+        Wallet-Bedingung ist der Normalweg, und jede Ausnahme davon ist benannt und begrenzt."""
         js = self._quelle("poly-wallets.js")
-        self.assertIn("return _pwTermPublicRest(r) && _pwTermWalletOk(r);", js)
+        self.assertIn("if(!_pwTermPublicRest(r)) return false;", js,
+                      "der Rest des Tors muss unbedingt gelten")
+        self.assertIn("return _pwTermWalletOk(r) || _pwEsportOhneWalletOk(r);", js,
+                      "die Wallet-Bedingung bleibt der Normalweg, die Ausnahme ist benannt")
+        self.assertIn("PW_ESPORT_FREI_AB_PREIS", js,
+                      "die Ausnahme braucht eine benannte Schwelle, keinen Zahlenliteral")
 
     def test_der_emitter_reicht_die_gruppe_durch(self):
         mjs = self._quelle("scripts/emit_shortlist.mjs")

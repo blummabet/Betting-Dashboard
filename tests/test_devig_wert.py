@@ -161,10 +161,10 @@ class TestBestpreisErfassung(unittest.TestCase):
         import fetch_liga_odds as F
         pub, books, _, _ = F.soft_consensus(
             [self._bk("bet365", 2.05, 3.50, 3.80),
-             self._bk("unibet", 2.15, 3.30, 3.95),
+             self._bk("unibet_eu", 2.15, 3.30, 3.95),
              self._bk("williamhill", 2.02, 3.60, 4.10)], "Heim", "Gast")
         self.assertEqual(pub["best_hw"], 2.15)
-        self.assertEqual(pub["bestBook_hw"], "unibet")
+        self.assertEqual(pub["bestBook_hw"], "unibet_eu")
         self.assertEqual(pub["best_aw"], 4.10)
         self.assertEqual(pub["bestBook_aw"], "williamhill")
         self.assertEqual(pub["nBooks_hw"], 3)
@@ -174,21 +174,21 @@ class TestBestpreisErfassung(unittest.TestCase):
         er ersetzt nichts."""
         import fetch_liga_odds as F
         pub, _, _, _ = F.soft_consensus(
-            [self._bk("a", 2.05, 3.50, 3.80), self._bk("b", 2.15, 3.30, 3.95),
-             self._bk("c", 2.02, 3.60, 4.10)], "Heim", "Gast")
+            [self._bk("bet365", 2.05, 3.50, 3.80), self._bk("unibet_eu", 2.15, 3.30, 3.95),
+             self._bk("bwin", 2.02, 3.60, 4.10)], "Heim", "Gast")
         self.assertEqual(pub["public_hw"], 2.05)
 
     def test_das_sharp_buch_faellt_nicht_in_den_soft_konsens(self):
         import fetch_liga_odds as F
         pub, books, _, _ = F.soft_consensus(
-            [self._bk("pinnacle", 9.99, 9.99, 9.99), self._bk("a", 2.05, 3.50, 3.80),
-             self._bk("b", 2.15, 3.30, 3.95)], "Heim", "Gast")
+            [self._bk("pinnacle", 9.99, 9.99, 9.99), self._bk("bet365", 2.05, 3.50, 3.80),
+             self._bk("unibet_eu", 2.15, 3.30, 3.95)], "Heim", "Gast")
         self.assertNotIn("pinnacle", books)
         self.assertEqual(pub["best_hw"], 2.15, "Pinnacle darf den Bestpreis nicht stellen")
 
     def test_ein_einziges_buch_liefert_keinen_bestpreis(self):
         import fetch_liga_odds as F
-        pub, _, _, _ = F.soft_consensus([self._bk("a", 2.05, 3.50, 3.80)], "Heim", "Gast")
+        pub, _, _, _ = F.soft_consensus([self._bk("bet365", 2.05, 3.50, 3.80)], "Heim", "Gast")
         self.assertNotIn("best_hw", pub)
         self.assertIn("public_hw", pub)
 
@@ -225,3 +225,75 @@ class TestBestpreisErfassung(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestNurSpielbareBuecher(unittest.TestCase):
+    """07.09.2026, Lucas: „mit den Quoten dann quasi von Softbookies oder wie?"
+
+    Die Frage hat einen Fehler in meinem eigenen Bau aufgedeckt, bevor etwas live war. Der Feed
+    holt `regions=eu,uk,us` — im Bestand stehen Konsense aus bis zu 46 Büchern. Das Maximum über
+    ALLE wäre systematisch bei US-Buchmachern gelandet (DraftKings, FanDuel …), bei denen man
+    aus Österreich kein Konto eröffnen kann.
+
+    Das Board hätte dann korrekt gerechnete Value-Funde gezeigt, auf die man nicht handeln kann.
+    Eine richtige Zahl, die nichts nützt, ist in diesem System der teurere Fehler.
+    """
+
+    def _bk(self, key, hw, dr, aw):
+        return {"key": key, "markets": [{"key": "h2h", "outcomes": [
+            {"name": "Heim", "price": hw}, {"name": "Draw", "price": dr},
+            {"name": "Gast", "price": aw}]}]}
+
+    def test_ein_us_buch_stellt_nie_den_bestpreis(self):
+        import fetch_liga_odds as F
+        pub, _, _, _ = F.soft_consensus(
+            [self._bk("bet365", 2.05, 3.50, 3.80),
+             self._bk("unibet_eu", 2.15, 3.30, 3.95),
+             self._bk("draftkings", 2.60, 3.90, 4.60)], "Heim", "Gast")
+        self.assertEqual(pub["bestBook_hw"], "unibet_eu")
+        self.assertEqual(pub["best_hw"], 2.15)
+
+    def test_der_median_bleibt_ueber_ALLE_buecher(self):
+        """Er beschreibt den Markt, er ist nicht der Preis, den man nimmt. Ihn mitzufiltern
+        wuerde die Marktbeschreibung verzerren."""
+        import fetch_liga_odds as F
+        pub, books, _, _ = F.soft_consensus(
+            [self._bk("bet365", 2.05, 3.50, 3.80),
+             self._bk("unibet_eu", 2.15, 3.30, 3.95),
+             self._bk("draftkings", 2.60, 3.90, 4.60),
+             self._bk("fanduel", 2.55, 3.85, 4.50)], "Heim", "Gast")
+        self.assertIn("draftkings", books)
+        self.assertEqual(pub["public_hw"], 2.35)
+
+    def test_nBooks_zaehlt_nur_die_spielbaren(self):
+        """Sonst behauptet die Zahl eine Auswahl, die es nicht gab — und die Mindestzahl im
+        Scanner waere wirkungslos."""
+        import fetch_liga_odds as F
+        pub, _, _, _ = F.soft_consensus(
+            [self._bk("bet365", 2.05, 3.50, 3.80),
+             self._bk("unibet_eu", 2.15, 3.30, 3.95),
+             self._bk("draftkings", 2.60, 3.90, 4.60),
+             self._bk("fanduel", 2.55, 3.85, 4.50)], "Heim", "Gast")
+        self.assertEqual(pub["nBooks_hw"], 2)
+
+    def test_nur_ein_spielbares_buch_liefert_keinen_bestpreis(self):
+        import fetch_liga_odds as F
+        pub, _, _, _ = F.soft_consensus(
+            [self._bk("bet365", 2.05, 3.50, 3.80),
+             self._bk("draftkings", 2.60, 3.90, 4.60),
+             self._bk("fanduel", 2.55, 3.85, 4.50)], "Heim", "Gast")
+        self.assertNotIn("best_hw", pub, "aus EINEM Buch ist das Maximum keine Auswahl")
+
+    def test_die_liste_kennt_die_gaengigen_faelle(self):
+        import buecher as B
+        for ja in ("bet365", "unibet_eu", "bwin", "interwetten", "betano", "BET365", " bwin "):
+            self.assertTrue(B.spielbar(ja), ja)
+        for nein in ("draftkings", "fanduel", "betmgm", "caesars", "bovada", "", None):
+            self.assertFalse(B.spielbar(nein), repr(nein))
+
+    def test_pinnacle_steht_nicht_in_der_spielbar_liste(self):
+        """Pinnacle ist der MASSSTAB, nicht der Ort, an dem gespielt wird. Stuende es drin,
+        wuerde der Scanner Pinnacle gegen sich selbst halten — Edge per Konstruktion null,
+        aber die Zeile saehe aus wie ein Fund."""
+        import buecher as B
+        self.assertFalse(B.spielbar("pinnacle"))

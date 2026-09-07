@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-07T07:25:23.692429+00:00",
+ "generatedAt": "2026-09-07T08:15:48.444033+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -83,7 +83,7 @@
     "nieAnteil": 0.46,
     "schaetzbar": false
    },
-   "alterTage": 0.4,
+   "alterTage": 0.5,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "top5"
@@ -218,7 +218,7 @@
     "nieAnteil": 0.46,
     "schaetzbar": false
    },
-   "alterTage": 0.4,
+   "alterTage": 0.5,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "top5"
@@ -299,7 +299,7 @@
     "nieAnteil": 0.052,
     "schaetzbar": false
    },
-   "alterTage": 0.6,
+   "alterTage": 0.7,
    "art": "gate",
    "nAlt": 138,
    "roiAlt": 0.0262,
@@ -1575,7 +1575,7 @@
    "noetigNRoi": null,
    "noetigNClv": null,
    "entfernung": null,
-   "alterTage": 1.3,
+   "alterTage": 1.4,
    "art": "conviction",
    "wert": 8,
    "nAlt": 13,
@@ -1653,7 +1653,7 @@
    "noetigNRoi": null,
    "noetigNClv": null,
    "entfernung": null,
-   "alterTage": 4.3,
+   "alterTage": 4.4,
    "art": "mix",
    "wert": "bf+money+steam",
    "nAlt": 5,
@@ -1693,7 +1693,7 @@
    "noetigNRoi": null,
    "noetigNClv": null,
    "entfernung": null,
-   "alterTage": 1.3,
+   "alterTage": 1.4,
    "art": "mix",
    "wert": "bf+money+sharp+steam"
   },
@@ -1874,6 +1874,35 @@
    "engineAlt": true
   },
   {
+   "schublade": "🔒 E-Sport ohne Wallet-Nachweis",
+   "strom": "poly",
+   "n": 0,
+   "status": "sammelt",
+   "grund": "0 von 120 Plays SEIT der Anmeldung (2026-09-07) — vorher abgerechnete zählen nicht",
+   "roi": null,
+   "roiLb": null,
+   "clv": null,
+   "clvLb": null,
+   "fehltN": 120,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "entfernung": null,
+   "alterTage": null,
+   "art": "vorangemeldet",
+   "angemeldet": "2026-09-07T08:15:48.444033+00:00",
+   "zielN": 120,
+   "warum": "Lucas: „was meinst du bei E-Sport? was wuerdest du da aendern?\" Gemessen an 621 abgerechneten Plays, getrennt nach dem, was das Public-Tor DURCHLAESST und was es ABWEIST — beides nur innerhalb E-Sport: durchgelassen n=69, Treffer 78,3 % gegen 73,2 % Break-even (+5,1 pp); abgewiesen n=100, Treffer 71,0 % gegen 66,0 % (+5,0 pp). Zwei disjunkte Gruppen, derselbe Vorsprung — die Wallet-Bedingung trennt dort nichts. Rueckgerechnet haette die Lockerung 89 Plays mehr gebracht: 75,3 % Treffer, +113,01 EUR, ROI +12,7 %, Untergrenze +1,0 %. ⚠️ Der E-Sport-Vorsprung repliziert in zwei unabhaengigen Gruppen — die PREISSCHWELLE 0,55 nicht: die habe ich gesetzt, nachdem ich gesehen habe, dass Aussenseiter darunter 40,5 % gegen 46,9 % treffen. Genau deshalb steht der Zuschnitt hier und nicht als Erfolgsmeldung. Der CLV ist mit -0,65 pp leicht negativ; bei diesem Vorsprung ueber 158 Plays ist das eine Merkwuerdigkeit, kein Veto — aber es gehoert dazugesagt.",
+   "quelle": "poly_shortlist_track.json → settled",
+   "nDavor": 158,
+   "rueckblick": {
+    "n": 158,
+    "roi": 0.1055,
+    "roiLb": 0.0226,
+    "clv": -0.693,
+    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
+   }
+  },
+  {
    "schublade": "🔒 Fade-Unter · Ganzspiel-Torlinie",
    "strom": "betfair",
    "n": 0,
@@ -1936,7 +1965,7 @@
   }
  ],
  "zusammenfassung": {
-  "schubladen": 87,
+  "schubladen": 88,
   "freigegeben": 0,
   "kandidaten": 5,
   "ruhend": 2,

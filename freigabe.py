@@ -703,6 +703,7 @@ def vorregistrierte_schubladen(track=None, reg=None, now=None, schreiben=True) -
     # Je Zuschnitt die eigene Quelle. Der Poly-Zuschnitt rechnet auf dem Shortlist-Depot, der
     # Buecher-Score auf punkte_ledger.json — zwei verschiedene Buecher, ein Register.
     _quellen = {"poly_bf_bestaetigt": st,
+                "esport_ohne_wallet": st,
                 "buecher_score_hoch": [x for x in (_load("punkte_ledger.json") or [])
                                        if isinstance(x, dict)],
                 # 06.09.2026: der Fade misst NICHT die Zeile, wie sie im Ledger steht — er misst

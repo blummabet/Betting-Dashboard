@@ -236,13 +236,21 @@ function ladePublicGate() {
   // schnitt vorher nur `_pwTermIsPublic` heraus und fand die Helfer nicht mehr. Er nimmt jetzt
   // den ganzen Block — die Prüfung selbst bleibt unverändert: das öffentliche Gate darf sich
   // durch die Zerlegung nicht gelockert haben.
+  // 07.09.2026: dritte Runde derselben Bruchstelle. Der Extraktor schneidet einen BLOCK aus
+  // der Datei — jede neue Abhängigkeit dieses Blocks muss er mitnehmen. Für E-Sport wurde die
+  // Wallet-Bedingung gelockert (gemessen: durchgelassenes E-Sport +5,1 pp gegen Break-even,
+  // abgewiesenes +5,0 pp), und die Ausnahme ruft `_pwSportCategory` — die lag außerhalb des
+  // Schnitts. Der Test brach, obwohl das Gate tat, was es soll.
+  const catVon = src.indexOf('function _pwSportCategory');
+  const catBis = src.indexOf('\n}', catVon) + 2;
+  assert.ok(catVon > 0, '_pwSportCategory nicht gefunden — das Gate braucht sie');
   const fnVon = src.indexOf('function _pwTermWalletOk');
   const ende = src.indexOf('function _pwTermIsPublicOhneWallet');
   const fnBis = ende > fnVon ? ende : (src.indexOf('\n}', src.indexOf('function _pwTermIsPublic')) + 2);
   assert.ok(von > 0 && fnVon > 0, 'Public-Gate in poly-wallets.js nicht gefunden');
   const g = {};
   // eslint-disable-next-line no-new-func
-  new Function('exp', src.slice(von, bisZeile) + '\n' + src.slice(fnVon, fnBis)
+  new Function('exp', src.slice(von, bisZeile) + '\n' + src.slice(catVon, catBis) + '\n' + src.slice(fnVon, fnBis)
     + '\nexp.isPublic=_pwTermIsPublic; exp.minConv=PW_PUBLIC_MIN_CONV;'
     + '\nexp.walletOk=_pwTermWalletOk; exp.rest=_pwTermPublicRest;')(g);
   return g;
@@ -287,9 +295,17 @@ test('Public-Gate ist EINE Quelle — nicht zweimal ausgeschrieben', () => {
 // Von 172 abgerechneten Public-Kandidaten waren 172 sharp — ohne Vergleichsgruppe ist nicht
 // messbar, ob das Wallet-Tor etwas beiträgt. Die Zerlegung schafft die Gruppe; sie darf aber
 // das öffentliche Gate nicht anfassen.
-test('Public bleibt exakt die Konjunktion aus Rest und Wallet', () => {
+test('Public bleibt der Rest UND Wallet — mit genau einer benannten Ausnahme', () => {
+  // 07.09.2026: hieß „exakt die Konjunktion". Seit dem 07.09. gibt es eine Ausnahme für
+  // E-Sport ab 55 Cent (gemessen: das Tor lässt E-Sport mit +5,1 pp durch und weist E-Sport
+  // mit +5,0 pp ab — die Wallet-Bedingung trennt dort nichts). Der Test hält jetzt fest, dass
+  // die Ausnahme WIRKLICH nur dort greift; für alles andere gilt die Konjunktion unverändert.
   const ok = play();
   assert.equal(PG.isPublic(ok), PG.rest(ok) && PG.walletOk(ok));
+  for (const liga of ['EPL', 'ATP Wien', 'MLB', 'Bundesliga']) {
+    const r = play({ league: liga, price: 0.62, sharp: { n: 20, hit: 0.6, grade: 0.6 } });
+    assert.equal(PG.isPublic(r), false, liga + ' darf ohne Wallet-Nachweis nicht durch');
+  }
   const ohneWallet = play({ sharp: { n: 20, hit: 0.6, grade: 0.6 } });
   assert.equal(PG.isPublic(ohneWallet), false, 'unbewiesene Wallet darf nicht öffentlich werden');
   assert.equal(PG.rest(ohneWallet), true, 'Conviction und Mehrheit stimmen ja');
