@@ -1,15 +1,15 @@
 {
- "n": 167,
+ "n": 169,
  "minOdds": 1.35,
- "moneyHitRate": 0.305,
- "priceHitRate": 0.371,
- "brierMoney": 0.9927,
- "brierPrice": 0.7306,
+ "moneyHitRate": 0.314,
+ "priceHitRate": 0.373,
+ "brierMoney": 0.981,
+ "brierPrice": 0.7247,
  "disagree": {
   "n": 49,
   "moneyWon": 2,
-  "priceWon": 13,
-  "neither": 34
+  "priceWon": 12,
+  "neither": 35
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -24,8 +24,8 @@
   }
  ],
  "guete": {
-  "belastbar": 167,
-  "preis_echo": 244,
+  "belastbar": 169,
+  "preis_echo": 240,
   "abgeschnitten": 23,
   "unbekannt": 419,
   "leer": 0
@@ -222,6 +222,18 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 313422
+  },
+  {
+   "key": "bra-cru-cap-2026-09-06",
+   "league": "BRAZIL-SERIE-A",
+   "winner": "Cruzeiro EC",
+   "moneyFav": "Cruzeiro EC",
+   "priceFav": "Cruzeiro EC",
+   "moneyShare": 0.991,
+   "priceProb": 0.558,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 307187
   },
   {
    "key": "bun-s04-bay-2026-09-05-halftime-result",
@@ -498,27 +510,15 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 91002
-  },
-  {
-   "key": "mls-por-min-2026-09-05",
-   "league": "MLS",
-   "winner": "Portland Timbers",
-   "moneyFav": "Minnesota United FC",
-   "priceFav": "Portland Timbers",
-   "moneyShare": 0.617,
-   "priceProb": 0.383,
-   "moneyOK": false,
-   "priceOK": true,
-   "totalUsd": 90736
   }
  ],
- "generatedAt": "2026-09-06T23:33:50.497577+00:00",
+ "generatedAt": "2026-09-07T00:05:25.707442+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 422,
   "nfl": 800,
-  "mlb": 642,
+  "mlb": 638,
   "nhl": 500,
   "mls": 724,
   "epl": 558,
@@ -529,13 +529,13 @@
   "bundesliga": 517,
   "serie-a": 51,
   "ligue-1": 546,
-  "primeira-liga": 545,
-  "brazil-serie-a": 569,
+  "primeira-liga": 544,
+  "brazil-serie-a": 556,
   "brasileirao": 0,
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 629,
+  "esports": 625,
   "cs2": 420,
   "lol": 400,
   "dota": 9,
@@ -545,7 +545,7 @@
   "boxing": 251,
   "golf": 366,
   "f1": 380,
-  "cricket": 643,
+  "cricket": 638,
   "allsvenskan": 1,
   "austria-bundesliga": 270,
   "brazil-serie-b": 4,
@@ -592,7 +592,7 @@
  "sweepStats": {
   "sweepOpen": 500,
   "sweepClosed": 500,
-  "sweepAdded": 405
+  "sweepAdded": 406
  },
  "vorStats": {
   "kandidaten": 0,
@@ -604,64 +604,69 @@
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1686,
-   "usd": 55137255,
+   "n": 1763,
+   "usd": 57353946,
    "beispiel": "fifwc-can-qat-2026-06-18"
+  },
+  "nba": {
+   "n": 453,
+   "usd": 7772058,
+   "beispiel": "nba-dal-lal-2026-02-12"
   },
   "balance": {
    "n": 2,
    "usd": 6000000,
    "beispiel": "balance-of-power-2026-midterms"
   },
-  "nba": {
-   "n": 277,
-   "usd": 4610809,
-   "beispiel": "nba-dal-lal-2026-02-12"
+  "nhl": {
+   "n": 167,
+   "usd": 2879532,
+   "beispiel": "nhl-car-mon-2026-05-27"
   },
   "ecs": {
-   "n": 9,
-   "usd": 1893443,
+   "n": 10,
+   "usd": 1897714,
    "beispiel": "ecs-ars-mci-2026-08-16"
   },
   "cfb": {
-   "n": 140,
-   "usd": 1099484,
-   "beispiel": "cfb-washst-wash-2026-09-06"
+   "n": 171,
+   "usd": 1467040,
+   "beispiel": "cfb-lou-miss-2026-09-06"
+  },
+  "fed": {
+   "n": 24,
+   "usd": 582943,
+   "beispiel": "fed-decision-in-september-762"
   },
   "world": {
    "n": 19,
    "usd": 572921,
    "beispiel": "world-cup-winner"
   },
-  "fed": {
-   "n": 23,
-   "usd": 570026,
-   "beispiel": "fed-decision-in-september-762"
+  "cbb": {
+   "n": 25,
+   "usd": 495501,
+   "beispiel": "cbb-tenn-mich-2026-03-29"
   },
   "usc": {
-   "n": 6,
-   "usd": 343260,
+   "n": 7,
+   "usd": 344975,
    "beispiel": "usc-psg-av-2026-08-12"
   },
   "fif": {
-   "n": 67,
-   "usd": 265586,
-   "beispiel": "fif-den-ukr-2026-06-07"
-  },
-  "nhl": {
-   "n": 17,
-   "usd": 195843,
-   "beispiel": "nhl-car-mon-2026-05-27"
-  },
-  "clf": {
-   "n": 34,
-   "usd": 156466,
-   "beispiel": "clf-mun-lee-2026-08-12"
+   "n": 68,
+   "usd": 284586,
+   "beispiel": "fif-usa-prt-2026-03-31"
   },
   "2026": {
-   "n": 20,
-   "usd": 118172,
+   "n": 25,
+   "usd": 254274,
    "beispiel": "2026-mens-us-open-winner-tennis"
+  },
+  "clf": {
+   "n": 32,
+   "usd": 151051,
+   "beispiel": "clf-mun-lee-2026-08-12"
   },
   "nbasl": {
    "n": 4,
@@ -670,37 +675,32 @@
   },
   "which": {
    "n": 10,
-   "usd": 99846,
-   "beispiel": "which-party-will-win-the-house-in-2026"
+   "usd": 101310,
+   "beispiel": "which-crypto-company-will-zachxbt-expose-for-insider-trading"
+  },
+  "what": {
+   "n": 22,
+   "usd": 92310,
+   "beispiel": "what-price-will-bitcoin-hit-before-2027"
   },
   "ballon": {
    "n": 9,
-   "usd": 80019,
+   "usd": 80046,
    "beispiel": "ballon-dor-winner-2026"
   },
   "brazil": {
    "n": 5,
-   "usd": 75934,
+   "usd": 75781,
    "beispiel": "brazil-presidential-election"
-  },
-  "cbb": {
-   "n": 2,
-   "usd": 73064,
-   "beispiel": "cbb-uconn-mich-2026-04-06"
   },
   "btc": {
    "n": 39,
-   "usd": 69509,
+   "usd": 69013,
    "beispiel": "btc-updown-5m-1784322000"
-  },
-  "what": {
-   "n": 15,
-   "usd": 65121,
-   "beispiel": "what-price-will-bitcoin-hit-before-2027"
   },
   "sachsen": {
    "n": 12,
-   "usd": 60195,
+   "usd": 60237,
    "beispiel": "sachsen-anhalt-parliamentary-elections-afd-of-seats-20260722230807017"
   }
  }
