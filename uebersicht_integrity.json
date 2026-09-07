@@ -73,14 +73,6 @@
       "hinweis": ""
     },
     {
-      "label": "Stake-Spielklasse: Tabelle vollstaendig, Richtungen getrennt",
-      "severity": "error",
-      "failures": [],
-      "nFail": 0,
-      "ok": true,
-      "hinweis": ""
-    },
-    {
       "label": "Poly-Deckung: Money-Scan gegen Liga-Fetcher",
       "severity": "error",
       "failures": [],
@@ -94,20 +86,19 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "136 Picks im Fenster, 23 % ohne Preis-Signal."
+      "hinweis": "139 Picks im Fenster, 22 % ohne Preis-Signal."
     },
     {
       "label": "Stumme Signale: wer hat nie gefeuert?",
       "severity": "warn",
       "failures": [
-        "betfair_coherence: 0 Feuerungen in 156 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
-        "game_state_openness: 0 Feuerungen in 156 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
-        "polymarket_sharp: 0 Feuerungen in 156 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
-        "smart_money: 0 Feuerungen in 156 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)"
+        "betfair_coherence: 0 Feuerungen in 159 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
+        "game_state_openness: 0 Feuerungen in 159 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
+        "polymarket_sharp: 0 Feuerungen in 159 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)"
       ],
-      "nFail": 4,
+      "nFail": 3,
       "ok": false,
-      "hinweis": "10 von 33 Signalen schweigen ueber 156 Picks — davon 6 bewusst abgeschaltet (altitude_signal, incentive_signal, pressure_index, steam_lag, travel_burden, weather_signal), 4 an und trotzdem stumm."
+      "hinweis": "9 von 33 Signalen schweigen ueber 159 Picks — davon 6 bewusst abgeschaltet (altitude_signal, incentive_signal, pressure_index, steam_lag, travel_burden, weather_signal), 3 an und trotzdem stumm."
     },
     {
       "label": "Signal-Bilanz: schadet ein Signal belegt?",
@@ -123,9 +114,9 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "seit Vorregistrierung n=29 (kein Urteil) · Rueckblick n=2726, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=31 (UG -42.1 %) · Rueckblick n=2726, nicht Teil des Urteils."
     }
   ],
   "nFail": 1,
-  "generatedAt": "2026-09-07T11:33:53.406069+00:00"
+  "generatedAt": "2026-09-07T12:29:19.384877+00:00"
 }
