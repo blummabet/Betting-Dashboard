@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "mls",
-    "generatedAt": "2026-09-07T13:31:41.415170+00:00",
+    "generatedAt": "2026-09-07T21:59:44.686911+00:00",
     "minLen": 3,
     "strongLen": 5,
     "sortiert": "zufallPct",
@@ -32,9 +32,9 @@
       "venue": "all",
       "strong": true,
       "continuation": {
-        "state": "neutral",
+        "state": "intakt",
         "ratePct": 57,
-        "label": "Eigen 57% + Gegner 53% → 55%"
+        "label": "Eigen 57% + Gegner 53% → 55% · Signale bestätigen"
       },
       "ratePct": 57,
       "seq": [
@@ -61,7 +61,18 @@
         "oppRatePct": 47
       },
       "oppSupportPct": 53,
-      "matchupPct": 55
+      "matchupPct": 55,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 2,
+        "conviction": 4,
+        "names": [
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength"
+        ],
+        "market": "Beide Teams treffen — Nein"
+      }
     },
     {
       "teamId": "1610",
@@ -247,9 +258,9 @@
       "venue": "H",
       "strong": true,
       "continuation": {
-        "state": "wackelt",
+        "state": "intakt",
         "ratePct": 35,
-        "label": "Eigen 35% + Gegner 53% → 42%"
+        "label": "Eigen 35% + Gegner 53% → 42% · Signale bestätigen"
       },
       "ratePct": 35,
       "seq": [
@@ -277,6 +288,17 @@
       },
       "oppSupportPct": 53,
       "matchupPct": 42,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 2,
+        "conviction": 4,
+        "names": [
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength"
+        ],
+        "market": "Beide Teams treffen — Nein"
+      },
       "impliziertVon": "cleanSheet",
       "impliziertLabel": "Zu null"
     },
@@ -588,7 +610,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 67,
-        "label": "Eigen 67% + Gegner 80% → 72%"
+        "label": "Eigen 67% + Gegner 80% → 72% · Signale bestätigen"
       },
       "ratePct": 67,
       "seq": [
@@ -615,7 +637,21 @@
         "oppRatePct": 80
       },
       "oppSupportPct": 80,
-      "matchupPct": 72
+      "matchupPct": 72,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 7,
+        "conviction": 5,
+        "names": [
+          "lead_lag_bias",
+          "injury",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "chance_creation"
+        ],
+        "market": "Über 3.5 Tore"
+      }
     },
     {
       "teamId": "9568",
@@ -631,7 +667,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 62,
-        "label": "Eigen 62% + Gegner 80% → 69%"
+        "label": "Eigen 62% + Gegner 80% → 69% · Signale bestätigen"
       },
       "ratePct": 62,
       "seq": [
@@ -658,7 +694,21 @@
         "oppRatePct": 80
       },
       "oppSupportPct": 80,
-      "matchupPct": 69
+      "matchupPct": 69,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 7,
+        "conviction": 5,
+        "names": [
+          "lead_lag_bias",
+          "injury",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "chance_creation"
+        ],
+        "market": "Über 3.5 Tore"
+      }
     },
     {
       "teamId": "1609",
@@ -1219,6 +1269,58 @@
       "matchupPct": 83
     },
     {
+      "teamId": "1610",
+      "team": "Colorado Rapids",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1610.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "bttsNo",
+      "market": "Beide treffen — Nein",
+      "length": 3,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 35,
+        "label": "Eigen 35% + Gegner 53% → 42% · Signale bestätigen"
+      },
+      "ratePct": 35,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "liga",
+      "preN": 3,
+      "zufallPct": 4.2472,
+      "ligaBasisPct": 35,
+      "next": {
+        "oppId": "16489",
+        "oppName": "Austin",
+        "atHome": false,
+        "date": "2026-09-10",
+        "kickoff": "2026-09-10T00:30:00+00:00",
+        "oppRatePct": 47
+      },
+      "oppSupportPct": 53,
+      "matchupPct": 42,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 2,
+        "conviction": 4,
+        "names": [
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength"
+        ],
+        "market": "Beide Teams treffen — Nein"
+      }
+    },
+    {
       "teamId": "1600",
       "team": "Houston Dynamo",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/1600.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -1305,47 +1407,6 @@
       "matchupPct": 40,
       "impliziertVon": "cleanSheet",
       "impliziertLabel": "Zu null"
-    },
-    {
-      "teamId": "1610",
-      "team": "Colorado Rapids",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1610.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "bttsNo",
-      "market": "Beide treffen — Nein",
-      "length": 3,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 35,
-        "label": "Eigen 35% + Gegner 53% → 42%"
-      },
-      "ratePct": 35,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "liga",
-      "preN": 3,
-      "zufallPct": 4.2472,
-      "ligaBasisPct": 35,
-      "next": {
-        "oppId": "16489",
-        "oppName": "Austin",
-        "atHome": false,
-        "date": "2026-09-10",
-        "kickoff": "2026-09-10T00:30:00+00:00",
-        "oppRatePct": 47
-      },
-      "oppSupportPct": 53,
-      "matchupPct": 42
     },
     {
       "teamId": "1600",
@@ -1773,8 +1834,8 @@
       "matchupPct": 60,
       "signalInfo": {
         "state": "confirm",
-        "count": 7,
-        "conviction": 6,
+        "count": 6,
+        "conviction": 4,
         "names": [
           "lead_lag_bias",
           "injury",
@@ -1798,9 +1859,9 @@
       "venue": "A",
       "strong": false,
       "continuation": {
-        "state": "intakt",
+        "state": "wackelt",
         "ratePct": 40,
-        "label": "Eigen 40% + Gegner 47% → 43% · Signale bestätigen"
+        "label": "Eigen 40% + Gegner 47% → 43%"
       },
       "ratePct": 40,
       "seq": [
@@ -1827,21 +1888,7 @@
         "oppRatePct": 53
       },
       "oppSupportPct": 47,
-      "matchupPct": 43,
-      "signalInfo": {
-        "state": "confirm",
-        "count": 5,
-        "conviction": 4,
-        "names": [
-          "lead_lag_bias",
-          "form_trend",
-          "h2h_pattern",
-          "xg_strength",
-          "chance_creation",
-          "topscorer_momentum"
-        ],
-        "market": "Unter 3.5 Tore"
-      }
+      "matchupPct": 43
     },
     {
       "teamId": "1604",
@@ -2524,8 +2571,8 @@
       "matchupPct": 57,
       "signalInfo": {
         "state": "confirm",
-        "count": 7,
-        "conviction": 6,
+        "count": 6,
+        "conviction": 4,
         "names": [
           "lead_lag_bias",
           "injury",
@@ -3561,8 +3608,8 @@
       "matchupPct": 62,
       "signalInfo": {
         "state": "confirm",
-        "count": 7,
-        "conviction": 6,
+        "count": 6,
+        "conviction": 4,
         "names": [
           "lead_lag_bias",
           "injury",
@@ -3618,8 +3665,8 @@
       "matchupPct": 41,
       "signalInfo": {
         "state": "confirm",
-        "count": 7,
-        "conviction": 6,
+        "count": 6,
+        "conviction": 4,
         "names": [
           "lead_lag_bias",
           "injury",
@@ -4750,7 +4797,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 75,
-        "label": "Eigen 75% + Gegner 87% → 80%"
+        "label": "Eigen 75% + Gegner 87% → 80% · Signale bestätigen"
       },
       "ratePct": 75,
       "seq": [
@@ -4777,7 +4824,21 @@
         "oppRatePct": 87
       },
       "oppSupportPct": 87,
-      "matchupPct": 80
+      "matchupPct": 80,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 7,
+        "conviction": 5,
+        "names": [
+          "lead_lag_bias",
+          "injury",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "chance_creation"
+        ],
+        "market": "Über 3.5 Tore"
+      }
     },
     {
       "teamId": "1607",
@@ -4793,7 +4854,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 71,
-        "label": "Eigen 71% + Gegner 87% → 77%"
+        "label": "Eigen 71% + Gegner 87% → 77% · Signale bestätigen"
       },
       "ratePct": 71,
       "seq": [
@@ -4820,7 +4881,21 @@
         "oppRatePct": 87
       },
       "oppSupportPct": 87,
-      "matchupPct": 77
+      "matchupPct": 77,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 7,
+        "conviction": 5,
+        "names": [
+          "lead_lag_bias",
+          "injury",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "chance_creation"
+        ],
+        "market": "Über 3.5 Tore"
+      }
     },
     {
       "teamId": "1611",
@@ -4909,6 +4984,49 @@
       "matchupPct": 65
     },
     {
+      "teamId": "25484",
+      "team": "San Diego",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/25484.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 3,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 53% → 57%"
+      },
+      "ratePct": 60,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 5,
+      "zufallPct": 23.3252,
+      "ligaBasisPct": 62,
+      "next": {
+        "oppId": "1596",
+        "oppName": "San Jose Earthquakes",
+        "atHome": true,
+        "date": "2026-09-10",
+        "kickoff": "2026-09-10T02:30:00+00:00",
+        "oppRatePct": 53
+      },
+      "oppSupportPct": 53,
+      "matchupPct": 57
+    },
+    {
       "teamId": "1605",
       "team": "Los Angeles Galaxy",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/1605.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -4950,63 +5068,6 @@
       },
       "oppSupportPct": 47,
       "matchupPct": 44
-    },
-    {
-      "teamId": "25484",
-      "team": "San Diego",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/25484.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 3,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 53% → 57% · Linie/Signale dagegen"
-      },
-      "ratePct": 60,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 5,
-      "zufallPct": 23.3252,
-      "ligaBasisPct": 62,
-      "next": {
-        "oppId": "1596",
-        "oppName": "San Jose Earthquakes",
-        "atHome": true,
-        "date": "2026-09-10",
-        "kickoff": "2026-09-10T02:30:00+00:00",
-        "oppRatePct": 53
-      },
-      "oppSupportPct": 53,
-      "matchupPct": 57,
-      "signalInfo": {
-        "state": "contradict",
-        "count": 5,
-        "conviction": 4,
-        "names": [
-          "lead_lag_bias",
-          "form_trend",
-          "h2h_pattern",
-          "xg_strength",
-          "chance_creation",
-          "topscorer_momentum"
-        ],
-        "market": "Unter 3.5 Tore"
-      }
     },
     {
       "teamId": "1598",
@@ -5831,7 +5892,7 @@
       "continuation": {
         "state": "wackelt",
         "ratePct": 33,
-        "label": "Eigen 33% + Gegner 20% → 28%"
+        "label": "Eigen 33% + Gegner 20% → 28% · Linie/Signale dagegen"
       },
       "ratePct": 33,
       "seq": [
@@ -5858,7 +5919,18 @@
         "oppRatePct": 20
       },
       "oppSupportPct": 20,
-      "matchupPct": 28
+      "matchupPct": 28,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 2,
+        "conviction": 4,
+        "names": [
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength"
+        ],
+        "market": "Beide Teams treffen — Nein"
+      }
     },
     {
       "teamId": "1604",
