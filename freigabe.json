@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-07T21:26:45.399244+00:00",
+ "generatedAt": "2026-09-07T21:41:57.431418+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -14,24 +14,24 @@
   {
    "schublade": "ABWÄGEN · gepusht",
    "strom": "cards",
-   "n": 25,
+   "n": 26,
    "status": "kandidat",
-   "grund": "25 von 30 Plays — noch 5 · wie weit es bis zu einem Beleg ist, lässt sich bei 25 Plays NICHT schätzen (Bootstrap: 8 bis 2181 Plays, und in 11 % der Ziehungen ist der Schnitt gar nicht positiv)",
-   "roi": 0.1896,
+   "grund": "26 von 30 Plays — noch 4 · wie weit es bis zu einem Beleg ist, lässt sich bei 26 Plays NICHT schätzen (Bootstrap: 5 bis 1804 Plays, und in 10 % der Ziehungen ist der Schnitt gar nicht positiv)",
+   "roi": 0.1965,
    "roiLb": null,
    "clv": null,
    "clvLb": null,
-   "fehltN": 5,
-   "noetigNRoi": 47,
+   "fehltN": 4,
+   "noetigNRoi": 42,
    "noetigNClv": null,
    "entfernung": {
-    "median": 36,
-    "lo": 8,
-    "hi": 2181,
-    "nieAnteil": 0.112,
+    "median": 35,
+    "lo": 5,
+    "hi": 1804,
+    "nieAnteil": 0.1,
     "schaetzbar": false
    },
-   "alterTage": 1.0,
+   "alterTage": 0.0,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py"
   },
@@ -108,7 +108,7 @@
     "nieAnteil": 0.573,
     "schaetzbar": false
    },
-   "alterTage": 0.7,
+   "alterTage": 0.8,
    "art": "conviction",
    "wert": 7,
    "nAlt": 132,
@@ -136,7 +136,7 @@
     "nieAnteil": 0.357,
     "schaetzbar": false
    },
-   "alterTage": 0.7,
+   "alterTage": 0.8,
    "art": "mix",
    "wert": "bf+money+sharp",
    "nAlt": 9,
@@ -149,24 +149,24 @@
   {
    "schublade": "ABWÄGEN · gepusht",
    "strom": "cards",
-   "n": 25,
+   "n": 26,
    "status": "kandidat",
-   "grund": "25 von 30 Plays — noch 5 · wie weit es bis zu einem Beleg ist, lässt sich bei 25 Plays NICHT schätzen (Bootstrap: 8 bis 2181 Plays, und in 11 % der Ziehungen ist der Schnitt gar nicht positiv)",
-   "roi": 0.1896,
+   "grund": "26 von 30 Plays — noch 4 · wie weit es bis zu einem Beleg ist, lässt sich bei 26 Plays NICHT schätzen (Bootstrap: 5 bis 1804 Plays, und in 10 % der Ziehungen ist der Schnitt gar nicht positiv)",
+   "roi": 0.1965,
    "roiLb": null,
    "clv": null,
    "clvLb": null,
-   "fehltN": 5,
-   "noetigNRoi": 47,
+   "fehltN": 4,
+   "noetigNRoi": 42,
    "noetigNClv": null,
    "entfernung": {
-    "median": 36,
-    "lo": 8,
-    "hi": 2181,
-    "nieAnteil": 0.112,
+    "median": 35,
+    "lo": 5,
+    "hi": 1804,
+    "nieAnteil": 0.1,
     "schaetzbar": false
    },
-   "alterTage": 1.0,
+   "alterTage": 0.0,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py"
   },
@@ -243,7 +243,7 @@
     "nieAnteil": 0.573,
     "schaetzbar": false
    },
-   "alterTage": 0.7,
+   "alterTage": 0.8,
    "art": "conviction",
    "wert": 7,
    "nAlt": 132,
@@ -271,7 +271,7 @@
     "nieAnteil": 0.357,
     "schaetzbar": false
    },
-   "alterTage": 0.7,
+   "alterTage": 0.8,
    "art": "mix",
    "wert": "bf+money+sharp",
    "nAlt": 9,
@@ -299,7 +299,7 @@
     "nieAnteil": 0.043,
     "schaetzbar": false
    },
-   "alterTage": 0.1,
+   "alterTage": 0.2,
    "art": "gate",
    "nAlt": 138,
    "roiAlt": 0.0262,
@@ -309,24 +309,24 @@
   {
    "schublade": "Liga · ABWÄGEN",
    "strom": "cards",
-   "n": 87,
+   "n": 91,
    "status": "geprueft",
    "grund": "CLV negativ belegt — der ROI kam aus der Varianz, nicht aus einer Kante",
-   "roi": 0.1524,
-   "roiLb": 0.0038,
-   "clv": -1.558,
-   "clvLb": -2.058,
+   "roi": 0.1518,
+   "roiLb": 0.0076,
+   "clv": -1.524,
+   "clvLb": -2.011,
    "fehltN": 0,
    "noetigNRoi": 83,
    "noetigNClv": null,
    "entfernung": {
-    "median": 81,
+    "median": 79,
     "lo": 19,
-    "hi": 2341,
-    "nieAnteil": 0.048,
+    "hi": 1294,
+    "nieAnteil": 0.043,
     "schaetzbar": false
    },
-   "alterTage": 1.4,
+   "alterTage": 0.4,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "Liga"
@@ -625,6 +625,30 @@
    "naeherung": false
   },
   {
+   "schublade": "ABWÄGEN · aussortiert",
+   "strom": "cards",
+   "n": 50,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0312,
+   "roiLb": -0.1549,
+   "clv": null,
+   "clvLb": null,
+   "fehltN": 0,
+   "noetigNRoi": 1780,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 213,
+    "lo": 27,
+    "hi": 19607,
+    "nieAnteil": 0.407,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "push_filter",
+   "quelle": "pick_push_ledger.py"
+  },
+  {
    "schublade": "MLS · ABWÄGEN",
    "strom": "cards",
    "n": 61,
@@ -648,30 +672,6 @@
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "MLS"
-  },
-  {
-   "schublade": "ABWÄGEN · aussortiert",
-   "strom": "cards",
-   "n": 47,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0294,
-   "roiLb": -0.1632,
-   "clv": null,
-   "clvLb": null,
-   "fehltN": 0,
-   "noetigNRoi": 2022,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 170,
-    "lo": 27,
-    "hi": 11896,
-    "nieAnteil": 0.397,
-    "schaetzbar": false
-   },
-   "alterTage": 0.4,
-   "art": "push_filter",
-   "quelle": "pick_push_ledger.py"
   },
   {
    "schublade": "English Sky Bet Championship · Over/Under 3.5 Goals",
@@ -1597,7 +1597,7 @@
    "noetigNRoi": null,
    "noetigNClv": null,
    "entfernung": null,
-   "alterTage": 0.1,
+   "alterTage": 0.2,
    "art": "vorangemeldet",
    "angemeldet": "2026-09-07T08:15:48.444033+00:00",
    "zielN": 120,
@@ -1969,7 +1969,7 @@
   "freigegeben": 0,
   "kandidaten": 5,
   "ruhend": 2,
-  "naechsteFreigabe": 5,
+  "naechsteFreigabe": 4,
   "naechsterBeleg": 5
  }
 }
