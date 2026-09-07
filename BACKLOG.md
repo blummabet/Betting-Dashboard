@@ -37,12 +37,29 @@ Reihenfolge ist Absicht: oben, was ohne neue Entscheidung gebaut werden kann.
   Literale direkt im `fetch()`. Neuer Guard: kein jsdom-Harness testet eine Umgebung ohne
   `raw-json.js`.
 
-### Ops, offen
-- ⏳ **Das Pages-Artefakt steht bei 160,27 MB gegen ein Budget von 160 MB** —
-  `test_pages_artifact_size.py` ist deshalb rot, und zwar **vor** den Änderungen dieses Abends
-  (die wiegen ~14 KB). Größte Posten: Wurzel 110 MB, `matches/` 49 MB. Entscheidung nötig:
-  aufräumen (was darf weg?) oder Budget begründet anheben. Nicht stillschweigend hochsetzen —
-  der Test misst die Deploy-Dauer, nicht den Geschmack.
+### Ops
+- ✅ **Pages-Artefakt: 160,3 → 126,3 MB** (07.09. abends). Ursache war kein Wachstum, sondern ein
+  Leck in der Ballast-Regel: ihr Sicherheitsnetz für dynamisch gebaute Namen liess jedes
+  generische Endstück gelten (`ledger.json`, `_results.json`, `_cache.json`), und damit fuhren
+  **34,1 MB** mit, die keine Zeile Frontend-Code anfasst — allen voran `stake_bet_ledger.json`
+  (15,4 MB), das nur blieb, weil irgendwo `liga_signal_ledger.json` steht. Endstücke zählen jetzt
+  nur an einer echten Verkettungsgrenze (`'`, `"`, `` ` ``, `}`). Budget 160 → **140**, damit der
+  gewonnene Platz nicht stillschweigend zuwächst.
+  *Woher der Deckel kommt:* nicht von GitHub (1 GB veröffentlichte Seite), sondern von der
+  **10-Minuten-Grenze für einen Deploy** — bei 198 MB dauerte der Upload 10–18 Min und wurde vom
+  nächsten Trigger überholt.
+- ⏳ **Was ohne Entscheidung nicht rauszuholen ist:** `matches/` 49 MB (1.018 Einzel-JSONs à
+  ~150 KB) und ~76 MB referenzierte Wurzel-JSONs. Letztere liegen im Deploy nur noch als
+  **Rückfall** — geholt wird seit heute überall raw-zuerst. Wer den Rückfall aufgibt, spart den
+  grössten Teil davon, hat bei einer raw-Störung aber eine leere Seite statt einer alten.
+
+### Nachtarbeit — gemessen, wann wirklich tote Zeit ist
+- ℹ️ **02–06 Uhr ist NICHT tot: das ist MLS-Primetime.** 419 von 510 MLS-Anpfiffen (82 %) liegen
+  zwischen 01 und 05 Uhr Wien. Genau dann laufen Live-Scan, Steam-Erkennung, Wallet-Beobachtung.
+- 📌 **Das echte Loch liegt 06–09 Uhr Wien** (Stake-Fluss 393–430 Wetten/Std gegen 486–631 in
+  02–06 und ~800 abends; Top-5-Anpfiffe beginnen erst ab 12 Uhr). Kandidaten für dieses Fenster:
+  Kompaktierung/Archivierung der grossen JSONs, Backtests und Lernläufe — damit der geteilte
+  Mac-Runner tagsüber frei bleibt (gemessen: Live-Scan lief sechs Tage bei 8–29 %).
 
 ### Angeboten, nicht begonnen
 - ⏳ **Draw-No-Bet als Alternative auf gerichteten Cards** + eigene vorregistrierte Schublade.

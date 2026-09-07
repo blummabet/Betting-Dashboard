@@ -40,12 +40,26 @@ WF = os.path.join(REPO, ".github", "workflows", "deploy-pages.yml")
 # waere in wenigen Tagen an normalem Datenwachstum gescheitert. Ein Test, der bei Routine-
 # Wachstum rot wird, wird weggeklickt statt gelesen — dann warnt er beim echten Problem nicht mehr.
 #
-# ⚠️ Was hier NICHT mehr rauszuholen ist, ohne eine Entscheidung: die 148 MB sind zu je etwa der
-# Haelfte `matches/` (125 Event-Seiten, ~550 KB pro Stueck) und referenzierte Wurzel-JSONs. Beide
+# 07.09.2026 (Lucas: „woher kommt das Limit?"): der Deckel ist UNSERER, nicht GitHubs. GitHub
+# erlaubt 1 GB veroeffentlichte Seite — was hier wirklich beisst, ist die 10-Minuten-Grenze fuer
+# einen Deploy. Bei 198 MB dauerte der Upload 10-18 Min, lief also darueber, und der naechste
+# Trigger ueberholte ihn („Error: Deployment cancelled"). Das Budget misst Upload-DAUER mit
+# Reserve, nicht Speicherplatz.
+#
+# 140 statt 160 (07.09.2026): die Ballast-Regel hatte ein Leck — ihr Sicherheitsnetz fuer
+# dynamisch gebaute Namen liess jedes generische Endstueck (`ledger.json`, `_results.json`)
+# gelten, und damit fuhren 34,1 MB mit, die keine Zeile Frontend-Code anfasst (allen voran
+# `stake_bet_ledger.json`, 15,4 MB). Endstuecke zaehlen jetzt nur noch an einer echten
+# Verkettungsgrenze; gemessen bleiben 126,3 MB. Das Budget geht mit runter — sonst waechst der
+# gewonnene Platz stillschweigend wieder zu, und genau das ist am 02.09. schon einmal passiert.
+#
+# ⚠️ Was hier NICHT mehr rauszuholen ist, ohne eine Entscheidung: 49 MB `matches/` (1.018
+# Einzel-JSONs a ~150 KB, plus 120 Event-Seiten) und ~76 MB referenzierte Wurzel-JSONs. Beide
 # werden von der Seite gebraucht — die JSONs allerdings nur als RUECKFALL, denn geholt wird
 # primaer von raw.githubusercontent.com/main. Wer den Rueckfall aufgibt, spart auf einen Schlag
-# ~79 MB; das ist eine Produktentscheidung (Verhalten bei raw-Ausfall), keine Aufraeumarbeit.
-ARTEFAKT_BUDGET_MB = 160
+# den groessten Teil davon; das ist eine Produktentscheidung (Verhalten bei raw-Ausfall), keine
+# Aufraeumarbeit.
+ARTEFAKT_BUDGET_MB = 140
 
 
 def _tracked():
@@ -181,3 +195,36 @@ class TestNichtsNoetigesWirdGeloescht:
             if re.search(r"""["'`](?:\.\./)?%s/""" % re.escape(d), text):
                 referenziert.append(m)
         assert not referenziert, f"Der Deploy loescht Pfade, die das Frontend laedt: {referenziert}"
+
+
+class TestBallastRegelLeck:
+    """07.09.2026 — das Sicherheitsnetz gegen dynamische Namen war zu grob.
+
+    Es liess JEDES Namens-Endstueck ab einem Unterstrich gelten. `ledger.json` ist aber kein
+    seltenes Endstueck, sondern ein haeufiges: sobald irgendwo `liga_signal_ledger.json` steht,
+    blieb auch `stake_bet_ledger.json` im Deploy — 15,4 MB, die keine Zeile Frontend-Code je
+    anfasst. Gemessen fuhren so 34,1 MB als blinde Passagiere mit.
+    """
+
+    def test_generisches_endstueck_haelt_eine_unreferenzierte_datei_nicht_am_leben(self):
+        text = "fetch('liga_signal_ledger.json'); fetch('mls_results.json')"
+        assert not BALLAST._wird_erwaehnt("stake_bet_ledger.json", text), \
+            "ein fremdes Ledger im Code haelt unser Ledger im Deploy"
+        assert not BALLAST._wird_erwaehnt("betfair_draw_results.json", text)
+
+    def test_dynamisch_gebauter_name_ueberlebt_weiterhin(self):
+        """Der Fall, wegen dem es das Netz gibt — in allen drei Schreibweisen."""
+        for code in ("fetch(ds + '_poly_prices.json')",
+                     'fetch(ds + "_poly_prices.json")',
+                     "fetch(`${ds}_poly_prices.json`)"):
+            assert BALLAST._wird_erwaehnt("mls_poly_prices.json", code), code
+
+    def test_der_volle_name_zaehlt_ueberall(self):
+        """Wer den ganzen Namen schreibt, meint ihn — auch mitten in einem Kommentar."""
+        assert BALLAST._wird_erwaehnt("liga-data.json", "// siehe liga-data.json")
+
+    def test_stake_ledger_faehrt_nicht_mehr_mit(self):
+        """Der konkrete Fall, 15,4 MB. Kein Frontend holt ihn; der Erzeuger liest ihn lokal."""
+        raus = set(_geloeschte_dateien())
+        if os.path.exists(os.path.join(REPO, "stake_bet_ledger.json")):
+            assert "stake_bet_ledger.json" in raus
