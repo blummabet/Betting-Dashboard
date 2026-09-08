@@ -134,7 +134,7 @@
    "gehaltenSeit": "2026-09-08T06:27:40.797576+00:00",
    "zuletztAktiv": "2026-09-08T17:44:02.333758+00:00",
    "haltePreis": 1.64,
-   "aktiv": true
+   "aktiv": false
   },
   "35998658|Match Odds": {
    "matchId": "35998658",
@@ -255,7 +255,7 @@
    "gehaltenSeit": "2026-09-08T06:27:40.797576+00:00",
    "zuletztAktiv": "2026-09-08T17:44:02.333758+00:00",
    "haltePreis": 1.74,
-   "aktiv": true
+   "aktiv": false
   },
   "35998661|Match Odds": {
    "matchId": "35998661",
@@ -266,7 +266,7 @@
    "markt": "Match Odds",
    "seite": "home",
    "name": "Dortmund",
-   "odd": 1.77,
+   "odd": 1.78,
    "entryOdd": 1.81,
    "anteilPct": 71,
    "stufe": 1,
@@ -312,13 +312,13 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 79% auf der Seite"
+       "text": "Geld 80% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
-      "text": "Geld 79% auf der Seite"
+      "text": "Geld 80% auf der Seite"
      },
      {
       "buch": "POLY",
@@ -348,7 +348,7 @@
       },
       "tiefe": {
        "ok": true,
-       "text": "Move +2.8pp in unsere Richtung"
+       "text": "Move +2.5pp in unsere Richtung"
       },
       "text": "hat dieselbe Seite als Favorit"
      },
@@ -379,7 +379,7 @@
    },
    "wertVsPinn": -0.0216,
    "gehaltenSeit": "2026-09-08T12:58:25.823674+00:00",
-   "zuletztAktiv": "2026-09-08T17:44:02.333758+00:00",
+   "zuletztAktiv": "2026-09-08T18:14:04.088005+00:00",
    "haltePreis": 1.87,
    "aktiv": true
   },
@@ -392,11 +392,16 @@
    "markt": "Match Odds",
    "seite": "away",
    "name": "Newcastle",
-   "odd": 1.45,
+   "odd": 1.41,
    "entryOdd": 1.58,
    "anteilPct": 94,
-   "stufe": 2,
+   "stufe": 1,
    "verstaerker": [
+    {
+     "art": "poly",
+     "text": "Poly Geld 99%",
+     "gewicht": 12
+    },
     {
      "art": "pinn",
      "text": "Pinnacle stimmt zu",
@@ -404,21 +409,25 @@
     },
     {
      "art": "pinnMove",
-     "text": "Pinnacle zieht mit +1.3pp",
-     "gewicht": 8
+     "text": "Pinnacle zieht mit +4.8pp",
+     "gewicht": 14
     }
    ],
-   "rang": 77.2,
+   "rang": 95.1,
    "track": null,
    "streak": null,
-   "poly": null,
+   "poly": {
+    "anteilPct": 99,
+    "usd": 8189,
+    "odd": 1.42
+   },
    "polyStatus": "unbekannt",
-   "polyKey": null,
-   "polySide": null,
+   "polyKey": "efl-mil-new-2026-09-08",
+   "polySide": "Newcastle United FC",
    "pinnMovePP": 0.3,
    "punkte": {
-    "punkte": 7,
-    "moeglich": 7,
+    "punkte": 9,
+    "moeglich": 10,
     "dauerH": 5.77,
     "teile": [
      {
@@ -440,12 +449,18 @@
      {
       "buch": "POLY",
       "name": "Polymarket",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "text": "Polymarket nicht erhoben"
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Poly-Geld 99% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein bewiesenes Wallet auf der Seite"
+      },
+      "text": "Poly-Geld 99% auf derselben Seite"
      },
      {
       "buch": "PIN",
@@ -459,7 +474,7 @@
       },
       "tiefe": {
        "ok": true,
-       "text": "Move +3.5pp in unsere Richtung"
+       "text": "Move +4.8pp in unsere Richtung"
       },
       "text": "hat dieselbe Seite als Favorit"
      },
@@ -490,103 +505,9 @@
    },
    "wertVsPinn": -0.0242,
    "gehaltenSeit": "2026-09-08T13:13:37.254752+00:00",
-   "zuletztAktiv": "2026-09-08T17:29:00.389092+00:00",
+   "zuletztAktiv": "2026-09-08T18:14:04.088005+00:00",
    "haltePreis": 1.51,
-   "aktiv": false
-  },
-  "36043405|Match Odds": {
-   "matchId": "36043405",
-   "home": "Hull City U21",
-   "away": "Brentford U21",
-   "league": "English U21 Premier League Cup",
-   "kickoff": "2026-09-08T18:00:00Z",
-   "markt": "Match Odds",
-   "seite": "away",
-   "name": "Brentford U21",
-   "odd": 1.59,
-   "entryOdd": 1.59,
-   "anteilPct": 79,
-   "stufe": 2,
-   "verstaerker": [],
-   "rang": 57.9,
-   "track": null,
-   "streak": null,
-   "poly": null,
-   "polyStatus": "unbekannt",
-   "polyKey": null,
-   "polySide": null,
-   "pinnMovePP": null,
-   "punkte": {
-    "punkte": 3,
-    "moeglich": 4,
-    "dauerH": 0.77,
-    "teile": [
-     {
-      "buch": "BF",
-      "name": "Betfair",
-      "status": "ja",
-      "punkte": 3,
-      "moeglich": 3,
-      "grund": {
-       "ok": true,
-       "text": "Geld 79% auf der Seite"
-      },
-      "tiefe": {
-       "ok": true,
-       "text": "frischer Zufluss und Quote zieht mit"
-      },
-      "text": "Geld 79% auf der Seite"
-     },
-     {
-      "buch": "POLY",
-      "name": "Polymarket",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "text": "Polymarket nicht erhoben"
-     },
-     {
-      "buch": "PIN",
-      "name": "Pinnacle",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "text": "Pinnacle nicht erhoben"
-     },
-     {
-      "buch": "STAKE",
-      "name": "Stake-Highroller",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "text": "Stake-Highroller nicht erhoben"
-     },
-     {
-      "buch": "ZEIT",
-      "name": "Dauer",
-      "status": "nein",
-      "punkte": 0,
-      "moeglich": 1,
-      "grund": {
-       "ok": false,
-       "text": "steht seit 0.8h vor Anpfiff"
-      },
-      "tiefe": null,
-      "text": "steht seit 0.8h vor Anpfiff"
-     }
-    ]
-   },
-   "wertVsPinn": null,
-   "gehaltenSeit": "2026-09-08T17:14:04.082443+00:00",
-   "zuletztAktiv": "2026-09-08T17:14:04.082443+00:00",
-   "haltePreis": 1.59,
-   "aktiv": false
+   "aktiv": true
   },
   "36043623|Match Odds": {
    "matchId": "36043623",
