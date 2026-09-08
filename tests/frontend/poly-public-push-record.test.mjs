@@ -138,5 +138,8 @@ test('der Push-Block wird in der Track-Record-Ansicht gerendert', () => {
 
 test('poly_public_record.json wird überhaupt geladen', () => {
   assert.match(JS, /jf\('poly_public_record\.json'\)/);
-  assert.match(JS, /publicRec\]\)=>/);
+  // 07.09.2026: die Destrukturierung endet nicht mehr auf publicRec — dahinter kamen
+  // walletNorm und markout dazu (Terminal-Überzeugungszeile). Geprüft wird deshalb, dass
+  // publicRec IN der Liste steht, nicht dass es die letzte Position ist.
+  assert.match(JS, /publicRec[,\]]/);
 });

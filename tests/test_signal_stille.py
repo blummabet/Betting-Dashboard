@@ -111,3 +111,33 @@ class TestBefunde(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+# ── 07.09.2026: erklaerte Stille von unerklaerter trennen ────────────────────
+# Der Guard listete drei Signale, jeden Tag dieselben. Zweimal war die Antwort „stimmt so"
+# (betfair_coherence seit der Fit-Schranke, game_state_openness vor dem Winter), einmal ein
+# echter Fehler. Nur stand das Ergebnis nirgends — also fing die Untersuchung jedes Mal von
+# vorne an.
+def test_erklaerte_stille_wandert_in_den_zweiten_block():
+    g = S.erklaert_und_offen(["polymarket_sharp", "betfair_coherence", "game_state_openness"])
+    assert g["offen"] == ["polymarket_sharp"]
+    assert set(g["erklaert"]) == {"betfair_coherence", "game_state_openness"}
+
+
+def test_jede_erklaerung_traegt_ihre_messung():
+    """Eine Erklaerung ohne Messung ist eine Ausrede mit Datum."""
+    for name, text in S.ERKLAERTE_STILLE.items():
+        assert "gemessen" in text, name
+        assert "2026" in text, name
+        assert any(z.isdigit() for z in text), name
+
+
+def test_unerklaerte_stille_bleibt_die_alte_meldung():
+    zeilen = S.befunde(["polymarket_sharp"], [{"x": 1}] * 80)
+    assert len(zeilen) == 1 and "stumm defekt" in zeilen[0]
+
+
+def test_beide_bloecke_erscheinen_im_bericht():
+    zeilen = S.befunde(["polymarket_sharp", "betfair_coherence"], [{"x": 1}] * 80)
+    assert len(zeilen) == 2
+    assert "stumm defekt" in zeilen[0] and "stumm, aber erklaert" in zeilen[1]

@@ -50,8 +50,45 @@ def _devig_1x2(hw, dr, aw):
     return (p_hw/s, p_dr/s, p_aw/s)
 
 
+# ── Welche Ausgaenge dieses Signal lesen kann (07.09.2026) ──────────────────────────────────
+# Ein Ausgang ist hier eine SUMME von 1X2-Beinen. Fuer Heimsieg ist das die Summe aus einem
+# Bein, fuer „Doppelte Chance — 1X" die aus zweien. Beides rechnet sich aus denselben drei
+# Poly-Preisen, die schon dastehen; es fehlte nur die Zuordnung.
+#
+# Warum das mehr als Kosmetik ist, gemessen am 07.09. ueber die 300 Liga-Picks:
+#
+#     Heimsieg + Auswaertssieg      80 Picks  → 22 mit Pinnacle → 15 mit Poly → **0 ueber $5k**
+#     Doppelte Chance (1X / X2)     95 Picks  ← die groesste Marktgruppe ueberhaupt
+#
+# Und die Spiele mit echtem Poly-Geld ($404.746, $345.895, $186.831, $86.761) tragen
+# ausschliesslich Doppelte-Chance- und Ueber/Unter-Picks. Das Signal schaute also genau dort
+# NICHT hin, wo das Geld lag — nicht wegen eines Fehlers in der Rechnung, sondern weil eine
+# Marktbezeichnung fehlte.
+#
+# DNB bleibt bewusst ein Ein-Bein-Ausgang: „Draw no bet" ist keine Summe, sondern eine
+# Rueckzahlung beim Remis. Es hier als hw+dr zu fuehren waere eine andere Wette.
+_AUSGANG_BEINE = {
+    "hw":  ("hw",),
+    "dr":  ("dr",),
+    "aw":  ("aw",),
+    "1x":  ("hw", "dr"),
+    "x2":  ("dr", "aw"),
+    "12":  ("hw", "aw"),
+}
+
+_LABEL = {"hw": "Heim", "dr": "X", "aw": "Auswärts",
+          "1x": "1X", "x2": "X2", "12": "12"}
+
+
 def _outcome_key_from_market(market: str) -> Optional[str]:
     m = (market or "").lower()
+    # Doppelte Chance zuerst: „Doppelte Chance — 1X" enthaelt kein „heimsieg", aber die
+    # Reihenfolge macht die Absicht sichtbar.
+    if "doppelte chance" in m or "double chance" in m:
+        if "1x" in m: return "1x"
+        if "x2" in m: return "x2"
+        if "12" in m: return "12"
+        return None
     if "heimsieg" in m: return "hw"
     if "auswärtssieg" in m or "auswartssieg" in m: return "aw"
     if "unentsch" in m: return "dr"
@@ -104,8 +141,13 @@ class PolymarketSharpSignal(Signal):
             return None
         poly_p = (p_hw/s, p_dr/s, p_aw/s)
 
-        idx = {"hw": 0, "dr": 1, "aw": 2}[outcome]
-        diff_pp = (poly_p[idx] - pinn_p[idx]) * 100.0
+        # Summe der Beine — bei 1X2 ein Bein, bei Doppelter Chance zwei. Beide Seiten
+        # werden GLEICH summiert, sonst vergliche man zwei verschiedene Wetten.
+        idx = {"hw": 0, "dr": 1, "aw": 2}
+        beine = _AUSGANG_BEINE[outcome]
+        poly_w = sum(poly_p[idx[b]] for b in beine)
+        pinn_w = sum(pinn_p[idx[b]] for b in beine)
+        diff_pp = (poly_w - pinn_w) * 100.0
 
         if abs(diff_pp) < self._t["min_diff_pp"]:
             return None
@@ -119,10 +161,10 @@ class PolymarketSharpSignal(Signal):
         vol_factor = min(1.0, vol / 50000.0)
         confidence = min(0.90, 0.50 + 0.15 * vol_factor + abs(diff_pp) * 0.03)
 
-        oc_label = {"hw": "Heim", "dr": "X", "aw": "Auswärts"}[outcome]
+        oc_label = _LABEL[outcome]
         direction = "bestätigt" if diff_pp > 0 else "widerspricht"
         ev = (f"🟣 Polymarket ({oc_label}) {direction} Pinnacle: "
-              f"Poly {poly_p[idx]*100:.0f}% vs Pinn {pinn_p[idx]*100:.0f}% "
+              f"Poly {poly_w*100:.0f}% vs Pinn {pinn_w*100:.0f}% "
               f"· Vol ${vol/1000:.0f}k")
 
         return SignalResult(
@@ -131,9 +173,10 @@ class PolymarketSharpSignal(Signal):
             evidence=ev,
             metadata={
                 "outcome":       outcome,
+                "beine":         list(beine),
                 "diff_pp":       round(diff_pp, 2),
-                "poly_implied":  round(poly_p[idx], 4),
-                "pinn_implied":  round(pinn_p[idx], 4),
+                "poly_implied":  round(poly_w, 4),
+                "pinn_implied":  round(pinn_w, 4),
                 "volume_usdc":   vol,
             },
         )

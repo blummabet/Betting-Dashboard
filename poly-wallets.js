@@ -269,8 +269,15 @@ function initPolyWallets(){
     jf('poly_live_signal_track.json'),       // 12.08.2026 (Lucas): Live-Signal Forward-CLV Track-Record
     jf('money_map.json'),                    // 21.08.2026 (Lucas): Betfair-Geld je Spiel → Gegencheck im Kanten-Scorer
     jf('poly_public_record.json'),           // 04.09.2026 (Lucas): wie schneiden die Public-Pushs WIRKLICH ab?
-  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist,liveSigTrack,moneyMap,publicRec])=>{
-    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist,liveSigTrack,moneyMap,publicRec};
+    // 07.09.2026 (Lucas: „das Terminal war nichtssagend") — die drei Dateien, die aus einer
+    // Zahl eine Aussage machen. Alle drei existieren seit Wochen und wurden hier nie gelesen:
+    //   · walletNorm  — was ist fuer DIESE Wallet ein normaler Einsatz (2.057 Wallets)
+    //   · markout     — bewegt sich der Preis NACH einem Einstieg zu unseren Gunsten
+    //   · moneyAccGl  — trifft die Geld-Seite besser als die Preis-Seite? (gemessen: nein)
+    jf('poly_wallet_norm.json'),
+    jf('liga_poly_markout.json'),
+  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist,liveSigTrack,moneyMap,publicRec,walletNorm,markout])=>{
+    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist,liveSigTrack,moneyMap,publicRec,walletNorm,markout};
     _pwRender();
   }).catch(err=>{
     // 12.07.2026: Vorher gab es KEIN catch — eine Exception im Render (z.B. der
@@ -3300,6 +3307,15 @@ function _pwPublicOhneWalletPlays(){
 let _pwTermRow=null;
 function _pwTermOpen(k){ _pwTermRow=(String(_pwTermRow)===String(k))?null:k; _pwRender(); }
 if(typeof window!=='undefined') window._pwTermOpen=_pwTermOpen;
+// 07.09.2026 — Testschnittstelle. `_pwCache` ist ein Modul-`let` und haengt bewusst nicht am
+// window (sonst koennte jede Flaeche es umschreiben). Fuer die Drawer-Tests braucht es aber
+// einen Weg, einen echten Artefakt-Stand hineinzugeben, ohne den ganzen Fetch-Pfad zu fahren —
+// sonst testet man den Mock statt der Anzeige.
+// (Die Funktionen selbst sind bereits global — das Skript laeuft ohne Modul-Wrapper. Ein
+// Wrapper `window.x = function(){ return x() }` waere hier eine Endlosschleife: er ueberschreibt
+// genau die Bindung, die er aufrufen will. Beim ersten Anlauf passiert und sofort im Test
+// gesehen — deshalb steht es hier.)
+if(typeof window!=='undefined'){ window._pwTestSetCache=function(c){ _pwCache=c||{}; }; }
 
 function _pwTermHist(key){ const c=_pwCache||{}; return (c.broadLiveHist&&c.broadLiveHist[key])||(c.broadHist&&c.broadHist[key])||[]; }
 function _pwTermFair(r){
@@ -3333,21 +3349,97 @@ function _pwTermCurve(r){
     +'<path d="'+line+'" fill="none" stroke="#a78bfa" stroke-width="2"/>'+fairEl+edgeEl+dot
     +'<text x="'+pl+'" y="'+(Hh-6)+'" font-size="8.5" fill="#484f58">Opening</text><text x="'+(pl+cw)+'" y="'+(Hh-6)+'" text-anchor="end" font-size="8.5" fill="#484f58">jetzt</text></svg>';
 }
+// ── Einsatz gegen die eigene Norm (07.09.2026) ──────────────────────────────────────────────
+// Lucas: „die Idee mit den Wallets, Einsätzen, Norm-Zeug ist mal eine gute Idee."
+//
+// Das Whale-Tape zeigte bisher nur die Summe. $50.000 sagt aber NICHTS, solange man nicht weiß,
+// was für diese Wallet ein normaler Einsatz ist: für die eine ist es Dienstag, für die andere
+// der größte Einsatz ihres Lebens. Genau diese Unterscheidung liegt seit Wochen fertig in
+// `poly_wallet_norm.json` (2.057 Wallets, Median/p90/Max je Wallet, gelernt ab minN) — sie
+// wurde hier nur nie gelesen.
+//
+// Keine eigene Schwelle im Frontend: `basis === 'gelernt'` entscheidet der Produzent, und ohne
+// gelernte Norm steht „neu" da, nicht ein erfundener Faktor.
+function _pwWalletNorm(wallet){
+  const wn=(_pwCache&&_pwCache.walletNorm&&_pwCache.walletNorm.wallets)||{};
+  const d=wn[String(wallet||'').toLowerCase()]||wn[String(wallet||'')];
+  if(!d||d.basis!=='gelernt'||!(d.median>0)) return null;
+  return d;
+}
+function _pwNormFaktor(usd, wallet){
+  const d=_pwWalletNorm(wallet);
+  if(!d||!(usd>0)) return null;
+  return {x:usd/d.median, n:d.n, median:d.median, p90:d.p90, max:d.max,
+          rekord:(d.max!=null && usd>d.max)};
+}
+// Die Marke, die man auf einen Blick lesen können muss. Die Grenzen sind Anzeige-Stufen, kein
+// Urteil — ob große Einsätze überhaupt etwas taugen, steht in der Kopfzeile des Drawers.
+function _pwNormBadge(nf){
+  if(!nf) return '<span style="color:#484f58;font-size:10px" title="Diese Wallet hat noch keine gelernte Norm (zu wenige erfasste Einsätze) — ohne Norm kein Faktor.">neu</span>';
+  const x=nf.x, col=x>=10?'#f0883e':x>=4?'#e3b341':x>=2?'#a78bfa':'#6e7681';
+  const t='Median dieser Wallet $'+Math.round(nf.median).toLocaleString('de-DE')+' über '+nf.n+' erfasste Einsätze'
+    +(nf.p90?' · p90 $'+Math.round(nf.p90).toLocaleString('de-DE'):'')
+    +(nf.max?' · größter bisher $'+Math.round(nf.max).toLocaleString('de-DE'):'');
+  return '<span title="'+t+'" style="font-weight:800;color:'+col+'">×'+(x>=20?Math.round(x):x.toFixed(1))+'</span>'
+    +(nf.rekord?' <span title="größer als alles, was wir von dieser Wallet erfasst haben" style="color:#f0883e;font-size:10px">Rekord</span>':'');
+}
+
 function _pwTermWhaleTape(r){
   const m=(_pwCache&&_pwCache.broadLive&&_pwCache.broadLive[r.key])||null;
   const wh=(m&&Array.isArray(m.whales))?m.whales.slice():[];
   if(!wh.length) return '<span style="color:#484f58;font-size:11px">keine Whale-Positionen erfasst</span>';
   const sc=(_pwCache&&_pwCache.walletTrack&&_pwCache.walletTrack.scores)||{};
   wh.sort((a,b)=>(b.usd||0)-(a.usd||0));
-  return wh.slice(0,6).map((w,i)=>{
+  const zeilen=wh.slice(0,6).map((w,i)=>{
     const raw=sc[w.wallet], n=(raw&&raw.n)||0;
     const hit=n?Math.round((raw.wins||0)/n*100):null, clv=n?(raw.clvSumPP/n):null;
     const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':'&nbsp;&nbsp;';
     const onSide=(w.side===r.side);
-    const trk=n>=8?(' <span style="color:#484f58">· '+hit+'% n'+n+(clv!=null?' · CLV '+(clv>=0?'+':'')+clv.toFixed(1):'')+'</span>'):' <span style="color:#484f58">· neu</span>';
+    const trk=n>=8?('<span style="color:#484f58">'+hit+'% n'+n+(clv!=null?' · CLV '+(clv>=0?'+':'')+clv.toFixed(1):'')+'</span>'):'<span style="color:#484f58">—</span>';
     const wl=String(w.wallet||'');
-    return '<div style="font-family:ui-monospace,monospace;font-size:11.5px;line-height:1.95">'+medal+' <span style="color:'+(onSide?'#a78bfa':'#6e7681')+'">'+wl.slice(0,6)+'…'+wl.slice(-3)+'</span> '+_pwUsd(w.usd)+(onSide?'':' <span style="color:#e3b341;font-size:10px">⟂ '+_pwEsc(w.side)+'</span>')+trk+'</div>';
+    const nf=_pwNormFaktor(w.usd,w.wallet);
+    return '<tr style="font-family:ui-monospace,monospace;font-size:11.5px">'
+      +'<td style="padding:2px 6px 2px 0">'+medal+' <span style="color:'+(onSide?'#a78bfa':'#6e7681')+'">'+wl.slice(0,6)+'…'+wl.slice(-3)+'</span>'
+        +(onSide?'':' <span style="color:#e3b341;font-size:10px" title="steht auf der Gegenseite">⟂ '+_pwEsc(w.side)+'</span>')+'</td>'
+      +'<td style="text-align:right;padding:2px 8px">'+_pwUsd(w.usd)+'</td>'
+      +'<td style="text-align:right;padding:2px 8px">'+_pwNormBadge(nf)+'</td>'
+      +'<td style="text-align:right;padding:2px 0">'+trk+'</td></tr>';
   }).join('');
+  return '<table style="width:100%;border-collapse:collapse"><thead><tr style="font-size:9.5px;color:#484f58;text-transform:uppercase;letter-spacing:.4px">'
+    +'<th style="text-align:left;font-weight:600;padding-bottom:3px">Wallet</th>'
+    +'<th style="text-align:right;font-weight:600;padding-bottom:3px">Einsatz</th>'
+    +'<th style="text-align:right;font-weight:600;padding-bottom:3px" title="Einsatz als Vielfaches des Medians DIESER Wallet — aus poly_wallet_norm.json, nicht geschätzt">× eigene Norm</th>'
+    +'<th style="text-align:right;font-weight:600;padding-bottom:3px" title="Trefferquote und Ø CLV dieser Wallet über aufgelöste Spiele (ab n=8)">Track</th>'
+    +'</tr></thead><tbody>'+zeilen+'</tbody></table>';
+}
+
+// Die Tabellen-Zelle: stärkster Norm-Faktor auf DIESER Seite, plus wie viele Wallets über ihrer
+// Norm dahinterstehen. Ohne erfasste Whales oder ohne gelernte Norm steht „—", nie eine Null:
+// „keine Norm bekannt" und „Einsatz ist normal" sind verschiedene Aussagen.
+function _pwTermNormZelle(r){
+  const ev=_pwNormEvidenz(r);
+  if(!ev.groesste) return '<span style="color:#484f58" title="'+(ev.erfasst?'Whales erfasst, aber keine mit gelernter Norm über ×2':'keine Whale-Positionen erfasst')+'">—</span>';
+  const x=ev.groesste.x, col=x>=10?'#f0883e':x>=4?'#e3b341':'#a78bfa';
+  return '<span style="font-weight:800;color:'+col+'" title="größter Einsatz auf dieser Seite, gemessen am eigenen Median dieser Wallet ($'
+    +Math.round(ev.groesste.median).toLocaleString('de-DE')+' über '+ev.groesste.n+' Einsätze)">×'+(x>=20?Math.round(x):x.toFixed(1))+'</span>'
+    +(ev.dafuer>1?'<span style="color:#484f58;font-size:10px"> ·'+ev.dafuer+'</span>':'')
+    +(ev.gegen?'<span style="color:#e3b341;font-size:10px" title="'+ev.gegen+' Wallet(s) über eigener Norm auf der Gegenseite"> ⟂'+ev.gegen+'</span>':'');
+}
+
+// Was das Whale-Tape für DIESE Seite an Norm-Evidenz hergibt — für die Kopfzeile.
+function _pwNormEvidenz(r){
+  const m=(_pwCache&&_pwCache.broadLive&&_pwCache.broadLive[r.key])||null;
+  const wh=(m&&Array.isArray(m.whales))?m.whales:[];
+  let dafuer=0, gegen=0, groesste=null, rekorde=0, ohneNorm=0;
+  wh.forEach(w=>{
+    const nf=_pwNormFaktor(w.usd,w.wallet);
+    if(!nf){ ohneNorm++; return; }
+    if(nf.x<2) return;                       // unter 2× ist es der normale Betrieb dieser Wallet
+    if(w.side===r.side){ dafuer++; if(!groesste||nf.x>groesste.x) groesste=nf; }
+    else gegen++;
+    if(nf.rekord) rekorde++;
+  });
+  return {dafuer, gegen, groesste, rekorde, ohneNorm, erfasst:wh.length};
 }
 function _pwTermConvPanel(r){
   const col=r.conv>=8?'#3fb950':r.conv>=6?'#e3b341':'#8b949e';
@@ -3437,6 +3529,107 @@ function _pwTermTape(r){
   }).join('');
 }
 
+// ── Die Überzeugungs-Zeile (07.09.2026) ─────────────────────────────────────────────────────
+// Lucas: „schön war's, aber es war nichtssagend — ich konnte damit nichts anfangen."
+//
+// Der Drawer hatte sechs hübsche Kästen und keine Aussage. Sechs Zahlen nebeneinander sind
+// keine Überzeugung; die Arbeit, sie zu einem Urteil zu verrechnen, blieb beim Leser hängen —
+// jedes Mal aufs Neue, bei jeder Zeile.
+//
+// Diese Funktion nimmt sie ab, ohne zu erfinden: sie sammelt, was MESSBAR für und gegen diese
+// Seite spricht, jede Zeile mit ihrer Basis, und zählt beides gegeneinander. Was fehlt, steht
+// als „fehlt" da und nicht als stiller Nuller — ein fehlender Pinnacle-Anker ist kein
+// Argument gegen die Wette, sondern ein Loch in der Begründung.
+//
+// Nichts hier ist eine neue Rechnung: Kante, Konviktion, Bucket-Track, Betfair-Gegencheck,
+// Markout und Geld-vs-Preis kommen fertig aus den Artefakten. Die Norm-Evidenz kommt aus
+// poly_wallet_norm.json (2.057 Wallets).
+function _pwTermUrteil(r){
+  const fair=_pwTermFair(r), preis=r.price;
+  const dafuer=[], dagegen=[], fehlt=[];
+
+  // 1. Die Kante gegen den einzigen echten Anker, den wir haben.
+  if(fair!=null&&preis!=null){
+    const c=Math.round((fair-preis)*100);
+    if(c>=2) dafuer.push(['Kante +'+c+'¢ gegen Pinnacle','fair '+Math.round(fair*100)+'¢ · Poly '+Math.round(preis*100)+'¢']);
+    else if(c<=-2) dagegen.push(['Poly '+Math.abs(c)+'¢ teurer als Pinnacle','fair '+Math.round(fair*100)+'¢ · Poly '+Math.round(preis*100)+'¢']);
+  } else fehlt.push('kein Pinnacle-Anker — ohne ihn ist eine Kante nicht bestimmbar');
+
+  // 2. Einsätze gegen die EIGENE Norm der Wallet (das, was das Tape bisher verschwieg).
+  const ev=_pwNormEvidenz(r);
+  if(ev.dafuer) dafuer.push([ev.dafuer+' Wallet'+(ev.dafuer===1?'':'s')+' über eigener Norm auf dieser Seite',
+    'größte ×'+(ev.groesste?(ev.groesste.x>=20?Math.round(ev.groesste.x):ev.groesste.x.toFixed(1)):'?')
+    +(ev.groesste?' · Median $'+Math.round(ev.groesste.median).toLocaleString('de-DE')+' über '+ev.groesste.n+' Einsätze':'')
+    +(ev.rekorde?' · '+ev.rekorde+'× größter je erfasster Einsatz':'')]);
+  if(ev.gegen) dagegen.push([ev.gegen+' Wallet'+(ev.gegen===1?'':'s')+' über eigener Norm auf der GEGENSEITE','dieselbe Messung, andere Richtung']);
+  if(!ev.erfasst) fehlt.push('keine Whale-Positionen erfasst — über die Einsatzgrößen sagt diese Zeile nichts');
+  else if(ev.ohneNorm===ev.erfasst) fehlt.push('keine der '+ev.erfasst+' Wallets hat eine gelernte Norm — Beträge ohne Bezug');
+
+  // 3. Was die Konviktions-Stufe historisch gebracht hat (dein Paper-Track, nicht eine Meinung).
+  const b=(r.conv!=null)?_pwTermBucket(r.conv):null;
+  if(b&&b.n>=20&&typeof b.roi==='number'){
+    const t='Stufe '+r.conv+': ROI '+(b.roi>=0?'+':'')+Math.round(b.roi*100)+'%'
+      +((typeof b.clvAvg==='number')?' · CLV '+(b.clvAvg>=0?'+':'')+b.clvAvg.toFixed(1)+'pp':'')+' · n'+b.n;
+    (b.roi>0?dafuer:dagegen).push([b.roi>0?'diese Konviktions-Stufe lief positiv':'diese Konviktions-Stufe lief negativ',t]);
+  } else if(b) fehlt.push('Konviktions-Stufe '+r.conv+' hat erst n'+b.n+' — darunter kein Track');
+
+  // 4. Zweites Buch (nur wo der Kanten-Scorer den Gegencheck mitliefert).
+  if(r.bf){ if(r.bf.agree) dafuer.push(['Betfair-Geld auf derselben Seite',r.bf.pct+'% · '+_pwBfEur(r.bf.eur)]);
+            else dagegen.push(['Betfair-Geld auf der Gegenseite',r.bf.pct+'% auf '+_pwEsc(r.bf.name)]); }
+
+  // 5. Zwei gemessene Aussagen über die Quelle selbst — sie gelten für JEDE Zeile und gehören
+  //    deshalb hierher und nicht in die Tabelle.
+  const mk=_pwCache&&_pwCache.markout;
+  if(mk&&mk.verdict==='traegt'&&typeof mk.netMakerPP==='number')
+    dafuer.push(['Einstiege auf Poly gewinnen im Schnitt Preis',
+      'Markout '+(mk.netMakerPP>=0?'+':'')+mk.netMakerPP.toFixed(1)+'pp netto über '+(mk.fills||0).toLocaleString('de-DE')
+      +' Fills ('+(mk.headlineHorizon||'2h')+') — gemessen auf '+_pwEsc(String(mk.dataset||'liga').toUpperCase())
+      +'-Fills, gilt für andere Sportarten nur als Anhaltspunkt']);
+  const acc=_pwCache&&_pwCache.moneyAcc;
+  // 07.09.2026 — hier stand zuerst der Trefferquoten-Vergleich („37% gegen 46%"). Das war
+  // meine eigene Bug-Klasse 6: eine Trefferquote ohne die Quoten ist keine Zahl, und die
+  // Preis-Seite ist per Konstruktion der Favorit, trifft also ohnehin öfter. Das Urteil des
+  // Produzenten hängt am BRIER-Vergleich (kalibriert, niedriger = besser) — also steht auch
+  // der hier. Die Trefferquoten bleiben als Beschreibung daneben.
+  if(acc&&acc.verdict==='preis_besser'&&(acc.n||0)>=(acc.urteilMinN||30))
+    dagegen.push(['die Geld-Verteilung ist schlechter kalibriert als der Preis',
+      'Brier '+(+acc.brierMoney).toFixed(2)+' gegen '+(+acc.brierPrice).toFixed(2)+' · n'+acc.n
+      +' (Treffer '+Math.round((acc.moneyHitRate||0)*100)+'% vs '+Math.round((acc.priceHitRate||0)*100)+'%)'
+      +' — wer hier nur dem Geld folgt, folgt der schwächeren Seite']);
+  if(acc&&acc.verdict==='geld_schaerfer'&&(acc.n||0)>=(acc.urteilMinN||30))
+    dafuer.push(['die Geld-Verteilung ist besser kalibriert als der Preis',
+      'Brier '+(+acc.brierMoney).toFixed(2)+' gegen '+(+acc.brierPrice).toFixed(2)+' · n'+acc.n]);
+
+  // 6. Der Mute-Grund gehört in die Begründung, nicht nur in die Zeile darüber.
+  if(r.eingefroren!=null)
+    fehlt.push('der Preis ist eingefroren (Spiel läuft, kein frischer Live-Snapshot — Stand vor '
+      +(r.eingefroren<1?Math.round(r.eingefroren*60)+' min':r.eingefroren.toFixed(1)+' h')+'): als Einstieg nicht belastbar');
+
+  // Nur wo es ueberhaupt eine Konviktion gibt. Eine Geld-/Bewegungs-Zeile ist nicht „gemutet",
+  // sie hat schlicht kein Wett-Signal — das als Gegenargument zu zaehlen waere eine Erfindung.
+  if(r.conv!=null){
+    const mu=_pwTermMuted(r);
+    if(mu.m) dagegen.push(['gemutet: '+_pwEsc(mu.reason),'aus deinem eigenen Track — die Stufe war historisch klar negativ']);
+  } else fehlt.push('kein Wett-Signal auf dieser Zeile (Geld-/Bewegungs-Linse) — die Konviktion fehlt, sie ist nicht null');
+
+  const li=(x,col)=>'<div style="font-size:11.5px;line-height:1.55;margin-bottom:5px"><span style="color:'+col+'">●</span> <b style="color:#c9d1d9">'+x[0]+'</b><div style="color:#6e7681;font-size:10.5px;margin-left:12px">'+x[1]+'</div></div>';
+  const score=dafuer.length-dagegen.length;
+  const kopf=(dafuer.length===0&&dagegen.length===0)
+    ? {t:'Nichts Messbares — weder dafür noch dagegen',c:'#6e7681'}
+    : score>=2 ? {t:dafuer.length+' Argumente dafür, '+dagegen.length+' dagegen',c:'#3fb950'}
+    : score<=-1 ? {t:dagegen.length+' Argumente dagegen, '+dafuer.length+' dafür',c:'#f85149'}
+    : {t:'gemischt — '+dafuer.length+' dafür, '+dagegen.length+' dagegen',c:'#e3b341'};
+  return '<div style="background:#0f1626;border:1px solid #21262d;border-left:3px solid '+kopf.c+';border-radius:10px;padding:11px 13px;margin-bottom:12px">'
+    +'<div style="font-size:12px;font-weight:800;color:'+kopf.c+';margin-bottom:8px">'+kopf.t
+      +' <span style="font-weight:500;color:#484f58">— gezählt, nicht gewichtet: die Zeilen darunter sind die Begründung</span></div>'
+    +'<div style="display:flex;gap:18px;flex-wrap:wrap">'
+      +'<div style="flex:1;min-width:250px">'+(dafuer.length?dafuer.map(x=>li(x,'#3fb950')).join(''):'<div style="font-size:11px;color:#484f58">nichts, was messbar dafür spricht</div>')+'</div>'
+      +'<div style="flex:1;min-width:250px">'+(dagegen.length?dagegen.map(x=>li(x,'#f85149')).join(''):'<div style="font-size:11px;color:#484f58">nichts, was messbar dagegen spricht</div>')+'</div>'
+    +'</div>'
+    +(fehlt.length?'<div style="font-size:10.5px;color:#6e7681;margin-top:8px;border-top:1px solid #21262d;padding-top:7px">Was fehlt: '+fehlt.map(_pwEsc).join(' · ')+'</div>':'')
+  +'</div>';
+}
+
 function _pwTermDrawer(r){
   const fair=_pwTermFair(r), poly=r.price;
   const box='background:#0f1626;border:1px solid #21262d;border-radius:10px;padding:11px 13px';
@@ -3445,6 +3638,7 @@ function _pwTermDrawer(r){
     kelly='<div style="font-size:20px;font-weight:900;color:#3fb950;font-family:ui-monospace,monospace">'+(hk*100).toFixed(1)+'%</div><div style="font-size:10.5px;color:#8b949e;margin-top:2px">½-Kelly der Bankroll · Edge +'+Math.round((fair-poly)*100)+'¢</div>';
   } else { kelly='<div style="font-size:15px;font-weight:800;color:#484f58">kein Stake</div><div style="font-size:10.5px;color:#8b949e;margin-top:2px">'+(fair==null?'kein Pinnacle-Anker':'keine positive Kante')+'</div>'; }
   return '<div style="padding:12px 4px 6px">'
+    +_pwTermUrteil(r)
     +'<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px">'
       +'<div style="flex:2;min-width:300px;'+box+'"><div style="font-size:11px;color:#484f58;margin-bottom:4px">Poly-Preis '+_pwEsc(r.side)+(fair!=null?' vs. faire Pinnacle · grüne Fläche = Kante':' — reine Poly-Sicht (kein Pinnacle-Anker)')+'</div>'+_pwTermCurve(r)+'</div>'
       +'<div style="flex:1;min-width:150px;'+box+'"><div style="font-size:11px;color:#484f58;margin-bottom:2px">Konviktion — warum</div>'+_pwTermConvPanel(r)+'</div>'
@@ -3452,7 +3646,7 @@ function _pwTermDrawer(r){
     +'</div>'
     +'<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px">'
       +'<div style="flex:1;min-width:230px;'+box+'"><div style="font-size:11px;color:#484f58;margin-bottom:6px">📖 Orderbuch '+_pwEsc(r.side)+' — Ausführbarkeit (Spread &amp; Tiefe)</div>'+_pwTermBook(r)+'</div>'
-      +'<div style="flex:1;min-width:230px;'+box+'"><div style="font-size:11px;color:#484f58;margin-bottom:6px">🐋 Whale-Tape — wer steht drin (nach Einsatz · Track wenn n≥8 · ⟂ Gegenseite)</div>'+_pwTermWhaleTape(r)+'</div>'
+      +'<div style="flex:1;min-width:260px;'+box+'"><div style="font-size:11px;color:#484f58;margin-bottom:6px">🐋 Whale-Tape — Einsatz <b>gegen die eigene Norm dieser Wallet</b> (Median aus poly_wallet_norm.json · ⟂ Gegenseite)</div>'+_pwTermWhaleTape(r)+'</div>'
     +'</div>'
     +'<div style="'+box+'"><div style="font-size:11px;color:#484f58;margin-bottom:6px">⚡ Live-Trades — frischer Fluss (BUY grün / SELL rot · 🔥 = scharfe Wallet · blau = auf unserer Seite)</div>'+_pwTermTape(r)+'</div>'
   +'</div>';
@@ -3464,11 +3658,39 @@ let _pwTermLens='kanten';
 function _pwTermSetLens(l){ _pwTermLens=l; _pwTermRow=null; _pwRender(); }
 if(typeof window!=='undefined') window._pwTermSetLens=_pwTermSetLens;
 
+// 07.09.2026 (Lucas: „macht es Sinn, mit einem Toggle umzustellen?") — ja, aber nicht
+// „Geld gegen Preis": nach dem Preis zu SORTIEREN ergibt keinen Sinn, ein hoher Preis ist
+// keine Rangfolge. Die Frage dahinter war eine andere: die Linse ordnet nach Marktgröße, und
+// Marktgröße ist nicht die Entscheidungsfrage. Deshalb ein Sortier-Umschalter mit den drei
+// Achsen, die etwas heißen — die Auswahl der Zeilen bleibt davon unberührt.
+let _pwTermSort='auto';
+function _pwTermSetSort(v){ _pwTermSort=v; _pwTermRow=null; _pwRender(); }
+if(typeof window!=='undefined') window._pwTermSetSort=_pwTermSetSort;
+
+// Stärkster Wallet-Norm-Faktor auf der Seite dieser Zeile (für Sortierung + Zelle).
+function _pwTermNormX(r){ const ev=_pwNormEvidenz(r); return ev.groesste?ev.groesste.x:null; }
+
+// 07.09.2026 (Lucas: „ob die Linsen es nicht besser darstellen als die Tabs daneben") —
+// nachgemessen, und für Bewegung war die Antwort nein: hier stand `H[0]` gegen `H[letzter]`,
+// also GENAU der Fehler, den der Bewegung-Reiter am 02.09. abgelegt hat. Gemessen war das
+// Fenster damals im Median 2,5 h lang, mit Spannen von 0,1 h bis 29,2 h — sortiert wurde
+// faktisch danach, wie lange ein Markt schon in der History steht, nicht wie schnell er sich
+// bewegt. Zwei Flächen, zwei Antworten auf dieselbe Frage; die ältere stand im Terminal.
+//
+// Jetzt dieselben Konstanten und dasselbe Fenster wie `_pwMomentum`. Kein zweiter Wahrheitsstand.
 function _pwMarketSteam(key, side){
   const c=_pwCache||{}; const H=(c.broadLiveHist&&c.broadLiveHist[key])||(c.broadHist&&c.broadHist[key])||[];
-  if(H.length<2) return null; const a=H[0], b=H[H.length-1];
+  if(!Array.isArray(H)||H.length<2) return null;
+  const jetzt=Date.now();
+  const fenster=H.filter(sn=>{ const t=Date.parse(sn&&sn.ts); return !isNaN(t)&&(jetzt-t)<=PW_MOVE_FENSTER_H*3.6e6; });
+  if(fenster.length<2) return null;                 // lange beobachtet ist nicht bewegt
+  const a=fenster[0], b=fenster[fenster.length-1];
   const p1=a.p&&a.p[side], p2=b.p&&b.p[side];
-  if(typeof p1!=='number'||typeof p2!=='number') return null; return (p2-p1)*100;
+  if(typeof p1!=='number'||typeof p2!=='number') return null;
+  const spanH=(Date.parse(b.ts)-Date.parse(a.ts))/3.6e6;
+  if(!(spanH>0)) return null;
+  const move=(p2-p1)*100;
+  return {move, tempo:move/Math.max(spanH,0.25), spanH};
 }
 // Markt (broadLive) -> Play-artige Zeile. Conviction via Engine falls sie greift, sonst null („kein Signal").
 function _pwMarketRow(key, m){
@@ -3483,7 +3705,10 @@ function _pwMarketRow(key, m){
   const match=_pwPlayLabel(key, Object.keys(prices).map(s=>({s})));
   return {key, match, side:fav, conv, reasons, moneyPct, sharp,
           price:(typeof prices[fav]==='number'?prices[fav]:null),
-          vol:m.totalUsd||0, htk:_pwRealHtk(m), league:m.league, sport:m.sport};
+          vol:m.totalUsd||0, htk:_pwRealHtk(m), league:m.league, sport:m.sport,
+          // Wie alt ist der Preis, den wir zeigen? Nur gesetzt, wenn das Spiel laeuft und es
+          // keinen frischen Live-Snapshot gab. null = frisch genug, um nichts dazuzusagen.
+          eingefroren:(m._eingefroren!=null?m._eingefroren:null)};
 }
 // 18.08.2026 (Lucas): fuer laufende Spiele in Geld/Bewegung die FRISCHE Live-Poly bevorzugen, sonst
 // zeigt das Terminal den eingefrorenen Close-Preis auf einem Live-Spiel. Preise/Shares/Volumen/Zeit aus
@@ -3513,21 +3738,45 @@ function _pwTermRows(lens){
       if(!m.shares||(m.totalUsd||0)<5000||_pwLiveDecided(m)||_pwLiveGone(m)) continue;
       if(useSP && !_pwSportPass(m.league,m.sport)) continue;
     } else {
+      // 07.09.2026 (Lucas: „ich seh im Terminal wenig Mehrwert") — hier lag der Hauptgrund,
+      // warum das Terminal fast immer leer war. Gemessen an diesem Stand: von 2.558
+      // Close-Eintraegen sind 2.500 abgerechnet, 24 ueberfaellig — und **31 laufen gerade**.
+      // Fuer keinen einzigen davon hatte die Live-Datei einen Eintrag (52 Eintraege, andere
+      // Keys). Die Zeile darunter warf deshalb alle 31 weg; uebrig blieben 3 Maerkte, waehrend
+      // der Geld-Reiter daneben 31 Zeilen zeigte.
+      //
+      // Wegwerfen war gut gemeint (ein eingefrorener Preis auf einem laufenden Spiel ist eine
+      // Luege), aber die Folge war eine leere Flaeche neben einer vollen. Jetzt bleibt die
+      // Zeile stehen und sagt, was mit ihr los ist: ● LIVE + wie alt der Preis ist. Ein
+      // markierter alter Preis ist ehrlich; ein verschwundenes Spiel ist es nicht.
       if((_pwRealHtk(m)||0)<0){ const lnm=_pwCache&&_pwCache.broadLiveNow&&_pwCache.broadLiveNow[k];
-        if(!lnm||_pwLiveGone(lnm)) continue;
-        mrow=_pwLivePreferred(m,lnm); }   // laufendes Spiel -> frische Live-Poly statt Close-Freeze
+        if(lnm&&!_pwLiveGone(lnm)) mrow=_pwLivePreferred(m,lnm);   // frische Live-Poly bevorzugt
+        else { const cap=m.capturedAt?Date.parse(m.capturedAt):NaN;
+               mrow=Object.assign({},m,{_eingefroren:isNaN(cap)?null:(Date.now()-cap)/3.6e6}); } }
       if(_pwSportCategory(m.league,m.sport)==='Sonstige') continue;
       if(useSP && !_pwSportPass(m.league,m.sport)) continue;
     }
     const r=_pwMarketRow(k,mrow); if(!r) continue;
-    if(lens==='bewegung'){ r._steam=_pwMarketSteam(k,r.side); if(r._steam==null||Math.abs(r._steam)<1) continue; }
+    if(lens==='bewegung'){ const st=_pwMarketSteam(k,r.side); if(!st||Math.abs(st.move)<PW_MOVE_MIN_PP) continue; r._steam=st.move; r._tempo=st.tempo; r._spanH=st.spanH; }
     rows.push({r, mute:{m:false,reason:''}, pub:_pwTermIsPublic(r)});
   }
   if(lens==='geld') rows.sort((a,b)=>(b.r.vol||0)-(a.r.vol||0));
-  else if(lens==='bewegung') rows.sort((a,b)=>Math.abs(b.r._steam||0)-Math.abs(a.r._steam||0));
+  // Wie im Reiter: schnell schlägt lange.
+  else if(lens==='bewegung') rows.sort((a,b)=>Math.abs(b.r._tempo||0)-Math.abs(a.r._tempo||0));
   else if(lens==='live') rows.sort((a,b)=>(b.r.vol||0)-(a.r.vol||0));
-  return rows.slice(0,40);
+  return _pwTermSortiere(rows).slice(0,40);
 }
+// Der Umschalter greift NACH der Linse: er ordnet um, er wählt nicht aus. Sonst hinge die
+// Auswahl an der Sortierung — derselbe Fehler wie bei der Stake-Kandidatenliste heute früh.
+function _pwTermSortiere(rows){
+  if(_pwTermSort==='norm')
+    return rows.slice().sort((a,b)=>((_pwTermNormX(b.r)||0)-(_pwTermNormX(a.r)||0)));
+  if(_pwTermSort==='zeit')
+    return rows.slice().sort((a,b)=>{ const x=a.r.htk, y=b.r.htk;
+      if(x==null&&y==null) return 0; if(x==null) return 1; if(y==null) return -1; return x-y; });
+  return rows;
+}
+
 function _pwTermMeter(conv){
   if(conv==null) return '<span style="display:inline-flex;align-items:center;gap:6px"><span style="width:46px;height:6px;background:#161b22;border-radius:3px;display:inline-block"></span><span style="color:#484f58;font-size:11px">—</span></span>';
   const c=conv>=8?'#3fb950':conv>=6?'#e3b341':'#8b949e';
@@ -3549,6 +3798,12 @@ function _pwTerminal(){
 
   const lbtn=(id)=>{ const on=id===lens, d=_lensDef[id]; return '<button onclick="_pwTermSetLens(\''+id+'\')" style="padding:5px 12px;border:1px solid '+(on?'#a78bfa':'#21262d')+';background:'+(on?'rgba(167,139,250,.14)':'transparent')+';color:'+(on?'#a78bfa':'#8b949e')+';font-size:12px;font-weight:700;cursor:pointer;border-radius:0">'+d[0]+'</button>'; };
   const lensBar='<div style="display:inline-flex;border-radius:9px;overflow:hidden;border:1px solid #21262d;margin:2px 0 10px">'+['kanten','geld','bewegung','live'].map(lbtn).join('')+'</div>';
+  const sortDef={auto:['↕ Linse','die Standard-Ordnung dieser Linse (Geld/Live: Volumen · Bewegung: Tempo · Kanten: Konviktion)'],
+                 norm:['× Wallet-Norm','stärkster Einsatz gemessen am eigenen Median seiner Wallet — die Anomalie zuerst'],
+                 zeit:['⏱ Anpfiff','was zuerst angepfiffen wird']};
+  const sbtn=(id)=>{ const on=id===_pwTermSort, d=sortDef[id];
+    return '<button onclick="_pwTermSetSort(\''+id+'\')" title="'+_pwEsc(d[1])+'" style="padding:5px 11px;border:1px solid '+(on?'#4cc2ff':'#21262d')+';background:'+(on?'rgba(76,194,255,.12)':'transparent')+';color:'+(on?'#4cc2ff':'#8b949e')+';font-size:11.5px;font-weight:700;cursor:pointer;border-radius:0">'+d[0]+'</button>'; };
+  const sortBar='<div style="display:inline-flex;border-radius:9px;overflow:hidden;border:1px solid #21262d;margin:2px 0 10px 10px" title="Ordnet nur um — die Auswahl der Zeilen ändert sich nicht">'+['auto','norm','zeit'].map(sbtn).join('')+'</div>';
 
   const agg=(_pwCache&&_pwCache.shortlistTrack&&_pwCache.shortlistTrack.agg)||{};
   const pub=agg.public||{}, allA=agg.all||{};
@@ -3567,7 +3822,7 @@ function _pwTerminal(){
   const th=(t,a)=>'<th style="font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:#484f58;font-weight:700;text-align:'+(a||'right')+';padding:7px 9px;border-bottom:1px solid #21262d;white-space:nowrap">'+t+'</th>';
   let out='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🖥️ Terminal — '+_lensDef[lens][0].replace(/^\S+\s/,'')+'</span>'
     +'<span class="pw-sec-note">'+_lensDef[lens][1]+' · Zeile klicken → Drilldown · alte Reiter bleiben, nichts geht verloren</span></div>';
-  out+=lensBar+kpiBand;
+  out+=lensBar+sortBar+kpiBand;
   if(isK&&nMuted) out+='<div style="display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:11.5px;color:#8b949e"><label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" '+(_pwTermHideMuted?'checked':'')+' onclick="_pwTermMute(this.checked)"/> '+nMuted+' gemutete (historisch -EV) ausblenden</label></div>';
   if(!shown.length) return out+'<div class="pw-none">'+(isK?'Aktuell keine klare Gelegenheit — die Shortlist lebt von Steam &amp; scharfen Wallets.':'Keine Märkte in dieser Linse gerade.')+'</div></section>';
 
@@ -3577,22 +3832,34 @@ function _pwTerminal(){
     // hiess „CLV-Bucket" und zeigte den ROI. Bei Konv 7 (n=175) stehen ROI +1,3% und CLV −0,2pp —
     // die beiden widersprechen sich dort im VORZEICHEN, die Ueberschrift log also genau da, wo es
     // zaehlt. `clvAvg` lag in agg.byConv die ganze Zeit vor und wurde nie gelesen.
-    +th('Anpfiff','left')+th('Spiel','left')+th('Pick','left')+th('Konviktion')+th(flHead)+th('Stufen-Bilanz')+th('Einstieg')+'</tr></thead><tbody>';
+    // 07.09.2026 (Lucas: „ich seh im Terminal wenig Mehrwert"). Die Tabelle zeigte Volumen —
+    // und Volumen ohne Bezug ist der Grund, warum sie nichtssagend war. „×Norm" ist der
+    // Einsatz der GRÖSSTEN Wallet auf dieser Seite gemessen an ihrem eigenen Median: ×1 heißt
+    // Dienstag, ×18 heißt, da macht jemand etwas, das er sonst nie macht. Das ist die Zahl,
+    // wegen der man klickt.
+    +th('Anpfiff','left')+th('Spiel','left')+th('Pick','left')+th('Konviktion')+th(flHead)+th('× Wallet-Norm')+th('Stufen-Bilanz')+th('Einstieg')+'</tr></thead><tbody>';
   let mutedStarted=false;
   shown.forEach(x=>{
     const r=x.r; const open=(String(_pwTermRow)===String(r.key));
     if(isK&&x.mute.m && !mutedStarted){ mutedStarted=true;
-      out+='<tr><td colspan="7" style="padding:10px 9px 4px;font-size:10px;color:#484f58;border-top:1px dashed #21262d">🔇 Gemutet — Conviction-Stufe historisch -EV (dein Track) oder zu dünn.</td></tr>'; }
+      out+='<tr><td colspan="8" style="padding:10px 9px 4px;font-size:10px;color:#484f58;border-top:1px dashed #21262d">🔇 Gemutet — Conviction-Stufe historisch -EV (dein Track) oder zu dünn.</td></tr>'; }
     const meter=_pwTermMeter(r.conv);
     const b=(r.conv!=null)?_pwTermBucket(r.conv):null;
     const clv=(b&&b.n>=20)
       ? '<span style="font-family:ui-monospace,monospace;font-size:10.5px;font-weight:700;padding:1px 6px;border-radius:5px;color:'+(b.roi>0?'#3fb950':b.roi<0?'#f85149':'#8b949e')+';background:'+(b.roi>0?'rgba(63,185,80,.1)':b.roi<0?'rgba(248,81,73,.1)':'transparent')+'" title="Wie diese Conviction-Stufe im Paper-Track wirklich lief. ROI und CLV getrennt — bei kleinem n ist der CLV belastbarer.">'+(b.roi>0?'🟢':b.roi<0?'🔴':'⚪')+' ROI '+(b.roi>=0?'+':'')+Math.round(b.roi*100)+'%'+((typeof b.clvAvg==='number')?' · CLV '+(b.clvAvg>=0?'+':'')+b.clvAvg.toFixed(1)+'pp':'')+' · n'+b.n+'</span>'
       : '<span style="color:#484f58;font-size:10px">'+(b?('dünn n'+b.n):'—')+'</span>';
     const htk=r.htk!=null?(r.htk<0?'<span style="color:#f85149;font-weight:700">● LIVE</span>':r.htk<1?'<1h':Math.round(r.htk)+'h'):'—';
-    const price=(r.price!=null)?Math.round(r.price*100)+'¢':'—';
+    const price=(r.price!=null)
+      ? (Math.round(r.price*100)+'¢'+(r.eingefroren!=null
+          ? '<div style="font-size:9px;color:#e3b341" title="Das Spiel läuft, und für diesen Markt gab es keinen frischen Live-Snapshot. Der Preis ist der eingefrorene Close-Stand — als Einstieg nicht belastbar.">❄ vor '+(r.eingefroren<1?Math.round(r.eingefroren*60)+' min':r.eingefroren.toFixed(1)+' h')+'</div>'
+          : ''))
+      : '—';
     const mk='<a href="https://polymarket.com/event/'+encodeURIComponent(r.key)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681" title="Markt öffnen ↗">'+_pwEsc(r.match)+' <span style="color:#a78bfa">↗</span></a>';
     let fluss;
-    if(lens==='bewegung'){ const st=r._steam||0, up=st>=0; fluss='<span style="color:'+(up?'#3fb950':'#f85149')+';font-weight:700">'+(up?'▲ ':'▼ ')+(st>=0?'+':'')+st.toFixed(1)+'pp</span>'; }
+    if(lens==='bewegung'){ const st=r._steam||0, up=st>=0, tp=r._tempo;
+    fluss='<span style="color:'+(up?'#3fb950':'#f85149')+';font-weight:700" title="über '+(r._spanH!=null?r._spanH.toFixed(1):'?')+'h im '+PW_MOVE_FENSTER_H+'h-Fenster — sortiert wird nach Tempo, nicht nach Gesamt-Move">'
+      +(up?'▲ ':'▼ ')+(st>=0?'+':'')+st.toFixed(1)+'pp'
+      +(tp!=null?'<span style="color:#6e7681;font-weight:600;font-size:10px"> · '+(tp>=0?'+':'')+tp.toFixed(1)+'pp/h</span>':'')+'</span>'; }
     else { const moneyPct=(r.moneyPct!=null)?Math.round(r.moneyPct*100)+'%':'—'; fluss=_pwUsd(r.vol)+' <span class="pw-mut" style="font-size:10px">'+moneyPct+'</span>'; }
     out+='<tr onclick="_pwTermOpen(\''+r.key+'\')" style="cursor:pointer;opacity:'+((isK&&x.mute.m)?'0.5':'1')+';background:'+(open?'rgba(167,139,250,.06)':'transparent')+'">'
       +'<td class="pw-cn" style="text-align:left;font-family:ui-monospace,monospace;color:#8b949e"><span style="color:#484f58;margin-right:3px">'+(open?'▾':'▸')+'</span>'+htk+'</td>'
@@ -3600,9 +3867,10 @@ function _pwTerminal(){
       +'<td class="pw-cm" style="font-weight:700;color:#4cc2ff">'+_pwEsc(r.side)+((isK&&x.mute.m)?' <span style="font-family:system-ui;font-size:8.5px;color:#484f58;border:1px solid #21262d;padding:0 4px;border-radius:4px">🔇 '+_pwEsc(x.mute.reason)+'</span>':'')+'</td>'
       +'<td class="pw-cn">'+meter+'</td>'
       +'<td class="pw-cn" style="font-family:ui-monospace,monospace">'+fluss+'</td>'
+      +'<td class="pw-cn" style="font-family:ui-monospace,monospace">'+_pwTermNormZelle(r)+'</td>'
       +'<td class="pw-cn">'+clv+'</td>'
       +'<td class="pw-cn pw-mut" style="font-family:ui-monospace,monospace">'+price+'</td></tr>';
-    if(open) out+='<tr><td colspan="7" style="background:rgba(167,139,250,.03);padding:0 9px 6px">'+_pwTermDrawer(r)+'</td></tr>';
+    if(open) out+='<tr><td colspan="8" style="background:rgba(167,139,250,.03);padding:0 9px 6px">'+_pwTermDrawer(r)+'</td></tr>';
   });
   out+='</tbody></table></div>';
   out+='<div style="font-size:10px;color:#484f58;margin-top:9px;line-height:1.5">'+(isK

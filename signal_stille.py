@@ -77,11 +77,52 @@ def abgeschaltet_und_stumm(stumme_liste, abgeschaltete) -> dict:
             "stumm_trotz_an": sorted(n for n in st if n not in ab)}
 
 
+# ── Erklaerte Stille (07.09.2026) ────────────────────────────────────────────
+# Der Guard listet seit dem 06.09. jeden Tag dieselben drei Signale, und jedes Mal faengt
+# jemand die Untersuchung von vorne an. Zweimal endete sie bei „stimmt so", einmal bei einem
+# echten Fehler — aber das Ergebnis stand nirgends, also war es beim naechsten Blick wieder
+# offen.
+#
+# Hier steht deshalb die ANTWORT, nicht eine Ausnahme: jeder Eintrag nennt die Messung, aus
+# der er stammt, und ein Datum. Was hier steht, faellt nicht aus dem Bericht — es wandert in
+# einen zweiten Block, damit „erklaert" und „unerklaert" nicht mehr gleich aussehen.
+#
+# Was hier NICHT hingehoert: ein Signal, das schweigt und bei dem niemand nachgesehen hat.
+# Eine Erklaerung ohne Messung ist eine Ausrede mit Datum.
+ERKLAERTE_STILLE = {
+    "betfair_coherence":
+        "07.09.2026 gemessen: seit der Fit-Schranke (MAX_RMSE 0,02 + Leave-one-out, 06.09.) "
+        "feuert es fast nie — richtigerweise. Ueber 633 Sprossen aus 150 Spielen blieben 8 "
+        "echte Kanten >= 4 pp, alle in duennen Ligen (Kasachstan, Litauen, Norwegen 2, "
+        "Estland), keine einzige in den Top 5. Die Betfair-Tormarkt-Leiter ist auf unserer "
+        "Aufloesung arbitragefrei.",
+    "game_state_openness":
+        "07.09.2026 gemessen: braucht asymmetrische Verzweiflung spaet in der Saison. Aktuell "
+        "Spieltag 3-4 von 34-38, also 34 Runden offen — der Tabellendruck ist per Konstruktion "
+        "nahe null. Vor dem Winter ist Stille hier der richtige Zustand.",
+}
+
+
+def erklaert_und_offen(stumme_liste) -> dict:
+    """Stille mit hinterlegter Messung von Stille ohne. REIN."""
+    stl = list(stumme_liste or [])
+    return {"erklaert": [s for s in stl if s in ERKLAERTE_STILLE],
+            "offen": [s for s in stl if s not in ERKLAERTE_STILLE]}
+
+
 def befunde(stumme_liste, records) -> list:
-    """Eine Zeile je stummem Signal. Leere Liste = nichts zu melden."""
+    """Eine Zeile je stummem Signal. Leere Liste = nichts zu melden.
+
+    Erklaerte Stille steht am Ende und traegt ihre Messung mit — sonst sieht ein Signal, das
+    nachgesehen und nichts gefunden hat, aus wie eines, das nicht hinsehen konnte.
+    """
     if not stumme_liste:
         return []
     n = len([r for r in (records or []) if isinstance(r, dict)])
-    return ["%s: 0 Feuerungen in %d abgerechneten Picks — entweder ohne Zustaendigkeit "
-            "in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)" % (s, n)
-            for s in stumme_liste]
+    geteilt = erklaert_und_offen(stumme_liste)
+    zeilen = ["%s: 0 Feuerungen in %d abgerechneten Picks — entweder ohne Zustaendigkeit "
+              "in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)" % (s, n)
+              for s in geteilt["offen"]]
+    zeilen += ["%s: stumm, aber erklaert — %s" % (s, ERKLAERTE_STILLE[s])
+               for s in geteilt["erklaert"]]
+    return zeilen

@@ -376,6 +376,64 @@ class TestPolymarketSharp(unittest.TestCase):
         self.assertGreater(r.score, 0)
 
 
+    # ── Doppelte Chance (07.09.2026) ──────────────────────────────────────────
+    # Bis heute kannte das Signal nur Heimsieg/Auswaertssieg/Unentschieden/DNB. Gemessen ueber
+    # die 300 Liga-Picks: 80 davon waren 1X2, **95 Doppelte Chance** — und die Spiele mit
+    # echtem Poly-Geld ($404.746, $345.895, $186.831) trugen ausschliesslich DC- und
+    # Ueber/Unter-Picks. Das Signal schaute genau dort nicht hin, wo das Geld lag.
+    #
+    # Nach der Erweiterung (gemessen am selben Bestand): 175 statt 80 lesbare Maerkte,
+    # 62 statt 22 mit Pinnacle, 48 statt 15 mit Poly-Preisen, **8 statt 0** ueber der
+    # Volumen-Schwelle. Gefeuert hat trotzdem keines — alle acht Differenzen liegen zwischen
+    # -2,31 und +0,13 pp, also unter der 2,5-pp-Schwelle. Das ist der Unterschied zwischen
+    # „nachgesehen und nichts gefunden" und „konnte nicht hinsehen".
+
+    def _dc_ctx(self, poly_hw, poly_dr, poly_aw, vol=20000):
+        return {"odds_snapshot": {"hw": 1.91, "dr": 3.47, "aw": 4.46},
+                "poly_snapshot": {"poly_hw": poly_hw, "poly_dr": poly_dr,
+                                  "poly_aw": poly_aw, "vol": vol}}
+
+    def test_doppelte_chance_1x_wird_gelesen(self):
+        # Pinnacle 1X ~ 81 %; Poly sieht hw+dr deutlich hoeher -> bestaetigt
+        r = self.sig.evaluate({"market": "Doppelte Chance — 1X"},
+                              self._dc_ctx(0.62, 0.30, 0.08))
+        self.assertIsNotNone(r, "Doppelte Chance muss lesbar sein")
+        self.assertGreater(r.score, 0)
+        self.assertEqual(r.metadata["outcome"], "1x")
+        self.assertEqual(r.metadata["beine"], ["hw", "dr"])
+
+    def test_doppelte_chance_x2_nimmt_die_andere_summe(self):
+        r = self.sig.evaluate({"market": "Doppelte Chance — X2"},
+                              self._dc_ctx(0.30, 0.30, 0.40))
+        self.assertIsNotNone(r)
+        self.assertEqual(r.metadata["beine"], ["dr", "aw"])
+
+    def test_beide_seiten_werden_gleich_summiert(self):
+        """Sonst vergliche man zwei verschiedene Wetten: Poly-DC gegen Pinnacle-Einzelbein."""
+        r = self.sig.evaluate({"market": "Doppelte Chance — 1X"},
+                              self._dc_ctx(0.62, 0.30, 0.08))
+        self.assertGreater(r.metadata["pinn_implied"], 0.7,
+                           "die Pinnacle-Seite muss ebenfalls hw+dr sein, nicht nur hw")
+
+    def test_dnb_bleibt_ein_bein(self):
+        """„Draw no bet" ist keine Summe, sondern eine Rueckzahlung beim Remis."""
+        r = self.sig.evaluate({"market": "DNB: Heimteam"}, self._dc_ctx(0.60, 0.27, 0.13))
+        self.assertIsNotNone(r)
+        self.assertEqual(r.metadata["beine"], ["hw"])
+
+    def test_ueber_unter_bleibt_ausserhalb(self):
+        self.assertIsNone(self.sig.evaluate({"market": "Über 2.5 Tore"},
+                                            self._dc_ctx(0.60, 0.27, 0.13)))
+
+    def test_einigkeit_feuert_nicht(self):
+        """Der reale Fall vom 07.09.: acht Spiele ueber der Volumen-Schwelle, alle Diffs
+        unter 2,5 pp. Stille ist hier das richtige Ergebnis."""
+        # Poly = Pinnacle (devigt) -> Diff ~ 0
+        r = self.sig.evaluate({"market": "Doppelte Chance — 1X"},
+                              self._dc_ctx(0.5117, 0.2817, 0.2192))
+        self.assertIsNone(r)
+
+
 class TestSteamLagSignal(unittest.TestCase):
     """Pinnacle-Move + Polymarket-Lag."""
 
