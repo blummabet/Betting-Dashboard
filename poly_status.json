@@ -82,9 +82,11 @@
       "id": "resolutions_match_open_keys",
       "label": "Auflösungen matchen unsere Keys",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "MLB: nur 135/226 fällige Märkte aufgelöst (60%)"
+      ],
       "note": "Fällige Märkte je Liga, die ihre Auflösung finden. < 60% = Settlement läuft ins Leere (Slug-Mismatch), Trefferquoten dieser Liga sind unvollständig."
     },
     {
@@ -139,6 +141,6 @@
       "note": "poly_direct_bets.py rechnet über poly_resolutions.json ab. Hängt ein Bet, kennt Poly den Ausgang nicht (Markt noch offen/obskur) oder der Slug passt nicht — dann fehlt echtes Geld in der Bilanz."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-09-08T07:36:48.026515+00:00"
+  "nFail": 3,
+  "generatedAt": "2026-09-08T08:06:30.876470+00:00"
 }
