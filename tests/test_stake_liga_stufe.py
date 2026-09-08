@@ -253,3 +253,46 @@ def test_alle_ligen_im_echten_ledger_haben_eine_ebene():
                     and LS.stufe(r.get("ligaSlug"), r.get("sport")) is None})
     assert not fehlt, ("Fussball-Ligen ohne Ebene in stake_liga_stufe.py: %s"
                        % ", ".join(fehlt[:20]))
+
+
+# ── 08.09.2026: der CI-Wachhund hat zugeschlagen ────────────────────────────
+# `test_alle_ligen_im_echten_ledger_haben_eine_ebene` fiel mit zwei Slugs:
+# „veikkausliiga" und „uefa-youth-league". Genau dafuer gibt es ihn — aber ein Guard, der
+# feuert und danach nur von Hand geflickt wird, feuert beim naechsten Wettbewerb wieder.
+def test_finnische_spitze_ist_ebene_1():
+    # Ykkonen (2) und Kolmonen (3) standen seit dem ersten Tag in der Tabelle — die oberste
+    # Klasse desselben Landes fehlte. Eine Tabelle mit einem Loch in der Mitte faellt nicht auf.
+    assert LS.stufe("veikkausliiga") == "1"
+    assert LS.stufe("ykkonen") == "2"
+    assert LS.stufe("kolmonen") == "3"
+
+
+def test_ausgeschriebener_nachwuchs_wird_erkannt():
+    # Die Regel las nur die ersten drei Zeichen und fing deshalb „u19-…", aber keinen
+    # Wettbewerb, der seine Jugend ausschreibt.
+    for slug in ("uefa-youth-league", "premier-league-youth", "primavera-1",
+                 "junior-league", "academy-cup-de"):
+        assert LS.stufe(slug) == "jugend", slug
+
+
+def test_kuerzel_zaehlt_auch_mitten_im_slug():
+    assert LS.stufe("u19-bundesliga") == "jugend"
+    assert LS.stufe("npl-victoria-u21") == "jugend"
+
+
+def test_die_breitere_regel_stuft_nichts_um():
+    # Gegenprobe an allen 170 Fussball-Slugs des echten Ledgers: die alte Prefix-Regel und die
+    # neue duerfen sich nur dort unterscheiden, wo vorher GAR NICHTS herauskam.
+    alt = lambda s: s[:3] in ("u17", "u19", "u20", "u21", "u23")
+    for slug in ("usl-championship", "u20-womens-world-cup", "u23-queensland-npl",
+                 "uefa-champions-league", "eliteserien", "championship", "league-two"):
+        neu_j = bool(LS._JUGEND_RX.search(slug))
+        if alt(slug):
+            assert neu_j, "%s war Jugend und darf es bleiben" % slug
+
+
+def test_nachwuchs_schlaegt_kontinental():
+    # Die UEFA Youth League ist beides. Fuer die Frage, die diese Tabelle beantwortet — wie
+    # verhaelt sich ein grosser Einsatz —, ist „Nachwuchs" die staerkere Auskunft.
+    assert LS.stufe("uefa-youth-league") == "jugend"
+    assert LS.stufe("uefa-champions-league") == "kontinental"

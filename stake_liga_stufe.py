@@ -74,6 +74,10 @@ EBENE = {
     "liga-nacional-apertura": 1, "cambodian-premier-league": 1, "pro-league": 1,
     "usl-championship": 1, "liga-i": 1, "iraqi-league": 1, "vysshaya-liga": 1,
     "division-profesional": 1, "liga-portugal": 1,
+    # 08.09.2026 (CI-Wachhund): die finnische Spitze fehlte, waehrend „ykkonen" (2) und
+    # „kolmonen" (3) darunter seit dem ersten Tag in der Tabelle stehen. Genau die Luecke,
+    # die eine Tabelle ohne Wachhund jahrelang behaelt.
+    "veikkausliiga": 1,
     # ── zweite Spielklassen ────────────────────────────────────────────────
     "championship": 2, "2nd-bundesliga": 2, "la-liga-2": 2, "serie-b": 2, "ligue-2": 2,
     "j-league-2": 2, "brasileiro-serie-b": 2, "primera-b": 2, "k-league-2": 2,
@@ -107,6 +111,10 @@ ART = {
     "copa-paulista": "pokal", "dfb-pokal": "pokal", "copa-del-rey": "pokal",
 }
 
+# Nachwuchs, egal wie der Wettbewerb ihn schreibt: als Kuerzel irgendwo im Slug (u17..u23)
+# oder ausgeschrieben. Wortgrenzen, damit „usl-championship" oder „u2" nichts ausloesen.
+_JUGEND_RX = re.compile(r"\bu1[789]\b|\bu2[0-3]\b|youth|jugend|junior|academy|primavera")
+
 # Mustererkennung fuer alles, was neu dazukommt. Sie ersetzt die Tabelle nicht, sie faengt
 # nur die Faelle ab, bei denen der Slug die Antwort selbst mitbringt.
 _MUSTER = (
@@ -118,7 +126,18 @@ _MUSTER = (
     # als MUSTER, damit die naechste Reserveliga nicht wieder von Hand nachgetragen werden
     # muss.
     ("reserve", lambda s: "reserve" in s or s.endswith("-ii")),
-    ("jugend", lambda s: s[:3] in ("u17", "u19", "u20", "u21", "u23")),
+    # 08.09.2026 (CI-Wachhund, „uefa-youth-league"): die Regel las nur die ERSTEN DREI
+    # ZEICHEN, fing also „u19-…" und „u23-…", aber kein Wettbewerb, der seine Jugend im Namen
+    # ausschreibt. Dieselbe Unterscheidung, die heute frueh `elf_marker` in betfair_consensus
+    # bekommen hat: Nachwuchs ist eine andere Mannschaft, nicht eine Spielklasse.
+    #
+    # Die UEFA Youth League koennte man auch „kontinental" nennen — das waere nicht falsch,
+    # aber die schwaechere Auskunft: fuer den Einsatz eines Highrollers verhaelt sich ein
+    # U19-Spiel wie Nachwuchs und nicht wie ein Champions-League-Abend.
+    #
+    # Gegenprobe an den 170 Fussball-Slugs des Ledgers: die breitere Regel stuft KEINEN
+    # bereits eingestuften Slug um; sie beantwortet genau einen, der vorher None war.
+    ("jugend", lambda s: bool(_JUGEND_RX.search(s))),
     ("frauen", lambda s: ("women" in s or "femenina" in s or "feminin" in s
                           or "damallsvenskan" in s or "frauen" in s)),
     ("pokal", lambda s: s.endswith("-cup") or s.startswith("copa-") or s.endswith("-pokal")),

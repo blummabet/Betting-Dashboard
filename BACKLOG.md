@@ -3,6 +3,30 @@
 Stand 07.09.2026 (oberster Block); Liga/WM-Teil darunter Stand 26.06.2026. Lebendige Liste aller offenen Punkte — Liga UND noch nicht umgesetzte WM-Sachen —
 damit wir alles abarbeiten können. ✅ = erledigt (Referenz), ⏳ = offen, 🔒 = blockiert.
 
+## ✅ 08.09.2026 — der CI-Wachhund hat zugeschlagen (Liga-Ebenen)
+
+`test_alle_ligen_im_echten_ledger_haben_eine_ebene` fiel im CI mit zwei Slugs:
+**`veikkausliiga`** und **`uefa-youth-league`**. Genau dafür ist der Guard gebaut — beide Ligen
+sind heute neu im Ledger aufgetaucht (das Youth-League-Spiel Porto U19 v Man City U19 und die
+finnische Runde, beide aus demselben Feed, über den wir vorher gesprochen haben).
+
+- ✅ **`veikkausliiga` → Ebene 1.** Ein reines Tabellen-Loch: `ykkonen` (2) und `kolmonen` (3)
+  standen seit dem ersten Tag drin, die oberste Klasse desselben Landes fehlte. Eine Tabelle mit
+  einem Loch in der Mitte fällt ohne Wachhund nie auf.
+- ✅ **`uefa-youth-league` → `jugend`**, und zwar über das Muster, nicht von Hand. Die Regel las
+  bisher nur die **ersten drei Zeichen** (`s[:3] in ("u17","u19",…)`) und fing damit „u19-…",
+  aber keinen Wettbewerb, der seine Jugend ausschreibt. Jetzt `u17`–`u23` an beliebiger Stelle
+  plus `youth|jugend|junior|academy|primavera`.
+
+  Man könnte die UEFA Youth League auch „kontinental" nennen — nicht falsch, aber die schwächere
+  Auskunft: für die Frage, die diese Tabelle beantwortet (wie verhält sich ein großer Einsatz),
+  verhält sich ein U19-Spiel wie Nachwuchs und nicht wie ein Champions-League-Abend. Dieselbe
+  Unterscheidung wie bei `elf_marker` in `betfair_consensus` vom selben Tag.
+
+- ✅ Gegenprobe an allen **170 Fußball-Slugs des echten Ledgers**: die breitere Regel stuft
+  **keinen** bereits eingestuften Slug um — sie beantwortet genau den einen, der vorher `None` war.
+- ✅ Guard gegen die Wiederholung: fünf Tests, die mit dem alten Stand fallen (geprüft).
+
 ## 🤝 08.09.2026 — Remis-Pushs: Lucas' Skepsis ist gemessen richtig
 
 Lucas: *„Ich hab wieder eine Push bekommen bei einem portugiesischen U23-Match … das Match war bei
