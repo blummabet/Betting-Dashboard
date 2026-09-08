@@ -41,24 +41,60 @@ class TestEntschiedenBleibtEntschieden(unittest.TestCase):
         self.assertIsNone(r["roiLb"])
         self.assertIn(r["status"], ("sammelt", "kandidat"))
 
-    def test_positiver_roi_ohne_clv_wird_nicht_freigegeben(self):
-        """Fail-closed: ohne CLV bleibt Glück und Kante ununterscheidbar. Zwei Betfair-
-        Schubladen mit belegtem ROI (+36 % bzw. +5,4 %) stehen genau deshalb auf 'geprueft'."""
+    # 08.09.2026 (Lucas: „ja Freigabe locker"). Die beiden Tests hier hielten bis heute fest,
+    # dass ein fehlender oder negativer CLV die Freigabe blockiert. Diese Regel gilt nicht mehr:
+    # das Tor ist die ROI-Untergrenze, der CLV beschreibt. Was die Tests jetzt festhalten, ist
+    # das, was an ihre Stelle treten MUSS — sonst waere der Wegfall des Tors ein stiller Verlust:
+    # die Auskunft bleibt auf der Zeile, und sie unterscheidet die drei Faelle sauber.
+    def test_ohne_clv_wird_freigegeben_aber_die_luecke_steht_dran(self):
+        """Fail-closed war die alte Antwort. Die neue: freigeben und die Luecke benennen —
+        „nicht erhoben" ist eine Datenluecke, kein Messergebnis gegen die Schublade."""
         r = F.bewerte("Test", "betfair", [0.4 + (i % 3) * 0.05 for i in range(40)], [],
                       letzter="2026-09-06T12:00:00Z")
         self.assertGreater(r["roiLb"], 0)
-        self.assertEqual(r["status"], "geprueft")
-        self.assertIn("CLV", r["grund"])
+        self.assertEqual(r["status"], "freigegeben")
+        self.assertEqual(r["clvUrteil"], "nicht erhoben")
+        self.assertIn("kein CLV", r["grund"])
 
-    def test_negativer_clv_blockt_trotz_belegtem_roi(self):
-        """Der reale Fall „Public-Kandidaten": ROI +19,6 % mit Untergrenze +0,63 %, aber
-        CLV-Untergrenze −2,53 pp. Der Markt widerspricht — also keine Freigabe."""
+    def test_negativer_clv_blockt_nicht_mehr_aber_warnt(self):
+        """ROI belegt, CLV nachweislich dagegen: freigegeben — mit der Warnung IN der Zeile.
+        Ohne sie waere „Freigabe locker" ein Datenverlust und nicht eine Lockerung."""
         r = F.bewerte("Test", "poly", [0.4 + (i % 3) * 0.05 for i in range(40)],
                       [-2.0 - (i % 3) * 0.1 for i in range(40)],
                       letzter="2026-09-06T12:00:00Z")
         self.assertGreater(r["roiLb"], 0)
-        self.assertLess(r["clvLb"], 0)
-        self.assertEqual(r["status"], "geprueft")
+        self.assertLess(r["clvOg"], 0, "die Vorbedingung: der CLV ist wirklich negativ belegt")
+        self.assertEqual(r["status"], "freigegeben")
+        self.assertEqual(r["clvUrteil"], "negativ belegt")
+        self.assertIn("⚠️", r["grund"])
+
+    def test_negativ_belegt_heisst_obergrenze_unter_null_nicht_untergrenze(self):
+        """⭐ Der Fehler, den die Umstellung sichtbar gemacht hat. Solange der CLV das TOR war,
+        wurden zwei Faelle gleich behandelt: „nachweislich schlechter CLV" und „CLV um null,
+        breit gestreut". Als Etikett auf der Zeile sind sie nicht dasselbe — das eine ist ein
+        Messergebnis gegen die Schublade, das andere die Abwesenheit eines Ergebnisses.
+
+        Real: „Public-Kandidaten" hat CLV −0,80 pp mit Untergrenze −2,53 — nach der alten Lesart
+        „negativ belegt". Die OBERgrenze liegt aber bei +0,93: gegen diese Schublade ist gar
+        nichts bewiesen."""
+        breit = F.bewerte("Test", "poly", [0.4 + (i % 3) * 0.05 for i in range(40)],
+                          [9.0 if i % 2 else -9.0 for i in range(40)],
+                          letzter="2026-09-06T12:00:00Z")
+        self.assertLess(breit["clvLb"], 0, "die Vorbedingung: die Untergrenze liegt unter null")
+        self.assertGreater(breit["clvOg"], 0)
+        self.assertEqual(breit["clvUrteil"], "gemessen, nicht belegt")
+        self.assertNotIn("⚠️", breit["grund"])
+
+    def test_der_strenge_schalter_bringt_das_alte_tor_zurueck(self):
+        """Ein Schalter, der nie feuert, ist keiner (s. x-Norm-Badge)."""
+        alt = F.CLV_BLOCKT
+        try:
+            F.CLV_BLOCKT = True
+            r = F.bewerte("Test", "betfair", [0.4 + (i % 3) * 0.05 for i in range(40)], [],
+                          letzter="2026-09-06T12:00:00Z")
+            self.assertEqual(r["status"], "geprueft")
+        finally:
+            F.CLV_BLOCKT = alt
 
     def test_beides_belegt_gibt_frei(self):
         r = F.bewerte("Test", "poly", [0.4 + (i % 3) * 0.05 for i in range(40)],

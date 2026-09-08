@@ -86,13 +86,40 @@ def _now():
 # Stake und die eigenen Cards fuehren keine Betfair-matchId. Gejoint wird deshalb ueber die
 # Namen — mit derselben Mechanik wie der Poly-Join, inklusive `gleiche_elf`: seit dem 08.09.
 # steht fest, dass ein Altersmarker die Identitaet traegt und nicht der Score.
-def paart(home_a, away_a, home_b, away_b, min_summe: float = NAME_MIN) -> bool:
+# 08.09.2026 — DIE SUMME ALLEIN REICHT NICHT. Beim Bau des Poly-Joins fuer Ebene 3 fielen drei
+# falsche Treffer auf, alle nach demselben Muster:
+#
+#     Poly „Cincinnati Reds / Los Angeles Dodgers"  ==  Stake „Boston Red Sox - Los Angeles Angels"
+#
+# „Los Angeles Dodgers" gegen „Los Angeles Angels" bringt 0,67 (zwei von drei Tokens: die STADT),
+# „Cincinnati Reds" gegen „Boston Red Sox" bringt 0,00. Summe 0,67 > 0,55 — also ein Treffer, bei
+# dem EIN Name den ganzen Join traegt und der andere gar nichts beisteuert. Dieselbe Klasse wie
+# `gleiche_elf` heute frueh: ein geteiltes Token ist keine Identitaet.
+#
+# Also muss JEDER der beiden Namen seinen eigenen Beleg mitbringen. Gegenprobe an den echten
+# Daten: der Fussball-Join (Stake x Betfair-Konsens) hat 7 Treffer, der schwaechste Einzelname
+# liegt bei 0,50 — die Huerde nimmt dort also keinen einzigen richtigen Treffer weg und wirft
+# genau die drei falschen aus dem Poly-Join.
+#
+# ⚠️ Was sie NICHT loest: „Manchester United" gegen „Manchester City" bringt 0,50 auf beiden
+# Seiten. Zwei Vereine derselben Stadt bleiben ueber Namen allein ununterscheidbar; dagegen hilft
+# nur ein Schluessel, kein Score. Das steht hier, damit niemand die Huerde fuer mehr haelt, als
+# sie ist.
+NAME_JE_MIN = 0.34        # jeder Name einzeln — ein Token-Treffer im groesseren Namen
+
+
+def paart(home_a, away_a, home_b, away_b, min_summe: float = NAME_MIN,
+          je_min: float = None) -> bool:
     """Beschreiben zwei Paarungen dasselbe Spiel? REIN. Ohne beide Namen: nein (kein Raten)."""
     if not (home_a and away_a and home_b and away_b):
         return False
     if not (gleiche_elf(home_a, home_b) and gleiche_elf(away_a, away_b)):
         return False
-    return (_name_score(home_a, home_b) + _name_score(away_a, away_b)) > min_summe
+    je = NAME_JE_MIN if je_min is None else je_min
+    sh, sa = _name_score(home_a, home_b), _name_score(away_a, away_b)
+    if min(sh, sa) < je:
+        return False
+    return (sh + sa) > min_summe
 
 
 _REMIS = ("draw", "the draw", "tie", "remis", "unentschieden", "x")
@@ -112,7 +139,18 @@ def _seite_aus_name(name, home, away):
 
 
 # ── Stake-Geld je Spiel ──────────────────────────────────────────────────────
-_STAKE_1X2 = ("1x2", "match odds", "full time result", "1 x 2")
+# Maerkte, die eine Seite FUER DAS GANZE SPIEL benennen. Fussball-1X2 war der einzige, den
+# `stake_je_spiel` kannte — bei Tennis, E-Sport und US-Sport heisst derselbe Markt „Winner" oder
+# „Match Winner - Twoway", und deshalb hatte in Ebene 3 kein einziger Tennis-Play eine
+# Stake-SEITE, obwohl Geld dalag (08.09.2026, beim Bau des Poly-Joins gemessen: 0 von 9).
+#
+# Ausdruecklich NICHT dabei: „1st Set - Winner", „Map 2 Winner", „2nd Set Game 7 - Winner".
+# Die tragen Geld, beantworten aber eine andere Frage — genau wie „Over 1.5" beim Fussball.
+# Wer den Satzsieger als Spielseite zaehlt, addiert zwei verschiedene Wetten zu einer Meinung.
+_STAKE_1X2 = ("1x2", "match odds", "full time result", "1 x 2",
+              "winner", "match winner", "match winner - twoway", "match winner - threeway",
+              "winner (incl. super over)", "winner (incl. extra innings)",
+              "winner (incl. overtime)", "moneyline")
 
 
 def stake_je_spiel(wetten, now=None, fenster_h: float = FENSTER_H):
@@ -174,6 +212,84 @@ def stake_fuer(home, away, index):
                 "seiteUsd": round(seite_usd), "event": e["event"],
                 "ohneSeiteUsd": round(e["ohneSeite"])}
     return None
+
+
+# ── Stake x Polymarket: derselbe Join, aber ueber den Poly-Marktschluessel ───────────────
+# 08.09.2026 (Lucas: „Stake in Ebene 3, aber genauso dargestellt wie diese anderen Indikatoren
+# mit dem Balken").
+#
+# Warum das hier und nicht im Frontend: Ebene 3 zieht ihre Zeilen aus der Poly-Shortlist, und
+# die kennt nur den Poly-MARKTSCHLUESSEL. Ein Namens-Join („Sinner - Alcaraz" gegen „Jannik
+# Sinner"/„Carlos Alcaraz") im Renderer waere Produzenten-Logik an der falschen Stelle — die
+# Klasse, an der `elf_marker` und `polyKey` schon zweimal haengen geblieben sind. Hier steht sie
+# einmal, rein und geprueft; die Oberflaeche schlaegt danach nur noch in einem Woerterbuch nach.
+#
+# Warum ueber `prices` und nicht ueber home/away: `poly_money_upcoming.json` fuehrt kein
+# Heim/Auswaerts — bei Tennis und E-Sport gibt es das auch gar nicht. Was es fuehrt, sind die
+# beiden SEITENNAMEN, und genau die braucht der Join.
+_POLY_SUFFIX = ("-more-markets", "-exact-score", "-total-goals")
+
+
+def poly_basis_key(key) -> str:
+    """Der Basis-Schluessel eines Poly-Marktes. „xyz-more-markets" und „xyz" sind EIN Spiel —
+    dieselbe Zusammenfassung, die `_pwTopPlays` im Frontend macht."""
+    k = str(key or "")
+    for suf in _POLY_SUFFIX:
+        if k.endswith(suf):
+            return k[: -len(suf)]
+    return k
+
+
+def _poly_seiten(markt) -> list:
+    """Die beiden Seitennamen eines Poly-Marktes — oder [] wenn es nicht genau zwei sind.
+
+    Drei-Wege-Maerkte (1X2 mit Remis) haben keine zwei Seiten, die sich mit „A - B" paaren
+    lassen; sie kommen deshalb gar nicht erst in den Join, statt mit zwei von drei Namen
+    verglichen zu werden.
+    """
+    pr = (markt or {}).get("prices")
+    if not isinstance(pr, dict):
+        return []
+    namen = [str(n) for n in pr.keys() if str(n).strip()]
+    return namen if len(namen) == 2 else []
+
+
+def stake_je_polykey(maerkte, wetten, now=None, fenster_h: float = FENSTER_H) -> dict:
+    """polyKey -> {usd, n, seite, seiteUsd, event, liga} ueber den Namens-Join. REIN.
+
+    `maerkte`: {key: {"prices": {seite: preis}, "league": …}} wie `poly_money_upcoming.json`.
+    `seite` ist der POLY-Seitenname (nicht home/away): so kann die Oberflaeche direkt
+    vergleichen, ob Stake auf derselben Seite liegt wie der Play — ohne selbst zu uebersetzen.
+    None heisst „Geld liegt da, aber unter dem Boden oder ohne 1X2-Seite"; das Geld bleibt
+    trotzdem sichtbar. Fehlende Information rendert als harmloser Default, nicht als Null.
+    """
+    idx = stake_je_spiel(wetten, now=now, fenster_h=fenster_h)
+    if not idx or not isinstance(maerkte, dict):
+        return {}
+    aus = {}
+    for key, m in maerkte.items():
+        seiten = _poly_seiten(m)
+        if not seiten:
+            continue
+        pa, pb = seiten
+        for e in idx.values():
+            h, a = [t.strip() for t in e["event"].split(" - ", 1)]
+            if not paart(pa, pb, h, a):
+                continue
+            # Welche STAKE-Seite traegt das meiste Geld — und wie heisst sie bei Poly?
+            seite, seite_usd = None, 0.0
+            for nm, usd in sorted(e["seiten"].items(), key=lambda kv: -kv[1]):
+                treffer = [ps for ps in seiten if _name_score(nm, ps) >= NAME_MIN]
+                if len(treffer) == 1:
+                    seite, seite_usd = treffer[0], usd
+                    break
+            if seite_usd < STAKE_MIN_USD:
+                seite = None
+            aus[poly_basis_key(key)] = {"usd": round(e["usd"]), "n": e["n"], "seite": seite,
+                                        "seiteUsd": round(seite_usd), "event": e["event"],
+                                        "liga": e.get("liga")}
+            break
+    return aus
 
 
 # ── Eigene Cards ─────────────────────────────────────────────────────────────

@@ -332,6 +332,7 @@
       '.fg-strom{flex:1 1 200px;min-width:200px;background:var(--mln);border:1px solid var(--mln2);border-radius:10px;padding:9px 11px;}',
       '.fg-strom-h{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mi);margin-bottom:2px;}',
       '.fg-strom-z{margin-left:auto;font-size:9.5px;color:var(--mi3);white-space:nowrap;}',
+      '.fg-strom-b{margin-top:5px;padding-top:5px;border-top:1px solid var(--mln2);font-size:10.5px;color:var(--mi2);line-height:1.35;}',
       // Ebene 0 — Spielzentrale (08.09.2026). Eine Zeile je Spiel, Quellen als feste
       // Spalten: belegt oder leer, immer an derselben Stelle. Man zaehlt die gefuellten
       // Felder, statt Text zu lesen — und zwei Zeilen untereinander sind vergleichbar.
@@ -2134,6 +2135,32 @@
     var x = (stellen === 1) ? (+v).toFixed(1) : Math.round(v);
     return (v >= 0 ? '+' : '') + x + (suffix || '');
   }
+  // 08.09.2026 (Lucas: „ja Freigabe locker"). Der CLV blockiert nicht mehr — also muss er
+  // SICHTBAR sein, sonst ist die Lockerung ein stiller Datenverlust: die einzige Warnung, die es
+  // zu einer Freigabe noch gibt, wäre weg. Vier Zustände, und die zwei mittleren dürfen nie
+  // gleich aussehen: „nicht erhoben" ist eine Datenlücke, „negativ belegt" ein Messergebnis
+  // GEGEN die Schublade (Obergrenze unter null, nicht bloß Untergrenze).
+  var FG_CLV_URTEIL = {
+    'belegt': ['✓ CLV belegt', 'good',
+      'Die CLV-Untergrenze liegt über null — der Markt gibt der Schublade recht.'],
+    'negativ belegt': ['⚠ CLV dagegen', 'red',
+      'Die CLV-OBERGRENZE liegt unter null: gegen diese Schublade ist etwas gemessen, nicht nur nichts dafür. '
+      + 'In unseren Daten (n=2.651) liefen Schubladen mit negativem CLV im Schnitt −6,8 %. '
+      + 'Sie ist trotzdem freigegeben — auf die Rendite, nicht auf eine gemessene Kante.'],
+    'gemessen, nicht belegt': ['· CLV offen', 'ink3',
+      'CLV gemessen, aber weder Unter- noch Obergrenze schließt die Null aus. Das ist die Abwesenheit '
+      + 'eines Ergebnisses, kein Ergebnis gegen die Schublade.'],
+    'nicht erhoben': ['· kein CLV', 'ink3',
+      'Für diese Schublade wird gar kein CLV erhoben. Unbekannt ist kein Nein — aber auch kein Ja.'],
+  };
+
+  function _fgClvUrteil(r) {
+    var u = FG_CLV_URTEIL[r && r.clvUrteil];
+    if (!u) return '';
+    var col = u[1] === 'good' ? A.good : (u[1] === 'red' ? A.red : 'var(--mi3)');
+    return '<span class="md-kl-c" style="color:' + col + '" title="' + esc(u[2]) + '">' + u[0] + '</span>';
+  }
+
   function _mdFgZeile(r, minN) {
     // Eine Schublade als Zeile: Name, Stichprobe, ROI und CLV IMMER mit Untergrenze daneben
     // (feedback_punktschaetzer_kein_beleg — der Punktschaetzer allein hat hier nichts verloren).
@@ -2188,7 +2215,7 @@
       + '<span class="md-kl-bs" title="Was die Schublade insgesamt getragen hat — Summe der Renditen in Einheiten Einsatz">'
       +   'P/L ' + (r.pl == null ? '—' : (r.pl > 0 ? '+' : '') + (+r.pl).toFixed(1)) + '</span>'
       + '<span class="md-kl-bs" title="CLV mit Untergrenze — bei kleinem n belastbarer als der ROI">'
-      +   'CLV ' + _mdFgZahl(r.clv, 'pp', 1) + '</span>' + alt + weit + '</div>';
+      +   'CLV ' + _mdFgZahl(r.clv, 'pp', 1) + '</span>' + _fgClvUrteil(r) + alt + weit + '</div>';
   }
   // Eine Ebene der Spielbar-Sektion. Alle drei bekommen denselben Kopf, damit man sie
   // uebereinander VERGLEICHEN kann: Nummer (Strenge) · Frage · Bauart · eigener Stand.
@@ -2345,7 +2372,24 @@
   // auch dran: „n=234" heißt nicht „alles von Poly", sondern „alle Poly-Plays nach Conviction".
   var FG_STROM = { cards: ['🎯', 'Cards'], poly: ['🎮', 'Polymarket'], betfair: ['💷', 'Betfair'] };
 
-  function _mdStromKachel(r) {
+  // 08.09.2026 (Lucas: „bei Poly wäre gut wenn wir den Public-Kandidaten auch anzeigen, weil
+  // der gut ist — also nicht über alle Poly"). Genau das Problem hatte die Kachel: „Polymarket
+  // −7,3 %" ist der Schnitt über ALLE Poly-Plays und verschweigt, dass eine Schublade darin
+  // (Public-Kandidaten, n=35) +20,8 % mit einer Untergrenze von +2,3 % trägt. Der Strom-Schnitt
+  // beantwortet „wie gut ist die Quelle im Mittel", die Frage ist aber „welchem Teil folge ich".
+  // Deshalb steht die stärkste BELEGTE Schublade des Stroms auf seiner eigenen Kachel — und
+  // wenn keine belegt ist, steht genau das da, nicht die beste unbelegte.
+  function _mdStromBeste(f, strom, minN) {
+    var rs = ((f && f.alle) || []).filter(function (r) {
+      return r.strom === strom && r.status !== 'ruht' && (r.n || 0) >= minN
+        && typeof r.roiLb === 'number' && r.roiLb > 0;
+    });
+    if (!rs.length) return null;
+    rs.sort(function (a, b) { return b.roiLb - a.roiLb; });
+    return rs[0];
+  }
+
+  function _mdStromKachel(r, beste) {
     var ico = FG_STROM[r.strom] || ['·', r.strom];
     var col = (r.roi == null) ? 'var(--mi3)' : (r.roi > 0 ? A.good : A.red);
     var z = function (lbl, wert, c) {
@@ -2364,7 +2408,18 @@
       + z('CLV', (r.clv == null ? '—' : (r.clv > 0 ? '+' : '') + (+r.clv).toFixed(1) + 'pp'))
       + z('belegte Schubladen', r.belegte == null ? '—' : r.belegte,
           r.belegte ? A.good : 'var(--mi3)')
-      + '</div></div>';
+      + '</div>'
+      + (beste
+        ? '<div class="fg-strom-b" title="Die stärkste Schublade dieses Stroms, deren Rendite-'
+          + 'Untergrenze über null liegt — ihr folgt man, nicht dem Strom-Schnitt">★ '
+          + '<b>' + esc(String(beste.schublade || '')) + '</b> '
+          + (beste.roi > 0 ? '+' : '') + (beste.roi * 100).toFixed(1) + '% '
+          + '<i>(UG ' + (beste.roiLb > 0 ? '+' : '') + (beste.roiLb * 100).toFixed(1) + '%, n='
+          + (beste.n || 0) + ')</i></div>'
+        : '<div class="fg-strom-b" style="color:var(--mi3)" title="Keine einzelne Schublade '
+          + 'dieses Stroms hat ihre Rendite-Untergrenze über null — der Strom-Schnitt ist hier '
+          + 'alles, was es gibt">· keine belegte Schublade</div>')
+      + '</div>';
   }
 
   // Die stärksten reifen Schubladen — sortiert nach dem, was ein Beleg WÄRE (ROI-Untergrenze),
@@ -2389,16 +2444,114 @@
       + (rest ? '<div class="md-kl-foot">' + rest + ' weitere reife Schubladen — im Register unten.</div>' : '');
   }
 
-  function _mdStroeme(f) {
+  function _mdStroeme(f, minN) {
     var st = (f && f.stroeme) || [];
     if (!st.length) return '';
-    return '<div class="fg-stroeme">' + st.map(_mdStromKachel).join('') + '</div>'
+    return '<div class="fg-stroeme">' + st.map(function (r) {
+        return _mdStromKachel(r, _mdStromBeste(f, r.strom, minN));
+      }).join('') + '</div>'
       + '<div class="md-kl-foot" style="border-top:0;padding:2px 0 8px">Je Strom über <b>eine '
       + 'überschneidungsfreie Zerlegung</b> gerechnet — die übrigen Schubladen desselben Stroms '
       + 'sind andere Schnitte durch dieselben Plays und würden doppelt zählen. Ruhende Schubladen '
       + '(z.&nbsp;B. die WM) sind draußen: sie liefern nichts mehr.</div>';
   }
 
+  // ══ Ligen und Wallets (08.09.2026) ══════════════════════════════════════════════════════
+  // Lucas, zwei Fragen in einer Nachricht: „geht aus dem Tracking eventuell auch anzeigen welche
+  // Ligen gut performen?" und „wäre eventuell auch gut wenn man anzeigt z. B. Top 10 Poly
+  // Wallets — dann weiss ich, die Pushs die ich krieg von denen sind gut".
+  //
+  // Beides sind KEINE Schubladen und stehen deshalb nicht in der Schubladenliste:
+  //   · Die Ligen sind eine ZWEITE überschneidungsfreie Zerlegung derselben Betfair-Plays
+  //     (jeder Play hat eine Liga UND einen Markt). Zur Markt-Zerlegung addiert wären es
+  //     dieselben 16.657 Plays doppelt.
+  //   · Die Wallets zählen gar keine Plays von uns, sondern fremde Positionen.
+  var FG_LIGA_TOP = 8, FG_LIGA_FLOP = 4, FG_WALLET_MAX = 10;
+
+  function _fgPct(v, stellen) {
+    if (v == null) return '—';
+    return (v >= 0 ? '+' : '') + (v * 100).toFixed(stellen == null ? 1 : stellen) + '%';
+  }
+
+  function _mdLigaZeile(l) {
+    var col = l.belegt ? A.good : (l.roi > 0 ? A.gold : A.red);
+    return '<div class="md-kl-bz" style="align-items:center">'
+      + '<span style="color:' + col + ';font-weight:800;flex-shrink:0">' + (l.belegt ? '✓' : '·') + '</span>'
+      + '<span class="md-kl-bn">' + esc(String(l.liga || '—')) + '</span>'
+      + '<span class="md-kl-bl" style="min-width:52px;font-size:10px;color:var(--mi3)">n=' + (l.n || 0) + '</span>'
+      + '<span class="md-kl-bo" title="ROI mit einseitiger 95%-Untergrenze aus den Einzelrenditen — '
+      + 'keine Näherung, die Plays liegen hier einzeln vor">ROI ' + _fgPct(l.roi)
+      + ' <i style="color:var(--mi3);font-style:normal">(UG ' + _fgPct(l.roiLb) + ')</i></span>'
+      + '<span class="md-kl-bs" title="Summe der Renditen in Einheiten Einsatz">P/L '
+      + (l.pl == null ? '—' : (l.pl > 0 ? '+' : '') + (+l.pl).toFixed(1)) + '</span>'
+      + '<span class="md-kl-bs">Treffer ' + (l.hit == null ? '—' : (100 * l.hit).toFixed(0) + '%')
+      + ' <i style="color:var(--mi3);font-style:normal">(UG ' + (l.hitLb == null ? '—' : (100 * l.hitLb).toFixed(0) + '%') + ')</i></span>'
+      + '</div>';
+  }
+
+  function _mdLigen(f) {
+    var lg = (f && f.ligen) || [];
+    if (!lg.length) return '';
+    var belegt = lg.filter(function (l) { return l.belegt; });
+    var oben = lg.slice(0, FG_LIGA_TOP);
+    var unten = lg.slice(-FG_LIGA_FLOP).reverse();
+    return '<details class="md-kl-det"><summary class="md-kl-sum">🏆 Welche Ligen tragen — '
+      + lg.length + ' mit mindestens 30 Plays'
+      + '<span class="md-kl-ch" style="margin-left:auto"><span class="md-kl-c" style="color:'
+      + (belegt.length ? A.good : 'var(--mi3)') + '">' + belegt.length + ' belegt</span></span></summary>'
+      + '<div class="md-kl-foot" style="border-top:0;padding:6px 0 2px">Quer über <b>alle</b> '
+      + 'Betfair-Märkte, aus den Einzelzeilen des Ledgers. „Belegt" heißt: die Rendite-'
+      + '<b>Untergrenze</b> liegt über null — bei ' + belegt.length + ' von ' + lg.length + ' Ligen. '
+      + 'Das ist eine <b>andere</b> Zerlegung derselben Plays als die Markt-Tafel oben; '
+      + 'zusammenzählen darf man die beiden nie.</div>'
+      + '<div class="md-kl-bliste">' + oben.map(_mdLigaZeile).join('') + '</div>'
+      + '<div class="md-kl-foot" style="padding:6px 0 2px">Und das andere Ende — hier kostet '
+      + 'Mitspielen Geld:</div>'
+      + '<div class="md-kl-bliste">' + unten.map(_mdLigaZeile).join('') + '</div></details>';
+  }
+
+  function _mdWalletZeile(w) {
+    var sp = (w.sportarten || []).join(', ');
+    return '<div class="md-kl-bz" style="align-items:center">'
+      + '<span style="color:' + A.good + ';font-weight:800;flex-shrink:0">◆</span>'
+      + '<span class="md-kl-bn" style="font-family:ui-monospace,monospace;font-size:11px">'
+      + esc(String(w.kurz || w.wallet || '—')) + '</span>'
+      + '<span class="md-kl-bl" style="min-width:52px;font-size:10px;color:var(--mi3)">n=' + (w.n || 0) + '</span>'
+      + '<span class="md-kl-bo" title="Trefferquote mit einseitiger 95%-Wilson-Untergrenze — '
+      + 'danach ist sortiert, nicht nach der rohen Quote">Treffer '
+      + (100 * (w.hit || 0)).toFixed(0) + '%'
+      + ' <i style="color:var(--mi3);font-style:normal">(UG ' + (100 * (w.hitLb || 0)).toFixed(0) + '%)</i></span>'
+      + '<span class="md-kl-bs" title="Durchschnittlicher CLV dieser Wallet">CLV '
+      + (w.clv == null ? '—' : (w.clv > 0 ? '+' : '') + (+w.clv).toFixed(2) + 'pp') + '</span>'
+      + '<span class="md-kl-bs" title="Beobachtetes Einsatzvolumen">$'
+      + Math.round((w.usd || 0) / 1000) + 'k</span>'
+      + (sp ? '<span class="md-kl-c">' + esc(sp) + '</span>' : '')
+      + '</div>';
+  }
+
+  function _mdWallets(f) {
+    var ws = (f && f.wallets) || [];
+    if (!ws.length) return '';
+    return '<details class="md-kl-det"><summary class="md-kl-sum">🐋 Die Wallets hinter den '
+      + 'Poly-Pushes — Top ' + Math.min(ws.length, FG_WALLET_MAX)
+      + '<span class="md-kl-ch" style="margin-left:auto"><span class="md-kl-c">nach belegter '
+      + 'Trefferquote</span></span></summary>'
+      + '<div class="md-kl-foot" style="border-top:0;padding:6px 0 2px">Dieselbe Definition, die '
+      + 'auch <b>entscheidet</b>, ob eine Wallet in einen Push einfließt (<code>sharp_gate</code>) — '
+      + 'nicht eine zweite Liste mit eigener Regel. Sortiert nach der <b>Untergrenze</b> der '
+      + 'Trefferquote: 8/8 und 40/50 sind nicht dieselbe Auskunft.</div>'
+      + '<div class="md-kl-bliste">' + ws.slice(0, FG_WALLET_MAX).map(_mdWalletZeile).join('') + '</div>'
+      + '<div class="md-kl-foot" style="padding-top:6px">Die Lebensbilanz einer Wallet auf '
+      + 'Polymarket steht hier bewusst <b>nicht</b> als Rang: sie enthält Wahlen und Krypto und '
+      + 'sagt über Fußball, Tennis oder E-Sport nichts.</div></details>';
+  }
+
+  if (typeof window !== 'undefined') {
+    window._mdFreigabeTest = function () { return _mdFreigabe(); };
+    window._mdLigenTest = function (f) { return _mdLigen(f); };
+    window._mdWalletsTest = function (f) { return _mdWallets(f); };
+    window._mdStroemeTest2 = function (f, minN) { return _mdStroeme(f, minN); };
+  }
   function _mdFreigabe() {
     var f = _md.data && _md.data.freigabe;
     // 08.09.2026 (Lucas: „ich kapier es einfach nicht — was wird da besonders freigegeben?").
@@ -2444,7 +2597,7 @@
     // 08.09.2026: die Strom-Tafel steht ganz oben — sie beantwortet die Frage, die Lucas
     // wirklich hat („wem folge ich am ehesten"), waehrend die Freigabe darunter die strengere,
     // seltenere Frage beantwortet.
-    var stroeme = _mdStroeme(f);
+    var stroeme = _mdStroeme(f, minN);
     var body;
     if (frei.length) {
       body = frei.map(function (r) { return _mdFgZeile(r, minN); }).join('');
@@ -2516,7 +2669,8 @@
       + '<div class="md-kl-foot" style="border-top:0;padding-top:6px">' + esc(regel) + '</div></details>' : '';
 
     return _mdEbene(1, frage, 'Register', A.good, mechT, unter, bad,
-      stroeme + body + '<div class="md-kl-foot">' + eng + '</div>' + det);
+      stroeme + body + _mdLigen(f) + _mdWallets(f)
+      + '<div class="md-kl-foot">' + eng + '</div>' + det);
   }
 
   function _mdKiller(polyPlays) {
@@ -2944,6 +3098,53 @@
     // 15.08.2026 (Lucas): Quellen-Diversitaet — je EIN garantierter Platz fuer Betfair + Money-Map.
     var _all = Object.keys(cand).map(function (id) { return cand[id]; })
       .sort(function (a, b) { return b.score - a.score || a.k - b.k; });
+    // ── Stake-Highroller als vierter Indikator (08.09.2026) ───────────────────────────────
+    // Lucas: „Stake in Ebene 3, aber genauso dargestellt wie diese anderen Indikatoren mit dem
+    // Balken." Also dieselbe `_mdSigCell` wie Geld, Wallets, Betfair-Track — kein Sonderformat.
+    //
+    // ⭐ Der Join wird hier NICHT gebaut. Ebene 3 kennt nur den Poly-Marktschlüssel; Stake führt
+    // „Gill, Felix - Sebastian Ofner" und Poly „Felix Gill"/„Sebastian Ofner". Ein Namensvergleich
+    // im Renderer wäre Produzenten-Logik an der falschen Stelle (dieselbe Klasse, an der schon
+    // `elf_marker` und `polyKey` hingen). Der Join steht in `spielzentrale.stake_je_polykey`,
+    // läuft einmal je Lauf in killer.py und kommt als fertiges Wörterbuch an. Hier wird
+    // nachgeschlagen, mehr nicht.
+    //
+    // Der Basisschlüssel ist derselbe wie in `_pwTopPlays`: „…-more-markets" ist dasselbe Spiel.
+    var _JZ_STAKE_SUF = /-(more-markets|exact-score|total-goals)$/;
+    var _jzStakeIdx = (_md.data && _md.data.killer && _md.data.killer.stakePoly) || null;
+    var _jzStake = function (o) {
+      if (!_jzStakeIdx || o.src !== 'poly' || !o.pk) return null;
+      return _jzStakeIdx[String(o.pk).replace(_JZ_STAKE_SUF, '')] || null;
+    };
+    // Maßstab für den Balken: das größte Stake-Geld unter den gezeigten Zeilen. Ein fester
+    // Maßstab würde 1.000 $ und 100.000 $ gleich lang malen oder beide unsichtbar.
+    var _jzStakeMax = 1;
+
+    var _mdStakeCell = function (o) {
+      var st = _jzStake(o);
+      // Zwei verschiedene Nichts, und sie dürfen nicht gleich aussehen: kein Index = wir haben
+      // gar nicht gefragt; Index ohne Treffer = gefragt, kein Highroller-Geld auf dem Spiel.
+      if (!_jzStakeIdx) return _mdSigMuted('Stake-Geld', 'nicht erhoben');
+      if (!st) return _mdSigMuted('Stake-Geld', 'kein Highroller-Geld auf diesem Spiel');
+      var usdv = +st.usd || 0;
+      var pct = _jzStakeMax ? (usdv / _jzStakeMax * 100) : 0;
+      var sub;
+      if (!st.seite) {
+        // Geld ja, Seite nein — z. B. nur Satzsieger- oder Über/Unter-Wetten. Das Geld bleibt
+        // sichtbar, es stimmt nur nicht mit ab.
+        sub = 'Geld ohne vergleichbare Seite';
+      } else if (o.polySide && st.seite === o.polySide) {
+        sub = '✓ gleiche Seite · ' + usd(+st.seiteUsd || 0);
+      } else if (o.polySide) {
+        sub = '⚠ andere Seite: ' + esc(String(st.seite));
+      } else {
+        sub = esc(String(st.seite)) + ' · ' + usd(+st.seiteUsd || 0);
+      }
+      var col = (st.seite && o.polySide && st.seite === o.polySide) ? A.good
+        : (st.seite && o.polySide) ? A.gold : A.soft;
+      return _mdSigCell('Stake-Geld', usd(usdv), col, pct, sub + ' · ' + (+st.n || 0) + ' Wetten');
+    };
+
     var items = (function () {
       var N = 6, pick = [], used = {};   // 15.08.2026 (Lucas): bis zu 6, damit Betfair (Steam + Geld) + Money-Map reinpassen
       var take = function (x) { if (x && !used[x.id]) { used[x.id] = 1; pick.push(x); } };
@@ -2964,6 +3165,11 @@
       for (var j = 0; j < _all.length && pick.length < N; j++) take(_all[j]);          // Rest auffuellen
       return pick.sort(function (a, b) { return b.score - a.score || a.k - b.k; });
     })();
+    // Maßstab für den Stake-Balken aus den TATSÄCHLICH gezeigten Zeilen — nicht aus dem
+    // ganzen Index, sonst richtet sich der Balken nach einem Spiel, das gar nicht dasteht.
+    _jzStakeMax = Math.max(1, items.reduce(function (a, x) {
+      var st = _jzStake(x); return Math.max(a, (st && +st.usd) || 0);
+    }, 0));
     // Leer heisst leer — aber die Ebene verschwindet NICHT. Eine fehlende dritte Sprosse laesst
     // die Leiter unvollstaendig aussehen und man sucht nach der Sektion, statt die Aussage zu lesen.
     if (!items.length) return '<div id="mdJetztBox">' + _mdEbene(3, 'Was ist gerade das Stärkste?',
@@ -2973,7 +3179,10 @@
       '<div class="md-kl-foot" style="border-top:0;padding-top:8px">Gerade kein spielbares Signal in den nächsten Stunden — meldet sich automatisch.</div>') + '</div>';
     // Signal-Balken je Quelle (gleicher Stil wie "Heute spielenswert")
     var sigOf = function (o) {
-      if (o.src === 'poly' && o.poly) return _mdSigStrip(o.poly, _polyMaxInf);
+      if (o.src === 'poly' && o.poly) {
+        // Die Stake-Zelle haengt an die bestehende Leiste an — gleicher Stil, gleiche Reihe.
+        return _mdSigStrip(o.poly, _polyMaxInf).replace(/<\/div>$/, '') + _mdStakeCell(o) + '</div>';
+      }
       if (o.src === 'bf') {
         var ap = Math.min(Math.abs(+o.pp || 0), 25), val = ((o.pp > 0) ? '+' : '') + (+o.pp).toFixed(1) + 'pp';
         var sub = o.moneyIn ? ('Quote zieht rein' + (o.odd != null ? ' · @' + (+o.odd).toFixed(2) : '')) : 'Quote driftet → Geld auf Gegenseite';
@@ -3123,4 +3332,5 @@
   window._mdStakeGeldTest = _mdStakeGeldBody;   // Test-Hook (kein Wrapper: der ueberschriebe die Bindung)
   window._mdSignalBoardTest = _mdSignalBoard;   // Test-Hook
   window._mdKlTafelTest = _klTafel;   // Test-Hook
+  window._mdJetztTest = _mdJetzt;   // Test-Hook (Ebene 3 ohne poly-wallets.js)
 })();

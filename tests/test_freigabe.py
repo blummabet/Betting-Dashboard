@@ -11,6 +11,12 @@ import math
 import freigabe as F
 
 
+def _frisch():
+    """Zeitstempel eines eben abgerechneten Plays. Ohne ihn greift die Lebendig-Bedingung und
+    der Test misst etwas anderes als gemeint (sie kommt VOR der Freigabe)."""
+    from datetime import timedelta
+    return (F._now() - timedelta(hours=6)).isoformat()
+
 def _plays(n, r, clv, stake=10.0, ev="X", tage_alt=1):
     """Fixture-Plays. `settledTs` gehoert dazu: seit der Lebendig-Bedingung ist eine Schublade
     ohne Datum nicht freigebbar — ein Fixture ohne Zeitstempel wuerde also etwas anderes testen
@@ -65,20 +71,59 @@ class TestBewertung:
         e = F.bewerte("test", "poly", r, c, letzter=(F._now() - timedelta(days=1)).isoformat())
         assert e["status"] == "freigegeben", e
 
-    def test_hoher_roi_mit_negativem_clv_wird_NICHT_freigegeben(self):
-        # Der Cards-Fall: +3,2% ROI sah spielbar aus, der CLV lag bei -2,01pp (UG -2,43) ueber
-        # 216 Picks. Positiver ROI bei sicher negativem CLV heisst: der Gewinn kam aus der
-        # Varianz, nicht aus einer Kante. Genau das darf nie durchrutschen.
+    def test_hoher_roi_mit_negativem_clv_wird_freigegeben_ABER_gewarnt(self):
+        """08.09.2026 (Lucas: „ja Freigabe locker"). Bis heute blockierte ein negativ belegter
+        CLV die Freigabe. Er blockiert nicht mehr — Lucas' Massstab ist die Trefferquote und der
+        ROI, der daraus folgt, und ein Kriterium, das seit Wochen jeden Tag alles blockiert,
+        beantwortet die Frage auch nicht.
+
+        Was NICHT verschwinden darf, ist der Einwand: der CLV ist in unseren Daten monoton
+        praediktiv. Also steht er auf der Zeile — als `clvUrteil` UND im Grund."""
         r = [0.25, 0.30, 0.20, 0.28, 0.22] * 8
         c = [-2.0, -2.2, -1.8, -2.1, -1.9] * 8
-        e = F.bewerte("test", "cards", r, c)
-        assert e["status"] == "geprueft"
-        assert "CLV" in e["grund"]
+        e = F.bewerte("test", "cards", r, c, letzter=_frisch())
+        assert e["status"] == "freigegeben"
+        assert e["clvUrteil"] == "negativ belegt"
+        assert "⚠️" in e["grund"] and "negativ belegt" in e["grund"], (
+            "eine Freigabe, die ihren eigenen Einwand verschweigt, ist genau die Sorte Zahl, "
+            "gegen die dieses Register gebaut ist")
 
-    def test_ohne_messbaren_clv_keine_freigabe(self):
+    def test_der_strenge_schalter_stellt_das_alte_tor_wieder_her(self):
+        """Gegenbeweis, dass `CLV_BLOCKT` kein Dekor ist: mit ihm gilt exakt die alte Regel.
+        (Dieselbe Bauform wie beim x-Norm-Badge — ein Schalter, der nie feuert, ist keiner.)"""
         r = [0.25, 0.30, 0.20, 0.28, 0.22] * 8
-        e = F.bewerte("test", "x", r, [])
-        assert e["status"] == "geprueft" and "CLV" in e["grund"]
+        c = [-2.0, -2.2, -1.8, -2.1, -1.9] * 8
+        _alt = F.CLV_BLOCKT
+        try:
+            F.CLV_BLOCKT = True
+            e = F.bewerte("test", "cards", r, c, letzter=_frisch())
+            assert e["status"] == "geprueft" and "CLV" in e["grund"]
+        finally:
+            F.CLV_BLOCKT = _alt
+
+    def test_ohne_messbaren_clv_wird_freigegeben_und_sagt_dass_er_fehlt(self):
+        """Unbekannt ist kein Nein — aber auch kein Ja. Der Unterschied steht in `clvUrteil`."""
+        r = [0.25, 0.30, 0.20, 0.28, 0.22] * 8
+        e = F.bewerte("test", "x", r, [], letzter=_frisch())
+        assert e["status"] == "freigegeben"
+        assert e["clvUrteil"] == "nicht erhoben"
+        assert "kein CLV" in e["grund"]
+
+    def test_clv_urteil_unterscheidet_vier_zustaende(self):
+        """„nicht erhoben" und „negativ belegt" duerfen nie gleich aussehen — der eine ist eine
+        Datenluecke, der andere ein Messergebnis gegen die Schublade."""
+        r = [0.25, 0.30, 0.20, 0.28, 0.22] * 8
+        assert F.bewerte("t", "x", r, [], letzter=_frisch())["clvUrteil"] == "nicht erhoben"
+        assert F.bewerte("t", "x", r, [1.2, 1.5, 0.9, 1.1, 1.3] * 8, letzter=_frisch())["clvUrteil"] == "belegt"
+        assert F.bewerte("t", "x", r, [-2.0, -2.2, -1.8, -2.1, -1.9] * 8, letzter=_frisch())["clvUrteil"] == "negativ belegt"
+        # Breit um null gestreut: gemessen, aber ohne Untergrenze auf einer Seite.
+        assert F.bewerte("t", "x", r, [9.0, -9.0] * 20, letzter=_frisch())["clvUrteil"] == "gemessen, nicht belegt"
+
+    def test_roi_bleibt_das_tor(self):
+        """Locker heisst nicht offen: ohne belegte ROI-Untergrenze gibt es weiter keine Freigabe."""
+        r = [0.9, -1.0, 0.8, -1.0, 1.1, -1.0] * 8       # Mittel knapp positiv, breit gestreut
+        e = F.bewerte("test", "poly", r, [1.2, 1.5] * 24, letzter=_frisch())
+        assert e["status"] == "geprueft" and "ROI" in e["grund"]
 
     def test_gute_zahlen_aber_zu_wenig_plays_bleiben_kandidat(self):
         r = [0.25, 0.30, 0.20, 0.28, 0.22] * 3          # n=15 < MIN_N
@@ -399,3 +444,126 @@ class TestStroemeUndPL:
         assert r["pl"] == 0.0
         r2 = F.bewerte("Y", "cards", [1.0, 1.0], [])
         assert r2["pl"] == 2.0
+
+
+# ── 08.09.2026: Public-Kanal, Ligen, Wallets ────────────────────────────────────────────
+
+# Kleine Zusicherungen — die Datei arbeitet ohne unittest, und zwei Stile in einer Datei
+# waeren die naechste stille Falle.
+def _eq(a, b, msg=""): assert a == b, msg or ("%r != %r" % (a, b))
+def _ne(a, b, msg=""): assert a != b, msg or ("%r == %r" % (a, b))
+def _t(x, msg=""): assert x, msg
+def _in(a, b, msg=""): assert a in b, msg or ("%r nicht in %r" % (a, b))
+def _nin(a, b, msg=""): assert a not in b, msg or ("%r doch in %r" % (a, b))
+def _nn(x, msg=""): assert x is not None, msg
+def _ae(a, b, places=7, msg=""): assert round(a - b, places) == 0, msg or ("%r != %r" % (a, b))
+def _gt(a, b, msg=""): assert a > b, msg or ("%r <= %r" % (a, b))
+def _lt(a, b, msg=""): assert a < b, msg or ("%r >= %r" % (a, b))
+def _le(a, b, msg=""): assert a <= b, msg or ("%r > %r" % (a, b))
+
+class TestPublicLigenWallets:
+    """Lucas, drei Fragen in einer Nachricht — und eine davon korrigiert einen Eindruck."""
+
+    def test_public_pushes_sind_ueberhaupt_eine_schublade(self):
+        """Der einzige Kanal, der von selbst sendet, war der einzige ohne Zeile im Register."""
+        rec = {"n": 191, "hitRate": 0.5812, "hitUg": 0.5217, "roi": -0.0309, "roiUg": -0.1335,
+               "avgOdd": 1.84, "avgClvBf": -2.36}
+        z = F.betfair_public_schubladen(rec)
+        _t(z, "der Public-Kanal muss eine Schublade haben")
+        _eq(z[0]["n"], 191)
+        _eq(z[0]["strom"], "betfair")
+
+    def test_public_zeile_erklaert_warum_58_prozent_treffer_minus_bringen(self):
+        """⭐ Der eigentliche Grund fuer diese Zeile: 58,1 % Treffer bei Ø-Quote 1,84 WAEREN
+        +6,9 % ROI — gemessen sind es −3,1 %. Ohne diesen Satz liest man die Trefferquote als
+        Beleg. „Eine Trefferquote ohne die Quoten ist keine Zahl."""
+        rec = {"n": 191, "hitRate": 0.5812, "roi": -0.0309, "roiUg": -0.1335, "avgOdd": 1.84}
+        g = F.betfair_public_schubladen(rec)[0]["grund"]
+        _in("kleineren Quoten", g)
+        _in("58.1", g)
+
+    def test_public_faellt_nicht_in_die_markt_zerlegung(self):
+        """Sonst zaehlten dieselben Plays zweimal: die Public-Pushes SIND Betfair-Signale."""
+        rec = {"n": 191, "hitRate": 0.58, "roi": -0.03, "roiUg": -0.13, "avgOdd": 1.84,
+               "byScenario": {"fresh": {"n": 167, "hitRate": 0.6, "roi": -0.0026, "roiUg": -0.11}}}
+        for z in F.betfair_public_schubladen(rec):
+            _ne(z.get("art"), "markt")
+        st = F.stroeme(F.betfair_public_schubladen(rec))
+        _eq(st, [], "aus Public-Zeilen allein darf keine Strom-Zeile entstehen")
+
+    # ── Ligen ──────────────────────────────────────────────────────────────
+    @staticmethod
+    def _zeilen(liga, n, gewinne, quote=2.5, markt="Match Odds"):
+        return [{"league": liga, "market": markt, "odd": quote, "win": i < gewinne}
+                for i in range(n)]
+
+    def test_liga_tafel_rechnet_aus_einzelrenditen(self):
+        z = self._zeilen("Testliga", 40, 20)     # 50 % bei Quote 2,5 -> ROI +25 %
+        t = F.betfair_ligen(z, min_n=30)
+        _eq(len(t), 1)
+        _eq(t[0]["n"], 40)
+        _ae(t[0]["roi"], 0.25, places=3)
+        _nn(t[0]["roiLb"], "aus Einzelrenditen gibt es eine echte Untergrenze")
+
+    def test_liga_unter_der_mindestzahl_kommt_gar_nicht_vor(self):
+        _eq(F.betfair_ligen(self._zeilen("Winzig", 12, 9), min_n=30), [])
+
+    def test_belegt_heisst_untergrenze_ueber_null_nicht_roi_positiv(self):
+        """Der Fehler, den dieses Feld verhindert: eine Liga mit +35 % Schnitt und einer
+        Untergrenze unter null sieht auf jeder Tafel aus wie eine Empfehlung. 14 Treffer aus 31
+        bei Quote 3,0 sind genau dieser Fall."""
+        t = F.betfair_ligen(self._zeilen("Sieht gut aus", 31, 14, quote=3.0), min_n=30)[0]
+        _gt(t["roi"], 0.3, "die Vorbedingung: der Schnitt sieht hervorragend aus")
+        _lt(t["roiLb"], 0, "die Vorbedingung: die Untergrenze liegt darunter unter null")
+        assert not t["belegt"], "ein positiver Schnitt ist kein Beleg"
+
+    def test_liga_sortierung_geht_nach_der_untergrenze(self):
+        """Der Fall, in dem Punktschaetzer und Untergrenze WIDERSPRECHEN — nur der beweist die
+        Sortierregel. „Klein" hat +35,5 % Schnitt gegen +14,0 %, aber eine Untergrenze von
+        −9,4 % gegen +4,1 %: nach dem Schnitt sortiert stuende oben, was nichts belegt."""
+        z = (self._zeilen("Gross", 400, 190, quote=2.4)
+             + self._zeilen("Klein", 31, 14, quote=3.0))
+        t = F.betfair_ligen(z, min_n=30)
+        _gt(t[1]["roi"], t[0]["roi"], "die Vorbedingung des Tests: der Schnitt sagt das Gegenteil")
+        _eq([x["liga"] for x in t][0], "Gross",
+            "sortiert wird nach dem, was uebrig bleibt, wenn man Glueck abzieht")
+
+    def test_liga_ohne_quote_zaehlt_nicht_als_verlust(self):
+        """Fehlende Information ist keine Rendite von −1."""
+        z = self._zeilen("Halb", 30, 15) + [{"league": "Halb", "market": "X", "win": False}] * 20
+        t = F.betfair_ligen(z, min_n=30)
+        _eq(t[0]["n"], 30)
+
+    # ── Wallets ────────────────────────────────────────────────────────────
+    def test_wallets_sortieren_nach_untergrenze_nicht_nach_roher_quote(self):
+        """Der Fall, in dem beide Masse WIDERSPRECHEN: 7/8 sind 87,5 % gegen 66,7 % aus 120 —
+        und trotzdem ist die Untergrenze der grossen Stichprobe hoeher (59,3 % gegen 58,9 %).
+        Nach der rohen Quote sortiert stuende die Acht-Play-Wallet oben.
+
+        (Nicht jedes kleine n verliert dabei: 8/8 hat eine hoehere Untergrenze als 40/50. Genau
+        deshalb wird gerechnet und nicht nach n gefiltert.)"""
+        sc = {"0xgross": {"n": 120, "wins": 80, "clvSumPP": 60.0, "usd": 598066},
+              "0xklein": {"n": 8, "wins": 7, "clvSumPP": 50.4, "usd": 15044}}
+        w = F.poly_wallets(sc)
+        _gt(w[1]["hit"], w[0]["hit"], "die Vorbedingung: die rohe Quote sagt das Gegenteil")
+        _eq([x["wallet"] for x in w], ["0xgross", "0xklein"])
+
+    def test_wallets_benutzen_dasselbe_gate_wie_die_pushs(self):
+        """Zwei Listen mit zwei Definitionen waeren genau der Fehler, den sharp_gate aufraeumte."""
+        sc = {"0xschwach": {"n": 9, "wins": 5, "clvSumPP": 0.3, "usd": 729},
+              "0xstark": {"n": 50, "wins": 40, "clvSumPP": 31.0, "usd": 1000}}
+        namen = [x["wallet"] for x in F.poly_wallets(sc)]
+        _in("0xstark", namen)
+        _nin("0xschwach", namen,
+                         "5/9 mit CLV +0,03pp ist kein Beweis — sharp_gate sagt das, die Liste muss es auch")
+
+    def test_bestaetigter_verlierer_steht_nicht_in_der_top_liste(self):
+        sc = {"0xverlierer": {"n": 186, "wins": 120, "clvSumPP": 90.0, "usd": 9e6,
+                              "pnl": -7775708.0}}
+        _eq(F.poly_wallets(sc), [])
+
+    def test_top_liste_ist_gedeckelt(self):
+        sc = {("0x%02d" % i): {"n": 50, "wins": 40, "clvSumPP": 31.0, "usd": 1000}
+              for i in range(25)}
+        _eq(len(F.poly_wallets(sc)), F.WALLET_TOP_N)
+

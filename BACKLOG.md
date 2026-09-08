@@ -3,6 +3,182 @@
 Stand 07.09.2026 (oberster Block); Liga/WM-Teil darunter Stand 26.06.2026. Lebendige Liste aller offenen Punkte — Liga UND noch nicht umgesetzte WM-Sachen —
 damit wir alles abarbeiten können. ✅ = erledigt (Referenz), ⏳ = offen, 🔒 = blockiert.
 
+## 📣 08.09.2026 (spät) — die Freigabe geht in den Trades-Channel
+
+Lucas: *„ja zum Testen mal in Trades-Channel."*
+
+Der Weg dahin existierte schon: `freigabe_push.py` läuft seit dem 01.09. in `betfair.yml` und
+meldet Zustands-WECHSEL (Freigabe rauf **und** Rücknahme, letztere zuerst — sie ist die
+Nachricht, die Geld spart). Der Zustand kennt beide Schubladen bereits mit `false`, der nächste
+CI-Lauf schickt sie also von selbst raus. Was nachgezogen werden musste, ist die **Ehrlichkeit
+der Nachricht** unter dem gelockerten Tor:
+
+- ✅ **Das CLV-Urteil steht im Push, nicht nur im Frontend.** Wer den Push liest, spielt danach —
+  er darf die einzige Warnung, die es zu dieser Freigabe noch gibt, nicht nur auf dem Board
+  finden. Drei Zeilen für drei Zustände, und „nicht erhoben" ist ausdrücklich **keine** Warnung:
+  gegen eine Schublade ohne CLV-Erhebung ist nichts gemessen.
+- ✅ **Die Kopfzeile sagt, WELCHE Untergrenze.** „Ab jetzt blind spielbar — die Untergrenze liegt
+  über null" war eindeutig, solange beide stimmen mussten. Jetzt steht **Rendite**-Untergrenze da,
+  sonst liest sich die Zeile als Zusicherung, die sie nicht mehr ist.
+- ✅ **Prozente mit einer Nachkommastelle.** Die beiden Schubladen liegen bei +2,3 % und +0,8 %
+  Untergrenze; auf ganze Prozent gerundet wurde daraus „+2%" und „+1%". Dieselbe Korrektur wie
+  auf dem Board — genau in diesem Bereich entscheidet die Nachkommastelle, ob die Zahl etwas sagt.
+- ✅ **Der `grund` steht nur noch an der Rücknahme.** Bei einer Freigabe sagte er inzwischen
+  dasselbe wie die Zeilen darüber; zweimal dieselbe Warnung liest sich beim dritten Push wie
+  Formelsprache. An der Rücknahme ist er die einzige Auskunft darüber, welche Bedingung kippte.
+
+**So sieht die erste Nachricht aus** (aus den echten Zahlen gerendert, nicht gesendet):
+
+    ✅ FREIGEGEBEN
+    Ab jetzt blind spielbar — die Rendite-Untergrenze liegt über null.
+    Was der CLV dazu sagt, steht je Schublade darunter.
+
+    🔓 Public-Kandidaten
+    📊 n=35 · ROI +20.8% · Untergrenze +2.3%
+    📈 CLV -0.8pp  (UG -2.53)
+    ❔ CLV gemessen, aber weder über noch unter null belegt.
+
+    🔓 Liga · ABWÄGEN
+    📊 n=91 · ROI +15.2% · Untergrenze +0.8%
+    📈 CLV -1.5pp  (UG -2.01)
+    ⚠️ CLV spricht dagegen — Obergrenze unter null. In unseren Daten liefen
+       Schubladen mit negativem CLV im Schnitt −6,8 %. Freigegeben auf die
+       Rendite, nicht auf eine gemessene Kante.
+
+**Gegenbeweis:** CLV-Urteil aus der Nachricht entfernt → 3 Tests fallen; ganze Prozente →
+Test fällt; „nicht erhoben" als ⚠️ gemeldet → Test fällt; `grund` auch an der Freigabe →
+die Warnung steht zweimal, Test fällt.
+
+**Offen:** ob eine Rücknahme dieser zwei Schubladen anders aussehen soll als eine reguläre —
+sie wurden auf die Rendite allein freigegeben und können deshalb schneller kippen.
+
+## 🔓 08.09.2026 (spät) — Freigabe locker, Stake in Ebene 3
+
+Lucas, zwei Sätze: *„ja Freigabe locker"* und *„Stake in Ebene 3, aber genauso dargestellt wie
+diese anderen Indikatoren mit dem Balken."*
+
+### Das Freigabe-Tor
+
+- ✅ **Das Tor ist ab jetzt die ROI-Untergrenze** (plus Mindestzahl und Lebendigkeit). Der CLV
+  blockiert nicht mehr, er **beschreibt** — als `clvUrteil` auf jeder Zeile.
+  `FREIGABE_CLV_BLOCKT=1` stellt das alte, strenge Tor ohne Code-Änderung wieder her (und ein
+  Test beweist, dass der Schalter wirklich feuert — s. x-Norm-Badge).
+- **Was das heute bewirkt:** 74 reife Schubladen, 2 mit belegter ROI-Untergrenze → freigegeben
+  werden genau diese zwei: **Public-Kandidaten** (n=35, ROI-UG +2,3 %) und **Liga · ABWÄGEN**
+  (n=91, ROI-UG +0,8 %). Vorher: null, seit Wochen jeden Tag.
+- ⚠️ **Der Einwand steht auf der Zeile, nicht in einer Fußnote.** In unseren Daten ist der CLV
+  monoton prädiktiv (n=2.651: CLV>0 → ROI +7,5 %, UG +1,9 %; CLV<0 → −6,8 %). Liga · ABWÄGEN ist
+  genau der Fall, vor dem er warnt, und trägt deshalb „⚠ CLV dagegen".
+- ⭐ **Und die Umstellung hat einen alten Etikettenfehler freigelegt.** Solange der CLV das TOR
+  war, wurden zwei Fälle gleich behandelt: „nachweislich schlechter CLV" und „CLV um null, breit
+  gestreut". Als Auskunft AUF der Zeile sind das nicht dieselben Dinge. „Negativ belegt" heißt
+  ab jetzt, was es heißen muss: die **Obergrenze** liegt unter null (neu: `freigabe.obergrenze`,
+  das Spiegelbild von `untergrenze`). Real: Public-Kandidaten hat CLV −0,80 pp mit Untergrenze
+  −2,53 — nach der alten Lesart „negativ belegt". Die Obergrenze liegt bei **+0,93**: gegen
+  diese Schublade ist gar nichts bewiesen. Vier Zustände statt zwei, und „nicht erhoben" ist
+  eine Datenlücke, kein Messergebnis.
+
+### Stake als vierter Indikator in Ebene 3
+
+- ✅ **`spielzentrale.stake_je_polykey`** — derselbe Namens-Join, aber über den Poly-Marktschlüssel
+  adressiert. Ebene 3 kennt keinen anderen Schlüssel; ein Namensvergleich im Renderer wäre
+  Produzenten-Logik an der falschen Stelle (die Klasse, an der schon `elf_marker` und `polyKey`
+  hingen). Gerechnet wird er einmal je Lauf in `killer.py`, das Ergebnis steht als `stakePoly`
+  im Artefakt, und das Frontend **schlägt nur nach**.
+- ✅ **Die Zelle ist eine normale `_mdSigCell`** — gleicher Balken wie Geld, Wallets, Liga-Track.
+  Gleiche Seite grün, andere Seite als **Warnung** (Stake-Geld auf der Gegenseite ist kein
+  Rückenwind), „Geld ohne vergleichbare Seite" wenn nur Satzsieger-Wetten dalagen. Und
+  „nicht erhoben" ≠ „kein Highroller-Geld auf diesem Spiel".
+- 🔴 **Zwei Fehler, die der Bau sichtbar gemacht hat — beide gemessen, beide behoben:**
+  1. **`paart` ließ EINEN Namen den ganzen Join tragen.** Poly „Cincinnati Reds / Los Angeles
+     Dodgers" wurde mit Stake „Boston Red Sox − Los Angeles Angels" gepaart: 0,67 für die STADT,
+     0,00 für den anderen Namen, Summe über der Hürde. Jetzt muss jeder Name seinen eigenen
+     Beleg mitbringen (`NAME_JE_MIN = 0.34`). Gegenprobe: der Fußball-Join behält alle 7 Treffer
+     (schwächster Einzelname dort 0,50), der Poly-Join verliert genau die 3 falschen.
+     ⚠️ Was das **nicht** löst: „Manchester United" gegen „Manchester City" bringt 0,50 auf
+     beiden Seiten. Zwei Vereine derselben Stadt sind über Namen allein nicht trennbar — dagegen
+     hilft nur ein Schlüssel. Steht als Kommentar im Code, damit niemand die Hürde für mehr hält.
+  2. **`_STAKE_1X2` kannte nur Fußball.** Bei Tennis und E-Sport heißt derselbe Markt „Winner"
+     oder „Match Winner - Twoway" — deshalb hatte **0 von 9** Treffern eine Stake-Seite, obwohl
+     Geld dalag. Jetzt zählen die Ganzspiel-Sieger-Märkte aller Sportarten; „1st Set - Winner"
+     und „Map 2 Winner" ausdrücklich **nicht** (sie tragen Geld, aber keine Spielseite — genau
+     wie „Over 1.5").
+  Ergebnis: 6 Treffer, alle korrekt, alle mit Seite. Heute u. a. Tiafoe–Michelsen ($7.427 auf
+  Tiafoe), Shelton–Alcaraz, Gill–Ofner, ein CS2- und zwei UFC-Kämpfe.
+
+**Gegenbeweis:** Hürde je Name entfernt → der MLB-Fehlpaarungs-Test fällt; Satzsieger als
+Spielseite → Test fällt; Drei-Wege-Markt zugelassen → Test fällt; „nicht erhoben" wie „kein
+Geld" gerendert → Frontend-Test fällt; andere Seite als gleiche gemeldet → Frontend-Test fällt;
+`CLV_BLOCKT=True` → das alte Tor greift wieder.
+
+**Offen:** ob die zwei freigegebenen Schubladen auch gepusht werden sollen — bisher ist
+„freigegeben" eine Anzeige, kein Auslöser.
+
+## 📊 08.09.2026 (nachts) — Ebene 1 ist eine Leistungstafel, keine Freigabe-Frage mehr
+
+Lucas: *„mein Ansatz wäre: ich seh dort die Schubladen die Sinn machen, mit etwas Stats — ROI,
+P/L, CLV. Und dann weiß ich für mich auch was ich besser folgen kann: eher Poly, eher Betfair,
+eher Konsens, eher Cards."* Und direkt danach vier Nachfragen, die alle dasselbe Muster haben:
+die Zahl war da, nur nie an der Stelle, wo sie die Frage beantwortet.
+
+- ✅ **Je Strom eine Kachel** (ROI, P/L, Plays, CLV) aus `freigabe.stroeme()`. Gerechnet über
+  **eine überschneidungsfreie Zerlegung** je Strom (cards→Verdikt, poly→Conviction,
+  betfair→Markt) und mit deren Namen beschriftet: die Schubladen eines Stroms sind Schnitte
+  durch dieselben Plays, aufsummiert ergäben sie 580 „Plays" aus 200. Ruhende Schubladen
+  (die WM trägt 158 der 314 Card-Plays) bleiben draußen.
+  Stand: **cards +9,5 % (n=156) · betfair −0,2 % (n=16.657) · poly −7,3 % (n=234)**.
+- ✅ **Jede Kachel nennt ihre stärkste BELEGTE Schublade.** Lucas: *„bei Poly wäre gut wenn wir
+  den Public-Kandidaten auch anzeigen, weil der gut ist — also nicht über alle Poly."* Genau der
+  Fall: „Polymarket −7,3 %" ist wahr und verschweigt, dass **Public-Kandidaten** darin +20,8 %
+  bei einer Untergrenze von +2,3 % tragen (n=35). Ist keine Schublade belegt, steht *das* da —
+  nicht die beste unbelegte. Ein ROI von +77 % ohne Untergrenze über null ist kein Beleg.
+- ✅ **P/L je Schublade.** Der ROI sagt, wie gut eine Schublade ist; das P/L, wie viel sie
+  getragen hat. „Half Time" bringt +5,0 % aus 1.936 Plays (+96 Einheiten), eine 30er-Schublade
+  mit +36 % ROI ganze +12. Aggregat-Schubladen ohne Einzelrenditen rechnen `roi × n` — dieselbe
+  Zahl aus der anderen Richtung, statt `null`.
+- ✅ **Die Betfair-Public-Pushes sind endlich eine Schublade.** Lucas: *„kann man bei Betfair
+  anzeigen z. B. die Public-Push? die sind relativ solide."* Sie standen in **keiner**:
+  `betfair_schubladen` liest `betfair_track_record.json`, der Public-Kanal führt sein eigenes
+  Register. Der einzige Kanal, der von selbst sendet, war der einzige ohne Zeile.
+  🔴 **Und der Eindruck kippt beim Nachrechnen:** 191 Pushes, **58,1 % Treffer** — bei der
+  Ø-Quote 1,84 wären das +6,9 % ROI, gemessen sind es **−3,1 %** (UG −13,4 %). Die Treffer
+  liegen bei kleineren Quoten als die Fehlschüsse. *Eine Trefferquote ohne die Quoten ist keine
+  Zahl.* Der Satz steht jetzt als `grund` an der Zeile, nicht in einer Notiz.
+  Zerlegung: frisches Signal n=167 ROI −0,3 % · Halbzeit n=24 ROI −22,8 %.
+- ✅ **Liga-Tafel** (`freigabe.betfair_ligen`). Lucas: *„geht aus dem Tracking eventuell auch
+  anzeigen welche Ligen gut performen? die Daten haben wir."* Sie lagen da und waren nie
+  zusammengefasst: das Record führt `byMarket` und `byLeagueMarket`, aber **kein `byLeague`** —
+  eine Liga stand in bis zu sieben Zeilen mit je n≈30 und in keiner mit ihrem Gesamtbild.
+  178 Ligen mit n≥30, davon **7 mit Untergrenze über null**:
+  Ukrainian Premier League +37,9 % (UG +13,5 %, n=80) · Bolivian Cup +37,5 % (UG +11,3 %) ·
+  Romanian Liga II +24,0 % (UG +5,3 %, n=120) · Uruguayan Segunda · South African Premier ·
+  Peruvian Primera · French Ligue 2. Das teure Ende steht daneben (Slovakian Cup −49,9 %) —
+  ohne das liest sich die Tafel als Empfehlungsliste.
+  ⚠️ Das ist eine **zweite** überschneidungsfreie Zerlegung derselben Plays (jeder Play hat eine
+  Liga UND einen Markt). Sie steht deshalb als eigene Tabelle in `ligen`, nicht in `alle`, und
+  darf nie zur Markt-Tafel addiert werden. Der Satz steht auch im Frontend.
+- ✅ **Wallet-Tafel** (`freigabe.poly_wallets`). Lucas: *„wäre eventuell auch gut wenn man
+  anzeigt z. B. top 10 Poly Wallets — dann weiß ich, die Pushs die ich krieg von denen sind
+  gut."* `sharp_gate` entschied das je Push seit jeher still; **welche** Wallets das sind, stand
+  nirgends. Filter ist `sharp_gate.sharp_grade` — dieselbe Definition, die auch sendet, keine
+  zweite Liste mit eigener Regel. 52 Wallets über der Schwelle, sortiert nach der
+  Wilson-**Untergrenze** der Trefferquote. Die Lebensbilanz einer Wallet steht bewusst **nicht**
+  als Rang: sie enthält Wahlen und Krypto und sagt über Tennis nichts (s. `sharp_gate.py`).
+- ✅ **Reserveligen in jeder Sprache** (CI-Wachhund, `campeonato-de-reserva-de-primera-division-c`).
+  Die Regel las nur die englische Schreibweise `reserve`; in Südamerika heißt dieselbe Sache
+  `reserva`, in Italien `riserve`. Ein Muster, das eine Sprache kennt, ist kein Muster, sondern
+  ein Einzelfall mit Platzhalter. Gegenprobe an den 171 Fußball-Slugs: beantwortet genau den
+  einen offenen, stuft keinen bereits eingestuften um.
+
+**Gegenbeweis** (jede Regel provoziert): Sortierung nach dem Punktschätzer statt der Untergrenze
+→ Liga- und Wallet-Test fallen; `belegt = ROI positiv` → Test fällt (+35,5 % Schnitt bei −9,4 %
+Untergrenze); Public-Zeile mit `art="markt"` → doppelte Zählung fällt auf; Wallet-Gate umgangen
+→ der bestätigte Verlierer (n=186, −$7,78 Mio) steht wieder in der Liste; Kachel-Beste ohne
+n-Boden und ohne Untergrenze → 2 Frontend-Tests fallen.
+
+**Offen:** ob Ebene 1 die Ligen und Wallets ausgeklappt oder eingeklappt zeigen soll — beide
+stehen als `<details>`, damit die Ebene nicht 180 Zeilen lang wird.
+
 ## 🔁 08.09.2026 (abends) — Ebene 0 wieder raus, Ebene 2 kann jetzt, was sie konnte
 
 Lucas nach einem Tag mit der Spielzentrale: *„Ebene 0 hast du heute dazugebaut, da seh ich aber

@@ -115,6 +115,9 @@ ART = {
 # oder ausgeschrieben. Wortgrenzen, damit „usl-championship" oder „u2" nichts ausloesen.
 _JUGEND_RX = re.compile(r"\bu1[789]\b|\bu2[0-3]\b|youth|jugend|junior|academy|primavera")
 
+# Reservemannschaften, in jeder Sprache, in der sie im Ledger auftauchen.
+_RESERVE_RX = re.compile(r"reserv|riserv")
+
 # Mustererkennung fuer alles, was neu dazukommt. Sie ersetzt die Tabelle nicht, sie faengt
 # nur die Faelle ab, bei denen der Slug die Antwort selbst mitbringt.
 _MUSTER = (
@@ -125,7 +128,13 @@ _MUSTER = (
     # an der Liga, deren Namen sie traegt. Deshalb eine eigene Marke statt einer Zahl — und
     # als MUSTER, damit die naechste Reserveliga nicht wieder von Hand nachgetragen werden
     # muss.
-    ("reserve", lambda s: "reserve" in s or s.endswith("-ii")),
+    # 08.09.2026 (CI-Wachhund, „campeonato-de-reserva-de-primera-division-c"): die Regel las
+    # nur die ENGLISCHE Schreibweise. Reserveligen heissen in Suedamerika „reserva", in
+    # Italien „riserve" — dieselbe Sache, anderes Wort. Ein Muster, das nur eine Sprache
+    # kennt, faellt bei jedem neuen Land wieder aus. Gegenprobe an den 171 Fussball-Slugs des
+    # Ledgers: die breitere Regel beantwortet genau den einen offenen Slug und stuft keinen
+    # bereits eingestuften um.
+    ("reserve", lambda s: bool(_RESERVE_RX.search(s)) or s.endswith("-ii")),
     # 08.09.2026 (CI-Wachhund, „uefa-youth-league"): die Regel las nur die ERSTEN DREI
     # ZEICHEN, fing also „u19-…" und „u23-…", aber kein Wettbewerb, der seine Jugend im Namen
     # ausschreibt. Dieselbe Unterscheidung, die heute frueh `elf_marker` in betfair_consensus

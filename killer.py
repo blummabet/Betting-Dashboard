@@ -731,6 +731,28 @@ def _stake_fuer(home, away, index):
         return None
 
 
+def _stake_poly_index(wetten, now, maerkte=None):
+    """Stake-Geld je POLY-Marktschluessel — fuer Ebene 3, die nur diesen Schluessel kennt.
+
+    08.09.2026 (Lucas: „Stake in Ebene 3, aber genauso dargestellt wie diese anderen Indikatoren
+    mit dem Balken"). Der Namens-Join wohnt wie der andere in `spielzentrale`; hier wird er nur
+    einmal je Lauf ausgefuehrt und ans Artefakt gehaengt. Faellt eine der beiden Dateien aus,
+    bleibt der Index leer — und Ebene 3 zeigt fuer Stake „nicht erhoben" statt einer Null.
+    """
+    try:
+        from spielzentrale import stake_je_polykey
+    except Exception:
+        return {}
+    if maerkte is None:
+        maerkte = _load("poly_money_upcoming.json", {})
+    if not isinstance(maerkte, dict):
+        return {}
+    try:
+        return stake_je_polykey(maerkte, wetten, now=now)
+    except Exception:
+        return {}
+
+
 def baue(state=None, consensus=None, track=None, streaks=None, now=None,
          latch_state=None, anker=None, stake_wetten=None) -> dict:
     now = now or _now()
@@ -758,8 +780,12 @@ def baue(state=None, consensus=None, track=None, streaks=None, now=None,
     # Stake-Highroller-Geld je Spiel, ebenfalls einmal je Lauf. Der Namens-Join wohnt in
     # `spielzentrale` (rein und getestet, inkl. `gleiche_elf`) — er wird hier benutzt, nicht
     # nachgebaut. Faellt die Datei aus, bleibt der Index leer und das vierte Buch „unbekannt".
-    _stake_idx = _stake_index(stake_wetten if stake_wetten is not None
-                              else (_load("stake_highroller.json").get("wetten") or []), now)
+    _stake_wetten = (stake_wetten if stake_wetten is not None
+                     else (_load("stake_highroller.json").get("wetten") or []))
+    _stake_idx = _stake_index(_stake_wetten, now)
+    # Derselbe Stake-Topf, ueber den Poly-Marktschluessel adressiert — Ebene 3 kennt keinen
+    # anderen Schluessel. Zwei Indizes, EIN Join (beide aus `spielzentrale`).
+    _stake_poly = _stake_poly_index(_stake_wetten, now)
     _latch_vor = (latch_state or {}).get("latch") or {}
     zeilen = []
     for mid, e in ((state or {}).get("pending") or {}).items():
@@ -822,6 +848,9 @@ def baue(state=None, consensus=None, track=None, streaks=None, now=None,
         z["aktiv"] = bool(za and (now - za).total_seconds() <= AKTIV_FENSTER_MIN * 60)
     return {
         "generatedAt": now.isoformat(),
+        # Stake-Geld je Poly-Marktschluessel. Steht bewusst NEBEN den Stufen und nicht in
+        # ihnen: es ist kein Konsens-Urteil, sondern ein Nachschlagewerk fuer Ebene 3.
+        "stakePoly": _stake_poly,
         "stufe1": [z for z in gezeigt if z["stufe"] == 1],
         "stufe2": [z for z in gezeigt if z["stufe"] == 2],
         "_latch": latch, "_angepfiffen": angepfiffen,

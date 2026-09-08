@@ -130,8 +130,11 @@ class Register(unittest.TestCase):
             led, now=datetime(2026, 8, 29, 18, tzinfo=timezone.utc))}
         self.assertEqual(set(z), {"ABWÄGEN · gepusht", "ABWÄGEN · aussortiert"})
         self.assertGreater(z["ABWÄGEN · gepusht"]["roi"], z["ABWÄGEN · aussortiert"]["roi"])
-        # Ohne CLV je Pick bleibt auch die bessere Schublade unter „freigegeben".
-        self.assertNotEqual(z["ABWÄGEN · gepusht"]["status"], "freigegeben")
+        # 08.09.2026 (Lucas: „ja Freigabe locker"): der fehlende CLV blockiert nicht mehr —
+        # das Tor ist die ROI-Untergrenze. Was an die Stelle der alten Zusicherung tritt: die
+        # Lücke muss AUF der Zeile stehen. „nicht erhoben" ist eine Datenlücke, kein Nein.
+        self.assertEqual(z["ABWÄGEN · gepusht"]["clvUrteil"], "nicht erhoben")
+        self.assertIn("kein CLV", z["ABWÄGEN · gepusht"]["grund"])
 
     def test_leeres_buch_erzeugt_keine_zeile(self):
         import freigabe

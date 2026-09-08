@@ -267,6 +267,19 @@ def test_finnische_spitze_ist_ebene_1():
     assert LS.stufe("kolmonen") == "3"
 
 
+def test_reserveliga_in_jeder_sprache():
+    """08.09.2026: der Wachhund fiel mit „campeonato-de-reserva-de-primera-division-c".
+    Die Regel kannte nur „reserve" — dieselbe Sache heisst in Suedamerika „reserva" und in
+    Italien „riserve". Ein Muster, das eine Sprache kennt, ist kein Muster, sondern ein
+    Einzelfall mit Platzhalter."""
+    assert LS.stufe("campeonato-de-reserva-de-primera-division-c") == "reserve"
+    assert LS.stufe("primera-division-reserve-clausura") == "reserve"
+    assert LS.stufe("campionato-primavera-riserve") in ("reserve", "jugend")
+    # Gegenprobe: die breitere Regel darf keine echte Spielklasse verschlucken.
+    assert LS.stufe("usl-championship") == "1"
+    assert LS.stufe("la-liga-2") == "2"
+
+
 def test_ausgeschriebener_nachwuchs_wird_erkannt():
     # Die Regel las nur die ersten drei Zeichen und fing deshalb „u19-…", aber keinen
     # Wettbewerb, der seine Jugend ausschreibt.

@@ -63,7 +63,8 @@ class TestNachricht:
     def test_freigabe_nennt_untergrenze_und_regel(self):
         txt = FP.nachricht([schub("Mix bf+money", "freigegeben")], [], reg())
         assert "FREIGEGEBEN" in txt
-        assert "Untergrenze +4%" in txt, "ohne UG ist die Freigabe eine Behauptung"
+        # 08.09.2026: eine Nachkommastelle — s. TestLockereFreigabeWarntTrotzdem unten.
+        assert "Untergrenze +4.0%" in txt, "ohne UG ist die Freigabe eine Behauptung"
         assert "n=34" in txt and "n&gt;=30" in txt
 
     def test_ruecknahme_sagt_klar_nicht_mehr_spielen(self):
@@ -114,3 +115,67 @@ class TestMain:
         FP.main()
         assert len(gesendet) == 1 and "FREIGEGEBEN" in gesendet[0]
         assert json.loads(st.read_text()) == {"A": True}
+
+
+# ── 08.09.2026: „Freigabe locker" — der Push muss die Lockerung mittragen ────────────────
+# Lucas: „ja zum Testen mal in Trades-Channel." Der Push geht damit an Schubladen raus, deren
+# CLV nichts beweist oder sogar dagegen spricht — bis heute waeren die gar nicht freigegeben
+# worden. Wer den Push liest, spielt danach; er darf die einzige Warnung, die es zu dieser
+# Freigabe noch gibt, nicht nur im Frontend finden.
+def _frei(**over):
+    r = {"schublade": "Liga · ABWÄGEN", "strom": "cards", "n": 91, "status": "freigegeben",
+         "roi": 0.1518, "roiLb": 0.0076, "clv": -1.524, "clvLb": -2.011, "clvOg": -1.038,
+         "clvUrteil": "negativ belegt", "grund": "ROI belegt …"}
+    r.update(over)
+    return r
+
+
+class TestLockereFreigabeWarntTrotzdem:
+    def test_negativ_belegter_clv_steht_als_warnung_im_push(self):
+        t = FP.nachricht([_frei()], [], {})
+        assert "⚠️" in t and "CLV spricht dagegen" in t
+        assert "−6,8" in t, "ohne die Zahl ist die Warnung eine Meinung"
+
+    def test_nicht_erhobener_clv_ist_keine_warnung_sondern_eine_luecke(self):
+        """Der Unterschied, den die Umstellung ueberhaupt erst noetig gemacht hat: gegen eine
+        Schublade ohne CLV-Erhebung ist nichts gemessen. Ein ⚠️ dort waere eine Behauptung."""
+        t = FP.nachricht([_frei(clv=None, clvLb=None, clvOg=None,
+                                clvUrteil="nicht erhoben")], [], {})
+        assert "kein CLV erhoben" in t or "gar kein CLV" in t
+        assert "CLV spricht dagegen" not in t
+
+    def test_gemessen_aber_unbelegt_ist_ein_dritter_zustand(self):
+        t = FP.nachricht([_frei(clv=-0.8, clvLb=-2.528, clvOg=0.928,
+                                clvUrteil="gemessen, nicht belegt")], [], {})
+        assert "weder" in t and "CLV spricht dagegen" not in t
+
+    def test_belegter_clv_bekommt_keine_zusatzzeile(self):
+        t = FP.nachricht([_frei(clv=2.1, clvLb=1.2, clvOg=3.0, clvUrteil="belegt")], [], {})
+        assert "CLV spricht dagegen" not in t and "weder" not in t
+
+    def test_kopfzeile_sagt_WELCHE_untergrenze(self):
+        """Frueher mussten beide stimmen, „die Untergrenze" war eindeutig. Jetzt nicht mehr —
+        und eine Kopfzeile, die das verschweigt, liest sich wie eine Zusicherung, die sie
+        nicht mehr ist."""
+        t = FP.nachricht([_frei()], [], {})
+        assert "Rendite</b>-Untergrenze" in t or "Rendite-Untergrenze" in t
+
+    def test_untergrenze_mit_nachkommastelle(self):
+        """+0,76 % als „+1%" gerundet ist genau in diesem Bereich keine Zahl mehr — dieselbe
+        Korrektur wie auf dem Board."""
+        t = FP.nachricht([_frei(roiLb=0.0076)], [], {})
+        assert "+0.8%" in t and "+1%" not in t
+
+    def test_bei_der_freigabe_steht_die_warnung_nur_einmal(self):
+        """Zweimal dieselbe Warnung liest sich beim dritten Push wie Formelsprache."""
+        t = FP.nachricht([_frei(grund="⚠️ der CLV ist dagegen negativ belegt (Obergrenze …)")],
+                         [], {})
+        assert t.count("⚠️") == 1, ("die Warnung steht einmal — der `grund` sagt bei einer "
+                                    "Freigabe dasselbe noch einmal und gehoert deshalb nur "
+                                    "an die Ruecknahme")
+
+    def test_bei_der_ruecknahme_bleibt_der_grund_stehen(self):
+        """Dort ist er die einzige Auskunft darueber, WELCHE Bedingung gekippt ist."""
+        t = FP.nachricht([], [_frei(status="geprueft",
+                                    grund="ROI nicht belegt über null")], {})
+        assert "ROI nicht belegt über null" in t

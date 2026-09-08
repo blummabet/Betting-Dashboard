@@ -198,3 +198,99 @@ class TestFixturesJoin(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+# ── 08.09.2026: der Join ueber den Poly-Marktschluessel (Ebene 3) ───────────────────────
+def _wette(event, markt, auswahl, usd, stunden=4.0, liga="X"):
+    from datetime import timedelta
+    ko = (SZ._now() + timedelta(hours=stunden)).isoformat()
+    return {"event": event, "markt": markt, "auswahl": auswahl, "einsatzUsd": usd,
+            "anpfiff": ko, "liga": liga, "eventId": event}
+
+
+class TestPaartBrauchtBeideNamen:
+    """⭐ Die Fehlerklasse, die der Poly-Join sichtbar gemacht hat.
+
+    Gemessen am 08.09.: `Cincinnati Reds / Los Angeles Dodgers` wurde mit dem Stake-Event
+    `Boston Red Sox - Los Angeles Angels` gepaart. „Los Angeles Dodgers" gegen „Los Angeles
+    Angels" bringt 0,67 (die STADT), „Cincinnati Reds" gegen „Boston Red Sox" bringt 0,00 —
+    Summe ueber der Huerde. Ein Name trug den ganzen Join, der andere widersprach.
+    """
+
+    def test_ein_name_allein_traegt_keinen_join(self):
+        assert not SZ.paart("Cincinnati Reds", "Los Angeles Dodgers",
+                            "Boston Red Sox", "Los Angeles Angels")
+
+    def test_richtige_paarung_bleibt(self):
+        assert SZ.paart("Cincinnati Reds", "Los Angeles Dodgers",
+                        "Cincinnati Reds", "Los Angeles Dodgers")
+        assert SZ.paart("Ben Shelton", "Carlos Alcaraz", "Ben Shelton", "Carlos Alcaraz")
+
+    def test_teilnamen_reichen_weiterhin(self):
+        """Die Huerde darf keinen echten Treffer kosten — der Fussball-Join lebt von
+        Kurzformen („Gill, Felix" gegen „Felix Gill")."""
+        assert SZ.paart("Felix Gill", "Sebastian Ofner", "Gill, Felix", "Sebastian Ofner")
+
+
+class TestStakeJePolyKey:
+    MARKT = {"atp-a-b-2026-09-08": {"prices": {"Frances Tiafoe": 0.7, "Alex Michelsen": 0.3},
+                                    "league": "TENNIS"}}
+
+    def test_join_findet_das_spiel_und_die_seite(self):
+        idx = SZ.stake_je_polykey(self.MARKT, [
+            _wette("Frances Tiafoe - Alex Michelsen", "Winner", "Frances Tiafoe", 6404),
+            _wette("Frances Tiafoe - Alex Michelsen", "1st Set - Winner", "Alex Michelsen", 1023)])
+        e = idx["atp-a-b-2026-09-08"]
+        assert e["seite"] == "Frances Tiafoe", "die Seite kommt im POLY-Namen zurueck"
+        assert e["usd"] == 7427 and e["n"] == 2
+
+    def test_satzsieger_ist_keine_spielseite(self):
+        """„1st Set - Winner" traegt Geld, aber keine Seite fuer das ganze Spiel — genau wie
+        „Over 1.5" beim Fussball. Wer beides addiert, macht aus zwei Wetten eine Meinung."""
+        idx = SZ.stake_je_polykey(self.MARKT, [
+            _wette("Frances Tiafoe - Alex Michelsen", "2nd Set - Winner", "Alex Michelsen", 9000)])
+        e = idx["atp-a-b-2026-09-08"]
+        assert e["seite"] is None
+        assert e["usd"] == 9000, "das Geld bleibt sichtbar, es stimmt nur nicht mit ab"
+
+    def test_winner_zaehlt_auch_ausserhalb_des_fussballs(self):
+        """Der Grund fuer die Erweiterung: bei Tennis heisst 1X2 „Winner". Vorher hatte in
+        Ebene 3 KEIN einziger Tennis-Play eine Stake-Seite, obwohl Geld dalag."""
+        for markt in ("Winner", "Match Winner - Twoway", "Winner (Incl. Extra Innings)"):
+            idx = SZ.stake_je_polykey(self.MARKT, [
+                _wette("Frances Tiafoe - Alex Michelsen", markt, "Frances Tiafoe", 5000)])
+            assert idx["atp-a-b-2026-09-08"]["seite"] == "Frances Tiafoe", markt
+
+    def test_unter_dem_boden_stimmt_stake_nicht_mit(self):
+        idx = SZ.stake_je_polykey(self.MARKT, [
+            _wette("Frances Tiafoe - Alex Michelsen", "Winner", "Frances Tiafoe", 120)])
+        assert idx["atp-a-b-2026-09-08"]["seite"] is None
+
+    def test_drei_wege_markt_kommt_gar_nicht_in_den_join(self):
+        """Mit Remis gibt es keine zwei Seiten, die sich mit „A - B" paaren lassen — dann wird
+        nicht mit zwei von drei Namen verglichen, sondern gar nicht."""
+        # Die beiden ERSTEN Namen passen hier absichtlich exakt zum Stake-Event — nur die
+        # Drei-Wege-Regel selbst haelt den Eintrag draussen. Mit einem Remis-Namen an dritter
+        # Stelle waere sonst offen, ob die Namenshuerde oder diese Regel gegriffen hat.
+        drei = {"k": {"prices": {"Bayern": 0.5, "Dortmund": 0.3, "Draw": 0.2}}}
+        assert SZ.stake_je_polykey(drei, [_wette("Bayern - Dortmund", "1x2", "Bayern", 5000)]) == {}
+        # Gegenprobe: dasselbe Spiel als Zwei-Wege-Markt geht durch.
+        zwei = {"k": {"prices": {"Bayern": 0.6, "Dortmund": 0.4}}}
+        assert SZ.stake_je_polykey(zwei, [_wette("Bayern - Dortmund", "1x2", "Bayern", 5000)])
+
+    def test_more_markets_landet_unter_dem_basisschluessel(self):
+        m = {"atp-a-b-2026-09-08-more-markets": self.MARKT["atp-a-b-2026-09-08"]}
+        idx = SZ.stake_je_polykey(m, [
+            _wette("Frances Tiafoe - Alex Michelsen", "Winner", "Frances Tiafoe", 5000)])
+        assert list(idx) == ["atp-a-b-2026-09-08"]
+
+    def test_falsche_paarung_kommt_nicht_durch(self):
+        """Der reale Fall vom 08.09., jetzt als Wachhund."""
+        m = {"mlb-cin-lad": {"prices": {"Cincinnati Reds": 0.5, "Los Angeles Dodgers": 0.5}}}
+        idx = SZ.stake_je_polykey(m, [
+            _wette("Boston Red Sox - Los Angeles Angels", "Winner", "Boston Red Sox", 9000)])
+        assert idx == {}
+
+    def test_ohne_daten_leerer_index_statt_raten(self):
+        assert SZ.stake_je_polykey(None, []) == {}
+        assert SZ.stake_je_polykey({}, [_wette("A - B", "Winner", "A", 5000)]) == {}

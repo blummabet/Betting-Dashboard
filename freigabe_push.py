@@ -68,7 +68,11 @@ def _esc(s) -> str:
 
 
 def _pct(v):
-    return "—" if v is None else ("%+d%%" % round(float(v) * 100))
+    # 08.09.2026: eine Nachkommastelle. Auf ganze Prozent gerundet stand bei „Liga · ABWAEGEN"
+    # eine Untergrenze von +0,76 % als „+1%" da — und die beiden heute freigegebenen Schubladen
+    # liegen bei +2,3 % und +0,8 %. Genau in diesem Bereich entscheidet die Nachkommastelle, ob
+    # die Zahl etwas sagt. Dieselbe Korrektur wie auf dem Board.
+    return "—" if v is None else ("%+.1f%%" % (float(v) * 100))
 
 
 def wechsel(freigabe, state) -> tuple[list, list, dict]:
@@ -98,10 +102,15 @@ def wechsel(freigabe, state) -> tuple[list, list, dict]:
     return rauf, runter, neuer
 
 
-def _zeile(r) -> str:
+def _zeile(r, grund: bool = True) -> str:
     """Immer ROI UND Untergrenze — der Punktschätzer allein hat hier schon dreimal getäuscht.
     Der `grund` aus freigabe.py sagt bei einer Rücknahme, WELCHE Bedingung gekippt ist; ohne ihn
-    wäre die Nachricht ein Alarm ohne Ursache."""
+    wäre die Nachricht ein Alarm ohne Ursache.
+
+    08.09.2026: bei einer FREIGABE sagt derselbe `grund` inzwischen dasselbe wie die Zeilen
+    darüber (ROI-Untergrenze plus CLV-Urteil) — zweimal dieselbe Warnung liest sich beim dritten
+    Push wie Formelsprache und wird überblättert. Deshalb steht er nur noch bei der Rücknahme,
+    wo er die einzige Auskunft über die gekippte Bedingung ist."""
     zeilen = ["🔓 <b>%s</b>" % _esc(r.get("schublade"))]
     zeilen.append("📊 n=%s · ROI %s · <b>Untergrenze %s</b>"
                   % (r.get("n", "—"), _pct(r.get("roi")), _pct(r.get("roiLb"))))
@@ -109,7 +118,21 @@ def _zeile(r) -> str:
     if clv is not None:
         zeilen.append("📈 CLV %+.1fpp%s" % (float(clv),
                       ("  (UG %+.2f)" % float(r["clvLb"])) if r.get("clvLb") is not None else ""))
-    if r.get("grund"):
+    # 08.09.2026 (Lucas: „ja Freigabe locker"). Seit das Tor allein die ROI-Untergrenze ist, muss
+    # der CLV in der NACHRICHT stehen — nicht nur auf dem Board. Wer den Push liest, spielt
+    # danach; er darf die einzige Warnung, die es zu dieser Freigabe noch gibt, nicht nur im
+    # Frontend finden. Vier Zustaende, und „nicht erhoben" ist ausdruecklich kein Nein.
+    _u = r.get("clvUrteil")
+    if _u == "negativ belegt":
+        zeilen.append("⚠️ <b>CLV spricht dagegen</b> — Obergrenze unter null. In unseren Daten "
+                      "liefen Schubladen mit negativem CLV im Schnitt −6,8 %. Freigegeben auf "
+                      "die Rendite, nicht auf eine gemessene Kante.")
+    elif _u == "nicht erhoben":
+        zeilen.append("❔ Fuer diese Schublade wird gar kein CLV erhoben — unbekannt ist kein "
+                      "Nein, aber auch kein Ja.")
+    elif _u == "gemessen, nicht belegt":
+        zeilen.append("❔ CLV gemessen, aber weder ueber noch unter null belegt.")
+    if grund and r.get("grund"):
         zeilen.append("🧭 %s" % _esc(r["grund"]))
     return "\n".join(zeilen)
 
@@ -129,9 +152,13 @@ def nachricht(rauf, runter, freigabe) -> str:
     if rauf:
         if teile:
             teile.append("")
+        # 08.09.2026: „die Untergrenze" war frueher eindeutig — es mussten beide stimmen.
+        # Seit das Tor allein die RENDITE-Untergrenze ist, muss genau das dastehen; sonst liest
+        # sich die Zeile wie eine Zusicherung, die sie nicht mehr ist.
         teile += ["✅ <b>FREIGEGEBEN</b>", TRENNER,
-                  "<i>Ab jetzt blind spielbar — die Untergrenze liegt über null.</i>", "",
-                  "\n\n".join(_zeile(r) for r in rauf)]
+                  "<i>Ab jetzt blind spielbar — die <b>Rendite</b>-Untergrenze liegt über null. "
+                  "Was der CLV dazu sagt, steht je Schublade darunter.</i>", "",
+                  "\n\n".join(_zeile(r, grund=False) for r in rauf)]
     # Die Regel steht nur an der FREIGABE — dort ist „was heisst freigegeben eigentlich?" die
     # Frage. Bei einer Ruecknahme beantwortet der `grund` sie bereits konkret, und die lange
     # Regelzeile wuerde die eine Zeile verwaessern, auf die es ankommt.

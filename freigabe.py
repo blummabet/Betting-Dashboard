@@ -47,6 +47,8 @@ import os
 from datetime import datetime, timezone
 from pathlib import Path
 
+import sharp_gate as SG
+
 BASE = Path(__file__).resolve().parent
 OUT_FILE = "freigabe.json"
 
@@ -68,6 +70,30 @@ KANDIDAT_N   = int(os.environ.get("FREIGABE_KANDIDAT_N") or 10)
 # Aeltere Schubladen bekommen den Status „ruht" — sie verschwinden nicht (die Historie bleibt
 # lesbar), sie stehen nur nicht mehr in der Warteschlange auf eine Freigabe.
 MAX_ALTER_TAGE = int(os.environ.get("FREIGABE_MAX_ALTER_TAGE") or 21)
+
+# ── 08.09.2026: „Freigabe locker" ───────────────────────────────────────────────────────
+# Lucas, seit Wochen und heute noch einmal ausdruecklich: er haelt nichts vom CLV als Kriterium.
+# Sein Massstab ist die Trefferquote und der ROI, der daraus folgt. Das Tor folgt ihm — aber nur
+# so weit, wie die Daten es zulassen, und der Rest steht dabei.
+#
+# WAS SICH AENDERT: das Tor ist ab jetzt die ROI-Untergrenze (plus Mindestzahl und Lebendigkeit).
+# Der CLV blockiert nicht mehr, er BESCHREIBT — als eigenes Feld `clvUrteil`, das auf jeder
+# freigegebenen Zeile mitlaeuft.
+#
+# WAS DAS HEUTE BEWIRKT, gemessen am Stand vom 08.09.:
+#   74 reife Schubladen · 2 mit belegter ROI-Untergrenze · 0 davon ohne CLV-Wert
+#   → freigegeben werden genau diese zwei: Public-Kandidaten (n=35, ROI-UG +2,3 %)
+#     und Liga · ABWAEGEN (n=91, ROI-UG +0,8 %).
+#
+# ⚠️ UND DER EINWAND, DER DAZUGEHOERT: beide haben eine NEGATIV BELEGTE CLV-Untergrenze
+# (−2,53 pp und −2,01 pp). In unseren eigenen Daten ist der CLV monoton praediktiv (n=2.651:
+# CLV>0 → ROI +7,5 %, Untergrenze +1,9 %; CLV<0 → ROI −6,8 %). Diese zwei Schubladen sind also
+# genau der Fall, vor dem der CLV warnt. Das ist Lucas' Entscheidung und sie ist vertretbar —
+# ein CLV-Kriterium, das seit Wochen jeden Tag alles blockiert, beantwortet die Frage auch nicht.
+# Aber verschwiegen wird es nicht: die Warnung steht auf der Zeile, nicht in einer Fussnote.
+#
+# `FREIGABE_CLV_BLOCKT=1` stellt das alte, strenge Tor wieder her — ohne Code-Aenderung.
+CLV_BLOCKT = str(os.environ.get("FREIGABE_CLV_BLOCKT") or "").lower() in ("1", "ja", "true", "on")
 
 
 def _now():
@@ -120,6 +146,29 @@ def untergrenze(werte, z: float = Z, min_n: int = None):
     m = sum(werte) / n
     var = sum((x - m) ** 2 for x in werte) / (n - 1)
     return m - z * math.sqrt(var) / math.sqrt(n)
+
+
+def obergrenze(werte, z: float = Z, min_n: int = None):
+    """Einseitige 95%-OBERgrenze desselben Mittelwerts — das Spiegelbild von `untergrenze`.
+
+    08.09.2026. Sie wird gebraucht, seit der CLV nicht mehr blockiert, sondern beschreibt:
+    „negativ belegt" heisst ab jetzt, was es heissen muss — die OBERgrenze liegt unter null.
+    Vorher stand dieses Etikett an jeder Schublade, deren Untergrenze unter null lag, und das
+    ist etwas voellig anderes: eine Schublade mit CLV ±0,0 und breiter Streuung hat eine
+    Untergrenze unter null, ohne dass irgendetwas gegen sie gemessen waere. Solange der CLV das
+    Tor war, fiel das nicht auf (beide Faelle wurden gleich behandelt); als Auskunft AUF der
+    Zeile waere es eine Behauptung ueber Daten, die es nicht gibt.
+
+    Dieselbe Doktrin wie ueberall hier, nur nach oben: Folgen beweist die Untergrenze ueber
+    null, Faden die Obergrenze unter null. Dazwischen liegt „gemessen, nicht belegt".
+    """
+    n = len(werte)
+    grenze = UG_MIN_N if min_n is None else min_n
+    if n < max(3, grenze):
+        return None
+    m = sum(werte) / n
+    var = sum((x - m) ** 2 for x in werte) / (n - 1)
+    return m + z * math.sqrt(var) / math.sqrt(n)
 
 
 def _mittel(werte):
@@ -249,6 +298,7 @@ def bewerte(name: str, strom: str, renditen, clvs, meta=None, letzter=None, now=
     n = len(renditen)
     roi, roi_lb = _mittel(renditen), untergrenze(renditen)
     clv, clv_lb = _mittel(clvs), untergrenze(clvs)
+    clv_og = obergrenze(clvs)
     alter = _alter_tage(letzter, now or _now())
 
     if alter is not None and alter > MAX_ALTER_TAGE:
@@ -303,9 +353,9 @@ def bewerte(name: str, strom: str, renditen, clvs, meta=None, letzter=None, now=
         status, grund = "kandidat", f"{n} von {MIN_N} Plays — noch {MIN_N - n}{_weit}"
     elif roi_lb is None or roi_lb <= MIN_ROI_LB:
         status, grund = "geprueft", "ROI nicht belegt über null"
-    elif clv_lb is None:
+    elif CLV_BLOCKT and clv_lb is None:
         status, grund = "geprueft", "kein CLV messbar — ohne den bleibt Glück und Kante ununterscheidbar"
-    elif clv_lb < MIN_CLV_LB:
+    elif CLV_BLOCKT and clv_lb < MIN_CLV_LB:
         status, grund = "geprueft", "CLV negativ belegt — der ROI kam aus der Varianz, nicht aus einer Kante"
     elif alter is None:
         # 29.08.2026: kein Zeitstempel -> die Lebendig-Bedingung ist nicht pruefbar. Fail-closed,
@@ -314,7 +364,24 @@ def bewerte(name: str, strom: str, renditen, clvs, meta=None, letzter=None, now=
         # ohne diese Klausel koennte eine undatierbare Schublade freigegeben werden.
         status, grund = "geprueft", "kein Datum am Play — Lebendigkeit nicht prüfbar"
     else:
-        status, grund = "freigegeben", "ROI und CLV belegt"
+        status = "freigegeben"
+        # Der Satz sagt, WORAUF die Freigabe beruht — und wenn der CLV dagegen spricht, sagt er
+        # das im selben Atemzug. Eine Freigabe, die ihren eigenen Einwand verschweigt, ist genau
+        # die Sorte Zahl, gegen die dieses Register gebaut ist.
+        if clv_lb is not None and clv_lb > MIN_CLV_LB:
+            grund = "ROI und CLV belegt"
+        elif clv_og is not None and clv_og < MIN_CLV_LB:
+            grund = ("ROI belegt (Untergrenze %+.1f %%) — ⚠️ der CLV ist dagegen negativ belegt "
+                     "(Obergrenze %+.2f pp): in unseren Daten liefen Schubladen mit negativem CLV "
+                     "im Schnitt −6,8 %%. Freigegeben auf die Rendite, nicht auf eine gemessene "
+                     "Kante." % (100 * roi_lb, clv_og))
+        elif clv is not None:
+            grund = ("ROI belegt (Untergrenze %+.1f %%) — der CLV ist gemessen (%+.2f pp), aber "
+                     "nicht belegt: unbekannt ist kein Nein." % (100 * roi_lb, clv))
+        else:
+            grund = ("ROI belegt (Untergrenze %+.1f %%) — für diese Schublade wird gar kein CLV "
+                     "erhoben. Unbekannt ist kein Nein, aber auch kein Ja."
+                     % (100 * roi_lb))
 
     return {
         "schublade": name, "strom": strom, "n": n, "status": status, "grund": grund,
@@ -328,6 +395,14 @@ def bewerte(name: str, strom: str, renditen, clvs, meta=None, letzter=None, now=
         "roiLb": round(roi_lb, 4) if roi_lb is not None else None,
         "clv": round(clv, 3) if clv is not None else None,
         "clvLb": round(clv_lb, 3) if clv_lb is not None else None,
+        # 08.09.2026: seit der CLV nicht mehr blockiert, muss er trotzdem SICHTBAR bleiben —
+        # sonst verschwindet die einzige Warnung, die es zu einer Freigabe noch gibt.
+        # Vier Zustaende, und „nicht erhoben" ist ausdruecklich nicht dasselbe wie „schlecht".
+        "clvUrteil": ("belegt" if (clv_lb is not None and clv_lb > MIN_CLV_LB)
+                      else "negativ belegt" if (clv_og is not None and clv_og < MIN_CLV_LB)
+                      else "gemessen, nicht belegt" if clv is not None
+                      else "nicht erhoben"),
+        "clvOg": round(clv_og, 3) if clv_og is not None else None,
         "fehltN": max(0, MIN_N - n),
         # Damit die Oberflaeche die Entfernung nicht selbst ausrechnet (sie hat die Einzelwerte
         # gar nicht) und nicht wieder „noch 15" schreibt, wo ~248 gemeint sind.
@@ -591,6 +666,175 @@ def betfair_schubladen(rec=None, min_n=None) -> list:
                                         "erhoben — ohne den keine Freigabe")
             out.append(eintrag)
     return out
+
+
+def betfair_public_schubladen(rec=None) -> list:
+    """Die Betfair-PUBLIC-Pushes als eigene Schublade — das, was wirklich aufs Handy geht.
+
+    08.09.2026 (Lucas: „kann man bei Betfair anzeigen z.B. die Public-Push? die sind relativ
+    solide"). Sie standen bis heute in KEINER Schublade: `betfair_schubladen` liest
+    `betfair_track_record.json` (alle Signale), der Public-Kanal fuehrt seit jeher sein eigenes
+    Register in `betfair_public_record.json`. Der Kanal, der als einziger von selbst sendet, war
+    damit der einzige ohne Zeile im Register.
+
+    Und beim Nachrechnen kippt der Eindruck: 58,1 % Treffer aus 191 Pushes klingt solide, mit der
+    Durchschnittsquote 1,84 waeren das +6,9 % ROI — gemessen sind es −3,1 %. Der Unterschied ist
+    keine Rundung, er ist die ganze Auskunft: die Treffer liegen bei KLEINEREN Quoten als die
+    Fehlschuesse. „Eine Trefferquote ohne die Quoten ist keine Zahl" — hier steht der Fall dazu.
+
+    `byScenario` (fresh/ht) ist eine ueberschneidungsfreie Zerlegung derselben Pushes und kommt
+    als eigene Zeilen mit; die Dachzeile traegt `art="public"` und faellt damit NICHT in die
+    Markt-Zerlegung des Stroms (sonst zaehlten dieselben Plays zweimal).
+    """
+    d = rec if rec is not None else _load("betfair_public_record.json")
+    if not isinstance(d, dict):
+        return []
+    out = []
+
+    def _zeile(name, v, art):
+        n = int(v.get("n") or 0)
+        roi, ug = v.get("roi"), v.get("roiUg")
+        if not n or not isinstance(roi, (int, float)):
+            return None
+        e = bewerte(name, "betfair", [], [], {"art": art, "quelle": "betfair_public_eval.py",
+                                              "kanal": "public"})
+        e.update({"n": n, "roi": round(float(roi), 4), "pl": round(float(roi) * n, 2),
+                  "roiLb": round(float(ug), 4) if isinstance(ug, (int, float)) else None,
+                  "hit": v.get("hitRate"), "hitLb": v.get("hitUg"), "avgOdd": v.get("avgOdd"),
+                  "fehltN": max(0, MIN_N - n), "status": "geprueft"})
+        _clv = v.get("avgClvBf")
+        if isinstance(_clv, (int, float)):
+            e["clv"] = round(float(_clv), 3)
+        if e["roiLb"] is not None and e["roiLb"] > 0:
+            e["grund"] = "ROI belegt ueber null — aber ohne CLV-Streuung keine Freigabe"
+        elif float(roi) < 0 and isinstance(v.get("hitRate"), (int, float)):
+            e["grund"] = ("%d Pushes, %.1f %% Treffer — und trotzdem %+.1f %% ROI: die Treffer "
+                          "liegen bei kleineren Quoten als die Fehlschuesse"
+                          % (n, 100 * float(v["hitRate"]), 100 * float(roi)))
+        else:
+            e["grund"] = "ROI nicht belegt ueber null"
+        return e
+
+    dach = _zeile("Public-Pushes", d, "public")
+    if dach:
+        out.append(dach)
+    for name, v in ((d.get("byScenario") or {}).items()):
+        if not isinstance(v, dict):
+            continue
+        label = {"fresh": "Public · frisches Signal",
+                 "ht": "Public · Halbzeit"}.get(name, "Public · " + str(name))
+        z = _zeile(label, v, "public_szenario")
+        if z:
+            out.append(z)
+    return out
+
+
+# ── Ligen: welche performen, quer ueber alle Betfair-Maerkte ────────────────────────────
+LIGA_MIN_N = 30
+
+
+def betfair_ligen(zeilen=None, min_n: int = None) -> list:
+    """Eine Zeile je Liga aus den ROHZEILEN des Betfair-Ledgers. REIN (Zeilen injizierbar).
+
+    08.09.2026 (Lucas: „geht aus dem Tracking eventuell auch anzeigen welche Ligen gut
+    performen? die Daten haben wir"). Sie lagen wirklich da — nur nie zusammengefasst:
+    `betfair_track_record.json` fuehrt `byMarket` und `byLeagueMarket`, aber kein `byLeague`.
+    Eine Liga stand damit in bis zu sieben Zeilen mit je n≈30 und in keiner einzigen mit ihrem
+    Gesamtbild.
+
+    ⚠️ Das ist eine ZWEITE ueberschneidungsfreie Zerlegung derselben Plays (jeder Play hat genau
+    eine Liga UND genau einen Markt). Sie darf deshalb nie zur Markt-Zerlegung addiert werden —
+    sie steht als eigene Tabelle und geht nicht in `alle` ein.
+
+    Untergrenze aus den Einzelrenditen, nicht aus der Binaer-Naeherung: hier liegen die Plays
+    einzeln vor, anders als in den Aggregat-Schubladen weiter oben.
+    """
+    min_n = LIGA_MIN_N if min_n is None else min_n
+    if zeilen is None:
+        try:
+            import betfair_track_store as _S
+            zeilen = _S.load(str(BASE / "betfair_track_results.json"))
+        except Exception:
+            return []
+    nach = {}
+    for r in (zeilen or []):
+        lg = r.get("league")
+        o = r.get("odd") or r.get("entryOdd")
+        if not lg or not isinstance(o, (int, float)) or o <= 1.0:
+            continue
+        e = nach.setdefault(lg, {"r": [], "c": [], "w": 0})
+        e["r"].append((float(o) - 1.0) if r.get("win") else -1.0)
+        if r.get("win"):
+            e["w"] += 1
+        if isinstance(r.get("clvBf"), (int, float)):
+            e["c"].append(float(r["clvBf"]))
+    out = []
+    for lg, e in nach.items():
+        n = len(e["r"])
+        if n < min_n:
+            continue
+        roi, ug = _mittel(e["r"]), untergrenze(e["r"])
+        clv = _mittel(e["c"])
+        out.append({"liga": lg, "n": n, "wins": e["w"],
+                    "hit": round(e["w"] / n, 4),
+                    "hitLb": round(SG.wilson_lb(e["w"], n), 4),
+                    "roi": round(roi, 4) if roi is not None else None,
+                    "roiLb": round(ug, 4) if ug is not None else None,
+                    "pl": round(sum(e["r"]), 2),
+                    "clv": round(clv, 3) if clv is not None else None,
+                    "belegt": bool(ug is not None and ug > 0)})
+    out.sort(key=lambda r: -(r["roiLb"] if r["roiLb"] is not None else -9))
+    return out
+
+
+# ── Wallets: wem folgen die Poly-Pushes eigentlich ──────────────────────────────────────
+WALLET_TOP_N = 10
+
+
+def poly_wallets(scores=None, top: int = None) -> list:
+    """Die Wallets hinter den Poly-Pushes, sortiert nach BELEGTER Trefferquote. REIN.
+
+    08.09.2026 (Lucas: „waere eventuell auch gut wenn man anzeigt z.B. Top 10 Poly Wallets —
+    dann weiss ich, die Pushs die ich krieg von denen sind gut"). Genau das beantwortet das Board
+    bisher nirgends: `sharp_gate` entscheidet je Push still, ob eine Wallet zaehlt, aber WELCHE
+    Wallets das sind und wie gut sie sind, stand nie irgendwo.
+
+    Sortiert wird nach der Wilson-UNTERGRENZE, nicht nach der rohen Quote: 8/8 (100 %) und 40/50
+    (80 %) sind nicht dieselbe Auskunft, und die rohe Quote stellt das kleine n nach vorn.
+    `sharp_gate.sharp_grade` bleibt der Filter — dieselbe Definition, die auch entscheidet, ob
+    eine Wallet ueberhaupt in einen Push einfliesst. Zwei Listen mit zwei Definitionen waeren
+    genau der Fehler, den sharp_gate.py aufgeraeumt hat.
+
+    P&L ist die LEBENSBILANZ der Wallet auf Polymarket (inkl. Wahlen und Krypto) und deshalb
+    hier nur Beiwerk, nie der Rang — s. sharp_gate.py.
+    """
+    top = WALLET_TOP_N if top is None else top
+    if scores is None:
+        scores = ((_load("poly_wallet_track.json") or {}).get("scores")) or {}
+    raus = []
+    for w, v in (scores or {}).items():
+        if not isinstance(v, dict):
+            continue
+        try:
+            grad = SG.sharp_grade(v)
+        except Exception:
+            grad = 0
+        if not grad:
+            continue
+        n = int(v.get("n") or 0)
+        wins = int(v.get("wins") or 0)
+        if n <= 0:
+            continue
+        raus.append({"wallet": w, "kurz": (w[:6] + "…" + w[-4:]) if len(w) > 12 else w,
+                     "n": n, "wins": wins, "hit": round(wins / n, 4),
+                     "hitLb": round(SG.wilson_lb(wins, n), 4),
+                     "clv": round(float(v.get("clvSumPP") or 0) / n, 3),
+                     "usd": int(v.get("usd") or 0),
+                     "pnl": v.get("pnl") if isinstance(v.get("pnl"), (int, float)) else None,
+                     "grad": round(float(grad), 3),
+                     "sportarten": sorted((v.get("bySport") or {}).keys())})
+    raus.sort(key=lambda r: (-r["hitLb"], -r["n"]))
+    return raus[:top]
 
 
 def killer_schublade(results=None, now=None) -> list:
@@ -863,7 +1107,8 @@ def baue(engine=None, track=None, cards=None, betfair=None, now=None) -> dict:
     else:
         engine_benutzt = engine or None          # False (= bewusst nicht filtern) -> null
     zeilen = (poly_schubladen(track, engine) + card_schubladen(cards)
-              + betfair_schubladen(betfair) + killer_schublade(now=now)
+              + betfair_schubladen(betfair) + betfair_public_schubladen()
+              + killer_schublade(now=now)
               + push_schubladen(now=now) + vorregistrierte_schubladen(track, now=now))
     zeilen.sort(key=lambda r: (RANG.get(r["status"], 9), -(r.get("roiLb") or -9), -r["n"]))
     frei = [r for r in zeilen if r["status"] == "freigegeben"]
@@ -874,12 +1119,24 @@ def baue(engine=None, track=None, cards=None, betfair=None, now=None) -> dict:
         "engineGefiltert": bool(engine_benutzt),
         "regeln": {"minN": MIN_N, "z": Z, "kandidatAbN": KANDIDAT_N,
                    "maxAlterTage": MAX_ALTER_TAGE,
-                   "text": "freigegeben = n>=%d UND ROI-Untergrenze>0 UND CLV-Untergrenze>=0 UND "
-                           "juengster Play juenger als %d Tage, alles auf der aktuellen "
-                           "Engine-Version" % (MIN_N, MAX_ALTER_TAGE)},
+                   "clvBlockt": CLV_BLOCKT,
+                   "text": (("freigegeben = n>=%d UND ROI-Untergrenze>0 UND CLV-Untergrenze>=0 "
+                             "UND juengster Play juenger als %d Tage, alles auf der aktuellen "
+                             "Engine-Version" % (MIN_N, MAX_ALTER_TAGE))
+                            if CLV_BLOCKT else
+                            ("freigegeben = n>=%d UND ROI-Untergrenze>0 UND juengster Play "
+                             "juenger als %d Tage, alles auf der aktuellen Engine-Version. "
+                             "Der CLV blockiert seit 08.09.2026 nicht mehr — er steht als "
+                             "Urteil auf jeder Zeile, mit Warnung bei negativ belegtem CLV."
+                             % (MIN_N, MAX_ALTER_TAGE)))},
         "freigegeben": frei,
         "kandidaten": kand,
         "stroeme": stroeme(zeilen),
+        # Zwei eigene Tabellen — KEINE Schubladen, weil sie zweite
+        # Zerlegungen derselben Plays sind (Ligen) bzw. gar keine Plays
+        # zaehlen, sondern Wallets.
+        "ligen": betfair_ligen(),
+        "wallets": poly_wallets(),
         "alle": zeilen,
         "zusammenfassung": {
             "schubladen": len(zeilen), "freigegeben": len(frei), "kandidaten": len(kand),
