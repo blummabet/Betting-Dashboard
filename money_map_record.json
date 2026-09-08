@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-08T19:44:45.596735+00:00",
+"generatedAt": "2026-09-08T19:59:27.506799+00:00",
 "byVerdict": {
 "konsens": {
-"n": 879,
-"wins": 730,
-"hitRate": 0.8305,
-"polyN": 825,
-"polyWins": 634,
-"polyHitRate": 0.7685,
+"n": 880,
+"wins": 731,
+"hitRate": 0.8307,
+"polyN": 826,
+"polyWins": 635,
+"polyHitRate": 0.7688,
 "pinnN": 97,
 "pinnHitRate": 0.8247,
-"nRoi": 207,
-"roi": 0.4476,
-"roiLb": 0.358,
-"nClv": 207,
-"clv": 20.83,
-"clvLb": 17.9862
+"nRoi": 208,
+"roi": 0.4495,
+"roiLb": 0.3603,
+"nClv": 208,
+"clv": 20.88,
+"clvLb": 18.0516
 },
 "uneinig": {
-"n": 332,
+"n": 333,
 "wins": 109,
-"hitRate": 0.3283,
-"polyN": 296,
+"hitRate": 0.3273,
+"polyN": 297,
 "polyWins": 76,
-"polyHitRate": 0.2568,
-"pinnN": 196,
-"pinnHitRate": 0.5969,
-"nRoi": 100,
-"roi": -0.3848,
-"roiLb": -0.5416,
-"nClv": 100,
-"clv": -18.31,
-"clvLb": -23.8756
+"polyHitRate": 0.2559,
+"pinnN": 197,
+"pinnHitRate": 0.5939,
+"nRoi": 101,
+"roi": -0.3909,
+"roiLb": -0.5465,
+"nClv": 101,
+"clv": -18.65,
+"clvLb": -24.1827
 },
 "teil": {
 "n": 16,
@@ -111,15 +111,15 @@
 "wins": 20,
 "hitRate": 0.6897
 },
+"Dutch Eredivisie": {
+"n": 27,
+"wins": 18,
+"hitRate": 0.6667
+},
 "Turkish Super League": {
 "n": 27,
 "wins": 17,
 "hitRate": 0.6296
-},
-"Dutch Eredivisie": {
-"n": 26,
-"wins": 18,
-"hitRate": 0.6923
 },
 "French Ligue 1": {
 "n": 26,
@@ -466,6 +466,11 @@
 "wins": 2,
 "hitRate": 1.0
 },
+"UEFA Champions League": {
+"n": 2,
+"wins": 2,
+"hitRate": 1.0
+},
 "UEFA Youth League": {
 "n": 2,
 "wins": 2,
@@ -586,11 +591,6 @@
 "wins": 1,
 "hitRate": 1.0
 },
-"UEFA Champions League": {
-"n": 1,
-"wins": 1,
-"hitRate": 1.0
-},
 "UEFA Super Cup": {
 "n": 1,
 "wins": 1,
@@ -599,37 +599,75 @@
 },
 "byStrength": {
 "strong": {
-"n": 728,
-"wins": 578,
-"hitRate": 0.794,
-"nRoi": 204,
-"roi": 0.2268,
-"roiLb": 0.1282,
-"nClv": 204,
-"clv": 11.69,
-"clvLb": 7.7501
+"n": 729,
+"wins": 579,
+"hitRate": 0.7942,
+"nRoi": 205,
+"roi": 0.2298,
+"roiLb": 0.1315,
+"nClv": 205,
+"clv": 11.78,
+"clvLb": 7.8644
 },
 "weak": {
-"n": 466,
+"n": 467,
 "wins": 246,
-"hitRate": 0.5279,
-"nRoi": 110,
-"roi": 0.0083,
-"roiLb": -0.1565,
-"nClv": 110,
-"clv": -1.31,
-"clvLb": -6.3473
+"hitRate": 0.5268,
+"nRoi": 111,
+"roi": -0.0008,
+"roiLb": -0.1648,
+"nClv": 111,
+"clv": -1.77,
+"clvLb": -6.8162
 }
 },
 "divergence": {
-"n": 332,
+"n": 333,
 "betfairWins": 109,
-"betfairRate": 0.3283,
-"polyN": 296,
+"betfairRate": 0.3273,
+"polyN": 297,
 "polyWins": 76,
-"polyRate": 0.2568
+"polyRate": 0.2559
 },
 "recent": [
+{
+"matchId": "35998674",
+"home": "AEK Athens",
+"away": "Lask Linz",
+"league": "UEFA Champions League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "AEK Athens",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-09-08T16:45:00Z",
+"settledAt": "2026-09-08T19:59:27.308293+00:00"
+},
+{
+"matchId": "36020725",
+"home": "NEC Nijmegen",
+"away": "Excelsior",
+"league": "Dutch Eredivisie",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "NEC Nijmegen",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-09-08T16:45:00Z",
+"settledAt": "2026-09-08T19:59:27.308293+00:00"
+},
 {
 "matchId": "35998660",
 "home": "Club Brugge",
@@ -1351,56 +1389,18 @@
 ],
 "kickoff": "2026-09-06T19:00:00Z",
 "settledAt": "2026-09-06T22:09:32.694795+00:00"
-},
-{
-"matchId": "35979386",
-"home": "Juventus",
-"away": "AC Milan",
-"league": "Italian Serie A",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Juventus",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-09-06T18:45:00Z",
-"settledAt": "2026-09-06T21:54:37.047724+00:00"
-},
-{
-"matchId": "35998360",
-"home": "Espanyol",
-"away": "Sevilla",
-"league": "Spanish La Liga",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Espanyol",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-09-06T19:00:00Z",
-"settledAt": "2026-09-06T21:09:29.286222+00:00"
 }
 ],
 "global": {
-"n": 1227,
-"wins": 842,
-"hitRate": 0.6862,
-"nRoi": 314,
-"roi": 0.1502,
-"roiLb": 0.0636,
-"nClv": 314,
-"clv": 7.13,
-"clvLb": 3.978
+"n": 1229,
+"wins": 843,
+"hitRate": 0.6859,
+"nRoi": 316,
+"roi": 0.1488,
+"roiLb": 0.0624,
+"nClv": 316,
+"clv": 7.02,
+"clvLb": 3.8709
 },
-"pending": 31
+"pending": 30
 }
