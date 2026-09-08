@@ -110,7 +110,7 @@
    "gehaltenSeit": "2026-09-08T19:59:30.262047+00:00",
    "zuletztAktiv": "2026-09-08T21:14:27.229031+00:00",
    "haltePreis": 1.76,
-   "aktiv": true
+   "aktiv": false
   },
   "35998675|Match Odds": {
    "matchId": "35998675",
@@ -233,7 +233,7 @@
    "markt": "Match Odds",
    "seite": "home",
    "name": "Fluminense",
-   "odd": 1.64,
+   "odd": 1.62,
    "entryOdd": 1.78,
    "anteilPct": 74,
    "stufe": 1,
@@ -274,13 +274,13 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 73% auf der Seite"
+       "text": "Geld 74% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
-      "text": "Geld 73% auf der Seite"
+      "text": "Geld 74% auf der Seite"
      },
      {
       "buch": "POLY",
@@ -290,13 +290,13 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Poly-Geld 79% auf derselben Seite"
+       "text": "Poly-Geld 85% auf derselben Seite"
       },
       "tiefe": {
        "ok": false,
        "text": "kein bewiesenes Wallet auf der Seite"
       },
-      "text": "Poly-Geld 79% auf derselben Seite"
+      "text": "Poly-Geld 85% auf derselben Seite"
      },
      {
       "buch": "PIN",
@@ -310,7 +310,7 @@
       },
       "tiefe": {
        "ok": false,
-       "text": "kein Move gemessen"
+       "text": "Move -16.9pp in unsere Richtung"
       },
       "text": "hat dieselbe Seite als Favorit"
      },
@@ -341,7 +341,7 @@
    },
    "wertVsPinn": -0.0422,
    "gehaltenSeit": "2026-09-08T21:14:27.229031+00:00",
-   "zuletztAktiv": "2026-09-08T21:29:26.189569+00:00",
+   "zuletztAktiv": "2026-09-08T21:44:32.468543+00:00",
    "haltePreis": 1.65,
    "aktiv": true
   },
@@ -464,7 +464,7 @@
    "gehaltenSeit": "2026-09-08T21:14:27.229031+00:00",
    "zuletztAktiv": "2026-09-08T21:14:27.229031+00:00",
    "haltePreis": 2.3,
-   "aktiv": true
+   "aktiv": false
   },
   "36043643|Match Odds": {
    "matchId": "36043643",
@@ -558,6 +558,128 @@
    "gehaltenSeit": "2026-09-08T21:30:48.212955+00:00",
    "zuletztAktiv": "2026-09-08T21:30:48.212955+00:00",
    "haltePreis": 1.33,
+   "aktiv": true
+  },
+  "35998677|Match Odds": {
+   "matchId": "35998677",
+   "home": "Napoli",
+   "away": "Arsenal",
+   "league": "UEFA Champions League",
+   "kickoff": "2026-09-09T19:00:00Z",
+   "markt": "Match Odds",
+   "seite": "away",
+   "name": "Arsenal",
+   "odd": 1.75,
+   "entryOdd": 1.77,
+   "anteilPct": 90,
+   "stufe": 2,
+   "verstaerker": [
+    {
+     "art": "pinn",
+     "text": "Pinnacle stimmt zu",
+     "gewicht": 10
+    },
+    {
+     "art": "streak",
+     "text": "Ungeschlagen ×5",
+     "gewicht": 8
+    }
+   ],
+   "rang": 77.0,
+   "track": null,
+   "streak": {
+    "art": "Ungeschlagen",
+    "laenge": 5,
+    "quote": 69,
+    "liga": "Premier League"
+   },
+   "poly": null,
+   "polyStatus": "nein",
+   "polyKey": "ucl-nap-ars-2026-09-09",
+   "polySide": "Arsenal FC",
+   "pinnMovePP": null,
+   "punkte": {
+    "punkte": 6,
+    "moeglich": 10,
+    "dauerH": 21.26,
+    "teile": [
+     {
+      "buch": "BF",
+      "name": "Betfair",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Geld 90% auf der Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "frischer Zufluss und Quote zieht mit"
+      },
+      "text": "Geld 90% auf der Seite"
+     },
+     {
+      "buch": "POLY",
+      "name": "Polymarket",
+      "status": "nein",
+      "punkte": 0,
+      "moeglich": 3,
+      "grund": {
+       "ok": false,
+       "text": "Poly-Preis 57% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein bewiesenes Wallet auf der Seite"
+      },
+      "text": "Poly-Preis 57% auf derselben Seite"
+     },
+     {
+      "buch": "PIN",
+      "name": "Pinnacle",
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "hat dieselbe Seite als Favorit"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein Move gemessen"
+      },
+      "text": "hat dieselbe Seite als Favorit"
+     },
+     {
+      "buch": "STAKE",
+      "name": "Stake-Highroller",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "text": "Stake-Highroller nicht erhoben"
+     },
+     {
+      "buch": "ZEIT",
+      "name": "Dauer",
+      "status": "ja",
+      "punkte": 1,
+      "moeglich": 1,
+      "grund": {
+       "ok": true,
+       "text": "steht seit 21.3h vor Anpfiff"
+      },
+      "tiefe": null,
+      "text": "steht seit 21.3h vor Anpfiff"
+     }
+    ]
+   },
+   "wertVsPinn": 0.0126,
+   "gehaltenSeit": "2026-09-08T21:44:32.468543+00:00",
+   "zuletztAktiv": "2026-09-08T21:44:32.468543+00:00",
+   "haltePreis": 1.75,
    "aktiv": true
   }
  }
