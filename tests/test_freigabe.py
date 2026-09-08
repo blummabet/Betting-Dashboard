@@ -567,3 +567,89 @@ class TestPublicLigenWallets:
               for i in range(25)}
         _eq(len(F.poly_wallets(sc)), F.WALLET_TOP_N)
 
+
+# ── 08.09.2026: welche Spiele fallen unter eine freigegebene Schublade ───────────────────
+# Lucas: „also es wird nur das geschickt, aber nicht welche Spiele — na dann brauch ich das eher
+# nicht." Der Einwand trifft: das Register urteilte ueber Schubladen und hoerte genau dort auf,
+# wo es nuetzlich wird.
+def _liga_datei(picks, ko_stunden=48.0, verdict="ABWÄGEN"):
+    """Eine liga-data.json-Form mit genau einem Fixture und den uebergebenen Picks."""
+    from datetime import timedelta
+    ko = (F._now() + timedelta(hours=ko_stunden)).isoformat()
+    return {"groups": {"ENG": {"fixtures": [{"matchday": 1, "home": "42", "away": "1346",
+                                             "homeName": "Arsenal", "awayName": "Coventry",
+                                             "kickoff": ko}]}},
+            "picks": {"ENG-1-42-1346": picks}}
+
+
+class TestOffenePlays:
+    def test_offene_card_picks_kommen_mit_spiel_auswahl_und_quote(self):
+        d = _liga_datei([{"market": "Über 2.5 Tore", "odds": 1.95, "verdict": "ABWÄGEN"}])
+        z = {"schublade": "Liga · ABWÄGEN", "strom": "cards", "art": "verdict",
+             "wert": "ABWÄGEN", "datensatz": "Liga"}
+        e = F.offene_plays(z, karten=[("egal.json", "Liga")])
+        # Die Datei wird ueber `_load` geholt; deshalb hier direkt die reine Funktion pruefen.
+        assert e["aufloesbar"] is True
+
+    def test_der_schnitt_kommt_aus_der_meta_der_schublade(self, monkeypatch):
+        """Baute diese Funktion die Bedingung nach, haetten wir zwei Wahrheiten ueber dieselbe
+        Schublade — und die Liste koennte Spiele zeigen, die in der Messung nie gezaehlt haetten."""
+        d = _liga_datei([{"market": "Über 2.5 Tore", "odds": 1.95, "verdict": "ABWÄGEN"},
+                         {"market": "Heimsieg", "odds": 2.1, "verdict": "NOBET"}])
+        monkeypatch.setattr(F, "_load", lambda name, default=None: d)
+        pl = F._card_offen("Liga", "ABWÄGEN", dateien=[("x.json", "Liga")])
+        assert [x["auswahl"] for x in pl] == ["Über 2.5 Tore"], "NOBET gehoert nicht dazu"
+        assert pl[0]["spiel"] == "Arsenal v Coventry" and pl[0]["quote"] == 1.95
+
+    def test_angepfiffene_spiele_sind_keine_kandidaten(self, monkeypatch):
+        d = _liga_datei([{"market": "Über 2.5 Tore", "odds": 1.95, "verdict": "ABWÄGEN"}],
+                        ko_stunden=-2.0)
+        monkeypatch.setattr(F, "_load", lambda name, default=None: d)
+        assert F._card_offen("Liga", "ABWÄGEN", dateien=[("x.json", "Liga")]) == []
+
+    def test_ausgeschlossene_picks_bleiben_draussen(self, monkeypatch):
+        """Dieselbe Regel wie in `_card_plays` — sonst zeigt die Liste Picks, die in der Messung
+        nie mitgezaehlt haetten."""
+        d = _liga_datei([{"market": "A", "odds": 2.0, "verdict": "ABWÄGEN", "trackingExcluded": True},
+                         {"market": "B", "odds": 2.0, "verdict": "ABWÄGEN", "boldAlt": True},
+                         {"market": "C", "odds": 2.0, "verdict": "ABWÄGEN"}])
+        monkeypatch.setattr(F, "_load", lambda name, default=None: d)
+        assert [x["auswahl"] for x in
+                F._card_offen("Liga", "ABWÄGEN", dateien=[("x.json", "Liga")])] == ["C"]
+
+    def test_betfair_ist_NICHT_AUFLOESBAR_und_sagt_das(self):
+        """⭐ „Nicht aufloesbar" ist nicht „keine Spiele". Betfair rechnet auf Aggregaten; eine
+        leere Liste waere dort dieselbe Luege wie ein fehlender CLV, den man als Nein liest."""
+        e = F.offene_plays({"schublade": "Half Time", "strom": "betfair", "art": "markt"})
+        assert e["aufloesbar"] is False and e["plays"] == []
+        assert "keine Liste offener Plays" in e["grund"]
+
+    def test_laufende_poly_kandidaten_werden_gezaehlt_nicht_verschwiegen(self):
+        """„Keine Kandidaten" heisst warten, „alle laufen schon" heisst zu spaet — als leere
+        Liste sehen die beiden gleich aus."""
+        from datetime import timedelta
+        vorbei = (F._now() - timedelta(hours=5)).isoformat()
+        tr = {"open": [{"key": "k1", "side": "A", "public": True, "entryPrice": 0.5,
+                        "firstTs": vorbei, "htkAtEntry": 1.0}]}
+        pl, lf = F._poly_offen(lambda z: bool(z.get("public")), track=tr, maerkte={})
+        assert pl == [] and lf == 1
+
+    def test_poly_ohne_bestimmbaren_anpfiff_bleibt_drin(self):
+        """Unbekannt ist kein „vorbei" — die Zeile bleibt, traegt dann aber auch kein Datum."""
+        tr = {"open": [{"key": "k1", "side": "A", "public": True, "entryPrice": 0.5}]}
+        pl, lf = F._poly_offen(lambda z: bool(z.get("public")), track=tr, maerkte={})
+        assert len(pl) == 1 and pl[0]["anpfiff"] is None and lf == 0
+
+    def test_poly_name_wird_nachgeschlagen_nicht_geraten(self):
+        """Aus „sea-fro-ven" laesst sich kein Vereinsname rekonstruieren, nur einer erfinden."""
+        tr = {"open": [{"key": "sea-fro-ven", "side": "Over", "public": True, "entryPrice": 0.5}]}
+        m = {"sea-fro-ven": {"prices": {"Frosinone": 0.4, "Venezia": 0.6}}}
+        pl, _ = F._poly_offen(lambda z: True, track=tr, maerkte=m)
+        assert pl[0]["spiel"] == "Frosinone vs Venezia"
+        pl2, _ = F._poly_offen(lambda z: True, track=tr, maerkte={})
+        assert pl2[0]["spiel"] == "sea-fro-ven", "ohne Markt bleibt der Schluessel stehen"
+
+    def test_spiele_nur_fuer_freigegebene_schubladen(self):
+        zeilen = [{"schublade": "A", "strom": "betfair", "art": "markt", "status": "geprueft"},
+                  {"schublade": "B", "strom": "betfair", "art": "markt", "status": "freigegeben"}]
+        assert [b["schublade"] for b in F.spiele(zeilen)] == ["B"]

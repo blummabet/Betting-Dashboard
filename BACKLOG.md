@@ -3,6 +3,81 @@
 Stand 07.09.2026 (oberster Block); Liga/WM-Teil darunter Stand 26.06.2026. Lebendige Liste aller offenen Punkte — Liga UND noch nicht umgesetzte WM-Sachen —
 damit wir alles abarbeiten können. ✅ = erledigt (Referenz), ⏳ = offen, 🔒 = blockiert.
 
+## 🎯 08.09.2026 (nachts) — welche SPIELE fallen unter eine freigegebene Schublade
+
+Lucas, nachdem er die erste Push-Vorschau gesehen hat: *„also es wird nur das geschickt, aber
+nicht welche Spiele — na dann brauch ich das eher nicht. Interessant wäre ja, welche Spiele für
+die freigegebenen Schubladen in Frage kämen. Das müsste man im Board sehen und halt ne Push
+dafür."*
+
+Er hat recht, und der Einwand trifft eine echte Lücke: **„Liga · ABWÄGEN ist freigegeben" ist
+eine Aussage über 91 abgerechnete Plays von gestern.** Was man damit TUT, steht erst in den
+offenen Picks, die heute unter dieselbe Definition fallen. Genau dort hörte das Register auf.
+
+- ✅ **`freigabe.offene_plays` / `freigabe.spiele`** — je freigegebener Schublade die offenen
+  Plays, die unter ihren Schnitt fallen. Der Schnitt wird **nicht nachgebaut**: jede Schublade
+  trägt ihre Definition schon als `meta` (`art` + `wert` + `datensatz`), weil `bewerte` sie beim
+  Zählen dorthin geschrieben hat. Dieselbe Definition wird auf die offenen Plays angewandt —
+  sonst hätten wir zwei Wahrheiten über eine Schublade, und die Liste könnte Spiele zeigen, die
+  in der Messung nie gezählt hätten. Dieselben Ausschlüsse gelten (`trackingExcluded`, `boldAlt`).
+  Stand heute: **31 offene Picks** aus Liga · ABWÄGEN (Venezia–Fiorentina, Rennes–Marseille,
+  Genoa–Frosinone, Real Madrid–Rayo …), **0** aus Public-Kandidaten.
+- ⭐ **Drei verschiedene Arten von „nichts", die als leere Liste alle gleich aussehen** — und
+  drei völlig verschiedene Auskünfte:
+  1. **nicht auflösbar** — für die Betfair-Aggregat-Schubladen gibt es gar keine Liste offener
+     Zeilen (sie rechnen auf Eimern). Eine „0" wäre dort eine Aussage über den Spielplan, die
+     wir nicht haben — dieselbe Lüge wie ein fehlender CLV, den man als „nein" liest.
+  2. **leer, aber alles läuft schon** — heißt zu spät. Genau der Fall bei Public-Kandidaten:
+     alle 4 Kandidaten sind angepfiffen. Sie werden **gezählt**, nicht bloß verworfen.
+  3. **leer und nichts läuft** — heißt warten.
+- ✅ **Der Poly-Anpfiff kommt aus `firstTs` + `htkAtEntry`.** Keine Schätzung: beide Werte stehen
+  in der Zeile, ihre Summe IST der Anpfiff. Fehlt einer, gibt es keinen — und dann bleibt die
+  Zeile drin (unbekannt ist kein „vorbei"), trägt aber auch kein Datum.
+- ✅ **Der Poly-Spielname wird nachgeschlagen, nicht geraten.** Der Shortlist-Eintrag trägt nur
+  „sea-fro-ven-2026-09-06-more-markets"; die beiden Seitennamen stehen im Markt selbst. Aus dem
+  Schlüssel ließe sich kein Vereinsname rekonstruieren, nur einer erfinden.
+- ✅ **Board:** unter den freigegebenen Schubladen steht ihre Spielliste (Spiel · Auswahl · Quote
+  · Anpfiff), gedeckelt auf 10 mit gezähltem Rest.
+- ✅ **Push:** eine ZWEITE Art Nachricht („🆕 NEUE SPIELE AUS FREIGEGEBENEN SCHUBLADEN") mit
+  eigenem Zustand **je Play**. Gemeldet wird, was NEU dazugekommen ist — eine tägliche Liste mit
+  31 Zeilen wäre nach drei Tagen Tapete. Abgelaufene Plays verschwinden still; ein „Spiel
+  angepfiffen"-Push wäre Rauschen über etwas, das man ohnehin nicht mehr tun kann. Erstlauf
+  meldet nichts (sonst fluteten 31 Picks den Channel), nicht auflösbare Schubladen bekommen
+  weder Meldung noch Zustand. Die **CLV-Warnung reist mit**: sie gehört an jede Nachricht, die
+  auf dieser Schublade beruht, nicht nur an die eine, in der sie freigegeben wurde.
+- ✅ **Der Zustand hat jetzt zwei Ebenen** (`schubladen` + `plays`) in EINER Datei, damit ein
+  Sendefehler nicht die eine Hälfte fortschreibt und die andere nicht. Die alte flache Form wird
+  weiter gelesen — würde sie es nicht, gälte der nächste Lauf als Erstlauf, und der meldet
+  nichts: genau die Freigabe, auf die seit Wochen gewartet wird, ginge still verloren.
+
+**So sieht die Spiele-Nachricht aus:**
+
+    🆕 NEUE SPIELE AUS FREIGEGEBENEN SCHUBLADEN
+    Diese offenen Plays fallen unter einen Schnitt, dessen Rendite-Untergrenze
+    über null liegt. Es sind Kandidaten aus einer belegten Schublade — keine
+    Einzelprüfung.
+
+    🎯 Liga · ABWÄGEN
+    freigegeben · Rendite-Untergrenze +0.8%
+    ⚠️ CLV spricht gegen diese Schublade — freigegeben auf die Rendite.
+
+    ▸ Venezia v Fiorentina — Doppelte Chance — X2 @1.40
+       🕐 Fr 11.09. 20:45
+    ▸ Rennes v Marseille — Doppelte Chance — 1X @1.38
+       🕐 Fr 11.09. 20:45
+    …
+    … und 19 weitere.
+
+**Gegenbeweis** (sieben Regeln, jede provoziert): ausgeschlossene Picks zugelassen → Test fällt;
+angepfiffene Spiele als Kandidaten → Test fällt; Betfair meldet leere Liste statt „nicht
+auflösbar" → Test fällt; Poly-Name aus dem Schlüssel geraten → Test fällt; Erstlauf meldet alle
+Plays → Test fällt; nicht auflösbare Schublade bekommt Zustand → Test fällt; „alle laufen schon"
+wie „nichts dabei" gerendert → Frontend-Test fällt.
+
+**Offen:** ob 31 Picks auf einmal zu viel für eine Nachricht sind — gedeckelt ist bei 12 je
+Schublade, der Rest wird gezählt. Nach dem ersten echten Lauf sieht man, wie viele je Tag
+wirklich neu dazukommen.
+
 ## 📣 08.09.2026 (spät) — die Freigabe geht in den Trades-Channel
 
 Lucas: *„ja zum Testen mal in Trades-Channel."*

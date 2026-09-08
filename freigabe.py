@@ -44,7 +44,7 @@ from __future__ import annotations
 import json
 import math
 import os
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import sharp_gate as SG
@@ -906,6 +906,199 @@ def push_schubladen(ledger=None, now=None) -> list:
     return out
 
 
+# ── Welche Spiele fallen JETZT in eine freigegebene Schublade? ──────────────────────────
+# 08.09.2026 (Lucas: „also es wird nur das geschickt, aber nicht welche Spiele — na dann brauch
+# ich das eher nicht. Interessant waere ja, welche Spiele fuer die freigegebenen Schubladen in
+# Frage kaemen").
+#
+# Er hat recht, und der Einwand trifft den Kern: das Register urteilte ueber Schubladen und hoerte
+# genau dort auf, wo es nuetzlich wird. „Liga · ABWAEGEN ist freigegeben" ist eine Aussage ueber
+# 91 abgerechnete Plays der Vergangenheit; was man damit TUT, steht erst in den 31 offenen Picks,
+# die heute unter dieselbe Definition fallen.
+#
+# ⭐ DIE SCHNITTE WERDEN NICHT NACHGEBAUT. Jede Schublade traegt ihre Definition schon als `meta`
+# mit (`art` + `wert` + `datensatz`), weil `bewerte` sie beim Zaehlen dorthin geschrieben hat.
+# Hier wird dieselbe Definition auf die OFFENEN Plays angewandt. Baute diese Funktion die
+# Bedingung nach, haetten wir zwei Wahrheiten ueber eine Schublade — und die Liste koennte
+# Spiele zeigen, die in der Messung nie gezaehlt haetten.
+#
+# ⚠️ „NICHT AUFLOESBAR" IST NICHT „KEINE SPIELE". Fuer die Betfair-Aggregat-Schubladen gibt es
+# gar keine Liste offener Plays (sie rechnen auf Eimern, nicht auf Zeilen). Eine leere Liste
+# waere dort eine Luege in dieselbe Richtung wie ein fehlender CLV, der als „nein" gelesen wird.
+# Deshalb sagt das Ergebnis ausdruecklich, ob die Frage ueberhaupt beantwortbar war.
+
+
+def _fixture_index(d):
+    """Fixture-Schluessel -> Fixture, in derselben Form wie `_card_plays` sie bildet."""
+    idx = {}
+    for gk, g in ((d or {}).get("groups") or {}).items():
+        for fx in (g.get("fixtures") or []):
+            idx["%s-%s-%s-%s" % (gk, fx.get("matchday"), fx.get("home"), fx.get("away"))] = fx
+    for kf in ((d or {}).get("koFixtures") or []):
+        idx["KO-%s-%s-%s" % (kf.get("round"), kf.get("home"), kf.get("away"))] = kf
+    return idx
+
+
+def _zeitpunkt(x):
+    """ISO-Zeitstempel -> aware datetime, sonst None. Ein Datum ohne Zeitzone gilt als UTC —
+    dieselbe Annahme wie in `_alter_tage`, damit nicht zwei Stellen verschieden rechnen."""
+    if not x:
+        return None
+    try:
+        t = datetime.fromisoformat(str(x).replace("Z", "+00:00"))
+    except (ValueError, TypeError):
+        return None
+    return t.replace(tzinfo=timezone.utc) if t.tzinfo is None else t
+
+
+def _kickoff(fx):
+    for feld in ("kickoff", "date"):
+        t = _zeitpunkt(fx.get(feld))
+        if t is not None:
+            return t
+    return None
+
+
+def _card_offen(datensatz, verdict, dateien=None, now=None) -> list:
+    """Offene Card-Picks eines Datensatzes mit diesem Verdikt. REIN (Dateien injizierbar)."""
+    now = now or _now()
+    raus = []
+    for datei, label in (dateien or CARD_DATEIEN):
+        if label != datensatz:
+            continue
+        d = _load(datei)
+        fixtures = _fixture_index(d)
+        for k, picks in ((d or {}).get("picks") or {}).items():
+            fx = fixtures.get(k)
+            if not fx:
+                continue
+            ko = _kickoff(fx)
+            if ko is None or ko <= now:
+                continue                      # angepfiffen oder ohne Datum: kein offener Play
+            for x in (picks or []):
+                if not isinstance(x, dict) or x.get("verdict") != verdict:
+                    continue
+                # Dieselbe Ausschlussregel wie in `_card_plays` — sonst zeigt die Liste Picks,
+                # die in der Messung nie mitgezaehlt haetten.
+                if x.get("trackingExcluded") or x.get("boldAlt"):
+                    continue
+                raus.append({
+                    "spiel": "%s v %s" % (fx.get("homeName") or fx.get("home"),
+                                          fx.get("awayName") or fx.get("away")),
+                    "auswahl": x.get("market"), "quote": x.get("odds"),
+                    "anpfiff": ko.isoformat(), "datensatz": label,
+                    "id": "%s|%s" % (k, x.get("market")),
+                })
+    raus.sort(key=lambda r: r["anpfiff"])
+    return raus
+
+
+def _poly_name(key, maerkte):
+    """„A vs B" aus den beiden Seitennamen des Poly-Marktes — sonst None.
+
+    Der Shortlist-Eintrag traegt nur den Marktschluessel („sea-fro-ven-2026-09-06-more-markets"),
+    und der ist als Spielname unlesbar. Die Namen stehen im Markt selbst; sie werden hier
+    NACHGESCHLAGEN und nicht aus dem Schluessel geraten — aus „sea-fro-ven" laesst sich kein
+    Vereinsname rekonstruieren, nur einer erfinden.
+    """
+    m = (maerkte or {}).get(key)
+    if not isinstance(m, dict):
+        return None
+    namen = [str(n) for n in ((m.get("prices") or {}).keys()) if str(n).strip()]
+    return " vs ".join(namen) if len(namen) == 2 else None
+
+
+def _poly_anpfiff(z):
+    """Anpfiff aus `firstTs` + `htkAtEntry` (Stunden bis Anpfiff im Moment des Einstiegs).
+
+    Keine Schaetzung: beide Werte stehen in der Zeile und ihre Summe IST der Anpfiff. Fehlt
+    einer, gibt es keinen — und dann steht auch keiner da.
+    """
+    t = _zeitpunkt(z.get("firstTs"))
+    h = z.get("htkAtEntry")
+    if t is None or not isinstance(h, (int, float)):
+        return None
+    return (t + timedelta(hours=float(h))).isoformat()
+
+
+def _poly_offen(pruef, track=None, now=None, maerkte=None) -> tuple:
+    """Offene Poly-Shortlist-Zeilen, die `pruef(zeile)` erfuellen. REIN.
+
+    Gibt (plays, laufend). Angepfiffene Zeilen fliegen raus: das Depot laesst eine offene
+    Position stehen, bis sie abgerechnet ist — als Handlungsvorschlag ist ein laufendes Spiel
+    aber nichts mehr wert. Ohne bestimmbaren Anpfiff bleibt die Zeile drin (unbekannt ist kein
+    „vorbei"), traegt dann aber auch kein Datum.
+    """
+    now = now or _now()
+    d = track if track is not None else _load("poly_shortlist_track.json")
+    if maerkte is None:
+        maerkte = _load("poly_money_upcoming.json", {})
+    op = (d or {}).get("open") or []
+    zeilen = list(op.values()) if isinstance(op, dict) else list(op)
+    raus, _laufend = [], 0
+    for z in zeilen:
+        if not isinstance(z, dict) or not pruef(z):
+            continue
+        ko = _poly_anpfiff(z)
+        if ko is not None and _zeitpunkt(ko) <= now:
+            # ⭐ Gezaehlt, nicht nur verworfen. „Keine Kandidaten" und „alle vier laufen schon"
+            # sehen als leere Liste gleich aus und sind zwei voellig verschiedene Auskuenfte —
+            # die erste heisst warten, die zweite heisst zu spaet.
+            _laufend += 1
+            continue
+        key = z.get("key")
+        raus.append({"spiel": _poly_name(key, maerkte) or key, "schluessel": key,
+                     "auswahl": z.get("side"),
+                     "quote": (round(1.0 / float(z["entryPrice"]), 2)
+                               if isinstance(z.get("entryPrice"), (int, float)) and z["entryPrice"] else None),
+                     "anpfiff": ko, "datensatz": z.get("cat") or z.get("league"),
+                     "conv": z.get("conv"), "warum": (z.get("reasons") or [])[:2],
+                     "id": "%s|%s" % (key, z.get("side"))})
+    raus.sort(key=lambda r: (r["anpfiff"] is None, r["anpfiff"] or ""))
+    return raus, _laufend
+
+
+def offene_plays(zeile, karten=None, track=None, now=None) -> dict:
+    """Welche offenen Plays fallen unter DIESE Schublade? -> {aufloesbar, plays, grund}.
+
+    Der Schnitt kommt aus der `meta` der Schublade, nicht aus einer zweiten Regel hier.
+    """
+    strom, art = zeile.get("strom"), zeile.get("art")
+    if strom == "cards" and art == "verdict" and zeile.get("wert") and zeile.get("datensatz"):
+        return {"aufloesbar": True,
+                "plays": _card_offen(zeile["datensatz"], zeile["wert"], karten, now)}
+    if strom == "poly" and art == "gate" and zeile.get("schublade") == "Public-Kandidaten":
+        pl, lf = _poly_offen(lambda z: bool(z.get("public")), track, now)
+        return {"aufloesbar": True, "plays": pl, "laufend": lf}
+    if strom == "poly" and art == "conviction" and isinstance(zeile.get("wert"), int):
+        _w = zeile["wert"]
+        pl, lf = _poly_offen(lambda z: int(z.get("conv") or 0) == _w, track, now)
+        return {"aufloesbar": True, "plays": pl, "laufend": lf}
+    # Betfair rechnet auf AGGREGATEN (Liga x Markt), nicht auf einzelnen offenen Zeilen — es gibt
+    # hier gar keine Liste, aus der sich „diese Spiele" bilden liesse. Das ist eine Auskunft ueber
+    # unsere Datenlage, keine ueber den heutigen Spielplan, und wird auch so ausgegeben.
+    return {"aufloesbar": False, "plays": [],
+            "grund": ("für diesen Schnitt gibt es keine Liste offener Plays — die Schublade "
+                      "rechnet auf Aggregaten, nicht auf einzelnen Zeilen")}
+
+
+def spiele(zeilen, karten=None, track=None, now=None) -> list:
+    """Je FREIGEGEBENER Schublade die offenen Plays, die unter sie fallen."""
+    raus = []
+    for z in (zeilen or []):
+        if z.get("status") != "freigegeben":
+            continue
+        e = offene_plays(z, karten, track, now)
+        raus.append({"schublade": z.get("schublade"), "strom": z.get("strom"),
+                     "roiLb": z.get("roiLb"), "clvUrteil": z.get("clvUrteil"),
+                     "aufloesbar": e["aufloesbar"], "grund": e.get("grund"),
+                     # `laufend` trennt „keine Kandidaten" von „alle laufen schon" — als leere
+                     # Liste sehen die beiden gleich aus und heissen das Gegenteil voneinander.
+                     "laufend": e.get("laufend") or 0,
+                     "n": len(e["plays"]), "plays": e["plays"]})
+    return raus
+
+
 # ── Zusammenbau ─────────────────────────────────────────────────────────────────────────
 RANG = {"freigegeben": 0, "kandidat": 1, "geprueft": 2, "sammelt": 3, "ruht": 4}
 
@@ -1135,6 +1328,9 @@ def baue(engine=None, track=None, cards=None, betfair=None, now=None) -> dict:
         # Zwei eigene Tabellen — KEINE Schubladen, weil sie zweite
         # Zerlegungen derselben Plays sind (Ligen) bzw. gar keine Plays
         # zaehlen, sondern Wallets.
+        # Welche Spiele fallen JETZT unter eine freigegebene Schublade — die Antwort, an der
+        # das Register bisher aufhoerte.
+        "spiele": spiele(zeilen),
         "ligen": betfair_ligen(),
         "wallets": poly_wallets(),
         "alle": zeilen,
