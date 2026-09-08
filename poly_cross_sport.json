@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-08T22:34:51.791715+00:00",
+ "generatedAt": "2026-09-08T22:58:45.848813+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -29,8 +29,65 @@
   "soccer_liga": 153
  },
  "trackRecord": {
-  "tracked": 303,
+  "tracked": 305,
   "converged": 69
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|baltimoreorioles-clevelandguardians|clevelandguardians",
+   "sport": "baseball_mlb",
+   "event": "Cleveland Guardians vs Baltimore Orioles",
+   "market": "Moneyline",
+   "outcome": "Cleveland Guardians",
+   "polyPP": 77.5,
+   "pinnPP": 54.1,
+   "gapPP": 23.38,
+   "vol": 74901,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-08T22:58:45.848328+00:00"
+  },
+  {
+   "id": "baseball_mlb|baltimoreorioles-clevelandguardians|baltimoreorioles",
+   "sport": "baseball_mlb",
+   "event": "Cleveland Guardians vs Baltimore Orioles",
+   "market": "Moneyline",
+   "outcome": "Baltimore Orioles",
+   "polyPP": 22.5,
+   "pinnPP": 45.9,
+   "gapPP": -23.38,
+   "vol": 74901,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-08T22:58:45.848328+00:00"
+  },
+  {
+   "id": "baseball_mlb|miamimarlins-newyorkmets|newyorkmets",
+   "sport": "baseball_mlb",
+   "event": "New York Mets vs Miami Marlins",
+   "market": "Moneyline",
+   "outcome": "New York Mets",
+   "polyPP": 69.5,
+   "pinnPP": 61.5,
+   "gapPP": 7.96,
+   "vol": 420887,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 19.39,
+   "firstSeen": "2026-09-07T18:02:30.443558+00:00"
+  },
+  {
+   "id": "baseball_mlb|miamimarlins-newyorkmets|miamimarlins",
+   "sport": "baseball_mlb",
+   "event": "New York Mets vs Miami Marlins",
+   "market": "Moneyline",
+   "outcome": "Miami Marlins",
+   "polyPP": 30.5,
+   "pinnPP": 38.5,
+   "gapPP": -7.96,
+   "vol": 420887,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 19.39,
+   "firstSeen": "2026-09-07T18:02:30.443558+00:00"
+  }
+ ]
 }
