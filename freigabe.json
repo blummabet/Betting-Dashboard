@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-08T10:58:13.757465+00:00",
+ "generatedAt": "2026-09-08T11:13:20.219331+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -55,7 +55,7 @@
     "nieAnteil": 0.072,
     "schaetzbar": false
    },
-   "alterTage": 1.6,
+   "alterTage": 1.7,
    "art": "mix",
    "wert": "money+sharp+steam",
    "nAlt": 11,
@@ -190,7 +190,7 @@
     "nieAnteil": 0.072,
     "schaetzbar": false
    },
-   "alterTage": 1.6,
+   "alterTage": 1.7,
    "art": "mix",
    "wert": "money+sharp+steam",
    "nAlt": 11,
@@ -952,34 +952,6 @@
    "naeherung": false
   },
   {
-   "schublade": "Conviction 5",
-   "strom": "poly",
-   "n": 122,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.1204,
-   "roiLb": -0.2333,
-   "clv": -2.032,
-   "clvLb": -3.105,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 4088,
-    "lo": 541,
-    "hi": 247105,
-    "nieAnteil": 0.96,
-    "schaetzbar": false
-   },
-   "alterTage": 0.0,
-   "art": "conviction",
-   "wert": 5,
-   "nAlt": 135,
-   "roiAlt": -0.0164,
-   "clvAlt": 0.06,
-   "engineAlt": true
-  },
-  {
    "schublade": "Argentinian Primera Nacional · Match Odds",
    "strom": "betfair",
    "n": 37,
@@ -1014,6 +986,34 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
+  },
+  {
+   "schublade": "Conviction 5",
+   "strom": "poly",
+   "n": 123,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.1275,
+   "roiLb": -0.2401,
+   "clv": -2.039,
+   "clvLb": -3.104,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 4466,
+    "lo": 630,
+    "hi": 14220,
+    "nieAnteil": 0.982,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "conviction",
+   "wert": 5,
+   "nAlt": 135,
+   "roiAlt": -0.0164,
+   "clvAlt": 0.06,
+   "engineAlt": true
   },
   {
    "schublade": "English Sky Bet League 2 · Both teams to Score?",
@@ -1369,21 +1369,21 @@
   {
    "schublade": "Mix money+steam",
    "strom": "poly",
-   "n": 47,
+   "n": 48,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.2011,
-   "roiLb": -0.368,
-   "clv": -1.631,
-   "clvLb": -2.979,
+   "roi": -0.2178,
+   "roiLb": -0.3834,
+   "clv": -1.659,
+   "clvLb": -2.98,
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
    "entfernung": {
-    "median": 2133,
-    "lo": 93,
-    "hi": 480521,
-    "nieAnteil": 0.972,
+    "median": 3633,
+    "lo": 182,
+    "hi": 15075,
+    "nieAnteil": 0.987,
     "schaetzbar": false
    },
    "alterTage": 0.0,
@@ -1719,6 +1719,35 @@
    "naeherung": false
   },
   {
+   "schublade": "🔒 E-Sport ohne Wallet-Nachweis",
+   "strom": "poly",
+   "n": 6,
+   "status": "sammelt",
+   "grund": "6 von 120 Plays SEIT der Anmeldung (2026-09-07) — vorher abgerechnete zählen nicht",
+   "roi": 0.1613,
+   "roiLb": null,
+   "clv": -6.083,
+   "clvLb": null,
+   "fehltN": 114,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "entfernung": null,
+   "alterTage": 0.0,
+   "art": "vorangemeldet",
+   "angemeldet": "2026-09-07T08:15:48.444033+00:00",
+   "zielN": 120,
+   "warum": "Lucas: „was meinst du bei E-Sport? was wuerdest du da aendern?\" Gemessen an 621 abgerechneten Plays, getrennt nach dem, was das Public-Tor DURCHLAESST und was es ABWEIST — beides nur innerhalb E-Sport: durchgelassen n=69, Treffer 78,3 % gegen 73,2 % Break-even (+5,1 pp); abgewiesen n=100, Treffer 71,0 % gegen 66,0 % (+5,0 pp). Zwei disjunkte Gruppen, derselbe Vorsprung — die Wallet-Bedingung trennt dort nichts. Rueckgerechnet haette die Lockerung 89 Plays mehr gebracht: 75,3 % Treffer, +113,01 EUR, ROI +12,7 %, Untergrenze +1,0 %. ⚠️ Der E-Sport-Vorsprung repliziert in zwei unabhaengigen Gruppen — die PREISSCHWELLE 0,55 nicht: die habe ich gesetzt, nachdem ich gesehen habe, dass Aussenseiter darunter 40,5 % gegen 46,9 % treffen. Genau deshalb steht der Zuschnitt hier und nicht als Erfolgsmeldung. Der CLV ist mit -0,65 pp leicht negativ; bei diesem Vorsprung ueber 158 Plays ist das eine Merkwuerdigkeit, kein Veto — aber es gehoert dazugesagt.",
+   "quelle": "poly_shortlist_track.json → settled",
+   "nDavor": 158,
+   "rueckblick": {
+    "n": 158,
+    "roi": 0.1055,
+    "roiLb": 0.0226,
+    "clv": -0.693,
+    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
+   }
+  },
+  {
    "schublade": "Mix sharp+steam",
    "strom": "poly",
    "n": 5,
@@ -1739,35 +1768,6 @@
    "roiAlt": 0.2173,
    "clvAlt": -2.143,
    "engineAlt": true
-  },
-  {
-   "schublade": "🔒 E-Sport ohne Wallet-Nachweis",
-   "strom": "poly",
-   "n": 5,
-   "status": "sammelt",
-   "grund": "5 von 120 Plays SEIT der Anmeldung (2026-09-07) — vorher abgerechnete zählen nicht",
-   "roi": 0.3936,
-   "roiLb": null,
-   "clv": -6.7,
-   "clvLb": null,
-   "fehltN": 115,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "entfernung": null,
-   "alterTage": 0.0,
-   "art": "vorangemeldet",
-   "angemeldet": "2026-09-07T08:15:48.444033+00:00",
-   "zielN": 120,
-   "warum": "Lucas: „was meinst du bei E-Sport? was wuerdest du da aendern?\" Gemessen an 621 abgerechneten Plays, getrennt nach dem, was das Public-Tor DURCHLAESST und was es ABWEIST — beides nur innerhalb E-Sport: durchgelassen n=69, Treffer 78,3 % gegen 73,2 % Break-even (+5,1 pp); abgewiesen n=100, Treffer 71,0 % gegen 66,0 % (+5,0 pp). Zwei disjunkte Gruppen, derselbe Vorsprung — die Wallet-Bedingung trennt dort nichts. Rueckgerechnet haette die Lockerung 89 Plays mehr gebracht: 75,3 % Treffer, +113,01 EUR, ROI +12,7 %, Untergrenze +1,0 %. ⚠️ Der E-Sport-Vorsprung repliziert in zwei unabhaengigen Gruppen — die PREISSCHWELLE 0,55 nicht: die habe ich gesetzt, nachdem ich gesehen habe, dass Aussenseiter darunter 40,5 % gegen 46,9 % treffen. Genau deshalb steht der Zuschnitt hier und nicht als Erfolgsmeldung. Der CLV ist mit -0,65 pp leicht negativ; bei diesem Vorsprung ueber 158 Plays ist das eine Merkwuerdigkeit, kein Veto — aber es gehoert dazugesagt.",
-   "quelle": "poly_shortlist_track.json → settled",
-   "nDavor": 158,
-   "rueckblick": {
-    "n": 158,
-    "roi": 0.1055,
-    "roiLb": 0.0226,
-    "clv": -0.693,
-    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
-   }
   },
   {
    "schublade": "Conviction 8",
