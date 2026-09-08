@@ -225585,7 +225585,13 @@
     "usd": 3000,
     "ts": 1788802980
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Arthur Gea": 0.0,
+   "Botic van de Zandschulp": 1.0
+  },
+  "resolvedAt": "2026-09-08T02:35:32.902871+00:00"
  },
  "spl-hil-neo-2026-09-07-more-markets": {
   "shares": {
@@ -225982,7 +225988,13 @@
     "usd": 35000,
     "ts": 1788814812
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Karen Khachanov": 1.0,
+   "Learner Tien": 0.0
+  },
+  "resolvedAt": "2026-09-08T02:35:32.902871+00:00"
  },
  "por-est-aro-2026-09-07-more-markets": {
   "shares": {
@@ -227889,16 +227901,23 @@
    "CA Unión": "100451709218444762694090812896910523484880047902449166310919060969700090178442",
    "Draw (CA Unión vs. Instituto AC Córdoba)": "20922918551130989092417351426237416452195872798125571877426008359381701944657",
    "Instituto AC Córdoba": "79915971524497404113152278249292425444124740593808848836948307281947070377984"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "CA Unión": 1.0,
+   "Draw (CA Unión vs. Instituto AC Córdoba)": 0.0,
+   "Instituto AC Córdoba": 0.0
+  },
+  "resolvedAt": "2026-09-08T02:35:32.902871+00:00"
  },
  "cs2-lgc-mgc-2026-09-07": {
   "shares": {
-   "Legacy": 161436.24965317495,
-   "magic": 77728.26626467501
+   "Legacy": 181943.17326794006,
+   "magic": 83666.88975392997
   },
   "prices": {
-   "Legacy": 0.675,
-   "magic": 0.325
+   "Legacy": 0.685,
+   "magic": 0.315
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -227906,35 +227925,35 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 255457,
+  "totalUsd": 260654,
   "whales": [
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "side": "magic",
-    "usd": 33159,
+    "usd": 32139,
     "avgPrice": 0.3176
    },
    {
     "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
     "side": "Legacy",
-    "usd": 20029,
+    "usd": 20326,
     "avgPrice": 0.679
    },
    {
     "wallet": "0xbb299ce4867ea634a83a254e24d1ffc5c148947a",
     "side": "Legacy",
-    "usd": 12856,
+    "usd": 12944,
     "avgPrice": 0.6825
    },
    {
     "wallet": "0xf5592765133941c40c77e52bc56bbe7ec167f462",
     "side": "magic",
-    "usd": 9899,
+    "usd": 9594,
     "avgPrice": 0.3283
    }
   ],
-  "hoursToKickoff": 0.95,
-  "capturedAt": "2026-09-08T02:05:39.270520+00:00",
+  "hoursToKickoff": 0.45,
+  "capturedAt": "2026-09-08T02:35:32.902871+00:00",
   "cond": "0x6d553c4a52f9c771843f27e262d95a529b29c7808980d41cc81b975cedb1c550",
   "frage": "Counter-Strike: Legacy vs magic (BO3) - FISSURE PLAYGROUND Group B",
   "tokens": {
@@ -227943,106 +227962,138 @@
   },
   "book": {
    "side": "Legacy",
-   "bid": 0.67,
-   "ask": 0.68,
+   "bid": 0.68,
+   "ask": 0.69,
    "spreadC": 1.0,
-   "spreadPct": 1.47,
+   "spreadPct": 1.45,
    "bids": [
     [
+     0.68,
+     604973
+    ],
+    [
      0.67,
-     88376
+     48184
     ],
     [
      0.66,
-     35533
+     30144
     ],
     [
      0.65,
-     17721
+     17731
     ],
     [
      0.64,
-     590
+     100
     ],
     [
      0.63,
-     26
-    ],
-    [
-     0.61,
-     250
+     256
     ]
    ],
    "asks": [
     [
-     0.68,
-     13402
-    ],
-    [
      0.69,
-     22320
+     17719
     ],
     [
      0.7,
-     2040
+     2742
     ],
     [
      0.71,
-     5913
+     851
     ],
     [
      0.72,
-     1300
+     6167
     ],
     [
      0.73,
-     2514
+     2304
+    ],
+    [
+     0.74,
+     2755
     ]
    ]
   },
   "trades": [
    {
-    "wallet": "0xb5257c069356192959e2a8e4ec1cfc469f87bdc7",
+    "wallet": "0x65fa00bb62ae6be6fffc13ad0d45309ccdbd4c6a",
+    "action": "BUY",
+    "side": "Legacy",
+    "price": 0.69,
+    "usd": 300,
+    "ts": 1788834871
+   },
+   {
+    "wallet": "0x41e813115510803dbb46d92306380bd5c4be5394",
+    "action": "BUY",
+    "side": "Legacy",
+    "price": 0.69,
+    "usd": 327,
+    "ts": 1788834844
+   },
+   {
+    "wallet": "0xa4efab87112258cfcc3c23da9eb918a42f9682b8",
+    "action": "BUY",
+    "side": "Legacy",
+    "price": 0.69,
+    "usd": 9384,
+    "ts": 1788834585
+   },
+   {
+    "wallet": "0x2285111d4dc25ac6b89b005a0ba22b910e602aea",
+    "action": "BUY",
+    "side": "Legacy",
+    "price": 0.69,
+    "usd": 491,
+    "ts": 1788834583
+   },
+   {
+    "wallet": "0xfd68f43e49eef1727878da6fe2890d8e4db4a90f",
+    "action": "BUY",
+    "side": "Legacy",
+    "price": 0.69,
+    "usd": 500,
+    "ts": 1788834549
+   },
+   {
+    "wallet": "0xfd68f43e49eef1727878da6fe2890d8e4db4a90f",
+    "action": "BUY",
+    "side": "Legacy",
+    "price": 0.69,
+    "usd": 500,
+    "ts": 1788834348
+   },
+   {
+    "wallet": "0xdb859a551fcf56e49416160911476bea7307152f",
     "action": "BUY",
     "side": "Legacy",
     "price": 0.68,
-    "usd": 759,
-    "ts": 1788833068
+    "usd": 5747,
+    "ts": 1788834268
    },
    {
-    "wallet": "0xe390b3f7cdbd7d9821c080bbe460a2814770e80f",
-    "action": "BUY",
-    "side": "magic",
-    "price": 0.33,
-    "usd": 825,
-    "ts": 1788832128
-   },
-   {
-    "wallet": "0x94f880a94515f1071f32b542fe51245d8fb6e851",
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
     "action": "BUY",
     "side": "Legacy",
     "price": 0.68,
-    "usd": 986,
-    "ts": 1788829810
-   },
-   {
-    "wallet": "0x81d12e02d411ea6784d14af0538c72ecf8bb4806",
-    "action": "BUY",
-    "side": "Legacy",
-    "price": 0.68,
-    "usd": 492,
-    "ts": 1788828826
+    "usd": 762,
+    "ts": 1788834217
    }
   ]
  },
  "cs2-9z-5s-2026-09-07": {
   "shares": {
-   "9z": 51067.62325430996,
-   "5star": 4743.988249015002
+   "9z": 53302.68585747996,
+   "5star": 4635.017469120001
   },
   "prices": {
-   "9z": 0.915,
-   "5star": 0.085
+   "9z": 0.92,
+   "5star": 0.08
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -228050,35 +228101,35 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 67148,
+  "totalUsd": 71185,
   "whales": [
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "side": "9z",
-    "usd": 32885,
+    "usd": 33064,
     "avgPrice": 0.922
    },
    {
-    "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
+    "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
     "side": "9z",
-    "usd": 1911,
+    "usd": 3680,
     "avgPrice": 0.92
-   },
-   {
-    "wallet": "0xeba1457b0731b6a0ed810a90476390771bed838b",
-    "side": "9z",
-    "usd": 1830,
-    "avgPrice": 0.929
    },
    {
     "wallet": "0x30dabc78ad361e569dacbfa88b49b0de6f1ddc82",
     "side": "9z",
-    "usd": 1677,
-    "avgPrice": 0.9145
+    "usd": 1939,
+    "avgPrice": 0.9139
+   },
+   {
+    "wallet": "0xeba1457b0731b6a0ed810a90476390771bed838b",
+    "side": "9z",
+    "usd": 1840,
+    "avgPrice": 0.929
    }
   ],
-  "hoursToKickoff": 0.95,
-  "capturedAt": "2026-09-08T02:05:39.270520+00:00",
+  "hoursToKickoff": 0.45,
+  "capturedAt": "2026-09-08T02:35:32.902871+00:00",
   "cond": "0x95979ca539cc9d662cc6a8e056b849ce2dd654d0024f82560d54446c2bc9f63e",
   "frage": "Counter-Strike: 9z vs 5star (BO3) - FISSURE PLAYGROUND Group A",
   "tokens": {
@@ -228087,64 +228138,72 @@
   },
   "book": {
    "side": "9z",
-   "bid": 0.91,
-   "ask": 0.92,
+   "bid": 0.92,
+   "ask": 0.93,
    "spreadC": 1.0,
-   "spreadPct": 1.09,
+   "spreadPct": 1.08,
    "bids": [
     [
+     0.92,
+     5450
+    ],
+    [
      0.91,
-     4883
+     45460
     ],
     [
      0.9,
-     8398
+     2266
     ],
     [
      0.89,
-     13291
+     12871
     ],
     [
      0.88,
-     644
+     516
     ],
     [
      0.87,
-     3194
-    ],
-    [
-     0.84,
-     189
+     3379
     ]
    ],
    "asks": [
     [
-     0.92,
-     1569
-    ],
-    [
      0.93,
-     28267
+     28042
     ],
     [
      0.94,
-     26386
+     23062
     ],
     [
      0.95,
-     28484
+     9263
     ],
     [
      0.96,
-     10220
+     5053
     ],
     [
      0.97,
-     7925
+     26899
+    ],
+    [
+     0.98,
+     2250
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
+    "action": "BUY",
+    "side": "9z",
+    "price": 0.92,
+    "usd": 3680,
+    "ts": 1788833244
+   },
    {
     "wallet": "0x4ebc2722adc772bde8680792d0a6fdf15499a33d",
     "action": "BUY",
@@ -228152,14 +228211,6 @@
     "price": 0.92,
     "usd": 1001,
     "ts": 1788831162
-   },
-   {
-    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
-    "action": "BUY",
-    "side": "9z",
-    "price": 0.93,
-    "usd": 931,
-    "ts": 1788807616
    }
   ]
  },
@@ -228205,19 +228256,112 @@
     "avgPrice": 0.28
    }
   ],
-  "hoursToKickoff": 0.95,
-  "capturedAt": "2026-09-08T02:05:39.270520+00:00",
+  "hoursToKickoff": 0.45,
+  "capturedAt": "2026-09-08T02:35:32.902871+00:00",
   "cond": "0x4501f90952cd6d42b0e6c0dca0b385f1792fa24a991a94d6cc5c0edc30131a63",
   "frage": "W15 Yeongwol: Ha Eum Lee vs Michika Ozeki",
   "tokens": {
    "Ha Eum Lee": "102944823570214195371158117210618303451716126777179661231741140298925662162386",
    "Michika Ozeki": "51374424227180384661664360219309463205431230846051635200602740603780659439531"
-  }
+  },
+  "book": {
+   "side": "Ha Eum Lee",
+   "bid": 0.71,
+   "ask": 0.72,
+   "spreadC": 1.0,
+   "spreadPct": 1.39,
+   "bids": [
+    [
+     0.71,
+     654
+    ],
+    [
+     0.7,
+     416
+    ],
+    [
+     0.69,
+     87
+    ],
+    [
+     0.68,
+     84
+    ],
+    [
+     0.67,
+     102
+    ],
+    [
+     0.62,
+     535
+    ]
+   ],
+   "asks": [
+    [
+     0.72,
+     5
+    ],
+    [
+     0.73,
+     587
+    ],
+    [
+     0.74,
+     774
+    ],
+    [
+     0.75,
+     528
+    ],
+    [
+     0.76,
+     450
+    ],
+    [
+     0.77,
+     888
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xb8e32d575b8d360f90bcc95596e9a0bee444aaf2",
+    "action": "BUY",
+    "side": "Ha Eum Lee",
+    "price": 0.74,
+    "usd": 1151,
+    "ts": 1788809838
+   },
+   {
+    "wallet": "0xb8e32d575b8d360f90bcc95596e9a0bee444aaf2",
+    "action": "BUY",
+    "side": "Ha Eum Lee",
+    "price": 0.74,
+    "usd": 1304,
+    "ts": 1788809829
+   },
+   {
+    "wallet": "0xb8e32d575b8d360f90bcc95596e9a0bee444aaf2",
+    "action": "BUY",
+    "side": "Ha Eum Lee",
+    "price": 0.73,
+    "usd": 1506,
+    "ts": 1788809776
+   },
+   {
+    "wallet": "0xb8e32d575b8d360f90bcc95596e9a0bee444aaf2",
+    "action": "BUY",
+    "side": "Ha Eum Lee",
+    "price": 0.73,
+    "usd": 1497,
+    "ts": 1788809770
+   }
+  ]
  },
  "atp-bax-jon-2026-09-06": {
   "shares": {
-   "Florent Bax": 3267.167358355,
-   "Maximus Jones": 3469.2693964500004
+   "Florent Bax": 4883.539045435001,
+   "Maximus Jones": 5186.216129730002
   },
   "prices": {
    "Florent Bax": 0.485,
@@ -228229,7 +228373,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 10315,
+  "totalUsd": 12428,
   "whales": [
    {
     "wallet": "0xb00cf07e6fa25034175f7da649524c23b08fdfa2",
@@ -228244,18 +228388,19 @@
     "avgPrice": 0.4899
    },
    {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Maximus Jones",
+    "usd": 1001,
+    "avgPrice": 0.51
+   },
+   {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
     "side": "Maximus Jones",
     "usd": 646
-   },
-   {
-    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
-    "side": "Maximus Jones",
-    "usd": 508
    }
   ],
-  "hoursToKickoff": 0.95,
-  "capturedAt": "2026-09-08T02:05:39.270520+00:00",
+  "hoursToKickoff": 0.45,
+  "capturedAt": "2026-09-08T02:35:32.902871+00:00",
   "cond": "0xcce365ce4396be5497aad20129a74b7fc139d4f4586dffc4d6b3536fa5077902",
   "frage": "Phan Thiet 3: Florent Bax vs Maximus Jones",
   "tokens": {
@@ -228265,8 +228410,8 @@
  },
  "lol-t1a-ktc-2026-09-08": {
   "shares": {
-   "T1 Academy": 12489.941515625005,
-   "KT Rolster Challengers": 7493.9677751249965
+   "T1 Academy": 12910.718796250001,
+   "KT Rolster Challengers": 7746.449200124996
   },
   "prices": {
    "T1 Academy": 0.625,
@@ -228278,7 +228423,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 23226,
+  "totalUsd": 23427,
   "whales": [
    {
     "wallet": "0x6918ea182d963b1fb7888860b8a8b8bcfba5782b",
@@ -228293,20 +228438,20 @@
     "avgPrice": 0.62
    },
    {
+    "wallet": "0x1316ebb019094a2267a27a697ecee08b5c5948a4",
+    "side": "T1 Academy",
+    "usd": 1266,
+    "avgPrice": 0.62
+   },
+   {
     "wallet": "0x70dbec635412c1568b36174b039f621bcc20f73f",
     "side": "T1 Academy",
     "usd": 1160,
     "avgPrice": 0.6463
-   },
-   {
-    "wallet": "0x1316ebb019094a2267a27a697ecee08b5c5948a4",
-    "side": "T1 Academy",
-    "usd": 1045,
-    "avgPrice": 0.62
    }
   ],
-  "hoursToKickoff": 2.95,
-  "capturedAt": "2026-09-08T02:05:39.270520+00:00",
+  "hoursToKickoff": 2.45,
+  "capturedAt": "2026-09-08T02:35:32.902871+00:00",
   "cond": "0x7a740000865268744a3c8f2c55e93c6b7f170fa6917cf83c2eda00a0b3214efb",
   "frage": "LoL: T1 Academy vs KT Rolster Challengers (BO5) - LCK Challengers League Playoffs",
   "tokens": {
@@ -228322,23 +228467,23 @@
    "bids": [
     [
      0.62,
-     11424
+     9800
     ],
     [
      0.61,
-     3066
+     2664
     ],
     [
      0.6,
-     5232
+     1806
     ],
     [
      0.59,
-     4067
+     2295
     ],
     [
      0.58,
-     8571
+     8576
     ],
     [
      0.57,
@@ -228348,27 +228493,27 @@
    "asks": [
     [
      0.63,
-     1388
+     3748
     ],
     [
      0.64,
-     3095
+     2988
     ],
     [
      0.65,
-     4006
+     5741
     ],
     [
      0.66,
-     10317
+     8033
     ],
     [
      0.67,
-     13207
+     8663
     ],
     [
      0.68,
-     2272
+     2906
     ]
    ]
   },
