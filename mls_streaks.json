@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "mls",
-    "generatedAt": "2026-09-07T21:59:44.686911+00:00",
+    "generatedAt": "2026-09-08T12:08:41.562597+00:00",
     "minLen": 3,
     "strongLen": 5,
     "sortiert": "zufallPct",
@@ -68,8 +68,7 @@
         "conviction": 4,
         "names": [
           "form_trend",
-          "h2h_pattern",
-          "xg_strength"
+          "h2h_pattern"
         ],
         "market": "Beide Teams treffen — Nein"
       }
@@ -172,9 +171,9 @@
       "venue": "H",
       "strong": true,
       "continuation": {
-        "state": "wackelt",
+        "state": "intakt",
         "ratePct": 38,
-        "label": "Eigen 38% + Gegner 40% → 39%"
+        "label": "Eigen 38% + Gegner 40% → 39% · Signale bestätigen"
       },
       "ratePct": 38,
       "seq": [
@@ -201,7 +200,21 @@
         "oppRatePct": 60
       },
       "oppSupportPct": 40,
-      "matchupPct": 39
+      "matchupPct": 39,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 6,
+        "conviction": 5,
+        "names": [
+          "public_static_bias",
+          "injury",
+          "form_trend",
+          "h2h_pattern",
+          "chance_creation",
+          "transfer_shift"
+        ],
+        "market": "Unter 2.5 Tore"
+      }
     },
     {
       "teamId": "1617",
@@ -294,8 +307,7 @@
         "conviction": 4,
         "names": [
           "form_trend",
-          "h2h_pattern",
-          "xg_strength"
+          "h2h_pattern"
         ],
         "market": "Beide Teams treffen — Nein"
       },
@@ -641,7 +653,7 @@
       "signalInfo": {
         "state": "confirm",
         "count": 7,
-        "conviction": 5,
+        "conviction": 6,
         "names": [
           "lead_lag_bias",
           "injury",
@@ -698,7 +710,7 @@
       "signalInfo": {
         "state": "confirm",
         "count": 7,
-        "conviction": 5,
+        "conviction": 6,
         "names": [
           "lead_lag_bias",
           "injury",
@@ -1314,8 +1326,7 @@
         "conviction": 4,
         "names": [
           "form_trend",
-          "h2h_pattern",
-          "xg_strength"
+          "h2h_pattern"
         ],
         "market": "Beide Teams treffen — Nein"
       }
@@ -1378,7 +1389,7 @@
       "continuation": {
         "state": "wackelt",
         "ratePct": 35,
-        "label": "Eigen 35% + Gegner 47% → 40%"
+        "label": "Eigen 35% + Gegner 47% → 40% · Linie/Signale dagegen"
       },
       "ratePct": 35,
       "seq": [
@@ -1405,6 +1416,16 @@
       },
       "oppSupportPct": 47,
       "matchupPct": 40,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 2,
+        "conviction": 4,
+        "names": [
+          "h2h_pattern",
+          "freshness_leg"
+        ],
+        "market": "Beide Teams treffen — Ja"
+      },
       "impliziertVon": "cleanSheet",
       "impliziertLabel": "Zu null"
     },
@@ -1834,7 +1855,7 @@
       "matchupPct": 60,
       "signalInfo": {
         "state": "confirm",
-        "count": 6,
+        "count": 5,
         "conviction": 4,
         "names": [
           "lead_lag_bias",
@@ -2571,7 +2592,7 @@
       "matchupPct": 57,
       "signalInfo": {
         "state": "confirm",
-        "count": 6,
+        "count": 5,
         "conviction": 4,
         "names": [
           "lead_lag_bias",
@@ -3608,7 +3629,7 @@
       "matchupPct": 62,
       "signalInfo": {
         "state": "confirm",
-        "count": 6,
+        "count": 5,
         "conviction": 4,
         "names": [
           "lead_lag_bias",
@@ -3665,7 +3686,7 @@
       "matchupPct": 41,
       "signalInfo": {
         "state": "confirm",
-        "count": 6,
+        "count": 5,
         "conviction": 4,
         "names": [
           "lead_lag_bias",
@@ -4828,7 +4849,7 @@
       "signalInfo": {
         "state": "confirm",
         "count": 7,
-        "conviction": 5,
+        "conviction": 6,
         "names": [
           "lead_lag_bias",
           "injury",
@@ -4885,7 +4906,7 @@
       "signalInfo": {
         "state": "confirm",
         "count": 7,
-        "conviction": 5,
+        "conviction": 6,
         "names": [
           "lead_lag_bias",
           "injury",
@@ -5580,6 +5601,59 @@
       "matchupPct": 74
     },
     {
+      "teamId": "1605",
+      "team": "Los Angeles Galaxy",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1605.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "bttsYes",
+      "market": "Beide Teams treffen",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 42,
+        "label": "Eigen 42% + Gegner 53% → 46% · Signale bestätigen"
+      },
+      "ratePct": 42,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 12,
+      "zufallPct": 27.60216,
+      "ligaBasisPct": 65,
+      "next": {
+        "oppId": "1603",
+        "oppName": "Vancouver Whitecaps",
+        "atHome": false,
+        "date": "2026-09-10",
+        "kickoff": "2026-09-10T02:30:00+00:00",
+        "oppRatePct": 53
+      },
+      "oppSupportPct": 53,
+      "matchupPct": 46,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 2,
+        "conviction": 4,
+        "names": [
+          "h2h_pattern",
+          "freshness_leg"
+        ],
+        "market": "Beide Teams treffen — Ja"
+      }
+    },
+    {
       "teamId": "20787",
       "team": "St. Louis City",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/20787.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -5705,49 +5779,6 @@
       },
       "oppSupportPct": 47,
       "matchupPct": 58
-    },
-    {
-      "teamId": "1605",
-      "team": "Los Angeles Galaxy",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1605.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "bttsYes",
-      "market": "Beide Teams treffen",
-      "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 42,
-        "label": "Eigen 42% + Gegner 53% → 46%"
-      },
-      "ratePct": 42,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        false,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 12,
-      "zufallPct": 27.60216,
-      "ligaBasisPct": 65,
-      "next": {
-        "oppId": "1603",
-        "oppName": "Vancouver Whitecaps",
-        "atHome": false,
-        "date": "2026-09-10",
-        "kickoff": "2026-09-10T02:30:00+00:00",
-        "oppRatePct": 53
-      },
-      "oppSupportPct": 53,
-      "matchupPct": 46
     },
     {
       "teamId": "1609",
@@ -5926,8 +5957,7 @@
         "conviction": 4,
         "names": [
           "form_trend",
-          "h2h_pattern",
-          "xg_strength"
+          "h2h_pattern"
         ],
         "market": "Beide Teams treffen — Nein"
       }
