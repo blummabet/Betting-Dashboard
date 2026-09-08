@@ -48,56 +48,6 @@
    "trunc": null
   }
  },
- "val-ns1-rrq1-2026-08-09": {
-  "shares": {
-   "Nongshim RedForce": 406.512295645,
-   "Rex Regum Qeon": 214.11716335499997
-  },
-  "prices": {
-   "Nongshim RedForce": 0.655,
-   "Rex Regum Qeon": 0.345
-  },
-  "league": "ESPORTS",
-  "totalUsd": 54393,
-  "whales": [
-   {
-    "wallet": "0x584f364ac50c275d67cf9ee441979e3c2f0d54b9",
-    "side": "Nongshim RedForce",
-    "usd": 224,
-    "avgPrice": 0.6566
-   },
-   {
-    "wallet": "0xfdc0bd67fbd71aa8edd00121eb2a7fcbddc34b85",
-    "side": "Nongshim RedForce",
-    "usd": 158,
-    "avgPrice": 0.64
-   },
-   {
-    "wallet": "0x5556aa398ba264f83ad75a95294bdbab23e82759",
-    "side": "Rex Regum Qeon",
-    "usd": 94,
-    "avgPrice": 0.3634
-   },
-   {
-    "wallet": "0x104451c4f49c23ae40c7e8a5c8cabd9587f1d67a",
-    "side": "Rex Regum Qeon",
-    "usd": 68,
-    "avgPrice": 0.33
-   }
-  ],
-  "hoursToKickoff": 0.74,
-  "capturedAt": "2026-08-09T10:16:24.509472+00:00",
-  "resolved": true,
-  "resolvedPrices": {
-   "Nongshim RedForce": 0.0,
-   "Rex Regum Qeon": 1.0
-  },
-  "resolvedAt": "2026-08-24T13:16:20.734705+00:00",
-  "splitGuete": {
-   "art": "preis_echo",
-   "trunc": null
-  }
- },
  "val-th1-ff3-2026-08-09": {
   "shares": {
    "Team Heretics": 2947.3524076500007,
@@ -228586,7 +228536,13 @@
     "usd": 500,
     "ts": 1788838954
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "T1 Academy": 1.0,
+   "KT Rolster Challengers": 0.0
+  },
+  "resolvedAt": "2026-09-08T10:36:46.662962+00:00"
  },
  "itf-wenzeli-tseng-2026-09-08": {
   "shares": {},
@@ -230318,12 +230274,12 @@
  },
  "cs2-prv-tyloo-2026-09-08": {
   "shares": {
-   "PARIVISION": 13309.186141290005,
-   "TYLOO": 7650.162767519999
+   "PARIVISION": 42414.25011062497,
+   "TYLOO": 25448.555058000013
   },
   "prices": {
-   "PARIVISION": 0.635,
-   "TYLOO": 0.365
+   "PARIVISION": 0.625,
+   "TYLOO": 0.375
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -230331,41 +230287,166 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 20989,
+  "totalUsd": 39516,
   "whales": [
+   {
+    "wallet": "0x6e9f61710b1703bb7e0ef7ebe1323c443a1d0eae",
+    "side": "PARIVISION",
+    "usd": 8125,
+    "avgPrice": 0.64
+   },
+   {
+    "wallet": "0xda3a9b7afff7b44ad4fd75308723194e0a11381f",
+    "side": "PARIVISION",
+    "usd": 5500,
+    "avgPrice": 0.63
+   },
    {
     "wallet": "0x6b97ebe911d7f2e5e3e8c4a0faad4a5c7c0b8d30",
     "side": "PARIVISION",
-    "usd": 5257,
+    "usd": 5174,
     "avgPrice": 0.6396
    },
    {
-    "wallet": "0x70dbec635412c1568b36174b039f621bcc20f73f",
+    "wallet": "0x1f4bae57c20bd96c9ad2a5d366466ea381be5345",
     "side": "PARIVISION",
-    "usd": 1172,
-    "avgPrice": 0.6499
-   },
-   {
-    "wallet": "0xdd882a70680633a75516f6ed5fce443e2d96dadb",
-    "side": "TYLOO",
-    "usd": 1140,
-    "avgPrice": 0.3599
-   },
-   {
-    "wallet": "0x513587a2f36a8cb29333052a6a479091ef8a7217",
-    "side": "PARIVISION",
-    "usd": 1127,
-    "avgPrice": 0.6338
+    "usd": 4854,
+    "avgPrice": 0.63
    }
   ],
-  "hoursToKickoff": 0.6,
-  "capturedAt": "2026-09-08T09:36:35.692168+00:00",
+  "hoursToKickoff": 0.35,
+  "capturedAt": "2026-09-08T10:36:46.662962+00:00",
   "cond": "0xc399558b6c6a719667d4f6e59b44c37b7f6cd9bfcb0fb808a9980439d33b3933",
   "frage": "Counter-Strike: PARIVISION vs TYLOO (BO3) - FISSURE PLAYGROUND Group B",
   "tokens": {
    "PARIVISION": "50473389805964205765693733274227883930791110534098724027889454061118063233206",
    "TYLOO": "80474228244713211150803322514871788763006979756483409878497898588997522499185"
-  }
+  },
+  "book": {
+   "side": "PARIVISION",
+   "bid": 0.62,
+   "ask": 0.63,
+   "spreadC": 1.0,
+   "spreadPct": 1.59,
+   "bids": [
+    [
+     0.62,
+     21510
+    ],
+    [
+     0.61,
+     71477
+    ],
+    [
+     0.6,
+     141
+    ],
+    [
+     0.59,
+     1621
+    ],
+    [
+     0.58,
+     966
+    ],
+    [
+     0.57,
+     741
+    ]
+   ],
+   "asks": [
+    [
+     0.63,
+     15626
+    ],
+    [
+     0.64,
+     10720
+    ],
+    [
+     0.65,
+     15124
+    ],
+    [
+     0.66,
+     1510
+    ],
+    [
+     0.67,
+     8281
+    ],
+    [
+     0.68,
+     1090
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xd202bf6d89dc6bab1b9f00ead175f75466348973",
+    "action": "BUY",
+    "side": "TYLOO",
+    "price": 0.37,
+    "usd": 1196,
+    "ts": 1788863563
+   },
+   {
+    "wallet": "0x2772868905c267a8f779c3e579b4ec13b864ac19",
+    "action": "BUY",
+    "side": "TYLOO",
+    "price": 0.37,
+    "usd": 353,
+    "ts": 1788863527
+   },
+   {
+    "wallet": "0x73f4626e71a9455bbe0e36de57019fcfa678158e",
+    "action": "BUY",
+    "side": "TYLOO",
+    "price": 0.37,
+    "usd": 370,
+    "ts": 1788863508
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "action": "BUY",
+    "side": "TYLOO",
+    "price": 0.37,
+    "usd": 1429,
+    "ts": 1788863439
+   },
+   {
+    "wallet": "0xa3b5da76ffbbe3325bb1b40a30f6a4634962941a",
+    "action": "BUY",
+    "side": "PARIVISION",
+    "price": 0.64,
+    "usd": 640,
+    "ts": 1788863310
+   },
+   {
+    "wallet": "0x6e9f61710b1703bb7e0ef7ebe1323c443a1d0eae",
+    "action": "BUY",
+    "side": "PARIVISION",
+    "price": 0.64,
+    "usd": 8320,
+    "ts": 1788863277
+   },
+   {
+    "wallet": "0x73f4626e71a9455bbe0e36de57019fcfa678158e",
+    "action": "BUY",
+    "side": "TYLOO",
+    "price": 0.37,
+    "usd": 370,
+    "ts": 1788863269
+   },
+   {
+    "wallet": "0xd202bf6d89dc6bab1b9f00ead175f75466348973",
+    "action": "BUY",
+    "side": "TYLOO",
+    "price": 0.37,
+    "usd": 1158,
+    "ts": 1788863215
+   }
+  ]
  },
  "atp-bobicho-rodiono-2026-09-08": {
   "shares": {
@@ -230712,12 +230793,18 @@
   "tokens": {
    "Ugo Blanchet": "97088000857042449552017679311994304601428952061191020901835305978798543294598",
    "Laurent Lokoli": "41460177194081903410319152355124598440230465959806589798914548977677508835265"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Ugo Blanchet": 1.0,
+   "Laurent Lokoli": 0.0
+  },
+  "resolvedAt": "2026-09-08T10:36:46.662962+00:00"
  },
  "cs2-zerote-pg5-2026-09-08": {
   "shares": {
-   "ex-Zero Tenacity": 10127.563967064993,
-   "Privateer Gaming": 9927.18866403
+   "ex-Zero Tenacity": 10211.451497674992,
+   "Privateer Gaming": 10009.41505542
   },
   "prices": {
    "ex-Zero Tenacity": 0.505,
@@ -230729,7 +230816,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 21394,
+  "totalUsd": 22442,
   "whales": [
    {
     "wallet": "0x4959cf0d907b5bbd903573c3d216fed122d3f2d0",
@@ -230756,8 +230843,8 @@
     "avgPrice": 0.4876
    }
   ],
-  "hoursToKickoff": 0.94,
-  "capturedAt": "2026-09-08T10:05:53.005315+00:00",
+  "hoursToKickoff": 0.44,
+  "capturedAt": "2026-09-08T10:36:46.662962+00:00",
   "cond": "0x783e465bf3b6cd1fc7a3faf77ee5badcdfbb853c0104c5f6d364a064644cd957",
   "frage": "Counter-Strike: ex-Zero Tenacity vs Privateer Gaming (BO3) - CCT Europe Challengers Series Playoffs",
   "tokens": {
@@ -230817,12 +230904,12 @@
  },
  "atp-couturi-lajal-2026-09-07": {
   "shares": {
-   "Lenny Couturier": 309.93322327000004,
-   "Mark Lajal": 10960.365804730001
+   "Lenny Couturier": 326.98367181200007,
+   "Mark Lajal": 10948.315356188
   },
   "prices": {
-   "Lenny Couturier": 0.0275,
-   "Mark Lajal": 0.9725
+   "Lenny Couturier": 0.029,
+   "Mark Lajal": 0.971
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -230835,30 +230922,30 @@
    {
     "wallet": "0xb7cb8bb29780840e3589c2d86320a6057c8ae02f",
     "side": "Mark Lajal",
-    "usd": 4893,
+    "usd": 4885,
     "avgPrice": 0.9683
    },
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
     "side": "Mark Lajal",
-    "usd": 4500,
+    "usd": 4493,
     "avgPrice": 0.968
    },
    {
     "wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
     "side": "Mark Lajal",
-    "usd": 1205,
+    "usd": 1203,
     "avgPrice": 0.96
    },
    {
-    "wallet": "0x162ca4c5249987872fea1e15c846d7fe80316c47",
-    "side": "Mark Lajal",
-    "usd": 269,
-    "avgPrice": 0.9659
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Lenny Couturier",
+    "usd": 268,
+    "avgPrice": 0.0317
    }
   ],
-  "hoursToKickoff": 1.19,
-  "capturedAt": "2026-09-08T10:05:53.005315+00:00",
+  "hoursToKickoff": 0.69,
+  "capturedAt": "2026-09-08T10:36:46.662962+00:00",
   "cond": "0xbd8911dab382fcf467fccd50f0088f43f9a5d8471fab360168a7486cdaa96d20",
   "frage": "Cassis: Lenny Couturier vs Mark Lajal",
   "tokens": {
@@ -231013,8 +231100,8 @@
  },
  "cs2-g2-ast10-2026-09-08": {
   "shares": {
-   "G2": 65494.02447163005,
-   "Astralis": 28741.828091700005
+   "G2": 68770.5794710051,
+   "Astralis": 30179.737667630005
   },
   "prices": {
    "G2": 0.695,
@@ -231026,13 +231113,13 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 94462,
+  "totalUsd": 97810,
   "whales": [
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "side": "G2",
-    "usd": 34728,
-    "avgPrice": 0.6925
+    "usd": 35063,
+    "avgPrice": 0.6926
    },
    {
     "wallet": "0x7e5e420a5cde8a322f3b5b93a12a164827f47315",
@@ -231053,8 +231140,8 @@
     "avgPrice": 0.31
    }
   ],
-  "hoursToKickoff": 1.94,
-  "capturedAt": "2026-09-08T10:05:53.005315+00:00",
+  "hoursToKickoff": 1.44,
+  "capturedAt": "2026-09-08T10:36:46.662962+00:00",
   "cond": "0x726e25c3283dff77dfe54ed33ec67c8b2444cab5fccd7d245b5eb77aeeddda86",
   "frage": "Counter-Strike: G2 vs Astralis (BO3) - FISSURE PLAYGROUND Group A",
   "tokens": {
@@ -231070,15 +231157,15 @@
    "bids": [
     [
      0.69,
-     108628
+     142266
     ],
     [
      0.68,
-     14686
+     9407
     ],
     [
      0.67,
-     18806
+     18821
     ],
     [
      0.66,
@@ -231096,31 +231183,55 @@
    "asks": [
     [
      0.7,
-     24594
+     20355
     ],
     [
      0.71,
-     45716
+     41185
     ],
     [
      0.72,
-     2498
+     2177
     ],
     [
      0.73,
-     8625
+     9229
     ],
     [
      0.74,
-     4625
+     1635
     ],
     [
      0.75,
-     13830
+     13705
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
+    "action": "BUY",
+    "side": "G2",
+    "price": 0.7,
+    "usd": 329,
+    "ts": 1788863163
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "action": "BUY",
+    "side": "G2",
+    "price": 0.7,
+    "usd": 886,
+    "ts": 1788862812
+   },
+   {
+    "wallet": "0x83c45fd1c609803198b93d619f02f2c4b5943212",
+    "action": "BUY",
+    "side": "G2",
+    "price": 0.7,
+    "usd": 300,
+    "ts": 1788862162
+   },
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "action": "BUY",
@@ -231144,22 +231255,6 @@
     "price": 0.7,
     "usd": 1174,
     "ts": 1788860730
-   },
-   {
-    "wallet": "0x7e5e420a5cde8a322f3b5b93a12a164827f47315",
-    "action": "BUY",
-    "side": "G2",
-    "price": 0.7,
-    "usd": 2800,
-    "ts": 1788856092
-   },
-   {
-    "wallet": "0x40ce68f1564f3c751b12d88a393d8cc0651dbf90",
-    "action": "BUY",
-    "side": "G2",
-    "price": 0.7,
-    "usd": 700,
-    "ts": 1788855913
    }
   ]
  },
@@ -231285,14 +231380,14 @@
  },
  "ere-utr-goa-2026-09-05": {
   "shares": {
-   "FC Utrecht": 926.5121065654996,
-   "Draw (FC Utrecht vs. Go Ahead Eagles)": 272.81854954199997,
-   "Go Ahead Eagles": 24772.872724488014
+   "FC Utrecht": 1096.2547825774996,
+   "Draw (FC Utrecht vs. Go Ahead Eagles)": 278.706719676,
+   "Go Ahead Eagles": 24919.25290459001
   },
   "prices": {
-   "FC Utrecht": 0.0655,
-   "Draw (FC Utrecht vs. Go Ahead Eagles)": 0.2085,
-   "Go Ahead Eagles": 0.798
+   "FC Utrecht": 0.0775,
+   "Draw (FC Utrecht vs. Go Ahead Eagles)": 0.213,
+   "Go Ahead Eagles": 0.803
   },
   "splitGuete": {
    "art": "belastbar",
@@ -231300,34 +231395,34 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 93669,
+  "totalUsd": 93676,
   "whales": [
    {
     "wallet": "0x86f40296c7e74f4c7bcf47ef217ac0f83491bd70",
     "side": "Go Ahead Eagles",
-    "usd": 6484,
+    "usd": 6524,
     "avgPrice": 0.938
    },
    {
     "wallet": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
     "side": "Go Ahead Eagles",
-    "usd": 4754
+    "usd": 4784
    },
    {
     "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
     "side": "Go Ahead Eagles",
-    "usd": 3519,
+    "usd": 3550,
     "avgPrice": 0.8606
    },
    {
     "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
     "side": "Go Ahead Eagles",
-    "usd": 1912,
+    "usd": 1924,
     "avgPrice": 0.7594
    }
   ],
-  "hoursToKickoff": 1.94,
-  "capturedAt": "2026-09-08T10:05:53.005315+00:00",
+  "hoursToKickoff": 1.44,
+  "capturedAt": "2026-09-08T10:36:46.662962+00:00",
   "tokens": {
    "FC Utrecht": "96270809794051114632471963465635209478269356119495771089472267330791451701591",
    "Draw (FC Utrecht vs. Go Ahead Eagles)": "107077553491661752157622524605900956721877138858311630306479263674886791398543",
@@ -231335,43 +231430,43 @@
   },
   "book": {
    "side": "Go Ahead Eagles",
-   "bid": 0.736,
-   "ask": 0.86,
-   "spreadC": 12.4,
-   "spreadPct": 14.42,
+   "bid": 0.72,
+   "ask": 0.85,
+   "spreadC": 13.0,
+   "spreadPct": 15.29,
    "bids": [
     [
-     0.736,
-     46
-    ],
-    [
-     0.73,
-     10
-    ],
-    [
      0.72,
-     4
+     1
+    ],
+    [
+     0.71,
+     10
     ],
     [
      0.701,
      5
     ],
     [
-     0.637,
-     8
+     0.66,
+     10
     ],
     [
-     0.605,
-     5
+     0.659,
+     10
+    ],
+    [
+     0.637,
+     18
     ]
    ],
    "asks": [
     [
-     0.86,
-     34
+     0.85,
+     80
     ],
     [
-     0.87,
+     0.86,
      10
     ],
     [
@@ -231395,12 +231490,12 @@
  },
  "ere-utr-goa-2026-09-05-more-markets": {
   "shares": {
-   "Over": 17421.5620640675,
-   "Under": 61.191720201500004
+   "Over": 17404.0793123725,
+   "Under": 78.6750688305
   },
   "prices": {
-   "Over": 0.9965,
-   "Under": 0.0035
+   "Over": 0.9955,
+   "Under": 0.0045
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -231413,13 +231508,13 @@
    {
     "wallet": "0xafdd3a4848933986cf3579c7c7e3b713840c3d1a",
     "side": "Over",
-    "usd": 16002,
+    "usd": 15986,
     "avgPrice": 0.8499
    },
    {
     "wallet": "0x5e8e7771121f4f8f9f7739ddecfe2baa2d918212",
     "side": "Over",
-    "usd": 850,
+    "usd": 849,
     "avgPrice": 0.9918
    },
    {
@@ -231435,8 +231530,8 @@
     "avgPrice": 0.9989
    }
   ],
-  "hoursToKickoff": 1.94,
-  "capturedAt": "2026-09-08T10:05:53.005315+00:00",
+  "hoursToKickoff": 1.44,
+  "capturedAt": "2026-09-08T10:36:46.662962+00:00",
   "cond": "0xcba7e54c2e1dac9b43f8ef4e4eb2af9b34c7ea3169dd56902ec7b3a68ace0b04",
   "frage": "FC Utrecht vs. Go Ahead Eagles: O/U 1.5",
   "tokens": {
@@ -231563,8 +231658,8 @@
  },
  "cs2-for10-ence-2026-09-08": {
   "shares": {
-   "Fortress": 1024.939837425,
-   "ENCE": 12640.925162
+   "Fortress": 1035.074212425,
+   "ENCE": 12765.915787
   },
   "prices": {
    "Fortress": 0.075,
@@ -231576,7 +231671,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 14326,
+  "totalUsd": 14362,
   "whales": [
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
@@ -231602,8 +231697,8 @@
     "avgPrice": 0.0797
    }
   ],
-  "hoursToKickoff": 0.94,
-  "capturedAt": "2026-09-08T10:05:53.005315+00:00",
+  "hoursToKickoff": 0.44,
+  "capturedAt": "2026-09-08T10:36:46.662962+00:00",
   "cond": "0xa09ed64a8713090729d2a2c7b0e76ca67df0ee9d5348944f5b72052b02fe7f7c",
   "frage": "Counter-Strike: Fortress vs ENCE (BO3) - NODWIN Clutch Series Play-In Group B",
   "tokens": {
@@ -231754,6 +231849,57 @@
    "Ulsan HD FC 3 - 2 FC Seoul": "47994944622244084671113738531351153835094422975151696440749345316591798488357",
    "Ulsan HD FC 3 - 3 FC Seoul": "78267266130639029059258221959137195397757981141991834187664139024765694814395",
    "Any Other Score": "89501066593271371667432196699608130005161240406240388771139910280923534428850"
+  }
+ },
+ "cs2-mouzn-unity-2026-09-08": {
+  "shares": {
+   "MOUZ NXT": 4189.120390665,
+   "UNiTY esports": 9109.556396745002
+  },
+  "prices": {
+   "MOUZ NXT": 0.315,
+   "UNiTY esports": 0.685
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 13233,
+  "whales": [
+   {
+    "wallet": "0x6b97ebe911d7f2e5e3e8c4a0faad4a5c7c0b8d30",
+    "side": "UNiTY esports",
+    "usd": 4796,
+    "avgPrice": 0.6999
+   },
+   {
+    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
+    "side": "MOUZ NXT",
+    "usd": 3190,
+    "avgPrice": 0.3004
+   },
+   {
+    "wallet": "0x70dbec635412c1568b36174b039f621bcc20f73f",
+    "side": "UNiTY esports",
+    "usd": 1178,
+    "avgPrice": 0.7
+   },
+   {
+    "wallet": "0x513587a2f36a8cb29333052a6a479091ef8a7217",
+    "side": "UNiTY esports",
+    "usd": 1101,
+    "avgPrice": 0.6999
+   }
+  ],
+  "hoursToKickoff": 0.44,
+  "capturedAt": "2026-09-08T10:36:46.662962+00:00",
+  "cond": "0x0f44eb8b627e919cbbc7c20fe656e188deba1bb588746fc9528fd7482bef9ffe",
+  "frage": "Counter-Strike: MOUZ NXT vs UNiTY esports (BO3) - CCT Europe Series #8 Group Stage",
+  "tokens": {
+   "MOUZ NXT": "98336588607177831371276854261653418689769939788750245982935432238345078548164",
+   "UNiTY esports": "26038012890635791173332754895810312488072163639017479243056075248804489954249"
   }
  }
 }
