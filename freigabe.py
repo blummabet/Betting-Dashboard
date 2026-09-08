@@ -256,6 +256,7 @@ def bewerte(name: str, strom: str, renditen, clvs, meta=None, letzter=None, now=
         return {"schublade": name, "strom": strom, "n": n, "status": "ruht",
                 "grund": "letzter Play vor %d Tagen — die Schublade liefert nichts mehr" % round(alter),
                 "roi": round(roi, 4) if roi is not None else None,
+                "pl": round(sum(renditen), 2) if renditen else None,
                 "roiLb": round(roi_lb, 4) if roi_lb is not None else None,
                 "clv": round(clv, 3) if clv is not None else None,
                 "clvLb": round(clv_lb, 3) if clv_lb is not None else None,
@@ -318,6 +319,12 @@ def bewerte(name: str, strom: str, renditen, clvs, meta=None, letzter=None, now=
     return {
         "schublade": name, "strom": strom, "n": n, "status": status, "grund": grund,
         "roi": round(roi, 4) if roi is not None else None,
+        # 08.09.2026 (Lucas: „ich seh dort die Schubladen die Sinn machen, mit ROI, P/L, CLV").
+        # P/L in EINHEITEN, also die Summe der Renditen je Play. ROI sagt, wie gut eine Schublade
+        # ist; P/L sagt, wie viel sie tatsaechlich gebracht hat — und die beiden koennen weit
+        # auseinanderliegen: „Half Time" hat +5,0 % ROI aus 1.936 Plays (+96 Einheiten), waehrend
+        # eine 30er-Schublade mit +36 % ROI nur +12 Einheiten getragen hat.
+        "pl": round(sum(renditen), 2) if renditen else None,
         "roiLb": round(roi_lb, 4) if roi_lb is not None else None,
         "clv": round(clv, 3) if clv is not None else None,
         "clvLb": round(clv_lb, 3) if clv_lb is not None else None,
@@ -555,6 +562,11 @@ def betfair_schubladen(rec=None, min_n=None) -> list:
             eintrag = bewerte(name.replace("|", " · "), "betfair", [], [],
                               {"art": art, "naeherung": _naeh})
             eintrag.update({"n": n, "roi": round(roi, 4),
+                            # 08.09.2026: diese Schubladen kommen aus einem AGGREGAT, nicht aus
+                            # Einzel-Renditen — `bewerte` bekommt hier eine leere Liste und kann
+                            # das P/L nicht selbst summieren. ROI x n ist dieselbe Zahl (der ROI
+                            # IST der Schnitt der Renditen), nur aus der anderen Richtung.
+                            "pl": round(roi * n, 2),
                             "roiLb": round(roi_lb, 4) if roi_lb is not None else None,
                             "fehltN": max(0, MIN_N - n)})
             if roi_lb is None or roi_lb <= 0:
@@ -652,6 +664,58 @@ def push_schubladen(ledger=None, now=None) -> list:
 
 # ── Zusammenbau ─────────────────────────────────────────────────────────────────────────
 RANG = {"freigegeben": 0, "kandidat": 1, "geprueft": 2, "sammelt": 3, "ruht": 4}
+
+
+# 08.09.2026 (Lucas: „dann weiss ich fuer mich auch was ich besser folgen kann — eher Poly, eher
+# Betfair, eher Konsens, eher Cards").
+#
+# ⭐ Die Schubladen eines Stroms UEBERLAPPEN sich: „Conviction 5" (n=125) und „Mix money+sharp"
+# (n=89) sind zwei Schnitte durch dieselben Poly-Plays. Wer sie aufsummiert, erfindet eine Zahl —
+# 580 „Plays" aus vielleicht 200. Deshalb wird je Strom EINE ueberschneidungsfreie Zerlegung
+# gerechnet und ihr Name mitgeschrieben, damit auf dem Board steht, worueber summiert wurde.
+#
+# Gewaehlt ist jeweils die Zerlegung, unter der jeder Play GENAU EINMAL vorkommt:
+#   cards   → Verdikt   (ein Pick hat ein Verdikt)
+#   poly    → Conviction (ein Play hat eine Conviction-Stufe)
+#   betfair → Markt     (ein Play gehoert zu einem Markt)
+# „Mix …", „Gate", „Konjunktion" und die Liga×Markt-Schubladen sind Schnitte durch dieselben
+# Plays und bleiben deshalb aussen vor — sie stehen einzeln in der Liste.
+STROM_ZERLEGUNG = {"cards": ("verdict", "nach Verdikt"),
+                   "poly": ("conviction", "nach Conviction"),
+                   "betfair": ("markt", "nach Markt")}
+
+
+def stroeme(zeilen) -> list:
+    """Je Strom eine Zeile aus seiner ueberschneidungsfreien Zerlegung. REIN.
+
+    Gibt n, ROI, P/L und CLV — und `zerlegung`, damit niemand die Zahl fuer „alles von Poly"
+    haelt. Ein Strom ohne die passende Zerlegung kommt gar nicht vor, statt mit einer Summe
+    ueber Ueberlappungen dazustehen.
+    """
+    out = []
+    for strom, (art, label) in STROM_ZERLEGUNG.items():
+        # RUHENDE Schubladen bleiben draussen. Nicht aus Kosmetik: die WM-Schubladen tragen
+        # 158 der 314 Card-Plays, und die WM ist vorbei. Eine Zeile „Cards" mit halber
+        # WM-Historie beantwortet „wem soll ich JETZT folgen" mit einem Turnier von gestern.
+        rs = [r for r in (zeilen or [])
+              if r.get("strom") == strom and r.get("art") == art and r.get("status") != "ruht"
+              and isinstance(r.get("roi"), (int, float)) and (r.get("n") or 0) > 0]
+        if not rs:
+            continue
+        n = sum(r["n"] for r in rs)
+        pl = sum(r["pl"] for r in rs if isinstance(r.get("pl"), (int, float)))
+        _c = [(r["clv"], r["n"]) for r in rs if isinstance(r.get("clv"), (int, float))]
+        clv = (sum(c * k for c, k in _c) / sum(k for _, k in _c)) if _c else None
+        out.append({"strom": strom, "zerlegung": label, "art": art, "gruppen": len(rs),
+                    "n": n, "pl": round(pl, 2), "roi": round(pl / n, 4) if n else None,
+                    "clv": round(clv, 3) if clv is not None else None,
+                    # Wie viele der Schubladen DIESES Stroms tragen ueberhaupt einen Beleg?
+                    # Das ist die ehrliche Antwort auf „wem soll ich folgen" — nicht der Schnitt.
+                    "belegte": len([r for r in (zeilen or [])
+                                    if r.get("strom") == strom
+                                    and isinstance(r.get("roiLb"), (int, float)) and r["roiLb"] > 0])})
+    out.sort(key=lambda r: -(r.get("roi") or -9))
+    return out
 
 
 # ── Strom 6: vorangemeldete Kandidaten ──────────────────────────────────────────────────
@@ -815,6 +879,7 @@ def baue(engine=None, track=None, cards=None, betfair=None, now=None) -> dict:
                            "Engine-Version" % (MIN_N, MAX_ALTER_TAGE)},
         "freigegeben": frei,
         "kandidaten": kand,
+        "stroeme": stroeme(zeilen),
         "alle": zeilen,
         "zusammenfassung": {
             "schubladen": len(zeilen), "freigegeben": len(frei), "kandidaten": len(kand),

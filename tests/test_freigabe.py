@@ -344,3 +344,58 @@ class TestDateiSagtWoraufSieGefiltertHat:
     def test_erzwungene_engine_wird_gemeldet(self):
         d = F.baue(engine="alt", track=self._t())
         assert d["engine"] == "alt" and d["engineGefiltert"] is True
+
+
+class TestStroemeUndPL:
+    """08.09.2026 (Lucas: „dann weiß ich für mich auch was ich besser folgen kann — eher Poly,
+    eher Betfair, eher Cards")."""
+
+    def _z(self, strom, art, name, n, roi, clv=None, status="geprueft"):
+        return {"schublade": name, "strom": strom, "art": art, "n": n, "roi": roi,
+                "pl": round(roi * n, 2), "clv": clv, "roiLb": None, "status": status}
+
+    def test_summiert_nur_ueber_die_disjunkte_zerlegung(self):
+        # „Mix money+sharp" ist ein SCHNITT durch dieselben Poly-Plays wie „Conviction 5".
+        # Wer beide summiert, erfindet Plays.
+        z = [self._z("poly", "conviction", "Conviction 5", 100, 0.10),
+             self._z("poly", "mix", "Mix money+sharp", 80, 0.50)]
+        s = F.stroeme(z)
+        assert len(s) == 1
+        assert s[0]["n"] == 100, "der Mix-Schnitt darf nicht mitzaehlen"
+        assert s[0]["art"] == "conviction"
+        assert s[0]["zerlegung"] == "nach Conviction"
+
+    def test_pl_und_roi_passen_zusammen(self):
+        z = [self._z("cards", "verdict", "Liga · ABWÄGEN", 100, 0.10),
+             self._z("cards", "verdict", "MLS · ABWÄGEN", 100, -0.04)]
+        s = F.stroeme(z)[0]
+        assert s["n"] == 200
+        assert round(s["pl"], 2) == 6.0
+        assert round(s["roi"], 4) == 0.03
+
+    def test_ruhende_schubladen_zaehlen_nicht_mit(self):
+        # Die WM-Schubladen tragen die Haelfte der Card-Plays, und die WM ist vorbei.
+        z = [self._z("cards", "verdict", "Liga · ABWÄGEN", 100, 0.10),
+             self._z("cards", "verdict", "WM · ABWÄGEN", 133, -0.05, status="ruht")]
+        s = F.stroeme(z)[0]
+        assert s["n"] == 100
+
+    def test_clv_wird_nach_stichprobe_gewichtet(self):
+        z = [self._z("poly", "conviction", "A", 100, 0.0, clv=-2.0),
+             self._z("poly", "conviction", "B", 300, 0.0, clv=-1.0)]
+        assert round(F.stroeme(z)[0]["clv"], 3) == -1.25
+
+    def test_strom_ohne_zerlegung_kommt_gar_nicht_vor(self):
+        # Lieber keine Zeile als eine Summe ueber Ueberlappungen.
+        assert F.stroeme([self._z("poly", "mix", "Mix money+sharp", 80, 0.5)]) == []
+
+    def test_sortiert_nach_roi(self):
+        z = [self._z("poly", "conviction", "A", 100, -0.07),
+             self._z("cards", "verdict", "B", 100, 0.09)]
+        assert [r["strom"] for r in F.stroeme(z)] == ["cards", "poly"]
+
+    def test_pl_steht_an_jeder_bewerteten_schublade(self):
+        r = F.bewerte("X", "cards", [0.5, -1.0, 0.5], [])
+        assert r["pl"] == 0.0
+        r2 = F.bewerte("Y", "cards", [1.0, 1.0], [])
+        assert r2["pl"] == 2.0

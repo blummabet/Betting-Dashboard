@@ -86,9 +86,11 @@ test('fehlende Datei meldet ❔ UNBEKANNT — niemals „nichts freigegeben"', (
 });
 
 test('jede Zeile zeigt die Untergrenze neben dem Wert', () => {
+  // 08.09.2026: ROI und UG stehen mit EINER Nachkommastelle. Auf ganze Prozent gerundet stand
+  // bei „Match Odds" (n=2.652) „ROI +0%" neben „P/L +5.8" — die Zahl war nicht falsch, nur weg.
   const h = render(reg());
-  assert.match(h, /ROI \+16%/);
-  assert.match(h, /\(UG −?-?2%\)/, 'ohne Untergrenze ist der ROI eine Behauptung');
+  assert.match(h, /ROI \+16\.3%/);
+  assert.match(h, /\(UG −?-?2\.1%\)/, 'ohne Untergrenze ist der ROI eine Behauptung');
 });
 
 test('freigegebene Schublade wird grün und mit Haken gezeigt', () => {

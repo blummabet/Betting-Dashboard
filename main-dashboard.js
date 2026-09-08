@@ -326,6 +326,12 @@
       '.md-eb-n.e2{color:#4cc2ff;border-color:rgba(76,194,255,.45);}',
       '.md-eb-n.e3{color:#d95926;border-color:rgba(217,89,38,.45);}',
       '.md-eb-n.e0{color:#c98500;border-color:rgba(201,133,0,.45);}',
+      // 08.09.2026 — die drei Strom-Kacheln von Ebene 1. Feste Breiten, damit man sie
+      // nebeneinander VERGLEICHT statt sie nacheinander zu lesen.
+      '.fg-stroeme{display:flex;gap:8px;flex-wrap:wrap;margin:9px 0 2px;}',
+      '.fg-strom{flex:1 1 200px;min-width:200px;background:var(--mln);border:1px solid var(--mln2);border-radius:10px;padding:9px 11px;}',
+      '.fg-strom-h{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mi);margin-bottom:2px;}',
+      '.fg-strom-z{margin-left:auto;font-size:9.5px;color:var(--mi3);white-space:nowrap;}',
       // Ebene 0 — Spielzentrale (08.09.2026). Eine Zeile je Spiel, Quellen als feste
       // Spalten: belegt oder leer, immer an derselben Stelle. Man zaehlt die gefuellten
       // Felder, statt Text zu lesen — und zwei Zeilen untereinander sind vergleichbar.
@@ -2170,8 +2176,17 @@
       +     '<span style="display:block;height:4px;width:' + pct + '%;background:' + col + '"></span></span>'
       +   ' <span style="font-size:10px;color:var(--mi3)">' + n + '/' + ziel + '</span></span>'
       + '<span class="md-kl-bo" title="ROI mit einseitiger 95%-Untergrenze">'
-      +   'ROI ' + _mdFgZahl(r.roi == null ? null : r.roi * 100, '%')
-      +   ' <i style="color:var(--mi3);font-style:normal">(UG ' + _mdFgZahl(r.roiLb == null ? null : r.roiLb * 100, '%') + ')</i></span>'
+      // 08.09.2026: eine Nachkommastelle. Auf ganze Prozent gerundet stand bei „Match Odds"
+      // (n=2.652) „ROI +0%" neben „P/L +5.8" — die Zahl war nicht falsch, sie war nur weg.
+      +   'ROI ' + _mdFgZahl(r.roi == null ? null : r.roi * 100, '%', 1)
+      +   ' <i style="color:var(--mi3);font-style:normal">(UG ' + _mdFgZahl(r.roiLb == null ? null : r.roiLb * 100, '%', 1) + ')</i></span>'
+      // 08.09.2026 (Lucas: „mit etwas Stats — ROI, P/L, CLV"). Der ROI sagt, wie GUT eine
+      // Schublade ist; das P/L, wie viel sie tatsächlich getragen hat. Die beiden laufen weit
+      // auseinander: „Half Time" bringt +5,0 % aus 1.936 Plays (+96 Einheiten), eine 30er-
+      // Schublade mit +36 % ROI ganze +12. Ohne beide Zahlen nebeneinander sortiert man nach
+      // der falschen.
+      + '<span class="md-kl-bs" title="Was die Schublade insgesamt getragen hat — Summe der Renditen in Einheiten Einsatz">'
+      +   'P/L ' + (r.pl == null ? '—' : (r.pl > 0 ? '+' : '') + (+r.pl).toFixed(1)) + '</span>'
       + '<span class="md-kl-bs" title="CLV mit Untergrenze — bei kleinem n belastbarer als der ROI">'
       +   'CLV ' + _mdFgZahl(r.clv, 'pp', 1) + '</span>' + alt + weit + '</div>';
   }
@@ -2319,11 +2334,81 @@
   // Beurteilt SCHUBLADEN ueber Wochen, nicht einzelne Spiele heute. Das ist der Grund, warum
   // sie ganz oben steht und warum sie kein einziges Spiel zeigt: sie sagt, wie ernst man die
   // beiden Ebenen darunter nehmen darf.
+  // ── Wem folge ich am ehesten? (08.09.2026) ────────────────────────────────────────────
+  // Lucas: „ich seh dort die Schubladen die Sinn machen … und dann weiss ich für mich auch was
+  // ich besser folgen kann — eher Poly, eher Betfair, eher Konsens, eher Cards."
+  //
+  // Die Zahl kommt fertig aus `freigabe.stroeme()` und wird hier NICHT nachgerechnet. Der Grund
+  // steht dort: die Schubladen eines Stroms überlappen sich („Conviction 5" und „Mix money+sharp"
+  // sind zwei Schnitte durch dieselben Plays), deshalb rechnet der Produzent je Strom über EINE
+  // überschneidungsfreie Zerlegung — und schreibt mit, über welche. Genau deshalb steht sie hier
+  // auch dran: „n=234" heißt nicht „alles von Poly", sondern „alle Poly-Plays nach Conviction".
+  var FG_STROM = { cards: ['🎯', 'Cards'], poly: ['🎮', 'Polymarket'], betfair: ['💷', 'Betfair'] };
+
+  function _mdStromKachel(r) {
+    var ico = FG_STROM[r.strom] || ['·', r.strom];
+    var col = (r.roi == null) ? 'var(--mi3)' : (r.roi > 0 ? A.good : A.red);
+    var z = function (lbl, wert, c) {
+      return '<span class="mpc-sub"><b style="color:' + (c || 'var(--mi)') + '">' + wert + '</b>'
+        + '<i>' + lbl + '</i></span>';
+    };
+    return '<div class="fg-strom">'
+      + '<div class="fg-strom-h">' + ico[0] + ' <b>' + ico[1] + '</b>'
+      + '<span class="fg-strom-z" title="Über diese Zerlegung wurde summiert — die anderen '
+      + 'Schubladen desselben Stroms sind Schnitte durch dieselben Plays und würden doppelt zählen">'
+      + esc(String(r.zerlegung || '')) + '</span></div>'
+      + '<div class="mpc-subs">'
+      + z('ROI', (r.roi == null ? '—' : (r.roi > 0 ? '+' : '') + (r.roi * 100).toFixed(1) + '%'), col)
+      + z('P/L', (r.pl == null ? '—' : (r.pl > 0 ? '+' : '') + (+r.pl).toFixed(1)), col)
+      + z('Plays', (r.n || 0).toLocaleString('de-DE'))
+      + z('CLV', (r.clv == null ? '—' : (r.clv > 0 ? '+' : '') + (+r.clv).toFixed(1) + 'pp'))
+      + z('belegte Schubladen', r.belegte == null ? '—' : r.belegte,
+          r.belegte ? A.good : 'var(--mi3)')
+      + '</div></div>';
+  }
+
+  // Die stärksten reifen Schubladen — sortiert nach dem, was ein Beleg WÄRE (ROI-Untergrenze),
+  // nicht nach dem Punktschätzer und nicht nach der Nähe zur Mindestzahl.
+  var FG_BESTE_MAX = 8;
+
+  function _mdFgBeste(f, minN) {
+    var reif = (f.alle || []).filter(function (r) {
+      return (r.n || 0) >= minN && r.status !== 'ruht' && r.roi != null;
+    });
+    if (!reif.length) return '<div class="md-kl-foot" style="border-top:0">Noch keine Schublade '
+      + 'mit ' + minN + ' Plays — die Bücher sammeln.</div>';
+    reif.sort(function (a, b) {
+      var av = (a.roiLb == null) ? -9 : a.roiLb, bv = (b.roiLb == null) ? -9 : b.roiLb;
+      return bv - av || (b.roi || 0) - (a.roi || 0);
+    });
+    var oben = reif.slice(0, FG_BESTE_MAX), rest = reif.length - oben.length;
+    return '<div class="md-kl-foot" style="border-top:0;padding:6px 0 2px">'
+      + '<b>Die stärksten Schubladen</b> — sortiert nach der Rendite-<b>Untergrenze</b>, also '
+      + 'danach, was übrig bleibt, wenn man Glück abzieht:</div>'
+      + oben.map(function (r) { return _mdFgZeile(r, minN); }).join('')
+      + (rest ? '<div class="md-kl-foot">' + rest + ' weitere reife Schubladen — im Register unten.</div>' : '');
+  }
+
+  function _mdStroeme(f) {
+    var st = (f && f.stroeme) || [];
+    if (!st.length) return '';
+    return '<div class="fg-stroeme">' + st.map(_mdStromKachel).join('') + '</div>'
+      + '<div class="md-kl-foot" style="border-top:0;padding:2px 0 8px">Je Strom über <b>eine '
+      + 'überschneidungsfreie Zerlegung</b> gerechnet — die übrigen Schubladen desselben Stroms '
+      + 'sind andere Schnitte durch dieselben Plays und würden doppelt zählen. Ruhende Schubladen '
+      + '(z.&nbsp;B. die WM) sind draußen: sie liefern nichts mehr.</div>';
+  }
+
   function _mdFreigabe() {
     var f = _md.data && _md.data.freigabe;
-    var frage = 'Darf ich ueberhaupt blind spielen?'.replace('ueberhaupt', 'überhaupt');
+    // 08.09.2026 (Lucas: „ich kapier es einfach nicht — was wird da besonders freigegeben?").
+    // Die alte Frage war richtig und nutzlos: sie wird seit Wochen jeden Tag mit „nein"
+    // beantwortet, und was er wirklich wissen will, stand nirgends. Die Ebene beantwortet
+    // jetzt ZUERST seine Frage und dann die strenge — dieselben Daten, andere Reihenfolge.
+    var frage = 'Wem kann ich am ehesten folgen?';
     var mechT = 'Register: beurteilt SCHUBLADEN ueber Wochen, nicht einzelne Spiele. Freigegeben wird eine Schublade erst, wenn ihre Untergrenze ueber null liegt.';
-    var unter = 'nicht der einzelne Tipp wird freigegeben, sondern die Schublade, aus der er kommt';
+    var unter = 'Leistung je Quelle und je Schublade — <b>ROI, P/L, CLV</b> · ganz unten die '
+      + 'strenge Frage: darf man einer Schublade <b>blind</b> folgen (nicht dem einzelnen Tipp)';
     // ❔ statt gruen: eine fehlende oder unlesbare Datei ist keine Aussage über die Freigabe.
     if (!f || !f.zusammenfassung) {
       return _mdEbene(1, frage, 'Register', A.good, mechT, unter,
@@ -2340,9 +2425,26 @@
       // überhaupt gerechnet wird. Die Entfernung zu einem BELEG ist eine andere — bei der
       // stärksten Schublade heute 248 statt 15. Ein Badge, der die kleinere Zahl zeigt und die
       // größere verschweigt, verspricht etwas, das die Daten daneben nicht hergeben.
-      : { txt: '👀 nichts freigegeben' + (z.naechsteFreigabe != null ? ' · in ' + z.naechsteFreigabe + ' Plays wird gerechnet' : ''),
-          col: A.gold, bg: 'rgba(201,133,0,.14)' };
+      // Ohne Freigabe sagt der Badge das Nuetzliche statt des Nichts: welcher Strom vorn liegt.
+      // Die Freigabe selbst steht als Satz darunter — sie ist selten und bleibt die strengere
+      // Aussage, aber sie ist nicht das, was man taeglich wissen will.
+      : (function () {
+          var s0 = (f.stroeme || [])[0];
+          if (s0 && s0.roi != null) {
+            var nm = (FG_STROM[s0.strom] || ['', s0.strom]);
+            return { txt: nm[0] + ' ' + nm[1] + ' vorn · ' + (s0.roi > 0 ? '+' : '')
+                          + (s0.roi * 100).toFixed(1) + '% ROI',
+                     col: s0.roi > 0 ? A.good : A.gold,
+                     bg: s0.roi > 0 ? 'rgba(46,160,71,.16)' : 'rgba(201,133,0,.14)' };
+          }
+          return { txt: '👀 nichts freigegeben' + (z.naechsteFreigabe != null ? ' · in ' + z.naechsteFreigabe + ' Plays wird gerechnet' : ''),
+                   col: A.gold, bg: 'rgba(201,133,0,.14)' };
+        })();
 
+    // 08.09.2026: die Strom-Tafel steht ganz oben — sie beantwortet die Frage, die Lucas
+    // wirklich hat („wem folge ich am ehesten"), waehrend die Freigabe darunter die strengere,
+    // seltenere Frage beantwortet.
+    var stroeme = _mdStroeme(f);
     var body;
     if (frei.length) {
       body = frei.map(function (r) { return _mdFgZeile(r, minN); }).join('');
@@ -2385,10 +2487,13 @@
         // n=25/19/16 — während der Satz davor gerade erklärt hatte, dass zwei REIFE Schubladen
         // die ROI-Hürde nehmen und an CLV scheitern. Zwei Sätze, zwei Bedeutungen von „dran".
         // Die Liste ist die Nähe zur MINDESTZAHL; das steht jetzt dran.
-        + 'Das ist ein Ergebnis, kein Fehler, und es gilt für alles darunter. '
-        + 'Am nächsten an der Mindestzahl (' + minN + ' Plays) — nicht an einem Beleg:</div>'
-        + (kand.length ? kand.map(function (r) { return _mdFgZeile(r, minN); }).join('')
-                       : '<div class="md-kl-foot" style="border-top:0">Noch nicht einmal ein Kandidat — die Bücher sammeln.</div>');
+        + 'Das ist ein Ergebnis, kein Fehler, und es gilt für alles darunter.</div>'
+        // 08.09.2026 (Lucas: „die Schubladen die gut sind, nach weicherer Hürde, aber auch mit
+        // etwas Stats"). Vorher standen hier die drei Schubladen mit der kleinsten Entfernung
+        // zur MINDESTZAHL — also die jüngsten, nicht die besten. Jetzt die stärksten reifen
+        // Schubladen nach ihrer ROI-Untergrenze: das ist die weichere Hürde, die trotzdem eine
+        // Hürde ist. Ruhende bleiben draußen, sie liefern nichts mehr.
+        + _mdFgBeste(f, minN);
     }
 
     // Engine-Zeile: seit 01.09. zählt für eine Freigabe nur die aktuelle Engine-Version.
@@ -2411,7 +2516,7 @@
       + '<div class="md-kl-foot" style="border-top:0;padding-top:6px">' + esc(regel) + '</div></details>' : '';
 
     return _mdEbene(1, frage, 'Register', A.good, mechT, unter, bad,
-      body + '<div class="md-kl-foot">' + eng + '</div>' + det);
+      stroeme + body + '<div class="md-kl-foot">' + eng + '</div>' + det);
   }
 
   function _mdKiller(polyPlays) {
