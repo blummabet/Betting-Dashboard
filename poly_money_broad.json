@@ -1,15 +1,15 @@
 {
- "n": 202,
+ "n": 207,
  "minOdds": 1.35,
- "moneyHitRate": 0.322,
- "priceHitRate": 0.366,
- "brierMoney": 0.9741,
- "brierPrice": 0.7201,
+ "moneyHitRate": 0.319,
+ "priceHitRate": 0.357,
+ "brierMoney": 0.9689,
+ "brierPrice": 0.7211,
  "disagree": {
-  "n": 55,
+  "n": 58,
   "moneyWon": 3,
-  "priceWon": 12,
-  "neither": 40
+  "priceWon": 11,
+  "neither": 44
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -32,9 +32,9 @@
   }
  ],
  "guete": {
-  "belastbar": 202,
-  "preis_echo": 220,
-  "abgeschnitten": 23,
+  "belastbar": 207,
+  "preis_echo": 224,
+  "abgeschnitten": 25,
   "unbekannt": 417,
   "leer": 0
  },
@@ -62,6 +62,30 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 1538448
+  },
+  {
+   "key": "ucl-rma-int-2026-09-08",
+   "league": "UCL",
+   "winner": "Real Madrid CF",
+   "moneyFav": "Real Madrid CF",
+   "priceFav": "Real Madrid CF",
+   "moneyShare": 0.801,
+   "priceProb": 0.618,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 1200778
+  },
+  {
+   "key": "ucl-lil-bet-2026-09-08",
+   "league": "UCL",
+   "winner": "Real Betis Balompié",
+   "moneyFav": "Lille OSC",
+   "priceFav": "Lille OSC",
+   "moneyShare": 0.771,
+   "priceProb": 0.453,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 1002414
   },
   {
    "key": "epl-ars-che-2026-09-06",
@@ -116,7 +140,7 @@
    "league": "EPL",
    "winner": "Draw (Nottingham Forest FC vs. Tottenham Hotspur FC)",
    "moneyFav": "Tottenham Hotspur FC",
-   "priceFav": "Tottenham Hotspur FC",
+   "priceFav": "Nottingham Forest FC",
    "moneyShare": 0.584,
    "priceProb": 0.357,
    "moneyOK": false,
@@ -278,6 +302,18 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 293674
+  },
+  {
+   "key": "ucl-por-mnc-2026-09-08",
+   "league": "UCL",
+   "winner": "Manchester City FC",
+   "moneyFav": "Manchester City FC",
+   "priceFav": "Manchester City FC",
+   "moneyShare": 0.957,
+   "priceProb": 0.588,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 288574
   },
   {
    "key": "ucl-aek1-lin2-2026-09-08",
@@ -482,45 +518,9 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 135859
-  },
-  {
-   "key": "bun-scp-fre-2026-09-05",
-   "league": "BUNDESLIGA",
-   "winner": "SC Freiburg",
-   "moneyFav": "SC Freiburg",
-   "priceFav": "SC Freiburg",
-   "moneyShare": 0.942,
-   "priceProb": 0.493,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 129988
-  },
-  {
-   "key": "mls-orl-sdg-2026-09-05",
-   "league": "MLS",
-   "winner": "Orlando City SC",
-   "moneyFav": "Orlando City SC",
-   "priceFav": "Orlando City SC",
-   "moneyShare": 0.972,
-   "priceProb": 0.429,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 124985
-  },
-  {
-   "key": "bun-ein-aug-2026-09-06",
-   "league": "BUNDESLIGA",
-   "winner": "FC Augsburg",
-   "moneyFav": "Eintracht Frankfurt",
-   "priceFav": "Eintracht Frankfurt",
-   "moneyShare": 0.935,
-   "priceProb": 0.508,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 119729
   }
  ],
- "generatedAt": "2026-09-08T21:12:14.767216+00:00",
+ "generatedAt": "2026-09-08T21:37:38.910586+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -532,7 +532,7 @@
   "epl": 586,
   "soccer": 800,
   "tennis": 800,
-  "ucl": 541,
+  "ucl": 509,
   "la-liga": 670,
   "bundesliga": 547,
   "serie-a": 51,
@@ -543,7 +543,7 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 621,
+  "esports": 618,
   "cs2": 420,
   "lol": 402,
   "dota": 9,
@@ -598,73 +598,63 @@
   "womens-champions-league": 424
  },
  "sweepStats": {
-  "sweepOpen": 200,
+  "sweepOpen": 500,
   "sweepClosed": 500,
   "sweepAdded": 404
  },
  "vorStats": {
-  "kandidaten": 13,
+  "kandidaten": 11,
   "budgetLeer": 0,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
-  "mitAnteilen": 13,
-  "calls": 13
+  "mitAnteilen": 11,
+  "calls": 11
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1718,
-   "usd": 54067800,
-   "beispiel": "fifwc-can-qat-2026-06-18"
+   "n": 1557,
+   "usd": 28668830,
+   "beispiel": "fifwc-prt-hrv-2026-07-02-player-props"
   },
   "nba": {
-   "n": 332,
-   "usd": 9129670,
-   "beispiel": "nba-dal-lal-2026-02-12"
+   "n": 321,
+   "usd": 6653149,
+   "beispiel": "nba-2027-champion"
   },
   "balance": {
    "n": 3,
    "usd": 6001696,
    "beispiel": "balance-of-power-2026-midterms"
   },
-  "ecs": {
-   "n": 15,
-   "usd": 1916916,
-   "beispiel": "ecs-ars-mci-2026-08-16"
-  },
   "nhl": {
-   "n": 93,
-   "usd": 1847537,
-   "beispiel": "nhl-las-car-2026-06-04"
+   "n": 92,
+   "usd": 1765471,
+   "beispiel": "nhl-cbj-phi-2026-03-14"
   },
   "cbb": {
-   "n": 25,
-   "usd": 1680124,
+   "n": 27,
+   "usd": 1682547,
    "beispiel": "cbb-verm-prnce-2025-12-30"
   },
-  "world": {
-   "n": 61,
-   "usd": 1199409,
-   "beispiel": "world-cup-winner"
+  "ecs": {
+   "n": 11,
+   "usd": 922409,
+   "beispiel": "ecs-ars-mci-2026-08-16"
   },
   "cfb": {
-   "n": 111,
-   "usd": 752710,
-   "beispiel": "cfb-smu-flst-2026-09-07"
+   "n": 95,
+   "usd": 551704,
+   "beispiel": "cfb-washst-wash-2026-09-06"
   },
   "fed": {
-   "n": 26,
-   "usd": 478150,
+   "n": 24,
+   "usd": 536224,
    "beispiel": "fed-decision-in-september-762"
   },
-  "usc": {
-   "n": 9,
-   "usd": 383638,
-   "beispiel": "usc-psg-av-2026-08-12"
-  },
   "fif": {
-   "n": 76,
-   "usd": 320633,
-   "beispiel": "fif-bra-egy-2026-06-06-more-markets"
+   "n": 79,
+   "usd": 320540,
+   "beispiel": "fif-svk-mon-2026-06-05-more-markets"
   },
   "euroleague": {
    "n": 6,
@@ -674,42 +664,52 @@
   "efa": {
    "n": 17,
    "usd": 291322,
-   "beispiel": "efa-wre-cfc-2026-03-07"
+   "beispiel": "efa-cfc-mnc-2026-05-16"
   },
   "uef": {
    "n": 14,
    "usd": 274495,
    "beispiel": "uef-kvx-tur-2026-03-31"
   },
-  "btc": {
-   "n": 160,
-   "usd": 245294,
-   "beispiel": "btc-updown-5m-1784322000"
-  },
   "cdr": {
    "n": 7,
    "usd": 217899,
    "beispiel": "cdr-atm-fcb-2026-02-12"
-  },
-  "presidential": {
-   "n": 7,
-   "usd": 208510,
-   "beispiel": "presidential-election-winner-2028"
   },
   "acn": {
    "n": 8,
    "usd": 191924,
    "beispiel": "acn-sen-bot-2025-12-23"
   },
+  "2026": {
+   "n": 27,
+   "usd": 183183,
+   "beispiel": "2026-womens-us-open-winner-tennis"
+  },
   "clf": {
-   "n": 38,
-   "usd": 186882,
+   "n": 40,
+   "usd": 165186,
    "beispiel": "clf-mun-lee-2026-08-12"
   },
-  "2026": {
-   "n": 23,
-   "usd": 162782,
-   "beispiel": "2026-mens-us-open-winner-tennis"
+  "strait": {
+   "n": 3,
+   "usd": 155466,
+   "beispiel": "strait-of-hormuz-traffic-returns-to-normal-by-august-31-20260702154212320"
+  },
+  "which": {
+   "n": 11,
+   "usd": 119936,
+   "beispiel": "which-party-will-win-the-house-in-2026"
+  },
+  "world": {
+   "n": 8,
+   "usd": 98804,
+   "beispiel": "world-cup-group-b-winner"
+  },
+  "nbasl": {
+   "n": 1,
+   "usd": 97044,
+   "beispiel": "nbasl-cle-nop-2026-07-15"
   }
  }
 }
