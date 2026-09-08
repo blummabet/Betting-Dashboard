@@ -227533,7 +227533,13 @@
     "usd": 945,
     "ts": 1788828493
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Cincinnati Reds": 0.0,
+   "Los Angeles Dodgers": 1.0
+  },
+  "resolvedAt": "2026-09-08T05:05:44.190457+00:00"
  },
  "bra-vit-gre-2026-09-07-exact-score": {
   "shares": {
@@ -228682,12 +228688,12 @@
  },
  "cs2-all-faze-2026-09-08": {
   "shares": {
-   "Alliance": 95822.53493654996,
-   "FaZe": 240396.88249434019
+   "Alliance": 127483.34939532499,
+   "FaZe": 336092.92713667516
   },
   "prices": {
-   "Alliance": 0.285,
-   "FaZe": 0.715
+   "Alliance": 0.275,
+   "FaZe": 0.725
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -228695,35 +228701,35 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 348370,
+  "totalUsd": 356499,
   "whales": [
+   {
+    "wallet": "0x208927449ac85131e4f34d0c499bfae71a24712e",
+    "side": "FaZe",
+    "usd": 68983,
+    "avgPrice": 0.7356
+   },
    {
     "wallet": "0x7e5e420a5cde8a322f3b5b93a12a164827f47315",
     "side": "FaZe",
-    "usd": 36259,
+    "usd": 36766,
     "avgPrice": 0.7391
    },
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "side": "Alliance",
-    "usd": 35319,
+    "usd": 34079,
     "avgPrice": 0.2824
    },
    {
     "wallet": "0x99e42eb9038705165b22f821e27659c1dc41e4c4",
     "side": "FaZe",
-    "usd": 19820,
+    "usd": 20097,
     "avgPrice": 0.7199
-   },
-   {
-    "wallet": "0xbb299ce4867ea634a83a254e24d1ffc5c148947a",
-    "side": "FaZe",
-    "usd": 19529,
-    "avgPrice": 0.7188
    }
   ],
-  "hoursToKickoff": 1.39,
-  "capturedAt": "2026-09-08T04:38:23.480758+00:00",
+  "hoursToKickoff": 0.94,
+  "capturedAt": "2026-09-08T05:05:44.190457+00:00",
   "cond": "0x95a5beea0030946971bd00ca2105a85733c705c2dfb11ae0db2d85e9ad9ecd1f",
   "frage": "Counter-Strike: Alliance vs FaZe (BO3) - FISSURE PLAYGROUND Group B",
   "tokens": {
@@ -228732,64 +228738,112 @@
   },
   "book": {
    "side": "FaZe",
-   "bid": 0.71,
-   "ask": 0.72,
+   "bid": 0.74,
+   "ask": 0.75,
    "spreadC": 1.0,
-   "spreadPct": 1.39,
+   "spreadPct": 1.33,
    "bids": [
     [
+     0.74,
+     850
+    ],
+    [
+     0.73,
+     2434
+    ],
+    [
+     0.72,
+     40014
+    ],
+    [
      0.71,
-     294582
+     289411
     ],
     [
      0.7,
-     4043
+     3708
     ],
     [
-     0.68,
-     2090
-    ],
-    [
-     0.67,
-     5065
-    ],
-    [
-     0.66,
-     254
-    ],
-    [
-     0.65,
-     64
+     0.69,
+     186
     ]
    ],
    "asks": [
     [
-     0.72,
-     31675
-    ],
-    [
-     0.73,
-     67540
-    ],
-    [
-     0.74,
-     64520
-    ],
-    [
      0.75,
-     29957
+     13197
     ],
     [
      0.76,
-     41226
+     28400
     ],
     [
      0.77,
-     2402
+     2159
+    ],
+    [
+     0.78,
+     1505
+    ],
+    [
+     0.79,
+     1500
+    ],
+    [
+     0.81,
+     197
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x208927449ac85131e4f34d0c499bfae71a24712e",
+    "action": "BUY",
+    "side": "FaZe",
+    "price": 0.7357,
+    "usd": 70000,
+    "ts": 1788843726
+   },
+   {
+    "wallet": "0x73e3fec494611d73c170cb2f23850fd998b21be9",
+    "action": "BUY",
+    "side": "FaZe",
+    "price": 0.72,
+    "usd": 16165,
+    "ts": 1788843475
+   },
+   {
+    "wallet": "0xa2fc0448a1dce9258ebb91b2f3abcddb98a0b1b4",
+    "action": "BUY",
+    "side": "FaZe",
+    "price": 0.72,
+    "usd": 585,
+    "ts": 1788843445
+   },
+   {
+    "wallet": "0x33039159ffe95333ef0661ac84b17b27fae69895",
+    "action": "BUY",
+    "side": "FaZe",
+    "price": 0.72,
+    "usd": 4400,
+    "ts": 1788842739
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "action": "BUY",
+    "side": "FaZe",
+    "price": 0.72,
+    "usd": 1143,
+    "ts": 1788842481
+   },
+   {
+    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+    "action": "BUY",
+    "side": "FaZe",
+    "price": 0.72,
+    "usd": 467,
+    "ts": 1788842062
+   },
    {
     "wallet": "0x89eb83948d44d7b9b5e2c58fb49167b563a3cff9",
     "action": "BUY",
@@ -228797,37 +228851,13 @@
     "price": 0.72,
     "usd": 500,
     "ts": 1788840847
-   },
-   {
-    "wallet": "0x0fded0ed829a00c35dcd2d550983e92108ed8ab1",
-    "action": "BUY",
-    "side": "FaZe",
-    "price": 0.72,
-    "usd": 382,
-    "ts": 1788839061
-   },
-   {
-    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
-    "action": "BUY",
-    "side": "Alliance",
-    "price": 0.29,
-    "usd": 369,
-    "ts": 1788835515
-   },
-   {
-    "wallet": "0xa032d2358fa08860ba30ba8e8d828b7738202090",
-    "action": "BUY",
-    "side": "Alliance",
-    "price": 0.29,
-    "usd": 836,
-    "ts": 1788835048
    }
   ]
  },
  "cs2-mibr-mglz-2026-09-08": {
   "shares": {
-   "MIBR": 131034.22829130004,
-   "TheMongolz": 139139.44622587998
+   "MIBR": 135523.3283739151,
+   "TheMongolz": 143906.22101760993
   },
   "prices": {
    "MIBR": 0.485,
@@ -228839,7 +228869,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 305095,
+  "totalUsd": 310661,
   "whales": [
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
@@ -228862,12 +228892,12 @@
    {
     "wallet": "0x73e3fec494611d73c170cb2f23850fd998b21be9",
     "side": "MIBR",
-    "usd": 17185,
+    "usd": 19863,
     "avgPrice": 0.4799
    }
   ],
-  "hoursToKickoff": 1.39,
-  "capturedAt": "2026-09-08T04:38:23.480758+00:00",
+  "hoursToKickoff": 0.44,
+  "capturedAt": "2026-09-08T05:05:44.190457+00:00",
   "cond": "0x0099c34859d0b77bac99cc9da44de3e5c9b75cb8f350df2e72138d2aefdc6f21",
   "frage": "Counter-Strike: MIBR vs TheMongolz (BO3) - FISSURE PLAYGROUND Group A",
   "tokens": {
@@ -228883,23 +228913,23 @@
    "bids": [
     [
      0.51,
-     35969
+     30927
     ],
     [
      0.5,
-     20941
+     9169
     ],
     [
      0.49,
-     12199
+     2863
     ],
     [
      0.48,
-     279
+     5765
     ],
     [
      0.47,
-     11
+     10051
     ],
     [
      0.46,
@@ -228909,94 +228939,78 @@
    "asks": [
     [
      0.52,
-     67282
+     61484
     ],
     [
      0.53,
-     120724
+     112485
     ],
     [
      0.54,
-     33725
+     21549
     ],
     [
      0.55,
-     13404
+     8839
     ],
     [
      0.56,
-     63326
+     47181
     ],
     [
      0.57,
-     42398
+     31660
     ]
    ]
   },
   "trades": [
    {
-    "wallet": "0xd202bf6d89dc6bab1b9f00ead175f75466348973",
-    "action": "BUY",
-    "side": "TheMongolz",
-    "price": 0.52,
-    "usd": 1158,
-    "ts": 1788841854
-   },
-   {
-    "wallet": "0x54b00cd9433bc60fd7fed197748f6707d5fadf70",
-    "action": "BUY",
-    "side": "TheMongolz",
-    "price": 0.52,
-    "usd": 1126,
-    "ts": 1788841638
-   },
-   {
-    "wallet": "0x54b00cd9433bc60fd7fed197748f6707d5fadf70",
-    "action": "BUY",
-    "side": "TheMongolz",
-    "price": 0.52,
-    "usd": 1126,
-    "ts": 1788841464
-   },
-   {
-    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
-    "action": "BUY",
-    "side": "TheMongolz",
-    "price": 0.52,
-    "usd": 463,
-    "ts": 1788841408
-   },
-   {
-    "wallet": "0x81d12e02d411ea6784d14af0538c72ecf8bb4806",
-    "action": "BUY",
-    "side": "TheMongolz",
-    "price": 0.52,
-    "usd": 488,
-    "ts": 1788840486
-   },
-   {
-    "wallet": "0x6b97ebe911d7f2e5e3e8c4a0faad4a5c7c0b8d30",
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "action": "BUY",
     "side": "MIBR",
     "price": 0.49,
-    "usd": 1760,
-    "ts": 1788839205
+    "usd": 391,
+    "ts": 1788843777
    },
    {
-    "wallet": "0xd202bf6d89dc6bab1b9f00ead175f75466348973",
+    "wallet": "0xc51fa8bf8a2c658a8295ef90667db20ab2895dc6",
     "action": "BUY",
     "side": "TheMongolz",
     "price": 0.52,
-    "usd": 1158,
-    "ts": 1788839070
+    "usd": 400,
+    "ts": 1788843705
    },
    {
-    "wallet": "0xba437745c058346319971651197bef40c3cbc6c0",
+    "wallet": "0x84000951e537b38cbe481ca993ca9ed08691274c",
+    "action": "BUY",
+    "side": "TheMongolz",
+    "price": 0.52,
+    "usd": 500,
+    "ts": 1788843268
+   },
+   {
+    "wallet": "0x84000951e537b38cbe481ca993ca9ed08691274c",
+    "action": "BUY",
+    "side": "TheMongolz",
+    "price": 0.52,
+    "usd": 500,
+    "ts": 1788843142
+   },
+   {
+    "wallet": "0x1c5e6a9f80cde40b5180918034c591917342269b",
     "action": "BUY",
     "side": "MIBR",
     "price": 0.49,
-    "usd": 1613,
-    "ts": 1788839070
+    "usd": 600,
+    "ts": 1788842919
+   },
+   {
+    "wallet": "0x4cb03276679d644ec1852f744668f345d41657e0",
+    "action": "BUY",
+    "side": "MIBR",
+    "price": 0.49,
+    "usd": 980,
+    "ts": 1788842509
    }
   ]
  },
@@ -229133,6 +229147,158 @@
     "price": 0.2273,
     "usd": 919,
     "ts": 1788834177
+   }
+  ]
+ },
+ "lol-dkc-nsea-2026-09-08": {
+  "shares": {
+   "Dplus KIA Challengers": 44475.25586476494,
+   "Nongshim Esports Academy": 45373.25067872997
+  },
+  "prices": {
+   "Dplus KIA Challengers": 0.495,
+   "Nongshim Esports Academy": 0.505
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 92995,
+  "whales": [
+   {
+    "wallet": "0x7e5e420a5cde8a322f3b5b93a12a164827f47315",
+    "side": "Dplus KIA Challengers",
+    "usd": 14547,
+    "avgPrice": 0.4865
+   },
+   {
+    "wallet": "0x6e9f61710b1703bb7e0ef7ebe1323c443a1d0eae",
+    "side": "Nongshim Esports Academy",
+    "usd": 7878,
+    "avgPrice": 0.52
+   },
+   {
+    "wallet": "0xda3a9b7afff7b44ad4fd75308723194e0a11381f",
+    "side": "Nongshim Esports Academy",
+    "usd": 6312,
+    "avgPrice": 0.5099
+   },
+   {
+    "wallet": "0x457f2814dac53a0a9951b5c2ea5a9db20896aa1a",
+    "side": "Nongshim Esports Academy",
+    "usd": 5050,
+    "avgPrice": 0.5099
+   }
+  ],
+  "hoursToKickoff": 2.94,
+  "capturedAt": "2026-09-08T05:05:44.190457+00:00",
+  "cond": "0x59cabe2fe7737e2b39a9493c9b3184cd84eede69b01dda511333a354ee7ce89b",
+  "frage": "LoL: Dplus KIA Challengers vs Nongshim Esports Academy (BO5) - LCK Challengers League Playoffs",
+  "tokens": {
+   "Dplus KIA Challengers": "19126929766442479774557635831981249603648450315049422813758462316508096993250",
+   "Nongshim Esports Academy": "42718454625894470849834357570683301730134333779212260244603899839163394572484"
+  },
+  "book": {
+   "side": "Nongshim Esports Academy",
+   "bid": 0.5,
+   "ask": 0.51,
+   "spreadC": 1.0,
+   "spreadPct": 1.96,
+   "bids": [
+    [
+     0.5,
+     14515
+    ],
+    [
+     0.49,
+     4809
+    ],
+    [
+     0.48,
+     605
+    ],
+    [
+     0.47,
+     2530
+    ],
+    [
+     0.46,
+     958
+    ],
+    [
+     0.45,
+     545
+    ]
+   ],
+   "asks": [
+    [
+     0.51,
+     6463
+    ],
+    [
+     0.52,
+     1770
+    ],
+    [
+     0.53,
+     1954
+    ],
+    [
+     0.54,
+     1149
+    ],
+    [
+     0.55,
+     464
+    ],
+    [
+     0.56,
+     1584
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x1047f313c5b75f58b8e3075174356e76bb309036",
+    "action": "BUY",
+    "side": "Dplus KIA Challengers",
+    "price": 0.5,
+    "usd": 522,
+    "ts": 1788843724
+   },
+   {
+    "wallet": "0x1047f313c5b75f58b8e3075174356e76bb309036",
+    "action": "BUY",
+    "side": "Dplus KIA Challengers",
+    "price": 0.5,
+    "usd": 2092,
+    "ts": 1788841003
+   },
+   {
+    "wallet": "0xcf609d3256f0f37f0595e5dc64012fa3a8fea6f5",
+    "action": "BUY",
+    "side": "Dplus KIA Challengers",
+    "price": 0.5,
+    "usd": 2500,
+    "ts": 1788840288
+   },
+   {
+    "wallet": "0xcbb5623096b78505a26524e642c5c9066e585ed9",
+    "action": "BUY",
+    "side": "Dplus KIA Challengers",
+    "price": 0.4992,
+    "usd": 1520,
+    "ts": 1788836794
+   },
+   {
+    "wallet": "0x6d1e331789bda6dafb39b42ba2160fc0adf52c7e",
+    "action": "BUY",
+    "side": "Dplus KIA Challengers",
+    "price": 0.49,
+    "usd": 1916,
+    "ts": 1788831271
    }
   ]
  }
