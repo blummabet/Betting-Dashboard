@@ -40,6 +40,7 @@ BASE = Path(__file__).resolve().parent
 STATE_FILE = BASE / "freigabe_push_state.json"
 FREIGABE_FILE = BASE / "freigabe.json"
 TRENNER = "━━━━━━━━━━━━━━━━━━━"
+WOCHENTAG = ("Mo", "Di", "Mi", "Do", "Fr", "Sa", "So")
 
 
 def _now():
@@ -100,6 +101,101 @@ def wechsel(freigabe, state) -> tuple[list, list, dict]:
         elif war and not ist:
             runter.append(zeilen.get(name) or {"schublade": name})
     return rauf, runter, neuer
+
+
+# ── 08.09.2026: der Push, der Lucas wirklich fehlte ─────────────────────────────────────
+# „also es wird nur das geschickt, aber nicht welche Spiele — na dann brauch ich das eher nicht."
+#
+# Der Wechsel „Schublade freigegeben" ist selten und richtig als eigenes Ereignis. Aber er ist
+# eine Aussage ueber die Vergangenheit; handeln kann man erst mit den offenen Plays, die heute
+# unter dieselbe Definition fallen. Die kommen jetzt als ZWEITE Art Nachricht.
+#
+# ⭐ WARUM EIN EIGENER ZUSTAND JE PLAY UND NICHT „taeglich die Liste"
+# Eine taegliche Liste mit 31 Zeilen ist nach drei Tagen Tapete: 29 davon standen gestern schon
+# da. Gemeldet wird deshalb, was NEU dazugekommen ist — dieselbe Regel wie bei der Schublade
+# selbst, nur eine Ebene tiefer. Abgelaufene Plays verschwinden still aus dem Zustand; ein
+# „Spiel angepfiffen"-Push waere Rauschen ueber etwas, das man ohnehin nicht mehr tun kann.
+#
+# ⚠️ NICHT AUFLOESBARE SCHUBLADEN ERZEUGEN KEINEN PLAY-PUSH und auch keinen Zustand. Sonst
+# stuende beim naechsten Lauf „0 Spiele" fuer eine Schublade, ueber deren Spiele wir gar nichts
+# wissen — genau die Verwechslung, gegen die `aufloesbar` gebaut ist.
+PLAY_MAX = 12          # so viele Plays je Schublade in EINER Nachricht; darueber wird gezaehlt
+
+
+def play_wechsel(freigabe, state) -> tuple[dict, dict]:
+    """({schublade: [neue Plays]}, neuer Play-Zustand).
+
+    Erstlauf (kein Zustand fuer diese Schublade) meldet NICHTS: sonst fluteten beim ersten Lauf
+    31 Picks den Channel, und der erste echte Neuzugang ginge darin unter. Dieselbe Regel wie
+    beim Schublade-Zustand, und aus demselben Grund.
+    """
+    alt_state = (state or {}).get("plays") or {}
+    neu_state, meldung = {}, {}
+    for b in ((freigabe or {}).get("spiele") or []):
+        if not b.get("aufloesbar"):
+            continue                                  # kein Wissen ist kein Zustand
+        name = str(b.get("schublade") or "")
+        if not name:
+            continue
+        ids = [str(p.get("id")) for p in (b.get("plays") or []) if p.get("id")]
+        neu_state[name] = ids
+        vorher = alt_state.get(name)
+        if vorher is None:
+            continue                                  # Erstlauf dieser Schublade: nur lernen
+        bekannt = set(vorher)
+        frisch = [p for p in (b.get("plays") or []) if str(p.get("id")) not in bekannt]
+        if frisch:
+            meldung[name] = frisch
+    return meldung, neu_state
+
+
+def _play_zeile(p) -> str:
+    q = p.get("quote")
+    teile = ["▸ <b>%s</b> — %s%s" % (_esc(p.get("spiel")), _esc(p.get("auswahl")),
+                                     (" @%.2f" % float(q)) if isinstance(q, (int, float)) else "")]
+    ko = p.get("anpfiff")
+    if ko:
+        try:
+            t = datetime.fromisoformat(str(ko).replace("Z", "+00:00"))
+            if t.tzinfo is None:
+                t = t.replace(tzinfo=timezone.utc)
+            _l = t.astimezone(LOKAL)
+            # `%a` liefert unter der C-Locale des CI-Runners „Fri"/„Sat" — in einer sonst
+            # deutschen Nachricht liest sich das wie ein Fremdkoerper, und eine Locale zu setzen
+            # waere eine Abhaengigkeit vom Runner-Image. Drei Buchstaben aus einer Liste sind
+            # billiger und laufen ueberall gleich.
+            teile.append("   🕐 %s %s" % (WOCHENTAG[_l.weekday()], _l.strftime("%d.%m. %H:%M")))
+        except (ValueError, TypeError):
+            pass
+    for g in (p.get("warum") or [])[:1]:
+        teile.append("   %s" % _esc(g))
+    return "\n".join(teile)
+
+
+def play_nachricht(meldung, freigabe) -> str:
+    """Die Spiele-Nachricht. Je Schublade ihr Kopf mit der Untergrenze — ohne die liest sich
+    die Liste wie eine Tipp-Empfehlung statt wie „aus diesem belegten Schnitt"."""
+    kopf = {str(b.get("schublade") or ""): b for b in ((freigabe or {}).get("spiele") or [])}
+    bloecke = []
+    for name, plays in meldung.items():
+        b = kopf.get(name) or {}
+        z = ["🎯 <b>%s</b>" % _esc(name)]
+        _ug = b.get("roiLb")
+        if _ug is not None:
+            z.append("<i>freigegeben · Rendite-Untergrenze %s</i>" % _pct(_ug))
+        if b.get("clvUrteil") == "negativ belegt":
+            z.append("⚠️ <i>CLV spricht gegen diese Schublade — freigegeben auf die Rendite.</i>")
+        z.append("")
+        z.append("\n".join(_play_zeile(p) for p in plays[:PLAY_MAX]))
+        if len(plays) > PLAY_MAX:
+            z.append("… und %d weitere." % (len(plays) - PLAY_MAX))
+        bloecke.append("\n".join(z))
+    teile = ["🆕 <b>NEUE SPIELE AUS FREIGEGEBENEN SCHUBLADEN</b>", TRENNER,
+             "<i>Diese offenen Plays fallen unter einen Schnitt, dessen Rendite-Untergrenze über "
+             "null liegt. Es sind Kandidaten aus einer belegten Schublade — keine Einzelprüfung.</i>",
+             ""] + bloecke
+    teile += ["", "🕐 %s" % _now().astimezone(LOKAL).strftime("%d.%m.%Y %H:%M %Z")]
+    return "\n".join(teile)
 
 
 def _zeile(r, grund: bool = True) -> str:
@@ -183,9 +279,20 @@ def main() -> int:
         print("[freigabe_push] freigabe.json fehlt oder ist leer — Zustand bleibt unangetastet")
         return 0
     state = _load(STATE_FILE, None)
+    # Alte Zustandsdateien sind eine flache Abbildung {Schublade: bool}; seit dem 08.09. liegt
+    # daneben `plays`. Beides in EINER Datei, damit ein Sendefehler nicht die eine Haelfte
+    # fortschreibt und die andere nicht.
+    if isinstance(state, dict) and "schubladen" in state:
+        st_schubladen, st_plays = state.get("schubladen"), state
+    elif isinstance(state, dict):
+        st_schubladen, st_plays = {k: v for k, v in state.items() if isinstance(v, bool)}, {}
+    else:
+        st_schubladen, st_plays = None, {}
     erstlauf = state is None
-    rauf, runter, neuer = wechsel(fg, state)
+    rauf, runter, neuer = wechsel(fg, st_schubladen)
+    meldung, neue_plays = play_wechsel(fg, st_plays)
 
+    gesendet = True
     if rauf or runter:
         ok = True if trocken else TG.send_trades_message(nachricht(rauf, runter, fg))
         if not ok:
@@ -195,8 +302,23 @@ def main() -> int:
         print("[freigabe_push] %d freigegeben, %d zurückgenommen%s"
               % (len(rauf), len(runter), " (DRY_RUN)" if trocken else ""))
     else:
-        print("[freigabe_push] kein Wechsel" + (" (Erstlauf: Zustand gelernt)" if erstlauf else ""))
-    _save(STATE_FILE, neuer)
+        print("[freigabe_push] kein Schubladen-Wechsel"
+              + (" (Erstlauf: Zustand gelernt)" if erstlauf else ""))
+
+    if meldung:
+        gesendet = True if trocken else TG.send_trades_message(play_nachricht(meldung, fg))
+        if not gesendet:
+            # Der Schubladen-Zustand ist an dieser Stelle schon gemeldet und darf fortgeschrieben
+            # werden; der PLAY-Zustand nicht, sonst gelten die neuen Plays als gemeldet, ohne dass
+            # sie je jemand gesehen hat. Deshalb wird nur dieser Teil zurueckgehalten.
+            print("[freigabe_push] Spiele-Nachricht fehlgeschlagen — Play-Zustand NICHT "
+                  "fortgeschrieben, nächster Lauf meldet dieselben Spiele erneut")
+        else:
+            print("[freigabe_push] %d Schubladen mit neuen Spielen (%d Plays)%s"
+                  % (len(meldung), sum(len(v) for v in meldung.values()),
+                     " (DRY_RUN)" if trocken else ""))
+    _save(STATE_FILE, {"schubladen": neuer,
+                       "plays": neue_plays if gesendet else ((st_plays or {}).get("plays") or {})})
     return 0
 
 

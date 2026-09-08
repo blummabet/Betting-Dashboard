@@ -2552,6 +2552,66 @@
     window._mdWalletsTest = function (f) { return _mdWallets(f); };
     window._mdStroemeTest2 = function (f, minN) { return _mdStroeme(f, minN); };
   }
+  // ══ Welche Spiele fallen JETZT unter eine freigegebene Schublade (08.09.2026) ═══════════
+  // Lucas: „also es wird nur das geschickt, aber nicht welche Spiele — na dann brauch ich das
+  // eher nicht. Interessant wäre ja, welche Spiele für die freigegebenen Schubladen in Frage
+  // kämen. Das müsste man im Board sehen und halt ne Push dafür."
+  //
+  // Er hat recht: „Liga · ABWÄGEN ist freigegeben" ist eine Aussage über 91 abgerechnete Plays
+  // von gestern. Was man damit TUT, steht erst in den offenen Picks, die heute unter dieselbe
+  // Definition fallen. Genau dort hörte das Register bisher auf.
+  //
+  // Der Schnitt wird hier NICHT nachgebaut — `freigabe.spiele()` wendet die Definition der
+  // Schublade auf die offenen Plays an und liefert die Liste fertig.
+  var FG_SPIELE_MAX = 10;
+
+  function _fgSpielZeile(p) {
+    var ko = p.anpfiff ? new Date(p.anpfiff) : null;
+    var zeit = (ko && isFinite(ko.getTime()))
+      ? ko.toLocaleString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit',
+                                     hour: '2-digit', minute: '2-digit' })
+      : '—';
+    return '<div class="md-kl-bz" style="align-items:center">'
+      + '<span style="color:' + A.good + ';font-weight:800;flex-shrink:0">▸</span>'
+      + '<span class="md-kl-bn">' + esc(String(p.spiel || '—')) + '</span>'
+      + '<span class="md-kl-bo"><b>' + esc(String(p.auswahl || '—')) + '</b>'
+      + (p.quote != null ? ' <span class="q">@' + (+p.quote).toFixed(2) + '</span>' : '') + '</span>'
+      + '<span class="md-kl-bs" style="color:var(--mi3)">' + esc(zeit) + '</span>'
+      + (p.conv != null ? '<span class="md-kl-c">Conv ' + (+p.conv) + '</span>' : '')
+      + '</div>';
+  }
+
+  function _mdFgSpiele(f) {
+    var bl = (f && f.spiele) || [];
+    if (!bl.length) return '';
+    return bl.map(function (b) {
+      var kopf = '<div class="md-kl-foot" style="border-top:0;padding:8px 0 2px">'
+        + '🎯 <b>Spielbar aus „' + esc(String(b.schublade || '')) + '"</b>';
+      if (!b.aufloesbar) {
+        // ⚠️ „Nicht auflösbar" ist NICHT „keine Spiele". Für die Betfair-Aggregat-Schubladen
+        // gibt es gar keine Liste offener Zeilen — eine leere Liste wäre hier dieselbe Lüge
+        // wie ein fehlender CLV, den man als „nein" liest.
+        return kopf + ' — <span style="color:var(--mi3)">' + esc(String(b.grund || ''))
+          + '</span></div>';
+      }
+      if (!b.n) {
+        // Und hier der zweite Unterschied, der als leere Liste verschwinden würde: keine
+        // Kandidaten heißt warten, „alle laufen schon" heißt zu spät.
+        var leer = b.laufend
+          ? ('gerade nichts Offenes — ' + b.laufend + ' Kandidat'
+             + (b.laufend === 1 ? ' ist' : 'en sind') + ' bereits angepfiffen')
+          : 'gerade kein offenes Spiel in diesem Schnitt';
+        return kopf + ' — <span style="color:var(--mi3)">' + leer + '</span></div>';
+      }
+      var oben = (b.plays || []).slice(0, FG_SPIELE_MAX), rest = b.n - oben.length;
+      return kopf + ' — <b>' + b.n + '</b> offene'
+        + (b.laufend ? ' <span style="color:var(--mi3)">(' + b.laufend + ' schon angepfiffen)</span>' : '')
+        + '</div>'
+        + '<div class="md-kl-bliste">' + oben.map(_fgSpielZeile).join('') + '</div>'
+        + (rest ? '<div class="md-kl-foot">' + rest + ' weitere in diesem Schnitt.</div>' : '');
+    }).join('');
+  }
+
   function _mdFreigabe() {
     var f = _md.data && _md.data.freigabe;
     // 08.09.2026 (Lucas: „ich kapier es einfach nicht — was wird da besonders freigegeben?").
@@ -2669,7 +2729,7 @@
       + '<div class="md-kl-foot" style="border-top:0;padding-top:6px">' + esc(regel) + '</div></details>' : '';
 
     return _mdEbene(1, frage, 'Register', A.good, mechT, unter, bad,
-      stroeme + body + _mdLigen(f) + _mdWallets(f)
+      stroeme + body + _mdFgSpiele(f) + _mdLigen(f) + _mdWallets(f)
       + '<div class="md-kl-foot">' + eng + '</div>' + det);
   }
 
