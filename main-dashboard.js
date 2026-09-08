@@ -95,7 +95,10 @@
              // 03.09.2026: neu dazu, und der Guard hat es sofort eingefordert — eine Quelle,
              // die geladen wird, aber nicht in die Frische-Rechnung eingeht, kann beliebig
              // alt sein, ohne dass die Übersicht es sagt.
-             ['Stake', d.stake], ['Stake-Auswertung', d.stakeAus]];
+             ['Stake', d.stake], ['Stake-Auswertung', d.stakeAus],
+             // 08.09.2026: Ebene 0. Derselbe Guard hat sie sofort eingefordert — sie steht
+             // ganz oben und waere die letzte Quelle, deren Alter jemandem auffiele.
+             ['Spielzentrale', d.zentrale]];
     var out = [];
     q.forEach(function (x) { var a = _ageMin(x[1]); if (a != null) out.push({ n: x[0], min: a }); });
     // Poly-LIVE fuehrt seine eigene Rechnung (dieselbe, die die Kachel unten anzeigt).
@@ -325,6 +328,23 @@
       '.md-eb-n.e1{color:#2ea047;border-color:rgba(46,160,71,.45);}',
       '.md-eb-n.e2{color:#4cc2ff;border-color:rgba(76,194,255,.45);}',
       '.md-eb-n.e3{color:#d95926;border-color:rgba(217,89,38,.45);}',
+      '.md-eb-n.e0{color:#c98500;border-color:rgba(201,133,0,.45);}',
+      // Ebene 0 — Spielzentrale (08.09.2026). Eine Zeile je Spiel, Quellen als feste
+      // Spalten: belegt oder leer, immer an derselben Stelle. Man zaehlt die gefuellten
+      // Felder, statt Text zu lesen — und zwei Zeilen untereinander sind vergleichbar.
+      '.sz-r{padding:7px 0;border-top:1px solid var(--mln);}',
+      '.sz-r:first-child{border-top:0;}',
+      '.sz-h{display:flex;align-items:baseline;gap:7px;flex-wrap:wrap;}',
+      '.sz-m{font-weight:700;font-size:12px;color:var(--mi);}',
+      '.sz-lg{font-size:10px;color:var(--mi3);}',
+      '.sz-u{font-size:9.5px;font-weight:800;padding:1px 6px;border-radius:5px;white-space:nowrap;}',
+      '.sz-q{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px;}',
+      '.sz-c{flex:1 1 84px;min-width:84px;border:1px solid var(--mln2);border-radius:6px;padding:4px 6px;}',
+      '.sz-c.leer{opacity:.32;}',
+      '.sz-c b{display:block;font-size:8.5px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--mi3);}',
+      '.sz-c i{display:block;font-style:normal;font-size:11.5px;font-weight:700;font-family:"JetBrains Mono",monospace;}',
+      '.sz-c s{display:block;text-decoration:none;font-size:9.5px;color:var(--mi3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+      '.sz-w{font-size:10.5px;color:var(--mi2);margin-top:4px;line-height:1.4;}',
       // 29.08.2026 (Lucas): das Konjunktions-Element. Bewusst anders als „Top-Wetten jetzt":
       // dunkler, ruhiger, weniger Zeilen. Die Sektion soll aussehen, als koste jede Zeile etwas.
       '.md-kl{background:radial-gradient(130% 150% at 0% 0%,rgba(76,194,255,.10),transparent 58%),var(--m1);border:1px solid rgba(76,194,255,.26);border-radius:14px;padding:13px 15px 10px;margin-top:12px;}',
@@ -453,7 +473,10 @@
       jf('killer.json'), jf('freigabe.json'),
       // 03.09.2026 (Lucas): die Stake-Sammlung fuer die drei Kacheln. Beide Dateien
       // duerfen fehlen — die Kacheln sagen dann, dass nichts da ist, statt leer zu bleiben.
-      jf('stake_highroller.json'), jf('stake_auswertung.json')]);
+      jf('stake_highroller.json'), jf('stake_auswertung.json'),
+      // 08.09.2026 (Lucas: „alle sources sehen, aber auch was sich deckt"): Ebene 0.
+      // Das Urteil steht IN der Datei — hier wird es gelesen, nicht nachgerechnet.
+      jf('spielzentrale.json')]);
   }
   function _mdLoad(force) {
     if (_md.loading) return;
@@ -463,7 +486,7 @@
     var p = document.getElementById('mainDashPanel');
     if (p && !_md.data) { p.classList.add('mdash'); p.innerHTML = _head() + '<div class="md-empty" style="text-align:center;padding:52px 0;">⏳ Übersicht wird geladen …</div>'; }
     _mdFetch().then(function (a) {
-      _md.data = { liga: a[0], mls: a[1], ligaStreaks: a[2], mlsStreaks: a[3], betfair: a[4], whales: a[5], pulse: a[6], bfOverview: a[7], bfDir: a[8], moneyMap: a[9], bfTrack: a[10], killer: a[11], freigabe: a[12], stake: a[13], stakeAus: a[14] };
+      _md.data = { liga: a[0], mls: a[1], ligaStreaks: a[2], mlsStreaks: a[3], betfair: a[4], whales: a[5], pulse: a[6], bfOverview: a[7], bfDir: a[8], moneyMap: a[9], bfTrack: a[10], killer: a[11], freigabe: a[12], stake: a[13], stakeAus: a[14], zentrale: a[15] };
       _md.loading = false; _mdRender();
     });
   }
@@ -1069,11 +1092,24 @@
 
   // Kachel 1 — größtes Geld
   function _mdStakeGeldBody() {
-    var spiele = _mdStakeSpiele(_mdStakeWetten(24))
-      .sort(function (a, b) { return b.geld - a.geld; }).slice(0, 4);
+    // 08.09.2026 (Lucas-Check der Übersicht): die Kachel zeigte vier Spiele, die seit 11 bis 15
+    // Stunden angepfiffen waren — sie sortierte nach Geld über ein 24-h-Fenster, ohne zu fragen,
+    // ob man da noch etwas tun kann. Eine prominente Kachel, die zuverlässig Vergangenheit zeigt,
+    // ist schlimmer als eine leere: sie kostet jedes Mal einen Blick.
+    //
+    // Jetzt zuerst die Spiele, auf die man noch wetten kann (Anpfiff in der Zukunft), und erst
+    // wenn davon keins da ist, der Rückblick — dann aber ausdrücklich als solcher beschriftet.
+    var alle = _mdStakeSpiele(_mdStakeWetten(24)).sort(function (a, b) { return b.geld - a.geld; });
+    var jetzt = Date.now();
+    var offen = alle.filter(function (g) { var t = g.anpfiff ? Date.parse(g.anpfiff) : NaN; return isFinite(t) && t > jetzt; });
+    var rueckblick = !offen.length;
+    var spiele = (rueckblick ? alle : offen).slice(0, 4);
     if (!spiele.length) return _mdStakeLeer('In 24 h kein Spiel mit bekanntem Einsatz.');
     var max = spiele[0].geld || 1;
-    return spiele.map(function (g) {
+    var kopf = rueckblick
+      ? '<div class="md-kl-foot" style="border-top:0;padding:0 0 6px;font-size:10px">Kein Spiel mehr vor Anpfiff — das hier ist <b>Rückblick</b> auf die letzten 24 h.</div>'
+      : '';
+    return kopf + spiele.map(function (g) {
       return rowEl(esc(g.event || '—') + ' ' + _mdStakeKo(g),
         usd(g.geld), A_STAKE,
         esc(g.liga || '') + ' · ' + g.n + (g.n === 1 ? ' Wette' : ' Wetten') +
@@ -1662,7 +1698,13 @@
         '<span class="mpc-h">🎮 Poly-Kandidaten<b>n' + pl.n + '</b></span>' +
         '<div class="mpc-big" style="color:' + (pl.hitPct >= 50 ? A.good : 'var(--mi)') + '">' + (pl.hitPct == null ? '—' : Math.round(pl.hitPct) + '%') + '</div><div class="mpc-cap">Treffer · Vorschau, sendet nicht</div>' +
         meter(pl.hitPct, A.good) +
-        '<div class="mpc-subs">' + sub(pl.roiPct == null ? '—' : (pl.roiPct > 0 ? '+' : '') + (+pl.roiPct).toFixed(1) + '%', 'ROI', col0(pl.roiPct)) +
+        // 08.09.2026: die Untergrenze steht jetzt UNTER der Zahl, nicht in der Datei daneben.
+        // +6,3 % ROI aus 173 Plays mit einer UG von −2,8 % ist kein belegter Vorteil, und die
+        // Kachel darf nur das obere Ende des Bereichs zeigen, wenn sie auch das untere nennt.
+        '<div class="mpc-subs">' + sub(pl.roiPct == null ? '—' : (pl.roiPct > 0 ? '+' : '') + (+pl.roiPct).toFixed(1) + '%',
+          (pl.roiUgPct == null ? 'ROI · UG —' : 'ROI · UG ' + (pl.roiUgPct > 0 ? '+' : '') + (+pl.roiUgPct).toFixed(1) + '%'),
+          col0(pl.roiPct)) +
+        (pl.roiUgPct != null ? sub(pl.belegt ? 'belegt' : 'nicht belegt', 'Untergrenze', pl.belegt ? A.good : 'var(--mi3)') : '') +
         (pl.openN ? sub(pl.openN, 'offen', 'var(--mi2)') : '') +
         // Was wirklich in den Kanal ging — daneben, damit die beiden nie wieder verschmelzen.
         (pl.gesendetN != null ? sub(pl.gesendetN, 'echt gesendet', 'var(--mi2)') : '') + '</div></button>');
@@ -1785,8 +1827,18 @@
     };
     // Zeilen unter der Feuer-Schwelle sagen ohnehin „zu wenig Daten" — sie stehen aber mit
     // demselben Gewicht zwischen Zeilen mit n=85. Sie wandern in eine Sammelzeile.
-    var duenn=rows.filter(function(r){return (r.fire||0)<(d.signals&&d.signals.minFire||0);});
-    rows=rows.filter(function(r){return (r.fire||0)>=(d.signals&&d.signals.minFire||0);});
+    //
+    // 08.09.2026 (Uebersicht-Check): hier stand `d.signals && d.signals.minFire || 0`. Das Feld
+    // heisst `minFire` und liegt in `signalBoard` — also in genau dem Objekt, aus dem zwei Zeilen
+    // weiter oben `b.rows` kommt. `d.signals` gibt es im Puls-Artefakt nicht (null), die Kette
+    // ergab `0`, und mit Schwelle 0 ist KEINE Zeile duenn: alle 25 standen ausgeklappt und
+    // gleichwertig da, darunter fuenf mit n<=2 („reverse_line_move n2 · 100 %·2 dafuer").
+    // Der Produzent hatte die Schwelle die ganze Zeit mitgeliefert (minFire 6) — sie wurde an
+    // der falschen Stelle gesucht, und das Ergebnis war ein harmlos aussehender Default.
+    // Fehlt sie wirklich, wird das jetzt gesagt statt stillschweigend auf 0 zu fallen.
+    var _minFire = (b.minFire != null) ? b.minFire : null;
+    var duenn = (_minFire == null) ? [] : rows.filter(function(r){return (r.fire||0) < _minFire;});
+    if (_minFire != null) rows = rows.filter(function(r){return (r.fire||0) >= _minFire;});
     var lines=rows.map(function(r){
       var L=_sigLabel(r.name), tg=tier(r), st=strength(r), u=urteil(r);
       // Kein Punktschaetzer ohne sein Urteil: steht die Zahl nicht belegt da, sagt die Zeile das.
@@ -1815,9 +1867,16 @@
       lines += '<div class="sb-row" style="opacity:.55">'
         +'<span class="sb-dot" style="background:var(--mi3)"></span>'
         +'<span class="sb-nm" title="'+esc(duenn.map(function(r){return _sigLabel(r.name).lb+' (n'+r.fire+')';}).join(' · '))+'">'
-        +'… '+duenn.length+' Signal'+(duenn.length===1?'':'e')+' unter n'+(d.signals&&d.signals.minFire||0)+'</span>'
+        +'… '+duenn.length+' Signal'+(duenn.length===1?'':'e')+' unter n'+_minFire+'</span>'
         +'<span class="sb-fire">—</span><span class="sb-cell">—</span><span class="sb-cell">—</span>'
         +'<span class="sb-edge" style="color:var(--mi3)">zu wenig Daten</span></div>';
+    }
+    if(_minFire==null){
+      lines += '<div class="sb-row" style="opacity:.7">'
+        +'<span class="sb-dot" style="background:var(--mi3)"></span>'
+        +'<span class="sb-nm">⚠ keine Feuer-Schwelle im Artefakt</span>'
+        +'<span class="sb-fire">—</span><span class="sb-cell">—</span><span class="sb-cell">—</span>'
+        +'<span class="sb-edge" style="color:var(--mi3)">duenne Zeilen stehen ungetrennt</span></div>';
     }
     return '<details class="md-pulse md-rise sb-wrap">'
       +'<summary class="sb-sum"><span class="md-pulse-h" style="margin:0">🧪 Signal-Bilanz</span>'
@@ -2165,6 +2224,106 @@
                  + '📚 gerade im Regal: ' + regal + '</span>' : '')
       + '</div>' + inhalt + '</div>';
   }
+  // ── Ebene 0: die Spielzentrale ────────────────────────────────────────────────────────
+  // 08.09.2026 (Lucas): „alle sources zu sehen aber auch Empfehlungen was deckt sich, was
+  // sinnvoll zu wetten ohne da jede source extra zu checken."
+  //
+  // Die drei Ebenen darunter beantworten „darf ich blind spielen", „bewegt sich das Geld JETZT"
+  // und „was ist das staerkste Einzelsignal". Keine davon beantwortet „auf welche Spiele schauen
+  // heute ueberhaupt mehrere Quellen". Gemessen an dem Tag: Ebene 2 haengt an einem Zufluss von
+  // >= 2.000 EUR in 15 Minuten — 0 von 192 Spielen erfuellten das, und 76 % aller Zeilen im
+  // Ledger tauchten erst < 3 h vor Anpfiff auf. Ebene 3 nahm die Money Map ausdruecklich nur bei
+  // `verdict == "uneinig"`, warf also genau die Zeile weg, die „einig" sagte.
+  //
+  // Diese Ebene braucht keine Bewegung. Sie liest `spielzentrale.json` und RECHNET NICHTS NACH:
+  // `urteil`, `dafuer`, `gegen` und `text` entstehen im Produzenten, damit die Flaeche nicht
+  // auseinanderlaeuft, sobald jemand eine der beiden anfasst.
+  var SZ_LABEL = { betfair: 'Betfair', poly: 'Polymarket', stake: 'Stake', pinn: 'Pinnacle', card: 'Card' };
+  var SZ_SEITE = { home: 'Heim', draw: 'Remis', away: 'Auswärts' };
+
+  function _szBadge(z) {
+    if (z.urteil === 'einig') return { txt: '🤝 ' + z.nGeld + ' Quellen einig', col: A.good, bg: 'rgba(46,160,71,.16)' };
+    if (z.urteil === 'uneinig') return { txt: '⚖️ uneinig', col: A.gold, bg: 'rgba(201,133,0,.16)' };
+    return { txt: 'eine Quelle', col: 'var(--mi3)', bg: 'transparent' };
+  }
+
+  // Eine Spalte je Quelle, IMMER an derselben Stelle — auch wenn sie leer ist. Eine Zeile mit
+  // drei Quellen soll sich von einer mit zweien unterscheiden, ohne dass man Text liest.
+  function _szZelle(kopf, wert, unten, col, mit) {
+    if (!mit) return '<div class="sz-c leer"><b>' + kopf + '</b><i style="color:var(--mi3)">—</i><s>&nbsp;</s></div>';
+    return '<div class="sz-c"><b>' + kopf + '</b><i style="color:' + col + '">' + wert + '</i><s>' + unten + '</s></div>';
+  }
+
+  function _szZeile(z) {
+    var bf = z.betfair, pl = z.poly, pn = z.pinn, sk = z.stake, cd = z.card;
+    var bad = _szBadge(z);
+    var min = z.kickoff ? Math.round((Date.parse(String(z.kickoff).replace('Z', '+00:00')) - Date.now()) / 60000) : null;
+    var uhr = (min == null || !isFinite(min)) ? ''
+      : '<span class="md-badge" style="background:rgba(57,135,229,.14);color:' + A.blue + '">⏱ '
+        + (min >= 60 ? Math.floor(min / 60) + ' h' : min + ' min') + '</span>';
+    var q = '<div class="sz-q">'
+      + _szZelle('Betfair', bf ? bf.anteilPct + '%' : '', bf ? (eur(bf.eur) + ' · ' + esc(short(bf.name || ''))) : '', A.bf, !!bf)
+      // Ein reiner Scan-PREIS steht sichtbar da, traegt aber „Preis" statt einer Geldzahl —
+      // sonst liest man ihn als bezahltes Geld (Money-Map-Regel `polyGeld`).
+      + _szZelle('Polymarket', pl ? pl.anteilPct + '%' : '',
+                 pl ? ((pl.art === 'geld' ? usd(pl.usd) : 'nur Preis') + ' · ' + esc(short(pl.name || ''))) : '', A.poly, !!pl)
+      + _szZelle('Stake', sk ? usd(sk.usd) : '',
+                 sk ? (sk.n + (sk.n === 1 ? ' Wette' : ' Wetten') + (sk.seite ? ' · ' + SZ_SEITE[sk.seite] : ' · ohne 1X2')) : '', A_STAKE, !!sk)
+      // Pinnacle ist der ANKER, keine Stimme: das Geld liegt fast immer auf dem Favoriten, diese
+      // Uebereinstimmung waere der Normalfall. Die Spalte sagt deshalb „passt"/„dagegen", nie „einig".
+      + _szZelle('Pinnacle', pn ? (z.anker === 'dagegen' ? '✗' : '✓') : '',
+                 pn ? (z.anker === 'dagegen' ? 'anderer Favorit' : 'Favorit ' + (SZ_SEITE[pn.fav] || '—')) : '',
+                 z.anker === 'dagegen' ? A.red : A.pinn, !!pn)
+      + _szZelle('eigene Card', cd ? (cd.conv || 0) + '/10' : '',
+                 cd ? esc(short(cd.markt || '')) : '', A.good, !!cd)
+      + '</div>';
+    return '<div class="sz-r"><div class="sz-h">'
+      + '<span class="sz-m">' + esc(z.home || '?') + ' <span style="color:var(--mi3);font-weight:400">v</span> ' + esc(z.away || '?') + '</span>'
+      + uhr + '<span class="sz-lg">' + esc(String(z.league || '')) + '</span>'
+      + '<span class="sz-u" style="margin-left:auto;background:' + bad.bg + ';color:' + bad.col + '">' + bad.txt + '</span>'
+      + '</div>' + q
+      + '<div class="sz-w">' + esc(String(z.text || ''))
+      + (z.duenn ? ' <span style="color:var(--mi3)">· dünner Markt — die Prozente stehen über sehr wenig Geld</span>' : '')
+      + '</div></div>';
+  }
+
+  function _mdZentrale() {
+    var d = _md.data && _md.data.zentrale;
+    var frage = 'Wo schauen mehrere Quellen auf dasselbe Spiel?';
+    var mechT = 'Vergleich: je Spiel eine Zeile, Quellen als Spalten. Einig heisst zwei unabhaengige '
+      + 'GELDquellen auf derselben Seite — Pinnacle zaehlt nicht mit, weil das Geld fast immer auf '
+      + 'dem Favoriten liegt und diese Uebereinstimmung der Normalfall waere.';
+    var unter = 'braucht keine Bewegung — steht schon Stunden vor Anpfiff · eine fehlende Quelle ist <b>kein</b> Widerspruch';
+    if (!d || !d.zeilen) {
+      return _mdEbene(0, frage, 'Vergleich', A.gold, mechT, unter,
+        { txt: '❔ unbekannt', col: A.gold, bg: 'rgba(201,133,0,.14)' },
+        '<div class="md-kl-foot" style="border-top:0;padding-top:8px">spielzentrale.json fehlt oder ist nicht lesbar — '
+        + 'ob sich heute Quellen decken, lässt sich gerade <b>nicht</b> sagen. Das ist nicht dasselbe wie „nichts deckt sich".</div>');
+    }
+    var zeilen = d.zeilen || [], rest = d.rest || {};
+    var nEinig = zeilen.filter(function (z) { return z.urteil === 'einig' && !z.duenn; }).length;
+    var bad = zeilen.length
+      ? { txt: (nEinig ? '🤝 ' + nEinig + ' mit echtem Geld einig' : zeilen.length + ' zu vergleichen'),
+          col: nEinig ? A.good : A.gold, bg: nEinig ? 'rgba(46,160,71,.16)' : 'rgba(201,133,0,.14)' }
+      : { txt: '👀 nichts zu vergleichen', col: A.gold, bg: 'rgba(201,133,0,.14)' };
+    // Die Restzeile ist Pflicht, nicht Deko: eine kurze Liste ohne sie liest sich wie ein
+    // Ausfall. Sie ist eine Messung — die meisten Spiele haben schlicht nur eine Quelle.
+    var fuss = '<div class="md-kl-foot">'
+      + (rest.einzeln ? '<b>' + rest.einzeln + '</b> weitere Spiele im Fenster haben <b>nur eine</b> Geldquelle — da gibt es nichts zu vergleichen. ' : '')
+      + (rest.spaeter ? rest.spaeter + ' spielen später als ' + Math.round(d.fensterH || 24) + ' h. ' : '')
+      + (rest.gelaufen ? rest.gelaufen + ' sind schon angepfiffen. ' : '')
+      + '</div>';
+    var koerper = zeilen.length
+      ? zeilen.map(_szZeile).join('') + fuss
+      : '<div class="md-kl-foot" style="border-top:0;padding-top:8px">Im nächsten Tag deckt sich keine zweite Geldquelle mit einer ersten. '
+        + 'Das ist ein Ergebnis, kein Fehler.</div>' + fuss;
+    var det = (d.einzeln && d.einzeln.length)
+      ? '<details class="md-kl-det"><summary class="md-kl-sum">👁 Die größten Spiele mit nur einer Quelle ansehen</summary>'
+        + '<div class="md-kl-bliste">' + d.einzeln.map(_szZeile).join('') + '</div></details>'
+      : '';
+    return _mdEbene(0, frage, 'Vergleich', A.gold, mechT, unter, bad, koerper + det);
+  }
+
   // ── Ebene 1: das Freigabe-Register ────────────────────────────────────────────────────
   // Beurteilt SCHUBLADEN ueber Wochen, nicht einzelne Spiele heute. Das ist der Grund, warum
   // sie ganz oben steht und warum sie kein einziges Spiel zeigt: sie sagt, wie ernst man die
@@ -2829,9 +2988,11 @@
     return '<section class="md-sp md-rise">'
       + '<div class="md-sp-h"><span style="font-size:16px">🎯</span>'
       + '<span class="md-sp-t">Was kann ich spielen?</span>'
-      + '<span class="md-sp-s">Drei Ebenen von streng nach breit — <b>je weiter unten, desto mehr steht da '
-      + 'und desto weniger ist belegt</b>. Ebene 1 sagt, wie ernst man die beiden darunter nehmen darf.</span></div>'
-      + _mdFreigabe() + _mdKiller(polyPlays) + _mdJetzt(polyPlays)
+      + '<span class="md-sp-s">Ebene <b>0</b> zeigt, wo mehrere Quellen auf dasselbe Spiel schauen — sie braucht '
+      + 'keine Bewegung und steht deshalb schon Stunden vor Anpfiff da. Darunter drei Ebenen von streng nach breit: '
+      + '<b>je weiter unten, desto mehr steht da und desto weniger ist belegt</b>. Ebene 1 sagt, wie ernst man die '
+      + 'beiden darunter nehmen darf.</span></div>'
+      + _mdZentrale() + _mdFreigabe() + _mdKiller(polyPlays) + _mdJetzt(polyPlays)
       + '</section>';
   }
   // 13.08.2026 (Lucas): Poly-Public-Plays sind erst async da → Box nach dem Laden mit ihnen neu ranken
@@ -2852,4 +3013,7 @@
   
   window._renderMainDash = _mdRender;
   window._mdState = _md;   // Test-Hook
+  window._mdStakeGeldTest = _mdStakeGeldBody;   // Test-Hook (kein Wrapper: der ueberschriebe die Bindung)
+  window._mdSignalBoardTest = _mdSignalBoard;   // Test-Hook
+  window._mdZentraleTest = _mdZentrale;   // Test-Hook
 })();

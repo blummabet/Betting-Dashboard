@@ -138,8 +138,12 @@ test('die Signal-Bilanz zeigt zu jeder Quote ihre Fallzahl', () => {
 });
 
 test('Signale unter der Feuer-Schwelle stehen nicht mit vollem Gewicht in der Liste', () => {
-  const block = schneide('var duenn=rows.filter', 'return \'<details class="md-pulse md-rise sb-wrap">\'');
-  assert.match(block, /minFire/, 'die Schwelle kommt nicht aus den Daten');
+  // 08.09.2026: Startmarke nachgezogen (`var duenn=` heisst jetzt `var _minFire =`, weil die
+  // Schwelle einmal gelesen und benannt wird). Geprueft wird unveraendert dieselbe Eigenschaft
+  // — plus die Stelle, an der sie herkommt: `signalBoard`, nicht das nicht existierende
+  // `pulse.signals`, das hier bis heute frueh 0 ergab.
+  const block = schneide('var _minFire =', 'return \'<details class="md-pulse md-rise sb-wrap">\'');
+  assert.match(block, /b\.minFire/, 'die Schwelle kommt nicht aus signalBoard');
   assert.match(block, /zu wenig Daten/, 'die Sammelzeile sagt nicht, warum sie da ist');
 });
 

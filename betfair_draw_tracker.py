@@ -245,6 +245,27 @@ def _agg(rows, odd_key="drawOdd"):
             "nPriced": priced, "oddBasis": odd_key}
 
 
+def _spanne(rows):
+    """In-Play-Eimer: beide Preis-Raender statt eines erfundenen Einstiegs. REIN.
+
+    `roiFrueh`  = Einstieg zur Quote beim ersten Gleichstand (bevor das Geld kam) — die
+                  guenstigste Lesart, die es geben kann.
+    `roiSpaet`  = Einstieg zur letzten gesehenen In-Play-Quote (Schlusspfiff) — kein Preis,
+                  den man nehmen konnte; steht nur da, damit die alte Zahl nachvollziehbar bleibt.
+    `backRoi`   = None. Es gibt keinen. Wer eine Zahl braucht, braucht erst den Preis.
+    """
+    frueh = _agg(rows, "firstLevelOdd")
+    spaet = _agg(rows, "lastDrawOddInplay")
+    return {"n": frueh["n"], "drawCame": frueh["drawCame"], "drawRate": frueh["drawRate"],
+            "nPriced": frueh["nPriced"],
+            "roiFrueh": frueh["backRoi"], "roiFruehBasis": "firstLevelOdd",
+            "roiSpaet": spaet["backRoi"], "roiSpaetBasis": "lastDrawOddInplay",
+            "backRoi": None, "oddBasis": None,
+            "hinweis": "Der Einstiegspreis im Moment des Geldzuflusses wird nicht mitgeschrieben. "
+                       "Zwischen den beiden Raendern wechselt der ROI das Vorzeichen — belegt ist "
+                       "hier nichts."}
+
+
 def aggregate(results, now=None):
     """Ledger -> Antwort auf Lucas' Frage: kommt X bei viel Draw-Geld oefter oder seltener? REIN."""
     now = now or _now()
@@ -276,12 +297,31 @@ def aggregate(results, now=None):
             "notable": _agg(notable),                # "hohe Einsaetze aufs X"
             "drawLeader": _agg([r for r in notable if r.get("drawLeader")]),
             "byShareBand": by_share,
-            # 13.08.2026 (Lucas-Audit): realistische In-Play-Einstiegsquote (lastDrawOddInplay), denn wer
-            # dem In-Play-Level-Geld FOLGT, kauft zur dann-aktuellen (kollabierten) Quote, nicht zur Pre-Match-
-            # oder Erst-Gleichstand-Quote. Die backbare Pre-Match-Kante steckt in notable/byShareBand (drawOdd).
-            "inplayLevelMoneyHigh": _agg(hi_level, "lastDrawOddInplay"),  # viel In-Play-Draw-Geld bei Gleichstand
-            "inplayLevelMoneyLow": _agg(lo_level, "lastDrawOddInplay"),
-            "inplayOddTightened": _agg(tightened, "lastDrawOddInplay")}   # Draw-Quote in-play gefallen (Aufbau, dann raus?)
+            # 13.08.2026 (Lucas-Audit): realistische In-Play-Einstiegsquote, denn wer dem In-Play-
+            # Level-Geld FOLGT, kauft zur dann-aktuellen Quote. Die backbare Pre-Match-Kante steckt
+            # in notable/byShareBand (drawOdd).
+            #
+            # 🔴 08.09.2026 (Lucas: „wie oft ist das Remis dann auch wirklich gekommen?"). Der Satz
+            # oben stimmt, die Umsetzung nicht: `lastDrawOddInplay` ist die LETZTE gesehene
+            # In-Play-Quote, also die vom Schlusspfiff. Im Eimer `inplayOddTightened` sind das
+            # Median @7,80, **Mittel @96,80, P90 @250, Max @1.000** — bei einem 4:2 steht das X
+            # eben bei 1.000. Zu diesem Preis konnte nie jemand einsteigen.
+            #
+            # Wie sehr das die Aussage traegt: derselbe Eimer, n=869 —
+            #     mit `lastDrawOddInplay` (Schlusspfiff)          ROI **−36,9 %**
+            #     mit `firstLevelOdd`     (Gleichstand, vor dem Geld)  ROI **+24,2 %**
+            # Dieselben Spiele, dasselbe Ergebnis, entgegengesetztes Vorzeichen. Genau aus dieser
+            # Zahl („−31…−79 % ROI") ist die Draw-Sperre in betfair_alerts.py begruendet worden.
+            #
+            # ⭐ Der wahre Einstiegspreis — die X-Quote in dem Moment, in dem das Geld reinlaeuft —
+            # wird NICHT mitgeschrieben. Er liegt zwischen `firstLevelOdd` und `minDrawOddInplay`
+            # (Median 3,50 gegen 1,90). Solange er fehlt, ist hier KEIN ROI belegbar, und ein ROI,
+            # der von der Wahl des Preises das Vorzeichen wechselt, ist keine Zahl, sondern eine
+            # Einstellung. Beide Raender werden deshalb ausgewiesen und der ROI ausdruecklich als
+            # nicht belegt markiert — statt einen der beiden als Wahrheit zu drucken.
+            "inplayLevelMoneyHigh": _spanne(hi_level),
+            "inplayLevelMoneyLow": _spanne(lo_level),
+            "inplayOddTightened": _spanne(tightened)}
 
 
 # -- I/O (main) ------------------------------------------------------------------

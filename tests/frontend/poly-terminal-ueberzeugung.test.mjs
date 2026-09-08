@@ -164,14 +164,29 @@ test('der Umschalter ordnet um, er wählt nicht aus', () => {
   assert.ok(typeof w._pwTermSetSort === 'function', 'der Umschalter ist nicht verdrahtet');
 });
 
-test('Bewegung rechnet wie der Bewegung-Reiter, nicht nach eigener Formel', () => {
-  // Bis heute stand hier H[0] gegen H[letzter] — genau der Fehler, den der Reiter am 02.09.
-  // abgelegt hat (sortiert wurde faktisch danach, wie lange ein Markt in der History steht).
+test('die Bewegungs-Linse ist raus — der Reiter kann es besser', () => {
+  // Gemessen mit demselben Stand: Reiter 14 Märkte, Linse 3 — und die drei kamen aus der
+  // alten Rechnung (H[0] gegen H[letzter]), die der Reiter am 02.09. abgelegt hat. Auf die
+  // Fensterlogik des Reiters umgestellt fand die Linse null. Eine Ansicht, die weniger findet
+  // und nichts hinzufügt, ist ein zweiter Wahrheitsstand ohne Gegenwert.
+  const JS = readFileSync(PW, 'utf8');
+  assert.ok(!/\['kanten','geld','bewegung','live'\]/.test(JS), 'die Linse steht wieder in der Leiste');
+  assert.match(JS, /\['kanten','geld','live'\]/, 'die verbliebenen drei Linsen fehlen');
+});
+
+test('die Steam-Rechnung bleibt korrekt, falls sie als Spalte zurückkommt', () => {
   const JS = readFileSync(PW, 'utf8');
   const fn = JS.slice(JS.indexOf('function _pwMarketSteam'), JS.indexOf('function _pwMarketRow'));
-  assert.match(fn, /PW_MOVE_FENSTER_H/, 'die Linse benutzt nicht das Fenster des Reiters');
-  assert.match(fn, /tempo:/, 'ohne Tempo sortiert die Linse wieder nach Gesamt-Move');
+  assert.match(fn, /PW_MOVE_FENSTER_H/, 'ohne das Fenster des Reiters wäre der alte Fehler zurück');
+  assert.match(fn, /tempo:/);
   assert.ok(!/H\[0\]/.test(fn), 'der Rückfall auf den ältesten Snapshot ist zurück');
+});
+
+test('ein alter Linsen-Zustand landet nicht auf einer leeren Fläche', () => {
+  const w = win();
+  w._pwTestSetCache({ broadLive: {}, broadLiveNow: {}, walletNorm: {} });
+  w._pwTermSetLens('bewegung');   // z.B. aus einer alten Sitzung
+  assert.doesNotThrow(() => w._pwTermRows('geld'));
 });
 
 test('laufende Märkte verschwinden nicht mehr — sie werden markiert', () => {

@@ -125,3 +125,49 @@ if __name__ == "__main__":
     for f in fns:
         f(); print("ok", f.__name__)
     print("\n%d tests passed" % len(fns))
+
+
+class TestInPlayEimerHatKeinenEinstiegspreis:
+    """🔴 08.09.2026 (Lucas: „wie oft ist das Remis dann auch wirklich gekommen?").
+
+    Die In-Play-Eimer rechneten ihren ROI gegen `lastDrawOddInplay` — die LETZTE gesehene
+    In-Play-Quote, also die vom Schlusspfiff. Im Eimer `inplayOddTightened` sind das Median
+    @7,80, Mittel @96,80, P90 @250, Max @1.000: bei einem 4:2 steht das X eben bei 1.000, und
+    zu dem Preis konnte nie jemand einsteigen.
+
+    Dieselben 869 Spiele, dasselbe Ergebnis, entgegengesetztes Vorzeichen:
+        mit `lastDrawOddInplay` (Schlusspfiff)              ROI −36,9 %
+        mit `firstLevelOdd`     (Gleichstand, vor dem Geld) ROI +24,2 %
+
+    Aus der ersten Zahl („−31…−79 % ROI") war die Draw-Sperre in betfair_alerts.py begründet.
+    Der echte Einstiegspreis wird nicht mitgeschrieben — also wird auch kein ROI behauptet.
+    """
+
+    def _r(self, came, first, last, inflow=5000.0, share=0.4):
+        return {"drawCame": came, "everLevel": True, "firstLevelOdd": first,
+                "minDrawOddInplay": min(first * 0.5, last), "lastDrawOddInplay": last,
+                "levelDrawInflowEur": inflow, "drawShare": share, "drawOdd": first,
+                "preInflowEur": inflow, "ft": [1, 1] if came else [2, 1]}
+
+    def _agg(self):
+        # Ein Remis (X blieb bei 3.5 → 1.9), zwei Nicht-Remis (X am Ende 1000).
+        rows = [self._r(True, 3.5, 1.9), self._r(False, 3.6, 1000.0), self._r(False, 3.4, 900.0)]
+        return D.aggregate(rows)["inplayOddTightened"]
+
+    def test_kein_backRoi_mehr(self):
+        a = self._agg()
+        assert a["backRoi"] is None, "ein ROI, dessen Vorzeichen an der Preiswahl haengt, ist keine Zahl"
+        assert a["oddBasis"] is None
+
+    def test_beide_raender_stehen_da(self):
+        a = self._agg()
+        assert a["roiFrueh"] is not None and a["roiFruehBasis"] == "firstLevelOdd"
+        assert a["roiSpaet"] is not None and a["roiSpaetBasis"] == "lastDrawOddInplay"
+        assert a["roiFrueh"] > a["roiSpaet"], "die Schlusspfiff-Quote muss der schlechtere Rand sein"
+
+    def test_der_hinweis_sagt_was_fehlt(self):
+        assert "nicht mitgeschrieben" in self._agg()["hinweis"]
+
+    def test_die_trefferzahl_bleibt_unberuehrt(self):
+        a = self._agg()
+        assert a["n"] == 3 and a["drawCame"] == 1

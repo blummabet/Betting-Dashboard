@@ -109,7 +109,61 @@ function _pwDatasetTabs(){
   const cur=_pwDataset();
   return '<div class="pw-ds">'+PW_DATASETS.map(d=>
     '<button class="pw-ds-btn'+(d.id===cur?' pw-ds-on':'')+'" onclick="_pwSwitchDataset(\''+d.id+'\')">'
-    +'<span>'+d.icon+'</span>'+d.label+'</button>').join('')+'</div>';
+    +'<span>'+d.icon+'</span>'+d.label+'</button>').join('')+'</div>'+_pwQuellenBanner();
+}
+
+// 🔴 08.09.2026 (Lucas: „schau dir die ganzen Whales an … ob das alles sauber umgesetzt ist").
+// Zwei Datensätze in diesem Menü zeigten ohne ein Wort etwas anderes, als der Reiter verspricht:
+//
+//   · 🏆 WM 2026 — `wm_poly_wallets.json` trägt den Stempel 19.07.2026, also **50 Tage alt**
+//     (das Finale war am 19.07.). Der Tab rendert diese Zahlen wie frische.
+//   · 🎮 E-Sport — `initPolyWallets` lädt `esports_poly_settlement.json`,
+//     `esports_poly_wallet_ledger.json` und `esports_poly_money_accuracy.json`. Alle drei
+//     **existieren nicht**: `fetch_poly_esports.py` schreibt nur prices/wallets/smartmoney/
+//     coherence, und `build_poly_wallet_ledger.py` läuft in fünf Workflows, alle Fußball.
+//     Das ist die Bug-Klasse „verdrahtet, aber hinten kommt nichts an" — der Tab fragt drei
+//     Dateien an, die niemand produziert, und die Sektionen bleiben still leer.
+//
+// ⭐ Ein leerer Abschnitt und ein NICHT GEBAUTER Abschnitt sehen gleich aus. Solange der
+// Unterschied nicht dasteht, sucht man den Fehler bei sich. Das Banner sagt beides an einer
+// Stelle: wie alt der Datensatz ist und welche seiner Dateien es gar nicht gibt.
+const PW_DS_ALT_WARN_H = 12, PW_DS_ALT_ERR_H = 48;
+
+function _pwDsAlterH(){
+  const c=(typeof _pwCache!=='undefined' && _pwCache) ? _pwCache : null;
+  if(!c) return null;
+  let neuste=null;
+  [c.prices, c.wallets, c.smart].forEach(d=>{
+    const ts=d && (d.generatedAt || d.asof || (d._meta && d._meta.generatedAt));
+    if(!ts) return;
+    const t=Date.parse(String(ts).replace('Z','+00:00'));
+    if(isFinite(t) && (neuste===null || t>neuste)) neuste=t;
+  });
+  return neuste===null ? null : (Date.now()-neuste)/3600e3;
+}
+
+// Welche datensatz-eigenen Dateien fehlen ganz? `null` heisst hier „nicht geladen/nicht da" —
+// _pwJson gibt bei 404 null zurueck, ohne zu werfen.
+function _pwDsFehlend(){
+  const c=(typeof _pwCache!=='undefined' && _pwCache) ? _pwCache : null;
+  if(!c) return [];
+  return [['Abrechnung', c.settlement], ['Wallet-Ledger', c.ledger], ['Geld-Genauigkeit', c.moneyAcc]]
+    .filter(x=>!x[1]).map(x=>x[0]);
+}
+
+function _pwQuellenBanner(){
+  const h=_pwDsAlterH(), fehlt=_pwDsFehlend();
+  if(h===null && !fehlt.length) return '';
+  const teile=[];
+  if(h!==null && h>=PW_DS_ALT_WARN_H){
+    teile.push('Stand dieses Datensatzes: <b>vor '+(h>=48 ? Math.round(h/24)+' Tagen' : h.toFixed(1).replace('.',',')+' h')+'</b>');
+  }
+  if(fehlt.length){
+    teile.push('für diesen Datensatz gibt es <b>'+fehlt.join(', ')+'</b> nicht — die Abschnitte bleiben leer, weil sie <b>nie gebaut</b> wurden, nicht weil nichts da ist');
+  }
+  if(!teile.length) return '';
+  const ernst=(h!==null && h>=PW_DS_ALT_ERR_H);
+  return '<div class="pw-dswarn'+(ernst?' pw-dswarn-err':'')+'">'+(ernst?'🔴':'⚠️')+' '+teile.join(' · ')+'</div>';
 }
 
 // ── View-Umschalter (19.07.2026): Edge-Board vs. „Liegt das Geld richtig?" ────
@@ -182,14 +236,17 @@ function _pwSportCategory(s, sport){
   const x=String(s||'').toLowerCase();
   // spezifische Sportarten ZUERST (sonst klauen breite Fußball-Begriffe wie „championship" sie)
   if(/esport|cs2|csgo|\blol\b|dota|valorant/.test(x)) return 'E-Sport';
-  if(/basketball|nba|nfl|americanfootball|baseball|mlb|icehockey|hockey|nhl|wnba|ncaa/.test(x)) return 'US-Sport';
+  // 08.09.2026: `cfb` (College Football) dazu — 12 offene Whale-Positionen liefen auf 'Sonstige'
+  // und fielen damit im Push-Pfad durch ein Tor, das gar nicht fuer sie gedacht ist. Diese Regex
+  // und `_CAT_RULES` in poly_whale_watch.py sind Spiegel: immer beide aendern.
+  if(/basketball|nba|nfl|americanfootball|baseball|mlb|icehockey|hockey|nhl|wnba|ncaa|\bcfb\b/.test(x)) return 'US-Sport';
   if(/tennis|wta|atp/.test(x)) return 'Tennis';
   if(/mma|ufc|boxing|box|kampf/.test(x)) return 'Kampfsport';
   if(/golf/.test(x)) return 'Golf';
   if(/f1|formula|motor|nascar/.test(x)) return 'Motorsport';
   if(/cricket/.test(x)) return 'Cricket';
   // Fußball breit: Namen + Liga-Muster (16.08.2026 Lucas: Eredivisie/Allsvenskan/EFL-Championship/… gefangen)
-  if(/soccer|football|fussball|fußball|\bepl\b|premier|\bucl\b|\buel\b|uecl|uefa|champions|conmebol|concacaf|copa|coupe|\bdfb\b|\befl\b|conference|europa|libertad|sudameri|\bmls\b|liga|ligue|serie|bundesliga|eredivisie|allsven|superett|elitese|ekstrakla|veikkau|primeira|championship|super-?lig|pro-?league|\blal\b/.test(x)) return 'Fußball';
+  if(/soccer|football|fussball|fußball|\bepl\b|premier|\bucl\b|\buel\b|uecl|uefa|champions|conmebol|concacaf|copa|coupe|\bdfb\b|\befl\b|conference|europa|libertad|sudameri|\bmls\b|liga|ligue|serie|bundesliga|eredivisie|allsven|superett|elitese|ekstrakla|veikkau|primeira|championship|super-?lig|pro(?:fessional)?-?league|\blal\b/.test(x)) return 'Fußball';
   return 'Sonstige';
 }
 const _PW_CAT_ICON={'Fußball':'⚽','US-Sport':'🏀','E-Sport':'🎮','Tennis':'🎾','Kampfsport':'🥊','Golf':'⛳','Motorsport':'🏎️','Cricket':'🏏','Sonstige':'🎯'};
@@ -3316,6 +3373,9 @@ if(typeof window!=='undefined') window._pwTermOpen=_pwTermOpen;
 // genau die Bindung, die er aufrufen will. Beim ersten Anlauf passiert und sofort im Test
 // gesehen — deshalb steht es hier.)
 if(typeof window!=='undefined'){ window._pwTestSetCache=function(c){ _pwCache=c||{}; }; }
+// Test-Hook ohne Wrapper: ein `function(){return _pwQuellenBanner();}` wuerde die globale
+// Bindung ueberschreiben und beim Aufruf endlos rekursieren (Vorfall vom 07.09.).
+if(typeof window!=='undefined'){ window._pwQuellenBanner=_pwQuellenBanner; }
 
 function _pwTermHist(key){ const c=_pwCache||{}; return (c.broadLiveHist&&c.broadLiveHist[key])||(c.broadHist&&c.broadHist[key])||[]; }
 function _pwTermFair(r){
@@ -3655,7 +3715,7 @@ function _pwTermDrawer(r){
 // 18.08.2026 (Lucas): Terminal-Linsen — nichts verlieren. Kanten=signal-gated (Heute wetten) ·
 // Geld/Bewegung/Live = volles Markt-Universum (broadLive), gleiche Spalten, andere Auswahl+Sortierung.
 let _pwTermLens='kanten';
-function _pwTermSetLens(l){ _pwTermLens=l; _pwTermRow=null; _pwRender(); }
+function _pwTermSetLens(l){ _pwTermLens=(l==='bewegung')?'geld':l; _pwTermRow=null; _pwRender(); }
 if(typeof window!=='undefined') window._pwTermSetLens=_pwTermSetLens;
 
 // 07.09.2026 (Lucas: „macht es Sinn, mit einem Toggle umzustellen?") — ja, aber nicht
@@ -3785,9 +3845,15 @@ function _pwTermMeter(conv){
 
 function _pwTerminal(){
   const lens=_pwTermLens||'kanten';
+  // 07.09.2026 (Lucas: „nimm die Linse Bewegung raus"). Nachgemessen mit demselben Stand:
+  // der Bewegung-REITER fand 14 Märkte, die Linse 3 — und die drei stammten aus der alten
+  // Rechnung (H[0] gegen H[letzter]), die der Reiter am 02.09. abgelegt hat. Auf dieselbe
+  // Fensterlogik umgestellt fand die Linse null: kein Markt hatte zwei Snapshots im Fenster.
+  // Eine Linse, die weniger findet als der Reiter daneben und nichts hinzufügt, ist ein
+  // zweiter Wahrheitsstand ohne Gegenwert. `_pwMarketSteam` bleibt (jetzt mit der Fensterlogik
+  // des Reiters), falls Steam später als SPALTE zurückkommt — nicht als eigene Ansicht.
   const _lensDef={kanten:['🎯 Kanten','handelbare Kanten — signal-gated (dieselbe „Heute wetten"-Engine), nach Conviction & CLV-Stufe.'],
                   geld:['💰 Geld','ALLE Märkte nach Zufluss — auch ohne Signal. Konviktion/Edge/CLV daneben zeigen, ob was dahintersteckt.'],
-                  bewegung:['📈 Bewegung','ALLE Märkte nach Steam (Preis-Move) — wohin das Geld zieht.'],
                   live:['⚡ Live','laufende Spiele nach Zufluss.']};
   const rowsAll=_pwTermRows(lens);
   const isK=(lens==='kanten');
@@ -3797,7 +3863,7 @@ function _pwTerminal(){
   const shown=(isK&&_pwTermHideMuted)?rows.filter(x=>!x.mute.m):rows;
 
   const lbtn=(id)=>{ const on=id===lens, d=_lensDef[id]; return '<button onclick="_pwTermSetLens(\''+id+'\')" style="padding:5px 12px;border:1px solid '+(on?'#a78bfa':'#21262d')+';background:'+(on?'rgba(167,139,250,.14)':'transparent')+';color:'+(on?'#a78bfa':'#8b949e')+';font-size:12px;font-weight:700;cursor:pointer;border-radius:0">'+d[0]+'</button>'; };
-  const lensBar='<div style="display:inline-flex;border-radius:9px;overflow:hidden;border:1px solid #21262d;margin:2px 0 10px">'+['kanten','geld','bewegung','live'].map(lbtn).join('')+'</div>';
+  const lensBar='<div style="display:inline-flex;border-radius:9px;overflow:hidden;border:1px solid #21262d;margin:2px 0 10px">'+['kanten','geld','live'].map(lbtn).join('')+'</div>';
   const sortDef={auto:['↕ Linse','die Standard-Ordnung dieser Linse (Geld/Live: Volumen · Bewegung: Tempo · Kanten: Konviktion)'],
                  norm:['× Wallet-Norm','stärkster Einsatz gemessen am eigenen Median seiner Wallet — die Anomalie zuerst'],
                  zeit:['⏱ Anpfiff','was zuerst angepfiffen wird']};
@@ -4433,6 +4499,9 @@ function _pwInjectStyle(){
   #polyWalletsPanel .pw-empty-ico{font-size:44px;margin-bottom:10px}#polyWalletsPanel .pw-empty h2{color:#e6ebf5;margin:0 0 8px}
   #polyWalletsPanel code{background:#0f1626;padding:2px 6px;border-radius:5px;font-size:12px;color:#9db2d6}
   #polyWalletsPanel .pw-ds{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px}
+  #polyWalletsPanel .pw-dswarn{margin:8px 0 2px;padding:8px 12px;border-radius:9px;font-size:11.5px;line-height:1.55;
+    background:rgba(201,133,0,.10);border:1px solid rgba(201,133,0,.32);color:#e0c07a}
+  #polyWalletsPanel .pw-dswarn-err{background:rgba(229,83,75,.10);border-color:rgba(229,83,75,.34);color:#f0a9a3}
   #polyWalletsPanel .pw-ds-btn{display:flex;align-items:center;gap:6px;background:#0f1626;border:1px solid rgba(255,255,255,.08);color:#8a95ad;font-size:13px;font-weight:700;padding:8px 14px;border-radius:10px;cursor:pointer;transition:all .15s;font-family:inherit}
   #polyWalletsPanel .pw-ds-btn:hover{border-color:rgba(94,234,212,.4);color:#cdd6ea}
   #polyWalletsPanel .pw-ds-btn.pw-ds-on{background:linear-gradient(145deg,#164e46,#0f2f2b);border-color:#5eead4;color:#5eead4}

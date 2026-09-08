@@ -71,6 +71,45 @@ def _sport(sport_key: str):
     return ("🎯", (sport_key or "Sport").split("_")[-1].upper())
 
 
+# 08.09.2026 (Lucas: „ob das alles reibungslos funktioniert"). Befund: von 84 Cross-Sport-Alerts
+# der letzten 30 Tage waren **84 MLB** — also genau die Kategorie, die `PW_BLOCKED_BET_CATS`
+# als gesperrt fuehrt und die `poly_whale_watch` mit einer 🚫-Zeile abweist.
+#
+# Die Sperre wird hier ABSICHTLICH NICHT uebernommen. Sie wurde am Whale-Papierdepot gemessen
+# (MLB n=72, ROI −28 %, Ø CLV −1,62 pp) — also an „einer grossen Wallet folgen". Cross-Sport ist
+# eine ANDERE Mechanik: Poly-Preis gegen die de-viggte Pinnacle. Ein Messwert der einen Mechanik
+# auf die andere anzuwenden waere derselbe Kurzschluss, den das Repo an anderer Stelle schon
+# einmal teuer bezahlt hat.
+#
+# Was aber dranstehen MUSS: dass diese Kategorie fuer Einsaetze gesperrt ist. Sonst kommt ein
+# Alert fuer etwas, worauf laut eigener Regel nicht gesetzt wird, und niemand sagt es.
+def _gesperrt_hinweis(sport_key, cats=None):
+    """Zeile, wenn die Sportart dieses Alerts fuer Einsaetze gesperrt ist. REIN, sonst None."""
+    s = str(sport_key or "").lower()
+    kat = None
+    if any(f in s for f in ("basketball", "americanfootball", "baseball", "icehockey")):
+        kat = "US-Sport"
+    elif any(f in s for f in ("mma", "boxing")):
+        kat = "Kampfsport"
+    if kat and kat in (cats or _BLOCKED_FALLBACK):
+        return ("⚠️ <b>%s ist fuer Einsaetze gesperrt</b> (gemessen am Whale-Depot). Dieses "
+                "Signal ist ein Preis-Edge gegen Pinnacle, nicht Whale-Folgen — fuer DIESE "
+                "Mechanik gibt es noch kein eigenes Buch." % kat)
+    return None
+
+
+_BLOCKED_FALLBACK = ("US-Sport", "Kampfsport")
+
+
+def _blocked_cats():
+    """Die gesperrten Kategorien aus poly_shortlist_track.json — dieselbe Quelle wie im
+    Whale-Watch, damit es nicht zwei Listen gibt."""
+    d = _load(BASE / "poly_shortlist_track.json", {}) or {}
+    got = d.get("blockedCats")
+    cats = [str(c) for c in got if c] if isinstance(got, list) else []
+    return cats or list(_BLOCKED_FALLBACK)
+
+
 # ── Helpers ────────────────────────────────────────────────────────────────────
 def _load(path, default):
     try:
@@ -118,6 +157,9 @@ def build_card(d: dict) -> str:
         lines.append(f"✅ <b>Lücke schließt sich</b>: −{conv:.1f}pp seit erster Sichtung "
                      f"(läuft zur Pinnacle → echt, kein Artefakt)")
     lines.append(f"💧 Volumen {_usd(d.get('vol'))}")
+    _sperr = _gesperrt_hinweis(d.get("sport"), d.get("_blockedCats"))
+    if _sperr:
+        lines.append(_sperr)
     lines.append("\n🤖 CocoBet Cross-Sport · kein Auto-Bet, ein Ausgangspunkt")
     return "\n".join(lines)
 
@@ -230,9 +272,10 @@ def main():
           f"≥{_usd(MIN_VOL)} Vol")
 
     now_iso = now.strftime("%Y-%m-%dT%H:%M:%SZ")
+    _cats = _blocked_cats()
     sent = 0
     for d in cand[:MAX_ALERTS]:
-        card = build_card(d)
+        card = build_card(dict(d, _blockedCats=_cats))
         if tg_send(card):
             sent += 1
             seen[d.get("id")] = {"gapPP": d.get("gapPP"), "convergePP": d.get("convergePP"), "ts": now_iso}

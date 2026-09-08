@@ -242,3 +242,60 @@ class TestManualResults(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestUntergrenzenUndVerfallene(unittest.TestCase):
+    """🔴 08.09.2026 — das GRÖSSTE Push-Buch im Repo (n=190) war das einzige ohne Untergrenze.
+    „58 % Treffer" und „ROI −2,6 %" standen als nackte Punktschätzer da; die 17 Zeilen, die NIE
+    ein Ergebnis bekamen, fielen still aus dem Nenner und das Board zeigte nur „offen: 2"."""
+
+    def _led(self, n_won, n_lost, odd=2.0, expired=0, void=0):
+        led = []
+        for i in range(n_won):
+            led.append({"k": "w%d" % i, "status": "won", "profit": odd - 1.0,
+                        "leadOdd": odd, "scenario": "fresh", "market": "Match Odds"})
+        for i in range(n_lost):
+            led.append({"k": "l%d" % i, "status": "lost", "profit": -1.0,
+                        "leadOdd": odd, "scenario": "fresh", "market": "Match Odds"})
+        for i in range(expired):
+            led.append({"k": "e%d" % i, "status": "expired", "scenario": "fresh"})
+        for i in range(void):
+            led.append({"k": "v%d" % i, "status": "void", "scenario": "fresh"})
+        return led
+
+    def test_untergrenzen_stehen_im_artefakt(self):
+        r = E.summarize(self._led(60, 40), now=NOW)
+        self.assertEqual(r["n"], 100)
+        self.assertIsNotNone(r["hitUg"])
+        self.assertIsNotNone(r["roiUg"])
+        self.assertLess(r["hitUg"], r["hitRate"], "die UG muss unter dem Punktschaetzer liegen")
+        self.assertLess(r["roiUg"], r["roi"])
+
+    def test_belegt_haengt_an_der_untergrenze_nicht_am_punkt(self):
+        # +20 % ROI aus 100 Plays bei Quote 2.0 -> UG ueber null -> belegt.
+        gut = E.summarize(self._led(60, 40), now=NOW)
+        self.assertGreater(gut["roi"], 0)
+        self.assertTrue(gut["belegt"])
+        # knapp positiver Punktschaetzer, aber UG unter null -> NICHT belegt.
+        knapp = E.summarize(self._led(51, 49), now=NOW)
+        self.assertGreater(knapp["roi"], 0)
+        self.assertLess(knapp["roiUg"], 0)
+        self.assertFalse(knapp["belegt"])
+
+    def test_kleine_stichprobe_bekommt_keine_erfundene_untergrenze(self):
+        # n<30: `freigabe.untergrenze` liefert None — eine „UG" aus 10 Plays waere schlimmer
+        # als gar keine (Vorfall vom 03.09.).
+        r = E.summarize(self._led(7, 3), now=NOW)
+        self.assertIsNone(r["roiUg"])
+        self.assertFalse(r["belegt"])
+
+    def test_verfallene_werden_gezaehlt_statt_zu_verschwinden(self):
+        r = E.summarize(self._led(60, 40, expired=17, void=1), now=NOW)
+        self.assertEqual(r["n"], 100, "verfallene duerfen nicht in den Nenner")
+        self.assertEqual(r["verfallen"], 17)
+        self.assertEqual(r["ungueltig"], 1)
+
+    def test_szenarien_tragen_ihre_untergrenze_mit(self):
+        r = E.summarize(self._led(60, 40), now=NOW)
+        self.assertIn("roiUg", r["byScenario"]["fresh"])
+        self.assertIn("hitUg", r["byScenario"]["fresh"])

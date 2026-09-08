@@ -722,7 +722,7 @@ def build_message(a) -> str:
             pct = lambda x: "—" if x is None else "%.0f%%" % (x * 100)
             msg += ("\n%s %s · X %s · %s %s" % (_esc(a["home"]), pct(a["hs"]), pct(a["ds"]),
                                                 _esc(a["away"]), pct(a["as_"])))
-        return msg + _fuehrt_line(a) + _dir_line(a, ou_fade=True) + _draw_inplay_note(a)
+        return msg + _fuehrt_line(a) + _dir_line(a, ou_fade=True) + _draw_inplay_note(a) + altbestand_note(a) + altbestand_note(a)
     tl = "Top-Liga" if a["tier"] == "top" else "Rest-Liga"
     msg = ("🟡 <b>Betfair · Frisches Geld</b> · %s\n" % tl + head
            + "💶 <b>%s</b>: +<b>%s</b> frisch → jetzt <b>%s</b>"
@@ -730,7 +730,7 @@ def build_message(a) -> str:
     if a.get("leadName"):
         odd = _lead_odd_txt(a)
         msg += "\nführt: %s (%.0f%%)%s" % (_esc(a["leadName"]), (a.get("leadShare") or 0.0) * 100, odd)
-    return msg + _fuehrt_line(a) + _dir_line(a, ou_fade=True) + _draw_inplay_note(a)
+    return msg + _fuehrt_line(a) + _dir_line(a, ou_fade=True) + _draw_inplay_note(a) + altbestand_note(a)
 
 
 def _bar(share, width=10):
@@ -841,7 +841,8 @@ def build_public_message(a, trades=False) -> str:
               % (_esc(_short_mk(a["market"])), _window_txt(a), _euro(inflow), _euro(total), pct)
             + "📊 <b>%s</b>  %s %.0f%%%s"
               % (_esc(lead), _bar(share), share * 100, odd)
-            + _fuehrt_line(a) + _dir_line(a, ou_fade=trades) + (_draw_inplay_note(a) if trades else ""))
+            + _fuehrt_line(a) + _dir_line(a, ou_fade=trades) + (_draw_inplay_note(a) if trades else "")
+            + altbestand_note(a))
 
 
 def _tg_public(text) -> bool:
@@ -956,6 +957,12 @@ def _log_public_push(a, cidx=None) -> None:
 
 # 13.08.2026 (Lucas-Audit): dem In-Play-Draw-Geld zur bereits kollabierten X-Quote hinterherlaufen
 # verliert nachweislich (-31..-79% ROI, betfair_draw_tracker). Pre-Match-Draw (~3.5) ist ~break-even.
+# ⚠️ 08.09.2026: die Zahl „-31..-79 %" ist WIDERLEGT — sie kam aus `betfair_draw_tracker`, das die
+# In-Play-Eimer gegen `lastDrawOddInplay` rechnete, also gegen die Quote beim SCHLUSSPFIFF
+# (Mittel @96,80, Max @1.000). Mit der Quote beim Gleichstand ergibt derselbe Eimer +24,2 %. Der
+# Tracker weist seither beide Raender aus und `backRoi: None`. Die Sperre bleibt trotzdem — sie
+# steht ab heute auf dem Signal-Track (konzentriertes Remis-Geld: n=135, ROI −29,3 %, OG −10,0 %)
+# und auf dem eigenen Public-Buch (10 Remis-Pushs, 3 Treffer, ROI −32 %).
 DRAW_INPLAY_CHASE_MAX_ODD = 2.2   # In-Play-Draw-Push nur, wenn die X-Quote NOCH nicht darunter kollabiert ist
 
 
@@ -971,6 +978,96 @@ def _draw_inplay_chase(a) -> bool:
     return isinstance(od, (int, float)) and od < DRAW_INPLAY_CHASE_MAX_ODD
 
 
+# 🔴 08.09.2026 (Lucas: „ich hab wieder eine Push bekommen bei einem portugiesischen U23-Match …
+# und jetzt noch im Trades-Channel beim Jugend-Champions-League-Spiel, Man City zwei null hinten,
+# da kam auch was auf Unentschieden"). Beide Spiele standen zu dem Zeitpunkt so im Feed:
+#
+#   Estoril U23 v Famalicao U23   Min 87, 3:2   The Draw  86 % Anteil  @ 6,60  → implizit 15 %
+#   Porto U19  v Man City U19     Min 45, 2:0   The Draw  48 % Anteil  @14,00  → implizit  7 %
+#
+# ⭐ Der ANTEIL ist kumulierter Umsatz ueber die ganze Marktlaufzeit, der PREIS ist von jetzt.
+# Bei 2:2 in der 70. Minute wird auf das Remis gehandelt; faellt danach das 3:2, bleibt das Geld
+# in der Statistik stehen und die Quote springt auf 6,6. „86 % des Geldes liegen auf dem Remis"
+# beschreibt dann nichts Gegenwaertiges mehr — es ist ein Fossil. Niemand backt gerade ein
+# 15-%-Ereignis mit 86 % des Marktes; die Zahl misst, was frueher einmal wahrscheinlich war.
+#
+# Gemessen am Feed dieses Laufs: von 6 laufenden Spielen tragen GENAU DIESE ZWEI einen
+# Geld-Fuehrer mit >=40 % Anteil und einer Quote >=5,0 — der Guard trifft die beiden Faelle,
+# ueber die Lucas gestolpert ist, und sonst nichts.
+#
+# Das ist bewusst eine LOGIK-Sperre, keine statistische: eine Quote von 14,0 neben 48 % Anteil
+# ist unabhaengig von jeder Stichprobe keine Ueberzeugung. Die statistische Seite steht separat
+# in `_draw_mo_public_raus`.
+#
+# Es gibt bereits `_pub_incoherent` (Anteil >=70 % auf Quote >=3,0) — beide Faelle rutschten
+# durch, und zwar aus zwei verschiedenen Gruenden: Man City hatte nur 48 % Anteil (unter 70),
+# und der Filter laeuft ausserdem NUR auf dem Public-Pfad, waehrend dieser Push in TRADES kam.
+# Der neue Guard ist auf der Anteils-Seite lockerer (40 %), auf der Preis-Seite strenger (5,0)
+# und gilt in BEIDEN Kanaelen. Er ersetzt `_pub_incoherent` nicht, er schliesst dessen Luecke.
+STALE_SHARE_MIN = 0.40    # so viel Anteil behauptet „hier liegt das Geld"
+STALE_ODD_MIN   = 5.0     # ... und so lang ist der Preis, der dem widerspricht (<= 20 % implizit)
+
+
+def geld_ist_altbestand(a) -> bool:
+    """Widerspricht der Geld-Anteil dem eigenen aktuellen Preis? REIN/testbar.
+
+    Nur IN-PLAY: vor Anpfiff kann der Anteil nicht veralten, weil sich der Spielstand nicht
+    geaendert hat. Ohne Anteil oder ohne Quote wird nichts behauptet — fehlende Angabe ist
+    kein Widerspruch.
+    """
+    li = a.get("live") or {}
+    if li.get("time") is None or li.get("finished"):
+        return False
+    sh, od = a.get("leadShare"), a.get("leadOdd")
+    if not isinstance(sh, (int, float)) or not isinstance(od, (int, float)) or od <= 1:
+        return False
+    return sh >= STALE_SHARE_MIN and od >= STALE_ODD_MIN
+
+
+def altbestand_note(a) -> str:
+    """Die Zeile dazu — fuer den Fall, dass die Sperre irgendwo NICHT greift."""
+    if not geld_ist_altbestand(a):
+        return ""
+    sh, od = a.get("leadShare"), a.get("leadOdd")
+    return ("\n⛔ <b>Der Anteil ist Altbestand</b>: %.0f %% des Marktgeldes stehen auf einem Ausgang, "
+            "den der Preis mit @%.2f (%.0f %%) fuehrt. Der Anteil summiert die ganze Marktlaufzeit, "
+            "die Quote ist von jetzt — nach einem Tor bleibt das alte Geld stehen." 
+            % (sh * 100, od, 100.0 / od))
+
+
+# 🔴 08.09.2026 — die zweite Haelfte derselben Frage: was sagt unser eigenes Buch ueber
+# Match-Odds-Remis-Pushs? Gemessen am Track (`betfair_track_results`, Preis = `entryOdd`):
+#
+#   Geld auf Heim          n=1482   53,3 %  Ø@2,10 (BE 47,7 %)   ROI  +3,9 %
+#   Geld auf Auswaerts     n= 868   49,0 %  Ø@2,57 (BE 39,0 %)   ROI  +1,4 %
+#   Geld auf Unentschieden n= 296   25,0 %  Ø@3,68 (BE 27,2 %)   ROI −14,1 %   [−28,8 % … +0,6 %]
+#
+# Und die Teilmengen, die eine PUSH-Bedingung beschreiben, verlieren belegt (Obergrenze < 0):
+#
+#   konzentriert (conc)          n=135   ROI −29,3 %   OG −10,0 %
+#   Quote zieht rein (dir=in)    n= 79   ROI −31,3 %   OG  −4,9 %
+#   konzentriert & Quote >= 3,4  n= 57   ROI −54,7 %   OG −28,0 %
+#
+# Das eigene Public-Buch sagt dasselbe: 10 Remis-Pushs, 3 Treffer, ROI −32 % (mit dem Estoril-4:2).
+# Halbzeit-Remis ist ausdruecklich NICHT betroffen (n=804, ROI +4,1 %) — bei Anpfiff steht 0:0,
+# das ist der Normalzustand und ein anderes Ereignis.
+#
+# ⚠️ Zur alten Begruendung: die Zahl „−31…−79 % ROI" in den Kommentaren unten stammt aus
+# `betfair_draw_record`, Eimer `inplayOddTightened`/`inplayLevelMoney*` — und die rechnen mit
+# `lastDrawOddInplay`, der LETZTEN In-Play-Quote. Bei einem 4:2 ist das ein Preis um 1.000
+# (Durchschnitt des Eimers: @181). Zu dem Preis konnte nie jemand einsteigen; die Zahl ist ein
+# Rueckblick-Artefakt. Die Richtung stimmt, die Zahl nicht — deshalb stehen oben die Werte aus
+# dem Einstiegspreis.
+def _draw_mo_public_raus(a) -> bool:
+    """Match-Odds-Remis geht nicht mehr in den PUBLIC-Kanal. REIN.
+
+    Trades behaelt es (dort entscheidet Lucas selbst und sieht die Warnzeile); Public ist der
+    Kanal, in dem ein Fehlalarm Glaubwuerdigkeit kostet, und dort gilt der strenge Schalter.
+    Halbzeit-Remis bleibt in beiden Kanaelen.
+    """
+    return str(a.get("leadName") or "") == "The Draw" and a.get("market") == "Match Odds"
+
+
 def _draw_inplay_note(a) -> str:
     """14.08.2026 (Lucas): Warnzeile fuer In-Play-Remis-Nachlauf. Fallende X-Quote + Geld aufs Live-Remis
     SIEHT aus wie Rueckenwind ('Quote bestaetigt Back'), ist aber der Zeit-Effekt: das Remis wird mit der
@@ -984,11 +1081,13 @@ def _draw_inplay_note(a) -> str:
     od = a.get("leadOdd")
     if isinstance(od, (int, float)) and od < DRAW_INPLAY_CHASE_MAX_ODD:
         return ("\n⛔ <b>Remis schon kollabiert</b> (X &lt; 2.2) — mit der Uhr wird das Remis von selbst "
-                "wahrscheinlicher, der fallende Kurs ist die Falle. Nachlaufen verliert (−31…−79% ROI).")
+                "wahrscheinlicher, der fallende Kurs ist die Falle. Im eigenen Buch verliert "
+                "konzentriertes Remis-Geld belegt: n=135, ROI −29 %, Obergrenze −10 %.")
     g1, g2 = li.get("goal_v1"), li.get("goal_v2")
     tail = ", Remis wird von allein wahrscheinlicher" if (g1 == 0 and g2 == 0) else ""
     return ("\n⚠️ <b>Aber:</b> In-Play-Remis-Nachlauf — die fallende X-Quote ist hier kein Rückenwind, "
-            "sondern der Zeit-Effekt" + tail + ". Nachlaufen verliert historisch (−31…−79% ROI).")
+            "sondern der Zeit-Effekt" + tail + ". Match-Odds-Remis ist im eigenen Buch die einzige "
+            "Seite ohne Kante: ROI −14 % gegen +4 % (Heim) und +1 % (Auswärts).")
 
 
 # 14.08.2026 (Lucas): zwei Public-Filter gegen unnoetige HT/Live-Pushs, wo die Geld-% der QUOTE
@@ -1172,7 +1271,11 @@ def main():
     alerts = _drop_subthreshold_jump(_leader_gate(attach_direction(collect_alerts(prices, hist), direction)))
     # 14.08.2026 (Lucas): kollabiertes In-Play-Remis (X<2.2) auch aus TRADES raus — eh wertlos
     # (-31..-79% ROI). Bisher nur Public gefiltert. Andere Draws (>2.2) + Nicht-Draws bleiben (mit Warn-Note).
-    alerts = [a for a in alerts if not _draw_inplay_chase(a) and not _trades_reactive_backed_under(a)]
+    # 08.09.2026: dazu der Altbestands-Guard — er gilt in BEIDEN Kanaelen, weil ein Anteil, der
+    # dem eigenen Preis widerspricht, auch auf dem eigenen Schreibtisch nichts wert ist. Genau so
+    # kam der Man-City-U19-Push (48 % auf @14,00 bei 2:0) in den Trades-Kanal.
+    alerts = [a for a in alerts if not _draw_inplay_chase(a) and not _trades_reactive_backed_under(a)
+              and not geld_ist_altbestand(a)]
     sent = 0
     for a in alerts:
         key = a["scenario"] + ":" + a["matchId"]
@@ -1210,6 +1313,10 @@ def main():
     # (Lucas 13.08.2026, Audit) NUR Public: In-Play-Draw-Nachlauf zur kollabierten X-Quote raus -
     # backen verliert dort real (-31..-79% ROI). Pre-Match-Draw und andere Seiten bleiben; Trades sieht es weiter.
     pub_alerts = [a for a in pub_alerts if not _draw_inplay_chase(a)]
+    # 08.09.2026: Match-Odds-Remis komplett raus aus Public (Buch: 10 Pushs, 3 Treffer, ROI −32 %;
+    # der Signal-Track: konzentriertes Remis-Geld ROI −29,3 % mit Obergrenze −10,0 %, also belegt
+    # verlierend). Halbzeit-Remis bleibt (n=804, ROI +4,1 %). Trades sieht beides weiter.
+    pub_alerts = [a for a in pub_alerts if not _draw_mo_public_raus(a) and not geld_ist_altbestand(a)]
     # 14.08.2026 (Lucas): unnoetige HT/Live-Pushs raus, wo die Geld-% der Quote widersprechen
     # (Galatasaray 85%@13.50; Wolves Under 87% aber Quote driftet). Trades sieht sie weiter.
     pub_alerts = [a for a in pub_alerts if not _pub_incoherent(a) and not _pub_drift(a) and not _pub_ht_useless(a) and not _pub_unconfirmed_fav(a) and not _pub_under_goals(a)]   # 16.08.2026 (Lucas): Under-Tore aus Public, live UND vor Anpfiff

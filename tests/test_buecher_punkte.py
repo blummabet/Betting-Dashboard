@@ -136,17 +136,34 @@ class TestDauer(unittest.TestCase):
 
 
 class TestBewieseneWallets(unittest.TestCase):
+    """🔴 08.09.2026 — bis heute reichte hier „genug Historie UND Ø CLV > 0". Am Stand des Tages
+    galten damit 233 Wallets als bewiesen, davon 91 bestaetigte Verlierer (groesste: n=186,
+    P&L −$7,78 Mio). Die Definition kommt jetzt aus `sharp_gate` — dieselbe, die Dashboard,
+    Shortlist, Whale-Watch und Live-Watch benutzen. Die Fixtures brauchen deshalb eine
+    Trefferbilanz: positiver CLV allein ist kein Beleg mehr.
+    """
+
     def test_wenig_historie_zaehlt_nicht(self):
-        w = K._bewiesene_wallets({"scores": {"0xA": {"n": 3, "clvSumPP": 30.0}}})
+        w = K._bewiesene_wallets({"scores": {"0xA": {"n": 3, "wins": 3, "clvSumPP": 30.0}}})
         self.assertEqual(w, set())
 
     def test_negativer_clv_zaehlt_nicht(self):
-        w = K._bewiesene_wallets({"scores": {"0xA": {"n": 20, "clvSumPP": -5.0}}})
+        w = K._bewiesene_wallets({"scores": {"0xA": {"n": 20, "wins": 15, "clvSumPP": -5.0}}})
         self.assertEqual(w, set())
 
     def test_genug_historie_und_positiver_clv_zaehlt(self):
-        w = K._bewiesene_wallets({"scores": {"0xAB": {"n": 20, "clvSumPP": 40.0}}})
+        w = K._bewiesene_wallets({"scores": {"0xAB": {"n": 20, "wins": 15, "clvSumPP": 40.0}}})
         self.assertEqual(w, {"0xab"}, "kleingeschrieben, damit der Vergleich nicht an Groß/Klein scheitert")
+
+    def test_positiver_clv_ohne_trefferbilanz_reicht_nicht_mehr(self):
+        # Genau die alte Fixture: n=20, CLV +40 — und keine einzige gewonnene Position.
+        w = K._bewiesene_wallets({"scores": {"0xAB": {"n": 20, "clvSumPP": 40.0}}})
+        self.assertEqual(w, set())
+
+    def test_bestaetigter_verlierer_zaehlt_nicht(self):
+        w = K._bewiesene_wallets({"scores": {"0xAB": {"n": 186, "wins": 97, "clvSumPP": 20.0,
+                                                      "pnl": -7775708.0}}})
+        self.assertEqual(w, set())
 
     def test_fehlende_datei_ergibt_leere_menge_nicht_absturz(self):
         self.assertEqual(K._bewiesene_wallets(None), set())

@@ -97,3 +97,40 @@ if __name__ == "__main__":
         f()
         print("ok", f.__name__)
     print(f"\n{len(fns)} tests passed")
+
+
+class TestGesperrteKategorieWirdBenannt:
+    """08.09.2026 (Lucas: „ob das alles reibungslos funktioniert"). Von 84 Cross-Sport-Alerts der
+    letzten 30 Tage waren 84 MLB — genau die Kategorie, die `PW_BLOCKED_BET_CATS` als gesperrt
+    führt und die der Whale-Watch mit einer 🚫-Zeile abweist.
+
+    Die Sperre wird hier BEWUSST NICHT übernommen: sie wurde am Whale-Papierdepot gemessen
+    (MLB n=72, ROI −28 %), also an „einer Wallet folgen". Cross-Sport ist Poly-Preis gegen
+    de-viggte Pinnacle — eine andere Mechanik, und ein Messwert der einen auf die andere
+    anzuwenden wäre ein Kurzschluss. Was dastehen MUSS, ist der Hinweis.
+    """
+
+    def _d(self, sport):
+        return {"sport": sport, "event": "A v B", "outcome": "A", "polyPP": 62, "pinnPP": 54,
+                "gapPP": 8, "convergePP": 2.1, "vol": 45000, "richtung": "Poly zu hoch",
+                "_blockedCats": ["US-Sport", "Kampfsport"]}
+
+    def test_gesperrte_kategorie_traegt_den_hinweis(self):
+        karte = X.build_card(self._d("baseball_mlb"))
+        assert "gesperrt" in karte
+        assert "Preis-Edge gegen Pinnacle" in karte
+
+    def test_der_alert_geht_trotzdem_raus(self):
+        # Kein stiller Ausschluss — die Karte wird gebaut, nur ehrlich beschriftet.
+        assert "Cross-Sport-Edge" in X.build_card(self._d("baseball_mlb"))
+
+    def test_kampfsport_ebenso(self):
+        assert "Kampfsport" in X.build_card(self._d("mma_mixed_martial_arts"))
+
+    def test_nicht_gesperrte_kategorie_bleibt_ohne_hinweis(self):
+        for s in ("soccer_epl", "tennis_atp", "esports_cs2"):
+            assert "gesperrt" not in X.build_card(self._d(s)), s
+
+    def test_ohne_sperrliste_kein_hinweis_fuer_freie_sportart(self):
+        d = self._d("soccer_epl"); d["_blockedCats"] = []
+        assert "gesperrt" not in X.build_card(d)

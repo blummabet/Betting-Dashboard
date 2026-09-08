@@ -169,6 +169,7 @@ class BetfairCtx:
 
 
 # ── Registry ─────────────────────────────────────────────────────────────────
+GROSSGELD_EUR = 20000.0   # = Radar-Schwelle fuer Top/Intl (THR.top.FT)
 BETFAIR_CHECKS = []
 def betfair_check(fn):
     BETFAIR_CHECKS.append(fn)
@@ -218,6 +219,48 @@ def check_feed_populated(ctx):
             fails.append(f"{n} Spiele, aber KEINES mit Volumen (totalVol=0 ueberall) — Money-Ansicht kaputt")
     return _chk("feed_populated", "Feed hat echte Spiele + Volumen", "error", fails,
                 "200 mit leerer/volumenloser Liste ist ein stiller Totalausfall — reine Datei-Frische sieht ihn nicht.")
+
+
+@betfair_check
+def check_grosses_geld_faellt_nicht_aus_dem_feed(ctx):
+    """08.09.2026 (Lucas: „vorher war Real Madrid drin … nun sind beide Spiele verschwunden").
+
+    Der Detail-Deckel (`BETWATCH_MAX_DETAIL`, 150) schnitt nach ANPFIFF sortiert. Als der Topf
+    an diesem Morgen erstmals volllief, fielen **alle vier Champions-League-Spiele des Abends**
+    heraus — darunter Real Madrid v Inter mit zuletzt **102.861 €**, dem meisten Geld des Tages,
+    auf das der Public-Push schon zeigte. Nachgerueckt sind 19 Scottish Challenge Cup, 13
+    English National League Cup und 6 Portuguese U23.
+
+    Der Fetcher sortiert seither nach bekanntem Geld; dieser Guard prueft das Ergebnis: ein
+    Spiel, das wir im letzten Stand mit ordentlichem Volumen gefuehrt haben und das noch nicht
+    angepfiffen ist, darf nicht kommentarlos aus dem Feed verschwinden.
+
+    Er misst gegen die HISTORIE (betfair_history.json), nicht gegen einen zweiten Feed: dort
+    steht, was wir zuletzt gesehen haben.
+    """
+    fails = []
+    hist = ctx.history
+    drin = {str(m.get("matchId")) for m in ctx.matches if isinstance(m, dict)}
+    jetzt = ctx.now
+    for mid, arr in hist.items():
+        if str(mid) in drin or not isinstance(arr, list) or not arr:
+            continue
+        letzter = arr[-1]
+        if not isinstance(letzter, dict):
+            continue
+        vol = letzter.get("totalVol") or 0
+        if vol < GROSSGELD_EUR:
+            continue
+        ko = _parse_ts(letzter.get("kickoff") or letzter.get("ko"))
+        if ko is None or ko <= jetzt:
+            continue          # angepfiffen/vorbei: dass es verschwindet, ist normal
+        fails.append("%s: zuletzt %s € und Anpfiff erst in %.1f h — trotzdem nicht mehr im Feed"
+                     % (letzter.get("name") or mid, f"{vol:,.0f}".replace(",", "."),
+                        (ko - jetzt).total_seconds() / 3600.0))
+    return _chk("grosses_geld_bleibt_im_feed", "Grosses Geld faellt nicht aus dem Feed", "error",
+                fails[:6],
+                "Der Detail-Deckel darf nicht das teuerste Spiel schneiden — genau das ist am "
+                "08.09. passiert (alle vier CL-Spiele, Real Madrid mit 102.861 €).")
 
 
 @betfair_check
