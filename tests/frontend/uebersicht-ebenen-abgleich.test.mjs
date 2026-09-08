@@ -137,8 +137,12 @@ test('ohne Begründung steht keine leere Zeile da', () => {
 });
 
 test('die beiden Köpfe sagen, was sie voneinander unterscheidet', () => {
-  assert.ok(/gleichzeitig<\/b> auf derselben Seite \(UND\)/.test(CODE),
-    'Ebene 2 sagt nicht, dass sie eine Konjunktion ist');
+  // 08.09.2026: Ebene 2 hat seither ZWEI Teile - die Tafel (Uebereinstimmung, ohne Bewegung)
+  // und darunter das UND-Tor. Beide muessen im Kopf stehen, sonst liest man die Tafel als Tor.
+  assert.ok(/Spitze aller bewerteten Spiele/.test(CODE),
+    'Ebene 2 sagt nicht, dass die Tafel die Spitze aller bewerteten Spiele ist');
+  assert.ok(/gleichzeitig<\/b> auf derselben Seite/.test(CODE) && /\(UND\)/.test(CODE),
+    'Ebene 2 sagt nicht, dass ihr Tor eine Konjunktion ist');
   assert.ok(/eine Quelle genügt, kein UND/.test(CODE),
     'Ebene 3 sagt nicht, dass sie eine Disjunktion ist');
 });

@@ -1,6 +1,17 @@
 #!/usr/bin/env python3
 """
-spielzentrale.py — Ebene 0 der Uebersicht: eine Zeile je Spiel, Quellen als Spalten.
+spielzentrale.py — der Stake-Join fuer den Buecher-Punktestand (Ebene 2).
+
+⚠️ 08.09.2026, am selben Tag zurueckgebaut. Diese Datei war eine eigene Uebersichts-Ebene
+(„Spielzentrale", Ebene 0). Lucas nach einem Tag damit: *„da seh ich aber eben nicht den
+Mehrwert zu Ebene 2."* Nachgemessen hatte er recht — **24 von 25** Zeilen der Zentrale standen
+ohnehin in `killer.alleBewertet`. Es war dieselbe Frage, zweimal gestellt, mit zwei verschiedenen
+Massstaeben. Was die Zentrale wirklich konnte, waren zwei Dinge, und beide sind jetzt in Ebene 2:
+der Stake-Highroller als viertes Buch, und die Spalten mit den Betraegen.
+
+Geblieben ist der Teil, der Arbeit war und stimmt: der **Namens-Join** zwischen Stake-Events und
+Betfair-Paarungen, inklusive `gleiche_elf` (Nachwuchs ist nicht die erste Mannschaft). `killer.py`
+benutzt ihn; `baue()` und das Artefakt gibt es nicht mehr.
 
 Vorgeschichte (08.09.2026, Lucas): *„Mir ist wichtig einerseits alle sources zu sehen aber auch
 Empfehlungen was deckt sich, was sinnvoll zu wetten ohne da jede source extra zu checken."*
@@ -53,8 +64,6 @@ from pathlib import Path
 from betfair_consensus import _name_score, gleiche_elf
 
 BASE = Path(__file__).resolve().parent
-DATEI = "spielzentrale.json"
-BASIS_DATEI = "spielzentrale_basis.json"
 
 FENSTER_H = 24.0          # so weit nach vorn schaut die Ebene
 GELDQUELLEN = ("betfair", "poly", "stake")   # unabhaengige Geldstroeme — nur die stimmen ab
@@ -404,23 +413,11 @@ def fixtures_aus(liga, mls):
     return out
 
 
+# Kein `main()` mehr: diese Datei erzeugt kein Artefakt. Wer sie ausfuehrt, soll das merken,
+# statt eine leere Datei zu schreiben.
 def main() -> int:
-    basis = _lade(BASIS_DATEI, {})
-    rows = (basis or {}).get("rows") or []
-    if not rows:
-        print("spielzentrale: keine Basis-Zeilen (%s fehlt — betfair_consensus muss zuerst laufen)"
-              % BASIS_DATEI)
-        return 0
-    st = _lade("stake_highroller.json", {})
-    doc = baue(rows, (st or {}).get("wetten"),
-               fixtures_aus(_lade("liga-data.json", {}), _lade("mls-data.json", {})))
-    (BASE / DATEI).write_text(json.dumps(doc, ensure_ascii=False, indent=2), encoding="utf-8")
-    v = {}
-    for z in doc["zeilen"]:
-        v[z["urteil"]] = v.get(z["urteil"], 0) + 1
-    print("spielzentrale: %d Zeilen (%s) · Rest: %d stumm, %d spaeter, %d gelaufen"
-          % (doc["n"], ", ".join("%s %d" % kv for kv in sorted(v.items())) or "—",
-             doc["rest"]["stumm"], doc["rest"]["spaeter"], doc["rest"]["gelaufen"]))
+    print("spielzentrale.py erzeugt seit dem 08.09.2026 kein Artefakt mehr — der Stake-Join "
+          "wohnt hier, gerechnet wird er in killer.py (Buecher-Punktestand, Ebene 2).")
     return 0
 
 

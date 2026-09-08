@@ -3,6 +3,77 @@
 Stand 07.09.2026 (oberster Block); Liga/WM-Teil darunter Stand 26.06.2026. Lebendige Liste aller offenen Punkte — Liga UND noch nicht umgesetzte WM-Sachen —
 damit wir alles abarbeiten können. ✅ = erledigt (Referenz), ⏳ = offen, 🔒 = blockiert.
 
+## 🔁 08.09.2026 (abends) — Ebene 0 wieder raus, Ebene 2 kann jetzt, was sie konnte
+
+Lucas nach einem Tag mit der Spielzentrale: *„Ebene 0 hast du heute dazugebaut, da seh ich aber
+eben nicht den Mehrwert zu Ebene 2, außer dass bei paar Spielen Stake dabei steht."*
+
+Nachgemessen hatte er recht: **24 von 25** Zeilen der Zentrale standen ohnehin in
+`killer.alleBewertet`. Dieselbe Frage, zweimal gestellt, mit zwei verschiedenen Maßstäben.
+
+Und der Grund, warum Ebene 2 trotzdem immer leer wirkte, war ein anderer als gedacht:
+**sie bewertet 145 Spiele und zeigte davon 6** — nur die, bei denen zusätzlich Geld in Bewegung
+war. Die anderen 139 standen in der Datei und wurden vom Frontend **nie gelesen** (grep über alle
+`.js`: null Treffer auf `alleBewertet`). Die Skala, die Lucas als „stimmiger eingestellt" empfand,
+war da; sichtbar war sie nicht.
+
+- ✅ **Stake ist das vierte Buch.** Ebene 2 kannte Betfair, Polymarket, Pinnacle. Der
+  Stake-Highroller ist die einzige der vier Quellen, die kein Buchmacher-Preis ist, sondern
+  fremdes Geld auf einer Seite. Der Namens-Join (inkl. `gleiche_elf`) kommt aus `spielzentrale`
+  und wird benutzt, nicht nachgebaut. Nenner wächst auf 13, wo Stake erhoben ist.
+- ✅ **`teile` wandert in die Datei.** `alleBewertet` trug `punkte`/`moeglich` und sonst nichts —
+  deshalb konnte die Tafel gar nicht gebaut werden, sie hätte Zahlen ohne Begründung gezeigt.
+- ✅ **Die Tafel steht immer**, auch wenn das Bewegungs-Tor leer ist. Sie zeigt die Spitze
+  (ab 6 Punkten, höchstens 12 Zeilen), darunter die gezählte Restmenge und ein Register mit allen.
+- ✅ **„—" heißt nicht erhoben, „0" heißt gefragt und stimmt nicht zu.** Ohne den Unterschied
+  sehen die beiden gleich aus — und genau dafür wird der Nenner mitgeschrieben.
+- ✅ **Ebene 0 ist raus**, `spielzentrale.json`/`_basis.json` werden nicht mehr erzeugt, der
+  Workflow-Schritt ist weg. `spielzentrale.py` bleibt als Stake-Join-Helfer (der Teil, der stimmt).
+- ✅ Guard `check_buecher_punktestand` löst `check_spielzentrale_urteil` ab: Punkte = Summe der
+  Teile, Nenner = Summe der Nenner, ein nicht erhobenes Buch steht nicht im Nenner, Tiefe zählt
+  nur bei Zustimmung, jede Zeile trägt ihre Aufschlüsselung.
+
+Ergebnis an den echten Daten: 139 bewertete Spiele vor Anpfiff, **12 ab 6 Punkten**. Oben
+AEK Athens, Real Madrid und Porto mit **10/13** — alle vier Bücher auf derselben Seite. Lille
+steht bei 8/13 mit **Betfair 0** (kein konzentriertes Geld), aber Poly, Pinnacle und Stake
+zustimmend — eine Zeile, die vorher nirgends sichtbar war.
+
+## 📉 08.09.2026 — CLV: die Messung gegen Lucas' Vermutung, das Tor trotzdem in seinem Sinn
+
+Lucas: *„Ich bin kein Fan von CLV … bei Cards und beim Paper Trading auf Poly ist der CLV negativ,
+bei beiden aber Profit da und der ROI positiv."*
+
+**Die Vermutung hält der Nachrechnung nicht stand.** Betfair-Track, Match Odds, n=2.651, nach CLV
+gegen den Betfair-Close geschichtet:
+
+| CLV | n | Treffer | ROI |
+|---|---|---|---|
+| < −5 pp | 173 | 51,4 % | −8,6 % |
+| −5…−1 | 567 | 48,0 % | −5,6 % |
+| −1…+1 | 1.080 | 43,2 % | −1,7 % |
+| +1…+5 | 608 | 53,3 % | +4,8 % |
+| > +5 pp | 223 | 61,9 % | **+27,0 %** (UG +13,6 %) |
+
+Grob: CLV>0 → **ROI +7,5 % mit Untergrenze +1,9 %** — die einzige Aggregation im Repo mit einer
+Untergrenze über null. CLV<0 → −6,8 %. Monoton über fünf Bänder.
+
+Und die beiden Belege: **Cards** n=1.184 abgerechnet → **ROI −11,4 %** (UG −16,1 %), CLV −1,8 pp —
+beide negativ, kein Widerspruch. **Poly-Paper** ganzes Buch n=638 → **ROI −3,6 %**, CLV −0,50.
+Positiv ist nur die Teilmenge `public` (n=173, +6,3 %), deren Untergrenze bei −2,8 % liegt.
+Nebenbefund aus den Cards: **50,2 % Treffer bei Ø 1,89** — 2,6 Punkte unter dem Break-even von
+52,8 %, und das sind exakt die −11,4 %.
+
+**Beim Tor hat er trotzdem recht, aus zwei anderen Gründen:**
+
+- **62 von 73 reifen Schubladen tragen gar keinen CLV-Wert.** Für die ist die Bedingung nicht
+  *nicht erfüllt*, sondern *unbekannt* — und wird wie ein Nein behandelt.
+- Liegt die **Rendite-Untergrenze über null, ist der Profit belegt.** Ein Nebenindikator kann das
+  nicht widerlegen. Heute betrifft das zwei Schubladen (Public-Kandidaten, Liga·ABWÄGEN), beide
+  scheitern ausschließlich an CLV.
+
+⏳ Vorschlag steht, noch nicht gebaut: **Rendite-Untergrenze ist das Tor, CLV beschreibt und
+blockiert nicht mehr.** Fehlender CLV heißt „unbekannt", nicht „nein".
+
 ## ✅ 08.09.2026 — der CI-Wachhund hat zugeschlagen (Liga-Ebenen)
 
 `test_alle_ligen_im_echten_ledger_haben_eine_ebene` fiel im CI mit zwei Slugs:

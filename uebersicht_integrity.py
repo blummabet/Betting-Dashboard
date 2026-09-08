@@ -612,55 +612,50 @@ def check_poly_markt_gehoert_zur_selben_mannschaft(ctx):
               "der Namens-Score kann sie nicht trennen, der Marker schon.")
 
 
-def check_spielzentrale_urteil(ctx):
-    """08.09.2026 — Ebene 0 sagt „einig". Das ist die staerkste Aussage der ganzen Uebersicht,
-    und sie ist genau dann wertlos, wenn sie zu leicht zu bekommen ist.
+def check_buecher_punktestand(ctx):
+    """08.09.2026 — Ebene 2 zeigt seit heute die Spitze aller bewerteten Spiele, mit den vier
+    Buechern als Spalten. Der Guard, der vorher die Spielzentrale pruefte, prueft jetzt dieselbe
+    Aussage an der Stelle, an der sie steht.
 
-    Drei Saetze werden am fertigen Artefakt geprueft, weil jeder von ihnen die Zeile ohne
-    sichtbaren Unterschied entwerten wuerde:
-
-      1. „Einig" braucht **zwei** Stimmen und keine Gegenstimme. Eine Quelle ist ein Hinweis.
-      2. **Pinnacle stimmt nie mit.** Das Geld liegt fast immer auf dem Favoriten — waere der
-         Anker eine Stimme, waere fast jede Zeile „einig", und die Farbe saegte nichts mehr aus.
-      3. Ein reiner Poly-**Preis** stimmt nie mit. Er ist sichtbar, aber niemand hat ihn bezahlt.
-
-    Dazu der Quervergleich: dasselbe Spiel darf in Money Map und Zentrale nicht zwei
-    verschiedene Antworten bekommen — das ist die Klasse „zwei Flaechen, zwei Antworten, und
-    keine sagt es".
+    Vier Saetze, jeder aus einem Fehler, der die Tafel ohne sichtbaren Unterschied entwerten wuerde:
+      1. `punkte` ist die Summe der Teile — sonst steht eine Zahl da, die niemand nachrechnen kann.
+      2. `moeglich` ist die Summe der Nenner. Ein nicht erhobenes Buch senkt den NENNER und kostet
+         keine Punkte; steht es trotzdem im Nenner, sieht ein vollstaendiges Spiel schlechter aus
+         als ein halb erhobenes.
+      3. Tiefe zaehlt nur, wo das Buch auch zustimmt — sonst waere „viel Geld auf der GEGENSEITE"
+         ein Pluspunkt.
+      4. Jede Zeile traegt ihre `teile`. Ohne sie kann die Tafel Punkte zeigen, aber nicht warum —
+         und genau das war der Grund, warum die 145 bewerteten Spiele monatelang unsichtbar blieben.
     """
     fails = []
-    z = ctx.get("zentrale") or {}
-    zeilen = z.get("zeilen") or []
-    for r in zeilen:
+    for r in ((ctx.get("killer") or {}).get("alleBewertet") or []):
         if not isinstance(r, dict):
             continue
-        wer = "%s v %s" % (r.get("home"), r.get("away"))
-        dafuer, gegen = r.get("dafuer") or [], r.get("gegen") or []
-        if r.get("urteil") == "einig" and (len(dafuer) < 2 or gegen):
-            fails.append("%s: „einig\u201c mit %d Stimme(n)%s — das ist kein Konsens"
-                         % (wer, len(dafuer), (" und %d dagegen" % len(gegen)) if gegen else ""))
-        if "pinn" in dafuer or "pinn" in gegen:
-            fails.append("%s: Pinnacle steht als Stimme in der Zeile — der Anker darf nur "
-                         "bestaetigen oder widersprechen" % wer)
-        if "poly" in dafuer and ((r.get("poly") or {}).get("art") != "geld"):
-            fails.append("%s: ein reiner Poly-Preis stimmt mit ab — dafuer hat niemand bezahlt" % wer)
-    # Quervergleich mit der Money Map (gleiche Rechnung, andere Filterung)
-    mm = {}
-    for r in ((ctx.get("moneyMap") or {}).get("rows") or []):
-        if r.get("matchId"):
-            mm[str(r["matchId"])] = r
-    for r in zeilen:
-        m = mm.get(str(r.get("matchId")))
-        if not m or r.get("urteil") not in ("einig", "uneinig"):
+        wer = "%s (%s)" % (r.get("name"), r.get("liga"))
+        teile = r.get("teile")
+        if not teile:
+            fails.append("%s: keine Aufschluesselung (`teile`) — Punkte ohne Begruendung" % wer)
             continue
-        mmu = {"konsens": "einig", "uneinig": "uneinig"}.get(m.get("verdict"))
-        if mmu and mmu != r.get("urteil"):
-            fails.append("%s v %s: Money Map sagt „%s\u201c, Spielzentrale „%s\u201c — dasselbe "
-                         "Spiel, zwei Antworten auf einem Bildschirm"
-                         % (r.get("home"), r.get("away"), m.get("verdict"), r.get("urteil")))
-    return _c("Spielzentrale: „einig\u201c ist belegt", "error", fails[:8],
-              "Zwei unabhaengige GELDquellen auf derselben Seite. Pinnacle und ein reiner "
-              "Poly-Preis zaehlen nicht mit.")
+        summe = sum((t.get("punkte") or 0) for t in teile if isinstance(t, dict))
+        nenner = sum((t.get("moeglich") or 0) for t in teile if isinstance(t, dict))
+        if r.get("punkte") != summe:
+            fails.append("%s: punkte %s, Summe der Teile %s" % (wer, r.get("punkte"), summe))
+        if r.get("moeglich") != nenner:
+            fails.append("%s: moeglich %s, Summe der Nenner %s" % (wer, r.get("moeglich"), nenner))
+        for t in teile:
+            if not isinstance(t, dict):
+                continue
+            if t.get("status") == "unbekannt" and (t.get("moeglich") or 0) != 0:
+                fails.append("%s: Buch %s ist nicht erhoben, steht aber im Nenner"
+                             % (wer, t.get("buch")))
+            _g = (t.get("grund") or {}).get("ok")
+            _t = (t.get("tiefe") or {}).get("ok")
+            if _t and not _g:
+                fails.append("%s: Buch %s zaehlt Tiefe, obwohl es nicht zustimmt"
+                             % (wer, t.get("buch")))
+    return _c("Buecher-Punktestand: die Zahl stimmt mit ihrer Begruendung ueberein", "error",
+              fails[:8],
+              "Nicht erhobene Buecher senken den Nenner, Tiefe zaehlt nur bei Zustimmung.")
 
 
 UEBERSICHT_CHECKS = [
@@ -674,7 +669,7 @@ UEBERSICHT_CHECKS = [
     check_money_map_meldet_ihre_luecken,
     check_money_map_poly_gehoert_zum_spiel,
     check_poly_markt_gehoert_zur_selben_mannschaft,
-    check_spielzentrale_urteil,
+    check_buecher_punktestand,
     check_stake_kachel_zeigt_das_gemessene_urteil,
     check_stake_spielklasse,
     check_poly_deckung,
@@ -706,7 +701,7 @@ def build_ctx_from_disk() -> dict:
         "pulse": _lade("dashboard_pulse.json", {}),
         "moneyMap": _lade("money_map.json", {}),
         "bfAnker": _lade("betfair_anker.json", {}),
-        "zentrale": _lade("spielzentrale.json", {}),
+        "killer": _lade("killer.json", {}),
         "ligaStreaks": _lade("liga_streaks.json", {}),
         "mlsStreaks": _lade("mls_streaks.json", {}),
         "stake": _lade("stake_highroller.json", {}),

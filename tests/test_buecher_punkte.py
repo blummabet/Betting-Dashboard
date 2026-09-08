@@ -282,3 +282,58 @@ class TestAnkerPool(unittest.TestCase):
     def test_kaputter_anker_wirft_nicht(self):
         for a in (None, {}, {"anker": None}, {"anker": {"77": "kaputt"}}, {"anker": []}):
             self.assertTrue(self._baue({"games": []}, a)["alleBewertet"])
+
+
+class TestStakeAlsViertesBuch(unittest.TestCase):
+    """08.09.2026 (Lucas: „was fehlt da noch neben Stake?"). Der Punktestand kannte drei Bücher —
+    Betfair, Polymarket, Pinnacle. Der Stake-Highroller ist die einzige der vier Quellen, die kein
+    Buchmacher-Preis ist, sondern fremdes Geld auf einer Seite, und er war der einzige Grund,
+    warum es die Spielzentrale daneben überhaupt gab."""
+
+    SIG = {"fav": "H", "share": 0.78, "odd": 1.64, "conc": True, "inflow": False, "dir": "flat"}
+
+    def _p(self, stake):
+        return K.buecher_punkte(self.SIG, {}, "home", stake=stake)
+
+    def _teil(self, p):
+        return next(t for t in p["teile"] if t["buch"] == "STAKE")
+
+    def test_geld_auf_derselben_seite_gibt_punkte(self):
+        p = self._p({"seite": "home", "seiteUsd": 7318.0, "n": 9})
+        t = self._teil(p)
+        self.assertEqual(t["status"], "ja")
+        self.assertEqual(t["punkte"], K.PUNKTE_BUCH + K.PUNKTE_TIEFE)
+        self.assertIn("7.318", t["grund"]["text"])
+
+    def test_gegenseite_gibt_keine_punkte_senkt_aber_den_nenner_nicht(self):
+        t = self._teil(self._p({"seite": "away", "seiteUsd": 9000.0, "n": 9}))
+        self.assertEqual(t["punkte"], 0)
+        self.assertEqual(t["moeglich"], K.PUNKTE_BUCH + K.PUNKTE_TIEFE)
+
+    def test_eine_einzelne_wette_hat_keine_tiefe(self):
+        # Ein grosser einzelner Klick ist kein Konsens.
+        t = self._teil(self._p({"seite": "home", "seiteUsd": 50000.0, "n": 1}))
+        self.assertEqual(t["punkte"], K.PUNKTE_BUCH)
+
+    def test_kleines_geld_stimmt_nicht_zu(self):
+        t = self._teil(self._p({"seite": "home", "seiteUsd": 80.0, "n": 9}))
+        self.assertEqual(t["punkte"], 0)
+
+    def test_ohne_stake_ist_das_buch_unbekannt_und_senkt_den_nenner(self):
+        ohne = self._p(None)
+        t = self._teil(ohne)
+        self.assertEqual(t["status"], "unbekannt")
+        self.assertEqual(t["moeglich"], 0)
+        # Der Nenner ist um genau ein Buch kleiner als mit erhobenem Stake.
+        mit = self._p({"seite": "home", "seiteUsd": 7318.0, "n": 9})
+        self.assertEqual(mit["moeglich"] - ohne["moeglich"], K.PUNKTE_BUCH + K.PUNKTE_TIEFE)
+
+    def test_ohne_1x2_seite_ist_es_unbekannt_nicht_nein(self):
+        # Eine Über/Unter-Wette trägt Geld, widerspricht uns aber nicht.
+        t = self._teil(self._p({"seite": None, "usd": 20000.0, "seiteUsd": 0, "n": 3}))
+        self.assertEqual(t["status"], "unbekannt")
+
+    def test_punkte_und_nenner_bleiben_die_summe_der_teile(self):
+        p = self._p({"seite": "home", "seiteUsd": 7318.0, "n": 9})
+        self.assertEqual(p["punkte"], sum(t["punkte"] for t in p["teile"]))
+        self.assertEqual(p["moeglich"], sum(t["moeglich"] for t in p["teile"]))

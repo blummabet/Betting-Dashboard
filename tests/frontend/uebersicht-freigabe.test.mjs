@@ -121,10 +121,10 @@ test('alte Datei ohne Filter-Auskunft meldet ❔ statt etwas zu behaupten', () =
 // als nummerierte Ebenen in EINER Sektion. Die Reihenfolge ist damit nicht mehr Geschmack,
 // sondern die Aussage der Sektion — von streng nach breit. Deshalb wird sie hier festgehalten.
 //
-// 08.09.2026: Ebene 0 kam davor. Sie ist bewusst KEINE vierte Ebene der Leiter, sondern die
-// Frage, die den anderen dreien vorausgeht — auf welche Spiele schauen ueberhaupt mehrere
-// Quellen. Deshalb die Null: die Leiter „streng → breit" bleibt 1-2-3.
-test('die Ebenen stehen in EINER Sektion, von streng nach breit', () => {
+// 08.09.2026, zweiter Anlauf: Ebene 0 („Spielzentrale") ist wieder RAUS. Gemessen standen 24
+// von 25 ihrer Zeilen ohnehin in `killer.alleBewertet` — es war dieselbe Frage, zweimal
+// gestellt. Was sie konnte (Stake als viertes Buch, Spalten mit Beträgen), kann jetzt Ebene 2.
+test('die drei Ebenen stehen in EINER Sektion, von streng nach breit', () => {
   const dom = new JSDOM('<!DOCTYPE html><body><div id="mainDashPanel"></div></body>',
     { url: 'https://x.com/', runScripts: 'outside-only' });
   const w = dom.window;
@@ -137,8 +137,7 @@ test('die Ebenen stehen in EINER Sektion, von streng nach breit', () => {
   const sek = [...doc.querySelectorAll('section.md-sp')];
   assert.equal(sek.length, 1, 'genau EINE Sektion — sonst konkurrieren wieder drei Köpfe');
   const nummern = [...sek[0].querySelectorAll('.md-eb-n')].map(x => x.textContent.trim());
-  assert.deepEqual(nummern, ['0', '1', '2', '3'],
-    'Spielzentrale → Register → Konjunktion → Rangliste, in dieser Folge');
+  assert.deepEqual(nummern, ['1', '2', '3'], 'Register → Konjunktion → Rangliste, in dieser Folge');
   // Die Klammer muss den Zusammenhang AUSSPRECHEN — ohne sie sehen drei Antworten aus
   // wie dreimal dieselbe Frage. Genau das war Lucas' Eindruck.
   const kopf = sek[0].querySelector('.md-sp-s').textContent;
@@ -159,8 +158,8 @@ test('jede Ebene sagt, wie sie gebaut ist — Register, Filter, Rangliste', () =
   // 01.09.2026: aus „Filter" wurde „Punktestand" — die Ebene sortiert Spiele jetzt nach der Zahl
   // der zustimmenden BÜCHER, statt sie hart auszusortieren. Drei verschiedene Bauarten bleibt der
   // Punkt: Urteil über Schubladen · Gewichtung über Bücher · Sortierung über Einzelsignale.
-  assert.deepEqual(pillen, ['Vergleich', 'Register', 'Punktestand', 'Rangliste'],
-    'vier verschiedene Bauarten — genau deshalb stehen sie nebeneinander und nicht als Wiederholung');
+  assert.deepEqual(pillen, ['Register', 'Punktestand', 'Rangliste'],
+    'drei verschiedene Bauarten — genau deshalb sind es drei Ebenen und keine Wiederholung');
 });
 
 // 01.09.2026 (Lucas: „brauch das im Desktop die gesamte Breite? reicht es nicht, wenn 3 Kacheln
@@ -191,7 +190,7 @@ test('die Ebenen bleiben untereinander, die Spiele duerfen nebeneinander', () =>
   assert.ok(!/\.md-eb\{[^}]*grid-template-columns/.test(css),
     'die Leiter darf nicht in Spalten zerfallen — die Reihenfolge ist die Aussage');
   assert.deepEqual([...sek.querySelectorAll('.md-eb-n')].map(x => x.textContent.trim()),
-    ['0', '1', '2', '3'], 'und sie bleibt streng → breit');
+    ['1', '2', '3'], 'und sie bleibt streng → breit');
 
   // Die Spiele stehen in einem Container, der erst ab 1040px zweispaltig wird.
   assert.equal(sek.querySelectorAll('.md-kl-paar > .md-kl-row').length, 2,

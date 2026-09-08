@@ -95,10 +95,7 @@
              // 03.09.2026: neu dazu, und der Guard hat es sofort eingefordert — eine Quelle,
              // die geladen wird, aber nicht in die Frische-Rechnung eingeht, kann beliebig
              // alt sein, ohne dass die Übersicht es sagt.
-             ['Stake', d.stake], ['Stake-Auswertung', d.stakeAus],
-             // 08.09.2026: Ebene 0. Derselbe Guard hat sie sofort eingefordert — sie steht
-             // ganz oben und waere die letzte Quelle, deren Alter jemandem auffiele.
-             ['Spielzentrale', d.zentrale]];
+             ['Stake', d.stake], ['Stake-Auswertung', d.stakeAus]];
     var out = [];
     q.forEach(function (x) { var a = _ageMin(x[1]); if (a != null) out.push({ n: x[0], min: a }); });
     // Poly-LIVE fuehrt seine eigene Rechnung (dieselbe, die die Kachel unten anzeigt).
@@ -473,10 +470,7 @@
       jf('killer.json'), jf('freigabe.json'),
       // 03.09.2026 (Lucas): die Stake-Sammlung fuer die drei Kacheln. Beide Dateien
       // duerfen fehlen — die Kacheln sagen dann, dass nichts da ist, statt leer zu bleiben.
-      jf('stake_highroller.json'), jf('stake_auswertung.json'),
-      // 08.09.2026 (Lucas: „alle sources sehen, aber auch was sich deckt"): Ebene 0.
-      // Das Urteil steht IN der Datei — hier wird es gelesen, nicht nachgerechnet.
-      jf('spielzentrale.json')]);
+      jf('stake_highroller.json'), jf('stake_auswertung.json')]);
   }
   function _mdLoad(force) {
     if (_md.loading) return;
@@ -486,7 +480,7 @@
     var p = document.getElementById('mainDashPanel');
     if (p && !_md.data) { p.classList.add('mdash'); p.innerHTML = _head() + '<div class="md-empty" style="text-align:center;padding:52px 0;">⏳ Übersicht wird geladen …</div>'; }
     _mdFetch().then(function (a) {
-      _md.data = { liga: a[0], mls: a[1], ligaStreaks: a[2], mlsStreaks: a[3], betfair: a[4], whales: a[5], pulse: a[6], bfOverview: a[7], bfDir: a[8], moneyMap: a[9], bfTrack: a[10], killer: a[11], freigabe: a[12], stake: a[13], stakeAus: a[14], zentrale: a[15] };
+      _md.data = { liga: a[0], mls: a[1], ligaStreaks: a[2], mlsStreaks: a[3], betfair: a[4], whales: a[5], pulse: a[6], bfOverview: a[7], bfDir: a[8], moneyMap: a[9], bfTrack: a[10], killer: a[11], freigabe: a[12], stake: a[13], stakeAus: a[14] };
       _md.loading = false; _mdRender();
     });
   }
@@ -2224,104 +2218,101 @@
                  + '📚 gerade im Regal: ' + regal + '</span>' : '')
       + '</div>' + inhalt + '</div>';
   }
-  // ── Ebene 0: die Spielzentrale ────────────────────────────────────────────────────────
-  // 08.09.2026 (Lucas): „alle sources zu sehen aber auch Empfehlungen was deckt sich, was
-  // sinnvoll zu wetten ohne da jede source extra zu checken."
+  // ── Die Tafel von Ebene 2 (08.09.2026) ────────────────────────────────────────────────
+  // Lucas: „Ebene 0 hast du heute dazugebaut, da seh ich aber eben nicht den Mehrwert zu
+  // Ebene 2." Er hatte recht, und die Messung gab ihm recht: 24 von 25 Zeilen der Spielzentrale
+  // standen ohnehin in `killer.alleBewertet`. Es war dieselbe Frage, zweimal gestellt.
   //
-  // Die drei Ebenen darunter beantworten „darf ich blind spielen", „bewegt sich das Geld JETZT"
-  // und „was ist das staerkste Einzelsignal". Keine davon beantwortet „auf welche Spiele schauen
-  // heute ueberhaupt mehrere Quellen". Gemessen an dem Tag: Ebene 2 haengt an einem Zufluss von
-  // >= 2.000 EUR in 15 Minuten — 0 von 192 Spielen erfuellten das, und 76 % aller Zeilen im
-  // Ledger tauchten erst < 3 h vor Anpfiff auf. Ebene 3 nahm die Money Map ausdruecklich nur bei
-  // `verdict == "uneinig"`, warf also genau die Zeile weg, die „einig" sagte.
+  // Was der Zentrale ihre Berechtigung gab, waren zwei Dinge, die Ebene 2 fehlten — und beide
+  // sind jetzt HIER, statt daneben:
+  //   · der Stake-Highroller als viertes Buch (Ebene 2 kannte Betfair, Poly, Pinnacle)
+  //   · die Spalten: welches Buch sagt was, mit welchem Betrag (`teile` wandert seit heute mit)
   //
-  // Diese Ebene braucht keine Bewegung. Sie liest `spielzentrale.json` und RECHNET NICHTS NACH:
-  // `urteil`, `dafuer`, `gegen` und `text` entstehen im Produzenten, damit die Flaeche nicht
-  // auseinanderlaeuft, sobald jemand eine der beiden anfasst.
-  var SZ_LABEL = { betfair: 'Betfair', poly: 'Polymarket', stake: 'Stake', pinn: 'Pinnacle', card: 'Card' };
-  var SZ_SEITE = { home: 'Heim', draw: 'Remis', away: 'Auswärts' };
+  // Und der eigentliche Grund, warum Ebene 2 immer leer wirkte: sie BEWERTET 145 Spiele und
+  // ZEIGTE davon 6 — nur die, bei denen zusaetzlich gerade Geld in Bewegung war. Die anderen
+  // 139 standen in der Datei und wurden vom Frontend nie gelesen. Die Skala war da, sichtbar
+  // war sie nicht.
+  //
+  // Gezeigt wird die Spitze, nicht die Liste: heute 12 Zeilen ab 6 Punkten, der Rest gezaehlt
+  // und aufklappbar. Eine Tafel mit 145 Zeilen waere dasselbe Problem in gruen.
+  var KL_TAFEL_MIN = 6;      // ab so vielen Punkten steht eine Zeile oben
+  var KL_TAFEL_MAX = 12;     // ... und nie mehr als so viele, egal wie gut der Tag ist
+  var KL_BUCH = { BF: 'Betfair', POLY: 'Polymarket', PIN: 'Pinnacle', STAKE: 'Stake', ZEIT: 'Dauer' };
+  var KL_BUCH_COL = { BF: A.bf, POLY: A.poly, PIN: A.pinn, STAKE: A_STAKE, ZEIT: A.gold };
 
-  function _szBadge(z) {
-    if (z.urteil === 'einig') return { txt: '🤝 ' + z.nGeld + ' Quellen einig', col: A.good, bg: 'rgba(46,160,71,.16)' };
-    if (z.urteil === 'uneinig') return { txt: '⚖️ uneinig', col: A.gold, bg: 'rgba(201,133,0,.16)' };
-    return { txt: 'eine Quelle', col: 'var(--mi3)', bg: 'transparent' };
+  // Eine Spalte je Buch, IMMER an derselben Stelle — auch leer. Man zaehlt die gefuellten
+  // Felder, statt Text zu lesen, und zwei Zeilen untereinander sind vergleichbar.
+  function _klZelle(t) {
+    var kurz = (t && t.buch) || '?';
+    var name = KL_BUCH[kurz] || kurz;
+    if (!t || t.status === 'unbekannt') {
+      return '<div class="sz-c leer"><b>' + name + '</b><i style="color:var(--mi3)">—</i>'
+        + '<s>nicht erhoben</s></div>';
+    }
+    // „—" heisst NICHT ERHOBEN und nur das. Ein Buch, das gefragt wurde und nicht zustimmt,
+    // zeigt eine 0 — sonst sehen „nicht gefragt" und „sagt nein" gleich aus, und genau diese
+    // Verwechslung ist der Grund, warum der Nenner ueberhaupt mitgeschrieben wird.
+    var col = (t.punkte > 0) ? (KL_BUCH_COL[kurz] || A.good) : 'var(--mi3)';
+    var wert = (t.punkte > 0) ? ('+' + t.punkte) : '0';
+    var txt = (t.grund && t.grund.text) || t.text || '';
+    // Die Tiefe steht nur dran, wenn sie auch gezaehlt hat — sonst liest sich ein „nein"
+    // wie ein Beleg.
+    if (t.tiefe && t.tiefe.ok && t.tiefe.text) txt += ' · ' + t.tiefe.text;
+    return '<div class="sz-c"><b>' + name + '</b>'
+      + '<i style="color:' + col + '">' + wert + '</i>'
+      + '<s title="' + esc(String(txt)) + '">' + esc(String(txt)) + '</s></div>';
   }
 
-  // Eine Spalte je Quelle, IMMER an derselben Stelle — auch wenn sie leer ist. Eine Zeile mit
-  // drei Quellen soll sich von einer mit zweien unterscheiden, ohne dass man Text liest.
-  function _szZelle(kopf, wert, unten, col, mit) {
-    if (!mit) return '<div class="sz-c leer"><b>' + kopf + '</b><i style="color:var(--mi3)">—</i><s>&nbsp;</s></div>';
-    return '<div class="sz-c"><b>' + kopf + '</b><i style="color:' + col + '">' + wert + '</i><s>' + unten + '</s></div>';
-  }
-
-  function _szZeile(z) {
-    var bf = z.betfair, pl = z.poly, pn = z.pinn, sk = z.stake, cd = z.card;
-    var bad = _szBadge(z);
-    var min = z.kickoff ? Math.round((Date.parse(String(z.kickoff).replace('Z', '+00:00')) - Date.now()) / 60000) : null;
+  function _klTafelZeile(r, bewegt) {
+    var min = r.kickoff ? Math.round((Date.parse(String(r.kickoff).replace('Z', '+00:00')) - Date.now()) / 60000) : null;
     var uhr = (min == null || !isFinite(min)) ? ''
       : '<span class="md-badge" style="background:rgba(57,135,229,.14);color:' + A.blue + '">⏱ '
         + (min >= 60 ? Math.floor(min / 60) + ' h' : min + ' min') + '</span>';
-    var q = '<div class="sz-q">'
-      + _szZelle('Betfair', bf ? bf.anteilPct + '%' : '', bf ? (eur(bf.eur) + ' · ' + esc(short(bf.name || ''))) : '', A.bf, !!bf)
-      // Ein reiner Scan-PREIS steht sichtbar da, traegt aber „Preis" statt einer Geldzahl —
-      // sonst liest man ihn als bezahltes Geld (Money-Map-Regel `polyGeld`).
-      + _szZelle('Polymarket', pl ? pl.anteilPct + '%' : '',
-                 pl ? ((pl.art === 'geld' ? usd(pl.usd) : 'nur Preis') + ' · ' + esc(short(pl.name || ''))) : '', A.poly, !!pl)
-      + _szZelle('Stake', sk ? usd(sk.usd) : '',
-                 sk ? (sk.n + (sk.n === 1 ? ' Wette' : ' Wetten') + (sk.seite ? ' · ' + SZ_SEITE[sk.seite] : ' · ohne 1X2')) : '', A_STAKE, !!sk)
-      // Pinnacle ist der ANKER, keine Stimme: das Geld liegt fast immer auf dem Favoriten, diese
-      // Uebereinstimmung waere der Normalfall. Die Spalte sagt deshalb „passt"/„dagegen", nie „einig".
-      + _szZelle('Pinnacle', pn ? (z.anker === 'dagegen' ? '✗' : '✓') : '',
-                 pn ? (z.anker === 'dagegen' ? 'anderer Favorit' : 'Favorit ' + (SZ_SEITE[pn.fav] || '—')) : '',
-                 z.anker === 'dagegen' ? A.red : A.pinn, !!pn)
-      + _szZelle('eigene Card', cd ? (cd.conv || 0) + '/10' : '',
-                 cd ? esc(short(cd.markt || '')) : '', A.good, !!cd)
-      + '</div>';
+    var paar = (r.home && r.away)
+      ? (esc(r.home) + ' <span style="color:var(--mi3);font-weight:400">v</span> ' + esc(r.away))
+      : esc(String(r.name || '—'));
+    // Der Nenner steht IMMER dabei: 6 aus 7 moeglichen ist etwas anderes als 6 aus 13.
+    var quote = (r.odd != null) ? ' <span style="color:var(--mi3)">@' + (+r.odd).toFixed(2) + '</span>' : '';
+    var teile = r.teile || [];
+    var reihe = ['BF', 'POLY', 'PIN', 'STAKE'].map(function (b) {
+      var t = null;
+      for (var i = 0; i < teile.length; i++) if (teile[i] && teile[i].buch === b) t = teile[i];
+      return _klZelle(t);
+    }).join('');
     return '<div class="sz-r"><div class="sz-h">'
-      + '<span class="sz-m">' + esc(z.home || '?') + ' <span style="color:var(--mi3);font-weight:400">v</span> ' + esc(z.away || '?') + '</span>'
-      + uhr + '<span class="sz-lg">' + esc(String(z.league || '')) + '</span>'
-      + '<span class="sz-u" style="margin-left:auto;background:' + bad.bg + ';color:' + bad.col + '">' + bad.txt + '</span>'
-      + '</div>' + q
-      + '<div class="sz-w">' + esc(String(z.text || ''))
-      + (z.duenn ? ' <span style="color:var(--mi3)">· dünner Markt — die Prozente stehen über sehr wenig Geld</span>' : '')
-      + '</div></div>';
+      + '<span class="sz-u" style="background:rgba(76,194,255,.14);color:' + A.blue + '">'
+      + r.punkte + '/' + r.moeglich + '</span>'
+      + '<span class="sz-m">' + paar + '</span>' + uhr
+      + '<span class="sz-lg">' + esc(String(r.liga || '')) + '</span>'
+      + (bewegt ? '<span class="sz-u" style="margin-left:auto;background:rgba(46,160,71,.16);color:' + A.good + '">⚡ Geld bewegt sich</span>' : '')
+      + '</div><div class="sz-q">' + reihe + '</div>'
+      + '<div class="sz-w">auf <b>' + esc(String(r.name || '—')) + '</b>' + quote + '</div></div>';
   }
 
-  function _mdZentrale() {
-    var d = _md.data && _md.data.zentrale;
-    var frage = 'Wo schauen mehrere Quellen auf dasselbe Spiel?';
-    var mechT = 'Vergleich: je Spiel eine Zeile, Quellen als Spalten. Einig heisst zwei unabhaengige '
-      + 'GELDquellen auf derselben Seite — Pinnacle zaehlt nicht mit, weil das Geld fast immer auf '
-      + 'dem Favoriten liegt und diese Uebereinstimmung der Normalfall waere.';
-    var unter = 'braucht keine Bewegung — steht schon Stunden vor Anpfiff · eine fehlende Quelle ist <b>kein</b> Widerspruch';
-    if (!d || !d.zeilen) {
-      return _mdEbene(0, frage, 'Vergleich', A.gold, mechT, unter,
-        { txt: '❔ unbekannt', col: A.gold, bg: 'rgba(201,133,0,.14)' },
-        '<div class="md-kl-foot" style="border-top:0;padding-top:8px">spielzentrale.json fehlt oder ist nicht lesbar — '
-        + 'ob sich heute Quellen decken, lässt sich gerade <b>nicht</b> sagen. Das ist nicht dasselbe wie „nichts deckt sich".</div>');
-    }
-    var zeilen = d.zeilen || [], rest = d.rest || {};
-    var nEinig = zeilen.filter(function (z) { return z.urteil === 'einig' && !z.duenn; }).length;
-    var bad = zeilen.length
-      ? { txt: (nEinig ? '🤝 ' + nEinig + ' mit echtem Geld einig' : zeilen.length + ' zu vergleichen'),
-          col: nEinig ? A.good : A.gold, bg: nEinig ? 'rgba(46,160,71,.16)' : 'rgba(201,133,0,.14)' }
-      : { txt: '👀 nichts zu vergleichen', col: A.gold, bg: 'rgba(201,133,0,.14)' };
-    // Die Restzeile ist Pflicht, nicht Deko: eine kurze Liste ohne sie liest sich wie ein
-    // Ausfall. Sie ist eine Messung — die meisten Spiele haben schlicht nur eine Quelle.
-    var fuss = '<div class="md-kl-foot">'
-      + (rest.einzeln ? '<b>' + rest.einzeln + '</b> weitere Spiele im Fenster haben <b>nur eine</b> Geldquelle — da gibt es nichts zu vergleichen. ' : '')
-      + (rest.spaeter ? rest.spaeter + ' spielen später als ' + Math.round(d.fensterH || 24) + ' h. ' : '')
-      + (rest.gelaufen ? rest.gelaufen + ' sind schon angepfiffen. ' : '')
-      + '</div>';
-    var koerper = zeilen.length
-      ? zeilen.map(_szZeile).join('') + fuss
-      : '<div class="md-kl-foot" style="border-top:0;padding-top:8px">Im nächsten Tag deckt sich keine zweite Geldquelle mit einer ersten. '
-        + 'Das ist ein Ergebnis, kein Fehler.</div>' + fuss;
-    var det = (d.einzeln && d.einzeln.length)
-      ? '<details class="md-kl-det"><summary class="md-kl-sum">👁 Die größten Spiele mit nur einer Quelle ansehen</summary>'
-        + '<div class="md-kl-bliste">' + d.einzeln.map(_szZeile).join('') + '</div></details>'
-      : '';
-    return _mdEbene(0, frage, 'Vergleich', A.gold, mechT, unter, bad, koerper + det);
+  function _klTafel(k, bewegteIds) {
+    var alle = ((k && k.alleBewertet) || []).filter(function (r) {
+      // Angepfiffene raus — dieselbe Regel wie ueberall seit heute frueh.
+      var t = r && r.kickoff ? Date.parse(String(r.kickoff).replace('Z', '+00:00')) : NaN;
+      return isFinite(t) && t > Date.now();
+    });
+    if (!alle.length) return '';
+    alle.sort(function (a, b) { return (b.punkte || 0) - (a.punkte || 0) || (a.kickoff < b.kickoff ? -1 : 1); });
+    var oben = alle.filter(function (r) { return (r.punkte || 0) >= KL_TAFEL_MIN; }).slice(0, KL_TAFEL_MAX);
+    var rest = alle.length - oben.length;
+    var koerper = oben.length
+      ? oben.map(function (r) { return _klTafelZeile(r, bewegteIds[String(r.matchId)]); }).join('')
+      : '<div class="md-kl-foot" style="border-top:0;padding-top:8px">Heute kommt kein Spiel über '
+        + KL_TAFEL_MIN + ' von 13 Punkten. Das ist ein Ergebnis, kein Fehler.</div>';
+    // Die Restzeile ist Pflicht: eine kurze Tafel ohne sie liest sich wie ein Ausfall.
+    var beste = alle.length ? (alle[oben.length] || {}).punkte : null;
+    var fuss = rest ? ('<div class="md-kl-foot"><b>' + rest + '</b> weitere Spiele bewertet'
+      + (beste != null ? ', bestes davon <b>' + beste + '/' + (alle[oben.length].moeglich) + '</b>' : '')
+      + ' — sie stehen nicht oben, weil zu wenige Bücher zustimmen.</div>') : '';
+    var det = rest ? ('<details class="md-kl-det"><summary class="md-kl-sum">📁 Alle ' + alle.length
+      + ' bewerteten Spiele ansehen</summary><div class="md-kl-bliste">'
+      + alle.map(function (r) { return _klTafelZeile(r, bewegteIds[String(r.matchId)]); }).join('')
+      + '</div></details>') : '';
+    return koerper + fuss + det;
   }
 
   // ── Ebene 1: das Freigabe-Register ────────────────────────────────────────────────────
@@ -2444,22 +2435,30 @@
     // Lucas beanstandet hat.
     var ebene = function (inhalt) {
       return '<div id="mdKillerBox">' + _mdEbene(2, 'Wie viele Bücher sind sich einig?', 'Punktestand', A.blue,
-        'Je zustimmendem Buch 2 Punkte, 1 für Tiefe im selben Buch, 1 wenn es schon ≥3h vor Anpfiff steht. Nicht erhobene Bücher senken den Nenner — sie kosten keine Punkte.',
+        'Vier Bücher: Betfair, Polymarket, Pinnacle, Stake-Highroller. Je zustimmendem Buch 2 Punkte, 1 für Tiefe im selben Buch, 1 wenn es schon ≥3h vor Anpfiff steht. Nicht erhobene Bücher senken den Nenner — sie kosten keine Punkte, deshalb steht immer x/y da.',
         // 06.09.2026 (Lucas: „ich weiß nicht, ob man das nicht noch verbessern kann … damit
         // ich wirklich check, was der Sinn der 2 Elemente ist"). Die Unterzeile sagt jetzt,
         // was diese Ebene von der darunter UNTERSCHEIDET — das war die eigentliche Frage.
         // Ebene 3 sagt an derselben Stelle: eine Quelle genügt, kein UND.
-        'mehrere Bücher <b>gleichzeitig</b> auf derselben Seite (UND) · gehalten bis zum Anpfiff · leer heißt leer',
+        'die Tafel zeigt die <b>Spitze aller bewerteten Spiele</b> — sie braucht keine Bewegung · darunter die, wo mehrere Bücher <b>gleichzeitig</b> auf derselben Seite stehen und frisches Geld fließt (UND) · leer heißt leer',
         bad, inhalt,
         // Was hier landen KANN, ist durch die Bauart begrenzt: nur Märkte, die alle drei
         // Bücher quotieren — praktisch 1X2. Die Poly-Shortlist spielt überwiegend Über/Unter,
         // trifft sich mit dieser Ebene aber sehr wohl auf 1X2-Spielen (06.09.: Remo v Flamengo).
         _mdRegal(s1.concat(s2), function (r) { return r.markt || r.market; })) + '</div>';
     };
+    // 08.09.2026 — die Tafel steht IMMER, auch wenn das Bewegungs-Tor leer ist. Vorher stand
+    // hier „Gerade deckt sich nichts", waehrend dieselbe Datei 145 Spiele bewertet hatte: der
+    // Satz sprach ueber die WELT, wo er ueber das WERKZEUG haette sprechen muessen.
+    var _bewegte = {};
+    s1.concat(s2).forEach(function (r) { if (r && r.matchId != null) _bewegte[String(r.matchId)] = 1; });
+    var _tafel = _klTafel(k, _bewegte);
     if (!s1.length && !s2.length) {
       var regel = (k && k.regeln && k.regeln.text) || 'Geldanteil, frischer Zufluss und mitziehende Quote müssen zusammenfallen.';
-      return ebene('<div class="md-kl-foot" style="border-top:0;padding-top:8px">Gerade deckt sich nichts. ' +
-        esc(regel) + '</div>' + _mdKlBilanz(bil));
+      return ebene(_tafel
+        + '<div class="md-kl-foot">Kein Spiel hat gerade zusätzlich <b>Geld in Bewegung</b> ('
+        + esc(regel) + '). Das ist ein eigener Befund und macht die Tafel darüber nicht ungültig — '
+        + 'sie misst Übereinstimmung, nicht Bewegung.</div>' + _mdKlBilanz(bil));
     }
     var now = Date.now();
     var uhr = function (iso) {
@@ -2696,6 +2695,9 @@
       + (st && st.clv != null ? ' Gemessenes Tor: ' + (st.n || 0) + ' abgerechnete Zeilen, CLV '
           + (st.clv >= 0 ? '+' : '') + st.clv.toFixed(1) + 'pp.' : '');
     return ebene(
+      _tafel +
+      '<div class="md-kl-foot" style="padding-top:9px"><b>Und diese bewegen sich gerade</b> — '
+      + 'zusätzlich zur Übereinstimmung fließt frisches Geld und die Quote zieht mit:</div>' +
       grp('🔒 Voll gedeckt — Betfair · Poly · Pinnacle', s1) +
       grp('💷 Betfair-Kern — das gemessene Tor', s2) +
       '<div class="md-kl-foot">' + esc(fuss) + '</div>' + _mdKlBilanz(bil));
@@ -2988,11 +2990,11 @@
     return '<section class="md-sp md-rise">'
       + '<div class="md-sp-h"><span style="font-size:16px">🎯</span>'
       + '<span class="md-sp-t">Was kann ich spielen?</span>'
-      + '<span class="md-sp-s">Ebene <b>0</b> zeigt, wo mehrere Quellen auf dasselbe Spiel schauen — sie braucht '
-      + 'keine Bewegung und steht deshalb schon Stunden vor Anpfiff da. Darunter drei Ebenen von streng nach breit: '
-      + '<b>je weiter unten, desto mehr steht da und desto weniger ist belegt</b>. Ebene 1 sagt, wie ernst man die '
-      + 'beiden darunter nehmen darf.</span></div>'
-      + _mdZentrale() + _mdFreigabe() + _mdKiller(polyPlays) + _mdJetzt(polyPlays)
+      + '<span class="md-sp-s">Drei Ebenen von streng nach breit — <b>je weiter unten, desto mehr steht da '
+      + 'und desto weniger ist belegt</b>. Ebene 1 sagt, wie ernst man die beiden darunter nehmen darf; '
+      + 'Ebene 2 zeigt, wie viele der vier Bücher auf derselben Seite liegen — und braucht dafür keine '
+      + 'Bewegung.</span></div>'
+      + _mdFreigabe() + _mdKiller(polyPlays) + _mdJetzt(polyPlays)
       + '</section>';
   }
   // 13.08.2026 (Lucas): Poly-Public-Plays sind erst async da → Box nach dem Laden mit ihnen neu ranken
@@ -3015,5 +3017,5 @@
   window._mdState = _md;   // Test-Hook
   window._mdStakeGeldTest = _mdStakeGeldBody;   // Test-Hook (kein Wrapper: der ueberschriebe die Bindung)
   window._mdSignalBoardTest = _mdSignalBoard;   // Test-Hook
-  window._mdZentraleTest = _mdZentrale;   // Test-Hook
+  window._mdKlTafelTest = _klTafel;   // Test-Hook
 })();
