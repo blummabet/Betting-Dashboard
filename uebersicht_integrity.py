@@ -565,6 +565,104 @@ def check_fade_kontrolle(ctx):
                          rb.get("n") or 0))
 
 
+def check_poly_markt_gehoert_zur_selben_mannschaft(ctx):
+    """08.09.2026 (Uebersicht-Check) — `betfair_anker.json` hing den SENIOREN-Markt an das
+    Nachwuchsspiel: „Real Madrid U19 v Inter U19" (UEFA Youth League) fuehrte
+    `ucl-rma-int-2026-09-08` mit **$294.571** — dem Geld von Real Madrid v Inter am selben Abend.
+    Fuenf Faelle in einer Datei; `ucl-por-mnc-2026-09-08` hing sogar gleichzeitig an Porto U19
+    **und** an Man City, also an zwei Betfair-Spielen auf einmal.
+
+    Der bestehende Guard `check_money_map_poly_gehoert_zum_spiel` sieht das nicht: „Real Madrid
+    U19" und „Real Madrid CF" teilen sehr wohl Tokens — sie sind ja fast derselbe Name. Genau
+    das ist der Punkt. Ein Altersmarker (U19, II, W, Jong) ist keine Namensvariante, sondern
+    eine andere Mannschaft, und ein Namens-Score kann das grundsaetzlich nicht trennen.
+
+    Zwei Saetze werden hier geprueft, beide am fertigen Artefakt statt am Weg dorthin:
+      1. Die Mannschafts-Ebene der Poly-Seite stimmt mit der des Betfair-Teams ueberein.
+      2. Ein Poly-Markt haengt an hoechstens EINEM Spiel — derselbe Topf zweimal ist immer falsch.
+    """
+    try:
+        from betfair_consensus import elf_marker
+    except Exception as e:                                   # pragma: no cover
+        return _c("Poly-Markt gehoert zur selben Mannschaft", "warn",
+                  [f"elf_marker nicht ladbar: {e}"])
+
+    fails = []
+    anker = (ctx.get("bfAnker") or {}).get("anker") or {}
+    belegt = {}
+    for mid, v in anker.items():
+        if not isinstance(v, dict):
+            continue
+        p = v.get("poly") or {}
+        key, name = p.get("key"), p.get("sideKey") or p.get("name")
+        if not key:
+            continue
+        belegt.setdefault(key, []).append((mid, v))
+        seite = v.get("moneyName")
+        if name and seite and elf_marker(seite) != elf_marker(name):
+            fails.append(f"{v.get('league')}: Betfair-Seite „{seite}\u201c gegen Poly „{name}\u201c — "
+                         f"andere Mannschaftsebene ({sorted(elf_marker(seite)) or 'erste Elf'} vs "
+                         f"{sorted(elf_marker(name)) or 'erste Elf'}), ${p.get('vol')} fremdes Geld")
+    for key, zeilen in belegt.items():
+        if len(zeilen) > 1:
+            wo = ", ".join(f"{v.get('league')}/{v.get('moneyName')}" for _, v in zeilen)
+            fails.append(f"Poly-Markt {key} haengt an {len(zeilen)} Betfair-Spielen: {wo}")
+    return _c("Poly-Markt gehoert zur selben Mannschaft", "error", fails[:8],
+              "Nachwuchs- und Frauenteams teilen fast alle Tokens mit der ersten Mannschaft — "
+              "der Namens-Score kann sie nicht trennen, der Marker schon.")
+
+
+def check_spielzentrale_urteil(ctx):
+    """08.09.2026 — Ebene 0 sagt „einig". Das ist die staerkste Aussage der ganzen Uebersicht,
+    und sie ist genau dann wertlos, wenn sie zu leicht zu bekommen ist.
+
+    Drei Saetze werden am fertigen Artefakt geprueft, weil jeder von ihnen die Zeile ohne
+    sichtbaren Unterschied entwerten wuerde:
+
+      1. „Einig" braucht **zwei** Stimmen und keine Gegenstimme. Eine Quelle ist ein Hinweis.
+      2. **Pinnacle stimmt nie mit.** Das Geld liegt fast immer auf dem Favoriten — waere der
+         Anker eine Stimme, waere fast jede Zeile „einig", und die Farbe saegte nichts mehr aus.
+      3. Ein reiner Poly-**Preis** stimmt nie mit. Er ist sichtbar, aber niemand hat ihn bezahlt.
+
+    Dazu der Quervergleich: dasselbe Spiel darf in Money Map und Zentrale nicht zwei
+    verschiedene Antworten bekommen — das ist die Klasse „zwei Flaechen, zwei Antworten, und
+    keine sagt es".
+    """
+    fails = []
+    z = ctx.get("zentrale") or {}
+    zeilen = z.get("zeilen") or []
+    for r in zeilen:
+        if not isinstance(r, dict):
+            continue
+        wer = "%s v %s" % (r.get("home"), r.get("away"))
+        dafuer, gegen = r.get("dafuer") or [], r.get("gegen") or []
+        if r.get("urteil") == "einig" and (len(dafuer) < 2 or gegen):
+            fails.append("%s: „einig\u201c mit %d Stimme(n)%s — das ist kein Konsens"
+                         % (wer, len(dafuer), (" und %d dagegen" % len(gegen)) if gegen else ""))
+        if "pinn" in dafuer or "pinn" in gegen:
+            fails.append("%s: Pinnacle steht als Stimme in der Zeile — der Anker darf nur "
+                         "bestaetigen oder widersprechen" % wer)
+        if "poly" in dafuer and ((r.get("poly") or {}).get("art") != "geld"):
+            fails.append("%s: ein reiner Poly-Preis stimmt mit ab — dafuer hat niemand bezahlt" % wer)
+    # Quervergleich mit der Money Map (gleiche Rechnung, andere Filterung)
+    mm = {}
+    for r in ((ctx.get("moneyMap") or {}).get("rows") or []):
+        if r.get("matchId"):
+            mm[str(r["matchId"])] = r
+    for r in zeilen:
+        m = mm.get(str(r.get("matchId")))
+        if not m or r.get("urteil") not in ("einig", "uneinig"):
+            continue
+        mmu = {"konsens": "einig", "uneinig": "uneinig"}.get(m.get("verdict"))
+        if mmu and mmu != r.get("urteil"):
+            fails.append("%s v %s: Money Map sagt „%s\u201c, Spielzentrale „%s\u201c — dasselbe "
+                         "Spiel, zwei Antworten auf einem Bildschirm"
+                         % (r.get("home"), r.get("away"), m.get("verdict"), r.get("urteil")))
+    return _c("Spielzentrale: „einig\u201c ist belegt", "error", fails[:8],
+              "Zwei unabhaengige GELDquellen auf derselben Seite. Pinnacle und ein reiner "
+              "Poly-Preis zaehlen nicht mit.")
+
+
 UEBERSICHT_CHECKS = [
     check_serien_rangfolge,
     check_freigabe_grund,
@@ -575,6 +673,8 @@ UEBERSICHT_CHECKS = [
     check_serie_seltenheit_nennt_ihren_nenner,
     check_money_map_meldet_ihre_luecken,
     check_money_map_poly_gehoert_zum_spiel,
+    check_poly_markt_gehoert_zur_selben_mannschaft,
+    check_spielzentrale_urteil,
     check_stake_kachel_zeigt_das_gemessene_urteil,
     check_stake_spielklasse,
     check_poly_deckung,
@@ -605,6 +705,8 @@ def build_ctx_from_disk() -> dict:
         "freigabe": _lade("freigabe.json", {}),
         "pulse": _lade("dashboard_pulse.json", {}),
         "moneyMap": _lade("money_map.json", {}),
+        "bfAnker": _lade("betfair_anker.json", {}),
+        "zentrale": _lade("spielzentrale.json", {}),
         "ligaStreaks": _lade("liga_streaks.json", {}),
         "mlsStreaks": _lade("mls_streaks.json", {}),
         "stake": _lade("stake_highroller.json", {}),

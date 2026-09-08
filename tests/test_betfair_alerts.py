@@ -846,3 +846,75 @@ class TestFreshFinishedLateGate(unittest.TestCase):
         # Vor Anpfiff: liveInfo leer -> time None -> Gate greift nicht
         a = BA.fresh_alert(self._m(live={}), self.HIST, 30000, 20000)
         self.assertIsNotNone(a)
+
+
+class TestAltbestandUndRemis(unittest.TestCase):
+    """🔴 08.09.2026 (Lucas: „ich hab wieder eine Push bekommen bei einem portugiesischen
+    U23-Match … und jetzt noch im Trades-Channel beim Jugend-Champions-League-Spiel, Man City
+    zwei null hinten, da kam auch was auf Unentschieden").
+
+    Beide Spiele standen zu dem Zeitpunkt so im Feed:
+
+        Estoril U23 v Famalicao U23   Min 87, 3:2   The Draw 86 % Anteil @ 6,60 → implizit 15 %
+        Porto U19  v Man City U19     Min 45, 2:0   The Draw 48 % Anteil @14,00 → implizit  7 %
+
+    Der Anteil ist kumulierter Umsatz über die ganze Marktlaufzeit, der Preis ist von jetzt.
+    Bei 2:2 wird auf das Remis gehandelt; fällt danach das 3:2, bleibt das Geld in der Statistik
+    stehen. „86 % des Geldes auf dem Remis" beschreibt dann nichts Gegenwärtiges mehr.
+
+    Von 6 laufenden Spielen im Feed dieses Laufs trugen GENAU DIESE ZWEI einen Geld-Führer mit
+    ≥40 % Anteil auf einer Quote ≥5,0.
+    """
+
+    def _a(self, share, odd, minute=45, name="The Draw", markt="Match Odds"):
+        return {"leadName": name, "market": markt, "leadShare": share, "leadOdd": odd,
+                "live": {"time": minute, "goal_v1": 2, "goal_v2": 0}}
+
+    def test_estoril_faellt(self):
+        self.assertTrue(BA.geld_ist_altbestand(self._a(0.86, 6.6, 87)))
+
+    def test_man_city_faellt_obwohl_der_alte_filter_ihn_durchliess(self):
+        a = self._a(0.48, 14.0, 45)
+        self.assertTrue(BA.geld_ist_altbestand(a))
+        # 48 % liegen unter der 70-%-Schwelle von `_pub_incoherent` — genau deshalb kam der Push.
+        self.assertFalse(BA._pub_incoherent(a))
+
+    def test_vor_anpfiff_kann_der_anteil_nicht_veralten(self):
+        a = self._a(0.86, 6.6); a["live"] = {}
+        self.assertFalse(BA.geld_ist_altbestand(a),
+                         "ohne laufendes Spiel hat sich der Spielstand nicht geaendert")
+
+    def test_gesunder_favorit_bleibt(self):
+        self.assertFalse(BA.geld_ist_altbestand(self._a(0.88, 1.66, name="Real Madrid")))
+
+    def test_fehlende_angabe_ist_kein_widerspruch(self):
+        a = self._a(0.86, 6.6); a["leadShare"] = None
+        self.assertFalse(BA.geld_ist_altbestand(a))
+        b = self._a(0.86, 6.6); b["leadOdd"] = None
+        self.assertFalse(BA.geld_ist_altbestand(b))
+
+    def test_beendetes_spiel_zaehlt_nicht(self):
+        a = self._a(0.86, 6.6); a["live"] = {"time": 90, "finished": True}
+        self.assertFalse(BA.geld_ist_altbestand(a))
+
+    def test_die_warnzeile_nennt_beide_zahlen(self):
+        t = BA.altbestand_note(self._a(0.48, 14.0))
+        self.assertIn("48 %", t)
+        self.assertIn("@14.00", t)
+        self.assertIn("7 %", t)   # was der Preis impliziert
+        self.assertEqual(BA.altbestand_note(self._a(0.9, 1.5)), "")
+
+    # ── Match-Odds-Remis raus aus Public ────────────────────────────────────
+    # Gemessen am eigenen Buch: 10 Remis-Pushs, 3 Treffer, ROI −32 %. Im Signal-Track verliert
+    # konzentriertes Remis-Geld belegt (n=135, ROI −29,3 %, Obergrenze −10,0 %), während Geld
+    # auf Heim +3,9 % und auf Auswärts +1,4 % bringt. Halbzeit-Remis ist NICHT betroffen
+    # (n=804, ROI +4,1 %) — bei Anpfiff steht 0:0, das ist ein anderes Ereignis.
+    def test_match_odds_remis_geht_nicht_mehr_public(self):
+        self.assertTrue(BA._draw_mo_public_raus(self._a(0.62, 2.5)))
+        self.assertTrue(BA._draw_mo_public_raus(self._a(0.55, 3.8)))
+
+    def test_halbzeit_remis_bleibt(self):
+        self.assertFalse(BA._draw_mo_public_raus(self._a(0.9, 1.52, markt="Half Time")))
+
+    def test_andere_seiten_bleiben(self):
+        self.assertFalse(BA._draw_mo_public_raus(self._a(0.8, 1.9, name="Servette")))

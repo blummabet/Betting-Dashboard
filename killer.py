@@ -226,17 +226,38 @@ WALLET_MIN_N  = 8       # ab so vielen aufgeloesten Positionen gilt ein Wallet a
 
 
 def _bewiesene_wallets(scores, min_n=WALLET_MIN_N):
-    """Wallets mit genug Historie UND positivem Ø-CLV. REIN.
+    """Wallets, die einen BELEG tragen — Definition aus `sharp_gate`. REIN.
 
-    Nicht „gross", sondern „hat bisher vor dem Markt gelegen" — dieselbe Unterscheidung wie beim
-    Wallet-Track (`smart` hiess frueher GROSS, nicht treffsicher). Ohne Datei: leere Menge, und der
-    Tiefen-Punkt bleibt dann UNBEKANNT statt verweigert."""
+    🔴 08.09.2026 (Lucas: „schau dir die ganzen Whales an … ob das auch wirklich sauber
+    umgesetzt ist"). Hier stand eine EIGENE, dritte Definition von „scharf": `n >= 8` und
+    Ø CLV > 0. Kein Wilson, keine Untergrenze, kein Ausschluss bestaetigter Verlierer — ein
+    Punktschaetzer gegen exakt Null. Gemessen am Stand von heute (3.439 Wallets):
+
+        diese Regel                      233 Wallets
+        sharp_gate.sharp_grade > 0        51
+        sharp_gate.is_sharp (Schalter)    19
+
+    Von den 233 sind **91 bestaetigte Verlierer** — darunter eine Wallet mit n=186 und
+    **P&L −$7.775.708**, eine zweite mit −$4.105.669. Sie trugen den Tiefen-Punkt im
+    Buecher-Score. Das eigene Statusfile meldete es die ganze Zeit
+    (`proven_wallets_profitable`: „101/238 'bewiesene' Wallets sind netto-NEGATIV"), nur las es
+    hier niemand.
+
+    ⭐ Es gibt genau EINE Sharp-Definition, und sie wohnt in `sharp_gate` — Dashboard,
+    Shortlist, Whale-Watch und Live-Watch benutzen sie bereits. Genommen wird die LOCKERE
+    Kante der Rampe (`grade > 0`), nicht der Schalter: das Repo hat am 01.09. gemessen, dass
+    die strengste Einstellung die SCHLECHTESTE Vorwaertsleistung liefert (z=1,645 → 16 Wallets,
+    54,4 % / +0,26 pp gegen z=1,036 → 33 Wallets, 55,2 % / +0,61 pp). Die Rampe schliesst
+    trotzdem aus, was kein Beleg ist: zu wenig Plays, negativer CLV, bestaetigter Verlierer.
+
+    Ohne Datei: leere Menge, und der Tiefen-Punkt bleibt UNBEKANNT statt verweigert.
+    """
+    import sharp_gate as _SG
     out = set()
     for w, v in ((scores or {}).get("scores") or {}).items():
         if not isinstance(v, dict):
             continue
-        n = v.get("n") or 0
-        if n >= min_n and (v.get("clvSumPP") or 0) / n > 0:
+        if _SG.sharp_grade(v, min_n=min_n) > 0:
             out.add(str(w).lower())
     return out
 

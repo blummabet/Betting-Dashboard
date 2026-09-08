@@ -55,6 +55,55 @@ WINDOW_H = float(os.environ.get("BETWATCH_WINDOW_H") or 26)
 PRIORITY_WINDOW_H = float(os.environ.get("BETWATCH_PRIO_WINDOW_H") or 72)
 PRIORITY_RX = re.compile(r"(german bundesliga|english premier league|spanish la ?liga|italian serie a|"
                          r"french ligue 1|major league soccer|\bmls\b)", re.I)
+# 08.09.2026 (Lucas: „vorher war Real Madrid drin, heute Champions League mit dem meisten Geld …
+# nun sind beide Spiele verschwunden").
+#
+# Genau das war es, und es lag am Deckel: `select_ids` holt Detail-Calls in der Reihenfolge
+# live → Prioritaets-Ligen (72h) → alles andere im 26h-Fenster NACH ANPFIFF sortiert, gedeckelt
+# bei MAX_DETAIL=150. Die Champions League stand in keiner Prioritaets-Liste, also lag sie im
+# dritten Topf — und der war heute frueh voll, bevor 21:00 Uhr an der Reihe war.
+#
+# Gemessen an den beiden Laeufen dieses Morgens:
+#   04:57 UTC → 125 Spiele (unter dem Deckel) → Real Madrid v Inter mit **102.861 €** drin
+#   07:57 UTC → 150 Spiele (= Deckel)         → ALLE VIER CL-Spiele weg (Real Madrid, Dortmund,
+#                                               Porto v Man City, Lille v Betis), dazu Boca,
+#                                               Fluminense, Bolton v West Ham
+#   dafuer neu: 19 Scottish Challenge Cup, 13 English National League Cup, 6 Portuguese U23 …
+#
+# Das Spiel mit dem meisten Geld des Tages fiel also raus, weil vierzig Pokalspiele frueher
+# anpfeifen. Der Push war da schon draussen — die Flaeche, auf die er zeigte, war leer.
+#
+# Zwei Ursachen, beide behoben:
+#  1. Die Prioritaets-Definition wich von der ab, die der VERBRAUCHER benutzt: betfair-radar.js
+#     stuft mit `tierOf()` in top5 / UEFA+International / Rest und gibt den ersten beiden
+#     dieselbe Schwelle. Die hier war eine zweite, kuerzere Liste. Jetzt dieselbe Definition.
+#  2. Der Rest-Topf sortierte nach ANPFIFF. Das ist die einzige Achse, die nichts darueber sagt,
+#     ob uns ein Spiel interessiert. Jetzt zuerst nach dem Geld, das wir vom letzten Lauf schon
+#     KENNEN (betfair_prices.json), dann nach Anpfiff. Ein Spiel mit 100k faellt damit nicht
+#     mehr aus dem Fenster, nur weil es spaeter beginnt — und das gilt auch fuer Wettbewerbe,
+#     die auf keiner Liste stehen (Libertadores, Sudamericana …).
+UEFA_RX = re.compile(r"(champions league|europa league|europa conference|conference league|uefa)", re.I)
+INTL_COUNTRY_RX = re.compile(r"^(int|international|eu|europe)$", re.I)
+
+
+def ist_prioritaet(e) -> bool:
+    """Dieselbe Einstufung wie `tierOf()` im Radar: Top-5/MLS oder UEFA/International. REIN."""
+    liga = str((e or {}).get("league") or "")
+    if PRIORITY_RX.search(liga) or UEFA_RX.search(liga):
+        return True
+    return bool(INTL_COUNTRY_RX.match(str((e or {}).get("country") or "")))
+
+
+def bekanntes_volumen(prices: dict) -> dict:
+    """{matchId: totalVol} aus dem letzten Lauf. Kostet keinen API-Call — wir wissen es schon."""
+    out = {}
+    for m in ((prices or {}).get("matches") or []):
+        if isinstance(m, dict) and m.get("matchId") is not None:
+            try:
+                out[m["matchId"]] = float(m.get("totalVol") or 0)
+            except (TypeError, ValueError):
+                continue
+    return out
 HIST_KEEP_H = 72
 HIST_MAX_POINTS = 80
 # Für den „frisches Geld"-Zufluss im Dashboard: je Snapshot das Markt-Volumen der Dashboard-Märkte
@@ -159,10 +208,16 @@ def dedup_matchups(snaps):
     return [best[k] for k in order]
 
 
-def select_ids(parsed, now=None, window_h=WINDOW_H, cap=MAX_DETAIL, prio_window_h=PRIORITY_WINDOW_H):
-    """Welche Matches bekommen einen (teuren) Detail-Call: alle LIVE zuerst, dann Top-5/MLS im WEITEN
-    Fenster (prio_window_h, ~3 Tage), dann alle anderen im Standard-Fenster (window_h, 26h). So werden
-    die Signal-Ligen früh erfasst, ohne den Cap mit obskuren Ligen zu fluten. Gedeckelt. REIN/testbar."""
+def select_ids(parsed, now=None, window_h=WINDOW_H, cap=MAX_DETAIL, prio_window_h=PRIORITY_WINDOW_H,
+               vol_bekannt=None):
+    """Welche Matches bekommen einen (teuren) Detail-Call: alle LIVE zuerst, dann die
+    Prioritaets-Wettbewerbe im WEITEN Fenster (prio_window_h, ~3 Tage), dann alle anderen im
+    Standard-Fenster (window_h, 26h) — die aber nach BEKANNTEM GELD sortiert, nicht nach Anpfiff.
+    Gedeckelt. REIN/testbar.
+
+    `vol_bekannt`: {matchId: totalVol} aus dem letzten Lauf (siehe bekanntes_volumen). Fehlt es,
+    bleibt es bei der Anpfiff-Reihenfolge — dann ist die Auswahl so gut wie vorher, nie schlechter.
+    """
     now = now or _now()
     horizon = now + timedelta(hours=window_h)
     prio_horizon = now + timedelta(hours=prio_window_h)
@@ -181,12 +236,15 @@ def select_ids(parsed, now=None, window_h=WINDOW_H, cap=MAX_DETAIL, prio_window_
         k = _ko(e)
         if k is None:
             continue
-        if PRIORITY_RX.search(str(e.get("league") or "")) and now <= k <= prio_horizon:
+        if ist_prioritaet(e) and now <= k <= prio_horizon:
             prio.append((k, e))
         elif now <= k <= horizon:
             pre.append((k, e))
     prio.sort(key=lambda x: x[0])
-    pre.sort(key=lambda x: x[0])
+    # Der Rest-Topf: erst das Geld, das wir schon kennen, dann der Anpfiff. Ohne bekanntes
+    # Volumen ist der Schluessel 0 — die Reihenfolge faellt dann auf Anpfiff zurueck.
+    vb = vol_bekannt or {}
+    pre.sort(key=lambda x: (-float(vb.get(x[1].get("matchId")) or 0), x[0]))
     ordered = ([e["matchId"] for e in live] + [e["matchId"] for _, e in prio]
                + [e["matchId"] for _, e in pre])
     # dedup, Reihenfolge erhalten
@@ -376,9 +434,22 @@ def main():
         by_id[e["matchId"]] = e
     for e in parse_events(live or []):
         by_id[e["matchId"]] = e   # live überschreibt prematch
-    ids = select_ids(list(by_id.values()), now=now)
+    _vorher = _load(PRICES_FILE) if callable(globals().get("_load")) else {}
+    _vol = bekanntes_volumen(_vorher)
+    ids = select_ids(list(by_id.values()), now=now, vol_bekannt=_vol)
     print(f"  {len(by_id)} Events · {sum(1 for e in by_id.values() if e['live'])} live · "
           f"{len(ids)} Detail-Calls (Fenster {WINDOW_H:.0f}h, Cap {MAX_DETAIL})")
+    # Der Deckel darf nicht still schneiden. Wenn er greift UND dabei ein Spiel faellt, von dem
+    # wir aus dem letzten Lauf Geld kennen, ist das genau der Fall vom 08.09. — dann steht es
+    # hier, mit Namen und Betrag.
+    if len(ids) >= MAX_DETAIL:
+        _drin = set(ids)
+        _fehlt = sorted(((v, by_id[k].get("league"), by_id[k].get("home"), by_id[k].get("away"))
+                         for k, v in _vol.items() if k not in _drin and v >= 20000 and k in by_id),
+                        reverse=True)[:5]
+        print(f"  ⚠️  Cap {MAX_DETAIL} erreicht — {len(by_id) - len(ids)} Events ohne Detail-Call.")
+        for v, lg, h, a in _fehlt:
+            print(f"      ❗ {h} v {a} ({lg}) hatte zuletzt {v:,.0f} € und faellt raus")
 
     snaps, hist = [], prune_history(_load(HISTORY_FILE), now=now)
     for mid in ids:

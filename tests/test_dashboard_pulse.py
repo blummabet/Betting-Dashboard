@@ -19,11 +19,23 @@ def test_betfair_pulse_leer_ist_none():
 def test_poly_pulse_aus_agg_public():
     # 12.08.2026 (Lucas): der Puls zeigt die HART GEGATETEN Public-Kandidaten (agg.public),
     # openN zaehlt nur offene Plays mit public=True.
-    track = {"agg": {"public": {"n": 40, "hit": 0.75, "roi": 0.026, "clvAvg": 0.03}},
+    track = {"agg": {"public": {"n": 40, "hit": 0.75, "roi": 0.026, "clvAvg": 0.03,
+                                "roiUg": -0.0283, "belegt": False}},
              "open": {"a": {"public": True}, "b": {"public": True}, "c": {"public": False}}}
     out = bp._poly_pulse(track, record={"gesamt": 3})
-    assert out == {"n": 40, "hitPct": 75.0, "roiPct": 2.6, "clvAvg": 0.03, "openN": 2,
-                   "sendet": False, "gesendetN": 3}
+    # 08.09.2026: `roiUgPct`/`belegt` kamen dazu — die Kachel zeigte bis heute nur das obere
+    # Ende des Bereichs (+2,6 %), waehrend die Untergrenze (−2,8 %) im Artefakt danebenstand.
+    assert out == {"n": 40, "hitPct": 75.0, "roiPct": 2.6, "roiUgPct": -2.8, "belegt": False,
+                   "clvAvg": 0.03, "openN": 2, "sendet": False, "gesendetN": 3}
+
+
+def test_die_untergrenze_wird_durchgereicht_nicht_erfunden():
+    """08.09.2026 — ohne `roiUg` im Artefakt steht `None`, nicht eine gerechnete Zahl.
+    Ein Punktschaetzer mit „UG" davor ist schlimmer als einer ohne (Vorfall vom 03.09.)."""
+    track = {"agg": {"public": {"n": 12, "hit": 0.75, "roi": 0.026}}, "open": {}}
+    out = bp._poly_pulse(track, record=None)
+    assert out["roiUgPct"] is None
+    assert out["belegt"] is False
 
 
 def test_die_vorschau_traegt_die_zahl_der_ECHTEN_pushs_daneben():

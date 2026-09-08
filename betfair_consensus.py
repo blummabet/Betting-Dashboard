@@ -126,6 +126,7 @@ LEAGUE_ODDS_KEY = {
 # zweimal in derselben Stunde. Ohne lesbare Anpfiffzeit auf BEIDEN Seiten gilt der Treffer NICHT:
 # fehlende Information ist keine Erlaubnis, auch beim Zuordnen nicht.
 ANKER_FILE       = "betfair_anker.json"   # Zweitmeinungen OHNE die Radar-Volumenschwelle
+ZENTRALE_BASIS_FILE = "spielzentrale_basis.json"   # money_map_row fuer JEDES Spiel (Rohstoff der Spielzentrale)
 SPORTS_FILE      = "odds_sports.json"     # Abzug von /sports, damit der Lauf nicht bei Netzfehler blind wird
 ANPFIFF_FENSTER_H = 2.0                   # Schranke fuer den globalen Pool
 MAX_ODDS_KEYS    = int(os.environ.get("BF_MAX_ODDS_KEYS") or 90)   # Laufzeit-Deckel, nicht Quota-Deckel
@@ -458,6 +459,47 @@ def _teilt_kern_token(a, b, allerwelts) -> bool:
     return any(len(t) >= _KERN_MIN_LEN for t in geteilt)
 
 
+# ── 08.09.2026 (Uebersicht-Check, Real Madrid U19) ───────────────────────────
+# `betfair_anker.json` fuehrte fuer „Real Madrid U19 v Inter U19" (UEFA Youth League) den
+# Poly-Markt `ucl-rma-int-2026-09-08` mit $294.571 — das ist das Geld des SENIOREN-Spiels
+# Real Madrid v Inter am selben Abend. Dasselbe fuenfmal: Porto U19 bekam Man Citys Markt
+# (der damit an ZWEI Betfair-Spielen gleichzeitig hing), Club Brugge U19 den von Aston Villa,
+# Goztepe U19 $339.991 und Alanyaspor U19 $120.566 aus den Erwachsenen-Ligen.
+#
+# Ursache ist der Namens-Score, nicht der Pool: „Real Madrid U19" gegen „Real Madrid CF"
+# ergibt 2/3 = 0,67 (das „CF" faellt als Rausch-Token weg, das „U19" bleibt in der groesseren
+# Menge stehen), „Inter U19" gegen „Inter Milan" 1/2 = 0,50 — Summe 1,17 ueber der Schwelle
+# von 0,99. Der Score kann das gar nicht anders sehen: er zaehlt geteilte Tokens, und die
+# Nachwuchsmannschaft teilt fast alle.
+#
+# ⭐ Ein Altersmarker ist kein Rauschen, er ist die Identitaet: „Real Madrid U19" ist ein
+# anderes Team als „Real Madrid", nicht dasselbe Team mit einem Zusatz. Also wird nicht am
+# Schwellwert gedreht — die Marker muessen auf BEIDEN Seiten uebereinstimmen, und eine
+# fehlende Angabe zaehlt als „Erste Mannschaft", weil genau so beide Feeds sie fuehren.
+_ELF_MARKER_RX = re.compile(
+    r"^(u\d{2}|ii|iii|b|w|women|womens|ladies|frauen|feminin[eo]|femenino|femminile|"
+    r"reserve|reserves|youth|jugend|junior|juniors|academy|jong)$")
+
+
+def elf_marker(name) -> frozenset:
+    """Alters-/Mannschaftsmarker eines Teamnamens („U19", „II", „W") als Menge. REIN.
+
+    Leere Menge = erste Herrenmannschaft. Bewusst auf dem ROHEN Namen, nicht auf `_norm`:
+    dort faellt genau die Kurzform weg, um die es geht.
+    """
+    s = unicodedata.normalize("NFKD", str(name or "")).encode("ascii", "ignore").decode()
+    s = re.sub(r"[^a-z0-9 ]", " ", s.lower())
+    return frozenset(t for t in s.split() if _ELF_MARKER_RX.match(t))
+
+
+def gleiche_elf(a, b) -> bool:
+    """Beschreiben zwei Namen dieselbe Mannschaftsebene? REIN.
+
+    „Real Madrid U19" vs „Real Madrid CF" -> False. „Real Madrid" vs „Real Madrid CF" -> True.
+    """
+    return elf_marker(a) == elf_marker(b)
+
+
 def abgerechnet_vor_anpfiff(pe, kickoff) -> bool:
     """Wurde dieser Poly-Markt abgerechnet, BEVOR dieses Spiel angepfiffen wurde? REIN.
 
@@ -504,13 +546,17 @@ def _best_poly_entry(m, poly_entries):
             # „al" steht in 14,6 % des Pools.
             if hk and not ak:
                 cand = next((k for k in team_keys if k != hk), None)
-                if cand and _teilt_kern_token(away, cand, _allerwelts):
+                if cand and gleiche_elf(away, cand) and _teilt_kern_token(away, cand, _allerwelts):
                     ak, rueckfall = cand, True
             elif ak and not hk:
                 cand = next((k for k in team_keys if k != ak), None)
-                if cand and _teilt_kern_token(home, cand, _allerwelts):
+                if cand and gleiche_elf(home, cand) and _teilt_kern_token(home, cand, _allerwelts):
                     hk, rueckfall = cand, True
         if hk and ak and hk != ak:
+            # 08.09.2026: erst die Ebene, dann der Score. Ein Nachwuchs- oder Frauenteam teilt
+            # fast alle Tokens mit der ersten Mannschaft — der Score kann die beiden nie trennen.
+            if not (gleiche_elf(home, hk) and gleiche_elf(away, ak)):
+                continue
             sc = _name_score(home, hk) + _name_score(away, ak)
             # 05.09.2026 (Uebersicht-Check): der Rueckfall oben setzte die Schluessel korrekt,
             # und DIESE Zeile warf sie danach wieder weg. `_name_score` misst geteilte Tokens
@@ -1438,9 +1484,19 @@ def main():
             _ev = match_event(m, _global_pool, max_h=ANPFIFF_FENSTER_H)
         _poly = pick_poly(m, _ms, _isl, poly_entries, poly_live_entries, poly_upcoming_entries)
         _g = build_game(m, _ev, hist.get(str(m.get("matchId"))) or [], direction, _poly)
+        # 08.09.2026: dieselbe Poly-Pool-Kaskade wie die Money Map, damit die Zentrale-Zeile
+        # unten aus derselben Quelle stammt wie die Blase — sonst zeigen zwei Flaechen
+        # verschiedene Poly-Zahlen zum selben Spiel, und niemand sieht, welche gilt.
+        _pool = poly_scan_entries
+        for _p in ((poly_live_entries if _isl else []), poly_entries, poly_upcoming_entries,
+                   poly_liga_entries):
+            if _p and _best_poly_entry(m, _p) is not None:
+                _pool = _p
+                break
         # Nur die Felder, die der Buecher-Score liest — die Datei wird alle 15 Minuten committet.
-        return {kk: _g.get(kk) for kk in ("moneySide", "moneyName", "poly", "pinn", "pinnMove",
-                                          "league", "kickoff", "verdict")}
+        _anker = {kk: _g.get(kk) for kk in ("moneySide", "moneyName", "poly", "pinn", "pinnMove",
+                                            "league", "kickoff", "verdict")}
+        return _anker, money_map_row(_g, poly_fav(m, _pool))
 
     now = _now_iso()
     games, new_hist, mm_rows, mm_name_misses = [], {}, [], []
@@ -1520,6 +1576,11 @@ def main():
     # `games` sind bereits vollstaendig, deshalb hier nur die uebrigen (kein Duplikat).
     _im_radar = {str(g.get("matchId")) for g in games}
     anker = {}
+    # 08.09.2026 (Lucas, Spielzentrale): dieselben Zeilen wie die Money Map, aber fuer JEDES Spiel
+    # und OHNE den Geld-Filter. Die Money Map beantwortet „wo ist genug Geld fuer einen Vergleich",
+    # die Zentrale „welche Quellen sprechen ueberhaupt ueber dieses Spiel" — zwei Fragen, eine
+    # Rechnung. Gefiltert und gezaehlt wird in `spielzentrale.py`, nicht hier.
+    zentrale_basis = list(mm_rows)
     for m in matches:
         _mid = str(m.get("matchId"))
         if _mid in _im_radar or (m.get("liveInfo") or {}).get("finished"):
@@ -1527,7 +1588,8 @@ def main():
         if not (m.get("markets") or {}).get("Match Odds"):
             continue
         try:
-            anker[_mid] = _anker_zeile(m)
+            anker[_mid], _zb = _anker_zeile(m)
+            zentrale_basis.append(_zb)
         except Exception:
             continue          # ein einzelnes Spiel darf den Pool nicht kosten
     _mit_pinn = sum(1 for v in anker.values() if v.get("pinn")) + sum(1 for g in games if g.get("pinn"))
@@ -1542,6 +1604,13 @@ def main():
     # ⚠️ 02.09.2026: `ankerQuote` mass vorher gegen `games` — also gegen den bereits auf >=15.000 EUR
     # gefilterten Pool. „100%" hiess dann „100% von drei Spielen", waehrend keines der Spiele im
     # Punktestand einen Anker hatte. Der richtige Nenner sind ALLE offenen Spiele.
+    _dump(ZENTRALE_BASIS_FILE, {"generatedAt": now, "n": len(zentrale_basis),
+                                "hinweis": "money_map_row fuer JEDES Spiel im Feed, ungefiltert — "
+                                           "Rohstoff fuer spielzentrale.py. Die Money Map selbst "
+                                           "bleibt die gefilterte Vergleichsliste.",
+                                "rows": zentrale_basis})
+    print("zentrale-basis: %d Zeilen (Radar %d + Anker %d)"
+          % (len(zentrale_basis), len(mm_rows), len(zentrale_basis) - len(mm_rows)))
     out["ankerQuote"] = round(_mit_pinn / _n_ges, 3) if _n_ges else None
     out["ankerN"] = _n_ges
     _dump(OUT_FILE, out)

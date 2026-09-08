@@ -124,8 +124,13 @@ test('Tabelle bleibt strukturell heil (colspan zieht mit der neuen Spalte mit)',
   const w = boot(LINKS);
   w._bfTermOpen('A');
   const h = panel(w);
-  assert.doesNotMatch(h, /colspan="8"/, 'kein veralteter colspan nach dem Spalten-Zuwachs');
-  assert.match(h, /colspan="9"/, 'Drilldown spannt ueber alle Spalten');
+  // 07.09.2026: „× Liga-Norm" kam als zehnte Spalte dazu — der Test zieht mit, weil er genau
+  // dafuer da ist. Geprueft wird die BEZIEHUNG (Drilldown spannt ueber alle Spalten), nicht
+  // eine feste Zahl: deshalb wird die Spaltenzahl aus dem Kopf gezaehlt.
+  const spalten = (h.match(/<th[ >]/g) || []).length;
+  assert.ok(spalten >= 9, 'Kopfzeile nicht gefunden');
+  assert.doesNotMatch(h, new RegExp('colspan="' + (spalten - 1) + '"'), 'veralteter colspan');
+  assert.match(h, new RegExp('colspan="' + spalten + '"'), 'Drilldown spannt ueber alle Spalten');
 });
 
 test('Kaputter Link-Eintrag wirft nicht', () => {

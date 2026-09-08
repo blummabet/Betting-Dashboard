@@ -18,6 +18,11 @@ import betfair_track_store as _store   # 01.09.2026: Ledger liegt kompakt, load(
 
 # Grading aus dem bestehenden Track-Record wiederverwenden (kein Duplikat).
 from betfair_track_record import fav_token, winning_token, grade, MARKETS, RESULTS_MIN_H, CORRECTION_WINDOW_H, _clv_pp
+# 08.09.2026: die beiden Untergrenzen kommen aus den Stellen, an denen sie schon wohnen —
+# Wilson aus `sharp_gate` (dieselbe Definition wie im Whale-Gate und im Frontend), die
+# Rendite-Grenze aus `freigabe` (n>=30, sonst None). Keine dritte Rechnung.
+from sharp_gate import wilson_lb as _wilson_lb
+from freigabe import untergrenze as _untergrenze
 
 try:
     from fetch_betfair_betwatch import fetch_results as _fetch_results   # 10.08.2026 (Lucas): autoritative Endstaende
@@ -263,6 +268,11 @@ def summarize(ledger, now=None):
     now = now or _now()
     res = [e for e in ledger if e.get("status") in ("won", "lost")]
     pend = sum(1 for e in ledger if e.get("status") == "pending")
+    # 08.09.2026: `expired` und `void` fielen bisher still aus dem Nenner — 17 bzw. 1 von 210
+    # Ledger-Zeilen. Das Board zeigte „offen: 2" und verschwieg die 17, die NIE ein Ergebnis
+    # bekommen haben. Das Poly-Board weist seine `unaufloesbar` aus; dieses tat es nicht.
+    verfallen = sum(1 for e in ledger if e.get("status") == "expired")
+    ungueltig = sum(1 for e in ledger if e.get("status") == "void")
 
     def agg(rows):
         n = len(rows)
@@ -271,9 +281,23 @@ def summarize(ledger, now=None):
         odds = [float(e["leadOdd"]) for e in rows if isinstance(e.get("leadOdd"), (int, float))]
         clvb = [e["clvBf"] for e in rows if isinstance(e.get("clvBf"), (int, float))]
         clvp = [e["clvPinn"] for e in rows if isinstance(e.get("clvPinn"), (int, float))]
+        # 🔴 08.09.2026 (Lucas: „ob das alles reibungslos funktioniert"). Das GROESSTE Push-Buch
+        # im Repo (n=190) trug als einziges KEINE Untergrenze — weder hier noch auf dem Board.
+        # Angezeigt wurden „58 % Treffer" und „ROI −2,6 %" als nackte Punktschaetzer, in genau
+        # dem Repo, dessen eigene Regel lautet: ein Punktschaetzer ohne Untergrenze belegt
+        # nichts. Das kleinste Buch (Poly Public, n=9) macht es seit dem 03.09. richtig.
+        # Beides kommt aus vorhandenen Bausteinen: Wilson fuer die Quote, `untergrenze` fuer
+        # die Rendite (n>=30, sonst None — eine „UG" aus drei Plays ist schlimmer als keine).
+        _profite = [float(e.get("profit") or 0) for e in rows]
+        _roi_ug = _untergrenze(_profite)
         return {"n": n, "wins": wins,
                 "hitRate": round(wins / n, 4) if n else None,
+                "hitUg": round(_wilson_lb(wins, n), 4) if n else None,
                 "roi": round(profit / n, 4) if n else None,
+                "roiUg": round(_roi_ug, 4) if _roi_ug is not None else None,
+                # `belegt` ist die eine Zahl, auf die man schaut: die Rendite-Untergrenze ueber
+                # null. Ohne sie ist ein positiver ROI eine Beobachtung, kein Beleg.
+                "belegt": bool(_roi_ug is not None and _roi_ug > 0),
                 "avgOdd": round(sum(odds) / len(odds), 2) if odds else None,
                 "nClvBf": len(clvb), "avgClvBf": round(sum(clvb) / len(clvb), 2) if clvb else None,
                 "pctBeatBf": round(sum(1 for x in clvb if x > 0) / len(clvb), 3) if clvb else None,
@@ -313,6 +337,7 @@ def summarize(ledger, now=None):
 
     out = agg(res)
     out.update({"generatedAt": now.isoformat(), "pending": pend,
+                "verfallen": verfallen, "ungueltig": ungueltig,
                 "byScenario": by_scn, "byMarket": by_mkt,
                 "byConsensus": by_cons, "consensusSplit": cons_split, "recent": recent})
     return out

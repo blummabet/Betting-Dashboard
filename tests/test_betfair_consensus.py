@@ -673,3 +673,54 @@ class TestPolyScanFallback(unittest.TestCase):
         self.assertTrue(BC._mm_money_ok({"betfair": {"eur": 50000}, "poly": {"usd": 40000, "src": "close"}}))
         # starker Betfair alleine (>=150K) bleibt auch mit Scan-Poly drin
         self.assertTrue(BC._mm_money_ok({"betfair": {"eur": 161000}, "poly": {"usd": 597, "src": "scan"}}))
+
+
+class TestNachwuchsIstEinAnderesTeam(unittest.TestCase):
+    """08.09.2026 (Uebersicht-Check): `betfair_anker.json` haengte den Senioren-Markt an das
+    Nachwuchsspiel. Fuenf Faelle an einem Tag — Real Madrid U19 bekam die $294.571 von
+    Real Madrid v Inter, Porto U19 die $47.300 von Man City (derselbe Markt hing damit an zwei
+    Betfair-Spielen gleichzeitig), dazu Club Brugge U19, Goztepe U19 ($339.991) und
+    Alanyaspor U19 ($120.566).
+
+    Der Namens-Score kann das nicht trennen: „Real Madrid U19" gegen „Real Madrid CF" ergibt
+    2/3, „Inter U19" gegen „Inter Milan" 1/2 — zusammen ueber der Schwelle. Ein Altersmarker
+    ist deshalb nicht Rauschen, sondern Identitaet.
+    """
+
+    def _pe(self, home, away, ph=0.60, pd=0.21, pa=0.19, vol=294571, key="k"):
+        return {"prices": {home: ph, "Draw": pd, away: pa}, "shares": {}, "totalUsd": vol,
+                "src": "upcoming", "key": key}
+
+    def _m(self, home, away, mid="1", liga="UEFA Youth League"):
+        return {"matchId": mid, "home": home, "away": away, "league": liga,
+                "kickoff": "2026-09-08T19:00:00Z", "markets": {}}
+
+    def test_marker_wird_erkannt(self):
+        self.assertEqual(BC.elf_marker("Real Madrid U19"), frozenset({"u19"}))
+        self.assertEqual(BC.elf_marker("Real Madrid CF"), frozenset())
+        self.assertEqual(BC.elf_marker("Barcelona W"), frozenset({"w"}))
+        self.assertEqual(BC.elf_marker("Bayern Munich II"), frozenset({"ii"}))
+        self.assertEqual(BC.elf_marker("Jong Ajax"), frozenset({"jong"}))
+
+    def test_u19_bekommt_den_senioren_markt_nicht(self):
+        pool = [self._pe("Real Madrid CF", "Inter Milan", key="ucl-rma-int-2026-09-08")]
+        self.assertIsNone(BC._best_poly_entry(self._m("Real Madrid U19", "Inter U19"), pool))
+
+    def test_senioren_spiel_bleibt_verbunden(self):
+        # Gegenprobe: derselbe Pool, dasselbe Spiel ohne Marker -> der Join muss weiter stehen.
+        pool = [self._pe("Real Madrid CF", "Inter Milan", key="ucl-rma-int-2026-09-08")]
+        got = BC._best_poly_entry(self._m("Real Madrid", "Inter", liga="UEFA Champions League"), pool)
+        self.assertIsNotNone(got)
+        self.assertEqual(got[0]["key"], "ucl-rma-int-2026-09-08")
+
+    def test_frauen_und_zweite_mannschaft_gelten_auch(self):
+        pool = [self._pe("Barcelona", "Real Madrid", key="esp-bar-rma")]
+        self.assertIsNone(BC._best_poly_entry(self._m("Barcelona W", "Real Madrid W"), pool))
+        pool2 = [self._pe("Bayern Munich", "Borussia Dortmund", key="ger-bay-bvb")]
+        self.assertIsNone(BC._best_poly_entry(self._m("Bayern Munich II", "Borussia Dortmund II"), pool2))
+
+    def test_abkuerzungs_rueckfall_umgeht_die_ebene_nicht(self):
+        # Der Rueckfall (eine Seite stark, die andere nur Token-Overlap) darf das Tor nicht
+        # hintenrum oeffnen: „Paris Saint-Germain" matcht direkt, „Marseille U19" nicht.
+        pool = [self._pe("Paris Saint-Germain", "Olympique Marseille", key="fra-psg-om")]
+        self.assertIsNone(BC._best_poly_entry(self._m("Paris Saint-Germain", "Marseille U19"), pool))

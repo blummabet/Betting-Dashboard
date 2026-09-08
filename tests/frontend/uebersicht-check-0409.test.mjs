@@ -115,3 +115,14 @@ test('die Zahl der echt gesendeten Pushs steht daneben', () => {
   assert.match(MD, /pl\.gesendetN != null/);
   assert.match(MD, /'echt gesendet'/);
 });
+
+// ── 08.09.2026: der Nachfolge-Fund zum 04.09. ───────────────────────────────
+// Die Kachel heißt seit dem 04.09. richtig — sie trug ihre Zahl aber weiter ohne Fehlerbalken.
+// `poly_shortlist_track.agg.public` liefert `roiUg: −0,0283` und `belegt: false` gleich mit;
+// angezeigt wurde nur das obere Ende des Bereichs (+6,3 %). Dieselbe Klasse, eine Ebene tiefer.
+test('die Poly-Kachel zeigt ihre Untergrenze, nicht nur den Punktschätzer', () => {
+  assert.match(MD, /pl\.roiUgPct/, 'die Untergrenze wird nicht gelesen');
+  assert.match(MD, /'ROI · UG —'/, 'ohne Untergrenze muss „UG —" dastehen, nicht nichts');
+  assert.match(MD, /pl\.belegt \? 'belegt' : 'nicht belegt'/,
+    'ob die Untergrenze über null liegt, ist die eigentliche Aussage');
+});

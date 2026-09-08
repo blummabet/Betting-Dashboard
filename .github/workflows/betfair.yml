@@ -87,6 +87,14 @@ jobs:
         run: ${{ env.BETFAIR_PY }} betfair_consensus.py
         continue-on-error: true
 
+      # 08.09.2026 (Lucas: „alle sources sehen, aber auch was sich deckt"): Ebene 0 der
+      # Uebersicht. Laeuft direkt NACH betfair_consensus.py, weil sie dessen
+      # spielzentrale_basis.json liest (money_map_row fuer JEDES Spiel, ungefiltert), und
+      # zusaetzlich stake_highroller.json + liga-data.json aus dem Repo-Stand.
+      - name: 🧭 Spielzentrale (eine Zeile je Spiel, Quellen als Spalten)
+        run: ${{ env.BETFAIR_PY }} spielzentrale.py
+        continue-on-error: true
+
       - name: 🔗 Terminal-Kartenlink (unsere Card neben die Geld-Seite der Boerse)
         run: ${{ env.BETFAIR_PY }} betfair_card_link.py
         continue-on-error: true
@@ -234,6 +242,8 @@ jobs:
           git add betfair_public_record.json 2>/dev/null || true
           git add betfair_consensus.json 2>/dev/null || true
           git add betfair_anker.json 2>/dev/null || true
+          git add spielzentrale_basis.json 2>/dev/null || true      # Rohstoff der Ebene 0
+          git add spielzentrale.json 2>/dev/null || true            # Ebene 0 der Uebersicht
           git add betfair_consensus_history.json 2>/dev/null || true
           git add odds_sports.json 2>/dev/null || true
           git add betfair_status.json 2>/dev/null || true

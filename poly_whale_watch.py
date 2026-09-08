@@ -134,7 +134,7 @@ BLOCKED_FALLBACK = ("US-Sport", "Kampfsport")   # nur wenn poly_shortlist_track.
 # Sportarten zuerst, sonst klauen breite Fussball-Begriffe wie "championship" sie weg.
 _CAT_RULES = (
     ("E-Sport",    r"esport|cs2|csgo|\blol\b|dota|valorant"),
-    ("US-Sport",   r"basketball|nba|nfl|americanfootball|baseball|mlb|icehockey|hockey|nhl|wnba|ncaa"),
+    ("US-Sport",   r"basketball|nba|nfl|americanfootball|baseball|mlb|icehockey|hockey|nhl|wnba|ncaa|\bcfb\b"),
     ("Tennis",     r"tennis|wta|atp"),
     ("Kampfsport", r"mma|ufc|boxing|box|kampf"),
     ("Golf",       r"golf"),
@@ -161,7 +161,10 @@ def sport_category(league, sport=None):
         r"soccer|football|fussball|\bepl\b|premier|\bucl\b|\buel\b|uecl|uefa|champions|conmebol|"
         r"concacaf|copa|coupe|\bdfb\b|\befl\b|conference|europa|libertad|sudameri|\bmls\b|liga|ligue|"
         r"serie|bundesliga|eredivisie|allsven|superett|elitese|ekstrakla|veikkau|primeira|championship|"
-        r"super-?lig|pro-?league|\blal\b", x) else "Sonstige"
+        # 08.09.2026: `pro-?league` traf „SAUDI-PROFESSIONAL-LEAGUE" nicht (nach „pro" kommt
+        # „fessional"). 4 offene Whale-Positionen liefen deshalb auf „Sonstige" und fielen
+        # aus beiden Kanaelen. Spiegel in poly-wallets.js mitgeaendert.
+        r"super-?lig|pro(?:fessional)?-?league|\blal\b", x) else "Sonstige"
 
 
 def blocked_cats(shortlist=None):
@@ -183,12 +186,39 @@ def bet_blocked(pos, cats=None):
     return sport_category(pos.get("league"), pos.get("sport")) in (cats or BLOCKED_FALLBACK)
 
 
-def _sport(league: str):
+# 08.09.2026 (Lucas: „schau dir die ganzen Whales an, ob das alles sauber umgesetzt ist").
+# Hier standen ZWEI Liga→Sport-Zuordnungen in derselben Datei: `sport_category()` (Zeile 146,
+# volle Regex, kennt ligue/serie/eredivisie/elitese/championship/…) und `_sport()` (arm:
+# „SOCCER…", „LIGA", „MLS", „EPL", „UCL"). Gegatet hat die ARME — `_pub_ok()` wirft alles raus,
+# was bei ihr auf dem 🎯-Default landet, und `_pub_ok` filtert **beide** Kanäle, nicht nur Public.
+#
+# Gemessen an den 617 offenen Positionen von heute: 75 (12,2 %) landeten auf 🎯, davon **55
+# echter Fußball** — Ligue 1 (13), EFL Championship (14), Eliteserien (8), Ligue 2 (7),
+# Brazil Serie A (5), Allsvenskan (4), Scottish Premiership (4). Der Fingerabdruck steht in den
+# Push-Zahlen: `epl` 54 Pushes, `lal` 33, `bun` 9 — aber `fl1` 2, `elc` 5, `nor` 1, `bra`/`sco`/
+# `all`/`fl2` **0**. Und weil jeder ANDERE Public-Filter eine Unterdrückungszeile druckt
+# (🚫 💭 🤝 ⚔️) und dieser nicht, war der Verlust im Log unsichtbar.
+#
+# ⭐ Zwei Zuordnungen für dieselbe Frage sind eine zu viel. `sport_category()` ist die Quelle
+# (sie spiegelt `_pwSportCategory` im Dashboard und liefert dieselben Kategorien, die auch die
+# Sperrliste benutzt); `_sport()` haengt nur noch das Emoji dran. Der gestempelte `sport` aus dem
+# Capture hat Vorrang — 601 der 617 Positionen tragen ihn bereits.
+_CAT_EMOJI = {
+    "Fußball": "⚽", "E-Sport": "🎮", "Tennis": "🎾", "US-Sport": "🏀",
+    "Kampfsport": "🥊", "Golf": "⛳", "Motorsport": "🏎️", "Cricket": "🏏",
+}
+
+
+def _sport(league: str, sport=None):
+    """(Emoji, Sportname) für die Karte. 🎯 heisst „keine Sportart erkannt" und ist das
+    einzige, was `_pub_ok` sperrt — deshalb darf hier nichts landen, was `sport_category`
+    benennen kann. REIN."""
     x = str(league or "").upper()
     if x in _SPORT:
         return _SPORT[x]
-    if x.startswith("SOCCER") or "LIGA" in x or "MLS" in x or "EPL" in x or "UCL" in x:
-        return ("⚽", "Fußball")
+    cat = sport_category(league, sport)
+    if cat in _CAT_EMOJI:
+        return (_CAT_EMOJI[cat], cat)
     return ("🎯", (league or "Sport").title())
 
 
@@ -424,7 +454,7 @@ def build_card(pos: dict, scores: dict, restock: bool, broad: dict = None, extra
                blocked=None) -> str:
     """Trades-Push (01.08.2026, Lucas: „entscheidungsreif") — Matchup, Anpfiff, Einstieg→Jetzt-Preis,
     Wallet-Qualität, Markt-Link. Ein Push = eine fertige Wett-Entscheidung."""
-    emoji, sport = _sport(pos.get("league"))
+    emoji, sport = _sport(pos.get("league"), pos.get("sport"))
     side  = pos.get("side") or "?"
     key   = pos.get("key")
     usd   = pos.get("usd") or 0
@@ -684,7 +714,7 @@ def _pub_wallet_line(scores: dict, wallet) -> str:
 def _pub_ok(pos: dict) -> bool:
     """Public-Qualität: nur SPORT (kein Politik/Sonstiges → _sport-Default 🎯) und ein sinnvoller
     Einstiegspreis (nicht quasi-settled @~100¢/0¢). Hält Wahl-/Krypto-Märkte aus dem Sport-Channel."""
-    if _sport(pos.get("league"))[0] == "🎯":
+    if _sport(pos.get("league"), pos.get("sport"))[0] == "🎯":
         return False
     try:
         p = float(pos.get("firstPrice"))
@@ -696,7 +726,7 @@ def _pub_ok(pos: dict) -> bool:
 def build_public_card(pos: dict, scores: dict, restock: bool, broad: dict) -> str:
     """Öffentliches Format (31.07.2026, Lucas), im Betfair-Moneyflow-Stil: Header, Paarung, Liga,
     die Wette, die Wallet-Qualität. Fett wo's zählt, Markt-Link zum Nachschauen."""
-    emoji, sport = _sport(pos.get("league"))
+    emoji, sport = _sport(pos.get("league"), pos.get("sport"))
     side = pos.get("side") or "?"
     key = pos.get("key")
     matchup = _matchup(key, broad)

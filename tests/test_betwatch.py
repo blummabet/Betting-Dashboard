@@ -198,3 +198,56 @@ if __name__ == "__main__":
         f()
         print("ok", f.__name__)
     print(f"\n{len(fns)} tests passed")
+
+
+# ── 08.09.2026: der Deckel schnitt das teuerste Spiel weg ─────────────────────
+# Lucas: „vorher war Real Madrid drin, heute Champions League mit dem meisten Geld … nun sind
+# beide Spiele verschwunden."
+#
+# Gemessen an den beiden Laeufen dieses Morgens: 04:57 → 125 Spiele (unter dem Deckel), Real
+# Madrid v Inter mit 102.861 € drin. 07:57 → 150 Spiele (= MAX_DETAIL), und ALLE VIER
+# CL-Spiele des Abends weg, dafuer 19 Scottish Challenge Cup und 13 English National League Cup.
+# Ursache: der Rest-Topf sortierte nach ANPFIFF, und die Champions League stand in keiner
+# Prioritaets-Liste — obwohl der Radar sie mit `tierOf()` genauso hoch einstuft wie die Top 5.
+def _ev(mid, liga, ko_h, live=False, land=None, now=None):
+    from datetime import timedelta
+    t = (now or T0) + timedelta(hours=ko_h)
+    return {"matchId": mid, "home": "H%s" % mid, "away": "A%s" % mid, "league": liga,
+            "country": land, "kickoff": t.isoformat().replace("+00:00", "Z"), "live": live}
+
+
+def test_uefa_zaehlt_als_prioritaet_wie_im_radar():
+    """Der Radar stuft mit tierOf() in top5 / UEFA+International / Rest — der Fetcher hatte eine
+    zweite, kuerzere Liste. Zwei Definitionen fuer dieselbe Frage."""
+    assert B.ist_prioritaet({"league": "UEFA Champions League"})
+    assert B.ist_prioritaet({"league": "German Bundesliga"})
+    assert B.ist_prioritaet({"league": "Irgendwas", "country": "INT"})
+    assert not B.ist_prioritaet({"league": "Scottish Challenge Cup"})
+
+
+def test_bekanntes_volumen_liest_den_letzten_stand():
+    v = B.bekanntes_volumen({"matches": [{"matchId": 7, "totalVol": 102861},
+                                         {"matchId": 8}, {"matchId": 9, "totalVol": "kaputt"}]})
+    assert v[7] == 102861.0 and v.get(8) == 0.0 and 9 not in v
+
+
+def test_grosses_spiel_faellt_nicht_mehr_aus_dem_deckel():
+    """Der reale Fall: vierzig kleine Spiele pfeifen frueher an, das teuerste spaeter."""
+    klein = [_ev(i, "Scottish Challenge Cup", 2 + i * 0.01) for i in range(40)]
+    gross = _ev(999, "Irgendeine Liga", 11)          # spaet, aber 102.861 € bekannt
+    ids_alt = B.select_ids(klein + [gross], now=T0, cap=40)
+    assert 999 not in ids_alt, "ohne bekanntes Geld schneidet der Deckel wie bisher"
+    ids_neu = B.select_ids(klein + [gross], now=T0, cap=40, vol_bekannt={999: 102861})
+    assert ids_neu[0] == 999, "das teuerste bekannte Spiel gehoert nach vorn"
+
+
+def test_ohne_bekanntes_volumen_bleibt_die_anpfiff_reihenfolge():
+    """Der Rueckfall darf die Auswahl nie schlechter machen als vorher."""
+    evs = [_ev(2, "Liga", 5), _ev(1, "Liga", 2), _ev(3, "Liga", 9)]
+    assert B.select_ids(evs, now=T0, cap=3) == [1, 2, 3]
+
+
+def test_live_bleibt_vor_allem_anderen():
+    """Auch das teuerste Vor-Anpfiff-Spiel verdraengt kein laufendes."""
+    evs = [_ev(1, "Liga", 3, live=True), _ev(2, "Liga", 8)]
+    assert B.select_ids(evs, now=T0, cap=1, vol_bekannt={2: 999999}) == [1]

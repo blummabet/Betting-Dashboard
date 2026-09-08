@@ -266,3 +266,77 @@ class BetfairUrteilBrauchtDieRichtigeGrenze(unittest.TestCase):
         # eigener Zustand und darf nicht wie „alles in Ordnung" aussehen.
         r = UI.check_betfair_urteil(self._ctx(roiOg=None))
         self.assertTrue(any("Obergrenze" in f for f in r["failures"]), r["failures"])
+
+
+class TestPolyMarktSelbeMannschaft(unittest.TestCase):
+    """08.09.2026: der Senioren-Markt hing am Nachwuchsspiel (Real Madrid U19 → $294.571 aus
+    `ucl-rma-int-2026-09-08`), und derselbe Markt gleichzeitig an zwei Betfair-Spielen."""
+
+    def _ctx(self, anker):
+        return {"bfAnker": {"anker": anker}}
+
+    def test_faengt_die_ebenen_vermischung(self):
+        r = UI.check_poly_markt_gehoert_zur_selben_mannschaft(self._ctx({
+            "1": {"league": "UEFA Youth League", "moneyName": "Real Madrid U19",
+                  "poly": {"key": "ucl-rma-int-2026-09-08", "sideKey": "Real Madrid CF", "vol": 294571}},
+        }))
+        self.assertEqual(r["nFail"], 1)
+        self.assertIn("Mannschaftsebene", r["failures"][0])
+
+    def test_faengt_denselben_markt_an_zwei_spielen(self):
+        r = UI.check_poly_markt_gehoert_zur_selben_mannschaft(self._ctx({
+            "1": {"league": "UEFA Champions League", "moneyName": "Man City",
+                  "poly": {"key": "ucl-por-mnc-2026-09-08", "sideKey": "Manchester City", "vol": 47300}},
+            "2": {"league": "UEFA Youth League", "moneyName": "Man City U19",
+                  "poly": {"key": "ucl-por-mnc-2026-09-08", "sideKey": "Manchester City", "vol": 47300}},
+        }))
+        # zweimal auffaellig: die Ebene UND der doppelt belegte Markt
+        self.assertTrue(any("haengt an 2" in f for f in r["failures"]))
+
+    def test_sauberer_join_bleibt_still(self):
+        r = UI.check_poly_markt_gehoert_zur_selben_mannschaft(self._ctx({
+            "1": {"league": "UEFA Champions League", "moneyName": "Real Madrid",
+                  "poly": {"key": "ucl-rma-int-2026-09-08", "sideKey": "Real Madrid CF", "vol": 294571}},
+            "2": {"league": "Serie A", "moneyName": "Inter", "poly": None},
+        }))
+        self.assertEqual(r["failures"], [])
+
+
+class TestSpielzentraleUrteil(unittest.TestCase):
+    """08.09.2026 — Ebene 0. „Einig" ist die staerkste Aussage der Uebersicht; drei Wege, sie
+    ohne sichtbaren Unterschied zu entwerten, muessen laut auffallen."""
+
+    def _z(self, **over):
+        r = {"matchId": "1", "home": "Real Madrid", "away": "Inter", "urteil": "einig",
+             "dafuer": ["betfair", "poly"], "gegen": [],
+             "poly": {"art": "geld", "usd": 294571}}
+        r.update(over)
+        return {"zentrale": {"zeilen": [r]}}
+
+    def test_einig_mit_einer_stimme_faellt_auf(self):
+        r = UI.check_spielzentrale_urteil(self._z(dafuer=["betfair"]))
+        self.assertEqual(r["nFail"], 1)
+        self.assertIn("kein Konsens", r["failures"][0])
+
+    def test_einig_mit_gegenstimme_faellt_auf(self):
+        r = UI.check_spielzentrale_urteil(self._z(gegen=["stake"]))
+        self.assertEqual(r["nFail"], 1)
+
+    def test_pinnacle_als_stimme_faellt_auf(self):
+        r = UI.check_spielzentrale_urteil(self._z(dafuer=["betfair", "pinn"]))
+        self.assertTrue(any("Anker" in f for f in r["failures"]))
+
+    def test_reiner_poly_preis_als_stimme_faellt_auf(self):
+        r = UI.check_spielzentrale_urteil(self._z(poly={"art": "preis", "usd": 597}))
+        self.assertTrue(any("bezahlt" in f for f in r["failures"]))
+
+    def test_widerspruch_zur_money_map_faellt_auf(self):
+        ctx = self._z()
+        ctx["moneyMap"] = {"rows": [{"matchId": "1", "verdict": "uneinig"}]}
+        r = UI.check_spielzentrale_urteil(ctx)
+        self.assertTrue(any("zwei Antworten" in f for f in r["failures"]))
+
+    def test_saubere_zeile_bleibt_still(self):
+        ctx = self._z()
+        ctx["moneyMap"] = {"rows": [{"matchId": "1", "verdict": "konsens"}]}
+        self.assertEqual(UI.check_spielzentrale_urteil(ctx)["failures"], [])

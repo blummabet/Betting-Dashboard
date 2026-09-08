@@ -736,3 +736,60 @@ class TestBlockedCard(unittest.TestCase):
         # build_card wird auch aus Tests/Skripten ohne Liste gerufen — die Sperre darf nicht ausfallen.
         self.assertIn("nicht bespielbar", P.build_card(self._pos(), self._sc(), False, {}))
 
+
+
+class TestSportZuordnungIstEine(unittest.TestCase):
+    """🔴 08.09.2026 (Lucas: „ob das alles sauber umgesetzt ist"). In DERSELBEN Datei standen zwei
+    Liga→Sport-Zuordnungen: `sport_category()` mit voller Regex und `_sport()` mit
+    „SOCCER…/LIGA/MLS/EPL/UCL". Gegatet hat die arme — `_pub_ok()` wirft alles raus, was bei ihr
+    auf dem 🎯-Default landet, und `_pub_ok` filtert **beide** Kanäle.
+
+    Gemessen an den 617 offenen Positionen des Tages: 75 auf 🎯, davon 55 echter Fußball
+    (Ligue 1, EFL Championship, Eliteserien, Ligue 2, Brazil Serie A, Allsvenskan, Scottish
+    Premiership). Der Fingerabdruck: `epl` 54 Pushes, `fl1` 2, `bra`/`sco`/`all` je 0. Und weil
+    dieser Filter als einziger keine Unterdrückungszeile druckt, war der Verlust unsichtbar.
+    """
+
+    LIGEN = ["LIGUE-1", "LIGUE-2", "EFL-CHAMPIONSHIP", "NORWAY-ELITESERIEN",
+             "BRAZIL-SERIE-A", "SWEDEN-ALLSVENSKAN", "SCOTTISH-PREMIERSHIP",
+             "SAUDI-PROFESSIONAL-LEAGUE", "PRIMEIRA-LIGA", "EREDIVISIE"]
+
+    def test_echte_fussballligen_landen_nicht_auf_dem_default(self):
+        for lg in self.LIGEN:
+            emoji, name = P._sport(lg)
+            self.assertNotEqual(emoji, "🎯", "%s faellt auf den 🎯-Default" % lg)
+            self.assertEqual(name, "Fußball", lg)
+
+    def test_pub_ok_laesst_diese_ligen_durch(self):
+        for lg in self.LIGEN:
+            self.assertTrue(P._pub_ok({"league": lg, "firstPrice": 0.55}),
+                            "%s wird aus BEIDEN Kanaelen gefiltert" % lg)
+
+    def test_gestempelter_sport_hat_vorrang(self):
+        # 601 der 617 offenen Positionen tragen `sport` bereits als saubere Kategorie.
+        self.assertEqual(P._sport("SACHSEN", "Fußball"), ("⚽", "Fußball"))
+        self.assertTrue(P._pub_ok({"league": "SACHSEN", "sport": "Fußball", "firstPrice": 0.5}))
+
+    def test_kein_sport_bleibt_draussen(self):
+        # Das 🎯 ist der Zweck des Tors: Wahl-/Krypto-Maerkte gehoeren nicht in den Sport-Kanal.
+        for lg in ["US-ELECTION-2028", "BITCOIN-PRICE", "OSCARS"]:
+            self.assertEqual(P._sport(lg)[0], "🎯", lg)
+            self.assertFalse(P._pub_ok({"league": lg, "firstPrice": 0.5}), lg)
+
+    def test_sport_und_sport_category_widersprechen_sich_nicht_mehr(self):
+        # Der eigentliche Fehler war der WIDERSPRUCH, nicht das Etikett: `_SPORT` darf ruhig
+        # feiner beschriften („MLB Baseball" statt „US-Sport"), aber wo `sport_category` eine
+        # Sportart benennt, darf `_sport` nicht „keine Sportart" sagen — das ist das Tor.
+        for lg in self.LIGEN + ["TENNIS", "ESPORTS", "MLB", "CFB", "UFC", "NBA", "NHL", "GOLF"]:
+            if P.sport_category(lg) == "Sonstige":
+                continue
+            self.assertNotEqual(P._sport(lg)[0], "🎯",
+                                "_sport sagt 'keine Sportart', sport_category sagt %s (%s)"
+                                % (P.sport_category(lg), lg))
+
+    def test_jede_bekannte_abkuerzung_ist_auch_eine_kategorie(self):
+        # Die andere Richtung: was `_SPORT` als Sport fuehrt, darf `sport_category` nicht
+        # „Sonstige" nennen — sonst greift die Sperrliste bei genau diesen Kuerzeln nie.
+        for kuerzel in P._SPORT:
+            self.assertNotEqual(P.sport_category(kuerzel), "Sonstige",
+                                "%s ist in _SPORT, aber fuer sport_category 'Sonstige'" % kuerzel)

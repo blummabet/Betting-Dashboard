@@ -481,3 +481,48 @@ class TestPolyDreiZustaende(unittest.TestCase):
         # Fehlende Information ist keine Erlaubnis — das bleibt. Sichtbar wird nur der Unterschied.
         z = self._zeile({"sharePct": None, "vol": 36373, "odd": 2.06})
         self.assertEqual(z["stufe"], 2, "ohne echtes Ja keine Stufe 1")
+
+
+class TestBewieseneWalletsIstEineDefinition(unittest.TestCase):
+    """🔴 08.09.2026 — `_bewiesene_wallets` hatte eine EIGENE, dritte Sharp-Definition:
+    n >= 8 und Ø CLV > 0. Damit galten am Stand des Tages 233 Wallets als „bewiesen", davon
+    **91 bestaetigte Verlierer** — die groesste mit n=186 und P&L −$7.775.708. Die eine
+    Definition wohnt in `sharp_gate`; hier wird sie nur noch benutzt.
+    """
+
+    def test_bestaetigter_verlierer_gilt_nicht_als_bewiesen(self):
+        # 186 Positionen, 52 % Treffer, positiver Ø CLV — und Millionen im Minus.
+        scores = {"scores": {"0xVERLIERER": {"n": 186, "wins": 97, "clvSumPP": 20.0,
+                                             "pnl": -7775708.0}}}
+        self.assertEqual(killer._bewiesene_wallets(scores), set())
+
+    def test_positiver_clv_allein_reicht_nicht(self):
+        # Ø CLV knapp ueber null, Trefferquote weit unter Muenzwurf: die alte Regel sagte ja.
+        scores = {"scores": {"0xRAUSCHEN": {"n": 20, "wins": 4, "clvSumPP": 0.4}}}
+        self.assertEqual(killer._bewiesene_wallets(scores), set())
+
+    def test_zu_wenig_plays_bleibt_draussen(self):
+        scores = {"scores": {"0xDUENN": {"n": 7, "wins": 6, "clvSumPP": 14.0}}}
+        self.assertEqual(killer._bewiesene_wallets(scores), set())
+
+    def test_belegte_wallet_kommt_rein(self):
+        scores = {"scores": {"0xGUT": {"n": 60, "wins": 40, "clvSumPP": 60.0, "pnl": 12000.0}}}
+        self.assertEqual(killer._bewiesene_wallets(scores), {"0xgut"})
+
+    def test_dieselbe_definition_wie_sharp_gate(self):
+        # Kein zweiter Schwellenwert, keine eigene Rechnung: was `sharp_grade` bei 0 laesst,
+        # ist hier draussen — sonst driften die Flaechen wieder auseinander.
+        import sharp_gate as SG
+        faelle = [
+            {"n": 60, "wins": 40, "clvSumPP": 60.0},
+            {"n": 60, "wins": 40, "clvSumPP": 60.0, "pnl": -1.0},
+            {"n": 60, "wins": 25, "clvSumPP": 60.0},
+            {"n": 8, "wins": 8, "clvSumPP": 8.0},
+            {"n": 60, "wins": 40, "clvSumPP": -1.0},
+        ]
+        for i, sc in enumerate(faelle):
+            drin = killer._bewiesene_wallets({"scores": {"0x%d" % i: sc}}) == {"0x%d" % i}
+            self.assertEqual(drin, SG.sharp_grade(sc) > 0, "Fall %d weicht von sharp_gate ab" % i)
+
+    def test_ohne_datei_leere_menge(self):
+        self.assertEqual(killer._bewiesene_wallets(None), set())

@@ -65,9 +65,18 @@ def _poly_pulse(track=None, record=None) -> dict | None:
                       if isinstance(e, dict) and e.get("public"))
     rec = record if record is not None else _load("poly_public_record.json")
     gesendet = (rec or {}).get("gesamt")
+    # 08.09.2026 (Lucas: „ob das alles reibungslos funktioniert"). Der Nachfolge-Fund zum
+    # 04.09.: die Kachel heisst inzwischen richtig, trug ihre Zahl aber weiter ohne Fehlerbalken.
+    # `poly_shortlist_track.agg.public` liefert `roiUg` und `belegt` GLEICH MIT — sie kamen hier
+    # nur nie an. Angezeigt wurde +6,3 %, der wahre Bereich laeuft von −2,8 % bis +6,3 %.
+    # Dieselbe Klasse wie am 04.09., eine Ebene tiefer: nicht mehr die falsche Menge, sondern
+    # die richtige Zahl ohne ihre Untergrenze.
+    _ug = a.get("roiUg")
     return {"n": a.get("n"),
             "hitPct": round(100.0 * (a.get("hit") or 0), 1),
             "roiPct": round(100.0 * (a.get("roi") or 0), 1),
+            "roiUgPct": (round(100.0 * _ug, 1) if isinstance(_ug, (int, float)) else None),
+            "belegt": bool(a.get("belegt")),
             "clvAvg": a.get("clvAvg"),
             "openN": open_public,
             # Was tatsaechlich gesendet wurde — getrennt gezaehlt, damit die Vorschau nie wieder

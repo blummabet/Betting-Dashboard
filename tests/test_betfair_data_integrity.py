@@ -298,3 +298,45 @@ class TestLeagueNorm(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class GrossesGeldBleibtImFeed(unittest.TestCase):
+    """08.09.2026 — der Detail-Deckel (MAX_DETAIL=150) schnitt nach Anpfiff sortiert und warf
+    alle vier Champions-League-Spiele des Abends aus dem Feed, darunter Real Madrid v Inter mit
+    zuletzt 102.861 € auf 1X2. Der Public-Push war da schon draussen.
+
+    Gegenprobe an den echten Dateien: mit dem 07:57-Feed und der Historie desselben Morgens
+    meldet der Guard zwei Spiele mit 125.638 € bzw. 21.226 € und Anpfiff in 10,8 h.
+    """
+
+    def _ctx(self, prices_ids, hist):
+        return BI.BetfairCtx(now=NOW,
+                            prices={"matches": [{"matchId": i} for i in prices_ids]},
+                            history=hist)
+
+    def _hist(self, mid, vol, ko_h, name=None):
+        ko = (NOW + timedelta(hours=ko_h)).isoformat().replace("+00:00", "Z")
+        return {str(mid): [{"ts": NOW.isoformat(), "totalVol": vol, "kickoff": ko,
+                            **({"name": name} if name else {})}]}
+
+    def test_verschwundenes_grosses_spiel_wird_gemeldet(self):
+        r = BI.check_grosses_geld_faellt_nicht_aus_dem_feed(
+            self._ctx([1], self._hist(99, 102861, 10.8)))
+        self.assertFalse(r["ok"])
+        self.assertIn("102.861", r["failures"][0])
+
+    def test_kleines_spiel_faellt_nicht_auf(self):
+        r = BI.check_grosses_geld_faellt_nicht_aus_dem_feed(
+            self._ctx([1], self._hist(99, 4000, 10.8)))
+        self.assertTrue(r["ok"])
+
+    def test_angepfiffenes_spiel_darf_verschwinden(self):
+        """Nach dem Anpfiff aus dem Feed zu fallen ist der Normalfall, kein Befund."""
+        r = BI.check_grosses_geld_faellt_nicht_aus_dem_feed(
+            self._ctx([1], self._hist(99, 999999, -2)))
+        self.assertTrue(r["ok"])
+
+    def test_noch_im_feed_ist_kein_befund(self):
+        r = BI.check_grosses_geld_faellt_nicht_aus_dem_feed(
+            self._ctx([99], self._hist(99, 999999, 10)))
+        self.assertTrue(r["ok"])

@@ -216,3 +216,83 @@ test('Drilldown zeigt O/U-Edge vs Pinnacle + unterdrückt Phasen-Mismatch', () =
   const greens = (open.match(/border-left:2px solid #2ee08a/g) || []).length;
   assert.strictEqual(greens, 1, 'nur die echte Kante ist grün, Mismatch-Zeile nicht');
 });
+
+// ── × Liga-Norm im Terminal (07.09.2026) ────────────────────────────────────
+// Lucas: „das Terminal verwende ich fast nie, ist aber schade."
+//
+// Die Fluss-Spalte zeigte €90K — eine Zahl ohne Bezug, genau wie das Whale-Tape im
+// Poly-Terminal vor heute früh. €90K sind in der Champions League Alltag und in einer
+// Zweitliga ein Ereignis. Den Bezug RECHNET der Radar seit dem 02.08. (gelernter Median je
+// Liga+Spielphase aus betfair_league_norm.py) — er stand nur in der Live-Liste, also genau
+// dort nicht, wo man entscheidet.
+function bootMitNorm() {
+  const w = boot();
+  // Anpfiff vor 30 Min + liveInfo.time -> Spielphase „l1" (erste Haelfte). Die Norm-Basis
+  // haengt an Liga UND Phase; eine Fixture ohne Phase wuerde „—" liefern und den Test
+  // gruen laufen lassen, ohne den Fall zu treffen.
+  // `_meta.generatedAt` ist Pflicht: ohne frischen Stempel haelt `isLive` alles fuer tot
+  // (Stale-Sperre), die Spielphase kippt von „l1" auf „p1" und die Norm-Basis findet nichts.
+  // Beim ersten Anlauf genau darauf hereingefallen — die Zelle blieb „—" und der Test war
+  // gruen, weil er nur die Spaltenueberschrift geprueft hatte.
+  w._bfState.data = { _meta: { generatedAt: iso(-2 * 60e3) }, matches: [
+    { matchId: 'A', league: 'Test Liga', kickoff: iso(-30 * 60e3), liveInfo: { time: 30 },
+      markets: { 'Match Odds': { runners: [{ name: 'Alpha', odd: 1.58, vol: 90000 },
+                                           { name: 'Beta', odd: 6.5, vol: 21000 }] } } },
+  ] };
+  w._bfState.lnorm = { byLeagueStage: { 'Test Liga|l1': { n: 12, med: 30000 } } };
+  return w;
+}
+
+test('die Terminal-Tabelle trägt eine × Liga-Norm-Spalte — mit echtem Faktor', () => {
+  const h = panel(bootMitNorm());
+  assert.match(h, /× Liga-Norm/, 'die Spalte fehlt');
+  // €111K auf dem Spiel gegen einen gelernten Median von €30K = ×3,7.
+  assert.match(h, />×3\.7</, 'der Faktor wird nicht gerechnet oder nicht gezeigt');
+});
+
+test('ohne belastbare Liga-Basis steht „—", kein erfundener Faktor', () => {
+  const w = boot();
+  w._bfState.data = { matches: [] };
+  w._bfState.lnorm = null;
+  const h = panel(w);
+  assert.match(h, /× Liga-Norm/);
+  assert.ok(!/>×\d+\.\d</.test(h), 'ohne Basis darf kein Faktor dastehen');
+});
+
+test('die Norm-Zelle rechnet nicht selbst — sie ruft dieselbe Funktion wie die Liste', () => {
+  const JS = readFileSync(new URL('betfair-radar.js', ROOT), 'utf8');
+  const fn = JS.slice(JS.indexOf('function _tNormCell'), JS.indexOf('function _tOtherMarkets'));
+  assert.match(fn, /_normRatio\(m\)/, 'eigene Norm-Rechnung im Terminal — dann gibt es sie zweimal');
+  assert.match(fn, /_normBasis\(m\)/, 'ohne Basis kein nachprüfbarer Tooltip');
+  assert.ok(!/NORM_MIN_PEERS|\/ *b\.med/.test(fn), 'die Schwellen gehören nicht in die Zelle');
+});
+
+test('die kurze Tabelle erklärt sich — sonst sieht sie aus wie ein Defekt', () => {
+  // Gemessen am 07.09.: 4 von 125 Spielen im Feed erreichen die Handelbarkeits-Schwelle.
+  // Ohne diesen Satz liest sich das Terminal wie eine kaputte Fläche.
+  const w = bootMitNorm();
+  const h = panel(w);
+  assert.match(h, /Spielen im Feed sind handelbar/);
+  assert.match(h, /Live-Radar/, 'wohin die übrigen Spiele gehen, muss dastehen');
+});
+
+test('die Richtung im Drilldown kommt gemessen, nicht geschätzt', () => {
+  // 07.09.2026: der Drawer rechnete sie sich aus den History-Punkten selbst zusammen, während
+  // betfair_direction.json sie je Markt UND je Runner mitliefert (77 Spiele im aktuellen Stand,
+  // mit Vorher-/Nachher-Quote). Zwei Rechenwege für dieselbe Aussage — der gröbere stand im
+  // Terminal.
+  const w = bootMitNorm();
+  w._bfState.dir = { A: { 'Match Odds': { Alpha: { dir: 'back', prev: 1.72, odd: 1.58 } } } };
+  w._bfTermOpen('A');
+  const h = panel(w);
+  assert.match(h, /BACK — Quote 1\.72 → 1\.58/, 'die gemessene Richtung fehlt');
+  assert.match(h, /gemessen je Runner/, 'die Quelle muss dranstehen');
+});
+
+test('ohne gemessene Richtung bleibt die geschätzte — und sagt es', () => {
+  const w = bootMitNorm();
+  w._bfState.dir = {};
+  w._bfTermOpen('A');
+  const h = panel(w);
+  assert.match(h, /geschätzt/, 'die Schätzung muss sich als solche ausweisen');
+});

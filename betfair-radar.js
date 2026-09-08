@@ -1199,9 +1199,35 @@
       .replace('Half Time/Full Time','HZ/EZ').replace('Half Time Score','HZ-Ergebnis').replace('Half Time','Halbzeit')
       .replace('Correct Score','Exakt-Ergebnis');
   }
+  // 07.09.2026: der Lookup stand hier inline und wurde fuer die Norm-Spalte ein zweites Mal
+  // gebraucht — eine Kopie waere der Anfang von zwei Wahrheiten ueber „welches Spiel ist das".
+  function _tMatch(g){
+    var arr=(_bf.data&&_bf.data.matches)||[], i;
+    for(i=0;i<arr.length;i++){ if(String(arr[i].matchId)===String(g.matchId)) return arr[i]; }
+    return null;
+  }
+  // ── × Liga-Norm im Terminal (07.09.2026) ───────────────────────────────────────────────
+  // Lucas: „das Terminal verwende ich fast nie, ist aber schade."
+  //
+  // Die Fluss-Spalte zeigte €90K. Genau wie beim Poly-Terminal heute frueh ist das eine Zahl
+  // ohne Bezug: €90K sind in der Champions League Alltag und in der Greek Super League 2 ein
+  // Ereignis. Der Radar RECHNET diesen Bezug seit dem 02.08. (`_normRatio`, gelernter Median je
+  // Liga+Spielphase aus betfair_league_norm.py) — er stand nur in der Live-Liste und nicht im
+  // Terminal, also genau dort nicht, wo man entscheidet.
+  //
+  // Kein zweiter Rechenweg: dieselbe Funktion, dieselbe Basis, derselbe Tooltip-Anspruch
+  // (an WAS gemessen, aus wie vielen Spielen). Ohne belastbare Liga-Basis steht „—".
+  function _tNormCell(g){
+    var m=_tMatch(g); if(!m) return '<span style="color:'+C.dim+'">—</span>';
+    var r=_normRatio(m), b=_normBasis(m);
+    if(r==null||!b) return '<span style="color:'+C.dim+'" title="keine belastbare Liga-Basis — lieber kein Faktor als ein falscher">—</span>';
+    var col=r>=NORM_RED?'#f0883e':r>=NORM_AMBER?C.gold:C.mut;
+    var basis=(b.src==='gelernt'?'gelernter Median dieser Liga in dieser Spielphase':'Median der heutigen Spiele dieser Liga')
+      +': '+fmtE(b.med)+' aus '+b.n+' Spielen';
+    return '<span style="font-weight:800;color:'+col+'" title="Geld auf diesem Spiel gegen das, was fuer diese Liga ueblich ist — '+basis+'">×'+r.toFixed(1)+'</span>';
+  }
   function _tOtherMarkets(g){
-    var arr=(_bf.data&&_bf.data.matches)||[], m=null, i;
-    for(i=0;i<arr.length;i++){ if(String(arr[i].matchId)===String(g.matchId)){ m=arr[i]; break; } }
+    var m=_tMatch(g);
     if(!m||!m.markets) return '';
     var PT=g.pinnTotals||null;
     function _ouEdge(x){
@@ -1321,6 +1347,31 @@
     return '<span title="'+esc(mk.txt)+'" style="color:'+mk.col+';margin-right:4px">'+mk.t+'</span>'
       +'<span style="font-family:monospace">'+esc(c.icon||'')+' '+esc(c.market||'')+odd+'</span>'+sc;
   }
+  // ── Richtung: gemessen schlägt inferiert (07.09.2026) ──────────────────────────────────
+  // Der Drawer sagte „Richtung (aus Quotenverlauf inferiert)" und rechnete sie sich aus den
+  // History-Punkten selbst zusammen — während `betfair_direction.json` sie längst je Markt UND
+  // je Runner mitliefert (77 Spiele im aktuellen Stand, mit Vorher-/Nachher-Quote). Zwei
+  // Rechenwege für dieselbe Aussage, und der schlechtere stand im Terminal: die History ist
+  // grob gerastert, der Produzent vergleicht die letzten beiden Läufe desselben Runners.
+  //
+  // Also: gemessene Richtung zuerst, mit ihren beiden Quoten. Fehlt sie für diesen Runner,
+  // bleibt die inferierte stehen — und sagt dann auch, dass sie inferiert ist.
+  function _tRichtung(g, inferiert, icol){
+    var m=_tMatch(g), d=m?dirOf(m,'Match Odds',g.moneyName):null;
+    if(d&&d.dir&&d.dir!=='flat'){
+      var back=d.dir==='back', col=back?'#2ee08a':'#ff5d5d';
+      var von=(typeof d.prev==='number')?d.prev.toFixed(2):'—', bis=(typeof d.odd==='number')?d.odd.toFixed(2):'—';
+      return '<div style="font-size:12.5px;font-weight:700;color:'+col+';line-height:1.5">'
+        +(back?'BACK':'DRIFT')+' — Quote '+von+' → '+bis+(back?' (Geld rein)':' (Geld raus)')+'</div>'
+        +'<div style="font-size:10px;color:'+C.dim+';margin-top:2px">gemessen je Runner (betfair_direction.json), nicht aus der Kurve geschätzt</div>';
+    }
+    if(d&&d.dir==='flat')
+      return '<div style="font-size:12.5px;font-weight:700;color:'+C.mut+';line-height:1.5">flach — die Quote dieses Runners steht</div>'
+        +'<div style="font-size:10px;color:'+C.dim+';margin-top:2px">gemessen je Runner (betfair_direction.json)</div>';
+    return '<div style="font-size:12.5px;font-weight:700;color:'+icol+';line-height:1.5">'+inferiert+'</div>'
+      +'<div style="font-size:10px;color:'+C.dim+';margin-top:2px">aus dem Quotenverlauf geschätzt — für diesen Runner liegt keine gemessene Richtung vor</div>';
+  }
+
   function _tDrawer(g){
     var edge=_tEdge(g),fair=_tFair(g),pts=_tSer(g),bank=_tBank(),hk=_tHalfKelly(g),stake=bank*hk;
     var dir='',dcol=C.mut; if(pts.length>=2){ var d=pts[pts.length-1].o-pts[0].o;
@@ -1342,9 +1393,9 @@
       +'<div style="display:flex;gap:12px;flex-wrap:wrap">'
         +'<div style="flex:1;min-width:240px;'+col2+'"><div style="font-size:11px;color:'+C.dim+';margin-bottom:6px">Gematcht je Quote — wo floss das Geld</div>'+(_tMBP(g)||'<span style="color:'+C.dim+';font-size:11px">kein Zufluss im Verlauf</span>')+'</div>'
         +'<div style="flex:1;min-width:240px;'+col2+'">'
-          +'<div style="font-size:11px;color:'+C.dim+';margin-bottom:6px">Richtung (aus Quotenverlauf inferiert)</div>'
-          +'<div style="font-size:12.5px;font-weight:700;color:'+dcol+';line-height:1.5">'+dir+'</div>'
-          +'<div style="font-size:10.5px;color:'+C.mut+';margin-top:8px;line-height:1.5">Edge '+(edge==null?'—':(edge>=0?'+':'')+(edge*100).toFixed(1)+'%')+' · faire Quote '+(fair==null?'—':fair.toFixed(2))+' vs. angeboten '+(g.moneyOdd||'—')+'. Kein Orderbuch — Betwatch liefert nur gematchtes Volumen, Richtung ist inferiert.</div>'
+          +'<div style="font-size:11px;color:'+C.dim+';margin-bottom:6px">Richtung</div>'
+          +_tRichtung(g, dir, dcol)
+          +'<div style="font-size:10.5px;color:'+C.mut+';margin-top:8px;line-height:1.5">Edge '+(edge==null?'—':(edge>=0?'+':'')+(edge*100).toFixed(1)+'%')+' · faire Quote '+(fair==null?'—':fair.toFixed(2))+' vs. angeboten '+(g.moneyOdd||'—')+'. Kein Orderbuch — Betwatch liefert nur gematchtes Volumen.</div>'
         +'</div>'
       +'</div>'
       +_tOtherMarkets(g)
@@ -1370,11 +1421,11 @@
       +(nMuted?'<label style="margin-left:auto;display:inline-flex;align-items:center;gap:6px;cursor:pointer;color:'+C.mut+'"><input type="checkbox" '+(hideMuted?'checked':'')+' onchange="_bfTermMute(this.checked)" onclick="event.stopPropagation()" style="cursor:pointer"/> '+nMuted+' gemutet ausblenden</label>':'')
       +'</div>';
     var out=viewToggle()+head+bankBar+'<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12.5px">'
-      +'<thead><tr>'+th('Anpfiff','left')+th('Spiel','left')+th('Geld-Seite','left')+th('Unsere Card','left')+th('Edge')+th('Konviktion')+th('Fluss')+th('CLV-Bucket')+th('½-Kelly €')+'</tr></thead><tbody>';
+      +'<thead><tr>'+th('Anpfiff','left')+th('Spiel','left')+th('Geld-Seite','left')+th('Unsere Card','left')+th('Edge')+th('Konviktion')+th('Fluss')+th('× Liga-Norm')+th('CLV-Bucket')+th('½-Kelly €')+'</tr></thead><tbody>';
     var mutedStarted=false;
     shown.forEach(function(r){
       var g=r.g,e=r.edge,open=(String(_bf.termOpen)===String(g.matchId));
-      if(r.mute.m && !mutedStarted){ mutedStarted=true; out+='<tr><td colspan="9" style="padding:10px 10px 4px;font-size:10px;color:'+C.dim+';border-top:1px dashed '+C.bd+'">🔇 Nicht handelbar (gemutet) — kein Pinnacle-Anker oder ein Bucket, dessen Rendite-UNTERGRENZE negativ ist. Nach unten sortiert.</td></tr>'; }
+      if(r.mute.m && !mutedStarted){ mutedStarted=true; out+='<tr><td colspan="10" style="padding:10px 10px 4px;font-size:10px;color:'+C.dim+';border-top:1px dashed '+C.bd+'">🔇 Nicht handelbar (gemutet) — kein Pinnacle-Anker oder ein Bucket, dessen Rendite-UNTERGRENZE negativ ist. Nach unten sortiert.</td></tr>'; }
       var dirTag=g.moneyDir==='in'?'<span style="font-size:8.5px;font-weight:800;color:#2ee08a;background:rgba(46,224,138,.14);padding:1px 5px;border-radius:5px">BACK</span>'
                  :g.moneyDir==='out'?'<span style="font-size:8.5px;font-weight:800;color:#ff5d5d;background:rgba(255,93,93,.14);padding:1px 5px;border-radius:5px">DRIFT</span>':'';
       var conv=_tConvMeter(g);
@@ -1402,13 +1453,29 @@
         +'<td style="padding:7px 10px;text-align:right;font-family:monospace;font-weight:800;color:'+eCol(e)+'">'+(e==null?'—':(e>=0?'+':'')+(e*100).toFixed(1)+'%')+'</td>'
         +'<td style="padding:7px 10px;text-align:right;white-space:nowrap">'+conv+'</td>'
         +'<td style="padding:7px 10px;text-align:right;font-family:monospace;white-space:nowrap">'+_tEur(g.totVol)+' '+dirTag+'</td>'
+        +'<td style="padding:7px 10px;text-align:right;font-family:monospace">'+_tNormCell(g)+'</td>'
         +'<td style="padding:7px 10px;text-align:right">'+clv+'</td>'
         +'<td style="padding:7px 10px;text-align:right;font-family:monospace;font-weight:700;color:'+(r.hk>0?C.ink:C.dim)+'">'+stakeCell+'</td>'
         +'</tr>';
-      if(open){ out+='<tr style="background:rgba(76,194,255,.03)"><td colspan="9" style="padding:0 10px 6px">'+_tDrawer(g)+'</td></tr>'; }
+      if(open){ out+='<tr style="background:rgba(76,194,255,.03)"><td colspan="10" style="padding:0 10px 6px">'+_tDrawer(g)+'</td></tr>'; }
     });
     out+='</tbody></table></div>';
-    out+='<div style="font-size:10px;color:'+C.dim+';margin-top:9px;line-height:1.5">Fluss = gematchtes Volumen (Betwatch); Richtung aus dem Quotenverlauf inferiert (nicht Back/Lay-Orderbuch). ½-Kelly in € aus deiner Bankroll, nur bei positiver Edge. Zeile klicken für Preis-Kurve, gematcht-je-Quote & Richtung.</div>';
+    // 07.09.2026 (Lucas: „verwende ich fast nie, ist aber schade") — der zweite Grund neben der
+    // fehlenden Norm-Spalte: die Tabelle ist fast immer kurz, und nirgends stand, warum. Gemessen
+    // an diesem Stand: **4 von 125 Spielen** im Feed erreichen die Handelbarkeits-Schwelle
+    // (groesster FT-Markt >= €20K in Top-Ligen bzw. €15K sonst, oder HT >= €10K/€5K —
+    // `qualifies_radar`, dieselbe Schwelle wie die Radar-Liste). Eine kurze Tabelle ohne diesen
+    // Satz sieht aus wie ein Defekt; mit ihm ist sie ein Ergebnis.
+    var _feedN=((_bf.data&&_bf.data.matches)||[]).length;
+    out+='<div style="font-size:10px;color:'+C.dim+';margin-top:9px;line-height:1.5">'
+      +'<b style="color:'+C.mut+'">'+games.length+' von '+_feedN+' Spielen im Feed sind handelbar</b> — '
+      +'die uebrigen liegen unter der Liquiditaets-Schwelle (groesster Markt ab €20K in Top-Ligen, '
+      +'sonst €15K; Halbzeit-Maerkte ab €10K/€5K). Sie verschwinden nicht: sie stehen im '
+      +'<b>🔴 Live-Radar</b>, nur ohne Kelly-Stake, weil es dort keinen belastbaren Anker gibt.<br>'
+      +'Fluss = gematchtes Volumen (Betwatch); Richtung aus dem Quotenverlauf inferiert (nicht Back/Lay-Orderbuch). '
+      +'× Liga-Norm = dieses Geld gegen den gelernten Median seiner Liga und Spielphase — €90K sind in der '
+      +'Champions League Alltag und in einer Zweitliga ein Ereignis. ½-Kelly in € aus deiner Bankroll, nur bei '
+      +'positiver Edge. Zeile klicken für Preis-Kurve, gematcht-je-Quote &amp; Richtung.</div>';
     return out;
   }
 
@@ -1820,21 +1887,42 @@
     }
     var roiCol = (r.roi >= 0) ? C.back : C.lay;
     var kpi = function (lbl, val, col, sub) { return '<div style="flex:1;min-width:120px;background:' + C.raised + ';border:1px solid ' + C.bd + ';border-radius:12px;padding:13px 15px"><div style="font-size:11px;color:' + C.mut + ';text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">' + lbl + '</div><div style="font-size:22px;font-weight:900;color:' + (col || C.ink) + '">' + val + '</div><div style="font-size:10px;color:' + C.dim + '">' + (sub || '') + '</div></div>'; };
+    // 🔴 08.09.2026 (Lucas: „ob das alles reibungslos funktioniert"). Das hier ist das GRÖSSTE
+    // Push-Buch im Repo (n=190) und war das einzige ohne Untergrenze — „58 % Treffer" und
+    // „ROI −2,6 %" standen als nackte Punktschätzer da, während das kleinste Buch (Poly Public,
+    // n=9) seit dem 03.09. sauber „UG — (n<30)" schreibt. Beide Grenzen kommen jetzt aus
+    // `betfair_public_eval` mit; hier werden sie nur gelesen.
+    //
+    // Dazu die Bezugsgröße, ohne die eine Trefferquote keine Zahl ist: bei Ø 1,83 liegt der
+    // Break-even bei 54,6 %. Die Untergrenze der Quote (52,5 %) liegt DARUNTER — die 58 %
+    // belegen also nichts, und genau das muss dastehen statt daneben.
+    var _ug = function (v) { return (v == null) ? 'UG — (n<30)' : ('UG ' + _pct(v)); };
+    var _be = (r.avgOdd && +r.avgOdd > 1) ? (1 / +r.avgOdd) : null;
+    var _beTxt = (_be == null) ? '' : (' · Break-even ' + _pct(_be));
     var band = '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">' +
-      kpi('Trefferquote', _pct(r.hitRate), C.gold, r.wins + '/' + r.n + ' Signale') +
-      kpi('ROI', _roi(r.roi), roiCol, '1 Einheit/Signal') +
+      kpi('Trefferquote', _pct(r.hitRate), C.gold,
+          r.wins + '/' + r.n + ' · ' + _ug(r.hitUg) + _beTxt) +
+      kpi('ROI', _roi(r.roi), roiCol,
+          '1 Einheit/Signal · ' + (r.roiUg == null ? 'UG — (n<30)' : ('UG ' + _roi(r.roiUg)))
+          + (r.belegt ? ' · <b>belegt</b>' : ' · nicht belegt')) +
       kpi('Ø Quote', r.avgOdd ? ('@' + (+r.avgOdd).toFixed(2)) : '—', C.ink, 'gefolgte Seite') +
-      kpi('offen', r.pending || 0, C.mut, 'noch nicht aufgelöst') +
+      // 08.09.2026: „verfallen" stand nirgends — 17 von 210 Ledger-Zeilen bekamen NIE ein
+      // Ergebnis und fielen still aus dem Nenner. Das Poly-Board weist seine unauflösbaren aus.
+      kpi('offen', (r.pending || 0) + ((r.verfallen || r.ungueltig) ? (' <span style="font-size:12px;color:' + C.dim + '">+' + ((r.verfallen || 0) + (r.ungueltig || 0)) + '</span>') : ''),
+          C.mut, (r.verfallen || r.ungueltig)
+            ? ((r.pending || 0) + ' offen · ' + (r.verfallen || 0) + ' nie aufgelöst' + ((r.ungueltig || 0) ? ' · ' + r.ungueltig + ' ungültig' : '') + ' — nicht im Nenner')
+            : 'noch nicht aufgelöst') +
       kpi('CLV vs Betfair-Close', _clvTxt(r.avgClvBf), _clvCol(r.avgClvBf), r.nClvBf ? (_pct(r.pctBeatBf) + ' schlagen Close · n' + r.nClvBf) : 'sammelt …') +
       kpi('CLV vs Pinnacle', _clvTxt(r.avgClvPinn), _clvCol(r.avgClvPinn), r.nClvPinn ? (_pct(r.pctBeatPinn) + ' · n' + r.nClvPinn) : 'nur abgedeckte Ligen') + '</div>';
-    var scnRow = function (key, lbl) { var s = (r.byScenario || {})[key]; if (!s) return ''; return '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid ' + C.bd + ';font-size:13px"><span style="font-weight:700">' + lbl + '</span><span style="text-align:right"><b style="color:' + C.gold + '">' + _pct(s.hitRate) + '</b> · <b style="color:' + (s.roi >= 0 ? C.back : C.lay) + '">' + _roi(s.roi) + '</b> ROI <span style="color:' + C.dim + '">' + s.wins + '/' + s.n + ' · Ø@' + (s.avgOdd || '—') + '</span></span></div>'; };
+    var scnRow = function (key, lbl) { var s = (r.byScenario || {})[key]; if (!s) return ''; return '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid ' + C.bd + ';font-size:13px"><span style="font-weight:700">' + lbl + '</span><span style="text-align:right"><b style="color:' + C.gold + '">' + _pct(s.hitRate) + '</b> · <b style="color:' + (s.roi >= 0 ? C.back : C.lay) + '">' + _roi(s.roi) + '</b> ROI <span style="color:' + C.dim + '">' + (s.roiUg == null ? 'UG —' : 'UG ' + _roi(s.roiUg)) + ' · ' + s.wins + '/' + s.n + ' · Ø@' + (s.avgOdd || '—') + '</span></span></div>'; };
     var scn = '<div style="background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:12px;padding:12px 15px;margin-bottom:14px"><div style="font-size:12px;color:' + C.mut + ';font-weight:700;margin-bottom:2px">nach Signal-Typ</div>' + scnRow('fresh', '💶 Moneyflow (frisches Geld)') + scnRow('ht', '💷 Halftime (einseitig)') + '</div>';
     var mkKeys = Object.keys(r.byMarket || {});
     var mkRows = mkKeys.map(function (k) { var s = r.byMarket[k]; return '<tr><td style="padding:5px 8px">' + esc(shortMk(k)) + '</td><td style="text-align:right;padding:5px 8px;color:' + C.gold + '">' + _pct(s.hitRate) + '</td><td style="text-align:right;padding:5px 8px;color:' + (s.roi >= 0 ? C.back : C.lay) + '">' + _roi(s.roi) + '</td><td style="text-align:right;padding:5px 8px;color:' + C.dim + '">' + s.wins + '/' + s.n + '</td></tr>'; }).join('');
     var mkt = mkRows ? '<div style="background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:12px;padding:12px 15px;margin-bottom:14px"><div style="font-size:12px;color:' + C.mut + ';font-weight:700;margin-bottom:6px">nach Markt</div><table style="width:100%;border-collapse:collapse;font-size:12.5px"><thead><tr style="color:' + C.mut + ';font-size:11px"><th style="text-align:left;padding:4px 8px">Markt</th><th style="text-align:right;padding:4px 8px">Treffer</th><th style="text-align:right;padding:4px 8px">ROI</th><th style="text-align:right;padding:4px 8px">n</th></tr></thead><tbody>' + mkRows + '</tbody></table></div>' : '';
     var recRows = (r.recent || []).map(function (e) { return '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid ' + C.bd + ';font-size:12.5px"><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + (e.won ? '✅' : '❌') + ' <b>' + esc(String(e.home).slice(0, 12)) + '</b> – ' + esc(String(e.away).slice(0, 12)) + ' <span style="color:' + C.dim + '">· ' + esc(shortMk(e.market)) + ' → ' + esc(e.leadName) + '</span></span><span style="color:' + C.dim + ';white-space:nowrap">@' + (e.leadOdd ? (+e.leadOdd).toFixed(2) : '—') + '</span></div>'; }).join('');
     var rec = recRows ? '<div style="background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:12px;padding:12px 15px"><div style="font-size:12px;color:' + C.mut + ';font-weight:700;margin-bottom:2px">zuletzt aufgelöst</div>' + recRows + '</div>' : '';
-    var intro = '<div style="font-size:11.5px;color:' + C.mut + ';margin:6px 0 12px;line-height:1.5">Wertet aus, ob das Geld, dem die öffentlichen Pushs gefolgt sind, recht hatte — die <b style="color:' + C.ink + '">gefolgte Seite</b> (die mit dem Geld) gegen den End-/Halbzeitstand. 1 Einheit Einsatz je Signal · ROI zu den gemeldeten Quoten.</div>';
+    var intro = '<div style="font-size:11.5px;color:' + C.mut + ';margin:6px 0 12px;line-height:1.5">Wertet aus, ob das Geld, dem die öffentlichen Pushs gefolgt sind, recht hatte — die <b style="color:' + C.ink + '">gefolgte Seite</b> (die mit dem Geld) gegen den End-/Halbzeitstand. 1 Einheit Einsatz je Signal · ROI zu den gemeldeten Quoten. '
+      + '<b style="color:' + C.ink + '">Gelesen wird die Untergrenze, nicht der Punkt</b> — eine Trefferquote ohne die Quoten ist keine Zahl, und ein ROI ohne UG ist eine Beobachtung.</div>';
     return viewToggle() + intro + band + scn + mkt + rec;
   }
 

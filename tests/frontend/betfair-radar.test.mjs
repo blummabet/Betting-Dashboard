@@ -693,3 +693,39 @@ test('Radar: reaktives Geld auf den Fuehrenden fliegt aus Frisches Geld', () => 
   assert.match(level, /▲ \+/, 'bei Gleichstand bleibt der Zufluss');
   assert.ok(!/führt/.test(level), 'ohne Fuehrer kein „führt"-Marker');
 });
+
+
+// 🔴 08.09.2026 (Lucas: „ob das alles reibungslos funktioniert"). Das größte Push-Buch im Repo
+// (n=190) war das einzige ohne Untergrenze: „58 % Treffer" und „ROI −2,6 %" standen als nackte
+// Punktschätzer, während das kleinste Buch (Poly Public, n=9) sauber „UG — (n<30)" schreibt.
+// Dazu fielen 17 von 210 Ledger-Zeilen still aus dem Nenner — das Board zeigte nur „offen: 2".
+test('Push-Bilanz: Untergrenze und Break-even stehen neben dem Punktschätzer', () => {
+  const { w } = boot();
+  w._bfState.pubrec = {
+    n: 190, wins: 111, hitRate: 0.5842, hitUg: 0.5246, roi: -0.0258, roiUg: -0.1286,
+    belegt: false, avgOdd: 1.83, pending: 2, verfallen: 17, ungueltig: 1,
+    byScenario: { fresh: { n: 166, wins: 100, hitRate: 0.6024, hitUg: 0.5388, roi: 0.0034, roiUg: -0.106, avgOdd: 1.77 } },
+    byMarket: {}, recent: [],
+  };
+  w._bfState.view = 'push';
+  const html = w._renderBetfairRadar();
+  assert.match(html, /UG 52%/, 'die Untergrenze der Trefferquote fehlt');
+  assert.match(html, /UG -12\.9%/, 'die Untergrenze des ROI fehlt');
+  // Eine Trefferquote ohne die Quoten ist keine Zahl: bei Ø 1,83 sind 55 % der Break-even,
+  // und die UG (52 %) liegt darunter. Beides muss auf derselben Kachel stehen.
+  assert.match(html, /Break-even 55%/, 'der Break-even zur Ø-Quote fehlt');
+  assert.match(html, /nicht belegt/, 'die Zeile sagt nicht, dass nichts belegt ist');
+  assert.match(html, /nie aufgelöst/, 'die verfallenen Pushs stehen nicht da');
+  assert.match(html, /17/, 'die Zahl der verfallenen fehlt');
+});
+
+test('Push-Bilanz: kleine Stichprobe bekommt keine erfundene Untergrenze', () => {
+  const { w } = boot();
+  w._bfState.pubrec = {
+    n: 12, wins: 7, hitRate: 0.5833, hitUg: 0.3196, roi: 0.083, roiUg: null, belegt: false,
+    avgOdd: 1.92, pending: 3, byScenario: {}, byMarket: {}, recent: [],
+  };
+  w._bfState.view = 'push';
+  const html = w._renderBetfairRadar();
+  assert.match(html, /UG — \(n&lt;30\)|UG — \(n<30\)/, 'ohne n>=30 muss „UG —" dastehen');
+});
