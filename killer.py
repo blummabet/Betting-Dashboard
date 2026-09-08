@@ -91,6 +91,12 @@ MARKT = "Match Odds"        # die gemessene Fläche (+12,9% n=81); andere Märkt
 MIN_QUOTE = 1.30            # darunter zahlt keine Kante die Varianz
 MAX_QUOTE = 15.0            # darüber ist es eine Lotterie, kein Geld-Signal
 POLY_MIN_ANTEIL = 60        # „Poly Geld oben" — Anteil in Prozent
+# 08.09.2026: ab wie viel Stake-Geld auf DER Seite das vierte Buch zustimmt, und ab wie vielen
+# Wetten es Tiefe hat. Der Boden ist derselbe wie in der Stake-Auswertung: darunter ist eine
+# Einzelwette kein Geldstrom. Die Tiefe verlangt mehr als eine Wette — ein einzelner Klick ist
+# kein Konsens, auch wenn er gross ist.
+STAKE_MIN_USD = 500.0
+STAKE_TIEFE_N = 3
 PINN_MIN_MOVE_PP = 1.0      # Verstärker: ab so viel pp gilt die Pinnacle-Bewegung als Bewegung
 AKTIV_FENSTER_MIN = 25      # so lange nach dem letzten Treffer gilt eine Zeile noch als „läuft gerade"
 
@@ -279,12 +285,20 @@ def _buch(kurz, name, status, grund_ok, tiefe_ok, grund_txt, tiefe_txt):
             "text": grund_txt}
 
 
-def buecher_punkte(sig, g, seite, gehalten_seit=None, kickoff=None, wallets=None, now=None):
-    """Bücher-Score 0..10 für eine Zeile. REIN/testbar.
+def buecher_punkte(sig, g, seite, gehalten_seit=None, kickoff=None, wallets=None, now=None,
+                   stake=None):
+    """Bücher-Score für eine Zeile. REIN/testbar.
 
-    Gibt {punkte, moeglich, teile, dauerH} zurueck. `moeglich` < 10 heisst: ein Buch wurde nicht
-    gefragt. Der Aufrufer zeigt IMMER beide Zahlen — eine 6 aus 7 moeglichen ist etwas anderes als
-    eine 6 aus 10."""
+    Gibt {punkte, moeglich, teile, dauerH} zurueck. `moeglich` unter dem Maximum heisst: ein Buch
+    wurde nicht gefragt. Der Aufrufer zeigt IMMER beide Zahlen — eine 6 aus 7 moeglichen ist etwas
+    anderes als eine 6 aus 10.
+
+    08.09.2026 (Lucas: „was fehlt da noch neben Stake?"): der Stake-Highroller ist das vierte Buch.
+    Er ist die einzige der vier Quellen, die kein Buchmacher-Preis ist, sondern echtes fremdes
+    Geld auf einer Seite — und er war der einzige Grund, warum es die Spielzentrale ueberhaupt
+    daneben gab. Statt zwei Flaechen mit je einem Loch gibt es jetzt eine mit vier Buechern.
+    `stake` ist {usd, seiteUsd, seite, n} oder None; None heisst NICHT ERHOBEN und senkt nur den
+    Nenner — dieselbe Regel wie fuer Poly und Pinnacle."""
     g = g or {}
     poly = g.get("poly") or {}
     pinn = g.get("pinn") or {}
@@ -324,6 +338,24 @@ def buecher_punkte(sig, g, seite, gehalten_seit=None, kickoff=None, wallets=None
         "hat dieselbe Seite als Favorit",
         ("Move %+.1fpp in unsere Richtung" % (pm.get("movePP") or 0)) if pm.get("move")
         else "kein Move gemessen"))
+
+    # ── Stake-Highroller ─────────────────────────────────────────────────────────────────
+    # Der Grund fuer die Zeile ist Geld auf DERSELBEN Seite; die Tiefe ist, dass es nicht an
+    # einer einzigen Wette haengt. Ohne 1X2-Markt gibt es keine vergleichbare Seite — dann ist
+    # das Buch „unbekannt" und nicht „nein": eine Ueber/Unter-Wette widerspricht uns nicht.
+    _st = stake if isinstance(stake, dict) else None
+    _st_seite = (_st or {}).get("seite")
+    if not _st or not _st_seite:
+        teile.append(_buch("STAKE", "Stake-Highroller", "unbekannt", False, False, "", ""))
+    else:
+        _su = float((_st.get("seiteUsd") or 0))
+        _sn = int(_st.get("n") or 0)
+        teile.append(_buch(
+            "STAKE", "Stake-Highroller", "ja",
+            _st_seite == seite and _su >= STAKE_MIN_USD,
+            _st_seite == seite and _sn >= STAKE_TIEFE_N,
+            "$%s Highroller-Geld auf derselben Seite" % format(round(_su), ",d").replace(",", "."),
+            "%d Wetten, nicht eine einzelne" % _sn))
 
     # ── Dauer ────────────────────────────────────────────────────────────────────────────
     ko, gs = _ts(kickoff), _ts(gehalten_seit)
@@ -676,8 +708,31 @@ def punkte_bilanz(ledger=None):
     return out
 
 
+def _stake_index(wetten, now):
+    """Stake-Geld je Spiel — duenne Huelle um die getestete Funktion aus `spielzentrale`."""
+    try:
+        from spielzentrale import stake_je_spiel
+    except Exception:
+        return {}
+    try:
+        return stake_je_spiel(wetten, now=now)
+    except Exception:
+        return {}
+
+
+def _stake_fuer(home, away, index):
+    """Stake-Eintrag zu einer Paarung — Namens-Join aus `spielzentrale` (mit `gleiche_elf`)."""
+    if not index:
+        return None
+    try:
+        from spielzentrale import stake_fuer
+        return stake_fuer(home, away, index)
+    except Exception:
+        return None
+
+
 def baue(state=None, consensus=None, track=None, streaks=None, now=None,
-         latch_state=None, anker=None) -> dict:
+         latch_state=None, anker=None, stake_wetten=None) -> dict:
     now = now or _now()
     if latch_state is None:
         latch_state = _load(STATE_FILE, {})
@@ -700,6 +755,11 @@ def baue(state=None, consensus=None, track=None, streaks=None, now=None,
             spiele.setdefault(str(_mid), _a)
     # Bewiesene Wallets einmal je Lauf — nicht je Zeile (2.968 Eintraege).
     _wallets = _bewiesene_wallets(_load("poly_wallet_track.json"))
+    # Stake-Highroller-Geld je Spiel, ebenfalls einmal je Lauf. Der Namens-Join wohnt in
+    # `spielzentrale` (rein und getestet, inkl. `gleiche_elf`) — er wird hier benutzt, nicht
+    # nachgebaut. Faellt die Datei aus, bleibt der Index leer und das vierte Buch „unbekannt".
+    _stake_idx = _stake_index(stake_wetten if stake_wetten is not None
+                              else (_load("stake_highroller.json").get("wetten") or []), now)
     _latch_vor = (latch_state or {}).get("latch") or {}
     zeilen = []
     for mid, e in ((state or {}).get("pending") or {}).items():
@@ -735,14 +795,22 @@ def baue(state=None, consensus=None, track=None, streaks=None, now=None,
             continue
         _seite = SEITE.get(sig.get("fav"))
         _gs = (_latch_vor.get("%s|%s" % (mid, MARKT)) or {}).get("gehaltenSeit")
+        _st = _stake_fuer(e.get("home"), e.get("away"), _stake_idx)
         _p = buecher_punkte(sig, spiele.get(str(mid)), _seite, gehalten_seit=_gs or now,
-                            kickoff=e.get("kickoff"), wallets=_wallets, now=now)
+                            kickoff=e.get("kickoff"), wallets=_wallets, now=now, stake=_st)
+        # 08.09.2026 (Lucas: „seh den Mehrwert von Ebene 0 nicht"). Er hatte recht — die Zentrale
+        # war eine zweite Flaeche fuer dieselbe Frage. Was ihr die Berechtigung gab, waren die
+        # SPALTEN: welches Buch sagt was, mit welchem Betrag. Die standen hier nie in der Datei
+        # (`alleBewertet` trug `punkte` und `moeglich` und sonst nichts), deshalb konnte das
+        # Frontend die 145 bewerteten Spiele gar nicht zeigen — es haette nur Zahlen ohne
+        # Begruendung anzeigen koennen. `teile` wandert jetzt mit.
         alle.append({"matchId": str(mid), "markt": MARKT, "liga": e.get("league"),
+                     "home": e.get("home"), "away": e.get("away"),
                      "name": {"home": e.get("home"), "draw": "Remis",
                               "away": e.get("away")}.get(_seite),
                      "seite": _seite, "odd": o, "kickoff": e.get("kickoff"),
                      "punkte": _p["punkte"], "moeglich": _p["moeglich"], "dauerH": _p["dauerH"],
-                     "torOk": kern_ok(sig)})
+                     "teile": _p["teile"], "torOk": kern_ok(sig)})
 
     # Halten statt live zeigen — Begründung oben bei STATE_FILE.
     latch = _halten((latch_state or {}).get("latch") or {}, zeilen, now)

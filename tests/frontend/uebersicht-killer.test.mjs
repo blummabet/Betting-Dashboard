@@ -138,7 +138,9 @@ test('leer heißt leer — keine erfundene Zeile, aber die Regel bleibt lesbar',
   const html = render({ stufe1: [], stufe2: [],
     regeln: { text: 'Geldanteil ≥65% UND frischer Zufluss ≥€2000 UND Quote zieht mit.' } },
     REG('geprueft'));
-  assert.match(html, /Gerade deckt sich nichts/);
+  // 08.09.2026: der alte Satz sprach ueber die WELT, waehrend dieselbe Datei 145 Spiele
+  // bewertet hatte. Jetzt spricht er ueber das TOR - die Tafel darueber bleibt.
+  assert.match(html, /Geld in Bewegung/);
   assert.match(html, /≥65%/);
 });
 
@@ -198,7 +200,9 @@ test('faellt dadurch alles weg, sagt die Sektion das ehrlich', () => {
   const html = render({ stufe1: [], stufe2: [zeile('Morgen', { kickoff: ko(30) })],
     regeln: { text: 'Geldanteil ≥65% UND frischer Zufluss ≥€2000 UND Quote zieht mit.' } },
     REG('geprueft'));
-  assert.match(html, /Gerade deckt sich nichts/);
+  // 08.09.2026: der alte Satz sprach ueber die WELT, waehrend dieselbe Datei 145 Spiele
+  // bewertet hatte. Jetzt spricht er ueber das TOR - die Tafel darueber bleibt.
+  assert.match(html, /Geld in Bewegung/);
 });
 
 // 30.08.2026 (Lucas: „sollten wir das nicht mittracken, damit ich seh wie gut es performt?").
@@ -277,7 +281,9 @@ test('auch eine leere Sektion zeigt ihre Bilanz', () => {
   const html = render({ stufe1: [], stufe2: [], regeln: { text: 'x' },
     bilanz: bilanz({ gesamt: { n: 5, gewonnen: 3, verloren: 2, einheiten: 1.1, roi: 0.22 } }) },
     REG('geprueft'));
-  assert.match(html, /Gerade deckt sich nichts/);
+  // 08.09.2026: der alte Satz sprach ueber die WELT, waehrend dieselbe Datei 145 Spiele
+  // bewertet hatte. Jetzt spricht er ueber das TOR - die Tafel darueber bleibt.
+  assert.match(html, /Geld in Bewegung/);
   assert.match(html, /5 abgerechnet · 3 gewonnen · 2 verloren/);
 });
 

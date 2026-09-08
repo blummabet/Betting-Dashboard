@@ -302,41 +302,44 @@ class TestPolyMarktSelbeMannschaft(unittest.TestCase):
         self.assertEqual(r["failures"], [])
 
 
-class TestSpielzentraleUrteil(unittest.TestCase):
-    """08.09.2026 — Ebene 0. „Einig" ist die staerkste Aussage der Uebersicht; drei Wege, sie
-    ohne sichtbaren Unterschied zu entwerten, muessen laut auffallen."""
+class TestBuecherPunktestand(unittest.TestCase):
+    """08.09.2026 - die Tafel von Ebene 2 zeigt Punkte UND ihre Aufschluesselung. Vier Wege,
+    die Zahl ohne sichtbaren Unterschied zu entwerten. (Loest den Guard der Spielzentrale ab,
+    die am selben Tag wieder ausgebaut wurde - 24 von 25 ihrer Zeilen standen ohnehin hier.)"""
 
-    def _z(self, **over):
-        r = {"matchId": "1", "home": "Real Madrid", "away": "Inter", "urteil": "einig",
-             "dafuer": ["betfair", "poly"], "gegen": [],
-             "poly": {"art": "geld", "usd": 294571}}
-        r.update(over)
-        return {"zentrale": {"zeilen": [r]}}
+    def _t(self, buch, punkte, moeglich, grund_ok, tiefe_ok=False, status=None):
+        return {"buch": buch, "status": status or ("ja" if grund_ok else "nein"),
+                "punkte": punkte, "moeglich": moeglich,
+                "grund": {"ok": grund_ok, "text": "x"},
+                "tiefe": {"ok": tiefe_ok, "text": "y"} if moeglich else None}
 
-    def test_einig_mit_einer_stimme_faellt_auf(self):
-        r = UI.check_spielzentrale_urteil(self._z(dafuer=["betfair"]))
-        self.assertEqual(r["nFail"], 1)
-        self.assertIn("kein Konsens", r["failures"][0])
-
-    def test_einig_mit_gegenstimme_faellt_auf(self):
-        r = UI.check_spielzentrale_urteil(self._z(gegen=["stake"]))
-        self.assertEqual(r["nFail"], 1)
-
-    def test_pinnacle_als_stimme_faellt_auf(self):
-        r = UI.check_spielzentrale_urteil(self._z(dafuer=["betfair", "pinn"]))
-        self.assertTrue(any("Anker" in f for f in r["failures"]))
-
-    def test_reiner_poly_preis_als_stimme_faellt_auf(self):
-        r = UI.check_spielzentrale_urteil(self._z(poly={"art": "preis", "usd": 597}))
-        self.assertTrue(any("bezahlt" in f for f in r["failures"]))
-
-    def test_widerspruch_zur_money_map_faellt_auf(self):
-        ctx = self._z()
-        ctx["moneyMap"] = {"rows": [{"matchId": "1", "verdict": "uneinig"}]}
-        r = UI.check_spielzentrale_urteil(ctx)
-        self.assertTrue(any("zwei Antworten" in f for f in r["failures"]))
+    def _ctx(self, teile, punkte=None, moeglich=None):
+        p = sum(t["punkte"] for t in teile) if punkte is None else punkte
+        m = sum(t["moeglich"] for t in teile) if moeglich is None else moeglich
+        return {"killer": {"alleBewertet": [
+            {"name": "Real Madrid", "liga": "UCL", "punkte": p, "moeglich": m, "teile": teile}]}}
 
     def test_saubere_zeile_bleibt_still(self):
-        ctx = self._z()
-        ctx["moneyMap"] = {"rows": [{"matchId": "1", "verdict": "konsens"}]}
-        self.assertEqual(UI.check_spielzentrale_urteil(ctx)["failures"], [])
+        t = [self._t("BF", 3, 3, True, True), self._t("POLY", 0, 0, False, status="unbekannt")]
+        self.assertEqual(UI.check_buecher_punktestand(self._ctx(t))["failures"], [])
+
+    def test_punkte_muessen_die_summe_der_teile_sein(self):
+        t = [self._t("BF", 2, 3, True)]
+        r = UI.check_buecher_punktestand(self._ctx(t, punkte=9))
+        self.assertTrue(any("Summe der Teile" in f for f in r["failures"]))
+
+    def test_nicht_erhobenes_buch_darf_nicht_im_nenner_stehen(self):
+        t = [self._t("BF", 3, 3, True), self._t("STAKE", 0, 3, False, status="unbekannt")]
+        r = UI.check_buecher_punktestand(self._ctx(t))
+        self.assertTrue(any("im Nenner" in f for f in r["failures"]))
+
+    def test_tiefe_ohne_zustimmung_faellt_auf(self):
+        # Sonst waere „viel Geld auf der GEGENSEITE, das schnell fliesst" ein Pluspunkt.
+        t = [self._t("BF", 1, 3, False, tiefe_ok=True)]
+        r = UI.check_buecher_punktestand(self._ctx(t))
+        self.assertTrue(any("Tiefe" in f for f in r["failures"]))
+
+    def test_zeile_ohne_aufschluesselung_faellt_auf(self):
+        ctx = {"killer": {"alleBewertet": [{"name": "X", "liga": "L", "punkte": 7, "moeglich": 13}]}}
+        r = UI.check_buecher_punktestand(ctx)
+        self.assertTrue(any("Begruendung" in f for f in r["failures"]))

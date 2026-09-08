@@ -126,7 +126,6 @@ LEAGUE_ODDS_KEY = {
 # zweimal in derselben Stunde. Ohne lesbare Anpfiffzeit auf BEIDEN Seiten gilt der Treffer NICHT:
 # fehlende Information ist keine Erlaubnis, auch beim Zuordnen nicht.
 ANKER_FILE       = "betfair_anker.json"   # Zweitmeinungen OHNE die Radar-Volumenschwelle
-ZENTRALE_BASIS_FILE = "spielzentrale_basis.json"   # money_map_row fuer JEDES Spiel (Rohstoff der Spielzentrale)
 SPORTS_FILE      = "odds_sports.json"     # Abzug von /sports, damit der Lauf nicht bei Netzfehler blind wird
 ANPFIFF_FENSTER_H = 2.0                   # Schranke fuer den globalen Pool
 MAX_ODDS_KEYS    = int(os.environ.get("BF_MAX_ODDS_KEYS") or 90)   # Laufzeit-Deckel, nicht Quota-Deckel
@@ -1576,11 +1575,6 @@ def main():
     # `games` sind bereits vollstaendig, deshalb hier nur die uebrigen (kein Duplikat).
     _im_radar = {str(g.get("matchId")) for g in games}
     anker = {}
-    # 08.09.2026 (Lucas, Spielzentrale): dieselben Zeilen wie die Money Map, aber fuer JEDES Spiel
-    # und OHNE den Geld-Filter. Die Money Map beantwortet „wo ist genug Geld fuer einen Vergleich",
-    # die Zentrale „welche Quellen sprechen ueberhaupt ueber dieses Spiel" — zwei Fragen, eine
-    # Rechnung. Gefiltert und gezaehlt wird in `spielzentrale.py`, nicht hier.
-    zentrale_basis = list(mm_rows)
     for m in matches:
         _mid = str(m.get("matchId"))
         if _mid in _im_radar or (m.get("liveInfo") or {}).get("finished"):
@@ -1588,8 +1582,7 @@ def main():
         if not (m.get("markets") or {}).get("Match Odds"):
             continue
         try:
-            anker[_mid], _zb = _anker_zeile(m)
-            zentrale_basis.append(_zb)
+            anker[_mid], _ = _anker_zeile(m)
         except Exception:
             continue          # ein einzelnes Spiel darf den Pool nicht kosten
     _mit_pinn = sum(1 for v in anker.values() if v.get("pinn")) + sum(1 for g in games if g.get("pinn"))
@@ -1604,13 +1597,6 @@ def main():
     # ⚠️ 02.09.2026: `ankerQuote` mass vorher gegen `games` — also gegen den bereits auf >=15.000 EUR
     # gefilterten Pool. „100%" hiess dann „100% von drei Spielen", waehrend keines der Spiele im
     # Punktestand einen Anker hatte. Der richtige Nenner sind ALLE offenen Spiele.
-    _dump(ZENTRALE_BASIS_FILE, {"generatedAt": now, "n": len(zentrale_basis),
-                                "hinweis": "money_map_row fuer JEDES Spiel im Feed, ungefiltert — "
-                                           "Rohstoff fuer spielzentrale.py. Die Money Map selbst "
-                                           "bleibt die gefilterte Vergleichsliste.",
-                                "rows": zentrale_basis})
-    print("zentrale-basis: %d Zeilen (Radar %d + Anker %d)"
-          % (len(zentrale_basis), len(mm_rows), len(zentrale_basis) - len(mm_rows)))
     out["ankerQuote"] = round(_mit_pinn / _n_ges, 3) if _n_ges else None
     out["ankerN"] = _n_ges
     _dump(OUT_FILE, out)

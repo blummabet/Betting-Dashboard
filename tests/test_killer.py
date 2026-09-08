@@ -526,3 +526,54 @@ class TestBewieseneWalletsIstEineDefinition(unittest.TestCase):
 
     def test_ohne_datei_leere_menge(self):
         self.assertEqual(killer._bewiesene_wallets(None), set())
+
+
+class TestAlleBewertetTraegtSeineBegruendung(unittest.TestCase):
+    """08.09.2026 — `alleBewertet` trug `punkte` und `moeglich` und sonst nichts. Deshalb konnte
+    das Frontend die 145 bewerteten Spiele gar nicht zeigen: es hätte Zahlen ohne Begründung
+    anzeigen müssen. Genau diese Lücke war der Grund, warum daneben eine zweite Fläche
+    („Spielzentrale") entstand, die dasselbe noch einmal rechnete."""
+
+    def _state(self):
+        ko = (datetime.now(timezone.utc) + timedelta(hours=5)).isoformat().replace("+00:00", "Z")
+        return {"pending": {"1": {
+            "league": "UEFA Champions League", "home": "Real Madrid", "away": "Inter",
+            "kickoff": ko,
+            "signals": {"Match Odds": {"fav": "H", "share": 0.78, "odd": 1.64,
+                                       "conc": True, "inflow": False, "dir": "flat"}}}}}
+
+    def _baue(self, stake=None):
+        return killer.baue(state=self._state(), consensus={"games": []}, track={},
+                           streaks={"streaks": []}, latch_state={}, anker={"anker": {}},
+                           stake_wetten=stake)
+
+    def test_teile_stehen_in_der_datei(self):
+        r = self._baue()["alleBewertet"][0]
+        self.assertIn("teile", r)
+        self.assertEqual({t["buch"] for t in r["teile"]},
+                         {"BF", "POLY", "PIN", "STAKE", "ZEIT"})
+
+    def test_paarung_steht_dabei_nicht_nur_die_seite(self):
+        # Ohne home/away kann die Tafel „Real Madrid v Inter" nicht schreiben.
+        r = self._baue()["alleBewertet"][0]
+        self.assertEqual(r["home"], "Real Madrid")
+        self.assertEqual(r["away"], "Inter")
+
+    def test_punkte_bleiben_die_summe_der_teile(self):
+        r = self._baue()["alleBewertet"][0]
+        self.assertEqual(r["punkte"], sum(t["punkte"] for t in r["teile"]))
+        self.assertEqual(r["moeglich"], sum(t["moeglich"] for t in r["teile"]))
+
+    def test_stake_wird_ueber_den_namen_gejoint(self):
+        ko = (datetime.now(timezone.utc) + timedelta(hours=5)).isoformat().replace("+00:00", "Z")
+        w = [{"kombi": False, "einsatzUsd": 7318.0, "event": "Real Madrid - Inter",
+              "markt": "1x2", "auswahl": "Real Madrid", "eventId": "e1", "anpfiff": ko}]
+        t = next(x for x in self._baue(stake=w)["alleBewertet"][0]["teile"] if x["buch"] == "STAKE")
+        self.assertEqual(t["status"], "ja")
+
+    def test_fremdes_spiel_wird_nicht_gejoint(self):
+        ko = (datetime.now(timezone.utc) + timedelta(hours=5)).isoformat().replace("+00:00", "Z")
+        w = [{"kombi": False, "einsatzUsd": 7318.0, "event": "Porto - Manchester City",
+              "markt": "1x2", "auswahl": "Porto", "eventId": "e2", "anpfiff": ko}]
+        t = next(x for x in self._baue(stake=w)["alleBewertet"][0]["teile"] if x["buch"] == "STAKE")
+        self.assertEqual(t["status"], "unbekannt")
