@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-09-08T11:43:06.530180+00:00",
-"count": 16,
-"covered": 11,
+"generatedAt": "2026-09-08T11:58:20.914767+00:00",
+"count": 17,
+"covered": 12,
 "leaguesCovered": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -35,7 +35,7 @@
 "soccer_usa_mls"
 ],
 "oddsKeysFetched": 48,
-"ankerQuote": 0.28,
+"ankerQuote": 0.282,
 "games": [
 {
 "matchId": "35998580",
@@ -49,9 +49,9 @@
 "moneyName": "Real Madrid",
 "moneySharePct": 81,
 "moneyOdd": 1.64,
-"moneyDir": "in",
-"totVol": 379713,
-"pinnOdd": 1.6,
+"moneyDir": "flat",
+"totVol": 386178,
+"pinnOdd": 1.61,
 "softOdd": 1.58,
 "softN": 48,
 "poly": {
@@ -78,26 +78,89 @@
 "whaleUsd": 51833
 },
 "pinn": {
-"home": 0.6043,
-"draw": 0.2163,
-"away": 0.1794,
+"home": 0.5997,
+"draw": 0.2175,
+"away": 0.1829,
 "fav": "home"
 },
 "soft": {
-"home": 0.6,
-"draw": 0.2133,
-"away": 0.1866,
+"home": 0.5992,
+"draw": 0.214,
+"away": 0.1868,
 "fav": "home",
 "n": 48
 },
-"pinnMovePP": 0.7,
+"pinnMovePP": 0.2,
 "pinnMove": {
-"movePP": 0.7,
-"stepPP": 0.7,
+"movePP": 0.2,
+"stepPP": 0.2,
 "n": 2,
 "move": false,
 "laeuft": true
 },
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "35998661",
+"home": "Dortmund",
+"away": "Villarreal",
+"league": "UEFA Champions League",
+"country": "International",
+"kickoff": "2026-09-08T19:00:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Dortmund",
+"moneySharePct": 75,
+"moneyOdd": 1.89,
+"moneyDir": "flat",
+"totVol": 190290,
+"pinnOdd": 1.83,
+"softOdd": 1.8,
+"softN": 48,
+"poly": {
+"vol": 465483,
+"odd": 1.87,
+"sharePct": 90,
+"shareSrc": "geld",
+"key": "ucl-bvb-vil-2026-09-08",
+"sideKey": "BV Borussia 09 Dortmund",
+"whales": [
+{
+"wallet": "0x457f89ae6fb64ace63f595378c0a2959cb422a64",
+"usd": 16001
+},
+{
+"wallet": "0x52d93dcf81444f793dda7fedc370f7a35101fb1a",
+"usd": 11864
+},
+{
+"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+"usd": 11248
+},
+{
+"wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+"usd": 10822
+}
+],
+"whaleUsd": 49935
+},
+"pinn": {
+"home": 0.5286,
+"draw": 0.2394,
+"away": 0.232,
+"fav": "home"
+},
+"soft": {
+"home": 0.5256,
+"draw": 0.2385,
+"away": 0.2359,
+"fav": "home",
+"n": 48
+},
+"pinnMovePP": null,
+"pinnMove": null,
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
@@ -114,10 +177,10 @@
 "moneyName": "AEK Athens",
 "moneySharePct": 81,
 "moneyOdd": 1.8,
-"moneyDir": "out",
-"totVol": 151153,
+"moneyDir": "flat",
+"totVol": 155443,
 "pinnOdd": 1.75,
-"softOdd": 1.74,
+"softOdd": 1.75,
 "softN": 47,
 "poly": {
 "vol": 91346,
@@ -143,15 +206,15 @@
 "whaleUsd": 14980
 },
 "pinn": {
-"home": 0.5541,
-"draw": 0.2383,
-"away": 0.2076,
+"home": 0.5539,
+"draw": 0.2381,
+"away": 0.208,
 "fav": "home"
 },
 "soft": {
-"home": 0.5473,
-"draw": 0.2378,
-"away": 0.2149,
+"home": 0.5439,
+"draw": 0.2388,
+"away": 0.2173,
 "fav": "home",
 "n": 47
 },
@@ -168,69 +231,6 @@
 "pinnTotals": null
 },
 {
-"matchId": "35998658",
-"home": "Porto",
-"away": "Man City",
-"league": "UEFA Champions League",
-"country": "International",
-"kickoff": "2026-09-08T19:00:00Z",
-"live": false,
-"moneySide": "away",
-"moneyName": "Man City",
-"moneySharePct": 87,
-"moneyOdd": 1.72,
-"moneyDir": "flat",
-"totVol": 141202,
-"pinnOdd": 1.68,
-"softOdd": 1.67,
-"softN": 48,
-"poly": {
-"vol": 92782,
-"odd": 1.74,
-"sharePct": 96,
-"shareSrc": "geld",
-"key": "ucl-por-mnc-2026-09-08",
-"sideKey": "Manchester City FC",
-"whales": [
-{
-"wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-"usd": 19619
-},
-{
-"wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
-"usd": 2711
-},
-{
-"wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
-"usd": 1878
-},
-{
-"wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
-"usd": 1778
-}
-],
-"whaleUsd": 25986
-},
-"pinn": {
-"home": 0.1876,
-"draw": 0.2361,
-"away": 0.5763,
-"fav": "away"
-},
-"soft": {
-"home": 0.1944,
-"draw": 0.2372,
-"away": 0.5684,
-"fav": "away",
-"n": 48
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
 "matchId": "35998660",
 "home": "Club Brugge",
 "away": "Aston Villa",
@@ -241,10 +241,10 @@
 "moneySide": "away",
 "moneyName": "Aston Villa",
 "moneySharePct": 45,
-"moneyOdd": 2.82,
-"moneyDir": "in",
-"totVol": 139813,
-"pinnOdd": 2.78,
+"moneyOdd": 2.86,
+"moneyDir": "out",
+"totVol": 141202,
+"pinnOdd": 2.79,
 "softOdd": 2.7,
 "softN": 47,
 "poly": {
@@ -275,26 +275,81 @@
 "whaleUsd": 6997
 },
 "pinn": {
-"home": 0.3835,
+"home": 0.3849,
 "draw": 0.2661,
-"away": 0.3504,
+"away": 0.349,
 "fav": "home"
 },
 "soft": {
-"home": 0.3796,
+"home": 0.3798,
 "draw": 0.2664,
-"away": 0.354,
+"away": 0.3538,
 "fav": "home",
 "n": 47
 },
-"pinnMovePP": -3.2,
+"pinnMovePP": -3.4,
 "pinnMove": {
-"movePP": -3.2,
-"stepPP": 0.0,
+"movePP": -3.4,
+"stepPP": -0.1,
 "n": 25,
 "move": true,
 "laeuft": false
 },
+"verdict": "uneinig",
+"agree": false,
+"pinnTotals": null
+},
+{
+"matchId": "36034382",
+"home": "Incheon Utd",
+"away": "Bucheon FC 1995",
+"league": "South Korean K1 League",
+"country": "KR",
+"kickoff": "2026-09-08T10:30:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Incheon Utd",
+"moneySharePct": 70,
+"moneyOdd": 1.23,
+"moneyDir": "in",
+"totVol": 55137,
+"pinnOdd": 2.73,
+"softOdd": 1.18,
+"softN": 28,
+"poly": {
+"vol": 20586,
+"odd": 2.11,
+"sharePct": 63,
+"shareSrc": "geld",
+"key": "kor-inc-bch-2026-09-08",
+"sideKey": "Incheon United FC",
+"whales": [
+{
+"wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
+"usd": 1040
+},
+{
+"wallet": "0x30d4bc53279f8a0e0dc11da5f0b9a4c815a7ac6c",
+"usd": 872
+}
+],
+"whaleUsd": 1912
+},
+"pinn": {
+"home": 0.3455,
+"draw": 0.4491,
+"away": 0.2055,
+"fav": "draw"
+},
+"soft": {
+"home": 0.6388,
+"draw": 0.2848,
+"away": 0.0764,
+"fav": "home",
+"n": 28
+},
+"pinnMovePP": null,
+"pinnMove": null,
 "verdict": "uneinig",
 "agree": false,
 "pinnTotals": null
@@ -309,10 +364,10 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Lille",
-"moneySharePct": 63,
+"moneySharePct": 62,
 "moneyOdd": 2.28,
 "moneyDir": "flat",
-"totVol": 51364,
+"totVol": 52274,
 "pinnOdd": 2.21,
 "softOdd": 2.2,
 "softN": 48,
@@ -346,71 +401,22 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.436,
-"draw": 0.2774,
-"away": 0.2866,
+"home": 0.4359,
+"draw": 0.2771,
+"away": 0.287,
 "fav": "home",
 "n": 48
 },
-"pinnMovePP": null,
-"pinnMove": null,
+"pinnMovePP": 0.0,
+"pinnMove": {
+"movePP": 0.0,
+"stepPP": 0.0,
+"n": 2,
+"move": false,
+"laeuft": false
+},
 "verdict": "konsens",
 "agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36034382",
-"home": "Incheon Utd",
-"away": "Bucheon FC 1995",
-"league": "South Korean K1 League",
-"country": "KR",
-"kickoff": "2026-09-08T10:30:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Incheon Utd",
-"moneySharePct": 72,
-"moneyOdd": 2.8,
-"moneyDir": "out",
-"totVol": 49505,
-"pinnOdd": 2.42,
-"softOdd": 2.49,
-"softN": 30,
-"poly": {
-"vol": 20586,
-"odd": 2.11,
-"sharePct": 63,
-"shareSrc": "geld",
-"key": "kor-inc-bch-2026-09-08",
-"sideKey": "Incheon United FC",
-"whales": [
-{
-"wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
-"usd": 1040
-},
-{
-"wallet": "0x30d4bc53279f8a0e0dc11da5f0b9a4c815a7ac6c",
-"usd": 872
-}
-],
-"whaleUsd": 1912
-},
-"pinn": {
-"home": 0.3901,
-"draw": 0.3934,
-"away": 0.2165,
-"fav": "draw"
-},
-"soft": {
-"home": 0.3627,
-"draw": 0.434,
-"away": 0.2033,
-"fav": "draw",
-"n": 30
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "uneinig",
-"agree": false,
 "pinnTotals": null
 },
 {
@@ -423,12 +429,12 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Ulsan Hyundai Horang-i",
-"moneySharePct": 41,
-"moneyOdd": 4.0,
+"moneySharePct": 40,
+"moneyOdd": 4.9,
 "moneyDir": "out",
-"totVol": 39341,
-"pinnOdd": 3.52,
-"softOdd": 3.65,
+"totVol": 48480,
+"pinnOdd": 3.59,
+"softOdd": 4.34,
 "softN": 30,
 "poly": {
 "vol": 80575,
@@ -441,15 +447,15 @@
 "whaleUsd": 0
 },
 "pinn": {
-"home": 0.2684,
-"draw": 0.346,
-"away": 0.3856,
-"fav": "away"
+"home": 0.2629,
+"draw": 0.3822,
+"away": 0.3549,
+"fav": "draw"
 },
 "soft": {
-"home": 0.2457,
-"draw": 0.4,
-"away": 0.3544,
+"home": 0.2097,
+"draw": 0.5193,
+"away": 0.271,
 "fav": "draw",
 "n": 30
 },
@@ -460,35 +466,44 @@
 "pinnTotals": null
 },
 {
-"matchId": "36027474",
-"home": "Millwall",
-"away": "Newcastle",
-"league": "English Football League Cup",
+"matchId": "36030372",
+"home": "Bolton",
+"away": "West Ham",
+"league": "English Sky Bet Championship",
 "country": "GB",
 "kickoff": "2026-09-08T19:00:00Z",
 "live": false,
 "moneySide": "away",
-"moneyName": "Newcastle",
-"moneySharePct": 95,
-"moneyOdd": 1.54,
+"moneyName": "West Ham",
+"moneySharePct": 69,
+"moneyOdd": 1.67,
 "moneyDir": "flat",
-"totVol": 27058,
-"pinnOdd": 1.5,
-"softOdd": 1.47,
-"softN": 38,
-"poly": null,
+"totVol": 21833,
+"pinnOdd": 1.65,
+"softOdd": 1.6,
+"softN": 47,
+"poly": {
+"vol": 4557,
+"odd": 1.68,
+"sharePct": 60,
+"shareSrc": "preis",
+"key": "elc-bol-whu-2026-09-08",
+"sideKey": "West Ham United FC",
+"whales": null,
+"whaleUsd": null
+},
 "pinn": {
-"home": 0.1539,
-"draw": 0.2077,
-"away": 0.6384,
+"home": 0.1894,
+"draw": 0.2252,
+"away": 0.5854,
 "fav": "away"
 },
 "soft": {
-"home": 0.1558,
-"draw": 0.212,
-"away": 0.6322,
+"home": 0.1875,
+"draw": 0.2247,
+"away": 0.5878,
 "fav": "away",
-"n": 38
+"n": 47
 },
 "pinnMovePP": null,
 "pinnMove": null,
@@ -508,8 +523,8 @@
 "moneyName": "Southampton",
 "moneySharePct": 75,
 "moneyOdd": 1.89,
-"moneyDir": "in",
-"totVol": 18895,
+"moneyDir": "flat",
+"totVol": 18986,
 "pinnOdd": 1.83,
 "softOdd": 1.83,
 "softN": 47,
@@ -530,9 +545,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.5143,
-"draw": 0.2522,
-"away": 0.2335,
+"home": 0.5158,
+"draw": 0.2523,
+"away": 0.2319,
 "fav": "home",
 "n": 47
 },
@@ -540,7 +555,7 @@
 "pinnMove": {
 "movePP": 0.7,
 "stepPP": 0.0,
-"n": 7,
+"n": 8,
 "move": false,
 "laeuft": false
 },
@@ -559,11 +574,11 @@
 "moneySide": "home",
 "moneyName": "Cardiff",
 "moneySharePct": 49,
-"moneyOdd": 2.12,
-"moneyDir": "in",
-"totVol": 16672,
+"moneyOdd": 2.16,
+"moneyDir": "out",
+"totVol": 16885,
 "pinnOdd": 2.08,
-"softOdd": 2.02,
+"softOdd": 2.01,
 "softN": 47,
 "poly": {
 "vol": 552,
@@ -582,9 +597,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.463,
+"home": 0.4637,
 "draw": 0.2564,
-"away": 0.2806,
+"away": 0.2799,
 "fav": "home",
 "n": 47
 },
@@ -592,10 +607,47 @@
 "pinnMove": {
 "movePP": 0.0,
 "stepPP": 0.0,
-"n": 2,
+"n": 3,
 "move": false,
 "laeuft": false
 },
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36025493",
+"home": "Gnistan",
+"away": "KuPS",
+"league": "Finnish Veikkausliiga",
+"country": "FI",
+"kickoff": "2026-09-08T16:00:00Z",
+"live": false,
+"moneySide": "away",
+"moneyName": "KuPS",
+"moneySharePct": 88,
+"moneyOdd": 1.94,
+"moneyDir": "in",
+"totVol": 15300,
+"pinnOdd": 1.93,
+"softOdd": 1.9,
+"softN": 39,
+"poly": null,
+"pinn": {
+"home": 0.2545,
+"draw": 0.2443,
+"away": 0.5012,
+"fav": "away"
+},
+"soft": {
+"home": 0.259,
+"draw": 0.2523,
+"away": 0.4887,
+"fav": "away",
+"n": 39
+},
+"pinnMovePP": null,
+"pinnMove": null,
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
@@ -612,32 +664,32 @@
 "moneyName": "TPS",
 "moneySharePct": 73,
 "moneyOdd": 2.78,
-"moneyDir": "out",
+"moneyDir": "flat",
 "totVol": 15261,
-"pinnOdd": 2.68,
+"pinnOdd": 2.66,
 "softOdd": 2.55,
 "softN": 39,
 "poly": null,
 "pinn": {
-"home": 0.3616,
-"draw": 0.2714,
-"away": 0.367,
+"home": 0.3641,
+"draw": 0.2705,
+"away": 0.3654,
 "fav": "away"
 },
 "soft": {
-"home": 0.3605,
-"draw": 0.2706,
-"away": 0.3688,
+"home": 0.361,
+"draw": 0.2707,
+"away": 0.3684,
 "fav": "away",
 "n": 39
 },
-"pinnMovePP": -0.8,
+"pinnMovePP": -0.5,
 "pinnMove": {
-"movePP": -0.8,
-"stepPP": -0.8,
-"n": 2,
+"movePP": -0.5,
+"stepPP": 0.2,
+"n": 3,
 "move": false,
-"laeuft": true
+"laeuft": false
 },
 "verdict": "uneinig",
 "agree": false,
@@ -653,36 +705,10 @@
 "live": true,
 "moneySide": "draw",
 "moneyName": "The Draw",
-"moneySharePct": 88,
-"moneyOdd": 4.6,
+"moneySharePct": 86,
+"moneyOdd": 6.6,
 "moneyDir": "out",
-"totVol": 289639,
-"pinnOdd": null,
-"softOdd": null,
-"softN": null,
-"poly": null,
-"pinn": null,
-"soft": null,
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "no_anchor",
-"agree": null,
-"pinnTotals": null
-},
-{
-"matchId": "36043478",
-"home": "Portimonense SC U23",
-"away": "Felgueiras U23",
-"league": "Portuguese U23",
-"country": "PT",
-"kickoff": "2026-09-08T10:00:00Z",
-"live": true,
-"moneySide": "away",
-"moneyName": "Felgueiras U23",
-"moneySharePct": 93,
-"moneyOdd": 1.03,
-"moneyDir": "in",
-"totVol": 29196,
+"totVol": 303460,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -703,25 +729,51 @@
 "country": "International",
 "kickoff": "2026-09-08T11:00:00Z",
 "live": true,
-"moneySide": "home",
-"moneyName": "Porto U19",
-"moneySharePct": 74,
-"moneyOdd": 1.73,
-"moneyDir": "in",
-"totVol": 28657,
+"moneySide": "draw",
+"moneyName": "The Draw",
+"moneySharePct": 48,
+"moneyOdd": 14.0,
+"moneyDir": "out",
+"totVol": 104494,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
 "poly": {
 "vol": 92782,
-"odd": 5.41,
-"sharePct": 3,
-"shareSrc": "geld",
+"odd": null,
+"sharePct": null,
+"shareSrc": null,
 "key": "ucl-por-mnc-2026-09-08",
-"sideKey": "FC Porto",
+"sideKey": null,
 "whales": [],
 "whaleUsd": 0
 },
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null
+},
+{
+"matchId": "36043391",
+"home": "Rio Ave FC U23",
+"away": "SC Uniao Torreense U23",
+"league": "Portuguese U23",
+"country": "PT",
+"kickoff": "2026-09-08T10:00:00Z",
+"live": true,
+"moneySide": "away",
+"moneyName": "SC Uniao Torreense U23",
+"moneySharePct": 74,
+"moneyOdd": 1.09,
+"moneyDir": "in",
+"totVol": 19257,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": null,
 "pinn": null,
 "soft": null,
 "pinnMovePP": null,
@@ -740,10 +792,10 @@
 "live": true,
 "moneySide": "away",
 "moneyName": "Orihuela CF",
-"moneySharePct": 68,
-"moneyOdd": 1.02,
+"moneySharePct": 77,
+"moneyOdd": 1.01,
 "moneyDir": "in",
-"totVol": 6646,
+"totVol": 9815,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -766,10 +818,10 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Club Brugge U19",
-"moneySharePct": 83,
-"moneyOdd": 1.9,
+"moneySharePct": 80,
+"moneyOdd": 1.87,
 "moneyDir": "in",
-"totVol": 1817,
+"totVol": 2394,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -792,5 +844,5 @@
 "pinnTotals": null
 }
 ],
-"ankerN": 150
+"ankerN": 149
 }
