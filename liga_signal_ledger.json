@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-09-07T13:57:29Z",
-    "total_records": 92,
+    "updated_at": "2026-09-07T21:40:03Z",
+    "total_records": 96,
     "oddsBackfilled": "2026-09-06 — Quote/entryOdd aus den Pick-Dateien nachgetragen; der Ledger trug sie nie (0 von 318)."
   },
   "records": [
@@ -1993,6 +1993,45 @@
       "entryBook": "soft"
     },
     {
+      "key": "ESP-4-546-538|Unter 2.5 Tore",
+      "matchKey": "ESP-4-546-538",
+      "market": "Unter 2.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "injury",
+          "score": 1.75
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 0.8
+        },
+        {
+          "name": "chance_creation",
+          "score": 2.78
+        },
+        {
+          "name": "transfer_shift",
+          "score": 0.6
+        },
+        {
+          "name": "betfair_money",
+          "score": 3.26
+        }
+      ],
+      "resolvedAt": "2026-09-07T21:39:59Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 1.16,
+      "clvResolved": true,
+      "odds": 1.37,
+      "entryOdd": 1.37,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED"
+    },
+    {
       "key": "ESP-4-728-4665|Doppelte Chance — X2",
       "matchKey": "ESP-4-728-4665",
       "market": "Doppelte Chance — X2",
@@ -2093,6 +2132,53 @@
       "odds": 1.82,
       "entryOdd": 1.82,
       "entryBook": "soft"
+    },
+    {
+      "key": "ESP-4-797-548|Über 2.5 Tore",
+      "matchKey": "ESP-4-797-548",
+      "market": "Über 2.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "injury",
+          "score": -5.25
+        },
+        {
+          "name": "form_trend",
+          "score": 2.0
+        },
+        {
+          "name": "h2h_pattern",
+          "score": -1.0
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.22
+        },
+        {
+          "name": "chance_creation",
+          "score": 1.1
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        },
+        {
+          "name": "betfair_money",
+          "score": 4.0
+        }
+      ],
+      "resolvedAt": "2026-09-07T21:39:59Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -2.3,
+      "clvResolved": true,
+      "odds": 1.74,
+      "entryOdd": 1.74,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED"
     },
     {
       "key": "ESP-6-548-538|Heimsieg",
@@ -3612,6 +3698,84 @@
       "odds": 1.98,
       "entryOdd": 1.98,
       "entryBook": "soft"
+    },
+    {
+      "key": "ITA-3-490-867|Über 1.5 Tore",
+      "matchKey": "ITA-3-490-867",
+      "market": "Über 1.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "injury",
+          "score": -2.5
+        },
+        {
+          "name": "form_trend",
+          "score": 2.93
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 1.8
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.8
+        },
+        {
+          "name": "chance_creation",
+          "score": 0.83
+        }
+      ],
+      "resolvedAt": "2026-09-07T21:39:59Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 1.84,
+      "clvResolved": true,
+      "odds": 1.44,
+      "entryOdd": 1.44,
+      "entryBook": "soft",
+      "processVerdict": "UNLUCKY"
+    },
+    {
+      "key": "ITA-3-494-487|Doppelte Chance — X2",
+      "matchKey": "ITA-3-494-487",
+      "market": "Doppelte Chance — X2",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 1.9
+        },
+        {
+          "name": "chance_creation",
+          "score": 1.46
+        },
+        {
+          "name": "smart_money",
+          "score": -1.32
+        },
+        {
+          "name": "opener_move",
+          "score": 1.13
+        },
+        {
+          "name": "move_following",
+          "score": -1.2
+        }
+      ],
+      "resolvedAt": "2026-09-07T21:39:59Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -3.88,
+      "clvResolved": true,
+      "odds": 1.44,
+      "entryOdd": 1.44,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED"
     },
     {
       "key": "ITA-3-496-489|Heimsieg",

@@ -65,6 +65,14 @@
       "hinweis": ""
     },
     {
+      "label": "Money Map: die Poly-Seite gehoert zum Spiel",
+      "severity": "error",
+      "failures": [],
+      "nFail": 0,
+      "ok": true,
+      "hinweis": ""
+    },
+    {
       "label": "Stake-Auffaelligkeiten tragen ihr gemessenes Urteil",
       "severity": "error",
       "failures": [],
@@ -94,19 +102,19 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "139 Picks im Fenster, 22 % ohne Preis-Signal."
+      "hinweis": "143 Picks im Fenster, 22 % ohne Preis-Signal."
     },
     {
       "label": "Stumme Signale: wer hat nie gefeuert?",
       "severity": "warn",
       "failures": [
-        "betfair_coherence: 0 Feuerungen in 159 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
-        "game_state_openness: 0 Feuerungen in 159 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
-        "polymarket_sharp: 0 Feuerungen in 159 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)"
+        "betfair_coherence: 0 Feuerungen in 163 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
+        "game_state_openness: 0 Feuerungen in 163 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
+        "polymarket_sharp: 0 Feuerungen in 163 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)"
       ],
       "nFail": 3,
       "ok": false,
-      "hinweis": "9 von 33 Signalen schweigen ueber 159 Picks — davon 6 bewusst abgeschaltet (altitude_signal, incentive_signal, pressure_index, steam_lag, travel_burden, weather_signal), 3 an und trotzdem stumm."
+      "hinweis": "9 von 33 Signalen schweigen ueber 163 Picks — davon 6 bewusst abgeschaltet (altitude_signal, incentive_signal, pressure_index, steam_lag, travel_burden, weather_signal), 3 an und trotzdem stumm."
     },
     {
       "label": "Signal-Bilanz: schadet ein Signal belegt?",
@@ -126,5 +134,5 @@
     }
   ],
   "nFail": 1,
-  "generatedAt": "2026-09-07T13:36:38.999224+00:00"
+  "generatedAt": "2026-09-07T22:05:43.900999+00:00"
 }
