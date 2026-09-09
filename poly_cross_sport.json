@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-09T22:36:52.189015+00:00",
+ "generatedAt": "2026-09-09T23:06:55.901602+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,11 +10,11 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 639,
- "pinnKeys": 323,
- "matched": 223,
+ "pinnKeys": 321,
+ "matched": 221,
  "footballRows": 201,
  "crossRows": 438,
- "footballSkippedStale": 86,
+ "footballSkippedStale": 95,
  "seenBySport": {
   "americanfootball_nfl": 176,
   "baseball_mlb": 90,
@@ -24,13 +24,42 @@
   "soccer_liga": 165
  },
  "matchedBySport": {
-  "baseball_mlb": 22,
+  "baseball_mlb": 20,
   "soccer_mls": 36,
   "soccer_liga": 165
  },
  "trackRecord": {
-  "tracked": 303,
-  "converged": 65
+  "tracked": 299,
+  "converged": 63
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|miamimarlins-newyorkmets|newyorkmets",
+   "sport": "baseball_mlb",
+   "event": "New York Mets vs Miami Marlins",
+   "market": "Moneyline",
+   "outcome": "New York Mets",
+   "polyPP": 73.5,
+   "pinnPP": 43.8,
+   "gapPP": 29.69,
+   "vol": 22893,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -2.34,
+   "firstSeen": "2026-09-07T18:02:30.443558+00:00"
+  },
+  {
+   "id": "baseball_mlb|miamimarlins-newyorkmets|miamimarlins",
+   "sport": "baseball_mlb",
+   "event": "New York Mets vs Miami Marlins",
+   "market": "Moneyline",
+   "outcome": "Miami Marlins",
+   "polyPP": 26.5,
+   "pinnPP": 56.2,
+   "gapPP": -29.69,
+   "vol": 22893,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -2.34,
+   "firstSeen": "2026-09-07T18:02:30.443558+00:00"
+  }
+ ]
 }
