@@ -135,7 +135,7 @@
    "gehaltenSeit": "2026-09-08T19:59:30.262047+00:00",
    "zuletztAktiv": "2026-09-09T15:46:33.058354+00:00",
    "haltePreis": 1.76,
-   "aktiv": true
+   "aktiv": false
   },
   "35998675|Match Odds": {
    "matchId": "35998675",
@@ -277,7 +277,7 @@
    "gehaltenSeit": "2026-09-08T19:59:30.262047+00:00",
    "zuletztAktiv": "2026-09-09T15:46:33.058354+00:00",
    "haltePreis": 1.86,
-   "aktiv": true
+   "aktiv": false
   },
   "35998677|Match Odds": {
    "matchId": "35998677",
@@ -684,7 +684,7 @@
    "markt": "Match Odds",
    "seite": "away",
    "name": "Al Ahly Cairo",
-   "odd": 1.4,
+   "odd": 1.44,
    "entryOdd": 1.5,
    "anteilPct": 92,
    "stufe": 2,
@@ -704,8 +704,8 @@
    "polySide": null,
    "pinnMovePP": null,
    "punkte": {
-    "punkte": 6,
-    "moeglich": 7,
+    "punkte": 4,
+    "moeglich": 4,
     "dauerH": 3.72,
     "teile": [
      {
@@ -716,20 +716,20 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 92% auf der Seite"
+       "text": "Geld 94% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.919,
-       "betrag": 8970,
-       "gesamt": 9761,
+       "anteil": 0.936,
+       "betrag": 16722,
+       "gesamt": 17865,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 92% auf der Seite"
+      "text": "Geld 94% auf der Seite"
      },
      {
       "buch": "POLY",
@@ -741,6 +741,137 @@
       "tiefe": null,
       "geld": null,
       "text": "Polymarket nicht erhoben"
+     },
+     {
+      "buch": "PIN",
+      "name": "Pinnacle",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Pinnacle nicht erhoben"
+     },
+     {
+      "buch": "STAKE",
+      "name": "Stake-Highroller",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Stake-Highroller nicht erhoben"
+     },
+     {
+      "buch": "ZEIT",
+      "name": "Dauer",
+      "status": "ja",
+      "punkte": 1,
+      "moeglich": 1,
+      "grund": {
+       "ok": true,
+       "text": "steht seit 3.7h vor Anpfiff"
+      },
+      "tiefe": null,
+      "text": "steht seit 3.7h vor Anpfiff"
+     }
+    ]
+   },
+   "wertVsPinn": null,
+   "gehaltenSeit": "2026-09-09T13:17:00.923086+00:00",
+   "zuletztAktiv": "2026-09-09T16:16:32.795483+00:00",
+   "haltePreis": 1.4,
+   "aktiv": true
+  },
+  "36030267|Match Odds": {
+   "matchId": "36030267",
+   "home": "Sandvikens IF",
+   "away": "Oddevold",
+   "league": "Swedish Superettan",
+   "kickoff": "2026-09-09T17:00:00Z",
+   "markt": "Match Odds",
+   "seite": "home",
+   "name": "Sandvikens IF",
+   "odd": 1.93,
+   "entryOdd": 2.34,
+   "anteilPct": 68,
+   "stufe": 1,
+   "verstaerker": [
+    {
+     "art": "poly",
+     "text": "Poly Geld 98%",
+     "gewicht": 12
+    },
+    {
+     "art": "pinn",
+     "text": "Pinnacle stimmt zu",
+     "gewicht": 10
+    }
+   ],
+   "rang": 78.8,
+   "track": null,
+   "streak": null,
+   "poly": {
+    "anteilPct": 98,
+    "usd": 11773,
+    "odd": 1.9
+   },
+   "polyStatus": "ja",
+   "polyKey": "swe2-san-odd-2026-09-09",
+   "polySide": "Sandvikens IF",
+   "pinnMovePP": null,
+   "punkte": {
+    "punkte": 8,
+    "moeglich": 10,
+    "dauerH": 0.72,
+    "teile": [
+     {
+      "buch": "BF",
+      "name": "Betfair",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Geld 68% auf der Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "frischer Zufluss und Quote zieht mit"
+      },
+      "geld": {
+       "anteil": 0.685,
+       "betrag": 5714,
+       "gesamt": 8342,
+       "waehrung": "EUR",
+       "quelle": "geld"
+      },
+      "text": "Geld 68% auf der Seite"
+     },
+     {
+      "buch": "POLY",
+      "name": "Polymarket",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Poly-Geld 98% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "1 bewiesene Wallet drauf"
+      },
+      "geld": {
+       "anteil": 0.98,
+       "betrag": 11538,
+       "gesamt": 11773,
+       "waehrung": "USD",
+       "quelle": "geld"
+      },
+      "text": "Poly-Geld 98% auf derselben Seite"
      },
      {
       "buch": "PIN",
@@ -773,23 +904,23 @@
      {
       "buch": "ZEIT",
       "name": "Dauer",
-      "status": "ja",
-      "punkte": 1,
+      "status": "nein",
+      "punkte": 0,
       "moeglich": 1,
       "grund": {
-       "ok": true,
-       "text": "steht seit 3.7h vor Anpfiff"
+       "ok": false,
+       "text": "steht seit 0.7h vor Anpfiff"
       },
       "tiefe": null,
-      "text": "steht seit 3.7h vor Anpfiff"
+      "text": "steht seit 0.7h vor Anpfiff"
      }
     ]
    },
-   "wertVsPinn": null,
-   "gehaltenSeit": "2026-09-09T13:17:00.923086+00:00",
-   "zuletztAktiv": "2026-09-09T13:17:00.923086+00:00",
-   "haltePreis": 1.4,
-   "aktiv": false
+   "wertVsPinn": 0.0206,
+   "gehaltenSeit": "2026-09-09T16:16:32.795483+00:00",
+   "zuletztAktiv": "2026-09-09T16:16:32.795483+00:00",
+   "haltePreis": 1.93,
+   "aktiv": true
   }
  }
 }

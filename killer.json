@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-09T16:01:28.494690+00:00",
+ "generatedAt": "2026-09-09T16:16:32.795483+00:00",
  "stakePoly": {
   "ucl-mnu-sf-2026-09-10": {
    "usd": 5000,
@@ -50,10 +50,10 @@
    "liga": "US Open Men Double"
   },
   "cs2-all-tyloo-2026-09-09": {
-   "usd": 4500,
-   "n": 1,
+   "usd": 18200,
+   "n": 2,
    "seite": "Alliance",
-   "seiteUsd": 4500,
+   "seiteUsd": 18200,
    "event": "Alliance - TYLOO",
    "liga": "FISSURE Playground #3"
   }
@@ -351,7 +351,7 @@
    "gehaltenSeit": "2026-09-08T19:59:30.262047+00:00",
    "zuletztAktiv": "2026-09-09T15:46:33.058354+00:00",
    "haltePreis": 1.86,
-   "aktiv": true
+   "aktiv": false
   },
   {
    "matchId": "35998576",
@@ -488,42 +488,49 @@
    "gehaltenSeit": "2026-09-08T19:59:30.262047+00:00",
    "zuletztAktiv": "2026-09-09T15:46:33.058354+00:00",
    "haltePreis": 1.76,
-   "aktiv": true
-  }
- ],
- "stufe2": [
+   "aktiv": false
+  },
   {
-   "matchId": "36028541",
-   "home": "Al Mokawloon",
-   "away": "Al Ahly Cairo",
-   "league": "Egyptian Premier",
+   "matchId": "36030267",
+   "home": "Sandvikens IF",
+   "away": "Oddevold",
+   "league": "Swedish Superettan",
    "kickoff": "2026-09-09T17:00:00Z",
    "markt": "Match Odds",
-   "seite": "away",
-   "name": "Al Ahly Cairo",
-   "odd": 1.4,
-   "entryOdd": 1.5,
-   "anteilPct": 92,
-   "stufe": 2,
+   "seite": "home",
+   "name": "Sandvikens IF",
+   "odd": 1.93,
+   "entryOdd": 2.34,
+   "anteilPct": 68,
+   "stufe": 1,
    "verstaerker": [
+    {
+     "art": "poly",
+     "text": "Poly Geld 98%",
+     "gewicht": 12
+    },
     {
      "art": "pinn",
      "text": "Pinnacle stimmt zu",
      "gewicht": 10
     }
    ],
-   "rang": 69.2,
+   "rang": 78.8,
    "track": null,
    "streak": null,
-   "poly": null,
-   "polyStatus": "unbekannt",
-   "polyKey": null,
-   "polySide": null,
+   "poly": {
+    "anteilPct": 98,
+    "usd": 11773,
+    "odd": 1.9
+   },
+   "polyStatus": "ja",
+   "polyKey": "swe2-san-odd-2026-09-09",
+   "polySide": "Sandvikens IF",
    "pinnMovePP": null,
    "punkte": {
-    "punkte": 6,
-    "moeglich": 7,
-    "dauerH": 3.72,
+    "punkte": 8,
+    "moeglich": 10,
+    "dauerH": 0.72,
     "teile": [
      {
       "buch": "BF",
@@ -533,31 +540,43 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 92% auf der Seite"
+       "text": "Geld 68% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.919,
-       "betrag": 8970,
-       "gesamt": 9761,
+       "anteil": 0.685,
+       "betrag": 5714,
+       "gesamt": 8342,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 92% auf der Seite"
+      "text": "Geld 68% auf der Seite"
      },
      {
       "buch": "POLY",
       "name": "Polymarket",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "geld": null,
-      "text": "Polymarket nicht erhoben"
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Poly-Geld 98% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "1 bewiesene Wallet drauf"
+      },
+      "geld": {
+       "anteil": 0.98,
+       "betrag": 11538,
+       "gesamt": 11773,
+       "waehrung": "USD",
+       "quelle": "geld"
+      },
+      "text": "Poly-Geld 98% auf derselben Seite"
      },
      {
       "buch": "PIN",
@@ -590,6 +609,118 @@
      {
       "buch": "ZEIT",
       "name": "Dauer",
+      "status": "nein",
+      "punkte": 0,
+      "moeglich": 1,
+      "grund": {
+       "ok": false,
+       "text": "steht seit 0.7h vor Anpfiff"
+      },
+      "tiefe": null,
+      "text": "steht seit 0.7h vor Anpfiff"
+     }
+    ]
+   },
+   "wertVsPinn": 0.0206,
+   "gehaltenSeit": "2026-09-09T16:16:32.795483+00:00",
+   "zuletztAktiv": "2026-09-09T16:16:32.795483+00:00",
+   "haltePreis": 1.93,
+   "aktiv": true
+  }
+ ],
+ "stufe2": [
+  {
+   "matchId": "36028541",
+   "home": "Al Mokawloon",
+   "away": "Al Ahly Cairo",
+   "league": "Egyptian Premier",
+   "kickoff": "2026-09-09T17:00:00Z",
+   "markt": "Match Odds",
+   "seite": "away",
+   "name": "Al Ahly Cairo",
+   "odd": 1.44,
+   "entryOdd": 1.5,
+   "anteilPct": 92,
+   "stufe": 2,
+   "verstaerker": [
+    {
+     "art": "pinn",
+     "text": "Pinnacle stimmt zu",
+     "gewicht": 10
+    }
+   ],
+   "rang": 69.2,
+   "track": null,
+   "streak": null,
+   "poly": null,
+   "polyStatus": "unbekannt",
+   "polyKey": null,
+   "polySide": null,
+   "pinnMovePP": null,
+   "punkte": {
+    "punkte": 4,
+    "moeglich": 4,
+    "dauerH": 3.72,
+    "teile": [
+     {
+      "buch": "BF",
+      "name": "Betfair",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Geld 94% auf der Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "frischer Zufluss und Quote zieht mit"
+      },
+      "geld": {
+       "anteil": 0.936,
+       "betrag": 16722,
+       "gesamt": 17865,
+       "waehrung": "EUR",
+       "quelle": "geld"
+      },
+      "text": "Geld 94% auf der Seite"
+     },
+     {
+      "buch": "POLY",
+      "name": "Polymarket",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Polymarket nicht erhoben"
+     },
+     {
+      "buch": "PIN",
+      "name": "Pinnacle",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Pinnacle nicht erhoben"
+     },
+     {
+      "buch": "STAKE",
+      "name": "Stake-Highroller",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Stake-Highroller nicht erhoben"
+     },
+     {
+      "buch": "ZEIT",
+      "name": "Dauer",
       "status": "ja",
       "punkte": 1,
       "moeglich": 1,
@@ -604,9 +735,9 @@
    },
    "wertVsPinn": null,
    "gehaltenSeit": "2026-09-09T13:17:00.923086+00:00",
-   "zuletztAktiv": "2026-09-09T13:17:00.923086+00:00",
+   "zuletztAktiv": "2026-09-09T16:16:32.795483+00:00",
    "haltePreis": 1.4,
-   "aktiv": false
+   "aktiv": true
   },
   {
    "matchId": "35998666",
@@ -864,7 +995,7 @@
    "seite": "away",
    "odd": 1.63,
    "kickoff": "2026-09-09T19:00:00Z",
-   "punkte": 12,
+   "punkte": 11,
    "moeglich": 13,
    "dauerH": 21.26,
    "teile": [
@@ -872,20 +1003,20 @@
      "buch": "BF",
      "name": "Betfair",
      "status": "ja",
-     "punkte": 3,
+     "punkte": 2,
      "moeglich": 3,
      "grund": {
       "ok": true,
       "text": "Geld 88% auf der Seite"
      },
      "tiefe": {
-      "ok": true,
+      "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.88,
-      "betrag": 483615,
-      "gesamt": 549562,
+      "anteil": 0.881,
+      "betrag": 505601,
+      "gesamt": 573895,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -899,20 +1030,20 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Poly-Geld 93% auf derselben Seite"
+      "text": "Poly-Geld 97% auf derselben Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "kein bewiesenes Wallet auf der Seite"
      },
      "geld": {
-      "anteil": 0.93,
-      "betrag": 496049,
-      "gesamt": 533386,
+      "anteil": 0.97,
+      "betrag": 1201444,
+      "gesamt": 1238602,
       "waehrung": "USD",
       "quelle": "geld"
      },
-     "text": "Poly-Geld 93% auf derselben Seite"
+     "text": "Poly-Geld 97% auf derselben Seite"
     },
     {
      "buch": "PIN",
@@ -926,7 +1057,7 @@
      },
      "tiefe": {
       "ok": true,
-      "text": "Move +2.7pp in unsere Richtung"
+      "text": "Move +3.2pp in unsere Richtung"
      },
      "geld": null,
      "text": "hat dieselbe Seite als Favorit"
@@ -939,20 +1070,20 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "$39.831 Highroller-Geld auf derselben Seite"
+      "text": "$43.835 Highroller-Geld auf derselben Seite"
      },
      "tiefe": {
       "ok": true,
-      "text": "14 Wetten, nicht eine einzelne"
+      "text": "24 Wetten, nicht eine einzelne"
      },
      "geld": {
-      "anteil": 0.8297,
-      "betrag": 39831,
-      "gesamt": 48007,
+      "anteil": 0.5091,
+      "betrag": 43835,
+      "gesamt": 86111,
       "waehrung": "USD",
       "quelle": "geld"
      },
-     "text": "$39.831 Highroller-Geld auf derselben Seite"
+     "text": "$43.835 Highroller-Geld auf derselben Seite"
     },
     {
      "buch": "ZEIT",
@@ -968,7 +1099,7 @@
      "text": "steht seit 21.3h vor Anpfiff"
     }
    ],
-   "torOk": true
+   "torOk": false
   },
   {
    "matchId": "35998675",
@@ -999,9 +1130,9 @@
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.787,
-      "betrag": 205175,
-      "gesamt": 260705,
+      "anteil": 0.786,
+      "betrag": 207043,
+      "gesamt": 263413,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -1023,8 +1154,8 @@
      },
      "geld": {
       "anteil": 0.96,
-      "betrag": 608191,
-      "gesamt": 633532,
+      "betrag": 613864,
+      "gesamt": 639442,
       "waehrung": "USD",
       "quelle": "geld"
      },
@@ -1042,7 +1173,7 @@
      },
      "tiefe": {
       "ok": true,
-      "text": "Move +3.6pp in unsere Richtung"
+      "text": "Move +3.8pp in unsere Richtung"
      },
      "geld": null,
      "text": "hat dieselbe Seite als Favorit"
@@ -1094,7 +1225,7 @@
    "away": "Atletico Madrid",
    "name": "Liverpool",
    "seite": "home",
-   "odd": 1.81,
+   "odd": 1.82,
    "kickoff": "2026-09-09T19:00:00Z",
    "punkte": 10,
    "moeglich": 13,
@@ -1115,9 +1246,9 @@
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.773,
-      "betrag": 242019,
-      "gesamt": 313090,
+      "anteil": 0.77,
+      "betrag": 243784,
+      "gesamt": 316603,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -1131,20 +1262,20 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Poly-Geld 93% auf derselben Seite"
+      "text": "Poly-Geld 94% auf derselben Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "kein bewiesenes Wallet auf der Seite"
      },
      "geld": {
-      "anteil": 0.93,
-      "betrag": 191036,
-      "gesamt": 205415,
+      "anteil": 0.94,
+      "betrag": 226754,
+      "gesamt": 241228,
       "waehrung": "USD",
       "quelle": "geld"
      },
-     "text": "Poly-Geld 93% auf derselben Seite"
+     "text": "Poly-Geld 94% auf derselben Seite"
     },
     {
      "buch": "PIN",
@@ -1210,11 +1341,11 @@
    "away": "St Mirren",
    "name": "Rangers",
    "seite": "home",
-   "odd": 1.36,
+   "odd": 1.35,
    "kickoff": "2026-09-09T18:45:00Z",
    "punkte": 9,
    "moeglich": 13,
-   "dauerH": 2.73,
+   "dauerH": 2.47,
    "teile": [
     {
      "buch": "BF",
@@ -1224,20 +1355,20 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Geld 76% auf der Seite"
+      "text": "Geld 75% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.764,
-      "betrag": 9331,
-      "gesamt": 12214,
+      "anteil": 0.754,
+      "betrag": 10027,
+      "gesamt": 13298,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 76% auf der Seite"
+     "text": "Geld 75% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -1247,20 +1378,20 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Poly-Preis 74% auf derselben Seite"
+      "text": "Poly-Geld 93% auf derselben Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "kein bewiesenes Wallet auf der Seite"
      },
      "geld": {
-      "anteil": 0.74,
-      "betrag": null,
+      "anteil": 0.93,
+      "betrag": 7619,
       "gesamt": 8192,
       "waehrung": "USD",
-      "quelle": "preis"
+      "quelle": "geld"
      },
-     "text": "Poly-Preis 74% auf derselben Seite"
+     "text": "Poly-Geld 93% auf derselben Seite"
     },
     {
      "buch": "PIN",
@@ -1310,13 +1441,117 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 2.7h vor Anpfiff"
+      "text": "steht seit 2.5h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 2.7h vor Anpfiff"
+     "text": "steht seit 2.5h vor Anpfiff"
     }
    ],
    "torOk": false
+  },
+  {
+   "matchId": "36030267",
+   "markt": "Match Odds",
+   "liga": "Swedish Superettan",
+   "home": "Sandvikens IF",
+   "away": "Oddevold",
+   "name": "Sandvikens IF",
+   "seite": "home",
+   "odd": 1.93,
+   "kickoff": "2026-09-09T17:00:00Z",
+   "punkte": 8,
+   "moeglich": 10,
+   "dauerH": 0.72,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
+     "status": "ja",
+     "punkte": 3,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
+      "text": "Geld 68% auf der Seite"
+     },
+     "tiefe": {
+      "ok": true,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.685,
+      "betrag": 5714,
+      "gesamt": 8342,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 68% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "ja",
+     "punkte": 3,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
+      "text": "Poly-Geld 98% auf derselben Seite"
+     },
+     "tiefe": {
+      "ok": true,
+      "text": "1 bewiesene Wallet drauf"
+     },
+     "geld": {
+      "anteil": 0.98,
+      "betrag": 11538,
+      "gesamt": 11773,
+      "waehrung": "USD",
+      "quelle": "geld"
+     },
+     "text": "Poly-Geld 98% auf derselben Seite"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "ja",
+     "punkte": 2,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
+      "text": "hat dieselbe Seite als Favorit"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "kein Move gemessen"
+     },
+     "geld": null,
+     "text": "hat dieselbe Seite als Favorit"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Stake-Highroller nicht erhoben"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 1,
+     "grund": {
+      "ok": false,
+      "text": "steht seit 0.7h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 0.7h vor Anpfiff"
+    }
+   ],
+   "torOk": true
   },
   {
    "matchId": "35964581",
@@ -1330,7 +1565,7 @@
    "kickoff": "2026-09-09T22:00:00Z",
    "punkte": 7,
    "moeglich": 10,
-   "dauerH": 5.98,
+   "dauerH": 5.72,
    "teile": [
     {
      "buch": "BF",
@@ -1347,9 +1582,9 @@
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.774,
-      "betrag": 4651,
-      "gesamt": 6009,
+      "anteil": 0.772,
+      "betrag": 4652,
+      "gesamt": 6026,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -1363,20 +1598,20 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Poly-Preis 72% auf derselben Seite"
+      "text": "Poly-Geld 81% auf derselben Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "kein bewiesenes Wallet auf der Seite"
      },
      "geld": {
-      "anteil": 0.72,
-      "betrag": null,
-      "gesamt": 13519,
+      "anteil": 0.81,
+      "betrag": 10956,
+      "gesamt": 13526,
       "waehrung": "USD",
-      "quelle": "preis"
+      "quelle": "geld"
      },
-     "text": "Poly-Preis 72% auf derselben Seite"
+     "text": "Poly-Geld 81% auf derselben Seite"
     },
     {
      "buch": "PIN",
@@ -1414,10 +1649,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 6.0h vor Anpfiff"
+      "text": "steht seit 5.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 6.0h vor Anpfiff"
+     "text": "steht seit 5.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -1434,7 +1669,7 @@
    "kickoff": "2026-09-10T16:45:00Z",
    "punkte": 7,
    "moeglich": 10,
-   "dauerH": 24.73,
+   "dauerH": 24.47,
    "teile": [
     {
      "buch": "BF",
@@ -1451,9 +1686,9 @@
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.699,
-      "betrag": 4645,
-      "gesamt": 6645,
+      "anteil": 0.695,
+      "betrag": 4641,
+      "gesamt": 6677,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -1476,7 +1711,7 @@
      "geld": {
       "anteil": 0.68,
       "betrag": null,
-      "gesamt": 2266,
+      "gesamt": 2275,
       "waehrung": "USD",
       "quelle": "preis"
      },
@@ -1518,10 +1753,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 24.7h vor Anpfiff"
+      "text": "steht seit 24.5h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 24.7h vor Anpfiff"
+     "text": "steht seit 24.5h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -1534,11 +1769,11 @@
    "away": "Norrby IF",
    "name": "Ljungskile",
    "seite": "home",
-   "odd": 2.14,
+   "odd": 2.12,
    "kickoff": "2026-09-09T17:00:00Z",
    "punkte": 7,
    "moeglich": 10,
-   "dauerH": 0.98,
+   "dauerH": 0.72,
    "teile": [
     {
      "buch": "BF",
@@ -1548,20 +1783,20 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Geld 66% auf der Seite"
+      "text": "Geld 65% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.661,
+      "anteil": 0.652,
       "betrag": 1097,
-      "gesamt": 1660,
+      "gesamt": 1682,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 66% auf der Seite"
+     "text": "Geld 65% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -1579,8 +1814,8 @@
      },
      "geld": {
       "anteil": 1.0,
-      "betrag": 19978,
-      "gesamt": 19978,
+      "betrag": 20073,
+      "gesamt": 20073,
       "waehrung": "USD",
       "quelle": "geld"
      },
@@ -1622,10 +1857,114 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 1.0h vor Anpfiff"
+      "text": "steht seit 0.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 1.0h vor Anpfiff"
+     "text": "steht seit 0.7h vor Anpfiff"
+    }
+   ],
+   "torOk": false
+  },
+  {
+   "matchId": "36043124",
+   "markt": "Match Odds",
+   "liga": "Scottish Premiership",
+   "home": "St Johnstone",
+   "away": "Celtic",
+   "name": "Celtic",
+   "seite": "away",
+   "odd": 1.47,
+   "kickoff": "2026-09-09T19:00:00Z",
+   "punkte": 7,
+   "moeglich": 10,
+   "dauerH": 2.72,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
+     "status": "ja",
+     "punkte": 2,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
+      "text": "Geld 87% auf der Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.873,
+      "betrag": 19801,
+      "gesamt": 22682,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 87% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "ja",
+     "punkte": 2,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
+      "text": "Poly-Preis 66% auf derselben Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "kein bewiesenes Wallet auf der Seite"
+     },
+     "geld": {
+      "anteil": 0.66,
+      "betrag": null,
+      "gesamt": 4697,
+      "waehrung": "USD",
+      "quelle": "preis"
+     },
+     "text": "Poly-Preis 66% auf derselben Seite"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "ja",
+     "punkte": 3,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
+      "text": "hat dieselbe Seite als Favorit"
+     },
+     "tiefe": {
+      "ok": true,
+      "text": "Move +1.3pp in unsere Richtung"
+     },
+     "geld": null,
+     "text": "hat dieselbe Seite als Favorit"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Stake-Highroller nicht erhoben"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 1,
+     "grund": {
+      "ok": false,
+      "text": "steht seit 2.7h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 2.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -1642,7 +1981,7 @@
    "kickoff": "2026-09-12T14:00:00Z",
    "punkte": 7,
    "moeglich": 10,
-   "dauerH": 69.98,
+   "dauerH": 69.72,
    "teile": [
     {
      "buch": "BF",
@@ -1660,8 +1999,8 @@
      },
      "geld": {
       "anteil": 0.818,
-      "betrag": 16453,
-      "gesamt": 20114,
+      "betrag": 16469,
+      "gesamt": 20133,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -1726,10 +2065,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 70.0h vor Anpfiff"
+      "text": "steht seit 69.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 70.0h vor Anpfiff"
+     "text": "steht seit 69.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -1742,11 +2081,11 @@
    "away": "Avai",
    "name": "Fortaleza EC",
    "seite": "home",
-   "odd": 1.61,
+   "odd": 1.59,
    "kickoff": "2026-09-09T22:30:00Z",
    "punkte": 7,
    "moeglich": 10,
-   "dauerH": 6.48,
+   "dauerH": 6.22,
    "teile": [
     {
      "buch": "BF",
@@ -1756,20 +2095,20 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Geld 75% auf der Seite"
+      "text": "Geld 73% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.753,
-      "betrag": 458,
-      "gesamt": 608,
+      "anteil": 0.732,
+      "betrag": 466,
+      "gesamt": 637,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 75% auf der Seite"
+     "text": "Geld 73% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -1830,73 +2169,73 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 6.5h vor Anpfiff"
+      "text": "steht seit 6.2h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 6.5h vor Anpfiff"
+     "text": "steht seit 6.2h vor Anpfiff"
     }
    ],
    "torOk": false
   },
   {
-   "matchId": "36043124",
+   "matchId": "36013822",
    "markt": "Match Odds",
-   "liga": "Scottish Premiership",
-   "home": "St Johnstone",
-   "away": "Celtic",
-   "name": "Celtic",
-   "seite": "away",
-   "odd": 1.47,
-   "kickoff": "2026-09-09T19:00:00Z",
+   "liga": "US MLS",
+   "home": "DC Utd",
+   "away": "Columbus",
+   "name": "DC Utd",
+   "seite": "home",
+   "odd": 2.66,
+   "kickoff": "2026-09-09T23:30:00Z",
    "punkte": 6,
    "moeglich": 10,
-   "dauerH": 2.98,
+   "dauerH": 7.22,
    "teile": [
     {
      "buch": "BF",
      "name": "Betfair",
-     "status": "ja",
-     "punkte": 2,
+     "status": "nein",
+     "punkte": 0,
      "moeglich": 3,
      "grund": {
-      "ok": true,
-      "text": "Geld 88% auf der Seite"
+      "ok": false,
+      "text": "Geld 59% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.875,
-      "betrag": 19630,
-      "gesamt": 22434,
+      "anteil": 0.588,
+      "betrag": 473,
+      "gesamt": 804,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 88% auf der Seite"
+     "text": "Geld 59% auf der Seite"
     },
     {
      "buch": "POLY",
      "name": "Polymarket",
      "status": "ja",
-     "punkte": 2,
+     "punkte": 3,
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Poly-Preis 66% auf derselben Seite"
+      "text": "Poly-Geld 87% auf derselben Seite"
      },
      "tiefe": {
-      "ok": false,
-      "text": "kein bewiesenes Wallet auf der Seite"
+      "ok": true,
+      "text": "1 bewiesene Wallet drauf"
      },
      "geld": {
-      "anteil": 0.66,
-      "betrag": null,
-      "gesamt": 4697,
+      "anteil": 0.87,
+      "betrag": 6684,
+      "gesamt": 7683,
       "waehrung": "USD",
-      "quelle": "preis"
+      "quelle": "geld"
      },
-     "text": "Poly-Preis 66% auf derselben Seite"
+     "text": "Poly-Geld 87% auf derselben Seite"
     },
     {
      "buch": "PIN",
@@ -1929,15 +2268,15 @@
     {
      "buch": "ZEIT",
      "name": "Dauer",
-     "status": "nein",
-     "punkte": 0,
+     "status": "ja",
+     "punkte": 1,
      "moeglich": 1,
      "grund": {
-      "ok": false,
-      "text": "steht seit 3.0h vor Anpfiff"
+      "ok": true,
+      "text": "steht seit 7.2h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 3.0h vor Anpfiff"
+     "text": "steht seit 7.2h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -1950,11 +2289,11 @@
    "away": "Leeds",
    "name": "Chelsea",
    "seite": "home",
-   "odd": 1.66,
+   "odd": 1.67,
    "kickoff": "2026-09-09T19:00:00Z",
    "punkte": 6,
    "moeglich": 10,
-   "dauerH": 2.98,
+   "dauerH": 2.72,
    "teile": [
     {
      "buch": "BF",
@@ -1971,9 +2310,9 @@
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.728,
-      "betrag": 24893,
-      "gesamt": 34193,
+      "anteil": 0.729,
+      "betrag": 25587,
+      "gesamt": 35099,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -1995,8 +2334,8 @@
      },
      "geld": {
       "anteil": 0.98,
-      "betrag": 138962,
-      "gesamt": 141798,
+      "betrag": 144576,
+      "gesamt": 147527,
       "waehrung": "USD",
       "quelle": "geld"
      },
@@ -2014,7 +2353,7 @@
      },
      "tiefe": {
       "ok": false,
-      "text": "Move -4.3pp in unsere Richtung"
+      "text": "Move -4.2pp in unsere Richtung"
      },
      "geld": null,
      "text": "hat dieselbe Seite als Favorit"
@@ -2038,10 +2377,10 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 3.0h vor Anpfiff"
+      "text": "steht seit 2.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 3.0h vor Anpfiff"
+     "text": "steht seit 2.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -2054,11 +2393,11 @@
    "away": "Nashville SC",
    "name": "Nashville SC",
    "seite": "away",
-   "odd": 2.16,
+   "odd": 2.14,
    "kickoff": "2026-09-09T23:30:00Z",
    "punkte": 5,
    "moeglich": 10,
-   "dauerH": 7.48,
+   "dauerH": 7.22,
    "teile": [
     {
      "buch": "BF",
@@ -2075,9 +2414,9 @@
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.83,
-      "betrag": 10701,
-      "gesamt": 12893,
+      "anteil": 0.826,
+      "betrag": 10759,
+      "gesamt": 13026,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -2100,7 +2439,7 @@
      "geld": {
       "anteil": 0.46,
       "betrag": null,
-      "gesamt": 6884,
+      "gesamt": 7059,
       "waehrung": "USD",
       "quelle": "preis"
      },
@@ -2142,10 +2481,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 7.5h vor Anpfiff"
+      "text": "steht seit 7.2h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 7.5h vor Anpfiff"
+     "text": "steht seit 7.2h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -2162,7 +2501,7 @@
    "kickoff": "2026-09-09T23:45:00Z",
    "punkte": 5,
    "moeglich": 10,
-   "dauerH": 7.73,
+   "dauerH": 7.47,
    "teile": [
     {
      "buch": "BF",
@@ -2246,10 +2585,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 7.7h vor Anpfiff"
+      "text": "steht seit 7.5h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 7.7h vor Anpfiff"
+     "text": "steht seit 7.5h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -2266,7 +2605,7 @@
    "kickoff": "2026-09-10T02:30:00Z",
    "punkte": 5,
    "moeglich": 10,
-   "dauerH": 10.48,
+   "dauerH": 10.22,
    "teile": [
     {
      "buch": "BF",
@@ -2308,7 +2647,7 @@
      "geld": {
       "anteil": 0.72,
       "betrag": null,
-      "gesamt": 8480,
+      "gesamt": 8563,
       "waehrung": "USD",
       "quelle": "preis"
      },
@@ -2350,10 +2689,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 10.5h vor Anpfiff"
+      "text": "steht seit 10.2h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 10.5h vor Anpfiff"
+     "text": "steht seit 10.2h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -2370,7 +2709,7 @@
    "kickoff": "2026-09-10T00:30:00Z",
    "punkte": 5,
    "moeglich": 10,
-   "dauerH": 8.48,
+   "dauerH": 8.22,
    "teile": [
     {
      "buch": "BF",
@@ -2388,8 +2727,8 @@
      },
      "geld": {
       "anteil": 0.761,
-      "betrag": 5385,
-      "gesamt": 7076,
+      "betrag": 5386,
+      "gesamt": 7078,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -2412,7 +2751,7 @@
      "geld": {
       "anteil": 0.48,
       "betrag": null,
-      "gesamt": 33365,
+      "gesamt": 34049,
       "waehrung": "USD",
       "quelle": "preis"
      },
@@ -2454,10 +2793,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 8.5h vor Anpfiff"
+      "text": "steht seit 8.2h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 8.5h vor Anpfiff"
+     "text": "steht seit 8.2h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -2492,8 +2831,8 @@
      },
      "geld": {
       "anteil": 0.711,
-      "betrag": 6452,
-      "gesamt": 9075,
+      "betrag": 6469,
+      "gesamt": 9099,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -2576,20 +2915,20 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Geld 78% auf der Seite"
+      "text": "Geld 79% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.785,
-      "betrag": 43440,
-      "gesamt": 55338,
+      "anteil": 0.788,
+      "betrag": 44492,
+      "gesamt": 56462,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 78% auf der Seite"
+     "text": "Geld 79% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -2608,7 +2947,7 @@
      "geld": {
       "anteil": 0.44,
       "betrag": null,
-      "gesamt": 19516,
+      "gesamt": 19745,
       "waehrung": "USD",
       "quelle": "preis"
      },
@@ -2670,7 +3009,7 @@
    "kickoff": "2026-09-10T19:00:00Z",
    "punkte": 5,
    "moeglich": 10,
-   "dauerH": 26.98,
+   "dauerH": 26.72,
    "teile": [
     {
      "buch": "BF",
@@ -2687,9 +3026,9 @@
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.929,
-      "betrag": 52236,
-      "gesamt": 56228,
+      "anteil": 0.928,
+      "betrag": 52241,
+      "gesamt": 56294,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -2754,10 +3093,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 27.0h vor Anpfiff"
+      "text": "steht seit 26.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 27.0h vor Anpfiff"
+     "text": "steht seit 26.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -2770,11 +3109,11 @@
    "away": "Torque",
    "name": "Cienciano",
    "seite": "home",
-   "odd": 1.6,
+   "odd": 1.58,
    "kickoff": "2026-09-11T00:30:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 32.48,
+   "dauerH": 32.22,
    "teile": [
     {
      "buch": "BF",
@@ -2791,9 +3130,9 @@
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.921,
-      "betrag": 812,
-      "gesamt": 882,
+      "anteil": 0.918,
+      "betrag": 841,
+      "gesamt": 916,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -2846,114 +3185,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 32.5h vor Anpfiff"
+      "text": "steht seit 32.2h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 32.5h vor Anpfiff"
-    }
-   ],
-   "torOk": false
-  },
-  {
-   "matchId": "36030267",
-   "markt": "Match Odds",
-   "liga": "Swedish Superettan",
-   "home": "Sandvikens IF",
-   "away": "Oddevold",
-   "name": "Sandvikens IF",
-   "seite": "home",
-   "odd": 2.04,
-   "kickoff": "2026-09-09T17:00:00Z",
-   "punkte": 5,
-   "moeglich": 10,
-   "dauerH": 0.98,
-   "teile": [
-    {
-     "buch": "BF",
-     "name": "Betfair",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 3,
-     "grund": {
-      "ok": false,
-      "text": "Geld 54% auf der Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "frischer Zufluss und Quote zieht mit"
-     },
-     "geld": {
-      "anteil": 0.54,
-      "betrag": 1977,
-      "gesamt": 3662,
-      "waehrung": "EUR",
-      "quelle": "geld"
-     },
-     "text": "Geld 54% auf der Seite"
-    },
-    {
-     "buch": "POLY",
-     "name": "Polymarket",
-     "status": "ja",
-     "punkte": 3,
-     "moeglich": 3,
-     "grund": {
-      "ok": true,
-      "text": "Poly-Geld 98% auf derselben Seite"
-     },
-     "tiefe": {
-      "ok": true,
-      "text": "1 bewiesene Wallet drauf"
-     },
-     "geld": {
-      "anteil": 0.98,
-      "betrag": 9545,
-      "gesamt": 9740,
-      "waehrung": "USD",
-      "quelle": "geld"
-     },
-     "text": "Poly-Geld 98% auf derselben Seite"
-    },
-    {
-     "buch": "PIN",
-     "name": "Pinnacle",
-     "status": "ja",
-     "punkte": 2,
-     "moeglich": 3,
-     "grund": {
-      "ok": true,
-      "text": "hat dieselbe Seite als Favorit"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "kein Move gemessen"
-     },
-     "geld": null,
-     "text": "hat dieselbe Seite als Favorit"
-    },
-    {
-     "buch": "STAKE",
-     "name": "Stake-Highroller",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Stake-Highroller nicht erhoben"
-    },
-    {
-     "buch": "ZEIT",
-     "name": "Dauer",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 1,
-     "grund": {
-      "ok": false,
-      "text": "steht seit 1.0h vor Anpfiff"
-     },
-     "tiefe": null,
-     "text": "steht seit 1.0h vor Anpfiff"
+     "text": "steht seit 32.2h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -2970,7 +3205,7 @@
    "kickoff": "2026-09-09T18:45:00Z",
    "punkte": 5,
    "moeglich": 10,
-   "dauerH": 2.73,
+   "dauerH": 2.47,
    "teile": [
     {
      "buch": "BF",
@@ -2980,20 +3215,20 @@
      "moeglich": 3,
      "grund": {
       "ok": false,
-      "text": "Geld 64% auf der Seite"
+      "text": "Geld 61% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.637,
-      "betrag": 20148,
-      "gesamt": 31629,
+      "anteil": 0.61,
+      "betrag": 20469,
+      "gesamt": 33555,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 64% auf der Seite"
+     "text": "Geld 61% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -3011,8 +3246,8 @@
      },
      "geld": {
       "anteil": 0.79,
-      "betrag": 10545,
-      "gesamt": 13348,
+      "betrag": 10584,
+      "gesamt": 13398,
       "waehrung": "USD",
       "quelle": "geld"
      },
@@ -3054,10 +3289,10 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 2.7h vor Anpfiff"
+      "text": "steht seit 2.5h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 2.7h vor Anpfiff"
+     "text": "steht seit 2.5h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -3074,7 +3309,7 @@
    "kickoff": "2026-09-12T11:00:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 66.98,
+   "dauerH": 66.72,
    "teile": [
     {
      "buch": "BF",
@@ -3146,10 +3381,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 67.0h vor Anpfiff"
+      "text": "steht seit 66.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 67.0h vor Anpfiff"
+     "text": "steht seit 66.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -3166,7 +3401,7 @@
    "kickoff": "2026-09-12T11:00:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 66.98,
+   "dauerH": 66.72,
    "teile": [
     {
      "buch": "BF",
@@ -3238,10 +3473,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 67.0h vor Anpfiff"
+      "text": "steht seit 66.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 67.0h vor Anpfiff"
+     "text": "steht seit 66.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -3258,7 +3493,7 @@
    "kickoff": "2026-09-12T13:30:00Z",
    "punkte": 5,
    "moeglich": 10,
-   "dauerH": 69.48,
+   "dauerH": 69.22,
    "teile": [
     {
      "buch": "BF",
@@ -3342,10 +3577,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 69.5h vor Anpfiff"
+      "text": "steht seit 69.2h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 69.5h vor Anpfiff"
+     "text": "steht seit 69.2h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -3362,7 +3597,7 @@
    "kickoff": "2026-09-12T13:30:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 69.48,
+   "dauerH": 69.22,
    "teile": [
     {
      "buch": "BF",
@@ -3380,8 +3615,8 @@
      },
      "geld": {
       "anteil": 0.818,
-      "betrag": 2601,
-      "gesamt": 3180,
+      "betrag": 2602,
+      "gesamt": 3181,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -3434,10 +3669,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 69.5h vor Anpfiff"
+      "text": "steht seit 69.2h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 69.5h vor Anpfiff"
+     "text": "steht seit 69.2h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -3454,7 +3689,7 @@
    "kickoff": "2026-09-12T14:00:00Z",
    "punkte": 5,
    "moeglich": 10,
-   "dauerH": 69.98,
+   "dauerH": 69.72,
    "teile": [
     {
      "buch": "BF",
@@ -3471,9 +3706,9 @@
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.762,
-      "betrag": 9093,
-      "gesamt": 11933,
+      "anteil": 0.763,
+      "betrag": 9107,
+      "gesamt": 11936,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -3538,10 +3773,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 70.0h vor Anpfiff"
+      "text": "steht seit 69.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 70.0h vor Anpfiff"
+     "text": "steht seit 69.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -3558,7 +3793,7 @@
    "kickoff": "2026-09-12T14:15:00Z",
    "punkte": 5,
    "moeglich": 10,
-   "dauerH": 70.23,
+   "dauerH": 69.97,
    "teile": [
     {
      "buch": "BF",
@@ -3575,9 +3810,9 @@
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.752,
-      "betrag": 2270,
-      "gesamt": 3018,
+      "anteil": 0.753,
+      "betrag": 2280,
+      "gesamt": 3028,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -3642,10 +3877,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 70.2h vor Anpfiff"
+      "text": "steht seit 70.0h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 70.2h vor Anpfiff"
+     "text": "steht seit 70.0h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -3658,11 +3893,11 @@
    "away": "Helsingborgs",
    "name": "Landskrona",
    "seite": "home",
-   "odd": 1.96,
+   "odd": 1.93,
    "kickoff": "2026-09-09T17:00:00Z",
    "punkte": 4,
    "moeglich": 10,
-   "dauerH": 0.98,
+   "dauerH": 0.72,
    "teile": [
     {
      "buch": "BF",
@@ -3672,20 +3907,20 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Geld 78% auf der Seite"
+      "text": "Geld 75% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.775,
-      "betrag": 2008,
-      "gesamt": 2591,
+      "anteil": 0.754,
+      "betrag": 2089,
+      "gesamt": 2771,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 78% auf der Seite"
+     "text": "Geld 75% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -3746,10 +3981,10 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 1.0h vor Anpfiff"
+      "text": "steht seit 0.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 1.0h vor Anpfiff"
+     "text": "steht seit 0.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -3762,11 +3997,11 @@
    "away": "Varnamo",
    "name": "United IK Nordic",
    "seite": "home",
-   "odd": 2.14,
+   "odd": 2.04,
    "kickoff": "2026-09-09T17:00:00Z",
    "punkte": 4,
    "moeglich": 10,
-   "dauerH": 0.98,
+   "dauerH": 0.72,
    "teile": [
     {
      "buch": "BF",
@@ -3776,20 +4011,20 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Geld 67% auf der Seite"
+      "text": "Geld 68% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.666,
-      "betrag": 657,
-      "gesamt": 987,
+      "anteil": 0.68,
+      "betrag": 1391,
+      "gesamt": 2045,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 67% auf der Seite"
+     "text": "Geld 68% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -3850,13 +4085,99 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 1.0h vor Anpfiff"
+      "text": "steht seit 0.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 1.0h vor Anpfiff"
+     "text": "steht seit 0.7h vor Anpfiff"
     }
    ],
    "torOk": false
+  },
+  {
+   "matchId": "36028541",
+   "markt": "Match Odds",
+   "liga": "Egyptian Premier",
+   "home": "Al Mokawloon",
+   "away": "Al Ahly Cairo",
+   "name": "Al Ahly Cairo",
+   "seite": "away",
+   "odd": 1.44,
+   "kickoff": "2026-09-09T17:00:00Z",
+   "punkte": 4,
+   "moeglich": 4,
+   "dauerH": 3.72,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
+     "status": "ja",
+     "punkte": 3,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
+      "text": "Geld 94% auf der Seite"
+     },
+     "tiefe": {
+      "ok": true,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.936,
+      "betrag": 16722,
+      "gesamt": 17865,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 94% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Polymarket nicht erhoben"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Pinnacle nicht erhoben"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Stake-Highroller nicht erhoben"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "ja",
+     "punkte": 1,
+     "moeglich": 1,
+     "grund": {
+      "ok": true,
+      "text": "steht seit 3.7h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 3.7h vor Anpfiff"
+    }
+   ],
+   "torOk": true
   },
   {
    "matchId": "36038381",
@@ -3870,7 +4191,7 @@
    "kickoff": "2026-09-09T18:45:00Z",
    "punkte": 4,
    "moeglich": 10,
-   "dauerH": 2.73,
+   "dauerH": 2.47,
    "teile": [
     {
      "buch": "BF",
@@ -3888,8 +4209,8 @@
      },
      "geld": {
       "anteil": 0.707,
-      "betrag": 17789,
-      "gesamt": 25161,
+      "betrag": 17945,
+      "gesamt": 25382,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -3954,10 +4275,10 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 2.7h vor Anpfiff"
+      "text": "steht seit 2.5h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 2.7h vor Anpfiff"
+     "text": "steht seit 2.5h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -3974,7 +4295,7 @@
    "kickoff": "2026-09-09T23:30:00Z",
    "punkte": 3,
    "moeglich": 10,
-   "dauerH": 7.48,
+   "dauerH": 7.22,
    "teile": [
     {
      "buch": "BF",
@@ -4058,10 +4379,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 7.5h vor Anpfiff"
+      "text": "steht seit 7.2h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 7.5h vor Anpfiff"
+     "text": "steht seit 7.2h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -4078,7 +4399,7 @@
    "kickoff": "2026-09-10T00:30:00Z",
    "punkte": 3,
    "moeglich": 10,
-   "dauerH": 8.48,
+   "dauerH": 8.22,
    "teile": [
     {
      "buch": "BF",
@@ -4095,9 +4416,9 @@
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.623,
-      "betrag": 2240,
-      "gesamt": 3596,
+      "anteil": 0.622,
+      "betrag": 2239,
+      "gesamt": 3600,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -4120,7 +4441,7 @@
      "geld": {
       "anteil": 0.44,
       "betrag": null,
-      "gesamt": 6023,
+      "gesamt": 6034,
       "waehrung": "USD",
       "quelle": "preis"
      },
@@ -4162,10 +4483,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 8.5h vor Anpfiff"
+      "text": "steht seit 8.2h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 8.5h vor Anpfiff"
+     "text": "steht seit 8.2h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -4182,7 +4503,7 @@
    "kickoff": "2026-09-10T00:30:00Z",
    "punkte": 3,
    "moeglich": 10,
-   "dauerH": 8.48,
+   "dauerH": 8.22,
    "teile": [
     {
      "buch": "BF",
@@ -4224,7 +4545,7 @@
      "geld": {
       "anteil": 0.48,
       "betrag": null,
-      "gesamt": 23520,
+      "gesamt": 23594,
       "waehrung": "USD",
       "quelle": "preis"
      },
@@ -4266,114 +4587,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 8.5h vor Anpfiff"
+      "text": "steht seit 8.2h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 8.5h vor Anpfiff"
-    }
-   ],
-   "torOk": false
-  },
-  {
-   "matchId": "36013822",
-   "markt": "Match Odds",
-   "liga": "US MLS",
-   "home": "DC Utd",
-   "away": "Columbus",
-   "name": "DC Utd",
-   "seite": "home",
-   "odd": 2.66,
-   "kickoff": "2026-09-09T23:30:00Z",
-   "punkte": 3,
-   "moeglich": 10,
-   "dauerH": 7.48,
-   "teile": [
-    {
-     "buch": "BF",
-     "name": "Betfair",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 3,
-     "grund": {
-      "ok": false,
-      "text": "Geld 59% auf der Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "frischer Zufluss und Quote zieht mit"
-     },
-     "geld": {
-      "anteil": 0.588,
-      "betrag": 473,
-      "gesamt": 804,
-      "waehrung": "EUR",
-      "quelle": "geld"
-     },
-     "text": "Geld 59% auf der Seite"
-    },
-    {
-     "buch": "POLY",
-     "name": "Polymarket",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 3,
-     "grund": {
-      "ok": false,
-      "text": "Poly-Preis 38% auf derselben Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "kein bewiesenes Wallet auf der Seite"
-     },
-     "geld": {
-      "anteil": 0.38,
-      "betrag": null,
-      "gesamt": 7683,
-      "waehrung": "USD",
-      "quelle": "preis"
-     },
-     "text": "Poly-Preis 38% auf derselben Seite"
-    },
-    {
-     "buch": "PIN",
-     "name": "Pinnacle",
-     "status": "ja",
-     "punkte": 2,
-     "moeglich": 3,
-     "grund": {
-      "ok": true,
-      "text": "hat dieselbe Seite als Favorit"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "kein Move gemessen"
-     },
-     "geld": null,
-     "text": "hat dieselbe Seite als Favorit"
-    },
-    {
-     "buch": "STAKE",
-     "name": "Stake-Highroller",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Stake-Highroller nicht erhoben"
-    },
-    {
-     "buch": "ZEIT",
-     "name": "Dauer",
-     "status": "ja",
-     "punkte": 1,
-     "moeglich": 1,
-     "grund": {
-      "ok": true,
-      "text": "steht seit 7.5h vor Anpfiff"
-     },
-     "tiefe": null,
-     "text": "steht seit 7.5h vor Anpfiff"
+     "text": "steht seit 8.2h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -4390,7 +4607,7 @@
    "kickoff": "2026-09-10T02:30:00Z",
    "punkte": 3,
    "moeglich": 10,
-   "dauerH": 10.48,
+   "dauerH": 10.22,
    "teile": [
     {
      "buch": "BF",
@@ -4474,10 +4691,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 10.5h vor Anpfiff"
+      "text": "steht seit 10.2h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 10.5h vor Anpfiff"
+     "text": "steht seit 10.2h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -4490,11 +4707,11 @@
    "away": "Atletico MG",
    "name": "Santos",
    "seite": "home",
-   "odd": 2.28,
+   "odd": 2.26,
    "kickoff": "2026-09-09T22:00:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 5.98,
+   "dauerH": 5.72,
    "teile": [
     {
      "buch": "BF",
@@ -4504,20 +4721,20 @@
      "moeglich": 3,
      "grund": {
       "ok": false,
-      "text": "Geld 48% auf der Seite"
+      "text": "Geld 49% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.484,
-      "betrag": 2758,
-      "gesamt": 5699,
+      "anteil": 0.486,
+      "betrag": 2853,
+      "gesamt": 5871,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 48% auf der Seite"
+     "text": "Geld 49% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -4566,10 +4783,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 6.0h vor Anpfiff"
+      "text": "steht seit 5.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 6.0h vor Anpfiff"
+     "text": "steht seit 5.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -4582,11 +4799,11 @@
    "away": "Lens",
    "name": "Slavia Prague",
    "seite": "home",
-   "odd": 2.7,
+   "odd": 2.72,
    "kickoff": "2026-09-10T19:00:00Z",
    "punkte": 3,
    "moeglich": 10,
-   "dauerH": 26.98,
+   "dauerH": 26.72,
    "teile": [
     {
      "buch": "BF",
@@ -4604,8 +4821,8 @@
      },
      "geld": {
       "anteil": 0.625,
-      "betrag": 17261,
-      "gesamt": 27618,
+      "betrag": 17301,
+      "gesamt": 27681,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -4670,10 +4887,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 27.0h vor Anpfiff"
+      "text": "steht seit 26.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 27.0h vor Anpfiff"
+     "text": "steht seit 26.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -4690,7 +4907,7 @@
    "kickoff": "2026-09-11T16:30:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 48.48,
+   "dauerH": 48.22,
    "teile": [
     {
      "buch": "BF",
@@ -4707,9 +4924,9 @@
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.876,
-      "betrag": 452,
-      "gesamt": 516,
+      "anteil": 0.877,
+      "betrag": 459,
+      "gesamt": 523,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -4762,10 +4979,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 48.5h vor Anpfiff"
+      "text": "steht seit 48.2h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 48.5h vor Anpfiff"
+     "text": "steht seit 48.2h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -4782,7 +4999,7 @@
    "kickoff": "2026-09-11T16:30:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 48.48,
+   "dauerH": 48.22,
    "teile": [
     {
      "buch": "BF",
@@ -4854,10 +5071,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 48.5h vor Anpfiff"
+      "text": "steht seit 48.2h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 48.5h vor Anpfiff"
+     "text": "steht seit 48.2h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -4874,7 +5091,7 @@
    "kickoff": "2026-09-11T18:45:00Z",
    "punkte": 3,
    "moeglich": 10,
-   "dauerH": 50.73,
+   "dauerH": 50.47,
    "teile": [
     {
      "buch": "BF",
@@ -4916,7 +5133,7 @@
      "geld": {
       "anteil": 0.46,
       "betrag": null,
-      "gesamt": 8836,
+      "gesamt": 8845,
       "waehrung": "USD",
       "quelle": "preis"
      },
@@ -4958,10 +5175,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 50.7h vor Anpfiff"
+      "text": "steht seit 50.5h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 50.7h vor Anpfiff"
+     "text": "steht seit 50.5h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -4978,7 +5195,7 @@
    "kickoff": "2026-09-11T18:45:00Z",
    "punkte": 3,
    "moeglich": 10,
-   "dauerH": 50.73,
+   "dauerH": 50.47,
    "teile": [
     {
      "buch": "BF",
@@ -4995,9 +5212,9 @@
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.494,
-      "betrag": 14035,
-      "gesamt": 28410,
+      "anteil": 0.492,
+      "betrag": 14040,
+      "gesamt": 28536,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -5062,10 +5279,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 50.7h vor Anpfiff"
+      "text": "steht seit 50.5h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 50.7h vor Anpfiff"
+     "text": "steht seit 50.5h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -5082,7 +5299,7 @@
    "kickoff": "2026-09-11T19:00:00Z",
    "punkte": 3,
    "moeglich": 10,
-   "dauerH": 50.98,
+   "dauerH": 50.72,
    "teile": [
     {
      "buch": "BF",
@@ -5166,96 +5383,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 51.0h vor Anpfiff"
+      "text": "steht seit 50.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 51.0h vor Anpfiff"
-    }
-   ],
-   "torOk": false
-  },
-  {
-   "matchId": "36028541",
-   "markt": "Match Odds",
-   "liga": "Egyptian Premier",
-   "home": "Al Mokawloon",
-   "away": "Al Ahly Cairo",
-   "name": "Al Ahly Cairo",
-   "seite": "away",
-   "odd": 1.45,
-   "kickoff": "2026-09-09T17:00:00Z",
-   "punkte": 3,
-   "moeglich": 4,
-   "dauerH": 3.72,
-   "teile": [
-    {
-     "buch": "BF",
-     "name": "Betfair",
-     "status": "ja",
-     "punkte": 2,
-     "moeglich": 3,
-     "grund": {
-      "ok": true,
-      "text": "Geld 92% auf der Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "frischer Zufluss und Quote zieht mit"
-     },
-     "geld": {
-      "anteil": 0.916,
-      "betrag": 11412,
-      "gesamt": 12459,
-      "waehrung": "EUR",
-      "quelle": "geld"
-     },
-     "text": "Geld 92% auf der Seite"
-    },
-    {
-     "buch": "POLY",
-     "name": "Polymarket",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Polymarket nicht erhoben"
-    },
-    {
-     "buch": "PIN",
-     "name": "Pinnacle",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Pinnacle nicht erhoben"
-    },
-    {
-     "buch": "STAKE",
-     "name": "Stake-Highroller",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Stake-Highroller nicht erhoben"
-    },
-    {
-     "buch": "ZEIT",
-     "name": "Dauer",
-     "status": "ja",
-     "punkte": 1,
-     "moeglich": 1,
-     "grund": {
-      "ok": true,
-      "text": "steht seit 3.7h vor Anpfiff"
-     },
-     "tiefe": null,
-     "text": "steht seit 3.7h vor Anpfiff"
+     "text": "steht seit 50.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -5272,7 +5403,7 @@
    "kickoff": "2026-09-10T07:30:00Z",
    "punkte": 3,
    "moeglich": 4,
-   "dauerH": 15.48,
+   "dauerH": 15.22,
    "teile": [
     {
      "buch": "BF",
@@ -5338,10 +5469,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 15.5h vor Anpfiff"
+      "text": "steht seit 15.2h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 15.5h vor Anpfiff"
+     "text": "steht seit 15.2h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -5358,7 +5489,7 @@
    "kickoff": "2026-09-10T01:06:00Z",
    "punkte": 3,
    "moeglich": 4,
-   "dauerH": 9.08,
+   "dauerH": 8.82,
    "teile": [
     {
      "buch": "BF",
@@ -5424,10 +5555,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 9.1h vor Anpfiff"
+      "text": "steht seit 8.8h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 9.1h vor Anpfiff"
+     "text": "steht seit 8.8h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -5444,7 +5575,7 @@
    "kickoff": "2026-09-09T23:00:00Z",
    "punkte": 3,
    "moeglich": 4,
-   "dauerH": 6.98,
+   "dauerH": 6.72,
    "teile": [
     {
      "buch": "BF",
@@ -5510,10 +5641,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 7.0h vor Anpfiff"
+      "text": "steht seit 6.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 7.0h vor Anpfiff"
+     "text": "steht seit 6.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -5530,7 +5661,7 @@
    "kickoff": "2026-09-10T13:00:00Z",
    "punkte": 3,
    "moeglich": 4,
-   "dauerH": 20.98,
+   "dauerH": 20.72,
    "teile": [
     {
      "buch": "BF",
@@ -5596,10 +5727,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 21.0h vor Anpfiff"
+      "text": "steht seit 20.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 21.0h vor Anpfiff"
+     "text": "steht seit 20.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -5616,7 +5747,7 @@
    "kickoff": "2026-09-12T12:00:00Z",
    "punkte": 3,
    "moeglich": 10,
-   "dauerH": 67.98,
+   "dauerH": 67.72,
    "teile": [
     {
      "buch": "BF",
@@ -5634,8 +5765,8 @@
      },
      "geld": {
       "anteil": 0.454,
-      "betrag": 4639,
-      "gesamt": 10217,
+      "betrag": 4640,
+      "gesamt": 10221,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -5700,10 +5831,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 68.0h vor Anpfiff"
+      "text": "steht seit 67.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 68.0h vor Anpfiff"
+     "text": "steht seit 67.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -5720,7 +5851,7 @@
    "kickoff": "2026-09-09T19:30:00Z",
    "punkte": 3,
    "moeglich": 4,
-   "dauerH": 3.48,
+   "dauerH": 3.22,
    "teile": [
     {
      "buch": "BF",
@@ -5786,10 +5917,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 3.5h vor Anpfiff"
+      "text": "steht seit 3.2h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 3.5h vor Anpfiff"
+     "text": "steht seit 3.2h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -5802,11 +5933,11 @@
    "away": "Zamora FC",
    "name": "Zamora FC",
    "seite": "away",
-   "odd": 1.3,
+   "odd": 1.44,
    "kickoff": "2026-09-09T19:30:00Z",
    "punkte": 3,
    "moeglich": 4,
-   "dauerH": 3.48,
+   "dauerH": 3.22,
    "teile": [
     {
      "buch": "BF",
@@ -5816,20 +5947,20 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Geld 99% auf der Seite"
+      "text": "Geld 98% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.989,
-      "betrag": 756,
-      "gesamt": 764,
+      "anteil": 0.975,
+      "betrag": 780,
+      "gesamt": 800,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 99% auf der Seite"
+     "text": "Geld 98% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -5872,10 +6003,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 3.5h vor Anpfiff"
+      "text": "steht seit 3.2h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 3.5h vor Anpfiff"
+     "text": "steht seit 3.2h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -5892,7 +6023,7 @@
    "kickoff": "2026-09-12T13:00:00Z",
    "punkte": 3,
    "moeglich": 10,
-   "dauerH": 68.98,
+   "dauerH": 68.72,
    "teile": [
     {
      "buch": "BF",
@@ -5909,9 +6040,9 @@
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.585,
-      "betrag": 16098,
-      "gesamt": 27518,
+      "anteil": 0.584,
+      "betrag": 16104,
+      "gesamt": 27575,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -5976,10 +6107,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 69.0h vor Anpfiff"
+      "text": "steht seit 68.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 69.0h vor Anpfiff"
+     "text": "steht seit 68.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -5996,7 +6127,7 @@
    "kickoff": "2026-09-09T20:00:00Z",
    "punkte": 3,
    "moeglich": 4,
-   "dauerH": 3.98,
+   "dauerH": 3.72,
    "teile": [
     {
      "buch": "BF",
@@ -6006,20 +6137,20 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Geld 79% auf der Seite"
+      "text": "Geld 77% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.794,
+      "anteil": 0.774,
       "betrag": 80,
-      "gesamt": 101,
+      "gesamt": 104,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 79% auf der Seite"
+     "text": "Geld 77% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -6062,10 +6193,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 4.0h vor Anpfiff"
+      "text": "steht seit 3.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 4.0h vor Anpfiff"
+     "text": "steht seit 3.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -6082,7 +6213,7 @@
    "kickoff": "2026-09-09T20:00:00Z",
    "punkte": 3,
    "moeglich": 4,
-   "dauerH": 3.98,
+   "dauerH": 3.72,
    "teile": [
     {
      "buch": "BF",
@@ -6148,10 +6279,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 4.0h vor Anpfiff"
+      "text": "steht seit 3.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 4.0h vor Anpfiff"
+     "text": "steht seit 3.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -6168,7 +6299,7 @@
    "kickoff": "2026-09-09T20:00:00Z",
    "punkte": 3,
    "moeglich": 4,
-   "dauerH": 3.98,
+   "dauerH": 3.72,
    "teile": [
     {
      "buch": "BF",
@@ -6234,10 +6365,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 4.0h vor Anpfiff"
+      "text": "steht seit 3.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 4.0h vor Anpfiff"
+     "text": "steht seit 3.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -6254,7 +6385,7 @@
    "kickoff": "2026-09-12T13:30:00Z",
    "punkte": 3,
    "moeglich": 4,
-   "dauerH": 69.48,
+   "dauerH": 69.22,
    "teile": [
     {
      "buch": "BF",
@@ -6272,8 +6403,8 @@
      },
      "geld": {
       "anteil": 0.973,
-      "betrag": 12191,
-      "gesamt": 12529,
+      "betrag": 12195,
+      "gesamt": 12533,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -6320,10 +6451,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 69.5h vor Anpfiff"
+      "text": "steht seit 69.2h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 69.5h vor Anpfiff"
+     "text": "steht seit 69.2h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -6336,11 +6467,11 @@
    "away": "Nottm Forest",
    "name": "Aston Villa",
    "seite": "home",
-   "odd": 2.3,
+   "odd": 2.32,
    "kickoff": "2026-09-12T14:00:00Z",
    "punkte": 3,
    "moeglich": 10,
-   "dauerH": 69.98,
+   "dauerH": 69.72,
    "teile": [
     {
      "buch": "BF",
@@ -6350,20 +6481,20 @@
      "moeglich": 3,
      "grund": {
       "ok": false,
-      "text": "Geld 54% auf der Seite"
+      "text": "Geld 55% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.543,
-      "betrag": 3926,
-      "gesamt": 7231,
+      "anteil": 0.552,
+      "betrag": 4073,
+      "gesamt": 7379,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 54% auf der Seite"
+     "text": "Geld 55% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -6382,7 +6513,7 @@
      "geld": {
       "anteil": 0.44,
       "betrag": null,
-      "gesamt": 4909,
+      "gesamt": 4922,
       "waehrung": "USD",
       "quelle": "preis"
      },
@@ -6424,10 +6555,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 70.0h vor Anpfiff"
+      "text": "steht seit 69.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 70.0h vor Anpfiff"
+     "text": "steht seit 69.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -6444,7 +6575,7 @@
    "kickoff": "2026-09-09T20:00:00Z",
    "punkte": 3,
    "moeglich": 4,
-   "dauerH": 3.98,
+   "dauerH": 3.72,
    "teile": [
     {
      "buch": "BF",
@@ -6462,8 +6593,8 @@
      },
      "geld": {
       "anteil": 0.983,
-      "betrag": 5,
-      "gesamt": 5,
+      "betrag": null,
+      "gesamt": null,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -6510,10 +6641,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 4.0h vor Anpfiff"
+      "text": "steht seit 3.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 4.0h vor Anpfiff"
+     "text": "steht seit 3.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -6530,7 +6661,7 @@
    "kickoff": "2026-09-12T15:15:00Z",
    "punkte": 3,
    "moeglich": 10,
-   "dauerH": 71.23,
+   "dauerH": 70.97,
    "teile": [
     {
      "buch": "BF",
@@ -6614,10 +6745,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 71.2h vor Anpfiff"
+      "text": "steht seit 71.0h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 71.2h vor Anpfiff"
+     "text": "steht seit 71.0h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -6634,7 +6765,7 @@
    "kickoff": "2026-09-09T21:00:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 4.98,
+   "dauerH": 4.72,
    "teile": [
     {
      "buch": "BF",
@@ -6667,20 +6798,20 @@
      "moeglich": 3,
      "grund": {
       "ok": false,
-      "text": "Poly-Preis 47% auf derselben Seite"
+      "text": "Poly-Preis 46% auf derselben Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "kein bewiesenes Wallet auf der Seite"
      },
      "geld": {
-      "anteil": 0.47,
+      "anteil": 0.46,
       "betrag": null,
-      "gesamt": 2330,
+      "gesamt": 2799,
       "waehrung": "USD",
       "quelle": "preis"
      },
-     "text": "Poly-Preis 47% auf derselben Seite"
+     "text": "Poly-Preis 46% auf derselben Seite"
     },
     {
      "buch": "PIN",
@@ -6712,10 +6843,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 5.0h vor Anpfiff"
+      "text": "steht seit 4.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 5.0h vor Anpfiff"
+     "text": "steht seit 4.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -6732,7 +6863,7 @@
    "kickoff": "2026-09-09T21:00:00Z",
    "punkte": 3,
    "moeglich": 4,
-   "dauerH": 4.98,
+   "dauerH": 4.72,
    "teile": [
     {
      "buch": "BF",
@@ -6798,10 +6929,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 5.0h vor Anpfiff"
+      "text": "steht seit 4.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 5.0h vor Anpfiff"
+     "text": "steht seit 4.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -6818,7 +6949,7 @@
    "kickoff": "2026-09-09T21:30:00Z",
    "punkte": 3,
    "moeglich": 4,
-   "dauerH": 5.48,
+   "dauerH": 5.22,
    "teile": [
     {
      "buch": "BF",
@@ -6884,10 +7015,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 5.5h vor Anpfiff"
+      "text": "steht seit 5.2h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 5.5h vor Anpfiff"
+     "text": "steht seit 5.2h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -6904,7 +7035,7 @@
    "kickoff": "2026-09-09T22:30:00Z",
    "punkte": 3,
    "moeglich": 10,
-   "dauerH": 6.48,
+   "dauerH": 6.22,
    "teile": [
     {
      "buch": "BF",
@@ -6914,20 +7045,20 @@
      "moeglich": 3,
      "grund": {
       "ok": false,
-      "text": "Geld 44% auf der Seite"
+      "text": "Geld 40% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.439,
-      "betrag": 562,
-      "gesamt": 1281,
+      "anteil": 0.398,
+      "betrag": 564,
+      "gesamt": 1416,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 44% auf der Seite"
+     "text": "Geld 40% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -6988,10 +7119,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 6.5h vor Anpfiff"
+      "text": "steht seit 6.2h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 6.5h vor Anpfiff"
+     "text": "steht seit 6.2h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -7008,7 +7139,7 @@
    "kickoff": "2026-09-09T22:30:00Z",
    "punkte": 3,
    "moeglich": 4,
-   "dauerH": 6.48,
+   "dauerH": 6.22,
    "teile": [
     {
      "buch": "BF",
@@ -7074,10 +7205,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 6.5h vor Anpfiff"
+      "text": "steht seit 6.2h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 6.5h vor Anpfiff"
+     "text": "steht seit 6.2h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -7094,7 +7225,7 @@
    "kickoff": "2026-09-09T23:00:00Z",
    "punkte": 3,
    "moeglich": 4,
-   "dauerH": 6.98,
+   "dauerH": 6.72,
    "teile": [
     {
      "buch": "BF",
@@ -7160,10 +7291,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 7.0h vor Anpfiff"
+      "text": "steht seit 6.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 7.0h vor Anpfiff"
+     "text": "steht seit 6.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -7180,7 +7311,7 @@
    "kickoff": "2026-09-09T23:00:00Z",
    "punkte": 3,
    "moeglich": 4,
-   "dauerH": 6.98,
+   "dauerH": 6.72,
    "teile": [
     {
      "buch": "BF",
@@ -7246,10 +7377,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 7.0h vor Anpfiff"
+      "text": "steht seit 6.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 7.0h vor Anpfiff"
+     "text": "steht seit 6.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -7262,11 +7393,11 @@
    "away": "OB",
    "name": "OB",
    "seite": "away",
-   "odd": 1.79,
+   "odd": 1.74,
    "kickoff": "2026-09-09T17:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 0.98,
+   "dauerH": 0.72,
    "teile": [
     {
      "buch": "BF",
@@ -7276,20 +7407,20 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Geld 85% auf der Seite"
+      "text": "Geld 86% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.852,
-      "betrag": 1287,
-      "gesamt": 1511,
+      "anteil": 0.859,
+      "betrag": 1379,
+      "gesamt": 1605,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 85% auf der Seite"
+     "text": "Geld 86% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -7332,10 +7463,10 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 1.0h vor Anpfiff"
+      "text": "steht seit 0.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 1.0h vor Anpfiff"
+     "text": "steht seit 0.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -7348,11 +7479,11 @@
    "away": "Al Orubah",
    "name": "Al Orubah",
    "seite": "away",
-   "odd": 1.98,
+   "odd": 1.97,
    "kickoff": "2026-09-09T17:30:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 1.48,
+   "dauerH": 1.22,
    "teile": [
     {
      "buch": "BF",
@@ -7362,20 +7493,20 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Geld 89% auf der Seite"
+      "text": "Geld 90% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.889,
-      "betrag": 678,
-      "gesamt": 763,
+      "anteil": 0.895,
+      "betrag": 720,
+      "gesamt": 805,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 89% auf der Seite"
+     "text": "Geld 90% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -7418,10 +7549,10 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 1.5h vor Anpfiff"
+      "text": "steht seit 1.2h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 1.5h vor Anpfiff"
+     "text": "steht seit 1.2h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -7438,7 +7569,7 @@
    "kickoff": "2026-09-09T18:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 1.98,
+   "dauerH": 1.72,
    "teile": [
     {
      "buch": "BF",
@@ -7448,20 +7579,20 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Geld 68% auf der Seite"
+      "text": "Geld 69% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.68,
-      "betrag": 210,
-      "gesamt": 309,
+      "anteil": 0.69,
+      "betrag": 237,
+      "gesamt": 343,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 68% auf der Seite"
+     "text": "Geld 69% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -7504,10 +7635,10 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 2.0h vor Anpfiff"
+      "text": "steht seit 1.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 2.0h vor Anpfiff"
+     "text": "steht seit 1.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -7520,11 +7651,11 @@
    "away": "Los Andes",
    "name": "Defensores de Belgrano",
    "seite": "home",
-   "odd": 2.46,
+   "odd": 2.44,
    "kickoff": "2026-09-09T18:30:00Z",
    "punkte": 2,
    "moeglich": 7,
-   "dauerH": 2.48,
+   "dauerH": 2.22,
    "teile": [
     {
      "buch": "BF",
@@ -7534,20 +7665,20 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Geld 79% auf der Seite"
+      "text": "Geld 80% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.793,
-      "betrag": 1779,
-      "gesamt": 2244,
+      "anteil": 0.797,
+      "betrag": 1822,
+      "gesamt": 2286,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 79% auf der Seite"
+     "text": "Geld 80% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -7602,10 +7733,10 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 2.5h vor Anpfiff"
+      "text": "steht seit 2.2h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 2.5h vor Anpfiff"
+     "text": "steht seit 2.2h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -7622,7 +7753,7 @@
    "kickoff": "2026-09-09T18:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 1.98,
+   "dauerH": 1.72,
    "teile": [
     {
      "buch": "BF",
@@ -7688,10 +7819,10 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 2.0h vor Anpfiff"
+      "text": "steht seit 1.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 2.0h vor Anpfiff"
+     "text": "steht seit 1.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -7708,7 +7839,7 @@
    "kickoff": "2026-09-09T18:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 1.98,
+   "dauerH": 1.72,
    "teile": [
     {
      "buch": "BF",
@@ -7774,10 +7905,10 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 2.0h vor Anpfiff"
+      "text": "steht seit 1.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 2.0h vor Anpfiff"
+     "text": "steht seit 1.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -7794,7 +7925,7 @@
    "kickoff": "2026-09-09T17:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 0.98,
+   "dauerH": 0.72,
    "teile": [
     {
      "buch": "BF",
@@ -7804,20 +7935,20 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Geld 71% auf der Seite"
+      "text": "Geld 67% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.706,
+      "anteil": 0.672,
       "betrag": 112,
-      "gesamt": 159,
+      "gesamt": 167,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 71% auf der Seite"
+     "text": "Geld 67% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -7860,10 +7991,10 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 1.0h vor Anpfiff"
+      "text": "steht seit 0.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 1.0h vor Anpfiff"
+     "text": "steht seit 0.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -7880,7 +8011,7 @@
    "kickoff": "2026-09-09T19:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 2.98,
+   "dauerH": 2.72,
    "teile": [
     {
      "buch": "BF",
@@ -7946,10 +8077,10 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 3.0h vor Anpfiff"
+      "text": "steht seit 2.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 3.0h vor Anpfiff"
+     "text": "steht seit 2.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -7966,7 +8097,7 @@
    "kickoff": "2026-09-09T18:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 1.98,
+   "dauerH": 1.72,
    "teile": [
     {
      "buch": "BF",
@@ -8032,10 +8163,10 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 2.0h vor Anpfiff"
+      "text": "steht seit 1.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 2.0h vor Anpfiff"
+     "text": "steht seit 1.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -8052,7 +8183,7 @@
    "kickoff": "2026-09-09T23:30:00Z",
    "punkte": 1,
    "moeglich": 10,
-   "dauerH": 7.48,
+   "dauerH": 7.22,
    "teile": [
     {
      "buch": "BF",
@@ -8094,7 +8225,7 @@
      "geld": {
       "anteil": 0.36,
       "betrag": null,
-      "gesamt": 3616,
+      "gesamt": 3625,
       "waehrung": "USD",
       "quelle": "preis"
      },
@@ -8136,10 +8267,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 7.5h vor Anpfiff"
+      "text": "steht seit 7.2h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 7.5h vor Anpfiff"
+     "text": "steht seit 7.2h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -8156,7 +8287,7 @@
    "kickoff": "2026-09-10T00:00:00Z",
    "punkte": 1,
    "moeglich": 10,
-   "dauerH": 7.98,
+   "dauerH": 7.72,
    "teile": [
     {
      "buch": "BF",
@@ -8173,9 +8304,9 @@
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.523,
-      "betrag": 1487,
-      "gesamt": 2843,
+      "anteil": 0.519,
+      "betrag": 1486,
+      "gesamt": 2864,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -8198,7 +8329,7 @@
      "geld": {
       "anteil": 0.34,
       "betrag": null,
-      "gesamt": 2078,
+      "gesamt": 2084,
       "waehrung": "USD",
       "quelle": "preis"
      },
@@ -8240,10 +8371,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 8.0h vor Anpfiff"
+      "text": "steht seit 7.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 8.0h vor Anpfiff"
+     "text": "steht seit 7.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -8260,7 +8391,7 @@
    "kickoff": "2026-09-10T00:30:00Z",
    "punkte": 1,
    "moeglich": 10,
-   "dauerH": 8.48,
+   "dauerH": 8.22,
    "teile": [
     {
      "buch": "BF",
@@ -8344,10 +8475,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 8.5h vor Anpfiff"
+      "text": "steht seit 8.2h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 8.5h vor Anpfiff"
+     "text": "steht seit 8.2h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -8364,7 +8495,7 @@
    "kickoff": "2026-09-10T02:30:00Z",
    "punkte": 1,
    "moeglich": 10,
-   "dauerH": 10.48,
+   "dauerH": 10.22,
    "teile": [
     {
      "buch": "BF",
@@ -8448,10 +8579,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 10.5h vor Anpfiff"
+      "text": "steht seit 10.2h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 10.5h vor Anpfiff"
+     "text": "steht seit 10.2h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -8468,7 +8599,7 @@
    "kickoff": "2026-09-10T02:30:00Z",
    "punkte": 1,
    "moeglich": 10,
-   "dauerH": 10.48,
+   "dauerH": 10.22,
    "teile": [
     {
      "buch": "BF",
@@ -8510,7 +8641,7 @@
      "geld": {
       "anteil": 0.14,
       "betrag": null,
-      "gesamt": 2360,
+      "gesamt": 2361,
       "waehrung": "USD",
       "quelle": "preis"
      },
@@ -8552,10 +8683,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 10.5h vor Anpfiff"
+      "text": "steht seit 10.2h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 10.5h vor Anpfiff"
+     "text": "steht seit 10.2h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -8572,7 +8703,7 @@
    "kickoff": "2026-09-11T00:30:00Z",
    "punkte": 1,
    "moeglich": 7,
-   "dauerH": 32.48,
+   "dauerH": 32.22,
    "teile": [
     {
      "buch": "BF",
@@ -8644,10 +8775,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 32.5h vor Anpfiff"
+      "text": "steht seit 32.2h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 32.5h vor Anpfiff"
+     "text": "steht seit 32.2h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -8664,7 +8795,7 @@
    "kickoff": "2026-09-11T18:30:00Z",
    "punkte": 1,
    "moeglich": 7,
-   "dauerH": 50.48,
+   "dauerH": 50.22,
    "teile": [
     {
      "buch": "BF",
@@ -8736,10 +8867,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 50.5h vor Anpfiff"
+      "text": "steht seit 50.2h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 50.5h vor Anpfiff"
+     "text": "steht seit 50.2h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -8756,7 +8887,7 @@
    "kickoff": "2026-09-10T03:06:00Z",
    "punkte": 1,
    "moeglich": 4,
-   "dauerH": 11.08,
+   "dauerH": 10.82,
    "teile": [
     {
      "buch": "BF",
@@ -8822,10 +8953,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 11.1h vor Anpfiff"
+      "text": "steht seit 10.8h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 11.1h vor Anpfiff"
+     "text": "steht seit 10.8h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -8842,7 +8973,7 @@
    "kickoff": "2026-09-12T11:00:00Z",
    "punkte": 1,
    "moeglich": 7,
-   "dauerH": 66.98,
+   "dauerH": 66.72,
    "teile": [
     {
      "buch": "BF",
@@ -8914,96 +9045,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 67.0h vor Anpfiff"
+      "text": "steht seit 66.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 67.0h vor Anpfiff"
-    }
-   ],
-   "torOk": false
-  },
-  {
-   "matchId": "36046805",
-   "markt": "Match Odds",
-   "liga": "Icelandic 1 Deild",
-   "home": "HK Kopavogur",
-   "away": "Fylkir",
-   "name": "HK Kopavogur",
-   "seite": "home",
-   "odd": 2.68,
-   "kickoff": "2026-09-09T19:15:00Z",
-   "punkte": 1,
-   "moeglich": 4,
-   "dauerH": 3.23,
-   "teile": [
-    {
-     "buch": "BF",
-     "name": "Betfair",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 3,
-     "grund": {
-      "ok": false,
-      "text": "Geld 36% auf der Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "frischer Zufluss und Quote zieht mit"
-     },
-     "geld": {
-      "anteil": 0.364,
-      "betrag": 66,
-      "gesamt": 180,
-      "waehrung": "EUR",
-      "quelle": "geld"
-     },
-     "text": "Geld 36% auf der Seite"
-    },
-    {
-     "buch": "POLY",
-     "name": "Polymarket",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Polymarket nicht erhoben"
-    },
-    {
-     "buch": "PIN",
-     "name": "Pinnacle",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Pinnacle nicht erhoben"
-    },
-    {
-     "buch": "STAKE",
-     "name": "Stake-Highroller",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Stake-Highroller nicht erhoben"
-    },
-    {
-     "buch": "ZEIT",
-     "name": "Dauer",
-     "status": "ja",
-     "punkte": 1,
-     "moeglich": 1,
-     "grund": {
-      "ok": true,
-      "text": "steht seit 3.2h vor Anpfiff"
-     },
-     "tiefe": null,
-     "text": "steht seit 3.2h vor Anpfiff"
+     "text": "steht seit 66.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -9020,7 +9065,7 @@
    "kickoff": "2026-09-09T19:30:00Z",
    "punkte": 1,
    "moeglich": 4,
-   "dauerH": 3.48,
+   "dauerH": 3.22,
    "teile": [
     {
      "buch": "BF",
@@ -9086,10 +9131,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 3.5h vor Anpfiff"
+      "text": "steht seit 3.2h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 3.5h vor Anpfiff"
+     "text": "steht seit 3.2h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -9106,7 +9151,7 @@
    "kickoff": "2026-09-09T20:00:00Z",
    "punkte": 1,
    "moeglich": 4,
-   "dauerH": 3.98,
+   "dauerH": 3.72,
    "teile": [
     {
      "buch": "BF",
@@ -9172,10 +9217,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 4.0h vor Anpfiff"
+      "text": "steht seit 3.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 4.0h vor Anpfiff"
+     "text": "steht seit 3.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -9192,7 +9237,7 @@
    "kickoff": "2026-09-09T20:00:00Z",
    "punkte": 1,
    "moeglich": 4,
-   "dauerH": 3.98,
+   "dauerH": 3.72,
    "teile": [
     {
      "buch": "BF",
@@ -9258,10 +9303,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 4.0h vor Anpfiff"
+      "text": "steht seit 3.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 4.0h vor Anpfiff"
+     "text": "steht seit 3.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -9278,7 +9323,7 @@
    "kickoff": "2026-09-12T13:30:00Z",
    "punkte": 1,
    "moeglich": 7,
-   "dauerH": 69.48,
+   "dauerH": 69.22,
    "teile": [
     {
      "buch": "BF",
@@ -9350,10 +9395,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 69.5h vor Anpfiff"
+      "text": "steht seit 69.2h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 69.5h vor Anpfiff"
+     "text": "steht seit 69.2h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -9370,7 +9415,7 @@
    "kickoff": "2026-09-12T14:00:00Z",
    "punkte": 1,
    "moeglich": 10,
-   "dauerH": 69.98,
+   "dauerH": 69.72,
    "teile": [
     {
      "buch": "BF",
@@ -9454,10 +9499,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 70.0h vor Anpfiff"
+      "text": "steht seit 69.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 70.0h vor Anpfiff"
+     "text": "steht seit 69.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -9470,11 +9515,11 @@
    "away": "Quindio",
    "name": "Independiente Yumbo",
    "seite": "home",
-   "odd": 2.5,
+   "odd": 2.56,
    "kickoff": "2026-09-09T20:30:00Z",
    "punkte": 1,
    "moeglich": 4,
-   "dauerH": 4.48,
+   "dauerH": 4.22,
    "teile": [
     {
      "buch": "BF",
@@ -9484,20 +9529,20 @@
      "moeglich": 3,
      "grund": {
       "ok": false,
-      "text": "Geld 46% auf der Seite"
+      "text": "Geld 50% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.456,
-      "betrag": 67,
-      "gesamt": 147,
+      "anteil": 0.5,
+      "betrag": 100,
+      "gesamt": 201,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 46% auf der Seite"
+     "text": "Geld 50% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -9540,10 +9585,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 4.5h vor Anpfiff"
+      "text": "steht seit 4.2h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 4.5h vor Anpfiff"
+     "text": "steht seit 4.2h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -9560,7 +9605,7 @@
    "kickoff": "2026-09-12T16:00:00Z",
    "punkte": 1,
    "moeglich": 7,
-   "dauerH": 71.98,
+   "dauerH": 71.72,
    "teile": [
     {
      "buch": "BF",
@@ -9577,9 +9622,9 @@
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.563,
+      "anteil": 0.562,
       "betrag": 5838,
-      "gesamt": 10369,
+      "gesamt": 10388,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -9632,10 +9677,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 72.0h vor Anpfiff"
+      "text": "steht seit 71.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 72.0h vor Anpfiff"
+     "text": "steht seit 71.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -9652,7 +9697,7 @@
    "kickoff": "2026-09-09T21:00:00Z",
    "punkte": 1,
    "moeglich": 4,
-   "dauerH": 4.98,
+   "dauerH": 4.72,
    "teile": [
     {
      "buch": "BF",
@@ -9662,20 +9707,20 @@
      "moeglich": 3,
      "grund": {
       "ok": false,
-      "text": "Geld 46% auf der Seite"
+      "text": "Geld 45% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.455,
+      "anteil": 0.446,
       "betrag": 117,
-      "gesamt": 257,
+      "gesamt": 262,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 46% auf der Seite"
+     "text": "Geld 45% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -9718,10 +9763,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 5.0h vor Anpfiff"
+      "text": "steht seit 4.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 5.0h vor Anpfiff"
+     "text": "steht seit 4.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -9734,11 +9779,11 @@
    "away": "Banfield",
    "name": "Deportivo Riestra",
    "seite": "home",
-   "odd": 2.32,
+   "odd": 2.36,
    "kickoff": "2026-09-09T22:00:00Z",
    "punkte": 1,
    "moeglich": 7,
-   "dauerH": 5.98,
+   "dauerH": 5.72,
    "teile": [
     {
      "buch": "BF",
@@ -9755,9 +9800,9 @@
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.639,
-      "betrag": 1182,
-      "gesamt": 1850,
+      "anteil": 0.643,
+      "betrag": 1205,
+      "gesamt": 1874,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -9780,7 +9825,7 @@
      "geld": {
       "anteil": 0.42,
       "betrag": null,
-      "gesamt": 592,
+      "gesamt": 745,
       "waehrung": "USD",
       "quelle": "preis"
      },
@@ -9816,96 +9861,10 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 6.0h vor Anpfiff"
+      "text": "steht seit 5.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 6.0h vor Anpfiff"
-    }
-   ],
-   "torOk": false
-  },
-  {
-   "matchId": "36046889",
-   "markt": "Match Odds",
-   "liga": "Saudi 1st Division",
-   "home": "Al-Jndal",
-   "away": "Al Bukayriyah",
-   "name": "Al-Jndal",
-   "seite": "home",
-   "odd": 3.25,
-   "kickoff": "2026-09-09T16:10:00Z",
-   "punkte": 0,
-   "moeglich": 4,
-   "dauerH": 0.14,
-   "teile": [
-    {
-     "buch": "BF",
-     "name": "Betfair",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 3,
-     "grund": {
-      "ok": false,
-      "text": "Geld 54% auf der Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "frischer Zufluss und Quote zieht mit"
-     },
-     "geld": {
-      "anteil": 0.541,
-      "betrag": 391,
-      "gesamt": 722,
-      "waehrung": "EUR",
-      "quelle": "geld"
-     },
-     "text": "Geld 54% auf der Seite"
-    },
-    {
-     "buch": "POLY",
-     "name": "Polymarket",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Polymarket nicht erhoben"
-    },
-    {
-     "buch": "PIN",
-     "name": "Pinnacle",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Pinnacle nicht erhoben"
-    },
-    {
-     "buch": "STAKE",
-     "name": "Stake-Highroller",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Stake-Highroller nicht erhoben"
-    },
-    {
-     "buch": "ZEIT",
-     "name": "Dauer",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 1,
-     "grund": {
-      "ok": false,
-      "text": "steht seit 0.1h vor Anpfiff"
-     },
-     "tiefe": null,
-     "text": "steht seit 0.1h vor Anpfiff"
+     "text": "steht seit 5.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -9918,11 +9877,11 @@
    "away": "Plzen",
    "name": "Remis",
    "seite": "draw",
-   "odd": 3.65,
+   "odd": 3.7,
    "kickoff": "2026-09-09T17:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.98,
+   "dauerH": 0.72,
    "teile": [
     {
      "buch": "BF",
@@ -9939,9 +9898,9 @@
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.545,
-      "betrag": 214,
-      "gesamt": 393,
+      "anteil": 0.549,
+      "betrag": 219,
+      "gesamt": 399,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -9988,10 +9947,10 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 1.0h vor Anpfiff"
+      "text": "steht seit 0.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 1.0h vor Anpfiff"
+     "text": "steht seit 0.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -10004,11 +9963,11 @@
    "away": "ZED FC",
    "name": "Remis",
    "seite": "draw",
-   "odd": 2.72,
+   "odd": 2.66,
    "kickoff": "2026-09-09T17:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.98,
+   "dauerH": 0.72,
    "teile": [
     {
      "buch": "BF",
@@ -10025,9 +9984,9 @@
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.51,
-      "betrag": 724,
-      "gesamt": 1419,
+      "anteil": 0.513,
+      "betrag": 772,
+      "gesamt": 1505,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -10074,10 +10033,10 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 1.0h vor Anpfiff"
+      "text": "steht seit 0.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 1.0h vor Anpfiff"
+     "text": "steht seit 0.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -10088,13 +10047,13 @@
    "liga": "Danish Cup",
    "home": "Vanlose",
    "away": "Hillerod Fodbold",
-   "name": "Vanlose",
-   "seite": "home",
-   "odd": 6.2,
+   "name": "Hillerod Fodbold",
+   "seite": "away",
+   "odd": 1.57,
    "kickoff": "2026-09-09T16:30:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.48,
+   "dauerH": 0.22,
    "teile": [
     {
      "buch": "BF",
@@ -10104,20 +10063,20 @@
      "moeglich": 3,
      "grund": {
       "ok": false,
-      "text": "Geld 36% auf der Seite"
+      "text": "Geld 40% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.364,
-      "betrag": 67,
-      "gesamt": 184,
+      "anteil": 0.403,
+      "betrag": 86,
+      "gesamt": 213,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 36% auf der Seite"
+     "text": "Geld 40% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -10160,10 +10119,10 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 0.5h vor Anpfiff"
+      "text": "steht seit 0.2h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 0.5h vor Anpfiff"
+     "text": "steht seit 0.2h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -10180,7 +10139,7 @@
    "kickoff": "2026-09-09T18:00:00Z",
    "punkte": 0,
    "moeglich": 7,
-   "dauerH": 1.98,
+   "dauerH": 1.72,
    "teile": [
     {
      "buch": "BF",
@@ -10197,9 +10156,9 @@
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.382,
+      "anteil": 0.38,
       "betrag": 150,
-      "gesamt": 393,
+      "gesamt": 396,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -10252,10 +10211,10 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 2.0h vor Anpfiff"
+      "text": "steht seit 1.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 2.0h vor Anpfiff"
+     "text": "steht seit 1.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -10268,11 +10227,11 @@
    "away": "FC Iberia 1999",
    "name": "Dinamo Batumi",
    "seite": "home",
-   "odd": 2.3,
+   "odd": 2.42,
    "kickoff": "2026-09-09T17:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.98,
+   "dauerH": 0.72,
    "teile": [
     {
      "buch": "BF",
@@ -10289,9 +10248,9 @@
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.582,
-      "betrag": 1056,
-      "gesamt": 1814,
+      "anteil": 0.579,
+      "betrag": 1062,
+      "gesamt": 1835,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -10338,10 +10297,10 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 1.0h vor Anpfiff"
+      "text": "steht seit 0.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 1.0h vor Anpfiff"
+     "text": "steht seit 0.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -10354,11 +10313,11 @@
    "away": "Throttur",
    "name": "Throttur",
    "seite": "away",
-   "odd": 2.46,
+   "odd": 2.5,
    "kickoff": "2026-09-09T17:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.98,
+   "dauerH": 0.72,
    "teile": [
     {
      "buch": "BF",
@@ -10375,9 +10334,9 @@
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.457,
-      "betrag": 67,
-      "gesamt": 147,
+      "anteil": 0.459,
+      "betrag": 68,
+      "gesamt": 148,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -10424,10 +10383,10 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 1.0h vor Anpfiff"
+      "text": "steht seit 0.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 1.0h vor Anpfiff"
+     "text": "steht seit 0.7h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -10440,11 +10399,11 @@
    "away": "QPR",
    "name": "QPR",
    "seite": "away",
-   "odd": 2.28,
+   "odd": 2.26,
    "kickoff": "2026-09-09T19:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 2.98,
+   "dauerH": 2.72,
    "teile": [
     {
      "buch": "BF",
@@ -10461,13 +10420,99 @@
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.61,
-      "betrag": 27365,
-      "gesamt": 44861,
+      "anteil": 0.607,
+      "betrag": 27417,
+      "gesamt": 45168,
       "waehrung": "EUR",
       "quelle": "geld"
      },
      "text": "Geld 61% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Polymarket nicht erhoben"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Pinnacle nicht erhoben"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Stake-Highroller nicht erhoben"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 1,
+     "grund": {
+      "ok": false,
+      "text": "steht seit 2.7h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 2.7h vor Anpfiff"
+    }
+   ],
+   "torOk": false
+  },
+  {
+   "matchId": "36046805",
+   "markt": "Match Odds",
+   "liga": "Icelandic 1 Deild",
+   "home": "HK Kopavogur",
+   "away": "Fylkir",
+   "name": "HK Kopavogur",
+   "seite": "home",
+   "odd": 2.68,
+   "kickoff": "2026-09-09T19:15:00Z",
+   "punkte": 0,
+   "moeglich": 4,
+   "dauerH": 2.97,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 3,
+     "grund": {
+      "ok": false,
+      "text": "Geld 36% auf der Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.364,
+      "betrag": 66,
+      "gesamt": 180,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 36% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -10541,12 +10586,12 @@
  },
  "bilanz": {
   "gesamt": {
-   "n": 269,
-   "gewonnen": 161,
+   "n": 270,
+   "gewonnen": 162,
    "verloren": 108,
-   "einheiten": 19.62,
-   "roi": 0.0729,
-   "roiLb": -0.0193
+   "einheiten": 20.54,
+   "roi": 0.0761,
+   "roiLb": -0.016
   },
   "jeStufe": {
    "1": {
@@ -10558,16 +10603,25 @@
     "roiLb": -0.084
    },
    "2": {
-    "n": 192,
-    "gewonnen": 114,
+    "n": 193,
+    "gewonnen": 115,
     "verloren": 78,
-    "einheiten": 12.98,
-    "roi": 0.0676,
-    "roiLb": -0.0424
+    "einheiten": 13.9,
+    "roi": 0.072,
+    "roiLb": -0.0377
    }
   },
-  "offen": 5,
+  "offen": 4,
   "zeilen": [
+   {
+    "name": "FK Novaci",
+    "liga": "Republic of North Macedonian Soccer",
+    "stufe": 2,
+    "haltePreis": 1.92,
+    "schlussPreis": 1.92,
+    "win": true,
+    "settledAt": "2026-09-09T16:16:32.999982+00:00"
+   },
    {
     "name": "Pyramids",
     "liga": "Egyptian Premier",
@@ -10783,15 +10837,6 @@
     "schlussPreis": 2.04,
     "win": true,
     "settledAt": "2026-09-08T12:28:36.527932+00:00"
-   },
-   {
-    "name": "Cagliari",
-    "liga": "Italian Serie A",
-    "stufe": 2,
-    "haltePreis": 2.16,
-    "schlussPreis": 2.18,
-    "win": true,
-    "settledAt": "2026-09-08T06:27:40.894608+00:00"
    }
   ]
  },
@@ -10932,9 +10977,9 @@
   {
    "punkte": 3,
    "moeglich": 4,
-   "n": 30,
-   "roi": 0.6803,
-   "roiLb": -0.1134
+   "n": 31,
+   "roi": 0.6881,
+   "roiLb": -0.0797
   },
   {
    "punkte": 2,
@@ -10953,9 +10998,9 @@
   {
    "punkte": 2,
    "moeglich": 4,
-   "n": 525,
-   "roi": 0.0182,
-   "roiLb": -0.0627
+   "n": 526,
+   "roi": 0.0162,
+   "roiLb": -0.0645
   },
   {
    "punkte": 1,
@@ -10988,9 +11033,9 @@
   {
    "punkte": 0,
    "moeglich": 4,
-   "n": 441,
-   "roi": 0.0075,
-   "roiLb": -0.1098
+   "n": 445,
+   "roi": 0.0081,
+   "roiLb": -0.1089
   }
  ]
 }
