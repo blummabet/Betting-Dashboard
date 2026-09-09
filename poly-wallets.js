@@ -333,8 +333,14 @@ function initPolyWallets(){
     //   · moneyAccGl  — trifft die Geld-Seite besser als die Preis-Seite? (gemessen: nein)
     jf('poly_wallet_norm.json'),
     jf('liga_poly_markout.json'),
-  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist,liveSigTrack,moneyMap,publicRec,walletNorm,markout])=>{
-    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist,liveSigTrack,moneyMap,publicRec,walletNorm,markout};
+    // 09.09.2026 (Lucas: „ich will auch immer kontrollieren, ob für die ‚Heute spielenswert' —
+    // das sollten ja die aus dem Public-Kandidaten sein — auch wirklich in Trades-Channel eine
+    // Push kommt"). Genau das steht hier drin: `push_shortlist_trades.py` fuehrt sein Dedup-Buch
+    // unter `key|side`, also demselben Schluessel, den auch der Paper-Track benutzt. Damit ist
+    // die Frage ohne jede Rekonstruktion beantwortbar — nachschlagen statt vermuten.
+    jf('shortlist_push_seen.json'),
+  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist,liveSigTrack,moneyMap,publicRec,walletNorm,markout,pushSeen])=>{
+    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist,liveSigTrack,moneyMap,publicRec,walletNorm,markout,pushSeen};
     _pwRender();
   }).catch(err=>{
     // 12.07.2026: Vorher gab es KEIN catch — eine Exception im Render (z.B. der
@@ -3127,6 +3133,80 @@ function _pwPublicPush(rec){
     +_pwPubBlock(rec.agg, '🐋 Gesendete Pushs', '(vorwärts gebucht, seit Einführung des Buchs)')
     +_pwPubCats(rec.byCat)+retro+'</section>';
 }
+// ── ◆ Public-Kandidaten: WELCHE Spiele sind das? (09.09.2026) ──────────────────────────
+// Lucas: „was mir fehlt vor allem beim Public-Kandidaten ist, welche Spiele da überhaupt dabei
+// sind — damit ich mir die auch anschauen kann. … und ich will auch immer kontrollieren, ob für
+// die ‚Heute spielenswert' auch wirklich in Trades-Channel eine Push kommt."
+//
+// Der Block darüber zeigt seit Wochen n, Trefferquote, ROI und CLV — also wie gut die Auswahl
+// war, aber nie WAS drin war. Eine Kennzahl ohne ihre Zeilen kann man nicht nachprüfen.
+//
+// ⭐ Die Push-Spalte ist der eigentliche Punkt: `push_shortlist_trades.py` schickt ab
+// Conviction ≥6, ein Public-Kandidat verlangt ≥7 PLUS bewiesene Wallet PLUS Mehrheit. Die beiden
+// Mengen sind also NICHT identisch, und genau die Differenz ist das, was Lucas kontrollieren
+// will. Nachgeschlagen wird in `shortlist_push_seen.json` (Schlüssel `key|side` — derselbe wie
+// im Track), nicht rekonstruiert.
+function _pwPushInfo(r){
+  const seen=(_pwCache&&_pwCache.pushSeen)||null;
+  if(!seen||typeof seen!=='object') return {txt:'—',col:'#6e7681',
+    tip:'shortlist_push_seen.json nicht geladen — ob dieser Play in den Channel ging, ist hier '
+       +'nicht feststellbar. Unbekannt ist etwas anderes als ein ausgebliebener Push, und darf '
+       +'auch nicht so aussehen.'};
+  const rec=seen[String(r.key||'')+'|'+String(r.side||'')];
+  if(!rec) return {txt:'kein Push',col:'#6e7681',
+    tip:'Dieser Play steht in keinem Push-Buch. Der Trades-Push feuert ab Conviction '
+       +'≥6; ein Public-Kandidat verlangt ≥7 plus bewiesene Wallet plus Mehrheit — die beiden '
+       +'Mengen sind nicht identisch.'};
+  const ts=String(rec.ts||'').slice(0,16).replace('T',' ');
+  return {txt:'✅ gepusht',col:'#3fb950',
+    tip:'In den Trades-Channel gegangen'+(ts?(' am '+ts):'')
+       +(rec.conv!=null?(' · Conviction beim Push '+rec.conv):'')};
+}
+
+function _pwPublicZeile(r, offen){
+  const p=_pwPushInfo(r);
+  const res = offen ? '<span class="pw-mut">läuft</span>'
+    : (r.result==='win' ? '<span style="color:#3fb950;font-weight:800">✓</span>'
+       : r.result==='loss' ? '<span style="color:#f85149;font-weight:800">✗</span>'
+       : '<span class="pw-mut">—</span>');
+  return '<tr>'
+    +'<td>'+_pwSportIcon(r.league)+' <span class="pw-cm">'+_pwEsc(String(r.key||'').slice(0,30))+'</span></td>'
+    +'<td class="pw-cm"><b style="color:#4cc2ff">'+_pwEsc(String(r.side||'').slice(0,22))+'</b></td>'
+    +'<td class="pw-cn">'+(r.conv!=null?r.conv+'/10':'—')+'</td>'
+    +'<td class="pw-cn pw-mut">'+(r.entryPrice!=null?Math.round(r.entryPrice*100)+'¢':'—')+'</td>'
+    +'<td class="pw-cn">'+res+'</td>'
+    +'<td class="pw-cn" style="color:'+p.col+'" title="'+_pwEsc(p.tip)+'">'+p.txt+'</td>'
+    +'</tr>';
+}
+
+function _pwPublicSpiele(track){
+  const t=track||{};
+  const offen=Object.values(t.open||{}).filter(r=>r&&r.public);
+  const settled=(t.settled||[]).filter(r=>r&&r.public).slice(-25).reverse();
+  if(!offen.length && !settled.length) return '';
+  const seen=(_pwCache&&_pwCache.pushSeen)||null;
+  // Wie viele der abgerechneten Kandidaten haben es in den Push geschafft? Die Zahl steht im
+  // Kopf, damit die Kontrolle nicht Zeile für Zeile gemacht werden muss.
+  let gepusht=null;
+  if(seen&&typeof seen==='object'){
+    gepusht=settled.concat(offen).filter(r=>seen[String(r.key||'')+'|'+String(r.side||'')]).length;
+  }
+  const kopf='<summary class="pw-sum">◆ Welche Spiele sind das? — '
+    +offen.length+' offen · '+settled.length+' zuletzt abgerechnet'
+    +(gepusht!=null?('<span class="pw-mut"> · '+gepusht+' davon im Trades-Channel</span>'):'')
+    +'</summary>';
+  const zeilen=offen.map(r=>_pwPublicZeile(r,true)).join('')
+    +settled.map(r=>_pwPublicZeile(r,false)).join('');
+  return '<details class="pw-det" style="margin:-6px 0 14px">'+kopf
+    +'<div class="pw-sec-note" style="margin:6px 0 4px">Die Spalte <b>Push</b> sagt, ob dieser '
+    +'Play wirklich in den Trades-Channel ging. Sie muss <b>nicht</b> überall ✅ sein: der Push '
+    +'feuert ab Conviction ≥6, ein Public-Kandidat verlangt ≥7 plus bewiesene Wallet plus '
+    +'Mehrheit — zwei verschiedene Tore. Genau die Differenz ist hier nachprüfbar.</div>'
+    +'<div class="pw-tw"><table class="pw-tbl"><thead><tr><th>Markt</th><th>Seite</th>'
+    +'<th>Conv</th><th>Einstieg</th><th>Erg.</th><th>Push</th></tr></thead><tbody>'
+    +zeilen+'</tbody></table></div></details>';
+}
+
 function _pwTrackRecord(track){
   const intro='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">📊 Track-Record — „Heute wetten" als Paper-Trade</span>'
     +'<span class="pw-sec-note">Jeder Scan schreibt die exakten Shortlist-Empfehlungen mit (fixer Einsatz, Einstieg = Snapshot-Preis) und rechnet bei Auflösung ab. <b>Es wird nichts gesetzt</b> — nur mitgeschrieben, damit wir sehen, ob sich echtes Nachspielen lohnt.</span></div>';
@@ -3139,6 +3219,7 @@ function _pwTrackRecord(track){
     +_pwTrackKpis(agg.bettable||agg.all||{n:0}, '🟢 Bespielbar', '(alle Sportarten, auf die gesetzt werden darf)')
     +_pwTrackBlocked(agg, track.reentry, track.blockedCats)
     +_pwTrackKpis(agg.public||{n:0}, '◆ Public-Kandidaten', '(nur Vorschau — sendet nichts; hart gegated: Conv≥7 + bewiesene Wallet + Mehrheit)')
+    +_pwPublicSpiele(track)
     // 06.09.2026 (Lucas: „ich will das direkt im Track-Record unter dem Public-Baustein sehen").
     // Von 172 Public-Kandidaten waren 172 sharp — ohne Vergleichsgruppe war nicht messbar, ob
     // das Wallet-Tor die Auswahl verbessert oder nur verkleinert. Diese Zeile ist die Kontrolle:
@@ -3373,6 +3454,7 @@ if(typeof window!=='undefined') window._pwTermOpen=_pwTermOpen;
 // genau die Bindung, die er aufrufen will. Beim ersten Anlauf passiert und sofort im Test
 // gesehen — deshalb steht es hier.)
 if(typeof window!=='undefined'){ window._pwTestSetCache=function(c){ _pwCache=c||{}; }; }
+if(typeof window!=='undefined'){ window._pwPublicSpiele=_pwPublicSpiele; window._pwPushInfo=_pwPushInfo; }
 // Test-Hook ohne Wrapper: ein `function(){return _pwQuellenBanner();}` wuerde die globale
 // Bindung ueberschreiben und beim Aufruf endlos rekursieren (Vorfall vom 07.09.).
 if(typeof window!=='undefined'){ window._pwQuellenBanner=_pwQuellenBanner; }
@@ -4524,6 +4606,14 @@ function _pwInjectStyle(){
   /* 19.07.2026 — kompakte Tabelle für die neuen Poly-Edge-Sektionen */
   #polyWalletsPanel .pw-sec-p{color:#8b98b5;font-size:12.5px;line-height:1.6;margin:2px 0 12px}
   #polyWalletsPanel .pw-sec-p i{color:#76819c}
+  /* 09.09.2026: die ausklappbare Spieleliste unter den Public-Kandidaten. Zugeklappt, weil
+     die Kennzahlen darueber die Antwort sind und die Zeilen die Kontrolle — wer kontrolliert,
+     klappt auf. */
+  #polyWalletsPanel .pw-det{border:1px solid rgba(255,255,255,.08);border-radius:10px;background:#0f1626;padding:8px 12px}
+  #polyWalletsPanel .pw-sum{cursor:pointer;font-size:12.5px;font-weight:700;color:#c9d4e5;list-style:none}
+  #polyWalletsPanel .pw-sum::-webkit-details-marker{display:none}
+  #polyWalletsPanel .pw-sum::before{content:'▸ ';color:#6e7681}
+  #polyWalletsPanel .pw-det[open] .pw-sum::before{content:'▾ '}
   #polyWalletsPanel .pw-tw{overflow-x:auto}
   #polyWalletsPanel .pw-tbl{width:100%;border-collapse:collapse;font-size:13px}
   #polyWalletsPanel .pw-tbl th{text-align:left;color:#76819c;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.5px;padding:6px 10px;border-bottom:1px solid rgba(255,255,255,.08)}

@@ -83,13 +83,62 @@ class TestGegenDieEchtenBetfairDaten(unittest.TestCase):
                 f"Gut gefittete Leiter (RMSE {rmse:.4f}) meldet {groesste:.4f} Abweichung — "
                 "das waere eine echte Inkohaerenz und gehoert angesehen.")
 
-    def test_schlechte_fits_werden_ueberhaupt_aussortiert(self):
-        """Haelt fest, dass die Schranke im echten Bestand etwas tut. Waere sie wirkungslos,
-        koennte man sie versehentlich entfernen, ohne dass ein Test rot wird."""
+    # 🔴 09.09.2026 — HIER STAND EIN GUARD, DER DIE DATEN MASS STATT DEN CODE.
+    #
+    # Er verlangte, dass im LIVE-Snapshot mindestens ein Fit an der Schranke scheitert. Die
+    # Absicht war richtig (eine Schranke, die nie greift, koennte man versehentlich loeschen),
+    # die Umsetzung nicht: am 09.09. hatte der Snapshot 49 Leitern, die schlechteste mit RMSE
+    # 0,0154 — alle unter der Schranke von 0,02. Der Test wurde rot, weil die DATEN gut waren.
+    #
+    # Ein Guard, der bei gutem Marktzustand anschlaegt, erzieht dazu, ihn zu ignorieren — und
+    # dann faengt er auch den echten Fall nicht mehr. Genau dieselbe Klasse wie „eine Kennzahl
+    # urteilt ueber sich selbst", nur eine Ebene hoeher: hier urteilt ein TEST ueber Daten,
+    # ueber die er gar nichts behaupten wollte.
+    #
+    # Was an seine Stelle tritt, sind zwei Saetze, die beide vom Marktzustand UNABHAENGIG sind:
+    #   1. Die Schranke wird im Entscheidungspfad wirklich angewandt (mit einer konstruierten
+    #      Leiter geprueft, nicht mit einer gefundenen).
+    #   2. Sie ist an DIESEN Daten kalibriert: sie liegt in derselben Groessenordnung wie die
+    #      real vorkommenden Fits. Eine Schranke bei 0,5 waere formal vorhanden und praktisch
+    #      tot — und genau das sollte der alte Test verhindern.
+    def test_die_schranke_greift_im_entscheidungspfad(self):
+        """Geprueft mit einer KONSTRUIERTEN Leiter — unabhaengig davon, wie der Markt heute
+        aussieht. Die verbogene Leiter darf kein Urteil erzeugen, die saubere schon."""
+        schlecht = BC._fit_lambda(_leiter(stoerung=0.25))
+        self.assertGreater(schlecht[2], BC.MAX_RMSE, "Vorbedingung: der Fit ist schlecht")
+        gut = BC._fit_lambda(_leiter())
+        self.assertLessEqual(gut[2], BC.MAX_RMSE, "Vorbedingung: der Fit ist gut")
+        # Und der Code liest die Schranke auch: die Zeile, die aussortiert, muss existieren.
+        quelle = (BASE / "sharp_signals" / "betfair_coherence.py").read_text(encoding="utf-8")
+        self.assertIn("rmse > MAX_RMSE", quelle,
+                      "die Schranke steht in der Konstanten, aber nichts sortiert danach aus")
+
+    def test_die_schranke_ist_an_diesen_daten_kalibriert(self):
+        """Die Absicht des alten Guards, ohne seine Abhaengigkeit vom Tagesbestand: die Schranke
+        muss in der Groessenordnung der real vorkommenden Fits liegen. Bei MAX_RMSE = 0,5 waere
+        sie formal da und praktisch tot — DAS soll auffallen, nicht ein guter Markttag."""
         alle = self._leitern()
-        raus = [1 for _r, (_l, _s, rmse) in alle if rmse > BC.MAX_RMSE]
-        self.assertGreater(len(raus), 0,
-                           "Kein einziger Fit faellt durch — Schranke pruefen statt vertrauen.")
+        schlechteste = max(rmse for _r, (_l, _s, rmse) in alle)
+        self.assertGreater(
+            schlechteste * 10, BC.MAX_RMSE,
+            f"schlechtester realer Fit {schlechteste:.4f}, Schranke {BC.MAX_RMSE} — die "
+            "Schranke liegt so weit ueber allem, was vorkommt, dass sie nie greifen kann")
+        # Die Gegenrichtung gehoert dazu: eine Schranke UNTER allen realen Fits wuerde jede
+        # Leiter aussortieren und das Signal still abschalten.
+        beste = min(rmse for _r, (_l, _s, rmse) in alle)
+        self.assertGreater(BC.MAX_RMSE, beste,
+                           f"bester realer Fit {beste:.4f} liegt ueber der Schranke — dann "
+                           "kommt gar nichts mehr durch und das Signal ist tot")
+
+    def test_wie_viele_leitern_die_schranke_heute_nimmt(self):
+        """Kein Urteil, nur ein Protokoll: der Anteil steht im Testlauf, damit eine Verschiebung
+        auffaellt, ohne dass ein guter Markttag den Lauf rot macht."""
+        alle = self._leitern()
+        raus = len([1 for _r, (_l, _s, rmse) in alle if rmse > BC.MAX_RMSE])
+        print(f"\n[coherence] {len(alle)} Leitern im Snapshot, {raus} ueber MAX_RMSE "
+              f"({BC.MAX_RMSE}) — schlechtester Fit "
+              f"{max(rmse for _r, (_l, _s, rmse) in alle):.4f}")
+        self.assertGreaterEqual(raus, 0)
 
 
 if __name__ == "__main__":
