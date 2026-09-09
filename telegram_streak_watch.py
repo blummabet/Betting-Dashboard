@@ -18,6 +18,7 @@ from __future__ import annotations
 from tg_safe import safe_flag
 
 import json
+import math
 import os
 import urllib.request
 from datetime import date, datetime, timezone
@@ -29,6 +30,22 @@ BASE = Path(__file__).parent
 STREAKS_FILE = D.file("wm_streaks.json", "liga_streaks.json")
 WM_FILE = D.data_file()
 STATE_FILE = BASE / f"{D.prefix()}streak_watch.json"
+# 09.09.2026 — das Buch: eine Zeile je abgerechneter Serie. Getrennt vom Watch-Zustand, weil der
+# Watch fluechtig ist (Eintraege fallen nach dem Spiel raus) und das Buch dauerhaft.
+RECORD_FILE = BASE / f"{D.prefix()}streak_record.json"
+BILANZ_MIN_N = int(os.environ.get("STREAK_BILANZ_MIN_N", "30"))
+
+
+def _wilson(treffer, n, z: float = 1.645):
+    """Einseitige 95-%-Wilson-Untergrenze. Dieselbe Definition wie in sharp_gate."""
+    n = int(n or 0)
+    if n <= 0:
+        return 0.0
+    ph = (treffer or 0) / n
+    d = 1 + z * z / n
+    mitte = (ph + z * z / (2 * n)) / d
+    rand = z * math.sqrt(ph * (1 - ph) / n + z * z / (4 * n * n)) / d
+    return mitte - rand
 
 TOKEN = os.environ.get("TELEGRAM_TOKEN", "").strip()
 # `or`-Fallback + echter Public-Default (nicht ""): ein leeres TELEGRAM_CHAT_ID-Secret
@@ -119,6 +136,13 @@ def streak_held(stype: str, team_id: str, fx: dict) -> bool | None:
     if stype == "bttsNo":    return not (hs > 0 and as_ > 0)
     if stype == "scored":    return own > 0
     if stype == "cleanSheet": return opp == 0
+    # 09.09.2026: Sieg- und Ungeschlagen-Serien stehen im Endstand genauso drin wie die
+    # Tor-Maerkte. Sie fehlten hier nur — und fielen deshalb still aus jeder Abrechnung.
+    if stype == "win":       return own > opp
+    if stype == "unbeaten":  return own >= opp
+    # Ecken und Karten stehen NICHT im Endstand. Sie bleiben None und werden als
+    # „unaufloesbar" gebucht, statt still zu verschwinden — ein Markt, den wir nicht
+    # abrechnen koennen, muss im Nenner sichtbar bleiben.
     return None
 
 
@@ -165,11 +189,19 @@ def build_watch(streaks: list, wm: dict, watched: dict, today: str, now=None) ->
         key = f"{s.get('teamId')}:{stype}:{gdate}"
         if key in watched:
             continue
+        # ⭐ 09.09.2026 — DIE ERWARTUNG WIRD VOR DEM SPIEL FESTGESCHRIEBEN.
+        # Ohne sie ist eine Trefferquote hinterher nur eine Zahl: „62 % erfuellt" heisst nichts,
+        # solange nicht danebensteht, was ohne jede Serie zu erwarten gewesen waere. Die Rate
+        # spaeter nachzuschlagen waere kein Vergleich, sondern ein Rueckblick auf einen Wert,
+        # den dasselbe Spiel schon veraendert hat. Dieselbe Regel wie in `vorregistrierung.py`.
+        _se = s.get("seltenheit") or {}
         entry = {"teamId": str(s.get("teamId")), "team": s.get("team"), "type": stype,
                  "length": s.get("length"), "market": s.get("market"),
                  "pickKey": nx.get("pickKey"), "oppName": nx.get("oppName"),
                  "date": gdate, "kickoff": nx.get("kickoff"), "xgBacked": s.get("xgBacked"),
                  "flag": safe_flag(s.get("flag")), "oppRatePct": nx.get("oppRatePct"),
+                 "erwartetPct": _se.get("ratePct"), "erwartetBasis": _se.get("basis"),
+                 "erwartetPreN": _se.get("preN"),
                  "postedAt": now.isoformat()}
         out.append((key, entry, _watch_msg(s, nx)))
     return out
@@ -223,9 +255,19 @@ def build_watch_digest(entries: list) -> str:
 
 
 # ── MODE=recap ────────────────────────────────────────────────────────────────
-def build_recap(wm: dict, watched: dict, today: str) -> tuple[list, list]:
-    """Bewachte Serien, deren Spiel gelaufen ist → (Nachrichten, erledigte Keys)."""
-    msgs, done = [], []
+def build_recap(wm: dict, watched: dict, today: str) -> tuple[list, list, list]:
+    """Bewachte Serien, deren Spiel gelaufen ist → (Nachrichten, erledigte Keys, Buchungen).
+
+    🔴 09.09.2026 (Lucas: „die Frage ist einfach — wurde Serie erfuellt ja oder nein").
+    Genau das rechnete diese Funktion seit August jeden Tag aus — und warf es weg. Der Recap
+    postete „Serie haelt" bzw. „gerissen" und `main` loeschte den Eintrag danach aus dem Watch.
+    Gemessen am 08.09.: 50 bewachte Serien, **0 Ergebnisse**. Die Antwort auf „machen die Serien
+    Sinn" wurde taeglich berechnet und nie aufgeschrieben.
+
+    Ab jetzt geht jede aufgeloeste Serie als Zeile ins Buch. Die dritte Rueckgabe ist diese
+    Zeile — `main` haengt sie an `streak_record.json`.
+    """
+    msgs, done, buchungen = [], [], []
     for key, w in list(watched.items()):
         if str(w.get("date") or "")[:10] >= today:
             continue   # Spieltag noch nicht vorbei
@@ -235,12 +277,85 @@ def build_recap(wm: dict, watched: dict, today: str) -> tuple[list, list]:
         if not fx or not _fixture_finished(fx):
             continue   # noch kein Endstand → beim nächsten Lauf erneut prüfen
         held = streak_held(w.get("type"), w.get("teamId"), fx)
+        buchungen.append(_buchung(key, w, held))
         if held is None:
-            done.append(key)   # nicht auflösbar → aus dem Watch nehmen, nicht posten
+            # Nicht aufloesbar (Ecken, Karten): raus aus dem Watch, aber MIT Zeile im Buch.
+            # Ein Markt, den wir nicht abrechnen koennen, muss im Nenner sichtbar bleiben —
+            # sonst sieht das Buch vollstaendiger aus, als es ist.
+            done.append(key)
             continue
         msgs.append(_recap_msg(w, held))
         done.append(key)
-    return msgs, done
+    return msgs, done, buchungen
+
+
+def _buchung(key: str, w: dict, held) -> dict:
+    """Eine Zeile fuers Buch. Traegt die VOR dem Spiel festgeschriebene Erwartung mit."""
+    return {"key": key, "teamId": w.get("teamId"), "team": w.get("team"),
+            "type": w.get("type"), "market": w.get("market"), "length": w.get("length"),
+            "oppName": w.get("oppName"), "date": w.get("date"), "kickoff": w.get("kickoff"),
+            "erwartetPct": w.get("erwartetPct"), "erwartetBasis": w.get("erwartetBasis"),
+            "erwartetPreN": w.get("erwartetPreN"),
+            "erfuellt": held, "gebuchtAm": datetime.now(timezone.utc).isoformat()}
+
+
+# ── Die Bilanz: traegt eine lange Serie sich selbst? ─────────────────────────────────────
+def bilanz(zeilen) -> dict:
+    """Aus den gebuchten Zeilen die eine Zahl, um die es geht. REIN/testbar.
+
+    ⭐ Die Trefferquote ALLEIN sagt hier nichts — „62 % erfuellt" ist gut oder schlecht, je
+    nachdem, was ohne jede Serie zu erwarten war. Deshalb steht die vor dem Spiel
+    festgeschriebene Erwartung daneben, und das Urteil vergleicht die UNTERGRENZE der
+    beobachteten Quote mit ihr:
+
+        Untergrenze > Erwartung   →  die Serie traegt sich selbst (Hot Hand)
+        Obergrenze  < Erwartung   →  sie kehrt um (Regression)
+        sonst                     →  kein Unterschied messbar
+
+    Ein Punktschaetzer entscheidet hier nichts: 8 von 12 sind 67 %, mit einer Untergrenze von
+    42 % — das ist mit „die Serie sagt gar nichts" voll vereinbar.
+
+    (Preise bleiben ausdruecklich draussen. Lucas: „der Preis ist da egal, die Frage ist einfach,
+    wurde die Serie erfuellt ja oder nein." Diese Bilanz beantwortet damit NICHT, ob Serien Geld
+    bringen — sie beantwortet, ob sie ueberhaupt Information tragen. Ohne das Ja ist die
+    Geldfrage sinnlos; mit dem Ja ist sie die naechste.)
+    """
+    rows = [z for z in (zeilen or []) if isinstance(z, dict)]
+    auf = [z for z in rows if isinstance(z.get("erfuellt"), bool)]
+    offen = len(rows) - len(auf)
+    n = len(auf)
+    treffer = sum(1 for z in auf if z["erfuellt"])
+    # Erwartung: nach Stichprobe gewichtetes Mittel der VOR dem Spiel festgeschriebenen Raten.
+    _e = [float(z["erwartetPct"]) for z in auf if isinstance(z.get("erwartetPct"), (int, float))]
+    erwartet = (sum(_e) / len(_e)) if _e else None
+    aus = {"n": n, "treffer": treffer, "unaufloesbar": offen,
+           "quotePct": round(100.0 * treffer / n, 1) if n else None,
+           "erwartetPct": round(erwartet, 1) if erwartet is not None else None,
+           "mitErwartung": len(_e)}
+    if n < BILANZ_MIN_N:
+        aus["urteil"] = "sammelt"
+        aus["grund"] = ("%d von %d abgerechneten Serien — unter %d sagt der Vergleich nichts"
+                        % (n, BILANZ_MIN_N, BILANZ_MIN_N))
+        return aus
+    ug = _wilson(treffer, n)
+    og = 1.0 - _wilson(n - treffer, n)
+    aus["ugPct"], aus["ogPct"] = round(100 * ug, 1), round(100 * og, 1)
+    if erwartet is None:
+        aus["urteil"] = "kein Vergleich"
+        aus["grund"] = "keine vor dem Spiel festgeschriebene Erwartung in den Zeilen"
+    elif ug * 100 > erwartet:
+        aus["urteil"] = "traegt sich selbst"
+        aus["grund"] = ("erfuellt in %.1f %% (Untergrenze %.1f %%) gegen %.1f %% Erwartung"
+                        % (aus["quotePct"], aus["ugPct"], erwartet))
+    elif og * 100 < erwartet:
+        aus["urteil"] = "kehrt um"
+        aus["grund"] = ("erfuellt in %.1f %% (Obergrenze %.1f %%) gegen %.1f %% Erwartung"
+                        % (aus["quotePct"], aus["ogPct"], erwartet))
+    else:
+        aus["urteil"] = "kein Unterschied"
+        aus["grund"] = ("erfuellt in %.1f %% (%.1f..%.1f %%) — die Erwartung von %.1f %% liegt "
+                        "im Band" % (aus["quotePct"], aus["ugPct"], aus["ogPct"], erwartet))
+    return aus
 
 
 def _recap_msg(w: dict, held: bool) -> str:
@@ -263,11 +378,29 @@ def main() -> None:
     today = date.today().isoformat()
 
     if MODE == "recap":
-        msgs, done = build_recap(wm, watched, today)
+        msgs, done, buchungen = build_recap(wm, watched, today)
         for m in msgs:
             tg_send(m)
         for k in done:
             watched.pop(k, None)
+        # `updatedAt` bei JEDEM Recap-Lauf setzen, auch ohne neue Zeile: sonst meldet die
+        # Frische-Rechnung der Uebersicht das Buch als veraltet, obwohl es nur gerade nichts
+        # abzurechnen gab. „Nichts passiert" und „laeuft nicht mehr" duerfen nicht gleich
+        # aussehen — dieselbe Unterscheidung wie ueberall sonst hier.
+        if buchungen or RECORD_FILE.exists():
+            # Das Buch wird ANGEHAENGT, nie neu geschrieben: eine Zeile, die einmal drinsteht,
+            # ist ein Messpunkt und kein Zwischenstand. Doppelte Keys koennen nicht entstehen,
+            # weil der Eintrag im selben Lauf aus dem Watch faellt — geprueft wird es trotzdem.
+            buch = _load(RECORD_FILE, {"zeilen": []})
+            bekannt = {str(z.get("key")) for z in (buch.get("zeilen") or [])}
+            neu_z = [b for b in buchungen if str(b.get("key")) not in bekannt]
+            buch["zeilen"] = (buch.get("zeilen") or []) + neu_z
+            buch["bilanz"] = bilanz(buch["zeilen"])
+            buch["geprueftAm"] = datetime.now(timezone.utc).isoformat()
+            buch["updatedAt"] = datetime.now(timezone.utc).isoformat()
+            RECORD_FILE.write_text(json.dumps(buch, ensure_ascii=False, indent=1),
+                                   encoding="utf-8")
+            print(f"📒 Serien-Buch: +{len(neu_z)} Zeilen, Bilanz: {buch['bilanz'].get('grund')}")
         print(f"📊 Serien-Recap: {len(msgs)} gepostet, {len(done)} abgeschlossen.")
     else:  # watch
         new = build_watch(streaks, wm, watched, today)

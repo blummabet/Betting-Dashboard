@@ -95,7 +95,13 @@
              // 03.09.2026: neu dazu, und der Guard hat es sofort eingefordert — eine Quelle,
              // die geladen wird, aber nicht in die Frische-Rechnung eingeht, kann beliebig
              // alt sein, ohne dass die Übersicht es sagt.
-             ['Stake', d.stake], ['Stake-Auswertung', d.stakeAus]];
+             ['Stake', d.stake], ['Stake-Auswertung', d.stakeAus],
+             // 09.09.2026: das Serien-Buch. Der Guard hat es SOFORT eingefordert, als es in die
+             // Ladezeile kam — zu Recht, aber hier steckt eine Besonderheit: das Buch waechst nur,
+             // wenn eine bewachte Serie abgerechnet wird, also alle paar Tage. `updatedAt` wird
+             // deshalb bei JEDEM Recap-Lauf neu gesetzt, auch ohne neue Zeile — sonst meldete die
+             // Uebersicht dauerhaft „aelteste Quelle: Serien-Buch, 3 Tage", obwohl nichts fehlt.
+             ['Serien-Buch', d.ligaStreakRec], ['Serien-Buch MLS', d.mlsStreakRec]];
     var out = [];
     q.forEach(function (x) { var a = _ageMin(x[1]); if (a != null) out.push({ n: x[0], min: a }); });
     // Poly-LIVE fuehrt seine eigene Rechnung (dieselbe, die die Kachel unten anzeigt).
@@ -488,7 +494,11 @@
       jf('killer.json'), jf('freigabe.json'),
       // 03.09.2026 (Lucas): die Stake-Sammlung fuer die drei Kacheln. Beide Dateien
       // duerfen fehlen — die Kacheln sagen dann, dass nichts da ist, statt leer zu bleiben.
-      jf('stake_highroller.json'), jf('stake_auswertung.json')]);
+      jf('stake_highroller.json'), jf('stake_auswertung.json'),
+      // 09.09.2026 (Lucas: wurde die Serie erfuellt, ja oder nein). Das Serien-Buch.
+      // Es darf fehlen (es beginnt erst); dann sagt die Kachel genau das, statt so zu
+      // tun, als sei nichts gemessen worden.
+      jf('liga_streak_record.json'), jf('mls_streak_record.json')]);
   }
   function _mdLoad(force) {
     if (_md.loading) return;
@@ -498,7 +508,7 @@
     var p = document.getElementById('mainDashPanel');
     if (p && !_md.data) { p.classList.add('mdash'); p.innerHTML = _head() + '<div class="md-empty" style="text-align:center;padding:52px 0;">⏳ Übersicht wird geladen …</div>'; }
     _mdFetch().then(function (a) {
-      _md.data = { liga: a[0], mls: a[1], ligaStreaks: a[2], mlsStreaks: a[3], betfair: a[4], whales: a[5], pulse: a[6], bfOverview: a[7], bfDir: a[8], moneyMap: a[9], bfTrack: a[10], killer: a[11], freigabe: a[12], stake: a[13], stakeAus: a[14] };
+      _md.data = { liga: a[0], mls: a[1], ligaStreaks: a[2], mlsStreaks: a[3], betfair: a[4], whales: a[5], pulse: a[6], bfOverview: a[7], bfDir: a[8], moneyMap: a[9], bfTrack: a[10], killer: a[11], freigabe: a[12], stake: a[13], stakeAus: a[14], ligaStreakRec: a[15], mlsStreakRec: a[16] };
       _md.loading = false; _mdRender();
     });
   }
@@ -1547,6 +1557,43 @@
 
     // Streaks — Pips (Länge)
     var st = bestStreaks();
+    // ── Das Serien-Buch (09.09.2026) ──────────────────────────────────────────────────────
+    // Lucas: „der Preis ist da egal um ehrlich zu sein — die Frage ist einfach: wurde Serie
+    // erfüllt ja oder nein. Das dann etwas simpler, aber das braucht es oder?" Ja — und es ist
+    // die bessere erste Frage: ob Serien überhaupt Information tragen, entscheidet sich an der
+    // Trefferquote gegen die Erwartung, nicht am Preis.
+    //
+    // ⚠️ Die Quote allein sagt hier nichts: „62 % erfüllt" ist gut oder schlecht, je nachdem,
+    // was ohne jede Serie zu erwarten war. Deshalb kommt das Urteil fertig aus dem Produzenten
+    // (`telegram_streak_watch.bilanz`), der die VOR dem Spiel festgeschriebene Erwartung kennt —
+    // das Frontend vergleicht hier nichts selbst.
+    function _mdStreakBuch() {
+      var b = [_md.data.ligaStreakRec, _md.data.mlsStreakRec].filter(Boolean);
+      if (!b.length) return '';
+      var n = 0, un = 0, bil = null;
+      b.forEach(function (x) {
+        var z = x.bilanz || {};
+        n += (+z.n || 0); un += (+z.unaufloesbar || 0);
+        if (!bil || (+z.n || 0) > (+bil.n || 0)) bil = z;
+      });
+      if (!n) {
+        return '<div class="md-kl-foot" style="border-top:0;padding:4px 0 6px;color:var(--mi3)">'
+          + '📒 Serien-Buch: noch keine abgerechnete Serie — es beginnt mit dem nächsten Spieltag.'
+          + '</div>';
+      }
+      var _u = (bil && bil.urteil) || '—';
+      var col = _u === 'traegt sich selbst' ? A.good : (_u === 'kehrt um' ? A.red : 'var(--mi3)');
+      var _lbl = { 'traegt sich selbst': 'trägt sich selbst', 'kehrt um': 'kehrt um',
+                   'kein Unterschied': 'kein Unterschied', 'sammelt': 'sammelt',
+                   'kein Vergleich': 'kein Vergleich' }[_u] || _u;
+      return '<div class="md-kl-foot" style="border-top:0;padding:4px 0 6px">'
+        + '📒 <b>Serien-Buch</b> · <span style="color:' + col + '">' + esc(_lbl) + '</span> — '
+        + esc(String((bil && bil.grund) || ''))
+        + (un ? ' <span style="color:var(--mi3)">· ' + un + ' nicht abrechenbar (Ecken und '
+            + 'Karten stehen nicht im Endstand)</span>' : '')
+        + '</div>';
+    }
+
     var streaksBody = st.length ? st.map(function (s) {
       // 08.08.2026 (Lucas: „vernünftig bewerten"): „Grundrate X%" = Rate der Serien-Richtung VOR der Serie
       // (echte Basis). „reine Serie" = Serie füllt das 15-Spiele-Fenster → keine unabhängige Basis (kein Fake-100%).
@@ -1607,7 +1654,7 @@
       var len = +s.length || 0;
       return rowEl(fl(_flagFrom(s.country, s.league, s.leagueName)) + esc(team(s.team)) + ' <span style="color:var(--mi3);font-weight:400">·</span> ' + esc(s.market || s.type || ''),
         len + '×', A.gold, sub, pips(Math.min(len, 10), 10));
-    }).join('') + _ageStr(_md.data.ligaStreaks) : empty('Keine langen Serien.');
+    }).join('') + _mdStreakBuch() + _ageStr(_md.data.ligaStreaks) : empty('Keine langen Serien.');
 
     // Betfair — Anteilsbalken
     var bf = bestBetfair();
