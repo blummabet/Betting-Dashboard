@@ -243421,7 +243421,13 @@
     "usd": 2000,
     "ts": 1788955333
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "PARIVISION": 0.0,
+   "FURIA": 1.0
+  },
+  "resolvedAt": "2026-09-09T15:40:06.993848+00:00"
  },
  "wta-brockma-burel-2026-09-09": {
   "shares": {
@@ -244899,8 +244905,8 @@
  },
  "lol-deer-vdn-2026-09-09": {
   "shares": {
-   "Deer Gaming": 1588.3013509250002,
-   "Verdant": 12223.043475600001
+   "Deer Gaming": 1703.2628886000002,
+   "Verdant": 13107.73983387
   },
   "prices": {
    "Deer Gaming": 0.115,
@@ -244912,7 +244918,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 12888,
+  "totalUsd": 15400,
   "whales": [
    {
     "wallet": "0x58f8f1138be2192696378629fc9aa23c7910dc70",
@@ -244939,8 +244945,8 @@
     "avgPrice": 0.88
    }
   ],
-  "hoursToKickoff": 0.7,
-  "capturedAt": "2026-09-09T15:21:24.636208+00:00",
+  "hoursToKickoff": 0.39,
+  "capturedAt": "2026-09-09T15:40:06.993848+00:00",
   "cond": "0x514f11cf22834521d1c7164718c4d49029a0fdcd445f795c6b2aac7614ac51ba",
   "frage": "LoL: Deer Gaming vs Verdant (BO5) - NLC Playoffs",
   "tokens": {
@@ -244949,64 +244955,72 @@
   },
   "book": {
    "side": "Verdant",
-   "bid": 0.87,
+   "bid": 0.88,
    "ask": 0.89,
-   "spreadC": 2.0,
-   "spreadPct": 2.25,
+   "spreadC": 1.0,
+   "spreadPct": 1.12,
    "bids": [
     [
+     0.88,
+     96
+    ],
+    [
      0.87,
-     9832
+     9366
     ],
     [
      0.86,
-     293
+     68
     ],
     [
      0.85,
-     596
+     406
     ],
     [
      0.84,
-     20
+     1148
     ],
     [
      0.83,
      5490
-    ],
-    [
-     0.8,
-     9
     ]
    ],
    "asks": [
     [
      0.89,
-     938
+     119
     ],
     [
      0.9,
-     1768
+     309
     ],
     [
      0.91,
-     1413
+     724
     ],
     [
      0.92,
-     2579
+     660
     ],
     [
      0.93,
-     3042
+     2994
     ],
     [
      0.94,
-     1452
+     1136
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0xb81ed6ab5d2167a6cb5777fd5356674fc609ba06",
+    "action": "BUY",
+    "side": "Verdant",
+    "price": 0.8841,
+    "usd": 663,
+    "ts": 1788968142
+   },
    {
     "wallet": "0xeba1457b0731b6a0ed810a90476390771bed838b",
     "action": "BUY",
@@ -245035,14 +245049,14 @@
  },
  "spl-kho-sha-2026-09-09": {
   "shares": {
-   "Al Kholood Saudi Club": 5333.951486430004,
-   "Draw (Al Kholood Saudi Club vs. Al Shabab Saudi Club)": 555.8161710450001,
-   "Al Shabab Saudi Club": 2324.237923875
+   "Al Kholood Saudi Club": 6551.082354395004,
+   "Draw (Al Kholood Saudi Club vs. Al Shabab Saudi Club)": 605.75223276,
+   "Al Shabab Saudi Club": 6798.19614782
   },
   "prices": {
-   "Al Kholood Saudi Club": 0.315,
+   "Al Kholood Saudi Club": 0.305,
    "Draw (Al Kholood Saudi Club vs. Al Shabab Saudi Club)": 0.255,
-   "Al Shabab Saudi Club": 0.425
+   "Al Shabab Saudi Club": 0.445
   },
   "splitGuete": {
    "art": "belastbar",
@@ -245050,35 +245064,34 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 27026,
+  "totalUsd": 37735,
   "whales": [
    {
     "wallet": "0xeb739f5e4f45b0b68688bb252f08327bc01653b0",
     "side": "Al Kholood Saudi Club",
-    "usd": 3447,
+    "usd": 3337,
     "avgPrice": 0.3472
    },
    {
+    "wallet": "0x531b6a892346bdad09a2f2197ea202fb41a132b6",
+    "side": "Al Shabab Saudi Club",
+    "usd": 2607,
+    "avgPrice": 0.4299
+   },
+   {
     "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
     "side": "Al Shabab Saudi Club",
-    "usd": 1362,
+    "usd": 1426,
     "avgPrice": 0.4096
    },
    {
-    "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
-    "side": "Al Kholood Saudi Club",
-    "usd": 1117,
-    "avgPrice": 0.34
-   },
-   {
-    "wallet": "0x8cfd5069c61048aded54cba9b7102c57d57395c4",
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
     "side": "Al Shabab Saudi Club",
-    "usd": 518,
-    "avgPrice": 0.4099
+    "usd": 1264
    }
   ],
-  "hoursToKickoff": 0.62,
-  "capturedAt": "2026-09-09T15:21:24.636208+00:00",
+  "hoursToKickoff": 0.31,
+  "capturedAt": "2026-09-09T15:40:06.993848+00:00",
   "tokens": {
    "Al Kholood Saudi Club": "10546844703790560887586772071442384143154546466077979088467257122822647429587",
    "Draw (Al Kholood Saudi Club vs. Al Shabab Saudi Club)": "71296340049977804502385991810959634474881019749039510872099983473057747470420",
@@ -245087,8 +245100,8 @@
  },
  "lol-gmb-zena-2026-09-09": {
   "shares": {
-   "GMBLERS ESPORTS": 7149.6259698250005,
-   "Zena Esports": 7591.4901135300015
+   "GMBLERS ESPORTS": 8179.383939204998,
+   "Zena Esports": 8684.944452149997
   },
   "prices": {
    "GMBLERS ESPORTS": 0.485,
@@ -245100,7 +245113,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 16165,
+  "totalUsd": 18254,
   "whales": [
    {
     "wallet": "0x6918ea182d963b1fb7888860b8a8b8bcfba5782b",
@@ -245127,8 +245140,8 @@
     "avgPrice": 0.6272
    }
   ],
-  "hoursToKickoff": 0.7,
-  "capturedAt": "2026-09-09T15:21:24.636208+00:00",
+  "hoursToKickoff": 0.39,
+  "capturedAt": "2026-09-09T15:40:06.993848+00:00",
   "cond": "0xae846ab35d7bd740bbed02061a8e5cb189de40648b70620d62b777c368d97961",
   "frage": "LoL: GMBLERS ESPORTS vs Zena Esports (BO5) - LIT Playoffs",
   "tokens": {
@@ -245153,7 +245166,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 15158,
+  "totalUsd": 15251,
   "whales": [
    {
     "wallet": "0xeb739f5e4f45b0b68688bb252f08327bc01653b0",
@@ -245180,8 +245193,8 @@
     "avgPrice": 0.4762
    }
   ],
-  "hoursToKickoff": 0.7,
-  "capturedAt": "2026-09-09T15:21:24.636208+00:00",
+  "hoursToKickoff": 0.39,
+  "capturedAt": "2026-09-09T15:40:06.993848+00:00",
   "tokens": {
    "Tartu JK Tammeka": "105820274386504896350855557416025562334646898723399356862047965342190299581137",
    "Draw (Tartu JK Tammeka vs. Paide Linnameeskond)": "98500063894917280484001643686372340378122490349521353636212052349888434159095",
@@ -245315,9 +245328,9 @@
  },
  "ucl-fcb-fey-2026-09-09": {
   "shares": {
-   "FC Barcelona": 422660.7165797244,
-   "Draw (FC Barcelona vs. Feyenoord Rotterdam)": 1248.0545812150028,
-   "Feyenoord Rotterdam": 21126.900577254975
+   "FC Barcelona": 424784.1530262745,
+   "Draw (FC Barcelona vs. Feyenoord Rotterdam)": 1723.7308037300033,
+   "Feyenoord Rotterdam": 21311.97255230998
   },
   "prices": {
    "FC Barcelona": 0.915,
@@ -245330,7 +245343,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 1369331,
+  "totalUsd": 1535065,
   "whales": [
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
@@ -245357,8 +245370,8 @@
     "avgPrice": 0.9199
    }
   ],
-  "hoursToKickoff": 1.45,
-  "capturedAt": "2026-09-09T15:21:24.636208+00:00",
+  "hoursToKickoff": 1.14,
+  "capturedAt": "2026-09-09T15:40:06.993848+00:00",
   "tokens": {
    "FC Barcelona": "42961526049823757534799696174550734884589575886824871139567727169460774434554",
    "Draw (FC Barcelona vs. Feyenoord Rotterdam)": "40527984950369755763847250194406543105128572598348083152942253079733098808332",
@@ -245373,23 +245386,23 @@
    "bids": [
     [
      0.91,
-     187668
+     464009
     ],
     [
      0.9,
-     300282
+     273361
     ],
     [
      0.89,
-     248203
+     247453
     ],
     [
      0.88,
-     16461
+     10937
     ],
     [
      0.87,
-     3413
+     4437
     ],
     [
      0.86,
@@ -245399,31 +245412,55 @@
    "asks": [
     [
      0.92,
-     868241
+     1179180
     ],
     [
      0.93,
-     977831
+     987882
     ],
     [
      0.94,
-     263733
+     262047
     ],
     [
      0.95,
-     40566
+     38119
     ],
     [
      0.96,
-     36671
+     36871
     ],
     [
      0.97,
-     49547
+     54547
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0xb5a5dca472a82c1b7770dc801d637b429032e3ca",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.92,
+    "usd": 359,
+    "ts": 1788968004
+   },
+   {
+    "wallet": "0xb5a5dca472a82c1b7770dc801d637b429032e3ca",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.92,
+    "usd": 366,
+    "ts": 1788967915
+   },
+   {
+    "wallet": "0xb5a5dca472a82c1b7770dc801d637b429032e3ca",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.92,
+    "usd": 738,
+    "ts": 1788967876
+   },
    {
     "wallet": "0xac4c55b85a1dcacb638bd63ea4eeb8d8a9352200",
     "action": "BUY",
@@ -245463,37 +245500,13 @@
     "price": 0.92,
     "usd": 18890,
     "ts": 1788966202
-   },
-   {
-    "wallet": "0x4d4815122c826e1ca6bc5d63f36e3b3a0c5c66ab",
-    "action": "BUY",
-    "side": "Yes",
-    "price": 0.92,
-    "usd": 800,
-    "ts": 1788965995
-   },
-   {
-    "wallet": "0x36966ad8548035d66799ed01ecdfbf1d10ad69ce",
-    "action": "BUY",
-    "side": "Yes",
-    "price": 0.92,
-    "usd": 460,
-    "ts": 1788965932
-   },
-   {
-    "wallet": "0xb70c4f38ce25d986a9da3f3190cbae87660934ca",
-    "action": "BUY",
-    "side": "Yes",
-    "price": 0.92,
-    "usd": 500,
-    "ts": 1788965439
    }
   ]
  },
  "ucl-fcb-fey-2026-09-09-more-markets": {
   "shares": {
-   "Over": 44653.11288236997,
-   "Under": 42052.048250140004
+   "Over": 45050.43815718995,
+   "Under": 42426.22836332
   },
   "prices": {
    "Over": 0.515,
@@ -245505,7 +245518,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 150744,
+  "totalUsd": 152150,
   "whales": [
    {
     "wallet": "0x15096a93fb86ea8a782574536ce3bab88e6cca95",
@@ -245516,7 +245529,7 @@
    {
     "wallet": "0x23d81ba9371e576015c1e562db09c689f56b0288",
     "side": "Under",
-    "usd": 7360,
+    "usd": 7734,
     "avgPrice": 0.48
    },
    {
@@ -245531,8 +245544,8 @@
     "usd": 6492
    }
   ],
-  "hoursToKickoff": 1.45,
-  "capturedAt": "2026-09-09T15:21:24.636208+00:00",
+  "hoursToKickoff": 1.14,
+  "capturedAt": "2026-09-09T15:40:06.993848+00:00",
   "cond": "0xb31439fb7c49baa4e053d54c5e8754a6a57f067766a30b83134abb804c62aa39",
   "frage": "FC Barcelona vs. Feyenoord Rotterdam: O/U 4.5",
   "tokens": {
@@ -245548,19 +245561,19 @@
    "bids": [
     [
      0.51,
-     70374
+     44657
     ],
     [
      0.5,
-     20896
+     19405
     ],
     [
      0.49,
-     23616
+     25355
     ],
     [
      0.48,
-     14371
+     8447
     ],
     [
      0.47,
@@ -245574,23 +245587,23 @@
    "asks": [
     [
      0.52,
-     90547
+     104575
     ],
     [
      0.53,
-     26213
+     21601
     ],
     [
      0.54,
-     19890
+     14094
     ],
     [
      0.55,
-     13069
+     12888
     ],
     [
      0.56,
-     8255
+     8211
     ],
     [
      0.57,
@@ -245622,25 +245635,17 @@
     "price": 0.52,
     "usd": 1359,
     "ts": 1788963568
-   },
-   {
-    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
-    "action": "BUY",
-    "side": "Over",
-    "price": 0.52,
-    "usd": 5152,
-    "ts": 1788963058
    }
   ]
  },
  "ucl-stu-vf-2026-09-09-more-markets": {
   "shares": {
-   "Over": 9858.5256039,
-   "Under": 35995.081856100005
+   "Over": 10316.386678500001,
+   "Under": 35534.2246565
   },
   "prices": {
-   "Over": 0.215,
-   "Under": 0.785
+   "Over": 0.225,
+   "Under": 0.775
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -245648,35 +245653,35 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 46923,
+  "totalUsd": 47005,
   "whales": [
    {
     "wallet": "0x4b9975ca3ea611438121b57a677759a211f5bad3",
     "side": "Under",
-    "usd": 34179,
+    "usd": 33744,
     "avgPrice": 0.7973
    },
    {
     "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
     "side": "Over",
-    "usd": 6129,
+    "usd": 6414,
     "avgPrice": 0.2026
    },
    {
     "wallet": "0xfa5e54493d9d9413e86a994cf4d2c2beae0d185e",
     "side": "Under",
-    "usd": 1078,
+    "usd": 1064,
     "avgPrice": 0.7899
    },
    {
     "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
     "side": "Over",
-    "usd": 853,
+    "usd": 893,
     "avgPrice": 0.2054
    }
   ],
-  "hoursToKickoff": 1.45,
-  "capturedAt": "2026-09-09T15:21:24.636208+00:00",
+  "hoursToKickoff": 1.14,
+  "capturedAt": "2026-09-09T15:40:06.993848+00:00",
   "cond": "0xf8c0cee5d464459b2ed061f6887ccc308de970a3c7a80c212c35714ec8fb9870",
   "frage": "VfB Stuttgart vs. Viking FK: O/U 5.5",
   "tokens": {
@@ -245685,60 +245690,60 @@
   },
   "book": {
    "side": "Under",
-   "bid": 0.78,
-   "ask": 0.79,
+   "bid": 0.77,
+   "ask": 0.78,
    "spreadC": 1.0,
-   "spreadPct": 1.27,
+   "spreadPct": 1.28,
    "bids": [
     [
-     0.78,
-     51
-    ],
-    [
      0.77,
-     13692
+     8594
     ],
     [
      0.76,
-     15420
+     9617
     ],
     [
      0.75,
-     4453
+     10933
     ],
     [
      0.74,
-     11043
+     2955
     ],
     [
      0.73,
-     13059
+     24796
+    ],
+    [
+     0.72,
+     39578
     ]
    ],
    "asks": [
     [
+     0.78,
+     5927
+    ],
+    [
      0.79,
-     23923
+     15206
     ],
     [
      0.8,
-     18537
+     19399
     ],
     [
      0.81,
-     15189
+     13209
     ],
     [
      0.82,
-     25089
+     14904
     ],
     [
      0.83,
-     6050
-    ],
-    [
-     0.84,
-     30120
+     42193
     ]
    ]
   },
@@ -245779,9 +245784,9 @@
  },
  "ucl-stu-vf-2026-09-09": {
   "shares": {
-   "VfB Stuttgart": 39185.40395977507,
-   "Draw (VfB Stuttgart vs. Viking FK)": 3722.5769044949993,
-   "Viking FK": 4835.951685654996
+   "VfB Stuttgart": 62125.03215119975,
+   "Draw (VfB Stuttgart vs. Viking FK)": 3722.576904494999,
+   "Viking FK": 4880.8152152899975
   },
   "prices": {
    "VfB Stuttgart": 0.775,
@@ -245794,34 +245799,35 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 168355,
+  "totalUsd": 175596,
   "whales": [
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "side": "VfB Stuttgart",
-    "usd": 15568,
-    "avgPrice": 0.7766
-   },
-   {
-    "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
-    "side": "VfB Stuttgart",
-    "usd": 2941,
-    "avgPrice": 0.7699
+    "usd": 17717,
+    "avgPrice": 0.777
    },
    {
     "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
     "side": "VfB Stuttgart",
-    "usd": 2503,
-    "avgPrice": 0.7699
+    "usd": 8888,
+    "avgPrice": 0.7771
    },
    {
-    "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
+    "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
     "side": "VfB Stuttgart",
-    "usd": 2055
+    "usd": 5756,
+    "avgPrice": 0.7748
+   },
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "side": "VfB Stuttgart",
+    "usd": 5252,
+    "avgPrice": 0.7755
    }
   ],
-  "hoursToKickoff": 1.45,
-  "capturedAt": "2026-09-09T15:21:24.636208+00:00",
+  "hoursToKickoff": 1.14,
+  "capturedAt": "2026-09-09T15:40:06.993848+00:00",
   "tokens": {
    "VfB Stuttgart": "10130894412276326581189986257623712161928546759341177826691491672149170825945",
    "Draw (VfB Stuttgart vs. Viking FK)": "1936063011117738933324250859599307845661268157121993631094276474771445264430",
@@ -245836,57 +245842,73 @@
    "bids": [
     [
      0.77,
-     89121
+     102167
     ],
     [
      0.76,
-     65497
+     43774
     ],
     [
      0.75,
-     35675
+     36598
     ],
     [
      0.74,
-     21147
+     17764
     ],
     [
      0.73,
-     1909
+     28133
     ],
     [
      0.72,
-     1178
+     10660
     ]
    ],
    "asks": [
     [
      0.78,
-     143354
+     406313
     ],
     [
      0.79,
-     219084
+     144160
     ],
     [
      0.8,
-     79830
+     31694
     ],
     [
      0.81,
-     61662
+     58244
     ],
     [
      0.82,
-     44285
+     46153
     ],
     [
      0.83,
-     50337
+     71336
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.78,
+    "usd": 500,
+    "ts": 1788967867
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.78,
+    "usd": 460,
+    "ts": 1788967867
+   },
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "action": "BUY",
@@ -245899,40 +245921,40 @@
  },
  "ucl-fcb-fey-2026-09-09-exact-score": {
   "shares": {
-   "FC Barcelona 0 - 0 Feyenoord Rotterdam": 74.52812728,
+   "FC Barcelona 0 - 0 Feyenoord Rotterdam": 75.89176365000002,
    "FC Barcelona 0 - 1 Feyenoord Rotterdam": 88.842,
-   "FC Barcelona 1 - 0 Feyenoord Rotterdam": 577.1228109885002,
-   "FC Barcelona 0 - 2 Feyenoord Rotterdam": 7.276955000000001,
-   "FC Barcelona 1 - 1 Feyenoord Rotterdam": 222.18393061900002,
-   "FC Barcelona 2 - 0 Feyenoord Rotterdam": 908.9963989600001,
+   "FC Barcelona 1 - 0 Feyenoord Rotterdam": 579.0319019415001,
+   "FC Barcelona 0 - 2 Feyenoord Rotterdam": 7.836954999999999,
+   "FC Barcelona 1 - 1 Feyenoord Rotterdam": 220.18135449000002,
+   "FC Barcelona 2 - 0 Feyenoord Rotterdam": 916.9703204350001,
    "FC Barcelona 0 - 3 Feyenoord Rotterdam": 5.420869251,
    "FC Barcelona 1 - 2 Feyenoord Rotterdam": 44.58681,
-   "FC Barcelona 2 - 1 Feyenoord Rotterdam": 228.77063093500004,
-   "FC Barcelona 3 - 0 Feyenoord Rotterdam": 1465.4046339200006,
-   "FC Barcelona 1 - 3 Feyenoord Rotterdam": 6.674466042500001,
-   "FC Barcelona 2 - 2 Feyenoord Rotterdam": 48.440601828,
-   "FC Barcelona 3 - 1 Feyenoord Rotterdam": 2426.031407325,
+   "FC Barcelona 2 - 1 Feyenoord Rotterdam": 229.72396430500004,
+   "FC Barcelona 3 - 0 Feyenoord Rotterdam": 1530.3950839200004,
+   "FC Barcelona 1 - 3 Feyenoord Rotterdam": 6.736966042500001,
+   "FC Barcelona 2 - 2 Feyenoord Rotterdam": 57.420029555000006,
+   "FC Barcelona 3 - 1 Feyenoord Rotterdam": 2900.9868534149996,
    "FC Barcelona 2 - 3 Feyenoord Rotterdam": 13.979957500000001,
-   "FC Barcelona 3 - 2 Feyenoord Rotterdam": 569.037334712,
+   "FC Barcelona 3 - 2 Feyenoord Rotterdam": 881.2627803719998,
    "FC Barcelona 3 - 3 Feyenoord Rotterdam": 12.2443545,
-   "Any Other Score": 1538.80693272
+   "Any Other Score": 2052.0875827200002
   },
   "prices": {
    "FC Barcelona 0 - 0 Feyenoord Rotterdam": 0.01,
    "FC Barcelona 0 - 1 Feyenoord Rotterdam": 0.0065,
    "FC Barcelona 1 - 0 Feyenoord Rotterdam": 0.0315,
    "FC Barcelona 0 - 2 Feyenoord Rotterdam": 0.0035,
-   "FC Barcelona 1 - 1 Feyenoord Rotterdam": 0.0245,
+   "FC Barcelona 1 - 1 Feyenoord Rotterdam": 0.0235,
    "FC Barcelona 2 - 0 Feyenoord Rotterdam": 0.065,
    "FC Barcelona 0 - 3 Feyenoord Rotterdam": 0.0015,
    "FC Barcelona 1 - 2 Feyenoord Rotterdam": 0.009,
    "FC Barcelona 2 - 1 Feyenoord Rotterdam": 0.055,
    "FC Barcelona 3 - 0 Feyenoord Rotterdam": 0.095,
    "FC Barcelona 1 - 3 Feyenoord Rotterdam": 0.0025,
-   "FC Barcelona 2 - 2 Feyenoord Rotterdam": 0.018,
-   "FC Barcelona 3 - 1 Feyenoord Rotterdam": 0.075,
+   "FC Barcelona 2 - 2 Feyenoord Rotterdam": 0.0175,
+   "FC Barcelona 3 - 1 Feyenoord Rotterdam": 0.085,
    "FC Barcelona 2 - 3 Feyenoord Rotterdam": 0.005,
-   "FC Barcelona 3 - 2 Feyenoord Rotterdam": 0.028,
+   "FC Barcelona 3 - 2 Feyenoord Rotterdam": 0.036,
    "FC Barcelona 3 - 3 Feyenoord Rotterdam": 0.007,
    "Any Other Score": 0.555
   },
@@ -245942,35 +245964,35 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 160230,
+  "totalUsd": 169224,
   "whales": [
    {
     "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
     "side": "FC Barcelona 3 - 1 Feyenoord Rotterdam",
-    "usd": 1121,
+    "usd": 1355,
     "avgPrice": 0.08
    },
    {
     "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
     "side": "Any Other Score",
-    "usd": 629,
+    "usd": 648,
     "avgPrice": 0.5595
    },
    {
-    "wallet": "0xaca23974e2b8131efbafaa1fe03ea9595ea0b9a1",
-    "side": "FC Barcelona 3 - 0 Feyenoord Rotterdam",
-    "usd": 503,
-    "avgPrice": 0.0999
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "side": "FC Barcelona 3 - 2 Feyenoord Rotterdam",
+    "usd": 601,
+    "avgPrice": 0.0308
    },
    {
-    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
-    "side": "FC Barcelona 3 - 1 Feyenoord Rotterdam",
-    "usd": 447,
-    "avgPrice": 0.0812
+    "wallet": "0x9c52f0c7617df14ebee80780aa3cdf2ef8b81a59",
+    "side": "Any Other Score",
+    "usd": 555,
+    "avgPrice": 0.5599
    }
   ],
-  "hoursToKickoff": 1.45,
-  "capturedAt": "2026-09-09T15:21:24.636208+00:00",
+  "hoursToKickoff": 1.14,
+  "capturedAt": "2026-09-09T15:40:06.993848+00:00",
   "tokens": {
    "FC Barcelona 0 - 0 Feyenoord Rotterdam": "49103469611168246767283226832781988391785456359480180289859328127235186920071",
    "FC Barcelona 0 - 1 Feyenoord Rotterdam": "11640655452624791584034473340164159430015329209983688643665596124709948393033",
@@ -245992,60 +246014,60 @@
   },
   "book": {
    "side": "FC Barcelona 3 - 1 Feyenoord Rotterdam",
-   "bid": 0.07,
-   "ask": 0.08,
+   "bid": 0.08,
+   "ask": 0.09,
    "spreadC": 1.0,
-   "spreadPct": 12.5,
+   "spreadPct": 11.11,
    "bids": [
     [
+     0.08,
+     25423
+    ],
+    [
      0.07,
-     3762
+     35654
     ],
     [
      0.06,
-     55567
+     61865
     ],
     [
      0.05,
-     59914
+     49963
     ],
     [
      0.04,
-     65275
+     57025
     ],
     [
      0.03,
-     77692
-    ],
-    [
-     0.02,
-     114325
+     667
     ]
    ],
    "asks": [
     [
-     0.08,
-     8734
-    ],
-    [
      0.09,
-     27701
+     14496
     ],
     [
      0.1,
-     13265
+     8591
     ],
     [
      0.11,
-     3178
+     13443
     ],
     [
      0.12,
-     2608
+     12648
     ],
     [
      0.13,
-     2670
+     1991
+    ],
+    [
+     0.14,
+     1962
     ]
    ]
   },
@@ -246062,8 +246084,8 @@
  },
  "cs2-nip-fokus-2026-09-09": {
   "shares": {
-   "NIP": 42637.3492675,
-   "FOKUS": 25582.321980749985
+   "NIP": 42662.3492675,
+   "FOKUS": 25597.321980749985
   },
   "prices": {
    "NIP": 0.625,
@@ -246075,7 +246097,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 71567,
+  "totalUsd": 71891,
   "whales": [
    {
     "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
@@ -246098,12 +246120,12 @@
    {
     "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
     "side": "FOKUS",
-    "usd": 3551,
+    "usd": 3566,
     "avgPrice": 0.3701
    }
   ],
-  "hoursToKickoff": 1.7,
-  "capturedAt": "2026-09-09T15:21:24.636208+00:00",
+  "hoursToKickoff": 1.39,
+  "capturedAt": "2026-09-09T15:40:06.993848+00:00",
   "cond": "0xa658bbddc100cdfabaaabc2348f325a3564c3890b46c4dd9646b54ada041b3ca",
   "frage": "Counter-Strike: NIP vs FOKUS (BO3) - Thunderpick World Championship Closed Qualifier Group D",
   "tokens": {
@@ -246119,23 +246141,23 @@
    "bids": [
     [
      0.62,
-     24150
+     26200
     ],
     [
      0.61,
-     2554
+     2464
     ],
     [
      0.6,
-     24030
+     24554
     ],
     [
      0.59,
-     166
+     66
     ],
     [
      0.58,
-     280
+     300
     ],
     [
      0.51,
@@ -246145,15 +246167,15 @@
    "asks": [
     [
      0.63,
-     66703
+     66713
     ],
     [
      0.64,
-     16227
+     15250
     ],
     [
      0.65,
-     11184
+     16848
     ],
     [
      0.66,
@@ -246161,11 +246183,11 @@
     ],
     [
      0.67,
-     8477
+     8679
     ],
     [
      0.68,
-     8905
+     8925
     ]
    ]
   },
@@ -246206,12 +246228,12 @@
  },
  "cs2-1win-inf6-2026-09-09": {
   "shares": {
-   "1WIN": 40380.84597977999,
-   "Infinite": 16896.949736219995
+   "1WIN": 49881.93459820996,
+   "Infinite": 19883.00889579
   },
   "prices": {
-   "1WIN": 0.705,
-   "Infinite": 0.295
+   "1WIN": 0.715,
+   "Infinite": 0.285
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -246219,127 +246241,50 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 58620,
+  "totalUsd": 71113,
   "whales": [
    {
     "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
     "side": "1WIN",
-    "usd": 31725,
+    "usd": 32175,
     "avgPrice": 0.7255
    },
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "side": "Infinite",
-    "usd": 11482,
+    "usd": 11093,
     "avgPrice": 0.273
    },
    {
-    "wallet": "0xb9abbf527032ba370e3519de95ff907d0154f282",
+    "wallet": "0x73e3fec494611d73c170cb2f23850fd998b21be9",
     "side": "1WIN",
-    "usd": 1762,
-    "avgPrice": 0.71
+    "usd": 7451,
+    "avgPrice": 0.7099
    },
    {
-    "wallet": "0x7e1827a86edfc58e31bb38e86d4e892bb471872e",
+    "wallet": "0xe0dbdb7f005f233f4510e4ef7e53a2f76a8df44e",
     "side": "Infinite",
-    "usd": 1311,
-    "avgPrice": 0.2699
+    "usd": 2948,
+    "avgPrice": 0.29
    }
   ],
-  "hoursToKickoff": 1.7,
-  "capturedAt": "2026-09-09T15:21:24.636208+00:00",
+  "hoursToKickoff": 1.39,
+  "capturedAt": "2026-09-09T15:40:06.993848+00:00",
   "cond": "0xe45731a441284ea0aab82381ee1af2ebea0fb6994389c00a1c01fc2eb23394e1",
   "frage": "Counter-Strike: 1WIN vs Infinite (BO3) - Thunderpick World Championship Closed Qualifier Group D",
   "tokens": {
    "1WIN": "78771353982452093089246431285113321281964362083167246052882685874439601879317",
    "Infinite": "97458152114765342913741798260025467633299594831059987493602477192440856706344"
-  },
-  "book": {
-   "side": "1WIN",
-   "bid": 0.7,
-   "ask": 0.71,
-   "spreadC": 1.0,
-   "spreadPct": 1.41,
-   "bids": [
-    [
-     0.7,
-     6419
-    ],
-    [
-     0.69,
-     10449
-    ],
-    [
-     0.68,
-     16662
-    ],
-    [
-     0.67,
-     98
-    ],
-    [
-     0.66,
-     20
-    ],
-    [
-     0.65,
-     80
-    ]
-   ],
-   "asks": [
-    [
-     0.71,
-     10316
-    ],
-    [
-     0.72,
-     24001
-    ],
-    [
-     0.73,
-     8648
-    ],
-    [
-     0.74,
-     5522
-    ],
-    [
-     0.75,
-     6512
-    ],
-    [
-     0.76,
-     17136
-    ]
-   ]
-  },
-  "trades": [
-   {
-    "wallet": "0xca8242056530d459182d969433dffb62c258fcfe",
-    "action": "BUY",
-    "side": "1WIN",
-    "price": 0.71,
-    "usd": 328,
-    "ts": 1788965785
-   },
-   {
-    "wallet": "0x6b97ebe911d7f2e5e3e8c4a0faad4a5c7c0b8d30",
-    "action": "BUY",
-    "side": "1WIN",
-    "price": 0.69,
-    "usd": 988,
-    "ts": 1788961012
-   }
-  ]
+  }
  },
  "cs2-ice-nemi1-2026-09-09": {
   "shares": {
-   "Inner Circle Esports": 41713.381527825004,
-   "Nemiga": 37740.68174472498
+   "Inner Circle Esports": 52491.252680805,
+   "Nemiga": 49433.51309352497
   },
   "prices": {
-   "Inner Circle Esports": 0.525,
-   "Nemiga": 0.475
+   "Inner Circle Esports": 0.515,
+   "Nemiga": 0.485
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -246347,35 +246292,35 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 75632,
+  "totalUsd": 105594,
   "whales": [
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "side": "Nemiga",
-    "usd": 15220,
+    "usd": 15541,
     "avgPrice": 0.4713
+   },
+   {
+    "wallet": "0x73e3fec494611d73c170cb2f23850fd998b21be9",
+    "side": "Nemiga",
+    "usd": 10748,
+    "avgPrice": 0.4799
+   },
+   {
+    "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
+    "side": "Inner Circle Esports",
+    "usd": 8951,
+    "avgPrice": 0.52
    },
    {
     "wallet": "0x503165b60b6e0db32160973a69731eba71ee1ffb",
     "side": "Inner Circle Esports",
-    "usd": 7821,
+    "usd": 7672,
     "avgPrice": 0.5299
-   },
-   {
-    "wallet": "0x1047f313c5b75f58b8e3075174356e76bb309036",
-    "side": "Inner Circle Esports",
-    "usd": 4604,
-    "avgPrice": 0.5318
-   },
-   {
-    "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
-    "side": "Nemiga",
-    "usd": 3898,
-    "avgPrice": 0.4665
    }
   ],
-  "hoursToKickoff": 1.7,
-  "capturedAt": "2026-09-09T15:21:24.636208+00:00",
+  "hoursToKickoff": 1.39,
+  "capturedAt": "2026-09-09T15:40:06.993848+00:00",
   "cond": "0x6fe18d09ea0affdd75b7d4e1139eef5f6e6095128baa8b2609d288d6d966d555",
   "frage": "Counter-Strike: Inner Circle Esports vs Nemiga (BO3) - PGL Masters Bucharest: European Qualifier Playoffs",
   "tokens": {
@@ -246384,64 +246329,80 @@
   },
   "book": {
    "side": "Inner Circle Esports",
-   "bid": 0.52,
-   "ask": 0.53,
+   "bid": 0.51,
+   "ask": 0.52,
    "spreadC": 1.0,
-   "spreadPct": 1.89,
+   "spreadPct": 1.92,
    "bids": [
     [
-     0.52,
-     19606
-    ],
-    [
      0.51,
-     78502
+     80946
     ],
     [
      0.5,
-     448
+     720
     ],
     [
      0.49,
-     708
+     725
     ],
     [
      0.48,
-     50
+     2914
     ],
     [
      0.47,
-     8956
+     100
+    ],
+    [
+     0.46,
+     125
     ]
    ],
    "asks": [
     [
+     0.52,
+     38732
+    ],
+    [
      0.53,
-     117992
+     123410
     ],
     [
      0.54,
-     30537
+     30781
     ],
     [
      0.55,
-     6868
+     9490
     ],
     [
      0.56,
-     7936
+     1048
     ],
     [
      0.57,
-     7659
-    ],
-    [
-     0.58,
-     310
+     805
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x9b963178d3b8765cfc5af94c00550d6ec6c54389",
+    "action": "BUY",
+    "side": "Inner Circle Esports",
+    "price": 0.52,
+    "usd": 1300,
+    "ts": 1788967873
+   },
+   {
+    "wallet": "0x73e3fec494611d73c170cb2f23850fd998b21be9",
+    "action": "BUY",
+    "side": "Nemiga",
+    "price": 0.48,
+    "usd": 9408,
+    "ts": 1788967455
+   },
    {
     "wallet": "0xa032d2358fa08860ba30ba8e8d828b7738202090",
     "action": "BUY",
@@ -246462,8 +246423,8 @@
  },
  "wta-andreev-gauff-2026-09-08": {
   "shares": {
-   "Mirra Andreeva": 14476.454521679998,
-   "Coco Gauff": 27484.295665355003
+   "Mirra Andreeva": 14483.482590164998,
+   "Coco Gauff": 27497.638809870004
   },
   "prices": {
    "Mirra Andreeva": 0.345,
@@ -246475,7 +246436,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 45484,
+  "totalUsd": 45641,
   "whales": [
    {
     "wallet": "0xd3faf1906cc31e75d1dfa0d7b57e8f97d33da26c",
@@ -246501,8 +246462,8 @@
     "avgPrice": 0.64
    }
   ],
-  "hoursToKickoff": 1.7,
-  "capturedAt": "2026-09-09T15:21:24.636208+00:00",
+  "hoursToKickoff": 1.39,
+  "capturedAt": "2026-09-09T15:40:06.993848+00:00",
   "cond": "0x93953a8ae1b4a59023067c35725491ef70ad6de52bba3ff1eecb1f3f6e0a484a",
   "frage": "US Open WTA: Mirra Andreeva vs Coco Gauff",
   "tokens": {
@@ -246512,41 +246473,41 @@
  },
  "ucl-stu-vf-2026-09-09-exact-score": {
   "shares": {
-   "VfB Stuttgart 0 - 0 Viking FK": 43.7635469425,
-   "VfB Stuttgart 0 - 1 Viking FK": 63.16084000000001,
-   "VfB Stuttgart 1 - 0 Viking FK": 59.115466685,
+   "VfB Stuttgart 0 - 0 Viking FK": 43.278159887,
+   "VfB Stuttgart 0 - 1 Viking FK": 63.93144250000001,
+   "VfB Stuttgart 1 - 0 Viking FK": 59.456466685,
    "VfB Stuttgart 0 - 2 Viking FK": 12.312,
-   "VfB Stuttgart 1 - 1 Viking FK": 79.2326667,
-   "VfB Stuttgart 2 - 0 Viking FK": 151.79687504999998,
+   "VfB Stuttgart 1 - 1 Viking FK": 72.05955003,
+   "VfB Stuttgart 2 - 0 Viking FK": 154.19687505,
    "VfB Stuttgart 0 - 3 Viking FK": 4.12,
-   "VfB Stuttgart 1 - 2 Viking FK": 35.91709271399999,
+   "VfB Stuttgart 1 - 2 Viking FK": 39.79747963799999,
    "VfB Stuttgart 2 - 1 Viking FK": 207.57755641500003,
-   "VfB Stuttgart 3 - 0 Viking FK": 133.92184486000002,
-   "VfB Stuttgart 1 - 3 Viking FK": 11.123999999999999,
-   "VfB Stuttgart 2 - 2 Viking FK": 575.772448797,
-   "VfB Stuttgart 3 - 1 Viking FK": 276.63665633000005,
+   "VfB Stuttgart 3 - 0 Viking FK": 380.72510581999984,
+   "VfB Stuttgart 1 - 3 Viking FK": 11.741999999999999,
+   "VfB Stuttgart 2 - 2 Viking FK": 592.458067568,
+   "VfB Stuttgart 3 - 1 Viking FK": 282.6999897200001,
    "VfB Stuttgart 2 - 3 Viking FK": 38.0315769345,
    "VfB Stuttgart 3 - 2 Viking FK": 58.186956554999995,
-   "VfB Stuttgart 3 - 3 Viking FK": 39.3792202835,
+   "VfB Stuttgart 3 - 3 Viking FK": 37.8536254265,
    "Any Other Score": 428.77442887500007
   },
   "prices": {
-   "VfB Stuttgart 0 - 0 Viking FK": 0.0175,
+   "VfB Stuttgart 0 - 0 Viking FK": 0.017,
    "VfB Stuttgart 0 - 1 Viking FK": 0.0145,
    "VfB Stuttgart 1 - 0 Viking FK": 0.055,
    "VfB Stuttgart 0 - 2 Viking FK": 0.009,
-   "VfB Stuttgart 1 - 1 Viking FK": 0.05,
+   "VfB Stuttgart 1 - 1 Viking FK": 0.045,
    "VfB Stuttgart 2 - 0 Viking FK": 0.075,
    "VfB Stuttgart 0 - 3 Viking FK": 0.004,
-   "VfB Stuttgart 1 - 2 Viking FK": 0.0235,
+   "VfB Stuttgart 1 - 2 Viking FK": 0.0245,
    "VfB Stuttgart 2 - 1 Viking FK": 0.085,
    "VfB Stuttgart 3 - 0 Viking FK": 0.085,
-   "VfB Stuttgart 1 - 3 Viking FK": 0.009,
-   "VfB Stuttgart 2 - 2 Viking FK": 0.0455,
+   "VfB Stuttgart 1 - 3 Viking FK": 0.0095,
+   "VfB Stuttgart 2 - 2 Viking FK": 0.046,
    "VfB Stuttgart 3 - 1 Viking FK": 0.085,
    "VfB Stuttgart 2 - 3 Viking FK": 0.0135,
    "VfB Stuttgart 3 - 2 Viking FK": 0.045,
-   "VfB Stuttgart 3 - 3 Viking FK": 0.0155,
+   "VfB Stuttgart 3 - 3 Viking FK": 0.0145,
    "Any Other Score": 0.375
   },
   "splitGuete": {
@@ -246555,35 +246516,32 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 31653,
+  "totalUsd": 32188,
   "whales": [
    {
     "wallet": "0x47b51c6c06db69e166fb951aae30b37092788115",
     "side": "VfB Stuttgart 2 - 2 Viking FK",
-    "usd": 488,
+    "usd": 493,
     "avgPrice": 0.0495
    },
    {
     "wallet": "0xfe9455e2cad5257b26547af62cbbfd75c8968a3d",
     "side": "Any Other Score",
-    "usd": 375,
-    "avgPrice": 0.0588
+    "usd": 366
    },
    {
-    "wallet": "0xfe9455e2cad5257b26547af62cbbfd75c8968a3d",
-    "side": "VfB Stuttgart 2 - 1 Viking FK",
-    "usd": 85,
-    "avgPrice": 0.0588
-   },
-   {
-    "wallet": "0xfe9455e2cad5257b26547af62cbbfd75c8968a3d",
+    "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
     "side": "VfB Stuttgart 3 - 0 Viking FK",
-    "usd": 85,
-    "avgPrice": 0.0588
+    "usd": 124
+   },
+   {
+    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
+    "side": "VfB Stuttgart 3 - 0 Viking FK",
+    "usd": 102
    }
   ],
-  "hoursToKickoff": 1.45,
-  "capturedAt": "2026-09-09T15:21:24.636208+00:00",
+  "hoursToKickoff": 1.14,
+  "capturedAt": "2026-09-09T15:40:06.993848+00:00",
   "tokens": {
    "VfB Stuttgart 0 - 0 Viking FK": "47973118661556851717311903120367439087999612018082465152481265867093104669608",
    "VfB Stuttgart 0 - 1 Viking FK": "33168445358261024150508987513681089486825862420034053169687605639769804066767",
@@ -246606,12 +246564,12 @@
  },
  "cs2-leo2-sparta-2026-09-09": {
   "shares": {
-   "Leo Team": 21017.052622925003,
-   "SPARTA": 38185.91839125001
+   "Leo Team": 23266.55924824001,
+   "SPARTA": 37166.078021850015
   },
   "prices": {
-   "Leo Team": 0.355,
-   "SPARTA": 0.645
+   "Leo Team": 0.385,
+   "SPARTA": 0.615
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -246619,35 +246577,35 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 61502,
+  "totalUsd": 64625,
   "whales": [
    {
     "wallet": "0x7e5e420a5cde8a322f3b5b93a12a164827f47315",
     "side": "SPARTA",
-    "usd": 14478,
+    "usd": 13804,
     "avgPrice": 0.6667
    },
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "side": "Leo Team",
-    "usd": 12427,
-    "avgPrice": 0.3072
+    "usd": 13496,
+    "avgPrice": 0.3073
    },
    {
     "wallet": "0x14af7564566edfd07d1996ae8b08d6235d7aca2c",
     "side": "SPARTA",
-    "usd": 11288,
+    "usd": 10762,
     "avgPrice": 0.71
    },
    {
     "wallet": "0xe0dbdb7f005f233f4510e4ef7e53a2f76a8df44e",
     "side": "Leo Team",
-    "usd": 3133,
+    "usd": 3397,
     "avgPrice": 0.3399
    }
   ],
-  "hoursToKickoff": 1.7,
-  "capturedAt": "2026-09-09T15:21:24.636208+00:00",
+  "hoursToKickoff": 1.39,
+  "capturedAt": "2026-09-09T15:40:06.993848+00:00",
   "cond": "0xad265a4729a2bf9e53379425d5e6993e5e8f8a0b3f998306592ce033ffa0cc88",
   "frage": "Counter-Strike: Leo Team vs SPARTA (BO3) - CCT Europe Series #8 Group Stage",
   "tokens": {
@@ -246656,101 +246614,67 @@
   },
   "book": {
    "side": "SPARTA",
-   "bid": 0.64,
-   "ask": 0.65,
+   "bid": 0.61,
+   "ask": 0.62,
    "spreadC": 1.0,
-   "spreadPct": 1.54,
+   "spreadPct": 1.61,
    "bids": [
     [
-     0.64,
-     484
-    ],
-    [
-     0.63,
-     205
-    ],
-    [
-     0.62,
-     466
-    ],
-    [
      0.61,
-     611
-    ],
-    [
-     0.57,
-     10
+     588
     ],
     [
      0.56,
-     105
+     100
+    ],
+    [
+     0.53,
+     10
+    ],
+    [
+     0.52,
+     24
+    ],
+    [
+     0.51,
+     55
+    ],
+    [
+     0.5,
+     210
     ]
    ],
    "asks": [
     [
+     0.62,
+     1
+    ],
+    [
+     0.63,
+     10
+    ],
+    [
+     0.64,
+     90
+    ],
+    [
      0.65,
-     1450
+     1034
     ],
     [
      0.66,
-     703
+     114
     ],
     [
      0.67,
-     6300
-    ],
-    [
-     0.68,
-     14721
-    ],
-    [
-     0.69,
-     22394
-    ],
-    [
-     0.7,
-     3789
+     7993
     ]
    ]
-  },
-  "trades": [
-   {
-    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
-    "action": "BUY",
-    "side": "Leo Team",
-    "price": 0.33,
-    "usd": 2238,
-    "ts": 1788965127
-   },
-   {
-    "wallet": "0xb8c800c67c726935039ee0e1a38f7b3a0d0f72df",
-    "action": "SELL",
-    "side": "SPARTA",
-    "price": 0.67,
-    "usd": 1132,
-    "ts": 1788965002
-   },
-   {
-    "wallet": "0x4959cf0d907b5bbd903573c3d216fed122d3f2d0",
-    "action": "BUY",
-    "side": "Leo Team",
-    "price": 0.33,
-    "usd": 513,
-    "ts": 1788964858
-   },
-   {
-    "wallet": "0x7e5e420a5cde8a322f3b5b93a12a164827f47315",
-    "action": "BUY",
-    "side": "SPARTA",
-    "price": 0.6642,
-    "usd": 8258,
-    "ts": 1788964789
-   }
-  ]
+  }
  },
  "swe2-lsk-nor-2026-09-09": {
   "shares": {
-   "Ljungskile SK": 7462.896489795002,
+   "Ljungskile SK": 7471.266489795002,
    "Draw (Ljungskile SK vs. Norrby IF)": 2.2031504949999996,
    "Norrby IF": 8.132317480000001
   },
@@ -246765,7 +246689,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 19960,
+  "totalUsd": 19978,
   "whales": [
    {
     "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
@@ -246792,8 +246716,8 @@
     "avgPrice": 0.48
    }
   ],
-  "hoursToKickoff": 1.7,
-  "capturedAt": "2026-09-09T15:21:24.636208+00:00",
+  "hoursToKickoff": 1.39,
+  "capturedAt": "2026-09-09T15:40:06.993848+00:00",
   "tokens": {
    "Ljungskile SK": "49325357748954516240040361637734649224013216644776013588914234514676990260099",
    "Draw (Ljungskile SK vs. Norrby IF)": "2660760307677744964996909830224359400336614527606217073089043932503268830295",
@@ -246804,7 +246728,7 @@
   "shares": {
    "El Mokawloon El Arab SC": 500.82517715,
    "Draw (El Mokawloon El Arab SC vs. El Ahly SC)": 102.40254565,
-   "El Ahly SC": 4390.9573367600005
+   "El Ahly SC": 4410.81240837
   },
   "prices": {
    "El Mokawloon El Arab SC": 0.095,
@@ -246817,7 +246741,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 21843,
+  "totalUsd": 21901,
   "whales": [
    {
     "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
@@ -246843,8 +246767,8 @@
     "usd": 417
    }
   ],
-  "hoursToKickoff": 1.7,
-  "capturedAt": "2026-09-09T15:21:24.636208+00:00",
+  "hoursToKickoff": 1.39,
+  "capturedAt": "2026-09-09T15:40:06.993848+00:00",
   "tokens": {
    "El Mokawloon El Arab SC": "111540571498076304882580411378445481956918207536686616022926252730385040232981",
    "Draw (El Mokawloon El Arab SC vs. El Ahly SC)": "18536176758663309390706558574492335713874218078284598373407160575985505614832",
@@ -246853,12 +246777,12 @@
  },
  "ucl-fcb-fey-2026-09-09-halftime-result": {
   "shares": {
-   "FC Barcelona": 7067.610665394997,
-   "Draw": 99.81681622999999,
+   "FC Barcelona": 7320.592259189997,
+   "Draw": 100.79050045999999,
    "Feyenoord Rotterdam": 357.16198595
   },
   "prices": {
-   "FC Barcelona": 0.755,
+   "FC Barcelona": 0.765,
    "Draw": 0.185,
    "Feyenoord Rotterdam": 0.055
   },
@@ -246868,23 +246792,23 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 16599,
+  "totalUsd": 16904,
   "whales": [
    {
     "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
     "side": "FC Barcelona",
-    "usd": 4317
+    "usd": 4374
    },
    {
     "wallet": "0x554d219486e15c8c8f1f17963b281cb494e8eb95",
     "side": "FC Barcelona",
-    "usd": 1250,
+    "usd": 1267,
     "avgPrice": 0.7661
    },
    {
     "wallet": "0xdd5ef115f801999575b03d78d0115ad8b2d59040",
     "side": "FC Barcelona",
-    "usd": 769
+    "usd": 779
    },
    {
     "wallet": "0x8fe8dc81f6fdc113e10e6da6d75dde016000843f",
@@ -246893,8 +246817,8 @@
     "avgPrice": 0.0699
    }
   ],
-  "hoursToKickoff": 1.45,
-  "capturedAt": "2026-09-09T15:21:24.636208+00:00",
+  "hoursToKickoff": 1.14,
+  "capturedAt": "2026-09-09T15:40:06.993848+00:00",
   "tokens": {
    "FC Barcelona": "15642353377249878101586731114350964484736951187459502312623201327763617980022",
    "Draw": "87539578262172555536645494141551887416213000367662754455753259337154360025893",
@@ -246903,12 +246827,12 @@
  },
  "swe2-san-odd-2026-09-09-more-markets": {
   "shares": {
-   "Over": 2319.565582165,
-   "Under": 1936.5154554199996
+   "Over": 2373.579600555,
+   "Under": 1903.1378581599997
   },
   "prices": {
-   "Over": 0.545,
-   "Under": 0.455
+   "Over": 0.555,
+   "Under": 0.445
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -246916,35 +246840,35 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 9245,
+  "totalUsd": 9307,
   "whales": [
    {
     "wallet": "0xe1e292a578d07497363048d9ec69e2be36b00d29",
     "side": "Over",
-    "usd": 743,
+    "usd": 756,
     "avgPrice": 0.5499
-   },
-   {
-    "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
-    "side": "Under",
-    "usd": 696,
-    "avgPrice": 0.4524
    },
    {
     "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
     "side": "Over",
-    "usd": 674,
+    "usd": 686,
     "avgPrice": 0.533
+   },
+   {
+    "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
+    "side": "Under",
+    "usd": 681,
+    "avgPrice": 0.4524
    },
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "Over",
-    "usd": 521,
+    "usd": 530,
     "avgPrice": 0.5391
    }
   ],
-  "hoursToKickoff": 1.7,
-  "capturedAt": "2026-09-09T15:21:24.636208+00:00",
+  "hoursToKickoff": 1.39,
+  "capturedAt": "2026-09-09T15:40:06.993848+00:00",
   "cond": "0x287e0c2961941ff337dd8c42252a68fc5f34dc725c80948d9940ffd65ce97457",
   "frage": "Sandvikens IF vs. IK Oddevold: O/U 2.5",
   "tokens": {
@@ -246954,7 +246878,7 @@
  },
  "ere-twe-tel-2026-09-09": {
   "shares": {
-   "FC Twente": 3055.3544990500004,
+   "FC Twente": 3065.4407288000007,
    "Draw (FC Twente vs. Telstar 1963)": 146.25923449499996,
    "Telstar 1963": 166.42799638000002
   },
@@ -246969,7 +246893,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 8307,
+  "totalUsd": 8320,
   "whales": [
    {
     "wallet": "0x33bcb6e9bd44be709122b2940c55e34f1a7e37dc",
@@ -246992,11 +246916,12 @@
    {
     "wallet": "0x85c3e3052e5bbe835ff27a4cbf2abd296a89700c",
     "side": "FC Twente",
-    "usd": 230
+    "usd": 230,
+    "avgPrice": 0.7483
    }
   ],
-  "hoursToKickoff": 1.45,
-  "capturedAt": "2026-09-09T15:21:24.636208+00:00",
+  "hoursToKickoff": 1.14,
+  "capturedAt": "2026-09-09T15:40:06.993848+00:00",
   "tokens": {
    "FC Twente": "11315273216409141961442612852081134784266055278791758747082897809431716788231",
    "Draw (FC Twente vs. Telstar 1963)": "602686063839435055447048205538405991568146720240212782870634131999740089558",
@@ -247020,7 +246945,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 9738,
+  "totalUsd": 9740,
   "whales": [
    {
     "wallet": "0x880b1fc5d3beb01c237f0848b249fd72b48fc98b",
@@ -247046,8 +246971,8 @@
     "usd": 34
    }
   ],
-  "hoursToKickoff": 1.7,
-  "capturedAt": "2026-09-09T15:21:24.636208+00:00",
+  "hoursToKickoff": 1.39,
+  "capturedAt": "2026-09-09T15:40:06.993848+00:00",
   "tokens": {
    "Sandvikens IF": "93936097973402621560841845797248680490814008227084351525254815547815330144440",
    "Draw (Sandvikens IF vs. IK Oddevold)": "70904436208447385491798969923024438673111707344241640649176002178899435247440",
@@ -247056,8 +246981,8 @@
  },
  "mlb-min-det-2026-09-09": {
   "shares": {
-   "Minnesota Twins": 18531.510560425002,
-   "Detroit Tigers": 20482.199623725002
+   "Minnesota Twins": 18816.04545705,
+   "Detroit Tigers": 20796.685562100003
   },
   "prices": {
    "Minnesota Twins": 0.475,
@@ -247069,7 +246994,7 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 48246,
+  "totalUsd": 49145,
   "whales": [
    {
     "wallet": "0xf9fe29004c5a905c7b78bbb930ac57feea67366b",
@@ -247096,14 +247021,131 @@
     "avgPrice": 0.5477
    }
   ],
-  "hoursToKickoff": 1.87,
-  "capturedAt": "2026-09-09T15:21:24.636208+00:00",
+  "hoursToKickoff": 1.56,
+  "capturedAt": "2026-09-09T15:40:06.993848+00:00",
   "cond": "0x14039392318b0ca2c58c8a4f388f62f670d281776fd6e9ce591a8c4d0f026215",
   "frage": "Minnesota Twins vs. Detroit Tigers",
   "tokens": {
    "Minnesota Twins": "83782599897982745732748316676066598888066959396260009845376671280174142312071",
    "Detroit Tigers": "110575510610165848859653900127387793244778735402984949541779776077158946588554"
-  }
+  },
+  "book": {
+   "side": "Detroit Tigers",
+   "bid": 0.52,
+   "ask": 0.53,
+   "spreadC": 1.0,
+   "spreadPct": 1.89,
+   "bids": [
+    [
+     0.52,
+     19584
+    ],
+    [
+     0.51,
+     123058
+    ],
+    [
+     0.5,
+     53455
+    ],
+    [
+     0.49,
+     35033
+    ],
+    [
+     0.48,
+     8670
+    ],
+    [
+     0.47,
+     2000
+    ]
+   ],
+   "asks": [
+    [
+     0.53,
+     78577
+    ],
+    [
+     0.54,
+     212042
+    ],
+    [
+     0.55,
+     94542
+    ],
+    [
+     0.56,
+     34024
+    ],
+    [
+     0.57,
+     8758
+    ],
+    [
+     0.58,
+     1950
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "action": "BUY",
+    "side": "Minnesota Twins",
+    "price": 0.47,
+    "usd": 1688,
+    "ts": 1788962826
+   },
+   {
+    "wallet": "0x684baa57c338c2549aec0aa3f034f695d72a8409",
+    "action": "BUY",
+    "side": "Minnesota Twins",
+    "price": 0.46,
+    "usd": 3547,
+    "ts": 1788962746
+   },
+   {
+    "wallet": "0xe954ddb021c19495f1c556f59dadbd1494821ef1",
+    "action": "BUY",
+    "side": "Minnesota Twins",
+    "price": 0.46,
+    "usd": 735,
+    "ts": 1788962742
+   },
+   {
+    "wallet": "0x73e83485b8e20b70c53c27bef8ba4c62575dcd6f",
+    "action": "BUY",
+    "side": "Minnesota Twins",
+    "price": 0.46,
+    "usd": 1000,
+    "ts": 1788962697
+   },
+   {
+    "wallet": "0x2b344112f63e69a2e411b0cb7f200cbc0051176e",
+    "action": "BUY",
+    "side": "Minnesota Twins",
+    "price": 0.46,
+    "usd": 2000,
+    "ts": 1788962692
+   },
+   {
+    "wallet": "0xf9fe29004c5a905c7b78bbb930ac57feea67366b",
+    "action": "BUY",
+    "side": "Detroit Tigers",
+    "price": 0.55,
+    "usd": 2200,
+    "ts": 1788958923
+   },
+   {
+    "wallet": "0xf9fe29004c5a905c7b78bbb930ac57feea67366b",
+    "action": "BUY",
+    "side": "Detroit Tigers",
+    "price": 0.55,
+    "usd": 6600,
+    "ts": 1788957079
+   }
+  ]
  },
  "fin1-hjk-int-2026-09-09-more-markets": {
   "shares": {
@@ -247158,9 +247200,9 @@
  },
  "spl-nsr-abh-2026-09-09": {
   "shares": {
-   "Al Nassr Saudi Club": 6972.2466703750015,
+   "Al Nassr Saudi Club": 6975.229429115002,
    "Draw (Al Nassr Saudi Club vs. Abha Saudi Club)": 261.35206974000005,
-   "Abha Saudi Club": 459.62205256750013
+   "Abha Saudi Club": 510.62205256750013
   },
   "prices": {
    "Al Nassr Saudi Club": 0.865,
@@ -247173,7 +247215,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 27776,
+  "totalUsd": 29091,
   "whales": [
    {
     "wallet": "0xd47bd0d1a398f00a01c7ed792527776c443835d7",
@@ -247200,8 +247242,8 @@
     "avgPrice": 0.7899
    }
   ],
-  "hoursToKickoff": 2.7,
-  "capturedAt": "2026-09-09T15:21:24.636208+00:00",
+  "hoursToKickoff": 2.39,
+  "capturedAt": "2026-09-09T15:40:06.993848+00:00",
   "tokens": {
    "Al Nassr Saudi Club": "9726944621702032431320158359042214878177831145870755111219467843457577026298",
    "Draw (Al Nassr Saudi Club vs. Abha Saudi Club)": "12430733961560351113102901458489387820989875533521311022842162476354203280438",
@@ -247210,12 +247252,12 @@
  },
  "spl-kho-sha-2026-09-09-more-markets": {
   "shares": {
-   "Over": 5847.859821375,
-   "Under": 4148.481753625
+   "Over": 7454.5334885249995,
+   "Under": 5509.872578475001
   },
   "prices": {
-   "Over": 0.585,
-   "Under": 0.415
+   "Over": 0.575,
+   "Under": 0.425
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -247223,34 +247265,33 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 10696,
+  "totalUsd": 11382,
   "whales": [
    {
     "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
     "side": "Over",
-    "usd": 4153
+    "usd": 4122
    },
    {
     "wallet": "0x97d6aed1774efe5c2ed9fe5ef234bfd7cfea69e1",
     "side": "Over",
-    "usd": 1254,
+    "usd": 1232,
     "avgPrice": 0.5599
+   },
+   {
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "side": "Under",
+    "usd": 1216
    },
    {
     "wallet": "0x3f3aa7005f8006bfcc367d43a25cde25509fe8fd",
     "side": "Under",
-    "usd": 1047,
+    "usd": 1072,
     "avgPrice": 0.42
-   },
-   {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-    "side": "Under",
-    "usd": 892,
-    "avgPrice": 0.44
    }
   ],
-  "hoursToKickoff": 0.62,
-  "capturedAt": "2026-09-09T15:21:24.636208+00:00",
+  "hoursToKickoff": 0.31,
+  "capturedAt": "2026-09-09T15:40:06.993848+00:00",
   "cond": "0xa431cb39e81b01778b5c77551613e8409ffb8adbf1480b63c5f8ca8d8a4e829f",
   "frage": "Al Kholood Saudi Club vs. Al Shabab Saudi Club: O/U 2.5",
   "tokens": {
@@ -247260,8 +247301,8 @@
  },
  "atp-ritscha-ofner-2026-09-09": {
   "shares": {
-   "Alexander Ritschard": 4408.5637719000015,
-   "Sebastian Ofner": 5964.533273375
+   "Alexander Ritschard": 4492.548612225001,
+   "Sebastian Ofner": 6077.608690874999
   },
   "prices": {
    "Alexander Ritschard": 0.425,
@@ -247273,7 +247314,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 11133,
+  "totalUsd": 11499,
   "whales": [
    {
     "wallet": "0xbc43c8bfbc4d77c2fc9011adad38ba43b88996d3",
@@ -247298,8 +247339,8 @@
     "usd": 696
    }
   ],
-  "hoursToKickoff": 0.7,
-  "capturedAt": "2026-09-09T15:21:24.636208+00:00",
+  "hoursToKickoff": 0.39,
+  "capturedAt": "2026-09-09T15:40:06.993848+00:00",
   "cond": "0x8f86a0c001883e12930c49caedb94025136528e46181961f88e2c680403645f0",
   "frage": "Seville: Alexander Ritschard vs Sebastian Ofner",
   "tokens": {
@@ -247311,18 +247352,18 @@
   "shares": {
    "Al Nassr Saudi Club 0 - 0 Abha Saudi Club": 5.02004,
    "Al Nassr Saudi Club 0 - 1 Abha Saudi Club": 0.07,
-   "Al Nassr Saudi Club 1 - 0 Abha Saudi Club": 55.4764118155,
+   "Al Nassr Saudi Club 1 - 0 Abha Saudi Club": 55.123058873999994,
    "Al Nassr Saudi Club 0 - 2 Abha Saudi Club": 0.025,
    "Al Nassr Saudi Club 1 - 1 Abha Saudi Club": 124.21719299249999,
-   "Al Nassr Saudi Club 2 - 0 Abha Saudi Club": 16.38733785,
+   "Al Nassr Saudi Club 2 - 0 Abha Saudi Club": 17.515487850000003,
    "Al Nassr Saudi Club 0 - 3 Abha Saudi Club": 1.53,
    "Al Nassr Saudi Club 1 - 2 Abha Saudi Club": 0.0675,
-   "Al Nassr Saudi Club 2 - 1 Abha Saudi Club": 1.28888896,
-   "Al Nassr Saudi Club 3 - 0 Abha Saudi Club": 52.322916875,
+   "Al Nassr Saudi Club 2 - 1 Abha Saudi Club": 6.17777792,
+   "Al Nassr Saudi Club 3 - 0 Abha Saudi Club": 58.09214775,
    "Al Nassr Saudi Club 1 - 3 Abha Saudi Club": 0.02,
    "Al Nassr Saudi Club 2 - 2 Abha Saudi Club": 69.2753571575,
-   "Al Nassr Saudi Club 3 - 1 Abha Saudi Club": 6.2625834000000005,
-   "Al Nassr Saudi Club 2 - 3 Abha Saudi Club": 0.05,
+   "Al Nassr Saudi Club 3 - 1 Abha Saudi Club": 6.8333334,
+   "Al Nassr Saudi Club 2 - 3 Abha Saudi Club": 0.05499999999999999,
    "Al Nassr Saudi Club 3 - 2 Abha Saudi Club": 8.461973703,
    "Al Nassr Saudi Club 3 - 3 Abha Saudi Club": 0.07,
    "Any Other Score": 3.75375
@@ -247330,7 +247371,7 @@
   "prices": {
    "Al Nassr Saudi Club 0 - 0 Abha Saudi Club": 0.0205,
    "Al Nassr Saudi Club 0 - 1 Abha Saudi Club": 0.014,
-   "Al Nassr Saudi Club 1 - 0 Abha Saudi Club": 0.0785,
+   "Al Nassr Saudi Club 1 - 0 Abha Saudi Club": 0.078,
    "Al Nassr Saudi Club 0 - 2 Abha Saudi Club": 0.005,
    "Al Nassr Saudi Club 1 - 1 Abha Saudi Club": 0.0405,
    "Al Nassr Saudi Club 2 - 0 Abha Saudi Club": 0.115,
@@ -247341,7 +247382,7 @@
    "Al Nassr Saudi Club 1 - 3 Abha Saudi Club": 0.004,
    "Al Nassr Saudi Club 2 - 2 Abha Saudi Club": 0.0205,
    "Al Nassr Saudi Club 3 - 1 Abha Saudi Club": 0.075,
-   "Al Nassr Saudi Club 2 - 3 Abha Saudi Club": 0.005,
+   "Al Nassr Saudi Club 2 - 3 Abha Saudi Club": 0.0055,
    "Al Nassr Saudi Club 3 - 2 Abha Saudi Club": 0.0255,
    "Al Nassr Saudi Club 3 - 3 Abha Saudi Club": 0.007,
    "Any Other Score": 0.375
@@ -247352,7 +247393,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 9106,
+  "totalUsd": 9287,
   "whales": [
    {
     "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
@@ -247378,8 +247419,8 @@
     "avgPrice": 0.117
    }
   ],
-  "hoursToKickoff": 2.7,
-  "capturedAt": "2026-09-09T15:21:24.636208+00:00",
+  "hoursToKickoff": 2.39,
+  "capturedAt": "2026-09-09T15:40:06.993848+00:00",
   "tokens": {
    "Al Nassr Saudi Club 0 - 0 Abha Saudi Club": "91854502080061269510732315365949824693217614106276729675731212973862273175157",
    "Al Nassr Saudi Club 0 - 1 Abha Saudi Club": "7025835996443952007441669598630148779067677532457732176492561270567669463192",
@@ -247441,12 +247482,313 @@
     "usd": 168
    }
   ],
-  "hoursToKickoff": 0.7,
-  "capturedAt": "2026-09-09T15:21:24.636208+00:00",
+  "hoursToKickoff": 0.39,
+  "capturedAt": "2026-09-09T15:40:06.993848+00:00",
   "tokens": {
    "Japan": "15077656311265478963298521012847662264822498758783899617619789526769791622789",
    "Draw (Japan vs. USA)": "11113121126905732216053059118017145947821081541799803613073986692428514157216",
    "USA": "111719662284087123319873432951425176636743781375338293579654249953634424582400"
+  }
+ },
+ "atp-khachan-blockx-2026-09-09": {
+  "shares": {
+   "Karen Khachanov": 49997.987772810025,
+   "Alexander Blockx": 31299.595664259992
+  },
+  "prices": {
+   "Karen Khachanov": 0.615,
+   "Alexander Blockx": 0.385
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 99701,
+  "whales": [
+   {
+    "wallet": "0xf43842aca68209bd8bd3b4cfae00a32053769559",
+    "side": "Karen Khachanov",
+    "usd": 9840,
+    "avgPrice": 0.61
+   },
+   {
+    "wallet": "0x3a1b7e2d598359231870824cb7468c9b0c994c4d",
+    "side": "Karen Khachanov",
+    "usd": 8045,
+    "avgPrice": 0.61
+   },
+   {
+    "wallet": "0xefc9eee85df4347def52da9fdfbfe04b7232b337",
+    "side": "Alexander Blockx",
+    "usd": 7700,
+    "avgPrice": 0.39
+   },
+   {
+    "wallet": "0x49e0265d1a3636870df298e2ef5e681e246e9af1",
+    "side": "Karen Khachanov",
+    "usd": 7542,
+    "avgPrice": 0.6034
+   }
+  ],
+  "hoursToKickoff": 2.89,
+  "capturedAt": "2026-09-09T15:40:06.993848+00:00",
+  "cond": "0xb2e4f1f05b4f3057baa0f3c69a3c7d7972cc3255e6040b76406bd1e462a3da7f",
+  "frage": "US Open ATP: Karen Khachanov vs Alexander Blockx",
+  "tokens": {
+   "Karen Khachanov": "104792788237875423403212129517135396085858566742870781274985424711321451283055",
+   "Alexander Blockx": "12324113151522605673538504071717017726307296345046530742947515546313619990640"
+  },
+  "book": {
+   "side": "Karen Khachanov",
+   "bid": 0.61,
+   "ask": 0.62,
+   "spreadC": 1.0,
+   "spreadPct": 1.61,
+   "bids": [
+    [
+     0.61,
+     19269
+    ],
+    [
+     0.6,
+     364734
+    ],
+    [
+     0.59,
+     460817
+    ],
+    [
+     0.58,
+     323441
+    ],
+    [
+     0.57,
+     10
+    ],
+    [
+     0.56,
+     4066
+    ]
+   ],
+   "asks": [
+    [
+     0.62,
+     90066
+    ],
+    [
+     0.63,
+     41397
+    ],
+    [
+     0.64,
+     38789
+    ],
+    [
+     0.65,
+     58030
+    ],
+    [
+     0.66,
+     8614
+    ],
+    [
+     0.67,
+     21345
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x4c17b3ae9fa824079950e117b24c0149df36525d",
+    "action": "BUY",
+    "side": "Alexander Blockx",
+    "price": 0.39,
+    "usd": 750,
+    "ts": 1788966112
+   },
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "action": "BUY",
+    "side": "Alexander Blockx",
+    "price": 0.39,
+    "usd": 445,
+    "ts": 1788965338
+   },
+   {
+    "wallet": "0x853212cd809da6acc458021c106af749b7aa738b",
+    "action": "SELL",
+    "side": "Alexander Blockx",
+    "price": 0.38,
+    "usd": 570,
+    "ts": 1788965074
+   },
+   {
+    "wallet": "0x49e0265d1a3636870df298e2ef5e681e246e9af1",
+    "action": "BUY",
+    "side": "Karen Khachanov",
+    "price": 0.6154,
+    "usd": 5000,
+    "ts": 1788963603
+   },
+   {
+    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+    "action": "BUY",
+    "side": "Karen Khachanov",
+    "price": 0.61,
+    "usd": 1438,
+    "ts": 1788959602
+   },
+   {
+    "wallet": "0xdc16718af9f04590b38a8e8aa32dedcd034740a5",
+    "action": "BUY",
+    "side": "Alexander Blockx",
+    "price": 0.4,
+    "usd": 500,
+    "ts": 1788958468
+   },
+   {
+    "wallet": "0xd9dde44ddeababae222bf7aec96c85cbdab6b525",
+    "action": "BUY",
+    "side": "Alexander Blockx",
+    "price": 0.4,
+    "usd": 825,
+    "ts": 1788957993
+   }
+  ]
+ },
+ "ucl-fcb-fey-2026-09-09-total-corners": {
+  "shares": {
+   "Over": 3974.344913859999,
+   "Under": 2877.97656636
+  },
+  "prices": {
+   "Over": 0.58,
+   "Under": 0.42
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 7538,
+  "whales": [
+   {
+    "wallet": "0xe954ddb021c19495f1c556f59dadbd1494821ef1",
+    "side": "Over",
+    "usd": 2422,
+    "avgPrice": 0.5478
+   },
+   {
+    "wallet": "0x3822028fc1c17b00dd2f84846f91c14b996cbfe6",
+    "side": "Under",
+    "usd": 933,
+    "avgPrice": 0.4499
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "side": "Over",
+    "usd": 621,
+    "avgPrice": 0.5325
+   },
+   {
+    "wallet": "0x65b57f3444e1dba0487c65d2618d3b0c0e0baa71",
+    "side": "Under",
+    "usd": 359,
+    "avgPrice": 0.49
+   }
+  ],
+  "hoursToKickoff": 1.14,
+  "capturedAt": "2026-09-09T15:40:06.993848+00:00",
+  "cond": "0xe91b01116bd051635e0cd794552e5fe8f79af976c1772ecddea2388544a777af",
+  "frage": "FC Barcelona vs. Feyenoord Rotterdam: O/U 9.5 Total Corners",
+  "tokens": {
+   "Over": "53405368378581216934686523050179775089576583595177818480354254049690763953983",
+   "Under": "52916028839168883044201472716873719162691121095902978838207704534435631586040"
+  }
+ },
+ "ucl-fcb-fey-2026-09-09-player-props": {
+  "shares": {
+   "Goalscorer: Raphinha": 1905.1390533700007,
+   "Goalscorer: Lamine Yamal": 2065.6888840500005,
+   "Goalscorer: Gabriel Jesus": 0.0,
+   "Goalscorer: Karim Adeyemi": 4.08510648,
+   "Goalscorer: Anthony Gordon": 15.505043429999997,
+   "Goalscorer: Hamza Abdelkarim": 0.0,
+   "Goalscorer: Fermín Lopez": 63.901778359999994,
+   "Goalscorer: Dani Olmo": 0.0,
+   "Goalscorer: Marc Bernal": 0.0,
+   "Goalscorer: Rodri": 0.0,
+   "Goalscorer: Pedri": 5.348076975000001,
+   "Goalscorer: Gavi": 0.0,
+   "Goalscorer: Nacho Ferri": 0.0,
+   "Goalscorer: Shaqueel van Persie": 0.0
+  },
+  "prices": {
+   "Goalscorer: Raphinha": 0.59,
+   "Goalscorer: Lamine Yamal": 0.55,
+   "Goalscorer: Gabriel Jesus": 0.135,
+   "Goalscorer: Karim Adeyemi": 0.24,
+   "Goalscorer: Anthony Gordon": 0.145,
+   "Goalscorer: Hamza Abdelkarim": 0.135,
+   "Goalscorer: Fermín Lopez": 0.14,
+   "Goalscorer: Dani Olmo": 0.235,
+   "Goalscorer: Marc Bernal": 0.1,
+   "Goalscorer: Rodri": 0.115,
+   "Goalscorer: Pedri": 0.135,
+   "Goalscorer: Gavi": 0.11,
+   "Goalscorer: Nacho Ferri": 0.095,
+   "Goalscorer: Shaqueel van Persie": 0.095
+  },
+  "splitGuete": {
+   "art": "abgeschnitten",
+   "trunc": true
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 7593,
+  "whales": [
+   {
+    "wallet": "0x1000008dd9001b968442c1000017eae6e0da00ba",
+    "side": "Goalscorer: Lamine Yamal",
+    "usd": 948
+   },
+   {
+    "wallet": "0x8fd4f49624c380d580d436dc44ab2859782c9cf7",
+    "side": "Goalscorer: Raphinha",
+    "usd": 591
+   },
+   {
+    "wallet": "0x1b8ddb2a480db1ac61cb43f8feb14b20a6c7f78a",
+    "side": "Goalscorer: Raphinha",
+    "usd": 318
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "Goalscorer: Lamine Yamal",
+    "usd": 277,
+    "avgPrice": 0.5673
+   }
+  ],
+  "hoursToKickoff": 1.14,
+  "capturedAt": "2026-09-09T15:40:06.993848+00:00",
+  "tokens": {
+   "Goalscorer: Raphinha": "102084575944898425537714417229982352994905091332836995064290503969693318900170",
+   "Goalscorer: Lamine Yamal": "69593217253487524642805828556561369072358795597202762075644267298529754379914",
+   "Goalscorer: Gabriel Jesus": "111419348937310072994350326471257633132405507526761880537316499052694899519870",
+   "Goalscorer: Karim Adeyemi": "12283232302892471845167074560848218733110411297613478787530353355668687186287",
+   "Goalscorer: Anthony Gordon": "16245937398924841581972278472795736488314864253623596115612384666931246183021",
+   "Goalscorer: Hamza Abdelkarim": "63114072695038253698672547844009725160659973682403564482982396520007342451451",
+   "Goalscorer: Fermín Lopez": "27582414230626962754199186154620556216686425383403407779772006132427168549880",
+   "Goalscorer: Dani Olmo": "107220644839665525745271380715011104918420557828266461899313664592149590598327",
+   "Goalscorer: Marc Bernal": "105663975487436054898964232054536672369020304805923623422651596396215944495070",
+   "Goalscorer: Rodri": "22310616739909727073542600914992801289382294292408240495489443762215768522169",
+   "Goalscorer: Pedri": "97277996360818557462265293532048519876791046345363312322489314885068277529229",
+   "Goalscorer: Gavi": "27322246985784475536357487138701710518153693577483410153894840180429318787519",
+   "Goalscorer: Nacho Ferri": "27767730635420624268293353047956886092728094895482308605617571974050451935441",
+   "Goalscorer: Shaqueel van Persie": "74091099676391508200287765808591910223092895142524512396909155396028017643649"
   }
  }
 }
