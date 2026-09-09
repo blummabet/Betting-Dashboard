@@ -1,19 +1,27 @@
 {
- "n": 219,
+ "n": 226,
  "minOdds": 1.35,
- "moneyHitRate": 0.329,
- "priceHitRate": 0.379,
- "brierMoney": 0.948,
- "brierPrice": 0.7082,
+ "moneyHitRate": 0.341,
+ "priceHitRate": 0.385,
+ "brierMoney": 0.9277,
+ "brierPrice": 0.7003,
  "disagree": {
-  "n": 59,
-  "moneyWon": 3,
+  "n": 62,
+  "moneyWon": 4,
   "priceWon": 14,
-  "neither": 42
+  "neither": 44
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
  "byLeague": [
+  {
+   "league": "UCL",
+   "n": 21,
+   "moneyHitRate": 0.333,
+   "brierMoney": 0.7844,
+   "brierPrice": 0.6495,
+   "verdict": "preis_besser"
+  },
   {
    "league": "LA-LIGA",
    "n": 21,
@@ -32,9 +40,9 @@
   }
  ],
  "guete": {
-  "belastbar": 219,
-  "preis_echo": 227,
-  "abgeschnitten": 26,
+  "belastbar": 226,
+  "preis_echo": 235,
+  "abgeschnitten": 27,
   "unbekannt": 417,
   "leer": 0
  },
@@ -50,6 +58,18 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 3152794
+  },
+  {
+   "key": "ucl-spo-gal-2026-09-09",
+   "league": "UCL",
+   "winner": "Sporting CP",
+   "moneyFav": "Sporting CP",
+   "priceFav": "Sporting CP",
+   "moneyShare": 0.975,
+   "priceProb": 0.602,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 2623965
   },
   {
    "key": "fl1-ogc-lmf-2026-09-05",
@@ -182,6 +202,18 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 476481
+  },
+  {
+   "key": "ucl-liv-atm-2026-09-09",
+   "league": "UCL",
+   "winner": "Liverpool FC",
+   "moneyFav": "Liverpool FC",
+   "priceFav": "Liverpool FC",
+   "moneyShare": 0.87,
+   "priceProb": 0.552,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 475718
   },
   {
    "key": "lal-elc-rso-2026-09-07",
@@ -494,45 +526,21 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 144833
-  },
-  {
-   "key": "epl-eve-mun-2026-09-06-exact-score",
-   "league": "EPL",
-   "winner": "Everton FC 2 - 2 Manchester United FC",
-   "moneyFav": "Everton FC 1 - 1 Manchester United FC",
-   "priceFav": "Any Other Score",
-   "moneyShare": 0.199,
-   "priceProb": 0.143,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 137647
-  },
-  {
-   "key": "jap-jef-gam-2026-09-06",
-   "league": "SOCCER:JAP",
-   "winner": "JEF United Ichihara Chiba",
-   "moneyFav": "Gamba Ōsaka",
-   "priceFav": "Gamba Ōsaka",
-   "moneyShare": 0.975,
-   "priceProb": 0.493,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 137508
   }
  ],
- "generatedAt": "2026-09-09T21:13:51.252415+00:00",
+ "generatedAt": "2026-09-09T21:46:29.337721+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 421,
   "nfl": 800,
-  "mlb": 741,
+  "mlb": 729,
   "nhl": 519,
   "mls": 789,
   "epl": 597,
   "soccer": 800,
   "tennis": 800,
-  "ucl": 495,
+  "ucl": 463,
   "la-liga": 676,
   "bundesliga": 547,
   "serie-a": 51,
@@ -543,7 +551,7 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 647,
+  "esports": 673,
   "cs2": 423,
   "lol": 417,
   "dota": 9,
@@ -553,7 +561,7 @@
   "boxing": 256,
   "golf": 384,
   "f1": 380,
-  "cricket": 652,
+  "cricket": 646,
   "allsvenskan": 1,
   "austria-bundesliga": 270,
   "brazil-serie-b": 4,
@@ -603,113 +611,113 @@
   "sweepAdded": 404
  },
  "vorStats": {
-  "kandidaten": 19,
+  "kandidaten": 13,
   "budgetLeer": 0,
-  "ohneGeldSplit": 0,
+  "ohneGeldSplit": 1,
   "nachgelegt": 0,
-  "mitAnteilen": 19,
-  "calls": 19
+  "mitAnteilen": 12,
+  "calls": 13
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 2338,
-   "usd": 57770907,
-   "beispiel": "fifwc-prt-hrv-2026-07-02-player-props"
+   "n": 2220,
+   "usd": 59637393,
+   "beispiel": "fifwc-can-qat-2026-06-18"
   },
   "nba": {
-   "n": 321,
-   "usd": 7214860,
-   "beispiel": "nba-2027-champion"
+   "n": 476,
+   "usd": 9497956,
+   "beispiel": "nba-dal-lal-2026-02-12"
   },
   "balance": {
-   "n": 2,
-   "usd": 6000000,
+   "n": 4,
+   "usd": 6021286,
    "beispiel": "balance-of-power-2026-midterms"
   },
   "ecs": {
-   "n": 17,
-   "usd": 1983225,
+   "n": 15,
+   "usd": 1940553,
    "beispiel": "ecs-ars-mci-2026-08-16"
   },
   "world": {
-   "n": 201,
-   "usd": 1846228,
+   "n": 193,
+   "usd": 1751328,
    "beispiel": "world-cup-winner"
   },
-  "cfb": {
-   "n": 122,
-   "usd": 785023,
-   "beispiel": "cfb-unlv-ntx-2026-09-12"
-  },
   "nhl": {
-   "n": 54,
-   "usd": 775165,
-   "beispiel": "nhl-phi-car-2026-05-02"
+   "n": 134,
+   "usd": 1343240,
+   "beispiel": "nhl-mon-buf-2026-05-18"
   },
-  "2026": {
-   "n": 114,
-   "usd": 494198,
-   "beispiel": "2026-mens-us-open-winner-tennis"
+  "us": {
+   "n": 44,
+   "usd": 1297266,
+   "beispiel": "us-x-iran-permanent-peace-deal-by"
+  },
+  "cfb": {
+   "n": 143,
+   "usd": 1109124,
+   "beispiel": "cfb-washst-wash-2026-09-06"
+  },
+  "cbb": {
+   "n": 87,
+   "usd": 783660,
+   "beispiel": "cbb-hofst-ala-2026-03-20"
   },
   "fed": {
-   "n": 28,
-   "usd": 475397,
-   "beispiel": "fed-decision-in-october-20260617190323537"
+   "n": 30,
+   "usd": 706798,
+   "beispiel": "fed-decision-in-july-181"
+  },
+  "2026": {
+   "n": 103,
+   "usd": 595150,
+   "beispiel": "2026-nba-champion"
+  },
+  "strait": {
+   "n": 8,
+   "usd": 357246,
+   "beispiel": "strait-of-hormuz-traffic-returns-to-normal-by-end-of-june"
   },
   "usc": {
-   "n": 6,
-   "usd": 339230,
+   "n": 7,
+   "usd": 340945,
    "beispiel": "usc-psg-av-2026-08-12"
   },
   "fif": {
-   "n": 71,
-   "usd": 275332,
-   "beispiel": "fif-pol-nga-2026-06-03"
+   "n": 72,
+   "usd": 285123,
+   "beispiel": "fif-svk-mon-2026-06-05-more-markets"
   },
-  "uef": {
-   "n": 5,
-   "usd": 231984,
-   "beispiel": "uef-kvx-tur-2026-03-31"
+  "will": {
+   "n": 20,
+   "usd": 270618,
+   "beispiel": "will-trump-visit-china-by"
+  },
+  "who": {
+   "n": 14,
+   "usd": 262738,
+   "beispiel": "who-will-be-the-next-prime-minister-of-israel-after-the-next-election"
   },
   "which": {
-   "n": 39,
-   "usd": 221246,
-   "beispiel": "which-party-will-win-the-house-in-2026"
-  },
-  "clf": {
-   "n": 36,
-   "usd": 163903,
-   "beispiel": "clf-mun-lee-2026-08-12"
-  },
-  "elon": {
-   "n": 92,
-   "usd": 114904,
-   "beispiel": "elon-musk-of-tweets-september-4-september-11-2026"
-  },
-  "nbasl": {
-   "n": 1,
-   "usd": 97044,
-   "beispiel": "nbasl-cle-nop-2026-07-15"
-  },
-  "pro": {
-   "n": 24,
-   "usd": 93467,
-   "beispiel": "pro-football-2027-champion-20260729185915366"
-  },
-  "super": {
-   "n": 17,
-   "usd": 74672,
-   "beispiel": "super-bowl-champion-2026-731"
-  },
-  "cbb": {
-   "n": 1,
-   "usd": 67887,
-   "beispiel": "cbb-uconn-mich-2026-04-06"
+   "n": 40,
+   "usd": 258109,
+   "beispiel": "which-party-will-win-the-senate-in-2026"
   },
   "presidential": {
-   "n": 13,
-   "usd": 67822,
+   "n": 15,
+   "usd": 200550,
    "beispiel": "presidential-election-winner-2028"
+  },
+  "clf": {
+   "n": 48,
+   "usd": 196259,
+   "beispiel": "clf-mun-lee-2026-08-12"
+  },
+  "texas": {
+   "n": 7,
+   "usd": 132188,
+   "beispiel": "texas-republican-senate-primary-winner"
   }
  }
 }
