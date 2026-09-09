@@ -3,6 +3,64 @@
 Stand 07.09.2026 (oberster Block); Liga/WM-Teil darunter Stand 26.06.2026. Lebendige Liste aller offenen Punkte — Liga UND noch nicht umgesetzte WM-Sachen —
 damit wir alles abarbeiten können. ✅ = erledigt (Referenz), ⏳ = offen, 🔒 = blockiert.
 
+## 📒 09.09.2026 — das Serien-Buch: wurde die Serie erfüllt, ja oder nein
+
+Lucas: *„naja der Preis is da egal um ehrlich zu sein. Die Frage ist einfach: wurde Serie erfüllt
+ja oder nein. Das dann etwas simpler, aber das braucht es oder?"*
+
+Ja — und es ist die **bessere erste Frage**. Ob Serien Geld bringen, kann man erst sinnvoll
+fragen, wenn sie überhaupt Information tragen; und das entscheidet sich an der Trefferquote gegen
+die Erwartung, nicht am Preis.
+
+🔴 **Der Fund: die Antwort wurde seit August täglich berechnet und weggeworfen.**
+`telegram_streak_watch.build_recap` rechnet `streak_held()` aus, postet „Serie hält" bzw.
+„gerissen" — und `main` löscht den Eintrag danach aus dem Watch. Stand 08.09.: **50 bewachte
+Serien, 0 Ergebnisse.** Nicht „noch nicht gebaut", sondern gebaut, gerechnet, und in den Müll.
+
+- ✅ **`streak_record.json`** — eine Zeile je abgerechneter Serie, angehängt, nie neu geschrieben.
+  Getrennt vom Watch-Zustand: der ist flüchtig (Einträge fallen nach dem Spiel raus), das Buch
+  dauerhaft.
+- ⭐ **Die Erwartung wird VOR dem Spiel festgeschrieben** (`erwartetPct` aus der neuen
+  `seltenheit`, beim Setzen des Watch). Ohne sie ist die Trefferquote hinterher nur eine Zahl:
+  „71 % erfüllt" ist gut oder schlecht, je nachdem, was ohne jede Serie zu erwarten war. Sie
+  später nachzuschlagen wäre kein Vergleich, sondern ein Rückblick auf einen Wert, den dasselbe
+  Spiel schon verändert hat — dieselbe Regel wie in `vorregistrierung.py`.
+- ✅ **`bilanz()`** vergleicht die **Untergrenze** der beobachteten Quote mit der Erwartung:
+  · Untergrenze > Erwartung → *trägt sich selbst* (Hot Hand)
+  · Obergrenze < Erwartung → *kehrt um* (das wäre ein Fade-Signal, die nützlichere Auskunft)
+  · sonst → *kein Unterschied*
+  Ein Punktschätzer entscheidet nichts: 25 von 35 sind 71 % gegen 60 % Erwartung, aber die
+  Untergrenze liegt bei 58 % — voll vereinbar mit „die Serie sagt gar nichts".
+- ✅ **Sieg- und Ungeschlagen-Serien sind jetzt abrechenbar.** Sie stehen im Endstand genauso
+  drin wie die Tor-Märkte und fehlten in `streak_held` nur — und fielen deshalb still aus jeder
+  Abrechnung.
+- ✅ **Ecken und Karten bleiben im Nenner sichtbar.** Sie stehen nicht im Endstand, werden aber
+  als `erfuellt: null` gebucht statt still verworfen: ein Markt, den wir nicht abrechnen können,
+  muss zählbar bleiben, sonst sieht das Buch vollständiger aus, als es ist.
+- ✅ Die Kachel zeigt das Urteil des **Produzenten**; das Frontend vergleicht nichts selbst.
+  Ohne Buch-Datei erscheint gar nichts, mit leerem Buch steht „es beginnt mit dem nächsten
+  Spieltag" — nicht „nichts gemessen".
+
+**Ehrlich dazugesagt:** diese Bilanz beantwortet **nicht**, ob Serien Geld bringen — dafür fehlen
+die Quoten, und *eine Trefferquote ohne die Quoten ist keine Zahl*. Sie beantwortet, ob Serien
+überhaupt Information tragen. Ohne dieses Ja ist die Geldfrage sinnlos; mit dem Ja ist sie die
+nächste. Und sie liefert erst ab n=30 ein Urteil, also in einigen Wochen.
+
+**Nebenbefund, vom Guard sofort eingefordert:** eine neu geladene Quelle muss in die
+Frische-Rechnung. Beim Serien-Buch mit einer Besonderheit — es wächst nur, wenn eine Serie
+abgerechnet wird, also alle paar Tage. Deshalb setzt jeder Recap-Lauf `updatedAt`, auch ohne neue
+Zeile: „nichts passiert" und „läuft nicht mehr" dürfen nicht gleich aussehen.
+
+**Gegenbeweis** (fünf Regeln): Ergebnis wieder wegwerfen → 3 Tests fallen; unauflösbare Zeilen
+still verschwinden lassen → Test fällt; Punktschätzer statt Untergrenze → Test fällt; Erwartung
+nicht mitbuchen → Test fällt; ohne Erwartung trotzdem urteilen → Test fällt.
+
+**Nicht von mir, aber gefunden:** `test_betfair_coherence_fit.py::test_schlechte_fits_werden_
+ueberhaupt_aussortiert` ist rot. Er verlangt, dass im LIVE-Bestand mindestens ein Fit an der
+RMSE-Schranke scheitert — heute scheitert keiner. Ein Guard, der rot wird, wenn die Daten gut
+sind, misst die Daten und nicht den Code. Gehört umgebaut (etwa gegen eine synthetische
+Schlecht-Leiter), ist aber ein eigener Vorgang.
+
 ## 🎲 08.09.2026 (nachts) — die Serien-Seltenheit rechnete mit dem falschen Nenner
 
 Externes Feedback zur Serien-Seite, an den echten Artefakten nachgerechnet: **es stimmt in jedem

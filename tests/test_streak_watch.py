@@ -141,25 +141,25 @@ class TestRecap(unittest.TestCase):
                 "oppName": "Paraguay", "date": "2026-07-04"}}
 
     def test_haelt(self):
-        msgs, done = W.build_recap(self._wm(3, 1), self._watched(), "2026-07-05")
+        msgs, done, _b = W.build_recap(self._wm(3, 1), self._watched(), "2026-07-05")
         self.assertEqual(len(msgs), 1)
         self.assertIn("hält", msgs[0])
         self.assertIn("16×", msgs[0])
         self.assertEqual(len(done), 1)
 
     def test_gerissen(self):
-        msgs, done = W.build_recap(self._wm(1, 0), self._watched(), "2026-07-05")
+        msgs, done, _b = W.build_recap(self._wm(1, 0), self._watched(), "2026-07-05")
         self.assertIn("gerissen", msgs[0])
         self.assertIn("15 Spielen", msgs[0])
 
     def test_spiel_noch_nicht_vorbei(self):
-        msgs, done = W.build_recap(self._wm(3, 1), self._watched(), "2026-07-04")
+        msgs, done, _b = W.build_recap(self._wm(3, 1), self._watched(), "2026-07-04")
         self.assertEqual(msgs, [])
         self.assertEqual(done, [])
 
     def test_kein_endstand_wartet(self):
         wm = {"groups": {}, "koFixtures": [{"home": "FRA", "away": "PRY", "result": {}}]}
-        msgs, done = W.build_recap(wm, self._watched(), "2026-07-05")
+        msgs, done, _b = W.build_recap(wm, self._watched(), "2026-07-05")
         self.assertEqual(msgs, [])
 
 
@@ -232,3 +232,100 @@ class TestWatchDigest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+# ── 09.09.2026: das Buch ────────────────────────────────────────────────────────────────
+# Lucas: „der Preis ist da egal um ehrlich zu sein — die Frage ist einfach: wurde Serie erfuellt
+# ja oder nein."
+#
+# 🔴 Der Fund davor: genau das rechnete `build_recap` seit August jeden Tag aus, postete es und
+# WARF ES WEG. Am 08.09. standen 50 bewachte Serien und 0 Ergebnisse im Zustand.
+class TestBuchung(unittest.TestCase):
+    def _wm(self, hs, as_):
+        return {"groups": {}, "koFixtures": [
+            {"home": "FRA", "away": "PRY", "round": "R16",
+             "result": {"status": "FT", "home_score": hs, "away_score": as_}}]}
+
+    def _watched(self, **over):
+        w = {"teamId": "FRA", "team": "Frankreich", "type": "over25", "length": 15,
+             "market": "over25", "pickKey": "KO-R16-FRA-PRY", "oppName": "Paraguay",
+             "date": "2026-07-04", "erwartetPct": 61, "erwartetBasis": "eigen",
+             "erwartetPreN": 8}
+        w.update(over)
+        return {"FRA:over25:2026-07-04": w}
+
+    def test_jede_aufgeloeste_serie_wird_gebucht(self):
+        _m, _d, buch = W.build_recap(self._wm(3, 1), self._watched(), "2026-07-05")
+        self.assertEqual(len(buch), 1)
+        self.assertIs(buch[0]["erfuellt"], True)
+        self.assertEqual(buch[0]["team"], "Frankreich")
+
+    def test_die_erwartung_reist_mit_ins_buch(self):
+        """Ohne sie ist die Trefferquote hinterher nur eine Zahl: „62 % erfuellt" heisst nichts,
+        solange nicht danebensteht, was ohne jede Serie zu erwarten gewesen waere."""
+        _m, _d, buch = W.build_recap(self._wm(3, 1), self._watched(), "2026-07-05")
+        self.assertEqual(buch[0]["erwartetPct"], 61)
+        self.assertEqual(buch[0]["erwartetBasis"], "eigen")
+
+    def test_nicht_abrechenbares_wird_gebucht_statt_verschwiegen(self):
+        """Ecken und Karten stehen nicht im Endstand. Sie fielen bisher still aus dem Watch —
+        ein Markt, den wir nicht abrechnen koennen, muss im Nenner sichtbar bleiben."""
+        _m, done, buch = W.build_recap(self._wm(3, 1), self._watched(type="cards"), "2026-07-05")
+        self.assertEqual(len(buch), 1)
+        self.assertIsNone(buch[0]["erfuellt"])
+        self.assertEqual(len(done), 1, "aus dem Watch faellt sie trotzdem")
+
+    def test_ein_unfertiges_spiel_wird_nicht_gebucht(self):
+        wm = {"groups": {}, "koFixtures": [{"home": "FRA", "away": "PRY", "result": {}}]}
+        _m, _d, buch = W.build_recap(wm, self._watched(), "2026-07-05")
+        self.assertEqual(buch, [])
+
+    def test_sieg_und_ungeschlagen_sind_abrechenbar(self):
+        """Sie stehen im Endstand genauso drin wie die Tor-Maerkte und fehlten hier nur."""
+        self.assertIs(W.streak_held("win", "FRA", self._wm(2, 1)["koFixtures"][0]), True)
+        self.assertIs(W.streak_held("win", "PRY", self._wm(2, 1)["koFixtures"][0]), False)
+        self.assertIs(W.streak_held("unbeaten", "PRY", self._wm(1, 1)["koFixtures"][0]), True)
+
+
+class TestBilanz(unittest.TestCase):
+    def _z(self, n, treffer, erwartet=60):
+        return ([{"erfuellt": True, "erwartetPct": erwartet} for _ in range(treffer)]
+                + [{"erfuellt": False, "erwartetPct": erwartet} for _ in range(n - treffer)])
+
+    def test_unter_der_mindestzahl_wird_nicht_geurteilt(self):
+        b = W.bilanz(self._z(10, 8))
+        self.assertEqual(b["urteil"], "sammelt")
+        self.assertNotIn("ugPct", b)
+
+    def test_ein_punktschaetzer_entscheidet_nichts(self):
+        """⭐ 25 von 35 sind 71 % gegen 60 % Erwartung — nach dem Punkt „traegt sich selbst".
+        Die Untergrenze liegt bei 58 % und damit UNTER der Erwartung: mit „die Serie sagt gar
+        nichts" ist das voll vereinbar."""
+        b = W.bilanz(self._z(35, 25, erwartet=60))
+        self.assertGreater(b["quotePct"], 60)
+        self.assertLess(b["ugPct"], 60)
+        self.assertEqual(b["urteil"], "kein Unterschied")
+
+    def test_traegt_sich_selbst_verlangt_die_untergrenze_ueber_der_erwartung(self):
+        b = W.bilanz(self._z(200, 160, erwartet=60))
+        self.assertGreater(b["ugPct"], 60)
+        self.assertEqual(b["urteil"], "traegt sich selbst")
+
+    def test_regression_wird_genauso_benannt(self):
+        """Die Gegenrichtung ist die nuetzlichere Auskunft: lange Serien, die ueberdurchschnittlich
+        oft REISSEN, waeren ein Fade-Signal."""
+        b = W.bilanz(self._z(200, 80, erwartet=60))
+        self.assertLess(b["ogPct"], 60)
+        self.assertEqual(b["urteil"], "kehrt um")
+
+    def test_ohne_erwartung_gibt_es_keinen_vergleich(self):
+        """Eine Trefferquote ohne die Erwartung ist keine Zahl — dieselbe Regel wie
+        „Trefferquote ohne die Quoten"."""
+        b = W.bilanz([{"erfuellt": True} for _ in range(40)])
+        self.assertEqual(b["urteil"], "kein Vergleich")
+
+    def test_unaufloesbare_zeilen_senken_den_nenner_sichtbar(self):
+        z = self._z(40, 30) + [{"erfuellt": None, "erwartetPct": 60} for _ in range(5)]
+        b = W.bilanz(z)
+        self.assertEqual(b["n"], 40)
+        self.assertEqual(b["unaufloesbar"], 5)
