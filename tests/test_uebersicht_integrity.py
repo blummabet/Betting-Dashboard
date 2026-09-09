@@ -343,3 +343,81 @@ class TestBuecherPunktestand(unittest.TestCase):
         ctx = {"killer": {"alleBewertet": [{"name": "X", "liga": "L", "punkte": 7, "moeglich": 13}]}}
         r = UI.check_buecher_punktestand(ctx)
         self.assertTrue(any("Begruendung" in f for f in r["failures"]))
+
+
+# ── 08.09.2026: der Nenner der Serien-Seltenheit ────────────────────────────────────────
+# Externes Feedback, an den Artefakten bestaetigt: „Parma · Unter 2,5, 10er: 1 von 11.990
+# (Liga-Basis 39 %)" stand neben „Eigenrate vor der Serie 80 %" — 0,8^10 sind 1 von 9.
+#
+# ⭐ Der aeltere Guard war dabei GRUEN: er prueft, dass `zufallPct` sauber aus der Liga-Basis
+# folgt, und das tat sie. Ein Guard, der die Arithmetik einer Zahl bewacht, die die falsche
+# Frage beantwortet, meldet nichts.
+def _serie(**over):
+    s = {"team": "Parma", "type": "under25", "length": 10, "basis": "prior", "preN": 5,
+         "seltenheit": {"basis": "eigen", "ratePct": 80, "preN": 5, "einsZu": 9,
+                        "erwartet": 340.16, "familie": 3168, "bandPct": [44, 95],
+                        "einsZuBand": [2, 4097], "erwartetBand": [0.77, 1979.08],
+                        "urteil": "erwartbar", "grund": "…"}}
+    s.update(over)
+    return s
+
+
+def _ctx(*serien):
+    return {"ligaStreaks": {"streaks": list(serien)}, "mlsStreaks": {"streaks": []}}
+
+
+class TestSeltenheitsNenner(unittest.TestCase):
+    def _n(self, ctx):
+        return UI.check_serie_seltenheit_rechnet_mit_der_eigenen_rate(ctx)["nFail"]
+
+    def test_gesunder_stand_faellt_nicht_auf(self):
+        self.assertEqual(self._n(_ctx(_serie())), 0)
+
+    def test_liga_nenner_trotz_eigener_rate_wird_gemeldet(self):
+        """Der Fund selbst: eigene Vorgeschichte da, gerechnet wurde gegen den Liga-Schnitt."""
+        s = _serie()
+        s["seltenheit"] = dict(s["seltenheit"], basis="liga", urteil="nicht belegbar")
+        self.assertGreaterEqual(self._n(_ctx(s)), 1)
+
+    def test_liga_basis_darf_kein_urteil_tragen(self):
+        """Ohne eigene Vorgeschichte gilt der Liga-Schnitt fuer ein Durchschnittsteam — ob
+        dieses Team eines ist, wissen wir gerade nicht. Das ist „nicht gemessen", nicht
+        „unauffaellig"."""
+        s = _serie(basis="liga", preN=0)
+        s["seltenheit"] = dict(s["seltenheit"], basis="liga", urteil="erwartbar")
+        self.assertGreaterEqual(self._n(_ctx(s)), 1)
+
+    def test_auffaellig_ohne_feldgroesse_wird_gemeldet(self):
+        """Ohne die Zahl der geprueften Kombinationen ist jede Seltenheit ein Fund, den die
+        Suche selbst erzeugt hat."""
+        s = _serie()
+        s["seltenheit"] = dict(s["seltenheit"], urteil="auffaellig", familie=None,
+                               erwartetBand=[0.1, 0.5])
+        self.assertGreaterEqual(self._n(_ctx(s)), 1)
+
+    def test_auffaellig_trotz_erwartbarer_bandobergrenze_wird_gemeldet(self):
+        s = _serie()
+        s["seltenheit"] = dict(s["seltenheit"], urteil="auffaellig")
+        self.assertGreaterEqual(self._n(_ctx(s)), 1)
+
+    def test_zahl_die_nicht_aus_der_rate_folgt_wird_gemeldet(self):
+        s = _serie()
+        s["seltenheit"] = dict(s["seltenheit"], einsZu=99999)
+        self.assertGreaterEqual(self._n(_ctx(s)), 1)
+
+    def test_fehlende_seltenheit_ist_die_rollout_luecke(self):
+        """Ein Code-Fix wirkt erst, wenn der Produzent neu gelaufen ist — das muss auffallen,
+        statt als „alles gruen" durchzugehen."""
+        s = _serie()
+        s.pop("seltenheit")
+        self.assertGreaterEqual(self._n(_ctx(s)), 1)
+
+    def test_kleine_zahlen_loesen_keinen_fehlalarm_aus(self):
+        """Arsenal „Sieg-Serie 3x": 0,67^3 = 1 von 3,3 -> gerundet 3. Der erste Entwurf dieses
+        Guards meldete prompt 8 gesunde Serien, weil Rate UND Ergebnis gerundet sind."""
+        s = _serie(length=3, preN=9)
+        s["seltenheit"] = {"basis": "eigen", "ratePct": 67, "preN": 9, "einsZu": 3,
+                           "erwartet": 1000.0, "familie": 3168, "bandPct": [40, 86],
+                           "einsZuBand": [2, 16], "erwartetBand": [12.0, 1500.0],
+                           "urteil": "erwartbar", "grund": "…"}
+        self.assertEqual(self._n(_ctx(s)), 0)

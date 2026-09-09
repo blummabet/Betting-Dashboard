@@ -1493,8 +1493,12 @@ def main():
                 _pool = _p
                 break
         # Nur die Felder, die der Buecher-Score liest — die Datei wird alle 15 Minuten committet.
+        # 08.09.2026 (Lucas: „koennte man das optisch nicht ins Kaestchen schreiben, wieviel Kohle
+        # oben liegt?"): `totVol` kam dazu. Ohne es kann der Score fuer Anker-Spiele zwar den
+        # ANTEIL zeigen („88 %"), aber nie den Betrag — und das sind 48 der 54 Zeilen, also
+        # ausgerechnet fast alle. Ein Feld, das laengst gerechnet ist und nur nicht mitkam.
         _anker = {kk: _g.get(kk) for kk in ("moneySide", "moneyName", "poly", "pinn", "pinnMove",
-                                            "league", "kickoff", "verdict")}
+                                            "league", "kickoff", "verdict", "totVol")}
         return _anker, money_map_row(_g, poly_fav(m, _pool))
 
     now = _now_iso()

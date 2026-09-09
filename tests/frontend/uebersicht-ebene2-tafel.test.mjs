@@ -124,3 +124,75 @@ test('„—" heißt nicht erhoben, „0" heißt gefragt und stimmt nicht zu', (
   assert.match(html, />0</, 'das gefragte Buch ohne Zustimmung muss eine 0 zeigen');
   assert.match(html, /Geld 62%/, 'und trotzdem seinen Grund');
 });
+
+// ── 08.09.2026: Geld ins Kästchen, mit Balken ──────────────────────────────────────────
+// Lucas: „könnte man das optisch nicht ins Kästchen schreiben, wieviel Kohle oben liegt? Bei
+// Betfair, Poly und Stake. Nur +2 und ganz mini so ein %, das sieht man ja nicht gut — unten in
+// Ebene 3 ist das mit den Balken optisch besser gelöst."
+//
+// Der teure Teil ist nicht der Balken, sondern WORAUS er gemacht wird: bei Polymarket ist
+// derselbe Anteil manchmal Geld und manchmal ein PREIS. Ein Geldbetrag aus einem Preis wäre eine
+// erfundene Zahl an genau der Stelle, auf die Lucas ab jetzt schaut.
+function tafelMit(w, teile) {
+  return w._mdKlTafelTest(K([zeile({ home: 'PSV', away: 'Shakhtar', name: 'PSV', odd: 1.48,
+                                     punkte: 7, moeglich: 10, teile: teile })]), {});
+}
+
+const gbuch = (over) => Object.assign({
+  buch: 'BF', name: 'Betfair', status: 'ja', punkte: 2, moeglich: 3,
+  grund: { ok: true, text: 'Geld 88% auf der Seite' }, tiefe: { ok: false, text: 'x' },
+  geld: { anteil: 0.88, betrag: 1840000, gesamt: 2091581, waehrung: 'EUR', quelle: 'geld' },
+}, over || {});
+
+test('der Betrag steht als große Zahl im Kästchen, der Anteil als Balken', () => {
+  const html = tafelMit(load(), [gbuch()]);
+  assert.match(html, /€1\.8M|€1840K|€1\.84M/, 'der Betrag fehlt — genau der war der Wunsch');
+  assert.match(html, /sz-bar/, 'ohne Balken ist es wieder nur eine Zahl');
+  assert.match(html, /88 % der Seite/);
+});
+
+test('die Punkte bleiben sichtbar, aber klein — sie sind die Mechanik, nicht das Ergebnis', () => {
+  const html = tafelMit(load(), [gbuch()]);
+  assert.match(html, /sz-p/);
+  assert.match(html, /\+2/);
+});
+
+test('⭐ ein Poly-PREIS bekommt keinen Geldbetrag — der wäre erfunden', () => {
+  // 68 % Preis heißt „der Markt hält es für zu 68 % wahrscheinlich", nicht „68 % des Geldes".
+  const html = tafelMit(load(), [gbuch({
+    buch: 'POLY', name: 'Polymarket',
+    grund: { ok: true, text: 'Poly-Preis 68% auf derselben Seite' },
+    geld: { anteil: 0.68, betrag: null, gesamt: 1407, waehrung: 'USD', quelle: 'preis' },
+  })]);
+  assert.match(html, /Preis, kein Geldanteil/);
+  assert.match(html, /68 %/);
+  assert.match(html, /sz-bar/, 'der Anteil ist gemessen — der Balken stimmt, nur der Betrag fehlt');
+});
+
+test('Anteil ohne Betrag wird benannt, nicht geschätzt', () => {
+  const html = tafelMit(load(), [gbuch({
+    geld: { anteil: 0.88, betrag: null, gesamt: null, waehrung: 'EUR', quelle: 'geld' },
+  })]);
+  assert.match(html, /Betrag nicht erhoben/);
+  assert.doesNotMatch(html, /€0|€NaN/, 'eine fehlende Zahl darf nie als 0 rendern');
+});
+
+test('Pinnacle bekommt keinen Balken — ein Preisbuch hat kein Geld auf einer Seite', () => {
+  const html = tafelMit(load(), [gbuch({
+    buch: 'PIN', name: 'Pinnacle', geld: null,
+    grund: { ok: true, text: 'hat dieselbe Seite als Favorit' },
+  })]);
+  assert.match(html, /dieselbe Seite als Favorit/);
+  const zelle = html.split('PIN')[1] || html;
+  assert.doesNotMatch(zelle.split('</div>')[0] || '', /sz-bar/,
+    'ein leerer Balken sähe aus wie „null Geld"');
+});
+
+test('nicht erhoben bleibt nicht erhoben — kein Balken, keine Null', () => {
+  const html = tafelMit(load(), [gbuch({
+    buch: 'STAKE', name: 'Stake-Highroller', status: 'unbekannt', punkte: 0, moeglich: 0,
+    grund: null, tiefe: null, geld: null,
+  })]);
+  assert.match(html, /nicht erhoben/);
+  assert.doesNotMatch(html, /\$0\b/);
+});

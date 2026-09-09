@@ -267,6 +267,18 @@ def test_finnische_spitze_ist_ebene_1():
     assert LS.stufe("kolmonen") == "3"
 
 
+def test_pokal_heisst_nicht_ueberall_cup():
+    """08.09.2026, zweiter Wachhund-Treffer des Tages: „efl-trophy". Die Regel kannte drei
+    Woerter fuer Pokal — englisch, spanisch, deutsch. Trophy, Shield, Coupe und Taca sind
+    derselbe Wettbewerbstyp und fielen durch. Dieselbe Klasse wie „reserve" gegen „reserva"."""
+    assert LS.stufe("efl-trophy") == "pokal"
+    assert LS.stufe("coupe-de-france") == "pokal"
+    assert LS.stufe("taca-de-portugal") == "pokal"
+    # Gegenprobe: eine echte Spielklasse darf die breitere Regel nicht verschlucken.
+    assert LS.stufe("premier-league") == "1"
+    assert LS.stufe("la-liga-2") == "2"
+
+
 def test_reserveliga_in_jeder_sprache():
     """08.09.2026: der Wachhund fiel mit „campeonato-de-reserva-de-primera-division-c".
     Die Regel kannte nur „reserve" — dieselbe Sache heisst in Suedamerika „reserva" und in

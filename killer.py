@@ -268,12 +268,35 @@ def _bewiesene_wallets(scores, min_n=WALLET_MIN_N):
     return out
 
 
-def _buch(kurz, name, status, grund_ok, tiefe_ok, grund_txt, tiefe_txt):
+def _geld(anteil=None, betrag=None, gesamt=None, waehrung=None, quelle=None):
+    """Die maschinenlesbare Seite eines Buch-Blocks — oder None, wenn es sie nicht gibt.
+
+    08.09.2026 (Lucas: „koennte man das optisch nicht ins Kaestchen schreiben, wieviel Kohle oben
+    liegt? Nur +2 und ganz mini so ein %, das sieht man ja nicht gut"). Bis heute stand die Zahl
+    nur als Fliesstext im `grund` („Geld 88% auf der Seite") — daraus laesst sich kein Balken
+    bauen, ohne den Text im Renderer wieder auseinanderzunehmen. Das waere Produzenten-Logik an
+    der falschen Stelle und beim naechsten Satzbau kaputt.
+
+    ⭐ `quelle` ist der wichtigste Teil und der Grund, warum das nicht einfach „prozent + betrag"
+    heisst: bei Polymarket ist derselbe Anteil MANCHMAL Geld und manchmal ein PREIS (`shareSrc`).
+    68 % Preis heisst „der Markt haelt es fuer zu 68 % wahrscheinlich" und nicht „68 % des Geldes
+    liegen da". Einen Geldbalken daraus zu malen waere eine erfundene Zahl an der Stelle, auf die
+    Lucas ausdruecklich schauen will. Deshalb: `betrag` gibt es NUR bei `quelle == "geld"`.
+    """
+    if anteil is None and betrag is None:
+        return None
+    return {"anteil": round(float(anteil), 4) if isinstance(anteil, (int, float)) else None,
+            "betrag": round(float(betrag)) if isinstance(betrag, (int, float)) else None,
+            "gesamt": round(float(gesamt)) if isinstance(gesamt, (int, float)) else None,
+            "waehrung": waehrung, "quelle": quelle}
+
+
+def _buch(kurz, name, status, grund_ok, tiefe_ok, grund_txt, tiefe_txt, geld=None):
     """Ein Buch-Block des Scores. `status` unbekannt -> weder Punkte noch Nenner."""
     if status == "unbekannt":
         return {"buch": kurz, "name": name, "status": "unbekannt",
                 "punkte": 0, "moeglich": 0,
-                "grund": None, "tiefe": None,
+                "grund": None, "tiefe": None, "geld": None,
                 "text": name + " nicht erhoben"}
     p = (PUNKTE_BUCH if grund_ok else 0) + (PUNKTE_TIEFE if (grund_ok and tiefe_ok) else 0)
     return {"buch": kurz, "name": name, "status": "ja" if grund_ok else "nein",
@@ -282,6 +305,7 @@ def _buch(kurz, name, status, grund_ok, tiefe_ok, grund_txt, tiefe_txt):
             # Tiefe zaehlt nur, wenn das Buch ueberhaupt zustimmt — sonst waere „viel Geld auf der
             # Gegenseite, das schnell fliesst" ein Pluspunkt.
             "tiefe": {"ok": bool(grund_ok and tiefe_ok), "text": tiefe_txt},
+            "geld": geld,
             "text": grund_txt}
 
 
@@ -306,13 +330,21 @@ def buecher_punkte(sig, g, seite, gehalten_seit=None, kickoff=None, wallets=None
     teile = []
 
     # ── Betfair: immer erhoben, sonst waeren wir gar nicht hier ──────────────────────────
-    _anteil = round((sig.get("share") or 0) * 100)
+    _share = sig.get("share") or 0
+    _anteil = round(_share * 100)
+    # `totVol` ist das gematchte 1X2-Geld des Spiels in EUR (s. betfair_consensus, wo es als
+    # `eur` weitergereicht wird). Anteil x Volumen ist das Geld auf DIESER Seite — dieselbe
+    # Rechnung, die der Satz „Geld 88 % auf der Seite" schon immer meinte, nur als Zahl.
+    _tot = g.get("totVol")
     teile.append(_buch(
         "BF", "Betfair", "ja",
         bool(sig.get("conc")),
         bool(sig.get("inflow")) and sig.get("dir") == "in",
         "Geld %d%% auf der Seite" % _anteil,
-        "frischer Zufluss und Quote zieht mit"))
+        "frischer Zufluss und Quote zieht mit",
+        _geld(anteil=_share,
+              betrag=(float(_tot) * _share) if isinstance(_tot, (int, float)) else None,
+              gesamt=_tot, waehrung="EUR", quelle="geld")))
 
     # ── Polymarket ───────────────────────────────────────────────────────────────────────
     _pa = poly.get("sharePct")
@@ -328,7 +360,16 @@ def buecher_punkte(sig, g, seite, gehalten_seit=None, kickoff=None, wallets=None
           % ("Preis" if poly.get("shareSrc") == "preis" else "Geld", _pa)) if _poly_bekannt else ""),
         ("%d bewiesene%s Wallet%s drauf" % (len(_bewiesen), "" if len(_bewiesen) == 1 else "",
                                             "" if len(_bewiesen) == 1 else "s"))
-        if _bewiesen else "kein bewiesenes Wallet auf der Seite"))
+        if _bewiesen else "kein bewiesenes Wallet auf der Seite",
+        # ⚠️ `betrag` NUR wenn der Anteil aus Geld kommt. Bei `shareSrc == "preis"` sind die
+        # 68 % eine Wahrscheinlichkeit, kein Geldanteil — ein Betrag daraus waere erfunden.
+        # Das Marktvolumen (`vol`) steht trotzdem da, es ist ja gemessen.
+        _geld(anteil=(_pa / 100.0) if _poly_bekannt else None,
+              betrag=((float(poly["vol"]) * _pa / 100.0)
+                      if (_poly_bekannt and poly.get("shareSrc") == "geld"
+                          and isinstance(poly.get("vol"), (int, float))) else None),
+              gesamt=poly.get("vol"), waehrung="USD",
+              quelle=("geld" if poly.get("shareSrc") == "geld" else "preis"))))
 
     # ── Pinnacle ─────────────────────────────────────────────────────────────────────────
     teile.append(_buch(
@@ -355,7 +396,10 @@ def buecher_punkte(sig, g, seite, gehalten_seit=None, kickoff=None, wallets=None
             _st_seite == seite and _su >= STAKE_MIN_USD,
             _st_seite == seite and _sn >= STAKE_TIEFE_N,
             "$%s Highroller-Geld auf derselben Seite" % format(round(_su), ",d").replace(",", "."),
-            "%d Wetten, nicht eine einzelne" % _sn))
+            "%d Wetten, nicht eine einzelne" % _sn,
+            _geld(anteil=((_su / float(_st["usd"]))
+                          if isinstance(_st.get("usd"), (int, float)) and _st["usd"] else None),
+                  betrag=_su, gesamt=_st.get("usd"), waehrung="USD", quelle="geld")))
 
     # ── Dauer ────────────────────────────────────────────────────────────────────────────
     ko, gs = _ts(kickoff), _ts(gehalten_seit)

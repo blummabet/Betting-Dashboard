@@ -653,3 +653,47 @@ class TestOffenePlays:
         zeilen = [{"schublade": "A", "strom": "betfair", "art": "markt", "status": "geprueft"},
                   {"schublade": "B", "strom": "betfair", "art": "markt", "status": "freigegeben"}]
         assert [b["schublade"] for b in F.spiele(zeilen)] == ["B"]
+
+
+# ── 08.09.2026: warum die Kachel und die Track-Seite verschiedene Zahlen zeigten ─────────
+# Lucas: „aja, und was ist das in Polymarket — im Tracking vom Polymarket-Wallet stehen da
+# andere Sachen." Standen da wirklich: −6,6 % hier, +0,1 % dort. Zwei Gruende, einer davon ein
+# echter Fehler.
+def _polyplay(pnl, cat="Fußball", ev="E1", conv=6, public=False):
+    return {"pnl": pnl, "stake": 10.0, "cat": cat, "ev": ev, "conv": conv, "public": public,
+            "clvPP": 0.0, "signals": ["money"], "settledTs": F._now().isoformat()}
+
+
+class TestPolyUniversum:
+    def test_gesperrte_kategorien_zaehlen_NICHT_mit(self):
+        """Die Track-Seite trennt „bespielbar" von „nicht bespielbar" (US-Sport, Kampfsport) und
+        sagt dazu ausdruecklich „nur Beobachtung, kein Geld". Die Freigabe zaehlte sie mit — ein
+        Strom-ROI, der Wetten enthaelt, die gar nicht gespielt werden duerfen, beantwortet eine
+        Frage, die niemand hat."""
+        tr = {"blockedCats": ["US-Sport"],
+              "settled": ([_polyplay(2.0) for _ in range(30)]
+                          + [_polyplay(-10.0, cat="US-Sport") for _ in range(30)])}
+        z = {r["schublade"]: r for r in F.poly_schubladen(tr, engine="E1")}
+        assert z["Conviction 6"]["n"] == 30, "die gesperrten Plays gehoeren nicht in die Zahl"
+        assert z["Conviction 6"]["roi"] > 0
+
+    def test_ohne_gesperrte_liste_aendert_sich_nichts(self):
+        tr = {"settled": [_polyplay(2.0) for _ in range(30)]}
+        z = {r["schublade"]: r for r in F.poly_schubladen(tr, engine="E1")}
+        assert z["Conviction 6"]["n"] == 30
+
+    def test_die_basis_sagt_worueber_gerechnet_wurde(self):
+        """Ohne diesen Satz stand „Polymarket −6,6 %" neben einer Track-Seite mit „+0,1 %", und
+        beide waren richtig: verschiedene Mengen, gleich beschriftet."""
+        tr = {"blockedCats": ["US-Sport"],
+              "settled": ([_polyplay(2.0, ev="E1") for _ in range(30)]
+                          + [_polyplay(2.0, ev="alt") for _ in range(20)]
+                          + [_polyplay(-10.0, cat="US-Sport", ev="E1") for _ in range(5)])}
+        b = F.strom_basis("poly", tr)
+        assert "30 von 55" in b, b
+        assert "US-Sport" in b and "Engine" in b
+
+    def test_andere_stroeme_haben_keine_solche_basis(self):
+        """Cards und Betfair werden nicht auf eine Engine gefiltert — ein Satz dort waere eine
+        Behauptung ueber einen Filter, den es nicht gibt."""
+        assert F.strom_basis("cards") is None and F.strom_basis("betfair") is None

@@ -333,6 +333,7 @@
       '.fg-strom-h{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mi);margin-bottom:2px;}',
       '.fg-strom-z{margin-left:auto;font-size:9.5px;color:var(--mi3);white-space:nowrap;}',
       '.fg-strom-b{margin-top:5px;padding-top:5px;border-top:1px solid var(--mln2);font-size:10.5px;color:var(--mi2);line-height:1.35;}',
+      '.fg-strom-q{margin-top:3px;font-size:9.5px;color:var(--mi3);line-height:1.3;}',
       // Ebene 0 — Spielzentrale (08.09.2026). Eine Zeile je Spiel, Quellen als feste
       // Spalten: belegt oder leer, immer an derselben Stelle. Man zaehlt die gefuellten
       // Felder, statt Text zu lesen — und zwei Zeilen untereinander sind vergleichbar.
@@ -348,6 +349,16 @@
       '.sz-c b{display:block;font-size:8.5px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--mi3);}',
       '.sz-c i{display:block;font-style:normal;font-size:11.5px;font-weight:700;font-family:"JetBrains Mono",monospace;}',
       '.sz-c s{display:block;text-decoration:none;font-size:9.5px;color:var(--mi3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+      // 08.09.2026 (Lucas: „nur +2 und ganz mini so ein %, das sieht man ja nicht gut —
+      // unten in Ebene 3 ist das mit den Balken optisch besser gelöst"). Also derselbe
+      // Aufbau wie dort: der BETRAG ist die große Zahl, der Anteil ein Balken darunter,
+      // die Punkte rutschen nach oben neben den Buchnamen. Die Punkte sind die Mechanik
+      // des Scores; das Geld ist das, wonach man schaut.
+      '.sz-c{position:relative;}',
+      '.sz-p{position:absolute;top:3px;right:6px;font-size:9px;font-weight:800;font-family:"JetBrains Mono",monospace;}',
+      '.sz-bar{height:4px;border-radius:2px;background:var(--mln2);overflow:hidden;margin:3px 0 3px;}',
+      '.sz-bar i{display:block;height:4px;border-radius:2px;}',
+      '.sz-c em{font-style:normal;font-size:9px;color:var(--mi3);font-weight:600;}',
       '.sz-w{font-size:10.5px;color:var(--mi2);margin-top:4px;line-height:1.4;}',
       // 29.08.2026 (Lucas): das Konjunktions-Element. Bewusst anders als „Top-Wetten jetzt":
       // dunkler, ruhiger, weniger Zeilen. Die Sektion soll aussehen, als koste jede Zeile etwas.
@@ -1548,22 +1559,49 @@
       // 1 von 5. `basis` beschreibt, worauf der ZUSTAND beruht (intakt/wackelt), nicht die
       // Seltenheit. Deshalb traegt die Seltenheit ihren eigenen Nenner mit, und die Eigenrate
       // steht als das dran, was sie ist.
+      // 🔴 08.09.2026 — hier stand „1 von 11.990 (Liga-Basis 39 %)" direkt neben „Eigenrate vor
+      // der Serie 80 %". Zwei Nenner für dieselbe Serie, und der gezeigte war der falsche:
+      // 0,8^10 = 1 von 9, nicht 1 von 11.990. Am 05.09. wurde derselbe Widerspruch schon einmal
+      // gesehen und nur BESCHRIFTET — ein Etikett an einer Zahl, die die falsche Frage
+      // beantwortet, macht sie nicht richtig.
+      //
+      // Jetzt kommt die Seltenheit fertig aus `compute_streaks.seltenheit`: eigener Nenner,
+      // Band statt Punktschätzer, Erwartungswert im Suchfeld und ein Urteil. Das Frontend
+      // vergleicht nichts mehr selbst — es liest, was der Produzent entschieden hat.
       var _rp = (s.continuation && s.continuation.ratePct != null) ? s.continuation.ratePct : null;
       var _bq = '';
-      var _z = _mdStreakSelten(s);
-      if (_z) {
-        var _eins = Math.round(100 / _z);
-        if (_eins >= 2) {
-          _bq += ' · 1 von ' + _eins.toLocaleString('de-DE');
-          if (s.ligaBasisPct != null) _bq += ' (Liga-Basis ' + s.ligaBasisPct + '%)';
+      var _se = s.seltenheit;
+      if (_se && _se.urteil === 'nicht belegbar') {
+        // ⚠️ Der Unterschied, der vorher verschwand: „unauffällig" und „nicht gemessen" sind
+        // nicht dasselbe. Ohne eigene Vorgeschichte rutschte die Liga-Basis still als Default
+        // durch — zwei der fünf Serien auf Lucas' Board hatten gar keine Eigenrate.
+        _bq += ' · <span style="color:var(--mi3)" title="' + esc(String(_se.grund || '')) + '">'
+          + 'Seltenheit nicht belegbar</span>';
+      } else if (_se && _se.einsZu) {
+        _bq += ' · 1 von ' + (+_se.einsZu).toLocaleString('de-DE')
+          + ' <i style="font-style:normal;color:var(--mi3)">(eigene Rate ' + _se.ratePct + '%'
+          + (_se.preN ? ' aus ' + _se.preN + ' Spielen' : '') + ')</i>';
+        if (_se.einsZuBand && _se.einsZuBand[0] !== _se.einsZuBand[1]) {
+          // Parmas 80 % sind 4 von 5 Spielen — das 95-%-Band macht daraus „1 von 2" bis
+          // „1 von 4.097". Eine Zahl, die über drei Größenordnungen schwankt, ist keine Auskunft.
+          _bq += '<i style="font-style:normal;color:var(--mi3)" title="95-%-Band der eigenen Rate '
+            + '— bei kleiner Vorgeschichte trägt der Punktschätzer nichts">'
+            + ' [' + (+_se.einsZuBand[0]).toLocaleString('de-DE') + '…'
+            + (+_se.einsZuBand[1]).toLocaleString('de-DE') + ']</i>';
+        }
+        if (_se.erwartet != null) {
+          // Über 125 Teams × 11 Märkte × 3 Ansichten gesucht ist ein „1 von 4.554" 0,9-mal zu
+          // erwarten. Ohne diese Zahl liest man jede Seltenheit als Befund.
+          var _auff = _se.urteil === 'auffaellig';
+          _bq += ' · <span style="color:' + (_auff ? A.good : 'var(--mi3)') + '" title="'
+            + esc(String(_se.grund || '')) + '">'
+            + (_auff ? '★ auffällig' : 'im Feld erwartbar (' + _se.erwartet + '×)') + '</span>';
         }
       }
-      // 06.09.2026 — bei basis 'liga' IST die Zustandsrate die Liga-Basis: die Zeile stand dann
-      // zweimal mit derselben Zahl da („1 von 3.495 (Liga-Basis 20%) · Zustand aus Liga-Schnitt
-      // 20%"). Doppelt genannt heisst nicht doppelt belegt — also nur nennen, was etwas hinzufuegt.
-      if (_rp != null && !(s.basis === 'liga' && _rp === s.ligaBasisPct)) {
-        _bq += s.basis === 'liga' ? ' · Zustand aus Liga-Schnitt ' + _rp + '%'
-                                  : ' · Eigenrate vor der Serie ' + _rp + '%';
+      if (_rp != null && s.basis !== 'liga') {
+        _bq += ' · Eigenrate vor der Serie ' + _rp + '%';
+      } else if (_rp != null && s.basis === 'liga' && _rp !== s.ligaBasisPct) {
+        _bq += ' · Zustand aus Liga-Schnitt ' + _rp + '%';
       }
       var sub = esc(String(s.leagueName || '')) + (s.continuation && s.continuation.state ? ' · ' + esc(s.continuation.state) : '') + _bq;
       var len = +s.length || 0;
@@ -2284,6 +2322,23 @@
 
   // Eine Spalte je Buch, IMMER an derselben Stelle — auch leer. Man zaehlt die gefuellten
   // Felder, statt Text zu lesen, und zwei Zeilen untereinander sind vergleichbar.
+  // 08.09.2026 (Lucas: „könnte man das optisch nicht ins Kästchen schreiben, wieviel Kohle oben
+  // liegt? … nur +2 und ganz mini so ein %, das sieht man ja nicht gut — unten in Ebene 3 ist das
+  // mit den Balken optisch besser gelöst").
+  //
+  // Also derselbe Aufbau wie die Signal-Zellen in Ebene 3: Betrag groß, Balken für den Anteil,
+  // Punkte klein in die Ecke. Die Punkte sind die MECHANIK des Scores; das Geld ist das, wonach
+  // man tatsächlich schaut.
+  //
+  // ⭐ Die Zahlen kommen fertig aus `killer.buecher_punkte` (`teil.geld`) und werden hier NICHT
+  // aus dem Begründungstext geparst. „Geld 88% auf der Seite" wäre als Quelle beim nächsten
+  // Satzbau kaputt — und der Betrag steht da ohnehin nie drin.
+  function _szGeld(g) {
+    if (!g) return '';
+    if (g.waehrung === 'EUR') return eur(g.betrag);
+    return usd(g.betrag);
+  }
+
   function _klZelle(t) {
     var kurz = (t && t.buch) || '?';
     var name = KL_BUCH[kurz] || kurz;
@@ -2300,9 +2355,42 @@
     // Die Tiefe steht nur dran, wenn sie auch gezaehlt hat — sonst liest sich ein „nein"
     // wie ein Beleg.
     if (t.tiefe && t.tiefe.ok && t.tiefe.text) txt += ' · ' + t.tiefe.text;
-    return '<div class="sz-c"><b>' + name + '</b>'
-      + '<i style="color:' + col + '">' + wert + '</i>'
-      + '<s title="' + esc(String(txt)) + '">' + esc(String(txt)) + '</s></div>';
+
+    var g = t.geld;
+    var kopf, balken = '', fuss;
+    if (g && g.betrag != null) {
+      // Der Normalfall, auf den Lucas hinauswollte: echtes Geld auf dieser Seite.
+      kopf = _szGeld(g);
+      fuss = Math.round((g.anteil || 0) * 100) + ' % der Seite'
+        + (g.gesamt != null ? ' · von ' + _szGeld({ betrag: g.gesamt, waehrung: g.waehrung }) : '');
+    } else if (g && g.anteil != null && g.quelle === 'preis') {
+      // ⚠️ Bei Polymarket ist derselbe Anteil manchmal ein PREIS. 68 % Preis heißt „der Markt
+      // hält es für zu 68 % wahrscheinlich" und nicht „68 % des Geldes liegen da". Ein
+      // Geldbetrag daraus wäre erfunden — also steht hier der Prozentwert und dazu, was er ist.
+      kopf = Math.round(g.anteil * 100) + ' %';
+      fuss = 'Preis, kein Geldanteil'
+        + (g.gesamt != null ? ' · Markt ' + _szGeld({ betrag: g.gesamt, waehrung: g.waehrung }) : '');
+    } else if (g && g.anteil != null) {
+      // Anteil bekannt, Betrag nicht — kommt vor, wenn das Spiel nur über den Anker läuft.
+      // Der Balken stimmt trotzdem; die fehlende Zahl wird benannt statt geschätzt.
+      kopf = Math.round(g.anteil * 100) + ' %';
+      fuss = 'Betrag nicht erhoben';
+    } else {
+      // Pinnacle: ein Preisbuch. Es hat kein Geld auf einer Seite und bekommt deshalb auch
+      // keinen Balken — ein leerer Balken sähe aus wie „null Geld".
+      kopf = wert;
+      fuss = txt;
+    }
+    if (g && g.anteil != null) {
+      balken = '<div class="sz-bar"><i style="width:'
+        + clamp(Math.round(g.anteil * 100), 0, 100) + '%;background:' + col + '"></i></div>';
+    }
+    return '<div class="sz-c" title="' + esc(String(txt)) + '">'
+      + '<b>' + name + '</b>'
+      + '<span class="sz-p" style="color:' + col + '">' + wert + '</span>'
+      + '<i style="color:' + col + '">' + kopf + '</i>'
+      + balken
+      + '<s>' + esc(String(fuss)) + '</s></div>';
   }
 
   function _klTafelZeile(r, bewegt) {
@@ -2401,6 +2489,15 @@
       + '<span class="fg-strom-z" title="Über diese Zerlegung wurde summiert — die anderen '
       + 'Schubladen desselben Stroms sind Schnitte durch dieselben Plays und würden doppelt zählen">'
       + esc(String(r.zerlegung || '')) + '</span></div>'
+      // 08.09.2026 (Lucas: „aja, und was ist das in Polymarket — im Tracking vom Polymarket-
+      // Wallet stehen da andere Sachen"). Standen da wirklich: −6,6 % hier, +0,1 % dort. Beide
+      // richtig, beide über eine ANDERE Menge, und keine der beiden sagte welche. Die Kachel
+      // sagt es jetzt selbst — das ist derselbe Satz wie „nach Conviction", nur eine Ebene
+      // tiefer: worüber wurde gerechnet.
+      + (r.basis ? '<div class="fg-strom-q" title="Welche Plays in diese Zahl eingehen. Die '
+          + 'Track-Record-Seite der Poly-Wallets zählt ALLE Plays und trennt bespielbar von '
+          + 'nicht bespielbar — deshalb steht dort eine andere Zahl.">'
+          + esc(String(r.basis)) + '</div>' : '')
       + '<div class="mpc-subs">'
       + z('ROI', (r.roi == null ? '—' : (r.roi > 0 ? '+' : '') + (r.roi * 100).toFixed(1) + '%'), col)
       + z('P/L', (r.pl == null ? '—' : (r.pl > 0 ? '+' : '') + (+r.pl).toFixed(1)), col)

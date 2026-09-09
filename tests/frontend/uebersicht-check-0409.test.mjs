@@ -71,19 +71,25 @@ test('das Label nennt, woher die Grundrate kommt', () => {
   assert.ok(!/s\.basis === 'pure'/.test(MD), "basis „pure\" gibt es nicht mehr");
 });
 
-test('die Seltenheit trägt den Nenner, aus dem sie gerechnet wurde', () => {
-  // 05.09.2026 — auf dem Board stand „Parma · intakt · vorher 83% · 1 von 4.541".
-  // Die zweite Zahl folgt NICHT aus der ersten: `zufallPct` rechnet immer gegen die
-  // Liga-Grundrate (39 % → 0,39^9 = 1 von 4.541), 0,83^9 wäre 1 von 5. `basis`/`ratePct`
-  // beschreiben den ZUSTAND (intakt/wackelt), nicht die Seltenheit.
+test('die Seltenheit rechnet mit der EIGENEN Rate, nicht mit dem Liga-Schnitt', () => {
+  // 05.09.2026 hielt dieser Test fest, dass die Seltenheit „Liga-Basis" als Nenner NENNT.
+  // 08.09.2026, externes Feedback: das Nennen war nie das Problem — der Nenner war falsch.
+  // „Parma · Unter 2,5, 10er: 1 von 11.990 (Liga-Basis 39 %)" neben „Eigenrate 80 %";
+  // 0,8^10 sind 1 von 9. Faktor 1.290.
   //
-  // Der alte Test hielt ausgerechnet die Formulierung fest, die der Fund war (' · vorher ') —
-  // ein Test, der den Defekt zementiert. Ersetzt durch die Regel dahinter.
+  // ⭐ Damit hat der Test von damals die falsche Zahl ZEMENTIERT — genau die Klasse, vor der
+  // sein eigener Kommentar warnte („ein Test, der den Defekt festhält"). Die Regel heißt jetzt:
+  // das Frontend rechnet gar nichts mehr, es liest `seltenheit` aus dem Produzenten.
   assert.match(MD, /1 von '/, 'die Seltenheit steht auf dem Board');
-  assert.match(MD, /Liga-Basis '/, 'und nennt den Nenner, aus dem sie folgt');
-  assert.ok(!/' · vorher ' \+ _rp/.test(MD),
-    'eine nackte Eigenrate darf nicht direkt neben der Seltenheit stehen');
-  assert.match(MD, /Eigenrate vor der Serie/, 'die Eigenrate heißt, was sie ist');
+  assert.match(MD, /s\.seltenheit/, 'sie kommt fertig aus compute_streaks');
+  assert.match(MD, /eigene Rate '/, 'und nennt die Rate, aus der sie folgt');
+  assert.match(MD, /Seltenheit nicht belegbar/,
+    'ohne eigene Vorgeschichte gibt es kein Urteil — „unauffällig" und „nicht gemessen" sind '
+    + 'nicht dasselbe');
+  assert.match(MD, /im Feld erwartbar/,
+    'der Erwartungswert im Suchfeld gehört daneben — sonst liest man jede Seltenheit als Befund');
+  assert.ok(!/\(Liga-Basis ' \+ s\.ligaBasisPct/.test(MD),
+    'der Liga-Schnitt darf nicht mehr als Nenner der Seltenheit erscheinen');
 });
 
 // ── 2. Ebene 1 nannte den falschen Grund ────────────────────────────────────

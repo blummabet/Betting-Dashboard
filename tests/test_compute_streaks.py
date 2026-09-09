@@ -219,3 +219,67 @@ class TestStreaks(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+# ── 08.09.2026: die Seltenheit rechnete mit dem falschen Nenner ─────────────────────────
+# Externes Feedback zur Serien-Seite, nachgerechnet an den echten Artefakten und in jedem Punkt
+# bestaetigt:
+#     Parma · Unter 2,5, 10er:  angezeigt „1 von 11.990 (Liga-Basis 39 %)",
+#                               daneben   „Eigenrate vor der Serie 80 %"  →  0,8^10 = 1 von 9.
+# Faktor 1.290. Betroffen: 207 von 556 Serien allein in der Liga-Datei.
+class TestSeltenheit:
+    def test_die_eigene_rate_ist_der_nenner_wenn_es_sie_gibt(self):
+        e = S.seltenheit(0.8, 5, 0.39, 10, 4125)
+        assert e["basis"] == "eigen"
+        assert e["einsZu"] == 9, "0,8^10 = 1 von 9 — nicht 1 von 11.990"
+
+    def test_ohne_eigene_vorgeschichte_ist_die_seltenheit_NICHT_BELEGBAR(self):
+        """⚠️ Der Unterschied, der vorher still verschwand: „unauffaellig" und „nicht gemessen"
+        sind nicht dasselbe. Zwei der fuenf Serien auf Lucas' Board hatten gar keine Eigenrate,
+        und die Liga-Basis rutschte als Default durch."""
+        e = S.seltenheit(None, 0, 0.39, 10, 4125)
+        assert e["basis"] == "liga"
+        assert e["urteil"] == "nicht belegbar"
+        assert "Durchschnittsteam" in e["grund"]
+
+    def test_der_punktschaetzer_bekommt_sein_band(self):
+        """Parmas 80 % sind 4 von 5 Spielen. Das Band macht daraus 1 von 2 bis 1 von 4.097 —
+        eine Zahl, die ueber drei Groessenordnungen schwankt, ist keine Auskunft."""
+        e = S.seltenheit(0.8, 5, 0.39, 10, 4125)
+        lo, hi = e["einsZuBand"]
+        assert lo < e["einsZu"] < hi
+        assert hi / max(lo, 1) > 100, "bei n=5 muss das Band die Unsicherheit auch zeigen"
+
+    def test_ein_grosses_suchfeld_macht_seltenes_erwartbar(self):
+        """Ueber 125 Teams x 11 Maerkte x 3 Ansichten ist ein „1 von 90" 46-mal zu erwarten."""
+        e = S.seltenheit(0.57, 7, 0.35, 8, 4125)
+        assert e["urteil"] == "erwartbar"
+        assert e["erwartet"] > 1
+
+    def test_auffaellig_verlangt_die_guenstigste_eigene_rate(self):
+        """⭐ Die Beweislast liegt beim Befund. Der Fall, der die Regel traegt: 3 von 10 Spielen
+        (30 %) bei einer 7er-Serie ergibt als PUNKTSCHAETZER 0,9 erwartete Laeufe im Feld — nach
+        dem Punkt also „auffaellig". Das 95-%-Band reicht aber bis 61 %, und damit sind 70 solche
+        Laeufe zu erwarten. Wer nach dem Punkt urteilt, meldet einen Fund, den die Suche selbst
+        erzeugt hat."""
+        F = 4125
+        e = S.seltenheit(0.3, 10, 0.5, 7, F)
+        assert F * (0.3 ** 7) < 1.0, "Vorbedingung: der Punktschaetzer wuerde 'auffaellig' sagen"
+        assert e["erwartetBand"][1] > 1.0, "Vorbedingung: die Bandobergrenze sagt das Gegenteil"
+        assert e["urteil"] == "erwartbar"
+
+    def test_auffaellig_gibt_es_wirklich_wenn_die_daten_es_hergeben(self):
+        """Kein Kriterium, das nie feuert: mit genug Vorgeschichte und niedriger eigener Rate
+        bleibt auch die Bandobergrenze unter einem erwarteten Lauf."""
+        e = S.seltenheit(0.1, 40, 0.2, 12, 4125)
+        assert e["urteil"] == "auffaellig"
+        assert e["erwartetBand"][1] < 1
+
+    def test_ohne_jede_basis_gibt_es_keine_zahl(self):
+        assert S.seltenheit(None, 0, None, 8, 4125) is None
+
+    def test_das_urteil_entsteht_im_produzenten(self):
+        """Kein Frontend vergleicht selbst gegen eine Schwelle — das Urteil gehoert dorthin, wo
+        die Zahl entsteht."""
+        e = S.seltenheit(0.57, 7, 0.35, 8, 4125)
+        assert set(("urteil", "grund", "erwartet", "familie")) <= set(e)

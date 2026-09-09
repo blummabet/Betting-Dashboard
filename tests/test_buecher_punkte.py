@@ -337,3 +337,61 @@ class TestStakeAlsViertesBuch(unittest.TestCase):
         p = self._p({"seite": "home", "seiteUsd": 7318.0, "n": 9})
         self.assertEqual(p["punkte"], sum(t["punkte"] for t in p["teile"]))
         self.assertEqual(p["moeglich"], sum(t["moeglich"] for t in p["teile"]))
+
+
+# ── 08.09.2026: Geld je Buch, maschinenlesbar ───────────────────────────────────────────
+# Lucas: „koennte man das optisch nicht ins Kaestchen schreiben, wieviel Kohle oben liegt? Bei
+# Betfair, Poly und Stake. Nur +2 und ganz mini so ein %, das sieht man ja nicht gut."
+#
+# Der teure Teil ist nicht der Betrag, sondern die Frage, wann es ihn NICHT gibt.
+class TestGeldJeBuch(unittest.TestCase):
+    def test_betfair_betrag_ist_anteil_mal_volumen(self):
+        g = spiel()
+        g["totVol"] = 2000000
+        t = teil(K.buecher_punkte(sig(share=0.88), g, "home", kickoff=ANPFIFF), "BF")
+        self.assertEqual(t["geld"]["betrag"], 1760000)
+        self.assertEqual(t["geld"]["waehrung"], "EUR")
+        self.assertEqual(t["geld"]["quelle"], "geld")
+
+    def test_ohne_volumen_gibt_es_den_anteil_aber_keinen_betrag(self):
+        """Kommt real vor: Spiele unter der Radar-Schwelle laufen ueber den Anker. Der Balken
+        stimmt trotzdem — erfunden wird nichts."""
+        t = teil(K.buecher_punkte(sig(share=0.88), spiel(), "home", kickoff=ANPFIFF), "BF")
+        self.assertAlmostEqual(t["geld"]["anteil"], 0.88)
+        self.assertIsNone(t["geld"]["betrag"])
+
+    def test_ein_poly_PREIS_bekommt_keinen_geldbetrag(self):
+        """⭐ Der Kern. Bei Polymarket ist derselbe Anteil manchmal Geld und manchmal ein PREIS.
+        68 % Preis heisst „der Markt haelt es fuer zu 68 % wahrscheinlich" und nicht „68 % des
+        Geldes liegen da". Ein Betrag daraus waere eine erfundene Zahl an genau der Stelle, auf
+        die Lucas ab jetzt schaut."""
+        g = spiel(poly_pct=68)
+        g["poly"].update({"vol": 1407, "shareSrc": "preis"})
+        t = teil(K.buecher_punkte(sig(), g, "home", kickoff=ANPFIFF), "POLY")
+        self.assertEqual(t["geld"]["quelle"], "preis")
+        self.assertIsNone(t["geld"]["betrag"], "aus einem Preis folgt kein Geldbetrag")
+        self.assertEqual(t["geld"]["gesamt"], 1407, "das Marktvolumen ist gemessen und bleibt")
+
+    def test_ein_poly_GELDANTEIL_bekommt_seinen_betrag(self):
+        g = spiel(poly_pct=75)
+        g["poly"].update({"vol": 10756, "shareSrc": "geld"})
+        t = teil(K.buecher_punkte(sig(), g, "home", kickoff=ANPFIFF), "POLY")
+        self.assertEqual(t["geld"]["quelle"], "geld")
+        self.assertEqual(t["geld"]["betrag"], 8067)
+
+    def test_stake_traegt_seinen_seitenbetrag(self):
+        st = {"seite": "home", "seiteUsd": 7318, "usd": 9000, "n": 4}
+        t = teil(K.buecher_punkte(sig(), spiel(), "home", kickoff=ANPFIFF, stake=st), "STAKE")
+        self.assertEqual(t["geld"]["betrag"], 7318)
+        self.assertEqual(t["geld"]["gesamt"], 9000)
+
+    def test_pinnacle_hat_gar_keinen_geldblock(self):
+        """Ein Preisbuch hat kein Geld auf einer Seite. Ein Nullwert waere hier eine Aussage,
+        die es nicht gibt — und im Frontend ein leerer Balken, der wie „null Geld" aussieht."""
+        t = teil(K.buecher_punkte(sig(), spiel(), "home", kickoff=ANPFIFF), "PIN")
+        self.assertIsNone(t["geld"])
+
+    def test_nicht_erhoben_traegt_kein_geld(self):
+        t = teil(K.buecher_punkte(sig(), spiel(), "home", kickoff=ANPFIFF), "STAKE")
+        self.assertEqual(t["status"], "unbekannt")
+        self.assertIsNone(t["geld"])

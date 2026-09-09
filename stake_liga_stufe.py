@@ -118,6 +118,10 @@ _JUGEND_RX = re.compile(r"\bu1[789]\b|\bu2[0-3]\b|youth|jugend|junior|academy|pr
 # Reservemannschaften, in jeder Sprache, in der sie im Ledger auftauchen.
 _RESERVE_RX = re.compile(r"reserv|riserv")
 
+# Pokalwettbewerbe, die sich nicht „Cup" nennen. Wortgrenzen, damit „shield" in einem Vereinsnamen
+# nicht die ganze Liga zum Pokal macht.
+_POKAL_RX = re.compile(r"(?:^|-)(?:trophy|shield|coupe|taca|kupa|kubok|beker|cupa)(?:-|$)")
+
 # Mustererkennung fuer alles, was neu dazukommt. Sie ersetzt die Tabelle nicht, sie faengt
 # nur die Faelle ab, bei denen der Slug die Antwort selbst mitbringt.
 _MUSTER = (
@@ -149,7 +153,13 @@ _MUSTER = (
     ("jugend", lambda s: bool(_JUGEND_RX.search(s))),
     ("frauen", lambda s: ("women" in s or "femenina" in s or "feminin" in s
                           or "damallsvenskan" in s or "frauen" in s)),
-    ("pokal", lambda s: s.endswith("-cup") or s.startswith("copa-") or s.endswith("-pokal")),
+    # 08.09.2026 (CI-Wachhund, „efl-trophy"): dieselbe Klasse wie „reserva" zwei Stunden vorher.
+    # Die Regel kannte drei Woerter fuer „Pokal" — englisch, spanisch, deutsch. Ein Wettbewerb,
+    # der sich Trophy, Shield, Coupe oder Taca nennt, ist derselbe Wettbewerbstyp und fiel durch.
+    # Gegenprobe an den Fussball-Slugs des Ledgers: beantwortet genau den einen offenen Slug und
+    # stuft keinen bereits eingestuften um.
+    ("pokal", lambda s: (s.endswith("-cup") or s.startswith("copa-") or s.endswith("-pokal")
+                         or bool(_POKAL_RX.search(s)))),
 )
 
 SPORT = "soccer"

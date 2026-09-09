@@ -49,6 +49,22 @@ from pathlib import Path
 
 import sharp_gate as SG
 
+
+def _row_cat(r):
+    """Kategorie einer Zeile — ueber den kanonischen Helfer, nicht ueber das rohe Feld.
+
+    Nicht jede Zeile traegt einen `cat`-Stempel; `poly_shortlist_track._row_cat` leitet ihn dann
+    aus der Liga ab. Ohne ihn landete eine ungestempelte UFC-Zeile im bespielbaren Topf — genau
+    der Fehler, gegen den `tests/test_shortlist_kategorie.py` einen Waechter haelt. Faellt der
+    Import aus, bleibt das rohe Feld die Notloesung; das ist schlechter als der Helfer, aber
+    besser als gar kein Filter.
+    """
+    try:
+        from poly_shortlist_track import _row_cat as _rc
+    except Exception:
+        return r.get("cat")
+    return _rc(r)
+
 BASE = Path(__file__).resolve().parent
 OUT_FILE = "freigabe.json"
 
@@ -478,6 +494,27 @@ def poly_schubladen(track=None, engine=None) -> list:
     d = track if track is not None else _load("poly_shortlist_track.json")
     st = (d or {}).get("settled") or []
     st = list(st.values()) if isinstance(st, dict) else st
+    # 08.09.2026 (Lucas: „aja, und was ist das in Polymarket — im Tracking vom Polymarket-Wallet
+    # stehen da andere Sachen"). Zwei Gruende, warum die Kachel und die Track-Record-Seite
+    # verschiedene Zahlen zeigten, und einer davon war ein echter Fehler:
+    #
+    #  1. Der ENGINE-FILTER (kein Fehler, aber ungesagt): die Freigabe rechnet nur auf der
+    #     aktuellen Engine-Version — 240 von 644 abgerechneten Plays. Die Track-Seite zeigt
+    #     alle. Das steht ab jetzt als `basis` auf der Kachel, statt dass man es wissen muss.
+    #  2. Die GESPERRTEN KATEGORIEN (Fehler): die Track-Seite trennt „bespielbar" von „nicht
+    #     bespielbar" (US-Sport, Kampfsport) und sagt dazu ausdruecklich „nur Beobachtung, kein
+    #     Geld". Die Freigabe zaehlte sie mit. Ein Strom-ROI, der Wetten enthaelt, die gar nicht
+    #     gespielt werden duerfen, beantwortet eine Frage, die niemand hat.
+    #     Gemessen: 4 der 240 Plays, ROI der Kachel −6,6 % → −5,6 %. Klein heute, aber die
+    #     gesperrten Kategorien laufen bei −43,2 % (n=53 ueber alle Engines) — sobald davon
+    #     mehr in die aktuelle Engine faellt, verzerrt es die Kachel ernsthaft.
+    #     Gefiltert wird ueber `poly_shortlist_track._row_cat` und NICHT ueber das rohe Feld:
+    #     nicht jede Zeile traegt einen Stempel, und eine ungestempelte UFC-Zeile landete sonst
+    #     im bespielbaren Topf. Genau dafuer gibt es den Helfer — und einen Waechter, der jeden
+    #     rohen `.get("cat") in …`-Filter im Repo findet.
+    _gesperrt = set((d or {}).get("blockedCats") or [])
+    if _gesperrt:
+        st = [x for x in st if _row_cat(x) not in _gesperrt]
     if engine is None:
         engine = aktuelle_engine(d)
     out = []
@@ -1122,7 +1159,29 @@ STROM_ZERLEGUNG = {"cards": ("verdict", "nach Verdikt"),
                    "betfair": ("markt", "nach Markt")}
 
 
-def stroeme(zeilen) -> list:
+# Woher die Zahl einer Strom-Kachel kommt — in einem Satz, den man ohne Vorwissen liest.
+# 08.09.2026: ohne ihn stand „Polymarket −6,6 %" neben einer Track-Seite mit „+0,1 %", und beide
+# waren richtig: verschiedene Mengen, gleich beschriftet.
+def strom_basis(strom, track=None) -> str | None:
+    if strom != "poly":
+        return None
+    d = track if track is not None else _load("poly_shortlist_track.json")
+    st = (d or {}).get("settled") or []
+    st = list(st.values()) if isinstance(st, dict) else st
+    if not st:
+        return None
+    eng = aktuelle_engine(d)
+    gesperrt = set((d or {}).get("blockedCats") or [])
+    zaehlt = [x for x in st if (not eng or x.get("ev") == eng) and _row_cat(x) not in gesperrt]
+    teile = ["%d von %d abgerechneten Plays" % (len(zaehlt), len(st))]
+    if eng:
+        teile.append("nur Engine %s" % eng)
+    if gesperrt:
+        teile.append("ohne %s" % ", ".join(sorted(gesperrt)))
+    return " · ".join(teile)
+
+
+def stroeme(zeilen, track=None) -> list:
     """Je Strom eine Zeile aus seiner ueberschneidungsfreien Zerlegung. REIN.
 
     Gibt n, ROI, P/L und CLV — und `zerlegung`, damit niemand die Zahl fuer „alles von Poly"
@@ -1144,6 +1203,7 @@ def stroeme(zeilen) -> list:
         _c = [(r["clv"], r["n"]) for r in rs if isinstance(r.get("clv"), (int, float))]
         clv = (sum(c * k for c, k in _c) / sum(k for _, k in _c)) if _c else None
         out.append({"strom": strom, "zerlegung": label, "art": art, "gruppen": len(rs),
+                    "basis": strom_basis(strom, track),
                     "n": n, "pl": round(pl, 2), "roi": round(pl / n, 4) if n else None,
                     "clv": round(clv, 3) if clv is not None else None,
                     # Wie viele der Schubladen DIESES Stroms tragen ueberhaupt einen Beleg?

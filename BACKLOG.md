@@ -3,6 +3,145 @@
 Stand 07.09.2026 (oberster Block); Liga/WM-Teil darunter Stand 26.06.2026. Lebendige Liste aller offenen Punkte — Liga UND noch nicht umgesetzte WM-Sachen —
 damit wir alles abarbeiten können. ✅ = erledigt (Referenz), ⏳ = offen, 🔒 = blockiert.
 
+## 🎲 08.09.2026 (nachts) — die Serien-Seltenheit rechnete mit dem falschen Nenner
+
+Externes Feedback zur Serien-Seite, an den echten Artefakten nachgerechnet: **es stimmt in jedem
+Punkt.** 714 Serien aus Liga + MLS geprüft.
+
+    Parma · Unter 2,5, 10er-Serie
+        angezeigt   „1 von 11.990 (Liga-Basis 39 %)"
+        daneben     „Eigenrate vor der Serie 80 %"
+        richtig     0,8^10 = 1 von 9          →  Faktor 1.290
+
+    Colorado · Beide treffen — Nein, 8er
+        angezeigt   1 von 4.554 (Liga-Basis 35 %)
+        Eigenrate   57 %  →  1 von 90         →  Faktor 50
+
+Die Liga-Grundrate ist der Nenner für ein **Durchschnittsteam**. Sobald das Team selbst eine
+andere Rate hat — und die steht auf derselben Karte —, beantwortet die Zahl eine Frage, die
+niemand gestellt hat. Betroffen: **207 von 556** Serien allein in der Liga-Datei.
+
+🔴 **Am 05.09. wurde derselbe Widerspruch schon einmal gesehen** — der Kommentar in
+`main-dashboard.js` rechnet „0,83^9 wäre 1 von 5" sogar vor — und damals nur **beschriftet**
+statt behoben. Schlimmer: der Test von damals hielt fest, dass die Seltenheit „Liga-Basis" als
+Nenner *nennt*, und zementierte damit die falsche Zahl. Genau die Klasse, vor der sein eigener
+Kommentar warnte. Und `check_serie_seltenheit_nennt_ihren_nenner` war die ganze Zeit **grün**:
+er prüft, dass `zufallPct` sauber aus der Liga-Basis folgt, und das tat sie. *Ein Guard, der die
+Arithmetik einer Zahl bewacht, die die falsche Frage beantwortet, meldet nichts.*
+
+### Zwei weitere Funde beim Nachrechnen
+
+1. **Der Punktschätzer trägt nichts.** Parmas 80 % sind **4 von 5 Spielen**. Das 95-%-Band ist
+   44 %..95 %, und daraus wird „1 von 2" bis „1 von 4.097" — drei Größenordnungen. Dieselbe
+   Klasse wie ein ROI ohne Untergrenze, nur an einer anderen Stelle.
+2. **Das Suchfeld.** Gesucht wird über 125 Teams × 11 Märkte × 3 Ansichten = **4.125
+   Kombinationen**. Ein „1 von 4.554" ist darin 0,9-mal zu erwarten, ein „1 von 24"
+   (Rennes · Team trifft 15×) **175-mal**. Ohne diese Zahl daneben liest man jede Seltenheit als
+   Befund. *(Der Einwand „selbst 1-zu-12.000 ist der Erwartungswert" geht mir allerdings zu weit:
+   bei 4.125 Kombinationen ist das 0,34-mal zu erwarten, also weiterhin bemerkenswert — wenn der
+   Nenner stimmt.)*
+
+### Was jetzt gerechnet wird — `compute_streaks.seltenheit`
+
+- **Nenner ist die eigene Vor-Serien-Rate**, wenn es sie gibt; sonst die Liga-Rate, und dann
+  heißt das Urteil **„nicht belegbar"**. Ohne eigene Vorgeschichte gilt der Liga-Schnitt für ein
+  Durchschnittsteam — ob dieses Team eines ist, wissen wir gerade nicht. Das ist „nicht
+  gemessen", nicht „unauffällig". (Zwei der fünf Serien auf Lucas' Board hatten gar keine
+  Eigenrate; die Liga-Basis rutschte still als Default durch.)
+- **Band statt Punkt:** `einsZuBand` aus zwei einseitigen Wilson-Grenzen der eigenen Rate.
+- **`erwartet`:** wie viele solcher Läufe im getesteten Feld ohnehin zu erwarten sind.
+- **Beweislast beim Befund:** „auffällig" nur, wenn selbst mit der *günstigsten* Rate des Bandes
+  weniger als ein solcher Lauf im Feld zu erwarten wäre.
+- Das Urteil entsteht im **Produzenten**; das Frontend vergleicht nichts mehr selbst.
+
+### Das Ergebnis, und es ist unbequem
+
+    436  keine eigene Vorgeschichte  → nicht belegbar
+    278  im Feld erwartbar
+      0  auffällig
+
+**Keine einzige der 714 Serien hält einer ehrlichen Prüfung stand.** Das ist die Antwort auf
+„machen die Serien Sinn": als *Seltenheits*-Befund nein — und das war nie ihr nützlicher Teil.
+`zufallPct` bleibt, aber nur wofür es gebaut war: Märkte untereinander sortierbar machen.
+
+🔴 **Und der eigentliche Grund, warum die Frage bisher unbeantwortbar ist:** `liga_streak_watch.json`
+führt **50 beobachtete Serien und 0 Ergebnisse**. Der Streak-Watch postet, bucht aber nie ab. Es
+gibt bis heute keine einzige Messung, ob das Folgen einer Serie je Geld gebracht hat.
+
+- ✅ Neuer Guard `check_serie_seltenheit_rechnet_mit_der_eigenen_rate` in der Batterie — er prüft
+  den **Nenner**, nicht die Rechnung. Gegenbeweis: fünf verschiedene Manipulationen, jede wird
+  gefangen. Der erste Entwurf meldete prompt 8 gesunde Serien (Arsenal „Sieg-Serie 3×": 0,67³ =
+  1 von 3,3 → gerundet 3), weil Rate **und** Ergebnis gerundet sind — geprüft wird jetzt gegen
+  das Intervall, das die Rundung zulässt.
+
+**Rollout-Lücke:** der Guard steht lokal auf Rot, bis die Pipeline neu gelaufen ist — die
+Artefakte auf der Platte stammen von vor der Änderung. Gegen frisch gerechnete Serien: 0 Fehler.
+
+**Offen (braucht eine Entscheidung):** ob der Streak-Watch abrechnen soll und was „der Serie
+folgen" heißt — die Fortsetzung zu welchem Preis, bei welchem Buch. Ohne diese Festlegung bleibt
+die Frage „machen die Serien Sinn" unbeantwortbar.
+
+## 💶 08.09.2026 (nachts) — Geld ins Kästchen, und warum Poly zwei Zahlen hatte
+
+### Die Bücher-Kästchen zeigen Beträge, nicht Mini-Prozente
+
+Lucas: *„könnte man das optisch nicht ins Kästchen schreiben, wieviel Kohle oben liegt? Bei
+Betfair, Poly und Stake. Nur +2 und ganz mini so ein %, das sieht man ja nicht gut — unten in
+Ebene 3 ist das mit den Balken optisch besser gelöst."*
+
+- ✅ **Derselbe Aufbau wie die Signal-Zellen in Ebene 3:** Betrag als große Zahl, Anteil als
+  Balken, Punkte klein in die Ecke. Die Punkte sind die *Mechanik* des Scores; das Geld ist das,
+  wonach man schaut.
+- ✅ **Die Zahlen kommen aus dem Produzenten** (`killer._geld` je Buch), nicht aus dem
+  Begründungstext. „Geld 88% auf der Seite" wäre als Quelle beim nächsten Satzbau kaputt — und
+  der Betrag steht dort ohnehin nie drin.
+- 🔴 **`totVol` fehlte im Anker.** Betfair konnte den Anteil zeigen, aber für **48 von 54**
+  Zeilen keinen Betrag: Spiele unter der €15.000-Radar-Schwelle laufen über
+  `betfair_anker.json`, und dessen Feld-Whitelist enthielt das Volumen nicht — obwohl es längst
+  gerechnet war und nur nicht mitkam. Ein Feld ergänzt, kein zusätzlicher API-Call.
+- ⭐ **Der teure Teil war nicht der Balken, sondern wann es KEINEN Betrag gibt:**
+  · **Poly-Preis:** bei `shareSrc == "preis"` sind die 68 % eine Wahrscheinlichkeit, kein
+    Geldanteil. Ein Betrag daraus wäre eine erfundene Zahl an genau der Stelle, auf die Lucas ab
+    jetzt schaut. Der Balken stimmt trotzdem (der Anteil ist gemessen), daneben steht „Preis,
+    kein Geldanteil" und das Marktvolumen.
+  · **Pinnacle** bekommt gar keinen Balken — ein Preisbuch hat kein Geld auf einer Seite, und
+    ein leerer Balken sähe aus wie „null Geld".
+  · **Anteil ohne Betrag** wird benannt, nie als 0 gerendert.
+
+### Warum die Poly-Kachel und die Track-Record-Seite verschiedene Zahlen zeigten
+
+Lucas: *„aja, und was ist das in Polymarket — im Tracking vom Polymarket-Wallet stehen da andere
+Sachen."* Standen da wirklich: **−6,6 %** auf der Kachel, **+0,1 %** auf der Track-Seite. Beide
+richtig, beide über eine andere Menge, und keine der beiden sagte welche.
+
+- **Grund 1 — der Engine-Filter (kein Fehler, aber ungesagt):** die Freigabe rechnet nur auf der
+  aktuellen Engine-Version — **240 von 644** abgerechneten Plays (320 tragen gar keinen Stempel,
+  84 einen älteren). Die Track-Seite zeigt alle. Bei den Public-Kandidaten macht das den ganzen
+  Unterschied: **+21,1 % (UG +3,6 %, n=37)** auf der aktuellen Engine gegen **+6,5 % (UG −2,5 %,
+  n=175)** über alle — die neue Engine ist dort messbar besser.
+- 🔴 **Grund 2 — die gesperrten Kategorien (echter Fehler):** die Track-Seite trennt „bespielbar"
+  von „nicht bespielbar" (US-Sport, Kampfsport) und sagt dazu ausdrücklich *„nur Beobachtung,
+  kein Geld"*. Die Freigabe zählte sie mit. **Ein Strom-ROI, der Wetten enthält, die gar nicht
+  gespielt werden dürfen, beantwortet eine Frage, die niemand hat.** Heute sind es nur 4 der 240
+  Plays (Kachel −6,6 % → **−5,6 %**), aber die gesperrten Kategorien laufen bei **−43,2 %**
+  (n=53 über alle Engines) — sobald mehr davon in die aktuelle Engine fällt, verzerrt es ernsthaft.
+  Gefiltert wird über `poly_shortlist_track._row_cat`, nicht über das rohe Feld: nicht jede Zeile
+  trägt einen Stempel, und eine ungestempelte UFC-Zeile landete sonst im bespielbaren Topf. Der
+  Wächter in `test_shortlist_kategorie.py` hat genau das beim ersten Versuch gefunden.
+- ✅ **Die Kachel sagt ihre Basis jetzt selbst:** *„236 von 644 abgerechneten Plays · nur Engine
+  2026-09-01 · ohne Kampfsport, US-Sport"*. Das ist derselbe Satz wie „nach Conviction", nur eine
+  Ebene tiefer: worüber wurde gerechnet.
+
+### Zweiter CI-Wachhund des Tages
+
+- ✅ **`efl-trophy`** — dieselbe Klasse wie „reserva" zwei Stunden vorher: die Pokal-Regel kannte
+  drei Wörter (Cup, Copa, Pokal). Trophy, Shield, Coupe, Taça sind derselbe Wettbewerbstyp und
+  fielen durch. Gegenprobe am Ledger: beantwortet den einen offenen Slug, stuft keinen um.
+
+**Gegenbeweis:** Poly-Preis bekommt einen Betrag → Test fällt; Pinnacle bekommt einen Geldblock
+→ Test fällt; fehlender Betrag rendert als 0 → Test fällt; Balken auch ohne Anteil → 9 Tests
+fallen; gesperrte Kategorien zählen mit → Test fällt; `basis` auch für Cards → Test fällt.
+
 ## 🎯 08.09.2026 (nachts) — welche SPIELE fallen unter eine freigegebene Schublade
 
 Lucas, nachdem er die erste Push-Vorschau gesehen hat: *„also es wird nur das geschickt, aber

@@ -245,6 +245,67 @@ def check_serie_seltenheit_nennt_ihren_nenner(ctx):
     return _c("Serien-Seltenheit folgt aus der Liga-Basis, die danebensteht", "error", fails[:8])
 
 
+def check_serie_seltenheit_rechnet_mit_der_eigenen_rate(ctx):
+    """08.09.2026 — externes Feedback zur Serien-Seite, an den Artefakten nachgerechnet und
+    bestaetigt: „Parma · Unter 2,5, 10er-Serie: 1 von 11.990 (Liga-Basis 39 %)" stand direkt
+    neben „Eigenrate vor der Serie 80 %". Mit 0,8^10 sind das 1 von 9. Faktor 1.290.
+
+    ⭐ Der aeltere Guard `check_serie_seltenheit_nennt_ihren_nenner` war GRUEN dabei — er prueft,
+    dass `zufallPct` sauber aus der Liga-Basis folgt, und das tat sie. Ein Guard, der die
+    Arithmetik einer Zahl bewacht, die die falsche Frage beantwortet, meldet nichts. Deshalb
+    dieser hier: er prueft nicht die Rechnung, sondern den NENNER.
+
+    Drei Saetze:
+      1. Wo eine eigene Vor-Serien-Rate existiert, ist sie der Nenner — nicht der Liga-Schnitt.
+      2. Eine Seltenheit ohne eigene Vorgeschichte heisst „nicht belegbar". Die Liga-Rate gilt
+         fuer ein Durchschnittsteam; ob dieses Team eines ist, wissen wir dann gerade nicht.
+      3. „auffaellig" gibt es nur mit eigener Rate UND einem Erwartungswert unter 1 im Suchfeld.
+         Ohne die Feldgroesse ist jede Seltenheit ein Fund, den die Suche selbst erzeugt hat.
+    """
+    fails = []
+    for quelle in ("ligaStreaks", "mlsStreaks"):
+        for s in ((ctx.get(quelle) or {}).get("streaks") or []):
+            se = s.get("seltenheit")
+            wer = "%s: %s %s %sx" % (quelle, s.get("team"), s.get("type"), s.get("length"))
+            if not isinstance(se, dict):
+                fails.append("%s — keine `seltenheit` im Artefakt (alter Produzentenstand?)" % wer)
+                continue
+            # 1) eigene Rate schlaegt Liga-Schnitt
+            if s.get("basis") == "prior" and se.get("basis") != "eigen":
+                fails.append("%s — eigene Vor-Serien-Rate vorhanden, gerechnet wurde aber gegen "
+                             "den Liga-Schnitt" % wer)
+            # 2) ohne Vorgeschichte kein Urteil
+            if se.get("basis") == "liga" and se.get("urteil") != "nicht belegbar":
+                fails.append("%s — ohne eigene Vorgeschichte als '%s' ausgewiesen"
+                             % (wer, se.get("urteil")))
+            # 3) auffaellig braucht die Feldgroesse und einen Erwartungswert unter 1
+            if se.get("urteil") == "auffaellig":
+                if not se.get("familie"):
+                    fails.append("%s — 'auffaellig' ohne Feldgroesse: ohne sie ist jede "
+                                 "Seltenheit ein Fund der Suche selbst" % wer)
+                _b = se.get("erwartetBand")
+                if not (isinstance(_b, list) and len(_b) == 2 and _b[1] < 1.0):
+                    fails.append("%s — 'auffaellig', obwohl die guenstigste eigene Rate "
+                                 "mindestens einen solchen Lauf im Feld erwarten laesst" % wer)
+            # 4) die Zahl muss aus der genannten Rate folgen (gerundet -> Intervall)
+            r, ln, eins = se.get("ratePct"), s.get("length"), se.get("einsZu")
+            if r and ln and eins:
+                # `ratePct` ist gerundet (82 statt 81,6) und `einsZu` ebenfalls (2 statt 2,21).
+                # Beides zusammen macht bei kleinen Werten die Rundung groesser als jede echte
+                # Abweichung — der erste Entwurf dieses Guards meldete prompt 8 gesunde Serien
+                # (Arsenal „Sieg-Serie 3x", 0,67^3 = 1 von 3,3 -> gerundet 3). Geprueft wird
+                # deshalb gegen das Intervall, das die Rundung ueberhaupt zulaesst, plus die
+                # eine Einheit, die das Runden von `einsZu` selbst kostet.
+                lo = (max(r - 0.5, 0.0) / 100.0) ** ln
+                hi = (min(r + 0.5, 100.0) / 100.0) ** ln
+                if lo > 0 and not (round(1.0 / hi) - 1 <= eins <= round(1.0 / lo) + 1):
+                    fails.append("%s — '1 von %s' folgt nicht aus der genannten Rate %s%% "
+                                 "(zulaessig %d..%d)"
+                                 % (wer, eins, r, round(1.0 / hi) - 1, round(1.0 / lo) + 1))
+    return _c("Serien-Seltenheit rechnet mit der Rate, die danebensteht", "error", fails[:8],
+              "Eigene Vor-Serien-Rate schlaegt den Liga-Schnitt; ohne Vorgeschichte kein Urteil.")
+
+
 def check_money_map_meldet_ihre_luecken(ctx):
     """05.09.2026 — Brighton v Leeds stand in der Money Map mit „Poly · kein Markt" und 2/3
     Quellen, waehrend dieselbe Uebersicht zwei Kacheln weiter $439.712 Poly-Geld auf Brighton
@@ -666,6 +727,7 @@ UEBERSICHT_CHECKS = [
     check_betfair_urteil,
     check_quellen_haben_zeitstempel,
     check_serie_seltenheit_nennt_ihren_nenner,
+    check_serie_seltenheit_rechnet_mit_der_eigenen_rate,
     check_money_map_meldet_ihre_luecken,
     check_money_map_poly_gehoert_zum_spiel,
     check_poly_markt_gehoert_zur_selben_mannschaft,

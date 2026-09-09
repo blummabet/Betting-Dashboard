@@ -15,6 +15,8 @@ Ecken-Serien folgen, sobald Ecken pro Spiel erfasst sind (cornersForm hat nur Sc
 Lauf 1×/Woche (engl. Woche 2×) nach fetch_wm_form.
 """
 from __future__ import annotations
+
+import math
 import json
 from datetime import datetime, timezone
 
@@ -150,6 +152,132 @@ def zufall_pct(p, length: int):
     if p is None or not length:
         return None
     return round((p ** length) * 100, 5)
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+#  🔴 08.09.2026 — DIE SELTENHEIT RECHNETE MIT DEM FALSCHEN NENNER
+#
+#  Externes Feedback zur Serien-Seite, und es stimmt in jedem Punkt. Nachgerechnet
+#  an den echten Artefakten (714 Serien aus Liga + MLS):
+#
+#    Parma · Unter 2,5, 10er-Serie
+#        angezeigt   „1 von 11.990 (Liga-Basis 39 %)"
+#        daneben     „Eigenrate vor der Serie 80 %"
+#        richtig     0,8^10 = 1 von 9        →  Faktor 1.290
+#
+#    Colorado · Beide treffen — Nein, 8er
+#        angezeigt   1 von 4.554 (Liga-Basis 35 %)
+#        Eigenrate   57 %  →  1 von 90       →  Faktor 50
+#
+#  Die Liga-Grundrate ist der Nenner für ein DURCHSCHNITTSTEAM. Sobald das Team
+#  selbst eine andere Rate hat — und die steht auf derselben Karte —, beantwortet
+#  die Zahl eine Frage, die niemand gestellt hat. Betroffen: 207 von 556 Serien
+#  allein in der Liga-Datei.
+#
+#  Am 05.09. wurde derselbe Widerspruch schon einmal gesehen (der Kommentar in
+#  main-dashboard.js rechnet „0,83^9 wäre 1 von 5" sogar vor) — und damals nur
+#  BESCHRIFTET statt behoben. Ein Etikett an einer Zahl, die die falsche Frage
+#  beantwortet, macht sie nicht richtig.
+#
+#  ⭐ ZWEI WEITERE FUNDE, die beim Nachrechnen dazukamen:
+#
+#  1. Der Punktschätzer trägt nichts. Parmas 80 % sind 4 von 5 Spielen. Das
+#     95-%-Band dieser Rate ist 44 %..95 %, und daraus wird „1 von 2" bis
+#     „1 von 4.097". Eine Zahl, die über drei Größenordnungen schwankt, ist keine
+#     Auskunft — dieselbe Klasse wie ein ROI ohne Untergrenze.
+#
+#  2. Das Suchfeld. Gesucht wird über 125 Teams × 11 Märkte × 3 Ansichten =
+#     4.125 Kombinationen. Ein „1 von 4.554" ist darin 0,9-mal zu erwarten, ein
+#     „1 von 24" (Rennes · Team trifft 15×) 175-mal. Ohne diese Zahl daneben liest
+#     man jede Seltenheit als Befund.
+#
+#  ERGEBNIS DIESER REGEL, gemessen an allen 714 Serien:
+#      436  keine eigene Vorgeschichte  → nicht belegbar
+#      278  im Feld erwartbar
+#        0  auffällig
+#  Das ist unbequem und es ist die Antwort. Eine Seite, die 714 Serien zeigt und
+#  keine davon auffällig nennen kann, sagt etwas Wahres — eine, die 714 Zufälle
+#  als Funde ausgibt, nicht.
+FAMILIE_ANSICHTEN = 3     # all / Heim / Auswärts — jede Kombination wird getestet
+
+
+def _wilson(treffer, n, z=1.645):
+    """Einseitige 95-%-Wilson-Untergrenze eines Anteils. Wie in sharp_gate — eine Definition."""
+    n = int(n or 0)
+    if n <= 0:
+        return 0.0
+    ph = (treffer or 0) / n
+    d = 1 + z * z / n
+    mitte = (ph + z * z / (2 * n)) / d
+    rand = z * math.sqrt(ph * (1 - ph) / n + z * z / (4 * n * n)) / d
+    return mitte - rand
+
+
+def raten_band(rate, n, z=1.645):
+    """(lo, hi) der Rate — beidseitig aus zwei einseitigen Wilson-Grenzen. REIN.
+
+    Ohne Stichprobe gibt es kein Band; dann None. Der Punktschätzer allein hat auf dieser
+    Seite schon einmal eine Zahl getragen, die über drei Größenordnungen unsicher war.
+    """
+    n = int(n or 0)
+    if rate is None or n <= 0:
+        return None
+    treffer = round(float(rate) * n)
+    return (_wilson(treffer, n, z), 1.0 - _wilson(n - treffer, n, z))
+
+
+def seltenheit(prior_rate, pre_n, liga_p, length, familie):
+    """Wie selten ist dieser Lauf WIRKLICH — und ist er im Suchfeld überhaupt auffällig? REIN.
+
+    Nenner ist die EIGENE Rate des Teams vor der Serie, wenn es sie gibt; sonst die
+    Liga-Grundrate, und dann sagt das Ergebnis das auch. `erwartet` ist die Zahl solcher Läufe,
+    die im getesteten Feld ohnehin zu erwarten sind.
+
+    Die Beweislast liegt beim Befund: „auffällig" nur, wenn selbst mit der GÜNSTIGSTEN Rate des
+    Bandes weniger als ein solcher Lauf im Feld zu erwarten wäre. Sonst ist es ein Fund, den die
+    Suche selbst erzeugt hat.
+    """
+    if not length or length < 1:
+        return None
+    if prior_rate is not None and pre_n:
+        p, basis = float(prior_rate), "eigen"
+        band = raten_band(prior_rate, pre_n)
+    elif liga_p is not None:
+        p, basis, band = float(liga_p), "liga", None
+    else:
+        return None
+    p = max(_RATE_UNTERGRENZE, min(_RATE_OBERGRENZE, p))
+    pl = p ** length
+    aus = {"basis": basis, "ratePct": round(p * 100), "preN": pre_n if basis == "eigen" else None,
+           "einsZu": (round(1.0 / pl) if pl > 0 else None),
+           "erwartet": round(familie * pl, 2) if familie else None,
+           "familie": familie}
+    if band:
+        lo, hi = (max(_RATE_UNTERGRENZE, min(_RATE_OBERGRENZE, x)) for x in band)
+        aus["bandPct"] = [round(lo * 100), round(hi * 100)]
+        # „1 von X" ist bei der HOEHEREN Rate die kleinere Zahl — deshalb ueber Kreuz.
+        aus["einsZuBand"] = [round(1.0 / (hi ** length)), round(1.0 / (lo ** length))]
+        aus["erwartetBand"] = [round(familie * (lo ** length), 2),
+                               round(familie * (hi ** length), 2)] if familie else None
+    if basis != "eigen":
+        # Ohne eigene Vorgeschichte ist die Frage nicht beantwortbar: die Liga-Rate gilt fuer ein
+        # Durchschnittsteam, und ob dieses Team eines ist, wissen wir gerade nicht. Das ist keine
+        # Vorsicht, sondern der Unterschied zwischen „unauffaellig" und „nicht gemessen".
+        aus["urteil"] = "nicht belegbar"
+        aus["grund"] = ("keine eigene Vorgeschichte vor der Serie — gemessen wird gegen den "
+                        "Liga-Schnitt, der für ein Durchschnittsteam gilt")
+        return aus
+    _erw_guenstig = (familie * ((band[1] if band else p) ** length)) if familie else None
+    if _erw_guenstig is not None and _erw_guenstig < 1.0:
+        aus["urteil"] = "auffaellig"
+        aus["grund"] = ("selbst mit der günstigsten eigenen Rate wäre unter %d geprüften "
+                        "Kombinationen weniger als ein solcher Lauf zu erwarten" % familie)
+    else:
+        aus["urteil"] = "erwartbar"
+        aus["grund"] = ("unter %d geprüften Kombinationen sind %s solcher Läufe zu erwarten"
+                        % (familie, ("%.1f" % aus["erwartet"]) if aus.get("erwartet") is not None
+                           else "mehrere"))
+    return aus
 
 
 def _lead_run(seq: list, target: bool) -> int:
@@ -396,6 +524,12 @@ def build_streaks(wm: dict) -> dict:
     picks = wm.get("picks") or {}   # Stufe 2: Signale/Linie des nächsten Spiels
     xg_totals = _team_xg_totals(wm)  # 04.07.2026: xG-Deckung pro Team (most-recent-first)
     grundraten = liga_grundraten(form, cf)   # 04.09.2026: unabhaengiger Massstab je Markt
+    # Wie gross ist das Suchfeld? Ohne diese Zahl liest man jede Seltenheit als Befund, obwohl
+    # ein „1 von 4.554" unter 4.125 gepruefeten Kombinationen 0,9-mal zu erwarten ist. Gezaehlt
+    # wird, was WIRKLICH geprueft wird: jedes Team, jeder Markt, jede Ansicht.
+    _n_teams = len({str(t.get("id")) for g in (wm.get("groups") or {}).values()
+                    for t in (g.get("teams") or []) if t.get("id") is not None})
+    familie = _n_teams * (len(FORM_MARKETS) + 3) * FAMILIE_ANSICHTEN
     streaks = []
 
     def _emit(tid, seq, venue_seq, target, market, rate, target_false, key):
@@ -449,10 +583,17 @@ def build_streaks(wm: dict) -> dict:
                 "strong": length >= STRONG_LEN, "continuation": cont,
                 "ratePct": cont["ratePct"], "seq": seq_viz, "xgBacked": xgb,
                 "basis": basis_art, "preN": pre_n,
-                # Wie unwahrscheinlich ist dieser Lauf bei einem Durchschnittsteam dieses
-                # Marktes? Der Massstab, der Maerkte vergleichbar macht — siehe zufall_pct.
+                # ⚠️ `zufallPct` rechnet weiter gegen die LIGA-Grundrate und bleibt genau dafuer
+                # da: Maerkte untereinander vergleichbar machen (Sortierung). Als Aussage ueber
+                # DIESES Team taugt es nicht, sobald es eine eigene Rate hat — siehe `seltenheit`.
                 "zufallPct": zufall_pct(grundraten.get(key), length),
                 "ligaBasisPct": (round(grundraten[key] * 100) if key in grundraten else None),
+                # 08.09.2026: die ehrliche Seltenheit — eigener Nenner, Band statt Punkt,
+                # Erwartungswert im Suchfeld, und ein Urteil, das die Beweislast beim Befund
+                # laesst. Das Urteil entsteht hier, wo die Zahl entsteht; kein Frontend
+                # vergleicht selbst gegen eine Schwelle.
+                "seltenheit": seltenheit(base, pre_n if has_prior else 0,
+                                         grundraten.get(key), length, familie),
             }
             nf = next_fx.get(str(tid))
             if nf:
