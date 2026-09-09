@@ -3,6 +3,55 @@
 Stand 07.09.2026 (oberster Block); Liga/WM-Teil darunter Stand 26.06.2026. Lebendige Liste aller offenen Punkte — Liga UND noch nicht umgesetzte WM-Sachen —
 damit wir alles abarbeiten können. ✅ = erledigt (Referenz), ⏳ = offen, 🔒 = blockiert.
 
+## 🔍 09.09.2026 — ein Guard, der die Daten mass · und die Spiele hinter den Public-Kandidaten
+
+### Der Guard, der bei gutem Marktzustand rot wurde
+
+`test_schlechte_fits_werden_ueberhaupt_aussortiert` verlangte, dass im **LIVE**-Snapshot
+mindestens ein Poisson-Fit an der RMSE-Schranke scheitert. Am 09.09.: 49 Leitern, schlechtester
+Fit 0,0154, Schranke 0,02 — **keiner scheitert**, also rot. Die Absicht war richtig (eine
+Schranke, die nie greift, könnte man versehentlich löschen), die Umsetzung nicht: der Test wurde
+rot, weil die **Daten gut waren**. Ein Guard, der bei gutem Marktzustand anschlägt, erzieht dazu,
+ihn zu ignorieren — und dann fängt er auch den echten Fall nicht mehr.
+
+Ersetzt durch zwei Sätze, die beide vom Tagesbestand unabhängig sind:
+
+- ✅ **Die Schranke greift im Entscheidungspfad** — geprüft mit einer *konstruierten* verbogenen
+  Leiter, plus der Nachweis, dass der Code sie überhaupt liest (`rmse > MAX_RMSE`).
+- ✅ **Sie ist an diesen Daten kalibriert** — sie muss in der Größenordnung der real vorkommenden
+  Fits liegen. `MAX_RMSE = 0,5` wäre formal da und praktisch tot; `MAX_RMSE = 0,0001` würde jede
+  Leiter aussortieren und das Signal still abschalten. **Beide Richtungen** werden geprüft.
+- ✅ Dazu ein **Protokoll ohne Urteil**: der Testlauf druckt „49 Leitern, 0 über MAX_RMSE,
+  schlechtester Fit 0,0154". Eine Verschiebung fällt auf, ohne dass ein guter Markttag rot wird.
+
+Gegenbeweis: Schranke auf 0,5 → fällt; auf 0,0001 → fällt; Aussortieren entfernt → fällt.
+
+### ◆ Public-Kandidaten: welche Spiele sind das eigentlich?
+
+Lucas: *„was mir fehlt vor allem beim Public-Kandidaten ist, welche Spiele da überhaupt dabei
+sind. … und ich will auch immer kontrollieren, ob für die ‚Heute spielenswert' auch wirklich in
+Trades-Channel eine Push kommt."*
+
+Der Block zeigte seit Wochen n, Trefferquote, ROI und CLV — also wie **gut** die Auswahl war, aber
+nie **was** drin war. Eine Kennzahl ohne ihre Zeilen kann man nicht nachprüfen.
+
+- ✅ Ausklappbare Liste unter den Public-KPIs: offene und zuletzt abgerechnete Kandidaten mit
+  Markt, Seite, Conviction, Einstiegspreis, Ergebnis — **und einer Push-Spalte**.
+- ⭐ **Die Push-Spalte ist der eigentliche Punkt.** `push_shortlist_trades.py` führt sein
+  Dedup-Buch unter `key|side` — demselben Schlüssel wie der Paper-Track. Damit ist die Frage
+  ohne jede Rekonstruktion beantwortbar: nachschlagen statt vermuten.
+- ⚠️ **Sie ist absichtlich nicht überall ✅.** Der Trades-Push feuert ab **Conviction ≥6**, ein
+  Public-Kandidat verlangt **≥7 plus bewiesene Wallet plus Mehrheit**. Zwei verschiedene Tore,
+  zwei verschiedene Mengen — und genau die Differenz ist das, was kontrolliert werden soll. Der
+  Satz steht über der Tabelle, damit ein fehlendes ✅ nicht als Fehler gelesen wird.
+- ⭐ **„Unbekannt" ≠ „nicht gepusht".** Ohne geladenes Push-Buch steht „—" und nie „kein Push" —
+  das wäre eine Behauptung über etwas, das gar nicht nachgesehen wurde. (Der Test hat mir dabei
+  meine eigene Formulierung um die Ohren gehauen: der Tooltip enthielt die Zeichenfolge „kein
+  Push" und ließ die Zusicherung anschlagen. Umformuliert statt Test aufgeweicht.)
+
+Gegenbeweis: fehlendes Buch als „kein Push" rendern → fällt; nicht-öffentliche Plays mit
+aufnehmen → fällt; laufendes Spiel bekommt ein Ergebnis → fällt.
+
 ## 📒 09.09.2026 — das Serien-Buch: wurde die Serie erfüllt, ja oder nein
 
 Lucas: *„naja der Preis is da egal um ehrlich zu sein. Die Frage ist einfach: wurde Serie erfüllt
