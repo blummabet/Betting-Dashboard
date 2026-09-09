@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-09T06:00:16.739972+00:00",
+ "generatedAt": "2026-09-09T06:15:20.809012+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -11,36 +11,6 @@
   "text": "freigegeben = n>=30 UND ROI-Untergrenze>0 UND juengster Play juenger als 21 Tage, alles auf der aktuellen Engine-Version. Der CLV blockiert seit 08.09.2026 nicht mehr — er steht als Urteil auf jeder Zeile, mit Warnung bei negativ belegtem CLV."
  },
  "freigegeben": [
-  {
-   "schublade": "Public-Kandidaten",
-   "strom": "poly",
-   "n": 38,
-   "status": "freigegeben",
-   "grund": "ROI belegt (Untergrenze +3.9 %) — der CLV ist gemessen (-1.45 pp), aber nicht belegt: unbekannt ist kein Nein.",
-   "roi": 0.2092,
-   "pl": 7.95,
-   "roiLb": 0.0389,
-   "clv": -1.447,
-   "clvLb": -3.351,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.457,
-   "fehltN": 0,
-   "noetigNRoi": 26,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 24,
-    "lo": 6,
-    "hi": 600,
-    "nieAnteil": 0.025,
-    "schaetzbar": false
-   },
-   "alterTage": 0.3,
-   "art": "gate",
-   "nAlt": 133,
-   "roiAlt": 0.0306,
-   "clvAlt": -0.212,
-   "engineAlt": true
-  },
   {
    "schublade": "Liga · ABWÄGEN",
    "strom": "cards",
@@ -68,6 +38,36 @@
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "Liga"
+  },
+  {
+   "schublade": "Public-Kandidaten",
+   "strom": "poly",
+   "n": 39,
+   "status": "freigegeben",
+   "grund": "ROI belegt (Untergrenze +0.5 %) — der CLV ist gemessen (-1.44 pp), aber nicht belegt: unbekannt ist kein Nein.",
+   "roi": 0.1782,
+   "pl": 6.95,
+   "roiLb": 0.0047,
+   "clv": -1.436,
+   "clvLb": -3.29,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.419,
+   "fehltN": 0,
+   "noetigNRoi": 37,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 34,
+    "lo": 7,
+    "hi": 1606,
+    "nieAnteil": 0.033,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "gate",
+   "nAlt": 133,
+   "roiAlt": 0.0306,
+   "clvAlt": -0.212,
+   "engineAlt": true
   }
  ],
  "kandidaten": [
@@ -94,7 +94,7 @@
     "nieAnteil": 0.1,
     "schaetzbar": false
    },
-   "alterTage": 1.3,
+   "alterTage": 1.4,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py"
   },
@@ -222,27 +222,27 @@
   {
    "schublade": "🔒 E-Sport ohne Wallet-Nachweis",
    "strom": "poly",
-   "n": 12,
+   "n": 13,
    "status": "kandidat",
-   "grund": "12 von 120 Plays SEIT der Anmeldung (2026-09-07) — vorher abgerechnete zählen nicht",
-   "roi": 0.2257,
-   "pl": 2.71,
+   "grund": "13 von 120 Plays SEIT der Anmeldung (2026-09-07) — vorher abgerechnete zählen nicht",
+   "roi": 0.1315,
+   "pl": 1.71,
    "roiLb": null,
-   "clv": -4.542,
+   "clv": -4.269,
    "clvLb": null,
    "clvUrteil": "gemessen, nicht belegt",
    "clvOg": null,
-   "fehltN": 108,
-   "noetigNRoi": 10,
+   "fehltN": 107,
+   "noetigNRoi": 43,
    "noetigNClv": null,
    "entfernung": {
-    "median": 8,
+    "median": 27,
     "lo": 1,
-    "hi": 271,
-    "nieAnteil": 0.052,
+    "hi": 2220,
+    "nieAnteil": 0.177,
     "schaetzbar": false
    },
-   "alterTage": 0.3,
+   "alterTage": 0.0,
    "art": "vorangemeldet",
    "angemeldet": "2026-09-07T08:15:48.444033+00:00",
    "zielN": 120,
@@ -288,41 +288,15 @@
    "zerlegung": "nach Conviction",
    "art": "conviction",
    "gruppen": 5,
-   "basis": "253 von 664 abgerechneten Plays · nur Engine 2026-09-01 · ohne Kampfsport, US-Sport",
-   "n": 253,
-   "pl": -7.2,
-   "roi": -0.0285,
+   "basis": "254 von 665 abgerechneten Plays · nur Engine 2026-09-01 · ohne Kampfsport, US-Sport",
+   "n": 254,
+   "pl": -8.2,
+   "roi": -0.0323,
    "clv": -1.167,
    "belegte": 1
   }
  ],
  "spiele": [
-  {
-   "schublade": "Public-Kandidaten",
-   "strom": "poly",
-   "roiLb": 0.0389,
-   "clvUrteil": "gemessen, nicht belegt",
-   "aufloesbar": true,
-   "grund": null,
-   "laufend": 4,
-   "n": 1,
-   "plays": [
-    {
-     "spiel": "Legacy vs Alliance",
-     "schluessel": "cs2-lgc-all-2026-09-09",
-     "auswahl": "Legacy",
-     "quote": 1.42,
-     "anpfiff": "2026-09-09T06:02:28.265219+00:00",
-     "datensatz": "E-Sport",
-     "conv": 6,
-     "warum": [
-      "großes Geld auf Legacy (70%) → $195K",
-      "🔥 scharfe Wallet (45/73, 62% · +$291K)"
-     ],
-     "id": "cs2-lgc-all-2026-09-09|Legacy"
-    }
-   ]
-  },
   {
    "schublade": "Liga · ABWÄGEN",
    "strom": "cards",
@@ -606,6 +580,17 @@
      "id": "FRA-5-81-85|Auswärtssieg"
     }
    ]
+  },
+  {
+   "schublade": "Public-Kandidaten",
+   "strom": "poly",
+   "roiLb": 0.0047,
+   "clvUrteil": "gemessen, nicht belegt",
+   "aufloesbar": true,
+   "grund": null,
+   "laufend": 4,
+   "n": 0,
+   "plays": []
   }
  ],
  "ligen": [
@@ -2983,36 +2968,6 @@
  ],
  "alle": [
   {
-   "schublade": "Public-Kandidaten",
-   "strom": "poly",
-   "n": 38,
-   "status": "freigegeben",
-   "grund": "ROI belegt (Untergrenze +3.9 %) — der CLV ist gemessen (-1.45 pp), aber nicht belegt: unbekannt ist kein Nein.",
-   "roi": 0.2092,
-   "pl": 7.95,
-   "roiLb": 0.0389,
-   "clv": -1.447,
-   "clvLb": -3.351,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.457,
-   "fehltN": 0,
-   "noetigNRoi": 26,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 24,
-    "lo": 6,
-    "hi": 600,
-    "nieAnteil": 0.025,
-    "schaetzbar": false
-   },
-   "alterTage": 0.3,
-   "art": "gate",
-   "nAlt": 133,
-   "roiAlt": 0.0306,
-   "clvAlt": -0.212,
-   "engineAlt": true
-  },
-  {
    "schublade": "Liga · ABWÄGEN",
    "strom": "cards",
    "n": 91,
@@ -3041,6 +2996,36 @@
    "datensatz": "Liga"
   },
   {
+   "schublade": "Public-Kandidaten",
+   "strom": "poly",
+   "n": 39,
+   "status": "freigegeben",
+   "grund": "ROI belegt (Untergrenze +0.5 %) — der CLV ist gemessen (-1.44 pp), aber nicht belegt: unbekannt ist kein Nein.",
+   "roi": 0.1782,
+   "pl": 6.95,
+   "roiLb": 0.0047,
+   "clv": -1.436,
+   "clvLb": -3.29,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.419,
+   "fehltN": 0,
+   "noetigNRoi": 37,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 34,
+    "lo": 7,
+    "hi": 1606,
+    "nieAnteil": 0.033,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "gate",
+   "nAlt": 133,
+   "roiAlt": 0.0306,
+   "clvAlt": -0.212,
+   "engineAlt": true
+  },
+  {
    "schublade": "ABWÄGEN · gepusht",
    "strom": "cards",
    "n": 26,
@@ -3063,7 +3048,7 @@
     "nieAnteil": 0.1,
     "schaetzbar": false
    },
-   "alterTage": 1.3,
+   "alterTage": 1.4,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py"
   },
@@ -3191,27 +3176,27 @@
   {
    "schublade": "🔒 E-Sport ohne Wallet-Nachweis",
    "strom": "poly",
-   "n": 12,
+   "n": 13,
    "status": "kandidat",
-   "grund": "12 von 120 Plays SEIT der Anmeldung (2026-09-07) — vorher abgerechnete zählen nicht",
-   "roi": 0.2257,
-   "pl": 2.71,
+   "grund": "13 von 120 Plays SEIT der Anmeldung (2026-09-07) — vorher abgerechnete zählen nicht",
+   "roi": 0.1315,
+   "pl": 1.71,
    "roiLb": null,
-   "clv": -4.542,
+   "clv": -4.269,
    "clvLb": null,
    "clvUrteil": "gemessen, nicht belegt",
    "clvOg": null,
-   "fehltN": 108,
-   "noetigNRoi": 10,
+   "fehltN": 107,
+   "noetigNRoi": 43,
    "noetigNClv": null,
    "entfernung": {
-    "median": 8,
+    "median": 27,
     "lo": 1,
-    "hi": 271,
-    "nieAnteil": 0.052,
+    "hi": 2220,
+    "nieAnteil": 0.177,
     "schaetzbar": false
    },
-   "alterTage": 0.3,
+   "alterTage": 0.0,
    "art": "vorangemeldet",
    "angemeldet": "2026-09-07T08:15:48.444033+00:00",
    "zielN": 120,
@@ -3507,7 +3492,7 @@
     "nieAnteil": 0.21,
     "schaetzbar": false
    },
-   "alterTage": 0.1,
+   "alterTage": 0.2,
    "art": "vorangemeldet",
    "angemeldet": "2026-09-01T20:41:52.601081+00:00",
    "zielN": 40,
@@ -3567,37 +3552,6 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
-  },
-  {
-   "schublade": "Mix money+sharp",
-   "strom": "poly",
-   "n": 89,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0094,
-   "pl": 0.84,
-   "roiLb": -0.1032,
-   "clv": -1.875,
-   "clvLb": -3.28,
-   "clvUrteil": "negativ belegt",
-   "clvOg": -0.47,
-   "fehltN": 0,
-   "noetigNRoi": 12684,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 392,
-    "lo": 53,
-    "hi": 33428,
-    "nieAnteil": 0.417,
-    "schaetzbar": false
-   },
-   "alterTage": 0.5,
-   "art": "mix",
-   "wert": "money+sharp",
-   "nAlt": 141,
-   "roiAlt": -0.0338,
-   "clvAlt": -0.256,
-   "engineAlt": true
   },
   {
    "schublade": "🔒 Fade-Unter · Ganzspiel-Torlinie",
@@ -3684,34 +3638,34 @@
    "avgOdd": 1.84
   },
   {
-   "schublade": "Conviction 6",
+   "schublade": "Mix money+sharp",
    "strom": "poly",
-   "n": 101,
+   "n": 90,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0091,
-   "pl": 0.92,
-   "roiLb": -0.1203,
-   "clv": -1.045,
-   "clvLb": -2.217,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.127,
+   "roi": -0.0018,
+   "pl": -0.16,
+   "roiLb": -0.1147,
+   "clv": -1.865,
+   "clvLb": -3.254,
+   "clvUrteil": "negativ belegt",
+   "clvOg": -0.476,
    "fehltN": 0,
-   "noetigNRoi": 20316,
+   "noetigNRoi": null,
    "noetigNClv": null,
    "entfernung": {
-    "median": 439,
-    "lo": 66,
-    "hi": 36965,
-    "nieAnteil": 0.462,
+    "median": 477,
+    "lo": 59,
+    "hi": 47939,
+    "nieAnteil": 0.473,
     "schaetzbar": false
    },
-   "alterTage": 0.2,
-   "art": "conviction",
-   "wert": 6,
-   "nAlt": 93,
-   "roiAlt": 0.0229,
-   "clvAlt": 0.077,
+   "alterTage": 0.0,
+   "art": "mix",
+   "wert": "money+sharp",
+   "nAlt": 141,
+   "roiAlt": -0.0338,
+   "clvAlt": -0.256,
    "engineAlt": true
   },
   {
@@ -3755,6 +3709,37 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
+  },
+  {
+   "schublade": "Conviction 6",
+   "strom": "poly",
+   "n": 102,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.0008,
+   "pl": -0.08,
+   "roiLb": -0.13,
+   "clv": -1.045,
+   "clvLb": -2.205,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.116,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 543,
+    "lo": 70,
+    "hi": 29499,
+    "nieAnteil": 0.532,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "conviction",
+   "wert": 6,
+   "nAlt": 93,
+   "roiAlt": 0.0229,
+   "clvAlt": 0.077,
+   "engineAlt": true
   },
   {
    "schublade": "Konjunktion · übrige Ligen",
@@ -3870,7 +3855,7 @@
     "nieAnteil": 0.407,
     "schaetzbar": false
    },
-   "alterTage": 1.3,
+   "alterTage": 1.4,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py"
   },
