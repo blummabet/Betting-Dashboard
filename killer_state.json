@@ -502,7 +502,7 @@
    "gehaltenSeit": "2026-09-09T22:47:12.316062+00:00",
    "zuletztAktiv": "2026-09-09T22:47:12.316062+00:00",
    "haltePreis": 2.74,
-   "aktiv": true
+   "aktiv": false
   },
   "36013828|Match Odds": {
    "matchId": "36013828",
@@ -513,27 +513,36 @@
    "markt": "Match Odds",
    "seite": "home",
    "name": "Philadelphia",
-   "odd": 1.69,
+   "odd": 1.68,
    "entryOdd": 1.7,
    "anteilPct": 83,
-   "stufe": 2,
+   "stufe": 1,
    "verstaerker": [
+    {
+     "art": "poly",
+     "text": "Poly Geld 98%",
+     "gewicht": 12
+    },
     {
      "art": "pinn",
      "text": "Pinnacle stimmt zu",
      "gewicht": 10
     }
    ],
-   "rang": 68.3,
+   "rang": 80.2,
    "track": null,
    "streak": null,
-   "poly": null,
+   "poly": {
+    "anteilPct": 98,
+    "usd": 315421,
+    "odd": 1.71
+   },
    "polyStatus": "nein",
    "polyKey": "mls-phi-fcc-2026-09-09",
    "polySide": "Philadelphia Union",
    "pinnMovePP": null,
    "punkte": {
-    "punkte": 5,
+    "punkte": 8,
     "moeglich": 10,
     "dauerH": 0.71,
     "teile": [
@@ -545,43 +554,43 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 83% auf der Seite"
+       "text": "Geld 82% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.826,
-       "betrag": 15615,
-       "gesamt": 18904,
+       "anteil": 0.824,
+       "betrag": 17951,
+       "gesamt": 21785,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 83% auf der Seite"
+      "text": "Geld 82% auf der Seite"
      },
      {
       "buch": "POLY",
       "name": "Polymarket",
-      "status": "nein",
-      "punkte": 0,
+      "status": "ja",
+      "punkte": 3,
       "moeglich": 3,
       "grund": {
-       "ok": false,
-       "text": "Poly-Geld 54% auf derselben Seite"
+       "ok": true,
+       "text": "Poly-Geld 98% auf derselben Seite"
       },
       "tiefe": {
-       "ok": false,
-       "text": "kein bewiesenes Wallet auf der Seite"
+       "ok": true,
+       "text": "1 bewiesene Wallet drauf"
       },
       "geld": {
-       "anteil": 0.54,
-       "betrag": 4799,
-       "gesamt": 8887,
+       "anteil": 0.98,
+       "betrag": 309113,
+       "gesamt": 315421,
        "waehrung": "USD",
        "quelle": "geld"
       },
-      "text": "Poly-Geld 54% auf derselben Seite"
+      "text": "Poly-Geld 98% auf derselben Seite"
      },
      {
       "buch": "PIN",
@@ -628,8 +637,112 @@
    },
    "wertVsPinn": null,
    "gehaltenSeit": "2026-09-09T23:02:13.620628+00:00",
-   "zuletztAktiv": "2026-09-09T23:02:13.620628+00:00",
+   "zuletztAktiv": "2026-09-09T23:17:16.156245+00:00",
    "haltePreis": 1.69,
+   "aktiv": true
+  },
+  "36049665|Match Odds": {
+   "matchId": "36049665",
+   "home": "Once Caldas",
+   "away": "Alianza FC Valledupar",
+   "league": "Colombian Cup",
+   "kickoff": "2026-09-10T00:00:00Z",
+   "markt": "Match Odds",
+   "seite": "home",
+   "name": "Once Caldas",
+   "odd": 1.42,
+   "entryOdd": 1.48,
+   "anteilPct": 94,
+   "stufe": 2,
+   "verstaerker": [],
+   "rang": 59.4,
+   "track": null,
+   "streak": null,
+   "poly": null,
+   "polyStatus": "unbekannt",
+   "polyKey": null,
+   "polySide": null,
+   "pinnMovePP": null,
+   "punkte": {
+    "punkte": 3,
+    "moeglich": 4,
+    "dauerH": 0.71,
+    "teile": [
+     {
+      "buch": "BF",
+      "name": "Betfair",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Geld 94% auf der Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "frischer Zufluss und Quote zieht mit"
+      },
+      "geld": {
+       "anteil": 0.939,
+       "betrag": 18754,
+       "gesamt": 19972,
+       "waehrung": "EUR",
+       "quelle": "geld"
+      },
+      "text": "Geld 94% auf der Seite"
+     },
+     {
+      "buch": "POLY",
+      "name": "Polymarket",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Polymarket nicht erhoben"
+     },
+     {
+      "buch": "PIN",
+      "name": "Pinnacle",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Pinnacle nicht erhoben"
+     },
+     {
+      "buch": "STAKE",
+      "name": "Stake-Highroller",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Stake-Highroller nicht erhoben"
+     },
+     {
+      "buch": "ZEIT",
+      "name": "Dauer",
+      "status": "nein",
+      "punkte": 0,
+      "moeglich": 1,
+      "grund": {
+       "ok": false,
+       "text": "steht seit 0.7h vor Anpfiff"
+      },
+      "tiefe": null,
+      "text": "steht seit 0.7h vor Anpfiff"
+     }
+    ]
+   },
+   "wertVsPinn": null,
+   "gehaltenSeit": "2026-09-09T23:17:16.156245+00:00",
+   "zuletztAktiv": "2026-09-09T23:17:16.156245+00:00",
+   "haltePreis": 1.42,
    "aktiv": true
   }
  }
