@@ -63,7 +63,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "401 geprueft, davon 43 abgeschnitten"
+      "note": "403 geprueft, davon 43 abgeschnitten"
     },
     {
       "id": "settlement_alive",
@@ -74,7 +74,7 @@
       "failures": [
         "atp-virtane-dimitro-2026-08-27: seit 14.0 Tagen offen — keine Auflösung gefunden",
         "nor-ffk-bog-2026-09-04-more-markets: seit 5.3 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "spl-sha-hil-2026-09-04-more-markets: seit 5.2 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
+        "spl-sha-hil-2026-09-04-more-markets: seit 5.3 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "fl1-psg-asm-2026-09-04-more-markets: seit 5.2 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "epl-ips-liv-2026-09-04-more-markets: seit 5.2 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "epl-new-bou-2026-09-05-more-markets: seit 4.5 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
@@ -95,7 +95,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "MLB: nur 136/241 fällige Märkte aufgelöst (56%)"
+        "MLB: nur 137/242 fällige Märkte aufgelöst (57%)"
       ],
       "note": "Fällige Märkte je Liga, die ihre Auflösung finden. < 60% = Settlement läuft ins Leere (Slug-Mismatch), Trefferquoten dieser Liga sind unvollständig."
     },
@@ -106,10 +106,10 @@
       "ok": false,
       "nFail": 5,
       "failures": [
-        "111/251 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (44%) — Trefferquote allein trügt",
-        "   0x84cfffc3f1… n=224 Treffer 53% P&L $-7,556,756",
-        "   0xc3c3b3ef30… n=338 Treffer 51% P&L $-3,975,196",
-        "   0xa0f21e6d35… n=73 Treffer 64% P&L $-2,635,720",
+        "112/251 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (45%) — Trefferquote allein trügt",
+        "   0x84cfffc3f1… n=224 Treffer 53% P&L $-7,557,352",
+        "   0xc3c3b3ef30… n=338 Treffer 51% P&L $-3,975,195",
+        "   0xa0f21e6d35… n=74 Treffer 65% P&L $-2,635,720",
         "   0xabb89972b2… n=28 Treffer 68% P&L $-2,563,982"
       ],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
@@ -152,5 +152,5 @@
     }
   ],
   "nFail": 4,
-  "generatedAt": "2026-09-09T23:10:32.566304+00:00"
+  "generatedAt": "2026-09-09T23:35:21.703246+00:00"
 }

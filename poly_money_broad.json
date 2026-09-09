@@ -1,15 +1,15 @@
 {
- "n": 232,
+ "n": 234,
  "minOdds": 1.35,
- "moneyHitRate": 0.345,
- "priceHitRate": 0.397,
- "brierMoney": 0.9218,
- "brierPrice": 0.6979,
+ "moneyHitRate": 0.346,
+ "priceHitRate": 0.406,
+ "brierMoney": 0.9184,
+ "brierPrice": 0.6968,
  "disagree": {
-  "n": 64,
+  "n": 67,
   "moneyWon": 4,
-  "priceWon": 16,
-  "neither": 44
+  "priceWon": 18,
+  "neither": 45
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -40,8 +40,8 @@
   }
  ],
  "guete": {
-  "belastbar": 232,
-  "preis_echo": 236,
+  "belastbar": 234,
+  "preis_echo": 232,
   "abgeschnitten": 28,
   "unbekannt": 414,
   "leer": 0
@@ -160,7 +160,7 @@
    "league": "EPL",
    "winner": "Draw (Nottingham Forest FC vs. Tottenham Hotspur FC)",
    "moneyFav": "Tottenham Hotspur FC",
-   "priceFav": "Tottenham Hotspur FC",
+   "priceFav": "Nottingham Forest FC",
    "moneyShare": 0.584,
    "priceProb": 0.357,
    "moneyOK": false,
@@ -262,6 +262,18 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 432192
+  },
+  {
+   "key": "efl-cfc-lee-2026-09-09",
+   "league": "SOCCER:EFL",
+   "winner": "Chelsea FC",
+   "moneyFav": "Chelsea FC",
+   "priceFav": "Chelsea FC",
+   "moneyShare": 0.833,
+   "priceProb": 0.518,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 397765
   },
   {
    "key": "bra-flu-vas-2026-09-05",
@@ -514,27 +526,15 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 158519
-  },
-  {
-   "key": "epl-mac-cov-2026-09-05-exact-score",
-   "league": "EPL",
-   "winner": "Manchester City FC 1 - 0 Coventry City FC",
-   "moneyFav": "Any Other Score",
-   "priceFav": "Any Other Score",
-   "moneyShare": 0.289,
-   "priceProb": 0.311,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 144833
   }
  ],
- "generatedAt": "2026-09-09T23:10:18.989341+00:00",
+ "generatedAt": "2026-09-09T23:35:07.832409+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 421,
   "nfl": 800,
-  "mlb": 706,
+  "mlb": 696,
   "nhl": 519,
   "mls": 789,
   "epl": 597,
@@ -551,7 +551,7 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 702,
+  "esports": 706,
   "cs2": 423,
   "lol": 417,
   "dota": 9,
@@ -561,7 +561,7 @@
   "boxing": 256,
   "golf": 384,
   "f1": 380,
-  "cricket": 645,
+  "cricket": 641,
   "allsvenskan": 1,
   "austria-bundesliga": 270,
   "brazil-serie-b": 4,
@@ -572,7 +572,7 @@
   "chinese-super-league": 427,
   "czechia-fortuna-liga": 9,
   "denmark-superliga": 489,
-  "efl-championship": 591,
+  "efl-championship": 590,
   "english-premier-league": 2,
   "europa-conference-league": 409,
   "europa-league": 185,
@@ -611,113 +611,113 @@
   "sweepAdded": 404
  },
  "vorStats": {
-  "kandidaten": 13,
+  "kandidaten": 5,
   "budgetLeer": 0,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
-  "mitAnteilen": 13,
-  "calls": 13
+  "mitAnteilen": 5,
+  "calls": 5
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 2195,
-   "usd": 59625159,
-   "beispiel": "fifwc-can-qat-2026-06-18"
+   "n": 2273,
+   "usd": 59889534,
+   "beispiel": "fifwc-fra-esp-2026-07-14-total-corners"
   },
   "nba": {
-   "n": 445,
-   "usd": 9581491,
-   "beispiel": "nba-dal-lal-2026-02-12"
+   "n": 537,
+   "usd": 7492203,
+   "beispiel": "nba-nyk-sas-2026-06-05"
   },
   "ecs": {
-   "n": 10,
-   "usd": 1903828,
-   "beispiel": "ecs-ars-mci-2026-08-16"
+   "n": 15,
+   "usd": 1937718,
+   "beispiel": "ecs-ars-mci-2026-08-16-more-markets"
   },
   "cfb": {
-   "n": 128,
-   "usd": 1477556,
-   "beispiel": "cfb-smu-flst-2026-09-07"
-  },
-  "nhl": {
-   "n": 127,
-   "usd": 1322702,
-   "beispiel": "nhl-mon-buf-2026-05-18"
+   "n": 134,
+   "usd": 1488629,
+   "beispiel": "cfb-ucla-cah-2026-09-05"
   },
   "us": {
-   "n": 42,
-   "usd": 1288858,
+   "n": 40,
+   "usd": 1274298,
    "beispiel": "us-x-iran-permanent-peace-deal-by"
   },
   "cbb": {
-   "n": 95,
-   "usd": 862567,
+   "n": 93,
+   "usd": 860144,
    "beispiel": "cbb-hofst-ala-2026-03-20"
   },
+  "nhl": {
+   "n": 110,
+   "usd": 847816,
+   "beispiel": "nhl-phi-car-2026-05-02"
+  },
   "fed": {
-   "n": 29,
-   "usd": 651228,
+   "n": 31,
+   "usd": 642279,
    "beispiel": "fed-decision-in-july-181"
   },
   "world": {
-   "n": 45,
-   "usd": 645627,
+   "n": 40,
+   "usd": 624147,
    "beispiel": "world-cup-winner"
   },
   "2026": {
-   "n": 50,
-   "usd": 393563,
-   "beispiel": "2026-tour-championship-winner"
+   "n": 54,
+   "usd": 402036,
+   "beispiel": "2026-womens-us-open-winner-tennis"
   },
   "strait": {
-   "n": 9,
-   "usd": 359167,
+   "n": 8,
+   "usd": 357261,
    "beispiel": "strait-of-hormuz-traffic-returns-to-normal-by-end-of-june"
   },
   "usc": {
-   "n": 5,
-   "usd": 337033,
+   "n": 7,
+   "usd": 345066,
    "beispiel": "usc-psg-av-2026-08-12"
   },
-  "will": {
-   "n": 28,
-   "usd": 300937,
-   "beispiel": "will-trump-visit-china-by"
+  "fif": {
+   "n": 74,
+   "usd": 291192,
+   "beispiel": "fif-prt-nga-2026-06-10"
   },
   "who": {
-   "n": 17,
-   "usd": 269368,
+   "n": 15,
+   "usd": 247083,
    "beispiel": "who-will-be-the-next-prime-minister-of-israel-after-the-next-election"
   },
-  "fif": {
-   "n": 66,
-   "usd": 262374,
-   "beispiel": "fif-bra-egy-2026-06-06-more-markets"
-  },
-  "which": {
-   "n": 20,
-   "usd": 196238,
-   "beispiel": "which-party-will-win-the-senate-in-2026"
+  "will": {
+   "n": 18,
+   "usd": 193579,
+   "beispiel": "will-trump-visit-china-by"
   },
   "clf": {
-   "n": 38,
-   "usd": 186803,
-   "beispiel": "clf-jej-bmu-2026-08-04-more-markets"
+   "n": 47,
+   "usd": 185834,
+   "beispiel": "clf-psg-mun-2026-08-08"
   },
-  "presidential": {
-   "n": 12,
-   "usd": 166081,
-   "beispiel": "presidential-election-winner-2028"
+  "which": {
+   "n": 19,
+   "usd": 151169,
+   "beispiel": "which-party-will-win-the-senate-in-2026"
   },
   "texas": {
    "n": 5,
    "usd": 125705,
    "beispiel": "texas-republican-senate-primary-winner"
   },
-  "j2100": {
-   "n": 19,
-   "usd": 125181,
-   "beispiel": "j2100-nar-kat-2026-05-23"
+  "nbasl": {
+   "n": 5,
+   "usd": 106156,
+   "beispiel": "nbasl-cle-nop-2026-07-15"
+  },
+  "iran": {
+   "n": 16,
+   "usd": 92748,
+   "beispiel": "iran-x-israelus-conflict-ends-by"
   }
  }
 }
