@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-09T16:46:30.375422+00:00",
+"generatedAt": "2026-09-09T17:01:32.162276+00:00",
 "byVerdict": {
 "konsens": {
-"n": 903,
-"wins": 754,
-"hitRate": 0.835,
-"polyN": 848,
-"polyWins": 653,
-"polyHitRate": 0.77,
+"n": 904,
+"wins": 755,
+"hitRate": 0.8352,
+"polyN": 849,
+"polyWins": 654,
+"polyHitRate": 0.7703,
 "pinnN": 102,
 "pinnHitRate": 0.8333,
-"nRoi": 231,
-"roi": 0.4832,
-"roiLb": 0.4001,
-"nClv": 231,
-"clv": 21.61,
-"clvLb": 18.953
+"nRoi": 232,
+"roi": 0.4871,
+"roiLb": 0.4041,
+"nClv": 232,
+"clv": 21.76,
+"clvLb": 19.1051
 },
 "uneinig": {
-"n": 339,
-"wins": 110,
-"hitRate": 0.3245,
-"polyN": 303,
+"n": 340,
+"wins": 111,
+"hitRate": 0.3265,
+"polyN": 304,
 "polyWins": 79,
-"polyHitRate": 0.2607,
+"polyHitRate": 0.2599,
 "pinnN": 201,
 "pinnHitRate": 0.597,
-"nRoi": 107,
-"roi": -0.4076,
-"roiLb": -0.5571,
-"nClv": 107,
-"clv": -18.76,
-"clvLb": -24.0904
+"nRoi": 108,
+"roi": -0.4,
+"roiLb": -0.5487,
+"nClv": 108,
+"clv": -18.36,
+"clvLb": -23.6892
 },
 "teil": {
 "n": 16,
@@ -286,6 +286,11 @@
 "wins": 6,
 "hitRate": 0.6
 },
+"Egyptian Premier": {
+"n": 9,
+"wins": 8,
+"hitRate": 0.8889
+},
 "Swedish Superettan": {
 "n": 9,
 "wins": 4,
@@ -300,11 +305,6 @@
 "n": 8,
 "wins": 8,
 "hitRate": 1.0
-},
-"Egyptian Premier": {
-"n": 8,
-"wins": 7,
-"hitRate": 0.875
 },
 "Romanian Liga I": {
 "n": 8,
@@ -421,6 +421,11 @@
 "wins": 2,
 "hitRate": 0.6667
 },
+"Czech 1 Liga": {
+"n": 3,
+"wins": 3,
+"hitRate": 1.0
+},
 "English National League": {
 "n": 3,
 "wins": 1,
@@ -434,11 +439,6 @@
 "Slovenian Premier League": {
 "n": 3,
 "wins": 3,
-"hitRate": 1.0
-},
-"Czech 1 Liga": {
-"n": 2,
-"wins": 2,
 "hitRate": 1.0
 },
 "English WSL": {
@@ -599,37 +599,75 @@
 },
 "byStrength": {
 "strong": {
-"n": 748,
-"wins": 597,
-"hitRate": 0.7981,
-"nRoi": 224,
-"roi": 0.2674,
-"roiLb": 0.1744,
-"nClv": 224,
-"clv": 13.2,
-"clvLb": 9.5109
+"n": 749,
+"wins": 598,
+"hitRate": 0.7984,
+"nRoi": 225,
+"roi": 0.2723,
+"roiLb": 0.1794,
+"nClv": 225,
+"clv": 13.39,
+"clvLb": 9.7081
 },
 "weak": {
-"n": 477,
-"wins": 252,
-"hitRate": 0.5283,
-"nRoi": 121,
-"roi": 0.0093,
-"roiLb": -0.1479,
-"nClv": 121,
-"clv": -1.75,
-"clvLb": -6.6114
+"n": 478,
+"wins": 253,
+"hitRate": 0.5293,
+"nRoi": 122,
+"roi": 0.0126,
+"roiLb": -0.1434,
+"nClv": 122,
+"clv": -1.54,
+"clvLb": -6.377
 }
 },
 "divergence": {
-"n": 339,
-"betfairWins": 110,
-"betfairRate": 0.3245,
-"polyN": 303,
+"n": 340,
+"betfairWins": 111,
+"betfairRate": 0.3265,
+"polyN": 304,
 "polyWins": 79,
-"polyRate": 0.2607
+"polyRate": 0.2599
 },
 "recent": [
+{
+"matchId": "36025250",
+"home": "Modern Sport FC",
+"away": "Wadi Degla",
+"league": "Egyptian Premier",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Modern Sport FC",
+"polySide": "away",
+"winner": "home",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-09-09T14:00:00Z",
+"settledAt": "2026-09-09T17:01:31.975517+00:00"
+},
+{
+"matchId": "36016159",
+"home": "FK Jablonec",
+"away": "Banik Ostrava",
+"league": "Czech 1 Liga",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "FK Jablonec",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+0
+],
+"kickoff": "2026-09-09T15:00:00Z",
+"settledAt": "2026-09-09T17:01:31.975517+00:00"
+},
 {
 "matchId": "36023872",
 "home": "Pyramids",
@@ -1351,56 +1389,18 @@
 ],
 "kickoff": "2026-09-08T11:00:00Z",
 "settledAt": "2026-09-08T12:58:23.270107+00:00"
-},
-{
-"matchId": "36034382",
-"home": "Incheon Utd",
-"away": "Bucheon FC 1995",
-"league": "South Korean K1 League",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Incheon Utd",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-09-08T10:30:00Z",
-"settledAt": "2026-09-08T12:28:33.701049+00:00"
-},
-{
-"matchId": "35999522",
-"home": "Getafe",
-"away": "Celta Vigo",
-"league": "Spanish La Liga",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Getafe",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-09-07T17:00:00Z",
-"settledAt": "2026-09-08T06:27:38.384196+00:00"
 }
 ],
 "global": {
-"n": 1258,
-"wins": 867,
-"hitRate": 0.6892,
-"nRoi": 345,
-"roi": 0.1769,
-"roiLb": 0.0945,
-"nClv": 345,
-"clv": 7.96,
-"clvLb": 4.9534
+"n": 1260,
+"wins": 869,
+"hitRate": 0.6897,
+"nRoi": 347,
+"roi": 0.181,
+"roiLb": 0.0989,
+"nClv": 347,
+"clv": 8.14,
+"clvLb": 5.1467
 },
-"pending": 30
+"pending": 28
 }
