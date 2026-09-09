@@ -322,6 +322,45 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   box-shadow:0 8px 26px rgba(0,0,0,.45); padding:6px; z-index:250;
 }
 .top-more-menu.open{display:block;}
+/* ── Stats-Seite (09.09.2026) ──────────────────────────────────────────────────────────
+   Eine Serie je Sparkline, Farbe nur fuer Status, jede Zahl mit Vorzeichen: Gruen und Rot
+   haben fuer Rot-Gruen-Blinde ΔE 2,2 — ohne das Vorzeichen waere die Tafel fuer sie unlesbar. */
+#statsPanel .st-head{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;justify-content:space-between;margin-bottom:18px;}
+#statsPanel .st-h1{font-size:22px;font-weight:900;margin:0 0 4px;letter-spacing:-.3px;}
+#statsPanel .st-h2{font-size:12px;color:var(--muted);line-height:1.5;max-width:640px;}
+#statsPanel .st-ctrl{display:flex;gap:8px;align-items:center;}
+#statsPanel .st-seg{display:inline-flex;border:1px solid var(--border);border-radius:20px;overflow:hidden;}
+#statsPanel .st-sb{background:none;border:0;color:var(--muted);font:600 12px/1 inherit;padding:8px 16px;cursor:pointer;}
+#statsPanel .st-sb.on{background:var(--accent);color:#08130f;}
+#statsPanel .st-post{background:none;border:1px solid var(--border);border-radius:20px;color:var(--muted);font:600 12px/1 inherit;padding:8px 14px;cursor:pointer;}
+#statsPanel .st-post.on{border-color:var(--accent);color:var(--accent);}
+#statsPanel .st-g{margin-bottom:26px;}
+#statsPanel .st-g-t{font-size:11px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin:0 0 10px 2px;}
+#statsPanel .st-block{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:15px 17px;margin-bottom:12px;}
+#statsPanel .st-b-h{display:flex;align-items:baseline;gap:9px;margin-bottom:3px;}
+#statsPanel .st-b-e{font-size:15px;}
+#statsPanel .st-b-t{font-size:14.5px;font-weight:800;}
+#statsPanel .st-b-a{margin-left:auto;font-size:10.5px;color:var(--muted);white-space:nowrap;}
+#statsPanel .st-b-n{font-size:11px;color:var(--muted);line-height:1.5;margin:4px 0 8px;}
+#statsPanel .st-ks{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;}
+#statsPanel .st-k{flex:1 1 130px;background:var(--card2);border-radius:10px;padding:9px 12px;}
+#statsPanel .st-k-l{font-size:9.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);}
+#statsPanel .st-k-v{font-size:20px;font-weight:900;line-height:1.25;font-variant-numeric:tabular-nums;}
+#statsPanel .st-k-s{font-size:10px;color:var(--muted);}
+#statsPanel .st-spark{display:block;width:100%;height:52px;margin:2px 0 10px;}
+#statsPanel .st-tw{overflow-x:auto;}
+#statsPanel .st-tbl{width:100%;border-collapse:collapse;font-size:12.5px;}
+#statsPanel .st-tbl th{padding:6px 8px;text-align:right;font-size:9.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);}
+#statsPanel .st-tbl th:first-child{text-align:left;}
+#statsPanel .st-tbl td{padding:7px 8px;border-bottom:1px solid rgba(255,255,255,.05);}
+#statsPanel .st-tbl .st-p{color:var(--text);font-weight:600;}
+#statsPanel .st-tbl .st-n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
+#statsPanel .st-tbl .st-n i{display:block;font-style:normal;font-size:9.5px;color:var(--muted);}
+#statsPanel .st-tbl tr.st-ges td{border-top:1px solid var(--border);border-bottom:0;font-weight:800;background:rgba(255,255,255,.02);}
+#statsPanel .st-unv{font-size:9.5px;font-weight:700;color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:1px 6px;margin-left:5px;white-space:nowrap;}
+#statsPanel .st-leer{color:var(--muted);font-size:12.5px;padding:14px 0;}
+#statsPanel .st-foot{font-size:11px;color:var(--muted);line-height:1.6;border-top:1px solid var(--border);padding-top:12px;margin-top:6px;}
+@media(max-width:640px){#statsPanel .st-k{flex:1 1 44%;}#statsPanel .st-b-a{width:100%;margin:2px 0 0;}}
 .top-more-menu .tm-item{
   display:block; width:100%; text-align:left; background:none; border:none; cursor:pointer;
   color:var(--text); font-size:13px; font-weight:600; padding:9px 12px; border-radius:7px;
@@ -2196,6 +2235,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
       <button class="tm-item" data-view="intl-studio"   onclick="showView('intl-studio');closeTopMore()">🎬 TikTok Studio</button>
       <button class="tm-item" data-view="analyse"       onclick="showView('analyse');closeTopMore()">📊 Analyse</button>
       <button class="tm-item" data-view="stakeradar"    onclick="showView('stakeradar');closeTopMore()" style="color:#67cc91">🎰 Stake Radar</button>
+      <button class="tm-item" data-view="stats"         onclick="showView('stats');closeTopMore()">📊 Stats</button>
     </div>
   </div>
 </div>
@@ -2253,6 +2293,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <button class="ms-btn" data-sec="status"       onclick="showView('status');toggleMoreSheet()">🔧 Status</button>
     <button class="ms-btn" data-view="intl-studio" onclick="showView('intl-studio');toggleMoreSheet()">🎬 TikTok Studio</button>
     <button class="ms-btn" data-view="analyse"     onclick="showView('analyse');toggleMoreSheet()">📊 Analyse</button>
+    <button class="ms-btn" data-view="stats"       onclick="showView('stats');toggleMoreSheet()">📊 Stats</button>
     <button class="ms-btn" data-view="stakeradar"  onclick="showView('stakeradar');toggleMoreSheet()">🎰 Stake Radar</button>
   </div>
 </div>
@@ -4132,6 +4173,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 <div id="moneyMapPanel" style="display:none;max-width:1180px;margin:0 auto;padding:20px 16px 100px;"></div>
 <div id="signalCheckPanel" style="display:none;max-width:1100px;margin:0 auto;padding:20px 16px 100px;"></div>
 <div id="stakeRadarPanel" style="display:none;max-width:1180px;margin:0 auto;padding:20px 16px 100px;"></div>
+<div id="statsPanel" style="display:none;max-width:1180px;margin:0 auto;padding:20px 16px 100px;"></div>
 <div id="polyTraderPanel" style="display:none;max-width:1100px;margin:0 auto;padding:20px 16px 100px;"></div>
 
 <!-- TRACKING V2 PANEL -->
@@ -4299,6 +4341,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     "poly-wallets.js", "money-map.js", "betfair-radar.js", "pinnacle-poly.js", "signal-check.js",
     "results-v2.js", "wm2026-renderer.js", "wm2026-tracking.js", "tiktok-studio.js",
     "stake-radar.js",
+    "stats.js",
     "main-dashboard.js"
   ];
   for (var i = 0; i < scripts.length; i++) {

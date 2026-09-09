@@ -267,6 +267,30 @@ def test_finnische_spitze_ist_ebene_1():
     assert LS.stufe("kolmonen") == "3"
 
 
+def test_eine_auszeichnung_ist_kein_wettbewerb():
+    """09.09.2026, vierter Wachhund-Treffer — und eine ANDERE Klasse als die drei davor.
+    „reserva", „efl-trophy" und „mizoram-premier-league" waren Wettbewerbe, deren Ebene nur
+    fehlte. Der Ballon d'Or ist gar keiner: „Ballon dor 2026 · Winner · Harry Kane" ist eine
+    Auszeichnung mit einem Sieger. Eine Spielklasse dafuer waere erfunden."""
+    assert LS.stufe("ballon-dor") == "auszeichnung"
+    assert LS.stufe("golden-boy") == "auszeichnung"
+    # Gegenprobe: „winner" oder „award" in einem echten Ligennamen darf nichts ausloesen.
+    assert LS.stufe("premier-league") == "1"
+    assert LS.stufe("championship") == LS.stufe("championship")
+    assert LS.stufe("usl-championship") == "1"
+
+
+def test_premier_im_namen_ist_keine_spielklasse():
+    """09.09.2026, dritter Wachhund-Treffer des Tages: „mizoram-premier-league". Eine indische
+    STAATSliga — trotz „Premier" im Namen nicht die oberste Klasse des Landes. Genau deshalb
+    gehoert sie in die Tabelle und nicht in eine Regel: ein Muster wuerde aus dem Wort das
+    Gegenteil lesen."""
+    assert LS.stufe("mizoram-premier-league") == "3"
+    # Gegenprobe: die echten obersten Klassen bleiben, wo sie sind.
+    assert LS.stufe("premier-league") == "1"
+    assert LS.stufe("premier-soccer-league") == "1"
+
+
 def test_pokal_heisst_nicht_ueberall_cup():
     """08.09.2026, zweiter Wachhund-Treffer des Tages: „efl-trophy". Die Regel kannte drei
     Woerter fuer Pokal — englisch, spanisch, deutsch. Trophy, Shield, Coupe und Taca sind

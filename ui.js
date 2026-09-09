@@ -38,7 +38,7 @@ const _ALL_PANELS = [
   'intlCardsPanel', 'intlTrackingPanel', 'intlWm2026Panel', 'intlTelegramPanel',
   'tiktokStudioPanel', 'streaksPanel',
   'polymarketPanel', 'polyTraderPanel', 'polyWalletsPanel', 'betfairRadarPanel', 'moneyMapPanel',
-  'heartPanel', 'statusPanel', 'signalCheckPanel', 'stakeRadarPanel',
+  'heartPanel', 'statusPanel', 'signalCheckPanel', 'stakeRadarPanel', 'statsPanel',
 ];
 
 // Top-nav button IDs (Heart/Status seit 28.06.2026 im „Mehr"-Dropdown, nicht mehr hier)
@@ -80,6 +80,7 @@ function showView(view) {
     'moneymap':          'moneyMapPanel',
     'analyse':           'signalCheckPanel',
     'stakeradar':        'stakeRadarPanel',
+    'stats':             'statsPanel',
     'heart':             'heartPanel',
     'status':            'statusPanel',
   };
@@ -138,7 +139,7 @@ function showView(view) {
   // ── „Mehr"-Menü (28.06.2026, Lucas): Heart/Status/Telegram/TikTok gebündelt ──
   // Desktop = Dropdown (#navMore + .top-more-menu), Mobile = Bottom-Sheet (.more-sheet).
   // Telegram/TikTok haben Section 'intl' → über die volle View (_activeView) matchen.
-  const MORE_SECS  = ['intl', 'polytrading', 'sharp', 'heart', 'status', 'analyse'];   // 14.08.2026 (Lucas): Intl/Sharp/Poly-Trading ins Mehr
+  const MORE_SECS  = ['intl', 'polytrading', 'sharp', 'heart', 'status', 'analyse', 'stats'];   // 14.08.2026 (Lucas): Intl/Sharp/Poly-Trading ins Mehr
   const MORE_VIEWS = ['intl-studio'];   // Telegram lebt jetzt im Status-Tab (28.06.2026)
   const isMore = MORE_SECS.includes(_activeSection) || MORE_VIEWS.includes(_activeView);
 
@@ -195,6 +196,8 @@ function showView(view) {
   if (view === 'intl-tracking'     && typeof initIntlTracking  === 'function') initIntlTracking();
   if (view === 'intl-wm2026'       && typeof initWm2026        === 'function') initWm2026();
   if (view === 'intl-studio'       && typeof initTiktokStudio  === 'function') initTiktokStudio();
+  // 09.09.2026: die Stats-Seite laedt ihr eigenes Artefakt beim ersten Oeffnen.
+  if (view === 'stats'             && typeof window._stLoad       === 'function') window._stLoad();
 }
 
 // Sub-nav click: navigate within current section

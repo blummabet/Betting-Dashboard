@@ -3,6 +3,85 @@
 Stand 07.09.2026 (oberster Block); Liga/WM-Teil darunter Stand 26.06.2026. Lebendige Liste aller offenen Punkte — Liga UND noch nicht umgesetzte WM-Sachen —
 damit wir alles abarbeiten können. ✅ = erledigt (Referenz), ⏳ = offen, 🔒 = blockiert.
 
+## 📊 09.09.2026 — die Stats-Seite (Mehr → Stats)
+
+Lucas: *„schaffen wir eine eigene Stats-Seite? Im Mehr-Menü einfach Stats, und dort alles rein was
+geht — Cards, Betfair, Poly, Push-Channels usw. Alles auf Monatsbasis und Wochenbasis auch. Schön
+modern dargestellt, weil brauch das um es zu posten."*
+
+Neu: `stats_perioden.py` (rechnet) → `stats_perioden.json` → `stats.js` (zeichnet). **12 Blöcke**
+in drei Gruppen, je mit Wochen, Monaten und Gesamt.
+
+| Block | n | Treffer | ROI |
+|---|---|---|---|
+| Cards · laufender Betrieb (Liga+MLS) | 151 | 64,9 % | **+9,4 %** |
+| Cards · Liga | 91 | 68,1 % | **+15,2 %** |
+| Cards · MLS | 60 | 60,0 % | +0,7 % |
+| Betfair · alle Signale | 17.678 | 52,4 % | −0,5 % |
+| Polymarket · Shortlist | 615 | 64,1 % | +1,1 % |
+| Polymarket · Public-Kandidaten | 174 | 70,7 % | **+6,0 %** |
+| Betfair · Public-Channel | 215 | 58,9 % | −1,5 % |
+| Poly-Whales · Public-Channel | 53 | 73,9 % | **+39,4 %** |
+| Konjunktion · Trades | 34 | 62,5 % | +11,9 % |
+| Liga-Picks · Trades | 125 | 68,8 % | +12,6 % |
+| MLS-Picks · Trades | 29 | 58,3 % | −11,8 % |
+| Heute spielenswert · Trades | 24 | — | — |
+
+### Die zwei Sätze, an denen so eine Seite sonst scheitert
+
+1. ⭐ **Eine Periode ohne Abdeckung ist keine Periode.** Der Betfair-Ledger hält ein rollierendes
+   Fenster und reicht am 09.09. nur bis zum **26.08.** zurück. Ein Balken „August" wäre dort seine
+   letzte Woche und sähe neben dem September aus wie ein schwacher Monat statt wie ein halber.
+   Jede Zeile trägt `vollstaendig` und, wenn nicht, den Grund („läuft noch" / „die Datenquelle
+   reicht nur bis … zurück"); die Balken sind dann schraffiert. Perioden ganz vor der Abdeckung
+   bekommen **gar keine Zeile** statt einer Null.
+2. **Eine fehlende Kennzahl ist keine Null.** „Heute spielenswert" führt ein Dedup-Buch, kein
+   Ledger — dort steht die Zahl der Pushes und **kein ROI**, mit dem Satz warum. `mitQuote: 0`
+   macht das maschinenlesbar.
+
+### Gestaltung
+
+- **Eine Serie je Sparkline** — damit braucht es keine kategoriale Palette und keine Legende. (Die
+  fünf Marken-Farben nebeneinander fallen im Palette-Validator durch das Helligkeitsband; die
+  Frage stellt sich so gar nicht.) **Balken statt Linie:** die Perioden sind diskret und teils
+  unvollständig — eine Linie würde dazwischen interpolieren und Werte behaupten, die nie gemessen
+  wurden.
+- **Farbe trägt nur Status**, und nie allein: Grün↔Rot hat für Rot-Grün-Blinde **ΔE 2,2**. Jede
+  Rendite trägt ihr Vorzeichen, jede unvollständige Periode ihr Wort und ihre Schraffur.
+- **Post-Modus** (Lucas' Screenshots): blendet P/L und Beträge aus, lässt Trefferquote, Rendite in
+  Prozent, Stichprobe und Untergrenzen stehen. Ein Test hält fest, dass er **genau eine Spalte und
+  genau eine Kachel** entfernt — mehr wäre ärmer als nötig, weniger nicht postbar.
+- **Cards „gesamt" ist Liga + MLS, nicht alles.** Die WM trägt 160 der 314 abgerechneten Picks und
+  ist seit 19.07. vorbei; sie steht als eigener, ausdrücklich als beendet beschrifteter Block.
+  Dieselbe Entscheidung wie bei den ruhenden Schubladen im Freigabe-Register.
+
+### Zwei Guards haben beim ersten Lauf zugeschlagen
+
+- 🔴 **`stats_perioden.py` las das rohe `cat`-Feld.** Der Wächter aus `test_shortlist_kategorie.py`
+  fand es sofort: nicht jede Zeile trägt einen Stempel, und eine ungestempelte UFC-Zeile wäre in
+  der bespielbaren Bilanz gelandet. Jetzt über `poly_shortlist_track._row_cat`.
+- 🔴 **`mizoram-premier-league`** — dritter CI-Treffer des Tages. Eine indische *Staats*liga:
+  trotz „Premier" im Namen nicht die oberste Klasse. Deshalb Tabelle statt Regel — ein Muster
+  würde aus dem Wort das Gegenteil lesen.
+- Und der Navi-Guard verlangte den Eintrag auf **beiden** Flächen (Desktop-Dropdown + mobiles
+  Sheet), sonst wäre die Seite mobil unerreichbar gewesen.
+
+🔴 **Und ein vierter Wachhund-Treffer, diesmal einer anderen Klasse:** `ballon-dor`. Die drei
+davor („reserva", „efl-trophy", „mizoram-premier-league") waren Wettbewerbe, deren Ebene nur
+fehlte. Der Ballon d'Or ist **gar kein Wettbewerb**: „Ballon dor 2026 · Winner · Harry Kane" ist
+eine Auszeichnung mit einem Sieger, kein Spiel mit einer Spielklasse. Eine Zahl dafür wäre
+erfunden — es gibt keine Liga, in der Harry Kane den Ballon d'Or gewinnt. Deshalb eine eigene
+Marke `auszeichnung` statt einer Ebene: die Zeile fällt nicht mehr aus der Ansicht (der Grund für
+den Wächter), behauptet aber auch keine Spielklasse. Das Muster deckt Golden Boy, Golden Boot,
+Puskás und Player-of-the-Year gleich mit ab.
+
+**Gegenbeweis** (sechs Regeln): Vollständigkeit ignorieren → 2 Tests fallen; fehlende Quote als
+0 → fällt; Untergrenze ohne Mindestzahl → fällt; WM zurück in „gesamt" → fällt; Sparkline ohne
+Schraffur → fällt; Post-Modus nimmt eine Kachel zu viel → fällt.
+
+**Rollout:** `stats_perioden.py` läuft in `betfair.yml` **nach** freigabe/killer (es liest deren
+Artefakte) und wird committet. Bis zum ersten CI-Lauf ist die Seite leer und sagt das auch.
+
 ## 🔍 09.09.2026 — ein Guard, der die Daten mass · und die Spiele hinter den Public-Kandidaten
 
 ### Der Guard, der bei gutem Marktzustand rot wurde

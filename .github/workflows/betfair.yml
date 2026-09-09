@@ -120,6 +120,13 @@ jobs:
         run: ${{ env.BETFAIR_PY }} freigabe.py
         continue-on-error: true
 
+      # 09.09.2026 (Lucas: „schaffen wir eine eigene Stats-Seite … alles auf Monatsbasis und
+      # Wochenbasis auch"). Liest nur, was die Schritte darueber geschrieben haben — muss also
+      # NACH ihnen laufen, sonst zeigt die Seite den Stand des Vorlaufs.
+      - name: 📊 Stats je Woche/Monat
+        run: ${{ env.BETFAIR_PY }} stats_perioden.py
+        continue-on-error: true
+
       # 01.09.2026 (Lucas: „damit ich aktiv drauf aufmerksam werde"): zwei Pushes in den
       # TRADES-Channel, bewusst schmal geschnitten.
       #   · Konjunktion NUR Stufe 1 (~5/Tag). Alles zu pushen waeren 20-58/Tag, und Stufe 2
@@ -208,6 +215,7 @@ jobs:
           # Ausloeser diesmal: neue Dateien (punkte_*, vorregistrierung, odds_sports), die es auf
           # dem Runner noch gar nicht gab. Ab jetzt bekommt JEDE Datei ihre eigene Zeile —
           # eine fehlende kostet dann genau sich selbst und nicht den ganzen Lauf.
+          git add stats_perioden.json 2>/dev/null || true      # Stats-Seite: Wochen/Monate je Strom
           git add stake_highroller.json 2>/dev/null || true
           git add stake_bet_ledger.json 2>/dev/null || true
           git add stake_query.json 2>/dev/null || true

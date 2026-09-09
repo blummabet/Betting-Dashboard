@@ -78,6 +78,12 @@ EBENE = {
     # „kolmonen" (3) darunter seit dem ersten Tag in der Tabelle stehen. Genau die Luecke,
     # die eine Tabelle ohne Wachhund jahrelang behaelt.
     "veikkausliiga": 1,
+    # 09.09.2026 (CI-Wachhund, dritter Treffer des Tages): „mizoram-premier-league". Eine
+    # indische STAATSliga — trotz „Premier" im Namen nicht die oberste Klasse des Landes
+    # (das ist die ISL/I-League), sondern die Ebene darunter. Genau deshalb steht sie in der
+    # TABELLE und nicht in einer Regel: „premier" im Namen sagt hier das Gegenteil dessen,
+    # was ein Muster daraus lesen wuerde.
+    "mizoram-premier-league": 3,
     # ── zweite Spielklassen ────────────────────────────────────────────────
     "championship": 2, "2nd-bundesliga": 2, "la-liga-2": 2, "serie-b": 2, "ligue-2": 2,
     "j-league-2": 2, "brasileiro-serie-b": 2, "primera-b": 2, "k-league-2": 2,
@@ -122,6 +128,12 @@ _RESERVE_RX = re.compile(r"reserv|riserv")
 # nicht die ganze Liga zum Pokal macht.
 _POKAL_RX = re.compile(r"(?:^|-)(?:trophy|shield|coupe|taca|kupa|kubok|beker|cupa)(?:-|$)")
 
+# Auszeichnungen und Langzeitwetten ohne Spielklasse. Wortgrenzen, damit „winner" in einem
+# Marktnamen nicht ganze Ligen zu Auszeichnungen macht.
+_AUSZEICHNUNG_RX = re.compile(
+    r"(?:^|-)(?:ballon-dor|golden-boy|golden-boot|golden-ball|puskas|"
+    r"player-of-the-year|team-of-the-year|top-scorer|award|awards)(?:-|$)")
+
 # Mustererkennung fuer alles, was neu dazukommt. Sie ersetzt die Tabelle nicht, sie faengt
 # nur die Faelle ab, bei denen der Slug die Antwort selbst mitbringt.
 _MUSTER = (
@@ -160,6 +172,16 @@ _MUSTER = (
     # stuft keinen bereits eingestuften um.
     ("pokal", lambda s: (s.endswith("-cup") or s.startswith("copa-") or s.endswith("-pokal")
                          or bool(_POKAL_RX.search(s)))),
+    # 09.09.2026 (CI-Wachhund, „ballon-dor"): und diesmal eine ANDERE Klasse als die drei
+    # Treffer davor. „reserva", „efl-trophy" und „mizoram-premier-league" waren Wettbewerbe,
+    # deren Ebene nur fehlte. Der Ballon d'Or ist gar kein Wettbewerb: „Ballon dor 2026 ·
+    # Winner · Harry Kane" ist eine AUSZEICHNUNG mit einem Sieger, kein Spiel mit einer
+    # Spielklasse. Eine Zahl dafuer waere erfunden — es gibt keine Liga, in der Harry Kane
+    # den Ballon d'Or gewinnt.
+    #
+    # Deshalb eine eigene Marke und keine Ebene: die Zeile faellt damit nicht mehr aus der
+    # Ansicht (das war der Grund fuer den Waechter), behauptet aber auch keine Spielklasse.
+    ("auszeichnung", lambda s: bool(_AUSZEICHNUNG_RX.search(s))),
 )
 
 SPORT = "soccer"
