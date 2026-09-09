@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-09-09T12:16:03.801637+00:00",
+"generatedAt": "2026-09-09T13:31:19.002555+00:00",
 "byVerdict": {
 "konsens": {
-"n": 898,
-"wins": 749,
-"hitRate": 0.8341,
-"polyN": 843,
-"polyWins": 650,
-"polyHitRate": 0.7711,
-"pinnN": 100,
-"pinnHitRate": 0.83,
-"nRoi": 226,
-"roi": 0.4786,
-"roiLb": 0.3939,
-"nClv": 226,
-"clv": 21.58,
-"clvLb": 18.8883
+"n": 902,
+"wins": 753,
+"hitRate": 0.8348,
+"polyN": 847,
+"polyWins": 652,
+"polyHitRate": 0.7698,
+"pinnN": 102,
+"pinnHitRate": 0.8333,
+"nRoi": 230,
+"roi": 0.4838,
+"roiLb": 0.4003,
+"nClv": 230,
+"clv": 21.62,
+"clvLb": 18.9473
 },
 "uneinig": {
 "n": 339,
@@ -131,6 +131,11 @@
 "wins": 15,
 "hitRate": 0.5769
 },
+"South Korean K1 League": {
+"n": 26,
+"wins": 21,
+"hitRate": 0.8077
+},
 "Brazilian Serie B": {
 "n": 25,
 "wins": 17,
@@ -147,11 +152,6 @@
 "hitRate": 0.8696
 },
 "German Bundesliga 2": {
-"n": 22,
-"wins": 17,
-"hitRate": 0.7727
-},
-"South Korean K1 League": {
 "n": 22,
 "wins": 17,
 "hitRate": 0.7727
@@ -599,26 +599,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 744,
-"wins": 593,
-"hitRate": 0.797,
-"nRoi": 220,
-"roi": 0.2585,
-"roiLb": 0.1643,
-"nClv": 220,
-"clv": 12.92,
-"clvLb": 9.1828
+"n": 747,
+"wins": 596,
+"hitRate": 0.7979,
+"nRoi": 223,
+"roi": 0.267,
+"roiLb": 0.1736,
+"nClv": 223,
+"clv": 13.16,
+"clvLb": 9.463
 },
 "weak": {
-"n": 476,
-"wins": 251,
-"hitRate": 0.5273,
-"nRoi": 120,
-"roi": 0.0058,
-"roiLb": -0.1527,
-"nClv": 120,
-"clv": -1.76,
-"clvLb": -6.6666
+"n": 477,
+"wins": 252,
+"hitRate": 0.5283,
+"nRoi": 121,
+"roi": 0.0093,
+"roiLb": -0.1479,
+"nClv": 121,
+"clv": -1.75,
+"clvLb": -6.6114
 }
 },
 "divergence": {
@@ -630,6 +630,82 @@
 "polyRate": 0.2607
 },
 "recent": [
+{
+"matchId": "36038768",
+"home": "Daejeon Citizen",
+"away": "FC Anyang",
+"league": "South Korean K1 League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Daejeon Citizen",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+2
+],
+"kickoff": "2026-09-09T10:30:00Z",
+"settledAt": "2026-09-09T13:31:18.802204+00:00"
+},
+{
+"matchId": "36038778",
+"home": "Gwangju FC",
+"away": "Jeju Utd",
+"league": "South Korean K1 League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Jeju Utd",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-09-09T10:30:00Z",
+"settledAt": "2026-09-09T13:31:18.802204+00:00"
+},
+{
+"matchId": "36038777",
+"home": "Pohang Steelers",
+"away": "Gimcheon Sangmu",
+"league": "South Korean K1 League",
+"verdict": "konsens",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-09-09T10:30:00Z",
+"settledAt": "2026-09-09T13:31:18.802204+00:00"
+},
+{
+"matchId": "36038771",
+"home": "Gangwon",
+"away": "Jeonbuk Motors",
+"league": "South Korean K1 League",
+"verdict": "konsens",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-09-09T10:30:00Z",
+"settledAt": "2026-09-09T12:31:00.866943+00:00"
+},
 {
 "matchId": "36003784",
 "home": "Sydney FC",
@@ -1313,94 +1389,18 @@
 ],
 "kickoff": "2026-09-07T19:30:00Z",
 "settledAt": "2026-09-08T06:27:38.384196+00:00"
-},
-{
-"matchId": "35979408",
-"home": "Udinese",
-"away": "Lazio",
-"league": "Italian Serie A",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Lazio",
-"polySide": "home",
-"winner": "away",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-09-07T18:45:00Z",
-"settledAt": "2026-09-08T06:27:38.384196+00:00"
-},
-{
-"matchId": "36008911",
-"home": "Rizespor",
-"away": "Alanyaspor",
-"league": "Turkish Super League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Rizespor",
-"polySide": "home",
-"winner": "away",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-09-07T17:00:00Z",
-"settledAt": "2026-09-08T06:27:38.384196+00:00"
-},
-{
-"matchId": "35979407",
-"home": "Cagliari",
-"away": "Lecce",
-"league": "Italian Serie A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Cagliari",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-09-07T16:30:00Z",
-"settledAt": "2026-09-08T06:27:38.384196+00:00"
-},
-{
-"matchId": "36017249",
-"home": "Palermo",
-"away": "Sampdoria",
-"league": "Italian Serie B",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Palermo",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-09-07T18:30:00Z",
-"settledAt": "2026-09-08T06:27:38.384196+00:00"
 }
 ],
 "global": {
-"n": 1253,
-"wins": 862,
-"hitRate": 0.6879,
-"nRoi": 340,
-"roi": 0.1693,
-"roiLb": 0.086,
-"nClv": 340,
-"clv": 7.74,
-"clvLb": 4.7027
+"n": 1257,
+"wins": 866,
+"hitRate": 0.6889,
+"nRoi": 344,
+"roi": 0.1764,
+"roiLb": 0.0938,
+"nClv": 344,
+"clv": 7.92,
+"clvLb": 4.9095
 },
-"pending": 21
+"pending": 20
 }
