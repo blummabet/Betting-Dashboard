@@ -240592,7 +240592,13 @@
     "usd": 355,
     "ts": 1788938148
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Legacy": 1.0,
+   "Alliance": 0.0
+  },
+  "resolvedAt": "2026-09-09T10:38:53.587851+00:00"
  },
  "itf-hillel1-chanta1-2026-09-09": {
   "shares": {},
@@ -240781,7 +240787,13 @@
     "usd": 7898,
     "ts": 1788932628
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "HOTU": 1.0,
+   "Wildcard": 0.0
+  },
+  "resolvedAt": "2026-09-09T10:38:53.587851+00:00"
  },
  "lol-dnsc-nsea-2026-09-09": {
   "shares": {
@@ -242261,8 +242273,8 @@
  },
  "cs2-b8-33-2026-09-09": {
   "shares": {
-   "B8": 159533.96803627512,
-   "BET-M 33": 76812.227026275
+   "B8": 160979.6331605251,
+   "BET-M 33": 77508.19849045
   },
   "prices": {
    "B8": 0.675,
@@ -242274,7 +242286,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 256288,
+  "totalUsd": 259150,
   "whales": [
    {
     "wallet": "0x14af7564566edfd07d1996ae8b08d6235d7aca2c",
@@ -242291,7 +242303,7 @@
    {
     "wallet": "0x73e3fec494611d73c170cb2f23850fd998b21be9",
     "side": "B8",
-    "usd": 32598,
+    "usd": 32782,
     "avgPrice": 0.6699
    },
    {
@@ -242301,8 +242313,8 @@
     "avgPrice": 0.7489
    }
   ],
-  "hoursToKickoff": 0.9,
-  "capturedAt": "2026-09-09T10:08:44.136658+00:00",
+  "hoursToKickoff": 0.4,
+  "capturedAt": "2026-09-09T10:38:53.587851+00:00",
   "cond": "0x19fe43d1eade8020647122bceaa42549071403dc71f2a864068c2fbd40079f4c",
   "frage": "Counter-Strike: B8 vs BET-M 33 (BO3) - PGL Masters Bucharest: European Qualifier Playoffs",
   "tokens": {
@@ -242318,15 +242330,15 @@
    "bids": [
     [
      0.67,
-     8697
+     31882
     ],
     [
      0.66,
-     586
+     1039
     ],
     [
      0.65,
-     465
+     431
     ],
     [
      0.64,
@@ -242334,7 +242346,7 @@
     ],
     [
      0.62,
-     1095
+     1395
     ],
     [
      0.61,
@@ -242344,31 +242356,39 @@
    "asks": [
     [
      0.68,
-     7240
+     15398
     ],
     [
      0.69,
-     4086
+     4494
     ],
     [
      0.7,
-     5797
+     5796
     ],
     [
      0.71,
-     5433
+     5440
     ],
     [
      0.72,
-     1277
+     4016
     ],
     [
      0.73,
-     277
+     2415
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x70dbec635412c1568b36174b039f621bcc20f73f",
+    "action": "BUY",
+    "side": "B8",
+    "price": 0.68,
+    "usd": 1200,
+    "ts": 1788948775
+   },
    {
     "wallet": "0xc52ce9ab82877004321b12b199a25eaeb5b20078",
     "action": "BUY",
@@ -242376,21 +242396,13 @@
     "price": 0.68,
     "usd": 3421,
     "ts": 1788944473
-   },
-   {
-    "wallet": "0xced18e8e68c37cae3b714ca4116ed8bef996280e",
-    "action": "BUY",
-    "side": "B8",
-    "price": 0.68,
-    "usd": 653,
-    "ts": 1788942720
    }
   ]
  },
  "cs2-hero-bst-2026-09-09": {
   "shares": {
-   "Heroic": 129530.86088536002,
-   "BESTIA": 35476.75832504
+   "Heroic": 129751.80559434,
+   "BESTIA": 35537.2849066
   },
   "prices": {
    "Heroic": 0.785,
@@ -242402,7 +242414,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 197385,
+  "totalUsd": 198140,
   "whales": [
    {
     "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
@@ -242429,8 +242441,8 @@
     "avgPrice": 0.78
    }
   ],
-  "hoursToKickoff": 0.9,
-  "capturedAt": "2026-09-09T10:08:44.136658+00:00",
+  "hoursToKickoff": 0.4,
+  "capturedAt": "2026-09-09T10:38:53.587851+00:00",
   "cond": "0xdc5ac6ed2f5b2ae8a6702b12c71d3d8cb856f728270ec0630c42e110b9c5b3a3",
   "frage": "Counter-Strike: Heroic vs BESTIA (BO3) - Thunderpick World Championship Closed Qualifier Group A",
   "tokens": {
@@ -242446,37 +242458,37 @@
    "bids": [
     [
      0.78,
-     58276
+     29615
     ],
     [
      0.77,
-     13105
+     9723
     ],
     [
      0.76,
-     1279
+     1280
     ],
     [
      0.75,
-     130
+     245
+    ],
+    [
+     0.74,
+     20
     ],
     [
      0.66,
      220
-    ],
-    [
-     0.61,
-     32
     ]
    ],
    "asks": [
     [
      0.79,
-     10818
+     10707
     ],
     [
      0.8,
-     431
+     931
     ],
     [
      0.81,
@@ -242484,15 +242496,15 @@
     ],
     [
      0.82,
-     9712
+     204
     ],
     [
      0.83,
-     7871
+     3672
     ],
     [
      0.84,
-     12391
+     291
     ]
    ]
   },
@@ -242528,21 +242540,13 @@
     "price": 0.22,
     "usd": 3048,
     "ts": 1788941814
-   },
-   {
-    "wallet": "0xfdc0bd67fbd71aa8edd00121eb2a7fcbddc34b85",
-    "action": "BUY",
-    "side": "Heroic",
-    "price": 0.79,
-    "usd": 316,
-    "ts": 1788940677
    }
   ]
  },
  "cs2-3dmax-ace1-2026-09-09": {
   "shares": {
-   "3DMAX": 134459.44355862,
-   "Acend": 41304.53273262501
+   "3DMAX": 138041.11725844504,
+   "Acend": 42404.78543780001
   },
   "prices": {
    "3DMAX": 0.765,
@@ -242554,7 +242558,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 177184,
+  "totalUsd": 186209,
   "whales": [
    {
     "wallet": "0xf19c1162e97a1170d0ec1b8ef9f47c4883770767",
@@ -242571,7 +242575,7 @@
    {
     "wallet": "0xe1f313a980c5cfd4444f66bcf40563eb900e5402",
     "side": "3DMAX",
-    "usd": 18828,
+    "usd": 18860,
     "avgPrice": 0.7673
    },
    {
@@ -242581,8 +242585,8 @@
     "avgPrice": 0.2657
    }
   ],
-  "hoursToKickoff": 0.9,
-  "capturedAt": "2026-09-09T10:08:44.136658+00:00",
+  "hoursToKickoff": 0.4,
+  "capturedAt": "2026-09-09T10:38:53.587851+00:00",
   "cond": "0xd204d39f2ee031502f777b41040f40df665a1e395c39abdfc3c746ca6824e397",
   "frage": "Counter-Strike: 3DMAX vs Acend (BO3) - Thunderpick World Championship Closed Qualifier Group C",
   "tokens": {
@@ -242598,19 +242602,19 @@
    "bids": [
     [
      0.76,
-     25819
+     30745
     ],
     [
      0.75,
-     10874
+     10875
     ],
     [
      0.74,
-     3010
+     541
     ],
     [
      0.73,
-     2833
+     2808
     ],
     [
      0.72,
@@ -242624,7 +242628,7 @@
    "asks": [
     [
      0.77,
-     13546
+     9573
     ],
     [
      0.78,
@@ -242632,15 +242636,15 @@
     ],
     [
      0.79,
-     7640
+     5131
     ],
     [
      0.8,
-     4304
+     4305
     ],
     [
      0.81,
-     5769
+     5723
     ],
     [
      0.82,
@@ -242649,6 +242653,22 @@
    ]
   },
   "trades": [
+   {
+    "wallet": "0xe47c09fc713a466b73f8776c26008c4fe38ce31a",
+    "action": "BUY",
+    "side": "3DMAX",
+    "price": 0.77,
+    "usd": 1200,
+    "ts": 1788949242
+   },
+   {
+    "wallet": "0x818be2b363af6d1b3f74cbd020550aeda633c5eb",
+    "action": "BUY",
+    "side": "3DMAX",
+    "price": 0.77,
+    "usd": 2310,
+    "ts": 1788948856
+   },
    {
     "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
     "action": "BUY",
@@ -242696,22 +242716,6 @@
     "price": 0.23,
     "usd": 1823,
     "ts": 1788946005
-   },
-   {
-    "wallet": "0xe1f313a980c5cfd4444f66bcf40563eb900e5402",
-    "action": "BUY",
-    "side": "3DMAX",
-    "price": 0.78,
-    "usd": 7019,
-    "ts": 1788944143
-   },
-   {
-    "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
-    "action": "BUY",
-    "side": "3DMAX",
-    "price": 0.77,
-    "usd": 924,
-    "ts": 1788943368
    }
   ]
  },
@@ -242964,8 +242968,8 @@
  },
  "itf-todora1-kimhi1-2026-09-09": {
   "shares": {
-   "Matei Todoran": 7059.047175284999,
-   "Orel Kimhi": 19578.409833149988
+   "Matei Todoran": 7061.19582364,
+   "Orel Kimhi": 19584.36929179499
   },
   "prices": {
    "Matei Todoran": 0.265,
@@ -242977,7 +242981,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 28036,
+  "totalUsd": 28080,
   "whales": [
    {
     "wallet": "0xb8e32d575b8d360f90bcc95596e9a0bee444aaf2",
@@ -242994,7 +242998,7 @@
    {
     "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
     "side": "Matei Todoran",
-    "usd": 1494,
+    "usd": 1492,
     "avgPrice": 0.2695
    },
    {
@@ -243004,8 +243008,8 @@
     "avgPrice": 0.28
    }
   ],
-  "hoursToKickoff": 0.9,
-  "capturedAt": "2026-09-09T10:08:44.136658+00:00",
+  "hoursToKickoff": 0.4,
+  "capturedAt": "2026-09-09T10:38:53.587851+00:00",
   "cond": "0x330879f290e25f8f8cb74b5ace7ae07738b986ef07736affd6739755cac1b677",
   "frage": "M15 Budapest: Matei Todoran vs Orel Kimhi",
   "tokens": {
@@ -243028,7 +243032,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 23092,
+  "totalUsd": 23153,
   "whales": [
    {
     "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
@@ -243054,8 +243058,8 @@
     "avgPrice": 0.79
    }
   ],
-  "hoursToKickoff": 1.4,
-  "capturedAt": "2026-09-09T10:08:44.136658+00:00",
+  "hoursToKickoff": 0.9,
+  "capturedAt": "2026-09-09T10:38:53.587851+00:00",
   "cond": "0xf1b7b089481d3e2e610dad536b301cdb19ce99bacae1c30b09df0b8eab0cc53b",
   "frage": "Genoa: Pedro Martinez vs Maximo Zeitune",
   "tokens": {
@@ -243155,8 +243159,8 @@
     "avgPrice": 0.0213
    }
   ],
-  "hoursToKickoff": 1.4,
-  "capturedAt": "2026-09-09T10:08:44.136658+00:00",
+  "hoursToKickoff": 0.9,
+  "capturedAt": "2026-09-09T10:38:53.587851+00:00",
   "cond": "0xa368213aaa95bb11ec14f9de4c3fd583a2588f250feb7c027c946190aef0579b",
   "frage": "W15 Viserba di Rimini: Francesca Gandolfi vs Celeste Faustini",
   "tokens": {
@@ -243166,8 +243170,8 @@
  },
  "cs2-bb3-ast10-2026-09-09": {
   "shares": {
-   "BetBoom Team": 65112.92325446002,
-   "Astralis": 63823.517963864986
+   "BetBoom Team": 65473.88854169503,
+   "Astralis": 64177.33542362999
   },
   "prices": {
    "BetBoom Team": 0.505,
@@ -243179,7 +243183,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 129519,
+  "totalUsd": 131590,
   "whales": [
    {
     "wallet": "0x73e3fec494611d73c170cb2f23850fd998b21be9",
@@ -243206,8 +243210,8 @@
     "avgPrice": 0.4795
    }
   ],
-  "hoursToKickoff": 1.9,
-  "capturedAt": "2026-09-09T10:08:44.136658+00:00",
+  "hoursToKickoff": 1.4,
+  "capturedAt": "2026-09-09T10:38:53.587851+00:00",
   "cond": "0x874c53488e28c5b16ecfff2255c4cdd734a8e4cd8c8d6cb773afaa67207e4004",
   "frage": "Counter-Strike: BetBoom Team vs Astralis (BO3) - FISSURE PLAYGROUND Group A",
   "tokens": {
@@ -243223,19 +243227,19 @@
    "bids": [
     [
      0.5,
-     135006
+     87552
     ],
     [
      0.49,
-     12747
+     15303
     ],
     [
      0.48,
-     29060
+     31060
     ],
     [
      0.47,
-     11678
+     88458
     ],
     [
      0.46,
@@ -243249,15 +243253,15 @@
    "asks": [
     [
      0.51,
-     17995
+     17712
     ],
     [
      0.52,
-     35735
+     33286
     ],
     [
      0.53,
-     29126
+     34121
     ],
     [
      0.54,
@@ -243297,29 +243301,13 @@
     "price": 0.51,
     "usd": 324,
     "ts": 1788943528
-   },
-   {
-    "wallet": "0x49514a200aa6ed57b2be804b9412d0b373973038",
-    "action": "BUY",
-    "side": "BetBoom Team",
-    "price": 0.51,
-    "usd": 380,
-    "ts": 1788942804
-   },
-   {
-    "wallet": "0xa7b12aac995899570e0de0c660eaa88d37288801",
-    "action": "BUY",
-    "side": "BetBoom Team",
-    "price": 0.51,
-    "usd": 4080,
-    "ts": 1788942672
    }
   ]
  },
  "cs2-hotu-nemi1-2026-09-09": {
   "shares": {
-   "HOTU": 57362.32118854501,
-   "Nemiga": 65997.97110168001
+   "HOTU": 57876.261029595014,
+   "Nemiga": 66589.27985221501
   },
   "prices": {
    "HOTU": 0.465,
@@ -243331,13 +243319,13 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 128782,
+  "totalUsd": 131527,
   "whales": [
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "side": "Nemiga",
-    "usd": 33653,
-    "avgPrice": 0.5477
+    "usd": 34115,
+    "avgPrice": 0.5476
    },
    {
     "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
@@ -243358,8 +243346,8 @@
     "avgPrice": 0.4499
    }
   ],
-  "hoursToKickoff": 1.9,
-  "capturedAt": "2026-09-09T10:08:44.136658+00:00",
+  "hoursToKickoff": 1.4,
+  "capturedAt": "2026-09-09T10:38:53.587851+00:00",
   "cond": "0x152d02f0780c4dd83ae5b1375afa5b72415fb27ac9845f9078aab5bcb1d4cedb",
   "frage": "Counter-Strike: HOTU vs Nemiga (BO3) - 1win Private Club #1: Closed Qualifier Playoffs",
   "tokens": {
@@ -243375,7 +243363,7 @@
    "bids": [
     [
      0.53,
-     7127
+     4122
     ],
     [
      0.52,
@@ -243383,49 +243371,57 @@
     ],
     [
      0.51,
-     880
+     856
     ],
     [
      0.5,
-     5907
+     5673
     ],
     [
      0.49,
-     5384
+     4611
     ],
     [
      0.48,
-     4829
+     3983
     ]
    ],
    "asks": [
     [
      0.54,
-     17645
+     13821
     ],
     [
      0.55,
-     23387
+     23595
     ],
     [
      0.56,
-     20928
+     19428
     ],
     [
      0.57,
-     3018
+     4834
     ],
     [
      0.58,
-     320
+     1820
     ],
     [
      0.59,
-     2040
+     40
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
+    "action": "BUY",
+    "side": "Nemiga",
+    "price": 0.54,
+    "usd": 331,
+    "ts": 1788948961
+   },
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "action": "BUY",
@@ -243457,29 +243453,13 @@
     "price": 0.54,
     "usd": 1625,
     "ts": 1788947160
-   },
-   {
-    "wallet": "0xda3407bec4c1f26d40afceb442de75b8260b01a8",
-    "action": "BUY",
-    "side": "HOTU",
-    "price": 0.47,
-    "usd": 2820,
-    "ts": 1788946593
-   },
-   {
-    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
-    "action": "BUY",
-    "side": "Nemiga",
-    "price": 0.54,
-    "usd": 3372,
-    "ts": 1788946263
    }
   ]
  },
  "cs2-prv-furia-2026-09-09": {
   "shares": {
-   "PARIVISION": 24513.094004230003,
-   "FURIA": 48660.313289595084
+   "PARIVISION": 25686.92900402,
+   "FURIA": 50990.4633638051
   },
   "prices": {
    "PARIVISION": 0.335,
@@ -243491,12 +243471,12 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 69886,
+  "totalUsd": 80740,
   "whales": [
    {
     "wallet": "0xe40ecff63ec661d218a86c048186ac83389a9770",
     "side": "PARIVISION",
-    "usd": 13877,
+    "usd": 14883,
     "avgPrice": 0.3299
    },
    {
@@ -243514,12 +243494,12 @@
    {
     "wallet": "0xafd492974cd531aae7786210438ae46b42047e61",
     "side": "FURIA",
-    "usd": 6650,
-    "avgPrice": 0.67
+    "usd": 6982,
+    "avgPrice": 0.6695
    }
   ],
-  "hoursToKickoff": 1.9,
-  "capturedAt": "2026-09-09T10:08:44.136658+00:00",
+  "hoursToKickoff": 1.4,
+  "capturedAt": "2026-09-09T10:38:53.587851+00:00",
   "cond": "0x84f3b2402f5471ff48cd85a43fa5ff8b144afc5b6c3afcc8ac7437578aba6774",
   "frage": "Counter-Strike: PARIVISION vs FURIA (BO3) - FISSURE PLAYGROUND Group B",
   "tokens": {
@@ -243535,15 +243515,15 @@
    "bids": [
     [
      0.66,
-     147893
+     139085
     ],
     [
      0.65,
-     47187
+     48166
     ],
     [
      0.64,
-     1521
+     74321
     ],
     [
      0.63,
@@ -243551,25 +243531,25 @@
     ],
     [
      0.62,
-     45
+     40
     ],
     [
      0.61,
-     1520
+     1569
     ]
    ],
    "asks": [
     [
      0.67,
-     126297
+     138343
     ],
     [
      0.68,
-     56874
+     56869
     ],
     [
      0.69,
-     8361
+     11677
     ],
     [
      0.7,
@@ -243586,6 +243566,30 @@
    ]
   },
   "trades": [
+   {
+    "wallet": "0x6888e548e47cfc9dc629376d86a41018add64c79",
+    "action": "BUY",
+    "side": "FURIA",
+    "price": 0.67,
+    "usd": 300,
+    "ts": 1788949051
+   },
+   {
+    "wallet": "0x70dbec635412c1568b36174b039f621bcc20f73f",
+    "action": "BUY",
+    "side": "FURIA",
+    "price": 0.67,
+    "usd": 1200,
+    "ts": 1788948822
+   },
+   {
+    "wallet": "0x4f4ebbdc7cd5ce12052b0db77ef47e098b3fb690",
+    "action": "BUY",
+    "side": "FURIA",
+    "price": 0.67,
+    "usd": 431,
+    "ts": 1788948568
+   },
    {
     "wallet": "0x98d52b88dc228a4b49e2514f8d368b4e6c582ec4",
     "action": "BUY",
@@ -243625,22 +243629,6 @@
     "price": 0.67,
     "usd": 800,
     "ts": 1788939865
-   },
-   {
-    "wallet": "0x59847267e2a004e3886d7a02ac53778c5ea176eb",
-    "action": "BUY",
-    "side": "PARIVISION",
-    "price": 0.34,
-    "usd": 400,
-    "ts": 1788929668
-   },
-   {
-    "wallet": "0x67b6ccabe5f6c01a7a9ecad5d420ea0cdc7f00bc",
-    "action": "BUY",
-    "side": "PARIVISION",
-    "price": 0.34,
-    "usd": 3060,
-    "ts": 1788929512
    }
   ]
  },
@@ -243686,8 +243674,8 @@
     "avgPrice": 0.85
    }
   ],
-  "hoursToKickoff": 1.9,
-  "capturedAt": "2026-09-09T10:08:44.136658+00:00",
+  "hoursToKickoff": 1.4,
+  "capturedAt": "2026-09-09T10:38:53.587851+00:00",
   "cond": "0x0bd99bdc83cfbf1aca94c54df2d9c4579894e2d620837c02c8d14221249e7038",
   "frage": "Montreux: Tessa Brockmann vs Clara Burel",
   "tokens": {
@@ -244108,7 +244096,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 11627,
+  "totalUsd": 11637,
   "whales": [
    {
     "wallet": "0xdc40c985063d50aa00cc5f637f7e83203b3b89cf",
@@ -244135,8 +244123,8 @@
     "avgPrice": 0.8899
    }
   ],
-  "hoursToKickoff": 0.9,
-  "capturedAt": "2026-09-09T10:08:44.136658+00:00",
+  "hoursToKickoff": 0.4,
+  "capturedAt": "2026-09-09T10:38:53.587851+00:00",
   "cond": "0x6f0569d2cd3862b3bf983182aa4189f8d2fb0c35f742d4313f94893b691ce0f1",
   "frage": "Counter-Strike: INOX Division vs The Last Resort (BO3) - CCT Europe Series #8 Group Stage",
   "tokens": {
@@ -244146,12 +244134,12 @@
  },
  "cs2-noirve-tsa-2026-09-09": {
   "shares": {
-   "Noir Verse": 4193.7953913950005,
-   "Spirit Academy": 4453.207993180002
+   "Noir Verse": 8408.130629260002,
+   "Spirit Academy": 3434.3067613199996
   },
   "prices": {
-   "Noir Verse": 0.485,
-   "Spirit Academy": 0.515
+   "Noir Verse": 0.71,
+   "Spirit Academy": 0.29
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -244159,35 +244147,35 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 8820,
+  "totalUsd": 12644,
   "whales": [
    {
     "wallet": "0xe95e58aae345ef776cb80f9ed80093737c394a9f",
     "side": "Noir Verse",
-    "usd": 2853,
+    "usd": 4176,
     "avgPrice": 0.4965
    },
    {
     "wallet": "0xdc40c985063d50aa00cc5f637f7e83203b3b89cf",
     "side": "Spirit Academy",
-    "usd": 1762,
+    "usd": 1160,
     "avgPrice": 0.51
-   },
-   {
-    "wallet": "0x513587a2f36a8cb29333052a6a479091ef8a7217",
-    "side": "Spirit Academy",
-    "usd": 927,
-    "avgPrice": 0.4997
    },
    {
     "wallet": "0xad5182ee66ffe052a01ac6cb695ce45bf53c2b2a",
     "side": "Noir Verse",
-    "usd": 485,
-    "avgPrice": 0.4897
+    "usd": 734,
+    "avgPrice": 0.491
+   },
+   {
+    "wallet": "0x984ffef12a23e7af5e2cef8e3283e0ab6a6e9a43",
+    "side": "Noir Verse",
+    "usd": 645,
+    "avgPrice": 0.4899
    }
   ],
-  "hoursToKickoff": 0.9,
-  "capturedAt": "2026-09-09T10:08:44.136658+00:00",
+  "hoursToKickoff": 0.4,
+  "capturedAt": "2026-09-09T10:38:53.587851+00:00",
   "cond": "0x64620b4210caa4f089868e43ebf8c9dbccd676839a92094ddc76efd7355b82b6",
   "frage": "Counter-Strike: Noir Verse vs Spirit Academy (BO3) - CCT Europe Challengers Series Playoffs",
   "tokens": {
