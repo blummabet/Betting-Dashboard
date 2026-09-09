@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-09T00:05:04.733433+00:00",
+ "generatedAt": "2026-09-09T00:35:07.627803+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -11,10 +11,10 @@
  "minGapPP": 6.0,
  "polyRowsSeen": 609,
  "pinnKeys": 323,
- "matched": 217,
+ "matched": 219,
  "footballRows": 189,
  "crossRows": 420,
- "footballSkippedStale": 99,
+ "footballSkippedStale": 90,
  "seenBySport": {
   "americanfootball_nfl": 178,
   "baseball_mlb": 84,
@@ -24,27 +24,55 @@
   "soccer_liga": 153
  },
  "matchedBySport": {
-  "baseball_mlb": 28,
+  "baseball_mlb": 30,
   "soccer_mls": 36,
   "soccer_liga": 153
  },
  "trackRecord": {
-  "tracked": 305,
-  "converged": 73
+  "tracked": 307,
+  "converged": 71
  },
  "discrepancies": [
+  {
+   "id": "baseball_mlb|miamimarlins-newyorkmets|newyorkmets",
+   "sport": "baseball_mlb",
+   "event": "New York Mets vs Miami Marlins",
+   "market": "Moneyline",
+   "outcome": "New York Mets",
+   "polyPP": 90.5,
+   "pinnPP": 46.9,
+   "gapPP": 43.51,
+   "vol": 574481,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -16.16,
+   "firstSeen": "2026-09-07T18:02:30.443558+00:00"
+  },
+  {
+   "id": "baseball_mlb|miamimarlins-newyorkmets|miamimarlins",
+   "sport": "baseball_mlb",
+   "event": "New York Mets vs Miami Marlins",
+   "market": "Moneyline",
+   "outcome": "Miami Marlins",
+   "polyPP": 9.6,
+   "pinnPP": 53.1,
+   "gapPP": -43.51,
+   "vol": 574481,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -16.16,
+   "firstSeen": "2026-09-07T18:02:30.443558+00:00"
+  },
   {
    "id": "baseball_mlb|detroittigers-minnesotatwins|minnesotatwins",
    "sport": "baseball_mlb",
    "event": "Minnesota Twins vs Detroit Tigers",
    "market": "Moneyline",
    "outcome": "Minnesota Twins",
-   "polyPP": 36.5,
-   "pinnPP": 59.3,
-   "gapPP": -22.84,
-   "vol": 280036,
-   "richtung": "Poly zu niedrig → backen",
-   "convergePP": 25.09,
+   "polyPP": 67.5,
+   "pinnPP": 45.8,
+   "gapPP": 21.7,
+   "vol": 436818,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 26.23,
    "firstSeen": "2026-09-01T01:18:43.400694+00:00"
   },
   {
@@ -53,13 +81,41 @@
    "event": "Minnesota Twins vs Detroit Tigers",
    "market": "Moneyline",
    "outcome": "Detroit Tigers",
-   "polyPP": 63.5,
-   "pinnPP": 40.7,
-   "gapPP": 22.84,
-   "vol": 280036,
-   "richtung": "Poly zu hoch → faden",
-   "convergePP": 25.09,
+   "polyPP": 32.5,
+   "pinnPP": 54.2,
+   "gapPP": -21.7,
+   "vol": 436818,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 26.23,
    "firstSeen": "2026-09-01T01:18:43.400694+00:00"
+  },
+  {
+   "id": "baseball_mlb|houstonastros-philadelphiaphillies|houstonastros",
+   "sport": "baseball_mlb",
+   "event": "Houston Astros vs Philadelphia Phillies",
+   "market": "Moneyline",
+   "outcome": "Houston Astros",
+   "polyPP": 89.5,
+   "pinnPP": 79.7,
+   "gapPP": 9.84,
+   "vol": 151408,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-09T00:35:07.627483+00:00"
+  },
+  {
+   "id": "baseball_mlb|houstonastros-philadelphiaphillies|philadelphiaphillies",
+   "sport": "baseball_mlb",
+   "event": "Houston Astros vs Philadelphia Phillies",
+   "market": "Moneyline",
+   "outcome": "Philadelphia Phillies",
+   "polyPP": 10.5,
+   "pinnPP": 20.3,
+   "gapPP": -9.84,
+   "vol": 151408,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-09T00:35:07.627483+00:00"
   }
  ]
 }
