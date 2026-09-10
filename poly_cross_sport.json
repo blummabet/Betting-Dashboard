@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-10T00:07:00.138554+00:00",
+ "generatedAt": "2026-09-10T00:37:09.427578+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,14 +9,14 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 637,
- "pinnKeys": 317,
- "matched": 217,
+ "polyRowsSeen": 639,
+ "pinnKeys": 323,
+ "matched": 223,
  "footballRows": 201,
- "crossRows": 436,
- "footballSkippedStale": 95,
+ "crossRows": 438,
+ "footballSkippedStale": 86,
  "seenBySport": {
-  "americanfootball_nfl": 176,
+  "americanfootball_nfl": 178,
   "baseball_mlb": 88,
   "icehockey_nhl": 146,
   "boxing_boxing": 26,
@@ -24,42 +24,70 @@
   "soccer_liga": 165
  },
  "matchedBySport": {
-  "baseball_mlb": 16,
+  "baseball_mlb": 22,
   "soccer_mls": 36,
   "soccer_liga": 165
  },
  "trackRecord": {
   "tracked": 300,
-  "converged": 61
+  "converged": 64
  },
  "discrepancies": [
   {
-   "id": "baseball_mlb|chicagocubs-milwaukeebrewers|chicagocubs",
+   "id": "baseball_mlb|houstonastros-philadelphiaphillies|houstonastros",
    "sport": "baseball_mlb",
-   "event": "Chicago Cubs vs Milwaukee Brewers",
+   "event": "Houston Astros vs Philadelphia Phillies",
    "market": "Moneyline",
-   "outcome": "Chicago Cubs",
-   "polyPP": 16.5,
-   "pinnPP": 41.0,
-   "gapPP": -24.51,
-   "vol": 158752,
+   "outcome": "Houston Astros",
+   "polyPP": 20.5,
+   "pinnPP": 39.6,
+   "gapPP": -19.1,
+   "vol": 339639,
    "richtung": "Poly zu niedrig → backen",
-   "convergePP": -3.33,
-   "firstSeen": "2026-09-02T00:51:01.258414+00:00"
+   "convergePP": -9.26,
+   "firstSeen": "2026-09-09T00:35:07.627483+00:00"
   },
   {
-   "id": "baseball_mlb|chicagocubs-milwaukeebrewers|milwaukeebrewers",
+   "id": "baseball_mlb|houstonastros-philadelphiaphillies|philadelphiaphillies",
    "sport": "baseball_mlb",
-   "event": "Chicago Cubs vs Milwaukee Brewers",
+   "event": "Houston Astros vs Philadelphia Phillies",
    "market": "Moneyline",
-   "outcome": "Milwaukee Brewers",
-   "polyPP": 83.5,
-   "pinnPP": 59.0,
-   "gapPP": 24.51,
-   "vol": 158752,
+   "outcome": "Philadelphia Phillies",
+   "polyPP": 79.5,
+   "pinnPP": 60.4,
+   "gapPP": 19.1,
+   "vol": 339639,
    "richtung": "Poly zu hoch → faden",
-   "convergePP": -3.33,
-   "firstSeen": "2026-09-02T00:51:01.258414+00:00"
+   "convergePP": -9.26,
+   "firstSeen": "2026-09-09T00:35:07.627483+00:00"
+  },
+  {
+   "id": "baseball_mlb|bostonredsox-losangelesangels|losangelesangels",
+   "sport": "baseball_mlb",
+   "event": "Los Angeles Angels vs Boston Red Sox",
+   "market": "Moneyline",
+   "outcome": "Los Angeles Angels",
+   "polyPP": 87.5,
+   "pinnPP": 80.3,
+   "gapPP": 7.2,
+   "vol": 128195,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 6.66,
+   "firstSeen": "2026-09-08T23:05:00.722788+00:00"
+  },
+  {
+   "id": "baseball_mlb|bostonredsox-losangelesangels|bostonredsox",
+   "sport": "baseball_mlb",
+   "event": "Los Angeles Angels vs Boston Red Sox",
+   "market": "Moneyline",
+   "outcome": "Boston Red Sox",
+   "polyPP": 12.5,
+   "pinnPP": 19.7,
+   "gapPP": -7.2,
+   "vol": 128195,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 6.66,
+   "firstSeen": "2026-09-08T23:05:00.722788+00:00"
   },
   {
    "id": "soccer_mls|nashvillesc-torontofc|aw",
@@ -67,40 +95,12 @@
    "event": "Toronto FC vs Nashville SC",
    "market": "1X2",
    "outcome": "Auswärts",
-   "polyPP": 72.0,
-   "pinnPP": 47.6,
-   "gapPP": 24.44,
-   "vol": 59895,
-   "richtung": "Poly zu hoch → faden",
-   "convergePP": 0.0,
-   "firstSeen": "2026-09-10T00:07:00.138206+00:00"
-  },
-  {
-   "id": "soccer_mls|nashvillesc-torontofc|dr",
-   "sport": "soccer_mls",
-   "event": "Toronto FC vs Nashville SC",
-   "market": "1X2",
-   "outcome": "Remis",
-   "polyPP": 14.0,
-   "pinnPP": 26.4,
-   "gapPP": -12.44,
-   "vol": 59895,
+   "polyPP": 59.0,
+   "pinnPP": 65.6,
+   "gapPP": -6.57,
+   "vol": 77203,
    "richtung": "Poly zu niedrig → backen",
-   "convergePP": 0.0,
-   "firstSeen": "2026-09-10T00:07:00.138206+00:00"
-  },
-  {
-   "id": "soccer_mls|nashvillesc-torontofc|hw",
-   "sport": "soccer_mls",
-   "event": "Toronto FC vs Nashville SC",
-   "market": "1X2",
-   "outcome": "Heim",
-   "polyPP": 15.5,
-   "pinnPP": 26.0,
-   "gapPP": -10.5,
-   "vol": 59895,
-   "richtung": "Poly zu niedrig → backen",
-   "convergePP": 0.0,
+   "convergePP": 17.87,
    "firstSeen": "2026-09-10T00:07:00.138206+00:00"
   }
  ]
