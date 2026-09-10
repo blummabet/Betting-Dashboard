@@ -255633,7 +255633,13 @@
     "usd": 720,
     "ts": 1789008982
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "9z": 0.0,
+   "G2": 1.0
+  },
+  "resolvedAt": "2026-09-10T07:40:08.012415+00:00"
  },
  "wta-podoros-blinkov-2026-09-09": {
   "shares": {
@@ -256300,8 +256306,8 @@
  },
  "lol-t1a-dkc-2026-09-10": {
   "shares": {
-   "T1 Academy": 39210.404069640084,
-   "Dplus KIA Challengers": 30188.719110060025
+   "T1 Academy": 44194.27273875011,
+   "Dplus KIA Challengers": 34025.85694234501
   },
   "prices": {
    "T1 Academy": 0.565,
@@ -256313,8 +256319,14 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 97847,
+  "totalUsd": 106792,
   "whales": [
+   {
+    "wallet": "0xe015b5a2a299167be835a2fd1e86f09c49e06ffd",
+    "side": "Dplus KIA Challengers",
+    "usd": 6739,
+    "avgPrice": 0.4299
+   },
    {
     "wallet": "0xef2684030d14a67c2a30a3e4fc00eed7a99505ba",
     "side": "T1 Academy",
@@ -256332,16 +256344,10 @@
     "side": "T1 Academy",
     "usd": 4479,
     "avgPrice": 0.56
-   },
-   {
-    "wallet": "0xe015b5a2a299167be835a2fd1e86f09c49e06ffd",
-    "side": "Dplus KIA Challengers",
-    "usd": 4050,
-    "avgPrice": 0.4299
    }
   ],
-  "hoursToKickoff": 0.87,
-  "capturedAt": "2026-09-10T07:09:59.612103+00:00",
+  "hoursToKickoff": 0.37,
+  "capturedAt": "2026-09-10T07:40:08.012415+00:00",
   "cond": "0xb055d72c45cf3ce3333423e23d483397fbbe74a3bc9e710aa4deefb2a6d944b6",
   "frage": "LoL: T1 Academy vs Dplus KIA Challengers (BO5) - LCK Challengers League Playoffs",
   "tokens": {
@@ -256357,19 +256363,19 @@
    "bids": [
     [
      0.56,
-     11403
+     8939
     ],
     [
      0.55,
-     1083
+     16338
     ],
     [
      0.54,
-     3016
+     37638
     ],
     [
      0.53,
-     4501
+     1509
     ],
     [
      0.52,
@@ -256383,31 +256389,47 @@
    "asks": [
     [
      0.57,
-     31823
+     32310
     ],
     [
      0.58,
-     28710
+     32171
     ],
     [
      0.59,
-     57951
+     12411
     ],
     [
      0.6,
-     3062
-    ],
-    [
-     0.61,
-     4000
+     1112
     ],
     [
      0.62,
-     5260
+     260
+    ],
+    [
+     0.66,
+     125
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "action": "BUY",
+    "side": "Dplus KIA Challengers",
+    "price": 0.44,
+    "usd": 958,
+    "ts": 1789025281
+   },
+   {
+    "wallet": "0x4873713d4954ab6ecebaf5fb1b018f622bb515ba",
+    "action": "BUY",
+    "side": "T1 Academy",
+    "price": 0.57,
+    "usd": 3200,
+    "ts": 1789024143
+   },
    {
     "wallet": "0xe015b5a2a299167be835a2fd1e86f09c49e06ffd",
     "action": "BUY",
@@ -256415,25 +256437,17 @@
     "price": 0.43,
     "usd": 3664,
     "ts": 1789022358
-   },
-   {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-    "action": "BUY",
-    "side": "T1 Academy",
-    "price": 0.58,
-    "usd": 1160,
-    "ts": 1789021662
    }
   ]
  },
  "cs2-bst-vp-2026-09-10": {
   "shares": {
-   "BESTIA": 57712.92984341495,
-   "Virtus.pro": 92190.63251311501
+   "BESTIA": 57499.09896387996,
+   "Virtus.pro": 93814.16660776004
   },
   "prices": {
-   "BESTIA": 0.385,
-   "Virtus.pro": 0.615
+   "BESTIA": 0.38,
+   "Virtus.pro": 0.62
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -256441,35 +256455,35 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 155698,
+  "totalUsd": 156593,
   "whales": [
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "side": "BESTIA",
-    "usd": 34342,
+    "usd": 33896,
     "avgPrice": 0.3794
    },
    {
     "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
     "side": "Virtus.pro",
-    "usd": 27675,
+    "usd": 27900,
     "avgPrice": 0.6277
    },
    {
     "wallet": "0x73e3fec494611d73c170cb2f23850fd998b21be9",
     "side": "Virtus.pro",
-    "usd": 18979,
+    "usd": 19196,
     "avgPrice": 0.6099
    },
    {
     "wallet": "0x6b97ebe911d7f2e5e3e8c4a0faad4a5c7c0b8d30",
     "side": "Virtus.pro",
-    "usd": 5642,
+    "usd": 5688,
     "avgPrice": 0.6199
    }
   ],
-  "hoursToKickoff": 0.87,
-  "capturedAt": "2026-09-10T07:09:59.612103+00:00",
+  "hoursToKickoff": 0.37,
+  "capturedAt": "2026-09-10T07:40:08.012415+00:00",
   "cond": "0x3661eb41e10dde6a469ad79a3cd2bc9ff91c2fb15dc04c164863e8894568982a",
   "frage": "Counter-Strike: BESTIA vs Virtus.pro (BO3) - Thunderpick World Championship Closed Qualifier Group A",
   "tokens": {
@@ -256479,21 +256493,21 @@
   "book": {
    "side": "Virtus.pro",
    "bid": 0.61,
-   "ask": 0.62,
-   "spreadC": 1.0,
-   "spreadPct": 1.61,
+   "ask": 0.63,
+   "spreadC": 2.0,
+   "spreadPct": 3.17,
    "bids": [
     [
      0.61,
-     39256
+     39491
     ],
     [
      0.6,
-     1830
+     1530
     ],
     [
      0.59,
-     5
+     10
     ],
     [
      0.53,
@@ -256510,32 +256524,48 @@
    ],
    "asks": [
     [
-     0.62,
-     335
-    ],
-    [
      0.63,
-     16195
+     15284
     ],
     [
      0.64,
-     9267
+     9262
     ],
     [
      0.65,
-     5786
+     3032
     ],
     [
      0.66,
-     13030
+     1030
     ],
     [
      0.67,
-     4000
+     1000
+    ],
+    [
+     0.68,
+     5
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x4f4ebbdc7cd5ce12052b0db77ef47e098b3fb690",
+    "action": "BUY",
+    "side": "Virtus.pro",
+    "price": 0.63,
+    "usd": 353,
+    "ts": 1789025712
+   },
+   {
+    "wallet": "0x567464a8b6b5794c43282c4a9274e12b48ba8b14",
+    "action": "BUY",
+    "side": "Virtus.pro",
+    "price": 0.6231,
+    "usd": 300,
+    "ts": 1789024732
+   },
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "action": "BUY",
@@ -256559,33 +256589,17 @@
     "price": 0.62,
     "usd": 4015,
     "ts": 1789022233
-   },
-   {
-    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
-    "action": "BUY",
-    "side": "BESTIA",
-    "price": 0.3866,
-    "usd": 3175,
-    "ts": 1789021846
-   },
-   {
-    "wallet": "0xeb739f5e4f45b0b68688bb252f08327bc01653b0",
-    "action": "BUY",
-    "side": "BESTIA",
-    "price": 0.38,
-    "usd": 1800,
-    "ts": 1789021797
    }
   ]
  },
  "cs2-ntr-33-2026-09-10": {
   "shares": {
-   "Nuclear TigeRES": 24653.123692004996,
-   "BET-M 33": 15433.057169530004
+   "Nuclear TigeRES": 38061.324501250005,
+   "BET-M 33": 22836.600747375
   },
   "prices": {
-   "Nuclear TigeRES": 0.615,
-   "BET-M 33": 0.385
+   "Nuclear TigeRES": 0.625,
+   "BET-M 33": 0.375
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -256593,35 +256607,35 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 42920,
+  "totalUsd": 63654,
   "whales": [
    {
     "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
     "side": "Nuclear TigeRES",
-    "usd": 6397,
-    "avgPrice": 0.6099
+    "usd": 19187,
+    "avgPrice": 0.6165
+   },
+   {
+    "wallet": "0xda3a9b7afff7b44ad4fd75308723194e0a11381f",
+    "side": "BET-M 33",
+    "usd": 5625,
+    "avgPrice": 0.38
    },
    {
     "wallet": "0x1047f313c5b75f58b8e3075174356e76bb309036",
     "side": "Nuclear TigeRES",
-    "usd": 4637,
+    "usd": 4712,
     "avgPrice": 0.5899
    },
    {
     "wallet": "0x6b97ebe911d7f2e5e3e8c4a0faad4a5c7c0b8d30",
     "side": "BET-M 33",
-    "usd": 3658,
+    "usd": 3562,
     "avgPrice": 0.39
-   },
-   {
-    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
-    "side": "Nuclear TigeRES",
-    "usd": 2952,
-    "avgPrice": 0.6138
    }
   ],
-  "hoursToKickoff": 0.87,
-  "capturedAt": "2026-09-10T07:09:59.612103+00:00",
+  "hoursToKickoff": 0.37,
+  "capturedAt": "2026-09-10T07:40:08.012415+00:00",
   "cond": "0xbafcea1ae4feeae7c1076f9145ac4e5fd7e3bfdecf840a40c69a1ea2ec5b5bb3",
   "frage": "Counter-Strike: Nuclear TigeRES vs BET-M 33 (BO3) - PGL Masters Bucharest: European Qualifier Playoffs",
   "tokens": {
@@ -256630,18 +256644,22 @@
   },
   "book": {
    "side": "Nuclear TigeRES",
-   "bid": 0.61,
-   "ask": 0.62,
+   "bid": 0.62,
+   "ask": 0.63,
    "spreadC": 1.0,
-   "spreadPct": 1.61,
+   "spreadPct": 1.59,
    "bids": [
     [
+     0.62,
+     5938
+    ],
+    [
      0.61,
-     21001
+     21224
     ],
     [
      0.6,
-     62985
+     3385
     ],
     [
      0.59,
@@ -256649,45 +256667,49 @@
     ],
     [
      0.57,
-     5000
+     5250
     ],
     [
      0.55,
-     255
-    ],
-    [
-     0.54,
-     100
+     5
     ]
    ],
    "asks": [
     [
-     0.62,
-     5263
-    ],
-    [
      0.63,
-     14528
+     7145
     ],
     [
      0.64,
-     10105
+     706
     ],
     [
-     0.71,
-     250
+     0.66,
+     20
+    ],
+    [
+     0.67,
+     90000
     ],
     [
      0.72,
-     576
+     160
     ],
     [
-     0.74,
-     21
+     0.73,
+     929
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
+    "action": "BUY",
+    "side": "Nuclear TigeRES",
+    "price": 0.62,
+    "usd": 12342,
+    "ts": 1789025335
+   },
    {
     "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
     "action": "BUY",
@@ -256727,21 +256749,13 @@
     "price": 0.61,
     "usd": 5516,
     "ts": 1789016733
-   },
-   {
-    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
-    "action": "BUY",
-    "side": "Nuclear TigeRES",
-    "price": 0.6088,
-    "usd": 736,
-    "ts": 1789011619
    }
   ]
  },
  "cs2-hero-k271-2026-09-10": {
   "shares": {
-   "Heroic": 8008.234723274996,
-   "K27": 4603.161803730001
+   "Heroic": 25218.32552146501,
+   "K27": 14495.47624538499
   },
   "prices": {
    "Heroic": 0.635,
@@ -256753,8 +256767,20 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 12799,
+  "totalUsd": 40129,
   "whales": [
+   {
+    "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
+    "side": "Heroic",
+    "usd": 15875,
+    "avgPrice": 0.64
+   },
+   {
+    "wallet": "0x6b97ebe911d7f2e5e3e8c4a0faad4a5c7c0b8d30",
+    "side": "K27",
+    "usd": 5352,
+    "avgPrice": 0.3635
+   },
    {
     "wallet": "0xe40ecff63ec661d218a86c048186ac83389a9770",
     "side": "Heroic",
@@ -256762,26 +256788,14 @@
     "avgPrice": 0.63
    },
    {
-    "wallet": "0x6b97ebe911d7f2e5e3e8c4a0faad4a5c7c0b8d30",
+    "wallet": "0x8e74984fb998be82444627906740dc1a19c35972",
     "side": "K27",
-    "usd": 2584,
-    "avgPrice": 0.3672
-   },
-   {
-    "wallet": "0x70dbec635412c1568b36174b039f621bcc20f73f",
-    "side": "Heroic",
-    "usd": 1200,
-    "avgPrice": 0.6352
-   },
-   {
-    "wallet": "0xbfe3908d7fc06d489202be1bda6ee7589392ed7f",
-    "side": "Heroic",
-    "usd": 635,
-    "avgPrice": 0.64
+    "usd": 3089,
+    "avgPrice": 0.36
    }
   ],
-  "hoursToKickoff": 0.87,
-  "capturedAt": "2026-09-10T07:09:59.612103+00:00",
+  "hoursToKickoff": 0.37,
+  "capturedAt": "2026-09-10T07:40:08.012415+00:00",
   "cond": "0x9a060aa31e648e1206d1b68e226408c5bd86d50cd84e574ef560390999192b52",
   "frage": "Counter-Strike: Heroic vs K27 (BO3) - Thunderpick World Championship Closed Qualifier Group A",
   "tokens": {
@@ -256797,45 +256811,45 @@
    "bids": [
     [
      0.63,
-     52923
+     56039
     ],
     [
      0.62,
-     7
+     157
     ],
     [
      0.61,
      79400
     ],
     [
-     0.5,
+     0.51,
      12
     ],
     [
-     0.49,
-     1973
+     0.5,
+     1641
     ],
     [
-     0.44,
-     43
+     0.49,
+     160
     ]
    ],
    "asks": [
     [
      0.64,
-     57762
+     42109
     ],
     [
      0.65,
-     2165
+     2065
     ],
     [
      0.72,
-     12
+     42
     ],
     [
      0.73,
-     3350
+     3450
     ],
     [
      0.77,
@@ -256848,6 +256862,14 @@
    ]
   },
   "trades": [
+   {
+    "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
+    "action": "BUY",
+    "side": "Heroic",
+    "price": 0.64,
+    "usd": 16000,
+    "ts": 1789024494
+   },
    {
     "wallet": "0x7a0a59c4eaa5ea8cabfbac39461339e00b9f8f9f",
     "action": "BUY",
@@ -256863,14 +256885,6 @@
     "price": 0.64,
     "usd": 640,
     "ts": 1789020363
-   },
-   {
-    "wallet": "0x6b97ebe911d7f2e5e3e8c4a0faad4a5c7c0b8d30",
-    "action": "BUY",
-    "side": "K27",
-    "price": 0.37,
-    "usd": 1910,
-    "ts": 1789010907
    }
   ]
  },
@@ -256889,7 +256903,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 20737,
+  "totalUsd": 20744,
   "whales": [
    {
     "wallet": "0xb8e32d575b8d360f90bcc95596e9a0bee444aaf2",
@@ -256916,8 +256930,8 @@
     "avgPrice": 0.1433
    }
   ],
-  "hoursToKickoff": 0.87,
-  "capturedAt": "2026-09-10T07:09:59.612103+00:00",
+  "hoursToKickoff": 0.37,
+  "capturedAt": "2026-09-10T07:40:08.012415+00:00",
   "cond": "0xfd77ee5fbb1fd970135dbb3c77738b13284e0710ff491d7c3012ed017b176aeb",
   "frage": "M15 Monastir: Carel Aubriel Ngounoue vs Roan Jones",
   "tokens": {
@@ -256933,7 +256947,7 @@
    "bids": [
     [
      0.85,
-     724
+     712
     ],
     [
      0.84,
@@ -256941,7 +256955,7 @@
     ],
     [
      0.83,
-     359
+     59
     ],
     [
      0.8,
@@ -256959,27 +256973,27 @@
    "asks": [
     [
      0.87,
-     342
+     337
     ],
     [
      0.88,
-     1494
+     1148
     ],
     [
      0.89,
      409
     ],
     [
-     0.9,
-     1000
-    ],
-    [
-     0.91,
-     1000
-    ],
-    [
      0.92,
-     636
+     5
+    ],
+    [
+     0.93,
+     77
+    ],
+    [
+     0.94,
+     83
     ]
    ]
   },
@@ -257196,8 +257210,8 @@
  },
  "cs2-mibr-bb3-2026-09-10": {
   "shares": {
-   "MIBR": 163011.11709348008,
-   "BetBoom Team": 203305.68715753502
+   "MIBR": 182096.92845733507,
+   "BetBoom Team": 227109.33819290999
   },
   "prices": {
    "MIBR": 0.445,
@@ -257209,35 +257223,35 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 375862,
+  "totalUsd": 419946,
   "whales": [
    {
     "wallet": "0x7c37b52eb226bcb9411375ec48b0169663fb6aeb",
     "side": "MIBR",
-    "usd": 91003,
+    "usd": 104353,
     "avgPrice": 0.4499
    },
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "side": "MIBR",
-    "usd": 33829,
-    "avgPrice": 0.4311
+    "usd": 35713,
+    "avgPrice": 0.4321
+   },
+   {
+    "wallet": "0x8e74984fb998be82444627906740dc1a19c35972",
+    "side": "BetBoom Team",
+    "usd": 25733,
+    "avgPrice": 0.55
    },
    {
     "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
     "side": "BetBoom Team",
     "usd": 24975,
     "avgPrice": 0.5499
-   },
-   {
-    "wallet": "0x2aecc79b2212b6dbdcac29625a54c1c71ebeea65",
-    "side": "BetBoom Team",
-    "usd": 19422,
-    "avgPrice": 0.5657
    }
   ],
-  "hoursToKickoff": 1.87,
-  "capturedAt": "2026-09-10T07:09:59.612103+00:00",
+  "hoursToKickoff": 1.37,
+  "capturedAt": "2026-09-10T07:40:08.012415+00:00",
   "cond": "0xcc7de410ca27dc50c9ff8ac3e892492c02d807d504bc916954a5a0b67ae620e5",
   "frage": "Counter-Strike: MIBR vs BetBoom Team (BO3) - FISSURE PLAYGROUND Group A",
   "tokens": {
@@ -257253,23 +257267,23 @@
    "bids": [
     [
      0.55,
-     278946
+     120296
     ],
     [
      0.54,
-     18735
+     12166
     ],
     [
      0.53,
-     3734
+     143555
     ],
     [
      0.52,
-     5250
+     5836
     ],
     [
      0.51,
-     9
+     1878
     ],
     [
      0.5,
@@ -257279,27 +257293,27 @@
    "asks": [
     [
      0.56,
-     106846
+     105409
     ],
     [
      0.57,
-     101962
+     107321
     ],
     [
      0.58,
-     12470
+     14145
     ],
     [
      0.59,
-     3114
+     20742
     ],
     [
      0.6,
-     25825
+     28372
     ],
     [
      0.61,
-     14019
+     4378
     ]
    ]
   },
@@ -257310,15 +257324,7 @@
     "side": "MIBR",
     "price": 0.45,
     "usd": 450,
-    "ts": 1789024068
-   },
-   {
-    "wallet": "0x1b47e9b128e6b671edebfb2cac23dd3efc40d814",
-    "action": "BUY",
-    "side": "BetBoom Team",
-    "price": 0.56,
-    "usd": 506,
-    "ts": 1789024011
+    "ts": 1789025869
    },
    {
     "wallet": "0x7c37b52eb226bcb9411375ec48b0169663fb6aeb",
@@ -257326,7 +257332,7 @@
     "side": "MIBR",
     "price": 0.45,
     "usd": 450,
-    "ts": 1789024008
+    "ts": 1789025808
    },
    {
     "wallet": "0x7c37b52eb226bcb9411375ec48b0169663fb6aeb",
@@ -257334,7 +257340,7 @@
     "side": "MIBR",
     "price": 0.45,
     "usd": 450,
-    "ts": 1789023948
+    "ts": 1789025748
    },
    {
     "wallet": "0x7c37b52eb226bcb9411375ec48b0169663fb6aeb",
@@ -257342,7 +257348,7 @@
     "side": "MIBR",
     "price": 0.45,
     "usd": 450,
-    "ts": 1789023888
+    "ts": 1789025688
    },
    {
     "wallet": "0x7c37b52eb226bcb9411375ec48b0169663fb6aeb",
@@ -257350,15 +257356,7 @@
     "side": "MIBR",
     "price": 0.45,
     "usd": 450,
-    "ts": 1789023828
-   },
-   {
-    "wallet": "0xda5fff24aa9d889d6366da205029c73093102e9b",
-    "action": "BUY",
-    "side": "MIBR",
-    "price": 0.45,
-    "usd": 500,
-    "ts": 1789023772
+    "ts": 1789025628
    },
    {
     "wallet": "0x7c37b52eb226bcb9411375ec48b0169663fb6aeb",
@@ -257366,14 +257364,30 @@
     "side": "MIBR",
     "price": 0.45,
     "usd": 450,
-    "ts": 1789023769
+    "ts": 1789025568
+   },
+   {
+    "wallet": "0x7c37b52eb226bcb9411375ec48b0169663fb6aeb",
+    "action": "BUY",
+    "side": "MIBR",
+    "price": 0.45,
+    "usd": 450,
+    "ts": 1789025508
+   },
+   {
+    "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
+    "action": "BUY",
+    "side": "MIBR",
+    "price": 0.45,
+    "usd": 327,
+    "ts": 1789025464
    }
   ]
  },
  "cs2-lgc-furia-2026-09-10": {
   "shares": {
-   "Legacy": 42141.47904581997,
-   "FURIA": 67316.90886722995
+   "Legacy": 42784.48218775497,
+   "FURIA": 68344.04375629495
   },
   "prices": {
    "Legacy": 0.385,
@@ -257385,7 +257399,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 108608,
+  "totalUsd": 111529,
   "whales": [
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
@@ -257396,7 +257410,7 @@
    {
     "wallet": "0x73e3fec494611d73c170cb2f23850fd998b21be9",
     "side": "Legacy",
-    "usd": 24281,
+    "usd": 24343,
     "avgPrice": 0.3799
    },
    {
@@ -257412,8 +257426,8 @@
     "avgPrice": 0.6179
    }
   ],
-  "hoursToKickoff": 1.87,
-  "capturedAt": "2026-09-10T07:09:59.612103+00:00",
+  "hoursToKickoff": 1.37,
+  "capturedAt": "2026-09-10T07:40:08.012415+00:00",
   "cond": "0x1d91f021022942d60be30cdd7ebf623c0e084158288f6de6a3dea815ac11c188",
   "frage": "Counter-Strike: Legacy vs FURIA (BO3) - FISSURE PLAYGROUND Group B",
   "tokens": {
@@ -257429,19 +257443,19 @@
    "bids": [
     [
      0.61,
-     232816
+     231311
     ],
     [
      0.6,
-     21741
+     29249
     ],
     [
      0.59,
-     40123
+     40246
     ],
     [
      0.58,
-     144254
+     125054
     ],
     [
      0.57,
@@ -257455,19 +257469,19 @@
    "asks": [
     [
      0.62,
-     51791
+     51636
     ],
     [
      0.63,
-     54828
+     63528
     ],
     [
      0.64,
-     8468
+     8978
     ],
     [
      0.65,
-     1854
+     10138
     ],
     [
      0.66,
@@ -257475,7 +257489,7 @@
     ],
     [
      0.67,
-     3410
+     3160
     ]
    ]
   },
@@ -257495,25 +257509,17 @@
     "price": 0.39,
     "usd": 424,
     "ts": 1789022142
-   },
-   {
-    "wallet": "0x83c45fd1c609803198b93d619f02f2c4b5943212",
-    "action": "BUY",
-    "side": "FURIA",
-    "price": 0.62,
-    "usd": 300,
-    "ts": 1789020514
    }
   ]
  },
  "itf-paolet2-cherub1-2026-09-10": {
   "shares": {
-   "Matilde Paoletti": 14477.663040559997,
-   "Diletta Cherubini": 7625.639311439996
+   "Matilde Paoletti": 14715.321064079997,
+   "Diletta Cherubini": 7412.981287919997
   },
   "prices": {
-   "Matilde Paoletti": 0.655,
-   "Diletta Cherubini": 0.345
+   "Matilde Paoletti": 0.665,
+   "Diletta Cherubini": 0.335
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -257521,35 +257527,35 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 22106,
+  "totalUsd": 22141,
   "whales": [
    {
     "wallet": "0xb8e32d575b8d360f90bcc95596e9a0bee444aaf2",
     "side": "Matilde Paoletti",
-    "usd": 13180,
+    "usd": 13381,
     "avgPrice": 0.66
    },
    {
     "wallet": "0xb4d250f58c26840e09723a83ce9c8149aa32ce99",
     "side": "Diletta Cherubini",
-    "usd": 1760,
+    "usd": 1709,
     "avgPrice": 0.34
    },
    {
     "wallet": "0x6a00004f0cbbcbd7e8ae51bc4a40c9b8790c9158",
     "side": "Diletta Cherubini",
-    "usd": 1725,
+    "usd": 1675,
     "avgPrice": 0.3358
    },
    {
     "wallet": "0xc4fe817476491890086330a639ac417d51bf601f",
     "side": "Diletta Cherubini",
-    "usd": 1111,
+    "usd": 1079,
     "avgPrice": 0.34
    }
   ],
-  "hoursToKickoff": 1.87,
-  "capturedAt": "2026-09-10T07:09:59.612103+00:00",
+  "hoursToKickoff": 1.37,
+  "capturedAt": "2026-09-10T07:40:08.012415+00:00",
   "cond": "0x0e81c1e8e9854916ba0c76423b852c372ff1bf9920816735946e9f602b859a7c",
   "frage": "W35 Reus: Matilde Paoletti vs Diletta Cherubini",
   "tokens": {
@@ -257559,9 +257565,9 @@
   "book": {
    "side": "Matilde Paoletti",
    "bid": 0.66,
-   "ask": 0.68,
-   "spreadC": 2.0,
-   "spreadPct": 2.94,
+   "ask": 0.67,
+   "spreadC": 1.0,
+   "spreadPct": 1.49,
    "bids": [
     [
      0.66,
@@ -257573,7 +257579,7 @@
     ],
     [
      0.64,
-     775
+     475
     ],
     [
      0.63,
@@ -257584,34 +257590,34 @@
      17
     ],
     [
-     0.61,
-     27
+     0.6,
+     4013
     ]
    ],
    "asks": [
     [
+     0.67,
+     20
+    ],
+    [
      0.68,
-     305
+     15
     ],
     [
      0.69,
-     302
+     318
     ],
     [
      0.7,
-     4700
+     5474
     ],
     [
      0.71,
-     964
+     1912
     ],
     [
      0.72,
-     87
-    ],
-    [
-     0.73,
-     300
+     688
     ]
    ]
   },
@@ -257707,8 +257713,8 @@
  },
  "wta-bagaric-havlick-2026-09-09": {
   "shares": {
-   "Lucija Bagaric": 3412.24691703,
-   "Lucie Havlickova": 6478.323437115
+   "Lucija Bagaric": 3416.73191703,
+   "Lucie Havlickova": 6486.838437115
   },
   "prices": {
    "Lucija Bagaric": 0.345,
@@ -257720,7 +257726,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 18838,
+  "totalUsd": 18851,
   "whales": [
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
@@ -257747,8 +257753,8 @@
     "avgPrice": 0.5999
    }
   ],
-  "hoursToKickoff": 2.37,
-  "capturedAt": "2026-09-10T07:09:59.612103+00:00",
+  "hoursToKickoff": 1.87,
+  "capturedAt": "2026-09-10T07:40:08.012415+00:00",
   "cond": "0x9d38eab42984742cd1628f1fd4a1d83a2ac446a5164010ed7b0666315ba20242",
   "frage": "Montreux: Lucija Bagaric vs Lucie Havlickova",
   "tokens": {
@@ -257764,49 +257770,49 @@
    "bids": [
     [
      0.65,
-     3121
+     4761
     ],
     [
      0.64,
-     8374
+     8344
     ],
     [
      0.63,
-     161
-    ],
-    [
-     0.62,
-     971
+     115
     ],
     [
      0.61,
-     1506
+     1611
     ],
     [
      0.6,
-     9522
+     9822
+    ],
+    [
+     0.59,
+     15
     ]
    ],
    "asks": [
     [
      0.66,
-     8551
+     6784
     ],
     [
      0.67,
-     3166
+     2325
     ],
     [
      0.68,
-     24402
+     16378
     ],
     [
      0.69,
-     10262
+     15255
     ],
     [
      0.7,
-     2532
+     8217
     ],
     [
      0.71,
@@ -257914,8 +257920,8 @@
     "avgPrice": 0.83
    }
   ],
-  "hoursToKickoff": 2.37,
-  "capturedAt": "2026-09-10T07:09:59.612103+00:00",
+  "hoursToKickoff": 1.87,
+  "capturedAt": "2026-09-10T07:40:08.012415+00:00",
   "cond": "0x868b8454a1d27c8f70901e04be294f3e9c9044cd4965932c345e099add60be1e",
   "frage": "Cassis: Nicolai Budkov Kjaer vs Yanis Durand",
   "tokens": {
@@ -257931,53 +257937,53 @@
    "bids": [
     [
      0.81,
-     12332
+     12078
     ],
     [
      0.8,
-     4475
+     2267
     ],
     [
      0.79,
-     3780
+     1700
     ],
     [
-     0.7,
-     125
+     0.78,
+     5
     ],
     [
-     0.69,
-     2500
+     0.65,
+     912
     ],
     [
-     0.68,
-     3903
+     0.61,
+     1505
     ]
    ],
    "asks": [
     [
      0.82,
-     1054
+     1354
     ],
     [
      0.83,
-     46842
+     49489
     ],
     [
      0.84,
-     3507
+     16978
     ],
     [
      0.85,
-     19398
+     3026
     ],
     [
      0.86,
-     2793
+     4460
     ],
     [
      0.87,
-     7425
+     3625
     ]
    ]
   },
@@ -258146,12 +258152,12 @@
  },
  "itf-mileti1-andree1-2026-09-10": {
   "shares": {
-   "Iannis Miletich": 7508.67145515,
-   "Adrian Andreev": 18383.2955263
+   "Iannis Miletich": 7380.636602475,
+   "Adrian Andreev": 18516.33035395
   },
   "prices": {
-   "Iannis Miletich": 0.29,
-   "Adrian Andreev": 0.71
+   "Iannis Miletich": 0.285,
+   "Adrian Andreev": 0.715
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -258159,35 +258165,35 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 26042,
+  "totalUsd": 26052,
   "whales": [
    {
     "wallet": "0xb8e32d575b8d360f90bcc95596e9a0bee444aaf2",
     "side": "Adrian Andreev",
-    "usd": 16453,
+    "usd": 16568,
     "avgPrice": 0.6928
    },
    {
     "wallet": "0xb4d250f58c26840e09723a83ce9c8149aa32ce99",
     "side": "Iannis Miletich",
-    "usd": 2086,
+    "usd": 2050,
     "avgPrice": 0.2955
    },
    {
     "wallet": "0x6a00004f0cbbcbd7e8ae51bc4a40c9b8790c9158",
     "side": "Iannis Miletich",
-    "usd": 1450,
+    "usd": 1425,
     "avgPrice": 0.3134
    },
    {
     "wallet": "0xc4fe817476491890086330a639ac417d51bf601f",
     "side": "Iannis Miletich",
-    "usd": 909,
+    "usd": 893,
     "avgPrice": 0.3109
    }
   ],
-  "hoursToKickoff": 2.87,
-  "capturedAt": "2026-09-10T07:09:59.612103+00:00",
+  "hoursToKickoff": 2.37,
+  "capturedAt": "2026-09-10T07:40:08.012415+00:00",
   "cond": "0x07e20547f6f35bd9615a6b05505ad941e83b01209bef412c814a086960d91091",
   "frage": "M25 Rabat: Iannis Miletich vs Adrian Andreev",
   "tokens": {
@@ -258203,33 +258209,33 @@
    "bids": [
     [
      0.71,
-     5885
-    ],
-    [
-     0.7,
-     300
+     5585
     ],
     [
      0.69,
-     205
+     175
     ],
     [
      0.68,
-     374
+     157
     ],
     [
      0.67,
-     775
+     1131
     ],
     [
-     0.66,
-     990
+     0.65,
+     8
+    ],
+    [
+     0.61,
+     5
     ]
    ],
    "asks": [
     [
      0.72,
-     380
+     360
     ],
     [
      0.73,
@@ -258237,19 +258243,19 @@
     ],
     [
      0.74,
-     809
+     823
     ],
     [
-     0.75,
+     0.76,
      300
     ],
     [
-     0.77,
+     0.78,
      300
     ],
     [
-     0.79,
-     310
+     0.8,
+     300
     ]
    ]
   },
@@ -258314,12 +258320,12 @@
  },
  "itf-corbin1-zahraj1-2026-09-10": {
   "shares": {
-   "Sven Corbinais": 3715.44910135,
-   "Patrick Zahraj": 17515.684495649995
+   "Sven Corbinais": 3505.078900620001,
+   "Patrick Zahraj": 17737.819352379996
   },
   "prices": {
-   "Sven Corbinais": 0.175,
-   "Patrick Zahraj": 0.825
+   "Sven Corbinais": 0.165,
+   "Patrick Zahraj": 0.835
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -258327,35 +258333,35 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 21597,
+  "totalUsd": 22284,
   "whales": [
    {
     "wallet": "0xb8e32d575b8d360f90bcc95596e9a0bee444aaf2",
     "side": "Patrick Zahraj",
-    "usd": 15580,
+    "usd": 15769,
     "avgPrice": 0.8368
    },
    {
     "wallet": "0x6a00004f0cbbcbd7e8ae51bc4a40c9b8790c9158",
     "side": "Sven Corbinais",
-    "usd": 878,
+    "usd": 828,
     "avgPrice": 0.1677
    },
    {
     "wallet": "0xb4d250f58c26840e09723a83ce9c8149aa32ce99",
     "side": "Sven Corbinais",
-    "usd": 864,
+    "usd": 815,
     "avgPrice": 0.15
    },
    {
     "wallet": "0x154ca10dfee317dcfb9337788db7da858cba658e",
     "side": "Patrick Zahraj",
-    "usd": 777,
+    "usd": 786,
     "avgPrice": 0.8393
    }
   ],
-  "hoursToKickoff": 2.87,
-  "capturedAt": "2026-09-10T07:09:59.612103+00:00",
+  "hoursToKickoff": 2.37,
+  "capturedAt": "2026-09-10T07:40:08.012415+00:00",
   "cond": "0x575a677b47d6e0706bddba608bc952e720816520cf9514167017e37d03578c51",
   "frage": "M25 Plaisir + H: Sven Corbinais vs Patrick Zahraj",
   "tokens": {
@@ -258371,19 +258377,15 @@
    "bids": [
     [
      0.83,
-     5932
-    ],
-    [
-     0.82,
-     43
+     5410
     ],
     [
      0.81,
-     447
+     5
     ],
     [
      0.8,
-     461
+     381
     ],
     [
      0.79,
@@ -258391,21 +258393,25 @@
     ],
     [
      0.78,
-     850
+     350
+    ],
+    [
+     0.77,
+     366
     ]
    ],
    "asks": [
     [
      0.84,
-     2974
+     2823
     ],
     [
      0.85,
-     1374
+     1037
     ],
     [
      0.86,
-     467
+     332
     ],
     [
      0.87,
@@ -258413,11 +258419,11 @@
     ],
     [
      0.89,
-     1005
+     700
     ],
     [
-     0.9,
-     40
+     0.91,
+     700
     ]
    ]
   },
@@ -258479,5 +258485,283 @@
     "ts": 1789017406
    }
   ]
+ },
+ "itf-mujaki1-tabacc1-2026-09-10": {
+  "shares": {
+   "Alen Mujakic": 4551.366377910001,
+   "Fausto Tabacco": 23032.672276089994
+  },
+  "prices": {
+   "Alen Mujakic": 0.165,
+   "Fausto Tabacco": 0.835
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 27892,
+  "whales": [
+   {
+    "wallet": "0xb8e32d575b8d360f90bcc95596e9a0bee444aaf2",
+    "side": "Fausto Tabacco",
+    "usd": 20906,
+    "avgPrice": 0.8236
+   },
+   {
+    "wallet": "0xb4d250f58c26840e09723a83ce9c8149aa32ce99",
+    "side": "Alen Mujakic",
+    "usd": 1596,
+    "avgPrice": 0.17
+   },
+   {
+    "wallet": "0x154ca10dfee317dcfb9337788db7da858cba658e",
+    "side": "Fausto Tabacco",
+    "usd": 1044,
+    "avgPrice": 0.8245
+   },
+   {
+    "wallet": "0x6a00004f0cbbcbd7e8ae51bc4a40c9b8790c9158",
+    "side": "Alen Mujakic",
+    "usd": 825,
+    "avgPrice": 0.19
+   }
+  ],
+  "hoursToKickoff": 2.87,
+  "capturedAt": "2026-09-10T07:40:08.012415+00:00",
+  "cond": "0xfe77a95801ea0885918f23f66ccfa61775fe736830b6c001d78b55c4a7e5a4bd",
+  "frage": "M25 Sintra: Alen Mujakic vs Fausto Tabacco",
+  "tokens": {
+   "Alen Mujakic": "78164967424575532338870195747742665908702882392138873714514002959181961984137",
+   "Fausto Tabacco": "40130243659157330846591482994546016828719728711005045743182316995997659162946"
+  },
+  "book": {
+   "side": "Fausto Tabacco",
+   "bid": 0.83,
+   "ask": 0.84,
+   "spreadC": 1.0,
+   "spreadPct": 1.19,
+   "bids": [
+    [
+     0.83,
+     8303
+    ],
+    [
+     0.82,
+     175
+    ],
+    [
+     0.81,
+     70
+    ],
+    [
+     0.8,
+     350
+    ],
+    [
+     0.79,
+     5
+    ],
+    [
+     0.58,
+     25
+    ]
+   ],
+   "asks": [
+    [
+     0.84,
+     49
+    ],
+    [
+     0.85,
+     314
+    ],
+    [
+     0.86,
+     2332
+    ],
+    [
+     0.87,
+     700
+    ],
+    [
+     0.88,
+     17
+    ],
+    [
+     0.89,
+     718
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xb8e32d575b8d360f90bcc95596e9a0bee444aaf2",
+    "action": "BUY",
+    "side": "Fausto Tabacco",
+    "price": 0.8299,
+    "usd": 1411,
+    "ts": 1789023334
+   },
+   {
+    "wallet": "0xb8e32d575b8d360f90bcc95596e9a0bee444aaf2",
+    "action": "BUY",
+    "side": "Fausto Tabacco",
+    "price": 0.83,
+    "usd": 2539,
+    "ts": 1789023238
+   },
+   {
+    "wallet": "0x154ca10dfee317dcfb9337788db7da858cba658e",
+    "action": "BUY",
+    "side": "Fausto Tabacco",
+    "price": 0.83,
+    "usd": 304,
+    "ts": 1789023231
+   },
+   {
+    "wallet": "0xb8e32d575b8d360f90bcc95596e9a0bee444aaf2",
+    "action": "BUY",
+    "side": "Fausto Tabacco",
+    "price": 0.828,
+    "usd": 6084,
+    "ts": 1789023229
+   },
+   {
+    "wallet": "0xb8e32d575b8d360f90bcc95596e9a0bee444aaf2",
+    "action": "BUY",
+    "side": "Fausto Tabacco",
+    "price": 0.83,
+    "usd": 1162,
+    "ts": 1789017744
+   },
+   {
+    "wallet": "0xb8e32d575b8d360f90bcc95596e9a0bee444aaf2",
+    "action": "BUY",
+    "side": "Fausto Tabacco",
+    "price": 0.83,
+    "usd": 456,
+    "ts": 1789017733
+   },
+   {
+    "wallet": "0xb8e32d575b8d360f90bcc95596e9a0bee444aaf2",
+    "action": "BUY",
+    "side": "Fausto Tabacco",
+    "price": 0.8293,
+    "usd": 498,
+    "ts": 1789017721
+   },
+   {
+    "wallet": "0xb8e32d575b8d360f90bcc95596e9a0bee444aaf2",
+    "action": "BUY",
+    "side": "Fausto Tabacco",
+    "price": 0.8293,
+    "usd": 663,
+    "ts": 1789017706
+   }
+  ]
+ },
+ "itf-minnen1-jorge1-2026-09-10": {
+  "shares": {
+   "Greet Minnen": 6468.932048149999,
+   "Matilde Jorge": 2578.5266671499994
+  },
+  "prices": {
+   "Greet Minnen": 0.715,
+   "Matilde Jorge": 0.285
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 9157,
+  "whales": [
+   {
+    "wallet": "0xb8e32d575b8d360f90bcc95596e9a0bee444aaf2",
+    "side": "Greet Minnen",
+    "usd": 4281,
+    "avgPrice": 0.7264
+   },
+   {
+    "wallet": "0x6a00004f0cbbcbd7e8ae51bc4a40c9b8790c9158",
+    "side": "Matilde Jorge",
+    "usd": 1055,
+    "avgPrice": 0.27
+   },
+   {
+    "wallet": "0x71bf058ed10d26ec55b19cc4f539b869ac72f6ed",
+    "side": "Greet Minnen",
+    "usd": 891,
+    "avgPrice": 0.7287
+   },
+   {
+    "wallet": "0xa032d2358fa08860ba30ba8e8d828b7738202090",
+    "side": "Greet Minnen",
+    "usd": 567,
+    "avgPrice": 0.7282
+   }
+  ],
+  "hoursToKickoff": 1.87,
+  "capturedAt": "2026-09-10T07:40:08.012415+00:00",
+  "cond": "0x3c5c190ca396f269a4d53585a847fb41f682126b87b003ec0c84d28dff79fdc2",
+  "frage": "W50 Evora: Greet Minnen vs Matilde Jorge",
+  "tokens": {
+   "Greet Minnen": "10782350448640610977452505434258240382690234547421762085393268887658836641913",
+   "Matilde Jorge": "49185058508182788249976510853724919253575660707118887817871451571949779353563"
+  }
+ },
+ "cs2-teiko-gbc2-2026-09-10": {
+  "shares": {
+   "TEIKO": 5466.913166295,
+   "Gothboiclique": 1971.32974929
+  },
+  "prices": {
+   "TEIKO": 0.735,
+   "Gothboiclique": 0.265
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 10391,
+  "whales": [
+   {
+    "wallet": "0x8be46e214e76d95b2febb337193f23a36168c0db",
+    "side": "TEIKO",
+    "usd": 1383,
+    "avgPrice": 0.427
+   },
+   {
+    "wallet": "0x984ffef12a23e7af5e2cef8e3283e0ab6a6e9a43",
+    "side": "TEIKO",
+    "usd": 808,
+    "avgPrice": 0.5272
+   },
+   {
+    "wallet": "0x70dbec635412c1568b36174b039f621bcc20f73f",
+    "side": "Gothboiclique",
+    "usd": 469,
+    "avgPrice": 0.6786
+   },
+   {
+    "wallet": "0x1f1c0c102329f71d43d42adc4c466d3a96d16383",
+    "side": "TEIKO",
+    "usd": 435,
+    "avgPrice": 0.5
+   }
+  ],
+  "hoursToKickoff": 0.37,
+  "capturedAt": "2026-09-10T07:40:08.012415+00:00",
+  "cond": "0x01350825fd6db7393bcdbdb967d08d09d58c34ef818b9f914034bd83aaff01ad",
+  "frage": "Counter-Strike: TEIKO vs Gothboiclique (BO1) - Roman Imperium Cup Group A",
+  "tokens": {
+   "TEIKO": "3625678829932133896972601255920277688856620029131528709259045893249497240001",
+   "Gothboiclique": "112389484718168979937797040524441688541458748005135678487702225874947642764213"
+  }
  }
 }
