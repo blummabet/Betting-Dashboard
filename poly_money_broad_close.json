@@ -260087,7 +260087,13 @@
     "usd": 500,
     "ts": 1789039116
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "G2": 1.0,
+   "5star": 0.0
+  },
+  "resolvedAt": "2026-09-10T16:12:40.119689+00:00"
  },
  "grc-ast-ari-2026-09-09-more-markets": {
   "shares": {
@@ -260917,12 +260923,12 @@
  },
  "mlb-tb-atl-2026-09-10": {
   "shares": {
-   "Tampa Bay Rays": 74083.02570990004,
-   "Atlanta Braves": 85234.83428195993
+   "Tampa Bay Rays": 103445.97083411507,
+   "Atlanta Braves": 123907.32390767992
   },
   "prices": {
-   "Tampa Bay Rays": 0.465,
-   "Atlanta Braves": 0.535
+   "Tampa Bay Rays": 0.455,
+   "Atlanta Braves": 0.545
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -260930,34 +260936,35 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 184999,
+  "totalUsd": 264407,
   "whales": [
    {
     "wallet": "0x684baa57c338c2549aec0aa3f034f695d72a8409",
     "side": "Atlanta Braves",
-    "usd": 35436,
+    "usd": 36098,
     "avgPrice": 0.5199
+   },
+   {
+    "wallet": "0x224a89dbe0db0d6124b335edabd15b3f877da3d5",
+    "side": "Atlanta Braves",
+    "usd": 29164,
+    "avgPrice": 0.53
    },
    {
     "wallet": "0xb9392e612a5b05063ca012b5dede548e16e5da70",
     "side": "Tampa Bay Rays",
-    "usd": 28691,
+    "usd": 28074,
     "avgPrice": 0.4699
    },
    {
-    "wallet": "0x16bb9951a36fce71e2ef57890b786145e0ba8492",
+    "wallet": "0x55a1f55fb021eb52f5233321f88ff8eca5aedb28",
     "side": "Tampa Bay Rays",
-    "usd": 19945,
-    "avgPrice": 0.4799
-   },
-   {
-    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
-    "side": "Tampa Bay Rays",
-    "usd": 11793
+    "usd": 27300,
+    "avgPrice": 0.4683
    }
   ],
-  "hoursToKickoff": 0.61,
-  "capturedAt": "2026-09-10T15:42:11.353513+00:00",
+  "hoursToKickoff": 0.11,
+  "capturedAt": "2026-09-10T16:12:40.119689+00:00",
   "cond": "0x3cf790e534d59f6261152e0958ecac38519436b09b4bc1b300bb28490993394e",
   "frage": "Tampa Bay Rays vs. Atlanta Braves",
   "tokens": {
@@ -260966,103 +260973,127 @@
   },
   "book": {
    "side": "Atlanta Braves",
-   "bid": 0.53,
-   "ask": 0.54,
+   "bid": 0.54,
+   "ask": 0.55,
    "spreadC": 1.0,
-   "spreadPct": 1.85,
+   "spreadPct": 1.82,
    "bids": [
     [
+     0.54,
+     158226
+    ],
+    [
      0.53,
-     142435
+     289720
     ],
     [
      0.52,
-     119977
+     152528
     ],
     [
      0.51,
-     108846
+     13321
     ],
     [
      0.5,
-     32682
+     8155
     ],
     [
      0.49,
-     5080
-    ],
-    [
-     0.48,
-     3889
+     1910
     ]
    ],
    "asks": [
     [
-     0.54,
-     45415
-    ],
-    [
      0.55,
-     165409
+     40484
     ],
     [
      0.56,
-     42271
+     115676
     ],
     [
      0.57,
-     53284
+     87519
     ],
     [
      0.58,
-     10017
+     43071
     ],
     [
      0.59,
-     1954
+     639
+    ],
+    [
+     0.6,
+     3894
     ]
    ]
   },
   "trades": [
    {
-    "wallet": "0xe372051ab9cb16397bcfa85fbb203acc280e2d51",
+    "wallet": "0xc9a9360098eb74e3bdda53acb03d401cbef79bf7",
     "action": "BUY",
     "side": "Tampa Bay Rays",
-    "price": 0.47,
-    "usd": 1043,
-    "ts": 1789054683
+    "price": 0.46,
+    "usd": 773,
+    "ts": 1789056433
    },
    {
-    "wallet": "0x9662e84e28252fa33f2a16ee60bc956299d1ec48",
+    "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
     "action": "BUY",
-    "side": "Tampa Bay Rays",
-    "price": 0.47,
-    "usd": 1190,
-    "ts": 1789054477
+    "side": "Atlanta Braves",
+    "price": 0.54,
+    "usd": 1855,
+    "ts": 1789056312
    },
    {
-    "wallet": "0xb9392e612a5b05063ca012b5dede548e16e5da70",
+    "wallet": "0x3e04fbc51adb75418129f6ce2091ae633070564d",
+    "action": "BUY",
+    "side": "Atlanta Braves",
+    "price": 0.54,
+    "usd": 600,
+    "ts": 1789056300
+   },
+   {
+    "wallet": "0x3e04fbc51adb75418129f6ce2091ae633070564d",
+    "action": "BUY",
+    "side": "Atlanta Braves",
+    "price": 0.54,
+    "usd": 3000,
+    "ts": 1789056291
+   },
+   {
+    "wallet": "0x5331121e9f2f206d8c06ae6235761b1a3f8d3672",
+    "action": "BUY",
+    "side": "Atlanta Braves",
+    "price": 0.54,
+    "usd": 300,
+    "ts": 1789056150
+   },
+   {
+    "wallet": "0x55a1f55fb021eb52f5233321f88ff8eca5aedb28",
     "action": "BUY",
     "side": "Tampa Bay Rays",
     "price": 0.47,
-    "usd": 29000,
-    "ts": 1789053919
+    "usd": 23500,
+    "ts": 1789055932
+   },
+   {
+    "wallet": "0x7a26b5e7e67fb902f2273d44517f5f406d3f1589",
+    "action": "BUY",
+    "side": "Atlanta Braves",
+    "price": 0.54,
+    "usd": 300,
+    "ts": 1789055515
    },
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "action": "BUY",
     "side": "Atlanta Braves",
     "price": 0.54,
-    "usd": 2900,
-    "ts": 1789052730
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "action": "BUY",
-    "side": "Atlanta Braves",
-    "price": 0.54,
-    "usd": 386,
-    "ts": 1789052710
+    "usd": 3415,
+    "ts": 1789055319
    }
   ]
  },
@@ -261346,14 +261377,14 @@
  },
  "ucl-fen-rom-2026-09-10": {
   "shares": {
-   "Fenerbahçe SK": 8183.566969184993,
-   "Draw (Fenerbahçe SK vs. AS Roma)": 13577.199883365,
-   "AS Roma": 288083.61509673554
+   "Fenerbahçe SK": 24144.894101895046,
+   "Draw (Fenerbahçe SK vs. AS Roma)": 14686.742353635,
+   "AS Roma": 497889.8459365055
   },
   "prices": {
-   "Fenerbahçe SK": 0.255,
+   "Fenerbahçe SK": 0.245,
    "Draw (Fenerbahçe SK vs. AS Roma)": 0.265,
-   "AS Roma": 0.485
+   "AS Roma": 0.495
   },
   "splitGuete": {
    "art": "belastbar",
@@ -261361,35 +261392,35 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 596038,
+  "totalUsd": 951442,
   "whales": [
+   {
+    "wallet": "0xa9bb7b5ef3d2e8ddb498ac251a4ec144e089701b",
+    "side": "AS Roma",
+    "usd": 117315,
+    "avgPrice": 0.4967
+   },
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "side": "AS Roma",
-    "usd": 70197,
-    "avgPrice": 0.4653
+    "usd": 82313,
+    "avgPrice": 0.4704
    },
    {
     "wallet": "0xe885f33c65fc6c244a297e9df9361b35975995b7",
     "side": "AS Roma",
-    "usd": 62995,
-    "avgPrice": 0.4876
+    "usd": 66394,
+    "avgPrice": 0.4874
    },
    {
     "wallet": "0xcfebe815bbeed383f552660befd48cbdbd01e8f0",
     "side": "AS Roma",
-    "usd": 39867,
+    "usd": 40689,
     "avgPrice": 0.4499
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "side": "AS Roma",
-    "usd": 31874,
-    "avgPrice": 0.4534
    }
   ],
-  "hoursToKickoff": 1.11,
-  "capturedAt": "2026-09-10T15:42:11.353513+00:00",
+  "hoursToKickoff": 0.61,
+  "capturedAt": "2026-09-10T16:12:40.119689+00:00",
   "tokens": {
    "Fenerbahçe SK": "44692481930852557507987289783577033740920184745328290539354963548014475480772",
    "Draw (Fenerbahçe SK vs. AS Roma)": "13293191353959995903233611108439895354299342340465545152344753827276889917981",
@@ -261397,78 +261428,134 @@
   },
   "book": {
    "side": "AS Roma",
-   "bid": 0.48,
-   "ask": 0.49,
+   "bid": 0.5,
+   "ask": 0.51,
    "spreadC": 1.0,
-   "spreadPct": 2.04,
+   "spreadPct": 1.96,
    "bids": [
     [
+     0.5,
+     103439
+    ],
+    [
+     0.49,
+     129365
+    ],
+    [
      0.48,
-     93884
+     46061
     ],
     [
      0.47,
-     93630
+     60499
     ],
     [
      0.46,
-     79294
+     51423
     ],
     [
      0.45,
-     39547
-    ],
-    [
-     0.44,
-     63329
-    ],
-    [
-     0.43,
-     7086
+     32702
     ]
    ],
    "asks": [
     [
-     0.49,
-     53718
-    ],
-    [
-     0.5,
-     921591
-    ],
-    [
      0.51,
-     59798
+     1216985
     ],
     [
      0.52,
-     46379
+     113857
     ],
     [
      0.53,
-     40300
+     55228
     ],
     [
      0.54,
-     6741
+     48297
+    ],
+    [
+     0.55,
+     50004
+    ],
+    [
+     0.56,
+     11821
     ]
    ]
   },
   "trades": [
    {
-    "wallet": "0xe885f33c65fc6c244a297e9df9361b35975995b7",
+    "wallet": "0xfec2354068ceed5766379c53180449e9070c08af",
+    "action": "SELL",
+    "side": "Yes",
+    "price": 0.49,
+    "usd": 417,
+    "ts": 1789056450
+   },
+   {
+    "wallet": "0xc6b13482e72f656519705d792a1f25587a6c78fd",
+    "action": "BUY",
+    "side": "No",
+    "price": 0.51,
+    "usd": 5175,
+    "ts": 1789056421
+   },
+   {
+    "wallet": "0xa6d188fb70c2e2e9ad411c42c02379ed3020286a",
     "action": "BUY",
     "side": "Yes",
-    "price": 0.48,
-    "usd": 14323,
-    "ts": 1789054567
+    "price": 0.5,
+    "usd": 1704,
+    "ts": 1789056405
+   },
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.5,
+    "usd": 6426,
+    "ts": 1789056379
+   },
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.5,
+    "usd": 6763,
+    "ts": 1789056378
+   },
+   {
+    "wallet": "0xcb7233254f59bdb4b865f712deb763fbc84d291f",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.5,
+    "usd": 3409,
+    "ts": 1789056372
+   },
+   {
+    "wallet": "0xa6d188fb70c2e2e9ad411c42c02379ed3020286a",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.5,
+    "usd": 3409,
+    "ts": 1789056367
+   },
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.5,
+    "usd": 6760,
+    "ts": 1789056363
    }
   ]
  },
  "cs2-backto-gls1-2026-09-10": {
   "shares": {
-   "Back to Back ": 49115.503955140004,
-   "Galorys": 89238.32040240007
+   "Back to Back ": 49764.825496004996,
+   "Galorys": 90418.09892917507
   },
   "prices": {
    "Back to Back ": 0.355,
@@ -261480,7 +261567,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 163154,
+  "totalUsd": 165966,
   "whales": [
    {
     "wallet": "0x14af7564566edfd07d1996ae8b08d6235d7aca2c",
@@ -261491,8 +261578,8 @@
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "side": "Back to Back ",
-    "usd": 40023,
-    "avgPrice": 0.3032
+    "usd": 40116,
+    "avgPrice": 0.3033
    },
    {
     "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
@@ -261507,8 +261594,8 @@
     "avgPrice": 0.849
    }
   ],
-  "hoursToKickoff": 1.36,
-  "capturedAt": "2026-09-10T15:42:11.353513+00:00",
+  "hoursToKickoff": 0.86,
+  "capturedAt": "2026-09-10T16:12:40.119689+00:00",
   "cond": "0x631f0c7b6f3555b2af94ab683cf62397c8bb17d5844d2b8c5f1b72d0301475a8",
   "frage": "Counter-Strike: Back to Back  vs Galorys (BO3) - PGL Masters Bucharest: South American Closed Qualifier Playoffs",
   "tokens": {
@@ -261524,23 +261611,23 @@
    "bids": [
     [
      0.64,
-     5289
+     4492
     ],
     [
      0.63,
-     1590
+     1665
     ],
     [
      0.62,
-     110
+     465
     ],
     [
      0.61,
-     20
+     462
     ],
     [
      0.6,
-     1759
+     973
     ],
     [
      0.59,
@@ -261550,31 +261637,39 @@
    "asks": [
     [
      0.65,
-     858
+     50
     ],
     [
      0.66,
-     100
+     5240
     ],
     [
      0.67,
-     23470
+     22288
     ],
     [
      0.68,
-     376
+     5190
     ],
     [
      0.69,
-     4761
+     1484
     ],
     [
      0.7,
-     8342
+     6982
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x70dbec635412c1568b36174b039f621bcc20f73f",
+    "action": "BUY",
+    "side": "Galorys",
+    "price": 0.6596,
+    "usd": 1200,
+    "ts": 1789055064
+   },
    {
     "wallet": "0x0201e56426119736d05b35b4b813998276e86a5f",
     "action": "BUY",
@@ -261611,12 +261706,12 @@
  },
  "ucl-psv-shd-2026-09-10-more-markets": {
   "shares": {
-   "Over": 20275.502310245,
-   "Under": 24286.046392085005
+   "Over": 31474.999907460002,
+   "Under": 36213.17507591999
   },
   "prices": {
-   "Over": 0.455,
-   "Under": 0.545
+   "Over": 0.465,
+   "Under": 0.535
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -261624,34 +261719,35 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 68741,
+  "totalUsd": 73589,
   "whales": [
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
     "side": "Under",
-    "usd": 17702,
+    "usd": 17377,
     "avgPrice": 0.5366
    },
    {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "side": "Over",
-    "usd": 4547,
-    "avgPrice": 0.4431
+    "wallet": "0x83720820a8aa6c3f20ad71850e7a1a17d16c5223",
+    "side": "Under",
+    "usd": 11204,
+    "avgPrice": 0.54
    },
    {
     "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
     "side": "Over",
-    "usd": 4041,
-    "avgPrice": 0.4568
+    "usd": 6543,
+    "avgPrice": 0.4578
    },
    {
-    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
-    "side": "Under",
-    "usd": 2351
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Over",
+    "usd": 5054,
+    "avgPrice": 0.445
    }
   ],
-  "hoursToKickoff": 1.11,
-  "capturedAt": "2026-09-10T15:42:11.353513+00:00",
+  "hoursToKickoff": 0.61,
+  "capturedAt": "2026-09-10T16:12:40.119689+00:00",
   "cond": "0x71ef4b07995749db0b495651842932f124e1b3a4a76e0fd1a7253fbf56ce0f82",
   "frage": "PSV vs. FK Shakhtar Donetsk: O/U 3.5",
   "tokens": {
@@ -261667,57 +261763,73 @@
    "bids": [
     [
      0.54,
-     14800
+     80838
     ],
     [
      0.53,
-     27458
+     19934
     ],
     [
      0.52,
-     32151
+     37709
     ],
     [
      0.51,
-     14907
+     14679
     ],
     [
      0.5,
-     57450
+     66572
     ],
     [
      0.49,
-     7328
+     8421
     ]
    ],
    "asks": [
     [
      0.55,
-     10241
+     9085
     ],
     [
      0.56,
-     15721
+     38541
     ],
     [
      0.57,
-     36629
+     21013
     ],
     [
      0.58,
-     29578
+     24296
     ],
     [
      0.59,
-     20163
+     21966
     ],
     [
      0.6,
-     44290
+     31819
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x51b3f27657252cec7cf31ca10351b7d457e23989",
+    "action": "SELL",
+    "side": "Over",
+    "price": 0.46,
+    "usd": 455,
+    "ts": 1789055985
+   },
+   {
+    "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+    "action": "BUY",
+    "side": "Over",
+    "price": 0.46,
+    "usd": 509,
+    "ts": 1789055287
+   },
    {
     "wallet": "0x6e0f1da50fc3467e127ee48048385d70672c9304",
     "action": "BUY",
@@ -261749,33 +261861,17 @@
     "price": 0.45,
     "usd": 626,
     "ts": 1789052383
-   },
-   {
-    "wallet": "0x51b3f27657252cec7cf31ca10351b7d457e23989",
-    "action": "BUY",
-    "side": "Over",
-    "price": 0.44,
-    "usd": 435,
-    "ts": 1789049883
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "action": "BUY",
-    "side": "Over",
-    "price": 0.44,
-    "usd": 964,
-    "ts": 1789048942
    }
   ]
  },
  "ucl-fen-rom-2026-09-10-more-markets": {
   "shares": {
-   "Over": 16241.492378655013,
-   "Under": 10167.441277840002
+   "Over": 98684.43400775999,
+   "Under": 4650.051954239999
   },
   "prices": {
-   "Over": 0.615,
-   "Under": 0.385
+   "Over": 0.955,
+   "Under": 0.045
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -261783,137 +261879,145 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 34075,
+  "totalUsd": 101884,
   "whales": [
    {
-    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "wallet": "0xcc32068e0d0b19790e3376bc1751552adcca92d2",
     "side": "Over",
-    "usd": 3998,
-    "avgPrice": 0.6074
+    "usd": 95152,
+    "avgPrice": 0.9599
    },
    {
-    "wallet": "0x31706006a0ef88b2b8f6d093efbc83b359fbc6a0",
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
     "side": "Under",
-    "usd": 3850,
-    "avgPrice": 0.39
+    "usd": 2838,
+    "avgPrice": 0.04
    },
    {
-    "wallet": "0x787969a140b71ad9ae68982a8ee69b6dab353653",
+    "wallet": "0x34ddd3c10216feecd3b628b2a6ed74b6d45d9947",
     "side": "Over",
-    "usd": 2976,
-    "avgPrice": 0.6199
+    "usd": 1631,
+    "avgPrice": 0.9599
    },
    {
-    "wallet": "0x542c5c14d4993ba404729e0e2a9f0106c15a39bc",
-    "side": "Over",
-    "usd": 2308,
-    "avgPrice": 0.5999
+    "wallet": "0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
+    "side": "Under",
+    "usd": 995,
+    "avgPrice": 0.04
    }
   ],
-  "hoursToKickoff": 1.11,
-  "capturedAt": "2026-09-10T15:42:11.353513+00:00",
-  "cond": "0x81abced7844db393a6e6db6ec25cc04bbe95f782b932dc98892a14b905433a70",
-  "frage": "Fenerbahçe SK vs. AS Roma: O/U 2.5",
+  "hoursToKickoff": 0.61,
+  "capturedAt": "2026-09-10T16:12:40.119689+00:00",
+  "cond": "0x4863f1e9e9c8389b55440df57409b29a9322589f525dd03266970c8d1c60964e",
+  "frage": "Fenerbahçe SK vs. AS Roma: O/U 0.5",
   "tokens": {
-   "Over": "43168317421298983578935893976032778237703842563185326395657910909747279412359",
-   "Under": "19963452660701288303637066644765587086685091212508268503618395165068573960785"
+   "Over": "84565255395825348373141002864409590688731611953333609530303921279324816561525",
+   "Under": "93999887367365826656475078289106501154309734254733324878163904565436959750674"
   },
   "book": {
    "side": "Over",
-   "bid": 0.61,
-   "ask": 0.62,
+   "bid": 0.95,
+   "ask": 0.96,
    "spreadC": 1.0,
-   "spreadPct": 1.61,
+   "spreadPct": 1.04,
    "bids": [
     [
-     0.61,
-     17516
+     0.95,
+     4026
     ],
     [
-     0.6,
-     18217
+     0.94,
+     12927
     ],
     [
-     0.59,
-     55341
+     0.93,
+     17009
     ],
     [
-     0.58,
-     33900
+     0.92,
+     1496
     ],
     [
-     0.57,
-     14816
+     0.91,
+     10997
     ],
     [
-     0.56,
-     4446
+     0.9,
+     1059
     ]
    ],
    "asks": [
     [
-     0.62,
-     14285
+     0.96,
+     10377
     ],
     [
-     0.63,
-     39444
+     0.97,
+     49871
     ],
     [
-     0.64,
-     40133
+     0.98,
+     45545
     ],
     [
-     0.65,
-     22546
-    ],
-    [
-     0.66,
-     19111
-    ],
-    [
-     0.67,
-     31990
+     0.99,
+     70706
     ]
    ]
   },
   "trades": [
    {
-    "wallet": "0x787969a140b71ad9ae68982a8ee69b6dab353653",
+    "wallet": "0x34ddd3c10216feecd3b628b2a6ed74b6d45d9947",
     "action": "BUY",
     "side": "Over",
-    "price": 0.62,
-    "usd": 3000,
-    "ts": 1789053495
+    "price": 0.96,
+    "usd": 1640,
+    "ts": 1789056441
    },
    {
-    "wallet": "0x31706006a0ef88b2b8f6d093efbc83b359fbc6a0",
+    "wallet": "0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
     "action": "BUY",
     "side": "Under",
-    "price": 0.39,
-    "usd": 3900,
-    "ts": 1789052866
+    "price": 0.04,
+    "usd": 885,
+    "ts": 1789055328
    },
    {
-    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "wallet": "0xcc32068e0d0b19790e3376bc1751552adcca92d2",
     "action": "BUY",
     "side": "Over",
-    "price": 0.6,
-    "usd": 326,
-    "ts": 1789051216
+    "price": 0.96,
+    "usd": 14516,
+    "ts": 1789055320
+   },
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "action": "BUY",
+    "side": "Under",
+    "price": 0.04,
+    "usd": 2170,
+    "ts": 1789055320
+   },
+   {
+    "wallet": "0x0189d8f03406b04b146507720e91c77ce09ecab8",
+    "action": "BUY",
+    "side": "Over",
+    "price": 0.96,
+    "usd": 300,
+    "ts": 1789052943
    }
   ]
  },
  "ucl-psv-shd-2026-09-10": {
   "shares": {
-   "PSV": 59949.62547411044,
-   "Draw (PSV vs. FK Shakhtar Donetsk)": 1325.86979928,
-   "FK Shakhtar Donetsk": 2207.849315145
+   "PSV": 65618.58274383548,
+   "Draw (PSV vs. FK Shakhtar Donetsk)": 1560.4073468099998,
+   "FK Shakhtar Donetsk": 2730.6125116699995
   },
   "prices": {
    "PSV": 0.655,
    "Draw (PSV vs. FK Shakhtar Donetsk)": 0.195,
-   "FK Shakhtar Donetsk": 0.145
+   "FK Shakhtar Donetsk": 0.155
   },
   "splitGuete": {
    "art": "belastbar",
@@ -261921,7 +262025,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 162071,
+  "totalUsd": 172996,
   "whales": [
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
@@ -261948,8 +262052,8 @@
     "avgPrice": 0.6599
    }
   ],
-  "hoursToKickoff": 1.11,
-  "capturedAt": "2026-09-10T15:42:11.353513+00:00",
+  "hoursToKickoff": 0.61,
+  "capturedAt": "2026-09-10T16:12:40.119689+00:00",
   "tokens": {
    "PSV": "93961398192149173463998461476504984930196639733613060582836586917133602078849",
    "Draw (PSV vs. FK Shakhtar Donetsk)": "23954409101089364038725321160309539415579822255150723776635586281663742737918",
@@ -261964,158 +262068,126 @@
    "bids": [
     [
      0.65,
-     56740
+     55300
     ],
     [
      0.64,
-     63543
+     58194
     ],
     [
      0.63,
-     54637
+     43845
     ],
     [
      0.62,
-     31811
+     50071
     ],
     [
      0.61,
-     7543
+     17333
     ],
     [
      0.6,
-     2916
+     3666
     ]
    ],
    "asks": [
     [
      0.66,
-     88207
+     644241
     ],
     [
      0.67,
-     58345
+     359747
     ],
     [
      0.68,
-     89451
+     42387
     ],
     [
      0.69,
-     102377
+     65155
     ],
     [
      0.7,
-     75686
+     55213
     ],
     [
      0.71,
-     21792
+     16792
     ]
    ]
   },
   "trades": [
    {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-    "action": "SELL",
-    "side": "No",
-    "price": 0.34,
-    "usd": 680,
-    "ts": 1789054036
+    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.66,
+    "usd": 467,
+    "ts": 1789056420
    },
    {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-    "action": "SELL",
-    "side": "No",
-    "price": 0.34,
-    "usd": 680,
-    "ts": 1789054036
+    "wallet": "0xa07c39ac29cc1bfc632db9dd6017483e43b411a0",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.66,
+    "usd": 500,
+    "ts": 1789055946
    },
    {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-    "action": "SELL",
-    "side": "No",
-    "price": 0.34,
-    "usd": 680,
-    "ts": 1789054036
+    "wallet": "0x3c5395e2705920d7f88289aabb8970e56755c9b0",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.66,
+    "usd": 1870,
+    "ts": 1789055682
    },
    {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-    "action": "SELL",
-    "side": "No",
-    "price": 0.34,
-    "usd": 680,
-    "ts": 1789054036
-   },
-   {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-    "action": "SELL",
-    "side": "No",
-    "price": 0.34,
-    "usd": 680,
-    "ts": 1789054036
-   },
-   {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-    "action": "SELL",
-    "side": "No",
-    "price": 0.34,
-    "usd": 680,
-    "ts": 1789054036
-   },
-   {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-    "action": "SELL",
-    "side": "No",
-    "price": 0.34,
-    "usd": 680,
-    "ts": 1789054036
-   },
-   {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-    "action": "SELL",
-    "side": "No",
-    "price": 0.34,
-    "usd": 680,
-    "ts": 1789054036
+    "wallet": "0x3830fd68537b1a408d495c31acdbe7d9f1e3d2d5",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.66,
+    "usd": 1360,
+    "ts": 1789055190
    }
   ]
  },
  "ucl-fen-rom-2026-09-10-exact-score": {
   "shares": {
    "Fenerbahçe SK 0 - 0 AS Roma": 138.13591203000001,
-   "Fenerbahçe SK 0 - 1 AS Roma": 278.86671645,
+   "Fenerbahçe SK 0 - 1 AS Roma": 294.36269519999996,
    "Fenerbahçe SK 1 - 0 AS Roma": 99.49458375000002,
-   "Fenerbahçe SK 0 - 2 AS Roma": 342.7545625399999,
-   "Fenerbahçe SK 1 - 1 AS Roma": 574.699059875,
-   "Fenerbahçe SK 2 - 0 AS Roma": 94.6985688,
-   "Fenerbahçe SK 0 - 3 AS Roma": 303.726530683,
-   "Fenerbahçe SK 1 - 2 AS Roma": 2540.8396016850006,
-   "Fenerbahçe SK 2 - 1 AS Roma": 271.26440913,
-   "Fenerbahçe SK 3 - 0 AS Roma": 37.341600539999995,
-   "Fenerbahçe SK 1 - 3 AS Roma": 271.68160960349996,
-   "Fenerbahçe SK 2 - 2 AS Roma": 595.739948625,
-   "Fenerbahçe SK 3 - 1 AS Roma": 101.777964971,
-   "Fenerbahçe SK 2 - 3 AS Roma": 549.112101096,
-   "Fenerbahçe SK 3 - 2 AS Roma": 258.4936119425,
-   "Fenerbahçe SK 3 - 3 AS Roma": 73.4076142215,
+   "Fenerbahçe SK 0 - 2 AS Roma": 468.41303369999997,
+   "Fenerbahçe SK 1 - 1 AS Roma": 618.486944625,
+   "Fenerbahçe SK 2 - 0 AS Roma": 88.9592616,
+   "Fenerbahçe SK 0 - 3 AS Roma": 327.9676609665,
+   "Fenerbahçe SK 1 - 2 AS Roma": 2693.351720010001,
+   "Fenerbahçe SK 2 - 1 AS Roma": 570.9412083699999,
+   "Fenerbahçe SK 3 - 0 AS Roma": 37.816290522,
+   "Fenerbahçe SK 1 - 3 AS Roma": 310.2351020145,
+   "Fenerbahçe SK 2 - 2 AS Roma": 654.0059486250001,
+   "Fenerbahçe SK 3 - 1 AS Roma": 97.6135874725,
+   "Fenerbahçe SK 2 - 3 AS Roma": 598.580124756,
+   "Fenerbahçe SK 3 - 2 AS Roma": 277.2132548075,
+   "Fenerbahçe SK 3 - 3 AS Roma": 97.94389185749999,
    "Any Other Score": 250.1573214599999
   },
   "prices": {
    "Fenerbahçe SK 0 - 0 AS Roma": 0.045,
    "Fenerbahçe SK 0 - 1 AS Roma": 0.075,
    "Fenerbahçe SK 1 - 0 AS Roma": 0.045,
-   "Fenerbahçe SK 0 - 2 AS Roma": 0.065,
+   "Fenerbahçe SK 0 - 2 AS Roma": 0.075,
    "Fenerbahçe SK 1 - 1 AS Roma": 0.125,
-   "Fenerbahçe SK 2 - 0 AS Roma": 0.033,
-   "Fenerbahçe SK 0 - 3 AS Roma": 0.041,
+   "Fenerbahçe SK 2 - 0 AS Roma": 0.031,
+   "Fenerbahçe SK 0 - 3 AS Roma": 0.0435,
    "Fenerbahçe SK 1 - 2 AS Roma": 0.105,
    "Fenerbahçe SK 2 - 1 AS Roma": 0.065,
-   "Fenerbahçe SK 3 - 0 AS Roma": 0.015,
-   "Fenerbahçe SK 1 - 3 AS Roma": 0.0555,
+   "Fenerbahçe SK 3 - 0 AS Roma": 0.0145,
+   "Fenerbahçe SK 1 - 3 AS Roma": 0.0585,
    "Fenerbahçe SK 2 - 2 AS Roma": 0.075,
-   "Fenerbahçe SK 3 - 1 AS Roma": 0.029,
-   "Fenerbahçe SK 2 - 3 AS Roma": 0.039,
+   "Fenerbahçe SK 3 - 1 AS Roma": 0.0275,
+   "Fenerbahçe SK 2 - 3 AS Roma": 0.0415,
    "Fenerbahçe SK 3 - 2 AS Roma": 0.0275,
    "Fenerbahçe SK 3 - 3 AS Roma": 0.0195,
    "Any Other Score": 0.135
@@ -262126,18 +262198,18 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 92147,
+  "totalUsd": 103765,
   "whales": [
    {
     "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
     "side": "Fenerbahçe SK 1 - 2 AS Roma",
-    "usd": 2064,
+    "usd": 2067,
     "avgPrice": 0.1
    },
    {
     "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
     "side": "Fenerbahçe SK 2 - 3 AS Roma",
-    "usd": 366
+    "usd": 390
    },
    {
     "wallet": "0x05ae67b8ae53c9c78d86e58b822a76c1c5f55a4b",
@@ -262148,12 +262220,12 @@
    {
     "wallet": "0x4b9975ca3ea611438121b57a677759a211f5bad3",
     "side": "Fenerbahçe SK 0 - 3 AS Roma",
-    "usd": 250,
+    "usd": 265,
     "avgPrice": 0.0404
    }
   ],
-  "hoursToKickoff": 1.11,
-  "capturedAt": "2026-09-10T15:42:11.353513+00:00",
+  "hoursToKickoff": 0.61,
+  "capturedAt": "2026-09-10T16:12:40.119689+00:00",
   "tokens": {
    "Fenerbahçe SK 0 - 0 AS Roma": "12084826550238704732298181056097603245489531902280248684533388628244707055091",
    "Fenerbahçe SK 0 - 1 AS Roma": "77661908437827033921345356122769666120413949132848518238032291033004672263423",
@@ -262172,93 +262244,16 @@
    "Fenerbahçe SK 3 - 2 AS Roma": "88010963648783337214065909917441453873962096664254476356945449119377143359711",
    "Fenerbahçe SK 3 - 3 AS Roma": "31955593756552681108166928396038012908870979903704210566526437033679533374408",
    "Any Other Score": "98608541806508314541144368754097240187751186028176096518207590229160939080271"
-  },
-  "book": {
-   "side": "Fenerbahçe SK 1 - 2 AS Roma",
-   "bid": 0.1,
-   "ask": 0.11,
-   "spreadC": 1.0,
-   "spreadPct": 9.09,
-   "bids": [
-    [
-     0.1,
-     10091
-    ],
-    [
-     0.09,
-     37837
-    ],
-    [
-     0.08,
-     36228
-    ],
-    [
-     0.07,
-     85239
-    ],
-    [
-     0.06,
-     85208
-    ],
-    [
-     0.05,
-     25713
-    ]
-   ],
-   "asks": [
-    [
-     0.11,
-     32765
-    ],
-    [
-     0.12,
-     7456
-    ],
-    [
-     0.13,
-     10903
-    ],
-    [
-     0.14,
-     5892
-    ],
-    [
-     0.15,
-     650
-    ],
-    [
-     0.16,
-     6
-    ]
-   ]
-  },
-  "trades": [
-   {
-    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
-    "action": "BUY",
-    "side": "No",
-    "price": 0.9,
-    "usd": 447,
-    "ts": 1789051525
-   },
-   {
-    "wallet": "0x04677c0cd4b904b50f0f829586824b773feefb2e",
-    "action": "BUY",
-    "side": "No",
-    "price": 0.9,
-    "usd": 3000,
-    "ts": 1789050336
-   }
-  ]
+  }
  },
  "cs2-fokus-1win-2026-09-10": {
   "shares": {
-   "FOKUS": 15417.148489050001,
-   "1WIN": 24627.389039759986
+   "FOKUS": 16870.31827725,
+   "1WIN": 28117.193062499988
   },
   "prices": {
-   "FOKUS": 0.385,
-   "1WIN": 0.615
+   "FOKUS": 0.375,
+   "1WIN": 0.625
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -262266,35 +262261,35 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 44055,
+  "totalUsd": 48376,
   "whales": [
    {
     "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
     "side": "1WIN",
-    "usd": 18450,
+    "usd": 18750,
     "avgPrice": 0.62
    },
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "side": "FOKUS",
-    "usd": 6480,
+    "usd": 6312,
     "avgPrice": 0.3795
+   },
+   {
+    "wallet": "0xe0dbdb7f005f233f4510e4ef7e53a2f76a8df44e",
+    "side": "FOKUS",
+    "usd": 2961,
+    "avgPrice": 0.38
    },
    {
     "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
     "side": "FOKUS",
-    "usd": 2369,
+    "usd": 2308,
     "avgPrice": 0.3799
-   },
-   {
-    "wallet": "0x9b963178d3b8765cfc5af94c00550d6ec6c54389",
-    "side": "1WIN",
-    "usd": 1538,
-    "avgPrice": 0.62
    }
   ],
-  "hoursToKickoff": 1.36,
-  "capturedAt": "2026-09-10T15:42:11.353513+00:00",
+  "hoursToKickoff": 0.86,
+  "capturedAt": "2026-09-10T16:12:40.119689+00:00",
   "cond": "0xd1372d2e24e70c01bc9b11fa4a5275591f13696a0a29188d45e93c0433776cf1",
   "frage": "Counter-Strike: FOKUS vs 1WIN (BO3) - Thunderpick World Championship Closed Qualifier Group D",
   "tokens": {
@@ -262304,8 +262299,8 @@
  },
  "cs2-sin2-nemi1-2026-09-10": {
   "shares": {
-   "Sinners": 30027.603368945012,
-   "Nemiga": 35966.875803305
+   "Sinners": 60852.31885141502,
+   "Nemiga": 72888.78775483507
   },
   "prices": {
    "Sinners": 0.455,
@@ -262317,35 +262312,35 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 69559,
+  "totalUsd": 137230,
   "whales": [
-   {
-    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
-    "side": "Nemiga",
-    "usd": 17079,
-    "avgPrice": 0.5446
-   },
    {
     "wallet": "0xe40ecff63ec661d218a86c048186ac83389a9770",
     "side": "Sinners",
-    "usd": 13037,
+    "usd": 43720,
     "avgPrice": 0.4499
+   },
+   {
+    "wallet": "0x7c37b52eb226bcb9411375ec48b0169663fb6aeb",
+    "side": "Nemiga",
+    "usd": 27250,
+    "avgPrice": 0.55
+   },
+   {
+    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
+    "side": "Nemiga",
+    "usd": 26068,
+    "avgPrice": 0.5464
    },
    {
     "wallet": "0x6b97ebe911d7f2e5e3e8c4a0faad4a5c7c0b8d30",
     "side": "Sinners",
     "usd": 7941,
     "avgPrice": 0.4583
-   },
-   {
-    "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
-    "side": "Nemiga",
-    "usd": 3198,
-    "avgPrice": 0.5416
    }
   ],
-  "hoursToKickoff": 1.36,
-  "capturedAt": "2026-09-10T15:42:11.353513+00:00",
+  "hoursToKickoff": 0.86,
+  "capturedAt": "2026-09-10T16:12:40.119689+00:00",
   "cond": "0x6ca0c223a92c394e2ef8048b19614513c15f960d239fd00f18896607b263a3a9",
   "frage": "Counter-Strike: Sinners vs Nemiga (BO3) - PGL Masters Bucharest: European Qualifier Playoffs",
   "tokens": {
@@ -262361,15 +262356,15 @@
    "bids": [
     [
      0.54,
-     32537
+     20461
     ],
     [
      0.53,
-     78812
+     79176
     ],
     [
      0.52,
-     4465
+     4524
     ],
     [
      0.51,
@@ -262377,7 +262372,7 @@
     ],
     [
      0.5,
-     3160
+     3060
     ],
     [
      0.49,
@@ -262387,15 +262382,15 @@
    "asks": [
     [
      0.55,
-     74315
+     4768
     ],
     [
      0.56,
-     15400
+     55328
     ],
     [
      0.57,
-     907
+     1372
     ],
     [
      0.58,
@@ -262407,11 +262402,35 @@
     ],
     [
      0.6,
-     875
+     750
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
+    "action": "BUY",
+    "side": "Nemiga",
+    "price": 0.55,
+    "usd": 4793,
+    "ts": 1789055982
+   },
+   {
+    "wallet": "0x7c37b52eb226bcb9411375ec48b0169663fb6aeb",
+    "action": "BUY",
+    "side": "Nemiga",
+    "price": 0.55,
+    "usd": 27500,
+    "ts": 1789055887
+   },
+   {
+    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
+    "action": "BUY",
+    "side": "Nemiga",
+    "price": 0.55,
+    "usd": 4279,
+    "ts": 1789055124
+   },
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "action": "BUY",
@@ -262427,45 +262446,13 @@
     "price": 0.46,
     "usd": 1800,
     "ts": 1789053654
-   },
-   {
-    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
-    "action": "BUY",
-    "side": "Nemiga",
-    "price": 0.55,
-    "usd": 4020,
-    "ts": 1789053294
-   },
-   {
-    "wallet": "0xe40ecff63ec661d218a86c048186ac83389a9770",
-    "action": "BUY",
-    "side": "Sinners",
-    "price": 0.45,
-    "usd": 5505,
-    "ts": 1789052163
-   },
-   {
-    "wallet": "0x567464a8b6b5794c43282c4a9274e12b48ba8b14",
-    "action": "BUY",
-    "side": "Nemiga",
-    "price": 0.56,
-    "usd": 377,
-    "ts": 1789051918
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "action": "BUY",
-    "side": "Sinners",
-    "price": 0.45,
-    "usd": 765,
-    "ts": 1789049524
    }
   ]
  },
  "mlb-hou-phi-2026-09-10": {
   "shares": {
-   "Houston Astros": 11300.49425249,
-   "Philadelphia Phillies": 19660.22796928
+   "Houston Astros": 12780.390152465003,
+   "Philadelphia Phillies": 22234.84138430499
   },
   "prices": {
    "Houston Astros": 0.365,
@@ -262477,12 +262464,12 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 34689,
+  "totalUsd": 37031,
   "whales": [
    {
     "wallet": "0x684baa57c338c2549aec0aa3f034f695d72a8409",
     "side": "Philadelphia Phillies",
-    "usd": 6317,
+    "usd": 6887,
     "avgPrice": 0.63
    },
    {
@@ -262503,110 +262490,25 @@
     "avgPrice": 0.63
    }
   ],
-  "hoursToKickoff": 1.44,
-  "capturedAt": "2026-09-10T15:42:11.353513+00:00",
+  "hoursToKickoff": 0.94,
+  "capturedAt": "2026-09-10T16:12:40.119689+00:00",
   "cond": "0x6bbd52994e4a25b33c7570b209d2f67722708c8172e785ce93385c4487f0a8c9",
   "frage": "Houston Astros vs. Philadelphia Phillies",
   "tokens": {
    "Houston Astros": "73980224499926583887107303500965833873351150813917077742688895913326004589854",
    "Philadelphia Phillies": "3959604305772021457992654145238432227509901737338161989435878139245813140930"
-  },
-  "book": {
-   "side": "Philadelphia Phillies",
-   "bid": 0.63,
-   "ask": 0.64,
-   "spreadC": 1.0,
-   "spreadPct": 1.56,
-   "bids": [
-    [
-     0.63,
-     247624
-    ],
-    [
-     0.62,
-     48491
-    ],
-    [
-     0.61,
-     113295
-    ],
-    [
-     0.6,
-     62029
-    ],
-    [
-     0.59,
-     23195
-    ],
-    [
-     0.58,
-     3316
-    ]
-   ],
-   "asks": [
-    [
-     0.64,
-     174409
-    ],
-    [
-     0.65,
-     73623
-    ],
-    [
-     0.66,
-     35238
-    ],
-    [
-     0.67,
-     5186
-    ],
-    [
-     0.68,
-     2178
-    ],
-    [
-     0.69,
-     6884
-    ]
-   ]
-  },
-  "trades": [
-   {
-    "wallet": "0xcba5b51fa8f722328a155b6136774768ad54cd88",
-    "action": "BUY",
-    "side": "Philadelphia Phillies",
-    "price": 0.64,
-    "usd": 300,
-    "ts": 1789054222
-   },
-   {
-    "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
-    "action": "BUY",
-    "side": "Houston Astros",
-    "price": 0.37,
-    "usd": 374,
-    "ts": 1789051491
-   },
-   {
-    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
-    "action": "BUY",
-    "side": "Houston Astros",
-    "price": 0.37,
-    "usd": 5567,
-    "ts": 1789051488
-   }
-  ]
+  }
  },
  "ucl-psv-shd-2026-09-10-halftime-result": {
   "shares": {
-   "PSV": 8394.985920480001,
+   "PSV": 8403.66003884,
    "Draw": 81.13999959,
-   "FK Shakhtar Donetsk": 1.03125
+   "FK Shakhtar Donetsk": 1.0625
   },
   "prices": {
    "PSV": 0.505,
    "Draw": 0.335,
-   "FK Shakhtar Donetsk": 0.165
+   "FK Shakhtar Donetsk": 0.17
   },
   "splitGuete": {
    "art": "belastbar",
@@ -262614,7 +262516,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 18305,
+  "totalUsd": 18509,
   "whales": [
    {
     "wallet": "0xe8c4d68aff65b38cac46987b9b65e01eb47d395d",
@@ -262640,8 +262542,8 @@
     "avgPrice": 0.5099
    }
   ],
-  "hoursToKickoff": 1.11,
-  "capturedAt": "2026-09-10T15:42:11.353513+00:00",
+  "hoursToKickoff": 0.61,
+  "capturedAt": "2026-09-10T16:12:40.119689+00:00",
   "tokens": {
    "PSV": "43364436506844122713829943858376799320749765325999136880984754937040637424621",
    "Draw": "68765049905338957886372738486775287523834928487922490716135591845560945011433",
@@ -262650,41 +262552,41 @@
  },
  "ucl-psv-shd-2026-09-10-exact-score": {
   "shares": {
-   "PSV 0 - 0 FK Shakhtar Donetsk": 107.499638639,
-   "PSV 0 - 1 FK Shakhtar Donetsk": 49.932375948,
+   "PSV 0 - 0 FK Shakhtar Donetsk": 117.69596477549999,
+   "PSV 0 - 1 FK Shakhtar Donetsk": 44.978427236499996,
    "PSV 1 - 0 FK Shakhtar Donetsk": 103.439294475,
    "PSV 0 - 2 FK Shakhtar Donetsk": 23.52,
-   "PSV 1 - 1 FK Shakhtar Donetsk": 89.80188307,
-   "PSV 2 - 0 FK Shakhtar Donetsk": 186.91424520000007,
+   "PSV 1 - 1 FK Shakhtar Donetsk": 91.14299419999999,
+   "PSV 2 - 0 FK Shakhtar Donetsk": 197.25591189500005,
    "PSV 0 - 3 FK Shakhtar Donetsk": 10.5861,
-   "PSV 1 - 2 FK Shakhtar Donetsk": 76.610084945,
-   "PSV 2 - 1 FK Shakhtar Donetsk": 325.1001420449999,
-   "PSV 3 - 0 FK Shakhtar Donetsk": 122.496585835,
-   "PSV 1 - 3 FK Shakhtar Donetsk": 32.023250000000004,
+   "PSV 1 - 2 FK Shakhtar Donetsk": 77.51138006199999,
+   "PSV 2 - 1 FK Shakhtar Donetsk": 341.7709920449999,
+   "PSV 3 - 0 FK Shakhtar Donetsk": 126.09015731000001,
+   "PSV 1 - 3 FK Shakhtar Donetsk": 32.9748125,
    "PSV 2 - 2 FK Shakhtar Donetsk": 55.0,
-   "PSV 3 - 1 FK Shakhtar Donetsk": 272.367375,
-   "PSV 2 - 3 FK Shakhtar Donetsk": 41.7216578975,
-   "PSV 3 - 2 FK Shakhtar Donetsk": 79.5341838795,
-   "PSV 3 - 3 FK Shakhtar Donetsk": 29.89176472,
+   "PSV 3 - 1 FK Shakhtar Donetsk": 283.617375,
+   "PSV 2 - 3 FK Shakhtar Donetsk": 42.913705265999994,
+   "PSV 3 - 2 FK Shakhtar Donetsk": 140.35025394150003,
+   "PSV 3 - 3 FK Shakhtar Donetsk": 30.8258823675,
    "Any Other Score": 418.96024989
   },
   "prices": {
-   "PSV 0 - 0 FK Shakhtar Donetsk": 0.029,
-   "PSV 0 - 1 FK Shakhtar Donetsk": 0.028,
+   "PSV 0 - 0 FK Shakhtar Donetsk": 0.0305,
+   "PSV 0 - 1 FK Shakhtar Donetsk": 0.0265,
    "PSV 1 - 0 FK Shakhtar Donetsk": 0.075,
    "PSV 0 - 2 FK Shakhtar Donetsk": 0.016,
    "PSV 1 - 1 FK Shakhtar Donetsk": 0.085,
    "PSV 2 - 0 FK Shakhtar Donetsk": 0.085,
    "PSV 0 - 3 FK Shakhtar Donetsk": 0.007,
-   "PSV 1 - 2 FK Shakhtar Donetsk": 0.0425,
+   "PSV 1 - 2 FK Shakhtar Donetsk": 0.043,
    "PSV 2 - 1 FK Shakhtar Donetsk": 0.105,
    "PSV 3 - 0 FK Shakhtar Donetsk": 0.065,
    "PSV 1 - 3 FK Shakhtar Donetsk": 0.0145,
    "PSV 2 - 2 FK Shakhtar Donetsk": 0.055,
    "PSV 3 - 1 FK Shakhtar Donetsk": 0.075,
-   "PSV 2 - 3 FK Shakhtar Donetsk": 0.0175,
-   "PSV 3 - 2 FK Shakhtar Donetsk": 0.0445,
-   "PSV 3 - 3 FK Shakhtar Donetsk": 0.016,
+   "PSV 2 - 3 FK Shakhtar Donetsk": 0.018,
+   "PSV 3 - 2 FK Shakhtar Donetsk": 0.0465,
+   "PSV 3 - 3 FK Shakhtar Donetsk": 0.0165,
    "Any Other Score": 0.235
   },
   "splitGuete": {
@@ -262693,7 +262595,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 23365,
+  "totalUsd": 26230,
   "whales": [
    {
     "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
@@ -262701,25 +262603,24 @@
     "usd": 165
    },
    {
-    "wallet": "0xfe9455e2cad5257b26547af62cbbfd75c8968a3d",
-    "side": "PSV 2 - 1 FK Shakhtar Donetsk",
-    "usd": 105,
-    "avgPrice": 0.0312
-   },
-   {
     "wallet": "0x9f3de29575e01e29172348351bf42d59ab16d65d",
     "side": "Any Other Score",
     "usd": 102
    },
    {
-    "wallet": "0x9f3de29575e01e29172348351bf42d59ab16d65d",
+    "wallet": "0xfe9455e2cad5257b26547af62cbbfd75c8968a3d",
     "side": "PSV 2 - 1 FK Shakhtar Donetsk",
-    "usd": 87,
-    "avgPrice": 0.1099
+    "usd": 98
+   },
+   {
+    "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
+    "side": "PSV 3 - 2 FK Shakhtar Donetsk",
+    "usd": 97,
+    "avgPrice": 0.0465
    }
   ],
-  "hoursToKickoff": 1.11,
-  "capturedAt": "2026-09-10T15:42:11.353513+00:00",
+  "hoursToKickoff": 0.61,
+  "capturedAt": "2026-09-10T16:12:40.119689+00:00",
   "tokens": {
    "PSV 0 - 0 FK Shakhtar Donetsk": "87439505419316722552333017868713655018062435022646875452957210408855633632493",
    "PSV 0 - 1 FK Shakhtar Donetsk": "48318712956413841660389428440656861035519334863194136575855372120173307174214",
@@ -262793,7 +262694,7 @@
  },
  "swe2-fff-ost-2026-09-10": {
   "shares": {
-   "Falkenbergs FF": 6621.642242974999,
+   "Falkenbergs FF": 6631.080173374999,
    "Draw (Falkenbergs FF vs. Osters IF)": 26.51417955,
    "Osters IF": 50.3026294
   },
@@ -262808,7 +262709,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 12940,
+  "totalUsd": 13031,
   "whales": [
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
@@ -262825,8 +262726,8 @@
    {
     "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
     "side": "Falkenbergs FF",
-    "usd": 53,
-    "avgPrice": 0.5199
+    "usd": 62,
+    "avgPrice": 0.5291
    },
    {
     "wallet": "0x45a825d92cce734ae9de00a7f6b10592017c5aed",
@@ -262835,8 +262736,8 @@
     "avgPrice": 0.5599
    }
   ],
-  "hoursToKickoff": 1.36,
-  "capturedAt": "2026-09-10T15:42:11.353513+00:00",
+  "hoursToKickoff": 0.86,
+  "capturedAt": "2026-09-10T16:12:40.119689+00:00",
   "tokens": {
    "Falkenbergs FF": "20396391845656854045901785485039607251729106353890555507354756425077847634961",
    "Draw (Falkenbergs FF vs. Osters IF)": "14964922454323104377751167973733870889065826814225079459095964721042583816954",
@@ -262897,8 +262798,8 @@
  },
  "wta-waltert-papamic-2026-09-10": {
   "shares": {
-   "Simona Waltert": 22667.075359680006,
-   "Despina Papamichail": 2659.2658243200003
+   "Simona Waltert": 22925.278767740005,
+   "Despina Papamichail": 2689.5578442600004
   },
   "prices": {
    "Simona Waltert": 0.895,
@@ -262910,7 +262811,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 25415,
+  "totalUsd": 25424,
   "whales": [
    {
     "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
@@ -262921,8 +262822,8 @@
    {
     "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
     "side": "Simona Waltert",
-    "usd": 6091,
-    "avgPrice": 0.8918
+    "usd": 6141,
+    "avgPrice": 0.8917
    },
    {
     "wallet": "0x565c09cd32dbbde32d5b4fcd6c49d55dd84f878d",
@@ -262937,8 +262838,8 @@
     "avgPrice": 0.89
    }
   ],
-  "hoursToKickoff": 1.11,
-  "capturedAt": "2026-09-10T15:42:11.353513+00:00",
+  "hoursToKickoff": 0.61,
+  "capturedAt": "2026-09-10T16:12:40.119689+00:00",
   "cond": "0x1cbb1d364eb8aba15e492eafc1aaa93aaef1f5dd266de44f1514fa3af5e5750e",
   "frage": "Montreux: Simona Waltert vs Despina Papamichail",
   "tokens": {
@@ -262948,8 +262849,8 @@
  },
  "lol-bublik-domi-2026-09-10": {
   "shares": {
-   "Bubliki": 10641.312047565,
-   "Dominion Goblins": 1804.6676670949996
+   "Bubliki": 10682.352047564998,
+   "Dominion Goblins": 1811.6276670949994
   },
   "prices": {
    "Bubliki": 0.855,
@@ -262961,7 +262862,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 12828,
+  "totalUsd": 12876,
   "whales": [
    {
     "wallet": "0x6918ea182d963b1fb7888860b8a8b8bcfba5782b",
@@ -262988,8 +262889,8 @@
     "avgPrice": 0.84
    }
   ],
-  "hoursToKickoff": 2.36,
-  "capturedAt": "2026-09-10T15:42:11.353513+00:00",
+  "hoursToKickoff": 1.86,
+  "capturedAt": "2026-09-10T16:12:40.119689+00:00",
   "cond": "0x2edcc9f499609d67119bd81e1e0e34562dfa243805b6ba9a4fe697cdf8ae72a4",
   "frage": "LoL: Bubliki vs Dominion Goblins (BO5) - LPLOL Playoffs",
   "tokens": {
@@ -262999,8 +262900,8 @@
  },
  "cs2-nip-inf6-2026-09-10": {
   "shares": {
-   "NIP": 5913.866425775001,
-   "Infinite": 2243.1893382249996
+   "NIP": 12319.09051774999,
+   "Infinite": 4672.757097250002
   },
   "prices": {
    "NIP": 0.725,
@@ -263012,35 +262913,35 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 8182,
+  "totalUsd": 17153,
   "whales": [
+   {
+    "wallet": "0x6b97ebe911d7f2e5e3e8c4a0faad4a5c7c0b8d30",
+    "side": "NIP",
+    "usd": 6163,
+    "avgPrice": 0.7199
+   },
    {
     "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
     "side": "NIP",
-    "usd": 3151,
+    "usd": 3164,
     "avgPrice": 0.7399
+   },
+   {
+    "wallet": "0xef803b16bcd5b3a271d84cb90b01ef3d685ce64a",
+    "side": "Infinite",
+    "usd": 2557,
+    "avgPrice": 0.2772
    },
    {
     "wallet": "0xb9abbf527032ba370e3519de95ff907d0154f282",
     "side": "Infinite",
     "usd": 825,
     "avgPrice": 0.26
-   },
-   {
-    "wallet": "0x513587a2f36a8cb29333052a6a479091ef8a7217",
-    "side": "NIP",
-    "usd": 562,
-    "avgPrice": 0.7451
-   },
-   {
-    "wallet": "0x8726d2642c9cdd9819a30539ff1acf7666090f36",
-    "side": "NIP",
-    "usd": 558,
-    "avgPrice": 0.74
    }
   ],
-  "hoursToKickoff": 1.36,
-  "capturedAt": "2026-09-10T15:42:11.353513+00:00",
+  "hoursToKickoff": 0.86,
+  "capturedAt": "2026-09-10T16:12:40.119689+00:00",
   "cond": "0xeaaff20bb57c41ac42134572378c7a8ad021393f750389a3bc64401e637a91d2",
   "frage": "Counter-Strike: NIP vs Infinite (BO3) - Thunderpick World Championship Closed Qualifier Group D",
   "tokens": {
@@ -263101,8 +263002,8 @@
  },
  "cs2-inox-blackp-2026-09-10": {
   "shares": {
-   "INOX Division": 8970.997589735,
-   "Black Phoenix": 3070.5588505350006
+   "INOX Division": 12683.547679429994,
+   "Black Phoenix": 4341.297471840001
   },
   "prices": {
    "INOX Division": 0.745,
@@ -263114,13 +263015,13 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 13555,
+  "totalUsd": 18460,
   "whales": [
    {
     "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
     "side": "INOX Division",
-    "usd": 3766,
-    "avgPrice": 0.7383
+    "usd": 7410,
+    "avgPrice": 0.7391
    },
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
@@ -263139,8 +263040,8 @@
     "avgPrice": 0.2726
    }
   ],
-  "hoursToKickoff": 1.36,
-  "capturedAt": "2026-09-10T15:42:11.353513+00:00",
+  "hoursToKickoff": 0.86,
+  "capturedAt": "2026-09-10T16:12:40.119689+00:00",
   "cond": "0xc5e8abc4b06b82bf384e85c13e4c29a1f4175aaceb1879abbdf25e00a72abfda",
   "frage": "Counter-Strike: INOX Division vs Black Phoenix (BO3) - CCT Europe Series #8 Group Stage",
   "tokens": {
@@ -263190,13 +263091,1370 @@
     "avgPrice": 0.77
    }
   ],
-  "hoursToKickoff": 2.61,
-  "capturedAt": "2026-09-10T15:42:11.353513+00:00",
+  "hoursToKickoff": 2.11,
+  "capturedAt": "2026-09-10T16:12:40.119689+00:00",
   "cond": "0xe15f69987c50e018237563b159ab5b5bffdbdbb738380816c2b04680c820bed2",
   "frage": "Seville: Calvin Hemery vs Dusan Lajovic",
   "tokens": {
    "Calvin Hemery": "39758756007583519143822086181637179877825002781430025287731383814068511775343",
    "Dusan Lajovic": "109709869865497915751910937140952982937691873253580396081017676083045035753922"
+  }
+ },
+ "ucl-bay-bog-2026-09-10": {
+  "shares": {
+   "FC Bayern München": 332684.66585894953,
+   "Draw (FC Bayern München vs. FK Bodø/Glimt)": 908.6694071649996,
+   "FK Bodø/Glimt": 25678.064222414996
+  },
+  "prices": {
+   "FC Bayern München": 0.905,
+   "Draw (FC Bayern München vs. FK Bodø/Glimt)": 0.065,
+   "FK Bodø/Glimt": 0.0275
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 1419353,
+  "whales": [
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "FC Bayern München",
+    "usd": 99337,
+    "avgPrice": 0.9009
+   },
+   {
+    "wallet": "0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
+    "side": "FC Bayern München",
+    "usd": 59240,
+    "avgPrice": 0.8999
+   },
+   {
+    "wallet": "0x96c2e57df188b3593ea675ebaf31d29d46ed5741",
+    "side": "FC Bayern München",
+    "usd": 37580,
+    "avgPrice": 0.8999
+   },
+   {
+    "wallet": "0x71ac3cbb40647cb6da6fa0dc2923999ad9c4d2b1",
+    "side": "FC Bayern München",
+    "usd": 32862,
+    "avgPrice": 0.9099
+   }
+  ],
+  "hoursToKickoff": 2.86,
+  "capturedAt": "2026-09-10T16:12:40.119689+00:00",
+  "tokens": {
+   "FC Bayern München": "42595297384768457487072353236468751138954383915835945182528333394635341607786",
+   "Draw (FC Bayern München vs. FK Bodø/Glimt)": "6793506857529803992586503820669220680148549216626697625050494074752953655207",
+   "FK Bodø/Glimt": "8824052224832958195497143662304404348474858268627408924074113458482619201642"
+  },
+  "book": {
+   "side": "FC Bayern München",
+   "bid": 0.9,
+   "ask": 0.91,
+   "spreadC": 1.0,
+   "spreadPct": 1.1,
+   "bids": [
+    [
+     0.9,
+     571051
+    ],
+    [
+     0.89,
+     57774
+    ],
+    [
+     0.88,
+     83777
+    ],
+    [
+     0.87,
+     17566
+    ],
+    [
+     0.86,
+     6881
+    ],
+    [
+     0.85,
+     8167
+    ]
+   ],
+   "asks": [
+    [
+     0.91,
+     6012
+    ],
+    [
+     0.92,
+     1757691
+    ],
+    [
+     0.93,
+     979071
+    ],
+    [
+     0.94,
+     251850
+    ],
+    [
+     0.95,
+     31144
+    ],
+    [
+     0.96,
+     23384
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.91,
+    "usd": 544,
+    "ts": 1789056094
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.91,
+    "usd": 446,
+    "ts": 1789056094
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.91,
+    "usd": 492,
+    "ts": 1789056015
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.91,
+    "usd": 334,
+    "ts": 1789055986
+   },
+   {
+    "wallet": "0x71ac3cbb40647cb6da6fa0dc2923999ad9c4d2b1",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.91,
+    "usd": 33044,
+    "ts": 1789055907
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.91,
+    "usd": 500,
+    "ts": 1789055757
+   }
+  ]
+ },
+ "ucl-mnu-sf-2026-09-10": {
+  "shares": {
+   "Manchester United FC": 163922.08079818447,
+   "Draw (Manchester United FC vs. Sabah FK)": 1632.5288852599988,
+   "Sabah FK": 4236.748801522502
+  },
+  "prices": {
+   "Manchester United FC": 0.895,
+   "Draw (Manchester United FC vs. Sabah FK)": 0.065,
+   "Sabah FK": 0.0265
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 510622,
+  "whales": [
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Manchester United FC",
+    "usd": 92343,
+    "avgPrice": 0.8978
+   },
+   {
+    "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+    "side": "Manchester United FC",
+    "usd": 12594,
+    "avgPrice": 0.8999
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "side": "Manchester United FC",
+    "usd": 7574,
+    "avgPrice": 0.8976
+   },
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "side": "Manchester United FC",
+    "usd": 6795
+   }
+  ],
+  "hoursToKickoff": 2.86,
+  "capturedAt": "2026-09-10T16:12:40.119689+00:00",
+  "tokens": {
+   "Manchester United FC": "4172922786618602837995040789016048204313643837232898232548189975115331131787",
+   "Draw (Manchester United FC vs. Sabah FK)": "75107103809931139214533220493092453012629570225224451325060803879051570629274",
+   "Sabah FK": "113325735454220291590563414646242471112153778575702908351315193323102414644210"
+  },
+  "book": {
+   "side": "Manchester United FC",
+   "bid": 0.89,
+   "ask": 0.9,
+   "spreadC": 1.0,
+   "spreadPct": 1.11,
+   "bids": [
+    [
+     0.89,
+     160374
+    ],
+    [
+     0.88,
+     43459
+    ],
+    [
+     0.87,
+     39176
+    ],
+    [
+     0.86,
+     8590
+    ],
+    [
+     0.85,
+     7069
+    ],
+    [
+     0.84,
+     6283
+    ]
+   ],
+   "asks": [
+    [
+     0.9,
+     116170
+    ],
+    [
+     0.91,
+     201687
+    ],
+    [
+     0.92,
+     133424
+    ],
+    [
+     0.93,
+     29116
+    ],
+    [
+     0.94,
+     43884
+    ],
+    [
+     0.95,
+     29515
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.9,
+    "usd": 994,
+    "ts": 1789056037
+   },
+   {
+    "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.9,
+    "usd": 493,
+    "ts": 1789055980
+   }
+  ]
+ },
+ "ucl-com-rbl-2026-09-10": {
+  "shares": {
+   "Como 1907": 164061.88190531995,
+   "Draw (Como 1907 vs. RB Leipzig)": 3636.0919013249995,
+   "RB Leipzig": 7561.168900029993
+  },
+  "prices": {
+   "Como 1907": 0.555,
+   "Draw (Como 1907 vs. RB Leipzig)": 0.235,
+   "RB Leipzig": 0.215
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 402263,
+  "whales": [
+   {
+    "wallet": "0x4d3079bd4c73bc0e8f7d9f64a9f64fadbd17a42d",
+    "side": "Como 1907",
+    "usd": 51170,
+    "avgPrice": 0.5478
+   },
+   {
+    "wallet": "0xe885f33c65fc6c244a297e9df9361b35975995b7",
+    "side": "Como 1907",
+    "usd": 44400,
+    "avgPrice": 0.5599
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "side": "Como 1907",
+    "usd": 9804,
+    "avgPrice": 0.5537
+   },
+   {
+    "wallet": "0xa6d188fb70c2e2e9ad411c42c02379ed3020286a",
+    "side": "Como 1907",
+    "usd": 8617,
+    "avgPrice": 0.5519
+   }
+  ],
+  "hoursToKickoff": 2.86,
+  "capturedAt": "2026-09-10T16:12:40.119689+00:00",
+  "tokens": {
+   "Como 1907": "113393526686876846727001830869025009746681871019921281497668203430979347137783",
+   "Draw (Como 1907 vs. RB Leipzig)": "44273465974680573258227723360676039485719562528143879785896132043258246758751",
+   "RB Leipzig": "30545207023484369465950951208986217918049830676866947200282009484401780929719"
+  },
+  "book": {
+   "side": "Como 1907",
+   "bid": 0.55,
+   "ask": 0.56,
+   "spreadC": 1.0,
+   "spreadPct": 1.79,
+   "bids": [
+    [
+     0.55,
+     108568
+    ],
+    [
+     0.54,
+     62620
+    ],
+    [
+     0.53,
+     42901
+    ],
+    [
+     0.52,
+     25988
+    ],
+    [
+     0.51,
+     7919
+    ],
+    [
+     0.5,
+     15625
+    ]
+   ],
+   "asks": [
+    [
+     0.56,
+     22582
+    ],
+    [
+     0.57,
+     44994
+    ],
+    [
+     0.58,
+     72831
+    ],
+    [
+     0.59,
+     31488
+    ],
+    [
+     0.6,
+     36336
+    ],
+    [
+     0.61,
+     13996
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xf055a5ecb04d26cc5a1e2f4ecfdbee33917002b5",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.56,
+    "usd": 300,
+    "ts": 1789056279
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.56,
+    "usd": 337,
+    "ts": 1789055971
+   },
+   {
+    "wallet": "0xa07c39ac29cc1bfc632db9dd6017483e43b411a0",
+    "action": "BUY",
+    "side": "No",
+    "price": 0.45,
+    "usd": 1000,
+    "ts": 1789055962
+   }
+  ]
+ },
+ "ucl-bay-bog-2026-09-10-more-markets": {
+  "shares": {
+   "Over": 25584.706215529997,
+   "Under": 40868.64865628999
+  },
+  "prices": {
+   "Over": 0.385,
+   "Under": 0.615
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 70666,
+  "whales": [
+   {
+    "wallet": "0x85f031d069de300055900c4055c1baeb6bde3f67",
+    "side": "Over",
+    "usd": 24217,
+    "avgPrice": 0.3599
+   },
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Under",
+    "usd": 15475,
+    "avgPrice": 0.6398
+   },
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "side": "Under",
+    "usd": 15062,
+    "avgPrice": 0.639
+   },
+   {
+    "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
+    "side": "Under",
+    "usd": 3219,
+    "avgPrice": 0.6399
+   }
+  ],
+  "hoursToKickoff": 2.86,
+  "capturedAt": "2026-09-10T16:12:40.119689+00:00",
+  "cond": "0xb67f2c70e13bc94bd8262ea5575dab71f2590ac0cbf68e2a1b48dd6076cfc403",
+  "frage": "FC Bayern München vs. FK Bodø/Glimt: O/U 5.5",
+  "tokens": {
+   "Over": "26400365871687570608173043178402028997260389013986059899578020639336523500147",
+   "Under": "46713952253131632076494512027004024505938981495633904104296640612134126886890"
+  },
+  "book": {
+   "side": "Under",
+   "bid": 0.61,
+   "ask": 0.62,
+   "spreadC": 1.0,
+   "spreadPct": 1.61,
+   "bids": [
+    [
+     0.61,
+     10761
+    ],
+    [
+     0.6,
+     16119
+    ],
+    [
+     0.59,
+     13719
+    ],
+    [
+     0.58,
+     16661
+    ],
+    [
+     0.57,
+     1879
+    ],
+    [
+     0.56,
+     1148
+    ]
+   ],
+   "asks": [
+    [
+     0.62,
+     4952
+    ],
+    [
+     0.63,
+     20209
+    ],
+    [
+     0.64,
+     98696
+    ],
+    [
+     0.65,
+     3694
+    ],
+    [
+     0.66,
+     12498
+    ],
+    [
+     0.67,
+     1700
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x096f5aa775c6f9904508625a5c3836ffedb9194d",
+    "action": "BUY",
+    "side": "Under",
+    "price": 0.63,
+    "usd": 863,
+    "ts": 1789053412
+   }
+  ]
+ },
+ "ucl-mnu-sf-2026-09-10-more-markets": {
+  "shares": {
+   "Over": 7998.0983412150035,
+   "Under": 4402.058321175
+  },
+  "prices": {
+   "Over": 0.645,
+   "Under": 0.355
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 13529,
+  "whales": [
+   {
+    "wallet": "0x542c5c14d4993ba404729e0e2a9f0106c15a39bc",
+    "side": "Over",
+    "usd": 2306,
+    "avgPrice": 0.6299
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "side": "Over",
+    "usd": 1556,
+    "avgPrice": 0.6388
+   },
+   {
+    "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+    "side": "Under",
+    "usd": 1302,
+    "avgPrice": 0.3686
+   },
+   {
+    "wallet": "0xd48a81db62f742c4e42d86dfc23a7ee345366e90",
+    "side": "Over",
+    "usd": 1040
+   }
+  ],
+  "hoursToKickoff": 2.86,
+  "capturedAt": "2026-09-10T16:12:40.119689+00:00",
+  "cond": "0x8f5b33085a94bab75f4a1075641f75c3f827db275d9b281d848e28b36b33f588",
+  "frage": "Manchester United FC vs. Sabah FK: O/U 3.5",
+  "tokens": {
+   "Over": "87233833542306760337322632062773940915223987829134444826764908607555705914721",
+   "Under": "102070810830426192983199742185521071187086532985863646684339590966710899179405"
+  },
+  "book": {
+   "side": "Over",
+   "bid": 0.64,
+   "ask": 0.65,
+   "spreadC": 1.0,
+   "spreadPct": 1.54,
+   "bids": [
+    [
+     0.64,
+     8831
+    ],
+    [
+     0.63,
+     11901
+    ],
+    [
+     0.62,
+     33585
+    ],
+    [
+     0.61,
+     19744
+    ],
+    [
+     0.6,
+     7865
+    ],
+    [
+     0.59,
+     4744
+    ]
+   ],
+   "asks": [
+    [
+     0.65,
+     10263
+    ],
+    [
+     0.66,
+     17652
+    ],
+    [
+     0.67,
+     15089
+    ],
+    [
+     0.68,
+     5041
+    ],
+    [
+     0.69,
+     2044
+    ],
+    [
+     0.7,
+     8658
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "action": "BUY",
+    "side": "Over",
+    "price": 0.64,
+    "usd": 686,
+    "ts": 1789053462
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "action": "BUY",
+    "side": "Over",
+    "price": 0.64,
+    "usd": 665,
+    "ts": 1789053462
+   },
+   {
+    "wallet": "0x542c5c14d4993ba404729e0e2a9f0106c15a39bc",
+    "action": "BUY",
+    "side": "Over",
+    "price": 0.63,
+    "usd": 2252,
+    "ts": 1789042980
+   }
+  ]
+ },
+ "ucl-bay-bog-2026-09-10-exact-score": {
+  "shares": {
+   "FC Bayern München 0 - 0 FK Bodø/Glimt": 228.42447199999998,
+   "FC Bayern München 0 - 1 FK Bodø/Glimt": 81.0932540795,
+   "FC Bayern München 1 - 0 FK Bodø/Glimt": 336.4528595725001,
+   "FC Bayern München 0 - 2 FK Bodø/Glimt": 45.63867315,
+   "FC Bayern München 1 - 1 FK Bodø/Glimt": 292.43346814,
+   "FC Bayern München 2 - 0 FK Bodø/Glimt": 679.0971499400001,
+   "FC Bayern München 0 - 3 FK Bodø/Glimt": 30.275907868000004,
+   "FC Bayern München 1 - 2 FK Bodø/Glimt": 125.726475357,
+   "FC Bayern München 2 - 1 FK Bodø/Glimt": 526.5804205350001,
+   "FC Bayern München 3 - 0 FK Bodø/Glimt": 1614.8409568399995,
+   "FC Bayern München 1 - 3 FK Bodø/Glimt": 55.19910529349999,
+   "FC Bayern München 2 - 2 FK Bodø/Glimt": 356.56848262200003,
+   "FC Bayern München 3 - 1 FK Bodø/Glimt": 967.3557996,
+   "FC Bayern München 2 - 3 FK Bodø/Glimt": 86.44703107949998,
+   "FC Bayern München 3 - 2 FK Bodø/Glimt": 1052.7345313515002,
+   "FC Bayern München 3 - 3 FK Bodø/Glimt": 122.6807869575,
+   "Any Other Score": 7352.846136999999
+  },
+  "prices": {
+   "FC Bayern München 0 - 0 FK Bodø/Glimt": 0.01,
+   "FC Bayern München 0 - 1 FK Bodø/Glimt": 0.0065,
+   "FC Bayern München 1 - 0 FK Bodø/Glimt": 0.0275,
+   "FC Bayern München 0 - 2 FK Bodø/Glimt": 0.0035,
+   "FC Bayern München 1 - 1 FK Bodø/Glimt": 0.022,
+   "FC Bayern München 2 - 0 FK Bodø/Glimt": 0.055,
+   "FC Bayern München 0 - 3 FK Bodø/Glimt": 0.002,
+   "FC Bayern München 1 - 2 FK Bodø/Glimt": 0.009,
+   "FC Bayern München 2 - 1 FK Bodø/Glimt": 0.045,
+   "FC Bayern München 3 - 0 FK Bodø/Glimt": 0.085,
+   "FC Bayern München 1 - 3 FK Bodø/Glimt": 0.0045,
+   "FC Bayern München 2 - 2 FK Bodø/Glimt": 0.022,
+   "FC Bayern München 3 - 1 FK Bodø/Glimt": 0.075,
+   "FC Bayern München 2 - 3 FK Bodø/Glimt": 0.0065,
+   "FC Bayern München 3 - 2 FK Bodø/Glimt": 0.0295,
+   "FC Bayern München 3 - 3 FK Bodø/Glimt": 0.0075,
+   "Any Other Score": 0.595
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 101753,
+  "whales": [
+   {
+    "wallet": "0x9106cf79b02f85d8f1e546802ed916648f44afcb",
+    "side": "Any Other Score",
+    "usd": 5494,
+    "avgPrice": 0.0576
+   },
+   {
+    "wallet": "0x9106cf79b02f85d8f1e546802ed916648f44afcb",
+    "side": "FC Bayern München 3 - 0 FK Bodø/Glimt",
+    "usd": 850,
+    "avgPrice": 0.0576
+   },
+   {
+    "wallet": "0xfe9455e2cad5257b26547af62cbbfd75c8968a3d",
+    "side": "Any Other Score",
+    "usd": 591
+   },
+   {
+    "wallet": "0x9106cf79b02f85d8f1e546802ed916648f44afcb",
+    "side": "FC Bayern München 2 - 0 FK Bodø/Glimt",
+    "usd": 550,
+    "avgPrice": 0.0576
+   }
+  ],
+  "hoursToKickoff": 2.86,
+  "capturedAt": "2026-09-10T16:12:40.119689+00:00",
+  "tokens": {
+   "FC Bayern München 0 - 0 FK Bodø/Glimt": "110538323534513751904764478716192655784200454986423139991350804902523234534914",
+   "FC Bayern München 0 - 1 FK Bodø/Glimt": "66715820023482621561980014511683564100825868317912075017689012058796814276666",
+   "FC Bayern München 1 - 0 FK Bodø/Glimt": "66887024231711610059317801117288640499029640892504933660303572112366978378067",
+   "FC Bayern München 0 - 2 FK Bodø/Glimt": "40032212693191250496935757449080612627613188944898106057621652137082270599906",
+   "FC Bayern München 1 - 1 FK Bodø/Glimt": "38534002894025792469340941605356488827282730036447583287909904343183816597868",
+   "FC Bayern München 2 - 0 FK Bodø/Glimt": "11881802117155468996970461559280349145855775650430265634022307847884705889765",
+   "FC Bayern München 0 - 3 FK Bodø/Glimt": "45592605733860302464830214776317045911891923220233375531840524380450460913574",
+   "FC Bayern München 1 - 2 FK Bodø/Glimt": "103993405554126282443425766704439958110067648539923320020566240348450237128673",
+   "FC Bayern München 2 - 1 FK Bodø/Glimt": "15076945187002523218500221021217139654227398134796634255818037855800302381023",
+   "FC Bayern München 3 - 0 FK Bodø/Glimt": "28103469606690078744047004546246613222047189489643973680156376375438192332580",
+   "FC Bayern München 1 - 3 FK Bodø/Glimt": "101292603304098128172892733885311987855843542911787954207537562367717113352700",
+   "FC Bayern München 2 - 2 FK Bodø/Glimt": "92184039904984032173509951486906259618711621177082749555182390752674325839950",
+   "FC Bayern München 3 - 1 FK Bodø/Glimt": "46724206542769377180701808590382886726328356838503271570911398787026424481589",
+   "FC Bayern München 2 - 3 FK Bodø/Glimt": "60508273578915139537964112940209758990724069100274714022909691472667164737333",
+   "FC Bayern München 3 - 2 FK Bodø/Glimt": "108328441763211515588565519520137872815726544110653344204902243609880634059707",
+   "FC Bayern München 3 - 3 FK Bodø/Glimt": "26794480399050895279803355071755815202142588846619594284027255147407804499539",
+   "Any Other Score": "23479143709400901259626939757364469285349087977148590008909289517529333035464"
+  }
+ },
+ "ucl-slp-rcl-2026-09-10": {
+  "shares": {
+   "SK Slavia Praha": 6351.3224201950015,
+   "Draw (SK Slavia Praha vs. Racing Club de Lens)": 2159.152184645,
+   "Racing Club de Lens": 7008.408734625
+  },
+  "prices": {
+   "SK Slavia Praha": 0.365,
+   "Draw (SK Slavia Praha vs. Racing Club de Lens)": 0.265,
+   "Racing Club de Lens": 0.375
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 59754,
+  "whales": [
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "side": "Racing Club de Lens",
+    "usd": 1828,
+    "avgPrice": 0.3683
+   },
+   {
+    "wallet": "0x0a7ed19909e9b4c6cd0fc1d59c1d481415a1fce4",
+    "side": "SK Slavia Praha",
+    "usd": 1095,
+    "avgPrice": 0.36
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "side": "SK Slavia Praha",
+    "usd": 947,
+    "avgPrice": 0.37
+   },
+   {
+    "wallet": "0xa74f9566070aa0d50d8a9523c1e8d325a750acb2",
+    "side": "SK Slavia Praha",
+    "usd": 912,
+    "avgPrice": 0.34
+   }
+  ],
+  "hoursToKickoff": 2.86,
+  "capturedAt": "2026-09-10T16:12:40.119689+00:00",
+  "tokens": {
+   "SK Slavia Praha": "66034303628045234594032777424357831037494926554214052173667092547737116868011",
+   "Draw (SK Slavia Praha vs. Racing Club de Lens)": "78145904849321419631547560709617290350267194533830340543197873162691493722224",
+   "Racing Club de Lens": "27485776170959252450623147036645548304815774992778493336793183520029460751234"
+  }
+ },
+ "ucl-com-rbl-2026-09-10-more-markets": {
+  "shares": {
+   "Over": 7486.2193279250005,
+   "Under": 8274.0450471
+  },
+  "prices": {
+   "Over": 0.475,
+   "Under": 0.525
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 16127,
+  "whales": [
+   {
+    "wallet": "0x31706006a0ef88b2b8f6d093efbc83b359fbc6a0",
+    "side": "Under",
+    "usd": 5250,
+    "avgPrice": 0.5399
+   },
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "side": "Over",
+    "usd": 1961
+   },
+   {
+    "wallet": "0xa6d188fb70c2e2e9ad411c42c02379ed3020286a",
+    "side": "Over",
+    "usd": 1921,
+    "avgPrice": 0.4639
+   },
+   {
+    "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+    "side": "Over",
+    "usd": 1204,
+    "avgPrice": 0.46
+   }
+  ],
+  "hoursToKickoff": 2.86,
+  "capturedAt": "2026-09-10T16:12:40.119689+00:00",
+  "cond": "0x2713a79b509edb946dae6a45b86c56d748c65fc8f4286473902f2888d5f56f6f",
+  "frage": "Como 1907 vs. RB Leipzig: O/U 3.5",
+  "tokens": {
+   "Over": "6259702003112275895032247953442922349343291423327641891952574489054378725863",
+   "Under": "99165955997640214000388630742475415804860271013163341548742071625829090387063"
+  }
+ },
+ "ucl-slp-rcl-2026-09-10-more-markets": {
+  "shares": {
+   "Over": 11045.08254549,
+   "Under": 7518.085978274999
+  },
+  "prices": {
+   "Over": 0.595,
+   "Under": 0.405
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 21946,
+  "whales": [
+   {
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "side": "Under",
+    "usd": 2970
+   },
+   {
+    "wallet": "0x542c5c14d4993ba404729e0e2a9f0106c15a39bc",
+    "side": "Over",
+    "usd": 2271,
+    "avgPrice": 0.5899
+   },
+   {
+    "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
+    "side": "Over",
+    "usd": 1864
+   },
+   {
+    "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+    "side": "Over",
+    "usd": 1511,
+    "avgPrice": 0.59
+   }
+  ],
+  "hoursToKickoff": 2.86,
+  "capturedAt": "2026-09-10T16:12:40.119689+00:00",
+  "cond": "0x0e67d952805a7d78b5ad867c12b558611991aeb56f7ec83ed64dde38d5e3e96c",
+  "frage": "SK Slavia Praha vs. Racing Club de Lens: O/U 2.5",
+  "tokens": {
+   "Over": "48490196969859722410832148237162509737667418591858784137624989515569335913195",
+   "Under": "58889886986604705215913481331185827845777253949688302535444652152554220985290"
+  }
+ },
+ "ucl-mnu-sf-2026-09-10-exact-score": {
+  "shares": {
+   "Manchester United FC 0 - 0 Sabah FK": 81.9709628945,
+   "Manchester United FC 0 - 1 Sabah FK": 40.0140066,
+   "Manchester United FC 1 - 0 Sabah FK": 258.18777076500004,
+   "Manchester United FC 0 - 2 Sabah FK": 12.318878667500002,
+   "Manchester United FC 1 - 1 Sabah FK": 149.11706570599998,
+   "Manchester United FC 2 - 0 Sabah FK": 518.9649166799999,
+   "Manchester United FC 0 - 3 Sabah FK": 10.606037222,
+   "Manchester United FC 1 - 2 Sabah FK": 36.7046019,
+   "Manchester United FC 2 - 1 Sabah FK": 296.62664393999995,
+   "Manchester United FC 3 - 0 Sabah FK": 442.8293072199998,
+   "Manchester United FC 1 - 3 Sabah FK": 13.015108233000001,
+   "Manchester United FC 2 - 2 Sabah FK": 83.13780061450001,
+   "Manchester United FC 3 - 1 Sabah FK": 616.7290857000002,
+   "Manchester United FC 2 - 3 Sabah FK": 23.736305554999994,
+   "Manchester United FC 3 - 2 Sabah FK": 123.84006417200001,
+   "Manchester United FC 3 - 3 Sabah FK": 24.827489965,
+   "Any Other Score": 2194.3276266450002
+  },
+  "prices": {
+   "Manchester United FC 0 - 0 Sabah FK": 0.0155,
+   "Manchester United FC 0 - 1 Sabah FK": 0.0075,
+   "Manchester United FC 1 - 0 Sabah FK": 0.045,
+   "Manchester United FC 0 - 2 Sabah FK": 0.0025,
+   "Manchester United FC 1 - 1 Sabah FK": 0.031,
+   "Manchester United FC 2 - 0 Sabah FK": 0.085,
+   "Manchester United FC 0 - 3 Sabah FK": 0.002,
+   "Manchester United FC 1 - 2 Sabah FK": 0.009,
+   "Manchester United FC 2 - 1 Sabah FK": 0.055,
+   "Manchester United FC 3 - 0 Sabah FK": 0.115,
+   "Manchester United FC 1 - 3 Sabah FK": 0.003,
+   "Manchester United FC 2 - 2 Sabah FK": 0.0205,
+   "Manchester United FC 3 - 1 Sabah FK": 0.07,
+   "Manchester United FC 2 - 3 Sabah FK": 0.005,
+   "Manchester United FC 3 - 2 Sabah FK": 0.022,
+   "Manchester United FC 3 - 3 Sabah FK": 0.005,
+   "Any Other Score": 0.515
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 34699,
+  "whales": [
+   {
+    "wallet": "0x9106cf79b02f85d8f1e546802ed916648f44afcb",
+    "side": "Any Other Score",
+    "usd": 1726,
+    "avgPrice": 0.1465
+   },
+   {
+    "wallet": "0x9106cf79b02f85d8f1e546802ed916648f44afcb",
+    "side": "Manchester United FC 2 - 0 Sabah FK",
+    "usd": 187,
+    "avgPrice": 0.0588
+   },
+   {
+    "wallet": "0x05ae67b8ae53c9c78d86e58b822a76c1c5f55a4b",
+    "side": "Manchester United FC 3 - 1 Sabah FK",
+    "usd": 175,
+    "avgPrice": 0.08
+   },
+   {
+    "wallet": "0x9f3de29575e01e29172348351bf42d59ab16d65d",
+    "side": "Any Other Score",
+    "usd": 161
+   }
+  ],
+  "hoursToKickoff": 2.86,
+  "capturedAt": "2026-09-10T16:12:40.119689+00:00",
+  "tokens": {
+   "Manchester United FC 0 - 0 Sabah FK": "9535385859710728208916282533487570753691705634585808523356829047987967543464",
+   "Manchester United FC 0 - 1 Sabah FK": "110576489493478589598740492786618672059260061835015830919807015399426671369065",
+   "Manchester United FC 1 - 0 Sabah FK": "79145403439998949647604602455448456181024889980980831549129121720031459662241",
+   "Manchester United FC 0 - 2 Sabah FK": "104154047805632053602376650097383452297974633557448452554717540606188073018722",
+   "Manchester United FC 1 - 1 Sabah FK": "26737445705281843469347224261202524979981126066896691154477863132374102965952",
+   "Manchester United FC 2 - 0 Sabah FK": "7214263573887164551051429058808703368870793822555877755200830039072341509392",
+   "Manchester United FC 0 - 3 Sabah FK": "101282255982149460988290711021062908164675605973854698768567072091409724264889",
+   "Manchester United FC 1 - 2 Sabah FK": "77694644117764091700666725626862188872145057195786233735083191780086763424120",
+   "Manchester United FC 2 - 1 Sabah FK": "17784034963174685038679668816257913755255247658472121146599169734089089755882",
+   "Manchester United FC 3 - 0 Sabah FK": "95341925443908846977865135569486301558773975125960620064636361966855264215909",
+   "Manchester United FC 1 - 3 Sabah FK": "15152828857593778796619215368261506873061562154604569631488122825309706359711",
+   "Manchester United FC 2 - 2 Sabah FK": "67726024533741652861231347970181032038712620838537091661533275981130877476439",
+   "Manchester United FC 3 - 1 Sabah FK": "56466913408522588143741790484127120322172376540946202665510043689701558017275",
+   "Manchester United FC 2 - 3 Sabah FK": "51149079081749007270034194428585668837650758779595281312254010132352989187429",
+   "Manchester United FC 3 - 2 Sabah FK": "24138447091502033626206680151554464201635611413085045041361146768994660612447",
+   "Manchester United FC 3 - 3 Sabah FK": "109867212383194908892813656098786851518956273444202007689938246256673150771524",
+   "Any Other Score": "114661873414220887929735747069640796539239676324220893916372606079714480124450"
+  }
+ },
+ "ucl-com-rbl-2026-09-10-exact-score": {
+  "shares": {
+   "Como 1907 0 - 0 RB Leipzig": 78.67632091499999,
+   "Como 1907 0 - 1 RB Leipzig": 57.531048120000015,
+   "Como 1907 1 - 0 RB Leipzig": 98.09716436000001,
+   "Como 1907 0 - 2 RB Leipzig": 30.72,
+   "Como 1907 1 - 1 RB Leipzig": 279.1682945099999,
+   "Como 1907 2 - 0 RB Leipzig": 160.083021475,
+   "Como 1907 0 - 3 RB Leipzig": 12.350999999999999,
+   "Como 1907 1 - 2 RB Leipzig": 122.79080000000002,
+   "Como 1907 2 - 1 RB Leipzig": 472.464970005,
+   "Como 1907 3 - 0 RB Leipzig": 60.64142249999999,
+   "Como 1907 1 - 3 RB Leipzig": 83.40719693250001,
+   "Como 1907 2 - 2 RB Leipzig": 553.1600894249999,
+   "Como 1907 3 - 1 RB Leipzig": 196.20537898000006,
+   "Como 1907 2 - 3 RB Leipzig": 160.686564345,
+   "Como 1907 3 - 2 RB Leipzig": 117.44014606399999,
+   "Como 1907 3 - 3 RB Leipzig": 59.474363294999996,
+   "Any Other Score": 213.108190035
+  },
+  "prices": {
+   "Como 1907 0 - 0 RB Leipzig": 0.0345,
+   "Como 1907 0 - 1 RB Leipzig": 0.0335,
+   "Como 1907 1 - 0 RB Leipzig": 0.065,
+   "Como 1907 0 - 2 RB Leipzig": 0.024,
+   "Como 1907 1 - 1 RB Leipzig": 0.105,
+   "Como 1907 2 - 0 RB Leipzig": 0.065,
+   "Como 1907 0 - 3 RB Leipzig": 0.0115,
+   "Como 1907 1 - 2 RB Leipzig": 0.055,
+   "Como 1907 2 - 1 RB Leipzig": 0.105,
+   "Como 1907 3 - 0 RB Leipzig": 0.051,
+   "Como 1907 1 - 3 RB Leipzig": 0.0245,
+   "Como 1907 2 - 2 RB Leipzig": 0.075,
+   "Como 1907 3 - 1 RB Leipzig": 0.065,
+   "Como 1907 2 - 3 RB Leipzig": 0.027,
+   "Como 1907 3 - 2 RB Leipzig": 0.047,
+   "Como 1907 3 - 3 RB Leipzig": 0.0235,
+   "Any Other Score": 0.195
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 33856,
+  "whales": [
+   {
+    "wallet": "0x05ae67b8ae53c9c78d86e58b822a76c1c5f55a4b",
+    "side": "Como 1907 2 - 2 RB Leipzig",
+    "usd": 281,
+    "avgPrice": 0.08
+   },
+   {
+    "wallet": "0xfe9455e2cad5257b26547af62cbbfd75c8968a3d",
+    "side": "Any Other Score",
+    "usd": 151
+   },
+   {
+    "wallet": "0xfe9455e2cad5257b26547af62cbbfd75c8968a3d",
+    "side": "Como 1907 1 - 1 RB Leipzig",
+    "usd": 105
+   },
+   {
+    "wallet": "0xfe9455e2cad5257b26547af62cbbfd75c8968a3d",
+    "side": "Como 1907 2 - 1 RB Leipzig",
+    "usd": 105,
+    "avgPrice": 0.0312
+   }
+  ],
+  "hoursToKickoff": 2.86,
+  "capturedAt": "2026-09-10T16:12:40.119689+00:00",
+  "tokens": {
+   "Como 1907 0 - 0 RB Leipzig": "70521065556786587005806204512341411603145135203198423390283709650174401969387",
+   "Como 1907 0 - 1 RB Leipzig": "68413469911983271902569812830750465070859802640252204668215973537994828502041",
+   "Como 1907 1 - 0 RB Leipzig": "38786876563192787809186758559068677794564052480935756951845069403910473261416",
+   "Como 1907 0 - 2 RB Leipzig": "22441995606761004543407924542518231362522177570268742406700239695370437223371",
+   "Como 1907 1 - 1 RB Leipzig": "66817085153102364004934176535556541332421132385524464564815660645662836276662",
+   "Como 1907 2 - 0 RB Leipzig": "103903819194547767284687860171717883232199476274062201049866321195543329824840",
+   "Como 1907 0 - 3 RB Leipzig": "65301154426199684221680686784876872352805146036289163328125018778636208712290",
+   "Como 1907 1 - 2 RB Leipzig": "67828079315673248081134862858655204607287141709018447631050364447395313244198",
+   "Como 1907 2 - 1 RB Leipzig": "57386090075024367243165036986493345020791269559258036790657081944670930169055",
+   "Como 1907 3 - 0 RB Leipzig": "82468582385148850723069632681728628209545025376889157742482940640546817911600",
+   "Como 1907 1 - 3 RB Leipzig": "16017679809855637219645580076865713018775835684530922786364090398787321501429",
+   "Como 1907 2 - 2 RB Leipzig": "94950564037175422715993524979966292869399449911574980883339764452777673718604",
+   "Como 1907 3 - 1 RB Leipzig": "58585022773618887567795973446975655893105820648048520192523543925384310352472",
+   "Como 1907 2 - 3 RB Leipzig": "4057742193222774261165351133289264249948996273119971346879768301798576183795",
+   "Como 1907 3 - 2 RB Leipzig": "30427701710959831068042716454890294291343638604346448369190394257993647213368",
+   "Como 1907 3 - 3 RB Leipzig": "76729988537959479020116226335192085294245063703525012832184455046679009041847",
+   "Any Other Score": "9455105967080663492873957616148119503479576093211802680678137918527194367339"
+  }
+ },
+ "ucl-slp-rcl-2026-09-10-exact-score": {
+  "shares": {
+   "SK Slavia Praha 0 - 0 Racing Club de Lens": 71.691907485,
+   "SK Slavia Praha 0 - 1 Racing Club de Lens": 91.70449879499999,
+   "SK Slavia Praha 1 - 0 Racing Club de Lens": 100.78643607500001,
+   "SK Slavia Praha 0 - 2 Racing Club de Lens": 76.90925005499999,
+   "SK Slavia Praha 1 - 1 Racing Club de Lens": 425.890278875,
+   "SK Slavia Praha 2 - 0 Racing Club de Lens": 122.877664305,
+   "SK Slavia Praha 0 - 3 Racing Club de Lens": 33.600147224,
+   "SK Slavia Praha 1 - 2 Racing Club de Lens": 298.957844775,
+   "SK Slavia Praha 2 - 1 Racing Club de Lens": 309.901122685,
+   "SK Slavia Praha 3 - 0 Racing Club de Lens": 32.258571436,
+   "SK Slavia Praha 1 - 3 Racing Club de Lens": 46.550921075000005,
+   "SK Slavia Praha 2 - 2 Racing Club de Lens": 167.39142862499997,
+   "SK Slavia Praha 3 - 1 Racing Club de Lens": 51.862571436,
+   "SK Slavia Praha 2 - 3 Racing Club de Lens": 110.64621011250001,
+   "SK Slavia Praha 3 - 2 Racing Club de Lens": 34.520170490000005,
+   "SK Slavia Praha 3 - 3 Racing Club de Lens": 19.65625,
+   "Any Other Score": 194.88803347
+  },
+  "prices": {
+   "SK Slavia Praha 0 - 0 Racing Club de Lens": 0.055,
+   "SK Slavia Praha 0 - 1 Racing Club de Lens": 0.065,
+   "SK Slavia Praha 1 - 0 Racing Club de Lens": 0.065,
+   "SK Slavia Praha 0 - 2 Racing Club de Lens": 0.055,
+   "SK Slavia Praha 1 - 1 Racing Club de Lens": 0.125,
+   "SK Slavia Praha 2 - 0 Racing Club de Lens": 0.055,
+   "SK Slavia Praha 0 - 3 Racing Club de Lens": 0.028,
+   "SK Slavia Praha 1 - 2 Racing Club de Lens": 0.085,
+   "SK Slavia Praha 2 - 1 Racing Club de Lens": 0.085,
+   "SK Slavia Praha 3 - 0 Racing Club de Lens": 0.026,
+   "SK Slavia Praha 1 - 3 Racing Club de Lens": 0.0425,
+   "SK Slavia Praha 2 - 2 Racing Club de Lens": 0.075,
+   "SK Slavia Praha 3 - 1 Racing Club de Lens": 0.039,
+   "SK Slavia Praha 2 - 3 Racing Club de Lens": 0.0345,
+   "SK Slavia Praha 3 - 2 Racing Club de Lens": 0.0325,
+   "SK Slavia Praha 3 - 3 Racing Club de Lens": 0.0185,
+   "Any Other Score": 0.13
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 19611,
+  "whales": [
+   {
+    "wallet": "0xfe9455e2cad5257b26547af62cbbfd75c8968a3d",
+    "side": "Any Other Score",
+    "usd": 130,
+    "avgPrice": 0.0312
+   },
+   {
+    "wallet": "0xfe9455e2cad5257b26547af62cbbfd75c8968a3d",
+    "side": "SK Slavia Praha 1 - 1 Racing Club de Lens",
+    "usd": 125
+   },
+   {
+    "wallet": "0x9f3de29575e01e29172348351bf42d59ab16d65d",
+    "side": "SK Slavia Praha 1 - 1 Racing Club de Lens",
+    "usd": 87,
+    "avgPrice": 0.1299
+   },
+   {
+    "wallet": "0xfe9455e2cad5257b26547af62cbbfd75c8968a3d",
+    "side": "SK Slavia Praha 2 - 1 Racing Club de Lens",
+    "usd": 85,
+    "avgPrice": 0.0312
+   }
+  ],
+  "hoursToKickoff": 2.86,
+  "capturedAt": "2026-09-10T16:12:40.119689+00:00",
+  "tokens": {
+   "SK Slavia Praha 0 - 0 Racing Club de Lens": "22211418942324156685779550859454948288275967659320025802926277104167543482374",
+   "SK Slavia Praha 0 - 1 Racing Club de Lens": "80321259339500383689720463428921372176612164942313612715412351949434382326966",
+   "SK Slavia Praha 1 - 0 Racing Club de Lens": "58797052220072507366476578704354767251146329402777424745320417059633438464113",
+   "SK Slavia Praha 0 - 2 Racing Club de Lens": "79103712452240481192135120095527723933164439194348726166774128441676666760672",
+   "SK Slavia Praha 1 - 1 Racing Club de Lens": "94376907569454969524551554104452897608159563951568123280139767210212402577271",
+   "SK Slavia Praha 2 - 0 Racing Club de Lens": "98414380452960340948964938174695667134986798661483321451966081805203447847298",
+   "SK Slavia Praha 0 - 3 Racing Club de Lens": "13886364960187842002355782343174013831979830819548512427774869727702846193383",
+   "SK Slavia Praha 1 - 2 Racing Club de Lens": "112101289348207035844921399482453098826533109863094319551217356356547306988456",
+   "SK Slavia Praha 2 - 1 Racing Club de Lens": "115164612390559817661560264109661433492161367862526764362232061992849721390973",
+   "SK Slavia Praha 3 - 0 Racing Club de Lens": "29986942212867285678465681068244124738024802539007817774768463460460942340848",
+   "SK Slavia Praha 1 - 3 Racing Club de Lens": "42032994672118233704373521185603707330876545263526880915663548689890174027747",
+   "SK Slavia Praha 2 - 2 Racing Club de Lens": "72609666622534734360741368768894533318009266582138077838512173643544528511363",
+   "SK Slavia Praha 3 - 1 Racing Club de Lens": "110880824351777190779136457664544893477407785255839526705836901151068369563089",
+   "SK Slavia Praha 2 - 3 Racing Club de Lens": "83752179954811366445767992167584727769277434838270469131501557466295798150831",
+   "SK Slavia Praha 3 - 2 Racing Club de Lens": "97241098502978092416085678030104689202535683463538469704226903753465014458674",
+   "SK Slavia Praha 3 - 3 Racing Club de Lens": "16060212919133676682737721795136139017816502488010809322961443970754286583361",
+   "Any Other Score": "2795387537299276665764946071375594197060971183715439061474764968525753291448"
+  }
+ },
+ "ucl-fen-rom-2026-09-10-first-to-score": {
+  "shares": {
+   "Fenerbahçe SK": 873.8692567199996,
+   "AS Roma": 6571.440653435,
+   "Neither": 174.90155697
+  },
+  "prices": {
+   "Fenerbahçe SK": 0.36,
+   "AS Roma": 0.595,
+   "Neither": 0.045
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 17749,
+  "whales": [
+   {
+    "wallet": "0x197c2c31027a6e4ae970b8b23b14fdc7ee95e025",
+    "side": "AS Roma",
+    "usd": 5744,
+    "avgPrice": 0.6171
+   },
+   {
+    "wallet": "0xee4b9d64e963c292e9e5fac189fcddfbc16cc2e4",
+    "side": "AS Roma",
+    "usd": 530,
+    "avgPrice": 0.5699
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Fenerbahçe SK",
+    "usd": 403,
+    "avgPrice": 0.3591
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "side": "AS Roma",
+    "usd": 207,
+    "avgPrice": 0.5729
+   }
+  ],
+  "hoursToKickoff": 0.61,
+  "capturedAt": "2026-09-10T16:12:40.119689+00:00",
+  "tokens": {
+   "Fenerbahçe SK": "36707479888086335076550589850407837778115279667257941069334219137877881489476",
+   "AS Roma": "47312117890879245062638529039338695229264317467920152252710617240769381028441",
+   "Neither": "21526519966118377003519351435524916943336115002915710392461487014506364735807"
+  }
+ },
+ "ucl-bay-bog-2026-09-10-halftime-result": {
+  "shares": {
+   "FC Bayern München": 7238.401305614999,
+   "Draw": 30.797886655000006,
+   "FK Bodø/Glimt": 124.94361638
+  },
+  "prices": {
+   "FC Bayern München": 0.765,
+   "Draw": 0.185,
+   "FK Bodø/Glimt": 0.055
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 11895,
+  "whales": [
+   {
+    "wallet": "0x5fc7fc92cee6a83dbb4e780f9e057abaf90d443f",
+    "side": "FC Bayern München",
+    "usd": 1834,
+    "avgPrice": 0.7299
+   },
+   {
+    "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
+    "side": "FC Bayern München",
+    "usd": 1520
+   },
+   {
+    "wallet": "0x554d219486e15c8c8f1f17963b281cb494e8eb95",
+    "side": "FC Bayern München",
+    "usd": 1115,
+    "avgPrice": 0.7599
+   },
+   {
+    "wallet": "0x1851cc2a59239f189b52c51df00d3e1e4b537016",
+    "side": "FC Bayern München",
+    "usd": 1018,
+    "avgPrice": 0.7513
+   }
+  ],
+  "hoursToKickoff": 2.86,
+  "capturedAt": "2026-09-10T16:12:40.119689+00:00",
+  "tokens": {
+   "FC Bayern München": "49053060624750147525479191053834496078675359819957199325797388070900677913309",
+   "Draw": "101297996713673577321202015885643488825304673377506933262865413279362962003142",
+   "FK Bodø/Glimt": "24282560572925744509868535373614946547352002520850409083803811031910584803710"
+  }
+ },
+ "el1-ste-lut-2026-09-10": {
+  "shares": {
+   "Stevenage FC": 302.185117025,
+   "Draw (Stevenage FC vs. Luton Town FC)": 15.0789221,
+   "Luton Town FC": 1983.4620114400004
+  },
+  "prices": {
+   "Stevenage FC": 0.275,
+   "Draw (Stevenage FC vs. Luton Town FC)": 0.275,
+   "Luton Town FC": 0.455
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 7786,
+  "whales": [
+   {
+    "wallet": "0xeb739f5e4f45b0b68688bb252f08327bc01653b0",
+    "side": "Luton Town FC",
+    "usd": 1898,
+    "avgPrice": 0.4315
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Stevenage FC",
+    "usd": 94,
+    "avgPrice": 0.31
+   },
+   {
+    "wallet": "0x91e6ce412d1e83228458c81549a9c5c86c212db1",
+    "side": "Stevenage FC",
+    "usd": 62
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Stevenage FC",
+    "usd": 59,
+    "avgPrice": 0.26
+   }
+  ],
+  "hoursToKickoff": 2.86,
+  "capturedAt": "2026-09-10T16:12:40.119689+00:00",
+  "tokens": {
+   "Stevenage FC": "87554161997084543780647986677231473513357709654801554413547965939362953223923",
+   "Draw (Stevenage FC vs. Luton Town FC)": "84833455226817146117825745648100178584823824081507745465680713276422310723902",
+   "Luton Town FC": "39135502481043185100316576286756345880592666759373969237332314272051913749865"
   }
  }
 }
