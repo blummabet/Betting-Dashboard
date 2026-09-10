@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-09T23:36:57.703090+00:00",
+ "generatedAt": "2026-09-10T00:07:00.138554+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,8 +10,8 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 637,
- "pinnKeys": 323,
- "matched": 223,
+ "pinnKeys": 317,
+ "matched": 217,
  "footballRows": 201,
  "crossRows": 436,
  "footballSkippedStale": 95,
@@ -24,42 +24,84 @@
   "soccer_liga": 165
  },
  "matchedBySport": {
-  "baseball_mlb": 22,
+  "baseball_mlb": 16,
   "soccer_mls": 36,
   "soccer_liga": 165
  },
  "trackRecord": {
-  "tracked": 299,
-  "converged": 63
+  "tracked": 300,
+  "converged": 61
  },
  "discrepancies": [
   {
-   "id": "baseball_mlb|baltimoreorioles-clevelandguardians|clevelandguardians",
+   "id": "baseball_mlb|chicagocubs-milwaukeebrewers|chicagocubs",
    "sport": "baseball_mlb",
-   "event": "Cleveland Guardians vs Baltimore Orioles",
+   "event": "Chicago Cubs vs Milwaukee Brewers",
    "market": "Moneyline",
-   "outcome": "Cleveland Guardians",
-   "polyPP": 6.5,
-   "pinnPP": 31.3,
-   "gapPP": -24.81,
-   "vol": 118701,
+   "outcome": "Chicago Cubs",
+   "polyPP": 16.5,
+   "pinnPP": 41.0,
+   "gapPP": -24.51,
+   "vol": 158752,
    "richtung": "Poly zu niedrig → backen",
-   "convergePP": -1.43,
-   "firstSeen": "2026-09-08T22:58:45.848328+00:00"
+   "convergePP": -3.33,
+   "firstSeen": "2026-09-02T00:51:01.258414+00:00"
   },
   {
-   "id": "baseball_mlb|baltimoreorioles-clevelandguardians|baltimoreorioles",
+   "id": "baseball_mlb|chicagocubs-milwaukeebrewers|milwaukeebrewers",
    "sport": "baseball_mlb",
-   "event": "Cleveland Guardians vs Baltimore Orioles",
+   "event": "Chicago Cubs vs Milwaukee Brewers",
    "market": "Moneyline",
-   "outcome": "Baltimore Orioles",
-   "polyPP": 93.5,
-   "pinnPP": 68.7,
-   "gapPP": 24.81,
-   "vol": 118701,
+   "outcome": "Milwaukee Brewers",
+   "polyPP": 83.5,
+   "pinnPP": 59.0,
+   "gapPP": 24.51,
+   "vol": 158752,
    "richtung": "Poly zu hoch → faden",
-   "convergePP": -1.43,
-   "firstSeen": "2026-09-08T22:58:45.848328+00:00"
+   "convergePP": -3.33,
+   "firstSeen": "2026-09-02T00:51:01.258414+00:00"
+  },
+  {
+   "id": "soccer_mls|nashvillesc-torontofc|aw",
+   "sport": "soccer_mls",
+   "event": "Toronto FC vs Nashville SC",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 72.0,
+   "pinnPP": 47.6,
+   "gapPP": 24.44,
+   "vol": 59895,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-10T00:07:00.138206+00:00"
+  },
+  {
+   "id": "soccer_mls|nashvillesc-torontofc|dr",
+   "sport": "soccer_mls",
+   "event": "Toronto FC vs Nashville SC",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 14.0,
+   "pinnPP": 26.4,
+   "gapPP": -12.44,
+   "vol": 59895,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-10T00:07:00.138206+00:00"
+  },
+  {
+   "id": "soccer_mls|nashvillesc-torontofc|hw",
+   "sport": "soccer_mls",
+   "event": "Toronto FC vs Nashville SC",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 15.5,
+   "pinnPP": 26.0,
+   "gapPP": -10.5,
+   "vol": 59895,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-10T00:07:00.138206+00:00"
   }
  ]
 }
