@@ -1,15 +1,15 @@
 {
- "n": 241,
+ "n": 242,
  "minOdds": 1.35,
- "moneyHitRate": 0.344,
- "priceHitRate": 0.39,
- "brierMoney": 0.9351,
- "brierPrice": 0.6966,
+ "moneyHitRate": 0.343,
+ "priceHitRate": 0.38,
+ "brierMoney": 0.9353,
+ "brierPrice": 0.6963,
  "disagree": {
   "n": 66,
   "moneyWon": 4,
-  "priceWon": 15,
-  "neither": 47
+  "priceWon": 13,
+  "neither": 49
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -48,9 +48,9 @@
   }
  ],
  "guete": {
-  "belastbar": 241,
-  "preis_echo": 229,
-  "abgeschnitten": 29,
+  "belastbar": 242,
+  "preis_echo": 231,
+  "abgeschnitten": 30,
   "unbekannt": 404,
   "leer": 0
  },
@@ -168,7 +168,7 @@
    "league": "EPL",
    "winner": "Draw (Nottingham Forest FC vs. Tottenham Hotspur FC)",
    "moneyFav": "Tottenham Hotspur FC",
-   "priceFav": "Nottingham Forest FC",
+   "priceFav": "Tottenham Hotspur FC",
    "moneyShare": 0.584,
    "priceProb": 0.357,
    "moneyOK": false,
@@ -536,20 +536,20 @@
    "totalUsd": 175803
   }
  ],
- "generatedAt": "2026-09-10T04:10:03.319043+00:00",
+ "generatedAt": "2026-09-10T04:40:02.282047+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 421,
   "nfl": 800,
-  "mlb": 592,
+  "mlb": 591,
   "nhl": 519,
   "mls": 681,
   "epl": 597,
   "soccer": 800,
   "tennis": 800,
   "ucl": 463,
-  "la-liga": 682,
+  "la-liga": 683,
   "bundesliga": 547,
   "serie-a": 51,
   "ligue-1": 576,
@@ -569,7 +569,7 @@
   "boxing": 256,
   "golf": 384,
   "f1": 380,
-  "cricket": 637,
+  "cricket": 633,
   "allsvenskan": 1,
   "austria-bundesliga": 270,
   "brazil-serie-b": 4,
@@ -603,7 +603,7 @@
   "serbian-superliga": 358,
   "serie-b": 541,
   "slovenia-prvaliga": 250,
-  "sweden-allsvenskan": 463,
+  "sweden-allsvenskan": 468,
   "switzerland-super-league": 318,
   "uefa-champions-league": 26,
   "uefa-conference-league": 27,
@@ -628,58 +628,63 @@
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 952,
-   "usd": 16639587,
+   "n": 884,
+   "usd": 16957060,
    "beispiel": "fifwc-mex-ecu-2026-06-30"
   },
   "nba": {
-   "n": 195,
-   "usd": 2736022,
+   "n": 161,
+   "usd": 2474250,
    "beispiel": "nba-det-okc-2026-03-30"
   },
   "fed": {
-   "n": 14,
-   "usd": 302915,
+   "n": 18,
+   "usd": 430066,
    "beispiel": "fed-decision-in-september-762"
   },
-  "cfb": {
-   "n": 12,
-   "usd": 238564,
-   "beispiel": "cfb-smu-flst-2026-09-07"
-  },
-  "fif": {
-   "n": 48,
-   "usd": 215223,
-   "beispiel": "fif-pol-nga-2026-06-03"
-  },
   "cbb": {
-   "n": 4,
-   "usd": 214922,
+   "n": 96,
+   "usd": 427340,
    "beispiel": "cbb-mst-uconn-2026-03-27"
   },
   "nhl": {
-   "n": 11,
-   "usd": 201750,
+   "n": 31,
+   "usd": 243995,
    "beispiel": "nhl-nyr-min-2026-03-14"
   },
+  "cfb": {
+   "n": 13,
+   "usd": 239350,
+   "beispiel": "cfb-smu-flst-2026-09-07"
+  },
+  "fif": {
+   "n": 39,
+   "usd": 177982,
+   "beispiel": "fif-pol-ukr-2026-05-31"
+  },
   "presidential": {
-   "n": 11,
-   "usd": 164265,
+   "n": 12,
+   "usd": 165492,
    "beispiel": "presidential-election-winner-2028"
   },
   "which": {
-   "n": 9,
-   "usd": 133927,
+   "n": 11,
+   "usd": 138888,
    "beispiel": "which-party-will-win-the-house-in-2026"
   },
   "clf": {
-   "n": 25,
-   "usd": 130054,
-   "beispiel": "clf-stk-vcf-2026-08-01"
+   "n": 20,
+   "usd": 116323,
+   "beispiel": "clf-gir-ars-2026-08-01"
+  },
+  "democratic": {
+   "n": 13,
+   "usd": 104580,
+   "beispiel": "democratic-presidential-nominee-2028"
   },
   "nbasl": {
-   "n": 2,
-   "usd": 103755,
+   "n": 1,
+   "usd": 97044,
    "beispiel": "nbasl-cle-nop-2026-07-15"
   },
   "will": {
@@ -688,44 +693,39 @@
    "beispiel": "will-the-iranian-regime-fall-by-the-end-of-2026"
   },
   "2026": {
-   "n": 14,
-   "usd": 67552,
-   "beispiel": "2026-mens-us-open-winner-tennis"
+   "n": 20,
+   "usd": 82857,
+   "beispiel": "2026-womens-us-open-winner-tennis"
   },
   "us": {
    "n": 6,
-   "usd": 63926,
+   "usd": 63961,
    "beispiel": "us-obtains-iranian-enriched-uranium-by"
-  },
-  "democratic": {
-   "n": 12,
-   "usd": 59159,
-   "beispiel": "democratic-presidential-nominee-2028"
   },
   "super": {
    "n": 14,
    "usd": 57397,
    "beispiel": "super-bowl-champion-2026-731"
   },
-  "strait": {
-   "n": 2,
-   "usd": 37118,
-   "beispiel": "strait-of-hormuz-traffic-returns-to-normal-by-december-31"
+  "ballon": {
+   "n": 6,
+   "usd": 45155,
+   "beispiel": "ballon-dor-winner-2026"
   },
   "brazil": {
-   "n": 3,
-   "usd": 36185,
+   "n": 4,
+   "usd": 40732,
    "beispiel": "brazil-presidential-election"
   },
   "world": {
    "n": 16,
    "usd": 32930,
-   "beispiel": "world-cup-winner"
+   "beispiel": "world-cup-golden-boot-winner"
   },
-  "ecs": {
-   "n": 4,
-   "usd": 24905,
-   "beispiel": "ecs-ars-mci-2026-08-16"
+  "michigan": {
+   "n": 2,
+   "usd": 27026,
+   "beispiel": "michigan-senate-election-winner"
   }
  }
 }
