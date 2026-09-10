@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-10T19:51:43.527150+00:00",
+"generatedAt": "2026-09-10T20:04:26.833386+00:00",
 "byVerdict": {
 "konsens": {
-"n": 935,
+"n": 936,
 "wins": 782,
-"hitRate": 0.8364,
-"polyN": 879,
+"hitRate": 0.8355,
+"polyN": 880,
 "polyWins": 679,
-"polyHitRate": 0.7725,
+"polyHitRate": 0.7716,
 "pinnN": 108,
 "pinnHitRate": 0.8241,
-"nRoi": 262,
-"roi": 0.4615,
-"roiLb": 0.3843,
-"nClv": 262,
-"clv": 21.19,
-"clvLb": 18.7603
+"nRoi": 263,
+"roi": 0.4559,
+"roiLb": 0.3785,
+"nClv": 263,
+"clv": 21.11,
+"clvLb": 18.6854
 },
 "uneinig": {
-"n": 357,
+"n": 359,
 "wins": 117,
-"hitRate": 0.3277,
-"polyN": 321,
-"polyWins": 85,
-"polyHitRate": 0.2648,
-"pinnN": 214,
-"pinnHitRate": 0.5935,
-"nRoi": 125,
-"roi": -0.3961,
-"roiLb": -0.5335,
-"nClv": 125,
-"clv": -18.55,
-"clvLb": -23.5086
+"hitRate": 0.3259,
+"polyN": 322,
+"polyWins": 86,
+"polyHitRate": 0.2671,
+"pinnN": 215,
+"pinnHitRate": 0.5953,
+"nRoi": 127,
+"roi": -0.4056,
+"roiLb": -0.5413,
+"nClv": 127,
+"clv": -18.15,
+"clvLb": -23.0933
 },
 "teil": {
 "n": 16,
@@ -231,6 +231,11 @@
 "wins": 8,
 "hitRate": 0.5714
 },
+"Swedish Superettan": {
+"n": 14,
+"wins": 4,
+"hitRate": 0.2857
+},
 "UEFA Champions League": {
 "n": 14,
 "wins": 11,
@@ -265,11 +270,6 @@
 "n": 12,
 "wins": 10,
 "hitRate": 0.8333
-},
-"Swedish Superettan": {
-"n": 12,
-"wins": 4,
-"hitRate": 0.3333
 },
 "Swiss Super League": {
 "n": 12,
@@ -336,6 +336,11 @@
 "wins": 3,
 "hitRate": 0.5
 },
+"Serbian Super League": {
+"n": 6,
+"wins": 5,
+"hitRate": 0.8333
+},
 "Argentinian Cup": {
 "n": 5,
 "wins": 3,
@@ -355,11 +360,6 @@
 "n": 5,
 "wins": 4,
 "hitRate": 0.8
-},
-"Serbian Super League": {
-"n": 5,
-"wins": 5,
-"hitRate": 1.0
 },
 "UAE Arabian Gulf League": {
 "n": 5,
@@ -604,37 +604,94 @@
 },
 "byStrength": {
 "strong": {
-"n": 780,
+"n": 782,
 "wins": 624,
-"hitRate": 0.8,
-"nRoi": 256,
-"roi": 0.2651,
-"roiLb": 0.1804,
-"nClv": 256,
-"clv": 12.41,
-"clvLb": 8.9887
+"hitRate": 0.798,
+"nRoi": 258,
+"roi": 0.2553,
+"roiLb": 0.1705,
+"nClv": 258,
+"clv": 12.21,
+"clvLb": 8.8056
 },
 "weak": {
-"n": 495,
+"n": 496,
 "wins": 260,
-"hitRate": 0.5253,
-"nRoi": 138,
-"roi": -0.0251,
-"roiLb": -0.1716,
-"nClv": 138,
-"clv": -1.34,
-"clvLb": -5.8465
+"hitRate": 0.5242,
+"nRoi": 139,
+"roi": -0.0322,
+"roiLb": -0.178,
+"nClv": 139,
+"clv": -1.04,
+"clvLb": -5.5434
 }
 },
 "divergence": {
-"n": 357,
+"n": 359,
 "betfairWins": 117,
-"betfairRate": 0.3277,
-"polyN": 321,
-"polyWins": 85,
-"polyRate": 0.2648
+"betfairRate": 0.3259,
+"polyN": 322,
+"polyWins": 86,
+"polyRate": 0.2671
 },
 "recent": [
+{
+"matchId": "36044298",
+"home": "Ostersunds FK",
+"away": "IK Brage",
+"league": "Swedish Superettan",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Ostersunds FK",
+"polySide": null,
+"winner": "draw",
+"moneyWin": false,
+"polyWin": null,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-09-10T17:00:00Z",
+"settledAt": "2026-09-10T20:04:26.558079+00:00"
+},
+{
+"matchId": "36035218",
+"home": "Falkenbergs",
+"away": "Osters",
+"league": "Swedish Superettan",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "home",
+"winner": "home",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-09-10T17:00:00Z",
+"settledAt": "2026-09-10T20:04:26.558079+00:00"
+},
+{
+"matchId": "36044203",
+"home": "Radnik Surdulica",
+"away": "Crvena Zvezda",
+"league": "Serbian Super League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Crvena Zvezda",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-09-10T17:00:00Z",
+"settledAt": "2026-09-10T20:04:26.558079+00:00"
+},
 {
 "matchId": "35998666",
 "home": "Fenerbahce",
@@ -1337,75 +1394,18 @@
 ],
 "kickoff": "2026-09-09T18:00:00Z",
 "settledAt": "2026-09-09T21:01:56.557958+00:00"
-},
-{
-"matchId": "36043121",
-"home": "Rangers",
-"away": "St Mirren",
-"league": "Scottish Premiership",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Rangers",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-09-09T18:45:00Z",
-"settledAt": "2026-09-09T20:46:50.207883+00:00"
-},
-{
-"matchId": "36030267",
-"home": "Sandvikens IF",
-"away": "Oddevold",
-"league": "Swedish Superettan",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Sandvikens IF",
-"polySide": "home",
-"winner": "away",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-09-09T17:00:00Z",
-"settledAt": "2026-09-09T20:01:59.636795+00:00"
-},
-{
-"matchId": "36030269",
-"home": "Ljungskile",
-"away": "Norrby IF",
-"league": "Swedish Superettan",
-"verdict": "uneinig",
-"moneySide": "draw",
-"moneyName": "The Draw",
-"polySide": "home",
-"winner": "home",
-"moneyWin": false,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-09-09T17:00:00Z",
-"settledAt": "2026-09-09T20:01:59.636795+00:00"
 }
 ],
 "global": {
-"n": 1308,
+"n": 1311,
 "wins": 902,
-"hitRate": 0.6896,
-"nRoi": 394,
-"roi": 0.1635,
-"roiLb": 0.0874,
-"nClv": 394,
-"clv": 7.6,
-"clvLb": 4.8176
+"hitRate": 0.688,
+"nRoi": 397,
+"roi": 0.1547,
+"roiLb": 0.0788,
+"nClv": 397,
+"clv": 7.57,
+"clvLb": 4.8075
 },
-"pending": 25
+"pending": 22
 }
