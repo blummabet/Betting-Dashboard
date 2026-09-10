@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-10T17:38:38.723892+00:00",
+ "generatedAt": "2026-09-10T18:08:35.824751+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,42 +9,70 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 613,
+ "polyRowsSeen": 615,
  "pinnKeys": 299,
- "matched": 195,
+ "matched": 197,
  "footballRows": 189,
- "crossRows": 424,
- "footballSkippedStale": 85,
+ "crossRows": 426,
+ "footballSkippedStale": 94,
  "seenBySport": {
   "americanfootball_nfl": 174,
-  "baseball_mlb": 74,
+  "baseball_mlb": 76,
   "icehockey_nhl": 150,
   "boxing_boxing": 26,
   "soccer_mls": 21,
   "soccer_liga": 168
  },
  "matchedBySport": {
-  "baseball_mlb": 6,
+  "baseball_mlb": 8,
   "soccer_mls": 21,
   "soccer_liga": 168
  },
  "trackRecord": {
   "tracked": 290,
-  "converged": 64
+  "converged": 66
  },
  "discrepancies": [
+  {
+   "id": "baseball_mlb|houstonastros-philadelphiaphillies|houstonastros",
+   "sport": "baseball_mlb",
+   "event": "Houston Astros vs Philadelphia Phillies",
+   "market": "Moneyline",
+   "outcome": "Houston Astros",
+   "polyPP": 58.5,
+   "pinnPP": 51.7,
+   "gapPP": 6.8,
+   "vol": 166417,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 3.04,
+   "firstSeen": "2026-09-09T00:35:07.627483+00:00"
+  },
+  {
+   "id": "baseball_mlb|houstonastros-philadelphiaphillies|philadelphiaphillies",
+   "sport": "baseball_mlb",
+   "event": "Houston Astros vs Philadelphia Phillies",
+   "market": "Moneyline",
+   "outcome": "Philadelphia Phillies",
+   "polyPP": 41.5,
+   "pinnPP": 48.3,
+   "gapPP": -6.8,
+   "vol": 166417,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 3.04,
+   "firstSeen": "2026-09-09T00:35:07.627483+00:00"
+  },
   {
    "id": "baseball_mlb|atlantabraves-tampabayrays|tampabayrays",
    "sport": "baseball_mlb",
    "event": "Tampa Bay Rays vs Atlanta Braves",
    "market": "Moneyline",
    "outcome": "Tampa Bay Rays",
-   "polyPP": 47.5,
-   "pinnPP": 40.3,
-   "gapPP": 7.2,
-   "vol": 700349,
-   "richtung": "Poly zu hoch → faden",
-   "convergePP": 1.97,
+   "polyPP": 6.5,
+   "pinnPP": 12.9,
+   "gapPP": -6.41,
+   "vol": 758370,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 2.76,
    "firstSeen": "2026-09-10T16:24:06.718668+00:00"
   },
   {
@@ -53,12 +81,12 @@
    "event": "Tampa Bay Rays vs Atlanta Braves",
    "market": "Moneyline",
    "outcome": "Atlanta Braves",
-   "polyPP": 52.5,
-   "pinnPP": 59.7,
-   "gapPP": -7.2,
-   "vol": 700349,
-   "richtung": "Poly zu niedrig → backen",
-   "convergePP": 1.97,
+   "polyPP": 93.5,
+   "pinnPP": 87.1,
+   "gapPP": 6.41,
+   "vol": 758370,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 2.76,
    "firstSeen": "2026-09-10T16:24:06.718668+00:00"
   }
  ]
