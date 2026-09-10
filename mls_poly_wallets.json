@@ -26,6 +26,13 @@
           "pick": "DC United Sieg"
         },
         {
+          "wallet": "0xbb8b2a57330880f395b05a596d2be92e296c9cd7",
+          "usd": 10.0,
+          "shares": 40.0,
+          "side": "draw",
+          "pick": "Unentschieden"
+        },
+        {
           "wallet": "0x45a825d92cce734ae9de00a7f6b10592017c5aed",
           "usd": 8.0,
           "shares": 19.0,
@@ -80,13 +87,6 @@
           "shares": 6.0,
           "side": "away",
           "pick": "Atlanta United FC Sieg"
-        },
-        {
-          "wallet": "0xbb8b2a57330880f395b05a596d2be92e296c9cd7",
-          "usd": 1.0,
-          "shares": 3.0,
-          "side": "draw",
-          "pick": "Unentschieden"
         }
       ],
       "bigTrades": []
@@ -289,7 +289,7 @@
       "topPositions": [
         {
           "wallet": "0xe3726a1b9c6ba2f06585d1c9e01d00afaedaeb38",
-          "usd": 69.0,
+          "usd": 76.0,
           "shares": 168.0,
           "side": "away",
           "pick": "Los Angeles FC Sieg"
@@ -303,14 +303,14 @@
         },
         {
           "wallet": "0xe3726a1b9c6ba2f06585d1c9e01d00afaedaeb38",
-          "usd": 59.0,
+          "usd": 60.0,
           "shares": 150.0,
           "side": "home",
           "pick": "New York City FC Sieg"
         },
         {
           "wallet": "0xbe3610e783826bbb94fb036e8c0538b31ec64fab",
-          "usd": 49.0,
+          "usd": 54.0,
           "shares": 120.0,
           "side": "away",
           "pick": "Los Angeles FC Sieg"
@@ -331,14 +331,14 @@
         },
         {
           "wallet": "0xd81fbc5c53593e4e2923a641ff2bc7e2d9866b75",
-          "usd": 20.0,
+          "usd": 22.0,
           "shares": 50.0,
           "side": "away",
           "pick": "Los Angeles FC Sieg"
         },
         {
           "wallet": "0x2b5920274740ca61745eeb077587bf5bb4ff9db6",
-          "usd": 20.0,
+          "usd": 22.0,
           "shares": 48.0,
           "side": "away",
           "pick": "Los Angeles FC Sieg"
@@ -366,10 +366,10 @@
         },
         {
           "wallet": "0x6344a266ccf4f58daf8ebbc1034a0c3f3ed2b9a7",
-          "usd": 10.0,
+          "usd": 11.0,
           "shares": 25.0,
-          "side": "home",
-          "pick": "New York City FC Sieg"
+          "side": "away",
+          "pick": "Los Angeles FC Sieg"
         }
       ],
       "bigTrades": []
@@ -949,7 +949,7 @@
     },
     {
       "wallet": "0xe3726a1b9c6ba2f06585d1c9e01d00afaedaeb38",
-      "usd": 69.0,
+      "usd": 76.0,
       "shares": 168.0,
       "side": "away",
       "pick": "Los Angeles FC Sieg",
@@ -976,10 +976,19 @@
     },
     {
       "wallet": "0xe3726a1b9c6ba2f06585d1c9e01d00afaedaeb38",
-      "usd": 59.0,
+      "usd": 60.0,
       "shares": 150.0,
       "side": "home",
       "pick": "New York City FC Sieg",
+      "match": "New York City FC – Los Angeles FC",
+      "key": "1604-1616"
+    },
+    {
+      "wallet": "0xbe3610e783826bbb94fb036e8c0538b31ec64fab",
+      "usd": 54.0,
+      "shares": 120.0,
+      "side": "away",
+      "pick": "Los Angeles FC Sieg",
       "match": "New York City FC – Los Angeles FC",
       "key": "1604-1616"
     },
@@ -1009,15 +1018,6 @@
       "pick": "Seattle Sounders Sieg",
       "match": "Seattle Sounders – Real Salt Lake",
       "key": "1595-1606"
-    },
-    {
-      "wallet": "0xbe3610e783826bbb94fb036e8c0538b31ec64fab",
-      "usd": 49.0,
-      "shares": 120.0,
-      "side": "away",
-      "pick": "Los Angeles FC Sieg",
-      "match": "New York City FC – Los Angeles FC",
-      "key": "1604-1616"
     },
     {
       "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
@@ -1137,17 +1137,8 @@
       "key": "1595-1606"
     },
     {
-      "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-      "usd": 21.0,
-      "shares": 42.0,
-      "side": "home",
-      "pick": "FC Cincinnati Sieg",
-      "match": "FC Cincinnati – Charlotte",
-      "key": "2242-18310"
-    },
-    {
       "wallet": "0xd81fbc5c53593e4e2923a641ff2bc7e2d9866b75",
-      "usd": 20.0,
+      "usd": 22.0,
       "shares": 50.0,
       "side": "away",
       "pick": "Los Angeles FC Sieg",
@@ -1156,12 +1147,21 @@
     },
     {
       "wallet": "0x2b5920274740ca61745eeb077587bf5bb4ff9db6",
-      "usd": 20.0,
+      "usd": 22.0,
       "shares": 48.0,
       "side": "away",
       "pick": "Los Angeles FC Sieg",
       "match": "New York City FC – Los Angeles FC",
       "key": "1604-1616"
+    },
+    {
+      "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+      "usd": 21.0,
+      "shares": 42.0,
+      "side": "home",
+      "pick": "FC Cincinnati Sieg",
+      "match": "FC Cincinnati – Charlotte",
+      "key": "2242-18310"
     },
     {
       "wallet": "0x3ca9089f59d506a6773a4d68227a1ac97806424a",
@@ -1234,7 +1234,7 @@
       "netFlowUsd": 500.0,
       "buyUsd": 500.0,
       "sellUsd": 0.0,
-      "hoursToKickoff": 636.9
+      "hoursToKickoff": 636.2
     },
     {
       "key": "9568-9569",
@@ -1245,9 +1245,9 @@
       "netFlowUsd": 600.0,
       "buyUsd": 600.0,
       "sellUsd": 0.0,
-      "hoursToKickoff": 59.9
+      "hoursToKickoff": 59.2
     }
   ],
   "emptyReason": null,
-  "updatedAt": "2026-09-10T11:34:17.970626+00:00"
+  "updatedAt": "2026-09-10T12:16:51.855209+00:00"
 }
