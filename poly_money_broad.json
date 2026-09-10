@@ -1,15 +1,15 @@
 {
- "n": 238,
+ "n": 242,
  "minOdds": 1.35,
- "moneyHitRate": 0.345,
- "priceHitRate": 0.382,
- "brierMoney": 0.9302,
- "brierPrice": 0.6963,
+ "moneyHitRate": 0.343,
+ "priceHitRate": 0.384,
+ "brierMoney": 0.9375,
+ "brierPrice": 0.697,
  "disagree": {
-  "n": 64,
+  "n": 68,
   "moneyWon": 5,
-  "priceWon": 14,
-  "neither": 45
+  "priceWon": 15,
+  "neither": 48
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -37,13 +37,21 @@
    "brierMoney": 1.0273,
    "brierPrice": 0.7959,
    "verdict": "preis_besser"
+  },
+  {
+   "league": "MLS",
+   "n": 20,
+   "moneyHitRate": 0.25,
+   "brierMoney": 1.2078,
+   "brierPrice": 0.7233,
+   "verdict": "preis_besser"
   }
  ],
  "guete": {
-  "belastbar": 238,
+  "belastbar": 242,
   "preis_echo": 236,
   "abgeschnitten": 29,
-  "unbekannt": 412,
+  "unbekannt": 405,
   "leer": 0
  },
  "rows": [
@@ -192,6 +200,18 @@
    "totalUsd": 572429
   },
   {
+   "key": "mls-hou-rsl-2026-09-09",
+   "league": "MLS",
+   "winner": "Houston Dynamo",
+   "moneyFav": "Houston Dynamo",
+   "priceFav": "Houston Dynamo",
+   "moneyShare": 0.981,
+   "priceProb": 0.542,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 500275
+  },
+  {
    "key": "epl-ful-cry-2026-09-05",
    "league": "EPL",
    "winner": "Crystal Palace FC",
@@ -310,6 +330,18 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 364386
+  },
+  {
+   "key": "mls-min-dal-2026-09-09",
+   "league": "MLS",
+   "winner": "FC Dallas",
+   "moneyFav": "Minnesota United FC",
+   "priceFav": "Minnesota United FC",
+   "moneyShare": 0.98,
+   "priceProb": 0.542,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 341463
   },
   {
    "key": "lal-bil-mad-2026-09-05",
@@ -502,41 +534,17 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 175803
-  },
-  {
-   "key": "bra-vit-gre-2026-09-07",
-   "league": "BRAZIL-SERIE-A",
-   "winner": "EC Vitória",
-   "moneyFav": "EC Vitória",
-   "priceFav": "EC Vitória",
-   "moneyShare": 0.948,
-   "priceProb": 0.448,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 172505
-  },
-  {
-   "key": "lal-get-cel-2026-09-07",
-   "league": "LA-LIGA",
-   "winner": "Draw (Getafe CF vs. RC Celta de Vigo)",
-   "moneyFav": "Getafe CF",
-   "priceFav": "Draw (Getafe CF vs. RC Celta de Vigo)",
-   "moneyShare": 0.721,
-   "priceProb": 0.36,
-   "moneyOK": false,
-   "priceOK": true,
-   "totalUsd": 158862
   }
  ],
- "generatedAt": "2026-09-10T02:40:05.972644+00:00",
+ "generatedAt": "2026-09-10T03:10:54.717839+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 421,
   "nfl": 800,
-  "mlb": 613,
+  "mlb": 600,
   "nhl": 519,
-  "mls": 727,
+  "mls": 682,
   "epl": 597,
   "soccer": 800,
   "tennis": 800,
@@ -551,11 +559,11 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 717,
+  "esports": 713,
   "cs2": 423,
   "lol": 417,
   "dota": 9,
-  "valorant": 422,
+  "valorant": 421,
   "ufc": 459,
   "mma": 52,
   "boxing": 256,
@@ -620,104 +628,104 @@
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1813,
-   "usd": 29058895,
-   "beispiel": "fifwc-esp-cvi-2026-06-15-more-markets"
+   "n": 1227,
+   "usd": 25002011,
+   "beispiel": "fifwc-ksa-ury-2026-06-15"
   },
   "nba": {
-   "n": 652,
-   "usd": 6581275,
-   "beispiel": "nba-sas-okc-2026-05-18"
+   "n": 477,
+   "usd": 5083858,
+   "beispiel": "nba-nyk-sas-2026-06-05"
   },
   "nhl": {
-   "n": 147,
-   "usd": 1088430,
-   "beispiel": "nhl-phi-car-2026-05-02"
-  },
-  "cbb": {
-   "n": 156,
-   "usd": 966291,
-   "beispiel": "cbb-uconn-mich-2026-04-06"
+   "n": 127,
+   "usd": 996181,
+   "beispiel": "nhl-las-ana-2026-05-14"
   },
   "ecs": {
-   "n": 7,
-   "usd": 900693,
+   "n": 6,
+   "usd": 890256,
    "beispiel": "ecs-ars-mci-2026-08-16-more-markets"
   },
+  "cbb": {
+   "n": 89,
+   "usd": 705742,
+   "beispiel": "cbb-utahst-arz-2026-03-22"
+  },
   "cfb": {
-   "n": 129,
-   "usd": 887521,
-   "beispiel": "cfb-unlv-ntx-2026-09-12"
+   "n": 82,
+   "usd": 560601,
+   "beispiel": "cfb-clmsn-lsu-2026-09-05"
   },
   "fed": {
-   "n": 31,
-   "usd": 620017,
+   "n": 20,
+   "usd": 348474,
    "beispiel": "fed-decision-in-september-762"
   },
-  "2026": {
-   "n": 42,
-   "usd": 265630,
-   "beispiel": "2026-the-cj-cup-byron-nelson-winner"
-  },
   "fif": {
-   "n": 58,
-   "usd": 209337,
-   "beispiel": "fif-bra-egy-2026-06-06-more-markets"
+   "n": 52,
+   "usd": 230549,
+   "beispiel": "fif-pol-nga-2026-06-03"
   },
-  "nbasl": {
-   "n": 3,
-   "usd": 196549,
-   "beispiel": "nbasl-cle-nop-2026-07-15"
+  "will": {
+   "n": 25,
+   "usd": 183158,
+   "beispiel": "will-apple-release-a-foldable-iphone-before-2027"
   },
-  "ballon": {
-   "n": 8,
-   "usd": 141903,
-   "beispiel": "ballon-dor-winner-2026"
+  "presidential": {
+   "n": 11,
+   "usd": 164312,
+   "beispiel": "presidential-election-winner-2028"
   },
   "which": {
-   "n": 13,
-   "usd": 137681,
+   "n": 11,
+   "usd": 160316,
    "beispiel": "which-party-will-win-the-house-in-2026"
   },
+  "2026": {
+   "n": 28,
+   "usd": 142935,
+   "beispiel": "2026-mens-us-open-winner-tennis"
+  },
   "clf": {
-   "n": 26,
-   "usd": 117306,
-   "beispiel": "clf-int-rbb-2026-08-15"
+   "n": 28,
+   "usd": 140307,
+   "beispiel": "clf-avl-bmu-2026-08-07-more-markets"
   },
-  "world": {
-   "n": 25,
-   "usd": 86571,
-   "beispiel": "world-cup-winner"
-  },
-  "j2100": {
-   "n": 10,
-   "usd": 83825,
-   "beispiel": "j2100-veg-ven-2026-05-30"
-  },
-  "aus": {
-   "n": 7,
-   "usd": 78916,
-   "beispiel": "aus-mct-wsw-2026-04-04"
+  "russia": {
+   "n": 4,
+   "usd": 109218,
+   "beispiel": "russia-x-ukraine-ceasefire-by"
   },
   "democratic": {
-   "n": 12,
-   "usd": 59123,
+   "n": 13,
+   "usd": 104580,
    "beispiel": "democratic-presidential-nominee-2028"
+  },
+  "nbasl": {
+   "n": 1,
+   "usd": 97044,
+   "beispiel": "nbasl-cle-nop-2026-07-15"
+  },
+  "btc": {
+   "n": 15,
+   "usd": 95211,
+   "beispiel": "btc-updown-5m-1781807400"
   },
   "super": {
    "n": 14,
    "usd": 57397,
    "beispiel": "super-bowl-champion-2026-731"
   },
-  "presidential": {
-   "n": 10,
-   "usd": 33111,
-   "beispiel": "presidential-election-winner-2028"
+  "world": {
+   "n": 18,
+   "usd": 44370,
+   "beispiel": "world-cup-winner"
   },
-  "how": {
-   "n": 2,
-   "usd": 32712,
-   "beispiel": "how-many-fed-rate-cuts-in-2026"
+  "brazil": {
+   "n": 3,
+   "usd": 36325,
+   "beispiel": "brazil-presidential-election"
   }
  }
 }
