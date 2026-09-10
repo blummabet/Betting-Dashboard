@@ -63,29 +63,28 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "386 geprueft, davon 41 abgeschnitten"
+      "note": "406 geprueft, davon 44 abgeschnitten"
     },
     {
       "id": "settlement_alive",
       "label": "Settlement lebt (keine ewig offenen Positionen)",
       "severity": "error",
       "ok": false,
-      "nFail": 14,
+      "nFail": 13,
       "failures": [
-        "atp-virtane-dimitro-2026-08-27: seit 13.8 Tagen offen — keine Auflösung gefunden",
-        "nor-ffk-bog-2026-09-04-more-markets: seit 5.1 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "spl-sha-hil-2026-09-04-more-markets: seit 5.1 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "fl1-psg-asm-2026-09-04-more-markets: seit 5.0 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "epl-ips-liv-2026-09-04-more-markets: seit 5.0 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "epl-new-bou-2026-09-05-more-markets: seit 4.3 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "elc-pne-bbr-2026-09-05-more-markets: seit 4.3 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "bun-scp-fre-2026-09-05-more-markets: seit 4.2 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "bun-s04-bay-2026-09-05-more-markets: seit 4.1 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "sea-fro-ven-2026-09-06-more-markets: seit 3.2 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "fl1-tro-str-2026-09-06-more-markets: seit 3.2 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "sea-par-mon-2026-09-06-more-markets: seit 3.2 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "fl1-ang-ren-2026-09-06-more-markets: seit 3.2 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "scop-ran-stm-2026-08-22: seit 18.8 Tagen offen — keine Auflösung gefunden"
+        "atp-virtane-dimitro-2026-08-27: seit 14.5 Tagen offen — keine Auflösung gefunden",
+        "nor-ffk-bog-2026-09-04-more-markets: seit 5.9 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
+        "spl-sha-hil-2026-09-04-more-markets: seit 5.8 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
+        "fl1-psg-asm-2026-09-04-more-markets: seit 5.7 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
+        "epl-ips-liv-2026-09-04-more-markets: seit 5.7 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
+        "epl-new-bou-2026-09-05-more-markets: seit 5.0 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
+        "elc-pne-bbr-2026-09-05-more-markets: seit 5.0 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
+        "bun-scp-fre-2026-09-05-more-markets: seit 5.0 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
+        "bun-s04-bay-2026-09-05-more-markets: seit 4.9 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
+        "sea-fro-ven-2026-09-06-more-markets: seit 4.0 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
+        "fl1-tro-str-2026-09-06-more-markets: seit 4.0 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
+        "sea-par-mon-2026-09-06-more-markets: seit 4.0 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
+        "fl1-ang-ren-2026-09-06-more-markets: seit 3.9 Tagen offen — Auflösung existiert, matcht aber den Key nicht!"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
     },
@@ -96,7 +95,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "MLB: nur 137/241 fällige Märkte aufgelöst (57%)"
+        "MLB: nur 139/256 fällige Märkte aufgelöst (54%)"
       ],
       "note": "Fällige Märkte je Liga, die ihre Auflösung finden. < 60% = Settlement läuft ins Leere (Slug-Mismatch), Trefferquoten dieser Liga sind unvollständig."
     },
@@ -107,10 +106,10 @@
       "ok": false,
       "nFail": 5,
       "failures": [
-        "110/244 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (45%) — Trefferquote allein trügt",
-        "   0x84cfffc3f1… n=212 Treffer 53% P&L $-7,656,562",
-        "   0xc3c3b3ef30… n=338 Treffer 51% P&L $-3,975,260",
-        "   0xa0f21e6d35… n=72 Treffer 64% P&L $-2,635,720",
+        "113/254 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (44%) — Trefferquote allein trügt",
+        "   0x84cfffc3f1… n=231 Treffer 54% P&L $-7,576,553",
+        "   0xc3c3b3ef30… n=338 Treffer 51% P&L $-3,975,750",
+        "   0xa0f21e6d35… n=75 Treffer 65% P&L $-2,635,720",
         "   0xabb89972b2… n=28 Treffer 68% P&L $-2,563,982"
       ],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
@@ -153,5 +152,5 @@
     }
   ],
   "nFail": 4,
-  "generatedAt": "2026-09-09T18:55:56.545158+00:00"
+  "generatedAt": "2026-09-10T12:42:22.530470+00:00"
 }
