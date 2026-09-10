@@ -48,8 +48,32 @@ const ECHT = {
 };
 
 // ── Die Verwechslung, die in der Frage steckte ──────────────────────────────
-test('die Vorschau steht als Vorschau da — „sendet nichts" gehört aufs Board, nicht in einen Kommentar', () => {
-  assert.match(JS, /◆ Public-Kandidaten', '\(nur Vorschau — sendet nichts/);
+// 10.09.2026 — DIESER TEST HAT EINE FALSCHE AUSSAGE FESTGEHALTEN.
+// Er verlangte woertlich „(nur Vorschau — sendet nichts" im Untertitel. Am 02.09. stimmte das.
+// Am 07.09. begann `push_shortlist_trades.py`, genau diese Menge in den Trades-Channel zu
+// schicken (gegated auf `public`) — ab da war der Satz falsch, und der Test hat ihn gehalten
+// statt ihn auffallen zu lassen. Lucas hat es dann gelesen: „ich bin grad etwas verwirrt."
+//
+// Geprueft wird jetzt die ABSICHT, nicht der Wortlaut: der Block muss sagen, WOHIN diese Plays
+// gehen, und er darf den Public-Channel nicht behaupten. Ein Test auf einen fixen Satz waere
+// wieder nur eine Zeitbombe mit Datum.
+test('der Public-Kandidaten-Block sagt, wohin diese Plays wirklich gehen', () => {
+  const m = JS.match(/'◆ Public-Kandidaten',\s*\n?\s*'([^']*)'/);
+  assert.ok(m, 'Untertitel des Public-Kandidaten-Blocks nicht gefunden');
+  assert.match(m[1], /TRADES-Channel/,
+               'der Block muss den Kanal benennen, in den er wirklich sendet');
+  assert.doesNotMatch(m[1], /sendet nichts/,
+                      'sendet nichts ist seit dem 07.09. falsch');
+});
+
+test('der Untertitel behauptet keine Conviction-Schwelle, sondern liest sie aus dem Code', () => {
+  // „Conv≥7" stand hier, waehrend PW_PUBLIC_MIN_CONV seit dem 29.08. auf 6 steht. Eine
+  // hartkodierte Zahl im Text ist genau so lange richtig, bis jemand die Konstante anfasst.
+  const m = JS.match(/'◆ Public-Kandidaten',[\s\S]{0,400}?\+_pwPublicSpiele/);
+  assert.ok(m, 'Public-Kandidaten-Aufruf nicht gefunden');
+  assert.match(m[0], /_pwPublicMinConv\(\)/,
+               'die Schwelle muss aus der Konstante kommen, nicht im Satz stehen');
+  assert.doesNotMatch(m[0], /Conv≥7/);
 });
 
 test('der Push-Block sagt im Kopf, dass er NICHT die Public-Kandidaten sind', () => {
