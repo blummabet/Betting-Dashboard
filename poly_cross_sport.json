@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-10T14:08:13.808778+00:00",
+ "generatedAt": "2026-09-10T16:24:06.718991+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,28 +9,57 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 608,
+ "polyRowsSeen": 610,
  "pinnKeys": 296,
- "matched": 194,
+ "matched": 192,
  "footballRows": 186,
- "crossRows": 422,
+ "crossRows": 424,
  "footballSkippedStale": 95,
  "seenBySport": {
   "americanfootball_nfl": 174,
-  "baseball_mlb": 76,
-  "icehockey_nhl": 146,
+  "baseball_mlb": 74,
+  "icehockey_nhl": 150,
   "boxing_boxing": 26,
   "soccer_mls": 21,
   "soccer_liga": 165
  },
  "matchedBySport": {
-  "baseball_mlb": 8,
+  "baseball_mlb": 6,
   "soccer_mls": 21,
   "soccer_liga": 165
  },
  "trackRecord": {
-  "tracked": 288,
+  "tracked": 290,
   "converged": 62
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|atlantabraves-tampabayrays|tampabayrays",
+   "sport": "baseball_mlb",
+   "event": "Tampa Bay Rays vs Atlanta Braves",
+   "market": "Moneyline",
+   "outcome": "Tampa Bay Rays",
+   "polyPP": 55.5,
+   "pinnPP": 46.3,
+   "gapPP": 9.17,
+   "vol": 386826,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-10T16:24:06.718668+00:00"
+  },
+  {
+   "id": "baseball_mlb|atlantabraves-tampabayrays|atlantabraves",
+   "sport": "baseball_mlb",
+   "event": "Tampa Bay Rays vs Atlanta Braves",
+   "market": "Moneyline",
+   "outcome": "Atlanta Braves",
+   "polyPP": 44.5,
+   "pinnPP": 53.7,
+   "gapPP": -9.17,
+   "vol": 386826,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-10T16:24:06.718668+00:00"
+  }
+ ]
 }
