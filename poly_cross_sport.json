@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-10T17:08:40.623036+00:00",
+ "generatedAt": "2026-09-10T17:38:38.723892+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -30,7 +30,36 @@
  },
  "trackRecord": {
   "tracked": 290,
-  "converged": 62
+  "converged": 64
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|atlantabraves-tampabayrays|tampabayrays",
+   "sport": "baseball_mlb",
+   "event": "Tampa Bay Rays vs Atlanta Braves",
+   "market": "Moneyline",
+   "outcome": "Tampa Bay Rays",
+   "polyPP": 47.5,
+   "pinnPP": 40.3,
+   "gapPP": 7.2,
+   "vol": 700349,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 1.97,
+   "firstSeen": "2026-09-10T16:24:06.718668+00:00"
+  },
+  {
+   "id": "baseball_mlb|atlantabraves-tampabayrays|atlantabraves",
+   "sport": "baseball_mlb",
+   "event": "Tampa Bay Rays vs Atlanta Braves",
+   "market": "Moneyline",
+   "outcome": "Atlanta Braves",
+   "polyPP": 52.5,
+   "pinnPP": 59.7,
+   "gapPP": -7.2,
+   "vol": 700349,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 1.97,
+   "firstSeen": "2026-09-10T16:24:06.718668+00:00"
+  }
+ ]
 }
