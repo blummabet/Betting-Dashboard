@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-10T19:08:49.474327+00:00",
+ "generatedAt": "2026-09-10T19:16:51.999920+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -30,7 +30,36 @@
  },
  "trackRecord": {
   "tracked": 286,
-  "converged": 66
+  "converged": 64
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|houstonastros-philadelphiaphillies|houstonastros",
+   "sport": "baseball_mlb",
+   "event": "Houston Astros vs Philadelphia Phillies",
+   "market": "Moneyline",
+   "outcome": "Houston Astros",
+   "polyPP": 35.5,
+   "pinnPP": 47.0,
+   "gapPP": -11.53,
+   "vol": 681696,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -1.69,
+   "firstSeen": "2026-09-09T00:35:07.627483+00:00"
+  },
+  {
+   "id": "baseball_mlb|houstonastros-philadelphiaphillies|philadelphiaphillies",
+   "sport": "baseball_mlb",
+   "event": "Houston Astros vs Philadelphia Phillies",
+   "market": "Moneyline",
+   "outcome": "Philadelphia Phillies",
+   "polyPP": 64.5,
+   "pinnPP": 53.0,
+   "gapPP": 11.53,
+   "vol": 681696,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -1.69,
+   "firstSeen": "2026-09-09T00:35:07.627483+00:00"
+  }
+ ]
 }
