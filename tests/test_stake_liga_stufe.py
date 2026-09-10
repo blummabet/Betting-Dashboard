@@ -369,3 +369,32 @@ def test_v_league_nur_im_fussball():
     assert LS.stufe("v-league") == "1"
     assert LS.stufe("v-league", "volleyball") is None
     assert LS.stufe("v-league", "basketball") is None
+
+
+# ── 10.09.2026, zweiter Schlag des Wachhunds ─────────────────────────────────
+def test_der_pokal_haengt_den_artikel_auch_hinten_an():
+    """„dbu-pokalen" — dieselbe Klasse wie „efl-trophy" und „reserva": ein Pokal, den die Regel
+    nicht als Pokal las. `-pokal` fing die deutsche Form; im Skandinavischen haengt der bestimmte
+    Artikel HINTEN an („pokalen" = der Pokal, „cupen" = der Cup)."""
+    for slug in ("dbu-pokalen", "nm-cupen-pokalen", "svenska-pokalen", "norges-cupen"):
+        assert LS.stufe(slug) == "pokal", slug
+    assert LS.stufe("dfb-pokal") == "pokal"          # die alte Form bleibt
+    # ⚠️ Die Regel verlangt eine WORTGRENZE. Ein Slug, der den Pokal ohne Bindestrich
+    # anhaengt („landspokalen"), faellt weiterhin durch — bewusst: `pokal` mitten im Wort zu
+    # suchen wuerde irgendwann einen Vereinsnamen zum Pokal machen. Taucht so ein Slug im
+    # Ledger auf, meldet ihn der Wachhund, und DANN wird entschieden.
+    assert LS.stufe("landspokalen") is None
+    # Gegenprobe: die breitere Regel darf keine Spielklasse verschlucken.
+    for liga, ebene in (("premium-liiga", "1"), ("allsvenskan", "1"), ("superettan", "2"),
+                        ("ekstraklasa", "1"), ("la-liga-2", "2")):
+        assert LS.stufe(liga) == ebene, liga
+
+
+def test_estland_und_georgien_stehen_in_der_tabelle():
+    """Zwei reine Nachtraege — die Slugs tragen nichts, woraus eine Regel etwas ableiten koennte.
+    „esiliiga" ist Estlands ZWEITE Klasse; die oberste steht seit jeher als „premium-liiga"
+    (Sponsorname der Meistriliiga) da. Ohne diese Zeile waere ausgerechnet die Liga darunter die
+    einzige ohne Ebene."""
+    assert LS.stufe("erovnuli-liga") == "1"
+    assert LS.stufe("esiliiga") == "2"
+    assert LS.stufe("premium-liiga") == "1"

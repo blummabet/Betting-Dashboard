@@ -145,3 +145,89 @@ test('das Frontend rechnet keine Vollständigkeit selbst nach', () => {
     'kein eigener Zeitvergleich im Render-Pfad');
   assert.match(SRC, /r\.vollstaendig/, 'gelesen wird das Feld des Produzenten');
 });
+
+// ── 10.09.2026: die Kopfzeile ─────────────────────────────────────────────────────────────
+// Lucas: „kannst du mir ganz oben ne Zusammenfassung von Cards / Betfair aus dem Public-Push /
+// Poly aus den Public-Kandidaten — und das wechselt mit, wenn ich Monat/Woche umstell."
+//
+// Drei Stellen, an denen so eine Kopfzeile lügt, und genau die werden hier festgehalten:
+//   1. Sie zeigt die LAUFENDE Periode als Schlagzeile (am Montag ein Spiel groß).
+//   2. Sie zeigt eine Rendite auf n=8, ohne dass man das sieht.
+//   3. Sie geht beim Umschalten NICHT mit und zeigt weiter Wochen, während Monate ausgewählt sind.
+const kopfBloecke = () => [
+  { id: 'cards', label: 'Cards · laufender Betrieb', emoji: '🎯', gruppe: 'Eigene Engine',
+    abdeckung: { von: '2026-07-01', bis: '2026-09-10' },
+    reihen: [
+      reihe({ periode: '2026-W35', n: 40, hitPct: 60.0, roi: 12.0 }),
+      reihe({ periode: '2026-W36', n: 44, hitPct: 70.5, roi: 18.3 }),
+      reihe({ periode: '2026-W37', n: 5, hitPct: 60.0, roi: 99.9, vollstaendig: false, grund: 'läuft noch' }),
+      reihe({ periode: '2026-08', art: 'monat', n: 88, hitPct: 66.0, roi: 5.5 }),
+      reihe({ periode: 'gesamt', art: 'gesamt', n: 166, roi: 8.1 }),
+    ] },
+  { id: 'push-bf-public', label: 'Betfair · Public-Channel', emoji: '🟣', gruppe: 'Push-Kanäle',
+    abdeckung: { von: '2026-08-26', bis: '2026-09-10' },
+    reihen: [reihe({ periode: '2026-W36', n: 71, hitPct: 60.6, roi: 1.4 }),
+             reihe({ periode: 'gesamt', art: 'gesamt', n: 220, roi: -0.8 })] },
+  { id: 'poly-public', label: 'Polymarket · Public-Kandidaten', emoji: '◆', gruppe: 'Marktdaten',
+    abdeckung: { von: '2026-08-05', bis: '2026-09-10' },
+    reihen: [reihe({ periode: '2026-W36', n: 22, hitPct: 68.2, roi: 3.1 }),
+             reihe({ periode: 'gesamt', art: 'gesamt', n: 183, roi: 6.0 })] },
+];
+
+const kopfTeil = (h) => h.split('st-kks')[1].split('st-kk-f')[0];
+
+test('die Kopfzeile führt genau die drei Flächen, nach denen Lucas gefragt hat', () => {
+  const w = laden();
+  const k = kopfTeil(seite(w, kopfBloecke()));
+  for (const name of ['Cards', 'Betfair', 'Poly']) assert.match(k, new RegExp(name));
+  assert.match(k, /Public-Channel/);       // Betfair kommt aus dem Push, nicht aus allen Signalen
+  assert.match(k, /Public-Kandidaten/);    // Poly kommt aus den Kandidaten, nicht aus der Shortlist
+  assert.match(k, /Liga \+ MLS/);          // Cards ist der laufende Betrieb, ohne WM
+});
+
+test('die Kopfzeile zeigt die letzte ABGESCHLOSSENE Periode, nie die laufende', () => {
+  // KW 37 läuft noch und stünde mit +99,9 % als Schlagzeile da — auf fünf Plays.
+  const w = laden();
+  const k = kopfTeil(seite(w, kopfBloecke()));
+  assert.match(k, /KW 36/);
+  assert.doesNotMatch(k, /KW 37/);
+  assert.doesNotMatch(k, /99\.9|99,9/);
+});
+
+test('die Kopfzeile geht beim Umschalten auf Monate mit', () => {
+  const w = laden();
+  seite(w, kopfBloecke());
+  w._stSetMode('monat');
+  const k = kopfTeil(w.document.getElementById('statsPanel').innerHTML);
+  assert.match(k, /Aug 2026/);
+  assert.doesNotMatch(k, /KW 3/, 'nach dem Umschalten darf keine Kalenderwoche mehr dastehen');
+  w._stSetMode('woche');
+  assert.match(kopfTeil(w.document.getElementById('statsPanel').innerHTML), /KW 36/);
+});
+
+test('eine dünne Stichprobe wird als Punktschätzer gekennzeichnet', () => {
+  // n=22 bei Poly liegt unter ugMinN=30 — die Zahl darf nicht als Urteil dastehen.
+  const w = laden();
+  const k = kopfTeil(seite(w, kopfBloecke()));
+  assert.match(k, /Punktschätzer/);
+  // Und die Stichprobe steht IMMER daneben, nicht nur bei den dünnen.
+  assert.match(k, /71 Plays/);
+  assert.match(k, /44 Plays/);
+});
+
+test('der Vergleich zur Vorperiode ist in Prozentpunkten und nennt die Periode', () => {
+  const w = laden();
+  const k = kopfTeil(seite(w, kopfBloecke()));
+  assert.match(k, /\+6\.3 pp/);            // Cards: 18.3 − 12.0
+  assert.match(k, /ggü. KW 35/);
+  // Betfair und Poly haben keine Vorwoche — das muss dastehen, statt „+0.0 pp" zu behaupten.
+  assert.match(k, /keine Vorperiode/);
+  assert.doesNotMatch(k, /\+0\.0 pp/);
+});
+
+test('fehlt ein Bereich ganz, steht dort ein Wort statt einer Null', () => {
+  const w = laden();
+  const k = kopfTeil(seite(w, [kopfBloecke()[0]]));
+  assert.match(k, /noch keine Daten/);
+  assert.doesNotMatch(k, /0\.0%/);
+});

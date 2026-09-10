@@ -25,6 +25,26 @@ from poly_shortlist_track import load_emit
 BASE = Path(__file__).resolve().parent
 SEEN_FILE = BASE / "shortlist_push_seen.json"
 
+# 🔴 10.09.2026 (Lucas: „Heute spielenswert Trades — wird das erst seit kurzem getrackt? weil nur
+# 23 in KW 37 und sonst nichts").
+#
+# Nein — es VERGISST. Die Stats-Seite las bis heute `shortlist_push_seen.json`, und das ist kein
+# Ledger, sondern ein Dedup-Buch mit drei Tagen TTL: es raeumt sich bei jedem Lauf selbst auf.
+# Mehr als drei Tage KANN dort nie stehen, und ein Ergebnis traegt es auch nicht. KW 36 war also
+# nicht leer, weil nichts gepusht wurde, sondern weil die Datei es weggeworfen hatte.
+#
+# „Heute spielenswert" war damit als einziger der fuenf Push-Kanaele ohne eigenes Buch —
+# Betfair-Public, Poly-Whales, Konjunktion und die Picks haben eins. Der Satz dazu steht in
+# killer_push.py: **wer pusht, misst den Push.**
+#
+# Das Buch haelt fest, was zum Zeitpunkt des Sendens galt: den Preis, den ein Leser IN DEM MOMENT
+# bekommen haette (nicht den aelteren Scan-Preis der Shortlist) und die Conviction von da.
+# ⭐ Es rechnet NICHT selbst ab. Der Ausgang steht in `poly_shortlist_track.json`, das seit heute
+# frueh weiss, wann ein Buendel-Markt ueberhaupt abrechnen darf — zwei Abrechnungen mit zwei
+# Regeln waeren genau der Fehler, den poly_slug_urteil.py aufgeraeumt hat.
+LEDGER_FILE = BASE / "shortlist_push_ledger.json"
+LEDGER_KEEP = int(os.environ.get("SHORTLIST_PUSH_LEDGER_KEEP") or 800)
+
 # 29.08.2026 (Lucas-Checkup, „D"): Default 8 → 7. Nicht weil die Latte sinken soll, sondern weil
 # die Skala darunter weggerutscht ist: die Wallet-Neugewichtung nimmt gewichteten Plays rund einen
 # Punkt. 8 auf der neuen Skala waere das alte 9 — also eine stille Verschaerfung, die niemand
@@ -191,6 +211,57 @@ def build_message(plays) -> str:
             + "\n\nKein Auto-Bet — deine Watchlist von oben. Selbst prüfen.")
 
 
+def _push_preis(p):
+    """Der Preis, den ein Leser im Moment des Pushs bekommen haette. REIN.
+
+    `price` ist der Stand aus dem Emit, aus dem die Nachricht gebaut wird — genau der, der auch
+    in der Push-Zeile steht. Ein spaeter besserer Einstieg gehoert nicht ins Buch: gemessen wird,
+    was der Push wert war, nicht was mit perfektem Timing moeglich gewesen waere.
+    """
+    try:
+        v = float(p.get("price"))
+    except (TypeError, ValueError):
+        return None
+    return round(v, 4) if 0.0 < v < 1.0 else None
+
+
+def buch_zeilen(plays, ts, gesendet=True) -> list:
+    """Die Push-Zeilen zu diesen Plays. REIN/testbar.
+
+    `gesendet=False` (Vorschau-Lauf ohne Token, oder Telegram hat abgelehnt) schreibt KEINE
+    Zeile: ein Buch der Pushes darf nur enthalten, was gepusht wurde. „Wir haetten gesendet"
+    ist keine Handlung, und eine Bilanz darauf waere erfunden.
+    """
+    if not gesendet:
+        return []
+    aus = []
+    for p in (plays or []):
+        if not isinstance(p, dict) or not p.get("key") or not p.get("side"):
+            continue
+        aus.append({"k": "%s|%s" % (p.get("key"), p.get("side")),
+                    "key": p.get("key"), "side": p.get("side"),
+                    "sentAt": ts, "conv": p.get("conv"),
+                    "pushPreis": _push_preis(p),
+                    "cat": p.get("cat"), "league": p.get("league")})
+    return aus
+
+
+def _buche_pushes(plays, ts, gesendet=True) -> int:
+    """Die neuen Zeilen ans Buch haengen (rollierend). Nie fatal — ein Buchungsfehler darf den
+    Push nicht nachtraeglich zum Fehlschlag machen."""
+    zeilen = buch_zeilen(plays, ts, gesendet)
+    if not zeilen:
+        return 0
+    try:
+        alt = _load(LEDGER_FILE, [])
+        alt = alt if isinstance(alt, list) else []
+        _save(LEDGER_FILE, (alt + zeilen)[-LEDGER_KEEP:])
+    except Exception as exc:
+        print("  ℹ️  Push-Buch nicht geschrieben:", exc)
+        return 0
+    return len(zeilen)
+
+
 def main() -> int:
     print("=== push_shortlist_trades.py ===")
     emit = load_emit()
@@ -224,6 +295,9 @@ def main() -> int:
     except Exception as exc:
         print("  ℹ️  Shortlist-Push uebersprungen:", exc)
     now_iso = _now().isoformat()
+    # 10.09.2026: gebucht wird, was WIRKLICH rausging (`fresh`), nicht die ganze Auswahl — `sel`
+    # enthaelt auch die schon gepushten, die nur den Dedup-Stempel auffrischen.
+    _buche_pushes(fresh, now_iso, sent)
     # alle aktuellen Top-Plays als „gesehen" markieren (auch die nicht-frischen → frischer ts, kein Re-Push)
     for p in sel:
         seen["%s|%s" % (p.get("key"), p.get("side"))] = {"conv": p.get("conv") or 0, "ts": now_iso}

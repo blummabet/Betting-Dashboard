@@ -181,3 +181,54 @@ class TestDigestEntschlackt(unittest.TestCase):
                         self.assertNotIn("💶", zeile)
         self.assertGreater(traf, 0, "keine BET-Kopfzeile in den echten Karten gefunden")
 
+
+
+# ── 10.09.2026: der Public-Channel ist einsprachig ──────────────────────────────────────
+class TestNurDeutschImPublic(unittest.TestCase):
+    """Lucas: „bitte deaktivier mal Englisch."
+
+    Jede Morning-Card und jeder Recap ging ZWEIMAL in denselben Channel — einmal deutsch,
+    einmal englisch. Weggenommen wird der VERSAND, nicht die Uebersetzung: eine geloeschte
+    Uebersetzung waere nicht rueckgaengig zu machen, ein Default ist es.
+    """
+
+    def test_der_default_sendet_nur_deutsch(self):
+        import importlib, os
+        _vorher = os.environ.pop("TG_LANGS", None)
+        try:
+            importlib.reload(telegram_wm)
+            self.assertEqual(telegram_wm.TG_LANGS, ["de"])
+        finally:
+            if _vorher is not None:
+                os.environ["TG_LANGS"] = _vorher
+            importlib.reload(telegram_wm)
+
+    def test_englisch_ist_einen_schalter_weit_weg(self):
+        """Der Gegenbeweis zur Streichung: sie darf nicht endgueltig sein."""
+        import importlib, os
+        _vorher = os.environ.get("TG_LANGS")
+        os.environ["TG_LANGS"] = "de,en"
+        try:
+            importlib.reload(telegram_wm)
+            self.assertEqual(telegram_wm.TG_LANGS, ["de", "en"])
+        finally:
+            if _vorher is None:
+                os.environ.pop("TG_LANGS", None)
+            else:
+                os.environ["TG_LANGS"] = _vorher
+            importlib.reload(telegram_wm)
+
+    def test_die_englische_karte_wird_weiter_gebaut(self):
+        """`telegram_i18n` bleibt vollstaendig — nur der Versand ist aus. Waere die Uebersetzung
+        mit weggefallen, koennte TG_LANGS sie nicht zurueckholen."""
+        import json as _json
+        wm = _json.loads((BASE / "wm2026-data.json").read_text(encoding="utf-8"))
+        tage = sorted({fx["date"] for g in (wm.get("groups") or {}).values()
+                       for fx in (g.get("fixtures") or []) if fx.get("date")})
+        gebaut = 0
+        for d in tage:
+            en = telegram_wm.build_morning_card(wm, d, "en")
+            if en:
+                gebaut += 1
+                self.assertNotIn("Abwägen", en, "die EN-Karte darf nicht deutsch werden")
+        self.assertGreater(gebaut, 0, "keine englische Karte gebaut")

@@ -141,6 +141,84 @@ function _stBlock(b) {
     + '</section>';
 }
 
+/* ── Die Kopfzeile: drei Zahlen, die mit dem Umschalter mitgehen ────────────────────────
+ * 10.09.2026 (Lucas: „kannst du mir ganz oben ne Zusammenfassung von Cards / Betfair aus dem
+ * Public-Push / Poly aus den Public-Kandidaten — und das wechselt mit, wenn ich Monat/Woche
+ * umstell").
+ *
+ * Form: eine KPI-Zeile aus drei Stat-Kacheln, kein Diagramm. Drei Kennzahlen nebeneinander sind
+ * genau der Fall, für den es Kacheln gibt — ein gruppiertes Balkendiagramm mit drei Balken wäre
+ * mehr Tinte für weniger Auskunft.
+ *
+ * ⚠️ Gezeigt wird die letzte VOLLSTÄNDIGE Periode, nicht die laufende. Die laufende Woche ist am
+ * Montag ein Spiel groß; als Schlagzeile gelesen wäre sie eine Behauptung über nichts. Die
+ * Blöcke darunter zeigen sie weiterhin, dort steht sie in ihrer Reihe und ist als unvollständig
+ * markiert.
+ *
+ * ⚠️ Und die Zahl bleibt ein Punktschätzer. Eine Wochen-Rendite steht auf n=10..30 — die Kachel
+ * nennt deshalb IMMER die Stichprobe daneben und sagt es ausdrücklich, wenn n unter der Schwelle
+ * liegt, ab der diese Seite überhaupt Untergrenzen rechnet. Ohne das wäre die Kopfzeile genau
+ * die Klasse „ein Punktschätzer entscheidet", gegen die der Rest der Seite gebaut ist. */
+var _ST_KOPF = [
+  { id: 'cards',          label: 'Cards',   sub: 'Liga + MLS' },
+  { id: 'push-bf-public', label: 'Betfair', sub: 'Public-Channel' },
+  { id: 'poly-public',    label: 'Poly',    sub: 'Public-Kandidaten' },
+];
+
+// Die letzten beiden ABGESCHLOSSENEN Perioden der aktuellen Auflösung, neueste zuerst.
+function _stLetzteVoll(b) {
+  var rs = (b && b.reihen ? b.reihen : []).filter(function (r) {
+    return r.art === _stMode && r.vollstaendig !== false;
+  });
+  return [rs[rs.length - 1] || null, rs[rs.length - 2] || null];
+}
+
+function _stKopfKachel(cfg, blockById, ugMinN) {
+  var b = blockById[cfg.id];
+  var kopf = '<div class="st-kk-l">' + _stEsc(cfg.label)
+    + ' <span class="st-kk-sub">' + _stEsc(cfg.sub) + '</span></div>';
+  if (!b) {
+    return '<div class="st-kk">' + kopf
+      + '<div class="st-kk-v" style="color:' + ST.ink3 + '">—</div>'
+      + '<div class="st-kk-s">noch keine Daten für diesen Bereich</div></div>';
+  }
+  var paar = _stLetzteVoll(b), jetzt = paar[0], vorher = paar[1];
+  if (!jetzt) {
+    return '<div class="st-kk">' + kopf
+      + '<div class="st-kk-v" style="color:' + ST.ink3 + '">—</div>'
+      + '<div class="st-kk-s">noch keine abgeschlossene '
+      + (_stMode === 'woche' ? 'Woche' : 'Monat') + '</div></div>';
+  }
+  // Der Delta-Wert ist eine Differenz zweier Prozentzahlen — also Prozentpunkte, nicht Prozent.
+  var d = (jetzt.roi != null && vorher && vorher.roi != null) ? (jetzt.roi - vorher.roi) : null;
+  var duenn = (jetzt.n || 0) < (ugMinN || 30);
+  return '<div class="st-kk">' + kopf
+    + '<div class="st-kk-p">' + _stEsc(_stPeriode(jetzt)) + '</div>'
+    + '<div class="st-kk-v" style="color:' + _stCol(jetzt.roi) + '">' + _stPct(jetzt.roi) + '</div>'
+    + '<div class="st-kk-s">' + _stNum(jetzt.n) + ' Plays'
+    + (jetzt.hitPct != null ? ' · ' + jetzt.hitPct.toFixed(0) + '% Treffer' : '')
+    + '</div>'
+    + (d != null
+        ? '<div class="st-kk-d" style="color:' + _stCol(d) + '">'
+          + (d >= 0 ? '▲' : '▼') + ' ' + (d >= 0 ? '+' : '') + d.toFixed(1) + ' pp'
+          + '<span class="st-kk-vgl"> ggü. ' + _stEsc(_stPeriode(vorher)) + '</span></div>'
+        : '<div class="st-kk-d" style="color:' + ST.ink3 + '">keine Vorperiode zum Vergleich</div>')
+    + (duenn
+        ? '<div class="st-kk-w">⚠️ n &lt; ' + (ugMinN || 30) + ' — Punktschätzer, keine Untergrenze</div>'
+        : '');
+}
+
+function _stKopfzahlen(d) {
+  var byId = {};
+  (d.bloecke || []).forEach(function (b) { byId[b.id] = b; });
+  return '<div class="st-kks">'
+    + _ST_KOPF.map(function (c) { return _stKopfKachel(c, byId, d.ugMinN); }).join('')
+    + '</div>'
+    + '<div class="st-kk-f">Letzte abgeschlossene '
+    + (_stMode === 'woche' ? 'Kalenderwoche' : 'abgeschlossener Monat')
+    + ' — die laufende Periode steht in den Tabellen darunter, dort als unvollständig markiert.</div>';
+}
+
 function _stRender() {
   var el = document.getElementById('statsPanel');
   if (!el) return;
@@ -170,6 +248,7 @@ function _stRender() {
     + 'Untergrenzen bleiben. Nur die Anzeige ändert sich, nicht die Zahlen.">'
     + (_stPost ? '🔒 Post-Modus an' : '🔓 Post-Modus aus') + '</button>'
     + '</div></div>'
+    + _stKopfzahlen(_stData)
     + gruppen.map(function (g) {
         return '<div class="st-g"><div class="st-g-t">' + _stEsc(g.name) + '</div>'
           + g.bloecke.map(_stBlock).join('') + '</div>';

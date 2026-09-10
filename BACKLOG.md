@@ -3,6 +3,128 @@
 Stand 10.09.2026 (oberster Block); Liga/WM-Teil darunter Stand 26.06.2026. Lebendige Liste aller offenen Punkte — Liga UND noch nicht umgesetzte WM-Sachen —
 damit wir alles abarbeiten können. ✅ = erledigt (Referenz), ⏳ = offen, 🔒 = blockiert.
 
+## 🇩🇪 10.09.2026 — der Public-Channel ist einsprachig
+
+Lucas: *„bei den Cards-Picks haben wir immer Deutsch und Englisch. Bitte deaktivier mal
+Englisch."*
+
+`TG_LANGS` stand seit dem 04.07. auf `"de,en"` — jede Morning-Card und jeder Recap ging
+**zweimal** in denselben Channel. Default jetzt `"de"`.
+
+⭐ **Weggenommen ist der Versand, nicht die Übersetzung.** `telegram_i18n` bleibt vollständig,
+`build_morning_card(..., "en")` baut die englische Karte weiter, und ein Test hält fest, dass sie
+gebaut wird. `TG_LANGS="de,en"` holt sie in einem Schritt zurück — eine gelöschte Übersetzung
+wäre nicht rückgängig zu machen, ein Default ist es.
+
+Betroffen ist nur dieser eine Sender: `telegram_i18n` hat außer `telegram_wm` keinen Aufrufer,
+die anderen Kanäle waren nie zweisprachig.
+
+## 🔗 10.09.2026 — der Markt-Link ist zurück in der Poly-Public-Karte
+
+Lucas: *„bitte wieder den Markt rein, das hab ich vergessen … ist userfreundlicher."*
+
+Beim Kürzen der Karte heute früh flog `Markt ansehen ↗` mit raus. Er gehört zurück, und der
+Grund überlebt die Kürzung: **alles andere auf der Karte ist eine Behauptung von uns** — der
+Rang, der Marktanteil, die Quote. Der Link ist das Einzige, womit ein fremder Leser sie
+nachprüfen kann. Eine Karte, die Zahlen nennt und den Weg zur Quelle weglässt, verlangt
+Vertrauen, statt es zu verdienen.
+
+Er steht am Ende, nicht oben — die Karte führt mit dem Spiel. Ohne `key` steht dort **nichts**;
+ein Link auf `polymarket.com/event/None` wäre schlechter als kein Link.
+
+## 📊 10.09.2026 — die Stats-Seite: drei Fragen, zwei Bugs, eine Kopfzeile
+
+### 1. Die WM ist raus
+
+Lucas: *„WM kann raus, wertlos in Wahrheit."* Am 09.09. bekam sie einen eigenen Block, damit sie
+die Gesamtzahl nicht zur Hälfte füllt — das war die halbe Lösung. Getrennt stand sie richtig da,
+beantwortet aber keine Frage, die heute noch jemand stellt.
+
+⭐ **Die Daten bleiben.** `cards_plays("WM")` liefert die Picks weiter, `freigabe._card_plays()`
+kennt sie unverändert. Weggenommen wurde der Platz auf der Seite, nicht die Auskunft aus dem
+System — dieselbe Trennung wie bei der ✦-Prosa im Cards-Digest.
+
+### 2. 🔴 Die Picks-Blöcke zählten Picks, die nie gepusht wurden
+
+`pick_push_ledger.json` ist ein **Schattenbuch** und soll es sein: es hält jeden announce-fähigen
+Pick, den gesendeten **und** den vom Gegensignal-Filter aussortierten, damit der Filter sich nicht
+selbst bestätigen kann. Genau das macht es als Quelle für einen Push-Kanal untauglich:
+
+```
+Liga   131 Zeilen  →   42 gepusht,   89 nie
+MLS     44 Zeilen  →    6 gepusht,   38 nie
+```
+
+127 Picks standen in der Gruppe „Push-Kanäle", die nie in einem Push waren. Dieselbe Fehlerklasse
+wie beim Public-Block eine Stunde vorher: der Name verspricht eine Menge, die Zahl enthält eine
+andere. Ein Kanal-Block zählt, was den Kanal verlassen hat — sonst misst er die Engine und nennt
+es Kanal.
+
+| | vorher | jetzt |
+|---|---|---|
+| Liga-Picks · Trades | n=125, ROI +12,6 % | **n=42, ROI +17,0 %** |
+| MLS-Picks · Trades | n=29, ROI −11,8 % | **n=6, ROI −11,6 %** |
+
+Die Aussortierten verschwinden nicht: der Block nennt ihre Zahl, die Gegenprobe steht als eigene
+Schublade im Freigabe-Register.
+
+### 3. 🔴 „Heute spielenswert" wurde nicht seit kurzem getrackt — es hat vergessen
+
+Lucas: *„wird das erst seit kurzem getrackt? weil nur 23 in KW 37 und sonst nichts."*
+
+Die Quelle war `shortlist_push_seen.json` — kein Ledger, sondern ein **Dedup-Buch mit 3 Tagen
+TTL** (`SEEN_TTL_DAYS = 3`), das sich bei jedem Lauf selbst aufräumt:
+
+```
+n=24   von 2026-09-08 bis 2026-09-10
+```
+
+Mehr kann dort nie stehen. KW 36 war nicht leer, weil nichts gepusht wurde, sondern weil die
+Datei es weggeworfen hatte. Ein Ergebnis trug sie auch nicht — der Block hatte deshalb weder
+Trefferquote noch ROI.
+
+„Heute spielenswert" war als **einziger der fünf Push-Kanäle ohne eigenes Buch**. Der Satz dazu
+steht seit dem 01.09. in `killer_push.py`: **wer pusht, misst den Push.**
+
+Neu: `shortlist_push_ledger.json`, geschrieben von `push_shortlist_trades.py`. Es hält, was beim
+Senden galt — Zeitpunkt, **Push-Preis** (nicht den älteren Scan-Preis) und Conviction.
+
+⭐ **Es rechnet nicht selbst ab.** Der Ausgang kommt aus `poly_shortlist_track.json`, das seit
+heute früh weiß, wann ein Bündel-Markt überhaupt entscheiden darf. Zwei Bücher mit zwei Regeln
+waren in diesem Repo schon einmal der Fehler. Gebucht wird nur, was wirklich gesendet wurde —
+ein Vorschau-Lauf schreibt keine Zeile.
+
+⚠️ Das Buch beginnt am 10.09.2026. Die früheren Pushes sind nicht rekonstruierbar; der Block
+erscheint erst, wenn die erste Zeile drinsteht (`_add` überspringt leere Blöcke — leer ist ein
+Ergebnis, aber eine leere Tabelle ist keine Auskunft).
+
+### 4. Die Kopfzeile
+
+Lucas: *„kannst du mir ganz oben ne Zusammenfassung von Cards / Betfair aus dem Public-Push /
+Poly aus den Public-Kandidaten — und das wechselt mit, wenn ich Monat/Woche umstell."*
+
+Eine **KPI-Zeile aus drei Stat-Kacheln**, kein Diagramm: drei Kennzahlen nebeneinander sind genau
+der Fall, für den es Kacheln gibt — drei Balken wären mehr Tinte für weniger Auskunft. Keine
+Hero-Zahl: eine Seite trägt genau eine, und drei gleichrangige Zahlen sind keine.
+
+Je Kachel: Periode · Rendite · Stichprobe + Trefferquote · Differenz zur Vorperiode **in
+Prozentpunkten**, mit deren Namen.
+
+Drei Stellen, an denen so eine Kopfzeile lügt — alle drei sind als Test provoziert:
+
+* **Sie zeigt die laufende Periode.** Am Montag ist die Woche ein Spiel groß; als Schlagzeile
+  wäre das eine Behauptung über nichts. Gezeigt wird die letzte **abgeschlossene** Periode; die
+  laufende steht weiter in der Tabelle darunter, dort als unvollständig markiert.
+* **Sie zeigt eine Rendite auf n=8, ohne dass man es sieht.** Die Stichprobe steht immer daneben,
+  und unter `ugMinN` sagt die Kachel ausdrücklich „Punktschätzer, keine Untergrenze". Ohne das
+  wäre die Kopfzeile die Klasse *ein Punktschätzer entscheidet*, gegen die der Rest der Seite
+  gebaut ist.
+* **Sie geht beim Umschalten nicht mit.** Ein Test schaltet auf Monate und prüft, dass danach
+  keine Kalenderwoche mehr dasteht.
+
+Fehlt ein Bereich, steht dort ein Wort statt einer Null; fehlt die Vorperiode, steht „keine
+Vorperiode zum Vergleich" statt „+0,0 pp".
+
 ## 🔴 10.09.2026 — der Bündel-Markt, zweiter Teil: die Erfassung
 
 Lucas: *„vor allem die 2 Fußball sind mmn schon alle erledigt, nur schaffst du es nicht, sie

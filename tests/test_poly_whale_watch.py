@@ -219,6 +219,30 @@ class TestPublicWhale(unittest.TestCase):
         self.assertIn("+$120", P.build_card(pos, scores, False, {}))
         self.assertNotIn("lifetime", msg)
 
+    def test_die_public_karte_traegt_den_markt_link(self):
+        """10.09.2026 (Lucas: „bitte wieder den Markt rein … ist userfreundlicher").
+
+        Beim Kuerzen der Karte heute frueh ist der Link mit rausgeflogen. Er gehoert zurueck,
+        und zwar aus einem Grund, der die Kuerzung ueberlebt: alles andere auf der Karte ist
+        eine Behauptung von uns — Rang, Marktanteil, Quote. Der Link ist das Einzige, womit ein
+        fremder Leser sie nachpruefen kann.
+        """
+        pos = _pos(150000, league="TENNIS", side="Sinner", price=0.55, wallet="0xP")
+        msg = P.build_public_card(pos, {}, False, {})
+        self.assertIn('href="https://polymarket.com/event/', msg)
+        self.assertIn("Markt ansehen", msg)
+        # Er steht am ENDE — die Karte fuehrt mit dem Spiel, nicht mit einem Link.
+        self.assertTrue(msg.rstrip().endswith("</a>"), msg[-80:])
+
+    def test_ohne_key_steht_kein_kaputter_link_da(self):
+        """Fehlende Information rendert als nichts. Ein Link auf
+        `polymarket.com/event/None` waere schlimmer als kein Link."""
+        msg = P.build_public_card({"usd": 90000, "league": "TENNIS", "side": "Sinner",
+                                   "wallet": "0xX"}, {}, False, {})
+        self.assertNotIn("polymarket.com/event/", msg)
+        self.assertNotIn("Markt ansehen", msg)
+        self.assertNotIn("None", msg)
+
     def test_lifetime_fehlt_rendert_als_nichts(self):
         """Gegenbeweis zu `_lifetime`: fehlende Information darf keine Zahl erfinden.
 
