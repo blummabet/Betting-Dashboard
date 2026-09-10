@@ -3141,11 +3141,16 @@ function _pwPublicPush(rec){
 // Der Block darüber zeigt seit Wochen n, Trefferquote, ROI und CLV — also wie gut die Auswahl
 // war, aber nie WAS drin war. Eine Kennzahl ohne ihre Zeilen kann man nicht nachprüfen.
 //
-// ⭐ Die Push-Spalte ist der eigentliche Punkt: `push_shortlist_trades.py` schickt ab
-// Conviction ≥6, ein Public-Kandidat verlangt ≥7 PLUS bewiesene Wallet PLUS Mehrheit. Die beiden
-// Mengen sind also NICHT identisch, und genau die Differenz ist das, was Lucas kontrollieren
-// will. Nachgeschlagen wird in `shortlist_push_seen.json` (Schlüssel `key|side` — derselbe wie
-// im Track), nicht rekonstruiert.
+// ⭐ Die Push-Spalte ist der eigentliche Punkt. Nachgeschlagen wird in
+// `shortlist_push_seen.json` (Schlüssel `key|side` — derselbe wie im Track), nicht rekonstruiert.
+//
+// 10.09.2026 — HIER STAND ZWEI WOCHEN LANG DAS FALSCHE. Der Text sagte, der Push feuere ab
+// Conviction ≥6 und ein Public-Kandidat verlange ≥7, das seien „zwei verschiedene Tore". Beides
+// stimmt nicht mehr: `PW_PUBLIC_MIN_CONV` steht seit dem 29.08. auf 6, und seit dem 07.09. hängt
+// `push_shortlist_trades.select()` am Public-Tor SELBST (`_tor(p) = bool(p.public)`). Die Mengen
+// sind also nicht mehr verschieden — der Push ist eine Teilmenge der Public-Kandidaten, gedeckelt
+// auf MAX_PLAYS und MAX_PRICE. Ein „kein Push" heißt deshalb Deckel, Preis oder Dedup, nicht
+// „andere Schwelle".
 function _pwPushInfo(r){
   const seen=(_pwCache&&_pwCache.pushSeen)||null;
   if(!seen||typeof seen!=='object') return {txt:'—',col:'#6e7681',
@@ -3199,12 +3204,45 @@ function _pwPublicSpiele(track){
     +settled.map(r=>_pwPublicZeile(r,false)).join('');
   return '<details class="pw-det" style="margin:-6px 0 14px">'+kopf
     +'<div class="pw-sec-note" style="margin:6px 0 4px">Die Spalte <b>Push</b> sagt, ob dieser '
-    +'Play wirklich in den Trades-Channel ging. Sie muss <b>nicht</b> überall ✅ sein: der Push '
-    +'feuert ab Conviction ≥6, ein Public-Kandidat verlangt ≥7 plus bewiesene Wallet plus '
-    +'Mehrheit — zwei verschiedene Tore. Genau die Differenz ist hier nachprüfbar.</div>'
+    +'Play wirklich in den Trades-Channel ging. Sie muss <b>nicht</b> überall ✅ sein — aber '
+    +'nicht wegen einer anderen Schwelle: der Push hängt seit dem 07.09. am selben Public-Tor. '
+    +'Ein fehlender Push heißt Tages-Deckel (max. 6), Preis über 92¢ oder Dedup (3 Tage), '
+    +'nicht „nicht gut genug".</div>'
     +'<div class="pw-tw"><table class="pw-tbl"><thead><tr><th>Markt</th><th>Seite</th>'
     +'<th>Conv</th><th>Einstieg</th><th>Erg.</th><th>Push</th></tr></thead><tbody>'
     +zeilen+'</tbody></table></div></details>';
+}
+
+// 10.09.2026 — die gesperrten Public-Kandidaten als eigene Beobachtungszeile.
+// `agg.public` zaehlte sie bis heute MIT: n=188 statt 183, ROI +5,6 % statt +6,0 %. Fuenf Plays,
+// auf die nie gesetzt wird, zogen die Bilanz nach unten — mit Geld, das nie geflossen ist. Der
+// Block „Bespielbar" darueber trennt sauber; dieser tat es nicht. Jetzt beide gleich, und die
+// Gesperrten verschwinden nicht, sondern stehen daneben.
+function _pwPublicBlocked(a){
+  if(!a || !a.n) return '';
+  return '<div class="pw-mut" style="font-size:11px;margin:-6px 0 10px">🚫 Davon nicht bespielbar (US-Sport · Kampfsport), '
+    +'nur Beobachtung: <b>'+a.n+'</b> Plays · Treffer '+(100*(a.hit||0)).toFixed(1)+'% · ROI '
+    +((a.roi||0)>=0?'+':'')+(100*(a.roi||0)).toFixed(1)+'% · P&L $'+((a.pnl||0)>=0?'+':'')
+    +(a.pnl||0).toFixed(2)+'</div>';
+}
+
+// 10.09.2026 — was NIE abgerechnet hat, und warum.
+// Bis heute war das ein Zaehler je Lauf (`expired`): was gestern verfiel, stand nirgends. Damit
+// verschwand eine ganze Klasse von Plays lautlos aus dem Nenner. Am 10.09. waren 15 von 23
+// offenen Plays Buendel-Maerkte, die nie abrechnen konnten — sie waeren am 18.09. auf einen
+// Schlag weg gewesen, ohne dass eine Zahl sich bewegt haette. Der Whale-Ledger weist seine
+// Unaufloesbaren seit dem 02.09. aus; dieses Buch war das letzte, das es nicht tat.
+function _pwUnaufloesbar(track){
+  const u=(track&&track.unaufloesbarAgg)||null;
+  if(!u || !u.n) return '';
+  const gr=Object.entries(u.nachGrund||{}).map(function(kv){
+    return _pwEsc(kv[0])+' <b>'+kv[1]+'</b>';
+  }).join(' · ');
+  return '<div class="pw-mut" style="font-size:11px;margin:-4px 0 12px">⚠️ <b>'+u.n
+    +'</b> Plays konnten nie abgerechnet werden'
+    +(u.publicN?(' (davon <b>'+u.publicN+'</b> Public-Kandidaten)'):'')
+    +' — sie senken den Nenner sichtbar, statt still zu verschwinden.'
+    +(gr?('<br>'+gr):'')+'</div>';
 }
 
 function _pwTrackRecord(track){
@@ -3218,8 +3256,18 @@ function _pwTrackRecord(track){
   return intro+upd
     +_pwTrackKpis(agg.bettable||agg.all||{n:0}, '🟢 Bespielbar', '(alle Sportarten, auf die gesetzt werden darf)')
     +_pwTrackBlocked(agg, track.reentry, track.blockedCats)
-    +_pwTrackKpis(agg.public||{n:0}, '◆ Public-Kandidaten', '(nur Vorschau — sendet nichts; hart gegated: Conv≥7 + bewiesene Wallet + Mehrheit)')
+    // 10.09.2026 (Lucas: „ich bin grad etwas verwirrt") — der Untertitel stimmte in BEIDEN
+    // Angaben nicht mehr. „sendet nichts": push_shortlist_trades.py schickt genau diese Menge
+    // seit dem 07.09. in den Trades-Channel, gegated auf `public`. „Conv≥7": das Tor steht seit
+    // dem 29.08. auf 6 (PW_PUBLIC_MIN_CONV). Ein Label, das seinem Code zwei Wochen hinterher
+    // ist, erzeugt genau die Verwirrung, gegen die es geschrieben wurde.
+    +_pwTrackKpis(agg.public||{n:0}, '◆ Public-Kandidaten',
+                  '(geht in den TRADES-Channel — nicht in den Public-Channel; Tor: Conv≥'
+                  +_pwPublicMinConv()+' + Geld-Mehrheit ≥60% + bewiesene Wallet, E-Sport ab '
+                  +Math.round(PW_ESPORT_FREI_AB_PREIS*100)+'¢ auch ohne)')
+    +_pwPublicBlocked(agg.publicBlocked)
     +_pwPublicSpiele(track)
+    +_pwUnaufloesbar(track)
     // 06.09.2026 (Lucas: „ich will das direkt im Track-Record unter dem Public-Baustein sehen").
     // Von 172 Public-Kandidaten waren 172 sharp — ohne Vergleichsgruppe war nicht messbar, ob
     // das Wallet-Tor die Auswahl verbessert oder nur verkleinert. Diese Zeile ist die Kontrolle:

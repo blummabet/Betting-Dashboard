@@ -342,3 +342,171 @@ def test_das_gedaechtnis_bleibt_ueberschreibbar(monkeypatch):
     finally:
         monkeypatch.delenv("SHORTLIST_SETTLED_KEEP", raising=False)
         importlib.reload(st)
+
+
+# ── 10.09.2026: Bündel-Plays kennen ihren Markt ───────────────────────────────────────────
+# Lucas: „vor allem die 2 Fußball sind mmn schon alle erledigt, nur schaffst du es nicht, sie
+# aufzulösen." Stimmte — und der Grund war nicht die Abrechnung, sondern dass der Play nie
+# aufschrieb, WELCHEN Markt des Bündels er meint.
+KEY_B = "ucl-aek-lin-2026-09-08-more-markets"
+
+
+def _buendel_emit(preis=0.705):
+    return _emit([{"key": KEY_B, "side": "Under", "verdict": "BET", "conv": 7,
+                   "league": "SOCCER", "price": preis, "public": True}])
+
+
+def _offen(cond=None, entry=0.705):
+    e = {"key": KEY_B, "side": "Under", "verdict": "BET", "conv": 7, "league": "SOCCER",
+         "entryPrice": entry, "lastPrice": entry, "public": True, "stake": 10.0,
+         "firstTs": NOW.isoformat()}
+    if cond:
+        e["cond"] = cond
+    return {"open": {KEY_B + "|Under": e}}
+
+
+def test_der_play_stempelt_den_markt_beim_eintrag():
+    close = {KEY_B: {"prices": {"Under": 0.705}, "cond": "0xAAA", "frage": "AEK vs. LASK: O/U 3.5"}}
+    t = st.update_track({}, _buendel_emit(), close, {}, now=NOW)
+    e = t["open"][KEY_B + "|Under"]
+    assert e["cond"] == "0xAAA"
+    assert e["frage"] == "AEK vs. LASK: O/U 3.5", "die Linie im Klartext gehoert an den Play"
+
+
+def test_ohne_bekannten_markt_wird_kein_feld_erfunden():
+    """Fehlende Information rendert als NICHTS — sonst waere „Markt unbekannt" beim Abgleich
+    nicht mehr von „Markt hat keine Kennung" zu unterscheiden."""
+    t = st.update_track({}, _buendel_emit(), {KEY_B: {"prices": {"Under": 0.705}}}, {}, now=NOW)
+    e = t["open"][KEY_B + "|Under"]
+    assert "cond" not in e and "frage" not in e
+
+
+def test_gleiche_marktkennung_rechnet_ab():
+    """Der Riegel vom 04.09. hat jetzt einen Schluessel: dieselbe conditionId auf beiden Seiten
+    macht „Under" eindeutig."""
+    res = {KEY_B: {"winner": "Under", "ts": NOW.isoformat(), "cond": "0xAAA"}}
+    t = st.update_track(_offen("0xAAA"), _emit([]), {}, res, now=NOW)
+    assert not t["open"], "mit belegtem Markt muss abgerechnet werden"
+    assert t["settled"][0]["result"] == "win"
+
+
+def test_andere_marktkennung_rechnet_NICHT_ab():
+    """Der eigentliche Gegenbeweis. Die Auflösung sagt „Under" — aber zu einer anderen Linie.
+    Genau so entstand der Leeds-Brentford-Fehler: 1:1 gewinnt Over 1,5 und verliert Over 2,5."""
+    res = {KEY_B: {"winner": "Under", "ts": NOW.isoformat(), "cond": "0xBBB"}}
+    t = st.update_track(_offen("0xAAA"), _emit([]), {}, res, now=NOW)
+    assert t["open"], "ein anderer Markt darf diese Wette nicht entscheiden"
+    assert not t["settled"]
+
+
+def test_fehlende_kennung_auf_EINER_seite_reicht_nicht():
+    """Der Altbestand in poly_resolutions.json hat keine cond. Eine unbeantwortete Frage ist
+    kein Ja — solche Plays bleiben offen."""
+    for play_cond, res_cond in (("0xAAA", None), (None, "0xAAA"), (None, None)):
+        res = {KEY_B: {"winner": "Under", "ts": NOW.isoformat()}}
+        if res_cond:
+            res[KEY_B]["cond"] = res_cond
+        t = st.update_track(_offen(play_cond), _emit([]), {}, res, now=NOW)
+        assert t["open"], "play=%r res=%r haette offen bleiben muessen" % (play_cond, res_cond)
+
+
+def test_echter_ausgang_im_buendel_bleibt_abrechenbar():
+    """Gegenprobe zur Gegenprobe: gesperrt wird das MEHRDEUTIGE, nicht der Slug. Ein Bündel mit
+    einem echten Teamnamen als Sieger rechnet weiter ohne cond ab."""
+    prev = {"open": {KEY_B + "|AEK Athen": {"key": KEY_B, "side": "AEK Athen", "verdict": "BET",
+            "conv": 7, "league": "SOCCER", "entryPrice": 0.5, "lastPrice": 0.5,
+            "public": True, "stake": 10.0, "firstTs": NOW.isoformat()}}}
+    res = {KEY_B: {"winner": "AEK Athen", "ts": NOW.isoformat()}}
+    t = st.update_track(prev, _emit([]), {}, res, now=NOW)
+    assert not t["open"] and t["settled"][0]["result"] == "win"
+
+
+def test_lastPrice_wird_nicht_aus_einer_fremden_linie_gezogen():
+    """`lastPrice` speist das CLV. Zieht der Close-Stand inzwischen einen ANDEREN Markt des
+    Bündels, misst „Einstieg → Schluss" zwei verschiedene Linien gegeneinander."""
+    close = {KEY_B: {"prices": {"Under": 0.145}, "cond": "0xBBB"}}     # andere Linie!
+    t = st.update_track(_offen("0xAAA"), _emit([]), close, {}, now=NOW)
+    assert t["open"][KEY_B + "|Under"]["lastPrice"] == 0.705, "der alte Preis muss stehen bleiben"
+    # Und mit demselben Markt zieht er ganz normal nach:
+    close2 = {KEY_B: {"prices": {"Under": 0.605}, "cond": "0xAAA"}}
+    t2 = st.update_track(_offen("0xAAA"), _emit([]), close2, {}, now=NOW)
+    assert t2["open"][KEY_B + "|Under"]["lastPrice"] == 0.605
+
+
+# ── 10.09.2026: verfallen ist ein Ergebnis und muss dastehen ──────────────────────────────
+def test_verfallene_plays_kommen_ins_buch_statt_still_zu_verschwinden():
+    """`expired` war ein Zaehler JE LAUF — was gestern verfiel, stand nirgends mehr. Am 10.09.
+    waren 15 von 23 offenen Plays Bündel-Märkte, die nie abrechnen konnten; sie waeren auf einen
+    Schlag weggewesen, ohne dass eine Zahl im Board sich bewegt haette."""
+    alt = NOW - timedelta(days=20)
+    prev = {"open": {KEY_B + "|Under": {"key": KEY_B, "side": "Under", "conv": 7,
+            "league": "SOCCER", "cat": "Fußball", "entryPrice": 0.705, "lastPrice": 0.705,
+            "public": True, "stake": 10.0, "firstTs": alt.isoformat()}}}
+    close = {KEY_B: {"prices": {}}}                       # getrackt -> langer Backstop, aber 20d > 14d
+    res = {KEY_B: {"winner": "Under", "ts": NOW.isoformat()}}
+    t = st.update_track(prev, _emit([]), close, res, now=NOW)
+    assert not t["open"] and t["expired"] == 1
+    u = t["unaufloesbar"]
+    assert len(u) == 1 and u[0]["key"] == KEY_B and u[0]["public"] is True
+    assert u[0]["grund"] == "Bündel ohne Marktkennung", u[0]["grund"]
+    assert t["unaufloesbarAgg"]["n"] == 1 and t["unaufloesbarAgg"]["publicN"] == 1
+    assert t["unaufloesbarAgg"]["nachGrund"]["Bündel ohne Marktkennung"] == 1
+
+
+def test_das_buch_wird_fortgeschrieben_nicht_je_lauf_neu_gezaehlt():
+    """Der Punkt der ganzen Uebung: der naechste Lauf darf die Vorgeschichte nicht wegwerfen."""
+    vorher = [{"key": "alt-1", "side": "Over", "grund": "nie aufgelöst", "public": False}]
+    alt = NOW - timedelta(days=20)
+    prev = {"unaufloesbar": vorher,
+            "open": {KEY_B + "|Under": {"key": KEY_B, "side": "Under", "entryPrice": 0.7,
+                     "stake": 10.0, "public": True, "firstTs": alt.isoformat()}}}
+    t = st.update_track(prev, _emit([]), {KEY_B: {"prices": {}}}, {}, now=NOW)
+    assert [u["key"] for u in t["unaufloesbar"]] == ["alt-1", KEY_B]
+    assert t["unaufloesbarAgg"]["n"] == 2
+
+
+def test_der_grund_unterscheidet_die_faelle():
+    """„12 verfallen" nennt nur einen Verlust. „12 x Bündel ohne Marktkennung" nennt eine
+    Ursache, die man beheben kann — und trennt sie von „nicht getrackt"."""
+    alt = (NOW - timedelta(days=20)).isoformat()
+    def _lauf(key, side, close, res, cond=None):
+        e = {"key": key, "side": side, "entryPrice": 0.7, "stake": 10.0, "firstTs": alt}
+        if cond:
+            e["cond"] = cond
+        t = st.update_track({"open": {key + "|" + side: e}}, _emit([]), close, res, now=NOW)
+        return t["unaufloesbar"][0]["grund"]
+    assert _lauf("x-more-markets", "Under", {}, {}) == "nicht getrackt"
+    assert _lauf("x-more-markets", "Under", {"x-more-markets": {}}, {}) == "nie aufgelöst"
+    assert _lauf("x-more-markets", "Under", {"x-more-markets": {}},
+                 {"x-more-markets": {"winner": "Under"}}) == "Bündel ohne Marktkennung"
+    assert _lauf("x-more-markets", "Under", {"x-more-markets": {}},
+                 {"x-more-markets": {"winner": "Under", "cond": "0xB"}},
+                 cond="0xA") == "Bündel: Auflösung nennt einen anderen Markt"
+
+
+# ── 10.09.2026: der Public-Block meint dasselbe wie „Bespielbar" ──────────────────────────
+def test_public_zaehlt_gesperrte_sportarten_nicht_mehr_mit():
+    """Gemessen am 10.09.: n=188 statt 183, ROI +5,6 % statt +6,0 %. Fuenf US-Sport-Plays, auf
+    die nie gesetzt wird, zogen die Public-Bilanz nach unten — mit Geld, das nie floss."""
+    def _s(cat, pnl, public=True):
+        return {"key": "k" + cat + str(pnl), "side": "A", "cat": cat, "result": "win" if pnl > 0 else "loss",
+                "pnl": pnl, "stake": 10.0, "public": public, "conv": 7, "clvPP": 0.0}
+    settled = [_s("Fußball", 5.0), _s("Tennis", 5.0), _s("US-Sport", -10.0)]
+    a = st.aggregate(settled, ["US-Sport"])
+    assert a["public"]["n"] == 2, "der gesperrte Play gehoert nicht in die Public-Bilanz"
+    assert a["public"]["pnl"] == 10.0
+    assert a["publicBlocked"]["n"] == 1 and a["publicBlocked"]["pnl"] == -10.0
+    # Gegenprobe: ohne Sperrliste bleibt alles zusammen — die Regel filtert nicht auf Verdacht.
+    a2 = st.aggregate(settled, [])
+    assert a2["public"]["n"] == 3 and a2["publicBlocked"]["n"] == 0
+
+
+def test_die_kontrollgruppe_wird_genauso_getrennt():
+    """Sonst stuenden auf den beiden Seiten des Wallet-Vergleichs zwei verschieden
+    zusammengesetzte Mengen, und der Unterschied waere teils Sportart statt Wallet-Tor."""
+    settled = [{"key": "a", "cat": "US-Sport", "result": "loss", "pnl": -10.0, "stake": 10.0,
+                "ohneWallet": True, "conv": 7, "clvPP": 0.0},
+               {"key": "b", "cat": "Tennis", "result": "win", "pnl": 5.0, "stake": 10.0,
+                "ohneWallet": True, "conv": 7, "clvPP": 0.0}]
+    a = st.aggregate(settled, ["US-Sport"])
+    assert a["publicOhneWallet"]["n"] == 1 and a["publicOhneWallet"]["pnl"] == 5.0

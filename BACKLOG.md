@@ -3,6 +3,140 @@
 Stand 10.09.2026 (oberster Block); Liga/WM-Teil darunter Stand 26.06.2026. Lebendige Liste aller offenen Punkte — Liga UND noch nicht umgesetzte WM-Sachen —
 damit wir alles abarbeiten können. ✅ = erledigt (Referenz), ⏳ = offen, 🔒 = blockiert.
 
+## 🔴 10.09.2026 — der Bündel-Markt, zweiter Teil: die Erfassung
+
+Lucas: *„vor allem die 2 Fußball sind mmn schon alle erledigt, nur schaffst du es nicht, sie
+aufzulösen. Das UCL war jedenfalls win mit dem Under."* — Stimmt beides. Die Auflösungen lagen
+seit Tagen da:
+
+```
+ucl-aek1-lin2-2026-09-08-more-markets  →  winner: "Under"   08.09. 19:08
+sea-fro-ven-2026-09-06-more-markets    →  winner: "Over"    06.09. 15:33
+```
+
+### Warum sie trotzdem nicht abrechneten — und warum das richtig war
+
+`poly_slug_urteil.aufloesbar()` blockt seit dem 04.09. (Leeds-Brentford: wir hatten einen Gewinn
+erfunden). Bei einem `-more-markets`-Bündel kann „Under" **Under 1,5 oder Under 3,5** heißen, und
+beide liegen im selben Event. Die Regel ist richtig: lieber offen als geraten.
+
+Die Regel hat einen Ausweg — `aufloesbar(key, seite, sieger, cond=…)`, die conditionId nagelt
+einen Markt fest. **Dieses Argument wurde an keiner einzigen Stelle im Repo übergeben.** Der
+Ausweg war gebaut und nie angeschlossen.
+
+### Und beim Nachsehen kippt der Befund
+
+Die Historie von `ucl-aek1-lin2-2026-09-08-more-markets`, sechs Snapshots eines Nachmittags:
+
+| Zeit | Over | Under | Volumen |
+|---|---|---|---|
+| 14:07 | 0,415 | 0,585 | 13.926 |
+| 14:36 | 0,425 | 0,575 | 18.880 |
+| **15:07** | **0,855** | **0,145** | 25.479 |
+| 16:07 | 0,865 | 0,135 | 25.702 |
+| **16:37** | **0,395** | **0,605** | **124.818** |
+
+Under 0,145 und Under 0,605 sind **keine Preisbewegung**. Ein Vorspiel-Totals-Markt läuft nicht
+44 Punkte weg und zurück; das sind zwei verschiedene Linien (Under 1,5 gegen Under 3,5). Die
+Erfassung hat den Markt gewechselt, weil `_outcomes()` bei einem Bündel den Markt mit dem
+**meisten Volumen** nimmt — **in jedem Lauf neu**.
+
+Der 04.09.-Fix hat die **Abrechnung** festgenagelt. Die **Erfassung** blieb Volumen-Roulette.
+Damit konnten `entryPrice`, `lastPrice` und das daraus gerechnete CLV eines Bündel-Plays aus
+**drei verschiedenen Märkten** stammen. Der Play, um den es Lucas ging, stieg zu Under **0,705**
+ein — ein Preis, der in keinem einzigen Snapshot vorkommt.
+
+Rate im Bestand: **7 % der Bündel-Keys** zeigen einen Sprung >25 pp gegen **1 %** der
+Einzelmärkte.
+
+### Die Kette, die jetzt geschlossen ist
+
+| Stelle | vorher | jetzt |
+|---|---|---|
+| `poly_money_broad.outcomes_gepinnt` | jeder Lauf wählt neu nach Volumen | ein erfasstes Bündel behält seine conditionId |
+| `resolutions_mit_markt` / `update_resolutions` | `{winner, ts}` | `+ cond, frage` („AEK vs. LASK Linz: O/U 3.5") |
+| `poly_shortlist_track` Eintrag | Key + Seite | `+ cond, frage` |
+| `poly_shortlist_track` `lastPrice` | Preis aus dem aktuellen Close-Stand | nur aus **demselben** Markt — sonst bleibt der alte stehen |
+| `poly_shortlist_track` Abrechnung | Bündel + „Under" → nie | rechnet ab, **wenn beide Seiten dieselbe conditionId tragen** |
+
+Findet sich der gepinnte Markt nicht mehr, gibt es **keine** Ausgänge — der Lauf überspringt ihn.
+Eine alte Auskunft schlägt eine falsche.
+
+⚠️ **Die 15 offenen Plays vom 04.–09.09. rechnen dadurch NICHT rückwirkend ab.** Der Altbestand
+in `poly_resolutions.json` trägt keine conditionId, und die Historie zeigt ja gerade, dass der
+Markt in der Zwischenzeit gewechselt haben kann. Sie nachträglich zu buchen hieße genau das zu
+tun, wogegen der Riegel gebaut wurde. Sie laufen sichtbar in `unaufloesbar` — und ab jetzt
+entsteht die Lücke nicht mehr.
+
+### Verfallen ist ein Ergebnis, also muss es dastehen
+
+`expired` war ein Zähler **je Lauf**: was gestern verfiel, stand nirgends. Am 10.09. waren **15
+von 23** offenen Plays Bündel-Märkte, die nie abrechnen konnten — am **18.09.** wären sie auf
+einen Schlag weg gewesen (`STALE_TTL_D = 14`), ohne dass eine Zahl im Board sich bewegt hätte.
+
+Neu: `unaufloesbar` als fortgeschriebenes Buch (500 Zeilen rollierend) mit `unaufloesbarAgg`
+**samt Grund** — „nicht getrackt", „nie aufgelöst", „Bündel ohne Marktkennung", „Bündel:
+Auflösung nennt einen anderen Markt". Die Zahl allein wäre die schwächere Auskunft: ein Grund
+nennt eine Ursache, die man beheben kann. Der Whale-Ledger macht das seit dem 02.09. genauso;
+dieses Buch war das letzte, das es nicht tat.
+
+## 📐 10.09.2026 — „+11 P/L" gegen „+$105": zweimal dieselbe Zahl, zweimal falsch beschriftet
+
+Lucas' Frage. Antwort: **ja, dasselbe Geld** — `stats_perioden.kennzahlen()` summiert
+`rendite = pnl/stake`, also **Einheiten**. 10,98 × $10 = $109,80.
+
+Aber die Blöcke meinten auch **nicht dieselbe Menge**:
+
+```
+Board  n=188   $105,28
+Stats  n=183   $109,85
+       ─────   ───────
+         5      $4,57     ← genau die gesperrten US-Sport-Plays
+```
+
+`aggregate()` baute `public` aus **allen** settled-Zeilen, während `bettable`/`blocked` zwei
+Zeilen tiefer korrekt nach `blockedCats` trennen. Der Public-Block zeigte also einen ROI, in dem
+5 Plays stecken, **auf die nie gesetzt wird** — und sie zogen ihn nach unten (+5,6 % statt
++6,0 %), mit Geld, das nie geflossen ist.
+
+`public` heißt jetzt dasselbe wie `bettable`. Die Gesperrten stehen als `publicBlocked` daneben.
+Die **Kontrollgruppe** (`publicOhneWallet`) wird genauso getrennt — sonst stünden auf den beiden
+Seiten des Wallet-Vergleichs zwei verschieden zusammengesetzte Mengen, und der Unterschied wäre
+teils Sportart statt Wallet-Tor.
+
+| | n | Treffer | ROI | UG | P&L |
+|---|---|---|---|---|---|
+| ◆ Public-Kandidaten | 183 | 71,0 % | +6,0 % | −2,8 % | +$109,85 |
+| 🚫 davon gesperrt | 5 | 60,0 % | −9,1 % | — | −$4,57 |
+| 🧪 Kontrollgruppe | 40 | 77,5 % | +20,1 % | **+1,9 %** | +$80,20 |
+
+Auf der Stats-Seite heißt die Spalte jetzt „P/L *Einh.*" und die Kachel nennt die Umrechnung.
+
+## 🏷️ 10.09.2026 — zwei Board-Texte, die ihrem Code zwei Wochen hinterher waren
+
+Lucas: *„ich bin grad etwas verwirrt."* Zu Recht — der Untertitel des Public-Blocks log in
+**beiden** Angaben:
+
+* **„sendet nichts"** — `push_shortlist_trades.py` schickt genau diese Menge seit dem 07.09. in
+  den **Trades**-Channel, gegated auf `public`.
+* **„Conv≥7"** — `PW_PUBLIC_MIN_CONV` steht seit dem 29.08. auf **6**.
+
+Derselbe Fehler in `_pwPushInfo`: „der Push feuert ab Conviction ≥6, ein Public-Kandidat verlangt
+≥7 … zwei verschiedene Tore". Seit dem 07.09. hängt `push_shortlist_trades.select()` am
+Public-Tor **selbst** (`_tor(p) = bool(p.public)`) — die Mengen sind nicht mehr verschieden, der
+Push ist eine **Teilmenge**. Ein „kein Push" heißt jetzt Deckel (max. 6), Preis >92¢ oder Dedup
+(3 Tage), **nicht** „nicht gut genug".
+
+Beide Texte lesen die Konstanten jetzt aus dem Code, statt sie zu behaupten.
+
+### ⏳ Offen
+
+* **Die Push-Frage selbst** (Public-Kandidaten in den Public-Channel?) ist bewusst **nicht**
+  entschieden — Lucas wollte erst die korrigierten Zahlen sehen. Sachstand: Whale-Public bringt
+  0 Tennis (Dollar-Schwelle gegen Marktgröße: größte Tennis-Position $2.850 gegen $25K nötig),
+  die Public-Kandidaten bringen 43 Tennis-Plays mit 76,7 % / +5,8 %. Dagegen steht, dass die
+  Kontrollgruppe **ohne** Wallet-Tor besser läuft als die Menge **mit** — bei n=40.
+
 ## ✂️ 10.09.2026 — die Public-Templates entschlackt
 
 Lucas hat drei Templates neu geschnitten und eines abgeschaltet. Die Klammer über allem:

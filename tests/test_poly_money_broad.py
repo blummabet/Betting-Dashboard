@@ -1038,3 +1038,121 @@ class TestVorFensterGuard:
     def test_unlesbare_datei_ist_unbekannt_nicht_gruen(self):
         c = self._lauf(None, unlesbar=True)
         assert c["severity"] == "warn" and not c["ok"]
+
+
+# ── 10.09.2026: die ERFASSUNG eines Buendels wird festgenagelt ───────────────────────────
+# Am 04.09. wurde die Abrechnung gegen den Leeds-Brentford-Fehler gesichert. Die Erfassung
+# blieb Volumen-Roulette — und damit sprang die Preisreihe eines Buendel-Keys zwischen Linien.
+def _bmarkt(cond, tor_linie, over, under, vol):
+    """Ein Totals-Markt eines Buendels: „O/U <linie>", Over/Under-Preise, eigenes Volumen."""
+    import json as _j
+    return {"conditionId": cond, "question": "A vs. B: O/U %s" % tor_linie,
+            "outcomes": _j.dumps(["Over", "Under"]),
+            "outcomePrices": _j.dumps([str(over), str(under)]),
+            "clobTokenIds": _j.dumps(["t1", "t2"]),
+            "volumeNum": vol}
+
+
+def _bev(*markets):
+    return {"slug": "ucl-aek-lin-2026-09-08-more-markets", "markets": list(markets)}
+
+
+KEY_B = "ucl-aek-lin-2026-09-08-more-markets"
+
+
+def test_ohne_pin_entscheidet_das_volumen_und_die_linie_wechselt():
+    """Der GEGENBEWEIS zuerst: ohne Pin liefert dasselbe Event zwei verschiedene Linien,
+    je nachdem welcher Markt gerade mehr Volumen hat. Genau das stand in der Historie."""
+    ev1 = _bev(_bmarkt("0xAAA", "3.5", 0.395, 0.605, 25000),
+               _bmarkt("0xBBB", "1.5", 0.855, 0.145, 12000))
+    ev2 = _bev(_bmarkt("0xAAA", "3.5", 0.395, 0.605, 25000),
+               _bmarkt("0xBBB", "1.5", 0.855, 0.145, 99000))   # nur das Volumen kippt
+    p1 = {o["label"]: o["price"] for o in B._outcomes(ev1)}
+    p2 = {o["label"]: o["price"] for o in B._outcomes(ev2)}
+    assert p1["Under"] == 0.605 and p2["Under"] == 0.145, "das Volumen-Roulette muss hier sichtbar sein"
+
+
+def test_mit_pin_bleibt_es_derselbe_markt():
+    """Und mit Pin bleibt es bei der Linie, die schon erfasst wurde — egal wohin das Volumen laeuft."""
+    ev2 = _bev(_bmarkt("0xAAA", "3.5", 0.395, 0.605, 25000),
+               _bmarkt("0xBBB", "1.5", 0.855, 0.145, 99000))
+    oc = B.outcomes_gepinnt(ev2, KEY_B, {KEY_B: "0xAAA"})
+    p = {o["label"]: o["price"] for o in oc}
+    assert p["Under"] == 0.605, "der gepinnte Markt muss gelten, nicht der groesste"
+    assert {o["cond"] for o in oc} == {"0xAAA"}
+
+
+def test_ohne_pin_faellt_es_auf_das_alte_verhalten_zurueck():
+    """Ein Key, der noch nie erfasst wurde, hat keinen Pin — dann gilt wie bisher der groesste
+    Markt. Der Pin darf die ERSTE Erfassung nicht verhindern, sonst kaeme nie eine zustande."""
+    ev = _bev(_bmarkt("0xAAA", "3.5", 0.395, 0.605, 25000),
+              _bmarkt("0xBBB", "1.5", 0.855, 0.145, 99000))
+    assert B.outcomes_gepinnt(ev, KEY_B, {}) == B._outcomes(ev)
+    assert B.outcomes_gepinnt(ev, KEY_B, None) == B._outcomes(ev)
+
+
+def test_verschwundener_pin_gibt_lieber_nichts_als_die_falsche_linie():
+    """Findet sich der gepinnte Markt im Event nicht mehr, gibt es KEINE Ausgaenge — der
+    Aufrufer ueberspringt den Markt. Ein alter Preis ist eine alte Auskunft, ein Preis aus der
+    falschen Linie eine falsche."""
+    ev = _bev(_bmarkt("0xBBB", "1.5", 0.855, 0.145, 99000))
+    assert B.outcomes_gepinnt(ev, KEY_B, {KEY_B: "0xAAA"}) == []
+
+
+def test_einzelmarkt_wird_vom_pin_nicht_angefasst():
+    """Nur Buendel-Keys werden gepinnt. Ein normaler Slug hat genau einen Markt; ein Pin koennte
+    dort nur schaden, falls Poly je eine conditionId austauscht."""
+    ev = {"slug": "epl-ars-che-2026-09-08",
+          "markets": [_bmarkt("0xNEU", "-", 0.6, 0.4, 5000)]}
+    assert B.outcomes_gepinnt(ev, "epl-ars-che-2026-09-08", {"epl-ars-che-2026-09-08": "0xALT"}) \
+        == B._outcomes(ev)
+
+
+def test_pin_von_close_liest_nur_echte_conds():
+    close = {"a-more-markets": {"cond": "0x1"}, "b-more-markets": {"cond": None},
+             "c-more-markets": {}, "d": "kaputt"}
+    assert B.pin_von_close(close) == {"a-more-markets": "0x1"}
+    assert B.pin_von_close(None) == {}
+
+
+# ── 10.09.2026: die Auflösung sagt jetzt auch, AUS WELCHEM Markt sie stammt ──────────────
+def test_aufloesung_traegt_den_markt_mit():
+    """Bei einem Buendel ist „Under" ohne den Markt keine Auskunft — es kann Under 1,5 oder
+    Under 3,5 heissen. cond und frage lagen an der Markt-Zeile bereit und wurden hier
+    weggeworfen."""
+    mk = [{"key": "k-more-markets", "resolved": True, "resolvedPrices": {"Under": 1.0, "Over": 0.0},
+           "cond": "0xAAA", "frage": "A vs. B: O/U 3.5"}]
+    assert B.resolutions_mit_markt(mk) == {
+        "k-more-markets": {"winner": "Under", "cond": "0xAAA", "frage": "A vs. B: O/U 3.5"}}
+    res = B.update_resolutions({}, mk)
+    assert res["k-more-markets"]["winner"] == "Under"
+    assert res["k-more-markets"]["cond"] == "0xAAA"
+    assert res["k-more-markets"]["frage"] == "A vs. B: O/U 3.5"
+
+
+def test_fehlende_herkunft_erfindet_kein_feld():
+    """Ein Markt ohne cond bekommt KEIN cond-Feld — nicht None und nicht ''. Sonst waere beim
+    Abgleich „unbekannt" von „leer" nicht mehr zu unterscheiden."""
+    mk = [{"key": "k", "resolved": True, "resolvedPrices": {"Home": 1.0}}]
+    assert B.resolutions_mit_markt(mk) == {"k": {"winner": "Home"}}
+    assert "cond" not in B.update_resolutions({}, mk)["k"]
+
+
+def test_spaeterer_lauf_ergaenzt_die_herkunft_und_loescht_sie_nie():
+    """Der Altbestand in poly_resolutions.json hat keine cond. Ein spaeterer Lauf darf sie
+    nachtragen — aber ein Lauf OHNE Herkunft darf eine vorhandene nicht wegnehmen."""
+    vor = {"k-more-markets": {"winner": "Under", "ts": "2026-09-08T00:00:00+00:00"}}
+    mit = B.update_resolutions(vor, [{"key": "k-more-markets", "resolved": True,
+                                      "resolvedPrices": {"Under": 1.0}, "cond": "0xAAA"}])
+    assert mit["k-more-markets"]["cond"] == "0xAAA", "nachtragen muss gehen"
+    ohne = B.update_resolutions(mit, [{"key": "k-more-markets", "resolved": True,
+                                       "resolvedPrices": {"Under": 1.0}}])
+    assert ohne["k-more-markets"]["cond"] == "0xAAA", "eine bekannte Herkunft darf nie verschwinden"
+
+
+def test_resolutions_bleibt_wie_es_war():
+    """Die alte Funktion beantwortet eine andere Frage und hat andere Aufrufer — sie darf sich
+    durch den Zusatz nicht veraendern."""
+    mk = [{"key": "a", "resolved": True, "resolvedPrices": {"home": 1.0, "away": 0.0},
+           "cond": "0xAAA"}]
+    assert B.resolutions(mk) == {"a": "home"}

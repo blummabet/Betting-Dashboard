@@ -35,7 +35,7 @@ from pathlib import Path
 import poly_money_accuracy as PMA
 from poly_money_accuracy import split_guete   # 02.09.2026: eine Quelle fuer die Split-Guete
 from safe_write import write_json_atomic   # 25.08.2026: temp+replace statt halber Datei
-from poly_slug_urteil import aufloesbar   # 04.09.2026: Buendel-Slugs nicht raten
+from poly_slug_urteil import aufloesbar, ist_buendel   # 04.09.2026: Buendel-Slugs nicht raten
 
 BASE = Path(__file__).resolve().parent
 
@@ -140,13 +140,19 @@ def update_resolutions(prev, markets, now=None, keep_days=RESOLUTIONS_KEEP_DAYS)
     REIN/testbar. Der Shortlist-Tracker liest das statt selbst Poly abzufragen."""
     now = now or _now()
     out = {k: dict(v) for k, v in (prev or {}).items() if isinstance(v, dict)}
-    for key, winner in resolutions(markets).items():
+    for key, e in resolutions_mit_markt(markets).items():
+        winner = e.get("winner")
         if not key or not winner:
             continue
         if key not in out:                       # erste Auflösung gewinnt (Zeitstempel = zuerst gesehen)
             out[key] = {"winner": winner, "ts": now.isoformat()}
         else:
             out[key]["winner"] = winner
+        # 10.09.2026: Herkunft mitschreiben, damit die Abrechnung den Markt abgleichen kann.
+        # Ein spaeterer Lauf darf sie ERGAENZEN (Altbestand hat sie nicht), aber nie loeschen.
+        for f in ("cond", "frage"):
+            if e.get(f):
+                out[key][f] = e[f]
     cutoff = now - timedelta(days=keep_days)
     for k in list(out.keys()):
         try:
@@ -750,6 +756,51 @@ def _outcomes_von_cond(ev, cond):
     return []
 
 
+def pin_von_close(close) -> dict:
+    """{key: cond} aus einem frueheren Close-Stand: welcher Markt eines Buendels bereits gilt. REIN."""
+    if not isinstance(close, dict):
+        return {}
+    return {k: v["cond"] for k, v in close.items()
+            if isinstance(v, dict) and v.get("cond")}
+
+
+def outcomes_gepinnt(ev, key, pin):
+    """Die Ausgaenge — bei einem SCHON ERFASSTEN Buendel aus demselben Markt wie beim ersten Mal.
+
+    🔴 10.09.2026 — die zweite Haelfte des Leeds-Brentford-Fehlers (s. poly_slug_urteil.py).
+    Am 04.09. wurde die ABRECHNUNG festgenagelt: `backfill_resolutions_by_slug` loest ueber die
+    gespeicherte conditionId auf, und `aufloesbar` verweigert alles Mehrdeutige. Die ERFASSUNG
+    blieb, wie sie war — `_outcomes(ev)` nimmt bei einem Buendel den Markt mit dem MEISTEN
+    VOLUMEN, und zwar in JEDEM Lauf neu.
+
+    Damit springt die Preisreihe eines Buendel-Keys zwischen Linien. Gemessen an
+    `ucl-aek1-lin2-2026-09-08-more-markets`, sechs Snapshots desselben Nachmittags:
+
+        14:07  Over 0.415 / Under 0.585    vol   13.926
+        14:36  Over 0.425 / Under 0.575    vol   18.880
+        15:07  Over 0.855 / Under 0.145    vol   25.479   ← anderer Markt
+        16:07  Over 0.865 / Under 0.135    vol   25.702
+        16:37  Over 0.395 / Under 0.605    vol  124.818   ← wieder zurueck, Volumen x5
+
+    Under 0,145 und Under 0,605 sind keine Preisbewegung, das sind zwei verschiedene Linien
+    (Under 1,5 gegen Under 3,5). Ein Vorspiel-Totals-Markt bewegt sich nicht um 44 Punkte und
+    zurueck. Folge: `entryPrice`, `lastPrice` und damit das CLV eines Buendel-Plays konnten aus
+    DREI verschiedenen Maerkten stammen.
+
+    Deshalb: ist ein Buendel-Key schon einmal erfasst worden, gilt seine conditionId weiter.
+    Findet dieser Markt sich im Event nicht mehr, gibt es KEINE Ausgaenge — der Aufrufer
+    ueberspringt den Markt in diesem Lauf. Ein alter Preis ist eine alte Auskunft; ein Preis aus
+    der falschen Linie ist eine falsche.
+
+    Nicht-Buendel bleiben unberuehrt: dort gibt es nur einen Markt, und ein Pin koennte nur
+    schaden, wenn Poly die conditionId eines Einzelmarkts je austauscht.
+    """
+    _p = (pin or {}).get(key)
+    if _p and ist_buendel(key):
+        return _outcomes_von_cond(ev, _p)
+    return _outcomes(ev)
+
+
 def _market_volume(ev, oc, fallback):
     """15.08.2026 (Lucas): Volumen NUR der Markt(e), aus denen _outcomes die Ausgaenge zog (per
     conditionId) — statt des ganzen Event-Volumens. Ein Best-of-3-eSport-Event summiert Serie + Map1
@@ -1134,7 +1185,7 @@ def backfill_resolutions_by_slug(prev_close, seen_keys, get=_get, cap=RESOLVE_LO
     return out
 
 
-def fetch_markets(live_only=False):
+def fetch_markets(live_only=False, pin=None):
     """Alle Poly-Sportmärkte über die Sport-Tags. Real, defensiv, gedeckelt. Rückgabeformat siehe
     capture()/resolutions(): {key, league, hoursToKickoff, totalUsd, shares, prices,
     resolved, resolvedPrices}. Bei jedem Fehler wird der Markt übersprungen, nie geworfen."""
@@ -1200,7 +1251,9 @@ def fetch_markets(live_only=False):
                 vol = float(ev.get("volume") or 0)
                 if vol < min_vol:
                     continue
-                oc = _outcomes(ev)
+                # 10.09.2026: bei einem schon erfassten Buendel derselbe Markt wie beim
+                # ersten Mal — sonst springt die Preisreihe zwischen Linien (s. outcomes_gepinnt).
+                oc = outcomes_gepinnt(ev, key, pin)
                 if len(oc) < 2:
                     continue
                 if _is_exhibition(oc):
@@ -1801,6 +1854,39 @@ def resolutions(markets) -> dict:
     return out
 
 
+def resolutions_mit_markt(markets) -> dict:
+    """{key: {winner, cond, frage}} — der Sieger UND der Markt, aus dem er stammt. REIN.
+
+    🔴 10.09.2026. `resolutions()` gibt nur den Namen zurueck, und `update_resolutions` schrieb
+    entsprechend nur {winner, ts}. Bei einem Buendel ist „Under" ohne den Markt aber keine
+    Auskunft: es kann Under 1,5 oder Under 3,5 heissen, und beide stehen im selben Event.
+
+    Die Information war die ganze Zeit da — die Markt-Zeile traegt `cond` (die conditionId, aus
+    deren Preisen der Sieger abgeleitet wurde) und `frage` (die die Linie ausschreibt, z. B.
+    „AEK vs. LASK Linz: O/U 3.5"). Sie wurde nur an dieser Stelle weggeworfen, und damit konnte
+    keine Abrechnung mehr pruefen, ob sie denselben Markt meint wie die Erfassung.
+
+    `resolutions()` bleibt unveraendert daneben stehen: sie hat andere Aufrufer und beantwortet
+    eine andere Frage („wer hat gewonnen"), nicht „welcher Markt sagt das".
+    """
+    out = {}
+    for m in markets or []:
+        if not m.get("resolved"):
+            continue
+        w = winner_from_prices(m.get("resolvedPrices") or {})
+        if not w:
+            continue
+        e = {"winner": w}
+        # Fehlende Herkunft rendert als NICHTS, nicht als leerer String: „cond unbekannt" und
+        # „cond ist ''" muessen beim Abgleich unterscheidbar bleiben.
+        if m.get("cond"):
+            e["cond"] = m["cond"]
+        if m.get("frage"):
+            e["frage"] = m["frage"]
+        out[m.get("key")] = e
+    return out
+
+
 def prune_upcoming(prev, fresh, now=None, window_h=UPCOMING_WINDOW_H):
     """Money-Map (12.08.2026, Lucas): frische upcoming-Erfassung ueber die alte legen + Vergangenes prunen.
     Prunt Eintraege, deren rekonstruierter Anpfiff schon vorbei ist (dann greift ohnehin close/live) oder
@@ -1833,7 +1919,7 @@ def main_live() -> int:
     # 13h spaeter noch als "live"). Jetzt: bei Fetch-Fehler leer weiterlaufen -> capture_live prunt die
     # alten Eintraege (>LIVE_KEEP_H) raus, die Datei wird ehrlich leer statt eingefroren.
     try:
-        markets = fetch_markets(live_only=True)
+        markets = fetch_markets(live_only=True, pin=pin_von_close(_load(CLOSE_FILE)))
     except Exception as e:
         print(f"[LIVE-only] fetch_markets fehlgeschlagen ({e!r}) -> nur pruning, kein Freeze auf altem Stand")
         markets = []
@@ -1849,7 +1935,9 @@ def main_live() -> int:
 
 def main() -> int:
     min_vol, min_odds = _cfg()
-    markets = fetch_markets()
+    # 10.09.2026: der Close-Stand sagt, welcher Markt eines Buendels schon gilt. Ohne diesen Pin
+    # waehlt `_outcomes` in jedem Lauf neu nach Volumen — s. outcomes_gepinnt.
+    markets = fetch_markets(pin=pin_von_close(_load(CLOSE_FILE)))
     if not markets:
         # 10.08.2026 (Lucas): FRÜHER hier ganz abgebrochen — auf Leer-Läufen (Fetch scheitert: Quota/429/
         # Timeout) lief der Geister-Prune NIE, und der Close-Feed wuchs auf ~96% fertige Spiele (Integritäts-

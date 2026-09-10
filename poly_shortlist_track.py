@@ -22,7 +22,7 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from safe_write import write_json_atomic   # 25.08.2026: temp+replace statt halber Datei
-from poly_slug_urteil import aufloesbar   # 04.09.2026: Buendel-Slugs nicht raten
+from poly_slug_urteil import aufloesbar, ist_buendel, ist_generisch   # 04.09.2026: Buendel-Slugs nicht raten
 
 BASE = Path(__file__).resolve().parent
 CLOSE_FILE = "poly_money_broad_close.json"
@@ -51,6 +51,8 @@ STAKE = float(os.environ.get("SHORTLIST_STAKE") or 10.0)   # fixer Einsatz je Pl
 # Artefakt vernachlaessigbar). Drift ist schon abgefangen: Plays aus einer aelteren Engine
 # zaehlen halb (PW_CALIB_LEGACY_W), das haengt an der Engine-Version, nicht am Alter.
 SETTLED_KEEP = int(os.environ.get("SHORTLIST_SETTLED_KEEP") or 2000)   # rollierend, ~75 Tage
+# 10.09.2026: dasselbe Fenster fuer die Verfallenen — sie gehoeren zur Bilanz derselben Zeit.
+UNAUFLOESBAR_KEEP = int(os.environ.get("SHORTLIST_UNAUFLOESBAR_KEEP") or 500)
 # 10.08.2026 (Lucas): Stale-Cleanup gegen ewig offene Plays. Ein Play, dessen Markt poly_money_broad
 # gar nicht trackt (nicht im close-file), bekommt NIE eine Auflösung → nach kurzer Frist verfallen
 # lassen. Getrackte-aber-ewig-unaufgelöste erst nach langem Backstop. KEIN Fake-Ergebnis.
@@ -201,6 +203,49 @@ def _pre_entry_move(key, side, now, pfade=None, stunden: float = PRE_ENTRY_STUND
     return round((im_fenster[-1][1] - im_fenster[0][1]) * 100.0, 3)
 
 
+def _markt_stempel(close_row) -> dict:
+    """{cond, frage} des Markts, aus dem der Einstiegspreis stammt — leer, wenn unbekannt. REIN.
+
+    Fehlende Herkunft rendert als NICHTS: kein None-Feld, kein leerer String. „Wir wissen den
+    Markt nicht" und „der Markt hat keine Kennung" muessen beim Abgleich unterscheidbar bleiben.
+    """
+    r = close_row if isinstance(close_row, dict) else {}
+    return {k: r[k] for k in ("cond", "frage") if r.get(k)}
+
+
+def _verfall_grund(play, resolutions, tracked: bool) -> str:
+    """Warum konnte dieser Play nie abrechnen? REIN.
+
+    Der Grund ist die eigentliche Auskunft: „nicht getrackt" ist ein Erfassungsproblem,
+    „Buendel ohne Marktkennung" ein Datenproblem, das wir seit dem 10.09. an der Wurzel
+    beheben — und beide muessen unterscheidbar bleiben, sonst sieht man nur eine Zahl, die
+    groesser wird.
+    """
+    key, side = (play or {}).get("key"), (play or {}).get("side")
+    r = (resolutions or {}).get(key) if isinstance(resolutions, dict) else None
+    if not tracked:
+        return "nicht getrackt"
+    if not (r or {}).get("winner"):
+        return "nie aufgelöst"
+    if ist_buendel(key) and ist_generisch(side):
+        return ("Bündel ohne Marktkennung" if not (play or {}).get("cond")
+                else "Bündel: Auflösung nennt einen anderen Markt")
+    return "aufgelöst, aber nicht zuordenbar"
+
+
+def _derselbe_markt(play, res) -> bool:
+    """Meint diese Auflösung denselben Markt wie der Eintrag? REIN.
+
+    Nur True, wenn BEIDE Seiten eine conditionId tragen und es dieselbe ist. Fehlt sie auf einer
+    Seite, ist die Frage nicht beantwortet — und eine unbeantwortete Frage ist kein Ja. Der
+    Altbestand in `poly_resolutions.json` hat keine cond; solche Plays bleiben offen und laufen
+    sichtbar in `unaufloesbar`, statt auf gut Glueck abgerechnet zu werden.
+    """
+    a = (play or {}).get("cond")
+    b = (res or {}).get("cond")
+    return bool(a and b and a == b)
+
+
 def _ok_price(p):
     return isinstance(p, (int, float)) and 0.0 < float(p) < 1.0
 
@@ -272,13 +317,42 @@ def _agg_one(rows):
             "clvUg": (lambda u: round(u, 2) if u is not None else None)(_ug(clv_werte))}
 
 
+def unaufloesbar_agg(rows) -> dict:
+    """{n, publicN, nachGrund} — wie viele Plays nie abrechnen konnten und warum. REIN.
+
+    Die Zahl allein waere die schwaechere Auskunft. „12 x Bündel ohne Marktkennung" nennt eine
+    Ursache, die man beheben kann; „12 verfallen" nennt nur einen Verlust.
+    """
+    rows = [r for r in (rows or []) if isinstance(r, dict)]
+    nach = {}
+    for r in rows:
+        g = r.get("grund") or "unbekannt"
+        nach[g] = nach.get(g, 0) + 1
+    return {"n": len(rows), "publicN": sum(1 for r in rows if r.get("public")),
+            "nachGrund": dict(sorted(nach.items(), key=lambda kv: -kv[1]))}
+
+
 def aggregate(settled, blocked=()):
     allr = settled
-    pub = [r for r in settled if r.get("public")]
+    # 🔴 10.09.2026 (Lucas: „im Stats-File stehen die +11 P/L, im Track-Record 105 Dollar")
+    # Der Unterschied war nicht nur die Einheit. Diese Zeile hiess `[r for r in settled if
+    # r.get("public")]` — ohne Sperrliste. Der Block „◆ Public-Kandidaten" zaehlte damit
+    # US-Sport und Kampfsport MIT, also Plays, auf die nie gesetzt wird, waehrend der Block
+    # direkt darueber sie sauber trennt. Gemessen am 10.09.: n=188 statt 183, ROI +5,6 % statt
+    # +6,0 % — die 5 gesperrten Plays zogen die Zeile nach unten, mit Geld, das nie floss.
+    #
+    # `public` heisst ab jetzt dasselbe wie `bettable`: das, was gespielt werden darf.
+    # `publicBlocked` traegt die anderen weiter — sichtbar, aber ausserhalb der Bilanz.
+    _bl0 = set(blocked or ())
+    pub = [r for r in settled if r.get("public") and _row_cat(r) not in _bl0]
+    pub_blk = [r for r in settled if r.get("public") and _row_cat(r) in _bl0]
     # Die Vergleichsgruppe zum Public-Gate: gleiche Conviction, gleiche Geld-Mehrheit, nur ohne
     # bewiesene Wallet. Erst der Unterschied dieser beiden Zeilen beantwortet, ob das Wallet-Tor
     # die Auswahl verbessert — oder sie nur verkleinert.
-    pub_ow = [r for r in settled if r.get("ohneWallet")]
+    # Dieselbe Trennung fuer die Vergleichsgruppe — sonst stuenden auf den beiden Seiten des
+    # Vergleichs zwei verschieden zusammengesetzte Mengen, und der Unterschied waere teils
+    # Sportart statt Wallet-Tor.
+    pub_ow = [r for r in settled if r.get("ohneWallet") and _row_cat(r) not in _bl0]
     # 24.08.2026 (Lucas): die Gesamt-Kennzahl mischte Sportarten, auf die nie gesetzt wird, mit
     # denen, auf die gesetzt wird — dadurch sah das Depot schlechter aus als das, was man wirklich
     # spielt. `all` bleibt unverändert (Kalibrierungs-Basis im Frontend hängt daran); `bettable`
@@ -323,6 +397,7 @@ def aggregate(settled, blocked=()):
         # nur nicht als Signal.
         (by_kalib if tg in KALIB_MARKEN else by_signal)[tg] = _agg_one(rows)
     return {"all": _agg_one(allr), "public": _agg_one(pub),
+            "publicBlocked": _agg_one(pub_blk),
             "publicOhneWallet": _agg_one(pub_ow),
             "bettable": _agg_one(bet), "blocked": _agg_one(blk), "byCat": by_cat,
             "byConv": by_conv, "byVerdict": by_verdict, "bySignal": by_signal,
@@ -367,6 +442,8 @@ def update_track(prev, emit, close, resolutions, now=None, stake=STAKE, blocked=
         (emit or {}).get("blockedCats") or (prev or {}).get("blockedCats") or [])
     open_ = {k: dict(v) for k, v in (prev.get("open") or {}).items() if isinstance(v, dict)}
     settled = [dict(s) for s in (prev.get("settled") or []) if isinstance(s, dict)]
+    # 10.09.2026: das Buch der Verfallenen wird fortgeschrieben, nicht je Lauf neu gezaehlt.
+    unaufloesbar = [dict(u) for u in (prev.get("unaufloesbar") or []) if isinstance(u, dict)]
     # 05.09.2026 (Lucas: „ich check's trotzdem nicht, was da passiert ist") — beim Nachrechnen
     # der Delle kam ich auf 549 bespielbare Plays und -118 $, die Datei sagte 512 und +60 $.
     # Der Grund war nicht die Delle, sondern `cat`: das Feld wird erst seit dem 24.08. gestempelt
@@ -421,11 +498,27 @@ def update_track(prev, emit, close, resolutions, now=None, stake=STAKE, blocked=
             # mitgeschrieben: in ein paar Wochen ist es eine Antwort statt einer Vermutung.
             # None heisst „kein Pfad vorhanden", nicht „keine Bewegung" — 0.0 waere eine Aussage.
             "movePreEntryPP": _pre_entry_move(key, side, now),
+            # 🔴 10.09.2026 — welcher MARKT ist das eigentlich? Bei einem `-more-markets`-Buendel
+            # ist „Under" ohne diese Angabe kein Play, sondern eine Schaetzung: Under 1,5 und
+            # Under 3,5 liegen im selben Event, und `entryPrice` gehoert zu genau einem davon.
+            # Ohne cond konnte spaeter niemand mehr pruefen, ob die Auflösung denselben Markt
+            # meint — genau der Leeds-Brentford-Fehler (s. poly_slug_urteil.py), nur eine Ebene
+            # frueher. `frage` traegt die Linie im Klartext („A vs. B: O/U 3.5") und ist das,
+            # was ein Mensch im Board lesen kann.
+            **_markt_stempel(close.get(key)),
         }
 
     # 2) lastPrice aller offenen Plays aus dem Close-File nachziehen (beste Schluss-Referenz für CLV)
     for e in open_.values():
-        cp = ((close.get(e["key"]) or {}).get("prices") or {}).get(e["side"])
+        _row = close.get(e["key"]) or {}
+        # 10.09.2026: dieselbe Frage wie beim Abrechnen, nur frueher — und sie war hier genauso
+        # offen. `lastPrice` speist das CLV. Zog der Close-Stand inzwischen einen ANDEREN Markt
+        # des Buendels, dann misst „Einstieg -> Schluss" zwei verschiedene Linien gegeneinander
+        # und das CLV ist kein CLV. Kennt der Eintrag seinen Markt und der Close-Stand einen
+        # anderen, bleibt der alte Preis stehen — eine alte Auskunft schlaegt eine falsche.
+        if e.get("cond") and _row.get("cond") and e["cond"] != _row["cond"]:
+            continue
+        cp = (_row.get("prices") or {}).get(e["side"])
         if _ok_price(cp):
             e["lastPrice"] = round(float(cp), 4)
             e["lastTs"] = now.isoformat()
@@ -438,7 +531,11 @@ def update_track(prev, emit, close, resolutions, now=None, stake=STAKE, blocked=
         # 04.09.2026: ein Buendel-Slug ("-more-markets") kann Over 1,5 und Over 2,5 nicht
         # auseinanderhalten. Wo der Sieger-Name die Linie nicht traegt, wird NICHT
         # abgerechnet — der Eintrag bleibt offen statt einen Ausgang zu erfinden.
-        if winner and not aufloesbar(e["key"], e.get("side"), winner):
+        # 10.09.2026: der Riegel vom 04.09. bleibt — aber er hat jetzt einen Schluessel. Traegt
+        # der Eintrag DIESELBE conditionId wie die Auflösung, ist „Under" eindeutig und darf
+        # abrechnen. Sonst wie bisher: lieber offen als geraten.
+        _cond = e.get("cond") if _derselbe_markt(e, r) else None
+        if winner and not aufloesbar(e["key"], e.get("side"), winner, cond=_cond):
             winner = None
         if not winner:
             continue
@@ -465,6 +562,16 @@ def update_track(prev, emit, close, resolutions, now=None, stake=STAKE, blocked=
     #    Nicht getrackt (nicht im close-file, poly_money_broad sieht den Markt nicht) → bekommt nie eine
     #    Auflösung, kurze Frist. Getrackt-aber-ewig-offen → langer Backstop. KEIN Fake-Ergebnis: verfallene
     #    Plays zählen NICHT als win/loss, sie werden nur aus open entfernt (raus aus der Integritäts-Warnung).
+    # 🔴 10.09.2026 — VERFALLEN IST EIN ERGEBNIS, ALSO MUSS ES DASTEHEN.
+    # `expired` war ein Zaehler JE LAUF: was gestern verfiel, stand nirgends mehr. Damit
+    # verschwanden unaufloesbare Plays lautlos aus dem Nenner — und mit ihnen der Hinweis
+    # darauf, DASS eine ganze Klasse von Plays nicht abrechnet. Am 10.09. waren das 15 von 23
+    # offenen Plays (alle `-more-markets`), die am 18.09. auf einen Schlag weggewesen waeren,
+    # ohne dass eine Zahl im Board sich bewegt haette.
+    #
+    # Ab jetzt wird jeder Verfall MIT GRUND in ein rollierendes Buch geschrieben. Der
+    # Whale-Ledger macht das seit dem 02.09. genauso („0 unauflösbar — senkt sichtbar den
+    # Nenner, statt still zu verschwinden"); das Shortlist-Buch war das letzte, das es nicht tat.
     n_expired = 0
     for ok in list(open_.keys()):
         e = open_[ok]
@@ -473,13 +580,24 @@ def update_track(prev, emit, close, resolutions, now=None, stake=STAKE, blocked=
             continue
         tracked = isinstance(close, dict) and e.get("key") in close
         if age > (STALE_TTL_D if tracked else UNTRACKED_TTL_D):
+            unaufloesbar.append({
+                "key": e.get("key"), "side": e.get("side"), "cat": _row_cat(e),
+                "conv": e.get("conv"), "public": bool(e.get("public")),
+                "entryPrice": e.get("entryPrice"), "firstTs": e.get("firstTs"),
+                "verfallenTs": now.isoformat(), "alterTage": round(age, 1),
+                "grund": _verfall_grund(e, resolutions, tracked),
+            })
             del open_[ok]
             n_expired += 1
+    unaufloesbar = unaufloesbar[-UNAUFLOESBAR_KEEP:]
 
     settled = settled[-SETTLED_KEEP:]
     return {"updatedAt": now.isoformat(), "stake": stake, "expired": n_expired,
             "katNachgetragen": _kat_nachgetragen,
             "blockedCats": _bl, "reentry": reentry_status(settled, _bl),
+            # `expired` bleibt der Zaehler DIESES Laufs (Diagnose), `unaufloesbar` ist das Buch.
+            "unaufloesbar": unaufloesbar,
+            "unaufloesbarAgg": unaufloesbar_agg(unaufloesbar),
             "open": open_, "settled": settled, "agg": aggregate(settled, _bl)}
 
 

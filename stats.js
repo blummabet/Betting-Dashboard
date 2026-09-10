@@ -115,9 +115,14 @@ function _stBlock(b) {
                 ohneQuote ? 'keine Quoten in dieser Quelle'
                   : (ges.roiUg != null ? 'Untergrenze ' + _stPct(ges.roiUg) : 'zu wenige für eine Untergrenze'))
     + (_stPost ? '' : _stKachel('P/L', ges.pl == null ? '—' : (ges.pl > 0 ? '+' : '') + ges.pl.toFixed(1),
-                _stCol(ges.pl), 'Einheiten Einsatz'));
+                // 10.09.2026 (Lucas: „im Stats-File stehen +11 P/L, im Track-Record $105 —
+                // ist das gleich?"). Ja: `kennzahlen()` summiert pnl/stake, also EINHEITEN.
+                // „Einheiten Einsatz" war zu leise, um neben einer Dollar-Zahl zu bestehen —
+                // die Umrechnung gehoert dazu, sonst liest man zwei Zahlen als zwei Sachen.
+                _stCol(ges.pl), 'in Einheiten · bei $10 fixem Einsatz ×10 = $'
+                  + (ges.pl == null ? '—' : ((ges.pl > 0 ? '+' : '') + (ges.pl * 10).toFixed(0)))));
   var kopfzeile = '<th>Periode</th><th>Plays</th><th>Treffer</th><th>Rendite</th>'
-    + (_stPost ? '' : '<th>P/L</th>') + '<th>CLV</th>';
+    + (_stPost ? '' : '<th>P/L <i>Einh.</i></th>') + '<th>CLV</th>';
   return '<section class="st-block">'
     + '<div class="st-b-h"><span class="st-b-e">' + _stEsc(b.emoji || '') + '</span>'
     + '<span class="st-b-t">' + _stEsc(b.label) + '</span>'
