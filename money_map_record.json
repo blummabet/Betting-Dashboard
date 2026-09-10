@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-09-10T19:34:27.293349+00:00",
+"generatedAt": "2026-09-10T19:51:43.527150+00:00",
 "byVerdict": {
 "konsens": {
 "n": 935,
@@ -18,20 +18,20 @@
 "clvLb": 18.7603
 },
 "uneinig": {
-"n": 355,
+"n": 357,
 "wins": 117,
-"hitRate": 0.3296,
-"polyN": 319,
+"hitRate": 0.3277,
+"polyN": 321,
 "polyWins": 85,
-"polyHitRate": 0.2665,
-"pinnN": 212,
-"pinnHitRate": 0.5896,
-"nRoi": 123,
-"roi": -0.3863,
-"roiLb": -0.5255,
-"nClv": 123,
-"clv": -18.13,
-"clvLb": -23.1444
+"polyHitRate": 0.2648,
+"pinnN": 214,
+"pinnHitRate": 0.5935,
+"nRoi": 125,
+"roi": -0.3961,
+"roiLb": -0.5335,
+"nClv": 125,
+"clv": -18.55,
+"clvLb": -23.5086
 },
 "teil": {
 "n": 16,
@@ -231,6 +231,11 @@
 "wins": 8,
 "hitRate": 0.5714
 },
+"UEFA Champions League": {
+"n": 14,
+"wins": 11,
+"hitRate": 0.7857
+},
 "Elite Friendlies": {
 "n": 13,
 "wins": 9,
@@ -267,11 +272,6 @@
 "hitRate": 0.3333
 },
 "Swiss Super League": {
-"n": 12,
-"wins": 11,
-"hitRate": 0.9167
-},
-"UEFA Champions League": {
 "n": 12,
 "wins": 11,
 "hitRate": 0.9167
@@ -604,15 +604,15 @@
 },
 "byStrength": {
 "strong": {
-"n": 778,
+"n": 780,
 "wins": 624,
-"hitRate": 0.8021,
-"nRoi": 254,
-"roi": 0.2751,
-"roiLb": 0.1905,
-"nClv": 254,
-"clv": 12.86,
-"clvLb": 9.4488
+"hitRate": 0.8,
+"nRoi": 256,
+"roi": 0.2651,
+"roiLb": 0.1804,
+"nClv": 256,
+"clv": 12.41,
+"clvLb": 8.9887
 },
 "weak": {
 "n": 495,
@@ -627,14 +627,52 @@
 }
 },
 "divergence": {
-"n": 355,
+"n": 357,
 "betfairWins": 117,
-"betfairRate": 0.3296,
-"polyN": 319,
+"betfairRate": 0.3277,
+"polyN": 321,
 "polyWins": 85,
-"polyRate": 0.2665
+"polyRate": 0.2648
 },
 "recent": [
+{
+"matchId": "35998666",
+"home": "Fenerbahce",
+"away": "Roma",
+"league": "UEFA Champions League",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Roma",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-09-10T16:45:00Z",
+"settledAt": "2026-09-10T19:51:43.340332+00:00"
+},
+{
+"matchId": "35998659",
+"home": "PSV",
+"away": "Shakhtar",
+"league": "UEFA Champions League",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "PSV",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-09-10T16:45:00Z",
+"settledAt": "2026-09-10T19:51:43.340332+00:00"
+},
 {
 "matchId": "36036086",
 "home": "Al Sailiya",
@@ -1356,56 +1394,18 @@
 ],
 "kickoff": "2026-09-09T17:00:00Z",
 "settledAt": "2026-09-09T20:01:59.636795+00:00"
-},
-{
-"matchId": "35998670",
-"home": "Barcelona",
-"away": "Feyenoord",
-"league": "UEFA Champions League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Barcelona",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-5,
-1
-],
-"kickoff": "2026-09-09T16:45:00Z",
-"settledAt": "2026-09-09T19:46:51.745960+00:00"
-},
-{
-"matchId": "35998667",
-"home": "Stuttgart",
-"away": "Viking",
-"league": "UEFA Champions League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Stuttgart",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-09-09T16:45:00Z",
-"settledAt": "2026-09-09T19:46:51.745960+00:00"
 }
 ],
 "global": {
-"n": 1306,
+"n": 1308,
 "wins": 902,
-"hitRate": 0.6907,
-"nRoi": 392,
-"roi": 0.1694,
-"roiLb": 0.0933,
-"nClv": 392,
-"clv": 7.86,
-"clvLb": 5.0857
+"hitRate": 0.6896,
+"nRoi": 394,
+"roi": 0.1635,
+"roiLb": 0.0874,
+"nClv": 394,
+"clv": 7.6,
+"clvLb": 4.8176
 },
-"pending": 27
+"pending": 25
 }
