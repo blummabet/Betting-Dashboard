@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "liga",
-    "generatedAt": "2026-09-10T11:11:50.617214+00:00",
+    "generatedAt": "2026-09-10T12:21:38.728375+00:00",
     "minLen": 3,
     "strongLen": 5,
     "sortiert": "zufallPct",
@@ -6478,151 +6478,6 @@
       "matchupPct": 66
     },
     {
-      "teamId": "541",
-      "team": "Real Madrid",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/541.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 6,
-      "venue": "H",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 61,
-        "label": "Eigen 61% + Gegner 53% → 58% · Signale bestätigen"
-      },
-      "ratePct": 61,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "liga",
-      "preN": 1,
-      "zufallPct": 5.17478,
-      "ligaBasisPct": 61,
-      "seltenheit": {
-        "basis": "liga",
-        "ratePct": 61,
-        "preN": null,
-        "einsZu": 19,
-        "erwartet": 163.94,
-        "familie": 3168,
-        "urteil": "nicht belegbar",
-        "grund": "keine eigene Vorgeschichte vor der Serie — gemessen wird gegen den Liga-Schnitt, der für ein Durchschnittsteam gilt"
-      },
-      "next": {
-        "oppId": "728",
-        "oppName": "Rayo Vallecano",
-        "atHome": true,
-        "date": "2026-09-12",
-        "kickoff": "2026-09-12T19:00:00+00:00",
-        "oppRatePct": 53
-      },
-      "oppSupportPct": 53,
-      "matchupPct": 58,
-      "signalInfo": {
-        "state": "confirm",
-        "count": 6,
-        "conviction": 4,
-        "names": [
-          "public_static_bias",
-          "injury",
-          "form_trend",
-          "h2h_pattern",
-          "xg_strength",
-          "chance_creation"
-        ],
-        "market": "Über 2.5 Tore"
-      }
-    },
-    {
-      "teamId": "728",
-      "team": "Rayo Vallecano",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/728.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 6,
-      "venue": "A",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 20,
-        "label": "Eigen 20% + Gegner 60% → 36% · Signale bestätigen"
-      },
-      "ratePct": 20,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 5,
-      "zufallPct": 5.17478,
-      "ligaBasisPct": 61,
-      "seltenheit": {
-        "basis": "eigen",
-        "ratePct": 20,
-        "preN": 5,
-        "einsZu": 15625,
-        "erwartet": 0.2,
-        "familie": 3168,
-        "bandPct": [
-          5,
-          56
-        ],
-        "einsZuBand": [
-          31,
-          106140280
-        ],
-        "erwartetBand": [
-          0.0,
-          102.77
-        ],
-        "urteil": "erwartbar",
-        "grund": "unter 3168 geprüften Kombinationen sind 0.2 solcher Läufe zu erwarten"
-      },
-      "next": {
-        "oppId": "541",
-        "oppName": "Real Madrid",
-        "atHome": false,
-        "date": "2026-09-12",
-        "kickoff": "2026-09-12T19:00:00+00:00",
-        "oppRatePct": 60
-      },
-      "oppSupportPct": 60,
-      "matchupPct": 36,
-      "signalInfo": {
-        "state": "confirm",
-        "count": 6,
-        "conviction": 4,
-        "names": [
-          "public_static_bias",
-          "injury",
-          "form_trend",
-          "h2h_pattern",
-          "xg_strength",
-          "chance_creation"
-        ],
-        "market": "Über 2.5 Tore"
-      }
-    },
-    {
       "teamId": "96",
       "team": "Toulouse",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/96.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -6668,6 +6523,58 @@
         "atHome": false,
         "date": "2026-09-12",
         "kickoff": "2026-09-12T18:45:00+00:00",
+        "oppRatePct": 53
+      },
+      "oppSupportPct": 53,
+      "matchupPct": 58
+    },
+    {
+      "teamId": "541",
+      "team": "Real Madrid",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/541.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 6,
+      "venue": "H",
+      "strong": true,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 61,
+        "label": "Eigen 61% + Gegner 53% → 58%"
+      },
+      "ratePct": 61,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "liga",
+      "preN": 1,
+      "zufallPct": 5.17478,
+      "ligaBasisPct": 61,
+      "seltenheit": {
+        "basis": "liga",
+        "ratePct": 61,
+        "preN": null,
+        "einsZu": 19,
+        "erwartet": 163.94,
+        "familie": 3168,
+        "urteil": "nicht belegbar",
+        "grund": "keine eigene Vorgeschichte vor der Serie — gemessen wird gegen den Liga-Schnitt, der für ein Durchschnittsteam gilt"
+      },
+      "next": {
+        "oppId": "728",
+        "oppName": "Rayo Vallecano",
+        "atHome": true,
+        "date": "2026-09-12",
+        "kickoff": "2026-09-12T19:00:00+00:00",
         "oppRatePct": 53
       },
       "oppSupportPct": 53,
@@ -6737,6 +6644,71 @@
       },
       "oppSupportPct": 13,
       "matchupPct": 32
+    },
+    {
+      "teamId": "728",
+      "team": "Rayo Vallecano",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/728.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 6,
+      "venue": "A",
+      "strong": true,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 20,
+        "label": "Eigen 20% + Gegner 60% → 36%"
+      },
+      "ratePct": 20,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 5,
+      "zufallPct": 5.17478,
+      "ligaBasisPct": 61,
+      "seltenheit": {
+        "basis": "eigen",
+        "ratePct": 20,
+        "preN": 5,
+        "einsZu": 15625,
+        "erwartet": 0.2,
+        "familie": 3168,
+        "bandPct": [
+          5,
+          56
+        ],
+        "einsZuBand": [
+          31,
+          106140280
+        ],
+        "erwartetBand": [
+          0.0,
+          102.77
+        ],
+        "urteil": "erwartbar",
+        "grund": "unter 3168 geprüften Kombinationen sind 0.2 solcher Läufe zu erwarten"
+      },
+      "next": {
+        "oppId": "541",
+        "oppName": "Real Madrid",
+        "atHome": false,
+        "date": "2026-09-12",
+        "kickoff": "2026-09-12T19:00:00+00:00",
+        "oppRatePct": 60
+      },
+      "oppSupportPct": 60,
+      "matchupPct": 36
     },
     {
       "teamId": "182",
@@ -11619,7 +11591,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 61,
-        "label": "Eigen 61% + Gegner 73% → 66%"
+        "label": "Eigen 61% + Gegner 73% → 66% · Signale bestätigen"
       },
       "ratePct": 61,
       "seq": [
@@ -11656,7 +11628,21 @@
         "oppRatePct": 73
       },
       "oppSupportPct": 73,
-      "matchupPct": 66
+      "matchupPct": 66,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 6,
+        "conviction": 4,
+        "names": [
+          "injury",
+          "form_trend",
+          "xg_strength",
+          "streak_momentum",
+          "opener_move",
+          "move_following"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "727",
@@ -16860,6 +16846,85 @@
       }
     },
     {
+      "teamId": "797",
+      "team": "Elche",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/797.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 4,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 40,
+        "label": "Eigen 40% + Gegner 67% → 51% · Signale bestätigen"
+      },
+      "ratePct": 40,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 5,
+      "zufallPct": 13.88655,
+      "ligaBasisPct": 61,
+      "seltenheit": {
+        "basis": "eigen",
+        "ratePct": 40,
+        "preN": 5,
+        "einsZu": 39,
+        "erwartet": 81.1,
+        "familie": 3168,
+        "bandPct": [
+          14,
+          73
+        ],
+        "einsZuBand": [
+          4,
+          2412
+        ],
+        "erwartetBand": [
+          1.31,
+          887.58
+        ],
+        "urteil": "erwartbar",
+        "grund": "unter 3168 geprüften Kombinationen sind 81.1 solcher Läufe zu erwarten"
+      },
+      "next": {
+        "oppId": "531",
+        "oppName": "Athletic Club",
+        "atHome": false,
+        "date": "2026-09-12",
+        "kickoff": "2026-09-12T16:30:00+00:00",
+        "oppRatePct": 67
+      },
+      "oppSupportPct": 67,
+      "matchupPct": 51,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 5,
+        "conviction": 4,
+        "names": [
+          "injury",
+          "form_trend",
+          "xg_strength",
+          "chance_creation",
+          "streak_momentum",
+          "move_following"
+        ],
+        "market": "Über 2.5 Tore"
+      }
+    },
+    {
       "teamId": "162",
       "team": "Werder Bremen",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/162.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -17402,71 +17467,6 @@
       },
       "oppSupportPct": 60,
       "matchupPct": 57
-    },
-    {
-      "teamId": "797",
-      "team": "Elche",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/797.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 4,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 40,
-        "label": "Eigen 40% + Gegner 67% → 51%"
-      },
-      "ratePct": 40,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 5,
-      "zufallPct": 13.88655,
-      "ligaBasisPct": 61,
-      "seltenheit": {
-        "basis": "eigen",
-        "ratePct": 40,
-        "preN": 5,
-        "einsZu": 39,
-        "erwartet": 81.1,
-        "familie": 3168,
-        "bandPct": [
-          14,
-          73
-        ],
-        "einsZuBand": [
-          4,
-          2412
-        ],
-        "erwartetBand": [
-          1.31,
-          887.58
-        ],
-        "urteil": "erwartbar",
-        "grund": "unter 3168 geprüften Kombinationen sind 81.1 solcher Läufe zu erwarten"
-      },
-      "next": {
-        "oppId": "531",
-        "oppName": "Athletic Club",
-        "atHome": false,
-        "date": "2026-09-12",
-        "kickoff": "2026-09-12T16:30:00+00:00",
-        "oppRatePct": 67
-      },
-      "oppSupportPct": 67,
-      "matchupPct": 51
     },
     {
       "teamId": "182",
@@ -22275,7 +22275,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 83,
-        "label": "Eigen 83% + Gegner 73% → 79%"
+        "label": "Eigen 83% + Gegner 73% → 79% · Signale bestätigen"
       },
       "ratePct": 83,
       "seq": [
@@ -22324,7 +22324,21 @@
         "oppRatePct": 73
       },
       "oppSupportPct": 73,
-      "matchupPct": 79
+      "matchupPct": 79,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 6,
+        "conviction": 4,
+        "names": [
+          "injury",
+          "form_trend",
+          "xg_strength",
+          "streak_momentum",
+          "opener_move",
+          "move_following"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "57",
@@ -22340,7 +22354,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 61,
-        "label": "Eigen 61% + Gegner 87% → 71%"
+        "label": "Eigen 61% + Gegner 87% → 71% · Signale bestätigen"
       },
       "ratePct": 61,
       "seq": [
@@ -22376,7 +22390,21 @@
         "oppRatePct": 87
       },
       "oppSupportPct": 87,
-      "matchupPct": 71
+      "matchupPct": 71,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 6,
+        "conviction": 4,
+        "names": [
+          "injury",
+          "form_trend",
+          "xg_strength",
+          "streak_momentum",
+          "opener_move",
+          "move_following"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "79",
@@ -22638,7 +22666,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 61,
-        "label": "Eigen 61% + Gegner 67% → 63%"
+        "label": "Eigen 61% + Gegner 67% → 63% · Signale bestätigen"
       },
       "ratePct": 61,
       "seq": [
@@ -22671,7 +22699,21 @@
         "oppRatePct": 67
       },
       "oppSupportPct": 67,
-      "matchupPct": 63
+      "matchupPct": 63,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 5,
+        "conviction": 4,
+        "names": [
+          "injury",
+          "form_trend",
+          "xg_strength",
+          "chance_creation",
+          "streak_momentum",
+          "move_following"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "536",
@@ -22739,7 +22781,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 58,
-        "label": "Eigen 58% + Gegner 67% → 62%"
+        "label": "Eigen 58% + Gegner 67% → 62% · Signale bestätigen"
       },
       "ratePct": 58,
       "seq": [
@@ -22788,7 +22830,21 @@
         "oppRatePct": 67
       },
       "oppSupportPct": 67,
-      "matchupPct": 62
+      "matchupPct": 62,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 5,
+        "conviction": 4,
+        "names": [
+          "injury",
+          "form_trend",
+          "xg_strength",
+          "chance_creation",
+          "streak_momentum",
+          "move_following"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "160",
