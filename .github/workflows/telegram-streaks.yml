@@ -6,9 +6,14 @@ name: 🔥 Serien der Woche (Telegram Public)
 # 15.07.2026 (Lucas: „Serien-der-Woche für MLS"): Matrix über alle drei Datensätze. telegram_streaks
 # ist dataset-aware (D.prefix()), COCOBET_DATASET=wm ist funktional identisch zum Default → WM
 # unverändert. Fehlt ein {prefix}streaks.json, ist der Lauf ein No-Op.
+# ⛔ 10.09.2026 (Lucas: „Serie der Woche kannst du entfernen aus Public").
+# Der Zeitplan ist AUS, der Workflow bleibt. Zwei Gruende, ihn nicht zu loeschen:
+#   · `workflow_dispatch` laesst ihn weiter von Hand starten, falls der Digest zurueckkommt.
+#   · Ein geloeschter Workflow nimmt seine Historie mit — und mit ihr die Frage, warum es ihn
+#     mal gab. Ein auskommentierter Cron mit Datum beantwortet sie in drei Monaten noch.
 on:
-  schedule:
-    - cron: '0 9 * * 1'   # Montag 09:00 UTC
+  # schedule:
+  #   - cron: '0 9 * * 1'   # Montag 09:00 UTC — deaktiviert am 10.09.2026
   workflow_dispatch:
 
 permissions:

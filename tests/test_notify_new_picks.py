@@ -126,3 +126,27 @@ class TestNotifyFlow(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+# ── 10.09.2026: der img-Bug, gegen den es seit dem 25.07. tg_safe gibt ───────────────────
+def test_klub_logo_wird_nie_als_img_tag_gesendet():
+    """🔴 `homeFlag` ist bei liga/mls ein komplettes <img src="…">-Tag (fuers Dashboard).
+    Telegram erlaubt im HTML-Modus kein <img> und antwortet mit HTTP 400 — die Nachricht
+    scheitert LAUTLOS. `telegram_wm`, `detect_wm_sharp_moves` und `telegram_streak_watch`
+    benutzen `safe_flag` seit dem 25.07.; dieser Sender nie. Der Cards-Public-Push hat damit
+    fuer die Klub-Datensaetze vermutlich nie zugestellt."""
+    import notify_new_picks as N
+    u = [{"id": "x", "homeFlag": '<img src="https://media.api-sports.io/football/teams/35.png">',
+          "homeName": "Bournemouth", "awayName": "Brentford", "market": "Über 2.5 Tore",
+          "verdict": "ABWÄGEN", "convictionScore": 5}]
+    t = N.build_message(u)
+    assert "<img" not in t, "ein <img>-Tag laesst Telegram die ganze Nachricht ablehnen"
+    assert "⚽" in t, "statt des Logos steht das neutrale Fallback-Emoji"
+
+
+def test_echte_laenderflagge_bleibt_stehen():
+    """Die WM-Flaggen sind echte Emoji und duerfen nicht zu ⚽ werden."""
+    import notify_new_picks as N
+    u = [{"id": "x", "homeFlag": "🇪🇸", "homeName": "Spanien", "awayName": "Italien",
+          "market": "Heimsieg", "verdict": "BET", "convictionScore": 8}]
+    assert "🇪🇸" in N.build_message(u)

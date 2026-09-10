@@ -465,6 +465,7 @@ def build_morning_card(wm: dict, target_date: str, lang: str = "de") -> str | No
     else:
         lines.append(T["no_bet"])
 
+    _letzter_abschnitt = None   # Gruppe/Spieltag des zuletzt gedruckten Trenners
     for m in matches_today:
         # FIX 11.06.2026: trackingExcluded raus (Cross-Market-Konflikte). Der Dashboard-
         # Renderer filtert das seit 06.06., der Telegram-Sender hat es nie getan →
@@ -476,10 +477,20 @@ def build_morning_card(wm: dict, target_date: str, lang: str = "de") -> str | No
 
         # Spiel-Block
         us = m["upsetScore"]
-        if m.get("isKO"):
-            lines.append(f"━━ 🏆 {I18N.round_label(m.get('roundLabel', 'K.O.-Runde'), lang)} ━━")
-        else:
-            lines.append(T["group_head"].format(g=I18N.group_label(m['group'], lang), md=m['matchday']))
+        # 10.09.2026 (Lucas) — DER TRENNER IST EINE ABSCHNITTS-ÜBERSCHRIFT, KEINE ZEILE JE SPIEL.
+        # Bei drei MLS-Spielen desselben Spieltags stand „━━ MLS · Spieltag 24 ━━" dreimal
+        # untereinander und trennte nichts, weil links und rechts davon dasselbe stand. Er
+        # erscheint jetzt beim WECHSEL — beim ersten Spiel und immer dann, wenn Gruppe oder
+        # Spieltag sich ändern. Damit trennt er wieder etwas, statt es zu wiederholen.
+        _abschnitt = ("KO:" + str(m.get("roundLabel") or "")) if m.get("isKO") \
+            else ("G:%s|%s" % (m.get("group"), m.get("matchday")))
+        if _abschnitt != _letzter_abschnitt:
+            if m.get("isKO"):
+                lines.append(f"━━ 🏆 {I18N.round_label(m.get('roundLabel', 'K.O.-Runde'), lang)} ━━")
+            else:
+                lines.append(T["group_head"].format(g=I18N.group_label(m['group'], lang), md=m['matchday']))
+            lines.append("")
+            _letzter_abschnitt = _abschnitt
 
         if us >= 6:
             lines.append(f"{upset_label(us, lang)}")   # ohne Elo-Gap-Zahl (21.06.2026, Lucas)
@@ -503,24 +514,15 @@ def build_morning_card(wm: dict, target_date: str, lang: str = "de") -> str | No
         # Richtungs-Wette mehr (Generator pick-aware) → kein Widerspruch zur Pick-Zeile.
         # DE: AI-Szene-Snippet (deutsch) + pick-konsistentes Intro. EN: Szene weglassen (deutscher
         # AI-Text), nur das übersetzte Intro (Szene-Snippet-Übersetzung ist Phase 2).
-        _fav_disp = I18N.team_name(m.get("home") if _fav == m["homeName"] else m.get("away"),
-                                   _fav, lang) if _fav else None
-        if lang == "de":
-            _scene = m.get("aiSnippet")
-            _intro = _pick_intro(_hero, m["homeName"], m["awayName"], _fav)
-            _first = True
-            if _scene:
-                lines.append(f"\n✦ <i>{_scene}</i>")
-                _first = False
-            if _intro:
-                lines.append((f"\n✦ <i>{_intro}</i>" if _first else f"✦ <i>{_intro}</i>"))
-        else:
-            _intro = I18N.pick_intro_en(
-                (_hero or {}).get("market", ""),
-                I18N.market_label((_hero or {}).get("market", ""), lang),
-                _hn, _an, _fav_disp) if _hero else None
-            if _intro:
-                lines.append(f"\n✦ <i>{_intro}</i>")
+        # 10.09.2026 (Lucas): die ✦-Prosa ist raus. Sie sagte zweimal dasselbe — „Das Modell
+        # sieht Treffer auf beiden Seiten — Value auf Beide Teams treffen — Nein" steht eine
+        # Zeile über „🟡 Abwägen: Beide Teams treffen — Nein @2.18". Der Satz war eine
+        # Übersetzung der Pick-Zeile ins Deutsche, kein zusätzlicher Inhalt, und er machte
+        # jeden Spiel-Block doppelt so lang wie nötig.
+        #
+        # ⚠️ Die Zeile hing an `aiSnippet` und `_pick_intro` — beide bleiben erzeugt und stehen
+        # weiter im Dashboard und in den Vorschau-Seiten. Weggenommen wird nur der Platz im
+        # Public-Push, nicht die Information aus dem System.
 
         if not bet_picks and not abw_picks:
             lines.append(T["no_edge"])
@@ -580,17 +582,24 @@ def build_morning_card(wm: dict, target_date: str, lang: str = "de") -> str | No
                         conv_badge = f" · {T['main_pick']}"
 
                 _mkt = I18N.market_label(p['market'], lang)
+                # 10.09.2026 (Lucas): der Einsatz wandert von der Kopfzeile ans ENDE der
+                # Begründungszeile. Die Kopfzeile beantwortet „was und zu welcher Quote", der
+                # Einsatz gehört zu „warum so viel" — und stand vorher zwischen beidem.
                 lines.append(
-                    f"🟢 <b>{T['bet']}: {_mkt} @{p.get('odds', '?')}</b>{conv_badge}{_stake_str(p)}"
+                    f"🟢 <b>{T['bet']}: {_mkt} @{p.get('odds', '?')}</b>{conv_badge}"
                 )
                 # Signal-Bestätigung NUR wenn welche stützen. KEIN fixer Nenner mehr
                 # (21.06.2026, Lucas: „/14" war veraltet — wir haben 19 Signale, und nicht
                 # jedes ist je Markt anwendbar). Echte Zahlen statt fragilem Hardcode.
                 n_pos = p.get("signalCountPos") or 0
                 n_neg = p.get("signalCountNeg") or 0
+                # Die Begründungszeile: Signale, die zwei stärksten Signal-Namen und der
+                # Einsatz. Vorher waren das drei Zeilen mit je einer Angabe — im Kanal las sich
+                # das wie eine Aufzählung, obwohl es EIN Gedanke ist: warum dieser Pick, so hoch.
+                _begr = []
                 if n_pos > 0:
                     _neg = T["signals_neg"].format(n=n_neg) if n_neg else ""
-                    lines.append(T["signals_for"].format(n=n_pos, neg=_neg))
+                    _begr.append("💡 " + T["signals_for"].format(n=n_pos, neg=_neg).strip().lstrip("💡 ").strip())
 
                 # Sharp-Move als eigene Zeile mit narrativem Text
                 if p.get("sharpMoveActive"):
@@ -609,7 +618,12 @@ def build_morning_card(wm: dict, target_date: str, lang: str = "de") -> str | No
                 # Top-2 narrative Engine-Signale (kein pp-Zahlen-Salat)
                 top_sigs = _top_signals_narrative(p, n=2)
                 if top_sigs:
-                    lines.append(f"   🧠 " + " · ".join(top_sigs))
+                    _begr.append("🧠 " + " · ".join(top_sigs))
+                _st = _stake_str(p).replace(" · ", "", 1).strip()
+                if _st:
+                    _begr.append(_st)
+                if _begr:
+                    lines.append("   " + "  ".join(_begr))
 
                 # Sicherere Alternative wenn vorhanden — knapp formuliert
                 bold_alt = p.get("boldAlt")
@@ -630,16 +644,26 @@ def build_morning_card(wm: dict, target_date: str, lang: str = "de") -> str | No
                         badges.append(T["top_pick"])
                     elif conv_score >= 6:
                         badges.append(T["main_pick"])
-                if n_pos > 0:
-                    badges.append(f"{n_pos} {T['signals_short']}")
                 if p.get("sharpMoveActive"):
                     badges.append("🔥")
                 if p.get("synthetic"):
                     badges.append(T["insurance"])
                 badge_str = "  " + " · ".join(badges) if badges else ""
+                # 10.09.2026 (Lucas): Signalzahl und Einsatz auf die ZWEITE Zeile. Vorher hing
+                # beides als Badge-Schwanz an der Pick-Zeile — bei langen Marktnamen („Beide
+                # Teams treffen — Nein") brach die Zeile im Telegram-Client um und die Quote
+                # landete optisch bei den Badges.
                 lines.append(
-                    f"🟡 <b>{T['lean']}</b> {I18N.market_label(p['market'], lang)} @{p.get('odds', '?')}{badge_str}{_stake_str(p)}"
+                    f"🟡 <b>{T['lean']}</b> {I18N.market_label(p['market'], lang)} @{p.get('odds', '?')}{badge_str}"
                 )
+                _zwei = []
+                if n_pos > 0:
+                    _zwei.append(f"{n_pos} {T['signals_short']}")
+                _st = _stake_str(p).replace(" · ", "", 1).strip()
+                if _st:
+                    _zwei.append(_st)
+                if _zwei:
+                    lines.append(" · ".join(_zwei))
 
         lines.append("")  # Leerzeile zwischen Spielen
 

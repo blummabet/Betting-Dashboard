@@ -284,6 +284,26 @@ def track_record(scores: dict, wallet: str):
     return f"bisher <b>{wins}/{n} richtig</b> ({pct}%)"
 
 
+def _lifetime(s) -> str:
+    """Die Lebensbilanz der Wallet auf Polymarket, als Zusatz — nie als Rang.
+
+    10.09.2026 (Lucas: „Trades-Channel lassen wir alles wie es ist, da will ich die ganze Info
+    haben die sonst noch da steht“). Die Zeile stand bis heute NUR in der Public-Karte
+    (`_pub_wallet_line`). Mit deren Kürzung wäre sie ersatzlos verschwunden — obwohl der
+    Trades-Channel genau der Kanal ist, in dem die volle Auskunft bleiben soll. Also wandert sie
+    hierher statt weg.
+
+    ⚠️ `pnl` ist die LEBENSBILANZ über ALLE Polymarket-Märkte (Wahlen, Krypto, Sport) und misst
+    deshalb NICHT die Sport-Qualität, nach der `sharp_gate` sortiert — s. sharp_gate.py. Sie steht
+    hier bewusst am Ende der Zeile und ohne eigenes Urteil, damit sie niemand als Rang liest.
+    Fehlt sie (Runner hat sie noch nicht gezogen), rendert sie als nichts — kein „?“, kein „0“.
+    """
+    pnl = s.get("pnl") if isinstance(s, dict) else None
+    if not isinstance(pnl, (int, float)):
+        return ""
+    return " · %s%s lifetime" % ("+" if pnl >= 0 else "−", _usd(abs(pnl)))
+
+
 def _wallet_line(scores: dict, wallet) -> str:
     """Nur eine gute Bilanz wird als Zahl gezeigt (Verkaufsargument). Schwacher/kein/zu duenner
     Record → neutral „im Aufbau", damit ein legitimer Groessen-Alert nicht durch eine 1/3-Quote
@@ -294,12 +314,13 @@ def _wallet_line(scores: dict, wallet) -> str:
     if _is_smart(s):
         wins = s.get("wins") or 0
         _clv = (s.get("clvSumPP") or 0) / n
-        return f"Wallet {link} · ✅ <b>bewiesene Wallet</b> ({wins}/{n} richtig, {round(wins/n*100)}% · {_clv:+.1f}pp CLV)"
+        return (f"Wallet {link} · ✅ <b>bewiesene Wallet</b> "
+                f"({wins}/{n} richtig, {round(wins/n*100)}% · {_clv:+.1f}pp CLV){_lifetime(s)}")
     # 06.08.2026 (Lucas: gleiche Loesung wie Public): rohe Bilanz ab n>=MIN_TR neutral zeigen, statt sie
     # hinter „im Aufbau" zu verstecken. Nur wirklich duenn (n<MIN_TR) oder Verlierer bleibt „im Aufbau".
     if isinstance(s, dict) and n >= MIN_TR and not _is_confirmed_loser(s):
         wins = s.get("wins") or 0
-        return f"Wallet {link} · 📊 <b>Bilanz</b> {wins}/{n} ({round(wins/n*100)}%)"
+        return f"Wallet {link} · 📊 <b>Bilanz</b> {wins}/{n} ({round(wins/n*100)}%){_lifetime(s)}"
     return f"Wallet {link} · <i>Track-Record noch im Aufbau</i>"
 
 
@@ -723,39 +744,87 @@ def _pub_ok(pos: dict) -> bool:
     return 0.03 <= p <= 0.97
 
 
+def _quote(preis):
+    """Cent-Preis -> Dezimalquote. 71¢ = 1/0,71 = @1.41. REIN.
+
+    10.09.2026 (Lucas: „können wir bitte beim Einstieg Quoten statt % ?"). Der Preis auf
+    Polymarket IST die Wahrscheinlichkeit — die Quote ist ihr Kehrwert und die Sprache, in der
+    der Rest des Kanals spricht (Betfair, Cards, alles @x.xx). Zwei Einheiten fuer dieselbe Sache
+    in einem Channel kosten bei jedem Blick eine Umrechnung.
+    """
+    try:
+        p = float(preis)
+    except (TypeError, ValueError):
+        return None
+    if not (0.0 < p < 1.0):
+        return None      # 0 oder 1 hat keine Quote — und 1,00 waere gelogen
+    return "@%.2f" % (1.0 / p)
+
+
+def _pub_einstieg(pos: dict):
+    """„Einstieg @1.41" — oder None, wenn es keinen brauchbaren Preis gibt."""
+    entry = pos.get("entryPrice")
+    if not isinstance(entry, (int, float)):
+        entry = pos.get("firstPrice")
+    q = _quote(entry)
+    return ("Einstieg %s" % q) if q else None
+
+
+def _pub_rang_zeile(scores, wallet, top=PUB_TOP_N):
+    """„🏅 Rang #9 Sharp Bettor hat gewettet" — kurz, ohne Rangliste-Jargon."""
+    if not wallet:
+        return None
+    r = _sharp_rank_map(scores).get(str(wallet).lower())
+    if not r or r > top:
+        return None
+    medal = "🥇" if r == 1 else "🥈" if r == 2 else "🥉" if r == 3 else "🏅"
+    return "%s <b>Rang #%d Sharp Bettor</b> hat gewettet" % (medal, r)
+
+
 def build_public_card(pos: dict, scores: dict, restock: bool, broad: dict) -> str:
-    """Öffentliches Format (31.07.2026, Lucas), im Betfair-Moneyflow-Stil: Header, Paarung, Liga,
-    die Wette, die Wallet-Qualität. Fett wo's zählt, Markt-Link zum Nachschauen."""
+    """Öffentliches Format — 10.09.2026 von Lucas neu geschnitten.
+
+    Vorher standen hier sieben Zeilen: Ticket-Median des Kontos, Preis-Bewegung mit Pfeil,
+    Außenseiter-Hinweis, die volle Wallet-Bilanz (n/Treffer/CLV/Lifetime) und der Markt-Link.
+    Das ist die TRADES-Sicht — dort bleibt sie auch unverändert, weil Lucas dort selbst
+    entscheidet. Der öffentliche Kanal bekommt die vier Dinge, die eine fremde Person braucht:
+    welches Spiel, wer hat gesetzt, wie viel, zu welchem Preis.
+
+    ⚠️ Was hier NICHT mehr steht, steht auch nirgends verkürzt: eine Wallet-Bilanz halb zu
+    zeigen wäre schlechter als sie wegzulassen. Weggelassen wird sie ganz.
+    """
     emoji, sport = _sport(pos.get("league"), pos.get("sport"))
     side = pos.get("side") or "?"
     key = pos.get("key")
     matchup = _matchup(key, broad)
-    ko = _kickoff_txt(key, broad)   # 01.08.2026 (Lucas): Anpfiff + Preis-Bewegung auch im Public
+    ko = _kickoff_txt(key, broad)
     header = "🐋 <b>Polymarket Whale — stockt auf</b>" if restock else "🐋 <b>Polymarket Whale</b>"
-    top = "%s <b>%s</b>" % (emoji, _esc(matchup)) if matchup else "%s <b>%s</b>" % (emoji, _esc(side))
+
+    # Sportart zuerst, dann das Spiel: die Sportart ist der Filter, mit dem ein Leser entscheidet,
+    # ob ihn die Zeile ueberhaupt angeht.
+    zeile_spiel = "%s <b>%s</b>" % (emoji, _esc(matchup or side))
     if ko:
-        top += " · %s" % ko
-    lines = [header, "", top, "<i>%s</i>" % _esc(sport)]
-    _tw = _rank_badge(scores, pos.get("wallet"), top=PUB_TOP_N)
-    if _tw:
-        lines.append(_tw)
-    # 04.09.2026: bei einem generischen Ausgang die LINIE nennen, nicht nur „Over".
+        zeile_spiel += " · %s" % ko
+    lines = [header, "", "<i>%s</i>" % _esc(sport), zeile_spiel]
+    _r = _pub_rang_zeile(scores, pos.get("wallet"))
+    if _r:
+        lines.append(_r)
+
     _label = ausgang_label(side, _markt_frage(key, broad)) or side
     lines += ["", "💰 <b>%s</b> auf <b>%s</b>" % (_usd(pos.get("usd") or 0), _esc(_label))]
-    lines += _groessen_zeilen(pos, broad)
-    pm = _price_move(pos)
-    if pm:
-        lines.append(pm)
-    try:
-        if float(pos.get("firstPrice")) < 0.45:
-            lines.append("💡 Außenseiter-Seite — die Wallet hält gegen den Markt")
-    except Exception:
-        pass
-    lines.append(_pub_wallet_line(scores, pos.get("wallet")))
-    if key:
-        lines.append('\n<a href="https://polymarket.com/event/%s">Markt ansehen ↗</a>' % _esc(key))
-    return "\n".join(lines)
 
+    # Einordnung: Marktanteil und Einstieg. Beide duerfen fehlen — dann steht dort nichts,
+    # keine Null und kein Platzhalter.
+    _unten = []
+    a = markt_anteil(pos, broad)
+    if a is not None:
+        _unten.append("📊 <b>%d %%</b> des Marktvolumens" % round(a * 100))
+    _e = _pub_einstieg(pos)
+    if _e:
+        _unten.append(_e)
+    if _unten:
+        lines += [""] + _unten
+    return "\n".join(lines)
 
 
 # ── Public-Ledger ──────────────────────────────────────────────────────────────

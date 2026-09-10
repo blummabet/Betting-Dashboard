@@ -84,6 +84,13 @@ EBENE = {
     # TABELLE und nicht in einer Regel: „premier" im Namen sagt hier das Gegenteil dessen,
     # was ein Muster daraus lesen wuerde.
     "mizoram-premier-league": 3,
+    # 10.09.2026 (CI-Wachhund, vierter und fuenfter Slug): „v-league" — die oberste Klasse
+    # Vietnams (Ledger-Paarung „The Cong - Viettel FC - Cong An Ha Noi FC"). Der Slug ist
+    # NICHT sportartenrein: in Korea und Japan heisst die Volleyball-Liga genauso. Dass hier
+    # trotzdem eine „1" stehen darf, haelt allein `stufe()` fest, das ausserhalb von
+    # `sport == "soccer"` grundsaetzlich None gibt — dieselbe Vorsichtsmassnahme, die schon
+    # „bundesliga" (Fussball und Handball) braucht.
+    "v-league": 1,
     # ── zweite Spielklassen ────────────────────────────────────────────────
     "championship": 2, "2nd-bundesliga": 2, "la-liga-2": 2, "serie-b": 2, "ligue-2": 2,
     "j-league-2": 2, "brasileiro-serie-b": 2, "primera-b": 2, "k-league-2": 2,
@@ -91,6 +98,11 @@ EBENE = {
     "primera-nacional": 2, "ykkonen": 2, "challenge-league": 2, "ligapro-primera-b": 2,
     "thai-league-2": 2, "liga-2": 2, "fnl": 2, "segunda-division": 2, "pervaya-liga": 2,
     "mls-next-pro": 2, "1-lig": 2, "first-division-b": 2, "2nd-division": 2,
+    # 10.09.2026 (CI-Wachhund): „superettan" — Schwedens ZWEITE Klasse, obwohl „super" im
+    # Namen steht. Genau deshalb Tabelle und keine Regel: „super-lig", „super-league" und
+    # „chinese-super-league" sind Ebene 1, „superettan" ist es nicht. Ein Muster auf „super"
+    # wuerde vier richtige Eintraege kaputtmachen, um einen zu sparen.
+    "superettan": 2,
     # ── dritte Klasse und tiefer, regional, Amateur ────────────────────────
     "league-one": 3, "league-two": 3, "3rd-liga": 3, "serie-c-group-a": 3,
     "serie-c-group-b": 3, "serie-c-group-c": 3, "tercera-division": 3,

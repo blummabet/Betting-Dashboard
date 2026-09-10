@@ -196,25 +196,75 @@ class TestPublicWhale(unittest.TestCase):
         broad = {"k-Flamengo": {"shares": {"Flamengo": 100, "Palmeiras": 50}}}
         pos = _pos(150000, league="soccer_brasileirao", side="Flamengo", price=0.62, wallet="0xS")
         scores = {"0xS": {"n": 20, "wins": 15, "clvSumPP": 64}}   # 75%, signifikant, Ø CLV +3.2pp
+        # 10.09.2026 (Lucas: „Trades-Channel lassen wir alles wie es ist"): die Wallet-Bilanz
+        # und der Cent-Preis leben ab jetzt in der TRADES-Karte. Der Public-Kanal zeigt Spiel,
+        # Rang, Betrag und die Quote — mehr nicht. Beide Zusicherungen bleiben, nur an der
+        # richtigen Karte.
         msg = P.build_public_card(pos, scores, False, broad)
         self.assertIn("Polymarket Whale", msg)
         self.assertIn("Flamengo v Palmeiras", msg)      # Paarung aus broad
         self.assertIn("$150K", msg)
-        self.assertIn("62¢", msg)
-        self.assertIn("bewiesen scharf", msg)
-        self.assertIn("15/20 richtig (75%, +3.2pp CLV)", msg)
+        self.assertIn("Einstieg @1.61", msg)            # Quote statt 62¢
+        trades = P.build_card(pos, scores, False, broad)
+        self.assertIn("bewiesen scharf", trades)
+        self.assertIn("15/20 richtig, 75%", trades)
+        self.assertIn("+3.2pp CLV", trades)
 
     def test_public_card_pnl_when_present(self):
         pos = _pos(150000, league="TENNIS", side="Sinner", price=0.55, wallet="0xP")
         scores = {"0xP": {"n": 12, "wins": 10, "clvSumPP": 24, "pnl": 120000}}   # 83% → signifikant
         msg = P.build_public_card(pos, scores, False, {})
-        self.assertIn("+$120", msg)   # Lifetime-P&L, sobald der Runner sie zieht
-        self.assertIn("lifetime", msg)
+        # 10.09.2026 (Lucas): die Lebensbilanz gehoert in den Trades-Kanal. Im Public steht sie
+        # nicht mehr — halb gezeigt waere sie schlechter als gar nicht.
+        self.assertIn("+$120", P.build_card(pos, scores, False, {}))
+        self.assertNotIn("lifetime", msg)
+
+    def test_lifetime_fehlt_rendert_als_nichts(self):
+        """Gegenbeweis zu `_lifetime`: fehlende Information darf keine Zahl erfinden.
+
+        Dieselbe Wallet, einmal mit und einmal ohne `pnl`. Ohne pnl darf in der Trades-Karte
+        weder „lifetime" noch ein „$0" stehen — sonst laese man eine ausgeglichene Bilanz, wo
+        gar keine gemessen wurde.
+        """
+        pos = _pos(150000, league="TENNIS", side="Sinner", price=0.55, wallet="0xP")
+        ohne = P.build_card(pos, {"0xP": {"n": 12, "wins": 10, "clvSumPP": 24}}, False, {})
+        self.assertIn("bewiesene Wallet", ohne)
+        self.assertNotIn("lifetime", ohne)
+        self.assertNotIn("$0", ohne)
+        mit = P.build_card(pos, {"0xP": {"n": 12, "wins": 10, "clvSumPP": 24, "pnl": 120000}},
+                           False, {})
+        self.assertIn("+$120K lifetime", mit)
+        # Und in der duennen „Bilanz"-Zeile (n>=MIN_TR, aber nicht bewiesen) genauso:
+        bil = P.build_card(pos, {"0xP": {"n": 30, "wins": 16, "pnl": 5000}}, False, {})
+        self.assertIn("Bilanz", bil)
+        self.assertIn("+$5K lifetime", bil)
+
+    def test_negativer_lifetime_zeigt_ueberhaupt_keine_zahl(self):
+        """Ein NEGATIVER Lifetime-P&L erreicht `_lifetime` nie — und das ist Absicht.
+
+        `_is_confirmed_loser` (P&L bekannt und < 0) schliesst BEIDE Zweige von `_wallet_line`
+        aus. Eine Verlierer-Wallet kriegt deshalb weder „bewiesene Wallet" noch eine Bilanz,
+        sondern „Track-Record noch im Aufbau" — auch bei 10/12 Treffern. Die Minus-Formatierung
+        in `_lifetime` ist damit reine Absicherung fuer kuenftige Aufrufer, kein gelebter Fall;
+        wer sie streicht, macht aus einem Verlust irgendwann ein Plus.
+        """
+        pos = _pos(150000, league="TENNIS", side="Sinner", price=0.55, wallet="0xP")
+        karte = P.build_card(pos, {"0xP": {"n": 12, "wins": 10, "clvSumPP": 24, "pnl": -8400}},
+                             False, {})
+        self.assertIn("Track-Record noch im Aufbau", karte)
+        self.assertNotIn("lifetime", karte)
+        self.assertNotIn("8", karte.split("Wallet")[-1])      # keine Verlustzahl in der Zeile
+        # Die Absicherung selbst: direkt aufgerufen rendert sie ein echtes Minus, kein „+".
+        self.assertIn("\u2212", P._lifetime({"pnl": -8400}))
+        self.assertNotIn("+", P._lifetime({"pnl": -8400}))
 
     def test_public_card_unproven_neutral(self):
         pos = _pos(120000, league="NBA", side="Celtics", price=0.58, wallet="0xNEW")
         msg = P.build_public_card(pos, {}, False, {})
-        self.assertIn("Track-Record noch im Aufbau", msg)
+        # Die Wallet-Einordnung steht jetzt in der Trades-Karte; der Public-Kanal sagt zu
+        # einer unbewiesenen Wallet GAR NICHTS, statt eine halbe Bilanz zu zeigen.
+        self.assertNotIn("bewiesen scharf", msg)
+        self.assertIn("Track-Record noch im Aufbau", P.build_card(pos, {}, False, {}))
         self.assertNotIn("bewiesen scharf", msg)
 
 
@@ -549,14 +599,17 @@ class TestPublicTopN(unittest.TestCase):
         sc = self._scores()
         pos = {"wallet": "0x00", "league": "ESPORTS", "side": "X", "key": "k", "usd": 41000, "firstPrice": 0.62}
         card = P.build_public_card(pos, sc, restock=False, broad={})
-        self.assertIn("Top-10-Wallet", card)
+        # 10.09.2026: kuerzere Formulierung im Public — „Rang #1 Sharp Bettor hat gewettet".
+        self.assertIn("Sharp Bettor", card)
         self.assertIn("Rang #1", card)
+        # Die lange Form bleibt in der Trades-Karte.
+        self.assertIn("Rang #1 der Sharp-Rangliste", P.build_card(pos, sc, restock=False, broad={}))
 
     def test_public_card_no_badge_for_outside_topn(self):
         sc = self._scores()
         pos = {"wallet": "0x10", "league": "ESPORTS", "side": "X", "key": "k", "usd": 41000, "firstPrice": 0.62}
         card = P.build_public_card(pos, sc, restock=False, broad={})
-        self.assertNotIn("Top-10-Wallet", card)
+        self.assertNotIn("Sharp Bettor", card)
 
 
 # ── Konflikt zwischen Top-Wallets im Push (24.08.2026, Lucas' INOX-Fall) ─────
@@ -793,3 +846,73 @@ class TestSportZuordnungIstEine(unittest.TestCase):
         for kuerzel in P._SPORT:
             self.assertNotEqual(P.sport_category(kuerzel), "Sonstige",
                                 "%s ist in _SPORT, aber fuer sport_category 'Sonstige'" % kuerzel)
+
+
+# ── 10.09.2026: der Public-Kanal bekommt ein eigenes, kuerzeres Format ───────────────────
+# Lucas: „die Poly Push schreiben wir bitte um … können wir bitte beim Einstieg Quoten statt %?
+# und bitte den Geldbetrag fett formatieren. Trades-Channel lassen wir alles wie es ist, da will
+# ich die ganze Info haben."
+class TestPublicKarteNeu(unittest.TestCase):
+    BROAD = {"ucl-fen-rom-2026-09-10": {
+        "shares": {"Fenerbahçe SK": 0.71, "AS Roma": 0.29},
+        "totalUsd": 336180, "league": "UCL", "sport": "Fußball",
+        "hoursToKickoff": 4.1}}
+
+    def _pos(self, **over):
+        p = {"key": "ucl-fen-rom-2026-09-10", "side": "Fenerbahçe SK", "wallet": "0xabc",
+             "usd": 26894, "league": "UCL", "sport": "Fußball",
+             "entryPrice": 0.71, "firstPrice": 0.71}
+        p.update(over)
+        return p
+
+    def test_einstieg_steht_als_QUOTE_nicht_in_cent(self):
+        """71¢ ist eine Wahrscheinlichkeit, @1.41 die Sprache, in der der Rest des Kanals
+        spricht (Betfair, Cards, alles @x.xx). Zwei Einheiten fuer dieselbe Sache kosten bei
+        jedem Blick eine Umrechnung."""
+        t = P.build_public_card(self._pos(), {}, False, self.BROAD)
+        self.assertIn("Einstieg @1.41", t)
+        self.assertNotIn("71¢", t)
+
+    def test_der_geldbetrag_ist_fett(self):
+        t = P.build_public_card(self._pos(), {}, False, self.BROAD)
+        self.assertIn("<b>$26.9K</b>", t)
+
+    def test_die_reihenfolge_ist_sportart_dann_spiel(self):
+        """Die Sportart ist der Filter, mit dem ein Leser entscheidet, ob ihn die Zeile
+        ueberhaupt angeht — sie steht deshalb vor der Paarung."""
+        t = P.build_public_card(self._pos(), {}, False, self.BROAD)
+        self.assertLess(t.index("Fußball"), t.index("Fenerbahçe SK v AS Roma"))
+
+    def test_die_trades_sicht_bleibt_draussen(self):
+        """⭐ Der Kern der Umstellung: Ticket-Median, Preisbewegung, Aussenseiter-Hinweis und die
+        volle Wallet-Bilanz sind TRADES-Information. Halb gezeigt waeren sie schlechter als gar
+        nicht — also gar nicht."""
+        scores = {"0xabc": {"n": 264, "wins": 147, "clvSumPP": 211.2, "pnl": 1000000.0,
+                            "usd": 500000}}
+        t = P.build_public_card(self._pos(), scores, False, self.BROAD)
+        for weg in ("übliche Ticket", "Median", "→ jetzt", "lifetime", "Außenseiter"):
+            self.assertNotIn(weg, t, "%s gehoert in den Trades-Kanal, nicht in den Public" % weg)
+
+    def test_ohne_preis_steht_keine_quote_da(self):
+        """Eine fehlende Zahl rendert nicht als @1.00 und nicht als 0."""
+        t = P.build_public_card(self._pos(entryPrice=None, firstPrice=None), {}, False, self.BROAD)
+        self.assertNotIn("Einstieg", t)
+        self.assertNotIn("@", t)
+
+    def test_quote_bei_sicherem_preis_gibt_es_nicht(self):
+        """Preis 1,00 hiesse Quote 1,00 — das waere eine erfundene Wette ohne Gewinn."""
+        self.assertIsNone(P._quote(1.0))
+        self.assertIsNone(P._quote(0.0))
+        self.assertEqual(P._quote(0.5), "@2.00")
+
+    def test_der_rang_steht_kurz_da(self):
+        scores = {"0xabc": {"n": 50, "wins": 40, "clvSumPP": 30.0}}
+        import poly_whale_watch as _W
+        rang = _W._pub_rang_zeile({"0xabc": scores["0xabc"]}, "0xabc")
+        if rang:
+            self.assertIn("Sharp Bettor", rang)
+            self.assertIn("hat gewettet", rang)
+
+    def test_ohne_marktvolumen_keine_prozentzeile(self):
+        t = P.build_public_card(self._pos(), {}, False, {})
+        self.assertNotIn("Marktvolumen", t)

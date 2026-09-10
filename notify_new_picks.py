@@ -26,6 +26,7 @@ from pathlib import Path
 
 import cocobet_dataset as D
 import pick_announce_state as S
+from tg_safe import safe_flag
 
 BASE    = Path(__file__).parent
 WM_FILE = D.data_file()
@@ -89,7 +90,15 @@ def build_message(new_units: list) -> str:
     for u in new_units[:MAX_LIST]:
         rl = f" <i>({u['roundLabel']})</i>" if u.get("roundLabel") else ""
         lines.append(
-            f"{u['homeFlag']} <b>{u['homeName']} – {u['awayName']}</b>{rl}{_kickoff_wien(u)}"
+            # 🔴 10.09.2026 — DERSELBE BUG, GEGEN DEN ES SEIT DEM 25.07. `tg_safe` GIBT.
+            # `homeFlag` ist bei den Klub-Datensaetzen kein Emoji, sondern ein komplettes
+            # <img src="https://media.api-sports.io/…">-Tag (fuers Dashboard gedacht). Telegram
+            # erlaubt im HTML-Modus kein <img> und antwortet mit HTTP 400 „Unsupported start
+            # tag" — die Nachricht scheitert LAUTLOS. `telegram_wm`, `detect_wm_sharp_moves` und
+            # `telegram_streak_watch` benutzen `safe_flag` seitdem; dieser Sender nie.
+            # Folge: der Cards-Public-Push hat fuer liga/mls vermutlich noch nie zugestellt —
+            # nur fuer die WM mit echten Laenderflaggen, und die ist seit dem 19.07. vorbei.
+            f"{safe_flag(u['homeFlag'])} <b>{u['homeName']} – {u['awayName']}</b>{rl}{_kickoff_wien(u)}"
         )
         lines.append(f"   {_conv_word(u)} · {u['market']}")
     if n > MAX_LIST:

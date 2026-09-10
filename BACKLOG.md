@@ -1,7 +1,117 @@
 # CocoBet Backlog (Liga + WM)
 
-Stand 07.09.2026 (oberster Block); Liga/WM-Teil darunter Stand 26.06.2026. Lebendige Liste aller offenen Punkte — Liga UND noch nicht umgesetzte WM-Sachen —
+Stand 10.09.2026 (oberster Block); Liga/WM-Teil darunter Stand 26.06.2026. Lebendige Liste aller offenen Punkte — Liga UND noch nicht umgesetzte WM-Sachen —
 damit wir alles abarbeiten können. ✅ = erledigt (Referenz), ⏳ = offen, 🔒 = blockiert.
+
+## ✂️ 10.09.2026 — die Public-Templates entschlackt
+
+Lucas hat drei Templates neu geschnitten und eines abgeschaltet. Die Klammer über allem:
+**der Public-Kanal ist nicht der Trades-Kanal.** Im Trades-Kanal entscheidet Lucas selbst und
+will alles sehen; im Public-Kanal liest jemand mit, der die Vorgeschichte nicht kennt.
+
+### 1. Poly-Whale · Public — kürzer, mit Quote statt Cent
+
+Vorher sieben Zeilen (Ticket-Median des Kontos, Preisbewegung mit Pfeil, Außenseiter-Hinweis,
+volle Wallet-Bilanz, Markt-Link). Jetzt vier Angaben: Sportart, Spiel, wer, wie viel, zu
+welchem Preis.
+
+```
+🐋 <b>Polymarket Whale</b>
+
+<i>Fußball</i>
+⚽ <b>Flamengo v Palmeiras</b>
+🥇 <b>Rang #1 Sharp Bettor</b> hat gewettet
+
+💰 <b>$150K</b> auf <b>Flamengo</b>
+
+📊 <b>18 %</b> des Marktvolumens
+Einstieg @1.41
+```
+
+* **Quote statt Cent** (`_quote`): 71¢ ist Polymarket-Sprache, @1.41 ist Wett-Sprache. Ein
+  Preis außerhalb (0,1) gibt **None**, nicht „@∞" — ein quasi-abgerechneter Markt hat keine
+  Einstiegsquote, und eine erfundene wäre schlimmer als keine.
+* **Betrag fett**, Sportart **vor** dem Spiel: die Sportart ist der Filter, mit dem ein
+  fremder Leser entscheidet, ob ihn die Zeile angeht.
+* ⚠️ **Was rausfiel, fiel GANZ raus.** Die Wallet-Bilanz halb zu zeigen („15/20") wäre
+  schlechter als sie wegzulassen — ohne CLV und ohne Lifetime ist sie kein Urteil, sondern
+  eine Zahl, die nach einem klingt.
+
+### 2. Poly-Whale · Trades — unverändert, plus die Lifetime-Bilanz
+
+Lucas: *„Trades-Channel lassen wir alles wie es ist, da will ich die ganze Info haben, die
+sonst noch da steht."* Wörtlich genommen: die Lifetime-P&L stand bis heute **nur** in der
+Public-Karte. Mit deren Kürzung wäre sie ersatzlos verschwunden — also wandert sie in
+`_wallet_line` (neu: `_lifetime`) statt weg.
+
+```
+Wallet 0xA1b2…5678 · ✅ <b>bewiesene Wallet</b> (15/20 richtig, 75% · +3.2pp CLV) · +$412K lifetime
+```
+
+* Fehlt `pnl`, steht **nichts** dort — kein „$0", das eine ausgeglichene Bilanz behauptet, wo
+  gar keine gemessen wurde. Der Guard dazu ist provoziert: mit `pnl = 0` als Default fällt er.
+* Ein **negativer** Lifetime erreicht `_lifetime` nie: `_is_confirmed_loser` schließt beide
+  Zweige von `_wallet_line` aus, eine Verlierer-Wallet bekommt „Track-Record noch im Aufbau"
+  auch bei 10/12 Treffern. Die Minus-Formatierung bleibt trotzdem drin — als Absicherung für
+  künftige Aufrufer, und ein Test hält fest, dass sie ein echtes „−" schreibt und kein „+".
+
+### 3. Cards-Digest — drei Streichungen
+
+| Vorher | Jetzt | Warum |
+|---|---|---|
+| `━━ Gruppe A · Spieltag 1 ━━` über **jedem** Spiel | nur beim **Wechsel** | Bei drei Spielen desselben Spieltags trennte der Trenner nichts, weil links und rechts dasselbe stand |
+| `✦ Das Modell sieht Treffer auf beiden Seiten — Value auf Beide Teams treffen — Nein` | *(weg)* | Stand eine Zeile über `🟡 Abwägen: Beide Teams treffen — Nein @2.18` — eine Übersetzung der Pick-Zeile, kein zusätzlicher Inhalt |
+| Einsatz in der **Kopfzeile**, Signale und Signalnamen je auf eigener Zeile | Einsatz am **Ende der Begründungszeile**, alles in einer | Die Kopfzeile beantwortet „was und zu welcher Quote", der Einsatz gehört zu „warum so viel" |
+
+⚠️ `aiSnippet` und `_pick_intro` werden **weiter erzeugt** und stehen unverändert im Dashboard
+und in den Vorschau-Seiten. Weggenommen wurde der Platz im Push, nicht die Information aus dem
+System.
+
+**Die Tests dazu waren im ersten Entwurf wertlos** und wurden ersetzt: einer las mit
+`inspect.getsource` nach, ob die ✦-Zeile noch im Quelltext steht (misst Code, nicht Ausgabe),
+der andere suchte den Trenner-Fall in Daten, die im Arbeitsverzeichnis gar nicht liegen — er
+lief als stiller No-Op durch. Jetzt wird der Fall **gebaut**: ein Spiel wird samt seinem Pick
+auf den nächsten Spieltag umgehängt (`pick_key` trägt den Spieltag im Namen — ohne Mitziehen
+fällt das Spiel aus der Karte und der Test misst die falsche Sache). Beide Richtungen sind
+provoziert: Trenner immer → fällt, Trenner nie → fällt die Gegenprobe.
+
+### 4. „Serie der Woche" ist aus dem Public-Kanal raus
+
+`.github/workflows/telegram-streaks.yml`: der Cron ist auskommentiert (mit Datum),
+`workflow_dispatch` bleibt. Der Workflow wird **nicht gelöscht** — ein gelöschter Workflow
+nimmt seine Historie mit und mit ihr die Frage, warum es ihn mal gab.
+
+### 5. 🔴 Der Flag-Fix — derselbe Bug, gegen den es seit dem 25.07. `tg_safe` gibt
+
+`notify_new_picks.py` schrieb `u['homeFlag']` roh in die Nachricht. Bei den Klub-Datensätzen
+ist das kein Emoji, sondern ein komplettes `<img src="https://media.api-sports.io/…">`-Tag
+(fürs Dashboard gedacht). Telegram erlaubt im HTML-Modus **kein `<img>`** und antwortet mit
+HTTP 400 „Unsupported start tag" — die Nachricht scheitert **lautlos**.
+
+`telegram_wm`, `detect_wm_sharp_moves` und `telegram_streak_watch` benutzen `safe_flag`
+seitdem; dieser Sender nie. **Folge: der Cards-Public-Push hat für liga/mls vermutlich noch
+nie zugestellt** — nur für die WM mit echten Länderflaggen, und die ist seit dem 19.07. vorbei.
+
+### 6. Der CI-Wachhund, vierter und fünfter Slug
+
+`superettan` (Schwedens **zweite** Klasse, trotz „super" im Namen) und `v-league` (Vietnams
+oberste). Beide in die **Tabelle**, nicht in eine Regel: ein Muster auf „super" würde
+`super-lig`, `super-league`, `super-league-1` und `chinese-super-league` umstürzen, um einen
+Nachtrag zu sparen. `v-league` heißt in Korea und Japan die **Volleyball**-Liga — dass hier
+trotzdem eine „1" stehen darf, hält allein `stufe()` fest, das außerhalb `sport == "soccer"`
+grundsätzlich `None` gibt.
+
+Der Wachhund wird bei jedem neuen Land wieder feuern. Das ist kein Mangel: ein Ligaslug bringt
+seine Spielklasse nicht mit, und eine geratene Ebene wäre schlechter als eine gemeldete Lücke.
+
+### ⏳ Offen / beobachten
+
+* `_sport(league, sport)` gibt für `("SOCCER", "soccer")` das Fallback-🎯 zurück und **`_pub_ok`
+  sperrt 🎯** — ein Fußball-Push würde damit gar nicht erst rausgehen. Aktuell harmlos, weil die
+  echten Positionen `sport = None` tragen und `("SOCCER", None)` sauber zu ⚽ Fußball auflöst;
+  die Konvention im Repo sind deutsche Kategorienamen (`"Fußball"`). Wer dort je englische
+  Kleinschreibung einträgt, schaltet den Fußball im Public-Kanal still ab.
+* `1 Signale dafür` — Singular/Plural in der Cards-Karte. Kosmetisch, vorbestehend.
 
 ## 📊 09.09.2026 — die Stats-Seite (Mehr → Stats)
 

@@ -345,3 +345,27 @@ def test_nachwuchs_schlaegt_kontinental():
     # verhaelt sich ein grosser Einsatz —, ist „Nachwuchs" die staerkere Auskunft.
     assert LS.stufe("uefa-youth-league") == "jugend"
     assert LS.stufe("uefa-champions-league") == "kontinental"
+
+
+# ── 10.09.2026: der Wachhund, vierter und fuenfter Slug ──────────────────────
+def test_super_im_namen_entscheidet_nicht_ueber_die_ebene():
+    """„superettan" ist Schwedens ZWEITE Klasse — und heisst trotzdem „super".
+
+    Das ist der Grund, warum diese beiden Slugs in der TABELLE stehen und nicht in einer
+    Regel: ein Muster auf „super" wuerde vier korrekte Ebene-1-Eintraege umstuerzen, um
+    einen einzigen Nachtrag zu sparen. Der Wachhund wird deshalb bei jedem neuen Land
+    wieder feuern — das ist kein Mangel, sondern die ehrliche Antwort darauf, dass ein
+    Ligaslug seine Spielklasse nicht mitbringt.
+    """
+    assert LS.stufe("superettan") == "2"
+    for eins in ("super-lig", "super-league", "super-league-1", "chinese-super-league"):
+        assert LS.stufe(eins) == "1", eins
+
+
+def test_v_league_nur_im_fussball():
+    """Vietnams oberste Klasse — aber „v-league" heisst in Korea und Japan die
+    VOLLEYBALL-Liga. Die Ebene darf deshalb nur unter `sport == "soccer"` herauskommen;
+    dieselbe Vorsichtsmassnahme, die „bundesliga" (Fussball und Handball) braucht."""
+    assert LS.stufe("v-league") == "1"
+    assert LS.stufe("v-league", "volleyball") is None
+    assert LS.stufe("v-league", "basketball") is None
