@@ -137,7 +137,7 @@
    "markt": "Match Odds",
    "seite": "home",
    "name": "Sevilla",
-   "odd": 2.1,
+   "odd": 2.14,
    "entryOdd": 2.28,
    "anteilPct": 75,
    "stufe": 2,
@@ -174,20 +174,20 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 76% auf der Seite"
+       "text": "Geld 78% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.759,
-       "betrag": 33626,
-       "gesamt": 44303,
+       "anteil": 0.778,
+       "betrag": 38818,
+       "gesamt": 49894,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 76% auf der Seite"
+      "text": "Geld 78% auf der Seite"
      },
      {
       "buch": "POLY",
@@ -206,7 +206,7 @@
       "geld": {
        "anteil": 0.46,
        "betrag": null,
-       "gesamt": 8949,
+       "gesamt": 13218,
        "waehrung": "USD",
        "quelle": "preis"
       },
@@ -257,9 +257,9 @@
    },
    "wertVsPinn": -0.0193,
    "gehaltenSeit": "2026-09-10T20:34:31.472832+00:00",
-   "zuletztAktiv": "2026-09-10T21:04:30.291119+00:00",
+   "zuletztAktiv": "2026-09-10T22:04:43.190550+00:00",
    "haltePreis": 2.12,
-   "aktiv": false
+   "aktiv": true
   },
   "36005171|Match Odds": {
    "matchId": "36005171",
@@ -397,6 +397,153 @@
    "gehaltenSeit": "2026-09-10T21:34:39.866187+00:00",
    "zuletztAktiv": "2026-09-10T21:34:39.866187+00:00",
    "haltePreis": 1.95,
+   "aktiv": false
+  },
+  "36005130|Match Odds": {
+   "matchId": "36005130",
+   "home": "Sunderland",
+   "away": "Arsenal",
+   "league": "English Premier League",
+   "kickoff": "2026-09-12T19:00:00Z",
+   "markt": "Match Odds",
+   "seite": "away",
+   "name": "Arsenal",
+   "odd": 1.52,
+   "entryOdd": 1.53,
+   "anteilPct": 83,
+   "stufe": 1,
+   "verstaerker": [
+    {
+     "art": "poly",
+     "text": "Poly Preis 66%",
+     "gewicht": 12
+    },
+    {
+     "art": "pinn",
+     "text": "Pinnacle stimmt zu",
+     "gewicht": 10
+    },
+    {
+     "art": "streak",
+     "text": "Ungeschlagen ×6",
+     "gewicht": 8
+    }
+   ],
+   "rang": 88.3,
+   "track": null,
+   "streak": {
+    "art": "Ungeschlagen",
+    "laenge": 6,
+    "quote": 69,
+    "liga": "Premier League"
+   },
+   "poly": {
+    "anteilPct": 66,
+    "usd": 45799,
+    "odd": 1.5
+   },
+   "polyStatus": "ja",
+   "polyKey": "epl-sun-ars-2026-09-12",
+   "polySide": "Arsenal FC",
+   "pinnMovePP": 0.3,
+   "punkte": {
+    "punkte": 8,
+    "moeglich": 10,
+    "dauerH": 44.92,
+    "teile": [
+     {
+      "buch": "BF",
+      "name": "Betfair",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Geld 83% auf der Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "frischer Zufluss und Quote zieht mit"
+      },
+      "geld": {
+       "anteil": 0.828,
+       "betrag": 31626,
+       "gesamt": 38196,
+       "waehrung": "EUR",
+       "quelle": "geld"
+      },
+      "text": "Geld 83% auf der Seite"
+     },
+     {
+      "buch": "POLY",
+      "name": "Polymarket",
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Poly-Preis 66% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein bewiesenes Wallet auf der Seite"
+      },
+      "geld": {
+       "anteil": 0.66,
+       "betrag": null,
+       "gesamt": 45799,
+       "waehrung": "USD",
+       "quelle": "preis"
+      },
+      "text": "Poly-Preis 66% auf derselben Seite"
+     },
+     {
+      "buch": "PIN",
+      "name": "Pinnacle",
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "hat dieselbe Seite als Favorit"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein Move gemessen"
+      },
+      "geld": null,
+      "text": "hat dieselbe Seite als Favorit"
+     },
+     {
+      "buch": "STAKE",
+      "name": "Stake-Highroller",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Stake-Highroller nicht erhoben"
+     },
+     {
+      "buch": "ZEIT",
+      "name": "Dauer",
+      "status": "ja",
+      "punkte": 1,
+      "moeglich": 1,
+      "grund": {
+       "ok": true,
+       "text": "steht seit 44.9h vor Anpfiff"
+      },
+      "tiefe": null,
+      "text": "steht seit 44.9h vor Anpfiff"
+     }
+    ]
+   },
+   "wertVsPinn": -0.0229,
+   "gehaltenSeit": "2026-09-10T22:04:43.190550+00:00",
+   "zuletztAktiv": "2026-09-10T22:04:43.190550+00:00",
+   "haltePreis": 1.52,
    "aktiv": true
   }
  }

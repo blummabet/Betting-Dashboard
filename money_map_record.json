@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-10T21:49:43.262772+00:00",
+"generatedAt": "2026-09-10T22:04:40.847755+00:00",
 "byVerdict": {
 "konsens": {
-"n": 940,
-"wins": 786,
-"hitRate": 0.8362,
-"polyN": 884,
-"polyWins": 683,
-"polyHitRate": 0.7726,
+"n": 941,
+"wins": 787,
+"hitRate": 0.8363,
+"polyN": 885,
+"polyWins": 684,
+"polyHitRate": 0.7729,
 "pinnN": 109,
 "pinnHitRate": 0.8257,
-"nRoi": 267,
-"roi": 0.4564,
-"roiLb": 0.3801,
-"nClv": 267,
-"clv": 21.18,
-"clvLb": 18.781
+"nRoi": 268,
+"roi": 0.4552,
+"roiLb": 0.3791,
+"nClv": 268,
+"clv": 21.14,
+"clvLb": 18.7523
 },
 "uneinig": {
-"n": 359,
+"n": 360,
 "wins": 117,
-"hitRate": 0.3259,
-"polyN": 322,
+"hitRate": 0.325,
+"polyN": 323,
 "polyWins": 86,
-"polyHitRate": 0.2671,
-"pinnN": 215,
-"pinnHitRate": 0.5953,
-"nRoi": 127,
-"roi": -0.4056,
-"roiLb": -0.5413,
-"nClv": 127,
-"clv": -18.15,
-"clvLb": -23.0933
+"polyHitRate": 0.2663,
+"pinnN": 216,
+"pinnHitRate": 0.5926,
+"nRoi": 128,
+"roi": -0.4102,
+"roiLb": -0.5451,
+"nClv": 128,
+"clv": -17.46,
+"clvLb": -22.4919
 },
 "teil": {
 "n": 16,
@@ -196,6 +196,11 @@
 "wins": 10,
 "hitRate": 0.5556
 },
+"UEFA Champions League": {
+"n": 18,
+"wins": 14,
+"hitRate": 0.7778
+},
 "CONMEBOL Copa Libertadores": {
 "n": 17,
 "wins": 8,
@@ -215,11 +220,6 @@
 "n": 16,
 "wins": 10,
 "hitRate": 0.625
-},
-"UEFA Champions League": {
-"n": 16,
-"wins": 13,
-"hitRate": 0.8125
 },
 "Danish Superliga": {
 "n": 15,
@@ -604,37 +604,75 @@
 },
 "byStrength": {
 "strong": {
-"n": 786,
-"wins": 628,
-"hitRate": 0.799,
-"nRoi": 262,
-"roi": 0.2589,
-"roiLb": 0.1752,
-"nClv": 262,
-"clv": 12.42,
-"clvLb": 9.052
+"n": 787,
+"wins": 629,
+"hitRate": 0.7992,
+"nRoi": 263,
+"roi": 0.2584,
+"roiLb": 0.1751,
+"nClv": 263,
+"clv": 12.41,
+"clvLb": 9.0606
 },
 "weak": {
-"n": 496,
+"n": 497,
 "wins": 260,
-"hitRate": 0.5242,
-"nRoi": 139,
-"roi": -0.0322,
-"roiLb": -0.178,
-"nClv": 139,
-"clv": -1.04,
-"clvLb": -5.5434
+"hitRate": 0.5231,
+"nRoi": 140,
+"roi": -0.0391,
+"roiLb": -0.1843,
+"nClv": 140,
+"clv": -0.53,
+"clvLb": -5.0777
 }
 },
 "divergence": {
-"n": 359,
+"n": 360,
 "betfairWins": 117,
-"betfairRate": 0.3259,
-"polyN": 322,
+"betfairRate": 0.325,
+"polyN": 323,
 "polyWins": 86,
-"polyRate": 0.2671
+"polyRate": 0.2663
 },
 "recent": [
+{
+"matchId": "35998669",
+"home": "Slavia Prague",
+"away": "Lens",
+"league": "UEFA Champions League",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Slavia Prague",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+3
+],
+"kickoff": "2026-09-10T19:00:00Z",
+"settledAt": "2026-09-10T22:04:40.635439+00:00"
+},
+{
+"matchId": "35998668",
+"home": "Man Utd",
+"away": "FC Sabah",
+"league": "UEFA Champions League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Man Utd",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+4,
+0
+],
+"kickoff": "2026-09-10T19:00:00Z",
+"settledAt": "2026-09-10T22:04:40.635439+00:00"
+},
 {
 "matchId": "35998676",
 "home": "Como",
@@ -1356,56 +1394,18 @@
 ],
 "kickoff": "2026-09-09T19:15:00Z",
 "settledAt": "2026-09-09T21:17:03.841682+00:00"
-},
-{
-"matchId": "35998677",
-"home": "Napoli",
-"away": "Arsenal",
-"league": "UEFA Champions League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Arsenal",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-09-09T19:00:00Z",
-"settledAt": "2026-09-09T21:01:56.557958+00:00"
-},
-{
-"matchId": "35998574",
-"home": "Paris St-G",
-"away": "Slovan Bratislava",
-"league": "UEFA Champions League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Paris St-G",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-6,
-1
-],
-"kickoff": "2026-09-09T19:00:00Z",
-"settledAt": "2026-09-09T21:01:56.557958+00:00"
 }
 ],
 "global": {
-"n": 1315,
-"wins": 906,
-"hitRate": 0.689,
-"nRoi": 401,
-"roi": 0.158,
-"roiLb": 0.0828,
-"nClv": 401,
-"clv": 7.75,
-"clvLb": 5.0077
+"n": 1317,
+"wins": 907,
+"hitRate": 0.6887,
+"nRoi": 403,
+"roi": 0.1551,
+"roiLb": 0.0801,
+"nClv": 403,
+"clv": 7.92,
+"clvLb": 5.1741
 },
-"pending": 22
+"pending": 21
 }
