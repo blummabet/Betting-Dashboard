@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-10T19:04:18.847789+00:00",
+"generatedAt": "2026-09-10T19:19:31.592267+00:00",
 "byVerdict": {
 "konsens": {
-"n": 934,
-"wins": 781,
-"hitRate": 0.8362,
-"polyN": 878,
-"polyWins": 678,
-"polyHitRate": 0.7722,
+"n": 935,
+"wins": 782,
+"hitRate": 0.8364,
+"polyN": 879,
+"polyWins": 679,
+"polyHitRate": 0.7725,
 "pinnN": 108,
 "pinnHitRate": 0.8241,
-"nRoi": 261,
-"roi": 0.4632,
-"roiLb": 0.3858,
-"nClv": 261,
-"clv": 21.27,
-"clvLb": 18.8358
+"nRoi": 262,
+"roi": 0.4615,
+"roiLb": 0.3843,
+"nClv": 262,
+"clv": 21.19,
+"clvLb": 18.7603
 },
 "uneinig": {
-"n": 354,
+"n": 355,
 "wins": 117,
-"hitRate": 0.3305,
-"polyN": 318,
+"hitRate": 0.3296,
+"polyN": 319,
 "polyWins": 85,
-"polyHitRate": 0.2673,
+"polyHitRate": 0.2665,
 "pinnN": 212,
 "pinnHitRate": 0.5896,
-"nRoi": 122,
-"roi": -0.3812,
-"roiLb": -0.5213,
-"nClv": 122,
-"clv": -18.34,
-"clvLb": -23.3863
+"nRoi": 123,
+"roi": -0.3863,
+"roiLb": -0.5255,
+"nClv": 123,
+"clv": -18.13,
+"clvLb": -23.1444
 },
 "teil": {
 "n": 16,
@@ -331,6 +331,11 @@
 "wins": 4,
 "hitRate": 0.6667
 },
+"Qatari Stars League": {
+"n": 6,
+"wins": 3,
+"hitRate": 0.5
+},
 "Argentinian Cup": {
 "n": 5,
 "wins": 3,
@@ -346,11 +351,6 @@
 "wins": 3,
 "hitRate": 0.6
 },
-"Qatari Stars League": {
-"n": 5,
-"wins": 2,
-"hitRate": 0.4
-},
 "Saudi Kings Cup": {
 "n": 5,
 "wins": 4,
@@ -360,6 +360,11 @@
 "n": 5,
 "wins": 5,
 "hitRate": 1.0
+},
+"UAE Arabian Gulf League": {
+"n": 5,
+"wins": 3,
+"hitRate": 0.6
 },
 "Argentinian Primera Nacional": {
 "n": 4,
@@ -392,11 +397,6 @@
 "hitRate": 0.5
 },
 "Israeli Premier League": {
-"n": 4,
-"wins": 3,
-"hitRate": 0.75
-},
-"UAE Arabian Gulf League": {
 "n": 4,
 "wins": 3,
 "hitRate": 0.75
@@ -604,37 +604,75 @@
 },
 "byStrength": {
 "strong": {
-"n": 777,
-"wins": 623,
-"hitRate": 0.8018,
-"nRoi": 253,
-"roi": 0.2761,
-"roiLb": 0.1912,
-"nClv": 253,
-"clv": 12.91,
-"clvLb": 9.4872
+"n": 778,
+"wins": 624,
+"hitRate": 0.8021,
+"nRoi": 254,
+"roi": 0.2751,
+"roiLb": 0.1905,
+"nClv": 254,
+"clv": 12.86,
+"clvLb": 9.4488
 },
 "weak": {
-"n": 494,
+"n": 495,
 "wins": 260,
-"hitRate": 0.5263,
-"nRoi": 137,
-"roi": -0.018,
-"roiLb": -0.1651,
-"nClv": 137,
-"clv": -1.41,
-"clvLb": -5.9453
+"hitRate": 0.5253,
+"nRoi": 138,
+"roi": -0.0251,
+"roiLb": -0.1716,
+"nClv": 138,
+"clv": -1.34,
+"clvLb": -5.8465
 }
 },
 "divergence": {
-"n": 354,
+"n": 355,
 "betfairWins": 117,
-"betfairRate": 0.3305,
-"polyN": 318,
+"betfairRate": 0.3296,
+"polyN": 319,
 "polyWins": 85,
-"polyRate": 0.2673
+"polyRate": 0.2665
 },
 "recent": [
+{
+"matchId": "36036086",
+"home": "Al Sailiya",
+"away": "Al-Sadd",
+"league": "Qatari Stars League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Al-Sadd",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+6
+],
+"kickoff": "2026-09-10T16:15:00Z",
+"settledAt": "2026-09-10T19:19:31.370865+00:00"
+},
+{
+"matchId": "36032220",
+"home": "Al Ain",
+"away": "Al Wasl",
+"league": "UAE Arabian Gulf League",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Al Ain",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-09-10T16:15:00Z",
+"settledAt": "2026-09-10T19:19:31.370865+00:00"
+},
 {
 "matchId": "36043617",
 "home": "Asteras Tripolis",
@@ -1356,56 +1394,18 @@
 ],
 "kickoff": "2026-09-09T16:45:00Z",
 "settledAt": "2026-09-09T19:46:51.745960+00:00"
-},
-{
-"matchId": "36005291",
-"home": "FC Twente",
-"away": "SC Telstar",
-"league": "Dutch Eredivisie",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "FC Twente",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-09-09T16:45:00Z",
-"settledAt": "2026-09-09T19:46:51.745960+00:00"
-},
-{
-"matchId": "36032446",
-"home": "Al-Kholood Club",
-"away": "Al-Shabab (KSA)",
-"league": "Saudi Professional League",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Al-Shabab (KSA)",
-"polySide": "home",
-"winner": "home",
-"moneyWin": false,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-09-09T15:55:00Z",
-"settledAt": "2026-09-09T19:01:55.023355+00:00"
 }
 ],
 "global": {
-"n": 1304,
-"wins": 901,
-"hitRate": 0.691,
-"nRoi": 390,
-"roi": 0.1728,
-"roiLb": 0.0965,
-"nClv": 390,
-"clv": 7.88,
-"clvLb": 5.0918
+"n": 1306,
+"wins": 902,
+"hitRate": 0.6907,
+"nRoi": 392,
+"roi": 0.1694,
+"roiLb": 0.0933,
+"nClv": 392,
+"clv": 7.86,
+"clvLb": 5.0857
 },
-"pending": 29
+"pending": 27
 }
