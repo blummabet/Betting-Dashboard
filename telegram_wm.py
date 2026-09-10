@@ -39,8 +39,18 @@ import cocobet_dataset as D  # noqa: E402
 import telegram_i18n as I18N  # noqa: E402  (04.07.2026, Lucas: DE+EN Public-Picks)
 import pick_announce_state as _PA  # noqa: E402  (30.08.2026: EINE Push-Definition)
 
-# Public-Sprachen: erst DE, dann EN (beide in denselben Channel). Via env override-bar.
-TG_LANGS = [s.strip() for s in os.environ.get("TG_LANGS", "de,en").split(",") if s.strip()]
+# Public-Sprachen: welche Fassungen der Cards-Karten in den Public-Channel gehen.
+#
+# 10.09.2026 (Lucas: „bitte deaktivier mal Englisch"). Default war „de,en" — jede Morning-Card
+# und jeder Recap ging ZWEIMAL in denselben Channel, einmal deutsch, einmal englisch. Seit dem
+# 04.07. war das so gedacht; heute ist es vor allem doppelt so viel Nachricht fuer dieselbe
+# Auskunft, und der Kanal ist deutschsprachig.
+#
+# ⭐ Weggenommen wird der VERSAND, nicht die Uebersetzung. `telegram_i18n` bleibt vollstaendig,
+# `build_morning_card(..., "en")` baut die englische Karte weiter, und die Tests pruefen sie
+# weiter — TG_LANGS="de,en" holt sie in einem Schritt zurueck. Eine geloeschte Uebersetzung
+# waere nicht rueckgaengig zu machen, ein Default ist es.
+TG_LANGS = [s.strip() for s in os.environ.get("TG_LANGS", "de").split(",") if s.strip()]
 # (31.07.2026, Lucas) Öffentliche Bilanz erst ab belastbarer Stichprobe zeigen (sonst -24% aus 8 Picks im Public).
 RECORD_MIN_N = int(os.environ.get("RECORD_MIN_N") or 20)
 WM_FILE        = str(D.data_file())

@@ -158,3 +158,48 @@ def test_zeile_vor_anpfiff_bleibt_ohne_live_marker():
                  "price": 0.48, "htk": 3.0, "league": "SOCCER"})
     assert "LIVE" not in z
     assert "Min" not in z
+
+
+class TestPushBuch(unittest.TestCase):
+    """10.09.2026 (Lucas: „Heute spielenswert Trades — wird das erst seit kurzem getrackt?").
+
+    Nein — es vergass. Die Stats-Seite las `shortlist_push_seen.json`, ein Dedup-Buch mit drei
+    Tagen TTL, das sich bei jedem Lauf selbst aufraeumt. „Heute spielenswert" war damit als
+    einziger der fuenf Push-Kanaele ohne eigenes Buch.
+    """
+
+    def test_das_buch_haelt_zeitpunkt_und_push_preis(self):
+        z = P.buch_zeilen([_play("k1", "Over", 7, price=0.62)], "2026-09-10T12:00:00+00:00")
+        self.assertEqual(len(z), 1)
+        self.assertEqual(z[0]["k"], "k1|Over")
+        self.assertEqual(z[0]["sentAt"], "2026-09-10T12:00:00+00:00")
+        self.assertEqual(z[0]["pushPreis"], 0.62)
+        self.assertEqual(z[0]["conv"], 7)
+
+    def test_ein_nicht_gesendeter_push_wird_NICHT_gebucht(self):
+        """Vorschau-Lauf ohne Token, oder Telegram hat abgelehnt. „Wir haetten gesendet" ist
+        keine Handlung — eine Bilanz darauf waere erfunden."""
+        self.assertEqual(P.buch_zeilen([_play("k1", "Over", 7)], "2026-09-10T12:00:00+00:00",
+                                       gesendet=False), [])
+
+    def test_ein_unbrauchbarer_preis_wird_nicht_gerundet_sondern_weggelassen(self):
+        """Fehlende Information rendert als nichts. Ein Preis von 0 oder 1 ist kein Einstieg,
+        und eine erfundene Zahl waere schlimmer als keine — die Stats-Seite zeigt dann eine
+        Zeile ohne Rendite statt einer falschen."""
+        for schlecht in (None, 0.0, 1.0, 1.5, -0.2, "teuer"):
+            z = P.buch_zeilen([_play("k1", "Over", 7, price=schlecht)],
+                              "2026-09-10T12:00:00+00:00")
+            self.assertIsNone(z[0]["pushPreis"], repr(schlecht))
+
+    def test_zeilen_ohne_key_oder_seite_kommen_nicht_ins_buch(self):
+        z = P.buch_zeilen([{"key": "k", "conv": 7}, {"side": "Over", "conv": 7}, "kaputt"],
+                          "2026-09-10T12:00:00+00:00")
+        self.assertEqual(z, [])
+
+    def test_das_buch_rechnet_nicht_selbst_ab(self):
+        """Der Ausgang steht in poly_shortlist_track.json — das seit dem 10.09. weiss, wann ein
+        Buendel-Markt ueberhaupt entscheiden darf. Zwei Abrechnungen mit zwei Regeln waren in
+        diesem Repo schon einmal der Fehler (s. poly_slug_urteil.py)."""
+        z = P.buch_zeilen([_play("k1", "Over", 7)], "2026-09-10T12:00:00+00:00")
+        for feld in ("result", "win", "pnl", "settledAt", "winner"):
+            self.assertNotIn(feld, z[0], feld)

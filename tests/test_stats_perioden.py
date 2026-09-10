@@ -14,6 +14,18 @@ from datetime import date, timedelta
 import stats_perioden as S
 
 
+# Kleine Zusicherungs-Helfer — die Datei nutzt plain asserts, kein unittest.
+def _lt(a, b, m=""):   assert a < b, m
+def _in(a, b, m=""):   assert a in b, m
+def _nin(a, b, m=""):  assert a not in b, m
+def _t(a, m=""):       assert a, m
+def _none(a, m=""):    assert a is None, m
+def _near(a, b, places=6, m=""): assert round(a - b, places) == 0, m
+def _skip(m=""):
+    import pytest
+    pytest.skip(m)
+
+
 def _p(tag, rendite=None, gewonnen=None, clv=None):
     return {"tag": tag, "rendite": rendite, "gewonnen": gewonnen, "clv": clv}
 
@@ -114,23 +126,31 @@ class TestBau:
             assert b["abdeckung"]["von"] and b["abdeckung"]["bis"]
             assert any(r["art"] == "gesamt" for r in b["reihen"])
 
-    def test_die_wm_steht_getrennt_vom_laufenden_betrieb(self):
-        """Die WM traegt 160 der 314 abgerechneten Card-Picks und ist seit 19.07. vorbei. Eine
-        Gesamtzahl, die zur Haelfte aus einem beendeten Turnier besteht, beantwortet „wie laeuft
-        es gerade" mit dem letzten Sommer."""
+    def test_die_wm_ist_von_der_seite_verschwunden_aber_nicht_aus_dem_system(self):
+        """10.09.2026 (Lucas: „WM kann raus, wertlos in Wahrheit").
+
+        Am 09.09. stand hier das Gegenteil — der Test verlangte einen eigenen WM-Block. Das war
+        richtig, solange die Frage lautete „wie halte ich das beendete Turnier aus der laufenden
+        Zahl raus". Lucas' Antwort ist eine Ebene darueber: die Frage stellt niemand mehr.
+
+        Geprueft wird deshalb beides. Der Block ist weg — UND die Daten sind es nicht: wer
+        `cards_plays("WM")` fragt, bekommt die Picks weiterhin. Ein Block zu entfernen darf
+        keine Auskunft aus dem System nehmen.
+        """
         d = S.baue()
         ids = {b["id"] for b in d["bloecke"]}
-        assert "cards-wm" in ids
-        laufend = [b for b in d["bloecke"] if b["id"] == "cards"][0]
-        wm = [b for b in d["bloecke"] if b["id"] == "cards-wm"][0]
-        n_l = [r for r in laufend["reihen"] if r["art"] == "gesamt"][0]["n"]
-        n_w = [r for r in wm["reihen"] if r["art"] == "gesamt"][0]["n"]
-        liga = [b for b in d["bloecke"] if b["id"] == "cards-liga"][0]
-        mls = [b for b in d["bloecke"] if b["id"] == "cards-mls"][0]
-        n_lm = ([r for r in liga["reihen"] if r["art"] == "gesamt"][0]["n"]
-                + [r for r in mls["reihen"] if r["art"] == "gesamt"][0]["n"])
-        assert n_l == n_lm, "der laufende Betrieb ist genau Liga + MLS"
-        assert n_w > 0 and n_l != n_l + n_w
+        assert "cards-wm" not in ids
+        assert not any("WM 2026" in b["label"] for b in d["bloecke"])
+        assert S.cards_plays("WM"), "die WM-Picks muessen abfragbar bleiben"
+
+    def test_der_laufende_betrieb_ist_genau_liga_plus_mls(self):
+        """Und die WM darf nicht durch die Hintertuer in die Gesamtzahl zurueckkommen."""
+        d = S.baue()
+        def _n(bid):
+            b = [x for x in d["bloecke"] if x["id"] == bid]
+            return [r for r in b[0]["reihen"] if r["art"] == "gesamt"][0]["n"] if b else 0
+        assert _n("cards") == _n("cards-liga") + _n("cards-mls")
+        assert _n("cards") < len(S.cards_plays()), "cards_plays() ohne Filter haelt auch die WM"
 
     def test_gesperrte_sportarten_sind_nicht_in_der_poly_bilanz(self):
         """Sie laufen als reine Beobachtung — eine Bilanz dessen, was gespielt werden darf,
@@ -147,3 +167,86 @@ class TestBau:
         n_block = len(S.poly_plays(tr))
         assert n_block == len([r for r in st if r.get("cat") not in gesperrt
                                and S._tag(r.get("settledTs"))])
+
+
+# ── 10.09.2026: die Push-Kanal-Blöcke zählen, was den Kanal verlassen hat ─────────────────
+class TestPushKanaeleZaehlenNurPushes:
+
+    def test_der_picks_block_zaehlt_nur_wirklich_gepushtes(self):
+        """`pick_push_ledger.json` ist ein SCHATTENBUCH: es haelt jeden announce-faehigen Pick,
+        den gesendeten UND den vom Gegensignal-Filter aussortierten, damit sich der Filter nicht
+        selbst bestaetigen kann. Als Quelle fuer einen Push-Kanal ist es damit untauglich —
+        gemessen am 10.09. standen 127 nie gepushte Picks in der Gruppe „Push-Kanäle"."""
+        import json
+        bloecke = {b[0]: b for b in S.push_bloecke()}
+        for bid, datei in (("liga-picks", "liga_pick_push_ledger.json"),
+                           ("mls-picks", "mls_pick_push_ledger.json")):
+            if bid not in bloecke:
+                continue
+            roh = json.loads((S.BASE / datei).read_text(encoding="utf-8"))
+            gepusht = [r for r in roh if isinstance(r, dict) and r.get("push")]
+            mit_tag = [r for r in gepusht if S._tag(r.get("gesehenAm"))]
+            assert len(bloecke[bid][3]) == len(mit_tag), bid
+            _lt(len(bloecke[bid][3]), len(roh),
+                            "%s: das Schattenbuch ist groesser als der Kanal" % bid)
+
+    def test_die_aussortierten_verschwinden_nicht_stillschweigend(self):
+        """Sie werden nicht mitgezaehlt — aber der Block sagt, wie viele es sind. Eine Zahl, die
+        kleiner wird, ohne dass jemand erfaehrt warum, ist die schlechtere Haelfte des Tauschs."""
+        bloecke = {b[0]: b for b in S.push_bloecke()}
+        if "liga-picks" not in bloecke:
+            _skip("kein Liga-Ledger im Arbeitsverzeichnis")
+        hinweis = bloecke["liga-picks"][4]
+        _t(hinweis, "der Block muss die Aussortierten benennen")
+        _in("aussortiert", hinweis)
+
+
+class TestShortlistPushBuch:
+    """10.09.2026 (Lucas: „wird das erst seit kurzem getrackt? weil nur 23 in KW 37 und sonst
+    nichts"). Nein — die alte Quelle war ein Dedup-Buch mit 3 Tagen TTL und VERGASS."""
+
+    def test_ergebnis_kommt_aus_dem_track_buch_und_preis_aus_dem_push(self):
+        led = [{"k": "a|Over", "key": "a", "side": "Over", "sentAt": "2026-09-10T10:00:00+00:00",
+                "pushPreis": 0.5, "conv": 7},
+               {"k": "b|Under", "key": "b", "side": "Under", "sentAt": "2026-09-10T11:00:00+00:00",
+                "pushPreis": 0.8, "conv": 6}]
+        tr = {"settled": [{"key": "a", "side": "Over", "result": "win"},
+                          {"key": "b", "side": "Under", "result": "loss"}]}
+        pl = S.shortlist_push_plays(led, tr)
+        assert [p["gewonnen"] for p in pl] == [True, False]
+        # Aktien = 1/0.5 → Gewinner zahlt 1.00 je Aktie → Rendite +1.0 je Einheit Einsatz.
+        _near(pl[0]["rendite"], 1.0)
+        _near(pl[1]["rendite"], -1.0)
+
+    def test_der_push_preis_entscheidet_nicht_der_scan_preis(self):
+        """Wer dem Push folgt, steigt zu dem Preis ein, der in der Nachricht stand."""
+        tr = {"settled": [{"key": "a", "side": "Over", "result": "win"}]}
+        teuer = S.shortlist_push_plays([{"k": "a|Over", "key": "a", "side": "Over",
+                                         "sentAt": "2026-09-10T10:00:00+00:00", "pushPreis": 0.9}], tr)
+        billig = S.shortlist_push_plays([{"k": "a|Over", "key": "a", "side": "Over",
+                                          "sentAt": "2026-09-10T10:00:00+00:00", "pushPreis": 0.5}], tr)
+        _lt(teuer[0]["rendite"], billig[0]["rendite"])
+
+    def test_ein_push_ohne_ausgang_zaehlt_als_zeile_ohne_treffer(self):
+        """Er ist gesendet worden — das ist die eine Zahl, die immer stimmt. Eine Rendite hat er
+        nicht, und die darf nicht als 0 erscheinen."""
+        pl = S.shortlist_push_plays([{"k": "x|Over", "key": "x", "side": "Over",
+                                      "sentAt": "2026-09-10T10:00:00+00:00", "pushPreis": 0.6}],
+                                    {"settled": []})
+        assert len(pl) == 1
+        _none(pl[0]["gewonnen"])
+        _none(pl[0]["rendite"])
+
+    def test_ohne_preis_gibt_es_keine_rendite(self):
+        pl = S.shortlist_push_plays([{"k": "a|Over", "key": "a", "side": "Over",
+                                      "sentAt": "2026-09-10T10:00:00+00:00"}],
+                                    {"settled": [{"key": "a", "side": "Over", "result": "win"}]})
+        _t(pl[0]["gewonnen"])
+        _none(pl[0]["rendite"], "ohne Preis keine Zahl — auch keine Null")
+
+    def test_das_dedup_buch_ist_keine_quelle_mehr(self):
+        """Der eigentliche Fund: `shortlist_push_seen.json` raeumt sich nach 3 Tagen selbst auf.
+        Wer daraus eine Historie baut, zeigt leere Wochen, in denen sehr wohl gepusht wurde."""
+        import inspect
+        quelle = inspect.getsource(S.push_bloecke)
+        _nin('_load("shortlist_push_seen.json"', quelle)

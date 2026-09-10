@@ -287,6 +287,47 @@ def _push_plays(rows, ts_feld, quote_feld, win_fn, clv_feld=None) -> list:
     return aus
 
 
+def shortlist_push_plays(ledger=None, track=None) -> list:
+    """Die Shortlist-Pushes mit ihrem Ausgang. REIN (beide Quellen injizierbar).
+
+    Zwei Quellen, klar getrennte Rollen — und genau so muss es sein:
+      · `shortlist_push_ledger.json` sagt, WANN und ZU WELCHEM PREIS gepusht wurde.
+      · `poly_shortlist_track.json` sagt, wie es AUSGEGANGEN ist.
+
+    Die Abrechnung wird NICHT nachgebaut. Das Track-Buch weiss seit dem 10.09., wann ein
+    Buendel-Markt ueberhaupt entscheiden darf (poly_slug_urteil); eine zweite Abrechnung hier
+    haette diese Regel nicht — und zwei Buecher mit zwei Regeln waren schon einmal der Fehler.
+
+    Ein Push ohne Ausgang zaehlt als Zeile OHNE Treffer: er ist gesendet worden, das ist die eine
+    Zahl, die immer stimmt. Ein Push ohne brauchbaren Preis bekommt keine Rendite, keine Null.
+    """
+    rows = ledger if ledger is not None else _load("shortlist_push_ledger.json", [])
+    rows = rows if isinstance(rows, list) else []
+    tr = track if track is not None else _load("poly_shortlist_track.json", {})
+    st = (tr or {}).get("settled") or []
+    st = list(st.values()) if isinstance(st, dict) else st
+    erg = {}
+    for r in st:
+        if isinstance(r, dict) and r.get("key") and r.get("side") and r.get("result"):
+            erg["%s|%s" % (r["key"], r["side"])] = (r["result"] == "win")
+    aus = []
+    for r in rows:
+        if not isinstance(r, dict):
+            continue
+        t = _tag(r.get("sentAt"))
+        if not t:
+            continue
+        w = erg.get(r.get("k") or "%s|%s" % (r.get("key"), r.get("side")))
+        preis = r.get("pushPreis")
+        ren = None
+        if isinstance(w, bool) and isinstance(preis, (int, float)) and 0 < preis < 1:
+            # Aktien = Einsatz/Preis, der Gewinner zahlt 1.00 je Aktie — dieselbe Rechnung wie
+            # im Track-Buch, nur mit dem Push-Preis statt dem Scan-Preis.
+            ren = (1.0 / float(preis) - 1.0) if w else -1.0
+        aus.append({"tag": t, "gewonnen": w, "rendite": ren, "clv": None})
+    return aus
+
+
 def push_bloecke() -> list:
     """Je Kanal ein Block. Die Ledger tragen alle einen Sende-Zeitstempel und einen Status —
     gebucht wird nach dem SENDEDATUM, denn das ist die Handlung, um die es geht."""
@@ -294,7 +335,7 @@ def push_bloecke() -> list:
     bl = _load("betfair_public_ledger.json", [])
     aus.append(("bf-public", "Betfair · Public-Channel", "🟣", _push_plays(
         bl if isinstance(bl, list) else [], "sentAt", "leadOdd",
-        lambda r: True if r.get("status") == "won" else (False if r.get("status") == "lost" else None))))
+        lambda r: True if r.get("status") == "won" else (False if r.get("status") == "lost" else None)), None))
     # Der Whale-Kanal fuehrt keine Quote, aber ein P&L bei festem Einsatz ($10) — das IST die
     # Rendite je Einheit. Aus `pushPrice` waere sie nur rekonstruiert, und in 11 von 23 Zeilen
     # fehlt der Preis ganz.
@@ -309,26 +350,59 @@ def push_bloecke() -> list:
         _wr.append({"tag": t, "gewonnen": _w,
                     "rendite": (float(_pnl) / float(_st)) if isinstance(_pnl, (int, float)) else None,
                     "clv": None})
-    aus.append(("whale-public", "Poly-Whales · Public-Channel", "🐋", _wr))
+    aus.append(("whale-public", "Poly-Whales · Public-Channel", "🐋", _wr, None))
     kp = _load("killer_push_ledger.json", [])
     aus.append(("killer", "Konjunktion · Trades", "🔒", _push_plays(
         kp if isinstance(kp, list) else [], "gepushtAm", "pushPreis",
-        lambda r: r.get("win") if isinstance(r.get("win"), bool) else None)))
+        lambda r: r.get("win") if isinstance(r.get("win"), bool) else None), None))
+    # 🔴 10.09.2026 (Lucas: „was ist Liga-Picks Trades?") — HIER STAND DAS FALSCHE BUCH.
+    #
+    # `pick_push_ledger.json` ist ein SCHATTENBUCH und soll es sein: es schreibt jeden
+    # announce-faehigen Pick mit, den gesendeten UND den vom Gegensignal-Filter aussortierten,
+    # damit der Filter sich nicht selbst bestaetigen kann (s. pick_push_ledger.py). Genau das
+    # macht es als Quelle fuer einen PUSH-KANAL untauglich:
+    #
+    #     Liga   131 Zeilen  ->   42 gepusht,   89 nie
+    #     MLS     44 Zeilen  ->    6 gepusht,   38 nie
+    #
+    # 127 Picks standen damit in der Gruppe „Push-Kanäle", die nie in einem Push waren. Dieselbe
+    # Fehlerklasse wie beim Public-Block heute frueh: der Name verspricht eine Menge, die Zahl
+    # enthaelt eine andere. Ein Kanal-Block zaehlt, was den Kanal verlassen hat — sonst misst er
+    # die Engine und nennt es Kanal.
+    #
+    # ⭐ Die Aussortierten verschwinden nicht: der Hinweis nennt ihre Zahl, und die Gegenprobe
+    # („waren die Aussortierten in Wahrheit gut?") steht dort, wo sie hingehoert — als eigene
+    # Schublade im Freigabe-Register, nach denselben Regeln beurteilt wie jede andere.
     for datei, name in (("liga_pick_push_ledger.json", "Liga-Picks · Trades"),
                         ("mls_pick_push_ledger.json", "MLS-Picks · Trades")):
         pl = _load(datei, [])
         rows = pl if isinstance(pl, list) else (pl.get("zeilen") or [])
+        rows = [r for r in rows if isinstance(r, dict)]
+        gepusht = [r for r in rows if r.get("push")]
+        _hinweis = None
+        if len(rows) > len(gepusht):
+            _hinweis = ("Nur was wirklich rausging: %d von %d announce-fähigen Picks. Die %d "
+                        "aussortierten führt das Schattenbuch weiter — sie stehen als Gegenprobe "
+                        "im Freigabe-Register, nicht in der Kanal-Bilanz."
+                        % (len(gepusht), len(rows), len(rows) - len(gepusht)))
         aus.append((datei.split("_")[0] + "-picks", name, "🎯", _push_plays(
-            rows, "gesehenAm", "odds",
-            lambda r: r.get("win") if isinstance(r.get("win"), bool) else None)))
-    sp = _load("shortlist_push_seen.json", {})
-    # ⚠️ Dieser Kanal fuehrt KEIN Ergebnis: `shortlist_push_seen.json` ist ein Dedup-Buch, kein
-    # Ledger. Die Zahl der Pushes stimmt, eine Trefferquote gibt es nicht — und die Zeile sagt
-    # das, statt eine leere Spalte als „0 %" zu zeigen.
-    aus.append(("shortlist", "Heute spielenswert · Trades", "⚡", [
-        {"tag": _tag(v.get("ts")), "gewonnen": None, "rendite": None, "clv": None}
-        for v in (sp.values() if isinstance(sp, dict) else []) if isinstance(v, dict)]))
-    return [(i, n, e, [p for p in pl if p.get("tag")]) for i, n, e, pl in aus]
+            gepusht, "gesehenAm", "odds",
+            lambda r: r.get("win") if isinstance(r.get("win"), bool) else None), _hinweis))
+    # 🔴 10.09.2026 (Lucas: „wird das erst seit kurzem getrackt? weil nur 23 in KW 37 und sonst
+    # nichts"). Hier stand `shortlist_push_seen.json` — ein DEDUP-Buch mit drei Tagen TTL, kein
+    # Ledger. Es raeumt sich selbst auf, also konnte der Block nie mehr als drei Tage zeigen, und
+    # ein Ergebnis trug es auch nicht. Die leeren Wochen waren keine Pushes-Luecke, sondern eine
+    # Gedaechtnisluecke.
+    #
+    # Jetzt liest der Block `shortlist_push_ledger.json` (push_shortlist_trades schreibt es seit
+    # dem 10.09.). Der Ausgang kommt aus `poly_shortlist_track.json` — dieselbe Abrechnung wie
+    # ueberall, statt einer zweiten Meinung. Gerechnet wird mit dem PUSH-Preis, nicht dem
+    # Scan-Preis: wer dem Push folgt, steigt zu dem ein, der in der Nachricht stand.
+    aus.append(("shortlist", "Heute spielenswert · Trades", "⚡", shortlist_push_plays(),
+                "Das Buch beginnt am 10.09.2026. Davor gab es für diesen Kanal nur ein "
+                "Dedup-Buch mit 3 Tagen Gedächtnis — die früheren Pushes sind nicht "
+                "rekonstruierbar."))
+    return [(i, n, e, [p for p in pl if p.get("tag")], h) for i, n, e, pl, h in aus]
 
 
 def baue(now=None) -> dict:
@@ -347,19 +421,23 @@ def baue(now=None) -> dict:
             b["hinweis"] = hinweis
         bloecke.append(b)
 
-    # ⚠️ „Gesamt" ist Liga + MLS, NICHT alles. Die WM traegt 160 der 314 abgerechneten Picks
-    # und ist seit dem 19.07. vorbei — eine Gesamtzahl, die zur Haelfte aus einem beendeten
-    # Turnier besteht, beantwortet „wie laeuft es GERADE" mit dem letzten Sommer. Dieselbe
-    # Entscheidung wie bei den ruhenden Schubladen im Freigabe-Register.
+    # ⚠️ „Gesamt" ist Liga + MLS, NICHT alles.
+    #
+    # 10.09.2026 (Lucas: „WM kann raus, wertlos in Wahrheit"). Am 09.09. bekam die WM einen
+    # eigenen Block, damit sie die Gesamtzahl nicht mehr zur Haelfte fuellt. Das war die halbe
+    # Loesung: getrennt stand sie zwar richtig da, aber sie beantwortet keine Frage, die heute
+    # noch jemand stellt — das Turnier ist seit dem 19.07. vorbei, die Engine hat sich seither
+    # zweimal geaendert, und die Seite existiert, damit Lucas den LAUFENDEN Betrieb postet.
+    #
+    # ⭐ Die Daten bleiben, wo sie sind: `freigabe._card_plays()` liefert die WM-Picks
+    # unveraendert weiter, und `cards_plays("WM")` beantwortet die Frage weiterhin fuer jeden,
+    # der sie stellt. Weggenommen wird nur der Platz auf der Seite, nicht die Auskunft aus dem
+    # System — dieselbe Trennung wie bei der ✦-Prosa im Cards-Digest heute frueh.
     _add("cards", "Cards · laufender Betrieb", "🎯", "Eigene Engine",
          cards_plays("Liga") + cards_plays("MLS"),
-         "Liga und MLS. Die WM läuft als eigener Block — sie ist seit 19.07. vorbei und würde "
-         "eine Gesamtzahl zur Hälfte mit einem beendeten Turnier füllen.")
+         "Liga und MLS. Die WM 2026 ist seit dem 19.07. vorbei und zählt hier nicht mit.")
     _add("cards-liga", "Cards · Liga", "🎯", "Eigene Engine", cards_plays("Liga"))
     _add("cards-mls", "Cards · MLS", "🎯", "Eigene Engine", cards_plays("MLS"))
-    _add("cards-wm", "Cards · WM 2026 (beendet)", "🏆", "Eigene Engine", cards_plays("WM"),
-         "Abgeschlossen — Finale am 19.07.2026. Steht als Historie hier, nicht als laufende "
-         "Leistung.")
     _add("betfair", "Betfair · alle Signale", "💷", "Marktdaten", betfair_plays(),
          "Der Ledger hält ein rollierendes Fenster — ältere Perioden sind unvollständig, "
          "nicht schwach.")
@@ -369,8 +447,8 @@ def baue(now=None) -> dict:
          "Beobachtung und werden nicht gespielt.")
     _add("poly-public", "Polymarket · Public-Kandidaten", "◆", "Marktdaten",
          [p for p in _pp if p.get("public")])
-    for bid, name, emoji, plays in push_bloecke():
-        _add("push-" + bid, name, emoji, "Push-Kanäle", plays)
+    for bid, name, emoji, plays, hinweis in push_bloecke():
+        _add("push-" + bid, name, emoji, "Push-Kanäle", plays, hinweis)
     return {"generatedAt": (now or _now()).isoformat(), "heute": heute,
             "wochenZurueck": WOCHEN_ZURUECK, "ugMinN": UG_MIN_N,
             "bloecke": bloecke}

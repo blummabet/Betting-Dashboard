@@ -824,6 +824,15 @@ def build_public_card(pos: dict, scores: dict, restock: bool, broad: dict) -> st
         _unten.append(_e)
     if _unten:
         lines += [""] + _unten
+
+    # 10.09.2026 (Lucas: „bitte wieder den Markt rein, das hab ich vergessen … ist
+    # userfreundlicher"). Beim Kuerzen der Karte heute frueh ist der Markt-Link mit rausgeflogen.
+    # Er gehoert zurueck, und zwar aus einem Grund, der die ganze Kuerzung ueberlebt: alles
+    # andere auf der Karte ist eine BEHAUPTUNG von uns — der Rang, der Marktanteil, die Quote.
+    # Der Link ist das Einzige, womit ein fremder Leser sie nachpruefen kann. Eine Karte, die
+    # Zahlen nennt und den Weg zur Quelle weglaesst, verlangt Vertrauen, statt es zu verdienen.
+    if key:
+        lines.append('\n<a href="https://polymarket.com/event/%s">Markt ansehen ↗</a>' % _esc(key))
     return "\n".join(lines)
 
 

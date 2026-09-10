@@ -347,6 +347,21 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 #statsPanel .st-k-l{font-size:9.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);}
 #statsPanel .st-k-v{font-size:20px;font-weight:900;line-height:1.25;font-variant-numeric:tabular-nums;}
 #statsPanel .st-k-s{font-size:10px;color:var(--muted);}
+/* 10.09.2026 — die Kopfzeile der Stats-Seite: drei Stat-Kacheln, eine je Fläche.
+   Groesser als die Block-Kacheln (.st-k), aber bewusst KEINE Hero-Zahl: eine Seite traegt
+   genau eine, und drei gleichrangige Zahlen sind keine. */
+#statsPanel .st-kks{display:flex;flex-wrap:wrap;gap:10px;margin:2px 0 6px;}
+#statsPanel .st-kk{flex:1 1 210px;min-width:0;background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:13px 16px 12px;}
+#statsPanel .st-kk-l{font-size:12px;font-weight:800;color:var(--text);letter-spacing:.2px;}
+#statsPanel .st-kk-sub{font-weight:600;color:var(--muted);font-size:10.5px;}
+#statsPanel .st-kk-p{font-size:9.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);margin-top:5px;}
+#statsPanel .st-kk-v{font-size:30px;font-weight:900;line-height:1.15;margin:1px 0 2px;}
+#statsPanel .st-kk-s{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;}
+#statsPanel .st-kk-d{font-size:11.5px;font-weight:700;margin-top:6px;font-variant-numeric:tabular-nums;}
+#statsPanel .st-kk-vgl{font-weight:600;color:var(--muted);}
+#statsPanel .st-kk-w{font-size:10px;color:var(--muted);margin-top:5px;line-height:1.45;}
+#statsPanel .st-kk-f{font-size:10.5px;color:var(--muted);margin:0 0 16px;line-height:1.5;}
+@media(max-width:640px){#statsPanel .st-kk{flex:1 1 100%;}}
 #statsPanel .st-spark{display:block;width:100%;height:52px;margin:2px 0 10px;}
 #statsPanel .st-tw{overflow-x:auto;}
 #statsPanel .st-tbl{width:100%;border-collapse:collapse;font-size:12.5px;}

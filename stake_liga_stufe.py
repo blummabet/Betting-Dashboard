@@ -91,6 +91,9 @@ EBENE = {
     # `sport == "soccer"` grundsaetzlich None gibt — dieselbe Vorsichtsmassnahme, die schon
     # „bundesliga" (Fussball und Handball) braucht.
     "v-league": 1,
+    # 10.09.2026 (CI-Wachhund): „erovnuli-liga" — Georgiens oberste Klasse. Reiner
+    # Tabelleneintrag, der Slug traegt nichts, woraus eine Regel etwas ableiten koennte.
+    "erovnuli-liga": 1,
     # ── zweite Spielklassen ────────────────────────────────────────────────
     "championship": 2, "2nd-bundesliga": 2, "la-liga-2": 2, "serie-b": 2, "ligue-2": 2,
     "j-league-2": 2, "brasileiro-serie-b": 2, "primera-b": 2, "k-league-2": 2,
@@ -103,6 +106,10 @@ EBENE = {
     # „chinese-super-league" sind Ebene 1, „superettan" ist es nicht. Ein Muster auf „super"
     # wuerde vier richtige Eintraege kaputtmachen, um einen zu sparen.
     "superettan": 2,
+    # 10.09.2026 (CI-Wachhund): „esiliiga" — Estlands ZWEITE Klasse. Die oberste steht seit
+    # jeher als „premium-liiga" (Sponsorname der Meistriliiga) in der Tabelle; ohne diese Zeile
+    # waere ausgerechnet die Liga darunter die einzige ohne Ebene.
+    "esiliiga": 2,
     # ── dritte Klasse und tiefer, regional, Amateur ────────────────────────
     "league-one": 3, "league-two": 3, "3rd-liga": 3, "serie-c-group-a": 3,
     "serie-c-group-b": 3, "serie-c-group-c": 3, "tercera-division": 3,
@@ -138,7 +145,14 @@ _RESERVE_RX = re.compile(r"reserv|riserv")
 
 # Pokalwettbewerbe, die sich nicht „Cup" nennen. Wortgrenzen, damit „shield" in einem Vereinsnamen
 # nicht die ganze Liga zum Pokal macht.
-_POKAL_RX = re.compile(r"(?:^|-)(?:trophy|shield|coupe|taca|kupa|kubok|beker|cupa)(?:-|$)")
+# 10.09.2026 (CI-Wachhund, „dbu-pokalen"): dieselbe Klasse wie „efl-trophy" und „reserva" —
+# ein Pokal, den die Regel nicht als Pokal las. `s.endswith("-pokal")` fing die deutsche Form,
+# aber im Skandinavischen haengt der bestimmte Artikel HINTEN an: „pokalen" ist „der Pokal".
+# Gegenprobe an allen Fussball-Slugs des Ledgers: die breitere Regel beantwortet genau den
+# einen offenen Slug und stuft keinen bereits eingestuften um.
+_POKAL_RX = re.compile(
+    r"(?:^|-)(?:trophy|shield|coupe|taca|kupa|kubok|beker|cupa|cupen"
+    r"|pokal(?:en|et)?)(?:-|$)")
 
 # Auszeichnungen und Langzeitwetten ohne Spielklasse. Wortgrenzen, damit „winner" in einem
 # Marktnamen nicht ganze Ligen zu Auszeichnungen macht.
