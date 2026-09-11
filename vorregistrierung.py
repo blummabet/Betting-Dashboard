@@ -98,6 +98,39 @@ ZUSCHNITTE = {
                             and isinstance(x.get("entryPrice"), (int, float))
                             and x["entryPrice"] >= 0.55),
     },
+    # ── 11.09.2026: wo sitzt die BET-Schwelle der Liga wirklich? ─────────────────────────
+    "liga_conv_ab_5": {
+        "name": "Liga · Conviction ab 5",
+        "strom": "cards",
+        "quelle": "liga_signal_ledger.json → freigabe._liga_conv5_plays()",
+        "zielN": 80,
+        "signatur": ("dataset==liga und convictionScore>=5 | quelle=liga_signal_ledger | "
+                     "rendite=odds/result | clv=clvPP"),
+        "warum": ("BELEGT ist nur, dass die Schwelle falsch SITZT: `steam_bet_threshold` stand fuer "
+                  "die Liga auf 8, und in 326 Liga-Picks wurde die 8 NIE erreicht — hoechster Wert "
+                  "6, also null BET seit Bestehen. Grund ist eine kuerzere Skala, nicht Strenge: "
+                  "die Kontext-Saeule feuert in der Liga in 7 von 326 Picks (2,2 %), weil ihre "
+                  "Mitglieder Turnierdruck/Reise/Hitze messen und im Herbst einer 34er-Liga per "
+                  "Konstruktion schweigen. Die WM lief mit 6 bei einer Decke von 8, die Liga bekam 8 "
+                  "bei einer Decke von 6.\n\n"
+                  "NICHT belegt ist, welcher Wert richtig waere — und der naheliegende ist der "
+                  "falsche. Nach Datensatz GETRENNT gerechnet (96 abgerechnete Liga-Picks):\n"
+                  "    Conv 4  n=50  Treffer 68,0 %  ROI +18,0 %  UG  -3,0 %\n"
+                  "    Conv 5  n=34  Treffer 76,5 %  ROI +37,2 %  UG +12,9 %\n"
+                  "    Conv 6  n=11  Treffer 45,5 %  ROI -28,6 %  UG -69,8 %\n"
+                  "Die 6 — also genau das Band, das eine Absenkung auf 6 neu zulassen wuerde — ist "
+                  "in der Liga das SCHLECHTESTE. Die Schwelle wurde deshalb NICHT gesenkt.\n\n"
+                  "⚠️ Anlass dieser Anmeldung ist mein eigener Fehler: ich hatte Liga und MLS "
+                  "gepoolt und daraus „Conviction 6: n=25, ROI +13,1 %\" gemeldet. Die +45,9 % bei "
+                  "Conv 6 stammen vollstaendig aus der MLS. Getrennt kippt das Bild.\n"
+                  "⚠️ Und die 5 ist genauso rueckwaerts geschnitten wie die 6 — sie sieht nur besser "
+                  "aus. n=34 und eine Untergrenze von +12,9 % sind ein Anlass, kein Beleg. Genau "
+                  "dafuer steht sie hier: ab jetzt zaehlt nur, was NACH der Anmeldung abgerechnet "
+                  "wird. zielN=80, weil die Streuung je Play bei Quoten um 1,5-2,0 alles darunter "
+                  "wieder zum Punktschaetzer macht."),
+        "pruef": lambda x: (isinstance(x.get("convictionScore"), (int, float))
+                            and x.get("convictionScore") >= 5),
+    },
     "fade_unter": {
         "name": "Fade-Unter · Ganzspiel-Torlinie",
         "strom": "betfair",

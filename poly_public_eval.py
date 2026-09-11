@@ -36,6 +36,12 @@ LEDGER_FILE = BASE / "poly_whale_public_ledger.json"
 RES_FILE    = BASE / "poly_resolutions.json"
 CLOSE_FILE  = BASE / "poly_money_broad_close.json"
 OUT_FILE    = BASE / "poly_public_record.json"
+# 11.09.2026 — das Beobachtungsband „Markt-Dominanz" (kleiner Markt, grosser Anteil) fuehrt sein
+# EIGENES Buch, wird aber mit DERSELBEN Funktion abgerechnet. Zwei Buecher mit zwei Abrechnungen
+# waren in diesem Repo schon zweimal der Fehler; `settle()` kennt den Buendel-Riegel und die
+# Ruecknahme-Regel, und die sollen hier genauso gelten.
+DOM_LEDGER_FILE = BASE / "poly_dominanz_ledger.json"
+DOM_OUT_FILE    = BASE / "poly_dominanz_record.json"
 
 STAKE = 10.0            # Einheits-Einsatz je Push (wie im Papier-Depot) — macht ROI vergleichbar
 PENDING_TTL_D = 10      # nie aufgelöst nach 10 Tagen → unaufloesbar (poly_resolutions hält Wochen)
@@ -317,8 +323,22 @@ def main() -> int:
     if not isinstance(led, list):
         print("⚠️  poly_whale_public_ledger.json ist keine Liste — nichts ausgewertet.")
         return 0
-    led = settle(led, _load(RES_FILE, {}), _load(CLOSE_FILE, {}), korrekturen=_load(KORR_FILE, {}))
+    _res, _close, _korr = _load(RES_FILE, {}), _load(CLOSE_FILE, {}), _load(KORR_FILE, {})
+    led = settle(led, _res, _close, korrekturen=_korr)
     write_json_atomic(LEDGER_FILE, led, indent=0)
+
+    # Das Dominanz-Band durch dieselbe Abrechnung. Es hat sein eigenes Buch und seinen eigenen
+    # Bericht — aber keine eigene Wahrheit darueber, was ein Treffer ist.
+    _dom = _load(DOM_LEDGER_FILE, [])
+    if isinstance(_dom, list) and _dom:
+        _dom = settle(_dom, _res, _close, korrekturen=_korr)
+        write_json_atomic(DOM_LEDGER_FILE, _dom, indent=0)
+        _drep = report(_dom)
+        write_json_atomic(DOM_OUT_FILE, _drep, indent=1)
+        _da = _drep["agg"]
+        print(f"  🎯 Markt-Dominanz: {_drep['gesamt']} gesendet · {_drep['offen']} offen · "
+              f"{_da['n']} abgerechnet"
+              + (f" · Treffer {_da['hit']*100:.0f}% (UG {_da['hitUg']*100:.0f}%)" if _da["n"] else ""))
     rep = report(led)
     write_json_atomic(OUT_FILE, rep, indent=1)
     a = rep["agg"]

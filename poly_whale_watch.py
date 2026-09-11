@@ -861,7 +861,189 @@ def _push_price(pos) -> float | None:
     return None
 
 
-def _log_public_push(pkey, pos, scores, restock, ts) -> None:
+# ══════════════════════════════════════════════════════════════════════════════════════════
+#  MARKTDOMINANZ — das Band UNTERHALB der Whale-Schwelle (11.09.2026)
+# ══════════════════════════════════════════════════════════════════════════════════════════
+# Lucas: „ob wir da eine Nische finden koennten — Wallets, die nur $5.000 spielen, aber das sind
+# dann 80 % vom ganzen Turnier-Markt. Weniger Geld im Nennwert, aber vom Markt deckt es 60, 70 %
+# ab. Ob da die Trefferquote hoch ist."
+#
+# GEMESSEN, bevor gebaut wurde — und die Messung sagt zweierlei:
+#
+#   1. Die Richtung stimmt. Von 36 abgerechneten Public-Whale-Pushs, deren Marktvolumen sich
+#      nachtraeglich rekonstruieren liess:
+#          Anteil < 15 %   n=21   Treffer 57,1 %   (UG 39,6 %)   Ø Markt $500.830
+#          Anteil 15-30 %  n=11   Treffer 81,8 %   (UG 57,3 %)   Ø Markt $151.446
+#          Anteil > 30 %   n= 4   Treffer 75,0 %   (UG 35,6 %)   Ø Markt  $97.201
+#      Kleiner Markt mit spuerbarem Anteil trifft besser als grosser Markt mit Streuung.
+#
+#   2. Lucas' eigentlicher Fall kommt darin GAR NICHT VOR. Die Public-Schwelle verlangt $25.000;
+#      fuer 60 % Anteil braeuchte ein $25.000-Einsatz einen Markt unter $42.000. Pushs in
+#      Maerkten <= $60.000: **0 von 36**. Der Dollar-Boden und ein hoher Anteil schliessen sich
+#      fast aus — hoher Anteil heisst kleiner Markt, kleiner Markt heisst wenig absolutes Geld.
+#      Wir finden die Nische nicht, weil wir sie herausfiltern.
+#
+# Deshalb ein eigenes Band mit eigener Schwelle, eigenem Buch und eigenem Kanal-Platz. Es geht in
+# den TRADES-Kanal, nicht in den Public — es ist eine BEOBACHTUNG, keine Empfehlung, und das muss
+# die Karte auch sagen. Ob es traegt, weiss in ein paar Wochen das Buch.
+DOM_MIN_USD   = float(os.environ.get("WHALE_DOM_MIN_USD")   or 3000)    # Lucas: „ab dreitausend Dollar klingt okay"
+DOM_MIN_SHARE = float(os.environ.get("WHALE_DOM_MIN_SHARE") or 0.40)    # Lucas: „mindestens Anteil groesser vierzig Prozent"
+DOM_MAX_ALERTS = int(os.environ.get("WHALE_DOM_MAX") or 5)
+DOM_LEDGER_FILE = BASE / "poly_dominanz_ledger.json"
+DOM_SEEN_FILE   = BASE / "poly_dominanz_seen.json"
+DOM_LEDGER_KEEP = 800
+# ⚠️ Ein winziger Markt macht jeden Einsatz zur Dominanz. „$300 im Markt und ich habe 100 %"
+# wollte Lucas ausdruecklich NICHT finden. Der Boden steht deshalb am MARKT, nicht nur am Einsatz.
+DOM_MIN_MARKET = float(os.environ.get("WHALE_DOM_MIN_MARKET") or 6000)
+
+
+def dom_sperre(dom_seen, trades_seen=None, pub_seen=None) -> dict:
+    """Was fuer das Dominanz-Band als „schon gemeldet" gilt. REIN.
+
+    Drei Staende, eine Sperre: der eigene (`dom_seen`) und BEIDE Whale-Staende. Eine Position,
+    die als Whale schon im Trades- oder Public-Kanal stand, kommt nicht Minuten spaeter ein
+    zweites Mal als Dominanz — Lucas liest beide Kanaele, die Doppelung waere seine.
+
+    Steht hier und nicht in main(), weil eine Regel, die nur im Ablauf existiert, nicht
+    pruefbar ist: der Zusammenbau der Sperre IST die Regel.
+    """
+    aus = dict(dom_seen if isinstance(dom_seen, dict) else {})
+    for stand in (trades_seen, pub_seen):
+        if isinstance(stand, dict):
+            aus.update({k: True for k in stand})
+    return aus
+
+
+def dominanz_kandidaten(track, broad, seen=None, now=None, min_usd=None, min_share=None,
+                        min_market=None) -> list:
+    """Positionen mit kleinem Markt und grossem Anteil. REIN (alles injizierbar).
+
+    Ausdruecklich ALLE Sportarten (Lucas: „laeuft ueber alles drueber, oder?") — die Sperrliste
+    fuer US-Sport/Kampfsport gilt hier NICHT, weil dies ein Beobachtungsband ist und kein Kanal,
+    dem jemand folgen soll. Die Kategorie wird gestempelt, damit sie sich spaeter trennen laesst.
+
+    Was sehr wohl gilt:
+      · SPORT, kein Politik/Krypto (`_pub_ok` prueft Sportart und ein sinnvolles Preisfenster).
+      · Ein Marktboden, damit „100 % von $300" nicht als Dominanz durchgeht.
+      · Frische (`FRESH_DAYS`) wie ueberall — eine alte Position ist kein Ereignis.
+      · Kein bestaetigter Verlierer.
+    """
+    min_usd = DOM_MIN_USD if min_usd is None else min_usd
+    min_share = DOM_MIN_SHARE if min_share is None else min_share
+    min_market = DOM_MIN_MARKET if min_market is None else min_market
+    now = now or _now()
+    seen = seen if isinstance(seen, dict) else {}
+    scores = (track or {}).get("scores") or {}
+    aus = []
+    for pkey, pos in ((track or {}).get("open") or {}).items():
+        if not isinstance(pos, dict) or pkey in seen:
+            continue
+        usd = pos.get("usd")
+        if not isinstance(usd, (int, float)) or usd < min_usd:
+            continue
+        m = (broad or {}).get(pos.get("key")) if isinstance(broad, dict) else None
+        tot = (m or {}).get("totalUsd")
+        if not isinstance(tot, (int, float)) or tot < min_market:
+            continue
+        a = markt_anteil(pos, broad)          # gibt None, wenn Einsatz > Markt (widerspruechlich)
+        if a is None or a < min_share:
+            continue
+        if not _pub_ok(pos):
+            continue
+        if _is_confirmed_loser(scores.get(pos.get("wallet"))):
+            continue
+        ft = _iso(pos.get("firstTs"))
+        if ft and (now - ft).days >= FRESH_DAYS:
+            continue
+        aus.append((pkey, pos, a))
+    # Der groesste Anteil zuerst — das ist die Eigenschaft, um die es in diesem Band geht.
+    aus.sort(key=lambda x: -x[2])
+    return aus[:DOM_MAX_ALERTS]
+
+
+def _dom_balken(anteil, breite=10) -> str:
+    """Der Anteil als Balken. Er ist die EINE Zahl, um die es in diesem Band geht — und ein Balken
+    liest sich auf dem Handy schneller als „68 %" zwischen zwei anderen Prozentzahlen."""
+    try:
+        n = max(0, min(breite, int(round(float(anteil) * breite))))
+    except (TypeError, ValueError):
+        return ""
+    return "█" * n + "░" * (breite - n)
+
+
+def build_dominanz_card(pos, scores, broad, anteil=None) -> str:
+    """Das Beobachtungs-Band als Telegram-Karte — bewusst anders gebaut als jede andere.
+
+    11.09.2026 (Lucas: „mach's bitte vom Template her so, dass ich's wirklich gleich seh, weil das
+    geht sonst unter in den Nachrichten"). Drei Dinge unterscheiden sie auf einen Blick von der
+    Whale-Karte: die Doppel-Linie als Rahmen, der Balken statt einer weiteren Prozentzahl, und die
+    Kopfzeile, die den Anteil NENNT statt den Betrag.
+
+    ⚠️ Die letzte Zeile ist kein Kleingedrucktes, sondern der Zweck: dieses Band ist eine
+    BEOBACHTUNG. Es hat kein Buch, das etwas belegt, und niemand soll ihm folgen, bis es eines
+    hat. Eine Karte, die aussieht wie eine Empfehlung, wird als eine gelesen.
+    """
+    a = markt_anteil(pos, broad) if anteil is None else anteil
+    emoji, sport = _sport(pos.get("league"), pos.get("sport"))
+    key = pos.get("key")
+    side = pos.get("side") or "?"
+    matchup = _matchup(key, broad)
+    _label = ausgang_label(side, _markt_frage(key, broad)) or side
+    m = (broad or {}).get(key) if isinstance(broad, dict) else None
+    tot = (m or {}).get("totalUsd")
+
+    kopf = "🎯 <b>MARKT-DOMINANZ</b>"
+    if a is not None:
+        kopf += " · <b>%d %%</b> des Marktes" % round(a * 100)
+    lines = ["━━━━━━━━━━━━━━━━━━━━", kopf, "━━━━━━━━━━━━━━━━━━━━", ""]
+    lines.append("%s <i>%s</i>" % (emoji, _esc(sport)))
+    lines.append("<b>%s</b>" % _esc(matchup or side))
+    lines.append("")
+    if a is not None:
+        lines.append("<code>%s</code>  <b>%d %%</b>" % (_dom_balken(a), round(a * 100)))
+    _geld = "💰 <b>%s</b> auf <b>%s</b>" % (_usd(pos.get("usd") or 0), _esc(_label))
+    if isinstance(tot, (int, float)) and tot > 0:
+        _geld += "\n📦 Markt gesamt <b>%s</b>" % _usd(tot)
+    lines.append(_geld)
+    _e = _pub_einstieg(pos)
+    if _e:
+        lines.append(_e)
+    lines.append("")
+    lines.append(_wallet_line(scores, pos.get("wallet")))
+    if key:
+        lines.append('\n<a href="https://polymarket.com/event/%s">Markt ansehen ↗</a>' % _esc(key))
+    lines.append("\n<i>🔬 Beobachtungsband — läuft mit, ist noch kein Beleg. "
+                 "Erst ab $%d Einsatz und %d %% Marktanteil.</i>"
+                 % (int(DOM_MIN_USD), int(DOM_MIN_SHARE * 100)))
+    return "\n".join(lines)
+
+
+def markt_stempel(pos, broad) -> dict:
+    """{totalUsd, anteil} des Markts im Moment des Sendens — leer, wenn nicht bestimmbar. REIN.
+
+    🔴 11.09.2026 (Lucas: „mich wuerde interessieren, ob bei kleinen Maerkten mit grossem Anteil
+    die Trefferquote hoch ist"). Die Frage war nicht zu beantworten: der Marktanteil steht auf
+    JEDER Karte, aber in KEINER abgerechneten Zeile. Von 64 Public-Pushs liess sich das Volumen
+    nachtraeglich nur bei 40 rekonstruieren — bei 24 war der Markt aus `poly_money_broad_close`
+    verschwunden und in der Historie nicht mehr auffindbar.
+
+    Dieselbe Lehre wie beim Serien-Stempel (04.09.) und beim `cond`-Stempel (10.09.): eine
+    Momentaufnahme laesst sich nicht rueckwirkend rekonstruieren, also wird sie im Moment des
+    Sendens festgehalten. Fehlt das Volumen, steht hier NICHTS — kein 0, kein 100 %. Ein
+    Anteil ohne Nenner waere schlimmer als kein Anteil.
+    """
+    a = markt_anteil(pos, broad)
+    m = (broad or {}).get(pos.get("key")) if isinstance(broad, dict) else None
+    tot = (m or {}).get("totalUsd")
+    aus = {}
+    if isinstance(tot, (int, float)) and tot > 0:
+        aus["totalUsd"] = round(float(tot), 2)
+    if a is not None:
+        aus["anteil"] = round(float(a), 4)
+    return aus
+
+
+def _log_public_push(pkey, pos, scores, restock, ts, broad=None) -> None:
     """Einen gesendeten Public-Push festhalten. Ein Eintrag je posKey (wallet|key|side) — derselbe
     Dedup-Schluessel wie poly_whale_public_seen.json, also kein Doppelzaehlen bei Aufstockung."""
     led = _load(PUB_LEDGER_FILE, [])
@@ -884,11 +1066,43 @@ def _log_public_push(pkey, pos, scores, restock, ts) -> None:
                        if isinstance(pos.get("firstPrice"), (int, float)) else None),
         "walletRank": rank, "restock": bool(restock),
         "sentAt": ts, "status": "pending",
+        # 11.09.2026: Marktgroesse und Anteil im Moment des Sendens — s. markt_stempel().
+        **markt_stempel(pos, broad),
     })
     try:
         _save(PUB_LEDGER_FILE, led[-PUB_LEDGER_KEEP:])
     except Exception as e:
         print("Public-Ledger-Schreibfehler:", e)
+
+
+def _log_dominanz_push(pkey, pos, scores, anteil, broad, ts) -> None:
+    """Eine gesendete Dominanz-Beobachtung buchen — dieselbe Form wie der Whale-Ledger, damit
+    `poly_public_eval.settle()` sie ohne Sonderfall abrechnen kann. Ein Eintrag je posKey."""
+    led = _load(DOM_LEDGER_FILE, [])
+    if not isinstance(led, list):
+        led = []
+    if any(isinstance(e, dict) and e.get("k") == pkey for e in led):
+        return
+    rank = None
+    try:
+        rank = _sharp_rank_map(scores).get(pos.get("wallet"))
+    except Exception:
+        pass
+    led.append({
+        "k": pkey, "key": pos.get("key"), "side": pos.get("side"),
+        "wallet": pos.get("wallet"), "league": pos.get("league"),
+        "cat": sport_category(pos.get("league")),
+        "usd": round(float(pos.get("usd") or 0), 2),
+        "pushPrice": _push_price(pos),
+        "whaleEntry": (round(float(pos["firstPrice"]), 4)
+                       if isinstance(pos.get("firstPrice"), (int, float)) else None),
+        "walletRank": rank, "sentAt": ts, "status": "pending",
+        **markt_stempel(pos, broad),
+    })
+    try:
+        _save(DOM_LEDGER_FILE, led[-DOM_LEDGER_KEEP:])
+    except Exception as e:
+        print("Dominanz-Ledger-Schreibfehler:", e)
 
 
 def _tg_public(text: str) -> bool:
@@ -1161,9 +1375,28 @@ def main():
         if _tg_public(build_public_card(pos, scores, restock, broad)):
             pub_sent += 1
             pub_seen[pkey] = {"usd": float(pos.get("usd") or 0), "ts": now_iso}
-            _log_public_push(pkey, pos, scores, restock, now_iso)
+            _log_public_push(pkey, pos, scores, restock, now_iso, broad)
     _save(PUB_SEEN_FILE, pub_seen)
     print(f"  🐋 Public-Whale: {len(pub_cand)} Kandidat(en), {pub_sent} gesendet.")
+
+    # ── Marktdominanz: das Beobachtungsband in den TRADES-Kanal (11.09.2026) ────────────────
+    # Eigener Dedup-Stand, eigenes Buch, eigener Kanal-Platz. Bewusst NACH dem Whale-Block und
+    # mit eigenem `seen`: eine Position, die schon als Whale rausging, soll nicht ein zweites
+    # Mal als Dominanz kommen — deshalb steht der Public-Dedup-Stand mit in der Sperre.
+    dom_seen = _load(DOM_SEEN_FILE, {})
+    if not isinstance(dom_seen, dict):
+        dom_seen = {}
+    dom_cand = dominanz_kandidaten(track, broad, seen=dom_sperre(dom_seen, seen, pub_seen), now=now)
+    dom_sent = 0
+    for pkey, pos, anteil in dom_cand:
+        if tg_send(build_dominanz_card(pos, scores, broad, anteil)):
+            dom_sent += 1
+            dom_seen[pkey] = {"usd": float(pos.get("usd") or 0), "anteil": round(anteil, 4),
+                              "ts": now_iso}
+            _log_dominanz_push(pkey, pos, scores, anteil, broad, now_iso)
+    _save(DOM_SEEN_FILE, dom_seen)
+    print(f"  🎯 Markt-Dominanz: {len(dom_cand)} Kandidat(en), {dom_sent} gesendet "
+          f"(ab ${int(DOM_MIN_USD)} und {int(DOM_MIN_SHARE*100)} % Anteil).")
 
 
 if __name__ == "__main__":

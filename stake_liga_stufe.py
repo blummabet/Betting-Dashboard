@@ -110,6 +110,11 @@ EBENE = {
     # jeher als „premium-liiga" (Sponsorname der Meistriliiga) in der Tabelle; ohne diese Zeile
     # waere ausgerechnet die Liga darunter die einzige ohne Ebene.
     "esiliiga": 2,
+    # 11.09.2026 (CI-Wachhund): „liga-nacional-de-ascenso" — Panamas ZWEITE Klasse (LNA, die
+    # Aufstiegsliga unter der LPF). Tabelleneintrag und keine Regel: „ascenso" heisst in Mexiko
+    # die zweite Liga, in anderen Verbaenden steht es im Namen der OBERSTEN. Ein Muster darauf
+    # waere in der Haelfte der Faelle falsch.
+    "liga-nacional-de-ascenso": 2,
     # ── dritte Klasse und tiefer, regional, Amateur ────────────────────────
     "league-one": 3, "league-two": 3, "3rd-liga": 3, "serie-c-group-a": 3,
     "serie-c-group-b": 3, "serie-c-group-c": 3, "tercera-division": 3,
@@ -119,6 +124,10 @@ EBENE = {
     "kolmonen": 3, "primera-divisio": 3, "south-australia-state-league-1": 3,
     "nsw-premier-league-2": 3, "japan-football-league": 3, "second-division-b": 3,
     "usl-league-one": 3, "k3-league": 3,
+    # 11.09.2026 (CI-Wachhund): „promotion-league" — die DRITTE Schweizer Klasse. Super League
+    # (1) und Challenge League (2) stehen schon oben; ohne diese Zeile fehlte ausgerechnet die
+    # Liga darunter. „promotion" im Namen meint den Aufstieg, nicht den Rang.
+    "promotion-league": 3,
     "northern-territory-premier-league": 3, "npl-western-australia": 3,
     "npl-new-south-wales": 3, "npl-victoria": 3, "npl-queensland": 3,
     "npl-south-australia": 3, "npl-northern-new-south": 3, "npl-capital-football": 3,

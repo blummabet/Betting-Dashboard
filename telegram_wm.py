@@ -678,10 +678,18 @@ def build_morning_card(wm: dict, target_date: str, lang: str = "de") -> str | No
         lines.append("")  # Leerzeile zwischen Spielen
 
     # Footer
+    # 11.09.2026 (Lucas: „bitte die letzte Zeile weg mit dem datengetrieben Pick Modell").
+    # Die Signatur-Zeile stand unter JEDER Morning-Card und sagte nichts, was die Karte nicht
+    # schon zeigt — die Zahl „19 Signale" war obendrein hartkodiert und seit dem Registry-Umbau
+    # falsch (33 Signale, davon 6 abgeschaltet). Eine Zeile, die sich selbst lobt und dabei eine
+    # veraltete Zahl nennt, ist der schlechteste Platz im Push.
+    #
+    # ⭐ Die BILANZ-Zeile bleibt: sie traegt eine gemessene Zahl, keine Selbstbeschreibung.
+    # `T["footer"]` bleibt in telegram_i18n stehen (DE und EN) — die Recap-Karte hat ihre eigene
+    # (`recap_footer`) und wird hier nicht angefasst.
     _bf = bilanz_footer(wm, lang)
     if _bf:
         lines.append(_bf)
-    lines.append(T["footer"])
 
     return "\n".join(lines)
 

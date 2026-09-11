@@ -172,3 +172,78 @@ class TestGuard(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+# ── 11.09.2026: der Liga-Conviction-Zuschnitt ────────────────────────────────────────────
+class TestLigaConvictionZuschnitt(unittest.TestCase):
+    """Anlass: `steam_bet_threshold` stand fuer die Liga auf 8, und die 8 wurde in 326 Picks nie
+    erreicht — null BET seit Bestehen. Beim Nachrechnen kippte aber der naheliegende Fix: nach
+    Datensatz GETRENNT ist die 6er-Gruppe in der Liga die schlechteste (n=11, ROI -28,6 %), die
+    5er die beste (n=34, UG +12,9 %). Die gepoolte Zahl hatte das verdeckt."""
+
+    def test_der_zuschnitt_ist_angemeldet_und_traegt_seine_warnung(self):
+        z = VR.ZUSCHNITTE.get("liga_conv_ab_5")
+        self.assertIsNotNone(z, "der Zuschnitt fehlt im Register")
+        self.assertEqual(z["zielN"], 80)
+        self.assertIn("convictionScore>=5", z["signatur"])
+        # Der Anlass muss als Anlass dastehen, nicht als Beleg.
+        self.assertIn("rueckwaerts geschnitten", z["warum"])
+        self.assertIn("-28,6", z["warum"], "der Gegenbefund zur 6 gehoert in die Begruendung")
+
+    def test_pruef_schneidet_genau_ab_5(self):
+        z = VR.ZUSCHNITTE["liga_conv_ab_5"]
+        self.assertTrue(z["pruef"]({"convictionScore": 5}))
+        self.assertTrue(z["pruef"]({"convictionScore": 8}))
+        self.assertFalse(z["pruef"]({"convictionScore": 4}))
+        # Fehlende Information ist keine Erlaubnis.
+        self.assertFalse(z["pruef"]({}))
+        self.assertFalse(z["pruef"]({"convictionScore": None}))
+        self.assertFalse(z["pruef"]({"convictionScore": "6"}))
+
+    def test_die_ledger_zeilen_werden_lesbar_uebersetzt(self):
+        """Der eigentliche Fallstrick: das Lern-Ledger nennt die Felder `odds`, `result` und
+        `resolvedAt` — `_rendite` erwartet `odd`/`win`, `teilen()` sucht settledTs/settledAt/
+        resolvedTs. Ohne Uebersetzung misst die Schublade still LEER und meldet ewig „0 von 80"."""
+        rohe = [{"convictionScore": 6, "odds": 2.0, "result": "WIN",
+                 "clvPP": 1.5, "resolvedAt": "2026-09-06T20:30:33Z"},
+                {"convictionScore": 5, "odds": 1.5, "result": "LOSS",
+                 "clvPP": -0.5, "resolvedAt": "2026-09-07T20:30:33Z"}]
+        import json as _j, tempfile, os, pathlib
+        _alt = F._load
+        try:
+            F._load = lambda name, *a, **k: rohe if "liga_signal_ledger" in str(name) else _alt(name, *a, **k)
+            pl = F._liga_conv5_plays()
+        finally:
+            F._load = _alt
+        self.assertEqual(len(pl), 2)
+        r, c = VR.kennzahlen(pl)
+        self.assertEqual(len(r), 2, "die Renditen muessen lesbar sein, sonst misst der Zuschnitt nichts")
+        self.assertEqual(len(c), 2)
+        self.assertAlmostEqual(r[0], 1.0, places=6)      # 2.00 gewonnen -> +1.0 je Einheit
+        self.assertAlmostEqual(r[1], -1.0, places=6)
+        # Und der Zeitstempel muss unter einem Namen stehen, den `teilen()` findet.
+        self.assertTrue(all(x.get("resolvedTs") for x in pl))
+
+    def test_unaufloesbare_zeilen_fliegen_raus_statt_als_null_zu_zaehlen(self):
+        rohe = [{"convictionScore": 6, "odds": None, "result": "WIN", "resolvedAt": "x"},
+                {"convictionScore": 6, "odds": 2.0, "result": "PENDING", "resolvedAt": "x"},
+                {"convictionScore": 6, "odds": 1.0, "result": "WIN", "resolvedAt": "x"},
+                "kaputt"]
+        _alt = F._load
+        try:
+            F._load = lambda name, *a, **k: rohe if "liga_signal_ledger" in str(name) else _alt(name, *a, **k)
+            self.assertEqual(F._liga_conv5_plays(), [])
+        finally:
+            F._load = _alt
+
+    def test_der_zuschnitt_misst_vorwaerts(self):
+        """Die ganze Uebung: Plays von VOR der Anmeldung duerfen nie ins Urteil."""
+        e = {"signatur": VR.ZUSCHNITTE["liga_conv_ab_5"]["signatur"],
+             "angemeldet": ANMELDUNG.isoformat(), "zielN": 80}
+        vorher = {"convictionScore": 6, "odd": 2.0, "win": True, "clvPP": 1.0,
+                  "resolvedTs": (ANMELDUNG - timedelta(days=3)).isoformat()}
+        nachher = {"convictionScore": 6, "odd": 2.0, "win": True, "clvPP": 1.0,
+                   "resolvedTs": (ANMELDUNG + timedelta(days=3)).isoformat()}
+        seit, davor = VR.teilen([vorher, nachher], "liga_conv_ab_5", e)
+        self.assertEqual(len(seit), 1)
+        self.assertEqual(len(davor), 1)

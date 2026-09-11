@@ -940,3 +940,174 @@ class TestPublicKarteNeu(unittest.TestCase):
     def test_ohne_marktvolumen_keine_prozentzeile(self):
         t = P.build_public_card(self._pos(), {}, False, {})
         self.assertNotIn("Marktvolumen", t)
+
+
+# ── 11.09.2026: das Beobachtungsband „Markt-Dominanz" ────────────────────────────────────
+class TestMarktDominanz(unittest.TestCase):
+    """Lucas: „Wallets, die nur $5.000 spielen, aber das sind 80 % vom ganzen Turnier-Markt — ob
+    da die Trefferquote hoch ist."
+
+    Gemessen an den Whale-Pushs zeigte der Anteil eine Richtung (15-30 %: 81,8 % Treffer bei n=11
+    gegen 57,1 % unter 15 %), aber Lucas' eigentlicher Fall kam dort 0 von 36 Mal vor: die
+    $25.000-Schwelle und ein hoher Anteil schliessen sich fast aus. Deshalb ein eigenes Band.
+    """
+
+    def _tr(self, **over):
+        pos = {"wallet": "0xw", "key": "k", "side": "A", "usd": 6000, "league": "ESPORTS",
+               "firstPrice": 0.55, "firstTs": NOW.isoformat()}
+        pos.update(over)
+        return {"open": {"0xw|k|A": pos}, "scores": {}}
+
+    def test_kleiner_markt_grosser_anteil_kommt_durch(self):
+        r = P.dominanz_kandidaten(self._tr(), {"k": {"totalUsd": 10000}}, now=NOW)
+        self.assertEqual(len(r), 1)
+        self.assertAlmostEqual(r[0][2], 0.6, places=3)
+
+    def test_zu_wenig_geld_faellt_raus(self):
+        """Lucas: „ab dreitausend Dollar klingt okay." Darunter ist es kein Band, sondern Rauschen.
+
+        Der Fall ist bewusst so zugeschnitten, dass ihn NUR die Einsatzschwelle faengt: $2.500 von
+        einem $6.000-Markt sind 41,7 % Anteil (ueber der Schwelle) in einem Markt, der den Boden
+        gerade erreicht. Ein Aufbau mit kleinerem Markt haette den Test bestanden, ohne die
+        Einsatzschwelle je zu pruefen — der Marktboden haette ihn vorher weggefangen (gemessen:
+        mit entfernter `min_usd`-Zeile lief die Suite vorher gruen durch).
+        """
+        r = P.dominanz_kandidaten(self._tr(usd=2500), {"k": {"totalUsd": 6000}}, now=NOW)
+        self.assertEqual(r, [], "$2.500 sind unter der Schwelle, auch bei 41,7 % Anteil")
+        # Gegenprobe: derselbe Markt, nur ueber der Schwelle — kommt durch.
+        self.assertEqual(len(P.dominanz_kandidaten(self._tr(usd=3100),
+                                                   {"k": {"totalUsd": 6000}}, now=NOW)), 1)
+
+    def test_zu_kleiner_anteil_faellt_raus(self):
+        r = P.dominanz_kandidaten(self._tr(usd=6000), {"k": {"totalUsd": 100000}}, now=NOW)
+        self.assertEqual(r, [])
+
+    def test_winziger_markt_ist_keine_dominanz(self):
+        """Lucas ausdruecklich: „natuerlich jetzt nicht auf der Spielwohnung 300 Euro und ich hab
+        100 %, das will ich nicht finden." Der Boden steht deshalb am MARKT, nicht nur am Einsatz."""
+        r = P.dominanz_kandidaten(self._tr(usd=3500), {"k": {"totalUsd": 4000}}, now=NOW)
+        self.assertEqual(r, [], "100 % von $4.000 ist kein Befund")
+
+    def test_ohne_marktvolumen_gibt_es_keinen_anteil(self):
+        """Fehlende Information rendert als nichts. Ein Anteil ohne Nenner waere schlimmer als
+        kein Anteil — und 100 % anzunehmen waere die teuerste Variante davon."""
+        self.assertEqual(P.dominanz_kandidaten(self._tr(), {}, now=NOW), [])
+        self.assertEqual(P.dominanz_kandidaten(self._tr(), {"k": {}}, now=NOW), [])
+
+    def test_einsatz_groesser_als_markt_gilt_nicht_als_100_prozent(self):
+        """`markt_anteil` gibt None, wo der Einsatz das Marktvolumen uebersteigt — der Nenner
+        widerspricht dann dem Zaehler. Das darf hier nicht als Dominanz durchgehen."""
+        r = P.dominanz_kandidaten(self._tr(usd=50000), {"k": {"totalUsd": 20000}}, now=NOW)
+        self.assertEqual(r, [])
+
+    def test_sperre_nimmt_beide_whale_staende_mit(self):
+        """Die Doppelung waere Lucas\' Problem, nicht das der Datei: er liest Trades UND Public.
+        Eine Position, die dort schon als Whale stand, darf hier nicht noch einmal kommen."""
+        sp = P.dom_sperre({"a|k|A": {"ts": "x"}},
+                          {"b|k|A": {"ts": "x"}}, {"c|k|A": {"ts": "x"}})
+        self.assertEqual(set(sp), {"a|k|A", "b|k|A", "c|k|A"})
+        tr = self._tr()
+        self.assertEqual(
+            P.dominanz_kandidaten(tr, {"k": {"totalUsd": 10000}},
+                                  seen=P.dom_sperre({}, {"0xw|k|A": {"ts": "x"}}, {}), now=NOW),
+            [], "als Trades-Whale gemeldet — kein zweiter Push")
+        self.assertEqual(
+            P.dominanz_kandidaten(tr, {"k": {"totalUsd": 10000}},
+                                  seen=P.dom_sperre({}, {}, {"0xw|k|A": {"ts": "x"}}), now=NOW),
+            [], "als Public-Whale gemeldet — kein zweiter Push")
+
+    def test_sperre_vertraegt_kaputte_staende(self):
+        """Ein fehlendes oder kaputtes Buch darf die Sperre nicht sprengen — sonst faellt das
+        Band beim ersten Lauf ohne Datei aus."""
+        self.assertEqual(P.dom_sperre(None, None, None), {})
+        self.assertEqual(P.dom_sperre("kaputt", [], 7), {})
+
+    def test_schon_gemeldete_position_kommt_nicht_doppelt(self):
+        tr = self._tr()
+        r = P.dominanz_kandidaten(tr, {"k": {"totalUsd": 10000}},
+                                  seen={"0xw|k|A": {"ts": NOW.isoformat()}}, now=NOW)
+        self.assertEqual(r, [])
+
+    def test_bestaetigter_verlierer_bleibt_draussen(self):
+        tr = self._tr()
+        tr["scores"]["0xw"] = {"n": 20, "wins": 16, "pnl": -25000}
+        self.assertEqual(P.dominanz_kandidaten(tr, {"k": {"totalUsd": 10000}}, now=NOW), [])
+
+    def test_alte_position_ist_kein_ereignis(self):
+        alt = (NOW - timedelta(days=5)).isoformat()
+        r = P.dominanz_kandidaten(self._tr(firstTs=alt), {"k": {"totalUsd": 10000}}, now=NOW)
+        self.assertEqual(r, [])
+
+    def test_kein_sport_bleibt_draussen(self):
+        """Politik und Krypto haben in diesem Band nichts zu suchen — `_pub_ok` prueft das."""
+        r = P.dominanz_kandidaten(self._tr(league="US-ELECTION"), {"k": {"totalUsd": 10000}}, now=NOW)
+        self.assertEqual(r, [])
+
+    def test_gesperrte_sportarten_laufen_hier_MIT(self):
+        """Lucas: „laeuft ueber alles drueber, oder?" — ja. Die Sperrliste (US-Sport/Kampfsport)
+        gilt hier NICHT, weil dies ein Beobachtungsband ist und kein Kanal, dem jemand folgt.
+        Die Kategorie wird gestempelt, damit sie sich spaeter trennen laesst."""
+        r = P.dominanz_kandidaten(self._tr(league="NBA"), {"k": {"totalUsd": 10000}}, now=NOW)
+        self.assertEqual(len(r), 1, "US-Sport gehoert in das Beobachtungsband")
+
+    def test_der_groesste_anteil_steht_oben(self):
+        tr = {"open": {
+            "0xa|k1|A": {"wallet": "0xa", "key": "k1", "side": "A", "usd": 6000,
+                         "league": "ESPORTS", "firstPrice": 0.55, "firstTs": NOW.isoformat()},
+            "0xb|k2|B": {"wallet": "0xb", "key": "k2", "side": "B", "usd": 9000,
+                         "league": "ESPORTS", "firstPrice": 0.55, "firstTs": NOW.isoformat()}},
+            "scores": {}}
+        r = P.dominanz_kandidaten(tr, {"k1": {"totalUsd": 7000}, "k2": {"totalUsd": 20000}}, now=NOW)
+        self.assertEqual([x[0] for x in r], ["0xa|k1|A", "0xb|k2|B"],
+                         "sortiert wird nach ANTEIL, nicht nach Dollar")
+
+
+class TestDominanzKarte(unittest.TestCase):
+    def _karte(self, usd=6800, tot=9900):
+        pos = {"usd": usd, "league": "ESPORTS", "side": "Falcons", "firstPrice": 0.58,
+               "entryPrice": 0.58, "wallet": "0xW", "key": "cs2-fal-vit-2026-09-12"}
+        return P.build_dominanz_card(pos, {}, {"cs2-fal-vit-2026-09-12": {"totalUsd": tot}})
+
+    def test_die_karte_ist_auf_den_ersten_blick_eine_andere(self):
+        """Lucas: „mach's bitte vom Template her so, dass ich's wirklich gleich seh, weil das geht
+        sonst unter in den Nachrichten." Rahmen, Balken und Kopfzeile trennen sie von der
+        Whale-Karte — die fuehrt mit dem BETRAG, diese mit dem ANTEIL."""
+        k = self._karte()
+        self.assertIn("MARKT-DOMINANZ", k)
+        self.assertIn("━━━", k)
+        self.assertTrue(any(c in k for c in "█░"), "der Balken fehlt")
+        self.assertIn("69 %", k)
+        self.assertNotIn("Polymarket Whale", k)
+
+    def test_die_karte_sagt_dass_sie_nichts_belegt(self):
+        """Der Zweck des Bandes steht drauf. Eine Karte, die aussieht wie eine Empfehlung, wird
+        als eine gelesen — und die ersten Wochen sind hier reines Rauschen."""
+        k = self._karte()
+        self.assertIn("Beobachtungsband", k)
+        self.assertIn("kein Beleg", k)
+
+    def test_das_marktvolumen_steht_neben_dem_einsatz(self):
+        k = self._karte(usd=6800, tot=9900)
+        self.assertIn("$6.8K", k)
+        self.assertIn("Markt gesamt", k)
+        self.assertIn("$9.9K", k)
+
+
+class TestMarktStempel(unittest.TestCase):
+    """11.09.2026 — von 64 Public-Pushs liess sich das Marktvolumen nachtraeglich nur bei 40
+    rekonstruieren. Eine Momentaufnahme laesst sich nicht rueckwirkend herstellen."""
+
+    def test_volumen_und_anteil_werden_gebucht(self):
+        st = P.markt_stempel({"key": "k", "usd": 20000}, {"k": {"totalUsd": 50000}})
+        self.assertEqual(st, {"totalUsd": 50000.0, "anteil": 0.4})
+
+    def test_ohne_volumen_wird_nichts_erfunden(self):
+        self.assertEqual(P.markt_stempel({"key": "x", "usd": 20000}, {"k": {"totalUsd": 5}}), {})
+        self.assertEqual(P.markt_stempel({"key": "k", "usd": 20000}, None), {})
+
+    def test_widerspruechlicher_nenner_gibt_keinen_anteil(self):
+        """Einsatz groesser als der Markt: das Volumen wird gebucht, der Anteil NICHT — sonst
+        stuende dort 100 % oder mehr, und beides waere erfunden."""
+        st = P.markt_stempel({"key": "k", "usd": 90000}, {"k": {"totalUsd": 50000}})
+        self.assertIn("totalUsd", st)
+        self.assertNotIn("anteil", st)

@@ -339,8 +339,13 @@ function initPolyWallets(){
     // unter `key|side`, also demselben Schluessel, den auch der Paper-Track benutzt. Damit ist
     // die Frage ohne jede Rekonstruktion beantwortbar — nachschlagen statt vermuten.
     jf('shortlist_push_seen.json'),
-  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist,liveSigTrack,moneyMap,publicRec,walletNorm,markout,pushSeen])=>{
-    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist,liveSigTrack,moneyMap,publicRec,walletNorm,markout,pushSeen};
+    // 11.09.2026 (Lucas: „wenn du so was baust, mach das bitte zumindest in der Tracking-Info
+    // auch als eigenen Bereich, dass man's mitschreiben und tracken kann"). Das Dominanz-Band
+    // fuehrt sein eigenes Buch und seinen eigenen Bericht — abgerechnet wird es von derselben
+    // `poly_public_eval.settle()` wie der Whale-Kanal.
+    jf('poly_dominanz_record.json'),
+  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist,liveSigTrack,moneyMap,publicRec,walletNorm,markout,pushSeen,domRec])=>{
+    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist,liveSigTrack,moneyMap,publicRec,walletNorm,markout,pushSeen,domRec};
     _pwRender();
   }).catch(err=>{
     // 12.07.2026: Vorher gab es KEIN catch — eine Exception im Render (z.B. der
@@ -3104,6 +3109,37 @@ function _pwPubCats(byCat){
     +'<span class="pw-sec-note">Die Spalte UG entscheidet, nicht ROI — ein ROI ohne Untergrenze ist ein Punktschätzer.</span></div>'
     +'<div class="pw-tw"><table class="pw-tbl"><thead><tr><th>Sportart</th><th>n</th><th>Treffer</th><th>ROI</th><th>UG</th><th>Ø CLV</th></tr></thead><tbody>'+body+'</tbody></table></div>';
 }
+// ── 🎯 Markt-Dominanz — das Beobachtungsband (11.09.2026) ────────────────────────────────
+// Lucas' Frage: „Wallets, die nur $5.000 spielen, aber das sind 80 % vom ganzen Turnier-Markt —
+// ob da die Trefferquote hoch ist." Die Frage war nicht zu beantworten, weil der Marktanteil auf
+// jeder Karte steht, aber in keiner abgerechneten Zeile. Seit dem 11.09. wird er gestempelt.
+//
+// ⚠️ Der Block sagt AUSDRUECKLICH, dass er nichts belegt. Er ist genau das Gegenteil einer
+// Empfehlung: ein Band, das wir aufmachen, WEIL wir es nicht wissen. Eine Zeile, die wie ein
+// Ergebnis aussieht, wuerde als eines gelesen — und die ersten Wochen sind hier reines Rauschen.
+function _pwDominanz(rec){
+  const kopf='<section class="pw-sec"><div class="pw-sec-head">'
+    +'<span class="pw-kicker">🎯 Markt-Dominanz — kleiner Markt, grosser Anteil</span>'
+    +'<span class="pw-sec-note">Positionen ab <b>$3.000</b>, die mindestens <b>40 %</b> ihres '
+    +'Marktvolumens ausmachen. Gehen in den <b>Trades</b>-Channel, nicht in den Public. '
+    +'Anlass: bei den Whale-Pushs trifft das Band 15–30 % Anteil mit 81,8 % (n=11) gegen 57,1 % '
+    +'bei unter 15 % — aber Lucas\' eigentlicher Fall (wenig Geld, viel Anteil) kam dort '
+    +'<b>0 von 36</b> Mal vor, weil die $25.000-Schwelle ihn herausfiltert.</span></div>';
+  if(!rec || !rec.gesamt){
+    return kopf+'<div class="pw-none">Noch nichts gebucht. Das Band läuft seit 11.09.2026 mit — '
+      +'die erste Zeile erscheint, sobald eine Position ab $3.000 mindestens 40 % ihres Marktes '
+      +'ausmacht.</div></section>';
+  }
+  const a=rec.agg||{n:0};
+  const zeile='<div class="pw-mut" style="font-size:11px;margin:6px 0 10px">'
+    +'<b>'+rec.gesamt+'</b> beobachtet · <b>'+(rec.offen||0)+'</b> offen · <b>'
+    +(rec.unaufloesbar||0)+'</b> unauflösbar</div>';
+  return kopf+zeile
+    +_pwTrackKpis(a, '🔬 Beobachtungsband',
+                  '(läuft mit, ist KEIN Beleg — alle Sportarten, auch die gesperrten)')
+    +'</section>';
+}
+
 function _pwPublicPush(rec){
   const kopf='<section class="pw-sec"><div class="pw-sec-head">'
     +'<span class="pw-kicker">🐋 Public-Channel — was dort wirklich rausgeht</span>'
@@ -3278,6 +3314,7 @@ function _pwTrackRecord(track){
                   '(läuft nur mit, wird nie gesendet: gleiche Conviction + Mehrheit, aber keine bewiesene Wallet)')
     +_pwWalletGateVergleich(agg.public||{n:0}, agg.publicOhneWallet||{n:0})
     +_pwPublicPush(_pwCache && _pwCache.publicRec)
+    +_pwDominanz(_pwCache && _pwCache.domRec)
     +_pwTrackConvTable(agg.byConv)
     +_pwCalibBoard()          // 29.08.2026: warum eine Stufe hoeher/tiefer — sichtbar statt Blackbox
     +_pwTrackSignalTable(agg.bySignal)

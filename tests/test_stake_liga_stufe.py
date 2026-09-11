@@ -398,3 +398,15 @@ def test_estland_und_georgien_stehen_in_der_tabelle():
     assert LS.stufe("erovnuli-liga") == "1"
     assert LS.stufe("esiliiga") == "2"
     assert LS.stufe("premium-liiga") == "1"
+
+
+# ── 11.09.2026: der Wachhund, sechster und siebter Slug ──────────────────────
+def test_aufstiegsligen_stehen_in_der_tabelle_nicht_in_einer_regel():
+    """„ascenso" und „promotion" im Namen sagen nichts ueber den Rang: in Mexiko ist die „Liga de
+    Ascenso" die zweite Klasse, anderswo steht dasselbe Wort im Namen der obersten. Die Schweizer
+    Promotion League ist die DRITTE Klasse (Super League 1, Challenge League 2 stehen schon oben).
+    Ein Muster waere in der Haelfte der Faelle falsch — deshalb Tabelle."""
+    assert LS.stufe("liga-nacional-de-ascenso") == "2"
+    assert LS.stufe("promotion-league") == "3"
+    # Gegenprobe: die schon eingestuften Schweizer Klassen bleiben, wo sie sind.
+    assert LS.stufe("challenge-league") == "2"

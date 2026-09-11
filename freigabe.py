@@ -1243,6 +1243,37 @@ def _fade_unter_plays() -> list:
     return raus
 
 
+def _liga_conv5_plays() -> list:
+    """Die Liga-Card-Picks als Plays, die `vorregistrierung._rendite` versteht.
+
+    11.09.2026 — der Zuschnitt zur Frage, wo die BET-Schwelle der Liga sitzen sollte. Das Lern-Ledger fuehrt `odds` und
+    `result` ("WIN"/"LOSS"), `_rendite` erwartet `odd` und `win` (bool); ausserdem heisst der
+    Zeitstempel dort `resolvedAt`, waehrend `teilen()` nach settledTs/settledAt/resolvedTs sucht.
+    Ohne diese Uebersetzung wuerde die Schublade still LEER messen und ewig „0 von 80" melden —
+    genau der Defekt, den `_rendite` im eigenen Docstring als „Geduld-Tarnung" beschreibt.
+
+    Bewusst das LEDGER und nicht liga-data.json: dort steht je Pick der Stand, mit dem er ins
+    Rennen ging (eingefroren bei Anpfiff), nicht der spaeter ueberschriebene.
+    """
+    d = _load("liga_signal_ledger.json")
+    zeilen = d if isinstance(d, list) else ((d or {}).get("records") or [])
+    raus = []
+    for z in zeilen:
+        if not isinstance(z, dict):
+            continue
+        o, r = z.get("odds") or z.get("entryOdd"), z.get("result")
+        if not isinstance(o, (int, float)) or o <= 1.0 or r not in ("WIN", "LOSS"):
+            continue
+        raus.append({"convictionScore": z.get("convictionScore"),
+                     "odd": float(o), "win": (r == "WIN"),
+                     "clvPP": z.get("clvPP"),
+                     # `teilen()` liest settledTs | settledAt | resolvedTs — der Ledger nennt es
+                     # resolvedAt. Unuebersetzt waere JEDER Play „vor der Anmeldung" und das
+                     # Urteil bliebe fuer immer leer.
+                     "resolvedTs": z.get("resolvedAt")})
+    return raus
+
+
 def vorregistrierte_schubladen(track=None, reg=None, now=None, schreiben=True) -> list:
     """Zuschnitte, die VOR der Messung festgeschrieben wurden — s. vorregistrierung.py.
 
@@ -1272,7 +1303,10 @@ def vorregistrierte_schubladen(track=None, reg=None, now=None, schreiben=True) -
                 # inklusive Kommission. Wuerde man die Rohzeile durchreichen, rechnete
                 # `_rendite` die Geldseite (odd/win) und die Schublade maesse das Gegenteil
                 # von dem, was sie behauptet.
-                "fade_unter": _fade_unter_plays()}
+                "fade_unter": _fade_unter_plays(),
+                # 11.09.2026: die Liga-Picks kommen aus dem Lern-Ledger, uebersetzt auf die
+                # Buchform, die `_rendite` und `teilen` verstehen.
+                "liga_conv_ab_5": _liga_conv5_plays()}
     reg = VR.laden() if reg is None else dict(reg)
     vorher = dict(reg)
     out = []

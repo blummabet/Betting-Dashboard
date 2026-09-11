@@ -3,6 +3,186 @@
 Stand 10.09.2026 (oberster Block); Liga/WM-Teil darunter Stand 26.06.2026. Lebendige Liste aller offenen Punkte — Liga UND noch nicht umgesetzte WM-Sachen —
 damit wir alles abarbeiten können. ✅ = erledigt (Referenz), ⏳ = offen, 🔒 = blockiert.
 
+## 🎯 11.09.2026 — Markt-Dominanz: ein eigenes Beobachtungsband im Trades-Kanal
+
+Lucas: *„wenn irgendwelche Wallets vielleicht auch nur so fünftausend, aber das sind nachher dann
+bei dem Turnier vielleicht achtzig Prozent. Mich würd nur interessieren, ob das vielleicht Treffer
+sind viele."* Und zum Aufbau: *„mach's bitte vom Template her so, dass ich's wirklich gleich auch
+seh, weil das geht sonst unter in den Nachrichten."*
+
+### Was gemessen war, bevor gebaut wurde
+
+Über die bisherigen Public-Whale-Pushs, nach Marktanteil geschnitten:
+
+| Anteil am Markt | n | Treffer |
+|---|---|---|
+| < 15 % | 21 | 57,1 % |
+| 15 – 30 % | 11 | **81,8 %** |
+| > 30 % | 4 | 75,0 % |
+
+Die Richtung ist da, aber **n = 11 und n = 4 sind kein Beleg** — das ist der Grund, warum das Band
+*Beobachtungsband* heißt und nicht Signal. Entscheidend ist die zweite Zahl: **Lucas' eigentlicher
+Fall kam in 36 Pushs 0 Mal vor.** Pushs in Märkten ≤ $60.000: **0 von 36.** Die $25.000-Schwelle
+des Whale-Pushs und ein hoher Anteil schließen sich fast aus — wer $25.000 setzt, tut das im großen
+Markt. Deshalb ein **eigenes Band mit eigenen Schwellen**, kein Umbau am Whale-Push: der bestehende
+Kanal hätte diesen Fall nie gezeigt, egal wie man an ihm dreht.
+
+### Die Schwellen (Lucas: „ab dreitausend Dollar, ja, klingt okay und mindestens Anteil größer vierzig Prozent")
+
+```
+DOM_MIN_USD    = 3000    Einsatz der Wallet
+DOM_MIN_SHARE  = 0.40    Anteil am Marktvolumen
+DOM_MIN_MARKET = 6000    Marktboden  ← steht NICHT in Lucas' Ansage, s. u.
+DOM_MAX_ALERTS = 5
+```
+
+Der **Marktboden** ist meine Ergänzung, und zwar wegen Lucas' eigener Einschränkung: *„natürlich
+jetzt nicht auf der Spielwohnung dreihundert Euro und ich hab hundert Prozent, das will ich nicht
+finden."* Ohne ihn wäre „100 % von $4.000" der häufigste Fund des Bandes — mathematisch der
+höchste Anteil, inhaltlich nichts. Der Boden steht am **Markt**, nicht am Einsatz, weil genau dort
+der Unsinn entsteht.
+
+`markt_anteil` gibt **None**, wo der Einsatz das Marktvolumen übersteigt: der Nenner widerspricht
+dann dem Zähler, und die teuerste Fehlannahme wäre, das als 100 % zu lesen. Fehlende Information
+rendert als nichts — die Position fällt raus, sie wird nicht geschätzt.
+
+### Läuft über alles
+
+Lucas: *„läuft hier über alles drüber, oder?"* — ja. Die Sperrliste für US-Sport/Kampfsport, die im
+Public-Whale-Push gilt, gilt hier **nicht**: das Band ist nichts, dem jemand folgen soll, und eine
+Sportart wegzuschneiden, bevor eine einzige Zahl da ist, macht die spätere Auswertung unmöglich.
+Die Kategorie wird **gestempelt**, damit sie sich in ein paar Wochen trennen lässt.
+
+### Eigener Bereich in der Tracking-Info
+
+Lucas: *„wenn Du so was baust, mach das bitte zumindest in der Tracking Info auch als eigenen
+Bereich."*
+
+```
+poly_dominanz_ledger.json   jeder Push mit Anteil, Marktvolumen, Einstiegspreis, Wallet-Stand
+poly_public_eval.py         zweiter settle()/report()-Durchlauf über dieses Buch
+poly_dominanz_record.json   die ausgewertete Bilanz
+poly-wallets.js → _pwDominanz(rec)   eigener Block auf der Seite, getrennt von den Whale-Zahlen
+```
+
+Getrennt zu buchen ist keine Ordnungsfrage: zusammengelegt wäre in drei Monaten nicht mehr
+trennbar, ob eine Trefferquote vom Whale-Push oder vom Band kommt. **Wer pusht, misst den Push** —
+und zwar den, den er gepusht hat.
+
+### Was die Gegenbeweise gezeigt haben
+
+Jede Regel einzeln entfernt, geprüft ob ein Test bricht:
+
+| entfernte Regel | Test bricht |
+|---|---|
+| Marktboden | ✅ |
+| Anteilsschwelle | ✅ |
+| „kein Anteil" → 100 % angenommen | ✅ |
+| Einsatzschwelle | ❌ → **nachgebessert** |
+| Dedup gegen die Whale-Stände | ✅ |
+
+Die **Einsatzschwelle war ungedeckt**. Der Test dazu gab es, er benutzte nur $2.500 in einem
+$4.000-Markt — den fing der *Marktboden* weg, bevor `min_usd` je geprüft wurde. Ein Test, der grün
+bleibt, während die Regel weg ist, prüft nichts. Neu zugeschnitten auf $2.500 in einem
+$6.000-Markt (41,7 % Anteil, Markt über dem Boden), plus Gegenprobe mit $3.100.
+
+Beim Provozieren fiel außerdem auf, dass die **Dedup-Sperre nur in `main()` stand** und dort nicht
+prüfbar war. Sie ist jetzt `dom_sperre(dom_seen, trades_seen, pub_seen)` — eine reine Funktion, die
+alle drei Stände zusammenlegt, damit eine Position, die schon als Whale im Trades- **oder**
+Public-Kanal stand, nicht Minuten später ein zweites Mal kommt. Lucas liest beide Kanäle; die
+Doppelung wäre seine.
+
+### Das Urteil steht in der Karte
+
+Letzte Zeile jeder Dominanz-Karte: *„🔬 Beobachtungsband — läuft mit, ist noch kein Beleg."* Bei
+n = 11 hinter der Idee gehört das dorthin, wo die Zahl gelesen wird, nicht in eine Fußnote im
+Backlog.
+
+## ✂️ 11.09.2026 — die Signatur-Zeile ist aus dem Cards-Push raus
+
+Lucas: *„bitte die letzte Zeile weg mit dem datengetrieben Pick Modell."*
+
+```
+🤖 CocoBet · datengetriebenes Pick-Modell mit 19 Signalen     ← weg
+```
+
+Sie stand unter **jeder** Morning-Card und sagte nichts, was die Karte nicht schon zeigt. Die
+Zahl „19 Signale" war obendrein hartkodiert und seit dem Registry-Umbau falsch: das Registry
+führt **33** Signale, davon sechs im Profil abgeschaltet.
+
+⭐ Weggenommen ist der **Aufruf**, nicht der Text. `L["de"]["footer"]` und `L["en"]["footer"]`
+bleiben in `telegram_i18n.py` stehen — die Recap-Karte hat ihren eigenen Fuß (`recap_footer`) und
+wird nicht angefasst; ein gelöschter Übersetzungs-Baustein wäre schwerer zurückzuholen als eine
+Zeile.
+
+Die **Bilanz-Zeile bleibt**: sie trägt eine gemessene Zahl, keine Selbstbeschreibung. Ein Test
+hält beides fest — Signatur weg, Bilanz da.
+
+## 🎯 11.09.2026 — warum die Liga nie ein BET hatte, und warum ich es trotzdem nicht gesenkt habe
+
+Lucas: *„dass wir selten 7 erreichen ist halt weil wir glaub ich relativ hart gegated haben."*
+Gemessen ist es anders: **die Liga hat in 326 Picks noch nie ein BET erzeugt.** Alles war ABWÄGEN
+oder NOBET.
+
+### Die Ursache steht in einer Config-Zeile
+
+```
+cocobet_config.json → profiles.<x>.conviction_score.steam_bet_threshold
+   wm2026         6          Decke 8   →  BETs
+   liga_default   8          Decke 6   →  null
+   mls_default    8          Decke 8   →  3
+```
+
+Alle 326 Liga-Picks sind `source: "steam"`, die Schwelle gilt also für jeden. Der Code-Kommentar
+sagt die Absicht: *„WM-Schwelle niedriger als Liga (weniger Spiele)"* — übersehen wurde, dass die
+Liga gleichzeitig eine **kürzere Skala** hat. Die Kontext-Säule feuert dort in **7 von 326** Picks
+(2,2 %), weil ihre Mitglieder Turnierdruck, Reise und Hitze messen und im Herbst einer 34er-Liga
+per Konstruktion schweigen. Strengere Schwelle auf kürzerer Skala ergibt mathematisch null.
+
+**Dass die Schwelle falsch sitzt, ist damit belegt.** Welcher Wert richtig wäre, nicht.
+
+### 🔴 Und der naheliegende Fix wäre der falsche gewesen
+
+Ich hatte Lucas „Conviction 6: n=25, Treffer 68,0 %, ROI +13,1 %" gemeldet und auf dieser Basis
+die Absenkung auf 6 vorgeschlagen. Er hat zugestimmt, ich habe die Config geändert — und beim
+Verdrahten der Vorregistrierung fiel auf, dass **diese Zahl Liga und MLS poolt**. Getrennt:
+
+| | Liga | | MLS | |
+|---|---|---|---|---|
+| Conv 4 | n=50 · 68,0 % · **+18,0 %** | UG −3,0 % | n=24 · 50,0 % · −17,1 % | |
+| Conv 5 | n=34 · 76,5 % · **+37,2 %** | **UG +12,9 %** | n=23 · 52,2 % · −15,2 % | |
+| Conv 6 | n=11 · 45,5 % · **−28,6 %** | UG −69,8 % | n=14 · 85,7 % · +45,9 % | UG +16,7 % |
+
+**Die 6 — genau das Band, das eine Absenkung auf 6 neu zugelassen hätte — ist in der Liga das
+schlechteste.** Die +45,9 % stammen vollständig aus der MLS. Die Config-Änderung wurde
+zurückgenommen, `liga_default` steht wieder auf 8.
+
+Dieselbe Fehlerklasse, die einen Tag vorher die Picks-Blöcke der Stats-Seite betraf: eine Zahl,
+die zwei Mengen mischt und deren Name nur eine nennt. Diesmal war ich es selbst.
+
+### Was stattdessen läuft
+
+Neuer vorangemeldeter Zuschnitt **`liga_conv_ab_5`** (`vorregistrierung.py`, zielN=80), gespeist
+aus `freigabe._liga_conv5_plays()`. Der Rückblick (+21,1 % über 45 Plays) steht ausdrücklich als
+Anlass drin, nicht als Beleg — die 5 ist genauso rückwärts geschnitten wie die 6, sie sieht nur
+besser aus.
+
+⚠️ Der Fallstrick beim Verdrahten, gegen den jetzt ein Test steht: das Lern-Ledger nennt die
+Felder `odds`, `result` und `resolvedAt`, während `_rendite` `odd`/`win` erwartet und `teilen()`
+nach `settledTs`/`settledAt`/`resolvedTs` sucht. Ohne Übersetzung hätte die Schublade **still leer
+gemessen** und ewig „0 von 80" gemeldet — der Defekt, den `_rendite` im eigenen Docstring als
+„Geduld-Tarnung" beschreibt. Drei Gegenproben provoziert: Zeitstempel nicht übersetzt, Quote nicht
+übersetzt, Schnitt auf 6 zurückgedreht — jede fällt.
+
+### ⏳ Offen
+
+* **Die Schwelle bleibt auf 8 und damit unerreichbar.** Das ist bewusst: lieber eine Schwelle, die
+  sichtbar nie greift, als eine gesenkte auf einem Band, das im Rückblick verloren hat. Entschieden
+  wird, wenn `liga_conv_ab_5` seine 80 Plays hat.
+* Die `market`-Säule ist in allen drei Datensätzen praktisch tot (Ø 0,02–0,04). `public_static_bias`
+  feuert nur, wenn Pinnacle und der 29–49-Bücher-Konsens 2–15pp auseinanderliegen — das ist in
+  **90 %** der Liga-Spiele nicht der Fall, weil die Softbooks dem Move bereits gefolgt sind.
+
 ## 🇩🇪 10.09.2026 — der Public-Channel ist einsprachig
 
 Lucas: *„bei den Cards-Picks haben wir immer Deutsch und Englisch. Bitte deaktivier mal

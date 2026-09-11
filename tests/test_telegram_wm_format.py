@@ -232,3 +232,42 @@ class TestNurDeutschImPublic(unittest.TestCase):
                 gebaut += 1
                 self.assertNotIn("Abwägen", en, "die EN-Karte darf nicht deutsch werden")
         self.assertGreater(gebaut, 0, "keine englische Karte gebaut")
+
+
+# ── 11.09.2026: die Signatur-Zeile ist raus ──────────────────────────────────────────────
+class TestKeineSelbstbeschreibungImFuss(unittest.TestCase):
+    """Lucas: „bitte die letzte Zeile weg mit dem datengetrieben Pick Modell."
+
+    Sie stand unter JEDER Morning-Card, sagte nichts, was die Karte nicht schon zeigt — und
+    nannte dabei eine hartkodierte Zahl, die seit dem Registry-Umbau falsch war (33 Signale im
+    Registry, davon 6 abgeschaltet; im Fuss stand 19).
+    """
+
+    def test_die_morning_card_endet_nicht_mit_der_signatur(self):
+        gebaut = 0
+        for d, fn, msg in _all_cards():
+            if fn != "build_morning_card":
+                continue
+            gebaut += 1
+            with self.subTest(date=d):
+                self.assertNotIn("datengetriebenes Pick-Modell", msg)
+                self.assertNotIn("data-driven pick model", msg)
+                self.assertNotIn("19 Signalen", msg)
+        self.assertGreater(gebaut, 0, "keine Morning-Card gebaut")
+
+    def test_die_bilanz_zeile_bleibt(self):
+        """Gegenprobe zur Streichung: weg soll die Selbstbeschreibung, nicht die gemessene Zahl."""
+        mit_bilanz = 0
+        for d, fn, msg in _all_cards():
+            if fn == "build_morning_card" and "Bilanz" in msg:
+                mit_bilanz += 1
+        self.assertGreater(mit_bilanz, 0,
+                           "die Bilanz-Zeile traegt eine Messung und darf nicht mitgestrichen werden")
+
+    def test_der_baustein_bleibt_fuer_andere_karten_erhalten(self):
+        """Die Recap-Karte hat ihren eigenen Fuss. `T[\"footer\"]` bleibt in telegram_i18n stehen —
+        geloescht wird der AUFRUF, nicht der Text, sonst faellt die Uebersetzung mit."""
+        import telegram_i18n as I
+        for lang in ("de", "en"):
+            self.assertIn("footer", I.L[lang], lang)
+        self.assertIn("recap_footer", I.L["de"])
