@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-11T07:05:31.798231+00:00",
+ "generatedAt": "2026-09-11T07:20:38.631862+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -242,6 +242,18 @@
    "belegte": 1
   },
   {
+   "strom": "poly",
+   "zerlegung": "nach Conviction",
+   "art": "conviction",
+   "gruppen": 6,
+   "basis": "333 von 746 abgerechneten Plays · nur Engine 2026-09-01 · ohne Kampfsport, US-Sport",
+   "n": 333,
+   "pl": -1.54,
+   "roi": -0.0046,
+   "clv": -1.887,
+   "belegte": 1
+  },
+  {
    "strom": "betfair",
    "zerlegung": "nach Markt",
    "art": "markt",
@@ -252,18 +264,6 @@
    "roi": -0.0078,
    "clv": null,
    "belegte": 0
-  },
-  {
-   "strom": "poly",
-   "zerlegung": "nach Conviction",
-   "art": "conviction",
-   "gruppen": 6,
-   "basis": "332 von 745 abgerechneten Plays · nur Engine 2026-09-01 · ohne Kampfsport, US-Sport",
-   "n": 332,
-   "pl": -2.74,
-   "roi": -0.0083,
-   "clv": -1.893,
-   "belegte": 1
   }
  ],
  "spiele": [
@@ -3804,7 +3804,7 @@
     "nieAnteil": 0.445,
     "schaetzbar": false
    },
-   "alterTage": 0.3,
+   "alterTage": 0.4,
    "art": "conviction",
    "wert": 6,
    "nAlt": 93,
@@ -4015,6 +4015,37 @@
    "naeherung": false
   },
   {
+   "schublade": "Conviction 5",
+   "strom": "poly",
+   "n": 170,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.0394,
+   "pl": -6.7,
+   "roiLb": -0.1326,
+   "clv": -2.952,
+   "clvLb": -4.031,
+   "clvUrteil": "negativ belegt",
+   "clvOg": -1.873,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 2337,
+    "lo": 297,
+    "hi": 404894,
+    "nieAnteil": 0.768,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "conviction",
+   "wert": 5,
+   "nAlt": 110,
+   "roiAlt": 0.1047,
+   "clvAlt": 0.283,
+   "engineAlt": true
+  },
+  {
    "schublade": "US MLS · Half Time",
    "strom": "betfair",
    "n": 43,
@@ -4034,37 +4065,6 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
-  },
-  {
-   "schublade": "Conviction 5",
-   "strom": "poly",
-   "n": 169,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0467,
-   "pl": -7.9,
-   "roiLb": -0.1397,
-   "clv": -2.97,
-   "clvLb": -4.055,
-   "clvUrteil": "negativ belegt",
-   "clvOg": -1.884,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 2888,
-    "lo": 278,
-    "hi": 122086,
-    "nieAnteil": 0.813,
-    "schaetzbar": false
-   },
-   "alterTage": 0.1,
-   "art": "conviction",
-   "wert": 5,
-   "nAlt": 110,
-   "roiAlt": 0.1047,
-   "clvAlt": 0.283,
-   "engineAlt": true
   },
   {
    "schublade": "English National League North · Match Odds",
@@ -4386,7 +4386,7 @@
     "nieAnteil": 0.602,
     "schaetzbar": false
    },
-   "alterTage": 0.3,
+   "alterTage": 0.4,
    "art": "mix",
    "wert": "bf+money",
    "nAlt": 60,
@@ -4647,6 +4647,37 @@
    "naeherung": false
   },
   {
+   "schublade": "Mix money+steam",
+   "strom": "poly",
+   "n": 66,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.1507,
+   "pl": -9.95,
+   "roiLb": -0.2981,
+   "clv": -1.728,
+   "clvLb": -3.017,
+   "clvUrteil": "negativ belegt",
+   "clvOg": -0.439,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 1151,
+    "lo": 185,
+    "hi": 37111,
+    "nieAnteil": 0.955,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "mix",
+   "wert": "money+steam",
+   "nAlt": 68,
+   "roiAlt": -0.0115,
+   "clvAlt": 0.332,
+   "engineAlt": true
+  },
+  {
    "schublade": "Japanese J League · First Half Goals 1.5",
    "strom": "betfair",
    "n": 30,
@@ -4750,37 +4781,6 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
-  },
-  {
-   "schublade": "Mix money+steam",
-   "strom": "poly",
-   "n": 65,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.1714,
-   "pl": -11.14,
-   "roiLb": -0.317,
-   "clv": -1.755,
-   "clvLb": -3.063,
-   "clvUrteil": "negativ belegt",
-   "clvOg": -0.447,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 1689,
-    "lo": 136,
-    "hi": 89904,
-    "nieAnteil": 0.98,
-    "schaetzbar": false
-   },
-   "alterTage": 0.5,
-   "art": "mix",
-   "wert": "money+steam",
-   "nAlt": 68,
-   "roiAlt": -0.0115,
-   "clvAlt": 0.332,
-   "engineAlt": true
   },
   {
    "schublade": "Italian Serie C · Over/Under 3.5 Goals",
