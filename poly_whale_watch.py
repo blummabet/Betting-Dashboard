@@ -712,11 +712,61 @@ def _matchup(key, broad):
         return [n for n in names if not _gen(n)]
 
     teams = _teams_of(key)
-    if len(teams) < 2 and "-more-markets" in str(key):
-        base = _teams_of(str(key).replace("-more-markets", ""))   # echte Teams aus dem Hauptmarkt
-        if len(base) >= 2:
-            teams = base
+    if len(teams) < 2:
+        base = _basis_key(key)
+        if base:
+            b = _teams_of(base)          # echte Teams aus dem Hauptmarkt
+            if len(b) >= 2:
+                teams = b
     return " v ".join(teams[:2]) if len(teams) >= 2 else None
+
+
+# 🔴 11.09.2026 (Lucas: „denke hier sind corner gemeint, bitte anpassen").
+#
+# Er hat eine Dominanz-Karte geschickt und nicht erkennen koennen, auf WAS gesetzt wurde. Bei der
+# konkreten Karte war es zwar der Matchsieger — aber die Fehlerklasse dahinter ist echt und
+# haesslich: bei einem Ecken-Markt rendert die Karte als Ueberschrift schlicht
+#
+#     ⚽ Fussball
+#     Over                          ← das soll die Paarung sein
+#     💰 $21.4K auf Over 10.5
+#
+# Die Paarung fehlt GANZ, und dass es Ecken sind, steht nirgends. Zwei Ursachen:
+#
+#  1. `_matchup` fiel nur bei „-more-markets" auf den Basis-Markt zurueck. Gemessen gibt es acht
+#     Suffixe (more-markets 354, exact-score 288, halftime-result 32, total-corners 30,
+#     first-to-score 11, player-props 6, …) — fuer die anderen sieben wurde nie nachgeschlagen,
+#     obwohl der Basis-Markt bei 612 von 726 Sub-Maerkten erfasst ist. Eine Liste, die nur ihren
+#     ersten Fall kennt.
+#  2. Die Marktfrage („… O/U 10.5 Total Corners") lag vor und wurde auf der Karte nicht gezeigt.
+_SUB_SUFFIXE = ("more-markets", "exact-score", "halftime-result", "total-corners",
+                "first-to-score", "player-props", "first-half-exact-score",
+                "first-five-winner")
+
+
+def _basis_key(key):
+    """Der Haupt-Markt zu einem Sub-Markt — oder None. REIN.
+
+    Geschnitten wird am DATUM, nicht an einer Suffix-Liste: `…-2026-09-04-total-corners` →
+    `…-2026-09-04`. Die Liste oben dient nur der Beschriftung; als Schnittregel waere sie eine
+    Aufzaehlung, die beim naechsten neuen Markttyp still danebenliegt — genau die Fehlerklasse,
+    die diesen Eintrag ausgeloest hat.
+    """
+    m = _re.match(r"^(.*-\d{4}-\d{2}-\d{2})-(.+)$", str(key or ""))
+    return m.group(1) if m else None
+
+
+def sub_markt_art(key):
+    """Klartext fuer den Markttyp eines Sub-Markts — oder None beim Hauptmarkt. REIN."""
+    m = _re.match(r"^.*-\d{4}-\d{2}-\d{2}-(.+)$", str(key or ""))
+    if not m:
+        return None
+    suf = m.group(1)
+    return {"total-corners": "Ecken", "exact-score": "Exaktes Ergebnis",
+            "halftime-result": "Halbzeit", "first-to-score": "Erstes Tor",
+            "player-props": "Spieler-Wette", "first-half-exact-score": "Exaktes Ergebnis (HZ)",
+            "first-five-winner": "Erste 5 Innings",
+            "more-markets": "Nebenmarkt"}.get(suf, suf.replace("-", " "))
 
 
 def _kickoff_txt(key, broad):
@@ -1351,7 +1401,30 @@ def build_dominanz_card(pos, scores, broad, anteil=None, now=None) -> str:
         kopf += " · <b>%d %%</b> des Marktes" % round(a * 100)
     lines = ["━━━━━━━━━━━━━━━━━━━━", kopf, "━━━━━━━━━━━━━━━━━━━━", ""]
     lines.append("%s <i>%s</i>" % (emoji, _esc(sport)))
-    lines.append("<b>%s</b>" % _esc(matchup or side))
+    # Die Ueberschrift ist die PAARUNG. Faellt sie auf die Seite zurueck, steht dort fett „Over"
+    # und liest sich wie ein Mannschaftsname — genau die Verwechslung, die Lucas gemeldet hat.
+    # Ist die Paarung nicht erfasst (114 von 726 Sub-Maerkten haben keinen erfassten Hauptmarkt),
+    # bleibt die Zeile LEER: die Seite steht ohnehin in der Geldzeile, und eine Ueberschrift, die
+    # etwas anderes behauptet als sie ist, ist schlechter als keine.
+    if matchup:
+        lines.append("<b>%s</b>" % _esc(matchup))
+    # 🔴 11.09.2026 (Lucas: „denke hier sind corner gemeint, bitte anpassen"). Ohne diese Zeile
+    # stand bei einem Ecken-Markt als Ueberschrift „Over" und sonst nichts — weder die Paarung
+    # noch, worauf ueberhaupt gesetzt wurde. Die Marktfrage lag vor und wurde nicht gezeigt.
+    #
+    # Reihenfolge: erst die erfasste Frage (praeziseste Auskunft, enthaelt die Linie), sonst der
+    # Markttyp aus dem Slug. Beim Hauptmarkt steht hier NICHTS — „Matchsieger" dazuzuschreiben
+    # waere Fuelltext, und die Karte soll nur sagen, was sie weiss.
+    _art = sub_markt_art(key)
+    _frage = _markt_frage(key, broad)
+    if _art:
+        # NUR beim Sub-Markt. Beim Hauptmarkt lautet die Frage „Seville: Munar vs Brancaccio" —
+        # also genau das, was schon in der Ueberschrift steht. Eine Zeile, die sich selbst
+        # wiederholt, macht die eine Zeile unglaubwuerdig, auf die es ankommt.
+        _txt = _frage or _art
+        lines.append(("📋 <b>%s</b>" if not matchup else "📋 <i>%s</i>") % _esc(_txt))
+    elif not matchup:
+        lines.append("📋 <i>Paarung nicht erfasst — siehe Markt-Link</i>")
     lines.append("")
     if a is not None:
         lines.append("<code>%s</code>  <b>%d %%</b>" % (_dom_balken(a), round(a * 100)))

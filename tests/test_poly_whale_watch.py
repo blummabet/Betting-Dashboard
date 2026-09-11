@@ -1568,6 +1568,109 @@ class TestKleinmarktSpur(unittest.TestCase):
             self.assertEqual(len(P.dominanz_kandidaten(tr, br, klein=leer, now=NOW)), 1, repr(leer))
 
 
+class TestSubMarktAufDerKarte(unittest.TestCase):
+    """🔴 11.09.2026 (Lucas: „denke hier sind corner gemeint, bitte anpassen").
+
+    Er konnte einer Dominanz-Karte nicht ansehen, auf WAS gesetzt wurde. Bei der konkreten Karte
+    war es der Matchsieger — aber die Fehlerklasse dahinter ist echt: bei einem Ecken-Markt stand
+    als Ueberschrift fett „Over" und sonst nichts. Weder die Paarung noch der Markttyp.
+
+    Zwei Ursachen, beide behoben:
+      1. `_matchup` fiel nur bei „-more-markets" auf den Hauptmarkt zurueck. Gemessen gibt es
+         ACHT Suffixe (more-markets 354, exact-score 288, halftime-result 32, total-corners 30,
+         first-to-score 11, player-props 6, …) und bei 612 von 726 Sub-Maerkten ist der
+         Hauptmarkt erfasst — nachgeschlagen wurde fuer sieben davon nie.
+      2. Die Marktfrage lag vor und wurde nicht gezeigt.
+    """
+
+    def _b(self, key, shares, frage=None, basis=None):
+        m = {key: {"totalUsd": 40000, "hoursToKickoff": 0.4, "capturedAt": NOW.isoformat(),
+                   "shares": shares, "prices": {k: 0.5 for k in shares}}}
+        if frage:
+            m[key]["frage"] = frage
+        if basis:
+            m[basis] = {"totalUsd": 90000, "shares": {"Real Betis": 45000.0,
+                                                      "Real Madrid": 45000.0},
+                        "prices": {"Real Betis": 0.5, "Real Madrid": 0.5}}
+        return m
+
+    def _pos(self, key, side, usd=20000):
+        return {"wallet": "0xw", "key": key, "side": side, "usd": usd, "league": "LA-LIGA",
+                "firstPrice": 0.53, "lastPrice": 0.53, "firstTs": NOW.isoformat()}
+
+    def test_der_basis_markt_wird_am_datum_geschnitten_nicht_an_einer_liste(self):
+        """Eine Suffix-Liste liegt beim naechsten neuen Markttyp still daneben — genau die
+        Fehlerklasse, die diesen Eintrag ausgeloest hat. Deshalb schneidet die Regel am DATUM."""
+        self.assertEqual(P._basis_key("lal-bet-rea-2026-09-04-total-corners"),
+                         "lal-bet-rea-2026-09-04")
+        self.assertEqual(P._basis_key("x-y-2026-09-04-irgendein-neuer-typ"), "x-y-2026-09-04")
+        self.assertIsNone(P._basis_key("atp-munar-brancac-2026-09-11"), "Hauptmarkt hat keinen")
+        self.assertIsNone(P._basis_key(None))
+        self.assertIsNone(P._basis_key(""))
+
+    def test_die_paarung_kommt_aus_dem_hauptmarkt(self):
+        br = self._b("lal-bet-rea-2026-09-04-total-corners", {"Over": 30000.0, "Under": 10000.0},
+                     basis="lal-bet-rea-2026-09-04")
+        self.assertEqual(P._matchup("lal-bet-rea-2026-09-04-total-corners", br),
+                         "Real Betis v Real Madrid")
+
+    def test_eckenmarkt_sagt_dass_es_ecken_sind(self):
+        br = self._b("lal-bet-rea-2026-09-04-total-corners", {"Over": 30000.0, "Under": 10000.0},
+                     frage="Real Betis vs. Real Madrid: O/U 10.5 Total Corners",
+                     basis="lal-bet-rea-2026-09-04")
+        k = P.build_dominanz_card(self._pos("lal-bet-rea-2026-09-04-total-corners", "Over"),
+                                  {}, br, now=NOW)
+        self.assertIn("Real Betis v Real Madrid", k, "die Paarung fehlte ganz")
+        self.assertIn("Total Corners", k, "dass es Ecken sind, stand nirgends")
+
+    def test_ohne_erfasste_frage_steht_wenigstens_der_markttyp(self):
+        br = self._b("lal-bet-rea-2026-09-04-total-corners", {"Over": 30000.0, "Under": 10000.0},
+                     basis="lal-bet-rea-2026-09-04")
+        k = P.build_dominanz_card(self._pos("lal-bet-rea-2026-09-04-total-corners", "Over"),
+                                  {}, br, now=NOW)
+        self.assertIn("Ecken", k)
+
+    def test_die_seite_wird_nie_als_paarung_ausgegeben(self):
+        """Der Kern der Meldung: fett „Over" liest sich wie ein Mannschaftsname. Ist die Paarung
+        nicht erfasst (114 von 726 Sub-Maerkten), bleibt die Zeile leer — die Seite steht ohnehin
+        in der Geldzeile, und eine Ueberschrift, die etwas anderes behauptet als sie ist, ist
+        schlechter als keine."""
+        br = self._b("kor-jej-any-2026-08-15-more-markets", {"Over": 30000.0, "Under": 10000.0})
+        k = P.build_dominanz_card(self._pos("kor-jej-any-2026-08-15-more-markets", "Over"),
+                                  {}, br, now=NOW)
+        # Geprueft wird die ZEILE, nicht das Vorkommen: „auf <b>Over</b>" in der Geldzeile ist
+        # richtig, eine Zeile die NUR „<b>Over</b>" ist, waere die Ueberschrift.
+        self.assertNotIn("<b>Over</b>", k.splitlines(),
+                         "die Seite darf nicht als Ueberschrift dastehen")
+        self.assertIn("📋 <b>Nebenmarkt</b>", k, "dann traegt der Markttyp die Karte")
+        self.assertIn("auf <b>Over</b>", k, "die Seite steht weiterhin in der Geldzeile")
+
+    def test_beim_hauptmarkt_wiederholt_sich_nichts(self):
+        """Die Frage des Hauptmarkts lautet „Seville: Munar vs Brancaccio" — also genau das, was
+        schon in der Ueberschrift steht. Eine Zeile, die sich selbst wiederholt, macht die eine
+        Zeile unglaubwuerdig, auf die es ankommt."""
+        br = self._b("atp-munar-brancac-2026-09-11",
+                     {"Jaume Munar": 30000.0, "Raul Brancaccio": 10000.0},
+                     frage="Seville: Jaume Munar vs Raul Brancaccio")
+        k = P.build_dominanz_card(self._pos("atp-munar-brancac-2026-09-11", "Jaume Munar"),
+                                  {}, br, now=NOW)
+        self.assertIn("Jaume Munar v Raul Brancaccio", k)
+        self.assertNotIn("📋", k, "beim Hauptmarkt ist die Markt-Zeile Fuelltext")
+
+    def test_markttyp_klartext(self):
+        f = P.sub_markt_art
+        self.assertEqual(f("x-2026-09-04-total-corners"), "Ecken")
+        self.assertEqual(f("x-2026-09-04-halftime-result"), "Halbzeit")
+        self.assertEqual(f("x-2026-09-04-exact-score"), "Exaktes Ergebnis")
+        self.assertEqual(f("x-2026-09-04-player-props"), "Spieler-Wette")
+        self.assertIsNone(f("atp-a-b-2026-09-11"), "Hauptmarkt hat keinen Typ")
+
+    def test_unbekannter_markttyp_faellt_nicht_weg(self):
+        """Ein Typ, den die Liste nicht kennt, wird lesbar gemacht statt verschwiegen — sonst
+        entsteht wieder eine Karte ohne Auskunft, und das war der Ausloeser."""
+        self.assertEqual(P.sub_markt_art("x-2026-09-04-first-set-tiebreak"), "first set tiebreak")
+
+
 class TestDominanzKarte(unittest.TestCase):
     def _karte(self, usd=6800, tot=9900):
         pos = {"usd": usd, "league": "ESPORTS", "side": "Falcons", "firstPrice": 0.58,

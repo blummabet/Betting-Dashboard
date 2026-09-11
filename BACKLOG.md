@@ -3,6 +3,81 @@
 Stand 10.09.2026 (oberster Block); Liga/WM-Teil darunter Stand 26.06.2026. Lebendige Liste aller offenen Punkte — Liga UND noch nicht umgesetzte WM-Sachen —
 damit wir alles abarbeiten können. ✅ = erledigt (Referenz), ⏳ = offen, 🔒 = blockiert.
 
+## 📋 11.09.2026 — „denke hier sind corner gemeint": die Karte sagte nicht, worauf gesetzt wurde
+
+Lucas schickte eine Dominanz-Karte zurück, weil er nicht erkennen konnte, auf **was** gesetzt
+wurde. Bei der konkreten Karte war es tatsächlich der Matchsieger (Munar @1,21 in einem
+Zwei-Wege-Markt) — **aber die Fehlerklasse dahinter ist echt und hässlich.** Bei einem
+Ecken-Markt rendert dieselbe Karte:
+
+```
+⚽ Fußball
+Over                          ← das soll die Paarung sein
+💰 $21.4K auf Over 10.5
+```
+
+Die Paarung fehlt **ganz**, und dass es Ecken sind, steht **nirgends**. Ein fett gesetztes „Over"
+liest sich wie ein Mannschaftsname — genau die Verwechslung, die Lucas gemeldet hat, nur an einer
+anderen Karte.
+
+### Zwei Ursachen
+
+**1. `_matchup` kannte nur einen von acht Sub-Markt-Typen.** Der Rückfall auf den Hauptmarkt war
+hartkodiert auf `-more-markets`. Gemessen in der Close-Datei:
+
+| Suffix | n |
+|---|---|
+| more-markets | 354 |
+| exact-score | 288 |
+| halftime-result | 32 |
+| **total-corners** | **30** |
+| first-to-score | 11 |
+| player-props | 6 |
+| first-half-exact-score | 4 |
+| first-five-winner | 1 |
+
+Für sieben davon wurde **nie** nachgeschlagen — obwohl bei **612 von 726** Sub-Märkten der
+Hauptmarkt erfasst ist und die Paarung dort einfach dastand.
+
+Der Schnitt läuft jetzt am **Datum** (`…-2026-09-04-total-corners` → `…-2026-09-04`), nicht an
+einer Suffix-Liste. Eine Aufzählung liegt beim nächsten neuen Markttyp still daneben — das ist
+exakt die Fehlerklasse, die diesen Eintrag ausgelöst hat, und sie zweimal zu bauen wäre albern.
+Die Liste dient nur noch der **Beschriftung** (`sub_markt_art`: Ecken, Halbzeit, Exaktes Ergebnis,
+Spieler-Wette …), und ein unbekannter Typ wird lesbar gemacht statt verschwiegen.
+
+⭐ Der Fix wirkt auf **alle** Karten, die `_matchup` benutzen — auch die Whale- und Public-Karten
+hatten dasselbe Loch.
+
+**2. Die Marktfrage lag vor und wurde nicht gezeigt.** `frage` steht seit 04.09. auf den
+Marktzeilen („Real Betis vs. Real Madrid: O/U 10.5 Total Corners") und war auf der
+Dominanz-Karte nirgends zu sehen.
+
+### Was jetzt dasteht
+
+```
+⚽ Fußball
+Real Betis Balompié v Real Madrid CF
+📋 Real Betis Balompié vs. Real Madrid CF: O/U 10.5 Total Corners
+```
+
+Drei Regeln dahinter, alle drei bewusst:
+
+- **Die 📋-Zeile erscheint nur bei Sub-Märkten.** Beim Hauptmarkt lautet die Frage „Seville:
+  Munar vs Brancaccio" — also genau das, was schon in der Überschrift steht. Eine Zeile, die sich
+  selbst wiederholt, macht die eine Zeile unglaubwürdig, auf die es ankommt.
+- **Die Überschrift fällt nicht mehr auf die Seite zurück.** Ist die Paarung nicht erfasst
+  (114 von 726 Sub-Märkten haben keinen erfassten Hauptmarkt), bleibt die Zeile **leer** und die
+  📋-Zeile trägt die Karte. Die Seite steht ohnehin in der Geldzeile; eine Überschrift, die etwas
+  anderes behauptet als sie ist, ist schlechter als keine.
+- **Fehlt beides**, sagt die Karte das hin („Paarung nicht erfasst — siehe Markt-Link") statt
+  etwas zu erfinden.
+
+### Gegenbeweise
+
+Basis-Markt nur bei `-more-markets` ✅ · Markt-Zeile ganz weg ✅ · Seite wieder als Überschrift ✅ ·
+Frage vor dem Markttyp verschwiegen ✅ · unbekannter Markttyp fällt weg ✅ · Markt-Zeile auch beim
+Hauptmarkt ✅
+
 ## ⚖️ 11.09.2026 (Nacht) — Dominanz misst jetzt die eigene Seite, und Stake bekommt einen Burst-Push
 
 ### Die Einheit war falsch — und beide Regeln arbeiteten gegeneinander
