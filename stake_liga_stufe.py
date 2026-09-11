@@ -142,6 +142,15 @@ EBENE = {
     # Namensmuster (`-ii`, „reserve"), und „division-b" ist keines davon. Wer sie dafuer
     # aufbohrt, faengt beim naechsten Lauf jede zweite echte zweite Liga mit.
     "mfl-division-b": 3,
+    # 11.09.2026 (CI-Wachhund): „Jordan 1st Division" — die ZWEITE Liga Jordaniens („1st
+    # Division" steht dort unter der Premier League). Ein Ligenname mit „1" ist kein Beleg fuer
+    # Ebene 1; entschieden hat die Paarung (Sama Al Sarhan - Jerash, beides Zweitligisten).
+    "jordan-1st-division": 3,
+    # „Division 1" ohne Land — Al-Dhaid gegen Dibba Al Fujairah, also die zweite Liga der VAE.
+    # Der Slug ist so generisch, dass er in einer anderen Saison etwas anderes bezeichnen kann;
+    # er steht hier trotzdem, weil der Wachhund sonst bei jedem Lauf erneut anschlaegt und die
+    # Alternative (ein Rueckfall auf „unbekannt = Ebene 3") die Sperre unterlaufen wuerde.
+    "division-1": 3,
 }
 
 # Wettbewerbe, bei denen „Spielklasse" die falsche Frage ist. Sie bekommen eine eigene Marke

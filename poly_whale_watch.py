@@ -430,6 +430,46 @@ def markt_anteil(pos: dict, broad: dict):
     return usd / total
 
 
+def seiten_anteil(pos: dict, broad: dict):
+    """Anteil dieser Position am Geld der EIGENEN SEITE. None, wenn nicht bestimmbar. REIN.
+
+    🔴 11.09.2026 — der Grund, warum es diese Funktion neben `markt_anteil` gibt.
+
+    Lucas fragte, ob bei Polymarket viel Geld auf einer Seite die Quote zwangslaeufig runterdrueckt
+    (anders als beim Buchmacher, wo beides unabhaengig ist). Beim Nachrechnen kam heraus: ja, aber
+    zu einem guten Teil ist es UNSERE MESSUNG.
+
+    Bei Polymarket ist `usd = Anteile × Preis`. Wer dieselbe Stueckzahl auf einen Favoriten @0,87
+    haelt statt auf einen Aussenseiter @0,13, hat rechnerisch das 6,7-FACHE an „Dominanz" — bei
+    identischem Contract-Bestand. Gemessen an 159 Positionen fiel die Median-Quote monoton mit dem
+    Marktanteil (1,96 unter 10 % → 1,16 ab 60 %), und 80 % der Positionen ab 40 % Anteil lagen
+    unter Quote 1,35. Das Band fand also fast nur Favoriten, und der Quotenboden warf sie wieder
+    raus — zwei Regeln, die gegeneinander arbeiteten, beide aus demselben Messfehler.
+
+    Hier kuerzt sich der Preis heraus: Zaehler und Nenner sind beide „Anteile × derselbe Preis".
+    Uebrig bleibt der reine Stueck-Anteil an der offenen Position dieser Seite. Gemessen
+    verschwindet der Drall vollstaendig (Median-Quote 2,00 / 2,15 / 1,98 / 1,74 ueber die Baender,
+    kein Trend), es gibt 43 statt 5 Kandidaten, und 77 % davon liegen ueber 1,35 statt 20 %.
+
+    ⚠️ `markt_anteil` bleibt unveraendert und wird weiter benutzt. Es beantwortet eine ANDERE
+    Frage („wie gross ist diese Position gemessen am ganzen Markt") und steht so auf den
+    Whale-Karten. Beide durch denselben Namen zu ersetzen haette eine bestehende Anzeige still
+    umgedeutet.
+    """
+    usd = pos.get("usd")
+    m = (broad or {}).get(pos.get("key")) if isinstance(broad, dict) else None
+    seite = ((m or {}).get("shares") or {}).get(pos.get("side")) if isinstance(m, dict) else None
+    if (not isinstance(usd, (int, float)) or isinstance(usd, bool)
+            or not isinstance(seite, (int, float)) or isinstance(seite, bool)):
+        return None
+    if usd <= 0 or seite <= 0 or usd > seite * 1.02:
+        # Mehr als die eigene Seite zu halten ist rechnerisch unmoeglich. 2 % Toleranz, weil
+        # Zaehler und Nenner aus zwei Abrufen stammen koennen; darueber widerspricht der Nenner
+        # dem Zaehler, und dann gibt es KEINE Zahl — nicht 100 %.
+        return None
+    return min(usd / seite, 1.0)
+
+
 def ticket_vergleich(pos: dict):
     """Wie gross ist die Position fuer DIESES Konto? None = zu wenig ueber das Konto bekannt.
 
@@ -1114,7 +1154,7 @@ def dom_freigabe(pos, broad, max_htk=None, min_share=None, now=None):
         return None                       # laeuft schon (oder unbekannt) — keine Beobachtung mehr
     if htk <= max_htk:
         return (htk, False)               # der Nenner steht — der normale Weg
-    a = markt_anteil(pos, broad)
+    a = seiten_anteil(pos, broad)
     f = fuellgrad(htk)
     if a is None or f is None:
         return None
@@ -1212,7 +1252,7 @@ def dominanz_kandidaten(track, broad, seen=None, now=None, min_usd=None, min_sha
         _boden = 0 if pos.get("quelle") == "klein" else min_market
         if not isinstance(tot, (int, float)) or tot < _boden or tot <= 0:
             continue
-        a = markt_anteil(pos, sicht)          # gibt None, wenn Einsatz > Markt (widerspruechlich)
+        a = seiten_anteil(pos, sicht)         # Anteil an der EIGENEN Seite — s. dort, warum
         if a is None or a < min_share:
             continue
         if dom_freigabe(pos, sicht, max_htk, min_share, now) is None:
@@ -1297,7 +1337,7 @@ def build_dominanz_card(pos, scores, broad, anteil=None, now=None) -> str:
     BEOBACHTUNG. Es hat kein Buch, das etwas belegt, und niemand soll ihm folgen, bis es eines
     hat. Eine Karte, die aussieht wie eine Empfehlung, wird als eine gelesen.
     """
-    a = markt_anteil(pos, broad) if anteil is None else anteil
+    a = seiten_anteil(pos, broad) if anteil is None else anteil
     emoji, sport = _sport(pos.get("league"), pos.get("sport"))
     key = pos.get("key")
     side = pos.get("side") or "?"
@@ -1389,13 +1429,19 @@ def markt_stempel(pos, broad) -> dict:
     Anteil ohne Nenner waere schlimmer als kein Anteil.
     """
     a = markt_anteil(pos, broad)
+    sa = seiten_anteil(pos, broad)
     m = (broad or {}).get(pos.get("key")) if isinstance(broad, dict) else None
     tot = (m or {}).get("totalUsd")
     aus = {}
     if isinstance(tot, (int, float)) and tot > 0:
         aus["totalUsd"] = round(float(tot), 2)
     if a is not None:
-        aus["anteil"] = round(float(a), 4)
+        aus["anteil"] = round(float(a), 4)          # am Gesamtmarkt — Favoriten-Drall, s. seiten_anteil
+    if sa is not None:
+        aus["seitenAnteil"] = round(float(sa), 4)   # an der eigenen Seite — das Mass des Bands
+    _seite = ((m or {}).get("shares") or {}).get(pos.get("side")) if isinstance(m, dict) else None
+    if isinstance(_seite, (int, float)) and _seite > 0:
+        aus["seiteUsd"] = round(float(_seite), 2)   # der Nenner, damit beides nachrechenbar bleibt
     # ⏱️ 11.09.2026: WANN der Anteil gemessen wurde, gehoert zur Zahl dazu. Ein Anteil bei 2,8 h
     # vor Anpfiff und einer bei 0,3 h sind nicht dasselbe Mass — der Nenner ist im Median 54 %
     # gegen 100 % voll. Ohne diesen Stempel liessen sich die beiden spaeter nicht trennen, und
@@ -1458,7 +1504,7 @@ def _dom_freigabe_stempel(pos, broad, now=None) -> dict:
     htk, frueh = fr
     aus = {"fruehFreigabe": bool(frueh)}
     f = fuellgrad(htk)
-    a = markt_anteil(pos, broad)
+    a = seiten_anteil(pos, broad)
     if f is not None:
         aus["fuellgrad"] = round(float(f), 3)
         if a is not None:
