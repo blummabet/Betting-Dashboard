@@ -960,19 +960,27 @@ class TestMarktDominanz(unittest.TestCase):
         return {"open": {"0xw|k|A": pos}, "scores": {}}
 
     @staticmethod
-    def _broad(total, htk=0.4):
+    def _broad(total, htk=0.4, seite=None):
         """Ein reifer Markt, dessen Anpfiff noch bevorsteht.
 
         `htk` muss drinstehen (ohne Messzeitpunkt gilt der Markt als unreif), und `capturedAt`
         ebenso: daraus errechnet sich der Anpfiff, und eine Position, deren Spiel schon laeuft,
         wird seit 11.09.2026 nicht mehr gepusht. Gemessen am Stand NOW, damit der Anpfiff in der
         Zukunft liegt — sonst pruefte jeder Test unbemerkt nur noch die Anpfiff-Sperre.
+
+        `shares` ist seit 11.09.2026 der NENNER des Bands (`seiten_anteil`): das Geld auf der
+        eigenen Seite, nicht das des ganzen Markts. Default: die Haelfte liegt auf „A" — damit
+        misst `total` weiter die Marktgroesse (fuer den Boden) und `seite` den Anteil.
         """
+        seite = total / 2.0 if seite is None else seite
         return {"k": {"totalUsd": total, "hoursToKickoff": htk,
-                      "capturedAt": NOW.isoformat()}}
+                      "capturedAt": NOW.isoformat(),
+                      "shares": {"A": seite, "B": max(total - seite, 1.0)}}}
 
     def test_kleiner_markt_grosser_anteil_kommt_durch(self):
-        r = P.dominanz_kandidaten(self._tr(), self._broad(10000), now=NOW)
+        # $6.000 von $10.000 auf der eigenen Seite = 60 %. Der Gesamtmarkt ist doppelt so gross —
+        # nach dem ALTEN Mass waeren es 30 % gewesen und die Position waere durchgefallen.
+        r = P.dominanz_kandidaten(self._tr(), self._broad(20000, seite=10000), now=NOW)
         self.assertEqual(len(r), 1)
         self.assertAlmostEqual(r[0][2], 0.6, places=3)
 
@@ -983,23 +991,67 @@ class TestMarktDominanz(unittest.TestCase):
         uebernimmt und die Einsatzschwelle ungeprueft mitlaeuft. Genau das war vorher der Fall:
         mit entfernter `min_usd`-Zeile lief die Suite gruen durch.
         """
-        r = P.dominanz_kandidaten(self._tr(usd=2500), self._broad(7600), now=NOW)
-        self.assertEqual(r, [], "$2.500 sind unter der Schwelle, auch bei 33 % Anteil")
-        r = P.dominanz_kandidaten(self._tr(usd=2900), self._broad(7000, htk=0.4), now=NOW)
-        self.assertEqual(r, [], "auch knapp darunter bleibt draussen")
-        # Gegenprobe: derselbe Markt, nur ueber der Schwelle — kommt durch.
-        self.assertEqual(len(P.dominanz_kandidaten(self._tr(usd=3100),
-                                                   self._broad(7600), now=NOW)), 1)
+        br = self._broad(20000, seite=5000)      # Seite $5.000, Markt weit ueber dem Boden
+        self.assertEqual(P.dominanz_kandidaten(self._tr(usd=2400), br, now=NOW), [],
+                         "$2.400 sind unter der Schwelle, auch bei 48 % Anteil")
+        self.assertEqual(P.dominanz_kandidaten(self._tr(usd=2900), br, now=NOW), [],
+                         "auch knapp darunter bleibt draussen")
+        # Gegenprobe: dieselbe Seite, nur ueber der Schwelle — kommt durch.
+        self.assertEqual(len(P.dominanz_kandidaten(self._tr(usd=3100), br, now=NOW)), 1)
 
     def test_zu_kleiner_anteil_faellt_raus(self):
-        r = P.dominanz_kandidaten(self._tr(usd=6000), self._broad(100000), now=NOW)
-        self.assertEqual(r, [])
+        r = P.dominanz_kandidaten(self._tr(usd=6000), self._broad(100000, seite=50000), now=NOW)
+        self.assertEqual(r, [], "12 % der eigenen Seite sind keine Dominanz")
+
+    def test_der_favoriten_drall_ist_weg(self):
+        """🔴 11.09.2026 — der Grund fuer die Umstellung. Bei Polymarket ist `usd = Anteile ×
+        Preis`. Dieselbe Stueckzahl auf einem Favoriten @0,87 zaehlte als 6,7× so viel
+        „Dominanz" wie auf einem Aussenseiter @0,13. Das Band fand fast nur Favoriten, und der
+        Quotenboden warf sie wieder raus — zwei Regeln, die gegeneinander arbeiteten.
+
+        Hier: dieselbe Stueckzahl, nur der Preis unterscheidet. Beim Anteil an der EIGENEN Seite
+        kuerzt sich der Preis heraus, also muss dasselbe herauskommen."""
+        for preis, gegen in ((0.87, 0.13), (0.13, 0.87)):
+            tr = self._tr(usd=round(600 * preis), firstPrice=preis, lastPrice=preis)
+            br = {"k": {"totalUsd": 50000, "hoursToKickoff": 0.4, "capturedAt": NOW.isoformat(),
+                        "shares": {"A": 1000 * preis, "B": 1000 * gegen}}}
+            a = P.seiten_anteil(tr["open"]["0xw|k|A"], br)
+            self.assertAlmostEqual(a, 0.6, places=2, msg="Preis %s" % preis)
+
+    def test_die_toleranz_kann_keinen_anteil_ueber_100_prozent_erzeugen(self):
+        """Zaehler und Nenner koennen aus zwei Abrufen stammen, deshalb 2 % Toleranz. Die darf
+        aber nie zu „103 % der Seite" fuehren — eine Zahl, die es nicht geben kann, faellt auf
+        der Karte nicht auf, weil sie wie eine besonders gute aussieht."""
+        br = {"k": {"totalUsd": 50000, "hoursToKickoff": 0.4, "capturedAt": NOW.isoformat(),
+                    "shares": {"A": 10000.0, "B": 10000.0}}}
+        pos = self._tr(usd=10150)["open"]["0xw|k|A"]        # 1,5 % ueber der Seite
+        a = P.seiten_anteil(pos, br)
+        self.assertIsNotNone(a, "innerhalb der Toleranz zaehlt es noch")
+        self.assertLessEqual(a, 1.0, "aber nie ueber 100 %")
+
+    def test_die_karte_zeigt_den_seiten_anteil(self):
+        """Die Karte sagt „X % des Marktes". Wuerde sie den alten Wert zeigen und die Auswahl den
+        neuen, stuende auf dem Push eine andere Zahl als die, nach der entschieden wurde."""
+        pos = self._tr(usd=6000)["open"]["0xw|k|A"]
+        br = self._broad(20000, seite=10000)
+        k = P.build_dominanz_card(pos, {}, br, now=NOW)
+        self.assertIn("60 %", k)
+        self.assertNotIn("30 %", k, "das waere der Anteil am Gesamtmarkt — nicht das Mass des Bands")
+
+    def test_beide_masse_stehen_im_buch(self):
+        """`anteil` (Gesamtmarkt) und `seitenAnteil` (eigene Seite) werden BEIDE gebucht, plus
+        der Nenner. Sonst liesse sich spaeter nicht nachrechnen, ob die Umstellung getragen hat —
+        und genau diese Frage wird in ein paar Wochen gestellt."""
+        st = P.markt_stempel(self._tr(usd=6000)["open"]["0xw|k|A"], self._broad(20000, seite=10000))
+        self.assertAlmostEqual(st.get("seitenAnteil"), 0.6, places=3)
+        self.assertAlmostEqual(st.get("anteil"), 0.3, places=3)
+        self.assertAlmostEqual(st.get("seiteUsd"), 10000.0, places=1)
 
     def test_winziger_markt_ist_keine_dominanz(self):
         """Lucas ausdruecklich: „natuerlich jetzt nicht auf der Spielwohnung 300 Euro und ich hab
         100 %, das will ich nicht finden." Der Boden steht deshalb am MARKT, nicht nur am Einsatz."""
-        r = P.dominanz_kandidaten(self._tr(usd=3500), self._broad(4000), now=NOW)
-        self.assertEqual(r, [], "100 % von $4.000 ist kein Befund")
+        r = P.dominanz_kandidaten(self._tr(usd=3500), self._broad(4000, seite=3500), now=NOW)
+        self.assertEqual(r, [], "100 % einer Seite in einem $4.000-Markt ist kein Befund")
 
     def test_ohne_marktvolumen_gibt_es_keinen_anteil(self):
         """Fehlende Information rendert als nichts. Ein Anteil ohne Nenner waere schlimmer als
@@ -1010,7 +1062,7 @@ class TestMarktDominanz(unittest.TestCase):
     def test_einsatz_groesser_als_markt_gilt_nicht_als_100_prozent(self):
         """`markt_anteil` gibt None, wo der Einsatz das Marktvolumen uebersteigt — der Nenner
         widerspricht dann dem Zaehler. Das darf hier nicht als Dominanz durchgehen."""
-        r = P.dominanz_kandidaten(self._tr(usd=50000), self._broad(20000), now=NOW)
+        r = P.dominanz_kandidaten(self._tr(usd=50000), self._broad(80000, seite=20000), now=NOW)
         self.assertEqual(r, [])
 
     def test_sperre_nimmt_beide_whale_staende_mit(self):
@@ -1060,7 +1112,8 @@ class TestMarktDominanz(unittest.TestCase):
         """Lucas: „laeuft ueber alles drueber, oder?" — ja. Die Sperrliste (US-Sport/Kampfsport)
         gilt hier NICHT, weil dies ein Beobachtungsband ist und kein Kanal, dem jemand folgt.
         Die Kategorie wird gestempelt, damit sie sich spaeter trennen laesst."""
-        r = P.dominanz_kandidaten(self._tr(league="NBA"), self._broad(10000), now=NOW)
+        r = P.dominanz_kandidaten(self._tr(league="NBA"), self._broad(20000, seite=10000),
+                                  now=NOW)
         self.assertEqual(len(r), 1, "US-Sport gehoert in das Beobachtungsband")
 
     def test_der_groesste_anteil_steht_oben(self):
@@ -1071,10 +1124,12 @@ class TestMarktDominanz(unittest.TestCase):
                          "league": "ESPORTS", "firstPrice": 0.55, "firstTs": NOW.isoformat()}},
             "scores": {}}
         _ca = NOW.isoformat()
-        r = P.dominanz_kandidaten(tr, {"k1": {"totalUsd": 7600, "hoursToKickoff": 0.4,
-                                              "capturedAt": _ca},
-                                       "k2": {"totalUsd": 20000, "hoursToKickoff": 0.4,
-                                              "capturedAt": _ca}}, now=NOW)
+        r = P.dominanz_kandidaten(tr, {"k1": {"totalUsd": 20000, "hoursToKickoff": 0.4,
+                                              "capturedAt": _ca,
+                                              "shares": {"A": 10000, "B": 10000}},
+                                       "k2": {"totalUsd": 40000, "hoursToKickoff": 0.4,
+                                              "capturedAt": _ca,
+                                              "shares": {"B": 20000, "A": 20000}}}, now=NOW)
         self.assertEqual([x[0] for x in r], ["0xa|k1|A", "0xb|k2|B"],
                          "sortiert wird nach ANTEIL, nicht nach Dollar")
 
@@ -1100,7 +1155,8 @@ class TestMarktReife(unittest.TestCase):
         """`capturedAt` + `hoursToKickoff` ergeben den Anpfiff. NOW als Aufnahmezeit heisst:
         der Anpfiff liegt `htk` Stunden in der Zukunft — das Spiel steht also noch bevor."""
         m = {"totalUsd": total, "hoursToKickoff": htk,
-             "capturedAt": (capturedAt or NOW).isoformat()}
+             "capturedAt": (capturedAt or NOW).isoformat(),
+             "shares": {"A": total / 2.0, "B": total / 2.0}}
         return {key: m}
 
     def test_reifer_markt_gibt_die_stunde_zurueck(self):
@@ -1142,9 +1198,9 @@ class TestMarktReife(unittest.TestCase):
         # unter der Schwelle, also warten. Bei 0,5 h steht der Nenner und dieselbe Position kommt.
         tr = {"open": {"0xw|k|A": self._pos()}, "scores": {}}
         self.assertEqual(
-            P.dominanz_kandidaten(tr, self._b(12000, 2.5), now=NOW),
+            P.dominanz_kandidaten(tr, self._b(24000, 2.5), now=NOW),
             [], "2,5 h vorher ist der Nenner im Median erst gut zwei Drittel voll")
-        spaeter = P.dominanz_kandidaten(tr, self._b(12000, 0.5), now=NOW)
+        spaeter = P.dominanz_kandidaten(tr, self._b(24000, 0.5), now=NOW)
         self.assertEqual(len(spaeter), 1, "naeher am Anpfiff kommt dieselbe Position durch")
 
     def test_der_messzeitpunkt_steht_auf_der_karte(self):
@@ -1232,7 +1288,8 @@ class TestDominanzQuote(unittest.TestCase):
 
     def test_die_auswahl_haelt_den_boden_ein(self):
         tr = {"open": {"0xw|k|A": self._pos(0.826)}, "scores": {}}
-        br = {"k": {"totalUsd": 12000, "hoursToKickoff": 0.5, "capturedAt": NOW.isoformat()}}
+        br = {"k": {"totalUsd": 12000, "hoursToKickoff": 0.5, "capturedAt": NOW.isoformat(),
+                    "shares": {"A": 8000.0, "B": 4000.0}}}
         self.assertEqual(P.dominanz_kandidaten(tr, br, now=NOW), [], "@1,21 bleibt draussen")
         tr["open"]["0xw|k|A"]["lastPrice"] = 0.55
         self.assertEqual(len(P.dominanz_kandidaten(tr, br, now=NOW)), 1)
@@ -1243,7 +1300,8 @@ class TestDominanzQuote(unittest.TestCase):
         die falsche Zahl."""
         k = P.build_dominanz_card(self._pos(firstPrice=0.50, lastPrice=0.55), {},
                                   {"k": {"totalUsd": 12000, "hoursToKickoff": 0.5,
-                                         "capturedAt": NOW.isoformat()}}, now=NOW)
+                                         "capturedAt": NOW.isoformat(),
+                                         "shares": {"A": 8000.0, "B": 4000.0}}}, now=NOW)
         self.assertIn("Einstieg", k)
         self.assertIn("jetzt", k)
         self.assertIn("@2.00", k, "der Einstieg des Wals")
@@ -1254,7 +1312,8 @@ class TestDominanzQuote(unittest.TestCase):
         da, wo der Wal eingestiegen ist, ist das EINE Aussage."""
         k = P.build_dominanz_card(self._pos(0.55), {},
                                   {"k": {"totalUsd": 12000, "hoursToKickoff": 0.5,
-                                         "capturedAt": NOW.isoformat()}}, now=NOW)
+                                         "capturedAt": NOW.isoformat(),
+                                         "shares": {"A": 8000.0, "B": 4000.0}}}, now=NOW)
         self.assertEqual(k.count("1.82"), 1)
         self.assertNotIn("jetzt", k)
 
@@ -1275,7 +1334,8 @@ class TestAnpfiffAufDerKarte(unittest.TestCase):
 
     def _b(self, htk, aufgenommen=None, total=12000):
         return {"k": {"totalUsd": total, "hoursToKickoff": htk,
-                      "capturedAt": (aufgenommen or NOW).isoformat()}}
+                      "capturedAt": (aufgenommen or NOW).isoformat(),
+                      "shares": {"A": total / 2.0, "B": total / 2.0}}}
 
     def test_anpfiff_ist_aufnahmezeit_plus_stunden_bis_anpfiff(self):
         ko = P.anpfiff_zeit(self._pos(), self._b(1.5))
@@ -1328,9 +1388,11 @@ class TestFrueheFreigabe(unittest.TestCase):
         p.update(over)
         return p
 
-    def _b(self, total, htk):
+    def _b(self, total, htk, seite=None):
+        seite = total / 2.0 if seite is None else seite
         return {"k": {"totalUsd": total, "hoursToKickoff": htk,
-                      "capturedAt": NOW.isoformat()}}
+                      "capturedAt": NOW.isoformat(),
+                      "shares": {"A": seite, "B": max(total - seite, 1.0)}}}
 
     def test_der_fuellgrad_kommt_aus_der_messung(self):
         self.assertEqual(P.fuellgrad(0.3), 1.00)
@@ -1353,33 +1415,36 @@ class TestFrueheFreigabe(unittest.TestCase):
         """80 % bei 2,8 h: auch wenn sich der Markt auf seinen Median-Endstand auffuellt
         (× 0,54), blieben 43 % — ueber der Schwelle. Also sofort, nicht in zwei Stunden."""
         tr = {"open": {"0xw|k|A": self._pos(usd=9600)}, "scores": {}}
-        r = P.dominanz_kandidaten(tr, self._b(12000, 2.8), now=NOW)
+        br = self._b(24000, 2.8, seite=12000)          # 9.600 von 12.000 der Seite = 80 %
+        r = P.dominanz_kandidaten(tr, br, now=NOW)
         self.assertEqual(len(r), 1)
-        _h, frueh = P.dom_freigabe(r[0][1], self._b(12000, 2.8), now=NOW)
+        _h, frueh = P.dom_freigabe(r[0][1], br, now=NOW)
         self.assertTrue(frueh, "als fruehe Freigabe gekennzeichnet")
 
     def test_knappe_dominanz_wartet(self):
         """45 % bei 2,8 h werden konservativ zu 24 % — das traegt nicht. Sie ist NICHT
         verworfen: sobald der Markt steht, kommt sie auf dem normalen Weg."""
-        tr = {"open": {"0xw|k|A": self._pos(usd=5400)}, "scores": {}}
-        self.assertEqual(P.dominanz_kandidaten(tr, self._b(12000, 2.8), now=NOW), [])
-        self.assertEqual(len(P.dominanz_kandidaten(tr, self._b(12000, 0.5), now=NOW)), 1)
+        tr = {"open": {"0xw|k|A": self._pos(usd=5400)}, "scores": {}}   # 45 % der Seite
+        self.assertEqual(P.dominanz_kandidaten(tr, self._b(24000, 2.8, seite=12000), now=NOW), [])
+        self.assertEqual(len(P.dominanz_kandidaten(tr, self._b(24000, 0.5, seite=12000),
+                                                   now=NOW)), 1)
 
     def test_die_karte_sagt_dass_der_markt_noch_waechst(self):
         """Bei einer fruehen Freigabe MUSS auf der Karte stehen, dass der Nenner noch waechst —
         sonst liest Lucas 80 % als Endstand, und der Fuellgrad ist ein Median, kein Versprechen."""
-        k = P.build_dominanz_card(self._pos(usd=9600), {}, self._b(12000, 2.8), now=NOW)
+        k = P.build_dominanz_card(self._pos(usd=9600), {},
+                                  self._b(24000, 2.8, seite=12000), now=NOW)
         self.assertIn("füllt sich noch", k)
         self.assertIn("kann noch fallen", k)
 
     def test_beim_reifen_markt_steht_das_gegenteil(self):
-        k = P.build_dominanz_card(self._pos(), {}, self._b(12000, 0.5), now=NOW)
+        k = P.build_dominanz_card(self._pos(), {}, self._b(24000, 0.5, seite=12000), now=NOW)
         self.assertIn("Markt steht", k)
         self.assertNotIn("füllt sich noch", k)
 
     def test_die_fruehe_freigabe_haengt_am_fuellgrad_nicht_an_der_stunde(self):
         """Gegenprobe: dieselbe Position, dieselbe Stunde — nur der Anteil entscheidet."""
-        br = self._b(12000, 2.8)
+        br = self._b(24000, 2.8, seite=12000)
         self.assertIsNotNone(P.dom_freigabe(self._pos(usd=9600), br, now=NOW))   # 80 % × 0,54
         self.assertIsNone(P.dom_freigabe(self._pos(usd=6000), br, now=NOW))      # 50 % × 0,54
 
@@ -1401,7 +1466,9 @@ class TestKleinmarktSpur(unittest.TestCase):
             "league": league, "sport": "Tennis", "totalUsd": tot, "hoursToKickoff": htk,
             "capturedAt": NOW.isoformat(),
             "prices": {"Spieler A": 0.62, "Spieler B": 0.38},
-            "shares": {"Spieler A": 100.0, "Spieler B": 60.0},
+            # Das Geld auf der eigenen Seite ist der Nenner (seiten_anteil). $4.000 von $5.000
+            # dort sind die 80 %, die Lucas beschrieben hat.
+            "shares": {"Spieler A": 5000.0, "Spieler B": 3000.0},
             "whales": [{"wallet": "0xabc", "side": "Spieler A", "usd": usd}]}}
 
     def _scores(self):
@@ -1455,17 +1522,19 @@ class TestKleinmarktSpur(unittest.TestCase):
         """Ein Markt, der ueber den Boden gewachsen ist, steht in beiden Dateien. Die
         eingefrorene Close-Zeile ist die belastbarere — sie muss den Nenner stellen."""
         kl = self._klein(tot=5000)
-        br = {"atp-a-b-2026-09-12": dict(kl["atp-a-b-2026-09-12"], totalUsd=20000)}
+        br = {"atp-a-b-2026-09-12": dict(kl["atp-a-b-2026-09-12"], totalUsd=40000,
+                                         shares={"Spieler A": 20000.0, "Spieler B": 20000.0})}
         tr = {"open": {}, "scores": self._scores()}
         r = P.dominanz_kandidaten(tr, br, klein=kl, now=NOW)
-        self.assertEqual(r, [], "$4.000 von $20.000 sind 20 % — unter der Schwelle")
+        self.assertEqual(r, [], "$4.000 von $20.000 auf der Seite sind 20 % — unter der Schwelle")
 
     def test_beide_spuren_laufen_nebeneinander(self):
         tr = {"open": {"0xw|k|A": {"wallet": "0xw", "key": "k", "side": "A", "usd": 6000,
                                    "league": "ESPORTS", "firstPrice": 0.55, "lastPrice": 0.55,
                                    "firstTs": NOW.isoformat()}},
               "scores": self._scores()}
-        br = {"k": {"totalUsd": 12000, "hoursToKickoff": 0.5, "capturedAt": NOW.isoformat()}}
+        br = {"k": {"totalUsd": 12000, "hoursToKickoff": 0.5, "capturedAt": NOW.isoformat(),
+                    "shares": {"A": 8000.0, "B": 4000.0}}}
         r = P.dominanz_kandidaten(tr, br, klein=self._klein(), now=NOW)
         self.assertEqual(len(r), 2)
         self.assertEqual({p.get("quelle") or "track" for _, p, _ in r}, {"track", "klein"})
@@ -1493,7 +1562,8 @@ class TestKleinmarktSpur(unittest.TestCase):
                                    "league": "ESPORTS", "firstPrice": 0.55, "lastPrice": 0.55,
                                    "firstTs": NOW.isoformat()}},
               "scores": {}}
-        br = {"k": {"totalUsd": 12000, "hoursToKickoff": 0.5, "capturedAt": NOW.isoformat()}}
+        br = {"k": {"totalUsd": 12000, "hoursToKickoff": 0.5, "capturedAt": NOW.isoformat(),
+                    "shares": {"A": 8000.0, "B": 4000.0}}}
         for leer in (None, {}, "kaputt"):
             self.assertEqual(len(P.dominanz_kandidaten(tr, br, klein=leer, now=NOW)), 1, repr(leer))
 
@@ -1504,7 +1574,9 @@ class TestDominanzKarte(unittest.TestCase):
                "entryPrice": 0.58, "wallet": "0xW", "key": "cs2-fal-vit-2026-09-12"}
         return P.build_dominanz_card(
             pos, {}, {"cs2-fal-vit-2026-09-12": {"totalUsd": tot, "hoursToKickoff": 0.75,
-                                                 "capturedAt": NOW.isoformat()}})
+                                                 "capturedAt": NOW.isoformat(),
+                                                 "shares": {"Falcons": usd / 0.69,
+                                                            "X": tot}}})
 
     def test_die_karte_ist_auf_den_ersten_blick_eine_andere(self):
         """Lucas: „mach's bitte vom Template her so, dass ich's wirklich gleich seh, weil das geht

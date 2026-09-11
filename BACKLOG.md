@@ -3,6 +3,114 @@
 Stand 10.09.2026 (oberster Block); Liga/WM-Teil darunter Stand 26.06.2026. Lebendige Liste aller offenen Punkte — Liga UND noch nicht umgesetzte WM-Sachen —
 damit wir alles abarbeiten können. ✅ = erledigt (Referenz), ⏳ = offen, 🔒 = blockiert.
 
+## ⚖️ 11.09.2026 (Nacht) — Dominanz misst jetzt die eigene Seite, und Stake bekommt einen Burst-Push
+
+### Die Einheit war falsch — und beide Regeln arbeiteten gegeneinander
+
+Lucas fragte, ob bei Polymarket viel Geld auf einer Seite die Quote zwangsläufig drückt (anders
+als beim Buchmacher, wo Geldverteilung und Quote unabhängig sind). Antwort: teilweise ja — der
+Preis IST die Wahrscheinlichkeit, und ein großer Kauf frisst das Orderbuch. **Aber zu einem guten
+Teil war es unsere Messung.**
+
+Bei Polymarket ist `usd = Anteile × Preis`. Wer dieselbe Stückzahl auf einen Favoriten @0,87 hält
+statt auf einen Außenseiter @0,13, hat rechnerisch das **6,7-fache** an „Dominanz" — bei
+identischem Contract-Bestand. Gemessen an 159 Positionen:
+
+| Anteil am Gesamtmarkt | n | Median-Quote |
+|---|---|---|
+| < 10 % | 102 | 1,96 |
+| 10–20 % | 33 | 1,83 |
+| 20–40 % | 19 | 1,55 |
+| ≥ 40 % | 5 | 1,16–1,48 |
+
+**80 % der Positionen ab 40 % Anteil lagen unter Quote 1,35** — gegen 18 % sonst. Das Band fand
+also fast nur Favoriten, und der Quotenboden warf sie wieder raus. Zwei Regeln, die gegeneinander
+arbeiteten, beide aus demselben Messfehler.
+
+`seiten_anteil()` misst stattdessen den Anteil am Geld der **eigenen Seite**. Dort kürzt sich der
+Preis heraus (Zähler und Nenner sind beide „Anteile × derselbe Preis"), übrig bleibt der reine
+Stück-Anteil an der offenen Position dieser Seite:
+
+| | Anteil am Gesamtmarkt | Anteil an der eigenen Seite |
+|---|---|---|
+| Median-Quote bei ≥ 60 % | 1,16 | **2,00** |
+| Median-Quote bei 40–60 % | 1,48 | **2,15** |
+| Median-Quote bei < 20 % | 1,94 | 1,74 |
+| Kandidaten ab 40 % | 5 | **43** |
+| davon Quote ≥ 1,35 | 20 % | **77 %** |
+
+Der Drall verschwindet vollständig, es gibt achtmal so viele Kandidaten, und der Quotenboden hört
+auf, gegen das Band zu arbeiten. Am Livestand fand das Band danach Quoten von 1,83 / 1,98 / 2,06
+statt 1,14 / 1,18 / 1,21.
+
+⚠️ **`markt_anteil` bleibt unverändert.** Es beantwortet eine andere Frage („wie groß ist diese
+Position gemessen am ganzen Markt") und steht so auf den Whale-Karten. Beide durch denselben
+Namen zu ersetzen hätte eine bestehende Anzeige still umgedeutet. Gebucht werden **beide** Maße
+plus der Nenner (`anteil`, `seitenAnteil`, `seiteUsd`) — sonst ließe sich in ein paar Wochen nicht
+nachrechnen, ob die Umstellung getragen hat, und genau diese Frage wird kommen.
+
+### Stake: der Burst-Push — und warum der Betrag NICHT der Hebel ist
+
+Lucas schickte eine VIP-Gruppen-Nachricht: vier Wetten, **eine** Auswahl, **dieselbe** Quote
+(3,35), innerhalb von **48 Sekunden**, $17.605 zusammen.
+
+> 🔴 **Vorher ein Fehler von mir, der alle bisherigen Stake-Zahlen betrifft.** Ich habe für jede
+> Stake-Messung den Top-Level-`status` gelesen — das ist Stakes Feed-Status zum Abrufzeitpunkt und
+> zieht fast nie nach. Die echte Abrechnung steht in `abrechnung`, und `stake_analyse.py` liest
+> sie auch korrekt. Meine Skripte liefen damit auf **1.524 von 14.270** abgerechneten Wetten,
+> also 11 %. Das Repo war in Ordnung, ich nicht. Alles unten ist auf der vollen Basis neu
+> gerechnet (15.646 auswertbare Einzelwetten).
+
+Auf der vollen Basis gemessen, Bursts nach Summe geschnitten (live):
+
+| Summe des Bursts | n | Treffer | ROI | UG |
+|---|---|---|---|---|
+| $10–20k | 213 | 67,1 % | **+25,2 %** | +11,7 % |
+| $20–35k | 136 | 58,1 % | −3,7 % | −18,1 % |
+| $35–50k | 71 | 77,5 % | +21,3 % | +2,1 % |
+| **ab $50k** | 184 | 52,2 % | **−12,3 %** | −23,8 % |
+
+**Die Schwelle hochzudrehen killt die Kante.** Das ist kontraintuitiv und der Grund, warum es hier
+steht: beim nächsten Aufräumen wird sonst „optimiert". Lucas' Sorge („hab Angst dass da zu viel
+kommt") ist berechtigt — ab $10k wären es 29 Pushes am Tag — aber der Betrag ist der falsche Hebel.
+
+Der richtige ist die **gleiche Quote**: der Buchmacher hat auf das Geld nicht reagiert. Genau das
+zeigt auch Lucas' Beispiel (viermal 3,35).
+
+| Regel | Bursts/Tag | n | Treffer | ROI | UG |
+|---|---|---|---|---|---|
+| ≥3, 5 Min, ab $10k | 29,0 | 771 | 65,4 % | +7,1 % | +1,0 % |
+| ≥4, 5 Min, ab $10k | 16,5 | 574 | 67,9 % | +10,2 % | +3,4 % |
+| **≥4, 5 Min, ab $10k, gleiche Quote — live** | **5,8** | 221 | 87,3 % | **+29,0 %** | **+19,1 %** |
+| ≥4, 5 Min, ab $10k, gleiche Quote — vor Anpfiff | 6,8 | 245 | 77,6 % | +8,8 % | +1,1 % |
+
+Beide Phasen laufen mit und werden **getrennt** gestempelt: live ist die stärkere Messung, aber
+Lucas' eigenes Beispiel war vor Anpfiff — eine der beiden vorab wegzuwerfen hieße, die Frage schon
+beantwortet zu haben. Dazu ein harter Deckel (4 je Lauf). Der Deckel nimmt die **ältesten** zuerst,
+weil jede Sortierung nach Güte eine Behauptung wäre, die wir nicht belegen können — der gemessene
+ROI fällt mit der Summe, steigt also gerade nicht mit ihr.
+
+`stake_burst_push.py`, eigenes Buch (`stake_burst_ledger.json`), eigener Dedup-Stand mit 48h-TTL,
+läuft in `stake-radar.yml` nach dem Sammler. Die Telegram-Secrets mussten in den Workflow
+nachgetragen werden — ohne sie hätte `send_trades_message` die Karte nur auf die Konsole
+geschrieben und der Lauf wäre grün geblieben.
+
+### Gegenbeweise
+
+Polymarket (7 Regeln): Rückfall auf den Gesamtmarkt-Anteil ✅ · frühe Freigabe auf dem alten Maß ✅ ·
+Einsatz > eigene Seite als 100 % ✅ · Deckelung auf 1.0 entfernt ✅ · `shares`-Nenner durch
+`totalUsd` ersetzt ✅ · Seitenanteil/Nenner nicht gebucht ✅ · Karte zeigt das alte Maß ✅
+
+Stake (12 Regeln): Gleiche-Quote-Regel entfernt ✅ · Betragsschwelle auf $50k ✅ · Kombiwetten
+mitgezählt ✅ · mehrere Bursts je Auswahl ✅ · Deckel nach Größe statt Zeit ✅ · Dedup vergisst nie ✅ ·
+gemischte Phase als live gebucht ✅ · Bet-IDs nicht gebucht ✅ · Zeitfenster auf eine Stunde ✅ ·
+Karte verschweigt das Beobachtungsband ✅
+
+> 🔴 Zwei liefen zuerst grün: „Deckel nach Größe" und „Zeitfenster auf eine Stunde". Beim ersten
+> war **mein Test schlecht gebaut** — der ältere Burst war dort auch der größere, also lieferte
+> eine Sortierung nach Summe dieselbe Reihenfolge. Neu zugeschnitten: der ältere ist jetzt der
+> kleinere. Der zweite hatte gar keinen Test; das Fenster ist jetzt gepinnt.
+
 ## 🔬 11.09.2026 (spät) — der eigentliche Logikfehler: wir haben gar nicht hingeschaut
 
 Lucas: *„wir müssen da an Logik Fehler haben, weil ich will ja herausfinden, Spiele bei Poly, die

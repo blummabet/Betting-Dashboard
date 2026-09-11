@@ -1,0 +1,289 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+stake_burst_push.py — 11.09.2026 (Lucas): Einsatz-Bursts bei Stake in den TRADES-Channel.
+
+Der Anlass war eine Nachricht aus einer VIP-Gruppe, die Lucas geschickt hat:
+
+    Cienciano - Montevideo City Torque · Volume: 17605.64$ · 7 bets / 4 bets in 48 sec
+    Player to be carded (sure sub) - Cabello, Carlos
+      $11580.35 x 3.35 · $1994 x 3.35 · $2990 x 3.35 · $1041.29 x 3.35
+
+Lucas: „mir geht's bei Stake wirklich um die Geldeinsaetze, die dort reinfliessen."
+
+Vier Wetten, EINE Auswahl, DIESELBE Quote, innerhalb einer Minute. Genau dieses Muster laesst
+sich im Highroller-Feed erkennen — Wallets und Nutzer nicht (Stake gibt `user` fuer alle 20.000
+Zeilen als null zurueck, obwohl das Feld im Schema steht; sie anonymisieren serverseitig).
+
+── Warum gerade diese Schwellen ──────────────────────────────────────────────────────────────
+Gemessen an 15.646 abgerechneten Einzelwetten (aus `abrechnung`, NICHT aus dem Feed-Status —
+der zieht nicht nach und haette die Basis auf 1.524 gedrueckt):
+
+    >=3 Wetten, 5 Min, ab $10k                     29,0 Bursts/Tag   ROI  +7,1 %   UG  +1,0 %
+    >=4 Wetten, 5 Min, ab $10k                     16,5              ROI +10,2 %   UG  +3,4 %
+    >=4 Wetten, 5 Min, ab $10k, GLEICHE Quote       5,8 (live)       ROI +29,0 %   UG +19,1 %
+                                                    6,8 (vor)        ROI  +8,8 %   UG  +1,1 %
+
+Der wirksame Hebel ist NICHT der Betrag — im Gegenteil: ab $50k faellt der ROI auf −12,3 %, die
+Kante sitzt im Band $10-20k. Der Hebel ist die GLEICHE QUOTE: der Buchmacher hat auf das Geld
+nicht reagiert. Genau das zeigt auch Lucas' Beispiel (viermal 3,35).
+
+Lucas: „Schwellen muessen wir sicher nachstellen, weil hab Angst dass da zu viel kommt." Deshalb
+zusaetzlich ein harter Deckel je Lauf. Der Deckel ist eine LAERMGRENZE, keine Rangfolge — er
+nimmt die aeltesten zuerst, weil jede Sortierung nach Guete eine Behauptung waere, die wir nicht
+belegen koennen. Wie viele er unterdrueckt hat, steht in der Nachricht und im Buch.
+
+⚠️ Beide Phasen laufen mit und werden GETRENNT gestempelt. Live ist die staerkere Messung, aber
+Lucas' eigenes Beispiel war vor Anpfiff — eine der beiden vorab wegzuwerfen hiesse, die Frage
+schon beantwortet zu haben.
+
+Env:
+  STAKE_BURST_MIN_N      Wetten je Burst (Default 4)
+  STAKE_BURST_FENSTER_S  Zeitfenster in Sekunden (Default 300)
+  STAKE_BURST_MIN_USD    Mindestsumme des Bursts (Default 10000)
+  STAKE_BURST_MAX        max Pushes je Lauf (Default 4)
+  TELEGRAM_TOKEN + TELEGRAM_TRADES_CHAT_ID — ohne Token = Vorschau (stdout)
+"""
+from __future__ import annotations
+import html
+import json
+import os
+from datetime import datetime, timezone
+from pathlib import Path
+
+from telegram_trades import send_trades_message
+
+BASE = Path(__file__).resolve().parent
+LEDGER_FILE = BASE / "stake_burst_ledger.json"
+SEEN_FILE = BASE / "stake_burst_seen.json"
+QUELLE_FILE = BASE / "stake_highroller.json"
+
+MIN_N = int(os.environ.get("STAKE_BURST_MIN_N") or 4)
+FENSTER_S = float(os.environ.get("STAKE_BURST_FENSTER_S") or 300)
+MIN_USD = float(os.environ.get("STAKE_BURST_MIN_USD") or 10000)
+MAX_PUSH = int(os.environ.get("STAKE_BURST_MAX") or 4)
+LEDGER_KEEP = 800
+SEEN_KEEP_H = 48.0
+
+
+def _load(p, default):
+    try:
+        return json.loads(Path(p).read_text(encoding="utf-8"))
+    except Exception:
+        return default
+
+
+def _save(p, data) -> None:
+    Path(p).write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+
+
+def _ts(x):
+    try:
+        return datetime.fromisoformat(str(x).replace("Z", "+00:00"))
+    except (TypeError, ValueError):
+        return None
+
+
+def _usd(x) -> str:
+    try:
+        x = float(x)
+    except (TypeError, ValueError):
+        return "?"
+    if x >= 1_000_000:
+        return "$%.1fM" % (x / 1_000_000)
+    if x >= 1000:
+        return "$%.1fK" % (x / 1000)
+    return "$%d" % round(x)
+
+
+def _quote(w):
+    q = w.get("beinQuote")
+    if not isinstance(q, (int, float)):
+        q = w.get("quote")
+    return q if isinstance(q, (int, float)) and q > 1 else None
+
+
+def bursts(wetten, min_n=None, fenster_s=None, min_usd=None) -> list:
+    """Alle Einsatz-Bursts im Feed. REIN (alles injizierbar).
+
+    Ein Burst ist: `min_n` Einzelwetten auf DIESELBE Auswahl, innerhalb von `fenster_s`, zusammen
+    mindestens `min_usd`, ALLE zur SELBEN Quote.
+
+    Kombiwetten bleiben draussen — ihr Einsatz haengt an mehreren Spielen und ist keinem davon
+    zurechenbar (dieselbe Regel wie im Stake-Radar seit 03.09.).
+
+    Je Auswahl wird HOECHSTENS EIN Burst gemeldet (der erste). Sonst wuerde eine lange Serie von
+    Wetten dieselbe Auswahl mehrfach ausloesen, und der Kanal saehe ein Ereignis als fuenf.
+    """
+    min_n = MIN_N if min_n is None else min_n
+    fenster_s = FENSTER_S if fenster_s is None else fenster_s
+    min_usd = MIN_USD if min_usd is None else min_usd
+    je_auswahl = {}
+    for w in wetten or []:
+        if not isinstance(w, dict) or w.get("kombi"):
+            continue
+        a, t, u, q = w.get("auswahlId"), _ts(w.get("ts")), w.get("einsatzUsd"), _quote(w)
+        if not a or t is None or q is None:
+            continue
+        if not isinstance(u, (int, float)) or isinstance(u, bool) or u <= 0:
+            continue
+        je_auswahl.setdefault(a, []).append((t, w))
+    aus = []
+    for a, v in je_auswahl.items():
+        v.sort(key=lambda z: z[0])
+        for i in range(len(v)):
+            j = i
+            while j + 1 < len(v) and (v[j + 1][0] - v[i][0]).total_seconds() <= fenster_s:
+                j += 1
+            if j - i + 1 < min_n:
+                continue
+            g = [z[1] for z in v[i:j + 1]]
+            # Dieselbe Quote ist die eigentliche Regel — nicht der Betrag. s. Kopf der Datei.
+            if len({round(float(_quote(x)), 2) for x in g}) != 1:
+                continue
+            summe = sum(float(x["einsatzUsd"]) for x in g)
+            if summe < min_usd:
+                continue
+            aus.append({"auswahlId": a, "wetten": g, "summe": summe,
+                        "sekunden": (v[j][0] - v[i][0]).total_seconds(),
+                        "von": v[i][0], "bis": v[j][0]})
+            break
+    aus.sort(key=lambda b: b["von"])      # aelteste zuerst — der Deckel ist keine Rangfolge
+    return aus
+
+
+def burst_key(b) -> str:
+    """Dedup-Schluessel. Die Auswahl allein reicht: ein zweiter Burst auf dieselbe Auswahl ist
+    dieselbe Beobachtung, nicht eine neue."""
+    return str(b.get("auswahlId"))
+
+
+def prune_seen(seen, now=None, keep_h=SEEN_KEEP_H) -> dict:
+    """Dedup-Stand aufraeumen. REIN. Ohne das waechst die Datei ewig, und eine Auswahl, die in
+    zwei Wochen wieder auftaucht, bliebe fuer immer gesperrt."""
+    now = now or datetime.now(timezone.utc)
+    aus = {}
+    for k, v in (seen if isinstance(seen, dict) else {}).items():
+        t = _ts((v or {}).get("ts") if isinstance(v, dict) else None)
+        if t is not None and (now - t).total_seconds() / 3600.0 <= keep_h:
+            aus[k] = v
+    return aus
+
+
+def build_burst_card(b, unterdrueckt=0) -> str:
+    """Die Telegram-Karte. Bewusst anders gebaut als die Poly-Dominanz-Karte: dort fuehrt der
+    ANTEIL, hier die GESCHWINDIGKEIT — das ist die Eigenschaft, um die es geht."""
+    g = b["wetten"]
+    erste = g[0]
+    q = _quote(erste)
+    sek = int(round(b["sekunden"]))
+    phase = ("live" if all(x.get("phase") == "live" for x in g)
+             else "vor Anpfiff" if all(x.get("phase") == "vor" for x in g) else "gemischt")
+    e = lambda x: html.escape(str(x or ""), quote=False)
+
+    lines = ["▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓",
+             "⚡ <b>STAKE-BURST</b> · <b>%d Wetten</b> in <b>%s</b>" % (len(g), _sek_text(sek)),
+             "▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓", ""]
+    lines.append("%s <i>%s</i>" % (_emoji(erste.get("kat")), e(erste.get("kat") or "Sport")))
+    lines.append("<b>%s</b>" % e(erste.get("event")))
+    lines.append("<i>%s</i>" % e(erste.get("liga")))
+    lines.append("")
+    lines.append("🎯 %s — <b>%s</b>" % (e(erste.get("markt")), e(erste.get("auswahl"))))
+    lines.append("💰 <b>%s</b> auf einer Auswahl · alle @<b>%.2f</b>" % (_usd(b["summe"]), q))
+    lines.append("")
+    for x in sorted(g, key=lambda y: -float(y.get("einsatzUsd") or 0))[:6]:
+        t = _ts(x.get("ts"))
+        lines.append("   %s  @%.2f  <code>%s</code>" % (_usd(x.get("einsatzUsd")), _quote(x),
+                                                        t.strftime("%H:%M:%S") if t else "?"))
+    lines.append("")
+    lines.append("⏱️ <b>%s</b>" % phase)
+    if unterdrueckt:
+        lines.append("<i>+%d weitere Bursts in diesem Lauf nicht gesendet (Deckel %d)</i>"
+                     % (unterdrueckt, MAX_PUSH))
+    # Das Urteil gehoert dorthin, wo die Zahl gelesen wird — nicht in eine Fussnote im Backlog.
+    lines.append("\n<i>🔬 Beobachtungsband — läuft mit, ist noch kein Beleg. Gemessen an 15.646 "
+                 "abgerechneten Wetten: dieses Muster +29 % ROI live (Untergrenze +19 %, n=221) "
+                 "und +8,8 % vor Anpfiff (Untergrenze +1,1 %). Die gleiche Quote ist die Regel, "
+                 "nicht der Betrag — ab $50.000 dreht es ins Minus.</i>")
+    return "\n".join(lines)
+
+
+def _sek_text(s) -> str:
+    s = int(s)
+    if s < 60:
+        return "%d Sek" % max(s, 1)
+    return "%d:%02d Min" % (s // 60, s % 60)
+
+
+_EMOJI = {"Fußball": "⚽", "Tennis": "🎾", "E-Sport": "🎮", "US-Sport": "🏈", "Cricket": "🏏",
+          "Basketball": "🏀", "Tischtennis": "🏓", "Volleyball": "🏐", "Handball": "🤾",
+          "Eishockey": "🏒", "Darts": "🎯", "Snooker": "🎱", "Kampfsport": "🥊"}
+
+
+def _emoji(kat) -> str:
+    return _EMOJI.get(str(kat or ""), "🏆")
+
+
+def buch_zeile(b, ts) -> dict:
+    """Eine gesendete Beobachtung als Buchzeile. Abgerechnet wird sie spaeter aus dem Ledger —
+    `stake_settle.py` traegt die Ergebnisse auf den Wetten nach, die hier namentlich stehen."""
+    g = b["wetten"]
+    erste = g[0]
+    return {
+        "k": burst_key(b),
+        "auswahlId": b["auswahlId"], "eventId": erste.get("eventId"),
+        "event": erste.get("event"), "liga": erste.get("liga"), "kat": erste.get("kat"),
+        "markt": erste.get("markt"), "auswahl": erste.get("auswahl"),
+        "quote": _quote(erste),
+        "summeUsd": round(float(b["summe"]), 2),
+        "nWetten": len(g), "sekunden": round(float(b["sekunden"]), 1),
+        # Phase getrennt stempeln: live und vor Anpfiff sind zwei verschiedene Messungen
+        # (+29 % gegen +8,8 %), zusammengerechnet waere keine von beiden zu beantworten.
+        "phase": ("live" if all(x.get("phase") == "live" for x in g)
+                  else "vor" if all(x.get("phase") == "vor" for x in g) else "gemischt"),
+        "betIds": [x.get("id") for x in g],
+        "sentAt": ts, "status": "pending",
+    }
+
+
+def main() -> int:
+    now = datetime.now(timezone.utc)
+    now_iso = now.isoformat()
+    quelle = _load(QUELLE_FILE, {})
+    wetten = (quelle or {}).get("wetten") or []
+    if not wetten:
+        print("Stake-Burst: keine Wetten in stake_highroller.json — nichts zu tun.")
+        return 0
+
+    seen = prune_seen(_load(SEEN_FILE, {}), now)
+    alle = bursts(wetten)
+    neu = [b for b in alle if burst_key(b) not in seen]
+    print("⚡ Stake-Burst: %d Burst(s) im Feed, %d davon neu (>=%d Wetten, %ds, ab %s, gleiche Quote)"
+          % (len(alle), len(neu), MIN_N, int(FENSTER_S), _usd(MIN_USD)))
+
+    senden = neu[:MAX_PUSH]
+    unterdrueckt = max(len(neu) - len(senden), 0)
+    led = _load(LEDGER_FILE, [])
+    if not isinstance(led, list):
+        led = []
+    schon = {e.get("k") for e in led if isinstance(e, dict)}
+    gesendet = 0
+    for i, b in enumerate(senden):
+        text = build_burst_card(b, unterdrueckt if i == len(senden) - 1 else 0)
+        if not send_trades_message(text):
+            continue
+        gesendet += 1
+        seen[burst_key(b)] = {"ts": now_iso, "summe": round(float(b["summe"]), 2)}
+        if burst_key(b) not in schon:
+            led.append(buch_zeile(b, now_iso))
+    _save(SEEN_FILE, seen)
+    try:
+        _save(LEDGER_FILE, led[-LEDGER_KEEP:])
+    except Exception as e:
+        print("Stake-Burst-Ledger-Schreibfehler:", e)
+    print("   %d gesendet, %d unterdrueckt (Deckel %d)." % (gesendet, unterdrueckt, MAX_PUSH))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
