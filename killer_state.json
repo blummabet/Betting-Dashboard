@@ -422,7 +422,7 @@
    "markt": "Match Odds",
    "seite": "home",
    "name": "Liverpool",
-   "odd": 1.49,
+   "odd": 1.5,
    "entryOdd": 1.49,
    "anteilPct": 81,
    "stufe": 1,
@@ -473,20 +473,20 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 86% auf der Seite"
+       "text": "Geld 87% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.862,
-       "betrag": 142142,
-       "gesamt": 164898,
+       "anteil": 0.871,
+       "betrag": 182292,
+       "gesamt": 209290,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 86% auf der Seite"
+      "text": "Geld 87% auf der Seite"
      },
      {
       "buch": "POLY",
@@ -505,7 +505,7 @@
       "geld": {
        "anteil": 0.66,
        "betrag": null,
-       "gesamt": 153279,
+       "gesamt": 165577,
        "waehrung": "USD",
        "quelle": "preis"
       },
@@ -556,9 +556,9 @@
    },
    "wertVsPinn": -0.0252,
    "gehaltenSeit": "2026-09-11T11:21:08.858371+00:00",
-   "zuletztAktiv": "2026-09-11T20:22:14.103236+00:00",
+   "zuletztAktiv": "2026-09-11T23:37:16.819678+00:00",
    "haltePreis": 1.47,
-   "aktiv": false
+   "aktiv": true
   },
   "36006610|Match Odds": {
    "matchId": "36006610",
@@ -1088,6 +1088,132 @@
    "zuletztAktiv": "2026-09-11T22:07:08.062746+00:00",
    "haltePreis": 1.68,
    "aktiv": false
+  },
+  "36053345|Match Odds": {
+   "matchId": "36053345",
+   "home": "Real Potosi",
+   "away": "Oriente Petrolero",
+   "league": "Bolivian Liga de Futbol Profesional",
+   "kickoff": "2026-09-12T00:00:00Z",
+   "markt": "Match Odds",
+   "seite": "home",
+   "name": "Real Potosi",
+   "odd": 1.65,
+   "entryOdd": 1.67,
+   "anteilPct": 89,
+   "stufe": 2,
+   "verstaerker": [
+    {
+     "art": "poly",
+     "text": "Poly Preis 60%",
+     "gewicht": 12
+    }
+   ],
+   "rang": 70.9,
+   "track": null,
+   "streak": null,
+   "poly": {
+    "anteilPct": 60,
+    "usd": 1044,
+    "odd": 1.68
+   },
+   "polyStatus": "ja",
+   "polyKey": "bol1-pot-ori-2026-09-11",
+   "polySide": "Bamin Real Potosí",
+   "pinnMovePP": null,
+   "punkte": {
+    "punkte": 5,
+    "moeglich": 7,
+    "dauerH": 0.38,
+    "teile": [
+     {
+      "buch": "BF",
+      "name": "Betfair",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Geld 89% auf der Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "frischer Zufluss und Quote zieht mit"
+      },
+      "geld": {
+       "anteil": 0.892,
+       "betrag": 2569,
+       "gesamt": 2880,
+       "waehrung": "EUR",
+       "quelle": "geld"
+      },
+      "text": "Geld 89% auf der Seite"
+     },
+     {
+      "buch": "POLY",
+      "name": "Polymarket",
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Poly-Preis 60% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein bewiesenes Wallet auf der Seite"
+      },
+      "geld": {
+       "anteil": 0.6,
+       "betrag": null,
+       "gesamt": 1044,
+       "waehrung": "USD",
+       "quelle": "preis"
+      },
+      "text": "Poly-Preis 60% auf derselben Seite"
+     },
+     {
+      "buch": "PIN",
+      "name": "Pinnacle",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Pinnacle nicht erhoben"
+     },
+     {
+      "buch": "STAKE",
+      "name": "Stake-Highroller",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Stake-Highroller nicht erhoben"
+     },
+     {
+      "buch": "ZEIT",
+      "name": "Dauer",
+      "status": "nein",
+      "punkte": 0,
+      "moeglich": 1,
+      "grund": {
+       "ok": false,
+       "text": "steht seit 0.4h vor Anpfiff"
+      },
+      "tiefe": null,
+      "text": "steht seit 0.4h vor Anpfiff"
+     }
+    ]
+   },
+   "wertVsPinn": null,
+   "gehaltenSeit": "2026-09-11T23:37:16.819678+00:00",
+   "zuletztAktiv": "2026-09-11T23:37:16.819678+00:00",
+   "haltePreis": 1.65,
+   "aktiv": true
   }
  }
 }
