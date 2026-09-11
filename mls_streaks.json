@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "mls",
-    "generatedAt": "2026-09-11T12:12:24.793088+00:00",
+    "generatedAt": "2026-09-11T21:42:23.967358+00:00",
     "minLen": 3,
     "strongLen": 5,
     "sortiert": "zufallPct",
@@ -138,9 +138,9 @@
       "venue": "H",
       "strong": true,
       "continuation": {
-        "state": "intakt",
+        "state": "wackelt",
         "ratePct": 38,
-        "label": "Eigen 38% + Gegner 47% → 42% · Signale bestätigen"
+        "label": "Eigen 38% + Gegner 47% → 42% · Linie/Signale dagegen"
       },
       "ratePct": 38,
       "seq": [
@@ -179,18 +179,17 @@
       "oppSupportPct": 47,
       "matchupPct": 42,
       "signalInfo": {
-        "state": "confirm",
-        "count": 7,
-        "conviction": 5,
+        "state": "contradict",
+        "count": 4,
+        "conviction": 4,
         "names": [
           "injury",
-          "form_trend",
           "h2h_pattern",
-          "xg_strength",
           "chance_creation",
-          "fixture_congestion"
+          "topscorer_momentum",
+          "streak_momentum"
         ],
-        "market": "Unter 3.5 Tore"
+        "market": "Über 2.5 Tore"
       }
     },
     {
@@ -8181,7 +8180,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 86,
-        "label": "Eigen 86% + Gegner 47% → 70% · Signale bestätigen"
+        "label": "Eigen 86% + Gegner 47% → 70%"
       },
       "ratePct": 86,
       "seq": [
@@ -8230,17 +8229,7 @@
         "oppRatePct": 47
       },
       "oppSupportPct": 47,
-      "matchupPct": 70,
-      "signalInfo": {
-        "state": "confirm",
-        "count": 2,
-        "conviction": 4,
-        "names": [
-          "form_trend",
-          "streak_momentum"
-        ],
-        "market": "Beide Teams treffen — Ja"
-      }
+      "matchupPct": 70
     },
     {
       "teamId": "9568",
