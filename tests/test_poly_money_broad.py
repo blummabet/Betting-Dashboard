@@ -1156,3 +1156,124 @@ def test_resolutions_bleibt_wie_es_war():
     mk = [{"key": "a", "resolved": True, "resolvedPrices": {"home": 1.0, "away": 0.0},
            "cond": "0xAAA"}]
     assert B.resolutions(mk) == {"a": "home"}
+
+
+# ── Kleinmarkt-Spur (11.09.2026) ──────────────────────────────────────────────────────────────
+# Lucas: „ich will ja herausfinden, Spiele bei Poly, die kleine Maerkte sind und wo ein
+# eventuelles Sharp Wallet hoeher sitzt … wenn der auf ein Tennis-Match viertausend setzt und es
+# sind maximal fuenftausend drin, dann koennte das schon sein, dass derjenige sich sehr sicher ist."
+#
+# 🔴 Der Befund: dieser Fall war NICHT SICHTBAR. `MIN_VOL_USD` entscheidet, welcher Markt einen
+# Holder-Call bekommt — also wo wir erfahren, WER wie viel haelt. Gemessen: der kleinste Markt mit
+# Wal-Daten in der gesamten Close-Datei hatte $7.504, in 2.928 Zeilen lag keine einzige darunter.
+# Ein Band, das kleine Maerkte finden soll, suchte in einem Bestand, aus dem sie per Konstruktion
+# entfernt waren. Diese Tests halten die Trennung fest, mit der es behoben wurde.
+class TestKleinmarktSpur:
+
+    def test_der_boden_liegt_unter_dem_hauptboden(self):
+        assert B.KLEIN_MIN_VOL < B.MIN_VOL_USD, \
+            "eine Spur fuer kleine Maerkte muss unter dem Boden ansetzen, der sie ausschliesst"
+
+    def test_der_hauptboden_bleibt_unangetastet(self):
+        """⚠️ Der Kern der Entscheidung. `MIN_VOL_USD` speist Close-Freeze, Historie,
+        Trefferquoten-Auswertung und das bestehende Whale-Buch. Ihn zu senken haette JEDE dieser
+        Zahlen umgedeutet und alte gegen neue Messungen unvergleichbar gemacht — deshalb eine
+        zweite Spur statt eines niedrigeren Bodens."""
+        assert B.MIN_VOL_USD == 7500, \
+            "wird der Hauptboden gesenkt, aendert sich rueckwirkend die Bedeutung des ganzen Buchs"
+
+    def test_eigenes_budget_das_den_hauptpfad_nicht_aushungert(self):
+        assert 0 < B.MAX_HOLDER_CALLS_KLEIN < B.MAX_HOLDER_CALLS, \
+            "die Spur darf dem Close-Freeze keine Calls wegnehmen — eigenes, kleineres Budget"
+
+    def test_eigene_datei(self):
+        """Kein Verbraucher des Close-Freeze darf diese Zeilen versehentlich mitlesen."""
+        assert B.KLEIN_FILE != B.CLOSE_FILE and B.KLEIN_FILE != B.UPCOMING_FILE
+
+    def _z(self, htk, cap_vor_h=0.0, now=None):
+        now = now or datetime(2026, 9, 11, 12, 0, tzinfo=timezone.utc)
+        return {"league": "TENNIS", "hoursToKickoff": htk, "totalUsd": 5000,
+                "prices": {"A": 0.62}, "whales": [{"wallet": "0xa", "side": "A", "usd": 4000}],
+                "capturedAt": (now - timedelta(hours=cap_vor_h)).isoformat()}
+
+    def test_frischer_markt_bleibt(self):
+        now = datetime(2026, 9, 11, 12, 0, tzinfo=timezone.utc)
+        assert "k" in B.prune_klein({}, {"k": self._z(0.66, now=now)}, now=now)
+
+    def test_der_frische_stand_ueberschreibt_den_alten(self):
+        """Kein Einfrieren wie beim Close-Freeze: der Anteil soll den Markt zeigen, wie er JETZT
+        ist. Ein eingefrorener Erstwert waere genau der halb leere Nenner, den das Band vermeidet."""
+        now = datetime(2026, 9, 11, 12, 0, tzinfo=timezone.utc)
+        alt = {"k": dict(self._z(2.5, now=now), totalUsd=2000)}
+        neu = {"k": dict(self._z(0.5, now=now), totalUsd=5000)}
+        assert B.prune_klein(alt, neu, now=now)["k"]["totalUsd"] == 5000
+
+    def test_gelaufene_spiele_fliegen_raus(self):
+        """Diese Datei speist NUR das Dominanz-Band, und das pusht ausschliesslich vor Anpfiff.
+        Eine Zeile, deren Spiel seit Stunden laeuft, ist dort wertlos."""
+        now = datetime(2026, 9, 11, 12, 0, tzinfo=timezone.utc)
+        # vor 5 h aufgenommen, damals 1 h bis Anpfiff -> seit 4 h angepfiffen
+        assert B.prune_klein({"k": self._z(1.0, cap_vor_h=5.0, now=now)}, {}, now=now) == {}
+
+    def test_kurz_nach_anpfiff_bleibt_als_puffer_stehen(self):
+        """Damit ein verzoegerter Runner die Zeile nicht mitten im Vorgang unter sich wegzieht.
+        Gepusht wird sie trotzdem nicht — das entscheidet `dom_freigabe` an der echten Uhr."""
+        now = datetime(2026, 9, 11, 12, 0, tzinfo=timezone.utc)
+        assert "k" in B.prune_klein({"k": self._z(1.0, cap_vor_h=1.5, now=now)}, {}, now=now)
+
+    def test_ohne_aufnahmezeit_fliegt_die_zeile_raus(self):
+        """Ohne `capturedAt` ist der Anpfiff nicht bestimmbar — und ohne Anpfiff pusht das Band
+        ohnehin nicht. Eine Zeile, die nie etwas ausloesen kann, gehoert nicht in die Datei."""
+        now = datetime(2026, 9, 11, 12, 0, tzinfo=timezone.utc)
+        z = self._z(0.66, now=now)
+        del z["capturedAt"]
+        assert B.prune_klein({"k": z}, {}, now=now) == {}
+        assert B.prune_klein({"k": {"totalUsd": 5000, "capturedAt": now.isoformat()}}, {},
+                             now=now) == {}
+
+
+    def test_kleinmarkt_zeilen_kommen_nicht_in_den_wallet_track(self):
+        """🔴 Der einzige Gegenbeweis von zwoelf, den nichts gefangen hat.
+
+        `scores` im Wallet-Track ist das Reputations-Buch ueber 3.650 Wallets — CLV und
+        Trefferquote, gemessen ausschliesslich in Maerkten ab MIN_VOL_USD. Ein
+        `markets.extend(klein.values())` an der falschen Stelle haette Maerkte ab $1.500
+        mitlaufen lassen und die Bedeutung jeder dieser Zahlen rueckwirkend geaendert — unbemerkt,
+        weil die Datei danach genauso aussieht. Die Spur traegt deshalb eine Marke, und der Track
+        weist sie ab.
+        """
+        now = datetime(2026, 9, 11, 12, 0, tzinfo=timezone.utc)
+        gross = {"key": "gross", "prices": {"A": 0.6}, "totalUsd": 20000, "league": "X",
+                 "whales": [{"wallet": "0xg", "side": "A", "usd": 9000}]}
+        klein = {"spur": "klein", "key": "klein", "prices": {"A": 0.6}, "totalUsd": 5000,
+                 "league": "X", "whales": [{"wallet": "0xk", "side": "A", "usd": 4000}]}
+        tr = B.update_wallet_track({}, [gross, klein], now=now)
+        assert "0xg|gross|A" in tr["open"]
+        assert not [k for k in tr["open"] if "klein" in k], \
+            "eine Kleinmarkt-Zeile im Reputations-Buch aendert still jede CLV-Zahl"
+
+    def test_die_marke_steht_auf_den_zeilen_der_spur(self):
+        """Ohne Marke waere die Sperre oben wirkungslos — und niemand wuerde es merken."""
+        import inspect
+        quelle = inspect.getsource(B.fetch_markets)
+        assert '"spur": "klein"' in quelle, \
+            "die Spur muss ihre Zeilen markieren, sonst greift die Sperre im Track nicht"
+
+
+    def test_kein_verbraucher_des_hauptpfads_nimmt_eine_kleinmarkt_zeile(self):
+        """Die Sperre sitzt beim VERBRAUCHER, nicht bei einer Konvention darueber, was in die
+        Liste gehoert. Provoziert: ein `markets.extend(klein.values())` an der falschen Stelle
+        laeuft jetzt folgenlos durch — Close-Freeze und Historie filtern ueber den Volumenboden,
+        der Wallet-Track ueber die Marke. Alle drei werden hier zugleich geprueft, weil ein
+        einzelner von ihnen die Luecke sonst offen liesse."""
+        now = datetime(2026, 9, 11, 12, 0, tzinfo=timezone.utc)
+        gross = {"key": "gross", "prices": {"A": 0.6}, "totalUsd": 20000, "league": "X",
+                 "hoursToKickoff": 0.5, "shares": {"A": 10},
+                 "whales": [{"wallet": "0xg", "side": "A", "usd": 9000}]}
+        klein = {"spur": "klein", "key": "klein", "prices": {"A": 0.6}, "totalUsd": 5000,
+                 "league": "X", "hoursToKickoff": 0.5, "shares": {"A": 10},
+                 "whales": [{"wallet": "0xk", "side": "A", "usd": 4000}]}
+        beide = [gross, klein]
+        assert list(B.capture(beide, {}, now=now)) == ["gross"]
+        assert list(B.append_history({}, beide, now=now)) == ["gross"]
+        assert list(B.update_wallet_track({}, beide, now=now)["open"]) == ["0xg|gross|A"]

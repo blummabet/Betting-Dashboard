@@ -111,6 +111,31 @@ LIVE_HIST_KEEP_H      = 12.0
 # zurueckfaellt. Der Close-Freeze bleibt unberuehrt.
 VOR_WINDOW_H          = float(os.environ.get("POLY_VOR_WINDOW_H") or 8.0)
 MAX_HOLDER_CALLS_VOR  = int(os.environ.get("POLY_MAX_HOLDER_CALLS_VOR") or 22)
+
+# ── 🔬 Kleinmarkt-Spur (11.09.2026) ────────────────────────────────────────────────────────
+# Lucas: „ich will ja herausfinden, Spiele bei Poly, die kleine Maerkte sind und wo ein
+# eventuelles Sharp Wallet hoeher sitzt … wenn der auf ein Tennis-Match viertausend setzt und es
+# sind maximal fuenftausend drin, dann koennte das schon sein, dass derjenige sich sehr sicher
+# ist, vor allem weil's ein kleiner Markt ist."
+#
+# 🔴 Der Befund, der diese Spur ausgeloest hat: dieser Fall war NICHT SICHTBAR. `MIN_VOL_USD`
+# entscheidet weiter unten, welcher Markt ueberhaupt einen Holder-Call bekommt (`if vol <
+# min_vol: continue`) — also wo wir erfahren, WER wie viel haelt. Unter $7.500 wurde nie gefragt.
+# Gemessen: der kleinste Markt mit Wal-Daten in der gesamten Close-Datei hatte $7.504, und in
+# 2.928 Zeilen lag keine einzige darunter. Ein Band, das kleine Maerkte finden soll, suchte in
+# einem Bestand, aus dem kleine Maerkte per Konstruktion entfernt waren.
+#
+# Und es war genau verkehrt herum: die hoechsten Anteile sitzen in den kleinsten Maerkten. In der
+# `upcoming`-Datei (die kleine Maerkte sieht, aber nur 30 von 566 mit Wal-Daten) standen oben
+# $4.107 mit 55 % und $4.671 mit 51 % — beide unter dem Boden.
+#
+# ⚠️ `MIN_VOL_USD` wird NICHT gesenkt. Es speist Close-Freeze, Historie, Trefferquoten-Auswertung
+# und das bestehende Whale-Buch; ein niedrigerer Boden wuerde jede dieser Zahlen umdeuten und
+# alte gegen neue Messungen unvergleichbar machen. Stattdessen eine eigene Spur mit eigenem
+# Boden, eigenem Budget und eigenem Speicher — dieselbe Bauart wie die „vor"-Spur vom 01.09.
+KLEIN_MIN_VOL         = float(os.environ.get("POLY_KLEIN_MIN_VOL") or 1500)
+MAX_HOLDER_CALLS_KLEIN = int(os.environ.get("POLY_MAX_HOLDER_CALLS_KLEIN") or 18)
+KLEIN_FILE            = "poly_money_klein.json"
 # ⭐ Und das Budget wird GEZIELT ausgegeben. Gemessen am 01.09.: von 58 Maerkten im Vor-Fenster
 # sind nur 20 Fussball — der Rest ist Tennis/Esport/US-Sport. Nach reinem Volumen sortiert gingen
 # 13 der 25 Calls an Tennis, also an Maerkte, die die Konjunktion NIE benutzt (killer.py sieht
@@ -1202,6 +1227,7 @@ def fetch_markets(live_only=False, pin=None):
     raw_by_tag = {}                      # je Tag: wie viele ROH-Events kamen (offen+aufgelöst)
     seen = set()                         # Dedup: ein Markt kann unter mehreren Tags liegen (cs2 ⊂ esports)
     candidates = []                      # near-kickoff 2-Wege-Kandidaten, VOR den Holders-Calls
+    klein_candidates = []                # 11.09.2026: Maerkte UNTER MIN_VOL_USD, eigene Spur
     _fragen = {}                         # conditionId -> Marktfrage (04.09.2026): die Linie,
                                          # ohne die „Over" nichts bezeichnet
     upcoming = {}                        # money-map: weiter draussen liegende Sport-Maerkte, NUR Preis+Vol (kein Holder-Call)
@@ -1249,6 +1275,15 @@ def fetch_markets(live_only=False, pin=None):
                 if live_only and cls != "live":
                     continue        # Live-only Schnell-Lauf: Vor-Spiel-Maerkte ueberspringen        # kein unmittelbarer Anpfiff → kein Sportspiel (Politik/Krypto raus)
                 vol = float(ev.get("volume") or 0)
+                # 🔬 Kleinmarkt-Spur (11.09.2026): was hier gleich am Volumenboden abprallt, ist
+                # genau der Fall, den Lucas sucht. Vorher als eigener Kandidat vermerkt — eigener
+                # Boden, eigenes Budget, eigener Speicher. `markets` und damit Close-Freeze,
+                # Historie und das bestehende Buch bleiben unberuehrt.
+                if vol < min_vol and cls == "pre" and not live_only and vol >= KLEIN_MIN_VOL:
+                    _koc = _outcomes(ev)
+                    if len(_koc) >= 2 and not _is_exhibition(_koc):
+                        klein_candidates.append((vol, key, league_of(ev, key), sport_of(ev, key),
+                                                 htk, _koc, _market_volume(ev, _koc, vol)))
                 if vol < min_vol:
                     continue
                 # 10.09.2026: bei einem schon erfassten Buendel derselbe Markt wie beim
@@ -1419,6 +1454,45 @@ def fetch_markets(live_only=False, pin=None):
             except Exception:
                 pass
         markets.append(_mrow)
+
+    # ── 🔬 Kleinmarkt-Spur: eigenes Budget, eigener Speicher ──────────────────────────────
+    # Sortiert nach Volumen ABSTEIGEND: von den kleinen Maerkten zuerst die groessten. Das ist
+    # eine Wahl ohne Beleg — ein $7.000-Markt hat mehr echtes Geld und weniger Rauschen als ein
+    # $1.600er, aber ob dort auch haeufiger Dominanz sitzt, ist NICHT gemessen. Deshalb steht es
+    # hier als Satz und nicht als Selbstverstaendlichkeit; `kleinStats` zaehlt mit, damit sich
+    # spaeter pruefen laesst, ob die Reihenfolge die richtige war.
+    klein = {}
+    _klein_stats = {"kandidaten": len(klein_candidates), "calls": 0,
+                    "budgetLeer": 0, "ohneGeldSplit": 0, "mitAnteilen": 0}
+    klein_candidates.sort(key=lambda c: -c[0])
+    for kvol, kkey, kleague, ksport, khtk, koc, kmvol in klein_candidates:
+        if _klein_stats["calls"] >= MAX_HOLDER_CALLS_KLEIN:
+            _klein_stats["budgetLeer"] += 1
+            continue
+        try:
+            kmm = _market_money(koc)
+        except Exception:
+            kmm = None
+        _klein_stats["calls"] += 1
+        if not kmm:
+            _klein_stats["ohneGeldSplit"] += 1
+            continue
+        kprices = {o["label"]: o["price"] for o in koc if o["price"] is not None}
+        kwhales = kmm.get("whales") or []
+        if not kprices or not kwhales:
+            continue
+        _kc = _cond_von(koc)
+        klein[kkey] = {"spur": "klein",     # s. update_wallet_track — diese Marke sperrt den Track
+                       "league": kleague, "sport": ksport,
+                       "hoursToKickoff": round(khtk, 2), "totalUsd": round(kmvol),
+                       "shares": kmm["shares"], "prices": kprices, "whales": kwhales[:12],
+                       "splitGuete": split_guete(kmm["shares"], kmvol, kmm.get("trunc")),
+                       "capturedAt": now.isoformat(),
+                       "cond": _kc, "frage": _fragen.get(_kc), "tokens": _tokens_of(koc)}
+        _klein_stats["mitAnteilen"] += 1
+    fetch_markets.klein = klein
+    fetch_markets.klein_stats = _klein_stats
+
     fetch_markets.sweep_stats = {"sweepOpen": len(sweep_open), "sweepClosed": len(sweep_closed),
                                  "sweepAdded": sweep_added}
     fetch_markets.upcoming = upcoming
@@ -1665,6 +1739,17 @@ def update_wallet_track(prev, markets, now=None, keep_h=HIST_KEEP_H, frozen=None
     for m in markets or []:
         if m.get("resolved"):
             continue
+        # 🔴 11.09.2026: die Kleinmarkt-Spur darf HIER NICHT hinein. `scores` ist das
+        # Reputations-Buch ueber 3.650 Wallets — CLV und Trefferquote, gemessen ausschliesslich in
+        # Maerkten ab MIN_VOL_USD. Liefen Maerkte ab $1.500 mit ein, aenderte sich rueckwirkend
+        # die Bedeutung jeder dieser Zahlen, und zwar unbemerkt: die Datei saehe genauso aus.
+        #
+        # Die Sperre steht hier und nicht beim Aufrufer, weil sie sonst eine Konvention waere
+        # („bitte nur `pre` uebergeben") statt einer Regel. Gefunden beim Provozieren: ein
+        # `markets.extend(klein.values())` an der falschen Stelle lief durch die gesamte Suite
+        # gruen durch — der einzige Gegenbeweis von zwoelf, den nichts gefangen hat.
+        if m.get("spur") == "klein":
+            continue
         key, prices = m.get("key"), m.get("prices") or {}
         if not key or not prices:
             continue
@@ -1909,6 +1994,38 @@ def prune_upcoming(prev, fresh, now=None, window_h=UPCOMING_WINDOW_H):
     return out
 
 
+def prune_klein(prev, fresh, now=None, grace_h=2.0):
+    """Die Kleinmarkt-Datei fortschreiben und Vergangenes prunen. REIN/testbar.
+
+    Dasselbe Muster wie `prune_upcoming`, aber mit einem viel kuerzeren Gedaechtnis: diese Datei
+    speist NUR das Dominanz-Beobachtungsband, und das pusht ausschliesslich VOR Anpfiff. Eine
+    Zeile, deren Spiel laeuft, ist dort wertlos — sie bleibt nur `grace_h` als Puffer stehen,
+    damit ein verzoegerter Runner sie nicht mitten im Vorgang unter sich wegzieht.
+
+    Kein Einfrieren wie beim Close-Freeze: hier wird der FRISCHE Stand genommen, wenn es einen
+    gibt. Der Anteil soll den Markt zeigen, wie er JETZT ist — ein eingefrorener Erstwert waere
+    genau der halb leere Nenner, den das Band vermeiden soll.
+    """
+    now = now or _now()
+    out = {k: dict(v) for k, v in (prev or {}).items() if isinstance(v, dict)}
+    for k, v in (fresh or {}).items():
+        out[k] = dict(v)
+    for k in list(out.keys()):
+        e = out[k]
+        try:
+            cap = datetime.fromisoformat(str(e.get("capturedAt")).replace("Z", "+00:00"))
+        except (TypeError, ValueError):
+            cap = None
+        htk = e.get("hoursToKickoff")
+        if cap is None or not isinstance(htk, (int, float)):
+            del out[k]          # ohne Aufnahmezeit kein bestimmbarer Anpfiff -> unbrauchbar
+            continue
+        rest = htk - (now - cap).total_seconds() / 3600.0
+        if rest <= -grace_h:
+            del out[k]
+    return out
+
+
 def main_live() -> int:
     """Live-only Schnell-Lauf (11.08.2026, Lucas Stufe 1/A): NUR die Live-Erfassung -- laufende Maerkte
     holen, capture_live, Live-History. Ueberspringt den schweren Vor-Spiel-Teil (Wallet-P&L, Eval, Cross-
@@ -2022,6 +2139,16 @@ def main() -> int:
     _upc = prune_upcoming(_load(UPCOMING_FILE), getattr(fetch_markets, "upcoming", {}) or {})
     write_json_atomic((BASE / UPCOMING_FILE), _upc, indent=1)
     print(f"[UPCOMING] {len(_upc)} Maerkte fuer die Money-Map (Preis+Vol, <={UPCOMING_WINDOW_H:.0f}h, kein Holder-Call)")
+
+    # 🔬 Kleinmarkt-Spur (11.09.2026): Maerkte UNTER MIN_VOL_USD mit Geld-Split. Speist NUR das
+    # Dominanz-Band in poly_whale_watch.py — kein Verbraucher des Close-Freeze sieht diese Datei.
+    _kl = prune_klein(_load(KLEIN_FILE), getattr(fetch_markets, "klein", {}) or {})
+    write_json_atomic((BASE / KLEIN_FILE), _kl, indent=1)
+    _ks = getattr(fetch_markets, "klein_stats", {}) or {}
+    print(f"[KLEIN] {len(_kl)} Maerkte ${KLEIN_MIN_VOL:.0f}-${min_vol:.0f} · "
+          f"{_ks.get('kandidaten', 0)} Kandidaten, {_ks.get('calls', 0)} Calls "
+          f"(Deckel {MAX_HOLDER_CALLS_KLEIN}), {_ks.get('mitAnteilen', 0)} mit Anteilen, "
+          f"{_ks.get('budgetLeer', 0)} ueber Budget")
 
     print(f"=== Liegt das Geld richtig? BREIT · min Vol ${min_vol:.0f} · min Quote {min_odds} ===")
     print(f"Eingefroren {len(frozen)} · aufgelöst {rep['n']}")

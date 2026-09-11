@@ -947,6 +947,12 @@ DOM_MAX_HTK = float(os.environ.get("WHALE_DOM_MAX_HTK") or 1.0)
 # dieselbe Zahl und nicht eine neue.
 DOM_MIN_QUOTE = float(os.environ.get("WHALE_DOM_MIN_QUOTE") or 1.35)
 
+# 🔬 Die Kleinmarkt-Spur (11.09.2026). Geschrieben von poly_money_broad.py, gelesen NUR hier.
+# Lucas: „ich will ja herausfinden, Spiele bei Poly, die kleine Maerkte sind und wo ein
+# eventuelles Sharp Wallet hoeher sitzt." Genau diese Maerkte standen in KEINER Datei, die dieses
+# Band lesen konnte — s. die Begruendung in poly_money_broad.py bei KLEIN_MIN_VOL.
+DOM_KLEIN_FILE = BASE / "poly_money_klein.json"
+
 # ⏱️ Die gemessene Fuellkurve: wie voll ein Markt im MEDIAN ist, je Stunde vor Anpfiff (424
 # Maerkte mit Verlauf bis zum Anpfiff). Sie steht hier als Tabelle und nicht als Formel, weil sie
 # GEMESSEN ist — eine glatte Kurve daruberzulegen wuerde eine Genauigkeit behaupten, die die
@@ -971,6 +977,54 @@ def _dom_quote(pos, min_quote=None):
         return None
     q = 1.0 / p
     return q if q >= min_quote else None
+
+
+def klein_positionen(klein, now=None):
+    """Die Wal-Positionen der Kleinmarkt-Spur, in der Form von `track["open"]`. REIN.
+
+    Der Wallet-Track kennt diese Maerkte nicht — er wird aus `pre` gespeist, und `pre` hat den
+    $7.500-Boden. Statt einen zweiten Track zu fuehren, werden die Positionen hier direkt aus den
+    Marktzeilen abgeleitet: alles Noetige (Wallet, Seite, Einsatz, Preis) steht dort.
+
+    ⚠️ Was hier FEHLT und nicht erfunden wird:
+      · `firstTs` — wir wissen nicht, wann die Wallet eingestiegen ist, nur dass sie jetzt da ist.
+        Gesetzt wird die Aufnahmezeit des Markts, und weil die Spur nur innerhalb des
+        Anpfiff-Fensters sammelt, ist die Frischepruefung damit ohnehin erfuellt.
+      · `htkFirst` — derselbe Grund, bleibt None. Der Vorlauf der WALLET ist hier unbekannt; die
+        Reife des MARKTS (`htkMess`) ist es nicht und entscheidet.
+      · `firstPrice` ist der AKTUELLE Preis, nicht der Einstieg. Die Karte zeigt deshalb bei
+        diesen Zeilen keinen „Einstieg" — eine Zahl, die wie ein Einstieg aussieht und keiner
+        ist, waere schlimmer als keine.
+    """
+    now = now or datetime.now(timezone.utc)
+    aus = {}
+    if not isinstance(klein, dict):
+        return aus          # eine kaputte oder fehlende Datei nimmt die Spur raus, nicht das Band
+    for key, m in klein.items():
+        if not isinstance(m, dict):
+            continue
+        preise = m.get("prices") or {}
+        for w in (m.get("whales") or []):
+            if not isinstance(w, dict):
+                continue
+            wallet, seite = w.get("wallet"), w.get("side")
+            preis = preise.get(seite)
+            if not wallet or seite is None or not isinstance(preis, (int, float)):
+                continue
+            usd = w.get("usd")
+            if not isinstance(usd, (int, float)) or usd <= 0:
+                continue
+            aus["%s|%s|%s" % (wallet, key, seite)] = {
+                "wallet": wallet, "key": key, "side": seite,
+                "league": m.get("league"), "sport": m.get("sport"),
+                "usd": round(float(usd)),
+                "firstPrice": round(float(preis), 4),
+                "lastPrice": round(float(preis), 4),
+                "firstTs": (m.get("capturedAt") or now.isoformat()),
+                "htkFirst": None,
+                "quelle": "klein",          # stempeln, damit sich beide Spuren trennen lassen
+            }
+    return aus
 
 
 def fuellgrad(htk):
@@ -1105,7 +1159,7 @@ def dom_sperre(dom_seen, trades_seen=None, pub_seen=None) -> dict:
 
 
 def dominanz_kandidaten(track, broad, seen=None, now=None, min_usd=None, min_share=None,
-                        min_market=None, max_htk=None) -> list:
+                        min_market=None, max_htk=None, klein=None) -> list:
     """Positionen mit kleinem Markt und grossem Anteil. REIN (alles injizierbar).
 
     Ausdruecklich ALLE Sportarten (Lucas: „laeuft ueber alles drueber, oder?") — die Sperrliste
@@ -1129,21 +1183,39 @@ def dominanz_kandidaten(track, broad, seen=None, now=None, min_usd=None, min_sha
     now = now or datetime.now(timezone.utc)
     seen = seen if isinstance(seen, dict) else {}
     scores = (track or {}).get("scores") or {}
+    # Zwei Quellen, ein Band: der Wallet-Track (Maerkte ab $7.500) und die Kleinmarkt-Spur
+    # (darunter). Die Bewertung der Wallet kommt IMMER aus `scores` des Haupt-Tracks — dort
+    # stehen 3.650 Konten mit Historie; eine Kleinmarkt-Zeile bringt keine eigene Reputation mit
+    # und soll auch keine vortaeuschen.
+    offen = dict((track or {}).get("open") or {})
+    offen.update(klein_positionen(klein, now) if klein else {})
+    # EINE Marktsicht statt zwei durchgereichter Dateien: jede Hilfsfunktion (Anteil, Anpfiff,
+    # Reife, Stempel) schlaegt den Markt unter seinem Key nach, und die soll nicht jede fuer sich
+    # wissen muessen, aus welcher Datei die Zeile kam. Bei einer Kollision gewinnt `broad` — das
+    # ist die eingefrorene Close-Zeile eines Markts, der inzwischen ueber den Boden gewachsen
+    # ist, und sie ist die belastbarere von beiden.
+    sicht = dict(klein if isinstance(klein, dict) else {})
+    sicht.update(broad if isinstance(broad, dict) else {})
     aus = []
-    for pkey, pos in ((track or {}).get("open") or {}).items():
+    for pkey, pos in offen.items():
         if not isinstance(pos, dict) or pkey in seen:
             continue
         usd = pos.get("usd")
         if not isinstance(usd, (int, float)) or usd < min_usd:
             continue
-        m = (broad or {}).get(pos.get("key")) if isinstance(broad, dict) else None
+        m = sicht.get(pos.get("key"))
         tot = (m or {}).get("totalUsd")
-        if not isinstance(tot, (int, float)) or tot < min_market:
+        # Der Marktboden gilt fuer die Haupt-Spur. Fuer die Kleinmarkt-Spur waere er ein
+        # Widerspruch in sich: sie existiert, WEIL diese Maerkte darunter liegen. Dort gilt ihr
+        # eigener Boden, und der steht in poly_money_broad.py (KLEIN_MIN_VOL) — also dort, wo
+        # entschieden wird, welcher Markt ueberhaupt abgefragt wird.
+        _boden = 0 if pos.get("quelle") == "klein" else min_market
+        if not isinstance(tot, (int, float)) or tot < _boden or tot <= 0:
             continue
-        a = markt_anteil(pos, broad)          # gibt None, wenn Einsatz > Markt (widerspruechlich)
+        a = markt_anteil(pos, sicht)          # gibt None, wenn Einsatz > Markt (widerspruechlich)
         if a is None or a < min_share:
             continue
-        if dom_freigabe(pos, broad, max_htk, min_share, now) is None:
+        if dom_freigabe(pos, sicht, max_htk, min_share, now) is None:
             continue                          # Nenner noch nicht voll und nicht deutlich genug
         if _dom_quote(pos) is None:
             continue                          # unter dem Quotenboden — oder gar kein Preis
@@ -1157,7 +1229,12 @@ def dominanz_kandidaten(track, broad, seen=None, now=None, min_usd=None, min_sha
         aus.append((pkey, pos, a))
     # Der groesste Anteil zuerst — das ist die Eigenschaft, um die es in diesem Band geht.
     aus.sort(key=lambda x: -x[2])
-    return aus[:DOM_MAX_ALERTS]
+    aus = aus[:DOM_MAX_ALERTS]
+    # Die Marktsicht haengt am Ergebnis, nicht am Aufrufer: wer die Karte baut oder die Zeile
+    # bucht, muss denselben Markt sehen wie die Auswahl. Sie hier zurueckzugeben ist billiger als
+    # die Regel „nimm dieselbe Sicht" in jede aufrufende Stelle zu schreiben und zu hoffen.
+    dominanz_kandidaten.sicht = sicht
+    return aus
 
 
 def _dom_balken(anteil, breite=10) -> str:
@@ -1269,7 +1346,10 @@ def build_dominanz_card(pos, scores, broad, anteil=None, now=None) -> str:
     # Zwei Preise, zwei Bedeutungen: der Einstieg des Wals ist Geschichte, die aktuelle Quote ist
     # das, was ein Leser JETZT bekaeme — und die, mit der das Buch rechnet. Bis heute stand nur
     # der Einstieg da; bei einer Karte, die auf den reifen Markt wartet, ist das die falsche Zahl.
-    _e = _pub_einstieg(pos)
+    # Bei einer Kleinmarkt-Zeile kennen wir den Einstieg des Wals NICHT — dort steht nur der
+    # aktuelle Preis. Ein „Einstieg @x", der in Wahrheit der Jetzt-Preis ist, waere eine erfundene
+    # Zahl an der Stelle, an der Lucas die Bewegung ablesen wuerde.
+    _e = None if pos.get("quelle") == "klein" else _pub_einstieg(pos)
     _q = _dom_quote(pos)
     if _q is not None:
         _jz = _quote(_push_price(pos))
@@ -1414,6 +1494,10 @@ def _log_dominanz_push(pkey, pos, scores, anteil, broad, ts) -> None:
         # Ungetrennt liesse sich spaeter nicht sagen, ob eine Trefferquote von den einen oder
         # den anderen kommt — und der Fuellgrad ist ein Median, kein Versprechen.
         **_dom_freigabe_stempel(pos, broad),
+        # Aus welcher Spur die Zeile kommt. Die Kleinmarkt-Spur kennt den Einstieg des Wals
+        # nicht und hat einen anderen Marktgroessen-Bereich — zusammengerechnet waeren es zwei
+        # Dinge unter einer Trefferquote.
+        "quelle": pos.get("quelle") or "track",
     })
     try:
         _save(DOM_LEDGER_FILE, led[-DOM_LEDGER_KEEP:])
@@ -1702,15 +1786,23 @@ def main():
     dom_seen = _load(DOM_SEEN_FILE, {})
     if not isinstance(dom_seen, dict):
         dom_seen = {}
-    dom_cand = dominanz_kandidaten(track, broad, seen=dom_sperre(dom_seen, seen, pub_seen), now=now)
+    klein = _load(DOM_KLEIN_FILE, {})     # 11.09.2026: Maerkte unter $7.500 — s. DOM_KLEIN_FILE
+    if not isinstance(klein, dict):
+        klein = {}
+    dom_cand = dominanz_kandidaten(track, broad, seen=dom_sperre(dom_seen, seen, pub_seen),
+                                   now=now, klein=klein)
+    # Dieselbe Marktsicht wie die Auswahl — sonst baut die Karte einen Markt, den die Auswahl
+    # nicht gemeint hat, und die Kleinmarkt-Zeilen rendern mit leeren Feldern.
+    dom_sicht = getattr(dominanz_kandidaten, "sicht", broad)
     dom_sent = 0
     for pkey, pos, anteil in dom_cand:
-        if tg_send(build_dominanz_card(pos, scores, broad, anteil, now)):
+        if tg_send(build_dominanz_card(pos, scores, dom_sicht, anteil, now)):
             dom_sent += 1
             dom_seen[pkey] = {"usd": float(pos.get("usd") or 0), "anteil": round(anteil, 4),
                               "ts": now_iso}
-            _log_dominanz_push(pkey, pos, scores, anteil, broad, now_iso)
+            _log_dominanz_push(pkey, pos, scores, anteil, dom_sicht, now_iso)
     _save(DOM_SEEN_FILE, dom_seen)
+    print(f"  🔬 Kleinmarkt-Spur: {len(klein)} Maerkte unter ${int(DOM_MIN_MARKET)}")
     print(f"  🎯 Markt-Dominanz: {len(dom_cand)} Kandidat(en), {dom_sent} gesendet "
           f"(ab ${int(DOM_MIN_USD)} und {int(DOM_MIN_SHARE*100)} % Anteil).")
 

@@ -3,6 +3,120 @@
 Stand 10.09.2026 (oberster Block); Liga/WM-Teil darunter Stand 26.06.2026. Lebendige Liste aller offenen Punkte — Liga UND noch nicht umgesetzte WM-Sachen —
 damit wir alles abarbeiten können. ✅ = erledigt (Referenz), ⏳ = offen, 🔒 = blockiert.
 
+## 🔬 11.09.2026 (spät) — der eigentliche Logikfehler: wir haben gar nicht hingeschaut
+
+Lucas: *„wir müssen da an Logik Fehler haben, weil ich will ja herausfinden, Spiele bei Poly, die
+kleine Märkte sind und wo ein eventuelles Sharp Wallet höher sitzt … wenn der auf ein Tennis-Match
+viertausend setzt und es sind maximal fünftausend drin, dann könnte das schon sein, dass derjenige
+sich sehr sicher ist, vor allem weil's ein kleiner Markt ist. … Dann müssten's hohe Vielspieler am
+Tag geben, vor allem E-Sport und Tennis."*
+
+Er hatte recht, und der Fehler lag **nicht** bei den Schwellen des Bands.
+
+### Der Befund
+
+`poly_money_broad.py`, Zeile ~1252: `if vol < min_vol: continue` — mit `MIN_VOL_USD = 7500`.
+Dieser Boden entscheidet nicht nur, was in die Close-Datei kommt, sondern **welcher Markt
+überhaupt einen Holder-Call bekommt**, also wo wir erfahren, *wer wie viel hält*. Unter $7.500
+wurde nie gefragt.
+
+Gemessen: **der kleinste Markt mit Wal-Daten in der gesamten Close-Datei hatte $7.504, und in
+2.928 Zeilen lag keine einzige darunter.** Lucas' Fall — $4.000 in einem $5.000-Markt — konnte das
+Band nicht finden, weil der Sammler dort nie hinschaut. Ein Band, das kleine Märkte finden soll,
+suchte in einem Bestand, aus dem kleine Märkte per Konstruktion entfernt waren.
+
+Und es war **genau verkehrt herum**: die höchsten Anteile sitzen in den kleinsten Märkten. In der
+`upcoming`-Datei (die kleine Märkte sieht, aber nur 30 von 566 mit Wal-Daten, weil auch dort das
+Budget nach Volumen vergeben wird) standen oben:
+
+| Markt | Volumen | größter Wal | Anteil |
+|---|---|---|---|
+| den-kob-hor (Fußball) | $4.107 | $2.249 | **55 %** |
+| elc-whu-wre-total-corners | $4.671 | $2.360 | **51 %** |
+| atp-zverev-khachan | $585.805 | $280.666 | 48 % |
+
+Das Budget war übrigens **nicht** der Engpass — `vorStats` meldet 22 von 22 Calls genutzt, nur 3
+über Budget. Es war der Volumenboden.
+
+**Lucas' Tipp stimmte auch:** von den 5 Positionen, die das Band aktuell findet, sind **4 Tennis
+und 1 E-Sport**.
+
+### Was gebaut wurde — und was ausdrücklich nicht
+
+⚠️ **`MIN_VOL_USD` wurde NICHT gesenkt.** Es speist Close-Freeze, Historie,
+Trefferquoten-Auswertung und das bestehende Whale-Buch. Ein niedrigerer Boden hätte jede dieser
+Zahlen umgedeutet und alte gegen neue Messungen unvergleichbar gemacht — dieselbe Fehlerklasse
+wie das Zusammenwerfen von Liga- und MLS-Conviction am 10.09., nur größer.
+
+Stattdessen eine **eigene Spur**, dieselbe Bauart wie die „vor"-Spur vom 01.09.:
+
+```
+KLEIN_MIN_VOL            1500     eigener Boden
+MAX_HOLDER_CALLS_KLEIN     18     eigenes Budget (kann den Close-Freeze nicht aushungern)
+poly_money_klein.json             eigene Datei — liest NUR poly_whale_watch.py
+```
+
+Im Band werden beide Spuren zu **einer Marktsicht** zusammengeführt (bei Kollision gewinnt die
+Close-Zeile — sie ist die belastbarere). Die Wallet-Bewertung kommt **immer** aus `scores` des
+Haupt-Tracks; eine Kleinmarkt-Zeile bringt keine eigene Reputation mit und darf auch keine
+vortäuschen.
+
+Was die Kleinmarkt-Spur **nicht** weiß und worüber sie nicht lügt: den **Einstiegspreis** des
+Wals. Wir wissen nur, dass die Wallet jetzt da ist. Die Karte zeigt bei diesen Zeilen deshalb
+keinen „Einstieg @x" — eine Zahl, die wie ein Einstieg aussieht und der Jetzt-Preis ist, wäre an
+genau der Stelle erfunden, an der Lucas die Bewegung abliest. Jede Zeile trägt `quelle`, damit
+sich die beiden Spuren später trennen lassen.
+
+### Der Gegenbeweis, den nichts gefangen hat
+
+Von zwölf provozierten Regelbrüchen liefen elf rot. Einer lief **grün durch die gesamte Suite**:
+
+```python
+fetch_markets.klein = klein
+markets.extend(klein.values())      # ← niemand merkt es
+```
+
+Das wäre der teuerste Fehler der ganzen Änderung gewesen. `markets` speist
+`update_wallet_track` — und `scores` ist das **Reputations-Buch über 3.650 Wallets**, CLV und
+Trefferquote, gemessen ausschließlich in Märkten ab $7.500. Märkte ab $1.500 hätten rückwirkend
+die Bedeutung jeder dieser Zahlen geändert, **und zwar unbemerkt: die Datei sähe danach genauso
+aus.**
+
+Behoben nicht durch eine Konvention („bitte nur `pre` übergeben"), sondern durch eine Regel beim
+**Verbraucher**: die Zeilen der Spur tragen `spur: "klein"`, und `update_wallet_track` weist sie
+ab. Close-Freeze und Historie filtern ohnehin über den Volumenboden. Ein Test prüft alle drei
+zugleich — einzeln geprüft ließe jeder von ihnen die Lücke offen.
+
+### Lucas' Fall, wörtlich nachgebaut
+
+$4.000 auf ein Tennis-Match, maximal $5.000 im Markt, Anpfiff in 40 Minuten, Wallet 53/63:
+
+```
+🎯 MARKT-DOMINANZ · 80 % des Marktes
+████████░░  80 %
+💰 $4K auf Spieler A  ·  📦 Markt gesamt $5K
+🕒 Anpfiff 17:05 — in 40 Min
+⏱️ gemessen 40 Min vor Anpfiff — Markt steht
+📈 @1.61
+Wallet 0xabc · ✅ bewiesene Wallet (53/63 richtig, 84% · +0.7pp CLV)
+```
+
+Feuert. Vorher war diese Karte unmöglich — nicht wegen einer Schwelle, sondern weil die Daten
+dafür nie geholt wurden.
+
+### Der Quotenboden bleibt bei 1,35 — Lucas' Entscheidung, mit offener Rechnung
+
+Die Daten sprechen dagegen: Dominanz in einem kleinen Markt **drückt den Preis**, je sicherer sich
+einer ist, desto kürzer die Quote. Gemessen: 5 Kandidaten → 3 bei ≥1,20 → **1** bei ≥1,35. Der
+Boden schneidet also die stärksten Ausprägungen genau des Effekts weg, um den es geht.
+
+Lucas hat sich trotzdem für 1,35 entschieden, und das ist vertretbar: es ist die einzige
+Preisecke, in der das Projekt überhaupt Vergleichszahlen hat (Public-Whale-Buch, 27 abgerechnete
+Pushs, keine Zeile darunter), und bei @1,14 braucht man 88 % Trefferquote zum Nullpunkt.
+Festgehalten, damit die Rechnung offen liegt, falls das Band in vier Wochen zu dünn besetzt ist:
+**der Quotenboden ist der bindende Schnitt, nicht die Datenlage.** Die Kleinmarkt-Spur hebt die
+Grundgesamtheit (124 kleine Märkte im Fenster statt 0) — ob das reicht, sagt das Buch.
+
 ## 🎯 11.09.2026 (abends) — was die erste echte Dominanz-Karte aufgedeckt hat
 
 Lucas hat die erste gepushte Karte zurückgeschickt:

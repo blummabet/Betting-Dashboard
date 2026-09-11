@@ -1384,6 +1384,120 @@ class TestFrueheFreigabe(unittest.TestCase):
         self.assertIsNone(P.dom_freigabe(self._pos(usd=6000), br, now=NOW))      # 50 % × 0,54
 
 
+class TestKleinmarktSpur(unittest.TestCase):
+    """Lucas 11.09.2026: „wir muessen da an Logik Fehler haben, weil ich will ja herausfinden,
+    Spiele bei Poly, die kleine Maerkte sind und wo ein eventuelles Sharp Wallet hoeher sitzt …
+    wenn der auf ein Tennis-Match viertausend setzt und es sind maximal fuenftausend drin."
+
+    🔴 Er hatte recht, und der Fehler lag NICHT bei den Schwellen dieses Bands. Der Wallet-Track
+    wird aus `pre` gespeist, und `pre` hat den $7.500-Boden aus `poly_money_broad.MIN_VOL_USD` —
+    unter dem wird gar kein Holder-Call gemacht, also erfahren wir nie, wer dort wie viel haelt.
+    Gemessen: kleinster Markt mit Wal-Daten $7.504, in 2.928 Close-Zeilen keine einzige darunter.
+    Das Band suchte kleine Maerkte in einem Bestand, aus dem kleine Maerkte entfernt waren.
+    """
+
+    def _klein(self, usd=4000, tot=5000, htk=0.66, league="TENNIS"):
+        return {"atp-a-b-2026-09-12": {
+            "league": league, "sport": "Tennis", "totalUsd": tot, "hoursToKickoff": htk,
+            "capturedAt": NOW.isoformat(),
+            "prices": {"Spieler A": 0.62, "Spieler B": 0.38},
+            "shares": {"Spieler A": 100.0, "Spieler B": 60.0},
+            "whales": [{"wallet": "0xabc", "side": "Spieler A", "usd": usd}]}}
+
+    def _scores(self):
+        return {"0xabc": {"n": 63, "wins": 53, "clvSumPP": 44.0, "pnl": 5200}}
+
+    def test_lucas_fall_woertlich(self):
+        """$4.000 auf ein Tennis-Match, maximal $5.000 drin. Genau der Fall, den er beschrieben
+        hat — und der vorher in KEINER Datei stand, die dieses Band lesen konnte."""
+        tr = {"open": {}, "scores": self._scores()}
+        r = P.dominanz_kandidaten(tr, {}, klein=self._klein(), now=NOW)
+        self.assertEqual(len(r), 1)
+        self.assertAlmostEqual(r[0][2], 0.8, places=3)
+
+    def test_positionen_werden_aus_den_marktzeilen_abgeleitet(self):
+        pos = P.klein_positionen(self._klein())
+        self.assertEqual(len(pos), 1)
+        p = pos["0xabc|atp-a-b-2026-09-12|Spieler A"]
+        self.assertEqual(p["usd"], 4000)
+        self.assertEqual(p["side"], "Spieler A")
+        self.assertEqual(p["firstPrice"], 0.62)
+        self.assertEqual(p["quelle"], "klein", "die Spur muss am Datensatz stehen")
+
+    def test_der_einstieg_des_wals_wird_nicht_erfunden(self):
+        """Wir wissen nur, dass die Wallet JETZT da ist — nicht, zu welchem Preis sie rein ist.
+        Ein „Einstieg @1,61", der in Wahrheit der Jetzt-Preis ist, waere eine erfundene Zahl an
+        genau der Stelle, an der Lucas die Bewegung ablesen wuerde."""
+        pos = P.klein_positionen(self._klein())["0xabc|atp-a-b-2026-09-12|Spieler A"]
+        self.assertIsNone(pos["htkFirst"], "der Vorlauf der Wallet ist hier unbekannt")
+        k = P.build_dominanz_card(pos, self._scores(), self._klein(), 0.8, NOW)
+        self.assertNotIn("Einstieg", k)
+        self.assertIn("📈", k, "der aktuelle Preis steht sehr wohl da")
+
+    def test_der_marktboden_gilt_hier_nicht(self):
+        """Er waere ein Widerspruch in sich: die Spur existiert, WEIL diese Maerkte darunter
+        liegen. Ihr Boden steht dort, wo entschieden wird, welcher Markt abgefragt wird."""
+        tr = {"open": {}, "scores": self._scores()}
+        self.assertEqual(len(P.dominanz_kandidaten(tr, {}, klein=self._klein(tot=5000),
+                                                   now=NOW)), 1,
+                         "$5.000 liegen unter DOM_MIN_MARKET und muessen trotzdem durch")
+
+    def test_die_haupt_spur_behaelt_ihren_boden(self):
+        """Gegenprobe: derselbe Markt ueber den Wallet-Track gelesen faellt am Boden — sonst
+        haette die neue Spur still den alten Boden mit aufgehoben."""
+        pos = P.klein_positionen(self._klein())["0xabc|atp-a-b-2026-09-12|Spieler A"]
+        pos = dict(pos); pos.pop("quelle")
+        tr = {"open": {"0xabc|atp-a-b-2026-09-12|Spieler A": pos}, "scores": self._scores()}
+        br = {"atp-a-b-2026-09-12": dict(self._klein()["atp-a-b-2026-09-12"])}
+        self.assertEqual(P.dominanz_kandidaten(tr, br, now=NOW), [])
+
+    def test_bei_kollision_gewinnt_die_close_zeile(self):
+        """Ein Markt, der ueber den Boden gewachsen ist, steht in beiden Dateien. Die
+        eingefrorene Close-Zeile ist die belastbarere — sie muss den Nenner stellen."""
+        kl = self._klein(tot=5000)
+        br = {"atp-a-b-2026-09-12": dict(kl["atp-a-b-2026-09-12"], totalUsd=20000)}
+        tr = {"open": {}, "scores": self._scores()}
+        r = P.dominanz_kandidaten(tr, br, klein=kl, now=NOW)
+        self.assertEqual(r, [], "$4.000 von $20.000 sind 20 % — unter der Schwelle")
+
+    def test_beide_spuren_laufen_nebeneinander(self):
+        tr = {"open": {"0xw|k|A": {"wallet": "0xw", "key": "k", "side": "A", "usd": 6000,
+                                   "league": "ESPORTS", "firstPrice": 0.55, "lastPrice": 0.55,
+                                   "firstTs": NOW.isoformat()}},
+              "scores": self._scores()}
+        br = {"k": {"totalUsd": 12000, "hoursToKickoff": 0.5, "capturedAt": NOW.isoformat()}}
+        r = P.dominanz_kandidaten(tr, br, klein=self._klein(), now=NOW)
+        self.assertEqual(len(r), 2)
+        self.assertEqual({p.get("quelle") or "track" for _, p, _ in r}, {"track", "klein"})
+
+    def test_die_spur_steht_im_buch(self):
+        """Zusammengerechnet waeren es zwei Dinge unter einer Trefferquote: die Kleinmarkt-Spur
+        kennt den Einstieg nicht und misst in einem anderen Groessenbereich."""
+        pos = P.klein_positionen(self._klein())["0xabc|atp-a-b-2026-09-12|Spieler A"]
+        self.assertEqual(pos.get("quelle"), "klein")
+
+    def test_kaputte_zeilen_reissen_die_spur_nicht_mit(self):
+        for kaputt in ({}, {"k": None}, {"k": {}}, {"k": {"whales": "x"}},
+                       {"k": {"whales": [{"wallet": None, "side": "A", "usd": 1}]}},
+                       {"k": {"whales": [{"wallet": "0x", "side": "A"}], "prices": {"A": 0.5}}},
+                       {"k": {"whales": [{"wallet": "0x", "side": "A", "usd": 0}],
+                              "prices": {"A": 0.5}}},
+                       {"k": {"whales": [{"wallet": "0x", "side": "Z", "usd": 99}],
+                              "prices": {"A": 0.5}}}):
+            self.assertEqual(P.klein_positionen(kaputt), {}, repr(kaputt))
+
+    def test_ohne_spur_laeuft_alles_wie_vorher(self):
+        """Die Spur ist additiv. Faellt die Datei aus, muss das Band weiterlaufen wie bisher —
+        nicht leer werden."""
+        tr = {"open": {"0xw|k|A": {"wallet": "0xw", "key": "k", "side": "A", "usd": 6000,
+                                   "league": "ESPORTS", "firstPrice": 0.55, "lastPrice": 0.55,
+                                   "firstTs": NOW.isoformat()}},
+              "scores": {}}
+        br = {"k": {"totalUsd": 12000, "hoursToKickoff": 0.5, "capturedAt": NOW.isoformat()}}
+        for leer in (None, {}, "kaputt"):
+            self.assertEqual(len(P.dominanz_kandidaten(tr, br, klein=leer, now=NOW)), 1, repr(leer))
+
+
 class TestDominanzKarte(unittest.TestCase):
     def _karte(self, usd=6800, tot=9900):
         pos = {"usd": usd, "league": "ESPORTS", "side": "Falcons", "firstPrice": 0.58,

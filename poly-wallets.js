@@ -3136,7 +3136,15 @@ function _pwDominanz(rec){
     +'vier darunter (@1,14 · @1,18 · @1,21 · @1,25) — Bauart, nicht Zufall: die niedrige '
     +'Einsatzschwelle landet in kleinen Favoritenmärkten, wo ein einzelner Einsatz überhaupt '
     +'erst 40 % erreichen kann. Im Public-Whale-Buch steht über 27 abgerechnete Pushs keine '
-    +'einzige Zeile unter 1,35.</span></div>';
+    +'einzige Zeile unter 1,35.<br>'
+    +'🔬 <b>Zwei Spuren.</b> Der Wallet-Track sieht nur Märkte ab $7.500 — darunter macht '
+    +'<code>poly_money_broad.py</code> gar keinen Holder-Call, wir erfahren dort also nie, wer wie '
+    +'viel hält (kleinster Markt mit Wal-Daten: <b>$7.504</b>, in 2.928 Zeilen keiner darunter). '
+    +'Genau Lucas\' Fall — „$4.000 auf ein Tennis-Match, maximal $5.000 drin" — war damit '
+    +'unsichtbar. Seit 11.09. läuft eine zweite Spur ab <b>$1.500</b> mit eigenem Call-Budget und '
+    +'eigener Datei; der Hauptboden bleibt, weil er das ganze bestehende Buch trägt. Jede Zeile '
+    +'ist als <code>quelle</code> gestempelt — getrennt auswertbar, weil die Kleinmarkt-Spur den '
+    +'Einstieg des Wals nicht kennt und in einem anderen Größenbereich misst.</span></div>';
   if(!rec || !rec.gesamt){
     return kopf+'<div class="pw-none">Noch nichts gebucht. Das Band läuft seit 11.09.2026 mit — '
       +'die erste Zeile erscheint, sobald eine Position ab $3.000 mindestens 40 % ihres Marktes '
