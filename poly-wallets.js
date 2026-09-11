@@ -3124,7 +3124,11 @@ function _pwDominanz(rec){
     +'Marktvolumens ausmachen. Gehen in den <b>Trades</b>-Channel, nicht in den Public. '
     +'Anlass: bei den Whale-Pushs trifft das Band 15–30 % Anteil mit 81,8 % (n=11) gegen 57,1 % '
     +'bei unter 15 % — aber Lucas\' eigentlicher Fall (wenig Geld, viel Anteil) kam dort '
-    +'<b>0 von 36</b> Mal vor, weil die $25.000-Schwelle ihn herausfiltert.</span></div>';
+    +'<b>0 von 36</b> Mal vor, weil die $25.000-Schwelle ihn herausfiltert.<br>'
+    +'⏱️ <b>Der Anteil wird erst nahe am Anpfiff gemessen</b> (bis 1 h davor). Gemessen an 424 '
+    +'Märkten steht 2,5–3 h vor Anpfiff erst der Median von <b>54 %</b> des Endvolumens im Markt, '
+    +'0,5–1 h davor <b>92 %</b>. Ein früher gelesener Anteil hat einen halb leeren Nenner und wäre '
+    +'systematisch zu hoch — das Band würde sich seine eigene Zahl schönrechnen.</span></div>';
   if(!rec || !rec.gesamt){
     return kopf+'<div class="pw-none">Noch nichts gebucht. Das Band läuft seit 11.09.2026 mit — '
       +'die erste Zeile erscheint, sobald eine Position ab $3.000 mindestens 40 % ihres Marktes '

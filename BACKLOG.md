@@ -3,6 +3,112 @@
 Stand 10.09.2026 (oberster Block); Liga/WM-Teil darunter Stand 26.06.2026. Lebendige Liste aller offenen Punkte — Liga UND noch nicht umgesetzte WM-Sachen —
 damit wir alles abarbeiten können. ✅ = erledigt (Referenz), ⏳ = offen, 🔒 = blockiert.
 
+## 📻 11.09.2026 — Stake Radar: drei Anzeigefehler und eine Idee, die nicht trägt
+
+Lucas, vier Fragen an einem Stück. Drei davon waren Fragen an eine **Anzeige** — und eine
+Anzeige, bei der der Leser raten muss, ist der Befund.
+
+### 1. „Was heisst der rote Punkt und die min daneben? Ist das vergangen?"
+
+Da stand `🔴 380. Min`. Zwei Fehler in einer Zeile:
+
+- **„380. Min" liest sich als Spielminute.** Gemessen ist die **Wanduhr seit Anpfiff** — die
+  Halbzeitpause zählt mit, und bei Cricket oder Tennis hat „Minute" gar keine Bedeutung. Genau
+  diese Verwechslung war am **07.09. schon einmal aufgefallen** und in den Auswertungs-Schubladen
+  korrigiert worden. Hier nicht — obwohl es dieselbe Zahl aus derselben Quelle ist. Eine
+  Korrektur an der Instanz statt an der Klasse.
+- **Der rote Punkt hiess „läuft".** Ein Spiel, das vor sechs Stunden angepfiffen wurde, läuft
+  nicht mehr. Lucas' Frage *„ist das vergangen?"* ist nicht das Missverständnis, sie ist das
+  Ergebnis des Entwurfs.
+
+Jetzt: `⏱ in 1 h 35 min` · `🔴 läuft · seit 1 h 03 min` · `⏹ angepfiffen vor 6 h 20 min` (grau).
+Der Feed meldet **kein Spielende** (`phase` kennt nur `vor`/`live`, `spielminute` läuft bis 3012
+weiter), deshalb steht dort ausdrücklich **nicht** „beendet" — nur nicht mehr „läuft".
+
+> 🔴 **Beim Schreiben des Tests dazu ein echter Fehler gefunden:** `new Date(null)` ist nicht
+> Invalid Date, sondern der **01.01.1970**. Eine Zeile ohne Anpfiff bestand deshalb jede
+> null-Prüfung und kam als *„angepfiffen vor 496.981 h"* heraus — vorher als
+> *„🔴 29818860. Min"*, also derselbe Fehler, nur besser getarnt. Fehlerklasse: fehlende
+> Information rendert als harmloser Default — und Epoch 0 ist alles andere als harmlos, weil es
+> ein **gültiges** Datum ist. `_srMs` gibt jetzt für `null`/`''` auch `null`.
+
+### 2. „Da is vieles alt" — und der Regler stand falsch herum
+
+Gemessen am Stand vom 11.09.: von **47 Gruppen auf dem Board lagen 37 über 30 Minuten im Spiel,
+17 davon über sechs Stunden.** Nur **10** waren überhaupt noch nicht angepfiffen.
+
+Der Filter dafür existierte seit Tag eins (`SR_NUR_SPIELBAR`) — er stand auf `false`. Ein Board,
+dessen Standardansicht zu **79 % aus gelaufenen Spielen** besteht, ist kein Radar, sondern ein
+Archiv. Steht jetzt auf `true`; der Regler bleibt, er geht jederzeit wieder auf.
+
+Das ist nicht nur Kosmetik: die Standardansicht versteckte damit ausgerechnet die **einzige
+Schublade, die im eigenen Buch etwas trägt** (siehe 3.).
+
+**Geld und Anteil** stehen jetzt je Seite auf der Karte. ⚠️ Aber **nicht als Marktanteil** —
+Lucas hatte nach „% vom Markt" gefragt, und den gibt es bei Stake nicht: der Feed ist eine Liste
+einzelner Highroller-Wetten, kein Orderbuch. Was dort steht, ist der Anteil am **beobachteten
+Großgeld** dieses Spiels, also an einer Stichprobe mit Auswahl (nur über der Schwelle, nur
+öffentliche Konten). Die Spalte heißt deshalb, was sie misst; ein Prozentwert, der „Marktanteil"
+suggeriert, wäre eine erfundene Zahl.
+
+### 3. „Sagen uns die anderen Auswertungen etwas aus?" — ja, und zwar etwas Unbequemes
+
+Über 24.679 gewertete Beine tragen **2 von 18 Schubladen** ein Urteil (einseitige 95 %-Untergrenze
+der Rendite je Bein über null):
+
+| Schublade | n (Beine) | Rendite/Bein | Untergrenze | |
+|---|---|---|---|---|
+| **vor Anpfiff** | 11.632 | **+2,6 %** | **+1,5 %** | ✅ trägt |
+| **Quote ab 3,50** | 7.101 | **+3,4 %** | **+1,5 %** | ✅ trägt |
+| gesamt | 24.679 | −1,1 % | −1,9 % | — |
+| live | 13.047 | −4,3 % | −5,7 % | — |
+| live, ≤ 30 min | 3.792 | −2,9 % | −5,3 % | — |
+| live, > 60 min | 6.679 | −6,5 % | −8,4 % | — |
+| ab $10k Einsatz | 2.612 | −1,0 % | −4,0 % | — |
+| über Liga-Norm | 198 | −0,2 % | −12,2 % | — |
+| Ebene 2/3, ab 3× Norm | 81 | −7,4 % | −22,5 % | — |
+
+Drei Dinge stehen da, die dem Tab widersprechen, in dem sie stehen:
+
+- **Größe allein sagt nichts.** `ab $10k` liegt bei −1,0 %. Das war die Vorregistrierung
+  („Trägt Größe allein etwas? Die Vorlage behauptet ja, ohne Beleg") — die Antwort ist nein.
+- **„Auffällig ist relativ" trägt auch nicht.** `über Liga-Norm`: −0,2 % bei n=198. Das ist die
+  Kernthese des Tabs „Über der Norm", und sie ist unbelegt.
+- **Die Live-Hypothese ist gefallen.** Vorregistriert war *„wenn Live etwas taugt, dann früh"* —
+  früh liegt bei −2,9 %, spät bei −6,5 %. Früh ist nur **weniger schlecht**, nicht gut. Und der
+  Feed besteht zu 83 % aus Live.
+
+Die Bilanz-Ansicht sagt das jetzt **oben in einem Satz**, gezählt aus dem Artefakt statt
+hineingeschrieben: eine feste Zahl im Text wäre in einer Woche falsch, und ausgerechnet die
+Zeile, die das Urteil zusammenfasst, darf nicht als erste veralten. Wichtig in der Formulierung:
+die übrigen sind **nicht widerlegt, sondern unbelegt** — ihre Untergrenze liegt unter null, das
+ist kein Gegenbeweis.
+
+### 4. „Sollten wirs bei Stake auch so machen wie bei Poly?" — nein, und zwar aus zwei Gründen
+
+**Der strukturelle Grund: es gibt keinen Nenner.** Die Poly-Dominanz misst Einsatz gegen
+*Marktvolumen*. Stake liefert kein Marktvolumen — kein `totalUsd`, keine Orderbuch-Tiefe,
+nichts. Übertragbar wäre nur „Anteil am beobachteten Großgeld", und das ist ein Anteil an
+**unserer Stichprobe**, nicht am Markt. Zwei verschiedene Dinge mit demselben Prozentzeichen.
+
+**Der gemessene Grund: selbst dieser Ersatz trägt nichts.** Über 1.536 abgerechnete Wetten,
+geschnitten nach Anteil am beobachteten Großgeld ihres Spiels:
+
+| Anteil | n | Treffer | Wilson-UG | ROI |
+|---|---|---|---|---|
+| ≥ 60 % | 61 | 70,5 % | 60,2 % | +7,7 % |
+| 40 – 60 % | 78 | 71,8 % | 62,8 % | +10,3 % |
+| 20 – 40 % | 141 | 73,0 % | 66,5 % | +2,1 % |
+| < 20 % | 948 | 69,8 % | 67,3 % | +6,9 % |
+
+Keine Richtung. Die Trefferquoten liegen zwischen 69,8 % und 73,0 %, die Konfidenzbänder
+überlappen vollständig, und der ROI springt ohne Ordnung (7,7 / 10,3 / 2,1 / 6,9). Bei Poly war
+die Anteils-Richtung wenigstens sichtbar (15–30 %: 81,8 %) — hier ist sie es nicht.
+
+**Nicht gebaut.** Ein Band, dessen Nenner eine andere Bedeutung hat als das Vorbild und dessen
+Vorab-Messung nichts zeigt, wäre eine Fläche, die aussieht wie das Poly-Band und nicht dasselbe
+misst. Das ist teurer als gar nichts.
+
 ## 🎯 11.09.2026 — Markt-Dominanz: ein eigenes Beobachtungsband im Trades-Kanal
 
 Lucas: *„wenn irgendwelche Wallets vielleicht auch nur so fünftausend, aber das sind nachher dann
@@ -38,13 +144,76 @@ DOM_MAX_ALERTS = 5
 
 Der **Marktboden** ist meine Ergänzung, und zwar wegen Lucas' eigener Einschränkung: *„natürlich
 jetzt nicht auf der Spielwohnung dreihundert Euro und ich hab hundert Prozent, das will ich nicht
-finden."* Ohne ihn wäre „100 % von $4.000" der häufigste Fund des Bandes — mathematisch der
-höchste Anteil, inhaltlich nichts. Der Boden steht am **Markt**, nicht am Einsatz, weil genau dort
-der Unsinn entsteht.
+finden."* Der Boden steht am **Markt**, nicht am Einsatz, weil genau dort der Unsinn entsteht.
+
+> 🔴 **Korrektur am selben Tag: der Boden stand auf $6.000 und konnte nie greifen.** Ich habe ihn
+> oben als die Verteidigung gegen „100 % von $4.000" beschrieben — er hat nie eine einzige Zeile
+> abgelehnt. `poly_money_broad.py` nimmt mit `MIN_VOL_USD = 7500` ohnehin keinen kleineren Markt in
+> die Close-Datei auf: **0 von 2.928 Zeilen liegen unter $6.000, der kleinste Markt überhaupt hat
+> $7.504.** Der Boden stand im Code, im Backlog und in einem grünen Test — und war Deko.
+>
+> Die Fehlerklasse: eine Schwelle gegen einen Fall setzen, den eine *andere* Datei schon
+> ausschließt, und die eigene Schwelle dann für den Grund halten. Der Test dazu war grün, weil er
+> die Schwelle direkt aufrief statt gegen echte Daten zu prüfen. Jetzt steht der Boden auf **7500**
+> — dem Wert, der tatsächlich gilt — und seine Aufgabe hat sich geändert: er ist eine
+> **Stolperschwelle**. Ein Test verankert ihn gegen `MIN_VOL_USD`, damit ein Absenken dort nicht
+> still dazu führt, dass das Band $2.000-Märkte als Dominanz meldet.
 
 `markt_anteil` gibt **None**, wo der Einsatz das Marktvolumen übersteigt: der Nenner widerspricht
 dann dem Zähler, und die teuerste Fehlannahme wäre, das als 100 % zu lesen. Fehlende Information
 rendert als nichts — die Position fällt raus, sie wird nicht geschätzt.
+
+### ⏱️ Das Reifefenster — und warum Lucas recht hatte
+
+Lucas: *„wie können wir sicherstellen, dass nicht quasi zu jedem Markt bei Poly dann ein Push
+kommt? Weil prinzipiell beginnt jeder Markt bei 0 … ein Markt in 2 Wochen wo jetzt 5K gespielt
+werden die 60 % sind, interessiert mich ja 0. Wir müssens quasi zeitlich wie die Whale-Alerts
+eingrenzen, oder?"*
+
+Erste Antwort auf den Wortlaut: der Zwei-Wochen-Fall **kann heute nicht auftreten.**
+`_capture_class` lässt nur Märkte innerhalb `CAPTURE_WINDOW_H = 3h` in den `pre`-Pfad, und der
+Wallet-Track wird ausschließlich daraus gespeist — gemessen liegt `htkFirst` über alle 421 offenen
+Positionen zwischen 0,1 h und 3,0 h. Eine Position zwei Wochen vor Anpfiff existiert in diesen
+Daten nicht.
+
+**Aber die Frage war trotzdem richtig, nur eine Größenordnung zu grob.** Das Problem passiert
+*innerhalb* der drei Stunden. Gemessen an 424 Märkten mit Verlauf bis zum Anpfiff, Volumen im
+Verhältnis zum Endstand:
+
+| Stunden vor Anpfiff | Median | unteres Viertel |
+|---|---|---|
+| 2,5 – 3 h | **54 %** | 28 % |
+| 2 – 2,5 h | 69 % | 45 % |
+| 1,5 – 2 h | 75 % | 49 % |
+| 1 – 1,5 h | 82 % | 60 % |
+| 0,5 – 1 h | **92 %** | 73 % |
+| 0 – 0,5 h | 100 % | 100 % |
+
+Ein Anteil, der 2,8 h vor Anpfiff gemessen wird, hat einen **halb leeren Nenner** und ist
+systematisch zu hoch — grob doppelt. Das ist exakt Lucas' „jeder Markt beginnt bei 0", nur passiert
+es nicht zwei Wochen vorher, sondern in dem Fenster, das wir ohnehin erfassen. Und es traf die
+gebauten Kandidaten direkt: von den vier Positionen, die das Band am 11.09. gefunden hätte, waren
+**drei bei htk = 2,83 gemessen** — im leersten Band der Tabelle.
+
+**`DOM_MAX_HTK = 1.0`**: der Anteil wird erst gelesen, wenn die Close-Zeile innerhalb einer Stunde
+vor Anpfiff steht. Dort hat der Nenner im Median 92 % seines Endstands, und 94 % aller Close-Zeilen
+(2.756 von 2.928) erreichen diesen Punkt überhaupt — enger bringt kaum Genauigkeit und kostet
+Abdeckung.
+
+Die Stunde kommt aus der **Close-Zeile** (`hoursToKickoff`), nicht aus `htkFirst` der Position: die
+Frage ist, wie voll der *Markt* beim Messen war, nicht wie früh die *Wallet* drin war. Zwei
+verschiedene Dinge — beide werden gestempelt (`htkMess`, `htkFirst`), damit sich später getrennt
+fragen lässt, ob ein früher Einstieg bei reifem Markt etwas anderes ist als ein später.
+
+⚠️ **Das ist ein Tausch, kein freies Mittagessen.** Die Karte kommt später: eine Position, die
+2,8 h vor Anpfiff aufgemacht wird, steht erst rund 1,8 h später im Kanal. Gefiltert wird sie
+dadurch **nicht** — sie wird zurückgehalten und kommt einen Pipeline-Lauf später durch. Für ein
+Beobachtungsband ist das richtig herum: ein zu früh gemessener Anteil verdirbt genau die Zahl, um
+die es in diesem Band geht. Der Effekt am 11.09.: aus 4 sofortigen Kandidaten wird **1** — die
+anderen drei folgen, wenn ihr Markt steht.
+
+Der Messzeitpunkt steht auf der **Karte**, nicht nur im Buch (*„⏱️ gemessen 50 Min vor Anpfiff"*).
+Ein Anteil ohne Zeitstempel lädt dazu ein, 2,8-h- und 0,3-h-Anteile für dasselbe Maß zu halten.
 
 ### Läuft über alles
 
@@ -80,6 +249,13 @@ Jede Regel einzeln entfernt, geprüft ob ein Test bricht:
 | „kein Anteil" → 100 % angenommen | ✅ |
 | Einsatzschwelle | ❌ → **nachgebessert** |
 | Dedup gegen die Whale-Stände | ✅ |
+| Reifefenster ganz entfernt | ✅ |
+| fehlender Messzeitpunkt gilt als reif | ✅ |
+| Vorzeichen gedreht (nach Anpfiff ausgesperrt) | ✅ |
+| Fenster auf 3 h aufgebohrt | ✅ |
+| `htkFirst` statt Markt-Reife gemessen | ✅ |
+| Marktboden zurück auf den toten Wert | ✅ |
+| Messzeitpunkt nicht mehr gestempelt | ✅ |
 
 Die **Einsatzschwelle war ungedeckt**. Der Test dazu gab es, er benutzte nur $2.500 in einem
 $4.000-Markt — den fing der *Marktboden* weg, bevor `min_usd` je geprüft wurde. Ein Test, der grün

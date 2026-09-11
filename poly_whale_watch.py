@@ -894,7 +894,60 @@ DOM_SEEN_FILE   = BASE / "poly_dominanz_seen.json"
 DOM_LEDGER_KEEP = 800
 # ⚠️ Ein winziger Markt macht jeden Einsatz zur Dominanz. „$300 im Markt und ich habe 100 %"
 # wollte Lucas ausdruecklich NICHT finden. Der Boden steht deshalb am MARKT, nicht nur am Einsatz.
-DOM_MIN_MARKET = float(os.environ.get("WHALE_DOM_MIN_MARKET") or 6000)
+#
+# 🔴 KORREKTUR 11.09.2026: dieser Boden stand auf 6000 und konnte NIE greifen. `poly_money_broad.py`
+# nimmt mit `MIN_VOL_USD = 7500` ohnehin keinen kleineren Markt in die Close-Datei auf — gemessen:
+# 0 von 2.928 Zeilen unter $6.000, der kleinste Markt ueberhaupt $7.504. Der Boden war Deko: er
+# stand im Code, im Backlog und in einem gruenen Test, und hat in der Praxis nie eine Zeile
+# abgelehnt. Er steht jetzt auf dem Wert, der TATSAECHLICH gilt, und seine Aufgabe hat sich
+# geaendert: er ist eine STOLPERSCHWELLE. Senkt jemand oben `MIN_VOL_USD`, faengt das Band nicht
+# still an, $2.000-Maerkte als Dominanz zu melden — es faellt hier auf.
+DOM_MIN_MARKET = float(os.environ.get("WHALE_DOM_MIN_MARKET") or 7500)
+
+# ⏱️ Das Reifefenster — Lucas: „ein Markt in 2 Wochen wo jetzt 5K gespielt werden die 60 % sind,
+# interessiert mich ja 0. Wir muessens quasi zeitlich wie die Whale-Alerts eingrenzen."
+#
+# Er hat recht, und zwar staerker als gedacht. Gemessen an 424 Maerkten mit Verlauf bis zum
+# Anpfiff, Volumen im Verhaeltnis zum Endstand:
+#
+#     2,5-3 h vor Anpfiff   Median  54 %   (unteres Viertel  28 %)
+#     1,5-2 h               Median  75 %
+#     0,5-1 h               Median  92 %   (unteres Viertel  73 %)
+#     0-0,5 h               Median 100 %
+#
+# Ein Anteil, der 3 h vor Anpfiff gemessen wird, hat einen halb leeren Nenner — er ist
+# systematisch zu HOCH. Das ist genau Lucas' „jeder Markt beginnt bei 0", nur passiert es nicht
+# zwei Wochen vorher, sondern INNERHALB des Fensters, das wir ohnehin schon erfassen.
+#
+# Der Zeitpunkt, an dem der Anteil gemessen wird, ist deshalb nicht egal. Gemessen wird erst, wenn
+# der Markt weitgehend voll ist. 1,0 h, weil dort der Nenner im Median 92 % seines Endstands hat
+# und 94 % aller Close-Zeilen diesen Punkt ueberhaupt erreichen (2.756 von 2.928) — enger gaebe
+# kaum mehr Genauigkeit und kostet Abdeckung.
+#
+# ⚠️ Das ist ein TAUSCH: die Karte kommt spaeter. Eine Position, die 2,8 h vorher aufgemacht wird,
+# steht erst ~1,8 h spaeter im Kanal. Fuer ein Beobachtungsband ist das richtig herum — ein zu
+# frueh gemessener Anteil verdirbt die Zahl, um die es in diesem Band ueberhaupt geht.
+DOM_MAX_HTK = float(os.environ.get("WHALE_DOM_MAX_HTK") or 1.0)
+
+
+def markt_reif(pos, broad, max_htk=None):
+    """Ist der Nenner voll genug, um einen Anteil daraus zu lesen? REIN.
+
+    Gibt die Stunden bis Anpfiff der Close-Zeile zurueck, wenn der Markt reif ist — sonst None.
+    Die Stunde kommt aus der CLOSE-Zeile (`hoursToKickoff`), nicht aus `htkFirst` der Position:
+    gefragt ist, wie voll der MARKT beim Messen war, nicht wie frueh die Wallet drin war. Das
+    sind zwei verschiedene Dinge, und nur das erste entscheidet ueber die Guete des Anteils.
+
+    Fehlt die Stunde, ist der Markt NICHT reif. Ein unbekannter Messzeitpunkt als „passt schon" zu
+    lesen waere dieselbe Fehlerklasse wie ein fehlendes Volumen als 100 % zu lesen.
+    """
+    max_htk = DOM_MAX_HTK if max_htk is None else max_htk
+    m = (broad or {}).get(pos.get("key")) if isinstance(broad, dict) else None
+    htk = (m or {}).get("hoursToKickoff")
+    if not isinstance(htk, (int, float)) or isinstance(htk, bool):
+        return None
+    # Nach dem Anpfiff (htk <= 0) ist der Vorspiel-Markt fertig — das ist reif, nicht unreif.
+    return float(htk) if htk <= max_htk else None
 
 
 def dom_sperre(dom_seen, trades_seen=None, pub_seen=None) -> dict:
@@ -915,7 +968,7 @@ def dom_sperre(dom_seen, trades_seen=None, pub_seen=None) -> dict:
 
 
 def dominanz_kandidaten(track, broad, seen=None, now=None, min_usd=None, min_share=None,
-                        min_market=None) -> list:
+                        min_market=None, max_htk=None) -> list:
     """Positionen mit kleinem Markt und grossem Anteil. REIN (alles injizierbar).
 
     Ausdruecklich ALLE Sportarten (Lucas: „laeuft ueber alles drueber, oder?") — die Sperrliste
@@ -926,12 +979,14 @@ def dominanz_kandidaten(track, broad, seen=None, now=None, min_usd=None, min_sha
       · SPORT, kein Politik/Krypto (`_pub_ok` prueft Sportart und ein sinnvolles Preisfenster).
       · Ein Marktboden, damit „100 % von $300" nicht als Dominanz durchgeht.
       · Frische (`FRESH_DAYS`) wie ueberall — eine alte Position ist kein Ereignis.
+      · REIFE des Markts (`markt_reif`): der Anteil wird erst gelesen, wenn der Nenner steht.
       · Kein bestaetigter Verlierer.
     """
     min_usd = DOM_MIN_USD if min_usd is None else min_usd
     min_share = DOM_MIN_SHARE if min_share is None else min_share
     min_market = DOM_MIN_MARKET if min_market is None else min_market
-    now = now or _now()
+    max_htk = DOM_MAX_HTK if max_htk is None else max_htk
+    now = now or datetime.now(timezone.utc)
     seen = seen if isinstance(seen, dict) else {}
     scores = (track or {}).get("scores") or {}
     aus = []
@@ -945,6 +1000,8 @@ def dominanz_kandidaten(track, broad, seen=None, now=None, min_usd=None, min_sha
         tot = (m or {}).get("totalUsd")
         if not isinstance(tot, (int, float)) or tot < min_market:
             continue
+        if markt_reif(pos, broad, max_htk) is None:
+            continue                          # Nenner noch nicht voll — der Anteil waere zu hoch
         a = markt_anteil(pos, broad)          # gibt None, wenn Einsatz > Markt (widerspruechlich)
         if a is None or a < min_share:
             continue
@@ -969,6 +1026,19 @@ def _dom_balken(anteil, breite=10) -> str:
     except (TypeError, ValueError):
         return ""
     return "█" * n + "░" * (breite - n)
+
+
+def _htk_text(h) -> str:
+    """Stunden bis Anpfiff so, wie ein Mensch sie liest. „0,3 h" liest niemand — „20 Min" schon."""
+    try:
+        h = float(h)
+    except (TypeError, ValueError):
+        return ""
+    if h <= 0:
+        return "Anpfiff"
+    if h < 1:
+        return "%d Min" % max(1, round(h * 60))
+    return ("%.1f h" % h).replace(".", ",")
 
 
 def build_dominanz_card(pos, scores, broad, anteil=None) -> str:
@@ -1005,6 +1075,11 @@ def build_dominanz_card(pos, scores, broad, anteil=None) -> str:
     if isinstance(tot, (int, float)) and tot > 0:
         _geld += "\n📦 Markt gesamt <b>%s</b>" % _usd(tot)
     lines.append(_geld)
+    # ⏱️ Der Messzeitpunkt gehoert auf die Karte, nicht nur ins Buch. Ein Anteil ist eine Zahl mit
+    # Zeitstempel — wer ihn ohne liest, haelt 2,8-h-Anteile und 0,3-h-Anteile fuer dasselbe Mass.
+    _h = markt_reif(pos, broad)
+    if _h is not None:
+        lines.append("⏱️ gemessen <b>%s</b> vor Anpfiff" % _htk_text(_h))
     _e = _pub_einstieg(pos)
     if _e:
         lines.append(_e)
@@ -1013,7 +1088,8 @@ def build_dominanz_card(pos, scores, broad, anteil=None) -> str:
     if key:
         lines.append('\n<a href="https://polymarket.com/event/%s">Markt ansehen ↗</a>' % _esc(key))
     lines.append("\n<i>🔬 Beobachtungsband — läuft mit, ist noch kein Beleg. "
-                 "Erst ab $%d Einsatz und %d %% Marktanteil.</i>"
+                 "Erst ab $%d Einsatz, %d %% Marktanteil und nur, wenn der Markt "
+                 "nahe am Anpfiff schon voll ist.</i>"
                  % (int(DOM_MIN_USD), int(DOM_MIN_SHARE * 100)))
     return "\n".join(lines)
 
@@ -1040,7 +1116,20 @@ def markt_stempel(pos, broad) -> dict:
         aus["totalUsd"] = round(float(tot), 2)
     if a is not None:
         aus["anteil"] = round(float(a), 4)
-    return aus
+    # ⏱️ 11.09.2026: WANN der Anteil gemessen wurde, gehoert zur Zahl dazu. Ein Anteil bei 2,8 h
+    # vor Anpfiff und einer bei 0,3 h sind nicht dasselbe Mass — der Nenner ist im Median 54 %
+    # gegen 100 % voll. Ohne diesen Stempel liessen sich die beiden spaeter nicht trennen, und
+    # die Auswertung wuerde zwei verschiedene Dinge zusammenruehren.
+    htk = (m or {}).get("hoursToKickoff")
+    if isinstance(htk, (int, float)) and not isinstance(htk, bool):
+        aus["htkMess"] = round(float(htk), 2)
+    hf = pos.get("htkFirst")
+    if isinstance(hf, (int, float)) and not isinstance(hf, bool):
+        aus["htkFirst"] = round(float(hf), 2)   # Vorlauf der WALLET — anderes Mass, eigene Frage
+    lg = pos.get("league")
+    if lg:
+        aus["league"] = str(lg)                 # fuer die spaetere Frage: ist $10K in EPL dasselbe
+    return aus                                  # wie $10K in Cricket? (Median EPL $103K, Cricket $12K)
 
 
 def _log_public_push(pkey, pos, scores, restock, ts, broad=None) -> None:

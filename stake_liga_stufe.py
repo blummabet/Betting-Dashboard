@@ -131,6 +131,17 @@ EBENE = {
     "northern-territory-premier-league": 3, "npl-western-australia": 3,
     "npl-new-south-wales": 3, "npl-victoria": 3, "npl-queensland": 3,
     "npl-south-australia": 3, "npl-northern-new-south": 3, "npl-capital-football": 3,
+    # 11.09.2026 (CI-Wachhund): „NPL 2, Victoria" — die Stufe UNTER `npl-victoria`, das hier
+    # schon auf 3 steht. Die 3 ist in diesem Schema der Boden, tiefer geht die Skala nicht;
+    # eine 4 zu erfinden waere eine Genauigkeit, die das Modell nicht traegt.
+    "npl-2-victoria": 3,
+    # 11.09.2026 (CI-Wachhund): „MFL, Division B". Der Name sagt nichts, die PAARUNG schon —
+    # gebucht wurde darauf „Samara Kryliya Sovetov - PFK Sochi", zwei russische Erstligisten.
+    # Ein Erstliga-Kader in einer „Division B" ist eine Reserve-/Nachwuchsrunde, kein
+    # Erstliga-Spiel. Ebene 3, und ausdruecklich NICHT ueber die Reserve-Regel: die liest
+    # Namensmuster (`-ii`, „reserve"), und „division-b" ist keines davon. Wer sie dafuer
+    # aufbohrt, faengt beim naechsten Lauf jede zweite echte zweite Liga mit.
+    "mfl-division-b": 3,
 }
 
 # Wettbewerbe, bei denen „Spielklasse" die falsche Frage ist. Sie bekommen eine eigene Marke

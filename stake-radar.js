@@ -37,7 +37,16 @@
   var SR_MIN_QUOTE = 1.35;
   var SR_QUOTEN = [1.0, 1.20, 1.35, 1.60, 2.00];
   var SR_OFFEN = {};          // welche Karten aufgeklappt sind
-  var SR_NUR_SPIELBAR = false;  // nur was noch nicht (oder kaum) läuft
+  // 🔴 11.09.2026 (Lucas: „die ganzen Spiele da in der Liste unter Spiele, da is vieles alt").
+  // Stand auf `false`, und das war der ganze Befund: gemessen am Stand vom 11.09. lagen von 47
+  // Gruppen auf dem Board **37 schon über 30 Minuten im Spiel, davon 17 über sechs Stunden** —
+  // also längst vorbei. Nur 10 waren überhaupt noch nicht angepfiffen.
+  //
+  // Der Regler war da, er stand nur falsch herum. Ein Board, dessen Standardansicht zu 79 % aus
+  // gelaufenen Spielen besteht, ist kein Radar, sondern ein Archiv — und es versteckt genau die
+  // eine Schublade, die im eigenen Buch etwas taugt (`vor_anpfiff`: +2,6 % ROI, UG +1,5 % bei
+  // n=11.632, als einzige neben `quote_ab_350` überhaupt belegt).
+  var SR_NUR_SPIELBAR = true;   // nur was noch nicht (oder kaum) läuft — s. o.
   var SR_GESPERRT_FALLBACK = ['US-Sport'];
   function _srGesperrt() {
     var d = SR.daten || {};
@@ -133,6 +142,9 @@
 '.sr-bad.sr-konf{color:#e3b341;border:1px solid rgba(201,133,0,.42)}',
 '.sr-card.sr-card-norm{border-color:rgba(234,185,56,.38)}',
 '.sr-ko{color:#8fc0ff;font-weight:700}.sr-live{color:#ff7a70;font-weight:700}',
+'.sr-vorbei{color:#6e7681;font-weight:700}',
+'.sr-sa{min-width:38px;text-align:right;color:#8fc0ff;font-weight:800;font-variant-numeric:tabular-nums}',
+'.sr-note-kern{border-left:3px solid #8fc0ff;background:rgba(143,192,255,.06)}',
 '.sr-warnz{color:#e3b341;font-weight:700}',
 '.sr-btn{background:none;border:0;color:#5c6577;font:inherit;font-size:10.5px;cursor:pointer;padding:4px 0 0;text-align:left}',
 '.sr-btn:hover{color:#9aa4b1}',
@@ -174,7 +186,19 @@
     var d = new Date(ts); if (isNaN(d)) return '—';
     return ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2);
   }
-  function _srMs(ts) { var d = new Date(ts); return isNaN(d) ? null : d.getTime(); }
+  // 🔴 11.09.2026: `new Date(null)` ist NICHT Invalid Date — es ist der 01.01.1970. Eine Zeile
+  // ohne Anpfiff (`anpfiff: null`) lief deshalb durch die null-Pruefung durch und kam als
+  // „angepfiffen vor 496.981 h" auf der Karte heraus. Vorher war derselbe Fehler nur besser
+  // getarnt: er stand als „🔴 29818860. Min" da. Gefunden beim Schreiben des Tests, der genau
+  // diesen Fall nicht als Platzhalter sehen wollte.
+  //
+  // Fehlerklasse: fehlende Information rendert als harmloser Default — und Epoch 0 ist
+  // alles andere als harmlos, weil es ein GUELTIGES Datum ist und jede Pruefung besteht.
+  function _srMs(ts) {
+    if (ts == null || ts === '') return null;
+    var d = new Date(ts);
+    return isNaN(d) ? null : d.getTime();
+  }
 
   /** Die meisten Wetten, die innerhalb eines Fensters von SR_DICHTE_MAX_MIN lagen.
       03.09.2026: erst als Rate n/Minuten gerechnet — das kürte immer ein Zweier-Paar,
@@ -247,14 +271,40 @@
     var t = _srMs(g.anpfiff);
     return t == null ? null : Math.round((t - Date.now()) / 60000);
   }
+  // 🔴 11.09.2026 (Lucas: „was heisst der rote Punkt und die min daneben? ist das vergangen?").
+  // Hier stand `🔴 380. Min`. Zwei Dinge waren daran falsch:
+  //
+  //  1. „380. Min" liest sich als SPIELMINUTE. Gemessen ist die WANDUHR seit Anpfiff — die
+  //     Halbzeit zaehlt mit, und bei Cricket oder Tennis hat „Minute" ohnehin keine Bedeutung.
+  //     Dieselbe Verwechslung war am 07.09. schon bei den Auswertungs-Schubladen aufgefallen und
+  //     dort in der Aufschrift korrigiert worden — hier nicht, obwohl es dieselbe Zahl ist.
+  //  2. Der rote Punkt hiess „laeuft". Ein Spiel, das vor sechs Stunden angepfiffen wurde, laeuft
+  //     nicht mehr — es stand trotzdem rot da. Lucas' Frage („ist das vergangen?") IST der Befund:
+  //     wenn der Leser raten muss, sagt die Anzeige nichts.
+  //
+  // Der Feed kennt kein Spielende (`phase` kennt nur `vor` und `live`, `spielminute` laeuft bis
+  // 3012 weiter). Deshalb wird hier NICHT behauptet, ein Spiel sei zu Ende — es wird nur nicht
+  // mehr behauptet, es laufe. Ab SR_LIVE_MAX_MIN steht grau da, wann angepfiffen wurde.
+  var SR_LIVE_MAX_MIN = 150;   // darueber ist „laeuft" eine Behauptung, die der Feed nicht deckt
+
+  function _srDauerText(min) {
+    var h = Math.floor(min / 60), m = min % 60;
+    return h ? (h + ' h ' + (m < 10 ? '0' : '') + m + ' min') : (m + ' min');
+  }
   function _srAnpfiffText(g) {
     var m = _srBisAnpfiff(g);
     if (m == null) return '';
-    if (m > 0) {
-      var h = Math.floor(m / 60);
-      return '<span class="sr-ko">⏱ ' + (h ? h + ' h ' + (m % 60) + ' min' : m + ' min') + '</span>';
+    if (m > 0) return '<span class="sr-ko">⏱ in ' + _srDauerText(m) + '</span>';
+    var laeuftSeit = -m;
+    if (laeuftSeit <= SR_LIVE_MAX_MIN) {
+      return '<span class="sr-live" title="Laeuft. Die Zahl ist die WANDUHR seit Anpfiff, nicht ' +
+        'die Spielminute — die Halbzeitpause zaehlt mit.">🔴 läuft · seit ' +
+        _srDauerText(laeuftSeit) + '</span>';
     }
-    return '<span class="sr-live">🔴 ' + (-m) + '. Min</span>';
+    return '<span class="sr-vorbei" title="Vor ueber ' + (SR_LIVE_MAX_MIN / 60).toFixed(1) +
+      ' h angepfiffen. Der Stake-Feed meldet kein Spielende, deshalb steht hier nicht ' +
+      'beendet — aber laeuft waere eine Behauptung, die er auch nicht deckt.">⏹ angepfiffen vor ' +
+      _srDauerText(laeuftSeit) + '</span>';
   }
 
   function _srKey(w) {
@@ -362,13 +412,27 @@
   // ── Karte ─────────────────────────────────────────────────────────────────
   function _srKarte(g) {
     var maxGeld = g.seiten.reduce(function (m, s) { return Math.max(m, s.geld); }, 0) || 1;
+    // 11.09.2026 (Lucas: „sollten wir da ja eher auch anzeigen wieviel Geld und wieviel % das
+    // sind vom Markt, damit ich das gleich seh"). Das Geld stand schon da, der Anteil nicht.
+    //
+    // ⚠️ Der Nenner ist NICHT der Markt. Stake liefert kein Marktvolumen — der Feed ist eine
+    // Liste einzelner Highroller-Wetten, keine Orderbuch-Tiefe. Was hier steht, ist der Anteil
+    // am BEOBACHTETEN Großgeld dieses Spiels, und das ist eine Stichprobe mit Auswahl: nur
+    // Wetten über der Schwelle, nur öffentliche Konten. Ein Prozentzeichen, das „Marktanteil"
+    // suggeriert, wäre hier schlicht falsch — deshalb heißt die Spalte, was sie misst.
+    var gesamt = g.seiten.reduce(function (m, s) { return m + (s.geld || 0); }, 0);
     var seiten = g.seiten.slice(0, 4).map(function (s) {
       var q = s.qMin == null ? '' : (s.qMin === s.qMax ? s.qMin.toFixed(2)
               : s.qMin.toFixed(2) + '–' + s.qMax.toFixed(2));
+      var ant = gesamt > 0
+        ? '<span class="sr-sa" title="Anteil am beobachteten Großgeld dieses Spiels — NICHT am ' +
+          'Marktvolumen. Das liefert der Stake-Feed nicht.">' +
+          Math.round(s.geld / gesamt * 100) + ' %</span>'
+        : '';
       return '<div class="sr-seite">' +
         '<span class="sr-sn">' + _srEsc(s.name) + '</span>' +
         '<span class="sr-sbar"><i style="width:' + Math.round(s.geld / maxGeld * 100) + '%"></i></span>' +
-        '<span class="sr-sg">' + _srUsd(s.geld) + '</span>' +
+        '<span class="sr-sg">' + _srUsd(s.geld) + '</span>' + ant +
         '<span class="sr-sq">' + (q ? '@ ' + q : '') + ' · ' + s.n + '×</span></div>';
     }).join('');
 
@@ -976,6 +1040,44 @@
       liste;
   }
 
+  /** Wie viele Schubladen tragen überhaupt ein Urteil — gezählt aus dem ARTEFAKT.
+   *
+   * 11.09.2026 (Lucas: „sagen uns die anderen Auswertungen in den anderen Tabs etwas aus?").
+   * Die Tabelle stand da und war ehrlich, aber sie beantwortete die Frage nicht: man musste 18
+   * Zeilen einzeln lesen, um zu sehen, dass zwei davon etwas belegen. Das ist genau die Sorte
+   * Ansicht, die viel zeigt und nichts sagt.
+   *
+   * Gezählt statt geschrieben: eine feste Zahl im Text wäre in einer Woche falsch, und die
+   * Zeile, die das Urteil zusammenfasst, darf nicht als erste veralten.
+   */
+  function _srBelegLage() {
+    var s = (SR_AUS && SR_AUS.schubladen) || {};
+    var namen = {}, i;
+    for (i = 0; i < _SR_SCHUBLADEN.length; i++) namen[_SR_SCHUBLADEN[i][0]] = _SR_SCHUBLADEN[i][1];
+    var alle = Object.keys(s).filter(function (k) {
+      return s[k] && typeof s[k] === 'object' && k !== 'gesamt';
+    });
+    var traegt = alle.filter(function (k) { return s[k].belegt; });
+    var gegen = alle.filter(function (k) { return s[k].belegtGegen; });
+    var nenn = function (k) { return _srEsc(namen[k] || k); };
+    if (!alle.length) return '';
+    var kern = traegt.length
+      ? '<b>' + traegt.length + ' von ' + alle.length + '</b> Schubladen ' +
+        (traegt.length === 1 ? 'trägt' : 'tragen') + ' ein Urteil: ' +
+        traegt.map(function (k) {
+          return '<b>' + nenn(k) + '</b> (' + (s[k].beinRoi > 0 ? '+' : '') +
+            _srPct(s[k].beinRoi) + ', Untergrenze ' + (s[k].beinRoiUg > 0 ? '+' : '') +
+            _srPct(s[k].beinRoiUg) + ' bei n=' + s[k].beinN + ')';
+        }).join(' · ')
+      : '<b>Keine</b> der ' + alle.length + ' Schubladen trägt bisher ein Urteil.';
+    var rest = gegen.length
+      ? ' Dagegenhalten belegt: ' + gegen.map(nenn).join(', ') + '.'
+      : '';
+    return '<div class="sr-note sr-note-kern">' + kern + '.' + rest +
+      ' Alle übrigen liegen mit ihrer Untergrenze unter null — sie sind <b>nicht widerlegt, ' +
+      'sondern unbelegt</b>, und ein Punktschätzer daraus ist keine Aussage.</div>';
+  }
+
   function _srBilanz() {
     if (!SR_AUS) return '<div class="sr-empty">stake_auswertung.json fehlt noch.</div>';
     var b = SR_AUS.bilanz || {};
@@ -1003,7 +1105,8 @@
       return '<tr><td>' + _srEsc(k) + '</td><td class="sr-r">' + d.n + '</td><td>' + _srBasis(d) + '</td></tr>';
     }).join('');
 
-    return '<div class="sr-kpi">' +
+    return _srBelegLage() +
+      '<div class="sr-kpi">' +
         _srKpi(b.gewertet, 'Beine gewertet') +
         _srKpi(b.treffer + ' / ' + b.daneben, 'Treffer / daneben') +
         _srKpi(b.quote == null ? '—' : _srPct(b.quote), 'rohe Trefferquote') +
@@ -1254,6 +1357,10 @@
                    _srUmkaempft: _srUmkaempft, _srBisAnpfiff: _srBisAnpfiff,
                    _srVerlauf: _srVerlauf, _srNormMeter: _srNormMeter,
                    _srNpUrteil: _srNpUrteil, _srNpTabelle: _srNpTabelle,
-                   _srLigaBalken: _srLigaBalken, _srZeitachse: _srZeitachse };
+                   _srLigaBalken: _srLigaBalken, _srZeitachse: _srZeitachse,
+                   _srAnpfiffText: _srAnpfiffText, _srDauerText: _srDauerText,
+                   _srKarte: _srKarte, _srBelegLage: _srBelegLage,
+                   _srAus: function (a) { SR_AUS = a; },
+                   _srNurSpielbar: function () { return SR_NUR_SPIELBAR; } };
   }
 })();
