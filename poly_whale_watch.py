@@ -1049,6 +1049,28 @@ DOM_KLEIN_FILE = BASE / "poly_money_klein.json"
 # Streuung nicht hergibt (unteres Viertel bei 2,5-3 h: 28 %).
 DOM_FUELLUNG = ((0.5, 1.00), (1.0, 0.92), (1.5, 0.82), (2.0, 0.75), (2.5, 0.69), (3.0, 0.54))
 
+# 🔴 12.09.2026 (Lucas: „jetzt kommen halt viele solcher pushs") — das fehlende Gate.
+#
+# Er schickte vier Karten hintereinander. Gemeinsam hatten sie NICHT den Markt und nicht den
+# Anteil, sondern die WALLETS: 7/15 (47 %), 15/34 (44 %), 266/582 (46 %), 13/24 (54 %). Das sind
+# Muenzwuerfe. Die grossen Lebensbilanzen daneben ($501K, $295K, $2,53M) sagen nichts ueber
+# Sport — sie stammen aus Wahl- und Kryptomaerkten, genau die Vermischung, die sharp_gate.py am
+# 29.08. auseinandergenommen hat.
+#
+# Das Band hatte von Anfang an KEIN Wallet-Gate — nur `_is_confirmed_loser` (P&L bekannt UND
+# negativ), was bei 87 % unbekanntem P&L fast nie greift. Dabei stand Lucas' Bedingung von
+# Anfang an in seinem ersten Satz: „Spiele bei Poly, die kleine Maerkte sind und wo ein
+# eventuelles SHARP WALLET hoeher sitzt." Ich habe die Marktseite dreimal nachgebessert und die
+# Wallet-Seite nie gebaut.
+#
+# Gemessen am Stand vom 12.09.: 32 Kandidaten ohne Gate, 5 mit. Die fuenf tragen 213/390 (55 %,
+# CLV +0,63pp), 93/157 (59 %, +0,46pp) und 175/307 (57 %, +0,80pp) — grosse Stichproben mit
+# positivem CLV, nicht die Muenzwuerfe von oben.
+#
+# Es gilt `sharp_gate.is_sharp`: n>=8, Wilson-Untergrenze der Trefferquote ueber 50 %, CLV >= 0,
+# kein bestaetigter Verlierer. DIE Definition des Projekts — eine eigene waere die fuenfte.
+DOM_NUR_SHARP = (os.environ.get("WHALE_DOM_NUR_SHARP") or "1").strip() not in ("0", "false", "")
+
 
 def _dom_quote(pos, min_quote=None):
     """Die Quote, mit der diese Beobachtung ins Buch geht — oder None, wenn sie zu niedrig ist.
@@ -1249,21 +1271,32 @@ def dom_sperre(dom_seen, trades_seen=None, pub_seen=None) -> dict:
 
 
 def dominanz_kandidaten(track, broad, seen=None, now=None, min_usd=None, min_share=None,
-                        min_market=None, max_htk=None, klein=None) -> list:
+                        min_market=None, max_htk=None, klein=None, blocked=None) -> list:
     """Positionen mit kleinem Markt und grossem Anteil. REIN (alles injizierbar).
 
-    Ausdruecklich ALLE Sportarten (Lucas: „laeuft ueber alles drueber, oder?") — die Sperrliste
-    fuer US-Sport/Kampfsport gilt hier NICHT, weil dies ein Beobachtungsband ist und kein Kanal,
-    dem jemand folgen soll. Die Kategorie wird gestempelt, damit sie sich spaeter trennen laesst.
+    🔴 KORREKTUR 12.09.2026 (Lucas: „aja und bitte us Sport gleich weg"). Hier stand bis heute
+    das Gegenteil: „ausdruecklich ALLE Sportarten … die Sperrliste gilt hier NICHT, weil dies ein
+    Beobachtungsband ist und kein Kanal, dem jemand folgen soll."
+
+    Das Argument war in sich schluessig und trotzdem falsch: Lucas LIEST den Trades-Kanal. Eine
+    Karte, die er nicht gebrauchen kann, kostet ihn Aufmerksamkeit — ob sie „Beobachtung" heisst
+    oder „Empfehlung", macht fuer die Zeit beim Lesen keinen Unterschied. Ausloeser war ein
+    MLB-Push mit einer 314/742-Wallet (42 %) und ohne erfasste Paarung.
+
+    Die Sperre kommt aus DERSELBEN Quelle wie fuer alle anderen Kanaele (`blocked_cats` →
+    poly-wallets.js `PW_BLOCKED_BET_CATS`). Legt Lucas sie dort um, zieht dieses Band mit — eine
+    eigene Liste hier waere genau die Drift, gegen die `blocked_cats` gebaut wurde.
 
     Was sehr wohl gilt:
       · SPORT, kein Politik/Krypto (`_pub_ok` prueft Sportart und ein sinnvolles Preisfenster).
+      · KEINE gesperrte Sportart (`bet_blocked`, dieselbe Liste wie in allen anderen Kanaelen).
       · Ein Marktboden, damit „100 % von $300" nicht als Dominanz durchgeht.
       · Frische (`FRESH_DAYS`) wie ueberall — eine alte Position ist kein Ereignis.
       · REIFE des Markts (`dom_freigabe`): der Anteil wird erst gelesen, wenn der Nenner steht —
         oder wenn er so deutlich ist, dass er auch bei ueblicher Nachfuellung noch traegt.
       · QUOTE ab DOM_MIN_QUOTE. Ohne Preis kein Push: eine Beobachtung, die sich nicht
         abrechnen laesst, ist keine.
+      · SHARP-Wallet (`DOM_NUR_SHARP`) — Lucas' urspruengliche Bedingung, s. dort.
       · Kein bestaetigter Verlierer.
     """
     min_usd = DOM_MIN_USD if min_usd is None else min_usd
@@ -1309,8 +1342,12 @@ def dominanz_kandidaten(track, broad, seen=None, now=None, min_usd=None, min_sha
             continue                          # Nenner noch nicht voll und nicht deutlich genug
         if _dom_quote(pos) is None:
             continue                          # unter dem Quotenboden — oder gar kein Preis
+        if DOM_NUR_SHARP and not SG.is_sharp(scores.get(pos.get("wallet"))):
+            continue                          # keine belegte Wallet — s. DOM_NUR_SHARP
         if not _pub_ok(pos):
             continue
+        if bet_blocked(pos, blocked):
+            continue                          # gesperrte Sportart — s. DOM_SPERRE_GILT
         if _is_confirmed_loser(scores.get(pos.get("wallet"))):
             continue
         ft = _iso(pos.get("firstTs"))
@@ -1480,10 +1517,12 @@ def build_dominanz_card(pos, scores, broad, anteil=None, now=None) -> str:
     # lassen, waere auf einer frueh freigegebenen Karte ein Widerspruch im eigenen Text.
     _wann = ("der Anteil auch bei üblicher Nachfüllung des Marktes noch trägt" if _frueh_gesetzt
              else "der Markt steht")
-    lines.append("\n<i>🔬 Beobachtungsband — läuft mit, ist noch kein Beleg. "
-                 "Erst ab $%d Einsatz, %d %% Marktanteil, Quote ab %s — und nur, wenn %s.</i>"
+    lines.append("\n<i>🔬 Beobachtungsband — läuft mit, ist noch kein Beleg. Erst ab $%d "
+                 "Einsatz, %d %% des Geldes auf dieser Seite, Quote ab %s%s — und nur, "
+                 "wenn %s.</i>"
                  % (int(DOM_MIN_USD), int(DOM_MIN_SHARE * 100),
-                    ("%.2f" % DOM_MIN_QUOTE).replace(".", ","), _wann))
+                    ("%.2f" % DOM_MIN_QUOTE).replace(".", ","),
+                    ", belegte Wallet" if DOM_NUR_SHARP else "", _wann))
     return "\n".join(lines)
 
 
@@ -1909,7 +1948,7 @@ def main():
     if not isinstance(klein, dict):
         klein = {}
     dom_cand = dominanz_kandidaten(track, broad, seen=dom_sperre(dom_seen, seen, pub_seen),
-                                   now=now, klein=klein)
+                                   now=now, klein=klein, blocked=_blocked)
     # Dieselbe Marktsicht wie die Auswahl — sonst baut die Karte einen Markt, den die Auswahl
     # nicht gemeint hat, und die Kleinmarkt-Zeilen rendern mit leeren Feldern.
     dom_sicht = getattr(dominanz_kandidaten, "sicht", broad)

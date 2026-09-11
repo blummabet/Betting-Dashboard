@@ -221,6 +221,66 @@ def _ht_thr(m) -> float:
 HT_MAX_MIN = int(os.environ.get("BF_HT_MAX_MIN") or 45)
 
 
+def tore_gefallen(m):
+    """Tore im laufenden Spiel — oder None, wenn der Feed sie nicht meldet. REIN/testbar."""
+    li = m.get("liveInfo") or {}
+    a, b = li.get("goal_v1"), li.get("goal_v2")
+    if not isinstance(a, (int, float)) or not isinstance(b, (int, float)):
+        return None
+    if isinstance(a, bool) or isinstance(b, bool):
+        return None
+    return int(a) + int(b)
+
+
+def _linie_aus_name(name):
+    """Die Torlinie aus dem Marktnamen („First Half Goals 1.5" -> 1.5). None, wenn keine drin
+    steht (z. B. „Half Time" — ein 1X2-Markt hat keine Linie). REIN/testbar."""
+    m = re.search(r"(\d+(?:\.\d+)?)\s*$", str(name or "").strip())
+    try:
+        return float(m.group(1)) if m else None
+    except (TypeError, ValueError):
+        return None
+
+
+def ht_linie_offen(m, market_name) -> bool:
+    """Ist dieser HZ-Tormarkt noch UNENTSCHIEDEN? REIN/testbar.
+
+    🔴 12.09.2026 (Lucas: „aja und die push kam grad in public … nur dort ist grad pause oder so
+    und die tore alle schon ewig her").
+
+    Gemeldet wurde „HZ Over/Under 1.5 · Over 1.5 @1,47 · 85 % · €24,1K gematcht" fuer
+    Al Ahli - Al-Hazm. Im Feed stand zu dem Zeitpunkt: **Minute 33, Stand 2:1 — also drei Tore,
+    alle in der ersten Halbzeit.** „Over 1.5" war damit laengst gewonnen, und die €20,5K auf
+    Over sind Geld von VOR den Toren. Die Karte las eine abgeschlossene Tatsache als Fluss.
+
+    `ht_fenster_offen` liess es durch, und zwar voellig korrekt: Minute 33 <= 45, `is_ht` false.
+    Das Fenster war offen — der MARKT war es nicht.
+
+    Das ist dieselbe Familie wie der Fix vom 05.09. („die Information war da und wurde nicht
+    gefragt"), eine Ebene tiefer: damals fehlte die Minute, jetzt der SPIELSTAND. Beide standen
+    die ganze Zeit in `liveInfo`.
+
+    Solange das HZ-Fenster offen ist, sind die gefallenen Tore per Definition Halbzeit-Tore —
+    deshalb reicht der aktuelle Stand. Nach der Pause greift ohnehin `ht_fenster_offen`.
+
+    Ein Markt OHNE Linie (`Half Time`, also HZ-1X2) kann so nicht entschieden werden; dort gilt
+    weiter nur das Fenster. Und ein Feed ohne Torangabe sperrt NICHT — sonst faellt der ganze
+    Kanal aus, sobald ein Anbieter das Feld weglaesst; die Minute deckt diesen Fall schon ab.
+    """
+    linie = _linie_aus_name(market_name)
+    if linie is None:
+        return True                       # kein Tormarkt -> hier nichts zu entscheiden
+    tore = tore_gefallen(m)
+    if tore is None:
+        return True                       # keine Torangabe -> das Fenster entscheidet allein
+    # Entschieden ist der Markt erst, wenn „Over" nicht mehr verlieren KANN, also `tore > linie`.
+    # Bei X,5-Linien ist das dasselbe wie `tore < linie` (Tore sind ganzzahlig) — bei einer
+    # ganzzahligen Linie NICHT: „Over 2" bei 2 Toren ist Push, und ein drittes Tor entscheidet
+    # noch. `<` haette dort zu frueh gesperrt. Aufgefallen erst beim Provozieren, weil der
+    # Unterschied an X,5-Linien unsichtbar ist.
+    return tore <= linie
+
+
 def ht_fenster_offen(m) -> bool:
     """Laeuft die erste Halbzeit noch? REIN/testbar.
 
@@ -257,6 +317,8 @@ def _ht_one(m, market_name, top_thr=HT_TOP_EUR, rest_thr=HT_REST_EUR):
     """Ein einzelner HZ-Markt (HZ-1X2 oder Über/Unter 1,5 HZ1): ≥ tier-Schwelle UND ≥85 % einseitig."""
     if not ht_fenster_offen(m):
         return None                       # erste Haelfte vorbei -> der Markt ist entschieden
+    if not ht_linie_offen(m, market_name):
+        return None                       # Linie schon gerissen -> s. ht_linie_offen
     mk = (m.get("markets") or {}).get(market_name)
     if not mk:
         return None
@@ -348,6 +410,8 @@ def fix_alert(m):
         mk = mkts.get(name)
         if not mk:
             continue
+        if not ht_linie_offen(m, name):
+            continue                      # entschiedener Tormarkt — s. ht_linie_offen
         total = _vol(mk)
         if total < FIX_HT_MIN_EUR:
             continue
