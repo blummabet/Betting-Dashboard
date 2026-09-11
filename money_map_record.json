@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-09-11T12:51:16.411885+00:00",
+"generatedAt": "2026-09-11T13:06:12.159752+00:00",
 "byVerdict": {
 "konsens": {
-"n": 949,
-"wins": 795,
-"hitRate": 0.8377,
-"polyN": 893,
-"polyWins": 691,
-"polyHitRate": 0.7738,
+"n": 952,
+"wins": 798,
+"hitRate": 0.8382,
+"polyN": 896,
+"polyWins": 694,
+"polyHitRate": 0.7746,
 "pinnN": 111,
 "pinnHitRate": 0.8288,
-"nRoi": 276,
-"roi": 0.4578,
-"roiLb": 0.3835,
-"nClv": 276,
-"clv": 21.19,
-"clvLb": 18.8483
+"nRoi": 279,
+"roi": 0.4623,
+"roiLb": 0.3885,
+"nClv": 279,
+"clv": 21.31,
+"clvLb": 18.9796
 },
 "uneinig": {
 "n": 362,
@@ -81,6 +81,11 @@
 "wins": 18,
 "hitRate": 0.5455
 },
+"Japanese J League": {
+"n": 32,
+"wins": 25,
+"hitRate": 0.7812
+},
 "Saudi Professional League": {
 "n": 32,
 "wins": 22,
@@ -100,11 +105,6 @@
 "n": 30,
 "wins": 24,
 "hitRate": 0.8
-},
-"Japanese J League": {
-"n": 30,
-"wins": 23,
-"hitRate": 0.7667
 },
 "Mexican Liga MX": {
 "n": 30,
@@ -446,6 +446,11 @@
 "wins": 3,
 "hitRate": 1.0
 },
+"Ukrainian Premier League": {
+"n": 3,
+"wins": 2,
+"hitRate": 0.6667
+},
 "English WSL": {
 "n": 2,
 "wins": 2,
@@ -490,11 +495,6 @@
 "n": 2,
 "wins": 2,
 "hitRate": 1.0
-},
-"Ukrainian Premier League": {
-"n": 2,
-"wins": 1,
-"hitRate": 0.5
 },
 "Venezuelan Primera Division": {
 "n": 2,
@@ -604,26 +604,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 796,
-"wins": 638,
-"hitRate": 0.8015,
-"nRoi": 272,
-"roi": 0.271,
-"roiLb": 0.1896,
-"nClv": 272,
-"clv": 12.85,
-"clvLb": 9.5794
+"n": 797,
+"wins": 639,
+"hitRate": 0.8018,
+"nRoi": 273,
+"roi": 0.2705,
+"roiLb": 0.1894,
+"nClv": 273,
+"clv": 12.81,
+"clvLb": 9.5434
 },
 "weak": {
-"n": 498,
-"wins": 261,
-"hitRate": 0.5241,
-"nRoi": 141,
-"roi": -0.038,
-"roiLb": -0.1823,
-"nClv": 141,
-"clv": -0.46,
-"clvLb": -4.9797
+"n": 500,
+"wins": 263,
+"hitRate": 0.526,
+"nRoi": 143,
+"roi": -0.0201,
+"roiLb": -0.1639,
+"nClv": 143,
+"clv": 0.22,
+"clvLb": -4.3003
 }
 },
 "divergence": {
@@ -635,6 +635,63 @@
 "polyRate": 0.2677
 },
 "recent": [
+{
+"matchId": "36042920",
+"home": "Kolos Kovalyovka",
+"away": "Karpaty",
+"league": "Ukrainian Premier League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Karpaty",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+2
+],
+"kickoff": "2026-09-11T10:00:00Z",
+"settledAt": "2026-09-11T13:06:11.927714+00:00"
+},
+{
+"matchId": "36038876",
+"home": "Kyoto",
+"away": "Kashiwa",
+"league": "Japanese J League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Kashiwa",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+3
+],
+"kickoff": "2026-09-11T10:00:00Z",
+"settledAt": "2026-09-11T13:06:11.927714+00:00"
+},
+{
+"matchId": "36038797",
+"home": "Kobe",
+"away": "Kashima",
+"league": "Japanese J League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Kobe",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-09-11T10:00:00Z",
+"settledAt": "2026-09-11T13:06:11.927714+00:00"
+},
 {
 "matchId": "36052264",
 "home": "Xelaju",
@@ -1337,75 +1394,18 @@
 ],
 "kickoff": "2026-09-09T23:30:00Z",
 "settledAt": "2026-09-10T02:32:33.235120+00:00"
-},
-{
-"matchId": "36013822",
-"home": "DC Utd",
-"away": "Columbus",
-"league": "US MLS",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "DC Utd",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-09-09T23:30:00Z",
-"settledAt": "2026-09-10T02:32:33.235120+00:00"
-},
-{
-"matchId": "36013826",
-"home": "CF Montreal",
-"away": "Charlotte FC",
-"league": "US MLS",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Charlotte FC",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-09-09T23:30:00Z",
-"settledAt": "2026-09-10T02:32:33.235120+00:00"
-},
-{
-"matchId": "36013832",
-"home": "Atlanta Utd",
-"away": "Orlando City",
-"league": "US MLS",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Orlando City",
-"polySide": "home",
-"winner": "away",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-2,
-3
-],
-"kickoff": "2026-09-09T23:30:00Z",
-"settledAt": "2026-09-10T02:32:33.235120+00:00"
 }
 ],
 "global": {
-"n": 1327,
-"wins": 917,
-"hitRate": 0.691,
-"nRoi": 413,
-"roi": 0.1655,
-"roiLb": 0.0918,
-"nClv": 413,
-"clv": 8.31,
-"clvLb": 5.6102
+"n": 1330,
+"wins": 920,
+"hitRate": 0.6917,
+"nRoi": 416,
+"roi": 0.1706,
+"roiLb": 0.0972,
+"nClv": 416,
+"clv": 8.48,
+"clvLb": 5.7939
 },
-"pending": 28
+"pending": 25
 }
