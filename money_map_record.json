@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-11T04:50:26.586487+00:00",
+"generatedAt": "2026-09-11T05:05:14.943985+00:00",
 "byVerdict": {
 "konsens": {
-"n": 948,
-"wins": 794,
-"hitRate": 0.8376,
-"polyN": 892,
-"polyWins": 690,
-"polyHitRate": 0.7735,
-"pinnN": 110,
-"pinnHitRate": 0.8273,
-"nRoi": 275,
-"roi": 0.4547,
-"roiLb": 0.3803,
-"nClv": 275,
-"clv": 21.13,
-"clvLb": 18.7845
+"n": 949,
+"wins": 795,
+"hitRate": 0.8377,
+"polyN": 893,
+"polyWins": 691,
+"polyHitRate": 0.7738,
+"pinnN": 111,
+"pinnHitRate": 0.8288,
+"nRoi": 276,
+"roi": 0.4578,
+"roiLb": 0.3835,
+"nClv": 276,
+"clv": 21.19,
+"clvLb": 18.8483
 },
 "uneinig": {
-"n": 361,
-"wins": 118,
-"hitRate": 0.3269,
-"polyN": 324,
+"n": 362,
+"wins": 119,
+"hitRate": 0.3287,
+"polyN": 325,
 "polyWins": 87,
-"polyHitRate": 0.2685,
+"polyHitRate": 0.2677,
 "pinnN": 217,
 "pinnHitRate": 0.5899,
-"nRoi": 129,
-"roi": -0.3959,
-"roiLb": -0.5318,
-"nClv": 129,
-"clv": -16.87,
-"clvLb": -21.9595
+"nRoi": 130,
+"roi": -0.3923,
+"roiLb": -0.5273,
+"nClv": 130,
+"clv": -16.74,
+"clvLb": -21.7949
 },
 "teil": {
 "n": 16,
@@ -106,15 +106,15 @@
 "wins": 23,
 "hitRate": 0.7667
 },
+"Mexican Liga MX": {
+"n": 30,
+"wins": 19,
+"hitRate": 0.6333
+},
 "Brazilian Serie B": {
 "n": 29,
 "wins": 21,
 "hitRate": 0.7241
-},
-"Mexican Liga MX": {
-"n": 29,
-"wins": 18,
-"hitRate": 0.6207
 },
 "Dutch Eredivisie": {
 "n": 28,
@@ -396,6 +396,11 @@
 "wins": 2,
 "hitRate": 0.5
 },
+"Guatemalan Liga Nacional": {
+"n": 4,
+"wins": 4,
+"hitRate": 1.0
+},
 "Israeli Premier League": {
 "n": 4,
 "wins": 3,
@@ -435,11 +440,6 @@
 "n": 3,
 "wins": 1,
 "hitRate": 0.3333
-},
-"Guatemalan Liga Nacional": {
-"n": 3,
-"wins": 3,
-"hitRate": 1.0
 },
 "Slovenian Premier League": {
 "n": 3,
@@ -604,15 +604,15 @@
 },
 "byStrength": {
 "strong": {
-"n": 794,
-"wins": 636,
-"hitRate": 0.801,
-"nRoi": 270,
-"roi": 0.2679,
-"roiLb": 0.1861,
-"nClv": 270,
-"clv": 12.81,
-"clvLb": 9.5178
+"n": 796,
+"wins": 638,
+"hitRate": 0.8015,
+"nRoi": 272,
+"roi": 0.271,
+"roiLb": 0.1896,
+"nClv": 272,
+"clv": 12.85,
+"clvLb": 9.5794
 },
 "weak": {
 "n": 498,
@@ -627,14 +627,52 @@
 }
 },
 "divergence": {
-"n": 361,
-"betfairWins": 118,
-"betfairRate": 0.3269,
-"polyN": 324,
+"n": 362,
+"betfairWins": 119,
+"betfairRate": 0.3287,
+"polyN": 325,
 "polyWins": 87,
-"polyRate": 0.2685
+"polyRate": 0.2677
 },
 "recent": [
+{
+"matchId": "36052264",
+"home": "Xelaju",
+"away": "Coban Imperial",
+"league": "Guatemalan Liga Nacional",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-09-11T02:00:00Z",
+"settledAt": "2026-09-11T05:05:14.757954+00:00"
+},
+{
+"matchId": "36035570",
+"home": "Pumas UNAM",
+"away": "Leon",
+"league": "Mexican Liga MX",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Pumas UNAM",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+1
+],
+"kickoff": "2026-09-11T03:05:00Z",
+"settledAt": "2026-09-11T05:05:14.757954+00:00"
+},
 {
 "matchId": "36050026",
 "home": "Malacateco",
@@ -1356,56 +1394,18 @@
 ],
 "kickoff": "2026-09-09T23:30:00Z",
 "settledAt": "2026-09-10T02:32:33.235120+00:00"
-},
-{
-"matchId": "36036819",
-"home": "Fortaleza EC",
-"away": "Avai",
-"league": "Brazilian Serie B",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Fortaleza EC",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-09-09T22:30:00Z",
-"settledAt": "2026-09-10T01:32:19.221253+00:00"
-},
-{
-"matchId": "35964581",
-"home": "SE Palmeiras",
-"away": "LDU",
-"league": "CONMEBOL Copa Libertadores",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "SE Palmeiras",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-09-09T22:00:00Z",
-"settledAt": "2026-09-10T01:02:26.190984+00:00"
 }
 ],
 "global": {
-"n": 1325,
-"wins": 915,
-"hitRate": 0.6906,
-"nRoi": 411,
-"roi": 0.1629,
-"roiLb": 0.089,
-"nClv": 411,
-"clv": 8.26,
-"clvLb": 5.5503
+"n": 1327,
+"wins": 917,
+"hitRate": 0.691,
+"nRoi": 413,
+"roi": 0.1655,
+"roiLb": 0.0918,
+"nClv": 413,
+"clv": 8.31,
+"clvLb": 5.6102
 },
-"pending": 21
+"pending": 19
 }
