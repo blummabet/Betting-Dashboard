@@ -1,15 +1,15 @@
 {
- "n": 258,
+ "n": 261,
  "minOdds": 1.35,
- "moneyHitRate": 0.341,
- "priceHitRate": 0.399,
- "brierMoney": 0.9386,
- "brierPrice": 0.6968,
+ "moneyHitRate": 0.345,
+ "priceHitRate": 0.395,
+ "brierMoney": 0.9337,
+ "brierPrice": 0.6953,
  "disagree": {
-  "n": 72,
-  "moneyWon": 4,
-  "priceWon": 19,
-  "neither": 49
+  "n": 75,
+  "moneyWon": 5,
+  "priceWon": 18,
+  "neither": 52
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -48,7 +48,7 @@
   }
  ],
  "guete": {
-  "belastbar": 258,
+  "belastbar": 261,
   "preis_echo": 236,
   "abgeschnitten": 31,
   "unbekannt": 402,
@@ -180,7 +180,7 @@
    "league": "EPL",
    "winner": "Draw (Nottingham Forest FC vs. Tottenham Hotspur FC)",
    "moneyFav": "Tottenham Hotspur FC",
-   "priceFav": "Tottenham Hotspur FC",
+   "priceFav": "Nottingham Forest FC",
    "moneyShare": 0.584,
    "priceProb": 0.357,
    "moneyOK": false,
@@ -416,6 +416,18 @@
    "totalUsd": 288574
   },
   {
+   "key": "lib-ind1-fla-2026-09-10",
+   "league": "SOCCER:LIB",
+   "winner": "CR Flamengo",
+   "moneyFav": "CR Flamengo",
+   "priceFav": "CR Flamengo",
+   "moneyShare": 0.589,
+   "priceProb": 0.387,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 288143
+  },
+  {
    "key": "ucl-aek1-lin2-2026-09-08",
    "league": "UCL",
    "winner": "AEK",
@@ -522,32 +534,20 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 226473
-  },
-  {
-   "key": "lal-rso-cel-2026-09-03",
-   "league": "LA-LIGA",
-   "winner": "Draw (Real Sociedad de Fútbol vs. RC Celta de Vigo)",
-   "moneyFav": "Real Sociedad de Fútbol",
-   "priceFav": "Real Sociedad de Fútbol",
-   "moneyShare": 0.859,
-   "priceProb": 0.538,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 222933
   }
  ],
- "generatedAt": "2026-09-11T04:12:14.038160+00:00",
+ "generatedAt": "2026-09-11T04:42:16.546389+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 421,
   "nfl": 800,
-  "mlb": 664,
+  "mlb": 669,
   "nhl": 522,
   "mls": 653,
   "epl": 601,
   "soccer": 800,
-  "tennis": 662,
+  "tennis": 664,
   "ucl": 415,
   "la-liga": 687,
   "bundesliga": 547,
@@ -559,7 +559,7 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 679,
+  "esports": 677,
   "cs2": 423,
   "lol": 420,
   "dota": 9,
@@ -569,7 +569,7 @@
   "boxing": 256,
   "golf": 384,
   "f1": 381,
-  "cricket": 633,
+  "cricket": 632,
   "allsvenskan": 1,
   "austria-bundesliga": 270,
   "brazil-serie-b": 4,
@@ -619,33 +619,33 @@
   "sweepAdded": 404
  },
  "vorStats": {
-  "kandidaten": 4,
+  "kandidaten": 6,
   "budgetLeer": 0,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
-  "mitAnteilen": 4,
-  "calls": 4
+  "mitAnteilen": 6,
+  "calls": 6
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 714,
-   "usd": 11025975,
+   "n": 780,
+   "usd": 12307867,
    "beispiel": "fifwc-usa-aus-2026-06-19-more-markets"
   },
   "nba": {
-   "n": 52,
-   "usd": 1650820,
+   "n": 46,
+   "usd": 1660810,
    "beispiel": "nba-det-cle-2026-05-09"
   },
-  "presidential": {
-   "n": 3,
-   "usd": 244423,
-   "beispiel": "presidential-election-winner-2024"
+  "fed": {
+   "n": 11,
+   "usd": 253844,
+   "beispiel": "fed-decision-in-september-762"
   },
   "will": {
-   "n": 3,
-   "usd": 240886,
-   "beispiel": "will-the-us-acquire-any-part-of-greenland-in-2026"
+   "n": 4,
+   "usd": 242048,
+   "beispiel": "will-the-us-confirm-that-aliens-exist-before-2027"
   },
   "fif": {
    "n": 48,
@@ -653,13 +653,13 @@
    "beispiel": "fif-bra-pan-2026-05-31"
   },
   "clf": {
-   "n": 28,
-   "usd": 132602,
+   "n": 30,
+   "usd": 136276,
    "beispiel": "clf-fey-ata-2026-08-02-more-markets"
   },
   "2026": {
-   "n": 16,
-   "usd": 122460,
+   "n": 17,
+   "usd": 124715,
    "beispiel": "2026-mens-us-open-winner-tennis"
   },
   "nhl": {
@@ -671,11 +671,6 @@
    "n": 1,
    "usd": 97044,
    "beispiel": "nbasl-cle-nop-2026-07-15"
-  },
-  "fed": {
-   "n": 6,
-   "usd": 83586,
-   "beispiel": "fed-decision-in-september-762"
   },
   "us": {
    "n": 2,
@@ -692,6 +687,11 @@
    "usd": 64427,
    "beispiel": "which-party-will-win-the-house-in-2026"
   },
+  "presidential": {
+   "n": 2,
+   "usd": 45797,
+   "beispiel": "presidential-election-winner-2024"
+  },
   "ecs": {
    "n": 5,
    "usd": 30945,
@@ -701,6 +701,16 @@
    "n": 6,
    "usd": 22413,
    "beispiel": "eurovision-2026-top-5"
+  },
+  "cs": {
+   "n": 9,
+   "usd": 20856,
+   "beispiel": "cs-falcons-vs-pain-2025-09-18"
+  },
+  "cricipl": {
+   "n": 7,
+   "usd": 20728,
+   "beispiel": "cricipl-del-raj-2026-05-17"
   },
   "j1100": {
    "n": 6,
@@ -712,20 +722,10 @@
    "usd": 15497,
    "beispiel": "codmw-riyf-crr-2026-06-14"
   },
-  "bkfibaw": {
-   "n": 3,
-   "usd": 14559,
-   "beispiel": "bkfibaw-hun-jap-2026-09-08"
-  },
-  "efa": {
-   "n": 2,
-   "usd": 11570,
-   "beispiel": "efa-cfc-mnc-2026-05-16"
-  },
-  "bkcba": {
-   "n": 1,
-   "usd": 10672,
-   "beispiel": "bkcba-gua-bei-2026-05-09"
+  "league": {
+   "n": 5,
+   "usd": 14662,
+   "beispiel": "league-of-legends-t1-vs-dplus-kia"
   }
  }
 }
