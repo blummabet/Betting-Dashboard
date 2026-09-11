@@ -3128,7 +3128,15 @@ function _pwDominanz(rec){
     +'⏱️ <b>Der Anteil wird erst nahe am Anpfiff gemessen</b> (bis 1 h davor). Gemessen an 424 '
     +'Märkten steht 2,5–3 h vor Anpfiff erst der Median von <b>54 %</b> des Endvolumens im Markt, '
     +'0,5–1 h davor <b>92 %</b>. Ein früher gelesener Anteil hat einen halb leeren Nenner und wäre '
-    +'systematisch zu hoch — das Band würde sich seine eigene Zahl schönrechnen.</span></div>';
+    +'systematisch zu hoch — das Band würde sich seine eigene Zahl schönrechnen. '
+    +'Eine Position, die auch nach üblicher Nachfüllung noch über 40 % läge, kommt trotzdem '
+    +'sofort raus und wird als <code>fruehFreigabe</code> gebucht — getrennt auswertbar, weil '
+    +'ihr Nenner geschätzt und nicht gemessen ist.<br>'
+    +'🎯 <b>Quote ab 1,35.</b> Von fünf Positionen, die das Band am 11.09. gefunden hätte, lagen '
+    +'vier darunter (@1,14 · @1,18 · @1,21 · @1,25) — Bauart, nicht Zufall: die niedrige '
+    +'Einsatzschwelle landet in kleinen Favoritenmärkten, wo ein einzelner Einsatz überhaupt '
+    +'erst 40 % erreichen kann. Im Public-Whale-Buch steht über 27 abgerechnete Pushs keine '
+    +'einzige Zeile unter 1,35.</span></div>';
   if(!rec || !rec.gesamt){
     return kopf+'<div class="pw-none">Noch nichts gebucht. Das Band läuft seit 11.09.2026 mit — '
       +'die erste Zeile erscheint, sobald eine Position ab $3.000 mindestens 40 % ihres Marktes '

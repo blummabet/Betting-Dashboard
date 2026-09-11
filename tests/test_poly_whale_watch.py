@@ -953,16 +953,23 @@ class TestMarktDominanz(unittest.TestCase):
     """
 
     def _tr(self, **over):
+        # firstPrice 0.55 -> Quote 1,82, also ueber DOM_MIN_QUOTE (1,35).
         pos = {"wallet": "0xw", "key": "k", "side": "A", "usd": 6000, "league": "ESPORTS",
-               "firstPrice": 0.55, "firstTs": NOW.isoformat()}
+               "firstPrice": 0.55, "lastPrice": 0.55, "firstTs": NOW.isoformat()}
         pos.update(over)
         return {"open": {"0xw|k|A": pos}, "scores": {}}
 
     @staticmethod
     def _broad(total, htk=0.4):
-        """Ein reifer Markt. `htk` steht hier ausdruecklich drin, weil ein Markt OHNE Messzeitpunkt
-        seit 11.09.2026 als unreif gilt — s. TestMarktReife."""
-        return {"k": {"totalUsd": total, "hoursToKickoff": htk}}
+        """Ein reifer Markt, dessen Anpfiff noch bevorsteht.
+
+        `htk` muss drinstehen (ohne Messzeitpunkt gilt der Markt als unreif), und `capturedAt`
+        ebenso: daraus errechnet sich der Anpfiff, und eine Position, deren Spiel schon laeuft,
+        wird seit 11.09.2026 nicht mehr gepusht. Gemessen am Stand NOW, damit der Anpfiff in der
+        Zukunft liegt — sonst pruefte jeder Test unbemerkt nur noch die Anpfiff-Sperre.
+        """
+        return {"k": {"totalUsd": total, "hoursToKickoff": htk,
+                      "capturedAt": NOW.isoformat()}}
 
     def test_kleiner_markt_grosser_anteil_kommt_durch(self):
         r = P.dominanz_kandidaten(self._tr(), self._broad(10000), now=NOW)
@@ -1058,13 +1065,16 @@ class TestMarktDominanz(unittest.TestCase):
 
     def test_der_groesste_anteil_steht_oben(self):
         tr = {"open": {
-            "0xa|k1|A": {"wallet": "0xa", "key": "k1", "side": "A", "usd": 6000,
+            "0xa|k1|A": {"wallet": "0xa", "key": "k1", "side": "A", "usd": 6000, "lastPrice": 0.55,
                          "league": "ESPORTS", "firstPrice": 0.55, "firstTs": NOW.isoformat()},
-            "0xb|k2|B": {"wallet": "0xb", "key": "k2", "side": "B", "usd": 9000,
+            "0xb|k2|B": {"wallet": "0xb", "key": "k2", "side": "B", "usd": 9000, "lastPrice": 0.55,
                          "league": "ESPORTS", "firstPrice": 0.55, "firstTs": NOW.isoformat()}},
             "scores": {}}
-        r = P.dominanz_kandidaten(tr, {"k1": {"totalUsd": 7600, "hoursToKickoff": 0.4},
-                                       "k2": {"totalUsd": 20000, "hoursToKickoff": 0.4}}, now=NOW)
+        _ca = NOW.isoformat()
+        r = P.dominanz_kandidaten(tr, {"k1": {"totalUsd": 7600, "hoursToKickoff": 0.4,
+                                              "capturedAt": _ca},
+                                       "k2": {"totalUsd": 20000, "hoursToKickoff": 0.4,
+                                              "capturedAt": _ca}}, now=NOW)
         self.assertEqual([x[0] for x in r], ["0xa|k1|A", "0xb|k2|B"],
                          "sortiert wird nach ANTEIL, nicht nach Dollar")
 
@@ -1081,9 +1091,17 @@ class TestMarktReife(unittest.TestCase):
 
     def _pos(self, **over):
         p = {"wallet": "0xw", "key": "k", "side": "A", "usd": 6000, "league": "ESPORTS",
-             "firstPrice": 0.55, "firstTs": NOW.isoformat(), "htkFirst": 2.8}
+             "firstPrice": 0.55, "lastPrice": 0.55, "firstTs": NOW.isoformat(), "htkFirst": 2.8}
         p.update(over)
         return p
+
+    @staticmethod
+    def _b(total, htk, key="k", capturedAt=None):
+        """`capturedAt` + `hoursToKickoff` ergeben den Anpfiff. NOW als Aufnahmezeit heisst:
+        der Anpfiff liegt `htk` Stunden in der Zukunft — das Spiel steht also noch bevor."""
+        m = {"totalUsd": total, "hoursToKickoff": htk,
+             "capturedAt": (capturedAt or NOW).isoformat()}
+        return {key: m}
 
     def test_reifer_markt_gibt_die_stunde_zurueck(self):
         self.assertAlmostEqual(
@@ -1120,20 +1138,20 @@ class TestMarktReife(unittest.TestCase):
         """Nicht verworfen — zurueckgehalten. Derselbe Markt kommt einen Lauf spaeter durch,
         wenn seine Close-Zeile naeher am Anpfiff steht. Das ist der Tausch: spaeter, dafuer
         gegen einen Nenner, der steht."""
+        # 50 % Anteil bei 2,5 h: konservativ gerechnet (× 0,69 Fuellgrad) sind das 34,5 % —
+        # unter der Schwelle, also warten. Bei 0,5 h steht der Nenner und dieselbe Position kommt.
         tr = {"open": {"0xw|k|A": self._pos()}, "scores": {}}
         self.assertEqual(
-            P.dominanz_kandidaten(tr, {"k": {"totalUsd": 12000, "hoursToKickoff": 2.5}}, now=NOW),
-            [], "2,5 h vorher ist der Nenner im Median erst halb voll")
-        spaeter = P.dominanz_kandidaten(
-            tr, {"k": {"totalUsd": 12000, "hoursToKickoff": 0.5}}, now=NOW)
+            P.dominanz_kandidaten(tr, self._b(12000, 2.5), now=NOW),
+            [], "2,5 h vorher ist der Nenner im Median erst gut zwei Drittel voll")
+        spaeter = P.dominanz_kandidaten(tr, self._b(12000, 0.5), now=NOW)
         self.assertEqual(len(spaeter), 1, "naeher am Anpfiff kommt dieselbe Position durch")
 
     def test_der_messzeitpunkt_steht_auf_der_karte(self):
         """Ein Anteil ohne Zeitstempel laedt dazu ein, 2,8-h- und 0,3-h-Anteile fuer dasselbe
         Mass zu halten. Deshalb steht die Stunde auf der Karte, nicht nur im Buch."""
         k = P.build_dominanz_card(self._pos(key="cs2-a-b-2026-09-12"), {},
-                                  {"cs2-a-b-2026-09-12": {"totalUsd": 12000,
-                                                          "hoursToKickoff": 0.5}})
+                                  self._b(12000, 0.5, key="cs2-a-b-2026-09-12"), now=NOW)
         self.assertIn("30 Min", k)
         self.assertIn("vor Anpfiff", k)
 
@@ -1165,12 +1183,214 @@ class TestMarktReife(unittest.TestCase):
                              "der Band-Boden darf nicht unter dem liegen, der oben ohnehin gilt")
 
 
+class TestDominanzQuote(unittest.TestCase):
+    """Lucas 11.09.2026, nach der ersten echten Karte („Einstieg @1,21"):
+    „bitte mindest odd auch einbauen, ab 1,35 erst wieder."
+
+    Der Befund ist groesser als die eine Karte: von fuenf Positionen, die das Band an dem Tag
+    gefunden haette, lagen VIER unter 1,35 (@1,14 · @1,18 · @1,21 · @1,25). Bauart, nicht Zufall
+    — die niedrige Einsatzschwelle dieses Bands landet in kleinen Favoritenmaerkten, wo ein
+    einzelner Einsatz ueberhaupt erst 40 % erreichen kann. Im Public-Whale-Buch steht ueber 27
+    abgerechnete Pushs KEINE EINZIGE Zeile unter 1,35.
+    """
+
+    def _pos(self, last=0.55, **over):
+        p = {"wallet": "0xw", "key": "k", "side": "A", "usd": 6000, "league": "ESPORTS",
+             "firstPrice": last, "lastPrice": last, "firstTs": NOW.isoformat()}
+        p.update(over)
+        return p
+
+    def test_quote_ueber_dem_boden_kommt_durch(self):
+        self.assertAlmostEqual(P._dom_quote(self._pos(0.55)), 1 / 0.55, places=6)
+
+    def test_favoritenpreis_faellt_raus(self):
+        """@1,21 war der Anlass. Bei 1,14 braucht man 88 % Trefferquote zum Nullpunkt —
+        da ist keine Beobachtung mehr drin, nur noch Marge."""
+        for preis in (0.88, 0.85, 0.826, 0.75):      # 1,14 · 1,18 · 1,21 · 1,33
+            self.assertIsNone(P._dom_quote(self._pos(preis)), "Preis %s" % preis)
+
+    def test_genau_auf_der_schwelle_zaehlt_als_drin(self):
+        self.assertIsNotNone(P._dom_quote(self._pos(1 / 1.35)))
+
+    def test_ohne_preis_gibt_es_keine_quote_und_keinen_push(self):
+        """Eine Trefferquote ohne die Quoten ist keine Zahl — eine Beobachtung ohne
+        abrechenbaren Preis waere genau das."""
+        # "0.5" fehlt hier bewusst: `_push_price` wandelt eine Zahl als Text um, und das ist
+        # gewollt — der Feed hat schon Preise als String geliefert. Geprueft wird, was KEIN
+        # brauchbarer Preis ist: fehlend, ausserhalb (0,1), oder ein bool getarnt als Zahl.
+        for bad in (None, 0, 1, 1.4, -0.2, True):
+            self.assertIsNone(P._dom_quote(self._pos(last=bad)), repr(bad))
+
+    def test_gerechnet_wird_auf_dem_push_preis_nicht_auf_dem_einstieg(self):
+        """Sonst koennte eine Zeile mit @1,50 ins Buch gehen und mit @1,15 abgerechnet werden:
+        dieselbe Zahl an zwei Stellen mit zwei Bedeutungen. `_log_dominanz_push` bucht den
+        Push-Preis, also entscheidet der auch."""
+        # Wal stieg guenstig ein (@2,00), der Markt ist inzwischen teuer (@1,15).
+        self.assertIsNone(P._dom_quote(self._pos(firstPrice=0.50, lastPrice=0.87)))
+        # Umgekehrt: Wal teuer rein, Markt inzwischen guenstig — das zaehlt.
+        self.assertIsNotNone(P._dom_quote(self._pos(firstPrice=0.87, lastPrice=0.50)))
+
+    def test_die_auswahl_haelt_den_boden_ein(self):
+        tr = {"open": {"0xw|k|A": self._pos(0.826)}, "scores": {}}
+        br = {"k": {"totalUsd": 12000, "hoursToKickoff": 0.5, "capturedAt": NOW.isoformat()}}
+        self.assertEqual(P.dominanz_kandidaten(tr, br, now=NOW), [], "@1,21 bleibt draussen")
+        tr["open"]["0xw|k|A"]["lastPrice"] = 0.55
+        self.assertEqual(len(P.dominanz_kandidaten(tr, br, now=NOW)), 1)
+
+    def test_die_karte_zeigt_beide_preise(self):
+        """Der Einstieg des Wals ist Geschichte, die aktuelle Quote ist das, was ein Leser
+        bekaeme. Bei einer Karte, die auf den reifen Markt wartet, ist der Einstieg allein
+        die falsche Zahl."""
+        k = P.build_dominanz_card(self._pos(firstPrice=0.50, lastPrice=0.55), {},
+                                  {"k": {"totalUsd": 12000, "hoursToKickoff": 0.5,
+                                         "capturedAt": NOW.isoformat()}}, now=NOW)
+        self.assertIn("Einstieg", k)
+        self.assertIn("jetzt", k)
+        self.assertIn("@2.00", k, "der Einstieg des Wals")
+        self.assertIn("@1.82", k, "und der Preis, den ein Leser jetzt bekaeme")
+
+    def test_bei_gleichem_preis_steht_die_zahl_nur_einmal(self):
+        """Zweimal dieselbe Zahl nebeneinander liest sich wie ein Fehler. Steht der Markt noch
+        da, wo der Wal eingestiegen ist, ist das EINE Aussage."""
+        k = P.build_dominanz_card(self._pos(0.55), {},
+                                  {"k": {"totalUsd": 12000, "hoursToKickoff": 0.5,
+                                         "capturedAt": NOW.isoformat()}}, now=NOW)
+        self.assertEqual(k.count("1.82"), 1)
+        self.assertNotIn("jetzt", k)
+
+
+class TestAnpfiffAufDerKarte(unittest.TestCase):
+    """Lucas 11.09.2026: „bzw sollt ich sehen wann das Spiel ist / seh ich ned."
+
+    Und der Fund dabei: die erste echte Karte ging 26 Minuten NACH Anpfiff raus. Der Markt
+    speichert keinen Anpfiff, sondern `capturedAt` + `hoursToKickoff` — `htk` ist der
+    MESSzeitpunkt, nicht die Gegenwart. Zwischen Messung und Versand liegt der Runner.
+    """
+
+    def _pos(self, **over):
+        p = {"wallet": "0xw", "key": "k", "side": "A", "usd": 6000, "league": "ESPORTS",
+             "firstPrice": 0.55, "lastPrice": 0.55, "firstTs": NOW.isoformat()}
+        p.update(over)
+        return p
+
+    def _b(self, htk, aufgenommen=None, total=12000):
+        return {"k": {"totalUsd": total, "hoursToKickoff": htk,
+                      "capturedAt": (aufgenommen or NOW).isoformat()}}
+
+    def test_anpfiff_ist_aufnahmezeit_plus_stunden_bis_anpfiff(self):
+        ko = P.anpfiff_zeit(self._pos(), self._b(1.5))
+        self.assertEqual(ko, NOW + timedelta(hours=1.5))
+
+    def test_ohne_aufnahmezeit_kein_anpfiff(self):
+        self.assertIsNone(P.anpfiff_zeit(self._pos(), {"k": {"hoursToKickoff": 1.5}}))
+        self.assertIsNone(P.anpfiff_zeit(self._pos(), {"k": {"capturedAt": NOW.isoformat()}}))
+        self.assertIsNone(P.anpfiff_zeit(self._pos(), {}))
+
+    def test_die_uhrzeit_steht_auf_der_karte(self):
+        k = P.build_dominanz_card(self._pos(), {}, self._b(0.5), now=NOW)
+        self.assertIn("Anpfiff", k)
+        self.assertRegex(k, r"Anpfiff <b>\d{2}:\d{2}</b>")
+
+    def test_ein_laufendes_spiel_wird_nicht_mehr_gepusht(self):
+        """Der eigentliche Fehler: die Messung lag 20 Min vor Anpfiff, der Push kam 26 Min
+        danach. Fuer die MESSUNG ist ein Markt nach Anpfiff maximal reif — fuer den PUSH ist er
+        wertlos, weil die genannte Quote nicht mehr zu bekommen ist."""
+        tr = {"open": {"0xw|k|A": self._pos()}, "scores": {}}
+        # Aufgenommen 20 Min vor Anpfiff, gesendet wird eine halbe Stunde spaeter.
+        br = self._b(0.33, aufgenommen=NOW - timedelta(hours=0.33))
+        self.assertEqual(P.dominanz_kandidaten(tr, br, now=NOW + timedelta(minutes=26)), [],
+                         "nach Anpfiff ist es keine Beobachtung mehr, nur Nachschau")
+        self.assertEqual(len(P.dominanz_kandidaten(tr, br, now=NOW - timedelta(minutes=10))), 1,
+                         "davor sehr wohl")
+
+    def test_ohne_bestimmbaren_anpfiff_wird_nicht_gepusht(self):
+        """Dieselbe Regel wie ueberall in diesem Band: fehlende Information laesst nicht durch.
+        Wann das Spiel ist, ist hier keine Zusatzinfo, sondern die Voraussetzung — Lucas will es
+        VORHER mitverfolgen."""
+        tr = {"open": {"0xw|k|A": self._pos()}, "scores": {}}
+        self.assertEqual(
+            P.dominanz_kandidaten(tr, {"k": {"totalUsd": 12000, "hoursToKickoff": 0.5}}, now=NOW),
+            [], "ohne capturedAt ist der Anpfiff unbekannt")
+
+
+class TestFrueheFreigabe(unittest.TestCase):
+    """Lucas 11.09.2026: „hast du Idee wie wir das Zeitproblem loesen?"
+
+    Das Reifefenster loeste das MESSproblem und schuf ein ANZEIGEproblem: eine Position von
+    2,8 h vor Anpfiff steht erst 1,8 h spaeter im Kanal. Beides zugleich geht, wenn man die
+    Schaetzung gegen sich selbst laufen laesst: `anteil · fuellgrad(htk)` ist der Anteil, der
+    uebrig bliebe, wenn sich der Markt noch wie ueblich auffuellt.
+    """
+
+    def _pos(self, usd=6000, **over):
+        p = {"wallet": "0xw", "key": "k", "side": "A", "usd": usd, "league": "ESPORTS",
+             "firstPrice": 0.55, "lastPrice": 0.55, "firstTs": NOW.isoformat()}
+        p.update(over)
+        return p
+
+    def _b(self, total, htk):
+        return {"k": {"totalUsd": total, "hoursToKickoff": htk,
+                      "capturedAt": NOW.isoformat()}}
+
+    def test_der_fuellgrad_kommt_aus_der_messung(self):
+        self.assertEqual(P.fuellgrad(0.3), 1.00)
+        self.assertEqual(P.fuellgrad(0.8), 0.92)
+        self.assertEqual(P.fuellgrad(1.4), 0.82)
+        self.assertEqual(P.fuellgrad(2.8), 0.54)
+        self.assertEqual(P.fuellgrad(0), 1.0, "ab Anpfiff ist der Markt fertig")
+        self.assertEqual(P.fuellgrad(-1), 1.0)
+
+    def test_frueher_als_gemessen_bleibt_beim_leersten_band(self):
+        """Ueber 3 h gibt es keine Messung. Zu extrapolieren waere eine Behauptung — das
+        leerste gemessene Band ist die konservative Wahl."""
+        self.assertEqual(P.fuellgrad(50), 0.54)
+
+    def test_kein_fuellgrad_ohne_stunde(self):
+        for bad in (None, "1.5", True):
+            self.assertIsNone(P.fuellgrad(bad), repr(bad))
+
+    def test_deutliche_dominanz_kommt_frueh_raus(self):
+        """80 % bei 2,8 h: auch wenn sich der Markt auf seinen Median-Endstand auffuellt
+        (× 0,54), blieben 43 % — ueber der Schwelle. Also sofort, nicht in zwei Stunden."""
+        tr = {"open": {"0xw|k|A": self._pos(usd=9600)}, "scores": {}}
+        r = P.dominanz_kandidaten(tr, self._b(12000, 2.8), now=NOW)
+        self.assertEqual(len(r), 1)
+        _h, frueh = P.dom_freigabe(r[0][1], self._b(12000, 2.8), now=NOW)
+        self.assertTrue(frueh, "als fruehe Freigabe gekennzeichnet")
+
+    def test_knappe_dominanz_wartet(self):
+        """45 % bei 2,8 h werden konservativ zu 24 % — das traegt nicht. Sie ist NICHT
+        verworfen: sobald der Markt steht, kommt sie auf dem normalen Weg."""
+        tr = {"open": {"0xw|k|A": self._pos(usd=5400)}, "scores": {}}
+        self.assertEqual(P.dominanz_kandidaten(tr, self._b(12000, 2.8), now=NOW), [])
+        self.assertEqual(len(P.dominanz_kandidaten(tr, self._b(12000, 0.5), now=NOW)), 1)
+
+    def test_die_karte_sagt_dass_der_markt_noch_waechst(self):
+        """Bei einer fruehen Freigabe MUSS auf der Karte stehen, dass der Nenner noch waechst —
+        sonst liest Lucas 80 % als Endstand, und der Fuellgrad ist ein Median, kein Versprechen."""
+        k = P.build_dominanz_card(self._pos(usd=9600), {}, self._b(12000, 2.8), now=NOW)
+        self.assertIn("füllt sich noch", k)
+        self.assertIn("kann noch fallen", k)
+
+    def test_beim_reifen_markt_steht_das_gegenteil(self):
+        k = P.build_dominanz_card(self._pos(), {}, self._b(12000, 0.5), now=NOW)
+        self.assertIn("Markt steht", k)
+        self.assertNotIn("füllt sich noch", k)
+
+    def test_die_fruehe_freigabe_haengt_am_fuellgrad_nicht_an_der_stunde(self):
+        """Gegenprobe: dieselbe Position, dieselbe Stunde — nur der Anteil entscheidet."""
+        br = self._b(12000, 2.8)
+        self.assertIsNotNone(P.dom_freigabe(self._pos(usd=9600), br, now=NOW))   # 80 % × 0,54
+        self.assertIsNone(P.dom_freigabe(self._pos(usd=6000), br, now=NOW))      # 50 % × 0,54
+
+
 class TestDominanzKarte(unittest.TestCase):
     def _karte(self, usd=6800, tot=9900):
         pos = {"usd": usd, "league": "ESPORTS", "side": "Falcons", "firstPrice": 0.58,
                "entryPrice": 0.58, "wallet": "0xW", "key": "cs2-fal-vit-2026-09-12"}
         return P.build_dominanz_card(
-            pos, {}, {"cs2-fal-vit-2026-09-12": {"totalUsd": tot, "hoursToKickoff": 0.75}})
+            pos, {}, {"cs2-fal-vit-2026-09-12": {"totalUsd": tot, "hoursToKickoff": 0.75,
+                                                 "capturedAt": NOW.isoformat()}})
 
     def test_die_karte_ist_auf_den_ersten_blick_eine_andere(self):
         """Lucas: „mach's bitte vom Template her so, dass ich's wirklich gleich seh, weil das geht
