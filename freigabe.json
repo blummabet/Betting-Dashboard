@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-11T17:36:55.192709+00:00",
+ "generatedAt": "2026-09-11T18:36:56.218903+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -34,7 +34,7 @@
     "nieAnteil": 0.043,
     "schaetzbar": false
    },
-   "alterTage": 4.2,
+   "alterTage": 4.3,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "Liga"
@@ -44,24 +44,24 @@
   {
    "schublade": "🔒 E-Sport ohne Wallet-Nachweis",
    "strom": "poly",
-   "n": 49,
+   "n": 51,
    "status": "kandidat",
-   "grund": "49 von 120 Plays SEIT der Anmeldung (2026-09-07) — vorher abgerechnete zählen nicht",
-   "roi": 0.183,
-   "pl": 8.97,
-   "roiLb": 0.0538,
-   "clv": -6.622,
-   "clvLb": -9.104,
+   "grund": "51 von 120 Plays SEIT der Anmeldung (2026-09-07) — vorher abgerechnete zählen nicht",
+   "roi": 0.1974,
+   "pl": 10.07,
+   "roiLb": 0.0719,
+   "clv": -6.363,
+   "clvLb": -8.765,
    "clvUrteil": "negativ belegt",
-   "clvOg": -4.141,
-   "fehltN": 71,
-   "noetigNRoi": 25,
+   "clvOg": -3.961,
+   "fehltN": 69,
+   "noetigNRoi": 21,
    "noetigNClv": null,
    "entfernung": {
-    "median": 25,
+    "median": 21,
     "lo": 6,
-    "hi": 366,
-    "nieAnteil": 0.017,
+    "hi": 191,
+    "nieAnteil": 0.008,
     "schaetzbar": false
    },
    "alterTage": 0.0,
@@ -102,7 +102,7 @@
     "nieAnteil": 0.235,
     "schaetzbar": false
    },
-   "alterTage": 1.2,
+   "alterTage": 1.3,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py"
   },
@@ -191,7 +191,7 @@
     "nieAnteil": 0.658,
     "schaetzbar": false
    },
-   "alterTage": 1.5,
+   "alterTage": 1.6,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "top5"
@@ -219,7 +219,7 @@
     "nieAnteil": 0.25,
     "schaetzbar": false
    },
-   "alterTage": 1.7,
+   "alterTage": 1.8,
    "art": "mix",
    "wert": "bf+money+sharp",
    "nAlt": 9,
@@ -230,24 +230,24 @@
   {
    "schublade": "Mix sharp+steam",
    "strom": "poly",
-   "n": 11,
+   "n": 12,
    "status": "kandidat",
-   "grund": "11 von 30 Plays — noch 19 · der ROI-Schnitt ist nicht positiv — mehr Plays bestätigen das, sie drehen es nicht",
-   "roi": -0.0507,
-   "pl": -0.56,
+   "grund": "12 von 30 Plays — noch 18 · wie weit es bis zu einem Beleg ist, lässt sich bei 12 Plays NICHT schätzen (Bootstrap: 6 bis 39828 Plays, und in 40 % der Ziehungen ist der Schnitt gar nicht positiv)",
+   "roi": 0.0151,
+   "pl": 0.18,
    "roiLb": null,
-   "clv": -1.136,
+   "clv": -1.042,
    "clvLb": null,
    "clvUrteil": "gemessen, nicht belegt",
    "clvOg": null,
-   "fehltN": 19,
-   "noetigNRoi": null,
+   "fehltN": 18,
+   "noetigNRoi": 9565,
    "noetigNClv": null,
    "entfernung": {
-    "median": 146,
-    "lo": 3,
-    "hi": 244,
-    "nieAnteil": 0.6,
+    "median": 80,
+    "lo": 6,
+    "hi": 39828,
+    "nieAnteil": 0.403,
     "schaetzbar": false
    },
    "alterTage": 0.0,
@@ -277,11 +277,11 @@
    "zerlegung": "nach Conviction",
    "art": "conviction",
    "gruppen": 6,
-   "basis": "339 von 752 abgerechneten Plays · nur Engine 2026-09-01 · ohne Kampfsport, US-Sport",
-   "n": 339,
-   "pl": 0.08,
-   "roi": 0.0002,
-   "clv": -1.885,
+   "basis": "341 von 754 abgerechneten Plays · nur Engine 2026-09-01 · ohne Kampfsport, US-Sport",
+   "n": 341,
+   "pl": 1.18,
+   "roi": 0.0035,
+   "clv": -1.873,
    "belegte": 1
   },
   {
@@ -290,9 +290,9 @@
    "art": "markt",
    "gruppen": 7,
    "basis": null,
-   "n": 19827,
-   "pl": -148.37,
-   "roi": -0.0075,
+   "n": 19998,
+   "pl": -132.33,
+   "roi": -0.0066,
    "clv": null,
    "belegte": 0
   }
@@ -306,16 +306,8 @@
    "aufloesbar": true,
    "grund": null,
    "laufend": 0,
-   "n": 44,
+   "n": 43,
    "plays": [
-    {
-     "spiel": "Union Berlin v FC Schalke 04",
-     "auswahl": "Unter 3.5 Tore",
-     "quote": 1.52,
-     "anpfiff": "2026-09-11T18:30:00+00:00",
-     "datensatz": "Liga",
-     "id": "GER-3-182-174|Unter 3.5 Tore"
-    },
     {
      "spiel": "Venezia v Fiorentina",
      "auswahl": "Über 2.5 Tore",
@@ -761,6 +753,18 @@
    "belegt": true
   },
   {
+   "liga": "Czech 2 Liga",
+   "n": 89,
+   "wins": 54,
+   "hit": 0.6067,
+   "hitLb": 0.5196,
+   "roi": 0.1917,
+   "roiLb": -0.0009,
+   "pl": 17.06,
+   "clv": -0.099,
+   "belegt": false
+  },
+  {
    "liga": "Romanian Cup",
    "n": 75,
    "wins": 50,
@@ -905,18 +909,6 @@
    "belegt": false
   },
   {
-   "liga": "Serbian First League",
-   "n": 48,
-   "wins": 27,
-   "hit": 0.5625,
-   "hitLb": 0.4445,
-   "roi": 0.2627,
-   "roiLb": -0.0633,
-   "pl": 12.61,
-   "clv": -0.317,
-   "belegt": false
-  },
-  {
    "liga": "Italian Serie A",
    "n": 134,
    "wins": 79,
@@ -962,18 +954,6 @@
    "roiLb": -0.0889,
    "pl": 3.08,
    "clv": 0.455,
-   "belegt": false
-  },
-  {
-   "liga": "Czech 2 Liga",
-   "n": 64,
-   "wins": 37,
-   "hit": 0.5781,
-   "hitLb": 0.4754,
-   "roi": 0.1436,
-   "roiLb": -0.0894,
-   "pl": 9.19,
-   "clv": -0.133,
    "belegt": false
   },
   {
@@ -1133,6 +1113,18 @@
    "belegt": false
   },
   {
+   "liga": "Saudi Professional League",
+   "n": 188,
+   "wins": 104,
+   "hit": 0.5532,
+   "hitLb": 0.4932,
+   "roi": 0.0066,
+   "roiLb": -0.1153,
+   "pl": 1.25,
+   "clv": -0.04,
+   "belegt": false
+  },
+  {
    "liga": "Swedish Superettan",
    "n": 144,
    "wins": 77,
@@ -1205,18 +1197,6 @@
    "belegt": false
   },
   {
-   "liga": "Saudi Professional League",
-   "n": 174,
-   "wins": 95,
-   "hit": 0.546,
-   "hitLb": 0.4837,
-   "roi": 0.0006,
-   "roiLb": -0.1279,
-   "pl": 0.1,
-   "clv": -0.143,
-   "belegt": false
-  },
-  {
    "liga": "Danish 2nd Division",
    "n": 35,
    "wins": 21,
@@ -1286,6 +1266,18 @@
    "roiLb": -0.1338,
    "pl": 2.82,
    "clv": -0.314,
+   "belegt": false
+  },
+  {
+   "liga": "Polish Ekstraklasa",
+   "n": 127,
+   "wins": 65,
+   "hit": 0.5118,
+   "hitLb": 0.4394,
+   "roi": 0.0417,
+   "roiLb": -0.1338,
+   "pl": 5.3,
+   "clv": -0.06,
    "belegt": false
   },
   {
@@ -1505,18 +1497,6 @@
    "belegt": false
   },
   {
-   "liga": "Polish Ekstraklasa",
-   "n": 120,
-   "wins": 60,
-   "hit": 0.5,
-   "hitLb": 0.4257,
-   "roi": 0.0277,
-   "roiLb": -0.1552,
-   "pl": 3.32,
-   "clv": -0.002,
-   "belegt": false
-  },
-  {
    "liga": "UEFA (W) Champions League Qualifiers",
    "n": 100,
    "wins": 55,
@@ -1526,6 +1506,18 @@
    "roiLb": -0.1563,
    "pl": 1.02,
    "clv": 0.348,
+   "belegt": false
+  },
+  {
+   "liga": "UAE Arabian Gulf League",
+   "n": 110,
+   "wins": 60,
+   "hit": 0.5455,
+   "hitLb": 0.4672,
+   "roi": -0.0005,
+   "roiLb": -0.1575,
+   "pl": -0.06,
+   "clv": -0.174,
    "belegt": false
   },
   {
@@ -1673,6 +1665,18 @@
    "belegt": false
   },
   {
+   "liga": "Finnish Ykkosliiga",
+   "n": 81,
+   "wins": 42,
+   "hit": 0.5185,
+   "hitLb": 0.4281,
+   "roi": 0.0506,
+   "roiLb": -0.1736,
+   "pl": 4.1,
+   "clv": -0.327,
+   "belegt": false
+  },
+  {
    "liga": "Icelandic Urvalsdeild",
    "n": 84,
    "wins": 46,
@@ -1682,18 +1686,6 @@
    "roiLb": -0.1762,
    "pl": 1.69,
    "clv": 0.314,
-   "belegt": false
-  },
-  {
-   "liga": "Danish 1st Division",
-   "n": 83,
-   "wins": 44,
-   "hit": 0.5301,
-   "hitLb": 0.4405,
-   "roi": 0.0122,
-   "roiLb": -0.1768,
-   "pl": 1.01,
-   "clv": -0.356,
    "belegt": false
   },
   {
@@ -1805,18 +1797,6 @@
    "belegt": false
   },
   {
-   "liga": "Tanzanian Premier League",
-   "n": 48,
-   "wins": 28,
-   "hit": 0.5833,
-   "hitLb": 0.4649,
-   "roi": 0.0444,
-   "roiLb": -0.1923,
-   "pl": 2.13,
-   "clv": 0.037,
-   "belegt": false
-  },
-  {
    "liga": "Uruguayan Primera Division",
    "n": 103,
    "wins": 54,
@@ -1874,6 +1854,18 @@
    "roiLb": -0.1969,
    "pl": -0.35,
    "clv": -0.433,
+   "belegt": false
+  },
+  {
+   "liga": "Serbian First League",
+   "n": 55,
+   "wins": 27,
+   "hit": 0.4909,
+   "hitLb": 0.3831,
+   "roi": 0.102,
+   "roiLb": -0.1973,
+   "pl": 5.61,
+   "clv": -0.442,
    "belegt": false
   },
   {
@@ -1961,6 +1953,18 @@
    "belegt": false
   },
   {
+   "liga": "Danish 1st Division",
+   "n": 90,
+   "wins": 46,
+   "hit": 0.5111,
+   "hitLb": 0.4254,
+   "roi": -0.0216,
+   "roiLb": -0.203,
+   "pl": -1.94,
+   "clv": -0.326,
+   "belegt": false
+  },
+  {
    "liga": "English National League Cup",
    "n": 79,
    "wins": 37,
@@ -1997,15 +2001,15 @@
    "belegt": false
   },
   {
-   "liga": "UAE Arabian Gulf League",
-   "n": 96,
-   "wins": 52,
-   "hit": 0.5417,
-   "hitLb": 0.458,
-   "roi": -0.0557,
-   "roiLb": -0.2104,
-   "pl": -5.35,
-   "clv": -0.108,
+   "liga": "Tanzanian Premier League",
+   "n": 54,
+   "wins": 31,
+   "hit": 0.5741,
+   "hitLb": 0.4625,
+   "roi": 0.0083,
+   "roiLb": -0.2101,
+   "pl": 0.45,
+   "clv": 0.045,
    "belegt": false
   },
   {
@@ -2042,6 +2046,18 @@
    "roiLb": -0.2166,
    "pl": 3.93,
    "clv": -0.358,
+   "belegt": false
+  },
+  {
+   "liga": "Czech 3 Liga",
+   "n": 90,
+   "wins": 44,
+   "hit": 0.4889,
+   "hitLb": 0.4038,
+   "roi": -0.0241,
+   "roiLb": -0.2166,
+   "pl": -2.17,
+   "clv": 0.182,
    "belegt": false
   },
   {
@@ -2105,18 +2121,6 @@
    "belegt": false
   },
   {
-   "liga": "Czech 3 Liga",
-   "n": 86,
-   "wins": 42,
-   "hit": 0.4884,
-   "hitLb": 0.4014,
-   "roi": -0.0323,
-   "roiLb": -0.2282,
-   "pl": -2.78,
-   "clv": 0.221,
-   "belegt": false
-  },
-  {
    "liga": "Ecuadorian Serie B",
    "n": 63,
    "wins": 33,
@@ -2126,18 +2130,6 @@
    "roiLb": -0.2287,
    "pl": 9.23,
    "clv": 0.293,
-   "belegt": false
-  },
-  {
-   "liga": "FIFA Ladies U20 World Cup",
-   "n": 96,
-   "wins": 53,
-   "hit": 0.5521,
-   "hitLb": 0.4683,
-   "roi": -0.073,
-   "roiLb": -0.2296,
-   "pl": -7.01,
-   "clv": 0.028,
    "belegt": false
   },
   {
@@ -2225,6 +2217,18 @@
    "belegt": false
   },
   {
+   "liga": "Omani Professional League",
+   "n": 68,
+   "wins": 35,
+   "hit": 0.5147,
+   "hitLb": 0.4164,
+   "roi": -0.0313,
+   "roiLb": -0.2436,
+   "pl": -2.13,
+   "clv": 0.109,
+   "belegt": false
+  },
+  {
    "liga": "Portuguese Primeira Liga",
    "n": 116,
    "wins": 60,
@@ -2249,6 +2253,18 @@
    "belegt": false
   },
   {
+   "liga": "FIFA Ladies U20 World Cup",
+   "n": 102,
+   "wins": 55,
+   "hit": 0.5392,
+   "hitLb": 0.4581,
+   "roi": -0.0973,
+   "roiLb": -0.2483,
+   "pl": -9.92,
+   "clv": 0.005,
+   "belegt": false
+  },
+  {
    "liga": "Venezuelan Primera Division",
    "n": 131,
    "wins": 60,
@@ -2258,6 +2274,30 @@
    "roiLb": -0.2485,
    "pl": -12.08,
    "clv": -0.167,
+   "belegt": false
+  },
+  {
+   "liga": "Polish 2 Liga",
+   "n": 59,
+   "wins": 30,
+   "hit": 0.5085,
+   "hitLb": 0.4034,
+   "roi": -0.0169,
+   "roiLb": -0.25,
+   "pl": -1.0,
+   "clv": -0.222,
+   "belegt": false
+  },
+  {
+   "liga": "Bahraini Premier",
+   "n": 75,
+   "wins": 37,
+   "hit": 0.4933,
+   "hitLb": 0.4003,
+   "roi": -0.0125,
+   "roiLb": -0.2517,
+   "pl": -0.94,
+   "clv": -0.2,
    "belegt": false
   },
   {
@@ -2309,15 +2349,15 @@
    "belegt": false
   },
   {
-   "liga": "Finnish Ykkosliiga",
-   "n": 67,
-   "wins": 32,
-   "hit": 0.4776,
-   "hitLb": 0.3801,
-   "roi": 0.0003,
-   "roiLb": -0.2571,
-   "pl": 0.02,
-   "clv": -0.404,
+   "liga": "Qatari Stars League",
+   "n": 91,
+   "wins": 46,
+   "hit": 0.5055,
+   "hitLb": 0.4204,
+   "roi": -0.0885,
+   "roiLb": -0.2575,
+   "pl": -8.05,
+   "clv": 0.052,
    "belegt": false
   },
   {
@@ -2633,18 +2673,6 @@
    "belegt": false
   },
   {
-   "liga": "Omani Professional League",
-   "n": 56,
-   "wins": 27,
-   "hit": 0.4821,
-   "hitLb": 0.3757,
-   "roi": -0.0725,
-   "roiLb": -0.3084,
-   "pl": -4.06,
-   "clv": 0.307,
-   "belegt": false
-  },
-  {
    "liga": "Indian Shillong Premier League",
    "n": 43,
    "wins": 23,
@@ -2654,30 +2682,6 @@
    "roiLb": -0.31,
    "pl": -2.4,
    "clv": 0.986,
-   "belegt": false
-  },
-  {
-   "liga": "Qatari Stars League",
-   "n": 84,
-   "wins": 40,
-   "hit": 0.4762,
-   "hitLb": 0.3887,
-   "roi": -0.144,
-   "roiLb": -0.3191,
-   "pl": -12.1,
-   "clv": 0.044,
-   "belegt": false
-  },
-  {
-   "liga": "Bahraini Premier",
-   "n": 61,
-   "wins": 29,
-   "hit": 0.4754,
-   "hitLb": 0.3735,
-   "roi": -0.0505,
-   "roiLb": -0.32,
-   "pl": -3.08,
-   "clv": -0.25,
    "belegt": false
   },
   {
@@ -2765,6 +2769,18 @@
    "belegt": false
   },
   {
+   "liga": "Finnish Ykkonen",
+   "n": 43,
+   "wins": 21,
+   "hit": 0.4884,
+   "hitLb": 0.3674,
+   "roi": -0.0847,
+   "roiLb": -0.3481,
+   "pl": -3.64,
+   "clv": -0.141,
+   "belegt": false
+  },
+  {
    "liga": "Czech U19",
    "n": 32,
    "wins": 18,
@@ -2846,18 +2862,6 @@
    "roiLb": -0.372,
    "pl": -6.74,
    "clv": 0.132,
-   "belegt": false
-  },
-  {
-   "liga": "Polish 2 Liga",
-   "n": 46,
-   "wins": 22,
-   "hit": 0.4783,
-   "hitLb": 0.3617,
-   "roi": -0.1309,
-   "roiLb": -0.3745,
-   "pl": -6.02,
-   "clv": -0.09,
    "belegt": false
   },
   {
@@ -2945,6 +2949,18 @@
    "belegt": false
   },
   {
+   "liga": "Polish I Liga",
+   "n": 122,
+   "wins": 44,
+   "hit": 0.3607,
+   "hitLb": 0.2929,
+   "roi": -0.2604,
+   "roiLb": -0.422,
+   "pl": -31.77,
+   "clv": -0.554,
+   "belegt": false
+  },
+  {
    "liga": "Slovakian Cup",
    "n": 75,
    "wins": 32,
@@ -2966,18 +2982,6 @@
    "roiLb": -0.4266,
    "pl": -17.92,
    "clv": 0.492,
-   "belegt": false
-  },
-  {
-   "liga": "Finnish Ykkonen",
-   "n": 36,
-   "wins": 17,
-   "hit": 0.4722,
-   "hitLb": 0.3421,
-   "roi": -0.155,
-   "roiLb": -0.4299,
-   "pl": -5.58,
-   "clv": -0.164,
    "belegt": false
   },
   {
@@ -3017,18 +3021,6 @@
    "belegt": false
   },
   {
-   "liga": "Polish I Liga",
-   "n": 115,
-   "wins": 40,
-   "hit": 0.3478,
-   "hitLb": 0.279,
-   "roi": -0.2802,
-   "roiLb": -0.4468,
-   "pl": -32.22,
-   "clv": -0.47,
-   "belegt": false
-  },
-  {
    "liga": "Faroe Premier League",
    "n": 32,
    "wins": 16,
@@ -3038,6 +3030,18 @@
    "roiLb": -0.4482,
    "pl": -6.37,
    "clv": 0.809,
+   "belegt": false
+  },
+  {
+   "liga": "Slovenian 2 SNL",
+   "n": 34,
+   "wins": 15,
+   "hit": 0.4412,
+   "hitLb": 0.3106,
+   "roi": -0.1603,
+   "roiLb": -0.4506,
+   "pl": -5.45,
+   "clv": -0.244,
    "belegt": false
   },
   {
@@ -3188,12 +3192,12 @@
   {
    "wallet": "0xb8e32d575b8d360f90bcc95596e9a0bee444aaf2",
    "kurz": "0xb8e3…aaf2",
-   "n": 65,
-   "wins": 49,
-   "hit": 0.7538,
-   "hitLb": 0.657,
-   "clv": 0.761,
-   "usd": 807218,
+   "n": 66,
+   "wins": 50,
+   "hit": 0.7576,
+   "hitLb": 0.6618,
+   "clv": 0.76,
+   "usd": 813198,
    "pnl": 121799.45,
    "grad": 1.0,
    "sportarten": [
@@ -3203,12 +3207,12 @@
   {
    "wallet": "0x0e50849ef225489b1879e3418e5b7633355a2609",
    "kurz": "0x0e50…2609",
-   "n": 32,
-   "wins": 25,
-   "hit": 0.7812,
-   "hitLb": 0.6418,
-   "clv": 0.8,
-   "usd": 28126,
+   "n": 33,
+   "wins": 26,
+   "hit": 0.7879,
+   "hitLb": 0.6514,
+   "clv": 0.822,
+   "usd": 29147,
    "pnl": 41139.25,
    "grad": 1.0,
    "sportarten": [
@@ -3302,7 +3306,7 @@
     "nieAnteil": 0.043,
     "schaetzbar": false
    },
-   "alterTage": 4.2,
+   "alterTage": 4.3,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "Liga"
@@ -3310,24 +3314,24 @@
   {
    "schublade": "🔒 E-Sport ohne Wallet-Nachweis",
    "strom": "poly",
-   "n": 49,
+   "n": 51,
    "status": "kandidat",
-   "grund": "49 von 120 Plays SEIT der Anmeldung (2026-09-07) — vorher abgerechnete zählen nicht",
-   "roi": 0.183,
-   "pl": 8.97,
-   "roiLb": 0.0538,
-   "clv": -6.622,
-   "clvLb": -9.104,
+   "grund": "51 von 120 Plays SEIT der Anmeldung (2026-09-07) — vorher abgerechnete zählen nicht",
+   "roi": 0.1974,
+   "pl": 10.07,
+   "roiLb": 0.0719,
+   "clv": -6.363,
+   "clvLb": -8.765,
    "clvUrteil": "negativ belegt",
-   "clvOg": -4.141,
-   "fehltN": 71,
-   "noetigNRoi": 25,
+   "clvOg": -3.961,
+   "fehltN": 69,
+   "noetigNRoi": 21,
    "noetigNClv": null,
    "entfernung": {
-    "median": 25,
+    "median": 21,
     "lo": 6,
-    "hi": 366,
-    "nieAnteil": 0.017,
+    "hi": 191,
+    "nieAnteil": 0.008,
     "schaetzbar": false
    },
    "alterTage": 0.0,
@@ -3368,7 +3372,7 @@
     "nieAnteil": 0.235,
     "schaetzbar": false
    },
-   "alterTage": 1.2,
+   "alterTage": 1.3,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py"
   },
@@ -3457,7 +3461,7 @@
     "nieAnteil": 0.658,
     "schaetzbar": false
    },
-   "alterTage": 1.5,
+   "alterTage": 1.6,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "top5"
@@ -3485,7 +3489,7 @@
     "nieAnteil": 0.25,
     "schaetzbar": false
    },
-   "alterTage": 1.7,
+   "alterTage": 1.8,
    "art": "mix",
    "wert": "bf+money+sharp",
    "nAlt": 9,
@@ -3496,24 +3500,24 @@
   {
    "schublade": "Mix sharp+steam",
    "strom": "poly",
-   "n": 11,
+   "n": 12,
    "status": "kandidat",
-   "grund": "11 von 30 Plays — noch 19 · der ROI-Schnitt ist nicht positiv — mehr Plays bestätigen das, sie drehen es nicht",
-   "roi": -0.0507,
-   "pl": -0.56,
+   "grund": "12 von 30 Plays — noch 18 · wie weit es bis zu einem Beleg ist, lässt sich bei 12 Plays NICHT schätzen (Bootstrap: 6 bis 39828 Plays, und in 40 % der Ziehungen ist der Schnitt gar nicht positiv)",
+   "roi": 0.0151,
+   "pl": 0.18,
    "roiLb": null,
-   "clv": -1.136,
+   "clv": -1.042,
    "clvLb": null,
    "clvUrteil": "gemessen, nicht belegt",
    "clvOg": null,
-   "fehltN": 19,
-   "noetigNRoi": null,
+   "fehltN": 18,
+   "noetigNRoi": 9565,
    "noetigNClv": null,
    "entfernung": {
-    "median": 146,
-    "lo": 3,
-    "hi": 244,
-    "nieAnteil": 0.6,
+    "median": 80,
+    "lo": 6,
+    "hi": 39828,
+    "nieAnteil": 0.403,
     "schaetzbar": false
    },
    "alterTage": 0.0,
@@ -3546,14 +3550,14 @@
    "naeherung": false
   },
   {
-   "schublade": "Match Odds",
+   "schublade": "Half Time",
    "strom": "betfair",
-   "n": 3139,
+   "n": 2319,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0171,
-   "pl": 53.68,
-   "roiLb": -0.0166,
+   "roi": 0.0361,
+   "pl": 83.72,
+   "roiLb": -0.0128,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -3567,14 +3571,14 @@
    "naeherung": false
   },
   {
-   "schublade": "Half Time",
+   "schublade": "Match Odds",
    "strom": "betfair",
-   "n": 2300,
+   "n": 3164,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0324,
-   "pl": 74.52,
-   "roiLb": -0.0167,
+   "roi": 0.0186,
+   "pl": 58.85,
+   "roiLb": -0.015,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -3590,39 +3594,39 @@
   {
    "schublade": "Konjunktion · gehalten (Haltepreis)",
    "strom": "betfair",
-   "n": 302,
+   "n": 305,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0705,
-   "pl": 21.28,
-   "roiLb": -0.0168,
+   "roi": 0.0716,
+   "pl": 21.83,
+   "roiLb": -0.0152,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
    "clvOg": null,
    "fehltN": 0,
-   "noetigNRoi": 464,
+   "noetigNRoi": 449,
    "noetigNClv": null,
    "entfernung": {
-    "median": 409,
-    "lo": 94,
-    "hi": 23983,
-    "nieAnteil": 0.082,
+    "median": 389,
+    "lo": 92,
+    "hi": 18963,
+    "nieAnteil": 0.08,
     "schaetzbar": false
    },
-   "alterTage": 0.2,
+   "alterTage": 0.0,
    "art": "konjunktion_gehalten",
    "quelle": "killer_ledger.json"
   },
   {
    "schublade": "Both teams to Score?",
    "strom": "betfair",
-   "n": 2882,
+   "n": 2908,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0036,
-   "pl": 10.38,
-   "roiLb": -0.0269,
+   "roi": 0.0042,
+   "pl": 12.21,
+   "roiLb": -0.0261,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -3638,12 +3642,12 @@
   {
    "schublade": "First Half Goals 1.5",
    "strom": "betfair",
-   "n": 2495,
+   "n": 2519,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0104,
-   "pl": -25.95,
-   "roiLb": -0.045,
+   "roi": -0.0093,
+   "pl": -23.43,
+   "roiLb": -0.0437,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -3659,12 +3663,12 @@
   {
    "schublade": "Over/Under 3.5 Goals",
    "strom": "betfair",
-   "n": 3031,
+   "n": 3057,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0167,
-   "pl": -50.62,
-   "roiLb": -0.047,
+   "roi": -0.0173,
+   "pl": -52.89,
+   "roiLb": -0.0475,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -3680,12 +3684,12 @@
   {
    "schublade": "First Half Goals 0.5",
    "strom": "betfair",
-   "n": 2834,
+   "n": 2859,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0255,
-   "pl": -72.27,
-   "roiLb": -0.055,
+   "roi": -0.0258,
+   "pl": -73.76,
+   "roiLb": -0.0552,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -3697,6 +3701,37 @@
    "alterTage": null,
    "art": "markt",
    "naeherung": false
+  },
+  {
+   "schublade": "Mix money+sharp",
+   "strom": "poly",
+   "n": 132,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0337,
+   "pl": 4.44,
+   "roiLb": -0.0555,
+   "clv": -3.302,
+   "clvLb": -4.621,
+   "clvUrteil": "negativ belegt",
+   "clvOg": -1.983,
+   "fehltN": 0,
+   "noetigNRoi": 927,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 388,
+    "lo": 54,
+    "hi": 28687,
+    "nieAnteil": 0.247,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "mix",
+   "wert": "money+sharp",
+   "nAlt": 141,
+   "roiAlt": -0.0338,
+   "clvAlt": -0.256,
+   "engineAlt": true
   },
   {
    "schublade": "Public-Kandidaten",
@@ -3721,7 +3756,7 @@
     "nieAnteil": 0.16,
     "schaetzbar": false
    },
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "gate",
    "nAlt": 133,
    "roiAlt": 0.0306,
@@ -3729,45 +3764,52 @@
    "engineAlt": true
   },
   {
-   "schublade": "Mix money+sharp",
-   "strom": "poly",
-   "n": 131,
+   "schublade": "🔒 Fade-Unter · Ganzspiel-Torlinie",
+   "strom": "betfair",
+   "n": 640,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0312,
-   "pl": 4.08,
-   "roiLb": -0.0586,
-   "clv": -3.327,
-   "clvLb": -4.655,
-   "clvUrteil": "negativ belegt",
-   "clvOg": -1.999,
+   "roi": 0.0274,
+   "pl": 17.54,
+   "roiLb": -0.0589,
+   "clv": null,
+   "clvLb": null,
+   "clvUrteil": "nicht erhoben",
+   "clvOg": null,
    "fehltN": 0,
-   "noetigNRoi": 1087,
+   "noetigNRoi": 6345,
    "noetigNClv": null,
    "entfernung": {
-    "median": 375,
-    "lo": 52,
-    "hi": 17011,
-    "nieAnteil": 0.292,
+    "median": 2089,
+    "lo": 286,
+    "hi": 145746,
+    "nieAnteil": 0.283,
     "schaetzbar": false
    },
    "alterTage": 0.0,
-   "art": "mix",
-   "wert": "money+sharp",
-   "nAlt": 141,
-   "roiAlt": -0.0338,
-   "clvAlt": -0.256,
-   "engineAlt": true
+   "art": "vorangemeldet",
+   "angemeldet": "2026-09-07T06:34:08.582101+00:00",
+   "zielN": 200,
+   "warum": "Lucas: „wenn wir sehen, dass die gespielten Sachen schlecht liefen, könnte man das ins Positive umkehren und faden.\" Gemessen ueber 15.945 abgerechnete Zeilen in getrennter Such- und Pruefhaelfte: von 16 Markt×Seite-Schnitten waren genau zwei in BEIDEN Haelften positiv, und beide sind Ganzspiel-Torlinien mit dem Geld auf UNTER. n=2.720, Geldseite trifft 59,2 % gegen 62,4 % implizit (-3,2 pp); der Fade brachte +5,5 % / +5,2 % nach Kommission. Kontrolle: auf Match Odds, BTTS und der 1.-HZ-Linie ist die Geldseite 1-2 pp BESSER als implizit, und dort verliert derselbe Fade korrekt -5,6 bis -7,8 %. ⚠️ Der Gegenpreis war im Altbestand NICHT erhoben und musste rekonstruiert werden (haelt bis ~1 % Overround, stirbt bei 2 %); ausserdem 12 Tage Basis und ein nachtraeglich gepoolter Schnitt aus 16. Genau deshalb steht er hier: der Rueckblick ist der Fund, nicht der Beleg. zielN=200 statt 40, weil bei einer Streuung von ~1,3 je Play alles darunter nur ein Punktschaetzer waere.",
+   "quelle": "betfair_track_results.json → fade_unter.py",
+   "nDavor": 2755,
+   "rueckblick": {
+    "n": 2720,
+    "roi": 0.0546,
+    "roiLb": 0.0099,
+    "clv": null,
+    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
+   }
   },
   {
    "schublade": "Over/Under 2.5 Goals",
    "strom": "betfair",
-   "n": 3146,
+   "n": 3172,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0439,
-   "pl": -138.11,
-   "roiLb": -0.0717,
+   "roi": -0.0432,
+   "pl": -137.03,
+   "roiLb": -0.0709,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -3802,44 +3844,6 @@
    "naeherung": false
   },
   {
-   "schublade": "🔒 Fade-Unter · Ganzspiel-Torlinie",
-   "strom": "betfair",
-   "n": 614,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0133,
-   "pl": 8.15,
-   "roiLb": -0.0744,
-   "clv": null,
-   "clvLb": null,
-   "clvUrteil": "nicht erhoben",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": 26766,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 2437,
-    "lo": 341,
-    "hi": 199587,
-    "nieAnteil": 0.395,
-    "schaetzbar": false
-   },
-   "alterTage": 0.0,
-   "art": "vorangemeldet",
-   "angemeldet": "2026-09-07T06:34:08.582101+00:00",
-   "zielN": 200,
-   "warum": "Lucas: „wenn wir sehen, dass die gespielten Sachen schlecht liefen, könnte man das ins Positive umkehren und faden.\" Gemessen ueber 15.945 abgerechnete Zeilen in getrennter Such- und Pruefhaelfte: von 16 Markt×Seite-Schnitten waren genau zwei in BEIDEN Haelften positiv, und beide sind Ganzspiel-Torlinien mit dem Geld auf UNTER. n=2.720, Geldseite trifft 59,2 % gegen 62,4 % implizit (-3,2 pp); der Fade brachte +5,5 % / +5,2 % nach Kommission. Kontrolle: auf Match Odds, BTTS und der 1.-HZ-Linie ist die Geldseite 1-2 pp BESSER als implizit, und dort verliert derselbe Fade korrekt -5,6 bis -7,8 %. ⚠️ Der Gegenpreis war im Altbestand NICHT erhoben und musste rekonstruiert werden (haelt bis ~1 % Overround, stirbt bei 2 %); ausserdem 12 Tage Basis und ein nachtraeglich gepoolter Schnitt aus 16. Genau deshalb steht er hier: der Rueckblick ist der Fund, nicht der Beleg. zielN=200 statt 40, weil bei einer Streuung von ~1,3 je Play alles darunter nur ein Punktschaetzer waere.",
-   "quelle": "betfair_track_results.json → fade_unter.py",
-   "nDavor": 2755,
-   "rueckblick": {
-    "n": 2720,
-    "roi": 0.0546,
-    "roiLb": 0.0099,
-    "clv": null,
-    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
-   }
-  },
-  {
    "schublade": "English National League · Both teams to Score?",
    "strom": "betfair",
    "n": 33,
@@ -3859,6 +3863,44 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
+  },
+  {
+   "schublade": "🔒 Bücher-Score ≥7 von 10",
+   "strom": "betfair",
+   "n": 89,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0798,
+   "pl": 7.1,
+   "roiLb": -0.0794,
+   "clv": null,
+   "clvLb": null,
+   "clvUrteil": "nicht erhoben",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": 355,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 208,
+    "lo": 32,
+    "hi": 13630,
+    "nieAnteil": 0.202,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "vorangemeldet",
+   "angemeldet": "2026-09-01T20:41:52.601081+00:00",
+   "zielN": 40,
+   "warum": "Lucas' These: wenn Betfair, Polymarket und Pinnacle sich EINIG sind, ist das eine gute Wette. Gestuetzt durch die Messung „mehr Buecher traegt (+11,5%), mehr Signale aus einem Buch nicht (-1,1%)\" — aber nie am Score selbst geprueft, den es vorher nicht gab. Verlangt volle 10 moegliche Punkte: eine 7 aus 7 ist eine andere Aussage als eine 7 aus 10 und darf den Test nicht verwaessern.",
+   "quelle": "punkte_ledger.json (killer.punkte_bilanz)",
+   "nDavor": 0,
+   "rueckblick": {
+    "n": 0,
+    "roi": null,
+    "roiLb": null,
+    "clv": null,
+    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
+   }
   },
   {
    "schublade": "English National League South · Over/Under 2.5 Goals",
@@ -3882,64 +3924,26 @@
    "naeherung": false
   },
   {
-   "schublade": "🔒 Bücher-Score ≥7 von 10",
-   "strom": "betfair",
-   "n": 88,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0749,
-   "pl": 6.59,
-   "roiLb": -0.0859,
-   "clv": null,
-   "clvLb": null,
-   "clvUrteil": "nicht erhoben",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": 406,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 219,
-    "lo": 35,
-    "hi": 9388,
-    "nieAnteil": 0.233,
-    "schaetzbar": false
-   },
-   "alterTage": 0.6,
-   "art": "vorangemeldet",
-   "angemeldet": "2026-09-01T20:41:52.601081+00:00",
-   "zielN": 40,
-   "warum": "Lucas' These: wenn Betfair, Polymarket und Pinnacle sich EINIG sind, ist das eine gute Wette. Gestuetzt durch die Messung „mehr Buecher traegt (+11,5%), mehr Signale aus einem Buch nicht (-1,1%)\" — aber nie am Score selbst geprueft, den es vorher nicht gab. Verlangt volle 10 moegliche Punkte: eine 7 aus 7 ist eine andere Aussage als eine 7 aus 10 und darf den Test nicht verwaessern.",
-   "quelle": "punkte_ledger.json (killer.punkte_bilanz)",
-   "nDavor": 0,
-   "rueckblick": {
-    "n": 0,
-    "roi": null,
-    "roiLb": null,
-    "clv": null,
-    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
-   }
-  },
-  {
    "schublade": "Conviction 6",
    "strom": "poly",
-   "n": 132,
+   "n": 133,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0247,
-   "pl": 3.27,
-   "roiLb": -0.0863,
-   "clv": -1.338,
-   "clvLb": -2.406,
+   "roi": 0.0301,
+   "pl": 4.01,
+   "roiLb": -0.0805,
+   "clv": -1.327,
+   "clvLb": -2.388,
    "clvUrteil": "negativ belegt",
-   "clvOg": -0.269,
+   "clvOg": -0.267,
    "fehltN": 0,
-   "noetigNRoi": 2660,
+   "noetigNRoi": 1794,
    "noetigNClv": null,
    "entfernung": {
-    "median": 611,
-    "lo": 67,
-    "hi": 41369,
-    "nieAnteil": 0.363,
+    "median": 473,
+    "lo": 61,
+    "hi": 33137,
+    "nieAnteil": 0.343,
     "schaetzbar": false
    },
    "alterTage": 0.0,
@@ -4039,6 +4043,34 @@
    "naeherung": false
   },
   {
+   "schublade": "Konjunktion · übrige Ligen",
+   "strom": "betfair",
+   "n": 143,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0076,
+   "pl": 1.08,
+   "roiLb": -0.1141,
+   "clv": 2.76,
+   "clvLb": 1.97,
+   "clvUrteil": "belegt",
+   "clvOg": 3.55,
+   "fehltN": 0,
+   "noetigNRoi": 37082,
+   "noetigNClv": 12,
+   "entfernung": {
+    "median": 624,
+    "lo": 84,
+    "hi": 77748,
+    "nieAnteil": 0.468,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "konjunktion",
+   "quelle": "killer.py",
+   "zuschnitt": "rest"
+  },
+  {
    "schublade": "Public-Pushes",
    "strom": "betfair",
    "n": 205,
@@ -4064,34 +4096,6 @@
    "avgOdd": 1.82
   },
   {
-   "schublade": "Konjunktion · übrige Ligen",
-   "strom": "betfair",
-   "n": 142,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.004,
-   "pl": 0.57,
-   "roiLb": -0.1183,
-   "clv": 2.72,
-   "clvLb": 1.927,
-   "clvUrteil": "belegt",
-   "clvOg": 3.513,
-   "fehltN": 0,
-   "noetigNRoi": 131898,
-   "noetigNClv": 13,
-   "entfernung": {
-    "median": 564,
-    "lo": 79,
-    "hi": 49513,
-    "nieAnteil": 0.483,
-    "schaetzbar": false
-   },
-   "alterTage": 0.6,
-   "art": "konjunktion",
-   "quelle": "killer.py",
-   "zuschnitt": "rest"
-  },
-  {
    "schublade": "Argentinian Primera Division · Over/Under 2.5 Goals",
    "strom": "betfair",
    "n": 30,
@@ -4111,6 +4115,37 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
+  },
+  {
+   "schublade": "Conviction 5",
+   "strom": "poly",
+   "n": 174,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.036,
+   "pl": -6.26,
+   "roiLb": -0.1279,
+   "clv": -2.924,
+   "clvLb": -3.98,
+   "clvUrteil": "negativ belegt",
+   "clvOg": -1.869,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 3358,
+    "lo": 246,
+    "hi": 721897,
+    "nieAnteil": 0.737,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "conviction",
+   "wert": 5,
+   "nAlt": 110,
+   "roiAlt": 0.1047,
+   "clvAlt": 0.283,
+   "engineAlt": true
   },
   {
    "schublade": "ABWÄGEN · aussortiert",
@@ -4135,7 +4170,7 @@
     "nieAnteil": 0.373,
     "schaetzbar": false
    },
-   "alterTage": 1.2,
+   "alterTage": 1.3,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py"
   },
@@ -4159,37 +4194,6 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
-  },
-  {
-   "schublade": "Conviction 5",
-   "strom": "poly",
-   "n": 173,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0383,
-   "pl": -6.62,
-   "roiLb": -0.1307,
-   "clv": -2.941,
-   "clvLb": -4.002,
-   "clvUrteil": "negativ belegt",
-   "clvOg": -1.88,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 2839,
-    "lo": 249,
-    "hi": 502015,
-    "nieAnteil": 0.753,
-    "schaetzbar": false
-   },
-   "alterTage": 0.1,
-   "art": "conviction",
-   "wert": 5,
-   "nAlt": 110,
-   "roiAlt": 0.1047,
-   "clvAlt": 0.283,
-   "engineAlt": true
   },
   {
    "schublade": "US MLS · Half Time",
@@ -4277,7 +4281,7 @@
     "nieAnteil": 0.48,
     "schaetzbar": false
    },
-   "alterTage": 0.5,
+   "alterTage": 0.6,
    "art": "vorangemeldet",
    "angemeldet": "2026-09-01T18:59:52.671883+00:00",
    "zielN": 60,
@@ -4378,7 +4382,7 @@
     "nieAnteil": 0.495,
     "schaetzbar": false
    },
-   "alterTage": 1.2,
+   "alterTage": 1.3,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "MLS"
@@ -4815,7 +4819,7 @@
     "nieAnteil": 0.955,
     "schaetzbar": false
    },
-   "alterTage": 0.4,
+   "alterTage": 0.5,
    "art": "mix",
    "wert": "money+steam",
    "nAlt": 68,
@@ -5516,7 +5520,7 @@
    "noetigNRoi": null,
    "noetigNClv": null,
    "entfernung": null,
-   "alterTage": 0.5,
+   "alterTage": 0.6,
    "art": "conviction",
    "wert": 8,
    "nAlt": 13,
@@ -5541,7 +5545,7 @@
    "noetigNRoi": null,
    "noetigNClv": null,
    "entfernung": null,
-   "alterTage": 0.5,
+   "alterTage": 0.6,
    "art": "mix",
    "wert": "bf+money+steam",
    "nAlt": 5,
@@ -5587,7 +5591,7 @@
    "noetigNRoi": null,
    "noetigNClv": null,
    "entfernung": null,
-   "alterTage": 1.2,
+   "alterTage": 1.3,
    "art": "verdict",
    "wert": "BET",
    "datensatz": "MLS"
@@ -5609,7 +5613,7 @@
    "noetigNRoi": null,
    "noetigNClv": null,
    "entfernung": null,
-   "alterTage": 1.8,
+   "alterTage": 1.9,
    "art": "mix",
    "wert": "bf+money+sharp+steam"
   },
@@ -5652,7 +5656,7 @@
    "noetigNRoi": null,
    "noetigNClv": null,
    "entfernung": null,
-   "alterTage": 1.8,
+   "alterTage": 1.9,
    "art": "conviction",
    "wert": 10,
    "nAlt": 3,
@@ -5677,7 +5681,7 @@
    "noetigNRoi": null,
    "noetigNClv": null,
    "entfernung": null,
-   "alterTage": 6.0,
+   "alterTage": 6.1,
    "art": "mix",
    "wert": "bf+sharp"
   },
@@ -5846,7 +5850,7 @@
    "clv": -2.199,
    "clvLb": -2.679,
    "fehltN": 0,
-   "alterTage": 54.2,
+   "alterTage": 54.3,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "WM"
@@ -5863,7 +5867,7 @@
    "clv": -0.609,
    "clvLb": null,
    "fehltN": 0,
-   "alterTage": 69.2,
+   "alterTage": 69.3,
    "art": "verdict",
    "wert": "BET",
    "datensatz": "WM"

@@ -6920,7 +6920,10 @@ null
 "value": 30616.31,
 "sentAt": "2026-09-11T17:06:55.603875+00:00",
 "status": "pending",
-"htScore": null,
+"htScore": [
+1,
+0
+],
 "consensus": {
 "verdict": "no_anchor",
 "agree": null
@@ -6937,6 +6940,85 @@ null
 "score": [
 0,
 0
+]
+}
+},
+{
+"k": "fresh:36006412:Match Odds",
+"matchId": "36006412",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Austrian Bundesliga",
+"home": "SV Ried",
+"away": "Red Bull Salzburg",
+"leadName": "Red Bull Salzburg",
+"leadOdd": 1.48,
+"value": 71181.81,
+"sentAt": "2026-09-11T17:52:01.740314+00:00",
+"status": "pending",
+"htScore": [
+0,
+0
+],
+"consensus": {
+"verdict": "konsens",
+"agree": true
+},
+"serie": {
+"gefunden": false,
+"grund": "kein Team-Treffer"
+},
+"onLeader": false,
+"leadDir": "in",
+"leadShare": 0.8314451402682792,
+"live": {
+"time": 19,
+"score": [
+0,
+0
+]
+}
+},
+{
+"k": "fresh:36011386:Match Odds",
+"matchId": "36011386",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Spanish La Liga",
+"home": "Sevilla",
+"away": "Valencia",
+"leadName": "Sevilla",
+"leadOdd": 1.85,
+"value": 617497.47,
+"sentAt": "2026-09-11T18:37:01.278830+00:00",
+"status": "pending",
+"htScore": null,
+"consensus": {
+"verdict": "konsens",
+"agree": true
+},
+"serie": {
+"gefunden": true,
+"serie": {
+"team": "Sevilla",
+"venue": "H",
+"typ": "scored",
+"markt": "Team trifft",
+"laenge": 8,
+"zufallPct": 18.7371,
+"basis": "prior",
+"state": "intakt",
+"ligaBasisPct": 81
+}
+},
+"onLeader": false,
+"leadDir": "in",
+"leadShare": 0.874888782945135,
+"live": {
+"time": null,
+"score": [
+null,
+null
 ]
 }
 }
