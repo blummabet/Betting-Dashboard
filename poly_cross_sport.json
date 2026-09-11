@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-11T18:40:55.432339+00:00",
+ "generatedAt": "2026-09-11T19:11:08.332229+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,28 +9,57 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 637,
- "pinnKeys": 323,
- "matched": 223,
- "footballRows": 195,
+ "polyRowsSeen": 649,
+ "pinnKeys": 337,
+ "matched": 237,
+ "footballRows": 207,
  "crossRows": 442,
- "footballSkippedStale": 92,
+ "footballSkippedStale": 88,
  "seenBySport": {
   "americanfootball_nfl": 172,
   "baseball_mlb": 74,
   "icehockey_nhl": 170,
   "boxing_boxing": 26,
   "soccer_mls": 21,
-  "soccer_liga": 174
+  "soccer_liga": 186
  },
  "matchedBySport": {
-  "baseball_mlb": 28,
+  "baseball_mlb": 30,
   "soccer_mls": 21,
-  "soccer_liga": 174
+  "soccer_liga": 186
  },
  "trackRecord": {
-  "tracked": 282,
+  "tracked": 284,
   "converged": 66
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|chicagocubs-pittsburghpirates|pittsburghpirates",
+   "sport": "baseball_mlb",
+   "event": "Pittsburgh Pirates vs Chicago Cubs",
+   "market": "Moneyline",
+   "outcome": "Pittsburgh Pirates",
+   "polyPP": 15.0,
+   "pinnPP": 27.8,
+   "gapPP": -12.85,
+   "vol": 669553,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-11T19:11:08.331920+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagocubs-pittsburghpirates|chicagocubs",
+   "sport": "baseball_mlb",
+   "event": "Pittsburgh Pirates vs Chicago Cubs",
+   "market": "Moneyline",
+   "outcome": "Chicago Cubs",
+   "polyPP": 85.0,
+   "pinnPP": 72.2,
+   "gapPP": 12.85,
+   "vol": 669553,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-11T19:11:08.331920+00:00"
+  }
+ ]
 }
