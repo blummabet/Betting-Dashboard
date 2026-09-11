@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "liga",
-    "generatedAt": "2026-09-11T12:23:03.488720+00:00",
+    "generatedAt": "2026-09-11T20:55:06.076234+00:00",
     "minLen": 3,
     "strongLen": 5,
     "sortiert": "zufallPct",
@@ -505,7 +505,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 61,
-        "label": "Eigen 61% + Gegner 80% → 69%"
+        "label": "Eigen 61% + Gegner 80% → 69% · Signale bestätigen"
       },
       "ratePct": 61,
       "seq": [
@@ -542,7 +542,21 @@
         "oppRatePct": 80
       },
       "oppSupportPct": 80,
-      "matchupPct": 69
+      "matchupPct": 69,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 6,
+        "conviction": 4,
+        "names": [
+          "injury",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "chance_creation",
+          "streak_momentum"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "94",
@@ -1932,7 +1946,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 61,
-        "label": "Eigen 61% + Gegner 80% → 69%"
+        "label": "Eigen 61% + Gegner 80% → 69% · Signale bestätigen"
       },
       "ratePct": 61,
       "seq": [
@@ -1969,7 +1983,21 @@
         "oppRatePct": 80
       },
       "oppSupportPct": 80,
-      "matchupPct": 69
+      "matchupPct": 69,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 6,
+        "conviction": 4,
+        "names": [
+          "injury",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "chance_creation",
+          "streak_momentum"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "167",
@@ -2210,15 +2238,15 @@
       "matchupPct": 63,
       "signalInfo": {
         "state": "contradict",
-        "count": 4,
+        "count": 3,
         "conviction": 4,
         "names": [
+          "lead_lag_bias",
           "injury",
           "form_trend",
           "h2h_pattern",
           "xg_strength",
-          "chance_creation",
-          "transfer_shift"
+          "chance_creation"
         ],
         "market": "Unter 3.5 Tore"
       }
@@ -2960,6 +2988,72 @@
       "matchupPct": 62
     },
     {
+      "teamId": "65",
+      "team": "Nottingham Forest",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/65.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
+      "type": "under25",
+      "market": "Unter 2,5 Tore",
+      "length": 4,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 39,
+        "label": "Eigen 39% + Gegner 13% → 29% · Signale bestätigen"
+      },
+      "ratePct": 39,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "liga",
+      "preN": 3,
+      "zufallPct": 2.30259,
+      "ligaBasisPct": 39,
+      "seltenheit": {
+        "basis": "liga",
+        "ratePct": 39,
+        "preN": null,
+        "einsZu": 43,
+        "erwartet": 72.95,
+        "familie": 3168,
+        "urteil": "nicht belegbar",
+        "grund": "keine eigene Vorgeschichte vor der Serie — gemessen wird gegen den Liga-Schnitt, der für ein Durchschnittsteam gilt"
+      },
+      "next": {
+        "oppId": "66",
+        "oppName": "Aston Villa",
+        "atHome": false,
+        "date": "2026-09-12",
+        "kickoff": "2026-09-12T14:00:00+00:00",
+        "oppRatePct": 87
+      },
+      "oppSupportPct": 13,
+      "matchupPct": 29,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 3,
+        "conviction": 4,
+        "names": [
+          "injury",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "transfer_shift",
+          "move_following"
+        ],
+        "market": "Unter 2.5 Tore"
+      }
+    },
+    {
       "teamId": "496",
       "team": "Juventus",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/496.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -3137,58 +3231,6 @@
         ],
         "market": "Über 2.5 Tore"
       }
-    },
-    {
-      "teamId": "65",
-      "team": "Nottingham Forest",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/65.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "under25",
-      "market": "Unter 2,5 Tore",
-      "length": 4,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 39,
-        "label": "Eigen 39% + Gegner 13% → 29%"
-      },
-      "ratePct": 39,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "liga",
-      "preN": 3,
-      "zufallPct": 2.30259,
-      "ligaBasisPct": 39,
-      "seltenheit": {
-        "basis": "liga",
-        "ratePct": 39,
-        "preN": null,
-        "einsZu": 43,
-        "erwartet": 72.95,
-        "familie": 3168,
-        "urteil": "nicht belegbar",
-        "grund": "keine eigene Vorgeschichte vor der Serie — gemessen wird gegen den Liga-Schnitt, der für ein Durchschnittsteam gilt"
-      },
-      "next": {
-        "oppId": "66",
-        "oppName": "Aston Villa",
-        "atHome": false,
-        "date": "2026-09-12",
-        "kickoff": "2026-09-12T14:00:00+00:00",
-        "oppRatePct": 87
-      },
-      "oppSupportPct": 13,
-      "matchupPct": 29
     },
     {
       "teamId": "867",
@@ -6799,15 +6841,15 @@
       "matchupPct": 66,
       "signalInfo": {
         "state": "contradict",
-        "count": 4,
+        "count": 3,
         "conviction": 4,
         "names": [
+          "lead_lag_bias",
           "injury",
           "form_trend",
           "h2h_pattern",
           "xg_strength",
-          "chance_creation",
-          "transfer_shift"
+          "chance_creation"
         ],
         "market": "Unter 3.5 Tore"
       }
@@ -16741,6 +16783,68 @@
       "matchupPct": 20
     },
     {
+      "teamId": "116",
+      "team": "Lens",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/116.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "FRA",
+      "leagueName": "Ligue 1",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 4,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 61,
+        "label": "Eigen 61% + Gegner 33% → 50% · Signale bestätigen"
+      },
+      "ratePct": 61,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "liga",
+      "preN": 1,
+      "zufallPct": 13.8875,
+      "ligaBasisPct": 61,
+      "seltenheit": {
+        "basis": "liga",
+        "ratePct": 61,
+        "preN": null,
+        "einsZu": 7,
+        "erwartet": 439.96,
+        "familie": 3168,
+        "urteil": "nicht belegbar",
+        "grund": "keine eigene Vorgeschichte vor der Serie — gemessen wird gegen den Liga-Schnitt, der für ein Durchschnittsteam gilt"
+      },
+      "next": {
+        "oppId": "1298",
+        "oppName": "Le Mans",
+        "atHome": false,
+        "date": "2026-09-13",
+        "kickoff": "2026-09-13T15:15:00+00:00",
+        "oppRatePct": 33
+      },
+      "oppSupportPct": 33,
+      "matchupPct": 50,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 4,
+        "conviction": 4,
+        "names": [
+          "injury",
+          "form_trend",
+          "h2h_pattern",
+          "chance_creation"
+        ],
+        "market": "Über 2.5 Tore"
+      }
+    },
+    {
       "teamId": "33",
       "team": "Manchester United",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/33.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -16922,94 +17026,15 @@
       "matchupPct": 48,
       "signalInfo": {
         "state": "confirm",
-        "count": 6,
+        "count": 7,
         "conviction": 6,
         "names": [
+          "lead_lag_bias",
           "injury",
           "form_trend",
           "h2h_pattern",
           "xg_strength",
-          "chance_creation",
-          "opener_move"
-        ],
-        "market": "Über 2.5 Tore"
-      }
-    },
-    {
-      "teamId": "797",
-      "team": "Elche",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/797.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 4,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 40,
-        "label": "Eigen 40% + Gegner 67% → 51% · Signale bestätigen"
-      },
-      "ratePct": 40,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 5,
-      "zufallPct": 13.8875,
-      "ligaBasisPct": 61,
-      "seltenheit": {
-        "basis": "eigen",
-        "ratePct": 40,
-        "preN": 5,
-        "einsZu": 39,
-        "erwartet": 81.1,
-        "familie": 3168,
-        "bandPct": [
-          14,
-          73
-        ],
-        "einsZuBand": [
-          4,
-          2412
-        ],
-        "erwartetBand": [
-          1.31,
-          887.58
-        ],
-        "urteil": "erwartbar",
-        "grund": "unter 3168 geprüften Kombinationen sind 81.1 solcher Läufe zu erwarten"
-      },
-      "next": {
-        "oppId": "531",
-        "oppName": "Athletic Club",
-        "atHome": false,
-        "date": "2026-09-12",
-        "kickoff": "2026-09-12T16:30:00+00:00",
-        "oppRatePct": 67
-      },
-      "oppSupportPct": 67,
-      "matchupPct": 51,
-      "signalInfo": {
-        "state": "confirm",
-        "count": 5,
-        "conviction": 5,
-        "names": [
-          "injury",
-          "form_trend",
-          "xg_strength",
-          "chance_creation",
-          "streak_momentum",
-          "move_following"
+          "chance_creation"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -17407,56 +17432,6 @@
       "matchupPct": 82
     },
     {
-      "teamId": "116",
-      "team": "Lens",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/116.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "FRA",
-      "leagueName": "Ligue 1",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 4,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 61,
-        "label": "Eigen 61% + Gegner 33% → 50%"
-      },
-      "ratePct": 61,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "liga",
-      "preN": 1,
-      "zufallPct": 13.8875,
-      "ligaBasisPct": 61,
-      "seltenheit": {
-        "basis": "liga",
-        "ratePct": 61,
-        "preN": null,
-        "einsZu": 7,
-        "erwartet": 439.96,
-        "familie": 3168,
-        "urteil": "nicht belegbar",
-        "grund": "keine eigene Vorgeschichte vor der Serie — gemessen wird gegen den Liga-Schnitt, der für ein Durchschnittsteam gilt"
-      },
-      "next": {
-        "oppId": "1298",
-        "oppName": "Le Mans",
-        "atHome": false,
-        "date": "2026-09-13",
-        "kickoff": "2026-09-13T15:15:00+00:00",
-        "oppRatePct": 33
-      },
-      "oppSupportPct": 33,
-      "matchupPct": 50
-    },
-    {
       "teamId": "85",
       "team": "Paris Saint Germain",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/85.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -17587,6 +17562,71 @@
       "matchupPct": 57
     },
     {
+      "teamId": "797",
+      "team": "Elche",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/797.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 4,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 40,
+        "label": "Eigen 40% + Gegner 67% → 51%"
+      },
+      "ratePct": 40,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 5,
+      "zufallPct": 13.8875,
+      "ligaBasisPct": 61,
+      "seltenheit": {
+        "basis": "eigen",
+        "ratePct": 40,
+        "preN": 5,
+        "einsZu": 39,
+        "erwartet": 81.1,
+        "familie": 3168,
+        "bandPct": [
+          14,
+          73
+        ],
+        "einsZuBand": [
+          4,
+          2412
+        ],
+        "erwartetBand": [
+          1.31,
+          887.58
+        ],
+        "urteil": "erwartbar",
+        "grund": "unter 3168 geprüften Kombinationen sind 81.1 solcher Läufe zu erwarten"
+      },
+      "next": {
+        "oppId": "531",
+        "oppName": "Athletic Club",
+        "atHome": false,
+        "date": "2026-09-12",
+        "kickoff": "2026-09-12T16:30:00+00:00",
+        "oppRatePct": 67
+      },
+      "oppSupportPct": 67,
+      "matchupPct": 51
+    },
+    {
       "teamId": "182",
       "team": "Union Berlin",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/182.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -17652,15 +17692,15 @@
       "matchupPct": 53,
       "signalInfo": {
         "state": "contradict",
-        "count": 4,
+        "count": 3,
         "conviction": 4,
         "names": [
+          "lead_lag_bias",
           "injury",
           "form_trend",
           "h2h_pattern",
           "xg_strength",
-          "chance_creation",
-          "transfer_shift"
+          "chance_creation"
         ],
         "market": "Unter 3.5 Tore"
       }
@@ -22658,15 +22698,15 @@
       "matchupPct": 37,
       "signalInfo": {
         "state": "confirm",
-        "count": 6,
+        "count": 7,
         "conviction": 6,
         "names": [
+          "lead_lag_bias",
           "injury",
           "form_trend",
           "h2h_pattern",
           "xg_strength",
-          "chance_creation",
-          "opener_move"
+          "chance_creation"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -23048,7 +23088,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 61,
-        "label": "Eigen 61% + Gegner 67% → 63% · Signale bestätigen"
+        "label": "Eigen 61% + Gegner 67% → 63%"
       },
       "ratePct": 61,
       "seq": [
@@ -23081,21 +23121,7 @@
         "oppRatePct": 67
       },
       "oppSupportPct": 67,
-      "matchupPct": 63,
-      "signalInfo": {
-        "state": "confirm",
-        "count": 5,
-        "conviction": 5,
-        "names": [
-          "injury",
-          "form_trend",
-          "xg_strength",
-          "chance_creation",
-          "streak_momentum",
-          "move_following"
-        ],
-        "market": "Über 2.5 Tore"
-      }
+      "matchupPct": 63
     },
     {
       "teamId": "536",
@@ -23163,7 +23189,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 58,
-        "label": "Eigen 58% + Gegner 67% → 62% · Signale bestätigen"
+        "label": "Eigen 58% + Gegner 67% → 62%"
       },
       "ratePct": 58,
       "seq": [
@@ -23212,21 +23238,7 @@
         "oppRatePct": 67
       },
       "oppSupportPct": 67,
-      "matchupPct": 62,
-      "signalInfo": {
-        "state": "confirm",
-        "count": 5,
-        "conviction": 5,
-        "names": [
-          "injury",
-          "form_trend",
-          "xg_strength",
-          "chance_creation",
-          "streak_momentum",
-          "move_following"
-        ],
-        "market": "Über 2.5 Tore"
-      }
+      "matchupPct": 62
     },
     {
       "teamId": "160",
@@ -23242,7 +23254,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 67,
-        "label": "Eigen 67% + Gegner 73% → 69%"
+        "label": "Eigen 67% + Gegner 73% → 69% · Signale bestätigen"
       },
       "ratePct": 67,
       "seq": [
@@ -23291,7 +23303,21 @@
         "oppRatePct": 73
       },
       "oppSupportPct": 73,
-      "matchupPct": 69
+      "matchupPct": 69,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 6,
+        "conviction": 4,
+        "names": [
+          "injury",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "chance_creation",
+          "streak_momentum"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "162",
@@ -23372,7 +23398,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 61,
-        "label": "Eigen 61% + Gegner 80% → 69%"
+        "label": "Eigen 61% + Gegner 80% → 69% · Signale bestätigen"
       },
       "ratePct": 61,
       "seq": [
@@ -23406,7 +23432,21 @@
         "oppRatePct": 80
       },
       "oppSupportPct": 80,
-      "matchupPct": 69
+      "matchupPct": 69,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 6,
+        "conviction": 4,
+        "names": [
+          "injury",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "chance_creation",
+          "streak_momentum"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "167",
