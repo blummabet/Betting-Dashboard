@@ -151,6 +151,11 @@ EBENE = {
     # er steht hier trotzdem, weil der Wachhund sonst bei jedem Lauf erneut anschlaegt und die
     # Alternative (ein Rueckfall auf „unbekannt = Ebene 3") die Sperre unterlaufen wuerde.
     "division-1": 3,
+    # 12.09.2026 (CI-Wachhund): „Division Nationale" — die ERSTE Liga Luxemburgs (Kaerjeng gegen
+    # Victoria Rosport). Oberste Spielklasse eines sehr kleinen Verbands: Ebene 2, nicht 1 — die
+    # 1 ist in dieser Tabelle den europaeischen Topligen vorbehalten, nach deren Massstab hier
+    # die Einsatzstufen haengen.
+    "division-nationale": 2,
 }
 
 # Wettbewerbe, bei denen „Spielklasse" die falsche Frage ist. Sie bekommen eine eigene Marke

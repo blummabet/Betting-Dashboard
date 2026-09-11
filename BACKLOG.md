@@ -3,6 +3,129 @@
 Stand 10.09.2026 (oberster Block); Liga/WM-Teil darunter Stand 26.06.2026. Lebendige Liste aller offenen Punkte — Liga UND noch nicht umgesetzte WM-Sachen —
 damit wir alles abarbeiten können. ✅ = erledigt (Referenz), ⏳ = offen, 🔒 = blockiert.
 
+## 🚫 12.09.2026 — US-Sport raus aus dem Dominanz-Band (Korrektur einer eigenen Begründung)
+
+Lucas: *„aja und bitte us Sport gleich weg"* — nach einem MLB-Push:
+
+```
+🎯 MARKT-DOMINANZ · 58 % des Marktes
+⚾ MLB Baseball
+📋 Paarung nicht erfasst — siehe Markt-Link
+💰 $3.3K auf Over 8.5 · Wallet 0xdc41…dd7e · 📊 Bilanz 314/742 (42 %)
+```
+
+### Ich hatte das Gegenteil gebaut, und die Begründung war schlüssig und trotzdem falsch
+
+Im Code stand seit dem 11.09.:
+
+> *Ausdrücklich ALLE Sportarten (Lucas: „läuft über alles drüber, oder?") — die Sperrliste für
+> US-Sport/Kampfsport gilt hier NICHT, weil dies ein Beobachtungsband ist und kein Kanal, dem
+> jemand folgen soll.*
+
+Das Argument hält in sich: ein Beobachtungsband soll nichts vorsortieren, sonst ist die spätere
+Auswertung beschnitten. Was es übersieht: **Lucas liest den Trades-Kanal.** Eine Karte, die er
+nicht gebrauchen kann, kostet ihn Aufmerksamkeit — ob sie „Beobachtung" heißt oder „Empfehlung",
+macht für die Zeit beim Lesen keinen Unterschied. Die Sammlung läuft ohnehin weiter; gesperrt ist
+nur der Push.
+
+Die Sperre kommt aus **derselben Quelle** wie für alle anderen Kanäle (`blocked_cats` →
+poly-wallets.js `PW_BLOCKED_BET_CATS`). Legt Lucas sie dort um, zieht das Band mit.
+
+### 🔴 Der Gegenbeweis, der grün lief — und warum er trotzdem zählt
+
+Die Weitergabe der Liste aus `main()` zu entfernen ließ die Suite **grün**: der Rückfall
+(`BLOCKED_FALLBACK`) ist heute zufällig dieselbe Liste wie die aus der Datei. Heute unsichtbar,
+morgen nicht — änderte Lucas die Sperre in poly-wallets.js, liefe dieses Band weiter auf dem
+alten Rückfall, während alle anderen Kanäle umziehen. **Das ist exakt die Drift, gegen die
+`blocked_cats` überhaupt gebaut wurde**, und sie wäre unsichtbar geblieben, weil beide Listen
+gleich aussehen. Jetzt prüft ein Test die Weitergabe strukturell.
+
+### Nebenbefund aus derselben Karte
+
+Der Push kam noch vom **alten Stand**: die Fußzeile nennt kein „belegte Wallet", und die Wallet
+trug 314/742 = **42 %** — die hätte das Sharp-Gate von heute nie passiert. Der Trichter am selben
+Stand: von 32 Kandidaten fallen **26 am Sharp-Gate**, 1 an der Sportart-Sperre, 5 bleiben übrig.
+Das Gate ist also der wirksame Schnitt; die Sperre nimmt den Rest.
+
+## 🚦 12.09.2026 — zwei Kanäle, die zu viel bzw. zu spät gesendet haben
+
+### Poly-Dominanz: das Wallet-Gate, das nie gebaut wurde
+
+Lucas: *„jetzt kommen halt viele solcher pushs"* — vier Karten hintereinander. Gemeinsam hatten
+sie **nicht** den Markt und **nicht** den Anteil, sondern die **Wallets**:
+
+| Wallet | Bilanz | Lebensbilanz |
+|---|---|---|
+| 0x73bc…46ce | 7/15 = **47 %** | +$501,2K |
+| 0x0a39…b0b9 | 15/34 = **44 %** | +$295,5K |
+| 0xfe78…0319 | 266/582 = **46 %** | +$2,53M |
+| 0x10a6…4d8b | 13/24 = **54 %** | +$364,2K |
+
+Münzwürfe. Die großen Lebensbilanzen daneben stammen aus Wahl- und Kryptomärkten und sagen über
+Sport nichts — genau die Vermischung, die `sharp_gate.py` am 29.08. auseinandergenommen hat.
+
+**Das Band hatte nie ein Wallet-Gate.** Nur `_is_confirmed_loser` (P&L bekannt UND negativ), was
+bei 87 % unbekanntem P&L fast nie greift. Dabei stand Lucas' Bedingung in seinem allerersten
+Satz zu dieser Sache: *„Spiele bei Poly, die kleine Märkte sind und wo ein eventuelles **Sharp
+Wallet** höher sitzt."* Ich habe die Marktseite dreimal nachgebessert — eigene Seite statt
+Gesamtmarkt, Reifefenster, Quotenboden, Kleinmarkt-Spur — und die Wallet-Seite **nie gebaut**.
+
+Es gilt jetzt `sharp_gate.is_sharp` (n≥8, Wilson-UG der Trefferquote über 50 %, CLV ≥ 0, kein
+bestätigter Verlierer) — DIE Definition des Projekts; eine eigene wäre die fünfte gewesen.
+Gemessen: **32 Kandidaten ohne Gate, 5 mit.** Die fünf tragen 213/390 (55 %, CLV +0,63pp),
+93/157 (59 %, +0,46pp) und 175/307 (57 %, +0,80pp) — große Stichproben mit positivem CLV.
+
+Abschaltbar über `WHALE_DOM_NUR_SHARP=0`, falls das Band damit zu dünn wird.
+
+### Betfair-Halbzeit: die Tore standen im Feed und wurden nicht gefragt
+
+Lucas: *„die push kam grad in public … nur dort ist grad pause oder so und die tore alle schon
+ewig her."*
+
+```
+🔵 Betfair Halftime Flow · Al Ahli v Al-Hazm (KSA)
+💷 HZ Over/Under 1.5 — €24,1K gematcht
+📊 Over 1.5 Goals ▓▓▓▓▓▓▓▓▓░ 85% @1.47
+```
+
+Im Feed stand zu dem Zeitpunkt: **Minute 33, Stand 2:1** — drei Tore, alle in Halbzeit 1.
+„Over 1.5" war **längst gewonnen**, und die €20,5K auf Over sind Geld von **vor** den Toren. Die
+Karte las eine abgeschlossene Tatsache als Fluss.
+
+`ht_fenster_offen` ließ es durch, und zwar völlig korrekt: 33 ≤ 45, `is_ht` false. **Das Fenster
+war offen — der Markt nicht.**
+
+Das ist dieselbe Familie wie der Fix vom **05.09.** (*„die Information war da und wurde nicht
+gefragt"*), eine Ebene tiefer: damals fehlte die Minute, jetzt der Spielstand. Beide standen die
+ganze Zeit in `liveInfo`. Neu: `ht_linie_offen(m, markt)` — solange das HZ-Fenster offen ist,
+sind die gefallenen Tore per Definition Halbzeit-Tore, also reicht der aktuelle Stand. Eingehängt
+an **beiden** Aufrufstellen (`_ht_one` und die „HZ > FT"-Auswahl).
+
+Zwei bewusste Ausnahmen: ein Markt **ohne Linie** (`Half Time` = HZ-1X2) kann so nicht entschieden
+werden, dort gilt weiter nur das Fenster. Und ein Feed **ohne Torangabe** sperrt **nicht** — sonst
+fällt der ganze Kanal aus, sobald ein Anbieter das Feld weglässt; die Minute deckt den Fall
+bereits ab. Das ist hier ausnahmsweise nicht fail-closed, und zwar weil es die *zweite* Sicherung
+ist, nicht die einzige.
+
+### 🔴 Und ein echter Fehler, den erst der Gegenbeweis gefunden hat
+
+Ich hatte `return tore < linie` geschrieben. Bei X,5-Linien ist das richtig und von `<=` **nicht
+unterscheidbar** (Tore sind ganzzahlig) — die Mutation lief grün durch. Bei einer ganzzahligen
+Linie ist es falsch: *„Over 2" bei 2 Toren ist Push*, ein drittes Tor entscheidet noch, und `<`
+hätte den Markt zu früh gesperrt. Korrekt ist `tore <= linie` („entschieden erst, wenn Over nicht
+mehr verlieren kann"). Der Test dazu prüft jetzt genau die ganzzahlige Linie — den Fall, den es
+heute noch nicht gibt und der sonst erst auffällt, wenn er auftritt.
+
+Ebenso grün lief „Tore als 0 statt None lesen": beide Fälle führen in `ht_linie_offen` zu
+„offen", der Unterschied ist dort unsichtbar. Er ist es trotzdem — 0 heißt „noch kein Tor", None
+heißt „wir wissen es nicht". Geprüft wird er jetzt an `tore_gefallen` selbst, dort wo er entsteht.
+
+### Gegenbeweise
+
+Poly (2): Wallet-Gate entfernt ✅ · Gate abgeschaltet ✅
+Betfair (7): Linien-Wache im HT-Alert ✅ · in der Fix-Auswahl ✅ · Tore als 0 statt None ✅ ·
+bool-Prüfung entfernt ✅ · 1X2-Markt mitgesperrt ✅ · Vergleich auf `<` ✅ · auf `>=` ✅
+
 ## 📋 11.09.2026 — „denke hier sind corner gemeint": die Karte sagte nicht, worauf gesetzt wurde
 
 Lucas schickte eine Dominanz-Karte zurück, weil er nicht erkennen konnte, auf **was** gesetzt

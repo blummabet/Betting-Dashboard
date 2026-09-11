@@ -13,6 +13,10 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 import poly_whale_watch as P
 
 NOW = datetime(2026, 7, 26, 12, 0, tzinfo=timezone.utc)
+
+# Eine Wallet, die `sharp_gate.is_sharp` besteht: n=60, 40 Treffer (Wilson-UG ~57 %), CLV positiv,
+# kein bestaetigter Verlierer. Steht hier einmal, damit nicht jede Fixture ihre eigene erfindet.
+SHARP = {"n": 60, "wins": 40, "clvSumPP": 30.0, "pnl": 12000}
 def _ts(dt): return dt.strftime("%Y-%m-%dT%H:%M:%S+00:00")
 
 def _pos(usd, league="TENNIS", side="Blockx", price=0.60, ageDays=0, wallet="0xabc123def456"):
@@ -957,7 +961,10 @@ class TestMarktDominanz(unittest.TestCase):
         pos = {"wallet": "0xw", "key": "k", "side": "A", "usd": 6000, "league": "ESPORTS",
                "firstPrice": 0.55, "lastPrice": 0.55, "firstTs": NOW.isoformat()}
         pos.update(over)
-        return {"open": {"0xw|k|A": pos}, "scores": {}}
+        # Seit 12.09.2026 braucht das Band eine BELEGTE Wallet (sharp_gate). Die Fixture traegt
+        # deshalb einen Track-Record, der das Gate besteht — sonst pruefte jeder Test hier
+        # unbemerkt nur noch das Wallet-Gate.
+        return {"open": {"0xw|k|A": pos}, "scores": {"0xw": SHARP}}
 
     @staticmethod
     def _broad(total, htk=0.4, seite=None):
@@ -1108,13 +1115,61 @@ class TestMarktDominanz(unittest.TestCase):
         r = P.dominanz_kandidaten(self._tr(league="US-ELECTION"), self._broad(10000), now=NOW)
         self.assertEqual(r, [])
 
-    def test_gesperrte_sportarten_laufen_hier_MIT(self):
-        """Lucas: „laeuft ueber alles drueber, oder?" — ja. Die Sperrliste (US-Sport/Kampfsport)
-        gilt hier NICHT, weil dies ein Beobachtungsband ist und kein Kanal, dem jemand folgt.
-        Die Kategorie wird gestempelt, damit sie sich spaeter trennen laesst."""
-        r = P.dominanz_kandidaten(self._tr(league="NBA"), self._broad(20000, seite=10000),
-                                  now=NOW)
-        self.assertEqual(len(r), 1, "US-Sport gehoert in das Beobachtungsband")
+    def test_gesperrte_sportarten_bleiben_draussen(self):
+        """🔴 KORREKTUR 12.09.2026 (Lucas: „aja und bitte us Sport gleich weg").
+
+        Hier stand das Gegenteil — mit der Begruendung, das Band sei eine Beobachtung und kein
+        Kanal, dem jemand folgt. Das Argument war in sich schluessig und trotzdem falsch: Lucas
+        LIEST den Trades-Kanal, und eine Karte, die er nicht gebrauchen kann, kostet ihn
+        Aufmerksamkeit — ob sie „Beobachtung" heisst oder „Empfehlung", macht beim Lesen keinen
+        Unterschied. Ausloeser war ein MLB-Push mit einer 314/742-Wallet (42 %) ohne Paarung.
+        """
+        for liga in ("NBA", "MLB", "NFL", "NHL", "UFC"):
+            self.assertEqual(
+                P.dominanz_kandidaten(self._tr(league=liga), self._broad(20000, seite=10000),
+                                      now=NOW, blocked=["US-Sport", "Kampfsport"]),
+                [], liga)
+
+    def test_die_sperrliste_kommt_aus_derselben_quelle_wie_ueberall(self):
+        """Eine eigene Liste hier waere genau die Drift, gegen die `blocked_cats` gebaut wurde:
+        legt Lucas die Sperre in poly-wallets.js um, muss dieses Band mitziehen."""
+        tr = self._tr(league="NBA")
+        br = self._broad(20000, seite=10000)
+        self.assertEqual(P.dominanz_kandidaten(tr, br, now=NOW, blocked=["US-Sport"]), [])
+        self.assertEqual(len(P.dominanz_kandidaten(tr, br, now=NOW, blocked=["Kampfsport"])), 1,
+                         "steht US-Sport nicht auf der Liste, laeuft es mit — die LISTE regiert")
+
+    def test_main_reicht_DIESELBE_liste_durch_wie_an_den_public_kanal(self):
+        """🔴 Beim Provozieren aufgefallen: die Weitergabe aus `main()` zu entfernen lief GRUEN
+        durch — weil der Rueckfall zufaellig dieselbe Liste ist wie die aus der Datei.
+
+        Heute unsichtbar, morgen nicht: legt Lucas die Sperre in poly-wallets.js um, liefe dieses
+        Band weiter auf dem alten Rueckfall, waehrend alle anderen Kanaele umziehen. Das ist
+        exakt die Drift, gegen die `blocked_cats` ueberhaupt gebaut wurde — und sie waere
+        unsichtbar, weil beide Listen heute gleich aussehen.
+        """
+        import inspect
+        q = inspect.getsource(P.main)
+        i = q.index("dom_cand = dominanz_kandidaten(")
+        aufruf = q[i:i + 320]
+        self.assertIn("blocked=_blocked", aufruf,
+                      "die Dominanz-Auswahl muss dieselbe Liste bekommen wie der Public-Kanal")
+        self.assertLess(q.index("_blocked = blocked_cats("), i,
+                        "die Liste muss VOR dem Aufruf aus der Datei gelesen werden")
+
+    def test_ohne_uebergebene_liste_gilt_der_sichere_rueckfall(self):
+        """Faellt poly_shortlist_track.json aus, darf NICHT alles durchrutschen. `bet_blocked`
+        greift dann auf BLOCKED_FALLBACK zurueck — dieselbe Regel wie in den anderen Kanaelen."""
+        self.assertEqual(P.dominanz_kandidaten(self._tr(league="NBA"),
+                                               self._broad(20000, seite=10000), now=NOW), [])
+        self.assertIn("US-Sport", P.BLOCKED_FALLBACK)
+
+    def test_fussball_und_esport_laufen_weiter(self):
+        """Die Gegenprobe. Ohne sie koennte die Sperre alles fangen und der Test waere gruen."""
+        for liga in ("ESPORTS", "SOCCER", "TENNIS"):
+            self.assertEqual(
+                len(P.dominanz_kandidaten(self._tr(league=liga), self._broad(20000, seite=10000),
+                                          now=NOW, blocked=["US-Sport", "Kampfsport"])), 1, liga)
 
     def test_der_groesste_anteil_steht_oben(self):
         tr = {"open": {
@@ -1122,7 +1177,7 @@ class TestMarktDominanz(unittest.TestCase):
                          "league": "ESPORTS", "firstPrice": 0.55, "firstTs": NOW.isoformat()},
             "0xb|k2|B": {"wallet": "0xb", "key": "k2", "side": "B", "usd": 9000, "lastPrice": 0.55,
                          "league": "ESPORTS", "firstPrice": 0.55, "firstTs": NOW.isoformat()}},
-            "scores": {}}
+            "scores": {"0xa": SHARP, "0xb": SHARP}}
         _ca = NOW.isoformat()
         r = P.dominanz_kandidaten(tr, {"k1": {"totalUsd": 20000, "hoursToKickoff": 0.4,
                                               "capturedAt": _ca,
@@ -1196,7 +1251,7 @@ class TestMarktReife(unittest.TestCase):
         gegen einen Nenner, der steht."""
         # 50 % Anteil bei 2,5 h: konservativ gerechnet (× 0,69 Fuellgrad) sind das 34,5 % —
         # unter der Schwelle, also warten. Bei 0,5 h steht der Nenner und dieselbe Position kommt.
-        tr = {"open": {"0xw|k|A": self._pos()}, "scores": {}}
+        tr = {"open": {"0xw|k|A": self._pos()}, "scores": {"0xw": SHARP}}
         self.assertEqual(
             P.dominanz_kandidaten(tr, self._b(24000, 2.5), now=NOW),
             [], "2,5 h vorher ist der Nenner im Median erst gut zwei Drittel voll")
@@ -1287,7 +1342,7 @@ class TestDominanzQuote(unittest.TestCase):
         self.assertIsNotNone(P._dom_quote(self._pos(firstPrice=0.87, lastPrice=0.50)))
 
     def test_die_auswahl_haelt_den_boden_ein(self):
-        tr = {"open": {"0xw|k|A": self._pos(0.826)}, "scores": {}}
+        tr = {"open": {"0xw|k|A": self._pos(0.826)}, "scores": {"0xw": SHARP}}
         br = {"k": {"totalUsd": 12000, "hoursToKickoff": 0.5, "capturedAt": NOW.isoformat(),
                     "shares": {"A": 8000.0, "B": 4000.0}}}
         self.assertEqual(P.dominanz_kandidaten(tr, br, now=NOW), [], "@1,21 bleibt draussen")
@@ -1355,7 +1410,7 @@ class TestAnpfiffAufDerKarte(unittest.TestCase):
         """Der eigentliche Fehler: die Messung lag 20 Min vor Anpfiff, der Push kam 26 Min
         danach. Fuer die MESSUNG ist ein Markt nach Anpfiff maximal reif — fuer den PUSH ist er
         wertlos, weil die genannte Quote nicht mehr zu bekommen ist."""
-        tr = {"open": {"0xw|k|A": self._pos()}, "scores": {}}
+        tr = {"open": {"0xw|k|A": self._pos()}, "scores": {"0xw": SHARP}}
         # Aufgenommen 20 Min vor Anpfiff, gesendet wird eine halbe Stunde spaeter.
         br = self._b(0.33, aufgenommen=NOW - timedelta(hours=0.33))
         self.assertEqual(P.dominanz_kandidaten(tr, br, now=NOW + timedelta(minutes=26)), [],
@@ -1414,7 +1469,7 @@ class TestFrueheFreigabe(unittest.TestCase):
     def test_deutliche_dominanz_kommt_frueh_raus(self):
         """80 % bei 2,8 h: auch wenn sich der Markt auf seinen Median-Endstand auffuellt
         (× 0,54), blieben 43 % — ueber der Schwelle. Also sofort, nicht in zwei Stunden."""
-        tr = {"open": {"0xw|k|A": self._pos(usd=9600)}, "scores": {}}
+        tr = {"open": {"0xw|k|A": self._pos(usd=9600)}, "scores": {"0xw": SHARP}}
         br = self._b(24000, 2.8, seite=12000)          # 9.600 von 12.000 der Seite = 80 %
         r = P.dominanz_kandidaten(tr, br, now=NOW)
         self.assertEqual(len(r), 1)
@@ -1424,7 +1479,8 @@ class TestFrueheFreigabe(unittest.TestCase):
     def test_knappe_dominanz_wartet(self):
         """45 % bei 2,8 h werden konservativ zu 24 % — das traegt nicht. Sie ist NICHT
         verworfen: sobald der Markt steht, kommt sie auf dem normalen Weg."""
-        tr = {"open": {"0xw|k|A": self._pos(usd=5400)}, "scores": {}}   # 45 % der Seite
+        tr = {"open": {"0xw|k|A": self._pos(usd=5400)},
+              "scores": {"0xw": SHARP}}                                  # 45 % der Seite
         self.assertEqual(P.dominanz_kandidaten(tr, self._b(24000, 2.8, seite=12000), now=NOW), [])
         self.assertEqual(len(P.dominanz_kandidaten(tr, self._b(24000, 0.5, seite=12000),
                                                    now=NOW)), 1)
@@ -1472,7 +1528,7 @@ class TestKleinmarktSpur(unittest.TestCase):
             "whales": [{"wallet": "0xabc", "side": "Spieler A", "usd": usd}]}}
 
     def _scores(self):
-        return {"0xabc": {"n": 63, "wins": 53, "clvSumPP": 44.0, "pnl": 5200}}
+        return {"0xabc": {"n": 63, "wins": 53, "clvSumPP": 44.0, "pnl": 5200}}   # besteht sharp_gate
 
     def test_lucas_fall_woertlich(self):
         """$4.000 auf ein Tennis-Match, maximal $5.000 drin. Genau der Fall, den er beschrieben
@@ -1532,7 +1588,7 @@ class TestKleinmarktSpur(unittest.TestCase):
         tr = {"open": {"0xw|k|A": {"wallet": "0xw", "key": "k", "side": "A", "usd": 6000,
                                    "league": "ESPORTS", "firstPrice": 0.55, "lastPrice": 0.55,
                                    "firstTs": NOW.isoformat()}},
-              "scores": self._scores()}
+              "scores": dict(self._scores(), **{"0xw": SHARP})}
         br = {"k": {"totalUsd": 12000, "hoursToKickoff": 0.5, "capturedAt": NOW.isoformat(),
                     "shares": {"A": 8000.0, "B": 4000.0}}}
         r = P.dominanz_kandidaten(tr, br, klein=self._klein(), now=NOW)
@@ -1561,11 +1617,89 @@ class TestKleinmarktSpur(unittest.TestCase):
         tr = {"open": {"0xw|k|A": {"wallet": "0xw", "key": "k", "side": "A", "usd": 6000,
                                    "league": "ESPORTS", "firstPrice": 0.55, "lastPrice": 0.55,
                                    "firstTs": NOW.isoformat()}},
-              "scores": {}}
+              "scores": {"0xw": SHARP}}
         br = {"k": {"totalUsd": 12000, "hoursToKickoff": 0.5, "capturedAt": NOW.isoformat(),
                     "shares": {"A": 8000.0, "B": 4000.0}}}
         for leer in (None, {}, "kaputt"):
             self.assertEqual(len(P.dominanz_kandidaten(tr, br, klein=leer, now=NOW)), 1, repr(leer))
+
+
+class TestWalletGate(unittest.TestCase):
+    """🔴 12.09.2026 (Lucas: „jetzt kommen halt viele solcher pushs").
+
+    Er schickte vier Karten hintereinander. Gemeinsam hatten sie nicht den Markt und nicht den
+    Anteil, sondern die WALLETS: 7/15 (47 %), 15/34 (44 %), 266/582 (46 %), 13/24 (54 %) — reine
+    Muenzwuerfe. Die grossen Lebensbilanzen daneben ($501K, $295K, $2,53M) stammen aus Wahl- und
+    Kryptomaerkten und sagen ueber Sport nichts.
+
+    Das Band hatte nie ein Wallet-Gate, obwohl Lucas' allererster Satz lautete: „Spiele bei Poly,
+    die kleine Maerkte sind und wo ein eventuelles SHARP WALLET hoeher sitzt." Ich habe die
+    Marktseite dreimal nachgebessert und die Wallet-Seite nie gebaut.
+
+    Gemessen: 32 Kandidaten ohne Gate, 5 mit.
+    """
+
+    def _tr(self, score):
+        pos = {"wallet": "0xw", "key": "k", "side": "A", "usd": 6000, "league": "ESPORTS",
+               "firstPrice": 0.55, "lastPrice": 0.55, "firstTs": NOW.isoformat()}
+        return {"open": {"0xw|k|A": pos}, "scores": ({"0xw": score} if score else {})}
+
+    def _br(self):
+        return {"k": {"totalUsd": 20000, "hoursToKickoff": 0.4, "capturedAt": NOW.isoformat(),
+                      "shares": {"A": 10000.0, "B": 10000.0}}}
+
+    def test_belegte_wallet_kommt_durch(self):
+        self.assertEqual(len(P.dominanz_kandidaten(self._tr(SHARP), self._br(), now=NOW)), 1)
+
+    def test_muenzwurf_wallet_bleibt_draussen(self):
+        """Die vier gemeldeten Karten, wortwoertlich: 47 %, 44 %, 46 %, 54 % — mit grosser
+        Lebensbilanz daneben, die genau nichts beweist."""
+        for n, w, pnl in ((15, 7, 501200), (34, 15, 295500), (582, 266, 2530000), (24, 13, 364200)):
+            r = P.dominanz_kandidaten(
+                self._tr({"n": n, "wins": w, "clvSumPP": 5.0, "pnl": pnl}), self._br(), now=NOW)
+            self.assertEqual(r, [], "%d/%d haette nicht rausgehen duerfen" % (w, n))
+
+    def test_grosse_lebensbilanz_ersetzt_keinen_track_record(self):
+        """P&L misst ALLE Polymarket-Maerkte (Wahlen, Krypto). Wer +$2,53 Mio hat, kann im Sport
+        trotzdem nichts koennen — genau die Vermischung, die sharp_gate.py aufgeloest hat."""
+        self.assertEqual(
+            P.dominanz_kandidaten(self._tr({"n": 582, "wins": 266, "clvSumPP": 9.0,
+                                            "pnl": 2530000}), self._br(), now=NOW), [])
+
+    def test_unbekannte_wallet_bleibt_draussen(self):
+        """Fehlende Information laesst nicht durch — dieselbe Regel wie beim Volumen, beim
+        Messzeitpunkt und beim Anpfiff."""
+        for score in (None, {}, {"n": 2, "wins": 2, "clvSumPP": 4.0}):
+            self.assertEqual(P.dominanz_kandidaten(self._tr(score), self._br(), now=NOW), [],
+                             repr(score))
+
+    def test_negativer_clv_faellt_raus(self):
+        """Eine hohe Trefferquote ohne CLV ist Glueck — steht so in sharp_gate.py."""
+        self.assertEqual(
+            P.dominanz_kandidaten(self._tr({"n": 60, "wins": 40, "clvSumPP": -30.0}),
+                                  self._br(), now=NOW), [])
+
+    def test_es_gilt_die_projektweite_definition(self):
+        """Kein eigenes Gate. sharp_gate.py existiert, WEIL es vier verschiedene gab — eine
+        fuenfte hier waere genau der Fehler, den diese Datei behoben hat."""
+        import sharp_gate as SG
+        import inspect
+        self.assertIn("SG.is_sharp", inspect.getsource(P.dominanz_kandidaten))
+
+    def test_das_gate_steht_auf_der_karte(self):
+        """Wer die Karte liest, soll sehen, dass die Wallet belegt ist — sonst ist die Zeile mit
+        dem Track-Record nur Dekoration neben einer Zahl, die ohne sie zustande kam."""
+        k = P.build_dominanz_card(self._tr(SHARP)["open"]["0xw|k|A"], {"0xw": SHARP},
+                                  self._br(), now=NOW)
+        self.assertIn("bewiesene Wallet", k)
+        self.assertIn("belegte Wallet", k, "die Fusszeile muss die Regel nennen")
+
+    def test_abschaltbar_ohne_code_eingriff(self):
+        """Falls das Band damit zu duenn wird, muss es sich ohne Aenderung drehen lassen."""
+        self.assertTrue(hasattr(P, "DOM_NUR_SHARP"))
+        self.assertEqual(len(P.dominanz_kandidaten(
+            self._tr({"n": 15, "wins": 7, "clvSumPP": 5.0}), self._br(), now=NOW,
+        )), 0)
 
 
 class TestSubMarktAufDerKarte(unittest.TestCase):
