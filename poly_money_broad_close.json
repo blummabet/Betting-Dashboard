@@ -264379,7 +264379,13 @@
     "usd": 400,
     "ts": 1789077573
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "paiN": 0.0,
+   "Imperial": 1.0
+  },
+  "resolvedAt": "2026-09-11T03:41:59.399300+00:00"
  },
  "mlb-col-nyy-2026-09-10": {
   "shares": {
@@ -264499,7 +264505,13 @@
     "usd": 1600,
     "ts": 1789078648
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Colorado Rockies": 0.0,
+   "New York Yankees": 1.0
+  },
+  "resolvedAt": "2026-09-11T03:41:59.399300+00:00"
  },
  "cs2-fxw7-dendel-2026-09-10": {
   "shares": {
@@ -266351,7 +266363,13 @@
     "usd": 498,
     "ts": 1789087338
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Philip Sekulic": 1.0,
+   "Koki Matsuda": 0.0
+  },
+  "resolvedAt": "2026-09-11T03:41:59.399300+00:00"
  },
  "lib-ind1-fla-2026-09-10-more-markets": {
   "shares": {
@@ -266877,12 +266895,12 @@
  },
  "cs2-mibr-all-2026-09-11": {
   "shares": {
-   "MIBR": 130050.94081029009,
-   "Alliance": 104274.43333360506
+   "MIBR": 133217.79837384005,
+   "Alliance": 102565.28659435506
   },
   "prices": {
-   "MIBR": 0.555,
-   "Alliance": 0.445
+   "MIBR": 0.565,
+   "Alliance": 0.435
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -266890,35 +266908,35 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 276408,
+  "totalUsd": 279860,
   "whales": [
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "side": "MIBR",
-    "usd": 35297,
+    "usd": 35933,
     "avgPrice": 0.5499
    },
    {
     "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
     "side": "MIBR",
-    "usd": 22200,
+    "usd": 22600,
     "avgPrice": 0.5187
    },
    {
     "wallet": "0xe40ecff63ec661d218a86c048186ac83389a9770",
     "side": "MIBR",
-    "usd": 22200,
+    "usd": 22600,
     "avgPrice": 0.5099
    },
    {
     "wallet": "0x994ec8e910b433265f3a46eaf666bfa28b1a6136",
     "side": "Alliance",
-    "usd": 8900,
+    "usd": 8700,
     "avgPrice": 0.495
    }
   ],
-  "hoursToKickoff": 2.84,
-  "capturedAt": "2026-09-11T03:12:22.603982+00:00",
+  "hoursToKickoff": 2.34,
+  "capturedAt": "2026-09-11T03:41:59.399300+00:00",
   "cond": "0x4a20b75b8e854945a5caa3739cef9068696435710254ab5c9c2eb52461243dc9",
   "frage": "Counter-Strike: MIBR vs Alliance (BO3) - FISSURE PLAYGROUND Playoffs",
   "tokens": {
@@ -266927,64 +266945,80 @@
   },
   "book": {
    "side": "MIBR",
-   "bid": 0.55,
-   "ask": 0.56,
+   "bid": 0.56,
+   "ask": 0.57,
    "spreadC": 1.0,
-   "spreadPct": 1.79,
+   "spreadPct": 1.75,
    "bids": [
     [
+     0.56,
+     20433
+    ],
+    [
      0.55,
-     119810
+     108864
     ],
     [
      0.54,
-     113796
+     12567
     ],
     [
      0.53,
-     45825
+     45342
     ],
     [
      0.52,
-     91902
+     91646
     ],
     [
      0.51,
-     2344
-    ],
-    [
-     0.5,
-     761
+     2815
     ]
    ],
    "asks": [
     [
-     0.56,
-     466
-    ],
-    [
      0.57,
-     11274
+     5453
     ],
     [
      0.58,
-     7177
+     9296
     ],
     [
      0.59,
-     4337
+     8133
     ],
     [
      0.6,
-     7481
+     9603
     ],
     [
      0.61,
-     22080
+     21431
+    ],
+    [
+     0.62,
+     3302
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x521fd59c7381e28e72b9853a00117635bd623344",
+    "action": "BUY",
+    "side": "MIBR",
+    "price": 0.57,
+    "usd": 300,
+    "ts": 1789097311
+   },
+   {
+    "wallet": "0xb797402993a52d55a1b405549062e0267910e779",
+    "action": "BUY",
+    "side": "MIBR",
+    "price": 0.57,
+    "usd": 399,
+    "ts": 1789096602
+   },
    {
     "wallet": "0xb4548603def79bb4e77b7d8f8c77e7a4ffdfa98c",
     "action": "BUY",
@@ -267016,14 +267050,6 @@
     "price": 0.5586,
     "usd": 445,
     "ts": 1789094799
-   },
-   {
-    "wallet": "0x0051cf76886d7e175b69207e3f4b8f09d323c6a3",
-    "action": "BUY",
-    "side": "Alliance",
-    "price": 0.46,
-    "usd": 719,
-    "ts": 1789092768
    }
   ]
  }
