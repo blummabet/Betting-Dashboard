@@ -269067,7 +269067,13 @@
     "usd": 2657,
     "ts": 1789128427
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "WBT": 0.0,
+   "SAW": 1.0
+  },
+  "resolvedAt": "2026-09-11T18:14:19.109236+00:00"
  },
  "ukr1-kol-kar-2026-09-13-exact-score": {
   "shares": {
@@ -270434,7 +270440,13 @@
   "tokens": {
    "Max Houkes": "33584560730872494194820880850463661022093938900369251229951081108220214138099",
    "Jeffrey Von Der Schulenburg": "104922247882843284769430975542775641627516018641438482795688700175425205600412"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Max Houkes": 1.0,
+   "Jeffrey Von Der Schulenburg": 0.0
+  },
+  "resolvedAt": "2026-09-11T18:14:19.109236+00:00"
  },
  "atp-droguet-glinka-2026-09-11": {
   "shares": {
@@ -271841,12 +271853,12 @@
  },
  "mlb-pit-chc-2026-09-11": {
   "shares": {
-   "Pittsburgh Pirates": 80887.53333066998,
-   "Chicago Cubs": 140722.0869957
+   "Pittsburgh Pirates": 94135.03087204,
+   "Chicago Cubs": 171034.03438426522
   },
   "prices": {
-   "Pittsburgh Pirates": 0.365,
-   "Chicago Cubs": 0.635
+   "Pittsburgh Pirates": 0.355,
+   "Chicago Cubs": 0.645
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -271854,35 +271866,35 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 240982,
+  "totalUsd": 323929,
   "whales": [
    {
     "wallet": "0x5e9458202b5817a72cf81105ec8a30e6f3705ba1",
     "side": "Pittsburgh Pirates",
-    "usd": 64510,
+    "usd": 62743,
     "avgPrice": 0.3662
    },
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "side": "Chicago Cubs",
-    "usd": 37478,
+    "usd": 38068,
     "avgPrice": 0.625
+   },
+   {
+    "wallet": "0x78becf0a4e4f2640380af0c19ad32e2557e6bde0",
+    "side": "Chicago Cubs",
+    "usd": 32233,
+    "avgPrice": 0.6403
    },
    {
     "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
     "side": "Chicago Cubs",
-    "usd": 25400,
+    "usd": 20566,
     "avgPrice": 0.635
-   },
-   {
-    "wallet": "0xcd84d7f9262516865553555751609fb6f52abec6",
-    "side": "Pittsburgh Pirates",
-    "usd": 9863,
-    "avgPrice": 0.37
    }
   ],
-  "hoursToKickoff": 0.65,
-  "capturedAt": "2026-09-11T17:44:18.609064+00:00",
+  "hoursToKickoff": 0.15,
+  "capturedAt": "2026-09-11T18:14:19.109236+00:00",
   "cond": "0x1ed7d60c35951e552eb11f848bd4b01efb29a68cdcc4a4f0cafa06c43f7338aa",
   "frage": "Pittsburgh Pirates vs. Chicago Cubs",
   "tokens": {
@@ -271891,64 +271903,96 @@
   },
   "book": {
    "side": "Chicago Cubs",
-   "bid": 0.63,
-   "ask": 0.64,
+   "bid": 0.64,
+   "ask": 0.65,
    "spreadC": 1.0,
-   "spreadPct": 1.56,
+   "spreadPct": 1.54,
    "bids": [
     [
+     0.64,
+     18291
+    ],
+    [
      0.63,
-     48520
+     69740
     ],
     [
      0.62,
-     96799
+     113804
     ],
     [
      0.61,
-     46692
+     69836
     ],
     [
      0.6,
-     7676
+     2999
     ],
     [
      0.59,
-     1379
-    ],
-    [
-     0.58,
-     1929
+     1979
     ]
    ],
    "asks": [
     [
-     0.64,
-     62365
-    ],
-    [
      0.65,
-     106953
+     145703
     ],
     [
      0.66,
-     35390
+     69924
     ],
     [
      0.67,
-     22464
+     11081
     ],
     [
      0.68,
-     5237
+     6266
     ],
     [
      0.69,
-     2084
+     4988
+    ],
+    [
+     0.7,
+     1999
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0xc34cd27593243598c66a9a2820f37bcfb87c2e29",
+    "action": "BUY",
+    "side": "Chicago Cubs",
+    "price": 0.6437,
+    "usd": 500,
+    "ts": 1789149805
+   },
+   {
+    "wallet": "0x26b46988d027c6c03cfa12a7c0c6d778be49b8a9",
+    "action": "BUY",
+    "side": "Chicago Cubs",
+    "price": 0.6468,
+    "usd": 18627,
+    "ts": 1789149445
+   },
+   {
+    "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
+    "action": "BUY",
+    "side": "Chicago Cubs",
+    "price": 0.6411,
+    "usd": 1837,
+    "ts": 1789149292
+   },
+   {
+    "wallet": "0x78becf0a4e4f2640380af0c19ad32e2557e6bde0",
+    "action": "BUY",
+    "side": "Chicago Cubs",
+    "price": 0.6403,
+    "usd": 32000,
+    "ts": 1789149223
+   },
    {
     "wallet": "0x6f6589b77c36b94c2a1304dfd40f44310725172c",
     "action": "BUY",
@@ -271964,41 +272008,17 @@
     "price": 0.63,
     "usd": 1000,
     "ts": 1789147710
-   },
-   {
-    "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
-    "action": "BUY",
-    "side": "Chicago Cubs",
-    "price": 0.63,
-    "usd": 322,
-    "ts": 1789143826
-   },
-   {
-    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
-    "action": "BUY",
-    "side": "Chicago Cubs",
-    "price": 0.63,
-    "usd": 1615,
-    "ts": 1789143825
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "action": "BUY",
-    "side": "Chicago Cubs",
-    "price": 0.63,
-    "usd": 362,
-    "ts": 1789143703
    }
   ]
  },
  "bun-uni-s04-2026-09-11-more-markets": {
   "shares": {
-   "Over": 11793.959668450001,
-   "Under": 8717.147390299997
+   "Over": 12437.265239380002,
+   "Under": 10383.264902465
   },
   "prices": {
-   "Over": 0.575,
-   "Under": 0.425
+   "Over": 0.545,
+   "Under": 0.455
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -272006,35 +272026,35 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 24218,
+  "totalUsd": 28545,
   "whales": [
    {
     "wallet": "0xe5f0ae9cc9aef77ae3c2a64c9e69caa3f335dc1d",
     "side": "Over",
-    "usd": 5340,
+    "usd": 5061,
     "avgPrice": 0.5899
    },
    {
     "wallet": "0xe8c4d68aff65b38cac46987b9b65e01eb47d395d",
     "side": "Under",
-    "usd": 2043,
+    "usd": 2188,
     "avgPrice": 0.42
+   },
+   {
+    "wallet": "0x65343c757e0debf49d95d79bf7e4c765e4ca7cc7",
+    "side": "Under",
+    "usd": 1674,
+    "avgPrice": 0.4199
    },
    {
     "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
     "side": "Over",
-    "usd": 1725,
-    "avgPrice": 0.58
-   },
-   {
-    "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
-    "side": "Over",
-    "usd": 1725,
+    "usd": 1635,
     "avgPrice": 0.58
    }
   ],
-  "hoursToKickoff": 0.82,
-  "capturedAt": "2026-09-11T17:44:18.609064+00:00",
+  "hoursToKickoff": 0.32,
+  "capturedAt": "2026-09-11T18:14:19.109236+00:00",
   "cond": "0x64dda4e0f56a93fb91dd145f947e7a803b4b4be18377ef4a7c29d79d4436bed7",
   "frage": "1. FC Union Berlin vs. FC Schalke 04: O/U 2.5",
   "tokens": {
@@ -272196,14 +272216,14 @@
  },
  "bun-uni-s04-2026-09-11": {
   "shares": {
-   "1. FC Union Berlin": 63282.05937490003,
-   "Draw (1. FC Union Berlin vs. FC Schalke 04)": 4520.536034425003,
-   "FC Schalke 04": 1245.3461108549996
+   "1. FC Union Berlin": 67134.61860365004,
+   "Draw (1. FC Union Berlin vs. FC Schalke 04)": 5257.441848300001,
+   "FC Schalke 04": 1931.2571470300013
   },
   "prices": {
    "1. FC Union Berlin": 0.415,
-   "Draw (1. FC Union Berlin vs. FC Schalke 04)": 0.265,
-   "FC Schalke 04": 0.315
+   "Draw (1. FC Union Berlin vs. FC Schalke 04)": 0.285,
+   "FC Schalke 04": 0.305
   },
   "splitGuete": {
    "art": "belastbar",
@@ -272211,7 +272231,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 120965,
+  "totalUsd": 192746,
   "whales": [
    {
     "wallet": "0xb809a4b78b5eadc71d84be43eda0491eedf72004",
@@ -272228,17 +272248,18 @@
    {
     "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
     "side": "Draw (1. FC Union Berlin vs. FC Schalke 04)",
-    "usd": 3622,
+    "usd": 3928,
     "avgPrice": 0.2788
    },
    {
-    "wallet": "0x224a89dbe0db0d6124b335edabd15b3f877da3d5",
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
     "side": "1. FC Union Berlin",
-    "usd": 1084
+    "usd": 2484,
+    "avgPrice": 0.4192
    }
   ],
-  "hoursToKickoff": 0.82,
-  "capturedAt": "2026-09-11T17:44:18.609064+00:00",
+  "hoursToKickoff": 0.32,
+  "capturedAt": "2026-09-11T18:14:19.109236+00:00",
   "tokens": {
    "1. FC Union Berlin": "61115241924263556703269709237711474262089605783755442755346371496514993765595",
    "Draw (1. FC Union Berlin vs. FC Schalke 04)": "74675702141075650917084715280774690619230267037614907433631167661343377131183",
@@ -272253,57 +272274,97 @@
    "bids": [
     [
      0.41,
-     38534
+     45830
     ],
     [
      0.4,
-     36028
+     66454
     ],
     [
      0.39,
-     36565
+     30514
     ],
     [
      0.38,
-     28663
+     30084
     ],
     [
      0.37,
-     8451
+     43800
     ],
     [
      0.36,
-     10583
+     5583
     ]
    ],
    "asks": [
     [
      0.42,
-     51347
+     279254
     ],
     [
      0.43,
-     90876
+     49666
     ],
     [
      0.44,
-     20991
+     29071
     ],
     [
      0.45,
-     9199
+     34880
     ],
     [
      0.46,
-     3895
+     34440
     ],
     [
      0.47,
-     11379
+     5723
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x68ccc7ba9c7137d854a24585e6b26a00c4b3d976",
+    "action": "BUY",
+    "side": "No",
+    "price": 0.59,
+    "usd": 400,
+    "ts": 1789149985
+   },
+   {
+    "wallet": "0x7e2a8ff8da3a83b95588e1fadc0fc89ad827d25c",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.42,
+    "usd": 400,
+    "ts": 1789149822
+   },
+   {
+    "wallet": "0xd48a81db62f742c4e42d86dfc23a7ee345366e90",
+    "action": "BUY",
+    "side": "No",
+    "price": 0.59,
+    "usd": 1000,
+    "ts": 1789149514
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.42,
+    "usd": 2400,
+    "ts": 1789149102
+   },
+   {
+    "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.42,
+    "usd": 19097,
+    "ts": 1789148479
+   },
    {
     "wallet": "0xb809a4b78b5eadc71d84be43eda0491eedf72004",
     "action": "BUY",
@@ -272324,8 +272385,8 @@
  },
  "es2-bur-ceu-2026-09-11-more-markets": {
   "shares": {
-   "Over": 6754.543925625,
-   "Under": 7465.5490728
+   "Over": 6844.1700216750005,
+   "Under": 7564.60567695
   },
   "prices": {
    "Over": 0.475,
@@ -272337,7 +272398,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 19529,
+  "totalUsd": 19718,
   "whales": [
    {
     "wallet": "0x3f3aa7005f8006bfcc367d43a25cde25509fe8fd",
@@ -272363,8 +272424,8 @@
     "usd": 766
    }
   ],
-  "hoursToKickoff": 0.82,
-  "capturedAt": "2026-09-11T17:44:18.609064+00:00",
+  "hoursToKickoff": 0.32,
+  "capturedAt": "2026-09-11T18:14:19.109236+00:00",
   "cond": "0x0678ffd04a8336dde94f08ef28f3c5bf3914851f2d79412754e1dbf1e50672e7",
   "frage": "Burgos CF vs. AD Ceuta FC: O/U 2.5",
   "tokens": {
@@ -272374,41 +272435,41 @@
  },
  "bun-uni-s04-2026-09-11-exact-score": {
   "shares": {
-   "1. FC Union Berlin 0 - 0 FC Schalke 04": 0.275,
-   "1. FC Union Berlin 0 - 1 FC Schalke 04": 24.833599635000006,
-   "1. FC Union Berlin 1 - 0 FC Schalke 04": 40.722906375,
-   "1. FC Union Berlin 0 - 2 FC Schalke 04": 23.7185,
-   "1. FC Union Berlin 1 - 1 FC Schalke 04": 107.741634875,
-   "1. FC Union Berlin 2 - 0 FC Schalke 04": 28.242500109999998,
-   "1. FC Union Berlin 0 - 3 FC Schalke 04": 0.10500000000000001,
-   "1. FC Union Berlin 1 - 2 FC Schalke 04": 9.525,
-   "1. FC Union Berlin 2 - 1 FC Schalke 04": 67.496894775,
-   "1. FC Union Berlin 3 - 0 FC Schalke 04": 2.1544354975,
-   "1. FC Union Berlin 1 - 3 FC Schalke 04": 22.488679518999998,
-   "1. FC Union Berlin 2 - 2 FC Schalke 04": 32.352820574999996,
-   "1. FC Union Berlin 3 - 1 FC Schalke 04": 13.212,
-   "1. FC Union Berlin 2 - 3 FC Schalke 04": 71.5640625,
-   "1. FC Union Berlin 3 - 2 FC Schalke 04": 50.6052168945,
-   "1. FC Union Berlin 3 - 3 FC Schalke 04": 49.269814307999994,
-   "Any Other Score": 16.10821491
+   "1. FC Union Berlin 0 - 0 FC Schalke 04": 15.601666684999998,
+   "1. FC Union Berlin 0 - 1 FC Schalke 04": 30.748599635000005,
+   "1. FC Union Berlin 1 - 0 FC Schalke 04": 63.42651618,
+   "1. FC Union Berlin 0 - 2 FC Schalke 04": 27.767999999999997,
+   "1. FC Union Berlin 1 - 1 FC Schalke 04": 129.06855799999997,
+   "1. FC Union Berlin 2 - 0 FC Schalke 04": 71.79250013,
+   "1. FC Union Berlin 0 - 3 FC Schalke 04": 2.016,
+   "1. FC Union Berlin 1 - 2 FC Schalke 04": 16.349999999999998,
+   "1. FC Union Berlin 2 - 1 FC Schalke 04": 124.20730035000001,
+   "1. FC Union Berlin 3 - 0 FC Schalke 04": 5.1119354975,
+   "1. FC Union Berlin 1 - 3 FC Schalke 04": 22.628102592,
+   "1. FC Union Berlin 2 - 2 FC Schalke 04": 71.05282057500001,
+   "1. FC Union Berlin 3 - 1 FC Schalke 04": 44.307,
+   "1. FC Union Berlin 2 - 3 FC Schalke 04": 99.26337500000001,
+   "1. FC Union Berlin 3 - 2 FC Schalke 04": 77.81439901350001,
+   "1. FC Union Berlin 3 - 3 FC Schalke 04": 69.244602402,
+   "Any Other Score": 74.48911491000004
   },
   "prices": {
    "1. FC Union Berlin 0 - 0 FC Schalke 04": 0.055,
    "1. FC Union Berlin 0 - 1 FC Schalke 04": 0.065,
-   "1. FC Union Berlin 1 - 0 FC Schalke 04": 0.075,
+   "1. FC Union Berlin 1 - 0 FC Schalke 04": 0.085,
    "1. FC Union Berlin 0 - 2 FC Schalke 04": 0.0445,
    "1. FC Union Berlin 1 - 1 FC Schalke 04": 0.125,
-   "1. FC Union Berlin 2 - 0 FC Schalke 04": 0.055,
+   "1. FC Union Berlin 2 - 0 FC Schalke 04": 0.065,
    "1. FC Union Berlin 0 - 3 FC Schalke 04": 0.021,
    "1. FC Union Berlin 1 - 2 FC Schalke 04": 0.075,
-   "1. FC Union Berlin 2 - 1 FC Schalke 04": 0.085,
+   "1. FC Union Berlin 2 - 1 FC Schalke 04": 0.09,
    "1. FC Union Berlin 3 - 0 FC Schalke 04": 0.0325,
-   "1. FC Union Berlin 1 - 3 FC Schalke 04": 0.0365,
+   "1. FC Union Berlin 1 - 3 FC Schalke 04": 0.032,
    "1. FC Union Berlin 2 - 2 FC Schalke 04": 0.075,
    "1. FC Union Berlin 3 - 1 FC Schalke 04": 0.045,
-   "1. FC Union Berlin 2 - 3 FC Schalke 04": 0.0315,
-   "1. FC Union Berlin 3 - 2 FC Schalke 04": 0.0345,
-   "1. FC Union Berlin 3 - 3 FC Schalke 04": 0.018,
+   "1. FC Union Berlin 2 - 3 FC Schalke 04": 0.029,
+   "1. FC Union Berlin 3 - 2 FC Schalke 04": 0.0335,
+   "1. FC Union Berlin 3 - 3 FC Schalke 04": 0.017,
    "Any Other Score": 0.115
   },
   "splitGuete": {
@@ -272417,34 +272478,34 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 12204,
+  "totalUsd": 18353,
   "whales": [
+   {
+    "wallet": "0x9f3de29575e01e29172348351bf42d59ab16d65d",
+    "side": "1. FC Union Berlin 2 - 1 FC Schalke 04",
+    "usd": 62,
+    "avgPrice": 0.0965
+   },
+   {
+    "wallet": "0x9f3de29575e01e29172348351bf42d59ab16d65d",
+    "side": "1. FC Union Berlin 2 - 0 FC Schalke 04",
+    "usd": 51,
+    "avgPrice": 0.0663
+   },
+   {
+    "wallet": "0x9f3de29575e01e29172348351bf42d59ab16d65d",
+    "side": "Any Other Score",
+    "usd": 48
+   },
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "1. FC Union Berlin 1 - 1 FC Schalke 04",
     "usd": 40,
     "avgPrice": 0.12
-   },
-   {
-    "wallet": "0x9f3de29575e01e29172348351bf42d59ab16d65d",
-    "side": "1. FC Union Berlin 1 - 1 FC Schalke 04",
-    "usd": 39
-   },
-   {
-    "wallet": "0xcba9371dcbbd7a48b477f04274376e1feea9f812",
-    "side": "1. FC Union Berlin 2 - 3 FC Schalke 04",
-    "usd": 34,
-    "avgPrice": 0.0319
-   },
-   {
-    "wallet": "0xcba9371dcbbd7a48b477f04274376e1feea9f812",
-    "side": "1. FC Union Berlin 3 - 2 FC Schalke 04",
-    "usd": 32,
-    "avgPrice": 0.0379
    }
   ],
-  "hoursToKickoff": 0.82,
-  "capturedAt": "2026-09-11T17:44:18.609064+00:00",
+  "hoursToKickoff": 0.32,
+  "capturedAt": "2026-09-11T18:14:19.109236+00:00",
   "tokens": {
    "1. FC Union Berlin 0 - 0 FC Schalke 04": "39495232096349358245280374495125910304303639989608032951210115222255002836480",
    "1. FC Union Berlin 0 - 1 FC Schalke 04": "88671715975134547053751766701360320556433188913771467673111699635944043431529",
@@ -272516,8 +272577,8 @@
  },
  "atp-varilla-wild-2026-09-11": {
   "shares": {
-   "Juan Pablo Varillas": 2894.7732450000003,
-   "Thiago Seyboth Wild": 4824.622074999999
+   "Juan Pablo Varillas": 2944.2361571250003,
+   "Thiago Seyboth Wild": 4907.060261874999
   },
   "prices": {
    "Juan Pablo Varillas": 0.375,
@@ -272529,7 +272590,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 7717,
+  "totalUsd": 7809,
   "whales": [
    {
     "wallet": "0x45e40dbee6f546c7b318498f8c9778560f5a7e20",
@@ -272540,7 +272601,8 @@
    {
     "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
     "side": "Thiago Seyboth Wild",
-    "usd": 1250
+    "usd": 1250,
+    "avgPrice": 0.6349
    },
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
@@ -272555,8 +272617,8 @@
     "avgPrice": 0.63
    }
   ],
-  "hoursToKickoff": 0.82,
-  "capturedAt": "2026-09-11T17:44:18.609064+00:00",
+  "hoursToKickoff": 0.32,
+  "capturedAt": "2026-09-11T18:14:19.109236+00:00",
   "cond": "0xb9c7f2766f4ebfd34dc07370226a1f1edd6316a40987249686a67996922c2ef8",
   "frage": "Genoa: Juan Pablo Varillas vs Thiago Seyboth Wild",
   "tokens": {
@@ -272658,12 +272720,12 @@
  },
  "atp-zverev-khachan-2026-09-11": {
   "shares": {
-   "Alexander Zverev": 530931.5160622902,
-   "Karen Khachanov": 128610.55191737997
+   "Alexander Zverev": 1437874.2929997395,
+   "Karen Khachanov": 326389.354468165
   },
   "prices": {
-   "Alexander Zverev": 0.805,
-   "Karen Khachanov": 0.195
+   "Alexander Zverev": 0.815,
+   "Karen Khachanov": 0.185
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -272671,35 +272733,35 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 694116,
+  "totalUsd": 1151398,
   "whales": [
    {
-    "wallet": "0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
+    "wallet": "0xe9b710551dd82a44e79203c2394a2b10163ace7b",
     "side": "Alexander Zverev",
-    "usd": 280666,
-    "avgPrice": 0.79
+    "usd": 1263250,
+    "avgPrice": 0.817
+   },
+   {
+    "wallet": "0xf0318c32136c2db7fec88b84869aee6a1106c80c",
+    "side": "Karen Khachanov",
+    "usd": 120250,
+    "avgPrice": 0.18
    },
    {
     "wallet": "0x0e604be17c231a33dc01e38a722c7fe3984e3bad",
     "side": "Karen Khachanov",
-    "usd": 77314,
+    "usd": 73349,
     "avgPrice": 0.2082
-   },
-   {
-    "wallet": "0x6f3e7f25baa7d2d49e15e2d2957ff3dec62cbcf8",
-    "side": "Alexander Zverev",
-    "usd": 53666,
-    "avgPrice": 0.8
    },
    {
     "wallet": "0x45e40dbee6f546c7b318498f8c9778560f5a7e20",
     "side": "Alexander Zverev",
-    "usd": 28980,
+    "usd": 29340,
     "avgPrice": 0.8036
    }
   ],
-  "hoursToKickoff": 1.32,
-  "capturedAt": "2026-09-11T17:44:18.609064+00:00",
+  "hoursToKickoff": 0.82,
+  "capturedAt": "2026-09-11T18:14:19.109236+00:00",
   "cond": "0x9de7b05be5b5ee9ac186a60f558de8d3bcabe74a383c01dd0dd3a426e64240d7",
   "frage": "US Open ATP: Alexander Zverev vs Karen Khachanov",
   "tokens": {
@@ -272708,64 +272770,88 @@
   },
   "book": {
    "side": "Alexander Zverev",
-   "bid": 0.8,
-   "ask": 0.81,
+   "bid": 0.81,
+   "ask": 0.82,
    "spreadC": 1.0,
-   "spreadPct": 1.23,
+   "spreadPct": 1.22,
    "bids": [
     [
+     0.81,
+     1047041
+    ],
+    [
      0.8,
-     74767
+     1247530
     ],
     [
      0.79,
-     734948
+     736606
     ],
     [
      0.78,
-     714784
+     5774
     ],
     [
      0.77,
-     2531
+     75
     ],
     [
      0.76,
-     620
-    ],
-    [
-     0.75,
-     2858
+     2146
     ]
    ],
    "asks": [
     [
-     0.81,
-     214268
-    ],
-    [
      0.82,
-     826235
+     425
     ],
     [
      0.83,
-     778953
+     825156
     ],
     [
      0.84,
-     20251
+     117465
     ],
     [
      0.85,
-     13991
+     34596
     ],
     [
      0.86,
-     12096
+     19023
+    ],
+    [
+     0.87,
+     15378
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0xe9b710551dd82a44e79203c2394a2b10163ace7b",
+    "action": "BUY",
+    "side": "Alexander Zverev",
+    "price": 0.81,
+    "usd": 162000,
+    "ts": 1789149817
+   },
+   {
+    "wallet": "0x5f3017816537dcc354da8f2494ed98c047153aee",
+    "action": "SELL",
+    "side": "Alexander Zverev",
+    "price": 0.8,
+    "usd": 2827,
+    "ts": 1789149477
+   },
+   {
+    "wallet": "0xe9b710551dd82a44e79203c2394a2b10163ace7b",
+    "action": "BUY",
+    "side": "Alexander Zverev",
+    "price": 0.81,
+    "usd": 202500,
+    "ts": 1789149280
+   },
    {
     "wallet": "0xccd81fbd3395dc43a0531f8484b21c2462daf4de",
     "action": "BUY",
@@ -272773,75 +272859,19 @@
     "price": 0.81,
     "usd": 810,
     "ts": 1789147636
-   },
-   {
-    "wallet": "0xccd81fbd3395dc43a0531f8484b21c2462daf4de",
-    "action": "BUY",
-    "side": "Alexander Zverev",
-    "price": 0.81,
-    "usd": 5670,
-    "ts": 1789147629
-   },
-   {
-    "wallet": "0x370575b7acf3d84ebb9cb003c2d470346cea9677",
-    "action": "BUY",
-    "side": "Karen Khachanov",
-    "price": 0.2,
-    "usd": 580,
-    "ts": 1789147083
-   },
-   {
-    "wallet": "0x5f3017816537dcc354da8f2494ed98c047153aee",
-    "action": "BUY",
-    "side": "Alexander Zverev",
-    "price": 0.81,
-    "usd": 2863,
-    "ts": 1789147014
-   },
-   {
-    "wallet": "0x280f1581f1aefb2f88053f1d46a674517296ad6a",
-    "action": "SELL",
-    "side": "Karen Khachanov",
-    "price": 0.19,
-    "usd": 500,
-    "ts": 1789146505
-   },
-   {
-    "wallet": "0x55f544a537f6b9f50a8d27e662c250e93418e2a0",
-    "action": "BUY",
-    "side": "Alexander Zverev",
-    "price": 0.81,
-    "usd": 1250,
-    "ts": 1789146334
-   },
-   {
-    "wallet": "0xecc558e1dd2164b451766c89d2a28b35d8405fde",
-    "action": "BUY",
-    "side": "Alexander Zverev",
-    "price": 0.81,
-    "usd": 2794,
-    "ts": 1789146150
-   },
-   {
-    "wallet": "0x56acab44cfca2e88bb9b3406890aea7bfa0cd77e",
-    "action": "BUY",
-    "side": "Karen Khachanov",
-    "price": 0.2,
-    "usd": 697,
-    "ts": 1789142830
    }
   ]
  },
  "fl1-ren-olm-2026-09-11": {
   "shares": {
-   "Stade Rennais FC 1901": 231474.8948562051,
-   "Draw (Stade Rennais FC 1901 vs. Olympique de Marseille)": 3142.62306197,
-   "Olympique de Marseille": 9692.715502515013
+   "Stade Rennais FC 1901": 431082.5587090749,
+   "Draw (Stade Rennais FC 1901 vs. Olympique de Marseille)": 3418.816203494999,
+   "Olympique de Marseille": 12499.574195840016
   },
   "prices": {
    "Stade Rennais FC 1901": 0.455,
    "Draw (Stade Rennais FC 1901 vs. Olympique de Marseille)": 0.245,
-   "Olympique de Marseille": 0.285
+   "Olympique de Marseille": 0.295
   },
   "splitGuete": {
    "art": "belastbar",
@@ -272849,8 +272879,14 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 763208,
+  "totalUsd": 782045,
   "whales": [
+   {
+    "wallet": "0x168a51f1cac0ad3b166797069382495a8aa10d24",
+    "side": "Stade Rennais FC 1901",
+    "usd": 203243,
+    "avgPrice": 0.4689
+   },
    {
     "wallet": "0x6c557de3d1056971396317b2553b15b094a24a8c",
     "side": "Stade Rennais FC 1901",
@@ -272868,16 +272904,10 @@
     "side": "Stade Rennais FC 1901",
     "usd": 28210,
     "avgPrice": 0.46
-   },
-   {
-    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
-    "side": "Stade Rennais FC 1901",
-    "usd": 15978,
-    "avgPrice": 0.46
    }
   ],
-  "hoursToKickoff": 1.07,
-  "capturedAt": "2026-09-11T17:44:18.609064+00:00",
+  "hoursToKickoff": 0.57,
+  "capturedAt": "2026-09-11T18:14:19.109236+00:00",
   "tokens": {
    "Stade Rennais FC 1901": "102955916736383970318525152607282984713098399363914380126908202379691672599615",
    "Draw (Stade Rennais FC 1901 vs. Olympique de Marseille)": "12503360671619877887005079842238734886152119304976146523041256915484145185279",
@@ -272885,64 +272915,88 @@
   },
   "book": {
    "side": "Stade Rennais FC 1901",
-   "bid": 0.45,
-   "ask": 0.46,
+   "bid": 0.46,
+   "ask": 0.47,
    "spreadC": 1.0,
-   "spreadPct": 2.17,
+   "spreadPct": 2.13,
    "bids": [
     [
+     0.46,
+     204110
+    ],
+    [
      0.45,
-     14402
+     38358
     ],
     [
      0.44,
-     40330
+     38725
     ],
     [
      0.43,
-     26476
+     35042
     ],
     [
      0.42,
-     32659
+     25909
     ],
     [
      0.41,
-     43734
-    ],
-    [
-     0.4,
-     6875
+     28936
     ]
    ],
    "asks": [
     [
-     0.46,
-     77635
-    ],
-    [
      0.47,
-     87466
+     31238
     ],
     [
      0.48,
-     166596
+     109021
     ],
     [
      0.49,
-     97527
+     103516
     ],
     [
      0.5,
-     96098
+     96052
     ],
     [
      0.51,
-     103570
+     129864
+    ],
+    [
+     0.52,
+     33753
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x020d2210ed22b5c5e66b1c7f43896244a18e06ea",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.46,
+    "usd": 300,
+    "ts": 1789150113
+   },
+   {
+    "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.46,
+    "usd": 330,
+    "ts": 1789149849
+   },
+   {
+    "wallet": "0xcb7233254f59bdb4b865f712deb763fbc84d291f",
+    "action": "BUY",
+    "side": "No",
+    "price": 0.55,
+    "usd": 1710,
+    "ts": 1789148464
+   },
    {
     "wallet": "0xa6d188fb70c2e2e9ad411c42c02379ed3020286a",
     "action": "BUY",
@@ -272982,43 +273036,19 @@
     "price": 0.53,
     "usd": 696,
     "ts": 1789147321
-   },
-   {
-    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-    "action": "BUY",
-    "side": "No",
-    "price": 0.53,
-    "usd": 590,
-    "ts": 1789147318
-   },
-   {
-    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-    "action": "BUY",
-    "side": "No",
-    "price": 0.53,
-    "usd": 592,
-    "ts": 1789147315
-   },
-   {
-    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-    "action": "BUY",
-    "side": "No",
-    "price": 0.53,
-    "usd": 350,
-    "ts": 1789146499
    }
   ]
  },
  "lal-sev-val-2026-09-11": {
   "shares": {
-   "Sevilla FC": 117899.96932296,
-   "Draw (Sevilla FC vs. Valencia CF)": 3541.8093838949962,
-   "Valencia CF": 1526.9409359750016
+   "Sevilla FC": 141830.31653121478,
+   "Draw (Sevilla FC vs. Valencia CF)": 3541.809383894996,
+   "Valencia CF": 2162.2345711650005
   },
   "prices": {
-   "Sevilla FC": 0.495,
+   "Sevilla FC": 0.505,
    "Draw (Sevilla FC vs. Valencia CF)": 0.285,
-   "Valencia CF": 0.215
+   "Valencia CF": 0.205
   },
   "splitGuete": {
    "art": "belastbar",
@@ -273026,35 +273056,35 @@
   },
   "league": "LA-LIGA",
   "sport": "Fußball",
-  "totalUsd": 293091,
+  "totalUsd": 329797,
   "whales": [
    {
     "wallet": "0xe4d6b67b76916d069a0a25b63df71e835cf0308a",
     "side": "Sevilla FC",
-    "usd": 39600,
+    "usd": 40400,
     "avgPrice": 0.47
    },
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "side": "Sevilla FC",
-    "usd": 18888,
+    "usd": 19329,
     "avgPrice": 0.4953
+   },
+   {
+    "wallet": "0xb52e8b3afd9f0f0d502a5a76494b42816d67285c",
+    "side": "Sevilla FC",
+    "usd": 13133,
+    "avgPrice": 0.4999
    },
    {
     "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
     "side": "Sevilla FC",
-    "usd": 8856,
-    "avgPrice": 0.4967
-   },
-   {
-    "wallet": "0x5016c48436ab3efa2ab54b117d0c08fa1a4a1eeb",
-    "side": "Sevilla FC",
-    "usd": 5156,
-    "avgPrice": 0.4799
+    "usd": 10114,
+    "avgPrice": 0.497
    }
   ],
-  "hoursToKickoff": 1.32,
-  "capturedAt": "2026-09-11T17:44:18.609064+00:00",
+  "hoursToKickoff": 0.82,
+  "capturedAt": "2026-09-11T18:14:19.109236+00:00",
   "tokens": {
    "Sevilla FC": "98137879301482368215292703416000252576975257052939310485686273073195455828130",
    "Draw (Sevilla FC vs. Valencia CF)": "95270015919929206895959201345267921801224167698429828106497454810159708833401",
@@ -273062,114 +273092,130 @@
   },
   "book": {
    "side": "Sevilla FC",
-   "bid": 0.49,
-   "ask": 0.5,
+   "bid": 0.5,
+   "ask": 0.51,
    "spreadC": 1.0,
-   "spreadPct": 2.0,
+   "spreadPct": 1.96,
    "bids": [
     [
+     0.5,
+     121633
+    ],
+    [
      0.49,
-     121232
+     101612
     ],
     [
      0.48,
-     30970
+     31085
     ],
     [
      0.47,
-     20718
+     32617
     ],
     [
      0.46,
-     10057
+     30432
     ],
     [
      0.45,
-     3802
-    ],
-    [
-     0.44,
-     6895
+     44323
     ]
    ],
    "asks": [
     [
-     0.5,
-     19930
-    ],
-    [
      0.51,
-     18540
+     169622
     ],
     [
      0.52,
-     81378
+     121587
     ],
     [
      0.53,
-     23610
+     86339
     ],
     [
      0.54,
-     9638
+     52932
     ],
     [
      0.55,
-     8581
+     12160
+    ],
+    [
+     0.56,
+     37072
     ]
    ]
   },
   "trades": [
    {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "wallet": "0xe0e637b08c971c2f50d1356e1a93696c9ce2584b",
     "action": "BUY",
-    "side": "Yes",
+    "side": "No",
     "price": 0.5,
-    "usd": 490,
-    "ts": 1789147831
+    "usd": 3979,
+    "ts": 1789150009
    },
    {
-    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+    "wallet": "0xb52e8b3afd9f0f0d502a5a76494b42816d67285c",
     "action": "BUY",
     "side": "Yes",
     "price": 0.5,
-    "usd": 463,
-    "ts": 1789147687
-   },
-   {
-    "wallet": "0x92f59e08060c00c9b2dde0098d272f66c34c52a2",
-    "action": "BUY",
-    "side": "Yes",
-    "price": 0.5,
-    "usd": 333,
-    "ts": 1789147422
+    "usd": 8863,
+    "ts": 1789149849
    },
    {
     "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
     "action": "BUY",
     "side": "Yes",
     "price": 0.5,
-    "usd": 6659,
-    "ts": 1789147422
+    "usd": 658,
+    "ts": 1789149772
    },
    {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "wallet": "0xae2b0aaea325a32870f56ff19df3b87acaa190ea",
     "action": "BUY",
     "side": "Yes",
     "price": 0.5,
-    "usd": 426,
-    "ts": 1789147363
+    "usd": 1000,
+    "ts": 1789149643
+   },
+   {
+    "wallet": "0x020d2210ed22b5c5e66b1c7f43896244a18e06ea",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.5,
+    "usd": 300,
+    "ts": 1789149622
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.5,
+    "usd": 4762,
+    "ts": 1789149331
+   },
+   {
+    "wallet": "0xd48a81db62f742c4e42d86dfc23a7ee345366e90",
+    "action": "BUY",
+    "side": "No",
+    "price": 0.51,
+    "usd": 1000,
+    "ts": 1789149283
    }
   ]
  },
  "fl1-ren-olm-2026-09-11-more-markets": {
   "shares": {
-   "Over": 12404.919650184998,
-   "Under": 15471.312154935003
+   "Over": 12503.658460095,
+   "Under": 16240.393015775002
   },
   "prices": {
-   "Over": 0.445,
-   "Under": 0.555
+   "Over": 0.435,
+   "Under": 0.565
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -273177,160 +273223,51 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 50904,
+  "totalUsd": 50986,
   "whales": [
    {
     "wallet": "0x10a6fadcbacd66330862206f6199b197e3ad4d8b",
     "side": "Under",
-    "usd": 12787,
+    "usd": 13017,
     "avgPrice": 0.5599
    },
    {
     "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
     "side": "Over",
-    "usd": 2876
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "side": "Over",
-    "usd": 1553,
-    "avgPrice": 0.4262
+    "usd": 2656
    },
    {
     "wallet": "0xfd4fb07f091e6a6d212f6e4876bd2ebc91bca4d3",
     "side": "Under",
-    "usd": 1515,
+    "usd": 1542,
     "avgPrice": 0.5599
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Over",
+    "usd": 1518,
+    "avgPrice": 0.4262
    }
   ],
-  "hoursToKickoff": 1.07,
-  "capturedAt": "2026-09-11T17:44:18.609064+00:00",
+  "hoursToKickoff": 0.57,
+  "capturedAt": "2026-09-11T18:14:19.109236+00:00",
   "cond": "0xdbe07e3700a5e77e95d5ab624a7fa46c186e7caa19265b712a57d467b04283d0",
   "frage": "Stade Rennais FC 1901 vs. Olympique de Marseille: O/U 3.5",
   "tokens": {
    "Over": "7525324717494856956029594396349590842814004261590745663998858329737784734084",
    "Under": "28681202294120029257599965238745272202096846530792564999082713585199832419234"
-  },
-  "book": {
-   "side": "Under",
-   "bid": 0.55,
-   "ask": 0.56,
-   "spreadC": 1.0,
-   "spreadPct": 1.79,
-   "bids": [
-    [
-     0.55,
-     2772
-    ],
-    [
-     0.54,
-     17459
-    ],
-    [
-     0.53,
-     30695
-    ],
-    [
-     0.52,
-     10740
-    ],
-    [
-     0.51,
-     3045
-    ],
-    [
-     0.5,
-     5963
-    ]
-   ],
-   "asks": [
-    [
-     0.56,
-     15481
-    ],
-    [
-     0.57,
-     15438
-    ],
-    [
-     0.58,
-     31608
-    ],
-    [
-     0.59,
-     5261
-    ],
-    [
-     0.6,
-     6780
-    ],
-    [
-     0.61,
-     1021
-    ]
-   ]
-  },
-  "trades": [
-   {
-    "wallet": "0xfd4fb07f091e6a6d212f6e4876bd2ebc91bca4d3",
-    "action": "BUY",
-    "side": "Under",
-    "price": 0.56,
-    "usd": 1495,
-    "ts": 1789146039
-   },
-   {
-    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
-    "action": "BUY",
-    "side": "Over",
-    "price": 0.44,
-    "usd": 4307,
-    "ts": 1789138612
-   },
-   {
-    "wallet": "0x10a6fadcbacd66330862206f6199b197e3ad4d8b",
-    "action": "BUY",
-    "side": "Under",
-    "price": 0.56,
-    "usd": 2580,
-    "ts": 1789133754
-   },
-   {
-    "wallet": "0x10a6fadcbacd66330862206f6199b197e3ad4d8b",
-    "action": "BUY",
-    "side": "Under",
-    "price": 0.5599,
-    "usd": 10320,
-    "ts": 1789133694
-   },
-   {
-    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
-    "action": "BUY",
-    "side": "Over",
-    "price": 0.43,
-    "usd": 1300,
-    "ts": 1789130562
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "action": "BUY",
-    "side": "Over",
-    "price": 0.43,
-    "usd": 733,
-    "ts": 1789129033
-   }
-  ]
+  }
  },
  "sea-ven-fio-2026-09-11": {
   "shares": {
-   "Venezia FC": 6244.322198040003,
-   "Draw (Venezia FC vs. ACF Fiorentina)": 18313.77727740001,
-   "ACF Fiorentina": 11153.493465750009
+   "Venezia FC": 14453.75696709,
+   "Draw (Venezia FC vs. ACF Fiorentina)": 25289.345747600015,
+   "ACF Fiorentina": 20722.281273114982
   },
   "prices": {
-   "Venezia FC": 0.345,
+   "Venezia FC": 0.355,
    "Draw (Venezia FC vs. ACF Fiorentina)": 0.275,
-   "ACF Fiorentina": 0.375
+   "ACF Fiorentina": 0.365
   },
   "splitGuete": {
    "art": "belastbar",
@@ -273338,33 +273275,35 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 111372,
+  "totalUsd": 199060,
   "whales": [
+   {
+    "wallet": "0x0a39b3b29ab3b7dd753aa96fde4ecab3f2dbb0b9",
+    "side": "Venezia FC",
+    "usd": 8116,
+    "avgPrice": 0.3499
+   },
+   {
+    "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
+    "side": "ACF Fiorentina",
+    "usd": 7388,
+    "avgPrice": 0.37
+   },
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "side": "Draw (Venezia FC vs. ACF Fiorentina)",
+    "usd": 5848,
+    "avgPrice": 0.27
+   },
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "Draw (Venezia FC vs. ACF Fiorentina)",
     "usd": 4400,
     "avgPrice": 0.2749
-   },
-   {
-    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
-    "side": "Venezia FC",
-    "usd": 3390
-   },
-   {
-    "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
-    "side": "ACF Fiorentina",
-    "usd": 2930,
-    "avgPrice": 0.3918
-   },
-   {
-    "wallet": "0x7ea571c40408f340c1c8fc8eaacebab53c1bde7b",
-    "side": "Draw (Venezia FC vs. ACF Fiorentina)",
-    "usd": 2697
    }
   ],
-  "hoursToKickoff": 1.07,
-  "capturedAt": "2026-09-11T17:44:18.609064+00:00",
+  "hoursToKickoff": 0.57,
+  "capturedAt": "2026-09-11T18:14:19.109236+00:00",
   "tokens": {
    "Venezia FC": "58248305361055628471726626582225830397127044748610647727047812613371282364885",
    "Draw (Venezia FC vs. ACF Fiorentina)": "73953678216996161232057120232699339720136332451731200937763253085331337268357",
@@ -273372,140 +273311,171 @@
   },
   "book": {
    "side": "Draw (Venezia FC vs. ACF Fiorentina)",
-   "bid": 0.26,
-   "ask": 0.27,
+   "bid": 0.27,
+   "ask": 0.28,
    "spreadC": 1.0,
-   "spreadPct": 3.7,
+   "spreadPct": 3.57,
    "bids": [
     [
+     0.27,
+     19697
+    ],
+    [
      0.26,
-     29896
+     54920
     ],
     [
      0.25,
-     31835
+     26941
     ],
     [
      0.24,
-     12948
+     20069
     ],
     [
      0.23,
-     5060
+     6546
     ],
     [
      0.22,
-     2891
-    ],
-    [
-     0.21,
-     1438
+     7294
     ]
    ],
    "asks": [
     [
-     0.27,
-     26140
-    ],
-    [
      0.28,
-     32893
+     59251
     ],
     [
      0.29,
-     50057
+     111030
     ],
     [
      0.3,
-     80463
+     28792
     ],
     [
      0.31,
-     17892
+     17169
     ],
     [
      0.32,
-     8380
+     11500
+    ],
+    [
+     0.33,
+     7280
     ]
    ]
   },
   "trades": [
    {
-    "wallet": "0xd202bf6d89dc6bab1b9f00ead175f75466348973",
-    "action": "BUY",
-    "side": "No",
-    "price": 0.73,
-    "usd": 19853,
-    "ts": 1789148497
-   },
-   {
-    "wallet": "0xa07c39ac29cc1bfc632db9dd6017483e43b411a0",
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
     "action": "BUY",
     "side": "Yes",
-    "price": 0.28,
-    "usd": 1000,
-    "ts": 1789146537
+    "price": 0.27,
+    "usd": 787,
+    "ts": 1789149726
    },
    {
-    "wallet": "0xd202bf6d89dc6bab1b9f00ead175f75466348973",
-    "action": "BUY",
-    "side": "No",
-    "price": 0.72,
-    "usd": 21401,
-    "ts": 1789131063
-   },
-   {
-    "wallet": "0xf57eb9e945fffa6980db07f2ce6e4461add3bbd6",
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
     "action": "BUY",
     "side": "Yes",
-    "price": 0.29,
-    "usd": 656,
-    "ts": 1789128891
+    "price": 0.27,
+    "usd": 442,
+    "ts": 1789149726
+   },
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.27,
+    "usd": 321,
+    "ts": 1789149456
+   },
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.27,
+    "usd": 338,
+    "ts": 1789149340
+   },
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.27,
+    "usd": 478,
+    "ts": 1789149250
+   },
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.27,
+    "usd": 454,
+    "ts": 1789149159
+   },
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.27,
+    "usd": 406,
+    "ts": 1789149127
+   },
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.27,
+    "usd": 350,
+    "ts": 1789149127
    }
   ]
  },
  "elc-whu-wre-2026-09-11-more-markets": {
   "shares": {
-   "Over": 4175.990635775001,
-   "Under": 7265.167015865
+   "Over": 5318.978161624999,
+   "Under": 9664.061486280001
   },
   "prices": {
-   "Over": 0.365,
-   "Under": 0.635
+   "Over": 0.355,
+   "Under": 0.645
   },
   "splitGuete": {
    "art": "preis_echo",
    "trunc": false
   },
-  "league": "EFL-CHAMPIONSHIP",
+  "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 14180,
+  "totalUsd": 18022,
   "whales": [
    {
     "wallet": "0x224a89dbe0db0d6124b335edabd15b3f877da3d5",
     "side": "Under",
-    "usd": 5765
+    "usd": 5856
+   },
+   {
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "side": "Under",
+    "usd": 2373
    },
    {
     "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
     "side": "Over",
-    "usd": 1826
+    "usd": 1776
    },
    {
     "wallet": "0x6ddda85ed91cda1a5edd712d4cd0d644b3fa8011",
     "side": "Over",
-    "usd": 786,
+    "usd": 764,
     "avgPrice": 0.3699
-   },
-   {
-    "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
-    "side": "Over",
-    "usd": 484,
-    "avgPrice": 0.33
    }
   ],
-  "hoursToKickoff": 1.32,
-  "capturedAt": "2026-09-11T17:44:18.609064+00:00",
+  "hoursToKickoff": 0.82,
+  "capturedAt": "2026-09-11T18:14:19.109236+00:00",
   "cond": "0xf02ad7579b8a1184c184b3d1665e0cbff229c71c584dc330dc370a607ac97a57",
   "frage": "West Ham United FC vs. Wrexham AFC: O/U 3.5",
   "tokens": {
@@ -273515,22 +273485,22 @@
  },
  "elc-whu-wre-2026-09-11": {
   "shares": {
-   "West Ham United FC": 43681.61051690995,
-   "Draw (West Ham United FC vs. Wrexham AFC)": 372.40769429499994,
-   "Wrexham AFC": 2906.5752950899996
+   "West Ham United FC": 45615.76831396493,
+   "Draw (West Ham United FC vs. Wrexham AFC)": 395.31000155499993,
+   "Wrexham AFC": 2760.5199583099993
   },
   "prices": {
    "West Ham United FC": 0.645,
    "Draw (West Ham United FC vs. Wrexham AFC)": 0.205,
-   "Wrexham AFC": 0.155
+   "Wrexham AFC": 0.145
   },
   "splitGuete": {
    "art": "belastbar",
    "trunc": false
   },
-  "league": "EFL-CHAMPIONSHIP",
+  "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 90657,
+  "totalUsd": 96662,
   "whales": [
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
@@ -273553,12 +273523,12 @@
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "side": "West Ham United FC",
-    "usd": 1975,
-    "avgPrice": 0.618
+    "usd": 2295,
+    "avgPrice": 0.6224
    }
   ],
-  "hoursToKickoff": 1.32,
-  "capturedAt": "2026-09-11T17:44:18.609064+00:00",
+  "hoursToKickoff": 0.82,
+  "capturedAt": "2026-09-11T18:14:19.109236+00:00",
   "tokens": {
    "West Ham United FC": "115358216489087730484051632872380409084821226432030388030346366207961111358448",
    "Draw (West Ham United FC vs. Wrexham AFC)": "96841025757073393399726938379383734316726318214062703154209830481924682981979",
@@ -273567,12 +273537,12 @@
  },
  "lal-sev-val-2026-09-11-total-corners": {
   "shares": {
-   "Over": 31877.03461385,
-   "Under": 30020.121593140004
+   "Over": 32940.79428255,
+   "Under": 29803.5773631
   },
   "prices": {
-   "Over": 0.515,
-   "Under": 0.485
+   "Over": 0.525,
+   "Under": 0.475
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -273580,35 +273550,35 @@
   },
   "league": "LA-LIGA",
   "sport": "Fußball",
-  "totalUsd": 70017,
+  "totalUsd": 70044,
   "whales": [
    {
     "wallet": "0x73bcd24d510ff4e4d5feac6aec763c5511e246ce",
     "side": "Under",
-    "usd": 25902,
+    "usd": 25368,
     "avgPrice": 0.51
    },
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
     "side": "Over",
-    "usd": 15747,
+    "usd": 16053,
     "avgPrice": 0.4898
    },
    {
     "wallet": "0x8606aa65253b257644e7945a6faf5332e2d9db26",
     "side": "Over",
-    "usd": 8755,
+    "usd": 8925,
     "avgPrice": 0.49
    },
    {
     "wallet": "0xdebbe89ceb32828a99648bca497684f5209ceedb",
     "side": "Over",
-    "usd": 2040,
+    "usd": 2079,
     "avgPrice": 0.4926
    }
   ],
-  "hoursToKickoff": 1.32,
-  "capturedAt": "2026-09-11T17:44:18.609064+00:00",
+  "hoursToKickoff": 0.82,
+  "capturedAt": "2026-09-11T18:14:19.109236+00:00",
   "cond": "0x35420bdf5655d57c4251aa3fdb99aad23b48c144e2e7c95994b0eae4f08e2d0d",
   "frage": "Sevilla FC vs. Valencia CF: O/U 8.5 Total Corners",
   "tokens": {
@@ -273618,41 +273588,41 @@
  },
  "fl1-ren-olm-2026-09-11-exact-score": {
   "shares": {
-   "Stade Rennais FC 1901 0 - 0 Olympique de Marseille": 357.18582588749996,
+   "Stade Rennais FC 1901 0 - 0 Olympique de Marseille": 377.8425566625,
    "Stade Rennais FC 1901 0 - 1 Olympique de Marseille": 36.58005,
    "Stade Rennais FC 1901 1 - 0 Olympique de Marseille": 48.100650065,
-   "Stade Rennais FC 1901 0 - 2 Olympique de Marseille": 358.547730354,
-   "Stade Rennais FC 1901 1 - 1 Olympique de Marseille": 83.67879586500001,
+   "Stade Rennais FC 1901 0 - 2 Olympique de Marseille": 374.845354461,
+   "Stade Rennais FC 1901 1 - 1 Olympique de Marseille": 84.553445865,
    "Stade Rennais FC 1901 2 - 0 Olympique de Marseille": 492.463635895,
-   "Stade Rennais FC 1901 0 - 3 Olympique de Marseille": 13.345170000000001,
+   "Stade Rennais FC 1901 0 - 3 Olympique de Marseille": 13.737675000000001,
    "Stade Rennais FC 1901 1 - 2 Olympique de Marseille": 68.8720179,
    "Stade Rennais FC 1901 2 - 1 Olympique de Marseille": 902.1209499999999,
-   "Stade Rennais FC 1901 3 - 0 Olympique de Marseille": 57.825374999999994,
-   "Stade Rennais FC 1901 1 - 3 Olympique de Marseille": 55.6618965175,
-   "Stade Rennais FC 1901 2 - 2 Olympique de Marseille": 174.48825000000002,
+   "Stade Rennais FC 1901 3 - 0 Olympique de Marseille": 57.05437,
+   "Stade Rennais FC 1901 1 - 3 Olympique de Marseille": 54.805559648,
+   "Stade Rennais FC 1901 2 - 2 Olympique de Marseille": 175.84500000000003,
    "Stade Rennais FC 1901 3 - 1 Olympique de Marseille": 280.5922167400001,
    "Stade Rennais FC 1901 2 - 3 Olympique de Marseille": 395.74428276900005,
-   "Stade Rennais FC 1901 3 - 2 Olympique de Marseille": 149.32632462,
-   "Stade Rennais FC 1901 3 - 3 Olympique de Marseille": 285.221393808,
-   "Any Other Score": 206.38553792
+   "Stade Rennais FC 1901 3 - 2 Olympique de Marseille": 148.9344345675,
+   "Stade Rennais FC 1901 3 - 3 Olympique de Marseille": 279.279281437,
+   "Any Other Score": 207.40553792
   },
   "prices": {
    "Stade Rennais FC 1901 0 - 0 Olympique de Marseille": 0.0375,
    "Stade Rennais FC 1901 0 - 1 Olympique de Marseille": 0.045,
    "Stade Rennais FC 1901 1 - 0 Olympique de Marseille": 0.065,
-   "Stade Rennais FC 1901 0 - 2 Olympique de Marseille": 0.033,
+   "Stade Rennais FC 1901 0 - 2 Olympique de Marseille": 0.0345,
    "Stade Rennais FC 1901 1 - 1 Olympique de Marseille": 0.105,
    "Stade Rennais FC 1901 2 - 0 Olympique de Marseille": 0.055,
-   "Stade Rennais FC 1901 0 - 3 Olympique de Marseille": 0.017,
+   "Stade Rennais FC 1901 0 - 3 Olympique de Marseille": 0.0175,
    "Stade Rennais FC 1901 1 - 2 Olympique de Marseille": 0.075,
    "Stade Rennais FC 1901 2 - 1 Olympique de Marseille": 0.095,
-   "Stade Rennais FC 1901 3 - 0 Olympique de Marseille": 0.0375,
-   "Stade Rennais FC 1901 1 - 3 Olympique de Marseille": 0.0325,
+   "Stade Rennais FC 1901 3 - 0 Olympique de Marseille": 0.037,
+   "Stade Rennais FC 1901 1 - 3 Olympique de Marseille": 0.032,
    "Stade Rennais FC 1901 2 - 2 Olympique de Marseille": 0.075,
    "Stade Rennais FC 1901 3 - 1 Olympique de Marseille": 0.055,
    "Stade Rennais FC 1901 2 - 3 Olympique de Marseille": 0.033,
-   "Stade Rennais FC 1901 3 - 2 Olympique de Marseille": 0.044,
-   "Stade Rennais FC 1901 3 - 3 Olympique de Marseille": 0.024,
+   "Stade Rennais FC 1901 3 - 2 Olympique de Marseille": 0.0435,
+   "Stade Rennais FC 1901 3 - 3 Olympique de Marseille": 0.0235,
    "Any Other Score": 0.17
   },
   "splitGuete": {
@@ -273661,7 +273631,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 72961,
+  "totalUsd": 72997,
   "whales": [
    {
     "wallet": "0x6daae04265d65cb2aae7fe6db4210568de7d954a",
@@ -273678,7 +273648,7 @@
    {
     "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
     "side": "Stade Rennais FC 1901 0 - 2 Olympique de Marseille",
-    "usd": 343,
+    "usd": 359,
     "avgPrice": 0.0366
    },
    {
@@ -273688,8 +273658,8 @@
     "avgPrice": 0.039
    }
   ],
-  "hoursToKickoff": 1.07,
-  "capturedAt": "2026-09-11T17:44:18.609064+00:00",
+  "hoursToKickoff": 0.57,
+  "capturedAt": "2026-09-11T18:14:19.109236+00:00",
   "tokens": {
    "Stade Rennais FC 1901 0 - 0 Olympique de Marseille": "3831109439366247207082222485870173362682551692530949779791179557519604659104",
    "Stade Rennais FC 1901 0 - 1 Olympique de Marseille": "20681772235758748779596609926659922874347047023050897138460548423827265928009",
@@ -273763,12 +273733,12 @@
  },
  "lal-sev-val-2026-09-11-more-markets": {
   "shares": {
-   "Over": 4704.779933555,
-   "Under": 6632.374813154999
+   "Over": 8553.961357074999,
+   "Under": 11573.005858825001
   },
   "prices": {
-   "Over": 0.415,
-   "Under": 0.585
+   "Over": 0.425,
+   "Under": 0.575
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -273776,34 +273746,34 @@
   },
   "league": "LA-LIGA",
   "sport": "Fußball",
-  "totalUsd": 13665,
+  "totalUsd": 25980,
   "whales": [
    {
     "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
     "side": "Under",
-    "usd": 2499
+    "usd": 7522
    },
    {
     "wallet": "0x42ef8bd14e25166ca87f5924ff6c5865ecab1576",
     "side": "Under",
-    "usd": 1508,
+    "usd": 1482,
     "avgPrice": 0.5876
    },
    {
     "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
     "side": "Over",
-    "usd": 1414,
+    "usd": 1448,
     "avgPrice": 0.4099
    },
    {
     "wallet": "0xe5f0ae9cc9aef77ae3c2a64c9e69caa3f335dc1d",
     "side": "Over",
-    "usd": 1245,
+    "usd": 1275,
     "avgPrice": 0.41
    }
   ],
-  "hoursToKickoff": 1.32,
-  "capturedAt": "2026-09-11T17:44:18.609064+00:00",
+  "hoursToKickoff": 0.82,
+  "capturedAt": "2026-09-11T18:14:19.109236+00:00",
   "cond": "0xeb5e7dec3d6ee6ff78d5e7a9854f20fbfc78ece9445ef39429eadc71afd09520",
   "frage": "Sevilla FC vs. Valencia CF: O/U 2.5",
   "tokens": {
@@ -273813,23 +273783,23 @@
  },
  "lal-sev-val-2026-09-11-exact-score": {
   "shares": {
-   "Sevilla FC 0 - 0 Valencia CF": 146.6518458,
-   "Sevilla FC 0 - 1 Valencia CF": 202.10289452000004,
-   "Sevilla FC 1 - 0 Valencia CF": 474.669584445,
-   "Sevilla FC 0 - 2 Valencia CF": 163.26424244,
-   "Sevilla FC 1 - 1 Valencia CF": 327.56217777000006,
-   "Sevilla FC 2 - 0 Valencia CF": 237.88618644,
-   "Sevilla FC 0 - 3 Valencia CF": 10.637337624999999,
-   "Sevilla FC 1 - 2 Valencia CF": 79.66181673999999,
-   "Sevilla FC 2 - 1 Valencia CF": 239.5615,
-   "Sevilla FC 3 - 0 Valencia CF": 81.257860452,
-   "Sevilla FC 1 - 3 Valencia CF": 44.62484875,
-   "Sevilla FC 2 - 2 Valencia CF": 93.0736250775,
-   "Sevilla FC 3 - 1 Valencia CF": 118.00784506999999,
-   "Sevilla FC 2 - 3 Valencia CF": 69.8033571615,
-   "Sevilla FC 3 - 2 Valencia CF": 80.873718356,
-   "Sevilla FC 3 - 3 Valencia CF": 38.13808889599999,
-   "Any Other Score": 71.611428655
+   "Sevilla FC 0 - 0 Valencia CF": 197.6098458,
+   "Sevilla FC 0 - 1 Valencia CF": 293.9929945200001,
+   "Sevilla FC 1 - 0 Valencia CF": 667.0343178749999,
+   "Sevilla FC 0 - 2 Valencia CF": 191.86391744,
+   "Sevilla FC 1 - 1 Valencia CF": 509.03920638000005,
+   "Sevilla FC 2 - 0 Valencia CF": 379.92073644000004,
+   "Sevilla FC 0 - 3 Valencia CF": 17.997387749999998,
+   "Sevilla FC 1 - 2 Valencia CF": 128.06126674,
+   "Sevilla FC 2 - 1 Valencia CF": 370.66054999999994,
+   "Sevilla FC 3 - 0 Valencia CF": 124.44171157599997,
+   "Sevilla FC 1 - 3 Valencia CF": 50.77773749999999,
+   "Sevilla FC 2 - 2 Valencia CF": 183.93896509399997,
+   "Sevilla FC 3 - 1 Valencia CF": 227.88159327000002,
+   "Sevilla FC 2 - 3 Valencia CF": 78.657917637,
+   "Sevilla FC 3 - 2 Valencia CF": 163.54528418599998,
+   "Sevilla FC 3 - 3 Valencia CF": 45.178008895999994,
+   "Any Other Score": 128.810778655
   },
   "prices": {
    "Sevilla FC 0 - 0 Valencia CF": 0.095,
@@ -273838,15 +273808,15 @@
    "Sevilla FC 0 - 2 Valencia CF": 0.0325,
    "Sevilla FC 1 - 1 Valencia CF": 0.135,
    "Sevilla FC 2 - 0 Valencia CF": 0.105,
-   "Sevilla FC 0 - 3 Valencia CF": 0.0095,
+   "Sevilla FC 0 - 3 Valencia CF": 0.009,
    "Sevilla FC 1 - 2 Valencia CF": 0.055,
    "Sevilla FC 2 - 1 Valencia CF": 0.095,
-   "Sevilla FC 3 - 0 Valencia CF": 0.0445,
-   "Sevilla FC 1 - 3 Valencia CF": 0.0155,
-   "Sevilla FC 2 - 2 Valencia CF": 0.0465,
-   "Sevilla FC 3 - 1 Valencia CF": 0.043,
-   "Sevilla FC 2 - 3 Valencia CF": 0.0135,
-   "Sevilla FC 3 - 2 Valencia CF": 0.0205,
+   "Sevilla FC 3 - 0 Valencia CF": 0.0455,
+   "Sevilla FC 1 - 3 Valencia CF": 0.015,
+   "Sevilla FC 2 - 2 Valencia CF": 0.047,
+   "Sevilla FC 3 - 1 Valencia CF": 0.045,
+   "Sevilla FC 2 - 3 Valencia CF": 0.013,
+   "Sevilla FC 3 - 2 Valencia CF": 0.0215,
    "Sevilla FC 3 - 3 Valencia CF": 0.008,
    "Any Other Score": 0.065
   },
@@ -273856,7 +273826,7 @@
   },
   "league": "LA-LIGA",
   "sport": "Fußball",
-  "totalUsd": 32005,
+  "totalUsd": 45377,
   "whales": [
    {
     "wallet": "0xfe9455e2cad5257b26547af62cbbfd75c8968a3d",
@@ -273867,8 +273837,7 @@
    {
     "wallet": "0xfe9455e2cad5257b26547af62cbbfd75c8968a3d",
     "side": "Sevilla FC 1 - 1 Valencia CF",
-    "usd": 135,
-    "avgPrice": 0.0312
+    "usd": 112
    },
    {
     "wallet": "0x9e161cf45572279b5dad0e03b3eece250c84a795",
@@ -273877,13 +273846,14 @@
     "avgPrice": 0.1004
    },
    {
-    "wallet": "0xfe9455e2cad5257b26547af62cbbfd75c8968a3d",
-    "side": "Sevilla FC 0 - 0 Valencia CF",
-    "usd": 95
+    "wallet": "0x79ab2e51826652efa43a45f0eb9b059fb155d7a7",
+    "side": "Sevilla FC 2 - 2 Valencia CF",
+    "usd": 99,
+    "avgPrice": 0.0474
    }
   ],
-  "hoursToKickoff": 1.32,
-  "capturedAt": "2026-09-11T17:44:18.609064+00:00",
+  "hoursToKickoff": 0.82,
+  "capturedAt": "2026-09-11T18:14:19.109236+00:00",
   "tokens": {
    "Sevilla FC 0 - 0 Valencia CF": "62302662614876857892266814196012760948260910680009418437575066605305830428527",
    "Sevilla FC 0 - 1 Valencia CF": "74670968195985652493973372404994202915002426400606134202393136170578568743876",
@@ -273999,22 +273969,22 @@
  },
  "sea-ven-fio-2026-09-11-exact-score": {
   "shares": {
-   "Venezia FC 0 - 0 ACF Fiorentina": 42.3775,
+   "Venezia FC 0 - 0 ACF Fiorentina": 317.1025,
    "Venezia FC 0 - 1 ACF Fiorentina": 70.21134939000001,
    "Venezia FC 1 - 0 ACF Fiorentina": 98.97642859,
-   "Venezia FC 0 - 2 ACF Fiorentina": 39.847500000000004,
-   "Venezia FC 1 - 1 ACF Fiorentina": 159.45403025000002,
+   "Venezia FC 0 - 2 ACF Fiorentina": 67.3475,
+   "Venezia FC 1 - 1 ACF Fiorentina": 219.202972625,
    "Venezia FC 2 - 0 ACF Fiorentina": 37.385999999999996,
-   "Venezia FC 0 - 3 ACF Fiorentina": 19.830833351,
-   "Venezia FC 1 - 2 ACF Fiorentina": 243.334222515,
-   "Venezia FC 2 - 1 ACF Fiorentina": 79.34277808000002,
+   "Venezia FC 0 - 3 ACF Fiorentina": 20.579166685,
+   "Venezia FC 1 - 2 ACF Fiorentina": 286.259222515,
+   "Venezia FC 2 - 1 ACF Fiorentina": 121.84277808,
    "Venezia FC 3 - 0 ACF Fiorentina": 33.975,
-   "Venezia FC 1 - 3 ACF Fiorentina": 35.170190484,
-   "Venezia FC 2 - 2 ACF Fiorentina": 114.0375,
-   "Venezia FC 3 - 1 ACF Fiorentina": 31.4315,
-   "Venezia FC 2 - 3 ACF Fiorentina": 91.409294151,
-   "Venezia FC 3 - 2 ACF Fiorentina": 68.202225,
-   "Venezia FC 3 - 3 ACF Fiorentina": 47.50672677449999,
+   "Venezia FC 1 - 3 ACF Fiorentina": 37.264404770000006,
+   "Venezia FC 2 - 2 ACF Fiorentina": 151.9125,
+   "Venezia FC 3 - 1 ACF Fiorentina": 32.90625,
+   "Venezia FC 2 - 3 ACF Fiorentina": 133.41257540099997,
+   "Venezia FC 3 - 2 ACF Fiorentina": 70.36737500000001,
+   "Venezia FC 3 - 3 ACF Fiorentina": 51.35862353999999,
    "Any Other Score": 87.9709092
   },
   "prices": {
@@ -274024,16 +273994,16 @@
    "Venezia FC 0 - 2 ACF Fiorentina": 0.055,
    "Venezia FC 1 - 1 ACF Fiorentina": 0.125,
    "Venezia FC 2 - 0 ACF Fiorentina": 0.045,
-   "Venezia FC 0 - 3 ACF Fiorentina": 0.0265,
+   "Venezia FC 0 - 3 ACF Fiorentina": 0.0275,
    "Venezia FC 1 - 2 ACF Fiorentina": 0.085,
    "Venezia FC 2 - 1 ACF Fiorentina": 0.085,
    "Venezia FC 3 - 0 ACF Fiorentina": 0.025,
-   "Venezia FC 1 - 3 ACF Fiorentina": 0.041,
+   "Venezia FC 1 - 3 ACF Fiorentina": 0.0425,
    "Venezia FC 2 - 2 ACF Fiorentina": 0.075,
-   "Venezia FC 3 - 1 ACF Fiorentina": 0.037,
+   "Venezia FC 3 - 1 ACF Fiorentina": 0.0375,
    "Venezia FC 2 - 3 ACF Fiorentina": 0.0315,
-   "Venezia FC 3 - 2 ACF Fiorentina": 0.0315,
-   "Venezia FC 3 - 3 ACF Fiorentina": 0.0185,
+   "Venezia FC 3 - 2 ACF Fiorentina": 0.0325,
+   "Venezia FC 3 - 3 ACF Fiorentina": 0.02,
    "Any Other Score": 0.12
   },
   "splitGuete": {
@@ -274042,8 +274012,14 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 12885,
+  "totalUsd": 21484,
   "whales": [
+   {
+    "wallet": "0x5be94b3a84065bacc8bc57b7bf46c4fb4ba5ef2b",
+    "side": "Venezia FC 0 - 0 ACF Fiorentina",
+    "usd": 275,
+    "avgPrice": 0.06
+   },
    {
     "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
     "side": "Venezia FC 1 - 2 ACF Fiorentina",
@@ -274056,20 +274032,13 @@
     "usd": 73
    },
    {
-    "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
+    "wallet": "0x9f3de29575e01e29172348351bf42d59ab16d65d",
     "side": "Venezia FC 1 - 1 ACF Fiorentina",
-    "usd": 60,
-    "avgPrice": 0.0605
-   },
-   {
-    "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
-    "side": "Any Other Score",
-    "usd": 58,
-    "avgPrice": 0.0605
+    "usd": 69
    }
   ],
-  "hoursToKickoff": 1.07,
-  "capturedAt": "2026-09-11T17:44:18.609064+00:00",
+  "hoursToKickoff": 0.57,
+  "capturedAt": "2026-09-11T18:14:19.109236+00:00",
   "tokens": {
    "Venezia FC 0 - 0 ACF Fiorentina": "79363315260091920210756821178307692262492673236965521156659012395431347674541",
    "Venezia FC 0 - 1 ACF Fiorentina": "75192324595877365488031456901470332277222815679758725788516968700979434142294",
@@ -274093,54 +274062,54 @@
  "elc-whu-wre-2026-09-11-exact-score": {
   "shares": {
    "West Ham United FC 0 - 0 Wrexham AFC": 2.961,
-   "West Ham United FC 0 - 1 Wrexham AFC": 21.408709117,
-   "West Ham United FC 1 - 0 Wrexham AFC": 2.375,
-   "West Ham United FC 0 - 2 Wrexham AFC": 8.721792846,
+   "West Ham United FC 0 - 1 Wrexham AFC": 23.5776272985,
+   "West Ham United FC 1 - 0 Wrexham AFC": 2.625,
+   "West Ham United FC 0 - 2 Wrexham AFC": 22.330157132,
    "West Ham United FC 1 - 1 Wrexham AFC": 6.848636545000001,
    "West Ham United FC 2 - 0 Wrexham AFC": 190.24692319499997,
    "West Ham United FC 0 - 3 Wrexham AFC": 0.09749999999999999,
    "West Ham United FC 1 - 2 Wrexham AFC": 6.7491,
-   "West Ham United FC 2 - 1 Wrexham AFC": 112.00283230499998,
-   "West Ham United FC 3 - 0 Wrexham AFC": 136.4783574,
-   "West Ham United FC 1 - 3 Wrexham AFC": 0.0675,
+   "West Ham United FC 2 - 1 Wrexham AFC": 112.52783230499998,
+   "West Ham United FC 3 - 0 Wrexham AFC": 136.8533574,
+   "West Ham United FC 1 - 3 Wrexham AFC": 0.0625,
    "West Ham United FC 2 - 2 Wrexham AFC": 0.275,
-   "West Ham United FC 3 - 1 Wrexham AFC": 124.20514304999999,
-   "West Ham United FC 2 - 3 Wrexham AFC": 7.6125,
-   "West Ham United FC 3 - 2 Wrexham AFC": 67.093015176,
+   "West Ham United FC 3 - 1 Wrexham AFC": 127.01764304999999,
+   "West Ham United FC 2 - 3 Wrexham AFC": 68.18625,
+   "West Ham United FC 3 - 2 Wrexham AFC": 87.10616774299999,
    "West Ham United FC 3 - 3 Wrexham AFC": 1.878333341,
-   "Any Other Score": 96.554117715
+   "Any Other Score": 90.70235300499999
   },
   "prices": {
    "West Ham United FC 0 - 0 Wrexham AFC": 0.045,
-   "West Ham United FC 0 - 1 Wrexham AFC": 0.041,
-   "West Ham United FC 1 - 0 Wrexham AFC": 0.095,
-   "West Ham United FC 0 - 2 Wrexham AFC": 0.0195,
+   "West Ham United FC 0 - 1 Wrexham AFC": 0.0405,
+   "West Ham United FC 1 - 0 Wrexham AFC": 0.105,
+   "West Ham United FC 0 - 2 Wrexham AFC": 0.019,
    "West Ham United FC 1 - 1 Wrexham AFC": 0.095,
    "West Ham United FC 2 - 0 Wrexham AFC": 0.105,
    "West Ham United FC 0 - 3 Wrexham AFC": 0.0065,
    "West Ham United FC 1 - 2 Wrexham AFC": 0.045,
    "West Ham United FC 2 - 1 Wrexham AFC": 0.105,
    "West Ham United FC 3 - 0 Wrexham AFC": 0.075,
-   "West Ham United FC 1 - 3 Wrexham AFC": 0.0135,
+   "West Ham United FC 1 - 3 Wrexham AFC": 0.0125,
    "West Ham United FC 2 - 2 Wrexham AFC": 0.055,
    "West Ham United FC 3 - 1 Wrexham AFC": 0.075,
-   "West Ham United FC 2 - 3 Wrexham AFC": 0.015,
-   "West Ham United FC 3 - 2 Wrexham AFC": 0.036,
+   "West Ham United FC 2 - 3 Wrexham AFC": 0.0145,
+   "West Ham United FC 3 - 2 Wrexham AFC": 0.0355,
    "West Ham United FC 3 - 3 Wrexham AFC": 0.0115,
-   "Any Other Score": 0.165
+   "Any Other Score": 0.155
   },
   "splitGuete": {
    "art": "belastbar",
    "trunc": false
   },
-  "league": "EFL-CHAMPIONSHIP",
+  "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 10861,
+  "totalUsd": 15752,
   "whales": [
    {
     "wallet": "0x9f3de29575e01e29172348351bf42d59ab16d65d",
     "side": "Any Other Score",
-    "usd": 93
+    "usd": 87
    },
    {
     "wallet": "0x9f3de29575e01e29172348351bf42d59ab16d65d",
@@ -274161,8 +274130,8 @@
     "avgPrice": 0.0699
    }
   ],
-  "hoursToKickoff": 1.32,
-  "capturedAt": "2026-09-11T17:44:18.609064+00:00",
+  "hoursToKickoff": 0.82,
+  "capturedAt": "2026-09-11T18:14:19.109236+00:00",
   "tokens": {
    "West Ham United FC 0 - 0 Wrexham AFC": "30061388705043492822396375332783894096286507458885454448851214978112458410050",
    "West Ham United FC 0 - 1 Wrexham AFC": "55774587222064385555668067810621457009252060700032551779188078672755683224413",
@@ -274285,8 +274254,8 @@
  },
  "sea-ven-fio-2026-09-11-more-markets": {
   "shares": {
-   "Over": 16903.894159619995,
-   "Under": 11991.316251739996
+   "Over": 17140.472819729992,
+   "Under": 12159.133306829997
   },
   "prices": {
    "Over": 0.585,
@@ -274298,7 +274267,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 37608,
+  "totalUsd": 40379,
   "whales": [
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
@@ -274324,8 +274293,8 @@
     "avgPrice": 0.58
    }
   ],
-  "hoursToKickoff": 1.07,
-  "capturedAt": "2026-09-11T17:44:18.609064+00:00",
+  "hoursToKickoff": 0.57,
+  "capturedAt": "2026-09-11T18:14:19.109236+00:00",
   "cond": "0x60752e40f8d24c2c9f63900f1cd0723fea83b2fa35b7589e3a0893ef18c8c775",
   "frage": "Venezia FC vs. ACF Fiorentina: O/U 2.5",
   "tokens": {
@@ -274384,12 +274353,12 @@
  },
  "itsb-pis-ent-2026-09-11": {
   "shares": {
-   "Pisa SC": 1786.191153745,
+   "Pisa SC": 1769.8040789400004,
    "Draw (Pisa SC vs. Virtus Entella)": 64.00889271,
    "Virtus Entella": 395.286534475
   },
   "prices": {
-   "Pisa SC": 0.545,
+   "Pisa SC": 0.54,
    "Draw (Pisa SC vs. Virtus Entella)": 0.285,
    "Virtus Entella": 0.175
   },
@@ -274397,19 +274366,20 @@
    "art": "belastbar",
    "trunc": false
   },
-  "league": "SERIE-B",
+  "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 7595,
+  "totalUsd": 7604,
   "whales": [
    {
     "wallet": "0xcc8b2daf7d6ff02611c58ca575d8fc860f8802b6",
     "side": "Pisa SC",
-    "usd": 292
+    "usd": 290
    },
    {
     "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
     "side": "Pisa SC",
-    "usd": 264
+    "usd": 261,
+    "avgPrice": 0.5398
    },
    {
     "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
@@ -274420,11 +274390,11 @@
    {
     "wallet": "0x50cc8708aff3791f2d6125645c82bda532baa534",
     "side": "Pisa SC",
-    "usd": 162
+    "usd": 161
    }
   ],
-  "hoursToKickoff": 1.32,
-  "capturedAt": "2026-09-11T17:44:18.609064+00:00",
+  "hoursToKickoff": 0.82,
+  "capturedAt": "2026-09-11T18:14:19.109236+00:00",
   "tokens": {
    "Pisa SC": "89445092786739714939993290780678990934862019210492477904722223660820251168450",
    "Draw (Pisa SC vs. Virtus Entella)": "33686165336523749050602629272122753967331398242152369294711932537044030110167",
@@ -274484,8 +274454,8 @@
  },
  "es2-bur-ceu-2026-09-11-total-corners": {
   "shares": {
-   "Over": 3948.19951834,
-   "Under": 3870.01734966
+   "Over": 3951.9264183399996,
+   "Under": 3873.67044966
   },
   "prices": {
    "Over": 0.505,
@@ -274497,7 +274467,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 7758,
+  "totalUsd": 7818,
   "whales": [
    {
     "wallet": "0xda3a9b7afff7b44ad4fd75308723194e0a11381f",
@@ -274508,7 +274478,7 @@
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
     "side": "Under",
-    "usd": 1677
+    "usd": 1681
    },
    {
     "wallet": "0x99d76c8a97a7c7ed25ecedc881d5aed3a73c6435",
@@ -274523,8 +274493,8 @@
     "avgPrice": 0.5
    }
   ],
-  "hoursToKickoff": 0.82,
-  "capturedAt": "2026-09-11T17:44:18.609064+00:00",
+  "hoursToKickoff": 0.32,
+  "capturedAt": "2026-09-11T18:14:19.109236+00:00",
   "cond": "0x80d7a6c73b6e12d2069e4923bc23731d474c472100b87f81a24ec816f337839e",
   "frage": "Burgos CF vs. AD Ceuta FC: O/U 8.5 Total Corners",
   "tokens": {
@@ -274534,8 +274504,8 @@
  },
  "cs2-imp11-dendel-2026-09-11": {
   "shares": {
-   "Imperial": 4069.5992972999998,
-   "DENDELE CS": 4497.9781707
+   "Imperial": 4256.7941088,
+   "DENDELE CS": 4704.877699200002
   },
   "prices": {
    "Imperial": 0.475,
@@ -274547,18 +274517,19 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 8156,
+  "totalUsd": 9007,
   "whales": [
    {
     "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
     "side": "Imperial",
-    "usd": 3258,
+    "usd": 3445,
     "avgPrice": 0.4699
    },
    {
     "wallet": "0x82d2e4dbb0a849ff8e2f5380719769145648beea",
     "side": "DENDELE CS",
-    "usd": 2023
+    "usd": 2023,
+    "avgPrice": 0.53
    },
    {
     "wallet": "0x513587a2f36a8cb29333052a6a479091ef8a7217",
@@ -274569,11 +274540,12 @@
    {
     "wallet": "0x197ffe802d6f058ca5f96d806c5249833faf7cc5",
     "side": "DENDELE CS",
-    "usd": 386
+    "usd": 386,
+    "avgPrice": 0.5299
    }
   ],
-  "hoursToKickoff": 2.32,
-  "capturedAt": "2026-09-11T17:44:18.609064+00:00",
+  "hoursToKickoff": 1.82,
+  "capturedAt": "2026-09-11T18:14:19.109236+00:00",
   "cond": "0xe9864d4fa49b436d9ea9789356d1d673d68879aee59fa3e249bb1f522e5cbf29",
   "frage": "Counter-Strike: Imperial vs DENDELE CS (BO3) - PGL Masters Bucharest: South American Closed Qualifier Playoffs",
   "tokens": {
@@ -274583,14 +274555,14 @@
  },
  "irl1-wat-dun-2026-09-11": {
   "shares": {
-   "Waterford FC": 4431.798448785,
+   "Waterford FC": 4446.474944235,
    "Draw (Waterford FC vs. Dundalk FC)": 3.2390885399999996,
-   "Dundalk FC": 732.1593480500001
+   "Dundalk FC": 687.10338817
   },
   "prices": {
    "Waterford FC": 0.435,
    "Draw (Waterford FC vs. Dundalk FC)": 0.255,
-   "Dundalk FC": 0.325
+   "Dundalk FC": 0.305
   },
   "splitGuete": {
    "art": "belastbar",
@@ -274598,7 +274570,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 12763,
+  "totalUsd": 12849,
   "whales": [
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
@@ -274609,7 +274581,7 @@
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "Dundalk FC",
-    "usd": 503,
+    "usd": 467,
     "avgPrice": 0.3302
    },
    {
@@ -274621,12 +274593,12 @@
    {
     "wallet": "0x1f624696c102b99bea92c75a502fa7e4a6d676f6",
     "side": "Dundalk FC",
-    "usd": 162,
+    "usd": 152,
     "avgPrice": 0.33
    }
   ],
-  "hoursToKickoff": 1.07,
-  "capturedAt": "2026-09-11T17:44:18.609064+00:00",
+  "hoursToKickoff": 0.57,
+  "capturedAt": "2026-09-11T18:14:19.109236+00:00",
   "tokens": {
    "Waterford FC": "47052565190902828085706221208460208002352555820151896341032127385900577802060",
    "Draw (Waterford FC vs. Dundalk FC)": "96860685174406044151728126898844842542189469267023244605940867428065320612599",
@@ -274635,9 +274607,9 @@
  },
  "es2-bur-ceu-2026-09-11": {
   "shares": {
-   "Burgos CF": 3127.632543034999,
+   "Burgos CF": 3136.5587729299987,
    "Draw (Burgos CF vs. AD Ceuta FC)": 266.28918092,
-   "AD Ceuta FC": 102.79162745
+   "AD Ceuta FC": 106.43868538
   },
   "prices": {
    "Burgos CF": 0.605,
@@ -274650,12 +274622,13 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 8120,
+  "totalUsd": 8159,
   "whales": [
    {
     "wallet": "0xbab95dd6a4a8fded0c023c30b32d26c5e08196da",
     "side": "Burgos CF",
-    "usd": 1043
+    "usd": 1043,
+    "avgPrice": 0.5799
    },
    {
     "wallet": "0xb00cf07e6fa25034175f7da649524c23b08fdfa2",
@@ -274674,12 +274647,115 @@
     "usd": 245
    }
   ],
-  "hoursToKickoff": 0.82,
-  "capturedAt": "2026-09-11T17:44:18.609064+00:00",
+  "hoursToKickoff": 0.32,
+  "capturedAt": "2026-09-11T18:14:19.109236+00:00",
   "tokens": {
    "Burgos CF": "82790322082461541305818900098264200770337921075131123750839449954282425767033",
    "Draw (Burgos CF vs. AD Ceuta FC)": "115597776288785986501632943600765731016411587447265791314449503874870929232507",
    "AD Ceuta FC": "89682342613827024835262895296798101955714296885433249843775499950022089685650"
+  }
+ },
+ "lol-cpd-mvu-2026-09-11": {
+  "shares": {
+   "Cupid Esports": 17109.86098302,
+   "Maryville University": 12137.77386937
+  },
+  "prices": {
+   "Cupid Esports": 0.585,
+   "Maryville University": 0.415
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 31631,
+  "whales": [
+   {
+    "wallet": "0x6918ea182d963b1fb7888860b8a8b8bcfba5782b",
+    "side": "Maryville University",
+    "usd": 3608,
+    "avgPrice": 0.4265
+   },
+   {
+    "wallet": "0xda3a9b7afff7b44ad4fd75308723194e0a11381f",
+    "side": "Maryville University",
+    "usd": 3477,
+    "avgPrice": 0.41
+   },
+   {
+    "wallet": "0x11b794cc6e446ca26e78c1721d7952c3adcd0d08",
+    "side": "Cupid Esports",
+    "usd": 2820,
+    "avgPrice": 0.5689
+   },
+   {
+    "wallet": "0x974cf2b1a7b1850554f1955a924bb6b3e86b3269",
+    "side": "Cupid Esports",
+    "usd": 1623,
+    "avgPrice": 0.5899
+   }
+  ],
+  "hoursToKickoff": 2.82,
+  "capturedAt": "2026-09-11T18:14:19.109236+00:00",
+  "cond": "0x4818f7f493247a5481827978eb1cea8ad201e5f64a8373887061ce369c51cbf0",
+  "frage": "LoL: Cupid Esports vs Maryville University (BO5) - North American Challengers League Playoffs",
+  "tokens": {
+   "Cupid Esports": "83376972580924422511150673938000333029810918824757628251960580735288753352603",
+   "Maryville University": "46807953944062255762763168877653665646822730865152547554290858580203405062422"
+  }
+ },
+ "bel1-yrm-rsc-2026-09-11": {
+  "shares": {
+   "Yellow-Red KV Mechelen": 37.132266654999995,
+   "Draw (Yellow-Red KV Mechelen vs. RSC Anderlecht)": 19.704146805,
+   "RSC Anderlecht": 7927.017833740004
+  },
+  "prices": {
+   "Yellow-Red KV Mechelen": 0.215,
+   "Draw (Yellow-Red KV Mechelen vs. RSC Anderlecht)": 0.245,
+   "RSC Anderlecht": 0.535
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 15903,
+  "whales": [
+   {
+    "wallet": "0xa6d188fb70c2e2e9ad411c42c02379ed3020286a",
+    "side": "RSC Anderlecht",
+    "usd": 1712,
+    "avgPrice": 0.55
+   },
+   {
+    "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
+    "side": "RSC Anderlecht",
+    "usd": 1343,
+    "avgPrice": 0.5499
+   },
+   {
+    "wallet": "0x1f90e8becb783e981036ae76bdd226bd9d597f51",
+    "side": "RSC Anderlecht",
+    "usd": 1338,
+    "avgPrice": 0.55
+   },
+   {
+    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
+    "side": "RSC Anderlecht",
+    "usd": 1210,
+    "avgPrice": 0.5497
+   }
+  ],
+  "hoursToKickoff": 0.57,
+  "capturedAt": "2026-09-11T18:14:19.109236+00:00",
+  "tokens": {
+   "Yellow-Red KV Mechelen": "40072123920835471003421848833180318593741647559522219866349827911116401905876",
+   "Draw (Yellow-Red KV Mechelen vs. RSC Anderlecht)": "97687495804416380976476826481287459241519649640979233324004242547527971553967",
+   "RSC Anderlecht": "59435172592068177500386723519575692697267389586525597957421931781437357142524"
   }
  }
 }
