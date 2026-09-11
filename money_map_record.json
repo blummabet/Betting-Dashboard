@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-11T03:20:08.957505+00:00",
+"generatedAt": "2026-09-11T03:35:14.663495+00:00",
 "byVerdict": {
 "konsens": {
-"n": 946,
-"wins": 792,
-"hitRate": 0.8372,
-"polyN": 890,
-"polyWins": 688,
-"polyHitRate": 0.773,
+"n": 947,
+"wins": 793,
+"hitRate": 0.8374,
+"polyN": 891,
+"polyWins": 689,
+"polyHitRate": 0.7733,
 "pinnN": 110,
 "pinnHitRate": 0.8273,
-"nRoi": 273,
-"roi": 0.4537,
-"roiLb": 0.3788,
-"nClv": 273,
-"clv": 21.03,
-"clvLb": 18.6679
+"nRoi": 274,
+"roi": 0.454,
+"roiLb": 0.3794,
+"nClv": 274,
+"clv": 21.08,
+"clvLb": 18.7243
 },
 "uneinig": {
-"n": 360,
-"wins": 117,
-"hitRate": 0.325,
-"polyN": 323,
-"polyWins": 86,
-"polyHitRate": 0.2663,
-"pinnN": 216,
-"pinnHitRate": 0.5926,
-"nRoi": 128,
-"roi": -0.4102,
-"roiLb": -0.5451,
-"nClv": 128,
-"clv": -17.46,
-"clvLb": -22.4919
+"n": 361,
+"wins": 118,
+"hitRate": 0.3269,
+"polyN": 324,
+"polyWins": 87,
+"polyHitRate": 0.2685,
+"pinnN": 217,
+"pinnHitRate": 0.5899,
+"nRoi": 129,
+"roi": -0.3959,
+"roiLb": -0.5318,
+"nClv": 129,
+"clv": -16.87,
+"clvLb": -21.9595
 },
 "teil": {
 "n": 16,
@@ -186,6 +186,11 @@
 "wins": 14,
 "hitRate": 0.7778
 },
+"CONMEBOL Copa Libertadores": {
+"n": 18,
+"wins": 9,
+"hitRate": 0.5
+},
 "Chinese Super League": {
 "n": 18,
 "wins": 12,
@@ -200,11 +205,6 @@
 "n": 18,
 "wins": 14,
 "hitRate": 0.7778
-},
-"CONMEBOL Copa Libertadores": {
-"n": 17,
-"wins": 8,
-"hitRate": 0.4706
 },
 "Italian Coppa Italia": {
 "n": 17,
@@ -221,6 +221,11 @@
 "wins": 10,
 "hitRate": 0.625
 },
+"CONMEBOL Copa Sudamericana": {
+"n": 15,
+"wins": 9,
+"hitRate": 0.6
+},
 "Danish Superliga": {
 "n": 15,
 "wins": 12,
@@ -230,11 +235,6 @@
 "n": 15,
 "wins": 9,
 "hitRate": 0.6
-},
-"CONMEBOL Copa Sudamericana": {
-"n": 14,
-"wins": 8,
-"hitRate": 0.5714
 },
 "Swedish Superettan": {
 "n": 14,
@@ -604,15 +604,15 @@
 },
 "byStrength": {
 "strong": {
-"n": 791,
-"wins": 633,
-"hitRate": 0.8003,
-"nRoi": 267,
-"roi": 0.261,
-"roiLb": 0.1787,
-"nClv": 267,
-"clv": 12.47,
-"clvLb": 9.1619
+"n": 793,
+"wins": 635,
+"hitRate": 0.8008,
+"nRoi": 269,
+"roi": 0.2665,
+"roiLb": 0.1845,
+"nClv": 269,
+"clv": 12.73,
+"clvLb": 9.4233
 },
 "weak": {
 "n": 498,
@@ -627,14 +627,52 @@
 }
 },
 "divergence": {
-"n": 360,
-"betfairWins": 117,
-"betfairRate": 0.325,
-"polyN": 323,
-"polyWins": 86,
-"polyRate": 0.2663
+"n": 361,
+"betfairWins": 118,
+"betfairRate": 0.3269,
+"polyN": 324,
+"polyWins": 87,
+"polyRate": 0.2685
 },
 "recent": [
+{
+"matchId": "35986034",
+"home": "Independiente (Ecu)",
+"away": "Flamengo",
+"league": "CONMEBOL Copa Libertadores",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Flamengo",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+2
+],
+"kickoff": "2026-09-11T00:30:00Z",
+"settledAt": "2026-09-11T03:35:14.471137+00:00"
+},
+{
+"matchId": "35988248",
+"home": "Cienciano",
+"away": "Torque",
+"league": "CONMEBOL Copa Sudamericana",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Cienciano",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-09-11T00:30:00Z",
+"settledAt": "2026-09-11T03:35:14.471137+00:00"
+},
 {
 "matchId": "36042039",
 "home": "Sport Recife",
@@ -1356,56 +1394,18 @@
 ],
 "kickoff": "2026-09-09T22:00:00Z",
 "settledAt": "2026-09-10T01:02:26.190984+00:00"
-},
-{
-"matchId": "35988244",
-"home": "Santos",
-"away": "Atletico MG",
-"league": "CONMEBOL Copa Sudamericana",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Santos",
-"polySide": null,
-"winner": "home",
-"moneyWin": true,
-"polyWin": null,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-09-09T22:00:00Z",
-"settledAt": "2026-09-10T01:02:26.190984+00:00"
-},
-{
-"matchId": "36036827",
-"home": "Botafogo SP",
-"away": "Novorizontino",
-"league": "Brazilian Serie B",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Novorizontino",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-3
-],
-"kickoff": "2026-09-09T22:30:00Z",
-"settledAt": "2026-09-10T00:32:18.951059+00:00"
 }
 ],
 "global": {
-"n": 1322,
-"wins": 912,
-"hitRate": 0.6899,
-"nRoi": 408,
-"roi": 0.1577,
-"roiLb": 0.0835,
-"nClv": 408,
-"clv": 8.0,
-"clvLb": 5.2885
+"n": 1324,
+"wins": 914,
+"hitRate": 0.6903,
+"nRoi": 410,
+"roi": 0.1618,
+"roiLb": 0.0878,
+"nClv": 410,
+"clv": 8.19,
+"clvLb": 5.4789
 },
-"pending": 24
+"pending": 22
 }
