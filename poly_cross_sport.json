@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-11T01:39:21.194571+00:00",
+ "generatedAt": "2026-09-11T02:09:23.368234+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,8 +10,8 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 612,
- "pinnKeys": 314,
- "matched": 214,
+ "pinnKeys": 318,
+ "matched": 218,
  "footballRows": 192,
  "crossRows": 420,
  "footballSkippedStale": 84,
@@ -24,13 +24,42 @@
   "soccer_liga": 171
  },
  "matchedBySport": {
-  "baseball_mlb": 22,
+  "baseball_mlb": 26,
   "soccer_mls": 21,
   "soccer_liga": 171
  },
  "trackRecord": {
   "tracked": 282,
-  "converged": 64
+  "converged": 66
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|chicagowhitesox-pittsburghpirates|pittsburghpirates",
+   "sport": "baseball_mlb",
+   "event": "Pittsburgh Pirates vs Chicago White Sox",
+   "market": "Moneyline",
+   "outcome": "Pittsburgh Pirates",
+   "polyPP": 91.5,
+   "pinnPP": 84.9,
+   "gapPP": 6.62,
+   "vol": 620377,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 4.73,
+   "firstSeen": "2026-09-10T01:07:03.630327+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagowhitesox-pittsburghpirates|chicagowhitesox",
+   "sport": "baseball_mlb",
+   "event": "Pittsburgh Pirates vs Chicago White Sox",
+   "market": "Moneyline",
+   "outcome": "Chicago White Sox",
+   "polyPP": 8.5,
+   "pinnPP": 15.1,
+   "gapPP": -6.62,
+   "vol": 620377,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 4.73,
+   "firstSeen": "2026-09-10T01:07:03.630327+00:00"
+  }
+ ]
 }
