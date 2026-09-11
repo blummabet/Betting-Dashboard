@@ -36,7 +36,7 @@ Wallet signifikant aufstockt (≥ +50% USD) — dann als „aufgestockt".
 """
 import json, os, re as _re, urllib.request, urllib.error, html   # 25.08.2026: _re fuer sport_category (Spiegel von _pwSportCategory)
 # 29.08.2026: `math` ist raus — die Wilson-Rechnung wohnt jetzt in sharp_gate.py.
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 BASE = Path(__file__).resolve().parent
@@ -929,6 +929,143 @@ DOM_MIN_MARKET = float(os.environ.get("WHALE_DOM_MIN_MARKET") or 7500)
 # frueh gemessener Anteil verdirbt die Zahl, um die es in diesem Band ueberhaupt geht.
 DOM_MAX_HTK = float(os.environ.get("WHALE_DOM_MAX_HTK") or 1.0)
 
+# 🎯 Mindestquote — Lucas 11.09.2026 nach der ersten echten Karte („Einstieg @1,21"):
+# „bitte mindest odd auch einbauen, ab 1,35 erst wieder."
+#
+# Der Befund dahinter ist groesser als die eine Karte. Von den fuenf Positionen, die das Band an
+# diesem Tag gefunden haette, lagen VIER unter 1,35: @1,14 · @1,18 · @1,21 · @1,25. Nur eine
+# (@1,75) daruber. Das ist kein Zufall, sondern Bauart: die $25.000-Schwelle des Whale-Pushs
+# landet in grossen, ausgeglichenen Maerkten — die $3.000-Schwelle dieses Bands landet in kleinen
+# Favoritenmaerkten, wo ein einzelner Einsatz ueberhaupt erst 40 % erreichen kann.
+#
+# Gemessen am Public-Whale-Buch (27 abgerechnete Pushs mit Preis): dort steht KEINE EINZIGE Zeile
+# unter Quote 1,35. Das Band haette also mehrheitlich in einer Ecke gemessen, in der das Projekt
+# noch nie etwas gemessen hat — und in der die Marge den Wert frisst: bei 1,14 braucht man 88 %
+# Trefferquote zum Nullpunkt.
+#
+# 1,35 ist im Projekt schon der Boden (pick-engine.js „Cheap ML filter", stake-radar.js), also
+# dieselbe Zahl und nicht eine neue.
+DOM_MIN_QUOTE = float(os.environ.get("WHALE_DOM_MIN_QUOTE") or 1.35)
+
+# ⏱️ Die gemessene Fuellkurve: wie voll ein Markt im MEDIAN ist, je Stunde vor Anpfiff (424
+# Maerkte mit Verlauf bis zum Anpfiff). Sie steht hier als Tabelle und nicht als Formel, weil sie
+# GEMESSEN ist — eine glatte Kurve daruberzulegen wuerde eine Genauigkeit behaupten, die die
+# Streuung nicht hergibt (unteres Viertel bei 2,5-3 h: 28 %).
+DOM_FUELLUNG = ((0.5, 1.00), (1.0, 0.92), (1.5, 0.82), (2.0, 0.75), (2.5, 0.69), (3.0, 0.54))
+
+
+def _dom_quote(pos, min_quote=None):
+    """Die Quote, mit der diese Beobachtung ins Buch geht — oder None, wenn sie zu niedrig ist.
+
+    Gerechnet wird auf dem PUSH-Preis (`_push_price`), nicht auf dem Einstieg des Wals: das ist
+    der Preis, den ein Leser in dem Moment bekaeme, und derselbe, den `_log_dominanz_push` bucht.
+    Waere hier der Einstiegspreis massgeblich, koennte eine Zeile mit @1,50 ins Buch gehen und
+    mit @1,15 abgerechnet werden — dieselbe Zahl an zwei Stellen mit zwei Bedeutungen.
+
+    Fehlt der Preis, gibt es KEINE Quote und damit keinen Push. „Eine Trefferquote ohne die
+    Quoten ist keine Zahl" — eine Beobachtung ohne abrechenbaren Preis waere genau das.
+    """
+    min_quote = DOM_MIN_QUOTE if min_quote is None else min_quote
+    p = _push_price(pos)
+    if not isinstance(p, (int, float)) or isinstance(p, bool) or not 0 < p < 1:
+        return None
+    q = 1.0 / p
+    return q if q >= min_quote else None
+
+
+def fuellgrad(htk):
+    """Wie voll ein Markt zu dieser Stunde vor Anpfiff im Median ist. REIN.
+
+    1.0 ab Anpfiff, sonst die naechsthoehere gemessene Stufe aus DOM_FUELLUNG. Unbekannte oder
+    unsinnige Stunde -> None, nie ein Default: ein geratener Fuellgrad waere ein geratener
+    Nenner, und der Nenner ist in diesem Band die ganze Frage.
+    """
+    if not isinstance(htk, (int, float)) or isinstance(htk, bool):
+        return None
+    if htk <= 0:
+        return 1.0
+    for grenze, anteil in DOM_FUELLUNG:
+        if htk <= grenze:
+            return anteil
+    return DOM_FUELLUNG[-1][1]   # frueher als 3 h: so voll wie im leersten gemessenen Band
+
+
+def anpfiff_zeit(pos, broad):
+    """Wann das Spiel beginnt, als datetime — oder None. REIN.
+
+    Der Markt speichert keinen Anpfiff, sondern `capturedAt` + `hoursToKickoff`. Der Anpfiff ist
+    die Summe. Dieselbe Rechnung nutzt `poly_money_broad.capture()` seit 06.08.2026, um
+    Geister-Maerkte zu prunen — hier wird sie nur gelesen.
+
+    11.09.2026 (Lucas: „bzw sollt ich sehen wann das Spiel ist / seh ich ned"). Die Karte nannte
+    einen Anteil, einen Betrag und eine Wallet — aber nicht, worauf sich das alles bezieht. Eine
+    Beobachtung ohne Zeitpunkt kann man nicht einordnen und schon gar nicht mitverfolgen.
+    """
+    m = (broad or {}).get(pos.get("key")) if isinstance(broad, dict) else None
+    if not isinstance(m, dict):
+        return None
+    htk = m.get("hoursToKickoff")
+    if not isinstance(htk, (int, float)) or isinstance(htk, bool):
+        return None
+    ct = _iso(m.get("capturedAt"))
+    if ct is None:
+        return None
+    return ct + timedelta(hours=float(htk))
+
+
+
+def dom_freigabe(pos, broad, max_htk=None, min_share=None, now=None):
+    """Wann diese Beobachtung raus darf — und mit welcher Begruendung. REIN.
+
+    Gibt (htk, frueh) zurueck oder None. `frueh=True` heisst: der Markt ist noch nicht reif, die
+    Dominanz ist aber so deutlich, dass sie auch dann noch ueber der Schwelle laege, wenn sich
+    der Markt bis zum Anpfiff auf seinen Median-Endstand auffuellt.
+
+    ── Warum es diesen zweiten Weg gibt ─────────────────────────────────────────────────────
+    Lucas 11.09.2026: „hast du Idee wie wir das Zeitproblem loesen?" Das Reifefenster loeste das
+    MESSproblem (ein Anteil bei 2,8 h hat einen halb leeren Nenner) und schuf ein ANZEIGEproblem:
+    eine Position, die 2,8 h vorher aufgemacht wird, steht erst 1,8 h spaeter im Kanal.
+
+    Beides zugleich geht, wenn man nicht den Anteil schaetzt, sondern die Schaetzung gegen sich
+    selbst laufen laesst: `anteil · fuellgrad(htk)` ist der Anteil, der uebrig bliebe, WENN der
+    Markt sich noch wie ueblich fuellt. Wer den so gerechnet noch besteht, ist frueh belegbar
+    dominant; wer nur knapp ueber der Schwelle liegt, wartet auf den echten Nenner.
+
+    ⚠️ Ehrlich bleiben, was das ist: der Fuellgrad ist ein MEDIAN. In der Haelfte der Faelle
+    fuellt sich der Markt staerker und der Anteil faellt doch unter die Schwelle. Deshalb wird
+    im Buch `fruehFreigabe` gestempelt — sonst liesse sich spaeter nicht trennen, ob eine
+    Trefferquote von den frueh oder den reif gemeldeten Zeilen kommt.
+    """
+    max_htk = DOM_MAX_HTK if max_htk is None else max_htk
+    min_share = DOM_MIN_SHARE if min_share is None else min_share
+    m = (broad or {}).get(pos.get("key")) if isinstance(broad, dict) else None
+    htk = (m or {}).get("hoursToKickoff")
+    if not isinstance(htk, (int, float)) or isinstance(htk, bool):
+        return None                       # unbekannter Messzeitpunkt ist nicht „passt schon"
+    htk = float(htk)
+    # 🔴 11.09.2026, an der ersten echten Karte gesehen: sie ging 26 Minuten NACH Anpfiff raus.
+    # Grund ist der Versatz zwischen Messung und Versand — die Close-Zeile stammte von 20 Minuten
+    # VOR Anpfiff, der Runner lief spaeter. `htk` ist der Messzeitpunkt, nicht die Gegenwart.
+    #
+    # Fuer die MESSUNG ist ein Markt nach Anpfiff maximal reif; fuer den PUSH ist er wertlos:
+    # Lucas wollte „aktiv mitbeobachten", und die genannte Quote waere nicht mehr zu bekommen.
+    # Deshalb entscheidet hier die ECHTE Uhr gegen den Anpfiff, nicht der Messzeitpunkt.
+    #
+    # Kein bestimmbarer Anpfiff heisst hier NICHT „dann eben durchlassen". Dieses Band lebt davon,
+    # dass Lucas ein Spiel vorher mitverfolgen kann — wann es ist, ist keine Zusatzinfo, sondern
+    # die Voraussetzung. Dieselbe Regel wie beim fehlenden Volumen und beim fehlenden
+    # Messzeitpunkt: fehlende Information laesst nicht durch.
+    ko = anpfiff_zeit(pos, broad)
+    if ko is None or ko <= (now or datetime.now(timezone.utc)):
+        return None                       # laeuft schon (oder unbekannt) — keine Beobachtung mehr
+    if htk <= max_htk:
+        return (htk, False)               # der Nenner steht — der normale Weg
+    a = markt_anteil(pos, broad)
+    f = fuellgrad(htk)
+    if a is None or f is None:
+        return None
+    return (htk, True) if a * f >= min_share else None
+
 
 def markt_reif(pos, broad, max_htk=None):
     """Ist der Nenner voll genug, um einen Anteil daraus zu lesen? REIN.
@@ -979,7 +1116,10 @@ def dominanz_kandidaten(track, broad, seen=None, now=None, min_usd=None, min_sha
       · SPORT, kein Politik/Krypto (`_pub_ok` prueft Sportart und ein sinnvolles Preisfenster).
       · Ein Marktboden, damit „100 % von $300" nicht als Dominanz durchgeht.
       · Frische (`FRESH_DAYS`) wie ueberall — eine alte Position ist kein Ereignis.
-      · REIFE des Markts (`markt_reif`): der Anteil wird erst gelesen, wenn der Nenner steht.
+      · REIFE des Markts (`dom_freigabe`): der Anteil wird erst gelesen, wenn der Nenner steht —
+        oder wenn er so deutlich ist, dass er auch bei ueblicher Nachfuellung noch traegt.
+      · QUOTE ab DOM_MIN_QUOTE. Ohne Preis kein Push: eine Beobachtung, die sich nicht
+        abrechnen laesst, ist keine.
       · Kein bestaetigter Verlierer.
     """
     min_usd = DOM_MIN_USD if min_usd is None else min_usd
@@ -1000,11 +1140,13 @@ def dominanz_kandidaten(track, broad, seen=None, now=None, min_usd=None, min_sha
         tot = (m or {}).get("totalUsd")
         if not isinstance(tot, (int, float)) or tot < min_market:
             continue
-        if markt_reif(pos, broad, max_htk) is None:
-            continue                          # Nenner noch nicht voll — der Anteil waere zu hoch
         a = markt_anteil(pos, broad)          # gibt None, wenn Einsatz > Markt (widerspruechlich)
         if a is None or a < min_share:
             continue
+        if dom_freigabe(pos, broad, max_htk, min_share, now) is None:
+            continue                          # Nenner noch nicht voll und nicht deutlich genug
+        if _dom_quote(pos) is None:
+            continue                          # unter dem Quotenboden — oder gar kein Preis
         if not _pub_ok(pos):
             continue
         if _is_confirmed_loser(scores.get(pos.get("wallet"))):
@@ -1028,6 +1170,31 @@ def _dom_balken(anteil, breite=10) -> str:
     return "█" * n + "░" * (breite - n)
 
 
+try:
+    from zoneinfo import ZoneInfo
+    _TZ_WIEN = ZoneInfo("Europe/Vienna")
+except Exception:
+    _TZ_WIEN = None   # faellt auf UTC zurueck statt zu brechen
+
+
+def _anpfiff_zeile(pos, broad, now=None):
+    """„🕒 Anpfiff 21:30 Uhr — in 1 h 05" — oder nichts. Die Uhrzeit steht in Wiener Zeit, weil
+    sie fuer Lucas lesbar sein muss und nicht fuer den Server."""
+    ko = anpfiff_zeit(pos, broad)
+    if ko is None:
+        return None
+    now = now or datetime.now(timezone.utc)
+    lokal = ko.astimezone(_TZ_WIEN) if _TZ_WIEN else ko
+    rest = (ko - now).total_seconds() / 3600.0
+    if rest > 0:
+        wann = "in %s" % _htk_text(rest)
+    elif rest > -3:
+        wann = "läuft seit %s" % _htk_text(-rest)
+    else:
+        wann = "angepfiffen"
+    return "🕒 Anpfiff <b>%s</b> — %s" % (lokal.strftime("%H:%M"), wann)
+
+
 def _htk_text(h) -> str:
     """Stunden bis Anpfiff so, wie ein Mensch sie liest. „0,3 h" liest niemand — „20 Min" schon."""
     try:
@@ -1041,7 +1208,7 @@ def _htk_text(h) -> str:
     return ("%.1f h" % h).replace(".", ",")
 
 
-def build_dominanz_card(pos, scores, broad, anteil=None) -> str:
+def build_dominanz_card(pos, scores, broad, anteil=None, now=None) -> str:
     """Das Beobachtungs-Band als Telegram-Karte — bewusst anders gebaut als jede andere.
 
     11.09.2026 (Lucas: „mach's bitte vom Template her so, dass ich's wirklich gleich seh, weil das
@@ -1075,22 +1242,55 @@ def build_dominanz_card(pos, scores, broad, anteil=None) -> str:
     if isinstance(tot, (int, float)) and tot > 0:
         _geld += "\n📦 Markt gesamt <b>%s</b>" % _usd(tot)
     lines.append(_geld)
+    # 🕒 Wann das Spiel ist — Lucas 11.09.2026: „sollt ich sehen wann das Spiel ist, seh ich ned."
+    _ap = _anpfiff_zeile(pos, broad, now)
+    if _ap:
+        lines.append(_ap)
     # ⏱️ Der Messzeitpunkt gehoert auf die Karte, nicht nur ins Buch. Ein Anteil ist eine Zahl mit
     # Zeitstempel — wer ihn ohne liest, haelt 2,8-h-Anteile und 0,3-h-Anteile fuer dasselbe Mass.
-    _h = markt_reif(pos, broad)
-    if _h is not None:
-        lines.append("⏱️ gemessen <b>%s</b> vor Anpfiff" % _htk_text(_h))
+    # Gerechnet wird hier NUR die Beschriftung — ueber das Senden hat `dominanz_kandidaten`
+    # schon entschieden. Deshalb der Messzeitpunkt direkt aus der Close-Zeile und nicht noch
+    # einmal ueber die Freigabe: sonst faellt die Zeile still weg, sobald die Uhr weitergelaufen
+    # ist, und die Karte verschweigt ausgerechnet ihre eigene Grundlage.
+    _frueh_gesetzt = False
+    _h = (m or {}).get("hoursToKickoff")
+    if isinstance(_h, (int, float)) and not isinstance(_h, bool):
+        _h = float(_h)
+        _frueh = _frueh_gesetzt = _h > DOM_MAX_HTK
+        if _frueh:
+            # Frueh heraus, weil die Dominanz auch bei ueblicher Nachfuellung noch traegt. Das
+            # gehoert auf die Karte, nicht nur ins Buch: der Leser soll wissen, dass der Nenner
+            # hier noch waechst und der Anteil noch fallen kann.
+            lines.append("⏱️ gemessen <b>%s</b> vor Anpfiff — <i>Markt füllt sich noch "
+                         "(~%d %% voll), der Anteil kann noch fallen</i>"
+                         % (_htk_text(_h), round((fuellgrad(_h) or 0) * 100)))
+        else:
+            lines.append("⏱️ gemessen <b>%s</b> vor Anpfiff — Markt steht" % _htk_text(_h))
+    # Zwei Preise, zwei Bedeutungen: der Einstieg des Wals ist Geschichte, die aktuelle Quote ist
+    # das, was ein Leser JETZT bekaeme — und die, mit der das Buch rechnet. Bis heute stand nur
+    # der Einstieg da; bei einer Karte, die auf den reifen Markt wartet, ist das die falsche Zahl.
     _e = _pub_einstieg(pos)
-    if _e:
+    _q = _dom_quote(pos)
+    if _q is not None:
+        _jz = _quote(_push_price(pos))
+        # Zweimal dieselbe Zahl nebeneinander liest sich wie ein Fehler. Steht der Markt noch da,
+        # wo der Wal eingestiegen ist, ist das EINE Aussage und gehoert auch als eine dazustehen.
+        lines.append(_e if (_e and _e.endswith(_jz)) else
+                     ((_e + " · 📈 jetzt <b>%s</b>" % _jz) if _e else "📈 <b>%s</b>" % _jz))
+    elif _e:
         lines.append(_e)
     lines.append("")
     lines.append(_wallet_line(scores, pos.get("wallet")))
     if key:
         lines.append('\n<a href="https://polymarket.com/event/%s">Markt ansehen ↗</a>' % _esc(key))
+    # Die Fusszeile muss zu DIESER Karte passen. Sie pauschal „nur wenn der Markt steht" sagen zu
+    # lassen, waere auf einer frueh freigegebenen Karte ein Widerspruch im eigenen Text.
+    _wann = ("der Anteil auch bei üblicher Nachfüllung des Marktes noch trägt" if _frueh_gesetzt
+             else "der Markt steht")
     lines.append("\n<i>🔬 Beobachtungsband — läuft mit, ist noch kein Beleg. "
-                 "Erst ab $%d Einsatz, %d %% Marktanteil und nur, wenn der Markt "
-                 "nahe am Anpfiff schon voll ist.</i>"
-                 % (int(DOM_MIN_USD), int(DOM_MIN_SHARE * 100)))
+                 "Erst ab $%d Einsatz, %d %% Marktanteil, Quote ab %s — und nur, wenn %s.</i>"
+                 % (int(DOM_MIN_USD), int(DOM_MIN_SHARE * 100),
+                    ("%.2f" % DOM_MIN_QUOTE).replace(".", ","), _wann))
     return "\n".join(lines)
 
 
@@ -1164,6 +1364,28 @@ def _log_public_push(pkey, pos, scores, restock, ts, broad=None) -> None:
         print("Public-Ledger-Schreibfehler:", e)
 
 
+def _dom_freigabe_stempel(pos, broad, now=None) -> dict:
+    """{fruehFreigabe, fuellgrad, anteilKons} — leer, wenn nichts davon bestimmbar ist. REIN.
+
+    `anteilKons` ist der konservativ gerechnete Anteil (Anteil × Fuellgrad). Bei einer reifen
+    Zeile ist er gleich dem Anteil; bei einer fruehen ist er die Zahl, auf die hin entschieden
+    wurde. Beide zu buchen kostet nichts und beantwortet spaeter die Frage, ob die fruehe
+    Freigabe getragen hat — ohne sie liesse sich das nicht mehr rekonstruieren.
+    """
+    fr = dom_freigabe(pos, broad, now=now)
+    if fr is None:
+        return {}
+    htk, frueh = fr
+    aus = {"fruehFreigabe": bool(frueh)}
+    f = fuellgrad(htk)
+    a = markt_anteil(pos, broad)
+    if f is not None:
+        aus["fuellgrad"] = round(float(f), 3)
+        if a is not None:
+            aus["anteilKons"] = round(float(a) * float(f), 4)
+    return aus
+
+
 def _log_dominanz_push(pkey, pos, scores, anteil, broad, ts) -> None:
     """Eine gesendete Dominanz-Beobachtung buchen — dieselbe Form wie der Whale-Ledger, damit
     `poly_public_eval.settle()` sie ohne Sonderfall abrechnen kann. Ein Eintrag je posKey."""
@@ -1187,6 +1409,11 @@ def _log_dominanz_push(pkey, pos, scores, anteil, broad, ts) -> None:
                        if isinstance(pos.get("firstPrice"), (int, float)) else None),
         "walletRank": rank, "sentAt": ts, "status": "pending",
         **markt_stempel(pos, broad),
+        # 11.09.2026: WIE die Zeile freigegeben wurde, gehoert ins Buch. Eine frueh freigegebene
+        # Zeile hat einen geschaetzten Nenner (Fuellgrad-Median), eine reife einen gemessenen.
+        # Ungetrennt liesse sich spaeter nicht sagen, ob eine Trefferquote von den einen oder
+        # den anderen kommt — und der Fuellgrad ist ein Median, kein Versprechen.
+        **_dom_freigabe_stempel(pos, broad),
     })
     try:
         _save(DOM_LEDGER_FILE, led[-DOM_LEDGER_KEEP:])
@@ -1478,7 +1705,7 @@ def main():
     dom_cand = dominanz_kandidaten(track, broad, seen=dom_sperre(dom_seen, seen, pub_seen), now=now)
     dom_sent = 0
     for pkey, pos, anteil in dom_cand:
-        if tg_send(build_dominanz_card(pos, scores, broad, anteil)):
+        if tg_send(build_dominanz_card(pos, scores, broad, anteil, now)):
             dom_sent += 1
             dom_seen[pkey] = {"usd": float(pos.get("usd") or 0), "anteil": round(anteil, 4),
                               "ts": now_iso}

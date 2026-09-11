@@ -3,6 +3,115 @@
 Stand 10.09.2026 (oberster Block); Liga/WM-Teil darunter Stand 26.06.2026. Lebendige Liste aller offenen Punkte — Liga UND noch nicht umgesetzte WM-Sachen —
 damit wir alles abarbeiten können. ✅ = erledigt (Referenz), ⏳ = offen, 🔒 = blockiert.
 
+## 🎯 11.09.2026 (abends) — was die erste echte Dominanz-Karte aufgedeckt hat
+
+Lucas hat die erste gepushte Karte zurückgeschickt:
+
+```
+🎯 MARKT-DOMINANZ · 40 % des Marktes
+💰 $5K auf Jaume Munar  ·  📦 Markt gesamt $12.4K
+Einstieg @1.21
+```
+
+Drei Befunde daraus — und **einer davon war nur an einer echten Karte zu sehen**, nicht an
+Testdaten.
+
+### 1. Der Quotenboden fehlte, und zwar systematisch
+
+Lucas: *„bitte mindest odd auch einbauen, ab 1,35 erst wieder."*
+
+Nachgemessen: von den **fünf** Positionen, die das Band an dem Tag gefunden hätte, lagen **vier
+unter 1,35** — @1,14 · @1,18 · @1,21 · @1,25. Nur eine (@1,75) darüber.
+
+Das ist keine Pechsträhne, das ist **Bauart**. Die $25.000-Schwelle des Whale-Pushs landet in
+großen, ausgeglichenen Märkten; die $3.000-Schwelle dieses Bands landet zwangsläufig in kleinen
+Favoritenmärkten — nur dort kann ein einzelner Einsatz überhaupt 40 % erreichen. Das Band hätte
+also mehrheitlich in einer Preisecke gemessen, in der das Projekt noch nie etwas gemessen hat:
+**im Public-Whale-Buch steht über 27 abgerechnete Pushs mit Preis keine einzige Zeile unter
+1,35.** Und bei @1,14 braucht man 88 % Trefferquote zum Nullpunkt — da ist keine Beobachtung
+mehr drin, nur noch Marge.
+
+`DOM_MIN_QUOTE = 1.35`, dieselbe Zahl, die im Projekt schon gilt (pick-engine, stake-radar).
+Gerechnet wird auf dem **Push-Preis**, nicht auf dem Einstieg des Wals: sonst könnte eine Zeile
+mit @1,50 ins Buch gehen und mit @1,15 abgerechnet werden. Die Karte zeigt jetzt beide Preise,
+wenn sie sich unterscheiden.
+
+### 2. 🔴 Die Karte ging 26 Minuten NACH Anpfiff raus
+
+Das stand nicht in Lucas' Nachricht — es fiel beim Nachbauen der Karte auf. `htk` ist der
+**Mess**zeitpunkt der Close-Zeile, nicht die Gegenwart; zwischen Messung und Versand liegt der
+Runner. Eine Zeile, die 20 Minuten vor Anpfiff gemessen wurde, wurde 26 Minuten danach gepusht.
+
+Für die **Messung** ist ein Markt nach Anpfiff maximal reif — für den **Push** ist er wertlos:
+Lucas wollte „aktiv mitbeobachten", und die genannte Quote wäre nicht mehr zu bekommen. Es
+entscheidet jetzt die echte Uhr gegen den Anpfiff, nicht der Messzeitpunkt.
+
+Fehlerklasse: **zwei Zeitpunkte mit demselben Namen.** Genau derselbe Fehler wie „Min" im Stake
+Radar (Spielminute vs. Wanduhr) und wie `n_observations` vs. Glättungs-n bei den Signalgewichten.
+
+### 3. „Sollt ich sehen wann das Spiel ist / seh ich ned"
+
+Die Karte nannte Anteil, Betrag, Wallet, Markt — aber nicht, **wann**. Der Markt speichert keinen
+Anpfiff, sondern `capturedAt + hoursToKickoff`; die Summe steht jetzt als `🕒 Anpfiff 21:30 — in
+1 h 05` auf der Karte (Wiener Zeit). Ist er nicht bestimmbar, wird **nicht** gepusht — dieselbe
+Regel wie bei fehlendem Volumen: in diesem Band ist der Zeitpunkt keine Zusatzinfo, sondern die
+Voraussetzung.
+
+### Und die Antwort auf „hast du Idee wie wir das Zeitproblem lösen?"
+
+Das Reifefenster löste das **Mess**problem und schuf ein **Anzeige**problem: eine Position von
+2,8 h vor Anpfiff stand erst 1,8 h später im Kanal.
+
+Beides zugleich geht, wenn man den Anteil nicht schätzt, sondern **die Schätzung gegen sich
+selbst laufen lässt**: `anteil × füllgrad(htk)` ist der Anteil, der übrig bliebe, wenn sich der
+Markt bis zum Anpfiff noch wie üblich auffüllt.
+
+| Anteil jetzt | bei 2,8 h (Füllgrad 0,54) | Folge |
+|---|---|---|
+| 80 % | → 43 % | **sofort raus** — trägt auch nach Nachfüllung |
+| 50 % | → 27 % | wartet auf den echten Nenner |
+
+Deutliche Dominanz kommt also sofort und mit voller Vorlaufzeit; knappe wartet. **Verworfen wird
+nichts** — die wartende Zeile kommt einen Lauf später auf dem normalen Weg.
+
+⚠️ Ehrlich bleiben, was das ist: der Füllgrad ist ein **Median**. In der Hälfte der Fälle füllt
+sich der Markt stärker und der Anteil fällt doch unter die Schwelle. Deshalb steht es auf der
+Karte (*„Markt füllt sich noch (~54 % voll), der Anteil kann noch fallen"*) und im Buch
+(`fruehFreigabe`, `fuellgrad`, `anteilKons`). Ungetrennt ließe sich später nicht sagen, ob eine
+Trefferquote von den früh oder den reif gemeldeten Zeilen kommt.
+
+### Was das Band jetzt kostet — der Trichter am 11.09.
+
+| Stufe | fällt hier raus |
+|---|---|
+| 421 offene Positionen, unter $3.000 | 381 |
+| kein oder zu kleiner Markt | 13 |
+| Anteil < 40 % | 50 |
+| Zeit (unreif **oder** schon angepfiffen) | 3 |
+| **Quote < 1,35** | **2** |
+| durch | 0 |
+
+Das ist sehr eng, und der **Quotenboden ist der bindende Schnitt**. Bei dieser Rate braucht das
+Buch Monate für eine Aussage. Das ist Lucas' Abwägung, nicht meine — er hat 1,35 ausdrücklich
+gesetzt, und die Alternative wäre, in einer Preisecke zu messen, in der ohnehin nichts zu holen
+ist. Festgehalten, damit in vier Wochen nicht „das Band feuert ja nie" als Überraschung kommt.
+
+### Gegenbeweise
+
+| entfernte Regel | Test bricht |
+|---|---|
+| Quotenboden ganz weg | ✅ |
+| Quote auf dem Einstieg statt dem Push-Preis | ✅ |
+| Quotenboden auf 1,0 gesenkt | ✅ |
+| fehlender Preis gilt als in Ordnung | ✅ |
+| Anpfiff-Sperre weg | ✅ |
+| unbekannter Anpfiff lässt durch | ✅ |
+| Anpfiff aus `htk` statt `capturedAt + htk` | ✅ |
+| frühe Freigabe ohne Füllgrad-Abschlag | ✅ |
+| Füllgrad auf 1,0 gesetzt | ✅ |
+| Karte verschweigt die frühe Freigabe | ✅ |
+| Anpfiffzeile weg | ✅ |
+
 ## 📻 11.09.2026 — Stake Radar: drei Anzeigefehler und eine Idee, die nicht trägt
 
 Lucas, vier Fragen an einem Stück. Drei davon waren Fragen an eine **Anzeige** — und eine
