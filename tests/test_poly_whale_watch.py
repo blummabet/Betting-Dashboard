@@ -958,34 +958,40 @@ class TestMarktDominanz(unittest.TestCase):
         pos.update(over)
         return {"open": {"0xw|k|A": pos}, "scores": {}}
 
+    @staticmethod
+    def _broad(total, htk=0.4):
+        """Ein reifer Markt. `htk` steht hier ausdruecklich drin, weil ein Markt OHNE Messzeitpunkt
+        seit 11.09.2026 als unreif gilt — s. TestMarktReife."""
+        return {"k": {"totalUsd": total, "hoursToKickoff": htk}}
+
     def test_kleiner_markt_grosser_anteil_kommt_durch(self):
-        r = P.dominanz_kandidaten(self._tr(), {"k": {"totalUsd": 10000}}, now=NOW)
+        r = P.dominanz_kandidaten(self._tr(), self._broad(10000), now=NOW)
         self.assertEqual(len(r), 1)
         self.assertAlmostEqual(r[0][2], 0.6, places=3)
 
     def test_zu_wenig_geld_faellt_raus(self):
         """Lucas: „ab dreitausend Dollar klingt okay." Darunter ist es kein Band, sondern Rauschen.
 
-        Der Fall ist bewusst so zugeschnitten, dass ihn NUR die Einsatzschwelle faengt: $2.500 von
-        einem $6.000-Markt sind 41,7 % Anteil (ueber der Schwelle) in einem Markt, der den Boden
-        gerade erreicht. Ein Aufbau mit kleinerem Markt haette den Test bestanden, ohne die
-        Einsatzschwelle je zu pruefen — der Marktboden haette ihn vorher weggefangen (gemessen:
-        mit entfernter `min_usd`-Zeile lief die Suite vorher gruen durch).
+        Der Markt liegt bewusst knapp UEBER dem Boden, damit nicht der Boden die Ablehnung
+        uebernimmt und die Einsatzschwelle ungeprueft mitlaeuft. Genau das war vorher der Fall:
+        mit entfernter `min_usd`-Zeile lief die Suite gruen durch.
         """
-        r = P.dominanz_kandidaten(self._tr(usd=2500), {"k": {"totalUsd": 6000}}, now=NOW)
-        self.assertEqual(r, [], "$2.500 sind unter der Schwelle, auch bei 41,7 % Anteil")
+        r = P.dominanz_kandidaten(self._tr(usd=2500), self._broad(7600), now=NOW)
+        self.assertEqual(r, [], "$2.500 sind unter der Schwelle, auch bei 33 % Anteil")
+        r = P.dominanz_kandidaten(self._tr(usd=2900), self._broad(7000, htk=0.4), now=NOW)
+        self.assertEqual(r, [], "auch knapp darunter bleibt draussen")
         # Gegenprobe: derselbe Markt, nur ueber der Schwelle — kommt durch.
         self.assertEqual(len(P.dominanz_kandidaten(self._tr(usd=3100),
-                                                   {"k": {"totalUsd": 6000}}, now=NOW)), 1)
+                                                   self._broad(7600), now=NOW)), 1)
 
     def test_zu_kleiner_anteil_faellt_raus(self):
-        r = P.dominanz_kandidaten(self._tr(usd=6000), {"k": {"totalUsd": 100000}}, now=NOW)
+        r = P.dominanz_kandidaten(self._tr(usd=6000), self._broad(100000), now=NOW)
         self.assertEqual(r, [])
 
     def test_winziger_markt_ist_keine_dominanz(self):
         """Lucas ausdruecklich: „natuerlich jetzt nicht auf der Spielwohnung 300 Euro und ich hab
         100 %, das will ich nicht finden." Der Boden steht deshalb am MARKT, nicht nur am Einsatz."""
-        r = P.dominanz_kandidaten(self._tr(usd=3500), {"k": {"totalUsd": 4000}}, now=NOW)
+        r = P.dominanz_kandidaten(self._tr(usd=3500), self._broad(4000), now=NOW)
         self.assertEqual(r, [], "100 % von $4.000 ist kein Befund")
 
     def test_ohne_marktvolumen_gibt_es_keinen_anteil(self):
@@ -997,7 +1003,7 @@ class TestMarktDominanz(unittest.TestCase):
     def test_einsatz_groesser_als_markt_gilt_nicht_als_100_prozent(self):
         """`markt_anteil` gibt None, wo der Einsatz das Marktvolumen uebersteigt — der Nenner
         widerspricht dann dem Zaehler. Das darf hier nicht als Dominanz durchgehen."""
-        r = P.dominanz_kandidaten(self._tr(usd=50000), {"k": {"totalUsd": 20000}}, now=NOW)
+        r = P.dominanz_kandidaten(self._tr(usd=50000), self._broad(20000), now=NOW)
         self.assertEqual(r, [])
 
     def test_sperre_nimmt_beide_whale_staende_mit(self):
@@ -1008,11 +1014,11 @@ class TestMarktDominanz(unittest.TestCase):
         self.assertEqual(set(sp), {"a|k|A", "b|k|A", "c|k|A"})
         tr = self._tr()
         self.assertEqual(
-            P.dominanz_kandidaten(tr, {"k": {"totalUsd": 10000}},
+            P.dominanz_kandidaten(tr, self._broad(10000),
                                   seen=P.dom_sperre({}, {"0xw|k|A": {"ts": "x"}}, {}), now=NOW),
             [], "als Trades-Whale gemeldet — kein zweiter Push")
         self.assertEqual(
-            P.dominanz_kandidaten(tr, {"k": {"totalUsd": 10000}},
+            P.dominanz_kandidaten(tr, self._broad(10000),
                                   seen=P.dom_sperre({}, {}, {"0xw|k|A": {"ts": "x"}}), now=NOW),
             [], "als Public-Whale gemeldet — kein zweiter Push")
 
@@ -1024,30 +1030,30 @@ class TestMarktDominanz(unittest.TestCase):
 
     def test_schon_gemeldete_position_kommt_nicht_doppelt(self):
         tr = self._tr()
-        r = P.dominanz_kandidaten(tr, {"k": {"totalUsd": 10000}},
+        r = P.dominanz_kandidaten(tr, self._broad(10000),
                                   seen={"0xw|k|A": {"ts": NOW.isoformat()}}, now=NOW)
         self.assertEqual(r, [])
 
     def test_bestaetigter_verlierer_bleibt_draussen(self):
         tr = self._tr()
         tr["scores"]["0xw"] = {"n": 20, "wins": 16, "pnl": -25000}
-        self.assertEqual(P.dominanz_kandidaten(tr, {"k": {"totalUsd": 10000}}, now=NOW), [])
+        self.assertEqual(P.dominanz_kandidaten(tr, self._broad(10000), now=NOW), [])
 
     def test_alte_position_ist_kein_ereignis(self):
         alt = (NOW - timedelta(days=5)).isoformat()
-        r = P.dominanz_kandidaten(self._tr(firstTs=alt), {"k": {"totalUsd": 10000}}, now=NOW)
+        r = P.dominanz_kandidaten(self._tr(firstTs=alt), self._broad(10000), now=NOW)
         self.assertEqual(r, [])
 
     def test_kein_sport_bleibt_draussen(self):
         """Politik und Krypto haben in diesem Band nichts zu suchen — `_pub_ok` prueft das."""
-        r = P.dominanz_kandidaten(self._tr(league="US-ELECTION"), {"k": {"totalUsd": 10000}}, now=NOW)
+        r = P.dominanz_kandidaten(self._tr(league="US-ELECTION"), self._broad(10000), now=NOW)
         self.assertEqual(r, [])
 
     def test_gesperrte_sportarten_laufen_hier_MIT(self):
         """Lucas: „laeuft ueber alles drueber, oder?" — ja. Die Sperrliste (US-Sport/Kampfsport)
         gilt hier NICHT, weil dies ein Beobachtungsband ist und kein Kanal, dem jemand folgt.
         Die Kategorie wird gestempelt, damit sie sich spaeter trennen laesst."""
-        r = P.dominanz_kandidaten(self._tr(league="NBA"), {"k": {"totalUsd": 10000}}, now=NOW)
+        r = P.dominanz_kandidaten(self._tr(league="NBA"), self._broad(10000), now=NOW)
         self.assertEqual(len(r), 1, "US-Sport gehoert in das Beobachtungsband")
 
     def test_der_groesste_anteil_steht_oben(self):
@@ -1057,16 +1063,114 @@ class TestMarktDominanz(unittest.TestCase):
             "0xb|k2|B": {"wallet": "0xb", "key": "k2", "side": "B", "usd": 9000,
                          "league": "ESPORTS", "firstPrice": 0.55, "firstTs": NOW.isoformat()}},
             "scores": {}}
-        r = P.dominanz_kandidaten(tr, {"k1": {"totalUsd": 7000}, "k2": {"totalUsd": 20000}}, now=NOW)
+        r = P.dominanz_kandidaten(tr, {"k1": {"totalUsd": 7600, "hoursToKickoff": 0.4},
+                                       "k2": {"totalUsd": 20000, "hoursToKickoff": 0.4}}, now=NOW)
         self.assertEqual([x[0] for x in r], ["0xa|k1|A", "0xb|k2|B"],
                          "sortiert wird nach ANTEIL, nicht nach Dollar")
+
+
+class TestMarktReife(unittest.TestCase):
+    """Lucas: „ein Markt in 2 Wochen wo jetzt 5K gespielt werden die 60 % sind, interessiert mich
+    ja 0. Wir muessens quasi zeitlich wie die Whale-Alerts eingrenzen."
+
+    Gemessen an 424 Maerkten mit Verlauf bis zum Anpfiff, Volumen gegen den Endstand:
+    2,5-3 h vorher Median 54 % (unteres Viertel 28 %), 0,5-1 h Median 92 %, 0-0,5 h 100 %.
+    Ein Anteil, der zu frueh gemessen wird, hat einen halb leeren Nenner und ist systematisch
+    zu hoch. Deshalb wird der Anteil erst gelesen, wenn der Markt steht.
+    """
+
+    def _pos(self, **over):
+        p = {"wallet": "0xw", "key": "k", "side": "A", "usd": 6000, "league": "ESPORTS",
+             "firstPrice": 0.55, "firstTs": NOW.isoformat(), "htkFirst": 2.8}
+        p.update(over)
+        return p
+
+    def test_reifer_markt_gibt_die_stunde_zurueck(self):
+        self.assertAlmostEqual(
+            P.markt_reif(self._pos(), {"k": {"totalUsd": 20000, "hoursToKickoff": 0.8}}), 0.8)
+
+    def test_zu_frueh_gemessen_ist_nicht_reif(self):
+        """Der Kern der Sache: 2,8 h vor Anpfiff steht im Median erst gut die Haelfte des
+        Endvolumens im Markt. Der Anteil waere dann etwa doppelt so hoch wie die Wahrheit."""
+        self.assertIsNone(
+            P.markt_reif(self._pos(), {"k": {"totalUsd": 20000, "hoursToKickoff": 2.8}}))
+
+    def test_nach_anpfiff_ist_reif_nicht_unreif(self):
+        """htk <= 0 heisst: der Vorspiel-Markt ist fertig. Ein Vorzeichenfehler hier wuerde
+        ausgerechnet die vollsten Maerkte aussperren."""
+        self.assertEqual(
+            P.markt_reif(self._pos(), {"k": {"totalUsd": 20000, "hoursToKickoff": 0}}), 0.0)
+        self.assertEqual(
+            P.markt_reif(self._pos(), {"k": {"totalUsd": 20000, "hoursToKickoff": -0.5}}), -0.5)
+
+    def test_ohne_messzeitpunkt_ist_der_markt_nicht_reif(self):
+        """Fehlende Information rendert als harmloser Default — und „harmlos" heisst hier NICHT
+        durchlassen. Ein unbekannter Messzeitpunkt als „passt schon" zu lesen waere dieselbe
+        Fehlerklasse wie ein fehlendes Volumen als 100 % zu lesen."""
+        for b in ({}, {"k": {}}, {"k": {"totalUsd": 20000}},
+                  {"k": {"totalUsd": 20000, "hoursToKickoff": None}},
+                  {"k": {"totalUsd": 20000, "hoursToKickoff": "0.5"}}):
+            self.assertIsNone(P.markt_reif(self._pos(), b), repr(b))
+
+    def test_bool_ist_keine_stunde(self):
+        self.assertIsNone(
+            P.markt_reif(self._pos(), {"k": {"totalUsd": 20000, "hoursToKickoff": True}}))
+
+    def test_die_auswahl_haelt_unreife_maerkte_zurueck(self):
+        """Nicht verworfen — zurueckgehalten. Derselbe Markt kommt einen Lauf spaeter durch,
+        wenn seine Close-Zeile naeher am Anpfiff steht. Das ist der Tausch: spaeter, dafuer
+        gegen einen Nenner, der steht."""
+        tr = {"open": {"0xw|k|A": self._pos()}, "scores": {}}
+        self.assertEqual(
+            P.dominanz_kandidaten(tr, {"k": {"totalUsd": 12000, "hoursToKickoff": 2.5}}, now=NOW),
+            [], "2,5 h vorher ist der Nenner im Median erst halb voll")
+        spaeter = P.dominanz_kandidaten(
+            tr, {"k": {"totalUsd": 12000, "hoursToKickoff": 0.5}}, now=NOW)
+        self.assertEqual(len(spaeter), 1, "naeher am Anpfiff kommt dieselbe Position durch")
+
+    def test_der_messzeitpunkt_steht_auf_der_karte(self):
+        """Ein Anteil ohne Zeitstempel laedt dazu ein, 2,8-h- und 0,3-h-Anteile fuer dasselbe
+        Mass zu halten. Deshalb steht die Stunde auf der Karte, nicht nur im Buch."""
+        k = P.build_dominanz_card(self._pos(key="cs2-a-b-2026-09-12"), {},
+                                  {"cs2-a-b-2026-09-12": {"totalUsd": 12000,
+                                                          "hoursToKickoff": 0.5}})
+        self.assertIn("30 Min", k)
+        self.assertIn("vor Anpfiff", k)
+
+    def test_stundenangabe_liest_sich_wie_ein_mensch_sie_schreibt(self):
+        self.assertEqual(P._htk_text(0.5), "30 Min")
+        self.assertEqual(P._htk_text(0.25), "15 Min")
+        self.assertEqual(P._htk_text(1.5), "1,5 h")
+        self.assertEqual(P._htk_text(0), "Anpfiff")
+        self.assertEqual(P._htk_text(-0.3), "Anpfiff")
+        self.assertEqual(P._htk_text(0.001), "1 Min", "nie 0 Min — das laese sich als Anpfiff")
+        self.assertEqual(P._htk_text(None), "")
+
+    def test_der_stempel_haelt_beide_zeiten_getrennt(self):
+        """`htkMess` ist die Reife des MARKTS, `htkFirst` der Vorlauf der WALLET. Zwei Fragen,
+        zwei Felder — zusammengelegt waere spaeter keine von beiden zu beantworten."""
+        st = P.markt_stempel(self._pos(htkFirst=2.8),
+                             {"k": {"totalUsd": 12000, "hoursToKickoff": 0.5}})
+        self.assertEqual(st.get("htkMess"), 0.5)
+        self.assertEqual(st.get("htkFirst"), 2.8)
+        self.assertEqual(st.get("league"), "ESPORTS")
+
+    def test_der_marktboden_steht_auf_dem_wert_der_wirklich_gilt(self):
+        """🔴 Der Boden stand auf 6000 und konnte nie greifen: `poly_money_broad.MIN_VOL_USD`
+        laesst keinen kleineren Markt in die Close-Datei (gemessen: 0 von 2.928 Zeilen unter
+        $6.000, kleinster Markt $7.504). Er ist jetzt eine Stolperschwelle — senkt jemand oben
+        den Boden, faellt es hier auf, statt still $2.000-Maerkte zu melden."""
+        import poly_money_broad as PMB
+        self.assertLessEqual(PMB.MIN_VOL_USD, P.DOM_MIN_MARKET,
+                             "der Band-Boden darf nicht unter dem liegen, der oben ohnehin gilt")
 
 
 class TestDominanzKarte(unittest.TestCase):
     def _karte(self, usd=6800, tot=9900):
         pos = {"usd": usd, "league": "ESPORTS", "side": "Falcons", "firstPrice": 0.58,
                "entryPrice": 0.58, "wallet": "0xW", "key": "cs2-fal-vit-2026-09-12"}
-        return P.build_dominanz_card(pos, {}, {"cs2-fal-vit-2026-09-12": {"totalUsd": tot}})
+        return P.build_dominanz_card(
+            pos, {}, {"cs2-fal-vit-2026-09-12": {"totalUsd": tot, "hoursToKickoff": 0.75}})
 
     def test_die_karte_ist_auf_den_ersten_blick_eine_andere(self):
         """Lucas: „mach's bitte vom Template her so, dass ich's wirklich gleich seh, weil das geht

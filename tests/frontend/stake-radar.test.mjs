@@ -181,7 +181,10 @@ test('die Seite traegt Markt UND Auswahl', () => {
 });
 
 test('ein Feed-Fehler zeigt keine alten Zahlen als aktuell', () => {
-  const block = schneide("if (d.status === 'schema_unbekannt'", 'var seit =');
+  // 11.09.2026: der Anker hiess 'var seit =' und traf ab sofort eine gleichnamige lokale
+  // Variable weiter oben in der Datei — der Test brach, ohne dass an seiner Sache etwas
+  // falsch war. Ein Anker muss die STELLE meinen, nicht ein haeufiges Wort.
+  const block = schneide("if (d.status === 'schema_unbekannt'", 'var seit = d.sammlungSeit');
   assert.ok(/Kein Feed/.test(block));
   assert.ok(/return;/.test(block), 'nach der Fehlermeldung darf nicht weitergerendert werden');
 });
