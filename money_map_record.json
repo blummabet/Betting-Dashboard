@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-09-12T18:09:07.707597+00:00",
+"generatedAt": "2026-09-12T18:24:10.624922+00:00",
 "byVerdict": {
 "konsens": {
 "n": 1024,
@@ -18,20 +18,20 @@
 "clvLb": 18.6799
 },
 "uneinig": {
-"n": 392,
+"n": 393,
 "wins": 128,
-"hitRate": 0.3265,
-"polyN": 354,
+"hitRate": 0.3257,
+"polyN": 355,
 "polyWins": 94,
-"polyHitRate": 0.2655,
-"pinnN": 241,
-"pinnHitRate": 0.5934,
-"nRoi": 160,
-"roi": -0.4221,
-"roiLb": -0.5397,
-"nClv": 160,
-"clv": -17.46,
-"clvLb": -21.9208
+"polyHitRate": 0.2648,
+"pinnN": 242,
+"pinnHitRate": 0.595,
+"nRoi": 161,
+"roi": -0.4257,
+"roiLb": -0.5427,
+"nClv": 161,
+"clv": -17.49,
+"clvLb": -21.9273
 },
 "teil": {
 "n": 16,
@@ -76,6 +76,11 @@
 "wins": 30,
 "hitRate": 0.7895
 },
+"English Premier League": {
+"n": 36,
+"wins": 18,
+"hitRate": 0.5
+},
 "Argentinian Primera Division": {
 "n": 35,
 "wins": 20,
@@ -85,11 +90,6 @@
 "n": 35,
 "wins": 24,
 "hitRate": 0.6857
-},
-"English Premier League": {
-"n": 35,
-"wins": 18,
-"hitRate": 0.5143
 },
 "Saudi Professional League": {
 "n": 35,
@@ -614,15 +614,15 @@
 },
 "byStrength": {
 "strong": {
-"n": 859,
+"n": 860,
 "wins": 686,
-"hitRate": 0.7986,
-"nRoi": 335,
-"roi": 0.2659,
-"roiLb": 0.1925,
-"nClv": 335,
-"clv": 12.57,
-"clvLb": 9.6161
+"hitRate": 0.7977,
+"nRoi": 336,
+"roi": 0.2621,
+"roiLb": 0.1887,
+"nClv": 336,
+"clv": 12.46,
+"clvLb": 9.5141
 },
 "weak": {
 "n": 540,
@@ -637,14 +637,33 @@
 }
 },
 "divergence": {
-"n": 392,
+"n": 393,
 "betfairWins": 128,
-"betfairRate": 0.3265,
-"polyN": 354,
+"betfairRate": 0.3257,
+"polyN": 355,
 "polyWins": 94,
-"polyRate": 0.2655
+"polyRate": 0.2648
 },
 "recent": [
+{
+"matchId": "36005149",
+"home": "Tottenham",
+"away": "Everton",
+"league": "English Premier League",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Tottenham",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-09-12T16:30:00Z",
+"settledAt": "2026-09-12T18:24:10.423521+00:00"
+},
 {
 "matchId": "36036685",
 "home": "CSKA 1948 Sofia",
@@ -1385,37 +1404,18 @@
 ],
 "kickoff": "2026-09-12T11:30:00Z",
 "settledAt": "2026-09-12T14:38:55.791206+00:00"
-},
-{
-"matchId": "36039347",
-"home": "Bolton",
-"away": "Cardiff",
-"league": "English Sky Bet Championship",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Bolton",
-"polySide": "away",
-"winner": "home",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-09-12T11:30:00Z",
-"settledAt": "2026-09-12T14:38:55.791206+00:00"
 }
 ],
 "global": {
-"n": 1432,
+"n": 1433,
 "wins": 990,
-"hitRate": 0.6913,
-"nRoi": 518,
-"roi": 0.1566,
-"roiLb": 0.0912,
-"nClv": 518,
-"clv": 8.23,
-"clvLb": 5.8323
+"hitRate": 0.6909,
+"nRoi": 519,
+"roi": 0.1544,
+"roiLb": 0.089,
+"nClv": 519,
+"clv": 8.17,
+"clvLb": 5.7749
 },
-"pending": 33
+"pending": 34
 }
