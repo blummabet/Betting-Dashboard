@@ -71,11 +71,6 @@ jobs:
         env:
           GITHUB_TOKEN:  ${{ secrets.GITHUB_TOKEN }}
           STAKE_MIN_USD: '1000'
-          # 11.09.2026: der Burst-Push braucht den Trades-Channel. Fehlen die Secrets, schreibt
-          # `send_trades_message` die Karte nur auf die Konsole und meldet False — der Lauf
-          # bleibt gruen, aber nichts kommt an. Deshalb stehen sie hier, nicht optional.
-          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
-          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
         run: |
           set +e
           git config user.name "CocoBet Bot"
@@ -105,11 +100,10 @@ jobs:
           # waechst in betfair.yml alle 15 Minuten ohnehin weiter.
           "${STAKE_PYTHON}" stake_analyse.py || echo "  ⚠️ Stake-Auswertung fehlgeschlagen (Sammlung steht trotzdem)"
 
-          # ⚡ Einsatz-Bursts in den Trades-Channel (11.09.2026, Lucas: „lass uns mal als Push
-          # im trades testen"). Laeuft NACH dem Sammler, damit er den frischen Feed sieht, und
-          # ist bewusst mit `|| echo` gekapselt: ein Push-Fehler darf die Sammlung nicht kippen —
-          # die Sammlung ist das Wertvolle, der Push nur ihre Auswertung.
-          "${STAKE_PYTHON}" stake_burst_push.py || echo "  ⚠️ Stake-Burst-Push fehlgeschlagen (Sammlung steht trotzdem)"
+          # ⚡ Der Burst-Push haengt NICHT hier, sondern in betfair.yml (12.09.2026).
+          # Dieser Workflow hat nur `workflow_dispatch` — er lief zuletzt am 07.09., von Hand.
+          # Ein Push, der auf einen frischen Feed reagieren soll, gehoert in den Job, der alle
+          # 10 Minuten sammelt. Hier stand er einen Tag lang und ist nie gelaufen.
 
           for f in stake_highroller.json stake_bet_ledger.json stake_auswertung.json stake_vorregistrierung.json stake_burst_ledger.json stake_burst_seen.json; do
             [ -f "$f" ] && git add "$f"

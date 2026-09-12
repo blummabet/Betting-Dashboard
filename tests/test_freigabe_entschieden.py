@@ -173,17 +173,48 @@ class TestBetfairSchubladenNutzenDieEchteSchranke(unittest.TestCase):
         r = F.betfair_schubladen(rec)[0]
         self.assertIn("gar kein CLV", r["grund"])
 
-    def test_gegen_den_echten_bestand_nimmt_keine_betfair_schublade_die_huerde(self):
+    # Schubladen, die die ROI-Huerde genommen haben und ANGESEHEN wurden. Der Eintrag ist das
+    # Protokoll der Sichtung, nicht ihre Abkuerzung — ohne ihn faengt der Wachhund denselben Fall
+    # jeden Tag erneut und wird weggeklickt, und dann meldet er den NAECHSTEN auch nicht mehr.
+    #
+    # 12.09.2026 — „Swedish Division 1 · Over/Under 2.5 Goals"
+    #     n=31 · ROI +28,5 % · ROI-Untergrenze +4,4 % · CLV **-0,29 pp** ohne Untergrenze
+    #     `freigabe.py` gibt sie korrekt NICHT frei (Status „geprueft", nicht „freigegeben").
+    #     Urteil: keine Freigabe-Kandidatin. Eine Trefferquote ohne CLV ist Glueck, und hier ist
+    #     der CLV nicht nur unbelegt, sondern gemessen NEGATIV. n=31 in einer schwedischen
+    #     dritten Liga dazu — das ist die Stichprobe, bei der +28 % ROI nichts heisst.
+    GESICHTET = {"Swedish Division 1 · Over/Under 2.5 Goals"}
+
+    def test_gegen_den_echten_bestand_nimmt_keine_NEUE_betfair_schublade_die_huerde(self):
         """Stand 06.09.: null. Nimmt eine die Huerde, schlaegt dieser Test an — und DAS ist
-        die Nachricht."""
+        die Nachricht.
+
+        12.09.2026: die erste ist gekommen (s. GESICHTET). Der Wachhund meldet ab jetzt nur noch
+        das, was NEU dazukommt — sonst steht er auf Dauerrot und sagt damit gar nichts mehr.
+        """
         import json
         from pathlib import Path
         p = Path(__file__).resolve().parents[1] / "betfair_track_record.json"
         if not p.exists():
             self.skipTest("kein Track-Record")
         rows = F.betfair_schubladen(json.loads(p.read_text(encoding="utf-8")))
-        pos = [r["schublade"] for r in rows if r.get("roiLb") is not None and r["roiLb"] > 0]
+        pos = [r["schublade"] for r in rows
+               if r.get("roiLb") is not None and r["roiLb"] > 0
+               and r["schublade"] not in self.GESICHTET]
         self.assertEqual(pos, [], f"Neu ueber der ROI-Huerde: {pos} — bitte ansehen.")
+
+    def test_keine_gesichtete_schublade_ist_still_freigegeben_worden(self):
+        """Die zweite Haelfte der Sichtung, und die wichtigere: „angesehen" darf nicht zu
+        „durchgewunken" werden. Waechst eine der bekannten Schubladen in die Freigabe hinein,
+        muss das auffallen — ein Eintrag in GESICHTET ist ein Protokoll, kein Freifahrtschein."""
+        import json
+        from pathlib import Path
+        p = Path(__file__).resolve().parents[1] / "betfair_track_record.json"
+        if not p.exists():
+            self.skipTest("kein Track-Record")
+        rows = F.betfair_schubladen(json.loads(p.read_text(encoding="utf-8")))
+        frei = [r["schublade"] for r in rows if r.get("status") == "freigegeben"]
+        self.assertEqual(frei, [], f"Freigegeben ohne Sichtung: {frei} — bitte ansehen.")
 
 
 class TestEntfernungZumBeleg(unittest.TestCase):

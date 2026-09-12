@@ -156,6 +156,11 @@ EBENE = {
     # 1 ist in dieser Tabelle den europaeischen Topligen vorbehalten, nach deren Massstab hier
     # die Einsatzstufen haengen.
     "division-nationale": 2,
+    # 12.09.2026 (CI-Wachhund): „First Division" ohne Land — Wexford gegen Finn Harps, also die
+    # ZWEITE Liga Irlands (unter der Premier Division). „First" im Namen ist auch hier kein Beleg
+    # fuer Ebene 1; entschieden hat die Paarung. Dritter Slug dieser Art nach „division-1" und
+    # „jordan-1st-division" — die Quelle benennt zweite Ligen gern „First/1st Division".
+    "first-division": 3,
 }
 
 # Wettbewerbe, bei denen „Spielklasse" die falsche Frage ist. Sie bekommen eine eigene Marke

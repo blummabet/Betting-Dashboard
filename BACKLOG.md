@@ -3,6 +3,94 @@
 Stand 10.09.2026 (oberster Block); Liga/WM-Teil darunter Stand 26.06.2026. Lebendige Liste aller offenen Punkte — Liga UND noch nicht umgesetzte WM-Sachen —
 damit wir alles abarbeiten können. ✅ = erledigt (Referenz), ⏳ = offen, 🔒 = blockiert.
 
+## 🔴 12.09.2026 — der Burst-Push hing im falschen Workflow und ist nie gelaufen
+
+Lucas: *„sag die stake burst push die wir gestern gebaut haben, wie wissen wir ob die klappen?
+sollte da nicht zumindest 1 spiel am tag sowas haben :)"*
+
+Ja — **8 bis 21 am Tag.** Über sechs Tage Ledger nachgerechnet:
+
+| Tag | Bursts |
+|---|---|
+| 06.09. | 12 |
+| 07.09. | 12 |
+| 08.09. | 10 |
+| 09.09. | **21** |
+| 10.09. | 8 |
+| 11.09. | 9 |
+
+Gekommen ist keiner. `stake_burst_ledger.json` und `stake_burst_seen.json` existieren nicht — das
+Skript ist **nie ausgeführt worden**.
+
+### Die Ursache
+
+Ich habe den Push gestern in `stake-radar.yml` eingehängt. **Dieser Workflow hat nur
+`workflow_dispatch` und keinen Schedule** — sein letzter Lauf war der **07.09.**, von Hand
+ausgelöst. Gesammelt wird Stake in `betfair.yml` (`*/10`), und dorthin gehört ein Push, der auf
+einen frischen Feed reagieren soll.
+
+Das ist exakt die Fehlerklasse, die in `stake-radar.yml` **selbst** dokumentiert steht — der
+Eintrag vom 07.09.:
+
+> *„Rollout-Lücke, dieselbe Klasse wie am 04.09. beim Auffälligkeits-Maß: der Code war da, der
+> Produzent nicht neu gelaufen."*
+
+Ich habe diesen Kommentar gelesen, während ich den Push daneben gehängt habe. Und **kein Test hat
+es gefangen** — alle 21 prüften die Funktion, keiner fragte, ob sie jemals aufgerufen wird.
+
+### Behoben
+
+Umgezogen nach `betfair.yml`, direkt hinter den Sammler (vorher hätte er den Feed des letzten
+Laufs gesehen, bis zu 10 Minuten alt — bei einem Muster aus 5-Minuten-Fenstern ist das der
+Unterschied). Die Telegram-Secrets stehen an diesem Schritt; ohne sie schreibt
+`send_trades_message` die Karte auf die Konsole, meldet False, und der Lauf bleibt grün, während
+nichts ankommt. `stake_burst_ledger.json` und `stake_burst_seen.json` werden mitcommittet — ein
+Buch, das der Runner schreibt und nicht committet, ist beim nächsten Lauf weg (derselbe Fehler wie
+bei „Heute spielenswert" am 10.09.).
+
+Aus `stake-radar.yml` wieder heraus: doppelt gehängt wäre schlimmer, ein manueller Radar-Lauf
+würde dann neben dem 10-Minuten-Job pushen.
+
+### Vier neue Tests, die die Funktion NICHT prüfen
+
+Sondern den Rollout: hängt der Push in einem Workflow **mit Schedule**, steht er **hinter** dem
+Sammler, sind die Secrets am selben Schritt, wird sein Buch committet. Das ist die Lücke, die
+21 Funktionstests offen gelassen haben.
+
+### Welche Wettbewerbe das trifft
+
+Lucas: *„ok das wären dann nur bursts zu Top Ligen oder"* — überwiegend ja, aber nicht nur.
+Die 72 Bursts der sechs Tage:
+
+| Kategorie | n | | Wettbewerb (Top) | n |
+|---|---|---|---|---|
+| Fußball | 58 | | Champions League | 19 |
+| Tennis | 8 | | US Open (m/w) | 8 |
+| E-Sport | 3 | | Serie A | 6 |
+| Cricket | 2 | | Süper Lig · La Liga | je 5 |
+| US-Sport | 1 | | Brasileirão A | 4 |
+
+Dazu einzeln: Championship, Brasileirão B, Superligaen, Primeira Liga, EFL Cup, CONMEBOL
+Libertadores/Sudamericana, LCK CL, MLS.
+
+Das ist **kein Filter, sondern Physik**: $10.000 auf eine Auswahl in fünf Minuten kommen nur dort
+zusammen, wo Verkehr ist. Damit ist der Burst-Push das **Gegenstück** zum Poly-Dominanz-Band —
+das sucht kleine Märkte, dieser findet zwangsläufig große. Sie überschneiden sich nicht.
+
+> 🔴 Beim Nachzählen aufgefallen: der Burst-Push war die **einzige Stake-Fläche ohne Sperrliste**.
+> Der Sammler führt sie seit dem 03.09. (`GESPERRT = {"US-Sport"}`, Lucas: „Ganze US-Sport brauch
+> ich aktuell mal nicht") und schreibt sie als `gesperrt` ins Artefakt; der Radar liest sie von
+> dort, dieser Push nicht. Jetzt liest er sie aus **derselben Datei wie die Wetten** — eine
+> zweite Liste wäre genau die Drift, die im Poly-Band einen Tag vorher aufgeräumt wurde.
+> Betrifft 1 von 72 Bursts; der Punkt ist die Konsistenz, nicht die eine Karte.
+
+### Was Lucas jetzt sehen wird
+
+Bei ~12 Bursts am Tag und 48h-Dedup: ungefähr **8–12 Pushes täglich**, an einem vollen
+Fußball-Abend mehr (im Fenster vom 11.09. lagen 9 Stück in 8 Stunden). Falls das zu viel ist, sind
+`STAKE_BURST_MIN_N` (4) und `STAKE_BURST_MAX` (4 je Lauf) die Hebel — beides per Env, ohne
+Code-Eingriff. **Nicht** über den Betrag: ab $50.000 dreht der gemessene ROI ins Minus.
+
 ## 🚫 12.09.2026 — US-Sport raus aus dem Dominanz-Band (Korrektur einer eigenen Begründung)
 
 Lucas: *„aja und bitte us Sport gleich weg"* — nach einem MLB-Push:
