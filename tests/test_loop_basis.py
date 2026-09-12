@@ -74,13 +74,21 @@ class ClvStrom(unittest.TestCase):
         Die REGEL: eine CLV-Beobachtung heisst „die Linie ist unseren Weg gelaufen" und wird
         gegen 0,5 gemessen — dort heisst 0,5 „Linie stand still", nicht „Muenzwurf". Seit dem
         06.09. ist auch der Ergebnis-Strom gegen 0,5 geeicht (der Preis steckt in jeder
-        Beobachtung), also muss der Nullpunkt in JEDER Mischung 0,5 sein."""
-        self.assertAlmostEqual(U._clv_outcome_score({"clvPP": 0.6}), 0.56, 2)
-        self.assertGreater(U._clv_outcome_score({"clvPP": 5.0}), 0.9)
-        self.assertLess(U._clv_outcome_score({"clvPP": -5.0}), 0.1)
+        Beobachtung), also muss der Nullpunkt in JEDER Mischung 0,5 sein.
+
+        12.09.2026: gelesen wird `clvFairPP` statt `clvPP` — die alte Zahl vergleicht entvigt
+        gegen vigt und ist um rund 2 pp zu niedrig (s. tests/test_clv_fair.py). Die REGEL hier
+        ist unveraendert; nur das Feld, aus dem sie ihre Eingabe nimmt, ist das richtige."""
+        def fair(pp):
+            return {"clvBasis": "fair", "clvFairPP": pp}
+        self.assertAlmostEqual(U._clv_outcome_score(fair(0.6)), 0.56, 2)
+        self.assertGreater(U._clv_outcome_score(fair(5.0)), 0.9)
+        self.assertLess(U._clv_outcome_score(fair(-5.0)), 0.1)
         # Deadband: winzige Bewegung ist keine Zustimmung, sondern Rauschen — und keine
         # erfundene 0,5-Beobachtung, die echte Signale verwaessert.
-        self.assertIsNone(U._clv_outcome_score({"clvPP": 0.1}))
+        self.assertIsNone(U._clv_outcome_score(fair(0.1)))
+        # Und ohne faire Basis gar keine Beobachtung — nicht ersatzweise die schiefe Zahl.
+        self.assertIsNone(U._clv_outcome_score({"clvPP": 0.6}))
 
     def test_nullpunkt_ist_der_preis_nicht_die_trefferquote(self):
         """Der Ergebnis-Strom ist seit 06.09. gegen 0,5 geeicht: ein Pick, der genau so

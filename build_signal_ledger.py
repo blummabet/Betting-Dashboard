@@ -188,6 +188,58 @@ def collect_observations(wm: dict) -> list[dict]:
     return records
 
 
+# ── 🔴 12.09.2026: `clvFairPP` nachtragen ────────────────────────────────────────────────────
+#
+# `clvPP` vergleicht die power-entvigte Pinnacle-Closing-Wahrscheinlichkeit gegen unseren ROHEN
+# Einstiegspreis — wir ziehen uns die Marge unseres eigenen Buchs ab (Herleitung in
+# `resolve_steam_clv.fair_clv_pp`). Der Bayesian-Loop liest seit heute `clvFairPP`; ohne diesen
+# Nachtrag haette er nach der Umstellung fast keine Beobachtungen mehr.
+#
+# Bewusst KEINE einmalige Migration, sondern ein Reparatur-Durchgang bei jedem Lauf: er ist
+# idempotent, holt Zeilen nach, deren Quotenverlauf erst spaeter ankommt, und er hinterlaesst
+# keine Handarbeit an einer Pipeline-Datei. Wo sich der Einstiegsmarkt nicht zuordnen laesst,
+# bleibt `clvBasis` auf „roh" und es gibt keine faire Zahl — geraten wird nichts.
+def _verlauf():
+    try:
+        pfad = D.file("wm2026-odds-history.json", "liga-odds-history.json")
+        return json.loads(pfad.read_text(encoding="utf-8")) if pfad.exists() else {}
+    except Exception:
+        return {}
+
+
+def fair_clv_nachtragen(records: list[dict], verlauf: dict = None) -> int:
+    """Setzt `clvFairPP` + `clvBasis` auf allen Zeilen, denen sie fehlen. Gibt die Zahl der
+    neu gefuellten Zeilen zurueck."""
+    try:
+        import resolve_steam_clv as RC
+    except Exception:
+        return 0
+    if verlauf is None:
+        verlauf = _verlauf()
+    n = 0
+    for r in records:
+        if not isinstance(r, dict) or r.get("clvFairPP") is not None:
+            continue
+        clv, odd = r.get("clvPP"), r.get("entryOdd") or r.get("odds")
+        if not isinstance(clv, (int, float)) or not isinstance(odd, (int, float)) or odd <= 1:
+            continue
+        if not r.get("clvResolved"):
+            continue                      # 0.0-Platzhalter ist keine gemessene Null
+        spiel = "-".join(str(r.get("matchKey") or "").split("-")[-2:])
+        buch = "pinnacle" if str(r.get("entryBook")) == "pini" else "public"
+        markt = RC.einstiegs_markt(verlauf.get(spiel), odd, r.get("market"), buch)
+        fair = RC.fair_entry_prob(markt, r.get("market"))
+        # clvPP = pinn_close_fair − 1/odd  →  pinn_close_fair zurueckrechnen
+        fclv = RC.fair_clv_pp(clv / 100.0 + 1.0 / odd, fair)
+        if fclv is None:
+            r["clvBasis"] = "roh"
+            continue
+        r["clvFairPP"] = fclv
+        r["clvBasis"] = "fair"
+        n += 1
+    return n
+
+
 def upsert(ledger: dict, observations: list[dict]) -> tuple[int, int]:
     """Mergt Beobachtungen in den Ledger. Returns (neu, aktualisiert)."""
     by_key = {r["key"]: r for r in ledger.get("records", [])}
@@ -227,6 +279,14 @@ def main() -> int:
     obs = collect_observations(wm)
     print(f"   {len(obs)} aufgelöste Picks mit gefeuerten Signalen gefunden")
     new, upd = upsert(ledger, obs)
+    nach = fair_clv_nachtragen(ledger.get("records") or [])
+    if nach:
+        print(f"   ⚖️  clvFairPP nachgetragen: {nach} Zeilen (beide Seiten entvigt)")
+    _fair = sum(1 for r in ledger.get("records") or []
+                if isinstance(r, dict) and r.get("clvBasis") == "fair")
+    _roh = sum(1 for r in ledger.get("records") or []
+               if isinstance(r, dict) and r.get("clvBasis") == "roh")
+    print(f"   ⚖️  CLV-Basis: {_fair} fair · {_roh} ohne zuordenbaren Einstiegsmarkt")
     ledger["_meta"]["updated_at"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     ledger["_meta"]["total_records"] = len(ledger["records"])
 

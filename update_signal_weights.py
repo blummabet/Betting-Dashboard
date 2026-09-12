@@ -139,8 +139,29 @@ def _clv_outcome_score(pick: dict) -> float | None:
 
     None bedeutet „keine verwertbare Beobachtung" — bei fehlendem CLV (Markt ohne Closing-
     Erfassung, z.B. BTTS/DC/AH) und innerhalb der Deadband. Bewusst kein Default 0.5: eine
-    erfundene neutrale Beobachtung würde echte Signale Richtung 1.0 verwässern."""
-    v = pick.get("clvPP")
+    erfundene neutrale Beobachtung würde echte Signale Richtung 1.0 verwässern.
+
+    🔴 12.09.2026 — gelesen wird `clvFairPP`, nicht `clvPP`. Der alte Wert vergleicht die
+    power-entvigte Pinnacle-Closing-Wahrscheinlichkeit gegen unseren ROHEN Einstiegspreis, zieht
+    uns also die Marge unseres eigenen Buchs ab (Herleitung in `resolve_steam_clv.fair_clv_pp`).
+
+    Für diesen Loop war das doppelt teuer. An den 29 Liga-Picks mit sauber zugeordnetem
+    Einstiegsmarkt:
+
+        wie gemessen   25 Beobachtungen   Ø Zustimmung 0,352   →  drückt die Gewichte
+        entvigt        26 Beobachtungen   Ø Zustimmung 0,544   →  knapp über dem Nullpunkt
+
+    Der zweite Effekt ist der schlimmere: die Deadband (±0,5 pp). Bei einer Verschiebung um
+    ~1,9 pp landet ein Pick mit echtem CLV +1,9 bei null und fliegt als „Rauschen" raus, während
+    einer mit echtem CLV 0 bei −1,9 landet und als Beleg DAGEGEN zählt. Der Bias verschiebt also
+    nicht nur — er sortiert die guten Beobachtungen aus und behält die schlechten.
+
+    Ohne faire Zahl gibt es hier KEINE Beobachtung. Auf den rohen Wert zurückzufallen wäre genau
+    die erfundene Beobachtung, vor der der Absatz darüber warnt.
+    """
+    if str(pick.get("clvBasis") or "") != "fair":
+        return None
+    v = pick.get("clvFairPP")
     if v is None:
         return None
     try:

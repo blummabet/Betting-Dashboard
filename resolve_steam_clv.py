@@ -72,19 +72,52 @@ def steam_clv_pp(pinn_close_prob, entry_odd):
 # sagt, woher die Einstiegs-Wahrscheinlichkeit stammt. Welche Zahl Stats-Seite und Lernstrom
 # benutzen, ist eine eigene Entscheidung und keine Nebenwirkung dieses Fixes.
 
-_SEITE_IDX = {"Heimsieg": 0, "Unentschieden": 1, "Auswärtssieg": 2, "Auswartssieg": 2}
+# Welche Felder im Snapshot bilden den Markt, und welches davon ist UNSERE Seite?
+# 1X2 und Doppelte Chance teilen sich dieselben drei Quoten — die DC-Wahrscheinlichkeit ist die
+# Summe zweier entvigter 1X2-Seiten und damit exakt, nicht geschaetzt.
+_MAERKTE = {
+    "Heimsieg":             (("hw", "dr", "aw"), (0,)),
+    "Unentschieden":        (("hw", "dr", "aw"), (1,)),
+    "Auswärtssieg":         (("hw", "dr", "aw"), (2,)),
+    "Auswartssieg":         (("hw", "dr", "aw"), (2,)),
+    "Doppelte Chance — 1X": (("hw", "dr", "aw"), (0, 1)),
+    "Doppelte Chance — X2": (("hw", "dr", "aw"), (1, 2)),
+    "Doppelte Chance — 12": (("hw", "dr", "aw"), (0, 2)),
+    "Über 1.5 Tore":        (("o15", "u15"), (0,)),
+    "Unter 1.5 Tore":       (("o15", "u15"), (1,)),
+    "Über 2.5 Tore":        (("o25", "u25"), (0,)),
+    "Unter 2.5 Tore":       (("o25", "u25"), (1,)),
+    "Über 3.5 Tore":        (("o35", "u35"), (0,)),
+    "Unter 3.5 Tore":       (("o35", "u35"), (1,)),
+    "BTTS Ja":              (("bttsY", "bttsN"), (0,)),
+    "BTTS Nein":            (("bttsY", "bttsN"), (1,)),
+}
+# Das Feld, ueber das wir den Einstiegs-Snapshot wiederfinden (unser eigener Preis).
+_EIGENES_FELD = {name: felder[idx[0]] for name, (felder, idx) in _MAERKTE.items()
+                 if len(idx) == 1}
+
+
+def _markt_felder(markt_name):
+    return _MAERKTE.get(str(markt_name))
 
 
 def fair_entry_prob(markt, markt_name, devig=None):
     """Faire (entvigte) Wahrscheinlichkeit UNSERER Seite aus dem vollen Einstiegsmarkt.
 
-    `markt` ist ein Snapshot mit hw/dr/aw desselben Buchs zum Einstiegszeitpunkt. None, wenn der
-    Markt nicht vollstaendig ist — geraten wird nichts.
+    `markt` ist ein Snapshot desselben Buchs zum Einstiegszeitpunkt. None, wenn der Markt nicht
+    vollstaendig ist — geraten wird nichts.
+
+    12.09.2026: anfangs nur 1X2. Gemessen am Liga-Ledger deckte das **29 von 87** Zeilen mit
+    gemessenem CLV ab; die restlichen 58 waren Ueber/Unter (34), Doppelte Chance (21) und AH (3).
+    Der Quotenverlauf traegt o15/u15, o25/u25, o35/u35 und BTTS seit dem 06.09. mit — sie fehlten
+    hier, nicht in den Daten. Asian Handicap bleibt draussen: dafuer gibt es keine Gegenseite im
+    Verlauf, und eine geschaetzte waere genau die erfundene Zahl, die dieser ganze Fix beseitigt.
     """
-    idx = _SEITE_IDX.get(str(markt_name))
-    if idx is None or not isinstance(markt, dict):
+    spez = _markt_felder(markt_name)
+    if spez is None or not isinstance(markt, dict):
         return None
-    quoten = [markt.get("hw"), markt.get("dr"), markt.get("aw")]
+    felder, idx = spez
+    quoten = [markt.get(f) for f in felder]
     if not all(isinstance(q, (int, float)) and q > 1 for q in quoten):
         return None
     if devig is None:
@@ -93,7 +126,9 @@ def fair_entry_prob(markt, markt_name, devig=None):
         except Exception:
             return None
     fair = devig(*quoten)
-    return fair[idx] if len(fair) == 3 else None
+    if len(fair) != len(felder):
+        return None
+    return sum(fair[i] for i in idx)
 
 
 def fair_clv_pp(pinn_close_prob, entry_fair_prob):
@@ -108,16 +143,21 @@ def einstiegs_markt(verlauf, entry_odd, markt_name, buch, toleranz=0.06):
 
     Ohne Treffer innerhalb der Toleranz: None. Ein „ungefaehr passender" Markt waere hier
     schlimmer als keiner — er wuerde die Korrektur erfinden statt sie zu messen.
+
+    Doppelte Chance hat im Verlauf keinen eigenen Preis (sie wird aus 1X2 abgeleitet). Dafuer
+    laesst sich der Einstieg nicht ueber den Preis wiederfinden — solche Zeilen bleiben ohne
+    faire Zahl, statt an einem beliebigen Snapshot festgemacht zu werden.
     """
-    idx = _SEITE_IDX.get(str(markt_name))
-    if idx is None or not isinstance(verlauf, list) or not entry_odd:
+    spez = _markt_felder(markt_name)
+    feld = _EIGENES_FELD.get(str(markt_name))
+    if spez is None or feld is None or not isinstance(verlauf, list) or not entry_odd:
         return None
-    feld = ("hw", "dr", "aw")[idx]
+    felder = spez[0]
     bester, abstand = None, None
     for s in verlauf:
         if not isinstance(s, dict) or str(s.get("bk")) != str(buch):
             continue
-        if not all(isinstance(s.get(k), (int, float)) and s[k] > 1 for k in ("hw", "dr", "aw")):
+        if not all(isinstance(s.get(k), (int, float)) and s[k] > 1 for k in felder):
             continue
         d = abs(s[feld] - entry_odd)
         if abstand is None or d < abstand:
