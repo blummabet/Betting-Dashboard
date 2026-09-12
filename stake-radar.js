@@ -47,7 +47,9 @@
   // eine Schublade, die im eigenen Buch etwas taugt (`vor_anpfiff`: +2,6 % ROI, UG +1,5 % bei
   // n=11.632, als einzige neben `quote_ab_350` überhaupt belegt).
   var SR_NUR_SPIELBAR = true;   // nur was noch nicht (oder kaum) läuft — s. o.
-  var SR_GESPERRT_FALLBACK = ['US-Sport'];
+  // 12.09.2026: haelt den Rueckfall mit stake_highroller_fetch.GESPERRT gleich („Cricket bitte
+  // raus"). Greift nur, wenn die Datei die Liste nicht mitschickt — sonst regiert das Artefakt.
+  var SR_GESPERRT_FALLBACK = ['US-Sport', 'Cricket'];
   function _srGesperrt() {
     var d = SR.daten || {};
     return (d.gesperrt && d.gesperrt.length) ? d.gesperrt : SR_GESPERRT_FALLBACK;

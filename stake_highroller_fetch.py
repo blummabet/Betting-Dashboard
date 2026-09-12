@@ -120,7 +120,11 @@ STABLE = {"usdt", "usdc", "busd", "dai", "usd", "tusd", "usdp"}
 # Sportart dreht. Der Sammler sammelt also weiter alles; die Auswertung fuehrt gesperrte
 # Sportarten in einer eigenen Schublade, und der Tab zeigt sie nicht, sagt aber wie viele
 # er weglaesst. Ein stiller Filter waere genau die Sorte Fehler, die wir hier ausraeumen.
-GESPERRT = {"US-Sport"}
+# 12.09.2026 (Lucas: „Cricket bitte raus") — nach einem Burst-Push auf
+# „1st Innings - Narine, Sunil Total · Under 12.5" in der Caribbean Premier League.
+# Gilt wie US-Sport: ausgeblendet, nicht ungesammelt. Die Auswertung fuehrt Cricket weiter in
+# der eigenen Schublade (470 pending Wetten im Bestand) — faellt es dort je auf, sieht man es.
+GESPERRT = {"US-Sport", "Cricket"}
 
 _KAT_SLUG = {
     "soccer": "Fußball", "football": "Fußball",
