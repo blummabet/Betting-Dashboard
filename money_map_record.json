@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-09-12T12:23:33.699277+00:00",
+"generatedAt": "2026-09-12T12:38:32.118113+00:00",
 "byVerdict": {
 "konsens": {
-"n": 981,
-"wins": 823,
-"hitRate": 0.8389,
-"polyN": 922,
-"polyWins": 711,
-"polyHitRate": 0.7711,
+"n": 983,
+"wins": 824,
+"hitRate": 0.8383,
+"polyN": 924,
+"polyWins": 712,
+"polyHitRate": 0.7706,
 "pinnN": 116,
 "pinnHitRate": 0.819,
-"nRoi": 308,
+"nRoi": 310,
 "roi": 0.4663,
-"roiLb": 0.3952,
-"nClv": 308,
-"clv": 21.67,
-"clvLb": 19.4493
+"roiLb": 0.3949,
+"nClv": 310,
+"clv": 21.59,
+"clvLb": 19.3465
 },
 "uneinig": {
 "n": 373,
@@ -81,15 +81,15 @@
 "wins": 24,
 "hitRate": 0.6857
 },
+"Japanese J League": {
+"n": 35,
+"wins": 27,
+"hitRate": 0.7714
+},
 "Saudi Professional League": {
 "n": 35,
 "wins": 24,
 "hitRate": 0.6857
-},
-"Japanese J League": {
-"n": 34,
-"wins": 26,
-"hitRate": 0.7647
 },
 "Mexican Liga MX": {
 "n": 32,
@@ -256,6 +256,11 @@
 "wins": 9,
 "hitRate": 0.6923
 },
+"Japanese J League 2": {
+"n": 13,
+"wins": 11,
+"hitRate": 0.8462
+},
 "Norwegian Eliteserien": {
 "n": 13,
 "wins": 8,
@@ -270,11 +275,6 @@
 "n": 13,
 "wins": 10,
 "hitRate": 0.7692
-},
-"Japanese J League 2": {
-"n": 12,
-"wins": 11,
-"hitRate": 0.9167
 },
 "Swiss Super League": {
 "n": 12,
@@ -614,26 +614,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 825,
+"n": 826,
 "wins": 661,
-"hitRate": 0.8012,
-"nRoi": 301,
-"roi": 0.2829,
-"roiLb": 0.2053,
-"nClv": 301,
-"clv": 13.24,
-"clvLb": 10.1205
+"hitRate": 0.8002,
+"nRoi": 302,
+"roi": 0.2786,
+"roiLb": 0.2009,
+"nClv": 302,
+"clv": 13.06,
+"clvLb": 9.9412
 },
 "weak": {
-"n": 512,
-"wins": 271,
-"hitRate": 0.5293,
-"nRoi": 155,
-"roi": -0.0107,
-"roiLb": -0.1489,
-"nClv": 155,
-"clv": 0.73,
-"clvLb": -3.6331
+"n": 513,
+"wins": 272,
+"hitRate": 0.5302,
+"nRoi": 156,
+"roi": 0.0018,
+"roiLb": -0.137,
+"nClv": 156,
+"clv": 1.09,
+"clvLb": -3.2852
 }
 },
 "divergence": {
@@ -645,6 +645,44 @@
 "polyRate": 0.2687
 },
 "recent": [
+{
+"matchId": "36039012",
+"home": "Toyama",
+"away": "Tochigi Uva FC",
+"league": "Japanese J League 2",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Toyama",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-09-12T09:30:00Z",
+"settledAt": "2026-09-12T12:38:31.924949+00:00"
+},
+{
+"matchId": "36038814",
+"home": "Shimizu",
+"away": "Fukuoka",
+"league": "Japanese J League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Shimizu",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-09-12T09:30:00Z",
+"settledAt": "2026-09-12T12:38:31.924949+00:00"
+},
 {
 "matchId": "36038784",
 "home": "Mito",
@@ -1366,56 +1404,18 @@
 ],
 "kickoff": "2026-09-11T15:25:00Z",
 "settledAt": "2026-09-11T18:36:51.993397+00:00"
-},
-{
-"matchId": "36052263",
-"home": "Imisli FK",
-"away": "Neftchi Baku",
-"league": "Azerbaijan Premier League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Neftchi Baku",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-3
-],
-"kickoff": "2026-09-11T12:30:00Z",
-"settledAt": "2026-09-11T15:36:22.054818+00:00"
-},
-{
-"matchId": "36055474",
-"home": "Buriram Utd",
-"away": "Chiangrai Utd",
-"league": "Thai League 1",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Buriram Utd",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-09-11T11:00:00Z",
-"settledAt": "2026-09-11T14:06:15.156833+00:00"
 }
 ],
 "global": {
-"n": 1370,
-"wins": 950,
-"hitRate": 0.6934,
-"nRoi": 456,
-"roi": 0.1831,
-"roiLb": 0.1128,
-"nClv": 456,
+"n": 1372,
+"wins": 951,
+"hitRate": 0.6931,
+"nRoi": 458,
+"roi": 0.1843,
+"roiLb": 0.114,
+"nClv": 458,
 "clv": 8.99,
-"clvLb": 6.4123
+"clvLb": 6.4095
 },
-"pending": 52
+"pending": 50
 }
