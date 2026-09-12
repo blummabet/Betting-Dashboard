@@ -103,7 +103,28 @@ def _quote(w):
     return q if isinstance(q, (int, float)) and q > 1 else None
 
 
-def bursts(wetten, min_n=None, fenster_s=None, min_usd=None) -> list:
+GESPERRT_FALLBACK = ("US-Sport",)
+
+
+def gesperrte_kats(quelle=None):
+    """Die ausgeblendeten Sportarten — aus `stake_highroller.json`, nicht hier hartkodiert. REIN.
+
+    12.09.2026 (Lucas: „ok das waeren dann nur bursts zu Top Ligen oder"). Beim Nachzaehlen fiel
+    auf, dass der Burst-Push als EINZIGE Stake-Flaeche keine Sperrliste las. Der Sammler fuehrt
+    sie (`stake_highroller_fetch.GESPERRT`, seit 03.09.: „Ganze US-Sport brauch ich aktuell mal
+    nicht") und schreibt sie als `gesperrt` ins Artefakt; der Radar liest sie von dort. Also
+    liest dieser Push sie auch von dort — eine zweite Liste waere genau die Drift, die im
+    Poly-Band einen Tag vorher aufgeraeumt wurde.
+
+    Gemessen betrifft es 1 von 72 Bursts. Der Aufwand lohnt trotzdem: die Konsistenz ist der
+    Punkt, nicht die eine Karte.
+    """
+    got = (quelle or {}).get("gesperrt") if isinstance(quelle, dict) else None
+    kats = [str(c) for c in got if c] if isinstance(got, list) else []
+    return kats or list(GESPERRT_FALLBACK)
+
+
+def bursts(wetten, min_n=None, fenster_s=None, min_usd=None, gesperrt=None) -> list:
     """Alle Einsatz-Bursts im Feed. REIN (alles injizierbar).
 
     Ein Burst ist: `min_n` Einzelwetten auf DIESELBE Auswahl, innerhalb von `fenster_s`, zusammen
@@ -118,10 +139,13 @@ def bursts(wetten, min_n=None, fenster_s=None, min_usd=None) -> list:
     min_n = MIN_N if min_n is None else min_n
     fenster_s = FENSTER_S if fenster_s is None else fenster_s
     min_usd = MIN_USD if min_usd is None else min_usd
+    gesperrt = list(GESPERRT_FALLBACK) if gesperrt is None else list(gesperrt)
     je_auswahl = {}
     for w in wetten or []:
         if not isinstance(w, dict) or w.get("kombi"):
             continue
+        if w.get("kat") in gesperrt:
+            continue                      # ausgeblendete Sportart — s. gesperrte_kats
         a, t, u, q = w.get("auswahlId"), _ts(w.get("ts")), w.get("einsatzUsd"), _quote(w)
         if not a or t is None or q is None:
             continue
@@ -256,10 +280,13 @@ def main() -> int:
         return 0
 
     seen = prune_seen(_load(SEEN_FILE, {}), now)
-    alle = bursts(wetten)
+    _gesperrt = gesperrte_kats(quelle)
+    alle = bursts(wetten, gesperrt=_gesperrt)
     neu = [b for b in alle if burst_key(b) not in seen]
-    print("⚡ Stake-Burst: %d Burst(s) im Feed, %d davon neu (>=%d Wetten, %ds, ab %s, gleiche Quote)"
-          % (len(alle), len(neu), MIN_N, int(FENSTER_S), _usd(MIN_USD)))
+    print("⚡ Stake-Burst: %d Burst(s) im Feed, %d davon neu (>=%d Wetten, %ds, ab %s, "
+          "gleiche Quote; ausgeblendet: %s)"
+          % (len(alle), len(neu), MIN_N, int(FENSTER_S), _usd(MIN_USD),
+             ", ".join(_gesperrt) or "—"))
 
     senden = neu[:MAX_PUSH]
     unterdrueckt = max(len(neu) - len(senden), 0)

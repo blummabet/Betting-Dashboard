@@ -27,7 +27,8 @@ def w(sek=0, usd=3000, quote=3.35, auswahl="a1", phase="vor", **over):
          "ts": (NOW + timedelta(seconds=sek)).isoformat(),
          "event": "Cienciano - Montevideo City Torque", "eventId": "e1",
          "liga": "CONMEBOL Sudamericana", "kat": "Fußball",
-         "markt": "Player to be carded (sure sub)", "auswahl": "Cabello, Carlos"}
+         "markt": "Player to be carded (sure sub)", "auswahl": "Cabello, Carlos",
+         "kat": "Fußball"}
     d.update(over)
     return d
 
@@ -122,6 +123,52 @@ class TestDieRegel(unittest.TestCase):
             self.assertEqual(B.bursts(leer), [])
 
 
+class TestGesperrteSportarten(unittest.TestCase):
+    """12.09.2026 (Lucas: „ok das waeren dann nur bursts zu Top Ligen oder").
+
+    Beim Nachzaehlen aufgefallen: der Burst-Push war die EINZIGE Stake-Flaeche ohne Sperrliste.
+    Der Sammler fuehrt sie seit dem 03.09. („Ganze US-Sport brauch ich aktuell mal nicht") und
+    schreibt sie als `gesperrt` ins Artefakt; der Radar liest sie von dort, dieser Push nicht.
+
+    Zur Frage selbst: 58 von 72 Bursts sind Fussball, davon Champions League 19, Serie A 6,
+    Sueper Lig 5, La Liga 5, Brasileirao 4. Dazu Tennis 8, E-Sport 3, Cricket 2, US-Sport 1.
+    Also ueberwiegend grosse Wettbewerbe — zwangslaeufig, weil $10.000 in fuenf Minuten nur dort
+    zusammenkommen, wo Verkehr ist.
+    """
+
+    def test_gesperrte_kategorie_erzeugt_keinen_burst(self):
+        feed = [w(i * 10, 5000, kat="US-Sport") for i in range(4)]
+        self.assertEqual(B.bursts(feed, gesperrt=["US-Sport"]), [])
+
+    def test_die_liste_kommt_aus_dem_artefakt(self):
+        """Eine zweite Liste hier waere genau die Drift, die im Poly-Band einen Tag vorher
+        aufgeraeumt wurde: aendert Lucas die Sperre im Sammler, muss dieser Push mitziehen."""
+        self.assertEqual(B.gesperrte_kats({"gesperrt": ["Cricket", "Darts"]}),
+                         ["Cricket", "Darts"])
+        feed = [w(i * 10, 5000, kat="Cricket") for i in range(4)]
+        self.assertEqual(B.bursts(feed, gesperrt=["Cricket"]), [])
+        self.assertEqual(len(B.bursts(feed, gesperrt=["US-Sport"])), 1,
+                         "steht Cricket nicht auf der Liste, laeuft es mit — die LISTE regiert")
+
+    def test_ohne_artefakt_liste_gilt_der_sichere_rueckfall(self):
+        for leer in (None, {}, {"gesperrt": None}, {"gesperrt": []}, "kaputt"):
+            self.assertEqual(B.gesperrte_kats(leer), ["US-Sport"], repr(leer))
+
+    def test_fussball_und_tennis_laufen_weiter(self):
+        """Die Gegenprobe — ohne sie koennte die Sperre alles fangen und der Test waere gruen."""
+        for kat in ("Fußball", "Tennis", "E-Sport"):
+            self.assertEqual(len(B.bursts([w(i * 10, 5000, kat=kat) for i in range(4)],
+                                          gesperrt=["US-Sport"])), 1, kat)
+
+    def test_main_liest_die_liste_aus_derselben_datei_wie_die_wetten(self):
+        """Sonst faellt beim naechsten Umbau auf, dass die Liste aus einer anderen Quelle kommt
+        als die Daten — und das merkt niemand, weil beide heute gleich aussehen."""
+        import inspect
+        q = inspect.getsource(B.main)
+        self.assertIn("gesperrte_kats(quelle)", q)
+        self.assertIn("gesperrt=_gesperrt", q)
+
+
 class TestDeckelUndDedup(unittest.TestCase):
 
     def test_der_deckel_ist_keine_rangfolge(self):
@@ -186,6 +233,61 @@ class TestBuch(unittest.TestCase):
             self.assertIn(feld, z, feld)
         self.assertEqual(len(z["betIds"]), 4, "ohne die Bet-IDs ist die Zeile nicht abrechenbar")
         self.assertEqual(z["status"], "pending")
+
+
+class TestRollout(unittest.TestCase):
+    """🔴 12.09.2026 (Lucas: „wie wissen wir ob die klappen? sollte da nicht zumindest 1 Spiel am
+    Tag sowas haben :)").
+
+    Antwort: ja — 8 bis 21 am Tag, gemessen ueber sechs Tage Ledger. Gekommen ist keiner, weil
+    ich den Push in `stake-radar.yml` eingehaengt habe. **Dieser Workflow hat nur
+    `workflow_dispatch`, keinen Schedule** — letzter Lauf 07.09., von Hand. Gesammelt wird Stake
+    in `betfair.yml` (*/10), und dorthin gehoert ein Push, der auf einen frischen Feed reagiert.
+
+    Exakt die Fehlerklasse, die in stake-radar.yml SELBST dokumentiert steht (07.09.:
+    „Rollout-Luecke … der Code war da, der Produzent nicht neu gelaufen"). Ich habe den Kommentar
+    gelesen und den Push trotzdem daneben gehaengt. Kein Test hat das gefangen, weil alle Tests
+    die FUNKTION pruefen und keiner gefragt hat, ob sie jemals aufgerufen wird.
+    """
+
+    def _wf(self, name):
+        from pathlib import Path
+        p = Path(__file__).resolve().parent.parent / ".github" / "workflows" / name
+        return p.read_text(encoding="utf-8") if p.exists() else ""
+
+    def test_der_push_haengt_in_einem_workflow_mit_schedule(self):
+        """Die eigentliche Regel: ein Push ohne Schedule ist kein Push."""
+        import re
+        treffer = []
+        for name in ("betfair.yml", "stake-radar.yml", "poly.yml", "cards.yml"):
+            q = self._wf(name)
+            if "stake_burst_push.py" in q:
+                treffer.append((name, bool(re.search(r"^\s*schedule:", q, re.M))))
+        self.assertTrue(treffer, "der Push ist in KEINEM Workflow eingehaengt")
+        self.assertTrue(any(hat_schedule for _, hat_schedule in treffer),
+                        "eingehaengt nur in Workflows ohne Schedule: %r" % (treffer,))
+
+    def test_er_haengt_hinter_dem_sammler(self):
+        """Vor dem Sammler haette er den Feed des letzten Laufs gesehen — also bis zu 10 Minuten
+        alt, und das ist bei einem Muster aus 5-Minuten-Fenstern der Unterschied."""
+        q = self._wf("betfair.yml")
+        self.assertIn("stake_burst_push.py", q)
+        self.assertLess(q.index("stake_highroller_fetch.py"), q.index("stake_burst_push.py"))
+
+    def test_die_secrets_stehen_am_richtigen_schritt(self):
+        """Ohne sie schreibt `send_trades_message` die Karte auf die Konsole, meldet False — und
+        der Lauf bleibt gruen, waehrend nichts ankommt. Lautloses Scheitern."""
+        q = self._wf("betfair.yml")
+        i = q.index("stake_burst_push.py")
+        block = q[max(0, i - 500):i]
+        self.assertIn("TELEGRAM_TRADES_CHAT_ID", block)
+
+    def test_sein_buch_wird_auch_committet(self):
+        """Ein Buch, das der Runner schreibt und nicht committet, ist beim naechsten Lauf weg —
+        genau der Fehler von „Heute spielenswert" (10.09., drei Tage TTL statt Ledger)."""
+        q = self._wf("betfair.yml")
+        self.assertIn("stake_burst_ledger.json", q)
+        self.assertIn("stake_burst_seen.json", q)
 
 
 if __name__ == "__main__":

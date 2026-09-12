@@ -70,6 +70,23 @@ jobs:
         continue-on-error: true
         run: ${{ env.BETFAIR_PY }} stake_analyse.py || echo "  ⚠️ Stake-Auswertung fehlgeschlagen"
 
+      # ⚡ 🔴 12.09.2026 — hier, NICHT in stake-radar.yml.
+      #
+      # Gestern eingehaengt in `stake-radar.yml`, und der Push ist nie gelaufen: dieser Workflow
+      # hat NUR `workflow_dispatch`, keinen Schedule. Letzter Lauf war der 07.09., von Hand.
+      # Gesammelt wird Stake in DIESEM Job (*/10), und der Push gehoert dorthin, wo die Daten
+      # entstehen.
+      #
+      # Exakt die Fehlerklasse, die in stake-radar.yml selbst dokumentiert steht („Rollout-Luecke
+      # … der Code war da, der Produzent nicht neu gelaufen") — ich habe den Kommentar gelesen
+      # und den Push trotzdem daneben gehaengt.
+      - name: ⚡ Stake-Bursts in den Trades-Channel
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+        run: ${{ env.BETFAIR_PY }} stake_burst_push.py || echo "  ⚠️ Stake-Burst-Push fehlgeschlagen"
+
       - name: 🟡 Betfair/Betwatch fetchen
         run: ${{ env.BETFAIR_PY }} fetch_betfair_betwatch.py
         env:
@@ -224,6 +241,8 @@ jobs:
           git add stake_vorregistrierung.json 2>/dev/null || true
           git add stake_league_norm.json 2>/dev/null || true
           git add stake_league_norm_state.json 2>/dev/null || true
+          git add stake_burst_ledger.json 2>/dev/null || true      # ⚡ das Buch des Burst-Pushs
+          git add stake_burst_seen.json 2>/dev/null || true        # sein Dedup-Stand (48h TTL)
           git add betfair_prices.json 2>/dev/null || true
           git add betfair_history.json 2>/dev/null || true
           git add betfair_overview.json 2>/dev/null || true
