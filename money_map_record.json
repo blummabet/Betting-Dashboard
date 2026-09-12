@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-09-12T21:09:31.457398+00:00",
+"generatedAt": "2026-09-12T21:24:37.285247+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1032,
-"wins": 865,
-"hitRate": 0.8382,
-"polyN": 972,
-"polyWins": 748,
-"polyHitRate": 0.7695,
-"pinnN": 134,
-"pinnHitRate": 0.806,
-"nRoi": 359,
-"roi": 0.4371,
-"roiLb": 0.3712,
-"nClv": 359,
-"clv": 20.7,
-"clvLb": 18.6357
+"n": 1034,
+"wins": 866,
+"hitRate": 0.8375,
+"polyN": 974,
+"polyWins": 750,
+"polyHitRate": 0.77,
+"pinnN": 135,
+"pinnHitRate": 0.8,
+"nRoi": 361,
+"roi": 0.4368,
+"roiLb": 0.3706,
+"nClv": 361,
+"clv": 20.75,
+"clvLb": 18.6878
 },
 "uneinig": {
 "n": 401,
@@ -271,6 +271,11 @@
 "wins": 8,
 "hitRate": 0.6154
 },
+"Polish Ekstraklasa": {
+"n": 13,
+"wins": 8,
+"hitRate": 0.6154
+},
 "Scottish Premiership": {
 "n": 13,
 "wins": 13,
@@ -280,11 +285,6 @@
 "n": 13,
 "wins": 10,
 "hitRate": 0.7692
-},
-"Polish Ekstraklasa": {
-"n": 12,
-"wins": 8,
-"hitRate": 0.6667
 },
 "Dutch Eerste Divisie": {
 "n": 11,
@@ -302,8 +302,8 @@
 "hitRate": 0.8
 },
 "Bulgarian A League": {
-"n": 9,
-"wins": 9,
+"n": 10,
+"wins": 10,
 "hitRate": 1.0
 },
 "Egyptian Premier": {
@@ -614,26 +614,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 864,
-"wins": 689,
-"hitRate": 0.7975,
-"nRoi": 340,
-"roi": 0.2591,
-"roiLb": 0.1862,
-"nClv": 340,
-"clv": 12.34,
-"clvLb": 9.3986
+"n": 865,
+"wins": 690,
+"hitRate": 0.7977,
+"nRoi": 341,
+"roi": 0.2634,
+"roiLb": 0.1904,
+"nClv": 341,
+"clv": 12.48,
+"clvLb": 9.5443
 },
 "weak": {
-"n": 554,
+"n": 555,
 "wins": 289,
-"hitRate": 0.5217,
-"nRoi": 197,
-"roi": -0.0847,
-"roiLb": -0.2035,
-"nClv": 197,
+"hitRate": 0.5207,
+"nRoi": 198,
+"roi": -0.0893,
+"roiLb": -0.2077,
+"nClv": 198,
 "clv": -1.2,
-"clvLb": -5.0182
+"clvLb": -5.0045
 }
 },
 "divergence": {
@@ -645,6 +645,44 @@
 "polyRate": 0.2645
 },
 "recent": [
+{
+"matchId": "36036691",
+"home": "Zaglebie Lubin",
+"away": "GKS Katowice",
+"league": "Polish Ekstraklasa",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "GKS Katowice",
+"polySide": "home",
+"winner": "home",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-09-12T18:15:00Z",
+"settledAt": "2026-09-12T21:24:37.082866+00:00"
+},
+{
+"matchId": "36036690",
+"home": "CSKA Sofia",
+"away": "Arda",
+"league": "Bulgarian A League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "CSKA Sofia",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+4,
+1
+],
+"kickoff": "2026-09-12T18:15:00Z",
+"settledAt": "2026-09-12T21:24:37.082866+00:00"
+},
 {
 "matchId": "36049693",
 "home": "Al-Khaleej Saihat",
@@ -1366,56 +1404,18 @@
 ],
 "kickoff": "2026-09-12T14:30:00Z",
 "settledAt": "2026-09-12T16:23:54.022951+00:00"
-},
-{
-"matchId": "36005217",
-"home": "Aston Villa",
-"away": "Nottm Forest",
-"league": "English Premier League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Nottm Forest",
-"polySide": "home",
-"winner": "away",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-09-12T14:00:00Z",
-"settledAt": "2026-09-12T16:09:02.275408+00:00"
-},
-{
-"matchId": "36010726",
-"home": "Osasuna",
-"away": "Espanyol",
-"league": "Spanish La Liga",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Espanyol",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-2
-],
-"kickoff": "2026-09-12T14:15:00Z",
-"settledAt": "2026-09-12T16:09:02.275408+00:00"
 }
 ],
 "global": {
-"n": 1451,
-"wins": 996,
-"hitRate": 0.6864,
-"nRoi": 537,
-"roi": 0.1329,
-"roiLb": 0.0685,
-"nClv": 537,
-"clv": 7.37,
-"clvLb": 4.9989
+"n": 1453,
+"wins": 997,
+"hitRate": 0.6862,
+"nRoi": 539,
+"roi": 0.1338,
+"roiLb": 0.0693,
+"nClv": 539,
+"clv": 7.46,
+"clvLb": 5.0859
 },
-"pending": 27
+"pending": 26
 }
