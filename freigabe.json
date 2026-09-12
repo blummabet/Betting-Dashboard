@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-12T00:37:17.385587+00:00",
+ "generatedAt": "2026-09-12T00:52:25.482203+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -222,7 +222,7 @@
     "nieAnteil": 0.543,
     "schaetzbar": false
    },
-   "alterTage": 0.1,
+   "alterTage": 0.2,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "top5"
@@ -277,11 +277,11 @@
    "zerlegung": "nach Conviction",
    "art": "conviction",
    "gruppen": 6,
-   "basis": "360 von 773 abgerechneten Plays · nur Engine 2026-09-01 · ohne Kampfsport, US-Sport",
-   "n": 360,
-   "pl": 4.35,
-   "roi": 0.0121,
-   "clv": -1.806,
+   "basis": "361 von 774 abgerechneten Plays · nur Engine 2026-09-01 · ohne Kampfsport, US-Sport",
+   "n": 361,
+   "pl": 5.41,
+   "roi": 0.015,
+   "clv": -1.8,
    "belegte": 1
   },
   {
@@ -3452,7 +3452,7 @@
     "nieAnteil": 0.543,
     "schaetzbar": false
    },
-   "alterTage": 0.1,
+   "alterTage": 0.2,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "top5"
@@ -3595,7 +3595,7 @@
     "nieAnteil": 0.07,
     "schaetzbar": false
    },
-   "alterTage": 0.1,
+   "alterTage": 0.2,
    "art": "konjunktion_gehalten",
    "quelle": "killer_ledger.json"
   },
@@ -3621,6 +3621,37 @@
    "naeherung": false
   },
   {
+   "schublade": "Mix money+sharp",
+   "strom": "poly",
+   "n": 137,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0464,
+   "pl": 6.36,
+   "roiLb": -0.0423,
+   "clv": -3.528,
+   "clvLb": -4.904,
+   "clvUrteil": "negativ belegt",
+   "clvOg": -2.152,
+   "fehltN": 0,
+   "noetigNRoi": 501,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 311,
+    "lo": 48,
+    "hi": 10921,
+    "nieAnteil": 0.18,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "mix",
+   "wert": "money+sharp",
+   "nAlt": 141,
+   "roiAlt": -0.0338,
+   "clvAlt": -0.256,
+   "engineAlt": true
+  },
+  {
    "schublade": "First Half Goals 1.5",
    "strom": "betfair",
    "n": 2600,
@@ -3640,37 +3671,6 @@
    "alterTage": null,
    "art": "markt",
    "naeherung": false
-  },
-  {
-   "schublade": "Mix money+sharp",
-   "strom": "poly",
-   "n": 136,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.039,
-   "pl": 5.3,
-   "roiLb": -0.0496,
-   "clv": -3.554,
-   "clvLb": -4.94,
-   "clvUrteil": "negativ belegt",
-   "clvOg": -2.168,
-   "fehltN": 0,
-   "noetigNRoi": 703,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 316,
-    "lo": 48,
-    "hi": 41834,
-    "nieAnteil": 0.232,
-    "schaetzbar": false
-   },
-   "alterTage": 0.1,
-   "art": "mix",
-   "wert": "money+sharp",
-   "nAlt": 141,
-   "roiAlt": -0.0338,
-   "clvAlt": -0.256,
-   "engineAlt": true
   },
   {
    "schublade": "Over/Under 3.5 Goals",
@@ -3884,6 +3884,37 @@
    }
   },
   {
+   "schublade": "Conviction 5",
+   "strom": "poly",
+   "n": 187,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0021,
+   "pl": 0.4,
+   "roiLb": -0.0881,
+   "clv": -2.825,
+   "clvLb": -3.905,
+   "clvUrteil": "negativ belegt",
+   "clvOg": -1.746,
+   "fehltN": 0,
+   "noetigNRoi": 332731,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 1272,
+    "lo": 138,
+    "hi": 130926,
+    "nieAnteil": 0.507,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "conviction",
+   "wert": 5,
+   "nAlt": 110,
+   "roiAlt": 0.1047,
+   "clvAlt": 0.283,
+   "engineAlt": true
+  },
+  {
    "schublade": "Conviction 6",
    "strom": "poly",
    "n": 139,
@@ -3912,37 +3943,6 @@
    "nAlt": 93,
    "roiAlt": 0.0229,
    "clvAlt": 0.077,
-   "engineAlt": true
-  },
-  {
-   "schublade": "Conviction 5",
-   "strom": "poly",
-   "n": 186,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0036,
-   "pl": -0.66,
-   "roiLb": -0.0938,
-   "clv": -2.841,
-   "clvLb": -3.925,
-   "clvUrteil": "negativ belegt",
-   "clvOg": -1.756,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 1305,
-    "lo": 153,
-    "hi": 82602,
-    "nieAnteil": 0.557,
-    "schaetzbar": false
-   },
-   "alterTage": 0.1,
-   "art": "conviction",
-   "wert": 5,
-   "nAlt": 110,
-   "roiAlt": 0.1047,
-   "clvAlt": 0.283,
    "engineAlt": true
   },
   {
@@ -4109,7 +4109,7 @@
     "nieAnteil": 0.357,
     "schaetzbar": false
    },
-   "alterTage": 0.1,
+   "alterTage": 0.2,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py"
   },
@@ -5668,7 +5668,7 @@
    "noetigNRoi": null,
    "noetigNClv": null,
    "entfernung": null,
-   "alterTage": 2.1,
+   "alterTage": 2.2,
    "art": "mix",
    "wert": "bf+money+sharp+steam"
   },
@@ -5711,7 +5711,7 @@
    "noetigNRoi": null,
    "noetigNClv": null,
    "entfernung": null,
-   "alterTage": 2.1,
+   "alterTage": 2.2,
    "art": "conviction",
    "wert": 10,
    "nAlt": 3,
