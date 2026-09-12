@@ -250,6 +250,50 @@ zu niedrigen Zahl gefüttert — das umzustellen ist eine eigene Entscheidung, k
 Fünf Mutationen, fünf rot (eine davon erst, nachdem ich den Fall ergänzt hatte, der die
 Typprüfung wirklich braucht).
 
+### Der Lernstrom liest jetzt die faire Zahl (Lucas: "ja machs")
+
+Der Loop rechnet den CLV in eine Markt-Zustimmung zwischen 0 und 1 um; **0,500 ist der Nullpunkt**
+(Linie stand still). Das geht als halbe Beobachtung in die `sharp_money`-Familie —
+`lead_lag_bias`, `smart_money`, `move_following`, `opener_move`, `betfair_money`.
+
+Drei Änderungen:
+
+1. **`_clv_outcome_score` liest `clvFairPP`.** Ohne faire Basis gibt es **keine** Beobachtung —
+   nicht ersatzweise die schiefe Zahl. Das steht so schon in der eigenen Docstring der Funktion
+   ("bewusst kein Default 0.5: eine erfundene neutrale Beobachtung würde echte Signale
+   verwässern").
+2. **Nachtrag in `build_signal_ledger`**, nicht als einmalige Migration: ein idempotenter
+   Reparatur-Durchgang bei jedem Lauf. Er holt Zeilen nach, deren Quotenverlauf erst später
+   ankommt, und niemand schreibt von Hand an einer Pipeline-Datei herum. Platzhalter-Nullen ohne
+   `clvResolved` bleiben außen vor.
+3. **Kein State-Reset nötig** — `update_weights()` liest den Ledger bei jedem Lauf komplett neu
+   und baut die Zähler von Grund auf. Die Umstellung wirkt rückwirkend.
+
+**Abdeckung.** Zuerst deckte der Fix nur 1X2 ab: 29 von 87 Zeilen mit gemessenem CLV. Die übrigen
+waren Über/Unter (34), Doppelte Chance (21) und AH (3) — und der Quotenverlauf trägt o15/u15,
+o25/u25, o35/u35 und BTTS **seit dem 06.09. mit**. Sie fehlten im Devig, nicht in den Daten. Mit
+Zwei-Weg-Devig für Über/Unter und BTTS, und der Doppelten Chance als Summe zweier entvigter
+1X2-Seiten (exakt, nicht geschätzt), sind es **63 von 87**. AH bleibt draußen: dafür gibt es keine
+Gegenseite im Verlauf, und eine geschätzte wäre genau die erfundene Zahl, die dieser Fix beseitigt.
+
+**Und damit ändert sich die Aussage nochmal.** An den 63 sauber zugeordneten Liga-Picks:
+
+| | Ø | 95-%-Band |
+|---|---|---|
+| CLV wie gemessen | **−1,47 pp** | −2,12 … −0,83 |
+| CLV entvigt | **+0,91 pp** | **+0,24 … +1,58** |
+
+Die Untergrenze liegt über null. Mit n=29 (nur 1X2) war das Band noch −0,77 … +1,41, also
+neutral; mit der vollen Abdeckung schlagen die Liga-Picks den Schlusskurs **belegt**. Dünn, aber
+belegt — und das Gegenteil dessen, was ich Lucas am Vormittag gesagt hatte.
+
+Lernstrom, dieselben 63 Picks: Ø Zustimmung **0,358 → 0,596**, und die Deadband wirft nur noch
+**3 statt 8** Beobachtungen weg.
+
+Sechs Mutationen, sechs rot. `tests/test_loop_basis.py` nachgezogen — die Regel dort ist
+unverändert, nur das Feld, aus dem sie ihre Eingabe nimmt, ist jetzt das richtige.
+
+
 ### Betfair-Führungs-Push: „unbekannt" stand als „nein" im Buch
 
 Lucas: *„Team in Führung und dann kommt das trotzdem — meinst du, das ist stark positiv? ich hab

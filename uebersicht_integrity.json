@@ -67,9 +67,11 @@
     {
       "label": "Money Map meldet ihre Luecken",
       "severity": "error",
-      "failures": [],
-      "nFail": 0,
-      "ok": true,
+      "failures": [
+        "Paris FC v Lyon: Money Map ohne Poly, aber ein Poly-Markt mit BEIDEN Teams existiert — stille Luecke, nicht Abwesenheit"
+      ],
+      "nFail": 1,
+      "ok": false,
       "hinweis": ""
     },
     {
@@ -128,19 +130,19 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "156 Picks im Fenster, 24 % ohne Preis-Signal."
+      "hinweis": "175 Picks im Fenster, 22 % ohne Preis-Signal."
     },
     {
       "label": "Stumme Signale: wer hat nie gefeuert?",
       "severity": "warn",
       "failures": [
-        "polymarket_sharp: 0 Feuerungen in 184 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
+        "polymarket_sharp: 0 Feuerungen in 203 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
         "betfair_coherence: stumm, aber erklaert — 07.09.2026 gemessen: seit der Fit-Schranke (MAX_RMSE 0,02 + Leave-one-out, 06.09.) feuert es fast nie — richtigerweise. Ueber 633 Sprossen aus 150 Spielen blieben 8 echte Kanten >= 4 pp, alle in duennen Ligen (Kasachstan, Litauen, Norwegen 2, Estland), keine einzige in den Top 5. Die Betfair-Tormarkt-Leiter ist auf unserer Aufloesung arbitragefrei.",
         "game_state_openness: stumm, aber erklaert — 07.09.2026 gemessen: braucht asymmetrische Verzweiflung spaet in der Saison. Aktuell Spieltag 3-4 von 34-38, also 34 Runden offen — der Tabellendruck ist per Konstruktion nahe null. Vor dem Winter ist Stille hier der richtige Zustand."
       ],
       "nFail": 3,
       "ok": false,
-      "hinweis": "9 von 33 Signalen schweigen ueber 184 Picks — davon 6 bewusst abgeschaltet (altitude_signal, incentive_signal, pressure_index, steam_lag, travel_burden, weather_signal), 3 an und trotzdem stumm."
+      "hinweis": "9 von 33 Signalen schweigen ueber 203 Picks — davon 6 bewusst abgeschaltet (altitude_signal, incentive_signal, pressure_index, steam_lag, travel_burden, weather_signal), 3 an und trotzdem stumm."
     },
     {
       "label": "Signal-Bilanz: schadet ein Signal belegt?",
@@ -148,7 +150,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "1 Signale belegt beitragend, 0 belegt schaedlich. ~30 Signale gleichzeitig geprueft — 1-2 falsche Treffer sind zu erwarten. Nur was ueber mehrere Wochen haelt, ist ein Befund."
+      "hinweis": "4 Signale belegt beitragend, 0 belegt schaedlich. ~30 Signale gleichzeitig geprueft — 1-2 falsche Treffer sind zu erwarten. Nur was ueber mehrere Wochen haelt, ist ein Befund."
     },
     {
       "label": "Fade-Unter: haelt die Kontrollgruppe?",
@@ -156,9 +158,9 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "seit Vorregistrierung n=988 (UG -3.8 %) · Rueckblick n=2726, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=972 (UG -4.3 %) · Rueckblick n=2726, nicht Teil des Urteils."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-09-12T21:30:58.391206+00:00"
+  "nFail": 3,
+  "generatedAt": "2026-09-12T21:31:51.172332+00:00"
 }

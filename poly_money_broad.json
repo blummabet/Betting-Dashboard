@@ -1,15 +1,15 @@
 {
- "n": 336,
+ "n": 338,
  "minOdds": 1.35,
- "moneyHitRate": 0.339,
- "priceHitRate": 0.381,
- "brierMoney": 0.9428,
- "brierPrice": 0.7069,
+ "moneyHitRate": 0.343,
+ "priceHitRate": 0.382,
+ "brierMoney": 0.9404,
+ "brierPrice": 0.7064,
  "disagree": {
   "n": 93,
-  "moneyWon": 7,
-  "priceWon": 21,
-  "neither": 65
+  "moneyWon": 9,
+  "priceWon": 22,
+  "neither": 62
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -23,6 +23,14 @@
    "verdict": "preis_besser"
   },
   {
+   "league": "EPL",
+   "n": 31,
+   "moneyHitRate": 0.194,
+   "brierMoney": 1.0089,
+   "brierPrice": 0.8524,
+   "verdict": "preis_besser"
+  },
+  {
    "league": "UCL",
    "n": 34,
    "moneyHitRate": 0.324,
@@ -31,19 +39,11 @@
    "verdict": "preis_besser"
   },
   {
-   "league": "EPL",
-   "n": 30,
-   "moneyHitRate": 0.167,
-   "brierMoney": 1.0275,
-   "brierPrice": 0.8527,
-   "verdict": "preis_besser"
-  },
-  {
    "league": "LA-LIGA",
-   "n": 28,
-   "moneyHitRate": 0.321,
-   "brierMoney": 0.991,
-   "brierPrice": 0.8034,
+   "n": 29,
+   "moneyHitRate": 0.345,
+   "brierMoney": 0.978,
+   "brierPrice": 0.7893,
    "verdict": "preis_besser"
   },
   {
@@ -64,10 +64,10 @@
   }
  ],
  "guete": {
-  "belastbar": 336,
-  "preis_echo": 258,
+  "belastbar": 338,
+  "preis_echo": 257,
   "abgeschnitten": 36,
-  "unbekannt": 396,
+  "unbekannt": 395,
   "leer": 0
  },
  "rows": [
@@ -220,7 +220,7 @@
    "league": "EPL",
    "winner": "Draw (Nottingham Forest FC vs. Tottenham Hotspur FC)",
    "moneyFav": "Tottenham Hotspur FC",
-   "priceFav": "Nottingham Forest FC",
+   "priceFav": "Tottenham Hotspur FC",
    "moneyShare": 0.584,
    "priceProb": 0.357,
    "moneyOK": false,
@@ -552,30 +552,30 @@
    "totalUsd": 244919
   }
  ],
- "generatedAt": "2026-09-12T21:18:49.376952+00:00",
+ "generatedAt": "2026-09-12T21:32:35.882076+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 421,
   "nfl": 800,
-  "mlb": 772,
+  "mlb": 768,
   "nhl": 536,
   "mls": 689,
-  "epl": 562,
+  "epl": 555,
   "soccer": 800,
   "tennis": 800,
   "ucl": 415,
-  "la-liga": 671,
+  "la-liga": 663,
   "bundesliga": 491,
   "serie-a": 51,
-  "ligue-1": 567,
+  "ligue-1": 566,
   "primeira-liga": 521,
   "brazil-serie-a": 547,
   "brasileirao": 0,
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 640,
+  "esports": 641,
   "cs2": 423,
   "lol": 423,
   "dota": 9,
@@ -602,7 +602,7 @@
   "europa-league": 185,
   "israel-premier-league": 225,
   "japan-j-league": 491,
-  "japan-j2-league": 488,
+  "japan-j2-league": 538,
   "k-league": 462,
   "la-liga-2": 527,
   "liga-mx-apertura": 2,
@@ -612,7 +612,7 @@
   "nations-league": 25,
   "norway-eliteserien": 505,
   "poland-ekstraklasa": 449,
-  "premier-league": 551,
+  "premier-league": 544,
   "saudi-professional-league": 447,
   "scotland-league-cup": 192,
   "scottish-premiership": 468,
@@ -632,25 +632,25 @@
  "sweepStats": {
   "sweepOpen": 500,
   "sweepClosed": 500,
-  "sweepAdded": 406
+  "sweepAdded": 407
  },
  "vorStats": {
-  "kandidaten": 10,
+  "kandidaten": 11,
   "budgetLeer": 0,
-  "ohneGeldSplit": 3,
+  "ohneGeldSplit": 2,
   "nachgelegt": 0,
-  "mitAnteilen": 7,
-  "calls": 10
+  "mitAnteilen": 9,
+  "calls": 11
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1807,
-   "usd": 54777810,
+   "n": 2101,
+   "usd": 56687312,
    "beispiel": "fifwc-ksa-ury-2026-06-15"
   },
   "nba": {
-   "n": 420,
-   "usd": 6115626,
+   "n": 442,
+   "usd": 8085572,
    "beispiel": "nba-nyk-sas-2026-06-05"
   },
   "balance": {
@@ -658,34 +658,39 @@
    "usd": 6000000,
    "beispiel": "balance-of-power-2026-midterms"
   },
-  "world": {
-   "n": 138,
-   "usd": 2363793,
-   "beispiel": "world-cup-winner"
-  },
   "ecs": {
    "n": 9,
-   "usd": 1915914,
+   "usd": 1919818,
    "beispiel": "ecs-ars-mci-2026-08-16-more-markets"
   },
+  "world": {
+   "n": 89,
+   "usd": 1741129,
+   "beispiel": "world-cup-winner"
+  },
   "nhl": {
-   "n": 81,
-   "usd": 750193,
+   "n": 94,
+   "usd": 1184766,
    "beispiel": "nhl-wpg-col-2026-03-28"
   },
+  "efa": {
+   "n": 34,
+   "usd": 456051,
+   "beispiel": "efa-wol-liv-2026-03-07-more-markets"
+  },
   "fif": {
-   "n": 88,
-   "usd": 408781,
-   "beispiel": "fif-bra-pan-2026-05-31"
+   "n": 107,
+   "usd": 455863,
+   "beispiel": "fif-svk-mon-2026-06-05-more-markets"
   },
   "fed": {
    "n": 24,
-   "usd": 403289,
+   "usd": 385664,
    "beispiel": "fed-decision-in-september-762"
   },
   "usc": {
-   "n": 5,
-   "usd": 336702,
+   "n": 4,
+   "usd": 335318,
    "beispiel": "usc-psg-av-2026-08-12"
   },
   "cbb": {
@@ -693,19 +698,19 @@
    "usd": 261800,
    "beispiel": "cbb-utahst-arz-2026-03-22"
   },
-  "efa": {
-   "n": 6,
-   "usd": 172745,
-   "beispiel": "efa-wol-liv-2026-03-07-more-markets"
+  "uef": {
+   "n": 16,
+   "usd": 208154,
+   "beispiel": "uef-cze-ire-2026-03-26"
   },
   "clf": {
-   "n": 34,
-   "usd": 162998,
+   "n": 39,
+   "usd": 173940,
    "beispiel": "clf-mun-lee-2026-08-12"
   },
   "2026": {
-   "n": 26,
-   "usd": 151248,
+   "n": 27,
+   "usd": 147708,
    "beispiel": "2026-mens-us-open-winner-tennis"
   },
   "republican": {
@@ -713,35 +718,30 @@
    "usd": 128125,
    "beispiel": "republican-presidential-nominee-2028"
   },
-  "nbasl": {
-   "n": 6,
-   "usd": 122920,
-   "beispiel": "nbasl-cle-nop-2026-07-15"
-  },
   "j2100": {
    "n": 17,
    "usd": 119561,
    "beispiel": "j2100-fuj-fuk-2026-05-06"
   },
+  "cdr": {
+   "n": 12,
+   "usd": 118119,
+   "beispiel": "cdr-atm-fcb-2026-02-12"
+  },
+  "nbasl": {
+   "n": 3,
+   "usd": 113076,
+   "beispiel": "nbasl-cle-nop-2026-07-15"
+  },
+  "democratic": {
+   "n": 17,
+   "usd": 112283,
+   "beispiel": "democratic-presidential-nominee-2028"
+  },
   "which": {
    "n": 15,
-   "usd": 99223,
+   "usd": 99258,
    "beispiel": "which-movie-has-biggest-opening-weekend-in-2026"
-  },
-  "aus": {
-   "n": 6,
-   "usd": 76156,
-   "beispiel": "aus-vic-mac-2026-03-15"
-  },
-  "pro": {
-   "n": 20,
-   "usd": 75033,
-   "beispiel": "pro-football-2027-champion-20260729185915366"
-  },
-  "presidential": {
-   "n": 13,
-   "usd": 66861,
-   "beispiel": "presidential-election-winner-2028"
   }
  }
 }
