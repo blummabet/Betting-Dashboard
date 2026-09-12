@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-12T16:39:05.966870+00:00",
+ "generatedAt": "2026-09-12T16:54:05.080141+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -277,11 +277,11 @@
    "zerlegung": "nach Conviction",
    "art": "conviction",
    "gruppen": 6,
-   "basis": "378 von 791 abgerechneten Plays · nur Engine 2026-09-01 · ohne Kampfsport, US-Sport",
-   "n": 378,
-   "pl": 8.95,
-   "roi": 0.0237,
-   "clv": -1.761,
+   "basis": "379 von 792 abgerechneten Plays · nur Engine 2026-09-01 · ohne Kampfsport, US-Sport",
+   "n": 379,
+   "pl": 7.95,
+   "roi": 0.021,
+   "clv": -1.757,
    "belegte": 1
   },
   {
@@ -3785,37 +3785,6 @@
    "naeherung": false
   },
   {
-   "schublade": "Conviction 5",
-   "strom": "poly",
-   "n": 194,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0235,
-   "pl": 4.56,
-   "roiLb": -0.0661,
-   "clv": -2.754,
-   "clvLb": -3.801,
-   "clvUrteil": "negativ belegt",
-   "clvOg": -1.708,
-   "fehltN": 0,
-   "noetigNRoi": 2815,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 804,
-    "lo": 115,
-    "hi": 43458,
-    "nieAnteil": 0.352,
-    "schaetzbar": false
-   },
-   "alterTage": 0.0,
-   "art": "conviction",
-   "wert": 5,
-   "nAlt": 110,
-   "roiAlt": 0.1047,
-   "clvAlt": 0.283,
-   "engineAlt": true
-  },
-  {
    "schublade": "Public-Kandidaten",
    "strom": "poly",
    "n": 55,
@@ -3843,6 +3812,37 @@
    "nAlt": 133,
    "roiAlt": 0.0306,
    "clvAlt": -0.212,
+   "engineAlt": true
+  },
+  {
+   "schublade": "Conviction 5",
+   "strom": "poly",
+   "n": 195,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0183,
+   "pl": 3.56,
+   "roiLb": -0.0713,
+   "clv": -2.74,
+   "clvLb": -3.782,
+   "clvUrteil": "negativ belegt",
+   "clvOg": -1.699,
+   "fehltN": 0,
+   "noetigNRoi": 4683,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 904,
+    "lo": 134,
+    "hi": 66007,
+    "nieAnteil": 0.367,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "conviction",
+   "wert": 5,
+   "nAlt": 110,
+   "roiAlt": 0.1047,
+   "clvAlt": 0.283,
    "engineAlt": true
   },
   {
@@ -4004,7 +4004,7 @@
     "nieAnteil": 0.34,
     "schaetzbar": false
    },
-   "alterTage": 0.2,
+   "alterTage": 0.3,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py"
   },
@@ -4209,44 +4209,6 @@
    "naeherung": false
   },
   {
-   "schublade": "🔒 Poly-Auswahl · von Betfair bestätigt",
-   "strom": "poly",
-   "n": 120,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0102,
-   "pl": -1.22,
-   "roiLb": -0.1536,
-   "clv": -0.15,
-   "clvLb": -1.296,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.996,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 763,
-    "lo": 104,
-    "hi": 70676,
-    "nieAnteil": 0.573,
-    "schaetzbar": false
-   },
-   "alterTage": 0.0,
-   "art": "vorangemeldet",
-   "angemeldet": "2026-09-01T18:59:52.671883+00:00",
-   "zielN": 60,
-   "warum": "Die einzige Untergruppe der Rangliste mit einer ROI-Untergrenze ueber null. Traegt nicht die Menge der Poly-Signale, sondern die eine FREMDE Stimme: ohne Betfair liegen dieselben Plays bei -5,1% (n=425).",
-   "quelle": "poly_shortlist_track.json → settled",
-   "nDavor": 75,
-   "rueckblick": {
-    "n": 75,
-    "roi": 0.1811,
-    "roiLb": 0.0106,
-    "clv": 0.24,
-    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
-   }
-  },
-  {
    "schublade": "US MLS · First Half Goals 0.5",
    "strom": "betfair",
    "n": 43,
@@ -4315,6 +4277,44 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
+  },
+  {
+   "schublade": "🔒 Poly-Auswahl · von Betfair bestätigt",
+   "strom": "poly",
+   "n": 121,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.0184,
+   "pl": -2.22,
+   "roiLb": -0.1612,
+   "clv": -0.149,
+   "clvLb": -1.285,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.988,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 1060,
+    "lo": 106,
+    "hi": 76798,
+    "nieAnteil": 0.6,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "vorangemeldet",
+   "angemeldet": "2026-09-01T18:59:52.671883+00:00",
+   "zielN": 60,
+   "warum": "Die einzige Untergruppe der Rangliste mit einer ROI-Untergrenze ueber null. Traegt nicht die Menge der Poly-Signale, sondern die eine FREMDE Stimme: ohne Betfair liegen dieselben Plays bei -5,1% (n=425).",
+   "quelle": "poly_shortlist_track.json → settled",
+   "nDavor": 75,
+   "rueckblick": {
+    "n": 75,
+    "roi": 0.1811,
+    "roiLb": 0.0106,
+    "clv": 0.24,
+    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
+   }
   },
   {
    "schublade": "Argentinian Primera Nacional · Over/Under 3.5 Goals",
@@ -5768,6 +5768,27 @@
    "wert": "bf+money+sharp+steam"
   },
   {
+   "schublade": "Mix bf+steam",
+   "strom": "poly",
+   "n": 2,
+   "status": "sammelt",
+   "grund": "2 von 30 Plays · für eine Hochrechnung sind es noch zu wenige Plays",
+   "roi": 0.266,
+   "pl": 0.53,
+   "roiLb": null,
+   "clv": 0.0,
+   "clvLb": null,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": null,
+   "fehltN": 28,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "entfernung": null,
+   "alterTage": 0.0,
+   "art": "mix",
+   "wert": "bf+steam"
+  },
+  {
    "schublade": "WM · BEOBACHTEN",
    "strom": "cards",
    "n": 2,
@@ -5834,27 +5855,6 @@
    "alterTage": 7.0,
    "art": "mix",
    "wert": "bf+sharp"
-  },
-  {
-   "schublade": "Mix bf+steam",
-   "strom": "poly",
-   "n": 1,
-   "status": "sammelt",
-   "grund": "1 von 30 Plays · für eine Hochrechnung sind es noch zu wenige Plays",
-   "roi": 1.532,
-   "pl": 1.53,
-   "roiLb": null,
-   "clv": 0.0,
-   "clvLb": null,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": null,
-   "fehltN": 29,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "entfernung": null,
-   "alterTage": 3.1,
-   "art": "mix",
-   "wert": "bf+steam"
   },
   {
    "schublade": "Conviction 9",
