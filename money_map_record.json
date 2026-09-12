@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-09-12T12:53:45.348213+00:00",
+"generatedAt": "2026-09-12T12:57:12.509431+00:00",
 "byVerdict": {
 "konsens": {
 "n": 985,
@@ -18,20 +18,20 @@
 "clvLb": 19.43
 },
 "uneinig": {
-"n": 374,
-"wins": 124,
-"hitRate": 0.3316,
-"polyN": 336,
-"polyWins": 90,
-"polyHitRate": 0.2679,
+"n": 376,
+"wins": 125,
+"hitRate": 0.3324,
+"polyN": 338,
+"polyWins": 91,
+"polyHitRate": 0.2692,
 "pinnN": 225,
 "pinnHitRate": 0.5911,
-"nRoi": 142,
-"roi": -0.3812,
-"roiLb": -0.5105,
-"nClv": 142,
-"clv": -16.67,
-"clvLb": -21.5502
+"nRoi": 144,
+"roi": -0.3826,
+"roiLb": -0.5103,
+"nClv": 144,
+"clv": -16.44,
+"clvLb": -21.2582
 },
 "teil": {
 "n": 16,
@@ -391,6 +391,11 @@
 "wins": 4,
 "hitRate": 1.0
 },
+"Chinese League 1": {
+"n": 4,
+"wins": 3,
+"hitRate": 0.75
+},
 "Estonian Premier League": {
 "n": 4,
 "wins": 2,
@@ -425,11 +430,6 @@
 "n": 3,
 "wins": 2,
 "hitRate": 0.6667
-},
-"Chinese League 1": {
-"n": 3,
-"wins": 3,
-"hitRate": 1.0
 },
 "Czech 1 Liga": {
 "n": 3,
@@ -475,6 +475,11 @@
 "n": 2,
 "wins": 0,
 "hitRate": 0.0
+},
+"Latvian Virsliga": {
+"n": 2,
+"wins": 2,
+"hitRate": 1.0
 },
 "Norwegian 1st Division": {
 "n": 2,
@@ -576,11 +581,6 @@
 "wins": 1,
 "hitRate": 1.0
 },
-"Latvian Virsliga": {
-"n": 1,
-"wins": 1,
-"hitRate": 1.0
-},
 "Lebanese FA Cup": {
 "n": 1,
 "wins": 1,
@@ -614,37 +614,75 @@
 },
 "byStrength": {
 "strong": {
-"n": 829,
+"n": 830,
 "wins": 663,
-"hitRate": 0.7998,
-"nRoi": 305,
-"roi": 0.2785,
-"roiLb": 0.2011,
-"nClv": 305,
-"clv": 13.05,
-"clvLb": 9.9425
+"hitRate": 0.7988,
+"nRoi": 306,
+"roi": 0.2743,
+"roiLb": 0.1969,
+"nClv": 306,
+"clv": 13.01,
+"clvLb": 9.9092
 },
 "weak": {
-"n": 513,
-"wins": 272,
-"hitRate": 0.5302,
-"nRoi": 156,
-"roi": 0.0018,
-"roiLb": -0.137,
-"nClv": 156,
+"n": 514,
+"wins": 273,
+"hitRate": 0.5311,
+"nRoi": 157,
+"roi": 0.002,
+"roiLb": -0.1359,
+"nClv": 157,
 "clv": 1.09,
-"clvLb": -3.2852
+"clvLb": -3.2642
 }
 },
 "divergence": {
-"n": 374,
-"betfairWins": 124,
-"betfairRate": 0.3316,
-"polyN": 336,
-"polyWins": 90,
-"polyRate": 0.2679
+"n": 376,
+"betfairWins": 125,
+"betfairRate": 0.3324,
+"polyN": 338,
+"polyWins": 91,
+"polyRate": 0.2692
 },
 "recent": [
+{
+"matchId": "36046481",
+"home": "SC Grobina",
+"away": "FK Jelgava",
+"league": "Latvian Virsliga",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-09-12T11:00:00Z",
+"settledAt": "2026-09-12T12:57:12.299572+00:00"
+},
+{
+"matchId": "36057652",
+"home": "Changchun Yatai",
+"away": "Jiangxi Dingnan United",
+"league": "Chinese League 1",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "home",
+"winner": "home",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-09-12T11:00:00Z",
+"settledAt": "2026-09-12T12:57:12.299572+00:00"
+},
 {
 "matchId": "36035031",
 "home": "Bochum",
@@ -1366,56 +1404,18 @@
 ],
 "kickoff": "2026-09-11T16:30:00Z",
 "settledAt": "2026-09-11T19:37:08.566375+00:00"
-},
-{
-"matchId": "36032226",
-"home": "SV Darmstadt",
-"away": "Arminia Bielefeld",
-"league": "German Bundesliga 2",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "SV Darmstadt",
-"polySide": "away",
-"winner": "home",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-09-11T16:30:00Z",
-"settledAt": "2026-09-11T19:37:08.566375+00:00"
-},
-{
-"matchId": "36035335",
-"home": "Al Rayyan",
-"away": "Al Ahli (QAT)",
-"league": "Qatari Stars League",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Al Rayyan",
-"polySide": "away",
-"winner": "home",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-3,
-0
-],
-"kickoff": "2026-09-11T16:15:00Z",
-"settledAt": "2026-09-11T19:21:57.888774+00:00"
 }
 ],
 "global": {
-"n": 1375,
-"wins": 953,
-"hitRate": 0.6931,
-"nRoi": 461,
-"roi": 0.1849,
-"roiLb": 0.1147,
-"nClv": 461,
-"clv": 9.0,
-"clvLb": 6.4356
+"n": 1377,
+"wins": 954,
+"hitRate": 0.6928,
+"nRoi": 463,
+"roi": 0.182,
+"roiLb": 0.112,
+"nClv": 463,
+"clv": 8.97,
+"clvLb": 6.4074
 },
-"pending": 51
+"pending": 49
 }
