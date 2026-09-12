@@ -963,7 +963,7 @@
    "gehaltenSeit": "2026-09-11T22:07:08.062746+00:00",
    "zuletztAktiv": "2026-09-12T08:38:11.767345+00:00",
    "haltePreis": 2.0,
-   "aktiv": true
+   "aktiv": false
   },
   "36006570|Match Odds": {
    "matchId": "36006570",
@@ -1347,7 +1347,7 @@
    "gehaltenSeit": "2026-09-12T06:37:58.431533+00:00",
    "zuletztAktiv": "2026-09-12T08:38:11.767345+00:00",
    "haltePreis": 2.28,
-   "aktiv": true
+   "aktiv": false
   },
   "36035031|Match Odds": {
    "matchId": "36035031",
@@ -1728,7 +1728,7 @@
    "gehaltenSeit": "2026-09-12T08:23:13.229390+00:00",
    "zuletztAktiv": "2026-09-12T08:38:11.767345+00:00",
    "haltePreis": 1.88,
-   "aktiv": true
+   "aktiv": false
   },
   "36038805|Match Odds": {
    "matchId": "36038805",
@@ -1832,6 +1832,143 @@
    "gehaltenSeit": "2026-09-12T08:38:11.767345+00:00",
    "zuletztAktiv": "2026-09-12T08:38:11.767345+00:00",
    "haltePreis": 2.16,
+   "aktiv": false
+  },
+  "36005149|Match Odds": {
+   "matchId": "36005149",
+   "home": "Tottenham",
+   "away": "Everton",
+   "league": "English Premier League",
+   "kickoff": "2026-09-12T16:30:00Z",
+   "markt": "Match Odds",
+   "seite": "home",
+   "name": "Tottenham",
+   "odd": 2.08,
+   "entryOdd": 2.12,
+   "anteilPct": 65,
+   "stufe": 1,
+   "verstaerker": [
+    {
+     "art": "poly",
+     "text": "Poly Geld 89%",
+     "gewicht": 12
+    },
+    {
+     "art": "pinn",
+     "text": "Pinnacle stimmt zu",
+     "gewicht": 10
+    }
+   ],
+   "rang": 78.5,
+   "track": null,
+   "streak": null,
+   "poly": {
+    "anteilPct": 89,
+    "usd": 94275,
+    "odd": 2.11
+   },
+   "polyStatus": "ja",
+   "polyKey": "epl-tot-eve-2026-09-12",
+   "polySide": "Tottenham Hotspur FC",
+   "pinnMovePP": 0.9,
+   "punkte": {
+    "punkte": 9,
+    "moeglich": 10,
+    "dauerH": 7.36,
+    "teile": [
+     {
+      "buch": "BF",
+      "name": "Betfair",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Geld 65% auf der Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "frischer Zufluss und Quote zieht mit"
+      },
+      "geld": {
+       "anteil": 0.651,
+       "betrag": 95781,
+       "gesamt": 147129,
+       "waehrung": "EUR",
+       "quelle": "geld"
+      },
+      "text": "Geld 65% auf der Seite"
+     },
+     {
+      "buch": "POLY",
+      "name": "Polymarket",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Poly-Geld 89% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "1 bewiesene Wallet drauf"
+      },
+      "geld": {
+       "anteil": 0.89,
+       "betrag": 83905,
+       "gesamt": 94275,
+       "waehrung": "USD",
+       "quelle": "geld"
+      },
+      "text": "Poly-Geld 89% auf derselben Seite"
+     },
+     {
+      "buch": "PIN",
+      "name": "Pinnacle",
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "hat dieselbe Seite als Favorit"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein Move gemessen"
+      },
+      "geld": null,
+      "text": "hat dieselbe Seite als Favorit"
+     },
+     {
+      "buch": "STAKE",
+      "name": "Stake-Highroller",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Stake-Highroller nicht erhoben"
+     },
+     {
+      "buch": "ZEIT",
+      "name": "Dauer",
+      "status": "ja",
+      "punkte": 1,
+      "moeglich": 1,
+      "grund": {
+       "ok": true,
+       "text": "steht seit 7.4h vor Anpfiff"
+      },
+      "tiefe": null,
+      "text": "steht seit 7.4h vor Anpfiff"
+     }
+    ]
+   },
+   "wertVsPinn": 0.0053,
+   "gehaltenSeit": "2026-09-12T09:08:18.317692+00:00",
+   "zuletztAktiv": "2026-09-12T09:08:18.317692+00:00",
+   "haltePreis": 2.08,
    "aktiv": true
   }
  }
