@@ -918,3 +918,33 @@ class TestAltbestandUndRemis(unittest.TestCase):
 
     def test_andere_seiten_bleiben(self):
         self.assertFalse(BA._draw_mo_public_raus(self._a(0.8, 1.9, name="Servette")))
+
+
+class TestFuehrungsLageDreiZustaende(unittest.TestCase):
+    """🔴 12.09.2026 (Lucas: „Team in Fuehrung und dann kommt das trotzdem — meinst du, das ist
+    stark positiv?"). `_money_on_leader` gab bool zurueck und warf zwei Lagen zusammen:
+    „steht gleich / liegt zurueck" und „wir kennen den Stand gar nicht". Bei 7 von 25
+    gestempelten Pushs war er unbekannt — alle sieben standen als `False` im Buch und damit in
+    der Vergleichsgruppe, mit der die Frage beantwortet werden soll."""
+
+    def _spiel(self, g1, g2, home="Koln", away="Bremen"):
+        return {"home": home, "away": away,
+                "liveInfo": ({"goal_v1": g1, "goal_v2": g2} if g1 is not None else {})}
+
+    def test_fuehrt_ist_true(self):
+        self.assertTrue(BA._money_on_leader(self._spiel(1, 0), "Koln"))
+
+    def test_gleichstand_ist_false_nicht_none(self):
+        self.assertIs(BA._money_on_leader(self._spiel(0, 0), "Koln"), False)
+
+    def test_liegt_zurueck_ist_false(self):
+        self.assertIs(BA._money_on_leader(self._spiel(0, 1), "Koln"), False)
+
+    def test_ohne_live_stand_ist_es_NONE(self):
+        """Der eigentliche Fund. Kein Stand heisst nicht „fuehrt nicht"."""
+        self.assertIsNone(BA._money_on_leader(self._spiel(None, None), "Koln"))
+
+    def test_ueber_unter_maerkte_bleiben_unberuehrt(self):
+        """Ein Ueber/Unter-Ausgang matcht keinen Teamnamen — da gibt es keine Fuehrungs-Lage,
+        aber der Stand ist bekannt, also False und nicht None."""
+        self.assertIs(BA._money_on_leader(self._spiel(1, 0), "Over 2.5 Goals"), False)

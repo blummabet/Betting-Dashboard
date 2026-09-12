@@ -12,6 +12,17 @@ Das Ergebnis trug trotzdem (n=52, Treffer 80,8 % gegen 64,1 % implizit, ROI +27,
 einseitige Untergrenze +12,5 %) — aber die nächste Antwort soll exakt sein. Dieselbe Lehre wie
 beim Serien-Stempel am 04.09.: **eine Momentaufnahme lässt sich nicht rückwirkend
 rekonstruieren.**
+
+🔴 NACHTRAG 12.09.2026 (Lucas: „Team in Führung und dann kommt das trotzdem — meinst du, das ist
+stark positiv? ich hab das gestern und heute mitgekriegt und beide Male minus").
+
+Die exakte Antwort gibt es immer noch nicht, und das muss hier stehen. Seit dem Stempel sind
+**2** Pushs auf einen Führenden gegangen, davon **1** abgerechnet. Die +27,8 % von oben waren
+die Rekonstruktion, nicht die Messung — und sie als Widerlegung zu präsentieren war zu stark.
+
+Dazu ein Fehler in diesem Test selbst: er schrieb fest, `onLeader` müsse ein `bool` sein, mit
+der Begründung „beim Senden ist die Lage immer bekannt". Falsch — bei 7 von 25 gestempelten
+Pushs gab es keinen Live-Stand, und alle sieben landeten als `False` in der Vergleichsgruppe.
 """
 import json
 import unittest
@@ -49,10 +60,28 @@ class TestLedgerStempel(unittest.TestCase):
         self.assertIn('"live"', LOG)
         self.assertIn("goal_v1", LOG)
 
-    def test_onleader_ist_ein_bool_kein_none(self):
-        """None hiesse 'unbekannt' und wäre beim Auswerten nicht von False zu unterscheiden —
-        beim Senden ist die Lage aber immer bekannt."""
-        self.assertIn('bool(a.get("onLeader"))', LOG)
+    def test_unbekannter_stand_wird_NICHT_zu_false(self):
+        """🔴 12.09.2026 — hier stand das Gegenteil, und es war falsch.
+
+        Der Test hiess `test_onleader_ist_ein_bool_kein_none` und begruendete das mit „beim
+        Senden ist die Lage aber immer bekannt". Die Daten sagen etwas anderes: von 25
+        gestempelten Pushs hatten **7** keinen Live-Stand zum Sendezeitpunkt. Alle sieben standen
+        als `onLeader: False` im Buch — also in der Vergleichsgruppe „nicht auf den Fuehrenden",
+        mit der die Frage beantwortet werden soll, ob Fuehrungs-Pushes taugen.
+
+        Damit hat mein eigener Test die Fehlerklasse festgeschrieben, die dieses Projekt sonst
+        ueberall jagt: fehlende Information als harmloser Default. Jetzt drei Zustaende.
+        """
+        self.assertNotIn('bool(a.get("onLeader"))', LOG,
+                         "bool() macht aus 'unbekannt' ein 'nein'")
+        self.assertIn('"onLeader": a.get("onLeader")', LOG)
+
+    def test_die_funktion_selbst_kennt_drei_zustaende(self):
+        quelle = _funktion("_money_on_leader")
+        self.assertIn("return None", quelle,
+                      "ohne den dritten Zustand ist 'Stand unbekannt' nicht von "
+                      "'fuehrt nicht' zu unterscheiden")
+        self.assertIn("_stand_bekannt(m)", quelle)
 
 
 class TestBestandBleibtLesbar(unittest.TestCase):
@@ -68,7 +97,30 @@ class TestBestandBleibtLesbar(unittest.TestCase):
         self.assertGreaterEqual(ohne, 0)
         for r in rows:
             if isinstance(r, dict) and "onLeader" in r:
-                self.assertIsInstance(r["onLeader"], bool)
+                self.assertIn(r["onLeader"], (True, False, None),
+                              "drei Zustaende, nichts anderes")
+
+    def test_unbekannte_zeilen_stehen_nicht_als_nein_im_buch(self):
+        """Die Gegenprobe am echten Bestand: eine Zeile ohne Live-Stand darf kuenftig nicht mehr
+        als `False` gebucht sein. Altzeilen (vor 12.09.) duerfen es noch — sie sind der Grund,
+        warum die Frage bis heute nicht exakt beantwortbar war."""
+        p = BASE / "betfair_public_ledger.json"
+        if not p.exists():
+            self.skipTest("kein Public-Ledger vorhanden")
+        rows = json.loads(p.read_text(encoding="utf-8"))
+        falsch = []
+        for r in rows:
+            if not isinstance(r, dict) or "onLeader" not in r:
+                continue
+            if str(r.get("sentAt") or "")[:10] < "2026-09-13":
+                continue                       # Altbestand, bewusst ausgenommen
+            s = (r.get("live") or {}).get("score")
+            unbekannt = not (isinstance(s, list) and len(s) == 2
+                             and s[0] is not None and s[1] is not None)
+            if unbekannt and r["onLeader"] is False:
+                falsch.append(str(r.get("k")))
+        self.assertEqual(falsch, [], "\nStand unbekannt, trotzdem als 'nicht auf den "
+                         "Fuehrenden' gebucht:\n" + "\n".join(falsch))
 
 
 if __name__ == "__main__":

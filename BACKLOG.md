@@ -212,6 +212,66 @@ Dazu zwei Gürtel:
 
 Vier Mutationen, vier rot.
 
+## 🔴 12.09.2026 — zwei Funde aus Lucas' Rückfragen (nicht aus dem Audit)
+
+### Der CLV rechnet entvigt gegen vigt — und ich hatte Lucas das Gegenteil gesagt
+
+Lucas: *„wir können keine guten CLV haben wenn wir die picks erst am selben tag posten — wie soll
+das gehen?"* Ich hatte ihm eine Stunde vorher geschrieben, der negative CLV sei „belegt, nur in
+die falsche Richtung". **Das war falsch.**
+
+    clvPP = Pinnacle-Closing-FAIR-Wahrscheinlichkeit − 1/Einstiegsquote
+                               ^^^^                    ^^^^^^^^^^^^^^^^
+                         power-entvigt               ROH, mit voller Marge
+
+Wir ziehen uns die Marge unseres eigenen Buchs vom CLV ab. Der Fingerabdruck ist eindeutig:
+
+| Einstiegs-Buch | Overround | n | Ø CLV | Median |
+|---|---|---|---|---|
+| soft | 6,6 % | 90 | −1,56 pp | −1,15 |
+| Pinnacle | 4,4 % | 12 | −0,41 pp | **±0,00** |
+
+Käme es vom Postzeitpunkt, träfe es beide Bücher gleich — ein später Einstieg macht den CLV
+*kleiner in beide Richtungen*, nicht systematisch negativ. Es skaliert aber mit der Marge.
+
+An 29 Liga-1X2-Picks mit eindeutig zuordenbarem Einstiegs-Snapshot, beide Seiten power-entvigt:
+aus Ø **−1,60 pp** wird **+0,32 pp** (Band −0,77 … +1,41), Close geschlagen in **62 %** statt
+31 %. Also: **nicht negativ — aber auch nicht belegt positiv.**
+
+`clvPP` bleibt unverändert; eine Zahl mitten in der Historie umzudefinieren würde alte und neue
+Zeilen unter demselben Namen vermischen. Die ehrliche Zahl kommt als **`clvFairPP`** daneben, mit
+`clvBasis` (`fair` / `roh`). Findet sich der Einstiegsmarkt nicht, gibt es **keine** faire Zahl —
+geraten wird nichts.
+
+**Offen und bewusst nicht miterledigt:** welche der beiden Zahlen Stats-Seite und Bayesian-
+Lernstrom benutzen. Der Lernstrom hat die `sharp_money`-Familie monatelang mit einer um ~1,9 pp
+zu niedrigen Zahl gefüttert — das umzustellen ist eine eigene Entscheidung, keine Nebenwirkung.
+
+Fünf Mutationen, fünf rot (eine davon erst, nachdem ich den Fall ergänzt hatte, der die
+Typprüfung wirklich braucht).
+
+### Betfair-Führungs-Push: „unbekannt" stand als „nein" im Buch
+
+Lucas: *„Team in Führung und dann kommt das trotzdem — meinst du, das ist stark positiv? ich hab
+das gestern und heute mitgekriegt und beide Male minus."*
+
+Am **06.09.** hatte er dasselbe gefragt, und ich hatte es „widerlegt": n=52, Treffer 80,8 %,
+ROI +27,8 %, Untergrenze +12,5 %. Diese Zahl war eine **Rekonstruktion** aus `htScore` — der Code
+markiert sie selbst als Näherung. Seitdem wird `onLeader` gestempelt. Exakter Stand heute:
+
+**2 Pushs auf einen Führenden, davon 1 abgerechnet.** Die Frage ist also weiterhin nicht
+beantwortbar, und sie damals als widerlegt zu präsentieren war zu stark.
+
+Dazu ein echter Fehler: `_money_on_leader` gab `bool` zurück und warf zwei Lagen zusammen —
+„steht gleich / liegt zurück" und „wir kennen den Stand gar nicht". Bei **7 von 25** gestempelten
+Pushs war der Live-Stand unbekannt; alle sieben stehen als `onLeader: False` im Buch und damit in
+der Vergleichsgruppe, mit der die Frage beantwortet werden soll. Ab jetzt drei Zustände.
+
+Und: `tests/test_public_ledger_fuehrung.py` hatte genau diese Annahme **festgeschrieben** —
+`test_onleader_ist_ein_bool_kein_none`, begründet mit „beim Senden ist die Lage aber immer
+bekannt". Mein eigener Test hat die Fehlerklasse zementiert, die das Projekt sonst überall jagt.
+Umgeschrieben, mit der Messung als Begründung.
+
 ## 🔴 12.09.2026 (Plattform-Audit, Block B — Teil 2)
 
 ### B3 — 14 von 17 Flammen ohne Beleg, auf dem Screen „wem folgen"
