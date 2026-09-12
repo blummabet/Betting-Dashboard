@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-09-12T18:39:09.008826+00:00",
+"generatedAt": "2026-09-12T18:54:17.409671+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1025,
-"wins": 860,
-"hitRate": 0.839,
-"polyN": 966,
-"polyWins": 744,
-"polyHitRate": 0.7702,
-"pinnN": 130,
-"pinnHitRate": 0.8154,
-"nRoi": 352,
-"roi": 0.4436,
-"roiLb": 0.3772,
-"nClv": 352,
-"clv": 20.81,
-"clvLb": 18.7155
+"n": 1028,
+"wins": 862,
+"hitRate": 0.8385,
+"polyN": 969,
+"polyWins": 746,
+"polyHitRate": 0.7699,
+"pinnN": 132,
+"pinnHitRate": 0.8106,
+"nRoi": 355,
+"roi": 0.4389,
+"roiLb": 0.3727,
+"nClv": 355,
+"clv": 20.71,
+"clvLb": 18.6298
 },
 "uneinig": {
 "n": 395,
@@ -81,17 +81,17 @@
 "wins": 18,
 "hitRate": 0.5
 },
+"Saudi Professional League": {
+"n": 36,
+"wins": 25,
+"hitRate": 0.6944
+},
 "Argentinian Primera Division": {
 "n": 35,
 "wins": 20,
 "hitRate": 0.5714
 },
 "Brazilian Serie A": {
-"n": 35,
-"wins": 24,
-"hitRate": 0.6857
-},
-"Saudi Professional League": {
 "n": 35,
 "wins": 24,
 "hitRate": 0.6857
@@ -121,15 +121,15 @@
 "wins": 25,
 "hitRate": 0.8333
 },
+"Turkish Super League": {
+"n": 30,
+"wins": 20,
+"hitRate": 0.6667
+},
 "Brazilian Serie B": {
 "n": 29,
 "wins": 21,
 "hitRate": 0.7241
-},
-"Turkish Super League": {
-"n": 29,
-"wins": 19,
-"hitRate": 0.6552
 },
 "English Football League Cup": {
 "n": 28,
@@ -241,6 +241,11 @@
 "wins": 9,
 "hitRate": 0.6
 },
+"Swiss Super League": {
+"n": 15,
+"wins": 13,
+"hitRate": 0.8667
+},
 "Bolivian Liga de Futbol Profesional": {
 "n": 14,
 "wins": 11,
@@ -255,11 +260,6 @@
 "n": 14,
 "wins": 4,
 "hitRate": 0.2857
-},
-"Swiss Super League": {
-"n": 14,
-"wins": 13,
-"hitRate": 0.9286
 },
 "Elite Friendlies": {
 "n": 13,
@@ -614,26 +614,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 861,
-"wins": 687,
-"hitRate": 0.7979,
-"nRoi": 337,
-"roi": 0.2628,
-"roiLb": 0.1895,
-"nClv": 337,
-"clv": 12.52,
-"clvLb": 9.5777
+"n": 862,
+"wins": 688,
+"hitRate": 0.7981,
+"nRoi": 338,
+"roi": 0.2629,
+"roiLb": 0.1899,
+"nClv": 338,
+"clv": 12.55,
+"clvLb": 9.6161
 },
 "weak": {
-"n": 543,
-"wins": 286,
-"hitRate": 0.5267,
-"nRoi": 186,
-"roi": -0.0589,
-"roiLb": -0.1817,
-"nClv": 186,
-"clv": -0.31,
-"clvLb": -4.2232
+"n": 545,
+"wins": 287,
+"hitRate": 0.5266,
+"nRoi": 188,
+"roi": -0.0618,
+"roiLb": -0.1835,
+"nClv": 188,
+"clv": -0.28,
+"clvLb": -4.1553
 }
 },
 "divergence": {
@@ -645,6 +645,63 @@
 "polyRate": 0.2633
 },
 "recent": [
+{
+"matchId": "36048525",
+"home": "Al-Taawoun Buraidah",
+"away": "Al-Hilal",
+"league": "Saudi Professional League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Al-Hilal",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+6
+],
+"kickoff": "2026-09-12T15:50:00Z",
+"settledAt": "2026-09-12T18:54:17.210902+00:00"
+},
+{
+"matchId": "36039890",
+"home": "Lugano",
+"away": "Young Boys",
+"league": "Swiss Super League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Young Boys",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-09-12T17:00:00Z",
+"settledAt": "2026-09-12T18:54:17.210902+00:00"
+},
+{
+"matchId": "36036334",
+"home": "Konyaspor",
+"away": "Trabzonspor",
+"league": "Turkish Super League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Konyaspor",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-09-12T17:00:00Z",
+"settledAt": "2026-09-12T18:54:17.210902+00:00"
+},
 {
 "matchId": "36005306",
 "home": "Go Ahead Eagles",
@@ -1347,75 +1404,18 @@
 ],
 "kickoff": "2026-09-12T14:00:00Z",
 "settledAt": "2026-09-12T15:53:49.082906+00:00"
-},
-{
-"matchId": "36005679",
-"home": "Mainz",
-"away": "Eintracht Frankfurt",
-"league": "German Bundesliga",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Eintracht Frankfurt",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-3
-],
-"kickoff": "2026-09-12T13:30:00Z",
-"settledAt": "2026-09-12T15:23:47.671432+00:00"
-},
-{
-"matchId": "36005672",
-"home": "Dortmund",
-"away": "Paderborn",
-"league": "German Bundesliga",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Dortmund",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-0
-],
-"kickoff": "2026-09-12T13:30:00Z",
-"settledAt": "2026-09-12T15:23:47.671432+00:00"
-},
-{
-"matchId": "36006553",
-"home": "Genoa",
-"away": "Frosinone",
-"league": "Italian Serie A",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Frosinone",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-09-12T13:00:00Z",
-"settledAt": "2026-09-12T15:08:53.834991+00:00"
 }
 ],
 "global": {
-"n": 1437,
-"wins": 991,
+"n": 1440,
+"wins": 993,
 "hitRate": 0.6896,
-"nRoi": 523,
-"roi": 0.1484,
-"roiLb": 0.0832,
-"nClv": 523,
+"nRoi": 526,
+"roi": 0.1469,
+"roiLb": 0.082,
+"nClv": 526,
 "clv": 7.96,
-"clvLb": 5.5665
+"clvLb": 5.5854
 },
-"pending": 33
+"pending": 31
 }
