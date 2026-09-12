@@ -2835,8 +2835,8 @@
  "wta-bosio-cabrera-2026-09-12": {
   "shares": {},
   "prices": {
-   "Victoria Bosio": 0.31,
-   "Lizette Cabrera": 0.69
+   "Victoria Bosio": 0.345,
+   "Lizette Cabrera": 0.655
   },
   "splitGuete": {
    "art": "leer",
@@ -2846,8 +2846,8 @@
   "league": "TENNIS",
   "sport": "Tennis",
   "totalUsd": 10091,
-  "hoursToKickoff": -0.3,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -0.4,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0xef2f78c357f460505217be89da3ddddc043a546b03f4d48bc090acf2c15ea1c5",
   "frage": "Sao Paulo Open, Qualification: Victoria Bosio vs Lizette Cabrera",
@@ -8333,12 +8333,12 @@
  },
  "cfb-okl-mich-2026-09-12": {
   "shares": {
-   "Oklahoma": 188593.68163673006,
-   "Michigan": 288859.420940255
+   "Oklahoma": 205499.0467847401,
+   "Michigan": 266912.05381284497
   },
   "prices": {
-   "Oklahoma": 0.395,
-   "Michigan": 0.605
+   "Oklahoma": 0.435,
+   "Michigan": 0.565
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -8348,32 +8348,29 @@
    {
     "wallet": "0x4bff30af91642dc7d2b19a8664378fe55c45fc26",
     "side": "Michigan",
-    "usd": 72188,
-    "avgPrice": 0.3499
+    "usd": 67415
    },
    {
     "wallet": "0xf28e42d20e4826f2b10a24bc952001697947cab2",
     "side": "Michigan",
-    "usd": 52295,
-    "avgPrice": 0.3592
-   },
-   {
-    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
-    "side": "Michigan",
-    "usd": 36525
+    "usd": 48837
    },
    {
     "wallet": "0xa0f21e6d351baa9185716b5c00c2925ed9621848",
     "side": "Oklahoma",
-    "usd": 35495,
-    "avgPrice": 0.5526
+    "usd": 40816
+   },
+   {
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "side": "Michigan",
+    "usd": 34110
    }
   ],
   "league": "CFB",
   "sport": null,
   "totalUsd": 993611,
-  "hoursToKickoff": -2.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -2.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0xe55b365b4e7304f5141cedd755fc5548fafce0cb09848d6337737e93ab85fe44",
   "frage": "Oklahoma vs. Michigan",
@@ -8383,64 +8380,112 @@
   },
   "book": {
    "side": "Michigan",
-   "bid": 0.54,
-   "ask": 0.56,
-   "spreadC": 2.0,
-   "spreadPct": 3.57,
+   "bid": 0.4,
+   "ask": 0.41,
+   "spreadC": 1.0,
+   "spreadPct": 2.44,
    "bids": [
     [
-     0.54,
-     5
+     0.4,
+     4410
     ],
     [
-     0.53,
-     871
+     0.39,
+     45219
     ],
     [
-     0.52,
-     5807
+     0.38,
+     41642
     ],
     [
-     0.51,
-     330
+     0.37,
+     22745
     ],
     [
-     0.5,
-     7432
+     0.36,
+     15054
     ],
     [
-     0.49,
-     5700
+     0.35,
+     24065
     ]
    ],
    "asks": [
     [
-     0.56,
-     1027
+     0.41,
+     32762
     ],
     [
-     0.57,
-     8954
+     0.42,
+     22375
     ],
     [
-     0.58,
-     54105
+     0.43,
+     35286
     ],
     [
-     0.59,
-     929
+     0.44,
+     10208
     ],
     [
-     0.6,
-     35092
+     0.45,
+     1215
     ],
     [
-     0.61,
-     1328
+     0.46,
+     2242
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0xa38a455bbdd4b68486548b7e19da99903f4f821d",
+    "action": "BUY",
+    "side": "Michigan",
+    "price": 0.56,
+    "usd": 364,
+    "ts": 1789238709
+   },
+   {
+    "wallet": "0xa0f21e6d351baa9185716b5c00c2925ed9621848",
+    "action": "BUY",
+    "side": "Oklahoma",
+    "price": 0.44,
+    "usd": 396,
+    "ts": 1789238686
+   },
+   {
+    "wallet": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
+    "action": "BUY",
+    "side": "Oklahoma",
+    "price": 0.39,
+    "usd": 5965,
+    "ts": 1789238625
+   },
+   {
+    "wallet": "0xa38a455bbdd4b68486548b7e19da99903f4f821d",
+    "action": "BUY",
+    "side": "Oklahoma",
+    "price": 0.37,
+    "usd": 376,
+    "ts": 1789238583
+   },
+   {
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "action": "BUY",
+    "side": "Michigan",
+    "price": 0.62,
+    "usd": 4344,
+    "ts": 1789238527
+   },
+   {
+    "wallet": "0xa38a455bbdd4b68486548b7e19da99903f4f821d",
+    "action": "BUY",
+    "side": "Michigan",
+    "price": 0.58,
+    "usd": 428,
+    "ts": 1789238500
+   },
    {
     "wallet": "0xa38a455bbdd4b68486548b7e19da99903f4f821d",
     "action": "BUY",
@@ -8456,65 +8501,17 @@
     "price": 0.44,
     "usd": 2789,
     "ts": 1789238175
-   },
-   {
-    "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
-    "action": "BUY",
-    "side": "Michigan",
-    "price": 0.5241,
-    "usd": 3534,
-    "ts": 1789238109
-   },
-   {
-    "wallet": "0xe289331c3fe3ac06ddab65a07dc799686befc31a",
-    "action": "BUY",
-    "side": "Oklahoma",
-    "price": 0.5,
-    "usd": 1100,
-    "ts": 1789237660
-   },
-   {
-    "wallet": "0xc32359bbc920b365a05cd310b9a998508c980077",
-    "action": "BUY",
-    "side": "Oklahoma",
-    "price": 0.5,
-    "usd": 6310,
-    "ts": 1789237659
-   },
-   {
-    "wallet": "0x69504825bc6269242932512a4dc704532bebb32a",
-    "action": "BUY",
-    "side": "Michigan",
-    "price": 0.51,
-    "usd": 500,
-    "ts": 1789237563
-   },
-   {
-    "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
-    "action": "BUY",
-    "side": "Michigan",
-    "price": 0.51,
-    "usd": 3240,
-    "ts": 1789237561
-   },
-   {
-    "wallet": "0x50f97e9c24050ca2cd7f0fef900df984e1d0c327",
-    "action": "BUY",
-    "side": "Oklahoma",
-    "price": 0.5,
-    "usd": 506,
-    "ts": 1789237507
    }
   ]
  },
  "cfb-ore-okst-2026-09-12": {
   "shares": {
-   "Oregon": 214054.32291505503,
-   "Oklahoma State": 137430.61457807003
+   "Oregon": 271956.587919409,
+   "Oklahoma State": 114071.21883074101
   },
   "prices": {
-   "Oregon": 0.609,
-   "Oklahoma State": 0.391
+   "Oregon": 0.7045,
+   "Oklahoma State": 0.2955
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -8524,33 +8521,29 @@
    {
     "wallet": "0x8bfee7aeca33003fe9d7398d5143dc7866542d74",
     "side": "Oregon",
-    "usd": 67057,
-    "avgPrice": 0.9499
+    "usd": 77572
    },
    {
     "wallet": "0x67542c3219b37fd1610aad290676ff91cdbfe3bc",
     "side": "Oregon",
-    "usd": 63945,
-    "avgPrice": 0.9399
+    "usd": 73972
    },
    {
     "wallet": "0x7a75a4183e577123db9ff0adff520561ef95d288",
     "side": "Oregon",
-    "usd": 46102,
-    "avgPrice": 0.9348
+    "usd": 53331
    },
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "side": "Oklahoma State",
-    "usd": 38440,
-    "avgPrice": 0.0592
+    "usd": 29051
    }
   ],
   "league": "CFB",
   "sport": null,
   "totalUsd": 385785,
-  "hoursToKickoff": -2.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -2.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0x1a537311915440521edf724bc217b60d25af2814863b9ca59d97a0e943592b43",
   "frage": "Oregon vs. Oklahoma State",
@@ -8560,64 +8553,88 @@
   },
   "book": {
    "side": "Oregon",
-   "bid": 0.734,
-   "ask": 0.76,
-   "spreadC": 2.6,
-   "spreadPct": 3.42,
+   "bid": 0.565,
+   "ask": 0.594,
+   "spreadC": 2.9,
+   "spreadPct": 4.88,
    "bids": [
     [
-     0.734,
-     10
+     0.565,
+     5
     ],
     [
-     0.733,
-     10
+     0.55,
+     12
     ],
     [
-     0.73,
-     100
+     0.53,
+     30
     ],
     [
-     0.713,
-     63
+     0.529,
+     20
     ],
     [
-     0.71,
-     553
+     0.528,
+     20
     ],
     [
-     0.7,
-     6815
+     0.52,
+     20
     ]
    ],
    "asks": [
     [
-     0.76,
-     4112
-    ],
-    [
-     0.761,
-     90
-    ],
-    [
-     0.766,
+     0.594,
      10
     ],
     [
-     0.767,
+     0.595,
+     95
+    ],
+    [
+     0.599,
      10
     ],
     [
-     0.77,
-     400
+     0.609,
+     10
     ],
     [
-     0.78,
-     20
+     0.61,
+     1548
+    ],
+    [
+     0.62,
+     907
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x1a3ee5acbb713b7ecd2296a9422348c5c4d3cd83",
+    "action": "BUY",
+    "side": "Oregon",
+    "price": 0.6411,
+    "usd": 2549,
+    "ts": 1789238644
+   },
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "action": "BUY",
+    "side": "Oregon",
+    "price": 0.5578,
+    "usd": 341,
+    "ts": 1789238568
+   },
+   {
+    "wallet": "0x38faf5932f8339b700c56058c0e46848ae7f87b5",
+    "action": "SELL",
+    "side": "Oklahoma State",
+    "price": 0.4409,
+    "usd": 306,
+    "ts": 1789238490
+   },
    {
     "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
     "action": "BUY",
@@ -8669,20 +8686,17 @@
    {
     "wallet": "0xd1c769317bd15de7768a70d0214cf0bbcc531d2b",
     "side": "Indiana",
-    "usd": 347128,
-    "avgPrice": 0.9988
+    "usd": 347128
    },
    {
     "wallet": "0x033f0346c007323030eb420305ffede19a95618e",
     "side": "Howard",
-    "usd": 100,
-    "avgPrice": 0.0009
+    "usd": 100
    },
    {
     "wallet": "0x8fff01819bd9fa175cc2c8feab5ba3730a770482",
     "side": "Indiana",
-    "usd": 83,
-    "avgPrice": 0.9983
+    "usd": 83
    },
    {
     "wallet": "0xa66790e2b0075e73c3781ddaf1d0b875a3aaceb3",
@@ -8693,8 +8707,8 @@
   "league": "CFB",
   "sport": null,
   "totalUsd": 349504,
-  "hoursToKickoff": -2.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -2.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0x6429e797ca7fb35ca40ca2a70004de7ac87a3dadc41e931d56eadb29bc183e47",
   "frage": "Howard vs. Indiana",
@@ -8705,12 +8719,12 @@
  },
  "lol-los-fur-2026-09-13": {
   "shares": {
-   "LOS": 92884.664284282,
-   "FURIA Esports": 13390.896441005998
+   "LOS": 92642.32674425299,
+   "FURIA Esports": 13965.853856282
   },
   "prices": {
-   "LOS": 0.874,
-   "FURIA Esports": 0.126
+   "LOS": 0.869,
+   "FURIA Esports": 0.131
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -8720,33 +8734,29 @@
    {
     "wallet": "0x746295855be6f49fe2da2accd69ea34b3cf23ac3",
     "side": "LOS",
-    "usd": 16638,
-    "avgPrice": 0.7246
+    "usd": 16543
    },
    {
     "wallet": "0x3078b391f843153c6859702cee974ca7f660a2cb",
     "side": "LOS",
-    "usd": 13589,
-    "avgPrice": 0.8222
+    "usd": 13511
    },
    {
     "wallet": "0x3fbc9a5ae5fe2c567f511c5ab01ff08f4119361f",
     "side": "LOS",
-    "usd": 4585,
-    "avgPrice": 0.8631
+    "usd": 4559
    },
    {
     "wallet": "0xbcd24281bb7c69943f07df21d56d9842330643f3",
     "side": "LOS",
-    "usd": 4211,
-    "avgPrice": 0.7297
+    "usd": 4187
    }
   ],
   "league": "ESPORTS",
   "sport": "E-Sport",
   "totalUsd": 145598,
-  "hoursToKickoff": -2.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -2.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0xee574d7bad1c08c7d52e4b17ca645b426f4094fd61dfff381225033167036444",
   "frage": "LoL: LOS vs FURIA Esports (BO5) - CBLOL Playoffs",
@@ -8756,64 +8766,72 @@
   },
   "book": {
    "side": "LOS",
-   "bid": 0.865,
-   "ask": 0.889,
-   "spreadC": 2.4,
-   "spreadPct": 2.7,
+   "bid": 0.84,
+   "ask": 0.849,
+   "spreadC": 0.9,
+   "spreadPct": 1.06,
    "bids": [
-    [
-     0.865,
-     5
-    ],
-    [
-     0.864,
-     459
-    ],
-    [
-     0.863,
-     256
-    ],
-    [
-     0.842,
-     100
-    ],
-    [
-     0.841,
-     544
-    ],
     [
      0.84,
      134
+    ],
+    [
+     0.829,
+     30
+    ],
+    [
+     0.827,
+     5
+    ],
+    [
+     0.826,
+     5
+    ],
+    [
+     0.817,
+     60
+    ],
+    [
+     0.816,
+     500
     ]
    ],
    "asks": [
     [
-     0.889,
-     20
+     0.849,
+     500
     ],
     [
-     0.89,
-     18
+     0.85,
+     219
     ],
     [
-     0.898,
-     359
+     0.864,
+     28
     ],
     [
-     0.899,
-     542
+     0.867,
+     5
     ],
     [
-     0.9,
-     343
+     0.868,
+     5
     ],
     [
-     0.901,
-     280
+     0.869,
+     60
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x06a22231b2d42f8704e85ef44c2dda278d9f8015",
+    "action": "BUY",
+    "side": "LOS",
+    "price": 0.8768,
+    "usd": 400,
+    "ts": 1789238931
+   },
    {
     "wallet": "0x2da325618fff9b2ffe64a49253fbcae8c7b9f258",
     "action": "BUY",
@@ -8851,7 +8869,7 @@
  "spl-taa-hil-2026-09-12": {
   "shares": {
    "Al Taawoun Saudi Club": 2.681175395,
-   "Draw (Al Taawoun Saudi Club vs. Al Hilal Saudi Club)": 0.68084481,
+   "Draw (Al Taawoun Saudi Club vs. Al Hilal Saudi Club)": 0.32449925,
    "Al Hilal Saudi Club": 27202.430171904496
   },
   "prices": {
@@ -8867,33 +8885,29 @@
    {
     "wallet": "0x5016c48436ab3efa2ab54b117d0c08fa1a4a1eeb",
     "side": "Al Hilal Saudi Club",
-    "usd": 6154,
-    "avgPrice": 0.8932
+    "usd": 6154
    },
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "side": "Al Hilal Saudi Club",
-    "usd": 4313,
-    "avgPrice": 0.7646
+    "usd": 4313
    },
    {
     "wallet": "0x3486ef8eeec032111d20acd71cb24f34ef5349ee",
     "side": "Al Hilal Saudi Club",
-    "usd": 2630,
-    "avgPrice": 0.7599
+    "usd": 2630
    },
    {
     "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
     "side": "Al Hilal Saudi Club",
-    "usd": 2315,
-    "avgPrice": 0.7956
+    "usd": 2315
    }
   ],
   "league": "SOCCER",
   "sport": "Fußball",
   "totalUsd": 59328,
-  "hoursToKickoff": -2.88,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -2.99,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "tokens": {
    "Al Taawoun Saudi Club": "104131328399648508236611968359178344441561979849518940086215885499311096262436",
@@ -8903,12 +8917,12 @@
  },
  "atp-djere-martine-2026-09-12": {
   "shares": {
-   "Laslo Djere": 27701.418934970025,
-   "Pedro Martinez": 59002.13835104999
+   "Laslo Djere": 34243.10944612502,
+   "Pedro Martinez": 57071.314227499985
   },
   "prices": {
-   "Laslo Djere": 0.355,
-   "Pedro Martinez": 0.645
+   "Laslo Djere": 0.375,
+   "Pedro Martinez": 0.625
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -8918,40 +8932,137 @@
    {
     "wallet": "0x441909510a0b18a7df9f5ea588314a53d5bcfcf4",
     "side": "Pedro Martinez",
-    "usd": 20414,
-    "avgPrice": 0.47
+    "usd": 19781
    },
    {
     "wallet": "0x713b63e4eccb6644aeaae4077c69a6b5e07eee60",
     "side": "Pedro Martinez",
-    "usd": 9347,
-    "avgPrice": 0.3588
+    "usd": 9058
    },
    {
-    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
     "side": "Laslo Djere",
-    "usd": 5822,
-    "avgPrice": 0.6859
+    "usd": 7035
    },
    {
-    "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
-    "side": "Laslo Djere",
-    "usd": 4668,
-    "avgPrice": 0.6041
+    "wallet": "0x6b91e8dd1e3498077cffef62299512a9910f06c4",
+    "side": "Pedro Martinez",
+    "usd": 4470
    }
   ],
   "league": "TENNIS",
   "sport": "Tennis",
   "totalUsd": 205510,
-  "hoursToKickoff": -2.3,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -2.4,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0xd4debb2da8fd6241044f006f3d3cd8a0848c6664afbfd7b8177ac021bbcdafed",
   "frage": "Genoa: Laslo Djere vs Pedro Martinez",
   "tokens": {
    "Laslo Djere": "21970733364391714242155133676662195526616198085076557447041130984024165730647",
    "Pedro Martinez": "106485239865986595260316759755199690057552031774298503796694686814517709099055"
-  }
+  },
+  "book": {
+   "side": "Pedro Martinez",
+   "bid": 0.74,
+   "ask": 0.77,
+   "spreadC": 3.0,
+   "spreadPct": 3.9,
+   "bids": [
+    [
+     0.74,
+     1648
+    ],
+    [
+     0.73,
+     6950
+    ],
+    [
+     0.72,
+     10818
+    ],
+    [
+     0.71,
+     634
+    ],
+    [
+     0.7,
+     907
+    ],
+    [
+     0.69,
+     398
+    ]
+   ],
+   "asks": [
+    [
+     0.77,
+     48
+    ],
+    [
+     0.78,
+     1648
+    ],
+    [
+     0.79,
+     6662
+    ],
+    [
+     0.8,
+     1551
+    ],
+    [
+     0.81,
+     179
+    ],
+    [
+     0.82,
+     26
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xa0f21e6d351baa9185716b5c00c2925ed9621848",
+    "action": "BUY",
+    "side": "Pedro Martinez",
+    "price": 0.69,
+    "usd": 313,
+    "ts": 1789238655
+   },
+   {
+    "wallet": "0xa0f21e6d351baa9185716b5c00c2925ed9621848",
+    "action": "BUY",
+    "side": "Pedro Martinez",
+    "price": 0.69,
+    "usd": 377,
+    "ts": 1789238655
+   },
+   {
+    "wallet": "0xef292327dc97299c63f30e998614740d9a852f1e",
+    "action": "BUY",
+    "side": "Laslo Djere",
+    "price": 0.31,
+    "usd": 500,
+    "ts": 1789238635
+   },
+   {
+    "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
+    "action": "BUY",
+    "side": "Pedro Martinez",
+    "price": 0.65,
+    "usd": 429,
+    "ts": 1789238574
+   },
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "action": "BUY",
+    "side": "Pedro Martinez",
+    "price": 0.65,
+    "usd": 1029,
+    "ts": 1789238560
+   }
+  ]
  },
  "sclc-ros-hib-2026-09-12-more-markets": {
   "shares": {},
@@ -8991,8 +9102,8 @@
   "league": "SOCCER",
   "sport": "Fußball",
   "totalUsd": 9608,
-  "hoursToKickoff": -2.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -2.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0x4fe6693cd731998d4a71a96037c52d50abcc6bbffe8b2153308d4938c411f08a",
   "frage": "FC St. Gallen 1879 vs. FC Sion: O/U 3.5",
@@ -9091,8 +9202,7 @@
    {
     "wallet": "0x4ebc2722adc772bde8680792d0a6fdf15499a33d",
     "side": "Fluxo W7M",
-    "usd": 5274,
-    "avgPrice": 0.4897
+    "usd": 5274
    },
    {
     "wallet": "0x52b7fc8a97df5f18974c06a83909f60c81010aa1",
@@ -9102,21 +9212,19 @@
    {
     "wallet": "0x2b140391f94e9304d1d2cc83fece0bf644d9d678",
     "side": "Fluxo W7M",
-    "usd": 1824,
-    "avgPrice": 0.7124
+    "usd": 1824
    },
    {
     "wallet": "0x513587a2f36a8cb29333052a6a479091ef8a7217",
     "side": "Fluxo W7M",
-    "usd": 1723,
-    "avgPrice": 0.3485
+    "usd": 1723
    }
   ],
   "league": "ESPORTS",
   "sport": "E-Sport",
   "totalUsd": 53354,
-  "hoursToKickoff": -2.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -2.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0xc113248b06edd4181faabbd6bd3da80f146b2d9ae161ada8e019a28a41023533",
   "frage": "Counter-Strike: Imperial vs Fluxo W7M (BO3) - PGL Masters Bucharest: South American Closed Qualifier Playoffs",
@@ -9444,7 +9552,7 @@
  },
  "epl-tot-eve-2026-09-12-more-markets": {
   "shares": {
-   "Under": 87760.96306000001
+   "Under": 2275.072466
   },
   "prices": {
    "Over": 0.0,
@@ -9456,31 +9564,31 @@
   },
   "whales": [
    {
-    "wallet": "0x224a89dbe0db0d6124b335edabd15b3f877da3d5",
+    "wallet": "0x6686fdba6249b9c279191dd52d2ca3c3ec9603b6",
     "side": "Under",
-    "usd": 18054
+    "usd": 2222
    },
    {
-    "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
+    "wallet": "0xb50fb52931478fb518f8d75073e36e81f41c78c8",
     "side": "Under",
-    "usd": 13294
+    "usd": 22
    },
    {
-    "wallet": "0xb4eea1c82f0c4cf7e02e69212bd447a63314cc59",
+    "wallet": "0x67af214764bd6eda61fadb25cdcbea6d13d761ee",
     "side": "Under",
-    "usd": 9217
+    "usd": 20
    },
    {
-    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "wallet": "0xd65f8979f80e32bd252935f837757ca30000656c",
     "side": "Under",
-    "usd": 8880
+    "usd": 11
    }
   ],
   "league": "EPL",
   "sport": "Fußball",
   "totalUsd": 124462,
-  "hoursToKickoff": -2.21,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -2.32,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0x6fe72e617e529a20570f8bff9e75780b1c31927773d85c9d03329f2a5897e358",
   "frage": "Tottenham Hotspur FC vs. Everton FC: O/U 2.5",
@@ -9517,8 +9625,8 @@
  },
  "lal-bil-elc-2026-09-12-more-markets": {
   "shares": {
-   "Over": 38.217240035,
-   "Under": 86283.65860599151
+   "Over": 43.162761014000004,
+   "Under": 86283.63861599151
   },
   "prices": {
    "Over": 0.0005,
@@ -9532,33 +9640,29 @@
    {
     "wallet": "0x34a1eed3f6bb10dd2f99b79cb4e8ca8749ae7622",
     "side": "Under",
-    "usd": 54902,
-    "avgPrice": 0.6169
+    "usd": 54902
    },
    {
     "wallet": "0x224a89dbe0db0d6124b335edabd15b3f877da3d5",
     "side": "Under",
-    "usd": 15173,
-    "avgPrice": 0.3993
+    "usd": 15173
    },
    {
     "wallet": "0xc23dc0eca9e1c2e293de8911b9ac254f0bcd82c8",
     "side": "Under",
-    "usd": 5807,
-    "avgPrice": 0.972
+    "usd": 5807
    },
    {
     "wallet": "0x8191c793fd7edbadf0fae651f55c1da3b638da72",
     "side": "Under",
-    "usd": 2656,
-    "avgPrice": 0.7799
+    "usd": 2656
    }
   ],
-  "league": "LA-LIGA",
+  "league": "SOCCER",
   "sport": "Fußball",
   "totalUsd": 130003,
-  "hoursToKickoff": -2.21,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -2.32,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0xf5de7f5ca2ff3958991531082565eb28c71ef38cb2a35e8620bf521a56f9cf5a",
   "frage": "Athletic Club vs. Elche CF: O/U 2.5",
@@ -9620,7 +9724,7 @@
  "lal-bil-elc-2026-09-12": {
   "shares": {
    "Athletic Club": 150.61448098950018,
-   "Draw (Athletic Club vs. Elche CF)": 47513.235697900025,
+   "Draw (Athletic Club vs. Elche CF)": 47513.231183158525,
    "Elche CF": 22.7895958775
   },
   "prices": {
@@ -9636,8 +9740,7 @@
    {
     "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
     "side": "Draw (Athletic Club vs. Elche CF)",
-    "usd": 21699,
-    "avgPrice": 0.5161
+    "usd": 21699
    },
    {
     "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
@@ -9647,21 +9750,19 @@
    {
     "wallet": "0xad825954d08beba32f74b594821f4251460c3df1",
     "side": "Draw (Athletic Club vs. Elche CF)",
-    "usd": 3331,
-    "avgPrice": 0.9899
+    "usd": 3331
    },
    {
     "wallet": "0xc23dc0eca9e1c2e293de8911b9ac254f0bcd82c8",
     "side": "Draw (Athletic Club vs. Elche CF)",
-    "usd": 1646,
-    "avgPrice": 0.9253
+    "usd": 1646
    }
   ],
-  "league": "LA-LIGA",
+  "league": "SOCCER",
   "sport": "Fußball",
   "totalUsd": 819743,
-  "hoursToKickoff": -2.21,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -2.32,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "tokens": {
    "Athletic Club": "74992977907904020842059195177657064711348985013122462368033043992224176145367",
@@ -9865,33 +9966,29 @@
    {
     "wallet": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
     "side": "Varvara Lepchenko",
-    "usd": 15165,
-    "avgPrice": 0.5033
+    "usd": 15165
    },
    {
     "wallet": "0x72e1597864456eda62878413cf3e60c332e4a45d",
     "side": "Nicole Melichar",
-    "usd": 6688,
-    "avgPrice": 0.49
+    "usd": 6688
    },
    {
     "wallet": "0x3e856790872025b26922999651992ea70bfe788b",
     "side": "Nicole Melichar",
-    "usd": 6394,
-    "avgPrice": 0.49
+    "usd": 6394
    },
    {
     "wallet": "0xc4b6ca859e448e531bed67f81ac57ab8145c2d0f",
     "side": "Nicole Melichar",
-    "usd": 1084,
-    "avgPrice": 0.49
+    "usd": 1084
    }
   ],
   "league": "TENNIS",
   "sport": "Tennis",
   "totalUsd": 573739,
-  "hoursToKickoff": -2.63,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -2.74,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0x9931ff5a38f9bcb0457e3c5222efc556b8f5e708dfe3c98225f0d0840e11fa2b",
   "frage": "Guadalajara Open Akron, Qualification: Varvara Lepchenko vs Nicole Melichar",
@@ -9934,7 +10031,7 @@
    "asks": [
     [
      0.51,
-     120081
+     119796
     ],
     [
      0.52,
@@ -9942,11 +10039,11 @@
     ],
     [
      0.53,
-     380
+     15
     ],
     [
      0.54,
-     386
+     21
     ],
     [
      0.55,
@@ -10121,8 +10218,8 @@
  },
  "es2-gir-cas-2026-09-12-more-markets": {
   "shares": {
-   "Over": 7.842319423999999,
-   "Under": 15676.8807454465
+   "Over": 8.566420201500003,
+   "Under": 17124.41229061
   },
   "prices": {
    "Over": 0.0005,
@@ -10136,31 +10233,29 @@
    {
     "wallet": "0x224a89dbe0db0d6124b335edabd15b3f877da3d5",
     "side": "Under",
-    "usd": 15593,
-    "avgPrice": 0.6493
+    "usd": 15593
    },
    {
-    "wallet": "0xf7c3b6cb4badc158f44cef43364701d3a393eac2",
+    "wallet": "0x594edb9112f526fa6a80b8f858a6379c8a2c1c11",
     "side": "Under",
-    "usd": 23,
-    "avgPrice": 0.662
+    "usd": 600
    },
    {
-    "wallet": "0x78147fb8bc941a294e8d48e9722799f8f17b9c0b",
+    "wallet": "0x882c2e9d90d28e02a15be0d7f8d3636994305d07",
     "side": "Under",
-    "usd": 15
+    "usd": 322
    },
    {
-    "wallet": "0xbddf3d56b49fab4a167b45d14b740062f9c81fc8",
+    "wallet": "0xb3ba8a8b66f068b81fa809ee24f23578bf35f84e",
     "side": "Under",
-    "usd": 15
+    "usd": 207
    }
   ],
-  "league": "LA-LIGA-2",
+  "league": "SOCCER",
   "sport": "Fußball",
   "totalUsd": 19130,
-  "hoursToKickoff": -2.21,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -2.32,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0xaf2e53d363c4ed5ac0769b4a7965d36574ed6bb103aeff117bb96557afcba76b",
   "frage": "Girona FC vs. CD Castellón: O/U 3.5",
@@ -10275,13 +10370,13 @@
  },
  "lal-bil-elc-2026-09-12-exact-score": {
   "shares": {
-   "Athletic Club 0 - 0 Elche CF": 1.237034849,
+   "Athletic Club 0 - 0 Elche CF": 0.51,
    "Athletic Club 0 - 1 Elche CF": 3.1613436515,
    "Athletic Club 1 - 0 Elche CF": 1.4836221219999999,
-   "Athletic Club 0 - 2 Elche CF": 2.0,
+   "Athletic Club 0 - 2 Elche CF": 3.6804,
    "Athletic Club 1 - 1 Elche CF": 2463.7870712094996,
    "Athletic Club 2 - 0 Elche CF": 1.4770365394999998,
-   "Athletic Club 0 - 3 Elche CF": 1.894593,
+   "Athletic Club 0 - 3 Elche CF": 5.2082999999999995,
    "Athletic Club 1 - 2 Elche CF": 4.650399999999999,
    "Athletic Club 2 - 1 Elche CF": 13.883428642499998,
    "Athletic Club 3 - 0 Elche CF": 1.2327533339999999,
@@ -10289,7 +10384,7 @@
    "Athletic Club 2 - 2 Elche CF": 1.04357,
    "Athletic Club 3 - 1 Elche CF": 1.207685,
    "Athletic Club 2 - 3 Elche CF": 3.5444,
-   "Athletic Club 3 - 2 Elche CF": 0.787800325,
+   "Athletic Club 3 - 2 Elche CF": 1.0489003250000002,
    "Athletic Club 3 - 3 Elche CF": 0.505,
    "Any Other Score": 1.7942728270000003
   },
@@ -10325,14 +10420,12 @@
    {
     "wallet": "0x66ca7fee3d820d801c319a7aede56a9d53c08078",
     "side": "Athletic Club 1 - 1 Elche CF",
-    "usd": 400,
-    "avgPrice": 0.999
+    "usd": 400
    },
    {
     "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
     "side": "Athletic Club 1 - 1 Elche CF",
-    "usd": 342,
-    "avgPrice": 0.0588
+    "usd": 342
    },
    {
     "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
@@ -10340,11 +10433,11 @@
     "usd": 305
    }
   ],
-  "league": "LA-LIGA",
+  "league": "SOCCER",
   "sport": "Fußball",
   "totalUsd": 72958,
-  "hoursToKickoff": -2.21,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -2.32,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "tokens": {
    "Athletic Club 0 - 0 Elche CF": "108367743545940463319063757332401117781615194247319770317130516187347876094961",
@@ -10380,8 +10473,8 @@
   "league": "EPL",
   "sport": "Fußball",
   "totalUsd": 11236,
-  "hoursToKickoff": -2.21,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -2.32,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0x9c0407d119705d67dda0bec072bc5581fe84a8a7a246d7624688d7d7d514eebd",
   "frage": "Tottenham Hotspur FC vs. Everton FC: O/U 10.5 Total Corners",
@@ -10417,8 +10510,8 @@
  "es2-gir-cas-2026-09-12": {
   "shares": {
    "Girona FC": 10.292815002500001,
-   "Draw (Girona FC vs. CD Castellón)": 0.0684635715,
-   "CD Castellón": 14097.153340278503
+   "Draw (Girona FC vs. CD Castellón)": 0.675649443,
+   "CD Castellón": 144.845672934
   },
   "prices": {
    "Girona FC": 0.0005,
@@ -10431,34 +10524,31 @@
   },
   "whales": [
    {
-    "wallet": "0xd218e474776403a330142299f7796e8ba32eb5c9",
+    "wallet": "0xe9045fa8a70479bb2a112d863f0eadc3058f44e9",
     "side": "CD Castellón",
-    "usd": 8795,
-    "avgPrice": 0.9793
+    "usd": 92
    },
    {
-    "wallet": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
+    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
     "side": "CD Castellón",
-    "usd": 1549
+    "usd": 28
    },
    {
-    "wallet": "0x9937968dc1237a11cf3e3f0f806c1cab15cb72dc",
+    "wallet": "0x6a0e1bc1468c2536b40458e72406e6b61550cded",
     "side": "CD Castellón",
-    "usd": 706,
-    "avgPrice": 0.999
+    "usd": 11
    },
    {
-    "wallet": "0xeed736036643c9ecf1d07cf3ba1cecf004190098",
+    "wallet": "0x988a0ddaabe22f2c4f14db578026ebf734ee8936",
     "side": "CD Castellón",
-    "usd": 506,
-    "avgPrice": 0.999
+    "usd": 5
    }
   ],
-  "league": "LA-LIGA-2",
+  "league": "SOCCER",
   "sport": "Fußball",
   "totalUsd": 50820,
-  "hoursToKickoff": -2.21,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -2.32,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "tokens": {
    "Girona FC": "1592218963582119162669454822419500515056997801048805016159850229095125427105",
@@ -10654,8 +10744,8 @@
   "league": "SOCCER",
   "sport": "Fußball",
   "totalUsd": 22664,
-  "hoursToKickoff": -2.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -2.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "tokens": {
    "Rosenborg BK": "104017920712598310208122811156925283052285590729415532659698683497915511661452",
@@ -10665,12 +10755,12 @@
  },
  "cs2-hero-1win-2026-09-12": {
   "shares": {
-   "Heroic": 174517.7900751749,
-   "1WIN": 59734.44109921497
+   "Heroic": 176860.3107473249,
+   "1WIN": 57391.91399728497
   },
   "prices": {
-   "Heroic": 0.745,
-   "1WIN": 0.255
+   "Heroic": 0.755,
+   "1WIN": 0.245
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -10680,33 +10770,29 @@
    {
     "wallet": "0x73e3fec494611d73c170cb2f23850fd998b21be9",
     "side": "Heroic",
-    "usd": 74500,
-    "avgPrice": 0.5599
+    "usd": 75500
    },
    {
     "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
     "side": "Heroic",
-    "usd": 31509,
-    "avgPrice": 0.567
+    "usd": 31932
    },
    {
     "wallet": "0x7c37b52eb226bcb9411375ec48b0169663fb6aeb",
     "side": "1WIN",
-    "usd": 21420,
-    "avgPrice": 0.44
+    "usd": 20580
    },
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "side": "1WIN",
-    "usd": 18781,
-    "avgPrice": 0.4336
+    "usd": 18044
    }
   ],
   "league": "ESPORTS",
   "sport": "E-Sport",
   "totalUsd": 250710,
-  "hoursToKickoff": -1.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -1.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0x8f35e0da63d0f92f97e9ce7de00d438d510a3c40f33037e76a083d7546e2544f",
   "frage": "Counter-Strike: Heroic vs 1WIN (BO3) - Thunderpick World Championship Closed Qualifier Playoffs",
@@ -10716,84 +10802,74 @@
   },
   "book": {
    "side": "Heroic",
-   "bid": 0.69,
-   "ask": 0.7,
-   "spreadC": 1.0,
-   "spreadPct": 1.43,
+   "bid": 0.73,
+   "ask": 0.75,
+   "spreadC": 2.0,
+   "spreadPct": 2.67,
    "bids": [
     [
+     0.73,
+     75
+    ],
+    [
+     0.72,
+     662
+    ],
+    [
+     0.71,
+     109
+    ],
+    [
+     0.7,
+     260
+    ],
+    [
      0.69,
-     269
+     99
     ],
     [
      0.68,
-     269
-    ],
-    [
-     0.67,
-     812
-    ],
-    [
-     0.66,
-     507
-    ],
-    [
-     0.65,
-     1446
-    ],
-    [
-     0.64,
-     70
+     103
     ]
    ],
    "asks": [
     [
-     0.7,
-     599
-    ],
-    [
-     0.71,
-     231
-    ],
-    [
-     0.72,
-     299
-    ],
-    [
-     0.73,
-     414
-    ],
-    [
-     0.74,
-     1020
-    ],
-    [
      0.75,
-     1430
+     200
+    ],
+    [
+     0.76,
+     60
+    ],
+    [
+     0.77,
+     110
+    ],
+    [
+     0.78,
+     305
+    ],
+    [
+     0.79,
+     473
+    ],
+    [
+     0.8,
+     5083
     ]
    ]
-  },
-  "trades": [
-   {
-    "wallet": "0xc2413167b6b6c041315ae62709abe367ea7e519c",
-    "action": "BUY",
-    "side": "Heroic",
-    "price": 0.6596,
-    "usd": 497,
-    "ts": 1789237774
-   }
-  ]
+  }
  },
  "por-cas-por-2026-09-12": {
   "shares": {
-   "Casa Pia AC": 393.0670187549998,
-   "Draw (Casa Pia AC vs. FC Porto)": 73.09295641999998,
-   "FC Porto": 125621.28465486999
+   "Casa Pia AC": 39.30670187549998,
+   "Draw (Casa Pia AC vs. FC Porto)": 106.31700398399997,
+   "FC Porto": 125557.99937292798
   },
   "prices": {
-   "Casa Pia AC": 0.005,
-   "Draw (Casa Pia AC vs. FC Porto)": 0.0055,
-   "FC Porto": 0.9925
+   "Casa Pia AC": 0.0005,
+   "Draw (Casa Pia AC vs. FC Porto)": 0.008,
+   "FC Porto": 0.992
   },
   "splitGuete": {
    "art": "belastbar",
@@ -10803,33 +10879,29 @@
    {
     "wallet": "0x958e910fa82c5d0f0825710817cf7635ba7cf76a",
     "side": "FC Porto",
-    "usd": 44111,
-    "avgPrice": 0.8214
+    "usd": 44089
    },
    {
     "wallet": "0x413f29bc7f5ce2a2d8d28fb3a8b5d75199d247f3",
     "side": "FC Porto",
-    "usd": 29895,
-    "avgPrice": 0.7906
+    "usd": 29880
    },
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "side": "FC Porto",
-    "usd": 8157,
-    "avgPrice": 0.8187
+    "usd": 8153
    },
    {
     "wallet": "0xac4c55b85a1dcacb638bd63ea4eeb8d8a9352200",
     "side": "FC Porto",
-    "usd": 7961,
-    "avgPrice": 0.81
+    "usd": 7957
    }
   ],
   "league": "PRIMEIRA-LIGA",
   "sport": "Fußball",
   "totalUsd": 298108,
-  "hoursToKickoff": -1.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -1.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "tokens": {
    "Casa Pia AC": "23850649371070922041241628202825288212420995092969396784661423202208484272714",
@@ -10845,41 +10917,53 @@
    "bids": [
     [
      0.99,
-     149
+     129
+    ],
+    [
+     0.989,
+     20
     ],
     [
      0.986,
-     1096
+     47
     ],
     [
      0.985,
-     2011
-    ],
-    [
-     0.984,
-     30
+     1913
     ],
     [
      0.98,
-     3491
+     2624
     ],
     [
-     0.972,
-     65
+     0.975,
+     1873
     ]
    ],
    "asks": [
     [
      0.994,
-     295
+     4
+    ],
+    [
+     0.998,
+     121
     ],
     [
      0.999,
-     3389
+     3462
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x6a00cfa16d476770ce8bfe7b7c2f842bbde04322",
+    "action": "SELL",
+    "side": "Yes",
+    "price": 0.99,
+    "usd": 760,
+    "ts": 1789238659
+   },
    {
     "wallet": "0xbba2df11d89c9016992a2adcc7932d36a61b24fe",
     "action": "SELL",
@@ -10919,14 +11003,6 @@
     "price": 0.9,
     "usd": 643,
     "ts": 1789237716
-   },
-   {
-    "wallet": "0x6a00cfa16d476770ce8bfe7b7c2f842bbde04322",
-    "action": "BUY",
-    "side": "Yes",
-    "price": 0.9134,
-    "usd": 500,
-    "ts": 1789237591
    }
   ]
  },
@@ -10947,45 +11023,51 @@
    {
     "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
     "side": "Nemiga",
-    "usd": 29985,
-    "avgPrice": 0.7697
+    "usd": 29985
    },
    {
     "wallet": "0xdc40c985063d50aa00cc5f637f7e83203b3b89cf",
     "side": "Nemiga",
-    "usd": 7996,
-    "avgPrice": 0.75
+    "usd": 7996
    },
    {
     "wallet": "0xda3a9b7afff7b44ad4fd75308723194e0a11381f",
     "side": "Nemiga",
-    "usd": 7496,
-    "avgPrice": 0.76
+    "usd": 7496
    },
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "side": "Nemiga",
-    "usd": 6720,
-    "avgPrice": 0.7499
+    "usd": 6720
    }
   ],
   "league": "ESPORTS",
   "sport": "E-Sport",
   "totalUsd": 133557,
-  "hoursToKickoff": -1.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -1.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0xb84d96019868b9ae93fe4db7dce829b201fb5c97ccebfffaa1498db7d50c851a",
   "frage": "Counter-Strike: Nemiga vs Just Players (BO3) - CCT Europe Series #8 Playoffs",
   "tokens": {
    "Nemiga": "42291915090605331676780204918579884531068550712603067319219941679514669554669",
    "Just Players": "76810547803236101403223373739995530432617124044909346357306504449919168744379"
-  }
+  },
+  "trades": [
+   {
+    "wallet": "0xc34b4901be324718c176100e350211d97b199296",
+    "action": "SELL",
+    "side": "Nemiga",
+    "price": 0.999,
+    "usd": 350,
+    "ts": 1789238080
+   }
+  ]
  },
  "mlb-col-det-2026-09-12": {
   "shares": {
-   "Colorado Rockies": 34932.20417718498,
-   "Detroit Tigers": 63467.82454580997
+   "Colorado Rockies": 34828.64450834998,
+   "Detroit Tigers": 63282.72831014998
   },
   "prices": {
    "Colorado Rockies": 0.355,
@@ -10999,33 +11081,29 @@
    {
     "wallet": "0xc32359bbc920b365a05cd310b9a998508c980077",
     "side": "Detroit Tigers",
-    "usd": 13317,
-    "avgPrice": 0.6199
+    "usd": 13317
    },
    {
     "wallet": "0x5e9458202b5817a72cf81105ec8a30e6f3705ba1",
     "side": "Colorado Rockies",
-    "usd": 12016,
-    "avgPrice": 0.3919
+    "usd": 12016
    },
    {
     "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
     "side": "Detroit Tigers",
-    "usd": 11562,
-    "avgPrice": 0.6101
+    "usd": 11562
    },
    {
     "wallet": "0x1610db79f753a80207e1d66716be9e91e627ae49",
     "side": "Detroit Tigers",
-    "usd": 8450,
-    "avgPrice": 0.3799
+    "usd": 8450
    }
   ],
   "league": "MLB",
   "sport": "US-Sport",
   "totalUsd": 146290,
-  "hoursToKickoff": -1.55,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -1.65,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0x923c5ee08d25025640b5acb89cfd94a8b179b6eed86574440642fbaff60c303d",
   "frage": "Colorado Rockies vs. Detroit Tigers",
@@ -11035,60 +11113,60 @@
   },
   "book": {
    "side": "Detroit Tigers",
-   "bid": 0.8,
-   "ask": 0.81,
+   "bid": 0.58,
+   "ask": 0.59,
    "spreadC": 1.0,
-   "spreadPct": 1.23,
+   "spreadPct": 1.69,
    "bids": [
     [
-     0.8,
-     11338
+     0.58,
+     48795
     ],
     [
-     0.79,
-     9169
+     0.57,
+     30146
     ],
     [
-     0.78,
-     532
+     0.56,
+     5575
     ],
     [
-     0.76,
-     2075
+     0.55,
+     11592
     ],
     [
-     0.75,
-     25
+     0.54,
+     10166
     ],
     [
-     0.65,
-     200
+     0.53,
+     10
     ]
    ],
    "asks": [
     [
-     0.81,
-     190
+     0.59,
+     17427
     ],
     [
-     0.82,
-     31154
+     0.6,
+     24103
     ],
     [
-     0.83,
-     351
+     0.61,
+     11640
     ],
     [
-     0.85,
-     55
+     0.62,
+     213
     ],
     [
-     0.86,
-     100
+     0.63,
+     7550
     ],
     [
-     0.87,
-     7505
+     0.64,
+     2005
     ]
    ]
   },
@@ -11108,35 +11186,19 @@
     "price": 0.48,
     "usd": 718,
     "ts": 1789238247
-   },
-   {
-    "wallet": "0xc0e4f49b80a2162aa8c1c1ad1bd0867574e3dd38",
-    "action": "BUY",
-    "side": "Colorado Rockies",
-    "price": 0.4631,
-    "usd": 800,
-    "ts": 1789238064
-   },
-   {
-    "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
-    "action": "BUY",
-    "side": "Colorado Rockies",
-    "price": 0.45,
-    "usd": 970,
-    "ts": 1789237983
    }
   ]
  },
  "sui-lug-yb-2026-09-12": {
   "shares": {
-   "FC Lugano": 14799.096129819995,
-   "Draw (FC Lugano vs. Young Boys Bern)": 1.766232,
-   "Young Boys Bern": 1340.3224456
+   "FC Lugano": 10446.420797519995,
+   "Draw (FC Lugano vs. Young Boys Bern)": 953.2759618850001,
+   "Young Boys Bern": 422.5757642499999
   },
   "prices": {
-   "FC Lugano": 0.17,
-   "Draw (FC Lugano vs. Young Boys Bern)": 0.68,
-   "Young Boys Bern": 0.16
+   "FC Lugano": 0.12,
+   "Draw (FC Lugano vs. Young Boys Bern)": 0.845,
+   "Young Boys Bern": 0.05
   },
   "splitGuete": {
    "art": "belastbar",
@@ -11146,33 +11208,29 @@
    {
     "wallet": "0xb52e8b3afd9f0f0d502a5a76494b42816d67285c",
     "side": "FC Lugano",
-    "usd": 14468,
-    "avgPrice": 0.4641
+    "usd": 10213
+   },
+   {
+    "wallet": "0x78e134b50ebce53898ae552c075d83202f327337",
+    "side": "Draw (FC Lugano vs. Young Boys Bern)",
+    "usd": 704
    },
    {
     "wallet": "0x2d1ffae8d41b181d1b1734016e07bd1a903a5246",
     "side": "Young Boys Bern",
-    "usd": 533,
-    "avgPrice": 0.32
+    "usd": 167
    },
    {
     "wallet": "0x1f624696c102b99bea92c75a502fa7e4a6d676f6",
     "side": "Young Boys Bern",
-    "usd": 322,
-    "avgPrice": 0.3546
-   },
-   {
-    "wallet": "0xb341ba2981305703de87e7ab996258f7c074bb28",
-    "side": "Young Boys Bern",
-    "usd": 112,
-    "avgPrice": 0.32
+    "usd": 101
    }
   ],
   "league": "SWITZERLAND-SUPER-LEAGUE",
   "sport": "Fußball",
   "totalUsd": 102901,
-  "hoursToKickoff": -1.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -1.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "tokens": {
    "FC Lugano": "55670855089090491488193869127240483520577730573242477856664306353721550820189",
@@ -11197,33 +11255,29 @@
    {
     "wallet": "0xf5fe759cece500f58a431ef8dacea321f6e3e23d",
     "side": "Alana Smith",
-    "usd": 8431,
-    "avgPrice": 0.45
+    "usd": 8431
    },
    {
     "wallet": "0xbc43c8bfbc4d77c2fc9011adad38ba43b88996d3",
     "side": "Anastasia Tikhonova",
-    "usd": 5050,
-    "avgPrice": 0.61
+    "usd": 5050
    },
    {
     "wallet": "0x056c3c1d6b90f764bd1f6c47fdaf7380619ca69a",
     "side": "Alana Smith",
-    "usd": 4960,
-    "avgPrice": 0.3899
+    "usd": 4960
    },
    {
     "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
     "side": "Anastasia Tikhonova",
-    "usd": 2810,
-    "avgPrice": 0.5752
+    "usd": 2810
    }
   ],
   "league": "TENNIS",
   "sport": "Tennis",
   "totalUsd": 42120,
-  "hoursToKickoff": -1.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -1.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0x7d8b2d34ae12694c748a5a48ea950ff5b2ae0d2d650bd15fd850fe683245922f",
   "frage": "Sao Paulo Open, Qualification: Alana Smith vs Anastasia Tikhonova",
@@ -11234,12 +11288,12 @@
  },
  "atp-munar-acosta-2026-09-12": {
   "shares": {
-   "Jaume Munar": 40272.97826097498,
-   "Facundo Acosta": 37148.24802467499
+   "Jaume Munar": 51134.036115239986,
+   "Facundo Acosta": 36274.17160056499
   },
   "prices": {
-   "Jaume Munar": 0.575,
-   "Facundo Acosta": 0.425
+   "Jaume Munar": 0.585,
+   "Facundo Acosta": 0.415
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -11247,41 +11301,131 @@
   },
   "whales": [
    {
-    "wallet": "0x75f204b39709544f763ca68c2e3f4a60a309ff6d",
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
     "side": "Jaume Munar",
-    "usd": 10561,
-    "avgPrice": 0.5444
+    "usd": 12542
    },
    {
-    "wallet": "0x45e40dbee6f546c7b318498f8c9778560f5a7e20",
-    "side": "Facundo Acosta",
-    "usd": 6507,
-    "avgPrice": 0.5097
+    "wallet": "0x75f204b39709544f763ca68c2e3f4a60a309ff6d",
+    "side": "Jaume Munar",
+    "usd": 10744
    },
    {
     "wallet": "0x713b63e4eccb6644aeaae4077c69a6b5e07eee60",
     "side": "Jaume Munar",
-    "usd": 6464,
-    "avgPrice": 0.5248
+    "usd": 6576
    },
    {
-    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
-    "side": "Jaume Munar",
-    "usd": 6163
+    "wallet": "0x45e40dbee6f546c7b318498f8c9778560f5a7e20",
+    "side": "Facundo Acosta",
+    "usd": 6354
    }
   ],
   "league": "TENNIS",
   "sport": "Tennis",
   "totalUsd": 127238,
-  "hoursToKickoff": -1.63,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -1.74,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0x30cd51edd15c2d13e1c985caf6cc18a8a83e354798ec573bbdd82cfbc9bd6a64",
   "frage": "Seville: Jaume Munar vs Facundo Acosta",
   "tokens": {
    "Jaume Munar": "13550966349804012701213385323565964132523823795164486565658328012631003755987",
    "Facundo Acosta": "109958749266379392780834567030576876470638242845256069855417098931286401117917"
-  }
+  },
+  "book": {
+   "side": "Jaume Munar",
+   "bid": 0.56,
+   "ask": 0.57,
+   "spreadC": 1.0,
+   "spreadPct": 1.75,
+   "bids": [
+    [
+     0.56,
+     17766
+    ],
+    [
+     0.55,
+     23489
+    ],
+    [
+     0.54,
+     874
+    ],
+    [
+     0.53,
+     6162
+    ],
+    [
+     0.52,
+     3735
+    ],
+    [
+     0.51,
+     255
+    ]
+   ],
+   "asks": [
+    [
+     0.57,
+     28
+    ],
+    [
+     0.58,
+     13941
+    ],
+    [
+     0.59,
+     21215
+    ],
+    [
+     0.6,
+     17288
+    ],
+    [
+     0.61,
+     359
+    ],
+    [
+     0.62,
+     1197
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "action": "BUY",
+    "side": "Jaume Munar",
+    "price": 0.58,
+    "usd": 375,
+    "ts": 1789238737
+   },
+   {
+    "wallet": "0xef292327dc97299c63f30e998614740d9a852f1e",
+    "action": "BUY",
+    "side": "Jaume Munar",
+    "price": 0.63,
+    "usd": 500,
+    "ts": 1789238367
+   },
+   {
+    "wallet": "0xef292327dc97299c63f30e998614740d9a852f1e",
+    "action": "BUY",
+    "side": "Jaume Munar",
+    "price": 0.7,
+    "usd": 500,
+    "ts": 1789238322
+   },
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "action": "BUY",
+    "side": "Jaume Munar",
+    "price": 0.77,
+    "usd": 1565,
+    "ts": 1789238077
+   }
+  ]
  },
  "sui-thu-gcz-2026-09-12": {
   "shares": {},
@@ -11298,8 +11442,8 @@
   "league": "SOCCER",
   "sport": "Fußball",
   "totalUsd": 24538,
-  "hoursToKickoff": -2.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -2.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "tokens": {
    "FC Thun": "39565423848031396524729508412459499008424339157478393486112628231280863389577",
@@ -11309,12 +11453,12 @@
  },
  "dota2-huliga-ks-2026-09-12": {
   "shares": {
-   "HULIGANI": 874.6987944800005,
-   "Klim Sani4": 24116.893925695
+   "HULIGANI": 4.470042361999999,
+   "Klim Sani4": 8935.4066287165
   },
   "prices": {
-   "HULIGANI": 0.035,
-   "Klim Sani4": 0.965
+   "HULIGANI": 0.0005,
+   "Klim Sani4": 0.9995
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -11322,48 +11466,78 @@
   },
   "whales": [
    {
-    "wallet": "0x9055a9e36aa73274e3a92dc2dbb081bb4d9e756a",
-    "side": "Klim Sani4",
-    "usd": 6686,
-    "avgPrice": 0.9891
-   },
-   {
     "wallet": "0xe23b8c541afbe1a3f06734a569207e7243ae7c42",
     "side": "Klim Sani4",
-    "usd": 6101,
-    "avgPrice": 0.6599
+    "usd": 6319
    },
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "Klim Sani4",
-    "usd": 3732,
-    "avgPrice": 0.652
+    "usd": 1398
    },
    {
-    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "wallet": "0x7e5972bfc25819775ee5a9d4f191919375487b8b",
     "side": "Klim Sani4",
-    "usd": 1579,
-    "avgPrice": 0.8316
+    "usd": 247
+   },
+   {
+    "wallet": "0x1cb5a68d8c9b1e999acb9f034dacd54bcd056be6",
+    "side": "Klim Sani4",
+    "usd": 171
    }
   ],
   "league": "ESPORTS",
   "sport": "E-Sport",
   "totalUsd": 20565,
-  "hoursToKickoff": -1.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -1.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0x2e8580614ff71b1f7db868acc2b5e60faf0657a198d13ff2f606b3fb155cf50a",
   "frage": "Dota 2: HULIGANI vs Klim Sani4 (BO3) - BLAST Slam Europe Closed Qualifier Playoffs",
   "tokens": {
    "HULIGANI": "35115492285388212872313703316645004327518443870871408880257534177924253639740",
    "Klim Sani4": "85444196319781314829382233710837582752096972243055651752078719066180153969087"
-  }
+  },
+  "trades": [
+   {
+    "wallet": "0x9055a9e36aa73274e3a92dc2dbb081bb4d9e756a",
+    "action": "BUY",
+    "side": "Klim Sani4",
+    "price": 0.9966,
+    "usd": 2933,
+    "ts": 1789238656
+   },
+   {
+    "wallet": "0x9055a9e36aa73274e3a92dc2dbb081bb4d9e756a",
+    "action": "BUY",
+    "side": "Klim Sani4",
+    "price": 0.9881,
+    "usd": 2933,
+    "ts": 1789238601
+   },
+   {
+    "wallet": "0x9055a9e36aa73274e3a92dc2dbb081bb4d9e756a",
+    "action": "BUY",
+    "side": "Klim Sani4",
+    "price": 0.97,
+    "usd": 317,
+    "ts": 1789238028
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "action": "BUY",
+    "side": "Klim Sani4",
+    "price": 0.8728,
+    "usd": 952,
+    "ts": 1789236373
+   }
+  ]
  },
  "lol-vlr-tp2-2026-09-12": {
   "shares": {},
   "prices": {
-   "Valerion": 0.815,
-   "Team Phantasma": 0.185
+   "Valerion": 0.885,
+   "Team Phantasma": 0.115
   },
   "splitGuete": {
    "art": "leer",
@@ -11373,8 +11547,8 @@
   "league": "ESPORTS",
   "sport": "E-Sport",
   "totalUsd": 11034,
-  "hoursToKickoff": -2.63,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -2.74,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0x986c55c827fd127fbc381b97929aa05d868f12df35b74fa37bcfb72bc7065308",
   "frage": "LoL: Valerion vs Team Phantasma (BO5) - HLL Playoffs",
@@ -11395,11 +11569,11 @@
    "trunc": null
   },
   "whales": [],
-  "league": "LA-LIGA",
+  "league": "SOCCER",
   "sport": "Fußball",
   "totalUsd": 28828,
-  "hoursToKickoff": -2.21,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -2.32,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "tokens": {
    "Athletic Club": "110923865413904747994675070556848386904488585378353805276142549135581190481537",
@@ -11422,8 +11596,8 @@
   "league": "SOCCER",
   "sport": "Fußball",
   "totalUsd": 12405,
-  "hoursToKickoff": -2.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -2.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "tokens": {
    "FC St. Gallen 1879": "4812361600067239315215151533270235701566233685576410298518055541864380392648",
@@ -11433,12 +11607,12 @@
  },
  "mlb-nym-nyy-2026-09-12": {
   "shares": {
-   "New York Mets": 76426.89276335998,
-   "New York Yankees": 22792.471128954985
+   "New York Mets": 109072.04005146,
+   "New York Yankees": 14173.143537724993
   },
   "prices": {
-   "New York Mets": 0.815,
-   "New York Yankees": 0.185
+   "New York Mets": 0.885,
+   "New York Yankees": 0.115
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -11446,40 +11620,131 @@
   },
   "whales": [
    {
-    "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
-    "side": "New York Mets",
-    "usd": 18697,
-    "avgPrice": 0.3925
-   },
-   {
     "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
     "side": "New York Mets",
-    "usd": 15307
+    "usd": 29329
    },
    {
-    "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
+    "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
     "side": "New York Mets",
-    "usd": 12947
+    "usd": 16968
    },
    {
     "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
     "side": "New York Mets",
-    "usd": 6932,
-    "avgPrice": 0.7231
+    "usd": 14800
+   },
+   {
+    "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
+    "side": "New York Mets",
+    "usd": 14059
    }
   ],
   "league": "MLB",
   "sport": "US-Sport",
   "totalUsd": 156125,
-  "hoursToKickoff": -1.13,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -1.24,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0x3df48fcdd5d1760ba588b50789974229b0fc82084e3b5233f2ff428ae448788d",
   "frage": "New York Mets vs. New York Yankees",
   "tokens": {
    "New York Mets": "27396431320765705545568208303833576649052342012892990210059387831446878892095",
    "New York Yankees": "51519290738735694002445331018952840749075195808217071369921245454565446857518"
-  }
+  },
+  "book": {
+   "side": "New York Mets",
+   "bid": 0.86,
+   "ask": 0.87,
+   "spreadC": 1.0,
+   "spreadPct": 1.15,
+   "bids": [
+    [
+     0.86,
+     19115
+    ],
+    [
+     0.85,
+     71617
+    ],
+    [
+     0.84,
+     4254
+    ],
+    [
+     0.83,
+     2100
+    ],
+    [
+     0.82,
+     10
+    ],
+    [
+     0.81,
+     1656
+    ]
+   ],
+   "asks": [
+    [
+     0.87,
+     59379
+    ],
+    [
+     0.88,
+     25205
+    ],
+    [
+     0.89,
+     3261
+    ],
+    [
+     0.9,
+     2195
+    ],
+    [
+     0.91,
+     7510
+    ],
+    [
+     0.92,
+     3656
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xc0e4f49b80a2162aa8c1c1ad1bd0867574e3dd38",
+    "action": "SELL",
+    "side": "New York Mets",
+    "price": 0.8633,
+    "usd": 681,
+    "ts": 1789238967
+   },
+   {
+    "wallet": "0xc0e4f49b80a2162aa8c1c1ad1bd0867574e3dd38",
+    "action": "SELL",
+    "side": "New York Mets",
+    "price": 0.86,
+    "usd": 1000,
+    "ts": 1789238967
+   },
+   {
+    "wallet": "0xc0e4f49b80a2162aa8c1c1ad1bd0867574e3dd38",
+    "action": "BUY",
+    "side": "New York Mets",
+    "price": 0.8499,
+    "usd": 1659,
+    "ts": 1789238667
+   },
+   {
+    "wallet": "0xbca08c1bc204a34f2fddbe47b438b9bd42ac9705",
+    "action": "BUY",
+    "side": "New York Mets",
+    "price": 0.84,
+    "usd": 608,
+    "ts": 1789238641
+   }
+  ]
  },
  "itsb-cat-car-2026-09-12-more-markets": {
   "shares": {},
@@ -11519,8 +11784,8 @@
   "league": "SOCCER",
   "sport": "Fußball",
   "totalUsd": 12390,
-  "hoursToKickoff": -2.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -2.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0xb9c279ea93ea7c6f0e0b99471cf881f97388358d91e339368d8b1e11696c79b3",
   "frage": "Rosenborg BK vs. Tromsø IL: O/U 5.5",
@@ -11532,9 +11797,9 @@
  "itsb-ces-cre-2026-09-12": {
   "shares": {},
   "prices": {
-   "Cesena FC": 0.575,
-   "Draw (Cesena FC vs. US Cremonese)": 0.285,
-   "US Cremonese": 0.135
+   "Cesena FC": 0.74,
+   "Draw (Cesena FC vs. US Cremonese)": 0.205,
+   "US Cremonese": 0.155
   },
   "splitGuete": {
    "art": "leer",
@@ -11544,8 +11809,8 @@
   "league": "SERIE-B",
   "sport": "Fußball",
   "totalUsd": 14073,
-  "hoursToKickoff": -1.21,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -1.32,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "tokens": {
    "Cesena FC": "113420860438086249772313671442242596155692342673992171080040260100306752799596",
@@ -11557,8 +11822,8 @@
   "shares": {},
   "prices": {
    "Wolfsberger AC": 0.0075,
-   "Draw (Wolfsberger AC vs. SK Rapid)": 0.038,
-   "SK Rapid": 0.495
+   "Draw (Wolfsberger AC vs. SK Rapid)": 0.033,
+   "SK Rapid": 0.515
   },
   "splitGuete": {
    "art": "leer",
@@ -11568,8 +11833,8 @@
   "league": "AUSTRIA-BUNDESLIGA",
   "sport": "Fußball",
   "totalUsd": 10226,
-  "hoursToKickoff": -1.21,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -1.32,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "tokens": {
    "Wolfsberger AC": "112089023824600174880769712441418563318657784899300437894027022032987533558504",
@@ -11579,7 +11844,7 @@
  },
  "cfb-arzst-txam-2026-09-12": {
   "shares": {
-   "Arizona State": 21125.645616375004,
+   "Arizona State": 21821.949884125002,
    "Texas A&M": 152752.88931962493
   },
   "prices": {
@@ -11594,33 +11859,29 @@
    {
     "wallet": "0x7a75a4183e577123db9ff0adff520561ef95d288",
     "side": "Texas A&M",
-    "usd": 72450,
-    "avgPrice": 0.8996
+    "usd": 72450
    },
    {
     "wallet": "0xd1049158a102840ce595efc6ab683a0cb6fbacef",
     "side": "Texas A&M",
-    "usd": 42519,
-    "avgPrice": 0.839
+    "usd": 42519
    },
    {
     "wallet": "0x224a89dbe0db0d6124b335edabd15b3f877da3d5",
     "side": "Arizona State",
-    "usd": 16922,
-    "avgPrice": 0.122
+    "usd": 16259
    },
    {
     "wallet": "0xa38a455bbdd4b68486548b7e19da99903f4f821d",
     "side": "Texas A&M",
-    "usd": 7509,
-    "avgPrice": 0.8305
+    "usd": 7509
    }
   ],
   "league": "CFB",
   "sport": null,
   "totalUsd": 247874,
-  "hoursToKickoff": -2.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -2.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0x9e44556256721d77e5208593e46632cf4d9f771ba0d3bc4e91c1aa41cf1ce16b",
   "frage": "Arizona State vs. Texas A&M",
@@ -11630,56 +11891,60 @@
   },
   "book": {
    "side": "Texas A&M",
-   "bid": 0.93,
-   "ask": 0.95,
-   "spreadC": 2.0,
-   "spreadPct": 2.11,
+   "bid": 0.92,
+   "ask": 0.93,
+   "spreadC": 1.0,
+   "spreadPct": 1.08,
    "bids": [
     [
-     0.93,
-     3797
-    ],
-    [
      0.92,
-     8870
+     6618
     ],
     [
      0.91,
-     13582
+     49988
     ],
     [
      0.9,
-     8905
+     24006
     ],
     [
      0.89,
-     2953
+     8985
     ],
     [
      0.88,
-     3600
+     3650
+    ],
+    [
+     0.87,
+     2289
     ]
    ],
    "asks": [
     [
+     0.93,
+     10663
+    ],
+    [
+     0.94,
+     2954
+    ],
+    [
      0.95,
-     4873
+     14295
     ],
     [
      0.96,
-     15535
+     8600
     ],
     [
      0.97,
-     9400
+     1974
     ],
     [
      0.98,
-     3880
-    ],
-    [
-     0.99,
-     2172
+     10463
     ]
    ]
   },
@@ -11720,12 +11985,12 @@
  },
  "ufc-jrosas-seakin-2026-09-12": {
   "shares": {
-   "Jessie Rosas": 19145.554244700015,
-   "Sean King": 96903.72099787502
+   "Jessie Rosas": 71.78100260799997,
+   "Sean King": 143489.25461843205
   },
   "prices": {
-   "Jessie Rosas": 0.325,
-   "Sean King": 0.675
+   "Jessie Rosas": 0.0005,
+   "Sean King": 0.9995
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -11735,39 +12000,94 @@
    {
     "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
     "side": "Sean King",
-    "usd": 20714
+    "usd": 30671
    },
    {
     "wallet": "0x9f2fe025f84839ca81dd8e0338892605702d2ca8",
     "side": "Sean King",
-    "usd": 16875,
-    "avgPrice": 0.6699
+    "usd": 24988
    },
    {
     "wallet": "0xb7271c112cbd83eb4c1ef1b554ff963604ae2a9d",
     "side": "Sean King",
-    "usd": 12150,
-    "avgPrice": 0.67
+    "usd": 17991
    },
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
     "side": "Sean King",
-    "usd": 10674,
-    "avgPrice": 0.6516
+    "usd": 15805
    }
   ],
   "league": "UFC",
   "sport": "Kampfsport",
   "totalUsd": 159207,
-  "hoursToKickoff": -0.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -0.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0xdb0f1110bafbef40a11271027851d0f6d6add6475d9da9a8bce51ca93c1c5d20",
   "frage": "Noche UFC: Jessie Rosas vs. Sean King (Featherweight, Prelims)",
   "tokens": {
    "Jessie Rosas": "31428847939242447453583269763158312125557292606051571316000339609404985468115",
    "Sean King": "100915743152289206236914452500815122612364973876584139245984403994043142575293"
-  }
+  },
+  "trades": [
+   {
+    "wallet": "0xb75b589998c15d1e7999d188cff84d08d844e377",
+    "action": "SELL",
+    "side": "Sean King",
+    "price": 0.999,
+    "usd": 749,
+    "ts": 1789238802
+   },
+   {
+    "wallet": "0x151e09b311f6de846994678a6ca7afeb2ab9cede",
+    "action": "BUY",
+    "side": "Sean King",
+    "price": 0.68,
+    "usd": 2435,
+    "ts": 1789238613
+   },
+   {
+    "wallet": "0x412fe1a101554f0b382181c3af932e4b2d8030fa",
+    "action": "BUY",
+    "side": "Jessie Rosas",
+    "price": 0.33,
+    "usd": 410,
+    "ts": 1789238539
+   },
+   {
+    "wallet": "0x412fe1a101554f0b382181c3af932e4b2d8030fa",
+    "action": "BUY",
+    "side": "Jessie Rosas",
+    "price": 0.33,
+    "usd": 4439,
+    "ts": 1789238527
+   },
+   {
+    "wallet": "0x1bc8b6519eb646dab62ac7be5b55920f5bb72f68",
+    "action": "BUY",
+    "side": "Jessie Rosas",
+    "price": 0.33,
+    "usd": 3442,
+    "ts": 1789238503
+   },
+   {
+    "wallet": "0x39d3c773be30fcc73161fc6768f46d563a779ef0",
+    "action": "BUY",
+    "side": "Jessie Rosas",
+    "price": 0.33,
+    "usd": 2454,
+    "ts": 1789238467
+   },
+   {
+    "wallet": "0x39d3c773be30fcc73161fc6768f46d563a779ef0",
+    "action": "BUY",
+    "side": "Jessie Rosas",
+    "price": 0.33,
+    "usd": 2478,
+    "ts": 1789238407
+   }
+  ]
  },
  "ufc-jea-jos55-2026-09-12": {
   "shares": {
@@ -11786,8 +12106,7 @@
    {
     "wallet": "0x1f64aefec94b99491def6bc0adfa061ba3f23633",
     "side": "Jean Silva",
-    "usd": 3040,
-    "avgPrice": 0.7798
+    "usd": 3040
    },
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
@@ -11797,21 +12116,19 @@
    {
     "wallet": "0x6dd6314d1670f9f1ccccbd6746b0bf2f2fa0f5f4",
     "side": "Jean Silva",
-    "usd": 1490,
-    "avgPrice": 0.7707
+    "usd": 1490
    },
    {
     "wallet": "0x448861155279dbf833d041b963e3ac854599e319",
     "side": "Jose Miguel Delgado",
-    "usd": 1191,
-    "avgPrice": 0.2199
+    "usd": 1191
    }
   ],
   "league": "UFC",
   "sport": "Kampfsport",
   "totalUsd": 21698,
-  "hoursToKickoff": -0.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -0.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0x72041a4e8cdb8539f0c037d4fdf1c7588e0b1590a2b4761a9c3c10889a206922",
   "frage": "Noche UFC: Jean Silva vs. Jose Miguel Delgado (Featherweight, Main Card)",
@@ -11823,7 +12140,7 @@
  "ufc-dan2-dav32-2026-09-12": {
   "shares": {
    "Dan Ige": 4484.362416795,
-   "David Martinez": 16373.148727854998
+   "David Martinez": 16376.716910030003
   },
   "prices": {
    "Dan Ige": 0.215,
@@ -11837,8 +12154,7 @@
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "David Martinez",
-    "usd": 4974,
-    "avgPrice": 0.7899
+    "usd": 4977
    },
    {
     "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
@@ -11848,21 +12164,19 @@
    {
     "wallet": "0x4bff30af91642dc7d2b19a8664378fe55c45fc26",
     "side": "Dan Ige",
-    "usd": 3042,
-    "avgPrice": 0.2099
+    "usd": 3042
    },
    {
     "wallet": "0x1f64aefec94b99491def6bc0adfa061ba3f23633",
     "side": "David Martinez",
-    "usd": 2257,
-    "avgPrice": 0.79
+    "usd": 2257
    }
   ],
   "league": "UFC",
   "sport": "Kampfsport",
   "totalUsd": 22929,
-  "hoursToKickoff": -0.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -0.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0x4666caf3fb8132efd21320b0d9ba6238034664d45183283e3086cc39cbd8b3cb",
   "frage": "Noche UFC: Dan Ige vs. David Martinez (Bantamweight, Main Card)",
@@ -11888,20 +12202,17 @@
    {
     "wallet": "0x2256478bb9bfe635465fcc31e3c413e8641d0386",
     "side": "Ignacio Bahamondes",
-    "usd": 9901,
-    "avgPrice": 0.8099
+    "usd": 9901
    },
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "Ignacio Bahamondes",
-    "usd": 7867,
-    "avgPrice": 0.8067
+    "usd": 7867
    },
    {
     "wallet": "0xed107a85a4585a381e48c7f7ca4144909e7dd2e5",
     "side": "Ignacio Bahamondes",
-    "usd": 6187,
-    "avgPrice": 0.82
+    "usd": 6187
    },
    {
     "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
@@ -11912,8 +12223,8 @@
   "league": "UFC",
   "sport": "Kampfsport",
   "totalUsd": 45569,
-  "hoursToKickoff": -0.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -0.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0x7a4e310199b0533f4a0caaca215a7260771febd093060fcab9e4774ac30d7561",
   "frage": "Noche UFC: Muslim Salikhov vs. Ignacio Bahamondes (Welterweight, Prelims)",
@@ -11939,33 +12250,29 @@
    {
     "wallet": "0x224a89dbe0db0d6124b335edabd15b3f877da3d5",
     "side": "Tommy McMillen",
-    "usd": 8337,
-    "avgPrice": 0.5974
+    "usd": 8337
    },
    {
     "wallet": "0x5c27aa8edf662d06b625925f82ff0d2f4fc4bdb0",
     "side": "Marwan Rahiki",
-    "usd": 4344,
-    "avgPrice": 0.4039
+    "usd": 4344
    },
    {
     "wallet": "0xb31e41965df4ab8014de4c4d8da9deff0a6ac120",
     "side": "Marwan Rahiki",
-    "usd": 3950,
-    "avgPrice": 0.3999
+    "usd": 3950
    },
    {
     "wallet": "0xa4ce6bc630da3c0e57ffbc6a0d2540b2f97602b2",
     "side": "Tommy McMillen",
-    "usd": 3043,
-    "avgPrice": 0.5963
+    "usd": 3043
    }
   ],
   "league": "UFC",
   "sport": "Kampfsport",
   "totalUsd": 61277,
-  "hoursToKickoff": -0.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -0.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0x31b35ceeafdeb30537d9c3b74d66414f758d3eda2b216d2d3f734f3dba631f7b",
   "frage": "Noche UFC: Tommy McMillen vs. Marwan Rahiki (Featherweight, Main Card)",
@@ -12030,7 +12337,7 @@
  "ufc-raf3-ron2-2026-09-12": {
   "shares": {
    "Rafa Garcia": 22240.757874334988,
-   "Rongzhu": 31351.37688364501
+   "Rongzhu": 33671.837225520016
   },
   "prices": {
    "Rafa Garcia": 0.415,
@@ -12044,33 +12351,29 @@
    {
     "wallet": "0xa71093cafc0c099b4ccab24c3cb8018d817923c4",
     "side": "Rafa Garcia",
-    "usd": 8027,
-    "avgPrice": 0.4099
+    "usd": 8027
    },
    {
     "wallet": "0xc6ce4a5b5881c1e3ba74c221f0457a794734fc99",
     "side": "Rongzhu",
-    "usd": 6445,
-    "avgPrice": 0.59
+    "usd": 6445
    },
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "Rongzhu",
-    "usd": 6051,
-    "avgPrice": 0.58
+    "usd": 6156
    },
    {
     "wallet": "0x414bbcb59f01777d6c95a18bafb35d14a6618008",
     "side": "Rongzhu",
-    "usd": 4898,
-    "avgPrice": 0.5899
+    "usd": 4898
    }
   ],
   "league": "UFC",
   "sport": "Kampfsport",
   "totalUsd": 63034,
-  "hoursToKickoff": -0.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -0.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0xe4a79f03ddbb62c329a0cb507b31b0e670e6e8bb145cb953deb4bd3008720bd5",
   "frage": "Noche UFC: Rafa Garcia vs. Rongzhu (Lightweight, Prelims)",
@@ -12080,47 +12383,21 @@
   }
  },
  "ufc-ale17-man3-2026-09-12": {
-  "shares": {
-   "Alexa Grasso": 9114.838030620002,
-   "Manon Fiorot": 21782.686138634992
-  },
+  "shares": {},
   "prices": {
    "Alexa Grasso": 0.295,
    "Manon Fiorot": 0.705
   },
   "splitGuete": {
-   "art": "preis_echo",
-   "trunc": false
+   "art": "leer",
+   "trunc": null
   },
-  "whales": [
-   {
-    "wallet": "0xe8c4d68aff65b38cac46987b9b65e01eb47d395d",
-    "side": "Manon Fiorot",
-    "usd": 5445
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "side": "Alexa Grasso",
-    "usd": 4981,
-    "avgPrice": 0.3076
-   },
-   {
-    "wallet": "0xb7aba0e44edb6773c3b3a8308aae8a24781fa2d1",
-    "side": "Manon Fiorot",
-    "usd": 4442
-   },
-   {
-    "wallet": "0x448861155279dbf833d041b963e3ac854599e319",
-    "side": "Manon Fiorot",
-    "usd": 3389,
-    "avgPrice": 0.7051
-   }
-  ],
+  "whales": [],
   "league": "UFC",
   "sport": "Kampfsport",
   "totalUsd": 41514,
-  "hoursToKickoff": -0.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -0.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0xc8496d4cc3d616c6a876982a836579c7b9dc70930fa0e9aef7f4d46d296531b4",
   "frage": "Noche UFC: Alexa Grasso vs. Manon Fiorot (Women's Flyweight, Main Card)",
@@ -12131,14 +12408,14 @@
  },
  "spl-kha-nsr-2026-09-12": {
   "shares": {
-   "Al Khaleej Saudi Club": 858.6850804200004,
-   "Draw (Al Khaleej Saudi Club vs. Al Nassr Saudi Club)": 1019.517096,
-   "Al Nassr Saudi Club": 11241.894629449995
+   "Al Khaleej Saudi Club": 3724.6150641599997,
+   "Draw (Al Khaleej Saudi Club vs. Al Nassr Saudi Club)": 1223.4205152,
+   "Al Nassr Saudi Club": 13199.491468799986
   },
   "prices": {
-   "Al Khaleej Saudi Club": 0.09,
-   "Draw (Al Khaleej Saudi Club vs. Al Nassr Saudi Club)": 0.25,
-   "Al Nassr Saudi Club": 0.635
+   "Al Khaleej Saudi Club": 0.36,
+   "Draw (Al Khaleej Saudi Club vs. Al Nassr Saudi Club)": 0.3,
+   "Al Nassr Saudi Club": 0.35
   },
   "splitGuete": {
    "art": "belastbar",
@@ -12146,35 +12423,31 @@
   },
   "whales": [
    {
+    "wallet": "0x9026f0c0490bc8d7faf9f5d5bbc329f80fcb9b07",
+    "side": "Al Nassr Saudi Club",
+    "usd": 1836
+   },
+   {
+    "wallet": "0x5016c48436ab3efa2ab54b117d0c08fa1a4a1eeb",
+    "side": "Al Nassr Saudi Club",
+    "usd": 1131
+   },
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Draw (Al Khaleej Saudi Club vs. Al Nassr Saudi Club)",
+    "usd": 939
+   },
+   {
     "wallet": "0x6055af2b735b5840988c2d1025c74981dd2c5fde",
     "side": "Al Nassr Saudi Club",
-    "usd": 1649,
-    "avgPrice": 0.7699
-   },
-   {
-    "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
-    "side": "Al Nassr Saudi Club",
-    "usd": 1518,
-    "avgPrice": 0.76
-   },
-   {
-    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
-    "side": "Al Nassr Saudi Club",
-    "usd": 1269,
-    "avgPrice": 0.7699
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "side": "Al Nassr Saudi Club",
-    "usd": 1032,
-    "avgPrice": 0.7651
+    "usd": 909
    }
   ],
   "league": "SAUDI-PROFESSIONAL-LEAGUE",
   "sport": "Fußball",
   "totalUsd": 50499,
-  "hoursToKickoff": -0.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -0.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "tokens": {
    "Al Khaleej Saudi Club": "42331826338285429351128906205975314992636671977643648946762217878700151178002",
@@ -12196,8 +12469,8 @@
   "league": "UFC",
   "sport": "Kampfsport",
   "totalUsd": 35676,
-  "hoursToKickoff": -0.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -0.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0x35d39e0c6a5ccccb8ec6d4a6e7e88edad94c3c125acf83fe259926bc2c45a06a",
   "frage": "Noche UFC: Curtis Blaydes vs. Waldo Cortes Acosta (Heavyweight, Main Card)",
@@ -12220,8 +12493,8 @@
   "league": "UFC",
   "sport": "Kampfsport",
   "totalUsd": 36070,
-  "hoursToKickoff": -0.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -0.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0x0845fcf526dc4b9e3634a28f3d7e7c16bafddbac441073251b65efa90306903a",
   "frage": "Noche UFC: Brandon Moreno vs. Joseph Morales (Flyweight, Main Card)",
@@ -12244,8 +12517,8 @@
   "league": "UFC",
   "sport": "Kampfsport",
   "totalUsd": 26077,
-  "hoursToKickoff": -0.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -0.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0xf7f468ff37dd03c97dd4e6d70c73936195c69e5e73fc628250dc089a74d5354f",
   "frage": "Noche UFC: Drakkar Klose vs. Tommy Gantt (Lightweight, Prelims)",
@@ -12268,8 +12541,8 @@
   "league": "UFC",
   "sport": "Kampfsport",
   "totalUsd": 21474,
-  "hoursToKickoff": -0.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -0.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0xa11108447fbf91e72305f85fc609dd981443e93e42e2cc002f151a9b9279dac3",
   "frage": "Noche UFC: Tim Elliott vs. Édgar Cháirez (Flyweight, Prelims)",
@@ -12292,8 +12565,8 @@
   "league": "UFC",
   "sport": "Kampfsport",
   "totalUsd": 21655,
-  "hoursToKickoff": -0.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -0.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0x3a1cd4b7491eb8f1aeb4ec29a4eafb6222f8795b2eb4641e54947ef3a27943ed",
   "frage": "Noche UFC: Yousri Belgaroui vs. Djorden Santos (Middleweight, Prelims)",
@@ -12305,8 +12578,8 @@
  "cs2-saw2-6666-2026-09-12": {
   "shares": {},
   "prices": {
-   "SAW": 0.76,
-   "6666": 0.24
+   "SAW": 0.865,
+   "6666": 0.135
   },
   "splitGuete": {
    "art": "leer",
@@ -12316,8 +12589,8 @@
   "league": "ESPORTS",
   "sport": "E-Sport",
   "totalUsd": 11913,
-  "hoursToKickoff": -0.96,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -1.07,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0x30800c3f5a6c97345b48590f6e807d725eee3198b7ed4c2fe727a30ba0fdbadc",
   "frage": "Counter-Strike: SAW vs 6666 (BO3) - Roman Imperium Cup Playoffs",
@@ -12340,8 +12613,8 @@
   "league": "SOCCER",
   "sport": "Fußball",
   "totalUsd": 17350,
-  "hoursToKickoff": -2.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -2.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0xf851ef2d95c0dcbb48c0878105f5053d81724b494976b8ebbdcee5b8d82ddc14",
   "frage": "AS Trenčín vs. FC DAC 1904 Dunajská Streda: O/U 3.5",
@@ -12365,8 +12638,8 @@
   "league": "SOCCER",
   "sport": "Fußball",
   "totalUsd": 15445,
-  "hoursToKickoff": -2.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -2.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "tokens": {
    "AC Sparta Praha": "9396628171700924534579666789111145933019636403912438929707360788831833628201",
@@ -12377,9 +12650,9 @@
  "fr2-usd-ass-2026-09-12": {
   "shares": {},
   "prices": {
-   "USL Dunkerque": 0.185,
-   "Draw (USL Dunkerque vs. AS Saint-Étienne)": 0.325,
-   "AS Saint-Étienne": 0.49
+   "USL Dunkerque": 0.045,
+   "Draw (USL Dunkerque vs. AS Saint-Étienne)": 0.165,
+   "AS Saint-Étienne": 0.785
   },
   "splitGuete": {
    "art": "leer",
@@ -12389,8 +12662,8 @@
   "league": "LIGUE-2",
   "sport": "Fußball",
   "totalUsd": 15990,
-  "hoursToKickoff": -0.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -0.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "tokens": {
    "USL Dunkerque": "66300178029782166989649288808771836711115635721664561365502399745298684367779",
@@ -12463,33 +12736,29 @@
    {
     "wallet": "0x63739796b47577a15c0b6d05cde710bda76da0b7",
     "side": "Regina Tarin",
-    "usd": 32026,
-    "avgPrice": 0.9699
+    "usd": 32026
    },
    {
     "wallet": "0xed107a85a4585a381e48c7f7ca4144909e7dd2e5",
     "side": "Regina Tarin",
-    "usd": 7497,
-    "avgPrice": 0.7122
+    "usd": 7497
    },
    {
     "wallet": "0x17b8dd10eb8657c495fe04a469c956fcc301d5d1",
     "side": "Regina Tarin",
-    "usd": 4017,
-    "avgPrice": 0.7631
+    "usd": 4017
    },
    {
     "wallet": "0x6dd6314d1670f9f1ccccbd6746b0bf2f2fa0f5f4",
     "side": "Regina Tarin",
-    "usd": 2554,
-    "avgPrice": 0.8296
+    "usd": 2554
    }
   ],
   "league": "UFC",
   "sport": "Kampfsport",
   "totalUsd": 77958,
-  "hoursToKickoff": -0.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -0.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0x88fa514cc4c803800c3d85a739f17d13bf76f079eb419307e16023a0f42594c9",
   "frage": "Noche UFC: JJ Aldrich vs. Regina Tarin (Women's Flyweight, Prelims)",
@@ -12512,8 +12781,8 @@
   "league": "SOCCER",
   "sport": "Fußball",
   "totalUsd": 7819,
-  "hoursToKickoff": -2.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -2.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0x0e9ee85d9b193eb7a4e640391ee854bd5efa5c613c1f1e35b55ddb0ba16368ec",
   "frage": "MFK Dukla Banská Bystrica vs. MFK Skalica: O/U 5.5",
@@ -12525,8 +12794,8 @@
  "cs2-is-ldp-2026-09-12": {
   "shares": {},
   "prices": {
-   "Iberian Soul": 0.735,
-   "largadosypelados": 0.265
+   "Iberian Soul": 0.645,
+   "largadosypelados": 0.355
   },
   "splitGuete": {
    "art": "leer",
@@ -12536,8 +12805,8 @@
   "league": "ESPORTS",
   "sport": "E-Sport",
   "totalUsd": 8001,
-  "hoursToKickoff": -1.46,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -1.57,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0x98b04069ca314869dfce2b97756b463ffe8aacf38a9c96b091e5d94d9569b7f7",
   "frage": "Counter-Strike: Iberian Soul vs largadosypelados (BO3) - Roman Imperium Cup Playoffs",
@@ -12548,12 +12817,12 @@
  },
  "mlb-pit-chc-2026-09-12": {
   "shares": {
-   "Over": 229019.10415598997,
-   "Under": 263494.9838903001
+   "Over": 214243.67808140995,
+   "Under": 278270.4035477
   },
   "prices": {
-   "Over": 0.465,
-   "Under": 0.535
+   "Over": 0.435,
+   "Under": 0.565
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -12563,33 +12832,29 @@
    {
     "wallet": "0x4bff30af91642dc7d2b19a8664378fe55c45fc26",
     "side": "Under",
-    "usd": 228920,
-    "avgPrice": 0.4974
+    "usd": 241757
    },
    {
     "wallet": "0x8a8685a792c184e5c2ee8c7d4d4baba7c2c94998",
     "side": "Over",
-    "usd": 93000,
-    "avgPrice": 0.5
+    "usd": 87000
    },
    {
     "wallet": "0xa71093cafc0c099b4ccab24c3cb8018d817923c4",
     "side": "Over",
-    "usd": 50118,
-    "avgPrice": 0.5099
+    "usd": 46885
    },
    {
     "wallet": "0x1d1ade627d0bb0205758580b20d808573e720df6",
     "side": "Over",
-    "usd": 36751,
-    "avgPrice": 0.4977
+    "usd": 34380
    }
   ],
   "league": "MLB",
   "sport": "US-Sport",
   "totalUsd": 537579,
-  "hoursToKickoff": -0.38,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -0.49,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0x064c302d931d0099c9e4a95ba9afb13fcf473ab5f2b54fb3ac4c1aa5076012ba",
   "frage": "Pittsburgh Pirates vs. Chicago Cubs: O/U 9.5",
@@ -12599,60 +12864,60 @@
   },
   "book": {
    "side": "Under",
-   "bid": 0.54,
-   "ask": 0.55,
+   "bid": 0.6,
+   "ask": 0.61,
    "spreadC": 1.0,
-   "spreadPct": 1.82,
+   "spreadPct": 1.64,
    "bids": [
     [
-     0.54,
-     6917
+     0.6,
+     14445
     ],
     [
-     0.53,
-     229
+     0.59,
+     6726
+    ],
+    [
+     0.58,
+     228
+    ],
+    [
+     0.57,
+     1000
+    ],
+    [
+     0.55,
+     117
     ],
     [
      0.51,
-     1050
-    ],
-    [
-     0.5,
-     5
-    ],
-    [
-     0.42,
-     300
-    ],
-    [
-     0.38,
-     300
+     50
     ]
    ],
    "asks": [
     [
-     0.55,
-     1000
+     0.61,
+     2261
     ],
     [
-     0.56,
-     7531
+     0.62,
+     20784
     ],
     [
-     0.57,
-     109
+     0.64,
+     79
     ],
     [
-     0.58,
-     132
+     0.72,
+     296
     ],
     [
-     0.59,
-     12
+     0.73,
+     700
     ],
     [
-     0.6,
-     63
+     0.74,
+     73
     ]
    ]
   },
@@ -12696,33 +12961,17 @@
     "price": 0.5,
     "usd": 6775,
     "ts": 1789237027
-   },
-   {
-    "wallet": "0x9c76cdb43fb46454da005fbc82047a64a18ec926",
-    "action": "BUY",
-    "side": "Over",
-    "price": 0.5,
-    "usd": 1250,
-    "ts": 1789236651
-   },
-   {
-    "wallet": "0x9c76cdb43fb46454da005fbc82047a64a18ec926",
-    "action": "BUY",
-    "side": "Over",
-    "price": 0.5,
-    "usd": 1250,
-    "ts": 1789236651
    }
   ]
  },
  "cfb-wake-pur-2026-09-12": {
   "shares": {
-   "Wake Forest": 147668.92024157496,
-   "Purdue": 15501.181836875012
+   "Wake Forest": 156517.460539275,
+   "Purdue": 20338.45668937502
   },
   "prices": {
-   "Wake Forest": 0.905,
-   "Purdue": 0.095
+   "Wake Forest": 0.885,
+   "Purdue": 0.115
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -12732,33 +12981,29 @@
    {
     "wallet": "0x4bff30af91642dc7d2b19a8664378fe55c45fc26",
     "side": "Wake Forest",
-    "usd": 95090,
-    "avgPrice": 0.58
+    "usd": 92988
    },
    {
     "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
     "side": "Wake Forest",
-    "usd": 19408,
-    "avgPrice": 0.7816
+    "usd": 26535
    },
    {
-    "wallet": "0xd218e474776403a330142299f7796e8ba32eb5c9",
-    "side": "Wake Forest",
-    "usd": 5672,
-    "avgPrice": 0.89
+    "wallet": "0x224a89dbe0db0d6124b335edabd15b3f877da3d5",
+    "side": "Purdue",
+    "usd": 6587
    },
    {
-    "wallet": "0xc785252b25901a591e9d962e09f4342468444ef2",
-    "side": "Wake Forest",
-    "usd": 5063,
-    "avgPrice": 0.8086
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "side": "Purdue",
+    "usd": 6107
    }
   ],
   "league": "CFB",
   "sport": null,
   "totalUsd": 223635,
-  "hoursToKickoff": -2.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -2.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0x87d596c92ef0e0835cd091408d30146c8a0e789301b47210a8d767f271f55bb1",
   "frage": "Wake Forest vs. Purdue",
@@ -12768,64 +13013,96 @@
   },
   "book": {
    "side": "Wake Forest",
-   "bid": 0.89,
-   "ask": 0.9,
+   "bid": 0.84,
+   "ask": 0.85,
    "spreadC": 1.0,
-   "spreadPct": 1.11,
+   "spreadPct": 1.18,
    "bids": [
     [
-     0.89,
-     38910
-    ],
-    [
-     0.88,
-     22374
-    ],
-    [
-     0.87,
-     2000
-    ],
-    [
-     0.86,
-     2747
-    ],
-    [
-     0.85,
-     820
-    ],
-    [
      0.84,
-     3250
+     809
+    ],
+    [
+     0.83,
+     7542
+    ],
+    [
+     0.82,
+     5517
+    ],
+    [
+     0.81,
+     2110
+    ],
+    [
+     0.8,
+     5548
+    ],
+    [
+     0.79,
+     500
     ]
    ],
    "asks": [
     [
+     0.85,
+     1100
+    ],
+    [
+     0.86,
+     8882
+    ],
+    [
+     0.87,
+     21010
+    ],
+    [
+     0.88,
+     10
+    ],
+    [
+     0.89,
+     500
+    ],
+    [
      0.9,
-     3754
-    ],
-    [
-     0.91,
-     6719
-    ],
-    [
-     0.92,
-     9977
-    ],
-    [
-     0.93,
-     7010
-    ],
-    [
-     0.95,
-     1630
-    ],
-    [
-     0.96,
-     2680
+     1634
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
+    "action": "BUY",
+    "side": "Wake Forest",
+    "price": 0.9,
+    "usd": 2678,
+    "ts": 1789238704
+   },
+   {
+    "wallet": "0xe9f5c75ee1ae1aae57bf8582e359913c795a3e7a",
+    "action": "BUY",
+    "side": "Wake Forest",
+    "price": 0.89,
+    "usd": 490,
+    "ts": 1789238689
+   },
+   {
+    "wallet": "0xe9f5c75ee1ae1aae57bf8582e359913c795a3e7a",
+    "action": "BUY",
+    "side": "Wake Forest",
+    "price": 0.89,
+    "usd": 981,
+    "ts": 1789238652
+   },
+   {
+    "wallet": "0xe9f5c75ee1ae1aae57bf8582e359913c795a3e7a",
+    "action": "BUY",
+    "side": "Wake Forest",
+    "price": 0.89,
+    "usd": 1082,
+    "ts": 1789238632
+   },
    {
     "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
     "action": "BUY",
@@ -12857,30 +13134,6 @@
     "price": 0.9,
     "usd": 396,
     "ts": 1789237870
-   },
-   {
-    "wallet": "0xa38a455bbdd4b68486548b7e19da99903f4f821d",
-    "action": "BUY",
-    "side": "Wake Forest",
-    "price": 0.82,
-    "usd": 333,
-    "ts": 1789237809
-   },
-   {
-    "wallet": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
-    "action": "BUY",
-    "side": "Wake Forest",
-    "price": 0.81,
-    "usd": 1188,
-    "ts": 1789237809
-   },
-   {
-    "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
-    "action": "BUY",
-    "side": "Wake Forest",
-    "price": 0.7975,
-    "usd": 2364,
-    "ts": 1789237770
    }
   ]
  },
@@ -12898,8 +13151,8 @@
   "league": "ESPORTS",
   "sport": "E-Sport",
   "totalUsd": 15233,
-  "hoursToKickoff": -1.46,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -1.57,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0xe9cb5c56b98dbf74e36e691d6ba26651256e42bc33ded4cec7cac98e480104ce",
   "frage": "Counter-Strike: NAVI Junior vs Bushido Wildcats (BO3) - CCT Europe Closed Qualifier: Series #9 Group D",
@@ -12911,8 +13164,8 @@
  "spl-kha-nsr-2026-09-12-more-markets": {
   "shares": {},
   "prices": {
-   "Over": 0.45,
-   "Under": 0.55
+   "Over": 0.7,
+   "Under": 0.3
   },
   "splitGuete": {
    "art": "leer",
@@ -12922,8 +13175,8 @@
   "league": "SAUDI-PROFESSIONAL-LEAGUE",
   "sport": "Fußball",
   "totalUsd": 8187,
-  "hoursToKickoff": -0.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -0.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0x3df557d405fa13faa83bd4f3e187abd6b5bbb3008628dbcdfc354caf48bc1cfb",
   "frage": "Al Khaleej Saudi Club vs. Al Nassr Saudi Club: O/U 2.5",
@@ -12947,8 +13200,8 @@
   "league": "SOCCER",
   "sport": "Fußball",
   "totalUsd": 33381,
-  "hoursToKickoff": -2.46,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -2.57,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "tokens": {
    "KVC Westerlo": "4566623177842139204215789134804726106664403654462458688292142242202096028128",
@@ -12959,8 +13212,8 @@
  "wta-tormo-koike-2026-09-12": {
   "shares": {},
   "prices": {
-   "Sara Sorribes Tormo": 0.815,
-   "Ena Koike": 0.185
+   "Sara Sorribes Tormo": 0.865,
+   "Ena Koike": 0.135
   },
   "splitGuete": {
    "art": "leer",
@@ -12970,8 +13223,8 @@
   "league": "TENNIS",
   "sport": "Tennis",
   "totalUsd": 23435,
-  "hoursToKickoff": -1.13,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -1.24,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0x2f3ac870df7fe9d6d4c888bdb74fe78ed6248a7ae6c9aa5fc7577dbff524cf1a",
   "frage": "Guadalajara Open Akron, Qualification: Sara Sorribes Tormo vs Ena Koike",
@@ -12995,8 +13248,8 @@
   "league": "SOCCER",
   "sport": "Fußball",
   "totalUsd": 16051,
-  "hoursToKickoff": -2.71,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -2.82,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "tokens": {
    "Olympiacos Piraeus": "36700595585370290487559638734473092741364246812963126915196746256409542820014",
@@ -13007,9 +13260,9 @@
  "bul-pcs-ard-2026-09-12": {
   "shares": {},
   "prices": {
-   "PFC CSKA Sofia": 0.56,
-   "Draw (PFC CSKA Sofia vs. FC Arda Kardzhali)": 0.3,
-   "FC Arda Kardzhali": 0.335
+   "PFC CSKA Sofia": 0.36,
+   "Draw (PFC CSKA Sofia vs. FC Arda Kardzhali)": 0.295,
+   "FC Arda Kardzhali": 0.35
   },
   "splitGuete": {
    "art": "leer",
@@ -13019,8 +13272,8 @@
   "league": "BULGARIA-PARVA-LIGA",
   "sport": "Fußball",
   "totalUsd": 12759,
-  "hoursToKickoff": -0.46,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -0.57,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "tokens": {
    "PFC CSKA Sofia": "102561408616276476145447211976640543223315753315502856654336275643852023128241",
@@ -13031,8 +13284,8 @@
  "wta-xu-dolehid-2026-09-12": {
   "shares": {},
   "prices": {
-   "Mimi Xu": 0.045,
-   "Caroline Dolehide": 0.955
+   "Mimi Xu": 0.027,
+   "Caroline Dolehide": 0.973
   },
   "splitGuete": {
    "art": "leer",
@@ -13042,8 +13295,8 @@
   "league": "TENNIS",
   "sport": "Tennis",
   "totalUsd": 9585,
-  "hoursToKickoff": -1.13,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -1.24,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "cond": "0xe5911514f0d47a0f02c3428a2c7d9e3222238194804aa8f24cf8759d1b1adde8",
   "frage": "Guadalajara Open Akron, Qualification: Mimi Xu vs Caroline Dolehide",
@@ -13067,8 +13320,8 @@
   "league": "SOCCER",
   "sport": "Fußball",
   "totalUsd": 8773,
-  "hoursToKickoff": -2.46,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -2.57,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "tokens": {
    "Al Duhail SC": "49824125819002016466876744189349566440223521034430661436498751156512736096854",
@@ -13088,11 +13341,11 @@
    "trunc": null
   },
   "whales": [],
-  "league": "LA-LIGA-2",
+  "league": "SOCCER",
   "sport": "Fußball",
   "totalUsd": 8571,
-  "hoursToKickoff": -2.21,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -2.32,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "tokens": {
    "Granada CF": "111213401150967690689519947660678963603586709797253052087015905968143719228769",
@@ -13103,9 +13356,9 @@
  "bl2-stp-wob-2026-09-12": {
   "shares": {},
   "prices": {
-   "FC St. Pauli 1910": 0.37,
-   "Draw (FC St. Pauli 1910 vs. VfL Wolfsburg)": 0.26,
-   "VfL Wolfsburg": 0.365
+   "FC St. Pauli 1910": 0.345,
+   "Draw (FC St. Pauli 1910 vs. VfL Wolfsburg)": 0.265,
+   "VfL Wolfsburg": 0.385
   },
   "splitGuete": {
    "art": "leer",
@@ -13115,13 +13368,330 @@
   "league": "BUNDESLIGA-2",
   "sport": "Fußball",
   "totalUsd": 8363,
-  "hoursToKickoff": -0.21,
-  "capturedAt": "2026-09-12T18:46:32.634692+00:00",
+  "hoursToKickoff": -0.32,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
   "live": true,
   "tokens": {
    "FC St. Pauli 1910": "83163543757671874065583772451245497620411335895626561914629265418061294366882",
    "Draw (FC St. Pauli 1910 vs. VfL Wolfsburg)": "2410258718819676492204631129449717224143174219110181268327735015706416977392",
    "VfL Wolfsburg": "19687968060022101500609567350278137915319879250475837471036361277388233408086"
+  }
+ },
+ "fl1-lor-tou-2026-09-12-more-markets": {
+  "shares": {
+   "Over": 38236.15022649999,
+   "Under": 38746.78270249999
+  },
+  "prices": {
+   "Over": 0.5,
+   "Under": 0.5
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "whales": [
+   {
+    "wallet": "0x4d3079bd4c73bc0e8f7d9f64a9f64fadbd17a42d",
+    "side": "Over",
+    "usd": 32393
+   },
+   {
+    "wallet": "0xfb07f48542d2b655e9d0bf1cc92a8a6feee8e2cc",
+    "side": "Under",
+    "usd": 6000
+   },
+   {
+    "wallet": "0xe954ddb021c19495f1c556f59dadbd1494821ef1",
+    "side": "Under",
+    "usd": 4754
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Under",
+    "usd": 4477
+   }
+  ],
+  "league": "LIGUE-1",
+  "sport": "Fußball",
+  "totalUsd": 72205,
+  "hoursToKickoff": -0.07,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
+  "live": true,
+  "cond": "0x0654fbfeb3093867a43dcf05fe99b5f29652ce9f90dc1cf50cbc813741adee6a",
+  "frage": "FC Lorient vs. Toulouse FC: O/U 2.5",
+  "tokens": {
+   "Over": "105572830260729325105207078117359622157650885782745080896219654676137784666158",
+   "Under": "59141844437148400881157701996602403557743030988807948228761781149051037123044"
+  }
+ },
+ "fl1-lor-tou-2026-09-12": {
+  "shares": {
+   "FC Lorient": 15249.849508275,
+   "Draw (FC Lorient vs. Toulouse FC)": 343.54563237499997,
+   "Toulouse FC": 873.4209598800002
+  },
+  "prices": {
+   "FC Lorient": 0.395,
+   "Draw (FC Lorient vs. Toulouse FC)": 0.275,
+   "Toulouse FC": 0.315
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "whales": [
+   {
+    "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
+    "side": "FC Lorient",
+    "usd": 4530
+   },
+   {
+    "wallet": "0x52d93dcf81444f793dda7fedc370f7a35101fb1a",
+    "side": "FC Lorient",
+    "usd": 2179
+   },
+   {
+    "wallet": "0x224a89dbe0db0d6124b335edabd15b3f877da3d5",
+    "side": "FC Lorient",
+    "usd": 2086
+   },
+   {
+    "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+    "side": "FC Lorient",
+    "usd": 759
+   }
+  ],
+  "league": "LIGUE-1",
+  "sport": "Fußball",
+  "totalUsd": 62591,
+  "hoursToKickoff": -0.07,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
+  "live": true,
+  "tokens": {
+   "FC Lorient": "76021711038484420213928617264872812179719175205340358657353951542084233158268",
+   "Draw (FC Lorient vs. Toulouse FC)": "12112778597341936231889212649815773668568567297646235048355926812135268689896",
+   "Toulouse FC": "80528370763152378997669819240952466012360951983064621652691649092093453067660"
+  }
+ },
+ "fl1-hac-ang-2026-09-12-more-markets": {
+  "shares": {
+   "Over": 10013.50084125,
+   "Under": 9620.80995813
+  },
+  "prices": {
+   "Over": 0.51,
+   "Under": 0.49
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "whales": [
+   {
+    "wallet": "0xb809a4b78b5eadc71d84be43eda0491eedf72004",
+    "side": "Over",
+    "usd": 3549
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Under",
+    "usd": 3393
+   },
+   {
+    "wallet": "0x19c4aa3200949f1dfc0f84cc2c9a47d78ed18c95",
+    "side": "Over",
+    "usd": 3135
+   },
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Over",
+    "usd": 2018
+   }
+  ],
+  "league": "LIGUE-1",
+  "sport": "Fußball",
+  "totalUsd": 27191,
+  "hoursToKickoff": -0.07,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
+  "live": true,
+  "cond": "0xe7d8375bd547a74389c0ef7d4c5bc5657235d2db1e85e2494c47e68ebff9871b",
+  "frage": "Le Havre AC vs. Angers SCO: O/U 2.5",
+  "tokens": {
+   "Over": "60711759338165736129041513848750568132007111406295778870192389911280853939450",
+   "Under": "28300902260745008203342409174510191923019763790948936413350884691762182103402"
+  }
+ },
+ "fl1-pfc-lyo-2026-09-12-more-markets": {
+  "shares": {
+   "Over": 551.52885612,
+   "Under": 1119.7707078800001
+  },
+  "prices": {
+   "Over": 0.33,
+   "Under": 0.67
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "whales": [
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Over",
+    "usd": 505
+   },
+   {
+    "wallet": "0x1f624696c102b99bea92c75a502fa7e4a6d676f6",
+    "side": "Under",
+    "usd": 501
+   },
+   {
+    "wallet": "0xf7f0b0b1e9c0fe02ccad926916ee31aef74b912c",
+    "side": "Under",
+    "usd": 343
+   },
+   {
+    "wallet": "0x594edb9112f526fa6a80b8f858a6379c8a2c1c11",
+    "side": "Under",
+    "usd": 201
+   }
+  ],
+  "league": "LIGUE-1",
+  "sport": "Fußball",
+  "totalUsd": 23573,
+  "hoursToKickoff": -0.07,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
+  "live": true,
+  "cond": "0x15ab29e1cd1805717edb909b1b99622217d18c18ff808cddf09d94c57392a5ef",
+  "frage": "Paris FC vs. Olympique Lyonnais: O/U 3.5",
+  "tokens": {
+   "Over": "26387112676620773332769116093494705124502204932875472840083358802406738998304",
+   "Under": "104526547185327984914400854282093646985130346636575236565555587182090321605588"
+  }
+ },
+ "fl1-pfc-lyo-2026-09-12": {
+  "shares": {},
+  "prices": {
+   "Paris FC": 0.385,
+   "Draw (Paris FC vs. Olympique Lyonnais)": 0.275,
+   "Olympique Lyonnais": 0.345
+  },
+  "splitGuete": {
+   "art": "leer",
+   "trunc": null
+  },
+  "whales": [],
+  "league": "LIGUE-1",
+  "sport": "Fußball",
+  "totalUsd": 18764,
+  "hoursToKickoff": -0.07,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
+  "live": true,
+  "tokens": {
+   "Paris FC": "95270394919877931530715005336483740478035780784800764261354789961668647328667",
+   "Draw (Paris FC vs. Olympique Lyonnais)": "106271529949779274878370737960353174347830712553400144616819354162725919374448",
+   "Olympique Lyonnais": "40450409330429806881829544565833887144630663566391293385977189164962237731546"
+  }
+ },
+ "fl1-hac-ang-2026-09-12": {
+  "shares": {},
+  "prices": {
+   "Le Havre AC": 0.375,
+   "Draw (Le Havre AC vs. Angers SCO)": 0.285,
+   "Angers SCO": 0.345
+  },
+  "splitGuete": {
+   "art": "leer",
+   "trunc": null
+  },
+  "whales": [],
+  "league": "LIGUE-1",
+  "sport": "Fußball",
+  "totalUsd": 18124,
+  "hoursToKickoff": -0.07,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
+  "live": true,
+  "tokens": {
+   "Le Havre AC": "82734246271489580560872085083757664666796222960851614289461951534128273958682",
+   "Draw (Le Havre AC vs. Angers SCO)": "93183477834299866213150995315040940947589121564149885428854414880074017300637",
+   "Angers SCO": "2505576531829943755941340163431633838790984985226102744475374196041470537245"
+  }
+ },
+ "fl1-aja-ogc-2026-09-12": {
+  "shares": {},
+  "prices": {
+   "AJ Auxerre": 0.325,
+   "Draw (AJ Auxerre vs. OGC Nice)": 0.285,
+   "OGC Nice": 0.385
+  },
+  "splitGuete": {
+   "art": "leer",
+   "trunc": null
+  },
+  "whales": [],
+  "league": "LIGUE-1",
+  "sport": "Fußball",
+  "totalUsd": 13350,
+  "hoursToKickoff": -0.07,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
+  "live": true,
+  "tokens": {
+   "AJ Auxerre": "57698358252040706990530531743341992659548887796882641921865204412128392898692",
+   "Draw (AJ Auxerre vs. OGC Nice)": "61607431285003988124410397977808904231990118907805624867278870550678761983084",
+   "OGC Nice": "6440653724239998285966861541248612803882097303170193240925363979634821369912"
+  }
+ },
+ "fl1-pfc-lyo-2026-09-12-exact-score": {
+  "shares": {},
+  "prices": {
+   "Paris FC 0 - 0 Olympique Lyonnais": 0.035,
+   "Paris FC 0 - 1 Olympique Lyonnais": 0.07,
+   "Paris FC 1 - 0 Olympique Lyonnais": 0.075,
+   "Paris FC 0 - 2 Olympique Lyonnais": 0.05,
+   "Paris FC 1 - 1 Olympique Lyonnais": 0.13,
+   "Paris FC 2 - 0 Olympique Lyonnais": 0.055,
+   "Paris FC 0 - 3 Olympique Lyonnais": 0.175,
+   "Paris FC 1 - 2 Olympique Lyonnais": 0.08,
+   "Paris FC 2 - 1 Olympique Lyonnais": 0.09,
+   "Paris FC 3 - 0 Olympique Lyonnais": 0.0265,
+   "Paris FC 1 - 3 Olympique Lyonnais": 0.0815,
+   "Paris FC 2 - 2 Olympique Lyonnais": 0.07,
+   "Paris FC 3 - 1 Olympique Lyonnais": 0.0425,
+   "Paris FC 2 - 3 Olympique Lyonnais": 0.0685,
+   "Paris FC 3 - 2 Olympique Lyonnais": 0.1695,
+   "Paris FC 3 - 3 Olympique Lyonnais": 0.052,
+   "Any Other Score": 0.38
+  },
+  "splitGuete": {
+   "art": "leer",
+   "trunc": null
+  },
+  "whales": [],
+  "league": "LIGUE-1",
+  "sport": "Fußball",
+  "totalUsd": 10607,
+  "hoursToKickoff": -0.07,
+  "capturedAt": "2026-09-12T18:51:03.201284+00:00",
+  "live": true,
+  "tokens": {
+   "Paris FC 0 - 0 Olympique Lyonnais": "5717394731230930090478821693191809995897309904144872524351674335577699238115",
+   "Paris FC 0 - 1 Olympique Lyonnais": "58667346528970940204059841742223717844531207537379850049796580886552692599414",
+   "Paris FC 1 - 0 Olympique Lyonnais": "34765883737030478848803467006699563411904660764007866806362684314068827843023",
+   "Paris FC 0 - 2 Olympique Lyonnais": "61950751799967875933545140183948353956780295804381208194253907304958260903911",
+   "Paris FC 1 - 1 Olympique Lyonnais": "93136108363389084216605561598577037813458996687575438774979221248755809645974",
+   "Paris FC 2 - 0 Olympique Lyonnais": "59534242664501786447713676963916851329758091279296122636610987269633087976994",
+   "Paris FC 0 - 3 Olympique Lyonnais": "7989428992621520184690890028617184140366097463513708266715900849392024226134",
+   "Paris FC 1 - 2 Olympique Lyonnais": "75191138115082171363797217874527992039417785654054900414939316526800141909920",
+   "Paris FC 2 - 1 Olympique Lyonnais": "37437086379409324214664943682119824353418809668506228199310914946036920213681",
+   "Paris FC 3 - 0 Olympique Lyonnais": "1628180923415720042144964840693924198297806203063644796072074590785114096865",
+   "Paris FC 1 - 3 Olympique Lyonnais": "86238933975124620277190647691726782477712309585613950733315375482712611010528",
+   "Paris FC 2 - 2 Olympique Lyonnais": "43363405787655804190186144350034145839730171272843571377761851678773280224518",
+   "Paris FC 3 - 1 Olympique Lyonnais": "75400676051875482465946197939197102471800147247018515666443298329000203622835",
+   "Paris FC 2 - 3 Olympique Lyonnais": "72934875479296689715233001876193120176371385820389417376613206009470202934300",
+   "Paris FC 3 - 2 Olympique Lyonnais": "59795018510841712050544944554268488763632030423956582549177365672427895615649",
+   "Paris FC 3 - 3 Olympique Lyonnais": "29603951731335970084240751457942573974615180361243724447596310306666089454545",
+   "Any Other Score": "76319249520566657865974330945706384110272230339273480411620807807280656916518"
   }
  }
 }
