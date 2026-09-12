@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-12T21:26:43.913573+00:00",
+ "generatedAt": "2026-09-12T21:43:07.827885+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,11 +10,11 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 654,
- "pinnKeys": 282,
+ "pinnKeys": 280,
  "matched": 202,
  "footballRows": 180,
  "crossRows": 474,
- "footballSkippedStale": 64,
+ "footballSkippedStale": 65,
  "seenBySport": {
   "americanfootball_nfl": 174,
   "baseball_mlb": 98,
@@ -29,8 +29,65 @@
   "soccer_liga": 156
  },
  "trackRecord": {
-  "tracked": 316,
-  "converged": 70
+  "tracked": 314,
+  "converged": 72
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|bostonredsox-kansascityroyals|kansascityroyals",
+   "sport": "baseball_mlb",
+   "event": "Kansas City Royals vs Boston Red Sox",
+   "market": "Moneyline",
+   "outcome": "Kansas City Royals",
+   "polyPP": 10.5,
+   "pinnPP": 31.9,
+   "gapPP": -21.39,
+   "vol": 192029,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 14.12,
+   "firstSeen": "2026-09-12T00:11:15.075223+00:00"
+  },
+  {
+   "id": "baseball_mlb|bostonredsox-kansascityroyals|bostonredsox",
+   "sport": "baseball_mlb",
+   "event": "Kansas City Royals vs Boston Red Sox",
+   "market": "Moneyline",
+   "outcome": "Boston Red Sox",
+   "polyPP": 89.5,
+   "pinnPP": 68.1,
+   "gapPP": 21.39,
+   "vol": 192029,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 14.12,
+   "firstSeen": "2026-09-12T00:11:15.075223+00:00"
+  },
+  {
+   "id": "baseball_mlb|losangelesdodgers-miamimarlins|losangelesdodgers",
+   "sport": "baseball_mlb",
+   "event": "Los Angeles Dodgers vs Miami Marlins",
+   "market": "Moneyline",
+   "outcome": "Los Angeles Dodgers",
+   "polyPP": 34.5,
+   "pinnPP": 41.8,
+   "gapPP": -7.34,
+   "vol": 289318,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 8.92,
+   "firstSeen": "2026-09-12T00:44:08.019557+00:00"
+  },
+  {
+   "id": "baseball_mlb|losangelesdodgers-miamimarlins|miamimarlins",
+   "sport": "baseball_mlb",
+   "event": "Los Angeles Dodgers vs Miami Marlins",
+   "market": "Moneyline",
+   "outcome": "Miami Marlins",
+   "polyPP": 65.5,
+   "pinnPP": 58.2,
+   "gapPP": 7.34,
+   "vol": 289318,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 8.92,
+   "firstSeen": "2026-09-12T00:44:08.019557+00:00"
+  }
+ ]
 }
