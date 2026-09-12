@@ -466,6 +466,7 @@ jobs:
           git add pick_announce_state.json 2>/dev/null || true   # Neuer-Pick-Noti-Basis (03.07.2026)
           git add pick_push_ledger.json 2>/dev/null || true   # Neuer-Pick-Noti-Basis (03.07.2026)
           git add streak_watch.json 2>/dev/null || true          # Serien-Watch-State (04.07.2026)
+          git add streak_record.json 2>/dev/null || true   # Serien-Buch (12.09.2026 Audit: der Watch wurde committet, das Buch nie)
           # Diagnose: was ist staged? (im Log sichtbar, kein stilles Versagen mehr)
           echo "📋 Staged für Commit:"; git diff --staged --name-only | sed 's/^/   /' || true
           if git diff --staged --quiet; then

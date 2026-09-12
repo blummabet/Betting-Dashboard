@@ -359,14 +359,22 @@ def test_ohne_stand_und_ohne_wetten_gibt_es_keine_norm(tmp_path, monkeypatch):
 # ── Quotenbänder ─────────────────────────────────────────────────────────────
 def test_quotenbaender_sind_schubladen_keine_filter():
     """Die 1,35 aus der Pick-Engine gilt fuer UNSERE Wetten. Ob eine fremde Wette bei 1,20
-    schlechter informiert ist, ist nicht gemessen — also wird beides gezaehlt."""
-    ws = ([dict(w(wid="tief%d" % i), quote=1.10) for i in range(5)]
-          + [dict(w(wid="hoch%d" % i), quote=2.50) for i in range(7)])
+    schlechter informiert ist, ist nicht gemessen — also wird beides gezaehlt.
+
+    12.09.2026: die Baender zaehlen jetzt BEINE statt Wetten (s. Block ganz unten). Dieser Test
+    hielt vorher `["wetten"] == 5` fest — also genau die Groesse, die bei einer Kombi nicht zur
+    gemessenen passt. Er prueft jetzt dieselbe Sache auf der richtigen Ebene."""
+    ws = ([dict(w(wid="tief%d" % i, beine=[{"quote": 1.10, "treffer": True}]), quote=1.10)
+           for i in range(5)]
+          + [dict(w(wid="hoch%d" % i, beine=[{"quote": 2.50, "treffer": False}]), quote=2.50)
+             for i in range(7)])
     a = A.auswerten({"wetten": ws}, "jetzt")
-    assert a["schubladen"]["quote_bis_120"]["wetten"] == 5
-    assert a["schubladen"]["quote_200_350"]["wetten"] == 7
-    assert a["schubladen"]["quote_unter_135"]["wetten"] == 5
-    assert a["schubladen"]["quote_ab_135"]["wetten"] == 7
+    assert a["schubladen"]["quote_bis_120"]["n"] == 5
+    assert a["schubladen"]["quote_200_350"]["n"] == 7
+    assert a["schubladen"]["quote_unter_135"]["n"] == 5
+    assert a["schubladen"]["quote_ab_135"]["n"] == 7
+    # Die Geldfelder bleiben in Bein-Schubladen bewusst leer — sie gehoeren der Wette.
+    assert a["schubladen"]["quote_bis_120"]["wetten"] is None
     assert a["schubladen"]["gesamt"]["wetten"] == 12, "gefiltert wird nichts"
 
 
@@ -412,3 +420,96 @@ def test_quotenbaender_sind_vorregistriert(tmp_path, monkeypatch):
     reg = A.vorregistrieren("2026-09-03T22:00:00Z")
     assert "quote_ab_135" in reg and "quote_unter_135" in reg
     assert reg["quote_unter_135"]["zielN"] >= 100
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 🔴 12.09.2026 (Lucas, Plattform-Audit) — eine Schublade muss messen, was sie auswaehlt.
+#
+# Die Quotenbaender waehlten auf `w["quote"]` aus — der GESAMTQUOTE der Wette — und massen danach
+# je BEIN. Bei einer Kombi sind das zwei verschiedene Mengen: von 7.891 Beinen in der Schublade
+# „ab 3,50" lagen **7.094 (89,9 %) unter 3,50**, Median-Beinquote 1,56.
+#
+# Folgenreich, weil `quote_ab_350` eine von genau ZWEI Schubladen mit `belegt: True` im ganzen
+# Stake-Buch war. Richtig gemessen: n von 6.423 auf 703, UG von +1,0 % auf **−11,2 %** — kein
+# Beleg, sondern das Gegenteil. Dafuer wurde `quote_160_200` sichtbar (n=5.898, Rendite +6,3 %,
+# UG +4,5 %), das vorher unter dem Fehler lag.
+# ─────────────────────────────────────────────────────────────────────────────
+import json as _json
+
+
+def _prod(xs):
+    p = 1.0
+    for x in xs:
+        p *= x
+    return p
+
+
+def _kombi(beine):
+    return {"kombi": True, "quote": round(_prod(b[0] for b in beine), 3), "einsatzUsd": 100,
+            "abrechnung": {"pnlUsd": 0.0,
+                           "beine": [{"quote": q, "treffer": t} for q, t in beine]}}
+
+
+def test_eine_kombi_landet_mit_ihren_beinen_im_richtigen_band():
+    # Gesamtquote 2,0 x 2,0 = 4,0 (also „ab 3,50"), aber KEIN Bein steht ab 3,50.
+    w = [_kombi([(2.0, True), (2.0, False)])]
+    s = A._schublade(w, bein_filter=lambda b: b.get("quote", 0) >= 3.50)
+    assert s["n"] == 0, "das Band ab 3,50 darf keine 2,0er-Beine zaehlen"
+    s2 = A._schublade(w, bein_filter=lambda b: 2.0 <= b.get("quote", 0) < 3.50)
+    assert s2["n"] == 2, "beide Beine gehoeren ins 2,00-3,50-Band"
+
+
+def test_ein_echtes_bein_ab_350_wird_gezaehlt():
+    w = [_kombi([(4.0, True), (1.2, True)])]
+    s = A._schublade(w, bein_filter=lambda b: b.get("quote", 0) >= 3.50)
+    assert s["n"] == 1
+    assert abs(s["beinRoi"] - 3.0) < 1e-6, "(4,0 - 1) bei Treffer"
+
+
+def test_eine_bein_schublade_behauptet_kein_geld():
+    """Der Einsatz einer Kombi gehoert nicht dem einen Bein, das den Filter passiert hat.
+    Lieber leer als zugeordnet — sonst steht eine Zahl da, die etwas anderes meint."""
+    w = [_kombi([(4.0, True), (1.2, True)])]
+    s = A._schublade(w, bein_filter=lambda b: b.get("quote", 0) >= 3.50)
+    assert s["basis"] == "beine"
+    for feld in ("einsatzUsd", "gewinnUsd", "abgerechnetUsd", "roi", "wetten", "abgerechnetN"):
+        assert s[feld] is None, f"{feld} darf in einer Bein-Schublade nicht gefuellt sein"
+
+
+def test_ohne_filter_bleibt_alles_wie_vorher():
+    """Gegenprobe: die Wett-Schubladen (gesamt, vor_anpfiff, ...) duerfen sich nicht aendern."""
+    w = [_kombi([(2.0, True), (2.0, False)])]
+    s = A._schublade(w)
+    assert s["basis"] == "wetten"
+    assert s["n"] == 2 and s["wetten"] == 1
+    assert s["abgerechnetUsd"] is not None
+
+
+def test_die_baender_werden_nicht_mehr_auf_der_gesamtquote_gefiltert():
+    quelle = (ROOT / "stake_analyse.py").read_text(encoding="utf-8")
+    assert 'lambda w, lo=lo, hi=hi: w.get("quote") is not None' not in quelle, \
+        "die Baender waehlen wieder auf der Gesamtquote aus"
+    assert "bein_filter=_bein_band(lo, hi)" in quelle
+
+
+def test_am_echten_bestand_passen_auswahl_und_messung_zusammen():
+    """Der Test, der den Fund gemacht hat. Jedes Bein in einem Band muss auch wirklich in dessen
+    Grenzen liegen — an erfundenen Zeilen waere das trivial."""
+    pfad = ROOT / "stake_bet_ledger.json"
+    if not pfad.exists():
+        pytest.skip("kein Ledger")
+    led = _json.loads(pfad.read_text(encoding="utf-8"))
+    wetten = [w for w in (led if isinstance(led, list) else (led.get("wetten") or []))
+              if isinstance(w, dict)]
+    if len(wetten) < 500:
+        pytest.skip("zu wenig Bestand")
+    for name, lo, hi in A.QUOTEN_BAENDER:
+        erwartet = [b for w in wetten
+                    for b in ((w.get("abrechnung") or {}).get("beine") or [])
+                    if b.get("treffer") is not None
+                    and isinstance(b.get("quote"), (int, float)) and lo <= b["quote"] < hi]
+        s = A._schublade(wetten, bein_filter=lambda b, lo=lo, hi=hi: isinstance(
+            b.get("quote"), (int, float)) and lo <= b["quote"] < hi)
+        assert s["n"] == len(erwartet), f"Band {name}: Auswahl und Messung driften"
+        if s["oQuote"] is not None:
+            assert s["oQuote"] >= lo * 0.99, f"Band {name}: Ø-Quote {s['oQuote']} liegt unter {lo}"

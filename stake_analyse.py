@@ -200,7 +200,7 @@ def _quote(treffer: int, n: int) -> dict:
             "belegt": False}          # wird in _schublade aus der Rendite gesetzt
 
 
-def _schublade(wetten: list) -> dict:
+def _schublade(wetten: list, bein_filter=None) -> dict:
     """Eine Schublade zählt ZWEI verschiedene Grundgesamtheiten, und das muss aus den Namen
     hervorgehen — sonst steht eine Zahl neben einer anderen, die etwas anderes meint:
 
@@ -212,6 +212,23 @@ def _schublade(wetten: list) -> dict:
     03.09.2026: hier hiess beides erst `einsatzUsd` — die eine Zahl zählte abgerechnete
     Wetten, die andere alle. Der Test hat es gefunden, bevor irgendwo eine Rendite auf der
     falschen Basis stand.
+
+    🔴 12.09.2026 (Lucas, Plattform-Audit) — derselbe Fehler eine Ebene tiefer, und diesmal hat
+    ihn kein Test gefunden. Die Quotenbänder wählten auf `w["quote"]` aus, also auf der
+    GESAMTQUOTE der Wette; gemessen wurde danach je BEIN. Bei einer Kombi sind das zwei
+    verschiedene Dinge: von 7.891 Beinen in der Schublade „ab 3,50" lagen **7.094 (89,9 %)
+    unter 3,50**, Median-Beinquote 1,56.
+
+    Das war nicht folgenlos. `quote_ab_350` ist eine von genau ZWEI Schubladen mit `belegt: True`
+    im ganzen Stake-Buch. Richtig gemessen — nur die Beine, die wirklich ab 3,50 stehen —
+    schrumpft sie von n=7.461 auf n=773, die Ø-Quote steigt von 2,04 auf 5,80, und aus +1,8 %
+    Rendite wird **−0,3 % mit einer Untergrenze von −12,1 %**. Also kein Beleg, sondern das
+    Gegenteil.
+
+    Deshalb nimmt `bein_filter` die Auswahl jetzt dort vor, wo auch gemessen wird. Und weil
+    Einsatz/PnL an der WETTE hängen und sich nicht auf ein einzelnes Bein aufteilen lassen,
+    bleiben die Geldfelder in einer Bein-Schublade leer statt falsch — `basis` sagt, welche
+    Grundgesamtheit gemeint ist.
     """
     tr = n = 0
     renditen = []          # je Bein: (Quote-1) bei Treffer, sonst -1 — flacher Einsatz
@@ -227,6 +244,8 @@ def _schublade(wetten: list) -> dict:
             if g:
                 gewinn += g
         for b in _gewertete_beine(w):
+            if bein_filter is not None and not bein_filter(b):
+                continue
             n += 1
             tr += 1 if b["treffer"] else 0
             q = b.get("quote")
@@ -247,6 +266,13 @@ def _schublade(wetten: list) -> dict:
     d["abgerechnetN"] = n_einzel
     d["abgerechnetUsd"] = round(abgerechnet, 2)
     d["roi"] = round(pnl / abgerechnet, 4) if abgerechnet else None
+    # Eine Bein-Schublade hat keine Wett-Ebene: der Einsatz einer Kombi gehört nicht dem einen
+    # Bein, das den Filter passiert hat. Lieber leer als zugeordnet.
+    d["basis"] = "beine" if bein_filter is not None else "wetten"
+    if bein_filter is not None:
+        for feld in ("einsatzUsd", "gewinnUsd", "abgerechnetUsd", "roi",
+                     "wetten", "einzelN", "abgerechnetN"):
+            d[feld] = None
 
     # Das eigentliche Urteil: Rendite je Bein bei flachem Einsatz, mit einseitiger
     # 95%-Untergrenze. Nur wenn die ÜBER null liegt, trägt die Schublade — eine
@@ -602,13 +628,14 @@ def auswerten(led: dict, jetzt: str) -> dict:
     # ist bisher nicht gemessen. Also: Bänder als eigene Schubladen, gemessen statt gesetzt.
     # Zur Einordnung, an 445 Wetten: unter 1,35 liegen 32% der Wetten und 35% des Einsatzes,
     # aber nur 3% des möglichen Gewinns.
+    # 12.09.2026: Auswahl je BEIN (s. _schublade). Vorher wurde auf der Gesamtquote der Wette
+    # ausgewählt und auf den Beinen gemessen — bei Kombis zwei verschiedene Grundgesamtheiten.
+    def _bein_band(lo, hi):
+        return lambda b: isinstance(b.get("quote"), (int, float)) and lo <= b["quote"] < hi
     for name, lo, hi in QUOTEN_BAENDER:
-        schubladen["quote_" + name] = _schublade(filt(
-            lambda w, lo=lo, hi=hi: w.get("quote") is not None and lo <= w["quote"] < hi))
-    schubladen["quote_ab_135"] = _schublade(filt(
-        lambda w: (w.get("quote") or 0) >= 1.35))
-    schubladen["quote_unter_135"] = _schublade(filt(
-        lambda w: w.get("quote") is not None and w["quote"] < 1.35))
+        schubladen["quote_" + name] = _schublade(wetten, bein_filter=_bein_band(lo, hi))
+    schubladen["quote_ab_135"] = _schublade(wetten, bein_filter=_bein_band(1.35, 1e9))
+    schubladen["quote_unter_135"] = _schublade(wetten, bein_filter=_bein_band(1.0, 1.35))
 
     je_liga = defaultdict(list)
     je_markt = defaultdict(list)

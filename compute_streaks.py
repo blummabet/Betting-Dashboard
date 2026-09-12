@@ -598,8 +598,13 @@ def build_streaks(wm: dict) -> dict:
             nf = next_fx.get(str(tid))
             if nf:
                 opp_pct = _opp_rate_pct(key, nf["oppId"], form, cf)
+                # `pickKey` gehoert mit in die Ausgabe: er wird hier gebaut (Z. 378) und von
+                # `telegram_streak_watch` gelesen — kopiert wurde er bis 12.09.2026 nie, und damit
+                # stand er in allen 132 bewachten Serien auf null. Die Abrechnung haengt seitdem
+                # nicht mehr an ihm, aber ein Feld, das ein anderes Modul liest, gehoert gefuellt.
                 s["next"] = {"oppId": nf["oppId"], "oppName": nf["oppName"], "atHome": nf["atHome"],
-                             "date": nf["date"], "kickoff": nf.get("kickoff"), "oppRatePct": opp_pct}
+                             "date": nf["date"], "kickoff": nf.get("kickoff"), "oppRatePct": opp_pct,
+                             "pickKey": nf.get("pickKey")}
                 # Stufe 1 — lebendiger Status: Eigentendenz × nächster Gegner (29.06.2026, Lucas).
                 mcont, opp_support_pct, matchup_pct = _matchup_continuation(cont, opp_pct, target_false, length)
                 s["continuation"] = mcont

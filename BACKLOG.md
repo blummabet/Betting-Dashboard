@@ -154,6 +154,72 @@ läuft dagegen live in der Seite und liest `GATE` direkt, ist also in Ordnung. E
 Python-Validator wieder anschließen (Banner + Commit) oder abschaffen. Bis zur Entscheidung steht
 er als Ausnahme **mit Begründung** im Artefakt-Wächter, statt still weiterzulaufen.
 
+## 🔴 12.09.2026 (Plattform-Audit, Block A — Teil 3, Abschluss)
+
+### A6 — das Serien-Buch hatte seit seiner Einführung null Zeilen
+
+`build_recap` suchte das Spiel über `pickKey`: String zerlegen, die letzten zwei Teile als
+Heim/Auswärts lesen. In **allen 132** bewachten Serien stand `pickKey: null` —
+`compute_streaks.py` baut den Schlüssel intern (Z. 378), kopierte ihn aber nie nach `s["next"]`,
+und von dort holt ihn der Watch. `parts` hatte ein Element, `fx` blieb None, jede Zeile fiel in
+`continue`. `streak_record.json` existierte nicht, `streak-log.json` war 0 Bytes.
+
+Der Fix ist nicht, den Schlüssel zu reparieren, sondern die Abhängigkeit von ihm loszuwerden:
+abgerechnet wird über **Team + Datum** — das steht immer im Eintrag. Ein zusammengesetzter String
+ist nur eine Abkürzung dorthin, und eine Abkürzung, die durch zwei Module reisen muss, geht
+irgendwo verloren. `pickKey` bleibt als zweiter Weg für verlegte Spiele, und `compute_streaks`
+stempelt ihn jetzt mit — ein Feld, das ein anderes Modul liest, gehört gefüllt.
+
+Sofort nach dem Fix, gegen die echten Watch-Daten: **Liga 52 von 62 abgerechnet, MLS 59 von 59.**
+Das Buch war nie leer, weil nichts passiert wäre — es konnte nur nie schreiben. Und damit gibt es
+zum ersten Mal eine Antwort auf „machen die Serien Sinn":
+
+| | n | erfüllt | Band |
+|---|---|---|---|
+| Liga | 52 | 71,2 % | 60,0 – 80,2 % |
+| MLS | 59 | 79,7 % | 69,8 – 86,9 % |
+
+⚠️ **Aber das Urteil trägt noch nicht.** Von den 52 Liga-Zeilen tragen nur **2** eine vor dem Spiel
+festgeschriebene Erwartung (das Feld gibt es erst seit dem 09.09.), bei MLS 6 von 59. Die Bilanz
+sagte trotzdem „die Erwartung von 71,0 % liegt im Band", als wäre sie aus denselben 52 gerechnet.
+Ein Mittel aus 2 Zeilen, angelegt an 52, ist kein Vergleich. Neues Urteil **„Erwartung zu dünn"**,
+mit der Zahl dabei; die Trefferquote und ihr Band bleiben sichtbar. Ab ~20 Zeilen mit Erwartung
+(und mindestens der Hälfte) urteilt es wieder.
+
+Dazu: `{liga_,mls_,}streak_record.json` werden jetzt committet — der Watch wurde es, das Buch nie.
+Fünf Mutationen, fünf rot.
+
+### A7 — die Schublade misst jetzt, was sie auswählt (und das dreht den Beleg um)
+
+Die Quotenbänder wählten auf `w["quote"]` aus — der **Gesamtquote** der Wette — und maßen danach
+**je Bein**. Bei einer Kombi sind das zwei verschiedene Mengen: von 7.891 Beinen in „ab 3,50" lagen
+**7.094 (89,9 %) unter 3,50**, Median-Beinquote 1,56.
+
+Erst die Korrektur am Audit-Befund: die Schublade wird **nicht angezeigt**. Der Agent hatte einen
+Kommentar in `stake-radar.js` gelesen, nicht die Seite. Die Zahl wurde aber als Beleg *zitiert*, und
+das ist fast schlimmer — `quote_ab_350` war eine von genau **zwei** Schubladen mit `belegt: True`
+im ganzen Stake-Buch.
+
+Richtig gemessen kippt sie:
+
+| | n | Ø-Quote | Rendite | Untergrenze | belegt |
+|---|---|---|---|---|---|
+| alt (Auswahl Gesamtquote) | 6.423 | 2,04 | +3,0 % | +1,0 % | ja |
+| **neu (Auswahl je Bein)** | **703** | **4,56** | +1,3 % | **−11,2 %** | **nein** |
+
+Und darunter kam etwas hervor, das vorher niemand sehen konnte: **`quote_160_200`** — n=5.898,
+Rendite **+6,3 %**, Untergrenze **+4,5 %**. Das Band um die 2,00 trägt, mit solider Stichprobe.
+Die belegten Schubladen sind jetzt `vor_anpfiff` und `quote_160_200` statt `vor_anpfiff` und
+`quote_ab_350`.
+
+Weil Einsatz und PnL an der **Wette** hängen und sich nicht auf ein einzelnes Bein aufteilen
+lassen, bleiben die Geldfelder in einer Bein-Schublade **leer statt falsch**; `basis` sagt, welche
+Grundgesamtheit gemeint ist. Der zitierende Kommentar in `stake-radar.js` ist korrigiert.
+
+Ein bestehender Test hielt die alte Semantik fest (`["wetten"] == 5`) — er prüft dieselbe Sache
+jetzt auf der richtigen Ebene. Der neue Test läuft zusätzlich **gegen den echten Bestand**: jedes
+Bein in einem Band muss auch wirklich in dessen Grenzen liegen. Drei Mutationen, drei rot.
+
 ## 🔴 12.09.2026 (Plattform-Audit, Block A — Teil 2)
 
 ### Die 26 Validator-Fehler waren alle Fehlalarme

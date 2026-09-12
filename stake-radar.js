@@ -45,7 +45,14 @@
   // Der Regler war da, er stand nur falsch herum. Ein Board, dessen Standardansicht zu 79 % aus
   // gelaufenen Spielen besteht, ist kein Radar, sondern ein Archiv — und es versteckt genau die
   // eine Schublade, die im eigenen Buch etwas taugt (`vor_anpfiff`: +2,6 % ROI, UG +1,5 % bei
-  // n=11.632, als einzige neben `quote_ab_350` überhaupt belegt).
+  // n=11.632).
+  //
+  // 12.09.2026 (Plattform-Audit): hier stand „als einzige neben `quote_ab_350` überhaupt belegt".
+  // Das war falsch, und zwar nicht knapp. `quote_ab_350` wählte auf der GESAMTQUOTE der Wette aus
+  // und maß dann je BEIN — bei Kombis zwei verschiedene Mengen: 89,9 % der gemessenen Beine lagen
+  // unter 3,50, Median 1,56. Richtig gemessen fällt die Schublade von n=6.423 auf n=703 und von
+  // UG +1,0 % auf **UG −11,2 %**, ist also nicht belegt. Dafür ist eine andere aufgetaucht, die
+  // vorher unter dem Fehler lag: **`quote_160_200`** — n=5.898, Rendite +6,3 %, **UG +4,5 %**.
   var SR_NUR_SPIELBAR = true;   // nur was noch nicht (oder kaum) läuft — s. o.
   // 12.09.2026: haelt den Rueckfall mit stake_highroller_fetch.GESPERRT gleich („Cricket bitte
   // raus"). Greift nur, wenn die Datei die Liste nicht mitschickt — sonst regiert das Artefakt.

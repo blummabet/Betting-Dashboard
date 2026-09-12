@@ -329,3 +329,109 @@ class TestBilanz(unittest.TestCase):
         b = W.bilanz(z)
         self.assertEqual(b["n"], 40)
         self.assertEqual(b["unaufloesbar"], 5)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 🔴 12.09.2026 (Lucas, Plattform-Audit) — das Serien-Buch war seit jeher leer.
+# ─────────────────────────────────────────────────────────────────────────────
+class TestAbrechnungHaengtNichtAmSchluessel(unittest.TestCase):
+    """`build_recap` suchte das Spiel ueber `pickKey`: String zerlegen, die letzten zwei Teile als
+    Heim/Auswaerts lesen. In **allen 132** bewachten Serien stand `pickKey: null` —
+    `compute_streaks.py` baut den Schluessel intern (Z. 378), kopierte ihn aber nie nach
+    `s["next"]`, und von dort holt ihn der Watch. Jede Zeile fiel in `continue`.
+
+    Folge: `streak_record.json` existierte nicht, `streak-log.json` war 0 Bytes. Das Buch, das die
+    Frage „machen die Serien Sinn" beantworten soll, hatte nach Wochen **null** Zeilen.
+
+    Die Abrechnung geht jetzt ueber Team + Datum — das steht immer im Eintrag. Ein zusammengesetzter
+    String ist nur eine Abkuerzung dorthin, und eine Abkuerzung, die durch zwei Module reisen muss,
+    geht irgendwo verloren.
+    """
+
+    def _welt(self):
+        return {"groups": {"ENG": {"fixtures": [
+            {"home": "65", "away": "63", "date": "2026-09-10", "matchday": 5,
+             "result": {"status": "FT", "home_score": 2, "away_score": 1}},
+            {"home": "42", "away": "99", "date": "2026-09-10", "matchday": 5,
+             "result": {"status": "NS"}},
+        ]}}, "koFixtures": []}
+
+    def _eintrag(self, **over):
+        e = {"teamId": "65", "team": "Arsenal", "type": "scored", "market": "Team trifft",
+             "length": 7, "date": "2026-09-10", "kickoff": "2026-09-10T18:00:00Z",
+             "pickKey": None, "oppName": "Chelsea"}
+        e.update(over)
+        return e
+
+    def test_ohne_pickKey_wird_trotzdem_abgerechnet(self):
+        msgs, done, buch = W.build_recap(self._welt(), {"k": self._eintrag()}, "2026-09-12")
+        self.assertEqual(len(buch), 1, "genau der Fall, der bisher still durchfiel")
+        self.assertTrue(buch[0]["erfuellt"], "Arsenal hat 2 Tore geschossen")
+        self.assertEqual(done, ["k"])
+
+    def test_auswaertsteam_wird_genauso_gefunden(self):
+        msgs, done, buch = W.build_recap(
+            self._welt(), {"k": self._eintrag(teamId="63", team="Chelsea")}, "2026-09-12")
+        self.assertEqual(len(buch), 1)
+
+    def test_ein_nicht_gespieltes_spiel_bleibt_offen(self):
+        msgs, done, buch = W.build_recap(
+            self._welt(), {"k": self._eintrag(teamId="42", team="X")}, "2026-09-12")
+        self.assertEqual(buch, [], "ohne Endstand darf nichts gebucht werden")
+        self.assertEqual(done, [], "und der Eintrag muss im Watch bleiben")
+
+    def test_falsches_datum_faellt_nicht_auf_ein_anderes_spiel(self):
+        """Gegenprobe: die Suche darf nicht einfach irgendein Spiel des Teams nehmen."""
+        msgs, done, buch = W.build_recap(
+            self._welt(), {"k": self._eintrag(date="2026-09-03")}, "2026-09-12")
+        self.assertEqual(buch, [])
+
+    def test_pickKey_bleibt_als_zweiter_weg(self):
+        """Wird ein Spiel verlegt, ist das Datum im Watch veraltet — dann traegt der Schluessel."""
+        welt = self._welt()
+        welt["groups"]["ENG"]["fixtures"][0]["date"] = "2026-09-11"   # verlegt
+        msgs, done, buch = W.build_recap(
+            welt, {"k": self._eintrag(pickKey="ENG-5-65-63")}, "2026-09-12")
+        self.assertEqual(len(buch), 1, "der Schluessel muss den verlegten Fall noch fangen")
+
+    def test_compute_streaks_stempelt_den_schluessel_mit(self):
+        quelle = (Path(__file__).resolve().parent.parent / "compute_streaks.py").read_text(
+            encoding="utf-8")
+        self.assertIn('"pickKey": nf.get("pickKey")', quelle,
+                      "ein Feld, das ein anderes Modul liest, gehoert gefuellt")
+
+
+class TestErwartungTraegtDasUrteil(unittest.TestCase):
+    """Als das Buch zum ersten Mal Zeilen bekam, standen sofort 52 Liga-Zeilen drin — aber nur
+    **2** trugen eine Erwartung (das Feld gibt es erst seit dem 09.09.). Das Urteil lautete
+    trotzdem „die Erwartung von 71,0 % liegt im Band", als waere sie aus denselben 52 gerechnet.
+    Ein Mittel aus 2 Zeilen, angelegt an 52, ist kein Vergleich."""
+
+    def _zeilen(self, n, treffer, mit_erwartung, erwartet=70.0):
+        raus = []
+        for i in range(n):
+            z = {"key": str(i), "erfuellt": i < treffer}
+            if i < mit_erwartung:
+                z["erwartetPct"] = erwartet
+            raus.append(z)
+        return raus
+
+    def test_zu_wenige_erwartungen_ergeben_kein_urteil(self):
+        b = W.bilanz(self._zeilen(52, 37, 2))
+        self.assertEqual(b["urteil"], "Erwartung zu duenn")
+        self.assertIn("2 von 52", b["grund"])
+
+    def test_auch_genug_zeilen_aber_unter_der_haelfte_reicht_nicht(self):
+        b = W.bilanz(self._zeilen(60, 45, 25))
+        self.assertEqual(b["urteil"], "Erwartung zu duenn",
+                         "25 von 60 ist unter der Haelfte — das Mittel gilt fuer die Minderheit")
+
+    def test_mit_breiter_erwartung_urteilt_es_wieder(self):
+        b = W.bilanz(self._zeilen(60, 45, 60, erwartet=50.0))
+        self.assertEqual(b["urteil"], "traegt sich selbst")
+
+    def test_die_quote_selbst_steht_trotzdem_da(self):
+        """Kein Urteil heisst nicht keine Zahl — die Trefferquote und ihr Band bleiben sichtbar."""
+        b = W.bilanz(self._zeilen(52, 37, 2))
+        self.assertEqual(b["quotePct"], 71.2)
+        self.assertIsNotNone(b["ugPct"])

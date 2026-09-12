@@ -34,6 +34,10 @@ STATE_FILE = BASE / f"{D.prefix()}streak_watch.json"
 # Watch fluechtig ist (Eintraege fallen nach dem Spiel raus) und das Buch dauerhaft.
 RECORD_FILE = BASE / f"{D.prefix()}streak_record.json"
 BILANZ_MIN_N = int(os.environ.get("STREAK_BILANZ_MIN_N", "30"))
+# Wie viele Zeilen muessen eine VOR dem Spiel festgeschriebene Erwartung tragen, damit der
+# Vergleich ueberhaupt einer ist? Zusaetzlich muss mindestens die Haelfte der Zeilen sie tragen —
+# sonst wird ein Mittel aus wenigen Zeilen an viele angelegt (s. bilanz()).
+ERWARTUNG_MIN_N = int(os.environ.get("STREAK_ERWARTUNG_MIN_N", "20"))
 
 
 def _wilson(treffer, n, z: float = 1.645):
@@ -113,6 +117,38 @@ def _find_fixture(wm: dict, home: str, away: str) -> dict | None:
                 return fx
     for kf in (wm.get("koFixtures") or []):
         if kf.get("home") == home and kf.get("away") == away:
+            return kf
+    return None
+
+
+def _fixture_fuer(wm: dict, team_id, datum) -> dict | None:
+    """Das Spiel dieses Teams an diesem Tag — ohne Umweg ueber einen Schluessel.
+
+    🔴 12.09.2026 (Lucas, Plattform-Audit). `build_recap` suchte das Spiel ueber `pickKey`:
+    String zerlegen, die letzten zwei Teile als Heim/Auswaerts lesen. Nur stand in **allen 132**
+    bewachten Serien `pickKey: null` — `compute_streaks.py` baut den Schluessel intern, kopiert
+    ihn aber nicht in `s["next"]`, und von dort holt ihn der Watch. Ergebnis: `parts` hatte ein
+    Element, `fx` blieb None, jede Zeile fiel in `continue`. **Das Serien-Buch hat seit seiner
+    Einfuehrung keine einzige Zeile bekommen** — `streak_record.json` existiert nicht,
+    `streak-log.json` ist 0 Bytes.
+
+    Der Schluessel wird jetzt zwar mitgeschrieben, aber die Abrechnung haengt nicht mehr an ihm.
+    Team und Datum stehen ohnehin im Watch-Eintrag und sind die Sache selbst; ein zusammengesetzter
+    String ist nur eine Abkuerzung dorthin — und eine Abkuerzung, die durch zwei Module reisen
+    muss, geht irgendwo verloren. Fehlerklasse statt Instanz.
+    """
+    if not team_id or not datum:
+        return None
+    tid, tag = str(team_id), str(datum)[:10]
+    for g in (wm.get("groups") or {}).values():
+        for fx in (g.get("fixtures") or []):
+            if str(fx.get("date") or "")[:10] != tag:
+                continue
+            if str(fx.get("home")) == tid or str(fx.get("away")) == tid:
+                return fx
+    for kf in (wm.get("koFixtures") or []):
+        _d = str(kf.get("date") or kf.get("kickoff") or "")[:10]
+        if _d == tag and (str(kf.get("home")) == tid or str(kf.get("away")) == tid):
             return kf
     return None
 
@@ -271,9 +307,13 @@ def build_recap(wm: dict, watched: dict, today: str) -> tuple[list, list, list]:
     for key, w in list(watched.items()):
         if str(w.get("date") or "")[:10] >= today:
             continue   # Spieltag noch nicht vorbei
-        pk = w.get("pickKey") or ""
-        parts = pk.split("-")
-        fx = _find_fixture(wm, parts[-2], parts[-1]) if len(parts) >= 2 else None
+        # Team + Datum zuerst — das steht immer im Eintrag. `pickKey` nur noch als zweiter Weg,
+        # fuer den Fall, dass ein Spiel verlegt wurde und das Datum im Watch veraltet ist.
+        fx = _fixture_fuer(wm, w.get("teamId"), w.get("date"))
+        if fx is None:
+            pk = str(w.get("pickKey") or "")
+            parts = pk.split("-")
+            fx = _find_fixture(wm, parts[-2], parts[-1]) if len(parts) >= 3 else None
         if not fx or not _fixture_finished(fx):
             continue   # noch kein Endstand → beim nächsten Lauf erneut prüfen
         held = streak_held(w.get("type"), w.get("teamId"), fx)
@@ -343,6 +383,20 @@ def bilanz(zeilen) -> dict:
     if erwartet is None:
         aus["urteil"] = "kein Vergleich"
         aus["grund"] = "keine vor dem Spiel festgeschriebene Erwartung in den Zeilen"
+    elif len(_e) < ERWARTUNG_MIN_N or len(_e) * 2 < n:
+        # 🔴 12.09.2026 (Plattform-Audit). Als das Serien-Buch zum ersten Mal Zeilen bekam, standen
+        # sofort 52 Liga-Zeilen drin — aber nur **2** davon trugen eine Erwartung (das Feld gibt es
+        # erst seit dem 09.09.). Das Urteil lautete trotzdem „die Erwartung von 71,0 % liegt im
+        # Band", als waere die Erwartung aus denselben 52 Zeilen gerechnet.
+        #
+        # Ein Mittel aus 2 Zeilen, angelegt an 52, ist kein Vergleich, sondern eine Zahl, die
+        # zufaellig danebensteht. Dieselbe Regel wie ueberall hier: was nichts entscheiden kann,
+        # darf nicht als Urteil auftreten.
+        aus["urteil"] = "Erwartung zu duenn"
+        aus["grund"] = ("erfuellt in %.1f %% (%.1f..%.1f %%), aber nur %d von %d Zeilen tragen "
+                        "eine vor dem Spiel festgeschriebene Erwartung — daraus laesst sich kein "
+                        "Vergleich rechnen" % (aus["quotePct"], aus["ugPct"], aus["ogPct"],
+                                               len(_e), n))
     elif ug * 100 > erwartet:
         aus["urteil"] = "traegt sich selbst"
         aus["grund"] = ("erfuellt in %.1f %% (Untergrenze %.1f %%) gegen %.1f %% Erwartung"
