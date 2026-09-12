@@ -44,16 +44,44 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 HTML_FILE  = os.path.join(SCRIPT_DIR, "season-finish.html")
 
 # ── Negative-edge gate thresholds ────────────────────────────────────────────
-# SYNC:GATE — These values MUST match the GATE object in pick-engine.js
-# (search for "const GATE = {" near the top of getBettingPicks engine).
-# When you change a threshold here, change the matching key there — and vice versa.
-GATE_GOALS_REAL  = 0.12  # Over 2.5 / Over 3.5 / BTTS  (real bookie odds)
-GATE_RESULT_REAL = 0.15  # Heimsieg / Auswärtssieg 1X2  (real bookie odds, Poisson-based — Apr 2026)
-GATE_TEAM_REAL   = 0.12  # Heim/Ausw über 1.5  (real bookie odds)
-GATE_TEAM_EST    = 0.15  # Heim/Ausw über 1.5  (estimated odds)
-GATE_AH_REAL     = 0.14  # Asian Handicap  (real only)
-GATE_CORN_REAL   = 0.10  # Ecken Over  (real bookie odds)
-GATE_CORN_EST    = 0.15  # Ecken Over  (estimated odds)
+# 🔴 12.09.2026 (Lucas, Plattform-Audit). Hier standen sieben KOPIEN der Schwellen aus
+# pick-engine.js, darüber ein Kommentar „SYNC:GATE — These values MUST match". Sie haben nicht
+# gematcht, und zwar schon länger:
+#
+#     GOALS_REAL  Engine 0.05  ·  hier 0.12      RESULT_REAL  Engine 0.05  ·  hier 0.15
+#     TEAM_REAL   Engine 0.07  ·  hier 0.12      CORN_REAL    Engine 0.06  ·  hier 0.10
+#     TEAM_EST    Engine 0.12  ·  hier 0.15      CORN_EST     Engine 0.10  ·  hier 0.15
+#     BTTS_REAL / CARD_EST                       fehlten hier ganz
+#
+# Ein Sync-Vertrag, den nur ein Kommentar bewacht, ist kein Vertrag. Deshalb werden die Werte
+# jetzt zur Laufzeit AUS pick-engine.js gelesen — eine Quelle, nichts zum Nachziehen, und ein
+# nicht lesbarer GATE-Block bricht laut ab statt still auf alte Zahlen zurückzufallen.
+#
+# Zur Einordnung, damit die Schwere nicht größer erzählt wird als sie war: die alten Konstanten
+# waren in KEINER Prüfung verdrahtet — sie standen nur in Kommentaren und Meldungstexten. Der
+# Validator hat also keine Picks durchgelassen, er hat FALSCHE ZAHLEN BEHAUPTET, und die davon
+# abgeleiteten Flag-Schwellen (unten) waren auf die alten, weiteren Gates gerechnet.
+_ENGINE_FILE = os.path.join(SCRIPT_DIR, "pick-engine.js")
+
+
+def _gates_aus_engine(pfad=None):
+    """Den `const GATE = { … }`-Block aus pick-engine.js lesen. EINE Quelle statt zwei Kopien."""
+    import re as _re
+    with open(pfad or _ENGINE_FILE, "r", encoding="utf-8") as fh:
+        quelle = fh.read()
+    treffer = _re.search(r"const GATE\s*=\s*\{(.*?)\n\};", quelle, _re.S)
+    if not treffer:
+        raise RuntimeError("pick-engine.js: `const GATE = { … };` nicht gefunden — der Validator "
+                           "hat keine Schwellen mehr und darf nicht so tun, als haette er welche.")
+    werte = {k: float(v) for k, v in
+             _re.findall(r"^\s*([A-Z_]+)\s*:\s*([0-9.]+)\s*,", treffer.group(1), _re.M)}
+    if not werte:
+        raise RuntimeError("pick-engine.js: GATE-Block gefunden, aber kein einziger Schwellwert "
+                           "darin lesbar.")
+    return werte
+
+
+GATES = _gates_aus_engine()
 
 # ── Poisson-Hilfsfunktion (identisch mit JS _poissonOver) ────────────────────
 import math
@@ -525,8 +553,13 @@ def check_fixture(fixture, league_key, league_name, rounds_left):
 
     # ── Cards FV Gate Plausibilität ─────────────────────────────────────────────
     # Prüft ob Karten-picks mit sehr niedrigem Poisson-FV trotzdem erscheinen.
-    # JS gate feuert wenn (1/bookie_odds) - fair_prob > GATE.GOALS_REAL (0.12).
-    # SYNC:GATE — gate fires at GATE_GOALS_REAL (0.12) in pick-engine.js for cards.
+    # JS: `_hasNegEdge(_fairCardP, _cardOdds, …, GATE.GOALS_REAL, GATE.CARD_EST)` (pick-engine.js
+    # 2362) — bei echten Quoten greift GOALS_REAL.
+    #
+    # 12.09.2026: die Schwellen unten waren Zahlen im Code (0.40 / 0.28), gerechnet auf ein Gate
+    # von 0.12. Das Gate steht seit einer Weile auf 0.05 — der Validator hat also eine Zone
+    # verschwiegen, in der die Engine längst blockt. Jetzt wird die Schwelle AUS dem Gate
+    # gerechnet, dann kann sie nicht mehr hinterherhinken.
     # Hinweis: Validator kennt kein refAvg — nutzt Liga-Baserate als konservativen Proxy.
     # In JS ist refAvg der primäre Predictor; Validator-FV kann davon abweichen.
     _league_card_base = {
@@ -535,17 +568,19 @@ def check_fixture(fixture, league_key, league_name, rounds_left):
     }.get(league_key, 3.5)
     _fv_c35 = poisson_over(_league_card_base, 3.5)
     _fv_c45 = poisson_over(_league_card_base, 4.5)
-    # Typical Über 3.5 odds: ~1.75–1.90 (impl. prob ~53–57%); gate at gap > 0.12
-    # → flag when FV < 0.40 (gap ≥ ~14pp at 1.80 odds)
-    if _fv_c35 < 0.40:
+    # Typische Quoten: Über 3.5 ~1,80 (impl. 55,6 %), Über 4.5 ~2,25 (impl. 44,4 %). Geflaggt
+    # wird, was die Engine bei dieser Quote blocken würde: FV < impl. Wahrscheinlichkeit − Gate.
+    _IMPL_C35, _IMPL_C45 = 0.556, 0.444
+    _schwelle_c35 = _IMPL_C35 - GATES["GOALS_REAL"]
+    _schwelle_c45 = _IMPL_C45 - GATES["GOALS_REAL"]
+    if _fv_c35 < _schwelle_c35:
         flag("WARN", "CARDS35_LOW_FV",
              f"Liga-Baserate={_league_card_base:.1f} → Poisson FV für Über 3.5 Karten = {_fv_c35:.1%} "
-             f"(typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~{0.556 - _fv_c35:+.1%}). "
-             f"FV-Gate (GATE_GOALS_REAL=0.12) sollte Karten-3.5-Pick blocken. "
+             f"(typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~{_IMPL_C35 - _fv_c35:+.1%}). "
+             f"FV-Gate (GOALS_REAL={GATES['GOALS_REAL']:.2f} → flaggt unter {_schwelle_c35:.1%}) "
+             f"sollte Karten-3.5-Pick blocken. "
              f"Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.")
-    # Typical Über 4.5 odds: ~2.10–2.40 (impl. prob ~42–48%); gate at gap > 0.12
-    # → flag when FV < 0.28
-    if _fv_c45 < 0.28:
+    if _fv_c45 < _schwelle_c45:
         flag("INFO", "CARDS45_LOW_FV",
              f"Liga-Baserate={_league_card_base:.1f} → Poisson FV für Über 4.5 Karten = {_fv_c45:.1%}. "
              f"JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. "
@@ -603,13 +638,16 @@ def check_fixture(fixture, league_key, league_name, rounds_left):
         fv_o35 = poisson_over(exp_goals_proxy, 3.5)
         # 🟡 HINWEIS: Over 2.5 FV unter 40% → Markt braucht Quoten ≥ 2.50 für Edge
         # Wenn FV so niedrig ist, sind typische Bookie-Quoten (~1.75–2.00) oft negativ.
-        # SYNC:GATE — gate fires at GATE_GOALS_REAL (0.12) implied gap in pick-engine.js
+        # Kein Gate-Check: `exp_goals_proxy` aus statischen Config-Werten ist 5–10x kleiner
+        # als der JS-expGoals. Das hier ist ein PROFIL-Hinweis, keine Gate-Nachrechnung —
+        # deshalb steht hier bewusst keine Gate-Zahl mehr (12.09.2026).
         if exp_goals_proxy < 2.2 and fv_o25 < 0.40:
             flag("INFO", "LOW_SCORING_PROFILE",
-                 f"Ø gpg={exp_goals_proxy:.2f}, H2H Ø={h2h_avg_g:.1f} Tore — "
+                 f"Ø gpg={exp_goals_proxy:.2f}"
+                 + (f", H2H Ø={h2h_avg_g:.1f} Tore" if h2h_avg_g is not None else "")
+                 + " — "
                  f"Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt")
         # 🟡 WARNUNG: Over 3.5 FV unter 20% → fast immer negativer Edge bei Bookie-Quoten
-        # SYNC:GATE — gate fires at GATE_GOALS_REAL (0.12) in season-finish.html
         # INFO (nicht WARN): exp_goals_proxy = h_gpg + a_gpg aus dem Config ist ~5–10× kleiner
         # als der JS-expGoals (der aus xG, homeAttStr, etc. berechnet wird). Deshalb feuert
         # der Check fast immer, auch wenn der JS-Gate es korrekt handhabt.
@@ -651,7 +689,7 @@ def check_fixture(fixture, league_key, league_name, rounds_left):
         fv_h15 = poisson_over(exp_h, 1.5)
         # INFO (nicht WARN): proxy = (h_gpg + a_def) / 2 aus statischen Config-Werten ist zu klein.
         # JS berechnet expH aus homeAttStr × awayDefStr × leagueMean — deutlich höher.
-        # SYNC:GATE — gate fires at GATE_TEAM_REAL (0.12) / GATE_TEAM_EST (0.15) in pick-engine.js
+        # Profil-Hinweis auf statischem Proxy, keine Gate-Nachrechnung (s. INFO-Text).
         if exp_h < 1.6 and fv_h15 < 0.40:
             flag("INFO", "TEAM_OVER_HOME_LOW_FV",
                  f"{home} expH≈{exp_h:.2f} (statischer Proxy) → FV über 1.5 = {fv_h15:.1%}. "
@@ -659,7 +697,7 @@ def check_fixture(fixture, league_key, league_name, rounds_left):
 
     if exp_a is not None:
         fv_a15 = poisson_over(exp_a, 1.5)
-        # SYNC:GATE — gate fires at GATE_TEAM_REAL (0.12) / GATE_TEAM_EST (0.15) in pick-engine.js
+        # Profil-Hinweis auf statischem Proxy, keine Gate-Nachrechnung (s. INFO-Text).
         if exp_a < 1.6 and fv_a15 < 0.40:
             flag("INFO", "TEAM_OVER_AWAY_LOW_FV",
                  f"{away} expA≈{exp_a:.2f} (statischer Proxy) → FV über 1.5 = {fv_a15:.1%}. "
@@ -668,7 +706,6 @@ def check_fixture(fixture, league_key, league_name, rounds_left):
     # ── Ecken FV Gate Plausibilität ───────────────────────────────────────────
     # Prüft ob Corner-picks mit sehr niedrigen erwarteten Ecken trotzdem erscheinen.
     # Validator liest keine Corner-Quoten; warnt wenn das Profil eindeutig "kein Over-Edge" zeigt.
-    # SYNC:GATE — gate fires at GATE_CORN_REAL (0.10) / GATE_CORN_EST (0.15) in pick-engine.js
     # Wir prüfen nur grob: wenn beide Teams sehr defensiv (wenig Angriffe) → Corner-Over riskant.
     if h_gpg > 0 and a_gpg > 0:
         # Proxy für Eckenbewegung: Teams mit <1.0 Tor/Spiel spielen auch sehr wenig Corner.
@@ -677,7 +714,8 @@ def check_fixture(fixture, league_key, league_name, rounds_left):
             flag("INFO", "CORNER_LOW_ATTACK_PROFILE",
                  f"{home} ({h_gpg:.1f} T/Sp) + {away} ({a_gpg:.1f} T/Sp): "
                  f"Beide Teams sehr angriffsschwach — Corner-Over-Pick hat schwaches Fundament. "
-                 f"FV-Gate (15pp bei geschätzten Quoten) sollte Corner-Pick blocken.")
+                 f"FV-Gate (CORN_EST={GATES['CORN_EST']:.2f} bei geschätzten Quoten) "
+                 f"sollte Corner-Pick blocken.")
 
     return issues
 
@@ -881,7 +919,21 @@ def main():
                     continue
 
             total_checked += 1
-            issues = check_fixture(fx, key, lname, rl)
+            # 🔴 12.09.2026 (Plattform-Audit): hier stand der nackte Aufruf. Eine einzige Partie
+            # ohne H2H-Schnitt hat den GANZEN Validator mit einem TypeError beendet — und zwar
+            # mitten in der Liste, also wurde alles danach nie geprueft. Nach aussen sah das aus
+            # wie ein Validator, der nichts gefunden hat.
+            #
+            # Fehlerklasse: **ein Waechter, der stirbt, darf nicht aussehen wie einer, der nichts
+            # findet.** Deshalb faengt der Lauf den Fehler pro Spiel ab und macht ihn zu einem
+            # ERROR-Befund — sichtbar, zaehlbar, und der Rest der Liste laeuft weiter.
+            try:
+                issues = check_fixture(fx, key, lname, rl)
+            except Exception as exc:
+                issues = [("ERROR", "VALIDATOR_ABSTURZ",
+                           f"Der Validator ist an dieser Partie abgestuerzt: "
+                           f"{type(exc).__name__}: {exc}. Die Pruefungen fuer dieses Spiel fehlen "
+                           f"— das ist kein 'alles in Ordnung'.")]
 
             for sev, code, msg in issues:
                 # always track for JSON (before errors_only filter)

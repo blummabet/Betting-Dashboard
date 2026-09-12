@@ -86,6 +86,13 @@ jobs:
           for f in $(python3 state_files_registry.py --bash-list daily_tiktok 2>/dev/null); do
             [ -e "$f" ] && git add "$f"
           done
+          # 12.09.2026 (Plattform-Audit): Money-Map-Dedup. `generate_daily_tiktok.py` schreibt ihn
+          # (`_mm_save_dedup`), damit ein Spiel nicht drei Tage in Folge kommt — committet hat ihn
+          # nur `update-liga.yml`, und die faehrt mit MONEYMAP_PUBLIC=false, schreibt ihn also nie.
+          # Heute folgenlos (der Public-Pfad ist ueberall aus), beim Einschalten sofort nicht mehr.
+          for f in money_map_sent.json; do
+            [ -e "$f" ] && git add "$f"
+          done
           # 02.09.2026 (Lucas: „Haben diese Tik Tok … auch da ein Speicher Problem" / „brauch ich
           # ja danach nicht mehr … sind eh auf telegram gepusht und dort gespeichert"): 145 MB im
           # Arbeitsbaum, alles in git, nirgends eine Aufraeum-Logik, ~2,2 MB/Tag Zuwachs.

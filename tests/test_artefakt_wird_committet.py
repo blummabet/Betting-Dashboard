@@ -37,8 +37,14 @@ JSON_TOK = re.compile(r"[A-Za-z0-9_./-]+\.json")
 # Test verhindern soll. Lieber ein lauter Test als ein Waechter mit Loch.
 SCHREIBER = {"_save", "_schreibe", "_dump", "write_json_atomic", "_write", "_save_seen",
              "write_json_guarded", "dump"}
+# Methoden AUF einem Pfad: `NORM_FILE.write_text(...)`. Die hat der Scanner in seiner ersten
+# Fassung komplett uebersehen — und zwar still, also in der gefaehrlichen Richtung: eine Datei
+# galt als „wird nicht geschrieben" und fiel damit aus der Pruefung heraus.
+PFAD_SCHREIBT = {"write_text", "write_bytes"}
+PFAD_LIEST = {"read_text", "read_bytes", "exists", "is_file", "stat", "resolve", "glob",
+              "unlink", "with_suffix", "as_posix", "touch"}
 LESER = {"_load", "_lade", "load", "load_json", "_lazy", "_load_seen", "load_picks",
-         "_mtime_age_h", "build_cache_index", "isinstance"}
+         "_mtime_age_h", "build_cache_index", "isinstance", "exists"}
 KLEMPNEREI = {"file", "join", "str", "Path", "replace", "discard", "add", "glob", "open"}
 
 # ── Ausnahmen: Datei wird geschrieben, aber bewusst NICHT von diesem Workflow committet ──────
@@ -53,6 +59,21 @@ AUSNAHMEN = {
         "Cache; baut sich aus der API neu auf. Kein Buch, kein Zustand, der verloren gehen kann.",
     ("fetch-wm-data.yml", "wm2026-player-props.json"):
         "WM ist vorbei, die Datei steht auf {}. Beim naechsten Turnier wieder aufnehmen.",
+    ("test-moneymap.yml", "money_map_sent.json"):
+        "Test-Workflow mit `permissions: contents: read` und MONEYMAP_PUBLIC=false — er schreibt "
+        "den Dedup bewusst NICHT und darf ueberhaupt nichts committen. Genau so ist er gemeint: "
+        "wiederholbar klickbar, ohne Zustand zu hinterlassen.",
+    ("fetch-pinnacle-odds.yml", "wm_closing_lines.json"):
+        "Owner ist capture-closing.yml. WM ist vorbei (letzte Aenderung 19.07.2026); beim "
+        "naechsten Turnier gehoert die Zustaendigkeit einmal sauber entschieden.",
+    ("fetch-wm-data.yml", "wm2026-player-picks.json"):
+        "WM vorbei, letzte Aenderung 19.07.2026, kein Workflow committet sie mehr.",
+    ("update-dashboard.yml", "validator_summary.json"):
+        "🔴 12.09.2026: `check_picks_logic.py` laeuft nach jedem Update, aber NIEMAND liest sein "
+        "Ergebnis — der Banner in ui.js steht auf `const vs = null`, und die committete Summary "
+        "ist vom 26.04.2026, weil der Validator seither bei jeder Partie ohne H2H-Schnitt "
+        "abgestuerzt ist. Der Absturz ist gefixt; ob der Validator wieder angeschlossen oder "
+        "abgeschafft wird, entscheidet Lucas. Bis dahin waere Committen nur Rauschen.",
 }
 # `telegram-log.json` schreiben sieben Workflows ueber die gemeinsame Sende-Hilfe, committet wird
 # sie nur von update-liga / update-mls / telegram-manual. Der Log ist damit unvollstaendig — als
@@ -74,46 +95,105 @@ def _json_name(knoten, konstanten):
     if isinstance(knoten, ast.Call) and isinstance(knoten.func, ast.Name) \
             and knoten.func.id in ("str", "Path") and knoten.args:
         return _json_name(knoten.args[0], konstanten)
+    # `os.path.join(SCRIPT_DIR, "x.json")` — 12.09.2026 nachgeruestet: genau dieser Weg hat
+    # `validator_summary.json` verdeckt, und damit einen Producer, der seit April abstuerzt.
+    # Die literalen Segmente davor gehoeren dazu: `join(BASE, "matches", "index.json")` ist
+    # `matches/index.json`, und nur unter dem Pfad laesst sich pruefen, ob es committet wird.
+    if isinstance(knoten, ast.Call) and isinstance(knoten.func, ast.Attribute) \
+            and knoten.func.attr == "join":
+        teile = []
+        for arg in knoten.args:
+            if isinstance(arg, ast.Constant) and isinstance(arg.value, str):
+                teile.append(arg.value)
+            else:
+                teile = []          # nicht-literales Segment -> alles davor ist unbekannt
+        if teile and teile[-1].endswith(".json"):
+            return "/".join(teile)
     return None
 
 
-def _analysiere(py):
-    """(geschriebene Dateien, unbekannte Helfer) eines Moduls."""
-    baum = ast.parse(py.read_text(encoding="utf-8"))
-    konstanten = {}
+def _zuweisungen(knoten, basis, nur_oberste_ebene=False):
+    """Namen -> .json-Pfad, aus den Zuweisungen EINES Geltungsbereichs.
+
+    `nur_oberste_ebene` fuer den Modul-Stand: sonst wandern lokale Namen aus Funktionsrumpfen
+    in die Modul-Konstanten und ueberschreiben sich gegenseitig."""
+    konstanten = dict(basis)
+    if nur_oberste_ebene:
+        quelle = [n for n in knoten.body if isinstance(n, ast.Assign)]
+    else:
+        quelle = [n for n in ast.walk(knoten) if isinstance(n, ast.Assign)]
     for _ in range(3):          # Konstanten koennen auf Konstanten zeigen
-        for n in ast.walk(baum):
-            if isinstance(n, ast.Assign) and len(n.targets) == 1 \
-                    and isinstance(n.targets[0], ast.Name):
+        for n in quelle:
+            if len(n.targets) == 1 and isinstance(n.targets[0], ast.Name):
                 wert = _json_name(n.value, konstanten)
                 if wert:
                     konstanten[n.targets[0].id] = wert
+    return konstanten
+
+
+def _analysiere(py):
+    """(geschriebene Dateien, unbekannte Helfer) eines Moduls.
+
+    🔴 Namen werden PRO FUNKTION aufgeloest, nicht modulweit. Beim Bau dieses Waechters hat mich
+    genau das erwischt: `generate_wm_match_pages.py` benutzt `f` in der einen Funktion fuer
+    `os.path.join(BASE, "betfair_league_norm.json")` und in drei anderen als offenen Datei-Griff.
+    Modulweit gesammelt hiess das: `json.dump(daten, f)` schreibt angeblich die Liga-Norm-Datei —
+    vier Workflows falsch angeklagt. Ein Waechter, der falsche Alarme erzeugt, wird abgeschaltet;
+    darum ist die Praezision hier kein Luxus."""
+    baum = ast.parse(py.read_text(encoding="utf-8"))
+    modul = _zuweisungen(baum, {}, nur_oberste_ebene=True)
+    # Funktionen ZUERST, mit ihrem eigenen Stand — sonst beansprucht der Modul-Durchlauf einen
+    # Aufruf, der in Wahrheit einen lokalen Namen benutzt.
+    bereiche = [(n, _zuweisungen(n, modul))
+                for n in ast.walk(baum)
+                if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))]
+    bereiche.append((baum, modul))
+
     schreibt, unbekannt = set(), set()
-    for n in ast.walk(baum):
-        if not isinstance(n, ast.Call):
-            continue
-        f = n.func
-        name = f.attr if isinstance(f, ast.Attribute) else (f.id if isinstance(f, ast.Name) else None)
-        if not name:
-            continue
-        ziel = None
-        for arg in n.args:
-            ziel = _json_name(arg, konstanten)
-            if ziel:
-                break
-        if not ziel:
-            continue
-        if name == "open":
-            modus = n.args[1] if len(n.args) > 1 else None
-            if isinstance(modus, ast.Constant) and isinstance(modus.value, str) \
-                    and ("w" in modus.value or "a" in modus.value):
+    gesehen = set()
+    for knoten, konstanten in bereiche:
+        for n in ast.walk(knoten):
+            if not isinstance(n, ast.Call) or id(n) in gesehen:
+                continue
+            f = n.func
+            name = f.attr if isinstance(f, ast.Attribute) else (f.id if isinstance(f, ast.Name) else None)
+            if not name:
+                continue
+            # Fall 1: der Pfad ist der EMPFAENGER — `NORM_FILE.write_text(...)`.
+            if isinstance(f, ast.Attribute):
+                empfaenger = _json_name(f.value, konstanten)
+                if empfaenger:
+                    gesehen.add(id(n))
+                    if name in PFAD_SCHREIBT:
+                        schreibt.add(empfaenger)
+                    elif name == "open":
+                        modus = n.args[0] if n.args else None
+                        if isinstance(modus, ast.Constant) and isinstance(modus.value, str) \
+                                and ("w" in modus.value or "a" in modus.value):
+                            schreibt.add(empfaenger)
+                    elif name not in PFAD_LIEST:
+                        unbekannt.add((py.name, name + "() auf einem Pfad"))
+                    continue
+            # Fall 2: der Pfad steht in den Argumenten — `_save(DATEI, …)`.
+            ziel = None
+            for arg in n.args:
+                ziel = _json_name(arg, konstanten)
+                if ziel:
+                    break
+            if not ziel:
+                continue
+            gesehen.add(id(n))      # in der Funktion aufgeloest -> nicht nochmal modulweit
+            if name == "open":
+                modus = n.args[1] if len(n.args) > 1 else None
+                if isinstance(modus, ast.Constant) and isinstance(modus.value, str) \
+                        and ("w" in modus.value or "a" in modus.value):
+                    schreibt.add(ziel)
+            elif name in SCHREIBER:
                 schreibt.add(ziel)
-        elif name in SCHREIBER:
-            schreibt.add(ziel)
-        elif name in LESER or name in KLEMPNEREI:
-            pass
-        else:
-            unbekannt.add((py.name, name))
+            elif name in LESER or name in KLEMPNEREI:
+                pass
+            else:
+                unbekannt.add((py.name, name))
     return schreibt, unbekannt
 
 
@@ -135,13 +215,15 @@ def _logische_zeilen(txt):
 
 def _committet(txt, registry):
     """(committete Dateien, bewusst verworfene Dateien) eines Workflows."""
-    raus, verworfen = set(), set()
+    raus, verworfen, ordner_adds = set(), set(), set()
     zeilen = _logische_zeilen(txt)
     for i, zeile in enumerate(zeilen):
         if re.search(r"\bgit checkout\s+--\s+", zeile):
             verworfen |= set(JSON_TOK.findall(zeile))
         if "git add" in zeile:
             raus |= set(JSON_TOK.findall(zeile))
+            for ordner in re.findall(r"git add\s+([A-Za-z0-9_./-]+/)(?:\s|$)", zeile):
+                ordner_adds.add(ordner)
         if re.search(r"\bfor\s+\w+\s+in\b", zeile):
             rumpf, k = [], i
             while k + 1 < len(zeilen) and "done" not in zeilen[k]:
@@ -151,14 +233,22 @@ def _committet(txt, registry):
                 raus |= set(JSON_TOK.findall(zeile))
     for kategorie in re.findall(r"--bash-list\s+([a-z_]+)", txt):
         raus |= set((registry.get("categories") or {}).get(kategorie, {}).get("files", []))
-    return raus, verworfen
+    return raus, verworfen, ordner_adds
 
 
 SKRIPT = re.compile(r"([A-Za-z0-9_]+)\.py\b")
 LAEUFT = re.compile(r"(python3?\s|PYTHON\s*\}\}\s|\$[A-Z_]*PYTHON\s)")
+SUBPROZESS = {"run", "Popen", "call", "check_call", "check_output"}
 
 
 def _skripte(txt):
+    """Die Skripte, die dieser Workflow startet — direkt UND eine Ebene tiefer.
+
+    🔴 12.09.2026: die erste Fassung sah nur die `run:`-Zeilen. `update_dashboard.py` startet
+    aber `check_picks_logic.py` per subprocess, und dessen `validator_summary.json` war damit
+    unsichtbar — ein Waechter mit genau der Sorte Loch, die er finden soll. Eine Ebene tiefer
+    reicht heute fuer das ganze Repo (genau ein zusaetzliches Paar); tiefer zu gehen waere
+    Aufwand ohne Fund."""
     treffer = set()
     for z in txt.split("\n"):
         zs = z.strip()
@@ -166,7 +256,61 @@ def _skripte(txt):
             continue
         if LAEUFT.search(zs):
             treffer |= set(SKRIPT.findall(zs))
+    direkt = {s for s in treffer if (WURZEL / (s + ".py")).exists()}
+    for s in sorted(direkt):
+        treffer |= _subprozesse(WURZEL / (s + ".py"))
     return treffer
+
+
+def _subprozesse(py):
+    """Skripte, die dieses Modul per subprocess startet. Bewusst NUR subprocess: ein `"x.py"`
+    irgendwo im Quelltext (in einer Meldung, einem Kommentar, einer Doku-Zeile) ist kein Aufruf,
+    und vier falsche Eltern pro Datei machen aus dem Waechter eine Ausnahmeliste."""
+    try:
+        baum = ast.parse(py.read_text(encoding="utf-8"))
+    except Exception:
+        return set()
+    # Namen, die auf ein Skript zeigen. `update_dashboard.py` schreibt
+    # `validator = os.path.join(SCRIPT_DIR, "check_picks_logic.py")` und uebergibt dann NUR den
+    # Namen — ohne diese Aufloesung bleibt der Aufruf unsichtbar, und genau dahinter stand ein
+    # Producer, der seit April abstuerzt.
+    namen = {}
+    for _ in range(2):
+        for n in ast.walk(baum):
+            if isinstance(n, ast.Assign) and len(n.targets) == 1 \
+                    and isinstance(n.targets[0], ast.Name):
+                treffer = _py_name(n.value, namen)
+                if treffer:
+                    namen[n.targets[0].id] = treffer
+    raus = set()
+    for n in ast.walk(baum):
+        if not isinstance(n, ast.Call) or not isinstance(n.func, ast.Attribute):
+            continue
+        if n.func.attr not in SUBPROZESS:
+            continue
+        for teil in ast.walk(n):
+            name = _py_name(teil, namen)
+            if name and (WURZEL / (name + ".py")).exists():
+                raus.add(name)
+    return raus
+
+
+def _py_name(knoten, namen):
+    """Ausdruck -> Skriptname ohne .py, soweit er sich statisch ergibt."""
+    if isinstance(knoten, ast.Constant) and isinstance(knoten.value, str) \
+            and knoten.value.endswith(".py"):
+        return knoten.value[:-3].split("/")[-1]
+    if isinstance(knoten, ast.Name):
+        return namen.get(knoten.id)
+    if isinstance(knoten, ast.Call) and isinstance(knoten.func, ast.Attribute) \
+            and knoten.func.attr == "join":
+        for arg in reversed(knoten.args):
+            treffer = _py_name(arg, namen)
+            if treffer:
+                return treffer
+    if isinstance(knoten, ast.BinOp) and isinstance(knoten.op, ast.Div):
+        return _py_name(knoten.right, namen) or _py_name(knoten.left, namen)
+    return None
 
 
 def _durchlauf():
@@ -174,7 +318,7 @@ def _durchlauf():
     luecken, unbekannt, gesehen = [], set(), 0
     for wf in sorted(WF.glob("*.yml")):
         txt = wf.read_text(encoding="utf-8")
-        ok, verworfen = _committet(txt, registry)
+        ok, verworfen, ordner = _committet(txt, registry)
         schreibt = set()
         for s in _skripte(txt):
             py = WURZEL / (s + ".py")
@@ -186,6 +330,8 @@ def _durchlauf():
         gesehen += len(schreibt)
         for datei in sorted(schreibt):
             if datei in ok or datei in verworfen:
+                continue
+            if any(datei.startswith(o) for o in ordner):
                 continue
             if datei == GEMEINSAMER_LOG:
                 continue
@@ -231,6 +377,35 @@ class TestArtefaktWirdCommittet(unittest.TestCase):
         self.assertIn("poly_money_klein.json", broad,
                       "`write_json_atomic(BASE / KLEIN_FILE, …)` wird nicht mehr aufgeloest — "
                       "genau dieser Pfad-Weg hat den Fund vom 12.09. zuerst verdeckt.")
+
+    def test_lokale_namen_fallen_nicht_modulweit_zusammen(self):
+        """Der Fehlalarm, den dieser Waechter beim Bauen selbst produziert hat.
+
+        `generate_wm_match_pages.py` benutzt `f` in einer Funktion fuer
+        `os.path.join(BASE, "betfair_league_norm.json")` und in drei anderen als offenen
+        Datei-Griff. Modulweit gesammelt hiess das: `json.dump(daten, f)` schreibt angeblich die
+        Liga-Norm-Datei — vier Workflows waeren falsch angeklagt worden, obwohl die Datei
+        ordentlich von `betfair.yml` committet wird.
+
+        Falsche Alarme sind fuer einen Waechter nicht die harmlose Richtung: sie sind der Grund,
+        aus dem man ihn irgendwann abschaltet."""
+        schreibt = _analysiere(WURZEL / "generate_wm_match_pages.py")[0]
+        self.assertNotIn("betfair_league_norm.json", schreibt,
+                         "Die Datei wird dort nur GELESEN. Wenn sie hier als geschrieben gilt, "
+                         "loest der Scanner lokale Namen wieder modulweit auf.")
+        norm = _analysiere(WURZEL / "betfair_league_norm.py")[0]
+        self.assertIn("betfair_league_norm.json", norm,
+                      "Gegenprobe: der echte Schreiber muss weiterhin erkannt werden — sonst ist "
+                      "der Test oben nur deshalb gruen, weil gar nichts mehr gefunden wird.")
+
+    def test_ein_skript_hinter_subprocess_zaehlt_mit(self):
+        """`update_dashboard.py` startet `check_picks_logic.py` per subprocess, ueber eine
+        Variable. Ohne diese Aufloesung war dessen `validator_summary.json` unsichtbar — und
+        dahinter stand ein Producer, der seit dem 26.04.2026 bei jedem Lauf abstuerzte, ohne dass
+        es jemandem auffiel."""
+        txt = (WF / "update-dashboard.yml").read_text(encoding="utf-8")
+        self.assertIn("check_picks_logic", _skripte(txt),
+                      "Der Scanner sieht nur noch, was direkt in der `run:`-Zeile steht.")
 
     def test_die_dominanz_dateien_sind_wirklich_drin(self):
         """Der konkrete Fund vom 12.09. — als Nagel, damit er nicht durch eine spaetere

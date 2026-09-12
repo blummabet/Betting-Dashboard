@@ -114,6 +114,71 @@ Nicht angefasst: die zweite Tabelle „CLV-Aggregation pro Signal-Familie" rechn
 gemischte Quoten sagt für sich nichts — steht so in `stake_analyse._quote`), aber das ist ein
 eigener Punkt und kein Rechenfehler.
 
+### A8 — der Validator: kleiner als gemeldet, und dahinter etwas Größeres
+
+**Erst die Korrektur am Audit-Befund.** Die sieben Schwellen in `check_picks_logic.py` (GOALS_REAL
+0,12 statt 0,05 · RESULT_REAL 0,15 statt 0,05 · TEAM_REAL 0,12 statt 0,07 · CORN_REAL 0,10 statt
+0,06 · CORN_EST 0,15 statt 0,10 · TEAM_EST 0,15 statt 0,12; BTTS_REAL und CARD_EST fehlten) waren
+**in keiner Prüfung verdrahtet** — sie standen nur in Kommentaren und Meldungstexten. Der Validator
+hat also keine Picks durchgelassen, er hat falsche Zahlen behauptet. „Der Wächter kann das Band
+nicht sehen" war zu groß erzählt.
+
+Wirkung hatte es trotzdem an einer Stelle: die **abgeleiteten** Flag-Schwellen waren aufs alte,
+weite Gate gerechnet. Bei typischer Karten-Quote 1,80 (impl. 55,6 %) flaggte der Validator erst
+unter FV 40 % — richtig sind 50,6 %. Zehn Prozentpunkte, in denen die Engine längst blockt und der
+Validator nichts gesagt hätte, wenn doch etwas durchrutscht.
+
+Die Werte kommen jetzt zur **Laufzeit aus `pick-engine.js`** (`_gates_aus_engine()`), die
+Kartenschwelle wird aus dem Gate gerechnet, ein unlesbarer GATE-Block bricht **laut** ab statt
+still auf alte Zahlen zurückzufallen. Ein Sync-Vertrag, den nur ein Kommentar bewacht, ist kein
+Vertrag. Wächter: `tests/test_validator_gate_sync.py`.
+
+**Und dann der eigentliche Fund.** Beim ersten Testlauf ist der Validator abgestürzt:
+
+    TypeError: unsupported format string passed to NoneType.__format__
+
+Eine Partie ohne H2H-Schnitt (`h2h_avg_g is None`) — jede andere Stelle der Datei prüft das, eine
+nicht. Der Absturz beendet den **ganzen** Lauf mitten in der Liste; alles danach wird nie geprüft.
+
+Wie lange: die committete `validator_summary.json` ist vom **26.04.2026**. Viereinhalb Monate.
+Sie sagt „46 Spiele geprüft, 3 Fehler". Der echte Stand nach dem Fix: **107 Spiele, 26 Fehler,
+153 Warnungen** — die 26 sind alle `PRESSURE_MUSTWINFLAG_MISMATCH` und waren nie sichtbar.
+
+Fehlerklasse: **ein Wächter, der stirbt, darf nicht aussehen wie einer, der nichts findet.**
+Ein einzelnes kaputtes Spiel wird jetzt zu einem ERROR-Befund (`VALIDATOR_ABSTURZ`), der Rest der
+Liste läuft weiter.
+
+**Offene Entscheidung für Lucas:** der Banner in `ui.js` steht auf `const vs = null` — niemand
+liest das Ergebnis, und `validator_summary.json` steht in keiner git-add-Zeile. `validator.js`
+läuft dagegen live in der Seite und liest `GATE` direkt, ist also in Ordnung. Entweder den
+Python-Validator wieder anschließen (Banner + Commit) oder abschaffen. Bis zur Entscheidung steht
+er als Ausnahme **mit Begründung** im Artefakt-Wächter, statt still weiterzulaufen.
+
+### Der Artefakt-Wächter hatte selbst drei Löcher
+
+Beim Nachziehen von A8 sind in `test_artefakt_wird_committet.py` drei eigene Fehler aufgefallen —
+festgehalten, weil ein Wächter mit Loch schlimmer ist als keiner:
+
+1. **`os.path.join(...)` wurde nicht aufgelöst** → `validator_summary.json` unsichtbar, und damit
+   der seit April abstürzende Producer dahinter.
+2. **`Path.write_text(...)` galt nicht als Schreiben** → still übersehen, also in der gefährlichen
+   Richtung. Fand danach `money_map_sent.json`: der Money-Map-Dedup („damit ein Spiel nicht drei
+   Tage in Folge kommt") wird von drei Workflows geschrieben und von keinem committet. Heute
+   folgenlos, weil `MONEYMAP_PUBLIC` überall auf false steht — beim Einschalten sofort nicht mehr.
+   `daily-tiktok.yml` und `update-mls.yml` committen ihn jetzt; `test-moneymap.yml` bleibt außen
+   vor (`contents: read`, schreibt bewusst keinen Dedup).
+3. **Lokale Namen fielen modulweit zusammen.** `generate_wm_match_pages.py` benutzt `f` einmal für
+   `os.path.join(BASE, "betfair_league_norm.json")` und dreimal als offenen Datei-Griff — der
+   Scanner meldete vier Workflows, die eine Datei „nicht committen", die sie nur lesen. Falsche
+   Alarme sind für einen Wächter nicht die harmlose Richtung: sie sind der Grund, aus dem man ihn
+   abschaltet. Namen werden jetzt pro Funktion aufgelöst.
+
+Dazu folgt der Scanner Aufrufe **eine Ebene tiefer** (nur echte `subprocess`-Starts, inklusive der
+Auflösung über eine Variable — `update_dashboard.py` übergibt den Skriptnamen so). Ein beliebiges
+`"x.py"` irgendwo im Quelltext zählt bewusst nicht.
+
+Gegenbeweise: neun Mutationen, neun rot.
+
 ### Offen aus demselben Durchlauf — noch nicht gefixt, bewusst
 
 - `telegram-log.json` schreiben **sieben** Workflows, committen drei. Der Log ist damit
