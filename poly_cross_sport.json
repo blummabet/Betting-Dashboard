@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-12T13:09:44.606534+00:00",
+ "generatedAt": "2026-09-12T13:42:19.937869+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,28 +9,57 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 675,
- "pinnKeys": 335,
- "matched": 235,
- "footballRows": 207,
+ "polyRowsSeen": 687,
+ "pinnKeys": 347,
+ "matched": 247,
+ "footballRows": 219,
  "crossRows": 468,
- "footballSkippedStale": 75,
+ "footballSkippedStale": 79,
  "seenBySport": {
   "americanfootball_nfl": 174,
   "baseball_mlb": 98,
   "icehockey_nhl": 170,
   "boxing_boxing": 26,
   "soccer_mls": 24,
-  "soccer_liga": 183
+  "soccer_liga": 195
  },
  "matchedBySport": {
   "baseball_mlb": 28,
   "soccer_mls": 24,
-  "soccer_liga": 183
+  "soccer_liga": 195
  },
  "trackRecord": {
-  "tracked": 302,
+  "tracked": 304,
   "converged": 70
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "soccer_liga|frosinone-genoa|aw",
+   "sport": "soccer_liga",
+   "event": "Genoa vs Frosinone",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 49.5,
+   "pinnPP": 30.6,
+   "gapPP": 18.93,
+   "vol": 205748,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-12T13:42:19.937313+00:00"
+  },
+  {
+   "id": "soccer_liga|frosinone-genoa|hw",
+   "sport": "soccer_liga",
+   "event": "Genoa vs Frosinone",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 23.5,
+   "pinnPP": 41.0,
+   "gapPP": -17.47,
+   "vol": 205748,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-12T13:42:19.937313+00:00"
+  }
+ ]
 }
