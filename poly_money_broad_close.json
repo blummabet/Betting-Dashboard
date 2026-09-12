@@ -275216,7 +275216,13 @@
     "usd": 500,
     "ts": 1789162996
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Colorado Rockies": 0.0,
+   "Detroit Tigers": 1.0
+  },
+  "resolvedAt": "2026-09-12T02:14:15.230711+00:00"
  },
  "mlb-laa-wsh-2026-09-11": {
   "shares": {
@@ -275360,7 +275366,13 @@
     "usd": 980,
     "ts": 1789129716
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Over": 0.0,
+   "Under": 1.0
+  },
+  "resolvedAt": "2026-09-12T02:14:15.230711+00:00"
  },
  "bol1-ant-aur-2026-09-11": {
   "shares": {
@@ -276753,7 +276765,13 @@
     "usd": 740,
     "ts": 1789160817
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Houston Astros": 0.0,
+   "Tampa Bay Rays": 1.0
+  },
+  "resolvedAt": "2026-09-12T02:14:15.230711+00:00"
  },
  "bra-cor-cap-2026-09-11-more-markets": {
   "shares": {
@@ -277735,8 +277753,8 @@
  },
  "mlb-sd-sf-2026-09-11": {
   "shares": {
-   "San Diego Padres": 281102.1803834998,
-   "San Francisco Giants": 191338.14840502501
+   "San Diego Padres": 326765.07605374476,
+   "San Francisco Giants": 222419.6151988949
   },
   "prices": {
    "San Diego Padres": 0.595,
@@ -277748,7 +277766,7 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 519396,
+  "totalUsd": 520469,
   "whales": [
    {
     "wallet": "0xa71093cafc0c099b4ccab24c3cb8018d817923c4",
@@ -277765,8 +277783,8 @@
    {
     "wallet": "0x3dfb153c197d4c19d3b31c1ecd2c7b6860eeabaf",
     "side": "San Francisco Giants",
-    "usd": 48600,
-    "avgPrice": 0.41
+    "usd": 81000,
+    "avgPrice": 0.4099
    },
    {
     "wallet": "0xf1d6444a999c705b5bf0c9d1d6b979c0e09c892a",
@@ -277775,8 +277793,8 @@
     "avgPrice": 0.41
    }
   ],
-  "hoursToKickoff": 0.56,
-  "capturedAt": "2026-09-12T01:44:22.502853+00:00",
+  "hoursToKickoff": 0.06,
+  "capturedAt": "2026-09-12T02:14:15.230711+00:00",
   "cond": "0x697559f55828ca4928f0dfae421eb21a00b17a2442896305e3ed5d34b0036b29",
   "frage": "San Diego Padres vs. San Francisco Giants",
   "tokens": {
@@ -277792,57 +277810,105 @@
    "bids": [
     [
      0.59,
-     141787
+     19974
     ],
     [
      0.58,
-     270731
+     242376
     ],
     [
      0.57,
-     49893
+     46032
     ],
     [
      0.56,
-     8556
+     5134
     ],
     [
      0.55,
-     2254
+     109
     ],
     [
      0.54,
-     2013
+     1933
     ]
    ],
    "asks": [
     [
      0.6,
-     237199
+     101791
     ],
     [
      0.61,
-     107761
+     116567
     ],
     [
      0.62,
-     76559
+     66983
     ],
     [
      0.63,
-     12019
+     15961
     ],
     [
      0.64,
-     7135
+     2955
     ],
     [
      0.65,
-     1930
+     1960
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "San Diego Padres",
+    "price": 0.6,
+    "usd": 513,
+    "ts": 1789179045
+   },
+   {
+    "wallet": "0x3dfb153c197d4c19d3b31c1ecd2c7b6860eeabaf",
+    "action": "BUY",
+    "side": "San Francisco Giants",
+    "price": 0.41,
+    "usd": 7332,
+    "ts": 1789179004
+   },
+   {
+    "wallet": "0xc34b4901be324718c176100e350211d97b199296",
+    "action": "BUY",
+    "side": "San Diego Padres",
+    "price": 0.6,
+    "usd": 2542,
+    "ts": 1789179004
+   },
+   {
+    "wallet": "0x3dfb153c197d4c19d3b31c1ecd2c7b6860eeabaf",
+    "action": "BUY",
+    "side": "San Francisco Giants",
+    "price": 0.41,
+    "usd": 25468,
+    "ts": 1789179004
+   },
+   {
+    "wallet": "0xc7b564d67b4f1e053d22a45d6a5c5969c366c3e3",
+    "action": "BUY",
+    "side": "San Francisco Giants",
+    "price": 0.41,
+    "usd": 8000,
+    "ts": 1789178880
+   },
+   {
+    "wallet": "0xa8bd9ae70657db83444c6ca987b8aeb9fb0ab7aa",
+    "action": "BUY",
+    "side": "San Diego Padres",
+    "price": 0.6,
+    "usd": 3600,
+    "ts": 1789178830
+   },
    {
     "wallet": "0xe8c4d68aff65b38cac46987b9b65e01eb47d395d",
     "action": "BUY",
@@ -277850,22 +277916,6 @@
     "price": 0.41,
     "usd": 643,
     "ts": 1789174132
-   },
-   {
-    "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
-    "action": "BUY",
-    "side": "San Francisco Giants",
-    "price": 0.41,
-    "usd": 15007,
-    "ts": 1789171546
-   },
-   {
-    "wallet": "0x4483c26cdf27496cf32fb244972fca3f9ee5c565",
-    "action": "BUY",
-    "side": "San Francisco Giants",
-    "price": 0.41,
-    "usd": 300,
-    "ts": 1789168447
    }
   ]
  },
@@ -277922,8 +277972,8 @@
  },
  "mex-atla-pac-2026-09-11-more-markets": {
   "shares": {
-   "Over": 5673.3780592,
-   "Under": 6024.3086608
+   "Over": 10834.890026944999,
+   "Under": 11505.089410055
   },
   "prices": {
    "Over": 0.485,
@@ -277935,34 +277985,34 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 12078,
+  "totalUsd": 12142,
   "whales": [
    {
     "wallet": "0x19c4aa3200949f1dfc0f84cc2c9a47d78ed18c95",
     "side": "Over",
-    "usd": 4571,
-    "avgPrice": 0.4896
+    "usd": 9708,
+    "avgPrice": 0.4845
    },
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
     "side": "Under",
-    "usd": 2440,
-    "avgPrice": 0.5099
+    "usd": 7025,
+    "avgPrice": 0.5165
    },
    {
     "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
     "side": "Under",
-    "usd": 2124
+    "usd": 2728
    },
    {
     "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
     "side": "Under",
-    "usd": 476,
-    "avgPrice": 0.4991
+    "usd": 502,
+    "avgPrice": 0.4996
    }
   ],
-  "hoursToKickoff": 1.31,
-  "capturedAt": "2026-09-12T01:44:22.502853+00:00",
+  "hoursToKickoff": 0.81,
+  "capturedAt": "2026-09-12T02:14:15.230711+00:00",
   "cond": "0x8070d5a41ec9d19637c4b639235d83cbc3a599c697b405983b245304b19d750d",
   "frage": "Atlante FC vs. CF Pachuca: O/U 2.5",
   "tokens": {
@@ -277972,9 +278022,9 @@
  },
  "mex-tij-que-2026-09-11": {
   "shares": {
-   "Club Tijuana": 5298.44791905,
+   "Club Tijuana": 11719.541969600004,
    "Draw (Club Tijuana vs. Querétaro FC)": 41.376096575000005,
-   "Querétaro FC": 303.71179830000005
+   "Querétaro FC": 343.13584431
   },
   "prices": {
    "Club Tijuana": 0.475,
@@ -277987,8 +278037,14 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 15000,
+  "totalUsd": 28245,
   "whales": [
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Club Tijuana",
+    "usd": 6790,
+    "avgPrice": 0.4797
+   },
    {
     "wallet": "0x0dbe4798a1719b1fc08cd3acc2369dd77c069013",
     "side": "Club Tijuana",
@@ -277996,24 +278052,18 @@
     "avgPrice": 0.48
    },
    {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "wallet": "0xe8c4d68aff65b38cac46987b9b65e01eb47d395d",
     "side": "Club Tijuana",
-    "usd": 1440,
-    "avgPrice": 0.479
+    "usd": 827
    },
    {
     "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
     "side": "Club Tijuana",
     "usd": 438
-   },
-   {
-    "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
-    "side": "Club Tijuana",
-    "usd": 289
    }
   ],
-  "hoursToKickoff": 1.48,
-  "capturedAt": "2026-09-12T01:44:22.502853+00:00",
+  "hoursToKickoff": 0.98,
+  "capturedAt": "2026-09-12T02:14:15.230711+00:00",
   "tokens": {
    "Club Tijuana": "106574014537353415930892159980572548363324209119807777980903066783000201578015",
    "Draw (Club Tijuana vs. Querétaro FC)": "90151507437512036241437941046418197935187991892312959725658163687246244295417",
@@ -278109,6 +278159,192 @@
    "Club Necaxa 3 - 2 Club Puebla": "19399442197255366172190802416376540566771147929692793877640221155590842535329",
    "Club Necaxa 3 - 3 Club Puebla": "81961202423759556439302218663704828672911381226004461837914529465088529667139",
    "Any Other Score": "47067706594779412997368471379364800440239629238126000435094321297945965075304"
+  }
+ },
+ "lol-hle1-t1-2026-09-12": {
+  "shares": {
+   "Hanwha Life Esports": 173207.70800157028,
+   "T1": 113086.10946631999
+  },
+  "prices": {
+   "Hanwha Life Esports": 0.605,
+   "T1": 0.395
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 365938,
+  "whales": [
+   {
+    "wallet": "0xc32359bbc920b365a05cd310b9a998508c980077",
+    "side": "T1",
+    "usd": 54078,
+    "avgPrice": 0.3999
+   },
+   {
+    "wallet": "0x7c37b52eb226bcb9411375ec48b0169663fb6aeb",
+    "side": "Hanwha Life Esports",
+    "usd": 30250,
+    "avgPrice": 0.6
+   },
+   {
+    "wallet": "0xdd882a70680633a75516f6ed5fce443e2d96dadb",
+    "side": "Hanwha Life Esports",
+    "usd": 16469,
+    "avgPrice": 0.5999
+   },
+   {
+    "wallet": "0xe3763d38ba82a745900800ec11af21128f0e5149",
+    "side": "Hanwha Life Esports",
+    "usd": 12100,
+    "avgPrice": 0.6
+   }
+  ],
+  "hoursToKickoff": 2.81,
+  "capturedAt": "2026-09-12T02:14:15.230711+00:00",
+  "cond": "0x1d38c2172d410b833739d7cc834e62e07b0a82d631f0f2c89f10a9fbfa6f3960",
+  "frage": "LoL: Hanwha Life Esports vs T1 (BO5) - LCK Playoffs",
+  "tokens": {
+   "Hanwha Life Esports": "48695112555672485727777248446585038036780756395855109591575492967792057631373",
+   "T1": "4771608182684132069154659378294591113535720319539132420981074656489816904281"
+  },
+  "book": {
+   "side": "Hanwha Life Esports",
+   "bid": 0.6,
+   "ask": 0.61,
+   "spreadC": 1.0,
+   "spreadPct": 1.64,
+   "bids": [
+    [
+     0.6,
+     63248
+    ],
+    [
+     0.59,
+     338397
+    ],
+    [
+     0.58,
+     76704
+    ],
+    [
+     0.57,
+     13254
+    ],
+    [
+     0.56,
+     5284
+    ],
+    [
+     0.55,
+     25199
+    ]
+   ],
+   "asks": [
+    [
+     0.61,
+     6006
+    ],
+    [
+     0.62,
+     122509
+    ],
+    [
+     0.63,
+     44927
+    ],
+    [
+     0.64,
+     42453
+    ],
+    [
+     0.65,
+     3456
+    ],
+    [
+     0.66,
+     6727
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xaa90305ac3a880a0984e5f5d11c21ad135286b3a",
+    "action": "BUY",
+    "side": "Hanwha Life Esports",
+    "price": 0.61,
+    "usd": 559,
+    "ts": 1789178106
+   },
+   {
+    "wallet": "0x26281ab2da0aaf2b33e20769ec4af16b9c5839cf",
+    "action": "BUY",
+    "side": "Hanwha Life Esports",
+    "price": 0.61,
+    "usd": 380,
+    "ts": 1789177404
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "action": "BUY",
+    "side": "T1",
+    "price": 0.4,
+    "usd": 390,
+    "ts": 1789177341
+   }
+  ]
+ },
+ "mex-atla-pac-2026-09-11": {
+  "shares": {
+   "Atlante FC": 1834.6551047999997,
+   "Draw (Atlante FC vs. CF Pachuca)": 36.324990209999996,
+   "CF Pachuca": 4936.822235299998
+  },
+  "prices": {
+   "Atlante FC": 0.315,
+   "Draw (Atlante FC vs. CF Pachuca)": 0.285,
+   "CF Pachuca": 0.395
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 19444,
+  "whales": [
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "CF Pachuca",
+    "usd": 1185,
+    "avgPrice": 0.39
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Atlante FC",
+    "usd": 930,
+    "avgPrice": 0.32
+   },
+   {
+    "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
+    "side": "CF Pachuca",
+    "usd": 651
+   },
+   {
+    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
+    "side": "CF Pachuca",
+    "usd": 592
+   }
+  ],
+  "hoursToKickoff": 0.81,
+  "capturedAt": "2026-09-12T02:14:15.230711+00:00",
+  "tokens": {
+   "Atlante FC": "72147911995967983402880506067523327387549939072558081418001037057627907177159",
+   "Draw (Atlante FC vs. CF Pachuca)": "74761040725207345883816376970834004939199318633055150042182010644985509118170",
+   "CF Pachuca": "47306854658476128176415654960671283476492637661403110197249576576128310766677"
   }
  }
 }
