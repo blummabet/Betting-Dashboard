@@ -21,28 +21,69 @@ import pytest
 import update_signal_weights as U
 
 
+# 🔴 11.09.2026 — der Loop las `clvPP`, und `clvPP` verglich AEPFEL MIT BIRNEN: Pinnacles
+# entvigte Schlussquote gegen unsere rohe, vigbehaftete Einstiegsquote. Der Overround (gemessen:
+# public 6,60 %, Pinnacle 4,43 %) steckte einseitig auf der Einstiegsseite → jeder CLV war um
+# ~2-3 pp zu negativ. Der Loop lernte damit systematisch das Falsche.
+#
+# Seither gilt: der Lernstrom nimmt NUR `clvFairPP` mit `clvBasis == "fair"` — beide Seiten
+# entvigt. Ein Pick, dessen Einstiegsmarkt sich nicht zuordnen laesst, liefert lieber gar keine
+# Beobachtung als eine schiefe. Deshalb tragen die Fixtures hier beides; `_clv` baut es.
+def _clv(pp, basis="fair"):
+    return {"clvFairPP": pp, "clvBasis": basis}
+
+
 class TestCLVScore:
     def test_stillstand_ist_keine_beobachtung(self):
         """0.5 zurückzugeben wäre bequem — und falsch: eine erfundene neutrale Beobachtung
         zieht echte Signale Richtung 1.0 und täuscht Datenmenge vor."""
-        assert U._clv_outcome_score({"clvPP": 0}) is None
-        assert U._clv_outcome_score({"clvPP": 0.3}) is None, "Rauschen innerhalb der Deadband"
+        assert U._clv_outcome_score(_clv(0)) is None
+        assert U._clv_outcome_score(_clv(0.3)) is None, "Rauschen innerhalb der Deadband"
 
     def test_fehlender_clv_ist_keine_beobachtung(self):
         """BTTS/DC/AH haben (noch) kein Closing → clvPP None. Darf nicht als neutral zählen."""
         assert U._clv_outcome_score({}) is None
-        assert U._clv_outcome_score({"clvPP": None}) is None
-        assert U._clv_outcome_score({"clvPP": "kaputt"}) is None
+        assert U._clv_outcome_score(_clv(None)) is None
+        assert U._clv_outcome_score(_clv("kaputt")) is None
 
     def test_richtung_stimmt(self):
-        assert U._clv_outcome_score({"clvPP": 5}) == pytest.approx(1.0)
-        assert U._clv_outcome_score({"clvPP": -5}) == pytest.approx(0.0)
-        assert U._clv_outcome_score({"clvPP": 2.5}) == pytest.approx(0.75)
+        assert U._clv_outcome_score(_clv(5)) == pytest.approx(1.0)
+        assert U._clv_outcome_score(_clv(-5)) == pytest.approx(0.0)
+        assert U._clv_outcome_score(_clv(2.5)) == pytest.approx(0.75)
 
     def test_ausreisser_werden_geklippt(self):
         """Ein 40pp-CLV (meist Platzhalter-Quoten) darf ein Signal nicht im Alleingang drehen."""
-        assert U._clv_outcome_score({"clvPP": 40}) == pytest.approx(1.0)
-        assert U._clv_outcome_score({"clvPP": -40}) == pytest.approx(0.0)
+        assert U._clv_outcome_score(_clv(40)) == pytest.approx(1.0)
+        assert U._clv_outcome_score(_clv(-40)) == pytest.approx(0.0)
+
+
+class TestNurDieFaireBasisLernt:
+    """Die Umstellung vom 11.09. — und der Grund, warum sie ein eigener Test sein muss.
+
+    Ein alter Pick traegt `clvPP` (vigbehaftete Einstiegsseite) und kein `clvBasis`. Wuerde der
+    Loop darauf zurueckfallen, saehe man nichts: die Zahlen sind plausibel, nur um den halben
+    Overround verschoben. Genau solche Fehler wandern still durch — deshalb hier explizit.
+    """
+
+    def test_alter_vigbehafteter_clv_zaehlt_nicht(self):
+        assert U._clv_outcome_score({"clvPP": 5}) is None, \
+            "der alte, vigbehaftete Wert darf keine Beobachtung mehr erzeugen"
+
+    def test_faire_zahl_ohne_ausgewiesene_basis_zaehlt_nicht(self):
+        assert U._clv_outcome_score({"clvFairPP": 5}) is None, \
+            "ohne clvBasis ist nicht belegt, dass beide Seiten entvigt sind"
+
+    def test_fremde_basis_zaehlt_nicht(self):
+        assert U._clv_outcome_score(_clv(5, basis="roh")) is None
+
+    def test_basis_fair_ohne_faire_zahl_faellt_nicht_auf_die_alte_zurueck(self):
+        """Der zweite, unabhaengige Riegel: nicht nur die Basis muss stimmen, es muss auch das
+        FAIRE Feld gelesen werden. Ein `.get("clvFairPP", pick.get("clvPP"))` sieht harmlos aus
+        und holt die vigbehaftete Zahl durch die Hintertuer wieder herein."""
+        assert U._clv_outcome_score({"clvBasis": "fair", "clvPP": 5}) is None
+
+    def test_mit_ausgewiesener_fairer_basis_zaehlt_sie(self):
+        assert U._clv_outcome_score(_clv(5)) == pytest.approx(1.0)
 
 
 class TestNurSharpMoneyLerntAufCLV:
@@ -81,7 +122,7 @@ class TestLoopEndeZuEnde:
         # 6:4 sichtbar ueber dem Nullpunkt, ohne an den Deckel zu stossen.
         p = {"result": result, "odds": quote, "signals": [{"name": sig, "score": score}]}
         if clv is not None:
-            p["clvPP"] = clv
+            p.update(_clv(clv))
         return p
 
     def _gemischt(self, sig, clv=None):
@@ -116,7 +157,7 @@ class TestLoopEndeZuEnde:
     def test_pick_ohne_ergebnis_lernt_trotzdem_aus_clv(self, monkeypatch, tmp_path):
         """Der halbe Punkt der Übung: CLV steht beim Anpfiff fest, das Ergebnis erst danach.
         Ein noch nicht aufgelöster Pick mit Closing muss schon Evidenz liefern."""
-        w = self._run([{"result": "PENDING", "clvPP": 4.0,
+        w = self._run([{"result": "PENDING", **_clv(4.0),
                         "signals": [{"name": "opener_move", "score": 1.0}]}] * 10,
                       monkeypatch, tmp_path)
         assert "opener_move" in w, "Pick ohne Ergebnis liefert gar keine Beobachtung"

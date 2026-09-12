@@ -41,6 +41,7 @@ from pathlib import Path
 
 BASE = Path(__file__).resolve().parent
 import sharp_gate as SG   # 29.08.2026: DIE Sharp-Definition, geteilt mit Live-Watch + Frontend
+import push_deckel as PD  # 12.09.2026: Nachrichten-Deckel je Lauf
 
 TRACK_FILE = BASE / "poly_wallet_track.json"
 SEEN_FILE  = BASE / "poly_whale_seen.json"
@@ -1952,14 +1953,20 @@ def main():
     # Dieselbe Marktsicht wie die Auswahl — sonst baut die Karte einen Markt, den die Auswahl
     # nicht gemeint hat, und die Kleinmarkt-Zeilen rendern mit leeren Feldern.
     dom_sicht = getattr(dominanz_kandidaten, "sicht", broad)
+    # 12.09.2026: Der Whale-Block darueber laeuft seit jeher ueber `cand[:MAX_ALERTS]`, die
+    # Dominanz-Schleife nicht — `DOM_MAX_ALERTS` begrenzte nur die AUSWAHL in
+    # `dominanz_kandidaten` (Z. 1359). Steht dort einmal eine laengere Liste (neuer Datenstand,
+    # zurueckgesetzter Dedup), sendet diese Schleife sie ganz. Deckel drum.
+    dom_send = PD.Deckel(tg_send, DOM_MAX_ALERTS, "Markt-Dominanz")
     dom_sent = 0
     for pkey, pos, anteil in dom_cand:
-        if tg_send(build_dominanz_card(pos, scores, dom_sicht, anteil, now)):
+        if dom_send(build_dominanz_card(pos, scores, dom_sicht, anteil, now)):
             dom_sent += 1
             dom_seen[pkey] = {"usd": float(pos.get("usd") or 0), "anteil": round(anteil, 4),
                               "ts": now_iso}
             _log_dominanz_push(pkey, pos, scores, anteil, dom_sicht, now_iso)
     _save(DOM_SEEN_FILE, dom_seen)
+    print("  " + dom_send.bericht())
     print(f"  🔬 Kleinmarkt-Spur: {len(klein)} Maerkte unter ${int(DOM_MIN_MARKET)}")
     print(f"  🎯 Markt-Dominanz: {len(dom_cand)} Kandidat(en), {dom_sent} gesendet "
           f"(ab ${int(DOM_MIN_USD)} und {int(DOM_MIN_SHARE*100)} % Anteil).")

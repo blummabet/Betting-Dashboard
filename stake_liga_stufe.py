@@ -74,6 +74,10 @@ EBENE = {
     "liga-nacional-apertura": 1, "cambodian-premier-league": 1, "pro-league": 1,
     "usl-championship": 1, "liga-i": 1, "iraqi-league": 1, "vysshaya-liga": 1,
     "division-profesional": 1, "liga-portugal": 1,
+    # 12.09.2026 (CI-Wachhund): „philippines-footb-league" — die Philippines Football League ist
+    # die OBERSTE Klasse des Landes. Der abgeschnittene Slug („footb.") sieht nach Amateurstaffel
+    # aus; das ist die Abkuerzung des Feeds, nicht der Rang.
+    "philippines-footb-league": 1,
     # 08.09.2026 (CI-Wachhund): die finnische Spitze fehlte, waehrend „ykkonen" (2) und
     # „kolmonen" (3) darunter seit dem ersten Tag in der Tabelle stehen. Genau die Luecke,
     # die eine Tabelle ohne Wachhund jahrelang behaelt.
@@ -116,9 +120,13 @@ EBENE = {
     # waere in der Haelfte der Faelle falsch.
     "liga-nacional-de-ascenso": 2,
     # ── dritte Klasse und tiefer, regional, Amateur ────────────────────────
-    "league-one": 3, "league-two": 3, "3rd-liga": 3, "serie-c-group-a": 3,
-    "serie-c-group-b": 3, "serie-c-group-c": 3, "tercera-division": 3,
-    "tercera-division-group-7": 3, "primera-c": 3, "primera-division-rfef": 3,
+    "league-one": 3, "league-two": 3, "3rd-liga": 3, "tercera-division": 3,
+    # 12.09.2026: hier standen frueher `serie-c-group-a/-b/-c` und `tercera-division-group-7`
+    # als eigene Zeilen. Die Gruppen kommen jetzt aus der Regel in `_ebene_aus_slug` — in der
+    # Tabelle steht nur noch der RUMPF, und zwar genau einmal. Eine Staffel je Zeile war der
+    # Grund, warum Gruppe 4 der Tercera (von achtzehn) wieder als Luecke auffiel.
+    "serie-c": 3,
+    "primera-c": 3, "primera-division-rfef": 3,
     "liga-portugal-3": 3, "tweede-divisie": 3, "national": 3, "national-league": 3,
     "liga-bet-south-a": 3, "shillong-second-divison": 3, "torneo-federal-a": 3,
     "kolmonen": 3, "primera-divisio": 3, "south-australia-state-league-1": 3,
@@ -274,6 +282,12 @@ def art(slug: str):
 # weiterhin alles andere: was hier nicht greift, bleibt None und faellt auf.
 _ORDNUNGSZAHL = re.compile(r"^([2-9])(?:st|nd|rd|th)?-(?:division|liga|league|lig)\b")
 _ANHANG = re.compile(r"^(.*)-([23])$")
+# 12.09.2026 (CI-Wachhund, „tercera-division-group-4"). Zum ZWEITEN Mal eine Gruppe derselben
+# Liga: `tercera-division-group-7` steht seit Tagen von Hand in der Tabelle, Gruppe 4 stand
+# wieder ohne Ebene da — und die spanische Tercera hat achtzehn Gruppen. Eine Tabellenzeile je
+# Gruppe ist die Instanz; die Klasse ist „eine Gruppe IST ihre Liga". Regionalstaffeln teilen
+# eine Spielklasse per Definition, das muss niemand wissen, das sagt der Slug selbst.
+_GRUPPE = re.compile(r"^(.*)-group-(?:\d{1,2}|[a-z])$")
 
 
 def _ebene_aus_slug(s: str):
@@ -291,6 +305,11 @@ def _ebene_aus_slug(s: str):
     m = _ANHANG.match(s)
     if m and EBENE.get(m.group(1)) == 1:
         return int(m.group(2))
+    # „…-group-4", „…-group-b" → die Ebene des Rumpfs, wenn der bekannt ist. Nur mit Rumpf in
+    # der Tabelle: eine unbekannte Liga wird durch eine Gruppennummer nicht bekannter.
+    m = _GRUPPE.match(s)
+    if m and EBENE.get(m.group(1)):
+        return EBENE[m.group(1)]
     return None
 
 

@@ -45,12 +45,14 @@ BASE = Path(__file__).parent
 # DATASET-AWARE (12.07.2026, Lucas: „MLS auf Polymarket"). Positions-Health muss je Datensatz
 # getrennt laufen — sonst würde ein MLS-Lauf die WM-Positionen bewerten (und umgekehrt).
 import cocobet_dataset as D  # noqa: E402
+import push_deckel as PD  # noqa: E402  — 12.09.2026: Nachrichten-Deckel je Lauf
 from safe_write import write_json_atomic   # 25.08.2026: temp+replace statt halber Datei
 BETS_FILE     = Path(str(D.file("wm_auto_bets_placed.json",     "liga_auto_bets_placed.json")))
 POLY_FILE     = Path(str(D.file("wm_poly_prices.json",          "liga_poly_prices.json")))
 WM_FILE       = Path(str(D.data_file()))
 HEALTH_FILE   = Path(str(D.file("position_health.json",         "liga_position_health.json")))
 DEDUP_FILE    = Path(str(D.file("position_health_alerts.json",  "liga_position_health_alerts.json")))
+MAX_ALERTS_PRO_LAUF = int(os.environ.get("POSITION_MAX_ALERTS") or 8)
 
 # ── Refactor 2026-06-06: Konstanten aus cocobet_config.json (Profile-aware) ──
 try:
@@ -422,6 +424,11 @@ def main():
     sent = 0
     skipped_dedup = 0
 
+    # 12.09.2026: Diese Schleife laeuft ueber ALLE offenen Positionen. Der 6h-Dedup bremst
+    # Wiederholungen, aber nicht den ersten Durchgang — kippen an einem Tag viele Positionen
+    # gleichzeitig auf „warning" (ein Datenfehler in der Health-Rechnung reicht), geht das als
+    # Nachrichtenflut raus. Dieselbe Klasse wie der Serien-Vorfall vom selben Tag.
+    deckel = PD.Deckel(tg_send, MAX_ALERTS_PRO_LAUF, "Positions-Health")
     for bet in open_bets:
         # Match key aus bet
         mk = bet.get("matchKey") or f"{bet.get('homeId','?')}-{bet.get('awayId','?')}"
@@ -451,7 +458,7 @@ def main():
                 except Exception:
                     pass
             if send:
-                ok = tg_send(format_alert(h))
+                ok = deckel(format_alert(h))
                 if ok:
                     dedup[dedup_key] = _now_iso()
                     sent += 1
@@ -459,6 +466,7 @@ def main():
     _save(HEALTH_FILE, {"lastRun": _now_iso(), "positions": health_entries})
     _save(DEDUP_FILE, dedup)
 
+    print("  " + deckel.bericht())
     print(f"\n✅ {len(health_entries)} Positionen geprüft · {sent} Alerts gesendet · {skipped_dedup} dedup-skip")
 
 

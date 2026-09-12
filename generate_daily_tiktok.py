@@ -77,6 +77,7 @@ BASE       = Path(__file__).parent
 # 01.07.2026 (Lucas: „Content für MLS/Liga"): dataset-aware. WM_FILE = aktives Daten-File; OUTPUT/DEDUP
 # per Dataset-Prefix (WM = kein Prefix → unverändert, mls/liga eigene Dateien → keine Kreuz-Kontamination).
 import cocobet_dataset as D  # noqa: E402
+import push_deckel as PD  # noqa: E402  — 12.09.2026: Nachrichten-Deckel je Lauf
 WM_FILE    = D.data_file()
 OUTPUT_DIR = BASE / f"{D.prefix()}daily-tiktok"
 DEDUP_FILE = BASE / f"{D.prefix()}tiktok_sent.json"   # Tracking was schon gepostet wurde
@@ -172,6 +173,7 @@ PUB_CHAT_ID      = os.environ.get("TELEGRAM_CHAT_ID", "").strip()   # 21.08.2026
 MONEYMAP_PUBLIC  = os.environ.get("MONEYMAP_PUBLIC", "false").lower() == "true"   # Money-Map-Cards auch an Public pushen
 SKIP_RENDER      = os.environ.get("SKIP_RENDER", "").lower() == "true"
 SKIP_TELEGRAM    = os.environ.get("SKIP_TELEGRAM", "").lower() == "true"
+MAX_CARDS_PRO_LAUF = int(os.environ.get("TIKTOK_MAX_CARDS") or 12)   # 12.09.2026: Bilder-Deckel je Lauf und Kanal
 # 14.06.2026 (Lucas): Umstellung auf Match-Preview-Cards. Daily-Picks-Sammelkarte
 # bleibt im Code, wird aber NICHT mehr gesendet (Flag default false). Previews on.
 SEND_DAILY_PICKS = os.environ.get("SEND_DAILY_PICKS", "").lower() == "true"
@@ -1562,8 +1564,14 @@ def main():
                 f"🎬 <b>CocoBet · TikTok-Cards · {today_iso}</b>\n"
                 f"Screen machen → posten. Reihenfolge: Hook → Info."
             )
+            # 12.09.2026: `produced` waechst aus einem Dutzend Quellen (Money-Map je Spiel,
+            # Previews, Reviews, Stories…). Kein Zweig begrenzt die Summe — ein Tag mit vielen
+            # Spielen ist eine Bilderflut. Deckel je Kanal.
+            deckel_trades = PD.Deckel(lambda t: tg_send_photo(*t), MAX_CARDS_PRO_LAUF,
+                                      "TikTok-Cards (Trades)")
             for label, png, caption in produced:
-                tg_send_photo(png, caption)
+                deckel_trades((png, caption))
+            print("  " + deckel_trades.bericht())
             sent_to_telegram = True
             print(f"\n✅ {len(produced)} Cards generiert und gepusht")
         else:
@@ -1601,9 +1609,12 @@ def main():
     # sent_to_telegram, damit der Money-Map-Dedup auch greift wenn NUR Public bedient wurde.
     moneymap_public_ids = []
     if MONEYMAP_PUBLIC and PUB_CHAT_ID and not SKIP_TELEGRAM and TELEGRAM_TOKEN and moneymap_cards:
+        deckel_public = PD.Deckel(lambda t: tg_send_photo(t[0], t[1], chat_id=PUB_CHAT_ID),
+                                  MAX_CARDS_PRO_LAUF, "Money-Map (Public)")
         for _label, _png, _cap in moneymap_cards:
-            if tg_send_photo(_png, _cap, chat_id=PUB_CHAT_ID):
+            if deckel_public((_png, _cap)):
                 moneymap_public_ids.append(_label.replace("moneymap_", "", 1))
+        print("  " + deckel_public.bericht())
         if moneymap_public_ids:
             print(f"📣 {len(moneymap_public_ids)}/{len(moneymap_cards)} Money-Map-Card(s) an Public gepusht")
 

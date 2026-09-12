@@ -49,6 +49,7 @@ TELEGRAM_TOKEN = (os.environ.get("TELEGRAM_TOKEN") or "").strip()
 CHAT_ID        = (os.environ.get("TELEGRAM_CHAT_ID") or "-1003819239615").strip()
 SPOTLIGHT_DAYS = int(os.environ.get("SPOTLIGHT_DAYS", "7"))
 MAX_SPOTLIGHTS = int(os.environ.get("MAX_SPOTLIGHTS", "3"))
+import push_deckel as PD  # 12.09.2026: Nachrichten-Deckel je Lauf
 DRY_RUN        = os.environ.get("DRY_RUN", "").lower() == "true"
 
 # Positions-Bonus für Spotlight-Score
@@ -478,6 +479,11 @@ def main():
     spots_store.setdefault(week_key, [])
 
     sent = 0
+    # 12.09.2026: Die Auswahl ist ueber das Tages-Limit begrenzt (`remaining_today`) — aber an
+    # der SCHLEIFE steht das nicht, und der Deckel liegt damit in einer anderen Funktion als
+    # der Send. Zweiter, lokaler Riegel: was auch immer `select_spotlights` liefert, hier gehen
+    # nie mehr als MAX_SPOTLIGHTS Nachrichten raus.
+    deckel = PD.Deckel(tg_send, MAX_SPOTLIGHTS, "Player-Spotlight")
     for entry in spotlights:
         name = entry["playerName"]
         print(f"  🌟 {name} ({entry['teamName']})")
@@ -491,7 +497,7 @@ def main():
         print()
 
         if not DRY_RUN:
-            ok = tg_send(card)
+            ok = deckel(card)
             if ok:
                 sent += 1
                 _log_send("player_spotlight", card.split("\n")[0], {

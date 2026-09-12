@@ -111,6 +111,20 @@ def _groessen_nach_cleanup():
     return gr
 
 
+def _ohne_kommentare(text: str, name: str) -> str:
+    """Kommentare raus, Code drin — vorsichtig genug, um keine echte Referenz zu schlucken.
+
+    Nur GANZE Kommentarzeilen (`//` als erstes Zeichen der Zeile) und Bloecke werden entfernt.
+    Ein `//` mitten in einer Zeile bleibt stehen: das ist meistens `https://` in einem String,
+    und eine Zeile wegzuwerfen, die auch Code enthaelt, waere genau das Loch, das dieser Test
+    zustopfen soll.
+    """
+    if name.endswith(".html"):
+        return re.sub(r"<!--.*?-->", " ", text, flags=re.DOTALL)
+    text = re.sub(r"/\*.*?\*/", " ", text, flags=re.DOTALL)
+    return "\n".join("" if z.lstrip().startswith("//") else z for z in text.splitlines())
+
+
 class TestArtefaktBudget:
     def test_artefakt_bleibt_unter_dem_budget(self):
         gr = _groessen_nach_cleanup()
@@ -184,11 +198,16 @@ class TestNichtsNoetigesWirdGeloescht:
         for f in quellen:
             try:
                 with open(os.path.join(REPO, f), encoding="utf-8", errors="replace") as fh:
-                    text += fh.read()
+                    text += _ohne_kommentare(fh.read(), f)
             except OSError:
                 pass
         # Nur ECHTE Referenzen zaehlen: der Pfad am Anfang eines Strings (fetch/src/href).
-        # Eine blosse Erwaehnung im Kommentar („Signale liegen in sharp_signals/") ist keine.
+        # Eine blosse Erwaehnung im Kommentar („Signale liegen in sharp_signals/") ist keine —
+        # 🔴 12.09.2026: genau daran ist der Test aufgeschlagen. Ein Kommentar in poly-wallets.js
+        # nennt `tests/test_zeitstempel_iso.py` in Backticks, und Backtick + Pfad + "/" ist fuer
+        # das Muster nicht von einem Template-String zu unterscheiden. Der Test sagte also
+        # „das Frontend laedt tests/" ueber eine Zeile, die gar kein Code ist. Kommentare fliegen
+        # jetzt vorher raus — das war die Absicht des Tests von Anfang an.
         referenziert = []
         for m in muster:
             d = m.rstrip("/")

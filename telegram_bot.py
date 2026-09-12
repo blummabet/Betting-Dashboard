@@ -20,6 +20,8 @@ import urllib.error
 from datetime import datetime, timezone, date, timedelta
 from collections import defaultdict
 
+import push_deckel as PD   # 12.09.2026: Nachrichten-Deckel je Lauf
+
 # ── Konfiguration ─────────────────────────────────────────────────────────────
 TELEGRAM_TOKEN        = (os.environ.get('TELEGRAM_TOKEN') or '').strip()
 CHAT_ID               = (os.environ.get('TELEGRAM_CHAT_ID') or '-1003819239615').strip()
@@ -30,6 +32,7 @@ MIN_EDGE_PP           = 4.0   # Mindest-Edge für PICK-Post (conf=high)
 MIN_EDGE_PP_MEDIUM    = 12.0  # Mindest-Edge für medium-conf Ausnahme-Picks
 MIN_MATCH_SCORE_WATCH = 8.0   # Mindest-Score für IM BLICK (erhöht: dead rubbers filtern)
 MAX_ROUNDS_LEFT_WATCH = 1     # Nur letzte Runde(n) für IM BLICK
+MAX_POSTS_PRO_LAUF    = int(os.environ.get('TG_MAX_POSTS') or 10)   # 12.09.2026: Nachrichten-Deckel je Lauf
 MIN_CONF_PICK         = 'high'
 
 STAKE_MITTEL_PP       = 7.0
@@ -459,6 +462,12 @@ def main():
     )
 
     picks_count = watch_count = 0
+    # 12.09.2026: Beide Schleifen darunter senden je Element. `sent_log` haelt Wiederholungen
+    # zurueck, einen ersten Durchgang ueber einen vollen Spieltag aber nicht — und ein
+    # zurueckgesetztes oder erstmalig gefuelltes `sent_log` ist genau der Zustand, der den
+    # Serien-Vorfall vom selben Tag ausgeloest hat. Ein Deckel fuer beide Bloecke zusammen:
+    # der Kanal ist derselbe, also gehoert die Grenze auf den Kanal und nicht auf die Schleife.
+    send = PD.Deckel(tg_send, MAX_POSTS_PRO_LAUF, "Telegram-Bot")
 
     # ── 🎯 PICK Posts ─────────────────────────────────────────────────────────
     if TG_MODE in ('picks', 'all'):
@@ -471,7 +480,7 @@ def main():
                 continue
             pm_fx = pm_index.get(f"{fx['home']}|{fx['away']}")
             msg   = format_pick_post(fx, pick, pm_fx)
-            if tg_send(msg):
+            if send(msg):
                 ep = edge_pp(pick.get('odds', 0), pick.get('modelOdds', 0))
                 sent_log[k] = {
                     'ts':     datetime.now(timezone.utc).isoformat(),
@@ -506,7 +515,7 @@ def main():
             if k in sent_log:
                 continue
             msg = format_watch_league_post(league_code, games, pm_index)
-            if tg_send(msg):
+            if send(msg):
                 sent_log[k] = {'ts': datetime.now(timezone.utc).isoformat(), 'type': 'watch',
                                'games': len(games)}
                 watch_count += 1
@@ -527,6 +536,7 @@ def main():
                 print('ℹ️  Keine gestrigen aufgelösten Picks für Recap')
 
     save_sent_log(sent_log)
+    print('  ' + send.bericht())
     print(f'\n📤 Fertig: {picks_count} Picks · {watch_count} Watch-Liga-Posts')
 
 

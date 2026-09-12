@@ -37,6 +37,7 @@ from pathlib import Path
 # steam_lag ist für mls_default jetzt AKTIV → braucht mls_poly_prices.json + eigene Logs.
 BASE          = Path(__file__).parent
 import cocobet_dataset as D  # noqa: E402
+import push_deckel as PD  # noqa: E402  — 12.09.2026: Nachrichten-Deckel je Lauf
 LOG_FILE      = Path(str(D.file("steam_lag_log.json",       "liga_steam_lag_log.json")))
 POLY_FILE     = Path(str(D.file("wm_poly_prices.json",      "liga_poly_prices.json")))
 SELL_DEDUP_FILE = Path(str(D.file("steam_lag_sell_dedup.json", "liga_steam_lag_sell_dedup.json")))
@@ -64,6 +65,7 @@ def _cfg(section: str, key: str, default):
 SELL_VELOCITY_PP_H  = _cfg("steam", "sell_velocity_pp_h",  0.3)   # Edge closing ≥ 0.3pp/h → sell alert
 SELL_EDGE_THRESHOLD = _cfg("steam", "sell_edge_threshold", 1.5)   # Only alert when edge already below this
 SELL_MIN_ENTRY_EDGE = _cfg("steam", "sell_min_entry_edge", 2.5)   # Only alert for signals with meaningful entry edge
+MAX_ALERTS_PRO_LAUF = int(os.environ.get("STEAM_MAX_ALERTS") or 8)   # 12.09.2026: Nachrichten-Deckel je Lauf
 
 # High-confidence threshold
 HIGH_CONF_EDGE_MIN  = _cfg("steam", "high_conf_edge_min", 3.0)    # Entry edge ≥ 3pp + steamLag → high confidence
@@ -1051,6 +1053,12 @@ def main():
     alerts_sent = 0
     now_dt_alert = datetime.fromisoformat(now_ts.replace("Z", "+00:00"))
 
+    # 12.09.2026: Diese Schleife laeuft ueber ALLE Signale und kann je Signal ZWEI Nachrichten
+    # schicken (High-Conf + Sell). Der Dedup-Stand haelt Wiederholungen zurueck, einen ersten
+    # Durchgang ueber einen vollen Signal-Stand aber nicht — und genau so sah der Serien-Vorfall
+    # vom selben Tag aus. Deckel drum; was hinten abfaellt, traegt keinen Stempel und steht beim
+    # naechsten Lauf wieder an.
+    send = PD.Deckel(tg_send, MAX_ALERTS_PRO_LAUF, "Steam-Lag")
     for sig in signals:
         # Keine Alerts für laufende/beendete Spiele (kein Pre-Match-Edge mehr)
         if _kickoff_passed(kickoffs, sig.get("matchKey", ""), now_dt_alert):
@@ -1088,7 +1096,7 @@ def main():
                 f"📅 Spiel: {sig.get('matchDate', '?')}\n"
                 f"\n🤖 CocoBet Steam Lag Monitor"
             )
-            ok = tg_send(msg)
+            ok = send(msg)
             if ok:
                 sell_dedup[hc_key] = {"ts": now_ts, "type": "high_conf"}
                 alerts_sent += 1
@@ -1116,13 +1124,14 @@ def main():
                 f"📅 Spiel: {sig.get('matchDate', '?')}\n"
                 f"\n🤖 CocoBet Steam Lag Monitor"
             )
-            ok = tg_send(msg)
+            ok = send(msg)
             if ok:
                 sell_dedup[sell_key] = {"ts": now_ts, "type": "sell", "vel": vel, "curr": curr}
                 alerts_sent += 1
                 print(f"  📉 SELL Alert: {home} vs {away} · {mkt} · {vel:+.2f}pp/h")
 
     save_sell_dedup(sell_dedup)
+    print("  " + send.bericht())
     if alerts_sent:
         print(f"  ✅ {alerts_sent} Alert(s) gesendet")
     else:

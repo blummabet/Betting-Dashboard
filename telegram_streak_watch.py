@@ -21,10 +21,11 @@ import json
 import math
 import os
 import urllib.request
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 import cocobet_dataset as D
+import push_deckel as PD   # 12.09.2026: Nachrichten-Deckel je Lauf
 
 BASE = Path(__file__).parent
 STREAKS_FILE = D.file("wm_streaks.json", "liga_streaks.json")
@@ -38,6 +39,21 @@ BILANZ_MIN_N = int(os.environ.get("STREAK_BILANZ_MIN_N", "30"))
 # Vergleich ueberhaupt einer ist? Zusaetzlich muss mindestens die Haelfte der Zeilen sie tragen —
 # sonst wird ein Mittel aus wenigen Zeilen an viele angelegt (s. bilanz()).
 ERWARTUNG_MIN_N = int(os.environ.get("STREAK_ERWARTUNG_MIN_N", "20"))
+
+# 🔴 12.09.2026 (Lucas: „Ich hab grad knapp 20 pushes in public bekommen — irgendwelche einzelner
+# zu Serien. Sowas gabs in der Form noch nie."). Das war MEIN Fix vom selben Tag: bis dahin hatte
+# das Serien-Buch NIE eine Zeile abgerechnet (alle `pickKey` null), der Fix machte die Abrechnung
+# ueber Team+Datum moeglich — und raeumte damit in einem Lauf den kompletten Rueckstau ab. `main`
+# schickte je abgerechneter Serie eine Nachricht: 52 Zeilen = 52 Pushes.
+#
+# Zwei Regeln, beide gegen die FEHLERKLASSE, nicht gegen diesen Lauf:
+#   1. Nur FRISCHE Abrechnungen werden gepostet. Was laenger her ist, wandert ins Buch — ein
+#      Ergebnis von vor sechs Wochen ist ein Messpunkt, keine Nachricht.
+#   2. Ein Recap-Lauf sendet HOECHSTENS EINE Nachricht (s. recap_nachrichten). Nicht „selten
+#      viele", sondern strukturell nie mehr als eine — dieselbe Konsequenz, die der Watch-Zweig
+#      im August gezogen hat („reicht 1 Nachricht am Tag").
+RECAP_MAX_ALTER_H = float(os.environ.get("STREAK_RECAP_MAX_ALTER_H", "36"))
+RECAP_DIGEST_MAX_ZEILEN = int(os.environ.get("STREAK_RECAP_MAX_ZEILEN", "12"))
 
 
 def _wilson(treffer, n, z: float = 1.645):
@@ -291,7 +307,7 @@ def build_watch_digest(entries: list) -> str:
 
 
 # ── MODE=recap ────────────────────────────────────────────────────────────────
-def build_recap(wm: dict, watched: dict, today: str) -> tuple[list, list, list]:
+def build_recap(wm: dict, watched: dict, today: str, now=None) -> tuple[list, list, list]:
     """Bewachte Serien, deren Spiel gelaufen ist → (Nachrichten, erledigte Keys, Buchungen).
 
     🔴 09.09.2026 (Lucas: „die Frage ist einfach — wurde Serie erfuellt ja oder nein").
@@ -303,6 +319,7 @@ def build_recap(wm: dict, watched: dict, today: str) -> tuple[list, list, list]:
     Ab jetzt geht jede aufgeloeste Serie als Zeile ins Buch. Die dritte Rueckgabe ist diese
     Zeile — `main` haengt sie an `streak_record.json`.
     """
+    jetzt = now or datetime.now(timezone.utc)
     msgs, done, buchungen = [], [], []
     for key, w in list(watched.items()):
         if str(w.get("date") or "")[:10] >= today:
@@ -318,15 +335,63 @@ def build_recap(wm: dict, watched: dict, today: str) -> tuple[list, list, list]:
             continue   # noch kein Endstand → beim nächsten Lauf erneut prüfen
         held = streak_held(w.get("type"), w.get("teamId"), fx)
         buchungen.append(_buchung(key, w, held))
+        done.append(key)
         if held is None:
             # Nicht aufloesbar (Ecken, Karten): raus aus dem Watch, aber MIT Zeile im Buch.
             # Ein Markt, den wir nicht abrechnen koennen, muss im Nenner sichtbar bleiben —
             # sonst sieht das Buch vollstaendiger aus, als es ist.
-            done.append(key)
             continue
+        if not _frisch(w, fx, jetzt):
+            continue   # Rueckstau: wird gebucht, aber NICHT gepostet (s. RECAP_MAX_ALTER_H)
         msgs.append(_recap_msg(w, held))
-        done.append(key)
     return msgs, done, buchungen
+
+
+def _abpfiff_etwa(w: dict, fx) -> "datetime | None":
+    """Grober Abpfiff-Zeitpunkt einer bewachten Serie — Anpfiff + 2 h, sonst Spieltag + 24 h."""
+    ko = _parse_ko(w.get("kickoff")) or _parse_ko((fx or {}).get("kickoff"))
+    if ko is not None:
+        return ko + timedelta(hours=2)
+    d = str(w.get("date") or "")[:10]
+    try:
+        return datetime.fromisoformat(d).replace(tzinfo=timezone.utc) + timedelta(hours=24)
+    except Exception:
+        return None
+
+
+def _frisch(w: dict, fx, jetzt: datetime) -> bool:
+    """Ist diese Abrechnung noch eine Nachricht wert?
+
+    Ohne bestimmbaren Zeitpunkt: NEIN. Fehlende Information rendert hier als harmloser Default,
+    und harmlos heisst beim Push „nicht senden" — die Zeile geht trotzdem ins Buch, es geht also
+    kein Messpunkt verloren. Der umgekehrte Default waere genau der Lauf vom 12.09.
+    """
+    ab = _abpfiff_etwa(w, fx)
+    if ab is None:
+        return False
+    return (jetzt - ab) <= timedelta(hours=RECAP_MAX_ALTER_H)
+
+
+def recap_nachrichten(msgs: list) -> list:
+    """Aus N Einzel-Abrechnungen HOECHSTENS EINE Nachricht.
+
+    Der Deckel ist hier keine Zahl, die man verstellen kann, sondern die Form der Funktion: sie
+    gibt nie mehr als ein Element zurueck. Ein Zaehler-Limit haette den 12.09. auf „nur" fuenf
+    Pushes gedeckelt; die Frage war aber nie, wie viele — sondern dass ein Rueckstau ueberhaupt
+    je Zeile sendet. Gleiche Antwort wie im Watch-Zweig: ein Block, alles drin.
+    """
+    rows = [m for m in (msgs or []) if m]
+    if not rows:
+        return []
+    if len(rows) == 1:
+        return [rows[0]]
+    zeilen = rows[:RECAP_DIGEST_MAX_ZEILEN]
+    rest = len(rows) - len(zeilen)
+    kopf = f"\U0001F4D2 <b>Serien-Abrechnung</b>\n<i>{len(rows)} bewachte Serien sind gelaufen</i>"
+    body = "\n".join(zeilen)
+    if rest:
+        body += f"\n<i>… und {rest} weitere</i>"
+    return ["\n\n".join([kopf, body, "\U0001F916 <i>CocoBet · Serien-Modell</i>"])]
 
 
 def _buchung(key: str, w: dict, held) -> dict:
@@ -433,8 +498,15 @@ def main() -> None:
 
     if MODE == "recap":
         msgs, done, buchungen = build_recap(wm, watched, today)
-        for m in msgs:
-            tg_send(m)
+        pushes = recap_nachrichten(msgs)
+        # `recap_nachrichten` gibt bauartbedingt hoechstens EINEN Eintrag zurueck. Der Deckel
+        # hier ist trotzdem kein Doppelmoppel, sondern der maschinenlesbare Beleg dafuer:
+        # `tests/test_push_deckel.py` prueft JEDE Sende-Schleife im Repo auf eine Grenze, die
+        # an der Schleife selbst steht — ein Versprechen zwei Funktionen weiter oben kann der
+        # Waechter nicht lesen, und genau so ein Versprechen ist am 12.09. gebrochen.
+        send = PD.Deckel(tg_send, 1, "Serien-Recap")
+        for m in pushes:
+            send(m)
         for k in done:
             watched.pop(k, None)
         # `updatedAt` bei JEDEM Recap-Lauf setzen, auch ohne neue Zeile: sonst meldet die
@@ -455,7 +527,13 @@ def main() -> None:
             RECORD_FILE.write_text(json.dumps(buch, ensure_ascii=False, indent=1),
                                    encoding="utf-8")
             print(f"📒 Serien-Buch: +{len(neu_z)} Zeilen, Bilanz: {buch['bilanz'].get('grund')}")
-        print(f"📊 Serien-Recap: {len(msgs)} gepostet, {len(done)} abgeschlossen.")
+        # „wer pusht, misst den Push": die Zeile trennt abgerechnet / gepostet / stumm gebucht.
+        # Am 12.09. stand hier „abgerechnet: 52 · Nachrichten: 52" und ich habe nur auf die
+        # erste Zahl geschaut. Jetzt steht die stumme Menge explizit daneben.
+        aufgeloest = sum(1 for b in buchungen if isinstance(b.get("erfuellt"), bool))
+        print(f"📊 Serien-Recap: {len(done)} abgeschlossen · {aufgeloest} abgerechnet · "
+              f"{len(msgs)} frisch · {aufgeloest - len(msgs)} stumm gebucht (Rueckstau) · "
+              f"{len(pushes)} Nachricht(en) gesendet.")
     else:  # watch
         new = build_watch(streaks, wm, watched, today)
         if new:

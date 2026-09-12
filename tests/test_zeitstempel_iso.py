@@ -42,8 +42,8 @@ PRODUCER_MUSTER = re.compile(
 # Lokale Artefakte werden bewusst NICHT von Hand umgeschrieben — Pipeline-Ausgabe gehoert der
 # Pipeline.
 WARTET_AUF_LAUF = {
-    "liga_poly_prices.json": "fetch_wm_poly_prices.py (Liga-Profil) — laeuft alle 30 Min",
-    "mls_poly_prices.json": "fetch_wm_poly_prices.py (MLS-Profil) — laeuft alle 30 Min",
+    "validator_summary.json": "check_picks_logic.py / update_dashboard.py — beide schreiben ISO, "
+                              "das committete Artefakt stammt noch aus einem Lauf davor",
     "wm_poly_prices.json": "fetch_wm_poly_prices.py (WM) — WM beendet, laeuft erst wieder 2030",
     "wm_poly_positions.json": "manage_wm_poly_positions.py — WM beendet",
     "wm_weather.json": "fetch_wm_weather.py — WM beendet",

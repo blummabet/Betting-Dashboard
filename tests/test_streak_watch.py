@@ -140,26 +140,34 @@ class TestRecap(unittest.TestCase):
                 "length": 15, "market": "over25", "pickKey": "KO-R16-FRA-PRY",
                 "oppName": "Paraguay", "date": "2026-07-04"}}
 
+    # Seit 12.09.2026 haengt der PUSH an der Frische der Abrechnung — diese Klasse prueft den
+    # Text, also wird hier ein „gerade gelaufen"-Jetzt gesetzt. Die Frische selbst hat unten
+    # ihre eigene Klasse.
+    _JETZT = datetime(2026, 7, 5, 6, 0, tzinfo=timezone.utc)
+
     def test_haelt(self):
-        msgs, done, _b = W.build_recap(self._wm(3, 1), self._watched(), "2026-07-05")
+        msgs, done, _b = W.build_recap(self._wm(3, 1), self._watched(), "2026-07-05",
+                                       now=self._JETZT)
         self.assertEqual(len(msgs), 1)
         self.assertIn("hält", msgs[0])
         self.assertIn("16×", msgs[0])
         self.assertEqual(len(done), 1)
 
     def test_gerissen(self):
-        msgs, done, _b = W.build_recap(self._wm(1, 0), self._watched(), "2026-07-05")
+        msgs, done, _b = W.build_recap(self._wm(1, 0), self._watched(), "2026-07-05",
+                                       now=self._JETZT)
         self.assertIn("gerissen", msgs[0])
         self.assertIn("15 Spielen", msgs[0])
 
     def test_spiel_noch_nicht_vorbei(self):
-        msgs, done, _b = W.build_recap(self._wm(3, 1), self._watched(), "2026-07-04")
+        msgs, done, _b = W.build_recap(self._wm(3, 1), self._watched(), "2026-07-04",
+                                       now=self._JETZT)
         self.assertEqual(msgs, [])
         self.assertEqual(done, [])
 
     def test_kein_endstand_wartet(self):
         wm = {"groups": {}, "koFixtures": [{"home": "FRA", "away": "PRY", "result": {}}]}
-        msgs, done, _b = W.build_recap(wm, self._watched(), "2026-07-05")
+        msgs, done, _b = W.build_recap(wm, self._watched(), "2026-07-05", now=self._JETZT)
         self.assertEqual(msgs, [])
 
 
@@ -435,3 +443,119 @@ class TestErwartungTraegtDasUrteil(unittest.TestCase):
         b = W.bilanz(self._zeilen(52, 37, 2))
         self.assertEqual(b["quotePct"], 71.2)
         self.assertIsNotNone(b["ugPct"])
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 🔴 12.09.2026 (Lucas: „Ich hab grad knapp 20 pushes in public bekommen — irgendwelche
+# einzelner zu Serien. Sowas gabs in der Form noch nie. Was ist das für Mist")
+#
+# Verursacht vom Fix direkt darueber. Bis dahin rechnete das Buch NIE etwas ab (alle `pickKey`
+# null); der Fix machte die Abrechnung ueber Team+Datum moeglich und raeumte in EINEM Lauf den
+# Rueckstau aus sechs Wochen ab — 52 Zeilen, 52 Pushes. Der Lauf davor hatte 0 Nachrichten
+# gesendet, der danach haette weitere ~59 aus dem MLS-Datensatz geschickt.
+#
+# Zwei unabhaengige Riegel, beide gegen die Klasse:
+#   1. Frische  — alte Abrechnungen werden gebucht, nicht gepostet.
+#   2. Form     — ein Lauf erzeugt hoechstens EINE Nachricht, egal wie viele frisch sind.
+# Ein Riegel allein reicht nicht: die Frische haette den 12.09. gefangen, aber nicht einen Tag
+# mit 30 gleichzeitig endenden Spielen; die Form haette beides gefangen, aber ein sechs Wochen
+# altes Ergebnis trotzdem gepostet.
+# ─────────────────────────────────────────────────────────────────────────────
+class TestRueckstauSendetNicht(unittest.TestCase):
+    JETZT = datetime(2026, 9, 12, 12, 0, tzinfo=timezone.utc)
+
+    def _welt(self, tag="2026-09-10"):
+        return {"groups": {"ENG": {"fixtures": [
+            {"home": "65", "away": "63", "date": tag, "matchday": 5,
+             "result": {"status": "FT", "home_score": 2, "away_score": 1}}]}}, "koFixtures": []}
+
+    def _eintrag(self, **over):
+        e = {"teamId": "65", "team": "Arsenal", "type": "scored", "market": "Team trifft",
+             "length": 7, "date": "2026-09-10", "kickoff": "2026-09-10T18:00:00Z",
+             "oppName": "Chelsea"}
+        e.update(over)
+        return e
+
+    # ── Riegel 1: Frische ────────────────────────────────────────────────────
+    def test_frische_abrechnung_wird_gepostet(self):
+        msgs, done, buch = W.build_recap(
+            self._welt(), {"k": self._eintrag()}, "2026-09-12",
+            now=datetime(2026, 9, 10, 21, 0, tzinfo=timezone.utc))
+        self.assertEqual(len(msgs), 1)
+        self.assertEqual(len(buch), 1)
+
+    def test_alte_abrechnung_wird_gebucht_aber_nicht_gepostet(self):
+        """Der Kern des Vorfalls: die Zeile darf nicht verlorengehen, nur die Nachricht."""
+        msgs, done, buch = W.build_recap(
+            self._welt("2026-07-28"),
+            {"k": self._eintrag(date="2026-07-28", kickoff="2026-07-28T18:00:00Z")},
+            "2026-09-12", now=self.JETZT)
+        self.assertEqual(msgs, [], "sechs Wochen alt — keine Nachricht")
+        self.assertEqual(len(buch), 1, "aber die Zeile MUSS ins Buch")
+        self.assertTrue(buch[0]["erfuellt"])
+        self.assertEqual(done, ["k"], "und der Eintrag faellt aus dem Watch")
+
+    def test_genau_an_der_grenze(self):
+        """Gegenprobe zur Grenze selbst: knapp drunter sendet, knapp drueber nicht."""
+        ko = datetime(2026, 9, 10, 18, 0, tzinfo=timezone.utc) + timedelta(hours=2)
+        knapp_drunter = ko + timedelta(hours=W.RECAP_MAX_ALTER_H - 1)
+        knapp_drueber = ko + timedelta(hours=W.RECAP_MAX_ALTER_H + 1)
+        a, _d, _b = W.build_recap(self._welt(), {"k": self._eintrag()}, "2026-09-12",
+                                  now=knapp_drunter)
+        b, _d, _b2 = W.build_recap(self._welt(), {"k": self._eintrag()}, "2026-09-12",
+                                   now=knapp_drueber)
+        self.assertEqual(len(a), 1)
+        self.assertEqual(b, [])
+
+    def test_ohne_zeitangabe_wird_nicht_gepostet(self):
+        """Fehlende Information rendert als harmloser Default — harmlos heisst hier: still.
+
+        Andersherum waere genau der 12.09.: ein Eintrag ohne verwertbares Datum haette
+        gesendet, weil „unbekannt" als „frisch" durchgeht.
+        """
+        e = self._eintrag(kickoff=None, date="")
+        welt = self._welt()
+        # ohne `date` findet die Datumssuche nichts → ueber pickKey abrechnen
+        msgs, done, buch = W.build_recap(
+            welt, {"k": dict(e, pickKey="ENG-5-65-63")}, "2026-09-12", now=self.JETZT)
+        self.assertEqual(len(buch), 1, "abgerechnet wird trotzdem")
+        self.assertEqual(msgs, [], "aber ohne bestimmbaren Zeitpunkt wird nicht gesendet")
+
+    def test_datum_ohne_kickoff_zaehlt_ab_spieltag(self):
+        msgs, _d, _b = W.build_recap(
+            self._welt(), {"k": self._eintrag(kickoff=None)}, "2026-09-12",
+            now=datetime(2026, 9, 11, 9, 0, tzinfo=timezone.utc))
+        self.assertEqual(len(msgs), 1, "Spieltag + 24 h ist am Folgetag frueh noch frisch")
+
+    # ── Riegel 2: Form ───────────────────────────────────────────────────────
+    def test_ein_lauf_sendet_hoechstens_eine_nachricht(self):
+        """Nicht „selten viele", sondern nie mehr als eine — fuer JEDE Menge."""
+        for n in (0, 1, 2, 5, 20, 52, 200):
+            with self.subTest(n=n):
+                self.assertLessEqual(len(W.recap_nachrichten([f"Zeile {i}" for i in range(n)])),
+                                     1, f"{n} Abrechnungen duerfen nie {n} Pushes werden")
+
+    def test_einzelne_abrechnung_bleibt_die_originalnachricht(self):
+        self.assertEqual(W.recap_nachrichten(["✅ <b>X hält</b>"]), ["✅ <b>X hält</b>"])
+
+    def test_sammelnachricht_traegt_alle_zeilen_oder_sagt_wie_viele_fehlen(self):
+        raus = W.recap_nachrichten([f"Zeile {i}" for i in range(52)])[0]
+        self.assertIn("52", raus, "die volle Zahl muss drinstehen, nicht nur die gezeigten")
+        self.assertIn("Zeile 0", raus)
+        fehlend = 52 - W.RECAP_DIGEST_MAX_ZEILEN
+        self.assertIn(f"{fehlend} weitere", raus)
+
+    def test_nichts_abgerechnet_ist_kein_push(self):
+        self.assertEqual(W.recap_nachrichten([]), [])
+        self.assertEqual(W.recap_nachrichten(None), [])
+
+    # ── Der Weg durch main: der Zaehler, auf den ich geschaut habe ───────────
+    def test_main_sendet_ueber_den_deckel_nicht_je_zeile(self):
+        """Gegenprobe gegen die alte Zeile `for m in msgs: tg_send(m)`."""
+        quelle = (Path(__file__).resolve().parent.parent /
+                  "telegram_streak_watch.py").read_text(encoding="utf-8")
+        ohne_kommentar = "\n".join(z for z in quelle.splitlines()
+                                   if not z.lstrip().startswith("#"))
+        self.assertIn("pushes = recap_nachrichten(msgs)", ohne_kommentar)
+        self.assertNotIn("for m in msgs:", ohne_kommentar,
+                         "je abgerechneter Zeile senden ist genau der Vorfall vom 12.09.")

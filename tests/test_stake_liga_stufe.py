@@ -410,3 +410,43 @@ def test_aufstiegsligen_stehen_in_der_tabelle_nicht_in_einer_regel():
     assert LS.stufe("promotion-league") == "3"
     # Gegenprobe: die schon eingestuften Schweizer Klassen bleiben, wo sie sind.
     assert LS.stufe("challenge-league") == "2"
+
+
+# ── 12.09.2026: der Wachhund, achter und neunter Slug ────────────────────────
+def test_eine_regionalgruppe_erbt_die_ebene_ihrer_liga():
+    """Zum zweiten Mal fiel eine GRUPPE derselben Liga durch: `tercera-division-group-7` stand
+    von Hand in der Tabelle, `-group-4` nicht — und die spanische Tercera hat achtzehn Gruppen.
+    Eine Zeile je Gruppe ist die Instanz. Die Klasse ist: eine Regionalstaffel IST ihre Liga,
+    das sagt der Slug selbst, dafuer braucht es kein Wissen."""
+    assert LS.stufe("tercera-division-group-4") == "3"
+    assert LS.stufe("tercera-division-group-11") == "3", "auch zweistellig"
+    assert LS.stufe("serie-c-group-d") == "3", "Buchstaben-Staffeln genauso"
+
+
+def test_eine_gruppennummer_macht_eine_unbekannte_liga_nicht_bekannt():
+    """Die Grenze der Regel: sie liest den Rumpf, sie raet ihn nicht. Ohne Rumpf in der Tabelle
+    bleibt None — sonst waere „irgendwas-group-2" stillschweigend eine Spielklasse."""
+    assert LS.stufe("voellig-unbekannte-liga-group-2") is None
+    assert LS.stufe("group-3") is None
+
+
+def test_tabelle_und_gruppenregel_widersprechen_sich_nicht():
+    """Die von Hand eingetragenen Gruppen bleiben drin (schneller Weg), muessen aber dasselbe
+    sagen wie die Regel — sonst haengt die Antwort davon ab, welcher Weg zuerst greift."""
+    widerspruch = []
+    for slug, ebene in LS.EBENE.items():
+        if "-group-" not in slug:
+            continue
+        rumpf = slug.rsplit("-group-", 1)[0]
+        aus_regel = LS.EBENE.get(rumpf)
+        if aus_regel and aus_regel != ebene:
+            widerspruch.append(f"{slug}={ebene} vs. {rumpf}={aus_regel}")
+    assert not widerspruch, "Tabelle und Regel sagen Verschiedenes: %s" % widerspruch
+
+
+def test_philippinen_sind_die_oberste_klasse():
+    """Der Slug kommt abgekuerzt („footb.") aus dem Feed und sieht nach Amateurstaffel aus.
+    Die Philippines Football League ist die oberste Klasse des Landes — das ist Wissen und
+    gehoert deshalb in die Tabelle, nicht in eine Regel."""
+    assert LS.stufe("philippines-footb-league") == "1"
+    assert LS.stufe("philippines-footb-league", "basketball") is None
