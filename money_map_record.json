@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-12T12:38:32.118113+00:00",
+"generatedAt": "2026-09-12T12:53:45.348213+00:00",
 "byVerdict": {
 "konsens": {
-"n": 983,
-"wins": 824,
-"hitRate": 0.8383,
-"polyN": 924,
-"polyWins": 712,
-"polyHitRate": 0.7706,
-"pinnN": 116,
-"pinnHitRate": 0.819,
-"nRoi": 310,
-"roi": 0.4663,
-"roiLb": 0.3949,
-"nClv": 310,
-"clv": 21.59,
-"clvLb": 19.3465
+"n": 985,
+"wins": 826,
+"hitRate": 0.8386,
+"polyN": 926,
+"polyWins": 714,
+"polyHitRate": 0.7711,
+"pinnN": 117,
+"pinnHitRate": 0.8205,
+"nRoi": 312,
+"roi": 0.4691,
+"roiLb": 0.398,
+"nClv": 312,
+"clv": 21.66,
+"clvLb": 19.43
 },
 "uneinig": {
-"n": 373,
+"n": 374,
 "wins": 124,
-"hitRate": 0.3324,
-"polyN": 335,
+"hitRate": 0.3316,
+"polyN": 336,
 "polyWins": 90,
-"polyHitRate": 0.2687,
-"pinnN": 224,
-"pinnHitRate": 0.5893,
-"nRoi": 141,
-"roi": -0.3768,
-"roiLb": -0.5068,
-"nClv": 141,
-"clv": -16.57,
-"clvLb": -21.4772
+"polyHitRate": 0.2679,
+"pinnN": 225,
+"pinnHitRate": 0.5911,
+"nRoi": 142,
+"roi": -0.3812,
+"roiLb": -0.5105,
+"nClv": 142,
+"clv": -16.67,
+"clvLb": -21.5502
 },
 "teil": {
 "n": 16,
@@ -141,15 +141,15 @@
 "wins": 16,
 "hitRate": 0.5926
 },
+"German Bundesliga 2": {
+"n": 26,
+"wins": 20,
+"hitRate": 0.7692
+},
 "Portuguese Primeira Liga": {
 "n": 26,
 "wins": 22,
 "hitRate": 0.8462
-},
-"German Bundesliga 2": {
-"n": 24,
-"wins": 19,
-"hitRate": 0.7917
 },
 "German Cup": {
 "n": 23,
@@ -176,6 +176,11 @@
 "wins": 15,
 "hitRate": 0.7895
 },
+"Chinese Super League": {
+"n": 19,
+"wins": 13,
+"hitRate": 0.6842
+},
 "English Sky Bet League 1": {
 "n": 19,
 "wins": 15,
@@ -190,11 +195,6 @@
 "n": 18,
 "wins": 9,
 "hitRate": 0.5
-},
-"Chinese Super League": {
-"n": 18,
-"wins": 12,
-"hitRate": 0.6667
 },
 "Colombian Primera A": {
 "n": 18,
@@ -614,15 +614,15 @@
 },
 "byStrength": {
 "strong": {
-"n": 826,
-"wins": 661,
-"hitRate": 0.8002,
-"nRoi": 302,
-"roi": 0.2786,
-"roiLb": 0.2009,
-"nClv": 302,
-"clv": 13.06,
-"clvLb": 9.9412
+"n": 829,
+"wins": 663,
+"hitRate": 0.7998,
+"nRoi": 305,
+"roi": 0.2785,
+"roiLb": 0.2011,
+"nClv": 305,
+"clv": 13.05,
+"clvLb": 9.9425
 },
 "weak": {
 "n": 513,
@@ -637,14 +637,71 @@
 }
 },
 "divergence": {
-"n": 373,
+"n": 374,
 "betfairWins": 124,
-"betfairRate": 0.3324,
-"polyN": 335,
+"betfairRate": 0.3316,
+"polyN": 336,
 "polyWins": 90,
-"polyRate": 0.2687
+"polyRate": 0.2679
 },
 "recent": [
+{
+"matchId": "36035031",
+"home": "Bochum",
+"away": "Greuther Furth",
+"league": "German Bundesliga 2",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Bochum",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-09-12T11:00:00Z",
+"settledAt": "2026-09-12T12:53:45.159705+00:00"
+},
+{
+"matchId": "36034528",
+"home": "FC Magdeburg",
+"away": "Kaiserslautern",
+"league": "German Bundesliga 2",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "FC Magdeburg",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+0
+],
+"kickoff": "2026-09-12T11:00:00Z",
+"settledAt": "2026-09-12T12:53:45.159705+00:00"
+},
+{
+"matchId": "36039182",
+"home": "Tianjin Jinmen Tiger FC",
+"away": "Liaoning Tieren FC",
+"league": "Chinese Super League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Tianjin Jinmen Tiger FC",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-09-12T11:00:00Z",
+"settledAt": "2026-09-12T12:53:45.159705+00:00"
+},
 {
 "matchId": "36039012",
 "home": "Toyama",
@@ -1347,75 +1404,18 @@
 ],
 "kickoff": "2026-09-11T16:15:00Z",
 "settledAt": "2026-09-11T19:21:57.888774+00:00"
-},
-{
-"matchId": "36032160",
-"home": "Rakow Czestochowa",
-"away": "LKP Motor Lublin",
-"league": "Polish Ekstraklasa",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Rakow Czestochowa",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-09-11T16:00:00Z",
-"settledAt": "2026-09-11T19:07:08.118104+00:00"
-},
-{
-"matchId": "36049487",
-"home": "Al Faisaly ( KSA )",
-"away": "Al-Ittihad",
-"league": "Saudi Professional League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Al-Ittihad",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-3
-],
-"kickoff": "2026-09-11T15:45:00Z",
-"settledAt": "2026-09-11T18:51:49.334028+00:00"
-},
-{
-"matchId": "36049681",
-"home": "Al-Quadisiya (KSA)",
-"away": "Al-Ettifaq",
-"league": "Saudi Professional League",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Al-Quadisiya (KSA)",
-"polySide": null,
-"winner": "draw",
-"moneyWin": false,
-"polyWin": null,
-"ftScore": [
-3,
-3
-],
-"kickoff": "2026-09-11T15:25:00Z",
-"settledAt": "2026-09-11T18:36:51.993397+00:00"
 }
 ],
 "global": {
-"n": 1372,
-"wins": 951,
+"n": 1375,
+"wins": 953,
 "hitRate": 0.6931,
-"nRoi": 458,
-"roi": 0.1843,
-"roiLb": 0.114,
-"nClv": 458,
-"clv": 8.99,
-"clvLb": 6.4095
+"nRoi": 461,
+"roi": 0.1849,
+"roiLb": 0.1147,
+"nClv": 461,
+"clv": 9.0,
+"clvLb": 6.4356
 },
-"pending": 50
+"pending": 51
 }
