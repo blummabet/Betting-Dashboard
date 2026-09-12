@@ -9,7 +9,7 @@
    "markt": "Match Odds",
    "seite": "home",
    "name": "Crystal Palace",
-   "odd": 1.92,
+   "odd": 1.96,
    "entryOdd": 1.94,
    "anteilPct": 81,
    "stufe": 2,
@@ -41,20 +41,20 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 81% auf der Seite"
+       "text": "Geld 78% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.809,
-       "betrag": 17424,
-       "gesamt": 21538,
+       "anteil": 0.778,
+       "betrag": 51217,
+       "gesamt": 65832,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 81% auf der Seite"
+      "text": "Geld 78% auf der Seite"
      },
      {
       "buch": "POLY",
@@ -73,7 +73,7 @@
       "geld": {
        "anteil": 0.52,
        "betrag": null,
-       "gesamt": 8397,
+       "gesamt": 25276,
        "waehrung": "USD",
        "quelle": "preis"
       },
@@ -124,9 +124,9 @@
    },
    "wertVsPinn": -0.0183,
    "gehaltenSeit": "2026-09-10T17:12:53.991461+00:00",
-   "zuletztAktiv": "2026-09-10T17:12:53.991461+00:00",
+   "zuletztAktiv": "2026-09-12T05:52:47.329848+00:00",
    "haltePreis": 1.92,
-   "aktiv": false
+   "aktiv": true
   },
   "36005171|Match Odds": {
    "matchId": "36005171",
@@ -275,7 +275,7 @@
    "markt": "Match Odds",
    "seite": "away",
    "name": "Arsenal",
-   "odd": 1.52,
+   "odd": 1.56,
    "entryOdd": 1.53,
    "anteilPct": 83,
    "stufe": 1,
@@ -326,20 +326,20 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 82% auf der Seite"
+       "text": "Geld 80% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.825,
-       "betrag": 62961,
-       "gesamt": 76316,
+       "anteil": 0.805,
+       "betrag": 106729,
+       "gesamt": 132582,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 82% auf der Seite"
+      "text": "Geld 80% auf der Seite"
      },
      {
       "buch": "POLY",
@@ -349,20 +349,20 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Poly-Preis 66% auf derselben Seite"
+       "text": "Poly-Preis 64% auf derselben Seite"
       },
       "tiefe": {
        "ok": false,
        "text": "kein bewiesenes Wallet auf der Seite"
       },
       "geld": {
-       "anteil": 0.66,
+       "anteil": 0.64,
        "betrag": null,
-       "gesamt": 98307,
+       "gesamt": 438133,
        "waehrung": "USD",
        "quelle": "preis"
       },
-      "text": "Poly-Preis 66% auf derselben Seite"
+      "text": "Poly-Preis 64% auf derselben Seite"
      },
      {
       "buch": "PIN",
@@ -376,7 +376,7 @@
       },
       "tiefe": {
        "ok": false,
-       "text": "kein Move gemessen"
+       "text": "Move -2.1pp in unsere Richtung"
       },
       "geld": null,
       "text": "hat dieselbe Seite als Favorit"
@@ -409,9 +409,9 @@
    },
    "wertVsPinn": -0.0229,
    "gehaltenSeit": "2026-09-10T22:04:43.190550+00:00",
-   "zuletztAktiv": "2026-09-11T20:52:19.350505+00:00",
+   "zuletztAktiv": "2026-09-12T05:52:47.329848+00:00",
    "haltePreis": 1.52,
-   "aktiv": false
+   "aktiv": true
   },
   "36005116|Match Odds": {
    "matchId": "36005116",
@@ -558,7 +558,7 @@
    "gehaltenSeit": "2026-09-11T11:21:08.858371+00:00",
    "zuletztAktiv": "2026-09-12T05:22:54.617586+00:00",
    "haltePreis": 1.47,
-   "aktiv": true
+   "aktiv": false
   },
   "36006610|Match Odds": {
    "matchId": "36006610",
@@ -823,11 +823,16 @@
    "markt": "Match Odds",
    "seite": "home",
    "name": "Mainz",
-   "odd": 1.9,
+   "odd": 1.89,
    "entryOdd": 2.04,
    "anteilPct": 82,
-   "stufe": 2,
+   "stufe": 1,
    "verstaerker": [
+    {
+     "art": "poly",
+     "text": "Poly Geld 97%",
+     "gewicht": 12
+    },
     {
      "art": "pinn",
      "text": "Pinnacle stimmt zu",
@@ -835,20 +840,24 @@
     },
     {
      "art": "pinnMove",
-     "text": "Pinnacle zieht mit +1.4pp",
+     "text": "Pinnacle zieht mit +4.0pp",
      "gewicht": 8
     }
    ],
-   "rang": 76.5,
+   "rang": 88.4,
    "track": null,
    "streak": null,
-   "poly": null,
+   "poly": {
+    "anteilPct": 97,
+    "usd": 144653,
+    "odd": 1.9
+   },
    "polyStatus": "nein",
    "polyKey": "bun-mai-ein-2026-09-12",
    "polySide": "1. FSV Mainz 05",
    "pinnMovePP": -1.5,
    "punkte": {
-    "punkte": 7,
+    "punkte": 9,
     "moeglich": 10,
     "dauerH": 15.38,
     "teile": [
@@ -860,43 +869,43 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 83% auf der Seite"
+       "text": "Geld 84% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.831,
-       "betrag": 50117,
-       "gesamt": 60309,
+       "anteil": 0.842,
+       "betrag": 57186,
+       "gesamt": 67917,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 83% auf der Seite"
+      "text": "Geld 84% auf der Seite"
      },
      {
       "buch": "POLY",
       "name": "Polymarket",
-      "status": "nein",
-      "punkte": 0,
+      "status": "ja",
+      "punkte": 2,
       "moeglich": 3,
       "grund": {
-       "ok": false,
-       "text": "Poly-Preis 52% auf derselben Seite"
+       "ok": true,
+       "text": "Poly-Geld 97% auf derselben Seite"
       },
       "tiefe": {
        "ok": false,
        "text": "kein bewiesenes Wallet auf der Seite"
       },
       "geld": {
-       "anteil": 0.52,
-       "betrag": null,
-       "gesamt": 113819,
+       "anteil": 0.97,
+       "betrag": 140313,
+       "gesamt": 144653,
        "waehrung": "USD",
-       "quelle": "preis"
+       "quelle": "geld"
       },
-      "text": "Poly-Preis 52% auf derselben Seite"
+      "text": "Poly-Geld 97% auf derselben Seite"
      },
      {
       "buch": "PIN",
@@ -910,7 +919,7 @@
       },
       "tiefe": {
        "ok": true,
-       "text": "Move +4.3pp in unsere Richtung"
+       "text": "Move +4.0pp in unsere Richtung"
       },
       "geld": null,
       "text": "hat dieselbe Seite als Favorit"
@@ -943,7 +952,7 @@
    },
    "wertVsPinn": -0.0388,
    "gehaltenSeit": "2026-09-11T22:07:08.062746+00:00",
-   "zuletztAktiv": "2026-09-12T05:22:54.617586+00:00",
+   "zuletztAktiv": "2026-09-12T05:52:47.329848+00:00",
    "haltePreis": 2.0,
    "aktiv": true
   },
