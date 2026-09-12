@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "mls",
-    "generatedAt": "2026-09-11T21:42:23.967358+00:00",
+    "generatedAt": "2026-09-12T11:36:39.381963+00:00",
     "minLen": 3,
     "strongLen": 5,
     "sortiert": "zufallPct",
@@ -140,7 +140,7 @@
       "continuation": {
         "state": "wackelt",
         "ratePct": 38,
-        "label": "Eigen 38% + Gegner 47% → 42% · Linie/Signale dagegen"
+        "label": "Eigen 38% + Gegner 47% → 42%"
       },
       "ratePct": 38,
       "seq": [
@@ -177,20 +177,7 @@
         "oppRatePct": 53
       },
       "oppSupportPct": 47,
-      "matchupPct": 42,
-      "signalInfo": {
-        "state": "contradict",
-        "count": 4,
-        "conviction": 4,
-        "names": [
-          "injury",
-          "h2h_pattern",
-          "chance_creation",
-          "topscorer_momentum",
-          "streak_momentum"
-        ],
-        "market": "Über 2.5 Tore"
-      }
+      "matchupPct": 42
     },
     {
       "teamId": "1617",
@@ -2055,6 +2042,72 @@
       "matchupPct": 37
     },
     {
+      "teamId": "1616",
+      "team": "Los Angeles FC",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1616.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "under25",
+      "market": "Unter 2,5 Tore",
+      "length": 3,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 38,
+        "label": "Eigen 38% + Gegner 27% → 34% · Signale bestätigen"
+      },
+      "ratePct": 38,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "liga",
+      "preN": 4,
+      "zufallPct": 5.3002,
+      "ligaBasisPct": 38,
+      "seltenheit": {
+        "basis": "liga",
+        "ratePct": 38,
+        "preN": null,
+        "einsZu": 19,
+        "erwartet": 52.47,
+        "familie": 990,
+        "urteil": "nicht belegbar",
+        "grund": "keine eigene Vorgeschichte vor der Serie — gemessen wird gegen den Liga-Schnitt, der für ein Durchschnittsteam gilt"
+      },
+      "next": {
+        "oppId": "1611",
+        "oppName": "Sporting Kansas City",
+        "atHome": false,
+        "date": "2026-09-13",
+        "kickoff": "2026-09-13T00:30:00+00:00",
+        "oppRatePct": 73
+      },
+      "oppSupportPct": 27,
+      "matchupPct": 34,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 7,
+        "conviction": 7,
+        "names": [
+          "lead_lag_bias",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "chance_creation",
+          "fixture_congestion"
+        ],
+        "market": "Unter 3.5 Tore"
+      }
+    },
+    {
       "teamId": "16489",
       "team": "Austin",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/16489.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -2121,7 +2174,7 @@
       "signalInfo": {
         "state": "confirm",
         "count": 7,
-        "conviction": 5,
+        "conviction": 6,
         "names": [
           "injury",
           "form_trend",
@@ -2132,58 +2185,6 @@
         ],
         "market": "Unter 3.5 Tore"
       }
-    },
-    {
-      "teamId": "1616",
-      "team": "Los Angeles FC",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1616.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "under25",
-      "market": "Unter 2,5 Tore",
-      "length": 3,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 38,
-        "label": "Eigen 38% + Gegner 27% → 34%"
-      },
-      "ratePct": 38,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "liga",
-      "preN": 4,
-      "zufallPct": 5.3002,
-      "ligaBasisPct": 38,
-      "seltenheit": {
-        "basis": "liga",
-        "ratePct": 38,
-        "preN": null,
-        "einsZu": 19,
-        "erwartet": 52.47,
-        "familie": 990,
-        "urteil": "nicht belegbar",
-        "grund": "keine eigene Vorgeschichte vor der Serie — gemessen wird gegen den Liga-Schnitt, der für ein Durchschnittsteam gilt"
-      },
-      "next": {
-        "oppId": "1611",
-        "oppName": "Sporting Kansas City",
-        "atHome": false,
-        "date": "2026-09-13",
-        "kickoff": "2026-09-13T00:30:00+00:00",
-        "oppRatePct": 73
-      },
-      "oppSupportPct": 27,
-      "matchupPct": 34
     },
     {
       "teamId": "20787",
@@ -3320,7 +3321,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 62,
-        "label": "Eigen 62% + Gegner 67% → 64% · Signale bestätigen"
+        "label": "Eigen 62% + Gegner 67% → 64%"
       },
       "ratePct": 62,
       "seq": [
@@ -3357,20 +3358,7 @@
         "oppRatePct": 67
       },
       "oppSupportPct": 67,
-      "matchupPct": 64,
-      "signalInfo": {
-        "state": "confirm",
-        "count": 4,
-        "conviction": 5,
-        "names": [
-          "injury",
-          "form_trend",
-          "xg_strength",
-          "topscorer_momentum",
-          "streak_momentum"
-        ],
-        "market": "Über 2.5 Tore"
-      }
+      "matchupPct": 64
     },
     {
       "teamId": "1612",
@@ -3439,7 +3427,7 @@
       "signalInfo": {
         "state": "confirm",
         "count": 5,
-        "conviction": 4,
+        "conviction": 5,
         "names": [
           "injury",
           "form_trend",
@@ -3518,7 +3506,7 @@
       "signalInfo": {
         "state": "confirm",
         "count": 5,
-        "conviction": 4,
+        "conviction": 5,
         "names": [
           "injury",
           "form_trend",
@@ -4443,7 +4431,7 @@
       "signalInfo": {
         "state": "confirm",
         "count": 5,
-        "conviction": 4,
+        "conviction": 5,
         "names": [
           "injury",
           "form_trend",
@@ -6755,9 +6743,9 @@
       "venue": "all",
       "strong": false,
       "continuation": {
-        "state": "neutral",
+        "state": "wackelt",
         "ratePct": 67,
-        "label": "Eigen 67% + Gegner 47% → 59%"
+        "label": "Eigen 67% + Gegner 47% → 59% · Linie/Signale dagegen"
       },
       "ratePct": 67,
       "seq": [
@@ -6806,7 +6794,21 @@
         "oppRatePct": 47
       },
       "oppSupportPct": 47,
-      "matchupPct": 59
+      "matchupPct": 59,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 7,
+        "conviction": 7,
+        "names": [
+          "lead_lag_bias",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "chance_creation",
+          "fixture_congestion"
+        ],
+        "market": "Unter 3.5 Tore"
+      }
     },
     {
       "teamId": "1597",
@@ -8180,7 +8182,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 86,
-        "label": "Eigen 86% + Gegner 47% → 70%"
+        "label": "Eigen 86% + Gegner 47% → 70% · Signale bestätigen"
       },
       "ratePct": 86,
       "seq": [
@@ -8229,7 +8231,17 @@
         "oppRatePct": 47
       },
       "oppSupportPct": 47,
-      "matchupPct": 70
+      "matchupPct": 70,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 2,
+        "conviction": 4,
+        "names": [
+          "form_trend",
+          "streak_momentum"
+        ],
+        "market": "Beide Teams treffen — Ja"
+      }
     },
     {
       "teamId": "9568",
