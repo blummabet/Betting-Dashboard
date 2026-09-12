@@ -3,6 +3,70 @@
 Stand 10.09.2026 (oberster Block); Liga/WM-Teil darunter Stand 26.06.2026. Lebendige Liste aller offenen Punkte — Liga UND noch nicht umgesetzte WM-Sachen —
 damit wir alles abarbeiten können. ✅ = erledigt (Referenz), ⏳ = offen, 🔒 = blockiert.
 
+## 🔴 12.09.2026 (nach den ersten echten Pushs) — drei Fehler im Burst-Push
+
+Lucas hat drei Karten zurückgeschickt. Alle drei Befunde sind meine.
+
+### 1. Kein Quotenboden — @1,01 und @1,15
+
+> *„Wieso auch so ne odd?"* — Venezia–Fiorentina, **$43,6K auf Fiorentina @1,01**, live.
+> *„Wieso kommt da so eine odd?"* — Real Madrid–Rayo, **$39,5K @1,15**, vor Anpfiff.
+
+Der Push hatte **keinen** Quotenboden. Beim Poly-Band habe ich einen gebaut (1,35, auf Lucas'
+eigene Ansage) und hier in derselben Woche keinen gesetzt.
+
+Gemessen an den 72 Bursts: **19 liegen unter Quote 1,10**, sechs davon bei 1,01. Das ist kein
+Signal, das ist jemand, der auf ein entschiedenes Spiel 1 % abgreift. Der Boden macht das Band
+auf **beiden** Achsen besser — seltener Fall, deshalb festgehalten:
+
+| | Bursts | n | Treffer | ROI | Untergrenze |
+|---|---|---|---|---|---|
+| ohne Boden (wie gebaut) | 72 | 365 | 86,0 % | +29,1 % | +22,3 % |
+| ab 1,20 | 43 | 247 | 79,4 % | +40,9 % | +31,0 % |
+| **ab 1,35** | **36** | 212 | 77,8 % | **+45,9 %** | **+34,3 %** |
+
+1,35 ist im Projekt ohnehin der Boden (pick-engine, stake-radar, Poly-Dominanz) — eine vierte
+Zahl wäre nur eine weitere zum Merken. Die Fußzeile der Karte nennt jetzt die Zahlen **mit**
+Boden, nicht mehr die verwässerten.
+
+### 2. Keine Frische — „Wertlos war gestern schon. Wieso kommt das jetzt?"
+
+Der Venezia-Burst lag am **11.09. um 20:29** und kam am **12.09.** `stake_highroller.json` hält
+ein 48-Stunden-Fenster, und die Erkennung hatte **keine Altersgrenze** — sie fand Bursts
+irgendwo im Fenster, auch zwölf Stunden alte.
+
+**Dieselbe Fehlerklasse wie der Betfair-Halbzeit-Push einen Tag vorher** („die Tore alle schon
+ewig her"): die Regel prüft den Zustand, aber nicht, *wann* er galt. Zwei Kanäle, derselbe
+Fehler, 24 Stunden auseinander — beim zweiten hätte ich es wissen müssen.
+
+`MAX_ALTER_MIN = 30`, gemessen **ab der letzten Wette** des Bursts, nicht ab der ersten: ein
+Burst, der vor 40 Minuten begann und vor 5 Minuten endete, ist frisch. Der Runner läuft alle
+10 Minuten, 30 Minuten sind also Puffer für einen verpassten Lauf.
+
+### 3. Cricket raus
+
+`GESPERRT = {"US-Sport", "Cricket"}` im Sammler — dieselbe Quelle wie beim US-Sport, also greift
+es zugleich im Radar. Ausgeblendet, nicht ungesammelt: die 470 Cricket-Zeilen laufen weiter mit,
+falls sie je etwas zeigen.
+
+> 🔴 Dabei aufgefallen: der Rückfallwert im Push war hartkodiert `("US-Sport",)` und wäre beim
+> Hinzufügen von Cricket **still auseinandergelaufen**. Er kommt jetzt per Import aus
+> `stake_highroller_fetch.GESPERRT` — eine Quelle, keine Kopie. Der JS-Rückfall im Radar ist
+> mitgezogen.
+
+### Was übrig bleibt
+
+Mit Boden, Sperre und Frische: **33 Bursts in sechs Tagen** statt 72 — im Schnitt **~5,5 am
+Tag**, davon Fußball 24, Tennis 6, E-Sport 3. Das ist ungefähr die Größenordnung, die Lucas sich
+gewünscht hatte.
+
+### Gegenbeweise
+
+Quotenboden entfernt ✅ · auf 1,0 gesenkt ✅ · Frische entfernt ✅ · ab der ERSTEN Wette gemessen ✅ ·
+Frischegrenze auf 48h ✅ · Cricket wieder frei ✅ · `now` nicht durchgereicht ✅ (nachgezogen — lief
+erst grün, weil `bursts` sich sonst selbst eine Uhr holt; ein Lauf muss aber **eine** haben,
+sonst entscheiden Frische, Dedup und Buch-Zeitstempel mit drei verschiedenen Zeitpunkten)
+
 ## 🔴 12.09.2026 — der Burst-Push hing im falschen Workflow und ist nie gelaufen
 
 Lucas: *„sag die stake burst push die wir gestern gebaut haben, wie wissen wir ob die klappen?

@@ -62,6 +62,34 @@ MIN_N = int(os.environ.get("STAKE_BURST_MIN_N") or 4)
 FENSTER_S = float(os.environ.get("STAKE_BURST_FENSTER_S") or 300)
 MIN_USD = float(os.environ.get("STAKE_BURST_MIN_USD") or 10000)
 MAX_PUSH = int(os.environ.get("STAKE_BURST_MAX") or 4)
+
+# 🎯 Mindestquote — 12.09.2026 (Lucas: „wieso kommt da so eine odd?", zu @1,01 und @1,15).
+#
+# Der Push hatte KEINEN Quotenboden. Beim Poly-Band habe ich einen gebaut (1,35, aus Lucas'
+# eigener Ansage) und hier nie einen gesetzt — dieselbe Luecke, dieselbe Woche.
+#
+# Gemessen an den 72 Bursts der letzten sechs Tage: **19 liegen unter Quote 1,10** (davon sechs
+# bei 1,01). Das ist kein Signal, das ist jemand, der auf ein entschiedenes Spiel 1 % abgreift.
+# Der Boden macht das Band auf BEIDEN Achsen besser — er nimmt Laerm UND hebt die Kante:
+#
+#     ohne Boden   72 Bursts   n=365   86,0 % Treffer   ROI +29,1 %   UG +22,3 %
+#     ab 1,20      43          n=247   79,4 %           ROI +40,9 %   UG +31,0 %
+#     ab 1,35      36          n=212   77,8 %           ROI +45,9 %   UG +34,3 %
+#
+# 1,35 ist im Projekt ohnehin der Boden (pick-engine.js, stake-radar.js, Poly-Dominanz) — eine
+# vierte Zahl waere hier nur eine weitere, die man im Kopf behalten muss.
+MIN_QUOTE = float(os.environ.get("STAKE_BURST_MIN_QUOTE") or 1.35)
+
+# ⏱️ Frische — 12.09.2026 (Lucas: „Wertlos war gestern schon. Wieso kommt das jetzt?").
+#
+# Der gemeldete Burst lag auf Venezia-Fiorentina, 11.09. um 20:29 — gepusht am 12.09. Der Grund:
+# `stake_highroller.json` haelt ein 48-Stunden-Fenster, und die Erkennung hatte KEINE
+# Altersgrenze. Sie fand Bursts irgendwo im Fenster, auch zwoelf Stunden alte.
+#
+# Genau dieselbe Fehlerklasse wie beim Betfair-Halbzeit-Push einen Tag vorher („die Tore alle
+# schon ewig her"): die Regel prueft den Zustand, aber nicht, WANN er galt. Der Runner laeuft
+# alle 10 Minuten, 30 Minuten sind also reichlich Puffer fuer einen verzoegerten Lauf.
+MAX_ALTER_MIN = float(os.environ.get("STAKE_BURST_MAX_ALTER_MIN") or 30)
 LEDGER_KEEP = 800
 SEEN_KEEP_H = 48.0
 
@@ -103,7 +131,15 @@ def _quote(w):
     return q if isinstance(q, (int, float)) and q > 1 else None
 
 
-GESPERRT_FALLBACK = ("US-Sport",)
+# Der Rueckfall kommt aus dem SAMMLER, nicht aus einer zweiten Liste hier. Sonst driftet er
+# beim naechsten Umbau der Sperre auseinander — und genau das ist am 12.09. passiert, als
+# „Cricket" dort dazukam und hier ein hartkodiertes ("US-Sport",) stehen blieb. Defensiv
+# gekapselt: faellt der Import aus, bleibt der Push lauffaehig statt zu sterben.
+try:
+    from stake_highroller_fetch import GESPERRT as _SAMMLER_GESPERRT
+    GESPERRT_FALLBACK = tuple(sorted(_SAMMLER_GESPERRT))
+except Exception:                                            # pragma: no cover
+    GESPERRT_FALLBACK = ("US-Sport", "Cricket")
 
 
 def gesperrte_kats(quelle=None):
@@ -124,7 +160,8 @@ def gesperrte_kats(quelle=None):
     return kats or list(GESPERRT_FALLBACK)
 
 
-def bursts(wetten, min_n=None, fenster_s=None, min_usd=None, gesperrt=None) -> list:
+def bursts(wetten, min_n=None, fenster_s=None, min_usd=None, gesperrt=None,
+           min_quote=None, max_alter_min=None, now=None) -> list:
     """Alle Einsatz-Bursts im Feed. REIN (alles injizierbar).
 
     Ein Burst ist: `min_n` Einzelwetten auf DIESELBE Auswahl, innerhalb von `fenster_s`, zusammen
@@ -140,6 +177,9 @@ def bursts(wetten, min_n=None, fenster_s=None, min_usd=None, gesperrt=None) -> l
     fenster_s = FENSTER_S if fenster_s is None else fenster_s
     min_usd = MIN_USD if min_usd is None else min_usd
     gesperrt = list(GESPERRT_FALLBACK) if gesperrt is None else list(gesperrt)
+    min_quote = MIN_QUOTE if min_quote is None else min_quote
+    max_alter_min = MAX_ALTER_MIN if max_alter_min is None else max_alter_min
+    now = now or datetime.now(timezone.utc)
     je_auswahl = {}
     for w in wetten or []:
         if not isinstance(w, dict) or w.get("kombi"):
@@ -165,6 +205,10 @@ def bursts(wetten, min_n=None, fenster_s=None, min_usd=None, gesperrt=None) -> l
             # Dieselbe Quote ist die eigentliche Regel — nicht der Betrag. s. Kopf der Datei.
             if len({round(float(_quote(x)), 2) for x in g}) != 1:
                 continue
+            if float(_quote(g[0])) < min_quote:
+                continue                  # @1,01 ist kein Signal — s. MIN_QUOTE
+            if (now - v[j][0]).total_seconds() / 60.0 > max_alter_min:
+                continue                  # zu alt zum Melden — s. MAX_ALTER_MIN
             summe = sum(float(x["einsatzUsd"]) for x in g)
             if summe < min_usd:
                 continue
@@ -226,9 +270,9 @@ def build_burst_card(b, unterdrueckt=0) -> str:
                      % (unterdrueckt, MAX_PUSH))
     # Das Urteil gehoert dorthin, wo die Zahl gelesen wird — nicht in eine Fussnote im Backlog.
     lines.append("\n<i>🔬 Beobachtungsband — läuft mit, ist noch kein Beleg. Gemessen an 15.646 "
-                 "abgerechneten Wetten: dieses Muster +29 % ROI live (Untergrenze +19 %, n=221) "
-                 "und +8,8 % vor Anpfiff (Untergrenze +1,1 %). Die gleiche Quote ist die Regel, "
-                 "nicht der Betrag — ab $50.000 dreht es ins Minus.</i>")
+                 "abgerechneten Wetten, mit Quotenboden %.2f: <b>+45,9 %% ROI</b> "
+                 "(Untergrenze +34,3 %%, n=212). Die gleiche Quote ist die Regel, nicht der "
+                 "Betrag — ab $50.000 dreht es ins Minus.</i>" % MIN_QUOTE)
     return "\n".join(lines)
 
 
@@ -281,12 +325,12 @@ def main() -> int:
 
     seen = prune_seen(_load(SEEN_FILE, {}), now)
     _gesperrt = gesperrte_kats(quelle)
-    alle = bursts(wetten, gesperrt=_gesperrt)
+    alle = bursts(wetten, gesperrt=_gesperrt, now=now)
     neu = [b for b in alle if burst_key(b) not in seen]
-    print("⚡ Stake-Burst: %d Burst(s) im Feed, %d davon neu (>=%d Wetten, %ds, ab %s, "
-          "gleiche Quote; ausgeblendet: %s)"
-          % (len(alle), len(neu), MIN_N, int(FENSTER_S), _usd(MIN_USD),
-             ", ".join(_gesperrt) or "—"))
+    print("⚡ Stake-Burst: %d frische(r) Burst(s), %d davon neu (>=%d Wetten, %ds, ab %s, "
+          "Quote ab %.2f, max %.0f Min alt, gleiche Quote; ausgeblendet: %s)"
+          % (len(alle), len(neu), MIN_N, int(FENSTER_S), _usd(MIN_USD), MIN_QUOTE,
+             MAX_ALTER_MIN, ", ".join(_gesperrt) or "—"))
 
     senden = neu[:MAX_PUSH]
     unterdrueckt = max(len(neu) - len(senden), 0)

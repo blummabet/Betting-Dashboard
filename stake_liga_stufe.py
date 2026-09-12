@@ -161,6 +161,9 @@ EBENE = {
     # fuer Ebene 1; entschieden hat die Paarung. Dritter Slug dieser Art nach „division-1" und
     # „jordan-1st-division" — die Quelle benennt zweite Ligen gern „First/1st Division".
     "first-division": 3,
+    # 12.09.2026 (CI-Wachhund): „China League" — die ZWEITE Liga Chinas (China League One, unter
+    # der Super League). Guandong GZ-Power gegen Dalian Kun City, beides Zweitligisten.
+    "china-league": 3,
 }
 
 # Wettbewerbe, bei denen „Spielklasse" die falsche Frage ist. Sie bekommen eine eigene Marke

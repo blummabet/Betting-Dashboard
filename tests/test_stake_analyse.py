@@ -304,7 +304,12 @@ def test_gesperrte_sportart_faellt_aus_dem_urteil():
     assert a["nWetten"] == 3, "die Auswertung rechnet ohne die gesperrten"
     assert a["nGesamt"] == 5
     assert a["nGesperrt"] == 2
-    assert a["gesperrt"] == ["US-Sport"]
+    # 12.09.2026: stand hier als exakte Liste `["US-Sport"]` und brach, als „Cricket" dazukam
+    # (Lucas: „Cricket bitte raus"). Geprueft wird die SACHE — die Sperrliste wird gemeldet und
+    # enthaelt die Sportart, um die es im Aufbau geht —, nicht ihr momentaner Inhalt. Sonst
+    # bricht der Test bei jeder Sperr-Aenderung, obwohl an ihm nichts falsch ist.
+    assert "US-Sport" in a["gesperrt"]
+    assert a["gesperrt"] == sorted(a["gesperrt"]), "die Liste wird sortiert gemeldet"
 
 
 def test_gesperrte_bekommen_ihre_eigene_schublade():
