@@ -212,6 +212,64 @@ Dazu zwei Gürtel:
 
 Vier Mutationen, vier rot.
 
+## 🔴 12.09.2026 (Plattform-Audit, Block B — Teil 2)
+
+### B3 — 14 von 17 Flammen ohne Beleg, auf dem Screen „wem folgen"
+
+Die Rangliste „🥇 Schärfste Wallets" hat zwei Modi. Im CLV-Modus wurde am **13.08.2026** die Regel
+eingebaut, dass 🔥 nur bei bestandenem Sharp-Gate erscheint (steht so im Code: „🔥 nur bei echtem
+Sharp-Gate"). Im **P&L-Modus** — dem aktiven, sobald Wallets eine P&L haben — wurde sie nie
+eingebaut: dort hing die Flamme an `r.pnl > 0`.
+
+Gemessen an den 20 angezeigten Zeilen: **17 trugen 🔥, 3 bestehen das Gate.** 14 Flammen ohne
+Beleg. Und das auf einem Abschnitt, dessen eigene Kopfzeile sagt, dass die Poly-P&L **null**
+Information über die Kante trägt (Median-CLV der Top-20 = Median aller Qualifizierten, r=0,06) —
+sie ist plattformweit, also Wahlen und Krypto, nicht Sport. Die Legende darunter verspricht
+„🔥 = bewiesen scharf".
+
+Fehlerklasse: **eine Regel, die an zwei Stellen steht, wird an einer repariert.** Der Wächter prüft
+deshalb nicht nur das Ergebnis, sondern dass **beide** Modi dieselbe Funktion aufrufen — ein
+Ergebnis-Test hätte den Fehler nicht gefunden, weil der geprüfte Modus ja korrekt war.
+
+Drei Mutationen, drei rot. (Die erste Fassung des Tests ließ „Gate ohne n-Schwelle" durchgehen,
+weil bei kleinem n ohnehin die Wilson-Untergrenze scheitert — jetzt mit dem Fall, der genau die
+Schwelle trifft: 7 perfekte Wetten reichen nicht, 8 schon.)
+
+### B5 — die Konjunktions-Tafel wählt aus, ohne ihre eigene Bilanz zu lesen
+
+`killer.py` rechnet `punkteBilanz`: je (Punkte, möglich) die Rendite **mit** einseitiger
+95-%-Untergrenze, schreibt sie in `killer.json` und committet sie. Gelesen hat sie **keine einzige
+Frontend-Datei** — dritter Fall derselben Sorte an einem Tag (Guard-Batterie, Pick-Validator, diese
+hier).
+
+Nachgerechnet: von 34 Eimern haben **zwei** eine Untergrenze über null — `12/13` (n=3) und `1/4`
+(n=6, ein Lottoschein mit +815 %). Im ganzen Bereich ab 6 Punkten, also **genau dem, was die Tafel
+zeigt**, liegt keine einzige Untergrenze über null:
+
+| Stufe | n | ROI | Untergrenze |
+|---|---|---|---|
+| 7/10 | 51 | +14,6 % | −7,7 % |
+| 6/10 | 33 | +7,1 % | −19,0 % |
+| 8/10 | 29 | −3,3 % | −31,4 % |
+| 9/10 | 13 | +22,2 % | −10,8 % |
+| 11/13 | 12 | +15,8 % | −26,7 % |
+
+Zweiter Fund an derselben Stelle: der Fußtext sagte „kein Spiel über 6 **von 13** Punkten". Der
+Nenner ist aber je Spiel verschieden — 38 Zeilen mit 10, 19 mit 4, 15 mit 7 und genau **eine** mit
+13. „6 von 13" stimmte für 72 von 73 Zeilen nicht, und ein Spiel mit `moeglich=4` erreicht die
+Schwelle **nie**, egal wie einig sich die gefragten Bücher sind. Das trifft 19 von 73 Spielen
+(26 %), die damit strukturell nicht auf die Tafel kommen.
+
+**Die Schwelle bleibt.** Eine bessere ist nicht belegt: auch anteilsbasiert kippt nichts — `3/4`
+(75 % Anteil, n=40, ROI +65 %) hat eine Untergrenze von −0,3 %. Was sich ändert: die Bilanz der
+Stufe steht jetzt **neben jeder Zeile**, mit Untergrenze, und „trägt" erscheint nur, wenn die über
+null liegt. Der Fußtext nennt keinen festen Nenner mehr und sagt, dass ein Spiel mit wenigen
+möglichen Punkten die Schwelle nicht erreichen kann.
+
+**Offen für Lucas:** ob die Tafel überhaupt ab 6 Punkten auswählen soll, wenn keine Stufe in diesem
+Bereich belegt ist. Fünf Mutationen, fünf rot — inklusive eines Tests am echten Bestand, der
+anschlägt, sobald sich diese Lage ändert.
+
 ## 🔴 12.09.2026 (Plattform-Audit, Block A — Teil 3, Abschluss)
 
 ### A6 — das Serien-Buch hatte seit seiner Einführung null Zeilen

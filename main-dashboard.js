@@ -420,6 +420,10 @@
       '.md-kl-c{font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;background:rgba(120,130,150,.13);color:var(--mi2);white-space:nowrap;}',
       '.md-kl-c.on{background:rgba(76,194,255,.15);color:#4cc2ff;}',
       '.md-kl-c.off{opacity:.45;}',
+      // 12.09.2026: Stufen-Bilanz neben der Punktzahl (s. _klStufenText).
+      '.md-kl-stufe{font-size:9.5px;font-weight:700;color:var(--mi3);margin-left:6px;white-space:nowrap;}',
+      '.md-kl-stufe i{font-style:normal;opacity:.7;}',
+      '.md-kl-traegt{color:#2ea043;}',
       '.md-kl-foot{font-size:10.5px;color:var(--mi3);margin-top:11px;line-height:1.5;border-top:1px solid var(--mln);padding-top:9px;}',
       '.md-kl-det{margin-top:9px;border-top:1px solid var(--mln);padding-top:8px;}',
       '.md-kl-sum{display:flex;align-items:center;gap:8px;flex-wrap:wrap;cursor:pointer;font-size:11px;font-weight:700;color:var(--mi2);list-style:none;}',
@@ -2440,7 +2444,7 @@
       + '<s>' + esc(String(fuss)) + '</s></div>';
   }
 
-  function _klTafelZeile(r, bewegt) {
+  function _klTafelZeile(r, bewegt, k) {
     var min = r.kickoff ? Math.round((Date.parse(String(r.kickoff).replace('Z', '+00:00')) - Date.now()) / 60000) : null;
     var uhr = (min == null || !isFinite(min)) ? ''
       : '<span class="md-badge" style="background:rgba(57,135,229,.14);color:' + A.blue + '">⏱ '
@@ -2459,11 +2463,47 @@
     return '<div class="sz-r"><div class="sz-h">'
       + '<span class="sz-u" style="background:rgba(76,194,255,.14);color:' + A.blue + '">'
       + r.punkte + '/' + r.moeglich + '</span>'
+      + _klStufenText(_klStufenBilanz(k, r.punkte, r.moeglich))
       + '<span class="sz-m">' + paar + '</span>' + uhr
       + '<span class="sz-lg">' + esc(String(r.liga || '')) + '</span>'
       + (bewegt ? '<span class="sz-u" style="margin-left:auto;background:rgba(46,160,71,.16);color:' + A.good + '">⚡ Geld bewegt sich</span>' : '')
       + '</div><div class="sz-q">' + reihe + '</div>'
       + '<div class="sz-w">auf <b>' + esc(String(r.name || '—')) + '</b>' + quote + '</div></div>';
+  }
+
+  // 🔴 12.09.2026 (Lucas, Plattform-Audit). `killer.py` rechnet `punkteBilanz` — je (Punkte,
+  // moeglich) die Rendite MIT einseitiger 95-%-Untergrenze — schreibt sie in `killer.json` und
+  // committet sie. Gelesen hat sie **keine einzige Frontend-Datei**. Die Tafel waehlt also seit
+  // Wochen ab 6 Punkten aus, und wie gut diese Auswahl war, stand ungelesen in derselben Datei.
+  //
+  // Nachgerechnet: von 34 Eimern haben **zwei** eine Untergrenze ueber null — 12/13 (n=3) und
+  // 1/4 (n=6, ein Lottoschein mit +815 %). Im ganzen Bereich ab 6 Punkten, also genau dem, was
+  // die Tafel zeigt, liegt **keine einzige** Untergrenze ueber null. Die Auswahl ist damit nicht
+  // widerlegt, aber eben auch nicht belegt — und der Fusstext sagte bisher, die anderen stuenden
+  // unten, „weil zu wenige Buecher zustimmen", als waere das eine gemessene Rangfolge.
+  //
+  // Die Schwelle bleibt (eine bessere ist nicht belegt, s. BACKLOG). Was sich aendert: die Zahl
+  // steht jetzt daneben, statt in der Datei zu liegen.
+  function _klStufenBilanz(k, punkte, moeglich) {
+    var b = (k && k.punkteBilanz) || [];
+    for (var i = 0; i < b.length; i++) {
+      if (b[i] && b[i].punkte === punkte && b[i].moeglich === moeglich) return b[i];
+    }
+    return null;
+  }
+
+  function _klStufenText(e) {
+    if (!e || !e.n) return '';
+    var roi = (e.roi >= 0 ? '+' : '') + Math.round(e.roi * 100) + '%';
+    if (e.roiLb == null) {
+      return '<span class="md-kl-stufe" title="Unter n=3 gibt es keine Untergrenze — ein '
+        + 'Punktschätzer ist kein Beleg">' + roi + ' bei n' + e.n + ' · kein Urteil</span>';
+    }
+    var traegt = e.roiLb > 0;
+    return '<span class="md-kl-stufe' + (traegt ? ' md-kl-traegt' : '')
+      + '" title="Rendite dieser Stufe bisher, mit einseitiger 95-%-Untergrenze. Nur über null '
+      + 'trägt sie.">' + roi + ' <i>UG ' + (e.roiLb >= 0 ? '+' : '') + Math.round(e.roiLb * 100)
+      + '%</i> bei n' + e.n + (traegt ? ' · trägt' : '') + '</span>';
   }
 
   function _klTafel(k, bewegteIds) {
@@ -2477,17 +2517,24 @@
     var oben = alle.filter(function (r) { return (r.punkte || 0) >= KL_TAFEL_MIN; }).slice(0, KL_TAFEL_MAX);
     var rest = alle.length - oben.length;
     var koerper = oben.length
-      ? oben.map(function (r) { return _klTafelZeile(r, bewegteIds[String(r.matchId)]); }).join('')
+      ? oben.map(function (r) { return _klTafelZeile(r, bewegteIds[String(r.matchId)], k); }).join('')
+      // 12.09.2026: hier stand „von 13". Der Nenner ist aber je Spiel verschieden — gemessen am
+      // Stand heute: 38 Zeilen mit 10, 19 mit 4, 15 mit 7 und genau EINE mit 13. „6 von 13" war
+      // also fuer 72 von 73 Zeilen falsch, und ein Spiel mit moeglich=4 kann die 6 nie erreichen,
+      // egal wie einig sich die gefragten Buecher sind.
       : '<div class="md-kl-foot" style="border-top:0;padding-top:8px">Heute kommt kein Spiel über '
-        + KL_TAFEL_MIN + ' von 13 Punkten. Das ist ein Ergebnis, kein Fehler.</div>';
+        + KL_TAFEL_MIN + ' Punkte. <span style="opacity:.75">Der Nenner ist je Spiel verschieden '
+        + '— nicht jedes Buch wird zu jedem Spiel gefragt, und ein Spiel mit wenigen möglichen '
+        + 'Punkten erreicht die Schwelle nie.</span> Das ist ein Ergebnis, kein Fehler.</div>';
     // Die Restzeile ist Pflicht: eine kurze Tafel ohne sie liest sich wie ein Ausfall.
     var beste = alle.length ? (alle[oben.length] || {}).punkte : null;
     var fuss = rest ? ('<div class="md-kl-foot"><b>' + rest + '</b> weitere Spiele bewertet'
       + (beste != null ? ', bestes davon <b>' + beste + '/' + (alle[oben.length].moeglich) + '</b>' : '')
-      + ' — sie stehen nicht oben, weil zu wenige Bücher zustimmen.</div>') : '';
+      + ' — sie stehen nicht oben, weil sie unter ' + KL_TAFEL_MIN + ' Punkten liegen oder '
+      + 'weniger Bücher gefragt wurden.</div>') : '';
     var det = rest ? ('<details class="md-kl-det"><summary class="md-kl-sum">📁 Alle ' + alle.length
       + ' bewerteten Spiele ansehen</summary><div class="md-kl-bliste">'
-      + alle.map(function (r) { return _klTafelZeile(r, bewegteIds[String(r.matchId)]); }).join('')
+      + alle.map(function (r) { return _klTafelZeile(r, bewegteIds[String(r.matchId)], k); }).join('')
       + '</div></details>') : '';
     return koerper + fuss + det;
   }

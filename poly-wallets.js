@@ -1547,8 +1547,21 @@ function _pwRankByPnl(scores, openMap, kick) {
   if (!rows.length) return intro + '<div class="pw-none">Noch keine Wallet mit P&amp;L-Historie erfasst.</div></section>';
   const body = rows.map(function (r, i) {
     const pcol = r.pnl >= 0 ? '#3fb950' : '#f85149', clvCol = r.avgClv >= 0 ? '#3fb950' : '#f85149';
+    // 🔴 12.09.2026 (Lucas, Plattform-Audit). Hier stand `r.pnl > 0 ? '🔥 '`. Die Legende
+    // darunter sagt „🔥 = bewiesen scharf", und die Kopfzeile dieses Abschnitts sagt selbst, dass
+    // die Poly-P&L **null** Information ueber die Kante traegt (Median-CLV der Top-20 = Median
+    // aller Qualifizierten, r=0,06) — sie ist plattformweit, also Wahlen und Krypto, nicht Sport.
+    //
+    // Gemessen an den 20 angezeigten Zeilen: **17 trugen 🔥, 3 bestehen das Sharp-Gate.**
+    // 14 Flammen ohne Beleg, auf dem Screen, der sagt, wem man folgen soll.
+    //
+    // Die Regel gibt es laengst und sie ist dieselbe wie in `sharp_gate.py`. Nur: am 13.08.2026
+    // wurde sie im CLV-Modus eingebaut („🔥 nur bei echtem Sharp-Gate", s. _pwRankByClv) und in
+    // DIESEM Modus nicht — und dieser ist der aktive, sobald es P&L gibt. Fehlerklasse: eine
+    // Regel, die an zwei Stellen steht, wird an einer repariert.
+    const proven = _pwIsSharpScore(r);
     return '<tr><td class="pw-cn" style="font-weight:800">' + _pwMedal(i) + '</td>'
-      + '<td style="white-space:nowrap">' + (r.pnl > 0 ? '🔥 ' : '') + _pwWalletChip(r.wallet) + '</td>'
+      + '<td style="white-space:nowrap">' + (proven ? '🔥 ' : '') + _pwWalletChip(r.wallet) + '</td>'
       + '<td class="pw-cn" style="font-weight:900;color:' + (r.clvUg >= 0 ? '#3fb950' : '#e3b341') + '" title="'
       + (r.clvArt === 'ug' ? 'Einseitige 95%-Untergrenze des Ø CLV über ' + r.n + ' Auflösungen.'
                            : 'Geschrumpfter Ø CLV (n/(n+25)) — die Streuung wird erst seit 02.09.2026 mitgeschrieben; eine echte Untergrenze gibt es hier noch nicht.')
