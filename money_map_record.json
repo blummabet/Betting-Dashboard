@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-09-12T16:11:18.056964+00:00",
+"generatedAt": "2026-09-12T16:23:54.209250+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1012,
-"wins": 848,
-"hitRate": 0.8379,
-"polyN": 953,
-"polyWins": 733,
-"polyHitRate": 0.7692,
+"n": 1013,
+"wins": 849,
+"hitRate": 0.8381,
+"polyN": 954,
+"polyWins": 734,
+"polyHitRate": 0.7694,
 "pinnN": 124,
 "pinnHitRate": 0.8145,
-"nRoi": 339,
-"roi": 0.4458,
-"roiLb": 0.3776,
-"nClv": 339,
-"clv": 20.73,
-"clvLb": 18.5835
+"nRoi": 340,
+"roi": 0.445,
+"roiLb": 0.377,
+"nClv": 340,
+"clv": 20.71,
+"clvLb": 18.5639
 },
 "uneinig": {
 "n": 385,
@@ -111,6 +111,11 @@
 "wins": 21,
 "hitRate": 0.6562
 },
+"Dutch Eredivisie": {
+"n": 30,
+"wins": 20,
+"hitRate": 0.6667
+},
 "South Korean K1 League": {
 "n": 30,
 "wins": 25,
@@ -120,11 +125,6 @@
 "n": 29,
 "wins": 21,
 "hitRate": 0.7241
-},
-"Dutch Eredivisie": {
-"n": 29,
-"wins": 19,
-"hitRate": 0.6552
 },
 "English Football League Cup": {
 "n": 28,
@@ -625,15 +625,15 @@
 "clvLb": 9.8956
 },
 "weak": {
-"n": 531,
-"wins": 282,
-"hitRate": 0.5311,
-"nRoi": 174,
-"roi": -0.0282,
-"roiLb": -0.1564,
-"nClv": 174,
-"clv": 0.03,
-"clvLb": -3.9779
+"n": 532,
+"wins": 283,
+"hitRate": 0.532,
+"nRoi": 175,
+"roi": -0.0272,
+"roiLb": -0.1547,
+"nClv": 175,
+"clv": 0.1,
+"clvLb": -3.8878
 }
 },
 "divergence": {
@@ -645,6 +645,25 @@
 "polyRate": 0.2651
 },
 "recent": [
+{
+"matchId": "36005298",
+"home": "FC Twente",
+"away": "ADO Den Haag",
+"league": "Dutch Eredivisie",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "FC Twente",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-09-12T14:30:00Z",
+"settledAt": "2026-09-12T16:23:54.022951+00:00"
+},
 {
 "matchId": "36005217",
 "home": "Aston Villa",
@@ -1385,37 +1404,18 @@
 ],
 "kickoff": "2026-09-12T11:00:00Z",
 "settledAt": "2026-09-12T12:53:45.159705+00:00"
-},
-{
-"matchId": "36034528",
-"home": "FC Magdeburg",
-"away": "Kaiserslautern",
-"league": "German Bundesliga 2",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "FC Magdeburg",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-0
-],
-"kickoff": "2026-09-12T11:00:00Z",
-"settledAt": "2026-09-12T12:53:45.159705+00:00"
 }
 ],
 "global": {
-"n": 1413,
-"wins": 978,
-"hitRate": 0.6921,
-"nRoi": 499,
+"n": 1414,
+"wins": 979,
+"hitRate": 0.6924,
+"nRoi": 500,
 "roi": 0.1647,
-"roiLb": 0.0979,
-"nClv": 499,
-"clv": 8.4,
-"clvLb": 5.9656
+"roiLb": 0.098,
+"nClv": 500,
+"clv": 8.41,
+"clvLb": 5.9777
 },
-"pending": 40
+"pending": 42
 }
