@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-09-11T21:13:58Z",
-    "total_records": 101,
+    "updated_at": "2026-09-12T10:45:37Z",
+    "total_records": 102,
     "oddsBackfilled": "2026-09-06 — Quote/entryOdd aus den Pick-Dateien nachgetragen; der Ledger trug sie nie (0 von 318)."
   },
   "records": [
@@ -2181,6 +2181,57 @@
       "processVerdict": "JUSTIFIED"
     },
     {
+      "key": "ESP-5-536-532|Heimsieg",
+      "matchKey": "ESP-5-536-532",
+      "market": "Heimsieg",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "lead_lag_bias",
+          "score": 5.68
+        },
+        {
+          "name": "form_trend",
+          "score": 1.53
+        },
+        {
+          "name": "apif_predictions",
+          "score": -1.05
+        },
+        {
+          "name": "chance_creation",
+          "score": 1.37
+        },
+        {
+          "name": "form_rating",
+          "score": 0.86
+        },
+        {
+          "name": "smart_money",
+          "score": 1.5
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        },
+        {
+          "name": "betfair_money",
+          "score": 4.0
+        }
+      ],
+      "resolvedAt": "2026-09-12T10:45:35Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 0.81,
+      "clvResolved": true,
+      "odds": 2.0,
+      "entryOdd": 2.0,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED"
+    },
+    {
       "key": "ESP-6-548-538|Heimsieg",
       "matchKey": "ESP-6-548-538",
       "market": "Heimsieg",
@@ -2713,7 +2764,7 @@
       "convictionScore": 6,
       "lateEntry": true,
       "engineVersion": "v1",
-      "clvPP": -2.58,
+      "clvPP": -1.79,
       "clvResolved": true,
       "odds": 1.37,
       "entryOdd": 1.37,
@@ -2764,7 +2815,7 @@
       "convictionScore": 6,
       "lateEntry": true,
       "engineVersion": "v1",
-      "clvPP": -4.39,
+      "clvPP": -3.28,
       "clvResolved": true,
       "odds": 2.02,
       "entryOdd": 2.02,
@@ -4216,7 +4267,7 @@
       "convictionScore": 4,
       "lateEntry": true,
       "engineVersion": "v1",
-      "clvPP": -4.86,
+      "clvPP": -5.0,
       "clvResolved": true,
       "odds": 1.47,
       "entryOdd": 1.47,
