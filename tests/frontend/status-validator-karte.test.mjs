@@ -123,7 +123,7 @@ test('⭐ ein roter Validator faerbt das Urteil OBEN mit', async () => {
   assert.ok(trenn > 0, 'die Validator-Karte wird gar nicht gerendert');
   assert.match(html, /PRESSURE_MUSTWINFLAG_MISMATCH/, 'der Befund steht nicht auf der Seite');
   const kopf = html.slice(0, trenn);   // alles vor der Validator-Karte
-  assert.match(kopf, /Validator meldet Fehler/,
+  assert.match(kopf, /Pick-Validator/,
     'Das Urteil oben erwaehnt den Validator nicht — dann steht dort gruen, waehrend unten rot steht.');
   assert.ok(kopf.includes(ROT), 'das Urteil oben ist nicht rot eingefaerbt');
 });
@@ -142,5 +142,5 @@ test('frischer sauberer Validator laesst ein gruenes Urteil gruen', async () => 
   const trenn = html.indexOf('🐕');
   assert.ok(trenn > 0, 'die Validator-Karte wird gar nicht gerendert');
   const kopf = html.slice(0, trenn);
-  assert.doesNotMatch(kopf, /Validator meldet Fehler/);
+  assert.doesNotMatch(kopf, /Pick-Validator meldet Fehler|Pick-Validator mit Warnungen/);
 });

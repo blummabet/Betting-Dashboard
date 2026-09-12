@@ -154,6 +154,64 @@ läuft dagegen live in der Seite und liest `GATE` direkt, ist also in Ordnung. E
 Python-Validator wieder anschließen (Banner + Commit) oder abschaffen. Bis zur Entscheidung steht
 er als Ausnahme **mit Begründung** im Artefakt-Wächter, statt still weiterzulaufen.
 
+## 🔴 12.09.2026 (Plattform-Audit, Block B)
+
+### B1 — die Guard-Batterie meldete seit jeher ins Leere
+
+`uebersicht_integrity.py` läuft bei **jedem** Liga- und MLS-Update, prüft 19
+Ausgabe-Eigenschaften der Übersicht und wird committet. Gelesen hat das Ergebnis **keine einzige
+Frontend-Datei**. Beim Fund standen drei Checks auf rot, zwei davon mit Schweregrad `error`, und
+einer war erst an diesem Vormittag dazugekommen:
+
+- **Stake-Spielklasse** (error): 1 Fußball-Liga ohne Eintrag in `stake_liga_stufe.py`
+  (`philippines-footb-league`) — sie fällt aus jeder Zeile der Ansicht, statt aufzufallen
+- **Poly-Deckung** (error): 2 Märkte, die der Liga-Fetcher hat und der Money-Scan nie
+  (Genoa–Frosinone, Anpfiff in 1,2 h · Atalanta–Cagliari, in 6,9 h)
+- **Stumme Signale** (warn): 3 Signale ohne eine einzige Feuerung
+
+Dieselbe Fehlerklasse wie beim Pick-Validator, also derselbe Platz: eine Karte **🧭 Guard-Batterie**
+in der Status-Übersicht, direkt über dem Validator. Frische zuerst (Stand > 48 h → rot,
+„Batterie läuft nicht"), `error` rot / `warn` gelb, Befunde mit Text, lange Listen gekappt aber
+mit Restzahl.
+
+**Beim Einbauen ist mir ein Fehler passiert, der hier hingehört:** die beiden Wächter-Blöcke im
+Urteil oben waren zwei aufeinanderfolgende `if`s — der spätere überschrieb die Meldung des
+früheren. Bei zwei roten Wächtern stand oben nur noch einer. Jetzt wird gesammelt statt
+überschrieben, und ein eigener Test hält das fest; wer einen dritten Wächter anhängt, fällt nicht
+in dieselbe Falle. Sechs Mutationen, sechs rot.
+
+### B4 — ein Alter von **minus 2.110 Stunden**
+
+`mls_poly_prices.json` trug `generatedAt: "12.09.2026 15:39 UTC"`. Das Frontend **parst** dieses
+Feld — und V8 liest „12.09.2026" als **9. Dezember**, drei Monate in der Zukunft:
+
+```
+Date.parse('12.09.2026 15:39 UTC')  →  2026-12-09T15:39:00.000Z
+Alter                               →  −2110,6 h
+```
+
+Das ist die unangenehme Variante: nicht „die Warnung kam zu selten", sondern ein negatives Alter
+liegt unter **jeder** Schwelle. Das Veraltet-Banner des Datensatzes konnte gar nicht feuern, egal
+wie alt die Daten wurden. Ein Wächter, der strukturell stumm ist, sieht genauso aus wie einer, der
+nichts zu melden hat.
+
+Betroffen: sechs Artefakte aus sechs Producern (`fetch_wm_poly_prices`, `manage_wm_poly_positions`,
+`generate_match_pages`, `fetch_wm_weather`, `check_picks_logic`, `update_dashboard`). Alle
+schreiben jetzt **ISO** ins gelesene Feld; wo der deutsche Text für die Anzeige gebraucht wurde,
+steht er in einem eigenen `*Human`-Feld.
+
+Dazu zwei Gürtel:
+- `_pwZeit()` versteht beide Formate **und weist ein Datum in der Zukunft ab**, statt daraus
+  Frische zu machen. Genau daran ist das Banner drei Monate lang gescheitert.
+- `tests/test_zeitstempel_iso.py` prüft **alle** Artefakte und **alle** Producer — auch die, die
+  es noch nicht gibt. Die fünf Dateien, die den alten Stempel noch tragen, stehen in
+  `WARTET_AUF_LAUF`: ihr Producer schreibt bereits ISO, sie warten nur auf ihren nächsten Lauf.
+  Kein Freibrief — ein Test wirft jeden Eintrag raus, sobald die Datei ISO trägt, ein zweiter
+  prüft, dass dort wirklich nur Wartezeit steht und kein ungefixter Producer. Lokale Artefakte
+  habe ich bewusst nicht von Hand umgeschrieben: Pipeline-Ausgabe gehört der Pipeline.
+
+Vier Mutationen, vier rot.
+
 ## 🔴 12.09.2026 (Plattform-Audit, Block A — Teil 3, Abschluss)
 
 ### A6 — das Serien-Buch hatte seit seiner Einführung null Zeilen

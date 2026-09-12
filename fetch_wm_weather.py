@@ -189,7 +189,9 @@ def main():
     if not WEATHERAPI_KEY:
         print("  ❌ WEATHERAPI_KEY nicht gesetzt — Abbruch (Secret in GitHub Actions setzen)")
         return
-    now_ts   = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M UTC")
+    # 12.09.2026: ISO ins gelesene Feld, Menschenlesbares daneben (s. fetch_wm_poly_prices).
+    now_ts   = datetime.now(timezone.utc).isoformat()
+    now_human = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M UTC")
     today    = date.today()
     max_date = today + timedelta(days=FORECAST_DAYS)
 
@@ -312,6 +314,7 @@ def main():
     # 4. Speichern
     output = {
         "generatedAt":    now_ts,
+        "generatedAtHuman": now_human,
         "forecastWindow": f"bis {max_date.isoformat()}",
         "source":         "weatherapi.com",
         "matches":        results,

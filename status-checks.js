@@ -1246,11 +1246,76 @@ function _stValidatorKarte(vs) {
     + tabelle) };
 }
 
+// ── 🧭 Guard-Batterie (12.09.2026, Plattform-Audit) ──────────────────────────────────────────
+// `uebersicht_integrity.py` laeuft bei jedem Liga- und MLS-Update, prueft 19 Ausgabe-Eigenschaften
+// der Uebersicht und committet das Ergebnis. Gelesen hat es **keine einzige Frontend-Datei** —
+// beim Fund standen drei Checks auf rot, zwei davon mit Schweregrad `error`, und einer war erst
+// an diesem Vormittag dazugekommen.
+//
+// Dieselbe Fehlerklasse wie beim Pick-Validator: ein Waechter, der laeuft und ins Leere meldet.
+// Deshalb derselbe Platz und dieselbe Reihenfolge — FRISCHE zuerst, dann die Befunde.
+const _ST_GUARD_WARN_H = 18, _ST_GUARD_ERR_H = 48;
+
+function _stGuardKarte(gi) {
+  const titel = '🧭 Guard-Batterie';
+  const unter = 'uebersicht_integrity.py — prueft die Ausgabe der Uebersicht gegen die Artefakte';
+  const leer = (farbe, kopf, text) => ({ col: farbe, html: _stCard(titel, unter,
+    `<div style="font-size:15px;font-weight:700;color:${farbe};margin-bottom:4px">${kopf}</div>`
+    + `<div style="font-size:12px;color:var(--muted);line-height:1.6">${text}</div>`) });
+
+  const checks = gi && Array.isArray(gi.checks) ? gi.checks : null;
+  if (!checks) {
+    return leer(_ST_R, '🔴 Kein Ergebnis',
+      'uebersicht_integrity.json fehlt oder ist unlesbar. Das ist <b>nicht</b> „keine Befunde" — '
+      + 'es heisst, die Batterie hat nichts geliefert.');
+  }
+  const stand = _stParseTs(gi.generatedAt);
+  const alter = _stAgeH(stand);
+  if (alter === null) {
+    return leer(_ST_R, '🔴 Stand unbekannt', 'Der Zeitstempel liess sich nicht lesen — ohne Stand '
+      + 'ist kein Befund etwas wert.');
+  }
+  if (alter > _ST_GUARD_ERR_H) {
+    return leer(_ST_R, `🔴 Batterie laeuft nicht — Stand ${_stAgo(stand)}`,
+      'Sie laeuft bei jedem Liga- und MLS-Update. Die Befunde unten waeren alt und sagen nichts '
+      + 'ueber heute.');
+  }
+
+  const fehler = checks.filter(c => c && !c.ok && c.severity === 'error');
+  const warn   = checks.filter(c => c && !c.ok && c.severity !== 'error');
+  const farbe = fehler.length ? _ST_R
+              : (warn.length || alter > _ST_GUARD_WARN_H) ? _ST_A : _ST_G;
+  const kopf = fehler.length ? `🔴 ${fehler.length} von ${checks.length} Checks rot`
+             : warn.length ? `🟡 ${warn.length} von ${checks.length} Checks mit Warnung`
+             : `✅ alle ${checks.length} Checks gruen`;
+
+  const zeile = (c) => {
+    const rot = c.severity === 'error';
+    const punkte = (c.failures || []).slice(0, 3).map(f =>
+      `<div style="color:var(--muted);font-size:11px;line-height:1.5">· ${_stValEsc(String(f).slice(0, 190))}</div>`).join('');
+    const mehr = (c.failures || []).length > 3
+      ? `<div style="color:var(--border);font-size:11px">· … ${(c.failures || []).length - 3} weitere</div>` : '';
+    return `<tr><td style="padding:6px 8px;border-bottom:1px solid var(--border);vertical-align:top;white-space:nowrap">`
+      + `<b style="color:${rot ? _ST_R : _ST_A}">${rot ? '🔴' : '🟡'}</b></td>`
+      + `<td style="padding:6px 8px;border-bottom:1px solid var(--border)">`
+      + `<div style="font-size:12px;font-weight:600">${_stValEsc(c.label)}</div>${punkte}${mehr}</td></tr>`;
+  };
+  const zeilen = fehler.concat(warn).map(zeile).join('');
+  const tabelle = zeilen
+    ? `<table style="width:100%;border-collapse:collapse;margin-top:12px">${zeilen}</table>`
+    : '<div style="font-size:12px;color:var(--muted);margin-top:10px">Nichts zu melden.</div>';
+  return { col: farbe, html: _stCard(titel, unter,
+    `<div style="font-size:15px;font-weight:700;color:${farbe}">${kopf}</div>`
+    + `<div style="font-size:11px;color:var(--muted);margin-top:2px">Stand ${_stAgo(stand)}</div>`
+    + tabelle) };
+}
+
 async function _stRenderOverview() {
   const dyn = _stDynEl(); if (!dyn) return;
-  const [bf, pb, liga, mls, vs] = await Promise.all([
+  const [bf, pb, liga, mls, vs, gi] = await Promise.all([
     _stGet('betfair_prices.json'), _stGet('poly_money_broad.json'), _stGet('liga-data.json'),
     _stGet('mls-data.json'), _stGet('validator_summary.json'),
+    _stGet('uebersicht_integrity.json'),
   ]);
   const sys = (icon, label, ds, ts, warnH, errH, line) => {
     const age = _stAgeH(ts);
@@ -1267,18 +1332,33 @@ async function _stRenderOverview() {
     sys('🇺🇸', 'MLS', 'mls', _stParseTs(mls && mls._meta && mls._meta.dataUpdatedAt), 14, 30, 'MLS-Pipeline 2×/Tag'),
   ];
   const val = _stValidatorKarte(vs);
+  const guard = _stGuardKarte(gi);
   const anyRed = cards.some(c => c.col === _ST_R), anyAmber = cards.some(c => c.col === _ST_A);
   let vIco = '✅', vT = 'Alle Live-Systeme frisch', vS = 'Betfair, Polymarket, Top-5 und MLS liefern aktuell.', vC = _ST_G;
   if (anyRed) { vIco = '🔴'; vT = 'Ein System hängt'; vS = 'Mindestens ein Live-System ist überfällig — unten ansehen.'; vC = _ST_R; }
   else if (anyAmber) { vIco = '🟡'; vT = 'Meist frisch, eins überfällig'; vS = 'Ein System ist leicht über der Soll-Frische.'; vC = _ST_A; }
-  // Der Validator gehoert ins Urteil, sonst steht oben gruen und unten rot (12.09.2026).
-  if (val.col === _ST_R) {
+  // Waechter gehoeren ins Urteil, sonst steht oben gruen und unten rot (12.09.2026).
+  //
+  // 12.09.2026, beim Bauen des zweiten Waechters aufgefallen: als zwei aufeinanderfolgende
+  // if-Bloecke hat der spaetere die Meldung des frueheren ueberschrieben — bei zwei roten
+  // Waechtern stand oben nur noch einer davon. Deshalb SAMMELN statt ueberschreiben; wer hier
+  // einen dritten Waechter anhaengt, faellt nicht in dieselbe Falle.
+  const rot = [], gelb = [];
+  if (guard.col === _ST_R) rot.push('die Guard-Batterie');
+  else if (guard.col === _ST_A) gelb.push('die Guard-Batterie');
+  if (val.col === _ST_R) rot.push('der Pick-Validator');
+  else if (val.col === _ST_A) gelb.push('der Pick-Validator');
+  const _und = (xs) => xs.length > 1 ? xs.slice(0, -1).join(', ') + ' und ' + xs[xs.length - 1] : xs[0];
+  if (rot.length) {
     vIco = '🔴'; vC = _ST_R;
-    vT = anyRed ? 'Ein System hängt · Validator meldet Fehler' : 'Der Pick-Validator meldet Fehler';
-    vS = 'Unten in der Validator-Karte steht, was — gruppiert nach Befund.';
-  } else if (val.col === _ST_A && vC === _ST_G) {
-    vIco = '🟡'; vC = _ST_A; vT = 'Systeme frisch, Validator mit Warnungen';
-    vS = 'Die Live-Feeds liefern; der Pick-Validator hat Warnungen — unten ansehen.';
+    vT = (anyRed ? 'Ein System hängt · ' : '')
+       + (rot.length > 1 ? 'Zwei Wächter melden Fehler'
+          : rot[0].replace(/^die |^der /, (m) => m.toUpperCase().charAt(0) + m.slice(1)) + ' meldet Fehler');
+    vS = 'Unten steht, was — bei ' + _und(rot) + '.';
+  } else if (gelb.length && vC === _ST_G) {
+    vIco = '🟡'; vC = _ST_A;
+    vT = 'Systeme frisch, ' + _und(gelb) + ' mit Warnungen';
+    vS = 'Die Live-Feeds liefern; ' + _und(gelb) + ' hat Warnungen — unten ansehen.';
   }
   const wmCard = `<div onclick="_stJump('intl')" style="cursor:pointer;background:var(--card2);border:1px dashed var(--border);border-radius:12px;padding:15px 16px;opacity:.6;"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;"><span style="font-size:14px;font-weight:800">📦 WM 2026</span><span style="font-size:11px;color:var(--muted)">Archiv</span></div><div style="font-size:13px;color:var(--muted)">beendet · winterisiert</div></div>`;
   const allFeeds = [..._BF_FEEDS, ..._stPolyFeeds(),
@@ -1287,6 +1367,7 @@ async function _stRenderOverview() {
   dyn.innerHTML = _stHead('🩺', 'Status — alle Live-Systeme', 'Was läuft, was hängt — Betfair · Polymarket · Top-5 · MLS auf einen Blick')
     + _stBanner(vIco, vT, vS, vC)
     + _stCard('🗂️ Systeme', 'Klick öffnet den Detail-Reiter', _stGridWrap([...cards.map(c => c.html), wmCard], 200))
+    + guard.html
     + val.html
     + _stCard('📁 Feed-Frische — alle Systeme', 'aus dem Datenstand selbst · grün = im Soll · gelb = überfällig · rot = tot/fehlt', await _stFreshGrid(allFeeds))
     + _stThresholdsCard();

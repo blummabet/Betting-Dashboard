@@ -12,7 +12,7 @@ import os
 import sys
 import time
 import http.client
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import mustwin_regel   # die eine mustWin-Regel, die auch der Validator liest
@@ -2037,10 +2037,10 @@ if __name__ == "__main__":
                 summary = json.load(sf)
         except Exception as e:
             print(f"  ⚠ validator_summary.json konnte nicht gelesen werden: {e}")
-            summary = {"timestamp": datetime.now().strftime("%d.%m.%Y %H:%M"),
+            summary = {"timestamp": datetime.now(timezone.utc).isoformat(),
                        "checked": 0, "errors": 0, "warnings": 0, "infos": 0, "issues": []}
     else:
-        summary = {"timestamp": datetime.now().strftime("%d.%m.%Y %H:%M"),
+        summary = {"timestamp": datetime.now(timezone.utc).isoformat(),
                    "checked": 0, "errors": 0, "warnings": 0, "infos": 0, "issues": []}
 
     # Merge backend data-quality issues (label/motivation/UECL/Jagd problems)
@@ -2055,7 +2055,7 @@ if __name__ == "__main__":
               f" ({be_errors} Fehler, {be_warns} Warnungen)")
 
     # Always update the timestamp so the banner shows the current run time
-    summary["timestamp"] = datetime.now().strftime("%d.%m.%Y %H:%M")
+    summary["timestamp"] = datetime.now(timezone.utc).isoformat()
 
     # Write back the merged summary
     with open(summary_path, "w", encoding="utf-8") as sf:

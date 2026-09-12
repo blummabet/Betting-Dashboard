@@ -292,7 +292,9 @@ def load_positions() -> dict:
 
 
 def save_positions(data: dict):
-    data["updatedAt"] = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M UTC")
+    # 12.09.2026: ISO ins gelesene Feld, Menschenlesbares daneben (s. fetch_wm_poly_prices).
+    data["updatedAt"] = datetime.now(timezone.utc).isoformat()
+    data["updatedAtHuman"] = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M UTC")
     write_json_atomic(POSITIONS_FILE, data)   # 25.08.2026: offene Positionen nie halb schreiben
 
 

@@ -11,7 +11,7 @@ Run: python generate_match_pages.py
 """
 
 import json, os, re, math, unicodedata
-from datetime import datetime
+from datetime import datetime, timezone
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE, "matches", "data")
@@ -428,7 +428,9 @@ def build_payload(entry, pmatch, hs, as_, poly):
         "moneyMap":_money_map_section(home, away),
         "betfairMoney":_bf_detail_for(home, away),
         "polyFlow":_poly_detail_for(home, away),
-        "generatedAt":datetime.utcnow().strftime("%d.%m.%Y %H:%M UTC"),
+        # 12.09.2026: ISO ins gelesene Feld, Menschenlesbares daneben (s. fetch_wm_poly_prices).
+        "generatedAt":datetime.now(timezone.utc).isoformat(),
+        "generatedAtHuman":datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M UTC"),
     }
 
 # ─── Write JSON files ─────────────────────────────────────────────────────────

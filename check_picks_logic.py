@@ -38,7 +38,7 @@ import json
 import re
 import sys
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 HTML_FILE  = os.path.join(SCRIPT_DIR, "season-finish.html")
@@ -1017,7 +1017,7 @@ def main():
         # JSON-Summary für Dashboard-Injection
         json_path = os.path.join(SCRIPT_DIR, "validator_summary.json")
         summary = {
-            "timestamp": datetime.now().strftime("%d.%m.%Y %H:%M"),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "checked": total_checked,
             "errors": total_errors,
             "warnings": total_warns,

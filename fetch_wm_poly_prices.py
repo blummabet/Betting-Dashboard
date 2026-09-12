@@ -1797,7 +1797,17 @@ def main():
         "prices":      prices,
         "allFixtures": all_fixtures, # All 72 games — momentum scores, edge trends, CLOB depth
         "count":       ok,
-        "generatedAt": datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M UTC"),
+        # 🔴 12.09.2026 (Lucas, Plattform-Audit). Hier stand `%d.%m.%Y %H:%M UTC`, also
+        # „12.09.2026 15:39 UTC" — in einem Feld, das das Frontend PARST. V8 liest das als
+        # **9. Dezember**, drei Monate in der Zukunft: `_pwDsAlterH()` rechnete daraus ein Alter
+        # von **−2.110 h**, und weil das unter jeder Warnschwelle liegt, konnte das
+        # Veraltet-Banner des Datensatzes nie feuern. Nicht „es warnte zu selten" — es KONNTE
+        # nicht warnen, egal wie alt die Daten wurden.
+        #
+        # Regel daraus: ein Feld, das gelesen wird, ist ISO. Menschenlesbares gehoert daneben,
+        # nicht hinein. `tests/test_zeitstempel_iso.py` haelt das fuer alle Artefakte fest.
+        "generatedAt": datetime.now(timezone.utc).isoformat(),
+        "generatedAtHuman": datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M UTC"),
     }
     with open(OUT_FILE, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=2)

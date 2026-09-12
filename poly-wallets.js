@@ -129,15 +129,36 @@ function _pwDatasetTabs(){
 // Stelle: wie alt der Datensatz ist und welche seiner Dateien es gar nicht gibt.
 const PW_DS_ALT_WARN_H = 12, PW_DS_ALT_ERR_H = 48;
 
+// 🔴 12.09.2026 (Lucas, Plattform-Audit). `mls_poly_prices.json` trug
+// `generatedAt: "12.09.2026 15:39 UTC"` — und V8 liest „12.09.2026" als **9. Dezember**, drei
+// Monate in der Zukunft. `_pwDsAlterH()` rechnete daraus **−2.110 h**. Das ist nicht „keine
+// Warnung", sondern schlimmer: ein negatives Alter liegt unter JEDER Schwelle, also konnte das
+// Veraltet-Banner des Datensatzes gar nicht feuern, egal wie alt die Daten wurden.
+//
+// Die Producer schreiben jetzt ISO (s. fetch_wm_poly_prices.py), und `tests/test_zeitstempel_iso.py`
+// haelt das fuer alle Artefakte fest. Dieser Parser ist der Guertel dazu: er versteht beide
+// Formate — und weist ein Datum in der ZUKUNFT ab, statt daraus Frische zu machen.
+function _pwZeit(ts){
+  const s=String(ts||'').trim();
+  if(!s) return null;
+  const m=s.match(/^(\d{2})\.(\d{2})\.(\d{4})[ T](\d{2}):(\d{2})/);
+  if(m) return Date.UTC(+m[3], +m[2]-1, +m[1], +m[4], +m[5]);
+  const t=Date.parse(s.replace('Z','+00:00'));
+  return isFinite(t) ? t : null;
+}
+
 function _pwDsAlterH(){
   const c=(typeof _pwCache!=='undefined' && _pwCache) ? _pwCache : null;
   if(!c) return null;
   let neuste=null;
   [c.prices, c.wallets, c.smart].forEach(d=>{
     const ts=d && (d.generatedAt || d.asof || (d._meta && d._meta.generatedAt));
-    if(!ts) return;
-    const t=Date.parse(String(ts).replace('Z','+00:00'));
-    if(isFinite(t) && (neuste===null || t>neuste)) neuste=t;
+    const t=_pwZeit(ts);
+    if(t===null) return;
+    // Ein Zeitstempel in der Zukunft ist kaputt, nicht frisch. Lieber „unbekannt" als eine
+    // Frische, die es nicht gibt — genau daran ist das Banner drei Monate lang gescheitert.
+    if(t > Date.now() + 3600e3) return;
+    if(neuste===null || t>neuste) neuste=t;
   });
   return neuste===null ? null : (Date.now()-neuste)/3600e3;
 }
