@@ -154,6 +154,90 @@ läuft dagegen live in der Seite und liest `GATE` direkt, ist also in Ordnung. E
 Python-Validator wieder anschließen (Banner + Commit) oder abschaffen. Bis zur Entscheidung steht
 er als Ausnahme **mit Begründung** im Artefakt-Wächter, statt still weiterzulaufen.
 
+## 🔴 12.09.2026 (Plattform-Audit, Block A — Teil 2)
+
+### Die 26 Validator-Fehler waren alle Fehlalarme
+
+`calc_pressure()` setzt `mustWin = pressureRatio > 0.65`. `update_dashboard.py` schränkt beim Bauen
+des Stakes noch einmal ein:
+
+    "mustWin": h_pressure.get("mustWin", False) and h_motiv == 'full'
+
+— weil bestätigte (`none`) und praktisch erledigte (`low`) Teams nicht mit Must-Win-Intensität
+spielen. Sinnvoll, dokumentiert, absichtlich. **Der Validator kannte die Einschränkung nicht** und
+meldete jeden solchen Fall als Fehler in `calc_pressure()`. Am echten Datenstand: **53 Fälle, alle
+mit `motivationLevel='low'`** — 53 Fehlalarme, kein einziger echter Fund.
+
+Das ist nicht harmlos: es wäre der erste Befund gewesen, den die frisch angeschlossene
+Validator-Karte gezeigt hätte. 26 rote Fehler, die keine sind. Genau so wird ein Wächter
+abgeschaltet — und findet danach auch die echten nicht mehr.
+
+Die Regel steht jetzt in **`mustwin_regel.py`**, und beide Seiten fragen dort nach statt sie zu
+wiederholen. Wächter: `tests/test_mustwin_regel.py`, mit einem Test **gegen den echten Bestand**
+(ohne den wäre der Fund nie entstanden) und einer Gegenprobe, dass es die Fälle überhaupt gibt —
+sonst wäre der Test grün, weil nichts zu prüfen ist.
+
+Dazu: `CARDS35_LOW_FV` war eine **WARNUNG bei 78 von 107 Spielen (73 %)**. Eine Warnung, die bei
+drei von vier Partien angeht, begräbt die 14 echten Befunde. Sie kann außerdem nicht halten, was
+ihr Kommentar verspricht („prüft, ob Karten-Picks trotzdem erscheinen") — die Picks entstehen erst
+im Browser, der Validator sieht in `season-finish.html` keinen einzigen. Jetzt HINWEIS statt
+Warnung. Stand danach: **0 Fehler, 75 Warnungen** statt 26/153.
+
+### A5 — die BET-Schwelle ist in Liga tot, und der naheliegende Fix wäre der falsche
+
+`generate_wm_picks.py` hebt ABWÄGEN auf BET bei `_conv_threshold`: Steam-Picks nach Profil, sonst
+hart 8. Profile: **WM 6, Liga 8, MLS 8.**
+
+Liga erreicht über 332 Picks + 101 Ledger-Einträge **nie mehr als 6**. Grund steht in den Familien:
+
+| Familie | feuert in Liga | max |
+|---|---|---|
+| sharp_money | 100 % | 3 |
+| model_stack | 99 % | 3 |
+| **context** | **2 %** | 3 |
+| **market** | **4 %** | 1 |
+
+Die Signale der beiden toten Familien (Travel, Wetter, Anreiz, Höhe) sind **WM**-Signale — in Liga
+gibt es sie nicht. Erreichbar sind 3+3 = 6, die Schwelle steht auf 8. **Null Hochstufungen in 332
+Picks**, und die Karte zeichnete trotzdem einen Zielmarker bei 8.
+
+⚠️ **Die Schwelle zu senken wäre nicht belegt.** Gemessen am Liga-Ledger:
+
+| | n | Treffer | ROI | Untergrenze |
+|---|---|---|---|---|
+| conv 4 | 52 | 65,4 % | +13,5 % | −7,4 % |
+| **conv 5** | **34** | **76,5 %** | **+37,2 %** | **+12,9 %** ← einzige belegte Schublade |
+| conv 6 | 15 | 60,0 % | +0,0 % | −36,9 % ← die erreichbare Spitze |
+
+Die Skala steigt in Liga **nicht monoton**, ihre Spitze ist die schwächste Stufe. Eine Senkung auf
+6 würde Picks genau dorthin lassen. Zum Vergleich MLS: conv 6 trägt (n=14, ROI +45,9 %, UG +16,7 %),
+conv 8+ dagegen −53,7 % (n=3). Und WM: conv 7 +50,8 % bei n=5 — ein Punktschätzer.
+
+**Deshalb keine Schwellen-Änderung in diesem Durchgang.** Geändert ist nur, was eindeutig falsch
+war: die Karte zeigt jetzt die Schwelle, die für DIESEN Pick gilt (`convBetSchwelle`, im Producer
+gestempelt) — vorher stand überall 8, auch bei einem WM-Steam-Pick, für den 6 gilt. Fehlt die
+Schwelle, verschwindet der Zielmarker, statt einen falschen zu zeigen.
+
+Wächter: `tests/test_bet_schwelle_erreichbar.py` — **eine Schwelle, die nie erreicht wurde, ist
+keine Schwelle, sondern ein Aus-Schalter.** Der Test vergleicht jede Profil-Schwelle mit der
+höchsten je erreichten Conviction des Datensatzes. Liga steht als bekannter Fall **mit der Messung**
+in `TOT_BEKANNT`; erreicht Liga eines Tages die 8, fällt der Eintrag auf. Fünf Mutationen, fünf rot.
+
+**Offen für Lucas:** Liga-Schwelle senken (nicht belegt), Familien-Caps für Liga neu schneiden
+(ehrlicher, aber verschiebt die Bedeutung jedes Punktes und damit alle Downstream-Schwellen), oder
+so lassen und die Conviction in Liga als reine Anzeige führen.
+
+### Nebenbefund aus den frischen Daten: zweite Betfair-Schublade über der ROI-Hürde
+
+`test_freigabe_entschieden` hat angeschlagen — nicht durch eine Änderung, sondern durch neue Daten.
+**English Sky Bet League 2 · First Half Goals 1.5**: n=35, ROI +43,3 %, ROI-Untergrenze **+8,3 %**,
+CLV −0,01 pp ohne Untergrenze. `freigabe.py` gibt sie korrekt **nicht** frei.
+
+Urteil wie bei der schwedischen Schublade: die Rendite trägt, aber es gibt keinen Beleg, dass wir
+dort die Schlusslinie schlagen — und 35 Zeilen Erste-Halbzeit-Over in der vierten englischen Liga
+sind genau die Ecke, in der das Glücksstreifen sein können. Gesichtet und protokolliert, keine
+Freigabe. Beobachten: es ist die erste Schublade mit einer ROI-Untergrenze über 8 %.
+
 ### A8-Folge — der Validator hängt jetzt in der Status-Seite (Lucas' Entscheidung)
 
 Nicht der alte Banner in `ui.js` (der bleibt aus), sondern eine Karte **🐕 Pick-Validator** in der

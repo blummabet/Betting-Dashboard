@@ -183,7 +183,18 @@ class TestBetfairSchubladenNutzenDieEchteSchranke(unittest.TestCase):
     #     Urteil: keine Freigabe-Kandidatin. Eine Trefferquote ohne CLV ist Glueck, und hier ist
     #     der CLV nicht nur unbelegt, sondern gemessen NEGATIV. n=31 in einer schwedischen
     #     dritten Liga dazu — das ist die Stichprobe, bei der +28 % ROI nichts heisst.
-    GESICHTET = {"Swedish Division 1 · Over/Under 2.5 Goals"}
+    # 12.09.2026 — „English Sky Bet League 2 · First Half Goals 1.5" (zweite Sichtung desselben
+    #     Tages, aus frischen Daten)
+    #     n=35 · ROI +43,3 % · ROI-Untergrenze +8,3 % · CLV **-0,01 pp** ohne Untergrenze
+    #     `freigabe.py` gibt sie korrekt NICHT frei (Status „geprueft").
+    #     Urteil: dasselbe Muster wie die schwedische Schublade, nur deutlicher. Die Rendite
+    #     traegt (Untergrenze ueber null), aber der CLV ist gemessen bei null und ohne Streuung
+    #     — es gibt also keinen Beleg, dass wir hier die Schlusslinie schlagen. Erste Halbzeit
+    #     Over 1.5 in der vierten englischen Liga ist dazu genau die Ecke, in der 35 Zeilen
+    #     Gluecksstreifen sein koennen. Keine Freigabe-Kandidatin, aber beobachten: sie ist die
+    #     erste Schublade mit einer ROI-Untergrenze ueber 8 %.
+    GESICHTET = {"Swedish Division 1 · Over/Under 2.5 Goals",
+                 "English Sky Bet League 2 · First Half Goals 1.5"}
 
     def test_gegen_den_echten_bestand_nimmt_keine_NEUE_betfair_schublade_die_huerde(self):
         """Stand 06.09.: null. Nimmt eine die Huerde, schlaegt dieser Test an — und DAS ist
