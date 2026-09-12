@@ -2384,6 +2384,11 @@ def main():
                         # Move + zusätzliche Signal-Bestätigung, nur die Schwelle ist profil-abh.
                         _conv_threshold = (STEAM_BET_THRESHOLD
                                            if p.get("source") == "steam" else 8)
+                        # 🔴 12.09.2026 (Lucas, Plattform-Audit): die Schwelle gehoert AN den Pick.
+                        # Die Karte zeichnete bisher hart „fuer Top-Wette: 8+" — auch bei einem
+                        # WM-Steam-Pick, fuer den in Wahrheit 6 gilt. Ein Ziel, das nicht das
+                        # Ziel ist, ist schlimmer als keins. Seitdem liest die Karte diesen Wert.
+                        p["convBetSchwelle"] = _conv_threshold
                         # BET-Entry-Hürde (18.06.2026): NEU auf BET nur bei FRISCHEM Move —
                         # letzter echter Move ≤ BET_ENTRY_HURDLE_H. lastMoveH None (unmappbarer
                         # Markt / Nicht-Steam) → Hürde aus (Altverhalten). Ein alter Drift-Move

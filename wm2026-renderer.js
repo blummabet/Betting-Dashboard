@@ -1655,11 +1655,25 @@
       // Score gesetzt — auch bei niedrigem Score (transparente Warnung).
       if (typeof heroPick.convictionScore === 'number') {
         const score = heroPick.convictionScore;
+        // 🔴 12.09.2026 (Lucas, Plattform-Audit). Hier stand ueberall die harte 8. Die gilt aber
+        // nur fuer Nicht-Steam-Picks; fuer Steam-Picks kommt sie aus dem Profil und steht bei WM
+        // auf 6. Die Karte hat also einem WM-Steam-Pick ein Ziel gezeigt, das gar nicht seins war.
+        //
+        // Schlimmer in Liga: dort steht die Schwelle auf 8, waehrend ueber 332 Picks nie mehr als
+        // 6 erreicht wurde (Kontext feuert in 2 %, Markt-Konsens in 4 % — die Signale dieser
+        // Familien sind WM-Signale). Das Ziel auf dem Balken war dort unerreichbar, und der Text
+        // versprach eine Hochstufung, die nie eintreten kann.
+        //
+        // Die Schwelle steht jetzt AM PICK (`convBetSchwelle`, generate_wm_picks.py). Fehlt sie,
+        // wird sie NICHT geraten: dann verschwindet der Zielmarker, statt einen falschen zu zeigen.
+        const schwelle = (typeof heroPick.convBetSchwelle === 'number'
+                          && heroPick.convBetSchwelle > 0) ? heroPick.convBetSchwelle : null;
         const label = heroPick.convictionLabel
-          || (score >= 8 ? '🎯 Top-Wette' : score >= 6 ? '⭐ Gute Wette'
+          || (schwelle !== null && score >= schwelle ? '🎯 Top-Wette'
+            : score >= 6 ? '⭐ Gute Wette'
             : score >= 4 ? '👁 Beobachten' : score >= 2 ? '⚠ Schwache Bestätigung'
             : '⚠ Keine Bestätigung');
-        const cls = score >= 8 ? 'cc-conv-top'
+        const cls = (schwelle !== null && score >= schwelle) ? 'cc-conv-top'
                   : score >= 6 ? 'cc-conv-good'
                   : score >= 4 ? 'cc-conv-watch' : 'cc-conv-low';
         const pct = (score / 10) * 100;
@@ -1682,8 +1696,14 @@
         html += `<div class="cc-conviction ${cls}">
           <div class="cc-conv-head">${label} <span class="cc-conv-score">${score}/10</span></div>
           ${famRows ? `<div class="cc-fam-grid">${famRows}</div>` : ''}
-          <div class="cc-conv-bar"><div class="cc-conv-fill" style="width:${pct}%"></div><div class="cc-conv-target" title="8+ = Top-Wette"></div></div>
-          <div class="cc-conv-bar-labels"><span>Conviction ${score}/10</span><span>für Top-Wette: 8+</span></div>
+          <div class="cc-conv-bar"><div class="cc-conv-fill" style="width:${pct}%"></div>${
+            schwelle !== null
+              ? `<div class="cc-conv-target" style="left:${(schwelle / 10) * 100}%" title="ab ${schwelle}/10 wird ABWÄGEN zu BET hochgestuft"></div>`
+              : ''}</div>
+          <div class="cc-conv-bar-labels"><span>Conviction ${score}/10</span><span>${
+            schwelle !== null
+              ? `für BET: ${schwelle}+`
+              : '<span title="Dieser Pick trägt keine Schwelle — sie wird hier nicht geraten.">Schwelle nicht hinterlegt</span>'}</span></div>
         </div>`;
       } else if (typeof heroPick.convictionScore === 'number'
                  && heroPick.modelHallucinationWarning
@@ -3436,8 +3456,13 @@
           </div>`;
         }).join('');
         const pct = (score / 10) * 100;
+        // 12.09.2026: dieselbe Korrektur wie auf der Karte — die Schwelle kommt vom Pick, nicht
+        // aus einer 8 im Code. Fehlt sie, wird nichts geraten (s. Kommentar oben bei der Karte).
+        const schwelle = (typeof pick.convBetSchwelle === 'number' && pick.convBetSchwelle > 0)
+                         ? pick.convBetSchwelle : null;
         const label = pick.convictionLabel
-          || (score >= 8 ? '🎯 Top-Wette' : score >= 6 ? '⭐ Gute Wette' : score >= 4 ? '👁 Beobachten' : '');
+          || (schwelle !== null && score >= schwelle ? '🎯 Top-Wette'
+              : score >= 6 ? '⭐ Gute Wette' : score >= 4 ? '👁 Beobachten' : '');
         return `<div class="wm-section">
           <div class="wm-section-label">🏅 Conviction-Score — wie überzeugt ist das System</div>
           <div class="wm-conv-modal">
@@ -3447,11 +3472,15 @@
             </div>
             <div class="wm-conv-modal-bar">
               <div class="wm-conv-modal-fill" style="width:${pct}%;"></div>
-              <div class="wm-conv-modal-target" title="8+ = Top-Wette"></div>
+              ${schwelle !== null
+                ? `<div class="wm-conv-modal-target" style="left:${(schwelle / 10) * 100}%" title="ab ${schwelle}/10 wird ABWÄGEN zu BET hochgestuft"></div>`
+                : ''}
             </div>
             <div class="wm-conv-modal-fams">${famHtml}</div>
             <div class="wm-conv-modal-explain">
-              Conviction zählt unabhängige Bestätigungs-Quellen. Bei 8+/10 darf ein ABWÄGEN auf BET hochgestuft werden.
+              Conviction zählt unabhängige Bestätigungs-Quellen. ${schwelle !== null
+                ? `Ab ${schwelle}/10 darf ein ABWÄGEN auf BET hochgestuft werden — die Schwelle hängt am Pick (Steam-Picks nutzen die Profil-Schwelle, die übrigen 8).`
+                : 'Für diesen Pick ist keine BET-Schwelle hinterlegt — sie wird hier bewusst nicht geraten.'}
               Bayesian-Loop kalibriert die Gewichte nach jedem resolved Pick.
               <br><br>
               <strong>Polymarket-Signale (polymarket_sharp, steam_lag) zählen hier NICHT</strong> —

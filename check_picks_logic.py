@@ -83,6 +83,9 @@ def _gates_aus_engine(pfad=None):
 
 GATES = _gates_aus_engine()
 
+# Die mustWin-Regel gehoert nicht hierher kopiert — s. mustwin_regel.py.
+import mustwin_regel as MWR
+
 # ── Poisson-Hilfsfunktion (identisch mit JS _poissonOver) ────────────────────
 import math
 
@@ -380,11 +383,17 @@ def check_fixture(fixture, league_key, league_name, rounds_left):
         mw  = stake.get("mustWin", False)
         cd  = stake.get("canDraw", False)
 
-        # 🔴 FEHLER: pressureRatio > 0.65 aber mustWin=False — Widerspruch in den Daten
-        if pr is not None and pr > 0.65 and not mw:
+        # 🔴 FEHLER: pressureRatio > 0.65 aber mustWin=False — Widerspruch in den Daten.
+        #
+        # 12.09.2026: hier stand die Bedingung ausgeschrieben, und sie kannte die Unterdrueckung
+        # aus update_dashboard.py nicht (`mustWin = … and motiv == 'full'`). Ergebnis: 53 Faelle
+        # gemeldet, ALLE mit motivationLevel='low' — also 53 Fehlalarme und kein echter Fund.
+        # Die Regel steht jetzt in mustwin_regel.py, und beide Seiten fragen dort nach.
+        if MWR.widerspruch(pr, mw, mot):
             flag("ERROR", "PRESSURE_MUSTWINFLAG_MISMATCH",
-                 f"{side}: pressureRatio={pr:.2f} > 0.65 aber mustWin=False. "
-                 f"calc_pressure() hat mustWin-Flag nicht korrekt gesetzt.")
+                 f"{side}: pressureRatio={pr:.2f} > 0.65, motivationLevel='{mot}' — bei voller "
+                 f"Motivation muesste mustWin=True sein, steht aber auf False. "
+                 f"calc_pressure() hat das Flag nicht gesetzt.")
 
         # 🔴 FEHLER: mustWin=True aber canDraw=True gleichzeitig — direkter Widerspruch
         if mw and cd:
@@ -573,8 +582,21 @@ def check_fixture(fixture, league_key, league_name, rounds_left):
     _IMPL_C35, _IMPL_C45 = 0.556, 0.444
     _schwelle_c35 = _IMPL_C35 - GATES["GOALS_REAL"]
     _schwelle_c45 = _IMPL_C45 - GATES["GOALS_REAL"]
+    # 12.09.2026: das war ein WARN und feuerte bei **78 von 107** Spielen (73 %). Eine Warnung,
+    # die bei drei von vier Partien angeht, ist keine Warnung mehr — sie macht die Liste unlesbar
+    # und begraebt die 14 echten Befunde darunter.
+    #
+    # Und sie kann gar nicht halten, was ihr Kommentar verspricht („prueft, ob Karten-picks
+    # trotzdem erscheinen"): die Picks entstehen erst im Browser in `getBettingPicks()`. Der
+    # Validator liest die Fixtures aus season-finish.html, und dort steht kein einziger Pick. Er
+    # kann also nur sagen „das Profil spricht dagegen", nicht „hier steht ein Pick, der nicht da
+    # sein duerfte". Dazu kommt, dass `refAvg` — laut JS der primaere Predictor — hier gar nicht
+    # vorliegt und das Bild drehen kann.
+    #
+    # Deshalb HINWEIS statt Warnung. Nicht weil es unwichtig waere, sondern weil die Stufe
+    # behaupten wuerde, hier sei etwas zu entscheiden.
     if _fv_c35 < _schwelle_c35:
-        flag("WARN", "CARDS35_LOW_FV",
+        flag("INFO", "CARDS35_LOW_FV",
              f"Liga-Baserate={_league_card_base:.1f} → Poisson FV für Über 3.5 Karten = {_fv_c35:.1%} "
              f"(typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~{_IMPL_C35 - _fv_c35:+.1%}). "
              f"FV-Gate (GOALS_REAL={GATES['GOALS_REAL']:.2f} → flaggt unter {_schwelle_c35:.1%}) "

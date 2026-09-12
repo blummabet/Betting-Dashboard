@@ -15,6 +15,8 @@ import http.client
 from datetime import datetime, timedelta
 from pathlib import Path
 
+import mustwin_regel   # die eine mustWin-Regel, die auch der Validator liest
+
 
 # ── Saison-Rollover (Fix 02.08.2026, Lucas): season war hart auf 2025 verdrahtet. Europäische Ligen:
 # Saison-Jahr = Startjahr; ab Juli das laufende Kalenderjahr. Aktuelle Saison zuerst, Vorsaison als
@@ -1581,7 +1583,9 @@ def fetch_league(key, cfg, squad_cache=None, xg_cache=None):
                       # mustWin=False unless motiv='full': confirmed ('none') and practically-doomed
                       # ('low') teams don't play with mustWin intensity — suppressing here prevents
                       # misleading high pressure picks for teams whose outcome is already decided.
-                      "mustWin": h_pressure.get("mustWin", False) and h_motiv == 'full',
+                      # 12.09.2026: die Regel steht in mustwin_regel.py, weil der Validator sie
+                      # kennen muss und sie sonst auseinanderlaeuft (53 Fehlalarme, s. dort).
+                      "mustWin": mustwin_regel.mustwin_setzen(h_pressure.get("mustWin", False), h_motiv),
                       "canDraw": h_pressure.get("canDraw", True),
                       "pos":             h_ctx.get("pos"),
                       "pts":             h_ctx.get("pts"),
@@ -1600,7 +1604,7 @@ def fetch_league(key, cfg, squad_cache=None, xg_cache=None):
                       "pointsNeeded": a_pressure.get("pointsNeeded", 0),
                       "pressureRatio": a_pressure.get("pressureRatio", 0.0),
                       # mustWin=False unless motiv='full': see home_stake comment above
-                      "mustWin": a_pressure.get("mustWin", False) and a_motiv == 'full',
+                      "mustWin": mustwin_regel.mustwin_setzen(a_pressure.get("mustWin", False), a_motiv),
                       "canDraw": a_pressure.get("canDraw", True),
                       "pos":             a_ctx.get("pos"),
                       "pts":             a_ctx.get("pts"),

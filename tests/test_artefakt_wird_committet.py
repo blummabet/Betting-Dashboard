@@ -68,12 +68,6 @@ AUSNAHMEN = {
         "naechsten Turnier gehoert die Zustaendigkeit einmal sauber entschieden.",
     ("fetch-wm-data.yml", "wm2026-player-picks.json"):
         "WM vorbei, letzte Aenderung 19.07.2026, kein Workflow committet sie mehr.",
-    ("update-dashboard.yml", "validator_summary.json"):
-        "🔴 12.09.2026: `check_picks_logic.py` laeuft nach jedem Update, aber NIEMAND liest sein "
-        "Ergebnis — der Banner in ui.js steht auf `const vs = null`, und die committete Summary "
-        "ist vom 26.04.2026, weil der Validator seither bei jeder Partie ohne H2H-Schnitt "
-        "abgestuerzt ist. Der Absturz ist gefixt; ob der Validator wieder angeschlossen oder "
-        "abgeschafft wird, entscheidet Lucas. Bis dahin waere Committen nur Rauschen.",
 }
 # `telegram-log.json` schreiben sieben Workflows ueber die gemeinsame Sende-Hilfe, committet wird
 # sie nur von update-liga / update-mls / telegram-manual. Der Log ist damit unvollstaendig — als

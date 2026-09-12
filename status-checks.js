@@ -1158,10 +1158,99 @@ async function _stRenderPolyStatus() {
     + _stCard('🧠 Smart-Money-Lernen', 'Wallet-Schärfe (CLV/Treffer) & Sharp-Discovery', learn);
 }
 
+// ── 🐕 Pick-Validator (12.09.2026, Plattform-Audit) ──────────────────────────────────────────
+// `check_picks_logic.py` laeuft nach jedem Dashboard-Update und prueft Dinge, die der
+// Live-Validator in validator.js NICHT kann (pressure/mustWin, H2H-Profile, Karten-FV gegen das
+// Gate). Sein Ergebnis ist hier zwei Jahreszeiten lang ins Leere gelaufen:
+//
+//   · der Banner in ui.js stand auf `const vs = null` — niemand las die Datei
+//   · `validator_summary.json` stand in keiner git-add-Zeile — sie kam nie im Repo an
+//   · und der Lauf starb seit dem 26.04.2026 bei jeder Partie ohne H2H-Schnitt an einem
+//     TypeError, mitten in der Liste. Die committete Summary sagte „46 geprueft, 3 Fehler";
+//     der echte Stand nach dem Fix sind 107 Spiele mit 26 Fehlern.
+//
+// Deshalb sitzt der Befund jetzt DORT, wo die anderen Systemchecks stehen — ein Ort statt zwei.
+// Und deshalb ist die FRISCHE der erste Check und nicht der letzte: ein Validator, dessen Stand
+// alt ist, hat nichts gefunden, weil er nicht gelaufen ist. Das darf nie wieder wie „alles in
+// Ordnung" aussehen.
+const _ST_VAL_WARN_H = 12, _ST_VAL_ERR_H = 36;
+
+// Befunde und Zeitstempel kommen aus einer JSON-Datei und landen in HTML. Escapen, sonst
+// zerlegt ein `<` in einer Meldung die Karte — und eine kaputte Karte sieht aus wie keine.
+function _stValEsc(t) {
+  return String(t == null ? '' : t)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function _stValidatorKarte(vs) {
+  const leer = (farbe, kopf, text) => ({ col: farbe, html: _stCard('🐕 Pick-Validator',
+    'check_picks_logic.py — prueft die Liga-Picks gegen Poisson-FV, Druck-Flags und H2H-Profile',
+    `<div style="font-size:15px;font-weight:700;color:${farbe};margin-bottom:4px">${kopf}</div>`
+    + `<div style="font-size:12px;color:var(--muted);line-height:1.6">${text}</div>`) });
+
+  if (!vs || typeof vs !== 'object' || vs.checked == null) {
+    return leer(_ST_R, '🔴 Kein Ergebnis',
+      'validator_summary.json fehlt oder ist unlesbar. Das ist <b>nicht</b> „keine Fehler gefunden" — '
+      + 'es heisst, der Validator hat nichts geliefert.');
+  }
+  const stand = _stParseTs(vs.timestamp);
+  const alter = _stAgeH(stand);
+  if (alter === null) {
+    return leer(_ST_R, '🔴 Stand unbekannt',
+      `Der Zeitstempel <code>${_stValEsc(vs.timestamp || '—')}</code> `
+      + 'liess sich nicht lesen. Ohne Stand ist kein Befund etwas wert.');
+  }
+  if (alter > _ST_VAL_ERR_H) {
+    return leer(_ST_R, `🔴 Validator liefert nicht — Stand ${_stAgo(stand)}`,
+      `Er laeuft nach jedem Dashboard-Update, der letzte Stand ist aber ${_stAgo(stand)}. `
+      + 'Vermutlich bricht der Lauf ab. Die Zahlen unten sind alt und sagen nichts ueber heute.');
+  }
+
+  const fehler = vs.errors || 0, warn = vs.warnings || 0, info = vs.infos || 0;
+  const farbe = fehler > 0 ? _ST_R : (alter > _ST_VAL_WARN_H || warn > 0) ? _ST_A : _ST_G;
+  const kopf = fehler > 0 ? `🔴 ${fehler} Fehler in ${vs.checked} Spielen`
+             : warn > 0 ? `🟡 ${warn} Warnungen in ${vs.checked} Spielen`
+             : `✅ ${vs.checked} Spiele geprueft, nichts zu melden`;
+
+  // Nach CODE gruppiert, nicht Zeile fuer Zeile: 26× derselbe Befund ist EIN Problem, und eine
+  // Liste aus 26 gleichen Zeilen versteckt die anderen.
+  const gruppen = {};
+  for (const i of (vs.issues || [])) {
+    if (!i || i.severity === 'INFO') continue;
+    const k = (i.severity || '?') + '|' + (i.code || '?');
+    (gruppen[k] = gruppen[k] || { sev: i.severity, code: i.code, n: 0, bsp: i })["n"]++;
+  }
+  const rang = { ERROR: 0, WARN: 1 };
+  const zeilen = Object.values(gruppen)
+    .sort((a, b) => (rang[a.sev] - rang[b.sev]) || (b.n - a.n))
+    .map(g => {
+      const c = g.sev === 'ERROR' ? _ST_R : _ST_A;
+      const b = g.bsp || {};
+      const spiel = [b.home, b.away].filter(Boolean).join(' vs ');
+      return `<tr><td style="padding:5px 8px;border-bottom:1px solid var(--border);white-space:nowrap">`
+        + `<b style="color:${c}">${g.sev === 'ERROR' ? '🔴' : '🟡'} ${g.n}×</b></td>`
+        + `<td style="padding:5px 8px;border-bottom:1px solid var(--border);font-family:monospace;font-size:11px">${_stValEsc(g.code)}</td>`
+        + `<td style="padding:5px 8px;border-bottom:1px solid var(--border);color:var(--muted);font-size:11px">`
+        + `${spiel ? _stValEsc(spiel) + ' — ' : ''}${_stValEsc(String(b.msg || '').slice(0, 120))}</td></tr>`;
+    }).join('');
+
+  const tabelle = zeilen
+    ? `<table style="width:100%;border-collapse:collapse;margin-top:12px">${zeilen}</table>`
+    : '<div style="font-size:12px;color:var(--muted);margin-top:10px">Keine Fehler oder Warnungen.</div>';
+  return { col: farbe, html: _stCard('🐕 Pick-Validator',
+    'check_picks_logic.py — prueft die Liga-Picks gegen Poisson-FV, Druck-Flags und H2H-Profile',
+    `<div style="font-size:15px;font-weight:700;color:${farbe}">${kopf}</div>`
+    + `<div style="font-size:11px;color:var(--muted);margin-top:2px">Stand ${_stAgo(stand)} · `
+    + `${fehler} Fehler · ${warn} Warnungen · ${info} Hinweise (Hinweise hier ausgeblendet)</div>`
+    + tabelle) };
+}
+
 async function _stRenderOverview() {
   const dyn = _stDynEl(); if (!dyn) return;
-  const [bf, pb, liga, mls] = await Promise.all([
-    _stGet('betfair_prices.json'), _stGet('poly_money_broad.json'), _stGet('liga-data.json'), _stGet('mls-data.json'),
+  const [bf, pb, liga, mls, vs] = await Promise.all([
+    _stGet('betfair_prices.json'), _stGet('poly_money_broad.json'), _stGet('liga-data.json'),
+    _stGet('mls-data.json'), _stGet('validator_summary.json'),
   ]);
   const sys = (icon, label, ds, ts, warnH, errH, line) => {
     const age = _stAgeH(ts);
@@ -1177,10 +1266,20 @@ async function _stRenderOverview() {
     sys('⚽', 'Top-5', 'liga', _stParseTs(liga && liga._meta && liga._meta.dataUpdatedAt), 14, 30, 'Liga-Pipeline 2×/Tag'),
     sys('🇺🇸', 'MLS', 'mls', _stParseTs(mls && mls._meta && mls._meta.dataUpdatedAt), 14, 30, 'MLS-Pipeline 2×/Tag'),
   ];
+  const val = _stValidatorKarte(vs);
   const anyRed = cards.some(c => c.col === _ST_R), anyAmber = cards.some(c => c.col === _ST_A);
   let vIco = '✅', vT = 'Alle Live-Systeme frisch', vS = 'Betfair, Polymarket, Top-5 und MLS liefern aktuell.', vC = _ST_G;
   if (anyRed) { vIco = '🔴'; vT = 'Ein System hängt'; vS = 'Mindestens ein Live-System ist überfällig — unten ansehen.'; vC = _ST_R; }
   else if (anyAmber) { vIco = '🟡'; vT = 'Meist frisch, eins überfällig'; vS = 'Ein System ist leicht über der Soll-Frische.'; vC = _ST_A; }
+  // Der Validator gehoert ins Urteil, sonst steht oben gruen und unten rot (12.09.2026).
+  if (val.col === _ST_R) {
+    vIco = '🔴'; vC = _ST_R;
+    vT = anyRed ? 'Ein System hängt · Validator meldet Fehler' : 'Der Pick-Validator meldet Fehler';
+    vS = 'Unten in der Validator-Karte steht, was — gruppiert nach Befund.';
+  } else if (val.col === _ST_A && vC === _ST_G) {
+    vIco = '🟡'; vC = _ST_A; vT = 'Systeme frisch, Validator mit Warnungen';
+    vS = 'Die Live-Feeds liefern; der Pick-Validator hat Warnungen — unten ansehen.';
+  }
   const wmCard = `<div onclick="_stJump('intl')" style="cursor:pointer;background:var(--card2);border:1px dashed var(--border);border-radius:12px;padding:15px 16px;opacity:.6;"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;"><span style="font-size:14px;font-weight:800">📦 WM 2026</span><span style="font-size:11px;color:var(--muted)">Archiv</span></div><div style="font-size:13px;color:var(--muted)">beendet · winterisiert</div></div>`;
   const allFeeds = [..._BF_FEEDS, ..._stPolyFeeds(),
     { file: 'liga-data.json', icon: '⚽', label: 'Top-5 Daten', ts: '_meta.dataUpdatedAt', warnH: 14, errH: 30, crit: false },
@@ -1188,6 +1287,7 @@ async function _stRenderOverview() {
   dyn.innerHTML = _stHead('🩺', 'Status — alle Live-Systeme', 'Was läuft, was hängt — Betfair · Polymarket · Top-5 · MLS auf einen Blick')
     + _stBanner(vIco, vT, vS, vC)
     + _stCard('🗂️ Systeme', 'Klick öffnet den Detail-Reiter', _stGridWrap([...cards.map(c => c.html), wmCard], 200))
+    + val.html
     + _stCard('📁 Feed-Frische — alle Systeme', 'aus dem Datenstand selbst · grün = im Soll · gelb = überfällig · rot = tot/fehlt', await _stFreshGrid(allFeeds))
     + _stThresholdsCard();
 }

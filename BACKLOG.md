@@ -154,6 +154,33 @@ läuft dagegen live in der Seite und liest `GATE` direkt, ist also in Ordnung. E
 Python-Validator wieder anschließen (Banner + Commit) oder abschaffen. Bis zur Entscheidung steht
 er als Ausnahme **mit Begründung** im Artefakt-Wächter, statt still weiterzulaufen.
 
+### A8-Folge — der Validator hängt jetzt in der Status-Seite (Lucas' Entscheidung)
+
+Nicht der alte Banner in `ui.js` (der bleibt aus), sondern eine Karte **🐕 Pick-Validator** in der
+Status-Übersicht — ein Ort für Systembefunde statt zwei.
+
+- `validator_summary.json` + `validator_report.md` werden jetzt von `update-dashboard.yml`
+  committet.
+- Die Karte prüft **zuerst die Frische**, nicht zuletzt: Stand > 36 h → rot, „Validator liefert
+  nicht". Genau der Zustand, der seit dem 26.04.2026 bestand und wie Stille aussah. Fehlende oder
+  unlesbare Datei ebenfalls rot, mit dem ausdrücklichen Satz, dass das **kein** „keine Fehler
+  gefunden" ist.
+- Befunde nach **Code gruppiert**: 26× derselbe Befund ist ein Problem, nicht 26 Zeilen — sonst
+  versteckt die Wiederholung alles andere. INFO-Hinweise (244 Stück) bleiben draußen.
+- Die Farbe fließt in das Urteil **oben** ein. Ein grüner Banner über einer roten Karte ist
+  schlimmer als beide Zustände einzeln.
+- Meldungstexte werden escaped — eine kaputte Karte sieht aus wie keine.
+
+Der erste sichtbare Befund sind die **26× `PRESSURE_MUSTWINFLAG_MISMATCH`**
+(`pressureRatio=0.85 > 0.65 aber mustWin=False` — `calc_pressure()` setzt das Flag nicht). Steht
+als eigener Punkt an, ist noch nicht gefixt.
+
+Beim Schreiben der Tests ist mir der eigene Fehler nochmal passiert, deshalb festgehalten: der
+Test „fließt die Farbe ins Urteil ein" war erst eine **Textsuche im Quelltext** — und blieb grün,
+als die Mutation `if (false && val.col === _ST_R)` daraus machte. Jetzt rendert der Test die
+Übersicht wirklich und liest nach, was oben steht. Sechs von sechs Mutationen rot (vorher vier von
+sechs).
+
 ### Der Artefakt-Wächter hatte selbst drei Löcher
 
 Beim Nachziehen von A8 sind in `test_artefakt_wird_committet.py` drei eigene Fehler aufgefallen —
