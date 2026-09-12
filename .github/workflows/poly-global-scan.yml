@@ -177,7 +177,10 @@ jobs:
             poly_cross_sport.json poly_cross_sport_history.json poly_cross_sport_seen.json \
             poly_whale_seen.json poly_whale_public_seen.json \
             poly_wallet_norm.json poly_wallet_norm_state.json \
-            shortlist_push_seen.json \
+            shortlist_push_seen.json shortlist_push_ledger.json \
+            poly_dominanz_ledger.json poly_dominanz_seen.json poly_dominanz_record.json \
+            poly_money_klein.json \
+            poly_money_broad_live.json poly_money_broad_live_history.json \
             esports_poly_prices.json esports_poly_wallets.json esports_poly_smartmoney.json esports_poly_coherence.json esports_poly_status.json \
             health/poly-global.json; do
             [ -f "$f" ] && git add "$f"

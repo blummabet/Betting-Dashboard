@@ -3,6 +3,125 @@
 Stand 10.09.2026 (oberster Block); Liga/WM-Teil darunter Stand 26.06.2026. Lebendige Liste aller offenen Punkte — Liga UND noch nicht umgesetzte WM-Sachen —
 damit wir alles abarbeiten können. ✅ = erledigt (Referenz), ⏳ = offen, 🔒 = blockiert.
 
+## 🔴 12.09.2026 (Plattform-Audit, Block A) — Bücher, die nie im Repo ankamen
+
+Lucas: *„schau dass beim Fix auch wirklich gefixt bleibt und nicht wieder kommt."* Deshalb steht
+unter jedem Punkt der Wächter, nicht nur die Korrektur.
+
+### A1/A2 — sieben Dateien wurden geschrieben und nie committet
+
+`poly-global-scan.yml` nannte in seiner `git add`-Liste weder `poly_dominanz_ledger.json` noch
+`_seen.json` noch `_record.json`, dazu nicht `poly_money_klein.json`, nicht
+`shortlist_push_ledger.json` und nicht `poly_money_broad_live(.history).json`. Auf einem frischen
+Runner heißt das: **leerer Dedup-Stand bei jedem Lauf.** Derselbe Markt durfte immer wieder
+pushen — das war Lucas' *„jetzt kommen halt viele solcher pushs"*, und die Ursache war nicht die
+Schwelle, sondern das fehlende Buch.
+
+`shortlist_push_ledger.json` ist der teuerste davon: am 10.09. gebaut, die Stats-Seite liest es
+seitdem — die Datei kam nie an, also stand der Kanal „Heute spielenswert" seither auf **leer statt
+falsch**. Ein Fix, der das Problem verschoben statt behoben hat.
+
+`poly_money_broad_live(.history).json` schreibt `main()` (Zeilen 2066/2080/2083), committet aber
+nur `poly-live-scan.yml`. Jeder Global-Scan hat seine Live-Erfassung weggeworfen.
+
+**Wächter: `tests/test_artefakt_wird_committet.py`.** Er liest per AST aus jedem Producer, welche
+`.json` er schreibt (`_save`, `write_json_atomic`, `open(…, "w")`, auch über `BASE / KONSTANTE`),
+und vergleicht das mit der `git add`-Liste des Workflows, der den Producer startet. Damit greift er
+auch für Dateien, die es heute noch nicht gibt. Ausnahmen stehen **mit Grund** in `AUSNAHMEN`, und
+ein eigener Test wirft verwaiste Ausnahmen wieder raus.
+
+Der bestehende `test_workflow_git_add.py` konnte das nicht sehen: er prüft die **Form** der
+`git add`-Zeilen (eine Datei pro Zeile, kein klebendes `2>`, keine offene Klammer) — also ob
+`git add` funktioniert, nicht ob eine Datei überhaupt genannt wird.
+
+Gegenbeweise (alle vier provoziert, alle vier rot):
+Datei aus der Liste genommen · Schreib-Helfer aus `SCHREIBER` entfernt (→ „unbekannter Helfer",
+statt still als Leser durchzugehen) · Auflösung von `BASE / KONSTANTE` kaputtgemacht · Ausnahme
+für eine Datei eingetragen, die niemand schreibt.
+
+### A3 — die Push-Spalte behauptete „kein Push" aus einem Dedup-Stand
+
+`_pwPushInfo` las `shortlist_push_seen.json` — TTL **3 Tage**, beim Fund 23 Zeilen — und schrieb
+bei jedem Fehltreffer ein definitives „kein Push". **179 von 193 Zeilen falsch.** Fehlerklasse:
+*fehlende Information rendert als harmloser Default.*
+
+Jetzt liest die Spalte `shortlist_push_ledger.json` und kennt **drei** Zustände: `✅ gepusht` ·
+`kein Push` (liegt im Zeitraum des Buchs und fehlt — echte Aussage) · `vor dem Buch` (älter als
+der erste Tag des Buchs — unbekannt, und sieht auch so aus). Der Zähler im Kopf nennt jetzt den
+Nenner: „1 von 2 im Zeitraum des Push-Buchs". Der tote `shortlist_push_seen.json`-Fetch ist raus.
+
+Verglichen wird auf **Tages**-Ebene, und der erste Tag des Buchs zählt als abgedeckt: der Push-Job
+läuft mehrmals täglich, ein Kandidat vom selben Tag ist ihm begegnet. Auf Sekunden-Ebene wäre
+jeder Play, der vor dem ersten Send des Tages gesehen wurde, fälschlich „vor dem Buch".
+
+`tests/frontend/poly-public-spiele.test.mjs` hatte die Regel nur zur **Hälfte** festgehalten:
+geprüft war „Datei fehlt ganz", nicht geprüft „Datei da, reicht aber nicht weit genug zurück".
+Genau in dieser Lücke saß der Fehler. Neu: `tests/frontend/poly-push-spalte.test.mjs`, inklusive
+der Gegenprobe, dass „kein Push" **nicht** verschwindet, wo es stimmt — ein Wächter, der nur die
+neue Freundlichkeit prüft, ließe eine Spalte durch, die nie mehr Nein sagt.
+
+### Zwei Texte, die etwas behauptet haben, das nie stimmte
+
+Die Leer-Anzeige des Dominanz-Bands sagte „läuft seit 11.09.2026 mit" (es hatte kein Buch), der
+Stats-Hinweis „Das Buch beginnt am 10.09.2026" (es begann nie). Beide nennen jetzt den echten
+Grund statt eines Datums, das nach Absicht aussieht.
+
+### A4 — das Bayesian-Panel zeigte durchweg zu gute Zahlen
+
+`_renderBayesianWeights` rechnete `wins_when_triggered / n_observations`. Zwei verschiedene Töpfe:
+
+    n_observations   nur die echten Live-Ergebnisse (n_live)
+    wins / losses    Live + Backtest-Prior + CLV-Strom   (update_signal_weights.py:426-433)
+
+Der Beweis stand auf der Seite: MLS `fixture_congestion` rendert mit der alten Formel **131 %**.
+Eine Trefferquote über 100 % gibt es nicht — das ist kein Rundungsfehler, sondern der Nachweis,
+dass Zähler und Nenner nicht zusammengehören.
+
+Betroffen waren **7 von 18** Liga- und **8 von 21** MLS-Signalen, und — das ist der Punkt —
+**jedes davon nach oben, keines nach unten**:
+
+| Signal | angezeigt | richtig |
+|---|---|---|
+| Liga xG-Stärke | 85 % | 59,1 % |
+| Liga Sharp-Move | 77 % | 55,5 % |
+| Liga Move-Following | 70 % | 51,9 % |
+| Liga Smart-Money | 64 % | **46,9 %** |
+| MLS Travel | 90 % | 51,7 % |
+| MLS Opener-Move | 59 % | **39,2 %** |
+| WM Smart-Money | 72 % | 50,5 % |
+| WM Opener-Move | 52 % | **37,8 %** |
+
+Dazu die feste 55-%-Grenze für Grün: Liga Smart-Money (echt 46,9 %, Nullpunkt ~52 %) leuchtete
+grün. Gefärbt wird jetzt gegen `neutral`, den Nullpunkt des Signals selbst — dieselbe Zahl, aus
+der `raw_weight = post_mean / neutral` entsteht. Die n-Spalte zeigt die Zusammensetzung
+(`110 +25`), der Tooltip nennt sie ausgeschrieben.
+
+Wächter in zwei Hälften, weil der Fehler zwei Hälften hat:
+- `tests/frontend/bayes-hitrate.test.mjs` läuft gegen die **echten** Gewichtsdateien — eine
+  Unmöglichkeit wie >100 % findet man nur an echten Zahlen. Dazu die Form-Prüfung („nirgends
+  wieder wins/n_observations", auf die Funktion selbst und ohne Kommentare) und die Gegenprobe,
+  dass ohne bekannten Nullpunkt **gar nicht** gefärbt wird statt falsch.
+- `tests/test_signal_weights_zaehler.py` nagelt die Bedeutung der Felder im Producer fest
+  (`wins+losses == n_live+n_prior+n_clv`). Ändert die jemand, fällt die Basis des Frontend-Fixes
+  weg — dann soll es dort knallen und nicht auf der Seite. Mit Gegenprobe: die alte Formel **muss**
+  an den echten Dateien noch Unmögliches liefern, sonst prüft der Test eine Welt ohne den Fehler.
+
+Gegenbeweise (alle vier rot): alte Formel zurück · feste 55 % zurück · Tooltip ohne
+Zusammensetzung · Farbe auch ohne bekannten Nullpunkt.
+
+Nicht angefasst: die zweite Tabelle „CLV-Aggregation pro Signal-Familie" rechnet `wins/n` aus
+**derselben** Grundgesamtheit. Ihre 55-%-Schwelle ist trotzdem fragwürdig (eine Trefferquote über
+gemischte Quoten sagt für sich nichts — steht so in `stake_analyse._quote`), aber das ist ein
+eigener Punkt und kein Rechenfehler.
+
+### Offen aus demselben Durchlauf — noch nicht gefixt, bewusst
+
+- `telegram-log.json` schreiben **sieben** Workflows, committen drei. Der Log ist damit
+  unvollständig. Als eine Ausnahme eingetragen (nicht sieben), damit es beim Aufräumen nicht in
+  Einzelteilen untergeht.
+- `league_fallback_cache.json` (getrackt, von keinem Workflow committet) und
+  `wm2026-player-props.json` (steht auf `{}`, WM vorbei) — beide mit Grund in `AUSNAHMEN`.
+
 ## 🔴 12.09.2026 (nach den ersten echten Pushs) — drei Fehler im Burst-Push
 
 Lucas hat drei Karten zurückgeschickt. Alle drei Befunde sind meine.

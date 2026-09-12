@@ -1695,19 +1695,48 @@ function _renderBayesianWeights() {
   // CLV-Beobachtungen ein Signal zusätzlich zu den Ergebnis-Beobachtungen bekommen hat. Nur die
   // sharp_money-Familie lernt darauf (Move-Signale) — bei allen anderen bleibt die Spalte leer,
   // und genau das ist die Aussage: Form/Ausfälle werden am Ergebnis gemessen, nicht am Markt.
+  // 🔴 12.09.2026 (Lucas, Plattform-Audit). Hier stand `wins_when_triggered / n_observations`,
+  // und das sind ZWEI VERSCHIEDENE GRUNDGESAMTHEITEN:
+  //
+  //   n_observations      nur die echten Live-Ergebnisse (`n_live`)
+  //   wins/losses         Live + Backtest-Prior + CLV-Strom  (update_signal_weights.py:426-433)
+  //
+  // Der Beweis stand auf der Seite: MLS `fixture_congestion` rendert mit der alten Formel
+  // **131 %**. Eine Trefferquote über 100 % gibt es nicht. Betroffen waren 7 von 18 Liga- und
+  // 8 von 21 MLS-Signalen — und JEDES davon nach oben, keines nach unten:
+  // Liga xG 85 statt 59,1 · Liga Smart-Money 64 statt 46,9 · MLS Travel 90 statt 51,7 ·
+  // WM Opener-Move 52 statt 37,8. Die grüne Schwelle von 55 % ließ mehrere Signale unter
+  // Münzwurf grün leuchten.
+  //
+  // Gerechnet wird jetzt `wins / (wins + losses)` — dieselbe Grundgesamtheit, und es ist genau
+  // die Zahl, aus der das Gewicht entsteht (`post_mean`). Verglichen wird gegen `neutral`, den
+  // Nullpunkt des Signals selbst, statt gegen feste 55 %: `raw_weight = post_mean / neutral`,
+  // also wäre jede andere Schwelle eine Farbe, die zur Zahl daneben nicht passt.
   let anyClv = false;
   const rows = signalNames.map(name => {
     const w = weights[name] || {};
     const weight = typeof w.weight === 'number' ? w.weight : 1.0;
     const n = w.n_observations || 0;
+    const nPrior = w.n_prior || 0;
     const nClv = w.n_clv || 0;
     if (nClv > 0) anyClv = true;
     const wins = w.wins_when_triggered || 0;
-    const hitRate = n > 0 ? Math.round((wins / n) * 100) : null;
+    const losses = w.losses_when_triggered || 0;
+    const nGesamt = wins + losses;
+    const hitRate = nGesamt > 0 ? Math.round((wins / nGesamt) * 100) : null;
+    // Der Nullpunkt des Signals. Fehlt er (alte Datei), lieber gar keine Farbe als eine falsche.
+    const neutral = typeof w.neutral === 'number' ? Math.round(w.neutral * 100) : null;
     const wCol = weight > 1.1 ? '#3fb950' : weight < 0.9 ? '#f85149' : '#8b949e';
     const wLabel = weight.toFixed(2);
+    const hrTitle = `${wins.toFixed(1)} von ${nGesamt.toFixed(1)} — Live ${n}`
+      + (nPrior ? ` + Backtest-Prior ${nPrior}` : '')
+      + (nClv ? ` + CLV ${nClv}` : '')
+      + (neutral !== null ? ` · Nullpunkt dieses Signals ${neutral}%` : '');
+    const hrCol = neutral === null ? '#8b949e'
+      : hitRate >= neutral + 3 ? '#3fb950'
+      : hitRate >= neutral - 3 ? '#e3b341' : '#f85149';
     const hrCell = hitRate !== null
-      ? `<span style="color:${hitRate >= 55 ? '#3fb950' : hitRate >= 45 ? '#e3b341' : '#f85149'};font-weight:700;">${hitRate}%</span>`
+      ? `<span title="${hrTitle}" style="color:${hrCol};font-weight:700;">${hitRate}%</span>`
       : `<span style="color:var(--muted);font-style:italic;">—</span>`;
     const clvCell = nClv > 0
       ? `<span title="zusätzliche Beobachtungen aus Closing Line Value" style="color:#a78bfa;font-weight:700;">+${nClv % 1 === 0 ? nClv : nClv.toFixed(1)}</span>`
@@ -1715,7 +1744,7 @@ function _renderBayesianWeights() {
     return `<tr style="border-top:1px solid var(--border);">
       <td style="padding:8px 12px;font-size:13px;">${labels[name] || name}</td>
       <td style="padding:8px 12px;text-align:right;font-family:ui-monospace,monospace;color:${wCol};font-weight:700;">${wLabel}</td>
-      <td style="padding:8px 12px;text-align:right;font-size:12px;color:var(--muted);">${n}</td>
+      <td title="Live-Beobachtungen aus Ergebnissen${nPrior ? ` · dazu ${nPrior} Backtest-Prior, die mit in die Hit-Rate eingehen` : ''}" style="padding:8px 12px;text-align:right;font-size:12px;color:var(--muted);">${n}${nPrior ? `<span style="color:var(--border)"> +${nPrior}</span>` : ''}</td>
       <td style="padding:8px 12px;text-align:right;font-size:12px;color:#a78bfa;">${clvCell}</td>
       <td style="padding:8px 12px;text-align:right;font-size:12px;">${hrCell}</td>
     </tr>`;
@@ -1736,7 +1765,7 @@ function _renderBayesianWeights() {
           <th style="padding:10px 12px;text-align:right;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;">Weight</th>
           <th style="padding:10px 12px;text-align:right;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;">n</th>
           <th title="Zusätzliche Beobachtungen aus Closing Line Value — nur Sharp-Money-Signale lernen darauf" style="padding:10px 12px;text-align:right;font-size:11px;color:#a78bfa;text-transform:uppercase;letter-spacing:0.5px;">CLV</th>
-          <th style="padding:10px 12px;text-align:right;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;">Hit-Rate</th>
+          <th title="Anteil der Treffer an ALLEN Beobachtungen des Signals — Live-Ergebnisse, Backtest-Prior und CLV zusammen. Genau die Zahl, aus der das Gewicht entsteht. Gefärbt gegen den Nullpunkt des Signals, nicht gegen feste 55 %." style="padding:10px 12px;text-align:right;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;">Hit-Rate</th>
         </tr></thead>
         <tbody>${rows}</tbody>
       </table>

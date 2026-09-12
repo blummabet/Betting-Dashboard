@@ -399,8 +399,10 @@ def push_bloecke() -> list:
     # ueberall, statt einer zweiten Meinung. Gerechnet wird mit dem PUSH-Preis, nicht dem
     # Scan-Preis: wer dem Push folgt, steigt zu dem ein, der in der Nachricht stand.
     aus.append(("shortlist", "Heute spielenswert · Trades", "⚡", shortlist_push_plays(),
-                "Das Buch beginnt am 10.09.2026. Davor gab es für diesen Kanal nur ein "
-                "Dedup-Buch mit 3 Tagen Gedächtnis — die früheren Pushes sind nicht "
+                "Das Buch beginnt am 12.09.2026. Am 10.09. wurde es gebaut, aber nie "
+                "committet — die Datei kam auf keinem Runner an, und dieser Block stand "
+                "seither auf leer statt auf falsch. Davor gab es für den Kanal nur ein "
+                "Dedup-Buch mit 3 Tagen Gedächtnis; die früheren Pushes sind nicht "
                 "rekonstruierbar."))
     return [(i, n, e, [p for p in pl if p.get("tag")], h) for i, n, e, pl, h in aus]
 

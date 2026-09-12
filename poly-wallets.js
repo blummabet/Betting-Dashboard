@@ -333,19 +333,18 @@ function initPolyWallets(){
     //   · moneyAccGl  — trifft die Geld-Seite besser als die Preis-Seite? (gemessen: nein)
     jf('poly_wallet_norm.json'),
     jf('liga_poly_markout.json'),
-    // 09.09.2026 (Lucas: „ich will auch immer kontrollieren, ob für die ‚Heute spielenswert' —
-    // das sollten ja die aus dem Public-Kandidaten sein — auch wirklich in Trades-Channel eine
-    // Push kommt"). Genau das steht hier drin: `push_shortlist_trades.py` fuehrt sein Dedup-Buch
-    // unter `key|side`, also demselben Schluessel, den auch der Paper-Track benutzt. Damit ist
-    // die Frage ohne jede Rekonstruktion beantwortbar — nachschlagen statt vermuten.
-    jf('shortlist_push_seen.json'),
     // 11.09.2026 (Lucas: „wenn du so was baust, mach das bitte zumindest in der Tracking-Info
     // auch als eigenen Bereich, dass man's mitschreiben und tracken kann"). Das Dominanz-Band
     // fuehrt sein eigenes Buch und seinen eigenen Bericht — abgerechnet wird es von derselben
     // `poly_public_eval.settle()` wie der Whale-Kanal.
     jf('poly_dominanz_record.json'),
-  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist,liveSigTrack,moneyMap,publicRec,walletNorm,markout,pushSeen,domRec])=>{
-    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist,liveSigTrack,moneyMap,publicRec,walletNorm,markout,pushSeen,domRec};
+    // 12.09.2026 (Audit): das ECHTE Push-Buch. Bis heute stand hier nur
+    // `shortlist_push_seen.json` — ein Dedup-Stand mit 3 Tagen TTL. Alles Aeltere las
+    // sich daraus als „kein Push", und das ist eine Behauptung, die die Datei gar nicht
+    // tragen kann.
+    jf('shortlist_push_ledger.json'),
+  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist,liveSigTrack,moneyMap,publicRec,walletNorm,markout,domRec,pushLed])=>{
+    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist,liveSigTrack,moneyMap,publicRec,walletNorm,markout,domRec,pushLed};
     _pwRender();
   }).catch(err=>{
     // 12.07.2026: Vorher gab es KEIN catch — eine Exception im Render (z.B. der
@@ -3154,9 +3153,11 @@ function _pwDominanz(rec){
     +'ist als <code>quelle</code> gestempelt — getrennt auswertbar, weil die Kleinmarkt-Spur den '
     +'Einstieg des Wals nicht kennt und in einem anderen Größenbereich misst.</span></div>';
   if(!rec || !rec.gesamt){
-    return kopf+'<div class="pw-none">Noch nichts gebucht. Das Band läuft seit 11.09.2026 mit — '
-      +'die erste Zeile erscheint, sobald eine Position ab $3.000 mindestens 40 % ihres Marktes '
-      +'ausmacht.</div></section>';
+    return kopf+'<div class="pw-none">Noch nichts gebucht. Das Band <b>sendet</b> seit 11.09.2026, '
+      +'aber sein Buch stand bis zum 12.09.2026 in keiner git-add-Zeile und kam auf keinem Runner '
+      +'an — die Pushs davor sind nicht rekonstruierbar, und der leere Dedup-Stand ist auch der '
+      +'Grund, warum derselbe Markt mehrfach kommen konnte. Die erste Zeile erscheint mit dem '
+      +'nächsten gesendeten Push.</div></section>';
   }
   const a=rec.agg||{n:0};
   const zeile='<div class="pw-mut" style="font-size:11px;margin:6px 0 10px">'
@@ -3206,7 +3207,9 @@ function _pwPublicPush(rec){
 // war, aber nie WAS drin war. Eine Kennzahl ohne ihre Zeilen kann man nicht nachprüfen.
 //
 // ⭐ Die Push-Spalte ist der eigentliche Punkt. Nachgeschlagen wird in
-// `shortlist_push_seen.json` (Schlüssel `key|side` — derselbe wie im Track), nicht rekonstruiert.
+// `shortlist_push_ledger.json` (Schlüssel `key|side` — derselbe wie im Track), nicht
+// rekonstruiert. Bis zum 12.09.2026 stand hier das Dedup-Buch; warum das falsch war, steht
+// ausführlich bei `_pwPushInfo`.
 //
 // 10.09.2026 — HIER STAND ZWEI WOCHEN LANG DAS FALSCHE. Der Text sagte, der Push feuere ab
 // Conviction ≥6 und ein Public-Kandidat verlange ≥7, das seien „zwei verschiedene Tore". Beides
@@ -3215,21 +3218,59 @@ function _pwPublicPush(rec){
 // sind also nicht mehr verschieden — der Push ist eine Teilmenge der Public-Kandidaten, gedeckelt
 // auf MAX_PLAYS und MAX_PRICE. Ein „kein Push" heißt deshalb Deckel, Preis oder Dedup, nicht
 // „andere Schwelle".
+// 🔴 12.09.2026 (Lucas, Plattform-Audit). Diese Spalte las `shortlist_push_seen.json` und
+// schrieb bei jedem Fehltreffer „kein Push" hin. Die Datei ist aber ein DEDUP-Stand mit drei
+// Tagen TTL (`SEEN_TTL_DAYS = 3`) und stand beim Fund auf 23 Zeilen: alles, was aelter als drei
+// Tage war, bekam ein definitives Negativ aus einer Datei, die es gar nicht wissen kann. Von 193
+// Zeilen sagten 179 faelschlich „kein Push".
+//
+// Es ist dieselbe Fehlerklasse wie ueberall sonst im Projekt: **fehlende Information darf nicht
+// als harmloser Default rendern.** Deshalb drei Zustaende statt zwei —
+//   ✅ gepusht      · steht im Buch
+//   kein Push      · liegt IM Zeitraum des Buchs und steht trotzdem nicht drin → echte Aussage
+//   vor dem Buch   · aelter als die aelteste Zeile des Buchs → unbekannt, und sieht auch so aus
+function _pwPushTag(t){ const x=String(t||''); return x.length>=10?x.slice(0,10):''; }
+
+function _pwPushBuch(){
+  const led=(_pwCache&&_pwCache.pushLed);
+  if(!Array.isArray(led)||!led.length) return null;
+  const map={}; let ab=null;
+  for(const z of led){
+    if(!z||typeof z!=='object') continue;
+    const k=z.k||(String(z.key||'')+'|'+String(z.side||''));
+    map[k]=z;
+    const t=String(z.sentAt||'');
+    if(t&&(!ab||t<ab)) ab=t;
+  }
+  return {map:map, ab:ab};
+}
+
 function _pwPushInfo(r){
-  const seen=(_pwCache&&_pwCache.pushSeen)||null;
-  if(!seen||typeof seen!=='object') return {txt:'—',col:'#6e7681',
-    tip:'shortlist_push_seen.json nicht geladen — ob dieser Play in den Channel ging, ist hier '
-       +'nicht feststellbar. Unbekannt ist etwas anderes als ein ausgebliebener Push, und darf '
-       +'auch nicht so aussehen.'};
-  const rec=seen[String(r.key||'')+'|'+String(r.side||'')];
-  if(!rec) return {txt:'kein Push',col:'#6e7681',
-    tip:'Dieser Play steht in keinem Push-Buch. Der Trades-Push feuert ab Conviction '
-       +'≥6; ein Public-Kandidat verlangt ≥7 plus bewiesene Wallet plus Mehrheit — die beiden '
-       +'Mengen sind nicht identisch.'};
-  const ts=String(rec.ts||'').slice(0,16).replace('T',' ');
-  return {txt:'✅ gepusht',col:'#3fb950',
-    tip:'In den Trades-Channel gegangen'+(ts?(' am '+ts):'')
-       +(rec.conv!=null?(' · Conviction beim Push '+rec.conv):'')};
+  const buch=_pwPushBuch();
+  if(!buch) return {txt:'—',col:'#6e7681',
+    tip:'shortlist_push_ledger.json nicht geladen oder noch leer — ob dieser Play in den Channel '
+       +'ging, ist hier nicht feststellbar. Unbekannt ist etwas anderes als ein ausgebliebener '
+       +'Push, und darf auch nicht so aussehen.'};
+  const rec=buch.map[String(r.key||'')+'|'+String(r.side||'')];
+  if(rec){
+    const ts=String(rec.sentAt||'').slice(0,16).replace('T',' ');
+    return {txt:'✅ gepusht',col:'#3fb950',
+      tip:'In den Trades-Channel gegangen'+(ts?(' am '+ts):'')
+         +(rec.conv!=null?(' · Conviction beim Push '+rec.conv):'')
+         +(rec.pushPreis!=null?(' · Push-Preis '+Math.round(rec.pushPreis*100)+'¢'):'')};
+  }
+  // Verglichen wird auf TAGES-Ebene, und der erste Tag des Buchs zaehlt als abgedeckt. Grund:
+  // der Push-Job laeuft mehrmals taeglich, ein Kandidat vom selben Tag ist ihm also begegnet.
+  // Auf Sekunden-Ebene waere jeder Play, der vor dem ersten Send des Tages gesehen wurde,
+  // faelschlich „vor dem Buch" — und das Buch kann ihn sehr wohl beantworten.
+  const eigen=_pwPushTag(r.firstTs||r.lastTs), ab=_pwPushTag(buch.ab);
+  if(ab&&eigen&&eigen<ab) return {txt:'vor dem Buch',col:'#6e7681',
+    tip:'Dieser Play ist aelter als der erste Tag des Push-Buchs ('+ab+'). Ob er gepusht wurde, '
+       +'steht nirgends — das ist kein ausgebliebener Push, sondern eine Luecke im Gedaechtnis.'};
+  return {txt:'kein Push',col:'#6e7681',
+    tip:'Liegt im Zeitraum des Push-Buchs und steht nicht darin — also wirklich nicht gesendet. '
+       +'Der Push haengt seit dem 07.09. am selben Public-Tor wie die Kandidaten; ein fehlender '
+       +'Push heisst Tages-Deckel, Preis ueber 92¢ oder Dedup, nicht „andere Schwelle".'};
 }
 
 function _pwPublicZeile(r, offen){
@@ -3253,16 +3294,25 @@ function _pwPublicSpiele(track){
   const offen=Object.values(t.open||{}).filter(r=>r&&r.public);
   const settled=(t.settled||[]).filter(r=>r&&r.public).slice(-25).reverse();
   if(!offen.length && !settled.length) return '';
-  const seen=(_pwCache&&_pwCache.pushSeen)||null;
   // Wie viele der abgerechneten Kandidaten haben es in den Push geschafft? Die Zahl steht im
-  // Kopf, damit die Kontrolle nicht Zeile für Zeile gemacht werden muss.
-  let gepusht=null;
-  if(seen&&typeof seen==='object'){
-    gepusht=settled.concat(offen).filter(r=>seen[String(r.key||'')+'|'+String(r.side||'')]).length;
+  // Kopf, damit die Kontrolle nicht Zeile für Zeile gemacht werden muss. Sie zaehlt NUR die
+  // Zeilen, die im Zeitraum des Buchs liegen — sonst waere der Nenner groesser als das, was das
+  // Buch ueberhaupt beantworten kann (12.09.2026).
+  const buch=_pwPushBuch();
+  let gepusht=null, imBuch=null;
+  if(buch){
+    const ab=_pwPushTag(buch.ab);
+    const kand=settled.concat(offen).filter(r=>{
+      const t=_pwPushTag(r.firstTs||r.lastTs);
+      return !ab||!t||t>=ab;
+    });
+    imBuch=kand.length;
+    gepusht=kand.filter(r=>buch.map[String(r.key||'')+'|'+String(r.side||'')]).length;
   }
   const kopf='<summary class="pw-sum">◆ Welche Spiele sind das? — '
     +offen.length+' offen · '+settled.length+' zuletzt abgerechnet'
-    +(gepusht!=null?('<span class="pw-mut"> · '+gepusht+' davon im Trades-Channel</span>'):'')
+    +(gepusht!=null?('<span class="pw-mut"> · '+gepusht+' von '+imBuch
+      +' im Zeitraum des Push-Buchs sind in den Trades-Channel gegangen</span>'):'')
     +'</summary>';
   const zeilen=offen.map(r=>_pwPublicZeile(r,true)).join('')
     +settled.map(r=>_pwPublicZeile(r,false)).join('');
