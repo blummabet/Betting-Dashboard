@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-12T19:42:53.760926+00:00",
+ "generatedAt": "2026-09-12T20:12:56.196442+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,8 +10,8 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 675,
- "pinnKeys": 321,
- "matched": 231,
+ "pinnKeys": 317,
+ "matched": 229,
  "footballRows": 201,
  "crossRows": 474,
  "footballSkippedStale": 68,
@@ -24,13 +24,42 @@
   "soccer_liga": 177
  },
  "matchedBySport": {
-  "baseball_mlb": 30,
+  "baseball_mlb": 28,
   "soccer_mls": 24,
   "soccer_liga": 177
  },
  "trackRecord": {
-  "tracked": 320,
-  "converged": 72
+  "tracked": 316,
+  "converged": 70
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|coloradorockies-detroittigers|coloradorockies",
+   "sport": "baseball_mlb",
+   "event": "Colorado Rockies vs Detroit Tigers",
+   "market": "Moneyline",
+   "outcome": "Colorado Rockies",
+   "polyPP": 3.5,
+   "pinnPP": 91.0,
+   "gapPP": -87.48,
+   "vol": 472822,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -66.21,
+   "firstSeen": "2026-09-11T23:41:18.017358+00:00"
+  },
+  {
+   "id": "baseball_mlb|coloradorockies-detroittigers|detroittigers",
+   "sport": "baseball_mlb",
+   "event": "Colorado Rockies vs Detroit Tigers",
+   "market": "Moneyline",
+   "outcome": "Detroit Tigers",
+   "polyPP": 96.5,
+   "pinnPP": 9.0,
+   "gapPP": 87.48,
+   "vol": 472822,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -66.21,
+   "firstSeen": "2026-09-11T23:41:18.017358+00:00"
+  }
+ ]
 }
