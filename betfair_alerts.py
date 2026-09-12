@@ -840,6 +840,12 @@ def _is_live(a) -> bool:
     return _flow_status(a) in ("⚽ läuft", "⏸ Halbzeit")
 
 
+def _stand_bekannt(m) -> bool:
+    """Steht zum Push-Zeitpunkt ueberhaupt ein Live-Stand zur Verfuegung?"""
+    li = m.get("liveInfo") or {}
+    return isinstance(li.get("goal_v1"), int) and isinstance(li.get("goal_v2"), int)
+
+
 def _leader_team(m):
     """Aktuell fuehrende Mannschaft aus dem Live-Stand (None bei Gleichstand/keinem Stand)."""
     li = m.get("liveInfo") or {}
@@ -849,10 +855,24 @@ def _leader_team(m):
     return m.get("home") if g1 > g2 else m.get("away")
 
 
-def _money_on_leader(m, lead_name) -> bool:
+def _money_on_leader(m, lead_name):
     """Reaktives Geld: die Seite mit dem meisten Geld IST die bereits fuehrende Mannschaft
     (Lucas: „1:0 fuehrt und Kohle kommt = eher wertlos"). Greift nur, wenn der Ausgang eine
-    Mannschaft ist (Ueber/Unter, BTTS matchen den Team-Namen nicht -> nicht betroffen)."""
+    Mannschaft ist (Ueber/Unter, BTTS matchen den Team-Namen nicht -> nicht betroffen).
+
+    🔴 12.09.2026 (Lucas: „Team in Fuehrung und dann kommt das trotzdem — meinst du, das ist
+    stark positiv?"). Diese Funktion gab **bool** zurueck und warf damit zwei verschiedene Lagen
+    in denselben Topf: „steht gleich / liegt zurueck" und „wir kennen den Stand gar nicht".
+
+    Gemessen an den 25 gestempelten Pushs: bei **7** war der Live-Stand unbekannt — alle sieben
+    stehen als `onLeader: False` im Buch und damit in der Vergleichsgruppe „nicht auf den
+    Fuehrenden". Sie verwaessern genau die Zahl, mit der die Frage beantwortet werden soll.
+
+    Dieselbe Fehlerklasse wie ueberall hier: **fehlende Information darf nicht als harmloser
+    Default rendern.** Ab jetzt drei Zustaende — True / False / None.
+    """
+    if not _stand_bekannt(m):
+        return None
     ldr = _leader_team(m)
     return bool(ldr) and bool(lead_name) and str(lead_name) == str(ldr)
 
@@ -1007,7 +1027,10 @@ def _log_public_push(a, cidx=None) -> None:
                 # exakt sein statt naeherungsweise. Also stempeln wir die Fuehrungs-Lage jetzt
                 # im Moment des Sendens — dieselbe Lehre wie beim Serien-Stempel am 04.09.:
                 # eine Momentaufnahme laesst sich nicht rueckwirkend rekonstruieren.
-                "onLeader": bool(a.get("onLeader")),
+                # 12.09.2026: KEIN bool() mehr — None heisst „Stand unbekannt" und muss beim
+                # Auswerten aus beiden Gruppen fallen, statt als „nicht auf den Fuehrenden" zu
+                # zaehlen (s. _money_on_leader).
+                "onLeader": a.get("onLeader"),
                 "leadDir": a.get("leadDir"),
                 "leadShare": a.get("leadShare"),
                 "live": {"time": ((a.get("live") or {}).get("time")),
