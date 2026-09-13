@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-13T20:14:49.426118+00:00",
+ "generatedAt": "2026-09-13T20:44:59.314299+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,11 +10,11 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 700,
- "pinnKeys": 286,
- "matched": 236,
+ "pinnKeys": 274,
+ "matched": 230,
  "footballRows": 216,
  "crossRows": 484,
- "footballSkippedStale": 50,
+ "footballSkippedStale": 46,
  "seenBySport": {
   "americanfootball_nfl": 180,
   "baseball_mlb": 94,
@@ -24,7 +24,7 @@
   "soccer_liga": 195
  },
  "matchedBySport": {
-  "baseball_mlb": 20,
+  "baseball_mlb": 14,
   "soccer_mls": 21,
   "soccer_liga": 195
  },
@@ -34,17 +34,73 @@
  },
  "discrepancies": [
   {
+   "id": "soccer_liga|juventus-sassuolo|hw",
+   "sport": "soccer_liga",
+   "event": "Sassuolo vs Juventus",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 85.5,
+   "pinnPP": 68.5,
+   "gapPP": 16.95,
+   "vol": 457858,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-13T20:44:59.313953+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagowhitesox-stlouiscardinals|chicagowhitesox",
+   "sport": "baseball_mlb",
+   "event": "Chicago White Sox vs St. Louis Cardinals",
+   "market": "Moneyline",
+   "outcome": "Chicago White Sox",
+   "polyPP": 2.5,
+   "pinnPP": 18.1,
+   "gapPP": -15.64,
+   "vol": 526053,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 31.8,
+   "firstSeen": "2026-09-12T04:11:33.280911+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagowhitesox-stlouiscardinals|stlouiscardinals",
+   "sport": "baseball_mlb",
+   "event": "Chicago White Sox vs St. Louis Cardinals",
+   "market": "Moneyline",
+   "outcome": "St. Louis Cardinals",
+   "polyPP": 97.5,
+   "pinnPP": 81.9,
+   "gapPP": 15.64,
+   "vol": 526053,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 31.8,
+   "firstSeen": "2026-09-12T04:11:33.280911+00:00"
+  },
+  {
+   "id": "soccer_liga|juventus-sassuolo|dr",
+   "sport": "soccer_liga",
+   "event": "Sassuolo vs Juventus",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 14.0,
+   "pinnPP": 25.3,
+   "gapPP": -11.34,
+   "vol": 457858,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-13T20:44:59.313953+00:00"
+  },
+  {
    "id": "baseball_mlb|chicagocubs-pittsburghpirates|pittsburghpirates",
    "sport": "baseball_mlb",
    "event": "Pittsburgh Pirates vs Chicago Cubs",
    "market": "Moneyline",
    "outcome": "Pittsburgh Pirates",
-   "polyPP": 54.5,
-   "pinnPP": 77.6,
-   "gapPP": -23.05,
-   "vol": 397721,
-   "richtung": "Poly zu niedrig → backen",
-   "convergePP": -10.2,
+   "polyPP": 73.5,
+   "pinnPP": 62.6,
+   "gapPP": 10.88,
+   "vol": 460089,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 1.97,
    "firstSeen": "2026-09-11T19:11:08.331920+00:00"
   },
   {
@@ -53,12 +109,12 @@
    "event": "Pittsburgh Pirates vs Chicago Cubs",
    "market": "Moneyline",
    "outcome": "Chicago Cubs",
-   "polyPP": 45.5,
-   "pinnPP": 22.4,
-   "gapPP": 23.05,
-   "vol": 397721,
-   "richtung": "Poly zu hoch → faden",
-   "convergePP": -10.2,
+   "polyPP": 26.5,
+   "pinnPP": 37.4,
+   "gapPP": -10.88,
+   "vol": 460089,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 1.97,
    "firstSeen": "2026-09-11T19:11:08.331920+00:00"
   }
  ]
