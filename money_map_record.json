@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-13T23:27:05.098647+00:00",
+"generatedAt": "2026-09-13T23:42:12.342935+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1120,
-"wins": 939,
-"hitRate": 0.8384,
-"polyN": 1058,
-"polyWins": 814,
-"polyHitRate": 0.7694,
+"n": 1122,
+"wins": 941,
+"hitRate": 0.8387,
+"polyN": 1060,
+"polyWins": 816,
+"polyHitRate": 0.7698,
 "pinnN": 151,
 "pinnHitRate": 0.7881,
-"nRoi": 447,
-"roi": 0.4217,
-"roiLb": 0.3615,
-"nClv": 447,
-"clv": 20.54,
-"clvLb": 18.6989
+"nRoi": 449,
+"roi": 0.4205,
+"roiLb": 0.3605,
+"nClv": 449,
+"clv": 20.49,
+"clvLb": 18.6577
 },
 "uneinig": {
-"n": 434,
+"n": 435,
 "wins": 137,
-"hitRate": 0.3157,
-"polyN": 396,
+"hitRate": 0.3149,
+"polyN": 397,
 "polyWins": 103,
-"polyHitRate": 0.2601,
-"pinnN": 268,
-"pinnHitRate": 0.6157,
-"nRoi": 202,
-"roi": -0.4547,
-"roiLb": -0.5596,
-"nClv": 202,
-"clv": -18.65,
-"clvLb": -22.565
+"polyHitRate": 0.2594,
+"pinnN": 269,
+"pinnHitRate": 0.6171,
+"nRoi": 203,
+"roi": -0.4574,
+"roiLb": -0.5619,
+"nClv": 203,
+"clv": -18.74,
+"clvLb": -22.6458
 },
 "teil": {
 "n": 22,
@@ -72,9 +72,9 @@
 "hitRate": 0.5833
 },
 "Brazilian Serie A": {
-"n": 42,
-"wins": 29,
-"hitRate": 0.6905
+"n": 43,
+"wins": 30,
+"hitRate": 0.6977
 },
 "Argentinian Primera Division": {
 "n": 40,
@@ -196,6 +196,11 @@
 "wins": 13,
 "hitRate": 0.6842
 },
+"Ecuadorian Serie A": {
+"n": 19,
+"wins": 13,
+"hitRate": 0.6842
+},
 "UEFA Europa League Qualifiers": {
 "n": 19,
 "wins": 15,
@@ -206,10 +211,10 @@
 "wins": 9,
 "hitRate": 0.5
 },
-"Ecuadorian Serie A": {
+"Chilean Primera Division": {
 "n": 18,
-"wins": 12,
-"hitRate": 0.6667
+"wins": 13,
+"hitRate": 0.7222
 },
 "Japanese J League 2": {
 "n": 18,
@@ -225,11 +230,6 @@
 "n": 18,
 "wins": 14,
 "hitRate": 0.7778
-},
-"Chilean Primera Division": {
-"n": 17,
-"wins": 13,
-"hitRate": 0.7647
 },
 "Danish Superliga": {
 "n": 17,
@@ -624,37 +624,94 @@
 },
 "byStrength": {
 "strong": {
-"n": 942,
-"wins": 754,
-"hitRate": 0.8004,
-"nRoi": 418,
-"roi": 0.2876,
-"roiLb": 0.2204,
-"nClv": 418,
-"clv": 13.65,
-"clvLb": 11.0542
+"n": 944,
+"wins": 756,
+"hitRate": 0.8008,
+"nRoi": 420,
+"roi": 0.287,
+"roiLb": 0.2201,
+"nClv": 420,
+"clv": 13.63,
+"clvLb": 11.0475
 },
 "weak": {
-"n": 601,
+"n": 602,
 "wins": 309,
-"hitRate": 0.5141,
-"nRoi": 244,
-"roi": -0.1343,
-"roiLb": -0.2384,
-"nClv": 244,
-"clv": -3.09,
-"clvLb": -6.4749
+"hitRate": 0.5133,
+"nRoi": 245,
+"roi": -0.1378,
+"roiLb": -0.2416,
+"nClv": 245,
+"clv": -3.23,
+"clvLb": -6.6131
 }
 },
 "divergence": {
-"n": 434,
+"n": 435,
 "betfairWins": 137,
-"betfairRate": 0.3157,
-"polyN": 396,
+"betfairRate": 0.3149,
+"polyN": 397,
 "polyWins": 103,
-"polyRate": 0.2601
+"polyRate": 0.2594
 },
 "recent": [
+{
+"matchId": "36016521",
+"home": "Flamengo",
+"away": "Corinthians",
+"league": "Brazilian Serie A",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Flamengo",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-09-13T20:30:00Z",
+"settledAt": "2026-09-13T23:42:12.165463+00:00"
+},
+{
+"matchId": "36038364",
+"home": "Colo Colo",
+"away": "Deportes Concepcion",
+"league": "Chilean Primera Division",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Deportes Concepcion",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-09-13T20:30:00Z",
+"settledAt": "2026-09-13T23:42:12.165463+00:00"
+},
+{
+"matchId": "36044217",
+"home": "Macara",
+"away": "Emelec",
+"league": "Ecuadorian Serie A",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Macara",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-09-13T20:30:00Z",
+"settledAt": "2026-09-13T23:42:12.165463+00:00"
+},
 {
 "matchId": "36041889",
 "home": "Atletico Grau",
@@ -1357,75 +1414,18 @@
 ],
 "kickoff": "2026-09-13T14:45:00Z",
 "settledAt": "2026-09-13T17:45:22.693097+00:00"
-},
-{
-"matchId": "36040025",
-"home": "Lausanne",
-"away": "Servette",
-"league": "Swiss Super League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Servette",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-09-13T14:30:00Z",
-"settledAt": "2026-09-13T17:41:48.015245+00:00"
-},
-{
-"matchId": "36010307",
-"home": "Levante",
-"away": "Barcelona",
-"league": "Spanish La Liga",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Barcelona",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-4
-],
-"kickoff": "2026-09-13T14:15:00Z",
-"settledAt": "2026-09-13T17:26:47.377359+00:00"
-},
-{
-"matchId": "36005234",
-"home": "Man Utd",
-"away": "Man City",
-"league": "English Premier League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Man City",
-"polySide": "home",
-"winner": "away",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-09-13T15:30:00Z",
-"settledAt": "2026-09-13T17:26:47.377359+00:00"
 }
 ],
 "global": {
-"n": 1576,
-"wins": 1081,
+"n": 1579,
+"wins": 1083,
 "hitRate": 0.6859,
-"nRoi": 662,
-"roi": 0.1321,
-"roiLb": 0.0735,
-"nClv": 662,
-"clv": 7.48,
-"clvLb": 5.3581
+"nRoi": 665,
+"roi": 0.1305,
+"roiLb": 0.0721,
+"nClv": 665,
+"clv": 7.42,
+"clvLb": 5.3024
 },
-"pending": 23
+"pending": 21
 }
