@@ -484,13 +484,41 @@
         .then(function (r) { if (r.ok) return r.json(); throw 0; })
         .catch(function () { return fetch(u + '?t=' + t, { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }); });
     };
+    // 🔴 12.09.2026 (Lucas: „Vor allem am iPhone ladet die Übersichtsseite beim ersten Aufruf
+    // recht langsam"). Gemessen lagen hier 27 MB JSON vor der ersten Kachel — und wegen des
+    // 2-Minuten-Refresh alle zwei Minuten erneut. Zwei Dateien machten 17 MB davon aus, und von
+    // beiden brauchte diese Seite nur einen Bruchteil:
+    //   · poly_money_broad_close.json  6,0 MB → 3.208 Maerkte, gelesen werden die 44 offenen
+    //   · betfair_track_record.json   11,1 MB → gelesen wird ein Feld, `byLeagueMarket`
+    // Die Produzenten schreiben den Ausschnitt jetzt selbst mit (poly_money_broad_offen.json,
+    // betfair_track_kompakt.json) — aus demselben Objekt im selben Moment, sie koennen also
+    // nicht auseinanderlaufen. Der Rueckfall auf die grosse Datei bleibt fuer den einen Lauf
+    // zwischen diesem Deploy und dem naechsten Produzenten-Durchgang; danach greift er nie
+    // wieder, weil beide Dateien im Commit-Block ihres Workflows stehen.
+    var jfSchlank = function (klein, gross) {
+      return fetch(base + '/' + klein + '?t=' + t, { cache: 'no-store' })
+        .then(function (r) { if (r.ok) return r.json(); throw 0; })
+        .catch(function () {
+          return fetch(klein + '?t=' + t, { cache: 'no-store' })
+            .then(function (r) { if (r.ok) return r.json(); throw 0; })
+            .catch(function () {
+              if (typeof console !== 'undefined' && console.warn) {
+                console.warn('[md] ' + klein + ' fehlt — Rueckfall auf ' + gross
+                             + '. Wenn das dauerhaft steht, schreibt der Produzent den '
+                             + 'Ausschnitt nicht mehr mit.');
+              }
+              return jf(gross);
+            });
+        });
+    };
     return Promise.all([jf('liga-data.json'), jf('mls-data.json'), jf('liga_streaks.json'),
-      jf('mls_streaks.json'), jf('betfair_prices.json'), jf('poly_money_broad_close.json'), jf('dashboard_pulse.json'),
+      jf('mls_streaks.json'), jf('betfair_prices.json'),
+      jfSchlank('poly_money_broad_offen.json', 'poly_money_broad_close.json'), jf('dashboard_pulse.json'),
       jf('betfair_overview.json'), jf('betfair_direction.json'), jf('money_map.json'),
       // 29.08.2026 (Lucas: „das müsste man auf der Übersicht auch anpassen"): der Betfair-Track.
       // Die Poly-Zeilen tragen ihre Conviction und ziehen deshalb bei jeder Neugewichtung
       // automatisch mit — die Betfair-Zeilen hingen an festen Konstanten und bewegten sich nie.
-      jf('betfair_track_record.json'),
+      jfSchlank('betfair_track_kompakt.json', 'betfair_track_record.json'),
       // 29.08.2026 (Lucas: „sowas könnte man schon als super killer Element bauen"): die
       // Konjunktions-Sektion + das Freigabe-Register, das ihr Urteil trägt. Beides muss hier
       // rein, weil die Sektion NICHT behaupten darf, sie sei spielbar — sie zeigt ihren

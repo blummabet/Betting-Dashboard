@@ -35,7 +35,10 @@ let _activeView = 'home';
 // All panel IDs — hidden when switching views
 const _ALL_PANELS = [
   'mainDashPanel', 'mainContent', 'trackingV2Panel', 'resultsPanel',
-  'intlCardsPanel', 'intlTrackingPanel', 'intlWm2026Panel', 'intlTelegramPanel',
+  // 12.09.2026: 'intlTelegramPanel' raus — das Panel gibt es seit dem 28.06. nicht mehr
+  // (Telegram lebt im Status-Tab). Eine Panel-ID ohne Markup faellt nicht auf, sie tut
+  // nur nichts — und deckt dabei die Frage zu, welche Panels es wirklich gibt.
+  'intlCardsPanel', 'intlTrackingPanel', 'intlWm2026Panel',
   'tiktokStudioPanel', 'streaksPanel',
   'polymarketPanel', 'polyTraderPanel', 'polyWalletsPanel', 'betfairRadarPanel', 'moneyMapPanel',
   'heartPanel', 'statusPanel', 'signalCheckPanel', 'stakeRadarPanel', 'statsPanel',
