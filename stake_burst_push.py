@@ -56,6 +56,8 @@ from telegram_trades import send_trades_message
 BASE = Path(__file__).resolve().parent
 LEDGER_FILE = BASE / "stake_burst_ledger.json"
 WETTEN_FILE = BASE / "stake_bet_ledger.json"   # 13.09.2026: die Quelle der Abrechnung
+VERWORFEN_FILE = BASE / "stake_burst_verworfen.json"   # 13.09.2026: das Beinahe-Buch
+VERWORFEN_KEEP = 1500
 SEEN_FILE = BASE / "stake_burst_seen.json"
 QUELLE_FILE = BASE / "stake_highroller.json"
 
@@ -162,7 +164,7 @@ def gesperrte_kats(quelle=None):
 
 
 def bursts(wetten, min_n=None, fenster_s=None, min_usd=None, gesperrt=None,
-           min_quote=None, max_alter_min=None, now=None) -> list:
+           min_quote=None, max_alter_min=None, now=None, verworfen=None) -> list:
     """Alle Einsatz-Bursts im Feed. REIN (alles injizierbar).
 
     Ein Burst ist: `min_n` Einzelwetten auf DIESELBE Auswahl, innerhalb von `fenster_s`, zusammen
@@ -182,11 +184,18 @@ def bursts(wetten, min_n=None, fenster_s=None, min_usd=None, gesperrt=None,
     max_alter_min = MAX_ALTER_MIN if max_alter_min is None else max_alter_min
     now = now or datetime.now(timezone.utc)
     je_auswahl = {}
+    je_gesperrt = {}
     for w in wetten or []:
         if not isinstance(w, dict) or w.get("kombi"):
             continue
         if w.get("kat") in gesperrt:
-            continue                      # ausgeblendete Sportart — s. gesperrte_kats
+            # 13.09.2026: auch die gesperrten Sportarten laufen ins Beinahe-Buch — getrennt
+            # gesammelt, damit spaeter beantwortbar ist, wie viel die Sperre kostet. Eine
+            # Sperre, deren Preis niemand kennt, ist eine Vermutung mit Bestandsschutz.
+            _a, _t = w.get("auswahlId"), _ts(w.get("ts"))
+            if verworfen is not None and _a and _t is not None:
+                je_gesperrt.setdefault(_a, []).append((_t, w))
+            continue
         a, t, u, q = w.get("auswahlId"), _ts(w.get("ts")), w.get("einsatzUsd"), _quote(w)
         if not a or t is None or q is None:
             continue
@@ -203,22 +212,72 @@ def bursts(wetten, min_n=None, fenster_s=None, min_usd=None, gesperrt=None,
             if j - i + 1 < min_n:
                 continue
             g = [z[1] for z in v[i:j + 1]]
-            # Dieselbe Quote ist die eigentliche Regel — nicht der Betrag. s. Kopf der Datei.
-            if len({round(float(_quote(x)), 2) for x in g}) != 1:
-                continue
-            if float(_quote(g[0])) < min_quote:
-                continue                  # @1,01 ist kein Signal — s. MIN_QUOTE
-            if (now - v[j][0]).total_seconds() / 60.0 > max_alter_min:
-                continue                  # zu alt zum Melden — s. MAX_ALTER_MIN
             summe = sum(float(x["einsatzUsd"]) for x in g)
+            # ⭐ ALLE Gruende sammeln statt beim ersten auszusteigen. Der Unterschied ist der
+            # ganze Zweck des Beinahe-Buchs: „scheitert an GENAU EINER Regel" ist die Frage,
+            # die man spaeter stellt, und die kann man nicht beantworten, wenn nur der erste
+            # Grund notiert ist.
+            gruende = []
+            if len({round(float(_quote(x)), 2) for x in g}) != 1:
+                gruende.append("quoten_uneinheitlich")
+            if float(_quote(g[0])) < min_quote:
+                gruende.append("quote_zu_tief")       # @1,01 ist kein Signal — s. MIN_QUOTE
             if summe < min_usd:
-                continue
+                gruende.append("summe_zu_klein")
+            if gruende:
+                # Zu alt ist KEIN Grund fuers Beinahe-Buch: das Cluster war fachlich in Ordnung,
+                # wir haben es nur zu spaet gesehen. Es hier mitzuzaehlen wuerde die Frage
+                # „welche Regel kostet uns kleine Ligen" mit Laufzeit-Rauschen zumuellen.
+                if verworfen is not None and (now - v[j][0]).total_seconds() / 60.0 <= max_alter_min:
+                    verworfen.append(_beinahe(a, g, summe, gruende, v[i][0], v[j][0]))
+                break
+            if (now - v[j][0]).total_seconds() / 60.0 > max_alter_min:
+                break                     # zu alt zum Melden — s. MAX_ALTER_MIN
             aus.append({"auswahlId": a, "wetten": g, "summe": summe,
                         "sekunden": (v[j][0] - v[i][0]).total_seconds(),
                         "von": v[i][0], "bis": v[j][0]})
             break
+    if verworfen is not None:
+        for a, v in je_gesperrt.items():
+            v.sort(key=lambda z: z[0])
+            for i in range(len(v)):
+                j = i
+                while j + 1 < len(v) and (v[j + 1][0] - v[i][0]).total_seconds() <= fenster_s:
+                    j += 1
+                if j - i + 1 < min_n:
+                    continue
+                g = [z[1] for z in v[i:j + 1]]
+                if (now - v[j][0]).total_seconds() / 60.0 <= max_alter_min:
+                    verworfen.append(_beinahe(a, g, sum(float(x["einsatzUsd"]) for x in g),
+                                              ["sportart_gesperrt"], v[i][0], v[j][0]))
+                break
     aus.sort(key=lambda b: b["von"])      # aelteste zuerst — der Deckel ist keine Rangfolge
     return aus
+
+
+def _beinahe(auswahl_id, g, summe, gruende, von, bis) -> dict:
+    """Eine Zeile fuers Beinahe-Buch: ein Cluster, das die Regeln NICHT passiert hat.
+
+    🔴 13.09.2026 (Lucas: „es muss auch solche Bursts auf generelle Ligen geben — ich seh da
+    immer Screens aus dieser einen Gruppe, irgendwelche Panama-Ligen"). Die Frage liess sich
+    nicht beantworten: der Kanal wusste nur, was er GESENDET hat. Ich habe sie an diesem Tag
+    von Hand aus dem Ledger rekonstruiert (Ergebnis: es liegt nicht an den Schwellen, sondern
+    daran, dass Stakes Feed erst ab ~1.000 $ je Wette ueberhaupt etwas zeigt) — und genau das
+    darf beim naechsten Mal nicht wieder eine Stunde Handarbeit sein.
+
+    Dieselbe Regel wie ueberall hier: was wir wegfiltern, muss messbar bleiben. Ein Filter, dessen
+    Preis niemand kennt, laesst sich weder rechtfertigen noch widerlegen.
+    """
+    erste = g[0]
+    return {"auswahlId": auswahl_id, "gruende": sorted(gruende),
+            "liga": erste.get("liga"), "ligaSlug": erste.get("ligaSlug"),
+            "kat": erste.get("kat"), "sport": erste.get("sport"),
+            "event": erste.get("event"), "markt": erste.get("markt"),
+            "auswahl": erste.get("auswahl"),
+            "quote": _quote(erste), "quoten": sorted({round(float(_quote(x)), 2) for x in g}),
+            "nWetten": len(g), "summeUsd": round(float(summe), 2),
+            "sekunden": round((bis - von).total_seconds(), 1),
+            "gesehenAm": von.isoformat()}
 
 
 def burst_key(b) -> str:
@@ -388,6 +447,53 @@ def abrechnen(zeilen: list, wetten: list, now=None) -> tuple[list, int, int]:
     return zeilen, fertig, tot
 
 
+def verworfen_mischen(alt: dict, neu: list, now) -> dict:
+    """Beinahe-Buch fortschreiben. Ein Cluster zaehlt EINMAL (Schluessel = Auswahl). REIN.
+
+    Ohne den Dedup zaehlte dasselbe Cluster bei jedem Lauf neu mit, solange es im Fenster liegt
+    — nach einer Stunde stuende „sechsmal an der Quote gescheitert" da, wo es einmal war. Genau
+    diese Sorte Zaehlfehler macht eine Statistik unbrauchbar, ohne dass etwas kaputt aussieht.
+    """
+    zeilen = list((alt or {}).get("zeilen") or [])
+    bekannt = {str(z.get("auswahlId")) for z in zeilen if isinstance(z, dict)}
+    for z in neu or []:
+        if str(z.get("auswahlId")) not in bekannt:
+            zeilen.append(z)
+            bekannt.add(str(z.get("auswahlId")))
+    zeilen = zeilen[-VERWORFEN_KEEP:]
+    zaehler, je_liga, allein = {}, {}, {}
+    for z in zeilen:
+        g = z.get("gruende") or []
+        for x in g:
+            zaehler[x] = zaehler.get(x, 0) + 1
+        # ⭐ Die eigentliche Frage: an welcher EINEN Regel scheitert ein sonst gueltiges Cluster?
+        # Eine Zeile mit drei Gruenden sagt nichts darueber, welche Regel man lockern muesste.
+        if len(g) == 1:
+            allein[g[0]] = allein.get(g[0], 0) + 1
+        L = z.get("liga") or "?"
+        je_liga[L] = je_liga.get(L, 0) + 1
+    tage = sorted(str(z.get("gesehenAm") or "")[:10] for z in zeilen if z.get("gesehenAm"))
+    return {"generatedAt": now.isoformat(), "n": len(zeilen),
+            "von": tage[0] if tage else None, "bis": tage[-1] if tage else None,
+            "zaehler": zaehler, "nurDieserGrund": allein,
+            "jeLiga": dict(sorted(je_liga.items(), key=lambda kv: -kv[1])[:40]),
+            "zeilen": zeilen}
+
+
+def _verworfen_buchen(beinahe: list, now) -> None:
+    buch = verworfen_mischen(_load(VERWORFEN_FILE, {}), beinahe, now)
+    try:
+        _save(VERWORFEN_FILE, buch)
+    except Exception as e:
+        print("Beinahe-Buch-Schreibfehler:", e)
+        return
+    a = buch.get("nurDieserGrund") or {}
+    print("   🔍 Beinahe-Buch: +%d neu · %d gesamt seit %s · scheitert an GENAU EINER Regel: %s"
+          % (len(beinahe), buch["n"], buch.get("von") or "—",
+             ", ".join("%s %d" % (k, v) for k, v in sorted(a.items(), key=lambda kv: -kv[1]))
+             or "—"))
+
+
 def main() -> int:
     now = datetime.now(timezone.utc)
     now_iso = now.isoformat()
@@ -399,7 +505,8 @@ def main() -> int:
 
     seen = prune_seen(_load(SEEN_FILE, {}), now)
     _gesperrt = gesperrte_kats(quelle)
-    alle = bursts(wetten, gesperrt=_gesperrt, now=now)
+    beinahe = []
+    alle = bursts(wetten, gesperrt=_gesperrt, now=now, verworfen=beinahe)
     neu = [b for b in alle if burst_key(b) not in seen]
     print("⚡ Stake-Burst: %d frische(r) Burst(s), %d davon neu (>=%d Wetten, %ds, ab %s, "
           "Quote ab %.2f, max %.0f Min alt, gleiche Quote; ausgeblendet: %s)"
@@ -422,6 +529,7 @@ def main() -> int:
         if burst_key(b) not in schon:
             led.append(buch_zeile(b, now_iso))
     _save(SEEN_FILE, seen)
+    _verworfen_buchen(beinahe, now)
     # Bei JEDEM Lauf abrechnen — das Fenster der Quelle ist nur ~5 Tage breit (s. oben).
     led, _fertig, _tot = abrechnen(led, _load(WETTEN_FILE, {}).get("wetten") or [], now)
     _offen = sum(1 for e in led if isinstance(e, dict) and e.get("status") == STATUS_OFFEN)

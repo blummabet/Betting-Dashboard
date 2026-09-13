@@ -916,6 +916,45 @@ def _minuten(a, b):
         return None
 
 
+def luecken_bilanz(alt: dict, luecke: dict, jetzt: str) -> dict:
+    """Wie oft und wie lange war der Feed unbeobachtet? Fortlaufend. REIN.
+
+    🔴 13.09.2026 (Lucas: „die Erhoehung der Abrufe hat eh keine negativen Auswirkungen?").
+    Doch, sie hat: die repo-weite Schedule-Last liegt bei 534 Laeufen/Tag, der Deckel bei 540,
+    und er steht dort, weil GitHub ab ~585 anfing, Schedules zu verzoegern und zu verschlucken
+    (test_cron_schedule_hygiene). `betfair.yml` von 10 auf 5 Minuten waere +144/Tag — also 678,
+    deutlich ueber der Schwelle, ab der ALLE Laeufe unzuverlaessig werden. Dazu doppelt so viele
+    Burst-Pushes und doppelte Last auf dem Mac.
+
+    `luecke_messen` rechnet die Luecke seit dem 03.09. je Lauf aus — und warf sie jedes Mal weg
+    bis auf den letzten Wert. Damit war „wie oft passiert das?" nicht zu beantworten, und genau
+    das ist die Zahl, die entscheidet, ob sich der Takt lohnt. Jetzt laeuft sie mit.
+
+    Kein Urteil hier: erst messen, dann Schedule-Budget ausgeben.
+    """
+    a = dict(alt or {})
+    a["laeufe"] = int(a.get("laeufe") or 0) + 1
+    a["seit"] = a.get("seit") or jetzt
+    a["zuletzt"] = jetzt
+    if not isinstance(luecke, dict) or luecke.get("luecke") is None:
+        return a                       # erster Lauf / kein Vergleich moeglich
+    if luecke.get("luecke"):
+        a["mitLuecke"] = int(a.get("mitLuecke") or 0) + 1
+        m = luecke.get("lueckeMin")
+        if isinstance(m, (int, float)):
+            a["minutenBlind"] = round(float(a.get("minutenBlind") or 0) + float(m), 1)
+            a["laengsteMin"] = max(float(a.get("laengsteMin") or 0), float(m))
+    ab = luecke.get("abdeckungMin")
+    if isinstance(ab, (int, float)):
+        n = int(a.get("mitAbdeckung") or 0) + 1
+        a["mitAbdeckung"] = n
+        a["abdeckungMinSchnitt"] = round(
+            ((a.get("abdeckungMinSchnitt") or 0) * (n - 1) + float(ab)) / n, 1)
+    v = int(a.get("laeufe") or 0)
+    a["anteilMitLueckePct"] = round(100.0 * int(a.get("mitLuecke") or 0) / v, 1) if v else None
+    return a
+
+
 def ledger_mischen(alt: dict, neu: list, jetzt: str) -> dict:
     """Dedupliziert über die Wett-ID. Einträge ohne ID werden verworfen —
     ohne ID kann man nicht deduplizieren, und doppelt gezähltes Geld ist
@@ -1110,6 +1149,7 @@ def holen(sonde: bool = False):
     luecke = luecke_messen(vorher, neu)
     ledger = ledger_mischen(vorher, neu, jetzt_s)
     ledger["luecke"] = luecke
+    ledger["luecken"] = luecken_bilanz(vorher.get("luecken"), luecke, jetzt_s)
     _schreibe(LEDGER_FILE, ledger)
     status = "ok" if roh else ("leer" if not err else "fehler")
     _schreibe(VIEW_FILE, sicht_bauen(ledger, jetzt, status, url_ok, feld, err or "", kurse))

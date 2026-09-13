@@ -455,6 +455,27 @@ def _arm(rows):
             for r in rows if _tag(r.get("gesehenAm"))]
 
 
+def _burst_beinahe_satz() -> str:
+    """Was der Filter kostet, in einem Satz — aus dem Beinahe-Buch (13.09.2026, Lucas:
+    „es muss auch solche Bursts auf generelle Ligen geben").
+
+    Ohne diese Zeile zeigt der Block nur, was rausging. Wie viele Cluster an welcher Regel
+    gescheitert sind, stuende nirgends — und genau danach wird gefragt.
+    """
+    b = _load("stake_burst_verworfen.json", {}) or {}
+    allein = b.get("nurDieserGrund") or {}
+    if not b.get("n"):
+        return ""
+    NAME = {"quote_zu_tief": "Quote unter der Grenze",
+            "quoten_uneinheitlich": "Quoten im Cluster uneinheitlich",
+            "summe_zu_klein": "Summe unter der Grenze",
+            "sportart_gesperrt": "Sportart gesperrt"}
+    teile = ["%s %d" % (NAME.get(k, k), v)
+             for k, v in sorted(allein.items(), key=lambda kv: -kv[1])]
+    return ("Daneben wurden seit %s %d Cluster verworfen; an GENAU EINER Regel scheiterten: %s."
+            % (str(b.get("von") or "—"), int(b["n"]), ", ".join(teile) or "keines"))
+
+
 def burst_plays(phase=None) -> list:
     """Stake-Einsatz-Bursts als Plays (13.09.2026, Lucas: „haette ich auch gerne in den Stats").
 
@@ -587,7 +608,7 @@ def baue(now=None) -> dict:
     _add("stake-burst", "Stake-Bursts · Trades", "⚡", "Push-Kanäle", burst_plays(),
          "Ein Burst ist EINE Auswahl, die innerhalb von Sekunden auf mehrere Tickets zur "
          "gleichen Quote gespielt wurde. Gerechnet wird geldgewichtet über alle Tickets des "
-         "Bursts, nicht je Ticket.")
+         "Bursts, nicht je Ticket. " + _burst_beinahe_satz())
     _add("stake-burst-live", "Stake-Bursts · live", "⚡", "Push-Kanäle", burst_plays("live"))
     _add("stake-burst-vor", "Stake-Bursts · vor Anpfiff", "⚡", "Push-Kanäle", burst_plays("vor"))
     # 13.09.2026 (Lucas): der Gegensignal-Filter als eigene Gruppe — BEIDE Arme, damit die

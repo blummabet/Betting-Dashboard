@@ -193,8 +193,30 @@ class TestBetfairSchubladenNutzenDieEchteSchranke(unittest.TestCase):
     #     Over 1.5 in der vierten englischen Liga ist dazu genau die Ecke, in der 35 Zeilen
     #     Gluecksstreifen sein koennen. Keine Freigabe-Kandidatin, aber beobachten: sie ist die
     #     erste Schublade mit einer ROI-Untergrenze ueber 8 %.
+    # 13.09.2026 — „Colombian Primera A · Both teams to Score?"
+    #     n=30 · ROI +32,2 % · ROI-Untergrenze +1,4 % · CLV **-0,75 pp** ohne Untergrenze
+    #     `freigabe.py` gibt sie korrekt NICHT frei (Status „geprueft").
+    #     Urteil: dieselbe Klasse wie die zwei darueber, und am selben Tag gemessen widerlegt.
+    #     Am 13.09. wurde die Liga×Markt-Aufteilung des Betfair-Ledgers gegen ein Nullmodell
+    #     geprueft (22.298 Zeilen, 361 Buckets): die beobachtete Streuung der Bucket-ROIs ist
+    #     20,5 pp, reiner Zufall liefert 21,2 pp, und in 80 % der Durchlaeufe war der Zufall
+    #     mindestens so gross. Der beste Bucket im Nullmodell liegt im Schnitt bei +74 %.
+    #     Eine Zeile mit n=30 und +32 % ist also GENAU das, was der Zufall hier produziert.
+    #     Dazu ein negativer CLV. Keine Kandidatin.
+    # 13.09.2026 — „Half Time"
+    #     n=**2637** · ROI +4,8 % · ROI-Untergrenze +0,2 % · CLV +0,05 pp ohne Untergrenze
+    #     `freigabe.py` gibt sie korrekt NICHT frei (Status „geprueft").
+    #     Urteil: die erste Schublade mit einer Stichprobe, die ueberhaupt etwas bedeuten kann —
+    #     das ist ein MARKT-Schnitt ueber alle Ligen, kein Liga×Markt-Bucket, und damit die
+    #     einzige Aufteilung, die in der Messung vom 13.09. Persistenz zeigte (Spearman +0,46
+    #     ueber die Zeithaelften, gegen -0,23 fuer die Liga). ABER: die Untergrenze liegt bei
+    #     +0,2 %, also praktisch auf der Null, und der CLV ist mit +0,05 pp nicht von null zu
+    #     unterscheiden. Kein Freigabe-Kandidat — aber die erste Zeile, die nicht an der
+    #     Stichprobe scheitert, sondern an der Groesse der Kante. Beobachten.
     GESICHTET = {"Swedish Division 1 · Over/Under 2.5 Goals",
-                 "English Sky Bet League 2 · First Half Goals 1.5"}
+                 "English Sky Bet League 2 · First Half Goals 1.5",
+                 "Colombian Primera A · Both teams to Score?",
+                 "Half Time"}
 
     def test_gegen_den_echten_bestand_nimmt_keine_NEUE_betfair_schublade_die_huerde(self):
         """Stand 06.09.: null. Nimmt eine die Huerde, schlaegt dieser Test an — und DAS ist

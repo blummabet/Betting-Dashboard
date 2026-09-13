@@ -243,6 +243,8 @@ jobs:
           git add stake_league_norm_state.json 2>/dev/null || true
           git add stake_burst_ledger.json 2>/dev/null || true      # ⚡ das Buch des Burst-Pushs
           git add stake_burst_seen.json 2>/dev/null || true        # sein Dedup-Stand (48h TTL)
+          # 13.09.2026: das Beinahe-Buch — was der Filter verwirft und warum
+          git add stake_burst_verworfen.json 2>/dev/null || true
           git add betfair_prices.json 2>/dev/null || true
           git add betfair_history.json 2>/dev/null || true
           git add betfair_overview.json 2>/dev/null || true
