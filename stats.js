@@ -190,18 +190,40 @@ function _stPeriodenWahl(rows) {
 function _stTelegram(bloecke) {
   var rows = bloecke.filter(function (b) { return b.gruppe === 'Push-Kanäle'; });
   if (!rows.length) return '';
+  // 13.09.2026 (Lucas: „ordne mir das bitte so an … denn dann kann ich darüber alles in einen
+  // Screenshot packen für Public"). Die Reihenfolge kam aus dem Produzenten und mischte die
+  // Kanäle: Public, Public, Trades, Public, Public, Trades. Wer die Public-Zeilen abfotografieren
+  // will, muss sie sonst einzeln zusammensuchen — und erwischt leicht eine Trades-Zeile mit,
+  // die nie ein Follower gesehen hat. Jetzt: erst alles Public, dann alles Trades, mit einer
+  // sichtbaren Trennlinie dazwischen. Innerhalb einer Gruppe bleibt die Reihenfolge des
+  // Produzenten (Konjunktion führt die Trades an).
+  var RANG = { 'Public': 0, 'Trades': 1 };
+  rows = rows.map(function (b, i) { return { b: b, i: i }; }).sort(function (x, y) {
+    var rx = RANG[x.b.kanal] == null ? 2 : RANG[x.b.kanal];
+    var ry = RANG[y.b.kanal] == null ? 2 : RANG[y.b.kanal];
+    return rx !== ry ? rx - ry : x.i - y.i;
+  }).map(function (o) { return o.b; });
   var hol = function (b) {
     var r = b.reihen.filter(function (x) { return x.periode === _stTgPeriode; })[0];
     return r || b.reihen.filter(function (x) { return x.art === 'gesamt'; })[0] || {};
   };
-  var summePush = 0, summeAb = 0;
+  var summePush = 0, summeAb = 0, letzterKanal = null;
+  var spalten = _stPost ? 6 : 7;
   var zeilen = rows.map(function (b) {
     var g = hol(b);
+    var trenner = '';
+    if (b.kanal && b.kanal !== letzterKanal) {
+      letzterKanal = b.kanal;
+      trenner = '<tr class="st-tg-g"><td colspan="' + spalten + '">'
+        + (b.kanal === 'Public' ? 'Public — das sehen die Follower'
+           : b.kanal === 'Trades' ? 'Trades — nur für dich, niemand sonst hat das bekommen'
+           : _stEsc(b.kanal)) + '</td></tr>';
+    }
     summePush += (g.n || 0);
     summeAb += (g.nAufgeloest || 0);
     var kanal = b.kanal || '—';
     var kf = kanal === 'Public' ? ST.good : kanal === 'Trades' ? '#a371f7' : ST.ink3;
-    return '<tr>'
+    return trenner + '<tr>'
       + '<td>' + _stEsc(b.emoji || '') + ' ' + _stEsc(b.label) + '</td>'
       + '<td><span class="st-tg-k" style="color:' + kf + ';border-color:' + kf + '">'
       + _stEsc(kanal) + '</span></td>'

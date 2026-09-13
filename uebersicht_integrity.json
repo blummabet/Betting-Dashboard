@@ -67,21 +67,17 @@
     {
       "label": "Money Map meldet ihre Luecken",
       "severity": "error",
-      "failures": [
-        "Karlsruhe v Cottbus: Money Map ohne Poly, aber ein Poly-Markt mit BEIDEN Teams existiert — stille Luecke, nicht Abwesenheit"
-      ],
-      "nFail": 1,
-      "ok": false,
+      "failures": [],
+      "nFail": 0,
+      "ok": true,
       "hinweis": ""
     },
     {
       "label": "Money Map: die Poly-Seite gehoert zum Spiel",
       "severity": "error",
-      "failures": [
-        "Sheff Utd v Wolves (English Sky Bet Championship): Poly-Seite heisst „Wolverhampton Wanderers FC“ und gehoert zu keinem der beiden Teams — $91749 fremdes Geld in einer Konsens-Zeile"
-      ],
-      "nFail": 1,
-      "ok": false,
+      "failures": [],
+      "nFail": 0,
+      "ok": true,
       "hinweis": ""
     },
     {
@@ -119,12 +115,9 @@
     {
       "label": "Poly-Deckung: Money-Scan gegen Liga-Fetcher",
       "severity": "error",
-      "failures": [
-        "sea-nap-bol-2026-09-13 (SSC Napoli v Bologna FC 1909, Anpfiff in 3.0h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
-        "sea-sas-juv-2026-09-13 (US Sassuolo Calcio v Juventus FC, Anpfiff in 5.8h) — der Liga-Fetcher hat den Markt, der Money-Scan nie"
-      ],
-      "nFail": 2,
-      "ok": false,
+      "failures": [],
+      "nFail": 0,
+      "ok": true,
       "hinweis": ""
     },
     {
@@ -133,19 +126,19 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "175 Picks im Fenster, 23 % ohne Preis-Signal."
+      "hinweis": "182 Picks im Fenster, 22 % ohne Preis-Signal."
     },
     {
       "label": "Stumme Signale: wer hat nie gefeuert?",
       "severity": "warn",
       "failures": [
-        "polymarket_sharp: 0 Feuerungen in 223 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
+        "polymarket_sharp: 0 Feuerungen in 230 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
         "betfair_coherence: stumm, aber erklaert — 07.09.2026 gemessen: seit der Fit-Schranke (MAX_RMSE 0,02 + Leave-one-out, 06.09.) feuert es fast nie — richtigerweise. Ueber 633 Sprossen aus 150 Spielen blieben 8 echte Kanten >= 4 pp, alle in duennen Ligen (Kasachstan, Litauen, Norwegen 2, Estland), keine einzige in den Top 5. Die Betfair-Tormarkt-Leiter ist auf unserer Aufloesung arbitragefrei.",
         "game_state_openness: stumm, aber erklaert — 07.09.2026 gemessen: braucht asymmetrische Verzweiflung spaet in der Saison. Aktuell Spieltag 3-4 von 34-38, also 34 Runden offen — der Tabellendruck ist per Konstruktion nahe null. Vor dem Winter ist Stille hier der richtige Zustand."
       ],
       "nFail": 3,
       "ok": false,
-      "hinweis": "9 von 33 Signalen schweigen ueber 223 Picks — davon 6 bewusst abgeschaltet (altitude_signal, incentive_signal, pressure_index, steam_lag, travel_burden, weather_signal), 3 an und trotzdem stumm."
+      "hinweis": "9 von 33 Signalen schweigen ueber 230 Picks — davon 6 bewusst abgeschaltet (altitude_signal, incentive_signal, pressure_index, steam_lag, travel_burden, weather_signal), 3 an und trotzdem stumm."
     },
     {
       "label": "Signal-Bilanz: schadet ein Signal belegt?",
@@ -153,7 +146,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "4 Signale belegt beitragend, 0 belegt schaedlich. ~30 Signale gleichzeitig geprueft — 1-2 falsche Treffer sind zu erwarten. Nur was ueber mehrere Wochen haelt, ist ein Befund."
+      "hinweis": "3 Signale belegt beitragend, 0 belegt schaedlich. ~30 Signale gleichzeitig geprueft — 1-2 falsche Treffer sind zu erwarten. Nur was ueber mehrere Wochen haelt, ist ein Befund."
     },
     {
       "label": "Fade-Unter: haelt die Kontrollgruppe?",
@@ -161,9 +154,9 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "seit Vorregistrierung n=1110 (UG -4.3 %) · Rueckblick n=2726, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=1326 (UG -7.0 %) · Rueckblick n=2726, nicht Teil des Urteils."
     }
   ],
-  "nFail": 4,
-  "generatedAt": "2026-09-13T12:58:11.938063+00:00"
+  "nFail": 1,
+  "generatedAt": "2026-09-13T20:54:34.509752+00:00"
 }

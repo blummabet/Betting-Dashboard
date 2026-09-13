@@ -265,3 +265,33 @@ class TestJederPushBlockNenntSeinenKanal(unittest.TestCase):
             q = p.read_text(encoding="utf-8")
             trades = "TELEGRAM_TRADES_CHAT_ID" in q
             self.assertEqual("Trades" if trades else "Public", ziel, datei)
+
+
+class TestCardsUndKanalSindAuseinanderzuhalten(unittest.TestCase):
+    """13.09.2026 (Lucas: „haben die Liga stats und mls stats auch den Filter drin? … weil im
+    Cards Bereich das Tracking hat dann mehr Picks oder").
+
+    Nein: die Cards-Blöcke messen die ENGINE (alle getrackten Picks), die Push-Blöcke den KANAL.
+    Gemessen Liga 120 gegen 36 gesendete. Dazu datieren sie verschieden — Cards nach Spieltag,
+    Push nach Sendetag, und bei 87 % der Picks liegen 1–13 Tage dazwischen. Auf einem Screenshot
+    stehen die beiden Familien untereinander; was sie unterscheidet, muss dort dabeistehen.
+    """
+
+    def test_jeder_cards_block_sagt_dass_er_ungefiltert_ist(self):
+        d = S.baue()
+        ohne = [b["label"] for b in d["bloecke"] if b["gruppe"] == "Eigene Engine"
+                and "NICHT gesendet" not in (b.get("hinweis") or "")]
+        self.assertEqual(ohne, [])
+
+    def test_der_hinweis_nennt_auch_die_datierung(self):
+        self.assertIn("Spieltag", S.CARDS_HINWEIS)
+        self.assertIn("Sendetag", S.CARDS_HINWEIS)
+
+    def test_die_cards_blocke_filtern_wirklich_nicht_auf_push(self):
+        """Gegenprobe am Verhalten: wäre der Filter drin, wären Cards und gesendeter Arm
+        gleich groß."""
+        d = S.baue()
+        n = {b["id"]: [r for r in b["reihen"] if r["art"] == "gesamt"][0]["n"] for b in d["bloecke"]}
+        if "cards-liga" in n and "push-liga-picks" in n:
+            self.assertGreater(n["cards-liga"], n["push-liga-picks"],
+                               "die Engine-Zahl muss größer sein als die Kanal-Zahl")

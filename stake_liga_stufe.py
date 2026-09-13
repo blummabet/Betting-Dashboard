@@ -74,6 +74,10 @@ EBENE = {
     "liga-nacional-apertura": 1, "cambodian-premier-league": 1, "pro-league": 1,
     "usl-championship": 1, "liga-i": 1, "iraqi-league": 1, "vysshaya-liga": 1,
     "division-profesional": 1, "liga-portugal": 1,
+    # 13.09.2026 (CI-Wachhund): „1. CFL" — die Prva crnogorska fudbalska liga, oberste Klasse
+    # Montenegros. Beleg aus der Paarung: FK Sutjeska Niksic gegen FK Decic Tuzi, beides
+    # montenegrinische Erstligisten (Sutjeska ist Rekordmeister). Der Slug sagt es nicht.
+    "1-cfl": 1,
     # 13.09.2026 (CI-Wachhund): die Liga Panameña de Fútbol ist die OBERSTE Klasse Panamas;
     # „Apertura" ist die Halbsaison, kein Rang (wie bei primera-division-apertura oben).
     # Beleg aus der Paarung: Tauro FC — einer der Rekordmeister — gegen CD Universitario.
@@ -132,6 +136,10 @@ EBENE = {
     "serie-c": 3,
     "primera-c": 3, "primera-division-rfef": 3,
     "liga-portugal-3": 3, "tweede-divisie": 3, "national": 3, "national-league": 3,
+    # 13.09.2026 (CI-Wachhund): das Campeonato de Portugal ist die DRITTE portugiesische Klasse
+    # (unter Liga Portugal und Liga Portugal 2) — der Name klingt nach Landesmeisterschaft, ist
+    # aber die Amateur-/Regionalebene. Beleg: AD Fazendense gegen O Elvas, beides Drittligisten.
+    "campeonato-de-portugal": 3,
     "liga-bet-south-a": 3, "shillong-second-divison": 3, "torneo-federal-a": 3,
     "kolmonen": 3, "primera-divisio": 3, "south-australia-state-league-1": 3,
     "nsw-premier-league-2": 3, "japan-football-league": 3, "second-division-b": 3,

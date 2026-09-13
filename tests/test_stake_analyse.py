@@ -513,3 +513,82 @@ def test_am_echten_bestand_passen_auswahl_und_messung_zusammen():
         assert s["n"] == len(erwartet), f"Band {name}: Auswahl und Messung driften"
         if s["oQuote"] is not None:
             assert s["oQuote"] >= lo * 0.99, f"Band {name}: Ø-Quote {s['oQuote']} liegt unter {lo}"
+
+
+# ── 13.09.2026: die zweite Achse — Marktgroesse statt Spielklasse ────────────
+#
+# Lucas zu einem Post aus einem Stake-Radar-Kanal: „kein Burst, sondern verdaechtige Einsaetze
+# auf so low leagues" — eine EINZELNE $3.486-Wette auf Moldawien, danach als 3:0 gefeiert.
+#
+# Der Punkt, der die neue Schublade noetig macht: Moldawiens Divizia Nationala ist **Ebene 1**.
+# `randliga_hoher_einsatz` misst die SPIELKLASSE und faengt diesen Fall gar nicht. Gemeint ist
+# die MARKTGROESSE, und die faellt mit der Spielklasse nicht zusammen.
+#
+# Rueckwirkend gemessen sieht die These schlecht aus (>=6x: kleine Liga -18,3 % gegen +3,4 % in
+# grossen). Genau deshalb wird sie vorregistriert und nicht gepusht.
+def _w_klein(**over):
+    w = {"sport": "soccer", "ligaSlug": "erovnuli-liga", "liga": "Winzige Liga",
+         "einsatzUsd": 9000.0, "kombi": False, "kat": "Fußball", "quote": 2.0,
+         "ts": "2026-09-10T12:00:00Z", "id": "x"}
+    w.update(over)
+    return w
+
+
+def test_kleinmarkt_und_grossmarkt_sind_vorregistriert(tmp_path, monkeypatch):
+    monkeypatch.setattr(A, "REG_FILE", tmp_path / "reg.json")
+    reg = A.vorregistrieren("2026-09-13T12:00:00Z")
+    for name in ("kleinmarkt_hoher_einsatz", "grossmarkt_hoher_einsatz"):
+        assert name in reg, name
+        assert reg[name]["angemeldet"] == "2026-09-13T12:00:00Z"
+        assert reg[name].get("signatur") and reg[name].get("zielN") and reg[name].get("warum")
+
+
+def test_die_grenze_kleiner_markt_ist_nicht_erfunden():
+    """Sie ist die Linie, die stake_league_norm.py ohnehin zieht: eine Liga mit zu wenig
+    Bestand bekommt keine eigene Norm, die Referenz faellt dann auf den Ebenen-Median
+    (`basis == 'ebene'`). Und die Schwelle 3x ist die bestehende LS.KAND_AB, keine neue Zahl.
+
+    Das ist der ganze Wert einer Vorregistrierung: nichts an ihr ist nachtraeglich passend
+    gemacht worden."""
+    import stake_liga_stufe as LS
+    quelle = (Path(__file__).resolve().parent.parent / "stake_analyse.py").read_text(encoding="utf-8")
+    i = quelle.index('"kleinmarkt_hoher_einsatz": _schublade(')
+    block = quelle[i:i + 420]
+    assert '== "ebene"' in block, "die Markt-Grenze steht nicht mehr auf der Norm-Basis"
+    assert "LS.KAND_AB" in block, "die Schwelle wurde durch eine eigene Zahl ersetzt"
+    assert LS.KAND_AB == 3.0
+
+
+def test_die_zwei_achsen_werden_nicht_verwechselt():
+    """Eine Liga kann gleichzeitig Ebene 1 und kleiner Markt sein — genau Lucas' Beispiel.
+    Waeren die Schubladen dasselbe, braeuchte man die zweite nicht."""
+    import stake_liga_stufe as LS
+    # Moldawiens oberste Klasse waere Ebene 1, aber ohne eigene Norm -> kleiner Markt
+    assert LS.stufe("erovnuli-liga", "soccer") == "1"
+    assert not LS.randliga("erovnuli-liga", "soccer")
+
+
+def test_kleinmarkt_faengt_die_wette_die_randliga_verpasst():
+    import stake_liga_stufe as LS
+    norm = {}                        # keine Liga hat eine eigene Norm -> Basis 'ebene'
+    ebmed = {"1": 2000.0}
+    w = _w_klein(einsatzUsd=9000.0)  # 4,5x -> ueber KAND_AB
+    f, basis = LS.faktor(w, norm, ebmed)
+    assert basis == "ebene" and f >= LS.KAND_AB
+    assert not LS.randliga(w["ligaSlug"], w["sport"]), "randliga wuerde diese Wette nicht sehen"
+
+
+def test_grossmarkt_ist_die_gegenprobe_mit_derselben_schwelle():
+    quelle = (Path(__file__).resolve().parent.parent / "stake_analyse.py").read_text(encoding="utf-8")
+    i = quelle.index('"grossmarkt_hoher_einsatz": _schublade(')
+    block = quelle[i:i + 420]
+    assert '== "liga"' in block
+    assert "LS.KAND_AB" in block, ("die Gegenprobe muss dieselbe Schwelle fahren — sonst misst "
+                                   "der Unterschied die Grenze und nicht den Markt")
+
+
+def test_das_frontend_zeigt_beide_neuen_schubladen():
+    js = (Path(__file__).resolve().parent.parent / "stake-radar.js").read_text(encoding="utf-8")
+    ohne = "\n".join(z for z in js.splitlines() if not z.lstrip().startswith("//"))
+    assert "kleinmarkt_hoher_einsatz" in ohne
+    assert "grossmarkt_hoher_einsatz" in ohne

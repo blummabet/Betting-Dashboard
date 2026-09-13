@@ -550,6 +550,39 @@ def vorregistrieren(jetzt: str) -> dict:
                       "Blick gesetzt. Deshalb vorwaerts."),
             "zielN": 150,
         },
+        "kleinmarkt_hoher_einsatz": {
+            "signatur": ("Fussball, Liga OHNE eigene Norm (unter der MIN_N-Grenze von "
+                         "stake_league_norm.py, Referenz faellt auf den Ebenen-Median), "
+                         "Einsatz >= 3x dieser Referenz"),
+            "warum": ("13.09.2026 (Lucas, zu einem Post eines Stake-Radar-Kanals): 'kein Burst, "
+                      "sondern verdaechtige Einsaetze auf so low leagues' — eine EINZELNE Wette "
+                      "von $3.486 auf Moldawien, danach als 3:0-Gewinner gefeiert.\n\n"
+                      "Das ist eine ANDERE Achse als `randliga_hoher_einsatz`. Die misst die "
+                      "SPIELKLASSE; Moldawiens Divizia Nationala ist aber Ebene 1 — oberste "
+                      "Klasse eines kleinen Landes. Gemeint ist die MARKTGROESSE, und die faellt "
+                      "mit der Spielklasse nicht zusammen.\n\n"
+                      "Rueckwirkend gemessen (Fussball-Einzelwetten mit Endstand, Liga-Groesse "
+                      "ueber das Feed-Volumen genommen) sieht sie SCHLECHT aus:\n"
+                      "    >=3x   kleine Liga n=51 ROI  +4,0 % (UG -14,1 %) · grosse n=942 +7,8 %\n"
+                      "    >=6x   kleine Liga n=18 ROI -18,3 %              · grosse n=480 +3,4 %\n"
+                      "    >=10x  kleine Liga n= 4 ROI -19,7 %              · grosse n=288 +0,1 %\n"
+                      "(alle Fussball-Einzelwetten zum Vergleich: +1,2 %)\n\n"
+                      "Sie steht hier trotzdem — gerade WEIL sie rueckwirkend schlecht aussieht. "
+                      "Die Schwelle 3x ist nicht neu gewaehlt, sondern die bestehende LS.KAND_AB; "
+                      "die Grenze 'kleiner Markt' ist nicht erfunden, sondern die Linie, die "
+                      "stake_league_norm.py ohnehin zieht (eine Liga mit zu wenig Bestand bekommt "
+                      "keine eigene Norm). Damit ist nichts an dieser Schublade nachtraeglich "
+                      "passend gemacht. Vorwaerts gemessen sagt sie, ob an der These etwas ist."),
+            "zielN": 150,
+        },
+        "grossmarkt_hoher_einsatz": {
+            "signatur": ("Fussball, Liga MIT eigener Norm, Einsatz >= 3x dem ueblichen Einsatz "
+                         "dieser Liga"),
+            "warum": ("Die Gegenprobe auf derselben Achse — ohne sie misst die Schublade darueber "
+                      "nur, wie gross Einsaetze sind, nicht wo. Dieselbe Schwelle (3x), damit der "
+                      "Unterschied wirklich der Markt ist und nicht die Grenze."),
+            "zielN": 200,
+        },
         "topliga_hoher_einsatz": {
             "signatur": ("Fussball, oberste Spielklasse, Einsatz >= 6x dem ueblichen Einsatz "
                          "der Liga"),
@@ -619,6 +652,19 @@ def auswerten(led: dict, jetzt: str) -> dict:
             lambda w: _ls_faktor(w, norm, ebmed)[0] is not None
             and LS.stufe(w.get("ligaSlug"), w.get("sport")) == "1"
             and _ls_faktor(w, norm, ebmed)[0] >= LS.TOP_AB)),
+        # 13.09.2026 — die ZWEITE Achse: Marktgroesse statt Spielklasse (s. Vorregistrierung).
+        # `basis == "ebene"` heisst: diese Liga hat keine eigene Norm, weil sie zu duenn ist —
+        # genau die Linie, die stake_league_norm.py schon zieht. Keine neue Zahl erfunden.
+        "kleinmarkt_hoher_einsatz": _schublade(filt(
+            lambda w: _ls_faktor(w, norm, ebmed)[0] is not None
+            and LS.stufe(w.get("ligaSlug"), w.get("sport")) is not None
+            and _ls_faktor(w, norm, ebmed)[1] == "ebene"
+            and _ls_faktor(w, norm, ebmed)[0] >= LS.KAND_AB)),
+        "grossmarkt_hoher_einsatz": _schublade(filt(
+            lambda w: _ls_faktor(w, norm, ebmed)[0] is not None
+            and LS.stufe(w.get("ligaSlug"), w.get("sport")) is not None
+            and _ls_faktor(w, norm, ebmed)[1] == "liga"
+            and _ls_faktor(w, norm, ebmed)[0] >= LS.KAND_AB)),
     }
 
     # 03.09.2026 (Lucas: „glaub Odds-Schwelle sollten wir auch bauen ... wollen wir die 1,35
