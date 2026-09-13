@@ -249,6 +249,8 @@ jobs:
           git add betfair_track_state.json 2>/dev/null || true
           git add betfair_track_results.json 2>/dev/null || true
           git add betfair_track_record.json 2>/dev/null || true
+          # eigene Zeile: `git add a b` staged NICHTS, wenn eine der beiden fehlt
+          git add betfair_track_kompakt.json 2>/dev/null || true
           git add betfair_league_norm.json 2>/dev/null || true
           git add betfair_league_norm_state.json 2>/dev/null || true
           git add betfair_direction.json 2>/dev/null || true

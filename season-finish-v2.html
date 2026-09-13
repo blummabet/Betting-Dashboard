@@ -2258,14 +2258,21 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 <!-- SUB NAV (Cards / Tracking / Telegram / TikTok Studio)
      "🌍 WM 2026"-Tab entfernt 03.06.2026 — Inhalt (Probability-Bar, Squad-Pills, AI-Preview)
      in Community-Cards (Cards-Tab) integriert. -->
-<div class="sub-nav" id="subNav">
+<!-- 12.09.2026 (Lucas: „beim erstmaligen ruft da noch mmn was altes auf ... im
+     privaten tab ist auch kurz quasi national zu sehen"): Sub-Navi und League-Navi gehoeren zur
+     National-Ansicht. Sichtbar im statischen Markup behaupteten sie diese Ansicht so lange, bis
+     `showView` sie wegnahm — und das passierte erst nach `window.load` + 60 ms, also nach 22
+     blockierenden Skripten und zwei CDN-Bibliotheken. Am iPhone sind das Sekunden.
+     Der Startzustand des Markups darf keine Ansicht behaupten; die bestimmt der View-Switcher.
+     `showView` setzt beim Anzeigen `style.display = ''`, das hebt genau dieses `none` wieder auf. -->
+<div class="sub-nav" id="subNav" style="display:none">
   <button class="sub-nav-btn active" id="subCards" onclick="showSubView('cards')">🃏 Cards</button>
   <button class="sub-nav-btn" id="subStreaks" onclick="showSubView('streaks')">🔥 Serien</button>
   <button class="sub-nav-btn" id="subTracking" onclick="showSubView('tracking')">📈 Tracking</button>
 </div>
 
 <!-- LEAGUE NAV -->
-<div class="league-nav" id="leagueNav">
+<div class="league-nav" id="leagueNav" style="display:none">
   <button class="league-btn active" data-league="overview"><span class="lf">⭐</span><span>Best of All</span></button>
   <!-- Sharp-Radar-Liga-Tab entfernt 11.06.2026 — redundant, Sharp Radar ist in der Hauptnavi. -->
   <button class="league-btn" data-league="ENG"><span class="lf">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span><span>Premier League</span><span class="lr">…</span></button>
@@ -2283,7 +2290,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
 <!-- MAIN-Dashboard „Übersicht" (Einstieg) -->
 <div id="mainDashPanel" style="max-width:1200px;margin:0 auto;padding:16px 16px 100px;"></div>
-<div class="container" id="mainContent"></div>
+<div class="container" id="mainContent" style="display:none"></div>
 
 <!-- Serien/Streaks (28.06.2026) — Content-Sektion, dataset-aware (Liga/WM), keine Quoten -->
 <div id="streaksPanel" style="display:none;max-width:1100px;margin:0 auto;padding:0 16px 80px;"></div>
@@ -9660,16 +9667,28 @@ function renderTgLog(log) {
     const ln = document.querySelector('.league-nav');   if (ln) ln.style.display = 'none';
     const lg = document.querySelector('.legend-section'); if (lg) lg.style.display = 'none';
   };
-  const go = () => { _hideOldNav(); if (typeof initNationalCards === 'function') initNationalCards(); };
+  // 12.09.2026: Hier wurden die National-Cards bei JEDEM ersten Laden gerendert — in ein Panel,
+  // das der Einstieg (Uebersicht) sofort wieder ausblendet. Das kostete einen zweiten Abruf von
+  // liga-data.json (4 MB, `cache: no-store`, also kein Wiederverwenden des ersten), fuer eine
+  // Ansicht, die niemand offen hat. `showView('national-cards')` ruft `initNationalCards()`
+  // selbst auf — die Ansicht laedt jetzt beim Oeffnen, nicht auf Verdacht.
   _hideOldNav();
-  if (document.readyState === 'complete') setTimeout(go, 300);
-  else window.addEventListener('load', () => setTimeout(go, 300));
 })();
 
 (function _bootHome() {   // MAIN-Dashboard ist der Einstieg (statt National)
-  const go = () => { if (typeof showView === 'function') showView('home'); };
-  if (document.readyState === 'complete') setTimeout(go, 60);
-  else window.addEventListener('load', () => setTimeout(go, 60));
+  // 12.09.2026: hing an `window.load` + 60 ms — also am LETZTEN Bild und der letzten
+  // CDN-Bibliothek. Bis dahin stand die Seite im Startzustand des Markups, und der zeigte
+  // National. `showView` braucht davon nichts: es schaltet Panels und startet den Datenlauf
+  // der Uebersicht. Dieses Skript steht am Ende des Body, der DOM ist also da — sofort laufen.
+  const go = () => {
+    if (typeof showView !== 'function') return false;
+    showView('home');
+    return true;
+  };
+  if (!go()) {   // ui.js noch nicht da (Skript-Reihenfolge kaputt) → zweite und dritte Chance
+    document.addEventListener('DOMContentLoaded', go);
+    window.addEventListener('load', go);
+  }
 })();
 
 // Status-Health beim Laden einmal rechnen, damit der Warn-Punkt am Status-Tab

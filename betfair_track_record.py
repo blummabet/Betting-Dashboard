@@ -40,6 +40,18 @@ STATE_FILE = BASE / "betfair_track_state.json"
 RESULTS_FILE = BASE / "betfair_track_results.json"
 CONSENSUS_FILE = BASE / "betfair_consensus.json"   # 12.08.2026 (Lucas): Pinnacle-Odd fuer CLV-vs-Pinnacle
 RECORD_FILE = BASE / "betfair_track_record.json"
+# 🔴 12.09.2026 (Lucas: „Vor allem am iPhone ladet die Übersichtsseite beim ersten Aufruf recht
+# langsam"). Gemessen: die Uebersicht holt 27 MB JSON, bevor die erste Kachel steht — und alle
+# zwei Minuten erneut. 10 MB davon sind DIESE Datei, und 10,3 MB davon ist `byTeamMarket`. Die
+# Uebersicht liest von hier genau EIN Feld: `byLeagueMarket` (1 MB).
+#
+# Fehlerklasse: eine Flaeche laedt das Rohbuch, obwohl sie nur die Zusammenfassung braucht. Der
+# Schnitt gehoert dorthin, wo die Zahlen entstehen — hier — und nicht ins Frontend, sonst muss
+# trotzdem alles ueber die Leitung. Beide Dateien entstehen im selben Moment aus demselben
+# Objekt; auseinanderlaufen koennen sie damit nicht.
+KOMPAKT_FILE = BASE / "betfair_track_kompakt.json"
+# Felder, die nur die Detailflaechen brauchen und deshalb NICHT in die kompakte Fassung gehoeren.
+NUR_IM_VOLLEN = ("byTeamMarket",)
 DIRECTION_FILE = BASE / "betfair_direction.json"   # 08.08.2026 (Lucas): Back/Lay-Richtung je Runner
 
 try:
@@ -666,6 +678,17 @@ def _write(p, data):
     write_json_atomic(p, data, indent=None)
 
 
+def kompakt(record: dict) -> dict:
+    """Dieselbe Auskunft ohne die Detailtabelle — das, was die Uebersicht tatsaechlich liest.
+
+    Bewusst subtraktiv definiert (`NUR_IM_VOLLEN`) und nicht additiv: kommt oben ein Feld dazu,
+    ist es automatisch auch hier drin. Eine Positivliste haette genau den Fehler, den sie
+    verhindern soll — sie veraltet still, und die Uebersicht zeigt ein Feld nicht, das es laengst
+    gibt.
+    """
+    return {k: v for k, v in (record or {}).items() if k not in NUR_IM_VOLLEN}
+
+
 def main():
     print("=== betfair_track_record.py ===")
     prices = _load(PRICES_FILE, {})
@@ -689,6 +712,7 @@ def main():
     _store.dump(RESULTS_FILE, results)
     record["fenster"] = _store.fenster(results)   # damit die UI die 40.000 nicht wieder fuer „alles" haelt
     _write(RECORD_FILE, record)
+    _write(KOMPAKT_FILE, kompakt(record))
     _f = record["fenster"]
     print("  ✅  %d pending · %d abgerechnet (%s Tage Fenster, Deckel %d) · %d Liga×Markt · %d Team×Markt"
           % (len(state.get("pending", {})), len(results), _f.get("tage"), RESULTS_KEEP,

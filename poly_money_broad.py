@@ -54,6 +54,17 @@ MIN_ODDS    = float(os.environ.get("POLY_MIN_ODDS") or 1.35)      # Lucas: trivi
 SHARP_LIST_MIN_CLV = float(os.environ.get("SHARP_MIN_CLV") or 1.5)   # Ø CLV pp — Linie real geschlagen
 SHARP_LIST_MIN_HIT = float(os.environ.get("SHARP_MIN_HIT") or 0.5)   # Mindest-Trefferquote
 CLOSE_FILE  = "poly_money_broad_close.json"
+# 🔴 12.09.2026 (Lucas: „Vor allem am iPhone ladet die Übersichtsseite beim ersten Aufruf recht
+# langsam"). Gemessen: 27 MB JSON, bevor die erste Kachel steht — und alle zwei Minuten erneut.
+# 7 MB davon ist der Close-Feed. Er haelt 3.208 Maerkte; die Uebersicht laeuft davon ueber die
+# NICHT aufgeloesten — am Messtag 44 Stueck, rund 35 KB. Der Rest der Datei wird uebertragen,
+# durchlaufen und verworfen.
+#
+# Fehlerklasse: eine Flaeche laedt das Rohbuch, obwohl sie nur einen Ausschnitt braucht. Der
+# Schnitt gehoert dorthin, wo die Daten entstehen. Bewusst DERSELBE Filter, den die Uebersicht
+# schon fuhr (`resolved is None`) — die Kachel zeigt danach exakt dasselbe, sie laedt es nur
+# nicht mehr dreihundertfach mit.
+OFFEN_FILE  = "poly_money_broad_offen.json"
 OUT_FILE    = "poly_money_broad.json"
 # 25.07.2026 (Lucas ① Momentum): globale Poly-Preis-ZEITREIHE je Markt — fortgeschrieben bei jedem
 # Lauf, damit „was bewegt sich gerade" (Steam vs Reversal) über ALLE Sportarten sichtbar wird. Wie
@@ -2050,6 +2061,24 @@ def main_live() -> int:
     return 0
 
 
+def offene_maerkte(frozen: dict) -> dict:
+    """Die noch nicht aufgeloesten Maerkte — der Ausschnitt, den die Uebersicht liest."""
+    return {k: v for k, v in (frozen or {}).items()
+            if isinstance(v, dict) and v.get("resolved") is None}
+
+
+def close_schreiben(frozen: dict) -> None:
+    """Close-Feed und offenen Ausschnitt IMMER zusammen schreiben.
+
+    Eine Funktion statt zweier Zeilen an jeder Schreibstelle: sonst schreibt ein Zweig (etwa der
+    Leer-Lauf, der nur Geister pruned) nur die grosse Datei, und der Ausschnitt friert still auf
+    einem alten Stand ein. Genau diese Sorte halber Aktualisierung faellt nirgends auf — beide
+    Dateien traegen ja Daten.
+    """
+    write_json_atomic((BASE / CLOSE_FILE), frozen, indent=1)
+    write_json_atomic((BASE / OFFEN_FILE), offene_maerkte(frozen), indent=1)
+
+
 def main() -> int:
     min_vol, min_odds = _cfg()
     # 10.09.2026: der Close-Stand sagt, welcher Markt eines Buendels schon gilt. Ohne diesen Pin
@@ -2061,7 +2090,7 @@ def main() -> int:
         # Warnung „Geister-Märkte"). Jetzt auch OHNE frischen Fetch prunen: capture([], frozen) fügt nichts
         # hinzu, wirft nur die Märkte raus, die > GHOST_GRACE_H nach Anpfiff und unaufgelöst sind.
         frozen = capture([], _load(CLOSE_FILE), resolutions=_load(RESOLUTIONS_FILE))
-        write_json_atomic((BASE / CLOSE_FILE), frozen, indent=1)
+        close_schreiben(frozen)
         live_store = capture_live([], _load(LIVE_FILE))   # Live-Speicher auch auf Leer-Laeufen prunen
         write_json_atomic((BASE / LIVE_FILE), live_store, indent=1)
         _upc = prune_upcoming(_load(UPCOMING_FILE), {})   # Money-Map: nur Vergangenes prunen (kein frischer Fetch)
@@ -2071,7 +2100,7 @@ def main() -> int:
     pre  = [m for m in markets if not m.get("live")]   # Vor-Spiel + aufgeloest: bestehende Pipeline unveraendert
     live = [m for m in markets if m.get("live")]        # 11.08.2026 (Lucas Stufe 1): laufende Spiele, eigener Datenpfad
     frozen = capture(pre, _load(CLOSE_FILE), min_vol=min_vol, resolutions=_load(RESOLUTIONS_FILE))
-    write_json_atomic((BASE / CLOSE_FILE), frozen, indent=1)
+    close_schreiben(frozen)
 
     # ① Momentum (25.07.2026): globale Preis-Zeitreihe fortschreiben (Steam/Reversal über alle Sportarten)
     # Live-Datenpfad (11.08.2026, Lucas Stufe 1): laufende Maerkte in EIGENEN Speicher, getrennt vom
