@@ -1,15 +1,15 @@
 {
- "n": 352,
+ "n": 350,
  "minOdds": 1.35,
- "moneyHitRate": 0.347,
- "priceHitRate": 0.381,
- "brierMoney": 0.9334,
- "brierPrice": 0.7052,
+ "moneyHitRate": 0.349,
+ "priceHitRate": 0.374,
+ "brierMoney": 0.9308,
+ "brierPrice": 0.7059,
  "disagree": {
-  "n": 97,
-  "moneyWon": 10,
-  "priceWon": 22,
-  "neither": 65
+  "n": 93,
+  "moneyWon": 9,
+  "priceWon": 18,
+  "neither": 66
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -66,13 +66,13 @@
    "league": "MLS",
    "n": 27,
    "moneyHitRate": 0.259,
-   "brierMoney": 1.1907,
-   "brierPrice": 0.7277,
+   "brierMoney": 1.1815,
+   "brierPrice": 0.7324,
    "verdict": "preis_besser"
   }
  ],
  "guete": {
-  "belastbar": 352,
+  "belastbar": 350,
   "preis_echo": 259,
   "abgeschnitten": 39,
   "unbekannt": 395,
@@ -228,7 +228,7 @@
    "league": "EPL",
    "winner": "Draw (Nottingham Forest FC vs. Tottenham Hotspur FC)",
    "moneyFav": "Tottenham Hotspur FC",
-   "priceFav": "Nottingham Forest FC",
+   "priceFav": "Tottenham Hotspur FC",
    "moneyShare": 0.584,
    "priceProb": 0.357,
    "moneyOK": false,
@@ -560,15 +560,15 @@
    "totalUsd": 249548
   }
  ],
- "generatedAt": "2026-09-13T02:46:31.913358+00:00",
+ "generatedAt": "2026-09-13T03:16:24.405507+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 421,
   "nfl": 800,
-  "mlb": 663,
+  "mlb": 657,
   "nhl": 536,
-  "mls": 644,
+  "mls": 620,
   "epl": 551,
   "soccer": 800,
   "tennis": 800,
@@ -593,7 +593,7 @@
   "boxing": 257,
   "golf": 393,
   "f1": 381,
-  "cricket": 578,
+  "cricket": 576,
   "allsvenskan": 1,
   "austria-bundesliga": 277,
   "brazil-serie-b": 4,
@@ -643,82 +643,57 @@
   "sweepAdded": 404
  },
  "vorStats": {
-  "kandidaten": 4,
+  "kandidaten": 10,
   "budgetLeer": 0,
-  "ohneGeldSplit": 1,
+  "ohneGeldSplit": 3,
   "nachgelegt": 0,
-  "mitAnteilen": 3,
-  "calls": 4
+  "mitAnteilen": 7,
+  "calls": 10
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1683,
-   "usd": 33378574,
-   "beispiel": "fifwc-ksa-ury-2026-06-15"
-  },
-  "balance": {
-   "n": 2,
-   "usd": 6000000,
-   "beispiel": "balance-of-power-2026-midterms"
+   "n": 1235,
+   "usd": 25110600,
+   "beispiel": "fifwc-fra-esp-2026-07-14-more-markets"
   },
   "nba": {
-   "n": 159,
-   "usd": 2460751,
-   "beispiel": "nba-nyk-sas-2026-06-05"
-  },
-  "ecs": {
-   "n": 7,
-   "usd": 898447,
-   "beispiel": "ecs-ars-mci-2026-08-16-more-markets"
+   "n": 75,
+   "usd": 1862857,
+   "beispiel": "nba-sas-okc-2026-05-18"
   },
   "fed": {
-   "n": 27,
-   "usd": 845404,
-   "beispiel": "fed-decision-in-october-20260617190323537"
+   "n": 33,
+   "usd": 942420,
+   "beispiel": "fed-decision-in-september-762"
+  },
+  "elon": {
+   "n": 331,
+   "usd": 800293,
+   "beispiel": "elon-musk-of-tweets-april-10-april-17"
   },
   "world": {
-   "n": 30,
-   "usd": 530357,
+   "n": 25,
+   "usd": 502703,
    "beispiel": "world-cup-winner"
   },
-  "nhl": {
-   "n": 61,
-   "usd": 508749,
-   "beispiel": "nhl-ott-pit-2026-02-02"
-  },
   "fif": {
-   "n": 66,
-   "usd": 270437,
-   "beispiel": "fif-pol-nga-2026-06-03"
+   "n": 37,
+   "usd": 176333,
+   "beispiel": "fif-svk-mon-2026-06-05-more-markets"
   },
-  "cbb": {
-   "n": 22,
-   "usd": 261800,
-   "beispiel": "cbb-uconn-mich-2026-04-06"
-  },
-  "uef": {
-   "n": 11,
-   "usd": 179536,
-   "beispiel": "uef-kvx-tur-2026-03-31"
-  },
-  "efa": {
-   "n": 12,
-   "usd": 163284,
-   "beispiel": "efa-ast-new-2026-02-14"
+  "nhl": {
+   "n": 7,
+   "usd": 142938,
+   "beispiel": "nhl-phi-car-2026-05-02"
   },
   "clf": {
-   "n": 32,
-   "usd": 146336,
-   "beispiel": "clf-mun-lee-2026-08-12"
-  },
-  "which": {
-   "n": 14,
-   "usd": 124115,
-   "beispiel": "which-party-will-win-the-senate-in-2026"
+   "n": 24,
+   "usd": 123520,
+   "beispiel": "clf-lfc-wre-2026-07-29"
   },
   "2026": {
-   "n": 19,
-   "usd": 120556,
+   "n": 18,
+   "usd": 120936,
    "beispiel": "2026-mens-us-open-winner-tennis"
   },
   "nbasl": {
@@ -726,30 +701,55 @@
    "usd": 97044,
    "beispiel": "nbasl-cle-nop-2026-07-15"
   },
-  "cdr": {
-   "n": 5,
-   "usd": 92289,
-   "beispiel": "cdr-atm-fcb-2026-02-12"
+  "zuffa": {
+   "n": 6,
+   "usd": 96746,
+   "beispiel": "zuffa-garcia-benn-2026-09-12"
   },
   "j2100": {
-   "n": 11,
-   "usd": 85947,
+   "n": 9,
+   "usd": 82123,
    "beispiel": "j2100-nar-kat-2026-05-23"
   },
-  "democratic": {
-   "n": 15,
-   "usd": 60487,
-   "beispiel": "democratic-presidential-nominee-2028"
+  "which": {
+   "n": 11,
+   "usd": 81077,
+   "beispiel": "which-party-will-win-the-senate-in-2026"
+  },
+  "cbb": {
+   "n": 1,
+   "usd": 67887,
+   "beispiel": "cbb-uconn-mich-2026-04-06"
   },
   "aus": {
-   "n": 3,
-   "usd": 59858,
+   "n": 4,
+   "usd": 63556,
    "beispiel": "aus-auc-syd-2026-05-23-more-markets"
+  },
+  "clarity": {
+   "n": 3,
+   "usd": 62286,
+   "beispiel": "clarity-act-signed-into-law-in-2026"
+  },
+  "democratic": {
+   "n": 14,
+   "usd": 58743,
+   "beispiel": "democratic-presidential-nominee-2028"
   },
   "super": {
    "n": 14,
    "usd": 57397,
    "beispiel": "super-bowl-champion-2026-731"
+  },
+  "ballon": {
+   "n": 6,
+   "usd": 46678,
+   "beispiel": "ballon-dor-winner-2026"
+  },
+  "cricipl": {
+   "n": 9,
+   "usd": 42794,
+   "beispiel": "cricipl-raj-guj-2026-05-09"
   }
  }
 }
