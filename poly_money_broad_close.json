@@ -296622,7 +296622,14 @@
    "Santos FC": "83757359150555662158667783054389965291232701524240644244705363243574577375773",
    "Draw (Santos FC vs. Cruzeiro EC)": "112145137988293764219035252726761788612175893227657197532982507796739196549379",
    "Cruzeiro EC": "63426542164413878780485092031931923854483875961486254173394689785475301470062"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Santos FC": 1.0,
+   "Draw (Santos FC vs. Cruzeiro EC)": 0.0,
+   "Cruzeiro EC": 0.0
+  },
+  "resolvedAt": "2026-09-13T05:16:26.582432+00:00"
  },
  "criccpl-bar-jam-2026-09-12": {
   "shares": {
@@ -296775,7 +296782,13 @@
   "tokens": {
    "Over": "373206075051240510608723150942515302818142082571888738061241079276068441706",
    "Under": "69980242298179212870990038993854245445124105959624355502658882798816495899415"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Over": 0.0,
+   "Under": 1.0
+  },
+  "resolvedAt": "2026-09-13T05:16:26.582432+00:00"
  },
  "nwsl-das-roy-2026-09-12": {
   "shares": {
@@ -296809,7 +296822,14 @@
    "Houston Dash": "113501821740265448390757286091640892102545065686853799104656665403375203471564",
    "Draw (Houston Dash vs. Utah Royals FC)": "60011435014785475109027137671362794986750646339922579312813367041424953721482",
    "Utah Royals FC": "31885857709888150104847600456817990915016319281103320228503001671950511677096"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Houston Dash": 0.0,
+   "Draw (Houston Dash vs. Utah Royals FC)": 0.0,
+   "Utah Royals FC": 1.0
+  },
+  "resolvedAt": "2026-09-13T05:16:26.582432+00:00"
  },
  "atp-weber-simakin-2026-09-13": {
   "shares": {
@@ -297601,7 +297621,14 @@
    "Los Angeles Galaxy": "47929836146187328006110271839451516555092012970179133791682997681562985253075",
    "Draw (Los Angeles Galaxy vs. Seattle Sounders FC)": "40297204508892775426696486614843783895269475291084749665073278737407187245782",
    "Seattle Sounders FC": "60698443076084010472443880939936669243053893170276000554957457406756044834719"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Los Angeles Galaxy": 0.0,
+   "Draw (Los Angeles Galaxy vs. Seattle Sounders FC)": 1.0,
+   "Seattle Sounders FC": 0.0
+  },
+  "resolvedAt": "2026-09-13T05:16:26.582432+00:00"
  },
  "mls-sje-hou-2026-09-12": {
   "shares": {
@@ -297653,7 +297680,14 @@
    "San Jose Earthquakes": "26917526956748682461647968154518515039326062135410665029905556414811055234212",
    "Draw (San Jose Earthquakes vs. Houston Dynamo)": "23828184698459954661285867077065284690759689126030531654298233399524071331608",
    "Houston Dynamo": "39242902535184415322247917468139572594182248031586990929083835620411079201206"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "San Jose Earthquakes": 1.0,
+   "Draw (San Jose Earthquakes vs. Houston Dynamo)": 0.0,
+   "Houston Dynamo": 0.0
+  },
+  "resolvedAt": "2026-09-13T05:16:26.582432+00:00"
  },
  "mex-caz-ame-2026-09-12-exact-score": {
   "shares": {
@@ -297921,27 +297955,124 @@
   }
  },
  "cs2-inox-forzer-2026-09-13": {
-  "shares": {},
+  "shares": {
+   "INOX Division": 3830.7662271449994,
+   "FORZE Reload": 3908.13979441
+  },
   "prices": {
-   "INOX Division": 0.485,
-   "FORZE Reload": 0.515
+   "INOX Division": 0.495,
+   "FORZE Reload": 0.505
   },
   "splitGuete": {
-   "art": "leer",
-   "trunc": null
+   "art": "preis_echo",
+   "trunc": false
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 8573,
-  "whales": [],
-  "hoursToKickoff": 1.28,
-  "capturedAt": "2026-09-13T04:46:13.832022+00:00",
+  "totalUsd": 8761,
+  "whales": [
+   {
+    "wallet": "0x82d2e4dbb0a849ff8e2f5380719769145648beea",
+    "side": "FORZE Reload",
+    "usd": 1246,
+    "avgPrice": 0.5
+   },
+   {
+    "wallet": "0x3db4c677e267cba4982c8d286c5544c72220d69b",
+    "side": "FORZE Reload",
+    "usd": 1010,
+    "avgPrice": 0.47
+   },
+   {
+    "wallet": "0x513587a2f36a8cb29333052a6a479091ef8a7217",
+    "side": "FORZE Reload",
+    "usd": 485,
+    "avgPrice": 0.4945
+   },
+   {
+    "wallet": "0x7d1d75ca771206f62ed25d7ce1503a285ecfc307",
+    "side": "INOX Division",
+    "usd": 433,
+    "avgPrice": 0.5
+   }
+  ],
+  "hoursToKickoff": 0.77,
+  "capturedAt": "2026-09-13T05:16:26.582432+00:00",
   "cond": "0x26762c724155d5e1fd40aa342abb5a03bcf951a49e70ba8ee2eedd0907d0bc0d",
   "frage": "Counter-Strike: INOX Division vs FORZE Reload (BO3) - CIS LAN Championship Group A",
   "tokens": {
    "INOX Division": "106007609046607766916763599914386709008449553003376459790961907133458588125062",
    "FORZE Reload": "105278564003861440636758271485340647330448296523021483016703092423359882524349"
-  }
+  },
+  "book": {
+   "side": "FORZE Reload",
+   "bid": 0.5,
+   "ask": 0.51,
+   "spreadC": 1.0,
+   "spreadPct": 1.96,
+   "bids": [
+    [
+     0.5,
+     508
+    ],
+    [
+     0.49,
+     984
+    ],
+    [
+     0.48,
+     963
+    ],
+    [
+     0.47,
+     62
+    ],
+    [
+     0.46,
+     150
+    ],
+    [
+     0.44,
+     586
+    ]
+   ],
+   "asks": [
+    [
+     0.51,
+     45
+    ],
+    [
+     0.52,
+     9003
+    ],
+    [
+     0.53,
+     715
+    ],
+    [
+     0.54,
+     129
+    ],
+    [
+     0.55,
+     403
+    ],
+    [
+     0.56,
+     694
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xd6dc971b4753188e48992d052dfc34977356baba",
+    "action": "BUY",
+    "side": "INOX Division",
+    "price": 0.4996,
+    "usd": 342,
+    "ts": 1789263280
+   }
+  ]
  },
  "itf-yang4-dorokh2-2026-09-13": {
   "shares": {},
@@ -297965,5 +298096,283 @@
    "Yaoyu Yang": "5586093594590960964348624922959996187987025402092486129630865626565907129836",
    "Fedor Dorokhov": "78707031344954435487041897766358242817364571028285660153372555647780763784373"
   }
+ },
+ "cs2-bbl1-hotu-2026-09-13": {
+  "shares": {
+   "BBL": 9439.800855104999,
+   "HOTU": 17922.079845765005
+  },
+  "prices": {
+   "BBL": 0.345,
+   "HOTU": 0.655
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 15741,
+  "whales": [
+   {
+    "wallet": "0x73e3fec494611d73c170cb2f23850fd998b21be9",
+    "side": "BBL",
+    "usd": 5842,
+    "avgPrice": 0.3399
+   },
+   {
+    "wallet": "0x6b97ebe911d7f2e5e3e8c4a0faad4a5c7c0b8d30",
+    "side": "HOTU",
+    "usd": 4997,
+    "avgPrice": 0.6599
+   },
+   {
+    "wallet": "0xdc40c985063d50aa00cc5f637f7e83203b3b89cf",
+    "side": "HOTU",
+    "usd": 4255,
+    "avgPrice": 0.65
+   },
+   {
+    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
+    "side": "HOTU",
+    "usd": 3739,
+    "avgPrice": 0.658
+   }
+  ],
+  "hoursToKickoff": 2.77,
+  "capturedAt": "2026-09-13T05:16:26.582432+00:00",
+  "cond": "0xdd519993eab6a34cb362a3f36aef12c6919f35ac233da76a3f6feca40f0db5f7",
+  "frage": "Counter-Strike: BBL vs HOTU (BO3) - Thunderpick World Championship Closed Qualifier Playoffs",
+  "tokens": {
+   "BBL": "29534856999969488798440083889352618747601319519992411392777641422412254889256",
+   "HOTU": "95422122838874238992376312544852342683371141905084938930696322745227727939371"
+  },
+  "book": {
+   "side": "HOTU",
+   "bid": 0.65,
+   "ask": 0.66,
+   "spreadC": 1.0,
+   "spreadPct": 1.52,
+   "bids": [
+    [
+     0.65,
+     9506
+    ],
+    [
+     0.64,
+     45029
+    ],
+    [
+     0.63,
+     1665
+    ],
+    [
+     0.62,
+     426
+    ],
+    [
+     0.61,
+     24
+    ],
+    [
+     0.6,
+     8288
+    ]
+   ],
+   "asks": [
+    [
+     0.66,
+     36259
+    ],
+    [
+     0.67,
+     2375
+    ],
+    [
+     0.68,
+     2068
+    ],
+    [
+     0.69,
+     2149
+    ],
+    [
+     0.7,
+     1008
+    ],
+    [
+     0.71,
+     315
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "action": "BUY",
+    "side": "BBL",
+    "price": 0.35,
+    "usd": 1639,
+    "ts": 1789276155
+   },
+   {
+    "wallet": "0x6b97ebe911d7f2e5e3e8c4a0faad4a5c7c0b8d30",
+    "action": "BUY",
+    "side": "HOTU",
+    "price": 0.66,
+    "usd": 5036,
+    "ts": 1789273177
+   }
+  ]
+ },
+ "atp-ivashka-sharipo-2026-09-13": {
+  "shares": {},
+  "prices": {
+   "Ilya Ivashka": 0.515,
+   "Marat Sharipov": 0.485
+  },
+  "splitGuete": {
+   "art": "leer",
+   "trunc": null
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 12769,
+  "whales": [],
+  "hoursToKickoff": 2.77,
+  "capturedAt": "2026-09-13T05:16:26.582432+00:00",
+  "cond": "0xcd18a30b39d081e90b829e2d9d00e374201df89c72966a93c0cec1af5731da2a",
+  "frage": "Shanghai: Ilya Ivashka vs Marat Sharipov",
+  "tokens": {
+   "Ilya Ivashka": "45277575939523260879330277890581771904936293182975695210337954676914464457815",
+   "Marat Sharipov": "99653852223352228919759291418325091436481057314441137827949401653377837322792"
+  }
+ },
+ "cs2-enjoy-mellre-2026-09-13": {
+  "shares": {
+   "ENJOY": 151.80300879,
+   "mellren": 197.16942520999996
+  },
+  "prices": {
+   "ENJOY": 0.435,
+   "mellren": 0.565
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 11966,
+  "whales": [
+   {
+    "wallet": "0x9266337e2deb5c5de22c06dfcd833ca5a20ca9d3",
+    "side": "mellren",
+    "usd": 141,
+    "avgPrice": 0.4986
+   },
+   {
+    "wallet": "0x13c9c313f2b07c34a696242390983972022f5e53",
+    "side": "ENJOY",
+    "usd": 96
+   },
+   {
+    "wallet": "0xb21bcc4615f7e0e15030c415def696d5936988f9",
+    "side": "mellren",
+    "usd": 31,
+    "avgPrice": 0.4899
+   },
+   {
+    "wallet": "0x21e2c95eaddac96f1d926a86b99f6ab1f9fe2833",
+    "side": "ENJOY",
+    "usd": 15,
+    "avgPrice": 0.5714
+   }
+  ],
+  "hoursToKickoff": 2.77,
+  "capturedAt": "2026-09-13T05:16:26.582432+00:00",
+  "cond": "0x8e78b384d3978149d0f3896da39f4c62458bd44743b3f6c4327e6f62b5a3cc10",
+  "frage": "Counter-Strike: ENJOY vs mellren (BO3) - CCT Europe Closed Qualifier: Series #9 Group A",
+  "tokens": {
+   "ENJOY": "48465355526759873716994295437061694206622961267521624335793035778401735368480",
+   "mellren": "47793369570804428090685195937578944966771321304285793064680545062585794687899"
+  },
+  "book": {
+   "side": "mellren",
+   "bid": 0.56,
+   "ask": 0.57,
+   "spreadC": 1.0,
+   "spreadPct": 1.75,
+   "bids": [
+    [
+     0.56,
+     974
+    ],
+    [
+     0.55,
+     952
+    ],
+    [
+     0.54,
+     501
+    ],
+    [
+     0.53,
+     15
+    ],
+    [
+     0.52,
+     235
+    ],
+    [
+     0.51,
+     234
+    ]
+   ],
+   "asks": [
+    [
+     0.57,
+     771
+    ],
+    [
+     0.58,
+     1087
+    ],
+    [
+     0.59,
+     592
+    ],
+    [
+     0.6,
+     2370
+    ],
+    [
+     0.61,
+     193
+    ],
+    [
+     0.62,
+     527
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
+    "action": "BUY",
+    "side": "mellren",
+    "price": 0.56,
+    "usd": 369,
+    "ts": 1789269297
+   },
+   {
+    "wallet": "0xd6771bf957cab6a10fcb8e2c8c6db9713cf37579",
+    "action": "BUY",
+    "side": "ENJOY",
+    "price": 0.44,
+    "usd": 441,
+    "ts": 1789258770
+   }
+  ]
  }
 }
