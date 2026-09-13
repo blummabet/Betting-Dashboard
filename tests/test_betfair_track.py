@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""test_betfair_track.py — reiner Kern von betfair_track_record (29.07.2026, Lucas)."""
+"""test_betfair_track.py — reiner Kern von betfair_track_record (29.07.2026, Lucas).
+"""
+# 13.09.2026: `team_min_n=1` in den Aufrufen unten ist Absicht. Das Artefakt filtert die
+# Team×Markt-Tabelle seit heute bei n>=3 (21.015 Eintraege, 10,6 MB, NULL davon mit Urteil —
+# groesstes n der Tabelle ist 6, die Urteilsschwelle 30). Diese Tests pruefen aber die
+# AUFTEILUNG selbst, mit Fixtures aus ein bis zwei Zeilen; sie sollen jede sehen.
 import sys
 from pathlib import Path
 from datetime import datetime, timezone, timedelta
@@ -146,7 +151,7 @@ def test_aggregate_trefferquote_und_roi_split():
         {"league": "Ecuador Serie A", "market": "Half Time", "home": "Aucas", "away": "LDU",
          "fav": "H", "odd": 3.0, "conc": True, "inflow": False, "win": False},
     ]
-    rec = T.aggregate(results, now=NOW)
+    rec = T.aggregate(results, now=NOW, team_min_n=1)
     lm = rec["byLeagueMarket"]["Ecuador Serie A|Half Time"]
     assert lm["n"] == 2 and lm["wins"] == 1 and lm["hitRate"] == 0.5
     # ROI: (2.4-1) - 1 = 0.4 auf 2 = 0.2
@@ -228,7 +233,7 @@ def test_direction_flows_through_and_splits():
     st, res = T.settle({"matches": [_finished(gv=(2, 1))]}, st, [], now=NOW + timedelta(hours=6))
     mo = {r["market"]: r for r in res}["Match Odds"]
     assert mo["dir"] == "in"
-    rec = T.aggregate(res, now=NOW)
+    rec = T.aggregate(res, now=NOW, team_min_n=1)
     bm = rec["byMarket"]["Match Odds"]           # Heim gewann + war 'in' → Back-Bucket
     assert bm["nBack"] == 1 and bm["hitRateBack"] == 1.0 and bm["nDrift"] == 0
 
@@ -244,7 +249,7 @@ def test_voller_flow_ecuador_ht():
     st = T.capture({"matches": [_prematch()]}, HIST, st, now=NOW)
     st = T.capture({"matches": [_live(gv=(1, 0))]}, HIST, st, now=NOW + timedelta(hours=4))
     st, res = T.settle({"matches": [_finished(gv=(2, 1))]}, st, res, now=NOW + timedelta(hours=6))
-    rec = T.aggregate(res, now=NOW + timedelta(hours=6))
+    rec = T.aggregate(res, team_min_n=1, now=NOW + timedelta(hours=6))
     ht = rec["byLeagueMarket"]["Ecuador Serie A|Half Time"]
     assert ht["n"] == 1 and ht["hitRate"] == 1.0            # HT-Sieg-Signal ging auf
 
@@ -276,7 +281,7 @@ def test_verify_fix_heilt_auch_die_stats():
     # nach der Korrektur muss die Aggregation die Zeile als Sieg zaehlen (Lern-Stats heilen mit)
     res = T.verify_settled([_row(700, False, [0, 0])], now=NOW,
                            results_fetch=lambda ids: {"700": {"goal_v1": 2, "goal_v2": 0, "finished": True}})
-    rec = T.aggregate(res, now=NOW)
+    rec = T.aggregate(res, now=NOW, team_min_n=1)
     assert rec["byTeamMarket"]["Plymouth|Match Odds"]["wins"] == 1
     assert rec["global"]["wins"] == 1
 

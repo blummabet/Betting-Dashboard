@@ -52,6 +52,26 @@ RECORD_FILE = BASE / "betfair_track_record.json"
 KOMPAKT_FILE = BASE / "betfair_track_kompakt.json"
 # Felder, die nur die Detailflaechen brauchen und deshalb NICHT in die kompakte Fassung gehoeren.
 NUR_IM_VOLLEN = ("byTeamMarket",)
+# 🔴 13.09.2026 — beim Groessen-Waechter des Pages-Deploys (141 von 140 MB) nachgesehen, was in
+# `byTeamMarket` eigentlich steht. Befund: **21.015 Eintraege, 10,6 MB, und NULL davon tragen ein
+# Urteil.** Das groesste n der ganzen Tabelle ist 6, die Schwelle fuer eine Untergrenze steht bei
+# 30. Kein Team×Markt-Eintrag kann also je eine Aussage tragen — 7.305 davon bestehen aus einer
+# einzigen Wette.
+#
+# Der Radar zeigt aus dieser Tabelle hoechstens 60 Zeilen, sortiert nach n und dann nach ROI.
+# Da keine Zeile die Vertrauensschwelle erreicht, sind das die 60 mit dem hoechsten ROI — also
+# ausgerechnet die lautesten Einzelfaelle („n=1, ROI +44 %"). Dieselbe Fehlerklasse, die am
+# selben Tag an der Liga×Markt-Tabelle gemessen wurde, eine Ebene tiefer und damit schaerfer.
+#
+# Was hier passiert, ist der schmale, sichere Teil: Eintraege unter drei Wetten fliegen raus.
+# Eine Zeile aus ein bis zwei Wetten ist keine Verlaesslichkeit, sie ist ein Ergebnis — und in
+# einer Tabelle, deren Schwelle bei 30 steht, ist die Grenze bei 3 nicht strenger als die bei 2,
+# nur ehrlicher. Das spart 6,7 MB und nimmt der Ansicht nichts, was sie tragen koennte.
+#
+# ⚠️ Der breite Teil ist eine Produktentscheidung und liegt bei Lucas: eine Team×Markt-Ansicht,
+# deren bestes n bei 6 liegt, beantwortet die Frage „wie verlaesslich ist dieses Team in diesem
+# Markt" grundsaetzlich nicht. Sie hier still zu loeschen waere nicht meine Entscheidung.
+TEAM_MIN_N = int(os.environ.get("BF_TRACK_TEAM_MIN_N") or 3)
 DIRECTION_FILE = BASE / "betfair_direction.json"   # 08.08.2026 (Lucas): Back/Lay-Richtung je Runner
 
 try:
@@ -637,9 +657,15 @@ def _fin(b):
             "pctBeatPinn": rate(b["beatPinn"], b["nClvPinn"])}
 
 
-def aggregate(results, now=None):
-    """Ledger → {byLeagueMarket, byTeamMarket} mit Trefferquote + ROI, je gesamt/konz/zufluss. REIN."""
+def aggregate(results, now=None, team_min_n=None):
+    """Ledger → {byLeagueMarket, byTeamMarket} mit Trefferquote + ROI, je gesamt/konz/zufluss. REIN.
+
+    `team_min_n` ist der Boden fuer die Team×Markt-Tabelle (Default TEAM_MIN_N, s. dort). Er ist
+    injizierbar, weil er eine ARTEFAKT-Entscheidung ist und keine Rechenregel: Tests, die die
+    Aufteilung selbst pruefen, arbeiten mit winzigen Fixtures und wollen jede Zeile sehen.
+    """
     now = now or _now()
+    team_min_n = TEAM_MIN_N if team_min_n is None else team_min_n
     lm, tm, bm = {}, {}, {}
     # 05.08.2026 (Lucas: "wissen wir ueberhaupt, ob die Kohle erfolgreich war?"): bisher gab es nur
     # Liga x Markt (451 winzige Buckets) -> pro Bucket sagt es fast nichts. Jetzt ZUSAETZLICH ein
@@ -662,7 +688,8 @@ def aggregate(results, now=None):
             "concThreshold": CONC_THRESHOLD, "inflowMinEur": INFLOW_MIN_EUR,
             "global": _fin(g), "byMarket": {k: _fin(v) for k, v in bm.items()},
             "byLeagueMarket": {k: _fin(v) for k, v in lm.items()},
-            "byTeamMarket": {k: _fin(v) for k, v in tm.items()}}
+            "byTeamMarket": {k: f for k, f in ((k, _fin(v)) for k, v in tm.items())
+                             if (f or {}).get("n", 0) >= team_min_n}}
 
 
 # ── I/O (main) ────────────────────────────────────────────────────────────────
