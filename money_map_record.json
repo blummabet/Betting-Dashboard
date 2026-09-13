@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-09-13T17:41:48.221426+00:00",
+"generatedAt": "2026-09-13T17:45:22.970330+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1092,
-"wins": 914,
-"hitRate": 0.837,
-"polyN": 1031,
-"polyWins": 792,
-"polyHitRate": 0.7682,
+"n": 1095,
+"wins": 916,
+"hitRate": 0.8365,
+"polyN": 1034,
+"polyWins": 794,
+"polyHitRate": 0.7679,
 "pinnN": 146,
 "pinnHitRate": 0.7877,
-"nRoi": 419,
-"roi": 0.4305,
-"roiLb": 0.3678,
-"nClv": 419,
-"clv": 20.8,
-"clvLb": 18.8902
+"nRoi": 422,
+"roi": 0.4252,
+"roiLb": 0.3627,
+"nClv": 422,
+"clv": 20.67,
+"clvLb": 18.7648
 },
 "uneinig": {
 "n": 425,
@@ -102,9 +102,9 @@
 "hitRate": 0.7027
 },
 "Dutch Eredivisie": {
-"n": 35,
-"wins": 23,
-"hitRate": 0.6571
+"n": 36,
+"wins": 24,
+"hitRate": 0.6667
 },
 "Italian Serie A": {
 "n": 35,
@@ -292,19 +292,19 @@
 "hitRate": 0.75
 },
 "Dutch Eerste Divisie": {
+"n": 12,
+"wins": 8,
+"hitRate": 0.6667
+},
+"Bulgarian A League": {
 "n": 11,
-"wins": 7,
-"hitRate": 0.6364
+"wins": 10,
+"hitRate": 0.9091
 },
 "UEFA Champions League Qualifiers": {
 "n": 11,
 "wins": 7,
 "hitRate": 0.6364
-},
-"Bulgarian A League": {
-"n": 10,
-"wins": 10,
-"hitRate": 1.0
 },
 "Romanian Liga I": {
 "n": 10,
@@ -624,15 +624,15 @@
 },
 "byStrength": {
 "strong": {
-"n": 917,
-"wins": 734,
-"hitRate": 0.8004,
-"nRoi": 393,
-"roi": 0.2932,
-"roiLb": 0.2237,
-"nClv": 393,
-"clv": 13.54,
-"clvLb": 10.8326
+"n": 920,
+"wins": 736,
+"hitRate": 0.8,
+"nRoi": 396,
+"roi": 0.2887,
+"roiLb": 0.2195,
+"nClv": 396,
+"clv": 13.46,
+"clvLb": 10.7632
 },
 "weak": {
 "n": 589,
@@ -655,6 +655,63 @@
 "polyRate": 0.2584
 },
 "recent": [
+{
+"matchId": "36039992",
+"home": "Botev Vratsa",
+"away": "PFC Levski Sofia",
+"league": "Bulgarian A League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "PFC Levski Sofia",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-09-13T14:45:00Z",
+"settledAt": "2026-09-13T17:45:22.693097+00:00"
+},
+{
+"matchId": "36005331",
+"home": "PEC Zwolle",
+"away": "Feyenoord",
+"league": "Dutch Eredivisie",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Feyenoord",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+7
+],
+"kickoff": "2026-09-13T14:45:00Z",
+"settledAt": "2026-09-13T17:45:22.693097+00:00"
+},
+{
+"matchId": "36043496",
+"home": "FC Volendam",
+"away": "Den Bosch",
+"league": "Dutch Eerste Divisie",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "FC Volendam",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-09-13T14:45:00Z",
+"settledAt": "2026-09-13T17:45:22.693097+00:00"
+},
 {
 "matchId": "36040025",
 "home": "Lausanne",
@@ -1357,75 +1414,18 @@
 ],
 "kickoff": "2026-09-13T11:30:00Z",
 "settledAt": "2026-09-13T13:26:10.604513+00:00"
-},
-{
-"matchId": "36043774",
-"home": "Paide Linnameeskond",
-"away": "Harju JK Laagri",
-"league": "Estonian Premier League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Paide Linnameeskond",
-"polySide": "home",
-"winner": "away",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-09-13T11:30:00Z",
-"settledAt": "2026-09-13T13:26:10.604513+00:00"
-},
-{
-"matchId": "36039357",
-"home": "Sheff Utd",
-"away": "Wolves",
-"league": "English Sky Bet Championship",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Wolves",
-"polySide": "home",
-"winner": "away",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-09-13T11:00:00Z",
-"settledAt": "2026-09-13T13:11:16.550174+00:00"
-},
-{
-"matchId": "36036497",
-"home": "Rangers",
-"away": "Celtic",
-"league": "Scottish League Cup",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Rangers",
-"polySide": "away",
-"winner": "home",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-3,
-0
-],
-"kickoff": "2026-09-13T11:00:00Z",
-"settledAt": "2026-09-13T12:56:10.051472+00:00"
 }
 ],
 "global": {
-"n": 1539,
-"wins": 1055,
+"n": 1542,
+"wins": 1057,
 "hitRate": 0.6855,
-"nRoi": 625,
-"roi": 0.1396,
-"roiLb": 0.0788,
-"nClv": 625,
-"clv": 7.59,
-"clvLb": 5.3891
+"nRoi": 628,
+"roi": 0.1374,
+"roiLb": 0.0769,
+"nClv": 628,
+"clv": 7.56,
+"clvLb": 5.372
 },
-"pending": 28
+"pending": 25
 }
