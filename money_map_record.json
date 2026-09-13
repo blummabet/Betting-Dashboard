@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-09-13T00:24:51.720332+00:00",
+"generatedAt": "2026-09-13T00:39:47.976869+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1046,
-"wins": 876,
-"hitRate": 0.8375,
-"polyN": 985,
-"polyWins": 757,
-"polyHitRate": 0.7685,
+"n": 1048,
+"wins": 878,
+"hitRate": 0.8378,
+"polyN": 987,
+"polyWins": 758,
+"polyHitRate": 0.768,
 "pinnN": 136,
 "pinnHitRate": 0.8015,
-"nRoi": 373,
-"roi": 0.4269,
-"roiLb": 0.362,
-"nClv": 373,
-"clv": 20.5,
-"clvLb": 18.4877
+"nRoi": 375,
+"roi": 0.4284,
+"roiLb": 0.3638,
+"nClv": 375,
+"clv": 20.61,
+"clvLb": 18.5997
 },
 "uneinig": {
 "n": 403,
@@ -72,9 +72,9 @@
 "hitRate": 0.6957
 },
 "Brazilian Serie A": {
-"n": 38,
-"wins": 27,
-"hitRate": 0.7105
+"n": 39,
+"wins": 28,
+"hitRate": 0.7179
 },
 "Japanese J League": {
 "n": 38,
@@ -211,6 +211,11 @@
 "wins": 14,
 "hitRate": 0.7778
 },
+"Ecuadorian Serie A": {
+"n": 17,
+"wins": 11,
+"hitRate": 0.6471
+},
 "Italian Coppa Italia": {
 "n": 17,
 "wins": 12,
@@ -225,11 +230,6 @@
 "n": 16,
 "wins": 13,
 "hitRate": 0.8125
-},
-"Ecuadorian Serie A": {
-"n": 16,
-"wins": 10,
-"hitRate": 0.625
 },
 "Japanese J League 2": {
 "n": 16,
@@ -614,15 +614,15 @@
 },
 "byStrength": {
 "strong": {
-"n": 871,
-"wins": 696,
-"hitRate": 0.7991,
-"nRoi": 347,
-"roi": 0.2657,
-"roiLb": 0.1937,
-"nClv": 347,
-"clv": 12.59,
-"clvLb": 9.6964
+"n": 873,
+"wins": 698,
+"hitRate": 0.7995,
+"nRoi": 349,
+"roi": 0.2682,
+"roiLb": 0.1966,
+"nClv": 349,
+"clv": 12.75,
+"clvLb": 9.8652
 },
 "weak": {
 "n": 563,
@@ -645,6 +645,44 @@
 "polyRate": 0.2658
 },
 "recent": [
+{
+"matchId": "36017203",
+"home": "SE Palmeiras",
+"away": "Sao Paulo",
+"league": "Brazilian Serie A",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "SE Palmeiras",
+"polySide": "away",
+"winner": "home",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-09-12T21:30:00Z",
+"settledAt": "2026-09-13T00:39:47.813072+00:00"
+},
+{
+"matchId": "36044219",
+"home": "Guayaquil City",
+"away": "Mushuc Runa",
+"league": "Ecuadorian Serie A",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Guayaquil City",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+1
+],
+"kickoff": "2026-09-12T21:30:00Z",
+"settledAt": "2026-09-13T00:39:47.813072+00:00"
+},
 {
 "matchId": "36045491",
 "home": "Internacional de Bogotá",
@@ -1366,56 +1404,18 @@
 ],
 "kickoff": "2026-09-12T16:00:00Z",
 "settledAt": "2026-09-12T17:54:13.624279+00:00"
-},
-{
-"matchId": "36036898",
-"home": "CD Nacional Funchal",
-"away": "Alverca",
-"league": "Portuguese Primeira Liga",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Alverca",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-3
-],
-"kickoff": "2026-09-12T14:30:00Z",
-"settledAt": "2026-09-12T17:39:12.013062+00:00"
-},
-{
-"matchId": "36005497",
-"home": "Strasbourg",
-"away": "Monaco",
-"league": "French Ligue 1",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Monaco",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-09-12T15:15:00Z",
-"settledAt": "2026-09-12T17:24:02.680627+00:00"
 }
 ],
 "global": {
-"n": 1467,
-"wins": 1008,
-"hitRate": 0.6871,
-"nRoi": 553,
-"roi": 0.1317,
-"roiLb": 0.0684,
-"nClv": 553,
-"clv": 7.46,
-"clvLb": 5.135
+"n": 1469,
+"wins": 1010,
+"hitRate": 0.6875,
+"nRoi": 555,
+"roi": 0.1338,
+"roiLb": 0.0706,
+"nClv": 555,
+"clv": 7.58,
+"clvLb": 5.2572
 },
-"pending": 28
+"pending": 26
 }
