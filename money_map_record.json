@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-09-13T18:41:56.101115+00:00",
+"generatedAt": "2026-09-13T18:56:50.370334+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1100,
-"wins": 921,
-"hitRate": 0.8373,
-"polyN": 1039,
-"polyWins": 799,
-"polyHitRate": 0.769,
+"n": 1102,
+"wins": 923,
+"hitRate": 0.8376,
+"polyN": 1041,
+"polyWins": 801,
+"polyHitRate": 0.7695,
 "pinnN": 147,
 "pinnHitRate": 0.7891,
-"nRoi": 427,
-"roi": 0.4254,
+"nRoi": 429,
+"roi": 0.4252,
 "roiLb": 0.3635,
-"nClv": 427,
-"clv": 20.67,
-"clvLb": 18.7804
+"nClv": 429,
+"clv": 20.63,
+"clvLb": 18.7511
 },
 "uneinig": {
 "n": 426,
@@ -126,20 +126,25 @@
 "wins": 25,
 "hitRate": 0.7812
 },
+"Turkish Super League": {
+"n": 31,
+"wins": 21,
+"hitRate": 0.6774
+},
 "German Bundesliga 2": {
 "n": 30,
 "wins": 23,
 "hitRate": 0.7667
 },
-"Turkish Super League": {
-"n": 30,
-"wins": 20,
-"hitRate": 0.6667
-},
 "Brazilian Serie B": {
 "n": 29,
 "wins": 21,
 "hitRate": 0.7241
+},
+"Portuguese Primeira Liga": {
+"n": 29,
+"wins": 25,
+"hitRate": 0.8621
 },
 "English Football League Cup": {
 "n": 28,
@@ -150,11 +155,6 @@
 "n": 28,
 "wins": 14,
 "hitRate": 0.5
-},
-"Portuguese Primeira Liga": {
-"n": 28,
-"wins": 24,
-"hitRate": 0.8571
 },
 "Swedish Allsvenskan": {
 "n": 25,
@@ -624,15 +624,15 @@
 },
 "byStrength": {
 "strong": {
-"n": 923,
-"wins": 739,
-"hitRate": 0.8007,
-"nRoi": 399,
-"roi": 0.2912,
-"roiLb": 0.2224,
-"nClv": 399,
+"n": 925,
+"wins": 741,
+"hitRate": 0.8011,
+"nRoi": 401,
+"roi": 0.2916,
+"roiLb": 0.2231,
+"nClv": 401,
 "clv": 13.56,
-"clvLb": 10.882
+"clvLb": 10.8906
 },
 "weak": {
 "n": 592,
@@ -655,6 +655,44 @@
 "polyRate": 0.2577
 },
 "recent": [
+{
+"matchId": "36041025",
+"home": "Galatasaray",
+"away": "Kocaelispor",
+"league": "Turkish Super League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Galatasaray",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-09-13T17:00:00Z",
+"settledAt": "2026-09-13T18:56:50.171591+00:00"
+},
+{
+"matchId": "36044148",
+"home": "Arouca",
+"away": "Santa Clara",
+"league": "Portuguese Primeira Liga",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Santa Clara",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-09-13T17:00:00Z",
+"settledAt": "2026-09-13T18:56:50.171591+00:00"
+},
 {
 "matchId": "36043223",
 "home": "Mallorca",
@@ -1376,56 +1414,18 @@
 ],
 "kickoff": "2026-09-13T12:30:00Z",
 "settledAt": "2026-09-13T14:26:23.975895+00:00"
-},
-{
-"matchId": "36005351",
-"home": "Heerenveen",
-"away": "SC Telstar",
-"league": "Dutch Eredivisie",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Heerenveen",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-09-13T12:30:00Z",
-"settledAt": "2026-09-13T14:26:23.975895+00:00"
-},
-{
-"matchId": "36007250",
-"home": "WSG Wattens",
-"away": "Hartberg",
-"league": "Austrian Bundesliga",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Hartberg",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-09-13T12:30:00Z",
-"settledAt": "2026-09-13T14:26:23.975895+00:00"
 }
 ],
 "global": {
-"n": 1548,
-"wins": 1062,
-"hitRate": 0.686,
-"nRoi": 634,
-"roi": 0.138,
-"roiLb": 0.0779,
-"nClv": 634,
-"clv": 7.59,
-"clvLb": 5.4102
+"n": 1550,
+"wins": 1064,
+"hitRate": 0.6865,
+"nRoi": 636,
+"roi": 0.1388,
+"roiLb": 0.0788,
+"nClv": 636,
+"clv": 7.6,
+"clvLb": 5.4327
 },
-"pending": 25
+"pending": 23
 }
