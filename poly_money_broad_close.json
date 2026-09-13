@@ -293708,7 +293708,13 @@
   "tokens": {
    "Houston Astros": "26924943409099587884725835387292512623954637197660419126367977003516773219764",
    "Tampa Bay Rays": "10501379140648888883890057888023639830520485726943794377790244669670622061026"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Houston Astros": 0.0,
+   "Tampa Bay Rays": 1.0
+  },
+  "resolvedAt": "2026-09-13T01:15:25.293818+00:00"
  },
  "bra-pal-sao-2026-09-12-more-markets": {
   "shares": {
@@ -295503,12 +295509,19 @@
     "usd": 1316,
     "ts": 1789251669
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "CA Talleres": 1.0,
+   "Draw (CA Talleres vs. CA Unión)": 0.0,
+   "CA Unión": 0.0
+  },
+  "resolvedAt": "2026-09-13T01:15:25.293818+00:00"
  },
  "mlb-sea-oak-2026-09-12": {
   "shares": {
-   "Over": 169851.30359422497,
-   "Under": 173282.6448388802
+   "Over": 173215.32359422496,
+   "Under": 176714.62483888018
   },
   "prices": {
    "Over": 0.495,
@@ -295520,7 +295533,7 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 357901,
+  "totalUsd": 365761,
   "whales": [
    {
     "wallet": "0x8a8685a792c184e5c2ee8c7d4d4baba7c2c94998",
@@ -295547,8 +295560,8 @@
     "avgPrice": 0.5066
    }
   ],
-  "hoursToKickoff": 0.95,
-  "capturedAt": "2026-09-13T00:46:27.222510+00:00",
+  "hoursToKickoff": 0.44,
+  "capturedAt": "2026-09-13T01:15:25.293818+00:00",
   "cond": "0x100f318bf8b716b2ddaa9dfccf1be7fca9bbc5f4ad4d640f7a3890359174efab",
   "frage": "Seattle Mariners vs. Athletics: O/U 9.5",
   "tokens": {
@@ -295564,23 +295577,23 @@
    "bids": [
     [
      0.5,
-     38578
+     28992
     ],
     [
      0.49,
-     199789
+     192698
     ],
     [
      0.48,
-     58862
+     38102
     ],
     [
      0.47,
-     32407
+     31457
     ],
     [
      0.46,
-     6162
+     5225
     ],
     [
      0.45,
@@ -295590,31 +295603,47 @@
    "asks": [
     [
      0.51,
-     21604
+     5606
     ],
     [
      0.52,
-     72141
+     65271
     ],
     [
      0.53,
-     56427
+     58239
     ],
     [
      0.54,
-     23778
+     26273
     ],
     [
      0.55,
-     16371
+     14871
     ],
     [
      0.56,
-     845
+     4345
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x7f2949f207a5b3bfd1d2a7d15e040c35c877f03d",
+    "action": "BUY",
+    "side": "Over",
+    "price": 0.5,
+    "usd": 344,
+    "ts": 1789261030
+   },
+   {
+    "wallet": "0xa8bd9ae70657db83444c6ca987b8aeb9fb0ab7aa",
+    "action": "BUY",
+    "side": "Over",
+    "price": 0.5,
+    "usd": 3000,
+    "ts": 1789260909
+   },
    {
     "wallet": "0x8a8685a792c184e5c2ee8c7d4d4baba7c2c94998",
     "action": "BUY",
@@ -295646,14 +295675,6 @@
     "price": 0.4996,
     "usd": 25000,
     "ts": 1789259412
-   },
-   {
-    "wallet": "0x8a8685a792c184e5c2ee8c7d4d4baba7c2c94998",
-    "action": "BUY",
-    "side": "Over",
-    "price": 0.49,
-    "usd": 63000,
-    "ts": 1789259320
    }
   ]
  },
@@ -295710,48 +295731,21 @@
   }
  },
  "mls-col-mim-2026-09-12-more-markets": {
-  "shares": {
-   "Over": 4813.068978025,
-   "Under": 7687.978386975001
-  },
+  "shares": {},
   "prices": {
    "Over": 0.385,
    "Under": 0.615
   },
   "splitGuete": {
-   "art": "preis_echo",
-   "trunc": false
+   "art": "leer",
+   "trunc": null
   },
   "league": "MLS",
   "sport": "Fußball",
   "totalUsd": 12503,
-  "whales": [
-   {
-    "wallet": "0xe5f0ae9cc9aef77ae3c2a64c9e69caa3f335dc1d",
-    "side": "Over",
-    "usd": 4468,
-    "avgPrice": 0.389
-   },
-   {
-    "wallet": "0x52d93dcf81444f793dda7fedc370f7a35101fb1a",
-    "side": "Under",
-    "usd": 2569,
-    "avgPrice": 0.61
-   },
-   {
-    "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
-    "side": "Under",
-    "usd": 1705,
-    "avgPrice": 0.6147
-   },
-   {
-    "wallet": "0x21f333307ac6d2e65ac82f014b3dd2b64cbc35e3",
-    "side": "Under",
-    "usd": 942
-   }
-  ],
-  "hoursToKickoff": 0.78,
-  "capturedAt": "2026-09-13T00:46:27.222510+00:00",
+  "whales": [],
+  "hoursToKickoff": 0.28,
+  "capturedAt": "2026-09-13T01:15:25.293818+00:00",
   "cond": "0x66d1a84e73b0a59e3820f1ff0c444985ae8f3bb90f3f07e6ffe690894882ad32",
   "frage": "Colorado Rapids SC vs. CF Montréal: O/U 3.5",
   "tokens": {
@@ -295810,14 +295804,14 @@
  },
  "mls-col-mim-2026-09-12": {
   "shares": {
-   "Colorado Rapids SC": 283.8088482949999,
-   "Draw (Colorado Rapids SC vs. CF Montréal)": 34.04862700499999,
-   "CF Montréal": 51.993924850000006
+   "Colorado Rapids SC": 1010.232756505,
+   "Draw (Colorado Rapids SC vs. CF Montréal)": 73.50141172500001,
+   "CF Montréal": 1573.99460649
   },
   "prices": {
    "Colorado Rapids SC": 0.595,
-   "Draw (Colorado Rapids SC vs. CF Montréal)": 0.215,
-   "CF Montréal": 0.175
+   "Draw (Colorado Rapids SC vs. CF Montréal)": 0.225,
+   "CF Montréal": 0.185
   },
   "splitGuete": {
    "art": "belastbar",
@@ -295825,33 +295819,31 @@
   },
   "league": "MLS",
   "sport": "Fußball",
-  "totalUsd": 10093,
+  "totalUsd": 10820,
   "whales": [
    {
-    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-    "side": "Colorado Rapids SC",
-    "usd": 93
-   },
-   {
-    "wallet": "0xfff787f9e84fa73786ced1871442947d8e8b7c28",
-    "side": "Colorado Rapids SC",
-    "usd": 50,
-    "avgPrice": 0.5999
+    "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
+    "side": "CF Montréal",
+    "usd": 453
    },
    {
     "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
-    "side": "Colorado Rapids SC",
-    "usd": 49
+    "side": "CF Montréal",
+    "usd": 385
    },
    {
-    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
     "side": "CF Montréal",
-    "usd": 42,
-    "avgPrice": 0.2
+    "usd": 258
+   },
+   {
+    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
+    "side": "CF Montréal",
+    "usd": 258
    }
   ],
-  "hoursToKickoff": 0.78,
-  "capturedAt": "2026-09-13T00:46:27.222510+00:00",
+  "hoursToKickoff": 0.28,
+  "capturedAt": "2026-09-13T01:15:25.293818+00:00",
   "tokens": {
    "Colorado Rapids SC": "23564300832181047611313708549197844918456939589965412852421746649090236590733",
    "Draw (Colorado Rapids SC vs. CF Montréal)": "13564005327778140867586377209012879915475970793772666977932224266170269119194",
@@ -296701,7 +296693,7 @@
   },
   "league": "MLS",
   "sport": "Fußball",
-  "totalUsd": 10067,
+  "totalUsd": 10245,
   "whales": [
    {
     "wallet": "0x3c7fe3a7f601280cb0784e26676dbb0b6ea64c60",
@@ -296727,8 +296719,8 @@
     "avgPrice": 0.5899
    }
   ],
-  "hoursToKickoff": 1.78,
-  "capturedAt": "2026-09-13T00:46:27.222510+00:00",
+  "hoursToKickoff": 1.28,
+  "capturedAt": "2026-09-13T01:15:25.293818+00:00",
   "cond": "0xf5c185fa01e1c95458c7a254a2df6fee3e823ce69d5c76780929c24085267e2d",
   "frage": "San Jose Earthquakes vs. Houston Dynamo: O/U 2.5",
   "tokens": {
@@ -296772,8 +296764,8 @@
  },
  "atp-weber-simakin-2026-09-13": {
   "shares": {
-   "Arthur Weber": 4.2712656099999995,
-   "Ilia Simakin": 16.56417639
+   "Arthur Weber": 901.424507805,
+   "Ilia Simakin": 3495.7592169750005
   },
   "prices": {
    "Arthur Weber": 0.205,
@@ -296785,27 +296777,34 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 38296,
+  "totalUsd": 38435,
   "whales": [
    {
-    "wallet": "0x57b43e50ae399c3d859167abb80d9b7d7a8fda40",
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
     "side": "Ilia Simakin",
-    "usd": 10
+    "usd": 1789,
+    "avgPrice": 0.7582
    },
    {
-    "wallet": "0xeedc12f6c01e982aa35c30b23c5a7d71f8e2d4c0",
+    "wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
     "side": "Ilia Simakin",
-    "usd": 7,
-    "avgPrice": 0.7899
+    "usd": 1341,
+    "avgPrice": 0.78
    },
    {
-    "wallet": "0x631857e845695738b089cd0773fa16a0897146b1",
+    "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
     "side": "Arthur Weber",
-    "usd": 4
+    "usd": 427
+   },
+   {
+    "wallet": "0xad89f899f1524533adfd1e6a07da692fcd92f6e1",
+    "side": "Arthur Weber",
+    "usd": 148,
+    "avgPrice": 0.2346
    }
   ],
-  "hoursToKickoff": 2.28,
-  "capturedAt": "2026-09-13T00:46:27.222510+00:00",
+  "hoursToKickoff": 1.78,
+  "capturedAt": "2026-09-13T01:15:25.293818+00:00",
   "cond": "0x9ebe55564f2b6c41d74870ed92631a9ef84eb5ab0113d3e0a72a731e1cd1e41a",
   "frage": "Phan Thiet 3: Arthur Weber vs Ilia Simakin",
   "tokens": {
@@ -296864,14 +296863,14 @@
  },
  "col1-alf-cjf-2026-09-11": {
   "shares": {
-   "Alianza FC": 2.054838765,
+   "Alianza FC": 1.970967795,
    "Draw (Alianza FC vs. CDP Junior FC)": 0.0,
-   "CDP Junior FC": 2474.686894425
+   "CDP Junior FC": 14.67786672
   },
   "prices": {
-   "Alianza FC": 0.245,
+   "Alianza FC": 0.235,
    "Draw (Alianza FC vs. CDP Junior FC)": 0.275,
-   "CDP Junior FC": 0.485
+   "CDP Junior FC": 0.495
   },
   "splitGuete": {
    "art": "abgeschnitten",
@@ -296879,32 +296878,26 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 10535,
+  "totalUsd": 10896,
   "whales": [
-   {
-    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
-    "side": "CDP Junior FC",
-    "usd": 2339
-   },
    {
     "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
     "side": "CDP Junior FC",
-    "usd": 71
+    "usd": 14
    },
    {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "side": "CDP Junior FC",
-    "usd": 31
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Alianza FC",
+    "usd": 2
    },
    {
-    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
+    "wallet": "0x92f59e08060c00c9b2dde0098d272f66c34c52a2",
     "side": "CDP Junior FC",
-    "usd": 27,
-    "avgPrice": 0.48
+    "usd": 0
    }
   ],
-  "hoursToKickoff": 0.61,
-  "capturedAt": "2026-09-13T00:46:27.222510+00:00",
+  "hoursToKickoff": 0.11,
+  "capturedAt": "2026-09-13T01:15:25.293818+00:00",
   "tokens": {
    "Alianza FC": "74629908444193899670792296498840382940674913349250657641340509485874374449833",
    "Draw (Alianza FC vs. CDP Junior FC)": "93178704150602027649783631863803233638277895106963728949489720085835020967942",
@@ -296961,5 +296954,154 @@
    "Draw (CF Monterrey vs. Tigres de la UANL)": "91258467648356983649821968545012035262320771711143281736561325665579024886005",
    "Tigres de la UANL": "66370095297274208500184993416845862599647585172436225462097595118770160912792"
   }
+ },
+ "mls-rsl-nyc-2026-09-12-more-markets": {
+  "shares": {
+   "Over": 138.221861155,
+   "Under": 94.08378784499999
+  },
+  "prices": {
+   "Over": 0.595,
+   "Under": 0.405
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "MLS",
+  "sport": "Fußball",
+  "totalUsd": 82736,
+  "whales": [
+   {
+    "wallet": "0x9bee35c409a568479e2eda656abe6a5104f12f92",
+    "side": "Over",
+    "usd": 84,
+    "avgPrice": 0.5999
+   },
+   {
+    "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
+    "side": "Under",
+    "usd": 57
+   },
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Over",
+    "usd": 54
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Under",
+    "usd": 29
+   }
+  ],
+  "hoursToKickoff": 0.28,
+  "capturedAt": "2026-09-13T01:15:25.293818+00:00",
+  "cond": "0xcdaa4fc76803709002ecb49af5ed1a55534b1acabb0eeafa6e5d7d6d3dca27a5",
+  "frage": "Real Salt Lake vs. New York City FC: O/U 2.5",
+  "tokens": {
+   "Over": "62518864652567803500319410613800889000308772823608060778362558544107642443636",
+   "Under": "84299223098700788144005907208380917381012062083127321702116695545067256775039"
+  },
+  "book": {
+   "side": "Over",
+   "bid": 0.59,
+   "ask": 0.6,
+   "spreadC": 1.0,
+   "spreadPct": 1.67,
+   "bids": [
+    [
+     0.59,
+     131212
+    ],
+    [
+     0.58,
+     30905
+    ],
+    [
+     0.57,
+     17930
+    ],
+    [
+     0.56,
+     23549
+    ],
+    [
+     0.55,
+     2367
+    ],
+    [
+     0.54,
+     2063
+    ]
+   ],
+   "asks": [
+    [
+     0.6,
+     14050
+    ],
+    [
+     0.61,
+     20626
+    ],
+    [
+     0.62,
+     15655
+    ],
+    [
+     0.63,
+     13362
+    ],
+    [
+     0.64,
+     1857
+    ],
+    [
+     0.65,
+     910
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xa3b5da76ffbbe3325bb1b40a30f6a4634962941a",
+    "action": "BUY",
+    "side": "Over",
+    "price": 0.6,
+    "usd": 600,
+    "ts": 1789260402
+   },
+   {
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "action": "BUY",
+    "side": "Under",
+    "price": 0.41,
+    "usd": 4785,
+    "ts": 1789260303
+   },
+   {
+    "wallet": "0xf5f92940519a72da460b1c2a606bc1230f0e87b0",
+    "action": "BUY",
+    "side": "Over",
+    "price": 0.5856,
+    "usd": 34059,
+    "ts": 1789260250
+   },
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "action": "BUY",
+    "side": "Under",
+    "price": 0.41,
+    "usd": 2706,
+    "ts": 1789260249
+   },
+   {
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "action": "BUY",
+    "side": "Under",
+    "price": 0.41,
+    "usd": 1214,
+    "ts": 1789242747
+   }
+  ]
  }
 }
