@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-13T13:41:22.607951+00:00",
+"generatedAt": "2026-09-13T13:56:06.617711+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1068,
-"wins": 893,
-"hitRate": 0.8361,
-"polyN": 1007,
-"polyWins": 772,
-"polyHitRate": 0.7666,
+"n": 1070,
+"wins": 895,
+"hitRate": 0.8364,
+"polyN": 1009,
+"polyWins": 774,
+"polyHitRate": 0.7671,
 "pinnN": 142,
 "pinnHitRate": 0.7958,
-"nRoi": 395,
-"roi": 0.4219,
-"roiLb": 0.3585,
-"nClv": 395,
-"clv": 20.57,
-"clvLb": 18.5889
+"nRoi": 397,
+"roi": 0.4239,
+"roiLb": 0.3607,
+"nClv": 397,
+"clv": 20.64,
+"clvLb": 18.6621
 },
 "uneinig": {
-"n": 414,
+"n": 415,
 "wins": 133,
-"hitRate": 0.3213,
-"polyN": 376,
+"hitRate": 0.3205,
+"polyN": 377,
 "polyWins": 98,
-"polyHitRate": 0.2606,
-"pinnN": 255,
-"pinnHitRate": 0.6039,
-"nRoi": 182,
-"roi": -0.4368,
-"roiLb": -0.5477,
-"nClv": 182,
-"clv": -17.97,
-"clvLb": -22.1727
+"polyHitRate": 0.2599,
+"pinnN": 256,
+"pinnHitRate": 0.6016,
+"nRoi": 183,
+"roi": -0.4399,
+"roiLb": -0.5503,
+"nClv": 183,
+"clv": -18.14,
+"clvLb": -22.3258
 },
 "teil": {
 "n": 21,
@@ -156,6 +156,11 @@
 "wins": 13,
 "hitRate": 0.5
 },
+"Swedish Allsvenskan": {
+"n": 24,
+"wins": 16,
+"hitRate": 0.6667
+},
 "English Sky Bet League 1": {
 "n": 23,
 "wins": 17,
@@ -167,11 +172,6 @@
 "hitRate": 0.8696
 },
 "German Bundesliga": {
-"n": 22,
-"wins": 14,
-"hitRate": 0.6364
-},
-"Swedish Allsvenskan": {
 "n": 22,
 "wins": 14,
 "hitRate": 0.6364
@@ -236,6 +236,11 @@
 "wins": 13,
 "hitRate": 0.8125
 },
+"Swiss Super League": {
+"n": 16,
+"wins": 13,
+"hitRate": 0.8125
+},
 "Bolivian Liga de Futbol Profesional": {
 "n": 15,
 "wins": 12,
@@ -250,11 +255,6 @@
 "n": 15,
 "wins": 11,
 "hitRate": 0.7333
-},
-"Swiss Super League": {
-"n": 15,
-"wins": 13,
-"hitRate": 0.8667
 },
 "Swedish Superettan": {
 "n": 14,
@@ -619,37 +619,94 @@
 },
 "byStrength": {
 "strong": {
-"n": 893,
-"wins": 713,
-"hitRate": 0.7984,
-"nRoi": 369,
-"roi": 0.2754,
-"roiLb": 0.2048,
-"nClv": 369,
-"clv": 13.09,
-"clvLb": 10.2555
+"n": 895,
+"wins": 715,
+"hitRate": 0.7989,
+"nRoi": 371,
+"roi": 0.2782,
+"roiLb": 0.2079,
+"nClv": 371,
+"clv": 13.2,
+"clvLb": 10.3775
 },
 "weak": {
-"n": 577,
+"n": 578,
 "wins": 299,
-"hitRate": 0.5182,
-"nRoi": 220,
-"roi": -0.1136,
-"roiLb": -0.2238,
-"nClv": 220,
-"clv": -1.93,
-"clvLb": -5.5178
+"hitRate": 0.5173,
+"nRoi": 221,
+"roi": -0.1176,
+"roiLb": -0.2276,
+"nClv": 221,
+"clv": -2.15,
+"clvLb": -5.7293
 }
 },
 "divergence": {
-"n": 414,
+"n": 415,
 "betfairWins": 133,
-"betfairRate": 0.3213,
-"polyN": 376,
+"betfairRate": 0.3205,
+"polyN": 377,
 "polyWins": 98,
-"polyRate": 0.2606
+"polyRate": 0.2599
 },
 "recent": [
+{
+"matchId": "36039235",
+"home": "FC Zurich",
+"away": "FC Vaduz",
+"league": "Swiss Super League",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "FC Vaduz",
+"polySide": "away",
+"winner": "home",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-09-13T12:00:00Z",
+"settledAt": "2026-09-13T13:56:06.423069+00:00"
+},
+{
+"matchId": "36043037",
+"home": "Elfsborg",
+"away": "Kalmar FF",
+"league": "Swedish Allsvenskan",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Elfsborg",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-09-13T12:00:00Z",
+"settledAt": "2026-09-13T13:56:06.423069+00:00"
+},
+{
+"matchId": "36039887",
+"home": "Hammarby",
+"away": "Brommapojkarna",
+"league": "Swedish Allsvenskan",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Hammarby",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+1
+],
+"kickoff": "2026-09-13T12:00:00Z",
+"settledAt": "2026-09-13T13:56:06.423069+00:00"
+},
 {
 "matchId": "36040030",
 "home": "VfL Osnabruck",
@@ -1352,75 +1409,18 @@
 ],
 "kickoff": "2026-09-12T21:05:00Z",
 "settledAt": "2026-09-13T00:09:44.773236+00:00"
-},
-{
-"matchId": "36053374",
-"home": "The Strongest",
-"away": "CDT Real Oruro",
-"league": "Bolivian Liga de Futbol Profesional",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "The Strongest",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-5,
-0
-],
-"kickoff": "2026-09-12T21:15:00Z",
-"settledAt": "2026-09-12T23:24:38.600856+00:00"
-},
-{
-"matchId": "36058759",
-"home": "Envigado",
-"away": "Leones FC",
-"league": "Colombian Primera B",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Envigado",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-09-12T20:30:00Z",
-"settledAt": "2026-09-12T22:39:36.897682+00:00"
-},
-{
-"matchId": "35999791",
-"home": "Atl Tucuman",
-"away": "River Plate",
-"league": "Argentinian Primera Division",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "River Plate",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-09-12T20:30:00Z",
-"settledAt": "2026-09-12T22:24:38.585495+00:00"
 }
 ],
 "global": {
-"n": 1503,
-"wins": 1030,
+"n": 1506,
+"wins": 1032,
 "hitRate": 0.6853,
-"nRoi": 589,
-"roi": 0.1301,
-"roiLb": 0.0684,
-"nClv": 589,
-"clv": 7.48,
-"clvLb": 5.2017
+"nRoi": 592,
+"roi": 0.1304,
+"roiLb": 0.0689,
+"nClv": 592,
+"clv": 7.47,
+"clvLb": 5.1986
 },
-"pending": 37
+"pending": 35
 }
