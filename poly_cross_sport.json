@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-13T01:25:44.074961+00:00",
+ "generatedAt": "2026-09-13T01:43:16.623118+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -30,7 +30,36 @@
  },
  "trackRecord": {
   "tracked": 310,
-  "converged": 72
+  "converged": 74
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|arizonadiamondbacks-texasrangers|texasrangers",
+   "sport": "baseball_mlb",
+   "event": "Texas Rangers vs Arizona Diamondbacks",
+   "market": "Moneyline",
+   "outcome": "Texas Rangers",
+   "polyPP": 92.5,
+   "pinnPP": 82.6,
+   "gapPP": 9.89,
+   "vol": 727916,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 7.67,
+   "firstSeen": "2026-09-12T03:11:26.796460+00:00"
+  },
+  {
+   "id": "baseball_mlb|arizonadiamondbacks-texasrangers|arizonadiamondbacks",
+   "sport": "baseball_mlb",
+   "event": "Texas Rangers vs Arizona Diamondbacks",
+   "market": "Moneyline",
+   "outcome": "Arizona Diamondbacks",
+   "polyPP": 7.5,
+   "pinnPP": 17.4,
+   "gapPP": -9.89,
+   "vol": 727916,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 7.67,
+   "firstSeen": "2026-09-12T03:11:26.796460+00:00"
+  }
+ ]
 }
