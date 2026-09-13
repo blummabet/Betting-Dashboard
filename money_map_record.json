@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-13T01:24:55.042243+00:00",
+"generatedAt": "2026-09-13T01:39:54.143861+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1049,
-"wins": 879,
-"hitRate": 0.8379,
-"polyN": 988,
+"n": 1051,
+"wins": 880,
+"hitRate": 0.8373,
+"polyN": 990,
 "polyWins": 759,
-"polyHitRate": 0.7682,
-"pinnN": 136,
-"pinnHitRate": 0.8015,
-"nRoi": 376,
-"roi": 0.4306,
-"roiLb": 0.366,
-"nClv": 376,
-"clv": 20.7,
-"clvLb": 18.6903
+"polyHitRate": 0.7667,
+"pinnN": 137,
+"pinnHitRate": 0.8029,
+"nRoi": 378,
+"roi": 0.4283,
+"roiLb": 0.3637,
+"nClv": 378,
+"clv": 20.72,
+"clvLb": 18.7101
 },
 "uneinig": {
-"n": 403,
+"n": 404,
 "wins": 129,
-"hitRate": 0.3201,
-"polyN": 365,
+"hitRate": 0.3193,
+"polyN": 366,
 "polyWins": 97,
-"polyHitRate": 0.2658,
-"pinnN": 249,
-"pinnHitRate": 0.6024,
-"nRoi": 171,
-"roi": -0.4527,
-"roiLb": -0.5641,
-"nClv": 171,
-"clv": -19.08,
-"clvLb": -23.3748
+"polyHitRate": 0.265,
+"pinnN": 250,
+"pinnHitRate": 0.6,
+"nRoi": 172,
+"roi": -0.4559,
+"roiLb": -0.5668,
+"nClv": 172,
+"clv": -19.13,
+"clvLb": -23.4057
 },
 "teil": {
 "n": 18,
@@ -52,9 +52,9 @@
 },
 "byLeague": {
 "US MLS": {
-"n": 80,
-"wins": 46,
-"hitRate": 0.575
+"n": 82,
+"wins": 47,
+"hitRate": 0.5732
 },
 "English Sky Bet Championship": {
 "n": 67,
@@ -366,6 +366,11 @@
 "wins": 4,
 "hitRate": 0.8
 },
+"Brazilian Serie C": {
+"n": 5,
+"wins": 2,
+"hitRate": 0.4
+},
 "Czech 1 Liga": {
 "n": 5,
 "wins": 5,
@@ -380,11 +385,6 @@
 "n": 5,
 "wins": 3,
 "hitRate": 0.6
-},
-"Brazilian Serie C": {
-"n": 4,
-"wins": 2,
-"hitRate": 0.5
 },
 "Chilean Primera B": {
 "n": 4,
@@ -614,37 +614,94 @@
 },
 "byStrength": {
 "strong": {
-"n": 874,
+"n": 875,
 "wins": 699,
-"hitRate": 0.7998,
-"nRoi": 350,
-"roi": 0.271,
-"roiLb": 0.1994,
-"nClv": 350,
-"clv": 12.87,
-"clvLb": 9.9867
+"hitRate": 0.7989,
+"nRoi": 351,
+"roi": 0.2674,
+"roiLb": 0.1958,
+"nClv": 351,
+"clv": 12.75,
+"clvLb": 9.8705
 },
 "weak": {
-"n": 563,
-"wins": 294,
-"hitRate": 0.5222,
-"nRoi": 206,
-"roi": -0.0939,
-"roiLb": -0.2088,
-"nClv": 206,
-"clv": -1.19,
-"clvLb": -4.8792
+"n": 565,
+"wins": 295,
+"hitRate": 0.5221,
+"nRoi": 208,
+"roi": -0.0931,
+"roiLb": -0.2074,
+"nClv": 208,
+"clv": -0.95,
+"clvLb": -4.6267
 }
 },
 "divergence": {
-"n": 403,
+"n": 404,
 "betfairWins": 129,
-"betfairRate": 0.3201,
-"polyN": 365,
+"betfairRate": 0.3193,
+"polyN": 366,
 "polyWins": 97,
-"polyRate": 0.2658
+"polyRate": 0.265
 },
 "recent": [
+{
+"matchId": "36040126",
+"home": "Orlando City",
+"away": "Toronto FC",
+"league": "US MLS",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Orlando City",
+"polySide": "away",
+"winner": "home",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+3,
+0
+],
+"kickoff": "2026-09-12T23:30:00Z",
+"settledAt": "2026-09-13T01:39:53.970863+00:00"
+},
+{
+"matchId": "36053773",
+"home": "Maringa",
+"away": "Santa Cruz PE",
+"league": "Brazilian Serie C",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Maringa",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-09-12T22:30:00Z",
+"settledAt": "2026-09-13T01:39:53.970863+00:00"
+},
+{
+"matchId": "36040094",
+"home": "Columbus",
+"away": "New York Red Bulls",
+"league": "US MLS",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Columbus",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-09-12T23:30:00Z",
+"settledAt": "2026-09-13T01:39:53.970863+00:00"
+},
 {
 "matchId": "35999842",
 "home": "Talleres",
@@ -1347,75 +1404,18 @@
 ],
 "kickoff": "2026-09-12T15:30:00Z",
 "settledAt": "2026-09-12T18:30:24.739602+00:00"
-},
-{
-"matchId": "36005149",
-"home": "Tottenham",
-"away": "Everton",
-"league": "English Premier League",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Tottenham",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-09-12T16:30:00Z",
-"settledAt": "2026-09-12T18:24:10.423521+00:00"
-},
-{
-"matchId": "36036685",
-"home": "CSKA 1948 Sofia",
-"away": "Dunav Ruse",
-"league": "Bulgarian A League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "CSKA 1948 Sofia",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-09-12T16:00:00Z",
-"settledAt": "2026-09-12T17:54:13.624279+00:00"
-},
-{
-"matchId": "36039885",
-"home": "Thun",
-"away": "Grasshoppers Zurich",
-"league": "Swiss Super League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Grasshoppers Zurich",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-09-12T16:00:00Z",
-"settledAt": "2026-09-12T17:54:13.624279+00:00"
 }
 ],
 "global": {
-"n": 1470,
-"wins": 1011,
-"hitRate": 0.6878,
-"nRoi": 556,
-"roi": 0.1358,
-"roiLb": 0.0727,
-"nClv": 556,
-"clv": 7.66,
-"clvLb": 5.342
+"n": 1473,
+"wins": 1012,
+"hitRate": 0.687,
+"nRoi": 559,
+"roi": 0.1333,
+"roiLb": 0.0703,
+"nClv": 559,
+"clv": 7.65,
+"clvLb": 5.3407
 },
-"pending": 29
+"pending": 27
 }
