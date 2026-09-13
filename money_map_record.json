@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-09-13T17:56:41.503292+00:00",
+"generatedAt": "2026-09-13T18:11:48.300119+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1096,
-"wins": 917,
-"hitRate": 0.8367,
-"polyN": 1035,
-"polyWins": 795,
-"polyHitRate": 0.7681,
-"pinnN": 146,
-"pinnHitRate": 0.7877,
-"nRoi": 423,
-"roi": 0.4263,
-"roiLb": 0.3639,
-"nClv": 423,
-"clv": 20.71,
-"clvLb": 18.8037
+"n": 1099,
+"wins": 920,
+"hitRate": 0.8371,
+"polyN": 1038,
+"polyWins": 798,
+"polyHitRate": 0.7688,
+"pinnN": 147,
+"pinnHitRate": 0.7891,
+"nRoi": 426,
+"roi": 0.4242,
+"roiLb": 0.3621,
+"nClv": 426,
+"clv": 20.61,
+"clvLb": 18.7183
 },
 "uneinig": {
 "n": 425,
@@ -241,6 +241,16 @@
 "wins": 12,
 "hitRate": 0.75
 },
+"Norwegian Eliteserien": {
+"n": 16,
+"wins": 11,
+"hitRate": 0.6875
+},
+"Peruvian Primera Division": {
+"n": 16,
+"wins": 12,
+"hitRate": 0.75
+},
 "Bolivian Liga de Futbol Profesional": {
 "n": 15,
 "wins": 12,
@@ -251,20 +261,15 @@
 "wins": 9,
 "hitRate": 0.6
 },
-"Norwegian Eliteserien": {
-"n": 15,
-"wins": 10,
-"hitRate": 0.6667
-},
-"Peruvian Primera Division": {
-"n": 15,
-"wins": 11,
-"hitRate": 0.7333
-},
 "Swedish Superettan": {
 "n": 14,
 "wins": 4,
 "hitRate": 0.2857
+},
+"Austrian Bundesliga": {
+"n": 13,
+"wins": 10,
+"hitRate": 0.7692
 },
 "Elite Friendlies": {
 "n": 13,
@@ -285,11 +290,6 @@
 "n": 13,
 "wins": 10,
 "hitRate": 0.7692
-},
-"Austrian Bundesliga": {
-"n": 12,
-"wins": 9,
-"hitRate": 0.75
 },
 "Dutch Eerste Divisie": {
 "n": 12,
@@ -624,26 +624,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 921,
-"wins": 737,
-"hitRate": 0.8002,
-"nRoi": 397,
-"roi": 0.2902,
-"roiLb": 0.2211,
-"nClv": 397,
-"clv": 13.51,
-"clvLb": 10.8242
+"n": 922,
+"wins": 738,
+"hitRate": 0.8004,
+"nRoi": 398,
+"roi": 0.2895,
+"roiLb": 0.2206,
+"nClv": 398,
+"clv": 13.48,
+"clvLb": 10.7964
 },
 "weak": {
-"n": 589,
-"wins": 303,
-"hitRate": 0.5144,
-"nRoi": 232,
-"roi": -0.1208,
-"roiLb": -0.229,
-"nClv": 232,
-"clv": -2.5,
-"clvLb": -5.9902
+"n": 591,
+"wins": 305,
+"hitRate": 0.5161,
+"nRoi": 234,
+"roi": -0.1183,
+"roiLb": -0.2256,
+"nClv": 234,
+"clv": -2.39,
+"clvLb": -5.8513
 }
 },
 "divergence": {
@@ -655,6 +655,63 @@
 "polyRate": 0.2584
 },
 "recent": [
+{
+"matchId": "36006613",
+"home": "Sturm Graz",
+"away": "LASK Linz",
+"league": "Austrian Bundesliga",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Sturm Graz",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-09-13T15:00:00Z",
+"settledAt": "2026-09-13T18:11:48.028041+00:00"
+},
+{
+"matchId": "36039995",
+"home": "Start",
+"away": "Brann",
+"league": "Norwegian Eliteserien",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Start",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-09-13T15:00:00Z",
+"settledAt": "2026-09-13T18:11:48.028041+00:00"
+},
+{
+"matchId": "36041173",
+"home": "Cesar Vallejo Moquegua",
+"away": "Sporting Cristal",
+"league": "Peruvian Primera Division",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Sporting Cristal",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-09-13T15:00:00Z",
+"settledAt": "2026-09-13T18:11:48.028041+00:00"
+},
 {
 "matchId": "36007395",
 "home": "Napoli",
@@ -1357,75 +1414,18 @@
 ],
 "kickoff": "2026-09-13T11:00:00Z",
 "settledAt": "2026-09-13T14:11:22.942579+00:00"
-},
-{
-"matchId": "36039235",
-"home": "FC Zurich",
-"away": "FC Vaduz",
-"league": "Swiss Super League",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "FC Vaduz",
-"polySide": "away",
-"winner": "home",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-09-13T12:00:00Z",
-"settledAt": "2026-09-13T13:56:06.423069+00:00"
-},
-{
-"matchId": "36043037",
-"home": "Elfsborg",
-"away": "Kalmar FF",
-"league": "Swedish Allsvenskan",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Elfsborg",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-09-13T12:00:00Z",
-"settledAt": "2026-09-13T13:56:06.423069+00:00"
-},
-{
-"matchId": "36039887",
-"home": "Hammarby",
-"away": "Brommapojkarna",
-"league": "Swedish Allsvenskan",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Hammarby",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-09-13T12:00:00Z",
-"settledAt": "2026-09-13T13:56:06.423069+00:00"
 }
 ],
 "global": {
-"n": 1543,
-"wins": 1058,
-"hitRate": 0.6857,
-"nRoi": 629,
-"roi": 0.1386,
-"roiLb": 0.0781,
-"nClv": 629,
-"clv": 7.61,
-"clvLb": 5.4188
+"n": 1546,
+"wins": 1061,
+"hitRate": 0.6863,
+"nRoi": 632,
+"roi": 0.1385,
+"roiLb": 0.0783,
+"nClv": 632,
+"clv": 7.6,
+"clvLb": 5.4266
 },
-"pending": 26
+"pending": 23
 }
