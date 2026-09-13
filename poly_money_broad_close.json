@@ -307298,7 +307298,13 @@
   "tokens": {
    "Saints": "57523127424226766393056633014729010003110199810600081599665311101663846205585",
    "Lions": "32059574265076269259476760399106103256517275484422576338566059365842580792146"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Saints": 0.0,
+   "Lions": 1.0
+  },
+  "resolvedAt": "2026-09-13T23:18:23.173462+00:00"
  },
  "nfl-nyj-ten-2026-09-13": {
   "shares": {
@@ -310413,7 +310419,14 @@
    "CD Tenerife": "67905528519223325881239555300324012250049551476780911798121968404473036516640",
    "Draw (CD Tenerife vs. CD Leganés)": "97530403650813677867493466828702908989126502051658452733065637201229233874975",
    "CD Leganés": "87954240087692233552234596901310177961912844363332245018694251661696767245825"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "CD Tenerife": 1.0,
+   "Draw (CD Tenerife vs. CD Leganés)": 0.0,
+   "CD Leganés": 0.0
+  },
+  "resolvedAt": "2026-09-13T23:18:23.173462+00:00"
  },
  "spl-dir-abh-2026-09-13": {
   "shares": {
@@ -310620,7 +310633,13 @@
   "tokens": {
    "Texas Rangers": "25383771499774250816800154495304262686476308914249063192027262367908497279498",
    "Arizona Diamondbacks": "44881825590993945122185209650366602375037828582067561632700066049971214626053"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Texas Rangers": 1.0,
+   "Arizona Diamondbacks": 0.0
+  },
+  "resolvedAt": "2026-09-13T23:18:23.173462+00:00"
  },
  "spl-riy-kho-2026-09-13": {
   "shares": {
@@ -311662,8 +311681,8 @@
  },
  "mlb-sd-sf-2026-09-13": {
   "shares": {
-   "Over": 107690.50708564503,
-   "Under": 109865.96774839504
+   "Over": 151910.830803105,
+   "Under": 154979.6253814499
   },
   "prices": {
    "Over": 0.495,
@@ -311675,8 +311694,14 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 234132,
+  "totalUsd": 259278,
   "whales": [
+   {
+    "wallet": "0x4bff30af91642dc7d2b19a8664378fe55c45fc26",
+    "side": "Over",
+    "usd": 111490,
+    "avgPrice": 0.4833
+   },
    {
     "wallet": "0x5e9458202b5817a72cf81105ec8a30e6f3705ba1",
     "side": "Under",
@@ -311684,25 +311709,20 @@
     "avgPrice": 0.5199
    },
    {
-    "wallet": "0x4bff30af91642dc7d2b19a8664378fe55c45fc26",
-    "side": "Over",
-    "usd": 73802,
-    "avgPrice": 0.4799
-   },
-   {
     "wallet": "0x224a89dbe0db0d6124b335edabd15b3f877da3d5",
     "side": "Over",
-    "usd": 23664,
-    "avgPrice": 0.4809
+    "usd": 34101,
+    "avgPrice": 0.4836
    },
    {
-    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
-    "side": "Over",
-    "usd": 5396
+    "wallet": "0xa08455c829a493054315e40e7817321e8c77bb99",
+    "side": "Under",
+    "usd": 32825,
+    "avgPrice": 0.51
    }
   ],
-  "hoursToKickoff": 0.58,
-  "capturedAt": "2026-09-13T22:48:25.745847+00:00",
+  "hoursToKickoff": 0.08,
+  "capturedAt": "2026-09-13T23:18:23.173462+00:00",
   "cond": "0x565eb50f1eb407d1bf1461716160a556cd0129e092c4c15c8b3dd059cb82c6d6",
   "frage": "San Diego Padres vs. San Francisco Giants: O/U 7.5",
   "tokens": {
@@ -311718,57 +311738,105 @@
    "bids": [
     [
      0.5,
-     63082
+     270432
     ],
     [
      0.49,
-     58819
+     50835
     ],
     [
      0.48,
-     39797
+     8534
     ],
     [
      0.47,
-     7612
+     5830
     ],
     [
      0.46,
-     27539
+     22509
     ],
     [
      0.45,
-     805
+     800
     ]
    ],
    "asks": [
     [
      0.51,
-     279950
+     65816
     ],
     [
      0.52,
-     32378
+     26091
     ],
     [
      0.53,
-     113962
+     52879
     ],
     [
      0.54,
-     17450
+     30459
     ],
     [
      0.55,
-     16525
+     10659
     ],
     [
      0.56,
-     5908
+     5379
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0xa08455c829a493054315e40e7817321e8c77bb99",
+    "action": "BUY",
+    "side": "Under",
+    "price": 0.51,
+    "usd": 33150,
+    "ts": 1789341267
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Under",
+    "price": 0.51,
+    "usd": 1770,
+    "ts": 1789341196
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Under",
+    "price": 0.51,
+    "usd": 981,
+    "ts": 1789341072
+   },
+   {
+    "wallet": "0xa8bd9ae70657db83444c6ca987b8aeb9fb0ab7aa",
+    "action": "BUY",
+    "side": "Under",
+    "price": 0.51,
+    "usd": 3060,
+    "ts": 1789340895
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Under",
+    "price": 0.51,
+    "usd": 1054,
+    "ts": 1789340130
+   },
+   {
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "action": "BUY",
+    "side": "Under",
+    "price": 0.51,
+    "usd": 10491,
+    "ts": 1789339729
+   },
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "action": "BUY",
@@ -311784,54 +311852,6 @@
     "price": 0.51,
     "usd": 594,
     "ts": 1789338670
-   },
-   {
-    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
-    "action": "BUY",
-    "side": "Under",
-    "price": 0.51,
-    "usd": 1479,
-    "ts": 1789337395
-   },
-   {
-    "wallet": "0x4bff30af91642dc7d2b19a8664378fe55c45fc26",
-    "action": "BUY",
-    "side": "Over",
-    "price": 0.48,
-    "usd": 23565,
-    "ts": 1789335858
-   },
-   {
-    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
-    "action": "BUY",
-    "side": "Over",
-    "price": 0.48,
-    "usd": 8747,
-    "ts": 1789335762
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "action": "BUY",
-    "side": "Over",
-    "price": 0.48,
-    "usd": 1776,
-    "ts": 1789335499
-   },
-   {
-    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
-    "action": "BUY",
-    "side": "Over",
-    "price": 0.48,
-    "usd": 1106,
-    "ts": 1789334358
-   },
-   {
-    "wallet": "0x5e9458202b5817a72cf81105ec8a30e6f3705ba1",
-    "action": "BUY",
-    "side": "Under",
-    "price": 0.52,
-    "usd": 70100,
-    "ts": 1789333120
    }
   ]
  },
@@ -312186,12 +312206,12 @@
  },
  "nfl-dal-nyg-2026-09-14": {
   "shares": {
-   "Cowboys": 125507.864003005,
-   "Giants": 81942.76640040003
+   "Cowboys": 154187.07022150498,
+   "Giants": 96523.24724350002
   },
   "prices": {
-   "Cowboys": 0.605,
-   "Giants": 0.395
+   "Cowboys": 0.615,
+   "Giants": 0.385
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -312199,35 +312219,35 @@
   },
   "league": "NFL",
   "sport": "US-Sport",
-  "totalUsd": 191083,
+  "totalUsd": 243626,
   "whales": [
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "side": "Cowboys",
-    "usd": 23229,
+    "usd": 23613,
+    "avgPrice": 0.6099
+   },
+   {
+    "wallet": "0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
+    "side": "Cowboys",
+    "usd": 22931,
     "avgPrice": 0.6099
    },
    {
     "wallet": "0xcd84d7f9262516865553555751609fb6f52abec6",
     "side": "Giants",
-    "usd": 20256,
+    "usd": 19744,
     "avgPrice": 0.39
    },
    {
     "wallet": "0x41bb029a2a2aa76315ff7a9f426a77675f9626e8",
     "side": "Giants",
-    "usd": 18565,
+    "usd": 18095,
     "avgPrice": 0.4
-   },
-   {
-    "wallet": "0x16bb9951a36fce71e2ef57890b786145e0ba8492",
-    "side": "Giants",
-    "usd": 16860,
-    "avgPrice": 0.3899
    }
   ],
-  "hoursToKickoff": 1.58,
-  "capturedAt": "2026-09-13T22:48:25.745847+00:00",
+  "hoursToKickoff": 1.08,
+  "capturedAt": "2026-09-13T23:18:23.173462+00:00",
   "cond": "0x18afd71a2b235a4a3b910e9d97f7ae3aea5cc000e6449cabc04cb0fe9f4a6e6a",
   "frage": "Cowboys vs. Giants",
   "tokens": {
@@ -312236,52 +312256,48 @@
   },
   "book": {
    "side": "Cowboys",
-   "bid": 0.6,
-   "ask": 0.61,
+   "bid": 0.61,
+   "ask": 0.62,
    "spreadC": 1.0,
-   "spreadPct": 1.64,
+   "spreadPct": 1.61,
    "bids": [
     [
+     0.61,
+     465094
+    ],
+    [
      0.6,
-     1473685
+     1665067
     ],
     [
      0.59,
-     618911
+     498089
     ],
     [
      0.58,
-     35683
+     5293
     ],
     [
      0.57,
-     11603
+     9603
     ],
     [
      0.56,
-     3199
-    ],
-    [
-     0.55,
-     2551
+     5699
     ]
    ],
    "asks": [
     [
-     0.61,
-     21262
-    ],
-    [
      0.62,
-     2064749
+     2005603
     ],
     [
      0.63,
-     855985
+     927586
     ],
     [
      0.64,
-     91638
+     92219
     ],
     [
      0.65,
@@ -312289,11 +312305,31 @@
     ],
     [
      0.66,
-     3719
+     1219
+    ],
+    [
+     0.67,
+     2581
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
+    "action": "BUY",
+    "side": "Cowboys",
+    "price": 0.61,
+    "usd": 22604,
+    "ts": 1789340958
+   },
+   {
+    "wallet": "0xcb7ff0ad390ca732ff9d54f5f6da58888046824b",
+    "action": "BUY",
+    "side": "Cowboys",
+    "price": 0.61,
+    "usd": 2500,
+    "ts": 1789340512
+   },
    {
     "wallet": "0x41bb029a2a2aa76315ff7a9f426a77675f9626e8",
     "action": "BUY",
@@ -312325,14 +312361,6 @@
     "price": 0.61,
     "usd": 8660,
     "ts": 1789338303
-   },
-   {
-    "wallet": "0xfed8ff0b541ce9a66d632aedebe81bdd1b2c4388",
-    "action": "BUY",
-    "side": "Cowboys",
-    "price": 0.61,
-    "usd": 4896,
-    "ts": 1789338214
    }
   ]
  },
@@ -312626,12 +312654,12 @@
  },
  "wta-bucsa-andrees-2026-09-13": {
   "shares": {
-   "Cristina Bucsa": 8538.563689045,
-   "Bianca Andreescu": 8369.504193105004
+   "Cristina Bucsa": 20262.421013295003,
+   "Bianca Andreescu": 17611.194716625003
   },
   "prices": {
-   "Cristina Bucsa": 0.505,
-   "Bianca Andreescu": 0.495
+   "Cristina Bucsa": 0.535,
+   "Bianca Andreescu": 0.465
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -312639,33 +312667,34 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 18036,
+  "totalUsd": 39387,
   "whales": [
    {
     "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
     "side": "Cristina Bucsa",
-    "usd": 4749
+    "usd": 5031
    },
    {
-    "wallet": "0x0cdff1e562faf5ece704ef15f6a9fc4232e7ec9e",
-    "side": "Bianca Andreescu",
-    "usd": 1509,
-    "avgPrice": 0.574
+    "wallet": "0x081e14554b92ee3dc53a21bd5b01f306692ef76e",
+    "side": "Cristina Bucsa",
+    "usd": 4940,
+    "avgPrice": 0.5199
+   },
+   {
+    "wallet": "0x0c4e4329e0d189f2d0f296708d63b190f1200065",
+    "side": "Cristina Bucsa",
+    "usd": 3043,
+    "avgPrice": 0.5399
    },
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "Bianca Andreescu",
-    "usd": 1059,
-    "avgPrice": 0.5083
-   },
-   {
-    "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
-    "side": "Bianca Andreescu",
-    "usd": 990
+    "usd": 2947,
+    "avgPrice": 0.4884
    }
   ],
-  "hoursToKickoff": 0.33,
-  "capturedAt": "2026-09-13T22:48:25.745847+00:00",
+  "hoursToKickoff": 0.25,
+  "capturedAt": "2026-09-13T23:18:23.173462+00:00",
   "cond": "0x2d2c54a5e2aecfa0429c0d21db217e86a125de6d4c3c63deb51b723af7a10114",
   "frage": "Guadalajara Open Akron: Cristina Bucsa vs Bianca Andreescu",
   "tokens": {
@@ -312675,9 +312704,9 @@
  },
  "mex-gua-pum-2026-09-13": {
   "shares": {
-   "CD Guadalajara": 3961.189779435002,
+   "CD Guadalajara": 4172.0055481200025,
    "Draw (CD Guadalajara vs. Pumas de la UNAM)": 126.43359460999999,
-   "Pumas de la UNAM": 1626.7464775750002
+   "Pumas de la UNAM": 1917.8588973950002
   },
   "prices": {
    "CD Guadalajara": 0.645,
@@ -312690,7 +312719,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 16821,
+  "totalUsd": 18592,
   "whales": [
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
@@ -312701,8 +312730,8 @@
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "side": "Pumas de la UNAM",
-    "usd": 1036,
-    "avgPrice": 0.1618
+    "usd": 1330,
+    "avgPrice": 0.1614
    },
    {
     "wallet": "0xd48a81db62f742c4e42d86dfc23a7ee345366e90",
@@ -312716,8 +312745,8 @@
     "avgPrice": 0.16
    }
   ],
-  "hoursToKickoff": 2.36,
-  "capturedAt": "2026-09-13T22:48:25.745847+00:00",
+  "hoursToKickoff": 1.87,
+  "capturedAt": "2026-09-13T23:18:23.173462+00:00",
   "tokens": {
    "CD Guadalajara": "53801425247603023747370759309340615646716294490293339017976905638518370229602",
    "Draw (CD Guadalajara vs. Pumas de la UNAM)": "100164358861627473257481909957221307256198820629607596630582610040536228213103",
@@ -312727,13 +312756,13 @@
  "mls-sdg-phi-2026-09-13": {
   "shares": {
    "San Diego FC": 374.069792805,
-   "Draw (San Diego FC vs. Philadelphia Union)": 1606.2598802700002,
-   "Philadelphia Union": 734.6261705500001
+   "Draw (San Diego FC vs. Philadelphia Union)": 1606.5998799300003,
+   "Philadelphia Union": 796.9643014500001
   },
   "prices": {
    "San Diego FC": 0.345,
    "Draw (San Diego FC vs. Philadelphia Union)": 0.255,
-   "Philadelphia Union": 0.395
+   "Philadelphia Union": 0.405
   },
   "splitGuete": {
    "art": "belastbar",
@@ -312741,7 +312770,7 @@
   },
   "league": "MLS",
   "sport": "Fußball",
-  "totalUsd": 9313,
+  "totalUsd": 9555,
   "whales": [
    {
     "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
@@ -312751,7 +312780,7 @@
    {
     "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
     "side": "Philadelphia Union",
-    "usd": 526,
+    "usd": 539,
     "avgPrice": 0.4097
    },
    {
@@ -312765,8 +312794,8 @@
     "usd": 382
    }
   ],
-  "hoursToKickoff": 2.25,
-  "capturedAt": "2026-09-13T22:48:25.745847+00:00",
+  "hoursToKickoff": 1.75,
+  "capturedAt": "2026-09-13T23:18:23.173462+00:00",
   "tokens": {
    "San Diego FC": "13266138092509023901937638019238340975076350845395979424816486114591894057563",
    "Draw (San Diego FC vs. Philadelphia Union)": "73414113715603858414897062434620510213628637046885860740451174583680865796875",
@@ -312828,40 +312857,40 @@
  "mex-gua-pum-2026-09-13-exact-score": {
   "shares": {
    "CD Guadalajara 0 - 0 Pumas de la UNAM": 10.5412257,
-   "CD Guadalajara 0 - 1 Pumas de la UNAM": 20.717399999999998,
+   "CD Guadalajara 0 - 1 Pumas de la UNAM": 20.01005,
    "CD Guadalajara 1 - 0 Pumas de la UNAM": 29.715,
    "CD Guadalajara 0 - 2 Pumas de la UNAM": 3.8745000000000003,
-   "CD Guadalajara 1 - 1 Pumas de la UNAM": 3.705,
-   "CD Guadalajara 2 - 0 Pumas de la UNAM": 14.49,
+   "CD Guadalajara 1 - 1 Pumas de la UNAM": 8.227,
+   "CD Guadalajara 2 - 0 Pumas de la UNAM": 19.03363644,
    "CD Guadalajara 0 - 3 Pumas de la UNAM": 0.66,
-   "CD Guadalajara 1 - 2 Pumas de la UNAM": 30.919799999999995,
-   "CD Guadalajara 2 - 1 Pumas de la UNAM": 136.605,
-   "CD Guadalajara 3 - 0 Pumas de la UNAM": 30.240000000000002,
+   "CD Guadalajara 1 - 2 Pumas de la UNAM": 35.85809999999999,
+   "CD Guadalajara 2 - 1 Pumas de la UNAM": 142.72363643999998,
+   "CD Guadalajara 3 - 0 Pumas de la UNAM": 36.8625,
    "CD Guadalajara 1 - 3 Pumas de la UNAM": 6.136,
-   "CD Guadalajara 2 - 2 Pumas de la UNAM": 23.232,
-   "CD Guadalajara 3 - 1 Pumas de la UNAM": 232.575,
+   "CD Guadalajara 2 - 2 Pumas de la UNAM": 27.801600000000004,
+   "CD Guadalajara 3 - 1 Pumas de la UNAM": 265.4625,
    "CD Guadalajara 2 - 3 Pumas de la UNAM": 0.0,
    "CD Guadalajara 3 - 2 Pumas de la UNAM": 5.5760000000000005,
-   "CD Guadalajara 3 - 3 Pumas de la UNAM": 0.09,
+   "CD Guadalajara 3 - 3 Pumas de la UNAM": 0.10500000000000001,
    "Any Other Score": 0.0
   },
   "prices": {
    "CD Guadalajara 0 - 0 Pumas de la UNAM": 0.045,
-   "CD Guadalajara 0 - 1 Pumas de la UNAM": 0.043,
+   "CD Guadalajara 0 - 1 Pumas de la UNAM": 0.041,
    "CD Guadalajara 1 - 0 Pumas de la UNAM": 0.105,
    "CD Guadalajara 0 - 2 Pumas de la UNAM": 0.0205,
    "CD Guadalajara 1 - 1 Pumas de la UNAM": 0.095,
    "CD Guadalajara 2 - 0 Pumas de la UNAM": 0.105,
    "CD Guadalajara 0 - 3 Pumas de la UNAM": 0.006,
-   "CD Guadalajara 1 - 2 Pumas de la UNAM": 0.0435,
+   "CD Guadalajara 1 - 2 Pumas de la UNAM": 0.0445,
    "CD Guadalajara 2 - 1 Pumas de la UNAM": 0.105,
-   "CD Guadalajara 3 - 0 Pumas de la UNAM": 0.07,
+   "CD Guadalajara 3 - 0 Pumas de la UNAM": 0.075,
    "CD Guadalajara 1 - 3 Pumas de la UNAM": 0.013,
    "CD Guadalajara 2 - 2 Pumas de la UNAM": 0.048,
    "CD Guadalajara 3 - 1 Pumas de la UNAM": 0.075,
    "CD Guadalajara 2 - 3 Pumas de la UNAM": 0.0145,
    "CD Guadalajara 3 - 2 Pumas de la UNAM": 0.034,
-   "CD Guadalajara 3 - 3 Pumas de la UNAM": 0.009,
+   "CD Guadalajara 3 - 3 Pumas de la UNAM": 0.0105,
    "Any Other Score": 0.165
   },
   "splitGuete": {
@@ -312870,35 +312899,35 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 8192,
+  "totalUsd": 9098,
   "whales": [
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "side": "CD Guadalajara 3 - 1 Pumas de la UNAM",
-    "usd": 224,
+    "usd": 252,
     "avgPrice": 0.0799
    },
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "side": "CD Guadalajara 2 - 1 Pumas de la UNAM",
-    "usd": 125,
+    "usd": 127,
     "avgPrice": 0.1099
    },
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "side": "CD Guadalajara 1 - 2 Pumas de la UNAM",
-    "usd": 25,
-    "avgPrice": 0.0485
+    "usd": 30,
+    "avgPrice": 0.0482
    },
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "side": "CD Guadalajara 1 - 0 Pumas de la UNAM",
-    "usd": 24,
-    "avgPrice": 0.1115
+    "side": "CD Guadalajara 3 - 0 Pumas de la UNAM",
+    "usd": 25,
+    "avgPrice": 0.08
    }
   ],
-  "hoursToKickoff": 2.36,
-  "capturedAt": "2026-09-13T22:48:25.745847+00:00",
+  "hoursToKickoff": 1.87,
+  "capturedAt": "2026-09-13T23:18:23.173462+00:00",
   "tokens": {
    "CD Guadalajara 0 - 0 Pumas de la UNAM": "80839220288807235416421162327997297499982699168100817061840224692821672799462",
    "CD Guadalajara 0 - 1 Pumas de la UNAM": "84141013047211975727628397019794786925550314288770722291189613997492290082933",
