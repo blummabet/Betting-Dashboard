@@ -63,14 +63,14 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "658 geprueft, davon 87 abgeschnitten"
+      "note": "661 geprueft, davon 87 abgeschnitten"
     },
     {
       "id": "settlement_alive",
       "label": "Settlement lebt (keine ewig offenen Positionen)",
       "severity": "error",
       "ok": false,
-      "nFail": 17,
+      "nFail": 18,
       "failures": [
         "nor-ffk-bog-2026-09-04-more-markets: seit 9.0 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "spl-sha-hil-2026-09-04-more-markets: seit 9.0 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
@@ -80,14 +80,15 @@
         "elc-pne-bbr-2026-09-05-more-markets: seit 8.2 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "bun-scp-fre-2026-09-05-more-markets: seit 8.1 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "bun-s04-bay-2026-09-05-more-markets: seit 8.0 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "sea-fro-ven-2026-09-06-more-markets: seit 7.1 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "fl1-tro-str-2026-09-06-more-markets: seit 7.1 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
+        "sea-fro-ven-2026-09-06-more-markets: seit 7.2 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
+        "fl1-tro-str-2026-09-06-more-markets: seit 7.2 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "sea-par-mon-2026-09-06-more-markets: seit 7.1 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "fl1-ang-ren-2026-09-06-more-markets: seit 7.1 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "spl-kha-riy-2026-09-07-more-markets: seit 6.0 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "spl-haz-taa-2026-09-08-more-markets: seit 5.0 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "ucl-aek1-lin2-2026-09-08-more-markets: seit 5.0 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "grc-ast-ari-2026-09-09-more-markets: seit 3.1 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
+        "grc-ast-ari-2026-09-09-more-markets: seit 3.2 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
+        "ucl-fen-rom-2026-09-10-more-markets: seit 3.0 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "ucl-fen-rom-2026-09-10-more-markets: seit 3.0 Tagen offen — Auflösung existiert, matcht aber den Key nicht!"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
@@ -111,7 +112,7 @@
       "nFail": 5,
       "failures": [
         "112/270 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (41%) — Trefferquote allein trügt",
-        "   0x84cfffc3f1… n=263 Treffer 52% P&L $-7,622,310",
+        "   0x84cfffc3f1… n=265 Treffer 52% P&L $-7,622,310",
         "   0xc3c3b3ef30… n=338 Treffer 51% P&L $-3,972,566",
         "   0xa0f21e6d35… n=79 Treffer 66% P&L $-2,635,720",
         "   0xabb89972b2… n=28 Treffer 68% P&L $-2,563,982"
@@ -156,5 +157,5 @@
     }
   ],
   "nFail": 4,
-  "generatedAt": "2026-09-13T16:19:42.351631+00:00"
+  "generatedAt": "2026-09-13T16:50:23.131982+00:00"
 }
