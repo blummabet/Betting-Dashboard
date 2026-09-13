@@ -67,16 +67,18 @@
     {
       "label": "Money Map meldet ihre Luecken",
       "severity": "error",
-      "failures": [],
-      "nFail": 0,
-      "ok": true,
+      "failures": [
+        "Karlsruhe v Cottbus: Money Map ohne Poly, aber ein Poly-Markt mit BEIDEN Teams existiert — stille Luecke, nicht Abwesenheit"
+      ],
+      "nFail": 1,
+      "ok": false,
       "hinweis": ""
     },
     {
       "label": "Money Map: die Poly-Seite gehoert zum Spiel",
       "severity": "error",
       "failures": [
-        "Sheff Utd v Wolves (English Sky Bet Championship): Poly-Seite heisst „Wolverhampton Wanderers FC“ und gehoert zu keinem der beiden Teams — $55436 fremdes Geld in einer Konsens-Zeile"
+        "Sheff Utd v Wolves (English Sky Bet Championship): Poly-Seite heisst „Wolverhampton Wanderers FC“ und gehoert zu keinem der beiden Teams — $91749 fremdes Geld in einer Konsens-Zeile"
       ],
       "nFail": 1,
       "ok": false,
@@ -118,8 +120,8 @@
       "label": "Poly-Deckung: Money-Scan gegen Liga-Fetcher",
       "severity": "error",
       "failures": [
-        "sea-nap-bol-2026-09-13 (SSC Napoli v Bologna FC 1909, Anpfiff in 4.2h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
-        "sea-sas-juv-2026-09-13 (US Sassuolo Calcio v Juventus FC, Anpfiff in 6.9h) — der Liga-Fetcher hat den Markt, der Money-Scan nie"
+        "sea-nap-bol-2026-09-13 (SSC Napoli v Bologna FC 1909, Anpfiff in 3.0h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
+        "sea-sas-juv-2026-09-13 (US Sassuolo Calcio v Juventus FC, Anpfiff in 5.8h) — der Liga-Fetcher hat den Markt, der Money-Scan nie"
       ],
       "nFail": 2,
       "ok": false,
@@ -159,9 +161,9 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "seit Vorregistrierung n=1096 (UG -3.5 %) · Rueckblick n=2726, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=1110 (UG -4.3 %) · Rueckblick n=2726, nicht Teil des Urteils."
     }
   ],
-  "nFail": 3,
-  "generatedAt": "2026-09-13T11:50:14.205769+00:00"
+  "nFail": 4,
+  "generatedAt": "2026-09-13T12:58:11.938063+00:00"
 }
