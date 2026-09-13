@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-13T13:56:06.617711+00:00",
+"generatedAt": "2026-09-13T14:11:23.129607+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1070,
-"wins": 895,
-"hitRate": 0.8364,
-"polyN": 1009,
-"polyWins": 774,
-"polyHitRate": 0.7671,
+"n": 1071,
+"wins": 896,
+"hitRate": 0.8366,
+"polyN": 1010,
+"polyWins": 775,
+"polyHitRate": 0.7673,
 "pinnN": 142,
 "pinnHitRate": 0.7958,
-"nRoi": 397,
-"roi": 0.4239,
-"roiLb": 0.3607,
-"nClv": 397,
-"clv": 20.64,
-"clvLb": 18.6621
+"nRoi": 398,
+"roi": 0.4258,
+"roiLb": 0.3627,
+"nClv": 398,
+"clv": 20.7,
+"clvLb": 18.7267
 },
 "uneinig": {
-"n": 415,
-"wins": 133,
-"hitRate": 0.3205,
-"polyN": 377,
+"n": 416,
+"wins": 134,
+"hitRate": 0.3221,
+"polyN": 378,
 "polyWins": 98,
-"polyHitRate": 0.2599,
+"polyHitRate": 0.2593,
 "pinnN": 256,
 "pinnHitRate": 0.6016,
-"nRoi": 183,
-"roi": -0.4399,
-"roiLb": -0.5503,
-"nClv": 183,
-"clv": -18.14,
-"clvLb": -22.3258
+"nRoi": 184,
+"roi": -0.4371,
+"roiLb": -0.5469,
+"nClv": 184,
+"clv": -18.11,
+"clvLb": -22.2799
 },
 "teil": {
 "n": 21,
@@ -336,6 +336,11 @@
 "wins": 4,
 "hitRate": 0.6667
 },
+"Czech 1 Liga": {
+"n": 6,
+"wins": 6,
+"hitRate": 1.0
+},
 "Finnish Veikkausliiga": {
 "n": 6,
 "wins": 4,
@@ -370,11 +375,6 @@
 "n": 5,
 "wins": 2,
 "hitRate": 0.4
-},
-"Czech 1 Liga": {
-"n": 5,
-"wins": 5,
-"hitRate": 1.0
 },
 "Estonian Premier League": {
 "n": 5,
@@ -441,6 +441,11 @@
 "wins": 1,
 "hitRate": 0.3333
 },
+"Kazakhstan Premier League": {
+"n": 3,
+"wins": 3,
+"hitRate": 1.0
+},
 "Scottish League Cup": {
 "n": 3,
 "wins": 3,
@@ -490,11 +495,6 @@
 "n": 2,
 "wins": 0,
 "hitRate": 0.0
-},
-"Kazakhstan Premier League": {
-"n": 2,
-"wins": 2,
-"hitRate": 1.0
 },
 "Latvian Virsliga": {
 "n": 2,
@@ -619,15 +619,15 @@
 },
 "byStrength": {
 "strong": {
-"n": 895,
-"wins": 715,
-"hitRate": 0.7989,
-"nRoi": 371,
-"roi": 0.2782,
-"roiLb": 0.2079,
-"nClv": 371,
-"clv": 13.2,
-"clvLb": 10.3775
+"n": 897,
+"wins": 717,
+"hitRate": 0.7993,
+"nRoi": 373,
+"roi": 0.2802,
+"roiLb": 0.2101,
+"nClv": 373,
+"clv": 13.21,
+"clvLb": 10.4004
 },
 "weak": {
 "n": 578,
@@ -642,14 +642,52 @@
 }
 },
 "divergence": {
-"n": 415,
-"betfairWins": 133,
-"betfairRate": 0.3205,
-"polyN": 377,
+"n": 416,
+"betfairWins": 134,
+"betfairRate": 0.3221,
+"polyN": 378,
 "polyWins": 98,
-"polyRate": 0.2599
+"polyRate": 0.2593
 },
 "recent": [
+{
+"matchId": "36043346",
+"home": "Irtysh Pavlodar",
+"away": "Okzhetpes",
+"league": "Kazakhstan Premier League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Irtysh Pavlodar",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-09-13T11:00:00Z",
+"settledAt": "2026-09-13T14:11:22.942579+00:00"
+},
+{
+"matchId": "36039011",
+"home": "Banik Ostrava",
+"away": "Pardubice",
+"league": "Czech 1 Liga",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Pardubice",
+"polySide": "home",
+"winner": "away",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-09-13T11:00:00Z",
+"settledAt": "2026-09-13T14:11:22.942579+00:00"
+},
 {
 "matchId": "36039235",
 "home": "FC Zurich",
@@ -1371,56 +1409,18 @@
 ],
 "kickoff": "2026-09-12T21:30:00Z",
 "settledAt": "2026-09-13T00:39:47.813072+00:00"
-},
-{
-"matchId": "36044219",
-"home": "Guayaquil City",
-"away": "Mushuc Runa",
-"league": "Ecuadorian Serie A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Guayaquil City",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-09-12T21:30:00Z",
-"settledAt": "2026-09-13T00:39:47.813072+00:00"
-},
-{
-"matchId": "36045491",
-"home": "Internacional de Bogotá",
-"away": "Llaneros FC",
-"league": "Colombian Primera A",
-"verdict": "uneinig",
-"moneySide": "draw",
-"moneyName": "The Draw",
-"polySide": "home",
-"winner": "home",
-"moneyWin": false,
-"polyWin": true,
-"ftScore": [
-3,
-2
-],
-"kickoff": "2026-09-12T21:05:00Z",
-"settledAt": "2026-09-13T00:09:44.773236+00:00"
 }
 ],
 "global": {
-"n": 1506,
-"wins": 1032,
-"hitRate": 0.6853,
-"nRoi": 592,
-"roi": 0.1304,
-"roiLb": 0.0689,
-"nClv": 592,
-"clv": 7.47,
-"clvLb": 5.1986
+"n": 1508,
+"wins": 1034,
+"hitRate": 0.6857,
+"nRoi": 594,
+"roi": 0.1322,
+"roiLb": 0.0708,
+"nClv": 594,
+"clv": 7.5,
+"clvLb": 5.2311
 },
-"pending": 35
+"pending": 33
 }
