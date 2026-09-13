@@ -466,3 +466,13 @@ def test_panama_ist_die_oberste_klasse():
     """Apertura ist die Halbsaison, kein Rang."""
     assert LS.stufe("liga-panamena-de-futbol-apertura") == "1"
     assert LS.stufe("liga-panamena-de-futbol-apertura", "basketball") is None
+
+
+# ── 13.09.2026: der Wachhund, zwoelfter und dreizehnter Slug ─────────────────
+def test_montenegro_und_portugal_kommen_aus_der_paarung():
+    """Zwei Namen, die in die Irre fuehren: „1. CFL" sagt nichts, und „Campeonato de Portugal"
+    klingt nach Landesmeisterschaft, ist aber die DRITTE Klasse (unter Liga Portugal und
+    Liga Portugal 2). Entschieden hat beide Male die Paarung im Ledger."""
+    assert LS.stufe("1-cfl") == "1"
+    assert LS.stufe("campeonato-de-portugal") == "3"
+    assert LS.stufe("liga-portugal") == "1", "die Gegenprobe: die echte oberste Klasse"

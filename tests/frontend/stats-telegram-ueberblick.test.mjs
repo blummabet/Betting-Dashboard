@@ -118,3 +118,58 @@ test('bei vollstaendig abgerechneten Bloecken steht kein ueberfluessiger Nenner'
   assert.ok(!/aus 10 abgerechneten/.test(html),
     'wenn alle abgerechnet sind, ist der Nenner keine Information, sondern Rauschen');
 });
+
+/* 13.09.2026 (Lucas: „ordne mir das bitte so an … denn dann kann ich darüber alles in einen
+ * Screenshot packen für Public") — die Reihenfolge kam aus dem Produzenten und mischte die
+ * Kanäle. Wer die Public-Zeilen fotografieren will, erwischt sonst leicht eine Trades-Zeile,
+ * die nie ein Follower gesehen hat. */
+const GEMISCHT = {
+  generatedAt: '2026-09-13T12:00:00Z', heute: '2026-09-13', ugMinN: 30,
+  bloecke: [
+    BLOCK('a', 'Betfair · Public-Channel', 'Public', 31, 31, 63.3, -0.8),
+    BLOCK('b', 'Poly-Whales · Public-Channel', 'Public', 7, 7, 71.4, 0),
+    BLOCK('c', 'Konjunktion · Trades', 'Trades', 74, 74, 56.9, 1.2),
+    BLOCK('d', 'Liga-Picks · Public-Channel', 'Public', 11, 11, 77.8, 21.7),
+    BLOCK('e', 'MLS-Picks · Public-Channel', 'Public', 8, 8, 71.4, 6.0),
+    BLOCK('f', 'Heute spielenswert · Trades', 'Trades', 11, 11, 100, 44.3),
+    BLOCK('g', 'Stake-Bursts · Trades', 'Trades', 22, 22, 66.7, 4.4),
+  ],
+};
+
+test('erst alle Public-Kanäle, dann alle Trades', () => {
+  const html = welt(GEMISCHT)._stTelegram(GEMISCHT.bloecke);
+  const pos = (t) => html.indexOf(t);
+  const letztesPublic = Math.max(pos('Betfair · Public'), pos('Poly-Whales'),
+    pos('Liga-Picks'), pos('MLS-Picks'));
+  const erstesTrades = Math.min(pos('Konjunktion'), pos('Heute spielenswert'),
+    pos('Stake-Bursts'));
+  assert.ok(letztesPublic < erstesTrades,
+    'eine Trades-Zeile steht zwischen den Public-Zeilen — genau das macht den Screenshot kaputt');
+});
+
+test('die Konjunktion führt die Trades an, vor „Heute spielenswert"', () => {
+  const html = welt(GEMISCHT)._stTelegram(GEMISCHT.bloecke);
+  assert.ok(html.indexOf('Konjunktion') < html.indexOf('Heute spielenswert'));
+});
+
+test('zwischen den Gruppen steht eine sichtbare Grenze', () => {
+  const html = welt(GEMISCHT)._stTelegram(GEMISCHT.bloecke);
+  assert.match(html, /das sehen die Follower/);
+  assert.match(html, /nur für dich/);
+});
+
+test('innerhalb einer Gruppe bleibt die Reihenfolge des Produzenten', () => {
+  const html = welt(GEMISCHT)._stTelegram(GEMISCHT.bloecke);
+  assert.ok(html.indexOf('Betfair · Public') < html.indexOf('Poly-Whales'));
+  assert.ok(html.indexOf('Heute spielenswert') < html.indexOf('Stake-Bursts'));
+});
+
+test('Blöcke ohne Kanal-Angabe fallen ans Ende statt die Gruppen zu zerreißen', () => {
+  /* Der Fall tritt real auf: das Artefakt wird vom Produzenten geschrieben, und zwischen
+   * einem Deploy und dessen nächstem Lauf trägt es das Feld `kanal` noch nicht. */
+  const ohne = { ...GEMISCHT, bloecke: GEMISCHT.bloecke.map((b, i) =>
+    i === 1 ? { ...b, kanal: undefined } : b) };
+  const html = welt(ohne)._stTelegram(ohne.bloecke);
+  assert.ok(html.indexOf('Poly-Whales') > html.indexOf('Stake-Bursts'),
+    'ein Block ohne Kanal gehört ans Ende, nicht mitten in eine Gruppe');
+});

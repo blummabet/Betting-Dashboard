@@ -899,6 +899,13 @@
      'Lucas 07.09.: „ne 50k Wette auf Arsenal sagt 0". Vorwärts gemessen.'],
     ['topliga_hoher_einsatz', 'oberste Liga, ab 6× Norm',
      'Die Gegenprobe — im Rückblick läuft diese Reihe nach unten.'],
+    // 13.09.2026 — die ZWEITE Achse. „Low League" heißt umgangssprachlich kleiner MARKT, nicht
+    // tiefe Spielklasse: Moldawiens Divizia Nationala ist Ebene 1. Beide Zeilen gehören
+    // nebeneinander, sonst misst man nur die Einsatzgröße und nennt es Liga.
+    ['kleinmarkt_hoher_einsatz', 'kleiner Markt, ab 3× Norm',
+     'Lucas 13.09.: „verdächtige Einsätze auf so low leagues". Rückwirkend sieht sie schlecht aus — deshalb vorwärts.'],
+    ['grossmarkt_hoher_einsatz', 'großer Markt, ab 3× Norm',
+     'Die Gegenprobe auf derselben Achse, mit derselben Schwelle.'],
   ];
 
   // ── Spielklasse ───────────────────────────────────────────────────────────

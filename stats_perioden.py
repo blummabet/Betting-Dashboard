@@ -203,6 +203,14 @@ def perioden_reihen(plays, heute: str) -> list:
 
 
 # ── Die Quellen ─────────────────────────────────────────────────────────────────────────
+# 13.09.2026 (Lucas: „haben die Liga stats und mls stats auch den Filter drin … weil im Cards
+# Bereich das Tracking hat dann mehr Picks oder"). Nein — und das muss auf der Seite stehen,
+# nicht nur in seinem Kopf: die Cards-Blöcke messen die ENGINE (alle getrackten Picks), die
+# Push-Blöcke den KANAL (nur was rausging). Gemessen: Liga 120 gegen 36 gesendete.
+CARDS_HINWEIS = ("Alle getrackten Picks — auch die, die der Gegensignal-Filter NICHT gesendet "
+                 "hat. Datiert nach Spieltag (die Push-Blöcke nach Sendetag).")
+
+
 def cards_plays(datensatz=None) -> list:
     """Abgerechnete Engine-Picks. Nutzt `freigabe._card_plays` — eine Quelle, nicht zwei."""
     try:
@@ -622,9 +630,10 @@ def baue(now=None) -> dict:
     # System — dieselbe Trennung wie bei der ✦-Prosa im Cards-Digest heute frueh.
     _add("cards", "Cards · laufender Betrieb", "🎯", "Eigene Engine",
          cards_plays("Liga") + cards_plays("MLS"),
-         "Liga und MLS. Die WM 2026 ist seit dem 19.07. vorbei und zählt hier nicht mit.")
-    _add("cards-liga", "Cards · Liga", "🎯", "Eigene Engine", cards_plays("Liga"))
-    _add("cards-mls", "Cards · MLS", "🎯", "Eigene Engine", cards_plays("MLS"))
+         "Liga und MLS. Die WM 2026 ist seit dem 19.07. vorbei und zählt hier nicht mit. "
+         + CARDS_HINWEIS)
+    _add("cards-liga", "Cards · Liga", "🎯", "Eigene Engine", cards_plays("Liga"), CARDS_HINWEIS)
+    _add("cards-mls", "Cards · MLS", "🎯", "Eigene Engine", cards_plays("MLS"), CARDS_HINWEIS)
     _add("betfair", "Betfair · alle Signale", "💷", "Marktdaten", betfair_plays(),
          "Der Ledger hält ein rollierendes Fenster — ältere Perioden sind unvollständig, "
          "nicht schwach.")
