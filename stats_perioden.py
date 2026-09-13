@@ -407,6 +407,136 @@ def push_bloecke() -> list:
     return [(i, n, e, [p for p in pl if p.get("tag")], h) for i, n, e, pl, h in aus]
 
 
+# ── Der Gegensignal-Filter: die Gegenprobe als eigener Block ────────────────────────────
+# 13.09.2026 (Lucas: „ich brauch es zumindest in den Stats, weil ich will im Public ja
+# Auswertungen schicken — als eigener Block, das reicht dann auch um weiter zu beobachten").
+#
+# Der Filter (pick_announce_state.push_ok) entstand am 30.08. aus einer Messung an 220
+# abgerechneten ABWÄGEN: ohne Gegensignal 78,7 % Treffer und +40,0 % ROI, mit Gegensignal
+# −11,7 %. Diese Zahlen sind IN-SAMPLE — sie sind die Stichprobe, an der die Regel gebaut
+# wurde, und sie lasen den Signalstand bei ABRECHNUNG, während der Filter vorher entscheidet.
+#
+# Das Schattenbuch (pick_push_ledger.py) friert seit dem 30.08. den Stand VOR ANPFIFF ein.
+# Alles darin ist damit echtes Out-of-Sample. Am 13.09. sah das so aus:
+#
+#     gepusht      n=31   71,0 % Treffer   ROI +15,6 %   [−7,4 … +37,7]
+#     aussortiert  n=85   63,5 %           ROI  +3,5 %   [−10,6 … +17,9]
+#
+# Also: die Richtung stimmt, die Stärke nicht — und die Aussortierten verlieren nicht, sie
+# gewinnen weniger. Deshalb steht hier NICHT nur die gepushte Seite (die sähe gut aus und
+# wäre die Selbstbestätigung, die das Schattenbuch gerade verhindern soll), sondern beide
+# Arme UND der Unterschied mit seinem Band.
+FILTER_MIN_N = 30          # je Arm; darunter gibt es kein Urteil, nur den Stand
+FILTER_BOOT = 4000
+FILTER_SEED = 20260913     # fest: dieselbe Datenlage muss dieselbe Zahl ergeben
+
+
+def _filter_zeilen():
+    """Alle Schattenbuch-Zeilen aller Datensätze, mit Ergebnis UND Quote."""
+    aus = []
+    for pfad in sorted(BASE.glob("*pick_push_ledger.json")):
+        roh = _load(pfad.name, [])
+        zeilen = roh if isinstance(roh, list) else (roh.get("zeilen") or [])
+        for r in zeilen:
+            if not isinstance(r, dict):
+                continue
+            if r.get("status") != "abgerechnet" or not isinstance(r.get("win"), bool):
+                continue
+            o = r.get("odds")
+            if not isinstance(o, (int, float)) or o <= 1.0:
+                continue
+            aus.append(r)
+    return aus
+
+
+def _arm(rows):
+    return [{"tag": _tag(r.get("gesehenAm")), "gewonnen": bool(r.get("win")),
+             "rendite": (float(r["odds"]) - 1.0) if r["win"] else -1.0, "clv": None}
+            for r in rows if _tag(r.get("gesehenAm"))]
+
+
+def burst_plays(phase=None) -> list:
+    """Stake-Einsatz-Bursts als Plays (13.09.2026, Lucas: „haette ich auch gerne in den Stats").
+
+    ⭐ `rendite` kommt aus der Abrechnung des Bursts (Summe pnl / Summe Einsatz), NICHT aus
+    seiner Quote. Ein Burst ist eine Position auf mehreren Tickets, teils zu leicht
+    verschiedenen Einsaetzen — die Quote allein waere die falsche Rechnung.
+
+    Zeilen mit Status `nicht_abrechenbar` fallen raus: ihre Wetten sind aus dem rollierenden
+    Stake-Ledger gefallen, sie sind keine offene Frage mehr, sondern eine verlorene. Sie als
+    „ohne Ergebnis" mitzuzaehlen wuerde die Zahl der Pushes richtig, die Trefferquote aber
+    schleichend falsch machen.
+    """
+    roh = _load("stake_burst_ledger.json", [])
+    zeilen = roh if isinstance(roh, list) else (roh.get("zeilen") or [])
+    aus = []
+    for r in zeilen:
+        if not isinstance(r, dict) or r.get("status") == "nicht_abrechenbar":
+            continue
+        if phase and r.get("phase") != phase:
+            continue
+        t = _tag(r.get("sentAt"))
+        if not t:
+            continue
+        ren = r.get("rendite")
+        aus.append({"tag": t,
+                    "gewonnen": r.get("win") if isinstance(r.get("win"), bool) else None,
+                    "rendite": float(ren) if isinstance(ren, (int, float)) else None,
+                    "clv": None})
+    return aus
+
+
+def filter_vergleich(zeilen=None, boot: int = FILTER_BOOT) -> dict | None:
+    """Beide Arme und der UNTERSCHIED zwischen ihnen, mit Band. REIN (fester Seed).
+
+    ⭐ Warum der Unterschied und nicht zwei Zahlen nebeneinander: zwei Bänder, die sich
+    überlappen, heißen NICHT automatisch „kein Unterschied" — und zwei, die sich nicht
+    überlappen, sind auch kein Test. Gefragt ist die Verteilung der Differenz, und die
+    entsteht nur, wenn man sie direkt zieht.
+    """
+    import random
+    zeilen = _filter_zeilen() if zeilen is None else zeilen
+    ja = [r for r in zeilen if r.get("push")]
+    nein = [r for r in zeilen if not r.get("push")]
+    if not ja or not nein:
+        return None
+    e = lambda rows: [(float(r["odds"]) - 1.0) if r["win"] else -1.0 for r in rows]
+    h = lambda rows: [1.0 if r["win"] else 0.0 for r in rows]
+    ea, eb, ha, hb = e(ja), e(nein), h(ja), h(nein)
+    rnd = random.Random(FILTER_SEED)
+
+    def _diff(a, b):
+        m = lambda v: sum(v) / len(v)
+        zieh = sorted(m([a[rnd.randrange(len(a))] for _ in a])
+                      - m([b[rnd.randrange(len(b))] for _ in b]) for _ in range(boot))
+        return {"punkt": round(100 * (m(a) - m(b)), 1),
+                "lo": round(100 * zieh[int(0.05 * boot)], 1),
+                "hi": round(100 * zieh[int(0.95 * boot)], 1),
+                "anteilUnterNull": round(100.0 * sum(1 for x in zieh if x < 0) / boot)}
+
+    roi_d, hit_d = _diff(ea, eb), _diff(ha, hb)
+    aus = {"gesendet": kennzahlen(_arm(ja)), "aussortiert": kennzahlen(_arm(nein)),
+           "roiDiff": roi_d, "hitDiff": hit_d,
+           "quelle": "Schattenbuch — Signalstand vor Anpfiff eingefroren",
+           "bootstrap": boot}
+    tage = sorted(t for t in (_tag(r.get("gesehenAm")) for r in zeilen) if t)
+    aus["abdeckung"] = {"von": tage[0] if tage else None, "bis": tage[-1] if tage else None}
+    if len(ja) < FILTER_MIN_N or len(nein) < FILTER_MIN_N:
+        aus["urteil"] = "sammelt"
+        aus["grund"] = ("%d gesendet / %d aussortiert abgerechnet — unter %d je Seite sagt der "
+                        "Vergleich nichts" % (len(ja), len(nein), FILTER_MIN_N))
+    elif roi_d["lo"] > 0:
+        aus["urteil"] = "der Filter trägt"
+        aus["grund"] = ("%+.1f pp Rendite gegenüber den Aussortierten, Untergrenze %+.1f pp"
+                        % (roi_d["punkt"], roi_d["lo"]))
+    else:
+        aus["urteil"] = "noch nicht belegt"
+        aus["grund"] = ("%+.1f pp Rendite gegenüber den Aussortierten, aber das Band reicht von "
+                        "%+.1f bis %+.1f pp — in %d %% der Ziehungen wäre der Filter schlechter"
+                        % (roi_d["punkt"], roi_d["lo"], roi_d["hi"], roi_d["anteilUnterNull"]))
+    return aus
+
+
 def baue(now=None) -> dict:
     heute = (now or _now()).date().isoformat()
     bloecke = []
@@ -451,9 +581,33 @@ def baue(now=None) -> dict:
          [p for p in _pp if p.get("public")])
     for bid, name, emoji, plays, hinweis in push_bloecke():
         _add("push-" + bid, name, emoji, "Push-Kanäle", plays, hinweis)
-    return {"generatedAt": (now or _now()).isoformat(), "heute": heute,
-            "wochenZurueck": WOCHEN_ZURUECK, "ugMinN": UG_MIN_N,
-            "bloecke": bloecke}
+    # 13.09.2026 (Lucas): die Stake-Bursts als eigener Block. Live und vor Anpfiff zusaetzlich
+    # getrennt — die Vorab-Messung sah +29,0 % (live) gegen +8,8 % (vor), und zusammengerechnet
+    # waere keine der beiden Fragen mehr zu beantworten.
+    _add("stake-burst", "Stake-Bursts · Trades", "⚡", "Push-Kanäle", burst_plays(),
+         "Ein Burst ist EINE Auswahl, die innerhalb von Sekunden auf mehrere Tickets zur "
+         "gleichen Quote gespielt wurde. Gerechnet wird geldgewichtet über alle Tickets des "
+         "Bursts, nicht je Ticket.")
+    _add("stake-burst-live", "Stake-Bursts · live", "⚡", "Push-Kanäle", burst_plays("live"))
+    _add("stake-burst-vor", "Stake-Bursts · vor Anpfiff", "⚡", "Push-Kanäle", burst_plays("vor"))
+    # 13.09.2026 (Lucas): der Gegensignal-Filter als eigene Gruppe — BEIDE Arme, damit die
+    # Gegenprobe auf derselben Seite steht wie das Ergebnis. Nur den gesendeten Arm zu zeigen
+    # waere die Selbstbestaetigung, die das Schattenbuch gerade verhindern soll.
+    _fz = _filter_zeilen()
+    _add("filter-gesendet", "Gegensignal-Filter · gesendet", "🟢", "Push-Filter",
+         _arm([r for r in _fz if r.get("push")]),
+         "Picks, zu denen KEIN Signal widerspricht — die gehen in den Public-Channel.")
+    _add("filter-aussortiert", "Gegensignal-Filter · aussortiert", "⚪", "Push-Filter",
+         _arm([r for r in _fz if not r.get("push")]),
+         "Die vom Filter zurückgehaltenen Picks, abgerechnet als wären sie gesendet worden. "
+         "Sie sind die Gegenprobe: wären sie in Wahrheit gut, stünde es hier.")
+    aus = {"generatedAt": (now or _now()).isoformat(), "heute": heute,
+           "wochenZurueck": WOCHEN_ZURUECK, "ugMinN": UG_MIN_N,
+           "bloecke": bloecke}
+    _v = filter_vergleich(_fz)
+    if _v:
+        aus["filterVergleich"] = _v
+    return aus
 
 
 def main() -> int:

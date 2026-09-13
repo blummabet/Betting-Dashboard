@@ -343,6 +343,21 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 #statsPanel .st-b-a{margin-left:auto;font-size:10.5px;color:var(--muted);white-space:nowrap;}
 #statsPanel .st-b-n{font-size:11px;color:var(--muted);line-height:1.5;margin:4px 0 8px;}
 #statsPanel .st-ks{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;}
+/* 13.09.2026 — die Gegensignal-Karte: zwei Arme nebeneinander, darunter der Unterschied.
+   Zwei Spalten, damit gesendet und aussortiert nebeneinander lesbar sind; unter 520px
+   untereinander, sonst quetscht sich die Rendite auf zwei Zeilen. */
+#statsPanel .st-fv{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0;}
+#statsPanel .st-fv-arm{background:var(--card2);border-radius:10px;padding:10px 12px;}
+#statsPanel .st-fv-l{font-size:10px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;}
+#statsPanel .st-fv-n{font-size:12px;color:var(--muted);margin:2px 0 6px;}
+#statsPanel .st-fv-z{font-size:15px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.5;}
+#statsPanel .st-fv-z i{font-style:normal;font-size:10px;font-weight:600;color:var(--muted);}
+#statsPanel .st-fv-d{display:flex;flex-wrap:wrap;gap:8px 22px;font-size:13px;padding:2px 2px 8px;}
+#statsPanel .st-fv-d b{font-variant-numeric:tabular-nums;}
+#statsPanel .st-fv-d i{font-style:normal;font-size:11px;color:var(--muted);}
+#statsPanel .st-fv-u{border-left:3px solid;padding:7px 11px;border-radius:0 8px 8px 0;
+  background:var(--card2);font-size:11.5px;line-height:1.55;}
+@media(max-width:520px){#statsPanel .st-fv{grid-template-columns:1fr;}}
 #statsPanel .st-k{flex:1 1 130px;background:var(--card2);border-radius:10px;padding:9px 12px;}
 #statsPanel .st-k-l{font-size:9.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);}
 #statsPanel .st-k-v{font-size:20px;font-weight:900;line-height:1.25;font-variant-numeric:tabular-nums;}

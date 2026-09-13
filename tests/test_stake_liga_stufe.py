@@ -450,3 +450,19 @@ def test_philippinen_sind_die_oberste_klasse():
     gehoert deshalb in die Tabelle, nicht in eine Regel."""
     assert LS.stufe("philippines-footb-league") == "1"
     assert LS.stufe("philippines-footb-league", "basketball") is None
+
+
+# ── 13.09.2026: der Wachhund, zehnter und elfter Slug ────────────────────────
+def test_generische_divisionsnamen_kommen_aus_der_paarung_nicht_aus_der_zahl():
+    """„Division 2" ist in Hongkong die DRITTE Klasse (unter Premier League und First Division),
+    während „Jordan 1st Division" die zweite ist. Eine Regel „division-N → Ebene N" wäre in
+    beiden Fällen falsch — deshalb Tabelle, mit der Paarung als Beleg."""
+    assert LS.stufe("division-2") == "3"
+    assert LS.stufe("division-1") == "3"
+    assert LS.stufe("jordan-1st-division") == "3"
+
+
+def test_panama_ist_die_oberste_klasse():
+    """Apertura ist die Halbsaison, kein Rang."""
+    assert LS.stufe("liga-panamena-de-futbol-apertura") == "1"
+    assert LS.stufe("liga-panamena-de-futbol-apertura", "basketball") is None
