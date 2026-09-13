@@ -93,7 +93,9 @@ function _stZeile(r) {
     : ' <span class="st-unv" title="' + _stEsc(r.grund || '') + '">unvollständig</span>';
   return '<tr' + (r.art === 'gesamt' ? ' class="st-ges"' : '') + '>'
     + '<td class="st-p">' + _stEsc(_stPeriode(r)) + unv + '</td>'
-    + '<td class="st-n">' + _stNum(r.n) + '</td>'
+    + '<td class="st-n">' + _stNum(r.n)
+    + (r.nAufgeloest != null && r.nAufgeloest !== r.n
+        ? '<i>' + _stNum(r.nAufgeloest) + ' abger.</i>' : '') + '</td>'
     + '<td class="st-n">' + (r.hitPct == null ? '—' : r.hitPct.toFixed(1) + '%')
     + (r.hitUg != null ? '<i>UG ' + r.hitUg.toFixed(0) + '%</i>' : '') + '</td>'
     + '<td class="st-n" style="color:' + _stCol(r.roi) + ';font-weight:800">' + _stPct(r.roi)
@@ -149,16 +151,114 @@ function _stFilterKarte(v) {
     + '</section>';
 }
 
+/* ── Telegram auf einen Blick (13.09.2026, Lucas: „wär cool, wenn auf der Startseite noch
+ * ganz oben ein Block ist, der Telegram komplett zusammenfasst, also die Stats für alle
+ * verschiedenen Kanäle") ───────────────────────────────────────────────────────────────
+ *
+ * Eine Zeile je Kanal, gebaut aus den Blöcken darunter — nicht aus einer zweiten Rechnung.
+ * Das ist wichtig: zwei Quellen für dieselbe Zahl laufen irgendwann auseinander, und dann
+ * widerspricht die Zusammenfassung ihren eigenen Details. Deshalb geht sie mit dem
+ * Wochen/Monats-Umschalter automatisch mit.
+ *
+ * ⚠️ Bewusst KEINE Gesamt-Rendite über alle Kanäle. Die Kanäle messen Verschiedenes: der
+ * Whale-Kanal rechnet bei festem $10-Einsatz, Betfair die Rendite des Mitgehenden zur Quote
+ * in der Nachricht, die Konjunktion zum Haltepreis. Ein Mittel darüber wäre eine Zahl ohne
+ * Bedeutung, die aber sehr überzeugend aussähe. Summiert wird nur, was zählbar ist: Pushes.
+ */
+/* Die Perioden-Wahl fuer den Ueberblick. 13.09.2026 (Lucas: „ich will die Stats fuer die
+ * letzte und vorletzte Kalenderwoche posten") — ohne sie muesste er in jedem Block einzeln
+ * die Zeile suchen und die Wochen von Hand zusammentragen. Angeboten wird nur, was es in der
+ * aktuellen Aufloesung wirklich gibt; eine Periode, die KEIN Kanal abdeckt, steht nicht da. */
+function _stPeriodenWahl(rows) {
+  var seen = {};
+  rows.forEach(function (b) {
+    b.reihen.forEach(function (r) { if (r.art === _stMode) seen[r.periode] = r.vollstaendig; });
+  });
+  var keys = Object.keys(seen).sort().reverse().slice(0, 8).reverse();
+  if (!keys.length) return '';
+  var btn = function (k, label, voll) {
+    return '<button class="st-pb' + (_stTgPeriode === k ? ' on' : '') + '"'
+      + ' onclick="_stSetPeriode(\'' + k + '\')"'
+      + (voll === false ? ' title="Diese Periode deckt die Datenquelle nicht ganz ab"' : '')
+      + '>' + _stEsc(label) + (voll === false ? ' *' : '') + '</button>';
+  };
+  return '<div class="st-pw">' + btn('gesamt', 'gesamt', true)
+    + keys.map(function (k) { return btn(k, k.replace('2026-', ''), seen[k]); }).join('')
+    + '</div>';
+}
+
+function _stTelegram(bloecke) {
+  var rows = bloecke.filter(function (b) { return b.gruppe === 'Push-Kanäle'; });
+  if (!rows.length) return '';
+  var hol = function (b) {
+    var r = b.reihen.filter(function (x) { return x.periode === _stTgPeriode; })[0];
+    return r || b.reihen.filter(function (x) { return x.art === 'gesamt'; })[0] || {};
+  };
+  var summePush = 0, summeAb = 0;
+  var zeilen = rows.map(function (b) {
+    var g = hol(b);
+    summePush += (g.n || 0);
+    summeAb += (g.nAufgeloest || 0);
+    var kanal = b.kanal || '—';
+    var kf = kanal === 'Public' ? ST.good : kanal === 'Trades' ? '#a371f7' : ST.ink3;
+    return '<tr>'
+      + '<td>' + _stEsc(b.emoji || '') + ' ' + _stEsc(b.label) + '</td>'
+      + '<td><span class="st-tg-k" style="color:' + kf + ';border-color:' + kf + '">'
+      + _stEsc(kanal) + '</span></td>'
+      + '<td class="st-n">' + _stNum(g.n) + '</td>'
+      + '<td class="st-n">' + _stNum(g.nAufgeloest) + '</td>'
+      + '<td class="st-n">' + (g.hitPct == null ? '—' : g.hitPct.toFixed(1) + '%')
+      + (g.hitUg != null ? '<i>UG ' + g.hitUg.toFixed(1) + '%</i>' : '') + '</td>'
+      + '<td class="st-n" style="color:' + _stCol(g.roi) + '">' + _stPct(g.roi)
+      + (g.roiUg != null ? '<i>UG ' + _stPct(g.roiUg) + '</i>' : '') + '</td>'
+      + (_stPost ? '' : '<td class="st-n" style="color:' + _stCol(g.pl) + '">'
+          + (g.pl == null ? '—' : (g.pl > 0 ? '+' : '') + (+g.pl).toFixed(1)) + '</td>')
+      + '</tr>';
+  }).join('');
+  return '<section class="st-block st-tg">'
+    + '<div class="st-b-h"><span class="st-b-e">📣</span>'
+    + '<span class="st-b-t">Telegram · alle Kanäle</span>'
+    + '<span class="st-b-a">' + _stEsc(_stTgPeriode === 'gesamt' ? 'gesamt' : _stTgPeriode)
+    + '</span></div>'
+    + _stPeriodenWahl(rows)
+    + '<div class="st-b-n">Jede Zeile ist der Block weiter unten, nur kompakt — dieselben Zahlen, '
+    + 'keine zweite Rechnung. <b>Abger.</b> ist der Nenner: Trefferquote und Rendite kommen aus '
+    + 'dieser Menge, nicht aus allen Pushes. Eine Gesamt-Rendite über alle Kanäle steht '
+    + 'bewusst nicht da — die Kanäle rechnen mit verschiedenen Einsätzen und Preisen.</div>'
+    + '<div class="st-tw"><table class="st-tbl"><thead><tr>'
+    + '<th>Kanal</th><th>Ziel</th><th>Pushes</th><th>Abger.</th><th>Treffer</th><th>Rendite</th>'
+    + (_stPost ? '' : '<th>P/L <i>Einh.</i></th>') + '</tr></thead><tbody>' + zeilen
+    + '<tr class="st-tg-s"><td><b>Zusammen</b></td><td>—</td>'
+    + '<td class="st-n"><b>' + _stNum(summePush) + '</b></td>'
+    + '<td class="st-n"><b>' + _stNum(summeAb) + '</b></td>'
+    + '<td class="st-n">—</td><td class="st-n">—</td>'
+    + (_stPost ? '' : '<td class="st-n">—</td>') + '</tr>'
+    + '</tbody></table></div></section>';
+}
+
 function _stBlock(b) {
   var ges = b.reihen.filter(function (r) { return r.art === 'gesamt'; })[0] || {};
   var rs = b.reihen.filter(function (r) { return r.art === _stMode; });
   var ohneQuote = ges.mitQuote === 0;
-  var kacheln = _stKachel('Plays', _stNum(ges.n), ST.ink)
+  // 13.09.2026 (Lucas: „ich will die Stats posten und hätte gern, dass das halbwegs passt").
+  // Die drei Kacheln hatten DREI verschiedene Nenner, genannt war nur der erste: Poly-Whales
+  // stand auf „69 Plays · 69,0 % Treffer · +24,6 % Rendite" — die Trefferquote kam aus 42
+  // abgerechneten, die Rendite aus 31 mit Preis. Auf einem Screenshot liest das jeder als
+  // 69 von 69. Der Nenner gehört unter die Zahl, die er trägt.
+  var _sub = function (k, n, was) {
+    if (n == null || n === ges.n) return k || '';
+    return 'aus ' + _stNum(n) + ' ' + was + (k ? ' · ' + k : '');
+  };
+  var kacheln = _stKachel('Plays', _stNum(ges.n), ST.ink,
+                ges.nAufgeloest != null && ges.nAufgeloest !== ges.n
+                  ? _stNum(ges.n - ges.nAufgeloest) + ' noch offen' : 'alle abgerechnet')
     + _stKachel('Trefferquote', ges.hitPct == null ? '—' : ges.hitPct.toFixed(1) + '%', ST.ink,
-                ges.hitUg != null ? 'Untergrenze ' + ges.hitUg.toFixed(1) + '%' : 'zu wenige für eine Untergrenze')
+                _sub(ges.hitUg != null ? 'UG ' + ges.hitUg.toFixed(1) + '%' : 'zu wenige für eine Untergrenze',
+                     ges.nAufgeloest, 'abgerechneten'))
     + _stKachel('Rendite', _stPct(ges.roi), _stCol(ges.roi),
                 ohneQuote ? 'keine Quoten in dieser Quelle'
-                  : (ges.roiUg != null ? 'Untergrenze ' + _stPct(ges.roiUg) : 'zu wenige für eine Untergrenze'))
+                  : _sub(ges.roiUg != null ? 'UG ' + _stPct(ges.roiUg) : 'zu wenige für eine Untergrenze',
+                         ges.mitQuote, 'mit Preis'))
     + (_stPost ? '' : _stKachel('P/L', ges.pl == null ? '—' : (ges.pl > 0 ? '+' : '') + ges.pl.toFixed(1),
                 // 10.09.2026 (Lucas: „im Stats-File stehen +11 P/L, im Track-Record $105 —
                 // ist das gleich?"). Ja: `kennzahlen()` summiert pnl/stake, also EINHEITEN.
@@ -294,6 +394,7 @@ function _stRender() {
     + (_stPost ? '🔒 Post-Modus an' : '🔓 Post-Modus aus') + '</button>'
     + '</div></div>'
     + _stKopfzahlen(_stData)
+    + _stTelegram(_stData.bloecke)
     + gruppen.map(function (g) {
         return '<div class="st-g"><div class="st-g-t">' + _stEsc(g.name) + '</div>'
           + (g.name === 'Push-Filter' ? _stFilterKarte(_stData.filterVergleich) : '')
@@ -305,7 +406,10 @@ function _stRender() {
     + '</div>';
 }
 
-function _stSetMode(m) { _stMode = m; _stRender(); }
+var _stTgPeriode = 'gesamt';   // Periode des Telegram-Ueberblicks (eigener Name:
+// `_stPeriode` ist seit jeher die FUNKTION, die eine Perioden-Beschriftung baut)
+function _stSetPeriode(p) { _stTgPeriode = p; _stRender(); }
+function _stSetMode(m) { _stMode = m; _stTgPeriode = 'gesamt'; _stRender(); }
 function _stTogglePost() { _stPost = !_stPost; _stRender(); }
 
 function _stLoad(force) {
