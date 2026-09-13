@@ -195,3 +195,73 @@ class TestFilterVergleich(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 🔴 13.09.2026 (Lucas: „ich will heute oder morgen die Stats für die letzte und vorletzte
+# Kalenderwoche posten und hätte halt gern, dass das halbwegs passt")
+#
+# Der Abgleich Push-Buch → Stats-Block stimmte in jedem Kanal und in beiden Wochen; unabhängig
+# aus den Büchern nachgerechnet kam überall dieselbe Zahl heraus. Zwei Dinge stimmten NICHT:
+#
+# 1. Die drei Kennzahlen einer Zeile haben drei verschiedene Nenner, genannt war nur der erste.
+#    Poly-Whales: 69 Pushes · Trefferquote aus 42 · Rendite aus 31. Liga-Picks KW37: fünf
+#    Pushes, davon zwei abgerechnet — angezeigt als „100 % Treffer, +55,5 % Rendite".
+# 2. „Liga-Picks · Trades" und „MLS-Picks · Trades" gehen in den PUBLIC-Channel. Ein falsches
+#    Etikett auf genau der Seite, von der Screenshots rausgehen.
+# ─────────────────────────────────────────────────────────────────────────────
+class TestJedeZahlNenntIhrenNenner(unittest.TestCase):
+    def test_kennzahlen_traegt_die_zahl_der_abgerechneten(self):
+        plays = [{"tag": "2026-09-10", "gewonnen": True, "rendite": 0.5},
+                 {"tag": "2026-09-10", "gewonnen": False, "rendite": -1.0},
+                 {"tag": "2026-09-10", "gewonnen": None, "rendite": None}]
+        k = S.kennzahlen(plays)
+        self.assertEqual(k["n"], 3)
+        self.assertEqual(k["nAufgeloest"], 2, "die Trefferquote kommt aus zweien, nicht aus drei")
+        self.assertEqual(k["mitQuote"], 2)
+        self.assertEqual(k["hitPct"], 50.0)
+
+    def test_ohne_ergebnis_ist_der_nenner_null_und_nicht_die_zeilenzahl(self):
+        k = S.kennzahlen([{"tag": "2026-09-10", "gewonnen": None, "rendite": None}] * 5)
+        self.assertEqual((k["n"], k["nAufgeloest"]), (5, 0))
+        self.assertIsNone(k["hitPct"], "ohne ein einziges Ergebnis darf keine Quote dastehen")
+
+    def test_jede_zeile_jedes_blocks_traegt_den_nenner(self):
+        d = S.baue()
+        fehlt = [f"{b['label']}/{r['periode']}" for b in d["bloecke"] for r in b["reihen"]
+                 if "nAufgeloest" not in r]
+        self.assertEqual(fehlt, [])
+
+
+class TestJederPushBlockNenntSeinenKanal(unittest.TestCase):
+    def test_die_pick_kanaele_sind_public_nicht_trades(self):
+        """`notify_new_picks.py` und der Digest in `telegram_wm.py` senden an TELEGRAM_CHAT_ID."""
+        self.assertEqual(S.KANAL.get("liga-picks"), "Public")
+        self.assertEqual(S.KANAL.get("mls-picks"), "Public")
+
+    def test_kein_block_heisst_noch_trades_obwohl_er_public_ist(self):
+        d = S.baue()
+        falsch = [b["label"] for b in d["bloecke"]
+                  if b.get("kanal") == "Public" and "Trades" in b["label"]]
+        self.assertEqual(falsch, [])
+
+    def test_jeder_push_block_sagt_wohin_er_geht(self):
+        d = S.baue()
+        ohne = [b["id"] for b in d["bloecke"]
+                if b["gruppe"] == "Push-Kanäle" and not b.get("kanal")]
+        self.assertEqual(ohne, [], "ein Kanal-Block ohne Ziel ist im Telegram-Überblick blind")
+
+    def test_der_kanal_stimmt_mit_dem_ziel_im_code_ueberein(self):
+        """Gegenprobe am Quelltext statt an meiner Erinnerung: wer TELEGRAM_TRADES_CHAT_ID
+        benutzt, ist Trades; wer TELEGRAM_CHAT_ID benutzt, ist Public."""
+        from pathlib import Path
+        wurzel = Path(__file__).resolve().parent.parent
+        erwartet = {"stake_burst_push.py": "Trades", "push_shortlist_trades.py": "Trades",
+                    "notify_new_picks.py": "Public"}
+        for datei, ziel in erwartet.items():
+            p = wurzel / datei
+            if not p.exists():
+                continue
+            q = p.read_text(encoding="utf-8")
+            trades = "TELEGRAM_TRADES_CHAT_ID" in q
+            self.assertEqual("Trades" if trades else "Public", ziel, datei)

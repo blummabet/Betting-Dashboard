@@ -123,7 +123,18 @@ def kennzahlen(plays) -> dict:
     treffer = sum(1 for p in gew if p["gewonnen"])
     ren = [float(p["rendite"]) for p in plays if isinstance(p.get("rendite"), (int, float))]
     clv = [float(p["clv"]) for p in plays if isinstance(p.get("clv"), (int, float))]
-    aus = {"n": n, "treffer": treffer if gew else None,
+    # 🔴 13.09.2026 (Lucas: „ich will die Stats für die letzte und vorletzte Kalenderwoche posten
+    # und hätte gern, dass das halbwegs passt"). Beim Nachrechnen kam heraus: die drei Zahlen
+    # einer Zeile haben DREI verschiedene Nenner, und die Seite nannte nur den ersten.
+    #
+    #   Poly-Whales gesamt:  69 Pushes · Trefferquote aus 42 · Rendite aus 31
+    #   Liga-Picks KW37:      5 Pushes · „100 % Treffer, +55,5 % ROI" — aus ZWEI abgerechneten
+    #
+    # Nichts davon ist falsch gerechnet. Aber ein Screenshot mit „5 Pushes, 100 % Treffer" liest
+    # sich als 5 von 5, und das waere eine Behauptung, die die Daten nicht hergeben. Also steht
+    # der Nenner jetzt in der Zeile — dieselbe Regel wie „eine Trefferquote ohne die Quoten ist
+    # keine Zahl", eine Ebene davor: eine Trefferquote ohne ihren Nenner ist auch keine.
+    aus = {"n": n, "treffer": treffer if gew else None, "nAufgeloest": len(gew),
            "hitPct": round(100.0 * treffer / len(gew), 1) if gew else None,
            "hitUg": None, "roi": None, "roiUg": None, "pl": None, "clv": None,
            # ⚠️ Ohne Quoten gibt es keinen ROI — und das muss die Zeile SAGEN, sonst liest man
@@ -328,6 +339,17 @@ def shortlist_push_plays(ledger=None, track=None) -> list:
     return aus
 
 
+# In welchen Telegram-Kanal geht ein Push? 🔴 13.09.2026: „Liga-Picks · Trades" und
+# „MLS-Picks · Trades" hiessen so, gehen aber beide in den PUBLIC-Channel — `notify_new_picks.py`
+# und der Digest in `telegram_wm.py` senden an TELEGRAM_CHAT_ID, nicht an TELEGRAM_TRADES_CHAT_ID.
+# Ein falsches Etikett auf der Seite, von der Lucas Screenshots postet.
+KANAL = {"bf-public": "Public", "whale-public": "Public",
+         "liga-picks": "Public", "mls-picks": "Public",
+         "killer": "Trades", "shortlist": "Trades", "stake-burst": "Trades",
+         "stake-burst-live": "Trades", "stake-burst-vor": "Trades",
+         "stake-burst-still": "Trades"}
+
+
 def push_bloecke() -> list:
     """Je Kanal ein Block. Die Ledger tragen alle einen Sende-Zeitstempel und einen Status —
     gebucht wird nach dem SENDEDATUM, denn das ist die Handlung, um die es geht."""
@@ -373,8 +395,8 @@ def push_bloecke() -> list:
     # ⭐ Die Aussortierten verschwinden nicht: der Hinweis nennt ihre Zahl, und die Gegenprobe
     # („waren die Aussortierten in Wahrheit gut?") steht dort, wo sie hingehoert — als eigene
     # Schublade im Freigabe-Register, nach denselben Regeln beurteilt wie jede andere.
-    for datei, name in (("liga_pick_push_ledger.json", "Liga-Picks · Trades"),
-                        ("mls_pick_push_ledger.json", "MLS-Picks · Trades")):
+    for datei, name in (("liga_pick_push_ledger.json", "Liga-Picks · Public-Channel"),
+                        ("mls_pick_push_ledger.json", "MLS-Picks · Public-Channel")):
         pl = _load(datei, [])
         rows = pl if isinstance(pl, list) else (pl.get("zeilen") or [])
         rows = [r for r in rows if isinstance(r, dict)]
@@ -572,7 +594,7 @@ def baue(now=None) -> dict:
     heute = (now or _now()).date().isoformat()
     bloecke = []
 
-    def _add(bid, label, emoji, gruppe, plays, hinweis=None):
+    def _add(bid, label, emoji, gruppe, plays, hinweis=None, kanal=None):
         plays = [p for p in (plays or []) if p.get("tag")]
         if not plays:
             return
@@ -582,6 +604,8 @@ def baue(now=None) -> dict:
              "reihen": perioden_reihen(plays, heute)}
         if hinweis:
             b["hinweis"] = hinweis
+        if kanal:
+            b["kanal"] = kanal
         bloecke.append(b)
 
     # ⚠️ „Gesamt" ist Liga + MLS, NICHT alles.
@@ -611,23 +635,25 @@ def baue(now=None) -> dict:
     _add("poly-public", "Polymarket · Public-Kandidaten", "◆", "Marktdaten",
          [p for p in _pp if p.get("public")])
     for bid, name, emoji, plays, hinweis in push_bloecke():
-        _add("push-" + bid, name, emoji, "Push-Kanäle", plays, hinweis)
+        _add("push-" + bid, name, emoji, "Push-Kanäle", plays, hinweis, KANAL.get(bid))
     # 13.09.2026 (Lucas): die Stake-Bursts als eigener Block. Live und vor Anpfiff zusaetzlich
     # getrennt — die Vorab-Messung sah +29,0 % (live) gegen +8,8 % (vor), und zusammengerechnet
     # waere keine der beiden Fragen mehr zu beantworten.
     _add("stake-burst", "Stake-Bursts · Trades", "⚡", "Push-Kanäle", burst_plays(),
          "Ein Burst ist EINE Auswahl, die innerhalb von Sekunden auf mehrere Tickets zur "
          "gleichen Quote gespielt wurde. Gerechnet wird geldgewichtet über alle Tickets des "
-         "Bursts, nicht je Ticket. " + _burst_beinahe_satz())
-    _add("stake-burst-live", "Stake-Bursts · live", "⚡", "Push-Kanäle", burst_plays("live"))
-    _add("stake-burst-vor", "Stake-Bursts · vor Anpfiff", "⚡", "Push-Kanäle", burst_plays("vor"))
+         "Bursts, nicht je Ticket. " + _burst_beinahe_satz(), "Trades")
+    _add("stake-burst-live", "Stake-Bursts · live", "⚡", "Push-Kanäle", burst_plays("live"),
+         None, "Trades")
+    _add("stake-burst-vor", "Stake-Bursts · vor Anpfiff", "⚡", "Push-Kanäle", burst_plays("vor"),
+         None, "Trades")
     # Die Gegenprobe: was der Deckel (oder ein abgeschalteter Push) zurueckgehalten hat. Getrennt,
     # damit die Kanal-Bilanz sauber bleibt — und sichtbar, damit der Deckel nicht unbemerkt die
     # besseren Bursts frisst.
     _add("stake-burst-still", "Stake-Bursts · nicht gesendet", "⚡", "Push-Kanäle",
          burst_plays(gesendet=False),
          "Erkannt, aber nicht rausgegangen — Deckel des Laufs erreicht oder Push abgeschaltet. "
-         "Wird trotzdem abgerechnet: sonst wüsste niemand, was der Deckel kostet.")
+         "Wird trotzdem abgerechnet: sonst wüsste niemand, was der Deckel kostet.", "—")
     # 13.09.2026 (Lucas): der Gegensignal-Filter als eigene Gruppe — BEIDE Arme, damit die
     # Gegenprobe auf derselben Seite steht wie das Ergebnis. Nur den gesendeten Arm zu zeigen
     # waere die Selbstbestaetigung, die das Schattenbuch gerade verhindern soll.

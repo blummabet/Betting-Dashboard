@@ -346,6 +346,15 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 /* 13.09.2026 — die Gegensignal-Karte: zwei Arme nebeneinander, darunter der Unterschied.
    Zwei Spalten, damit gesendet und aussortiert nebeneinander lesbar sind; unter 520px
    untereinander, sonst quetscht sich die Rendite auf zwei Zeilen. */
+/* 13.09.2026 — Telegram-Ueberblick ganz oben: eine Zeile je Kanal, mit Perioden-Wahl. */
+#statsPanel .st-tg{border-color:rgba(88,166,255,.35);}
+#statsPanel .st-pw{display:flex;flex-wrap:wrap;gap:5px;margin:8px 0 10px;}
+#statsPanel .st-pb{background:var(--card2);border:1px solid var(--border);color:var(--muted);
+  border-radius:7px;padding:4px 10px;font-size:11.5px;font-weight:700;cursor:pointer;}
+#statsPanel .st-pb.on{border-color:var(--accent);color:var(--accent);}
+#statsPanel .st-tg-k{font-size:9.5px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;
+  border:1px solid;border-radius:5px;padding:1px 6px;white-space:nowrap;}
+#statsPanel .st-tg-s td{border-top:1px solid var(--border);}
 #statsPanel .st-fv{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0;}
 #statsPanel .st-fv-arm{background:var(--card2);border-radius:10px;padding:10px 12px;}
 #statsPanel .st-fv-l{font-size:10px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;}
