@@ -74,6 +74,10 @@ EBENE = {
     "liga-nacional-apertura": 1, "cambodian-premier-league": 1, "pro-league": 1,
     "usl-championship": 1, "liga-i": 1, "iraqi-league": 1, "vysshaya-liga": 1,
     "division-profesional": 1, "liga-portugal": 1,
+    # 13.09.2026 (CI-Wachhund): die Liga Panameña de Fútbol ist die OBERSTE Klasse Panamas;
+    # „Apertura" ist die Halbsaison, kein Rang (wie bei primera-division-apertura oben).
+    # Beleg aus der Paarung: Tauro FC — einer der Rekordmeister — gegen CD Universitario.
+    "liga-panamena-de-futbol-apertura": 1,
     # 12.09.2026 (CI-Wachhund): „philippines-footb-league" — die Philippines Football League ist
     # die OBERSTE Klasse des Landes. Der abgeschnittene Slug („footb.") sieht nach Amateurstaffel
     # aus; das ist die Abkuerzung des Feeds, nicht der Rang.
@@ -159,6 +163,12 @@ EBENE = {
     # er steht hier trotzdem, weil der Wachhund sonst bei jedem Lauf erneut anschlaegt und die
     # Alternative (ein Rueckfall auf „unbekannt = Ebene 3") die Sperre unterlaufen wuerde.
     "division-1": 3,
+    # 13.09.2026 (CI-Wachhund): „Division 2" — Wong Tai Sin gegen Sun Hei SC, also Hongkong.
+    # Dort steht die Second Division unter Premier League (1) und First Division (2), ist also
+    # die dritte Klasse. Wieder von Hand und nicht als Regel „division-N → Ebene N": in Jordanien
+    # ist die „1st Division" die zweite Liga (steht drei Zeilen drueber), die Zahl im Namen sagt
+    # ueber den Rang nichts. Entschieden hat auch hier die Paarung.
+    "division-2": 3,
     # 12.09.2026 (CI-Wachhund): „Division Nationale" — die ERSTE Liga Luxemburgs (Kaerjeng gegen
     # Victoria Rosport). Oberste Spielklasse eines sehr kleinen Verbands: Ebene 2, nicht 1 — die
     # 1 ist in dieser Tabelle den europaeischen Topligen vorbehalten, nach deren Massstab hier

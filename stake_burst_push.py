@@ -55,6 +55,7 @@ from telegram_trades import send_trades_message
 
 BASE = Path(__file__).resolve().parent
 LEDGER_FILE = BASE / "stake_burst_ledger.json"
+WETTEN_FILE = BASE / "stake_bet_ledger.json"   # 13.09.2026: die Quelle der Abrechnung
 SEEN_FILE = BASE / "stake_burst_seen.json"
 QUELLE_FILE = BASE / "stake_highroller.json"
 
@@ -314,6 +315,79 @@ def buch_zeile(b, ts) -> dict:
     }
 
 
+# ── Abrechnung (13.09.2026, Lucas: „die Stake-Bursts haette ich auch gerne in den Stats") ──
+#
+# 🔴 Beim Bauen des Stats-Blocks stellte sich heraus: ALLE 15 Buchzeilen standen auf `pending`.
+# Der Kopf von `buch_zeile` sagte „abgerechnet wird sie spaeter aus dem Ledger" — nur tat das
+# niemand. Der Kanal pushte seit dem 11.09. und mass sich nie. Das ist die Fehlerklasse „wer
+# pusht, misst den Push", diesmal in ihrer stillsten Form: nichts ist falsch, es steht nur
+# nichts da.
+#
+# ⚠️ Und es war dringender, als es aussah. `stake_bet_ledger.json` ist ein ROLLIERENDES Fenster
+# von 20.000 Wetten — gemessen am 13.09. sind das **5,3 Tage**. Eine Burst-Zeile, die in diesem
+# Fenster nicht abgerechnet wird, ist danach nicht mehr abrechenbar: ihre Wetten sind aus der
+# Quelle gefallen. Deshalb laeuft die Abrechnung bei JEDEM Lauf mit (alle 15 Minuten), und
+# deshalb bekommt eine Zeile, deren Wetten verschwunden sind, den Status `nicht_abrechenbar`
+# statt ewig `pending` — sonst waechst ein Haufen Zeilen, die aussehen, als kaeme da noch was.
+STATUS_OFFEN = "pending"
+STATUS_FERTIG = "abgerechnet"
+STATUS_TOT = "nicht_abrechenbar"
+
+
+def _rendite(zeile: dict, wetten_idx: dict):
+    """(rendite, grund) fuer eine Burst-Zeile. Rendite je Einsatz-Dollar, `None` = noch nicht.
+
+    ⭐ Nur wenn ALLE Wetten des Bursts einen Endstand tragen. Teilweise abzurechnen waere
+    verzerrt: die frueh fertigen Beine sind nicht dieselbe Menge wie der ganze Burst, und die
+    Zeile wuerde beim naechsten Lauf eine andere Zahl zeigen als beim letzten.
+
+    ⭐ Gewichtet nach GELD (Summe pnl / Summe Einsatz), nicht je Wette gemittelt: ein Burst ist
+    EINE Position, die auf mehrere Tickets verteilt wurde. Genau das ist ja das Muster, das ihn
+    zum Burst macht.
+    """
+    ids = zeile.get("betIds") or []
+    if not ids:
+        return None, "keine Wett-IDs in der Zeile"
+    da = [wetten_idx.get(i) for i in ids]
+    if any(x is None for x in da):
+        return None, "mindestens eine Wette ist aus dem rollierenden Stake-Ledger gefallen"
+    abr = [(x.get("abrechnung") or {}) for x in da]
+    if not all(y.get("endstand") for y in abr):
+        return None, "laeuft noch"
+    einsatz = sum(float(y.get("einsatzUsdGeprueft") or 0) for y in abr)
+    if einsatz <= 0:
+        return None, "kein geprueefter Einsatz"
+    pnl = sum(float(y.get("pnlUsd") or 0) for y in abr)
+    return pnl / einsatz, None
+
+
+def abrechnen(zeilen: list, wetten: list, now=None) -> tuple[list, int, int]:
+    """Offene Buchzeilen abrechnen. Gibt (Zeilen, neu abgerechnet, aufgegeben) zurueck. REIN."""
+    now = now or datetime.now(timezone.utc)
+    idx = {w.get("id"): w for w in (wetten or []) if isinstance(w, dict) and w.get("id")}
+    # Ab wann ist eine Zeile verloren? Sobald ihre Wetten fehlen UND die Quelle nicht mehr so
+    # weit zurueckreicht. Die zweite Bedingung ist wichtig: ein leeres oder halb geladenes
+    # Stake-Ledger darf nicht reihenweise Zeilen fuer tot erklaeren.
+    quelle_ab = min((str(w.get("ts") or "") for w in (wetten or []) if w.get("ts")), default=None)
+    fertig = tot = 0
+    for z in zeilen:
+        if not isinstance(z, dict) or z.get("status") != STATUS_OFFEN:
+            continue
+        r, grund = _rendite(z, idx)
+        if r is not None:
+            z["status"] = STATUS_FERTIG
+            z["rendite"] = round(r, 4)
+            z["win"] = r > 0
+            z["settledAt"] = now.isoformat()
+            fertig += 1
+        elif quelle_ab and str(z.get("sentAt") or "") < quelle_ab:
+            z["status"] = STATUS_TOT
+            z["grund"] = grund
+            z["settledAt"] = now.isoformat()
+            tot += 1
+    return zeilen, fertig, tot
+
+
 def main() -> int:
     now = datetime.now(timezone.utc)
     now_iso = now.isoformat()
@@ -348,6 +422,11 @@ def main() -> int:
         if burst_key(b) not in schon:
             led.append(buch_zeile(b, now_iso))
     _save(SEEN_FILE, seen)
+    # Bei JEDEM Lauf abrechnen — das Fenster der Quelle ist nur ~5 Tage breit (s. oben).
+    led, _fertig, _tot = abrechnen(led, _load(WETTEN_FILE, {}).get("wetten") or [], now)
+    _offen = sum(1 for e in led if isinstance(e, dict) and e.get("status") == STATUS_OFFEN)
+    print("   📒 Buch: +%d abgerechnet · %d offen%s"
+          % (_fertig, _offen, (" · %d aufgegeben (Wetten aus dem Ledger gefallen)" % _tot) if _tot else ""))
     try:
         _save(LEDGER_FILE, led[-LEDGER_KEEP:])
     except Exception as e:

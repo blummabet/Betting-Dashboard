@@ -104,6 +104,51 @@ function _stZeile(r) {
     + '</tr>';
 }
 
+/* ── Der Gegensignal-Filter: das Urteil ueber BEIDE Arme ───────────────────────────────
+ * 13.09.2026 (Lucas: „ich will im Public Auswertungen schicken — als eigener Block").
+ *
+ * Diese Karte steht ueber den zwei Arm-Bloecken und zeigt den UNTERSCHIED, nicht zwei Zahlen
+ * nebeneinander. Der Grund ist derselbe wie ueberall hier: zwei sich ueberlappende Baender
+ * heissen nicht „kein Unterschied", und zwei getrennte sind kein Test. Gefragt ist die
+ * Verteilung der Differenz — und die steht als Band da, mit dem Anteil der Ziehungen, in
+ * denen der Filter schlechter waere.
+ *
+ * Das Urteil kommt aus dem Artefakt, nicht von hier. Das Frontend zeichnet. */
+function _stFilterKarte(v) {
+  if (!v) return '';
+  var F = { 'der Filter trägt': ST.good, 'noch nicht belegt': ST.warn, 'sammelt': ST.ink3 };
+  var farbe = F[v.urteil] || ST.ink3;
+  var arm = function (t, k, ton) {
+    return '<div class="st-fv-arm"><div class="st-fv-l" style="color:' + ton + '">' + _stEsc(t) + '</div>'
+      + '<div class="st-fv-n">' + _stNum(k.n) + ' <i>abgerechnet</i></div>'
+      + '<div class="st-fv-z">' + (k.hitPct == null ? '—' : k.hitPct.toFixed(1) + '%') + ' <i>Treffer'
+      + (k.hitUg != null ? ' · UG ' + k.hitUg.toFixed(1) + '%' : '') + '</i></div>'
+      + '<div class="st-fv-z" style="color:' + _stCol(k.roi) + '">' + _stPct(k.roi) + ' <i>Rendite'
+      + (k.roiUg != null ? ' · UG ' + _stPct(k.roiUg) : '') + '</i></div></div>';
+  };
+  var d = v.roiDiff || {}, h = v.hitDiff || {};
+  return '<section class="st-block">'
+    + '<div class="st-b-h"><span class="st-b-e">⚖️</span>'
+    + '<span class="st-b-t">Trägt der Filter?</span>'
+    + '<span class="st-b-a">' + _stEsc(String((v.abdeckung || {}).von || '').split('-').reverse().join('.'))
+    + ' – ' + _stEsc(String((v.abdeckung || {}).bis || '').split('-').reverse().join('.')) + '</span></div>'
+    + '<div class="st-b-n">' + _stEsc(v.quelle || '') + '. Der Filter entscheidet vor dem Anpfiff — '
+    + 'gemessen wird deshalb der Stand von vorher, nicht der bei Abrechnung.</div>'
+    + '<div class="st-fv">' + arm('gesendet', v.gesendet || {}, ST.good)
+    + arm('aussortiert', v.aussortiert || {}, ST.ink2) + '</div>'
+    + '<div class="st-fv-d">'
+    + '<div><b>' + (d.punkt == null ? '—' : (d.punkt > 0 ? '+' : '') + d.punkt.toFixed(1) + ' pp')
+    + '</b> Rendite <i>(' + (d.lo == null ? '—' : (d.lo > 0 ? '+' : '') + d.lo.toFixed(1)) + ' … '
+    + (d.hi == null ? '—' : (d.hi > 0 ? '+' : '') + d.hi.toFixed(1)) + ')</i></div>'
+    + '<div><b>' + (h.punkt == null ? '—' : (h.punkt > 0 ? '+' : '') + h.punkt.toFixed(1) + ' pp')
+    + '</b> Trefferquote <i>(' + (h.lo == null ? '—' : (h.lo > 0 ? '+' : '') + h.lo.toFixed(1)) + ' … '
+    + (h.hi == null ? '—' : (h.hi > 0 ? '+' : '') + h.hi.toFixed(1)) + ')</i></div>'
+    + '</div>'
+    + '<div class="st-fv-u" style="border-color:' + farbe + ';color:' + farbe + '">'
+    + '<b>' + _stEsc(v.urteil || '—') + '</b> — ' + _stEsc(v.grund || '') + '</div>'
+    + '</section>';
+}
+
 function _stBlock(b) {
   var ges = b.reihen.filter(function (r) { return r.art === 'gesamt'; })[0] || {};
   var rs = b.reihen.filter(function (r) { return r.art === _stMode; });
@@ -251,6 +296,7 @@ function _stRender() {
     + _stKopfzahlen(_stData)
     + gruppen.map(function (g) {
         return '<div class="st-g"><div class="st-g-t">' + _stEsc(g.name) + '</div>'
+          + (g.name === 'Push-Filter' ? _stFilterKarte(_stData.filterVergleich) : '')
           + g.bloecke.map(_stBlock).join('') + '</div>';
       }).join('')
     + '<div class="st-foot">Schraffierte Balken und der Vermerk „unvollständig" markieren '
