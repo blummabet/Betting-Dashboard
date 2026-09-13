@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-13T15:56:24.211736+00:00",
+"generatedAt": "2026-09-13T16:11:29.256776+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1082,
-"wins": 904,
-"hitRate": 0.8355,
-"polyN": 1021,
-"polyWins": 783,
-"polyHitRate": 0.7669,
+"n": 1084,
+"wins": 906,
+"hitRate": 0.8358,
+"polyN": 1023,
+"polyWins": 785,
+"polyHitRate": 0.7674,
 "pinnN": 144,
 "pinnHitRate": 0.7847,
-"nRoi": 409,
-"roi": 0.4156,
-"roiLb": 0.3534,
-"nClv": 409,
-"clv": 20.56,
-"clvLb": 18.6135
+"nRoi": 411,
+"roi": 0.424,
+"roiLb": 0.3604,
+"nClv": 411,
+"clv": 20.65,
+"clvLb": 18.7089
 },
 "uneinig": {
-"n": 421,
+"n": 422,
 "wins": 136,
-"hitRate": 0.323,
-"polyN": 383,
-"polyWins": 98,
-"polyHitRate": 0.2559,
+"hitRate": 0.3223,
+"polyN": 384,
+"polyWins": 99,
+"polyHitRate": 0.2578,
 "pinnN": 259,
 "pinnHitRate": 0.6023,
-"nRoi": 189,
-"roi": -0.423,
-"roiLb": -0.5338,
-"nClv": 189,
-"clv": -17.95,
-"clvLb": -22.0641
+"nRoi": 190,
+"roi": -0.426,
+"roiLb": -0.5363,
+"nClv": 190,
+"clv": -17.97,
+"clvLb": -22.0645
 },
 "teil": {
 "n": 22,
@@ -106,15 +106,15 @@
 "wins": 23,
 "hitRate": 0.6571
 },
+"Italian Serie A": {
+"n": 35,
+"wins": 26,
+"hitRate": 0.7429
+},
 "Mexican Liga MX": {
 "n": 35,
 "wins": 23,
 "hitRate": 0.6571
-},
-"Italian Serie A": {
-"n": 34,
-"wins": 25,
-"hitRate": 0.7353
 },
 "French Ligue 1": {
 "n": 33,
@@ -316,6 +316,11 @@
 "wins": 8,
 "hitRate": 0.8889
 },
+"Czech 1 Liga": {
+"n": 8,
+"wins": 7,
+"hitRate": 0.875
+},
 "French Ligue 2": {
 "n": 8,
 "wins": 3,
@@ -340,11 +345,6 @@
 "n": 6,
 "wins": 4,
 "hitRate": 0.6667
-},
-"Czech 1 Liga": {
-"n": 6,
-"wins": 6,
-"hitRate": 1.0
 },
 "Finnish Veikkausliiga": {
 "n": 6,
@@ -624,37 +624,94 @@
 },
 "byStrength": {
 "strong": {
-"n": 908,
-"wins": 725,
-"hitRate": 0.7985,
-"nRoi": 384,
-"roi": 0.2761,
-"roiLb": 0.2072,
-"nClv": 384,
-"clv": 13.12,
-"clvLb": 10.3675
+"n": 910,
+"wins": 727,
+"hitRate": 0.7989,
+"nRoi": 386,
+"roi": 0.2858,
+"roiLb": 0.2153,
+"nClv": 386,
+"clv": 13.26,
+"clvLb": 10.512
 },
 "weak": {
-"n": 584,
+"n": 585,
 "wins": 302,
-"hitRate": 0.5171,
-"nRoi": 227,
-"roi": -0.111,
-"roiLb": -0.2205,
-"nClv": 227,
-"clv": -2.14,
-"clvLb": -5.6717
+"hitRate": 0.5162,
+"nRoi": 228,
+"roi": -0.1149,
+"roiLb": -0.2241,
+"nClv": 228,
+"clv": -2.23,
+"clvLb": -5.7467
 }
 },
 "divergence": {
-"n": 421,
+"n": 422,
 "betfairWins": 136,
-"betfairRate": 0.323,
-"polyN": 383,
-"polyWins": 98,
-"polyRate": 0.2559
+"betfairRate": 0.3223,
+"polyN": 384,
+"polyWins": 99,
+"polyRate": 0.2578
 },
 "recent": [
+{
+"matchId": "36006910",
+"home": "Lecce",
+"away": "AC Monza",
+"league": "Italian Serie A",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Lecce",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+2
+],
+"kickoff": "2026-09-13T13:00:00Z",
+"settledAt": "2026-09-13T16:11:29.019054+00:00"
+},
+{
+"matchId": "36039366",
+"home": "Plzen",
+"away": "Sigma Olomouc",
+"league": "Czech 1 Liga",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "away",
+"winner": "away",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+2,
+3
+],
+"kickoff": "2026-09-13T13:00:00Z",
+"settledAt": "2026-09-13T16:11:29.019054+00:00"
+},
+{
+"matchId": "36039350",
+"home": "Zlin",
+"away": "Hradec Kralove",
+"league": "Czech 1 Liga",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Hradec Kralove",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-09-13T13:00:00Z",
+"settledAt": "2026-09-13T16:11:29.019054+00:00"
+},
 {
 "matchId": "36048090",
 "home": "Stjarnan",
@@ -1357,75 +1414,18 @@
 ],
 "kickoff": "2026-09-13T02:30:00Z",
 "settledAt": "2026-09-13T04:40:09.132654+00:00"
-},
-{
-"matchId": "36045494",
-"home": "Alianza FC Valledupar",
-"away": "Junior FC Barranquilla",
-"league": "Colombian Primera A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Alianza FC Valledupar",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-09-13T01:20:00Z",
-"settledAt": "2026-09-13T04:34:40.637311+00:00"
-},
-{
-"matchId": "36040226",
-"home": "Colorado",
-"away": "CF Montreal",
-"league": "US MLS",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Colorado",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-09-13T01:30:00Z",
-"settledAt": "2026-09-13T04:34:40.637311+00:00"
-},
-{
-"matchId": "36040165",
-"home": "Real Salt Lake",
-"away": "New York City",
-"league": "US MLS",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "New York City",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-2
-],
-"kickoff": "2026-09-13T01:30:00Z",
-"settledAt": "2026-09-13T04:34:40.637311+00:00"
 }
 ],
 "global": {
-"n": 1525,
-"wins": 1045,
+"n": 1528,
+"wins": 1047,
 "hitRate": 0.6852,
-"nRoi": 611,
-"roi": 0.1323,
-"roiLb": 0.0716,
-"nClv": 611,
-"clv": 7.45,
-"clvLb": 5.2265
+"nRoi": 614,
+"roi": 0.137,
+"roiLb": 0.0756,
+"nClv": 614,
+"clv": 7.51,
+"clvLb": 5.2883
 },
-"pending": 32
+"pending": 29
 }
