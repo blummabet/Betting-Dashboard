@@ -1,6 +1,6 @@
 {
-"generatedAt": "2026-09-13T15:41:30.502736+00:00",
-"count": 25,
+"generatedAt": "2026-09-13T15:56:22.348174+00:00",
+"count": 23,
 "rows": [
 {
 "matchId": "36005234",
@@ -9,26 +9,26 @@
 "league": "English Premier League",
 "live": true,
 "kickoff": "2026-09-13T15:30:00Z",
-"verdict": "konsens",
+"verdict": "teil",
 "betfair": {
 "side": "away",
 "name": "Man City",
-"sharePct": 68,
-"eur": 2185799,
-"odd": 2.32
+"sharePct": 67,
+"eur": 2681443,
+"odd": 5.7
 },
 "poly": {
 "side": "away",
 "name": "Manchester City FC",
-"sharePct": 83,
-"usd": 1721972,
-"src": "close"
+"sharePct": 80,
+"usd": 2079128,
+"src": "live"
 },
 "pinn": {
 "fav": "away",
-"home": 0.3179,
-"draw": 0.2554,
-"away": 0.4267
+"home": 0.3116,
+"draw": 0.2771,
+"away": 0.4114
 },
 "mmStrong": true,
 "polyGeld": true,
@@ -46,14 +46,14 @@
 "side": "away",
 "name": "Barcelona",
 "sharePct": 95,
-"eur": 1706200,
+"eur": 1708990,
 "odd": 1.01
 },
 "poly": {
 "side": "away",
 "name": "FC Barcelona",
 "sharePct": 100,
-"usd": 2143736,
+"usd": 2284622,
 "src": "live"
 },
 "pinn": null,
@@ -72,22 +72,22 @@
 "betfair": {
 "side": "away",
 "name": "Bayern Munich",
-"sharePct": 94,
-"eur": 919022,
-"odd": 1.17
+"sharePct": 95,
+"eur": 1258675,
+"odd": 1.23
 },
 "poly": {
 "side": "away",
 "name": "FC Bayern München",
-"sharePct": 90,
-"usd": 440664,
-"src": "close"
+"sharePct": 94,
+"usd": 673765,
+"src": "live"
 },
 "pinn": {
 "fav": "away",
-"home": 0.0738,
-"draw": 0.117,
-"away": 0.8091
+"home": 0.0685,
+"draw": 0.1287,
+"away": 0.8027
 },
 "mmStrong": true,
 "polyGeld": true,
@@ -104,9 +104,9 @@
 "betfair": {
 "side": "home",
 "name": "Napoli",
-"sharePct": 69,
-"eur": 447614,
-"odd": 1.9
+"sharePct": 76,
+"eur": 596329,
+"odd": 1.88
 },
 "poly": {
 "side": "home",
@@ -117,9 +117,9 @@
 },
 "pinn": {
 "fav": "home",
-"home": 0.5064,
-"draw": 0.2731,
-"away": 0.2205
+"home": 0.5308,
+"draw": 0.2676,
+"away": 0.2015
 },
 "mmStrong": false,
 "polyGeld": true,
@@ -132,25 +132,30 @@
 "league": "French Ligue 1",
 "live": true,
 "kickoff": "2026-09-13T15:15:00Z",
-"verdict": "konsens",
+"verdict": "uneinig",
 "betfair": {
 "side": "away",
 "name": "Lens",
-"sharePct": 83,
-"eur": 350321,
-"odd": 1.92
+"sharePct": 70,
+"eur": 438174,
+"odd": 3.7
 },
 "poly": {
 "side": "away",
 "name": "Racing Club de Lens",
-"sharePct": 72,
-"usd": 28738,
-"src": "close"
+"sharePct": 61,
+"usd": 58823,
+"src": "live"
 },
-"pinn": null,
+"pinn": {
+"fav": "home",
+"home": 0.4312,
+"draw": 0.2942,
+"away": 0.2745
+},
 "mmStrong": true,
 "polyGeld": true,
-"nSources": 2
+"nSources": 3
 },
 {
 "matchId": "36005331",
@@ -164,20 +169,52 @@
 "side": "away",
 "name": "Feyenoord",
 "sharePct": 87,
-"eur": 251692,
+"eur": 257018,
 "odd": 1.01
 },
 "poly": {
 "side": "away",
 "name": "Feyenoord Rotterdam",
-"sharePct": 66,
-"usd": 4358,
-"src": "scan"
+"sharePct": 100,
+"usd": 83297,
+"src": "live"
 },
 "pinn": null,
+"mmStrong": true,
+"polyGeld": true,
+"nSources": 2
+},
+{
+"matchId": "36040949",
+"home": "Genk",
+"away": "Gent",
+"league": "Belgian Pro League",
+"live": true,
+"kickoff": "2026-09-13T14:00:00Z",
+"verdict": "uneinig",
+"betfair": {
+"side": "away",
+"name": "Gent",
+"sharePct": 58,
+"eur": 226372,
+"odd": 18.5
+},
+"poly": {
+"side": "home",
+"name": "KRC Genk",
+"sharePct": 18,
+"usd": 13585,
+"src": "live"
+},
+"pinn": {
+"fav": "draw",
+"home": 0.1168,
+"draw": 0.7817,
+"away": 0.1015
+},
 "mmStrong": false,
-"polyGeld": false,
-"nSources": 1
+"polyGeld": true,
+"nSources": 3
 },
 {
 "matchId": "36006610",
@@ -191,7 +228,7 @@
 "side": "away",
 "name": "Juventus",
 "sharePct": 90,
-"eur": 205384,
+"eur": 207899,
 "odd": 1.69
 },
 "poly": {
@@ -203,43 +240,11 @@
 },
 "pinn": {
 "fav": "away",
-"home": 0.1647,
-"draw": 0.2395,
-"away": 0.5958
+"home": 0.1649,
+"draw": 0.2394,
+"away": 0.5956
 },
 "mmStrong": true,
-"polyGeld": true,
-"nSources": 3
-},
-{
-"matchId": "36040949",
-"home": "Genk",
-"away": "Gent",
-"league": "Belgian Pro League",
-"live": true,
-"kickoff": "2026-09-13T14:00:00Z",
-"verdict": "uneinig",
-"betfair": {
-"side": "away",
-"name": "Gent",
-"sharePct": 63,
-"eur": 205200,
-"odd": 5.4
-},
-"poly": {
-"side": "home",
-"name": "KRC Genk",
-"sharePct": 35,
-"usd": 11792,
-"src": "live"
-},
-"pinn": {
-"fav": "draw",
-"home": 0.2262,
-"draw": 0.558,
-"away": 0.2158
-},
-"mmStrong": false,
 "polyGeld": true,
 "nSources": 3
 },
@@ -255,25 +260,51 @@
 "side": "away",
 "name": "Atletico Madrid",
 "sharePct": 54,
-"eur": 172398,
-"odd": 2.22
+"eur": 176088,
+"odd": 2.24
 },
 "poly": {
 "side": "away",
 "name": "Club Atlético de Madrid",
-"sharePct": 56,
-"usd": 56966,
+"sharePct": 58,
+"usd": 58655,
 "src": "upcoming"
 },
 "pinn": {
 "fav": "away",
-"home": 0.2857,
-"draw": 0.2654,
-"away": 0.4489
+"home": 0.285,
+"draw": 0.267,
+"away": 0.4479
 },
 "mmStrong": false,
 "polyGeld": true,
 "nSources": 3
+},
+{
+"matchId": "36005511",
+"home": "Brest",
+"away": "Paris St-G",
+"league": "French Ligue 1",
+"live": false,
+"kickoff": "2026-09-13T18:45:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "away",
+"name": "Paris St-G",
+"sharePct": 84,
+"eur": 165004,
+"odd": 1.26
+},
+"poly": null,
+"pinn": {
+"fav": "away",
+"home": 0.0832,
+"draw": 0.1388,
+"away": 0.778
+},
+"mmStrong": false,
+"polyGeld": false,
+"nSources": 2
 },
 {
 "matchId": "36005134",
@@ -287,14 +318,14 @@
 "side": "home",
 "name": "Leeds",
 "sharePct": 58,
-"eur": 106927,
+"eur": 107119,
 "odd": 2.4
 },
 "poly": {
 "side": "home",
 "name": "Leeds United FC",
 "sharePct": 42,
-"usd": 201734,
+"usd": 201851,
 "src": "upcoming"
 },
 "pinn": {
@@ -318,22 +349,22 @@
 "betfair": {
 "side": "home",
 "name": "Malmo FF",
-"sharePct": 58,
-"eur": 76295,
-"odd": 1.76
+"sharePct": 63,
+"eur": 93849,
+"odd": 1.19
 },
 "poly": {
 "side": "home",
 "name": "Malmo FF",
-"sharePct": 62,
-"usd": 11408,
+"sharePct": 99,
+"usd": 19844,
 "src": "live"
 },
 "pinn": {
 "fav": "home",
-"home": 0.5621,
-"draw": 0.3161,
-"away": 0.1218
+"home": 0.822,
+"draw": 0.1459,
+"away": 0.0321
 },
 "mmStrong": true,
 "polyGeld": true,
@@ -350,22 +381,22 @@
 "betfair": {
 "side": "draw",
 "name": "The Draw",
-"sharePct": 43,
-"eur": 67089,
-"odd": 3.0
+"sharePct": 41,
+"eur": 72546,
+"odd": 3.05
 },
 "poly": {
 "side": "home",
 "name": "Getafe CF",
-"sharePct": 65,
-"usd": 39978,
+"sharePct": 83,
+"usd": 41964,
 "src": "close"
 },
 "pinn": {
 "fav": "home",
-"home": 0.3605,
-"draw": 0.3391,
-"away": 0.3004
+"home": 0.3635,
+"draw": 0.3359,
+"away": 0.3006
 },
 "mmStrong": false,
 "polyGeld": true,
@@ -378,26 +409,26 @@
 "league": "Norwegian Eliteserien",
 "live": true,
 "kickoff": "2026-09-13T15:00:00Z",
-"verdict": "konsens",
+"verdict": "teil",
 "betfair": {
 "side": "away",
 "name": "Brann",
-"sharePct": 73,
-"eur": 61364,
-"odd": 2.34
+"sharePct": 70,
+"eur": 64768,
+"odd": 5.2
 },
 "poly": {
 "side": "away",
 "name": "SK Brann",
-"sharePct": 83,
-"usd": 309183,
+"sharePct": 68,
+"usd": 320949,
 "src": "live"
 },
 "pinn": {
 "fav": "away",
-"home": 0.2697,
-"draw": 0.2729,
-"away": 0.4574
+"home": 0.2579,
+"draw": 0.3287,
+"away": 0.4134
 },
 "mmStrong": true,
 "polyGeld": true,
@@ -415,14 +446,14 @@
 "side": "home",
 "name": "Benfica",
 "sharePct": 92,
-"eur": 55317,
+"eur": 56252,
 "odd": 1.15
 },
 "poly": {
 "side": "home",
 "name": "Sport Lisboa e Benfica",
 "sharePct": 99,
-"usd": 33181,
+"usd": 40067,
 "src": "close"
 },
 "pinn": {
@@ -436,63 +467,95 @@
 "nSources": 3
 },
 {
-"matchId": "36043447",
-"home": "Kairat Almaty",
-"away": "Tobol Kostanay",
-"league": "Kazakhstan Premier League",
+"matchId": "36006613",
+"home": "Sturm Graz",
+"away": "LASK Linz",
+"league": "Austrian Bundesliga",
 "live": true,
-"kickoff": "2026-09-13T14:00:00Z",
-"verdict": "uneinig",
+"kickoff": "2026-09-13T15:00:00Z",
+"verdict": "konsens",
 "betfair": {
-"side": "draw",
-"name": "The Draw",
-"sharePct": 59,
-"eur": 43526,
-"odd": 15.5
+"side": "away",
+"name": "LASK Linz",
+"sharePct": 60,
+"eur": 49010,
+"odd": 2.4
 },
 "poly": {
 "side": "away",
-"name": "Tobol Kostanay",
-"sharePct": 39,
-"usd": 10113,
+"name": "LASK Linz",
+"sharePct": 57,
+"usd": 31657,
+"src": "live"
+},
+"pinn": {
+"fav": "away",
+"home": 0.2476,
+"draw": 0.3462,
+"away": 0.4062
+},
+"mmStrong": true,
+"polyGeld": true,
+"nSources": 3
+},
+{
+"matchId": "36040025",
+"home": "Lausanne",
+"away": "Servette",
+"league": "Swiss Super League",
+"live": true,
+"kickoff": "2026-09-13T14:30:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "away",
+"name": "Servette",
+"sharePct": 64,
+"eur": 45016,
+"odd": 1.36
+},
+"poly": {
+"side": "away",
+"name": "Servette Geneva",
+"sharePct": 70,
+"usd": 8347,
+"src": "live"
+},
+"pinn": {
+"fav": "away",
+"home": 0.0565,
+"draw": 0.2122,
+"away": 0.7313
+},
+"mmStrong": true,
+"polyGeld": true,
+"nSources": 3
+},
+{
+"matchId": "36040033",
+"home": "Kfum Oslo",
+"away": "Aalesunds",
+"league": "Norwegian Eliteserien",
+"live": true,
+"kickoff": "2026-09-13T15:00:00Z",
+"verdict": "uneinig",
+"betfair": {
+"side": "home",
+"name": "KFUM Oslo",
+"sharePct": 59,
+"eur": 42324,
+"odd": 1.57
+},
+"poly": {
+"side": "away",
+"name": "Aalesunds FK",
+"sharePct": 54,
+"usd": 24174,
 "src": "live"
 },
 "pinn": null,
 "mmStrong": false,
 "polyGeld": true,
 "nSources": 2
-},
-{
-"matchId": "36046980",
-"home": "Calcio Avellino SSD",
-"away": "Palermo",
-"league": "Italian Serie B",
-"live": true,
-"kickoff": "2026-09-13T15:15:00Z",
-"verdict": "konsens",
-"betfair": {
-"side": "away",
-"name": "Palermo",
-"sharePct": 67,
-"eur": 42847,
-"odd": 2.28
-},
-"poly": {
-"side": "away",
-"name": "Palermo FC",
-"sharePct": 48,
-"usd": 823,
-"src": "upcoming"
-},
-"pinn": {
-"fav": "away",
-"home": 0.2287,
-"draw": 0.3257,
-"away": 0.4456
-},
-"mmStrong": false,
-"polyGeld": true,
-"nSources": 3
 },
 {
 "matchId": "36043229",
@@ -505,42 +568,15 @@
 "betfair": {
 "side": "away",
 "name": "Oviedo",
-"sharePct": 55,
-"eur": 38707,
-"odd": 1.02
+"sharePct": 56,
+"eur": 40050,
+"odd": 1.01
 },
 "poly": {
 "side": "away",
 "name": "Real Oviedo",
-"sharePct": 62,
-"usd": 8787,
-"src": "live"
-},
-"pinn": null,
-"mmStrong": true,
-"polyGeld": true,
-"nSources": 2
-},
-{
-"matchId": "36040033",
-"home": "Kfum Oslo",
-"away": "Aalesunds",
-"league": "Norwegian Eliteserien",
-"live": true,
-"kickoff": "2026-09-13T15:00:00Z",
-"verdict": "konsens",
-"betfair": {
-"side": "home",
-"name": "KFUM Oslo",
-"sharePct": 60,
-"eur": 38425,
-"odd": 3.05
-},
-"poly": {
-"side": "home",
-"name": "KFUM-Kameratene Oslo",
-"sharePct": 72,
-"usd": 21930,
+"sharePct": 98,
+"usd": 30269,
 "src": "live"
 },
 "pinn": null,
@@ -559,88 +595,24 @@
 "betfair": {
 "side": "home",
 "name": "Mallorca",
-"sharePct": 86,
-"eur": 37768,
+"sharePct": 84,
+"eur": 39953,
 "odd": 1.92
 },
 "poly": {
 "side": "home",
 "name": "RCD Mallorca",
-"sharePct": 92,
-"usd": 13440,
+"sharePct": 94,
+"usd": 15615,
 "src": "close"
 },
 "pinn": {
 "fav": "home",
-"home": 0.5137,
-"draw": 0.2767,
-"away": 0.2095
+"home": 0.5136,
+"draw": 0.2774,
+"away": 0.209
 },
 "mmStrong": true,
-"polyGeld": true,
-"nSources": 3
-},
-{
-"matchId": "36006613",
-"home": "Sturm Graz",
-"away": "LASK Linz",
-"league": "Austrian Bundesliga",
-"live": true,
-"kickoff": "2026-09-13T15:00:00Z",
-"verdict": "teil",
-"betfair": {
-"side": "away",
-"name": "LASK Linz",
-"sharePct": 77,
-"eur": 37217,
-"odd": 4.7
-},
-"poly": {
-"side": "away",
-"name": "LASK Linz",
-"sharePct": 100,
-"usd": 22132,
-"src": "live"
-},
-"pinn": {
-"fav": "away",
-"home": 0.269,
-"draw": 0.3169,
-"away": 0.4141
-},
-"mmStrong": true,
-"polyGeld": true,
-"nSources": 3
-},
-{
-"matchId": "36040025",
-"home": "Lausanne",
-"away": "Servette",
-"league": "Swiss Super League",
-"live": true,
-"kickoff": "2026-09-13T14:30:00Z",
-"verdict": "konsens",
-"betfair": {
-"side": "away",
-"name": "Servette",
-"sharePct": 65,
-"eur": 35210,
-"odd": 1.46
-},
-"poly": {
-"side": "away",
-"name": "Servette Geneva",
-"sharePct": 35,
-"usd": 7865,
-"src": "live"
-},
-"pinn": {
-"fav": "away",
-"home": 0.0856,
-"draw": 0.2324,
-"away": 0.6821
-},
-"mmStrong": false,
 "polyGeld": true,
 "nSources": 3
 },
@@ -655,22 +627,22 @@
 "betfair": {
 "side": "home",
 "name": "Mantova",
-"sharePct": 47,
-"eur": 34997,
-"odd": 2.56
+"sharePct": 48,
+"eur": 36910,
+"odd": 2.68
 },
 "poly": {
 "side": "home",
 "name": "Mantova 1911",
-"sharePct": 70,
-"usd": 21180,
-"src": "close"
+"sharePct": 69,
+"usd": 26537,
+"src": "live"
 },
 "pinn": {
 "fav": "home",
-"home": 0.3948,
-"draw": 0.3394,
-"away": 0.2658
+"home": 0.385,
+"draw": 0.3773,
+"away": 0.2376
 },
 "mmStrong": false,
 "polyGeld": true,
@@ -720,8 +692,8 @@
 "side": "away",
 "name": "Roma",
 "sharePct": 78,
-"eur": 20617,
-"odd": 1.61
+"eur": 20619,
+"odd": 1.59
 },
 "poly": {
 "side": "away",
@@ -739,42 +711,21 @@
 "mmStrong": true,
 "polyGeld": true,
 "nSources": 3
-},
-{
-"matchId": "36048090",
-"home": "Stjarnan",
-"away": "IBV",
-"league": "Icelandic Urvalsdeild",
-"live": true,
-"kickoff": "2026-09-13T14:00:00Z",
-"verdict": "konsens",
-"betfair": {
-"side": "home",
-"name": "Stjarnan",
-"sharePct": 90,
-"eur": 20216,
-"odd": 1.03
-},
-"poly": {
-"side": "home",
-"name": "Stjarnan Gardabae",
-"sharePct": 91,
-"usd": 9713,
-"src": "live"
-},
-"pinn": null,
-"mmStrong": true,
-"polyGeld": true,
-"nSources": 2
 }
 ],
-"nameMatchMisses": 8,
+"nameMatchMisses": 10,
 "nameMatchMissList": [
 {
-"matchId": "36056830",
-"home": "Ljungskile",
-"away": "Falkenbergs",
-"league": "Swedish Superettan"
+"matchId": "36046980",
+"home": "Calcio Avellino SSD",
+"away": "Palermo",
+"league": "Italian Serie B"
+},
+{
+"matchId": "36040002",
+"home": "Hodd",
+"away": "Lyn",
+"league": "Norwegian 1st Division"
 },
 {
 "matchId": "36039998",
@@ -783,16 +734,22 @@
 "league": "Norwegian Eliteserien"
 },
 {
-"matchId": "36039992",
-"home": "Botev Vratsa",
-"away": "PFC Levski Sofia",
-"league": "Bulgarian A League"
+"matchId": "36056830",
+"home": "Ljungskile",
+"away": "Falkenbergs",
+"league": "Swedish Superettan"
 },
 {
 "matchId": "36043496",
 "home": "FC Volendam",
 "away": "Den Bosch",
 "league": "Dutch Eerste Divisie"
+},
+{
+"matchId": "36039992",
+"home": "Botev Vratsa",
+"away": "PFC Levski Sofia",
+"league": "Bulgarian A League"
 },
 {
 "matchId": "36040021",
@@ -807,10 +764,10 @@
 "league": "German 3 Liga"
 },
 {
-"matchId": "36039686",
-"home": "Randers",
-"away": "OB",
-"league": "Danish Superliga"
+"matchId": "36039901",
+"home": "FC Liege",
+"away": "Club Brugge B",
+"league": "Belgian Challenger Pro League"
 },
 {
 "matchId": "36005511",
