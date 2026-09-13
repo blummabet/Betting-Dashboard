@@ -476,7 +476,7 @@ def _burst_beinahe_satz() -> str:
             % (str(b.get("von") or "—"), int(b["n"]), ", ".join(teile) or "keines"))
 
 
-def burst_plays(phase=None) -> list:
+def burst_plays(phase=None, gesendet=True) -> list:
     """Stake-Einsatz-Bursts als Plays (13.09.2026, Lucas: „haette ich auch gerne in den Stats").
 
     ⭐ `rendite` kommt aus der Abrechnung des Bursts (Summe pnl / Summe Einsatz), NICHT aus
@@ -493,6 +493,16 @@ def burst_plays(phase=None) -> list:
     aus = []
     for r in zeilen:
         if not isinstance(r, dict) or r.get("status") == "nicht_abrechenbar":
+            continue
+        # 13.09.2026: seit der Trennung von Messen und Senden stehen auch NICHT gesendete
+        # Bursts im Buch. Ein Kanal-Block zaehlt, was den Kanal verlassen hat — dieselbe Regel,
+        # an der am 10.09. die Liga-Picks-Kachel gescheitert ist. Alte Zeilen tragen kein Feld
+        # und waren alle gesendet, deshalb fehlend = gesendet.
+        # `gesendet`: True = nur was rausging · False = nur was zurueckgehalten wurde ·
+        # None = alles. Eine Mengen-Differenz zweier Play-Listen waere hier falsch — Plays sind
+        # Dicts ohne Identitaet, zwei gleiche Zeilen wuerden sich gegenseitig wegkuerzen.
+        raus = r.get("push") is not False      # altes Feld fehlt = war gesendet
+        if gesendet is not None and raus != gesendet:
             continue
         if phase and r.get("phase") != phase:
             continue
@@ -611,6 +621,13 @@ def baue(now=None) -> dict:
          "Bursts, nicht je Ticket. " + _burst_beinahe_satz())
     _add("stake-burst-live", "Stake-Bursts · live", "⚡", "Push-Kanäle", burst_plays("live"))
     _add("stake-burst-vor", "Stake-Bursts · vor Anpfiff", "⚡", "Push-Kanäle", burst_plays("vor"))
+    # Die Gegenprobe: was der Deckel (oder ein abgeschalteter Push) zurueckgehalten hat. Getrennt,
+    # damit die Kanal-Bilanz sauber bleibt — und sichtbar, damit der Deckel nicht unbemerkt die
+    # besseren Bursts frisst.
+    _add("stake-burst-still", "Stake-Bursts · nicht gesendet", "⚡", "Push-Kanäle",
+         burst_plays(gesendet=False),
+         "Erkannt, aber nicht rausgegangen — Deckel des Laufs erreicht oder Push abgeschaltet. "
+         "Wird trotzdem abgerechnet: sonst wüsste niemand, was der Deckel kostet.")
     # 13.09.2026 (Lucas): der Gegensignal-Filter als eigene Gruppe — BEIDE Arme, damit die
     # Gegenprobe auf derselben Seite steht wie das Ergebnis. Nur den gesendeten Arm zu zeigen
     # waere die Selbstbestaetigung, die das Schattenbuch gerade verhindern soll.

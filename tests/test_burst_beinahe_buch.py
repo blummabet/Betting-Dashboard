@@ -191,3 +191,151 @@ class TestLueckenBilanz(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 🔴 13.09.2026 (Lucas: „aber jetzt rennen die Bursts normal als Push weiter und ich krieg die
+# weiter rein")
+#
+# Beim Nachsehen fiel auf, dass Messen und Senden DASSELBE waren: `led.append(buch_zeile(...))`
+# stand INNERHALB der Sende-Schleife und lief nur nach einem erfolgreichen `tg_send`. Folgen:
+#   · Jeder Burst ueber dem Deckel von 4 wurde gezaehlt, aber nie gemessen.
+#   · Den Kanal stillzulegen haette auch die Messung stillgelegt — die zwei Wochen Beobachtung,
+#     auf die wir uns gerade geeinigt hatten, waeren mit dem ersten stummen Lauf weg gewesen.
+#
+# Dieselbe Trennung wie im Pick-Schattenbuch. Das Buch schreibt jeden erkannten Burst mit, der
+# Push ist eine unabhaengige Entscheidung — und die Kanal-Bilanz zaehlt weiterhin nur, was den
+# Kanal verlassen hat (die Regel, an der am 10.09. die Liga-Picks-Kachel gescheitert ist).
+# ─────────────────────────────────────────────────────────────────────────────
+class TestMessenUndSendenSindGetrennt(unittest.TestCase):
+    def test_der_schalter_existiert_und_schaltet(self):
+        import importlib, os
+        alt = os.environ.get("STAKE_BURST_PUSH")
+        try:
+            os.environ["STAKE_BURST_PUSH"] = "false"
+            self.assertFalse(importlib.reload(B).PUSH_AN)
+            os.environ["STAKE_BURST_PUSH"] = "true"
+            self.assertTrue(importlib.reload(B).PUSH_AN)
+        finally:
+            if alt is None:
+                os.environ.pop("STAKE_BURST_PUSH", None)
+            else:
+                os.environ["STAKE_BURST_PUSH"] = alt
+            importlib.reload(B)
+
+    def test_push_aus_heisst_wirklich_nichts_senden(self):
+        """Nicht nur die Variable, die WIRKUNG. Eine Mutation, die `PUSH_AN` im Ausdruck
+        weglaesst, ist sonst gruen — sie war es beim ersten Versuch."""
+        drei = [{"auswahlId": f"a{i}"} for i in range(3)]
+        self.assertEqual(B.zu_senden(drei, push_an=False, max_push=4), [])
+        self.assertEqual(len(B.zu_senden(drei, push_an=True, max_push=4)), 3)
+
+    def test_der_deckel_gilt_weiter(self):
+        zehn = [{"auswahlId": f"a{i}"} for i in range(10)]
+        self.assertEqual(len(B.zu_senden(zehn, push_an=True, max_push=4)), 4)
+
+    def test_das_buch_haengt_nicht_mehr_am_send(self):
+        """Der Kern: die Buchzeile darf nicht in der Sende-Schleife entstehen."""
+        quelle = __import__("pathlib").Path("stake_burst_push.py").read_text(encoding="utf-8")
+        ohne = "\n".join(z for z in quelle.splitlines() if not z.lstrip().startswith("#"))
+        i_send = ohne.index("for i, b in enumerate(senden):")
+        i_buch = ohne.index("for b in neu:")
+        self.assertLess(i_send, i_buch, "das Buch wird vor der Sende-Schleife gefuellt?")
+        block = ohne[i_send:i_buch]
+        self.assertNotIn("led.append", block,
+                         "die Buchzeile entsteht wieder nur bei erfolgreichem Send")
+
+    def test_jede_zeile_sagt_ob_sie_rausging(self):
+        quelle = __import__("pathlib").Path("stake_burst_push.py").read_text(encoding="utf-8")
+        self.assertIn('z["push"] = k in seen', quelle)
+        self.assertIn('z["pushGrund"]', quelle)
+
+
+class TestDieKanalBilanzZaehltNurWasRausging(unittest.TestCase):
+    import stats_perioden as S
+
+    ROWS = [
+        {"sentAt": "2026-09-12T10:00:00Z", "status": "abgerechnet", "win": True,
+         "rendite": 0.5, "phase": "live", "push": True},
+        {"sentAt": "2026-09-12T11:00:00Z", "status": "abgerechnet", "win": False,
+         "rendite": -1.0, "phase": "live", "push": False},
+        {"sentAt": "2026-09-12T11:00:00Z", "status": "abgerechnet", "win": False,
+         "rendite": -1.0, "phase": "live", "push": False},     # absichtlich identisch
+        {"sentAt": "2026-09-12T12:00:00Z", "status": "abgerechnet", "win": True,
+         "rendite": 0.2, "phase": "vor"},                      # Altzeile ohne Feld
+    ]
+
+    def _mit_rows(self, fn):
+        orig = self.S._load
+        self.S._load = lambda n, d=None: self.ROWS if "burst_ledger" in n else orig(n, d)
+        try:
+            return fn()
+        finally:
+            self.S._load = orig
+
+    def test_die_drei_mengen_sind_sauber_getrennt(self):
+        g = self._mit_rows(lambda: len(self.S.burst_plays()))
+        n = self._mit_rows(lambda: len(self.S.burst_plays(gesendet=False)))
+        a = self._mit_rows(lambda: len(self.S.burst_plays(gesendet=None)))
+        self.assertEqual((g, n, a), (2, 2, 4))
+
+    def test_zwei_identische_zeilen_kuerzen_sich_nicht_weg(self):
+        """Die erste Fassung hat die zurueckgehaltenen ueber eine Listen-Differenz gebildet.
+        Plays sind Dicts ohne Identitaet — zwei gleiche Zeilen haetten sich gegenseitig
+        aufgehoben, und die Menge waere still um eine zu klein gewesen."""
+        self.assertEqual(self._mit_rows(lambda: len(self.S.burst_plays(gesendet=False))), 2)
+
+    def test_alte_zeilen_ohne_feld_gelten_als_gesendet(self):
+        plays = self._mit_rows(lambda: self.S.burst_plays(phase="vor"))
+        self.assertEqual(len(plays), 1, "die Altzeile ohne `push` muss in der Kanal-Bilanz sein")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 🔴 13.09.2026 — der Groessen-Waechter des Pages-Deploys schlug an (141 von 140 MB), ausgeloest
+# von den zwei schlanken Artefakten, die ich am selben Tag DAZU gelegt hatte. Beim Nachsehen,
+# wo die Masse liegt, kam der eigentliche Fund: `byTeamMarket` im Betfair-Track-Record hat
+# 21.015 Eintraege und 10,6 MB — und **kein einziger** traegt ein Urteil. Das groesste n der
+# ganzen Tabelle ist 6, die Schwelle fuer eine Untergrenze steht bei 30.
+# ─────────────────────────────────────────────────────────────────────────────
+class TestTeamMarktTabelleTraegtNurWasZaehlenKann(unittest.TestCase):
+    import betfair_track_record as BT
+
+    def test_eine_handvoll_wetten_ist_keine_verlaesslichkeit(self):
+        """Die Grenze steht bei 3 und nicht bei 1: in einer Tabelle, deren Urteilsschwelle bei
+        30 liegt, ist der Unterschied zwischen n=1 und n=2 keiner."""
+        roh = {"A|1X2": {"n": 1}, "B|1X2": {"n": 2}, "C|1X2": {"n": 3}, "D|1X2": {"n": 6}}
+        keep = {k: v for k, v in roh.items() if v["n"] >= self.BT.TEAM_MIN_N}
+        self.assertEqual(sorted(keep), ["C|1X2", "D|1X2"])
+        self.assertGreaterEqual(self.BT.TEAM_MIN_N, 2)
+
+    def test_der_producer_filtert_wirklich(self):
+        quelle = __import__("pathlib").Path("betfair_track_record.py").read_text(encoding="utf-8")
+        ohne = "\n".join(z for z in quelle.splitlines() if not z.lstrip().startswith("#"))
+        self.assertIn(">= team_min_n", ohne)
+        self.assertIn('"byTeamMarket"', ohne)
+        # und der Default des Parameters ist die Konstante — sonst filtert der echte Lauf nicht
+        self.assertIn("team_min_n = TEAM_MIN_N if team_min_n is None else team_min_n", ohne)
+
+    def test_die_kompakte_fassung_traegt_die_tabelle_weiterhin_gar_nicht(self):
+        """Die Uebersicht liest von hier nur `byLeagueMarket` — das bleibt so, unabhaengig
+        davon, wie stark die Team-Tabelle gefiltert ist."""
+        self.assertIn("byTeamMarket", self.BT.NUR_IM_VOLLEN)
+        self.assertNotIn("byTeamMarket", self.BT.kompakt({"a": 1, "byTeamMarket": {"x": 1}}))
+
+    def test_gegen_das_echte_artefakt(self):
+        """Gegenprobe am Bestand: keine Zeile der Tabelle kann heute ein Urteil tragen."""
+        import json
+        from pathlib import Path
+        p = Path(__file__).resolve().parents[1] / "betfair_track_record.json"
+        if not p.exists():
+            self.skipTest("kein Track-Record")
+        tm = (json.loads(p.read_text(encoding="utf-8")) or {}).get("byTeamMarket") or {}
+        if not tm:
+            self.skipTest("keine Team-Tabelle")
+        mit_urteil = [k for k, v in tm.items() if (v or {}).get("urteil")]
+        groesstes_n = max((v or {}).get("n", 0) for v in tm.values())
+        schwelle = max((v or {}).get("ugAb", 0) for v in tm.values())
+        if mit_urteil:
+            return          # ab dann traegt die Tabelle etwas — dieser Test hat seinen Zweck erfuellt
+        self.assertLess(groesstes_n, schwelle,
+                        "kein Urteil, obwohl n die Schwelle erreicht — dann stimmt etwas anderes nicht")

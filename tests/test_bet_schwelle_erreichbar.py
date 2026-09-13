@@ -49,10 +49,15 @@ DATENSAETZE = {
 # Bekannt tote Schwellen — MIT Messung, damit niemand sie fuer eine Entscheidung haelt.
 # Ein Eintrag hier heisst: „wissen wir, liegt bei Lucas, nicht stillschweigend akzeptiert."
 TOT_BEKANNT = {
-    "liga": "Erreichbar sind 6 (context feuert in 2 %, market in 4 % — beides WM-Signalfamilien). "
-            "Schwelle 8 → 0 Hochstufungen in 332 Picks. Senken waere NICHT belegt: conv 6 ist im "
-            "Liga-Ledger die schwaechste Schublade (n=15, ROI +0,0 %, UG −36,9 %). "
-            "Entscheidung liegt bei Lucas (12.09.2026).",
+    "liga": "Schwelle 8 → weiterhin 0 Hochstufungen (334 Picks). 13.09.2026 nachgemessen: die "
+            "Obergrenze liegt NICHT mehr bei 6 — ein Pick hat erstmals 7 erreicht (ITA-4-867-1579, "
+            "Doppelte Chance X2 @1,47, trotzdem ABWÄGEN). Einer von 334, die Verteilung endet "
+            "sonst bei 6 (40 Stueck). Am Urteil aendert das nichts: der Liga-Ledger zeigt "
+            "weiterhin conv 5 als einzige belegte Schublade (n=44, ROI +37,2 %, UG +16,9 %), "
+            "waehrend conv 6 mit gewachsener Stichprobe zurueckfaellt (n=26, ROI +10,2 %, "
+            "UG −16,6 %) und conv 4 daneben liegt (n=55, +10,2 %, UG −9,9 %). Die Skala steigt "
+            "in Liga nach wie vor nicht monoton — ihre Spitze ist nicht ihre beste Stufe. "
+            "Senken waere also weiter NICHT belegt. Entscheidung liegt bei Lucas.",
 }
 
 
@@ -120,7 +125,10 @@ class TestSchwelleErreichbar(unittest.TestCase):
         """Der Fund selbst, als Nagel. Verschiebt sich das, ist die Begruendung oben veraltet."""
         werte = _convictions("liga-data.json", "liga_signal_ledger.json")
         self.assertGreater(len(werte), 200, "zu wenig Liga-Picks fuer die Aussage")
-        self.assertLessEqual(max(werte), 6,
+        # 13.09.2026: von 6 auf 7 gehoben — ein Pick hat es erstmals erreicht (s. TOT_BEKANNT).
+        # Die Grenze steht hier als MESSUNG, nicht als Erlaubnis: steigt sie weiter, gehoert die
+        # Schwellen-Frage neu auf den Tisch, nicht die Zahl neu gesetzt.
+        self.assertLessEqual(max(werte), 7,
                              "Liga erreicht jetzt mehr als 6 — dann gehoert TOT_BEKANNT neu "
                              "bewertet, nicht nur dieser Test.")
 

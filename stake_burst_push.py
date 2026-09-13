@@ -65,6 +65,16 @@ MIN_N = int(os.environ.get("STAKE_BURST_MIN_N") or 4)
 FENSTER_S = float(os.environ.get("STAKE_BURST_FENSTER_S") or 300)
 MIN_USD = float(os.environ.get("STAKE_BURST_MIN_USD") or 10000)
 MAX_PUSH = int(os.environ.get("STAKE_BURST_MAX") or 4)
+# 13.09.2026 (Lucas: „aber jetzt rennen die Bursts normal als Push weiter und ich krieg die
+# weiter rein"). Der Schalter trennt MESSEN von SENDEN. Vorher waren beide dasselbe: eine
+# Buchzeile entstand nur, wenn `send_trades_message` erfolgreich war — den Kanal stillzulegen
+# haette also auch die Messung stillgelegt, und die zwei Wochen Beobachtung waeren weg gewesen.
+#
+# Dieselbe Trennung wie im Pick-Schattenbuch: das Buch schreibt JEDEN erkannten Burst mit, der
+# Push ist eine davon unabhaengige Entscheidung. Was nicht rausging, traegt `push: false` und
+# den Grund — die Kanal-Bilanz in den Stats zaehlt weiterhin nur, was den Kanal verlassen hat.
+PUSH_AN = (os.environ.get("STAKE_BURST_PUSH") or "true").strip().lower() \
+    not in ("false", "0", "nein", "off", "aus")
 
 # 🎯 Mindestquote — 12.09.2026 (Lucas: „wieso kommt da so eine odd?", zu @1,01 und @1,15).
 #
@@ -494,6 +504,17 @@ def _verworfen_buchen(beinahe: list, now) -> None:
              or "—"))
 
 
+def zu_senden(neu, push_an=None, max_push=None) -> list:
+    """Welche der neuen Bursts gehen raus? REIN — damit „Push aus" pruefbar ist.
+
+    Stand vorher als Ausdruck mitten in `main` und war damit nur am Quelltext zu pruefen. Eine
+    Mutation, die den Schalter ignoriert, waere gruen durchgelaufen — genau deshalb hier.
+    """
+    push_an = PUSH_AN if push_an is None else push_an
+    max_push = MAX_PUSH if max_push is None else max_push
+    return list(neu or [])[:max_push] if push_an else []
+
+
 def main() -> int:
     now = datetime.now(timezone.utc)
     now_iso = now.isoformat()
@@ -513,7 +534,7 @@ def main() -> int:
           % (len(alle), len(neu), MIN_N, int(FENSTER_S), _usd(MIN_USD), MIN_QUOTE,
              MAX_ALTER_MIN, ", ".join(_gesperrt) or "—"))
 
-    senden = neu[:MAX_PUSH]
+    senden = zu_senden(neu)
     unterdrueckt = max(len(neu) - len(senden), 0)
     led = _load(LEDGER_FILE, [])
     if not isinstance(led, list):
@@ -526,8 +547,24 @@ def main() -> int:
             continue
         gesendet += 1
         seen[burst_key(b)] = {"ts": now_iso, "summe": round(float(b["summe"]), 2)}
-        if burst_key(b) not in schon:
-            led.append(buch_zeile(b, now_iso))
+    # ⭐ JEDER erkannte Burst kommt ins Buch — auch der, der am Deckel haengengeblieben ist, und
+    # auch jeder, wenn der Push ganz aus ist. Vorher stand hier `led.append` INNERHALB der
+    # Sende-Schleife: alles ueber dem Deckel wurde gezaehlt, aber nie gemessen, und ein
+    # stillgelegter Kanal haette gar nichts mehr gesammelt.
+    neu_gebucht = 0
+    for b in neu:
+        k = burst_key(b)
+        if k in schon:
+            continue
+        z = buch_zeile(b, now_iso)
+        z["push"] = k in seen          # nur ein erfolgreicher Send steht in `seen`
+        if not z["push"]:
+            z["pushGrund"] = ("Push abgeschaltet (STAKE_BURST_PUSH)" if not PUSH_AN
+                              else "Deckel des Laufs erreicht" if k not in {burst_key(x) for x in senden}
+                              else "Senden fehlgeschlagen")
+        led.append(z)
+        schon.add(k)
+        neu_gebucht += 1
     _save(SEEN_FILE, seen)
     _verworfen_buchen(beinahe, now)
     # Bei JEDEM Lauf abrechnen — das Fenster der Quelle ist nur ~5 Tage breit (s. oben).
@@ -539,7 +576,9 @@ def main() -> int:
         _save(LEDGER_FILE, led[-LEDGER_KEEP:])
     except Exception as e:
         print("Stake-Burst-Ledger-Schreibfehler:", e)
-    print("   %d gesendet, %d unterdrueckt (Deckel %d)." % (gesendet, unterdrueckt, MAX_PUSH))
+    print("   %d gesendet, %d unterdrueckt (Deckel %d)%s · %d neu im Buch."
+          % (gesendet, unterdrueckt, MAX_PUSH,
+             "" if PUSH_AN else " — PUSH IST AUS, es wird nur gemessen", neu_gebucht))
     return 0
 
 
