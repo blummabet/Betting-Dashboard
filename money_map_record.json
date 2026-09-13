@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-13T03:55:07.387649+00:00",
+"generatedAt": "2026-09-13T04:14:29.474539+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1057,
-"wins": 885,
-"hitRate": 0.8373,
-"polyN": 996,
-"polyWins": 764,
-"polyHitRate": 0.7671,
+"n": 1058,
+"wins": 886,
+"hitRate": 0.8374,
+"polyN": 997,
+"polyWins": 765,
+"polyHitRate": 0.7673,
 "pinnN": 139,
 "pinnHitRate": 0.7986,
-"nRoi": 384,
-"roi": 0.4295,
-"roiLb": 0.3653,
-"nClv": 384,
-"clv": 20.98,
-"clvLb": 18.9918
+"nRoi": 385,
+"roi": 0.4297,
+"roiLb": 0.3657,
+"nClv": 385,
+"clv": 20.77,
+"clvLb": 18.7606
 },
 "uneinig": {
-"n": 407,
+"n": 408,
 "wins": 129,
-"hitRate": 0.317,
-"polyN": 369,
+"hitRate": 0.3162,
+"polyN": 370,
 "polyWins": 98,
-"polyHitRate": 0.2656,
-"pinnN": 251,
-"pinnHitRate": 0.6016,
-"nRoi": 175,
-"roi": -0.4652,
-"roiLb": -0.5746,
-"nClv": 175,
-"clv": -19.2,
-"clvLb": -23.4186
+"polyHitRate": 0.2649,
+"pinnN": 252,
+"pinnHitRate": 0.6032,
+"nRoi": 176,
+"roi": -0.4682,
+"roiLb": -0.5771,
+"nClv": 176,
+"clv": -19.27,
+"clvLb": -23.4592
 },
 "teil": {
 "n": 18,
@@ -106,12 +106,12 @@
 "wins": 25,
 "hitRate": 0.7353
 },
-"Dutch Eredivisie": {
-"n": 33,
-"wins": 22,
-"hitRate": 0.6667
-},
 "Mexican Liga MX": {
+"n": 34,
+"wins": 22,
+"hitRate": 0.6471
+},
+"Dutch Eredivisie": {
 "n": 33,
 "wins": 22,
 "hitRate": 0.6667
@@ -246,15 +246,15 @@
 "wins": 9,
 "hitRate": 0.6
 },
+"Peruvian Primera Division": {
+"n": 15,
+"wins": 11,
+"hitRate": 0.7333
+},
 "Swiss Super League": {
 "n": 15,
 "wins": 13,
 "hitRate": 0.8667
-},
-"Peruvian Primera Division": {
-"n": 14,
-"wins": 10,
-"hitRate": 0.7143
 },
 "Swedish Superettan": {
 "n": 14,
@@ -625,26 +625,64 @@
 "clvLb": 10.3182
 },
 "weak": {
-"n": 568,
-"wins": 295,
-"hitRate": 0.5194,
-"nRoi": 211,
-"roi": -0.106,
-"roiLb": -0.2193,
-"nClv": 211,
-"clv": -1.27,
-"clvLb": -4.916
+"n": 570,
+"wins": 296,
+"hitRate": 0.5193,
+"nRoi": 213,
+"roi": -0.1073,
+"roiLb": -0.2198,
+"nClv": 213,
+"clv": -1.68,
+"clvLb": -5.3225
 }
 },
 "divergence": {
-"n": 407,
+"n": 408,
 "betfairWins": 129,
-"betfairRate": 0.317,
-"polyN": 369,
+"betfairRate": 0.3162,
+"polyN": 370,
 "polyWins": 98,
-"polyRate": 0.2656
+"polyRate": 0.2649
 },
 "recent": [
+{
+"matchId": "36037607",
+"home": "Monterrey",
+"away": "Tigres",
+"league": "Mexican Liga MX",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Monterrey",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-09-13T01:10:00Z",
+"settledAt": "2026-09-13T04:14:29.280767+00:00"
+},
+{
+"matchId": "36041210",
+"home": "Alianza Lima",
+"away": "Universitario de Deportes",
+"league": "Peruvian Primera Division",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Universitario de Deportes",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-09-13T01:00:00Z",
+"settledAt": "2026-09-13T04:14:29.280767+00:00"
+},
 {
 "matchId": "36040124",
 "home": "Kansas City",
@@ -1366,56 +1404,18 @@
 ],
 "kickoff": "2026-09-12T18:45:00Z",
 "settledAt": "2026-09-12T20:39:21.963919+00:00"
-},
-{
-"matchId": "36041066",
-"home": "Casa Pia",
-"away": "Porto",
-"league": "Portuguese Primeira Liga",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Porto",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-4
-],
-"kickoff": "2026-09-12T17:00:00Z",
-"settledAt": "2026-09-12T20:09:21.246812+00:00"
-},
-{
-"matchId": "36043226",
-"home": "Girona",
-"away": "CD Castellon",
-"league": "Spanish Segunda Division",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Girona",
-"polySide": "away",
-"winner": "away",
-"moneyWin": false,
-"polyWin": true,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-09-12T16:30:00Z",
-"settledAt": "2026-09-12T19:39:22.856281+00:00"
 }
 ],
 "global": {
-"n": 1482,
-"wins": 1017,
-"hitRate": 0.6862,
-"nRoi": 568,
-"roi": 0.1312,
-"roiLb": 0.0686,
-"nClv": 568,
-"clv": 7.81,
-"clvLb": 5.5099
+"n": 1484,
+"wins": 1018,
+"hitRate": 0.686,
+"nRoi": 570,
+"roi": 0.1298,
+"roiLb": 0.0674,
+"nClv": 570,
+"clv": 7.62,
+"clvLb": 5.3235
 },
-"pending": 25
+"pending": 24
 }
