@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-09-13T19:54:24.665866+00:00",
+"generatedAt": "2026-09-13T19:56:42.296301+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1104,
-"wins": 925,
-"hitRate": 0.8379,
-"polyN": 1043,
-"polyWins": 803,
-"polyHitRate": 0.7699,
-"pinnN": 147,
-"pinnHitRate": 0.7891,
-"nRoi": 431,
-"roi": 0.4243,
-"roiLb": 0.363,
-"nClv": 431,
-"clv": 20.62,
-"clvLb": 18.7506
+"n": 1106,
+"wins": 927,
+"hitRate": 0.8382,
+"polyN": 1045,
+"polyWins": 804,
+"polyHitRate": 0.7694,
+"pinnN": 148,
+"pinnHitRate": 0.7905,
+"nRoi": 433,
+"roi": 0.4229,
+"roiLb": 0.3618,
+"nClv": 433,
+"clv": 20.56,
+"clvLb": 18.6945
 },
 "uneinig": {
 "n": 428,
@@ -406,6 +406,11 @@
 "wins": 4,
 "hitRate": 1.0
 },
+"Greek Super League": {
+"n": 4,
+"wins": 3,
+"hitRate": 0.75
+},
 "Guatemalan Liga Nacional": {
 "n": 4,
 "wins": 4,
@@ -446,11 +451,6 @@
 "wins": 1,
 "hitRate": 0.3333
 },
-"Greek Super League": {
-"n": 3,
-"wins": 2,
-"hitRate": 0.6667
-},
 "Scottish League Cup": {
 "n": 3,
 "wins": 3,
@@ -472,6 +472,11 @@
 "hitRate": 0.6667
 },
 "Costa Rican Primera Division": {
+"n": 2,
+"wins": 2,
+"hitRate": 1.0
+},
+"Croatian HNL": {
 "n": 2,
 "wins": 2,
 "hitRate": 1.0
@@ -546,11 +551,6 @@
 "wins": 0,
 "hitRate": 0.0
 },
-"Croatian HNL": {
-"n": 1,
-"wins": 1,
-"hitRate": 1.0
-},
 "English Community Shield": {
 "n": 1,
 "wins": 1,
@@ -624,26 +624,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 927,
-"wins": 743,
-"hitRate": 0.8015,
-"nRoi": 403,
-"roi": 0.2914,
+"n": 928,
+"wins": 744,
+"hitRate": 0.8017,
+"nRoi": 404,
+"roi": 0.2911,
 "roiLb": 0.2232,
-"nClv": 403,
+"nClv": 404,
 "clv": 13.58,
-"clvLb": 10.929
+"clvLb": 10.9366
 },
 "weak": {
-"n": 594,
-"wins": 305,
-"hitRate": 0.5135,
-"nRoi": 237,
-"roi": -0.1295,
-"roiLb": -0.2359,
-"nClv": 237,
-"clv": -2.59,
-"clvLb": -6.0195
+"n": 595,
+"wins": 306,
+"hitRate": 0.5143,
+"nRoi": 238,
+"roi": -0.1287,
+"roiLb": -0.2347,
+"nClv": 238,
+"clv": -2.58,
+"clvLb": -5.9942
 }
 },
 "divergence": {
@@ -655,6 +655,44 @@
 "polyRate": 0.2564
 },
 "recent": [
+{
+"matchId": "36025237",
+"home": "Kifisia",
+"away": "Levadiakos",
+"league": "Greek Super League",
+"verdict": "konsens",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-09-13T18:00:00Z",
+"settledAt": "2026-09-13T19:56:42.112417+00:00"
+},
+{
+"matchId": "36041776",
+"home": "Hajduk Split",
+"away": "Slaven Belupo",
+"league": "Croatian HNL",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Hajduk Split",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-09-13T18:00:00Z",
+"settledAt": "2026-09-13T19:56:42.112417+00:00"
+},
 {
 "matchId": "36005345",
 "home": "PSV",
@@ -1376,56 +1414,18 @@
 ],
 "kickoff": "2026-09-13T13:00:00Z",
 "settledAt": "2026-09-13T14:56:16.358930+00:00"
-},
-{
-"matchId": "36039080",
-"home": "Club Brugge",
-"away": "Antwerp",
-"league": "Belgian Pro League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Club Brugge",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-09-13T11:30:00Z",
-"settledAt": "2026-09-13T14:42:54.121536+00:00"
-},
-{
-"matchId": "36039060",
-"home": "FC Heidenheim",
-"away": "Holstein Kiel",
-"league": "German Bundesliga 2",
-"verdict": "teil",
-"moneySide": "home",
-"moneyName": "FC Heidenheim",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-09-13T11:30:00Z",
-"settledAt": "2026-09-13T14:42:54.121536+00:00"
 }
 ],
 "global": {
-"n": 1554,
-"wins": 1066,
-"hitRate": 0.686,
-"nRoi": 640,
+"n": 1556,
+"wins": 1068,
+"hitRate": 0.6864,
+"nRoi": 642,
 "roi": 0.1355,
-"roiLb": 0.0758,
-"nClv": 640,
+"roiLb": 0.076,
+"nClv": 642,
 "clv": 7.59,
-"clvLb": 5.4362
+"clvLb": 5.441
 },
-"pending": 28
+"pending": 26
 }
