@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-13T18:11:48.300119+00:00",
+"generatedAt": "2026-09-13T18:26:50.308514+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1099,
-"wins": 920,
-"hitRate": 0.8371,
-"polyN": 1038,
-"polyWins": 798,
-"polyHitRate": 0.7688,
+"n": 1100,
+"wins": 921,
+"hitRate": 0.8373,
+"polyN": 1039,
+"polyWins": 799,
+"polyHitRate": 0.769,
 "pinnN": 147,
 "pinnHitRate": 0.7891,
-"nRoi": 426,
-"roi": 0.4242,
-"roiLb": 0.3621,
-"nClv": 426,
-"clv": 20.61,
-"clvLb": 18.7183
+"nRoi": 427,
+"roi": 0.4254,
+"roiLb": 0.3635,
+"nClv": 427,
+"clv": 20.67,
+"clvLb": 18.7804
 },
 "uneinig": {
-"n": 425,
+"n": 426,
 "wins": 136,
-"hitRate": 0.32,
-"polyN": 387,
+"hitRate": 0.3192,
+"polyN": 388,
 "polyWins": 100,
-"polyHitRate": 0.2584,
-"pinnN": 261,
-"pinnHitRate": 0.6054,
-"nRoi": 193,
-"roi": -0.4349,
-"roiLb": -0.5439,
-"nClv": 193,
-"clv": -18.19,
-"clvLb": -22.2411
+"polyHitRate": 0.2577,
+"pinnN": 262,
+"pinnHitRate": 0.6069,
+"nRoi": 194,
+"roi": -0.4378,
+"roiLb": -0.5463,
+"nClv": 194,
+"clv": -18.32,
+"clvLb": -22.3481
 },
 "teil": {
 "n": 22,
@@ -86,6 +86,11 @@
 "wins": 21,
 "hitRate": 0.5385
 },
+"Spanish Segunda Division": {
+"n": 38,
+"wins": 27,
+"hitRate": 0.7105
+},
 "Argentinian Primera Division": {
 "n": 37,
 "wins": 22,
@@ -95,11 +100,6 @@
 "n": 37,
 "wins": 25,
 "hitRate": 0.6757
-},
-"Spanish Segunda Division": {
-"n": 37,
-"wins": 26,
-"hitRate": 0.7027
 },
 "Dutch Eredivisie": {
 "n": 36,
@@ -146,15 +146,15 @@
 "wins": 23,
 "hitRate": 0.8214
 },
+"Italian Serie B": {
+"n": 28,
+"wins": 14,
+"hitRate": 0.5
+},
 "Portuguese Primeira Liga": {
 "n": 28,
 "wins": 24,
 "hitRate": 0.8571
-},
-"Italian Serie B": {
-"n": 27,
-"wins": 14,
-"hitRate": 0.5185
 },
 "Swedish Allsvenskan": {
 "n": 25,
@@ -624,37 +624,75 @@
 },
 "byStrength": {
 "strong": {
-"n": 922,
-"wins": 738,
-"hitRate": 0.8004,
-"nRoi": 398,
-"roi": 0.2895,
-"roiLb": 0.2206,
-"nClv": 398,
-"clv": 13.48,
-"clvLb": 10.7964
+"n": 923,
+"wins": 739,
+"hitRate": 0.8007,
+"nRoi": 399,
+"roi": 0.2912,
+"roiLb": 0.2224,
+"nClv": 399,
+"clv": 13.56,
+"clvLb": 10.882
 },
 "weak": {
-"n": 591,
+"n": 592,
 "wins": 305,
-"hitRate": 0.5161,
-"nRoi": 234,
-"roi": -0.1183,
-"roiLb": -0.2256,
-"nClv": 234,
-"clv": -2.39,
-"clvLb": -5.8513
+"hitRate": 0.5152,
+"nRoi": 235,
+"roi": -0.122,
+"roiLb": -0.2291,
+"nClv": 235,
+"clv": -2.55,
+"clvLb": -6.0163
 }
 },
 "divergence": {
-"n": 425,
+"n": 426,
 "betfairWins": 136,
-"betfairRate": 0.32,
-"polyN": 387,
+"betfairRate": 0.3192,
+"polyN": 388,
 "polyWins": 100,
-"polyRate": 0.2584
+"polyRate": 0.2577
 },
 "recent": [
+{
+"matchId": "36043223",
+"home": "Mallorca",
+"away": "Sabadell",
+"league": "Spanish Segunda Division",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Mallorca",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-09-13T16:30:00Z",
+"settledAt": "2026-09-13T18:26:50.087841+00:00"
+},
+{
+"matchId": "36046980",
+"home": "Calcio Avellino SSD",
+"away": "Palermo",
+"league": "Italian Serie B",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Palermo",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-09-13T15:15:00Z",
+"settledAt": "2026-09-13T18:26:50.087841+00:00"
+},
 {
 "matchId": "36006613",
 "home": "Sturm Graz",
@@ -1376,56 +1414,18 @@
 ],
 "kickoff": "2026-09-13T12:30:00Z",
 "settledAt": "2026-09-13T14:26:23.975895+00:00"
-},
-{
-"matchId": "36043346",
-"home": "Irtysh Pavlodar",
-"away": "Okzhetpes",
-"league": "Kazakhstan Premier League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Irtysh Pavlodar",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-09-13T11:00:00Z",
-"settledAt": "2026-09-13T14:11:22.942579+00:00"
-},
-{
-"matchId": "36039011",
-"home": "Banik Ostrava",
-"away": "Pardubice",
-"league": "Czech 1 Liga",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Pardubice",
-"polySide": "home",
-"winner": "away",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-09-13T11:00:00Z",
-"settledAt": "2026-09-13T14:11:22.942579+00:00"
 }
 ],
 "global": {
-"n": 1546,
-"wins": 1061,
-"hitRate": 0.6863,
-"nRoi": 632,
-"roi": 0.1385,
-"roiLb": 0.0783,
-"nClv": 632,
-"clv": 7.6,
-"clvLb": 5.4266
+"n": 1548,
+"wins": 1062,
+"hitRate": 0.686,
+"nRoi": 634,
+"roi": 0.138,
+"roiLb": 0.0779,
+"nClv": 634,
+"clv": 7.59,
+"clvLb": 5.4102
 },
-"pending": 23
+"pending": 22
 }
