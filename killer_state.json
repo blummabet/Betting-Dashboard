@@ -147,11 +147,16 @@
    "markt": "Match Odds",
    "seite": "away",
    "name": "Lens",
-   "odd": 1.68,
+   "odd": 1.7,
    "entryOdd": 1.71,
    "anteilPct": 75,
-   "stufe": 2,
+   "stufe": 1,
    "verstaerker": [
+    {
+     "art": "poly",
+     "text": "Poly Geld 78%",
+     "gewicht": 12
+    },
     {
      "art": "pinn",
      "text": "Pinnacle stimmt zu",
@@ -159,20 +164,24 @@
     },
     {
      "art": "pinnMove",
-     "text": "Pinnacle zieht mit +1.0pp",
-     "gewicht": 14
+     "text": "Pinnacle zieht mit +2.2pp",
+     "gewicht": 8
     }
    ],
-   "rang": 81.7,
+   "rang": 88.2,
    "track": null,
    "streak": null,
-   "poly": null,
+   "poly": {
+    "anteilPct": 78,
+    "usd": 11426,
+    "odd": 1.71
+   },
    "polyStatus": "nein",
    "polyKey": "fl1-lmf-rcl-2026-09-13",
    "polySide": "Racing Club de Lens",
    "pinnMovePP": null,
    "punkte": {
-    "punkte": 7,
+    "punkte": 9,
     "moeglich": 10,
     "dauerH": 18.59,
     "teile": [
@@ -184,43 +193,43 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 75% auf der Seite"
+       "text": "Geld 82% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.746,
-       "betrag": 76301,
-       "gesamt": 102280,
+       "anteil": 0.818,
+       "betrag": 138422,
+       "gesamt": 169220,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 75% auf der Seite"
+      "text": "Geld 82% auf der Seite"
      },
      {
       "buch": "POLY",
       "name": "Polymarket",
-      "status": "nein",
-      "punkte": 0,
+      "status": "ja",
+      "punkte": 2,
       "moeglich": 3,
       "grund": {
-       "ok": false,
-       "text": "Poly-Geld 0% auf derselben Seite"
+       "ok": true,
+       "text": "Poly-Geld 78% auf derselben Seite"
       },
       "tiefe": {
        "ok": false,
        "text": "kein bewiesenes Wallet auf der Seite"
       },
       "geld": {
-       "anteil": 0.0,
-       "betrag": 0,
-       "gesamt": 8680,
+       "anteil": 0.78,
+       "betrag": 8912,
+       "gesamt": 11426,
        "waehrung": "USD",
        "quelle": "geld"
       },
-      "text": "Poly-Geld 0% auf derselben Seite"
+      "text": "Poly-Geld 78% auf derselben Seite"
      },
      {
       "buch": "PIN",
@@ -234,7 +243,7 @@
       },
       "tiefe": {
        "ok": true,
-       "text": "Move +1.5pp in unsere Richtung"
+       "text": "Move +2.2pp in unsere Richtung"
       },
       "geld": null,
       "text": "hat dieselbe Seite als Favorit"
@@ -267,9 +276,9 @@
    },
    "wertVsPinn": -0.0025,
    "gehaltenSeit": "2026-09-12T20:39:24.895333+00:00",
-   "zuletztAktiv": "2026-09-13T13:11:19.827595+00:00",
+   "zuletztAktiv": "2026-09-13T14:41:32.710205+00:00",
    "haltePreis": 1.75,
-   "aktiv": false
+   "aktiv": true
   },
   "36005234|Match Odds": {
    "matchId": "36005234",
@@ -652,134 +661,6 @@
    "haltePreis": 1.45,
    "aktiv": false
   },
-  "36040025|Match Odds": {
-   "matchId": "36040025",
-   "home": "Lausanne",
-   "away": "Servette",
-   "league": "Swiss Super League",
-   "kickoff": "2026-09-13T14:30:00Z",
-   "markt": "Match Odds",
-   "seite": "away",
-   "name": "Servette",
-   "odd": 2.18,
-   "entryOdd": 2.26,
-   "anteilPct": 71,
-   "stufe": 2,
-   "verstaerker": [
-    {
-     "art": "pinn",
-     "text": "Pinnacle stimmt zu",
-     "gewicht": 10
-    }
-   ],
-   "rang": 67.1,
-   "track": null,
-   "streak": null,
-   "poly": null,
-   "polyStatus": "nein",
-   "polyKey": "sui-lau-ser-2026-09-13",
-   "polySide": "Servette Geneva",
-   "pinnMovePP": null,
-   "punkte": {
-    "punkte": 5,
-    "moeglich": 10,
-    "dauerH": 0.31,
-    "teile": [
-     {
-      "buch": "BF",
-      "name": "Betfair",
-      "status": "ja",
-      "punkte": 3,
-      "moeglich": 3,
-      "grund": {
-       "ok": true,
-       "text": "Geld 71% auf der Seite"
-      },
-      "tiefe": {
-       "ok": true,
-       "text": "frischer Zufluss und Quote zieht mit"
-      },
-      "geld": {
-       "anteil": 0.706,
-       "betrag": 8604,
-       "gesamt": 12187,
-       "waehrung": "EUR",
-       "quelle": "geld"
-      },
-      "text": "Geld 71% auf der Seite"
-     },
-     {
-      "buch": "POLY",
-      "name": "Polymarket",
-      "status": "nein",
-      "punkte": 0,
-      "moeglich": 3,
-      "grund": {
-       "ok": false,
-       "text": "Poly-Preis 44% auf derselben Seite"
-      },
-      "tiefe": {
-       "ok": false,
-       "text": "kein bewiesenes Wallet auf der Seite"
-      },
-      "geld": {
-       "anteil": 0.44,
-       "betrag": null,
-       "gesamt": 1246,
-       "waehrung": "USD",
-       "quelle": "preis"
-      },
-      "text": "Poly-Preis 44% auf derselben Seite"
-     },
-     {
-      "buch": "PIN",
-      "name": "Pinnacle",
-      "status": "ja",
-      "punkte": 2,
-      "moeglich": 3,
-      "grund": {
-       "ok": true,
-       "text": "hat dieselbe Seite als Favorit"
-      },
-      "tiefe": {
-       "ok": false,
-       "text": "kein Move gemessen"
-      },
-      "geld": null,
-      "text": "hat dieselbe Seite als Favorit"
-     },
-     {
-      "buch": "STAKE",
-      "name": "Stake-Highroller",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "geld": null,
-      "text": "Stake-Highroller nicht erhoben"
-     },
-     {
-      "buch": "ZEIT",
-      "name": "Dauer",
-      "status": "nein",
-      "punkte": 0,
-      "moeglich": 1,
-      "grund": {
-       "ok": false,
-       "text": "steht seit 0.3h vor Anpfiff"
-      },
-      "tiefe": null,
-      "text": "steht seit 0.3h vor Anpfiff"
-     }
-    ]
-   },
-   "wertVsPinn": null,
-   "gehaltenSeit": "2026-09-13T14:11:26.311765+00:00",
-   "zuletztAktiv": "2026-09-13T14:11:26.311765+00:00",
-   "haltePreis": 2.18,
-   "aktiv": true
-  },
   "36006613|Match Odds": {
    "matchId": "36006613",
    "home": "Sturm Graz",
@@ -906,6 +787,581 @@
    "gehaltenSeit": "2026-09-13T14:11:26.311765+00:00",
    "zuletztAktiv": "2026-09-13T14:11:26.311765+00:00",
    "haltePreis": 2.0,
+   "aktiv": false
+  },
+  "36043496|Match Odds": {
+   "matchId": "36043496",
+   "home": "FC Volendam",
+   "away": "Den Bosch",
+   "league": "Dutch Eerste Divisie",
+   "kickoff": "2026-09-13T14:45:00Z",
+   "markt": "Match Odds",
+   "seite": "home",
+   "name": "FC Volendam",
+   "odd": 1.74,
+   "entryOdd": 1.79,
+   "anteilPct": 77,
+   "stufe": 2,
+   "verstaerker": [],
+   "rang": 57.7,
+   "track": null,
+   "streak": null,
+   "poly": null,
+   "polyStatus": "unbekannt",
+   "polyKey": null,
+   "polySide": null,
+   "pinnMovePP": null,
+   "punkte": {
+    "punkte": 3,
+    "moeglich": 4,
+    "dauerH": 0.06,
+    "teile": [
+     {
+      "buch": "BF",
+      "name": "Betfair",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Geld 77% auf der Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "frischer Zufluss und Quote zieht mit"
+      },
+      "geld": {
+       "anteil": 0.77,
+       "betrag": 2946,
+       "gesamt": 3826,
+       "waehrung": "EUR",
+       "quelle": "geld"
+      },
+      "text": "Geld 77% auf der Seite"
+     },
+     {
+      "buch": "POLY",
+      "name": "Polymarket",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Polymarket nicht erhoben"
+     },
+     {
+      "buch": "PIN",
+      "name": "Pinnacle",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Pinnacle nicht erhoben"
+     },
+     {
+      "buch": "STAKE",
+      "name": "Stake-Highroller",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Stake-Highroller nicht erhoben"
+     },
+     {
+      "buch": "ZEIT",
+      "name": "Dauer",
+      "status": "nein",
+      "punkte": 0,
+      "moeglich": 1,
+      "grund": {
+       "ok": false,
+       "text": "steht seit 0.1h vor Anpfiff"
+      },
+      "tiefe": null,
+      "text": "steht seit 0.1h vor Anpfiff"
+     }
+    ]
+   },
+   "wertVsPinn": null,
+   "gehaltenSeit": "2026-09-13T14:41:32.710205+00:00",
+   "zuletztAktiv": "2026-09-13T14:41:32.710205+00:00",
+   "haltePreis": 1.74,
+   "aktiv": true
+  },
+  "36039992|Match Odds": {
+   "matchId": "36039992",
+   "home": "Botev Vratsa",
+   "away": "PFC Levski Sofia",
+   "league": "Bulgarian A League",
+   "kickoff": "2026-09-13T14:45:00Z",
+   "markt": "Match Odds",
+   "seite": "away",
+   "name": "PFC Levski Sofia",
+   "odd": 1.5,
+   "entryOdd": 1.5,
+   "anteilPct": 89,
+   "stufe": 2,
+   "verstaerker": [
+    {
+     "art": "poly",
+     "text": "Poly Preis 67%",
+     "gewicht": 12
+    }
+   ],
+   "rang": 70.9,
+   "track": null,
+   "streak": null,
+   "poly": {
+    "anteilPct": 67,
+    "usd": 713,
+    "odd": 1.49
+   },
+   "polyStatus": "ja",
+   "polyKey": "bul-bvr-lev-2026-09-13",
+   "polySide": "PFC Levski Sofia",
+   "pinnMovePP": null,
+   "punkte": {
+    "punkte": 5,
+    "moeglich": 7,
+    "dauerH": 0.06,
+    "teile": [
+     {
+      "buch": "BF",
+      "name": "Betfair",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Geld 89% auf der Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "frischer Zufluss und Quote zieht mit"
+      },
+      "geld": {
+       "anteil": 0.889,
+       "betrag": 8510,
+       "gesamt": 9573,
+       "waehrung": "EUR",
+       "quelle": "geld"
+      },
+      "text": "Geld 89% auf der Seite"
+     },
+     {
+      "buch": "POLY",
+      "name": "Polymarket",
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Poly-Preis 67% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein bewiesenes Wallet auf der Seite"
+      },
+      "geld": {
+       "anteil": 0.67,
+       "betrag": null,
+       "gesamt": 713,
+       "waehrung": "USD",
+       "quelle": "preis"
+      },
+      "text": "Poly-Preis 67% auf derselben Seite"
+     },
+     {
+      "buch": "PIN",
+      "name": "Pinnacle",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Pinnacle nicht erhoben"
+     },
+     {
+      "buch": "STAKE",
+      "name": "Stake-Highroller",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Stake-Highroller nicht erhoben"
+     },
+     {
+      "buch": "ZEIT",
+      "name": "Dauer",
+      "status": "nein",
+      "punkte": 0,
+      "moeglich": 1,
+      "grund": {
+       "ok": false,
+       "text": "steht seit 0.1h vor Anpfiff"
+      },
+      "tiefe": null,
+      "text": "steht seit 0.1h vor Anpfiff"
+     }
+    ]
+   },
+   "wertVsPinn": null,
+   "gehaltenSeit": "2026-09-13T14:41:32.710205+00:00",
+   "zuletztAktiv": "2026-09-13T14:41:32.710205+00:00",
+   "haltePreis": 1.5,
+   "aktiv": true
+  },
+  "36040004|Match Odds": {
+   "matchId": "36040004",
+   "home": "Egersund",
+   "away": "Kongsvinger",
+   "league": "Norwegian 1st Division",
+   "kickoff": "2026-09-13T15:00:01Z",
+   "markt": "Match Odds",
+   "seite": "away",
+   "name": "Kongsvinger",
+   "odd": 1.81,
+   "entryOdd": 1.86,
+   "anteilPct": 87,
+   "stufe": 2,
+   "verstaerker": [],
+   "rang": 58.7,
+   "track": null,
+   "streak": null,
+   "poly": null,
+   "polyStatus": "unbekannt",
+   "polyKey": null,
+   "polySide": null,
+   "pinnMovePP": null,
+   "punkte": {
+    "punkte": 3,
+    "moeglich": 4,
+    "dauerH": 0.31,
+    "teile": [
+     {
+      "buch": "BF",
+      "name": "Betfair",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Geld 87% auf der Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "frischer Zufluss und Quote zieht mit"
+      },
+      "geld": {
+       "anteil": 0.874,
+       "betrag": 3786,
+       "gesamt": 4332,
+       "waehrung": "EUR",
+       "quelle": "geld"
+      },
+      "text": "Geld 87% auf der Seite"
+     },
+     {
+      "buch": "POLY",
+      "name": "Polymarket",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Polymarket nicht erhoben"
+     },
+     {
+      "buch": "PIN",
+      "name": "Pinnacle",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Pinnacle nicht erhoben"
+     },
+     {
+      "buch": "STAKE",
+      "name": "Stake-Highroller",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Stake-Highroller nicht erhoben"
+     },
+     {
+      "buch": "ZEIT",
+      "name": "Dauer",
+      "status": "nein",
+      "punkte": 0,
+      "moeglich": 1,
+      "grund": {
+       "ok": false,
+       "text": "steht seit 0.3h vor Anpfiff"
+      },
+      "tiefe": null,
+      "text": "steht seit 0.3h vor Anpfiff"
+     }
+    ]
+   },
+   "wertVsPinn": null,
+   "gehaltenSeit": "2026-09-13T14:41:32.710205+00:00",
+   "zuletztAktiv": "2026-09-13T14:41:32.710205+00:00",
+   "haltePreis": 1.81,
+   "aktiv": true
+  },
+  "36039995|Match Odds": {
+   "matchId": "36039995",
+   "home": "Start",
+   "away": "Brann",
+   "league": "Norwegian Eliteserien",
+   "kickoff": "2026-09-13T15:00:00Z",
+   "markt": "Match Odds",
+   "seite": "away",
+   "name": "Brann",
+   "odd": 1.88,
+   "entryOdd": 1.95,
+   "anteilPct": 70,
+   "stufe": 1,
+   "verstaerker": [
+    {
+     "art": "poly",
+     "text": "Poly Geld 64%",
+     "gewicht": 12
+    },
+    {
+     "art": "pinn",
+     "text": "Pinnacle stimmt zu",
+     "gewicht": 10
+    }
+   ],
+   "rang": 79.0,
+   "track": null,
+   "streak": null,
+   "poly": {
+    "anteilPct": 64,
+    "usd": 148809,
+    "odd": 1.94
+   },
+   "polyStatus": "ja",
+   "polyKey": "nor-ik-bra-2026-09-13",
+   "polySide": "SK Brann",
+   "pinnMovePP": null,
+   "punkte": {
+    "punkte": 7,
+    "moeglich": 10,
+    "dauerH": 0.31,
+    "teile": [
+     {
+      "buch": "BF",
+      "name": "Betfair",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Geld 70% auf der Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "frischer Zufluss und Quote zieht mit"
+      },
+      "geld": {
+       "anteil": 0.699,
+       "betrag": 9591,
+       "gesamt": 13721,
+       "waehrung": "EUR",
+       "quelle": "geld"
+      },
+      "text": "Geld 70% auf der Seite"
+     },
+     {
+      "buch": "POLY",
+      "name": "Polymarket",
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Poly-Geld 64% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein bewiesenes Wallet auf der Seite"
+      },
+      "geld": {
+       "anteil": 0.64,
+       "betrag": 95238,
+       "gesamt": 148809,
+       "waehrung": "USD",
+       "quelle": "geld"
+      },
+      "text": "Poly-Geld 64% auf derselben Seite"
+     },
+     {
+      "buch": "PIN",
+      "name": "Pinnacle",
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "hat dieselbe Seite als Favorit"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein Move gemessen"
+      },
+      "geld": null,
+      "text": "hat dieselbe Seite als Favorit"
+     },
+     {
+      "buch": "STAKE",
+      "name": "Stake-Highroller",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Stake-Highroller nicht erhoben"
+     },
+     {
+      "buch": "ZEIT",
+      "name": "Dauer",
+      "status": "nein",
+      "punkte": 0,
+      "moeglich": 1,
+      "grund": {
+       "ok": false,
+       "text": "steht seit 0.3h vor Anpfiff"
+      },
+      "tiefe": null,
+      "text": "steht seit 0.3h vor Anpfiff"
+     }
+    ]
+   },
+   "wertVsPinn": null,
+   "gehaltenSeit": "2026-09-13T14:41:32.710205+00:00",
+   "zuletztAktiv": "2026-09-13T14:41:32.710205+00:00",
+   "haltePreis": 1.88,
+   "aktiv": true
+  },
+  "36039998|Match Odds": {
+   "matchId": "36039998",
+   "home": "Ham-Kam",
+   "away": "Molde",
+   "league": "Norwegian Eliteserien",
+   "kickoff": "2026-09-13T15:00:00Z",
+   "markt": "Match Odds",
+   "seite": "away",
+   "name": "Molde",
+   "odd": 1.73,
+   "entryOdd": 1.75,
+   "anteilPct": 91,
+   "stufe": 2,
+   "verstaerker": [],
+   "rang": 59.1,
+   "track": null,
+   "streak": null,
+   "poly": null,
+   "polyStatus": "unbekannt",
+   "polyKey": null,
+   "polySide": null,
+   "pinnMovePP": null,
+   "punkte": {
+    "punkte": 3,
+    "moeglich": 4,
+    "dauerH": 0.31,
+    "teile": [
+     {
+      "buch": "BF",
+      "name": "Betfair",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Geld 91% auf der Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "frischer Zufluss und Quote zieht mit"
+      },
+      "geld": {
+       "anteil": 0.913,
+       "betrag": 9814,
+       "gesamt": 10749,
+       "waehrung": "EUR",
+       "quelle": "geld"
+      },
+      "text": "Geld 91% auf der Seite"
+     },
+     {
+      "buch": "POLY",
+      "name": "Polymarket",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Polymarket nicht erhoben"
+     },
+     {
+      "buch": "PIN",
+      "name": "Pinnacle",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Pinnacle nicht erhoben"
+     },
+     {
+      "buch": "STAKE",
+      "name": "Stake-Highroller",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Stake-Highroller nicht erhoben"
+     },
+     {
+      "buch": "ZEIT",
+      "name": "Dauer",
+      "status": "nein",
+      "punkte": 0,
+      "moeglich": 1,
+      "grund": {
+       "ok": false,
+       "text": "steht seit 0.3h vor Anpfiff"
+      },
+      "tiefe": null,
+      "text": "steht seit 0.3h vor Anpfiff"
+     }
+    ]
+   },
+   "wertVsPinn": null,
+   "gehaltenSeit": "2026-09-13T14:41:32.710205+00:00",
+   "zuletztAktiv": "2026-09-13T14:41:32.710205+00:00",
+   "haltePreis": 1.73,
    "aktiv": true
   }
  }

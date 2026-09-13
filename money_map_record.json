@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-09-13T14:26:24.191450+00:00",
+"generatedAt": "2026-09-13T14:41:29.629936+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1073,
-"wins": 897,
-"hitRate": 0.836,
-"polyN": 1012,
-"polyWins": 776,
-"polyHitRate": 0.7668,
+"n": 1077,
+"wins": 900,
+"hitRate": 0.8357,
+"polyN": 1016,
+"polyWins": 779,
+"polyHitRate": 0.7667,
 "pinnN": 143,
 "pinnHitRate": 0.7902,
-"nRoi": 400,
-"roi": 0.4218,
-"roiLb": 0.3587,
-"nClv": 400,
-"clv": 20.62,
-"clvLb": 18.6498
+"nRoi": 404,
+"roi": 0.4186,
+"roiLb": 0.3559,
+"nClv": 404,
+"clv": 20.57,
+"clvLb": 18.6079
 },
 "uneinig": {
 "n": 417,
@@ -34,20 +34,20 @@
 "clvLb": -22.3152
 },
 "teil": {
-"n": 21,
-"wins": 4,
-"hitRate": 0.1905,
-"polyN": 19,
-"polyWins": 2,
-"polyHitRate": 0.1053,
-"pinnN": 21,
-"pinnHitRate": 0.1905,
-"nRoi": 12,
-"roi": -0.8792,
-"roiLb": -1.0779,
-"nClv": 12,
-"clv": -37.79,
-"clvLb": -51.8203
+"n": 22,
+"wins": 5,
+"hitRate": 0.2273,
+"polyN": 20,
+"polyWins": 3,
+"polyHitRate": 0.15,
+"pinnN": 22,
+"pinnHitRate": 0.2273,
+"nRoi": 13,
+"roi": -0.7085,
+"roiLb": -1.0436,
+"nClv": 13,
+"clv": -35.59,
+"clvLb": -48.9934
 }
 },
 "byLeague": {
@@ -126,6 +126,11 @@
 "wins": 25,
 "hitRate": 0.7812
 },
+"German Bundesliga 2": {
+"n": 30,
+"wins": 23,
+"hitRate": 0.7667
+},
 "Turkish Super League": {
 "n": 30,
 "wins": 20,
@@ -135,11 +140,6 @@
 "n": 29,
 "wins": 21,
 "hitRate": 0.7241
-},
-"German Bundesliga 2": {
-"n": 29,
-"wins": 22,
-"hitRate": 0.7586
 },
 "English Football League Cup": {
 "n": 28,
@@ -181,15 +181,15 @@
 "wins": 11,
 "hitRate": 0.5238
 },
+"Belgian Pro League": {
+"n": 20,
+"wins": 16,
+"hitRate": 0.8
+},
 "North American Leagues Cup": {
 "n": 20,
 "wins": 13,
 "hitRate": 0.65
-},
-"Belgian Pro League": {
-"n": 19,
-"wins": 15,
-"hitRate": 0.7895
 },
 "Chinese Super League": {
 "n": 19,
@@ -331,6 +331,11 @@
 "wins": 4,
 "hitRate": 0.5714
 },
+"Chinese League 1": {
+"n": 6,
+"wins": 4,
+"hitRate": 0.6667
+},
 "Colombian Primera B": {
 "n": 6,
 "wins": 4,
@@ -400,11 +405,6 @@
 "n": 4,
 "wins": 4,
 "hitRate": 1.0
-},
-"Chinese League 1": {
-"n": 4,
-"wins": 3,
-"hitRate": 0.75
 },
 "Guatemalan Liga Nacional": {
 "n": 4,
@@ -596,6 +596,11 @@
 "wins": 1,
 "hitRate": 1.0
 },
+"Lithuanian A Lyga": {
+"n": 1,
+"wins": 1,
+"hitRate": 1.0
+},
 "Mexican U21": {
 "n": 1,
 "wins": 0,
@@ -619,26 +624,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 899,
-"wins": 718,
-"hitRate": 0.7987,
-"nRoi": 375,
-"roi": 0.2767,
-"roiLb": 0.2067,
-"nClv": 375,
-"clv": 13.16,
-"clvLb": 10.3653
+"n": 902,
+"wins": 721,
+"hitRate": 0.7993,
+"nRoi": 378,
+"roi": 0.2809,
+"roiLb": 0.2113,
+"nClv": 378,
+"clv": 13.2,
+"clvLb": 10.4247
 },
 "weak": {
-"n": 579,
-"wins": 299,
+"n": 581,
+"wins": 300,
 "hitRate": 0.5164,
-"nRoi": 222,
-"roi": -0.1216,
-"roiLb": -0.2312,
-"nClv": 222,
+"nRoi": 224,
+"roi": -0.1236,
+"roiLb": -0.2324,
+"nClv": 224,
 "clv": -2.26,
-"clvLb": -5.8378
+"clvLb": -5.8055
 }
 },
 "divergence": {
@@ -650,6 +655,101 @@
 "polyRate": 0.2586
 },
 "recent": [
+{
+"matchId": "36039080",
+"home": "Club Brugge",
+"away": "Antwerp",
+"league": "Belgian Pro League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Club Brugge",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+1
+],
+"kickoff": "2026-09-13T11:30:00Z",
+"settledAt": "2026-09-13T14:41:29.388492+00:00"
+},
+{
+"matchId": "36039060",
+"home": "FC Heidenheim",
+"away": "Holstein Kiel",
+"league": "German Bundesliga 2",
+"verdict": "teil",
+"moneySide": "home",
+"moneyName": "FC Heidenheim",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-09-13T11:30:00Z",
+"settledAt": "2026-09-13T14:41:29.388492+00:00"
+},
+{
+"matchId": "36057657",
+"home": "Shijiazhuang Gongfu FC",
+"away": "Shenzhen Juniors FC",
+"league": "Chinese League 1",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Shenzhen Juniors FC",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-09-13T11:30:00Z",
+"settledAt": "2026-09-13T14:41:29.388492+00:00"
+},
+{
+"matchId": "36048483",
+"home": "Panevezys",
+"away": "FK Kauno Zalgiris",
+"league": "Lithuanian A Lyga",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "FK Kauno Zalgiris",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-09-13T11:30:00Z",
+"settledAt": "2026-09-13T14:41:29.388492+00:00"
+},
+{
+"matchId": "36057646",
+"home": "Meizhou Hakka",
+"away": "Nanjing City",
+"league": "Chinese League 1",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Meizhou Hakka",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-09-13T11:30:00Z",
+"settledAt": "2026-09-13T14:41:29.388492+00:00"
+},
 {
 "matchId": "36041113",
 "home": "Viking",
@@ -1314,113 +1414,18 @@
 ],
 "kickoff": "2026-09-12T23:30:00Z",
 "settledAt": "2026-09-13T02:39:47.658739+00:00"
-},
-{
-"matchId": "36040131",
-"home": "St Louis City SC",
-"away": "Minnesota Utd",
-"league": "US MLS",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "St Louis City SC",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-4,
-2
-],
-"kickoff": "2026-09-13T00:30:00Z",
-"settledAt": "2026-09-13T02:39:47.658739+00:00"
-},
-{
-"matchId": "36045487",
-"home": "Boyaca Chico",
-"away": "Ind Medellin",
-"league": "Colombian Primera A",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Ind Medellin",
-"polySide": "home",
-"winner": "home",
-"moneyWin": false,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-09-12T23:10:00Z",
-"settledAt": "2026-09-13T02:24:58.842117+00:00"
-},
-{
-"matchId": "36037697",
-"home": "Toluca",
-"away": "Atlas",
-"league": "Mexican Liga MX",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Toluca",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-5,
-2
-],
-"kickoff": "2026-09-12T23:00:00Z",
-"settledAt": "2026-09-13T02:09:58.080717+00:00"
-},
-{
-"matchId": "36040126",
-"home": "Orlando City",
-"away": "Toronto FC",
-"league": "US MLS",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Orlando City",
-"polySide": "away",
-"winner": "home",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-3,
-0
-],
-"kickoff": "2026-09-12T23:30:00Z",
-"settledAt": "2026-09-13T01:39:53.970863+00:00"
-},
-{
-"matchId": "36053773",
-"home": "Maringa",
-"away": "Santa Cruz PE",
-"league": "Brazilian Serie C",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Maringa",
-"polySide": "home",
-"winner": "away",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-09-12T22:30:00Z",
-"settledAt": "2026-09-13T01:39:53.970863+00:00"
 }
 ],
 "global": {
-"n": 1511,
-"wins": 1035,
-"hitRate": 0.685,
-"nRoi": 597,
-"roi": 0.1286,
-"roiLb": 0.0673,
-"nClv": 597,
-"clv": 7.42,
-"clvLb": 5.168
+"n": 1516,
+"wins": 1039,
+"hitRate": 0.6854,
+"nRoi": 602,
+"roi": 0.1304,
+"roiLb": 0.0694,
+"nClv": 602,
+"clv": 7.45,
+"clvLb": 5.2078
 },
-"pending": 32
+"pending": 30
 }
