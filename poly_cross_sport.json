@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-14T20:46:54.995110+00:00",
+ "generatedAt": "2026-09-14T21:17:02.555527+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,8 +10,8 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 656,
- "pinnKeys": 286,
- "matched": 218,
+ "pinnKeys": 292,
+ "matched": 224,
  "footballRows": 198,
  "crossRows": 458,
  "footballSkippedStale": 48,
@@ -24,13 +24,70 @@
   "soccer_liga": 180
  },
  "matchedBySport": {
-  "baseball_mlb": 20,
+  "baseball_mlb": 26,
   "soccer_mls": 18,
   "soccer_liga": 180
  },
  "trackRecord": {
-  "tracked": 288,
+  "tracked": 290,
   "converged": 63
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|losangelesangels-seattlemariners|seattlemariners",
+   "sport": "baseball_mlb",
+   "event": "Seattle Mariners vs Los Angeles Angels",
+   "market": "Moneyline",
+   "outcome": "Seattle Mariners",
+   "polyPP": 50.5,
+   "pinnPP": 60.5,
+   "gapPP": -10.04,
+   "vol": 81393,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-14T21:17:02.554928+00:00"
+  },
+  {
+   "id": "baseball_mlb|losangelesangels-seattlemariners|losangelesangels",
+   "sport": "baseball_mlb",
+   "event": "Seattle Mariners vs Los Angeles Angels",
+   "market": "Moneyline",
+   "outcome": "Los Angeles Angels",
+   "polyPP": 49.5,
+   "pinnPP": 39.5,
+   "gapPP": 10.04,
+   "vol": 81393,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-14T21:17:02.554928+00:00"
+  },
+  {
+   "id": "baseball_mlb|minnesotatwins-newyorkyankees|newyorkyankees",
+   "sport": "baseball_mlb",
+   "event": "New York Yankees vs Minnesota Twins",
+   "market": "Moneyline",
+   "outcome": "New York Yankees",
+   "polyPP": 53.5,
+   "pinnPP": 61.7,
+   "gapPP": -8.15,
+   "vol": 67758,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-14T21:17:02.554928+00:00"
+  },
+  {
+   "id": "baseball_mlb|minnesotatwins-newyorkyankees|minnesotatwins",
+   "sport": "baseball_mlb",
+   "event": "New York Yankees vs Minnesota Twins",
+   "market": "Moneyline",
+   "outcome": "Minnesota Twins",
+   "polyPP": 46.5,
+   "pinnPP": 38.3,
+   "gapPP": 8.15,
+   "vol": 67758,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-14T21:17:02.554928+00:00"
+  }
+ ]
 }

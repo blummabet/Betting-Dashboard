@@ -1,15 +1,15 @@
 {
- "n": 387,
+ "n": 398,
  "minOdds": 1.35,
- "moneyHitRate": 0.357,
- "priceHitRate": 0.39,
- "brierMoney": 0.9307,
- "brierPrice": 0.701,
+ "moneyHitRate": 0.359,
+ "priceHitRate": 0.397,
+ "brierMoney": 0.9264,
+ "brierPrice": 0.6994,
  "disagree": {
-  "n": 105,
-  "moneyWon": 12,
-  "priceWon": 25,
-  "neither": 68
+  "n": 111,
+  "moneyWon": 13,
+  "priceWon": 28,
+  "neither": 70
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -24,10 +24,18 @@
   },
   {
    "league": "EPL",
-   "n": 32,
-   "moneyHitRate": 0.219,
-   "brierMoney": 0.979,
-   "brierPrice": 0.8409,
+   "n": 34,
+   "moneyHitRate": 0.206,
+   "brierMoney": 0.971,
+   "brierPrice": 0.8343,
+   "verdict": "preis_besser"
+  },
+  {
+   "league": "LA-LIGA",
+   "n": 39,
+   "moneyHitRate": 0.385,
+   "brierMoney": 0.9431,
+   "brierPrice": 0.7781,
    "verdict": "preis_besser"
   },
   {
@@ -36,14 +44,6 @@
    "moneyHitRate": 0.324,
    "brierMoney": 0.8252,
    "brierPrice": 0.6534,
-   "verdict": "preis_besser"
-  },
-  {
-   "league": "LA-LIGA",
-   "n": 36,
-   "moneyHitRate": 0.361,
-   "brierMoney": 0.9555,
-   "brierPrice": 0.7692,
    "verdict": "preis_besser"
   },
   {
@@ -80,10 +80,10 @@
   }
  ],
  "guete": {
-  "belastbar": 387,
-  "preis_echo": 239,
-  "abgeschnitten": 54,
-  "unbekannt": 378,
+  "belastbar": 398,
+  "preis_echo": 237,
+  "abgeschnitten": 55,
+  "unbekannt": 375,
   "leer": 0
  },
  "rows": [
@@ -220,6 +220,18 @@
    "totalUsd": 862256
   },
   {
+   "key": "epl-lee-new-2026-09-14",
+   "league": "EPL",
+   "winner": "Leeds United FC",
+   "moneyFav": "Newcastle United FC",
+   "priceFav": "Leeds United FC",
+   "moneyShare": 0.578,
+   "priceProb": 0.407,
+   "moneyOK": false,
+   "priceOK": true,
+   "totalUsd": 793615
+  },
+  {
    "key": "fl1-ang-ren-2026-09-06",
    "league": "LIGUE-1",
    "winner": "Stade Rennais FC 1901",
@@ -254,6 +266,18 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 632784
+  },
+  {
+   "key": "lal-vil-bet-2026-09-14",
+   "league": "LA-LIGA",
+   "winner": "Real Betis Balompié",
+   "moneyFav": "Real Betis Balompié",
+   "priceFav": "Villarreal CF",
+   "moneyShare": 0.671,
+   "priceProb": 0.493,
+   "moneyOK": true,
+   "priceOK": false,
+   "totalUsd": 616638
   },
   {
    "key": "epl-bri-lee-2026-09-05",
@@ -542,33 +566,9 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 285416
-  },
-  {
-   "key": "ucl-aek1-lin2-2026-09-08",
-   "league": "UCL",
-   "winner": "AEK",
-   "moneyFav": "AEK",
-   "priceFav": "AEK",
-   "moneyShare": 0.838,
-   "priceProb": 0.558,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 278775
-  },
-  {
-   "key": "nor-ik-bra-2026-09-13",
-   "league": "NORWAY-ELITESERIEN",
-   "winner": "IK Start",
-   "moneyFav": "SK Brann",
-   "priceFav": "SK Brann",
-   "moneyShare": 0.82,
-   "priceProb": 0.518,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 277240
   }
  ],
- "generatedAt": "2026-09-14T20:50:25.952702+00:00",
+ "generatedAt": "2026-09-14T21:20:44.239833+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -577,11 +577,11 @@
   "mlb": 781,
   "nhl": 552,
   "mls": 638,
-  "epl": 529,
+  "epl": 519,
   "soccer": 800,
-  "tennis": 800,
+  "tennis": 793,
   "ucl": 417,
-  "la-liga": 623,
+  "la-liga": 613,
   "bundesliga": 475,
   "serie-a": 51,
   "ligue-1": 513,
@@ -591,7 +591,7 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 623,
+  "esports": 618,
   "cs2": 422,
   "lol": 425,
   "dota": 9,
@@ -601,12 +601,12 @@
   "boxing": 262,
   "golf": 402,
   "f1": 379,
-  "cricket": 607,
+  "cricket": 606,
   "afc-champions-league-elite": 134,
   "allsvenskan": 1,
   "austria-bundesliga": 312,
   "brazil-serie-b": 4,
-  "bulgaria-parva-liga": 386,
+  "bulgaria-parva-liga": 391,
   "bundesliga-2": 467,
   "champions-league": 311,
   "champions-league-final": 12,
@@ -627,23 +627,23 @@
   "naitons-league": 1,
   "national-league": 654,
   "nations-league": 25,
-  "norway-eliteserien": 470,
-  "poland-ekstraklasa": 442,
-  "premier-league": 518,
+  "norway-eliteserien": 465,
+  "poland-ekstraklasa": 445,
+  "premier-league": 508,
   "saudi-professional-league": 410,
   "scotland-league-cup": 193,
   "scottish-premiership": 468,
   "serbian-superliga": 378,
   "serie-b": 471,
   "slovenia-prvaliga": 280,
-  "sweden-allsvenskan": 484,
+  "sweden-allsvenskan": 472,
   "switzerland-super-league": 381,
   "uefa-champions-league": 26,
   "uefa-conference-league": 29,
   "uefa-europa-league": 18,
   "uefa-nations-league": 292,
   "uefa-womens-champions-league": 2,
-  "ukraine-premier-liha": 463,
+  "ukraine-premier-liha": 462,
   "womens-champions-league": 462
  },
  "sweepStats": {
@@ -652,113 +652,113 @@
   "sweepAdded": 404
  },
  "vorStats": {
-  "kandidaten": 6,
+  "kandidaten": 5,
   "budgetLeer": 0,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
-  "mitAnteilen": 6,
-  "calls": 6
+  "mitAnteilen": 5,
+  "calls": 5
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1597,
-   "usd": 24114523,
-   "beispiel": "fifwc-prt-hrv-2026-07-02-player-props"
+   "n": 1204,
+   "usd": 45554773,
+   "beispiel": "fifwc-can-qat-2026-06-18"
   },
   "balance": {
-   "n": 4,
-   "usd": 6007572,
+   "n": 2,
+   "usd": 6000000,
    "beispiel": "balance-of-power-2026-midterms"
   },
   "nba": {
-   "n": 150,
-   "usd": 2705866,
-   "beispiel": "nba-2027-champion"
-  },
-  "nhl": {
-   "n": 361,
-   "usd": 1846896,
-   "beispiel": "nhl-las-car-2026-06-02"
+   "n": 169,
+   "usd": 4852647,
+   "beispiel": "nba-dal-lal-2026-02-12"
   },
   "ecs": {
-   "n": 6,
-   "usd": 884006,
-   "beispiel": "ecs-ars-mci-2026-08-16-more-markets"
+   "n": 9,
+   "usd": 1866096,
+   "beispiel": "ecs-ars-mci-2026-08-16"
   },
-  "fed": {
-   "n": 28,
-   "usd": 812674,
-   "beispiel": "fed-decision-in-september-762"
+  "nhl": {
+   "n": 356,
+   "usd": 1851178,
+   "beispiel": "nhl-phi-car-2026-05-02"
   },
   "world": {
-   "n": 65,
-   "usd": 757517,
+   "n": 7,
+   "usd": 488167,
    "beispiel": "world-cup-winner"
   },
-  "presidential": {
-   "n": 4,
-   "usd": 703573,
-   "beispiel": "presidential-election-winner-2028"
+  "fed": {
+   "n": 19,
+   "usd": 409568,
+   "beispiel": "fed-decision-in-september-762"
+  },
+  "usc": {
+   "n": 5,
+   "usd": 339916,
+   "beispiel": "usc-psg-av-2026-08-12"
   },
   "fif": {
-   "n": 51,
-   "usd": 235142,
-   "beispiel": "fif-prt-nga-2026-06-10"
+   "n": 37,
+   "usd": 176594,
+   "beispiel": "fif-pol-nga-2026-06-03"
   },
   "clf": {
-   "n": 38,
-   "usd": 162032,
+   "n": 31,
+   "usd": 152073,
    "beispiel": "clf-mun-lee-2026-08-12"
-  },
-  "which": {
-   "n": 12,
-   "usd": 123470,
-   "beispiel": "which-party-will-win-the-house-in-2026"
   },
   "nbasl": {
    "n": 5,
    "usd": 116209,
    "beispiel": "nbasl-cle-nop-2026-07-15"
   },
-  "j2100": {
-   "n": 1,
-   "usd": 77337,
-   "beispiel": "j2100-van-fuk-2026-06-01"
+  "which": {
+   "n": 9,
+   "usd": 99793,
+   "beispiel": "which-party-will-win-the-house-in-2026"
   },
   "brazil": {
-   "n": 4,
-   "usd": 75330,
+   "n": 3,
+   "usd": 71112,
    "beispiel": "brazil-presidential-election"
+  },
+  "clarity": {
+   "n": 4,
+   "usd": 68188,
+   "beispiel": "clarity-act-signed-into-law-in-2026"
   },
   "cbb": {
    "n": 1,
    "usd": 67887,
    "beispiel": "cbb-uconn-mich-2026-04-06"
   },
-  "clarity": {
-   "n": 4,
-   "usd": 67860,
-   "beispiel": "clarity-act-signed-into-law-in-2026"
+  "ballon": {
+   "n": 9,
+   "usd": 53318,
+   "beispiel": "ballon-dor-winner-2026"
   },
   "npb": {
    "n": 14,
    "usd": 51893,
-   "beispiel": "npb-hir-yok-2026-09-11"
+   "beispiel": "npb-han-chu-2026-09-14"
+  },
+  "bitcoin": {
+   "n": 13,
+   "usd": 51858,
+   "beispiel": "bitcoin-above-on-june-5-2026"
   },
   "democratic": {
-   "n": 3,
-   "usd": 48228,
+   "n": 2,
+   "usd": 46458,
    "beispiel": "democratic-presidential-nominee-2028"
   },
-  "kbo": {
-   "n": 14,
-   "usd": 40454,
-   "beispiel": "kbo-lg-doo-2026-09-03"
-  },
-  "us": {
-   "n": 4,
-   "usd": 39300,
-   "beispiel": "us-announces-end-of-iranian-blockade-byptptpt-20260713152715080"
+  "eurovision": {
+   "n": 8,
+   "usd": 43712,
+   "beispiel": "eurovision-winner-2026"
   }
  }
 }
