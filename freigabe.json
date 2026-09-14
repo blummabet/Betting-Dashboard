@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-14T14:13:49.672940+00:00",
+ "generatedAt": "2026-09-14T14:43:56.727935+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -140,7 +140,7 @@
     "nieAnteil": 0.345,
     "schaetzbar": false
    },
-   "alterTage": 0.4,
+   "alterTage": 0.5,
    "art": "conviction",
    "wert": 7,
    "nAlt": 124,
@@ -277,10 +277,10 @@
    "art": "verdict",
    "gruppen": 4,
    "basis": null,
-   "n": 222,
-   "pl": 21.86,
-   "roi": 0.0985,
-   "clv": -1.862,
+   "n": 226,
+   "pl": 23.2,
+   "roi": 0.1027,
+   "clv": -1.844,
    "belegte": 2
   },
   {
@@ -434,7 +434,7 @@
     {
      "spiel": "Athletic Club v Alaves",
      "auswahl": "Heimsieg",
-     "quote": 1.65,
+     "quote": 1.67,
      "anpfiff": "2026-09-19T14:15:00+00:00",
      "datensatz": "Liga",
      "id": "ESP-7-531-542|Heimsieg"
@@ -450,7 +450,7 @@
     {
      "spiel": "AS Roma v Inter",
      "auswahl": "Über 2.5 Tore",
-     "quote": 1.69,
+     "quote": 1.7,
      "anpfiff": "2026-09-19T16:00:00+00:00",
      "datensatz": "Liga",
      "id": "ITA-5-497-505|Über 2.5 Tore"
@@ -458,7 +458,7 @@
     {
      "spiel": "Venezia v Lazio",
      "auswahl": "Auswärtssieg",
-     "quote": 2.06,
+     "quote": 2.07,
      "anpfiff": "2026-09-19T18:45:00+00:00",
      "datensatz": "Liga",
      "id": "ITA-5-517-487|Auswärtssieg"
@@ -490,7 +490,7 @@
     {
      "spiel": "Auxerre v Stade Brestois 29",
      "auswahl": "Doppelte Chance — X2",
-     "quote": 1.48,
+     "quote": 1.5,
      "anpfiff": "2026-09-20T13:00:00+00:00",
      "datensatz": "Liga",
      "id": "FRA-5-108-106|Doppelte Chance — X2"
@@ -514,7 +514,7 @@
     {
      "spiel": "Marseille v Paris Saint Germain",
      "auswahl": "Über 2.5 Tore",
-     "quote": 1.35,
+     "quote": 1.37,
      "anpfiff": "2026-09-20T18:45:00+00:00",
      "datensatz": "Liga",
      "id": "FRA-5-81-85|Über 2.5 Tore"
@@ -3409,7 +3409,7 @@
     "nieAnteil": 0.345,
     "schaetzbar": false
    },
-   "alterTage": 0.4,
+   "alterTage": 0.5,
    "art": "conviction",
    "wert": 7,
    "nAlt": 124,
@@ -3674,33 +3674,6 @@
    "engineAlt": true
   },
   {
-   "schublade": "ABWÄGEN · gepusht",
-   "strom": "cards",
-   "n": 34,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.2085,
-   "pl": 7.09,
-   "roiLb": -0.0063,
-   "clv": null,
-   "clvLb": null,
-   "clvUrteil": "nicht erhoben",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": 37,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 33,
-    "lo": 8,
-    "hi": 1088,
-    "nieAnteil": 0.065,
-    "schaetzbar": false
-   },
-   "alterTage": 1.0,
-   "art": "push_filter",
-   "quelle": "pick_push_ledger.py"
-  },
-  {
    "schublade": "English National League · Both teams to Score?",
    "strom": "betfair",
    "n": 40,
@@ -3895,6 +3868,33 @@
    "naeherung": false
   },
   {
+   "schublade": "ABWÄGEN · gepusht",
+   "strom": "cards",
+   "n": 38,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.1611,
+   "pl": 6.12,
+   "roiLb": -0.0457,
+   "clv": null,
+   "clvLb": null,
+   "clvUrteil": "nicht erhoben",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": 63,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 47,
+    "lo": 9,
+    "hi": 1522,
+    "nieAnteil": 0.088,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "push_filter",
+   "quelle": "pick_push_ledger.py"
+  },
+  {
    "schublade": "First Half Goals 0.5",
    "strom": "betfair",
    "n": 3526,
@@ -3935,6 +3935,33 @@
    "alterTage": null,
    "art": "markt",
    "naeherung": false
+  },
+  {
+   "schublade": "ABWÄGEN · aussortiert",
+   "strom": "cards",
+   "n": 123,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0628,
+   "pl": 7.73,
+   "roiLb": -0.058,
+   "clv": null,
+   "clvLb": null,
+   "clvUrteil": "nicht erhoben",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": 455,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 268,
+    "lo": 44,
+    "hi": 22588,
+    "nieAnteil": 0.198,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "push_filter",
+   "quelle": "pick_push_ledger.py"
   },
   {
    "schublade": "English Sky Bet League 1 · Over/Under 2.5 Goals",
@@ -3994,33 +4021,6 @@
     "clv": null,
     "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
    }
-  },
-  {
-   "schublade": "ABWÄGEN · aussortiert",
-   "strom": "cards",
-   "n": 107,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0603,
-   "pl": 6.45,
-   "roiLb": -0.0684,
-   "clv": null,
-   "clvLb": null,
-   "clvUrteil": "nicht erhoben",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": 488,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 289,
-    "lo": 40,
-    "hi": 16751,
-    "nieAnteil": 0.243,
-    "schaetzbar": false
-   },
-   "alterTage": 0.7,
-   "art": "push_filter",
-   "quelle": "pick_push_ledger.py"
   },
   {
    "schublade": "🔒 Bücher-Score ≥7 von 10",
@@ -4386,6 +4386,34 @@
    "zuschnitt": "rest"
   },
   {
+   "schublade": "MLS · ABWÄGEN",
+   "strom": "cards",
+   "n": 93,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0231,
+   "pl": 2.15,
+   "roiLb": -0.1196,
+   "clv": -2.503,
+   "clvLb": -3.188,
+   "clvUrteil": "negativ belegt",
+   "clvOg": -1.818,
+   "fehltN": 0,
+   "noetigNRoi": 3543,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 424,
+    "lo": 40,
+    "hi": 23026,
+    "nieAnteil": 0.412,
+    "schaetzbar": false
+   },
+   "alterTage": 1.1,
+   "art": "verdict",
+   "wert": "ABWÄGEN",
+   "datensatz": "MLS"
+  },
+  {
    "schublade": "Saudi Professional League · First Half Goals 1.5",
    "strom": "betfair",
    "n": 32,
@@ -4472,34 +4500,6 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
-  },
-  {
-   "schublade": "MLS · ABWÄGEN",
-   "strom": "cards",
-   "n": 89,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0091,
-   "pl": 0.81,
-   "roiLb": -0.1367,
-   "clv": -2.577,
-   "clvLb": -3.286,
-   "clvUrteil": "negativ belegt",
-   "clvOg": -1.868,
-   "fehltN": 0,
-   "noetigNRoi": 22849,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 437,
-    "lo": 42,
-    "hi": 23703,
-    "nieAnteil": 0.492,
-    "schaetzbar": false
-   },
-   "alterTage": 1.1,
-   "art": "verdict",
-   "wert": "ABWÄGEN",
-   "datensatz": "MLS"
   },
   {
    "schublade": "Argentinian Primera Division · Match Odds",
@@ -4755,7 +4755,7 @@
     "nieAnteil": 0.755,
     "schaetzbar": false
    },
-   "alterTage": 0.4,
+   "alterTage": 0.5,
    "art": "vorangemeldet",
    "angemeldet": "2026-09-01T18:59:52.671883+00:00",
    "zielN": 60,
@@ -5286,7 +5286,7 @@
     "nieAnteil": 0.887,
     "schaetzbar": false
    },
-   "alterTage": 0.5,
+   "alterTage": 0.6,
    "art": "mix",
    "wert": "bf+money",
    "nAlt": 60,
@@ -6722,7 +6722,7 @@
    "noetigNRoi": null,
    "noetigNClv": null,
    "entfernung": null,
-   "alterTage": 0.4,
+   "alterTage": 0.5,
    "art": "mix",
    "wert": "bf+money+steam",
    "nAlt": 5,
@@ -6747,7 +6747,7 @@
    "noetigNRoi": null,
    "noetigNClv": null,
    "entfernung": null,
-   "alterTage": 5.6,
+   "alterTage": 5.7,
    "art": "conviction",
    "wert": 3
   },
