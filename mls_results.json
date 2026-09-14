@@ -44,15 +44,20 @@
       "polyClose": 0.375,
       "polyClvPP": 20.5,
       "isSteamLag": false,
-      "result": "SOLD",
-      "pnl": 0.0,
+      "result": "LOSS",
+      "pnl": -5.5,
       "score": "1-2",
       "slug": "mls-sea-aus-2026-08-19-more-markets",
       "source": "auto",
       "placedAt": "2026-08-18T12:59:35.908360+00:00",
-      "resolvedAt": "2026-08-18T12:59:36.123337+00:00",
+      "resolvedAt": null,
       "sellPrice": null,
-      "sellReason": "manuell auf Polymarket geschlossen",
+      "sellReason": null,
+      "processVerdict": "UNLUCKY",
+      "processCovered": true,
+      "xgTotal": 2.43,
+      "xgHome": 1.25,
+      "xgAway": 1.18,
       "competition": "mls",
       "competitionLabel": "MLS"
     }
@@ -61,19 +66,19 @@
     "totalBets": 2,
     "resolved": 2,
     "pending": 0,
-    "sold": 2,
+    "sold": 1,
     "wins": 0,
-    "losses": 0,
+    "losses": 1,
     "voids": 0,
-    "winRate": null,
+    "winRate": 0.0,
     "totalStaked": 11.0,
-    "totalPnl": 0.0,
-    "roi": 0.0,
+    "totalPnl": -5.5,
+    "roi": -50.0,
     "avgCLV": -1.07,
     "sharpeEst": null,
     "postmortem": {
       "closedN": 2,
-      "realizedPnl": 0.0,
+      "realizedPnl": -5.5,
       "avgClv": -1.07,
       "clvCoverage": "1/2",
       "byMarket": {
@@ -85,26 +90,32 @@
         },
         "O/U": {
           "n": 1,
-          "pnl": 0.0,
+          "pnl": -5.5,
           "avgClv": null,
           "clvCoverage": "0/1"
         }
       },
       "byExit": {
+        "LOSS": {
+          "n": 1,
+          "pnl": -5.5,
+          "avgClv": null,
+          "clvCoverage": "0/1"
+        },
         "Sell-sonstig": {
-          "n": 2,
+          "n": 1,
           "pnl": 0.0,
           "avgClv": -1.07,
-          "clvCoverage": "1/2"
+          "clvCoverage": "1/1"
         }
       },
       "byCompetition": {
         "mls": {
           "label": "MLS",
           "n": 2,
-          "pnl": 0.0,
+          "pnl": -5.5,
           "staked": 11.0,
-          "roi": 0.0,
+          "roi": -50.0,
           "avgClv": -1.07,
           "clvCoverage": "1/2"
         }
@@ -113,9 +124,9 @@
         "n": 2,
         "exitBetter": 1,
         "holdBetter": 1,
-        "avgDeltaEur": -3.25
+        "avgDeltaEur": -6.0
       }
     }
   },
-  "updatedAt": "2026-09-14T09:35:43.218228+00:00"
+  "updatedAt": "2026-09-14T18:01:06.552316+00:00"
 }
