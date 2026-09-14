@@ -222,6 +222,13 @@ ART = {
     # ein suedostasiatischer Vereinswettbewerb ueber Landesgrenzen (Shan United/Myanmar gegen
     # Ezra FC/Laos), keine Liga. „championship" im Namen heisst hier nicht zweite Klasse.
     "asean-club-championship": "kontinental",
+    # 14.09.2026 (Status-Seite, Guard-Batterie): „asian-games". Ein multisportliches
+    # Kontinentalereignis — im Ledger stehen aktuell 131 BASKETBALL-Zeilen (China–Philippines),
+    # deren Spielklasse `stufe()` ohnehin nicht beantwortet. Gemeldet wurde es trotzdem als
+    # Fussball-Luecke, weil das Turnier auch ein Fussballturnier hat und dessen Zeilen durch
+    # das rollierende Fenster kommen und gehen. Eine Spielklasse hat es in keiner Sportart:
+    # es spielen Nationalauswahlen (im Fussball U23), keine Ligamannschaften.
+    "asian-games": "kontinental",
     # 14.09.2026 (CI-Wachhund): die Professional Development League ist Englands U21-Reserve-
     # wettbewerb. „Swansea City - Huddersfield Town" sieht nach Profifussball aus, es sind die
     # Nachwuchsmannschaften — die Namensregel greift nicht, weil weder U21 noch „youth" im

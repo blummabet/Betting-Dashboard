@@ -239,6 +239,20 @@ def test_block_meldet_ligen_ohne_ebene():
     assert b["nOhneEbene"] == 1 and "gibt-es-nicht" in b["ohneEbene"]
 
 
+def test_asian_games_steht_in_der_tabelle():
+    """14.09.2026 (Status-Seite): die Guard-Batterie meldete „asian-games" als Fussball-Luecke.
+
+    Der Test am echten Ledger kann das NICHT halten: dort stehen aktuell nur Basketball-Zeilen
+    (131 Stueck, China–Philippines), und fuer die beantwortet `stufe()` ohnehin nichts. Die
+    Fussball-Zeilen desselben Turniers kommen und gehen mit dem rollierenden Fenster — eine
+    Luecke, die sich selbst versteckt, bis sie wieder auftaucht. Deshalb steht der Eintrag hier
+    ausdruecklich, unabhaengig vom Bestand.
+    """
+    assert LS.stufe("asian-games", "soccer") == "kontinental"
+    assert LS.stufe("asian-games", "basketball") is None
+
+
+
 def test_alle_ligen_im_echten_ledger_haben_eine_ebene():
     """Der Wachhund gegen stilles Veralten: taucht eine neue Fussball-Liga auf, faellt sie
     hier auf, und nicht erst in einer Tabelle, in der sie nicht vorkommt."""

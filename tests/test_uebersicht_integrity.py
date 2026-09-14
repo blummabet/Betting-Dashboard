@@ -234,6 +234,43 @@ class MoneyMapPolyGehoertZumSpiel(unittest.TestCase):
         r = UI.check_money_map_poly_gehoert_zum_spiel(self._ctx("Akhaa Ahli Aley"))
         self.assertEqual(r["failures"], [])
 
+    # ── 14.09.2026: der Fehlalarm, der die Status-Seite dauerhaft rot hielt ────────────────
+    def _inter(self, poly_name):
+        return {"moneyMap": {"rows": [{"home": "Inter", "away": "Udinese",
+                                       "league": "Italian Serie A",
+                                       "poly": {"side": "home", "name": poly_name,
+                                                "usd": 119734, "sharePct": 96}}]}}
+
+    def test_laengerer_vereinsname_ist_kein_fremdes_geld(self):
+        """⭐ „Inter" und „FC Internazionale Milano" sind dasselbe Team. Der Vergleich auf ganze
+        Wortmarken kannte nur Gleichheit — die Zeile stand rot, obwohl 96 % des Geldes genau
+        dort hingehoerten. Ein Waechter, der bei korrekten Daten dauerhaft rot steht, wird
+        weggeschaut, und dann faellt der echte Fall mit durch."""
+        self.assertEqual(UI.check_money_map_poly_gehoert_zum_spiel(
+            self._inter("FC Internazionale Milano"))["failures"], [])
+
+    def test_der_praefix_beweist_erst_ab_fuenf_zeichen(self):
+        """Die Gegenprobe, und der Grund fuer die Laengengrenze: genau ein zu kurzes Token als
+        Beleg gelten zu lassen („al"), war die Luecke, aus der der Al-Hilal-Fall entstand."""
+        r = UI.check_money_map_poly_gehoert_zum_spiel(self._ctx("Al Hilal Saudi Club"))
+        self.assertEqual(len(r["failures"]), 1,
+                         "Al-Ahed darf Al Hilal nicht belegen")
+
+    def test_vier_zeichen_belegen_noch_nichts(self):
+        """Warum die Grenze bei FUENF liegt und nicht bei vier: „Bari" ist ein Praefix von
+        „Barito Putera" — zwei Vereine auf zwei Kontinenten. Bei vier Zeichen wuerde das Geld
+        des einen den Konsens des anderen bestaetigen; genau diese Klasse (ein zu kurzes Token
+        als Beleg) hat den Al-Hilal-Fall erzeugt."""
+        ctx = {"moneyMap": {"rows": [{"home": "Bari", "away": "Cesena", "league": "Serie B",
+                                      "poly": {"side": "home", "name": "Barito Putera",
+                                               "usd": 41000}}]}}
+        self.assertEqual(len(UI.check_money_map_poly_gehoert_zum_spiel(ctx)["failures"]), 1)
+
+    def test_fremdes_geld_faellt_weiter_auf(self):
+        r = UI.check_money_map_poly_gehoert_zum_spiel(self._inter("Juventus Turin"))
+        self.assertEqual(len(r["failures"]), 1)
+        self.assertIn("119734", r["failures"][0])
+
     def test_zeile_ohne_poly_ist_kein_fall(self):
         ctx = {"moneyMap": {"rows": [{"home": "A", "away": "B", "poly": None}]}}
         self.assertEqual(UI.check_money_map_poly_gehoert_zum_spiel(ctx)["failures"], [])

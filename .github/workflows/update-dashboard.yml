@@ -126,6 +126,31 @@ jobs:
       # das war das Vor-WM-Domestic-System und doppelte/störte den Public-Channel. Telegram läuft
       # jetzt ausschließlich über telegram_wm.py (WM/Liga: Morning + Recap + Spotlight).
 
+      # 🔴 14.09.2026 (Lucas: „schau dir die roten Fehler auf der Status-Seite an").
+      #
+      # Die Status-Seite meldete „Validator liefert nicht — Stand vor 2 Tagen", und sie hatte
+      # recht: `validator_summary.json` traegt im Repo den Zeitstempel „12.09.2026 14:15" — das
+      # ALTE deutsche Format. Beide Schreiber setzen seit dem 12.09. ISO. Das committete Artefakt
+      # stammt also aus keinem Workflow-Lauf, sondern aus einem Lauf davor, den Lucas von Hand
+      # gepusht hat. Der Validator lief hier bis heute NUR als Anhaengsel im `__main__`-Schwanz
+      # von `update_dashboard.py` — und dieser Schritt traegt `continue-on-error: true`. Stirbt
+      # das Skript irgendwo nach `main()`, faellt die Validator-Ausgabe lautlos aus, waehrend
+      # season-finish.html & Co. aus demselben Lauf sauber committet werden. Genau so sah es aus.
+      #
+      # Der Validator bekommt deshalb seinen EIGENEN Schritt: er laeuft, egal was davor stirbt,
+      # und wenn ER stirbt, steht es als eigener roter Schritt in den Actions statt als stille
+      # alte Datei auf der Status-Seite. Ein Check, der nicht laufen konnte, ist kein bestandener
+      # Check — derselbe Satz, mit dem die Status-Seite selbst gebaut ist.
+      #
+      # `continue-on-error` bleibt dran, weil der Validator per Design mit Exit-Code 1 endet,
+      # wenn er FEHLER FINDET (check_picks_logic.py, letzte Zeile) — das darf den Push nicht
+      # verhindern. Sichtbar ist es trotzdem: die Datei traegt dann einen frischen Stand.
+      - name: 🐕 Pick-Validator (schreibt validator_summary.json)
+        run: python check_picks_logic.py --days 3 --report
+        continue-on-error: true
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+
       # 9. Geänderte Dateien zurück ins Repo committen und pushen
       - name: 💾 Änderungen speichern & pushen
         run: |

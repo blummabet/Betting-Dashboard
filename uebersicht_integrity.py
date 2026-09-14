@@ -378,7 +378,22 @@ def check_money_map_poly_gehoert_zum_spiel(ctx):
         nm = p.get("name")
         if not nm:
             continue
-        if _tok(nm) & (_tok(r.get("home")) | _tok(r.get("away"))):
+        _seiten = _tok(r.get("home")) | _tok(r.get("away"))
+        if _tok(nm) & _seiten:
+            continue
+        # 14.09.2026 (Status-Seite): FEHLALARM. „Inter v Udinese" stand hier rot, weil die
+        # Poly-Seite „FC Internazionale Milano" heisst — dasselbe Team, anderer Name. Der
+        # Vergleich auf ganze Wortmarken kennt nur Gleichheit, und „inter" ist nicht
+        # „internazionale". Das Geld lag zu 96 % auf der Heimseite und gehoerte genau dorthin.
+        #
+        # Ein Waechter, der bei korrekten Daten dauerhaft rot steht, wird weggeschaut — und dann
+        # faellt der echte Fall (Al-Hilal-Geld in einer Al-Ahed-Zeile) mit durch. Deshalb: eine
+        # Wortmarke gilt auch, wenn sie den ANFANG der anderen bildet — aber erst ab fuenf
+        # Zeichen. Genau das war die Luecke damals: „al" als Beleg. Fuenf Zeichen sind lang
+        # genug, dass ein Praefix den Verein benennt und nicht bloss seine Sprache.
+        if any(a.startswith(b) or b.startswith(a)
+               for a in _tok(nm) for b in _seiten
+               if min(len(a), len(b)) >= 5):
             continue
         fails.append(f"{r.get('home')} v {r.get('away')} ({r.get('league')}): Poly-Seite heisst "
                      f"„{nm}\u201c und gehoert zu keinem der beiden Teams — "
