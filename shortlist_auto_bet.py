@@ -175,12 +175,15 @@ def preis_urteil(push_preis, ask, max_slip_pp=None, min_p=None, max_p=None):
     if not (0.0 < a < 1.0):
         return False, "Ask unplausibel"
     if a < lo:
-        return False, f"Ask {a:.3f} unter Mindestpreis {lo:.2f}"
+        return False, "Ask %d¢ unter dem Mindestpreis von %d¢" % (round(a * 100), round(lo * 100))
     if a > hi:
-        return False, f"Ask {a:.3f} ueber Hoechstpreis {hi:.2f}"
+        return False, "Ask %d¢ ueber dem Hoechstpreis von %d¢" % (round(a * 100), round(hi * 100))
     auf_pp = (a - p) * 100.0
     if auf_pp > slip:
-        return False, f"Ask {auf_pp:.1f}pp ueber Push-Preis (max {slip:.1f}pp)"
+        # In Cent, weil im Channel alles in Cent steht — und mit beiden Preisen, weil genau
+        # dieser Vergleich die Entscheidung ist.
+        return False, ("Ask %d¢, das sind +%.1fpp ueber dem Push-Preis von %d¢ (max %.1fpp)"
+                       % (round(a * 100), auf_pp, round(p * 100), slip))
     return True, ""
 
 
@@ -359,6 +362,36 @@ def buch_holen(token_id):
             "bid": bids[0][0] if bids else None, "ask": asks[0][0] if asks else None}
 
 
+def liegengeblieben_text(faelle, dry=False) -> str:
+    """Die Meldung „nicht nachgespielt". REIN/testbar.
+
+    🔴 14.09.2026 (Lucas: „wenn so eine push kommt und danach keine auto bet push, weiss ich
+    quote nicht erreicht oder?"). Nein — und das war die Luecke. Stille hiess bisher nur „es kam
+    keine Wette", nicht warum. Neun verschiedene Gruende sehen im Telegram identisch aus: der
+    Preis lief davon, kein Token im Feed, kein Buch, zu duenn, Deckel erreicht, Boerse abgelehnt,
+    Push zu alt, Schalter aus, Schritt gar nicht gelaufen. Der Lauf KENNT den Grund in jedem
+    einzelnen Fall — er behielt ihn fuer sich (im Actions-Log, wo zu Recht niemand nachsieht).
+
+    Derselbe Satz wie an drei anderen Stellen heute: wer nicht handeln kann, muss es sagen.
+
+    EINE Nachricht je Lauf, nur wenn wirklich etwas liegengeblieben ist. Die „schon im Depot"-
+    Faelle stehen gar nicht erst drin — die erklaert die Push-Karte selbst („du bist drin ...
+    kein Nachkauf"). Damit heisst Stille ab jetzt wirklich: es gab nichts zu setzen.
+    """
+    if not faelle:
+        return ""
+    kopf = "🤖 <b>Nicht nachgespielt</b> (%d)" % len(faelle)
+    if dry:
+        kopf += " <i>— Trockenlauf</i>"
+    zeilen = []
+    for f in faelle[:8]:
+        titel = f.get("titel") or "?"
+        zeilen.append("• %s — %s" % (titel, f.get("grund") or "kein Grund vermerkt"))
+    if len(faelle) > 8:
+        zeilen.append("… und %d weitere" % (len(faelle) - 8))
+    return kopf + "\n" + "\n".join(zeilen)
+
+
 def _melden(zeile, bet, dry):
     """Trades-Channel-Meldung fuer eine gesetzte Shortlist-Wette."""
     from telegram_trades import notify_shortlist_opened
@@ -443,36 +476,47 @@ def main() -> int:
     # Der Deckel umschliesst den ECHTEN Sender: eine fehlgeschlagene Meldung verbraucht dann
     # kein Kontingent (Vertrag von push_deckel.Deckel).
     melde = PD.Deckel(lambda arg: _melden(arg[0], arg[1], dry=False), MAX_TG, "shortlist-auto-bet")
-    neu, lauf_offen, dran = [], offen, 0
+    neu, lauf_offen, dran, liegen = [], offen, 0, []
+
+    def _liegen(titel, grund):
+        """Einmal drucken, einmal merken — damit der Grund auch im Channel ankommt."""
+        print(f"  ⏭  {titel}: {grund}.")
+        liegen.append({"titel": titel, "grund": grund})
+
     for z in faellig:
         # Der Lauf-Deckel zaehlt im Trockenlauf MIT. Sonst zeigt die Vorschau neun Wetten, wo
         # der echte Lauf drei setzt — und eine Vorschau, die etwas anderes tut als der Ernstfall,
         # ist keine Vorschau.
         if dran >= MAX_LAUF:
             print(f"  ⏹  Lauf-Deckel {MAX_LAUF} erreicht — Rest beim naechsten Lauf.")
+            liegen.append({"titel": "%d weitere Play(s)" % (len(faellig) - dran),
+                           "grund": "Lauf-Deckel %d erreicht — kommen beim naechsten Lauf" % MAX_LAUF})
             break
         bk = bet_key(z)
-        titel = f"{z.get('key')} · {z.get('side')} (conv {z.get('conv')})"
+        # Der Slug sagt niemandem, welches Spiel das war — die Paarung steht seit heute im
+        # Push-Buch. Fehlt sie (Zeilen von davor), bleibt der Slug: lieber unschoen als erfunden.
+        titel = f"{z.get('match') or z.get('key')} · {z.get('side')} (conv {z.get('conv')})"
         ok, grund = handeln_erlaubt(balance, lauf_offen, STAKE)
         if not ok:
             print(f"  🛑 {grund} — Schluss fuer diesen Lauf.")
+            liegen.append({"titel": titel, "grund": grund})
             break
         tok = token_aus_feed(feed, z.get("key"), z.get("side")) or \
               token_aus_feed(feed2, z.get("key"), z.get("side"))
         if not tok:
-            print(f"  ⏭  {titel}: kein Token im Feed — nicht geraten, uebersprungen.")
+            _liegen(titel, "kein Token im Feed — es wird nicht geraten")
             continue
         buch = buch_holen(tok) if not dry else None
         if buch is None and not dry:
-            print(f"  ⏭  {titel}: kein Buch — uebersprungen.")
+            _liegen(titel, "kein Orderbuch abrufbar")
             continue
         ask = (buch or {}).get("ask") if buch else z.get("pushPreis")
         ok, grund = preis_urteil(z.get("pushPreis"), ask)
         if not ok:
-            print(f"  ⏭  {titel}: {grund}.")
+            _liegen(titel, grund)
             continue
         if buch is not None and not liquide(buch, STAKE, ask):
-            print(f"  ⏭  {titel}: zu wenig Ask-Volumen fuer ${STAKE:.2f}.")
+            _liegen(titel, "zu wenig Ask-Volumen fuer $%.2f" % STAKE)
             continue
 
         if dry:
@@ -486,7 +530,7 @@ def main() -> int:
         res = place_market_order(tok, STAKE, key, price_hint=ask,
                                  best_bid=(buch or {}).get("bid"), best_ask=ask)
         if res.get("status") not in ("placed", "dry-run"):
-            print(f"  ❌ {titel}: {str(res.get('error') or '')[:200]}")
+            _liegen(titel, "Boerse hat abgelehnt: " + str(res.get("error") or "")[:120])
             continue
         lauf_offen += STAKE
         balance -= STAKE
@@ -507,6 +551,16 @@ def main() -> int:
             melde((z, bet))
         except Exception as exc:
             print(f"    ⚠️  Trades-Meldung fehlgeschlagen: {exc}")
+
+    # Die eine Meldung je Lauf — nur wenn wirklich etwas liegengeblieben ist. Sie geht auch im
+    # Trockenlauf raus, dann als solche gekennzeichnet: sonst wuesste niemand, dass der Schalter
+    # aus ist, und Stille hiesse wieder zweierlei.
+    if liegen:
+        try:
+            from telegram_trades import send_trades_message
+            send_trades_message(liegengeblieben_text(liegen, dry))
+        except Exception as exc:
+            print(f"  ℹ️  Liegengeblieben-Meldung nicht gesendet: {exc}")
 
     for b in neu:
         b.pop("_offenNachher", None)

@@ -554,6 +554,13 @@ def update_track(prev, emit, close, resolutions, now=None, stake=STAKE, blocked=
             "public": bool(e.get("public")), "ohneWallet": bool(e.get("ohneWallet")),
             "signals": list(e.get("signals") or []), "firstTs": e.get("firstTs"),
             "ev": e.get("ev"),   # 29.08.2026: Engine-Stempel ueberlebt die Abrechnung
+            # 🔴 14.09.2026 (Lucas: „keine Ahnung was wir tun sollen inplay"). Genau die Frage
+            # liess sich nicht beantworten: ob LIVE eingestiegene Plays schlechter laufen als
+            # vor Anpfiff eingestiegene. `htkAtEntry` steht an jeder OFFENEN Zeile — und fiel
+            # beim Abrechnen raus. 871 abgerechnete Plays, und bei keinem einzigen war noch zu
+            # sehen, ob er live war. Das Feld ueberlebt jetzt die Abrechnung; in zwei Wochen ist
+            # die Frage eine Messung statt einer Meinung.
+            "htkAtEntry": e.get("htkAtEntry"),
             "settledTs": now.isoformat(), "resolvedTs": (r or {}).get("ts"),
         })
         del open_[ok]

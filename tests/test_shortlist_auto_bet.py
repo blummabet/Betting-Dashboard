@@ -485,6 +485,69 @@ class TestDieFusszeileSagtDieWahrheit(unittest.TestCase):
         self.assertEqual(P.AUTO_AN, SAB.AN)
 
 
+class TestStilleHatEinenGrund(unittest.TestCase):
+    """🔴 14.09.2026 (Lucas: „wenn so eine push kommt und danach keine auto bet push, weiss ich
+    quote nicht erreicht oder?"). Nein — und das war die Luecke.
+
+    Neun Gruende sahen im Telegram identisch aus: Preis davongelaufen, kein Token, kein Buch, zu
+    duenn, Deckel, Boerse abgelehnt, Push zu alt, Schalter aus, Schritt nicht gelaufen. Der Lauf
+    kennt jeden davon und behielt ihn fuer sich. Wer nicht handeln kann, muss es sagen.
+    """
+
+    def test_ohne_faelle_keine_nachricht(self):
+        """Der wichtigste Fall: nichts liegengeblieben = kein Rauschen."""
+        self.assertEqual(SAB.liegengeblieben_text([]), "")
+
+    def test_der_grund_steht_in_der_nachricht(self):
+        ok, grund = SAB.preis_urteil(0.635, 0.68)
+        self.assertFalse(ok)
+        t = SAB.liegengeblieben_text([{"titel": "BIG vs KOI · BIG (conv 6)", "grund": grund}])
+        self.assertIn("BIG vs KOI", t)
+        self.assertIn("68¢", t)
+        self.assertIn("64¢", t)
+        self.assertIn("4.5pp", t)
+
+    def test_der_echte_BIG_fall(self):
+        """Push 63,5¢, Buch bid 66 / ask 68 — die Wette, die heute nicht kam."""
+        ok, grund = SAB.preis_urteil(0.635, 0.68)
+        self.assertFalse(ok, "68¢ auf einen 63,5¢-Push ist +4,5pp und muss blocken")
+        self.assertTrue(SAB.preis_urteil(0.635, 0.66)[0], "+2,5pp ist noch erlaubt")
+
+    def test_trockenlauf_ist_gekennzeichnet(self):
+        """Sonst hiesse Stille wieder zweierlei — und ein ausgeschalteter Schalter saehe aus
+        wie ein Markt, der zu teuer war."""
+        t = SAB.liegengeblieben_text([{"titel": "x", "grund": "y"}], dry=True)
+        self.assertIn("Trockenlauf", t)
+        self.assertNotIn("Trockenlauf", SAB.liegengeblieben_text([{"titel": "x", "grund": "y"}]))
+
+    def test_lange_liste_wird_gekuerzt(self):
+        viele = [{"titel": f"p{i}", "grund": "zu teuer"} for i in range(12)]
+        t = SAB.liegengeblieben_text(viele)
+        self.assertIn("(12)", t)
+        self.assertIn("4 weitere", t)
+        self.assertLessEqual(t.count("•"), 8)
+
+    def test_jeder_uebersprungene_pfad_sammelt_seinen_grund(self):
+        """⭐ Die Meldung nuetzt nichts, wenn ein Zweig sie umgeht: dann ist genau DER Fall
+        wieder stumm. Jeder Abbruch im Lauf muss den Grund vermerken, nicht nur drucken."""
+        import inspect
+        quelle = inspect.getsource(SAB.main)
+        # Die Skip-Zeile darf es nur EINMAL geben — im Helfer, der auch vermerkt. Jede
+        # zweite waere ein Zweig, der wieder nur ins Log spricht.
+        self.assertEqual(quelle.count('print(f"  ⏭'), 1,
+                         "ein uebersprungener Play darf nicht nur gedruckt werden")
+        self.assertGreaterEqual(quelle.count("_liegen("), 5)
+        self.assertIn("liegengeblieben_text(liegen", quelle)
+
+    def test_preisgruende_sprechen_cent(self):
+        # Im Channel steht alles in Cent; 0.680 waere eine zweite Einheit in derselben Zeile.
+        for ask, feld in ((0.98, "Hoechstpreis"), (0.05, "Mindestpreis")):
+            ok, g = SAB.preis_urteil(0.5, ask)
+            self.assertFalse(ok)
+            self.assertIn(feld, g)
+            self.assertIn("¢", g)
+
+
 class TestDieseTestsVergiftenDieUmgebungNicht(unittest.TestCase):
     """13.09.2026er Lehre: ein Testmodul, das beim Import Env setzt, kippt fremde Tests."""
 
@@ -498,3 +561,45 @@ class TestDieseTestsVergiftenDieUmgebungNicht(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_main_meldet_den_liegengebliebenen_play(tmp_path, monkeypatch):
+    """⭐ Die Gegenprobe am ganzen Lauf statt an den Bausteinen: ein Play, der uebersprungen
+    wird, MUSS im Channel landen. Ohne diesen Test ueberlebt die Mutation „Gruende werden nicht
+    mehr gesammelt" — und dann ist die Stille wieder unerklaert, genau wie vor dem Fix.
+
+    Trockenlauf, kein Netz: das Push-Buch kennt einen frischen Play, der Feed keinen Token.
+    """
+    import json as _json
+    from datetime import datetime as _dt, timezone as _tz
+    jetzt = _dt.now(_tz.utc).isoformat()
+
+    led = tmp_path / "ledger.json"
+    led.write_text(_json.dumps([{"k": "m1|Heim", "key": "m1", "side": "Heim",
+                                 "match": "Alpha vs Beta", "sentAt": jetzt,
+                                 "conv": 8, "pushPreis": 0.55}]), encoding="utf-8")
+    placed = tmp_path / "placed.json"
+    placed.write_text(_json.dumps({"bets": []}), encoding="utf-8")
+    leer = tmp_path / "leer.json"
+    leer.write_text("{}", encoding="utf-8")
+
+    monkeypatch.setattr(SAB, "LEDGER_FILE", led)
+    monkeypatch.setattr(SAB, "PLACED_FILE", placed)
+    monkeypatch.setattr(SAB, "TRACK_FILE", leer)
+    monkeypatch.setattr(SAB, "OFFEN_FILE", leer)      # kein Token → uebersprungen
+    monkeypatch.setattr(SAB, "CLOSE_FILE", leer)
+    monkeypatch.setattr(SAB, "BASE", tmp_path)        # keine fremden Wett-/Kill-Dateien
+    monkeypatch.setattr(SAB, "_balance", lambda base_dir=None: (250.0, "TEST"))
+
+    gesendet = []
+    import telegram_trades as _TT
+    monkeypatch.setattr(_TT, "send_trades_message", lambda t, **kw: gesendet.append(t) or True)
+
+    SAB.main()
+
+    assert gesendet, "der uebersprungene Play wurde nirgends gemeldet"
+    text = "\n".join(gesendet)
+    assert "Nicht nachgespielt" in text
+    assert "Alpha vs Beta" in text
+    assert "kein Token" in text
+    assert "Trockenlauf" in text, "ohne Schalter muss die Meldung das sagen"

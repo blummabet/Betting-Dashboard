@@ -91,9 +91,20 @@ test('der Abgleich feuert gegen den echten Bestand', () => {
   if (!rows.length) return;
   const mitKey = rows.filter((r) => r.polyKey);
   if (!mitKey.length) {
-    assert.ok(!Object.prototype.hasOwnProperty.call(rows[0], 'polyKey'),
-      'killer.json kennt polyKey, aber keine einzige Zeile trägt einen — dann joint nichts');
-    return;   // Rollout-Lücke: killer.json ist älter als der Fix
+    // 14.09.2026: hier stand „Feld da, aber kein Wert = kaputt". Das trifft nicht mehr zu,
+    // seit der Fix ausgerollt ist: das Feld steht jetzt an JEDER Zeile, und ein leerer Wert
+    // heisst schlicht, dass es zu diesem Spiel keinen Poly-Markt gibt (aktuell eine einzige
+    // Zeile, Sligo Rovers – Galway Utd, Irish Premier Division, `polyStatus: "unbekannt"`).
+    // Bei einem Bestand dieser Groesse sagt „keine Zeile hat einen Key" nichts.
+    //
+    // Gemeldet wird deshalb nur noch, was wirklich ein Befund waere: das Feld fehlt ganz
+    // (nicht ausgerollt), oder es steht an vielen Zeilen und ist bei ALLEN leer — dann joint
+    // der Abgleich systematisch nicht.
+    assert.ok(Object.prototype.hasOwnProperty.call(rows[0], 'polyKey'),
+      'killer.json kennt polyKey gar nicht — der Abgleich ist nicht ausgerollt');
+    assert.ok(rows.length < 5,
+      `${rows.length} Zeilen, keine einzige mit polyKey — dann joint der Abgleich nie`);
+    return;   // zu duenner Bestand fuer eine Aussage
   }
   const offen = sl.open || {};
   const nachKey = {};

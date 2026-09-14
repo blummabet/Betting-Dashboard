@@ -510,3 +510,32 @@ def test_die_kontrollgruppe_wird_genauso_getrennt():
                 "ohneWallet": True, "conv": 7, "clvPP": 0.0}]
     a = st.aggregate(settled, ["US-Sport"])
     assert a["publicOhneWallet"]["n"] == 1 and a["publicOhneWallet"]["pnl"] == 5.0
+
+
+def test_einstiegs_zeitpunkt_ueberlebt_die_abrechnung():
+    """🔴 14.09.2026 (Lucas: „keine Ahnung was wir tun sollen inplay").
+
+    Die Frage — laufen LIVE eingestiegene Plays schlechter als vor Anpfiff eingestiegene? —
+    war an 871 abgerechneten Plays nicht zu beantworten: `htkAtEntry` steht an jeder OFFENEN
+    Zeile und fiel beim Abrechnen heraus. Eine Auswertung, deren entscheidende Spalte beim
+    Buchen geloescht wird, kann die Frage nie beantworten, egal wie lange man sammelt.
+    """
+    prev = {"open": {"lol-x-y|BIG": {"key": "lol-x-y", "side": "BIG", "verdict": "BET",
+            "conv": 6, "league": "ESPORTS", "entryPrice": 0.635, "lastPrice": 0.64,
+            "public": True, "stake": 10.0, "firstTs": NOW.isoformat(),
+            "htkAtEntry": -1.78}}}      # negativ = lief schon
+    res = {"lol-x-y": {"winner": "BIG", "ts": NOW.isoformat()}}
+    t = st.update_track(prev, _emit([]), {}, res, now=NOW)
+    s = t["settled"][0]
+    assert s["htkAtEntry"] == -1.78, "ohne dieses Feld ist live/vor-Anpfiff nicht mehr trennbar"
+    assert s["htkAtEntry"] < 0
+
+
+def test_vor_anpfiff_eingestiegen_bleibt_unterscheidbar():
+    prev = {"open": {"soc-a-b|Heim": {"key": "soc-a-b", "side": "Heim", "verdict": "BET",
+            "conv": 7, "league": "SOCCER", "entryPrice": 0.55, "lastPrice": 0.56,
+            "public": True, "stake": 10.0, "firstTs": NOW.isoformat(),
+            "htkAtEntry": 2.5}}}
+    res = {"soc-a-b": {"winner": "Heim", "ts": NOW.isoformat()}}
+    t = st.update_track(prev, _emit([]), {}, res, now=NOW)
+    assert t["settled"][0]["htkAtEntry"] == 2.5
