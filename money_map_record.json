@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-14T01:12:21.248803+00:00",
+"generatedAt": "2026-09-14T01:42:21.400932+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1126,
-"wins": 945,
-"hitRate": 0.8393,
-"polyN": 1064,
-"polyWins": 820,
-"polyHitRate": 0.7707,
+"n": 1127,
+"wins": 946,
+"hitRate": 0.8394,
+"polyN": 1065,
+"polyWins": 821,
+"polyHitRate": 0.7709,
 "pinnN": 152,
 "pinnHitRate": 0.7895,
-"nRoi": 453,
-"roi": 0.4253,
-"roiLb": 0.3654,
-"nClv": 453,
-"clv": 20.58,
-"clvLb": 18.7513
+"nRoi": 454,
+"roi": 0.4244,
+"roiLb": 0.3646,
+"nClv": 454,
+"clv": 20.54,
+"clvLb": 18.713
 },
 "uneinig": {
-"n": 437,
+"n": 438,
 "wins": 137,
-"hitRate": 0.3135,
-"polyN": 399,
-"polyWins": 103,
-"polyHitRate": 0.2581,
-"pinnN": 271,
-"pinnHitRate": 0.6199,
-"nRoi": 205,
-"roi": -0.4627,
-"roiLb": -0.5664,
-"nClv": 205,
-"clv": -18.96,
-"clvLb": -22.8381
+"hitRate": 0.3128,
+"polyN": 400,
+"polyWins": 104,
+"polyHitRate": 0.26,
+"pinnN": 272,
+"pinnHitRate": 0.6213,
+"nRoi": 206,
+"roi": -0.4653,
+"roiLb": -0.5686,
+"nClv": 206,
+"clv": -19.23,
+"clvLb": -23.1131
 },
 "teil": {
 "n": 22,
@@ -52,9 +52,9 @@
 },
 "byLeague": {
 "US MLS": {
-"n": 92,
+"n": 93,
 "wins": 54,
-"hitRate": 0.587
+"hitRate": 0.5806
 },
 "English Sky Bet Championship": {
 "n": 68,
@@ -401,6 +401,11 @@
 "wins": 3,
 "hitRate": 0.6
 },
+"Uruguayan Primera Division": {
+"n": 5,
+"wins": 5,
+"hitRate": 1.0
+},
 "Chilean Primera B": {
 "n": 4,
 "wins": 1,
@@ -430,11 +435,6 @@
 "n": 4,
 "wins": 3,
 "hitRate": 0.75
-},
-"Uruguayan Primera Division": {
-"n": 4,
-"wins": 4,
-"hitRate": 1.0
 },
 "Australia Cup": {
 "n": 3,
@@ -624,37 +624,75 @@
 },
 "byStrength": {
 "strong": {
-"n": 948,
-"wins": 759,
-"hitRate": 0.8006,
-"nRoi": 424,
-"roi": 0.2905,
-"roiLb": 0.2236,
-"nClv": 424,
-"clv": 13.67,
-"clvLb": 11.0808
+"n": 949,
+"wins": 760,
+"hitRate": 0.8008,
+"nRoi": 425,
+"roi": 0.2899,
+"roiLb": 0.2231,
+"nClv": 425,
+"clv": 13.64,
+"clvLb": 11.0588
 },
 "weak": {
-"n": 604,
+"n": 605,
 "wins": 310,
-"hitRate": 0.5132,
-"nRoi": 247,
-"roi": -0.1401,
-"roiLb": -0.2432,
-"nClv": 247,
-"clv": -3.32,
-"clvLb": -6.6806
+"hitRate": 0.5124,
+"nRoi": 248,
+"roi": -0.1435,
+"roiLb": -0.2464,
+"nClv": 248,
+"clv": -3.61,
+"clvLb": -6.9862
 }
 },
 "divergence": {
-"n": 437,
+"n": 438,
 "betfairWins": 137,
-"betfairRate": 0.3135,
-"polyN": 399,
-"polyWins": 103,
-"polyRate": 0.2581
+"betfairRate": 0.3128,
+"polyN": 400,
+"polyWins": 104,
+"polyRate": 0.26
 },
 "recent": [
+{
+"matchId": "36040309",
+"home": "Vancouver Whitecaps",
+"away": "Austin FC",
+"league": "US MLS",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Vancouver Whitecaps",
+"polySide": "away",
+"winner": "away",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-09-13T22:30:00Z",
+"settledAt": "2026-09-14T01:42:21.220043+00:00"
+},
+{
+"matchId": "36041272",
+"home": "Penarol",
+"away": "Albion FC",
+"league": "Uruguayan Primera Division",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Penarol",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+1
+],
+"kickoff": "2026-09-13T22:30:00Z",
+"settledAt": "2026-09-14T01:42:21.220043+00:00"
+},
 {
 "matchId": "36040253",
 "home": "Chicago Fire",
@@ -1376,56 +1414,18 @@
 ],
 "kickoff": "2026-09-13T16:30:00Z",
 "settledAt": "2026-09-13T18:26:50.087841+00:00"
-},
-{
-"matchId": "36046980",
-"home": "Calcio Avellino SSD",
-"away": "Palermo",
-"league": "Italian Serie B",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Palermo",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-09-13T15:15:00Z",
-"settledAt": "2026-09-13T18:26:50.087841+00:00"
-},
-{
-"matchId": "36006613",
-"home": "Sturm Graz",
-"away": "LASK Linz",
-"league": "Austrian Bundesliga",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Sturm Graz",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-09-13T15:00:00Z",
-"settledAt": "2026-09-13T18:11:48.028041+00:00"
 }
 ],
 "global": {
-"n": 1585,
-"wins": 1087,
-"hitRate": 0.6858,
-"nRoi": 671,
-"roi": 0.132,
-"roiLb": 0.0737,
-"nClv": 671,
-"clv": 7.41,
-"clvLb": 5.3
+"n": 1587,
+"wins": 1088,
+"hitRate": 0.6856,
+"nRoi": 673,
+"roi": 0.1302,
+"roiLb": 0.072,
+"nClv": 673,
+"clv": 7.28,
+"clvLb": 5.1672
 },
-"pending": 18
+"pending": 20
 }
