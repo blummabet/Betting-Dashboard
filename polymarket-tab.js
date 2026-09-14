@@ -4180,6 +4180,13 @@ async function loadCockpitData() {
     resting: await jf(`${ds}_poly_resting_orders.json`),
     markout: await jf(`${ds}_poly_markout.json`),
   })));
+  // 14.09.2026 (Lucas: „wo zeigen wir die Bets an die automatisch gemacht werden … wuerde fast
+  // polymarket trading sagen"). Der „Heute spielenswert"-Auto-Play ist KEIN Datensatz wie
+  // liga/mls — er hat keine Fixtures, keine eigene Balance, keinen eigenen Kill-Switch. Er hat
+  // nur ein Wett-Buch auf DERSELBEN Wallet. Deshalb eine eigene Zeile statt eines vierten
+  // Eintrags in POLY_DATASETS (der wuerde vier Dateien suchen, die es nie geben wird).
+  const shortlist = await jf('shortlist_auto_bets_placed.json');
+
   // … und MERGEN (eine Wallet, ein Cockpit).
   const ts = (x) => (x && x.updatedAt) ? Date.parse(x.updatedAt) : -1;
   const bets = [], allFixtures = [], resting = [], markout = {};
@@ -4193,6 +4200,18 @@ async function loadCockpitData() {
     if (p.data && !anyData) anyData = p.data;
     if (p.resting && Array.isArray(p.resting.orders)) for (const o of p.resting.orders) if (o && o.status === 'resting') resting.push(o);
     if (p.markout) markout[p.ds] = p.markout;
+  }
+  // Shortlist-Zeilen auf die Form bringen, die die Positions-Tabelle liest. Der Auto-Play kennt
+  // kein Heim/Auswaerts — er kennt eine Paarung und einen Pick. `match` kommt aus dem Push-Buch;
+  // fehlt es (Zeilen von vor dem 14.09.), bleibt der Slug stehen: lieber unschoen als erfunden.
+  if (shortlist && Array.isArray(shortlist.bets)) for (const b of shortlist.bets) {
+    const paarung = String(b.match || b.key || '');
+    const teil = paarung.split(/\s+vs\.?\s+/i);
+    bets.push({
+      ...b, _ds: 'shortlist',
+      home: teil[0] || paarung, away: teil[1] || '',
+      market: b.side || b.market || '?',
+    });
   }
   if (!balance) balance = per.map((p) => p.balance).find((b) => b && b.usdc != null) || null;   // sonst frischeste (auch error)
   if (!kill)    kill    = per.map((p) => p.kill).find(Boolean) || null;
@@ -4313,6 +4332,9 @@ function renderTradingCockpit(data) {
   // Open Positions
   const openBets = bets.filter(b => !b.resolved && b.result == null && !b.soldAt);
   const openExposure = openBets.reduce((s, b) => s + (parseFloat(b.stake) || 0), 0);
+  const _istShortlist = (b) => b._ds === 'shortlist' || b.source === 'auto_shortlist';
+  const expShortlist = openBets.filter(_istShortlist).reduce((s, b) => s + (parseFloat(b.stake) || 0), 0);
+  const expPinnacle  = openExposure - expShortlist;
 
   // Live P&L offene Positionen
   let openPnl = 0, openPnlCount = 0;
@@ -4341,7 +4363,13 @@ function renderTradingCockpit(data) {
   const roi7d = stake7d > 0 ? (pnl7d / stake7d * 100) : null;
 
   // Caps
+  // ⚠️ Handgepflegte Spiegel der Python-Konstanten (cocobet_config → auto_wm_poly_trigger).
+  // MAX_OPEN_EXP ist der Deckel des PINNACLE-Traders; der Shortlist-Auto-Play hat seinen
+  // eigenen ($100, SHORTLIST_AUTO_MAX_OFFEN). Beide zaehlen denselben Topf, also ist die
+  // Wallet-Obergrenze der groessere der beiden — und der Pinnacle-Trader hoert bei 80 auf.
+  // Genau das zeigt die Leiste, statt EINE Zahl fuer beide zu behaupten.
   const DAILY_BET_CAP = 8, MAX_OPEN_EXP = 80, ADAPTIVE_FRAC = 0.40, DAILY_STAKE_HARD = 50;
+  const SHORTLIST_MAX_OPEN = 100;
   const adaptiveCap = Math.min(DAILY_STAKE_HARD, balanceUsd * ADAPTIVE_FRAC);
 
   const fmtUsd = v => '$' + (v ?? 0).toFixed(2);
@@ -4398,7 +4426,9 @@ function renderTradingCockpit(data) {
   const capBars = [
     { label: 'Bets heute', cur: betsToday.length, max: DAILY_BET_CAP, display: `${betsToday.length} / ${DAILY_BET_CAP}` },
     { label: 'Stake heute', cur: stakeToday, max: adaptiveCap, display: `${fmtUsd(stakeToday)} / ${fmtUsd(adaptiveCap)}` },
-    { label: 'Open Exposure', cur: openExposure, max: MAX_OPEN_EXP, display: `${fmtUsd(openExposure)} / $${MAX_OPEN_EXP}` },
+    { label: 'Open Exposure', cur: openExposure, max: Math.max(MAX_OPEN_EXP, SHORTLIST_MAX_OPEN),
+      display: `${fmtUsd(openExposure)} / $${Math.max(MAX_OPEN_EXP, SHORTLIST_MAX_OPEN)}`,
+      note: `🤖 Pinnacle ${fmtUsd(expPinnacle)} (Stopp $${MAX_OPEN_EXP}) · 🔥 Shortlist ${fmtUsd(expShortlist)} (Stopp $${SHORTLIST_MAX_OPEN})` },
   ];
 
   const capHtml = capBars.map(b => {
@@ -4413,6 +4443,7 @@ function renderTradingCockpit(data) {
       <div style="height:6px;background:#21262d;border-radius:3px;overflow:hidden">
         <div style="height:100%;width:${pct}%;background:${clr};transition:width .3s"></div>
       </div>
+      ${b.note ? `<div style="font-size:10px;color:#8b949e;margin-top:5px">${b.note}</div>` : ''}
     </div>`;
   }).join('');
 
@@ -4440,10 +4471,21 @@ function renderTradingCockpit(data) {
       const matchStatus = hrsUntil != null ? (hrsUntil < 0 ? '🔴 läuft' : hrsUntil < 6 ? `⚠️ in ${hrsUntil.toFixed(1)}h` : `${hrsUntil.toFixed(1)}h`) : '—';
       const pnlColor = pnl == null ? '#8b949e' : pnl > 0.05 ? '#00d4a1' : pnl < -0.05 ? '#f85149' : '#e3b341';
       const slug = b.slug || '';
-      const polyLink = slug ? `https://polymarket.com/sports/fifa-world-cup/${slug}` : '#';
+      // 14.09.2026: der WM-Pfad stimmt nur fuer WM-Slugs. Shortlist-Wetten sind Poly-EVENTS
+      // (E-Sport, Tennis, Ligen aller Art) — deren Link liegt unter /event/<slug>. Der alte
+      // Pfad haette bei jeder Shortlist-Zeile ins Leere gefuehrt.
+      const polyLink = slug
+        ? (_istShortlist(b) ? `https://polymarket.com/event/${slug}`
+                            : `https://polymarket.com/sports/fifa-world-cup/${slug}`)
+        : '#';
+      // Zwei Systeme setzen auf dieselbe Wallet. Welches eine Position aufgemacht hat, ist die
+      // erste Frage, die Lucas an die Tabelle hat — sie gehoert in die Zeile, nicht in den Kopf.
+      const quelle = _istShortlist(b)
+        ? `<span title="Heute spielenswert · Auto-Play" style="color:#f0883e">🔥</span> `
+        : `<span title="Pinnacle-Edge · Auto-Trader" style="color:#a371f7">🤖</span> `;
       return `
       <tr style="border-bottom:1px solid #30363d">
-        <td style="padding:8px 12px;font-size:12px;color:#e6edf3">${b.home || b.homeId} <span style="color:#8b949e">vs</span> ${b.away || b.awayId}</td>
+        <td style="padding:8px 12px;font-size:12px;color:#e6edf3">${quelle}${b.home || b.homeId || '?'}${(b.away || b.awayId) ? ` <span style="color:#8b949e">vs</span> ${b.away || b.awayId}` : ''}</td>
         <td style="padding:8px 12px;font-size:11px;color:#8b949e">${b.market || '?'}</td>
         <td style="padding:8px 12px;font-size:11px;color:#e6edf3;font-family:'SF Mono',Menlo,monospace">${(entry * 100).toFixed(1)}¢</td>
         <td style="padding:8px 12px;font-size:11px;color:#e6edf3;font-family:'SF Mono',Menlo,monospace">${cur != null ? (cur * 100).toFixed(1) + '¢' : '—'}</td>
@@ -4709,7 +4751,11 @@ function _polyStatsHtml(c) {
   // Trades (source='auto'/'auto_steam', inkl. Legacy-Einträge ohne source → default auto)
   // gehören aufs Trading-Cockpit, nicht hierher. Kennzahlen werden lokal aus dem manuellen
   // Subset gerechnet — die Server-summary aggregiert auto+manuell und wäre sonst falsch.
-  const _isAutoSrc = b => { const sc = b.source || 'auto'; return sc === 'auto' || sc === 'auto_steam'; };
+  // 14.09.2026: hier standen die zwei Auto-Quellen als Aufzaehlung — und `auto_shortlist` waere
+  // als DRITTE still als „manuelle Wette" auf dieser Seite gelandet. Dieselbe Lehre wie bei
+  // telegram_trades.is_auto_source (auto_steam zeigte „MANUELLER BET"): jede auto_*-Variante ist
+  // automatisch, und eine Liste vergisst die naechste.
+  const _isAutoSrc = b => String(b.source || 'auto').startsWith('auto');
   const allBets   = allRows.filter(b => !_isAutoSrc(b));
   const autoCount = allRows.length - allBets.length;
   const placedArr = (c.placed && Array.isArray(c.placed.bets)) ? c.placed.bets.filter(b => !_isAutoSrc(b)) : [];

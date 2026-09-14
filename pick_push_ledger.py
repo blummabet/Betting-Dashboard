@@ -126,10 +126,11 @@ def abrechnen(ledger: list, wm: dict, dataset: str, now=None) -> list:
     als Fehlschlag — die Zeile wird stillgelegt, nicht als Verlust gebucht."""
     now = now or _now()
     ko = _ko_map(wm)
-    res, quote = {}, {}
+    res, schatten, quote = {}, {}, {}
     for pk, p in _alle_picks(wm):
         kk = f"{dataset}|{pk}|{p.get('market') or ''}"
         res[kk] = p.get("result")
+        schatten[kk] = p.get("shadowResult")
         if isinstance(p.get("odds"), (int, float)):
             quote[kk] = p["odds"]
     out = []
@@ -137,6 +138,31 @@ def abrechnen(ledger: list, wm: dict, dataset: str, now=None) -> list:
         r = dict(r)
         if r.get("status") == "offen" and r.get("dataset") == dataset:
             e = res.get(r["k"])
+            # 🔴 14.09.2026 (Lucas: „wieso sind nur 2 Liga Picks abgerechnet von 8?").
+            #
+            # Die 8/2 selbst waren harmlos — sechs Anpfiffe lagen in der Zukunft, Liga pusht bis
+            # zu 27 Tage voraus. Beim Nachrechnen fiel aber etwas anderes auf: 16 Zeilen hingen
+            # DAUERHAFT auf „offen", obwohl ihre Spiele laengst abgepfiffen waren, vier davon
+            # gepusht (2 Treffer, 2 Nieten, −0,97 Einheiten).
+            #
+            # Grund: die Engine hat sie NACH dem Push auf NOBET herabgestuft, und fuer NOBET
+            # schreibt resolve_wm_picks bewusst nie `result`, nur `shadowResult`. Die Abrechnung
+            # fragte den HEUTIGEN Datensatz — also erfuhr sie nie ein Ergebnis. Der Kanal stand
+            # damit auf „100 % aus n=2", waehrend vier entschiedene Pushes ungemessen danebenlagen.
+            #
+            # Das verstoesst gegen den Satz, an dem alle Push-Buecher haengen: **wer pusht, misst
+            # den Push.** Was rausging, ist raus; dass das Modell es spaeter anders sieht, aendert
+            # nichts an der Wette, die ein Leser gespielt hat. Diese Zeile haelt den Stand von vor
+            # dem Anpfiff fest (`verdict`) — genau dafuer wird er eingefroren.
+            #
+            # Kein zweites Regelwerk: `shadowResult` kommt aus demselben `evaluate_pick` auf
+            # demselben Endstand wie `result`. War die Zeile schon BEIM PUSH ein NOBET, bleibt es
+            # dabei — dann war es nie eine Wette.
+            if e not in ("WIN", "LOSS", "VOID") and str(r.get("verdict") or "").upper() != "NOBET":
+                _sch = schatten.get(r["k"])
+                if _sch in ("WIN", "LOSS", "VOID"):
+                    e = _sch
+                    r["ergebnisQuelle"] = "schatten"   # nachvollziehbar, nicht stillschweigend
             if r.get("odds") is None and quote.get(r["k"]) is not None:
                 r["odds"] = quote[r["k"]]          # Quote wird erst spät final
             if e in ("WIN", "LOSS"):

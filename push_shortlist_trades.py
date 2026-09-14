@@ -240,6 +240,11 @@ def buch_zeilen(plays, ts, gesendet=True) -> list:
             continue
         aus.append({"k": "%s|%s" % (p.get("key"), p.get("side")),
                     "key": p.get("key"), "side": p.get("side"),
+                    # 14.09.2026: die lesbare Paarung mitschreiben. Der Slug ist als Schluessel
+                    # richtig, aber als Anzeige unbrauchbar — „cs2-withou-lag-2026-09-13" sagt
+                    # niemandem, welches Spiel das war. Der Auto-Play und das Trading-Cockpit
+                    # zeigen sie jetzt; ohne dieses Feld muessten sie sie nachschlagen oder raten.
+                    "match": p.get("match"),
                     "sentAt": ts, "conv": p.get("conv"),
                     "pushPreis": _push_preis(p),
                     "cat": p.get("cat"), "league": p.get("league")})
