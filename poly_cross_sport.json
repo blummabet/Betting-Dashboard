@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-14T23:17:02.210169+00:00",
+ "generatedAt": "2026-09-14T23:47:13.745476+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -29,10 +29,66 @@
   "soccer_liga": 171
  },
  "trackRecord": {
-  "tracked": 296,
-  "converged": 65
+  "tracked": 294,
+  "converged": 63
  },
  "discrepancies": [
+  {
+   "id": "baseball_mlb|cincinnatireds-losangelesdodgers|losangelesdodgers",
+   "sport": "baseball_mlb",
+   "event": "Los Angeles Dodgers vs Cincinnati Reds",
+   "market": "Moneyline",
+   "outcome": "Los Angeles Dodgers",
+   "polyPP": 90.5,
+   "pinnPP": 67.0,
+   "gapPP": 23.53,
+   "vol": 871288,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -11.82,
+   "firstSeen": "2026-09-07T23:02:51.897187+00:00"
+  },
+  {
+   "id": "baseball_mlb|cincinnatireds-losangelesdodgers|cincinnatireds",
+   "sport": "baseball_mlb",
+   "event": "Los Angeles Dodgers vs Cincinnati Reds",
+   "market": "Moneyline",
+   "outcome": "Cincinnati Reds",
+   "polyPP": 9.5,
+   "pinnPP": 33.0,
+   "gapPP": -23.53,
+   "vol": 871288,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -11.82,
+   "firstSeen": "2026-09-07T23:02:51.897187+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagowhitesox-clevelandguardians|chicagowhitesox",
+   "sport": "baseball_mlb",
+   "event": "Chicago White Sox vs Cleveland Guardians",
+   "market": "Moneyline",
+   "outcome": "Chicago White Sox",
+   "polyPP": 34.5,
+   "pinnPP": 46.6,
+   "gapPP": -12.06,
+   "vol": 376981,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -5.13,
+   "firstSeen": "2026-09-14T22:17:02.394203+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagowhitesox-clevelandguardians|clevelandguardians",
+   "sport": "baseball_mlb",
+   "event": "Chicago White Sox vs Cleveland Guardians",
+   "market": "Moneyline",
+   "outcome": "Cleveland Guardians",
+   "polyPP": 65.5,
+   "pinnPP": 53.4,
+   "gapPP": 12.06,
+   "vol": 376981,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -5.13,
+   "firstSeen": "2026-09-14T22:17:02.394203+00:00"
+  },
   {
    "id": "baseball_mlb|losangelesangels-seattlemariners|seattlemariners",
    "sport": "baseball_mlb",
@@ -42,7 +98,7 @@
    "polyPP": 49.5,
    "pinnPP": 60.5,
    "gapPP": -11.04,
-   "vol": 330970,
+   "vol": 336633,
    "richtung": "Poly zu niedrig → backen",
    "convergePP": -1.0,
    "firstSeen": "2026-09-14T21:17:02.554928+00:00"
@@ -56,122 +112,10 @@
    "polyPP": 50.5,
    "pinnPP": 39.5,
    "gapPP": 11.04,
-   "vol": 330970,
+   "vol": 336633,
    "richtung": "Poly zu hoch → faden",
    "convergePP": -1.0,
    "firstSeen": "2026-09-14T21:17:02.554928+00:00"
-  },
-  {
-   "id": "baseball_mlb|detroittigers-torontobluejays|detroittigers",
-   "sport": "baseball_mlb",
-   "event": "Detroit Tigers vs Toronto Blue Jays",
-   "market": "Moneyline",
-   "outcome": "Detroit Tigers",
-   "polyPP": 35.5,
-   "pinnPP": 43.9,
-   "gapPP": -8.36,
-   "vol": 154681,
-   "richtung": "Poly zu niedrig → backen",
-   "convergePP": 0.0,
-   "firstSeen": "2026-09-14T23:17:02.209742+00:00"
-  },
-  {
-   "id": "baseball_mlb|detroittigers-torontobluejays|torontobluejays",
-   "sport": "baseball_mlb",
-   "event": "Detroit Tigers vs Toronto Blue Jays",
-   "market": "Moneyline",
-   "outcome": "Toronto Blue Jays",
-   "polyPP": 64.5,
-   "pinnPP": 56.1,
-   "gapPP": 8.36,
-   "vol": 154681,
-   "richtung": "Poly zu hoch → faden",
-   "convergePP": 0.0,
-   "firstSeen": "2026-09-14T23:17:02.209742+00:00"
-  },
-  {
-   "id": "baseball_mlb|minnesotatwins-newyorkyankees|newyorkyankees",
-   "sport": "baseball_mlb",
-   "event": "New York Yankees vs Minnesota Twins",
-   "market": "Moneyline",
-   "outcome": "New York Yankees",
-   "polyPP": 53.5,
-   "pinnPP": 61.7,
-   "gapPP": -8.15,
-   "vol": 107486,
-   "richtung": "Poly zu niedrig → backen",
-   "convergePP": 0.0,
-   "firstSeen": "2026-09-14T21:17:02.554928+00:00"
-  },
-  {
-   "id": "baseball_mlb|minnesotatwins-newyorkyankees|minnesotatwins",
-   "sport": "baseball_mlb",
-   "event": "New York Yankees vs Minnesota Twins",
-   "market": "Moneyline",
-   "outcome": "Minnesota Twins",
-   "polyPP": 46.5,
-   "pinnPP": 38.3,
-   "gapPP": 8.15,
-   "vol": 107486,
-   "richtung": "Poly zu hoch → faden",
-   "convergePP": 0.0,
-   "firstSeen": "2026-09-14T21:17:02.554928+00:00"
-  },
-  {
-   "id": "baseball_mlb|cincinnatireds-losangelesdodgers|losangelesdodgers",
-   "sport": "baseball_mlb",
-   "event": "Los Angeles Dodgers vs Cincinnati Reds",
-   "market": "Moneyline",
-   "outcome": "Los Angeles Dodgers",
-   "polyPP": 74.5,
-   "pinnPP": 67.0,
-   "gapPP": 7.53,
-   "vol": 769868,
-   "richtung": "Poly zu hoch → faden",
-   "convergePP": 4.18,
-   "firstSeen": "2026-09-07T23:02:51.897187+00:00"
-  },
-  {
-   "id": "baseball_mlb|cincinnatireds-losangelesdodgers|cincinnatireds",
-   "sport": "baseball_mlb",
-   "event": "Los Angeles Dodgers vs Cincinnati Reds",
-   "market": "Moneyline",
-   "outcome": "Cincinnati Reds",
-   "polyPP": 25.5,
-   "pinnPP": 33.0,
-   "gapPP": -7.53,
-   "vol": 769868,
-   "richtung": "Poly zu niedrig → backen",
-   "convergePP": 4.18,
-   "firstSeen": "2026-09-07T23:02:51.897187+00:00"
-  },
-  {
-   "id": "baseball_mlb|baltimoreorioles-newyorkmets|baltimoreorioles",
-   "sport": "baseball_mlb",
-   "event": "Baltimore Orioles vs New York Mets",
-   "market": "Moneyline",
-   "outcome": "Baltimore Orioles",
-   "polyPP": 39.0,
-   "pinnPP": 45.2,
-   "gapPP": -6.18,
-   "vol": 384041,
-   "richtung": "Poly zu niedrig → backen",
-   "convergePP": 0.0,
-   "firstSeen": "2026-09-14T23:17:02.209742+00:00"
-  },
-  {
-   "id": "baseball_mlb|baltimoreorioles-newyorkmets|newyorkmets",
-   "sport": "baseball_mlb",
-   "event": "Baltimore Orioles vs New York Mets",
-   "market": "Moneyline",
-   "outcome": "New York Mets",
-   "polyPP": 61.0,
-   "pinnPP": 54.8,
-   "gapPP": 6.18,
-   "vol": 384041,
-   "richtung": "Poly zu hoch → faden",
-   "convergePP": 0.0,
-   "firstSeen": "2026-09-14T23:17:02.209742+00:00"
   }
  ]
 }
