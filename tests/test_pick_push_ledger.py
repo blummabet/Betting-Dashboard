@@ -101,6 +101,53 @@ class Buch(unittest.TestCase):
         self.assertEqual(s["ABWÄGEN · gepusht"]["renditen"], [1.0])
         self.assertEqual(s["ABWÄGEN · aussortiert"]["renditen"], [-1.0])
 
+    # ── 14.09.2026: der Pick, den die Engine nachtraeglich zum Nicht-Pick erklaert ──────────
+    def test_nachtraeglich_auf_NOBET_gestufter_pick_wird_trotzdem_abgerechnet(self):
+        """🔴 Der echte Fall: 16 Liga-Zeilen hingen dauerhaft auf „offen", obwohl abgepfiffen.
+
+        Rausgegangen als ABWÄGEN, spaeter von der Engine auf NOBET herabgestuft — und fuer NOBET
+        schreibt der Resolver bewusst nur `shadowResult`, nie `result`. Ohne diesen Fall misst
+        das Buch den Push nicht mehr, den es selbst verschickt hat."""
+        led = self.L.erfassen([], _wm(), "wm", NOW)
+        self.assertEqual(led[0]["verdict"], "ABWÄGEN", "eingefrorener Stand beim Push")
+        spaet = _wm(verdict="NOBET", shadowResult="WIN")      # Engine hat es sich anders ueberlegt
+        led = self.L.abrechnen(led, spaet, "wm", NOW)
+        self.assertEqual(led[0]["status"], "abgerechnet")
+        self.assertTrue(led[0]["win"])
+        self.assertEqual(led[0]["ergebnisQuelle"], "schatten",
+                         "die Herkunft muss dranstehen, sonst ist es eine stille Umdeutung")
+
+    def test_ein_NOBET_kommt_gar_nicht_erst_ins_buch(self):
+        """Erste Haelfte der Gegenprobe: NOBET wird nie erfasst — es ist keine Wette."""
+        self.assertEqual(self.L.erfassen([], _wm(verdict="NOBET"), "wm", NOW), [])
+
+    def test_zeile_die_als_NOBET_ins_buch_kam_bleibt_offen(self):
+        """Zweite Haelfte: stuende eine NOBET-Zeile doch im Buch (Altbestand, anderer Erfasser),
+        macht ein Schatten-Ergebnis keine Wette daraus. Der eingefrorene Stand entscheidet."""
+        zeile = [{"k": "wm|A-1-MEX-ZAF|Über 2.5 Tore", "dataset": "wm",
+                  "pickKey": "A-1-MEX-ZAF", "markt": "Über 2.5 Tore", "odds": 1.9,
+                  "gesehenAm": NOW.isoformat(), "status": "offen", "win": None,
+                  "settledAt": None, "verdict": "NOBET", "push": False}]
+        led = self.L.abrechnen(zeile, _wm(verdict="NOBET", shadowResult="WIN"), "wm", NOW)
+        self.assertEqual(led[0]["status"], "offen")
+
+    def test_echtes_ergebnis_schlaegt_den_schatten(self):
+        led = self.L.erfassen([], _wm(), "wm", NOW)
+        led = self.L.abrechnen(led, _wm(result="LOSS", shadowResult="WIN"), "wm", NOW)
+        self.assertFalse(led[0]["win"])
+        self.assertNotIn("ergebnisQuelle", led[0])
+
+    def test_ohne_ergebnis_bleibt_die_zeile_offen(self):
+        led = self.L.erfassen([], _wm(), "wm", NOW)
+        led = self.L.abrechnen(led, _wm(), "wm", NOW)
+        self.assertEqual(led[0]["status"], "offen")
+
+    def test_schatten_void_bleibt_void(self):
+        led = self.L.erfassen([], _wm(), "wm", NOW)
+        led = self.L.abrechnen(led, _wm(verdict="NOBET", shadowResult="VOID"), "wm", NOW)
+        self.assertEqual(led[0]["status"], "void")
+        self.assertIsNone(led[0]["win"])
+
     def test_unbrauchbare_quote_fliegt_raus(self):
         led = [{"k": "wm|a", "dataset": "wm", "verdict": "ABWÄGEN", "status": "abgerechnet",
                 "push": True, "odds": o, "win": True, "settledAt": "2026-08-29T10:00:00Z"}
