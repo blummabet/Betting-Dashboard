@@ -1,7 +1,34 @@
 {
-"generatedAt": "2026-09-14T13:58:38.866948+00:00",
+"generatedAt": "2026-09-14T14:59:03.102943+00:00",
 "count": 12,
 "rows": [
+{
+"matchId": "36006770",
+"home": "Torino",
+"away": "Roma",
+"league": "Italian Serie A",
+"live": false,
+"kickoff": "2026-09-14T16:30:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "away",
+"name": "Roma",
+"sharePct": 81,
+"eur": 350867,
+"odd": 1.55
+},
+"poly": {
+"side": "away",
+"name": "AS Roma",
+"sharePct": 97,
+"usd": 349846,
+"src": "close"
+},
+"pinn": null,
+"mmStrong": true,
+"polyGeld": true,
+"nSources": 2
+},
 {
 "matchId": "36005134",
 "home": "Leeds",
@@ -13,21 +40,26 @@
 "betfair": {
 "side": "home",
 "name": "Leeds",
-"sharePct": 56,
-"eur": 285541,
-"odd": 2.4
+"sharePct": 55,
+"eur": 318127,
+"odd": 2.42
 },
 "poly": {
 "side": "away",
 "name": "Newcastle United FC",
-"sharePct": 62,
-"usd": 602224,
+"sharePct": 61,
+"usd": 655587,
 "src": "upcoming"
 },
-"pinn": null,
+"pinn": {
+"fav": "home",
+"home": 0.4216,
+"draw": 0.2751,
+"away": 0.3034
+},
 "mmStrong": true,
 "polyGeld": true,
-"nSources": 2
+"nSources": 3
 },
 {
 "matchId": "36007437",
@@ -41,42 +73,15 @@
 "side": "home",
 "name": "Inter",
 "sharePct": 86,
-"eur": 198056,
+"eur": 240933,
 "odd": 1.23
 },
 "poly": {
 "side": "home",
 "name": "FC Internazionale Milano",
 "sharePct": 96,
-"usd": 119734,
+"usd": 130304,
 "src": "upcoming"
-},
-"pinn": null,
-"mmStrong": true,
-"polyGeld": true,
-"nSources": 2
-},
-{
-"matchId": "36006770",
-"home": "Torino",
-"away": "Roma",
-"league": "Italian Serie A",
-"live": false,
-"kickoff": "2026-09-14T16:30:00Z",
-"verdict": "konsens",
-"betfair": {
-"side": "away",
-"name": "Roma",
-"sharePct": 83,
-"eur": 197720,
-"odd": 1.57
-},
-"poly": {
-"side": "away",
-"name": "AS Roma",
-"sharePct": 92,
-"usd": 97807,
-"src": "close"
 },
 "pinn": null,
 "mmStrong": true,
@@ -94,15 +99,15 @@
 "betfair": {
 "side": "home",
 "name": "Como",
-"sharePct": 89,
-"eur": 191653,
-"odd": 1.26
+"sharePct": 90,
+"eur": 234648,
+"odd": 1.25
 },
 "poly": {
 "side": "home",
 "name": "Como 1907",
 "sharePct": 95,
-"usd": 132558,
+"usd": 138552,
 "src": "close"
 },
 "pinn": null,
@@ -122,42 +127,15 @@
 "side": "away",
 "name": "Real Madrid",
 "sharePct": 95,
-"eur": 137836,
+"eur": 139480,
 "odd": 1.26
 },
 "poly": {
 "side": "away",
 "name": "Real Madrid CF",
 "sharePct": 80,
-"usd": 199077,
+"usd": 200330,
 "src": "upcoming"
-},
-"pinn": null,
-"mmStrong": true,
-"polyGeld": true,
-"nSources": 2
-},
-{
-"matchId": "36045515",
-"home": "Dynamo Kiev",
-"away": "FC Epicentr Dunaivtsi",
-"league": "Ukrainian Premier League",
-"live": true,
-"kickoff": "2026-09-14T12:30:00Z",
-"verdict": "uneinig",
-"betfair": {
-"side": "draw",
-"name": "The Draw",
-"sharePct": 60,
-"eur": 93061,
-"odd": 60.0
-},
-"poly": {
-"side": "home",
-"name": "FK Dynamo Kyiv",
-"sharePct": 95,
-"usd": 49868,
-"src": "live"
 },
 "pinn": null,
 "mmStrong": true,
@@ -175,15 +153,15 @@
 "betfair": {
 "side": "home",
 "name": "Villarreal",
-"sharePct": 71,
-"eur": 83763,
-"odd": 2.06
+"sharePct": 72,
+"eur": 90315,
+"odd": 2.04
 },
 "poly": {
 "side": "away",
 "name": "Real Betis Balompié",
-"sharePct": 76,
-"usd": 191016,
+"sharePct": 78,
+"usd": 225868,
 "src": "upcoming"
 },
 "pinn": null,
@@ -203,20 +181,25 @@
 "side": "away",
 "name": "Fenerbahce",
 "sharePct": 93,
-"eur": 57313,
-"odd": 1.58
+"eur": 72807,
+"odd": 1.57
 },
 "poly": {
 "side": "away",
 "name": "Fenerbahçe SK",
-"sharePct": 96,
-"usd": 46008,
-"src": "upcoming"
+"sharePct": 97,
+"usd": 59969,
+"src": "close"
 },
-"pinn": null,
+"pinn": {
+"fav": "away",
+"home": 0.1519,
+"draw": 0.2134,
+"away": 0.6347
+},
 "mmStrong": true,
 "polyGeld": true,
-"nSources": 2
+"nSources": 3
 },
 {
 "matchId": "36038724",
@@ -230,15 +213,42 @@
 "side": "home",
 "name": "Barcelona",
 "sharePct": 99,
-"eur": 55200,
+"eur": 55380,
 "odd": 1.07
 },
 "poly": {
 "side": "home",
 "name": "FC Barcelona",
 "sharePct": 92,
-"usd": 37518,
+"usd": 39106,
 "src": "upcoming"
+},
+"pinn": null,
+"mmStrong": true,
+"polyGeld": true,
+"nSources": 2
+},
+{
+"matchId": "36066451",
+"home": "Neftchi Fargona",
+"away": "Al Quwa Al Jawiya",
+"league": "AFC Champions League",
+"live": true,
+"kickoff": "2026-09-14T13:45:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "home",
+"name": "Neftchi Fargona",
+"sharePct": 83,
+"eur": 37065,
+"odd": 2.04
+},
+"poly": {
+"side": "home",
+"name": "FK Neftchi Fargona",
+"sharePct": 88,
+"usd": 17170,
+"src": "live"
 },
 "pinn": null,
 "mmStrong": true,
@@ -257,14 +267,14 @@
 "side": "home",
 "name": "Alaves",
 "sharePct": 90,
-"eur": 33156,
-"odd": 1.93
+"eur": 33541,
+"odd": 1.92
 },
 "poly": {
 "side": "home",
 "name": "Deportivo Alavés",
 "sharePct": 52,
-"usd": 22379,
+"usd": 22416,
 "src": "upcoming"
 },
 "pinn": null,
@@ -284,14 +294,14 @@
 "side": "home",
 "name": "Rayo Vallecano",
 "sharePct": 74,
-"eur": 22848,
+"eur": 23221,
 "odd": 2.34
 },
 "poly": {
 "side": "home",
 "name": "Rayo Vallecano de Madrid",
 "sharePct": 44,
-"usd": 10966,
+"usd": 11075,
 "src": "upcoming"
 },
 "pinn": null,
@@ -311,15 +321,15 @@
 "side": "home",
 "name": "Bodo Glimt",
 "sharePct": 85,
-"eur": 16347,
-"odd": 1.17
+"eur": 17615,
+"odd": 1.16
 },
 "poly": {
 "side": "home",
 "name": "FK Bodø/Glimt",
 "sharePct": 98,
-"usd": 42989,
-"src": "upcoming"
+"usd": 52089,
+"src": "close"
 },
 "pinn": null,
 "mmStrong": true,
@@ -330,16 +340,10 @@
 "nameMatchMisses": 4,
 "nameMatchMissList": [
 {
-"matchId": "36066451",
-"home": "Neftchi Fargona",
-"away": "Al Quwa Al Jawiya",
-"league": "AFC Champions League"
-},
-{
-"matchId": "36068508",
-"home": "Sheff Utd U21",
-"away": "Cardiff City U21",
-"league": "English U21 Pro Development League"
+"matchId": "36049013",
+"home": "El Geish",
+"away": "Smouha",
+"league": "Egyptian Premier"
 },
 {
 "matchId": "36004943",
@@ -352,6 +356,12 @@
 "home": "Shafa Baku FC",
 "away": "FC Sabah",
 "league": "Azerbaijan Premier League"
+},
+{
+"matchId": "36052807",
+"home": "FC Inter Turku",
+"away": "VPS",
+"league": "Finnish Veikkausliiga"
 }
 ]
 }
