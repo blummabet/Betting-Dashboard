@@ -216,7 +216,14 @@ class TestBetfairSchubladenNutzenDieEchteSchranke(unittest.TestCase):
     GESICHTET = {"Swedish Division 1 · Over/Under 2.5 Goals",
                  "English Sky Bet League 2 · First Half Goals 1.5",
                  "Colombian Primera A · Both teams to Score?",
-                 "Half Time"}
+                 "Half Time",
+                 # 14.09.2026 angesehen: n=30, ROI +35,0 %, Untergrenze +7,7 %, P/L +10,50.
+                 # Die ROI-Untergrenze liegt zum ersten Mal ueber null — aber der CLV ist mit
+                 # +0,16 pp ein blosses MITTEL ohne Streuung, also ohne Untergrenze. Genau die
+                 # Konstellation, fuer die die Freigabe zwei Belege verlangt: 30 Zeilen bei
+                 # dreissig Prozent ROI sind auch ein gutes halbes Jahr Glueck. Bleibt gesperrt,
+                 # bis der CLV eine eigene Untergrenze hat — angesehen ist nicht freigegeben.
+                 "Brazilian Serie A · Both teams to Score?"}
 
     def test_gegen_den_echten_bestand_nimmt_keine_NEUE_betfair_schublade_die_huerde(self):
         """Stand 06.09.: null. Nimmt eine die Huerde, schlaegt dieser Test an — und DAS ist

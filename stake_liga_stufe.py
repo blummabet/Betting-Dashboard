@@ -74,6 +74,10 @@ EBENE = {
     "liga-nacional-apertura": 1, "cambodian-premier-league": 1, "pro-league": 1,
     "usl-championship": 1, "liga-i": 1, "iraqi-league": 1, "vysshaya-liga": 1,
     "division-profesional": 1, "liga-portugal": 1,
+    # 14.09.2026 (CI-Wachhund): die Canadian Premier League ist die OBERSTE Klasse Kanadas
+    # (Pacific FC gegen Cavalry FC, beides Gruendungsklubs). Nicht mit der USL zu verwechseln,
+    # in der kanadische Klubs frueher spielten.
+    "canadian-premier-league": 1,
     # 13.09.2026 (CI-Wachhund): „1. CFL" — die Prva crnogorska fudbalska liga, oberste Klasse
     # Montenegros. Beleg aus der Paarung: FK Sutjeska Niksic gegen FK Decic Tuzi, beides
     # montenegrinische Erstligisten (Sutjeska ist Rekordmeister). Der Slug sagt es nicht.
@@ -190,6 +194,14 @@ EBENE = {
     # 12.09.2026 (CI-Wachhund): „China League" — die ZWEITE Liga Chinas (China League One, unter
     # der Super League). Guandong GZ-Power gegen Dalian Kun City, beides Zweitligisten.
     "china-league": 3,
+    # 14.09.2026 (CI-Wachhund): Brasileiro Serie C ist die DRITTE brasilianische Klasse
+    # (unter Serie A und B). Beleg: Brusque FC gegen AA Internacional Limeira.
+    "brasileiro-serie-c": 3,
+    # 14.09.2026 (CI-Wachhund): „Calcutta Premier Div." ist eine indische STADT-Liga —
+    # wie „mizoram-premier-league" trotz „Premier" weit unter der obersten Klasse (ISL).
+    # Beleg aus der Paarung: United SC gegen „Mohun Bagan SG Reserves" — die erste Elf
+    # von Mohun Bagan spielt in der ISL, hier laeuft ihre Reserve.
+    "calcutta-premier-div-": 3,
 }
 
 # Wettbewerbe, bei denen „Spielklasse" die falsche Frage ist. Sie bekommen eine eigene Marke
@@ -202,6 +214,23 @@ ART = {
     "copa-do-brasil": "pokal", "fa-cup": "pokal", "efl-cup": "pokal", "ofb-cup": "pokal",
     "coppa-italia": "pokal", "greece-cup": "pokal", "copa-uruguay": "pokal",
     "copa-paulista": "pokal", "dfb-pokal": "pokal", "copa-del-rey": "pokal",
+    # 14.09.2026 (CI-Wachhund): die AFC Champions League ist das asiatische Gegenstueck zu UEFA-
+    # und CAF-Champions-League — Vereine aus verschiedenen Verbaenden, also keine Spielklasse.
+    # Beleg: FK Neftchi Fargona (Usbekistan) gegen Al Quwa Al Jawiya (Irak).
+    "afc-champions-league": "kontinental",
+    # 14.09.2026 (CI-Wachhund): die ASEAN Club Championship ist dasselbe eine Stufe kleiner —
+    # ein suedostasiatischer Vereinswettbewerb ueber Landesgrenzen (Shan United/Myanmar gegen
+    # Ezra FC/Laos), keine Liga. „championship" im Namen heisst hier nicht zweite Klasse.
+    "asean-club-championship": "kontinental",
+    # 14.09.2026 (CI-Wachhund): die Professional Development League ist Englands U21-Reserve-
+    # wettbewerb. „Swansea City - Huddersfield Town" sieht nach Profifussball aus, es sind die
+    # Nachwuchsmannschaften — die Namensregel greift nicht, weil weder U21 noch „youth" im
+    # Slug steht. Deshalb Tabelle statt Regel.
+    "professional-development-league": "jugend",
+    # 14.09.2026 (CI-Wachhund): die WK League ist Suedkoreas oberste FRAUEN-Liga (Seoul City WFC
+    # gegen Hwacheon KSPO). Die Frauen-Regel sucht „women/femenina/feminin" — die koreanische
+    # Abkuerzung „WK" (Women\u2019s K League) enthaelt keines davon.
+    "wk-league": "frauen",
 }
 
 # Nachwuchs, egal wie der Wettbewerb ihn schreibt: als Kuerzel irgendwo im Slug (u17..u23)

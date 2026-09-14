@@ -30,6 +30,7 @@ import math
 import re
 import time
 import requests
+import poly_offen as PO   # 14.09.2026: EINE Definition von „offene Position"
 from datetime import datetime, timezone, date
 
 # ── Konfiguration ──────────────────────────────────────────────────────────────
@@ -318,7 +319,9 @@ def load_json(path: str, default):
 # ── Gemeinsame Wallet über alle Datensätze (18.07.2026) ─────────────────────────────────────
 # WM, Liga und MLS traden auf DERSELBEN Polymarket-Wallet. Balance und Limits sind deshalb
 # wallet-weit, nicht datensatz-weit. Die Dateien liegen aber pro Datensatz vor.
-_DATASET_PREFIXES = ("wm_", "liga_", "mls_")
+# 14.09.2026: Liste liegt jetzt in poly_offen.py — dort kam der Shortlist-Auto-Play dazu.
+# Zwei Listen waeren zwei Wahrheiten darueber, wer sich die Wallet teilt.
+_DATASET_PREFIXES = PO.DATENSATZ_PRAEFIXE
 
 
 def _load_wallet_balance():
@@ -358,7 +361,7 @@ def _cross_dataset_exposure(today_str: str):
             if not isinstance(b, dict):
                 continue
             stake = float(b.get("stake") or 0)
-            if not b.get("resolved") and not b.get("soldAt"):
+            if PO.ist_offen(b):
                 offen += stake
                 n += 1
             if (b.get("placedAt") or "")[:10] == today_str:
@@ -977,8 +980,11 @@ def main():
     print(f"  💰 Heute bereits platziert: {len(bets_today)} Bet(s), ${stake_today:.2f} USDC")
 
     # Open-Exposure: kumulativer Stake aller noch nicht aufgelösten Positionen
-    open_bets = [b for b in placed_bets
-                 if not b.get("resolved") and not b.get("soldAt")]
+    # 🔴 14.09.2026: hier stand `not b.get("resolved") and not b.get("soldAt")`. Das Feld
+    # `resolved` schreibt NIEMAND — der Resolver setzt status/result/resolvedAt. Folge: drei im
+    # Juni verlorene Wetten und eine verkaufte blockierten dauerhaft $22,00 des $80-Deckels
+    # (27,5 %), und der Anteil waechst mit jeder Auflösung. Begruendung + Test: poly_offen.py.
+    open_bets = [b for b in placed_bets if PO.ist_offen(b)]
     open_exposure = sum(float(b.get("stake") or 0) for b in open_bets)
     print(f"  📈 Open Exposure: {len(open_bets)} Position(en), ${open_exposure:.2f} USDC")
 

@@ -44,6 +44,7 @@ PFAD_SCHREIBT = {"write_text", "write_bytes"}
 PFAD_LIEST = {"read_text", "read_bytes", "exists", "is_file", "stat", "resolve", "glob",
               "unlink", "with_suffix", "as_posix", "touch"}
 LESER = {"_load", "_lade", "load", "load_json", "_lazy", "_load_seen", "load_picks",
+         "_laden",   # 14.09.2026: shortlist_auto_bet._laden — liest nur (schreibt ueber _speichern)
          "_mtime_age_h", "build_cache_index", "isinstance", "exists"}
 KLEMPNEREI = {"file", "join", "str", "Path", "replace", "discard", "add", "glob", "open"}
 

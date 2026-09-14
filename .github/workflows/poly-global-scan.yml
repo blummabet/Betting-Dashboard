@@ -106,6 +106,24 @@ jobs:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
 
+      # 14.09.2026 (Lucas: „Ich will die Public-Kandidaten automatisch nachspielen, ein paar
+      # Wochen"). MUSS direkt nach dem Push laufen: gesetzt wird, was im Buch der gesendeten
+      # Pushes steht, und nur innerhalb eines 90-Minuten-Fensters. Ein spaeterer Lauf setzt
+      # denselben Push nicht nach.
+      # Schalter: Secret SHORTLIST_AUTO_BET=1. Fehlt es, ist es ein Trockenlauf — kein Geld.
+      - name: 💸 Heute-spielenswert automatisch nachspielen ($5, Default AUS)
+        run: ${{ env.POLY_PYTHON }} shortlist_auto_bet.py
+        continue-on-error: true
+        env:
+          SHORTLIST_AUTO_BET:      ${{ secrets.SHORTLIST_AUTO_BET }}
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+          POLY_PRIVATE_KEY:        ${{ secrets.POLY_PRIVATE_KEY }}
+          POLY_FUNDER_ADDRESS:     ${{ secrets.POLY_FUNDER_ADDRESS }}
+          POLY_API_KEY:            ${{ secrets.POLY_API_KEY }}
+          POLY_API_SECRET:         ${{ secrets.POLY_API_SECRET }}
+          POLY_API_PASSPHRASE:     ${{ secrets.POLY_API_PASSPHRASE }}
+
       # 05.09.2026 (Lucas: „250.000 ist fuer mich ein Vermoegen, fuer den ein normaler Bet") —
       # MUSS vor dem Whale-Watch laufen: der baut daraus die Zeile „Normalgroesse fuer dieses
       # Konto". Faellt der Schritt aus, fehlt die Zeile, der Push geht trotzdem raus.
@@ -177,7 +195,7 @@ jobs:
             poly_cross_sport.json poly_cross_sport_history.json poly_cross_sport_seen.json \
             poly_whale_seen.json poly_whale_public_seen.json \
             poly_wallet_norm.json poly_wallet_norm_state.json \
-            shortlist_push_seen.json shortlist_push_ledger.json \
+            shortlist_push_seen.json shortlist_push_ledger.json shortlist_auto_bets_placed.json \
             poly_dominanz_ledger.json poly_dominanz_seen.json poly_dominanz_record.json \
             poly_money_klein.json \
             poly_money_broad_live.json poly_money_broad_live_history.json \

@@ -169,6 +169,77 @@ def notify_trade_opened(
     return send_trades_message(text)
 
 
+def notify_shortlist_opened(
+    match: str, side: str,
+    stake: float, fill: float,
+    league: str | None = None,
+    conv: int | None = None,
+    push_preis: float | None = None,
+    order_id: str | None = None,
+    slug: str = "",
+    offen: float | None = None,
+    deckel: float | None = None,
+    dry_run: bool = False,
+) -> bool:
+    """14.09.2026 (Lucas: „ich brauch bitte im Trades Channel auch eine Meldung wenn ein
+    ‚heute spielenswert‘ gesetzt wurde, so aehnlich wie wirs bei den automatischen trades
+    eh schon haben").
+
+    Gleiche Form wie notify_trade_opened — mit einem bewussten Unterschied: wo beim
+    Pinnacle-Trader die Edge steht, steht hier die **Conviction und der Push-Preis**. Diese
+    Wette hat keine Pinnacle-Edge; sie hat einen Push, dem sie folgt. Die Differenz
+    Fuellpreis minus Push-Preis ist die eine Zahl, die der Nachbau kostet, und sie gehoert in
+    jede Meldung: nur so sieht Lucas im Channel, ob der Bot noch den Preis bekommt, den der
+    Kanal genannt hat.
+    """
+    now = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M UTC")
+    label = "[DRY-RUN] AUTO-PLAY" if dry_run else "AUTO-PLAY"
+    comp_label, _ = _competition(slug)
+
+    def _c(x):
+        try:
+            return "%d¢" % round(float(x) * 100)
+        except (TypeError, ValueError):
+            return "?"
+
+    quote = f"{1/fill:.2f}" if fill and fill > 0 else "?"
+
+    slip_line = ""
+    if push_preis:
+        try:
+            d_pp = (float(fill) - float(push_preis)) * 100.0
+            slip_line = f"\n\U0001F4C9 Push-Preis: {_c(push_preis)} \u2192 Fill: {_c(fill)} ({d_pp:+.1f}pp)"
+        except (TypeError, ValueError):
+            slip_line = ""
+
+    conv_line = f"\n\U0001F3AF Conviction: <b>{conv}/10</b>" if conv is not None else ""
+    liga_line = f" \u00b7 {league}" if league else ""
+    deckel_line = ""
+    if offen is not None and deckel:
+        deckel_line = f"\n\U0001F4CA Offen gesamt: ${offen:.2f} / ${deckel:.0f}"
+
+    order_line = f"\n\U0001F194 Order: <code>{str(order_id)[:24]}</code>" if order_id else ""
+    _url = _poly_url(slug)
+    poly_link = f"\n\U0001F517 <a href='{_url}'>Polymarket \u00f6ffnen</a>" if _url else ""
+
+    text = (
+        f"\U0001F525 <b>{label} PLATZIERT</b> \u2014 Heute spielenswert\n"
+        f"\u2501" * 1 + "\u2501" * 18 + "\n"
+        f"\U0001F3C6 {comp_label}{liga_line}\n"
+        f"{match}\n"
+        f"\U0001F4CB Pick: <b>{side}</b>\n"
+        f"\U0001F4B0 Einsatz: <b>${stake:.2f}</b>\n"
+        f"\U0001F4CA Poly: <b>{quote}</b> ({_c(fill)})"
+        f"{conv_line}"
+        f"{slip_line}"
+        f"{deckel_line}"
+        f"{order_line}"
+        f"{poly_link}\n"
+        f"\U0001F550 {now}"
+    )
+    return send_trades_message(text)
+
+
 def notify_sell_alert(
     home: str, away: str, market: str,
     entry_price: float, current_price: float,
