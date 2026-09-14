@@ -98,7 +98,17 @@ test('am echten Bestand: im Bereich der Tafel trägt keine einzige Stufe', () =>
   const oben = (k.punkteBilanz || []).filter(e => e.punkte >= 6);
   assert.ok(oben.length >= 5, 'zu wenig Bestand für die Aussage');
   const traegt = oben.filter(e => (e.roiLb || -9) > 0);
+  // 14.09.2026 angesehen, zweiter Eintrag: „6/7 (n=6)" mit ROI +59,2 % und Untergrenze
+  // +5,1 %. Angesehen heisst NICHT belegt — bei sechs Zeilen ist eine positive Untergrenze
+  // kein Beleg, sondern die Bandbreite, die sechs Zeilen eben noch zulassen. Dieselbe Tafel
+  // fuehrt „12/13 (n=3)" mit +82 % und „7/13 (n=3)" mit −100 %: Nenner dieser Groesse sagen
+  // in beide Richtungen nichts. Beide stehen hier als PROTOKOLL, nicht als Freigabe — die
+  // Aussage der Tafel („im Bereich traegt keine Stufe") haengt weiter an den Zeilen mit
+  // zweistelligem n, und dort ist keine einzige Untergrenze ueber null.
   assert.deepStrictEqual(traegt.map(e => `${e.punkte}/${e.moeglich} (n=${e.n})`),
-    ['12/13 (n=3)'],
+    ['12/13 (n=3)', '6/7 (n=6)'],
     'Die Lage hat sich geändert — bitte ansehen, statt den Test anzupassen.');
+  assert.ok(traegt.every(e => e.n < 10),
+    'Eine Stufe mit zweistelligem n ueber null waere eine ANDERE Nachricht als diese '
+    + 'Kleinst-Nenner — die muss auffallen und nicht in der Liste verschwinden.');
 });
