@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-14T19:21:52.944481+00:00",
+ "generatedAt": "2026-09-14T19:46:50.730708+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,10 +9,10 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 662,
- "pinnKeys": 292,
- "matched": 224,
- "footballRows": 204,
+ "polyRowsSeen": 656,
+ "pinnKeys": 286,
+ "matched": 218,
+ "footballRows": 198,
  "crossRows": 458,
  "footballSkippedStale": 48,
  "seenBySport": {
@@ -21,16 +21,59 @@
   "icehockey_nhl": 204,
   "boxing_boxing": 10,
   "soccer_mls": 18,
-  "soccer_liga": 186
+  "soccer_liga": 180
  },
  "matchedBySport": {
   "baseball_mlb": 20,
   "soccer_mls": 18,
-  "soccer_liga": 186
+  "soccer_liga": 180
  },
  "trackRecord": {
-  "tracked": 286,
+  "tracked": 288,
   "converged": 63
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "soccer_liga|inter-udinese|hw",
+   "sport": "soccer_liga",
+   "event": "Inter vs Udinese",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 80.5,
+   "pinnPP": 53.1,
+   "gapPP": 27.35,
+   "vol": 191057,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-14T19:46:50.730393+00:00"
+  },
+  {
+   "id": "soccer_liga|inter-udinese|dr",
+   "sport": "soccer_liga",
+   "event": "Inter vs Udinese",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 13.5,
+   "pinnPP": 27.0,
+   "gapPP": -13.53,
+   "vol": 191057,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-14T19:46:50.730393+00:00"
+  },
+  {
+   "id": "soccer_liga|inter-udinese|aw",
+   "sport": "soccer_liga",
+   "event": "Inter vs Udinese",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 6.5,
+   "pinnPP": 19.8,
+   "gapPP": -13.32,
+   "vol": 191057,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-14T19:46:50.730393+00:00"
+  }
+ ]
 }
