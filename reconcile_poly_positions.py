@@ -32,6 +32,31 @@ TRADES_URL    = "https://data-api.polymarket.com/trades?user={user}&limit=200"
 HTTP_TIMEOUT  = 15
 HELD_EPS      = 1.0   # Shares ≤ EPS = praktisch nicht mehr gehalten (Staub ignorieren)
 
+# 🔴 14.09.2026 (Lucas: „wurde vorhin platziert … sollte dann auch im Cockpit auftauchen oder?
+# und hoffentlich von alleine closen, weil die letzten 2 mmn haben nicht von allein geclosed").
+#
+# Sie haben nie von allein geschlossen — sie waren im Buch nie offen. Alle drei Liga-Auto-Bets
+# tragen dasselbe Muster:
+#
+#     Ipswich–Liverpool    platziert 03:17:20.114   „verkauft" 03:17:20.587   (+0,5 s)
+#     Betis–Real Madrid    platziert 13:42:58.593   „verkauft" 13:42:59.698   (+1,1 s)
+#     Brentford–Chelsea    platziert 14:54:29.403   „verkauft" 14:54:30.207   (+0,8 s)
+#
+# Niemand klickt dreimal binnen einer Sekunde nach dem Kauf auf „verkaufen". Es war dieser
+# Abgleich: er laeuft direkt nach dem Trade, fragt die Positions-API — und die hat den frischen
+# Fill noch nicht indexiert. „Steht nicht in der Liste" wurde als „verkauft" gelesen.
+#
+# Die Folgen greifen ineinander: `soldAt` gesetzt -> das Cockpit zeigt die Position nicht mehr
+# (`openBets` filtert auf `!soldAt`), `status != "placed"` -> der Auto-Sell-Manager fasst sie nie
+# wieder an, `result` bleibt null -> es entsteht nie ein Ergebnis. Das Geld liegt derweil auf
+# Polymarket. Eine unsichtbare, ungemessene, offene Position ist das Schlimmste von allem.
+#
+# Zwei Schranken, beide beweispflichtig:
+#   1. Eine frische Wette wird NICHT geschlossen. „Noch nicht sichtbar" ist kein Verkauf.
+#   2. Was faelschlich geschlossen wurde, wird zurueckgeholt, sobald die Wallet den Token
+#      zeigt — die Wallet ist der Beleg, nicht unsere Vermutung von damals.
+MIN_ALTER_MIN = float(os.environ.get("RECONCILE_MIN_ALTER_MIN") or 15)
+
 
 def _http_get(url: str):
     req = urllib.request.Request(
@@ -153,6 +178,67 @@ def close_bet_manual(bet: dict, sell: dict | None, now_iso: str) -> dict:
     return bet
 
 
+def _alter_min(placed_iso, now_iso):
+    """Alter einer Wette in Minuten. None, wenn unlesbar — dann wird nichts behauptet und die
+    Zeile laeuft wie bisher weiter (keine stille Verhaltensaenderung fuer Altbestand)."""
+    try:
+        a = datetime.fromisoformat(str(placed_iso).replace("Z", "+00:00"))
+        b = datetime.fromisoformat(str(now_iso).replace("Z", "+00:00"))
+    except (ValueError, TypeError):
+        return None
+    if a.tzinfo is None:
+        a = a.replace(tzinfo=timezone.utc)
+    if b.tzinfo is None:
+        b = b.replace(tzinfo=timezone.utc)
+    return (b - a).total_seconds() / 60.0
+
+
+def falsch_geschlossen(bet) -> bool:
+    """Traegt diese Wette die Handschrift des Indexierungs-Rennens? REIN/testbar.
+
+    Drei Merkmale zusammen, nicht eines davon: als manuell geschlossen gebucht, OHNE Verkaufs-
+    Beleg (kein Preis, kein P&L), und binnen zwei Minuten nach dem Kauf. Ein echter manueller
+    Verkauf hat entweder einen Fill oder wenigstens Abstand zum Kauf.
+    """
+    if bet.get("status") != "closed_manual":
+        return False
+    if bet.get("sellPrice") is not None or bet.get("pnl") is not None:
+        return False        # es gibt einen Verkaufs-Beleg → war echt
+    d = _alter_min(bet.get("placedAt"), bet.get("soldAt"))
+    return d is not None and d < 2.0
+
+
+def zurueckholen(bets: list, held: dict, now_iso: str | None = None) -> list:
+    """Faelschlich geschlossene Wetten wieder oeffnen, wenn die Wallet den Token HAELT.
+
+    Die Wallet ist der Beleg. Steht der Token mit Groesse in den echten Positionen, dann ist die
+    Wette offen — egal, was ein frueherer Lauf ins Buch geschrieben hat. Ohne diesen Schritt
+    bliebe der Schaden liegen: `reconcile` sieht nur `status == "placed"` und kommt an die
+    fehlgebuchten Zeilen nie wieder heran.
+    """
+    now_iso = now_iso or datetime.now(timezone.utc).isoformat()
+    zurueck = []
+    for bet in bets:
+        if not falsch_geschlossen(bet):
+            continue
+        tok = str(bet.get("tokenId") or "")
+        if not tok or (held or {}).get(tok, 0.0) <= HELD_EPS:
+            continue
+        bet["status"] = "placed"
+        bet["soldAt"] = None
+        bet["sellReason"] = None
+        bet["sellPrice"] = None
+        bet["pnl"] = None
+        bet["pnlSource"] = None
+        bet["reopenedAt"] = now_iso
+        bet["reopenGrund"] = ("faelschlich als manuell geschlossen gebucht (Positions-API war "
+                              "beim Kauf noch nicht aktuell) — Wallet haelt den Token")
+        zurueck.append(bet)
+        print(f"  ♻️  zurueckgeholt: {bet.get('home')}–{bet.get('away')} {bet.get('market')} — "
+              f"die Wallet haelt den Token, die Wette lief die ganze Zeit.")
+    return zurueck
+
+
 def reconcile(bets: list, *, proxy: str, finished_keys: set | None = None,
               now_iso: str | None = None, getter=_http_get) -> list:
     """Gleicht 'placed'-Bets gegen die echten Wallet-Positionen ab. Token nicht mehr gehalten UND
@@ -166,6 +252,7 @@ def reconcile(bets: list, *, proxy: str, finished_keys: set | None = None,
         print("  ⚠️  reconcile: Positions-API nicht erreichbar → übersprungen")
         return []
     changed = []
+    changed += zurueckholen(bets, held, now_iso=now_iso)
     for bet in bets:
         if bet.get("status") != "placed":
             continue
@@ -174,6 +261,14 @@ def reconcile(bets: list, *, proxy: str, finished_keys: set | None = None,
             continue
         if held.get(tok, 0.0) > HELD_EPS:
             continue   # noch gehalten → nichts tun
+        alter = _alter_min(bet.get("placedAt"), now_iso)
+        if alter is not None and alter < MIN_ALTER_MIN:
+            # Der Fill ist juenger als die Indexierung der Positions-API. Hier zu schliessen
+            # hiesse, eine gerade eroeffnete Position fuer verkauft zu erklaeren.
+            print(f"  ⏳ zu frisch für ein Urteil ({alter:.1f} Min): {bet.get('home')}–"
+                  f"{bet.get('away')} {bet.get('market')} — Position steht evtl. noch nicht "
+                  f"in der Positions-API. Nächster Lauf entscheidet.")
+            continue
         if bet.get("betKey") in finished_keys or bet.get("matchKey") in finished_keys:
             continue   # Spiel fertig → Settlement, NICHT als manueller Eingriff werten
         sell = find_sell_trade(proxy, tok, bet.get("placedAt"), getter=getter)
