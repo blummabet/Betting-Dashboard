@@ -78,6 +78,10 @@ EBENE = {
     # (Pacific FC gegen Cavalry FC, beides Gruendungsklubs). Nicht mit der USL zu verwechseln,
     # in der kanadische Klubs frueher spielten.
     "canadian-premier-league": 1,
+    # 14.09.2026 (CI-Wachhund): die A Lyga ist die OBERSTE Klasse Litauens. Beleg aus der
+    # Paarung: FK Banga Gargzdai gegen FK Transinvest, beides A-Lyga-Klubs. Der Name sagt es
+    # nicht — „A" liest sich wie eine Staffel, ist aber der Ligenname selbst.
+    "a-lyga": 1,
     # 13.09.2026 (CI-Wachhund): „1. CFL" — die Prva crnogorska fudbalska liga, oberste Klasse
     # Montenegros. Beleg aus der Paarung: FK Sutjeska Niksic gegen FK Decic Tuzi, beides
     # montenegrinische Erstligisten (Sutjeska ist Rekordmeister). Der Slug sagt es nicht.

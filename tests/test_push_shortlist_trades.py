@@ -61,10 +61,23 @@ class TestFresh(unittest.TestCase):
 
     def test_conv_increase_repushes_same_or_lower_does_not(self):
         # 05.08.2026 (Lucas: „wenn 7->8 steigt, trotzdem schicken"): Re-Push nur bei neuem Hoechststand.
-        seen = {"a|H": {"conv": 8, "ts": "2026-08-05T10:00:00+00:00"}}
-        self.assertEqual(len(P.fresh_plays([_play("a", "H", 9)], seen)), 1)   # 8 -> 9: erneut schicken
-        self.assertEqual(P.fresh_plays([_play("a", "H", 8)], seen), [])       # gleich: nicht
-        self.assertEqual(P.fresh_plays([_play("a", "H", 8)], {"a|H": {"conv": 9}}), [])  # niedriger: nicht
+        # 14.09.2026 (Lucas: „aja der kam nun 3. mal"): eine gestiegene Conviction GENUEGT NICHT
+        # mehr. Der Treiber war `steam` — es misst gegen ein festes 6-h-Fenster, also waechst
+        # dieselbe Bewegung darin von selbst und laedt die Conviction nach. Es braucht jetzt
+        # zusaetzlich ein SIGNAL, das beim letzten Push nicht dabei war, und das Spiel darf noch
+        # nicht angepfiffen sein. Die Steigerungs-Bedingung bleibt notwendig — sie ist nur nicht
+        # mehr hinreichend. Ausfuehrlich: tests/test_shortlist_auto_bet.py.
+        seen = {"a|H": {"conv": 8, "ts": "2026-08-05T10:00:00+00:00", "sig": ["money"]}}
+        neu = _play("a", "H", 9)
+        neu["signals"] = ["money", "sharp"]                                  # neues Argument
+        self.assertEqual(len(P.fresh_plays([neu], seen)), 1)                 # 8 -> 9 MIT Evidenz
+        gleich = _play("a", "H", 8)
+        gleich["signals"] = ["money", "sharp"]
+        self.assertEqual(P.fresh_plays([gleich], seen), [])                  # gleich: nicht
+        self.assertEqual(P.fresh_plays([_play("a", "H", 8)], {"a|H": {"conv": 9, "sig": []}}), [])
+        ohne = _play("a", "H", 9)
+        ohne["signals"] = ["money"]                                          # dieselbe Evidenz
+        self.assertEqual(P.fresh_plays([ohne], seen), [], "ohne neues Signal kein Re-Push")
 
 
 class TestFormat(unittest.TestCase):

@@ -105,6 +105,8 @@ jobs:
         env:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+          # 14.09.2026: nur damit die Fusszeile die Wahrheit sagt — dieser Schritt setzt nichts.
+          SHORTLIST_AUTO_BET:      ${{ secrets.SHORTLIST_AUTO_BET }}
 
       # 14.09.2026 (Lucas: „Ich will die Public-Kandidaten automatisch nachspielen, ein paar
       # Wochen"). MUSS direkt nach dem Push laufen: gesetzt wird, was im Buch der gesendeten

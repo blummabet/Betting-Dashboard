@@ -16,6 +16,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import poly_offen as PO
 import shortlist_auto_bet as SAB
+import push_shortlist_trades as PST
 
 
 def _ts(minuten_alt=0, jetzt=None):
@@ -284,6 +285,204 @@ class TestSchalterUndKopplung(unittest.TestCase):
         self.assertNotIn("load_emit", quelle,
                          "eine eigene Auswahl waere eine fuenfte Menge neben Uebersicht, "
                          "Public-Tor, Paper-Track und Push")
+
+
+class TestDieKarteWeissDassSieEineVerstaerkungIst(unittest.TestCase):
+    """🔴 14.09.2026 (Lucas: „A hso ich Trottel — das ja selbe Spiel").
+
+    Er war es nicht. Der zweite Ostersunds-Push (Conviction 7→8, 55,5¢ → 61¢) sah aus wie ein
+    neuer Play; dass er eine Verstaerkung war und dass die Position seit einer halben Stunde
+    lief, stand nirgends. Beides lag vor: die vorige Conviction im Dedup-Buch (nur deshalb
+    feuert der Push erneut), die Position im Wett-Buch. Eine Nachricht, die den Leser zum
+    Nachschlagen zwingt, hat ihre Aufgabe nicht erfuellt.
+    """
+
+    VORHER = {"conv": 7, "ts": "2026-09-14T16:20:46+00:00"}
+    POS = {"stake": 5.0, "polyPrice": 0.56, "placedAt": "2026-09-14T16:20:47+00:00"}
+
+    def _play(self, conv=8):
+        return {"key": "swe2-of-hel-2026-09-14", "side": "Ostersunds FK", "conv": conv,
+                "verdict": "BET", "price": 0.61, "match": "Ostersunds FK vs Helsingborgs IF"}
+
+    def test_gestiegene_conviction_wird_als_verstaerkung_benannt(self):
+        z = PST.kontext_zeilen(self._play(), self.VORHER, None)
+        self.assertTrue(any("Verstärkung" in x and "7→8" in x for x in z), z)
+
+    def test_die_uhrzeit_des_ersten_pushs_steht_dabei(self):
+        z = PST.kontext_zeilen(self._play(), self.VORHER, None)
+        self.assertIn("16:20", " ".join(z))
+
+    def test_erster_push_bekommt_keine_verstaerkungs_zeile(self):
+        self.assertEqual(PST.kontext_zeilen(self._play(), None, None), [])
+
+    def test_gleiche_conviction_ist_keine_verstaerkung(self):
+        self.assertEqual(PST.kontext_zeilen(self._play(conv=7), self.VORHER, None), [])
+
+    def test_bestehende_position_steht_mit_preis_und_zeit_dabei(self):
+        z = " ".join(PST.kontext_zeilen(self._play(), self.VORHER, self.POS))
+        self.assertIn("$5.00", z)
+        self.assertIn("56¢", z)
+        self.assertIn("16:20", z)
+
+    def test_kein_nachkauf_steht_ausdruecklich_dran(self):
+        """Sonst wartet der Leser auf eine Bestaetigung, die nie kommt."""
+        z = " ".join(PST.kontext_zeilen(self._play(), self.VORHER, self.POS))
+        self.assertIn("kein Nachkauf", z)
+
+    def test_unlesbare_zeit_erfindet_keine_uhrzeit(self):
+        z = " ".join(PST.kontext_zeilen(self._play(), {"conv": 7, "ts": "kaputt"}, None))
+        self.assertIn("Verstärkung", z)
+        self.assertNotIn("UTC", z)
+
+    def test_offene_positionen_nur_wirklich_offene(self):
+        buch = {"bets": [
+            {"betKey": "a|A", "status": "placed"},
+            {"betKey": "b|B", "status": "placed", "soldAt": "2026-09-14T17:00:00Z"},
+            {"betKey": "c|C", "status": "won"},
+        ]}
+        import json, tempfile, os
+        fd, pfad = tempfile.mkstemp(suffix=".json")
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            json.dump(buch, f)
+        try:
+            self.assertEqual(sorted(PST.offene_positionen(pfad)), ["a|A"])
+        finally:
+            os.unlink(pfad)
+
+    def test_die_fertige_nachricht_traegt_den_kontext(self):
+        """⭐ Der Test, der den ganzen Fix haelt: es genuegt nicht, dass die Zeilen BERECHNET
+        werden — sie muessen in der Nachricht stehen, die Lucas liest."""
+        txt = PST.build_message(
+            [self._play()], auto_an=True,
+            seen={"swe2-of-hel-2026-09-14|Ostersunds FK": self.VORHER},
+            positionen={"swe2-of-hel-2026-09-14|Ostersunds FK": self.POS})
+        self.assertIn("Verstärkung", txt)
+        self.assertIn("7→8", txt)
+        self.assertIn("du bist drin", txt)
+        self.assertIn("56¢", txt)
+
+    def test_ein_neuer_play_bleibt_schlank(self):
+        txt = PST.build_message([self._play()], auto_an=True, seen={}, positionen={})
+        self.assertNotIn("Verstärkung", txt)
+        self.assertNotIn("du bist drin", txt)
+
+    def test_fehlendes_buch_kippt_den_push_nicht(self):
+        self.assertEqual(PST.offene_positionen("/gibt/es/nicht.json"), {})
+
+
+class TestDerRePushBrauchtNeueEvidenz(unittest.TestCase):
+    """🔴 14.09.2026 (Lucas: „aja der kam nun 3. mal — wieso wird der so wild in die Hoehe
+    gepusht?"). Ostersunds FK, drei Karten in einer Stunde: conv 7 → 8 → 10, die letzte LIVE in
+    der 12. Minute.
+
+    Der Motor war `steam`: es misst die Bewegung gegen ein festes 6-Stunden-Fenster, also waechst
+    dieselbe Bewegung darin von selbst weiter (+2,5 → +8,0 → +8,5pp) und schiebt die Conviction
+    mit hoch. „Conviction gestiegen" war deshalb kein Beleg fuer neue Erkenntnis, sondern fuer
+    ein Mass, das sich selbst nachlaedt.
+    """
+
+    def _p(self, conv, sig, htk=2.0):
+        return {"key": "swe2-of-hel-2026-09-14", "side": "Ostersunds FK",
+                "conv": conv, "signals": sig, "htk": htk}
+
+    VORHER = {"conv": 7, "sig": ["money", "steam"], "ts": "2026-09-14T16:20:46+00:00"}
+
+    def _seen(self):
+        return {"swe2-of-hel-2026-09-14|Ostersunds FK": dict(self.VORHER)}
+
+    def test_dieselben_signale_nur_groessere_zahlen_pushen_nicht(self):
+        """⭐ Genau der Ostersunds-Fall: conv 7 → 10, aber kein neues Argument."""
+        self.assertEqual(PST.fresh_plays([self._p(10, ["money", "steam"])], self._seen()), [])
+
+    def test_ein_neues_signal_kommt_durch(self):
+        aus = PST.fresh_plays([self._p(8, ["money", "steam", "sharp"])], self._seen())
+        self.assertEqual(len(aus), 1)
+
+    def test_nach_anpfiff_kein_re_push_auch_mit_neuem_signal(self):
+        """Nach dem Anpfiff ist „mehr Geld auf der fuehrenden Seite" der Spielstand, kein Signal."""
+        self.assertEqual(PST.fresh_plays(
+            [self._p(10, ["money", "steam", "sharp"], htk=-0.2)], self._seen()), [])
+
+    def test_ohne_anpfiffzeit_kein_re_push(self):
+        self.assertEqual(PST.fresh_plays(
+            [self._p(10, ["money", "steam", "sharp"], htk=None)], self._seen()), [])
+
+    def test_der_erste_push_bleibt_unberuehrt_auch_live(self):
+        self.assertEqual(len(PST.fresh_plays([self._p(7, ["money"], htk=-0.2)], {})), 1)
+
+    def test_gesunkene_conviction_pusht_nicht(self):
+        self.assertEqual(PST.fresh_plays([self._p(6, ["money", "steam", "sharp"])], self._seen()), [])
+
+    def test_das_buch_merkt_sich_die_signale(self):
+        """Ohne diese Zeile ist die Schranke zahnlos: ein Buch-Eintrag mit leerer Signal-Liste
+        laesst beim naechsten Lauf JEDES Signal als „neu" gelten."""
+        e = PST.seen_eintrag(self._p(8, ["steam", "money"]), "2026-09-14T16:20:00Z")
+        self.assertEqual(e["sig"], ["money", "steam"])
+        self.assertEqual(e["conv"], 8)
+        # und die Runde schliesst sich: mit diesem Eintrag pusht derselbe Play nicht nach
+        self.assertEqual(PST.fresh_plays([self._p(10, ["steam", "money"])],
+                                         {"swe2-of-hel-2026-09-14|Ostersunds FK": e}), [])
+
+    def test_main_schreibt_das_buch_ueber_seen_eintrag(self):
+        """Die reine Funktion nuetzt nichts, wenn der Lauf sie umgeht — dann steht die
+        Signal-Liste wieder nicht im Buch und die Schranke ist zahnlos."""
+        import inspect
+        quelle = inspect.getsource(PST.main)
+        self.assertIn("seen_eintrag(", quelle)
+
+    def test_altes_buch_ohne_signalmenge_pusht_nicht_nach(self):
+        """Ohne Signal-Liste im Buch ist „neue Evidenz" nicht entscheidbar — dann lieber still.
+        Das Buch raeumt sich nach drei Tagen selbst auf, der Fall heilt also von allein."""
+        alt = {"swe2-of-hel-2026-09-14|Ostersunds FK": {"conv": 7, "ts": "x"}}
+        self.assertEqual(PST.fresh_plays([self._p(10, ["money", "steam"])], alt), [])
+
+
+class TestDieFusszeileKenntDenFall(unittest.TestCase):
+    """Eine reine Verstaerkungs-Karte darf nicht „werden automatisch nachgespielt" sagen."""
+
+    def test_alles_laeuft_schon(self):
+        self.assertIn("nicht", PST.fusszeile(True, n_plays=1, n_gehalten=1))
+        self.assertNotIn("Bestätigung", PST.fusszeile(True, n_plays=1, n_gehalten=1))
+
+    def test_gemischt_nennt_beide_haelften(self):
+        t = PST.fusszeile(True, n_plays=2, n_gehalten=1)
+        self.assertIn("neuen Plays", t)
+        self.assertIn("bereits laufenden", t)
+
+    def test_nur_neue_plays(self):
+        self.assertIn("Bestätigung", PST.fusszeile(True, n_plays=2, n_gehalten=0))
+
+    def test_auto_aus_schlaegt_alles(self):
+        self.assertIn("Kein Auto-Bet", PST.fusszeile(False, n_plays=1, n_gehalten=1))
+
+
+class TestDieFusszeileSagtDieWahrheit(unittest.TestCase):
+    """14.09.2026, erster Live-Fall: Push „Ostersunds FK" 16:20, Auto-Play 16:20 — und unter dem
+    Push stand „Kein Auto-Bet". Zwei Nachrichten im selben Channel, die sich binnen Sekunden
+    widersprechen. Was ein Kanal ueber sich selbst behauptet, muss stimmen, sonst ist keine
+    seiner Angaben mehr etwas wert."""
+
+    def test_bei_eingeschaltetem_auto_play_steht_es_dran(self):
+        import push_shortlist_trades as P
+        t = P.fusszeile(True)
+        self.assertIn("automatisch", t)
+        self.assertNotIn("Kein Auto-Bet", t)
+
+    def test_ohne_auto_play_bleibt_der_alte_satz(self):
+        import push_shortlist_trades as P
+        self.assertIn("Kein Auto-Bet", P.fusszeile(False))
+
+    def test_die_nachricht_traegt_die_fusszeile(self):
+        import push_shortlist_trades as P
+        plays = [{"key": "k", "side": "A", "conv": 7, "verdict": "BET", "price": 0.5}]
+        self.assertIn("automatisch", P.build_message(plays, auto_an=True))
+        self.assertIn("Kein Auto-Bet", P.build_message(plays, auto_an=False))
+
+    def test_beide_lesen_denselben_schalter(self):
+        # Zwei Schalter waeren zwei Zustaende — und genau einer davon waere irgendwann falsch.
+        import inspect, push_shortlist_trades as P
+        self.assertIn("SHORTLIST_AUTO_BET", inspect.getsource(P))
+        self.assertEqual(P.AUTO_AN, SAB.AN)
 
 
 class TestDieseTestsVergiftenDieUmgebungNicht(unittest.TestCase):

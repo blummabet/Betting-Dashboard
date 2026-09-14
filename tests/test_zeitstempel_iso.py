@@ -42,8 +42,10 @@ PRODUCER_MUSTER = re.compile(
 # Lokale Artefakte werden bewusst NICHT von Hand umgeschrieben — Pipeline-Ausgabe gehoert der
 # Pipeline.
 WARTET_AUF_LAUF = {
-    "validator_summary.json": "check_picks_logic.py / update_dashboard.py — beide schreiben ISO, "
-                              "das committete Artefakt stammt noch aus einem Lauf davor",
+    # 14.09.2026 erledigt: der Validator hat seinen eigenen Workflow-Schritt bekommen (vorher lief
+    # er nur im `__main__`-Schwanz von update_dashboard.py hinter `continue-on-error`). Erster
+    # Lauf 16:32 UTC, 28 Spiele geprueft — und die Datei traegt seither ISO. Genau dafuer gibt es
+    # diese Liste: sie raeumt sich selbst auf, sobald die Pipeline geliefert hat.
     "wm_poly_prices.json": "fetch_wm_poly_prices.py (WM) — WM beendet, laeuft erst wieder 2030",
     "wm_poly_positions.json": "manage_wm_poly_positions.py — WM beendet",
     "wm_weather.json": "fetch_wm_weather.py — WM beendet",

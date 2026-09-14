@@ -115,6 +115,27 @@ class TestNotifyFlow(unittest.TestCase):
         st = self.S.load()
         self.assertIn("A-1-MEX-ZAF|Über 3.5 Tore", st["announced"])
 
+    def test_spaeteres_spiel_wird_vermerkt_aber_NICHT_gesendet(self):
+        """⭐ 14.09.2026: der Fall „AS Roma – Inter · 18:00", fuenf Tage im Voraus im
+        Public-Channel. Er muss als bekannt vermerkt werden (sonst bietet ihn jeder Lauf erneut
+        an), darf aber nicht rausgehen — die Morning-Card kuendigt ihn an seinem Spieltag an.
+        Das Fixture dieser Datei steht auf 2099, liegt also sicher nicht im heutigen Slate."""
+        import json
+        st = self.S.load()
+        self.S.mark(st, self.S.current_pick_ids(json.loads(self._wmfile.read_text())))
+        st["lastDigestDate"] = datetime.now(timezone.utc).date().isoformat()
+        self.S.save(st)
+        wm = _wm()
+        wm["picks"]["A-1-MEX-ZAF"].append(
+            {"verdict": "BET", "market": "Über 3.5 Tore", "convictionScore": 8})
+        self._write(wm)
+        self.N.main()
+        st = self.S.load()
+        pid = "A-1-MEX-ZAF|Über 3.5 Tore"
+        self.assertIn(pid, st["announced"], "muss als bekannt vermerkt sein")
+        self.assertNotIn(pid, st.get("gesendet") or {},
+                         "ein Spiel in ferner Zukunft darf nicht als gesendet gebucht werden")
+
     def test_message_ist_tiktok_safe(self):
         units = list(self.S.iter_pick_units(_wm()))
         msg = self.N.build_message(units)
@@ -150,3 +171,60 @@ def test_echte_laenderflagge_bleibt_stehen():
     u = [{"id": "x", "homeFlag": "🇪🇸", "homeName": "Spanien", "awayName": "Italien",
           "market": "Heimsieg", "verdict": "BET", "convictionScore": 8}]
     assert "🇪🇸" in N.build_message(u)
+
+
+class NurHeutigeSpieleUndNieOhneDatum(unittest.TestCase):
+    """🔴 14.09.2026 (Lucas: „aber sorry die Spiele sind doch nicht heute").
+
+    In einer Public-Nachricht standen nebeneinander:
+
+        ⚽ Inter – Udinese · 20:45      (heute)
+        ⚽ AS Roma – Inter · 18:00      (19.09., fünf Tage später)
+
+    Beide unter „🆕 2 neue Picks" und über „Kam nach dem Morgen-Update rein". Eine nackte
+    Uhrzeit liest sich als heute Abend — im öffentlichen Kanal.
+
+    Zwei Ursachen, beide hier festgehalten: die Zeitzeile kannte kein Datum, und die Auswahl
+    kein „heute" — obwohl der Zweck dieser Noti laut ihrer eigenen Beschreibung genau die
+    Nachzügler für HEUTE sind.
+    """
+
+    JETZT = datetime(2026, 9, 14, 17, 27, tzinfo=timezone.utc)
+
+    def setUp(self):
+        os.environ["COCOBET_DATASET"] = "liga"
+        import notify_new_picks
+        importlib.reload(notify_new_picks)
+        self.N = notify_new_picks
+
+    def _u(self, ident, ko):
+        return {"id": ident, "kickoff": ko}
+
+    def test_spiel_von_heute_kommt_durch(self):
+        u = [self._u("a", "2026-09-14T18:45:00Z")]
+        self.assertEqual([x["id"] for x in self.N.heutiger_slate(u, self.JETZT)], ["a"])
+
+    def test_spiel_in_fuenf_tagen_faellt_raus(self):
+        u = [self._u("b", "2026-09-19T16:00:00Z")]
+        self.assertEqual(self.N.heutiger_slate(u, self.JETZT), [])
+
+    def test_nachtspiel_gehoert_noch_zu_heute(self):
+        """00:30 UTC am Folgetag ist der heutige Abend — dasselbe Fenster wie die Morning-Card."""
+        u = [self._u("c", "2026-09-15T00:30:00Z")]
+        self.assertEqual([x["id"] for x in self.N.heutiger_slate(u, self.JETZT)], ["c"])
+
+    def test_ohne_anpfiff_wird_nicht_geraten(self):
+        self.assertEqual(self.N.heutiger_slate([self._u("x", None)], self.JETZT), [])
+
+    def test_heutiges_spiel_zeigt_nur_die_uhrzeit(self):
+        t = self.N._kickoff_wien(self._u("a", "2026-09-14T18:45:00Z"), self.JETZT)
+        self.assertEqual(t.strip(), "· 20:45")
+
+    def test_spaeteres_spiel_traegt_sein_datum(self):
+        """⭐ Der eigentliche Fund: „18:00" ohne Datum war die Irreführung."""
+        t = self.N._kickoff_wien(self._u("b", "2026-09-19T16:00:00Z"), self.JETZT)
+        self.assertIn("19.09.", t)
+        self.assertIn("Sa", t)
+
+    def test_unlesbarer_anpfiff_erfindet_nichts(self):
+        self.assertEqual(self.N._kickoff_wien({"kickoff": "kaputt"}, self.JETZT), "")

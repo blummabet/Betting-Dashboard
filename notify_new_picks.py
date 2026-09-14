@@ -68,16 +68,51 @@ def _conv_word(u: dict) -> str:
     return "🟡 Auf dem Zettel"   # ABWÄGEN
 
 
-def _kickoff_wien(u: dict) -> str:
+_WOCHENTAG = ("Mo", "Di", "Mi", "Do", "Fr", "Sa", "So")
+
+
+def _kickoff_wien(u: dict, jetzt=None) -> str:
+    """Anpfiff in Wiener Zeit — mit Datum, sobald es NICHT heute ist. REIN/testbar.
+
+    🔴 14.09.2026 (Lucas: „aber sorry die Spiele sind doch nicht heute"). In einer Nachricht
+    standen „Inter – Udinese · 20:45" (heute) und „AS Roma – Inter · 18:00" — das zweite Spiel
+    ist am 19.09., also fuenf Tage spaeter. Eine nackte Uhrzeit unter der Ueberschrift „Neuer
+    Pick" liest sich als heute Abend. Im PUBLIC-Channel.
+    """
     ko = u.get("kickoff")
     if not ko:
         return ""
     try:
-        dt = datetime.fromisoformat(str(ko).replace("Z", "+00:00"))
         from datetime import timedelta
-        return " · " + (dt + timedelta(hours=2)).strftime("%H:%M")   # Wien (CEST)
+        dt = datetime.fromisoformat(str(ko).replace("Z", "+00:00")) + timedelta(hours=2)
+        heute = ((jetzt or datetime.now(timezone.utc)) + timedelta(hours=2)).date()
     except Exception:
         return ""
+    if dt.date() == heute:
+        return " · " + dt.strftime("%H:%M")
+    return " · %s %s" % (_WOCHENTAG[dt.weekday()], dt.strftime("%d.%m. %H:%M"))
+
+
+def heutiger_slate(units, jetzt=None) -> list:
+    """Nur die Picks, deren Spiel ins HEUTIGE Kartenfenster faellt. REIN/testbar.
+
+    Der Sinn dieser Noti steht in ihrer eigenen Beschreibung: Nachzuegler fuer HEUTE, die der
+    Morgen-Digest nicht mehr erwischt hat. Genommen wurde bisher alles Kommende — auch Spiele in
+    zwei Wochen. Die kommen an ihrem Spieltag ohnehin ueber die Morning-Card; die Noti hat sie
+    also ein zweites Mal angekuendigt, mit einer Uhrzeit ohne Datum.
+
+    Fenster wie bei der Morning-Card: [Tag 08:00 UTC, +1 Tag 08:00) — ein Spiel um 00:30 gehoert
+    zum Abend davor (vgl. pick_push_ledger.slate_datum, dieselbe Rechnung).
+    """
+    import pick_push_ledger as _PPL
+    jetzt = jetzt or datetime.now(timezone.utc)
+    heute = _PPL.slate_datum(jetzt.isoformat())
+    aus = []
+    for u in (units or []):
+        tag = _PPL.slate_datum(u.get("kickoff"))
+        if tag and tag == heute:
+            aus.append(u)
+    return aus
 
 
 def build_message(new_units: list) -> str:
@@ -136,14 +171,31 @@ def main() -> None:
         return
 
     # Neue zuerst nach Anpfiff sortieren (früheste zuerst)
-    new_units = sorted((by_id[i] for i in new_ids), key=lambda u: u.get("kickoff") or "~")
+    alle_neu = sorted((by_id[i] for i in new_ids), key=lambda u: u.get("kickoff") or "~")
+    new_units = heutiger_slate(alle_neu, now)
+    spaeter = len(alle_neu) - len(new_units)
+
+    # ⭐ Die spaeteren werden trotzdem als bekannt VERMERKT — sonst gelten sie bei jedem Lauf
+    # wieder als neu und die Noti wuerde sie stuendlich anbieten. Gesendet sind sie nicht, also
+    # auch nicht `gesendet=True`: das Push-Buch darf sie nicht als Push buchen. Ihre Ankuendigung
+    # uebernimmt die Morning-Card an ihrem Spieltag — genau wie bisher.
+    if spaeter:
+        print(f"○ {spaeter} Pick(s) für spätere Spieltage — nicht gesendet (die Morning-Card "
+              f"kündigt sie an ihrem Tag an), nur als bekannt vermerkt.")
+        S.mark(state, [u["id"] for u in alle_neu if u not in new_units], now.isoformat())
+        S.save(state)
+
+    if not new_units:
+        print("○ Kein Nachzügler für heute — nichts zu senden.")
+        return
+
     msg = build_message(new_units)
     ok = tg_send(msg)
     print(f"{'✅' if ok else '❌'} Neuer-Pick-Noti: {len(new_units)} Pick(s)")
     if ok:
         # 14.09.2026: `gesendet=True` — DIESE Zeilen sind wirklich rausgegangen (anders als die
         # stumme Basis oben). Das Push-Buch bucht sie dadurch in die richtige Woche.
-        S.mark(state, new_ids, now.isoformat(), gesendet=True)
+        S.mark(state, [u["id"] for u in new_units], now.isoformat(), gesendet=True)
         S.save(state)
 
 
