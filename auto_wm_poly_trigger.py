@@ -823,6 +823,68 @@ def find_trigger_candidates(fixtures: list, placed_keys: set) -> list:
     return candidates
 
 
+# ── „Wer nicht handeln kann, muss es sagen" (14.09.2026) ────────────────────────────────
+MELDE_FILE = str(D.file("wm_auto_trigger_meldung.json", "liga_auto_trigger_meldung.json"))
+
+
+def handels_blockade(balance: float, tages_deckel: float, candidates: list) -> dict | None:
+    """Kann dieser Lauf ueberhaupt EINEN Kandidaten platzieren? Sonst: warum nicht. REIN.
+
+    Gibt None zurueck, wenn mindestens der guenstigste Kandidat durchpasst — dann macht die
+    Schleife ihre Arbeit wie bisher. Sonst eine Begruendung, die den Grund NENNT statt ihn in
+    einem `continue` verschwinden zu lassen.
+    """
+    if not candidates:
+        return None                      # nichts gefunden ist kein Blockade-Fall
+    kleinster = min(float(o.get("stake") or 0) for o in candidates)
+    if kleinster <= 0:
+        return None
+    beste = max(float(o.get("edgePP") or 0) for o in candidates)
+    kopf = (f"{len(candidates)} handelbare Edge(s) gefunden (beste {beste:.1f} pp), "
+            f"0 platziert.")
+    if balance - kleinster < MIN_BALANCE_BUFFER:
+        return {"grund": "balance",
+                "text": (f"{kopf}\nBalance ${balance:.2f} USDC — fuer einen Einsatz von "
+                         f"${kleinster:.2f} plus ${MIN_BALANCE_BUFFER:.2f} Puffer zu wenig. "
+                         f"Wallet nachladen.")}
+    if tages_deckel < kleinster:
+        return {"grund": "deckel",
+                "text": (f"{kopf}\nDer adaptive Tages-Deckel liegt bei ${tages_deckel:.2f} "
+                         f"(40 % der Balance von ${balance:.2f}) und damit unter dem kleinsten "
+                         f"Einsatz von ${kleinster:.2f}.")}
+    return None
+
+
+def melden_faellig(grund: str, heute: str = None) -> bool:
+    """Hoechstens EINE Meldung je Grund und Tag. Der Lauf geht alle 30 Minuten — ohne das
+    waeren es zwei Dutzend gleiche Nachrichten taeglich, und die naechste echte ginge darin
+    unter. Das ist derselbe Deckel-Gedanke wie in push_deckel.py, nur zeitlich."""
+    heute = heute or datetime.now(timezone.utc).date().isoformat()
+    try:
+        with open(MELDE_FILE, encoding="utf-8") as f:
+            st = json.load(f)
+    except Exception:
+        st = {}
+    return (st or {}).get(grund) != heute
+
+
+def melden_vermerken(grund: str, heute: str = None) -> None:
+    heute = heute or datetime.now(timezone.utc).date().isoformat()
+    try:
+        with open(MELDE_FILE, encoding="utf-8") as f:
+            st = json.load(f)
+        if not isinstance(st, dict):
+            st = {}
+    except Exception:
+        st = {}
+    st[grund] = heute
+    try:
+        with open(MELDE_FILE, "w", encoding="utf-8") as f:
+            json.dump(st, f, ensure_ascii=False, indent=1)
+    except Exception as e:
+        print("  Melde-Stand nicht schreibbar (nicht fatal):", e)
+
+
 def main():
     print(f"\n{'='*55}")
     # Datensatz im Header zeigen (12.07.2026): im MLS-Lauf stand hier „WM 2026" → verwirrend.
@@ -1012,6 +1074,29 @@ def main():
 
     history = load_history()
     new_placed = []
+
+    # 🔴 14.09.2026 (Lucas: „dieses Auto Trading … das funktioniert ja nicht mal ansatzweise,
+    # da passiert ja gar nix"). Gemessen an diesem Tag: der Trigger fand in EINEM Lauf vier
+    # handelbare Edges (4,7–7,7 pp), platzierte null — und sagte kein Wort. Seit dem 30.08.
+    # laeuft er 24× am Tag ins Leere.
+    #
+    # Der Grund war nicht der leere Wallet ($0,0343), sondern die REIHENFOLGE der Gates. Die
+    # Meldung „Bankroll niedrig — bitte nachladen" steht in der Schleife HINTER dem adaptiven
+    # Tages-Deckel. Der ist `0,4 × Balance`, bei 3 Cent Balance also $0,0137 — jeder Einsatz
+    # reisst ihn, der Kandidat faellt mit `continue` heraus, und die Zeile, die Lucas haette
+    # warnen sollen, wird nie erreicht. Ein leerer Lauf sah aus wie „heute nichts gefunden".
+    #
+    # Dieselbe Fehlerklasse wie ueberall hier: fehlende Information rendert als harmloser
+    # Default. Und die Regel dagegen ist dieselbe: **wer nicht handeln kann, muss es sagen.**
+    _blockade = handels_blockade(available_balance, adaptive_daily_cap, candidates)
+    if _blockade:
+        print(f"  🛑 {_blockade['text']}")
+        if telegram_token and telegram_chat_id and melden_faellig(_blockade["grund"]):
+            send_telegram(telegram_token, telegram_chat_id,
+                          "🛑 <b>Auto-Trading steht</b>\n" + _blockade["text"]
+                          + "\n\n<i>Diese Meldung kommt hoechstens einmal am Tag.</i>")
+            melden_vermerken(_blockade["grund"])
+        return
 
     # Running tally für Bankroll-Schutz innerhalb dieses Runs
     running_count    = len(bets_today)
