@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-14T00:27:10.519818+00:00",
+"generatedAt": "2026-09-14T00:42:17.752316+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1124,
-"wins": 943,
-"hitRate": 0.839,
-"polyN": 1062,
-"polyWins": 818,
-"polyHitRate": 0.7702,
-"pinnN": 151,
-"pinnHitRate": 0.7881,
-"nRoi": 451,
-"roi": 0.4204,
-"roiLb": 0.3607,
-"nClv": 451,
-"clv": 20.49,
-"clvLb": 18.6558
+"n": 1126,
+"wins": 945,
+"hitRate": 0.8393,
+"polyN": 1064,
+"polyWins": 820,
+"polyHitRate": 0.7707,
+"pinnN": 152,
+"pinnHitRate": 0.7895,
+"nRoi": 453,
+"roi": 0.4253,
+"roiLb": 0.3654,
+"nClv": 453,
+"clv": 20.58,
+"clvLb": 18.7513
 },
 "uneinig": {
-"n": 436,
+"n": 437,
 "wins": 137,
-"hitRate": 0.3142,
-"polyN": 398,
+"hitRate": 0.3135,
+"polyN": 399,
 "polyWins": 103,
-"polyHitRate": 0.2588,
-"pinnN": 270,
-"pinnHitRate": 0.6185,
-"nRoi": 204,
-"roi": -0.46,
-"roiLb": -0.5641,
-"nClv": 204,
-"clv": -18.91,
-"clvLb": -22.808
+"polyHitRate": 0.2581,
+"pinnN": 271,
+"pinnHitRate": 0.6199,
+"nRoi": 205,
+"roi": -0.4627,
+"roiLb": -0.5664,
+"nClv": 205,
+"clv": -18.96,
+"clvLb": -22.8381
 },
 "teil": {
 "n": 22,
@@ -52,9 +52,9 @@
 },
 "byLeague": {
 "US MLS": {
-"n": 91,
-"wins": 53,
-"hitRate": 0.5824
+"n": 92,
+"wins": 54,
+"hitRate": 0.587
 },
 "English Sky Bet Championship": {
 "n": 68,
@@ -126,6 +126,11 @@
 "wins": 25,
 "hitRate": 0.7812
 },
+"Brazilian Serie B": {
+"n": 31,
+"wins": 22,
+"hitRate": 0.7097
+},
 "Portuguese Primeira Liga": {
 "n": 31,
 "wins": 26,
@@ -135,11 +140,6 @@
 "n": 31,
 "wins": 21,
 "hitRate": 0.6774
-},
-"Brazilian Serie B": {
-"n": 30,
-"wins": 22,
-"hitRate": 0.7333
 },
 "German Bundesliga 2": {
 "n": 30,
@@ -252,9 +252,9 @@
 "hitRate": 0.8235
 },
 "Bolivian Liga de Futbol Profesional": {
-"n": 15,
-"wins": 12,
-"hitRate": 0.8
+"n": 16,
+"wins": 13,
+"hitRate": 0.8125
 },
 "CONMEBOL Copa Sudamericana": {
 "n": 15,
@@ -624,37 +624,94 @@
 },
 "byStrength": {
 "strong": {
-"n": 946,
-"wins": 757,
-"hitRate": 0.8002,
-"nRoi": 422,
-"roi": 0.2847,
-"roiLb": 0.218,
-"nClv": 422,
-"clv": 13.53,
-"clvLb": 10.9422
+"n": 948,
+"wins": 759,
+"hitRate": 0.8006,
+"nRoi": 424,
+"roi": 0.2905,
+"roiLb": 0.2236,
+"nClv": 424,
+"clv": 13.67,
+"clvLb": 11.0808
 },
 "weak": {
-"n": 603,
+"n": 604,
 "wins": 310,
-"hitRate": 0.5141,
-"nRoi": 246,
-"roi": -0.1366,
-"roiLb": -0.24,
-"nClv": 246,
-"clv": -3.22,
-"clvLb": -6.5862
+"hitRate": 0.5132,
+"nRoi": 247,
+"roi": -0.1401,
+"roiLb": -0.2432,
+"nClv": 247,
+"clv": -3.32,
+"clvLb": -6.6806
 }
 },
 "divergence": {
-"n": 436,
+"n": 437,
 "betfairWins": 137,
-"betfairRate": 0.3142,
-"polyN": 398,
+"betfairRate": 0.3135,
+"polyN": 399,
 "polyWins": 103,
-"polyRate": 0.2588
+"polyRate": 0.2581
 },
 "recent": [
+{
+"matchId": "36040253",
+"home": "Chicago Fire",
+"away": "New England Revolution",
+"league": "US MLS",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "New England Revolution",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-09-13T21:30:00Z",
+"settledAt": "2026-09-14T00:42:17.568290+00:00"
+},
+{
+"matchId": "36053371",
+"home": "Universitario de Vinto",
+"away": "Club Independiente Petro",
+"league": "Bolivian Liga de Futbol Profesional",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Universitario de Vinto",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+1
+],
+"kickoff": "2026-09-13T21:30:00Z",
+"settledAt": "2026-09-14T00:42:17.568290+00:00"
+},
+{
+"matchId": "36053826",
+"home": "Novorizontino",
+"away": "Cuiaba",
+"league": "Brazilian Serie B",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Novorizontino",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-09-13T21:30:00Z",
+"settledAt": "2026-09-14T00:42:17.568290+00:00"
+},
 {
 "matchId": "36045493",
 "home": "Atletico Nacional Medellin",
@@ -1357,75 +1414,18 @@
 ],
 "kickoff": "2026-09-13T15:00:00Z",
 "settledAt": "2026-09-13T18:11:48.028041+00:00"
-},
-{
-"matchId": "36039995",
-"home": "Start",
-"away": "Brann",
-"league": "Norwegian Eliteserien",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Start",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-09-13T15:00:00Z",
-"settledAt": "2026-09-13T18:11:48.028041+00:00"
-},
-{
-"matchId": "36041173",
-"home": "Cesar Vallejo Moquegua",
-"away": "Sporting Cristal",
-"league": "Peruvian Primera Division",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Sporting Cristal",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-09-13T15:00:00Z",
-"settledAt": "2026-09-13T18:11:48.028041+00:00"
-},
-{
-"matchId": "36007395",
-"home": "Napoli",
-"away": "Bologna",
-"league": "Italian Serie A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Napoli",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-09-13T16:00:00Z",
-"settledAt": "2026-09-13T17:56:41.291645+00:00"
 }
 ],
 "global": {
-"n": 1582,
-"wins": 1085,
+"n": 1585,
+"wins": 1087,
 "hitRate": 0.6858,
-"nRoi": 668,
-"roi": 0.1296,
-"roiLb": 0.0714,
-"nClv": 668,
-"clv": 7.36,
-"clvLb": 5.2479
+"nRoi": 671,
+"roi": 0.132,
+"roiLb": 0.0737,
+"nClv": 671,
+"clv": 7.41,
+"clvLb": 5.3
 },
-"pending": 20
+"pending": 17
 }
