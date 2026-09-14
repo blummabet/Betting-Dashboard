@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-14T18:14:18.600612+00:00",
+"generatedAt": "2026-09-14T18:44:07.811845+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1139,
-"wins": 957,
-"hitRate": 0.8402,
-"polyN": 1077,
-"polyWins": 832,
-"polyHitRate": 0.7725,
+"n": 1142,
+"wins": 960,
+"hitRate": 0.8406,
+"polyN": 1080,
+"polyWins": 835,
+"polyHitRate": 0.7731,
 "pinnN": 152,
 "pinnHitRate": 0.7895,
-"nRoi": 466,
-"roi": 0.4467,
-"roiLb": 0.3846,
-"nClv": 466,
-"clv": 20.69,
-"clvLb": 18.8646
+"nRoi": 469,
+"roi": 0.4458,
+"roiLb": 0.3841,
+"nClv": 469,
+"clv": 20.64,
+"clvLb": 18.8247
 },
 "uneinig": {
-"n": 440,
-"wins": 138,
-"hitRate": 0.3136,
-"polyN": 402,
+"n": 441,
+"wins": 139,
+"hitRate": 0.3152,
+"polyN": 403,
 "polyWins": 105,
-"polyHitRate": 0.2612,
+"polyHitRate": 0.2605,
 "pinnN": 272,
 "pinnHitRate": 0.6213,
-"nRoi": 208,
-"roi": -0.4655,
-"roiLb": -0.5679,
-"nClv": 208,
-"clv": -19.14,
-"clvLb": -22.9872
+"nRoi": 209,
+"roi": -0.4631,
+"roiLb": -0.5651,
+"nClv": 209,
+"clv": -19.05,
+"clvLb": -22.8801
 },
 "teil": {
 "n": 22,
@@ -91,6 +91,11 @@
 "wins": 21,
 "hitRate": 0.5385
 },
+"Italian Serie A": {
+"n": 39,
+"wins": 29,
+"hitRate": 0.7436
+},
 "Saudi Professional League": {
 "n": 39,
 "wins": 26,
@@ -105,11 +110,6 @@
 "n": 37,
 "wins": 25,
 "hitRate": 0.6757
-},
-"Italian Serie A": {
-"n": 37,
-"wins": 27,
-"hitRate": 0.7297
 },
 "Mexican Liga MX": {
 "n": 37,
@@ -361,6 +361,11 @@
 "wins": 4,
 "hitRate": 0.6667
 },
+"Israeli Premier League": {
+"n": 6,
+"wins": 5,
+"hitRate": 0.8333
+},
 "Other Competitions Soccer": {
 "n": 6,
 "wins": 4,
@@ -425,11 +430,6 @@
 "n": 4,
 "wins": 4,
 "hitRate": 1.0
-},
-"Israeli Premier League": {
-"n": 4,
-"wins": 3,
-"hitRate": 0.75
 },
 "Kazakhstan Premier League": {
 "n": 4,
@@ -629,15 +629,15 @@
 },
 "byStrength": {
 "strong": {
-"n": 959,
-"wins": 769,
-"hitRate": 0.8019,
-"nRoi": 435,
-"roi": 0.2991,
+"n": 963,
+"wins": 773,
+"hitRate": 0.8027,
+"nRoi": 439,
+"roi": 0.2985,
 "roiLb": 0.233,
-"nClv": 435,
-"clv": 13.74,
-"clvLb": 11.1975
+"nClv": 439,
+"clv": 13.7,
+"clvLb": 11.1822
 },
 "weak": {
 "n": 609,
@@ -652,14 +652,90 @@
 }
 },
 "divergence": {
-"n": 440,
-"betfairWins": 138,
-"betfairRate": 0.3136,
-"polyN": 402,
+"n": 441,
+"betfairWins": 139,
+"betfairRate": 0.3152,
+"polyN": 403,
 "polyWins": 105,
-"polyRate": 0.2612
+"polyRate": 0.2605
 },
 "recent": [
+{
+"matchId": "36006770",
+"home": "Torino",
+"away": "Roma",
+"league": "Italian Serie A",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Roma",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+2
+],
+"kickoff": "2026-09-14T16:30:00Z",
+"settledAt": "2026-09-14T18:29:23.952884+00:00"
+},
+{
+"matchId": "36006591",
+"home": "Como",
+"away": "Parma",
+"league": "Italian Serie A",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Como",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-09-14T16:30:00Z",
+"settledAt": "2026-09-14T18:29:23.952884+00:00"
+},
+{
+"matchId": "36066475",
+"home": "Hapoel Ramat Gan",
+"away": "Maccabi Netanya",
+"league": "Israeli Premier League",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Hapoel Ramat Gan",
+"polySide": "away",
+"winner": "home",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-09-14T16:30:00Z",
+"settledAt": "2026-09-14T18:29:23.952884+00:00"
+},
+{
+"matchId": "36045325",
+"home": "Hapoel Haifa",
+"away": "Bnei Sakhnin",
+"league": "Israeli Premier League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Hapoel Haifa",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+1
+],
+"kickoff": "2026-09-14T16:30:00Z",
+"settledAt": "2026-09-14T18:29:23.952884+00:00"
+},
 {
 "matchId": "36046465",
 "home": "Shakhtar",
@@ -1343,94 +1419,18 @@
 ],
 "kickoff": "2026-09-13T18:00:00Z",
 "settledAt": "2026-09-13T21:12:03.631652+00:00"
-},
-{
-"matchId": "36041724",
-"home": "Sport Boys (Per)",
-"away": "Deportivo Garcilaso",
-"league": "Peruvian Primera Division",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Sport Boys (Per)",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-09-13T18:00:00Z",
-"settledAt": "2026-09-13T21:12:03.631652+00:00"
-},
-{
-"matchId": "36044221",
-"home": "CD Leones del Norte",
-"away": "Tecnico Universitario",
-"league": "Ecuadorian Serie A",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Tecnico Universitario",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-09-13T18:00:00Z",
-"settledAt": "2026-09-13T21:12:03.631652+00:00"
-},
-{
-"matchId": "35999841",
-"home": "Tigre",
-"away": "Rosario Central",
-"league": "Argentinian Primera Division",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Rosario Central",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-09-13T17:45:00Z",
-"settledAt": "2026-09-13T20:56:55.522526+00:00"
-},
-{
-"matchId": "35999785",
-"home": "Sarmiento de Junin",
-"away": "Belgrano",
-"league": "Argentinian Primera Division",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Sarmiento de Junin",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-09-13T17:45:00Z",
-"settledAt": "2026-09-13T20:56:55.522526+00:00"
 }
 ],
 "global": {
-"n": 1601,
-"wins": 1100,
-"hitRate": 0.6871,
-"nRoi": 687,
-"roi": 0.1486,
-"roiLb": 0.0894,
-"nClv": 687,
-"clv": 7.56,
-"clvLb": 5.4683
+"n": 1605,
+"wins": 1104,
+"hitRate": 0.6879,
+"nRoi": 691,
+"roi": 0.1492,
+"roiLb": 0.0903,
+"nClv": 691,
+"clv": 7.58,
+"clvLb": 5.4921
 },
 "pending": 28
 }
