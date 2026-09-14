@@ -1,7 +1,39 @@
 {
-"generatedAt": "2026-09-14T02:27:26.236771+00:00",
+"generatedAt": "2026-09-14T02:42:16.632422+00:00",
 "count": 12,
 "rows": [
+{
+"matchId": "36040301",
+"home": "San Diego FC",
+"away": "Philadelphia",
+"league": "US MLS",
+"live": true,
+"kickoff": "2026-09-14T01:00:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "away",
+"name": "Philadelphia",
+"sharePct": 79,
+"eur": 186093,
+"odd": 1.11
+},
+"poly": {
+"side": "away",
+"name": "Philadelphia Union",
+"sharePct": 96,
+"usd": 588501,
+"src": "live"
+},
+"pinn": {
+"fav": "away",
+"home": 0.1075,
+"draw": 0.241,
+"away": 0.6515
+},
+"mmStrong": true,
+"polyGeld": true,
+"nSources": 3
+},
 {
 "matchId": "36005134",
 "home": "Leeds",
@@ -14,8 +46,8 @@
 "side": "home",
 "name": "Leeds",
 "sharePct": 53,
-"eur": 148188,
-"odd": 2.42
+"eur": 148206,
+"odd": 2.4
 },
 "poly": {
 "side": "home",
@@ -31,38 +63,6 @@
 "away": 0.3146
 },
 "mmStrong": false,
-"polyGeld": true,
-"nSources": 3
-},
-{
-"matchId": "36040301",
-"home": "San Diego FC",
-"away": "Philadelphia",
-"league": "US MLS",
-"live": true,
-"kickoff": "2026-09-14T01:00:00Z",
-"verdict": "konsens",
-"betfair": {
-"side": "away",
-"name": "Philadelphia",
-"sharePct": 75,
-"eur": 147493,
-"odd": 1.54
-},
-"poly": {
-"side": "away",
-"name": "Philadelphia Union",
-"sharePct": 96,
-"usd": 588501,
-"src": "live"
-},
-"pinn": {
-"fav": "away",
-"home": 0.1302,
-"draw": 0.2407,
-"away": 0.6291
-},
-"mmStrong": true,
 "polyGeld": true,
 "nSources": 3
 },
@@ -109,9 +109,9 @@
 "betfair": {
 "side": "home",
 "name": "Guadalajara",
-"sharePct": 80,
-"eur": 62702,
-"odd": 1.25
+"sharePct": 82,
+"eur": 70541,
+"odd": 1.01
 },
 "poly": {
 "side": "home",
@@ -120,15 +120,10 @@
 "usd": 124728,
 "src": "live"
 },
-"pinn": {
-"fav": "home",
-"home": 0.7654,
-"draw": 0.1764,
-"away": 0.0582
-},
+"pinn": null,
 "mmStrong": true,
 "polyGeld": true,
-"nSources": 3
+"nSources": 2
 },
 {
 "matchId": "36006591",
@@ -142,7 +137,7 @@
 "side": "home",
 "name": "Como",
 "sharePct": 91,
-"eur": 56737,
+"eur": 57349,
 "odd": 1.25
 },
 "poly": {
@@ -195,6 +190,33 @@
 "nSources": 3
 },
 {
+"matchId": "36054063",
+"home": "Cucuta Deportivo",
+"away": "Millonarios",
+"league": "Colombian Primera A",
+"live": true,
+"kickoff": "2026-09-14T01:15:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "away",
+"name": "Millonarios",
+"sharePct": 75,
+"eur": 42549,
+"odd": 1.24
+},
+"poly": {
+"side": "away",
+"name": "Millonarios FC",
+"sharePct": 62,
+"usd": 11442,
+"src": "live"
+},
+"pinn": null,
+"mmStrong": true,
+"polyGeld": true,
+"nSources": 2
+},
+{
 "matchId": "36006770",
 "home": "Torino",
 "away": "Roma",
@@ -206,8 +228,8 @@
 "side": "away",
 "name": "Roma",
 "sharePct": 77,
-"eur": 35572,
-"odd": 1.6
+"eur": 35577,
+"odd": 1.59
 },
 "poly": {
 "side": "away",
@@ -227,33 +249,6 @@
 "nSources": 3
 },
 {
-"matchId": "36054063",
-"home": "Cucuta Deportivo",
-"away": "Millonarios",
-"league": "Colombian Primera A",
-"live": true,
-"kickoff": "2026-09-14T01:15:00Z",
-"verdict": "konsens",
-"betfair": {
-"side": "away",
-"name": "Millonarios",
-"sharePct": 76,
-"eur": 32149,
-"odd": 2.82
-},
-"poly": {
-"side": "away",
-"name": "Millonarios FC",
-"sharePct": 62,
-"usd": 11442,
-"src": "live"
-},
-"pinn": null,
-"mmStrong": true,
-"polyGeld": true,
-"nSources": 2
-},
-{
 "matchId": "36011366",
 "home": "Villarreal",
 "away": "Betis",
@@ -265,7 +260,7 @@
 "side": "home",
 "name": "Villarreal",
 "sharePct": 65,
-"eur": 31860,
+"eur": 31875,
 "odd": 2.04
 },
 "poly": {
@@ -296,8 +291,8 @@
 "betfair": {
 "side": "home",
 "name": "Inter",
-"sharePct": 79,
-"eur": 27515,
+"sharePct": 80,
+"eur": 28319,
 "odd": 1.28
 },
 "poly": {
@@ -372,18 +367,24 @@
 "src": "live"
 },
 "pinn": {
-"fav": "away",
-"home": 0.1388,
-"draw": 0.2894,
-"away": 0.5718
+"fav": "draw",
+"home": 0.3176,
+"draw": 0.5116,
+"away": 0.1708
 },
 "mmStrong": false,
 "polyGeld": true,
 "nSources": 3
 }
 ],
-"nameMatchMisses": 1,
+"nameMatchMisses": 2,
 "nameMatchMissList": [
+{
+"matchId": "36065262",
+"home": "CSD Municipal",
+"away": "Malacateco",
+"league": "Guatemalan Liga Nacional"
+},
 {
 "matchId": "36004943",
 "home": "Sturm Graz",
