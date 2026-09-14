@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-14T14:59:04.997470+00:00",
+"generatedAt": "2026-09-14T15:43:52.309680+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1136,
-"wins": 954,
-"hitRate": 0.8398,
-"polyN": 1074,
-"polyWins": 829,
-"polyHitRate": 0.7719,
+"n": 1137,
+"wins": 955,
+"hitRate": 0.8399,
+"polyN": 1075,
+"polyWins": 830,
+"polyHitRate": 0.7721,
 "pinnN": 152,
 "pinnHitRate": 0.7895,
-"nRoi": 463,
-"roi": 0.446,
-"roiLb": 0.3836,
-"nClv": 463,
-"clv": 20.63,
-"clvLb": 18.8016
+"nRoi": 464,
+"roi": 0.4465,
+"roiLb": 0.3843,
+"nClv": 464,
+"clv": 20.65,
+"clvLb": 18.8247
 },
 "uneinig": {
-"n": 439,
+"n": 440,
 "wins": 138,
-"hitRate": 0.3144,
-"polyN": 401,
-"polyWins": 104,
-"polyHitRate": 0.2594,
+"hitRate": 0.3136,
+"polyN": 402,
+"polyWins": 105,
+"polyHitRate": 0.2612,
 "pinnN": 272,
 "pinnHitRate": 0.6213,
-"nRoi": 207,
-"roi": -0.4629,
-"roiLb": -0.5657,
-"nClv": 207,
-"clv": -19.13,
-"clvLb": -22.9958
+"nRoi": 208,
+"roi": -0.4655,
+"roiLb": -0.5679,
+"nClv": 208,
+"clv": -19.14,
+"clvLb": -22.9872
 },
 "teil": {
 "n": 22,
@@ -436,6 +436,11 @@
 "wins": 3,
 "hitRate": 0.75
 },
+"Ukrainian Premier League": {
+"n": 4,
+"wins": 2,
+"hitRate": 0.5
+},
 "Australia Cup": {
 "n": 3,
 "wins": 2,
@@ -470,11 +475,6 @@
 "n": 3,
 "wins": 1,
 "hitRate": 0.3333
-},
-"Ukrainian Premier League": {
-"n": 3,
-"wins": 2,
-"hitRate": 0.6667
 },
 "Croatian HNL": {
 "n": 2,
@@ -534,6 +534,11 @@
 "Venezuelan Primera Division": {
 "n": 2,
 "wins": 2,
+"hitRate": 1.0
+},
+"AFC Champions League": {
+"n": 1,
+"wins": 1,
 "hitRate": 1.0
 },
 "Azerbaijan 1st Division": {
@@ -624,37 +629,75 @@
 },
 "byStrength": {
 "strong": {
-"n": 956,
-"wins": 766,
-"hitRate": 0.8013,
-"nRoi": 432,
-"roi": 0.2973,
-"roiLb": 0.2308,
-"nClv": 432,
-"clv": 13.63,
-"clvLb": 11.0775
+"n": 957,
+"wins": 767,
+"hitRate": 0.8015,
+"nRoi": 433,
+"roi": 0.2982,
+"roiLb": 0.2319,
+"nClv": 433,
+"clv": 13.67,
+"clvLb": 11.1198
 },
 "weak": {
-"n": 608,
+"n": 609,
 "wins": 313,
-"hitRate": 0.5148,
-"nRoi": 251,
-"roi": -0.1075,
-"roiLb": -0.2171,
-"nClv": 251,
-"clv": -3.03,
-"clvLb": -6.4249
+"hitRate": 0.514,
+"nRoi": 252,
+"roi": -0.111,
+"roiLb": -0.2204,
+"nClv": 252,
+"clv": -3.1,
+"clvLb": -6.4857
 }
 },
 "divergence": {
-"n": 439,
+"n": 440,
 "betfairWins": 138,
-"betfairRate": 0.3144,
-"polyN": 401,
-"polyWins": 104,
-"polyRate": 0.2594
+"betfairRate": 0.3136,
+"polyN": 402,
+"polyWins": 105,
+"polyRate": 0.2612
 },
 "recent": [
+{
+"matchId": "36045515",
+"home": "Dynamo Kiev",
+"away": "FC Epicentr Dunaivtsi",
+"league": "Ukrainian Premier League",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "home",
+"winner": "home",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+3,
+0
+],
+"kickoff": "2026-09-14T12:30:00Z",
+"settledAt": "2026-09-14T15:43:52.084700+00:00"
+},
+{
+"matchId": "36066451",
+"home": "Neftchi Fargona",
+"away": "Al Quwa Al Jawiya",
+"league": "AFC Champions League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Neftchi Fargona",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-09-14T13:45:00Z",
+"settledAt": "2026-09-14T15:43:52.084700+00:00"
+},
 {
 "matchId": "36044446",
 "home": "Guadalajara",
@@ -1376,56 +1419,18 @@
 ],
 "kickoff": "2026-09-13T18:45:00Z",
 "settledAt": "2026-09-13T20:42:00.629656+00:00"
-},
-{
-"matchId": "36041112",
-"home": "Fredrikstad",
-"away": "Sarpsborg",
-"league": "Norwegian Eliteserien",
-"verdict": "konsens",
-"moneySide": "draw",
-"moneyName": "The Draw",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-09-13T17:15:00Z",
-"settledAt": "2026-09-13T20:26:56.759496+00:00"
-},
-{
-"matchId": "36044706",
-"home": "Benfica",
-"away": "Gil Vicente",
-"league": "Portuguese Primeira Liga",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Benfica",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-09-13T17:00:00Z",
-"settledAt": "2026-09-13T20:11:59.321508+00:00"
 }
 ],
 "global": {
-"n": 1597,
-"wins": 1097,
-"hitRate": 0.6869,
-"nRoi": 683,
-"roi": 0.1486,
-"roiLb": 0.0891,
-"nClv": 683,
-"clv": 7.51,
-"clvLb": 5.4079
+"n": 1599,
+"wins": 1098,
+"hitRate": 0.6867,
+"nRoi": 685,
+"roi": 0.1477,
+"roiLb": 0.0883,
+"nClv": 685,
+"clv": 7.5,
+"clvLb": 5.4027
 },
 "pending": 16
 }
