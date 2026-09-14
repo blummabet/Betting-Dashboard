@@ -101,10 +101,24 @@ def save(state: dict) -> None:
     STATE_FILE.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
-def mark(state: dict, ids, ts: str | None = None) -> None:
+def mark(state: dict, ids, ts: str | None = None, gesendet: bool = False) -> None:
+    """Picks als bekannt markieren. `gesendet=True` heisst: sie sind WIRKLICH rausgegangen.
+
+    🔴 14.09.2026 — der Unterschied ist der ganze Punkt. `announced` sah immer wie ein
+    Sendebuch aus, ist aber keines: sowohl der Digest als auch notify_new_picks markieren
+    hier STUMM alle kommenden Picks, damit nichts doppelt rausgeht — auch Spiele in drei
+    Wochen, die niemand je gesehen hat. Wer diesen Zeitstempel als „gesendet" las, buchte
+    Pushes in Wochen, in denen sie keinen Follower erreicht haben (15 von 44 bei Liga).
+
+    Das zweite Fach haelt deshalb nur fest, was ein Sender tatsaechlich verschickt hat. Die
+    Morning-Card braucht es nicht (ihr Sendebuch ist `{ds}_telegram_sent.json`, je Spieltag);
+    der Intraday-Nachzuegler von notify_new_picks hatte gar keines — der steht ab jetzt hier.
+    """
     ts = ts or _now().isoformat()
     for i in ids:
         state.setdefault("announced", {})[i] = ts
+        if gesendet:
+            state.setdefault("gesendet", {})[i] = ts
 
 
 def is_announced(state: dict, pick_id: str) -> bool:

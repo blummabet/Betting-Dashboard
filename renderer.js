@@ -1654,17 +1654,30 @@ function _renderBayesianWeights() {
   const _isLiga = (typeof _sharpDataset !== 'undefined') && _sharpIsLigaLike(_sharpDataset);
   const weights = (typeof _sharpDataset !== 'undefined'
     ? window[_sharpMeta(_sharpDataset).weightsGlobal] : null) || {};
-  const signalNames = _isLiga ? [
-    "lead_lag_bias", "public_static_bias", "injury", "form_trend", "h2h_pattern",
-    "xg_strength", "chance_creation", "form_rating", "freshness_leg", "lineup_signal",
-    "apif_predictions", "league_pressure", "fixture_congestion", "topscorer_momentum",
-    "coach_change", "transfer_shift", "betfair_money", "betfair_coherence",
-  ] : [
-    "lead_lag_bias", "public_static_bias", "travel_burden", "injury",
-    "form_trend", "h2h_pattern", "xg_strength", "polymarket_sharp",
-    "steam_lag", "pressure_index", "lineup_signal", "apif_predictions",
-    "weather_signal", "incentive_signal", "betfair_money", "betfair_coherence",
-  ];
+  // 🔴 14.09.2026 (Lucas: „wo seh ich eigentlich, wie die Signale werken, wie sie sich anpassen
+  // und lernen?"). Hier standen ZWEI HANDGEPFLEGTE LISTEN — und beide waren stehengeblieben,
+  // waehrend neue Signale dazukamen. Gemessen am echten Bestand:
+  //
+  //     Liga   630 von 820 Beobachtungen sichtbar  —  unsichtbar: move_following (77),
+  //            venue_form (49), opener_move (36), streak_momentum (18), smart_money (10)
+  //     MLS    294 von 668 sichtbar (56 % fehlten!) — darunter topscorer_momentum (67, das
+  //            groesste MLS-Signal ueberhaupt), chance_creation (61), form_rating (49),
+  //            mls_travel (39, ein MLS-EIGENES Signal, das in keiner der beiden Listen stand)
+  //
+  // Die Kopfzeile sagte dazu „verteilt ueber ALLE Signale". Diese Signale lernen mit, ihr
+  // Gewicht verschiebt echte Picks — nur sehen konnte man sie nicht. Umgekehrt stand
+  // `topscorer_momentum` in der Liga-Liste, ohne in der Liga-Datei zu existieren, und rendert
+  // seither als „1.00 · 0 · —".
+  //
+  // Dieselbe Fehlerklasse wie bei `_isAutoSrc` heute frueh: eine Aufzaehlung vergisst das
+  // naechste Element, und niemand merkt es. Die Zeilen kommen deshalb jetzt aus der DATEI —
+  // was lernt, steht in der Tabelle. Unbekannte Namen erscheinen mit ihrem Rohnamen statt zu
+  // verschwinden; ein unschoener Name ist besser als ein blinder Fleck.
+  const _ignorieren = new Set(["_meta"]);
+  const signalNames = Object.keys(weights)
+    .filter((k) => !_ignorieren.has(k) && weights[k] && typeof weights[k] === 'object')
+    .sort((a, b) => ((weights[b] || {}).n_observations || 0) - ((weights[a] || {}).n_observations || 0)
+                    || a.localeCompare(b));
   const labels = {
     lead_lag_bias: "Sharp-Move (Pinn vs Soft)",
     public_static_bias: "Public-Bias",
@@ -1755,7 +1768,7 @@ function _renderBayesianWeights() {
     : `⏳ Lern-Loop wartet auf erste resolved WM-Picks. Erst nach ~30 Beobachtungen verschieben sich die Weights spürbar.`;
   const learnState = totalN < 10
     ? `<div style="padding:10px 14px;background:rgba(245,194,90,0.06);border-left:3px solid #f5c25a;font-size:12px;color:#f5c25a;">${waitMsg}</div>`
-    : `<div style="padding:10px 14px;background:rgba(0,212,161,0.06);border-left:3px solid #00d4a1;font-size:12px;color:#00d4a1;">✓ Lern-Loop aktiv · ${totalN} Beobachtungen verteilt über alle Signale${_isLiga ? ' (Liga)' : ''}</div>`;
+    : `<div style="padding:10px 14px;background:rgba(0,212,161,0.06);border-left:3px solid #00d4a1;font-size:12px;color:#00d4a1;">✓ Lern-Loop aktiv · ${totalN} Beobachtungen über ${signalNames.length} Signale${_isLiga ? ' (Liga)' : ''} — die Tabelle zeigt jedes davon</div>`;
   return `<div class="section-label" style="margin-bottom:10px;">🧠 Bayesian-Lern-Status · was das System gelernt hat</div>
     <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:24px;">
       ${learnState}

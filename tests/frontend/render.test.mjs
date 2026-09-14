@@ -66,7 +66,15 @@ test('Bayesian-Panel (WM): zeigt WM-Signale aus window.SIGNAL_WEIGHTS', () => {
   };
   const html = w._renderBayesianWeights();
   assert.match(html, /Travel-Burden/, 'WM-Panel muss Travel-Burden listen');
-  assert.match(html, /Pressure-Index/, 'WM-Panel muss Pressure-Index listen');
+  // 14.09.2026: hier stand „muss Pressure-Index listen" — ein Signal, das in den Gewichten
+  // dieses Falls GAR NICHT vorkommt. Der alte Renderer zeigte es trotzdem, weil er eine feste
+  // Namensliste abarbeitete und Fehlendes als „1.00 · 0 · —" rendert. Genau diese Liste war
+  // in beide Richtungen falsch: sie erfand Zeilen ohne Daten UND verschluckte 190 (Liga) bzw.
+  // 374 (MLS) echte Beobachtungen von Signalen, die nicht draufstanden. Jetzt gilt: die
+  // Tabelle zeigt, was in der Datei steht — nicht mehr und nicht weniger.
+  assert.ok(!/Pressure-Index/.test(html),
+    'ein Signal ohne Gewichte gehoert nicht in die Tabelle — es hat nichts gelernt');
+  assert.match(html, /2 Signale/, 'die Kopfzeile nennt die Zahl der wirklich gezeigten Signale');
 });
 
 test('Bayesian-Panel (Liga): nur Liga-Signale, KEINE WM-only-Signale', () => {
@@ -78,6 +86,8 @@ test('Bayesian-Panel (Liga): nur Liga-Signale, KEINE WM-only-Signale', () => {
   };
   const html = w._renderBayesianWeights();
   assert.match(html, /Liga-Druck/, 'Liga-Panel muss league_pressure (Liga-Druck) zeigen');
+  // Das gilt jetzt PER KONSTRUKTION statt per Liste: die Zeilen kommen aus den Liga-Gewichten,
+  // und WM-Signale stehen dort nicht drin. Eine Liste konnte das nur versprechen.
   assert.ok(!/Travel-Burden/.test(html), 'Liga-Panel darf KEIN WM-Travel-Burden zeigen');
   assert.ok(!/Weather\/Hitze/.test(html), 'Liga-Panel darf KEIN WM-Wetter zeigen');
 });

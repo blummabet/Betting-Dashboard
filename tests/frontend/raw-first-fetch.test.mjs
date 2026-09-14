@@ -179,6 +179,11 @@ test('kein jsdom-Harness testet eine Umgebung ohne raw-json.js', () => {
   const fehlt = [];
   for (const f of dateien) {
     const s = readFileSync(new URL(f, dir), 'utf8');
+    // 14.09.2026: „jsdom-Harness" heisst jsdom. Vorher genuegte es, einen Dateipfad zu NENNEN —
+    // ein Test, der eine Quelle nur als TEXT liest und darauf Aussagen prueft, fuehrt nichts
+    // aus und kann an einem fehlenden window.rawJson auch nicht scheitern. Er wurde trotzdem
+    // angemahnt. Ein Waechter, der raet, ist keiner (derselbe Satz wie im Datei-Helfer-Test).
+    if (!/new JSDOM|runScripts/.test(s)) continue;
     // Welche Dashboard-Dateien evaluiert dieser Harness?
     const evals = [...s.matchAll(/\.\.\/\.\.\/([\w.-]+\.js)/g)].map((m) => m[1]);
     const brauchtHelfer = evals.some((d) => {

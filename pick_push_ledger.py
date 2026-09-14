@@ -121,6 +121,123 @@ def erfassen(ledger: list, wm: dict, dataset: str, now=None) -> list:
     return out
 
 
+# 14.09.2026 (Lucas: „darum kommt beim Ausrechnen was anderes raus als der User kriegt, aber die
+# Push die am selben Spieltag rausgeht hat doch auch ne Quote … wieso nehmen wir nicht die?").
+#
+# Er hat recht, und es war verdrehter als gedacht — ZWEI Verschiebungen in entgegengesetzte
+# Richtungen:
+#
+#   Datum zu frueh: `gesehenAm` ist der Zeitpunkt, an dem der Pick ZUERST IN DEN DATEN stand —
+#     bis zu 27 Tage vor Anpfiff. Verschickt wird er aber erst mit der Morning-Card seines
+#     Spieltags (die nimmt nur das Tagesfenster). 15 von 44 Liga-Zeilen standen dadurch in einer
+#     anderen Kalenderwoche, als sie die Follower erreicht haben.
+#   Quote zu spaet: abgerechnet wurde mit dem letzten Vor-Anpfiff-Stand, im Median 2,6 Stunden
+#     vor Kickoff — also SPAETER als die Nachricht, die der Leser am Morgen hatte.
+#
+# ⚠️ Die naheliegende Quelle ist die falsche. Das Announce-Buch (`*_pick_announce_state.json`)
+# sieht aus wie ein Sendebuch, ist aber keines: sowohl der Digest als auch notify_new_picks
+# markieren dort STUMM alle kommenden Picks als „bekannt", damit nichts doppelt rausgeht — auch
+# Spiele in drei Wochen. Ein Zeitstempel dort heisst „gesehen", nicht „gesendet".
+#
+# Die echten Sendebuecher sind zwei, und beide sind exakt:
+#   · `{ds}_telegram_sent.json` — „morning_card:<Tag>" → Sendezeit. DAS ist der Weg, auf dem ein
+#     Card-Pick die Follower erreicht, und der Tag ergibt sich aus dem Anpfiff (gleiches Fenster
+#     wie telegram_wm._in_slate).
+#   · das `gesendet`-Fach im Announce-Buch — der Intraday-Nachzuegler, den notify_new_picks
+#     WIRKLICH geschickt hat (seit heute mitgeschrieben; nicht rekonstruierbar, also erst ab jetzt).
+#
+# Ohne Eintrag in einem der beiden wird NICHT geraten: die Zeile bleibt ohne `gesendetAm` und
+# zaehlt in keiner Woche mit. Ein Pick fuer den 10.10. ist am 13.09. schlicht noch nicht gesendet
+# — ihn trotzdem als Push der KW37 zu buchen, war der ganze Fehler.
+PUSH_ODDS_TOLERANZ_H = 6.0
+SLATE_START_H = 8   # Morning-Card-Fenster: [Tag 08:00 UTC, +1 Tag 08:00 UTC)
+
+
+def slate_datum(kickoff) -> str | None:
+    """Der Tag, an dessen Morning-Card dieses Spiel gehoert. REIN/testbar.
+
+    Spiegel von telegram_wm._in_slate — ein Spiel um 01:00 UTC gehoert zum VORTAG, sonst waeren
+    die MLS-Spaetspiele in der Karte des falschen Tages (und die MLS-Karten gehen um 21 Uhr UTC).
+    """
+    from datetime import datetime as _dt, timedelta as _td, timezone as _tz
+    try:
+        t = _dt.fromisoformat(str(kickoff).replace("Z", "+00:00"))
+    except (ValueError, TypeError):
+        return None
+    if t.tzinfo is None:
+        t = t.replace(tzinfo=_tz.utc)
+    return (t.astimezone(_tz.utc) - _td(hours=SLATE_START_H)).date().isoformat()
+
+
+def _stunden_seit(ts, now):
+    """Stunden zwischen `ts` und jetzt. None, wenn unlesbar — dann wird nichts behauptet."""
+    from datetime import datetime as _dt, timezone as _tz
+    try:
+        t = _dt.fromisoformat(str(ts).replace("Z", "+00:00"))
+    except (ValueError, TypeError):
+        return None
+    if t.tzinfo is None:
+        t = t.replace(tzinfo=_tz.utc)
+    return (now - t).total_seconds() / 3600.0
+
+
+def sendezeit_nachtragen(ledger: list, karten: dict, intraday: dict, dataset: str, now=None) -> list:
+    """`gesendetAm` + `pushOdds` eintragen. REIN/testbar.
+
+    `karten`   = {"morning_card:2026-09-05": "2026-09-05T21:11:09Z", …}  (Sendebuch des Digests)
+    `intraday` = {"<pickKey>|<Markt>": "<ISO>"}                          (wirklich geschickte Nachzuegler)
+
+    Die Sendezeit steht fest und wird auch rueckwirkend nachgetragen. Die Sende-QUOTE nur,
+    solange der Lauf nah genug dran ist (`PUSH_ODDS_TOLERANZ_H`) — was ein Pick im Moment der
+    Karte kostete, steht nirgends nachtraeglich. Aeltere Zeilen bekommen `oddsQuelle`
+    =„vorAnpfiff" und sagen damit, dass ihre Quote eine andere Frage beantwortet. Eine
+    Sende-Quote zu erfinden, die niemand gemessen hat, waere schlimmer als eine ehrlich
+    beschriftete zweitbeste.
+    """
+    now = now or _now()
+    aus = []
+    for r in ledger:
+        r = dict(r)
+        if r.get("dataset") != dataset or not r.get("push"):
+            aus.append(r)
+            continue
+        if not r.get("gesendetAm"):
+            pid = str(r.get("k") or "").split("|", 1)[-1]
+            ts = (intraday or {}).get(pid)
+            quelle = "intraday"
+            if not ts:
+                tag = slate_datum(r.get("kickoff"))
+                ts = (karten or {}).get("morning_card:%s" % tag) if tag else None
+                quelle = "morning_card"
+            if ts:
+                r["gesendetAm"] = ts
+                r["sendeQuelle"] = quelle
+        if not r.get("pushOdds"):
+            alter = _stunden_seit(r.get("gesendetAm"), now)
+            if alter is not None and 0 <= alter <= PUSH_ODDS_TOLERANZ_H \
+                    and isinstance(r.get("odds"), (int, float)) and r["odds"] > 1.0:
+                r["pushOdds"] = r["odds"]
+                r["pushOddsAm"] = now.isoformat()
+                r["oddsQuelle"] = "senden"
+            elif alter is not None and alter > PUSH_ODDS_TOLERANZ_H:
+                r.setdefault("oddsQuelle", "vorAnpfiff")
+        aus.append(r)
+    return aus
+
+
+def abrechnungs_quote(r):
+    """Die Quote, mit der diese Zeile abgerechnet wird. REIN/testbar.
+
+    Vorrang hat die Sende-Quote — sie ist die, die der Leser vor sich hatte. Fehlt sie
+    (Historie), faellt es auf die Vor-Anpfiff-Quote zurueck; `oddsQuelle` sagt, welche es war.
+    """
+    for feld in ("pushOdds", "odds"):
+        o = r.get(feld)
+        if isinstance(o, (int, float)) and o > 1.0:
+            return float(o)
+    return None
+
+
 def abrechnen(ledger: list, wm: dict, dataset: str, now=None) -> list:
     """Offene Zeilen aus dem Ergebnis am Pick nachtragen. VOID zählt weder als Treffer noch
     als Fehlschlag — die Zeile wird stillgelegt, nicht als Verlust gebucht."""
@@ -221,7 +338,16 @@ def main():
     path = ledger_file()
     led = _load(path)
     vorher = len(led)
-    led = abrechnen(erfassen(led, wm, ds), wm, ds)
+    import pick_announce_state as _S
+    _st = _S.load() or {}
+    # _load erzwingt eine Liste (das Ledger ist eine) — das Sendebuch ist ein Objekt.
+    try:
+        _karten = json.loads((BASE / f"{D.prefix()}telegram_sent.json").read_text(encoding="utf-8"))
+        _karten = _karten if isinstance(_karten, dict) else {}
+    except Exception:
+        _karten = {}
+    led = abrechnen(sendezeit_nachtragen(erfassen(led, wm, ds), _karten,
+                                         _st.get("gesendet") or {}, ds), wm, ds)
     path.write_text(json.dumps(led, ensure_ascii=False, indent=1), encoding="utf-8")
     offen = sum(1 for r in led if r.get("status") == "offen" and r.get("dataset") == ds)
     ab = sum(1 for r in led if r.get("status") == "abgerechnet" and r.get("dataset") == ds)

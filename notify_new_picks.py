@@ -141,7 +141,9 @@ def main() -> None:
     ok = tg_send(msg)
     print(f"{'✅' if ok else '❌'} Neuer-Pick-Noti: {len(new_units)} Pick(s)")
     if ok:
-        S.mark(state, new_ids, now.isoformat())
+        # 14.09.2026: `gesendet=True` — DIESE Zeilen sind wirklich rausgegangen (anders als die
+        # stumme Basis oben). Das Push-Buch bucht sie dadurch in die richtige Woche.
+        S.mark(state, new_ids, now.isoformat(), gesendet=True)
         S.save(state)
 
 

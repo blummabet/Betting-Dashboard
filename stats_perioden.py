@@ -27,6 +27,7 @@ reine Anzeige — hier wird nichts weggelassen, damit nicht zwei Wahrheiten ents
 from __future__ import annotations
 
 import json
+import pick_push_ledger as PPL   # 14.09.2026: eine Quelle fuer die Abrechnungs-Quote
 import math
 import os
 from datetime import date, datetime, timedelta, timezone
@@ -415,8 +416,52 @@ def push_bloecke() -> list:
                         "aussortierten führt das Schattenbuch weiter — sie stehen als Gegenprobe "
                         "im Freigabe-Register, nicht in der Kanal-Bilanz."
                         % (len(gepusht), len(rows), len(rows) - len(gepusht)))
+        # 🔴 14.09.2026 (Lucas: „darum kommt beim Ausrechnen was anderes raus als der User
+        # kriegt"). Gebucht wird nach dem SENDEZEITPUNKT, nicht nach dem ersten Sehen.
+        #
+        # `gesehenAm` ist der Moment, in dem der Pick in den Daten auftauchte — bis zu 27 Tage
+        # vor Anpfiff, waehrend die Morning-Card nur ihren Spieltag verschickt. 15 von 44
+        # Liga-Zeilen standen dadurch in einer anderen Kalenderwoche, als die Follower sie
+        # bekamen (KW35: 11 gebucht, 4 gesendet).
+        #
+        # ⭐ Und eine Zeile OHNE nachweisbare Sendung zaehlt in keiner Woche mit. Das ist die
+        # Haelfte, die Lucas' „8 Pushes, 2 abgerechnet" erklaert: zwei davon waren Spiele am
+        # 10.10. — nie gesendet, nie abrechenbar, trotzdem als Push der Woche gezaehlt. Ein
+        # Kanal-Block zaehlt, was den Kanal verlassen hat (derselbe Satz wie oben, eine Ebene
+        # tiefer). Sie sind nicht verloren: die Zeile darunter nennt sie.
+        _gesendet = [r for r in gepusht if r.get("gesendetAm")]
+        # Uebergang: solange KEINE Zeile eine Sendezeit traegt, hat der Pipeline-Lauf sie noch
+        # nicht nachgetragen. Dann hier auf `gesehenAm` zurueckfallen und es SAGEN — ein leerer
+        # Block waere die schlechtere Luege als ein beschrifteter ungenauer. „Keine einzige"
+        # heisst eindeutig „noch nicht migriert"; sobald eine da ist, sind die uebrigen
+        # wirklich noch nicht gesendet.
+        _uebergang = bool(gepusht) and not _gesendet
+        if _uebergang:
+            _gesendet = [dict(r, gesendetAm=r.get("gesehenAm")) for r in gepusht]
+            _hinweis = ((_hinweis + " ") if _hinweis else "") + (
+                "⚠️ Gebucht ist hier noch das Datum des ERSTEN SEHENS, nicht das des Sendens — "
+                "der naechste Pipeline-Lauf traegt die echten Sendezeiten nach. Bis dahin "
+                "koennen einzelne Zeilen in der falschen Woche stehen (gemessen: 15 von 44).")
+        _wartend = len(gepusht) - len(_gesendet)
+        if _wartend:
+            _hinweis = ((_hinweis + " ") if _hinweis else "") + (
+                "%d weitere Pick(s) stehen im Buch, sind aber noch NICHT rausgegangen — ihre "
+                "Spiele kommen erst. Sie erscheinen in der Woche, in der die Morning-Card sie "
+                "verschickt." % _wartend)
+        # Gerechnet wird mit der Quote von DA — dieselbe Regel wie beim `pushPreis` der anderen
+        # drei Kanaele. Wo es sie (noch) nicht gibt, steht die Vor-Anpfiff-Quote, und die Zeile
+        # sagt es.
+        _sende = [dict(r, _ts=r.get("gesendetAm"), _quote=PPL.abrechnungs_quote(r))
+                  for r in _gesendet]
+        _alt_quote = sum(1 for r in _sende if r.get("oddsQuelle") != "senden")
+        if _alt_quote:
+            _hinweis = ((_hinweis + " ") if _hinweis else "") + (
+                "%d der %d gesendeten Zeilen rechnen mit der letzten Quote VOR ANPFIFF statt "
+                "mit der beim Senden — fuer sie wurde die Sende-Quote nie erfasst (vor dem "
+                "14.09.2026). Sie steht im Median rund 2,6 Stunden naeher am Anpfiff als die "
+                "Nachricht, die der Follower bekam." % (_alt_quote, len(_sende)))
         aus.append((datei.split("_")[0] + "-picks", name, "🎯", _push_plays(
-            gepusht, "gesehenAm", "odds",
+            _sende, "_ts", "_quote",
             lambda r: r.get("win") if isinstance(r.get("win"), bool) else None), _hinweis))
     # 🔴 10.09.2026 (Lucas: „wird das erst seit kurzem getrackt? weil nur 23 in KW 37 und sonst
     # nichts"). Hier stand `shortlist_push_seen.json` — ein DEDUP-Buch mit drei Tagen TTL, kein

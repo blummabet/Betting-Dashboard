@@ -148,6 +148,86 @@ class Buch(unittest.TestCase):
         self.assertEqual(led[0]["status"], "void")
         self.assertIsNone(led[0]["win"])
 
+    # ── 14.09.2026: gebucht wird, wann es WIRKLICH rausging ─────────────────────────────────
+    def test_slate_datum_folgt_dem_karten_fenster(self):
+        """Spiegel von telegram_wm._in_slate: [Tag 08:00 UTC, +1 Tag 08:00 UTC).
+
+        Ohne das Fenster landen die MLS-Spaetspiele (00:30 UTC) in der Karte des FOLGETAGS —
+        also in einer Karte, in der sie nie standen."""
+        self.assertEqual(self.L.slate_datum("2026-09-20T16:00:00Z"), "2026-09-20")
+        self.assertEqual(self.L.slate_datum("2026-09-20T00:30:00Z"), "2026-09-19")
+        self.assertEqual(self.L.slate_datum("2026-09-20T08:00:00Z"), "2026-09-20", "Grenze gehoert zum Tag")
+        self.assertEqual(self.L.slate_datum("2026-09-20T07:59:00Z"), "2026-09-19")
+        self.assertIsNone(self.L.slate_datum(None))
+
+    def _zeile(self, **kw):
+        r = {"k": "wm|A-1-MEX-ZAF|Über 2.5 Tore", "dataset": "wm", "push": True,
+             "odds": 1.9, "status": "offen", "gesehenAm": NOW.isoformat(),
+             "kickoff": "2026-09-20T16:00:00Z"}
+        r.update(kw)
+        return [r]
+
+    def test_sendezeit_kommt_aus_dem_karten_buch(self):
+        karten = {"morning_card:2026-09-20": "2026-09-20T09:12:00Z"}
+        out = self.L.sendezeit_nachtragen(self._zeile(), karten, {}, "wm", NOW)
+        self.assertEqual(out[0]["gesendetAm"], "2026-09-20T09:12:00Z")
+        self.assertEqual(out[0]["sendeQuelle"], "morning_card")
+
+    def test_ohne_karte_wird_NICHT_geraten(self):
+        """⭐ Der Kern des Fundes: ein Pick fuer ein Spiel in drei Wochen ist noch nicht
+        gesendet. Ihn trotzdem in die aktuelle Woche zu buchen, war der ganze Fehler."""
+        out = self.L.sendezeit_nachtragen(self._zeile(), {}, {}, "wm", NOW)
+        self.assertIsNone(out[0].get("gesendetAm"))
+
+    def test_intraday_nachzuegler_schlaegt_die_karte(self):
+        karten = {"morning_card:2026-09-20": "2026-09-20T09:12:00Z"}
+        intraday = {"A-1-MEX-ZAF|Über 2.5 Tore": "2026-09-14T15:00:00Z"}
+        out = self.L.sendezeit_nachtragen(self._zeile(), karten, intraday, "wm", NOW)
+        self.assertEqual(out[0]["gesendetAm"], "2026-09-14T15:00:00Z")
+        self.assertEqual(out[0]["sendeQuelle"], "intraday")
+
+    def test_sende_quote_wird_nur_frisch_erfasst(self):
+        """Die Quote im Moment des Sendens gibt es nur, solange der Lauf nah dran ist."""
+        frisch = NOW.isoformat()
+        out = self.L.sendezeit_nachtragen(self._zeile(gesendetAm=frisch), {}, {}, "wm", NOW)
+        self.assertEqual(out[0]["pushOdds"], 1.9)
+        self.assertEqual(out[0]["oddsQuelle"], "senden")
+
+    def test_alte_zeile_bekommt_KEINE_erfundene_sende_quote(self):
+        """⭐ Was ein Pick beim Senden kostete, steht nirgends nachtraeglich. Eine Zahl dafuer
+        zu erfinden waere schlimmer als eine ehrlich beschriftete zweitbeste."""
+        alt = (NOW - timedelta(days=3)).isoformat()
+        out = self.L.sendezeit_nachtragen(self._zeile(gesendetAm=alt), {}, {}, "wm", NOW)
+        self.assertNotIn("pushOdds", out[0])
+        self.assertEqual(out[0]["oddsQuelle"], "vorAnpfiff")
+
+    def test_sendezeit_wird_nie_ueberschrieben(self):
+        karten = {"morning_card:2026-09-20": "2026-09-20T09:12:00Z"}
+        out = self.L.sendezeit_nachtragen(self._zeile(gesendetAm="2026-09-01T07:00:00Z"),
+                                          karten, {}, "wm", NOW)
+        self.assertEqual(out[0]["gesendetAm"], "2026-09-01T07:00:00Z")
+
+    def test_aussortierte_zeilen_bekommen_keine_sendezeit(self):
+        karten = {"morning_card:2026-09-20": "2026-09-20T09:12:00Z"}
+        out = self.L.sendezeit_nachtragen(self._zeile(push=False), karten, {}, "wm", NOW)
+        self.assertIsNone(out[0].get("gesendetAm"), "was nie rausging, hat keine Sendezeit")
+
+    def test_abrechnungs_quote_bevorzugt_die_sende_quote(self):
+        self.assertEqual(self.L.abrechnungs_quote({"pushOdds": 1.7, "odds": 2.1}), 1.7)
+        self.assertEqual(self.L.abrechnungs_quote({"odds": 2.1}), 2.1)
+        self.assertIsNone(self.L.abrechnungs_quote({"odds": 1.0}), "1.0 ist keine Quote")
+        self.assertIsNone(self.L.abrechnungs_quote({}))
+
+    def test_das_announce_buch_ist_KEIN_sendebuch(self):
+        """Die Lehre in einem Test: `mark` ohne `gesendet` fuellt nur `announced`."""
+        import pick_announce_state as S
+        st = {}
+        S.mark(st, ["x|y"], "2026-09-14T06:00:00Z")
+        self.assertIn("x|y", st["announced"])
+        self.assertNotIn("x|y", st.get("gesendet") or {})
+        S.mark(st, ["x|y"], "2026-09-14T15:00:00Z", gesendet=True)
+        self.assertEqual(st["gesendet"]["x|y"], "2026-09-14T15:00:00Z")
+
     def test_unbrauchbare_quote_fliegt_raus(self):
         led = [{"k": "wm|a", "dataset": "wm", "verdict": "ABWÄGEN", "status": "abgerechnet",
                 "push": True, "odds": o, "win": True, "settledAt": "2026-08-29T10:00:00Z"}
