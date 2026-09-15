@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-15T22:49:06.749972+00:00",
+ "generatedAt": "2026-09-15T23:19:09.380183+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,15 +9,15 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 662,
+ "polyRowsSeen": 668,
  "pinnKeys": 294,
  "matched": 212,
  "footballRows": 180,
- "crossRows": 482,
+ "crossRows": 488,
  "footballSkippedStale": 53,
  "seenBySport": {
   "americanfootball_nfl": 180,
-  "baseball_mlb": 68,
+  "baseball_mlb": 74,
   "icehockey_nhl": 210,
   "boxing_boxing": 24,
   "soccer_mls": 18,
@@ -33,5 +33,62 @@
   "tracked": 296,
   "converged": 63
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|cincinnatireds-losangelesdodgers|losangelesdodgers",
+   "sport": "baseball_mlb",
+   "event": "Los Angeles Dodgers vs Cincinnati Reds",
+   "market": "Moneyline",
+   "outcome": "Los Angeles Dodgers",
+   "polyPP": 78.5,
+   "pinnPP": 64.9,
+   "gapPP": 13.63,
+   "vol": 283585,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -1.92,
+   "firstSeen": "2026-09-07T23:02:51.897187+00:00"
+  },
+  {
+   "id": "baseball_mlb|cincinnatireds-losangelesdodgers|cincinnatireds",
+   "sport": "baseball_mlb",
+   "event": "Los Angeles Dodgers vs Cincinnati Reds",
+   "market": "Moneyline",
+   "outcome": "Cincinnati Reds",
+   "polyPP": 21.5,
+   "pinnPP": 35.1,
+   "gapPP": -13.63,
+   "vol": 283585,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -1.92,
+   "firstSeen": "2026-09-07T23:02:51.897187+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagowhitesox-clevelandguardians|chicagowhitesox",
+   "sport": "baseball_mlb",
+   "event": "Chicago White Sox vs Cleveland Guardians",
+   "market": "Moneyline",
+   "outcome": "Chicago White Sox",
+   "polyPP": 13.5,
+   "pinnPP": 19.6,
+   "gapPP": -6.14,
+   "vol": 277670,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.79,
+   "firstSeen": "2026-09-14T22:17:02.394203+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagowhitesox-clevelandguardians|clevelandguardians",
+   "sport": "baseball_mlb",
+   "event": "Chicago White Sox vs Cleveland Guardians",
+   "market": "Moneyline",
+   "outcome": "Cleveland Guardians",
+   "polyPP": 86.5,
+   "pinnPP": 80.4,
+   "gapPP": 6.14,
+   "vol": 277670,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.79,
+   "firstSeen": "2026-09-14T22:17:02.394203+00:00"
+  }
+ ]
 }
