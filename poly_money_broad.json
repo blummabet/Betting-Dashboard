@@ -1,15 +1,15 @@
 {
- "n": 407,
+ "n": 413,
  "minOdds": 1.35,
  "moneyHitRate": 0.373,
- "priceHitRate": 0.405,
- "brierMoney": 0.9094,
- "brierPrice": 0.6943,
+ "priceHitRate": 0.4,
+ "brierMoney": 0.9114,
+ "brierPrice": 0.6962,
  "disagree": {
-  "n": 111,
-  "moneyWon": 14,
-  "priceWon": 27,
-  "neither": 70
+  "n": 114,
+  "moneyWon": 15,
+  "priceWon": 26,
+  "neither": 73
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -32,10 +32,10 @@
   },
   {
    "league": "LA-LIGA",
-   "n": 41,
-   "moneyHitRate": 0.415,
-   "brierMoney": 0.9162,
-   "brierPrice": 0.7739,
+   "n": 43,
+   "moneyHitRate": 0.395,
+   "brierMoney": 0.9379,
+   "brierPrice": 0.7856,
    "verdict": "preis_besser"
   },
   {
@@ -80,13 +80,25 @@
   }
  ],
  "guete": {
-  "belastbar": 407,
-  "preis_echo": 226,
-  "abgeschnitten": 56,
-  "unbekannt": 348,
+  "belastbar": 413,
+  "preis_echo": 227,
+  "abgeschnitten": 57,
+  "unbekannt": 346,
   "leer": 0
  },
  "rows": [
+  {
+   "key": "lal-ala-val-2026-09-15",
+   "league": "LA-LIGA",
+   "winner": "Valencia CF",
+   "moneyFav": "Deportivo Alavés",
+   "priceFav": "Deportivo Alavés",
+   "moneyShare": 0.977,
+   "priceProb": 0.574,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 3775748
+  },
   {
    "key": "ucl-bru-ast-2026-09-08",
    "league": "UCL",
@@ -554,21 +566,9 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 293674
-  },
-  {
-   "key": "ucl-por-mnc-2026-09-08",
-   "league": "UCL",
-   "winner": "Manchester City FC",
-   "moneyFav": "Manchester City FC",
-   "priceFav": "Manchester City FC",
-   "moneyShare": 0.957,
-   "priceProb": 0.588,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 288574
   }
  ],
- "generatedAt": "2026-09-15T19:52:29.834969+00:00",
+ "generatedAt": "2026-09-15T20:22:10.662933+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -579,9 +579,9 @@
   "mls": 664,
   "epl": 521,
   "soccer": 800,
-  "tennis": 633,
+  "tennis": 767,
   "ucl": 417,
-  "la-liga": 603,
+  "la-liga": 592,
   "bundesliga": 484,
   "serie-a": 51,
   "ligue-1": 513,
@@ -591,11 +591,11 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 651,
+  "esports": 653,
   "cs2": 421,
   "lol": 424,
   "dota": 9,
-  "valorant": 441,
+  "valorant": 446,
   "ufc": 458,
   "mma": 53,
   "boxing": 263,
@@ -628,7 +628,7 @@
   "national-league": 654,
   "nations-league": 25,
   "norway-eliteserien": 463,
-  "poland-ekstraklasa": 456,
+  "poland-ekstraklasa": 454,
   "premier-league": 510,
   "saudi-professional-league": 410,
   "scotland-league-cup": 193,
@@ -654,85 +654,85 @@
  "vorStats": {
   "kandidaten": 14,
   "budgetLeer": 0,
-  "ohneGeldSplit": 0,
+  "ohneGeldSplit": 1,
   "nachgelegt": 0,
-  "mitAnteilen": 14,
+  "mitAnteilen": 13,
   "calls": 14
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1824,
-   "usd": 44258466,
+   "n": 2014,
+   "usd": 45835141,
    "beispiel": "fifwc-prt-hrv-2026-07-02-player-props"
+  },
+  "nba": {
+   "n": 364,
+   "usd": 6245093,
+   "beispiel": "nba-2027-champion"
   },
   "balance": {
    "n": 2,
    "usd": 6000000,
    "beispiel": "balance-of-power-2026-midterms"
   },
-  "nba": {
-   "n": 334,
-   "usd": 5675500,
-   "beispiel": "nba-2027-champion"
-  },
-  "ecs": {
-   "n": 8,
-   "usd": 1009211,
-   "beispiel": "ecs-ars-mci-2026-08-16"
+  "nhl": {
+   "n": 384,
+   "usd": 2059538,
+   "beispiel": "nhl-tb-lak-2026-01-01"
   },
   "world": {
-   "n": 35,
-   "usd": 921133,
+   "n": 72,
+   "usd": 1386225,
    "beispiel": "world-cup-winner"
   },
-  "elon": {
-   "n": 335,
-   "usd": 820447,
-   "beispiel": "elon-musk-of-tweets-april-10-april-17"
+  "ecs": {
+   "n": 13,
+   "usd": 1036126,
+   "beispiel": "ecs-ars-mci-2026-08-16"
   },
   "fed": {
    "n": 35,
-   "usd": 694000,
+   "usd": 723578,
    "beispiel": "fed-decision-in-september-762"
   },
-  "nhl": {
-   "n": 58,
-   "usd": 554032,
-   "beispiel": "nhl-tb-lak-2026-01-01"
-  },
   "cbb": {
-   "n": 60,
-   "usd": 503722,
+   "n": 63,
+   "usd": 650757,
    "beispiel": "cbb-uconn-mich-2026-04-06"
   },
   "usc": {
-   "n": 6,
-   "usd": 379523,
+   "n": 7,
+   "usd": 382136,
    "beispiel": "usc-psg-av-2026-08-12"
   },
   "fif": {
-   "n": 80,
-   "usd": 345827,
+   "n": 82,
+   "usd": 351376,
    "beispiel": "fif-bra-pan-2026-05-31"
   },
   "btc": {
-   "n": 35,
-   "usd": 177520,
+   "n": 34,
+   "usd": 164498,
    "beispiel": "btc-updown-5m-1784322000"
   },
   "clf": {
    "n": 34,
-   "usd": 153617,
+   "usd": 160676,
    "beispiel": "clf-mun-lee-2026-08-12"
   },
   "ballon": {
    "n": 12,
-   "usd": 152119,
+   "usd": 152065,
    "beispiel": "ballon-dor-winner-2026"
   },
+  "efa": {
+   "n": 20,
+   "usd": 143162,
+   "beispiel": "efa-cfc-mnc-2026-05-16"
+  },
   "pro": {
-   "n": 28,
-   "usd": 118581,
+   "n": 29,
+   "usd": 124408,
    "beispiel": "pro-football-2027-champion-20260729185915366"
   },
   "nbasl": {
@@ -740,25 +740,25 @@
    "usd": 101319,
    "beispiel": "nbasl-cle-nop-2026-07-15"
   },
-  "j2100": {
-   "n": 4,
-   "usd": 82863,
-   "beispiel": "j2100-van-fuk-2026-06-01"
+  "us": {
+   "n": 6,
+   "usd": 86652,
+   "beispiel": "us-recession-by-end-of-2026"
   },
   "bitcoin": {
    "n": 18,
-   "usd": 72287,
+   "usd": 72266,
    "beispiel": "bitcoin-all-time-high-by"
   },
-  "clarity": {
-   "n": 4,
-   "usd": 55089,
-   "beispiel": "clarity-act-signed-into-law-in-2026"
+  "noche": {
+   "n": 2,
+   "usd": 62974,
+   "beispiel": "noche-ufc-lopes-vs-silva"
   },
-  "next": {
-   "n": 6,
-   "usd": 43856,
-   "beispiel": "next-french-presidential-election"
+  "clarity": {
+   "n": 3,
+   "usd": 52465,
+   "beispiel": "clarity-act-signed-into-law-in-2026"
   }
  }
 }
