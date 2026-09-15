@@ -206,6 +206,11 @@ EBENE = {
     # Beleg aus der Paarung: United SC gegen „Mohun Bagan SG Reserves" — die erste Elf
     # von Mohun Bagan spielt in der ISL, hier laeuft ihre Reserve.
     "calcutta-premier-div-": 3,
+    # 15.09.2026 (CI-Wachhund): „calcutta-1st-division". Die Ordnungszahl-Regel liest „1st" NICHT
+    # als Ebene 1, und das ist Absicht — sie wuerde eine indische Regionalstaffel neben die
+    # Bundesliga stellen. Der Calcutta-Pyramide nach gehoert sie dorthin, wo die Calcutta
+    # Premier Division schon steht: Ebene 3. Tabelle statt Regel, weil der Slug das nicht sagt.
+    "calcutta-1st-division": 3,
 }
 
 # Wettbewerbe, bei denen „Spielklasse" die falsche Frage ist. Sie bekommen eine eigene Marke
@@ -263,8 +268,12 @@ _RESERVE_RX = re.compile(r"reserv|riserv")
 # aber im Skandinavischen haengt der bestimmte Artikel HINTEN an: „pokalen" ist „der Pokal".
 # Gegenprobe an allen Fussball-Slugs des Ledgers: die breitere Regel beantwortet genau den
 # einen offenen Slug und stuft keinen bereits eingestuften um.
+# 15.09.2026 (CI-Wachhund, „turkiye-kupasi"): dieselbe Klasse zum dritten Mal. „kupa" stand
+# schon da, aber im Tuerkischen haengt die Besitzform HINTEN an — „kupasi" ist „der Pokal von".
+# Genau wie beim skandinavischen „pokalen" am 10.09. Also die Endung zulassen, nicht den Slug
+# eintragen: der naechste Landespokal heisst wieder anders, meint aber dasselbe.
 _POKAL_RX = re.compile(
-    r"(?:^|-)(?:trophy|shield|coupe|taca|kupa|kubok|beker|cupa|cupen"
+    r"(?:^|-)(?:trophy|shield|coupe|taca|kupa(?:s[iı])?|kubok|beker|cupa|cupen"
     r"|pokal(?:en|et)?)(?:-|$)")
 
 # Auszeichnungen und Langzeitwetten ohne Spielklasse. Wortgrenzen, damit „winner" in einem
@@ -309,8 +318,14 @@ _MUSTER = (
     # der sich Trophy, Shield, Coupe oder Taca nennt, ist derselbe Wettbewerbstyp und fiel durch.
     # Gegenprobe an den Fussball-Slugs des Ledgers: beantwortet genau den einen offenen Slug und
     # stuft keinen bereits eingestuften um.
-    ("pokal", lambda s: (s.endswith("-cup") or s.startswith("copa-") or s.endswith("-pokal")
-                         or bool(_POKAL_RX.search(s)))),
+    # 15.09.2026 (CI-Wachhund, „cup"): der Slug heisst NUR „cup" — die Quelle liefert fuer den
+    # tschechischen Pokal (FK Trinec – Mlada Boleslav) nichts als das Wort. `endswith("-cup")`
+    # verlangte einen Bindestrich davor und griff deshalb nicht. Die Wettbewerbs-ART ist damit
+    # trotzdem bekannt: es ist ein Pokal. Die Spielklasse ist es nicht — und genau dafuer gibt
+    # es `art()`: eine Kategorie fuer Wettbewerbe, bei denen die Spielklasse nichts sagt. Eine
+    # Zahl waere hier erfunden, „pokal" ist die Wahrheit.
+    ("pokal", lambda s: (s == "cup" or s.endswith("-cup") or s.startswith("copa-")
+                         or s.endswith("-pokal") or bool(_POKAL_RX.search(s)))),
     # 09.09.2026 (CI-Wachhund, „ballon-dor"): und diesmal eine ANDERE Klasse als die drei
     # Treffer davor. „reserva", „efl-trophy" und „mizoram-premier-league" waren Wettbewerbe,
     # deren Ebene nur fehlte. Der Ballon d'Or ist gar kein Wettbewerb: „Ballon dor 2026 ·
@@ -344,6 +359,14 @@ def art(slug: str):
 # man WISSEN muss; diese Regeln lesen nur, was der Slug selbst sagt. Nicht geraten wird
 # weiterhin alles andere: was hier nicht greift, bleibt None und faellt auf.
 _ORDNUNGSZAHL = re.compile(r"^([2-9])(?:st|nd|rd|th)?-(?:division|liga|league|lig)\b")
+# 15.09.2026 (CI-Wachhund, „second-prof-league"): dieselbe Aussage, nur ausgeschrieben. Die
+# Ziffern-Regel las „2nd-division", aber nicht „second-…". Bewusst OHNE „first": die Ziffern-
+# Regel beginnt aus demselben Grund bei 2 — eine Regionalstaffel, die sich „1st Division"
+# nennt, waere sonst mit einem Wort auf die Ebene der Bundesliga gehoben (siehe
+# „calcutta-1st-division" in der Tabelle). Was man WISSEN muss, bleibt Tabelle.
+_ORDNUNGSWORT = re.compile(r"^(second|third|fourth|fifth|sixth|seventh|eighth|ninth)-")
+_ORDNUNGSWORT_ZAHL = {"second": 2, "third": 3, "fourth": 4, "fifth": 5,
+                      "sixth": 6, "seventh": 7, "eighth": 8, "ninth": 9}
 _ANHANG = re.compile(r"^(.*)-([23])$")
 # 12.09.2026 (CI-Wachhund, „tercera-division-group-4"). Zum ZWEITEN Mal eine Gruppe derselben
 # Liga: `tercera-division-group-7` steht seit Tagen von Hand in der Tabelle, Gruppe 4 stand
@@ -365,6 +388,9 @@ def _ebene_aus_slug(s: str):
     m = _ORDNUNGSZAHL.match(s)
     if m:
         return min(int(m.group(1)), 3)
+    m = _ORDNUNGSWORT.match(s)
+    if m:
+        return min(_ORDNUNGSWORT_ZAHL[m.group(1)], 3)
     m = _ANHANG.match(s)
     if m and EBENE.get(m.group(1)) == 1:
         return int(m.group(2))

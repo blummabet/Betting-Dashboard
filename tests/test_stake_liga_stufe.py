@@ -490,3 +490,66 @@ def test_montenegro_und_portugal_kommen_aus_der_paarung():
     assert LS.stufe("1-cfl") == "1"
     assert LS.stufe("campeonato-de-portugal") == "3"
     assert LS.stufe("liga-portugal") == "1", "die Gegenprobe: die echte oberste Klasse"
+
+
+# ── 15.09.2026: der CI-Wachhund hat zum vierten Mal zugeschlagen ─────────────
+# Vier Slugs, DREI verschiedene Klassen — und darum drei verschiedene Antworten:
+#
+#   cup                    die Quelle liefert nur das Wort. ART bekannt (Pokal), Ebene nicht.
+#   turkiye-kupasi         „kupasi" ist die tuerkische Besitzform von „kupa" — dieselbe Luecke
+#                          wie „pokalen" am 10.09., nur eine Sprache weiter.
+#   second-prof-league     dieselbe Aussage wie „2nd-division", nur ausgeschrieben.
+#   calcutta-1st-division  sagt der Slug NICHT — Tabelle, kein Muster (s. Begruendung dort).
+
+def test_nackter_cup_slug_ist_ein_pokal():
+    # PROVOKATION: `endswith("-cup")` verlangte einen Bindestrich davor. Der tschechische
+    # Pokal (FK Trinec – Mlada Boleslav) kommt als blankes „cup" herein und fiel durch.
+    assert LS.stufe("cup", "soccer") == "pokal"
+
+
+def test_tuerkische_pokal_endung_wird_gelesen():
+    assert LS.stufe("turkiye-kupasi", "soccer") == "pokal"
+    assert LS.stufe("turkiye-kupası", "soccer") == "pokal"
+
+
+def test_ausgeschriebene_ordnungszahl_zaehlt_wie_die_ziffer():
+    assert LS.stufe("second-prof-league", "soccer") == "2"
+    assert LS.stufe("2nd-division", "soccer") == "2"
+    assert LS.stufe("third-league", "soccer") == "3"
+
+
+def test_first_wird_bewusst_NICHT_als_ebene_1_gelesen():
+    # 🔴 Die Ziffern-Regel beginnt bei 2, und die Wort-Regel muss das spiegeln. Sonst hebt ein
+    # einziges Wort eine Regionalstaffel („1st Division" irgendeiner Stadt) auf die Ebene der
+    # Bundesliga. Genau deshalb steht „calcutta-1st-division" in der TABELLE, nicht im Muster.
+    assert LS._ORDNUNGSWORT.match("first-division") is None
+    assert LS.stufe("calcutta-1st-division", "soccer") == "3"
+
+
+def test_die_neuen_muster_greifen_nicht_zu_weit():
+    # Ein Waechter, der raet, ist keiner — und ein Muster, das zu viel frisst, raet.
+    for harmlos in ("cupra", "hiccup", "cup-winners", "secondary-school-league"):
+        assert LS._ORDNUNGSWORT.match(harmlos) is None
+    assert LS.stufe("cupra", "soccer") is None
+    assert LS.stufe("hiccup", "soccer") is None
+
+
+def test_kein_bereits_eingestufter_slug_wird_umgestuft():
+    """⭐ Die Gegenprobe, die dieses Modul bei JEDER Musteraenderung verlangt: eine neue Regel
+    darf offene Slugs beantworten, aber keinen beantworteten anders beantworten."""
+    import json
+    p = ROOT / "stake_bet_ledger.json"
+    if not p.exists():
+        import pytest
+        pytest.skip("kein Ledger im Arbeitsverzeichnis")
+    rows = (json.load(open(p, encoding="utf-8")) or {}).get("wetten") or []
+    slugs = {r.get("ligaSlug") for r in rows
+             if r.get("sport") == "soccer" and r.get("ligaSlug")}
+    # Die vier Slugs von heute muessen beantwortet sein …
+    for s, erwartet in (("cup", "pokal"), ("turkiye-kupasi", "pokal"),
+                        ("second-prof-league", "2"), ("calcutta-1st-division", "3")):
+        if s in slugs:
+            assert LS.stufe(s, "soccer") == erwartet, s
+    # … und kein Slug darf ohne Ebene dastehen.
+    offen = sorted({s for s in slugs if LS.stufe(s, "soccer") is None})
+    assert not offen, "Fussball-Ligen ohne Ebene: %s" % ", ".join(offen[:20])
