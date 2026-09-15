@@ -63,14 +63,14 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "735 geprueft, davon 96 abgeschnitten"
+      "note": "738 geprueft, davon 96 abgeschnitten"
     },
     {
       "id": "settlement_alive",
       "label": "Settlement lebt (keine ewig offenen Positionen)",
       "severity": "error",
       "ok": false,
-      "nFail": 18,
+      "nFail": 19,
       "failures": [
         "nor-ffk-bog-2026-09-04-more-markets: seit 11.0 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "spl-sha-hil-2026-09-04-more-markets: seit 10.9 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
@@ -89,7 +89,8 @@
         "ucl-aek1-lin2-2026-09-08-more-markets: seit 6.9 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "grc-ast-ari-2026-09-09-more-markets: seit 5.1 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "ucl-fen-rom-2026-09-10-more-markets: seit 5.0 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "ucl-fen-rom-2026-09-10-more-markets: seit 5.0 Tagen offen — Auflösung existiert, matcht aber den Key nicht!"
+        "ucl-fen-rom-2026-09-10-more-markets: seit 5.0 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
+        "elc-bri-lin-2026-09-08: seit 7.7 Tagen offen — keine Auflösung gefunden"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
     },
@@ -159,5 +160,5 @@
     }
   ],
   "nFail": 4,
-  "generatedAt": "2026-09-15T15:47:19.171531+00:00"
+  "generatedAt": "2026-09-15T15:52:37.543237+00:00"
 }
