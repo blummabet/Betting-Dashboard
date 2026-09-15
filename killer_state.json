@@ -125,21 +125,31 @@
    "markt": "Match Odds",
    "seite": "home",
    "name": "Daejeon Citizen",
-   "odd": 1.82,
+   "odd": 1.81,
    "entryOdd": 2.3,
    "anteilPct": 96,
    "stufe": 2,
-   "verstaerker": [],
-   "rang": 59.6,
+   "verstaerker": [
+    {
+     "art": "poly",
+     "text": "Poly Geld 75%",
+     "gewicht": 12
+    }
+   ],
+   "rang": 71.5,
    "track": null,
    "streak": null,
-   "poly": null,
+   "poly": {
+    "anteilPct": 75,
+    "usd": 30229,
+    "odd": 1.8
+   },
    "polyStatus": "nein",
    "polyKey": "acle-daj-kyo-2026-09-15",
    "polySide": "Daejeon Citizen FC",
    "pinnMovePP": null,
    "punkte": {
-    "punkte": 3,
+    "punkte": 5,
     "moeglich": 7,
     "dauerH": 1.24,
     "teile": [
@@ -151,43 +161,43 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 95% auf der Seite"
+       "text": "Geld 96% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.952,
-       "betrag": 26129,
-       "gesamt": 27446,
+       "anteil": 0.955,
+       "betrag": 34887,
+       "gesamt": 36531,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 95% auf der Seite"
+      "text": "Geld 96% auf der Seite"
      },
      {
       "buch": "POLY",
       "name": "Polymarket",
-      "status": "nein",
-      "punkte": 0,
+      "status": "ja",
+      "punkte": 2,
       "moeglich": 3,
       "grund": {
-       "ok": false,
-       "text": "Poly-Geld 38% auf derselben Seite"
+       "ok": true,
+       "text": "Poly-Geld 75% auf derselben Seite"
       },
       "tiefe": {
        "ok": false,
        "text": "kein bewiesenes Wallet auf der Seite"
       },
       "geld": {
-       "anteil": 0.38,
-       "betrag": 4521,
-       "gesamt": 11898,
+       "anteil": 0.75,
+       "betrag": 22672,
+       "gesamt": 30229,
        "waehrung": "USD",
        "quelle": "geld"
       },
-      "text": "Poly-Geld 38% auf derselben Seite"
+      "text": "Poly-Geld 75% auf derselben Seite"
      },
      {
       "buch": "PIN",
@@ -228,7 +238,7 @@
    },
    "wertVsPinn": null,
    "gehaltenSeit": "2026-09-15T08:45:33.240939+00:00",
-   "zuletztAktiv": "2026-09-15T09:00:36.267692+00:00",
+   "zuletztAktiv": "2026-09-15T09:30:34.534157+00:00",
    "haltePreis": 1.86,
    "aktiv": true
   }
