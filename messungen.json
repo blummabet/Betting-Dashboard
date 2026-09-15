@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-15T18:22:50.084856+00:00",
+ "generatedAt": "2026-09-15T18:52:50.278231+00:00",
  "heute": "2026-09-15",
  "messungen": [
   {
@@ -93,6 +93,24 @@
    "tageBisFaellig": 19
   },
   {
+   "id": "entschiedene-ausgaenge",
+   "titel": "Wie oft pusht der Radar einen bereits entschiedenen Ausgang?",
+   "frage": "Anzahl und Muster der Alarme, die verworfen wurden, weil der Spielstand den Ausgang schon entschieden hatte. Haeuft es sich auf einen Markt-Typ, liegt der Fehler in der Markt-Auswahl weiter oben.",
+   "warum": "15.09.2026 (Lucas): am selben Spiel, in derselben Minute, ging Over 0.5 bei 0:1 raus (entschieden) und Over 1.5 bei 0:1 (lebt). Der erste war keine Wette mehr. Das Gate verhindert das jetzt — die Zahl sagt, ob die Auswahl davor sauber arbeitet oder ob das Gate staendig aufraeumen muss.",
+   "gestartet": "2026-09-15",
+   "faellig": "2026-10-13",
+   "quelle": "betfair_reaktiv_ledger.json -> faelle[]",
+   "messer": "reaktiv_faelle",
+   "mindestN": 20,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "standN": 0,
+   "zustand": "sammelt",
+   "stand": "0 von 20 Beobachtungen · faellig in 28 Tag(en)",
+   "fortschritt": 0.0,
+   "tageBisFaellig": 28
+  },
+  {
    "id": "serie-a-btts-schublade",
    "titel": "Betfair-Schublade Italian Serie A - Both teams to Score?",
    "frage": "Freigeben oder gesperrt lassen? n=30, ROI +39,6%, ROI-Untergrenze +13,4%, CLV +1,27pp — aber als blosses Mittel ohne Streuung.",
@@ -111,7 +129,7 @@
    "tageBisFaellig": 30
   }
  ],
- "n": 6,
- "nOffen": 6,
+ "n": 7,
+ "nOffen": 7,
  "nHandlung": 0
 }
