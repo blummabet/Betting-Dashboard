@@ -489,6 +489,44 @@ def place_order_with_retry(place_fn, token_id, stake, private_key, fill_price):
     return place_fn(token_id, float(stake), private_key, price_hint=float(fill_price))
 
 
+def odds_alter_h(fix, now=None):
+    """Alter der Pinnacle-Odds DIESES Spiels in Stunden. None = kein Zeitstempel. REIN/testbar."""
+    ts = (fix or {}).get("pinnTs")
+    if not ts:
+        return None
+    try:
+        t = datetime.fromisoformat(str(ts).replace("Z", "+00:00"))
+    except (ValueError, TypeError):
+        return None
+    if t.tzinfo is None:
+        t = t.replace(tzinfo=timezone.utc)
+    return ((now or datetime.now(timezone.utc)) - t).total_seconds() / 3600.0
+
+
+def odds_zu_alt(fix, now=None, max_h=None) -> bool:
+    """Ist der Anker dieses Spiels abgestanden? REIN/testbar.
+
+    🔴 14.09.2026 (Logik-Check Trading). Der Stale-Schutz in main() prueft
+    `newest_pinnacle_odds_age_h()` — das MAXIMUM ueber ALLE Spiele, also den FRISCHESTEN
+    Zeitstempel im Datensatz. Gemessen am 14.09.: frischester 2,6 h (gruen), gleichzeitig 20 von
+    94 Spielen mit Odds aelter als 24 h, die aeltesten 430 h (18 Tage).
+
+    Heute erreichte das den Handel nicht — die alten Spiele waren alle abgepfiffen. Aber der Fall,
+    fuer den das Gate gebaut wurde, ist ein anderer: faellt der Odds-Abruf fuer EINE Liga aus,
+    waehrend die uebrigen weiterlaufen, bleibt die Sammelzahl frisch und diese eine Liga handelt
+    gegen einen eingefrorenen Anker. Ein Waechter, der den Durchschnitt prueft, wo der Einzelfall
+    zaehlt, faengt genau seinen eigenen Fall nicht.
+
+    ⚠️ Fehlt `pinnTs` (Datensaetze aus einem Lauf vor dem 14.09.), wird NICHT blockiert: sonst
+    stuende der Handel still, bis die Pipeline einmal durchgelaufen ist. Das globale Gate in
+    main() bleibt so lange die einzige Schranke — es ist schwach, aber es ist da.
+    """
+    a = odds_alter_h(fix, now)
+    if a is None:
+        return False
+    return a > float(max_h if max_h is not None else MAX_ODDS_AGE_HOURS)
+
+
 def find_trigger_candidates(fixtures: list, placed_keys: set) -> list:
     """
     Findet alle Fixture+Markt-Kombinationen die die Trigger-Kriterien erfüllen.
@@ -504,6 +542,13 @@ def find_trigger_candidates(fixtures: list, placed_keys: set) -> list:
 
         # Pinnacle-Daten notwendig für Edge-Berechnung
         if not fix.get("hasPinnacle"):
+            continue
+
+        # … und sie müssen von HEUTE sein, nicht irgendwoher aus dem Datensatz (s. odds_zu_alt).
+        if odds_zu_alt(fix):
+            _a = odds_alter_h(fix)
+            print(f"  🕐 {fix.get('home')}–{fix.get('away')}: Pinnacle-Odds {_a:.1f}h alt "
+                  f"(Limit {MAX_ODDS_AGE_HOURS:.0f}h) — kein Anker, übersprungen")
             continue
 
         # Timing-Check: kein Kauf am Spieltag selbst

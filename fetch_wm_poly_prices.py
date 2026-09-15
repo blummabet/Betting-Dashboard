@@ -67,7 +67,8 @@ def _kickoff_passed(fx):
 
 
 import cocobet_dataset as D   # 29.06.2026: dataset-aware (WM / Liga / MLS-Poly-Dry-Run)
-from odds_plausibility import plausible_1x2, devig_1x2   # 19.07.2026: Platzhalter-Quoten raus
+from odds_plausibility import (plausible_1x2, devig_1x2,   # 19.07.2026: Platzhalter-Quoten raus
+                               devig_power, devig_1x2_power)   # 14.09.2026: laeuft parallel mit, entscheidet nichts
 try:                                  # 28.08.2026: Slug-Gedächtnis atomar schreiben
     from safe_write import write_json_atomic
 except Exception:                     # safe_write fehlt → lieber schreiben als abbrechen
@@ -1255,6 +1256,15 @@ def main():
         # Remis 1.01 / Auswärts 1.04 sind keine echten Pinnacle-Quoten → daraus wurde eine
         # Fake-Edge +13-17pp gerechnet und gesendet. `devig_1x2` ist die EINE gegatete De-Vig:
         # implausibel → None → gar keine 1X2-Edge (dieselbe Bug-Klasse wie 13.07.).
+        # 14.09.2026: die Power-De-Vig laeuft PARALLEL mit — sie entscheidet nichts, sie wird
+        # nur mitgeschrieben, damit in ein paar Wochen der CLV sagen kann, welcher faire Wert
+        # naeher am Schlusskurs lag. Scharf bleibt `devig_1x2` (proportional).
+        fairPow_hw = fairPow_dr = fairPow_aw = None
+        fairPow_o25 = fairPow_u25 = None
+        _fairp = devig_1x2_power(pinn_hw, pinn_dr, pinn_aw)
+        if _fairp:
+            fairPow_hw, fairPow_dr, fairPow_aw = _fairp["home"], _fairp["draw"], _fairp["away"]
+
         _fair = devig_1x2(pinn_hw, pinn_dr, pinn_aw)
         if _fair:
             fair_hw, fair_dr, fair_aw = _fair["home"], _fair["draw"], _fair["away"]
@@ -1284,6 +1294,9 @@ def main():
             ou_margin  = 1/pinn_o25 + 1/pinn_u25
             fair_o25   = round((1/pinn_o25) / ou_margin, 4)
             fair_u25   = round((1/pinn_u25) / ou_margin, 4)
+            _pw = devig_power([pinn_o25, pinn_u25])      # nur Messung, s. odds_plausibility
+            if _pw:
+                fairPow_o25, fairPow_u25 = _pw[0], _pw[1]
             edge_o25   = round((fair_o25 - poly_o25) * 100, 1)
             edge_u25   = round((fair_u25 - (poly_u25 or 0)) * 100, 1) if poly_u25 else None
 
@@ -1373,6 +1386,27 @@ def main():
             "bestEdge":     best_edge,
             "bestEdgeKey":  best_edge_key,
             "hasPinnacle":  bool(pinn_hw),
+            # 🔴 14.09.2026 (Logik-Check Trading): der Stale-Schutz im Auto-Trigger prueft das
+            # MAXIMUM ueber alle Spiele — also den FRISCHESTEN Zeitstempel im Datensatz. Gemessen
+            # am 14.09.: frischester 2,6 h (Gate gruen), gleichzeitig 20 von 94 Spielen mit Odds
+            # aelter als 24 h, die aeltesten 430 h. Heute erreicht das den Handel nicht (die alten
+            # sind alle abgepfiffen) — aber es faengt genau den Fall nicht, fuer den es gebaut
+            # wurde: faellt der Odds-Abruf fuer EINE Liga aus, waehrend die anderen laufen, bleibt
+            # das Gate gruen und diese Liga handelt gegen einen eingefrorenen Anker.
+            # Der Zeitstempel je Spiel steht in der Odds-Quelle; er kommt jetzt mit.
+            "pinnTs":       (pinn or {}).get("updatedAt"),
+            # Power-De-Vig — laeuft mit, entscheidet nichts (Vergleich am CLV ab ~04.10.2026).
+            "fairPow_hw":   fairPow_hw,
+            "fairPow_dr":   fairPow_dr,
+            "fairPow_aw":   fairPow_aw,
+            "fairPow_o25":  fairPow_o25,
+            "fairPow_u25":  fairPow_u25,
+            "pinnBooks":    {k: v for k, v in {
+                                "h2h":     (pinn or {}).get("bookmaker"),
+                                "totals":  (pinn or {}).get("bookmaker_totals"),
+                                "btts":    (pinn or {}).get("bookmaker_btts"),
+                                "spreads": (pinn or {}).get("bookmaker_spreads"),
+                             }.items() if v},
             "hasMoreMarkets": bool(p.get("poly_o25")),
             # ── CLOB token IDs (for market depth fetching) ───────────────────────
             # First token in each pair is the YES token (used for bid/ask lookup)

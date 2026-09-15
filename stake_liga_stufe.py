@@ -238,6 +238,11 @@ ART = {
     # Nachwuchsmannschaften — die Namensregel greift nicht, weil weder U21 noch „youth" im
     # Slug steht. Deshalb Tabelle statt Regel.
     "professional-development-league": "jugend",
+    # 14.09.2026 (CI-Wachhund): die NIFL Development League ist Nordirlands Reserve-/Nachwuchs-
+    # wettbewerb. Beleg aus der Paarung: „Crusaders FC – Linfield Swifts" — die „Swifts" sind
+    # die Reservemannschaft von Linfield. Der Slug sagt „Development", das reicht der
+    # bestehenden Jugend-Regel aber nicht (sie sucht u17..u23/youth/academy).
+    "nifl-development-league": "jugend",
     # 14.09.2026 (CI-Wachhund): die WK League ist Suedkoreas oberste FRAUEN-Liga (Seoul City WFC
     # gegen Hwacheon KSPO). Die Frauen-Regel sucht „women/femenina/feminin" — die koreanische
     # Abkuerzung „WK" (Women\u2019s K League) enthaelt keines davon.

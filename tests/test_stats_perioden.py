@@ -15,6 +15,10 @@ import stats_perioden as S
 
 
 # Kleine Zusicherungs-Helfer — die Datei nutzt plain asserts, kein unittest.
+def _lte(a, b, msg=""):
+    assert a <= b, msg
+
+
 def _lt(a, b, m=""):   assert a < b, m
 def _in(a, b, m=""):   assert a in b, m
 def _nin(a, b, m=""):  assert a not in b, m
@@ -185,8 +189,18 @@ class TestPushKanaeleZaehlenNurPushes:
                 continue
             roh = json.loads((S.BASE / datei).read_text(encoding="utf-8"))
             gepusht = [r for r in roh if isinstance(r, dict) and r.get("push")]
-            mit_tag = [r for r in gepusht if S._tag(r.get("gesehenAm"))]
-            assert len(bloecke[bid][3]) == len(mit_tag), bid
+            # 14.09.2026: gezaehlt wird nach dem SENDEZEITPUNKT, nicht nach dem ersten Sehen —
+            # und eine Zeile ohne nachweisbare Sendung zaehlt in keiner Woche mit. Hier stand
+            # `gesehenAm`; das war der Moment, in dem der Pick in den Daten auftauchte, bis zu
+            # 27 Tage vor Anpfiff. Seit der Pipeline-Lauf `gesendetAm` nachtraegt, ist der
+            # Unterschied sichtbar: 46 gepusht, 37 wirklich gesendet, 9 warten auf ihren
+            # Spieltag. Der Block nennt sie im Hinweis.
+            mit_tag = [r for r in gepusht if S._tag(r.get("gesendetAm") or r.get("gesehenAm"))]
+            gesendet = [r for r in gepusht if S._tag(r.get("gesendetAm"))]
+            erwartet = len(gesendet) if gesendet else len(mit_tag)   # vor dem Rollout: Rueckfall
+            assert len(bloecke[bid][3]) == erwartet, bid
+            _lte(len(bloecke[bid][3]), len(gepusht),
+                 "%s: der Kanal kann nicht mehr Zeilen haben als gepusht wurden" % bid)
             _lt(len(bloecke[bid][3]), len(roh),
                             "%s: das Schattenbuch ist groesser als der Kanal" % bid)
 

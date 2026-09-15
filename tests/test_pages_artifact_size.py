@@ -19,6 +19,7 @@ import re
 import sys
 import subprocess
 import collections
+import functools
 import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
@@ -62,6 +63,7 @@ WF = os.path.join(REPO, ".github", "workflows", "deploy-pages.yml")
 ARTEFAKT_BUDGET_MB = 140
 
 
+@functools.lru_cache(maxsize=1)
 def _tracked():
     out = subprocess.run(["git", "ls-files", "-z"], capture_output=True, cwd=REPO).stdout
     return [f.decode("utf-8", "replace") for f in out.split(b"\0") if f]
@@ -91,6 +93,11 @@ def _passt(top, muster):
     return any(fnmatch.fnmatch(top, mu) for mu in muster)
 
 
+# 14.09.2026: gemessen wird ueber `os.path.getsize` je getrackter Datei — 2.861 Stueck. Zehn
+# Tests riefen das je einzeln auf, also ~28.000 stat-Aufrufe. Auf einer normalen Platte faellt
+# das nicht auf; ueber eine gemountete Verbindung dauert derselbe Lauf Minuten. Das Ergebnis
+# haengt nur am Repo-Stand und aendert sich innerhalb eines Laufs nicht — einmal rechnen genuegt.
+@functools.lru_cache(maxsize=1)
 def _groessen_nach_cleanup():
     muster = _cleanup_muster()
     gr = collections.Counter()

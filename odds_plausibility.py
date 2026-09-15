@@ -94,6 +94,64 @@ def devig_1x2(hw, dr, aw):
             "away": round((1.0 / aw) / margin, 4)}
 
 
+def devig_power(odds, tol=1e-12, schritte=200):
+    """De-Vig nach der POWER-Methode: p_i = (1/o_i)^k, k so gewaehlt, dass die Summe 1 ergibt.
+
+    🔴 14.09.2026 (Logik-Check Trading, Lucas: „miss die devig mit"). Die faire
+    Wahrscheinlichkeit entsteht bisher proportional — jede implizite durch die Marge geteilt.
+    Das verteilt die Marge gleichmaessig, obwohl Buchmacher sie bekanntlich staerker auf die
+    Aussenseiter legen. Gemessen an den echten Pinnacle-Quoten (proportional MINUS power):
+
+        1X2   unter 20 %  +0,88pp        Over/Under  20–40 %  +1,36pp
+              ueber 60 %  −1,81pp                    ueber 60 %  −1,53pp
+
+    Ueber alle Ausgaenge hebt sich das auf — es ist eine Umverteilung. Aber gesetzt wird nur, wo
+    die Edge POSITIV und ueber der Schwelle ist, also auf der billigen Seite: fuer Ausgaenge unter
+    40 Cent betraegt der Aufschlag im Schnitt **+1,47pp**. Genau dort lagen alle drei bisherigen
+    Auto-Trades (40¢, 35¢, 36¢), und die groesste gemeldete Edge war +3,7pp.
+
+    ⚠️ Diese Funktion ENTSCHEIDET NICHTS. Welche De-Vig naeher an der Wahrheit liegt, ist eine
+    Modellwahl und keine Tatsache; sie auf Verdacht umzustellen hiesse, eine unbelegte Zahl durch
+    eine andere zu ersetzen. Sie laeuft ab dem 14.09.2026 nur mit, damit in ein paar Wochen der
+    CLV entscheiden kann — welcher faire Wert naeher am Schlusskurs lag. Bis dahin bleibt
+    `devig_1x2` der scharfe Pfad.
+
+    Gibt None, wenn die Quoten kein echter Markt sind (gleiche Gate-Logik wie devig_1x2) oder die
+    Summe der impliziten Wahrscheinlichkeiten nicht ueber 1 liegt (dann gibt es keine Marge).
+    """
+    try:
+        o = [float(x) for x in odds]
+    except (TypeError, ValueError):
+        return None
+    if len(o) < 2 or any(x <= 1.0 for x in o):
+        return None
+    imp = [1.0 / x for x in o]
+    if sum(imp) <= 1.0:
+        return None
+    lo, hi = 0.5, 4.0
+    for _ in range(schritte):
+        k = (lo + hi) / 2
+        s = sum(x ** k for x in imp)
+        if abs(s - 1.0) < tol:
+            break
+        if s > 1.0:
+            lo = k
+        else:
+            hi = k
+    k = (lo + hi) / 2
+    return [round(x ** k, 4) for x in imp]
+
+
+def devig_1x2_power(hw, dr, aw):
+    """Power-De-Vig fuer 1X2 — hinter demselben Plausibilitaets-Gate wie devig_1x2. NUR Messung."""
+    if not plausible_1x2(hw, dr, aw):
+        return None
+    p = devig_power([hw, dr, aw])
+    if not p:
+        return None
+    return {"home": p[0], "draw": p[1], "away": p[2]}
+
+
 def derive_double_chance(hw, dr, aw):
     """Doppelte Chance {dc1X, dc12, dcX2} aus dem 1X2 ableiten — ODER None bei Platzhaltern.
 

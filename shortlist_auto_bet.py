@@ -69,6 +69,26 @@ MAX_OFFEN     = float(os.environ.get("SHORTLIST_AUTO_MAX_OFFEN") or 100.0)
 MAX_LAUF      = int(os.environ.get("SHORTLIST_AUTO_MAX_LAUF") or 3)
 MAX_ALTER_M   = float(os.environ.get("SHORTLIST_AUTO_MAX_ALTER_M") or 90)
 MAX_SLIP_PP   = float(os.environ.get("SHORTLIST_AUTO_MAX_SLIP_PP") or 3.0)
+# 🔴 14.09.2026, zweiter Anlauf (Lucas: „übrigens wurde dieses esport Match BIG doch gesetzt").
+#
+# Die Schranke prüfte nur EINE Richtung. Sie blockte, wenn es teurer wurde — und liess alles
+# durch, was billiger war. Es gab sogar einen Test, der genau das festschrieb.
+#
+#     17:50  Push 63,5¢ · Buch 66/68  →  blockiert (+4,5pp)      richtig
+#     18:21  gekauft @ 38¢                                        falsch
+#
+# In der halben Stunde brach der Preis um 25 Punkte ein, im laufenden Spiel (107. Minute). Das
+# ist kein Schnaeppchen, das ist neue Information: der Play, den das Signal um 17:50 fand, gab
+# es um 18:21 nicht mehr. Gekauft wurde eine andere Wette — genau die Adverse Selection, vor der
+# ich bei der Limit-Order gewarnt und die ich im eigenen Code stehen gelassen habe.
+#
+# Nach UNTEN gilt deshalb auch eine Grenze, und live eine engere: vor Anpfiff ist ein Rutsch
+# meistens der Markt, der sich korrigiert; im laufenden Spiel ist er das Spiel.
+MAX_RUTSCH_PP      = float(os.environ.get("SHORTLIST_AUTO_MAX_RUTSCH_PP") or 15.0)
+MAX_RUTSCH_LIVE_PP = float(os.environ.get("SHORTLIST_AUTO_MAX_RUTSCH_LIVE_PP") or 5.0)
+# Und das Fenster: ein blockierter Play wurde vom NAECHSTEN Lauf aus dem Buch geholt — 31 Minuten
+# spaeter. Vor Anpfiff ist das harmlos, live sind 31 Minuten eine andere Lage.
+MAX_ALTER_LIVE_M   = float(os.environ.get("SHORTLIST_AUTO_MAX_ALTER_LIVE_M") or 10)
 MIN_PREIS     = float(os.environ.get("SHORTLIST_AUTO_MIN_PREIS") or 0.15)
 MAX_PREIS     = float(os.environ.get("SHORTLIST_AUTO_MAX_PREIS") or 0.92)
 BALANCE_PUFFER = float(os.environ.get("SHORTLIST_AUTO_BALANCE_PUFFER") or 1.0)
@@ -109,7 +129,7 @@ def bet_key(zeile) -> str:
     return str(zeile.get("k") or "%s|%s" % (zeile.get("key"), zeile.get("side")))
 
 
-def faellige_zeilen(ledger, schon_gesetzt, jetzt=None, max_alter_m=None) -> list:
+def faellige_zeilen(ledger, schon_gesetzt, jetzt=None, max_alter_m=None, live_fn=None) -> list:
     """Push-Zeilen, die jetzt gesetzt werden duerfen. REIN/testbar.
 
     Drei Gruende, eine Zeile NICHT zu nehmen:
@@ -132,7 +152,14 @@ def faellige_zeilen(ledger, schon_gesetzt, jetzt=None, max_alter_m=None) -> list
         ts = _parse(z.get("sentAt"))
         if ts is None:
             continue                                  # ohne Zeit kein Alter → nicht setzen
-        if (jetzt - ts).total_seconds() / 60.0 > grenze:
+        alter_m = (jetzt - ts).total_seconds() / 60.0
+        # Live gilt ein engeres Fenster: der BIG-Fall am 14.09. wurde vom NAECHSTEN Lauf aus dem
+        # Buch geholt, 31 Minuten nach dem Push — und in der Zeit war der Preis um 25 Punkte
+        # gefallen. Vor Anpfiff ist eine halbe Stunde nichts, im laufenden Spiel ist sie alles.
+        eigene = grenze
+        if live_fn is not None and live_fn(z.get("key")):
+            eigene = min(grenze, MAX_ALTER_LIVE_M)
+        if alter_m > eigene:
             continue
         try:
             p = float(z.get("pushPreis"))
@@ -158,13 +185,34 @@ def token_aus_feed(feed, key, side):
     return str(tok) if tok else None
 
 
-def preis_urteil(push_preis, ask, max_slip_pp=None, min_p=None, max_p=None):
+def ist_live(feed, key) -> bool:
+    """Laeuft dieses Spiel schon? REIN/testbar.
+
+    `hoursToKickoff` steht im Money-Feed und ist negativ ab Anpfiff. Fehlt die Zahl, gilt das
+    Spiel als LIVE — bei einer Grenze, die live enger ist, ist das der vorsichtige Default.
+    """
+    m = (feed or {}).get(key)
+    if not isinstance(m, dict):
+        return True
+    htk = m.get("hoursToKickoff")
+    return not isinstance(htk, (int, float)) or htk < 0
+
+
+def preis_urteil(push_preis, ask, max_slip_pp=None, min_p=None, max_p=None,
+                 live=False, max_rutsch_pp=None):
     """Darf zu diesem Ask gekauft werden? → (ok, grund). REIN/testbar.
 
-    Der Push nannte einen Preis. Kauft der Bot spaeter deutlich teurer, ist die gemessene
-    Bilanz nicht mehr die des Pushs — und genau die soll dieser Versuch beantworten.
+    Der Push nannte einen Preis. Der Markt muss noch IN DER NAEHE dieses Preises stehen — in
+    beide Richtungen:
+
+      · teurer  → die gemessene Bilanz waere nicht mehr die des Pushs (max MAX_SLIP_PP)
+      · billiger → der Preis ist nicht geschenkt, er ist begruendet. Ein Rutsch bedeutet, dass
+        der Markt etwas weiss, das im Push nicht stand. Live ist die Grenze enger, weil dort
+        jeder Rutsch das Spiel ist und nicht eine Korrektur.
     """
     slip = float(max_slip_pp if max_slip_pp is not None else MAX_SLIP_PP)
+    rutsch = float(max_rutsch_pp if max_rutsch_pp is not None
+                   else (MAX_RUTSCH_LIVE_PP if live else MAX_RUTSCH_PP))
     lo = float(min_p if min_p is not None else MIN_PREIS)
     hi = float(max_p if max_p is not None else MAX_PREIS)
     try:
@@ -184,6 +232,11 @@ def preis_urteil(push_preis, ask, max_slip_pp=None, min_p=None, max_p=None):
         # dieser Vergleich die Entscheidung ist.
         return False, ("Ask %d¢, das sind +%.1fpp ueber dem Push-Preis von %d¢ (max %.1fpp)"
                        % (round(a * 100), auf_pp, round(p * 100), slip))
+    if -auf_pp > rutsch:
+        return False, ("Ask %d¢, das sind %.1fpp UNTER dem Push-Preis von %d¢ (max %.1fpp%s) — "
+                       "der Markt weiss etwas, das im Push nicht stand"
+                       % (round(a * 100), -auf_pp, round(p * 100), rutsch,
+                          " live" if live else ""))
     return True, ""
 
 
@@ -407,6 +460,7 @@ def _melden(zeile, bet, dry):
         slug=zeile.get("key"),
         offen=bet.get("_offenNachher"),
         deckel=MAX_OFFEN,
+        push_at=zeile.get("sentAt"),
         dry_run=dry,
     )
 
@@ -454,7 +508,17 @@ def main() -> int:
         _speichern(bets)
         return 0
     schon = {b.get("betKey") for b in bets if isinstance(b, dict)}
-    faellig = faellige_zeilen(ledger if isinstance(ledger, list) else [], schon)
+    feed = _laden(OFFEN_FILE, {}) or {}
+    feed2 = _laden(CLOSE_FILE, {}) or {}
+    live_feed = _laden(BASE / "poly_money_broad_live.json", {}) or {}
+
+    def _live(key):
+        # Steht der Markt im Live-Feed, laeuft er. Sonst entscheidet hoursToKickoff im Offen-Feed.
+        if key in live_feed:
+            return ist_live(live_feed, key)
+        return ist_live(feed, key) if key in feed else True
+
+    faellig = faellige_zeilen(ledger if isinstance(ledger, list) else [], schon, live_fn=_live)
     if not faellig:
         print(f"  ℹ️  kein frischer Push zum Nachspielen (Fenster {MAX_ALTER_M:.0f} Min).")
         _speichern(bets)
@@ -464,8 +528,6 @@ def main() -> int:
     balance, bal_src = _balance()
     print(f"  💼 Balance: ${balance:.2f}  (Quelle: {bal_src})")
 
-    feed = _laden(OFFEN_FILE, {}) or {}
-    feed2 = _laden(CLOSE_FILE, {}) or {}
     key = os.environ.get("POLY_PRIVATE_KEY", "").strip()
     dry = not (AN and key)
     if not AN:
@@ -511,7 +573,7 @@ def main() -> int:
             _liegen(titel, "kein Orderbuch abrufbar")
             continue
         ask = (buch or {}).get("ask") if buch else z.get("pushPreis")
-        ok, grund = preis_urteil(z.get("pushPreis"), ask)
+        ok, grund = preis_urteil(z.get("pushPreis"), ask, live=_live(z.get("key")))
         if not ok:
             _liegen(titel, grund)
             continue

@@ -407,15 +407,35 @@ def extract_prices(event: dict, orientation: str, home_name: str, away_name: str
     if bhw and bdr and baw:
         out.update({"bf_hw": bhw, "bf_dr": bdr, "bf_aw": baw})
     # ── Über/Unter (1.5/2.5/3.5) — Sharp ──
-    _, t_outs = _best_book(bks, "totals")
-    _, at_outs = _best_book(bks, "alternate_totals")   # 1.5/3.5 (per-Event, flag-gated)
+    #
+    # 🔴 14.09.2026 (Logik-Check Trading): hier stand dreimal `_`, das Buch wurde weggeworfen.
+    # Die Felder heissen spaeter `pinn_o25` / `pinn_u25` — aber `_best_book` nimmt der Reihe nach
+    # Pinnacle → Betfair → Marathon → William Hill → und danach IRGENDEINEN Buchmacher aus der
+    # Antwort. Welcher es war, stand nirgends.
+    #
+    # Messbar am Overround: bei Snapshots, deren 1X2 von Pinnacle kommt, liegt der O/U-Overround
+    # im Median bei 3,59 % (passt zu Pinnacle) — aber **22,5 % davon ueber 5 %**, also klar bei
+    # einem weichen Buch. Und alle drei bisherigen Auto-Trades waren Under 2.5, also genau dieser
+    # Pfad. Die Strategie heisst „die schaerfste Linie ist der Anker"; bei etwa jedem fuenften
+    # Totals-Markt stimmt das nicht, und hinterher war es nicht mehr feststellbar.
+    #
+    # Das Buch entscheidet hier nichts — es wird nur mitgeschrieben. Damit laesst sich ueberhaupt
+    # erst messen, ob Trades mit weichem Anker anders laufen.
+    bk_t, t_outs = _best_book(bks, "totals")
+    bk_at, at_outs = _best_book(bks, "alternate_totals")   # 1.5/3.5 (per-Event, flag-gated)
     out.update(_extract_ou((t_outs or []) + (at_outs or [])))
+    if t_outs or at_outs:
+        out["bookmaker_totals"] = bk_t or bk_at
     # ── BTTS — Sharp ──
-    _, b_outs = _best_book(bks, "btts")
+    bk_b, b_outs = _best_book(bks, "btts")
     out.update(_extract_btts(b_outs))
+    if b_outs:
+        out["bookmaker_btts"] = bk_b
     # ── Asian Handicap (spreads) — Sharp-Leiter + diskrete Keys ──
-    _, sp_outs = _best_book(bks, "spreads")
+    bk_sp, sp_outs = _best_book(bks, "spreads")
     out.update(_extract_ah(sp_outs, home_name, away_name))
+    if sp_outs:
+        out["bookmaker_spreads"] = bk_sp
     return out
 
 

@@ -179,6 +179,7 @@ def notify_shortlist_opened(
     slug: str = "",
     offen: float | None = None,
     deckel: float | None = None,
+    push_at: str | None = None,
     dry_run: bool = False,
 ) -> bool:
     """14.09.2026 (Lucas: „ich brauch bitte im Trades Channel auch eine Meldung wenn ein
@@ -203,6 +204,24 @@ def notify_shortlist_opened(
             return "?"
 
     quote = f"{1/fill:.2f}" if fill and fill > 0 else "?"
+
+    # 14.09.2026 (Lucas: „Push kam ca 30 min nach der empfehlenswert Push"). Genau so war es —
+    # und die Nachricht sagte es nicht. Er sah um 17:50 einen Push, es passierte nichts, er hatte
+    # ihn abgehakt; eine halbe Stunde spaeter kam eine Bestaetigung fuer einen Play, den er
+    # gedanklich weggelegt hatte. Wenn zwischen Empfehlung und Kauf Zeit liegt, gehoert sie in
+    # die Zeile — sonst wirken die beiden Nachrichten wie zwei verschiedene Dinge.
+    verzug_line = ""
+    if push_at:
+        try:
+            _p = datetime.fromisoformat(str(push_at).replace("Z", "+00:00"))
+            if _p.tzinfo is None:
+                _p = _p.replace(tzinfo=timezone.utc)
+            _min = (datetime.now(timezone.utc) - _p).total_seconds() / 60.0
+            if _min >= 5:
+                verzug_line = ("\n\u23f1\ufe0f %d Min nach dem Push von %s UTC"
+                               % (round(_min), _p.strftime("%H:%M")))
+        except (ValueError, TypeError):
+            verzug_line = ""
 
     slip_line = ""
     if push_preis:
@@ -232,6 +251,7 @@ def notify_shortlist_opened(
         f"\U0001F4CA Poly: <b>{quote}</b> ({_c(fill)})"
         f"{conv_line}"
         f"{slip_line}"
+        f"{verzug_line}"
         f"{deckel_line}"
         f"{order_line}"
         f"{poly_link}\n"

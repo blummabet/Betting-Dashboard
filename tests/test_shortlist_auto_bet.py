@@ -131,9 +131,11 @@ class TestPreisUrteil(unittest.TestCase):
         self.assertFalse(ok)
         self.assertIn("Push-Preis", grund)
 
-    def test_billiger_ist_immer_ok(self):
+    def test_etwas_billiger_ist_ok(self):
+        """14.09.2026: hier stand „billiger ist IMMER ok". Das war der Satz, mit dem der
+        BIG-Trade durchging — 25 Punkte unter dem Push-Preis, im laufenden Spiel."""
         ok, _ = SAB.preis_urteil(0.50, 0.41)
-        self.assertTrue(ok)
+        self.assertTrue(ok, "9pp guenstiger vor Anpfiff ist eine Korrektur, kein Alarm")
 
     def test_quasi_lock_wird_abgelehnt(self):
         ok, grund = SAB.preis_urteil(0.95, 0.95)
@@ -148,6 +150,83 @@ class TestPreisUrteil(unittest.TestCase):
     def test_kein_ask_kein_kauf(self):
         ok, _ = SAB.preis_urteil(0.50, None)
         self.assertFalse(ok)
+
+
+class TestDerPreisDarfAuchNichtEINBRECHEN(unittest.TestCase):
+    """🔴 14.09.2026, zweiter Anlauf (Lucas: „übrigens wurde dieses esport Match BIG doch
+    gesetzt auf poly, hab ich grad gesehen").
+
+    Ich hatte geschlossen, die Schranke habe den Trade verhindert. Sie hat ihn nur VERZOEGERT:
+
+        17:50  Push 63,5¢ · Buch 66/68  →  blockiert (+4,5pp)   richtig
+        18:21  gekauft @ 38¢                                     falsch
+
+    Die Schranke kannte nur eine Richtung. 25 Punkte Preisverfall im laufenden Spiel (107. Min)
+    sind kein Schnaeppchen — da ist im Match etwas passiert, und der Play, den das Signal fand,
+    existierte nicht mehr. Dieselbe Adverse Selection, vor der ich bei der Limit-Order gewarnt
+    und die ich im eigenen Code stehen gelassen habe.
+    """
+
+    PUSH = 0.635
+
+    def test_der_echte_BIG_trade_wird_jetzt_geblockt(self):
+        ok, grund = SAB.preis_urteil(self.PUSH, 0.38, live=True)
+        self.assertFalse(ok)
+        self.assertIn("UNTER", grund)
+        self.assertIn("38¢", grund)
+
+    def test_live_ist_die_grenze_enger_als_vor_anpfiff(self):
+        """Vor Anpfiff ist ein Rutsch meist die Korrektur eines duennen Marktes; live ist er
+        das Spiel."""
+        ok_live, _ = SAB.preis_urteil(0.60, 0.52, live=True)     # -8pp
+        ok_vor, _ = SAB.preis_urteil(0.60, 0.52, live=False)
+        self.assertFalse(ok_live)
+        self.assertTrue(ok_vor)
+
+    def test_kleiner_rutsch_bleibt_erlaubt(self):
+        self.assertTrue(SAB.preis_urteil(0.60, 0.57, live=True)[0], "-3pp live ist noch normal")
+
+    def test_teurer_bleibt_wie_es_war(self):
+        ok, grund = SAB.preis_urteil(self.PUSH, 0.68, live=True)
+        self.assertFalse(ok)
+        self.assertIn("ueber", grund)
+
+    def test_live_erkennung_aus_dem_feed(self):
+        self.assertTrue(SAB.ist_live({"m": {"hoursToKickoff": -2.78}}, "m"))
+        self.assertFalse(SAB.ist_live({"m": {"hoursToKickoff": 0.22}}, "m"))
+
+    def test_unbekannt_gilt_als_live(self):
+        """Bei einer Grenze, die live enger ist, ist „live" der vorsichtige Default."""
+        self.assertTrue(SAB.ist_live({}, "m"))
+        self.assertTrue(SAB.ist_live({"m": {}}, "m"))
+
+    def test_live_push_veraltet_nach_zehn_minuten(self):
+        """Die zweite Ursache: der Push lag 31 Minuten im Buch, weil der erste Lauf ihn
+        blockiert hatte und der naechste ihn wieder aufnahm."""
+        from datetime import datetime as _d, timezone as _t
+        jetzt = _d(2026, 9, 14, 18, 21, tzinfo=_t.utc)
+        z = {"k": "a|A", "key": "a", "side": "A", "conv": 6,
+             "sentAt": "2026-09-14T17:50:47+00:00", "pushPreis": 0.635}
+        self.assertEqual(SAB.faellige_zeilen([z], set(), jetzt, live_fn=lambda k: True), [])
+        self.assertEqual(len(SAB.faellige_zeilen([z], set(), jetzt, live_fn=lambda k: False)), 1)
+
+    def test_der_lauf_fragt_live_auch_wirklich_ab(self):
+        """⭐ Beide Schranken nuetzen nichts, wenn main() den Live-Zustand nicht durchreicht —
+        dann gilt ueberall die weite Vor-Anpfiff-Grenze und der BIG-Fall geht wieder durch."""
+        import inspect
+        quelle = inspect.getsource(SAB.main)
+        self.assertIn("live=_live(z.get(\"key\"))", quelle,
+                      "preis_urteil muss wissen, ob das Spiel laeuft")
+        self.assertIn("live_fn=_live", quelle,
+                      "faellige_zeilen muss das engere Live-Fenster anwenden koennen")
+        self.assertIn("poly_money_broad_live.json", quelle)
+
+    def test_frischer_live_push_kommt_durch(self):
+        from datetime import datetime as _d, timezone as _t
+        jetzt = _d(2026, 9, 14, 17, 55, tzinfo=_t.utc)
+        z = {"k": "a|A", "key": "a", "side": "A", "conv": 6,
+             "sentAt": "2026-09-14T17:50:47+00:00", "pushPreis": 0.635}
+        self.assertEqual(len(SAB.faellige_zeilen([z], set(), jetzt, live_fn=lambda k: True)), 1)
 
 
 class TestLiquiditaet(unittest.TestCase):
@@ -285,6 +364,56 @@ class TestSchalterUndKopplung(unittest.TestCase):
         self.assertNotIn("load_emit", quelle,
                          "eine eigene Auswahl waere eine fuenfte Menge neben Uebersicht, "
                          "Public-Tor, Paper-Track und Push")
+
+
+class TestDieBestaetigungNenntDenVerzug(unittest.TestCase):
+    """🔴 14.09.2026 (Lucas: „Push kam ca 30 min nach der empfehlenswert Push").
+
+    Genau so war es — und die Nachricht sagte es nicht. Er sah um 17:50 einen Push, es passierte
+    nichts, er hatte ihn abgehakt; eine halbe Stunde spaeter kam eine Bestaetigung fuer einen
+    Play, den er gedanklich weggelegt hatte. Zwei Nachrichten, die zusammengehoeren, aber nicht
+    zusammen aussehen.
+    """
+
+    def _bau(self, minuten):
+        from datetime import datetime as _d, timedelta as _td, timezone as _t
+        import telegram_trades as TT
+        gesendet = []
+        alt = TT.send_trades_message
+        TT.send_trades_message = lambda t, **kw: gesendet.append(t) or True
+        try:
+            TT.notify_shortlist_opened(
+                match="BIG vs KOI", side="BIG", stake=5.0, fill=0.38, conv=6,
+                push_preis=0.635, slug="x",
+                push_at=(_d.now(_t.utc) - _td(minutes=minuten)).isoformat())
+        finally:
+            TT.send_trades_message = alt
+        return gesendet[0]
+
+    def test_eine_halbe_stunde_spaeter_steht_dran(self):
+        t = self._bau(31)
+        self.assertIn("31 Min nach dem Push", t)
+
+    def test_sofortiger_kauf_bleibt_schlank(self):
+        """Der Normalfall — Push und Kauf im selben Lauf — braucht die Zeile nicht."""
+        self.assertNotIn("nach dem Push", self._bau(0))
+
+    def test_kaputter_zeitstempel_erfindet_keinen_verzug(self):
+        import telegram_trades as TT
+        gesendet = []
+        alt = TT.send_trades_message
+        TT.send_trades_message = lambda t, **kw: gesendet.append(t) or True
+        try:
+            TT.notify_shortlist_opened(match="A vs B", side="A", stake=5.0, fill=0.5,
+                                       push_preis=0.5, slug="x", push_at="gestern")
+        finally:
+            TT.send_trades_message = alt
+        self.assertNotIn("nach dem Push", gesendet[0])
+
+    def test_der_lauf_reicht_den_push_zeitpunkt_durch(self):
+        """Ohne das ist die Zeile tot — der Zeitstempel steht im Push-Buch, nicht in der Wette."""
+        import inspect
+        self.assertIn('push_at=zeile.get("sentAt")', inspect.getsource(SAB._melden))
 
 
 class TestDieKarteWeissDassSieEineVerstaerkungIst(unittest.TestCase):
