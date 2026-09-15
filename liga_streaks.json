@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "liga",
-    "generatedAt": "2026-09-15T11:36:57.111868+00:00",
+    "generatedAt": "2026-09-15T12:52:03.036163+00:00",
     "minLen": 3,
     "strongLen": 5,
     "sortiert": "zufallPct",
@@ -3930,11 +3930,12 @@
       "matchupPct": 61,
       "signalInfo": {
         "state": "confirm",
-        "count": 4,
+        "count": 5,
         "conviction": 4,
         "names": [
           "injury",
           "form_trend",
+          "h2h_pattern",
           "xg_strength",
           "chance_creation",
           "streak_momentum"
@@ -7322,11 +7323,12 @@
       "matchupPct": 39,
       "signalInfo": {
         "state": "contradict",
-        "count": 4,
+        "count": 5,
         "conviction": 4,
         "names": [
           "injury",
           "form_trend",
+          "h2h_pattern",
           "xg_strength",
           "chance_creation",
           "streak_momentum"
@@ -11390,6 +11392,71 @@
       "matchupPct": 36
     },
     {
+      "teamId": "116",
+      "team": "Lens",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/116.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "FRA",
+      "leagueName": "Ligue 1",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 5,
+      "venue": "A",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 62,
+        "label": "Eigen 62% + Gegner 53% → 58% · Signale bestätigen"
+      },
+      "ratePct": 62,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "liga",
+      "preN": 0,
+      "zufallPct": 8.91769,
+      "ligaBasisPct": 62,
+      "seltenheit": {
+        "basis": "liga",
+        "ratePct": 62,
+        "preN": null,
+        "einsZu": 11,
+        "erwartet": 282.51,
+        "familie": 3168,
+        "urteil": "nicht belegbar",
+        "grund": "keine eigene Vorgeschichte vor der Serie — gemessen wird gegen den Liga-Schnitt, der für ein Durchschnittsteam gilt"
+      },
+      "next": {
+        "oppId": "91",
+        "oppName": "Monaco",
+        "atHome": false,
+        "date": "2026-09-18",
+        "kickoff": "2026-09-18T18:45:00+00:00",
+        "oppRatePct": 53,
+        "pickKey": "FRA-5-91-116"
+      },
+      "oppSupportPct": 53,
+      "matchupPct": 58,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 7,
+        "conviction": 4,
+        "names": [
+          "injury",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "chance_creation",
+          "streak_momentum"
+        ],
+        "market": "Über 2.5 Tore"
+      }
+    },
+    {
       "teamId": "1579",
       "team": "Monza",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/1579.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -12231,57 +12298,6 @@
       },
       "oppSupportPct": 87,
       "matchupPct": 72
-    },
-    {
-      "teamId": "116",
-      "team": "Lens",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/116.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "FRA",
-      "leagueName": "Ligue 1",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 5,
-      "venue": "A",
-      "strong": true,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 62,
-        "label": "Eigen 62% + Gegner 53% → 58%"
-      },
-      "ratePct": 62,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "liga",
-      "preN": 0,
-      "zufallPct": 8.91769,
-      "ligaBasisPct": 62,
-      "seltenheit": {
-        "basis": "liga",
-        "ratePct": 62,
-        "preN": null,
-        "einsZu": 11,
-        "erwartet": 282.51,
-        "familie": 3168,
-        "urteil": "nicht belegbar",
-        "grund": "keine eigene Vorgeschichte vor der Serie — gemessen wird gegen den Liga-Schnitt, der für ein Durchschnittsteam gilt"
-      },
-      "next": {
-        "oppId": "91",
-        "oppName": "Monaco",
-        "atHome": false,
-        "date": "2026-09-18",
-        "kickoff": "2026-09-18T18:45:00+00:00",
-        "oppRatePct": 53,
-        "pickKey": "FRA-5-91-116"
-      },
-      "oppSupportPct": 53,
-      "matchupPct": 58
     },
     {
       "teamId": "502",
@@ -18741,15 +18757,15 @@
       "matchupPct": 71,
       "signalInfo": {
         "state": "confirm",
-        "count": 5,
-        "conviction": 4,
+        "count": 6,
+        "conviction": 6,
         "names": [
+          "injury",
           "form_trend",
           "h2h_pattern",
           "xg_strength",
           "chance_creation",
-          "move_following",
-          "venue_form"
+          "freshness_leg"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -18805,15 +18821,15 @@
       "matchupPct": 64,
       "signalInfo": {
         "state": "confirm",
-        "count": 5,
-        "conviction": 4,
+        "count": 6,
+        "conviction": 6,
         "names": [
+          "injury",
           "form_trend",
           "h2h_pattern",
           "xg_strength",
           "chance_creation",
-          "move_following",
-          "venue_form"
+          "freshness_leg"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -24874,15 +24890,15 @@
       "matchupPct": 64,
       "signalInfo": {
         "state": "confirm",
-        "count": 5,
-        "conviction": 4,
+        "count": 6,
+        "conviction": 6,
         "names": [
+          "injury",
           "form_trend",
           "h2h_pattern",
           "xg_strength",
           "chance_creation",
-          "move_following",
-          "venue_form"
+          "freshness_leg"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -24957,6 +24973,7 @@
         "count": 3,
         "conviction": 4,
         "names": [
+          "public_static_bias",
           "form_trend",
           "xg_strength",
           "chance_creation"
@@ -25020,6 +25037,7 @@
         "count": 3,
         "conviction": 4,
         "names": [
+          "public_static_bias",
           "form_trend",
           "xg_strength",
           "chance_creation"
@@ -25147,11 +25165,12 @@
       "matchupPct": 64,
       "signalInfo": {
         "state": "confirm",
-        "count": 4,
+        "count": 5,
         "conviction": 4,
         "names": [
           "injury",
           "form_trend",
+          "h2h_pattern",
           "xg_strength",
           "chance_creation",
           "streak_momentum"

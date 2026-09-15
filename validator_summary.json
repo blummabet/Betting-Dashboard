@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-09-15T07:49:52.452817+00:00",
-  "checked": 30,
+  "timestamp": "2026-09-15T15:03:40.637117+00:00",
+  "checked": 31,
   "errors": 0,
-  "warnings": 21,
-  "infos": 99,
+  "warnings": 22,
+  "infos": 102,
   "issues": [
     {
       "date": "18.09.2026",
@@ -85,6 +85,42 @@
       "severity": "INFO",
       "code": "OVER35_LOW_FV",
       "msg": "Ø gpg=1.70 (statischer Proxy) → Poisson FV für Over 3.5 = 9.3%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy."
+    },
+    {
+      "date": "18.09.2026",
+      "home": "Rudes",
+      "away": "NK Slaven Belupo",
+      "league": "HNL",
+      "severity": "WARN",
+      "code": "BOTRED_ASYMMETRIC_PRESSURE",
+      "msg": "Kellerduell-Narrativ aber asymmetrischer Druck: Rudes pressureRatio=0.33 vs NK Slaven Belupo pressureRatio=0.30. Nur eine Mannschaft kämpft wirklich — Angle zu vereinfacht."
+    },
+    {
+      "date": "18.09.2026",
+      "home": "Rudes",
+      "away": "NK Slaven Belupo",
+      "league": "HNL",
+      "severity": "INFO",
+      "code": "LOW_MOTIV_CARDS_CHECK",
+      "msg": "NK Slaven Belupo: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen."
+    },
+    {
+      "date": "18.09.2026",
+      "home": "Rudes",
+      "away": "NK Slaven Belupo",
+      "league": "HNL",
+      "severity": "INFO",
+      "code": "CARDS35_LOW_FV",
+      "msg": "Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen."
+    },
+    {
+      "date": "18.09.2026",
+      "home": "Rudes",
+      "away": "NK Slaven Belupo",
+      "league": "HNL",
+      "severity": "INFO",
+      "code": "CARDS45_LOW_FV",
+      "msg": "Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis."
     },
     {
       "date": "18.09.2026",
