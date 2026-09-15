@@ -95,6 +95,14 @@ jobs:
         run: ${{ env.POLY_PYTHON }} poly_price_path.py
         continue-on-error: true
 
+      # 🔴 15.09.2026 (Lucas: „wieso steht BIG noch nicht als beendet? Spiel laengst vorbei").
+      # Zweite Auflösungs-Quelle, MUSS vor dem Paper-Track laufen — der rechnet aus
+      # poly_resolutions.json ab. Gamma lieferte fuer lol-big1-koia-2026-09-14 eine leere Liste;
+      # der CLOB, ueber den wir gekauft haben, lieferte closed+winner in einem Call.
+      - name: 🔎 Auflösungen per CLOB nachschlagen (conditionId statt Slug)
+        run: ${{ env.POLY_PYTHON }} poly_clob_aufloesung.py
+        continue-on-error: true
+
       - name: 📈 Shortlist Paper-Track (Heute-wetten Track-Record, read-only)
         run: ${{ env.POLY_PYTHON }} poly_shortlist_track.py
         continue-on-error: true
@@ -129,6 +137,13 @@ jobs:
       # 05.09.2026 (Lucas: „250.000 ist fuer mich ein Vermoegen, fuer den ein normaler Bet") —
       # MUSS vor dem Whale-Watch laufen: der baut daraus die Zeile „Normalgroesse fuer dieses
       # Konto". Faellt der Schritt aus, fehlt die Zeile, der Push geht trotzdem raus.
+      # 🔬 15.09.2026 (Lucas: „wo sehen wir den Outcome dieser Messungen? Damit wir in 2 Wochen
+      # wissen, dass wir das heute gemacht haben"). Laeuft NACH dem Auto-Play, damit der Stand
+      # den heutigen Lauf schon enthaelt. Schreibt nur das Buch, entscheidet nichts.
+      - name: 🔬 Buch der laufenden Messungen fortschreiben
+        run: ${{ env.POLY_PYTHON }} messungen.py
+        continue-on-error: true
+
       - name: 📐 Wallet-Norm (was ist fuer DIESES Konto ein normaler Einsatz)
         run: ${{ env.POLY_PYTHON }} poly_wallet_norm.py
         continue-on-error: true
@@ -199,7 +214,7 @@ jobs:
             poly_wallet_norm.json poly_wallet_norm_state.json \
             shortlist_push_seen.json shortlist_push_ledger.json shortlist_auto_bets_placed.json \
             poly_dominanz_ledger.json poly_dominanz_seen.json poly_dominanz_record.json \
-            poly_money_klein.json \
+            poly_money_klein.json messungen.json \
             poly_money_broad_live.json poly_money_broad_live_history.json \
             esports_poly_prices.json esports_poly_wallets.json esports_poly_smartmoney.json esports_poly_coherence.json esports_poly_status.json \
             health/poly-global.json; do

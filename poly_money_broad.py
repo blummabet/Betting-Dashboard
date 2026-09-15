@@ -1179,7 +1179,11 @@ def sport_inventar(cache, bekannte_keys, min_usd=1000.0):
 RESOLVE_LOOKUP_MAX = int(os.environ.get("POLY_RESOLVE_LOOKUP_MAX") or 60)
 
 
-def backfill_resolutions_by_slug(prev_close, seen_keys, get=_get, cap=RESOLVE_LOOKUP_MAX):
+EXTRA_MIN_BUDGET = int(os.environ.get("POLY_RESOLVE_EXTRA_MIN") or 15)
+
+
+def backfill_resolutions_by_slug(prev_close, seen_keys, get=_get, cap=RESOLVE_LOOKUP_MAX,
+                                 extra=None):
     """(02.08.2026, Lucas) Settlement-Key-Fix an der Wurzel: Der Key IST der rohe Event-Slug, und dieselbe
     Partie kann unter mehreren Slugs laufen (kuratierter Kurz-Slug offen, voller Event-Slug bei Auflösung)
     → die Auflösung landete unter einem ANDEREN Key als die offene Position → Wallet-/Shortlist-Track
@@ -1189,13 +1193,31 @@ def backfill_resolutions_by_slug(prev_close, seen_keys, get=_get, cap=RESOLVE_LO
     offene Position. REIN/testbar (get injizierbar), defensiv (nie werfen), gedeckelt (cap Calls/Lauf)."""
     out = []
     if not isinstance(prev_close, dict):
-        return out
+        prev_close = {}          # 15.09.2026: kaputtes Close-File darf `extra` nicht mit killen
     # broad_close wächst über die Zeit → Budget den ZULETZT erfassten (gerade angepfiffenen) Märkten
     # geben, nicht uralten hängengebliebenen Keys. Sort: neuestes capturedAt zuerst.
-    cand = [(k, str(v.get("capturedAt") or "")) for k, v in prev_close.items()
+    cand = [(k, str(v.get("capturedAt") or ""), (v or {}).get("cond"))
+            for k, v in prev_close.items()
             if isinstance(v, dict) and not v.get("resolved") and k not in seen_keys]
     cand.sort(key=lambda kv: kv[1], reverse=True)
-    for key, _cap_ts in cand[:cap]:
+    # 🔴 15.09.2026 (Lucas: „wieso steht BIG noch nicht als beendet"). Diese Funktion war der
+    # EINZIGE Nachschlag-Pfad — und sie iterierte ausschliesslich ueber prev_close. Der Broad-Scan
+    # friert aber nur Maerkte ueber MIN_VOL_USD = 7500 ein; ein Play, den nur der Shortlist-Emitter
+    # kennt, stand dort nie und wurde deshalb NIE nachgeschlagen. Nicht „nicht gefunden": nicht
+    # gefragt. Am 15.09. waren 4 Plays genau daran verfallen (Grund „nicht getrackt"), darunter
+    # lol-gx-navi-2026-09-11 — das Gamma zu diesem Zeitpunkt voll aufgeloest auslieferte.
+    extra_cand = []
+    _bekannt = {c[0] for c in cand} | set(seen_keys or ())
+    for e in (extra or []):
+        k = (e.get("key") if isinstance(e, dict) else e)
+        if not k or k in _bekannt or k in prev_close:
+            continue
+        _bekannt.add(k)
+        extra_cand.append((k, "", (e.get("cond") if isinstance(e, dict) else None)))
+    # Den Nachzueglern ein eigenes Budget reservieren, sonst frisst ein volles Close-File sie auf.
+    _reserve = min(len(extra_cand), EXTRA_MIN_BUDGET)
+    cand = (cand[:max(0, cap - _reserve)] + extra_cand)[:cap]
+    for key, _cap_ts, _cond in cand:
         try:
             page = get(f"{GAMMA}?slug={key}&closed=true")
             ev = page[0] if isinstance(page, list) and page else None
@@ -1204,7 +1226,7 @@ def backfill_resolutions_by_slug(prev_close, seen_keys, get=_get, cap=RESOLVE_LO
             # Genau den Markt aufloesen, aus dem die Erfassung ihre Preise gezogen hat.
             # Ohne die conditionId waere das wieder „der mit dem meisten Volumen" — und damit
             # bei einem Totals-Buendel eine andere Linie als beim Erfassen.
-            _cond = (prev_close.get(key) or {}).get("cond")
+            _cond = _cond or (prev_close.get(key) or {}).get("cond")
             oc = _outcomes_von_cond(ev, _cond) or ([] if _cond else _outcomes(ev))
             rp = {o["label"]: o["price"] for o in oc if o.get("price") is not None}
             _sieger = winner_from_prices(rp) if rp else None
@@ -1219,6 +1241,29 @@ def backfill_resolutions_by_slug(prev_close, seen_keys, get=_get, cap=RESOLVE_LO
         except Exception:
             continue
     return out
+
+
+def nachschlag_kandidaten(base_dir=None) -> list:
+    """Offene Positionen AUSSERHALB des Close-Files (Shortlist-Track + echte Wett-Dateien).
+
+    15.09.2026: eigene Funktion, damit die Verdrahtung pruefbar ist. Ein Nachschlag, der die
+    Kandidaten gar nicht erst einsammelt, ist in fetch_markets nicht von einem leeren Lauf zu
+    unterscheiden — und genau dort ist der Fehler vom 14.09. entstanden."""
+    try:
+        import poly_clob_aufloesung as _CA
+        return _CA.offene_kandidaten(str(base_dir or BASE))
+    except Exception as _e:
+        print(f"  Nachzuegler-Kandidaten uebersprungen (nicht fatal): {_e}")
+        return []
+
+
+def backfill_lauf(seen_open, close=None, extra=None) -> list:
+    """Der Nachschlag EINES Laufs: Close-File-Kandidaten PLUS offene Positionen von ausserhalb."""
+    if extra is None:
+        extra = nachschlag_kandidaten()
+    if close is None:
+        close = _load(CLOSE_FILE)
+    return backfill_resolutions_by_slug(close, seen_open, get=_get, extra=extra)
 
 
 def fetch_markets(live_only=False, pin=None):
@@ -1528,7 +1573,7 @@ def fetch_markets(live_only=False, pin=None):
     # Key-Mismatch, v.a. Esports). Additiv/defensiv: schlägt es fehl, bleibt alles wie bisher.
     try:
         _seen_open = {c[1] for c in candidates} | {m.get("key") for m in markets}
-        _bf = backfill_resolutions_by_slug(_load(CLOSE_FILE), _seen_open)
+        _bf = backfill_lauf(_seen_open)
         if _bf:
             markets += _bf
             print(f"  \U0001f501 {len(_bf)} getrackte Markt-Auflösung(en) per Slug nachgezogen (Key-Match)")

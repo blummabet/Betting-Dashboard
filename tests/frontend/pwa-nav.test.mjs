@@ -35,14 +35,16 @@ test('PWA-Tags + Navi-Markup (Bottom-Nav, Sheet, Web-Dropdown) im HTML vorhanden
   const ziele = (sel, b) => [...d.querySelectorAll(sel)].map(x => x.dataset.view || x.dataset.sec);
   const drop = ziele('#topMoreMenu .tm-item');
   const sheet = ziele('.more-sheet .ms-btn');
-  // 09.09.2026: +1 fuer die Stats-Seite. Die Zahl ist bewusst hart — sie faengt einen
-  // geloeschten Eintrag, den der Mengenvergleich darunter nicht sieht (beide Flaechen koennten
-  // gemeinsam einen verlieren).
-  assert.equal(drop.length, 9, '9 Dropdown-Eintraege erwartet');
+  // 09.09.2026: +1 fuer die Stats-Seite. 15.09.2026: +1 fuer das Buch der laufenden Messungen.
+  // Die Zahl ist bewusst hart — sie faengt einen geloeschten Eintrag, den der Mengenvergleich
+  // darunter nicht sieht (beide Flaechen koennten gemeinsam einen verlieren).
+  assert.equal(drop.length, 10, '10 Dropdown-Eintraege erwartet');
   assert.equal(sheet.length, drop.length,
     'Web-Dropdown und mobiles Sheet aus dem Takt — ein Tab waere auf einer Flaeche unerreichbar');
   assert.ok(drop.includes('stakeradar'), 'Stake Radar fehlt im Web-Dropdown');
   assert.ok(sheet.includes('stakeradar'), 'Stake Radar fehlt im mobilen Sheet');
+  assert.ok(drop.includes('messungen'), 'Messungen fehlt im Web-Dropdown');
+  assert.ok(sheet.includes('messungen'), 'Messungen fehlt im mobilen Sheet');
   assert.ok(drop.includes('stats'), 'Stats fehlt im Web-Dropdown');
   assert.ok(sheet.includes('stats'), 'Stats fehlt im mobilen Sheet');
   // Mobile Bottom-Nav (7 Tabs: Übersicht/National/Betting/Wallets/Betfair/Money/Mehr)

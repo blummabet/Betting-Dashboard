@@ -1858,3 +1858,112 @@ class TestMarktStempel(unittest.TestCase):
         st = P.markt_stempel({"key": "k", "usd": 90000}, {"k": {"totalUsd": 50000}})
         self.assertIn("totalUsd", st)
         self.assertNotIn("anteil", st)
+
+
+class RangNachSchaerfeNichtNachVermoegen(unittest.TestCase):
+    """🔴 15.09.2026 (Lucas, Whale-Push-Audit). Der Push nannte eine Liste „Sharp-Rangliste",
+    die nach LEBENSZEIT-P&L sortiert war. Das Dashboard sortiert seit dem 02.09. nach der
+    CLV-Untergrenze — gemessen trug die P&L-Sortierung null Information ueber die Kante
+    (r=0,06). Von den zehn so gepushten Wallets hatten vier eine NEGATIVE CLV-Untergrenze."""
+
+    def _w(self, **kw):
+        v = {"n": 12, "wins": 7, "clvSumPP": 6.0, "usd": 12000.0 * 12, "pnl": 1000.0,
+             "clvFenN": 12, "clvFenSum": 6.0, "clvSqSum": 4.0}
+        v.update(kw)
+        return v
+
+    def test_das_reichere_wallet_mit_schlechterem_clv_verliert(self):
+        # PROVOKATION: genau dieser Fall stand am 15.09. auf Rang 5 und 7 der gepushten Liste.
+        scores = {
+            "0xarm":   self._w(pnl=1_000.0,       clvSumPP=24.0, clvFenSum=24.0, clvSqSum=50.0),
+            "0xreich": self._w(pnl=20_000_000.0,  clvSumPP=0.6,  clvFenSum=0.6,  clvSqSum=4.0),
+        }
+        rang = P._sharp_rank_map(scores)
+        self.assertEqual(rang["0xarm"], 1, "das Vermoegen hat wieder ueber die Kante entschieden")
+        self.assertEqual(rang["0xreich"], 2)
+
+    def test_negative_untergrenze_landet_hinten_nicht_vorne(self):
+        scores = {
+            "0xscharf": self._w(clvSumPP=12.0, clvFenSum=12.0, clvSqSum=13.0, pnl=100.0),
+            "0xstumpf": self._w(clvSumPP=0.12, clvFenSum=0.12, clvSqSum=40.0, pnl=9_000_000.0),
+        }
+        self.assertEqual(P._sharp_rank_map(scores)["0xscharf"], 1)
+
+    def test_bei_gleichstand_entscheidet_die_groessere_stichprobe(self):
+        # Ein ECHTER Gleichstand: beide ergeben 1,0 - 1,645*sqrt(0,1) auf dieselbe Stelle.
+        # klein: Varianz 1,0 bei n=10 · gross: Varianz 2,0 bei n=20.
+        klein = self._w(n=10, wins=6, clvSumPP=10.0, clvFenN=10, clvFenSum=10.0,
+                        clvSqSum=19.0, usd=12000.0 * 10, pnl=9_000_000.0)
+        gross = self._w(n=20, wins=12, clvSumPP=20.0, clvFenN=20, clvFenSum=20.0,
+                        clvSqSum=58.0, usd=12000.0 * 20, pnl=1.0)
+        self.assertEqual(P._clv_ug(klein)[0], P._clv_ug(gross)[0], "kein echter Gleichstand")
+        # PROVOKATION: bei Gleichstand darf NICHT das Vermoegen entscheiden — und auch nicht
+        # die duennere Stichprobe. Zwanzig Auflösungen wiegen schwerer als zehn.
+        rang = P._sharp_rank_map({"0xklein": klein, "0xgross": gross})
+        self.assertEqual(rang["0xgross"], 1)
+        self.assertEqual(rang["0xklein"], 2)
+
+    def test_ohne_streuung_gilt_das_strengere_n_gate(self):
+        # Eine echte Untergrenze bestraft ein duennes n selbst; der Schrumpf-Wert kann das nicht.
+        # PROVOKATION: mit flachem Gate 8 kaeme ein Wallet mit n=9 und ohne Streuung in die Liste.
+        ohne = self._w(n=9, wins=5, clvSumPP=5.0, usd=12000.0 * 9)
+        ohne.pop("clvSqSum"); ohne.pop("clvFenN"); ohne.pop("clvFenSum")
+        self.assertNotIn("0xduenn", P._sharp_rank_map({"0xduenn": ohne}))
+        mit = self._w(n=9, wins=5, clvSumPP=5.0, usd=12000.0 * 9,
+                      clvFenN=9, clvFenSum=5.0, clvSqSum=4.0)
+        self.assertIn("0xduenn", P._sharp_rank_map({"0xduenn": mit}))
+
+    def test_schaerfe_floor_und_vier_stellig_filter_bleiben(self):
+        stumpf = self._w(clvSumPP=-6.0, clvFenSum=-6.0)
+        self.assertNotIn("0xneg", P._sharp_rank_map({"0xneg": stumpf}))
+        klein = self._w(usd=100.0 * 12)
+        self.assertNotIn("0xklein", P._sharp_rank_map({"0xklein": klein}))
+
+
+class ClvUntergrenzeSpiegeltDasDashboard(unittest.TestCase):
+    """Die Spiegelung soll nicht wieder auseinanderlaufen. Deshalb werden die Konstanten an die
+    JS-Quelle GEPINNT statt abgeschrieben — und der Kommentar darf nichts behaupten, was der
+    Code nicht tut."""
+
+    def setUp(self):
+        self.js = (Path(__file__).parent.parent / "poly-wallets.js").read_text(encoding="utf-8")
+
+    def test_die_konstanten_stimmen_mit_poly_wallets_js_ueberein(self):
+        import re
+        def konst(name):
+            m = re.search(r"const %s\s*=\s*([\d.]+)" % name, self.js)
+            self.assertTrue(m, "%s nicht in poly-wallets.js gefunden" % name)
+            return float(m.group(1))
+        self.assertEqual(P._CLV_Z, konst("PW_CLV_Z"))
+        self.assertEqual(P._CLV_SHRINK_K, konst("PW_CLV_SHRINK_K"))
+        self.assertEqual(P._CLV_UG_MIN_N, konst("PW_CLV_UG_MIN_N"))
+        self.assertEqual(P._RANK_MIN_N_PNL, konst("PW_RANK_MIN_N_PNL"))
+        self.assertEqual(P._RANK_MIN_N_CLV, konst("PW_RANK_MIN_N"))
+        self.assertEqual(P._RANK_FLOOR_HIT, konst("PW_RANK_FLOOR_HIT"))
+        self.assertEqual(P._RANK_MIN_AVG_USD, konst("PW_RANK_MIN_AVG_USD"))
+
+    def test_das_dashboard_sortiert_weiterhin_nach_der_untergrenze(self):
+        # Faellt dieser Test, hat sich die ANDERE Seite bewegt — dann gehoert der Push nachgezogen,
+        # nicht dieser Test angepasst.
+        self.assertIn("(b.clvUg - a.clvUg) || (b.n - a.n)", self.js)
+
+    def test_echte_untergrenze_wird_aus_der_streuung_gerechnet(self):
+        v = {"n": 10, "wins": 6, "clvSumPP": 10.0, "clvFenN": 10, "clvFenSum": 10.0,
+             "clvSqSum": 19.0}
+        ug, art = P._clv_ug(v)
+        self.assertEqual(art, "ug")
+        self.assertAlmostEqual(ug, 1.0 - 1.645 * ((9.0 / 9 / 10) ** 0.5), places=6)
+
+    def test_ohne_quadratsumme_wird_geschrumpft(self):
+        ug, art = P._clv_ug({"n": 10, "clvSumPP": 10.0})
+        self.assertEqual(art, "schrumpf")
+        self.assertAlmostEqual(ug, 1.0 * 10 / 35)
+
+    def test_kaputtes_fenster_gibt_keine_scheinsicherheit(self):
+        # Negative Rohvarianz heisst: Zaehler und Quadratsumme decken nicht dieselben Zeilen ab.
+        v = {"n": 10, "clvSumPP": 10.0, "clvFenN": 10, "clvFenSum": 30.0, "clvSqSum": 1.0}
+        self.assertEqual(P._clv_ug(v)[1], "schrumpf")
+
+    def test_muell_wirft_nicht(self):
+        for v in (None, {}, {"n": 0}, "nein", {"n": 3, "clvSumPP": None}):
+            self.assertIsInstance(P._clv_ug(v)[0], float)

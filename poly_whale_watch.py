@@ -34,7 +34,7 @@ Ein HTML-Post je frischer Großposition in den Trades-Channel (TELEGRAM_TRADES_C
 poly_whale_seen.json {posKey → {usd, ts}}: je Position EINMAL alerten; erneut nur, wenn die
 Wallet signifikant aufstockt (≥ +50% USD) — dann als „aufgestockt".
 """
-import json, os, re as _re, urllib.request, urllib.error, html   # 25.08.2026: _re fuer sport_category (Spiegel von _pwSportCategory)
+import json, math, os, re as _re, urllib.request, urllib.error, html   # 25.08.2026: _re fuer sport_category (Spiegel von _pwSportCategory)
 # 29.08.2026: `math` ist raus — die Wilson-Rechnung wohnt jetzt in sharp_gate.py.
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
@@ -331,9 +331,11 @@ def _esc(x) -> str:
 
 # ── Top-20 Sharp-Rangliste im Push (23.08.2026, Lucas: „Top-20-Wallets extra highlighten, damit ich
 # seh: ist eine Top-Wallet") ──────────────────────────────────────────────────────────────────────
-# Spiegelt EXAKT die Dashboard-Rangliste (poly-wallets.js _pwSharpRanking). Modus A (echte Poly-P&L),
-# sobald irgendein Wallet pnl hat, sonst Interim CLV-Kombi. Gates identisch: n-Floor, im P&L-Modus
-# Ø CLV ≥ 0 & Treffer ≥ 45 %, plus 4-stellig-Filter (Ø-Einsatz ≥ $1.000). → {wallet_lower: Rang 1..20}.
+# Spiegelt die Dashboard-Rangliste (poly-wallets.js `_pwRankRowsPnl`). Modus A (echte Poly-P&L),
+# sobald irgendein Wallet pnl hat, sonst Interim CLV-Kombi. Gates identisch: n-Floor (dynamisch,
+# je nach Art der CLV-Untergrenze), im P&L-Modus Ø CLV ≥ 0 & Treffer ≥ 45 %, plus 4-stellig-Filter
+# (Ø-Einsatz ≥ $1.000). SORTIERT wird nach der CLV-UNTERGRENZE, nicht nach der Lebenszeit-P&L —
+# siehe die Begruendung unten im P&L-Zweig. → {wallet_lower: Rang 1..n}.
 _RANK_MIN_N_PNL   = 8
 _RANK_MIN_N_CLV   = 12
 _RANK_FLOOR_HIT   = 0.45
@@ -341,6 +343,37 @@ _RANK_MIN_AVG_USD = 1000.0
 _RANK_HITW = 6.0
 _RANK_K    = 6.0
 _RANK_TOP  = 20
+# Spiegel von poly-wallets.js (PW_CLV_Z / PW_CLV_SHRINK_K / PW_CLV_UG_MIN_N). Ein Test pinnt die
+# Zahlen an die JS-Quelle — genau damit die Spiegelung nicht wieder auseinanderlaeuft.
+_CLV_Z         = 1.645
+_CLV_SHRINK_K  = 25
+_CLV_UG_MIN_N  = 5
+
+
+def _clv_ug(v) -> tuple:
+    """(Wert, Art) der CLV-Untergrenze eines Wallets. REIN/testbar. Spiegel von `_pwClvUg`.
+
+    Art ist "ug" (echte einseitige 95%-Untergrenze aus der Streuung) oder "schrumpf" (Interim
+    ohne Streuung, n/(n+K) Richtung null). Der Unterschied entscheidet mit ueber die Mindest-
+    Stichprobe: eine echte Untergrenze bestraft ein duennes n selbst, der Schrumpf-Wert nicht.
+    """
+    if not isinstance(v, dict):
+        return 0.0, "keine"
+    n = v.get("n") or 0
+    if not n:
+        return 0.0, "keine"
+    avg = (v.get("clvSumPP") or 0) / n
+    fn = v.get("clvFenN") if isinstance(v.get("clvFenN"), (int, float)) else 0
+    fs = v.get("clvFenSum") if isinstance(v.get("clvFenSum"), (int, float)) else 0
+    q = v.get("clvSqSum")
+    if isinstance(q, (int, float)) and fn >= _CLV_UG_MIN_N and fn > 1:
+        favg = fs / fn
+        roh = (q - fn * favg * favg) / (fn - 1)
+        # Eine nennenswert negative Rohvarianz heisst: Zaehler und Quadratsumme decken NICHT
+        # dieselben Zeilen ab. Dann schrumpfen wir, statt Scheinsicherheit auszugeben.
+        if roh >= -1e-6:
+            return favg - _CLV_Z * math.sqrt(max(0.0, roh) / fn), "ug"
+    return avg * n / (n + _CLV_SHRINK_K), "schrumpf"
 
 
 def _sharp_rank_map(scores):
@@ -358,17 +391,39 @@ def _sharp_rank_map(scores):
         avg_clv = (v.get("clvSumPP") or 0) / n
         hit = (v.get("wins") or 0) / n
         if has_pnl:
-            if not isinstance(v.get("pnl"), (int, float)) or n < _RANK_MIN_N_PNL:
+            # 🔴 15.09.2026 (Lucas, Whale-Push-Audit). Hier stand `rows.append((w, v["pnl"]))` —
+            # sortiert wurde also nach LEBENSZEIT-P&L. Das Dashboard sortiert seit dem 02.09.
+            # nach der CLV-UNTERGRENZE, und es sagt in seiner eigenen Kopfzeile, warum: die
+            # P&L-Sortierung trug **null** Information ueber die Kante (Median-CLV der Top-20 =
+            # Median aller Qualifizierten, r=0,06); die Poly-P&L ist plattformweit — Wahlen und
+            # Krypto, nicht Sport.
+            #
+            # Gemessen an den Zahlen vom 15.09.2026: von den zehn Wallets, die dieser Push
+            # „Sharp-Rangliste" nannte, hatten **vier eine negative CLV-Untergrenze**
+            # (#5 -0,10 · #7 -0,17 · #9 -0,20 · #10 -0,39). Sie schlagen den Schluss
+            # nachweislich nicht und standen auf der Liste, die sagt, wem man folgen soll —
+            # im Trades-Channel UND, ueber `_pub_in_top_n`, im oeffentlichen Feed.
+            #
+            # Ueber dieser Funktion stand „Spiegelt EXAKT die Dashboard-Rangliste". Das stimmte
+            # bis zum 02.09. Fehlerklasse wie beim 🔥-Abzeichen am 12.09.: eine Regel steht an
+            # zwei Stellen und wird an einer repariert.
+            if not isinstance(v.get("pnl"), (int, float)):
+                continue
+            ug, art = _clv_ug(v)
+            # Dynamische Mindest-Stichprobe wie im Dashboard: solange nur geschrumpft wird
+            # (keine Streuung erfasst), gilt das strengere Gate.
+            if n < (_RANK_MIN_N_PNL if art == "ug" else _RANK_MIN_N_CLV):
                 continue
             if not (avg_clv >= 0 and hit >= _RANK_FLOOR_HIT):   # Schärfe-Floor (P&L-Modus)
                 continue
-            rows.append((w, v["pnl"]))
+            rows.append((w, (ug, n)))
         else:
             if n < _RANK_MIN_N_CLV:
                 continue
             raw = avg_clv + (hit - 0.5) * _RANK_HITW
-            rows.append((w, raw * (n / (n + _RANK_K))))
-    rows.sort(key=lambda x: -x[1])
+            rows.append((w, (raw * (n / (n + _RANK_K)), n)))
+    # Bei Gleichstand entscheidet die groessere Stichprobe, nicht das groessere Vermoegen.
+    rows.sort(key=lambda x: (-x[1][0], -x[1][1]))
     return {str(w).lower(): i + 1 for i, (w, _) in enumerate(rows)}   # volle Rangliste; Anzeige/Gate cappen selbst
 
 
