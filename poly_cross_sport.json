@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-15T02:17:25.790674+00:00",
+ "generatedAt": "2026-09-15T02:47:22.787278+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,8 +10,8 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 649,
- "pinnKeys": 285,
- "matched": 217,
+ "pinnKeys": 281,
+ "matched": 215,
  "footballRows": 189,
  "crossRows": 460,
  "footballSkippedStale": 51,
@@ -24,55 +24,27 @@
   "soccer_liga": 171
  },
  "matchedBySport": {
-  "baseball_mlb": 28,
+  "baseball_mlb": 26,
   "soccer_mls": 18,
   "soccer_liga": 171
  },
  "trackRecord": {
-  "tracked": 296,
-  "converged": 63
+  "tracked": 298,
+  "converged": 65
  },
  "discrepancies": [
-  {
-   "id": "baseball_mlb|losangelesangels-seattlemariners|seattlemariners",
-   "sport": "baseball_mlb",
-   "event": "Seattle Mariners vs Los Angeles Angels",
-   "market": "Moneyline",
-   "outcome": "Seattle Mariners",
-   "polyPP": 24.5,
-   "pinnPP": 60.5,
-   "gapPP": -36.04,
-   "vol": 515824,
-   "richtung": "Poly zu niedrig → backen",
-   "convergePP": -26.0,
-   "firstSeen": "2026-09-14T21:17:02.554928+00:00"
-  },
-  {
-   "id": "baseball_mlb|losangelesangels-seattlemariners|losangelesangels",
-   "sport": "baseball_mlb",
-   "event": "Seattle Mariners vs Los Angeles Angels",
-   "market": "Moneyline",
-   "outcome": "Los Angeles Angels",
-   "polyPP": 75.5,
-   "pinnPP": 39.5,
-   "gapPP": 36.04,
-   "vol": 515824,
-   "richtung": "Poly zu hoch → faden",
-   "convergePP": -26.0,
-   "firstSeen": "2026-09-14T21:17:02.554928+00:00"
-  },
   {
    "id": "baseball_mlb|arizonadiamondbacks-miamimarlins|miamimarlins",
    "sport": "baseball_mlb",
    "event": "Miami Marlins vs Arizona Diamondbacks",
    "market": "Moneyline",
    "outcome": "Miami Marlins",
-   "polyPP": 77.5,
+   "polyPP": 66.5,
    "pinnPP": 42.4,
-   "gapPP": 35.14,
-   "vol": 302788,
+   "gapPP": 24.14,
+   "vol": 339773,
    "richtung": "Poly zu hoch → faden",
-   "convergePP": 0.0,
+   "convergePP": 11.0,
    "firstSeen": "2026-09-15T02:17:25.790347+00:00"
   },
   {
@@ -81,41 +53,69 @@
    "event": "Miami Marlins vs Arizona Diamondbacks",
    "market": "Moneyline",
    "outcome": "Arizona Diamondbacks",
-   "polyPP": 22.5,
+   "polyPP": 33.5,
    "pinnPP": 57.6,
-   "gapPP": -35.14,
-   "vol": 302788,
+   "gapPP": -24.14,
+   "vol": 339773,
    "richtung": "Poly zu niedrig → backen",
-   "convergePP": 0.0,
+   "convergePP": 11.0,
    "firstSeen": "2026-09-15T02:17:25.790347+00:00"
   },
   {
-   "id": "baseball_mlb|sanfranciscogiants-stlouiscardinals|sanfranciscogiants",
+   "id": "baseball_mlb|losangelesangels-seattlemariners|seattlemariners",
    "sport": "baseball_mlb",
-   "event": "San Francisco Giants vs St. Louis Cardinals",
+   "event": "Seattle Mariners vs Los Angeles Angels",
    "market": "Moneyline",
-   "outcome": "San Francisco Giants",
-   "polyPP": 8.5,
-   "pinnPP": 40.2,
-   "gapPP": -31.75,
-   "vol": 155436,
+   "outcome": "Seattle Mariners",
+   "polyPP": 36.5,
+   "pinnPP": 60.5,
+   "gapPP": -24.04,
+   "vol": 661589,
    "richtung": "Poly zu niedrig → backen",
-   "convergePP": -14.4,
-   "firstSeen": "2026-09-08T00:32:58.660790+00:00"
+   "convergePP": -14.0,
+   "firstSeen": "2026-09-14T21:17:02.554928+00:00"
   },
   {
-   "id": "baseball_mlb|sanfranciscogiants-stlouiscardinals|stlouiscardinals",
+   "id": "baseball_mlb|losangelesangels-seattlemariners|losangelesangels",
    "sport": "baseball_mlb",
-   "event": "San Francisco Giants vs St. Louis Cardinals",
+   "event": "Seattle Mariners vs Los Angeles Angels",
    "market": "Moneyline",
-   "outcome": "St. Louis Cardinals",
-   "polyPP": 91.5,
-   "pinnPP": 59.8,
-   "gapPP": 31.75,
-   "vol": 155436,
+   "outcome": "Los Angeles Angels",
+   "polyPP": 63.5,
+   "pinnPP": 39.5,
+   "gapPP": 24.04,
+   "vol": 661589,
    "richtung": "Poly zu hoch → faden",
-   "convergePP": -14.4,
-   "firstSeen": "2026-09-08T00:32:58.660790+00:00"
+   "convergePP": -14.0,
+   "firstSeen": "2026-09-14T21:17:02.554928+00:00"
+  },
+  {
+   "id": "baseball_mlb|coloradorockies-sandiegopadres|sandiegopadres",
+   "sport": "baseball_mlb",
+   "event": "San Diego Padres vs Colorado Rockies",
+   "market": "Moneyline",
+   "outcome": "San Diego Padres",
+   "polyPP": 76.5,
+   "pinnPP": 63.7,
+   "gapPP": 12.84,
+   "vol": 495126,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-15T02:47:22.786806+00:00"
+  },
+  {
+   "id": "baseball_mlb|coloradorockies-sandiegopadres|coloradorockies",
+   "sport": "baseball_mlb",
+   "event": "San Diego Padres vs Colorado Rockies",
+   "market": "Moneyline",
+   "outcome": "Colorado Rockies",
+   "polyPP": 23.5,
+   "pinnPP": 36.3,
+   "gapPP": -12.84,
+   "vol": 495126,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-15T02:47:22.786806+00:00"
   }
  ]
 }
