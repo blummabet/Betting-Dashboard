@@ -1,11 +1,11 @@
-# 🟡 Picks Validator — 15.09.2026 07:49
+# 🟡 Picks Validator — 15.09.2026 15:03
 
-**30 Spiele geprüft** · 🔴 0 Fehler · 🟡 21 Warnungen · 🔵 99 Hinweise
+**31 Spiele geprüft** · 🔴 0 Fehler · 🟡 22 Warnungen · 🔵 102 Hinweise
 
 ```
 =================================================================
   🐕 CocoBet — Picks Logik-Check
-  15.09.2026 07:49
+  15.09.2026 15:03
   Filter: nächste 3 Tag(e)
 =================================================================
 
@@ -43,6 +43,22 @@
   🔵 HINWEIS [OVER35_LOW_FV]
      📅 18.09.2026  Gent vs Standard Liege
      Ø gpg=1.70 (statischer Proxy) → Poisson FV für Over 3.5 = 9.3%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
+
+─────────────────────────────────────────────────────────────────
+  🇭🇷 HNL  (rl=29)
+─────────────────────────────────────────────────────────────────
+  🟡 WARNUNG [BOTRED_ASYMMETRIC_PRESSURE]
+     📅 18.09.2026  Rudes vs NK Slaven Belupo
+     Kellerduell-Narrativ aber asymmetrischer Druck: Rudes pressureRatio=0.33 vs NK Slaven Belupo pressureRatio=0.30. Nur eine Mannschaft kämpft wirklich — Angle zu vereinfacht.
+  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
+     📅 18.09.2026  Rudes vs NK Slaven Belupo
+     NK Slaven Belupo: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
+  🔵 HINWEIS [CARDS35_LOW_FV]
+     📅 18.09.2026  Rudes vs NK Slaven Belupo
+     Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
+  🔵 HINWEIS [CARDS45_LOW_FV]
+     📅 18.09.2026  Rudes vs NK Slaven Belupo
+     Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
 
 ─────────────────────────────────────────────────────────────────
   🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League  (rl=34)
@@ -422,9 +438,9 @@
      Konyaspor expA≈0.90 (statischer Proxy) → FV über 1.5 = 22.8%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
 
 ═════════════════════════════════════════════════════════════════
-  Geprüft: 30 Spiele
-  🟡 21 Warnungen — manuelle Prüfung empfohlen
-  🔵 99 Hinweise — Pick-Richtung kontrollieren
+  Geprüft: 31 Spiele
+  🟡 22 Warnungen — manuelle Prüfung empfohlen
+  🔵 102 Hinweise — Pick-Richtung kontrollieren
 ═════════════════════════════════════════════════════════════════
 
 ```
