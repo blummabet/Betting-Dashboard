@@ -7067,7 +7067,7 @@ null
 "leadOdd": 1.47,
 "value": 24081.14,
 "sentAt": "2026-09-11T18:51:57.290851+00:00",
-"status": "won",
+"status": "void",
 "htScore": [
 3,
 1
@@ -7094,9 +7094,10 @@ null
 3,
 1
 ],
-"profit": 0.47,
+"profit": 0.0,
 "via": "track",
-"resChk": true
+"resChk": true,
+"voidGrund": "Ausgang beim Senden bereits entschieden"
 },
 {
 "k": "fresh:36046950:Over/Under 2.5 Goals",
@@ -7989,7 +7990,7 @@ null
 "leadOdd": 1.51,
 "value": 35500.09,
 "sentAt": "2026-09-15T14:16:26.143778+00:00",
-"status": "won",
+"status": "void",
 "htScore": [
 0,
 1
@@ -8014,8 +8015,9 @@ null
 2,
 2
 ],
-"profit": 0.51,
-"resChk": true
+"profit": 0.0,
+"resChk": true,
+"voidGrund": "Ausgang beim Senden bereits entschieden"
 },
 {
 "k": "fresh:36063964:Match Odds",
@@ -8146,6 +8148,49 @@ null
 "score": [
 null,
 null
+]
+}
+},
+{
+"k": "fresh:36038726:Match Odds",
+"matchId": "36038726",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Spanish La Liga",
+"home": "Rayo Vallecano",
+"away": "Espanyol",
+"leadName": "Rayo Vallecano",
+"leadOdd": 1.38,
+"value": 1429659.52,
+"sentAt": "2026-09-15T18:31:49.589662+00:00",
+"status": "pending",
+"htScore": null,
+"consensus": {
+"verdict": "konsens",
+"agree": true
+},
+"serie": {
+"gefunden": true,
+"serie": {
+"team": "Rayo Vallecano",
+"venue": "H",
+"typ": "unbeaten",
+"markt": "Ungeschlagen",
+"laenge": 4,
+"zufallPct": 22.25117,
+"basis": "liga",
+"state": "intakt",
+"ligaBasisPct": 69
+}
+},
+"onLeader": true,
+"leadDir": "in",
+"leadShare": 0.8436361197384954,
+"live": {
+"time": 69,
+"score": [
+2,
+1
 ]
 }
 }
