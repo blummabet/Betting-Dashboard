@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-15T03:30:03.405107+00:00",
+ "generatedAt": "2026-09-15T03:45:00.908762+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -34,7 +34,7 @@
     "nieAnteil": 0.015,
     "schaetzbar": false
    },
-   "alterTage": 0.6,
+   "alterTage": 0.7,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "Liga"
@@ -62,7 +62,7 @@
     "nieAnteil": 0.047,
     "schaetzbar": false
    },
-   "alterTage": 0.4,
+   "alterTage": 0.5,
    "art": "gate",
    "nAlt": 133,
    "roiAlt": 0.0306,
@@ -94,7 +94,7 @@
     "nieAnteil": 0.0,
     "schaetzbar": false
    },
-   "alterTage": 0.4,
+   "alterTage": 0.5,
    "art": "vorangemeldet",
    "angemeldet": "2026-09-07T08:15:48.444033+00:00",
    "zielN": 120,
@@ -260,7 +260,7 @@
     "nieAnteil": 0.213,
     "schaetzbar": false
    },
-   "alterTage": 0.4,
+   "alterTage": 0.5,
    "art": "mix",
    "wert": "sharp+steam",
    "nAlt": 6,
@@ -3322,7 +3322,7 @@
     "nieAnteil": 0.015,
     "schaetzbar": false
    },
-   "alterTage": 0.6,
+   "alterTage": 0.7,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "Liga"
@@ -3350,7 +3350,7 @@
     "nieAnteil": 0.047,
     "schaetzbar": false
    },
-   "alterTage": 0.4,
+   "alterTage": 0.5,
    "art": "gate",
    "nAlt": 133,
    "roiAlt": 0.0306,
@@ -3380,7 +3380,7 @@
     "nieAnteil": 0.0,
     "schaetzbar": false
    },
-   "alterTage": 0.4,
+   "alterTage": 0.5,
    "art": "vorangemeldet",
    "angemeldet": "2026-09-07T08:15:48.444033+00:00",
    "zielN": 120,
@@ -3546,7 +3546,7 @@
     "nieAnteil": 0.213,
     "schaetzbar": false
    },
-   "alterTage": 0.4,
+   "alterTage": 0.5,
    "art": "mix",
    "wert": "sharp+steam",
    "nAlt": 6,
@@ -4257,7 +4257,7 @@
     "nieAnteil": 0.377,
     "schaetzbar": false
    },
-   "alterTage": 0.2,
+   "alterTage": 0.3,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "rest"
@@ -4378,31 +4378,6 @@
    "naeherung": false
   },
   {
-   "schublade": "Public · frisches Signal",
-   "strom": "betfair",
-   "n": 200,
-   "status": "geprueft",
-   "grund": "200 Pushes, 59.5 % Treffer — und trotzdem -0.8 % ROI: die Treffer liegen bei kleineren Quoten als die Fehlschuesse",
-   "roi": -0.0075,
-   "pl": -1.5,
-   "roiLb": -0.107,
-   "clv": -1.06,
-   "clvLb": null,
-   "clvUrteil": "nicht erhoben",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "entfernung": null,
-   "alterTage": null,
-   "art": "public_szenario",
-   "quelle": "betfair_public_eval.py",
-   "kanal": "public",
-   "hit": 0.595,
-   "hitLb": 0.537,
-   "avgOdd": 1.75
-  },
-  {
    "schublade": "Spanish La Liga · First Half Goals 1.5",
    "strom": "betfair",
    "n": 32,
@@ -4422,6 +4397,31 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
+  },
+  {
+   "schublade": "Public · frisches Signal",
+   "strom": "betfair",
+   "n": 201,
+   "status": "geprueft",
+   "grund": "201 Pushes, 59.2 % Treffer — und trotzdem -1.2 % ROI: die Treffer liegen bei kleineren Quoten als die Fehlschuesse",
+   "roi": -0.0124,
+   "pl": -2.49,
+   "roiLb": -0.1118,
+   "clv": -1.05,
+   "clvLb": null,
+   "clvUrteil": "nicht erhoben",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "entfernung": null,
+   "alterTage": null,
+   "art": "public_szenario",
+   "quelle": "betfair_public_eval.py",
+   "kanal": "public",
+   "hit": 0.592,
+   "hitLb": 0.5342,
+   "avgOdd": 1.75
   },
   {
    "schublade": "English Sky Bet Championship · Over/Under 3.5 Goals",
@@ -4488,7 +4488,7 @@
     "nieAnteil": 0.412,
     "schaetzbar": false
    },
-   "alterTage": 1.6,
+   "alterTage": 1.7,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "MLS"
@@ -4515,31 +4515,6 @@
    "naeherung": false
   },
   {
-   "schublade": "Public-Pushes",
-   "strom": "betfair",
-   "n": 226,
-   "status": "geprueft",
-   "grund": "226 Pushes, 58.4 % Treffer — und trotzdem -2.7 % ROI: die Treffer liegen bei kleineren Quoten als die Fehlschuesse",
-   "roi": -0.0272,
-   "pl": -6.15,
-   "roiLb": -0.1209,
-   "clv": -2.5,
-   "clvLb": null,
-   "clvUrteil": "nicht erhoben",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "entfernung": null,
-   "alterTage": null,
-   "art": "public",
-   "quelle": "betfair_public_eval.py",
-   "kanal": "public",
-   "hit": 0.5841,
-   "hitLb": 0.5295,
-   "avgOdd": 1.81
-  },
-  {
    "schublade": "Dutch Eerste Divisie · Over/Under 2.5 Goals",
    "strom": "betfair",
    "n": 31,
@@ -4559,6 +4534,31 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
+  },
+  {
+   "schublade": "Public-Pushes",
+   "strom": "betfair",
+   "n": 227,
+   "status": "geprueft",
+   "grund": "227 Pushes, 58.1 % Treffer — und trotzdem -3.1 % ROI: die Treffer liegen bei kleineren Quoten als die Fehlschuesse",
+   "roi": -0.0315,
+   "pl": -7.15,
+   "roiLb": -0.125,
+   "clv": -2.49,
+   "clvLb": null,
+   "clvUrteil": "nicht erhoben",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "entfernung": null,
+   "alterTage": null,
+   "art": "public",
+   "quelle": "betfair_public_eval.py",
+   "kanal": "public",
+   "hit": 0.5815,
+   "hitLb": 0.527,
+   "avgOdd": 1.8
   },
   {
    "schublade": "English National League North · First Half Goals 1.5",
@@ -7331,7 +7331,7 @@
    "noetigNRoi": null,
    "noetigNClv": null,
    "entfernung": null,
-   "alterTage": 1.6,
+   "alterTage": 1.7,
    "art": "verdict",
    "wert": "BET",
    "datensatz": "MLS"
@@ -7353,7 +7353,7 @@
    "noetigNRoi": null,
    "noetigNClv": null,
    "entfernung": null,
-   "alterTage": 1.4,
+   "alterTage": 1.5,
    "art": "mix",
    "wert": "bf+money+sharp+steam"
   },
@@ -7399,7 +7399,7 @@
    "noetigNRoi": null,
    "noetigNClv": null,
    "entfernung": null,
-   "alterTage": 2.4,
+   "alterTage": 2.5,
    "art": "mix",
    "wert": "bf+steam"
   },
@@ -7467,7 +7467,7 @@
    "noetigNRoi": null,
    "noetigNClv": null,
    "entfernung": null,
-   "alterTage": 1.4,
+   "alterTage": 1.5,
    "art": "conviction",
    "wert": 9,
    "nAlt": 11,
@@ -7558,7 +7558,7 @@
    "clv": -2.199,
    "clvLb": -2.679,
    "fehltN": 0,
-   "alterTage": 57.6,
+   "alterTage": 57.7,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "WM"
@@ -7575,7 +7575,7 @@
    "clv": -0.609,
    "clvLb": null,
    "fehltN": 0,
-   "alterTage": 72.6,
+   "alterTage": 72.7,
    "art": "verdict",
    "wert": "BET",
    "datensatz": "WM"
