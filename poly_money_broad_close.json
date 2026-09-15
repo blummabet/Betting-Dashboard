@@ -321709,7 +321709,13 @@
     "usd": 300,
     "ts": 1789458388
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Brute": 1.0,
+   "G2 Ares": 0.0
+  },
+  "resolvedAt": "2026-09-15T13:21:44.559634+00:00"
  },
  "cs2-unity-phanto-2026-09-15": {
   "shares": {
@@ -323511,12 +323517,18 @@
   "tokens": {
    "Matisse Bobichon": "101757743358053010597123931174719433553838578566957718073401314669822911980696",
    "Eliakim Coulibaly": "75183856050137340721439671553417503017374644575873874807764005104508871531029"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Matisse Bobichon": 1.0,
+   "Eliakim Coulibaly": 0.0
+  },
+  "resolvedAt": "2026-09-15T13:21:44.559634+00:00"
  },
  "wta-stefani-podoros-2026-09-14": {
   "shares": {
-   "Lucrezia Stefanini": 17839.60839402,
-   "Nadia Podoroska": 8986.874776449999
+   "Lucrezia Stefanini": 19372.668227464997,
+   "Nadia Podoroska": 9759.168076004999
   },
   "prices": {
    "Lucrezia Stefanini": 0.665,
@@ -323528,7 +323540,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 26971,
+  "totalUsd": 29291,
   "whales": [
    {
     "wallet": "0x2ce8505aa641791eb8460f6ac6bf5c0511e34527",
@@ -323548,29 +323560,138 @@
     "avgPrice": 0.6699
    },
    {
-    "wallet": "0x3663ed135115e034de3a9ad8cdca8493e8d68950",
-    "side": "Nadia Podoroska",
-    "usd": 1106,
-    "avgPrice": 0.33
+    "wallet": "0x2dea2e3b98c81ed7510262402ffb198d450c6279",
+    "side": "Lucrezia Stefanini",
+    "usd": 1531,
+    "avgPrice": 0.6699
    }
   ],
-  "hoursToKickoff": 0.69,
-  "capturedAt": "2026-09-15T12:51:37.930656+00:00",
+  "hoursToKickoff": 0.19,
+  "capturedAt": "2026-09-15T13:21:44.559634+00:00",
   "cond": "0x87dd70725895f68541aeff4f25078926eafd94acbe1cb9e03cec90d4994535fd",
   "frage": "Sao Paulo Open: Lucrezia Stefanini vs Nadia Podoroska",
   "tokens": {
    "Lucrezia Stefanini": "100192868971458270668158646207837625928738270706969213511858418474546065891813",
    "Nadia Podoroska": "44884725725358907604778578471478990056615794269710267066557524727739164642504"
-  }
+  },
+  "book": {
+   "side": "Lucrezia Stefanini",
+   "bid": 0.66,
+   "ask": 0.67,
+   "spreadC": 1.0,
+   "spreadPct": 1.49,
+   "bids": [
+    [
+     0.66,
+     17018
+    ],
+    [
+     0.65,
+     10185
+    ],
+    [
+     0.64,
+     2880
+    ],
+    [
+     0.63,
+     2206
+    ],
+    [
+     0.62,
+     40
+    ],
+    [
+     0.61,
+     2530
+    ]
+   ],
+   "asks": [
+    [
+     0.67,
+     9555
+    ],
+    [
+     0.68,
+     31286
+    ],
+    [
+     0.69,
+     22683
+    ],
+    [
+     0.7,
+     11129
+    ],
+    [
+     0.71,
+     6107
+    ],
+    [
+     0.72,
+     7322
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x2dea2e3b98c81ed7510262402ffb198d450c6279",
+    "action": "BUY",
+    "side": "Lucrezia Stefanini",
+    "price": 0.67,
+    "usd": 1543,
+    "ts": 1789476960
+   },
+   {
+    "wallet": "0xe8c4d68aff65b38cac46987b9b65e01eb47d395d",
+    "action": "BUY",
+    "side": "Nadia Podoroska",
+    "price": 0.33,
+    "usd": 444,
+    "ts": 1789471638
+   },
+   {
+    "wallet": "0x3663ed135115e034de3a9ad8cdca8493e8d68950",
+    "action": "BUY",
+    "side": "Nadia Podoroska",
+    "price": 0.33,
+    "usd": 1089,
+    "ts": 1789469527
+   },
+   {
+    "wallet": "0xfa011919b3ce3222620052757ee0f0c66c41f0a7",
+    "action": "BUY",
+    "side": "Lucrezia Stefanini",
+    "price": 0.68,
+    "usd": 408,
+    "ts": 1789467418
+   },
+   {
+    "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
+    "action": "BUY",
+    "side": "Nadia Podoroska",
+    "price": 0.32,
+    "usd": 1024,
+    "ts": 1789457184
+   },
+   {
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "action": "BUY",
+    "side": "Nadia Podoroska",
+    "price": 0.32,
+    "usd": 5371,
+    "ts": 1789457181
+   }
+  ]
  },
  "wta-semenis-kinoshi-2026-09-15": {
   "shares": {
-   "Darja Semenistaja": 9799.035539085002,
-   "Hayu Kinoshita": 6951.224897064998
+   "Darja Semenistaja": 10564.515420095004,
+   "Hayu Kinoshita": 7190.750501954999
   },
   "prices": {
-   "Darja Semenistaja": 0.585,
-   "Hayu Kinoshita": 0.415
+   "Darja Semenistaja": 0.595,
+   "Hayu Kinoshita": 0.405
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -323578,35 +323699,35 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 16701,
+  "totalUsd": 16750,
   "whales": [
    {
     "wallet": "0x0cdff1e562faf5ece704ef15f6a9fc4232e7ec9e",
     "side": "Darja Semenistaja",
-    "usd": 8333,
+    "usd": 8476,
     "avgPrice": 0.5826
    },
    {
     "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
     "side": "Hayu Kinoshita",
-    "usd": 1939,
+    "usd": 1892,
     "avgPrice": 0.4197
-   },
-   {
-    "wallet": "0x9f15613ebf1f36d4bc679e1211d1fc567cf9bdb3",
-    "side": "Hayu Kinoshita",
-    "usd": 993,
-    "avgPrice": 0.41
    },
    {
     "wallet": "0xd0392a0d4bed65e63a019155c6ff32a88924ba3b",
     "side": "Darja Semenistaja",
-    "usd": 985,
+    "usd": 1002,
     "avgPrice": 0.5899
+   },
+   {
+    "wallet": "0x9f15613ebf1f36d4bc679e1211d1fc567cf9bdb3",
+    "side": "Hayu Kinoshita",
+    "usd": 969,
+    "avgPrice": 0.41
    }
   ],
-  "hoursToKickoff": 0.69,
-  "capturedAt": "2026-09-15T12:51:37.930656+00:00",
+  "hoursToKickoff": 0.19,
+  "capturedAt": "2026-09-15T13:21:44.559634+00:00",
   "cond": "0xc7a4a83f34ca865da6b646c1eab05d3364d84aa7a662e9fa28812cca81834c1e",
   "frage": "Sao Paulo Open: Darja Semenistaja vs Hayu Kinoshita",
   "tokens": {
@@ -323616,12 +323737,12 @@
  },
  "cs2-baks-tsa-2026-09-15": {
   "shares": {
-   "BakS eSports": 32805.052860644995,
-   "Spirit Academy": 23271.806276034997
+   "BakS eSports": 37803.8385054,
+   "Spirit Academy": 24681.31434029
   },
   "prices": {
-   "BakS eSports": 0.585,
-   "Spirit Academy": 0.415
+   "BakS eSports": 0.605,
+   "Spirit Academy": 0.395
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -323629,35 +323750,35 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 60832,
+  "totalUsd": 70256,
   "whales": [
    {
     "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
     "side": "BakS eSports",
-    "usd": 12142,
+    "usd": 12572,
     "avgPrice": 0.6185
    },
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "side": "Spirit Academy",
-    "usd": 11921,
+    "usd": 11347,
     "avgPrice": 0.3769
    },
    {
     "wallet": "0x6b97ebe911d7f2e5e3e8c4a0faad4a5c7c0b8d30",
     "side": "BakS eSports",
-    "usd": 6456,
+    "usd": 6677,
     "avgPrice": 0.6185
    },
    {
     "wallet": "0xbdd21cd4bdfa6764c6f43ea6d154c4b414d86657",
     "side": "BakS eSports",
-    "usd": 4095,
+    "usd": 4235,
     "avgPrice": 0.6128
    }
   ],
-  "hoursToKickoff": 1.19,
-  "capturedAt": "2026-09-15T12:51:37.930656+00:00",
+  "hoursToKickoff": 0.69,
+  "capturedAt": "2026-09-15T13:21:44.559634+00:00",
   "cond": "0xa67c1bdc731a3c30e52c92f04b7f3fa2b73b62962d1b8cc15de0d46824ab390c",
   "frage": "Counter-Strike: BakS eSports vs Spirit Academy (BO3) - CCT Europe Series #9 Group Stage",
   "tokens": {
@@ -323666,64 +323787,88 @@
   },
   "book": {
    "side": "BakS eSports",
-   "bid": 0.58,
-   "ask": 0.6,
-   "spreadC": 2.0,
-   "spreadPct": 3.33,
+   "bid": 0.6,
+   "ask": 0.61,
+   "spreadC": 1.0,
+   "spreadPct": 1.64,
    "bids": [
     [
+     0.6,
+     428
+    ],
+    [
+     0.59,
+     169
+    ],
+    [
      0.58,
-     10020
+     10502
     ],
     [
      0.57,
-     31
+     496
     ],
     [
      0.56,
-     3210
+     2379
     ],
     [
      0.55,
-     2289
-    ],
-    [
-     0.54,
-     1668
-    ],
-    [
-     0.53,
-     20
+     2033
     ]
    ],
    "asks": [
     [
-     0.6,
-     1056
-    ],
-    [
      0.61,
-     2102
+     19351
     ],
     [
      0.62,
-     3137
+     18763
     ],
     [
      0.63,
-     2383
+     3728
     ],
     [
      0.64,
-     357
+     146
     ],
     [
      0.65,
-     1123
+     363
+    ],
+    [
+     0.66,
+     1307
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x183f8b17cfb09c9115d068b2da3033b54f4c85e3",
+    "action": "BUY",
+    "side": "BakS eSports",
+    "price": 0.61,
+    "usd": 1220,
+    "ts": 1789477099
+   },
+   {
+    "wallet": "0x4cb03276679d644ec1852f744668f345d41657e0",
+    "action": "BUY",
+    "side": "BakS eSports",
+    "price": 0.61,
+    "usd": 610,
+    "ts": 1789476759
+   },
+   {
+    "wallet": "0x4cb03276679d644ec1852f744668f345d41657e0",
+    "action": "BUY",
+    "side": "BakS eSports",
+    "price": 0.6105,
+    "usd": 1526,
+    "ts": 1789476741
+   },
    {
     "wallet": "0x9b963178d3b8765cfc5af94c00550d6ec6c54389",
     "action": "BUY",
@@ -323757,7 +323902,7 @@
   },
   "league": "CRICKET",
   "sport": "Cricket",
-  "totalUsd": 39123,
+  "totalUsd": 51397,
   "whales": [
    {
     "wallet": "0x8488ef25f79c0cf2ffdff307973b2ac10464588c",
@@ -323783,14 +323928,107 @@
     "usd": 1479
    }
   ],
-  "hoursToKickoff": 1.19,
-  "capturedAt": "2026-09-15T12:51:37.930656+00:00",
+  "hoursToKickoff": 0.69,
+  "capturedAt": "2026-09-15T13:21:44.559634+00:00",
   "cond": "0x15261d86df628febdfb08093d46d9734dcb13e2fdb4dfabbd7cc3aa4607ac08f",
   "frage": "Afghanistan Tour of India T20s: India vs Afghanistan",
   "tokens": {
    "India": "101895276020213567372033367280796060777500522826697726811965043675252066256742",
    "Afghanistan": "32941787206527997390469471986400362973577420423383247857053832322750423842840"
-  }
+  },
+  "book": {
+   "side": "India",
+   "bid": 0.89,
+   "ask": 0.9,
+   "spreadC": 1.0,
+   "spreadPct": 1.11,
+   "bids": [
+    [
+     0.89,
+     8890
+    ],
+    [
+     0.88,
+     585
+    ],
+    [
+     0.87,
+     12171
+    ],
+    [
+     0.86,
+     4088
+    ],
+    [
+     0.85,
+     11414
+    ],
+    [
+     0.84,
+     280
+    ]
+   ],
+   "asks": [
+    [
+     0.9,
+     4734
+    ],
+    [
+     0.91,
+     8566
+    ],
+    [
+     0.92,
+     25718
+    ],
+    [
+     0.93,
+     4469
+    ],
+    [
+     0.94,
+     1955
+    ],
+    [
+     0.95,
+     969
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xb5db6abf19904c4f18daa9bcd753edb99b1f5800",
+    "action": "BUY",
+    "side": "India",
+    "price": 0.9,
+    "usd": 5000,
+    "ts": 1789476526
+   },
+   {
+    "wallet": "0xb5db6abf19904c4f18daa9bcd753edb99b1f5800",
+    "action": "BUY",
+    "side": "India",
+    "price": 0.9,
+    "usd": 5000,
+    "ts": 1789476510
+   },
+   {
+    "wallet": "0x8488ef25f79c0cf2ffdff307973b2ac10464588c",
+    "action": "BUY",
+    "side": "India",
+    "price": 0.89,
+    "usd": 1335,
+    "ts": 1789475253
+   },
+   {
+    "wallet": "0x220f2e57e42655d5384640c38993ae804cd6e61f",
+    "action": "BUY",
+    "side": "India",
+    "price": 0.89,
+    "usd": 463,
+    "ts": 1789465231
+   }
+  ]
  },
  "wta-werner-rapolu-2026-09-15": {
   "shares": {
@@ -323845,8 +324083,8 @@
  },
  "cs2-ast-run2-2026-09-15": {
   "shares": {
-   "ASTRAL": 4521.836405034997,
-   "Rune Eaters": 4802.11704371
+   "ASTRAL": 4556.855384804998,
+   "Rune Eaters": 4839.302145940001
   },
   "prices": {
    "ASTRAL": 0.485,
@@ -323858,7 +324096,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 10123,
+  "totalUsd": 10399,
   "whales": [
    {
     "wallet": "0xa4131264e0cfa60b1e8d994551d29ee5f9806c4a",
@@ -323885,8 +324123,8 @@
     "avgPrice": 0.4963
    }
   ],
-  "hoursToKickoff": 1.19,
-  "capturedAt": "2026-09-15T12:51:37.930656+00:00",
+  "hoursToKickoff": 0.69,
+  "capturedAt": "2026-09-15T13:21:44.559634+00:00",
   "cond": "0xd031d38dbe96685febb6bb9e231d9f2bf8958e57644a29869e98b9c0c271c9b4",
   "frage": "Counter-Strike: ASTRAL vs Rune Eaters (BO3) - Stake Ranked Episode 5: Open Qualifier Playoffs",
   "tokens": {
@@ -323909,7 +324147,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 14396,
+  "totalUsd": 14439,
   "whales": [
    {
     "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
@@ -323934,8 +324172,8 @@
     "avgPrice": 0.5402
    }
   ],
-  "hoursToKickoff": 2.19,
-  "capturedAt": "2026-09-15T12:51:37.930656+00:00",
+  "hoursToKickoff": 1.69,
+  "capturedAt": "2026-09-15T13:21:44.559634+00:00",
   "cond": "0x54059aa9810bfa065ac337f6a2cfa8e11ffe174ec21ae8bc560689e0040fed3d",
   "frage": "Sao Paulo Open: Julia Riera vs Elina Avanesyan",
   "tokens": {
@@ -323958,7 +324196,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 10074,
+  "totalUsd": 10088,
   "whales": [
    {
     "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
@@ -323984,8 +324222,8 @@
     "avgPrice": 0.31
    }
   ],
-  "hoursToKickoff": 2.19,
-  "capturedAt": "2026-09-15T12:51:37.930656+00:00",
+  "hoursToKickoff": 1.69,
+  "capturedAt": "2026-09-15T13:21:44.559634+00:00",
   "cond": "0xc9fa413ac3658cd39efbcf931cce40bd0012072577d2ff45b53d031ea59b2ceb",
   "frage": "Sao Paulo Open: Xiaodi You vs Alina Charaeva",
   "tokens": {
@@ -323995,8 +324233,8 @@
  },
  "atp-cadenas-forti-2026-09-14": {
   "shares": {
-   "Gianluca Cadenasso": 4617.022973180003,
-   "Francesco Forti": 5758.311240240001
+   "Gianluca Cadenasso": 4630.266173625003,
+   "Francesco Forti": 5774.8280407950015
   },
   "prices": {
    "Gianluca Cadenasso": 0.445,
@@ -324008,7 +324246,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 10508,
+  "totalUsd": 11079,
   "whales": [
    {
     "wallet": "0xb00cf07e6fa25034175f7da649524c23b08fdfa2",
@@ -324034,8 +324272,8 @@
     "usd": 269
    }
   ],
-  "hoursToKickoff": 2.44,
-  "capturedAt": "2026-09-15T12:51:37.930656+00:00",
+  "hoursToKickoff": 1.94,
+  "capturedAt": "2026-09-15T13:21:44.559634+00:00",
   "cond": "0x84940eabcae7bfcc49050b3c83bf91da5a0b6a04fcfa6fc8928725a6f8d74b80",
   "frage": "Biella: Gianluca Cadenasso vs Francesco Forti",
   "tokens": {
@@ -324096,8 +324334,8 @@
  },
  "egy1-wds-eme-2026-09-15": {
   "shares": {
-   "Wadi Degla SC": 2895.360975325,
-   "Draw (Wadi Degla SC vs. El Mokawloon El Arab SC)": 116.553529625,
+   "Wadi Degla SC": 2933.7200670049992,
+   "Draw (Wadi Degla SC vs. El Mokawloon El Arab SC)": 117.0314704,
    "El Mokawloon El Arab SC": 75.901620375
   },
   "prices": {
@@ -324111,7 +324349,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 7511,
+  "totalUsd": 7610,
   "whales": [
    {
     "wallet": "0xeb739f5e4f45b0b68688bb252f08327bc01653b0",
@@ -324132,18 +324370,509 @@
     "avgPrice": 0.5099
    },
    {
-    "wallet": "0x9b848dcc6d7fc3206d6c833d682aeceaa57c653f",
-    "side": "Draw (Wadi Degla SC vs. El Mokawloon El Arab SC)",
-    "usd": 36,
-    "avgPrice": 0.3099
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Wadi Degla SC",
+    "usd": 37,
+    "avgPrice": 0.4613
    }
   ],
-  "hoursToKickoff": 1.19,
-  "capturedAt": "2026-09-15T12:51:37.930656+00:00",
+  "hoursToKickoff": 0.69,
+  "capturedAt": "2026-09-15T13:21:44.559634+00:00",
   "tokens": {
    "Wadi Degla SC": "27708611768613054839242601965468556518413556919691844302254199366464433649419",
    "Draw (Wadi Degla SC vs. El Mokawloon El Arab SC)": "43520931752013479785539528604051484816657731007112817277111518389829310292447",
    "El Mokawloon El Arab SC": "45425568220788802455896823120894447313457027130208179987111651788357334426828"
+  }
+ },
+ "cs2-forzer-upgrad-2026-09-15": {
+  "shares": {
+   "FORZE Reload": 60270.55115527001,
+   "UPGRADE": 31746.442705259982
+  },
+  "prices": {
+   "FORZE Reload": 0.655,
+   "UPGRADE": 0.345
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 94565,
+  "whales": [
+   {
+    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
+    "side": "FORZE Reload",
+    "usd": 33987,
+    "avgPrice": 0.6461
+   },
+   {
+    "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
+    "side": "UPGRADE",
+    "usd": 10350,
+    "avgPrice": 0.35
+   },
+   {
+    "wallet": "0xdc40c985063d50aa00cc5f637f7e83203b3b89cf",
+    "side": "FORZE Reload",
+    "usd": 7860,
+    "avgPrice": 0.6358
+   },
+   {
+    "wallet": "0x82d2e4dbb0a849ff8e2f5380719769145648beea",
+    "side": "UPGRADE",
+    "usd": 2513,
+    "avgPrice": 0.3599
+   }
+  ],
+  "hoursToKickoff": 2.69,
+  "capturedAt": "2026-09-15T13:21:44.559634+00:00",
+  "cond": "0x93676748a9059db2f78b7a9ce16225c1bfc9ab64d33dc7dd1613acc834fba822",
+  "frage": "Counter-Strike: FORZE Reload vs UPGRADE (BO3) - CIS LAN Championship Playoffs",
+  "tokens": {
+   "FORZE Reload": "41824269369148817902965032376487846037143393529213341869756702830295504710170",
+   "UPGRADE": "4614654004766681391307239313067376771362417909547680818022034750970218169435"
+  },
+  "book": {
+   "side": "FORZE Reload",
+   "bid": 0.65,
+   "ask": 0.66,
+   "spreadC": 1.0,
+   "spreadPct": 1.52,
+   "bids": [
+    [
+     0.65,
+     5258
+    ],
+    [
+     0.64,
+     1564
+    ],
+    [
+     0.63,
+     244
+    ],
+    [
+     0.62,
+     1673
+    ],
+    [
+     0.61,
+     1954
+    ],
+    [
+     0.6,
+     10
+    ]
+   ],
+   "asks": [
+    [
+     0.66,
+     8690
+    ],
+    [
+     0.67,
+     886
+    ],
+    [
+     0.68,
+     964
+    ],
+    [
+     0.69,
+     470
+    ],
+    [
+     0.7,
+     290
+    ],
+    [
+     0.73,
+     36
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xe1f313a980c5cfd4444f66bcf40563eb900e5402",
+    "action": "BUY",
+    "side": "UPGRADE",
+    "price": 0.35,
+    "usd": 889,
+    "ts": 1789477279
+   },
+   {
+    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
+    "action": "BUY",
+    "side": "FORZE Reload",
+    "price": 0.64,
+    "usd": 842,
+    "ts": 1789476348
+   },
+   {
+    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
+    "action": "BUY",
+    "side": "FORZE Reload",
+    "price": 0.63,
+    "usd": 643,
+    "ts": 1789475451
+   }
+  ]
+ },
+ "lol-nbs-ckz-2026-09-15": {
+  "shares": {
+   "NightBirds": 13122.789912750002,
+   "CITA Kaizen": 1874.685899875
+  },
+  "prices": {
+   "NightBirds": 0.875,
+   "CITA Kaizen": 0.125
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 18079,
+  "whales": [
+   {
+    "wallet": "0x58f8f1138be2192696378629fc9aa23c7910dc70",
+    "side": "NightBirds",
+    "usd": 8861,
+    "avgPrice": 0.8711
+   },
+   {
+    "wallet": "0xaf21b89714840bfbb74f401bc0007710d065d34a",
+    "side": "NightBirds",
+    "usd": 968,
+    "avgPrice": 0.8596
+   },
+   {
+    "wallet": "0x1316ebb019094a2267a27a697ecee08b5c5948a4",
+    "side": "NightBirds",
+    "usd": 865,
+    "avgPrice": 0.85
+   },
+   {
+    "wallet": "0x9c3ce009c9b039956665cecc4cd14de862b5e8c9",
+    "side": "NightBirds",
+    "usd": 680
+   }
+  ],
+  "hoursToKickoff": 0.69,
+  "capturedAt": "2026-09-15T13:21:44.559634+00:00",
+  "cond": "0xfe9be44db3ff84463d25a578f03a5190d5c1aa377cbd4acaf4c7940e5a8d77ba",
+  "frage": "LoL: NightBirds vs CITA Kaizen (BO5) - Hitpoint Masters Playoffs",
+  "tokens": {
+   "NightBirds": "92475212702475699997003215052173099112269976049471499495530954994098835406646",
+   "CITA Kaizen": "105287580309128210683713929343950225095975882830288788829020397407395796495837"
+  }
+ },
+ "lol-sc-pcs-2026-09-15": {
+  "shares": {
+   "Skillcamp Esport": 14041.037063205005,
+   "Project Conquerors": 2381.2101534049984
+  },
+  "prices": {
+   "Skillcamp Esport": 0.855,
+   "Project Conquerors": 0.145
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 17410,
+  "whales": [
+   {
+    "wallet": "0x58f8f1138be2192696378629fc9aa23c7910dc70",
+    "side": "Skillcamp Esport",
+    "usd": 7343,
+    "avgPrice": 0.7948
+   },
+   {
+    "wallet": "0xbaac4adee9e1b1eff4097ab2e2cc5a25ba22ff10",
+    "side": "Skillcamp Esport",
+    "usd": 1281,
+    "avgPrice": 0.8506
+   },
+   {
+    "wallet": "0x7af0515790acddb3cf7b9adb0f809d43efdf509d",
+    "side": "Skillcamp Esport",
+    "usd": 1243,
+    "avgPrice": 0.85
+   },
+   {
+    "wallet": "0x214039968998abdcdbd998d15d699296f3570e12",
+    "side": "Skillcamp Esport",
+    "usd": 834,
+    "avgPrice": 0.8
+   }
+  ],
+  "hoursToKickoff": 2.69,
+  "capturedAt": "2026-09-15T13:21:44.559634+00:00",
+  "cond": "0x62b1c9069ce23d27693d934203c34857b18cb6176654f9f2dd9380441d8012bd",
+  "frage": "LoL: Skillcamp Esport vs Project Conquerors (BO5) - LFL Promotion Playoffs",
+  "tokens": {
+   "Skillcamp Esport": "101278587530880802710440070577750838312626191238436279791546683369393137786613",
+   "Project Conquerors": "19964453284990930714012386476638907841458946525373761211805434941368370288507"
+  }
+ },
+ "wta-lys-ce-2026-09-14": {
+  "shares": {
+   "Eva Lys": 10063.167096030002,
+   "Gabriela Ce": 1307.5511819700002
+  },
+  "prices": {
+   "Eva Lys": 0.885,
+   "Gabriela Ce": 0.115
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 13451,
+  "whales": [
+   {
+    "wallet": "0x2f4beded4082ff033f1c0b7efbde9962220def55",
+    "side": "Eva Lys",
+    "usd": 4962,
+    "avgPrice": 0.9152
+   },
+   {
+    "wallet": "0x7e5e420a5cde8a322f3b5b93a12a164827f47315",
+    "side": "Eva Lys",
+    "usd": 4425,
+    "avgPrice": 0.8899
+   },
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "side": "Gabriela Ce",
+    "usd": 531
+   },
+   {
+    "wallet": "0xace19196b5c9a1ad34ff315863403b0beefbf428",
+    "side": "Eva Lys",
+    "usd": 212,
+    "avgPrice": 0.89
+   }
+  ],
+  "hoursToKickoff": 2.69,
+  "capturedAt": "2026-09-15T13:21:44.559634+00:00",
+  "cond": "0x431b618fc505ca2c9b0f15a0f8c2266f5375dd0a89ce9b9d2925b6f088e5ba83",
+  "frage": "Sao Paulo Open: Eva Lys vs Gabriela Ce",
+  "tokens": {
+   "Eva Lys": "113410898578359179004300197969180033577117966133363574130852157999095426773328",
+   "Gabriela Ce": "38529402179380453274054160447894446131075014065345422409685345552005410605740"
+  }
+ },
+ "atp-brunold-giunta-2026-09-14": {
+  "shares": {
+   "Mika Brunold": 6505.444708370002,
+   "Massimo Giunta": 3426.53326422
+  },
+  "prices": {
+   "Mika Brunold": 0.655,
+   "Massimo Giunta": 0.345
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 10471,
+  "whales": [
+   {
+    "wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
+    "side": "Mika Brunold",
+    "usd": 1965,
+    "avgPrice": 0.69
+   },
+   {
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "side": "Massimo Giunta",
+    "usd": 1815
+   },
+   {
+    "wallet": "0x0267ebb4a7371037b79e2b062c766b03ee2e7f7e",
+    "side": "Massimo Giunta",
+    "usd": 1390,
+    "avgPrice": 0.3099
+   },
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Mika Brunold",
+    "usd": 1078,
+    "avgPrice": 0.65
+   }
+  ],
+  "hoursToKickoff": 1.44,
+  "capturedAt": "2026-09-15T13:21:44.559634+00:00",
+  "cond": "0xdcfa7985b0db354b2be7d3656059d313f2ea71a0801bc0c6433abce6514feb89",
+  "frage": "Biella: Mika Brunold vs Massimo Giunta",
+  "tokens": {
+   "Mika Brunold": "21568972187711550599645775169162184330167453363526784959576157896609787022928",
+   "Massimo Giunta": "63464647937938692265213079199750955547151580768457687934912370926925843715891"
+  }
+ },
+ "acle-ain-aln-2026-09-15": {
+  "shares": {
+   "Al Ain FC": 1167.68671075,
+   "Draw (Al Ain FC vs. Al Nassr Club)": 445.51518597,
+   "Al Nassr Club": 2070.7299080949997
+  },
+  "prices": {
+   "Al Ain FC": 0.25,
+   "Draw (Al Ain FC vs. Al Nassr Club)": 0.235,
+   "Al Nassr Club": 0.515
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 10132,
+  "whales": [
+   {
+    "wallet": "0xa6daa2890eb3b2dc6339eea81110cc72c9fffb9a",
+    "side": "Al Nassr Club",
+    "usd": 869,
+    "avgPrice": 0.5637
+   },
+   {
+    "wallet": "0x8cfd5069c61048aded54cba9b7102c57d57395c4",
+    "side": "Al Ain FC",
+    "usd": 299,
+    "avgPrice": 0.2089
+   },
+   {
+    "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
+    "side": "Al Ain FC",
+    "usd": 248,
+    "avgPrice": 0.2123
+   },
+   {
+    "wallet": "0x16cf1a6b776f55181955ee0a0d3d68b46786a2fb",
+    "side": "Al Ain FC",
+    "usd": 220,
+    "avgPrice": 0.2299
+   }
+  ],
+  "hoursToKickoff": 2.69,
+  "capturedAt": "2026-09-15T13:21:44.559634+00:00",
+  "tokens": {
+   "Al Ain FC": "72486687966577765840430958393126206962209319348215403790472438843190210328925",
+   "Draw (Al Ain FC vs. Al Nassr Club)": "14907844551672216317461066068988661197962895766914156639257509995353711611194",
+   "Al Nassr Club": "66764199576642362659096304446691182564992008576771513213512119653066710225927"
+  }
+ },
+ "itc-gen-sud-2026-09-15": {
+  "shares": {
+   "Genoa CFC": 4210.618091319999,
+   "Draw (Genoa CFC vs. FC Südtirol)": 34.534074145,
+   "FC Südtirol": 93.22435276000002
+  },
+  "prices": {
+   "Genoa CFC": 0.635,
+   "Draw (Genoa CFC vs. FC Südtirol)": 0.235,
+   "FC Südtirol": 0.14
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 7940,
+  "whales": [
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Genoa CFC",
+    "usd": 1202,
+    "avgPrice": 0.6099
+   },
+   {
+    "wallet": "0xb00cf07e6fa25034175f7da649524c23b08fdfa2",
+    "side": "Genoa CFC",
+    "usd": 1008,
+    "avgPrice": 0.6299
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "Genoa CFC",
+    "usd": 501,
+    "avgPrice": 0.6199
+   },
+   {
+    "wallet": "0x8ae599cc1fdeb17c95e2af00bd75a38034bd4f22",
+    "side": "Genoa CFC",
+    "usd": 159,
+    "avgPrice": 0.62
+   }
+  ],
+  "hoursToKickoff": 2.69,
+  "capturedAt": "2026-09-15T13:21:44.559634+00:00",
+  "tokens": {
+   "Genoa CFC": "86063535460328474235675916919639001081036240027903043043217371402033560265915",
+   "Draw (Genoa CFC vs. FC Südtirol)": "84771750095677444289233230330117161130329245024073883675334001793754307851984",
+   "FC Südtirol": "64739629572897364308889598864876997684698899952606332221377266910160421347012"
+  }
+ },
+ "atp-pereira-pieczon-2026-09-15": {
+  "shares": {
+   "Tiago Pereira": 3459.081437115,
+   "Filip Pieczonka": 3980.44630639
+  },
+  "prices": {
+   "Tiago Pereira": 0.465,
+   "Filip Pieczonka": 0.535
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 7573,
+  "whales": [
+   {
+    "wallet": "0xac75b6e590720a394364f2a1580b68a2fbe51319",
+    "side": "Filip Pieczonka",
+    "usd": 1788,
+    "avgPrice": 0.5
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Filip Pieczonka",
+    "usd": 521,
+    "avgPrice": 0.5185
+   },
+   {
+    "wallet": "0xe54d37c9c12e5fd3d684ff4d193ef1f44dabfdec",
+    "side": "Tiago Pereira",
+    "usd": 465,
+    "avgPrice": 0.48
+   },
+   {
+    "wallet": "0x01c78f8873c0c86d6b6b92ff627e3802237ee995",
+    "side": "Tiago Pereira",
+    "usd": 400
+   }
+  ],
+  "hoursToKickoff": 0.53,
+  "capturedAt": "2026-09-15T13:21:44.559634+00:00",
+  "cond": "0xd5791ff7cc096092f44824a57682d34f46e1cb2aa63423ce46811a404c1798d3",
+  "frage": "Szczecin: Tiago Pereira vs Filip Pieczonka",
+  "tokens": {
+   "Tiago Pereira": "22918457619768438515289839325975499349979410293652283626290745317372100558356",
+   "Filip Pieczonka": "4429127760098420700909477110587419287802655314294539900072286919144793750766"
   }
  }
 }
