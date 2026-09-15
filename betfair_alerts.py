@@ -620,6 +620,138 @@ def _leader_gate(alerts, ht_top=HT_TOP_EUR, ht_rest=HT_REST_EUR,
     return out
 
 
+# 🔴 15.09.2026, zweiter Anlauf (Lucas). Erster Anlauf war zu stumpf und haette einen RICHTIGEN
+# Alarm mitgerissen — der Beleg kam von Lucas selbst:
+#
+#   Public  16:16   HZ Over/Under 0.5 · Over 0.5 @1.51   bei Stand 0:1  → FALSCH, laengst entschieden
+#   Trades  16:16   HZ Over/Under 1.5 · Over 1.5 @1.54   bei Stand 0:1  → RICHTIG, Ausgang lebt
+#
+# Dasselbe Spiel, dieselbe Minute, dasselbe Tor im Zufluss-Fenster. Ein Gate auf „Ereignis im
+# Fenster" haette BEIDE verworfen. Das Tor war also nie das Unterscheidungsmerkmal.
+#
+# Das Merkmal ist die LINIE: Over 0.5 steht bei einem Tor bereits fest, Over 1.5 nicht. Ein Push
+# auf einen Ausgang, der schon entschieden ist, ist kein schlechtes Signal — er ist gar keine
+# Wette mehr.
+#
+# Und wieder lag alles vor: `_ou_under_alive` liest seit dem 14.08. genau diese Linie aus dem
+# Label und vergleicht sie mit dem echten Stand (`liveInfo.goal_v1/goal_v2`) — aber nur fuer
+# UNDER, und nur um eine Drift-Formulierung zu waehlen. Nie, um einen Push zu verhindern.
+ENTSCHIEDEN_LEDGER = "betfair_reaktiv_ledger.json"
+ENTSCHIEDEN_KEEP = int(os.environ.get("BETFAIR_ENTSCHIEDEN_KEEP") or 500)
+_BASIS = os.path.dirname(os.path.abspath(__file__))
+# Rueckwaerts-kompatible Namen (das Buch heisst weiter so, damit kein Artefakt umzieht).
+REAKTIV_LEDGER = ENTSCHIEDEN_LEDGER
+REAKTIV_KEEP = ENTSCHIEDEN_KEEP
+
+
+def ou_linie(label):
+    """Die Ueber/Unter-Linie aus einem Label ("Over 1.5 Goals" -> 1.5). None = keine. REIN."""
+    t = str(label or "").lower()
+    if "over" not in t and "under" not in t and "über" not in t and "unter" not in t:
+        return None
+    m = re.search(r"(\d+(?:[.,]\d+)?)", t)
+    if not m:
+        return None
+    try:
+        return float(m.group(1).replace(",", "."))
+    except ValueError:
+        return None
+
+
+def ist_halbzeit_markt(a) -> bool:
+    """Bezieht sich der Markt auf die ERSTE HALBZEIT? REIN."""
+    t = (str((a or {}).get("market") or "") + " " + str((a or {}).get("leadLabel") or "")).lower()
+    return any(k in t for k in ("hz ", "hz:", "halbzeit", "half time", "half-time", "1st half",
+                                "first half", "ht "))
+
+
+def _tore(a):
+    li = (a or {}).get("live") or {}
+    g1, g2 = li.get("goal_v1"), li.get("goal_v2")
+    if isinstance(g1, int) and isinstance(g2, int):
+        return g1 + g2
+    return None
+
+
+def ausgang_schon_entschieden(a):
+    """Steht der gepushte Ausgang durch den aktuellen Stand bereits fest? REIN/testbar.
+
+    True  = entschieden (gewonnen ODER verloren) -> es gibt nichts mehr zu wetten
+    False = lebt noch
+    None  = nicht beurteilbar (kein O/U-Markt, kein Stand) -> im Zweifel durchlassen, ein
+            Waechter, der raet, wirft gute Alarme weg
+    """
+    if not isinstance(a, dict):
+        return None
+    li = a.get("live") or {}
+    hz = ist_halbzeit_markt(a)
+    # Eine erste Halbzeit, die vorbei ist, entscheidet JEDEN HZ-Markt — unabhaengig von der Linie.
+    if hz:
+        t = li.get("time")
+        if li.get("finished") or li.get("is_ht") or (isinstance(t, (int, float)) and t > 45):
+            return True
+    linie = ou_linie(a.get("leadLabel") or a.get("leadName")) 
+    if linie is None:
+        linie = ou_linie(a.get("market"))
+    if linie is None:
+        return None
+    tore = _tore(a)
+    if tore is None:
+        return None
+    # Bei einem HZ-Markt sind die Tore nur AUSSAGEKRAEFTIG, solange die erste Halbzeit laeuft —
+    # und genau dann ist der Live-Stand der Halbzeitstand. Danach hat der Zweig oben schon True
+    # zurueckgegeben.
+    return tore >= linie
+
+
+def entschieden_gate(alerts) -> tuple:
+    """(durchgelassen, verworfen). REIN/testbar. Nur ein klares True verwirft."""
+    durch, raus = [], []
+    for a in (alerts or []):
+        (raus if ausgang_schon_entschieden(a) is True else durch).append(a)
+    return durch, raus
+
+
+def entschieden_zeile(a, jetzt=None) -> dict:
+    """Ein verworfener Fall fuers Buch. REIN/testbar."""
+    jetzt = jetzt or datetime.now(timezone.utc)
+    li = (a or {}).get("live") or {}
+    return {"ts": jetzt.isoformat(), "matchId": str((a or {}).get("matchId") or ""),
+            "spiel": "%s v %s" % ((a or {}).get("home") or "?", (a or {}).get("away") or "?"),
+            "league": (a or {}).get("league"), "market": (a or {}).get("market"),
+            "leadName": (a or {}).get("leadName"), "leadOdd": (a or {}).get("leadOdd"),
+            "stand": [li.get("goal_v1"), li.get("goal_v2")], "minute": li.get("time"),
+            "inflow": (a or {}).get("inflow"),
+            "grund": "Ausgang durch den Spielstand bereits entschieden"}
+
+
+def entschieden_buch_schreiben(raus, basis, jetzt=None, keep=ENTSCHIEDEN_KEEP) -> int:
+    """Verworfene Faelle rollierend mitschreiben. Nie fatal.
+
+    Warum ueberhaupt mitschreiben, wo die Faelle doch wertlos SIND: weil die Zahl etwas ueber die
+    Markt-Auswahl weiter oben sagt. Pusht der Radar jede Woche zwanzig entschiedene Ausgaenge,
+    liegt der Fehler nicht hier, sondern dort."""
+    if not raus:
+        return 0
+    try:
+        from pathlib import Path as _P
+        from safe_write import write_json_atomic
+        pfad = _P(basis) / ENTSCHIEDEN_LEDGER
+        try:
+            alt = json.loads(pfad.read_text(encoding="utf-8"))
+            zeilen = alt.get("faelle") if isinstance(alt, dict) else None
+        except Exception:
+            zeilen = None
+        zeilen = list(zeilen or [])
+        zeilen += [entschieden_zeile(a, jetzt) for a in raus]
+        write_json_atomic(pfad, {"updatedAt": (jetzt or datetime.now(timezone.utc)).isoformat(),
+                                 "n": len(zeilen[-keep:]), "faelle": zeilen[-keep:]}, indent=1)
+        return len(raus)
+    except Exception as exc:
+        print("  ℹ️  Entschieden-Buch nicht geschrieben: %s" % exc)
+        return 0
+
+
 def _drop_subthreshold_jump(alerts):
     """09.08.2026 (Lucas, Braga 2:1->2:2 in der Nachspielzeit): sprang die Quote durch ein Spielereignis
     (Tor/Karte, _dir_event_jump), lief das Geld zur Quote DAVOR rein (leadPrev), nicht zur neu gepreisten.
@@ -1363,6 +1495,12 @@ def main():
     # kam der Man-City-U19-Push (48 % auf @14,00 bei 2:0) in den Trades-Kanal.
     alerts = [a for a in alerts if not _draw_inplay_chase(a) and not _trades_reactive_backed_under(a)
               and not geld_ist_altbestand(a)]
+    # 15.09.2026: ein Ausgang, den der Spielstand schon entschieden hat, ist keine Wette mehr —
+    # raus aus BEIDEN Kanaelen, aber ins Buch (s. entschieden_gate).
+    alerts, _entschieden = entschieden_gate(alerts)
+    if _entschieden:
+        n = entschieden_buch_schreiben(_entschieden, _BASIS)
+        print("  🔇 %d Alarm(e) verworfen: Ausgang durch den Spielstand entschieden" % n)
     sent = 0
     for a in alerts:
         key = a["scenario"] + ":" + a["matchId"]

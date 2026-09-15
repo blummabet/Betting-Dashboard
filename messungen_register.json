@@ -78,6 +78,19 @@
    "mindestN": null,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist"
+  },
+  {
+   "id": "entschiedene-ausgaenge",
+   "titel": "Wie oft pusht der Radar einen bereits entschiedenen Ausgang?",
+   "frage": "Anzahl und Muster der Alarme, die verworfen wurden, weil der Spielstand den Ausgang schon entschieden hatte. Haeuft es sich auf einen Markt-Typ, liegt der Fehler in der Markt-Auswahl weiter oben.",
+   "warum": "15.09.2026 (Lucas): am selben Spiel, in derselben Minute, ging Over 0.5 bei 0:1 raus (entschieden) und Over 1.5 bei 0:1 (lebt). Der erste war keine Wette mehr. Das Gate verhindert das jetzt — die Zahl sagt, ob die Auswahl davor sauber arbeitet oder ob das Gate staendig aufraeumen muss.",
+   "gestartet": "2026-09-15",
+   "faellig": "2026-10-13",
+   "quelle": "betfair_reaktiv_ledger.json -> faelle[]",
+   "messer": "reaktiv_faelle",
+   "mindestN": 20,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist"
   }
  ]
 }

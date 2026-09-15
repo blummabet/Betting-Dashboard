@@ -222,6 +222,7 @@ jobs:
           git add health/betfair.json 2>/dev/null || true
           git add betfair_coherence_watch.json 2>/dev/null || true   # ab wann liegt Geld in den Tormaerkten
           git add fade_unter.json 2>/dev/null || true                # vorregistrierte Fade-Schublade
+          git add betfair_reaktiv_ledger.json 2>/dev/null || true    # 15.09.2026: verworfene Alarme (Tor im Zufluss-Fenster) — still wegwerfen hiesse, nie zu erfahren, ob es richtig war
           # 🔴 02.09.2026 — DIE ZWEITE RUNDE DERSELBEN FALLE. `git add a b c` staged NICHTS,
           # sobald EIN Pfad nicht existiert (fatal: pathspec). Mit `2>/dev/null || true`
           # sieht man den Fehler nicht, danach ist der Index leer, `git diff --cached --quiet`

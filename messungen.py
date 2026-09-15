@@ -112,10 +112,22 @@ def zaehler_echte_fills(base_dir):
     return _zaehle_wetten(base_dir, "clvPP", ("shortlist_",))
 
 
+def zaehler_reaktiv_faelle(base_dir):
+    """Verworfene Betfair-Alarme (Ausgang schon entschieden) im Buch."""
+    d = _laden(os.path.join(base_dir, "betfair_reaktiv_ledger.json"))
+    if d is None:
+        return 0            # Buch noch nicht angelegt = noch kein Fall, nicht „unbekannt"
+    if not isinstance(d, dict):
+        return None
+    f = d.get("faelle")
+    return len(f) if isinstance(f, list) else None
+
+
 ZAEHLER = {
     "htk_shortlist": zaehler_htk_shortlist,
     "htk_trader": zaehler_htk_trader,
     "echte_fills": zaehler_echte_fills,
+    "reaktiv_faelle": zaehler_reaktiv_faelle,
 }
 
 

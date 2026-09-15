@@ -4095,7 +4095,7 @@ function renderAutoTraderLiveStatus() {
 
   const todayBets    = bets.filter(b => (b.placedAt || '').slice(0, 10) === today);
   const todayStake   = todayBets.reduce((s, b) => s + (parseFloat(b.stake) || 0), 0);
-  const openBets     = bets.filter(b => !b.resolved && b.result == null && !b.soldAt);
+  const openBets     = bets.filter(_ptIstOffen);      // EINE Definition, s. _ptIstOffen
   const openExposure = openBets.reduce((s, b) => s + (parseFloat(b.stake) || 0), 0);
   const balance      = (typeof window._wmPolyBalance === 'object' && window._wmPolyBalance)
                        ? (parseFloat(window._wmPolyBalance.usdc) || 0)
@@ -4158,6 +4158,133 @@ function renderAutoTraderLiveStatus() {
 // handelt über ALLE Bewerbe → das Cockpit VEREINT sie (mls + liga …), statt pro Liga umzuschalten.
 // Neue Liga dazunehmen = EIN Eintrag hier. Kein Datei-Chirurgie mehr, kein WM-Tiefschlaf pro Tab.
 const POLY_DATASETS = ['mls', 'liga'];   // aktive Bewerbe (WM winterisiert → raus)
+
+// ── Was heisst „offen"? EINE Definition, gespiegelt von poly_offen.py ────────────────────────
+// 🔴 15.09.2026. Hier stand `!b.resolved && b.result == null && !b.soldAt` — also genau das
+// Praedikat, das am 14.09. in Python durch `poly_offen.ist_offen` ersetzt wurde, weil das Feld
+// `resolved` NIEMAND schreibt. Python bekam die eine Definition, das Frontend behielt seine
+// Kopie. Aktuell stimmen beide ueberein; die Abweichung liegt trotzdem in den echten Daten:
+// eine Zeile mit `status: "sold"` ohne `soldAt` und ohne `result` (wm_auto_bets_placed.json)
+// zaehlte der alte JS-Filter als OFFEN — das sind die $5,50 aus dem Phantom-Befund. Und
+// `reconcile_poly_positions.py` schreibt `closed_manual`, bevor `soldAt` steht.
+// Ein Test pinnt die beiden Listen an poly_offen.py, damit sie nicht wieder auseinanderlaufen.
+const PT_TERMINAL_STATUS = ['won', 'lost', 'void', 'sold', 'closed_manual', 'dry-run', 'dry_run'];
+const PT_TERMINAL_RESULT = ['WIN', 'LOSS', 'VOID'];
+
+function _ptIstOffen(b) {
+  if (!b || typeof b !== 'object') return false;
+  if (b.resolved) return false;                       // Altfeld, schreibt niemand — Vorsorge
+  if (b.soldAt || b.resolvedAt) return false;
+  if (PT_TERMINAL_RESULT.includes(String(b.result || '').toUpperCase())) return false;
+  if (PT_TERMINAL_STATUS.includes(String(b.status || '').trim().toLowerCase())) return false;
+  return true;                                        // Unbekanntes gilt als offen
+}
+
+// Damit der Pin-Test die Listen lesen kann (const landet nicht auf window).
+function _ptTerminalListen() {
+  return { status: PT_TERMINAL_STATUS.slice(), result: PT_TERMINAL_RESULT.slice() };
+}
+
+function _ptIstShortlist(b) {
+  return !!b && (b._ds === 'shortlist' || b.source === 'auto_shortlist');
+}
+
+// Ab so vielen abgerechneten Zeilen darf ueberhaupt von Rendite gesprochen werden. Dieselbe
+// Zahl wie `mindestN` der Messung „echte-fills" in messungen_register.json — nicht neu erfunden.
+const PT_MIN_N_URTEIL = 25;
+
+function _ptAbgerechnet(bets) {
+  return (bets || []).filter(b => b && typeof b === 'object' && !_ptIstOffen(b))
+    .slice().sort((a, b) => String(b.resolvedAt || b.soldAt || b.placedAt || '')
+      .localeCompare(String(a.resolvedAt || a.soldAt || a.placedAt || '')));
+}
+
+function _ptBilanz(settled) {
+  let w = 0, l = 0, v = 0, pnl = 0, stake = 0, mitPnl = 0;
+  for (const b of settled) {
+    const r = String(b.result || '').toUpperCase();
+    if (r === 'WIN') w++; else if (r === 'LOSS') l++; else if (r === 'VOID') v++;
+    const p = parseFloat(b.pnl);
+    if (Number.isFinite(p)) { pnl += p; mitPnl++; }
+    const st = parseFloat(b.stake);
+    if (Number.isFinite(st)) stake += st;
+  }
+  return { n: settled.length, w, l, v, pnl, stake, mitPnl };
+}
+
+function _ptSettledBlock(bets) {
+  const settled = _ptAbgerechnet(bets);
+  const bil = _ptBilanz(settled);
+  const usd = (v) => (v >= 0 ? '+$' : '-$') + Math.abs(v).toFixed(2);
+  const kopf = (rechts) => `
+    <div style="padding:10px 16px;border-bottom:1px solid #30363d;display:flex;align-items:center;justify-content:space-between">
+      <span style="font-size:10px;font-weight:700;letter-spacing:.8px;color:#8b949e;text-transform:uppercase">📒 Abgerechnet</span>
+      ${rechts}
+    </div>`;
+  if (!settled.length) {
+    return `<div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;overflow:hidden;margin-bottom:14px">
+      ${kopf('')}
+      <div style="font-size:12px;color:#8b949e;font-style:italic;text-align:center;padding:14px">Noch nichts abgerechnet</div>
+    </div>`;
+  }
+  const rows = settled.slice(0, 50).map(b => {
+    const r = String(b.result || '').toUpperCase();
+    const ausgang = r === 'WIN' ? '<span style="color:#00d4a1;font-weight:800">GEWONNEN</span>'
+                  : r === 'LOSS' ? '<span style="color:#f85149;font-weight:800">VERLOREN</span>'
+                  : r === 'VOID' ? '<span style="color:#8b949e;font-weight:800">VOID</span>'
+                  : `<span style="color:#e3b341;font-weight:800">${String(b.status || '?').toUpperCase()}</span>`;
+    const fill = parseFloat(b.polyPrice);
+    const p = parseFloat(b.pnl);
+    const pCol = !Number.isFinite(p) ? '#8b949e' : p > 0 ? '#00d4a1' : p < 0 ? '#f85149' : '#e3b341';
+    // Der CLV auf dem ECHTEN Fill — seit 15.09. gemessen. Fehlt er, steht ein Strich da und
+    // keine Null: „keine Schluss-Referenz" ist nicht dasselbe wie „flach".
+    const clv = parseFloat(b.clvPP);
+    const vor = parseFloat(b.clvVorsprungPP);
+    const clvTxt = Number.isFinite(clv)
+      ? `<span style="color:${clv >= 0 ? '#00d4a1' : '#f85149'}">${clv >= 0 ? '+' : ''}${clv.toFixed(1)}pp</span>`
+        + (Number.isFinite(vor) ? `<span style="color:#6e7681" title="gegenüber demselben Play im Paper-Track"> (${vor >= 0 ? '+' : ''}${vor.toFixed(1)} vs Papier)</span>` : '')
+      : '<span style="color:#6e7681">—</span>';
+    const quelle = _ptIstShortlist(b)
+      ? '<span title="Heute spielenswert · Auto-Play" style="color:#f0883e">🔥</span> '
+      : '<span title="Pinnacle-Edge · Auto-Trader" style="color:#a371f7">🤖</span> ';
+    const titel = b.match || `${b.home || b.homeId || '?'}${(b.away || b.awayId) ? ' vs ' + (b.away || b.awayId) : ''}`;
+    const wann = String(b.resolvedAt || b.soldAt || b.placedAt || '').slice(0, 10);
+    return `
+      <tr style="border-bottom:1px solid #30363d">
+        <td style="padding:8px 12px;font-size:12px;color:#e6edf3">${quelle}${titel}</td>
+        <td style="padding:8px 12px;font-size:11px;color:#8b949e">${b.market || b.side || '?'}</td>
+        <td style="padding:8px 12px;font-size:11px;color:#e6edf3;font-family:'SF Mono',Menlo,monospace">${Number.isFinite(fill) ? (fill * 100).toFixed(1) + '¢' : '—'}</td>
+        <td style="padding:8px 12px;font-size:10px">${ausgang}</td>
+        <td style="padding:8px 12px;font-size:11px;color:${pCol};font-weight:700;font-family:'SF Mono',Menlo,monospace;text-align:right">${Number.isFinite(p) ? usd(p) : '—'}</td>
+        <td style="padding:8px 12px;font-size:11px;font-family:'SF Mono',Menlo,monospace;text-align:right">${clvTxt}</td>
+        <td style="padding:8px 12px;font-size:10px;color:#6e7681">${wann}</td>
+      </tr>`;
+  }).join('');
+  // 🔴 KEIN ROI, solange die Stichprobe ihn nicht traegt. „+39 %" aus drei Zeilen ist Dekoration,
+  // und diese Flaeche lebt davon, dass man ihren Zahlen glauben kann. Was dasteht, sind Fakten:
+  // wie viele, wie ausgegangen, wie viel Geld. Das Urteil kommt aus dem Messungen-Buch.
+  const urteil = bil.n >= PT_MIN_N_URTEIL && bil.stake > 0
+    ? `<span style="color:#8b949e">Rendite ${(bil.pnl / bil.stake * 100 >= 0 ? '+' : '')}${(bil.pnl / bil.stake * 100).toFixed(1)} % — Untergrenze siehe 🔬 Messungen</span>`
+    : `<span style="color:#6e7681">Rendite erst ab ${PT_MIN_N_URTEIL} Zeilen — darunter ist sie ein Punktschätzer ohne Aussage</span>`;
+  const rechts = `<span style="font-size:11px;font-family:'SF Mono',Menlo,monospace;color:${bil.pnl >= 0 ? '#00d4a1' : '#f85149'};font-weight:800">${bil.n} · ${bil.w}W/${bil.l}L${bil.v ? '/' + bil.v + 'V' : ''} · ${usd(bil.pnl)}</span>`;
+  return `
+    <div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;overflow:hidden;margin-bottom:14px">
+      ${kopf(rechts)}
+      <table style="width:100%;border-collapse:collapse">
+        <thead><tr style="background:#1c2128">
+          <th style="padding:8px 12px;text-align:left;font-size:9px;color:#8b949e;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Match</th>
+          <th style="padding:8px 12px;text-align:left;font-size:9px;color:#8b949e;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Markt</th>
+          <th style="padding:8px 12px;text-align:left;font-size:9px;color:#8b949e;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Fill</th>
+          <th style="padding:8px 12px;text-align:left;font-size:9px;color:#8b949e;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Ausgang</th>
+          <th style="padding:8px 12px;text-align:right;font-size:9px;color:#8b949e;font-weight:700;text-transform:uppercase;letter-spacing:.5px">P&amp;L</th>
+          <th style="padding:8px 12px;text-align:right;font-size:9px;color:#8b949e;font-weight:700;text-transform:uppercase;letter-spacing:.5px" title="Einstieg gegen Schlusskurs, auf dem ECHTEN Fill gerechnet">CLV</th>
+          <th style="padding:8px 12px;text-align:left;font-size:9px;color:#8b949e;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Datum</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <div style="padding:8px 16px;border-top:1px solid #21262d;font-size:10px">${urteil}</div>
+    </div>`;
+}
 
 async function loadCockpitData() {
   const base = 'https://raw.githubusercontent.com/blummabet/Betting-Dashboard/main';
@@ -4330,9 +4457,9 @@ function renderTradingCockpit(data) {
   const stakeToday = betsToday.reduce((s, b) => s + (parseFloat(b.stake) || 0), 0);
 
   // Open Positions
-  const openBets = bets.filter(b => !b.resolved && b.result == null && !b.soldAt);
+  const openBets = bets.filter(_ptIstOffen);          // EINE Definition, s. _ptIstOffen
   const openExposure = openBets.reduce((s, b) => s + (parseFloat(b.stake) || 0), 0);
-  const _istShortlist = (b) => b._ds === 'shortlist' || b.source === 'auto_shortlist';
+  const _istShortlist = _ptIstShortlist;
   const expShortlist = openBets.filter(_istShortlist).reduce((s, b) => s + (parseFloat(b.stake) || 0), 0);
   const expPinnacle  = openExposure - expShortlist;
 
@@ -4582,6 +4709,10 @@ function renderTradingCockpit(data) {
       </div>
       ${positionsHtml}
     </div>
+
+    <!-- 15.09.2026 (Lucas: „abgerechnete Positionen sind nicht im Cockpit, nur aktive"). Eine
+         Flaeche, deren Zweck der Track Record ist, darf die abgerechnete Haelfte nicht wegwerfen. -->
+    ${_ptSettledBlock(bets)}
 
     ${_ptRestingBlock(data && data.resting, data && data.markout)}
 

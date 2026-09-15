@@ -982,7 +982,6 @@ def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, 
 
     # Group teams + fixtures (for group table / context)
     group_teams = group_data.get("teams", [])
-    group_fixtures = group_data.get("fixtures", [])
 
     payload = {
         "slug":       slug,
@@ -1058,7 +1057,21 @@ def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, 
         "awayForm":      away_form,
         "h2h":           h2h_out,
         "homeTeams":     group_teams,
-        "groupFixtures": group_fixtures,
+        # 🔴 15.09.2026 (Lucas: „Das Pages Artefakt"). Hier stand `"groupFixtures": group_fixtures`.
+        # Der komplette Fixture-Block der Gruppe wurde in JEDE Match-Datei dieser Gruppe kopiert:
+        # 42,7 MB ueber 574 Dateien, 82 % des Ordners `matches/data`, 30 % des ganzen Pages-
+        # Artefakts — bei nur 87 verschiedenen Inhalten, also im Schnitt 6,6-mal dasselbe.
+        #
+        # Gelesen hat es NIEMAND. Kein `wm-match.html`, kein `wm-match-v2.html`, keine Zeile
+        # Frontend. Die einzige Fundstelle im ganzen Repo war diese hier, die es schrieb.
+        #
+        # Das Artefakt stand dadurch bei 141,5 MB gegen ein Budget von 140 — und das Budget misst
+        # Upload-DAUER: bei zu grossen Artefakten ueberholt der naechste Trigger den laufenden
+        # Deploy („Error: Deployment cancelled", 01.07. und 28.08.2026). Ein Feld, das niemand
+        # liest, hat also zweimal den Deploy gekippt.
+        #
+        # Ein Test haelt die Regel offen: ein Top-Level-Feld, das keine ausgelieferte Seite
+        # erwaehnt, darf kein Gewicht tragen (tests/test_pages_artifact_size.py).
         # Meta — ISO 8601 für browser-kompatibles Parsing (Safari/Firefox sind strikt).
         # Vorher "06.06.2026 06:57 UTC" → Safari gab Invalid Date → "Aktualisiert vor 43866m" Bug.
         "generatedAt":      datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),

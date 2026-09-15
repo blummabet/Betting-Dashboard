@@ -948,3 +948,113 @@ class TestFuehrungsLageDreiZustaende(unittest.TestCase):
         """Ein Ueber/Unter-Ausgang matcht keinen Teamnamen — da gibt es keine Fuehrungs-Lage,
         aber der Stand ist bekannt, also False und nicht None."""
         self.assertIs(BA._money_on_leader(self._spiel(1, 0), "Over 2.5 Goals"), False)
+
+
+class AusgangSchonEntschieden(unittest.TestCase):
+    """🔴 15.09.2026 (Lucas). Erst der falsche Befund, dann der richtige — beide von ihm belegt:
+
+        Public  16:16  HZ Over/Under 0.5 · Over 0.5 @1.51  bei 0:1  -> FALSCH, laengst entschieden
+        Trades  16:16  HZ Over/Under 1.5 · Over 1.5 @1.54  bei 0:1  -> RICHTIG, Ausgang lebt
+
+    Dasselbe Spiel, dieselbe Minute, dasselbe Tor. Ein Gate auf „Ereignis im Fenster" haette
+    BEIDE verworfen — das Tor war nie das Unterscheidungsmerkmal. Die LINIE ist es."""
+
+    def _a(self, market, lead, g1=0, g2=1, t=38, is_ht=False, fin=False, **kw):
+        a = {"scenario": "fresh", "matchId": "1", "home": "Sporting U23", "away": "Viseu U23",
+             "league": "Portuguese U23", "market": market, "leadName": lead, "leadOdd": 1.51,
+             "inflow": 35500.0, "total": 35500.0,
+             "live": {"goal_v1": g1, "goal_v2": g2, "time": t, "is_ht": is_ht, "finished": fin}}
+        a.update(kw)
+        return a
+
+    def test_die_beiden_echten_karten_werden_unterschieden(self):
+        # ⭐ Der Fall, der den Fix ausgeloest hat — beide Richtungen in EINEM Test.
+        falsch = self._a("HZ Over/Under 0.5", "Over 0.5 Goals")
+        richtig = self._a("HZ Over/Under 1.5", "Over 1.5 Goals")
+        self.assertIs(BA.ausgang_schon_entschieden(falsch), True)
+        self.assertIs(BA.ausgang_schon_entschieden(richtig), False)
+        durch, raus = BA.entschieden_gate([falsch, richtig])
+        self.assertEqual([x["market"] for x in durch], ["HZ Over/Under 1.5"])
+        self.assertEqual(len(raus), 1)
+
+    def test_ein_verlorenes_under_ist_genauso_entschieden_wie_ein_gewonnenes_over(self):
+        # Entschieden heisst entschieden — gewonnen ODER verloren, in beiden Faellen keine Wette.
+        self.assertIs(BA.ausgang_schon_entschieden(self._a("HZ O/U 0.5", "Under 0.5 Goals")), True)
+        self.assertIs(BA.ausgang_schon_entschieden(self._a("HZ O/U 1.5", "Under 1.5 Goals")), False)
+
+    def test_ein_hz_markt_nach_der_pause_ist_immer_entschieden(self):
+        # PROVOKATION: ohne diesen Zweig zaehlten nach der Pause die ZWEITHALBZEIT-Tore gegen die
+        # Halbzeit-Linie — und ein laengst abgerechneter Markt liefe als „lebt noch" durch.
+        for kw in ({"t": 58}, {"is_ht": True}, {"fin": True}):
+            a = self._a("HZ Over/Under 1.5", "Over 1.5 Goals", g1=0, g2=0, **kw)
+            self.assertIs(BA.ausgang_schon_entschieden(a), True, repr(kw))
+
+    def test_ein_ft_markt_lebt_bei_demselben_stand_weiter(self):
+        self.assertIs(BA.ausgang_schon_entschieden(
+            self._a("Over/Under 2.5", "Over 2.5 Goals")), False)
+
+    def test_ohne_linie_oder_ohne_stand_wird_nicht_geraten(self):
+        # Ein Waechter, der raet, wirft gute Alarme weg. Unklar = durchlassen.
+        self.assertIsNone(BA.ausgang_schon_entschieden(self._a("Match Odds", "Sporting U23")))
+        a = self._a("Over/Under 2.5", "Over 2.5 Goals")
+        a["live"] = {}
+        self.assertIsNone(BA.ausgang_schon_entschieden(a))
+        durch, raus = BA.entschieden_gate([a])
+        self.assertEqual(len(durch), 1)
+
+    def test_die_linie_wird_aus_dem_label_gelesen_komma_wie_punkt(self):
+        self.assertEqual(BA.ou_linie("Over 1.5 Goals"), 1.5)
+        self.assertEqual(BA.ou_linie("Unter 2,5 Tore"), 2.5)
+        self.assertIsNone(BA.ou_linie("Sporting Lisbon U23"))
+        self.assertIsNone(BA.ou_linie(None))
+
+    def test_halbzeit_markt_wird_am_namen_erkannt(self):
+        for m in ("HZ Over/Under 0.5", "Half Time Goals 1.5", "1st Half Over/Under"):
+            self.assertTrue(BA.ist_halbzeit_markt({"market": m}), m)
+        self.assertFalse(BA.ist_halbzeit_markt({"market": "Over/Under 2.5"}))
+
+    def test_muell_wirft_nicht(self):
+        for x in (None, "x", {}, {"live": "nein"}):
+            self.assertIsNone(BA.ausgang_schon_entschieden(x))
+        self.assertEqual(BA.entschieden_gate(None), ([], []))
+
+    def test_das_buch_haelt_stand_und_grund_fest(self):
+        z = BA.entschieden_zeile(self._a("HZ Over/Under 0.5", "Over 0.5 Goals"))
+        self.assertEqual(z["stand"], [0, 1])
+        self.assertEqual(z["minute"], 38)
+        self.assertIn("entschieden", z["grund"])
+        self.assertEqual(z["leadOdd"], 1.51)
+
+    def test_das_buch_waechst_rollierend_und_wirft_nie(self):
+        import tempfile, json as _j, os as _o
+        d = tempfile.mkdtemp()
+        n = BA.entschieden_buch_schreiben([self._a("HZ O/U 0.5", "Over 0.5 Goals")] * 3, d, keep=2)
+        self.assertEqual(n, 3)
+        buch = _j.load(open(_o.path.join(d, BA.ENTSCHIEDEN_LEDGER), encoding="utf-8"))
+        self.assertEqual(len(buch["faelle"]), 2)
+        self.assertEqual(BA.entschieden_buch_schreiben([self._a("x", "Over 0.5")], "/gibt/es/nicht/x"), 0)
+        self.assertEqual(BA.entschieden_buch_schreiben([], "/gibt/es/nicht"), 0)
+
+    def test_das_gate_haengt_wirklich_im_lauf(self):
+        # ⭐ Sonst waere es gebaut und ungenutzt — genau der Zustand, in dem `_ou_under_alive`
+        # seit dem 14.08. war: es kannte die Linie und verhinderte nie einen Push.
+        from pathlib import Path
+        quelle = (Path(__file__).parent.parent / "betfair_alerts.py").read_text(encoding="utf-8")
+        self.assertIn("alerts, _entschieden = entschieden_gate(alerts)", quelle)
+        self.assertIn("entschieden_buch_schreiben(_entschieden", quelle)
+
+    def test_die_messung_steht_im_buch(self):
+        import json as _j
+        from pathlib import Path
+        reg = _j.loads((Path(__file__).parent.parent / "messungen_register.json")
+                       .read_text(encoding="utf-8"))
+        e = next((x for x in reg["messungen"] if x["id"] == "entschiedene-ausgaenge"), None)
+        self.assertIsNotNone(e, "die verworfenen Ausgaenge stehen in keiner Messung")
+        self.assertEqual(e["messer"], "reaktiv_faelle")
+
+    def test_kein_blindes_ereignis_gate_mehr(self):
+        # Es haette den richtigen Trades-Alarm mitgerissen. Faellt jemandem die Idee wieder ein,
+        # faellt dieser Test — und die zwei Karten oben stehen als Begruendung daneben.
+        from pathlib import Path
+        quelle = (Path(__file__).parent.parent / "betfair_alerts.py").read_text(encoding="utf-8")
+        self.assertNotIn("ereignis_gate(alerts)", quelle)

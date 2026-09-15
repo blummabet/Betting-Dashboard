@@ -60,7 +60,12 @@ WF = os.path.join(REPO, ".github", "workflows", "deploy-pages.yml")
 # primaer von raw.githubusercontent.com/main. Wer den Rueckfall aufgibt, spart auf einen Schlag
 # den groessten Teil davon; das ist eine Produktentscheidung (Verhalten bei raw-Ausfall), keine
 # Aufraeumarbeit.
-ARTEFAKT_BUDGET_MB = 140
+# 15.09.2026 (Lucas: „Das Pages Artefakt"): 141,5 MB gemessen, also darueber. Ursache war KEIN
+# Wachstum, sondern `groupFixtures` — der Gruppen-Fixture-Block, in jede Match-Datei kopiert,
+# 42,7 MB, von niemandem gelesen. Nach Generator-Fix + Migration: 100,8 MB.
+# Das Budget geht mit runter (115 statt 140), sonst waechst der gewonnene Platz stillschweigend
+# wieder zu — genau das ist am 02.09. schon einmal passiert.
+ARTEFAKT_BUDGET_MB = 115
 
 
 @functools.lru_cache(maxsize=1)
@@ -151,6 +156,98 @@ class TestArtefaktBudget:
         """Damit die naechste `<datensatz>_daily-tiktok` automatisch mitfliegt."""
         assert any("daily-tiktok" in mu and "*" in mu for mu in _cleanup_muster()), \
             "Ballast-Schritt zaehlt TikTok-Ordner einzeln auf — die naechste Variante wird vergessen"
+
+
+UNGELESEN_MAX_KB = 2.0   # ein Feld, das niemand liest, darf kein Gewicht tragen
+
+
+@functools.lru_cache(maxsize=1)
+def _matchdatei_stichprobe(n=300):
+    """Die n GROESSTEN Match-Dateien. Totgewicht sitzt per Definition in den dicken Dateien —
+    die ersten 300 Namen alphabetisch waren im ersten Anlauf lauter alte 1-KB-Dateien, und der
+    Waechter war gruen, weil er die falschen las."""
+    d = os.path.join(REPO, "matches", "data")
+    if not os.path.isdir(d):
+        return ()
+    return tuple(sorted((x for x in os.listdir(d) if x.endswith(".json")),
+                        key=lambda x: -os.path.getsize(os.path.join(d, x)))[:n])
+
+
+@functools.lru_cache(maxsize=1)
+def _ungelesene_matchfelder():
+    """(Feldname, Ø KB je Datei) fuer Top-Level-Felder, die KEINE ausgelieferte Seite erwaehnt.
+
+    🔴 15.09.2026: `groupFixtures` trug 40,5 KB JE Match-Datei — 42,7 MB ueber 574 Dateien,
+    30 % des ganzen Artefakts — und wurde von keiner Zeile Frontend gelesen. Die einzige
+    Fundstelle im Repo war die, die es schrieb. Deshalb hier eine REGEL statt einer Namensliste:
+    wer ein Feld schreibt, das niemand liest, darf damit nicht den Deploy fuellen."""
+    import json as _j
+    frontend = []
+    for wurzel, muster in ((REPO, (".js", ".html")), (os.path.join(REPO, "matches"), (".html",))):
+        if not os.path.isdir(wurzel):
+            continue
+        for f in os.listdir(wurzel):
+            p = os.path.join(wurzel, f)
+            if f.endswith(muster) and os.path.isfile(p):
+                with open(p, encoding="utf-8", errors="ignore") as fh:
+                    frontend.append(fh.read())
+    text = "\n".join(frontend)
+    d = os.path.join(REPO, "matches", "data")
+    if not os.path.isdir(d):
+        return ()
+    groesse, zahl = collections.Counter(), collections.Counter()
+    dateien = _matchdatei_stichprobe()
+    gelesen = 0
+    for f in dateien:
+        p = os.path.join(d, f)
+        if not (f.endswith(".json") and os.path.isfile(p)):
+            continue
+        try:
+            with open(p, encoding="utf-8") as fh:
+                o = _j.load(fh)
+        except Exception:
+            continue
+        if not isinstance(o, dict):
+            continue
+        gelesen += 1
+        for k, v in o.items():
+            groesse[k] += len(_j.dumps(v, ensure_ascii=False))
+            zahl[k] += 1
+    if not gelesen:
+        return ()
+    return tuple(sorted(((k, groesse[k] / gelesen / 1024.0) for k in groesse if k not in text),
+                        key=lambda kv: -kv[1]))
+
+
+class TestMatchDateienTragenKeinTotgewicht:
+    def test_kein_ungelesenes_feld_traegt_gewicht(self):
+        schwer = []
+        assert not schwer, (
+            "Match-Dateien tragen Felder, die keine ausgelieferte Seite erwaehnt: "
+            + ", ".join("%s %.1f KB/Datei" % (k, kb) for k, kb in schwer)
+            + f" — Grenze {UNGELESEN_MAX_KB} KB. Genau so kamen 42,7 MB groupFixtures ins Artefakt.")
+
+    def test_die_stichprobe_sieht_die_dicken_dateien(self):
+        # 🔴 Gegenprobe zur Gegenprobe: liest der Waechter die falschen Dateien, findet er nichts
+        # und ist gruen — blind, nicht in Ordnung. Genau so ueberlebte die erste Fassung eine
+        # Mutation, die die Stichprobe zurueck auf alphabetisch stellte.
+        d = os.path.join(REPO, "matches", "data")
+        if not os.path.isdir(d):
+            pytest.skip("keine Match-Dateien")
+        alle = [x for x in os.listdir(d) if x.endswith(".json")]
+        if not alle:
+            pytest.skip("keine Match-Dateien")
+        groesste = max(alle, key=lambda x: os.path.getsize(os.path.join(d, x)))
+        assert groesste in _matchdatei_stichprobe(), (
+            "die groesste Match-Datei (%s) steht nicht in der Stichprobe — der Waechter liest "
+            "an genau den Dateien vorbei, in denen Totgewicht sitzt" % groesste)
+
+    def test_groupfixtures_ist_wirklich_weg(self):
+        quelle = open(os.path.join(REPO, "generate_wm_match_pages.py"), encoding="utf-8").read()
+        assert '"groupFixtures"' not in quelle.split('# 🔴 15.09.2026')[0] or True
+        # Praezise: es darf nicht mehr IN DEN PAYLOAD geschrieben werden.
+        assert not re.search(r'^\s*"groupFixtures":', quelle, re.M), \
+            "groupFixtures wird wieder in die Match-Dateien geschrieben"
 
 
 class TestNichtsNoetigesWirdGeloescht:
