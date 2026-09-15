@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-15T01:17:21.172510+00:00",
+ "generatedAt": "2026-09-15T01:47:18.480234+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -30,21 +30,77 @@
  },
  "trackRecord": {
   "tracked": 294,
-  "converged": 63
+  "converged": 65
  },
  "discrepancies": [
+  {
+   "id": "baseball_mlb|baltimoreorioles-newyorkmets|baltimoreorioles",
+   "sport": "baseball_mlb",
+   "event": "Baltimore Orioles vs New York Mets",
+   "market": "Moneyline",
+   "outcome": "Baltimore Orioles",
+   "polyPP": 89.5,
+   "pinnPP": 45.2,
+   "gapPP": 44.32,
+   "vol": 605924,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -38.14,
+   "firstSeen": "2026-09-14T23:17:02.209742+00:00"
+  },
+  {
+   "id": "baseball_mlb|baltimoreorioles-newyorkmets|newyorkmets",
+   "sport": "baseball_mlb",
+   "event": "Baltimore Orioles vs New York Mets",
+   "market": "Moneyline",
+   "outcome": "New York Mets",
+   "polyPP": 10.5,
+   "pinnPP": 54.8,
+   "gapPP": -44.32,
+   "vol": 605924,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -38.14,
+   "firstSeen": "2026-09-14T23:17:02.209742+00:00"
+  },
+  {
+   "id": "baseball_mlb|minnesotatwins-newyorkyankees|newyorkyankees",
+   "sport": "baseball_mlb",
+   "event": "New York Yankees vs Minnesota Twins",
+   "market": "Moneyline",
+   "outcome": "New York Yankees",
+   "polyPP": 24.5,
+   "pinnPP": 61.7,
+   "gapPP": -37.15,
+   "vol": 480779,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -29.0,
+   "firstSeen": "2026-09-14T21:17:02.554928+00:00"
+  },
+  {
+   "id": "baseball_mlb|minnesotatwins-newyorkyankees|minnesotatwins",
+   "sport": "baseball_mlb",
+   "event": "New York Yankees vs Minnesota Twins",
+   "market": "Moneyline",
+   "outcome": "Minnesota Twins",
+   "polyPP": 75.5,
+   "pinnPP": 38.3,
+   "gapPP": 37.15,
+   "vol": 480779,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -29.0,
+   "firstSeen": "2026-09-14T21:17:02.554928+00:00"
+  },
   {
    "id": "baseball_mlb|sanfranciscogiants-stlouiscardinals|sanfranciscogiants",
    "sport": "baseball_mlb",
    "event": "San Francisco Giants vs St. Louis Cardinals",
    "market": "Moneyline",
    "outcome": "San Francisco Giants",
-   "polyPP": 10.5,
+   "polyPP": 27.5,
    "pinnPP": 40.2,
-   "gapPP": -29.75,
-   "vol": 84298,
+   "gapPP": -12.75,
+   "vol": 116582,
    "richtung": "Poly zu niedrig → backen",
-   "convergePP": -12.4,
+   "convergePP": 4.6,
    "firstSeen": "2026-09-08T00:32:58.660790+00:00"
   },
   {
@@ -53,12 +109,12 @@
    "event": "San Francisco Giants vs St. Louis Cardinals",
    "market": "Moneyline",
    "outcome": "St. Louis Cardinals",
-   "polyPP": 89.5,
+   "polyPP": 72.5,
    "pinnPP": 59.8,
-   "gapPP": 29.75,
-   "vol": 84298,
+   "gapPP": 12.75,
+   "vol": 116582,
    "richtung": "Poly zu hoch → faden",
-   "convergePP": -12.4,
+   "convergePP": 4.6,
    "firstSeen": "2026-09-08T00:32:58.660790+00:00"
   },
   {
@@ -67,12 +123,12 @@
    "event": "Seattle Mariners vs Los Angeles Angels",
    "market": "Moneyline",
    "outcome": "Seattle Mariners",
-   "polyPP": 49.5,
+   "polyPP": 48.5,
    "pinnPP": 60.5,
-   "gapPP": -11.04,
-   "vol": 400844,
+   "gapPP": -12.04,
+   "vol": 417724,
    "richtung": "Poly zu niedrig → backen",
-   "convergePP": -1.0,
+   "convergePP": -2.0,
    "firstSeen": "2026-09-14T21:17:02.554928+00:00"
   },
   {
@@ -81,12 +137,12 @@
    "event": "Seattle Mariners vs Los Angeles Angels",
    "market": "Moneyline",
    "outcome": "Los Angeles Angels",
-   "polyPP": 50.5,
+   "polyPP": 51.5,
    "pinnPP": 39.5,
-   "gapPP": 11.04,
-   "vol": 400844,
+   "gapPP": 12.04,
+   "vol": 417724,
    "richtung": "Poly zu hoch → faden",
-   "convergePP": -1.0,
+   "convergePP": -2.0,
    "firstSeen": "2026-09-14T21:17:02.554928+00:00"
   }
  ]
