@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-15T04:15:10.783843+00:00",
+ "generatedAt": "2026-09-15T04:30:07.184387+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -201,7 +201,7 @@
     "nieAnteil": 0.493,
     "schaetzbar": false
    },
-   "alterTage": 1.0,
+   "alterTage": 1.1,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "top5"
@@ -318,11 +318,11 @@
    "zerlegung": "nach Conviction",
    "art": "conviction",
    "gruppen": 7,
-   "basis": "463 von 884 abgerechneten Plays · nur Engine 2026-09-01 · ohne Kampfsport, US-Sport",
-   "n": 463,
-   "pl": 5.74,
-   "roi": 0.0124,
-   "clv": -1.928,
+   "basis": "464 von 885 abgerechneten Plays · nur Engine 2026-09-01 · ohne Kampfsport, US-Sport",
+   "n": 464,
+   "pl": 4.74,
+   "roi": 0.0102,
+   "clv": -1.924,
    "belegte": 2
   },
   {
@@ -3487,7 +3487,7 @@
     "nieAnteil": 0.493,
     "schaetzbar": false
    },
-   "alterTage": 1.0,
+   "alterTage": 1.1,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "top5"
@@ -3833,37 +3833,6 @@
    "naeherung": false
   },
   {
-   "schublade": "Mix money+sharp",
-   "strom": "poly",
-   "n": 165,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0486,
-   "pl": 8.02,
-   "roiLb": -0.0343,
-   "clv": -3.748,
-   "clvLb": -4.996,
-   "clvUrteil": "negativ belegt",
-   "clvOg": -2.499,
-   "fehltN": 0,
-   "noetigNRoi": 480,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 338,
-    "lo": 56,
-    "hi": 16246,
-    "nieAnteil": 0.148,
-    "schaetzbar": false
-   },
-   "alterTage": 0.2,
-   "art": "mix",
-   "wert": "money+sharp",
-   "nAlt": 141,
-   "roiAlt": -0.0338,
-   "clvAlt": -0.256,
-   "engineAlt": true
-  },
-  {
    "schublade": "Over/Under 3.5 Goals",
    "strom": "betfair",
    "n": 3883,
@@ -3883,6 +3852,37 @@
    "alterTage": null,
    "art": "markt",
    "naeherung": false
+  },
+  {
+   "schublade": "Mix money+sharp",
+   "strom": "poly",
+   "n": 166,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0423,
+   "pl": 7.02,
+   "roiLb": -0.0408,
+   "clv": -3.725,
+   "clvLb": -4.967,
+   "clvUrteil": "negativ belegt",
+   "clvOg": -2.483,
+   "fehltN": 0,
+   "noetigNRoi": 640,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 359,
+    "lo": 62,
+    "hi": 35595,
+    "nieAnteil": 0.182,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "mix",
+   "wert": "money+sharp",
+   "nAlt": 141,
+   "roiAlt": -0.0338,
+   "clvAlt": -0.256,
+   "engineAlt": true
   },
   {
    "schublade": "First Half Goals 1.5",
@@ -4072,37 +4072,6 @@
    }
   },
   {
-   "schublade": "Conviction 5",
-   "strom": "poly",
-   "n": 240,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0078,
-   "pl": 1.86,
-   "roiLb": -0.0721,
-   "clv": -2.933,
-   "clvLb": -3.861,
-   "clvUrteil": "negativ belegt",
-   "clvOg": -2.004,
-   "fehltN": 0,
-   "noetigNRoi": 25350,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 1118,
-    "lo": 146,
-    "hi": 107111,
-    "nieAnteil": 0.475,
-    "schaetzbar": false
-   },
-   "alterTage": 0.1,
-   "art": "conviction",
-   "wert": 5,
-   "nAlt": 110,
-   "roiAlt": 0.1047,
-   "clvAlt": 0.283,
-   "engineAlt": true
-  },
-  {
    "schublade": "ABWÄGEN · aussortiert",
    "strom": "cards",
    "n": 134,
@@ -4128,6 +4097,37 @@
    "alterTage": 0.3,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py"
+  },
+  {
+   "schublade": "Conviction 5",
+   "strom": "poly",
+   "n": 241,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0036,
+   "pl": 0.86,
+   "roiLb": -0.0762,
+   "clv": -2.921,
+   "clvLb": -3.845,
+   "clvUrteil": "negativ belegt",
+   "clvOg": -1.996,
+   "fehltN": 0,
+   "noetigNRoi": 119217,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 1609,
+    "lo": 150,
+    "hi": 296459,
+    "nieAnteil": 0.487,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "conviction",
+   "wert": 5,
+   "nAlt": 110,
+   "roiAlt": 0.1047,
+   "clvAlt": 0.283,
+   "engineAlt": true
   },
   {
    "schublade": "US MLS · Both teams to Score?",
