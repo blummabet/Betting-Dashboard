@@ -1778,6 +1778,20 @@
     var d = _md.data.pulse || {};
     var mmRows = (_md.data.moneyMap && _md.data.moneyMap.rows) || [];
     var bf = d.betfair, pl = d.poly, ml = d.moneymap;
+    // 🔴 15.09.2026 (Lucas-Uebersicht-Check). Auf EINEM Board standen zwei Betfair-Gesamtzahlen:
+    // Puls „n25876 · 52,7 % · −0,7 %", Register „25.985 Plays · −0,8 %". Dieselbe Grundmenge,
+    // zwei Alter — `dashboard_pulse.json` kopiert den Aggregat-Block aus
+    // `betfair_track_record.json` und wird 3–4×/Tag gebaut, das Track-Record alle ~15 Min.
+    // Die Kopie trug nichts bei ausser ihrem Rueckstand. Diese Flaeche laedt die Quelle selbst
+    // (`bfTrack`, seit 03.09. in der Frische-Rechnung) — also liest die Kachel ab jetzt DORT,
+    // und der Puls-Block bleibt nur der Rueckfall, falls die Datei nicht geladen hat.
+    // KEIN Nachbau von Produzenten-Logik: drei Felder lesen und formatieren, kein Urteil.
+    var _bfg = (_md.data.bfTrack && _md.data.bfTrack.global) || null;
+    if (_bfg && _bfg.n) {
+      bf = { n: _bfg.n,
+             hitPct: _bfg.hitRate == null ? null : Math.round(1000 * _bfg.hitRate) / 10,
+             roiPct: _bfg.roi == null ? null : Math.round(1000 * _bfg.roi) / 10 };
+    }
     if (!d.n && !(bf && bf.n) && !(pl && pl.n) && !mmRows.length) return '<section class="md-pulse md-rise"><div class="md-pulse-h">📈 Puls</div>' +
       '<div class="md-pulse-l" style="color:var(--mi2)">Noch keine abgerechneten Picks/Plays — füllt sich, sobald die ersten resolven.</div></section>';
     var col0 = function (v) { return v == null ? 'var(--mi3)' : v > 0 ? A.good : v < 0 ? A.red : 'var(--mi2)'; };
@@ -1791,8 +1805,16 @@
         // also eine Quote auf 27. `n` ist die Fenstergroesse (alle abgerechneten Picks),
         // `nGraded` = wins+losses; Picks, deren Ergebnis weder WIN noch LOSS ist, fallen aus der
         // Quote und blieben trotzdem im angezeigten n. Jetzt traegt jede Zahl ihre eigene Basis.
+        // 🔴 15.09.2026 (Lucas-Uebersicht-Check). Der Fix vom 03.09. hatte die richtige Zahl
+        // und das falsche Wort: „n30 · 27 gew." stand direkt neben „63 % Treffer 17–10". `gew.`
+        // war als „gewertet" gemeint — gelesen wird es als GEWONNEN, und 17 Siege daneben machen
+        // die Verwechslung erst richtig teuer. Eine Abkuerzung, die zwei Dinge heissen kann,
+        // steht in diesem Repo ausgeschrieben da: das Wort muss die Zahl benennen, an der es
+        // klebt. (Dieselbe Klasse wie „kein CLV" neben einer CLV-Zahl im Register, s. freigabe.py.)
         '<span class="mpc-h">🎯 Cards<b>n' + d.n +
-          (d.nGraded != null && d.nGraded !== d.n ? ' · ' + d.nGraded + ' gew.' : '') + '</b></span>' +
+          (d.nGraded != null && d.nGraded !== d.n
+            ? '<i style="font-style:normal;font-weight:600;opacity:.8" title="' + d.nGraded + ' der ' + d.n + ' Picks sind mit WIN oder LOSS abgerechnet — nur sie bilden die Trefferquote. Der Rest (Push, Void, ungewertet) bleibt im n, aber nicht in der Quote."> · ' + d.nGraded + ' abgerechnet</i>'
+            : '') + '</b></span>' +
         '<div class="mpc-big" style="color:' + col0(clv) + '">' + clvTxt + '</div>' +
         '<div class="mpc-cap"' + (d.nClv != null && d.nClv !== d.n ? ' title="Ø über ' + d.nClv + ' Picks mit CLV"' : '') +
           '>Ø CLV' + (d.nClv != null && d.nClv !== d.n ? ' · n' + d.nClv : '') + '</div>' +

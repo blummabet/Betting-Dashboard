@@ -56,7 +56,11 @@ test('ein Netto nahe null wird trotzdem gezeigt — es ist der einzige Anker', (
 
 test('das Netto sagt dazu, dass es kein Summenwert ist', () => {
   const h = F(ELCHE);
-  assert.match(h, /Ø gew\./, 'ohne Kennzeichnung liest man es als Summe der Kacheln');
+  // 15.09.2026 (Lucas-Uebersicht-Check): hier stand „Ø gew." — dieselbe Abkuerzung, die auf
+  // dem Puls-Board als „gewonnen" gelesen wurde, waehrend sie hier „gewichtet" heisst. Zwei
+  // Bedeutungen fuer dasselbe Kuerzel in einer App: ausgeschrieben kostet es vier Zeichen.
+  assert.match(h, /Ø gewichtet/, 'ohne Kennzeichnung liest man es als Summe der Kacheln');
+  assert.ok(!/Ø gew\.(?!i)/.test(h), 'die mehrdeutige Abkuerzung ist zurueck');
   assert.match(h, /KEINE Summe der Kacheln/, 'die Erklärung gehört in den Titel');
   assert.match(h, /-0\.4pp/, 'und nennt, was die Kacheln tatsächlich ergäben');
 });

@@ -734,6 +734,55 @@ def check_buecher_punktestand(ctx):
               "Nicht erhobene Buecher senken den Nenner, Tiefe zaehlt nur bei Zustimmung.")
 
 
+def check_clv_urteil_passt_zur_zahl(ctx):
+    """15.09.2026 (Lucas-Uebersicht-Check) — im Register standen 8 von 200 Zeilen mit einer
+    CLV-Zahl NEBEN dem Urteil „· kein CLV": „Public-Pushes −2,35 pp · kein CLV",
+    „Public · Halbzeit −18,18 pp · kein CLV", dazu 5 Betfair-Markt-Schubladen.
+
+    Ursache war die Reihenfolge, nicht die Rechnung: die Aggregat-Quellen rufen `bewerte()` mit
+    einer LEEREN CLV-Liste (Betfair fuehrt kein Closing je Signal) und setzen `clv` erst danach
+    aus `avgClvBf` nach. Das Urteil beschrieb einen Stand, den die Zeile nicht mehr hatte.
+    Zweiter Fall am selben Tag: der „ruht"-Zweig von `bewerte()` baute seine Zeile selbst und
+    liess `clvOg`/`clvUrteil` ganz weg — „WM · ABWAEGEN … CLV −2,2 pp" stand ohne jedes Urteil
+    auf dem Board, obwohl die Obergrenze (−1,7 pp) unter null liegt, also GEGEN die Schublade.
+
+    Der Guard prueft die Aussage, nicht den Code: das Wort auf der Zeile und die Zahl daneben
+    muessen dasselbe sagen. Die Regel dazu steht einmal in `freigabe.clv_urteil`.
+    """
+    f = ctx.get("freigabe") or {}
+    zeilen = [z for z in (f.get("alle") or []) if isinstance(z, dict)]
+    if not zeilen:
+        return _c("CLV-Urteil passt zur CLV-Zahl", "warn", [], "kein freigabe.json geladen")
+    fails = []
+    ohne = [z for z in zeilen if "clvUrteil" not in z]
+    if ohne:
+        fails.append(f"{len(ohne)} Zeilen ohne `clvUrteil` — eine Leerstelle sieht auf dem Board "
+                     f"aus wie \u201ekein CLV\u201c, ist aber keine Auskunft (z. B. "
+                     f"{ohne[0].get('schublade')}, CLV {ohne[0].get('clv')})")
+    stumm = [z for z in zeilen
+             if z.get("clv") is not None and z.get("clvUrteil") == "nicht erhoben"]
+    if stumm:
+        schlimm = max(stumm, key=lambda z: abs(z.get("clv") or 0))
+        fails.append(f"{len(stumm)} Zeilen sagen \u201ekein CLV erhoben\u201c und tragen eine CLV-Zahl "
+                     f"(schlimmster Fall: {schlimm.get('schublade')} {schlimm.get('clv'):+.2f} pp, "
+                     f"n{schlimm.get('n')}) — Fund vom 15.09.")
+    leer = [z for z in zeilen
+            if z.get("clv") is None and z.get("clvUrteil") not in (None, "nicht erhoben")]
+    if leer:
+        fails.append(f"{len(leer)} Zeilen ohne CLV-Zahl tragen trotzdem ein CLV-Urteil "
+                     f"(z. B. {leer[0].get('schublade')}: \u201e{leer[0].get('clvUrteil')}\u201c)")
+    # Die Gegenrichtung des zweiten Falls: ein Urteil „gemessen, nicht belegt" behauptet, dass
+    # WEDER Unter- noch Obergrenze die Null ausschliesst. Ohne berechnete Obergrenze ist das
+    # eine Behauptung ueber eine Zahl, die es nicht gibt.
+    halb = [z for z in zeilen
+            if z.get("clvUrteil") == "gemessen, nicht belegt" and "clvOg" not in z]
+    if halb:
+        fails.append(f"{len(halb)} Zeilen mit \u201eCLV offen\u201c, aber ohne Feld `clvOg` — das Urteil "
+                     f"redet ueber eine Obergrenze, die nie gerechnet wurde "
+                     f"(z. B. {halb[0].get('schublade')})")
+    return _c("CLV-Urteil passt zur CLV-Zahl", "error", fails)
+
+
 UEBERSICHT_CHECKS = [
     check_serien_rangfolge,
     check_freigabe_grund,
@@ -754,6 +803,7 @@ UEBERSICHT_CHECKS = [
     check_stumme_signale,
     check_signal_bilanz,
     check_fade_kontrolle,
+    check_clv_urteil_passt_zur_zahl,
 ]
 
 

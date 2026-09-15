@@ -307,6 +307,40 @@ def entfernung(werte, ziehungen: int = 600, saat: int = 7) -> dict | None:
             "nieAnteil": round(nie_anteil, 3), "schaetzbar": bool(schaetzbar)}
 
 
+def clv_urteil(clv, clv_lb, clv_og) -> str:
+    """Der CLV-Zustand einer Schublade — aus DEN FELDERN, die am Ende auf der Zeile stehen.
+
+    🔴 15.09.2026 (Lucas-Uebersicht-Check). Im Register standen 8 von 200 Zeilen mit einer
+    CLV-Zahl NEBEN dem Urteil „· kein CLV" — „Public-Pushes −2,35 pp · kein CLV",
+    „Public · Halbzeit −18,18 pp · kein CLV". Beides gleichzeitig kann nicht stimmen.
+
+    Die Ursache ist keine Rechenfehler, sondern die Reihenfolge: `bewerte()` bekommt von den
+    Aggregat-Quellen (Betfair-Track, Betfair-Public) eine LEERE CLV-Liste und schreibt darum
+    korrekt „nicht erhoben" — und ERST DANACH setzt der Aufrufer `eintrag["clv"] = avgClvBf`.
+    Das Urteil beschrieb einen Stand, den die Zeile nicht mehr hatte. Dieselbe Klasse wie die
+    Cards-Kachel am selben Tag: ein Wort, das etwas anderes benennt als die Zahl daneben.
+
+    Deshalb steht die Regel ab jetzt genau einmal hier, und `baue()` zieht sie ueber JEDE Zeile
+    nach, nachdem alle Quellen ihre Felder gesetzt haben. Wer spaeter ein `clv` nachtraegt,
+    bekommt das passende Urteil automatisch mit.
+    """
+    if clv_lb is not None and clv_lb > MIN_CLV_LB:
+        return "belegt"
+    if clv_og is not None and clv_og < MIN_CLV_LB:
+        return "negativ belegt"
+    if clv is not None:
+        return "gemessen, nicht belegt"
+    return "nicht erhoben"
+
+
+def clv_urteil_nachziehen(zeilen):
+    """Jede Zeile bekommt das Urteil, das zu IHREN Feldern passt (s. `clv_urteil`)."""
+    for r in zeilen:
+        if isinstance(r, dict):
+            r["clvUrteil"] = clv_urteil(r.get("clv"), r.get("clvLb"), r.get("clvOg"))
+    return zeilen
+
+
 def bewerte(name: str, strom: str, renditen, clvs, meta=None, letzter=None, now=None) -> dict:
     """Eine Schublade -> ein Urteil. `renditen` sind Renditen JE PLAY (pnl/stake), nicht die
     Summe: nur so misst die Streuung das, was sie messen soll. `letzter` = Zeitstempel des
@@ -326,6 +360,12 @@ def bewerte(name: str, strom: str, renditen, clvs, meta=None, letzter=None, now=
                 "roiLb": round(roi_lb, 4) if roi_lb is not None else None,
                 "clv": round(clv, 3) if clv is not None else None,
                 "clvLb": round(clv_lb, 3) if clv_lb is not None else None,
+                # 15.09.2026: dieser Zweig baut die Zeile SELBST — und liess `clvOg`/`clvUrteil`
+                # weg. Auf dem Board stand darum „WM · ABWAEGEN … CLV −2,2pp" ganz ohne Urteil,
+                # waehrend jede andere Zeile eines trug. Eine ruhende Schublade ist ein anderer
+                # Zustand als eine ohne CLV; als Leerstelle sahen beide gleich aus.
+                "clvOg": round(clv_og, 3) if clv_og is not None else None,
+                "clvUrteil": clv_urteil(clv, clv_lb, clv_og),
                 "fehltN": 0, "alterTage": round(alter, 1), **(meta or {})}
 
     # Die echte Entfernung zur Freigabe, nicht nur die zur Mindestzahl. `MIN_N` ist die
@@ -414,10 +454,7 @@ def bewerte(name: str, strom: str, renditen, clvs, meta=None, letzter=None, now=
         # 08.09.2026: seit der CLV nicht mehr blockiert, muss er trotzdem SICHTBAR bleiben —
         # sonst verschwindet die einzige Warnung, die es zu einer Freigabe noch gibt.
         # Vier Zustaende, und „nicht erhoben" ist ausdruecklich nicht dasselbe wie „schlecht".
-        "clvUrteil": ("belegt" if (clv_lb is not None and clv_lb > MIN_CLV_LB)
-                      else "negativ belegt" if (clv_og is not None and clv_og < MIN_CLV_LB)
-                      else "gemessen, nicht belegt" if clv is not None
-                      else "nicht erhoben"),
+        "clvUrteil": clv_urteil(clv, clv_lb, clv_og),
         "clvOg": round(clv_og, 3) if clv_og is not None else None,
         "fehltN": max(0, MIN_N - n),
         # Damit die Oberflaeche die Entfernung nicht selbst ausrechnet (sie hat die Einzelwerte
@@ -702,7 +739,10 @@ def betfair_schubladen(rec=None, min_n=None) -> list:
                     eintrag["grund"] = ("ROI belegt, aber fuer diesen Eimer ist gar kein CLV "
                                         "erhoben — ohne den keine Freigabe")
             out.append(eintrag)
-    return out
+    # Das `clv` kommt hier NACH `bewerte()` dazu (s. `clv_urteil`) — also faellt das Urteil auch
+    # hier neu, nicht erst in `baue()`. Wer diese Funktion einzeln aufruft (Tests, Skripte),
+    # bekommt sonst Zeilen, die „kein CLV" sagen und eine CLV-Zahl tragen.
+    return clv_urteil_nachziehen(out)
 
 
 def betfair_public_schubladen(rec=None) -> list:
@@ -763,7 +803,8 @@ def betfair_public_schubladen(rec=None) -> list:
         z = _zeile(label, v, "public_szenario")
         if z:
             out.append(z)
-    return out
+    # dieselbe Reihenfolge-Falle wie oben: `clv` kommt aus `avgClvBf` erst nach `bewerte()`.
+    return clv_urteil_nachziehen(out)
 
 
 # ── Ligen: welche performen, quer ueber alle Betfair-Maerkte ────────────────────────────
@@ -1397,6 +1438,9 @@ def baue(engine=None, track=None, cards=None, betfair=None, now=None) -> dict:
               + betfair_schubladen(betfair) + betfair_public_schubladen()
               + killer_schublade(now=now)
               + push_schubladen(now=now) + vorregistrierte_schubladen(track, now=now))
+    # Nach ALLEN Quellen: die Aggregat-Zweige tragen ihr `clv` erst nach `bewerte()` nach
+    # (s. `clv_urteil` — 15.09.2026). Ohne diese Zeile stuende dort ein Urteil von vorher.
+    clv_urteil_nachziehen(zeilen)
     zeilen.sort(key=lambda r: (RANG.get(r["status"], 9), -(r.get("roiLb") or -9), -r["n"]))
     frei = [r for r in zeilen if r["status"] == "freigegeben"]
     kand = [r for r in zeilen if r["status"] == "kandidat"]

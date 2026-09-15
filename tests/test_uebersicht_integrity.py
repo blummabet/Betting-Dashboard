@@ -458,3 +458,87 @@ class TestSeltenheitsNenner(unittest.TestCase):
                            "einsZuBand": [2, 16], "erwartetBand": [12.0, 1500.0],
                            "urteil": "erwartbar", "grund": "…"}
         self.assertEqual(self._n(_ctx(s)), 0)
+
+
+class ClvUrteilPasstZurZahl(unittest.TestCase):
+    """Der Fund vom 15.09.2026 (Lucas-Uebersicht-Check): im Register standen 8 von 200 Zeilen
+    mit einer CLV-Zahl NEBEN dem Wort „kein CLV" — „Public · Halbzeit −18,18 pp · kein CLV".
+    Dazu 2 ruhende Zeilen ganz ohne Urteil („WM · ABWAEGEN … CLV −2,2 pp"), deren Obergrenze
+    in Wahrheit unter null liegt.
+    """
+
+    def _n(self, zeilen):
+        return UI.check_clv_urteil_passt_zur_zahl({"freigabe": {"alle": zeilen}})["nFail"]
+
+    def _z(self, **kw):
+        z = {"schublade": "X", "n": 40, "clv": None, "clvLb": None, "clvOg": None,
+             "clvUrteil": "nicht erhoben"}
+        z.update(kw)
+        return z
+
+    def test_gesunder_stand_faellt_nicht_auf(self):
+        self.assertEqual(self._n([
+            self._z(),
+            self._z(clv=-2.4, clvLb=-5.0, clvOg=0.4, clvUrteil="gemessen, nicht belegt"),
+            self._z(clv=1.9, clvLb=0.4, clvOg=3.1, clvUrteil="belegt"),
+            self._z(clv=-2.2, clvLb=-2.7, clvOg=-1.7, clvUrteil="negativ belegt"),
+        ]), 0)
+
+    def test_faengt_den_vorfall_kein_clv_neben_einer_clv_zahl(self):
+        self.assertGreaterEqual(self._n([self._z(clv=-18.18, clvUrteil="nicht erhoben")]), 1)
+
+    def test_faengt_die_zeile_ganz_ohne_urteil(self):
+        z = self._z(clv=-2.199, clvLb=-2.679)
+        z.pop("clvUrteil")
+        z.pop("clvOg")
+        self.assertGreaterEqual(self._n([z]), 1)
+
+    def test_faengt_ein_urteil_ohne_zahl(self):
+        self.assertGreaterEqual(self._n([self._z(clvUrteil="gemessen, nicht belegt")]), 1)
+
+    def test_faengt_clv_offen_ohne_gerechnete_obergrenze(self):
+        """«weder Unter- noch Obergrenze schliesst die Null aus» — ohne `clvOg` redet der Satz
+        ueber eine Zahl, die nie gerechnet wurde."""
+        z = self._z(clv=-0.6, clvUrteil="gemessen, nicht belegt")
+        z.pop("clvOg")
+        self.assertGreaterEqual(self._n([z]), 1)
+
+    def test_leeres_register_ist_kein_beleg(self):
+        r = UI.check_clv_urteil_passt_zur_zahl({"freigabe": {}})
+        self.assertTrue(r["ok"])
+        self.assertEqual(r["severity"], "warn")
+
+
+class FreigabeClvUrteilAmEnde(unittest.TestCase):
+    """Die andere Haelfte desselben Vorfalls: die Ursache, nicht das Symptom. Die
+    Aggregat-Quellen rufen `bewerte()` mit leerer CLV-Liste und setzen `clv` DANACH."""
+
+    def setUp(self):
+        import importlib.util as _i
+        sp = _i.spec_from_file_location("freigabe_t", os.path.join(ROOT, "freigabe.py"))
+        self.F = _i.module_from_spec(sp)
+        sp.loader.exec_module(self.F)
+
+    def test_nachgetragenes_clv_bekommt_sein_urteil(self):
+        z = self.F.bewerte("Public-Pushes", "betfair", [0.1] * 40, [], {"art": "public"})
+        self.assertEqual(z["clvUrteil"], "nicht erhoben")
+        z["clv"] = -2.35                       # genau das, was der Aufrufer danach tut
+        self.F.clv_urteil_nachziehen([z])
+        self.assertEqual(z["clvUrteil"], "gemessen, nicht belegt")
+
+    def test_ruhende_schublade_traegt_ihr_clv_urteil(self):
+        """Der „ruht"-Zweig baut seine Zeile selbst — und liess das Urteil weg."""
+        z = self.F.bewerte("WM · ABWÄGEN", "cards", [0.0] * 40, [-2.2] * 40,
+                           letzter="2026-06-28T12:00:00+00:00")
+        self.assertEqual(z["status"], "ruht")
+        self.assertIn("clvUrteil", z)
+        self.assertIn("clvOg", z)
+        self.assertEqual(z["clvUrteil"], "negativ belegt")
+
+    def test_die_regel_steht_nur_einmal(self):
+        """`bewerte` und der Nachzug muessen dieselbe Funktion benutzen — sonst driften sie."""
+        for clv, lb, og, erwartet in ((None, None, None, "nicht erhoben"),
+                                      (-2.4, -5.0, 0.4, "gemessen, nicht belegt"),
+                                      (1.9, 0.4, 3.1, "belegt"),
+                                      (-2.2, -2.7, -1.7, "negativ belegt")):
+            self.assertEqual(self.F.clv_urteil(clv, lb, og), erwartet)

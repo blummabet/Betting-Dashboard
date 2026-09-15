@@ -223,7 +223,18 @@ class TestBetfairSchubladenNutzenDieEchteSchranke(unittest.TestCase):
                  # Konstellation, fuer die die Freigabe zwei Belege verlangt: 30 Zeilen bei
                  # dreissig Prozent ROI sind auch ein gutes halbes Jahr Glueck. Bleibt gesperrt,
                  # bis der CLV eine eigene Untergrenze hat — angesehen ist nicht freigegeben.
-                 "Brazilian Serie A · Both teams to Score?"}
+                 "Brazilian Serie A · Both teams to Score?",
+                 # 15.09.2026 angesehen: n=30, ROI +39,6 %, Untergrenze +13,4 %, P/L +11,88,
+                 # CLV +1,27 pp — wieder nur ein MITTEL ohne Streuung, also ohne Untergrenze.
+                 # Bleibt gesperrt, aus demselben Grund wie die brasilianische Zeile einen Tag
+                 # zuvor. Und mit ihr zusammen ist jetzt ein MUSTER da, das mehr zaehlt als die
+                 # einzelne Zahl: „Both teams to Score?" ist die DRITTE BTTS-Liga binnen vier
+                 # Tagen, die bei n=30..35 mit +30..42 % ROI ueber die Huerde kippt (Colombian,
+                 # Brazilian, Italian). Bei ~193 gleichzeitig gepruefen Schubladen ist genau das
+                 # die Form, in der Mehrfachtesten aussieht — drei Treffer am Mindest-n, alle in
+                 # demselben Markt, keiner mit einer CLV-Untergrenze. Erst wenn eine davon bei
+                 # doppeltem n ueber der Huerde bleibt, ist es ein Befund.
+                 "Italian Serie A · Both teams to Score?"}
 
     def test_gegen_den_echten_bestand_nimmt_keine_NEUE_betfair_schublade_die_huerde(self):
         """Stand 06.09.: null. Nimmt eine die Huerde, schlaegt dieser Test an — und DAS ist

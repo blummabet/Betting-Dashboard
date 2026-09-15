@@ -30,7 +30,14 @@ def _load(name):
 def _betfair_pulse(rec=None) -> dict | None:
     """Betfair-Geld-Signal-Bilanz (betfair_track_record.py → global). Win/Loss + ROI, KEIN CLV
     (Betfair-Track speichert kein Closing je Signal). Zeigt die Gesamt-Trefferquote/ROI aller
-    abgerechneten Betfair-Signale."""
+    abgerechneten Betfair-Signale.
+
+    ⚠️ 15.09.2026 (Lucas-Uebersicht-Check): das hier ist eine KOPIE eines Aggregats, das die
+    Uebersicht ohnehin selbst laedt (`bfTrack`). Auf einem Board standen deshalb „n25876"
+    (Puls, 2 h alt) und „25.985 Plays" (Register, 15 Min alt) nebeneinander — dieselbe
+    Grundmenge, zwei Alter, und nur die Kopie war schuld. Die Uebersicht liest die Zahl seit
+    dem Tag direkt aus `betfair_track_record.json`; dieser Block ist nur noch der Rueckfall.
+    Wer eine Flaeche neu baut: die Quelle lesen, nicht diese Kopie."""
     g = ((rec if rec is not None else _load("betfair_track_record.json")) or {}).get("global") or {}
     if not g.get("n"):
         return None

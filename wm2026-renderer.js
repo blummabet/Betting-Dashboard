@@ -1296,7 +1296,7 @@
     const adj = heroPick.signalAdjustmentPP;
     const roh = sigList.reduce((a, s) => a + (s.score || 0), 0);
     const adjLabel = (typeof adj === 'number')
-      ? `<span class="cc-sig-adj ${adj > 0.05 ? 'pos' : adj < -0.05 ? 'neg' : ''}" title="Ø gewichtet nach Konfidenz und Signal-Gewicht — bewusst KEINE Summe der Kacheln (die ergäben ${roh > 0 ? '+' : ''}${roh.toFixed(1)}pp). Ein sicheres Signal zählt mehr als ein unsicheres.">${adj > 0 ? '+' : ''}${adj.toFixed(1)}pp Netto <span style="font-weight:600;opacity:.75">Ø gew.</span></span>`
+      ? `<span class="cc-sig-adj ${adj > 0.05 ? 'pos' : adj < -0.05 ? 'neg' : ''}" title="Ø gewichtet nach Konfidenz und Signal-Gewicht — bewusst KEINE Summe der Kacheln (die ergäben ${roh > 0 ? '+' : ''}${roh.toFixed(1)}pp). Ein sicheres Signal zählt mehr als ein unsicheres.">${adj > 0 ? '+' : ''}${adj.toFixed(1)}pp Netto <span style="font-weight:600;opacity:.75">Ø gewichtet</span></span>`
       : '';
     // Nach Betrag sortiert: die Kacheln, die das Ergebnis tragen, stehen vorn. Die
     // Registry-Reihenfolge sagt dem Leser nichts.
