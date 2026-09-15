@@ -114,8 +114,71 @@ def settle_from_track(ledger, track_results, now=None):
     return ledger
 
 
+# 🔴 15.09.2026 (Lucas: „den public push mit den over 0.5 muessen wir aber entfernen aus allen
+# stats oder"). Ja — aber als VOID mit Grund, nicht als Loeschung. Eine Zeile aus dem Buch zu
+# nehmen ist genau das, was dieser Flaeche den Wert nimmt; die Zeile bleibt sichtbar und faellt
+# aus Zaehler UND Nenner (`void` wird seit dem 08.09. ausgewiesen statt still geschluckt).
+#
+# Der Fall: „First Half Goals 0.5 · Over 0.5 @1.51", gesendet 15.09. um 14:16 UTC bei Stand 0:1
+# in Minute 13. Der Ausgang stand da schon fest. Als „won" gezaehlt haette er die Trefferquote
+# mit einer Sicherheit aufgeblasen — und ein geschoenter Track Record ist schlimmer als ein
+# schlechter, weil man ihm nicht mehr glauben kann.
+VOID_ENTSCHIEDEN = "Ausgang beim Senden bereits entschieden"
+
+
+def entschieden_beim_senden(e) -> bool:
+    """War der Ausgang schon entschieden, als der Push RAUSGING? REIN/testbar.
+
+    Nur der Live-Stand ZUM SENDEZEITPUNKT (`live.score`) zaehlt. `htScore` waere der Halbzeit-
+    stand aus der ABRECHNUNG — der sagt nichts darueber, was beim Senden bekannt war, und wer
+    ihn hier benutzt, erklaert nachtraeglich Zeilen fuer ungueltig, die damals offen waren.
+    Die Linien-Regel selbst steht in betfair_alerts.ausgang_schon_entschieden — EINE Stelle."""
+    if not isinstance(e, dict):
+        return False
+    li = e.get("live") or {}
+    sc = li.get("score")
+    if not (isinstance(sc, list) and len(sc) >= 2):
+        return False
+    try:
+        from betfair_alerts import ausgang_schon_entschieden
+    except Exception:
+        return False
+    g1, g2 = sc[0], sc[1]
+    alert = {"market": e.get("market"), "leadName": e.get("leadName"),
+             "live": {"goal_v1": g1 if isinstance(g1, int) else None,
+                      "goal_v2": g2 if isinstance(g2, int) else None,
+                      "time": li.get("time"), "is_ht": False, "finished": False}}
+    return ausgang_schon_entschieden(alert) is True
+
+
+def void_entschiedene(ledger, now=None) -> int:
+    """Schon-entschiedene Zeilen auf void setzen — auch rueckwirkend. Idempotent. REIN/testbar."""
+    n = 0
+    for e in (ledger or []):
+        if not isinstance(e, dict):
+            continue
+        if e.get("voidGrund") == VOID_ENTSCHIEDEN:
+            continue                      # schon erledigt
+        if not entschieden_beim_senden(e):
+            continue
+        e["status"] = "void"
+        e["profit"] = 0.0
+        e["voidGrund"] = VOID_ENTSCHIEDEN
+        if now is not None:
+            e["settledAt"] = now.isoformat()
+        n += 1
+    return n
+
+
 def _grade_ledger_entry(e, ft, ht, now):
     """Einen pending-Push gegen den Endstand abrechnen (status won/lost/void + profit setzen). REIN."""
+    if entschieden_beim_senden(e):
+        e["settledAt"] = now.isoformat()
+        e["ftScore"] = ft
+        e["status"] = "void"
+        e["profit"] = 0.0
+        e["voidGrund"] = VOID_ENTSCHIEDEN
+        return
     fav = fav_token(e.get("market"), e.get("leadName"), e.get("home"), e.get("away"))
     win, ok = grade(fav, e.get("market"), ft, ht)
     e["settledAt"] = now.isoformat()
@@ -358,6 +421,12 @@ def main():
     # 11.08.2026 (Lucas): LETZTER Schritt — manuell gepinnte Endstaende (Spiele in keiner Ergebnisquelle,
     # z.B. EFL-Cup, aus dem Feed verschwunden). Schlaegt Feed/Vanish auch bei bereits abgerechneten Zeilen.
     ledger = apply_manual_results(ledger, _load(MANUAL_RESULTS_FILE, {}))
+    # 15.09.2026: NACH allen Abrechnungs-Schritten — wer beim Senden schon entschieden war, faellt
+    # aus der Bilanz, egal wie ein Endstand-Fetch ihn vorher bewertet hat. Idempotent, wirkt auch
+    # rueckwirkend auf laengst abgerechnete Zeilen.
+    _nv = void_entschiedene(ledger)
+    if _nv:
+        print("  🔇 %d Zeile(n) auf void gesetzt: %s" % (_nv, VOID_ENTSCHIEDEN))
     # abgeschlossene/verworfene lange behalten fürs Ledger, aber deckeln
     ledger = ledger[-LEDGER_KEEP:]
     record = summarize(ledger)

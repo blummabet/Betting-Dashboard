@@ -299,3 +299,96 @@ class TestUntergrenzenUndVerfallene(unittest.TestCase):
         r = E.summarize(self._led(60, 40), now=NOW)
         self.assertIn("roiUg", r["byScenario"]["fresh"])
         self.assertIn("hitUg", r["byScenario"]["fresh"])
+
+
+class EntschiedenBeimSenden(unittest.TestCase):
+    """🔴 15.09.2026 (Lucas: „den public push mit den over 0.5 muessen wir aber entfernen aus
+    allen stats oder"). Ja — aber als VOID mit Grund, nicht als Loeschung.
+
+    Der Fall: „First Half Goals 0.5 · Over 0.5 @1.51", gesendet bei Stand 0:1 in Minute 13.
+    Der Ausgang stand fest. Als Treffer gezaehlt haette er die Quote mit einer SICHERHEIT
+    aufgeblasen — und ein geschoenter Track Record ist schlimmer als ein schlechter."""
+
+    def _e(self, market="First Half Goals 0.5", lead="Over 0.5 Goals",
+           score=None, minute=13, **kw):
+        e = {"k": "fresh:1:%s" % market, "matchId": "1", "market": market, "leadName": lead,
+             "leadOdd": 1.51, "home": "Sporting U23", "away": "Viseu U23",
+             "sentAt": "2026-09-15T14:16:26+00:00", "status": "pending",
+             "live": {"time": minute, "score": [0, 1] if score is None else score}}
+        e.update(kw)
+        return e
+
+    def test_der_echte_fall_wird_erkannt(self):
+        self.assertTrue(E.entschieden_beim_senden(self._e()))
+
+    def test_dieselbe_partie_mit_hoeherer_linie_bleibt_gueltig(self):
+        # Over 1.5 bei 0:1 lebt — genau die Karte, die im Trades-Channel RICHTIG war.
+        self.assertFalse(E.entschieden_beim_senden(
+            self._e(market="First Half Goals 1.5", lead="Over 1.5 Goals")))
+
+    def test_der_halbzeitstand_aus_der_abrechnung_zaehlt_NICHT(self):
+        # 🔴 Die wichtigste Schranke. `htScore` ist der Stand bei HALBZEIT, aus der Abrechnung —
+        # er sagt nichts darueber, was beim SENDEN bekannt war. Wer ihn hier benutzt, erklaert
+        # nachtraeglich Zeilen fuer ungueltig, die damals offen waren. In meinem ersten Anlauf
+        # fielen dadurch 14 statt 2 Zeilen — zwoelf davon zu Unrecht.
+        e = self._e()
+        e.pop("live")
+        e["htScore"] = [0, 1]
+        self.assertFalse(E.entschieden_beim_senden(e))
+
+    def test_ohne_stand_wird_nicht_geraten(self):
+        for e in ({}, self._e(score="kaputt"), self._e(score=[]), None, "x"):
+            self.assertFalse(E.entschieden_beim_senden(e))
+
+    def test_void_statt_loeschen_mit_grund(self):
+        led = [self._e(), self._e(market="First Half Goals 1.5", lead="Over 1.5 Goals")]
+        n = E.void_entschiedene(led)
+        self.assertEqual(n, 1)
+        self.assertEqual(len(led), 2, "die Zeile wurde geloescht statt entwertet")
+        self.assertEqual(led[0]["status"], "void")
+        self.assertEqual(led[0]["profit"], 0.0)
+        self.assertEqual(led[0]["voidGrund"], E.VOID_ENTSCHIEDEN)
+        self.assertEqual(led[1]["status"], "pending")
+
+    def test_wirkt_auch_rueckwirkend_auf_gewonnene_zeilen(self):
+        # Der 11.09.-Fall stand auf „won" und blies die Trefferquote auf.
+        led = [self._e(market="First Half Goals 1.5", lead="Over 1.5 Goals",
+                       score=[3, 1], minute=45, status="won", profit=0.74)]
+        E.void_entschiedene(led)
+        self.assertEqual(led[0]["status"], "void")
+        self.assertEqual(led[0]["profit"], 0.0)
+
+    def test_ist_idempotent(self):
+        led = [self._e()]
+        self.assertEqual(E.void_entschiedene(led), 1)
+        self.assertEqual(E.void_entschiedene(led), 0, "zaehlt bei jedem Lauf erneut")
+
+    def test_die_zeile_faellt_aus_zaehler_UND_nenner(self):
+        led = [self._e(status="won", profit=0.51),
+               self._e(market="Match Odds", lead="Sporting U23", score=[0, 1],
+                       status="won", profit=1.0),
+               self._e(market="Match Odds", lead="Viseu U23", score=[0, 1],
+                       status="lost", profit=-1.0)]
+        vor = E.summarize([dict(x) for x in led])
+        E.void_entschiedene(led)
+        nach = E.summarize(led)
+        self.assertEqual(nach["n"], vor["n"] - 1)
+        self.assertEqual(nach["wins"], vor["wins"] - 1)
+        self.assertEqual(nach.get("ungueltig", 0), vor.get("ungueltig", 0) + 1)
+
+    def test_die_abrechnung_selbst_entwertet_direkt(self):
+        from datetime import datetime, timezone
+        e = self._e()
+        E._grade_ledger_entry(e, [2, 1], [0, 1], datetime(2026, 9, 15, 20, tzinfo=timezone.utc))
+        self.assertEqual(e["status"], "void")
+        self.assertEqual(e["voidGrund"], E.VOID_ENTSCHIEDEN)
+
+    def test_die_linien_regel_steht_nur_an_einer_stelle(self):
+        from pathlib import Path
+        q = (Path(__file__).parent.parent / "betfair_public_eval.py").read_text(encoding="utf-8")
+        self.assertIn("from betfair_alerts import ausgang_schon_entschieden", q)
+
+    def test_der_lauf_ruft_es_auch_auf(self):
+        from pathlib import Path
+        q = (Path(__file__).parent.parent / "betfair_public_eval.py").read_text(encoding="utf-8")
+        self.assertIn("_nv = void_entschiedene(ledger)", q)
