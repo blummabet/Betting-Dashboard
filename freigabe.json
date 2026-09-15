@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-15T22:47:14.685052+00:00",
+ "generatedAt": "2026-09-15T23:02:14.758857+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -34,7 +34,7 @@
     "nieAnteil": 0.045,
     "schaetzbar": false
    },
-   "alterTage": 0.4,
+   "alterTage": 0.5,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "Liga"
@@ -250,11 +250,11 @@
    "zerlegung": "nach Conviction",
    "art": "conviction",
    "gruppen": 7,
-   "basis": "484 von 905 abgerechneten Plays · nur Engine 2026-09-01 · ohne Kampfsport, US-Sport",
-   "n": 484,
-   "pl": 5.65,
-   "roi": 0.0117,
-   "clv": -1.882,
+   "basis": "485 von 906 abgerechneten Plays · nur Engine 2026-09-01 · ohne Kampfsport, US-Sport",
+   "n": 485,
+   "pl": 4.65,
+   "roi": 0.0096,
+   "clv": -1.876,
    "belegte": 1
   },
   {
@@ -3331,7 +3331,7 @@
     "nieAnteil": 0.045,
     "schaetzbar": false
    },
-   "alterTage": 0.4,
+   "alterTage": 0.5,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "Liga"
@@ -4244,37 +4244,6 @@
    "naeherung": false
   },
   {
-   "schublade": "Conviction 6",
-   "strom": "poly",
-   "n": 189,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0034,
-   "pl": -0.65,
-   "roiLb": -0.0968,
-   "clv": -1.267,
-   "clvLb": -2.113,
-   "clvUrteil": "negativ belegt",
-   "clvOg": -0.422,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 1181,
-    "lo": 145,
-    "hi": 72557,
-    "nieAnteil": 0.54,
-    "schaetzbar": false
-   },
-   "alterTage": 0.0,
-   "art": "conviction",
-   "wert": 6,
-   "nAlt": 93,
-   "roiAlt": 0.0229,
-   "clvAlt": 0.077,
-   "engineAlt": true
-  },
-  {
    "schublade": "Japanese J League · Over/Under 3.5 Goals",
    "strom": "betfair",
    "n": 40,
@@ -4294,6 +4263,37 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
+  },
+  {
+   "schublade": "Conviction 6",
+   "strom": "poly",
+   "n": 190,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.0087,
+   "pl": -1.65,
+   "roiLb": -0.102,
+   "clv": -1.256,
+   "clvLb": -2.097,
+   "clvUrteil": "negativ belegt",
+   "clvOg": -0.414,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 1188,
+    "lo": 134,
+    "hi": 76831,
+    "nieAnteil": 0.582,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "conviction",
+   "wert": 6,
+   "nAlt": 93,
+   "roiAlt": 0.0229,
+   "clvAlt": 0.077,
+   "engineAlt": true
   },
   {
    "schublade": "Public · frisches Signal",
@@ -4406,7 +4406,7 @@
     "nieAnteil": 0.412,
     "schaetzbar": false
    },
-   "alterTage": 2.4,
+   "alterTage": 2.5,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "MLS"
@@ -4455,7 +4455,7 @@
     "nieAnteil": 0.52,
     "schaetzbar": false
    },
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "rest"
@@ -4738,44 +4738,6 @@
    "naeherung": false
   },
   {
-   "schublade": "🔒 Poly-Auswahl · von Betfair bestätigt",
-   "strom": "poly",
-   "n": 161,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0273,
-   "pl": -4.39,
-   "roiLb": -0.1474,
-   "clv": -0.292,
-   "clvLb": -1.22,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.636,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 1593,
-    "lo": 136,
-    "hi": 156064,
-    "nieAnteil": 0.642,
-    "schaetzbar": false
-   },
-   "alterTage": 0.0,
-   "art": "vorangemeldet",
-   "angemeldet": "2026-09-01T18:59:52.671883+00:00",
-   "zielN": 60,
-   "warum": "Die einzige Untergruppe der Rangliste mit einer ROI-Untergrenze ueber null. Traegt nicht die Menge der Poly-Signale, sondern die eine FREMDE Stimme: ohne Betfair liegen dieselben Plays bei -5,1% (n=425).",
-   "quelle": "poly_shortlist_track.json → settled",
-   "nDavor": 75,
-   "rueckblick": {
-    "n": 75,
-    "roi": 0.1811,
-    "roiLb": 0.0106,
-    "clv": 0.24,
-    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
-   }
-  },
-  {
    "schublade": "Argentinian Primera Division · Over/Under 2.5 Goals",
    "strom": "betfair",
    "n": 45,
@@ -4795,6 +4757,44 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
+  },
+  {
+   "schublade": "🔒 Poly-Auswahl · von Betfair bestätigt",
+   "strom": "poly",
+   "n": 162,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.0333,
+   "pl": -5.39,
+   "roiLb": -0.153,
+   "clv": -0.284,
+   "clvLb": -1.206,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.638,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 1721,
+    "lo": 181,
+    "hi": 409367,
+    "nieAnteil": 0.658,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "vorangemeldet",
+   "angemeldet": "2026-09-01T18:59:52.671883+00:00",
+   "zielN": 60,
+   "warum": "Die einzige Untergruppe der Rangliste mit einer ROI-Untergrenze ueber null. Traegt nicht die Menge der Poly-Signale, sondern die eine FREMDE Stimme: ohne Betfair liegen dieselben Plays bei -5,1% (n=425).",
+   "quelle": "poly_shortlist_track.json → settled",
+   "nDavor": 75,
+   "rueckblick": {
+    "n": 75,
+    "roi": 0.1811,
+    "roiLb": 0.0106,
+    "clv": 0.24,
+    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
+   }
   },
   {
    "schublade": "English Sky Bet Championship · Over/Under 3.5 Goals",
@@ -5269,37 +5269,6 @@
    "naeherung": false
   },
   {
-   "schublade": "Mix bf+money",
-   "strom": "poly",
-   "n": 122,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0755,
-   "pl": -9.22,
-   "roiLb": -0.2085,
-   "clv": -0.82,
-   "clvLb": -1.951,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.311,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 1534,
-    "lo": 148,
-    "hi": 103667,
-    "nieAnteil": 0.85,
-    "schaetzbar": false
-   },
-   "alterTage": 0.0,
-   "art": "mix",
-   "wert": "bf+money",
-   "nAlt": 60,
-   "roiAlt": 0.1637,
-   "clvAlt": 0.233,
-   "engineAlt": true
-  },
-  {
    "schublade": "Japanese J League 2 · Over/Under 2.5 Goals",
    "strom": "betfair",
    "n": 30,
@@ -5403,6 +5372,37 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
+  },
+  {
+   "schublade": "Mix bf+money",
+   "strom": "poly",
+   "n": 123,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.0831,
+   "pl": -10.22,
+   "roiLb": -0.2155,
+   "clv": -0.805,
+   "clvLb": -1.927,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.317,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 2241,
+    "lo": 168,
+    "hi": 198290,
+    "nieAnteil": 0.86,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "mix",
+   "wert": "bf+money",
+   "nAlt": 60,
+   "roiAlt": 0.1637,
+   "clvAlt": 0.233,
+   "engineAlt": true
   },
   {
    "schublade": "Colombian Primera A · Half Time",
@@ -7613,7 +7613,7 @@
    "noetigNRoi": null,
    "noetigNClv": null,
    "entfernung": null,
-   "alterTage": 2.4,
+   "alterTage": 2.5,
    "art": "verdict",
    "wert": "BET",
    "datensatz": "MLS"
@@ -7728,7 +7728,7 @@
    "noetigNRoi": null,
    "noetigNClv": null,
    "entfernung": null,
-   "alterTage": 2.2,
+   "alterTage": 2.3,
    "art": "conviction",
    "wert": 9,
    "nAlt": 11,
@@ -7821,7 +7821,7 @@
    "clvOg": -1.719,
    "clvUrteil": "negativ belegt",
    "fehltN": 0,
-   "alterTage": 58.4,
+   "alterTage": 58.5,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "WM"
@@ -7840,7 +7840,7 @@
    "clvOg": null,
    "clvUrteil": "gemessen, nicht belegt",
    "fehltN": 0,
-   "alterTage": 73.4,
+   "alterTage": 73.5,
    "art": "verdict",
    "wert": "BET",
    "datensatz": "WM"
