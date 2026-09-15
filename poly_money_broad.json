@@ -1,15 +1,15 @@
 {
- "n": 405,
+ "n": 407,
  "minOdds": 1.35,
- "moneyHitRate": 0.37,
- "priceHitRate": 0.4,
- "brierMoney": 0.912,
+ "moneyHitRate": 0.373,
+ "priceHitRate": 0.405,
+ "brierMoney": 0.9094,
  "brierPrice": 0.6943,
  "disagree": {
-  "n": 109,
-  "moneyWon": 13,
-  "priceWon": 25,
-  "neither": 71
+  "n": 111,
+  "moneyWon": 14,
+  "priceWon": 27,
+  "neither": 70
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -32,10 +32,10 @@
   },
   {
    "league": "LA-LIGA",
-   "n": 39,
-   "moneyHitRate": 0.385,
-   "brierMoney": 0.9431,
-   "brierPrice": 0.7781,
+   "n": 41,
+   "moneyHitRate": 0.415,
+   "brierMoney": 0.9162,
+   "brierPrice": 0.7739,
    "verdict": "preis_besser"
   },
   {
@@ -80,10 +80,10 @@
   }
  ],
  "guete": {
-  "belastbar": 405,
-  "preis_echo": 227,
+  "belastbar": 407,
+  "preis_echo": 226,
   "abgeschnitten": 56,
-  "unbekannt": 351,
+  "unbekannt": 348,
   "leer": 0
  },
  "rows": [
@@ -260,7 +260,7 @@
    "league": "EPL",
    "winner": "Draw (Nottingham Forest FC vs. Tottenham Hotspur FC)",
    "moneyFav": "Tottenham Hotspur FC",
-   "priceFav": "Tottenham Hotspur FC",
+   "priceFav": "Nottingham Forest FC",
    "moneyShare": 0.584,
    "priceProb": 0.357,
    "moneyOK": false,
@@ -374,6 +374,18 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 475718
+  },
+  {
+   "key": "lal-ray-esp-2026-09-15",
+   "league": "LA-LIGA",
+   "winner": "Rayo Vallecano de Madrid",
+   "moneyFav": "Rayo Vallecano de Madrid",
+   "priceFav": "Rayo Vallecano de Madrid",
+   "moneyShare": 0.657,
+   "priceProb": 0.427,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 459593
   },
   {
    "key": "lal-elc-rso-2026-09-07",
@@ -554,34 +566,22 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 288574
-  },
-  {
-   "key": "bun-mai-ein-2026-09-12",
-   "league": "BUNDESLIGA",
-   "winner": "Eintracht Frankfurt",
-   "moneyFav": "1. FSV Mainz 05",
-   "priceFav": "1. FSV Mainz 05",
-   "moneyShare": 0.964,
-   "priceProb": 0.552,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 285416
   }
  ],
- "generatedAt": "2026-09-15T18:52:47.826877+00:00",
+ "generatedAt": "2026-09-15T19:52:29.834969+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 420,
   "nfl": 800,
-  "mlb": 709,
+  "mlb": 800,
   "nhl": 555,
   "mls": 664,
   "epl": 521,
   "soccer": 800,
-  "tennis": 639,
+  "tennis": 633,
   "ucl": 417,
-  "la-liga": 614,
+  "la-liga": 603,
   "bundesliga": 484,
   "serie-a": 51,
   "ligue-1": 513,
@@ -591,17 +591,17 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 630,
+  "esports": 651,
   "cs2": 421,
   "lol": 424,
   "dota": 9,
-  "valorant": 425,
+  "valorant": 441,
   "ufc": 458,
   "mma": 53,
   "boxing": 263,
   "golf": 402,
   "f1": 381,
-  "cricket": 568,
+  "cricket": 560,
   "afc-champions-league-elite": 133,
   "allsvenskan": 1,
   "austria-bundesliga": 312,
@@ -621,7 +621,7 @@
   "japan-j-league": 477,
   "japan-j2-league": 544,
   "k-league": 455,
-  "la-liga-2": 554,
+  "la-liga-2": 555,
   "liga-mx-apertura": 2,
   "ligue-2": 467,
   "naitons-league": 1,
@@ -652,43 +652,53 @@
   "sweepAdded": 404
  },
  "vorStats": {
-  "kandidaten": 19,
+  "kandidaten": 14,
   "budgetLeer": 0,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
-  "mitAnteilen": 19,
-  "calls": 19
+  "mitAnteilen": 14,
+  "calls": 14
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 2076,
-   "usd": 51991417,
-   "beispiel": "fifwc-arg-aut-2026-06-22"
+   "n": 1824,
+   "usd": 44258466,
+   "beispiel": "fifwc-prt-hrv-2026-07-02-player-props"
+  },
+  "balance": {
+   "n": 2,
+   "usd": 6000000,
+   "beispiel": "balance-of-power-2026-midterms"
   },
   "nba": {
-   "n": 362,
-   "usd": 5856085,
-   "beispiel": "nba-por-was-2026-01-27"
+   "n": 334,
+   "usd": 5675500,
+   "beispiel": "nba-2027-champion"
   },
   "ecs": {
-   "n": 12,
-   "usd": 1878159,
+   "n": 8,
+   "usd": 1009211,
    "beispiel": "ecs-ars-mci-2026-08-16"
   },
   "world": {
-   "n": 83,
-   "usd": 1564024,
+   "n": 35,
+   "usd": 921133,
    "beispiel": "world-cup-winner"
   },
+  "elon": {
+   "n": 335,
+   "usd": 820447,
+   "beispiel": "elon-musk-of-tweets-april-10-april-17"
+  },
   "fed": {
-   "n": 31,
-   "usd": 770291,
+   "n": 35,
+   "usd": 694000,
    "beispiel": "fed-decision-in-september-762"
   },
   "nhl": {
-   "n": 49,
-   "usd": 516400,
-   "beispiel": "nhl-phi-car-2026-05-02"
+   "n": 58,
+   "usd": 554032,
+   "beispiel": "nhl-tb-lak-2026-01-01"
   },
   "cbb": {
    "n": 60,
@@ -696,28 +706,38 @@
    "beispiel": "cbb-uconn-mich-2026-04-06"
   },
   "usc": {
-   "n": 8,
-   "usd": 387023,
+   "n": 6,
+   "usd": 379523,
    "beispiel": "usc-psg-av-2026-08-12"
   },
   "fif": {
-   "n": 75,
-   "usd": 312651,
-   "beispiel": "fif-svk-mon-2026-06-05-more-markets"
+   "n": 80,
+   "usd": 345827,
+   "beispiel": "fif-bra-pan-2026-05-31"
+  },
+  "btc": {
+   "n": 35,
+   "usd": 177520,
+   "beispiel": "btc-updown-5m-1784322000"
+  },
+  "clf": {
+   "n": 34,
+   "usd": 153617,
+   "beispiel": "clf-mun-lee-2026-08-12"
   },
   "ballon": {
    "n": 12,
-   "usd": 152676,
+   "usd": 152119,
    "beispiel": "ballon-dor-winner-2026"
   },
-  "clf": {
-   "n": 33,
-   "usd": 152244,
-   "beispiel": "clf-lfc-wre-2026-07-29"
+  "pro": {
+   "n": 28,
+   "usd": 118581,
+   "beispiel": "pro-football-2027-champion-20260729185915366"
   },
   "nbasl": {
-   "n": 3,
-   "usd": 100177,
+   "n": 4,
+   "usd": 101319,
    "beispiel": "nbasl-cle-nop-2026-07-15"
   },
   "j2100": {
@@ -725,40 +745,20 @@
    "usd": 82863,
    "beispiel": "j2100-van-fuk-2026-06-01"
   },
-  "us": {
-   "n": 7,
-   "usd": 69234,
-   "beispiel": "us-x-iran-permanent-peace-deal-by"
-  },
-  "btc": {
-   "n": 27,
-   "usd": 60567,
-   "beispiel": "btc-updown-5m-1789497900"
+  "bitcoin": {
+   "n": 18,
+   "usd": 72287,
+   "beispiel": "bitcoin-all-time-high-by"
   },
   "clarity": {
-   "n": 3,
-   "usd": 57598,
+   "n": 4,
+   "usd": 55089,
    "beispiel": "clarity-act-signed-into-law-in-2026"
   },
-  "democratic": {
-   "n": 7,
-   "usd": 57251,
-   "beispiel": "democratic-presidential-nominee-2028"
-  },
-  "bitcoin": {
-   "n": 12,
-   "usd": 50845,
-   "beispiel": "bitcoin-up-or-down-december-10-9am-et"
-  },
-  "eurovision": {
-   "n": 8,
-   "usd": 43712,
-   "beispiel": "eurovision-winner-2026"
-  },
-  "kbo": {
-   "n": 13,
-   "usd": 40744,
-   "beispiel": "kbo-ssg-doo-2026-09-09"
+  "next": {
+   "n": 6,
+   "usd": 43856,
+   "beispiel": "next-french-presidential-election"
   }
  }
 }

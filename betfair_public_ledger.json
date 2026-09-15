@@ -8124,7 +8124,10 @@ null
 "value": 661113.03,
 "sentAt": "2026-09-15T18:17:02.612422+00:00",
 "status": "pending",
-"htScore": null,
+"htScore": [
+1,
+0
+],
 "consensus": {
 "verdict": "konsens",
 "agree": true
@@ -8204,7 +8207,8 @@ null
 1
 ],
 "profit": 0.3799999999999999,
-"via": "track"
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36027458:Match Odds",
@@ -8219,7 +8223,10 @@ null
 "value": 388899.56,
 "sentAt": "2026-09-15T18:46:50.181676+00:00",
 "status": "pending",
-"htScore": null,
+"htScore": [
+0,
+2
+],
 "consensus": {
 "verdict": "konsens",
 "agree": true
@@ -8246,6 +8253,75 @@ null
 "score": [
 null,
 null
+]
+}
+},
+{
+"k": "fresh:36065979:Match Odds",
+"matchId": "36065979",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Italian Serie C",
+"home": "Barletta",
+"away": "Salernitana",
+"leadName": "Barletta",
+"leadOdd": 2.8,
+"value": 107926.03,
+"sentAt": "2026-09-15T19:17:12.038298+00:00",
+"status": "pending",
+"htScore": null,
+"consensus": {
+"verdict": "no_anchor",
+"agree": null
+},
+"serie": {
+"gefunden": false,
+"grund": "kein Team-Treffer"
+},
+"onLeader": false,
+"leadDir": "flat",
+"leadShare": 0.9759203595277247,
+"live": {
+"time": 12,
+"score": [
+0,
+0
+]
+}
+},
+{
+"k": "fresh:36069612:Match Odds",
+"matchId": "36069612",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Italian Coppa Italia",
+"home": "Fiorentina",
+"away": "Pisa",
+"leadName": "Fiorentina",
+"leadOdd": 1.59,
+"value": 180448.31,
+"sentAt": "2026-09-15T19:17:12.328997+00:00",
+"status": "pending",
+"htScore": [
+1,
+0
+],
+"consensus": {
+"verdict": "konsens",
+"agree": true
+},
+"serie": {
+"gefunden": false,
+"grund": "keine Serie"
+},
+"onLeader": false,
+"leadDir": "flat",
+"leadShare": 0.9039623036646893,
+"live": {
+"time": 13,
+"score": [
+0,
+0
 ]
 }
 }
