@@ -1,2 +1,8 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# 15.09.2026 (Lucas): matches/data ist PIPELINE-AUSGABE. Bei einem Merge gewinnt immer der
+# Server — der Generator schreibt diese Dateien ohnehin neu. Ohne diese Zeile legt jeder Pull
+# 174 Konflikte vor, die man einzeln anklicken muesste, und jeder davon ist dieselbe Antwort.
+# Der Treiber steht lokal: git config merge.pipeline.driver 'cp -f "%B" "%A"'
+matches/data/*.json merge=pipeline
