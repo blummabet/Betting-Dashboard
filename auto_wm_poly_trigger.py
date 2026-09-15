@@ -807,6 +807,12 @@ def find_trigger_candidates(fixtures: list, placed_keys: set) -> list:
                 "isSteamLag":  has_steam_lag,
                 "matchDate":   (fix.get("date") or "")[:10],
                 "kickoff":     fix.get("kickoff"),   # echte Anpfiffzeit (UTC) für 2h-Pre-Match-Close
+                # 15.09.2026 (Lucas: „koennte es sein dass Spiele weiter in Zukunft liegen und
+                # getraded werden"). Der Trigger hat KEINE Obergrenze — trotzdem war bisher an
+                # keiner Wette festgehalten, wie weit der Anpfiff beim Kauf weg war. Damit liess
+                # sich die Frage, ob weiter draussen mehr Kante liegt, gar nicht beantworten.
+                # Der Shortlist-Track schreibt `htkAtEntry` seit dem 14.09.; hier fehlte es.
+                "htkAtEntry":  h,
                 "_betKey":     key,   # intern, wird vor Übergabe an polymarket_bet entfernt
             })
 
@@ -1336,6 +1342,7 @@ def main():
                 "tokenId":        token_id,
                 "matchDate":      order.get("matchDate", ""),
                 "kickoff":        order.get("kickoff"),   # echte Anpfiffzeit (UTC) → 2h-Pre-Match-Close
+                "htkAtEntry":     order.get("htkAtEntry"),   # 15.09.2026: Abstand zum Anpfiff BEIM KAUF
                 "sharesEstimate": shares_estimate,
                 "isSteamLag":     is_steam,
                 # FIX 14.06.2026: source explizit taggen (vorher fehlte es → Frontend/Resolve

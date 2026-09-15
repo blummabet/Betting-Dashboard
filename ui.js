@@ -42,6 +42,7 @@ const _ALL_PANELS = [
   'tiktokStudioPanel', 'streaksPanel',
   'polymarketPanel', 'polyTraderPanel', 'polyWalletsPanel', 'betfairRadarPanel', 'moneyMapPanel',
   'heartPanel', 'statusPanel', 'signalCheckPanel', 'stakeRadarPanel', 'statsPanel',
+  'messungenPanel',
 ];
 
 // Top-nav button IDs (Heart/Status seit 28.06.2026 im „Mehr"-Dropdown, nicht mehr hier)
@@ -86,6 +87,7 @@ function showView(view) {
     'stats':             'statsPanel',
     'heart':             'heartPanel',
     'status':            'statusPanel',
+    'messungen':         'messungenPanel',
   };
   const panelId = panelMap[view];
   if (panelId) {
@@ -142,7 +144,7 @@ function showView(view) {
   // ── „Mehr"-Menü (28.06.2026, Lucas): Heart/Status/Telegram/TikTok gebündelt ──
   // Desktop = Dropdown (#navMore + .top-more-menu), Mobile = Bottom-Sheet (.more-sheet).
   // Telegram/TikTok haben Section 'intl' → über die volle View (_activeView) matchen.
-  const MORE_SECS  = ['intl', 'polytrading', 'sharp', 'heart', 'status', 'analyse', 'stats'];   // 14.08.2026 (Lucas): Intl/Sharp/Poly-Trading ins Mehr
+  const MORE_SECS  = ['intl', 'polytrading', 'sharp', 'heart', 'status', 'analyse', 'stats', 'messungen'];   // 14.08.2026 (Lucas): Intl/Sharp/Poly-Trading ins Mehr
   const MORE_VIEWS = ['intl-studio'];   // Telegram lebt jetzt im Status-Tab (28.06.2026)
   const isMore = MORE_SECS.includes(_activeSection) || MORE_VIEWS.includes(_activeView);
 
@@ -201,6 +203,8 @@ function showView(view) {
   if (view === 'intl-studio'       && typeof initTiktokStudio  === 'function') initTiktokStudio();
   // 09.09.2026: die Stats-Seite laedt ihr eigenes Artefakt beim ersten Oeffnen.
   if (view === 'stats'             && typeof window._stLoad       === 'function') window._stLoad();
+  // 15.09.2026: das Buch der laufenden Messungen laedt beim ersten Oeffnen.
+  if (view === 'messungen'         && typeof initMessungen      === 'function') initMessungen();
 }
 
 // Sub-nav click: navigate within current section

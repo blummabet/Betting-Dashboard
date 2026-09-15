@@ -732,3 +732,146 @@ def test_main_meldet_den_liegengebliebenen_play(tmp_path, monkeypatch):
     assert "Alpha vs Beta" in text
     assert "kein Token" in text
     assert "Trockenlauf" in text, "ohne Schalter muss die Meldung das sagen"
+
+
+class HaengendeMeldung(unittest.TestCase):
+    """🔴 15.09.2026 (Lucas: „wieso steht BIG noch nicht als beendet? Spiel laengst vorbei").
+
+    Der Paper-Tracker gab den Markt auf, die echte Wette bekam `haengt: true` — korrekt, aber
+    NUR als Feld in einer JSON-Datei. Kein Ergebnis, keine Bilanz-Zeile, keine Meldung: $5
+    blockierten den Deckel auf unbestimmte Zeit, und der Verlust tauchte nirgends auf.
+    """
+
+    def _bet(self, **kw):
+        b = {"key": "lol-big1-koia-2026-09-14", "match": "BIG vs KOI", "side": "BIG",
+             "stake": 5.0, "polyPrice": 0.38, "status": "placed",
+             "haengtGrund": "nicht getrackt"}
+        b.update(kw)
+        return b
+
+    def test_meldung_nennt_einsatz_fill_und_grund(self):
+        t = SAB.haengend_text([self._bet()])
+        self.assertIn("BIG vs KOI", t)
+        self.assertIn("$5.00", t)
+        self.assertIn("38¢", t)
+        self.assertIn("nicht getrackt", t)
+
+    def test_ohne_faelle_keine_meldung(self):
+        self.assertEqual(SAB.haengend_text([]), "")
+
+    def test_trockenlauf_wird_gekennzeichnet(self):
+        self.assertIn("Trockenlauf", SAB.haengend_text([self._bet()], dry=True))
+        self.assertNotIn("Trockenlauf", SAB.haengend_text([self._bet()], dry=False))
+
+    def test_fehlende_zahlen_rendern_als_fragezeichen_statt_zu_werfen(self):
+        t = SAB.haengend_text([self._bet(stake=None, polyPrice=None, match=None)])
+        self.assertIn("?", t)
+
+    def test_lange_liste_wird_gekuerzt(self):
+        t = SAB.haengend_text([self._bet(match=f"m{i}") for i in range(12)])
+        self.assertIn("und 4 weitere", t)
+
+    def test_abgleichen_markiert_nur_den_uebergang(self):
+        # PROVOKATION: ohne den Marker meldete entweder niemand — oder jeder Lauf erneut
+        # dieselbe Position, bis die Meldung als Rauschen ignoriert wird.
+        bets = [self._bet(betKey="lol-big1-koia-2026-09-14|BIG")]
+        track = {"unaufloesbar": [{"key": "lol-big1-koia-2026-09-14", "side": "BIG",
+                                   "grund": "nicht getrackt"}]}
+        SAB.abgleichen(bets, track)
+        self.assertTrue(bets[0].get("haengt"))
+        self.assertTrue(bets[0].get("_neuHaengend"))
+        bets[0].pop("_neuHaengend")
+        SAB.abgleichen(bets, track)          # zweiter Lauf
+        self.assertNotIn("_neuHaengend", bets[0])
+
+    def test_abgerechnete_position_haengt_nicht(self):
+        bets = [self._bet(betKey="lol-big1-koia-2026-09-14|BIG", status="lost", result="LOSS")]
+        track = {"unaufloesbar": [{"key": "lol-big1-koia-2026-09-14", "side": "BIG"}]}
+        SAB.abgleichen(bets, track)
+        self.assertNotIn("_neuHaengend", bets[0])
+
+
+def test_main_meldet_die_position_ohne_ergebnis(tmp_path, monkeypatch):
+    """⭐ Gegenprobe am ganzen Lauf: gibt der Paper-Tracker eine Position mit echtem Geld auf,
+    MUSS das im Channel landen. Ohne diesen Test ueberlebt die Mutation „main raeumt den Marker
+    ab, ohne zu senden" — und $5 verschwinden wieder lautlos aus jeder Bilanz."""
+    import json as _json
+    placed = tmp_path / "placed.json"
+    placed.write_text(_json.dumps({"bets": [
+        {"betKey": "lol-big1-koia-2026-09-14|BIG", "key": "lol-big1-koia-2026-09-14",
+         "match": "BIG vs KOI", "side": "BIG", "stake": 5.0, "polyPrice": 0.38,
+         "status": "placed"}]}), encoding="utf-8")
+    track = tmp_path / "track.json"
+    track.write_text(_json.dumps({"unaufloesbar": [
+        {"key": "lol-big1-koia-2026-09-14", "side": "BIG", "grund": "nicht getrackt"}]}),
+        encoding="utf-8")
+    leer = tmp_path / "leer.json"
+    leer.write_text("{}", encoding="utf-8")
+    led = tmp_path / "ledger.json"
+    led.write_text("[]", encoding="utf-8")
+
+    monkeypatch.setattr(SAB, "LEDGER_FILE", led)
+    monkeypatch.setattr(SAB, "PLACED_FILE", placed)
+    monkeypatch.setattr(SAB, "TRACK_FILE", track)
+    monkeypatch.setattr(SAB, "OFFEN_FILE", leer)
+    monkeypatch.setattr(SAB, "CLOSE_FILE", leer)
+    monkeypatch.setattr(SAB, "BASE", tmp_path)
+    monkeypatch.setattr(SAB, "_balance", lambda base_dir=None: (250.0, "TEST"))
+
+    gesendet = []
+    import telegram_trades as _TT
+    monkeypatch.setattr(_TT, "send_trades_message", lambda t, **kw: gesendet.append(t) or True)
+
+    SAB.main()
+
+    text = "\n".join(gesendet)
+    assert "Position ohne Ergebnis" in text, "die haengende Position wurde nirgends gemeldet"
+    assert "BIG vs KOI" in text
+    assert "nicht getrackt" in text
+    # und der Marker darf nicht im Buch landen
+    buch = _json.loads(placed.read_text(encoding="utf-8"))
+    assert "_neuHaengend" not in buch["bets"][0]
+    assert buch["bets"][0]["haengt"] is True
+
+
+class ClvAufDemEchtenFill(unittest.TestCase):
+    """🔴 15.09.2026. Bewertet wurde der Auto-Bet anhand des PAPIERS, das er kopiert — und die
+    beiden sind nicht dieselbe Wette: BIG stand im Papier bei 64¢ und wurde real bei 38¢
+    gefuellt. Derselbe Schlusskurs, zwei Einstiege, zwei CLVs."""
+
+    def _lauf(self, fill=0.38, close=0.50, papier_clv=-14.0, entry=0.635):
+        bets = [{"betKey": "k|A", "key": "k", "side": "A", "match": "A vs B",
+                 "stake": 5.0, "polyPrice": fill, "status": "placed"}]
+        track = {"settled": [{"key": "k", "side": "A", "result": "win", "winner": "A",
+                              "entryPrice": entry, "closePrice": close, "clvPP": papier_clv}]}
+        SAB.abgleichen(bets, track)
+        return bets[0]
+
+    def test_clv_wird_auf_dem_echten_fill_gerechnet(self):
+        b = self._lauf()
+        self.assertEqual(b["clvPP"], 12.0)          # (0.50 - 0.38) * 100
+        self.assertEqual(b["status"], "won")
+
+    def test_der_papier_clv_steht_zum_vergleich_daneben(self):
+        b = self._lauf()
+        self.assertEqual(b["clvPapierPP"], -14.0)
+        self.assertEqual(b["clvVorsprungPP"], 26.0)
+
+    def test_ohne_schlusskurs_wird_kein_clv_erfunden(self):
+        # PROVOKATION: ein clvPP von 0 hiesse „flach" statt „keine Schluss-Referenz" — genau
+        # die Verwechslung, die den Poly-Shortlist-CLV am 07.08. wertlos gemacht hat.
+        b = self._lauf(close=None)
+        self.assertNotIn("clvPP", b)
+
+    def test_ohne_papier_clv_bleibt_der_vorsprung_leer(self):
+        b = self._lauf(papier_clv=None)
+        self.assertIn("clvPP", b)
+        self.assertNotIn("clvVorsprungPP", b)
+
+    def test_der_zaehler_des_messungsbuchs_findet_ihn(self):
+        import messungen as M
+        import tempfile, json as _j, os as _o
+        d = tempfile.mkdtemp()
+        with open(_o.path.join(d, "shortlist_auto_bets_placed.json"), "w") as f:
+            _j.dump({"bets": [{"clvPP": 12.0}, {"status": "placed"}]}, f)
+        self.assertEqual(M.zaehler_echte_fills(d), 1)

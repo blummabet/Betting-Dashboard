@@ -328,6 +328,23 @@ def abgleichen(bets, track, jetzt=None) -> int:
                 b["pnl"] = 0.0
             b["resolvedAt"] = _iso(jetzt)
             b["winner"] = s.get("winner")
+            # 🔴 15.09.2026 (Lucas: „wo sehen wir den Outcome dieser Messungen?"). Bis hierher
+            # wurde der Auto-Bet anhand des PAPIERS bewertet, das er kopiert — und die beiden
+            # sind nicht dieselbe Wette: BIG stand im Papier bei 64c und wurde real bei 38c
+            # gefuellt. Derselbe Schlusskurs, zwei Einstiege, zwei CLVs. Erst wenn beide
+            # nebeneinander stehen, laesst sich sagen, ob das Nachspielen besser oder
+            # schlechter ist als die Vorlage. Konvention wie im Paper-Track: (Schluss - Einstieg)
+            # in Prozentpunkten, positiv = guenstiger gekauft als der Markt schloss.
+            try:
+                close = float(s.get("closePrice"))
+            except (TypeError, ValueError):
+                close = None
+            if close and close > 0 and fill > 0:
+                b["clvPP"] = round((close - fill) * 100, 2)
+                b["closePrice"] = round(close, 4)
+                if isinstance(s.get("clvPP"), (int, float)):
+                    b["clvPapierPP"] = round(float(s["clvPP"]), 2)
+                    b["clvVorsprungPP"] = round(b["clvPP"] - b["clvPapierPP"], 2)
             b.pop("haengt", None)
             n += 1
         elif k in tot and not b.get("haengt"):
@@ -335,6 +352,9 @@ def abgleichen(bets, track, jetzt=None) -> int:
             b["haengt"] = True
             b["haengtGrund"] = tot[k].get("grund") or "vom Tracker abgeschrieben"
             b["haengtSeit"] = _iso(jetzt)
+            # 15.09.2026: nur der UEBERGANG wird gemeldet (der Zweig laeuft nur bei `not haengt`),
+            # sonst kaeme dieselbe Position bei jedem Lauf erneut ins Telegram.
+            b["_neuHaengend"] = True
             n += 1
     return n
 
@@ -445,6 +465,49 @@ def liegengeblieben_text(faelle, dry=False) -> str:
     return kopf + "\n" + "\n".join(zeilen)
 
 
+def haengend_text(bets, dry=False) -> str:
+    """Die Meldung „Position ohne Ergebnis". REIN/testbar.
+
+    🔴 15.09.2026 (Lucas: „wieso steht BIG noch nicht als beendet? Spiel laengst vorbei").
+    Der Paper-Tracker laesst unaufloesbare Plays nach zwei Tagen verfallen — richtig fuer Papier,
+    falsch fuer Geld. Die echte Wette bekam dabei `haengt: true` und blieb korrekt in der
+    Exposure, aber NUR als Feld in einer JSON-Datei: kein Ergebnis, keine Bilanz-Zeile, keine
+    Meldung. $5 blockierten den $100-Deckel auf unbestimmte Zeit, und eine verlorene Wette
+    tauchte in keiner Statistik als Verlust auf.
+
+    Ein Track Record, dessen einziger Wert Ehrlichkeit ist, darf einen Verlust nicht
+    verschwinden lassen. Also derselbe Satz wie an den anderen Stellen: wer nicht handeln kann,
+    muss es sagen.
+    """
+    if not bets:
+        return ""
+    kopf = "⚠️ <b>Position ohne Ergebnis</b> (%d)" % len(bets)
+    if dry:
+        kopf += " <i>— Trockenlauf</i>"
+    zeilen = []
+    for b in bets[:8]:
+        titel = b.get("match") or b.get("key") or "?"
+        seite = b.get("side")
+        try:
+            stake = "$%.2f" % float(b.get("stake") or 0)
+        except (TypeError, ValueError):
+            stake = "?"
+        try:
+            fill = "%d¢" % round(float(b.get("polyPrice")) * 100)
+        except (TypeError, ValueError):
+            fill = "?"
+        kopfzeile = "• %s — %s" % (titel, seite) if seite else "• %s" % titel
+        zeilen.append(kopfzeile)
+        zeilen.append("   %s @ %s · %s" % (stake, fill,
+                                           b.get("haengtGrund") or "kein Grund vermerkt"))
+    if len(bets) > 8:
+        zeilen.append("… und %d weitere" % (len(bets) - 8))
+    zeilen.append("")
+    zeilen.append("<i>Der Tracker hat den Markt abgeschrieben, das Geld liegt weiter auf "
+                  "Polymarket. Zaehlt weiter gegen den Deckel, steht in keiner Bilanz.</i>")
+    return kopf + "\n" + "\n".join(zeilen)
+
+
 def _melden(zeile, bet, dry):
     """Trades-Channel-Meldung fuer eine gesetzte Shortlist-Wette."""
     from telegram_trades import notify_shortlist_opened
@@ -479,6 +542,15 @@ def main() -> int:
         n_ab = abgleichen(bets, track)
         if n_ab:
             print(f"  📒 {n_ab} Position(en) abgeglichen (Ausgang vom Paper-Tracker).")
+        # 15.09.2026: eine Position, die das Papier aufgibt, darf nicht nur ein Feld werden.
+        _neu_haengend = [b for b in bets if isinstance(b, dict) and b.pop("_neuHaengend", None)]
+        if _neu_haengend:
+            print(f"  ⚠️  {len(_neu_haengend)} Position(en) ohne Ergebnis — wird gemeldet.")
+            try:
+                from telegram_trades import send_trades_message
+                send_trades_message(haengend_text(_neu_haengend, not AN))
+            except Exception as exc:
+                print(f"  ℹ️  Haengend-Meldung nicht gesendet: {exc}")
 
     exp = PO.wallet_exposure(str(BASE))
     if exp["unlesbar"]:

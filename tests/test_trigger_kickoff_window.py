@@ -106,3 +106,34 @@ class TestDerGateBenutztDenAnpfiff:
         assert "hours_until(_anpfiff_feld(fix))" in src
         assert 'hours_until(fix.get("date", ""))' not in src, \
             "der alte, datums-basierte Aufruf steht noch da"
+
+
+class TestAnpfiffAbstandWirdFestgehalten:
+    """15.09.2026 (Lucas: „koennte es sein dass Spiele weiter in Zukunft liegen und getraded
+    werden?"). Der Trigger hat keine Obergrenze — trotzdem stand an keiner platzierten Wette,
+    wie weit der Anpfiff beim Kauf weg war. Die Frage, ob weiter draussen mehr Kante liegt,
+    war damit unbeantwortbar: nicht „kein Befund", sondern kein Messwert."""
+
+    def test_die_order_traegt_den_abstand_zum_anpfiff(self):
+        import re
+        quelle = open(os.path.join(REPO, "auto_wm_poly_trigger.py"), encoding="utf-8").read()
+        # In find_trigger_candidates wird `h` bereits fuer das Anpfiff-Gate gerechnet —
+        # es muss auch an der Order landen, sonst ist es nach dem Lauf weg.
+        assert re.search(r'"htkAtEntry":\s*h,', quelle), \
+            "der Anpfiff-Abstand wird nicht an die Order gehaengt"
+
+    def test_der_abstand_ueberlebt_die_platzierung(self):
+        import re
+        quelle = open(os.path.join(REPO, "auto_wm_poly_trigger.py"), encoding="utf-8").read()
+        # PROVOKATION: an der Order allein nuetzt er nichts — das Wett-Buch ist die Datei,
+        # die in zwei Wochen ausgewertet wird.
+        assert re.search(r'"htkAtEntry":\s*order\.get\("htkAtEntry"\)', quelle), \
+            "der Anpfiff-Abstand faellt beim Schreiben der Wette wieder raus"
+
+    def test_der_zaehler_des_messungsbuchs_findet_ihn_unter_diesem_namen(self):
+        # Der Name ist der Vertrag zwischen Trader und Buch — und derselbe wie im
+        # Shortlist-Track, damit beide Systeme dieselbe Frage beantworten.
+        import messungen as M
+        assert M.ZAEHLER["htk_trader"].__doc__
+        quelle = open(os.path.join(REPO, "messungen.py"), encoding="utf-8").read()
+        assert '"htkAtEntry", ("wm_", "liga_", "mls_")' in quelle

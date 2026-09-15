@@ -2277,6 +2277,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
       <button class="tm-item" data-view="analyse"       onclick="showView('analyse');closeTopMore()">📊 Analyse</button>
       <button class="tm-item" data-view="stakeradar"    onclick="showView('stakeradar');closeTopMore()" style="color:#67cc91">🎰 Stake Radar</button>
       <button class="tm-item" data-view="stats"         onclick="showView('stats');closeTopMore()">📊 Stats</button>
+      <button class="tm-item" data-view="messungen"     onclick="showView('messungen');closeTopMore()" style="color:#a78bfa">🔬 Messungen<span id="navMessungenDot" style="display:none;width:8px;height:8px;border-radius:50%;background:#e3b341;margin-left:6px;vertical-align:middle;box-shadow:0 0 6px rgba(227,179,65,.8);"></span></button>
     </div>
   </div>
 </div>
@@ -2342,6 +2343,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <button class="ms-btn" data-view="intl-studio" onclick="showView('intl-studio');toggleMoreSheet()">🎬 TikTok Studio</button>
     <button class="ms-btn" data-view="analyse"     onclick="showView('analyse');toggleMoreSheet()">📊 Analyse</button>
     <button class="ms-btn" data-view="stats"       onclick="showView('stats');toggleMoreSheet()">📊 Stats</button>
+    <button class="ms-btn" data-view="messungen"  onclick="showView('messungen');toggleMoreSheet()">🔬 Messungen</button>
     <button class="ms-btn" data-view="stakeradar"  onclick="showView('stakeradar');toggleMoreSheet()">🎰 Stake Radar</button>
   </div>
 </div>
@@ -4222,6 +4224,8 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 <div id="signalCheckPanel" style="display:none;max-width:1100px;margin:0 auto;padding:20px 16px 100px;"></div>
 <div id="stakeRadarPanel" style="display:none;max-width:1180px;margin:0 auto;padding:20px 16px 100px;"></div>
 <div id="statsPanel" style="display:none;max-width:1180px;margin:0 auto;padding:20px 16px 100px;"></div>
+<!-- 15.09.2026 (Lucas): Buch der laufenden Messungen — offene Fragen mit Termin und Datenstand. -->
+<div id="messungenPanel" style="display:none;max-width:1180px;margin:0 auto;padding:20px 16px 100px;"></div>
 <div id="polyTraderPanel" style="display:none;max-width:1100px;margin:0 auto;padding:20px 16px 100px;"></div>
 
 <!-- TRACKING V2 PANEL -->
@@ -4390,6 +4394,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     "results-v2.js", "wm2026-renderer.js", "wm2026-tracking.js", "tiktok-studio.js",
     "stake-radar.js",
     "stats.js",
+    "messungen.js",
     "main-dashboard.js"
   ];
   for (var i = 0; i < scripts.length; i++) {
