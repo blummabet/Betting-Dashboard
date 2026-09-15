@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-09-15T20:31:55.413595+00:00",
-"count": 29,
-"covered": 23,
+"generatedAt": "2026-09-15T20:46:52.086298+00:00",
+"count": 22,
+"covered": 18,
 "leaguesCovered": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -35,7 +35,7 @@
 "soccer_usa_mls"
 ],
 "oddsKeysFetched": 47,
-"ankerQuote": 0.313,
+"ankerQuote": 0.281,
 "games": [
 {
 "matchId": "36027457",
@@ -47,12 +47,12 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Liverpool",
-"moneySharePct": 89,
-"moneyOdd": 1.31,
-"moneyDir": "out",
-"totVol": 3874901,
-"pinnOdd": null,
-"softOdd": 1.27,
+"moneySharePct": 90,
+"moneyOdd": 1.16,
+"moneyDir": "in",
+"totVol": 4391118,
+"pinnOdd": 1.23,
+"softOdd": 1.14,
 "softN": 31,
 "poly": {
 "vol": 1096649,
@@ -81,11 +81,16 @@
 ],
 "whaleUsd": 234818
 },
-"pinn": null,
+"pinn": {
+"home": 0.7724,
+"draw": 0.1885,
+"away": 0.0391,
+"fav": "home"
+},
 "soft": {
-"home": 0.7293,
-"draw": 0.2151,
-"away": 0.0556,
+"home": 0.8224,
+"draw": 0.1574,
+"away": 0.0203,
 "fav": "home",
 "n": 31
 },
@@ -106,9 +111,9 @@
 "moneySide": "away",
 "moneyName": "Real Madrid",
 "moneySharePct": 95,
-"moneyOdd": 1.03,
-"moneyDir": "flat",
-"totVol": 3291144,
+"moneyOdd": 1.02,
+"moneyDir": "in",
+"totVol": 3329875,
 "pinnOdd": null,
 "softOdd": 1.01,
 "softN": 27,
@@ -141,9 +146,9 @@
 },
 "pinn": null,
 "soft": {
-"home": 0.0104,
-"draw": 0.0356,
-"away": 0.954,
+"home": 0.0083,
+"draw": 0.0354,
+"away": 0.9562,
 "fav": "away",
 "n": 27
 },
@@ -166,7 +171,7 @@
 "moneySharePct": 93,
 "moneyOdd": 1.01,
 "moneyDir": "flat",
-"totVol": 1169618,
+"totVol": 1171811,
 "pinnOdd": null,
 "softOdd": 1.0,
 "softN": 7,
@@ -199,167 +204,15 @@
 },
 "pinn": null,
 "soft": {
-"home": 0.0095,
-"draw": 0.0221,
-"away": 0.9684,
+"home": 0.1513,
+"draw": 0.0148,
+"away": 0.8339,
 "fav": "away",
 "n": 7
 },
 "pinnMovePP": null,
 "pinnMove": null,
 "verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36027467",
-"home": "West Ham",
-"away": "Fulham",
-"league": "English Football League Cup",
-"country": "GB",
-"kickoff": "2026-09-15T18:45:00Z",
-"live": true,
-"moneySide": "away",
-"moneyName": "Fulham",
-"moneySharePct": 61,
-"moneyOdd": 1.16,
-"moneyDir": "in",
-"totVol": 960768,
-"pinnOdd": 1.21,
-"softOdd": 1.14,
-"softN": 31,
-"poly": {
-"vol": 409929,
-"odd": 3.64,
-"sharePct": 39,
-"shareSrc": "geld",
-"key": "efl-whu-ful-2026-09-15",
-"sideKey": "Fulham FC",
-"whales": [
-{
-"wallet": "0x3f985e3a68f88e6ed8da1a22e1a5eda81c8e0aa1",
-"usd": 14827
-}
-],
-"whaleUsd": 14827
-},
-"pinn": {
-"home": 0.0367,
-"draw": 0.1821,
-"away": 0.7812,
-"fav": "away"
-},
-"soft": {
-"home": 0.0214,
-"draw": 0.1619,
-"away": 0.8167,
-"fav": "away",
-"n": 31
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36064344",
-"home": "Middlesbrough",
-"away": "Millwall",
-"league": "English Sky Bet Championship",
-"country": "GB",
-"kickoff": "2026-09-15T18:45:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Middlesbrough",
-"moneySharePct": 44,
-"moneyOdd": 6.2,
-"moneyDir": "out",
-"totVol": 879111,
-"pinnOdd": 2.96,
-"softOdd": 4.82,
-"softN": 36,
-"poly": {
-"vol": 80984,
-"odd": 2.47,
-"sharePct": 56,
-"shareSrc": "geld",
-"key": "elc-mid-mil-2026-09-08",
-"sideKey": "Middlesbrough FC",
-"whales": [
-{
-"wallet": "0xe915e574f47735e9c00f0b3b70299f61bff83d7f",
-"usd": 3345
-},
-{
-"wallet": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
-"usd": 3191
-}
-],
-"whaleUsd": 6536
-},
-"pinn": {
-"home": 0.3193,
-"draw": 0.587,
-"away": 0.0938,
-"fav": "draw"
-},
-"soft": {
-"home": 0.1888,
-"draw": 0.75,
-"away": 0.0611,
-"fav": "draw",
-"n": 36
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "uneinig",
-"agree": false,
-"pinnTotals": null
-},
-{
-"matchId": "36027478",
-"home": "Peterborough",
-"away": "Barnsley",
-"league": "English Football League Cup",
-"country": "GB",
-"kickoff": "2026-09-15T18:30:00Z",
-"live": true,
-"moneySide": "away",
-"moneyName": "Barnsley",
-"moneySharePct": 46,
-"moneyOdd": 950.0,
-"moneyDir": "flat",
-"totVol": 369641,
-"pinnOdd": 1.24,
-"softOdd": 22.0,
-"softN": 28,
-"poly": {
-"vol": 27811,
-"odd": 15.38,
-"sharePct": 6,
-"shareSrc": "geld",
-"key": "efl-pet-bar1-2026-09-15",
-"sideKey": "Barnsley FC",
-"whales": [],
-"whaleUsd": 0
-},
-"pinn": {
-"home": 0.0402,
-"draw": 0.1974,
-"away": 0.7624,
-"fav": "away"
-},
-"soft": {
-"home": 0.059,
-"draw": 0.8964,
-"away": 0.0446,
-"fav": "draw",
-"n": 28
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "teil",
 "agree": true,
 "pinnTotals": null
 },
@@ -374,12 +227,12 @@
 "moneySide": "home",
 "moneyName": "Fiorentina",
 "moneySharePct": 89,
-"moneyOdd": 1.24,
-"moneyDir": "out",
-"totVol": 337971,
-"pinnOdd": 1.19,
-"softOdd": 1.17,
-"softN": 22,
+"moneyOdd": 1.02,
+"moneyDir": "in",
+"totVol": 351288,
+"pinnOdd": null,
+"softOdd": 1.0,
+"softN": 14,
 "poly": {
 "vol": 108883,
 "odd": 1.26,
@@ -403,78 +256,18 @@
 ],
 "whaleUsd": 10378
 },
-"pinn": {
-"home": 0.7944,
-"draw": 0.1691,
-"away": 0.0365,
-"fav": "home"
-},
+"pinn": null,
 "soft": {
-"home": 0.8039,
-"draw": 0.1636,
-"away": 0.0325,
+"home": 0.9663,
+"draw": 0.0278,
+"away": 0.006,
 "fav": "home",
-"n": 22
+"n": 14
 },
 "pinnMovePP": null,
 "pinnMove": null,
 "verdict": "konsens",
 "agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36064351",
-"home": "Bristol City",
-"away": "Lincoln",
-"league": "English Sky Bet Championship",
-"country": "GB",
-"kickoff": "2026-09-15T18:45:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Bristol City",
-"moneySharePct": 46,
-"moneyOdd": 48.0,
-"moneyDir": "out",
-"totVol": 322705,
-"pinnOdd": 16.31,
-"softOdd": 43.01,
-"softN": 36,
-"poly": {
-"vol": 96594,
-"odd": 13.33,
-"sharePct": 57,
-"shareSrc": "geld",
-"key": "elc-bri-lin-2026-09-08",
-"sideKey": "Bristol City FC",
-"whales": [
-{
-"wallet": "0xaebf3acc7c9add4928bd218f96de5cf64987e1ca",
-"usd": 1626
-},
-{
-"wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
-"usd": 651
-}
-],
-"whaleUsd": 2277
-},
-"pinn": {
-"home": 0.0581,
-"draw": 0.2549,
-"away": 0.687,
-"fav": "away"
-},
-"soft": {
-"home": 0.0228,
-"draw": 0.1782,
-"away": 0.799,
-"fav": "away",
-"n": 36
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "uneinig",
-"agree": false,
 "pinnTotals": null
 },
 {
@@ -490,7 +283,7 @@
 "moneySharePct": 98,
 "moneyOdd": 1.09,
 "moneyDir": "flat",
-"totVol": 216532,
+"totVol": 217566,
 "pinnOdd": 1.06,
 "softOdd": 1.06,
 "softN": 45,
@@ -511,9 +304,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.8955,
+"home": 0.8957,
 "draw": 0.0648,
-"away": 0.0397,
+"away": 0.0395,
 "fav": "home",
 "n": 45
 },
@@ -530,43 +323,6 @@
 "pinnTotals": null
 },
 {
-"matchId": "36071028",
-"home": "Falkirk",
-"away": "Hearts",
-"league": "Scottish Premiership",
-"country": "GB",
-"kickoff": "2026-09-15T18:45:00Z",
-"live": true,
-"moneySide": "away",
-"moneyName": "Hearts",
-"moneySharePct": 46,
-"moneyOdd": 75.0,
-"moneyDir": "out",
-"totVol": 161069,
-"pinnOdd": 23.92,
-"softOdd": 48.0,
-"softN": 31,
-"poly": null,
-"pinn": {
-"home": 0.7492,
-"draw": 0.211,
-"away": 0.0398,
-"fav": "home"
-},
-"soft": {
-"home": 0.8248,
-"draw": 0.1551,
-"away": 0.02,
-"fav": "home",
-"n": 31
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "uneinig",
-"agree": false,
-"pinnTotals": null
-},
-{
 "matchId": "36027477",
 "home": "Reading",
 "away": "Brentford",
@@ -576,13 +332,13 @@
 "live": true,
 "moneySide": "away",
 "moneyName": "Brentford",
-"moneySharePct": 91,
-"moneyOdd": 1.19,
-"moneyDir": "out",
-"totVol": 142028,
+"moneySharePct": 92,
+"moneyOdd": 1.07,
+"moneyDir": "in",
+"totVol": 205897,
 "pinnOdd": null,
-"softOdd": 1.12,
-"softN": 31,
+"softOdd": 1.05,
+"softN": 30,
 "poly": {
 "vol": 36130,
 "odd": 1.03,
@@ -612,11 +368,11 @@
 },
 "pinn": null,
 "soft": {
-"home": 0.0281,
-"draw": 0.1395,
-"away": 0.8324,
+"home": 0.0102,
+"draw": 0.0948,
+"away": 0.895,
 "fav": "away",
-"n": 31
+"n": 30
 },
 "pinnMovePP": null,
 "pinnMove": null,
@@ -625,122 +381,44 @@
 "pinnTotals": null
 },
 {
-"matchId": "36071035",
-"home": "Hibernian",
-"away": "Kilmarnock",
-"league": "Scottish Premiership",
-"country": "GB",
-"kickoff": "2026-09-15T18:45:00Z",
-"live": true,
+"matchId": "36004943",
+"home": "Sturm Graz",
+"away": "Rennes",
+"league": "UEFA Europa League",
+"country": "International",
+"kickoff": "2026-09-16T19:00:00Z",
+"live": false,
 "moneySide": "away",
-"moneyName": "Kilmarnock",
-"moneySharePct": 37,
-"moneyOdd": 1.27,
-"moneyDir": "in",
-"totVol": 139208,
-"pinnOdd": 1.4,
-"softOdd": 1.24,
-"softN": 32,
-"poly": {
-"vol": 31424,
-"odd": 1.64,
-"sharePct": 90,
-"shareSrc": "geld",
-"key": "scop-hib-kil-2026-08-22",
-"sideKey": "Kilmarnock FC",
-"whales": [
-{
-"wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
-"usd": 1319
-},
-{
-"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-"usd": 1240
-},
-{
-"wallet": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
-"usd": 1130
-},
-{
-"wallet": "0x01c78f8873c0c86d6b6b92ff627e3802237ee995",
-"usd": 1091
-}
-],
-"whaleUsd": 4780
-},
+"moneyName": "Rennes",
+"moneySharePct": 93,
+"moneyOdd": 2.06,
+"moneyDir": "flat",
+"totVol": 68482,
+"pinnOdd": 1.99,
+"softOdd": 1.95,
+"softN": 44,
+"poly": null,
 "pinn": {
-"home": 0.0711,
-"draw": 0.2525,
-"away": 0.6764,
+"home": 0.2705,
+"draw": 0.2469,
+"away": 0.4826,
 "fav": "away"
 },
 "soft": {
-"home": 0.0387,
-"draw": 0.2252,
-"away": 0.7361,
+"home": 0.2673,
+"draw": 0.2493,
+"away": 0.4834,
 "fav": "away",
-"n": 32
+"n": 44
 },
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
+"pinnMovePP": -1.7,
+"pinnMove": {
+"movePP": -1.7,
+"stepPP": 0.4,
+"n": 25,
+"move": true,
+"laeuft": false
 },
-{
-"matchId": "36071046",
-"home": "Motherwell",
-"away": "Aberdeen",
-"league": "Scottish Premiership",
-"country": "GB",
-"kickoff": "2026-09-15T18:45:00Z",
-"live": true,
-"moneySide": "away",
-"moneyName": "Aberdeen",
-"moneySharePct": 53,
-"moneyOdd": 1.01,
-"moneyDir": "flat",
-"totVol": 73095,
-"pinnOdd": null,
-"softOdd": 1.0,
-"softN": 18,
-"poly": {
-"vol": 18206,
-"odd": 1.01,
-"sharePct": 97,
-"shareSrc": "geld",
-"key": "scop-mot-abe-2026-08-22",
-"sideKey": "Aberdeen FC",
-"whales": [
-{
-"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
-"usd": 1044
-},
-{
-"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-"usd": 907
-},
-{
-"wallet": "0x325f0e5b5afc66ff54102d850f67f0c621304511",
-"usd": 373
-},
-{
-"wallet": "0xd7942f4874aee257cad9eb2b0000ffe84dfecfa4",
-"usd": 236
-}
-],
-"whaleUsd": 2560
-},
-"pinn": null,
-"soft": {
-"home": 0.0487,
-"draw": 0.0701,
-"away": 0.8812,
-"fav": "away",
-"n": 18
-},
-"pinnMovePP": null,
-"pinnMove": null,
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
@@ -758,7 +436,7 @@
 "moneySharePct": 76,
 "moneyOdd": 2.46,
 "moneyDir": "flat",
-"totVol": 55551,
+"totVol": 55824,
 "pinnOdd": 2.29,
 "softOdd": 2.25,
 "softN": 45,
@@ -799,9 +477,9 @@
 "moneySide": "away",
 "moneyName": "Villarreal",
 "moneySharePct": 86,
-"moneyOdd": 2.06,
-"moneyDir": "flat",
-"totVol": 52948,
+"moneyOdd": 2.04,
+"moneyDir": "in",
+"totVol": 53035,
 "pinnOdd": 1.99,
 "softOdd": 1.95,
 "softN": 45,
@@ -834,49 +512,6 @@
 "stepPP": -0.0,
 "n": 25,
 "move": false,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36004943",
-"home": "Sturm Graz",
-"away": "Rennes",
-"league": "UEFA Europa League",
-"country": "International",
-"kickoff": "2026-09-16T19:00:00Z",
-"live": false,
-"moneySide": "away",
-"moneyName": "Rennes",
-"moneySharePct": 91,
-"moneyOdd": 2.06,
-"moneyDir": "in",
-"totVol": 48123,
-"pinnOdd": 2.01,
-"softOdd": 1.95,
-"softN": 44,
-"poly": null,
-"pinn": {
-"home": 0.2732,
-"draw": 0.2485,
-"away": 0.4784,
-"fav": "away"
-},
-"soft": {
-"home": 0.268,
-"draw": 0.2494,
-"away": 0.4826,
-"fav": "away",
-"n": 44
-},
-"pinnMovePP": -2.2,
-"pinnMove": {
-"movePP": -2.2,
-"stepPP": -0.0,
-"n": 25,
-"move": true,
 "laeuft": false
 },
 "verdict": "konsens",
@@ -945,10 +580,10 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Atletico Madrid",
-"moneySharePct": 83,
-"moneyOdd": 1.43,
-"moneyDir": "out",
-"totVol": 43883,
+"moneySharePct": 82,
+"moneyOdd": 1.42,
+"moneyDir": "in",
+"totVol": 43999,
 "pinnOdd": 1.4,
 "softOdd": 1.38,
 "softN": 43,
@@ -969,9 +604,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.6872,
+"home": 0.6873,
 "draw": 0.1959,
-"away": 0.1169,
+"away": 0.1168,
 "fav": "home",
 "n": 43
 },
@@ -998,9 +633,9 @@
 "moneySide": "home",
 "moneyName": "AC Milan",
 "moneySharePct": 78,
-"moneyOdd": 2.18,
-"moneyDir": "in",
-"totVol": 41774,
+"moneyOdd": 2.2,
+"moneyDir": "out",
+"totVol": 42496,
 "pinnOdd": 2.09,
 "softOdd": 2.05,
 "softN": 45,
@@ -1012,9 +647,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.4569,
+"home": 0.4568,
 "draw": 0.2619,
-"away": 0.2812,
+"away": 0.2813,
 "fav": "home",
 "n": 45
 },
@@ -1041,9 +676,9 @@
 "moneySide": "home",
 "moneyName": "Espanyol",
 "moneySharePct": 99,
-"moneyOdd": 1.87,
-"moneyDir": "in",
-"totVol": 34093,
+"moneyOdd": 1.9,
+"moneyDir": "out",
+"totVol": 34801,
 "pinnOdd": 1.85,
 "softOdd": 1.85,
 "softN": 44,
@@ -1064,9 +699,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.5114,
+"home": 0.5111,
 "draw": 0.2733,
-"away": 0.2153,
+"away": 0.2156,
 "fav": "home",
 "n": 44
 },
@@ -1093,9 +728,9 @@
 "moneySide": "home",
 "moneyName": "Betis",
 "moneySharePct": 89,
-"moneyOdd": 1.73,
-"moneyDir": "flat",
-"totVol": 26197,
+"moneyOdd": 1.74,
+"moneyDir": "out",
+"totVol": 27829,
 "pinnOdd": 1.69,
 "softOdd": 1.67,
 "softN": 43,
@@ -1116,9 +751,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.5668,
+"home": 0.5665,
 "draw": 0.26,
-"away": 0.1732,
+"away": 0.1735,
 "fav": "home",
 "n": 43
 },
@@ -1135,6 +770,52 @@
 "pinnTotals": null
 },
 {
+"matchId": "36050134",
+"home": "Vasco Da Gama",
+"away": "Santa Fe",
+"league": "CONMEBOL Copa Sudamericana",
+"country": "International",
+"kickoff": "2026-09-15T22:00:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Vasco Da Gama",
+"moneySharePct": 91,
+"moneyOdd": 1.44,
+"moneyDir": "out",
+"totVol": 24723,
+"pinnOdd": 1.38,
+"softOdd": 1.36,
+"softN": 21,
+"poly": {
+"vol": 4959,
+"odd": 1.42,
+"sharePct": 70,
+"shareSrc": "preis",
+"key": "sud-vas-san1-2026-09-15",
+"sideKey": "CR Vasco da Gama",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.695,
+"draw": 0.2028,
+"away": 0.1022,
+"fav": "home"
+},
+"soft": {
+"home": 0.6787,
+"draw": 0.209,
+"away": 0.1123,
+"fav": "home",
+"n": 21
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
 "matchId": "36050124",
 "home": "Sao Paulo",
 "away": "Boca Juniors",
@@ -1144,10 +825,10 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "Boca Juniors",
-"moneySharePct": 77,
-"moneyOdd": 3.7,
-"moneyDir": "flat",
-"totVol": 23493,
+"moneySharePct": 76,
+"moneyOdd": 3.8,
+"moneyDir": "out",
+"totVol": 23839,
 "pinnOdd": 3.61,
 "softOdd": 3.3,
 "softN": 24,
@@ -1177,9 +858,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.4155,
-"draw": 0.3078,
-"away": 0.2767,
+"home": 0.4176,
+"draw": 0.3082,
+"away": 0.2742,
 "fav": "home",
 "n": 24
 },
@@ -1207,7 +888,7 @@
 "moneyName": "Chelsea",
 "moneySharePct": 73,
 "moneyOdd": 2.36,
-"moneyDir": "out",
+"moneyDir": "flat",
 "totVol": 22737,
 "pinnOdd": 2.32,
 "softOdd": 2.25,
@@ -1229,8 +910,8 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.3289,
-"draw": 0.2505,
+"home": 0.3288,
+"draw": 0.2504,
 "away": 0.4207,
 "fav": "away",
 "n": 51
@@ -1248,6 +929,43 @@
 "pinnTotals": null
 },
 {
+"matchId": "36004951",
+"home": "Besiktas",
+"away": "Marseille",
+"league": "UEFA Europa League",
+"country": "International",
+"kickoff": "2026-09-17T19:00:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Besiktas",
+"moneySharePct": 93,
+"moneyOdd": 1.81,
+"moneyDir": "flat",
+"totVol": 20053,
+"pinnOdd": 1.73,
+"softOdd": 1.75,
+"softN": 43,
+"poly": null,
+"pinn": {
+"home": 0.5489,
+"draw": 0.2261,
+"away": 0.225,
+"fav": "home"
+},
+"soft": {
+"home": 0.5326,
+"draw": 0.2377,
+"away": 0.2297,
+"fav": "home",
+"n": 43
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
 "matchId": "36065979",
 "home": "Barletta",
 "away": "Salernitana",
@@ -1257,10 +975,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Barletta",
-"moneySharePct": 83,
-"moneyOdd": 1.57,
-"moneyDir": "in",
-"totVol": 182220,
+"moneySharePct": 82,
+"moneyOdd": 6.0,
+"moneyDir": "out",
+"totVol": 187341,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -1283,10 +1001,10 @@
 "live": true,
 "moneySide": "away",
 "moneyName": "Breidablik",
-"moneySharePct": 66,
-"moneyOdd": 1.99,
+"moneySharePct": 69,
+"moneyOdd": 1.09,
 "moneyDir": "in",
-"totVol": 64345,
+"totVol": 86993,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -1318,36 +1036,10 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "Celta Vigo",
-"moneySharePct": 80,
+"moneySharePct": 81,
 "moneyOdd": 2.12,
-"moneyDir": "out",
-"totVol": 37411,
-"pinnOdd": null,
-"softOdd": null,
-"softN": null,
-"poly": null,
-"pinn": null,
-"soft": null,
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "no_anchor",
-"agree": null,
-"pinnTotals": null
-},
-{
-"matchId": "36056822",
-"home": "Stenhousemuir",
-"away": "Partick",
-"league": "Scottish Championship",
-"country": "GB",
-"kickoff": "2026-09-15T18:45:00Z",
-"live": true,
-"moneySide": "away",
-"moneyName": "Partick",
-"moneySharePct": 41,
-"moneyOdd": 42.0,
-"moneyDir": "out",
-"totVol": 16898,
+"moneyDir": "flat",
+"totVol": 41354,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -1370,10 +1062,10 @@
 "live": true,
 "moneySide": "away",
 "moneyName": "Real Potosi",
-"moneySharePct": 72,
-"moneyOdd": 1.37,
+"moneySharePct": 73,
+"moneyOdd": 1.24,
 "moneyDir": "in",
-"totVol": 16854,
+"totVol": 17442,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -1394,33 +1086,7 @@
 "verdict": "no_anchor",
 "agree": null,
 "pinnTotals": null
-},
-{
-"matchId": "36064708",
-"home": "Southend",
-"away": "Tamworth FC",
-"league": "English National League",
-"country": "GB",
-"kickoff": "2026-09-15T18:45:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Southend",
-"moneySharePct": 80,
-"moneyOdd": 1.01,
-"moneyDir": "in",
-"totVol": 15304,
-"pinnOdd": null,
-"softOdd": null,
-"softN": null,
-"poly": null,
-"pinn": null,
-"soft": null,
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "no_anchor",
-"agree": null,
-"pinnTotals": null
 }
 ],
-"ankerN": 150
+"ankerN": 146
 }
