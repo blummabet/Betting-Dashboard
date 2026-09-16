@@ -70,18 +70,18 @@
       "label": "Settlement lebt (keine ewig offenen Positionen)",
       "severity": "error",
       "ok": false,
-      "nFail": 19,
+      "nFail": 20,
       "failures": [
         "nor-ffk-bog-2026-09-04-more-markets: seit 12.3 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "spl-sha-hil-2026-09-04-more-markets: seit 12.2 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
+        "spl-sha-hil-2026-09-04-more-markets: seit 12.3 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "fl1-psg-asm-2026-09-04-more-markets: seit 12.2 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "epl-ips-liv-2026-09-04-more-markets: seit 12.2 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "epl-new-bou-2026-09-05-more-markets: seit 11.5 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "elc-pne-bbr-2026-09-05-more-markets: seit 11.5 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "bun-scp-fre-2026-09-05-more-markets: seit 11.4 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "bun-s04-bay-2026-09-05-more-markets: seit 11.3 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "sea-fro-ven-2026-09-06-more-markets: seit 10.4 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "fl1-tro-str-2026-09-06-more-markets: seit 10.4 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
+        "sea-fro-ven-2026-09-06-more-markets: seit 10.5 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
+        "fl1-tro-str-2026-09-06-more-markets: seit 10.5 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "sea-par-mon-2026-09-06-more-markets: seit 10.4 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "fl1-ang-ren-2026-09-06-more-markets: seit 10.4 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "spl-kha-riy-2026-09-07-more-markets: seit 9.3 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
@@ -90,7 +90,8 @@
         "grc-ast-ari-2026-09-09-more-markets: seit 6.4 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "ucl-fen-rom-2026-09-10-more-markets: seit 6.3 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "ucl-fen-rom-2026-09-10-more-markets: seit 6.3 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "chi1-ccu-cdh-2026-08-30: seit 18.0 Tagen offen — keine Auflösung gefunden"
+        "chi1-ccu-cdh-2026-08-30: seit 18.0 Tagen offen — keine Auflösung gefunden",
+        "col1-onc-cdt-2026-08-27: seit 21.0 Tagen offen — keine Auflösung gefunden"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
     },
@@ -101,9 +102,9 @@
       "ok": false,
       "nFail": 3,
       "failures": [
-        "ESPORTS: nur 343/645 fällige Märkte aufgelöst (53%)",
-        "TENNIS: nur 297/624 fällige Märkte aufgelöst (48%)",
-        "MLB: nur 166/331 fällige Märkte aufgelöst (50%)"
+        "ESPORTS: nur 342/645 fällige Märkte aufgelöst (53%)",
+        "TENNIS: nur 294/624 fällige Märkte aufgelöst (47%)",
+        "MLB: nur 164/332 fällige Märkte aufgelöst (49%)"
       ],
       "note": "Fällige Märkte je Liga, die ihre Auflösung finden. < 60% = Settlement läuft ins Leere (Slug-Mismatch), Trefferquoten dieser Liga sind unvollständig."
     },
@@ -115,7 +116,7 @@
       "nFail": 5,
       "failures": [
         "120/304 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (39%) — Trefferquote allein trügt",
-        "   0x84cfffc3f1… n=297 Treffer 52% P&L $-7,753,122",
+        "   0x84cfffc3f1… n=297 Treffer 52% P&L $-7,752,038",
         "   0xc3c3b3ef30… n=338 Treffer 51% P&L $-3,971,890",
         "   0xa0f21e6d35… n=86 Treffer 66% P&L $-2,635,720",
         "   0xabb89972b2… n=32 Treffer 62% P&L $-2,563,982"
@@ -160,5 +161,5 @@
     }
   ],
   "nFail": 4,
-  "generatedAt": "2026-09-16T23:26:09.402168+00:00"
+  "generatedAt": "2026-09-16T23:55:30.460223+00:00"
 }
