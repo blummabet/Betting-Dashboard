@@ -1,33 +1,33 @@
 {
- "n": 417,
+ "n": 420,
  "minOdds": 1.35,
- "moneyHitRate": 0.369,
+ "moneyHitRate": 0.371,
  "priceHitRate": 0.4,
- "brierMoney": 0.9206,
- "brierPrice": 0.6971,
+ "brierMoney": 0.9174,
+ "brierPrice": 0.6957,
  "disagree": {
-  "n": 114,
+  "n": 115,
   "moneyWon": 15,
-  "priceWon": 28,
-  "neither": 71
+  "priceWon": 27,
+  "neither": 73
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
  "byLeague": [
+  {
+   "league": "LA-LIGA",
+   "n": 48,
+   "moneyHitRate": 0.417,
+   "brierMoney": 0.8938,
+   "brierPrice": 0.762,
+   "verdict": "preis_besser"
+  },
   {
    "league": "EPL",
    "n": 34,
    "moneyHitRate": 0.206,
    "brierMoney": 0.971,
    "brierPrice": 0.8343,
-   "verdict": "preis_besser"
-  },
-  {
-   "league": "LA-LIGA",
-   "n": 45,
-   "moneyHitRate": 0.4,
-   "brierMoney": 0.9222,
-   "brierPrice": 0.7796,
    "verdict": "preis_besser"
   },
   {
@@ -80,10 +80,10 @@
   }
  ],
  "guete": {
-  "belastbar": 417,
-  "preis_echo": 225,
+  "belastbar": 420,
+  "preis_echo": 227,
   "abgeschnitten": 57,
-  "unbekannt": 328,
+  "unbekannt": 322,
   "leer": 0
  },
  "rows": [
@@ -256,6 +256,18 @@
    "totalUsd": 787777
   },
   {
+   "key": "lal-mad-osa-2026-09-16",
+   "league": "LA-LIGA",
+   "winner": "Club Atlético de Madrid",
+   "moneyFav": "Club Atlético de Madrid",
+   "priceFav": "Club Atlético de Madrid",
+   "moneyShare": 0.925,
+   "priceProb": 0.739,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 724068
+  },
+  {
    "key": "epl-new-bou-2026-09-05",
    "league": "EPL",
    "winner": "Draw (Newcastle United FC vs. AFC Bournemouth)",
@@ -272,7 +284,7 @@
    "league": "EPL",
    "winner": "Draw (Nottingham Forest FC vs. Tottenham Hotspur FC)",
    "moneyFav": "Tottenham Hotspur FC",
-   "priceFav": "Nottingham Forest FC",
+   "priceFav": "Tottenham Hotspur FC",
    "moneyShare": 0.584,
    "priceProb": 0.357,
    "moneyOK": false,
@@ -554,34 +566,22 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 307187
-  },
-  {
-   "key": "bun-s04-bay-2026-09-05-halftime-result",
-   "league": "BUNDESLIGA",
-   "winner": "Draw",
-   "moneyFav": "FC Bayern München",
-   "priceFav": "FC Bayern München",
-   "moneyShare": 0.991,
-   "priceProb": 0.621,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 293674
   }
  ],
- "generatedAt": "2026-09-16T19:10:23.376587+00:00",
+ "generatedAt": "2026-09-16T19:24:36.031955+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 420,
   "nfl": 800,
-  "mlb": 714,
+  "mlb": 711,
   "nhl": 571,
   "mls": 664,
   "epl": 528,
   "soccer": 800,
-  "tennis": 555,
+  "tennis": 554,
   "ucl": 417,
-  "la-liga": 581,
+  "la-liga": 560,
   "bundesliga": 484,
   "serie-a": 51,
   "ligue-1": 513,
@@ -591,7 +591,7 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 661,
+  "esports": 659,
   "cs2": 421,
   "lol": 424,
   "dota": 9,
@@ -661,9 +661,9 @@
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1597,
-   "usd": 21849200,
-   "beispiel": "fifwc-arg-aut-2026-06-22"
+   "n": 1835,
+   "usd": 29500080,
+   "beispiel": "fifwc-civ-ecu-2026-06-14"
   },
   "balance": {
    "n": 2,
@@ -671,49 +671,54 @@
    "beispiel": "balance-of-power-2026-midterms"
   },
   "nba": {
-   "n": 470,
-   "usd": 4852051,
+   "n": 476,
+   "usd": 4894260,
    "beispiel": "nba-lebron-james-next-team"
   },
+  "ecs": {
+   "n": 12,
+   "usd": 921111,
+   "beispiel": "ecs-ars-mci-2026-08-16-more-markets"
+  },
   "world": {
-   "n": 80,
-   "usd": 800010,
+   "n": 75,
+   "usd": 780048,
    "beispiel": "world-cup-winner"
   },
   "fed": {
    "n": 24,
-   "usd": 553075,
-   "beispiel": "fed-rate-hike-in-2026"
+   "usd": 566561,
+   "beispiel": "fed-decision-in-september-762"
   },
   "cbb": {
    "n": 67,
    "usd": 508064,
-   "beispiel": "cbb-uconn-mich-2026-04-06"
+   "beispiel": "cbb-pur-arz-2026-03-28"
   },
   "fif": {
-   "n": 75,
-   "usd": 311234,
-   "beispiel": "fif-svk-mon-2026-06-05-more-markets"
+   "n": 81,
+   "usd": 322231,
+   "beispiel": "fif-prt-nga-2026-06-10"
   },
   "btc": {
-   "n": 44,
-   "usd": 188775,
+   "n": 59,
+   "usd": 213936,
    "beispiel": "btc-updown-5m-1784322000"
   },
   "clf": {
-   "n": 38,
-   "usd": 173680,
-   "beispiel": "clf-lfc-wre-2026-07-29"
-  },
-  "ballon": {
-   "n": 12,
-   "usd": 154773,
-   "beispiel": "ballon-dor-winner-2026"
+   "n": 42,
+   "usd": 195173,
+   "beispiel": "clf-psg-mun-2026-08-08"
   },
   "efa": {
    "n": 21,
    "usd": 146362,
    "beispiel": "efa-cfc-mnc-2026-05-16"
+  },
+  "ballon": {
+   "n": 9,
+   "usd": 135882,
+   "beispiel": "ballon-dor-winner-2026"
   },
   "republican": {
    "n": 3,
@@ -722,8 +727,8 @@
   },
   "pro": {
    "n": 27,
-   "usd": 103311,
-   "beispiel": "pro-football-2026-mvp-winner"
+   "usd": 103303,
+   "beispiel": "pro-football-2027-champion-20260729185915366"
   },
   "nbasl": {
    "n": 3,
@@ -732,7 +737,7 @@
   },
   "us": {
    "n": 8,
-   "usd": 95369,
+   "usd": 94323,
    "beispiel": "us-x-iran-permanent-peace-deal-by"
   },
   "laliga": {
@@ -741,24 +746,19 @@
    "beispiel": "laliga-2027-champion-20260701200737375"
   },
   "bitcoin": {
-   "n": 10,
-   "usd": 61589,
+   "n": 9,
+   "usd": 54979,
    "beispiel": "bitcoin-all-time-high-by"
   },
   "svk1": {
-   "n": 8,
-   "usd": 52647,
+   "n": 9,
+   "usd": 54577,
    "beispiel": "svk1-zil-kos-2026-07-26-halftime-result"
   },
   "hr1": {
    "n": 9,
    "usd": 51210,
    "beispiel": "hr1-rij-rud-2026-08-02"
-  },
-  "next": {
-   "n": 11,
-   "usd": 44273,
-   "beispiel": "next-prime-minister-of-sweden"
   }
  }
 }
