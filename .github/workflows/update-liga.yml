@@ -188,6 +188,14 @@ jobs:
         run: python poly_markout.py || true
         continue-on-error: true
 
+      # 16.09.2026 (Lucas: „koennen wir rueckwirkend auslesen, ob Poly ueberhaupt zu unseren
+      # Gunsten anpasst? Eventuell machen die das nie und es ist nur unsere Theorie"). Die
+      # Annahme traegt den Auto-Trader und war ungemessen. Laeuft NACH der Historie, weil sie
+      # genau daraus rechnet.
+      - name: 🧲 Liga Konvergenz messen (zieht Poly nach?)
+        run: python poly_konvergenz.py || true
+        continue-on-error: true
+
       - name: 🎯 Liga Geld-Genauigkeit (liegt das Geld richtig?)
         run: python poly_money_accuracy.py || true
         continue-on-error: true
@@ -471,6 +479,7 @@ jobs:
           git add liga_poly_coherence.json 2>/dev/null || true
           git add liga_poly_settlement.json 2>/dev/null || true
           git add liga_poly_markout.json 2>/dev/null || true
+          git add liga_poly_konvergenz.json 2>/dev/null || true
           git add liga_poly_money_accuracy.json 2>/dev/null || true
           git add liga_poly_money_close.json 2>/dev/null || true
           git diff --staged --quiet || git commit -m "liga: Daten + Quoten + Picks + Resolve + Lernen [skip ci]"

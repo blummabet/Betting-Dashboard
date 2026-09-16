@@ -364,8 +364,14 @@ function initPolyWallets(){
     // sich daraus als „kein Push", und das ist eine Behauptung, die die Datei gar nicht
     // tragen kann.
     jf('shortlist_push_ledger.json'),
-  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist,liveSigTrack,moneyMap,publicRec,walletNorm,markout,domRec,pushLed])=>{
-    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist,liveSigTrack,moneyMap,publicRec,walletNorm,markout,domRec,pushLed};
+    // 16.09.2026 (Lucas: „koennen wir rueckwirkend auslesen, ob Poly ueberhaupt zu unseren
+    // Gunsten anpasst, wenn Pinnacle bewegt hat? Eventuell machen die das nie und es ist nur
+    // unsere Theorie"). Genau die Annahme, auf der der Auto-Trader steht — bis dahin ungemessen.
+    // Wie `markout` liest diese Flaeche bewusst die LIGA-Datei: sie ist die Bank mit der
+    // laengsten Historie, und das Urteil traegt seinen Datensatz im Feld mit.
+    jf('liga_poly_konvergenz.json'),
+  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist,liveSigTrack,moneyMap,publicRec,walletNorm,markout,domRec,pushLed,konv])=>{
+    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist,liveSigTrack,moneyMap,publicRec,walletNorm,markout,domRec,pushLed,konv};
     _pwRender();
   }).catch(err=>{
     // 12.07.2026: Vorher gab es KEIN catch — eine Exception im Render (z.B. der
@@ -3924,6 +3930,21 @@ function _pwTermUrteil(r){
       'Markout '+(mk.netMakerPP>=0?'+':'')+mk.netMakerPP.toFixed(1)+'pp netto über '+(mk.fills||0).toLocaleString('de-DE')
       +' Fills ('+(mk.headlineHorizon||'2h')+') — gemessen auf '+_pwEsc(String(mk.dataset||'liga').toUpperCase())
       +'-Fills, gilt für andere Sportarten nur als Anhaltspunkt']);
+  // 16.09.2026 (Lucas, zu drei offenen Trades ~5 % im Minus): „koennen wir rueckwirkend
+  // auslesen, ob Poly ueberhaupt zu unseren Gunsten anpasst?" Gemessen wird es seither in
+  // `poly_konvergenz.py`. Das Urteil faellt DORT (Untergrenze, Spiegelfall, Kontrollgruppe) —
+  // hier steht nur, was es sagt. Ein `belegt: false` ist ein Gegenargument, kein Schweigen:
+  // die Annahme traegt jeden dieser Trades.
+  const kv=_pwCache&&_pwCache.konv, kvd=kv&&kv.arme&&kv.arme.dafuer;
+  if(kv&&kvd&&kvd.spiele){
+    const txt='Kante ab '+kv.schwellePP+'pp: Poly laeuft bis Anpfiff '+(kvd.polyPP>=0?'+':'')+kvd.polyPP.toFixed(1)
+      +'pp mit (Untergrenze '+(kvd.polyUgPP==null?'—':(kvd.polyUgPP>=0?'+':'')+kvd.polyUgPP.toFixed(1)+'pp')
+      +', '+kvd.spiele+' Spiele, '+_pwEsc(String(kv.dataset||'liga').toUpperCase())+') · '
+      +Math.round(kvd.gegenUnsPct)+'% laufen trotzdem gegen uns · netto nach halbem Spread '
+      +(kv.nettoPP>=0?'+':'')+(+kv.nettoPP).toFixed(1)+'pp';
+    if(kv.belegt) dafuer.push(['Poly zieht der Pinnacle-Kante nach',txt]);
+    else dagegen.push(['dass Poly der Kante nachzieht, ist NICHT belegt',_pwEsc(kv.grund||txt)]);
+  }
   const acc=_pwCache&&_pwCache.moneyAcc;
   // 07.09.2026 — hier stand zuerst der Trefferquoten-Vergleich („37% gegen 46%"). Das war
   // meine eigene Bug-Klasse 6: eine Trefferquote ohne die Quoten ist keine Zahl, und die

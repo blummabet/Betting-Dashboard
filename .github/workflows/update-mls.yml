@@ -170,6 +170,14 @@ jobs:
         run: python poly_markout.py || true
         continue-on-error: true
 
+      # 16.09.2026 (Lucas: „koennen wir rueckwirkend auslesen, ob Poly ueberhaupt zu unseren
+      # Gunsten anpasst? Eventuell machen die das nie und es ist nur unsere Theorie"). Die
+      # Annahme traegt den Auto-Trader und war ungemessen. Laeuft NACH der Historie, weil sie
+      # genau daraus rechnet.
+      - name: 🧲 MLS Konvergenz messen (zieht Poly nach?)
+        run: python poly_konvergenz.py || true
+        continue-on-error: true
+
       - name: 🎯 MLS Geld-Genauigkeit (liegt das Geld richtig?)
         run: python poly_money_accuracy.py || true
         continue-on-error: true
@@ -426,6 +434,7 @@ jobs:
           git add mls_poly_coherence.json 2>/dev/null || true
           git add mls_poly_settlement.json 2>/dev/null || true
           git add mls_poly_markout.json 2>/dev/null || true
+          git add mls_poly_konvergenz.json 2>/dev/null || true
           git add mls_poly_money_close.json 2>/dev/null || true
           git add mls_poly_money_accuracy.json 2>/dev/null || true
           git add mls-poly-history.json 2>/dev/null || true
