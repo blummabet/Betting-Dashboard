@@ -460,7 +460,7 @@
    "markt": "Match Odds",
    "seite": "away",
    "name": "Rennes",
-   "odd": 2.0,
+   "odd": 1.93,
    "entryOdd": 1.98,
    "anteilPct": 91,
    "stufe": 2,
@@ -469,19 +469,24 @@
      "art": "pinn",
      "text": "Pinnacle stimmt zu",
      "gewicht": 10
+    },
+    {
+     "art": "pinnMove",
+     "text": "Pinnacle zieht mit +2.7pp",
+     "gewicht": 14
     }
    ],
-   "rang": 69.1,
+   "rang": 83.2,
    "track": null,
    "streak": null,
    "poly": null,
    "polyStatus": "unbekannt",
-   "polyKey": null,
-   "polySide": null,
+   "polyKey": "uel-stu1-ren1-2026-09-16",
+   "polySide": "Stade Rennais FC 1901",
    "pinnMovePP": -2.2,
    "punkte": {
-    "punkte": 6,
-    "moeglich": 7,
+    "punkte": 7,
+    "moeglich": 10,
     "dauerH": 22.47,
     "teile": [
      {
@@ -492,45 +497,57 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 93% auf der Seite"
+       "text": "Geld 92% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.934,
-       "betrag": 71519,
-       "gesamt": 76573,
+       "anteil": 0.917,
+       "betrag": 78735,
+       "gesamt": 85861,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 93% auf der Seite"
+      "text": "Geld 92% auf der Seite"
      },
      {
       "buch": "POLY",
       "name": "Polymarket",
-      "status": "unbekannt",
+      "status": "nein",
       "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "geld": null,
-      "text": "Polymarket nicht erhoben"
+      "moeglich": 3,
+      "grund": {
+       "ok": false,
+       "text": "Poly-Preis 50% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein bewiesenes Wallet auf der Seite"
+      },
+      "geld": {
+       "anteil": 0.5,
+       "betrag": null,
+       "gesamt": 24371,
+       "waehrung": "USD",
+       "quelle": "preis"
+      },
+      "text": "Poly-Preis 50% auf derselben Seite"
      },
      {
       "buch": "PIN",
       "name": "Pinnacle",
       "status": "ja",
-      "punkte": 2,
+      "punkte": 3,
       "moeglich": 3,
       "grund": {
        "ok": true,
        "text": "hat dieselbe Seite als Favorit"
       },
       "tiefe": {
-       "ok": false,
-       "text": "Move -2.0pp in unsere Richtung"
+       "ok": true,
+       "text": "Move +2.7pp in unsere Richtung"
       },
       "geld": null,
       "text": "hat dieselbe Seite als Favorit"
@@ -563,9 +580,130 @@
    },
    "wertVsPinn": -0.0145,
    "gehaltenSeit": "2026-09-15T20:32:00.779169+00:00",
-   "zuletztAktiv": "2026-09-15T21:02:08.764335+00:00",
+   "zuletztAktiv": "2026-09-16T04:47:43.095599+00:00",
    "haltePreis": 2.06,
-   "aktiv": false
+   "aktiv": true
+  },
+  "36004944|Match Odds": {
+   "matchId": "36004944",
+   "home": "Anderlecht",
+   "away": "Lyon",
+   "league": "UEFA Europa League",
+   "kickoff": "2026-09-16T19:00:00Z",
+   "markt": "Match Odds",
+   "seite": "away",
+   "name": "Lyon",
+   "odd": 2.38,
+   "entryOdd": 2.14,
+   "anteilPct": 72,
+   "stufe": 2,
+   "verstaerker": [
+    {
+     "art": "pinn",
+     "text": "Pinnacle stimmt zu",
+     "gewicht": 10
+    },
+    {
+     "art": "pinnMove",
+     "text": "Pinnacle zieht mit +1.4pp",
+     "gewicht": 14
+    }
+   ],
+   "rang": 81.2,
+   "track": null,
+   "streak": null,
+   "poly": null,
+   "polyStatus": "unbekannt",
+   "polyKey": null,
+   "polySide": null,
+   "pinnMovePP": 1.4,
+   "punkte": {
+    "punkte": 7,
+    "moeglich": 7,
+    "dauerH": 14.2,
+    "teile": [
+     {
+      "buch": "BF",
+      "name": "Betfair",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Geld 72% auf der Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "frischer Zufluss und Quote zieht mit"
+      },
+      "geld": {
+       "anteil": 0.722,
+       "betrag": 47799,
+       "gesamt": 66204,
+       "waehrung": "EUR",
+       "quelle": "geld"
+      },
+      "text": "Geld 72% auf der Seite"
+     },
+     {
+      "buch": "POLY",
+      "name": "Polymarket",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Polymarket nicht erhoben"
+     },
+     {
+      "buch": "PIN",
+      "name": "Pinnacle",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "hat dieselbe Seite als Favorit"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "Move +1.4pp in unsere Richtung"
+      },
+      "geld": null,
+      "text": "hat dieselbe Seite als Favorit"
+     },
+     {
+      "buch": "STAKE",
+      "name": "Stake-Highroller",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Stake-Highroller nicht erhoben"
+     },
+     {
+      "buch": "ZEIT",
+      "name": "Dauer",
+      "status": "ja",
+      "punkte": 1,
+      "moeglich": 1,
+      "grund": {
+       "ok": true,
+       "text": "steht seit 14.2h vor Anpfiff"
+      },
+      "tiefe": null,
+      "text": "steht seit 14.2h vor Anpfiff"
+     }
+    ]
+   },
+   "wertVsPinn": 0.0079,
+   "gehaltenSeit": "2026-09-16T04:47:43.095599+00:00",
+   "zuletztAktiv": "2026-09-16T04:47:43.095599+00:00",
+   "haltePreis": 2.38,
+   "aktiv": true
   }
  }
 }
