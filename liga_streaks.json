@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "liga",
-    "generatedAt": "2026-09-16T12:47:55.226517+00:00",
+    "generatedAt": "2026-09-16T21:14:57.436734+00:00",
     "minLen": 3,
     "strongLen": 5,
     "sortiert": "zufallPct",
@@ -32,9 +32,9 @@
       "venue": "H",
       "strong": true,
       "continuation": {
-        "state": "intakt",
+        "state": "wackelt",
         "ratePct": 38,
-        "label": "Eigen 38% + Gegner 60% → 47% · Signale bestätigen"
+        "label": "Eigen 38% + Gegner 60% → 47% · Linie/Signale dagegen"
       },
       "ratePct": 38,
       "seq": [
@@ -74,17 +74,18 @@
       "oppSupportPct": 60,
       "matchupPct": 47,
       "signalInfo": {
-        "state": "confirm",
+        "state": "contradict",
         "count": 4,
         "conviction": 4,
         "names": [
           "injury",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
           "chance_creation",
-          "transfer_shift",
-          "streak_momentum",
-          "venue_form"
+          "streak_momentum"
         ],
-        "market": "Unter 2.5 Tore"
+        "market": "Über 1.5 Tore"
       }
     },
     {
@@ -873,14 +874,15 @@
       "matchupPct": 36,
       "signalInfo": {
         "state": "confirm",
-        "count": 4,
+        "count": 5,
         "conviction": 4,
         "names": [
           "injury",
           "form_trend",
           "xg_strength",
           "transfer_shift",
-          "streak_momentum"
+          "streak_momentum",
+          "move_following"
         ],
         "market": "Unter 3.5 Tore"
       }
@@ -2149,6 +2151,86 @@
       "matchupPct": 35
     },
     {
+      "teamId": "746",
+      "team": "Sunderland",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/746.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
+      "type": "under25",
+      "market": "Unter 2,5 Tore",
+      "length": 4,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 45,
+        "label": "Eigen 45% + Gegner 33% → 40% · Signale bestätigen"
+      },
+      "ratePct": 45,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 11,
+      "zufallPct": 2.11271,
+      "ligaBasisPct": 38,
+      "seltenheit": {
+        "basis": "eigen",
+        "ratePct": 45,
+        "preN": 11,
+        "einsZu": 23,
+        "erwartet": 135.24,
+        "familie": 3168,
+        "bandPct": [
+          24,
+          68
+        ],
+        "einsZuBand": [
+          5,
+          291
+        ],
+        "erwartetBand": [
+          10.88,
+          697.3
+        ],
+        "urteil": "erwartbar",
+        "grund": "unter 3168 geprüften Kombinationen sind 135.2 solcher Läufe zu erwarten"
+      },
+      "next": {
+        "oppId": "50",
+        "oppName": "Manchester City",
+        "atHome": false,
+        "date": "2026-09-20",
+        "kickoff": "2026-09-20T13:00:00+00:00",
+        "oppRatePct": 67,
+        "pickKey": "ENG-5-50-746"
+      },
+      "oppSupportPct": 33,
+      "matchupPct": 40,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 5,
+        "conviction": 4,
+        "names": [
+          "injury",
+          "form_trend",
+          "xg_strength",
+          "chance_creation",
+          "transfer_shift",
+          "move_following"
+        ],
+        "market": "Unter 3.5 Tore"
+      }
+    },
+    {
       "teamId": "500",
       "team": "Bologna",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/500.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -2251,72 +2333,6 @@
       },
       "oppSupportPct": 47,
       "matchupPct": 42
-    },
-    {
-      "teamId": "746",
-      "team": "Sunderland",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/746.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "under25",
-      "market": "Unter 2,5 Tore",
-      "length": 4,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 45,
-        "label": "Eigen 45% + Gegner 33% → 40%"
-      },
-      "ratePct": 45,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 11,
-      "zufallPct": 2.11271,
-      "ligaBasisPct": 38,
-      "seltenheit": {
-        "basis": "eigen",
-        "ratePct": 45,
-        "preN": 11,
-        "einsZu": 23,
-        "erwartet": 135.24,
-        "familie": 3168,
-        "bandPct": [
-          24,
-          68
-        ],
-        "einsZuBand": [
-          5,
-          291
-        ],
-        "erwartetBand": [
-          10.88,
-          697.3
-        ],
-        "urteil": "erwartbar",
-        "grund": "unter 3168 geprüften Kombinationen sind 135.2 solcher Läufe zu erwarten"
-      },
-      "next": {
-        "oppId": "50",
-        "oppName": "Manchester City",
-        "atHome": false,
-        "date": "2026-09-20",
-        "kickoff": "2026-09-20T13:00:00+00:00",
-        "oppRatePct": 67,
-        "pickKey": "ENG-5-50-746"
-      },
-      "oppSupportPct": 33,
-      "matchupPct": 40
     },
     {
       "teamId": "867",
@@ -4853,14 +4869,15 @@
       "matchupPct": 50,
       "signalInfo": {
         "state": "contradict",
-        "count": 4,
+        "count": 5,
         "conviction": 4,
         "names": [
           "injury",
           "form_trend",
           "xg_strength",
           "transfer_shift",
-          "streak_momentum"
+          "streak_momentum",
+          "move_following"
         ],
         "market": "Unter 3.5 Tore"
       }
@@ -5052,7 +5069,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 58,
-        "label": "Eigen 58% + Gegner 67% → 62%"
+        "label": "Eigen 58% + Gegner 67% → 62% · Signale bestätigen"
       },
       "ratePct": 58,
       "seq": [
@@ -5088,7 +5105,20 @@
         "pickKey": "ESP-7-540-797"
       },
       "oppSupportPct": 67,
-      "matchupPct": 62
+      "matchupPct": 62,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 4,
+        "conviction": 5,
+        "names": [
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "freshness_leg",
+          "streak_momentum"
+        ],
+        "market": "Beide Teams treffen — Ja"
+      }
     },
     {
       "teamId": "192",
@@ -6534,6 +6564,153 @@
       "matchupPct": 89
     },
     {
+      "teamId": "50",
+      "team": "Manchester City",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/50.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
+      "type": "under25",
+      "market": "Unter 2,5 Tore",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 17,
+        "label": "Eigen 17% + Gegner 60% → 34% · Signale bestätigen"
+      },
+      "ratePct": 17,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 12,
+      "zufallPct": 5.54153,
+      "ligaBasisPct": 38,
+      "seltenheit": {
+        "basis": "eigen",
+        "ratePct": 17,
+        "preN": 12,
+        "einsZu": 216,
+        "erwartet": 14.67,
+        "familie": 3168,
+        "bandPct": [
+          6,
+          40
+        ],
+        "einsZuBand": [
+          16,
+          5464
+        ],
+        "erwartetBand": [
+          0.58,
+          201.58
+        ],
+        "urteil": "erwartbar",
+        "grund": "unter 3168 geprüften Kombinationen sind 14.7 solcher Läufe zu erwarten"
+      },
+      "next": {
+        "oppId": "746",
+        "oppName": "Sunderland",
+        "atHome": true,
+        "date": "2026-09-20",
+        "kickoff": "2026-09-20T13:00:00+00:00",
+        "oppRatePct": 40,
+        "pickKey": "ENG-5-50-746"
+      },
+      "oppSupportPct": 60,
+      "matchupPct": 34,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 5,
+        "conviction": 4,
+        "names": [
+          "injury",
+          "form_trend",
+          "xg_strength",
+          "chance_creation",
+          "transfer_shift",
+          "move_following"
+        ],
+        "market": "Unter 3.5 Tore"
+      }
+    },
+    {
+      "teamId": "746",
+      "team": "Sunderland",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/746.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
+      "type": "under25",
+      "market": "Unter 2,5 Tore",
+      "length": 3,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 38,
+        "label": "Eigen 38% + Gegner 33% → 36% · Signale bestätigen"
+      },
+      "ratePct": 38,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "liga",
+      "preN": 4,
+      "zufallPct": 5.54153,
+      "ligaBasisPct": 38,
+      "seltenheit": {
+        "basis": "liga",
+        "ratePct": 38,
+        "preN": null,
+        "einsZu": 18,
+        "erwartet": 175.56,
+        "familie": 3168,
+        "urteil": "nicht belegbar",
+        "grund": "keine eigene Vorgeschichte vor der Serie — gemessen wird gegen den Liga-Schnitt, der für ein Durchschnittsteam gilt"
+      },
+      "next": {
+        "oppId": "50",
+        "oppName": "Manchester City",
+        "atHome": false,
+        "date": "2026-09-20",
+        "kickoff": "2026-09-20T13:00:00+00:00",
+        "oppRatePct": 67,
+        "pickKey": "ENG-5-50-746"
+      },
+      "oppSupportPct": 33,
+      "matchupPct": 36,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 5,
+        "conviction": 4,
+        "names": [
+          "injury",
+          "form_trend",
+          "xg_strength",
+          "chance_creation",
+          "transfer_shift",
+          "move_following"
+        ],
+        "market": "Unter 3.5 Tore"
+      }
+    },
+    {
       "teamId": "79",
       "team": "Lille",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/79.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -6600,72 +6777,6 @@
       "matchupPct": 48
     },
     {
-      "teamId": "546",
-      "team": "Getafe",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/546.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "under25",
-      "market": "Unter 2,5 Tore",
-      "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 58,
-        "label": "Eigen 58% + Gegner 47% → 54%"
-      },
-      "ratePct": 58,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 12,
-      "zufallPct": 5.54153,
-      "ligaBasisPct": 38,
-      "seltenheit": {
-        "basis": "eigen",
-        "ratePct": 58,
-        "preN": 12,
-        "einsZu": 5,
-        "erwartet": 628.83,
-        "familie": 3168,
-        "bandPct": [
-          36,
-          78
-        ],
-        "einsZuBand": [
-          2,
-          22
-        ],
-        "erwartetBand": [
-          142.89,
-          1503.59
-        ],
-        "urteil": "erwartbar",
-        "grund": "unter 3168 geprüften Kombinationen sind 628.8 solcher Läufe zu erwarten"
-      },
-      "next": {
-        "oppId": "543",
-        "oppName": "Real Betis",
-        "atHome": false,
-        "date": "2026-09-17",
-        "kickoff": "2026-09-17T17:00:00+00:00",
-        "oppRatePct": 53,
-        "pickKey": "ESP-6-543-546"
-      },
-      "oppSupportPct": 47,
-      "matchupPct": 54
-    },
-    {
       "teamId": "496",
       "team": "Juventus",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/496.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -6717,125 +6828,6 @@
       },
       "oppSupportPct": 47,
       "matchupPct": 42
-    },
-    {
-      "teamId": "50",
-      "team": "Manchester City",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/50.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "under25",
-      "market": "Unter 2,5 Tore",
-      "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 17,
-        "label": "Eigen 17% + Gegner 60% → 34%"
-      },
-      "ratePct": 17,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        false,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 12,
-      "zufallPct": 5.54153,
-      "ligaBasisPct": 38,
-      "seltenheit": {
-        "basis": "eigen",
-        "ratePct": 17,
-        "preN": 12,
-        "einsZu": 216,
-        "erwartet": 14.67,
-        "familie": 3168,
-        "bandPct": [
-          6,
-          40
-        ],
-        "einsZuBand": [
-          16,
-          5464
-        ],
-        "erwartetBand": [
-          0.58,
-          201.58
-        ],
-        "urteil": "erwartbar",
-        "grund": "unter 3168 geprüften Kombinationen sind 14.7 solcher Läufe zu erwarten"
-      },
-      "next": {
-        "oppId": "746",
-        "oppName": "Sunderland",
-        "atHome": true,
-        "date": "2026-09-20",
-        "kickoff": "2026-09-20T13:00:00+00:00",
-        "oppRatePct": 40,
-        "pickKey": "ENG-5-50-746"
-      },
-      "oppSupportPct": 60,
-      "matchupPct": 34
-    },
-    {
-      "teamId": "746",
-      "team": "Sunderland",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/746.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "under25",
-      "market": "Unter 2,5 Tore",
-      "length": 3,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 38,
-        "label": "Eigen 38% + Gegner 33% → 36%"
-      },
-      "ratePct": 38,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "liga",
-      "preN": 4,
-      "zufallPct": 5.54153,
-      "ligaBasisPct": 38,
-      "seltenheit": {
-        "basis": "liga",
-        "ratePct": 38,
-        "preN": null,
-        "einsZu": 18,
-        "erwartet": 175.56,
-        "familie": 3168,
-        "urteil": "nicht belegbar",
-        "grund": "keine eigene Vorgeschichte vor der Serie — gemessen wird gegen den Liga-Schnitt, der für ein Durchschnittsteam gilt"
-      },
-      "next": {
-        "oppId": "50",
-        "oppName": "Manchester City",
-        "atHome": false,
-        "date": "2026-09-20",
-        "kickoff": "2026-09-20T13:00:00+00:00",
-        "oppRatePct": 67,
-        "pickKey": "ENG-5-50-746"
-      },
-      "oppSupportPct": 33,
-      "matchupPct": 36
     },
     {
       "teamId": "80",
@@ -6965,12 +6957,91 @@
       "type": "under25",
       "market": "Unter 2,5 Tore",
       "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 58,
+        "label": "Eigen 58% + Gegner 47% → 54% · Linie/Signale dagegen"
+      },
+      "ratePct": 58,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 12,
+      "zufallPct": 5.54153,
+      "ligaBasisPct": 38,
+      "seltenheit": {
+        "basis": "eigen",
+        "ratePct": 58,
+        "preN": 12,
+        "einsZu": 5,
+        "erwartet": 628.83,
+        "familie": 3168,
+        "bandPct": [
+          36,
+          78
+        ],
+        "einsZuBand": [
+          2,
+          22
+        ],
+        "erwartetBand": [
+          142.89,
+          1503.59
+        ],
+        "urteil": "erwartbar",
+        "grund": "unter 3168 geprüften Kombinationen sind 628.8 solcher Läufe zu erwarten"
+      },
+      "next": {
+        "oppId": "543",
+        "oppName": "Real Betis",
+        "atHome": false,
+        "date": "2026-09-17",
+        "kickoff": "2026-09-17T17:00:00+00:00",
+        "oppRatePct": 53,
+        "pickKey": "ESP-6-543-546"
+      },
+      "oppSupportPct": 47,
+      "matchupPct": 54,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 4,
+        "conviction": 5,
+        "names": [
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "chance_creation",
+          "betfair_money"
+        ],
+        "market": "Über 1.5 Tore"
+      }
+    },
+    {
+      "teamId": "546",
+      "team": "Getafe",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/546.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "under25",
+      "market": "Unter 2,5 Tore",
+      "length": 3,
       "venue": "H",
       "strong": false,
       "continuation": {
         "state": "wackelt",
         "ratePct": 38,
-        "label": "Eigen 38% + Gegner 47% → 42%"
+        "label": "Eigen 38% + Gegner 47% → 42% · Linie/Signale dagegen"
       },
       "ratePct": 38,
       "seq": [
@@ -7006,7 +7077,87 @@
         "pickKey": "ESP-6-543-546"
       },
       "oppSupportPct": 47,
-      "matchupPct": 42
+      "matchupPct": 42,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 4,
+        "conviction": 5,
+        "names": [
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "chance_creation",
+          "betfair_money"
+        ],
+        "market": "Über 1.5 Tore"
+      }
+    },
+    {
+      "teamId": "52",
+      "team": "Crystal Palace",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/52.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 6,
+      "venue": "H",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 62,
+        "label": "Eigen 62% + Gegner 47% → 56% · Signale bestätigen"
+      },
+      "ratePct": 62,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "liga",
+      "preN": 2,
+      "zufallPct": 5.61166,
+      "ligaBasisPct": 62,
+      "seltenheit": {
+        "basis": "liga",
+        "ratePct": 62,
+        "preN": null,
+        "einsZu": 18,
+        "erwartet": 177.78,
+        "familie": 3168,
+        "urteil": "nicht belegbar",
+        "grund": "keine eigene Vorgeschichte vor der Serie — gemessen wird gegen den Liga-Schnitt, der für ein Durchschnittsteam gilt"
+      },
+      "next": {
+        "oppId": "63",
+        "oppName": "Leeds",
+        "atHome": false,
+        "date": "2026-09-20",
+        "kickoff": "2026-09-20T13:00:00+00:00",
+        "oppRatePct": 47,
+        "pickKey": "ENG-5-63-52"
+      },
+      "oppSupportPct": 47,
+      "matchupPct": 56,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 4,
+        "conviction": 4,
+        "names": [
+          "injury",
+          "form_trend",
+          "xg_strength",
+          "streak_momentum",
+          "move_following"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "157",
@@ -7258,60 +7409,6 @@
       },
       "oppSupportPct": 80,
       "matchupPct": 69
-    },
-    {
-      "teamId": "52",
-      "team": "Crystal Palace",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/52.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 6,
-      "venue": "H",
-      "strong": true,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 62,
-        "label": "Eigen 62% + Gegner 47% → 56%"
-      },
-      "ratePct": 62,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "liga",
-      "preN": 2,
-      "zufallPct": 5.61166,
-      "ligaBasisPct": 62,
-      "seltenheit": {
-        "basis": "liga",
-        "ratePct": 62,
-        "preN": null,
-        "einsZu": 18,
-        "erwartet": 177.78,
-        "familie": 3168,
-        "urteil": "nicht belegbar",
-        "grund": "keine eigene Vorgeschichte vor der Serie — gemessen wird gegen den Liga-Schnitt, der für ein Durchschnittsteam gilt"
-      },
-      "next": {
-        "oppId": "63",
-        "oppName": "Leeds",
-        "atHome": false,
-        "date": "2026-09-20",
-        "kickoff": "2026-09-20T13:00:00+00:00",
-        "oppRatePct": 47,
-        "pickKey": "ENG-5-63-52"
-      },
-      "oppSupportPct": 47,
-      "matchupPct": 56
     },
     {
       "teamId": "96",
@@ -11299,7 +11396,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 62,
-        "label": "Eigen 62% + Gegner 60% → 61% · Signale bestätigen"
+        "label": "Eigen 62% + Gegner 60% → 61%"
       },
       "ratePct": 62,
       "seq": [
@@ -11336,20 +11433,7 @@
         "pickKey": "ENG-5-35-40"
       },
       "oppSupportPct": 60,
-      "matchupPct": 61,
-      "signalInfo": {
-        "state": "confirm",
-        "count": 5,
-        "conviction": 4,
-        "names": [
-          "form_trend",
-          "h2h_pattern",
-          "xg_strength",
-          "chance_creation",
-          "streak_momentum"
-        ],
-        "market": "Über 2.5 Tore"
-      }
+      "matchupPct": 61
     },
     {
       "teamId": "42",
@@ -11630,11 +11714,14 @@
       "matchupPct": 64,
       "signalInfo": {
         "state": "confirm",
-        "count": 2,
+        "count": 4,
         "conviction": 4,
         "names": [
+          "lead_lag_bias",
           "form_trend",
-          "h2h_pattern"
+          "h2h_pattern",
+          "topscorer_momentum",
+          "betfair_money"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -11760,7 +11847,7 @@
       "signalInfo": {
         "state": "confirm",
         "count": 6,
-        "conviction": 6,
+        "conviction": 4,
         "names": [
           "injury",
           "form_trend",
@@ -11825,7 +11912,7 @@
       "signalInfo": {
         "state": "confirm",
         "count": 6,
-        "conviction": 6,
+        "conviction": 4,
         "names": [
           "injury",
           "form_trend",
@@ -14019,7 +14106,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 73,
-        "label": "Eigen 73% + Gegner 67% → 71%"
+        "label": "Eigen 73% + Gegner 67% → 71% · Signale bestätigen"
       },
       "ratePct": 73,
       "seq": [
@@ -14069,7 +14156,20 @@
         "pickKey": "ESP-7-540-797"
       },
       "oppSupportPct": 67,
-      "matchupPct": 71
+      "matchupPct": 71,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 4,
+        "conviction": 5,
+        "names": [
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "freshness_leg",
+          "streak_momentum"
+        ],
+        "market": "Beide Teams treffen — Ja"
+      }
     },
     {
       "teamId": "1298",
@@ -18604,7 +18704,7 @@
       "matchupPct": 73,
       "signalInfo": {
         "state": "confirm",
-        "count": 5,
+        "count": 6,
         "conviction": 6,
         "names": [
           "injury",
@@ -18668,7 +18768,7 @@
       "matchupPct": 66,
       "signalInfo": {
         "state": "confirm",
-        "count": 5,
+        "count": 6,
         "conviction": 6,
         "names": [
           "injury",
@@ -18695,7 +18795,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 82,
-        "label": "Eigen 82% + Gegner 47% → 68%"
+        "label": "Eigen 82% + Gegner 47% → 68% · Signale bestätigen"
       },
       "ratePct": 82,
       "seq": [
@@ -18745,7 +18845,166 @@
         "pickKey": "ENG-5-63-52"
       },
       "oppSupportPct": 47,
-      "matchupPct": 68
+      "matchupPct": 68,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 4,
+        "conviction": 4,
+        "names": [
+          "injury",
+          "form_trend",
+          "xg_strength",
+          "streak_momentum",
+          "move_following"
+        ],
+        "market": "Über 2.5 Tore"
+      }
+    },
+    {
+      "teamId": "895",
+      "team": "Como",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/895.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ITA",
+      "leagueName": "Serie A",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 4,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 45,
+        "label": "Eigen 45% + Gegner 53% → 48% · Signale bestätigen"
+      },
+      "ratePct": 45,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 11,
+      "zufallPct": 14.65753,
+      "ligaBasisPct": 62,
+      "seltenheit": {
+        "basis": "eigen",
+        "ratePct": 45,
+        "preN": 11,
+        "einsZu": 23,
+        "erwartet": 135.24,
+        "familie": 3168,
+        "bandPct": [
+          24,
+          68
+        ],
+        "einsZuBand": [
+          5,
+          291
+        ],
+        "erwartetBand": [
+          10.88,
+          697.3
+        ],
+        "urteil": "erwartbar",
+        "grund": "unter 3168 geprüften Kombinationen sind 135.2 solcher Läufe zu erwarten"
+      },
+      "next": {
+        "oppId": "512",
+        "oppName": "Frosinone",
+        "atHome": false,
+        "date": "2026-09-20",
+        "kickoff": "2026-09-20T13:00:00+00:00",
+        "oppRatePct": 53,
+        "pickKey": "ITA-5-512-895"
+      },
+      "oppSupportPct": 53,
+      "matchupPct": 48,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 4,
+        "conviction": 4,
+        "names": [
+          "injury",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "chance_creation",
+          "move_following"
+        ],
+        "market": "Über 2.5 Tore"
+      }
+    },
+    {
+      "teamId": "895",
+      "team": "Como",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/895.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ITA",
+      "leagueName": "Serie A",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 4,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 62,
+        "label": "Eigen 62% + Gegner 53% → 58% · Signale bestätigen"
+      },
+      "ratePct": 62,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "liga",
+      "preN": 2,
+      "zufallPct": 14.65753,
+      "ligaBasisPct": 62,
+      "seltenheit": {
+        "basis": "liga",
+        "ratePct": 62,
+        "preN": null,
+        "einsZu": 7,
+        "erwartet": 464.35,
+        "familie": 3168,
+        "urteil": "nicht belegbar",
+        "grund": "keine eigene Vorgeschichte vor der Serie — gemessen wird gegen den Liga-Schnitt, der für ein Durchschnittsteam gilt"
+      },
+      "next": {
+        "oppId": "512",
+        "oppName": "Frosinone",
+        "atHome": false,
+        "date": "2026-09-20",
+        "kickoff": "2026-09-20T13:00:00+00:00",
+        "oppRatePct": 53,
+        "pickKey": "ITA-5-512-895"
+      },
+      "oppSupportPct": 53,
+      "matchupPct": 58,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 4,
+        "conviction": 4,
+        "names": [
+          "injury",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "chance_creation",
+          "move_following"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "529",
@@ -19247,124 +19506,6 @@
         "kickoff": "2026-09-19T14:00:00+00:00",
         "oppRatePct": 53,
         "pickKey": "ENG-5-45-57"
-      },
-      "oppSupportPct": 53,
-      "matchupPct": 58
-    },
-    {
-      "teamId": "895",
-      "team": "Como",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/895.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ITA",
-      "leagueName": "Serie A",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 4,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 45,
-        "label": "Eigen 45% + Gegner 53% → 48%"
-      },
-      "ratePct": 45,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 11,
-      "zufallPct": 14.65753,
-      "ligaBasisPct": 62,
-      "seltenheit": {
-        "basis": "eigen",
-        "ratePct": 45,
-        "preN": 11,
-        "einsZu": 23,
-        "erwartet": 135.24,
-        "familie": 3168,
-        "bandPct": [
-          24,
-          68
-        ],
-        "einsZuBand": [
-          5,
-          291
-        ],
-        "erwartetBand": [
-          10.88,
-          697.3
-        ],
-        "urteil": "erwartbar",
-        "grund": "unter 3168 geprüften Kombinationen sind 135.2 solcher Läufe zu erwarten"
-      },
-      "next": {
-        "oppId": "512",
-        "oppName": "Frosinone",
-        "atHome": false,
-        "date": "2026-09-20",
-        "kickoff": "2026-09-20T13:00:00+00:00",
-        "oppRatePct": 53,
-        "pickKey": "ITA-5-512-895"
-      },
-      "oppSupportPct": 53,
-      "matchupPct": 48
-    },
-    {
-      "teamId": "895",
-      "team": "Como",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/895.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ITA",
-      "leagueName": "Serie A",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 4,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 62,
-        "label": "Eigen 62% + Gegner 53% → 58%"
-      },
-      "ratePct": 62,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "liga",
-      "preN": 2,
-      "zufallPct": 14.65753,
-      "ligaBasisPct": 62,
-      "seltenheit": {
-        "basis": "liga",
-        "ratePct": 62,
-        "preN": null,
-        "einsZu": 7,
-        "erwartet": 464.35,
-        "familie": 3168,
-        "urteil": "nicht belegbar",
-        "grund": "keine eigene Vorgeschichte vor der Serie — gemessen wird gegen den Liga-Schnitt, der für ein Durchschnittsteam gilt"
-      },
-      "next": {
-        "oppId": "512",
-        "oppName": "Frosinone",
-        "atHome": false,
-        "date": "2026-09-20",
-        "kickoff": "2026-09-20T13:00:00+00:00",
-        "oppRatePct": 53,
-        "pickKey": "ITA-5-512-895"
       },
       "oppSupportPct": 53,
       "matchupPct": 58
@@ -24534,7 +24675,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 67,
-        "label": "Eigen 67% + Gegner 60% → 64% · Signale bestätigen"
+        "label": "Eigen 67% + Gegner 60% → 64%"
       },
       "ratePct": 67,
       "seq": [
@@ -24584,20 +24725,7 @@
         "pickKey": "ENG-5-35-40"
       },
       "oppSupportPct": 60,
-      "matchupPct": 64,
-      "signalInfo": {
-        "state": "confirm",
-        "count": 5,
-        "conviction": 4,
-        "names": [
-          "form_trend",
-          "h2h_pattern",
-          "xg_strength",
-          "chance_creation",
-          "streak_momentum"
-        ],
-        "market": "Über 2.5 Tore"
-      }
+      "matchupPct": 64
     },
     {
       "teamId": "488",
@@ -24719,7 +24847,7 @@
       "matchupPct": 66,
       "signalInfo": {
         "state": "confirm",
-        "count": 5,
+        "count": 6,
         "conviction": 6,
         "names": [
           "injury",
@@ -24799,12 +24927,13 @@
       "matchupPct": 57,
       "signalInfo": {
         "state": "confirm",
-        "count": 3,
+        "count": 4,
         "conviction": 4,
         "names": [
           "form_trend",
           "xg_strength",
-          "chance_creation"
+          "chance_creation",
+          "move_following"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -24862,12 +24991,13 @@
       "matchupPct": 64,
       "signalInfo": {
         "state": "confirm",
-        "count": 3,
+        "count": 4,
         "conviction": 4,
         "names": [
           "form_trend",
           "xg_strength",
-          "chance_creation"
+          "chance_creation",
+          "move_following"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -24939,7 +25069,7 @@
       "matchupPct": 67,
       "signalInfo": {
         "state": "confirm",
-        "count": 6,
+        "count": 7,
         "conviction": 4,
         "names": [
           "injury",
@@ -25283,6 +25413,85 @@
       "matchupPct": 69
     },
     {
+      "teamId": "543",
+      "team": "Real Betis",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/543.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 3,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 33,
+        "label": "Eigen 33% + Gegner 33% → 33% · Signale bestätigen"
+      },
+      "ratePct": 33,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 6,
+      "zufallPct": 23.68894,
+      "ligaBasisPct": 62,
+      "seltenheit": {
+        "basis": "eigen",
+        "ratePct": 33,
+        "preN": 6,
+        "einsZu": 27,
+        "erwartet": 117.33,
+        "familie": 3168,
+        "bandPct": [
+          12,
+          65
+        ],
+        "einsZuBand": [
+          4,
+          620
+        ],
+        "erwartetBand": [
+          5.11,
+          882.15
+        ],
+        "urteil": "erwartbar",
+        "grund": "unter 3168 geprüften Kombinationen sind 117.3 solcher Läufe zu erwarten"
+      },
+      "next": {
+        "oppId": "546",
+        "oppName": "Getafe",
+        "atHome": true,
+        "date": "2026-09-17",
+        "kickoff": "2026-09-17T17:00:00+00:00",
+        "oppRatePct": 33,
+        "pickKey": "ESP-6-543-546"
+      },
+      "oppSupportPct": 33,
+      "matchupPct": 33,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 4,
+        "conviction": 5,
+        "names": [
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "chance_creation",
+          "betfair_money"
+        ],
+        "market": "Über 1.5 Tore"
+      }
+    },
+    {
       "teamId": "163",
       "team": "Borussia Mönchengladbach",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/163.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -25599,7 +25808,7 @@
       "signalInfo": {
         "state": "confirm",
         "count": 6,
-        "conviction": 6,
+        "conviction": 4,
         "names": [
           "injury",
           "form_trend",
@@ -25860,72 +26069,6 @@
       },
       "oppSupportPct": 67,
       "matchupPct": 39
-    },
-    {
-      "teamId": "543",
-      "team": "Real Betis",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/543.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 3,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 33,
-        "label": "Eigen 33% + Gegner 33% → 33%"
-      },
-      "ratePct": 33,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 6,
-      "zufallPct": 23.68894,
-      "ligaBasisPct": 62,
-      "seltenheit": {
-        "basis": "eigen",
-        "ratePct": 33,
-        "preN": 6,
-        "einsZu": 27,
-        "erwartet": 117.33,
-        "familie": 3168,
-        "bandPct": [
-          12,
-          65
-        ],
-        "einsZuBand": [
-          4,
-          620
-        ],
-        "erwartetBand": [
-          5.11,
-          882.15
-        ],
-        "urteil": "erwartbar",
-        "grund": "unter 3168 geprüften Kombinationen sind 117.3 solcher Läufe zu erwarten"
-      },
-      "next": {
-        "oppId": "546",
-        "oppName": "Getafe",
-        "atHome": true,
-        "date": "2026-09-17",
-        "kickoff": "2026-09-17T17:00:00+00:00",
-        "oppRatePct": 33,
-        "pickKey": "ESP-6-543-546"
-      },
-      "oppSupportPct": 33,
-      "matchupPct": 33
     },
     {
       "teamId": "34",
