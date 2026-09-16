@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-16T20:20:53.068309+00:00",
+ "generatedAt": "2026-09-16T20:50:47.694865+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,8 +10,8 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 702,
- "pinnKeys": 276,
- "matched": 198,
+ "pinnKeys": 274,
+ "matched": 196,
  "footballRows": 174,
  "crossRows": 528,
  "footballSkippedStale": 55,
@@ -24,7 +24,7 @@
   "soccer_liga": 156
  },
  "matchedBySport": {
-  "baseball_mlb": 22,
+  "baseball_mlb": 20,
   "boxing_boxing": 2,
   "soccer_mls": 18,
   "soccer_liga": 156
@@ -33,5 +33,34 @@
   "tracked": 290,
   "converged": 63
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|minnesotatwins-newyorkyankees|newyorkyankees",
+   "sport": "baseball_mlb",
+   "event": "New York Yankees vs Minnesota Twins",
+   "market": "Moneyline",
+   "outcome": "New York Yankees",
+   "polyPP": 28.5,
+   "pinnPP": 62.0,
+   "gapPP": -33.53,
+   "vol": 1324620,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -25.38,
+   "firstSeen": "2026-09-14T21:17:02.554928+00:00"
+  },
+  {
+   "id": "baseball_mlb|minnesotatwins-newyorkyankees|minnesotatwins",
+   "sport": "baseball_mlb",
+   "event": "New York Yankees vs Minnesota Twins",
+   "market": "Moneyline",
+   "outcome": "Minnesota Twins",
+   "polyPP": 71.5,
+   "pinnPP": 38.0,
+   "gapPP": 33.53,
+   "vol": 1324620,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -25.38,
+   "firstSeen": "2026-09-14T21:17:02.554928+00:00"
+  }
+ ]
 }
