@@ -69,6 +69,14 @@ KILL_SWITCH_FILE = BASE / "wm_kill_switch.json"
 
 # Ab so vielen Tagen ohne Trade sagt die Karte es ausdruecklich.
 STILLE_TAGE = float(os.environ.get("HEARTBEAT_STILLE_TAGE") or 2)
+# 🔴 16.09.2026 (Lucas: „was mich nur wundert — gestern und heute kam kein einziger Public-Push
+# aus Polymarket"). Er hatte recht, und es waren drei Tage. Aufgefallen ist es IHM, nicht uns:
+# der Kanal hat kein Schweigen gemeldet, weil niemand seine Stille gemessen hat. Gemessen an
+# den 69 Pushes seit dem 05.08.: mittlere Luecke 4,5 h, 90 % unter 1,1 Tagen, fuenf Luecken ueber
+# zwei Tagen. Drei Tage sind also selten genug, um etwas zu heissen, und haeufig genug, dass die
+# Zahl nicht aus der Luft gegriffen ist.
+PUBLIC_STILLE_TAGE = float(os.environ.get("HEARTBEAT_PUBLIC_STILLE_TAGE") or 3)
+PUBLIC_LEDGER = "poly_whale_public_ledger.json"
 
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN", "").strip()
 TRADES_CHAT_ID = os.environ.get("TELEGRAM_TRADES_CHAT_ID", "").strip()
@@ -217,6 +225,36 @@ def stille_zeile(letzte_iso, jetzt, tage=STILLE_TAGE) -> str:
     return "seit %d Tagen kein Trade" % int(d) if d >= tage else ""
 
 
+def letzter_public_push(ledger) -> str | None:
+    """Zeitstempel des juengsten oeffentlichen Whale-Pushes. REIN."""
+    ts = [str(x.get("sentAt")) for x in (ledger or [])
+          if isinstance(x, dict) and x.get("sentAt")]
+    return max(ts) if ts else None
+
+
+def public_stille(ledger, jetzt, tage=None) -> str:
+    """Schweigt der oeffentliche Kanal zu lange? REIN/testbar. '' = alles normal.
+
+    Ein Kanal, der aufhoert zu senden, sieht von aussen genauso aus wie einer, der nichts zu
+    senden hat. Genau diese Verwechslung hat den Fund vom 16.09. drei Tage lang verdeckt.
+    """
+    tage = PUBLIC_STILLE_TAGE if tage is None else tage
+    letzte = letzter_public_push(ledger)
+    if not letzte:
+        return ""          # leeres Buch heisst „noch nie", nicht „kaputt" — kein Fehlalarm
+    try:
+        t = datetime.fromisoformat(str(letzte).replace("Z", "+00:00"))
+        if t.tzinfo is None:
+            t = t.replace(tzinfo=timezone.utc)
+    except (TypeError, ValueError):
+        return ""
+    d = (jetzt - t).total_seconds() / 86400.0
+    if d < tage:
+        return ""
+    return ("Public-Kanal still seit %.1f Tagen (letzter Push %s) — normal sind 4,5 h, "
+            "90 %% der Luecken liegen unter 1,1 Tagen" % (d, t.strftime("%d.%m. %H:%M")))
+
+
 def angebots_zeilen(je_datensatz) -> list:
     """Das Angebot je Datensatz, ruhende getrennt. REIN/testbar.
 
@@ -294,7 +332,8 @@ def _kurz(b) -> str:
     return "%s–%s %s" % (b.get("home", "?"), b.get("away", "?"), b.get("market", ""))
 
 
-def bericht(*, jetzt, schalter_an, kill_grund, balance, exp, bets, unlesbar, a) -> str:
+def bericht(*, jetzt, schalter_an, kill_grund, balance, exp, bets, unlesbar, a,
+            public_ledger=None) -> str:
     """Die ganze Karte. REIN/testbar — keine Datei, kein Netz."""
     tag = jetzt.strftime("%Y-%m-%d")
     adaptiv = min(DAILY_STAKE_CAP_USDC, balance * ADAPTIVE_DAILY_FRACTION)
@@ -366,6 +405,9 @@ def bericht(*, jetzt, schalter_an, kill_grund, balance, exp, bets, unlesbar, a) 
         warn.append("⚠️ Wallet-Deckel fast voll ($%.0f/$%.0f)" % (exp["offen"], WALLET_DECKEL))
     if balance < 10:
         warn.append("🚨 Balance kritisch niedrig: $%.2f" % balance)
+    _still = public_stille(public_ledger, jetzt)
+    if _still:
+        warn.append("🔇 " + _still)
     _rein, _zu = durchgerutscht(bets, jetzt)
     for b in _rein[:4]:
         warn.append("🚨 Ins Spiel gelaufen, nicht verkauft: %s — der Pre-Match-Close hat diese "
@@ -408,6 +450,7 @@ def main() -> int:
         bets=bets,
         unlesbar=unlesbar,
         a=alle_angebote(str(BASE), jetzt),
+        public_ledger=load_json(BASE / PUBLIC_LEDGER, []),
     )
     print(msg)
     if not TELEGRAM_TOKEN or not TRADES_CHAT_ID:

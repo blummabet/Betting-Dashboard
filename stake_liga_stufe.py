@@ -86,6 +86,11 @@ EBENE = {
     # Montenegros. Beleg aus der Paarung: FK Sutjeska Niksic gegen FK Decic Tuzi, beides
     # montenegrinische Erstligisten (Sutjeska ist Rekordmeister). Der Slug sagt es nicht.
     "1-cfl": 1,
+    # 16.09.2026 (CI-Wachhund): „Premijer Liga" — die Premijer Liga BiH, oberste Klasse
+    # Bosnien-Herzegowinas. Beleg aus der Paarung: FK Sloga Doboj gegen FK Borac Banja Luka,
+    # beides Erstligisten (Borac ist amtierender Meister). Dieselbe Einstufung wie 1. CFL
+    # (Montenegro) und A-Lyga (Litauen): oberste Klasse eines kleinen Verbands bleibt Ebene 1.
+    "premijer-liga": 1,
     # 13.09.2026 (CI-Wachhund): die Liga Panameña de Fútbol ist die OBERSTE Klasse Panamas;
     # „Apertura" ist die Halbsaison, kein Rang (wie bei primera-division-apertura oben).
     # Beleg aus der Paarung: Tauro FC — einer der Rekordmeister — gegen CD Universitario.

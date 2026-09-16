@@ -616,12 +616,64 @@ class TestPublicTopN(unittest.TestCase):
             s["0x%02d" % i] = {"n": 20, "wins": 13, "clvSumPP": 20, "usd": 40000, "pnl": 1_000_000 - i * 10_000}
         return s
 
-    def test_top10_in_gate_11th_out(self):
+    def test_der_beleg_entscheidet_nicht_der_listenplatz(self):
+        """🔴 16.09.2026 (Lucas: „gestern und heute kam kein einziger Public-Push aus
+        Polymarket").
+
+        Hier stand „Rang 10 rein, Rang 11 raus". Am 14.09. wurde die Sharp-Rangliste vom
+        P&L-Rang auf die CLV-Untergrenze umgestellt — richtig, denn 4 der alten Top-10 hatten
+        eine negative CLV-Untergrenze. Uebersehen: dieselbe Rangliste ist der Tuersteher des
+        oeffentlichen Kanals. Die beiden Top-10 hatten danach KEINE Wallet gemeinsam, und die
+        neue besteht aus Wallets mit Schnitt-Tickets von $1,2K–$31,6K — unter der
+        Public-Schwelle von $25K. Der Kanal stand drei Tage still.
+
+        Gemessen an den Track-Staenden 11.–16.09. (Kandidaten nach allen anderen Filtern):
+        alter Rang Top-10 -> 3/3/1/0/0/0, neuer Rang Top-10 -> 0/0/0/0/0/0,
+        neuer Rang + CLV-UG > 0 -> 3/3/3/1/2/0.
+
+        Also: die Eigenschaft entscheidet, nicht der Listenplatz.
+        """
         sc = self._scores()
-        self.assertTrue(P._pub_in_top_n(sc, "0x00"))    # Rang 1
-        self.assertTrue(P._pub_in_top_n(sc, "0x09"))    # Rang 10
-        self.assertFalse(P._pub_in_top_n(sc, "0x10"))   # Rang 11 -> raus
+        self.assertTrue(P._pub_in_top_n(sc, "0x00"))    # belegt scharf, Rang 1
+        self.assertTrue(P._pub_in_top_n(sc, "0x10"),
+                        "Rang 11 mit belegtem CLV gehoert rein — der Platz ist kein Urteil")
         self.assertFalse(P._pub_in_top_n(sc, "0xDEAD"))
+
+    def test_ohne_belegten_clv_hilft_auch_rang_eins_nicht(self):
+        """Die Umkehrung, und der eigentliche Punkt: genau so kamen bis zum 14.09. vier Wallets
+        mit gemessen negativem CLV ins oeffentliche Feed (bis −0,66 pp Untergrenze).
+
+        Nachgebaut wird der ECHTE Fall: positiver CLV-Schnitt (sonst faellt die Wallet schon aus
+        der Rangliste), aber so viel Streuung, dass die einseitige Untergrenze unter null liegt.
+        Ein Schnitt ohne Schranke ist kein Beleg — dieselbe Regel wie ueberall hier.
+        """
+        sc = self._scores()
+        # 20 Fenster-Zeilen, Schnitt +0,5 pp, Varianz ~25 -> UG = 0,5 − 1,645·sqrt(25/20) < 0
+        sc["0x00"] = dict(sc["0x00"], clvSumPP=10, clvFenN=20, clvFenSum=10.0,
+                          clvSqSum=20 * 0.5 * 0.5 + 19 * 25.0)
+        ug, art = P._clv_ug(sc["0x00"])
+        self.assertEqual(art, "ug")
+        self.assertLess(ug, 0, "Fixture trifft den Fall nicht")
+        self.assertIn(str("0x00").lower(), P._sharp_rank_map(sc), "Wallet muss in der Liste sein")
+        self.assertFalse(P._pub_in_top_n(sc, "0x00"))
+
+    def test_die_notbremse_verengt_weiterhin(self):
+        """Wer den Kanal haendisch verengen will, kann — ohne den Beleg-Begriff anzufassen."""
+        sc = self._scores()
+        self.assertTrue(P._pub_in_top_n(sc, "0x00", n=1), "Rang 1 muss durch")
+        self.assertFalse(P._pub_in_top_n(sc, "0x10", n=1), "Rang 11 bei n=1 nicht")
+
+    def test_jenseits_der_notbremse_ist_schluss(self):
+        """Ein belegter CLV ganz unten in der Liste ist noch kein Grund, oeffentlich zu posten —
+        sonst waere der Gate faktisch weg."""
+        sc = self._scores()
+        self.assertFalse(P._pub_in_top_n(sc, "0x00", n=0))
+
+    def test_eine_wallet_ohne_clv_zaehlt_nicht_als_belegt(self):
+        """Fehlende Information ist kein Beleg — sonst rutscht „unbekannt" als „gut" durch."""
+        sc = self._scores()
+        sc["0x00"] = dict(sc["0x00"], clvSumPP=0)
+        self.assertFalse(P._pub_in_top_n(sc, "0x00"))
 
     def test_public_card_shows_top10_badge(self):
         sc = self._scores()

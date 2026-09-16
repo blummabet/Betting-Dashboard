@@ -81,6 +81,11 @@ CONTEST_MIN_USD       = float(os.environ.get("WHALE_CONTEST_MIN_USD")     or 100
 CONFLICT_TOP_N        = int(os.environ.get("WHALE_CONFLICT_TOP_N")        or 20)       # 24.08.2026 (Lucas, INOX-Fall): haelt eine andere Wallet aus den Top-N die Gegenseite, ist das Signal mehrdeutig — RANG statt Dollar, deshalb greift es auch bei $7K.
 PUB_MIN_ODDS          = float(os.environ.get("WHALE_PUB_MIN_ODDS")       or 1.30)     # 22.08.2026 (Lucas): Public — Whale-Bet braucht Mindest-Quote (86c/1.16 = zu wenig Value). Einstieg/Jetzt <= 1/odds.
 PUB_TOP_N             = int(os.environ.get("WHALE_PUB_TOP_N")            or 10)   # 23.08.2026 (Lucas): Public postet NUR die Top-N der Sharp-Rangliste (kuratiert), optisch mit Rang-Badge wie im Trades-Channel.
+# 16.09.2026: der Public-Gate haengt nicht mehr am Listenplatz, sondern an der CLV-Untergrenze
+# (s. `_pub_in_top_n`). Diese Zahl ist nur noch die Notbremse nach oben — sie begrenzt, wie weit
+# unten in der Rangliste eine belegte Wallet noch posten darf. 47 von 100 Wallets haben heute
+# eine Untergrenze ueber null; die schlechteste davon steht auf Rang 49.
+PUB_RANG_NOTBREMSE    = int(os.environ.get("WHALE_PUB_RANG_NOTBREMSE") or 60)
 
 
 # 03.08.2026 (Lucas: „50% ist Münzwurf, kein Beweis"): „bewiesen" heißt jetzt STATISTISCH über
@@ -438,10 +443,45 @@ def _rank_badge(scores, wallet, top=_RANK_TOP):
     return "%s <b>Top-%d-Wallet</b> · Rang #%d der Sharp-Rangliste" % (medal, top, r)
 
 
-def _pub_in_top_n(scores, wallet, n=PUB_TOP_N):
-    """Public-Gate (23.08.2026, Lucas): nur die Top-N der Sharp-Rangliste ins öffentliche Feed."""
-    r = _sharp_rank_map(scores).get(str(wallet).lower()) if wallet else None
-    return bool(r and r <= n)
+def _pub_in_top_n(scores, wallet, n=None):
+    """Public-Gate (23.08.2026, Lucas): nur BELEGT scharfe Wallets ins oeffentliche Feed.
+
+    🔴 16.09.2026 (Lucas: „gestern und heute kam kein einziger Public-Push aus Polymarket").
+
+    Er hat recht, und es war meine Aenderung. Am 14.09. habe ich die Sharp-Rangliste vom
+    P&L-Rang auf die CLV-Untergrenze umgestellt — richtig, denn 4 der damaligen Top-10 hatten
+    eine NEGATIVE CLV-Untergrenze (bis −0,66 pp). Uebersehen habe ich, dass dieselbe Rangliste
+    als Tuersteher fuer den oeffentlichen Kanal dient. Die beiden Top-10-Listen haben danach
+    KEINE EINZIGE Wallet gemeinsam, und die neue besteht aus Wallets, die kleine Tickets
+    spielen: Schnitt-Ticket $1,2K bis $31,6K, nur 2 von 10 ueber der Public-Schwelle von $25K.
+    Der Kanal konnte damit praktisch nicht mehr feuern.
+
+    Gemessen an den Track-Staenden vom 11.–16.09., Kandidaten nach allen anderen Filtern:
+
+        Regel                          11.  12.  13.  14.  15.  16.
+        alter P&L-Rang, Top-10          3    3    1    0    0    0     (= was wirklich kam)
+        neuer CLV-Rang, Top-10          0    0    0    0    0    0     (= die Stille)
+        neuer CLV-Rang, CLV-UG > 0      3    3    3    1    2    0
+
+    Der Gate fragt deshalb ab jetzt nach der EIGENSCHAFT statt nach einem Listenplatz: hat die
+    Wallet eine CLV-Untergrenze ueber null, ist sie belegt scharf. Das sind heute 47 von 100
+    Wallets der Rangliste — und es ist eine STRENGERE Huerde als der alte Zustand, der vier
+    Wallets mit gemessen negativem CLV ins oeffentliche Feed liess. Eine Zahl weniger, die
+    jemand willkuerlich drehen kann; die Grenze liegt dort, wo die Messung sie hinlegt.
+
+    `n` verengt den Gate fuer einen einzelnen Aufruf; ohne Angabe gilt `PUB_RANG_NOTBREMSE`.
+    `PUB_TOP_N` heisst weiter, was es anzeigt: den Rang-Badge auf der Karte. Zwei Zahlen fuer
+    zwei Zwecke — vorher war es eine fuer beides, und genau daran ist der Kanal erstickt.
+    """
+    w = str(wallet).lower() if wallet else ""
+    if not w:
+        return False
+    grenze = PUB_RANG_NOTBREMSE if n is None else n
+    rang = _sharp_rank_map(scores).get(w)
+    if not rang or rang > grenze:
+        return False
+    ug, _art = _clv_ug((scores or {}).get(w) or (scores or {}).get(wallet) or {})
+    return ug is not None and ug > 0
 
 
 # ── Groesse relativ statt absolut (05.09.2026) ────────────────────────────────
