@@ -1,20 +1,29 @@
 {
  "dataset": "mls",
- "generatedAt": "2026-09-16T07:47:35.040629+00:00",
+ "generatedAt": "2026-09-16T12:38:37.091277+00:00",
  "stale": false,
  "pricesAgeH": 0.0,
  "arbCount": 1,
  "inversions": 0,
- "warnings": 0,
+ "warnings": 1,
  "findings": [
   {
    "key": "1607-1603",
    "match": "Chicago Fire FC vs. Vancouver Whitecaps FC",
    "typ": "underround",
    "markt": "1X2",
-   "summe": 0.935,
-   "edgePP": 6.5,
+   "summe": 0.945,
+   "edgePP": 5.5,
    "hinweis": "Alle drei Ergebnisse zusammen < 1.0 → garantierter Ertrag"
+  },
+  {
+   "key": "2242-1615",
+   "match": "FC Cincinnati vs. D.C. United SC",
+   "typ": "overround",
+   "markt": "1X2",
+   "summe": 1.085,
+   "edgePP": 8.5,
+   "hinweis": "Fetter Spread — nicht als Taker rein"
   }
  ]
 }
