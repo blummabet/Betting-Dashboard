@@ -57,6 +57,38 @@ HELD_EPS      = 1.0   # Shares ≤ EPS = praktisch nicht mehr gehalten (Staub ig
 #      zeigt — die Wallet ist der Beleg, nicht unsere Vermutung von damals.
 MIN_ALTER_MIN = float(os.environ.get("RECONCILE_MIN_ALTER_MIN") or 15)
 
+# 🔴 16.09.2026 (Lucas: „im Cockpit wurde geschrieben, dass Chelsea gegen Brentford manuell
+# geschlossen wurde. Das stimmt nicht, das ist immer noch offen. Ich greife den natuerlich
+# nicht an.").
+#
+# Dieselbe Fehlbuchung wie am 14.09., aber die Schranke von damals konnte sie nicht fangen:
+#
+#     Brentford–Chelsea   gekauft 14.09. 14:54   „verkauft" 15.09. 14:45   (+24 h)
+#
+# 24 Stunden sind kein Indexierungs-Rennen. Die Positions-API hat den Token in DIESEM einen
+# Lauf nicht geliefert — sieben Stunden spaeter stand er wieder drin: `liga_poly_balance.json`
+# meldet um 22:00 Positionen im Wert von $10,12, und das sind genau die beiden offenen Tickets
+# (Brentford 15,28 × 0,34 + Sevilla 18,97 × 0,27). Dieselbe API, anderer Lauf, anderes Ergebnis.
+#
+# Die eigentliche Fehlerklasse ist damit eine andere als beim ersten Mal: **eine ABWESENHEIT
+# wurde als Beweis gelesen.** Der Token stand nicht in der Liste, ein Verkaufs-Trade liess sich
+# auch nicht finden — und aus zwei Fehlanzeigen wurde eine Zustandsaenderung. Was fehlt, belegt
+# nichts; eine Buchung braucht einen Beleg.
+#
+# Was das kostet, ist gemessen und nicht theoretisch: Seattle Sounders–Austin (MLS) wurde am
+# 18.08. binnen einer Sekunde nach dem Kauf falsch geschlossen, war damit fuer den Verkaufs-
+# Manager unsichtbar (der sieht nur `status == "placed"`), lief am 20.08. ins Spiel und verlor
+# den vollen Einsatz. Von vier Positionen, die je in ein Spiel gelaufen sind, geht diese eine
+# allein auf diese Fehlbuchung. Brentford–Chelsea stand bis heute genauso da — Anpfiff 18.09.
+#
+# Zwei Aenderungen, beide nach derselben Regel:
+#   1. Geschlossen wird erst, wenn die Position ueber MEHRERE Laeufe fehlt (`MIN_FEHLT_MIN`).
+#      Ein einzelner Lauf ist eine Momentaufnahme, kein Befund.
+#   2. Zurueckgeholt wird nach BELEG statt nach Uhr: haelt die Wallet den Token und gibt es
+#      keinen Verkaufs-Beleg, war die Buchung falsch — egal, wie lange sie her ist. Die alte
+#      Zwei-Minuten-Regel beschrieb den Tathergang vom 14.09., nicht die Fehlerklasse.
+MIN_FEHLT_MIN = float(os.environ.get("RECONCILE_MIN_FEHLT_MIN") or 60)
+
 
 def _http_get(url: str):
     req = urllib.request.Request(
@@ -194,18 +226,51 @@ def _alter_min(placed_iso, now_iso):
 
 
 def falsch_geschlossen(bet) -> bool:
-    """Traegt diese Wette die Handschrift des Indexierungs-Rennens? REIN/testbar.
+    """Ist diese Schliessung UNBELEGT? REIN/testbar.
 
-    Drei Merkmale zusammen, nicht eines davon: als manuell geschlossen gebucht, OHNE Verkaufs-
-    Beleg (kein Preis, kein P&L), und binnen zwei Minuten nach dem Kauf. Ein echter manueller
-    Verkauf hat entweder einen Fill oder wenigstens Abstand zum Kauf.
+    Zwei Merkmale: als manuell geschlossen gebucht — und ohne jeden Verkaufs-Beleg (kein Preis,
+    kein P&L). Mehr braucht es nicht, denn geprueft wird das nur dort, wo die Wallet den Token
+    nachweislich HAELT (s. `zurueckholen`). Beides zusammen kann nur eines heissen: die Buchung
+    war falsch.
+
+    🔴 16.09.2026: hier stand zusaetzlich „binnen zwei Minuten nach dem Kauf". Das beschrieb den
+    Tathergang vom 14.09. (Indexierungs-Rennen direkt nach dem Fill), nicht die Fehlerklasse.
+    Brentford–Chelsea wurde 24 Stunden nach dem Kauf falsch geschlossen und fiel damit durch:
+    die Wallet hielt den Token, das Buch sagte „verkauft", und niemand holte sie zurueck. Eine
+    Regel, die an der Uhr haengt statt am Beleg, faengt nur den Fall, den man schon gesehen hat.
     """
     if bet.get("status") != "closed_manual":
         return False
-    if bet.get("sellPrice") is not None or bet.get("pnl") is not None:
-        return False        # es gibt einen Verkaufs-Beleg → war echt
-    d = _alter_min(bet.get("placedAt"), bet.get("soldAt"))
-    return d is not None and d < 2.0
+    return bet.get("sellPrice") is None and bet.get("pnl") is None
+
+
+def fehlt_lange_genug(bet: dict, now_iso: str) -> tuple:
+    """Fehlt der Token lange genug fuer ein Urteil? REIN (mutiert nur den Marker am Bet).
+
+    Gibt (darf_schliessen, text). Beim ERSTEN Fehlen wird `nichtGehaltenSeit` gesetzt und
+    nichts getan; geschlossen wird erst, wenn die Luecke `MIN_FEHLT_MIN` ueberdauert hat. Der
+    Marker steht am Bet und nicht in einer eigenen Datei — eine zweite Datei waere ein zweiter
+    Zustand, der mit dem Buch auseinanderlaufen kann.
+
+    Vorfall 16.09.2026: Brentford–Chelsea fehlte in EINEM Lauf um 14:45 und wurde geschlossen;
+    um 22:00 meldete dieselbe API die Position wieder (Wallet-Positionen $10,12 = beide offenen
+    Tickets). Bei Laeufen alle 15 Minuten haette diese Schranke vier aufeinanderfolgende
+    Fehlanzeigen verlangt.
+    """
+    seit = bet.get("nichtGehaltenSeit")
+    if not seit:
+        bet["nichtGehaltenSeit"] = now_iso
+        return (False, "zum ersten Mal nicht in den Positionen — ein Lauf ist kein Befund, "
+                       "der naechste entscheidet")
+    d = _alter_min(seit, now_iso)
+    if d is None:
+        # Unlesbarer Marker: neu setzen statt raten. Ein kaputter Zeitstempel darf keine
+        # Schliessung ausloesen, aber auch nicht dauerhaft eine blockieren.
+        bet["nichtGehaltenSeit"] = now_iso
+        return (False, "Marker unlesbar — neu gesetzt")
+    if d < MIN_FEHLT_MIN:
+        return (False, "fehlt seit %.0f Min (noetig: %.0f)" % (d, MIN_FEHLT_MIN))
+    return (True, "")
 
 
 def zurueckholen(bets: list, held: dict, now_iso: str | None = None) -> list:
@@ -230,9 +295,11 @@ def zurueckholen(bets: list, held: dict, now_iso: str | None = None) -> list:
         bet["sellPrice"] = None
         bet["pnl"] = None
         bet["pnlSource"] = None
+        bet.pop("nichtGehaltenSeit", None)
         bet["reopenedAt"] = now_iso
-        bet["reopenGrund"] = ("faelschlich als manuell geschlossen gebucht (Positions-API war "
-                              "beim Kauf noch nicht aktuell) — Wallet haelt den Token")
+        bet["reopenGrund"] = ("als manuell geschlossen gebucht, aber ohne jeden Verkaufs-Beleg "
+                              "— und die Wallet haelt den Token. Die Positions-API hatte ihn in "
+                              "dem Lauf nicht geliefert.")
         zurueck.append(bet)
         print(f"  ♻️  zurueckgeholt: {bet.get('home')}–{bet.get('away')} {bet.get('market')} — "
               f"die Wallet haelt den Token, die Wette lief die ganze Zeit.")
@@ -260,7 +327,17 @@ def reconcile(bets: list, *, proxy: str, finished_keys: set | None = None,
         if not tok:
             continue
         if held.get(tok, 0.0) > HELD_EPS:
+            # Wieder (oder immer noch) da → der Zaehler beginnt bei der naechsten Luecke von vorn.
+            # Ohne dieses Loeschen summierte sich eine einzelne alte Fehlanzeige ueber Tage zu
+            # einem „Befund", der nie einer war.
+            bet.pop("nichtGehaltenSeit", None)
             continue   # noch gehalten → nichts tun
+        # Ein Lauf ist eine Momentaufnahme. Erst wenn die Position ueber mehrere Laeufe fehlt,
+        # ist das ein Befund — s. `fehlt_lange_genug` (Vorfall Brentford–Chelsea, 16.09.).
+        weiter, wartetext = fehlt_lange_genug(bet, now_iso)
+        if not weiter:
+            print(f"  ⏳ {wartetext}: {bet.get('home')}–{bet.get('away')} {bet.get('market')}")
+            continue
         alter = _alter_min(bet.get("placedAt"), now_iso)
         if alter is not None and alter < MIN_ALTER_MIN:
             # Der Fill ist juenger als die Indexierung der Positions-API. Hier zu schliessen

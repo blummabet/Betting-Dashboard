@@ -255,3 +255,72 @@ class Bericht(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class Durchgerutscht(unittest.TestCase):
+    """🔴 16.09.2026 (Lucas: „wichtig ist nur, dass wir schauen, dass der automatische Close
+    funktioniert und das Spiel nicht startet, weil dann waere es ja im Worst Case Totalverlust").
+
+    Der Pre-Match-Close feuert nachweislich (fuenfmal gemessen, 0,5–1,1 h vor Anpfiff). Er sieht
+    aber nur `status == "placed"` — eine falsch als geschlossen gebuchte Position ist fuer ihn
+    unsichtbar und laeuft ins Spiel. Genau so hat Seattle Sounders–Austin am 20.08. den vollen
+    Einsatz verloren.
+    """
+
+    def _b(self, **kw):
+        b = {"home": "Brentford", "away": "Chelsea", "market": "Under 2.5 Tore",
+             "status": "placed", "kickoff": (JETZT + timedelta(hours=5)).isoformat()}
+        b.update(kw)
+        return b
+
+    def test_offen_nach_anpfiff_ist_der_schaden_selbst(self):
+        rein, zu = H.durchgerutscht([self._b(kickoff=(JETZT - timedelta(hours=2)).isoformat())],
+                                    JETZT)
+        self.assertEqual(len(rein), 1)
+        self.assertEqual(zu, [])
+
+    def test_offen_vor_anpfiff_ist_der_normalfall(self):
+        rein, zu = H.durchgerutscht([self._b()], JETZT)
+        self.assertEqual((rein, zu), ([], []))
+
+    def test_geschlossen_ohne_verkaufsbeleg_faellt_auf(self):
+        rein, zu = H.durchgerutscht([self._b(status="closed_manual", sellPrice=None, pnl=None)],
+                                    JETZT)
+        self.assertEqual(rein, [])
+        self.assertEqual(len(zu), 1)
+
+    def test_ein_echter_verkauf_ist_kein_hinweis(self):
+        rein, zu = H.durchgerutscht(
+            [self._b(status="closed_manual", sellPrice=0.34, pnl=-0.31)], JETZT)
+        self.assertEqual((rein, zu), ([], []))
+
+    def test_ein_abgerechnetes_spiel_ist_kein_hinweis(self):
+        rein, zu = H.durchgerutscht(
+            [self._b(status="lost", kickoff=(JETZT - timedelta(days=3)).isoformat())], JETZT)
+        self.assertEqual((rein, zu), ([], []))
+
+    def test_ohne_anpfiff_wird_nichts_behauptet(self):
+        """Fehlende Information ist kein Befund — sonst meldet die Karte Altbestand ohne
+        `kickoff` als Totalrisiko."""
+        rein, zu = H.durchgerutscht([self._b(kickoff=None)], JETZT)
+        self.assertEqual(rein, [])
+
+    def test_die_karte_nennt_beide_faelle_beim_namen(self):
+        t = Bericht()._karte.__func__(
+            Bericht(), bets=[_bet("liga", 20.2),
+                             {"home": "Brentford", "away": "Chelsea", "market": "Under 2.5 Tore",
+                              "status": "placed", "placedAt": _iso(30),
+                              "kickoff": (JETZT - timedelta(hours=2)).isoformat()},
+                             {"home": "Seattle", "away": "Austin", "market": "Über 2.5",
+                              "status": "closed_manual", "placedAt": _iso(40),
+                              "sellPrice": None, "pnl": None,
+                              "kickoff": (JETZT + timedelta(hours=9)).isoformat()}])
+        self.assertIn("Ins Spiel gelaufen", t)
+        self.assertIn("Brentford–Chelsea", t)
+        self.assertIn("ohne Verkaufs-Beleg", t)
+        self.assertIn("Seattle–Austin", t)
+
+    def test_eine_gesunde_karte_traegt_keinen_dieser_hinweise(self):
+        t = Bericht()._karte.__func__(Bericht())
+        self.assertNotIn("Ins Spiel gelaufen", t)
+        self.assertNotIn("ohne Verkaufs-Beleg", t)

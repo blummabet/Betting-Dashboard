@@ -247,6 +247,53 @@ def angebots_zeilen(je_datensatz) -> list:
     return laufend
 
 
+def durchgerutscht(bets, jetzt) -> tuple:
+    """Die zwei Zustaende, in denen eine Position still zum Totalrisiko wird. REIN/testbar.
+
+    🔴 16.09.2026 (Lucas: „wichtig ist nur, dass wir schauen, dass der automatische Close
+    funktioniert und das Spiel nicht startet, weil dann waere es ja im Worst Case Totalverlust").
+
+    Der Pre-Match-Close funktioniert — fuenfmal gemessen gefeuert, jeweils 0,5–1,1 h vor
+    Anpfiff. Genau deshalb faellt auf, WANN er nicht feuert: er sieht nur `status == "placed"`.
+
+      1. `ins_spiel` — offen, und der Anpfiff ist vorbei. Das ist der Schaden selbst.
+      2. `unbelegt_zu` — als manuell geschlossen gebucht, aber ohne jeden Verkaufs-Beleg. Das
+         ist die Vorstufe: eine solche Zeile ist fuer den Verkaufs-Manager unsichtbar und faellt
+         aus jeder Offen-Statistik (`poly_offen.TERMINAL_STATUS` kennt `closed_manual`).
+
+    Gemessen, warum beides hier steht: Seattle Sounders–Austin wurde am 18.08. binnen einer
+    Sekunde nach dem Kauf so fehlgebucht, lief am 20.08. ins Spiel und verlor den vollen
+    Einsatz — die einzige der vier je ins Spiel gelaufenen Positionen, die nicht auf den
+    (laengst reparierten) Anpfiff-Zeitfehler vom 19.08. zurueckgeht. `reconcile_poly_positions`
+    holt solche Zeilen seit dem 16.09. automatisch zurueck; diese Karte sagt trotzdem Bescheid,
+    denn ein Selbstheilungs-Mechanismus, der still arbeitet, ist einer, den niemand prueft.
+    """
+    ins_spiel, unbelegt_zu = [], []
+    for b in (bets or []):
+        if not isinstance(b, dict):
+            continue
+        st = str(b.get("status") or "").lower()
+        ko = b.get("kickoff") or b.get("matchDate")
+        t = None
+        try:
+            if ko:
+                t = datetime.fromisoformat(str(ko).replace("Z", "+00:00"))
+                if t.tzinfo is None:
+                    t = t.replace(tzinfo=timezone.utc)
+        except (TypeError, ValueError):
+            t = None
+        if st == "placed" and t is not None and t < jetzt:
+            ins_spiel.append(b)
+        elif (st == "closed_manual" and b.get("sellPrice") is None
+              and b.get("pnl") is None):
+            unbelegt_zu.append(b)
+    return ins_spiel, unbelegt_zu
+
+
+def _kurz(b) -> str:
+    return "%s–%s %s" % (b.get("home", "?"), b.get("away", "?"), b.get("market", ""))
+
+
 def bericht(*, jetzt, schalter_an, kill_grund, balance, exp, bets, unlesbar, a) -> str:
     """Die ganze Karte. REIN/testbar — keine Datei, kein Netz."""
     tag = jetzt.strftime("%Y-%m-%d")
@@ -319,6 +366,14 @@ def bericht(*, jetzt, schalter_an, kill_grund, balance, exp, bets, unlesbar, a) 
         warn.append("⚠️ Wallet-Deckel fast voll ($%.0f/$%.0f)" % (exp["offen"], WALLET_DECKEL))
     if balance < 10:
         warn.append("🚨 Balance kritisch niedrig: $%.2f" % balance)
+    _rein, _zu = durchgerutscht(bets, jetzt)
+    for b in _rein[:4]:
+        warn.append("🚨 Ins Spiel gelaufen, nicht verkauft: %s — der Pre-Match-Close hat diese "
+                    "Position nie gesehen" % _kurz(b))
+    for b in _zu[:4]:
+        warn.append("⚠️ Als geschlossen gebucht, aber ohne Verkaufs-Beleg: %s — fuer den "
+                    "Verkaufs-Manager unsichtbar; der naechste Abgleich holt sie zurueck, "
+                    "falls die Wallet den Token haelt" % _kurz(b))
     if warn:
         z += ["", "<b>Hinweise</b>"] + ["  " + w for w in warn]
 
