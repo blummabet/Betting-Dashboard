@@ -455,3 +455,72 @@ class TestEinFensterIstNichtDieGanzeAuswahl(unittest.TestCase):
         bursts(feed, verworfen=verworfen)
         self.assertEqual(len(verworfen), 1)
         self.assertEqual(verworfen[0]["gruende"], ["quoten_uneinheitlich"])
+
+
+class TestDerPreisDerAnzahlSchwelle(unittest.TestCase):
+    """16.09.2026 (Lucas: „das sollte nicht beschraenkt sein auf sieben oder vier Wetten …
+    vielleicht reichen da drei schnelle Einsaetze").
+
+    Gemessen (Ledger 10.–16.09., 16.104 abgerechnete Einzelwetten, ein Burst je Auswahl,
+    >=$10k, Quote>=1.35): die Treppe ist in allen drei Quotenregeln streng monoton —
+    n>=5 +65,8 % (UG +26,3 %), n>=4 +28,4 % (−1,0 %), n>=3 +13,6 % (−8,5 %),
+    n>=2 +5,9 % (−6,6 %). Runter auf 3 verdoppelt die Menge und verliert den Beleg.
+
+    MIN_N bleibt also bei 4 — aber der PREIS dieser Schwelle wird mitgeschrieben. Sie war
+    bis heute der einzige Filter ohne Beinahe-Zeile, und damit der einzige, dessen Kosten man
+    nur mit einem Einmal-Skript auf dem rollierenden Ledger schaetzen konnte.
+    """
+
+    def test_ein_dreier_cluster_kommt_ins_buch_statt_zu_verschwinden(self):
+        verworfen = []
+        feed = [w(0, 5000, quote=2.0), w(20, 5000, quote=2.0), w(40, 5000, quote=2.0)]
+        self.assertEqual(bursts(feed, verworfen=verworfen), [])
+        self.assertEqual(len(verworfen), 1)
+        self.assertEqual(verworfen[0]["gruende"], ["unter_min_n"])
+        self.assertEqual(verworfen[0]["nWetten"], 3)
+
+    def test_ein_dreier_cluster_wird_kein_push(self):
+        feed = [w(0, 5000, quote=2.0), w(20, 5000, quote=2.0), w(40, 5000, quote=2.0)]
+        self.assertEqual(bursts(feed), [], "unter der Schwelle darf nichts rausgehen")
+
+    def test_nur_saubere_dreier_zaehlen(self):
+        """Ein zu kleines Cluster, das AUSSERDEM an einer Regel scheitert, ist keine Auskunft
+        ueber die Anzahl-Schwelle — es gehoert nicht ins Buch."""
+        verworfen = []
+        bursts([w(0, 5000, quote=2.0), w(20, 5000, quote=2.1), w(40, 5000, quote=2.0)],
+               verworfen=verworfen)
+        self.assertEqual(verworfen, [])
+        verworfen = []
+        bursts([w(0, 200, quote=2.0), w(20, 200, quote=2.0), w(40, 200, quote=2.0)],
+               verworfen=verworfen)
+        self.assertEqual(verworfen, [], "Summe zu klein — sagt nichts ueber die Anzahl")
+
+    def test_zwei_tickets_bleiben_draussen(self):
+        """`BEOBACHTEN_AB_N` ist selbst eine Schwelle: n>=2 waere gemessen die schlechteste
+        Stufe (+5,9 %, UG −6,6 %) und wuerde das Buch mit 28 Zeilen/Tag zumuellen."""
+        verworfen = []
+        bursts([w(0, 8000, quote=2.0), w(20, 8000, quote=2.0)], verworfen=verworfen)
+        self.assertEqual(verworfen, [])
+
+    def test_ein_echter_beinahe_treffer_schlaegt_das_kleine_cluster(self):
+        """Eine Auswahl bekommt EINE Zeile. „Vier Tickets, aber uneinheitliche Quoten" sagt
+        mehr als „drei Tickets" — sonst verschiebt die neue Zeile die Gruende-Statistik."""
+        verworfen = []
+        feed = ([w(0, 5000, quote=2.0), w(20, 5000, quote=2.0), w(40, 5000, quote=2.0)]
+                + [w(600 + k * 10, 5000, quote=2.0 + (k % 2) * 0.1) for k in range(4)])
+        bursts(feed, verworfen=verworfen)
+        self.assertEqual(len(verworfen), 1)
+        self.assertEqual(verworfen[0]["gruende"], ["quoten_uneinheitlich"])
+
+    def test_ein_treffer_loescht_auch_das_kleine_cluster(self):
+        verworfen = []
+        feed = ([w(0, 5000, quote=2.0), w(20, 5000, quote=2.0), w(40, 5000, quote=2.0)]
+                + [w(600 + k * 10, 5000, quote=2.0) for k in range(4)])
+        b = bursts(feed, verworfen=verworfen)
+        self.assertEqual(len(b), 1)
+        self.assertEqual(verworfen, [])
+
+    def test_die_schwelle_steht_nur_an_einer_stelle(self):
+        """Der Stats-Satz nennt die Zahl, holt sie aber aus dem Erkenner."""
+        import stats_perioden as SP
+        self.assertEqual(SP._burst_min_n(), B.MIN_N)

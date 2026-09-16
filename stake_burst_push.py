@@ -93,6 +93,34 @@ PUSH_AN = (os.environ.get("STAKE_BURST_PUSH") or "true").strip().lower() \
 # vierte Zahl waere hier nur eine weitere, die man im Kopf behalten muss.
 MIN_QUOTE = float(os.environ.get("STAKE_BURST_MIN_QUOTE") or 1.35)
 
+# 🔢 Wie viele Tickets macht einen Burst? — 16.09.2026 (Lucas: „das sollte nicht beschraenkt
+# sein auf sieben oder vier Wetten … vielleicht reichen da drei schnelle Einsaetze").
+#
+# Gemessen am Ledger 10.–16.09. (16.104 abgerechnete Einzelwetten, 5,37 Tage), EIN Burst je
+# Auswahl — also genau die Einheit, die auch gepusht wird — >=$10k, Quote>=1.35, Rendite aus
+# der Abrechnung der Wetten selbst, Untergrenze als 5-%-Bootstrap ueber die Bursts:
+#
+#     Quotenregel      n>=5              n>=4              n>=3              n>=2
+#     strikt gleich    +65,8 % (UG +26,3 %)  +28,4 % (−1,0 %)  +13,6 % (−8,5 %)  +5,9 % (−6,6 %)
+#     groesste Gruppe  +36,2 % (UG  +5,1 %)  +19,4 % (−3,8 %)   +9,0 % (−9,0 %)  +5,1 % (−6,5 %)
+#     Quote egal       +27,0 % (UG  +5,4 %)  +14,1 % (−2,6 %)   +8,6 % (−5,8 %)  +0,6 % (−9,3 %)
+#     Bursts/Tag       3,4 / 6,0 / 10,4      6,1 / 9,3 / 15,5   11,0 / 15,3 / 24,8  27,6 / 33,0 / 51,2
+#
+# Die Treppe ist in ALLEN DREI Quotenregeln streng monoton: je mehr Tickets, desto staerker.
+# Runter auf 3 kauft das Doppelte an Menge und verliert den Beleg (Untergrenze faellt von
+# −1,0 % auf −8,5 %). Bewiesen ist derzeit nur n>=5. Zwoelf Zellen, ein Muster — die einzelne
+# Zelle ist Rauschen, die Monotonie ist es nicht.
+#
+# ⚠️ Die Rendite ist die der WALE, nicht unsere: wir steigen Minuten spaeter ein, moeglicherweise
+# zu schlechteren Quoten. Fuer Stake gibt es kein CLV, also ist das die beste verfuegbare
+# Naeherung — und sie taugt fuer den VERGLEICH der Schwellen, nicht als Renditeversprechen.
+#
+# MIN_N bleibt deshalb bei 4 (und nicht bei 3), aber der Preis dieser Schwelle wird ab jetzt
+# MITGESCHRIEBEN statt geschaetzt: Cluster, die NUR an der Anzahl scheitern, gehen mit dem
+# Grund `unter_min_n` ins Beinahe-Buch. Nach zwei Wochen beantwortet unser eigenes Buch die
+# Frage — nicht ein Skript, das ich einmal laufen lasse.
+BEOBACHTEN_AB_N = int(os.environ.get("STAKE_BURST_BEOBACHTEN_AB_N") or 3)
+
 # ⏱️ Frische — 12.09.2026 (Lucas: „Wertlos war gestern schon. Wieso kommt das jetzt?").
 #
 # Der gemeldete Burst lag auf Venezia-Fiorentina, 11.09. um 20:29 — gepusht am 12.09. Der Grund:
@@ -174,7 +202,8 @@ def gesperrte_kats(quelle=None):
 
 
 def bursts(wetten, min_n=None, fenster_s=None, min_usd=None, gesperrt=None,
-           min_quote=None, max_alter_min=None, now=None, verworfen=None) -> list:
+           min_quote=None, max_alter_min=None, now=None, verworfen=None,
+           beobachten_ab_n=None) -> list:
     """Alle Einsatz-Bursts im Feed. REIN (alles injizierbar).
 
     Ein Burst ist: `min_n` Einzelwetten auf DIESELBE Auswahl, innerhalb von `fenster_s`, zusammen
@@ -192,6 +221,7 @@ def bursts(wetten, min_n=None, fenster_s=None, min_usd=None, gesperrt=None,
     gesperrt = list(GESPERRT_FALLBACK) if gesperrt is None else list(gesperrt)
     min_quote = MIN_QUOTE if min_quote is None else min_quote
     max_alter_min = MAX_ALTER_MIN if max_alter_min is None else max_alter_min
+    beobachten_ab_n = BEOBACHTEN_AB_N if beobachten_ab_n is None else beobachten_ab_n
     now = now or datetime.now(timezone.utc)
     je_auswahl = {}
     je_gesperrt = {}
@@ -233,12 +263,25 @@ def bursts(wetten, min_n=None, fenster_s=None, min_usd=None, gesperrt=None,
         # Das Beinahe-Buch bekommt weiterhin genau EINE Zeile je Auswahl (die des ersten
         # gescheiterten Fensters) — und nur dann, wenn die Auswahl am Ende gar keinen Burst
         # ergeben hat. Sonst stuende dieselbe Auswahl als Treffer UND als Beinahe im Buch.
-        beinahe = None
+        beinahe = None      # erstes Fenster ab `min_n`, das an einer Regel scheitert
+        klein = None        # erstes Fenster UNTER `min_n`, das sonst sauber waere
         for i in range(len(v)):
             j = i
             while j + 1 < len(v) and (v[j + 1][0] - v[i][0]).total_seconds() <= fenster_s:
                 j += 1
             if j - i + 1 < min_n:
+                # Cluster unter der Anzahl-Schwelle: KEIN Push, aber eine Zeile im Beinahe-Buch,
+                # wenn es sonst an nichts scheitert. Das ist der einzige Filter, dessen Preis
+                # bisher nirgends stand — die Schwellen-Treppe oben musste ich dafuer aus dem
+                # rollierenden Ledger rechnen, das nur fuenf Tage weit zurueckreicht.
+                _n = j - i + 1
+                if (klein is None and verworfen is not None and _n >= beobachten_ab_n
+                        and (now - v[j][0]).total_seconds() / 60.0 <= max_alter_min):
+                    _g = [z[1] for z in v[i:j + 1]]
+                    _su = sum(float(x["einsatzUsd"]) for x in _g)
+                    if (len({round(float(_quote(x)), 2) for x in _g}) == 1
+                            and float(_quote(_g[0])) >= min_quote and _su >= min_usd):
+                        klein = _beinahe(a, _g, _su, ["unter_min_n"], v[i][0], v[j][0])
                 continue
             g = [z[1] for z in v[i:j + 1]]
             summe = sum(float(x["einsatzUsd"]) for x in g)
@@ -266,10 +309,12 @@ def bursts(wetten, min_n=None, fenster_s=None, min_usd=None, gesperrt=None,
             aus.append({"auswahlId": a, "wetten": g, "summe": summe,
                         "sekunden": (v[j][0] - v[i][0]).total_seconds(),
                         "von": v[i][0], "bis": v[j][0]})
-            beinahe = None                # Treffer schlaegt Beinahe — nie beides je Auswahl
+            beinahe = klein = None        # Treffer schlaegt Beinahe — nie beides je Auswahl
             break
-        if beinahe is not None and verworfen is not None:
-            verworfen.append(beinahe)
+        # Ein echter Beinahe-Treffer (genug Tickets, an einer Regel gescheitert) sagt mehr als
+        # ein zu kleines Cluster — er bekommt den einen Platz je Auswahl.
+        if verworfen is not None and (beinahe or klein) is not None:
+            verworfen.append(beinahe if beinahe is not None else klein)
     if verworfen is not None:
         for a, v in je_gesperrt.items():
             v.sort(key=lambda z: z[0])

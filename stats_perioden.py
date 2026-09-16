@@ -530,6 +530,17 @@ def _arm(rows):
             for r in rows if _tag(r.get("gesehenAm"))]
 
 
+def _burst_min_n():
+    """Die Anzahl-Schwelle kommt aus dem Erkenner, nicht aus einer zweiten Zahl hier — sonst
+    steht dieselbe Regel an zwei Stellen und wird an einer repariert. Faellt der Import aus,
+    sagt die Zeile lieber nichts als etwas Falsches."""
+    try:
+        from stake_burst_push import MIN_N
+        return MIN_N
+    except Exception:                                        # pragma: no cover
+        return "der Schwelle"
+
+
 def _burst_beinahe_satz() -> str:
     """Was der Filter kostet, in einem Satz — aus dem Beinahe-Buch (13.09.2026, Lucas:
     „es muss auch solche Bursts auf generelle Ligen geben").
@@ -544,7 +555,12 @@ def _burst_beinahe_satz() -> str:
     NAME = {"quote_zu_tief": "Quote unter der Grenze",
             "quoten_uneinheitlich": "Quoten im Cluster uneinheitlich",
             "summe_zu_klein": "Summe unter der Grenze",
-            "sportart_gesperrt": "Sportart gesperrt"}
+            "sportart_gesperrt": "Sportart gesperrt",
+            # 16.09.2026 (Lucas: „vielleicht reichen da drei schnelle Einsaetze"): der einzige
+            # Filter, dessen Preis bisher nirgends stand. Cluster, die NUR an der Anzahl
+            # scheitern, laufen seither mit — damit die Schwelle in zwei Wochen aus dem eigenen
+            # Buch beantwortbar ist statt aus einem einmaligen Skript.
+            "unter_min_n": "zu wenige Tickets (unter %s)" % _burst_min_n()}
     teile = ["%s %d" % (NAME.get(k, k), v)
              for k, v in sorted(allein.items(), key=lambda kv: -kv[1])]
     return ("Daneben wurden seit %s %d Cluster verworfen; an GENAU EINER Regel scheiterten: %s."
