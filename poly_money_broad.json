@@ -1,33 +1,33 @@
 {
  "n": 422,
  "minOdds": 1.35,
- "moneyHitRate": 0.37,
- "priceHitRate": 0.396,
- "brierMoney": 0.9186,
- "brierPrice": 0.6966,
+ "moneyHitRate": 0.372,
+ "priceHitRate": 0.405,
+ "brierMoney": 0.9158,
+ "brierPrice": 0.6945,
  "disagree": {
   "n": 116,
-  "moneyWon": 16,
-  "priceWon": 27,
-  "neither": 73
+  "moneyWon": 15,
+  "priceWon": 29,
+  "neither": 72
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
  "byLeague": [
-  {
-   "league": "LA-LIGA",
-   "n": 49,
-   "moneyHitRate": 0.408,
-   "brierMoney": 0.897,
-   "brierPrice": 0.7644,
-   "verdict": "preis_besser"
-  },
   {
    "league": "EPL",
    "n": 34,
    "moneyHitRate": 0.206,
    "brierMoney": 0.971,
    "brierPrice": 0.8343,
+   "verdict": "preis_besser"
+  },
+  {
+   "league": "LA-LIGA",
+   "n": 50,
+   "moneyHitRate": 0.42,
+   "brierMoney": 0.8897,
+   "brierPrice": 0.7522,
    "verdict": "preis_besser"
   },
   {
@@ -81,9 +81,9 @@
  ],
  "guete": {
   "belastbar": 422,
-  "preis_echo": 226,
-  "abgeschnitten": 57,
-  "unbekannt": 322,
+  "preis_echo": 231,
+  "abgeschnitten": 58,
+  "unbekannt": 319,
   "leer": 0
  },
  "rows": [
@@ -284,7 +284,7 @@
    "league": "EPL",
    "winner": "Draw (Nottingham Forest FC vs. Tottenham Hotspur FC)",
    "moneyFav": "Tottenham Hotspur FC",
-   "priceFav": "Tottenham Hotspur FC",
+   "priceFav": "Nottingham Forest FC",
    "moneyShare": 0.584,
    "priceProb": 0.357,
    "moneyOK": false,
@@ -568,20 +568,20 @@
    "totalUsd": 307187
   }
  ],
- "generatedAt": "2026-09-16T21:54:53.923584+00:00",
+ "generatedAt": "2026-09-16T22:14:53.823353+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 420,
   "nfl": 800,
-  "mlb": 706,
+  "mlb": 702,
   "nhl": 571,
   "mls": 664,
   "epl": 528,
   "soccer": 800,
-  "tennis": 630,
+  "tennis": 633,
   "ucl": 417,
-  "la-liga": 559,
+  "la-liga": 548,
   "bundesliga": 484,
   "serie-a": 51,
   "ligue-1": 513,
@@ -596,7 +596,7 @@
   "lol": 424,
   "dota": 9,
   "valorant": 444,
-  "ufc": 453,
+  "ufc": 458,
   "mma": 53,
   "boxing": 270,
   "golf": 411,
@@ -652,18 +652,18 @@
   "sweepAdded": 405
  },
  "vorStats": {
-  "kandidaten": 5,
+  "kandidaten": 4,
   "budgetLeer": 0,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
-  "mitAnteilen": 5,
-  "calls": 5
+  "mitAnteilen": 4,
+  "calls": 4
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1482,
-   "usd": 24653960,
-   "beispiel": "fifwc-prt-cdr-2026-06-17"
+   "n": 1392,
+   "usd": 23477656,
+   "beispiel": "fifwc-prt-hrv-2026-07-02-player-props"
   },
   "balance": {
    "n": 4,
@@ -671,79 +671,59 @@
    "beispiel": "balance-of-power-2026-midterms"
   },
   "nba": {
-   "n": 411,
-   "usd": 5284419,
-   "beispiel": "nba-phi-nyk-2026-05-04"
+   "n": 193,
+   "usd": 2317784,
+   "beispiel": "nba-2027-champion"
   },
   "ecs": {
    "n": 10,
-   "usd": 918385,
-   "beispiel": "ecs-ars-mci-2026-08-16"
+   "usd": 920059,
+   "beispiel": "ecs-ars-mci-2026-08-16-more-markets"
   },
   "world": {
-   "n": 61,
-   "usd": 664401,
+   "n": 55,
+   "usd": 650438,
    "beispiel": "world-cup-winner"
   },
   "fed": {
-   "n": 17,
-   "usd": 541921,
+   "n": 12,
+   "usd": 527264,
    "beispiel": "fed-decision-in-october-20260617190323537"
   },
-  "presidential": {
-   "n": 8,
-   "usd": 537213,
-   "beispiel": "presidential-election-winner-2028"
-  },
-  "cbb": {
-   "n": 72,
-   "usd": 513417,
-   "beispiel": "cbb-pur-arz-2026-03-28"
-  },
   "fif": {
-   "n": 91,
-   "usd": 329919,
-   "beispiel": "fif-svk-mon-2026-06-05-more-markets"
+   "n": 80,
+   "usd": 300348,
+   "beispiel": "fif-bra-pan-2026-05-31"
   },
   "clf": {
-   "n": 50,
-   "usd": 211899,
-   "beispiel": "clf-lfc-wre-2026-07-29"
+   "n": 38,
+   "usd": 180677,
+   "beispiel": "clf-mun-lee-2026-08-12"
   },
   "nbasl": {
-   "n": 3,
-   "usd": 113076,
+   "n": 1,
+   "usd": 97044,
    "beispiel": "nbasl-cle-nop-2026-07-15"
   },
-  "us": {
-   "n": 9,
-   "usd": 106843,
-   "beispiel": "us-announces-end-of-iranian-blockade-byptptpt-20260713152715080"
+  "cbb": {
+   "n": 6,
+   "usd": 73240,
+   "beispiel": "cbb-uconn-mich-2026-04-06"
   },
-  "pro": {
-   "n": 22,
-   "usd": 93489,
-   "beispiel": "pro-football-2027-champion-20260729185915366"
+  "us": {
+   "n": 7,
+   "usd": 69498,
+   "beispiel": "us-x-iran-permanent-peace-deal-by"
   },
   "svk1": {
    "n": 8,
    "usd": 53507,
-   "beispiel": "svk1-sba-pod-2026-08-01"
+   "beispiel": "svk1-zil-kos-2026-07-26-halftime-result"
   },
   "hr1": {
    "n": 9,
    "usd": 52497,
    "beispiel": "hr1-rij-rud-2026-08-02"
-  },
-  "btc": {
-   "n": 20,
-   "usd": 50371,
-   "beispiel": "btc-updown-5m-1780604700"
-  },
-  "next": {
-   "n": 4,
-   "usd": 47470,
-   "beispiel": "next-ministerprasident-of-sachsen-anhalt-20260806155819619"
   },
   "skc": {
    "n": 6,
@@ -753,12 +733,32 @@
   "mar1": {
    "n": 6,
    "usd": 44156,
-   "beispiel": "mar1-ocs-kaa-2026-06-12"
+   "beispiel": "mar1-wac-uye-2026-04-29-more-markets"
   },
-  "who": {
-   "n": 4,
-   "usd": 39587,
-   "beispiel": "who-will-be-the-next-prime-minister-of-israel-after-the-next-election"
+  "j2100": {
+   "n": 10,
+   "usd": 40582,
+   "beispiel": "j2100-veg-ven-2026-05-30"
+  },
+  "j1100": {
+   "n": 12,
+   "usd": 38327,
+   "beispiel": "j1100-vva-gam-2026-04-25-more-markets"
+  },
+  "kbo": {
+   "n": 11,
+   "usd": 37682,
+   "beispiel": "kbo-kt-han-2026-09-16"
+  },
+  "usl1": {
+   "n": 5,
+   "usd": 37391,
+   "beispiel": "usl1-spo-coc-2026-08-15"
+  },
+  "btc": {
+   "n": 18,
+   "usd": 34208,
+   "beispiel": "btc-updown-5m-1784322000"
   }
  }
 }
