@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-09-16T00:47:17.585301+00:00",
+"generatedAt": "2026-09-16T01:02:15.639101+00:00",
 "count": 17,
-"covered": 14,
+"covered": 13,
 "leaguesCovered": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -35,8 +35,63 @@
 "soccer_usa_mls"
 ],
 "oddsKeysFetched": 46,
-"ankerQuote": 0.24,
+"ankerQuote": 0.233,
 "games": [
+{
+"matchId": "36050124",
+"home": "Sao Paulo",
+"away": "Boca Juniors",
+"league": "CONMEBOL Copa Sudamericana",
+"country": "International",
+"kickoff": "2026-09-16T00:30:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Sao Paulo",
+"moneySharePct": 71,
+"moneyOdd": 2.72,
+"moneyDir": "out",
+"totVol": 298570,
+"pinnOdd": 2.58,
+"softOdd": 2.6,
+"softN": 19,
+"poly": {
+"vol": 66991,
+"odd": 2.6,
+"sharePct": 29,
+"shareSrc": "geld",
+"key": "sud-sao-boc-2026-09-15",
+"sideKey": "São Paulo FC",
+"whales": [
+{
+"wallet": "0x06a9865f05e5f379840e6df4feadc98892571a49",
+"usd": 846
+},
+{
+"wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
+"usd": 734
+}
+],
+"whaleUsd": 1580
+},
+"pinn": {
+"home": 0.3631,
+"draw": 0.4003,
+"away": 0.2366,
+"fav": "draw"
+},
+"soft": {
+"home": 0.3552,
+"draw": 0.3942,
+"away": 0.2506,
+"fav": "draw",
+"n": 19
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "uneinig",
+"agree": false,
+"pinnTotals": null
+},
 {
 "matchId": "36038724",
 "home": "Barcelona",
@@ -49,13 +104,13 @@
 "moneyName": "Barcelona",
 "moneySharePct": 98,
 "moneyOdd": 1.1,
-"moneyDir": "out",
-"totVol": 289604,
+"moneyDir": "flat",
+"totVol": 290308,
 "pinnOdd": 1.06,
 "softOdd": 1.06,
 "softN": 45,
 "poly": {
-"vol": 216415,
+"vol": 223734,
 "odd": 1.09,
 "sharePct": 92,
 "shareSrc": "preis",
@@ -71,9 +126,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.8976,
+"home": 0.8977,
 "draw": 0.0636,
-"away": 0.0388,
+"away": 0.0387,
 "fav": "home",
 "n": 45
 },
@@ -85,61 +140,6 @@
 "move": false,
 "laeuft": false
 },
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36050124",
-"home": "Sao Paulo",
-"away": "Boca Juniors",
-"league": "CONMEBOL Copa Sudamericana",
-"country": "International",
-"kickoff": "2026-09-16T00:30:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Sao Paulo",
-"moneySharePct": 65,
-"moneyOdd": 2.48,
-"moneyDir": "out",
-"totVol": 192467,
-"pinnOdd": 2.41,
-"softOdd": 2.3,
-"softN": 20,
-"poly": {
-"vol": 53241,
-"odd": 2.47,
-"sharePct": 24,
-"shareSrc": "geld",
-"key": "sud-sao-boc-2026-09-15",
-"sideKey": "São Paulo FC",
-"whales": [
-{
-"wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
-"usd": 772
-},
-{
-"wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
-"usd": 554
-}
-],
-"whaleUsd": 1326
-},
-"pinn": {
-"home": 0.3888,
-"draw": 0.3703,
-"away": 0.2409,
-"fav": "home"
-},
-"soft": {
-"home": 0.3979,
-"draw": 0.3509,
-"away": 0.2512,
-"fav": "home",
-"n": 20
-},
-"pinnMovePP": null,
-"pinnMove": null,
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
@@ -162,8 +162,8 @@
 "softOdd": 1.93,
 "softN": 44,
 "poly": {
-"vol": 23521,
-"odd": 2.02,
+"vol": 23821,
+"odd": 1.98,
 "sharePct": 50,
 "shareSrc": "preis",
 "key": "uel-stu1-ren1-2026-09-16",
@@ -208,13 +208,13 @@
 "moneyName": "Atletico Madrid",
 "moneySharePct": 83,
 "moneyOdd": 1.42,
-"moneyDir": "out",
+"moneyDir": "flat",
 "totVol": 68924,
 "pinnOdd": 1.4,
 "softOdd": 1.36,
 "softN": 43,
 "poly": {
-"vol": 47273,
+"vol": 47675,
 "odd": 1.42,
 "sharePct": 70,
 "shareSrc": "preis",
@@ -230,8 +230,8 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.6921,
-"draw": 0.194,
+"home": 0.6922,
+"draw": 0.1939,
 "away": 0.1139,
 "fav": "home",
 "n": 43
@@ -258,10 +258,10 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "Lyon",
-"moneySharePct": 75,
-"moneyOdd": 2.48,
-"moneyDir": "out",
-"totVol": 60268,
+"moneySharePct": 74,
+"moneyOdd": 2.44,
+"moneyDir": "in",
+"totVol": 60488,
 "pinnOdd": 2.32,
 "softOdd": 2.28,
 "softN": 45,
@@ -273,9 +273,9 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.3228,
+"home": 0.323,
 "draw": 0.262,
-"away": 0.4151,
+"away": 0.415,
 "fav": "away",
 "n": 45
 },
@@ -304,12 +304,12 @@
 "moneySharePct": 87,
 "moneyOdd": 2.04,
 "moneyDir": "flat",
-"totVol": 53402,
+"totVol": 53518,
 "pinnOdd": 1.97,
 "softOdd": 1.95,
 "softN": 45,
 "poly": {
-"vol": 27734,
+"vol": 27774,
 "odd": 2.04,
 "sharePct": 49,
 "shareSrc": "preis",
@@ -361,7 +361,7 @@
 "softOdd": 2.1,
 "softN": 45,
 "poly": {
-"vol": 83553,
+"vol": 83685,
 "odd": 2.2,
 "sharePct": 46,
 "shareSrc": "preis",
@@ -413,7 +413,7 @@
 "softOdd": 1.06,
 "softN": 50,
 "poly": {
-"vol": 30612,
+"vol": 30726,
 "odd": 1.09,
 "sharePct": 92,
 "shareSrc": "preis",
@@ -458,9 +458,9 @@
 "moneySide": "home",
 "moneyName": "Espanyol",
 "moneySharePct": 98,
-"moneyOdd": 1.92,
-"moneyDir": "out",
-"totVol": 37454,
+"moneyOdd": 1.91,
+"moneyDir": "in",
+"totVol": 37515,
 "pinnOdd": 1.85,
 "softOdd": 1.85,
 "softN": 44,
@@ -481,7 +481,7 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.5106,
+"home": 0.5107,
 "draw": 0.2738,
 "away": 0.2156,
 "fav": "home",
@@ -510,14 +510,14 @@
 "moneySide": "home",
 "moneyName": "Betis",
 "moneySharePct": 90,
-"moneyOdd": 1.72,
-"moneyDir": "flat",
-"totVol": 31702,
+"moneyOdd": 1.73,
+"moneyDir": "out",
+"totVol": 31751,
 "pinnOdd": 1.7,
 "softOdd": 1.67,
 "softN": 43,
 "poly": {
-"vol": 17643,
+"vol": 17688,
 "odd": 1.71,
 "sharePct": 58,
 "shareSrc": "preis",
@@ -552,6 +552,58 @@
 "pinnTotals": null
 },
 {
+"matchId": "36004952",
+"home": "Leverkusen",
+"away": "NK Celje",
+"league": "UEFA Europa League",
+"country": "International",
+"kickoff": "2026-09-16T19:00:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Leverkusen",
+"moneySharePct": 98,
+"moneyOdd": 1.15,
+"moneyDir": "flat",
+"totVol": 28742,
+"pinnOdd": 1.13,
+"softOdd": 1.13,
+"softN": 45,
+"poly": {
+"vol": 9512,
+"odd": 1.16,
+"sharePct": 86,
+"shareSrc": "preis",
+"key": "uel-lev-cel2-2026-09-16",
+"sideKey": "Bayer 04 Leverkusen",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.8485,
+"draw": 0.0989,
+"away": 0.0525,
+"fav": "home"
+},
+"soft": {
+"home": 0.8392,
+"draw": 0.1042,
+"away": 0.0566,
+"fav": "home",
+"n": 45
+},
+"pinnMovePP": 1.0,
+"pinnMove": {
+"movePP": 1.0,
+"stepPP": 0.0,
+"n": 8,
+"move": true,
+"laeuft": false
+},
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
 "matchId": "36036322",
 "home": "Brentford",
 "away": "Chelsea",
@@ -563,13 +615,13 @@
 "moneyName": "Chelsea",
 "moneySharePct": 71,
 "moneyOdd": 2.4,
-"moneyDir": "in",
+"moneyDir": "flat",
 "totVol": 28471,
 "pinnOdd": 2.32,
 "softOdd": 2.25,
 "softN": 51,
 "poly": {
-"vol": 33687,
+"vol": 33709,
 "odd": 2.35,
 "sharePct": 42,
 "shareSrc": "preis",
@@ -587,7 +639,7 @@
 "soft": {
 "home": 0.331,
 "draw": 0.2496,
-"away": 0.4194,
+"away": 0.4193,
 "fav": "away",
 "n": 51
 },
@@ -597,58 +649,6 @@
 "stepPP": -0.0,
 "n": 14,
 "move": false,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36004952",
-"home": "Leverkusen",
-"away": "NK Celje",
-"league": "UEFA Europa League",
-"country": "International",
-"kickoff": "2026-09-16T19:00:00Z",
-"live": false,
-"moneySide": "home",
-"moneyName": "Leverkusen",
-"moneySharePct": 97,
-"moneyOdd": 1.15,
-"moneyDir": "flat",
-"totVol": 25875,
-"pinnOdd": 1.13,
-"softOdd": 1.13,
-"softN": 45,
-"poly": {
-"vol": 9507,
-"odd": 1.16,
-"sharePct": 86,
-"shareSrc": "preis",
-"key": "uel-lev-cel2-2026-09-16",
-"sideKey": "Bayer 04 Leverkusen",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.8485,
-"draw": 0.0989,
-"away": 0.0525,
-"fav": "home"
-},
-"soft": {
-"home": 0.8394,
-"draw": 0.1041,
-"away": 0.0565,
-"fav": "home",
-"n": 45
-},
-"pinnMovePP": 1.0,
-"pinnMove": {
-"movePP": 1.0,
-"stepPP": 0.0,
-"n": 8,
-"move": true,
 "laeuft": false
 },
 "verdict": "konsens",
@@ -666,9 +666,9 @@
 "moneySide": "home",
 "moneyName": "Besiktas",
 "moneySharePct": 92,
-"moneyOdd": 1.78,
-"moneyDir": "flat",
-"totVol": 22276,
+"moneyOdd": 1.77,
+"moneyDir": "in",
+"totVol": 22327,
 "pinnOdd": 1.74,
 "softOdd": 1.75,
 "softN": 43,
@@ -680,9 +680,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.5419,
+"home": 0.542,
 "draw": 0.2334,
-"away": 0.2247,
+"away": 0.2246,
 "fav": "home",
 "n": 43
 },
@@ -693,75 +693,6 @@
 "n": 10,
 "move": false,
 "laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36046778",
-"home": "Puebla",
-"away": "Toluca",
-"league": "Mexican Liga MX",
-"country": "MX",
-"kickoff": "2026-09-16T01:00:00Z",
-"live": false,
-"moneySide": "away",
-"moneyName": "Toluca",
-"moneySharePct": 79,
-"moneyOdd": 1.54,
-"moneyDir": "in",
-"totVol": 9336,
-"pinnOdd": 1.52,
-"softOdd": 1.48,
-"softN": 38,
-"poly": {
-"vol": 36630,
-"odd": 1.57,
-"sharePct": 94,
-"shareSrc": "geld",
-"key": "mex-pue-tol-2026-09-04",
-"sideKey": "Deportivo Toluca FC",
-"whales": [
-{
-"wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
-"usd": 12420
-},
-{
-"wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-"usd": 1605
-},
-{
-"wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-"usd": 1086
-},
-{
-"wallet": "0xd48a81db62f742c4e42d86dfc23a7ee345366e90",
-"usd": 992
-}
-],
-"whaleUsd": 16103
-},
-"pinn": {
-"home": 0.1601,
-"draw": 0.2049,
-"away": 0.635,
-"fav": "away"
-},
-"soft": {
-"home": 0.165,
-"draw": 0.212,
-"away": 0.623,
-"fav": "away",
-"n": 38
-},
-"pinnMovePP": 0.9,
-"pinnMove": {
-"movePP": 0.9,
-"stepPP": 0.9,
-"n": 2,
-"move": false,
-"laeuft": true
 },
 "verdict": "konsens",
 "agree": true,
@@ -780,7 +711,7 @@
 "moneySharePct": 82,
 "moneyOdd": 2.1,
 "moneyDir": "flat",
-"totVol": 49708,
+"totVol": 49766,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -805,8 +736,34 @@
 "moneyName": "CRB",
 "moneySharePct": 67,
 "moneyOdd": 1.35,
+"moneyDir": "flat",
+"totVol": 24974,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": null,
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null
+},
+{
+"matchId": "36064323",
+"home": "Boyaca Chico",
+"away": "Alianza FC Valledupar",
+"league": "Colombian Primera A",
+"country": "CO",
+"kickoff": "2026-09-16T00:30:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Boyaca Chico",
+"moneySharePct": 48,
+"moneyOdd": 4.5,
 "moneyDir": "out",
-"totVol": 24239,
+"totVol": 18015,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -829,10 +786,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Universidad de Venezuela",
-"moneySharePct": 78,
-"moneyOdd": 2.32,
-"moneyDir": "out",
-"totVol": 8991,
+"moneySharePct": 77,
+"moneyOdd": 1.19,
+"moneyDir": "in",
+"totVol": 12043,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
