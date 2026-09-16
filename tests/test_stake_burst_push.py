@@ -395,3 +395,63 @@ class TestRollout(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestEinFensterIstNichtDieGanzeAuswahl(unittest.TestCase):
+    """🔴 16.09.2026 (Lucas: „wundert mich, dass von Tag auf Tag nicht mehrere Einsaetze
+    hintereinander in einem kurzen Zeitfenster gibt … ich glaube, dass da irgendwo hakt").
+
+    Es hakte. Jedes `break` in der Fenster-Schleife verliess die ganze AUSWAHL: fiel das erste
+    Fenster durch eine Regel oder war es zu alt, sah niemand mehr die spaeteren Fenster
+    derselben Auswahl. Gemessen am Ledger vom 10.–16.09. (20.000 Wetten): 22 statt 33 Bursts,
+    im Replay alle 10 Minuten 25 statt 35 — rund jeder dritte ging so verloren.
+    """
+
+    def test_erstes_fenster_scheitert_an_den_quoten_zweites_zaehlt(self):
+        feed = ([w(0, 5000, quote=2.0), w(10, 5000, quote=2.0),
+                 w(20, 5000, quote=2.1), w(30, 5000, quote=2.0)]      # uneinheitlich
+                + [w(400 + k * 10, 5000, quote=2.0) for k in range(4)])  # sauberes Fenster
+        b = bursts(feed)
+        self.assertEqual(len(b), 1, "das zweite, saubere Fenster wurde nie angesehen")
+        self.assertEqual(len(b[0]["wetten"]), 4)
+
+    def test_erstes_fenster_zu_tief_bepreist_zweites_zaehlt(self):
+        feed = ([w(0, 5000, quote=1.05) for _ in range(1)]
+                + [w(10 * k, 5000, quote=1.05) for k in range(1, 4)]
+                + [w(400 + k * 10, 5000, quote=2.4) for k in range(4)])
+        b = bursts(feed)
+        self.assertEqual(len(b), 1)
+        self.assertAlmostEqual(b[0]["wetten"][0]["quote"], 2.4)
+
+    def test_altes_fenster_verdeckt_kein_frisches(self):
+        """Die Altersgrenze gilt dem FENSTER, nicht der Auswahl — sonst sperrt ein zwoelf
+        Stunden alter Cluster die Auswahl fuer den Rest des Feed-Fensters."""
+        alt = [w(-60 * 60 * 6 + k * 10, 5000, quote=2.0) for k in range(4)]
+        frisch = [w(-60 * 5 + k * 10, 5000, quote=2.0) for k in range(4)]
+        b = bursts(alt + frisch)
+        self.assertEqual(len(b), 1, "das frische Fenster fiel mit dem alten zusammen aus")
+
+    def test_je_auswahl_bleibt_es_bei_einem_burst(self):
+        """Der Fix darf die gewollte Regel nicht aufheben: zwei saubere Fenster derselben
+        Auswahl sind EINE Beobachtung."""
+        feed = ([w(k * 10, 5000, quote=2.0) for k in range(4)]
+                + [w(600 + k * 10, 5000, quote=2.0) for k in range(4)])
+        self.assertEqual(len(bursts(feed)), 1)
+
+    def test_eine_auswahl_steht_nie_als_treffer_und_als_beinahe_im_buch(self):
+        verworfen = []
+        feed = ([w(0, 5000, quote=2.0), w(10, 5000, quote=2.0),
+                 w(20, 5000, quote=2.1), w(30, 5000, quote=2.0)]
+                + [w(400 + k * 10, 5000, quote=2.0) for k in range(4)])
+        b = bursts(feed, verworfen=verworfen)
+        self.assertEqual(len(b), 1)
+        self.assertEqual([v for v in verworfen if v["auswahlId"] == "a1"], [])
+
+    def test_das_beinahe_buch_bekommt_genau_eine_zeile_je_auswahl(self):
+        """Ohne den `break` koennte jedes gescheiterte Fenster eine Zeile schreiben — dann
+        misst das Buch die Schleifenlaenge statt die Auswahl."""
+        verworfen = []
+        feed = [w(k * 10, 5000, quote=2.0 + (k % 2) * 0.1) for k in range(12)]
+        bursts(feed, verworfen=verworfen)
+        self.assertEqual(len(verworfen), 1)
+        self.assertEqual(verworfen[0]["gruende"], ["quoten_uneinheitlich"])

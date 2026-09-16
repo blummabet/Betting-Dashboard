@@ -238,6 +238,13 @@ ART = {
     # das rollierende Fenster kommen und gehen. Eine Spielklasse hat es in keiner Sportart:
     # es spielen Nationalauswahlen (im Fussball U23), keine Ligamannschaften.
     "asian-games": "kontinental",
+    # 16.09.2026 (CI-Wachhund, „uefa-nations-league"): dieselbe Antwort wie bei den Asian Games,
+    # nur in Europa — es spielen Nationalauswahlen (Beleg aus der einen Zeile im Ledger:
+    # „Turkiye - France"), und eine Nationalmannschaft hat keine Spielklasse. Aufgetaucht ist
+    # der Slug mit dem Laenderspielfenster; dass es nur EINE Wette war, aendert nichts: die
+    # Tabelle wird nicht nach Haeufigkeit gepflegt, sondern danach, ob die Frage beantwortbar
+    # ist. Eine Namensregel waere hier falsch — „nations" steckt auch in Vereinsturnieren.
+    "uefa-nations-league": "kontinental",
     # 14.09.2026 (CI-Wachhund): die Professional Development League ist Englands U21-Reserve-
     # wettbewerb. „Swansea City - Huddersfield Town" sieht nach Profifussball aus, es sind die
     # Nachwuchsmannschaften — die Namensregel greift nicht, weil weder U21 noch „youth" im

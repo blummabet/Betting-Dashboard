@@ -620,12 +620,18 @@ def check_fade_kontrolle(ctx):
     if not isinstance(d, dict) or not d.get("regel"):
         return _c("Fade-Unter: haelt die Kontrollgruppe?", "warn", [],
                   hinweis="fade_unter.json fehlt — dann ist ueber die Regel nichts gesagt.")
+    # 🔴 16.09.2026: hier stand `k["roi"] > 0` — ein PUNKTSCHAETZER. Match Odds H kippte an dem
+    # Tag auf +0,47 % mit Untergrenze −4,18 % (n=2.329) und haette den Guard rot gemacht, ohne
+    # dass irgendetwas belegt waere. Dieselbe Korrektur wie am 07.09. am Betfair-Urteil
+    # „verliert": die Aussage haengt an der Schranke, nicht am Schnitt. Der Schnitt steht
+    # weiterhin in der Meldung — als Bewegung, nicht als Urteil.
     fails = []
     for k in (d.get("kontrolle") or []):
-        if isinstance(k.get("roi"), (int, float)) and k["roi"] > 0:
-            fails.append("%s %s: der Fade GEWINNT hier (%+.1f %%, Geldseite %+.1f pp) — die "
-                         "Rechnung misst sich selbst, der Befund traegt nicht"
-                         % (k.get("markt"), k.get("seite"), 100 * k["roi"], k.get("vorsprungPP") or 0))
+        if isinstance(k.get("roiUg"), (int, float)) and k["roiUg"] > 0:
+            fails.append("%s %s: der Fade gewinnt hier BELEGT (%+.1f %%, UG %+.1f %%, Geldseite "
+                         "%+.1f pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
+                         % (k.get("markt"), k.get("seite"), 100 * (k.get("roi") or 0),
+                            100 * k["roiUg"], k.get("vorsprungPP") or 0))
     if not (d.get("kontrolle") or []):
         fails.append("keine Kontrollmaerkte im Artefakt — ein Befund ohne Kontrollgruppe ist "
                      "eine Behauptung")

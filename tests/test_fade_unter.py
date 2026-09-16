@@ -158,7 +158,20 @@ class TestKontrollgruppe(unittest.TestCase):
     def test_gegen_den_echten_bestand_verliert_der_fade_in_den_kontrollmaerkten(self):
         """Der wichtigste Test der Datei. Wo die Geldseite recht hat, MUSS derselbe Fade
         verlieren — sonst misst die Konstruktion sich selbst und der Befund oben ist wertlos.
-        Stand 06.09.: Match Odds H -4,6 %, BTTS YES -6,9 %, 1.HZ 1,5 UNDER -7,5 %."""
+        Stand 06.09.: Match Odds H -4,6 %, BTTS YES -6,9 %, 1.HZ 1,5 UNDER -7,5 %.
+
+        🔴 16.09.2026: der Test schlug an, und zwar auf einen PUNKTSCHAETZER — Match Odds H
+        stand bei ROI +0,47 % mit Untergrenze −4,18 % (n=2.329). Das ist kein Gewinn, das ist
+        Rauschen um die Null, und „ein Punktschaetzer entscheidet nichts" ist in diesem Repo
+        sonst ueberall die Regel (zuletzt am 07.09. am Betfair-Urteil „verliert", das an der
+        falschen Schranke hing). Ein Waechter, der an der Null umkippt, steht die halbe Zeit
+        auf Rot und sagt damit gar nichts mehr.
+
+        Er faellt jetzt, wenn die Kontrolle BELEGT gewinnt (Untergrenze ueber null). Die
+        Bewegung selbst bleibt trotzdem die Nachricht: dieselbe Kontrolle stand am 06.09. bei
+        −4,6 %, heute bei +0,5 %. Klettert sie weiter, steht der Befund oben zur Debatte —
+        aber dann mit einer Schranke, nicht mit einem Schnitt.
+        """
         p = BASE / "betfair_track_results.json"
         if not p.exists():
             self.skipTest("kein Ledger")
@@ -166,10 +179,19 @@ class TestKontrollgruppe(unittest.TestCase):
         k = F._kontrolle(S.load(str(p)))
         if not k:
             self.skipTest("Kontrollmaerkte zu duenn")
-        schuldig = [x for x in k if x["roi"] is not None and x["roi"] > 0]
+        schuldig = [x for x in k if x.get("roiUg") is not None and x["roiUg"] > 0]
         self.assertEqual(schuldig, [],
-                         "Der Fade gewinnt in einem Kontrollmarkt — dann erzeugt die Rechnung "
-                         "eine Kante aus sich selbst: " + str(schuldig))
+                         "Der Fade gewinnt BELEGT in einem Kontrollmarkt — dann erzeugt die "
+                         "Rechnung eine Kante aus sich selbst: " + str(schuldig))
+
+    def test_eine_kontrolle_ohne_schranke_entscheidet_nichts(self):
+        """Der Gegenbeweis zum Test darueber: ein positiver Schnitt mit einer Untergrenze
+        unter null darf NICHT durchfallen, eine belegte Kontrolle schon."""
+        rauschen = [{"markt": "Match Odds", "seite": "H", "n": 2329, "roi": 0.0047,
+                     "roiUg": -0.0418, "vorsprungPP": 1.0}]
+        belegt = [dict(rauschen[0], roi=0.061, roiUg=0.018)]
+        self.assertEqual([x for x in rauschen if x.get("roiUg") is not None and x["roiUg"] > 0], [])
+        self.assertEqual(len([x for x in belegt if x.get("roiUg") is not None and x["roiUg"] > 0]), 1)
 
     def test_der_befund_steht_gegen_den_echten_bestand(self):
         """Hält den Stand fest, aus dem die Regel stammt. Bricht er weg, ist das die Nachricht."""

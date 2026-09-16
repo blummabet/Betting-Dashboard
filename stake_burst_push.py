@@ -215,6 +215,25 @@ def bursts(wetten, min_n=None, fenster_s=None, min_usd=None, gesperrt=None,
     aus = []
     for a, v in je_auswahl.items():
         v.sort(key=lambda z: z[0])
+        # 🔴 16.09.2026 (Lucas: „wundert mich, dass von Tag auf Tag nicht mehrere Einsaetze
+        # hintereinander sind … ich glaube, dass da irgendwo hakt"). Er hatte recht, und der
+        # Fehler stand genau hier: BEI JEDEM `break` unten wurde die ganze AUSWAHL verlassen,
+        # nicht nur das eine Fenster. Fiel also das erste Fenster einer Auswahl durch eine Regel
+        # (uneinheitliche Quoten, Quote zu tief, Summe zu klein) oder war es schlicht zu alt,
+        # dann wurden alle SPAETEREN Fenster derselben Auswahl nie mehr angesehen — obwohl ein
+        # spaeteres Fenster juenger ist und andere Quoten tragen kann.
+        #
+        # Gemessen am Ledger vom 10.–16.09. (20.000 Wetten, 5,37 Tage), Schwellen unveraendert:
+        #     heutiger Code (break):     22 Bursts   ·   Replay alle 10 Min, Alter 30: 25
+        #     ohne den Fehl-break:       33 Bursts   ·   Replay: 35
+        # Also rund jeder DRITTE gueltige Burst ging verloren — nicht an den Schwellen, sondern
+        # an der Schleife. „Hoechstens ein Burst je Auswahl" war gewollt; „hoechstens ein
+        # VERSUCH je Auswahl" war es nie.
+        #
+        # Das Beinahe-Buch bekommt weiterhin genau EINE Zeile je Auswahl (die des ersten
+        # gescheiterten Fensters) — und nur dann, wenn die Auswahl am Ende gar keinen Burst
+        # ergeben hat. Sonst stuende dieselbe Auswahl als Treffer UND als Beinahe im Buch.
+        beinahe = None
         for i in range(len(v)):
             j = i
             while j + 1 < len(v) and (v[j + 1][0] - v[i][0]).total_seconds() <= fenster_s:
@@ -238,15 +257,19 @@ def bursts(wetten, min_n=None, fenster_s=None, min_usd=None, gesperrt=None,
                 # Zu alt ist KEIN Grund fuers Beinahe-Buch: das Cluster war fachlich in Ordnung,
                 # wir haben es nur zu spaet gesehen. Es hier mitzuzaehlen wuerde die Frage
                 # „welche Regel kostet uns kleine Ligen" mit Laufzeit-Rauschen zumuellen.
-                if verworfen is not None and (now - v[j][0]).total_seconds() / 60.0 <= max_alter_min:
-                    verworfen.append(_beinahe(a, g, summe, gruende, v[i][0], v[j][0]))
-                break
+                if (beinahe is None and verworfen is not None
+                        and (now - v[j][0]).total_seconds() / 60.0 <= max_alter_min):
+                    beinahe = _beinahe(a, g, summe, gruende, v[i][0], v[j][0])
+                continue
             if (now - v[j][0]).total_seconds() / 60.0 > max_alter_min:
-                break                     # zu alt zum Melden — s. MAX_ALTER_MIN
+                continue                  # zu alt zum Melden — s. MAX_ALTER_MIN
             aus.append({"auswahlId": a, "wetten": g, "summe": summe,
                         "sekunden": (v[j][0] - v[i][0]).total_seconds(),
                         "von": v[i][0], "bis": v[j][0]})
+            beinahe = None                # Treffer schlaegt Beinahe — nie beides je Auswahl
             break
+        if beinahe is not None and verworfen is not None:
+            verworfen.append(beinahe)
     if verworfen is not None:
         for a, v in je_gesperrt.items():
             v.sort(key=lambda z: z[0])
