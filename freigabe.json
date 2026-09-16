@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-16T12:48:42.323700+00:00",
+ "generatedAt": "2026-09-16T13:03:48.355102+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -38,6 +38,37 @@
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "Liga"
+  },
+  {
+   "schublade": "Mix money+sharp+steam",
+   "strom": "poly",
+   "n": 32,
+   "status": "freigegeben",
+   "grund": "ROI belegt (Untergrenze +0.4 %) — der CLV ist gemessen (-0.58 pp), aber nicht belegt: unbekannt ist kein Nein.",
+   "roi": 0.2011,
+   "pl": 6.43,
+   "roiLb": 0.0041,
+   "clv": -0.578,
+   "clvLb": -1.71,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.554,
+   "fehltN": 0,
+   "noetigNRoi": 31,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 31,
+    "lo": 5,
+    "hi": 1005,
+    "nieAnteil": 0.072,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "mix",
+   "wert": "money+sharp+steam",
+   "nAlt": 11,
+   "roiAlt": -0.1875,
+   "clvAlt": 0.818,
+   "engineAlt": true
   }
  ],
  "kandidaten": [
@@ -250,12 +281,12 @@
    "zerlegung": "nach Conviction",
    "art": "conviction",
    "gruppen": 7,
-   "basis": "496 von 917 abgerechneten Plays · nur Engine 2026-09-01 · ohne Kampfsport, US-Sport",
-   "n": 496,
-   "pl": 5.67,
-   "roi": 0.0114,
-   "clv": -1.877,
-   "belegte": 1
+   "basis": "497 von 918 abgerechneten Plays · nur Engine 2026-09-01 · ohne Kampfsport, US-Sport",
+   "n": 497,
+   "pl": 6.18,
+   "roi": 0.0124,
+   "clv": -1.873,
+   "belegte": 2
   },
   {
    "strom": "betfair",
@@ -279,7 +310,7 @@
    "aufloesbar": true,
    "grund": null,
    "laufend": 0,
-   "n": 31,
+   "n": 29,
    "plays": [
     {
      "spiel": "Atletico Madrid v Osasuna",
@@ -308,7 +339,7 @@
     {
      "spiel": "Brentford v Chelsea",
      "auswahl": "Über 2.5 Tore",
-     "quote": 1.45,
+     "quote": 1.46,
      "anpfiff": "2026-09-18T19:00:00+00:00",
      "datensatz": "Liga",
      "id": "ENG-5-55-49|Über 2.5 Tore"
@@ -339,16 +370,8 @@
     },
     {
      "spiel": "Eintracht Frankfurt v SC Freiburg",
-     "auswahl": "Doppelte Chance — X2",
-     "quote": 1.64,
-     "anpfiff": "2026-09-19T13:30:00+00:00",
-     "datensatz": "Liga",
-     "id": "GER-4-169-160|Doppelte Chance — X2"
-    },
-    {
-     "spiel": "Eintracht Frankfurt v SC Freiburg",
      "auswahl": "Über 2.5 Tore",
-     "quote": 1.47,
+     "quote": 1.44,
      "anpfiff": "2026-09-19T13:30:00+00:00",
      "datensatz": "Liga",
      "id": "GER-4-169-160|Über 2.5 Tore"
@@ -372,7 +395,7 @@
     {
      "spiel": "Athletic Club v Alaves",
      "auswahl": "Heimsieg",
-     "quote": 1.65,
+     "quote": 1.64,
      "anpfiff": "2026-09-19T14:15:00+00:00",
      "datensatz": "Liga",
      "id": "ESP-7-531-542|Heimsieg"
@@ -458,14 +481,6 @@
      "id": "ENG-5-63-52|Heimsieg"
     },
     {
-     "spiel": "Frosinone v Como",
-     "auswahl": "Auswärtssieg",
-     "quote": 1.5,
-     "anpfiff": "2026-09-20T13:00:00+00:00",
-     "datensatz": "Liga",
-     "id": "ITA-5-512-895|Auswärtssieg"
-    },
-    {
      "spiel": "Parma v Genoa",
      "auswahl": "Unter 2.5 Tore",
      "quote": 1.53,
@@ -514,22 +529,33 @@
      "id": "FRA-5-81-85|Auswärtssieg"
     },
     {
-     "spiel": "Manchester United v Tottenham",
-     "auswahl": "Heimsieg",
-     "quote": 1.62,
-     "anpfiff": "2026-10-10T16:30:00+00:00",
-     "datensatz": "Liga",
-     "id": "ENG-6-33-47|Heimsieg"
-    },
-    {
      "spiel": "Crystal Palace v Nottingham Forest",
      "auswahl": "Doppelte Chance — X2",
      "quote": 1.48,
      "anpfiff": "2026-10-11T13:00:00+00:00",
      "datensatz": "Liga",
      "id": "ENG-6-52-65|Doppelte Chance — X2"
+    },
+    {
+     "spiel": "Torino v Udinese",
+     "auswahl": "Unter 2.5 Tore",
+     "quote": 1.83,
+     "anpfiff": "2026-10-12T18:45:00+00:00",
+     "datensatz": "Liga",
+     "id": "ITA-6-503-494|Unter 2.5 Tore"
     }
    ]
+  },
+  {
+   "schublade": "Mix money+sharp+steam",
+   "strom": "poly",
+   "roiLb": 0.0041,
+   "clvUrteil": "gemessen, nicht belegt",
+   "aufloesbar": false,
+   "grund": "für diesen Schnitt gibt es keine Liste offener Plays — die Schublade rechnet auf Aggregaten, nicht auf einzelnen Zeilen",
+   "laufend": 0,
+   "n": 0,
+   "plays": []
   }
  ],
  "ligen": [
@@ -3357,6 +3383,37 @@
    "datensatz": "Liga"
   },
   {
+   "schublade": "Mix money+sharp+steam",
+   "strom": "poly",
+   "n": 32,
+   "status": "freigegeben",
+   "grund": "ROI belegt (Untergrenze +0.4 %) — der CLV ist gemessen (-0.58 pp), aber nicht belegt: unbekannt ist kein Nein.",
+   "roi": 0.2011,
+   "pl": 6.43,
+   "roiLb": 0.0041,
+   "clv": -0.578,
+   "clvLb": -1.71,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.554,
+   "fehltN": 0,
+   "noetigNRoi": 31,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 31,
+    "lo": 5,
+    "hi": 1005,
+    "nieAnteil": 0.072,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "mix",
+   "wert": "money+sharp+steam",
+   "nAlt": 11,
+   "roiAlt": -0.1875,
+   "clvAlt": 0.818,
+   "engineAlt": true
+  },
+  {
    "schublade": "🔒 E-Sport ohne Wallet-Nachweis",
    "strom": "poly",
    "n": 83,
@@ -3709,37 +3766,6 @@
    "alterTage": null,
    "art": "markt",
    "naeherung": false
-  },
-  {
-   "schublade": "Mix money+sharp+steam",
-   "strom": "poly",
-   "n": 31,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.1913,
-   "pl": 5.93,
-   "roiLb": -0.0114,
-   "clv": -0.597,
-   "clvLb": -1.766,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.572,
-   "fehltN": 0,
-   "noetigNRoi": 35,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 33,
-    "lo": 6,
-    "hi": 1531,
-    "nieAnteil": 0.047,
-    "schaetzbar": false
-   },
-   "alterTage": 2.4,
-   "art": "mix",
-   "wert": "money+sharp+steam",
-   "nAlt": 11,
-   "roiAlt": -0.1875,
-   "clvAlt": 0.818,
-   "engineAlt": true
   },
   {
    "schublade": "Both teams to Score?",
@@ -4243,6 +4269,37 @@
    "quelle": "pick_push_ledger.py"
   },
   {
+   "schublade": "Conviction 6",
+   "strom": "poly",
+   "n": 199,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.0012,
+   "pl": -0.23,
+   "roiLb": -0.0917,
+   "clv": -1.236,
+   "clvLb": -2.049,
+   "clvUrteil": "negativ belegt",
+   "clvOg": -0.424,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 1028,
+    "lo": 131,
+    "hi": 264212,
+    "nieAnteil": 0.538,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "conviction",
+   "wert": 6,
+   "nAlt": 93,
+   "roiAlt": 0.0229,
+   "clvAlt": 0.077,
+   "engineAlt": true
+  },
+  {
    "schublade": "Dutch Eerste Divisie · Match Odds",
    "strom": "betfair",
    "n": 31,
@@ -4262,37 +4319,6 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
-  },
-  {
-   "schublade": "Conviction 6",
-   "strom": "poly",
-   "n": 198,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0037,
-   "pl": -0.74,
-   "roiLb": -0.0946,
-   "clv": -1.243,
-   "clvLb": -2.059,
-   "clvUrteil": "negativ belegt",
-   "clvOg": -0.426,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 1250,
-    "lo": 124,
-    "hi": 224582,
-    "nieAnteil": 0.553,
-    "schaetzbar": false
-   },
-   "alterTage": 0.0,
-   "art": "conviction",
-   "wert": 6,
-   "nAlt": 93,
-   "roiAlt": 0.0229,
-   "clvAlt": 0.077,
-   "engineAlt": true
   },
   {
    "schublade": "Japanese J League · Over/Under 3.5 Goals",
@@ -7889,7 +7915,7 @@
  ],
  "zusammenfassung": {
   "schubladen": 204,
-  "freigegeben": 1,
+  "freigegeben": 2,
   "kandidaten": 6,
   "ruhend": 2,
   "naechsteFreigabe": 2,
