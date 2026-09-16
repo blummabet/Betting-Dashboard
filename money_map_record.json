@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-09-16T18:49:21.492280+00:00",
+"generatedAt": "2026-09-16T19:04:19.349274+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1205,
-"wins": 1020,
-"hitRate": 0.8465,
-"polyN": 1142,
-"polyWins": 892,
-"polyHitRate": 0.7811,
+"n": 1210,
+"wins": 1025,
+"hitRate": 0.8471,
+"polyN": 1147,
+"polyWins": 897,
+"polyHitRate": 0.782,
 "pinnN": 161,
 "pinnHitRate": 0.8012,
-"nRoi": 532,
-"roi": 0.4442,
-"roiLb": 0.3883,
-"nClv": 532,
-"clv": 20.67,
-"clvLb": 19.007
+"nRoi": 537,
+"roi": 0.445,
+"roiLb": 0.3896,
+"nClv": 537,
+"clv": 20.65,
+"clvLb": 18.9925
 },
 "uneinig": {
 "n": 465,
@@ -62,9 +62,9 @@
 "hitRate": 0.6571
 },
 "Spanish La Liga": {
-"n": 54,
-"wins": 37,
-"hitRate": 0.6852
+"n": 56,
+"wins": 39,
+"hitRate": 0.6964
 },
 "UEFA Europa Conference Qualifiers": {
 "n": 48,
@@ -271,6 +271,11 @@
 "wins": 15,
 "hitRate": 0.9375
 },
+"Egyptian Premier": {
+"n": 15,
+"wins": 13,
+"hitRate": 0.8667
+},
 "Polish Ekstraklasa": {
 "n": 15,
 "wins": 9,
@@ -281,15 +286,15 @@
 "wins": 11,
 "hitRate": 0.7857
 },
-"Egyptian Premier": {
-"n": 14,
-"wins": 12,
-"hitRate": 0.8571
-},
 "Austrian Bundesliga": {
 "n": 13,
 "wins": 10,
 "hitRate": 0.7692
+},
+"Bulgarian A League": {
+"n": 13,
+"wins": 12,
+"hitRate": 0.9231
 },
 "Elite Friendlies": {
 "n": 13,
@@ -300,11 +305,6 @@
 "n": 13,
 "wins": 10,
 "hitRate": 0.7692
-},
-"Bulgarian A League": {
-"n": 12,
-"wins": 11,
-"hitRate": 0.9167
 },
 "Dutch Eerste Divisie": {
 "n": 12,
@@ -456,6 +456,11 @@
 "wins": 3,
 "hitRate": 0.75
 },
+"Latvian Virsliga": {
+"n": 4,
+"wins": 3,
+"hitRate": 0.75
+},
 "UEFA (W) Champions League Qualifiers": {
 "n": 4,
 "wins": 3,
@@ -480,11 +485,6 @@
 "n": 3,
 "wins": 1,
 "hitRate": 0.3333
-},
-"Latvian Virsliga": {
-"n": 3,
-"wins": 2,
-"hitRate": 0.6667
 },
 "Scottish League Cup": {
 "n": 3,
@@ -634,26 +634,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 1026,
-"wins": 828,
-"hitRate": 0.807,
-"nRoi": 502,
-"roi": 0.3009,
-"roiLb": 0.2413,
-"nClv": 502,
-"clv": 13.99,
-"clvLb": 11.6633
+"n": 1029,
+"wins": 831,
+"hitRate": 0.8076,
+"nRoi": 505,
+"roi": 0.3008,
+"roiLb": 0.2416,
+"nClv": 505,
+"clv": 14.01,
+"clvLb": 11.6968
 },
 "weak": {
-"n": 635,
-"wins": 325,
-"hitRate": 0.5118,
-"nRoi": 278,
-"roi": -0.1318,
-"roiLb": -0.2339,
-"nClv": 278,
-"clv": -4.28,
-"clvLb": -7.4795
+"n": 637,
+"wins": 327,
+"hitRate": 0.5133,
+"nRoi": 280,
+"roi": -0.1244,
+"roiLb": -0.2262,
+"nClv": 280,
+"clv": -4.12,
+"clvLb": -7.3048
 }
 },
 "divergence": {
@@ -665,6 +665,101 @@
 "polyRate": 0.27
 },
 "recent": [
+{
+"matchId": "36038818",
+"home": "Atletico Madrid",
+"away": "Osasuna",
+"league": "Spanish La Liga",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Atletico Madrid",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+4,
+0
+],
+"kickoff": "2026-09-16T17:00:00Z",
+"settledAt": "2026-09-16T19:04:19.119361+00:00"
+},
+{
+"matchId": "36038886",
+"home": "Deportivo",
+"away": "Sevilla",
+"league": "Spanish La Liga",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Sevilla",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-09-16T17:00:00Z",
+"settledAt": "2026-09-16T19:04:19.119361+00:00"
+},
+{
+"matchId": "36065806",
+"home": "Lokomotiv Sofia",
+"away": "CSKA Sofia",
+"league": "Bulgarian A League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "CSKA Sofia",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+2
+],
+"kickoff": "2026-09-16T16:00:00Z",
+"settledAt": "2026-09-16T19:04:19.119361+00:00"
+},
+{
+"matchId": "36067612",
+"home": "FK Auda",
+"away": "Ogre United",
+"league": "Latvian Virsliga",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "FK Auda",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-09-16T16:00:00Z",
+"settledAt": "2026-09-16T19:04:19.119361+00:00"
+},
+{
+"matchId": "36053525",
+"home": "Ghazl El Mahallah",
+"away": "Zamalek",
+"league": "Egyptian Premier",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Zamalek",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-09-16T17:00:00Z",
+"settledAt": "2026-09-16T19:04:19.119361+00:00"
+},
 {
 "matchId": "36052743",
 "home": "El Gounah",
@@ -1329,113 +1424,18 @@
 ],
 "kickoff": "2026-09-15T17:00:00Z",
 "settledAt": "2026-09-15T20:01:51.018416+00:00"
-},
-{
-"matchId": "36056782",
-"home": "SV Meppen",
-"away": "Viktoria Koln",
-"league": "German 3 Liga",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Viktoria Koln",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-3
-],
-"kickoff": "2026-09-15T17:00:00Z",
-"settledAt": "2026-09-15T20:01:51.018416+00:00"
-},
-{
-"matchId": "36056826",
-"home": "Varnamo",
-"away": "Osters",
-"league": "Swedish Superettan",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Osters",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-3
-],
-"kickoff": "2026-09-15T17:00:00Z",
-"settledAt": "2026-09-15T20:01:51.018416+00:00"
-},
-{
-"matchId": "36049420",
-"home": "Ironi Tiberias",
-"away": "Hapoel Jerusalem",
-"league": "Israeli Premier League",
-"verdict": "uneinig",
-"moneySide": "draw",
-"moneyName": "The Draw",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-09-15T16:30:00Z",
-"settledAt": "2026-09-15T19:31:46.480557+00:00"
-},
-{
-"matchId": "36038726",
-"home": "Rayo Vallecano",
-"away": "Espanyol",
-"league": "Spanish La Liga",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Rayo Vallecano",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-09-15T17:00:00Z",
-"settledAt": "2026-09-15T19:01:51.823000+00:00"
-},
-{
-"matchId": "36063964",
-"home": "Genoa",
-"away": "Sudtirol",
-"league": "Italian Coppa Italia",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Genoa",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-09-15T16:00:00Z",
-"settledAt": "2026-09-15T19:01:51.823000+00:00"
 }
 ],
 "global": {
-"n": 1694,
-"wins": 1171,
-"hitRate": 0.6913,
-"nRoi": 780,
-"roi": 0.1467,
-"roiLb": 0.0925,
-"nClv": 780,
-"clv": 7.48,
-"clvLb": 5.528
+"n": 1699,
+"wins": 1176,
+"hitRate": 0.6922,
+"nRoi": 785,
+"roi": 0.1491,
+"roiLb": 0.0952,
+"nClv": 785,
+"clv": 7.55,
+"clvLb": 5.6048
 },
-"pending": 32
+"pending": 28
 }
