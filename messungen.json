@@ -1,7 +1,25 @@
 {
- "generatedAt": "2026-09-16T19:54:34.436440+00:00",
- "heute": "2026-09-16",
+ "generatedAt": "2026-09-17T04:24:14.648808+00:00",
+ "heute": "2026-09-17",
  "messungen": [
+  {
+   "id": "horizont-shortlist",
+   "titel": "Zahlt sich ein frueherer Einstieg aus?",
+   "frage": "ROI und CLV der Shortlist-Plays nach Abstand zum Anpfiff — live, 0-3h, 3-12h, 12-24h, >1 Tag.",
+   "warum": "Der CLV ist ueber alle 886 Plays negativ (-2,16pp). Verdacht: die Picks sind gut, der Einstieg ist zu spaet. Wenn das stimmt, ist der Einstiegszeitpunkt der billigste Hebel, den es gibt.",
+   "gestartet": "2026-09-15",
+   "faellig": "2026-09-29",
+   "quelle": "poly_shortlist_track.json -> settled[].htkAtEntry",
+   "messer": "htk_shortlist",
+   "mindestN": 60,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "standN": 66,
+   "zustand": "bereit",
+   "stand": "66 von 60 Beobachtungen · faellig in 12 Tag(en)",
+   "fortschritt": 1.0,
+   "tageBisFaellig": 12
+  },
   {
    "id": "sharp-radar-drift-pushes",
    "titel": "Sharp-Radar-Drift-Pushes: Buch geben oder abschalten?",
@@ -16,27 +34,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": null,
    "zustand": "sammelt",
-   "stand": "Entscheidung offen · in 6 Tag(en) faellig",
+   "stand": "Entscheidung offen · in 5 Tag(en) faellig",
    "fortschritt": null,
-   "tageBisFaellig": 6
-  },
-  {
-   "id": "horizont-shortlist",
-   "titel": "Zahlt sich ein frueherer Einstieg aus?",
-   "frage": "ROI und CLV der Shortlist-Plays nach Abstand zum Anpfiff — live, 0-3h, 3-12h, 12-24h, >1 Tag.",
-   "warum": "Der CLV ist ueber alle 886 Plays negativ (-2,16pp). Verdacht: die Picks sind gut, der Einstieg ist zu spaet. Wenn das stimmt, ist der Einstiegszeitpunkt der billigste Hebel, den es gibt.",
-   "gestartet": "2026-09-15",
-   "faellig": "2026-09-29",
-   "quelle": "poly_shortlist_track.json -> settled[].htkAtEntry",
-   "messer": "htk_shortlist",
-   "mindestN": 60,
-   "entscheidung": null,
-   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 49,
-   "zustand": "sammelt",
-   "stand": "49 von 60 Beobachtungen · faellig in 13 Tag(en)",
-   "fortschritt": 0.8166666666666667,
-   "tageBisFaellig": 13
+   "tageBisFaellig": 5
   },
   {
    "id": "horizont-trader",
@@ -52,9 +52,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 3,
    "zustand": "sammelt",
-   "stand": "3 von 20 Beobachtungen · faellig in 13 Tag(en)",
+   "stand": "3 von 20 Beobachtungen · faellig in 12 Tag(en)",
    "fortschritt": 0.15,
-   "tageBisFaellig": 13
+   "tageBisFaellig": 12
   },
   {
    "id": "echte-fills",
@@ -68,11 +68,11 @@
    "mindestN": 25,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 4,
+   "standN": 6,
    "zustand": "sammelt",
-   "stand": "4 von 25 Beobachtungen · faellig in 13 Tag(en)",
-   "fortschritt": 0.16,
-   "tageBisFaellig": 13
+   "stand": "6 von 25 Beobachtungen · faellig in 12 Tag(en)",
+   "fortschritt": 0.24,
+   "tageBisFaellig": 12
   },
   {
    "id": "devig-proportional-vs-power",
@@ -88,9 +88,9 @@
    "wecker": "eigene Aufgabe am 04.10.2026, 08:00 UTC + Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": null,
    "zustand": "sammelt",
-   "stand": "Entscheidung offen · in 18 Tag(en) faellig",
+   "stand": "Entscheidung offen · in 17 Tag(en) faellig",
    "fortschritt": null,
-   "tageBisFaellig": 18
+   "tageBisFaellig": 17
   },
   {
    "id": "entschiedene-ausgaenge",
@@ -106,9 +106,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 0,
    "zustand": "sammelt",
-   "stand": "0 von 20 Beobachtungen · faellig in 27 Tag(en)",
+   "stand": "0 von 20 Beobachtungen · faellig in 26 Tag(en)",
    "fortschritt": 0.0,
-   "tageBisFaellig": 27
+   "tageBisFaellig": 26
   },
   {
    "id": "serie-a-btts-schublade",
@@ -124,9 +124,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": null,
    "zustand": "sammelt",
-   "stand": "Entscheidung offen · in 29 Tag(en) faellig",
+   "stand": "Entscheidung offen · in 28 Tag(en) faellig",
    "fortschritt": null,
-   "tageBisFaellig": 29
+   "tageBisFaellig": 28
   }
  ],
  "n": 7,

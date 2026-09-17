@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-09-16T12:54:10Z",
-    "total_records": 143,
+    "updated_at": "2026-09-16T21:22:43Z",
+    "total_records": 146,
     "oddsBackfilled": "2026-09-06 — Quote/entryOdd aus den Pick-Dateien nachgetragen; der Ledger trug sie nie (0 von 318)."
   },
   "records": [
@@ -3160,6 +3160,142 @@
       "clvBasis": "roh"
     },
     {
+      "key": "ESP-6-530-727|AH Heim −1",
+      "matchKey": "ESP-6-530-727",
+      "market": "AH Heim −1",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 1.37
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 1.2
+        },
+        {
+          "name": "xg_strength",
+          "score": -1.62
+        },
+        {
+          "name": "chance_creation",
+          "score": 2.09
+        },
+        {
+          "name": "form_rating",
+          "score": -0.9
+        },
+        {
+          "name": "smart_money",
+          "score": 1.5
+        },
+        {
+          "name": "fixture_congestion",
+          "score": -0.52
+        },
+        {
+          "name": "transfer_shift",
+          "score": 1.2
+        },
+        {
+          "name": "opener_move",
+          "score": 1.77
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        },
+        {
+          "name": "venue_form",
+          "score": 1.37
+        },
+        {
+          "name": "betfair_money",
+          "score": -3.32
+        }
+      ],
+      "resolvedAt": "2026-09-16T21:22:41Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 0.0,
+      "clvResolved": false,
+      "odds": 1.86,
+      "entryOdd": 1.86,
+      "entryBook": "pini",
+      "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "ESP-6-530-727|Heimsieg",
+      "matchKey": "ESP-6-530-727",
+      "market": "Heimsieg",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 1.37
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 1.2
+        },
+        {
+          "name": "xg_strength",
+          "score": -1.62
+        },
+        {
+          "name": "chance_creation",
+          "score": 2.09
+        },
+        {
+          "name": "form_rating",
+          "score": -0.9
+        },
+        {
+          "name": "smart_money",
+          "score": 0.79
+        },
+        {
+          "name": "fixture_congestion",
+          "score": -0.52
+        },
+        {
+          "name": "transfer_shift",
+          "score": 1.2
+        },
+        {
+          "name": "opener_move",
+          "score": 1.77
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        },
+        {
+          "name": "venue_form",
+          "score": 1.37
+        },
+        {
+          "name": "betfair_money",
+          "score": -3.32
+        }
+      ],
+      "resolvedAt": "2026-09-16T21:22:41Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -3.06,
+      "clvResolved": true,
+      "odds": 1.36,
+      "entryOdd": 1.36,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED",
+      "clvFairPP": -1.39,
+      "clvBasis": "fair"
+    },
+    {
       "key": "ESP-6-542-532|Heimsieg",
       "matchKey": "ESP-6-542-532",
       "market": "Heimsieg",
@@ -3223,6 +3359,50 @@
       "processVerdict": "UNLUCKY",
       "clvFairPP": 3.9,
       "clvBasis": "fair"
+    },
+    {
+      "key": "ESP-6-544-536|Doppelte Chance — X2",
+      "matchKey": "ESP-6-544-536",
+      "market": "Doppelte Chance — X2",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "injury",
+          "score": -1.2
+        },
+        {
+          "name": "form_trend",
+          "score": -1.1
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 1.4
+        },
+        {
+          "name": "fixture_congestion",
+          "score": 0.9
+        },
+        {
+          "name": "transfer_shift",
+          "score": -0.48
+        },
+        {
+          "name": "betfair_money",
+          "score": 3.17
+        }
+      ],
+      "resolvedAt": "2026-09-16T21:22:41Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -0.65,
+      "clvResolved": true,
+      "odds": 1.54,
+      "entryOdd": 1.54,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED",
+      "clvBasis": "roh"
     },
     {
       "key": "ESP-6-548-538|Heimsieg",
