@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-17T03:20:03.892815+00:00",
+"generatedAt": "2026-09-17T03:34:56.034649+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1234,
+"n": 1235,
 "wins": 1047,
-"hitRate": 0.8485,
-"polyN": 1169,
+"hitRate": 0.8478,
+"polyN": 1170,
 "polyWins": 916,
-"polyHitRate": 0.7836,
+"polyHitRate": 0.7829,
 "pinnN": 162,
 "pinnHitRate": 0.7963,
-"nRoi": 561,
-"roi": 0.446,
-"roiLb": 0.3922,
-"nClv": 561,
-"clv": 20.71,
-"clvLb": 19.0754
+"nRoi": 562,
+"roi": 0.4434,
+"roiLb": 0.3895,
+"nClv": 562,
+"clv": 20.67,
+"clvLb": 19.035
 },
 "uneinig": {
-"n": 472,
-"wins": 147,
-"hitRate": 0.3114,
-"polyN": 433,
+"n": 474,
+"wins": 148,
+"hitRate": 0.3122,
+"polyN": 435,
 "polyWins": 117,
-"polyHitRate": 0.2702,
-"pinnN": 290,
-"pinnHitRate": 0.6276,
-"nRoi": 240,
-"roi": -0.4853,
-"roiLb": -0.5775,
-"nClv": 240,
-"clv": -20.1,
-"clvLb": -23.6158
+"polyHitRate": 0.269,
+"pinnN": 291,
+"pinnHitRate": 0.6254,
+"nRoi": 242,
+"roi": -0.4822,
+"roiLb": -0.5741,
+"nClv": 242,
+"clv": -19.95,
+"clvLb": -23.461
 },
 "teil": {
 "n": 24,
@@ -191,15 +191,15 @@
 "wins": 17,
 "hitRate": 0.8095
 },
+"CONMEBOL Copa Libertadores": {
+"n": 21,
+"wins": 10,
+"hitRate": 0.4762
+},
 "Ecuadorian Serie A": {
 "n": 21,
 "wins": 14,
 "hitRate": 0.6667
-},
-"CONMEBOL Copa Libertadores": {
-"n": 20,
-"wins": 10,
-"hitRate": 0.5
 },
 "North American Leagues Cup": {
 "n": 20,
@@ -635,41 +635,108 @@
 "n": 1,
 "wins": 1,
 "hitRate": 1.0
+},
+"US Lamar Hunt U.S Open Cup": {
+"n": 1,
+"wins": 1,
+"hitRate": 1.0
+},
+"US United Soccer League": {
+"n": 1,
+"wins": 0,
+"hitRate": 0.0
 }
 },
 "byStrength": {
 "strong": {
-"n": 1051,
-"wins": 850,
-"hitRate": 0.8088,
-"nRoi": 527,
-"roi": 0.3007,
-"roiLb": 0.2433,
-"nClv": 527,
-"clv": 14.11,
-"clvLb": 11.8443
+"n": 1053,
+"wins": 851,
+"hitRate": 0.8082,
+"nRoi": 529,
+"roi": 0.2991,
+"roiLb": 0.2419,
+"nClv": 529,
+"clv": 14.13,
+"clvLb": 11.8734
 },
 "weak": {
-"n": 646,
+"n": 647,
 "wins": 331,
-"hitRate": 0.5124,
-"nRoi": 289,
-"roi": -0.1244,
-"roiLb": -0.2249,
-"nClv": 289,
-"clv": -4.16,
-"clvLb": -7.3194
+"hitRate": 0.5116,
+"nRoi": 290,
+"roi": -0.1274,
+"roiLb": -0.2277,
+"nClv": 290,
+"clv": -4.3,
+"clvLb": -7.4597
 }
 },
 "divergence": {
-"n": 472,
-"betfairWins": 147,
-"betfairRate": 0.3114,
-"polyN": 433,
+"n": 474,
+"betfairWins": 148,
+"betfairRate": 0.3122,
+"polyN": 435,
 "polyWins": 117,
-"polyRate": 0.2702
+"polyRate": 0.269
 },
 "recent": [
+{
+"matchId": "36055429",
+"home": "Corinthians",
+"away": "Estudiantes",
+"league": "CONMEBOL Copa Libertadores",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Corinthians",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-09-17T00:30:00Z",
+"settledAt": "2026-09-17T03:34:55.838012+00:00"
+},
+{
+"matchId": "36066386",
+"home": "Birmingham Legion FC",
+"away": "New Mexico United",
+"league": "US United Soccer League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "New Mexico United",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+4,
+4
+],
+"kickoff": "2026-09-17T00:30:00Z",
+"settledAt": "2026-09-17T03:34:55.838012+00:00"
+},
+{
+"matchId": "36070143",
+"home": "Colorado",
+"away": "St Louis City SC",
+"league": "US Lamar Hunt U.S Open Cup",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "St Louis City SC",
+"polySide": "home",
+"winner": "away",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+0,
+3
+],
+"kickoff": "2026-09-17T01:30:00Z",
+"settledAt": "2026-09-17T03:34:55.838012+00:00"
+},
 {
 "matchId": "36079914",
 "home": "Inter Miami CF",
@@ -1372,75 +1439,18 @@
 ],
 "kickoff": "2026-09-16T14:00:00Z",
 "settledAt": "2026-09-16T17:04:03.722438+00:00"
-},
-{
-"matchId": "36070855",
-"home": "Aris",
-"away": "Marko",
-"league": "Greek Cup",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Aris",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-09-16T13:45:00Z",
-"settledAt": "2026-09-16T16:49:05.136597+00:00"
-},
-{
-"matchId": "36071826",
-"home": "Port FC",
-"away": "Kobe",
-"league": "AFC Champions League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Kobe",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-09-16T12:15:00Z",
-"settledAt": "2026-09-16T15:18:51.673232+00:00"
-},
-{
-"matchId": "36067144",
-"home": "Niki Volou",
-"away": "Asteras Tripolis",
-"league": "Greek Cup",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Asteras Tripolis",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-3
-],
-"kickoff": "2026-09-16T12:00:00Z",
-"settledAt": "2026-09-16T15:03:46.798670+00:00"
 }
 ],
 "global": {
-"n": 1730,
-"wins": 1199,
-"hitRate": 0.6931,
-"nRoi": 816,
-"roi": 0.1501,
-"roiLb": 0.0975,
-"nClv": 816,
-"clv": 7.64,
-"clvLb": 5.7308
+"n": 1733,
+"wins": 1200,
+"hitRate": 0.6924,
+"nRoi": 819,
+"roi": 0.1481,
+"roiLb": 0.0955,
+"nClv": 819,
+"clv": 7.6,
+"clvLb": 5.6991
 },
-"pending": 19
+"pending": 16
 }
