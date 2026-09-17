@@ -324,3 +324,43 @@ class Durchgerutscht(unittest.TestCase):
         t = Bericht()._karte.__func__(Bericht())
         self.assertNotIn("Ins Spiel gelaufen", t)
         self.assertNotIn("ohne Verkaufs-Beleg", t)
+
+
+class PublicStille(unittest.TestCase):
+    """🔴 16.09.2026 (Lucas: „was mich nur wundert — gestern und heute kam kein einziger
+    Public-Push aus Polymarket").
+
+    Es waren drei Tage, und aufgefallen ist es IHM. Der Kanal hat sein Schweigen nie gemeldet:
+    ein Kanal, der aufhoert zu senden, sieht von aussen aus wie einer, der nichts zu senden hat.
+    Gemessen an 69 Pushes seit dem 05.08.: mittlere Luecke 4,5 h, 90 % unter 1,1 Tagen, fuenf
+    Luecken ueber zwei Tagen.
+    """
+
+    def _led(self, *stunden):
+        return [{"sentAt": (JETZT - timedelta(hours=h)).isoformat()} for h in stunden]
+
+    def test_frischer_kanal_meldet_nichts(self):
+        self.assertEqual(H.public_stille(self._led(2, 30), JETZT), "")
+
+    def test_drei_tage_stille_stehen_auf_der_karte(self):
+        t = H.public_stille(self._led(80, 200), JETZT)
+        self.assertIn("still seit 3.3 Tagen", t)
+
+    def test_der_juengste_push_zaehlt_nicht_der_erste(self):
+        """Die Liste ist nicht sortiert — wer den ersten Eintrag nimmt, meldet Dauer-Stille."""
+        self.assertEqual(H.public_stille(self._led(500, 1), JETZT), "")
+
+    def test_ein_leeres_buch_ist_kein_fehlalarm(self):
+        self.assertEqual(H.public_stille([], JETZT), "")
+        self.assertEqual(H.public_stille(None, JETZT), "")
+
+    def test_unlesbarer_zeitstempel_behauptet_nichts(self):
+        self.assertEqual(H.public_stille([{"sentAt": "irgendwann"}], JETZT), "")
+
+    def test_die_karte_traegt_den_hinweis(self):
+        t = Bericht()._karte.__func__(Bericht(), public_ledger=self._led(90))
+        self.assertIn("Public-Kanal still", t)
+
+    def test_eine_gesunde_karte_traegt_ihn_nicht(self):
+        t = Bericht()._karte.__func__(Bericht(), public_ledger=self._led(3))
+        self.assertNotIn("Public-Kanal still", t)
