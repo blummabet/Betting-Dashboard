@@ -216,6 +216,11 @@ EBENE = {
     # Bundesliga stellen. Der Calcutta-Pyramide nach gehoert sie dorthin, wo die Calcutta
     # Premier Division schon steht: Ebene 3. Tabelle statt Regel, weil der Slug das nicht sagt.
     "calcutta-1st-division": 3,
+    # 17.09.2026 (CI-Wachhund): „shillong-first-divison-league" (Tippfehler im Feed) — die
+    # Stadtliga von Shillong in Meghalaya, eine Amateur-Regionalliga weit unterhalb der
+    # I-League. Beleg aus der Paarung: Laitkyrhong SC gegen Mawtawar SC. Dieselbe Klasse wie
+    # „calcutta-1st-division" drueber: „First Division" ist der Name der Staffel, nicht ihr Rang.
+    "shillong-first-divison-league": 3,
 }
 
 # Wettbewerbe, bei denen „Spielklasse" die falsche Frage ist. Sie bekommen eine eigene Marke

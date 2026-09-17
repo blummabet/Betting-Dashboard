@@ -155,3 +155,49 @@ class TestDieKontrolleEnthaeltNichtDieBehandlung(unittest.TestCase):
         js = (Path(__file__).resolve().parents[1] / "poly-wallets.js").read_text(encoding="utf-8")
         self.assertIn("return _pwTermPublicRest(r) && !_pwTermWalletOk(r) && !_pwTermIsPublic(r);",
                       js, "die Kontrollgruppe muss die gesendeten ausschliessen")
+
+
+class TestDerUnterschiedTraegtSeinBand(unittest.TestCase):
+    """Die zweite Haelfte des Fundes vom 17.09.: die Kachel entschied am VORZEICHEN der Differenz
+    zweier ROIs und schrieb im selben Absatz, dass ein Unterschied zwischen zwei Punktschaetzern
+    selbst nur einer ist. Gemessen: bereinigt −1,2 pp mit einem Band von [−13,3, +16,2] — die
+    Null steckt weit drin.
+    """
+
+    def test_ein_band_um_die_null_entscheidet_nichts(self):
+        # Hohe Streuung, kleiner Unterschied — genau die Lage im echten Bestand: wenige grosse
+        # Gewinner tragen den Schnitt, und zwei Treffer mehr im einen Arm sehen aus wie ein
+        # Vorsprung.
+        mit = [_play(9.0) for _ in range(20)] + [_play(-1.0) for _ in range(40)]
+        ohne = [_play(9.0) for _ in range(19)] + [_play(-1.0) for _ in range(41)]
+        v = T.wallet_tor_vergleich(mit, ohne)
+        self.assertGreater(v["diffPP"], 0, "der Punktschaetzer zeigt nach oben …")
+        self.assertLess(v["lo"], 0)
+        self.assertGreater(v["hi"], 0)
+        self.assertEqual(v["urteil"], "nicht entschieden", "… das Band tut es nicht")
+
+    def test_ein_klarer_vorsprung_heisst_traegt(self):
+        mit = [_play(3.0) for _ in range(60)]
+        ohne = [_play(-3.0) for _ in range(60)]
+        v = T.wallet_tor_vergleich(mit, ohne)
+        self.assertEqual(v["urteil"], "traegt")
+        self.assertGreater(v["lo"], 0)
+
+    def test_ein_klarer_rueckstand_heisst_traegt_nicht(self):
+        mit = [_play(-3.0) for _ in range(60)]
+        ohne = [_play(3.0) for _ in range(60)]
+        v = T.wallet_tor_vergleich(mit, ohne)
+        self.assertEqual(v["urteil"], "traegt nicht")
+        self.assertLess(v["hi"], 0)
+
+    def test_unter_der_mindestzahl_gibt_es_kein_urteil(self):
+        v = T.wallet_tor_vergleich([_play(1.0) for _ in range(5)], [_play(1.0) for _ in range(60)])
+        self.assertEqual(v["urteil"], "zu duenn")
+        self.assertIsNone(v["diffPP"])
+
+    def test_das_ergebnis_haengt_im_aggregat(self):
+        """Sonst rechnet es niemand und die Kachel faellt auf den Punktschaetzer zurueck."""
+        a = T.aggregate([_play(1.0, public=True) for _ in range(40)]
+                        + [_play(-1.0, ohne=True) for _ in range(40)])
+        self.assertIn("walletTor", a)
+        self.assertEqual(a["walletTor"]["nMit"], 40)
