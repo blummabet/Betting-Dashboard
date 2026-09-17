@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-17T16:52:33.695054+00:00",
+ "generatedAt": "2026-09-17T17:22:33.962749+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -33,5 +33,34 @@
   "tracked": 288,
   "converged": 71
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|milwaukeebrewers-pittsburghpirates|milwaukeebrewers",
+   "sport": "baseball_mlb",
+   "event": "Milwaukee Brewers vs Pittsburgh Pirates",
+   "market": "Moneyline",
+   "outcome": "Milwaukee Brewers",
+   "polyPP": 13.0,
+   "pinnPP": 57.5,
+   "gapPP": -44.59,
+   "vol": 354422,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -27.42,
+   "firstSeen": "2026-09-15T23:49:07.552681+00:00"
+  },
+  {
+   "id": "baseball_mlb|milwaukeebrewers-pittsburghpirates|pittsburghpirates",
+   "sport": "baseball_mlb",
+   "event": "Milwaukee Brewers vs Pittsburgh Pirates",
+   "market": "Moneyline",
+   "outcome": "Pittsburgh Pirates",
+   "polyPP": 87.1,
+   "pinnPP": 42.5,
+   "gapPP": 44.59,
+   "vol": 354422,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -27.42,
+   "firstSeen": "2026-09-15T23:49:07.552681+00:00"
+  }
+ ]
 }
