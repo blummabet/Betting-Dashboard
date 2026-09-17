@@ -9,28 +9,42 @@
    "markt": "Match Odds",
    "seite": "away",
    "name": "Red Bull Salzburg",
-   "odd": 2.38,
+   "odd": 2.18,
    "entryOdd": 2.46,
    "anteilPct": 74,
-   "stufe": 2,
+   "stufe": 1,
    "verstaerker": [
+    {
+     "art": "poly",
+     "text": "Poly Geld 86%",
+     "gewicht": 12
+    },
     {
      "art": "pinn",
      "text": "Pinnacle stimmt zu",
      "gewicht": 10
+    },
+    {
+     "art": "pinnMove",
+     "text": "Pinnacle zieht mit +2.1pp",
+     "gewicht": 14
     }
    ],
-   "rang": 67.5,
+   "rang": 93.5,
    "track": null,
    "streak": null,
-   "poly": null,
+   "poly": {
+    "anteilPct": 86,
+    "usd": 49400,
+    "odd": 2.15
+   },
    "polyStatus": "unbekannt",
-   "polyKey": null,
-   "polySide": null,
+   "polyKey": "uel-lev2-rbs-2026-09-17",
+   "polySide": "FC Red Bull Salzburg",
    "pinnMovePP": null,
    "punkte": {
-    "punkte": 6,
-    "moeglich": 7,
+    "punkte": 9,
+    "moeglich": 10,
     "dauerH": 47.22,
     "teile": [
      {
@@ -41,45 +55,57 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 74% auf der Seite"
+       "text": "Geld 75% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.745,
-       "betrag": 3025,
-       "gesamt": 4060,
+       "anteil": 0.754,
+       "betrag": 44572,
+       "gesamt": 59114,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 74% auf der Seite"
+      "text": "Geld 75% auf der Seite"
      },
      {
       "buch": "POLY",
       "name": "Polymarket",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "geld": null,
-      "text": "Polymarket nicht erhoben"
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Poly-Geld 86% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein bewiesenes Wallet auf der Seite"
+      },
+      "geld": {
+       "anteil": 0.86,
+       "betrag": 42484,
+       "gesamt": 49400,
+       "waehrung": "USD",
+       "quelle": "geld"
+      },
+      "text": "Poly-Geld 86% auf derselben Seite"
      },
      {
       "buch": "PIN",
       "name": "Pinnacle",
       "status": "ja",
-      "punkte": 2,
+      "punkte": 3,
       "moeglich": 3,
       "grund": {
        "ok": true,
        "text": "hat dieselbe Seite als Favorit"
       },
       "tiefe": {
-       "ok": false,
-       "text": "kein Move gemessen"
+       "ok": true,
+       "text": "Move +2.1pp in unsere Richtung"
       },
       "geld": null,
       "text": "hat dieselbe Seite als Favorit"
@@ -112,9 +138,9 @@
    },
    "wertVsPinn": null,
    "gehaltenSeit": "2026-09-15T17:31:46.289007+00:00",
-   "zuletztAktiv": "2026-09-15T17:31:46.289007+00:00",
+   "zuletztAktiv": "2026-09-17T14:51:25.070783+00:00",
    "haltePreis": 2.38,
-   "aktiv": false
+   "aktiv": true
   },
   "36004951|Match Odds": {
    "matchId": "36004951",
@@ -256,7 +282,7 @@
    "gehaltenSeit": "2026-09-16T08:18:05.688055+00:00",
    "zuletztAktiv": "2026-09-17T14:21:23.705629+00:00",
    "haltePreis": 1.82,
-   "aktiv": true
+   "aktiv": false
   },
   "36004953|Match Odds": {
    "matchId": "36004953",
