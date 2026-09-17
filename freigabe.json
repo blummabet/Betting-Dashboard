@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-17T19:21:54.658896+00:00",
+ "generatedAt": "2026-09-17T19:36:58.299080+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -288,11 +288,11 @@
    "zerlegung": "nach Conviction",
    "art": "conviction",
    "gruppen": 7,
-   "basis": "534 von 956 abgerechneten Plays · nur Engine 2026-09-01 · ohne Kampfsport, US-Sport",
-   "n": 534,
-   "pl": 10.68,
-   "roi": 0.02,
-   "clv": -2.156,
+   "basis": "535 von 957 abgerechneten Plays · nur Engine 2026-09-01 · ohne Kampfsport, US-Sport",
+   "n": 535,
+   "pl": 11.28,
+   "roi": 0.0211,
+   "clv": -2.146,
    "belegte": 2
   },
   {
@@ -4224,6 +4224,37 @@
    "naeherung": false
   },
   {
+   "schublade": "Conviction 6",
+   "strom": "poly",
+   "n": 217,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0216,
+   "pl": 4.68,
+   "roiLb": -0.0644,
+   "clv": -1.668,
+   "clvLb": -2.496,
+   "clvUrteil": "negativ belegt",
+   "clvOg": -0.841,
+   "fehltN": 0,
+   "noetigNRoi": 3445,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 889,
+    "lo": 101,
+    "hi": 55217,
+    "nieAnteil": 0.367,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "conviction",
+   "wert": 6,
+   "nAlt": 93,
+   "roiAlt": 0.0229,
+   "clvAlt": 0.077,
+   "engineAlt": true
+  },
+  {
    "schublade": "Conviction 5",
    "strom": "poly",
    "n": 271,
@@ -4252,37 +4283,6 @@
    "nAlt": 110,
    "roiAlt": 0.1047,
    "clvAlt": 0.283,
-   "engineAlt": true
-  },
-  {
-   "schublade": "Conviction 6",
-   "strom": "poly",
-   "n": 216,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0189,
-   "pl": 4.08,
-   "roiLb": -0.0673,
-   "clv": -1.69,
-   "clvLb": -2.521,
-   "clvUrteil": "negativ belegt",
-   "clvOg": -0.859,
-   "fehltN": 0,
-   "noetigNRoi": 4500,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 910,
-    "lo": 105,
-    "hi": 38747,
-    "nieAnteil": 0.375,
-    "schaetzbar": false
-   },
-   "alterTage": 0.1,
-   "art": "conviction",
-   "wert": 6,
-   "nAlt": 93,
-   "roiAlt": 0.0229,
-   "clvAlt": 0.077,
    "engineAlt": true
   },
   {
@@ -4603,6 +4603,44 @@
    "naeherung": false
   },
   {
+   "schublade": "🔒 Poly-Auswahl · von Betfair bestätigt",
+   "strom": "poly",
+   "n": 180,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0015,
+   "pl": 0.27,
+   "roiLb": -0.1099,
+   "clv": -0.603,
+   "clvLb": -1.502,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.297,
+   "fehltN": 0,
+   "noetigNRoi": 1022779,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 1139,
+    "lo": 115,
+    "hi": 71830,
+    "nieAnteil": 0.482,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "vorangemeldet",
+   "angemeldet": "2026-09-01T18:59:52.671883+00:00",
+   "zielN": 60,
+   "warum": "Die einzige Untergruppe der Rangliste mit einer ROI-Untergrenze ueber null. Traegt nicht die Menge der Poly-Signale, sondern die eine FREMDE Stimme: ohne Betfair liegen dieselben Plays bei -5,1% (n=425).",
+   "quelle": "poly_shortlist_track.json → settled",
+   "nDavor": 75,
+   "rueckblick": {
+    "n": 75,
+    "roi": 0.1811,
+    "roiLb": 0.0106,
+    "clv": 0.24,
+    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
+   }
+  },
+  {
    "schublade": "English National League South · Over/Under 2.5 Goals",
    "strom": "betfair",
    "n": 44,
@@ -4622,44 +4660,6 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
-  },
-  {
-   "schublade": "🔒 Poly-Auswahl · von Betfair bestätigt",
-   "strom": "poly",
-   "n": 179,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0019,
-   "pl": -0.33,
-   "roiLb": -0.1137,
-   "clv": -0.623,
-   "clvLb": -1.527,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.281,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 1025,
-    "lo": 98,
-    "hi": 87294,
-    "nieAnteil": 0.515,
-    "schaetzbar": false
-   },
-   "alterTage": 0.6,
-   "art": "vorangemeldet",
-   "angemeldet": "2026-09-01T18:59:52.671883+00:00",
-   "zielN": 60,
-   "warum": "Die einzige Untergruppe der Rangliste mit einer ROI-Untergrenze ueber null. Traegt nicht die Menge der Poly-Signale, sondern die eine FREMDE Stimme: ohne Betfair liegen dieselben Plays bei -5,1% (n=425).",
-   "quelle": "poly_shortlist_track.json → settled",
-   "nDavor": 75,
-   "rueckblick": {
-    "n": 75,
-    "roi": 0.1811,
-    "roiLb": 0.0106,
-    "clv": 0.24,
-    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
-   }
   },
   {
    "schublade": "Spanish Segunda Division · Over/Under 3.5 Goals",
@@ -4730,7 +4730,7 @@
     "nieAnteil": 0.545,
     "schaetzbar": false
    },
-   "alterTage": 0.1,
+   "alterTage": 0.2,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "rest"
@@ -5079,6 +5079,37 @@
    "naeherung": false
   },
   {
+   "schublade": "Mix bf+money",
+   "strom": "poly",
+   "n": 139,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.03,
+   "pl": -4.17,
+   "roiLb": -0.1523,
+   "clv": -1.245,
+   "clvLb": -2.324,
+   "clvUrteil": "negativ belegt",
+   "clvOg": -0.165,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 1537,
+    "lo": 136,
+    "hi": 308008,
+    "nieAnteil": 0.662,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "mix",
+   "wert": "bf+money",
+   "nAlt": 60,
+   "roiAlt": 0.1637,
+   "clvAlt": 0.233,
+   "engineAlt": true
+  },
+  {
    "schublade": "English Sky Bet Championship · Over/Under 3.5 Goals",
    "strom": "betfair",
    "n": 48,
@@ -5098,37 +5129,6 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
-  },
-  {
-   "schublade": "Mix bf+money",
-   "strom": "poly",
-   "n": 138,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0346,
-   "pl": -4.77,
-   "roiLb": -0.1575,
-   "clv": -1.275,
-   "clvLb": -2.361,
-   "clvUrteil": "negativ belegt",
-   "clvOg": -0.189,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 1779,
-    "lo": 144,
-    "hi": 106873,
-    "nieAnteil": 0.69,
-    "schaetzbar": false
-   },
-   "alterTage": 0.6,
-   "art": "mix",
-   "wert": "bf+money",
-   "nAlt": 60,
-   "roiAlt": 0.1637,
-   "clvAlt": 0.233,
-   "engineAlt": true
   },
   {
    "schublade": "Argentinian Primera Nacional · First Half Goals 0.5",
@@ -8153,7 +8153,7 @@
    "noetigNRoi": null,
    "noetigNClv": null,
    "entfernung": null,
-   "alterTage": 3.6,
+   "alterTage": 3.7,
    "art": "mix",
    "wert": "bf+money+steam",
    "nAlt": 5,
@@ -8178,7 +8178,7 @@
    "noetigNRoi": null,
    "noetigNClv": null,
    "entfernung": null,
-   "alterTage": 8.8,
+   "alterTage": 8.9,
    "art": "conviction",
    "wert": 3
   },
