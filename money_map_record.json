@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-09-17T00:49:48.260354+00:00",
+"generatedAt": "2026-09-17T01:04:53.430365+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1227,
-"wins": 1042,
-"hitRate": 0.8492,
-"polyN": 1162,
-"polyWins": 910,
-"polyHitRate": 0.7831,
-"pinnN": 161,
-"pinnHitRate": 0.8012,
-"nRoi": 554,
-"roi": 0.452,
-"roiLb": 0.3979,
-"nClv": 554,
-"clv": 20.97,
-"clvLb": 19.3491
+"n": 1230,
+"wins": 1044,
+"hitRate": 0.8488,
+"polyN": 1165,
+"polyWins": 913,
+"polyHitRate": 0.7837,
+"pinnN": 162,
+"pinnHitRate": 0.7963,
+"nRoi": 557,
+"roi": 0.4491,
+"roiLb": 0.395,
+"nClv": 557,
+"clv": 20.81,
+"clvLb": 19.1771
 },
 "uneinig": {
 "n": 471,
@@ -191,6 +191,16 @@
 "wins": 14,
 "hitRate": 0.6667
 },
+"Bolivian Liga de Futbol Profesional": {
+"n": 20,
+"wins": 17,
+"hitRate": 0.85
+},
+"CONMEBOL Copa Libertadores": {
+"n": 20,
+"wins": 10,
+"hitRate": 0.5
+},
 "North American Leagues Cup": {
 "n": 20,
 "wins": 13,
@@ -200,16 +210,6 @@
 "n": 20,
 "wins": 17,
 "hitRate": 0.85
-},
-"Bolivian Liga de Futbol Profesional": {
-"n": 19,
-"wins": 16,
-"hitRate": 0.8421
-},
-"CONMEBOL Copa Libertadores": {
-"n": 19,
-"wins": 10,
-"hitRate": 0.5263
 },
 "Chilean Primera Division": {
 "n": 19,
@@ -436,6 +436,11 @@
 "wins": 3,
 "hitRate": 0.6
 },
+"Venezuelan Primera Division": {
+"n": 5,
+"wins": 5,
+"hitRate": 1.0
+},
 "Chinese Cup": {
 "n": 4,
 "wins": 4,
@@ -475,11 +480,6 @@
 "n": 4,
 "wins": 3,
 "hitRate": 0.75
-},
-"Venezuelan Primera Division": {
-"n": 4,
-"wins": 4,
-"hitRate": 1.0
 },
 "Australia Cup": {
 "n": 3,
@@ -639,26 +639,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 1046,
-"wins": 845,
-"hitRate": 0.8078,
-"nRoi": 522,
-"roi": 0.3002,
-"roiLb": 0.2423,
-"nClv": 522,
-"clv": 14.07,
-"clvLb": 11.7844
+"n": 1048,
+"wins": 847,
+"hitRate": 0.8082,
+"nRoi": 524,
+"roi": 0.3003,
+"roiLb": 0.2427,
+"nClv": 524,
+"clv": 14.09,
+"clvLb": 11.8177
 },
 "weak": {
-"n": 643,
+"n": 644,
 "wins": 331,
-"hitRate": 0.5148,
-"nRoi": 286,
-"roi": -0.1152,
-"roiLb": -0.2164,
-"nClv": 286,
-"clv": -3.88,
-"clvLb": -7.0464
+"hitRate": 0.514,
+"nRoi": 287,
+"roi": -0.1183,
+"roiLb": -0.2193,
+"nClv": 287,
+"clv": -4.1,
+"clvLb": -7.2767
 }
 },
 "divergence": {
@@ -670,6 +670,63 @@
 "polyRate": 0.2685
 },
 "recent": [
+{
+"matchId": "36053973",
+"home": "LDU",
+"away": "SE Palmeiras",
+"league": "CONMEBOL Copa Libertadores",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "SE Palmeiras",
+"polySide": "home",
+"winner": "home",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+3,
+2
+],
+"kickoff": "2026-09-16T22:00:00Z",
+"settledAt": "2026-09-17T01:04:53.250804+00:00"
+},
+{
+"matchId": "36072417",
+"home": "Nacional Potosi",
+"away": "Always Ready",
+"league": "Bolivian Liga de Futbol Profesional",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Always Ready",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+4
+],
+"kickoff": "2026-09-16T22:00:00Z",
+"settledAt": "2026-09-17T01:04:53.250804+00:00"
+},
+{
+"matchId": "36074358",
+"home": "Monagas",
+"away": "Zamora FC",
+"league": "Venezuelan Primera Division",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Monagas",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-09-16T22:00:00Z",
+"settledAt": "2026-09-17T01:04:53.250804+00:00"
+},
 {
 "matchId": "36064453",
 "home": "Botafogo FR",
@@ -1372,75 +1429,18 @@
 ],
 "kickoff": "2026-09-15T22:30:00Z",
 "settledAt": "2026-09-16T01:32:29.140062+00:00"
-},
-{
-"matchId": "36050134",
-"home": "Vasco Da Gama",
-"away": "Santa Fe",
-"league": "CONMEBOL Copa Sudamericana",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Vasco Da Gama",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-09-15T22:00:00Z",
-"settledAt": "2026-09-16T01:02:17.746744+00:00"
-},
-{
-"matchId": "36050113",
-"home": "CA Platense",
-"away": "Fluminense",
-"league": "CONMEBOL Copa Libertadores",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "CA Platense",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-09-15T22:00:00Z",
-"settledAt": "2026-09-16T01:02:17.746744+00:00"
-},
-{
-"matchId": "36073806",
-"home": "Carabobo FC",
-"away": "Deportivo La Guaira",
-"league": "Venezuelan Primera Division",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Carabobo FC",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-09-15T22:00:00Z",
-"settledAt": "2026-09-16T01:02:17.746744+00:00"
 }
 ],
 "global": {
-"n": 1722,
-"wins": 1194,
-"hitRate": 0.6934,
-"nRoi": 808,
-"roi": 0.1531,
-"roiLb": 0.1001,
-"nClv": 808,
-"clv": 7.72,
-"clvLb": 5.7986
+"n": 1725,
+"wins": 1196,
+"hitRate": 0.6933,
+"nRoi": 811,
+"roi": 0.1522,
+"roiLb": 0.0993,
+"nClv": 811,
+"clv": 7.66,
+"clvLb": 5.7386
 },
-"pending": 23
+"pending": 21
 }
