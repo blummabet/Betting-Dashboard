@@ -72,12 +72,27 @@ test('gesperrte Kategorien bleiben gesperrt', () => {
   assert.strictEqual(W._pwBetBlocked({ league: 'CS2 Blast' }), false);
 });
 
-test('die Kontrollgruppe misst weiter das, was sie messen soll', () => {
-  // `_pwTermIsPublicOhneWallet` ist die Schattengruppe: Public-Rest erfüllt, Wallet NICHT.
-  // Sie muss unabhängig von der E-Sport-Lockerung bleiben, sonst misst sie ab heute etwas
-  // anderes als gestern und die Reihe bricht.
-  assert.strictEqual(W._pwTermIsPublicOhneWallet(basis({ league: 'CS2 Blast', price: 0.62 })), true,
-    'ein E-Sport-Play ohne Wallet gehört weiterhin in die Kontrollgruppe');
+test('was durch die E-Sport-Ausnahme GESENDET wird, ist keine Kontrollgruppe', () => {
+  // 🔴 17.09.2026 — hier stand bis heute das Gegenteil: „ein E-Sport-Play ohne Wallet gehört
+  // weiterhin in die Kontrollgruppe", mit dem Argument, die Gruppe müsse unabhängig von der
+  // Lockerung bleiben, sonst breche die Reihe.
+  //
+  // Das Argument war gut gemeint und falsch. Die Lockerung vom 07.09. schickt genau diese Plays
+  // RAUS — sie standen damit gleichzeitig in der Behandlungsgruppe („gesendet") und in der
+  // Kontrolle („läuft nur mit, wird nie gesendet"). Gemessen am 17.09.: 12 von 124
+  // Kontroll-Plays waren gesendet worden, 11 davon gewonnen, ROI +33,2 %. Sie hoben die
+  // Kontrolle von +4,5 % auf +7,3 % — und damit drehte sich die Aussage der Kachel von
+  // „Wallet-Tor 1,2 pp besser" auf „Wallet-Tor 1,5 pp schlechter".
+  //
+  // Die Reihe ist an dem Tag ohnehin gebrochen, nur hat es niemand gesehen. Eine Kontrollgruppe,
+  // die Mitglieder der Behandlungsgruppe enthält, misst den Unterschied gegen sich selbst.
+  assert.strictEqual(W._pwTermIsPublicOhneWallet(basis({ league: 'CS2 Blast', price: 0.62 })), false,
+    'dieses Play wird gesendet — es kann nicht die Kontrolle dafür sein');
+  assert.strictEqual(W._pwTermIsPublic(basis({ league: 'CS2 Blast', price: 0.62 })), true,
+    'und es wird wirklich gesendet (die Ausnahme selbst bleibt unangetastet)');
+  // Unterhalb der Preisschwelle greift die Ausnahme nicht — dort ist es weiter Kontrolle.
+  assert.strictEqual(W._pwTermIsPublicOhneWallet(basis({ league: 'CS2 Blast', price: 0.40 })), true,
+    'ohne Ausnahme und ohne Wallet: genau der Fall, den die Kontrolle messen soll');
   assert.strictEqual(W._pwTermIsPublicOhneWallet(basis({ league: 'EPL', price: 0.62, sharp: SHARP })), false);
 });
 

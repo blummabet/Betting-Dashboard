@@ -272,6 +272,9 @@ def _ug(werte):
         return None
 
 
+VERGLEICH_MIN_N = 20      # darunter lohnt der Vergleich der beiden Arme nicht
+
+
 def _agg_one(rows):
     """Kennzahlen einer Menge Plays — MIT einseitiger 95%-Untergrenze.
 
@@ -315,6 +318,52 @@ def _agg_one(rows):
             "belegt": bool(roi_ug is not None and roi_ug > 0),
             "clvAvg": round(clv / n, 2) if n else 0.0,
             "clvUg": (lambda u: round(u, 2) if u is not None else None)(_ug(clv_werte))}
+
+
+def wallet_tor_vergleich(mit_rows, ohne_rows, ziehungen: int = 4000, saat: int = 7) -> dict:
+    """Der UNTERSCHIED der beiden Arme mit Band — nicht zwei Punktschaetzer nebeneinander.
+
+    🔴 17.09.2026 (Lucas: „schaut ok aus oder?"). Die Kachel las den Unterschied zweier ROIs und
+    schrieb daraus „das Wallet-Tor traegt" bzw. „traegt nicht". Sie sagte im selben Atemzug
+    richtig, dass ein Unterschied zwischen zwei Punktschaetzern selbst nur einer ist — und traf
+    trotzdem genau daran ihre Aussage.
+
+    Gemessen am selben Tag: bereinigt liegt der Unterschied bei −1,2 pp mit einem 90-%-Band von
+    [−15,8, +13,3]. Die Null steckt weit drin; entschieden ist gar nichts, in keine Richtung.
+
+    Bootstrap ueber die Renditen je Play, fester Seed — dieselbe Bauart wie `filter_vergleich`
+    in `stats_perioden.py`, damit im Repo nicht zwei Arten stehen, einen Unterschied zu messen.
+    """
+    import random as _r
+    import statistics as _st
+
+    def _ren(rows):
+        aus = []
+        for x in (rows or []):
+            st = float(x.get("stake") or 0)
+            if st > 0:
+                aus.append(float(x.get("pnl") or 0) / st)
+        return aus
+
+    a, b = _ren(mit_rows), _ren(ohne_rows)
+    if len(a) < VERGLEICH_MIN_N or len(b) < VERGLEICH_MIN_N:
+        return {"nMit": len(a), "nOhne": len(b), "diffPP": None, "lo": None, "hi": None,
+                "urteil": "zu duenn",
+                "grund": "unter %d Plays je Arm sagt der Unterschied nichts" % VERGLEICH_MIN_N}
+    rnd = _r.Random(saat)
+    zieh = sorted(_st.fmean(rnd.choices(a, k=len(a))) - _st.fmean(rnd.choices(b, k=len(b)))
+                  for _ in range(ziehungen))
+    lo, hi = zieh[int(0.05 * ziehungen)], zieh[int(0.95 * ziehungen)]
+    diff = _st.fmean(a) - _st.fmean(b)
+    if lo > 0:
+        u, g = "traegt", "der Vorsprung des Tors liegt ganz ueber null"
+    elif hi < 0:
+        u, g = "traegt nicht", "der Rueckstand des Tors liegt ganz unter null"
+    else:
+        u, g = "nicht entschieden", "das Band schliesst die Null ein"
+    return {"nMit": len(a), "nOhne": len(b),
+            "diffPP": round(100 * diff, 2), "lo": round(100 * lo, 2), "hi": round(100 * hi, 2),
+            "urteil": u, "grund": g}
 
 
 def unaufloesbar_agg(rows) -> dict:
@@ -410,6 +459,9 @@ def aggregate(settled, blocked=()):
     return {"all": _agg_one(allr), "public": _agg_one(pub),
             "publicBlocked": _agg_one(pub_blk),
             "publicOhneWallet": _agg_one(pub_ow),
+            # Das Urteil ueber den UNTERSCHIED faellt hier, nicht in der Kachel — sonst steht die
+            # Schwelle zweimal da und die Flaeche entscheidet am Punktschaetzer (Vorfall 17.09.).
+            "walletTor": wallet_tor_vergleich(pub, pub_ow),
             "bettable": _agg_one(bet), "blocked": _agg_one(blk), "byCat": by_cat,
             "byConv": by_conv, "byVerdict": by_verdict, "bySignal": by_signal,
             "byKalibrierung": by_kalib}

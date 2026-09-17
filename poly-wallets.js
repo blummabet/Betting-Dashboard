@@ -2958,14 +2958,29 @@ function _pwWalletGateVergleich(mit, ohne){
   if(!n1 && !n2) return '';
   if(n2<20) return '<div class="pw-sec-note" style="margin:-8px 0 16px">🧪 Die Kontrollgruppe sammelt noch ('
     +n2+' Plays). Erst ab ~20 lohnt der Vergleich — bis dahin sagt die Differenz nichts.</div>';
+  // 🔴 17.09.2026 (Lucas: „schaut ok aus oder?"). Hier stand das Urteil am Vorzeichen der
+  // Differenz zweier ROIs — „das Wallet-Tor trägt (nicht)" — und direkt daneben der Satz, dass
+  // ein Unterschied zwischen zwei Punktschätzern selbst nur einer ist. Der Satz hatte recht und
+  // wurde von der Zeile darüber widerlegt: dieselbe Klasse wie beim Fade-Unter-Wächter zwei Tage
+  // vorher. Das Band kommt jetzt aus dem Produzenten (`wallet_tor_vergleich`, Bootstrap über die
+  // Renditen je Play), die Kachel liest nur noch ab.
+  const v = (_pwCache && _pwCache.shortlistTrack && _pwCache.shortlistTrack.agg
+             && _pwCache.shortlistTrack.agg.walletTor) || null;
   const d=(mit.roi||0)-(ohne.roi||0);
-  const txt = d>0
-    ? 'Das Wallet-Tor trägt: <b>'+_pwtSig(Math.round(d*1000)/10)+' pp</b> besser als ohne.'
-    : 'Das Wallet-Tor trägt <b>nicht</b>: ohne Wallet-Nachweis liegt der ROI um <b>'
-      +_pwtSig(Math.round(-d*1000)/10)+' pp</b> höher.';
+  let txt;
+  if (v && v.diffPP != null) {
+    const wort = v.urteil === 'traegt' ? 'Das Wallet-Tor <b>trägt</b>'
+               : v.urteil === 'traegt nicht' ? 'Das Wallet-Tor trägt <b>nicht</b>'
+               : 'Das Wallet-Tor ist <b>nicht entschieden</b>';
+    txt = wort + ': ' + _pwtSig(v.diffPP) + ' pp Unterschied, 90-%-Band ['
+        + _pwtSig(v.lo) + ', ' + _pwtSig(v.hi) + '] pp.';
+  } else {
+    txt = 'Unterschied ' + _pwtSig(Math.round(d*1000)/10) + ' pp — ohne Band ist das kein Urteil.';
+  }
   return '<div class="pw-sec-note" style="margin:-8px 0 16px">🧪 <b>Wallet-Tor im Vergleich:</b> '+txt
-    +' (mit n'+n1+' · ohne n'+n2+'). Entschieden ist das erst, wenn beide Untergrenzen es tragen — '
-    +'ein Unterschied zwischen zwei Punktschätzern ist selbst nur ein Punktschätzer.</div>';
+    +' (mit n'+n1+' · ohne n'+n2+'). Die Kontrollgruppe enthält nur Plays, die NICHT gesendet '
+    +'wurden — am 17.09. standen 12 gesendete E-Sport-Plays fälschlich mit drin und drehten das '
+    +'Vorzeichen.</div>';
 }
 function _pwTrackConvTable(byConv){
   const rows=Object.keys(byConv||{}).map(k=>({c:+k, a:byConv[k]})).sort((x,y)=>y.c-x.c);
@@ -3676,6 +3691,9 @@ if(typeof window!=='undefined'){ window._pwPublicSpiele=_pwPublicSpiele; window.
 // Test-Hook ohne Wrapper: ein `function(){return _pwQuellenBanner();}` wuerde die globale
 // Bindung ueberschreiben und beim Aufruf endlos rekursieren (Vorfall vom 07.09.).
 if(typeof window!=='undefined'){ window._pwQuellenBanner=_pwQuellenBanner; }
+// 17.09.2026: dieselbe Testschnittstelle fuer den Wallet-Tor-Vergleich — das Urteil kommt aus
+// dem Produzenten, und genau das muss pruefbar sein.
+if(typeof window!=='undefined'){ window._pwWalletGateVergleich=_pwWalletGateVergleich; }
 
 function _pwTermHist(key){ const c=_pwCache||{}; return (c.broadLiveHist&&c.broadLiveHist[key])||(c.broadHist&&c.broadHist[key])||[]; }
 function _pwTermFair(r){
