@@ -27,9 +27,10 @@ Helfer (`winner_from_prices`, Aggregation via `evaluate`) sind ohne Netz geteste
 from __future__ import annotations
 
 import json
+import math
 import os
 import sys
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 import poly_money_accuracy as PMA
@@ -1001,6 +1002,41 @@ def _lifetime_pnl(data):
 WALLET_FENSTER = int(os.environ.get("WALLET_FENSTER") or 30)   # so viele Auflösungen behaelt das Fenster
 WALLET_FENSTER_AB_N = int(os.environ.get("WALLET_FENSTER_AB_N") or 8)   # erst ab Ranglisten-Reife sammeln
 
+# 🔴 17.09.2026 (Lucas: „der war die Woche nicht so gut, aber in dem Monat 600K vorn — also weiss
+# nicht, wonach wir genau tracken, welchen Timeframe").
+#
+# Berechtigte Frage, und die Antwort war: nach DREI verschiedenen gleichzeitig.
+#   · n/wins/clvSumPP  — kumulativ, seit die Wallet zum ersten Mal gesehen wurde (kein Fenster)
+#   · pnl              — LEBENSZEIT, direkt von Polymarkets API (ganz anderer Zeitraum)
+#   · recent           — die letzten 30 Aufloesungen, mitgeschrieben, nie bewertet
+#
+# Bevor daraus ein Urteil wird, habe ich das Fenster gegen den kumulativen Schnitt GEMESSEN —
+# 65 Wallets mit vollem 30er-Fenster, erste 15 Aufloesungen sagen die letzten 15 voraus:
+#
+#     Vorhersage-Gewicht auf dem Fenster    0 %    10 %   30 %   50 %   100 %
+#     mittlerer Fehler                    0,74   0,74   0,76   0,82   1,06 pp
+#
+# Das Fenster ist SCHLECHTER als der kumulative Schnitt, in jeder Mischung, und gewinnt nur in
+# 32 % der Einzelfaelle. Auch dort, wo es am staerksten abweicht (17 Wallets, |Fenster − kumulativ|
+# > 1 pp) bleibt der kumulative Schnitt vorn: 1,46 gegen 2,49 pp. Was nach „Formkurve" aussieht,
+# ist bei 30 Beobachtungen und rund 5 pp Streuung schlicht Rauschen.
+#
+# Der Grund steht in der Einheit: ein VOLLES 30er-Fenster deckt im Median **6 Tage** ab (bei den
+# aktivsten Wallets 2). „Die letzten 30 Aufloesungen" ist eben kein Zeitraum — und damit kann es
+# die Frage „diesen Monat gegen letzten Monat" gar nicht beantworten.
+#
+# Deshalb wird das Fenster weiterhin NICHT bewertet, und stattdessen waechst ab heute ein echtes
+# Tages-Gedaechtnis mit: je Tag {n, CLV-Summe, Treffer, CLV-Quadratsumme}. Damit ist jeder
+# Zeitraum rechenbar (7 Tage, 30 Tage, Monat gegen Monat) samt Streuung, also samt Untergrenze —
+# und die Messung oben laesst sich in vier Wochen mit echten Zeitraeumen wiederholen, statt
+# wieder mit 30 Aufloesungen aus sechs Tagen. Kosten: rund halb so viele Bytes wie `recent` bei
+# gleicher Abdeckung (gemessen: 64 KB gegen 123 KB ueber 496 Wallets).
+WALLET_TAGE_KEEP = int(os.environ.get("WALLET_TAGE_KEEP") or 60)   # so viele TAGE behaelt das Gedaechtnis
+# Dieselben Zahlen wie in der Rangliste (`poly_whale_watch._clv_ug` / `poly-wallets.js`) — eine
+# zweite Untergrenze mit eigener Konstante waere genau die Drift, die dieses Repo sonst jagt.
+WALLET_UG_Z = 1.645
+WALLET_UG_MIN_N = 5
+
 
 def _wallet_zeit(s: dict, clv: float, win: bool, now) -> dict:
     """Zeitstempel und gleitendes Fenster einer Wallet fortschreiben. REIN/testbar.
@@ -1021,6 +1057,15 @@ def _wallet_zeit(s: dict, clv: float, win: bool, now) -> dict:
     fenster = list(s.get("recent") or [])
     fenster.append([tag, round(float(clv), 2), 1 if win else 0])
     s["recent"] = fenster[-WALLET_FENSTER:]
+    # Tages-Gedaechtnis (17.09.2026, s. WALLET_TAGE_KEEP): {Tag: [n, clvSum, wins, clvSqSum]}.
+    # Auch hier eine NEUE Struktur statt in-place — `update_wallet_track` kopiert die scores nur
+    # flach, sonst mutierte der Eintrag rueckwirkend auch in `prev`.
+    tage = {k: list(v) for k, v in (s.get("tage") or {}).items()
+            if isinstance(v, (list, tuple)) and len(v) >= 4}
+    e = tage.get(tag) or [0, 0.0, 0, 0.0]
+    c = float(clv)
+    tage[tag] = [e[0] + 1, round(e[1] + c, 2), e[2] + (1 if win else 0), round(e[3] + c * c, 2)]
+    s["tage"] = {k: tage[k] for k in sorted(tage)[-WALLET_TAGE_KEEP:]}
     return s
 
 
@@ -1080,6 +1125,54 @@ def fenster_bilanz(s: dict) -> dict | None:
     wins = sum(1 for x in gut if x[2])
     return {"n": len(clv), "clv": round(sum(clv) / len(clv), 2),
             "hit": round(wins / len(clv), 4), "von": gut[0][0], "bis": gut[-1][0]}
+
+
+def zeitraum_bilanz(s: dict, bis, tage: int) -> dict | None:
+    """Was die Wallet in den letzten `tage` Tagen geliefert hat — aus dem Tages-Gedaechtnis.
+    None, wenn dafuer nichts dasteht. REIN/testbar.
+
+    17.09.2026 (Lucas: „welchen Timeframe"). Die Antwort auf die Frage, die `fenster_bilanz`
+    NICHT beantworten kann: die rechnet ueber die letzten 30 Aufloesungen, und die decken bei
+    einer aktiven Wallet im Median sechs Tage ab.
+
+    Gibt `n`, `hit`, `clv` und — ab `WALLET_UG_MIN_N` Beobachtungen — `clvUg`, die einseitige
+    95-%-Untergrenze aus der im Gedaechtnis mitgefuehrten Quadratsumme. Ohne Streuung KEINE
+    Untergrenze: ein Schnitt ohne Schranke ist in diesem Repo kein Beleg, und das gilt hier
+    genauso wie in der Rangliste.
+
+    ⚠️ Bewusst KEIN Urteil und an keiner Sperre angeschlossen. Gemessen am 17.09. sagt der
+    kumulative Schnitt die naechsten Aufloesungen BESSER voraus als jedes Fenster (s. den Block
+    bei `WALLET_TAGE_KEEP`). Diese Funktion existiert, damit dieselbe Messung in vier Wochen mit
+    echten Zeitraeumen wiederholbar ist — nicht, damit jemand sie vorher als Gate benutzt.
+    """
+    t = (s or {}).get("tage") or {}
+    if not isinstance(t, dict) or not t or not tage:
+        return None
+    try:
+        ende = date.fromisoformat(str(bis)[:10])
+    except (TypeError, ValueError):
+        return None
+    ab = (ende - timedelta(days=int(tage) - 1)).isoformat()
+    n = wins = 0
+    summe = quad = 0.0
+    for k in sorted(t):
+        v = t[k]
+        if not (isinstance(v, (list, tuple)) and len(v) >= 4) or not (ab <= str(k) <= ende.isoformat()):
+            continue
+        try:
+            n += int(v[0]); summe += float(v[1]); wins += int(v[2]); quad += float(v[3])
+        except (TypeError, ValueError):
+            continue
+    if not n:
+        return None
+    schnitt = summe / n
+    aus = {"n": n, "clv": round(schnitt, 2), "hit": round(wins / n, 4),
+           "von": ab, "bis": ende.isoformat(), "clvUg": None}
+    if n >= WALLET_UG_MIN_N and n > 1:
+        roh = (quad - n * schnitt * schnitt) / (n - 1)
+        if roh >= -1e-6:
+            aus["clvUg"] = round(schnitt - WALLET_UG_Z * math.sqrt(max(0.0, roh) / n), 2)
+    return aus
 
 
 def enrich_wallet_pnl(scores, get, budget, min_n=5):

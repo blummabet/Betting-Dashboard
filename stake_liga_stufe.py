@@ -236,6 +236,11 @@ ART = {
     # ein suedostasiatischer Vereinswettbewerb ueber Landesgrenzen (Shan United/Myanmar gegen
     # Ezra FC/Laos), keine Liga. „championship" im Namen heisst hier nicht zweite Klasse.
     "asean-club-championship": "kontinental",
+    # 17.09.2026 (CI-Wachhund): die Canadian Championship ist Kanadas POKAL (Voyageurs Cup),
+    # ausgespielt zwischen MLS- und CPL-Klubs. Beleg aus der Paarung: Montreal gegen Vancouver
+    # Whitecaps, beides MLS-Vereine. „Championship" im Namen heisst auch hier nicht zweite
+    # Klasse — dritter Slug dieser Art nach „asean-club-championship" und „usl-championship".
+    "canadian-championship": "pokal",
     # 14.09.2026 (Status-Seite, Guard-Batterie): „asian-games". Ein multisportliches
     # Kontinentalereignis — im Ledger stehen aktuell 131 BASKETBALL-Zeilen (China–Philippines),
     # deren Spielklasse `stufe()` ohnehin nicht beantwortet. Gemeldet wurde es trotzdem als

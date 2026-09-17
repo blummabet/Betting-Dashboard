@@ -120,3 +120,94 @@ class TestVerdrahtung:
         assert s["n"] == 11, "die Auflösung ist gezählt"
         assert s["lastTs"] == "2026-09-01", "und der Zeitstempel steht"
         assert s["recent"] and s["recent"][-1][2] == 1, "Gewinn im Fenster vermerkt"
+
+
+# ── Tages-Gedaechtnis (17.09.2026) ────────────────────────────────────────────────────────────
+# Lucas: „der war die Woche nicht so gut, aber in dem Monat 600K vorn — also weiss nicht, wonach
+# wir genau tracken, welchen Timeframe."
+#
+# Gemessen, bevor daraus ein Urteil wurde: das 30er-Fenster sagt die naechsten Aufloesungen
+# SCHLECHTER voraus als der kumulative Schnitt (Fehler 1,06 gegen 0,74 pp ueber 65 Wallets mit
+# vollem Fenster; die beste Mischung liegt bei 10 % Fenster). Der Grund steckt in der Einheit:
+# ein volles 30er-Fenster deckt im Median sechs Tage ab. „Letzte 30 Aufloesungen" ist kein
+# Zeitraum — und kann „diesen Monat gegen letzten" gar nicht beantworten.
+#
+# Deshalb waechst ein Tages-Gedaechtnis mit, und deshalb urteilt es NICHT.
+
+def _tage_score(**extra):
+    d = {"n": 9, "clvSumPP": 0.0, "wins": 0, "usd": 0}
+    d.update(extra)
+    return d
+
+
+def test_jeder_tag_bekommt_seine_eigene_zeile():
+    s = _tage_score()
+    P._wallet_zeit(s, 2.0, True, "2026-09-10")
+    P._wallet_zeit(s, -1.0, False, "2026-09-10")
+    P._wallet_zeit(s, 3.0, True, "2026-09-15")
+    assert s["tage"] == {"2026-09-10": [2, 1.0, 1, 5.0], "2026-09-15": [1, 3.0, 1, 9.0]}
+
+
+def test_unter_der_reifegrenze_wird_nichts_gesammelt():
+    """Dieselbe Schranke wie beim Fenster: 2.500 Wallets mit n<8 wuerden die Datei sprengen."""
+    s = _tage_score(n=3)
+    P._wallet_zeit(s, 2.0, True, "2026-09-10")
+    assert "tage" not in s
+
+
+def test_das_gedaechtnis_endet_nach_der_aufbewahrungsfrist():
+    s = _tage_score()
+    for i in range(1, 70):
+        P._wallet_zeit(s, 1.0, True, "2026-%02d-%02d" % (6 + i // 30, 1 + i % 28))
+    assert len(s["tage"]) <= P.WALLET_TAGE_KEEP
+
+
+def test_ein_zeitraum_rechnet_nur_seine_tage():
+    s = _tage_score()
+    for tag, clv, win in (("2026-09-01", 9.0, True), ("2026-09-15", 3.0, True),
+                          ("2026-09-17", 1.0, False)):
+        P._wallet_zeit(s, clv, win, tag)
+    w = P.zeitraum_bilanz(s, "2026-09-17", 7)
+    assert w["n"] == 2 and w["clv"] == 2.0, w
+    m = P.zeitraum_bilanz(s, "2026-09-17", 30)
+    assert m["n"] == 3 and m["hit"] == round(2 / 3, 4)
+
+
+def test_ohne_daten_im_zeitraum_wird_nichts_behauptet():
+    s = _tage_score()
+    P._wallet_zeit(s, 9.0, True, "2026-07-01")
+    assert P.zeitraum_bilanz(s, "2026-09-17", 7) is None
+    assert P.zeitraum_bilanz({}, "2026-09-17", 7) is None
+    assert P.zeitraum_bilanz(None, "2026-09-17", 7) is None
+    assert P.zeitraum_bilanz(s, "kaputt", 7) is None
+
+
+def test_eine_untergrenze_gibt_es_nur_mit_streuung():
+    """Ein Schnitt ohne Schranke ist kein Beleg — auch hier nicht."""
+    s = _tage_score()
+    for i in range(3):
+        P._wallet_zeit(s, 2.0, True, "2026-09-%02d" % (10 + i))
+    assert P.zeitraum_bilanz(s, "2026-09-17", 30)["clvUg"] is None
+    for i in range(3, 10):
+        P._wallet_zeit(s, 2.0 + (i % 3), True, "2026-09-%02d" % (10 + i))
+    w = P.zeitraum_bilanz(s, "2026-09-19", 30)
+    assert w["clvUg"] is not None
+    assert w["clvUg"] < w["clv"], "die Untergrenze muss unter dem Schnitt liegen"
+
+
+def test_kaputte_zeilen_kippen_die_bilanz_nicht():
+    s = _tage_score(tage={"2026-09-16": ["x", None, 1, 0], "2026-09-17": [2, 4.0, 2, 8.0]})
+    w = P.zeitraum_bilanz(s, "2026-09-17", 7)
+    assert w["n"] == 2 and w["clv"] == 2.0
+
+
+def test_das_gedaechtnis_haengt_an_keiner_sperre():
+    """Der wichtigste Test der Datei: gemessen ist das Fenster SCHLECHTER als der kumulative
+    Schnitt. Wer es trotzdem als Gate anschliesst, soll hier anschlagen und die Messung
+    wiederholen muessen."""
+    import subprocess
+    roots = subprocess.run(["grep", "-rn", "zeitraum_bilanz", "--include=*.py", "--include=*.js",
+                            str(BASE)], capture_output=True, text=True).stdout.splitlines()
+    fremd = [z for z in roots
+             if "poly_money_broad.py" not in z and "test_wallet_gedaechtnis" not in z]
+    assert not fremd, "das Tages-Gedaechtnis urteilt woanders mit: %s" % fremd
