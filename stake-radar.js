@@ -1205,6 +1205,23 @@
   }
 
   // ── Render ────────────────────────────────────────────────────────────────
+
+  // Wie oft war der Sammler blind? Bilanz statt Momentaufnahme (17.09.2026 — s. Fundstelle unten).
+  // Zeigt NICHTS, solange keine Läufe gezählt sind: „0 %" wäre eine Behauptung über eine Messung,
+  // die es nicht gibt.
+  function _srLueckenBilanz(l) {
+    if (!l || !l.laeufe) return '';
+    var anteil = (typeof l.anteilMitLueckePct === 'number') ? l.anteilMitLueckePct
+               : (100 * (l.mitLuecke || 0) / l.laeufe);
+    var min = l.minutenBlind || 0;
+    var farbe = anteil >= 25 ? 'sr-warnz' : 'sr-mut';
+    return '<span class="' + farbe + '" title="Über alle ' + l.laeufe + ' Abrufe seit ' +
+      String(l.seit || '').slice(0, 10) + ': in ' + (l.mitLuecke || 0) + ' davon lagen mehr Wetten ' +
+      'zwischen zwei Läufen, als der Feed auf einmal hergibt (50). Längste Einzellücke ' +
+      (l.laengsteMin || 0) + ' min. Was dazwischen lag, steht in keiner Zahl dieser Seite.">' +
+      Math.round(anteil) + ' % der Abrufe mit Lücke · ' + Math.round(min) + ' min blind</span>';
+  }
+
   function _srRender() {
     var el = document.getElementById('stakeRadarPanel');
     if (!el) return;
@@ -1246,6 +1263,12 @@
           d.luecke.lueckeMin + ' min</span>'
         : (d.luecke && d.luecke.abdeckungMin != null
             ? '<span class="sr-mut">Abruf deckt ' + d.luecke.abdeckungMin + ' min</span>' : '')) +
+      // 🔴 17.09.2026 (Lucas, zu einem Fremd-Radar-Post aus der kasachischen Pervaya Liga:
+      // „sowas findest du nicht? Gab's nicht in unserem Feed?"). Gab es nicht — null Zeilen aus
+      // Kasachstan in 20.000 Wetten. Die Zeile darüber sagte trotzdem „Abruf deckt 37 min" und
+      // las sich gesund: sie zeigt den LETZTEN Lauf. Die Bilanz über alle Läufe sagt etwas
+      // anderes, und die stand nur im JSON. Eine Momentaufnahme dort, wo eine Bilanz hingehört.
+      _srLueckenBilanz(d.luecken) +
       '</div>';
 
     var warn = '<div class="sr-warn">Der Feed ist <b>anonym</b> — Stake nennt zu keiner Wette ein ' +
@@ -1376,6 +1399,7 @@
                    _srLigaBalken: _srLigaBalken, _srZeitachse: _srZeitachse,
                    _srAnpfiffText: _srAnpfiffText, _srDauerText: _srDauerText,
                    _srKarte: _srKarte, _srBelegLage: _srBelegLage,
+                   _srLueckenBilanz: _srLueckenBilanz,
                    _srAus: function (a) { SR_AUS = a; },
                    _srNurSpielbar: function () { return SR_NUR_SPIELBAR; } };
   }

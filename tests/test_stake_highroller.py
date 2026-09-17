@@ -932,3 +932,29 @@ def test_der_produzent_kennt_mehr_kategorien_als_der_alte_nachbau():
         ("handball", "HBL"), ("darts", "PDC"))}
     assert len(fein) >= 6, "genau diese fielen im Nachbau alle auf „Sonstige\""
     assert "Sonstige" not in fein
+
+
+def test_sicht_traegt_die_luecken_bilanz_mit():
+    """🔴 17.09.2026 (Lucas schickt einen Fremd-Radar-Post aus der kasachischen Pervaya Liga:
+    „6 bets / 5 bets in 3 min — sowas findest du nicht? Gab's nicht in unserem Feed?").
+
+    Gab es nicht: null Zeilen aus Kasachstan in 20.000 Wetten. Die Flaeche zeigte trotzdem
+    „Abruf deckt 37 min" und las sich gesund — das ist der LETZTE Lauf. Die Bilanz ueber alle
+    Laeufe stand nur im Ledger: 138 von 369 Abrufen mit Luecke, 855,8 Minuten blind.
+
+    Ohne dieses Feld in der Sicht kann die Oberflaeche die Bilanz gar nicht zeigen — der
+    Rollout-Teil des Fundes, und der faellt sonst niemandem auf.
+    """
+    jetzt = datetime.now(timezone.utc)
+    led = _ledger_mit(2, 0, jetzt)
+    led["luecken"] = {"laeufe": 369, "mitLuecke": 138, "minutenBlind": 855.8,
+                      "laengsteMin": 24.3, "anteilMitLueckePct": 37.4}
+    s = M.sicht_bauen(led, jetzt, "ok", "u", "f", "")
+    assert s.get("luecken", {}).get("laeufe") == 369
+    assert s["luecken"]["anteilMitLueckePct"] == 37.4
+
+
+def test_ohne_bilanz_steht_dort_ein_leeres_objekt_keine_erfindung():
+    jetzt = datetime.now(timezone.utc)
+    s = M.sicht_bauen(_ledger_mit(1, 0, jetzt), jetzt, "ok", "u", "f", "")
+    assert s.get("luecken") == {}

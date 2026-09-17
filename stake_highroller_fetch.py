@@ -1036,6 +1036,20 @@ def sicht_bauen(ledger: dict, jetzt: datetime, status: str, endpunkt: str,
         # Eine Quelle fuer Tab und Auswertung — der Filter wird nicht zweimal definiert.
         "gesperrt": sorted(GESPERRT),
         "luecke": ledger.get("luecke") or {},
+        # 🔴 17.09.2026 (Lucas schickt einen Fremd-Radar-Post: „Kasachstan Pervaya Liga, 6 Wetten
+        # in 3 Minuten — sowas findest du nicht? Gab's nicht in unserem Feed?").
+        #
+        # Gab es nicht: null Zeilen aus Kasachstan in 20.000 Wetten. Der Grund steht seit jeher
+        # in der Datei, nur nicht auf der Flaeche: `luecke` zeigt den LETZTEN Lauf („Abruf deckt
+        # 37 min") und liest sich gesund, waehrend die BILANZ sagt, dass in 138 von 369 Laeufen
+        # eine Luecke entstand — 855,8 Minuten blind seit dem 13.09., laengste Einzelluecke
+        # 24,3 Minuten. Der Feed gibt hoechstens 50 Eintraege her (MAX_LIMIT; 51 liefert
+        # kommentarlos null), das sind bei 2,4 Wetten/Minute rund 21 Minuten Gedaechtnis — und
+        # der Sammler haengt am 10-Minuten-Takt von betfair.yml, der nicht immer puenktlich ist.
+        #
+        # Eine Momentaufnahme dort, wo eine Bilanz hingehoert: dieselbe Fehlerklasse wie ueberall
+        # hier. Also wandert die Bilanz mit in die Sicht.
+        "luecken": ledger.get("luecken") or {},
         # Die Sicht trägt die ROHEN Wetten im Fenster — gruppiert und gefiltert wird
         # im Frontend, damit Lucas die Schwellen live drehen kann.
         "wetten": im_fenster[:VIEW_KEEP],
