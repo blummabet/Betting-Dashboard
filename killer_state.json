@@ -125,28 +125,37 @@
    "markt": "Match Odds",
    "seite": "home",
    "name": "Besiktas",
-   "odd": 1.84,
+   "odd": 1.85,
    "entryOdd": 1.86,
    "anteilPct": 89,
-   "stufe": 2,
+   "stufe": 1,
    "verstaerker": [
+    {
+     "art": "poly",
+     "text": "Poly Geld 94%",
+     "gewicht": 12
+    },
     {
      "art": "pinn",
      "text": "Pinnacle stimmt zu",
      "gewicht": 10
     }
    ],
-   "rang": 68.9,
+   "rang": 80.6,
    "track": null,
    "streak": null,
-   "poly": null,
+   "poly": {
+    "anteilPct": 94,
+    "usd": 168016,
+    "odd": 1.87
+   },
    "polyStatus": "unbekannt",
-   "polyKey": null,
-   "polySide": null,
+   "polyKey": "uel-bes-olm-2026-09-17",
+   "polySide": "Beşiktaş JK",
    "pinnMovePP": -0.6,
    "punkte": {
-    "punkte": 6,
-    "moeglich": 7,
+    "punkte": 8,
+    "moeglich": 10,
     "dauerH": 34.7,
     "teile": [
      {
@@ -157,31 +166,43 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 89% auf der Seite"
+       "text": "Geld 86% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.886,
-       "betrag": 84539,
-       "gesamt": 95417,
+       "anteil": 0.857,
+       "betrag": 128938,
+       "gesamt": 150453,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 89% auf der Seite"
+      "text": "Geld 86% auf der Seite"
      },
      {
       "buch": "POLY",
       "name": "Polymarket",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "geld": null,
-      "text": "Polymarket nicht erhoben"
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Poly-Geld 94% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein bewiesenes Wallet auf der Seite"
+      },
+      "geld": {
+       "anteil": 0.94,
+       "betrag": 157935,
+       "gesamt": 168016,
+       "waehrung": "USD",
+       "quelle": "geld"
+      },
+      "text": "Poly-Geld 94% auf derselben Seite"
      },
      {
       "buch": "PIN",
@@ -195,7 +216,7 @@
       },
       "tiefe": {
        "ok": false,
-       "text": "Move -1.5pp in unsere Richtung"
+       "text": "kein Move gemessen"
       },
       "geld": null,
       "text": "hat dieselbe Seite als Favorit"
@@ -228,9 +249,525 @@
    },
    "wertVsPinn": -0.0121,
    "gehaltenSeit": "2026-09-16T08:18:05.688055+00:00",
-   "zuletztAktiv": "2026-09-16T22:49:48.809666+00:00",
+   "zuletztAktiv": "2026-09-17T12:36:10.970135+00:00",
    "haltePreis": 1.82,
+   "aktiv": true
+  },
+  "36004953|Match Odds": {
+   "matchId": "36004953",
+   "home": "OFI",
+   "away": "Hoffenheim",
+   "league": "UEFA Europa League",
+   "kickoff": "2026-09-17T16:45:00Z",
+   "markt": "Match Odds",
+   "seite": "away",
+   "name": "Hoffenheim",
+   "odd": 1.36,
+   "entryOdd": 1.44,
+   "anteilPct": 81,
+   "stufe": 1,
+   "verstaerker": [
+    {
+     "art": "poly",
+     "text": "Poly Preis 70%",
+     "gewicht": 12
+    },
+    {
+     "art": "pinn",
+     "text": "Pinnacle stimmt zu",
+     "gewicht": 10
+    },
+    {
+     "art": "pinnMove",
+     "text": "Pinnacle zieht mit +1.4pp",
+     "gewicht": 14
+    }
+   ],
+   "rang": 94.2,
+   "track": null,
+   "streak": null,
+   "poly": {
+    "anteilPct": 70,
+    "usd": 23971,
+    "odd": 1.42
+   },
+   "polyStatus": "ja",
+   "polyKey": "uel-ofi-hof-2026-09-17",
+   "polySide": "TSG 1899 Hoffenheim",
+   "pinnMovePP": -0.0,
+   "punkte": {
+    "punkte": 9,
+    "moeglich": 10,
+    "dauerH": 9.41,
+    "teile": [
+     {
+      "buch": "BF",
+      "name": "Betfair",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Geld 79% auf der Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "frischer Zufluss und Quote zieht mit"
+      },
+      "geld": {
+       "anteil": 0.79,
+       "betrag": 39713,
+       "gesamt": 50270,
+       "waehrung": "EUR",
+       "quelle": "geld"
+      },
+      "text": "Geld 79% auf der Seite"
+     },
+     {
+      "buch": "POLY",
+      "name": "Polymarket",
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Poly-Geld 85% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein bewiesenes Wallet auf der Seite"
+      },
+      "geld": {
+       "anteil": 0.85,
+       "betrag": 26543,
+       "gesamt": 31227,
+       "waehrung": "USD",
+       "quelle": "geld"
+      },
+      "text": "Poly-Geld 85% auf derselben Seite"
+     },
+     {
+      "buch": "PIN",
+      "name": "Pinnacle",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "hat dieselbe Seite als Favorit"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "Move +3.5pp in unsere Richtung"
+      },
+      "geld": null,
+      "text": "hat dieselbe Seite als Favorit"
+     },
+     {
+      "buch": "STAKE",
+      "name": "Stake-Highroller",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Stake-Highroller nicht erhoben"
+     },
+     {
+      "buch": "ZEIT",
+      "name": "Dauer",
+      "status": "ja",
+      "punkte": 1,
+      "moeglich": 1,
+      "grund": {
+       "ok": true,
+       "text": "steht seit 9.4h vor Anpfiff"
+      },
+      "tiefe": null,
+      "text": "steht seit 9.4h vor Anpfiff"
+     }
+    ]
+   },
+   "wertVsPinn": -0.014,
+   "gehaltenSeit": "2026-09-17T07:20:30.758454+00:00",
+   "zuletztAktiv": "2026-09-17T10:50:54.065715+00:00",
+   "haltePreis": 1.43,
    "aktiv": false
+  },
+  "36004960|Match Odds": {
+   "matchId": "36004960",
+   "home": "Lillestrom",
+   "away": "Torreense",
+   "league": "UEFA Europa League",
+   "kickoff": "2026-09-17T19:00:00Z",
+   "markt": "Match Odds",
+   "seite": "home",
+   "name": "Lillestrom",
+   "odd": 1.67,
+   "entryOdd": 1.56,
+   "anteilPct": 77,
+   "stufe": 2,
+   "verstaerker": [
+    {
+     "art": "pinn",
+     "text": "Pinnacle stimmt zu",
+     "gewicht": 10
+    }
+   ],
+   "rang": 67.7,
+   "track": null,
+   "streak": null,
+   "poly": null,
+   "polyStatus": "unbekannt",
+   "polyKey": null,
+   "polySide": null,
+   "pinnMovePP": null,
+   "punkte": {
+    "punkte": 6,
+    "moeglich": 7,
+    "dauerH": 10.41,
+    "teile": [
+     {
+      "buch": "BF",
+      "name": "Betfair",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Geld 79% auf der Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "frischer Zufluss und Quote zieht mit"
+      },
+      "geld": {
+       "anteil": 0.787,
+       "betrag": 23620,
+       "gesamt": 30013,
+       "waehrung": "EUR",
+       "quelle": "geld"
+      },
+      "text": "Geld 79% auf der Seite"
+     },
+     {
+      "buch": "POLY",
+      "name": "Polymarket",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Polymarket nicht erhoben"
+     },
+     {
+      "buch": "PIN",
+      "name": "Pinnacle",
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "hat dieselbe Seite als Favorit"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein Move gemessen"
+      },
+      "geld": null,
+      "text": "hat dieselbe Seite als Favorit"
+     },
+     {
+      "buch": "STAKE",
+      "name": "Stake-Highroller",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Stake-Highroller nicht erhoben"
+     },
+     {
+      "buch": "ZEIT",
+      "name": "Dauer",
+      "status": "ja",
+      "punkte": 1,
+      "moeglich": 1,
+      "grund": {
+       "ok": true,
+       "text": "steht seit 10.4h vor Anpfiff"
+      },
+      "tiefe": null,
+      "text": "steht seit 10.4h vor Anpfiff"
+     }
+    ]
+   },
+   "wertVsPinn": null,
+   "gehaltenSeit": "2026-09-17T08:35:38.700135+00:00",
+   "zuletztAktiv": "2026-09-17T11:59:12.979775+00:00",
+   "haltePreis": 1.66,
+   "aktiv": false
+  },
+  "36005136|Match Odds": {
+   "matchId": "36005136",
+   "home": "Celtic",
+   "away": "Ferencvaros",
+   "league": "UEFA Europa League",
+   "kickoff": "2026-09-17T19:00:00Z",
+   "markt": "Match Odds",
+   "seite": "home",
+   "name": "Celtic",
+   "odd": 1.75,
+   "entryOdd": 1.79,
+   "anteilPct": 73,
+   "stufe": 2,
+   "verstaerker": [
+    {
+     "art": "pinn",
+     "text": "Pinnacle stimmt zu",
+     "gewicht": 10
+    },
+    {
+     "art": "pinnMove",
+     "text": "Pinnacle zieht mit +1.2pp",
+     "gewicht": 8
+    }
+   ],
+   "rang": 75.3,
+   "track": null,
+   "streak": null,
+   "poly": null,
+   "polyStatus": "unbekannt",
+   "polyKey": null,
+   "polySide": null,
+   "pinnMovePP": 1.2,
+   "punkte": {
+    "punkte": 7,
+    "moeglich": 7,
+    "dauerH": 9.15,
+    "teile": [
+     {
+      "buch": "BF",
+      "name": "Betfair",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Geld 77% auf der Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "frischer Zufluss und Quote zieht mit"
+      },
+      "geld": {
+       "anteil": 0.771,
+       "betrag": 50709,
+       "gesamt": 65770,
+       "waehrung": "EUR",
+       "quelle": "geld"
+      },
+      "text": "Geld 77% auf der Seite"
+     },
+     {
+      "buch": "POLY",
+      "name": "Polymarket",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Polymarket nicht erhoben"
+     },
+     {
+      "buch": "PIN",
+      "name": "Pinnacle",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "hat dieselbe Seite als Favorit"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "Move +2.6pp in unsere Richtung"
+      },
+      "geld": null,
+      "text": "hat dieselbe Seite als Favorit"
+     },
+     {
+      "buch": "STAKE",
+      "name": "Stake-Highroller",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Stake-Highroller nicht erhoben"
+     },
+     {
+      "buch": "ZEIT",
+      "name": "Dauer",
+      "status": "ja",
+      "punkte": 1,
+      "moeglich": 1,
+      "grund": {
+       "ok": true,
+       "text": "steht seit 9.2h vor Anpfiff"
+      },
+      "tiefe": null,
+      "text": "steht seit 9.2h vor Anpfiff"
+     }
+    ]
+   },
+   "wertVsPinn": -0.0202,
+   "gehaltenSeit": "2026-09-17T09:50:47.170499+00:00",
+   "zuletztAktiv": "2026-09-17T12:20:55.996709+00:00",
+   "haltePreis": 1.75,
+   "aktiv": true
+  },
+  "36004998|Match Odds": {
+   "matchId": "36004998",
+   "home": "Crystal Palace",
+   "away": "Lech Poznan",
+   "league": "UEFA Europa League",
+   "kickoff": "2026-09-17T19:00:00Z",
+   "markt": "Match Odds",
+   "seite": "home",
+   "name": "Crystal Palace",
+   "odd": 1.4,
+   "entryOdd": 1.46,
+   "anteilPct": 77,
+   "stufe": 1,
+   "verstaerker": [
+    {
+     "art": "poly",
+     "text": "Poly Geld 94%",
+     "gewicht": 12
+    },
+    {
+     "art": "pinn",
+     "text": "Pinnacle stimmt zu",
+     "gewicht": 10
+    }
+   ],
+   "rang": 79.7,
+   "track": null,
+   "streak": null,
+   "poly": {
+    "anteilPct": 94,
+    "usd": 29817,
+    "odd": 1.4
+   },
+   "polyStatus": "ja",
+   "polyKey": "uel-cry-lep-2026-09-17",
+   "polySide": "Crystal Palace FC",
+   "pinnMovePP": 0.2,
+   "punkte": {
+    "punkte": 8,
+    "moeglich": 10,
+    "dauerH": 6.4,
+    "teile": [
+     {
+      "buch": "BF",
+      "name": "Betfair",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Geld 77% auf der Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "frischer Zufluss und Quote zieht mit"
+      },
+      "geld": {
+       "anteil": 0.773,
+       "betrag": 30832,
+       "gesamt": 39886,
+       "waehrung": "EUR",
+       "quelle": "geld"
+      },
+      "text": "Geld 77% auf der Seite"
+     },
+     {
+      "buch": "POLY",
+      "name": "Polymarket",
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Poly-Geld 94% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein bewiesenes Wallet auf der Seite"
+      },
+      "geld": {
+       "anteil": 0.94,
+       "betrag": 28028,
+       "gesamt": 29817,
+       "waehrung": "USD",
+       "quelle": "geld"
+      },
+      "text": "Poly-Geld 94% auf derselben Seite"
+     },
+     {
+      "buch": "PIN",
+      "name": "Pinnacle",
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "hat dieselbe Seite als Favorit"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein Move gemessen"
+      },
+      "geld": null,
+      "text": "hat dieselbe Seite als Favorit"
+     },
+     {
+      "buch": "STAKE",
+      "name": "Stake-Highroller",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Stake-Highroller nicht erhoben"
+     },
+     {
+      "buch": "ZEIT",
+      "name": "Dauer",
+      "status": "ja",
+      "punkte": 1,
+      "moeglich": 1,
+      "grund": {
+       "ok": true,
+       "text": "steht seit 6.4h vor Anpfiff"
+      },
+      "tiefe": null,
+      "text": "steht seit 6.4h vor Anpfiff"
+     }
+    ]
+   },
+   "wertVsPinn": -0.0148,
+   "gehaltenSeit": "2026-09-17T12:36:10.970135+00:00",
+   "zuletztAktiv": "2026-09-17T12:36:10.970135+00:00",
+   "haltePreis": 1.4,
+   "aktiv": true
   }
  }
 }
