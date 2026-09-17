@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-17T22:53:02.352980+00:00",
+ "generatedAt": "2026-09-17T23:23:00.821603+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,15 +9,15 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 679,
+ "polyRowsSeen": 673,
  "pinnKeys": 253,
  "matched": 177,
  "footballRows": 165,
- "crossRows": 514,
+ "crossRows": 508,
  "footballSkippedStale": 54,
  "seenBySport": {
   "americanfootball_nfl": 176,
-  "baseball_mlb": 76,
+  "baseball_mlb": 70,
   "icehockey_nhl": 238,
   "boxing_boxing": 24,
   "soccer_mls": 21,
@@ -33,5 +33,34 @@
   "tracked": 291,
   "converged": 73
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|houstonastros-kansascityroyals|kansascityroyals",
+   "sport": "baseball_mlb",
+   "event": "Kansas City Royals vs Houston Astros",
+   "market": "Moneyline",
+   "outcome": "Kansas City Royals",
+   "polyPP": 51.0,
+   "pinnPP": 42.3,
+   "gapPP": 8.71,
+   "vol": 217094,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 17.11,
+   "firstSeen": "2026-09-16T00:56:06.296311+00:00"
+  },
+  {
+   "id": "baseball_mlb|houstonastros-kansascityroyals|houstonastros",
+   "sport": "baseball_mlb",
+   "event": "Kansas City Royals vs Houston Astros",
+   "market": "Moneyline",
+   "outcome": "Houston Astros",
+   "polyPP": 49.0,
+   "pinnPP": 57.7,
+   "gapPP": -8.71,
+   "vol": 217094,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 17.11,
+   "firstSeen": "2026-09-16T00:56:06.296311+00:00"
+  }
+ ]
 }
