@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-16T23:51:09.499083+00:00",
+ "generatedAt": "2026-09-17T00:21:11.168689+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,29 +9,58 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 694,
- "pinnKeys": 264,
- "matched": 192,
+ "polyRowsSeen": 692,
+ "pinnKeys": 262,
+ "matched": 188,
  "footballRows": 168,
- "crossRows": 526,
+ "crossRows": 524,
  "footballSkippedStale": 54,
  "seenBySport": {
   "americanfootball_nfl": 178,
-  "baseball_mlb": 88,
+  "baseball_mlb": 86,
   "icehockey_nhl": 236,
   "boxing_boxing": 24,
   "soccer_mls": 18,
   "soccer_liga": 150
  },
  "matchedBySport": {
-  "baseball_mlb": 22,
+  "baseball_mlb": 18,
   "boxing_boxing": 2,
   "soccer_mls": 18,
   "soccer_liga": 150
  },
  "trackRecord": {
   "tracked": 288,
-  "converged": 63
+  "converged": 65
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|athletics-tampabayrays|athletics",
+   "sport": "baseball_mlb",
+   "event": "Athletics vs Tampa Bay Rays",
+   "market": "Moneyline",
+   "outcome": "Athletics",
+   "polyPP": 17.5,
+   "pinnPP": 29.0,
+   "gapPP": -11.53,
+   "vol": 429357,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 7.4,
+   "firstSeen": "2026-09-15T23:49:07.552681+00:00"
+  },
+  {
+   "id": "baseball_mlb|athletics-tampabayrays|tampabayrays",
+   "sport": "baseball_mlb",
+   "event": "Athletics vs Tampa Bay Rays",
+   "market": "Moneyline",
+   "outcome": "Tampa Bay Rays",
+   "polyPP": 82.5,
+   "pinnPP": 71.0,
+   "gapPP": 11.53,
+   "vol": 429357,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 7.4,
+   "firstSeen": "2026-09-15T23:49:07.552681+00:00"
+  }
+ ]
 }
