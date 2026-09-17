@@ -1,15 +1,15 @@
 {
- "n": 435,
+ "n": 440,
  "minOdds": 1.35,
  "moneyHitRate": 0.384,
- "priceHitRate": 0.411,
- "brierMoney": 0.8983,
- "brierPrice": 0.6875,
+ "priceHitRate": 0.414,
+ "brierMoney": 0.896,
+ "brierPrice": 0.6883,
  "disagree": {
-  "n": 118,
-  "moneyWon": 15,
-  "priceWon": 27,
-  "neither": 76
+  "n": 119,
+  "moneyWon": 16,
+  "priceWon": 29,
+  "neither": 74
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -80,8 +80,8 @@
   }
  ],
  "guete": {
-  "belastbar": 435,
-  "preis_echo": 217,
+  "belastbar": 440,
+  "preis_echo": 212,
   "abgeschnitten": 60,
   "unbekannt": 309,
   "leer": 0
@@ -218,6 +218,18 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 1200778
+  },
+  {
+   "key": "uel-rso-bou-2026-09-17",
+   "league": "SOCCER:UEL",
+   "winner": "AFC Bournemouth",
+   "moneyFav": "AFC Bournemouth",
+   "priceFav": "AFC Bournemouth",
+   "moneyShare": 0.655,
+   "priceProb": 0.463,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 1050867
   },
   {
    "key": "ucl-lil-bet-2026-09-08",
@@ -554,21 +566,9 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 341463
-  },
-  {
-   "key": "mls-orl-tor-2026-09-12",
-   "league": "MLS",
-   "winner": "Orlando City SC",
-   "moneyFav": "Orlando City SC",
-   "priceFav": "Orlando City SC",
-   "moneyShare": 0.997,
-   "priceProb": 0.518,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 337428
   }
  ],
- "generatedAt": "2026-09-17T22:29:19.817427+00:00",
+ "generatedAt": "2026-09-17T22:58:54.977091+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -579,7 +579,7 @@
   "mls": 664,
   "epl": 528,
   "soccer": 800,
-  "tennis": 532,
+  "tennis": 531,
   "ucl": 417,
   "la-liga": 525,
   "bundesliga": 484,
@@ -591,7 +591,7 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 670,
+  "esports": 666,
   "cs2": 420,
   "lol": 424,
   "dota": 9,
@@ -652,28 +652,33 @@
   "sweepAdded": 405
  },
  "vorStats": {
-  "kandidaten": 2,
+  "kandidaten": 1,
   "budgetLeer": 0,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
-  "mitAnteilen": 2,
-  "calls": 2
+  "mitAnteilen": 1,
+  "calls": 1
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1010,
-   "usd": 39795049,
+   "n": 1015,
+   "usd": 41027185,
    "beispiel": "fifwc-prt-hrv-2026-07-02-player-props"
+  },
+  "nba": {
+   "n": 211,
+   "usd": 7291625,
+   "beispiel": "nba-2027-champion"
   },
   "balance": {
    "n": 2,
    "usd": 6000000,
    "beispiel": "balance-of-power-2026-midterms"
   },
-  "nba": {
-   "n": 161,
-   "usd": 4366515,
-   "beispiel": "nba-2027-champion"
+  "cbb": {
+   "n": 20,
+   "usd": 1583289,
+   "beispiel": "cbb-verm-prnce-2025-12-30"
   },
   "ecs": {
    "n": 6,
@@ -681,8 +686,8 @@
    "beispiel": "ecs-ars-mci-2026-08-16"
   },
   "world": {
-   "n": 5,
-   "usd": 481653,
+   "n": 8,
+   "usd": 555103,
    "beispiel": "world-cup-winner"
   },
   "usc": {
@@ -690,19 +695,39 @@
    "usd": 335318,
    "beispiel": "usc-psg-av-2026-08-12"
   },
+  "euroleague": {
+   "n": 5,
+   "usd": 309118,
+   "beispiel": "euroleague-monaco-milano-2026-03-24"
+  },
   "fif": {
    "n": 34,
-   "usd": 165237,
+   "usd": 180415,
    "beispiel": "fif-svk-mon-2026-06-05-more-markets"
   },
+  "acn": {
+   "n": 7,
+   "usd": 172521,
+   "beispiel": "acn-sen-bot-2025-12-23"
+  },
   "clf": {
-   "n": 23,
-   "usd": 126751,
+   "n": 24,
+   "usd": 135300,
    "beispiel": "clf-mun-lee-2026-08-12"
   },
+  "efa": {
+   "n": 4,
+   "usd": 134376,
+   "beispiel": "efa-cfc-mnc-2026-05-16"
+  },
+  "cdr": {
+   "n": 2,
+   "usd": 125610,
+   "beispiel": "cdr-atm-fcb-2026-02-12"
+  },
   "fed": {
-   "n": 8,
-   "usd": 117035,
+   "n": 5,
+   "usd": 100928,
    "beispiel": "fed-decision-in-september-762"
   },
   "nbasl": {
@@ -715,50 +740,25 @@
    "usd": 92209,
    "beispiel": "democratic-presidential-nominee-2028"
   },
-  "cbb": {
+  "uef": {
    "n": 2,
-   "usd": 77012,
-   "beispiel": "cbb-uconn-mich-2026-04-06"
+   "usd": 81307,
+   "beispiel": "uef-kvx-tur-2026-03-31"
+  },
+  "cricipl": {
+   "n": 3,
+   "usd": 52196,
+   "beispiel": "cricipl-del-raj-2026-05-17"
   },
   "us": {
    "n": 7,
-   "usd": 46379,
+   "usd": 46490,
    "beispiel": "us-x-iran-permanent-peace-deal-by"
   },
-  "ballon": {
-   "n": 5,
-   "usd": 38721,
-   "beispiel": "ballon-dor-winner-2026"
-  },
-  "pro": {
-   "n": 3,
-   "usd": 37351,
-   "beispiel": "pro-football-2027-champion-20260729185915366"
-  },
   "eurovision": {
-   "n": 2,
-   "usd": 21299,
+   "n": 8,
+   "usd": 43712,
    "beispiel": "eurovision-winner-2026"
-  },
-  "kbo": {
-   "n": 9,
-   "usd": 14147,
-   "beispiel": "kbo-kt-sam-2026-08-28"
-  },
-  "euroleague": {
-   "n": 3,
-   "usd": 13856,
-   "beispiel": "euroleague-munchen-efes-2026-03-12"
-  },
-  "npb": {
-   "n": 7,
-   "usd": 12842,
-   "beispiel": "npb-hir-yok-2026-09-11"
-  },
-  "efa": {
-   "n": 2,
-   "usd": 11570,
-   "beispiel": "efa-cfc-mnc-2026-05-16"
   }
  }
 }
