@@ -283,3 +283,68 @@ class TestEineAbwesenheitIstKeinBeleg(unittest.TestCase):
                         sellPrice=0.34, pnl=-0.31, pnlSource="manual_sell_trade")
         self.assertEqual(R.zurueckholen([bet], {"TOK1": 15.28}, now_iso="2026-09-16T08:00:00Z"), [])
         self.assertEqual(bet["status"], "closed_manual")
+
+
+class TestZeitAlleinReichtNichtWennLaeufeFehlen(unittest.TestCase):
+    """🔴 17.09.2026 (Lucas: „der Betfair-Cron sollte alle 10 min, tut er aber nicht — falls das
+    irgendwo wichtig ist"). Hier war es wichtig, und schlimmer als der Betfair-Fall selbst.
+
+    Die 60-Minuten-Schranke von gestern stand mit der Begruendung da, sie verlange „bei Laeufen
+    alle 15 Minuten vier aufeinanderfolgende Fehlanzeigen". Dieser Abgleich laeuft aber gar nicht
+    im Betfair-Takt: `manage-liga-poly.yml`, Cron `0,30 10-21` plus 08:00 — alle 30 Minuten, und
+    nur zwischen 10 und 21 Uhr UTC. Ueber Nacht ist ein Marker vom 21:00-Lauf beim 08:00-Lauf elf
+    Stunden alt, und die Position waere auf EINE einzige neue Fehlanzeige hin geschlossen worden.
+    """
+
+    def _bet(self, **kw):
+        b = {"betKey": "55-49-Under 2.5 Tore", "home": "Brentford", "away": "Chelsea",
+             "market": "Under 2.5 Tore", "status": "placed", "tokenId": "TOK1",
+             "polyPrice": 0.36, "stake": 5.5, "placedAt": "2026-09-14T14:54:29+00:00"}
+        b.update(kw)
+        return b
+
+    def test_ueber_nacht_schliesst_ein_einziger_lauf_nichts(self):
+        bet = self._bet()
+        R.reconcile([bet], proxy="0xabc", now_iso="2026-09-16T21:00:00Z", getter=_getter([], []))
+        self.assertEqual(bet["status"], "placed")
+        changed = R.reconcile([bet], proxy="0xabc", now_iso="2026-09-17T08:00:00Z",
+                              getter=_getter([], []))
+        self.assertEqual(changed, [], "elf Stunden Pause sind kein zweiter Befund")
+        self.assertEqual(bet["status"], "placed")
+
+    def test_zwei_echte_laeufe_nach_der_frist_schliessen_sehr_wohl(self):
+        bet = self._bet()
+        for t in ("2026-09-16T10:00:00Z", "2026-09-16T10:30:00Z", "2026-09-16T11:00:00Z"):
+            changed = R.reconcile([bet], proxy="0xabc", now_iso=t, getter=_getter([], []))
+        self.assertEqual(len(changed), 1)
+        self.assertEqual(bet["status"], "closed_manual")
+
+    def test_die_mindestzahl_der_laeufe_greift_wirklich(self):
+        """`MIN_FEHLT_LAEUFE` ist die ausdrueckliche Form der Absicht („mehrere Laeufe"), auch
+        wenn die Zeitschranke bei heutigem Takt meist zuerst zieht. Wer sie hochdreht, muss
+        etwas davon haben — sonst waere sie Dekoration."""
+        alt = R.MIN_FEHLT_LAEUFE
+        R.MIN_FEHLT_LAEUFE = 3
+        try:
+            bet = self._bet()
+            R.reconcile([bet], proxy="0xabc", now_iso="2026-09-16T10:00:00Z", getter=_getter([], []))
+            changed = R.reconcile([bet], proxy="0xabc", now_iso="2026-09-16T11:05:00Z",
+                                  getter=_getter([], []))
+            self.assertEqual(changed, [], "zwei Fehlanzeigen, verlangt sind drei")
+            changed = R.reconcile([bet], proxy="0xabc", now_iso="2026-09-16T12:10:00Z",
+                                  getter=_getter([], []))
+            self.assertEqual(len(changed), 1)
+        finally:
+            R.MIN_FEHLT_LAEUFE = alt
+
+    def test_der_zaehler_faellt_mit_der_position_zurueck(self):
+        bet = self._bet()
+        R.reconcile([bet], proxy="0xabc", now_iso="2026-09-16T10:00:00Z", getter=_getter([], []))
+        R.reconcile([bet], proxy="0xabc", now_iso="2026-09-16T10:30:00Z",
+                    getter=_getter([{"asset": "TOK1", "size": 15.0}], []))
+        self.assertNotIn("nichtGehaltenLaeufe", bet)
+        self.assertNotIn("nichtGehaltenZuletzt", bet)
+        R.reconcile([bet], proxy="0xabc", now_iso="2026-09-16T11:00:00Z", getter=_getter([], []))
+        changed = R.reconcile([bet], proxy="0xabc", now_iso="2026-09-16T12:05:00Z",
+                              getter=_getter([], []))
+        self.assertEqual(len(changed), 1, "nach zwei frischen Fehlanzeigen ist es ein Befund")

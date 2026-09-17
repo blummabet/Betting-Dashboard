@@ -542,3 +542,60 @@ class FreigabeClvUrteilAmEnde(unittest.TestCase):
                                       (1.9, 0.4, 3.1, "belegt"),
                                       (-2.2, -2.7, -1.7, "negativ belegt")):
             self.assertEqual(self.F.clv_urteil(clv, lb, og), erwartet)
+
+
+class TaktGegenCron(unittest.TestCase):
+    """🔴 17.09.2026 (Lucas: „der Betfair-Cron sollte alle 10 min, tut er aber nicht — in
+    Wahrheit rennt er alle 15 min, falls das irgendwo wichtig ist").
+
+    Es war an vier Stellen wichtig (Schedule-Bilanz, Burst-Altersgrenze, zwei Commit-Groessen-
+    Rechnungen) und keine hat es gemerkt. Der echte Takt steht in `health/<slug>.json`.
+    """
+
+    def test_ein_einfacher_minuten_cron_wird_gelesen(self):
+        self.assertEqual(UI._cron_minuten("*/15 * * * *"), 15.0)
+        self.assertEqual(UI._cron_minuten("4,19,34,49 * * * *"), 15.0)
+        self.assertEqual(UI._cron_minuten("25 * * * *"), 60.0)
+
+    def test_ein_unregelmaessiger_cron_wird_nicht_geraten(self):
+        """„0,5,40" ist kein Takt — daraus einen Abstand zu rechnen waere eine Erfindung."""
+        self.assertIsNone(UI._cron_minuten("0,5,40 * * * *"))
+        self.assertIsNone(UI._cron_minuten("kaputt"))
+
+    def test_zu_wenige_laeufe_sind_kein_urteil(self):
+        import json as _j
+        import tempfile
+        from pathlib import Path as _P
+        with tempfile.TemporaryDirectory() as d:
+            p = _P(d) / "x.json"
+            p.write_text(_j.dumps({"runs": [{"ts": "2026-09-17T0%d:00:00Z" % i} for i in range(4)]}),
+                         encoding="utf-8")
+            self.assertIsNone(UI._health_abstand(p))
+
+    def test_der_abstand_kommt_aus_dem_quantil_nicht_aus_dem_mittel(self):
+        """Ein einzelner Ausfall darf den Takt nicht bestimmen: 8 Laeufe im 15-Minuten-Abstand
+        und EINE Luecke von zehn Stunden ergeben 15, nicht 90."""
+        import json as _j
+        import tempfile
+        from datetime import datetime as _dt, timedelta as _td, timezone as _tz
+        from pathlib import Path as _P
+        t0 = _dt(2026, 9, 17, 0, 0, tzinfo=_tz.utc)
+        ts = [(t0 + _td(minutes=15 * i)).isoformat() for i in range(9)]
+        ts.append((t0 + _td(hours=12)).isoformat())
+        with tempfile.TemporaryDirectory() as d:
+            p = _P(d) / "x.json"
+            p.write_text(_j.dumps({"runs": [{"ts": x} for x in ts]}), encoding="utf-8")
+            self.assertAlmostEqual(UI._health_abstand(p), 15.0, places=1)
+
+    def test_der_guard_ist_eine_warnung_keine_sperre(self):
+        """Ein verlorener Gesundheits-Eintrag (gescheiterter Push) sieht aus wie ein verpasster
+        Lauf. Die Zahl ist eine Obergrenze der Haeufigkeit — also warnen, nicht blockieren."""
+        r = UI.check_takt_stimmt_mit_dem_cron({})
+        self.assertEqual(r["severity"], "warn")
+
+    def test_gegen_den_echten_bestand(self):
+        """Der Fund selbst: betfair.yml stand auf */10 und lieferte 15,0 Min. Seit der Cron das
+        sagt, darf er hier nicht mehr auffallen — und wenn doch, ist DAS die Nachricht."""
+        r = UI.check_takt_stimmt_mit_dem_cron({})
+        betfair = [f for f in r["failures"] if f.startswith("betfair.yml")]
+        self.assertEqual(betfair, [], "\n".join(betfair))

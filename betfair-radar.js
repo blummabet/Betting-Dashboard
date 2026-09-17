@@ -1827,7 +1827,10 @@
     // wann ~der nächste Push kommt). Grün frisch, amber ab 1 verpasstem Lauf, rot ab ~2.5, dann „überfällig"/„hängt".
     var g = _bf.data && _bf.data._meta && _bf.data._meta.generatedAt;
     if (!g) return '';
-    var CAD_MIN = 15;   // Anzeige-Kadenz in Minuten. Cron steht auf */10, ABER GitHubs Schedule drosselt kurze Intervalle → real ~15 Min. Statuszeile spiegelt die Realitaet (Lucas 09.08.2026: „wieder auf 15").
+    // 17.09.2026: der Cron steht jetzt selbst auf */15 — vorher behauptete er */10, waehrend der
+    // Runner gemessen 15,0 Minuten lieferte (health/betfair.json, 17 von 19 Abstaenden). Diese
+    // Zahl hier war also schon immer die richtige; jetzt stimmt auch die Quelle, aus der sie kommt.
+    var CAD_MIN = 15;   // Anzeige-Kadenz in Minuten — deckungsgleich mit dem Cron in betfair.yml.
     var a = genAgeMin();
     var at = a >= 90 ? Math.round(a / 60) + 'h' : Math.round(a) + ' Min';
     var col = a > CAD_MIN * 2.5 ? '#f2a6a6' : a > CAD_MIN ? C.amber : C.back;

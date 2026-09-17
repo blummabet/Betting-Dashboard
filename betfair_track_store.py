@@ -5,7 +5,8 @@ RESULTS_KEEP=8000 den Ledger deckelte — und weil ~1.300 Signale pro Tag abgere
 der Ledger damit exakt SECHS TAGE. Jeder Liga×Markt-Bucket kam deshalb nie über n≈24 hinaus, und
 das Lern-Board (ab n=15 dreht es Card-Signale um) entschied dauerhaft auf einer Wochenstichprobe.
 
-Der Deckel muss also hoch. Nur: die Datei wird alle 10 Minuten committet, und .git steht bereits
+Der Deckel muss also hoch. Nur: die Datei wird bei jedem Betfair-Lauf committet (Cron seit dem
+17.09.2026 `*/15`, gemessen 15,0 Min — vorher stand hier „alle 10 Minuten"), und .git steht bereits
 bei ~1 GB. Im alten Format (Liste von Dicts, 392 B/Zeile) wären 40.000 Zeilen 15,7 MB pro Commit —
 das erschlägt das Repo schneller, als die Historie nützt.
 

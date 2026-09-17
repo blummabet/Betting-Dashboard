@@ -88,6 +88,27 @@ MIN_ALTER_MIN = float(os.environ.get("RECONCILE_MIN_ALTER_MIN") or 15)
 #      keinen Verkaufs-Beleg, war die Buchung falsch — egal, wie lange sie her ist. Die alte
 #      Zwei-Minuten-Regel beschrieb den Tathergang vom 14.09., nicht die Fehlerklasse.
 MIN_FEHLT_MIN = float(os.environ.get("RECONCILE_MIN_FEHLT_MIN") or 60)
+# 🔴 17.09.2026 (Lucas: „der Betfair-Cron sollte alle 10 min, tut er aber nicht — falls das
+# irgendwo wichtig ist"). Es war hier wichtig, und schlimmer als gedacht: die Schranke oben stand
+# gestern mit der Begruendung da, sie verlange „bei Laeufen alle 15 Minuten vier aufeinander-
+# folgende Fehlanzeigen". Dieser Abgleich laeuft aber gar nicht im Betfair-Takt, sondern in
+# `manage-liga-poly.yml` — Cron `0,30 10-21` plus ein Lauf um 08:00, also alle 30 Minuten und
+# NUR zwischen 10 und 21 Uhr UTC.
+#
+# Damit reichten 60 Minuten tagsueber fuer zwei weitere Laeufe (gerade noch die Absicht), ueber
+# Nacht aber gar nicht: ein Marker vom 21:00-Lauf ist beim 08:00-Lauf elf Stunden alt, und die
+# Position waere auf EINE einzige neue Fehlanzeige hin geschlossen worden — genau das, was die
+# Schranke verhindern sollte.
+#
+# Eine Zeitspanne ist eben kein Ersatz fuers Zaehlen, wenn die Laeufe Luecken haben. Also beides:
+# die Luecke muss `MIN_FEHLT_MIN` ueberdauern UND in mindestens `MIN_FEHLT_LAEUFE` Laeufen
+# beobachtet worden sein.
+MIN_FEHLT_LAEUFE = int(os.environ.get("RECONCILE_MIN_FEHLT_LAEUFE") or 2)
+# Und die Beobachtungen muessen eine KETTE sein, keine zwei Punkte mit einer Nacht dazwischen:
+# reisst der Abstand zwischen zwei Fehlanzeigen weiter als das hier, faengt die Zaehlung von vorn
+# an. 150 Minuten deckt den weitesten regulaeren Abstand dieses Workflows ab (der 08:00-Lauf steht
+# allein, der naechste kommt um 10:00) und bricht die Kette ueber Nacht sicher.
+MAX_KETTE_MIN = float(os.environ.get("RECONCILE_MAX_KETTE_MIN") or 150)
 
 
 def _http_get(url: str):
@@ -260,16 +281,39 @@ def fehlt_lange_genug(bet: dict, now_iso: str) -> tuple:
     seit = bet.get("nichtGehaltenSeit")
     if not seit:
         bet["nichtGehaltenSeit"] = now_iso
+        bet["nichtGehaltenLaeufe"] = 1
+        bet["nichtGehaltenZuletzt"] = now_iso
         return (False, "zum ersten Mal nicht in den Positionen — ein Lauf ist kein Befund, "
                        "der naechste entscheidet")
+    # Kette gerissen? Dann ist die alte Fehlanzeige keine Beobachtung von JETZT mehr.
+    _lueck = _alter_min(bet.get("nichtGehaltenZuletzt") or seit, now_iso)
+    if _lueck is not None and _lueck > MAX_KETTE_MIN:
+        bet["nichtGehaltenSeit"] = now_iso
+        bet["nichtGehaltenLaeufe"] = 1
+        bet["nichtGehaltenZuletzt"] = now_iso
+        return (False, "zwischen den beiden Fehlanzeigen lagen %.0f Min ohne Lauf — die Kette "
+                       "faengt von vorn an" % _lueck)
+    try:
+        laeufe = int(bet.get("nichtGehaltenLaeufe") or 1) + 1
+    except (TypeError, ValueError):
+        laeufe = 2
+    bet["nichtGehaltenLaeufe"] = laeufe
+    bet["nichtGehaltenZuletzt"] = now_iso
     d = _alter_min(seit, now_iso)
     if d is None:
         # Unlesbarer Marker: neu setzen statt raten. Ein kaputter Zeitstempel darf keine
         # Schliessung ausloesen, aber auch nicht dauerhaft eine blockieren.
         bet["nichtGehaltenSeit"] = now_iso
+        bet["nichtGehaltenLaeufe"] = 1
+        bet["nichtGehaltenZuletzt"] = now_iso
         return (False, "Marker unlesbar — neu gesetzt")
     if d < MIN_FEHLT_MIN:
         return (False, "fehlt seit %.0f Min (noetig: %.0f)" % (d, MIN_FEHLT_MIN))
+    if laeufe < MIN_FEHLT_LAEUFE:
+        # Die Zeit allein reicht nicht: ueber Nacht laeuft dieser Abgleich elf Stunden gar nicht,
+        # und dann waere „60 Minuten alt" nach EINER einzigen neuen Fehlanzeige erfuellt.
+        return (False, "fehlt seit %.0f Min, aber erst in %d Lauf gesehen (noetig: %d)"
+                       % (d, laeufe, MIN_FEHLT_LAEUFE))
     return (True, "")
 
 
@@ -296,6 +340,8 @@ def zurueckholen(bets: list, held: dict, now_iso: str | None = None) -> list:
         bet["pnl"] = None
         bet["pnlSource"] = None
         bet.pop("nichtGehaltenSeit", None)
+        bet.pop("nichtGehaltenLaeufe", None)
+        bet.pop("nichtGehaltenZuletzt", None)
         bet["reopenedAt"] = now_iso
         bet["reopenGrund"] = ("als manuell geschlossen gebucht, aber ohne jeden Verkaufs-Beleg "
                               "— und die Wallet haelt den Token. Die Positions-API hatte ihn in "
@@ -331,6 +377,8 @@ def reconcile(bets: list, *, proxy: str, finished_keys: set | None = None,
             # Ohne dieses Loeschen summierte sich eine einzelne alte Fehlanzeige ueber Tage zu
             # einem „Befund", der nie einer war.
             bet.pop("nichtGehaltenSeit", None)
+            bet.pop("nichtGehaltenLaeufe", None)
+            bet.pop("nichtGehaltenZuletzt", None)
             continue   # noch gehalten → nichts tun
         # Ein Lauf ist eine Momentaufnahme. Erst wenn die Position ueber mehrere Laeufe fehlt,
         # ist das ein Befund — s. `fehlt_lange_genug` (Vorfall Brentford–Chelsea, 16.09.).

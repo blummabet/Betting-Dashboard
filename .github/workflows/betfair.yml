@@ -7,7 +7,23 @@ name: 🟡 Betfair Radar (Betwatch)
 # `git push` scheitert non-fast-forward. Darum vor jedem Push pullen (-X ours) und bis zu 5x retry.
 on:
   schedule:
-    - cron: '*/10 * * * *'
+    # 🔴 17.09.2026 (Lucas: „der Betfair-Cron sollte alle 10 min, tut er aber nicht, weil damals
+    # irgendwas nicht ging — in Wahrheit rennt er alle 15 min, falls das irgendwo wichtig ist").
+    #
+    # Es war wichtig. Nachgemessen an `health/betfair.json` (20 Laeufe, 02:05–06:35 UTC):
+    # 17 von 19 Abstaenden liegen bei exakt 15,0 Minuten. Zum Vergleich poly-global-scan
+    # (Cron `15,45`): gemessene 29,7 Minuten — der haelt seinen Takt also punktgenau.
+    # Der Job hat 29 Schritte und braucht laenger als sein eigenes Intervall; mit
+    # `cancel-in-progress: false` verschluckt jeder dritte Tick.
+    #
+    # Ein Cron, der etwas anderes behauptet als er liefert, ist nicht nur Kosmetik: die
+    # Schedule-Bilanz (`test_cron_schedule_hygiene`) rechnete diesen Workflow mit 144 Laeufen/Tag
+    # gegen einen Deckel von 540 — geliefert hat er 96. 48 Slots waren auf dem Papier belegt und
+    # in Wahrheit frei, und genau an diesem Deckel scheiterte am 03.09. der Wunsch nach einem
+    # eigenen Cron fuer den Stake-Sammler.
+    #
+    # Also sagt der Cron ab jetzt, was passiert. Am tatsaechlichen Takt aendert das nichts.
+    - cron: '*/15 * * * *'
   workflow_dispatch:
 
 permissions:
@@ -44,8 +60,14 @@ jobs:
       # 03.09.2026 — der Stake-Sammler reist hier mit, nicht mehr beim Poly-Live-Scan.
       # Grund: der erste echte Lauf zeigte, dass 50 Eintraege (Stakes Deckel) nur 12 Minuten
       # abdecken. Bei einem 15-Minuten-Takt fehlten damit rund 3 Minuten je Zyklus — und zwar
-      # genau dann, wenn viel los ist. Dieser Job laeuft */10, also mit 2 Minuten Ueberlappung.
-      # Reicht auch das nicht, sagt es der Sammler selbst: er misst die Luecke und schreibt sie
+      # genau dann, wenn viel los ist.
+      #
+      # 🔴 17.09.2026: hier stand „dieser Job laeuft */10, also mit 2 Minuten Ueberlappung".
+      # Der Cron sagte das, der Runner nicht — gemessen 15,0 Minuten (s. oben beim Schedule).
+      # Es gab also nie eine Ueberlappung, sondern im Schnitt eine Punktlandung und in
+      # Stosszeiten eine Luecke: 37,4 % der Laeufe, 855,8 Minuten blind seit dem 13.09.
+      # Deshalb faellt derselbe Sammler am Ende des Jobs ein ZWEITES Mal an (s. dort).
+      # Was dann noch fehlt, sagt der Sammler selbst: er misst die Luecke und schreibt sie
       # ins Ledger, statt sie als ruhigen Abend durchgehen zu lassen.
       - name: 🎰 Stake Highroller sammeln
         continue-on-error: true
@@ -74,8 +96,8 @@ jobs:
       #
       # Gestern eingehaengt in `stake-radar.yml`, und der Push ist nie gelaufen: dieser Workflow
       # hat NUR `workflow_dispatch`, keinen Schedule. Letzter Lauf war der 07.09., von Hand.
-      # Gesammelt wird Stake in DIESEM Job (*/10), und der Push gehoert dorthin, wo die Daten
-      # entstehen.
+      # Gesammelt wird Stake in DIESEM Job (Cron */15, gemessener Takt 15,0 Min), und der Push
+      # gehoert dorthin, wo die Daten entstehen.
       #
       # Exakt die Fehlerklasse, die in stake-radar.yml selbst dokumentiert steht („Rollout-Luecke
       # … der Code war da, der Produzent nicht neu gelaufen") — ich habe den Kommentar gelesen
@@ -190,6 +212,40 @@ jobs:
 
       - name: 📈 Public-Push-Auswertung (Treffer/ROI der Moneyflow-Signale)
         run: ${{ env.BETFAIR_PY }} betfair_public_eval.py
+        continue-on-error: true
+
+      # 🔴 17.09.2026 (Lucas, zu einem Fremd-Radar-Post aus der kasachischen Pervaya Liga:
+      # „sowas findest du nicht? Gab's nicht in unserem Feed?"). Gab es nicht — und der Grund war
+      # die Abdeckung, nicht die Schwelle:
+      #
+      #   · Stakes Feed gibt HOECHSTENS 50 Eintraege her (MAX_LIMIT; 51 liefert kommentarlos
+      #     null). Bei 2,4 Wetten/Minute sind das rund 21 Minuten Gedaechtnis.
+      #   · Dieser Job laeuft gemessen alle 15,0 Minuten (health/betfair.json).
+      #   · Ergebnis: in 138 von 369 Laeufen entstand trotzdem eine Luecke — 37,4 %, zusammen
+      #     855,8 Minuten blind seit dem 13.09., laengste Einzelluecke 24,3 Minuten. In
+      #     Stosszeiten ist das 50er-Fenster eben kuerzer als der Abstand zum naechsten Lauf.
+      #
+      # Ein eigener Cron fuer den Sammler waere der teure Weg (+144 Laeufe/Tag gegen einen
+      # Deckel von 540). Der billige: ihn ZWEIMAL je Lauf holen. Der erste Abruf steht ganz oben
+      # (Schritt 4), dieser hier am Ende — dazwischen liegen die ~12 Minuten, die der Job
+      # braucht. Aus einem Sample alle 15 Minuten werden damit zwei im Abstand von rund 12 und 3
+      # Minuten, ohne einen einzigen zusaetzlichen Schedule-Slot.
+      #
+      # Der Burst-Push laeuft gleich mit: sonst saehe der zweite Abruf zwar den Burst, wuerde ihn
+      # aber erst im naechsten Lauf melden — und die Altersgrenze (MAX_ALTER_MIN=30) ist bei
+      # einem 15-Minuten-Takt knapp genug. Der Deckel je Aufruf (4) bleibt, der Dedup ueber
+      # `stake_burst_seen.json` verhindert Wiederholungen aus dem ersten Abruf.
+      - name: 🎰 Stake Highroller nachfassen (zweites Sample, ~12 Min nach dem ersten)
+        env:
+          STAKE_MIN_USD: "1000"
+        run: ${{ env.BETFAIR_PY }} stake_highroller_fetch.py || echo "  ⚠️ Stake-Nachfass fehlgeschlagen"
+        continue-on-error: true
+
+      - name: ⚡ Stake-Bursts aus dem zweiten Sample
+        env:
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+        run: ${{ env.BETFAIR_PY }} stake_burst_push.py || echo "  ⚠️ Stake-Burst-Push (2) fehlgeschlagen"
         continue-on-error: true
 
       - name: Daten-Integritaet (Guard-Batterie, rein lesend)

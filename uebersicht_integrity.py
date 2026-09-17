@@ -789,6 +789,102 @@ def check_clv_urteil_passt_zur_zahl(ctx):
     return _c("CLV-Urteil passt zur CLV-Zahl", "error", fails)
 
 
+def check_takt_stimmt_mit_dem_cron(ctx):
+    """🔴 17.09.2026 (Lucas: „der Betfair-Cron sollte alle 10 min, tut er aber nicht, weil damals
+    irgendwas nicht ging — in Wahrheit rennt er alle 15 min, falls das irgendwo wichtig ist").
+
+    Es war an vier Stellen wichtig, und keine davon hat es gemerkt:
+      · `test_cron_schedule_hygiene` rechnete betfair.yml mit 144 Laeufen/Tag gegen einen Deckel
+        von 540 — geliefert hat er 96. 48 Slots waren auf dem Papier belegt und in Wahrheit frei.
+      · `stake_burst_push.MAX_ALTER_MIN` (30 Min) war mit „der Runner laeuft alle 10 Minuten"
+        begruendet — der Puffer ist in Wahrheit zwei Laeufe, nicht drei.
+      · `betfair_track_store` und `betfair_track_record` rechneten Commit-Groessen „alle 10 Min".
+      · `reconcile_poly_positions` begruendete seine 60-Minuten-Schranke mit einem 15-Minuten-Takt,
+        laeuft aber selbst alle 30 Minuten und nur zwischen 10 und 21 Uhr.
+
+    Ein behaupteter Takt, den niemand misst, wandert durch das ganze Repo. Der echte steht in
+    `health/<slug>.json`: jeder Lauf traegt sich dort ein.
+
+    ⚠️ Die gemessene Kadenz ist eine OBERGRENZE der Haeufigkeit, keine Zaehlung: der
+    Gesundheits-Eintrag wird am Ende des Laufs committet, und ein gescheiterter Push verliert ihn.
+    Deshalb `warn` und nicht `error` — und deshalb steht der Vorbehalt in der Meldung.
+    """
+    import re
+    fails = []
+    basis = BASE
+    wf_dir = basis / ".github" / "workflows"
+    if not wf_dir.is_dir():
+        return _c("Takt: Cron gegen gemessene Laeufe", "warn", [], "keine Workflows gefunden")
+    slug2wf = {}
+    for f in sorted(wf_dir.glob("*.y*ml")):
+        t = f.read_text(encoding="utf-8", errors="ignore")
+        for m in re.finditer(r"--slug\s+([a-z0-9\-]+)", t):
+            slug2wf[m.group(1)] = (f.name, t)
+    for f in sorted((basis / "health").glob("*.json")) if (basis / "health").is_dir() else []:
+        slug = f.stem
+        wf = slug2wf.get(slug)
+        if not wf:
+            continue
+        crons = re.findall(r"^\s*-\s*cron:\s*['\"]([^'\"]+)['\"]", wf[1], re.M)
+        # Nur regelmaessige Crons: genau einer, ohne Stunden-/Tagesfenster. Bei einem Fenster-Cron
+        # („*/15 9-21") ist der Abstand ueber Nacht per Konstruktion riesig — daraus einen
+        # Ausfall zu lesen waere derselbe Fehler, den dieser Guard fangen soll.
+        if len(crons) != 1 or not re.match(r"^\S+\s+\*\s+\*\s+\*\s+\*$", crons[0]):
+            continue
+        soll = _cron_minuten(crons[0])
+        ist = _health_abstand(f)
+        if soll is None or ist is None:
+            continue
+        if ist > soll * 1.4:
+            fails.append("%s: Cron sagt alle %.0f Min, gemessen alle %.0f Min (%s) — die "
+                         "Schedule-Bilanz rechnet mit %.0f Laeufen/Tag, geliefert werden eher %.0f. "
+                         "Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist "
+                         "also eine Obergrenze der Haeufigkeit."
+                         % (wf[0], soll, ist, slug, 1440.0 / soll, 1440.0 / ist))
+    return _c("Takt: Cron gegen gemessene Laeufe", "warn", fails)
+
+
+def _cron_minuten(cron: str):
+    """Abstand zweier Laeufe in Minuten fuer einen einfachen Minuten-Cron. REIN."""
+    import re
+    teil = str(cron).split()
+    if len(teil) != 5:
+        return None
+    m = teil[0]
+    if m.startswith("*/"):
+        try:
+            return float(m[2:])
+        except ValueError:
+            return None
+    if re.match(r"^\d+(,\d+)*$", m):
+        werte = sorted(int(x) for x in m.split(","))
+        if len(werte) == 1:
+            return 60.0
+        # gleichmaessig verteilt? Dann ist der Abstand aussagekraeftig, sonst nicht.
+        d = {werte[i + 1] - werte[i] for i in range(len(werte) - 1)}
+        d.add(60 - werte[-1] + werte[0])
+        return float(next(iter(d))) if len(d) == 1 else None
+    return None
+
+
+def _health_abstand(pfad):
+    """Das 25-%-Quantil der Laufabstaende aus einer Gesundheitsdatei. REIN(-genug: liest eine
+    Datei). Das Quantil statt des Mittels, damit einzelne Ausfaelle den Wert nicht tragen."""
+    try:
+        d = json.loads(pfad.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    ts = sorted(str(r.get("ts")) for r in (d.get("runs") or []) if r.get("ts"))
+    if len(ts) < 8:
+        return None
+    try:
+        punkte = [datetime.fromisoformat(x.replace("Z", "+00:00")) for x in ts]
+    except ValueError:
+        return None
+    ab = sorted((punkte[i + 1] - punkte[i]).total_seconds() / 60.0 for i in range(len(punkte) - 1))
+    return ab[len(ab) // 4]
+
+
 UEBERSICHT_CHECKS = [
     check_serien_rangfolge,
     check_freigabe_grund,
@@ -810,6 +906,7 @@ UEBERSICHT_CHECKS = [
     check_signal_bilanz,
     check_fade_kontrolle,
     check_clv_urteil_passt_zur_zahl,
+    check_takt_stimmt_mit_dem_cron,
 ]
 
 

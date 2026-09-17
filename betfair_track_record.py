@@ -93,7 +93,7 @@ RESULTS_KEEP = int(os.environ.get("BF_RESULTS_KEEP") or 40000)   # Ledger-Kappun
 # SECHS Tage; jeder Liga×Markt-Bucket war damit auf n≈24 gedeckelt, waehrend das Lern-Board ab
 # n=15 Card-Signale umdreht. 40.000 sind ~6 Wochen. Moeglich wird das nur durch das kompakte
 # Format in betfair_track_store.py (105 statt 392 B/Zeile) — im alten Format waeren das 15,7 MB
-# alle 10 Minuten ins Git.
+# je Betfair-Lauf ins Git, also alle 15 Minuten (gemessener Takt, s. betfair.yml).
 PENDING_TTL_H = 60        # pending ohne Settlement nach so vielen h nach Anpfiff verwerfen
 RESULTS_MIN_H = 3.0       # Anpfiff so lange her → Spiel sicher vorbei → autoritatives Ergebnis (POST /results) abfragbar
 CORRECTION_WINDOW_H = 30  # so lange nach dem Settle darf /results eine per Live-Feed abgerechnete Zeile noch

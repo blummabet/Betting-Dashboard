@@ -345,7 +345,7 @@ class TestRollout(unittest.TestCase):
     Antwort: ja — 8 bis 21 am Tag, gemessen ueber sechs Tage Ledger. Gekommen ist keiner, weil
     ich den Push in `stake-radar.yml` eingehaengt habe. **Dieser Workflow hat nur
     `workflow_dispatch`, keinen Schedule** — letzter Lauf 07.09., von Hand. Gesammelt wird Stake
-    in `betfair.yml` (*/10), und dorthin gehoert ein Push, der auf einen frischen Feed reagiert.
+    in `betfair.yml` (*/15, gemessener Takt 15,0 Min), und dorthin gehoert ein Push, der auf einen frischen Feed reagiert.
 
     Exakt die Fehlerklasse, die in stake-radar.yml SELBST dokumentiert steht (07.09.:
     „Rollout-Luecke … der Code war da, der Produzent nicht neu gelaufen"). Ich habe den Kommentar

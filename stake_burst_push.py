@@ -128,8 +128,16 @@ BEOBACHTEN_AB_N = int(os.environ.get("STAKE_BURST_BEOBACHTEN_AB_N") or 3)
 # Altersgrenze. Sie fand Bursts irgendwo im Fenster, auch zwoelf Stunden alte.
 #
 # Genau dieselbe Fehlerklasse wie beim Betfair-Halbzeit-Push einen Tag vorher („die Tore alle
-# schon ewig her"): die Regel prueft den Zustand, aber nicht, WANN er galt. Der Runner laeuft
-# alle 10 Minuten, 30 Minuten sind also reichlich Puffer fuer einen verzoegerten Lauf.
+# schon ewig her"): die Regel prueft den Zustand, aber nicht, WANN er galt.
+#
+# 🔴 17.09.2026 (Lucas: „der Betfair-Cron sollte alle 10 min, tut er aber nicht — in Wahrheit
+# rennt er alle 15 min"). Hier stand „der Runner laeuft alle 10 Minuten, 30 Minuten sind also
+# reichlich Puffer". Gemessen an `health/betfair.json`: 17 von 19 Abstaenden exakt 15,0 Minuten.
+# Der Puffer ist also nicht das Dreifache eines Laufs, sondern das Doppelte — und weil der
+# Stake-Feed nur 50 Eintraege (~21 Min) im Gedaechtnis hat, kann ein Burst beim ersten Sehen
+# schon 15 Minuten alt sein. 30 bleibt richtig, aber knapp: der naechste Lauf ist die letzte
+# Chance, nicht die zweitletzte. Wer hier schraubt, muss den echten Takt kennen, nicht den
+# im Cron behaupteten — deshalb steht die Messung jetzt dabei.
 MAX_ALTER_MIN = float(os.environ.get("STAKE_BURST_MAX_ALTER_MIN") or 30)
 LEDGER_KEEP = 800
 SEEN_KEEP_H = 48.0
