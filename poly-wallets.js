@@ -3636,8 +3636,23 @@ function _pwTermIsPublic(r){
 // Deshalb: die Plays, die alles ausser der Wallet erfuellen, laufen als SCHATTEN mit. Sie werden
 // nicht gesendet und nicht angezeigt — nur mitgeschrieben, damit der Vergleich in ein paar
 // Wochen dasteht statt weiter zu fehlen.
+// 🔴 17.09.2026 (Lucas: „schaut ok aus oder?", zur Kontrollgruppen-Kachel).
+//
+// Sah ok aus und war es nicht. Die Kachel sagt „laeuft nur mit, wird NIE gesendet" — von 124
+// abgerechneten Kontroll-Plays waren **12 trotzdem gesendet**. Grund ist die E-Sport-Ausnahme
+// vom 07.09.: `_pwTermIsPublic` laesst E-Sport ab `PW_ESPORT_FREI_AB_PREIS` auch OHNE
+// Wallet-Nachweis durch, und die Kontrollgruppe fragte nur nach `!_pwTermWalletOk`. Damit
+// erfuellte derselbe Play beide Definitionen und zaehlte auf beiden Seiten des Vergleichs.
+//
+// Die zwoelf sind nicht irgendwelche: 11 von 12 gewonnen, ROI +33,2 %. Sie zogen die Kontrolle
+// von +4,5 % auf +7,3 % — und damit kippte die Aussage der Kachel. Bereinigt liegt die Kontrolle
+// 1,2 pp UNTER dem Wallet-Tor statt 1,5 pp darueber. Beides ist im Band nicht entschieden, aber
+// der Satz „das Wallet-Tor traegt nicht" stand auf einer Kontrolle, die das Tor mitzaehlte.
+//
+// Eine Kontrollgruppe, die Mitglieder der Behandlungsgruppe enthaelt, misst den Unterschied
+// gegen sich selbst. Sie ist deshalb ab jetzt ausdruecklich die Menge der NICHT gesendeten.
 function _pwTermIsPublicOhneWallet(r){
-  return _pwTermPublicRest(r) && !_pwTermWalletOk(r);
+  return _pwTermPublicRest(r) && !_pwTermWalletOk(r) && !_pwTermIsPublic(r);
 }
 function _pwPublicOhneWalletPlays(){
   return _pwTopPlays(0,false,false).filter(r=> !_pwBetBlocked(r) && _pwTermIsPublicOhneWallet(r));

@@ -352,7 +352,18 @@ def aggregate(settled, blocked=()):
     # Dieselbe Trennung fuer die Vergleichsgruppe — sonst stuenden auf den beiden Seiten des
     # Vergleichs zwei verschieden zusammengesetzte Mengen, und der Unterschied waere teils
     # Sportart statt Wallet-Tor.
-    pub_ow = [r for r in settled if r.get("ohneWallet") and _row_cat(r) not in _bl0]
+    # 🔴 17.09.2026 (Lucas: „schaut ok aus oder?"). Hier stand nur `r.get("ohneWallet")` — und
+    # damit landeten 12 von 124 Kontroll-Plays in BEIDEN Armen: die E-Sport-Ausnahme vom 07.09.
+    # sendet E-Sport ab einem Preis auch ohne Wallet-Nachweis, der Kontroll-Marker fragte aber
+    # nur nach der fehlenden Wallet. Die zwoelf waren 11-mal Gewinn (ROI +33,2 %) und hoben die
+    # Kontrolle von +4,5 % auf +7,3 % — genau die Zahl, aus der die Kachel „das Wallet-Tor
+    # traegt nicht" ableitete. Bereinigt dreht das Vorzeichen (−1,2 pp statt +1,5 pp).
+    #
+    # Der Marker wird im Frontend seither richtig gesetzt; diese Zeile erzwingt es trotzdem hier,
+    # weil das Buch anhaengt und die alten Zeilen ihre beiden Flaggen behalten. Eine Kontroll-
+    # gruppe, die Mitglieder der Behandlungsgruppe enthaelt, misst gegen sich selbst.
+    pub_ow = [r for r in settled
+              if r.get("ohneWallet") and not r.get("public") and _row_cat(r) not in _bl0]
     # 24.08.2026 (Lucas): die Gesamt-Kennzahl mischte Sportarten, auf die nie gesetzt wird, mit
     # denen, auf die gesetzt wird — dadurch sah das Depot schlechter aus als das, was man wirklich
     # spielt. `all` bleibt unverändert (Kalibrierungs-Basis im Frontend hängt daran); `bettable`

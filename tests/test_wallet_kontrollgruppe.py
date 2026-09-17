@@ -109,3 +109,49 @@ class TestEmitterVertrag(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestDieKontrolleEnthaeltNichtDieBehandlung(unittest.TestCase):
+    """🔴 17.09.2026 (Lucas: „schaut ok aus oder?", zur Kontrollgruppen-Kachel).
+
+    Sah ok aus und war es nicht. Die Kachel sagt „laeuft nur mit, wird NIE gesendet" — von 124
+    abgerechneten Kontroll-Plays waren 12 trotzdem gesendet. Die E-Sport-Ausnahme vom 07.09.
+    laesst E-Sport ab einem Preis auch OHNE Wallet-Nachweis durchs Public-Tor; die
+    Kontrollgruppe fragte aber nur nach der fehlenden Wallet. Derselbe Play erfuellte damit
+    beide Definitionen.
+
+    Die zwoelf waren nicht irgendwelche: 11 Gewinne, ROI +33,2 %. Sie hoben die Kontrolle von
+    +4,5 % auf +7,3 % — und daraus las die Kachel „das Wallet-Tor traegt nicht: ohne Nachweis
+    +1,5 pp hoeher". Bereinigt liegt die Kontrolle 1,2 pp DARUNTER. Entschieden ist beides
+    nicht, aber das Vorzeichen kam aus der Verunreinigung.
+
+    Der bestehende Test `test_public_und_kontrollgruppe_sind_disjunkt` hat das nicht gefangen:
+    er fuetterte Plays, die je nur EINE Flagge tragen, und prueft damit die Fixture, nicht die
+    Regel. Ein Guard, der seinen eigenen Fall nicht provoziert, ist Dekoration.
+    """
+
+    def test_ein_play_mit_beiden_flaggen_zaehlt_nur_als_behandlung(self):
+        rows = ([_play(1.0, public=True) for _ in range(10)]
+                + [_play(-1.0, ohne=True) for _ in range(7)]
+                + [_play(9.0, public=True, ohne=True) for _ in range(3)])
+        a = T.aggregate(rows)
+        self.assertEqual(a["public"]["n"], 13, "gesendet ist gesendet")
+        self.assertEqual(a["publicOhneWallet"]["n"], 7,
+                         "die Kontrolle darf keinen gesendeten Play enthalten")
+
+    def test_die_verunreinigung_wuerde_das_vorzeichen_drehen(self):
+        """Der Vorfall in Zahlen: drei starke Gewinner in beiden Armen drehen den Vergleich."""
+        rows = ([_play(0.5, public=True) for _ in range(20)]
+                + [_play(-1.0, ohne=True) for _ in range(10)]
+                + [_play(9.0, public=True, ohne=True) for _ in range(3)])
+        a = T.aggregate(rows)
+        self.assertLess(a["publicOhneWallet"]["roi"], a["public"]["roi"],
+                        "mit der Verunreinigung saehe die Kontrolle besser aus als die Behandlung")
+
+    def test_das_frontend_schliesst_die_gesendeten_aus(self):
+        """Die Regel muss auch dort stehen, wo der Marker entsteht — sonst repariert die
+        Python-Seite ewig nach, was das Gate falsch schreibt."""
+        from pathlib import Path
+        js = (Path(__file__).resolve().parents[1] / "poly-wallets.js").read_text(encoding="utf-8")
+        self.assertIn("return _pwTermPublicRest(r) && !_pwTermWalletOk(r) && !_pwTermIsPublic(r);",
+                      js, "die Kontrollgruppe muss die gesendeten ausschliessen")
