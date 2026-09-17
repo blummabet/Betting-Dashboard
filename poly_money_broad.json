@@ -1,33 +1,33 @@
 {
- "n": 428,
+ "n": 431,
  "minOdds": 1.35,
- "moneyHitRate": 0.379,
- "priceHitRate": 0.404,
- "brierMoney": 0.9067,
- "brierPrice": 0.6904,
+ "moneyHitRate": 0.381,
+ "priceHitRate": 0.406,
+ "brierMoney": 0.9026,
+ "brierPrice": 0.6889,
  "disagree": {
-  "n": 117,
+  "n": 118,
   "moneyWon": 16,
   "priceWon": 27,
-  "neither": 74
+  "neither": 75
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
  "byLeague": [
+  {
+   "league": "LA-LIGA",
+   "n": 53,
+   "moneyHitRate": 0.434,
+   "brierMoney": 0.8576,
+   "brierPrice": 0.737,
+   "verdict": "preis_besser"
+  },
   {
    "league": "EPL",
    "n": 34,
    "moneyHitRate": 0.206,
    "brierMoney": 0.971,
    "brierPrice": 0.8343,
-   "verdict": "preis_besser"
-  },
-  {
-   "league": "LA-LIGA",
-   "n": 50,
-   "moneyHitRate": 0.42,
-   "brierMoney": 0.8897,
-   "brierPrice": 0.7522,
    "verdict": "preis_besser"
   },
   {
@@ -80,13 +80,25 @@
   }
  ],
  "guete": {
-  "belastbar": 428,
-  "preis_echo": 221,
+  "belastbar": 431,
+  "preis_echo": 219,
   "abgeschnitten": 58,
-  "unbekannt": 310,
+  "unbekannt": 309,
   "leer": 0
  },
  "rows": [
+  {
+   "key": "lal-bet-get-2026-09-17",
+   "league": "LA-LIGA",
+   "winner": "Real Betis Balompié",
+   "moneyFav": "Real Betis Balompié",
+   "priceFav": "Real Betis Balompié",
+   "moneyShare": 0.982,
+   "priceProb": 0.658,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 5171631
+  },
   {
    "key": "lal-ala-val-2026-09-15",
    "league": "LA-LIGA",
@@ -284,7 +296,7 @@
    "league": "EPL",
    "winner": "Draw (Nottingham Forest FC vs. Tottenham Hotspur FC)",
    "moneyFav": "Tottenham Hotspur FC",
-   "priceFav": "Tottenham Hotspur FC",
+   "priceFav": "Nottingham Forest FC",
    "moneyShare": 0.584,
    "priceProb": 0.357,
    "moneyOK": false,
@@ -554,21 +566,9 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 313422
-  },
-  {
-   "key": "bra-cru-cap-2026-09-06",
-   "league": "BRAZIL-SERIE-A",
-   "winner": "Cruzeiro EC",
-   "moneyFav": "Cruzeiro EC",
-   "priceFav": "Cruzeiro EC",
-   "moneyShare": 0.991,
-   "priceProb": 0.558,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 307187
   }
  ],
- "generatedAt": "2026-09-17T19:19:58.730901+00:00",
+ "generatedAt": "2026-09-17T19:26:11.789416+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -581,7 +581,7 @@
   "soccer": 800,
   "tennis": 496,
   "ucl": 417,
-  "la-liga": 547,
+  "la-liga": 536,
   "bundesliga": 484,
   "serie-a": 51,
   "ligue-1": 513,
@@ -661,14 +661,14 @@
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 2122,
-   "usd": 30286987,
-   "beispiel": "fifwc-esp-arg-2026-07-19-exact-score"
+   "n": 2099,
+   "usd": 30297784,
+   "beispiel": "fifwc-prt-cdr-2026-06-17-more-markets"
   },
   "nba": {
-   "n": 459,
-   "usd": 8531654,
-   "beispiel": "nba-2027-champion"
+   "n": 468,
+   "usd": 8637042,
+   "beispiel": "nba-phi-nyk-2026-01-03"
   },
   "balance": {
    "n": 2,
@@ -685,6 +685,11 @@
    "usd": 903771,
    "beispiel": "ecs-ars-mci-2026-08-16-more-markets"
   },
+  "presidential": {
+   "n": 9,
+   "usd": 507465,
+   "beispiel": "presidential-election-winner-2028"
+  },
   "world": {
    "n": 49,
    "usd": 482079,
@@ -695,25 +700,35 @@
    "usd": 329690,
    "beispiel": "euroleague-monaco-milano-2026-03-24"
   },
-  "2026": {
-   "n": 60,
-   "usd": 294553,
-   "beispiel": "2026-f1-drivers-champion"
+  "efa": {
+   "n": 17,
+   "usd": 293571,
+   "beispiel": "efa-wre-cfc-2026-03-07"
   },
-  "will": {
-   "n": 14,
-   "usd": 279806,
-   "beispiel": "will-the-us-confirm-that-aliens-exist-before-2027"
+  "2026": {
+   "n": 58,
+   "usd": 290843,
+   "beispiel": "2026-mens-australian-open-winner"
   },
   "fif": {
-   "n": 61,
-   "usd": 257096,
+   "n": 64,
+   "usd": 286242,
    "beispiel": "fif-prt-nga-2026-06-10"
   },
-  "fed": {
-   "n": 18,
-   "usd": 196149,
-   "beispiel": "fed-decision-in-october-20260617190323537"
+  "will": {
+   "n": 12,
+   "usd": 270452,
+   "beispiel": "will-the-us-invade-iran-before-2027"
+  },
+  "uef": {
+   "n": 13,
+   "usd": 260843,
+   "beispiel": "uef-kvx-tur-2026-03-31"
+  },
+  "cdr": {
+   "n": 7,
+   "usd": 217899,
+   "beispiel": "cdr-atm-fcb-2026-02-12"
   },
   "acn": {
    "n": 9,
@@ -721,24 +736,9 @@
    "beispiel": "acn-sen-bot-2025-12-23"
   },
   "clf": {
-   "n": 33,
-   "usd": 156665,
+   "n": 32,
+   "usd": 152550,
    "beispiel": "clf-eve-new-2026-08-12-exact-score"
-  },
-  "efa": {
-   "n": 7,
-   "usd": 141857,
-   "beispiel": "efa-wre-cfc-2026-03-07"
-  },
-  "us": {
-   "n": 7,
-   "usd": 137975,
-   "beispiel": "us-announces-end-of-iranian-blockade-byptptpt-20260713152715080"
-  },
-  "cdr": {
-   "n": 2,
-   "usd": 125610,
-   "beispiel": "cdr-atm-fcb-2026-02-12"
   },
   "republican": {
    "n": 7,
@@ -747,18 +747,18 @@
   },
   "btc": {
    "n": 30,
-   "usd": 115122,
-   "beispiel": "btc-updown-5m-1780604700"
+   "usd": 113370,
+   "beispiel": "btc-updown-5m-1784322000"
   },
   "ballon": {
-   "n": 7,
-   "usd": 113200,
+   "n": 5,
+   "usd": 104252,
    "beispiel": "ballon-dor-winner-2026"
   },
-  "pro": {
-   "n": 23,
-   "usd": 101780,
-   "beispiel": "pro-football-championship-player-to-cry-during-national-anthem"
+  "us": {
+   "n": 3,
+   "usd": 103583,
+   "beispiel": "us-strike-on-cuba-by"
   }
  }
 }
