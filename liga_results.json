@@ -100,15 +100,15 @@
       "polyClose": null,
       "polyClvPP": null,
       "isSteamLag": false,
-      "result": "PENDING",
-      "pnl": 0.0,
+      "result": "SOLD",
+      "pnl": -1.14,
       "score": null,
       "slug": "lal-sev-bar-2026-09-19-more-markets",
       "source": "auto",
       "placedAt": "2026-09-15T13:20:56.005706+00:00",
-      "resolvedAt": null,
-      "sellPrice": null,
-      "sellReason": null,
+      "resolvedAt": "2026-09-17T21:59:59.937371+00:00",
+      "sellPrice": 0.23,
+      "sellReason": "Age-Loss: Position 57h alt, -20.7% im Minus, noch 45.0h bis KO — Spread frisst Buchwert",
       "competition": "laliga",
       "competitionLabel": "La Liga"
     },
@@ -139,36 +139,70 @@
       "sellReason": "manuell auf Polymarket geschlossen",
       "competition": "bundesliga",
       "competitionLabel": "Bundesliga"
+    },
+    {
+      "betKey": "157-182-Under 2.5 Tore",
+      "home": "Bayern München",
+      "away": "Union Berlin",
+      "homeId": "157",
+      "awayId": "182",
+      "market": "Under 2.5 Tore",
+      "stake": 5.5,
+      "polyPrice": 0.13,
+      "polyOdds": 7.692,
+      "pinnFair": 0.1643,
+      "pinnClose": null,
+      "clvPP": null,
+      "polyClose": null,
+      "polyClvPP": null,
+      "isSteamLag": false,
+      "result": "PENDING",
+      "pnl": 0.0,
+      "score": null,
+      "slug": "bun-bay-uni-2026-09-18-more-markets",
+      "source": "auto",
+      "placedAt": "2026-09-17T21:59:58.459766+00:00",
+      "resolvedAt": null,
+      "sellPrice": null,
+      "sellReason": null,
+      "competition": "bundesliga",
+      "competitionLabel": "Bundesliga"
     }
   ],
   "summary": {
-    "totalBets": 5,
-    "resolved": 4,
+    "totalBets": 6,
+    "resolved": 5,
     "pending": 1,
-    "sold": 4,
+    "sold": 5,
     "wins": 0,
-    "losses": 0,
+    "losses": 1,
     "voids": 0,
-    "winRate": null,
-    "totalStaked": 27.5,
-    "totalPnl": 0.0,
-    "roi": 0.0,
+    "winRate": 0.0,
+    "totalStaked": 33.0,
+    "totalPnl": -1.14,
+    "roi": -3.45,
     "avgCLV": -7.21,
-    "sharpeEst": null,
+    "sharpeEst": -0.5,
     "postmortem": {
-      "closedN": 4,
-      "realizedPnl": 0.0,
+      "closedN": 5,
+      "realizedPnl": -1.14,
       "avgClv": -7.21,
-      "clvCoverage": "2/4",
+      "clvCoverage": "2/5",
       "byMarket": {
         "O/U": {
-          "n": 4,
-          "pnl": 0.0,
+          "n": 5,
+          "pnl": -1.14,
           "avgClv": -7.21,
-          "clvCoverage": "2/4"
+          "clvCoverage": "2/5"
         }
       },
       "byExit": {
+        "Age-Loss": {
+          "n": 1,
+          "pnl": -1.14,
+          "avgClv": null,
+          "clvCoverage": "0/1"
+        },
         "Sell-sonstig": {
           "n": 4,
           "pnl": 0.0,
@@ -197,12 +231,12 @@
         },
         "laliga": {
           "label": "La Liga",
-          "n": 1,
-          "pnl": 0.0,
-          "staked": 5.5,
-          "roi": 0.0,
+          "n": 2,
+          "pnl": -1.14,
+          "staked": 11.0,
+          "roi": -10.36,
           "avgClv": -6.36,
-          "clvCoverage": "1/1"
+          "clvCoverage": "1/2"
         }
       },
       "heldToClose": {
@@ -213,5 +247,5 @@
       }
     }
   },
-  "updatedAt": "2026-09-17T18:54:04.389302+00:00"
+  "updatedAt": "2026-09-17T22:00:00.755708+00:00"
 }
