@@ -290,6 +290,62 @@ def track_record(scores: dict, wallet: str):
     return f"bisher <b>{wins}/{n} richtig</b> ({pct}%)"
 
 
+# Welches Fenster die Karte zeigt. Die Zahl steht EINMAL hier; gerechnet wird sie in
+# `poly_money_broad.zeitraum_bilanz` und kommt als fertiges Feld `fenster7` / `fenster30` an.
+FENSTER_TAGE = 7
+
+
+def _fenster(s) -> str:
+    """Was die Wallet im laufenden Fenster geliefert hat — vor der Lebensbilanz.
+
+    18.09.2026 (Lucas: „koennen wir da noch vor lifetime stats die weekly oder 30 Tage
+    hinzufuegen, und beides fett formatieren"). Die Karte trug zwei Zahlen, die beide ALLES
+    mitschleppen: den kumulativen Record seit Trackingbeginn und die Lebensbilanz ueber alle
+    Polymarket-Maerkte. Was die Wallet gerade liefert, stand nirgends — dabei war das die Frage
+    („der war die Woche nicht so gut, aber in dem Monat 600K vorn").
+
+    Zwei Dinge, die diese Zeile NICHT tut:
+    * Sie rechnet nichts. Der Produzent schreibt `fenster7`; hier wird gelesen. Eine zweite
+      Rechnung neben der ersten ist in dieser Flaeche schon einmal teuer geworden.
+    * Sie urteilt nicht. Gemessen am 17.09. sagt der kumulative Schnitt die naechsten
+      Aufloesungen BESSER voraus als jedes Fenster (1,06 gegen 0,74 pp). Das Fenster ist also
+      Auskunft, kein Beleg — und an keiner Sperre angeschlossen.
+
+    Und es sagt, wie weit es reicht: das Tages-Gedaechtnis ist am 17.09.2026 angelegt worden.
+    Ein „7-Tage-Fenster", das zwei Tage kennt, muss das dranschreiben, sonst liest es sich in
+    vier Wochen genauso wie heute.
+    """
+    f = s.get("fenster%d" % FENSTER_TAGE) if isinstance(s, dict) else None
+    if not isinstance(f, dict):
+        return ""
+    n = f.get("n") or 0
+    wins = f.get("wins")
+    if not n or not isinstance(wins, int):
+        return ""
+    # 🔴 Gemessen am 18.09. ueber die 165 Wallets mit Tages-Gedaechtnis: der MEDIAN hat im
+    # 7-Tage-Fenster genau EINE Aufloesung, nur 12 haben zehn oder mehr. Ohne diese Schranke
+    # stuende auf der Mehrzahl der Karten „7 Tage: 1/1 richtig (100 %)" — eine Quote aus einer
+    # einzigen Wette, direkt neben einer aus 366. Das ist keine Auskunft, das ist Rauschen in
+    # Fettschrift. Dieselbe Schwelle wie fuer den kumulativen Record (MIN_TR), nicht eine neue.
+    if n < MIN_TR:
+        return ""
+    clv = f.get("clv")
+    txt = " · <b>%d Tage: %d/%d richtig (%d%%)" % (FENSTER_TAGE, wins, n, round(wins / n * 100))
+    if isinstance(clv, (int, float)):
+        txt += " · %+.1fpp CLV" % clv
+    txt += "</b>"
+    seit, von = str(f.get("seit") or ""), str(f.get("von") or "")
+    if seit and von and seit > von:
+        txt += " <i>(Gedaechtnis erst seit %s)</i>" % _tag_kurz(seit)
+    return txt
+
+
+def _tag_kurz(iso: str) -> str:
+    """2026-09-17 -> 17.09. Faellt auf die Eingabe zurueck, statt etwas zu erfinden."""
+    t = str(iso or "")
+    return "%s.%s." % (t[8:10], t[5:7]) if len(t) >= 10 and t[4] == "-" else t
+
+
 def _lifetime(s) -> str:
     """Die Lebensbilanz der Wallet auf Polymarket, als Zusatz — nie als Rang.
 
@@ -307,7 +363,7 @@ def _lifetime(s) -> str:
     pnl = s.get("pnl") if isinstance(s, dict) else None
     if not isinstance(pnl, (int, float)):
         return ""
-    return " · %s%s lifetime" % ("+" if pnl >= 0 else "−", _usd(abs(pnl)))
+    return " · <b>%s%s lifetime</b>" % ("+" if pnl >= 0 else "−", _usd(abs(pnl)))
 
 
 def _wallet_line(scores: dict, wallet) -> str:
@@ -321,12 +377,14 @@ def _wallet_line(scores: dict, wallet) -> str:
         wins = s.get("wins") or 0
         _clv = (s.get("clvSumPP") or 0) / n
         return (f"Wallet {link} · ✅ <b>bewiesene Wallet</b> "
-                f"({wins}/{n} richtig, {round(wins/n*100)}% · {_clv:+.1f}pp CLV){_lifetime(s)}")
+                f"({wins}/{n} richtig, {round(wins/n*100)}% · {_clv:+.1f}pp CLV)"
+                f"{_fenster(s)}{_lifetime(s)}")
     # 06.08.2026 (Lucas: gleiche Loesung wie Public): rohe Bilanz ab n>=MIN_TR neutral zeigen, statt sie
     # hinter „im Aufbau" zu verstecken. Nur wirklich duenn (n<MIN_TR) oder Verlierer bleibt „im Aufbau".
     if isinstance(s, dict) and n >= MIN_TR and not _is_confirmed_loser(s):
         wins = s.get("wins") or 0
-        return f"Wallet {link} · 📊 <b>Bilanz</b> {wins}/{n} ({round(wins/n*100)}%){_lifetime(s)}"
+        return (f"Wallet {link} · 📊 <b>Bilanz</b> {wins}/{n} ({round(wins/n*100)}%)"
+                f"{_fenster(s)}{_lifetime(s)}")
     return f"Wallet {link} · <i>Track-Record noch im Aufbau</i>"
 
 

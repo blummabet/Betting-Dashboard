@@ -206,8 +206,70 @@ def test_das_gedaechtnis_haengt_an_keiner_sperre():
     Schnitt. Wer es trotzdem als Gate anschliesst, soll hier anschlagen und die Messung
     wiederholen muessen."""
     import subprocess
-    roots = subprocess.run(["grep", "-rn", "zeitraum_bilanz", "--include=*.py", "--include=*.js",
+    # 18.09.2026: gesucht wird der AUFRUF, nicht die Erwaehnung. Der Test schlug an, weil in
+    # `poly_whale_watch.py` ein Kommentar erklaerte, woher das Feld kommt — und ein Verbot, das
+    # auch das Erklaeren verbietet, erzieht dazu, nichts mehr zu erklaeren. Verboten bleibt, was
+    # gemeint war: eine zweite Rechnung neben der ersten.
+    roots = subprocess.run(["grep", "-rn", "zeitraum_bilanz(", "--include=*.py", "--include=*.js",
                             str(BASE)], capture_output=True, text=True).stdout.splitlines()
     fremd = [z for z in roots
              if "poly_money_broad.py" not in z and "test_wallet_gedaechtnis" not in z]
-    assert not fremd, "das Tages-Gedaechtnis urteilt woanders mit: %s" % fremd
+    assert not fremd, "das Tages-Gedaechtnis rechnet woanders mit: %s" % fremd
+
+    # Und die fertigen Felder duerfen im Tor nicht vorkommen. Die Karte darf sie zeigen; was
+    # entscheidet, wer ueberhaupt gesendet wird, ist `sharp_gate` — dort haben sie nichts zu
+    # suchen, solange das Fenster schlechter vorhersagt als der kumulative Schnitt.
+    tor = subprocess.run(["grep", "-rEn", "fenster7|fenster30", str(BASE / "sharp_gate.py")],
+                         capture_output=True, text=True).stdout.strip()
+    assert not tor, "das Fenster steht im Tor: %s" % tor
+
+
+# ── 18.09.2026: das Fenster darf gezeigt werden — aber nur so weit, wie es reicht ────────────
+# Lucas: „koennen wir da noch vor lifetime stats die weekly oder 30 Tage hinzufuegen".
+# Das Tages-Gedaechtnis ist am 17.09.2026 angelegt worden. Ein Fenster, das „30 Tage" heisst und
+# einen einzigen Tag kennt, saehe ohne `seit` heute genauso aus wie in vier Wochen.
+
+def test_der_zeitraum_sagt_wie_weit_das_gedaechtnis_reicht():
+    s = _tage_score()
+    P._wallet_zeit(s, 1.0, True, "2026-09-17")
+    w = P.zeitraum_bilanz(s, "2026-09-18", 30)
+    assert w["von"] == "2026-08-20", w          # das angefragte Fenster
+    assert w["seit"] == "2026-09-17", w         # was das Gedaechtnis wirklich hergibt
+    assert w["seit"] > w["von"], "sonst kann die Karte die Luecke nicht ausweisen"
+
+
+def test_ein_volles_gedaechtnis_meldet_keine_luecke():
+    s = _tage_score()
+    for i in range(10):
+        P._wallet_zeit(s, 1.0, True, "2026-09-%02d" % (8 + i))
+    w = P.zeitraum_bilanz(s, "2026-09-17", 7)
+    assert w["seit"] <= w["von"], w
+
+
+def test_der_zeitraum_liefert_die_treffer_als_zahl():
+    """Die Karte soll „5/14" schreiben koennen, ohne wins aus hit*n zurueckzurechnen — eine
+    Rundung, die bei jeder krummen Quote irgendwann danebenliegt."""
+    s = _tage_score()
+    for clv, win in ((1.0, True), (2.0, False), (3.0, True)):
+        P._wallet_zeit(s, clv, win, "2026-09-17")
+    w = P.zeitraum_bilanz(s, "2026-09-17", 7)
+    assert w["wins"] == 2 and w["n"] == 3
+
+
+def test_der_produzent_haengt_die_fenster_ans_score():
+    """Gerechnet wird beim Produzenten, einmal je Lauf. Ein Renderer, der `zeitraum_bilanz`
+    selbst aufruft, waere eine zweite Rechnung neben der ersten — und der Test darueber
+    (`test_das_gedaechtnis_haengt_an_keiner_sperre`) verbietet ihn ohnehin."""
+    now = datetime(2026, 9, 18, 12, 0, tzinfo=timezone.utc)
+    prev = {"open": {}, "scores": {"0xw": _tage_score(tage={"2026-09-17": [4, 8.0, 3, 20.0]})}}
+    out = P.update_wallet_track(prev, [], now=now)
+    s = out["scores"]["0xw"]
+    assert s["fenster7"]["n"] == 4 and s["fenster7"]["wins"] == 3
+    assert s["fenster30"]["n"] == 4
+
+
+def test_ohne_gedaechtnis_steht_kein_leeres_fenster_da():
+    now = datetime(2026, 9, 18, 12, 0, tzinfo=timezone.utc)
+    prev = {"open": {}, "scores": {"0xw": {"n": 20, "wins": 10, "clvSumPP": 5.0}}}
+    out = P.update_wallet_track(prev, [], now=now)
+    assert "fenster7" not in out["scores"]["0xw"]
