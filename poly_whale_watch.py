@@ -2096,6 +2096,104 @@ def _agreeing_wallets(pos, broad, scores) -> list:
     return out
 
 
+SCHATTEN_FILE = BASE / "poly_einigkeit_schatten.json"
+SCHATTEN_KEEP = 800
+SCHATTEN_MIN_WALLETS = int(os.environ.get("WHALE_SCHATTEN_MIN_WALLETS") or 2)
+
+
+def einigkeit_kandidaten(broad, scores, min_wallets=SCHATTEN_MIN_WALLETS,
+                         max_einzel=PUB_MIN_USD_TRACKED) -> list:
+    """Maerkte, in denen sich mehrere bewiesene Wallets einig sind, ABER keine allein die
+    Public-Geldschwelle reisst. REIN/testbar. Gibt [{key, side, wallets, usd, preis, htk}].
+
+    🔴 18.09.2026 (Lucas: „Fuer Public wuerde es dann nur Sinn machen, wenn mehrere Top Wallets
+    sich einig sind, aber wir die Schwelle von Geld einzeln nicht erreichen wuerden. Das waere
+    eine Neuerung, oder?").
+
+    Ja, und die Luecke ist gross: rund 13 solche Maerkte pro Woche, von denen heute keiner je
+    gepusht wird — der Public-Kanal verlangt EINE bewiesene Wallet mit mindestens $25K.
+
+    Gemessen wurde die Idee auch, und sie ist NICHT belegt. Zuerst sah sie glaenzend aus (82,9 %
+    Treffer, ROI +26,9 %, Untergrenze +6,8 %). Diese Zahl war aber zirkulaer: „bewiesen" wird am
+    heutigen Record der Wallet gemessen, und der enthaelt genau die Maerkte, ueber die geurteilt
+    wird — zwei Wallets auf der Gewinnerseite sind zwei Treffer mehr in beiden Records. Rechnet
+    man jeden Markt aus dem Record der beteiligten Wallets heraus (leave-one-out), bleibt:
+
+        heutige Regel (eine Wallet >= $25K)   61 Maerkte   67,2 %   ROI +13,1 %   UG -4,9 %
+        Einigkeit, keine >= $25K              35 Maerkte   77,1 %   ROI +19,9 %   UG -3,0 %
+        Unterschied der beiden                          +6,9 pp   Band [-28,6, +40,7]
+
+    Besser als die heutige Regel — aber beide unbelegt, und der Unterschied unentschieden.
+
+    Deshalb wird hier NICHTS gesendet. Die Kandidaten wandern in ein Schattenbuch, das dieselbe
+    Form hat wie der Public-Ledger und von `poly_public_eval.settle()` ohne Sonderfall
+    abgerechnet werden kann. In vier bis sechs Wochen steht die Antwort aus der Zukunft da
+    statt aus der Rueckschau. Ein Test verbietet, dass jemand das Buch vorher an den Sendeweg
+    haengt — genau wie beim Tages-Gedaechtnis.
+    """
+    out = []
+    for key, m in (broad or {}).items():
+        if not isinstance(m, dict) or m.get("resolved"):
+            continue
+        htk = m.get("hoursToKickoff")
+        if not isinstance(htk, (int, float)) or htk <= 0:
+            continue
+        seiten = {}
+        for w in (m.get("whales") or []):
+            if not isinstance(w, dict):
+                continue
+            side, wallet = w.get("side"), str(w.get("wallet") or "").lower()
+            if not side or not wallet or not _is_smart((scores or {}).get(wallet)):
+                continue
+            seiten.setdefault(side, []).append(w)
+        if len(seiten) != 1:
+            continue                     # keine bewiesene Wallet, oder umkaempft
+        side, wale = list(seiten.items())[0]
+        if len(wale) < min_wallets:
+            continue
+        usd = [float(w.get("usd") or 0) for w in wale]
+        if max(usd) >= max_einzel:
+            continue                     # das pusht der Kanal heute schon
+        preis = (m.get("prices") or {}).get(side)
+        out.append({"key": key, "side": side,
+                    "wallets": sorted(str(w.get("wallet") or "").lower() for w in wale),
+                    "usd": round(sum(usd), 2), "maxEinzel": round(max(usd), 2),
+                    "preis": preis if isinstance(preis, (int, float)) else None,
+                    "htk": round(float(htk), 2),
+                    "league": m.get("league"), "sport": m.get("sport")})
+    return out
+
+
+def _log_einigkeit_schatten(kandidaten, ts) -> int:
+    """Kandidaten ins Schattenbuch schreiben — ein Eintrag je Markt+Seite, nie doppelt.
+    Sendet NICHTS. Die Form ist die des Public-Ledgers, damit `poly_public_eval.settle()`
+    sie ohne Sonderfall abrechnen kann."""
+    led = _load(SCHATTEN_FILE, [])
+    if not isinstance(led, list):
+        led = []
+    da = {e.get("k") for e in led if isinstance(e, dict)}
+    neu = 0
+    for c in (kandidaten or []):
+        k = "%s|%s" % (c["key"], c["side"])
+        if k in da:
+            continue
+        led.append({"k": k, "key": c["key"], "side": c["side"], "wallet": (c["wallets"] or [None])[0],
+                    "wallets": c["wallets"], "nWallets": len(c["wallets"]),
+                    "league": c.get("league"), "cat": sport_category(c.get("league")),
+                    "usd": c["usd"], "maxEinzel": c["maxEinzel"],
+                    "pushPrice": c["preis"], "whaleEntry": c["preis"],
+                    "htkMess": c["htk"], "sentAt": ts, "status": "pending",
+                    "nurBeobachtung": True})
+        da.add(k)
+        neu += 1
+    if neu:
+        try:
+            _save(SCHATTEN_FILE, led[-SCHATTEN_KEEP:])
+        except Exception as e:
+            print("Schattenbuch-Schreibfehler:", e)
+    return neu
+
+
 def einigkeit_traegt(urteil_datei=None) -> tuple:
     """Traegt Einigkeit? -> (ja, urteil). Liest NUR das Artefakt — wie `gegenseite_sperrt`."""
     p = Path(urteil_datei) if urteil_datei else (BASE / "poly_gegenseite.json")
@@ -2314,6 +2412,16 @@ def main():
             pub_seen[pkey] = {"usd": float(pos.get("usd") or 0), "ts": now_iso}
             _log_public_push(pkey, pos, scores, restock, now_iso, broad)
     _save(PUB_SEEN_FILE, pub_seen)
+
+    # ⚖️ Schattenbuch (18.09.2026, Lucas' Vorschlag): mehrere bewiesene Wallets einig, aber
+    # keine allein ueber der Geldschwelle. Heute faellt das durch jedes Raster. Gemessen ist die
+    # Idee besser als die heutige Regel und trotzdem UNBELEGT (s. `einigkeit_kandidaten`), also
+    # wird sie beobachtet statt gesendet — die Antwort soll aus der Zukunft kommen, nicht aus
+    # der Rueckschau.
+    _schatten = einigkeit_kandidaten(broad, scores)
+    _neu = _log_einigkeit_schatten(_schatten, now_iso)
+    print(f"  ⚖️  Schattenbuch Einigkeit: {len(_schatten)} Kandidat(en), {_neu} neu "
+          f"— wird beobachtet, nicht gesendet.")
     print(f"  🐋 Public-Whale: {len(pub_cand)} Kandidat(en), {pub_sent} gesendet.")
 
     # ── Marktdominanz: das Beobachtungsband in den TRADES-Kanal (11.09.2026) ────────────────

@@ -123,7 +123,20 @@ def zaehler_reaktiv_faelle(base_dir):
     return len(f) if isinstance(f, list) else None
 
 
+def zaehler_einigkeit_schatten(base_dir):
+    """Beobachtete (nicht gesendete) Einigkeits-Kandidaten im Schattenbuch.
+
+    18.09.2026: das Buch entsteht, damit die Frage NICHT in der Rueckschau beantwortet wird —
+    dort war sie zirkulaer. Gezaehlt wird, wie viele Faelle aus der Zukunft schon dastehen.
+    """
+    d = _laden(os.path.join(base_dir, "poly_einigkeit_schatten.json"))
+    if d is None:
+        return 0            # Buch noch nicht angelegt = noch kein Fall, nicht „unbekannt"
+    return len(d) if isinstance(d, list) else None
+
+
 ZAEHLER = {
+    "einigkeit_schatten": zaehler_einigkeit_schatten,
     "htk_shortlist": zaehler_htk_shortlist,
     "htk_trader": zaehler_htk_trader,
     "echte_fills": zaehler_echte_fills,

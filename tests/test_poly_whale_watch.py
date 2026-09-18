@@ -2313,3 +2313,86 @@ class TestDieEinigkeitStehtAufDerKarte(unittest.TestCase):
                 json.dump({"einigkeit": {"urteil": "nicht entschieden"}}, f)
             self.assertFalse(P.einigkeit_traegt(p)[0])
         self.assertEqual(P.einigkeit_traegt("/gibt/es/nicht.json"), (False, None))
+
+
+class TestDasSchattenbuchEinigkeit(unittest.TestCase):
+    """18.09.2026 (Lucas: „Fuer Public wuerde es nur Sinn machen, wenn mehrere Top Wallets sich
+    einig sind, aber wir die Schwelle von Geld einzeln nicht erreichen wuerden. Das waere eine
+    Neuerung, oder?").
+
+    Ja — und die Luecke ist gross: rund 13 solche Maerkte pro Woche, von denen heute keiner je
+    gepusht wird. Aber die Idee ist gemessen NICHT belegt. Der erste Blick sah glaenzend aus
+    (82,9 %, ROI +26,9 %, UG +6,8 %) und war zirkulaer: „bewiesen" haengt am heutigen Record der
+    Wallet, und der enthaelt genau die Maerkte, ueber die geurteilt wird. Leave-one-out:
+
+        heutige Regel (eine >= $25K)   61 Maerkte   67,2 %   ROI +13,1 %   UG -4,9 %
+        Einigkeit (keine >= $25K)      35 Maerkte   77,1 %   ROI +19,9 %   UG -3,0 %
+        Unterschied                              +6,9 pp   Band [-28,6, +40,7]
+
+    Also: beobachten statt senden. Diese Tests halten fest, WAS beobachtet wird — und dass es
+    nicht gesendet wird.
+    """
+
+    SCORES = {"0xa": {"n": 371, "wins": 208, "clvSumPP": 300.0, "usd": 4_000_000},
+              "0xb": {"n": 184, "wins": 111, "clvSumPP": 92.0, "usd": 2_000_000},
+              "0xschwach": {"n": 5, "wins": 2, "clvSumPP": -3.0, "usd": 50_000}}
+
+    def _markt(self, wale, htk=2.6, resolved=False):
+        return {"m1": {"whales": wale, "hoursToKickoff": htk, "resolved": resolved,
+                       "prices": {"A": 0.44, "B": 0.56}, "league": "ESPORTS"}}
+
+    def _w(self, wallet, side="A", usd=5000):
+        return {"wallet": wallet, "side": side, "usd": usd}
+
+    def test_zwei_einige_kleine_wallets_sind_ein_kandidat(self):
+        k = P.einigkeit_kandidaten(self._markt([self._w("0xa"), self._w("0xb")]), self.SCORES)
+        self.assertEqual(len(k), 1)
+        self.assertEqual(k[0]["side"], "A")
+        self.assertEqual(k[0]["usd"], 10000.0)
+        self.assertEqual(k[0]["wallets"], ["0xa", "0xb"])
+
+    def test_was_der_kanal_heute_schon_pusht_ist_kein_kandidat(self):
+        """Das Schattenbuch misst die NEUERUNG. Waere die grosse Wallet drin, wuerde es zur
+        Haelfte das messen, was ohnehin laeuft — und die Zahl saehe besser aus, als die neue
+        Bedingung ist."""
+        gross = P.PUB_MIN_USD_TRACKED + 1
+        k = P.einigkeit_kandidaten(self._markt([self._w("0xa", usd=gross), self._w("0xb")]),
+                                   self.SCORES)
+        self.assertEqual(k, [])
+
+    def test_eine_wallet_allein_reicht_nicht(self):
+        self.assertEqual(P.einigkeit_kandidaten(self._markt([self._w("0xa")]), self.SCORES), [])
+
+    def test_ein_umkaempfter_markt_ist_kein_kandidat(self):
+        k = P.einigkeit_kandidaten(self._markt([self._w("0xa"), self._w("0xb"),
+                                                self._w("0xa2", side="B")]),
+                                   dict(self.SCORES, **{"0xa2": self.SCORES["0xb"]}))
+        self.assertEqual(k, [])
+
+    def test_unbewiesene_mitlaeufer_machen_keine_einigkeit(self):
+        k = P.einigkeit_kandidaten(self._markt([self._w("0xa"), self._w("0xschwach")]),
+                                   self.SCORES)
+        self.assertEqual(k, [])
+
+    def test_angepfiffene_und_aufgeloeste_maerkte_fallen_raus(self):
+        wale = [self._w("0xa"), self._w("0xb")]
+        self.assertEqual(P.einigkeit_kandidaten(self._markt(wale, htk=-0.1), self.SCORES), [])
+        self.assertEqual(P.einigkeit_kandidaten(self._markt(wale, resolved=True), self.SCORES), [])
+
+    def test_das_buch_haengt_an_keinem_sendeweg(self):
+        """Der wichtigste Test der Klasse. Wer das Schattenbuch an den Push haengt, sendet auf
+        einer Zahl mit Untergrenze unter null — und die Messung, fuer die es angelegt wurde,
+        waere im selben Moment wertlos, weil sie dann ihre eigene Wirkung misst."""
+        import subprocess, os
+        wurzel = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        treffer = subprocess.run(
+            ["grep", "-rn", "einigkeit_kandidaten(", "--include=*.py", "--include=*.js", wurzel],
+            capture_output=True, text=True).stdout.splitlines()
+        fremd = [z for z in treffer
+                 if "poly_whale_watch.py" not in z and "test_poly_whale_watch" not in z]
+        self.assertEqual(fremd, [], "das Schattenbuch wird woanders benutzt: %s" % fremd)
+        quelle = open(os.path.join(wurzel, "poly_whale_watch.py"), encoding="utf-8").read()
+        stelle = quelle.index("_schatten = einigkeit_kandidaten(")
+        umfeld = quelle[stelle:stelle + 600]
+        self.assertNotIn("tg_send", umfeld)
+        self.assertNotIn("_tg_public", umfeld)
