@@ -2174,3 +2174,86 @@ class TestDieGegenseiteZaehltNachBeleg(unittest.TestCase):
         """Erster Lauf, Datei fehlt: dann bleibt es beim alten Rang-Test. Eine Sperre auf
         Verdacht waere dasselbe Muster, das die falschen Schliessungen erzeugt hat."""
         self.assertEqual(P.gegenseite_sperrt("/gibt/es/nicht.json"), (False, None))
+
+
+class TestDerNachtrag(unittest.TestCase):
+    """18.09.2026 (Lucas: „schicken wir da irgendwie zumindest in den Trades Channel eine extra
+    Nachricht, dass das Spiel umkaempft ist?").
+
+    Seine zwei Karten aus Liquid v 3DMAX zeigen die Luecke: die ERSTE ging ohne jeden Hinweis
+    raus, weil die Gegenseite noch nicht im Markt stand; die zweite, Minuten spaeter, trug die
+    ⚔️-Zeile. Wer die erste gelesen hat, erfaehrt es nie — ein Telegram-Post wird nicht
+    nachtraeglich umgeschrieben. Die Warnung fehlt damit ausgerechnet beim FRUEHEN Einstieg, dem
+    man folgen wollte.
+    """
+
+    JETZT = datetime(2026, 9, 18, 12, 0, tzinfo=timezone.utc)
+    PKEY = "0xich|m1|3DMAX"
+    SCORES = {"0xich": {"n": 371, "wins": 208, "clvSumPP": 300.0, "usd": 4_000_000},
+              "0xgegner": {"n": 184, "wins": 111, "clvSumPP": 92.0, "usd": 2_000_000}}
+
+    def _broad(self, gegner=True, htk=2.6, resolved=False):
+        wale = [{"wallet": "0xich", "side": "3DMAX", "usd": 31100}]
+        if gegner:
+            wale.append({"wallet": "0xgegner", "side": "Liquid", "usd": 13900})
+        return {"m1": {"whales": wale, "hoursToKickoff": htk, "resolved": resolved,
+                       "shares": {"Liquid": 1, "3DMAX": 1}}}
+
+    def _seen(self, stunden=2.0, cf=False):
+        ts = (self.JETZT - timedelta(hours=stunden)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        return {self.PKEY: {"usd": 31100.0, "ts": ts, "cf": cf}}
+
+    def _lauf(self, seen=None, broad=None, schon=None):
+        return P.nachtraege(seen or self._seen(), broad or self._broad(), self.SCORES,
+                            schon or {}, self.JETZT, bewiesen_zaehlt=True, top=0)
+
+    def test_die_gegenseite_kommt_spaeter_also_kommt_der_nachtrag(self):
+        f = self._lauf()
+        self.assertEqual(len(f), 1)
+        self.assertEqual(f[0][1]["side"], "3DMAX")
+        self.assertEqual(f[0][2]["side"], "Liquid")
+
+    def test_ohne_gegenseite_kein_nachtrag(self):
+        self.assertEqual(self._lauf(broad=self._broad(gegner=False)), [])
+
+    def test_wer_den_marker_schon_auf_der_karte_hatte_bekommt_keinen(self):
+        """Sonst wiederholt der Nachtrag, was schon dastand — und wird zu Rauschen."""
+        self.assertEqual(self._lauf(seen=self._seen(cf=True)), [])
+
+    def test_nur_einmal_je_position(self):
+        self.assertEqual(self._lauf(schon={self.PKEY: {"ts": "egal"}}), [])
+
+    def test_nach_dem_anpfiff_ist_es_keine_warnung_mehr(self):
+        """Danach kann niemand mehr etwas aendern — dann ist es keine Warnung, sondern Laerm."""
+        self.assertEqual(self._lauf(broad=self._broad(htk=-0.5)), [])
+
+    def test_ein_aufgeloester_markt_loest_nichts_aus(self):
+        self.assertEqual(self._lauf(broad=self._broad(resolved=True)), [])
+
+    def test_alte_pushes_werden_nicht_nachtraeglich_aufgerollt(self):
+        """Der Dedup-Stand des Trades-Kanals hat ueber 1.600 Eintraege. Ohne diese Schranke
+        wuerde der erste Lauf sie alle durchgehen."""
+        self.assertEqual(self._lauf(seen=self._seen(stunden=40)), [])
+
+    def test_unlesbarer_zeitstempel_loest_nichts_aus(self):
+        self.assertEqual(self._lauf(seen={self.PKEY: {"usd": 1, "ts": "gestern"}}), [])
+
+    def test_kaputter_schluessel_stuerzt_nicht_ab(self):
+        self.assertEqual(self._lauf(seen={"nur|zwei": {"ts": "2026-09-18T10:00:00Z"}}), [])
+
+    def test_die_karte_sagt_was_war_und_was_jetzt_ist(self):
+        _, pos, cf = self._lauf()[0]
+        karte = P.build_nachtrag_card(pos, cf, self._broad(), self.SCORES)
+        self.assertIn("Nachtrag", karte)
+        self.assertIn("3DMAX", karte)          # unsere Seite
+        self.assertIn("Liquid", karte)         # die Gegenseite
+        self.assertIn("$13.9K", karte)
+        self.assertIn("Anpfiff in 2.6h", karte)
+
+    def test_die_karte_gibt_keinen_neuen_tipp(self):
+        """Ein Nachtrag, der zum Gegenteil raet, waere die dritte widerspruechliche Nachricht
+        zu demselben Spiel. Er sagt, dass die Lage anders ist — mehr nicht."""
+        _, pos, cf = self._lauf()[0]
+        karte = P.build_nachtrag_card(pos, cf, self._broad(), self.SCORES)
+        self.assertIn("Kein neuer Tipp", karte)
+        self.assertIn("Muenzwurf", karte)

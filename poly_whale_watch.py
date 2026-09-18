@@ -2062,6 +2062,91 @@ def gegenseite_sperrt(urteil_datei=None) -> tuple:
     return (u == "umkaempft ist schlechter", u)
 
 
+NACHTRAG_SEEN_FILE = BASE / "poly_whale_nachtrag_seen.json"
+NACHTRAG_MAX_ALTER_H = float(os.environ.get("WHALE_NACHTRAG_MAX_ALTER_H") or 24)
+NACHTRAG_MAX = int(os.environ.get("WHALE_NACHTRAG_MAX") or 6)
+
+
+def nachtraege(seen, broad, scores, schon, now, bewiesen_zaehlt=False,
+               max_alter_h=NACHTRAG_MAX_ALTER_H, top=None) -> list:
+    """Welche BEREITS GESENDETE Karte ist nachtraeglich umkaempft geworden? REIN/testbar.
+
+    🔴 18.09.2026 (Lucas: „schicken wir da irgendwie zumindest in den Trades Channel eine extra
+    Nachricht, dass das Spiel umkaempft ist?").
+
+    Seine zwei Karten aus Liquid v 3DMAX zeigen die Luecke genau: die ERSTE ging ohne jeden
+    Hinweis raus, weil die Gegenseite da noch nicht im Markt stand. Die zweite, Minuten spaeter,
+    trug die ⚔️-Zeile. Nur: wer die erste gelesen hat, erfaehrt es nie. Der Marker sitzt auf der
+    Karte, und eine Karte wird nicht nachtraeglich umgeschrieben — ein Telegram-Post schon gar
+    nicht. Ohne Nachtrag ist die Warnung also genau in dem Fall nicht da, in dem sie zaehlt:
+    beim FRUEHEN Einstieg, dem man folgen wollte.
+
+    Gibt [(pkey, pos, gegner)] fuer die Positionen, zu denen ein Nachtrag faellig ist. Vier
+    Schranken, damit daraus kein zweiter Kanal wird:
+      * nur was wir selbst gesendet haben (`seen`), und nur einmal je Position (`schon`),
+      * nur wenn die Karte damals KEINEN Marker trug — sonst wiederholt der Nachtrag, was
+        schon dastand,
+      * nur solange das Spiel noch nicht angepfiffen ist: danach ist es keine Warnung mehr,
+        sondern eine Nachricht ueber eine Wette, die niemand mehr aendern kann,
+      * nur fuer Pushes der letzten `max_alter_h` Stunden — sonst wuerde der erste Lauf 1.633
+        Alteintraege auf einmal durchgehen.
+    """
+    out = []
+    for pkey, meta in (seen or {}).items():
+        if pkey in (schon or {}):
+            continue
+        if isinstance(meta, dict) and meta.get("cf"):
+            continue                      # die Karte trug den Marker schon
+        teile = str(pkey).split("|")
+        if len(teile) != 3:
+            continue
+        wallet, key, side = teile
+        m = (broad or {}).get(key) if isinstance(broad, dict) else None
+        if not isinstance(m, dict) or m.get("resolved"):
+            continue
+        htk = m.get("hoursToKickoff")
+        if not isinstance(htk, (int, float)) or htk <= 0:
+            continue                      # angepfiffen oder unbekannt -> keine Warnung mehr
+        alter = _stunden_seit((meta or {}).get("ts"), now)
+        if alter is None or alter > max_alter_h:
+            continue
+        pos = {"key": key, "side": side, "wallet": wallet}
+        cf = _conflicting_top_wallet(pos, broad, scores, top=top,
+                                     bewiesen_zaehlt=bewiesen_zaehlt)
+        if cf:
+            out.append((pkey, pos, cf))
+    return out
+
+
+def _stunden_seit(iso, now):
+    try:
+        t = datetime.fromisoformat(str(iso).replace("Z", "+00:00"))
+    except (TypeError, ValueError):
+        return None
+    if t.tzinfo is None:
+        t = t.replace(tzinfo=timezone.utc)
+    return (now - t).total_seconds() / 3600.0
+
+
+def build_nachtrag_card(pos, cf, broad, scores) -> str:
+    """Kurz und ohne neue Empfehlung: was sich geaendert hat, und was es gemessen bedeutet."""
+    m = (broad or {}).get(pos.get("key")) or {}
+    htk = m.get("hoursToKickoff")
+    wer = ("Rang #%d" % cf["rank"]) if cf.get("rank") else "Eine bewiesene Wallet"
+    zeilen = ["⚔️ <b>Nachtrag: dieses Spiel ist jetzt umkaempft</b>"]
+    spiel = _matchup(pos.get("key"), broad)
+    if spiel:
+        zeilen.append(_esc(spiel))
+    zeilen.append("Unsere Karte lief auf <b>%s</b>%s."
+                  % (_esc(pos.get("side")),
+                     (" · Anpfiff in %.1fh" % htk) if isinstance(htk, (int, float)) else ""))
+    zeilen.append("%s haelt inzwischen die Gegenseite — <b>%s</b> (%s)."
+                  % (wer, _esc(cf["side"]), _usd(cf["usd"])))
+    zeilen.append("<i>In solchen Maerkten ist Folgen gemessen ein Muenzwurf. Kein neuer Tipp — "
+                  "nur der Hinweis, dass die Lage eine andere ist als auf der Karte.</i>")
+    return "\n".join(zeilen)
+
+
 def _contested_market(key, broad, min_usd=CONTEST_MIN_USD):
     """12.08.2026 (Lucas): „Gegenseiten-Krieg" — hat EIN Markt Gross-Einstiege (>= min_usd) auf MEHR
     ALS EINER Seite, ist er umkaempft und taugt NICHT als Public-Whale-Signal (zwei widerspruechliche
@@ -2095,16 +2180,39 @@ def main():
     print(f"  {len(cand)} alertwürdige Position(en) (Sport + 3–97¢, ≥ {_usd(MIN_USD_TRACKED)} mit / {_usd(MIN_USD_UNTRACKED)} ohne Record, frisch)")
 
     now_iso = now.strftime("%Y-%m-%dT%H:%M:%SZ")
+    _sperrt_bew, _urteil_gs = gegenseite_sperrt()
     sent = 0
     for pkey, pos, restock in cand[:MAX_ALERTS]:
         card = build_card(pos, scores, restock, broad, extra=_extra.get(pkey, 0), blocked=_blocked)
         if tg_send(card):
             sent += 1
-            seen[pkey] = {"usd": float(pos.get("usd") or 0), "ts": now_iso}
+            # 18.09.2026: ob die Karte den ⚔️-Marker TRUG, wird mitgeschrieben. Ohne diesen
+            # Merker koennte der Nachtrag unten nicht wissen, ob er etwas Neues sagt oder nur
+            # wiederholt, was schon auf der Karte stand.
+            _cf_jetzt = _conflicting_top_wallet(pos, broad, scores, bewiesen_zaehlt=_sperrt_bew)
+            seen[pkey] = {"usd": float(pos.get("usd") or 0), "ts": now_iso,
+                          "cf": bool(_cf_jetzt)}
             _log_send(card.split("\n")[1] if "\n" in card else card,
                       {"posKey": pkey, "usd": pos.get("usd"), "league": pos.get("league")})
     _save(SEEN_FILE, seen)
     print(f"  ✅  {sent} Whale-Alert(s) (Trades) gesendet.")
+
+    # ⚔️ Nachtrag (18.09.2026, Lucas): eine Karte, die ohne Marker rausging, wird nicht
+    # nachtraeglich umgeschrieben — also kommt der Hinweis als eigene kurze Nachricht, sobald
+    # sich die Lage dreht. Nur im Trades-Kanal: im oeffentlichen geht ein umkaempftes Spiel
+    # ohnehin nicht raus, dort gaebe es nichts nachzutragen.
+    nach_seen = _load(NACHTRAG_SEEN_FILE, {})
+    if not isinstance(nach_seen, dict):
+        nach_seen = {}
+    faellig = nachtraege(seen, broad, scores, nach_seen, now, bewiesen_zaehlt=_sperrt_bew)
+    n_sent = 0
+    for pkey, pos, cf in faellig[:NACHTRAG_MAX]:
+        if tg_send(build_nachtrag_card(pos, cf, broad, scores)):
+            n_sent += 1
+            nach_seen[pkey] = {"ts": now_iso, "gegen": cf.get("wallet"), "grund": cf.get("grund")}
+    if faellig:
+        _save(NACHTRAG_SEEN_FILE, nach_seen)
+    print(f"  ⚔️  {n_sent} Nachtrag/Nachtraege gesendet ({len(faellig)} faellig).")
 
     # 🐋 Öffentlicher Whale-Watch: kuratiert (riesig ab $100K ODER bewährt ab $25K), eigener Dedup.
     pub_seen = _load(PUB_SEEN_FILE, {})
