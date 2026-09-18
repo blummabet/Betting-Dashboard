@@ -348933,7 +348933,13 @@
     "usd": 400,
     "ts": 1789720047
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "3DMAX": 1.0,
+   "EYEBALLERS": 0.0
+  },
+  "resolvedAt": "2026-09-18T12:57:36.033788+00:00"
  },
  "cs2-tl1-inf6-2026-09-18": {
   "shares": {
@@ -349251,7 +349257,13 @@
     "usd": 300,
     "ts": 1789701391
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Samira De Stefano": 1.0,
+   "Alice Tubello": 0.0
+  },
+  "resolvedAt": "2026-09-18T12:57:36.033788+00:00"
  },
  "idn1-are-pke-2026-09-18": {
   "shares": {
@@ -349395,7 +349407,14 @@
     "usd": 9120,
     "ts": 1789712151
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Arema FC": 0.0,
+   "Draw (Arema FC vs. Persik Kediri)": 1.0,
+   "Persik Kediri": 0.0
+  },
+  "resolvedAt": "2026-09-18T12:57:36.033788+00:00"
  },
  "atp-ymer-sharipo-2026-09-18": {
   "shares": {
@@ -349721,7 +349740,13 @@
   "tokens": {
    "Mitsuki Wei Kang Leong": "46451647667690864603948405782106896442153810638622579575409997580691164705607",
    "Petr Bar Biryukov": "48291812077780554437400914371831847316566651731744890020359793550118539689447"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Mitsuki Wei Kang Leong": 0.0,
+   "Petr Bar Biryukov": 1.0
+  },
+  "resolvedAt": "2026-09-18T12:57:36.033788+00:00"
  },
  "cs2-leo2-g2a-2026-09-18": {
   "shares": {
@@ -350495,8 +350520,8 @@
  },
  "cs2-eye-tl1-2026-09-18": {
   "shares": {
-   "EYEBALLERS": 38198.45587824,
-   "Liquid": 56118.727712634995
+   "EYEBALLERS": 39955.085856900005,
+   "Liquid": 58699.45570418997
   },
   "prices": {
    "EYEBALLERS": 0.405,
@@ -350508,12 +350533,12 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 101730,
+  "totalUsd": 107566,
   "whales": [
    {
     "wallet": "0xe40ecff63ec661d218a86c048186ac83389a9770",
     "side": "EYEBALLERS",
-    "usd": 35470,
+    "usd": 36949,
     "avgPrice": 0.3999
    },
    {
@@ -350536,7 +350561,7 @@
    }
   ],
   "hoursToKickoff": 0.1,
-  "capturedAt": "2026-09-18T11:57:30.936386+00:00",
+  "capturedAt": "2026-09-18T12:57:36.033788+00:00",
   "cond": "0xe60fcc3b6114e0b8f78a773deecc8760152dd225f45578a15627873b099f7ba1",
   "frage": "Counter-Strike: EYEBALLERS vs Liquid (BO1) - Logitech G Play Connect Group B",
   "tokens": {
@@ -350552,57 +350577,89 @@
    "bids": [
     [
      0.59,
-     47951
+     42752
     ],
     [
      0.58,
-     3221
+     3021
     ],
     [
      0.57,
-     10
+     1205
     ],
     [
      0.56,
-     29
+     186
     ],
     [
      0.55,
-     117
+     486
     ],
     [
      0.54,
-     106
+     1548
     ]
    ],
    "asks": [
     [
      0.6,
-     21170
+     14260
     ],
     [
      0.61,
-     5171
+     3614
     ],
     [
      0.62,
-     320
+     3057
     ],
     [
      0.63,
-     1004
+     1608
     ],
     [
      0.64,
-     3210
+     1680
     ],
     [
      0.65,
-     6086
+     363
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0xda62b72f7884c9cf18ab841b5287f034bac8b0e8",
+    "action": "BUY",
+    "side": "Liquid",
+    "price": 0.6,
+    "usd": 306,
+    "ts": 1789736040
+   },
+   {
+    "wallet": "0x685dbb3846060b05783beb37d34b9f6c6e921ab3",
+    "action": "SELL",
+    "side": "Liquid",
+    "price": 0.59,
+    "usd": 1097,
+    "ts": 1789735755
+   },
+   {
+    "wallet": "0x685dbb3846060b05783beb37d34b9f6c6e921ab3",
+    "action": "BUY",
+    "side": "Liquid",
+    "price": 0.6,
+    "usd": 1116,
+    "ts": 1789735673
+   },
+   {
+    "wallet": "0x75b0deb4f24fe13547cd9f7c4fb38e09e55c7db2",
+    "action": "BUY",
+    "side": "Liquid",
+    "price": 0.6,
+    "usd": 336,
+    "ts": 1789735628
+   },
    {
     "wallet": "0x2525e5ba54e1c8496de7efe311f041663a123ddd",
     "action": "BUY",
@@ -350634,22 +350691,6 @@
     "price": 0.6,
     "usd": 386,
     "ts": 1789731474
-   },
-   {
-    "wallet": "0x2525e5ba54e1c8496de7efe311f041663a123ddd",
-    "action": "BUY",
-    "side": "EYEBALLERS",
-    "price": 0.41,
-    "usd": 1230,
-    "ts": 1789731424
-   },
-   {
-    "wallet": "0xc34b4901be324718c176100e350211d97b199296",
-    "action": "BUY",
-    "side": "EYEBALLERS",
-    "price": 0.41,
-    "usd": 361,
-    "ts": 1789728906
    }
   ]
  },
@@ -351254,8 +351295,8 @@
  },
  "cs2-bbl1-3dmax-2026-09-18": {
   "shares": {
-   "BBL": 8215.240802549995,
-   "3DMAX": 11580.603714810002
+   "BBL": 8277.005128464994,
+   "3DMAX": 11667.669089895004
   },
   "prices": {
    "BBL": 0.415,
@@ -351267,19 +351308,19 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 20336,
+  "totalUsd": 20532,
   "whales": [
+   {
+    "wallet": "0x8e74984fb998be82444627906740dc1a19c35972",
+    "side": "BBL",
+    "usd": 2004,
+    "avgPrice": 0.41
+   },
    {
     "wallet": "0xb9abbf527032ba370e3519de95ff907d0154f282",
     "side": "BBL",
     "usd": 1994,
     "avgPrice": 0.357
-   },
-   {
-    "wallet": "0x8e74984fb998be82444627906740dc1a19c35972",
-    "side": "BBL",
-    "usd": 1944,
-    "avgPrice": 0.41
    },
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
@@ -351295,7 +351336,7 @@
    }
   ],
   "hoursToKickoff": 1.1,
-  "capturedAt": "2026-09-18T11:57:30.936386+00:00",
+  "capturedAt": "2026-09-18T12:57:36.033788+00:00",
   "cond": "0x3e39f715d6dae073c43f08fcf666d0fc85c94c111c32bb091ebf50be81cd0453",
   "frage": "Counter-Strike: BBL vs 3DMAX (BO1) - Logitech G Play Connect Group B",
   "tokens": {
@@ -351457,8 +351498,8 @@
  },
  "cs2-mgc-mibr-2026-09-18": {
   "shares": {
-   "magic": 87625.08104606006,
-   "MIBR": 199670.27591376484
+   "magic": 91718.79562441507,
+   "MIBR": 208998.57634640977
   },
   "prices": {
    "magic": 0.305,
@@ -351470,7 +351511,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 299331,
+  "totalUsd": 313000,
   "whales": [
    {
     "wallet": "0xc9ae00eda811041a059f3eec9356b24067c1b9e0",
@@ -351497,8 +351538,8 @@
     "avgPrice": 0.6999
    }
   ],
-  "hoursToKickoff": 0.6,
-  "capturedAt": "2026-09-18T12:28:50.408258+00:00",
+  "hoursToKickoff": 0.1,
+  "capturedAt": "2026-09-18T12:57:36.033788+00:00",
   "cond": "0xedb627eda3cddfa8e1b7e3eee350c0023f08621ed26b4a18b0bba2c8b4b1ded8",
   "frage": "Counter-Strike: magic vs MIBR (BO3) - StarLadder StarSeries Playoffs",
   "tokens": {
@@ -351507,111 +351548,119 @@
   },
   "book": {
    "side": "MIBR",
-   "bid": 0.69,
-   "ask": 0.7,
+   "bid": 0.7,
+   "ask": 0.71,
    "spreadC": 1.0,
-   "spreadPct": 1.43,
+   "spreadPct": 1.41,
    "bids": [
     [
+     0.7,
+     100046
+    ],
+    [
      0.69,
-     22706
+     92755
     ],
     [
      0.68,
-     10835
+     30239
     ],
     [
      0.67,
-     9188
+     11464
     ],
     [
      0.66,
-     7340
+     6440
     ],
     [
      0.65,
-     1345
-    ],
-    [
-     0.64,
-     10
+     1342
     ]
    ],
    "asks": [
     [
-     0.7,
-     26783
-    ],
-    [
      0.71,
-     155240
+     154928
     ],
     [
      0.72,
-     870
+     805
     ],
     [
      0.73,
-     4009
+     1262
     ],
     [
      0.74,
-     1287
+     2255
     ],
     [
      0.75,
-     1025
+     5195
+    ],
+    [
+     0.76,
+     696
     ]
    ]
   },
   "trades": [
    {
-    "wallet": "0xbd2a0ed35f9b4051908aecea618ac085036f0620",
+    "wallet": "0xebb4fec90645748b8415d1d43318dfeb0e071374",
     "action": "BUY",
     "side": "MIBR",
     "price": 0.7,
-    "usd": 430,
-    "ts": 1789733343
+    "usd": 1750,
+    "ts": 1789735718
    },
    {
-    "wallet": "0x7c37b52eb226bcb9411375ec48b0169663fb6aeb",
+    "wallet": "0xd7afdd16402a4b02bc6345822eda715ea795f22e",
+    "action": "BUY",
+    "side": "MIBR",
+    "price": 0.7,
+    "usd": 681,
+    "ts": 1789735526
+   },
+   {
+    "wallet": "0x75b0deb4f24fe13547cd9f7c4fb38e09e55c7db2",
+    "action": "BUY",
+    "side": "MIBR",
+    "price": 0.7,
+    "usd": 980,
+    "ts": 1789735434
+   },
+   {
+    "wallet": "0x27e43aad2471b41a8cee10a20920d948c2304803",
+    "action": "BUY",
+    "side": "MIBR",
+    "price": 0.7,
+    "usd": 1750,
+    "ts": 1789735248
+   },
+   {
+    "wallet": "0xe2e7b09800ca9e342048eee4b660aae4202c295b",
+    "action": "BUY",
+    "side": "MIBR",
+    "price": 0.7,
+    "usd": 300,
+    "ts": 1789735217
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
     "action": "BUY",
     "side": "magic",
     "price": 0.31,
-    "usd": 24800,
-    "ts": 1789733181
+    "usd": 571,
+    "ts": 1789735113
    },
    {
-    "wallet": "0x00c8ef6895e2fb38b538cac8c08edd6b82289ccd",
+    "wallet": "0x2d117529d3126d39a7bef490a40433b85f6cc823",
     "action": "BUY",
     "side": "MIBR",
     "price": 0.7,
-    "usd": 580,
-    "ts": 1789733133
-   },
-   {
-    "wallet": "0xa29ab0e033f66cc043371a7396e5eb6cf56d9a97",
-    "action": "SELL",
-    "side": "magic",
-    "price": 0.3,
-    "usd": 663,
-    "ts": 1789733097
-   },
-   {
-    "wallet": "0xa29ab0e033f66cc043371a7396e5eb6cf56d9a97",
-    "action": "BUY",
-    "side": "magic",
-    "price": 0.31,
-    "usd": 685,
-    "ts": 1789731375
-   },
-   {
-    "wallet": "0x689f7d0a49d2646dc199848ffbdb4757242e259c",
-    "action": "BUY",
-    "side": "MIBR",
-    "price": 0.7,
-    "usd": 2100,
-    "ts": 1789731351
+    "usd": 1322,
+    "ts": 1789734663
    }
   ]
  },
@@ -351813,8 +351862,8 @@
  },
  "cs2-eye-bbl1-2026-09-18": {
   "shares": {
-   "EYEBALLERS": 40723.024878375,
-   "BBL": 36844.57207979995
+   "EYEBALLERS": 43932.69084855,
+   "BBL": 39748.555576624945
   },
   "prices": {
    "EYEBALLERS": 0.525,
@@ -351826,12 +351875,12 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 78388,
+  "totalUsd": 82469,
   "whales": [
    {
     "wallet": "0xe40ecff63ec661d218a86c048186ac83389a9770",
     "side": "EYEBALLERS",
-    "usd": 30206,
+    "usd": 33420,
     "avgPrice": 0.5199
    },
    {
@@ -351847,14 +351896,14 @@
     "avgPrice": 0.4799
    },
    {
-    "wallet": "0x4b59e178095b9bb5ba97598244f2ca8b02fc3aa6",
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "side": "BBL",
-    "usd": 3197,
-    "avgPrice": 0.4695
+    "usd": 3224,
+    "avgPrice": 0.48
    }
   ],
   "hoursToKickoff": 2.1,
-  "capturedAt": "2026-09-18T11:57:30.936386+00:00",
+  "capturedAt": "2026-09-18T12:57:36.033788+00:00",
   "cond": "0x1a0ba03b076c4284d8a7ca74f6c795f03562605e44025e2d2afe164359b53410",
   "frage": "Counter-Strike: EYEBALLERS vs BBL (BO1) - Logitech G Play Connect Group B",
   "tokens": {
@@ -351870,57 +351919,81 @@
    "bids": [
     [
      0.52,
-     24553
+     19443
+    ],
+    [
+     0.51,
+     50
     ],
     [
      0.5,
-     1112
+     603
     ],
     [
      0.49,
-     1157
+     177
     ],
     [
      0.48,
-     9522
+     6625
     ],
     [
      0.47,
-     12693
-    ],
-    [
-     0.46,
-     1015
+     3253
     ]
    ],
    "asks": [
     [
      0.53,
-     104123
+     109008
     ],
     [
      0.54,
-     2676
+     2819
     ],
     [
      0.55,
-     2872
+     2142
     ],
     [
      0.56,
-     1691
+     1101
     ],
     [
      0.58,
-     5000
+     3125
     ],
     [
-     0.6,
-     2625
+     0.62,
+     56
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x0e50849ef225489b1879e3418e5b7633355a2609",
+    "action": "BUY",
+    "side": "BBL",
+    "price": 0.48,
+    "usd": 980,
+    "ts": 1789736105
+   },
+   {
+    "wallet": "0xfdc0bd67fbd71aa8edd00121eb2a7fcbddc34b85",
+    "action": "BUY",
+    "side": "BBL",
+    "price": 0.48,
+    "usd": 344,
+    "ts": 1789734731
+   },
+   {
+    "wallet": "0x4cb03276679d644ec1852f744668f345d41657e0",
+    "action": "BUY",
+    "side": "BBL",
+    "price": 0.48,
+    "usd": 1440,
+    "ts": 1789734603
+   },
    {
     "wallet": "0xa3b5da76ffbbe3325bb1b40a30f6a4634962941a",
     "action": "BUY",
@@ -351960,30 +352033,6 @@
     "price": 0.48,
     "usd": 960,
     "ts": 1789721160
-   },
-   {
-    "wallet": "0xda3a9b7afff7b44ad4fd75308723194e0a11381f",
-    "action": "BUY",
-    "side": "BBL",
-    "price": 0.48,
-    "usd": 2880,
-    "ts": 1789720905
-   },
-   {
-    "wallet": "0xe8c4d68aff65b38cac46987b9b65e01eb47d395d",
-    "action": "BUY",
-    "side": "BBL",
-    "price": 0.48,
-    "usd": 528,
-    "ts": 1789719379
-   },
-   {
-    "wallet": "0xfdc0bd67fbd71aa8edd00121eb2a7fcbddc34b85",
-    "action": "BUY",
-    "side": "BBL",
-    "price": 0.48,
-    "usd": 449,
-    "ts": 1789717807
    }
   ]
  },
@@ -352226,8 +352275,8 @@
  },
  "atp-gentzsc-mikrut-2026-09-18": {
   "shares": {
-   "Tom Gentzsch": 5234.585841450001,
-   "Luka Mikrut": 4735.791078
+   "Tom Gentzsch": 5383.9380231000005,
+   "Luka Mikrut": 4870.91924235
   },
   "prices": {
    "Tom Gentzsch": 0.525,
@@ -352239,7 +352288,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 9824,
+  "totalUsd": 10695,
   "whales": [
    {
     "wallet": "0xb00cf07e6fa25034175f7da649524c23b08fdfa2",
@@ -352264,8 +352313,8 @@
     "usd": 592
    }
   ],
-  "hoursToKickoff": 0.6,
-  "capturedAt": "2026-09-18T12:28:50.408258+00:00",
+  "hoursToKickoff": 0.1,
+  "capturedAt": "2026-09-18T12:57:36.033788+00:00",
   "cond": "0x3f9e2f9ee034204937cd006518a2a21f9a15d14dc0041454130d4432efb8c5ff",
   "frage": "Szczecin: Tom Gentzsch vs Luka Mikrut",
   "tokens": {
@@ -352419,14 +352468,14 @@
  },
  "tur2-bas-umr-2026-09-18": {
   "shares": {
-   "Bandirmaspor": 3046.1356135799997,
-   "Draw (Bandirmaspor vs. Umraniyespor)": 26.5,
-   "Umraniyespor": 128.55526940000001
+   "Bandirmaspor": 3075.41343227,
+   "Draw (Bandirmaspor vs. Umraniyespor)": 34.715,
+   "Umraniyespor": 253.10045113499996
   },
   "prices": {
-   "Bandirmaspor": 0.54,
+   "Bandirmaspor": 0.535,
    "Draw (Bandirmaspor vs. Umraniyespor)": 0.265,
-   "Umraniyespor": 0.2
+   "Umraniyespor": 0.205
   },
   "splitGuete": {
    "art": "belastbar",
@@ -352434,35 +352483,35 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 10541,
+  "totalUsd": 11315,
   "whales": [
    {
     "wallet": "0xd7f1ba35c7faf6f4a4534d462121a0cc50a58322",
     "side": "Bandirmaspor",
-    "usd": 1033,
+    "usd": 1023,
     "avgPrice": 0.5497
    },
    {
     "wallet": "0x4da9d10560447d4e0f7489d4317585aeff1d8299",
     "side": "Bandirmaspor",
-    "usd": 301,
+    "usd": 298,
     "avgPrice": 0.5199
    },
    {
     "wallet": "0x8314fd1f002a4e9bbf4b5abb939e24949a4e0f1e",
     "side": "Bandirmaspor",
-    "usd": 299,
+    "usd": 296,
     "avgPrice": 0.51
    },
    {
     "wallet": "0x2d2d00224c297f97cf71983e30181a50bf0aef11",
     "side": "Bandirmaspor",
-    "usd": 285,
+    "usd": 283,
     "avgPrice": 0.5327
    }
   ],
-  "hoursToKickoff": 0.6,
-  "capturedAt": "2026-09-18T12:28:50.408258+00:00",
+  "hoursToKickoff": 0.1,
+  "capturedAt": "2026-09-18T12:57:36.033788+00:00",
   "tokens": {
    "Bandirmaspor": "65152475344104681576885781399027706655236097216242254683996552503273968723539",
    "Draw (Bandirmaspor vs. Umraniyespor)": "75495023620085902418781335069058252619195660147963461683058386484633674312562",
@@ -352521,8 +352570,8 @@
  },
  "lol-navi-mkoi-2026-09-18": {
   "shares": {
-   "Natus Vincere": 34997.13682710001,
-   "Movistar KOI": 63586.43505867002
+   "Natus Vincere": 40885.13809979003,
+   "Movistar KOI": 74284.356243135
   },
   "prices": {
    "Natus Vincere": 0.355,
@@ -352534,12 +352583,12 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 103066,
+  "totalUsd": 120173,
   "whales": [
    {
     "wallet": "0x6ac5bb06a9eb05641fd5e82640268b92f3ab4b6e",
     "side": "Natus Vincere",
-    "usd": 17956,
+    "usd": 21676,
     "avgPrice": 0.3499
    },
    {
@@ -352555,14 +352604,14 @@
     "avgPrice": 0.65
    },
    {
-    "wallet": "0x7e5e420a5cde8a322f3b5b93a12a164827f47315",
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
     "side": "Movistar KOI",
-    "usd": 5655,
+    "usd": 6337,
     "avgPrice": 0.65
    }
   ],
-  "hoursToKickoff": 2.6,
-  "capturedAt": "2026-09-18T12:28:50.408258+00:00",
+  "hoursToKickoff": 2.1,
+  "capturedAt": "2026-09-18T12:57:36.033788+00:00",
   "cond": "0x38d9ae1b3fb7e97151b8097d4f879e98ab7ee88ce42d240b7c74a269b544f1c4",
   "frage": "LoL: Natus Vincere vs Movistar KOI (BO5) - LEC Playoffs",
   "tokens": {
@@ -352578,57 +352627,97 @@
    "bids": [
     [
      0.64,
-     15039
+     46713
     ],
     [
      0.63,
-     78075
+     83337
     ],
     [
      0.62,
-     1765
+     6948
     ],
     [
      0.61,
-     15651
+     4641
     ],
     [
      0.6,
-     2666
+     12759
     ],
     [
      0.59,
-     1755
+     1505
     ]
    ],
    "asks": [
     [
      0.65,
-     47282
+     6728
     ],
     [
      0.66,
-     45764
+     83675
     ],
     [
      0.67,
-     16510
+     7501
     ],
     [
      0.68,
-     6541
+     4766
     ],
     [
      0.69,
-     4025
+     8905
     ],
     [
      0.7,
-     5720
+     3220
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
+    "action": "BUY",
+    "side": "Movistar KOI",
+    "price": 0.65,
+    "usd": 370,
+    "ts": 1789735800
+   },
+   {
+    "wallet": "0xf32de5829daae9ab35a9ece9200bc0a43f64bbbb",
+    "action": "BUY",
+    "side": "Movistar KOI",
+    "price": 0.65,
+    "usd": 448,
+    "ts": 1789735608
+   },
+   {
+    "wallet": "0xd2c0bef7b7867a00ecff83b84c42b6772c365135",
+    "action": "BUY",
+    "side": "Movistar KOI",
+    "price": 0.65,
+    "usd": 2440,
+    "ts": 1789735446
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "action": "BUY",
+    "side": "Movistar KOI",
+    "price": 0.65,
+    "usd": 6185,
+    "ts": 1789734800
+   },
+   {
+    "wallet": "0xbd0acee2c217a6ec352e604c566f6d6bb4783a44",
+    "action": "BUY",
+    "side": "Movistar KOI",
+    "price": 0.65,
+    "usd": 661,
+    "ts": 1789734473
+   },
    {
     "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
     "action": "BUY",
@@ -352644,45 +352733,13 @@
     "price": 0.65,
     "usd": 676,
     "ts": 1789729009
-   },
-   {
-    "wallet": "0x6e9f61710b1703bb7e0ef7ebe1323c443a1d0eae",
-    "action": "BUY",
-    "side": "Movistar KOI",
-    "price": 0.65,
-    "usd": 8450,
-    "ts": 1789726092
-   },
-   {
-    "wallet": "0x16807201e53a62e472b1b62e7835833c1222490d",
-    "action": "BUY",
-    "side": "Movistar KOI",
-    "price": 0.65,
-    "usd": 1307,
-    "ts": 1789725724
-   },
-   {
-    "wallet": "0x6ac5bb06a9eb05641fd5e82640268b92f3ab4b6e",
-    "action": "BUY",
-    "side": "Natus Vincere",
-    "price": 0.35,
-    "usd": 9840,
-    "ts": 1789725723
-   },
-   {
-    "wallet": "0x14366189bbd03f3a12fdf442d998b0ee21860121",
-    "action": "BUY",
-    "side": "Movistar KOI",
-    "price": 0.66,
-    "usd": 900,
-    "ts": 1789723750
    }
   ]
  },
  "cs2-nrg-aur1-2026-09-18": {
   "shares": {
-   "NRG": 13940.622611475,
-   "Aurora Gaming": 42959.892020159976
+   "NRG": 15257.323401284999,
+   "Aurora Gaming": 47017.480168349975
   },
   "prices": {
    "NRG": 0.245,
@@ -352694,7 +352751,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 58170,
+  "totalUsd": 58689,
   "whales": [
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
@@ -352709,20 +352766,20 @@
     "avgPrice": 0.76
    },
    {
+    "wallet": "0x8e74984fb998be82444627906740dc1a19c35972",
+    "side": "NRG",
+    "usd": 8851,
+    "avgPrice": 0.2399
+   },
+   {
     "wallet": "0x994ec8e910b433265f3a46eaf666bfa28b1a6136",
     "side": "Aurora Gaming",
     "usd": 7550,
     "avgPrice": 0.7561
-   },
-   {
-    "wallet": "0x8e74984fb998be82444627906740dc1a19c35972",
-    "side": "NRG",
-    "usd": 7534,
-    "avgPrice": 0.2399
    }
   ],
-  "hoursToKickoff": 2.6,
-  "capturedAt": "2026-09-18T12:28:50.408258+00:00",
+  "hoursToKickoff": 2.1,
+  "capturedAt": "2026-09-18T12:57:36.033788+00:00",
   "cond": "0xcd3e2e5160aa5f0130c419e7867d366d257087a064ea50cb82a03127082c48d2",
   "frage": "Counter-Strike: NRG vs Aurora Gaming (BO3) - StarLadder StarSeries Playoffs",
   "tokens": {
@@ -352738,57 +352795,81 @@
    "bids": [
     [
      0.75,
-     57186
+     57843
     ],
     [
      0.74,
-     59801
+     48998
     ],
     [
      0.73,
-     2671
+     13156
     ],
     [
      0.72,
-     12090
+     11840
     ],
     [
      0.71,
-     1275
+     775
     ],
     [
-     0.69,
-     1350
+     0.7,
+     1250
     ]
    ],
    "asks": [
     [
      0.76,
-     10932
+     7803
     ],
     [
      0.77,
-     102430
+     102281
     ],
     [
      0.78,
-     3934
+     5028
     ],
     [
      0.79,
-     3359
+     19722
     ],
     [
      0.8,
-     15000
+     3535
     ],
     [
      0.81,
-     3254
+     4254
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x80b933dc9ea4286d7288cbe5187f4a5fdad8cedc",
+    "action": "BUY",
+    "side": "Aurora Gaming",
+    "price": 0.76,
+    "usd": 665,
+    "ts": 1789735907
+   },
+   {
+    "wallet": "0x51c7d30511ed096b39a9392bad97e0dc76c298aa",
+    "action": "BUY",
+    "side": "Aurora Gaming",
+    "price": 0.76,
+    "usd": 3060,
+    "ts": 1789735896
+   },
+   {
+    "wallet": "0xe2e7b09800ca9e342048eee4b660aae4202c295b",
+    "action": "BUY",
+    "side": "Aurora Gaming",
+    "price": 0.76,
+    "usd": 300,
+    "ts": 1789735251
+   },
    {
     "wallet": "0x8be44208ae101dd166725c450f2d0ce2b005a700",
     "action": "BUY",
@@ -352828,14 +352909,6 @@
     "price": 0.76,
     "usd": 500,
     "ts": 1789725621
-   },
-   {
-    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
-    "action": "BUY",
-    "side": "Aurora Gaming",
-    "price": 0.76,
-    "usd": 2381,
-    "ts": 1789725618
    }
   ]
  },
@@ -353027,8 +353100,8 @@
  },
  "fin1-sei-mar-2026-09-18-more-markets": {
   "shares": {
-   "Over": 4551.6779758600005,
-   "Under": 3800.020182140002
+   "Over": 7142.854603074999,
+   "Under": 5963.300631925003
   },
   "prices": {
    "Over": 0.545,
@@ -353040,8 +353113,14 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 10178,
+  "totalUsd": 10230,
   "whales": [
+   {
+    "wallet": "0xec9f344ac6b942bf2a8bb36ebc0294a73cd9e57b",
+    "side": "Over",
+    "usd": 3563,
+    "avgPrice": 0.5499
+   },
    {
     "wallet": "0x6b97ebe911d7f2e5e3e8c4a0faad4a5c7c0b8d30",
     "side": "Under",
@@ -353059,15 +353138,10 @@
     "side": "Over",
     "usd": 1195,
     "avgPrice": 0.5599
-   },
-   {
-    "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
-    "side": "Over",
-    "usd": 708
    }
   ],
-  "hoursToKickoff": 2.6,
-  "capturedAt": "2026-09-18T12:28:50.408258+00:00",
+  "hoursToKickoff": 2.1,
+  "capturedAt": "2026-09-18T12:57:36.033788+00:00",
   "cond": "0x7f2c9f00181a5991ec1238c0eb687d8086d89407692adde973a271804b30f431",
   "frage": "Seinajoen JK vs. IFK Mariehamn: O/U 2.5",
   "tokens": {
@@ -353124,6 +353198,56 @@
    "FK Polissia": "60088727567755513919854974648722622764546617852734913435533605482431003787890",
    "Draw (FK Polissia vs. FK Kryvbas Kryvyi Rih)": "112778066226007115882444991333516024269276710158174132124793227122348264243103",
    "FK Kryvbas Kryvyi Rih": "13845519682088464712534893365023231103015652041388527060549291679196354627033"
+  }
+ },
+ "aze1-gab-neb-2026-09-18-more-markets": {
+  "shares": {
+   "Over": 3812.34498441,
+   "Under": 2386.5899495900003
+  },
+  "prices": {
+   "Over": 0.615,
+   "Under": 0.385
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 7702,
+  "whales": [
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "side": "Over",
+    "usd": 2774
+   },
+   {
+    "wallet": "0x3f3aa7005f8006bfcc367d43a25cde25509fe8fd",
+    "side": "Under",
+    "usd": 1177,
+    "avgPrice": 0.4379
+   },
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Over",
+    "usd": 672,
+    "avgPrice": 0.5515
+   },
+   {
+    "wallet": "0x1f624696c102b99bea92c75a502fa7e4a6d676f6",
+    "side": "Under",
+    "usd": 528,
+    "avgPrice": 0.4618
+   }
+  ],
+  "hoursToKickoff": 0.6,
+  "capturedAt": "2026-09-18T12:57:36.033788+00:00",
+  "cond": "0xb822aa89413794a7e19b497b9a65f76267c66adca9532b5e73388b0d96bc88a3",
+  "frage": "Gabala FK vs. Neftchi Baku PFC: O/U 2.5",
+  "tokens": {
+   "Over": "65237525024504058679018919552158809736532616483942844267556145327765628812853",
+   "Under": "63916730225453482481842491931951238242964748826472190882665740323999472609445"
   }
  }
 }
