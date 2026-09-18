@@ -69,18 +69,18 @@
       "pinnFair": 0.3924,
       "pinnClose": null,
       "clvPP": null,
-      "polyClose": null,
-      "polyClvPP": null,
+      "polyClose": 0.345,
+      "polyClvPP": -1.5,
       "isSteamLag": false,
-      "result": "SOLD",
+      "result": "PENDING",
       "pnl": 0.0,
       "score": null,
       "slug": "epl-bre-che-2026-09-18-more-markets",
       "source": "auto",
       "placedAt": "2026-09-14T14:54:29.403881+00:00",
-      "resolvedAt": "2026-09-15T14:45:18.162921+00:00",
+      "resolvedAt": null,
       "sellPrice": null,
-      "sellReason": "manuell auf Polymarket geschlossen",
+      "sellReason": null,
       "competition": "epl",
       "competitionLabel": "Premier League"
     },
@@ -128,15 +128,15 @@
       "polyClose": null,
       "polyClvPP": null,
       "isSteamLag": false,
-      "result": "SOLD",
+      "result": "PENDING",
       "pnl": 0.0,
       "score": null,
       "slug": "bun-s04-elv-2026-09-20-more-markets",
       "source": "auto",
       "placedAt": "2026-09-16T13:19:08.174543+00:00",
-      "resolvedAt": "2026-09-16T14:44:15.906145+00:00",
+      "resolvedAt": null,
       "sellPrice": null,
-      "sellReason": "manuell auf Polymarket geschlossen",
+      "sellReason": null,
       "competition": "bundesliga",
       "competitionLabel": "Bundesliga"
     },
@@ -153,8 +153,8 @@
       "pinnFair": 0.1643,
       "pinnClose": null,
       "clvPP": null,
-      "polyClose": null,
-      "polyClvPP": null,
+      "polyClose": 0.105,
+      "polyClvPP": -2.5,
       "isSteamLag": false,
       "result": "PENDING",
       "pnl": 0.0,
@@ -167,33 +167,61 @@
       "sellReason": null,
       "competition": "bundesliga",
       "competitionLabel": "Bundesliga"
+    },
+    {
+      "betKey": "96-111-Under 2.5 Tore",
+      "home": "Toulouse",
+      "away": "Le Havre",
+      "homeId": "96",
+      "awayId": "111",
+      "market": "Under 2.5 Tore",
+      "stake": 5.5,
+      "polyPrice": 0.45,
+      "polyOdds": 2.222,
+      "pinnFair": 0.4807,
+      "pinnClose": null,
+      "clvPP": null,
+      "polyClose": null,
+      "polyClvPP": null,
+      "isSteamLag": false,
+      "result": "PENDING",
+      "pnl": 0.0,
+      "score": null,
+      "slug": "fl1-tou-hac-2026-09-19-more-markets",
+      "source": "auto",
+      "placedAt": "2026-09-18T12:51:03.859059+00:00",
+      "resolvedAt": null,
+      "sellPrice": null,
+      "sellReason": null,
+      "competition": "ligue1",
+      "competitionLabel": "Ligue 1"
     }
   ],
   "summary": {
-    "totalBets": 6,
-    "resolved": 5,
-    "pending": 1,
-    "sold": 5,
+    "totalBets": 7,
+    "resolved": 3,
+    "pending": 4,
+    "sold": 3,
     "wins": 0,
     "losses": 1,
     "voids": 0,
     "winRate": 0.0,
-    "totalStaked": 33.0,
+    "totalStaked": 38.5,
     "totalPnl": -1.14,
-    "roi": -3.45,
+    "roi": -2.96,
     "avgCLV": -7.21,
-    "sharpeEst": -0.5,
+    "sharpeEst": null,
     "postmortem": {
-      "closedN": 5,
+      "closedN": 3,
       "realizedPnl": -1.14,
       "avgClv": -7.21,
-      "clvCoverage": "2/5",
+      "clvCoverage": "2/3",
       "byMarket": {
         "O/U": {
-          "n": 5,
+          "n": 3,
           "pnl": -1.14,
           "avgClv": -7.21,
-          "clvCoverage": "2/5"
+          "clvCoverage": "2/3"
         }
       },
       "byExit": {
@@ -204,30 +232,21 @@
           "clvCoverage": "0/1"
         },
         "Sell-sonstig": {
-          "n": 4,
+          "n": 2,
           "pnl": 0.0,
           "avgClv": -7.21,
-          "clvCoverage": "2/4"
+          "clvCoverage": "2/2"
         }
       },
       "byCompetition": {
-        "bundesliga": {
-          "label": "Bundesliga",
+        "epl": {
+          "label": "Premier League",
           "n": 1,
           "pnl": 0.0,
           "staked": 5.5,
           "roi": 0.0,
-          "avgClv": null,
-          "clvCoverage": "0/1"
-        },
-        "epl": {
-          "label": "Premier League",
-          "n": 2,
-          "pnl": 0.0,
-          "staked": 11.0,
-          "roi": 0.0,
           "avgClv": -8.06,
-          "clvCoverage": "1/2"
+          "clvCoverage": "1/1"
         },
         "laliga": {
           "label": "La Liga",
@@ -247,5 +266,5 @@
       }
     }
   },
-  "updatedAt": "2026-09-17T22:00:00.755708+00:00"
+  "updatedAt": "2026-09-18T12:51:05.177344+00:00"
 }
