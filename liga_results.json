@@ -69,8 +69,8 @@
       "pinnFair": 0.3924,
       "pinnClose": null,
       "clvPP": null,
-      "polyClose": 0.345,
-      "polyClvPP": -1.5,
+      "polyClose": 0.355,
+      "polyClvPP": -0.5,
       "isSteamLag": false,
       "result": "PENDING",
       "pnl": 0.0,
@@ -156,15 +156,15 @@
       "polyClose": 0.105,
       "polyClvPP": -2.5,
       "isSteamLag": false,
-      "result": "PENDING",
-      "pnl": 0.0,
+      "result": "SOLD",
+      "pnl": -1.27,
       "score": null,
       "slug": "bun-bay-uni-2026-09-18-more-markets",
       "source": "auto",
       "placedAt": "2026-09-17T21:59:58.459766+00:00",
-      "resolvedAt": null,
-      "sellPrice": null,
-      "sellReason": null,
+      "resolvedAt": "2026-09-18T17:48:48.699530+00:00",
+      "sellPrice": 0.1,
+      "sellReason": "Pre-Match Close (0.69h vor Anpfiff)",
       "competition": "bundesliga",
       "competitionLabel": "Bundesliga"
     },
@@ -199,35 +199,41 @@
   ],
   "summary": {
     "totalBets": 7,
-    "resolved": 3,
-    "pending": 4,
-    "sold": 3,
+    "resolved": 4,
+    "pending": 3,
+    "sold": 4,
     "wins": 0,
-    "losses": 1,
+    "losses": 2,
     "voids": 0,
     "winRate": 0.0,
     "totalStaked": 38.5,
-    "totalPnl": -1.14,
-    "roi": -2.96,
+    "totalPnl": -2.41,
+    "roi": -6.26,
     "avgCLV": -7.21,
     "sharpeEst": null,
     "postmortem": {
-      "closedN": 3,
-      "realizedPnl": -1.14,
+      "closedN": 4,
+      "realizedPnl": -2.41,
       "avgClv": -7.21,
-      "clvCoverage": "2/3",
+      "clvCoverage": "2/4",
       "byMarket": {
         "O/U": {
-          "n": 3,
-          "pnl": -1.14,
+          "n": 4,
+          "pnl": -2.41,
           "avgClv": -7.21,
-          "clvCoverage": "2/3"
+          "clvCoverage": "2/4"
         }
       },
       "byExit": {
         "Age-Loss": {
           "n": 1,
           "pnl": -1.14,
+          "avgClv": null,
+          "clvCoverage": "0/1"
+        },
+        "KO-Close": {
+          "n": 1,
+          "pnl": -1.27,
           "avgClv": null,
           "clvCoverage": "0/1"
         },
@@ -239,6 +245,15 @@
         }
       },
       "byCompetition": {
+        "bundesliga": {
+          "label": "Bundesliga",
+          "n": 1,
+          "pnl": -1.27,
+          "staked": 5.5,
+          "roi": -23.09,
+          "avgClv": null,
+          "clvCoverage": "0/1"
+        },
         "epl": {
           "label": "Premier League",
           "n": 1,
@@ -259,12 +274,12 @@
         }
       },
       "heldToClose": {
-        "n": 2,
+        "n": 3,
         "exitBetter": 2,
-        "holdBetter": 0,
-        "avgDeltaEur": 1.02
+        "holdBetter": 1,
+        "avgDeltaEur": 0.61
       }
     }
   },
-  "updatedAt": "2026-09-18T14:14:55.795880+00:00"
+  "updatedAt": "2026-09-18T17:48:49.439216+00:00"
 }
