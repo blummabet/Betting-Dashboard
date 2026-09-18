@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-18T00:23:04.885543+00:00",
+ "generatedAt": "2026-09-18T00:54:22.488532+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,14 +9,14 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 673,
- "pinnKeys": 253,
- "matched": 177,
+ "polyRowsSeen": 675,
+ "pinnKeys": 255,
+ "matched": 179,
  "footballRows": 165,
- "crossRows": 508,
- "footballSkippedStale": 54,
+ "crossRows": 510,
+ "footballSkippedStale": 53,
  "seenBySport": {
-  "americanfootball_nfl": 176,
+  "americanfootball_nfl": 178,
   "baseball_mlb": 70,
   "icehockey_nhl": 238,
   "boxing_boxing": 24,
@@ -24,14 +24,43 @@
   "soccer_liga": 144
  },
  "matchedBySport": {
-  "baseball_mlb": 10,
+  "baseball_mlb": 12,
   "boxing_boxing": 2,
   "soccer_mls": 21,
   "soccer_liga": 144
  },
  "trackRecord": {
   "tracked": 295,
-  "converged": 73
+  "converged": 71
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|bostonredsox-texasrangers|bostonredsox",
+   "sport": "baseball_mlb",
+   "event": "Boston Red Sox vs Texas Rangers",
+   "market": "Moneyline",
+   "outcome": "Boston Red Sox",
+   "polyPP": 16.4,
+   "pinnPP": 41.7,
+   "gapPP": -25.38,
+   "vol": 572947,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -15.16,
+   "firstSeen": "2026-09-16T00:19:07.905096+00:00"
+  },
+  {
+   "id": "baseball_mlb|bostonredsox-texasrangers|texasrangers",
+   "sport": "baseball_mlb",
+   "event": "Boston Red Sox vs Texas Rangers",
+   "market": "Moneyline",
+   "outcome": "Texas Rangers",
+   "polyPP": 83.7,
+   "pinnPP": 58.3,
+   "gapPP": 25.38,
+   "vol": 572947,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -15.16,
+   "firstSeen": "2026-09-16T00:19:07.905096+00:00"
+  }
+ ]
 }
