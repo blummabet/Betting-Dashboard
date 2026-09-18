@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-18T01:23:13.108567+00:00",
+ "generatedAt": "2026-09-18T01:53:08.802692+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,8 +10,8 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 675,
- "pinnKeys": 259,
- "matched": 183,
+ "pinnKeys": 267,
+ "matched": 191,
  "footballRows": 165,
  "crossRows": 510,
  "footballSkippedStale": 53,
@@ -24,56 +24,28 @@
   "soccer_liga": 144
  },
  "matchedBySport": {
-  "baseball_mlb": 16,
+  "baseball_mlb": 24,
   "boxing_boxing": 2,
   "soccer_mls": 21,
   "soccer_liga": 144
  },
  "trackRecord": {
-  "tracked": 295,
-  "converged": 73
+  "tracked": 297,
+  "converged": 71
  },
  "discrepancies": [
-  {
-   "id": "baseball_mlb|newyorkmets-philadelphiaphillies|philadelphiaphillies",
-   "sport": "baseball_mlb",
-   "event": "Philadelphia Phillies vs New York Mets",
-   "market": "Moneyline",
-   "outcome": "Philadelphia Phillies",
-   "polyPP": 93.5,
-   "pinnPP": 78.7,
-   "gapPP": 14.77,
-   "vol": 444184,
-   "richtung": "Poly zu hoch → faden",
-   "convergePP": -8.66,
-   "firstSeen": "2026-09-17T23:53:05.798957+00:00"
-  },
-  {
-   "id": "baseball_mlb|newyorkmets-philadelphiaphillies|newyorkmets",
-   "sport": "baseball_mlb",
-   "event": "Philadelphia Phillies vs New York Mets",
-   "market": "Moneyline",
-   "outcome": "New York Mets",
-   "polyPP": 6.5,
-   "pinnPP": 21.3,
-   "gapPP": -14.77,
-   "vol": 444184,
-   "richtung": "Poly zu niedrig → backen",
-   "convergePP": -8.66,
-   "firstSeen": "2026-09-17T23:53:05.798957+00:00"
-  },
   {
    "id": "baseball_mlb|chicagowhitesox-detroittigers|detroittigers",
    "sport": "baseball_mlb",
    "event": "Detroit Tigers vs Chicago White Sox",
    "market": "Moneyline",
    "outcome": "Detroit Tigers",
-   "polyPP": 11.5,
-   "pinnPP": 17.8,
-   "gapPP": -6.29,
-   "vol": 304899,
+   "polyPP": 12.5,
+   "pinnPP": 46.2,
+   "gapPP": -33.67,
+   "vol": 346308,
    "richtung": "Poly zu niedrig → backen",
-   "convergePP": 2.16,
+   "convergePP": -25.22,
    "firstSeen": "2026-09-17T23:53:05.798957+00:00"
   },
   {
@@ -82,13 +54,41 @@
    "event": "Detroit Tigers vs Chicago White Sox",
    "market": "Moneyline",
    "outcome": "Chicago White Sox",
-   "polyPP": 88.5,
-   "pinnPP": 82.2,
-   "gapPP": 6.29,
-   "vol": 304899,
+   "polyPP": 87.5,
+   "pinnPP": 53.8,
+   "gapPP": 33.67,
+   "vol": 346308,
    "richtung": "Poly zu hoch → faden",
-   "convergePP": 2.16,
+   "convergePP": -25.22,
    "firstSeen": "2026-09-17T23:53:05.798957+00:00"
+  },
+  {
+   "id": "baseball_mlb|losangelesangels-minnesotatwins|minnesotatwins",
+   "sport": "baseball_mlb",
+   "event": "Minnesota Twins vs Los Angeles Angels",
+   "market": "Moneyline",
+   "outcome": "Minnesota Twins",
+   "polyPP": 29.5,
+   "pinnPP": 53.1,
+   "gapPP": -23.56,
+   "vol": 480014,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-18T01:53:08.802246+00:00"
+  },
+  {
+   "id": "baseball_mlb|losangelesangels-minnesotatwins|losangelesangels",
+   "sport": "baseball_mlb",
+   "event": "Minnesota Twins vs Los Angeles Angels",
+   "market": "Moneyline",
+   "outcome": "Los Angeles Angels",
+   "polyPP": 70.5,
+   "pinnPP": 46.9,
+   "gapPP": 23.56,
+   "vol": 480014,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-18T01:53:08.802246+00:00"
   }
  ]
 }
