@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-18T21:54:38.149707+00:00",
+"generatedAt": "2026-09-18T22:09:42.198095+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1286,
-"wins": 1090,
-"hitRate": 0.8476,
-"polyN": 1219,
-"polyWins": 953,
-"polyHitRate": 0.7818,
-"pinnN": 171,
-"pinnHitRate": 0.7895,
-"nRoi": 613,
-"roi": 0.4356,
-"roiLb": 0.3842,
-"nClv": 613,
+"n": 1287,
+"wins": 1091,
+"hitRate": 0.8477,
+"polyN": 1220,
+"polyWins": 954,
+"polyHitRate": 0.782,
+"pinnN": 172,
+"pinnHitRate": 0.7907,
+"nRoi": 614,
+"roi": 0.4355,
+"roiLb": 0.3841,
+"nClv": 614,
 "clv": 20.66,
-"clvLb": 19.0709
+"clvLb": 19.0786
 },
 "uneinig": {
-"n": 490,
-"wins": 152,
-"hitRate": 0.3102,
-"polyN": 451,
-"polyWins": 124,
-"polyHitRate": 0.2749,
-"pinnN": 299,
-"pinnHitRate": 0.6254,
-"nRoi": 258,
-"roi": -0.4913,
-"roiLb": -0.5793,
-"nClv": 258,
-"clv": -19.67,
-"clvLb": -23.1102
+"n": 491,
+"wins": 153,
+"hitRate": 0.3116,
+"polyN": 452,
+"polyWins": 125,
+"polyHitRate": 0.2765,
+"pinnN": 300,
+"pinnHitRate": 0.6233,
+"nRoi": 259,
+"roi": -0.4893,
+"roiLb": -0.577,
+"nClv": 259,
+"clv": -19.59,
+"clvLb": -23.0233
 },
 "teil": {
 "n": 24,
@@ -81,15 +81,15 @@
 "wins": 32,
 "hitRate": 0.7111
 },
+"English Premier League": {
+"n": 41,
+"wins": 23,
+"hitRate": 0.561
+},
 "Italian Serie A": {
 "n": 41,
 "wins": 31,
 "hitRate": 0.7561
-},
-"English Premier League": {
-"n": 40,
-"wins": 22,
-"hitRate": 0.55
 },
 "Japanese J League": {
 "n": 40,
@@ -371,6 +371,11 @@
 "wins": 5,
 "hitRate": 0.7143
 },
+"Irish Premier Division": {
+"n": 7,
+"wins": 4,
+"hitRate": 0.5714
+},
 "Kazakhstan Premier League": {
 "n": 7,
 "wins": 5,
@@ -392,11 +397,6 @@
 "hitRate": 0.8571
 },
 "Estonian Premier League": {
-"n": 6,
-"wins": 3,
-"hitRate": 0.5
-},
-"Irish Premier Division": {
 "n": 6,
 "wins": 3,
 "hitRate": 0.5
@@ -660,26 +660,64 @@
 "clvLb": 12.2342
 },
 "weak": {
-"n": 667,
-"wins": 339,
-"hitRate": 0.5082,
-"nRoi": 310,
-"roi": -0.1475,
-"roiLb": -0.2431,
-"nClv": 310,
-"clv": -4.09,
-"clvLb": -7.1556
+"n": 669,
+"wins": 341,
+"hitRate": 0.5097,
+"nRoi": 312,
+"roi": -0.1454,
+"roiLb": -0.2405,
+"nClv": 312,
+"clv": -3.99,
+"clvLb": -7.037
 }
 },
 "divergence": {
-"n": 490,
-"betfairWins": 152,
-"betfairRate": 0.3102,
-"polyN": 451,
-"polyWins": 124,
-"polyRate": 0.2749
+"n": 491,
+"betfairWins": 153,
+"betfairRate": 0.3116,
+"polyN": 452,
+"polyWins": 125,
+"polyRate": 0.2765
 },
 "recent": [
+{
+"matchId": "36036322",
+"home": "Brentford",
+"away": "Chelsea",
+"league": "English Premier League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Brentford",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+0
+],
+"kickoff": "2026-09-18T19:00:00Z",
+"settledAt": "2026-09-18T22:09:41.989613+00:00"
+},
+{
+"matchId": "36067729",
+"home": "Bohemians",
+"away": "Drogheda",
+"league": "Irish Premier Division",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Bohemians",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-09-18T19:00:00Z",
+"settledAt": "2026-09-18T22:09:41.989613+00:00"
+},
 {
 "matchId": "36068623",
 "home": "Gent",
@@ -1401,56 +1439,18 @@
 ],
 "kickoff": "2026-09-18T12:45:00Z",
 "settledAt": "2026-09-18T14:38:51.119044+00:00"
-},
-{
-"matchId": "36075807",
-"home": "Chernomorets Odesa",
-"away": "Obolon-Brovar Kiev",
-"league": "Ukrainian Premier League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Chernomorets Odesa",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-09-18T10:00:00Z",
-"settledAt": "2026-09-18T14:23:48.915926+00:00"
-},
-{
-"matchId": "36079512",
-"home": "Nantong Zhiyun F.C",
-"away": "Guangxi Hengchen",
-"league": "Chinese League 1",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Nantong Zhiyun F.C",
-"polySide": "away",
-"winner": "away",
-"moneyWin": false,
-"polyWin": true,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-09-18T11:30:00Z",
-"settledAt": "2026-09-18T13:23:40.936025+00:00"
 }
 ],
 "global": {
-"n": 1800,
-"wins": 1247,
-"hitRate": 0.6928,
-"nRoi": 886,
-"roi": 0.1457,
-"roiLb": 0.0955,
-"nClv": 886,
-"clv": 7.93,
-"clvLb": 6.0964
+"n": 1802,
+"wins": 1249,
+"hitRate": 0.6931,
+"nRoi": 888,
+"roi": 0.1458,
+"roiLb": 0.0956,
+"nClv": 888,
+"clv": 7.94,
+"clvLb": 6.1092
 },
-"pending": 28
+"pending": 26
 }
