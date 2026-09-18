@@ -63,17 +63,16 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "884 geprueft, davon 109 abgeschnitten"
+      "note": "894 geprueft, davon 111 abgeschnitten"
     },
     {
       "id": "settlement_alive",
       "label": "Settlement lebt (keine ewig offenen Positionen)",
       "severity": "error",
       "ok": false,
-      "nFail": 18,
+      "nFail": 17,
       "failures": [
-        "nor-ffk-bog-2026-09-04-more-markets: seit 14.0 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "spl-sha-hil-2026-09-04-more-markets: seit 13.9 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
+        "spl-sha-hil-2026-09-04-more-markets: seit 14.0 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "fl1-psg-asm-2026-09-04-more-markets: seit 13.9 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "epl-ips-liv-2026-09-04-more-markets: seit 13.9 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "epl-new-bou-2026-09-05-more-markets: seit 13.2 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
@@ -101,7 +100,7 @@
       "nFail": 3,
       "failures": [
         "TENNIS: nur 279/660 fällige Märkte aufgelöst (42%)",
-        "ESPORTS: nur 335/653 fällige Märkte aufgelöst (51%)",
+        "ESPORTS: nur 338/656 fällige Märkte aufgelöst (52%)",
         "MLB: nur 172/332 fällige Märkte aufgelöst (52%)"
       ],
       "note": "Fällige Märkte je Liga, die ihre Auflösung finden. < 60% = Settlement läuft ins Leere (Slug-Mismatch), Trefferquoten dieser Liga sind unvollständig."
@@ -113,9 +112,9 @@
       "ok": false,
       "nFail": 5,
       "failures": [
-        "121/311 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (39%) — Trefferquote allein trügt",
-        "   0x84cfffc3f1… n=312 Treffer 52% P&L $-7,662,814",
-        "   0xc3c3b3ef30… n=338 Treffer 51% P&L $-3,973,116",
+        "122/312 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (39%) — Trefferquote allein trügt",
+        "   0x84cfffc3f1… n=312 Treffer 52% P&L $-7,663,002",
+        "   0xc3c3b3ef30… n=338 Treffer 51% P&L $-3,973,117",
         "   0xa0f21e6d35… n=90 Treffer 66% P&L $-2,635,720",
         "   0xabb89972b2… n=35 Treffer 60% P&L $-2,563,982"
       ],
@@ -159,5 +158,5 @@
     }
   ],
   "nFail": 4,
-  "generatedAt": "2026-09-18T15:58:54.507561+00:00"
+  "generatedAt": "2026-09-18T16:29:22.682028+00:00"
 }
