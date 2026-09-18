@@ -41,6 +41,11 @@ OUT_FILE    = BASE / "poly_public_record.json"
 # waren in diesem Repo schon zweimal der Fehler; `settle()` kennt den Buendel-Riegel und die
 # Ruecknahme-Regel, und die sollen hier genauso gelten.
 DOM_LEDGER_FILE = BASE / "poly_dominanz_ledger.json"
+# 18.09.2026 (Lucas' Einigkeits-Idee): ein Buch, das NICHTS sendet — mehrere bewiesene Wallets
+# einig, keine allein ueber der Geldschwelle. Es wird hier mit abgerechnet, sonst stuende die
+# registrierte Messung in vier Wochen immer noch bei null und niemand wuesste, warum.
+SCHATTEN_LEDGER_FILE = BASE / "poly_einigkeit_schatten.json"
+SCHATTEN_OUT_FILE = BASE / "poly_einigkeit_schatten_bericht.json"
 DOM_OUT_FILE    = BASE / "poly_dominanz_record.json"
 
 STAKE = 10.0            # Einheits-Einsatz je Push (wie im Papier-Depot) — macht ROI vergleichbar
@@ -339,6 +344,21 @@ def main() -> int:
         print(f"  🎯 Markt-Dominanz: {_drep['gesamt']} gesendet · {_drep['offen']} offen · "
               f"{_da['n']} abgerechnet"
               + (f" · Treffer {_da['hit']*100:.0f}% (UG {_da['hitUg']*100:.0f}%)" if _da["n"] else ""))
+    # Das Schattenbuch durch dieselbe Abrechnung. Es hat sein eigenes Buch und seinen eigenen
+    # Bericht — aber keine eigene Wahrheit darueber, was ein Treffer ist, und vor allem keinen
+    # eigenen Kanal: hier wird gerechnet, gesendet wurde nie etwas.
+    _sch = _load(SCHATTEN_LEDGER_FILE, [])
+    if isinstance(_sch, list) and _sch:
+        _sch = settle(_sch, _res, _close, korrekturen=_korr)
+        write_json_atomic(SCHATTEN_LEDGER_FILE, _sch, indent=0)
+        _srep = report(_sch)
+        write_json_atomic(SCHATTEN_OUT_FILE, _srep, indent=1)
+        _sa = _srep["agg"]
+        print(f"  ⚖️  Einigkeit (Schatten, nie gesendet): {_srep['gesamt']} beobachtet · "
+              f"{_srep['offen']} offen · {_sa['n']} abgerechnet"
+              + (f" · ROI {_sa['roi']*100:+.1f}%" if _sa["n"] and _sa["roi"] is not None else "")
+              + (f" · Treffer {_sa['hit']*100:.0f}% (UG {_sa['hitUg']*100:.0f}%)" if _sa["n"] else ""))
+
     rep = report(led)
     write_json_atomic(OUT_FILE, rep, indent=1)
     a = rep["agg"]

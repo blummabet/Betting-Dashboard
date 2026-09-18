@@ -137,13 +137,6 @@ jobs:
       # 05.09.2026 (Lucas: „250.000 ist fuer mich ein Vermoegen, fuer den ein normaler Bet") —
       # MUSS vor dem Whale-Watch laufen: der baut daraus die Zeile „Normalgroesse fuer dieses
       # Konto". Faellt der Schritt aus, fehlt die Zeile, der Push geht trotzdem raus.
-      # 🔬 15.09.2026 (Lucas: „wo sehen wir den Outcome dieser Messungen? Damit wir in 2 Wochen
-      # wissen, dass wir das heute gemacht haben"). Laeuft NACH dem Auto-Play, damit der Stand
-      # den heutigen Lauf schon enthaelt. Schreibt nur das Buch, entscheidet nichts.
-      - name: 🔬 Buch der laufenden Messungen fortschreiben
-        run: ${{ env.POLY_PYTHON }} messungen.py
-        continue-on-error: true
-
       - name: 📐 Wallet-Norm (was ist fuer DIESES Konto ein normaler Einsatz)
         run: ${{ env.POLY_PYTHON }} poly_wallet_norm.py
         continue-on-error: true
@@ -169,6 +162,18 @@ jobs:
       # faellige Pushs gegen den Slug-Sieger abgerechnet werden.
       - name: 🐋 Public-Whale-Pushs abrechnen (Slug → Trefferquote/ROI/CLV)
         run: ${{ env.POLY_PYTHON }} poly_public_eval.py
+        continue-on-error: true
+
+      # 🔬 15.09.2026 (Lucas: „wo sehen wir den Outcome dieser Messungen? Damit wir in 2 Wochen
+      # wissen, dass wir das heute gemacht haben"). Schreibt nur das Buch, entscheidet nichts.
+      #
+      # 🔴 18.09.2026 nach hinten verschoben. Der Schritt stand VOR dem Whale-Watch und vor der
+      # Abrechnung — der Stand im Messungen-Buch war damit immer einen ganzen Lauf alt. Beim
+      # neuen Einigkeits-Schattenbuch waere das besonders irrefuehrend gewesen: es entsteht im
+      # Whale-Watch und wird erst von poly_public_eval abgerechnet. Jetzt zaehlt das Buch, was
+      # dieser Lauf wirklich hergegeben hat.
+      - name: 🔬 Buch der laufenden Messungen fortschreiben
+        run: ${{ env.POLY_PYTHON }} messungen.py
         continue-on-error: true
 
       - name: ⚖️ Cross-Sport-Edge-Alert (Poly vs Pinnacle, konvergierend)
@@ -222,7 +227,7 @@ jobs:
             poly_wallet_norm.json poly_wallet_norm_state.json \
             shortlist_push_seen.json shortlist_push_ledger.json shortlist_auto_bets_placed.json \
             poly_dominanz_ledger.json poly_dominanz_seen.json poly_dominanz_record.json \
-            poly_money_klein.json messungen.json poly_gegenseite.json poly_einigkeit_schatten.json \
+            poly_money_klein.json messungen.json poly_gegenseite.json poly_einigkeit_schatten.json poly_einigkeit_schatten_bericht.json \
             poly_money_broad_live.json poly_money_broad_live_history.json \
             esports_poly_prices.json esports_poly_wallets.json esports_poly_smartmoney.json esports_poly_coherence.json esports_poly_status.json \
             health/poly-global.json; do

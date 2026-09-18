@@ -132,7 +132,13 @@ def zaehler_einigkeit_schatten(base_dir):
     d = _laden(os.path.join(base_dir, "poly_einigkeit_schatten.json"))
     if d is None:
         return 0            # Buch noch nicht angelegt = noch kein Fall, nicht „unbekannt"
-    return len(d) if isinstance(d, list) else None
+    if not isinstance(d, list):
+        return None
+    # 🔴 Gezaehlt werden nur ABGERECHNETE Zeilen. Alle zu zaehlen waere derselbe Fehler, den das
+    # Board schon einmal hatte: ein Wort, das etwas anderes benennt als die Zahl daneben. Ein
+    # offener Kandidat ist keine Beobachtung — er kann noch in beide Richtungen ausgehen, und
+    # „40 von 40 erreicht" haette dann keinen einzigen Ausgang gesehen.
+    return sum(1 for e in d if isinstance(e, dict) and e.get("status") == "settled")
 
 
 ZAEHLER = {

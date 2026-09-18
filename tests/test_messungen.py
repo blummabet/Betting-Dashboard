@@ -211,8 +211,57 @@ class RegisterImRepo(unittest.TestCase):
         ids = {e["id"] for e in self.reg["messungen"]}
         for noetig in ("horizont-shortlist", "horizont-trader", "echte-fills",
                        "devig-proportional-vs-power", "serie-a-btts-schublade",
-                       "sharp-radar-drift-pushes"):
+                       "sharp-radar-drift-pushes", "einigkeit-statt-geld"):
             self.assertIn(noetig, ids)
+
+
+class TestDieEinigkeitsMessungWirdAuchGefuellt(unittest.TestCase):
+    """18.09.2026 (Lucas: „hau das auch in den Menuepunkt Messung, damit wir das wo haben und ich
+    schauen kann und wir das nicht vergessen").
+
+    Eine eingetragene Messung, die niemand fuellt, ist schlimmer als keine: sie steht sechs
+    Wochen auf „0 von 40" und sieht dabei aus, als liefe sie. Genau das waere hier passiert —
+    das Schattenbuch wurde geschrieben, aber von niemandem abgerechnet.
+    """
+
+    def test_der_zaehler_zaehlt_nur_abgerechnete_zeilen(self):
+        """Offene Kandidaten sind keine Beobachtungen. Wer sie mitzaehlt, meldet „40 von 40
+        erreicht", ohne einen einzigen Ausgang gesehen zu haben."""
+        import json, tempfile, os
+        with tempfile.TemporaryDirectory() as d:
+            with open(os.path.join(d, "poly_einigkeit_schatten.json"), "w") as f:
+                json.dump([{"k": "a", "status": "settled"}, {"k": "b", "status": "pending"},
+                           {"k": "c", "status": "settled"}, {"k": "d"}], f)
+            self.assertEqual(M.zaehler_einigkeit_schatten(d), 2)
+
+    def test_ohne_buch_ist_es_null_und_nicht_unbekannt(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            self.assertEqual(M.zaehler_einigkeit_schatten(d), 0)
+
+    def test_das_schattenbuch_wird_wirklich_abgerechnet(self):
+        """Der Test, der den stillen Ausfall verhindert: `poly_public_eval` muss das Buch
+        anfassen. Ohne ihn haette die Messung bis zum Faelligkeitstag bei null gestanden, und
+        erst dann waere aufgefallen, dass nie jemand gesettelt hat."""
+        import os
+        wurzel = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        quelle = open(os.path.join(wurzel, "poly_public_eval.py"), encoding="utf-8").read()
+        self.assertIn("poly_einigkeit_schatten.json", quelle)
+        self.assertIn("SCHATTEN_LEDGER_FILE", quelle)
+        stelle = quelle.index("SCHATTEN_LEDGER_FILE, []")
+        self.assertIn("settle(", quelle[stelle:stelle + 400])
+
+    def test_die_quelle_im_register_zeigt_auf_das_buch(self):
+        e = [x for x in self.reg["messungen"] if x["id"] == "einigkeit-statt-geld"][0]
+        self.assertIn("poly_einigkeit_schatten.json", e["quelle"])
+        self.assertEqual(e["messer"], "einigkeit_schatten")
+        self.assertIn(e["messer"], M.ZAEHLER)
+
+    def setUp(self):
+        import json, os
+        wurzel = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        self.reg = json.loads(open(os.path.join(wurzel, "messungen_register.json"),
+                                   encoding="utf-8").read())
 
 
 if __name__ == "__main__":
