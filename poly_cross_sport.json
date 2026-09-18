@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-18T00:54:22.488532+00:00",
+ "generatedAt": "2026-09-18T01:23:13.108567+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,8 +10,8 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 675,
- "pinnKeys": 255,
- "matched": 179,
+ "pinnKeys": 259,
+ "matched": 183,
  "footballRows": 165,
  "crossRows": 510,
  "footballSkippedStale": 53,
@@ -24,43 +24,71 @@
   "soccer_liga": 144
  },
  "matchedBySport": {
-  "baseball_mlb": 12,
+  "baseball_mlb": 16,
   "boxing_boxing": 2,
   "soccer_mls": 21,
   "soccer_liga": 144
  },
  "trackRecord": {
   "tracked": 295,
-  "converged": 71
+  "converged": 73
  },
  "discrepancies": [
   {
-   "id": "baseball_mlb|bostonredsox-texasrangers|bostonredsox",
+   "id": "baseball_mlb|newyorkmets-philadelphiaphillies|philadelphiaphillies",
    "sport": "baseball_mlb",
-   "event": "Boston Red Sox vs Texas Rangers",
+   "event": "Philadelphia Phillies vs New York Mets",
    "market": "Moneyline",
-   "outcome": "Boston Red Sox",
-   "polyPP": 16.4,
-   "pinnPP": 41.7,
-   "gapPP": -25.38,
-   "vol": 572947,
-   "richtung": "Poly zu niedrig → backen",
-   "convergePP": -15.16,
-   "firstSeen": "2026-09-16T00:19:07.905096+00:00"
+   "outcome": "Philadelphia Phillies",
+   "polyPP": 93.5,
+   "pinnPP": 78.7,
+   "gapPP": 14.77,
+   "vol": 444184,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -8.66,
+   "firstSeen": "2026-09-17T23:53:05.798957+00:00"
   },
   {
-   "id": "baseball_mlb|bostonredsox-texasrangers|texasrangers",
+   "id": "baseball_mlb|newyorkmets-philadelphiaphillies|newyorkmets",
    "sport": "baseball_mlb",
-   "event": "Boston Red Sox vs Texas Rangers",
+   "event": "Philadelphia Phillies vs New York Mets",
    "market": "Moneyline",
-   "outcome": "Texas Rangers",
-   "polyPP": 83.7,
-   "pinnPP": 58.3,
-   "gapPP": 25.38,
-   "vol": 572947,
+   "outcome": "New York Mets",
+   "polyPP": 6.5,
+   "pinnPP": 21.3,
+   "gapPP": -14.77,
+   "vol": 444184,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -8.66,
+   "firstSeen": "2026-09-17T23:53:05.798957+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagowhitesox-detroittigers|detroittigers",
+   "sport": "baseball_mlb",
+   "event": "Detroit Tigers vs Chicago White Sox",
+   "market": "Moneyline",
+   "outcome": "Detroit Tigers",
+   "polyPP": 11.5,
+   "pinnPP": 17.8,
+   "gapPP": -6.29,
+   "vol": 304899,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 2.16,
+   "firstSeen": "2026-09-17T23:53:05.798957+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagowhitesox-detroittigers|chicagowhitesox",
+   "sport": "baseball_mlb",
+   "event": "Detroit Tigers vs Chicago White Sox",
+   "market": "Moneyline",
+   "outcome": "Chicago White Sox",
+   "polyPP": 88.5,
+   "pinnPP": 82.2,
+   "gapPP": 6.29,
+   "vol": 304899,
    "richtung": "Poly zu hoch → faden",
-   "convergePP": -15.16,
-   "firstSeen": "2026-09-16T00:19:07.905096+00:00"
+   "convergePP": 2.16,
+   "firstSeen": "2026-09-17T23:53:05.798957+00:00"
   }
  ]
 }
