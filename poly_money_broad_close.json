@@ -352065,7 +352065,13 @@
   "tokens": {
    "Over": "3867566622568842079586429661861056018065036896638079856765011015217533753263",
    "Under": "54049883607399092299264641984079539083423568344964888142705256916662036896604"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Over": 0.0,
+   "Under": 1.0
+  },
+  "resolvedAt": "2026-09-18T21:57:44.916224+00:00"
  },
  "bun-bay-uni-2026-09-18": {
   "shares": {
@@ -355731,7 +355737,14 @@
    "Grenoble Foot 38": "108322092975718224144626665998421964238049098386435528172705183436097042643670",
    "Draw (Grenoble Foot 38 vs. Clermont Foot 63)": "50149804828955221555874106385202501950401974975306900010837299643139391356135",
    "Clermont Foot 63": "69945763241860139819924440480256765965235818099130969166218053008011900997550"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Grenoble Foot 38": 0.0,
+   "Draw (Grenoble Foot 38 vs. Clermont Foot 63)": 1.0,
+   "Clermont Foot 63": 0.0
+  },
+  "resolvedAt": "2026-09-18T21:57:44.916224+00:00"
  },
  "wta-stoiana-badosa-2026-09-18": {
   "shares": {
@@ -355837,12 +355850,12 @@
  },
  "cs2-shin-tdp-2026-09-18": {
   "shares": {
-   "ShindeN": 58401.93573554999,
-   "Turma do Pagode": 22152.565442425002
+   "ShindeN": 70348.55550975,
+   "Turma do Pagode": 23449.618318250003
   },
   "prices": {
-   "ShindeN": 0.725,
-   "Turma do Pagode": 0.275
+   "ShindeN": 0.75,
+   "Turma do Pagode": 0.25
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -355850,35 +355863,35 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 83333,
+  "totalUsd": 100205,
   "whales": [
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "side": "ShindeN",
-    "usd": 35793,
+    "usd": 37027,
     "avgPrice": 0.7089
    },
    {
     "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
     "side": "Turma do Pagode",
-    "usd": 8250,
+    "usd": 7500,
     "avgPrice": 0.29
    },
    {
     "wallet": "0xf1ef8705e9f63c790c6fffd6329aea7011718cd6",
     "side": "ShindeN",
-    "usd": 5800,
+    "usd": 6000,
     "avgPrice": 0.71
    },
    {
     "wallet": "0xcd48b60248f881852b785dfb4dc9e92da011395c",
     "side": "ShindeN",
-    "usd": 2569,
-    "avgPrice": 0.7099
+    "usd": 5908,
+    "avgPrice": 0.7186
    }
   ],
   "hoursToKickoff": 0.09,
-  "capturedAt": "2026-09-18T20:58:04.257608+00:00",
+  "capturedAt": "2026-09-18T21:57:44.916224+00:00",
   "cond": "0xf3ddd57b0697f14bc20727c99272de9ce655af923dfb2defa426f8a3368b1fc8",
   "frage": "Counter-Strike: ShindeN vs Turma do Pagode (BO3) - Circuit X Curitiba Playoffs",
   "tokens": {
@@ -355888,63 +355901,79 @@
   "book": {
    "side": "ShindeN",
    "bid": 0.73,
-   "ask": 0.74,
-   "spreadC": 1.0,
-   "spreadPct": 1.35,
+   "ask": 0.75,
+   "spreadC": 2.0,
+   "spreadPct": 2.67,
    "bids": [
     [
      0.73,
-     70
+     10
     ],
     [
      0.72,
-     2590
+     667
     ],
     [
      0.71,
-     2500
+     617
     ],
     [
      0.7,
-     2036
+     1640
     ],
     [
-     0.69,
-     5834
+     0.67,
+     10
     ],
     [
-     0.68,
-     786
+     0.64,
+     30
     ]
    ],
    "asks": [
     [
-     0.74,
-     152
-    ],
-    [
      0.75,
-     511
+     10
     ],
     [
      0.76,
-     910
+     95
     ],
     [
      0.77,
-     808
+     757
     ],
     [
      0.78,
-     462
+     50
     ],
     [
      0.79,
-     74
+     150
+    ],
+    [
+     0.8,
+     50
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0xe80c3e22d5307c0b28586d40de00719e8113f3e6",
+    "action": "BUY",
+    "side": "Turma do Pagode",
+    "price": 0.2651,
+    "usd": 2872,
+    "ts": 1789768077
+   },
+   {
+    "wallet": "0xa032d2358fa08860ba30ba8e8d828b7738202090",
+    "action": "BUY",
+    "side": "ShindeN",
+    "price": 0.7618,
+    "usd": 760,
+    "ts": 1789767930
+   },
    {
     "wallet": "0xcd48b60248f881852b785dfb4dc9e92da011395c",
     "action": "BUY",
@@ -356125,12 +356154,18 @@
   "tokens": {
    "Francesco Maestrelli": "53675342004888454269667326232410566580836374351549929942303529649990584524138",
    "Sascha Gueymard-Wayenburg": "46796654824021564087540373231847526174636518495515062941745091630216398721000"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Francesco Maestrelli": 0.0,
+   "Sascha Gueymard-Wayenburg": 1.0
+  },
+  "resolvedAt": "2026-09-18T21:57:44.916224+00:00"
  },
  "wta-podoros-lamens-2026-09-18": {
   "shares": {
-   "Nadia Podoroska": 3625.69773876,
-   "Suzan Lamens": 3414.591027435001
+   "Nadia Podoroska": 9709.03316885,
+   "Suzan Lamens": 9143.557403345001
   },
   "prices": {
    "Nadia Podoroska": 0.515,
@@ -356142,8 +356177,20 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 8843,
+  "totalUsd": 21154,
   "whales": [
+   {
+    "wallet": "0x081e14554b92ee3dc53a21bd5b01f306692ef76e",
+    "side": "Suzan Lamens",
+    "usd": 5939,
+    "avgPrice": 0.4899
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Nadia Podoroska",
+    "usd": 2975,
+    "avgPrice": 0.5137
+   },
    {
     "wallet": "0x38337de21ff0bb0a11a40761507d51e318d633d1",
     "side": "Suzan Lamens",
@@ -356153,24 +356200,12 @@
    {
     "wallet": "0x9b11866433281ade9f2811dbde8acdefc45f5375",
     "side": "Nadia Podoroska",
-    "usd": 1029,
-    "avgPrice": 0.52
-   },
-   {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-    "side": "Nadia Podoroska",
-    "usd": 919,
-    "avgPrice": 0.522
-   },
-   {
-    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
-    "side": "Nadia Podoroska",
-    "usd": 515,
-    "avgPrice": 0.535
+    "usd": 1543,
+    "avgPrice": 0.5166
    }
   ],
-  "hoursToKickoff": 0.67,
-  "capturedAt": "2026-09-18T21:32:34.052531+00:00",
+  "hoursToKickoff": 0.25,
+  "capturedAt": "2026-09-18T21:57:44.916224+00:00",
   "cond": "0x9d1d388c9f0f00dd3724738d2a8623cec13bb99e97914d41e03aa348005589e6",
   "frage": "Sao Paulo Open: Nadia Podoroska vs Suzan Lamens",
   "tokens": {
@@ -356180,12 +356215,12 @@
  },
  "mlb-kc-pit-2026-09-18": {
   "shares": {
-   "Over": 37678.54359956999,
-   "Under": 40009.175123804984
+   "Kansas City Royals": 33970.418689059996,
+   "Pittsburgh Pirates": 59099.33572730502
   },
   "prices": {
-   "Over": 0.485,
-   "Under": 0.515
+   "Kansas City Royals": 0.365,
+   "Pittsburgh Pirates": 0.635
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -356193,147 +356228,131 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 80632,
+  "totalUsd": 96469,
   "whales": [
    {
-    "wallet": "0x8a8685a792c184e5c2ee8c7d4d4baba7c2c94998",
-    "side": "Under",
-    "usd": 25074,
-    "avgPrice": 0.5134
+    "wallet": "0x26b46988d027c6c03cfa12a7c0c6d778be49b8a9",
+    "side": "Pittsburgh Pirates",
+    "usd": 29468,
+    "avgPrice": 0.64
    },
    {
-    "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
-    "side": "Over",
-    "usd": 11578,
-    "avgPrice": 0.4813
+    "wallet": "0x684baa57c338c2549aec0aa3f034f695d72a8409",
+    "side": "Pittsburgh Pirates",
+    "usd": 18930,
+    "avgPrice": 0.63
    },
    {
-    "wallet": "0x90139393512b18b73a75d04dead023388764a8a5",
-    "side": "Under",
-    "usd": 9625,
-    "avgPrice": 0.5199
+    "wallet": "0x1610db79f753a80207e1d66716be9e91e627ae49",
+    "side": "Kansas City Royals",
+    "usd": 13900,
+    "avgPrice": 0.3699
    },
    {
-    "wallet": "0x6f3e7f25baa7d2d49e15e2d2957ff3dec62cbcf8",
-    "side": "Over",
-    "usd": 8622,
-    "avgPrice": 0.48
+    "wallet": "0xcd84d7f9262516865553555751609fb6f52abec6",
+    "side": "Kansas City Royals",
+    "usd": 10804,
+    "avgPrice": 0.36
    }
   ],
-  "hoursToKickoff": 1.17,
-  "capturedAt": "2026-09-18T21:32:34.052531+00:00",
-  "cond": "0x31a6c37918fcb05ca2d2d9efbfb4cca41c5a2c6c1d34babde020a0f909238b44",
-  "frage": "Kansas City Royals vs. Pittsburgh Pirates: O/U 8.5",
+  "hoursToKickoff": 0.75,
+  "capturedAt": "2026-09-18T21:57:44.916224+00:00",
+  "cond": "0xf938c0630476a73cd51b8350920cc20a47346b24e611ae1bf2d575fd2d829a1c",
+  "frage": "Kansas City Royals vs. Pittsburgh Pirates",
   "tokens": {
-   "Over": "40133375366660458450494127424332984273221375365799185368588400603315070607449",
-   "Under": "63968553515525121608287483064344105270352733439469243583617944740356415917577"
+   "Kansas City Royals": "104071721642066280998382637305631659301445678359470516594041665054878843664494",
+   "Pittsburgh Pirates": "2665252611913615805947476496257983418521603028824411538119618099430562145971"
   },
   "book": {
-   "side": "Under",
-   "bid": 0.51,
-   "ask": 0.52,
+   "side": "Pittsburgh Pirates",
+   "bid": 0.63,
+   "ask": 0.64,
    "spreadC": 1.0,
-   "spreadPct": 1.92,
+   "spreadPct": 1.56,
    "bids": [
     [
-     0.51,
-     15006
+     0.63,
+     170396
     ],
     [
-     0.5,
-     64880
+     0.62,
+     153315
     ],
     [
-     0.49,
-     52275
+     0.61,
+     67617
     ],
     [
-     0.48,
-     26187
+     0.6,
+     28816
     ],
     [
-     0.47,
-     3505
+     0.59,
+     1364
     ],
     [
-     0.46,
-     5010
+     0.58,
+     19
     ]
    ],
    "asks": [
     [
-     0.52,
-     24606
+     0.64,
+     154735
     ],
     [
-     0.53,
-     97217
+     0.65,
+     148700
     ],
     [
-     0.54,
-     43937
+     0.66,
+     79555
     ],
     [
-     0.55,
-     7632
+     0.67,
+     39532
     ],
     [
-     0.56,
-     6060
+     0.68,
+     6119
     ],
     [
-     0.58,
-     5000
+     0.69,
+     38
     ]
    ]
   },
   "trades": [
    {
-    "wallet": "0xe5dec959aa50fe94080b7b529d134c557a83df2a",
+    "wallet": "0x689f7d0a49d2646dc199848ffbdb4757242e259c",
     "action": "BUY",
-    "side": "Under",
-    "price": 0.52,
-    "usd": 1040,
-    "ts": 1789766685
+    "side": "Kansas City Royals",
+    "price": 0.37,
+    "usd": 1910,
+    "ts": 1789768206
    },
    {
-    "wallet": "0x90139393512b18b73a75d04dead023388764a8a5",
+    "wallet": "0x26b46988d027c6c03cfa12a7c0c6d778be49b8a9",
     "action": "BUY",
-    "side": "Under",
-    "price": 0.52,
-    "usd": 9718,
-    "ts": 1789766233
+    "side": "Pittsburgh Pirates",
+    "price": 0.64,
+    "usd": 4700,
+    "ts": 1789767349
    },
    {
-    "wallet": "0x374e6ec4b01a41d68926c48d197365e65ece87c9",
+    "wallet": "0x26b46988d027c6c03cfa12a7c0c6d778be49b8a9",
     "action": "BUY",
-    "side": "Under",
-    "price": 0.52,
-    "usd": 300,
-    "ts": 1789762371
-   },
-   {
-    "wallet": "0x8a8685a792c184e5c2ee8c7d4d4baba7c2c94998",
-    "action": "BUY",
-    "side": "Under",
-    "price": 0.5177,
-    "usd": 5000,
-    "ts": 1789750633
-   },
-   {
-    "wallet": "0x8a8685a792c184e5c2ee8c7d4d4baba7c2c94998",
-    "action": "BUY",
-    "side": "Under",
-    "price": 0.5124,
-    "usd": 20000,
-    "ts": 1789748901
+    "side": "Pittsburgh Pirates",
+    "price": 0.64,
+    "usd": 25000,
+    "ts": 1789767301
    }
   ]
  },
  "mlb-chc-cin-2026-09-18": {
   "shares": {
-   "Chicago Cubs": 50241.05752305006,
-   "Cincinnati Reds": 37134.37941447498
+   "Chicago Cubs": 60610.07907332507,
+   "Cincinnati Reds": 44798.438821199976
   },
   "prices": {
    "Chicago Cubs": 0.575,
@@ -356345,7 +356364,7 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 88911,
+  "totalUsd": 101649,
   "whales": [
    {
     "wallet": "0x16bb9951a36fce71e2ef57890b786145e0ba8492",
@@ -356372,8 +356391,8 @@
     "avgPrice": 0.4324
    }
   ],
-  "hoursToKickoff": 1.17,
-  "capturedAt": "2026-09-18T21:32:34.052531+00:00",
+  "hoursToKickoff": 0.75,
+  "capturedAt": "2026-09-18T21:57:44.916224+00:00",
   "cond": "0xe09e54a08669bc9d1bdddf390da30838efa387cc4a57e2e910cd70ee6229db53",
   "frage": "Chicago Cubs vs. Cincinnati Reds",
   "tokens": {
@@ -356389,19 +356408,19 @@
    "bids": [
     [
      0.57,
-     124858
+     122818
     ],
     [
      0.56,
-     159897
+     185074
     ],
     [
      0.55,
-     73474
+     83418
     ],
     [
      0.54,
-     20055
+     21150
     ],
     [
      0.53,
@@ -356415,19 +356434,19 @@
    "asks": [
     [
      0.58,
-     135256
+     123532
     ],
     [
      0.59,
-     134177
+     149374
     ],
     [
      0.6,
-     55259
+     59289
     ],
     [
      0.61,
-     16422
+     17122
     ],
     [
      0.62,
@@ -356440,6 +356459,30 @@
    ]
   },
   "trades": [
+   {
+    "wallet": "0xf91683432c57581b0c8c58eb3bd0d6e5f03fe770",
+    "action": "BUY",
+    "side": "Chicago Cubs",
+    "price": 0.58,
+    "usd": 1013,
+    "ts": 1789768396
+   },
+   {
+    "wallet": "0x689f7d0a49d2646dc199848ffbdb4757242e259c",
+    "action": "BUY",
+    "side": "Cincinnati Reds",
+    "price": 0.43,
+    "usd": 2213,
+    "ts": 1789768192
+   },
+   {
+    "wallet": "0x6f6589b77c36b94c2a1304dfd40f44310725172c",
+    "action": "BUY",
+    "side": "Cincinnati Reds",
+    "price": 0.43,
+    "usd": 5215,
+    "ts": 1789767175
+   },
    {
     "wallet": "0x2465e0eb9743a7156575ccc65aad331359185d84",
     "action": "BUY",
@@ -356463,22 +356506,6 @@
     "price": 0.57,
     "usd": 27730,
     "ts": 1789757731
-   },
-   {
-    "wallet": "0x1610db79f753a80207e1d66716be9e91e627ae49",
-    "action": "BUY",
-    "side": "Chicago Cubs",
-    "price": 0.57,
-    "usd": 12549,
-    "ts": 1789751440
-   },
-   {
-    "wallet": "0x09af203b5af180c61d54eea118a4548a1f209728",
-    "action": "BUY",
-    "side": "Chicago Cubs",
-    "price": 0.57,
-    "usd": 3000,
-    "ts": 1789750039
    }
   ]
  },
@@ -356532,8 +356559,8 @@
  },
  "mlb-mil-bal-2026-09-18": {
   "shares": {
-   "Over": 54726.32396147998,
-   "Under": 62964.69531052001
+   "Over": 60994.93949384998,
+   "Under": 70176.97339614999
   },
   "prices": {
    "Over": 0.465,
@@ -356545,13 +356572,19 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 118787,
+  "totalUsd": 132182,
   "whales": [
    {
     "wallet": "0x5e9458202b5817a72cf81105ec8a30e6f3705ba1",
     "side": "Under",
-    "usd": 60667,
-    "avgPrice": 0.5277
+    "usd": 67879,
+    "avgPrice": 0.5279
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Over",
+    "usd": 11165,
+    "avgPrice": 0.47
    },
    {
     "wallet": "0x5f38747053bb642bb3ad456c5766ad9e6fb9eb70",
@@ -356564,16 +356597,10 @@
     "side": "Over",
     "usd": 10311,
     "avgPrice": 0.47
-   },
-   {
-    "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
-    "side": "Over",
-    "usd": 8786,
-    "avgPrice": 0.4752
    }
   ],
-  "hoursToKickoff": 1.59,
-  "capturedAt": "2026-09-18T21:32:34.052531+00:00",
+  "hoursToKickoff": 1.17,
+  "capturedAt": "2026-09-18T21:57:44.916224+00:00",
   "cond": "0x7928212d2de12deb2a928a2a70517b1d7549b957674217491d9385022549b644",
   "frage": "Milwaukee Brewers vs. Baltimore Orioles: O/U 8.5",
   "tokens": {
@@ -356589,23 +356616,23 @@
    "bids": [
     [
      0.53,
-     101723
+     88614
     ],
     [
      0.52,
-     54178
+     42261
     ],
     [
      0.51,
-     31269
+     31538
     ],
     [
      0.5,
-     38814
+     58434
     ],
     [
      0.49,
-     13317
+     7556
     ],
     [
      0.48,
@@ -356615,11 +356642,11 @@
    "asks": [
     [
      0.54,
-     250072
+     236396
     ],
     [
      0.55,
-     86193
+     76254
     ],
     [
      0.56,
@@ -356645,31 +356672,47 @@
     "action": "BUY",
     "side": "Over",
     "price": 0.47,
-    "usd": 470,
-    "ts": 1789766701
+    "usd": 331,
+    "ts": 1789768444
    },
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "action": "BUY",
     "side": "Over",
     "price": 0.47,
-    "usd": 1442,
-    "ts": 1789765038
+    "usd": 481,
+    "ts": 1789768170
    },
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "action": "BUY",
     "side": "Over",
     "price": 0.47,
-    "usd": 962,
-    "ts": 1789765014
+    "usd": 991,
+    "ts": 1789768131
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Over",
+    "price": 0.47,
+    "usd": 1410,
+    "ts": 1789767879
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Over",
+    "price": 0.47,
+    "usd": 979,
+    "ts": 1789767280
    }
   ]
  },
  "mlb-bos-tb-2026-09-18": {
   "shares": {
-   "Boston Red Sox": 64717.472911665034,
-   "Tampa Bay Rays": 80715.05743393503
+   "Boston Red Sox": 73599.45861123502,
+   "Tampa Bay Rays": 91792.59015370504
   },
   "prices": {
    "Boston Red Sox": 0.445,
@@ -356681,12 +356724,12 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 164842,
+  "totalUsd": 179566,
   "whales": [
    {
     "wallet": "0x5e9458202b5817a72cf81105ec8a30e6f3705ba1",
     "side": "Boston Red Sox",
-    "usd": 47882,
+    "usd": 56772,
     "avgPrice": 0.4399
    },
    {
@@ -356696,20 +356739,20 @@
     "avgPrice": 0.56
    },
    {
+    "wallet": "0x6f6589b77c36b94c2a1304dfd40f44310725172c",
+    "side": "Tampa Bay Rays",
+    "usd": 7731,
+    "avgPrice": 0.5599
+   },
+   {
     "wallet": "0x1610db79f753a80207e1d66716be9e91e627ae49",
     "side": "Tampa Bay Rays",
     "usd": 7718,
     "avgPrice": 0.5599
-   },
-   {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-    "side": "Tampa Bay Rays",
-    "usd": 6938,
-    "avgPrice": 0.56
    }
   ],
-  "hoursToKickoff": 1.67,
-  "capturedAt": "2026-09-18T21:32:34.052531+00:00",
+  "hoursToKickoff": 1.25,
+  "capturedAt": "2026-09-18T21:57:44.916224+00:00",
   "cond": "0x2cdcceec8023a609a77d8aedba047864307f7c964f5d1a45b0469e8a16954e53",
   "frage": "Boston Red Sox vs. Tampa Bay Rays",
   "tokens": {
@@ -356725,57 +356768,73 @@
    "bids": [
     [
      0.55,
-     136017
+     148012
     ],
     [
      0.54,
-     80239
+     98243
     ],
     [
      0.53,
-     22581
+     27148
     ],
     [
      0.52,
-     5392
+     8537
     ],
     [
      0.51,
-     4064
+     5309
     ],
     [
      0.5,
-     9078
+     4033
     ]
    ],
    "asks": [
     [
      0.56,
-     242325
+     242672
     ],
     [
      0.57,
-     76437
+     89483
     ],
     [
      0.58,
-     138301
+     115868
     ],
     [
      0.59,
-     52577
+     53436
     ],
     [
      0.6,
-     11199
+     7940
     ],
     [
      0.61,
-     14060
+     9010
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x689f7d0a49d2646dc199848ffbdb4757242e259c",
+    "action": "BUY",
+    "side": "Tampa Bay Rays",
+    "price": 0.56,
+    "usd": 2863,
+    "ts": 1789768186
+   },
+   {
+    "wallet": "0x6f6589b77c36b94c2a1304dfd40f44310725172c",
+    "action": "BUY",
+    "side": "Tampa Bay Rays",
+    "price": 0.56,
+    "usd": 7801,
+    "ts": 1789767267
+   },
    {
     "wallet": "0x787969a140b71ad9ae68982a8ee69b6dab353653",
     "action": "BUY",
@@ -356820,8 +356879,8 @@
  },
  "mlb-oak-cle-2026-09-18": {
   "shares": {
-   "Athletics": 28103.620182949995,
-   "Cleveland Guardians": 58369.48519230002
+   "Athletics": 28123.8275357,
+   "Cleveland Guardians": 58411.45430955002
   },
   "prices": {
    "Athletics": 0.325,
@@ -356833,7 +356892,7 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 120812,
+  "totalUsd": 121311,
   "whales": [
    {
     "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
@@ -356849,7 +356908,7 @@
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "Athletics",
-    "usd": 10591,
+    "usd": 10590,
     "avgPrice": 0.35
    },
    {
@@ -356858,8 +356917,8 @@
     "usd": 6841
    }
   ],
-  "hoursToKickoff": 1.67,
-  "capturedAt": "2026-09-18T21:32:34.052531+00:00",
+  "hoursToKickoff": 1.25,
+  "capturedAt": "2026-09-18T21:57:44.916224+00:00",
   "cond": "0xee9a9e0bf7bb416d5202ef42d3fc5233d3382b3f282a880d8536715607a46095",
   "frage": "Athletics vs. Cleveland Guardians",
   "tokens": {
@@ -356875,45 +356934,45 @@
    "bids": [
     [
      0.67,
-     157490
+     177390
     ],
     [
      0.66,
-     281469
+     306736
     ],
     [
      0.65,
-     185695
+     136522
     ],
     [
      0.64,
-     9932
+     4932
     ],
     [
      0.63,
-     3114
+     1384
     ],
     [
      0.62,
-     190
+     185
     ]
    ],
    "asks": [
     [
      0.68,
-     229935
+     231440
     ],
     [
      0.69,
-     161991
+     148437
     ],
     [
      0.7,
-     47911
+     44815
     ],
     [
      0.71,
-     15206
+     21992
     ],
     [
      0.72,
@@ -356921,7 +356980,7 @@
     ],
     [
      0.73,
-     114
+     64
     ]
    ]
   },
@@ -356962,8 +357021,8 @@
  },
  "mlb-phi-nym-2026-09-18": {
   "shares": {
-   "Philadelphia Phillies": 49511.95549631999,
-   "New York Mets": 56965.19759795999
+   "Philadelphia Phillies": 51918.358867364994,
+   "New York Mets": 59733.85523991499
   },
   "prices": {
    "Philadelphia Phillies": 0.465,
@@ -356975,7 +357034,7 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 114768,
+  "totalUsd": 116033,
   "whales": [
    {
     "wallet": "0x1610db79f753a80207e1d66716be9e91e627ae49",
@@ -357001,8 +357060,8 @@
     "avgPrice": 0.5
    }
   ],
-  "hoursToKickoff": 1.76,
-  "capturedAt": "2026-09-18T21:32:34.052531+00:00",
+  "hoursToKickoff": 1.34,
+  "capturedAt": "2026-09-18T21:57:44.916224+00:00",
   "cond": "0x237d361d6c7f524860fc0eda043a907c0be9e23705e2a801fd8097153caaa7b7",
   "frage": "Philadelphia Phillies vs. New York Mets",
   "tokens": {
@@ -357018,15 +357077,15 @@
    "bids": [
     [
      0.53,
-     73332
+     66835
     ],
     [
      0.52,
-     128981
+     103914
     ],
     [
      0.51,
-     83779
+     87125
     ],
     [
      0.5,
@@ -357044,19 +357103,19 @@
    "asks": [
     [
      0.54,
-     55299
+     55312
     ],
     [
      0.55,
-     163609
+     163708
     ],
     [
      0.56,
-     45279
+     49829
     ],
     [
      0.57,
-     52731
+     51127
     ],
     [
      0.58,
@@ -357069,6 +357128,14 @@
    ]
   },
   "trades": [
+   {
+    "wallet": "0x689f7d0a49d2646dc199848ffbdb4757242e259c",
+    "action": "BUY",
+    "side": "Philadelphia Phillies",
+    "price": 0.47,
+    "usd": 2414,
+    "ts": 1789768200
+   },
    {
     "wallet": "0x2f983f2a36c462320331eff6901db9307d1abd4c",
     "action": "BUY",
@@ -357124,21 +357191,13 @@
     "price": 0.51,
     "usd": 510,
     "ts": 1789761823
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "action": "BUY",
-    "side": "New York Mets",
-    "price": 0.51,
-    "usd": 510,
-    "ts": 1789761817
    }
   ]
  },
  "wta-bucsa-jovic-2026-09-18": {
   "shares": {
-   "Cristina Bucsa": 2294.8899277500004,
-   "Iva Jovic": 7904.6184799
+   "Cristina Bucsa": 2541.2983564500005,
+   "Iva Jovic": 8753.3586232
   },
   "prices": {
    "Cristina Bucsa": 0.225,
@@ -357150,7 +357209,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 12781,
+  "totalUsd": 14234,
   "whales": [
    {
     "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
@@ -357158,25 +357217,25 @@
     "usd": 4776
    },
    {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Cristina Bucsa",
+    "usd": 810,
+    "avgPrice": 0.2244
+   },
+   {
+    "wallet": "0xdd7be065486413ad92e091ef1bb79484cf02653e",
+    "side": "Iva Jovic",
+    "usd": 795,
+    "avgPrice": 0.7799
+   },
+   {
     "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
     "side": "Iva Jovic",
     "usd": 746
-   },
-   {
-    "wallet": "0x5b624e3e0426f7aa2ca57f7451fbcea4b125d87f",
-    "side": "Cristina Bucsa",
-    "usd": 675,
-    "avgPrice": 0.23
-   },
-   {
-    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
-    "side": "Iva Jovic",
-    "usd": 668,
-    "avgPrice": 0.7641
    }
   ],
-  "hoursToKickoff": 1.51,
-  "capturedAt": "2026-09-18T21:32:34.052531+00:00",
+  "hoursToKickoff": 1.09,
+  "capturedAt": "2026-09-18T21:57:44.916224+00:00",
   "cond": "0x8dae410ef46d07fa211d136b31eb1fa9a39979858cbaa2ac7d18b9729a8fdf65",
   "frage": "Guadalajara Open Akron: Cristina Bucsa vs Iva Jovic",
   "tokens": {
@@ -357238,8 +357297,8 @@
  },
  "mlb-det-cws-2026-09-18": {
   "shares": {
-   "Detroit Tigers": 17368.383362329998,
-   "Chicago White Sox": 20803.88776367
+   "Detroit Tigers": 18802.105573614994,
+   "Chicago White Sox": 22521.203379385002
   },
   "prices": {
    "Detroit Tigers": 0.455,
@@ -357251,7 +357310,7 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 45503,
+  "totalUsd": 62548,
   "whales": [
    {
     "wallet": "0x1610db79f753a80207e1d66716be9e91e627ae49",
@@ -357260,10 +357319,10 @@
     "avgPrice": 0.5499
    },
    {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "wallet": "0x6f6589b77c36b94c2a1304dfd40f44310725172c",
     "side": "Detroit Tigers",
-    "usd": 3412,
-    "avgPrice": 0.45
+    "usd": 7743,
+    "avgPrice": 0.4599
    },
    {
     "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
@@ -357278,19 +357337,120 @@
     "avgPrice": 0.45
    }
   ],
-  "hoursToKickoff": 2.17,
-  "capturedAt": "2026-09-18T21:32:34.052531+00:00",
+  "hoursToKickoff": 1.75,
+  "capturedAt": "2026-09-18T21:57:44.916224+00:00",
   "cond": "0x4023e40a6f48190748642ab83d85103d7c000336f8ac4c3c0cd4b3db78132d5e",
   "frage": "Detroit Tigers vs. Chicago White Sox",
   "tokens": {
    "Detroit Tigers": "114072179728722508844329249874019118569037386621168999519570958132129208870938",
    "Chicago White Sox": "98620692528596152305583735793948238674016967007346464294522487408812325844793"
-  }
+  },
+  "book": {
+   "side": "Chicago White Sox",
+   "bid": 0.54,
+   "ask": 0.55,
+   "spreadC": 1.0,
+   "spreadPct": 1.82,
+   "bids": [
+    [
+     0.54,
+     57763
+    ],
+    [
+     0.53,
+     132241
+    ],
+    [
+     0.52,
+     81929
+    ],
+    [
+     0.51,
+     21894
+    ],
+    [
+     0.5,
+     5114
+    ],
+    [
+     0.49,
+     69
+    ]
+   ],
+   "asks": [
+    [
+     0.55,
+     128189
+    ],
+    [
+     0.56,
+     147280
+    ],
+    [
+     0.57,
+     52054
+    ],
+    [
+     0.58,
+     9457
+    ],
+    [
+     0.59,
+     6259
+    ],
+    [
+     0.6,
+     304
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x6f6589b77c36b94c2a1304dfd40f44310725172c",
+    "action": "BUY",
+    "side": "Detroit Tigers",
+    "price": 0.46,
+    "usd": 7828,
+    "ts": 1789767307
+   },
+   {
+    "wallet": "0x787969a140b71ad9ae68982a8ee69b6dab353653",
+    "action": "BUY",
+    "side": "Chicago White Sox",
+    "price": 0.55,
+    "usd": 1375,
+    "ts": 1789766031
+   },
+   {
+    "wallet": "0x54d00bee04ad0fef256af327f4f0bb6842e18e20",
+    "action": "SELL",
+    "side": "Chicago White Sox",
+    "price": 0.54,
+    "usd": 1964,
+    "ts": 1789752757
+   },
+   {
+    "wallet": "0x54d00bee04ad0fef256af327f4f0bb6842e18e20",
+    "action": "BUY",
+    "side": "Chicago White Sox",
+    "price": 0.55,
+    "usd": 2000,
+    "ts": 1789752066
+   },
+   {
+    "wallet": "0x1610db79f753a80207e1d66716be9e91e627ae49",
+    "action": "BUY",
+    "side": "Chicago White Sox",
+    "price": 0.55,
+    "usd": 18214,
+    "ts": 1789751506
+   }
+  ]
  },
  "atp-shelbay-mmoh-2026-09-18": {
   "shares": {
-   "Abedallah Shelbayh": 4868.390433875001,
-   "Michael Mmoh": 6586.64674995
+   "Abedallah Shelbayh": 4969.204387650001,
+   "Michael Mmoh": 6723.042099175
   },
   "prices": {
    "Abedallah Shelbayh": 0.425,
@@ -357302,12 +357462,12 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 12310,
+  "totalUsd": 12755,
   "whales": [
    {
     "wallet": "0x820a0e91fdf03907ff7d05d0145f9d326f16ca12",
     "side": "Michael Mmoh",
-    "usd": 5808,
+    "usd": 5805,
     "avgPrice": 0.5875
    },
    {
@@ -357316,19 +357476,20 @@
     "usd": 1611
    },
    {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Michael Mmoh",
+    "usd": 641,
+    "avgPrice": 0.57
+   },
+   {
     "wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
     "side": "Abedallah Shelbayh",
     "usd": 638,
     "avgPrice": 0.42
-   },
-   {
-    "wallet": "0x5213eb85fcd465c8927a8382f95dd2dc22306a35",
-    "side": "Abedallah Shelbayh",
-    "usd": 518
    }
   ],
-  "hoursToKickoff": 0.76,
-  "capturedAt": "2026-09-18T21:32:34.052531+00:00",
+  "hoursToKickoff": 0.34,
+  "capturedAt": "2026-09-18T21:57:44.916224+00:00",
   "cond": "0xfbfea2ec7ed26885a79dd4ef1528d53ba591ad33afc9497ed3238e4c02173969",
   "frage": "Tiburon: Abedallah Shelbayh vs Michael Mmoh",
   "tokens": {
@@ -357338,13 +357499,13 @@
  },
  "mls-nyc-nyr-2026-09-18": {
   "shares": {
-   "New York City FC": 5812.186875164999,
-   "Draw (New York City FC vs. New York Red Bulls)": 226.81472792499997,
-   "New York Red Bulls": 11377.203469725
+   "New York City FC": 12344.369483654997,
+   "Draw (New York City FC vs. New York Red Bulls)": 250.90103447500002,
+   "New York Red Bulls": 11420.428716075001
   },
   "prices": {
    "New York City FC": 0.495,
-   "Draw (New York City FC vs. New York Red Bulls)": 0.235,
+   "Draw (New York City FC vs. New York Red Bulls)": 0.245,
    "New York Red Bulls": 0.255
   },
   "splitGuete": {
@@ -357353,7 +357514,7 @@
   },
   "league": "MLS",
   "sport": "Fußball",
-  "totalUsd": 66967,
+  "totalUsd": 76706,
   "whales": [
    {
     "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
@@ -357362,129 +357523,130 @@
     "avgPrice": 0.2643
    },
    {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "side": "New York City FC",
+    "usd": 3708,
+    "avgPrice": 0.5153
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "New York City FC",
+    "usd": 3075,
+    "avgPrice": 0.5
+   },
+   {
     "wallet": "0xb619ed5b378053f8309c307d2f7adf9c13665068",
     "side": "New York City FC",
     "usd": 2475,
     "avgPrice": 0.52
-   },
-   {
-    "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
-    "side": "New York City FC",
-    "usd": 884
-   },
-   {
-    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
-    "side": "New York City FC",
-    "usd": 792,
-    "avgPrice": 0.5355
    }
   ],
-  "hoursToKickoff": 2.01,
-  "capturedAt": "2026-09-18T21:32:34.052531+00:00",
+  "hoursToKickoff": 1.59,
+  "capturedAt": "2026-09-18T21:57:44.916224+00:00",
   "tokens": {
    "New York City FC": "44166035501586687883208699473283290243841043748535316150749642977557711721214",
    "Draw (New York City FC vs. New York Red Bulls)": "109611747860941874601253507459734058598227102676602801578251936245856137321972",
    "New York Red Bulls": "96016772943910331774604371683487648452272587390895331353444530487933074670760"
   },
   "book": {
-   "side": "New York Red Bulls",
-   "bid": 0.25,
-   "ask": 0.26,
+   "side": "New York City FC",
+   "bid": 0.5,
+   "ask": 0.51,
    "spreadC": 1.0,
-   "spreadPct": 3.85,
+   "spreadPct": 1.96,
    "bids": [
     [
-     0.25,
-     28176
+     0.5,
+     1958
     ],
     [
-     0.24,
-     26945
+     0.49,
+     33734
     ],
     [
-     0.23,
-     20938
+     0.48,
+     31360
     ],
     [
-     0.22,
-     13404
+     0.47,
+     24943
     ],
     [
-     0.21,
-     8244
+     0.46,
+     6377
     ],
     [
-     0.2,
-     9517
+     0.45,
+     926
     ]
    ],
    "asks": [
     [
-     0.26,
-     3999
+     0.51,
+     46524
     ],
     [
-     0.27,
-     62352
+     0.52,
+     53054
     ],
     [
-     0.28,
-     49820
+     0.53,
+     17202
     ],
     [
-     0.29,
-     20691
+     0.54,
+     30505
     ],
     [
-     0.3,
-     2077
+     0.55,
+     17691
     ],
     [
-     0.31,
-     4023
+     0.56,
+     7202
     ]
    ]
   },
   "trades": [
    {
-    "wallet": "0xd27cc742d023d06ef633a4c880cf1ff1836ec081",
-    "action": "BUY",
-    "side": "No",
-    "price": 0.75,
-    "usd": 6416,
-    "ts": 1789766370
-   },
-   {
-    "wallet": "0x062922dcc898a4935b2b87f5e9ea2360b31e0a16",
-    "action": "BUY",
-    "side": "No",
-    "price": 0.75,
-    "usd": 350,
-    "ts": 1789765861
-   },
-   {
     "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
     "action": "BUY",
     "side": "Yes",
-    "price": 0.2623,
-    "usd": 8302,
-    "ts": 1789765263
+    "price": 0.5,
+    "usd": 1203,
+    "ts": 1789767583
    },
    {
-    "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "action": "BUY",
     "side": "Yes",
-    "price": 0.27,
-    "usd": 3049,
-    "ts": 1789765261
+    "price": 0.5,
+    "usd": 1020,
+    "ts": 1789767103
    },
    {
-    "wallet": "0x77add09dc3203df69184179d4ac49e23bac6ba8a",
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.5,
+    "usd": 664,
+    "ts": 1789767103
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.5,
+    "usd": 1386,
+    "ts": 1789767102
+   },
+   {
+    "wallet": "0x3f3aa7005f8006bfcc367d43a25cde25509fe8fd",
     "action": "BUY",
     "side": "No",
-    "price": 0.7814,
-    "usd": 824,
-    "ts": 1789590657
+    "price": 0.48,
+    "usd": 2374,
+    "ts": 1789761181
    }
   ]
  },
@@ -357542,14 +357704,14 @@
  },
  "bra2-vln-afc-2026-09-18": {
   "shares": {
-   "Vila Nova FC": 1357.0285140300002,
-   "Draw (Vila Nova FC vs. América FC)": 508.0442296499999,
-   "América FC": 306.00399175499996
+   "Vila Nova FC": 1625.2563121199996,
+   "Draw (Vila Nova FC vs. América FC)": 564.73582762,
+   "América FC": 399.005737715
   },
   "prices": {
-   "Vila Nova FC": 0.665,
-   "Draw (Vila Nova FC vs. América FC)": 0.225,
-   "América FC": 0.105
+   "Vila Nova FC": 0.685,
+   "Draw (Vila Nova FC vs. América FC)": 0.215,
+   "América FC": 0.095
   },
   "splitGuete": {
    "art": "belastbar",
@@ -357557,33 +357719,34 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 10384,
+  "totalUsd": 12626,
   "whales": [
    {
     "wallet": "0x594edb9112f526fa6a80b8f858a6379c8a2c1c11",
     "side": "Vila Nova FC",
-    "usd": 266,
+    "usd": 274,
     "avgPrice": 0.6699
    },
    {
     "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
     "side": "América FC",
-    "usd": 261
+    "usd": 236
    },
    {
-    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
-    "side": "Draw (Vila Nova FC vs. América FC)",
-    "usd": 212
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "side": "Vila Nova FC",
+    "usd": 223,
+    "avgPrice": 0.6722
    },
    {
     "wallet": "0xe76c9b6d6108655887df57e76413b4dc44201c3c",
     "side": "Vila Nova FC",
-    "usd": 196,
+    "usd": 201,
     "avgPrice": 0.6799
    }
   ],
-  "hoursToKickoff": 1.01,
-  "capturedAt": "2026-09-18T21:32:34.052531+00:00",
+  "hoursToKickoff": 0.59,
+  "capturedAt": "2026-09-18T21:57:44.916224+00:00",
   "tokens": {
    "Vila Nova FC": "60659666427240851961978930533375734980845849571786358642030579580370468942968",
    "Draw (Vila Nova FC vs. América FC)": "47215240508490988423878094688655283060591617469128587360471359068133772704377",
@@ -357605,7 +357768,7 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 112471,
+  "totalUsd": 112483,
   "whales": [
    {
     "wallet": "0x5e9458202b5817a72cf81105ec8a30e6f3705ba1",
@@ -357631,8 +357794,8 @@
     "avgPrice": 0.5093
    }
   ],
-  "hoursToKickoff": 2.67,
-  "capturedAt": "2026-09-18T21:32:34.052531+00:00",
+  "hoursToKickoff": 2.25,
+  "capturedAt": "2026-09-18T21:57:44.916224+00:00",
   "cond": "0xfcaefbab86f3fe832849398a222e36f2affa457bf51b03da01238feffc06af33",
   "frage": "Seattle Mariners vs. Colorado Rockies: O/U 10.5",
   "tokens": {
@@ -357648,19 +357811,19 @@
    "bids": [
     [
      0.5,
-     20455
+     20939
     ],
     [
      0.49,
-     32765
+     32594
     ],
     [
      0.48,
-     42757
+     35745
     ],
     [
      0.47,
-     10671
+     9759
     ],
     [
      0.46,
@@ -357668,25 +357831,25 @@
     ],
     [
      0.45,
-     5005
+     5
     ]
    ],
    "asks": [
     [
      0.51,
-     29040
+     29230
     ],
     [
      0.52,
-     41646
+     41626
     ],
     [
      0.53,
-     51960
+     52210
     ],
     [
      0.54,
-     8118
+     7218
     ],
     [
      0.55,
@@ -357751,12 +357914,12 @@
  },
  "cs2-imp11-bst-2026-09-18": {
   "shares": {
-   "Imperial": 51147.443857305,
-   "BESTIA": 22445.943440814997
+   "Imperial": 50398.40400862501,
+   "BESTIA": 24265.591168975003
   },
   "prices": {
-   "Imperial": 0.695,
-   "BESTIA": 0.305
+   "Imperial": 0.675,
+   "BESTIA": 0.325
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -357764,35 +357927,35 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 77315,
+  "totalUsd": 79358,
   "whales": [
    {
     "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
     "side": "Imperial",
-    "usd": 27800,
+    "usd": 27000,
     "avgPrice": 0.6899
    },
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "side": "BESTIA",
-    "usd": 19335,
+    "usd": 20602,
     "avgPrice": 0.3099
    },
    {
     "wallet": "0x0915fcb7f56e8e6a3a433e8080ba656f51c863da",
     "side": "Imperial",
-    "usd": 13900,
+    "usd": 13500,
     "avgPrice": 0.6899
    },
    {
     "wallet": "0xbdd21cd4bdfa6764c6f43ea6d154c4b414d86657",
     "side": "Imperial",
-    "usd": 3725,
-    "avgPrice": 0.6886
+    "usd": 4100,
+    "avgPrice": 0.6864
    }
   ],
-  "hoursToKickoff": 2.51,
-  "capturedAt": "2026-09-18T21:32:34.052531+00:00",
+  "hoursToKickoff": 2.09,
+  "capturedAt": "2026-09-18T21:57:44.916224+00:00",
   "cond": "0xf9a5e638ceffa2f8946bf0c5f21ebcdb975301a40f5f20098324ede102ca61fe",
   "frage": "Counter-Strike: Imperial vs BESTIA (BO3) - Circuit X Curitiba Playoffs",
   "tokens": {
@@ -357801,22 +357964,18 @@
   },
   "book": {
    "side": "Imperial",
-   "bid": 0.68,
-   "ask": 0.69,
+   "bid": 0.67,
+   "ask": 0.68,
    "spreadC": 1.0,
-   "spreadPct": 1.45,
+   "spreadPct": 1.47,
    "bids": [
     [
-     0.68,
-     310
-    ],
-    [
      0.67,
-     5991
+     5427
     ],
     [
      0.66,
-     7910
+     7900
     ],
     [
      0.65,
@@ -357829,36 +357988,48 @@
     [
      0.49,
      125
+    ],
+    [
+     0.48,
+     22
     ]
    ],
    "asks": [
     [
+     0.68,
+     446
+    ],
+    [
      0.69,
-     612
+     186
     ],
     [
      0.7,
-     8348
+     7922
     ],
     [
      0.71,
-     472
+     467
     ],
     [
      0.72,
-     115
+     5
     ],
     [
-     0.74,
-     1892
-    ],
-    [
-     0.75,
-     1275
+     0.73,
+     5
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x197ffe802d6f058ca5f96d806c5249833faf7cc5",
+    "action": "BUY",
+    "side": "BESTIA",
+    "price": 0.3266,
+    "usd": 350,
+    "ts": 1789767402
+   },
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "action": "BUY",
@@ -357887,8 +358058,8 @@
  },
  "mlb-tor-tex-2026-09-18": {
   "shares": {
-   "Over": 20212.067347224995,
-   "Under": 22339.548383774996
+   "Over": 22201.819144899997,
+   "Under": 24538.7489172
   },
   "prices": {
    "Over": 0.475,
@@ -357900,7 +358071,7 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 40933,
+  "totalUsd": 47361,
   "whales": [
    {
     "wallet": "0x5e9458202b5817a72cf81105ec8a30e6f3705ba1",
@@ -357911,13 +358082,13 @@
    {
     "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
     "side": "Over",
-    "usd": 4446,
-    "avgPrice": 0.48
+    "usd": 5736,
+    "avgPrice": 0.4777
    },
    {
     "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
     "side": "Over",
-    "usd": 3202
+    "usd": 3692
    },
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
@@ -357926,8 +358097,8 @@
     "avgPrice": 0.4992
    }
   ],
-  "hoursToKickoff": 2.59,
-  "capturedAt": "2026-09-18T21:32:34.052531+00:00",
+  "hoursToKickoff": 2.17,
+  "capturedAt": "2026-09-18T21:57:44.916224+00:00",
   "cond": "0x1a9fe13c5106f5adf73af72c03ddaaa9b4b17ac4bc010373cffbfef832cacb62",
   "frage": "Toronto Blue Jays vs. Texas Rangers: O/U 7.5",
   "tokens": {
@@ -357943,49 +358114,49 @@
    "bids": [
     [
      0.52,
-     480
+     952
     ],
     [
      0.51,
-     30004
+     29049
     ],
     [
      0.5,
-     66102
+     78137
     ],
     [
      0.49,
-     27211
+     27782
     ],
     [
      0.48,
-     17716
+     14116
     ],
     [
      0.47,
-     155
+     5105
     ]
    ],
    "asks": [
     [
      0.53,
-     72528
+     70890
     ],
     [
      0.54,
-     53140
+     49558
     ],
     [
      0.55,
-     31384
+     27954
     ],
     [
      0.56,
-     555
+     4060
     ],
     [
      0.57,
-     5005
+     5105
     ],
     [
      0.58,
@@ -357994,6 +358165,14 @@
    ]
   },
   "trades": [
+   {
+    "wallet": "0xf499ffe714952193c81b3965f65ae73df95cb5d9",
+    "action": "BUY",
+    "side": "Under",
+    "price": 0.53,
+    "usd": 2200,
+    "ts": 1789767943
+   },
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "action": "BUY",
@@ -358030,8 +358209,8 @@
  },
  "mlb-wsh-stl-2026-09-18": {
   "shares": {
-   "Over": 28867.617947520004,
-   "Under": 29450.80214848
+   "Over": 28889.571197520003,
+   "Under": 29473.19889848
   },
   "prices": {
    "Over": 0.495,
@@ -358043,7 +358222,7 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 58250,
+  "totalUsd": 58614,
   "whales": [
    {
     "wallet": "0x5e9458202b5817a72cf81105ec8a30e6f3705ba1",
@@ -358070,8 +358249,8 @@
     "avgPrice": 0.5
    }
   ],
-  "hoursToKickoff": 2.76,
-  "capturedAt": "2026-09-18T21:32:34.052531+00:00",
+  "hoursToKickoff": 2.34,
+  "capturedAt": "2026-09-18T21:57:44.916224+00:00",
   "cond": "0x4bea018118f1fc4d0833cc822ac127e8f38f4bf19006f64f3f8ff6098eae0aac",
   "frage": "Washington Nationals vs. St. Louis Cardinals: O/U 7.5",
   "tokens": {
@@ -358087,7 +358266,7 @@
    "bids": [
     [
      0.5,
-     72
+     359
     ],
     [
      0.49,
@@ -358095,7 +358274,7 @@
     ],
     [
      0.48,
-     41379
+     51574
     ],
     [
      0.47,
@@ -358107,17 +358286,17 @@
     ],
     [
      0.45,
-     9975
+     4125
     ]
    ],
    "asks": [
     [
      0.51,
-     85284
+     85980
     ],
     [
      0.52,
-     51403
+     50503
     ],
     [
      0.53,
@@ -358125,7 +358304,7 @@
     ],
     [
      0.54,
-     3020
+     3010
     ],
     [
      0.55,
@@ -358166,8 +358345,8 @@
  },
  "mlb-atl-hou-2026-09-18": {
   "shares": {
-   "Atlanta Braves": 27576.287111100013,
-   "Houston Astros": 24949.974052900005
+   "Atlanta Braves": 27724.599214725014,
+   "Houston Astros": 25084.161194275002
   },
   "prices": {
    "Atlanta Braves": 0.525,
@@ -358179,7 +358358,7 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 52694,
+  "totalUsd": 53070,
   "whales": [
    {
     "wallet": "0x1610db79f753a80207e1d66716be9e91e627ae49",
@@ -358206,8 +358385,8 @@
     "avgPrice": 0.5299
    }
   ],
-  "hoursToKickoff": 2.67,
-  "capturedAt": "2026-09-18T21:32:34.052531+00:00",
+  "hoursToKickoff": 2.25,
+  "capturedAt": "2026-09-18T21:57:44.916224+00:00",
   "cond": "0x7980f6e4b6b680ce81594d9ca99bd046f9dd712ec5fbe9a669fa779724ae3c0e",
   "frage": "Atlanta Braves vs. Houston Astros",
   "tokens": {
@@ -358218,8 +358397,8 @@
  "arg-rac-cas-2026-09-18": {
   "shares": {
    "Racing Club": 2910.4734639750004,
-   "Draw (Racing Club vs. CA Sarmiento)": 318.27910950000006,
-   "CA Sarmiento": 984.921494065
+   "Draw (Racing Club vs. CA Sarmiento)": 318.69349270000004,
+   "CA Sarmiento": 1098.822129955
   },
   "prices": {
    "Racing Club": 0.525,
@@ -358232,7 +358411,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 12307,
+  "totalUsd": 14759,
   "whales": [
    {
     "wallet": "0x5652090d21c85a9d1ca5b6a41fe07f3099fb00c9",
@@ -358243,8 +358422,8 @@
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "side": "CA Sarmiento",
-    "usd": 516,
-    "avgPrice": 0.2066
+    "usd": 618,
+    "avgPrice": 0.2074
    },
    {
     "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
@@ -358258,12 +358437,214 @@
     "avgPrice": 0.5399
    }
   ],
-  "hoursToKickoff": 2.76,
-  "capturedAt": "2026-09-18T21:32:34.052531+00:00",
+  "hoursToKickoff": 2.34,
+  "capturedAt": "2026-09-18T21:57:44.916224+00:00",
   "tokens": {
    "Racing Club": "63557619871072370372197069273812799619253846914918414483856269339425428829975",
    "Draw (Racing Club vs. CA Sarmiento)": "69001380174291313861422264822712969462235659751361920062809976537766534867153",
    "CA Sarmiento": "55971357144944362539216787485412944183448297564156127201747100666854919829709"
+  }
+ },
+ "cfb-mia-wake-2026-09-18": {
+  "shares": {
+   "Miami (FL)": 40841.31875644999,
+   "Wake Forest": 3311.4750381749996
+  },
+  "prices": {
+   "Miami (FL)": 0.925,
+   "Wake Forest": 0.075
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "CFB",
+  "sport": null,
+  "totalUsd": 67089,
+  "whales": [
+   {
+    "wallet": "0xe8d78397160e13edc306a63b1d88c9c1f3dd1252",
+    "side": "Miami (FL)",
+    "usd": 19893,
+    "avgPrice": 0.93
+   },
+   {
+    "wallet": "0xec981ed70ae69c5cbcac08c1ba063e734f6bafcd",
+    "side": "Miami (FL)",
+    "usd": 6938,
+    "avgPrice": 0.92
+   },
+   {
+    "wallet": "0x1e105911ebbb6f438fcca272d9e09aaef0b10cd4",
+    "side": "Miami (FL)",
+    "usd": 2775,
+    "avgPrice": 0.92
+   },
+   {
+    "wallet": "0x57baf1d806391b1780363d8f2284713ead75e350",
+    "side": "Miami (FL)",
+    "usd": 2775,
+    "avgPrice": 0.92
+   }
+  ],
+  "hoursToKickoff": 1.59,
+  "capturedAt": "2026-09-18T21:57:44.916224+00:00",
+  "cond": "0x7ca11d47d552880eb28453dcd52c1f7945d683bcb7f8ec75001efb2bc307ee51",
+  "frage": "Miami (FL) vs. Wake Forest",
+  "tokens": {
+   "Miami (FL)": "16708592853763941855299519655590633975764278435491544581112899461453157356000",
+   "Wake Forest": "59098784603688283861479195410278546417296527534333362249239137432524334155843"
+  },
+  "book": {
+   "side": "Miami (FL)",
+   "bid": 0.92,
+   "ask": 0.93,
+   "spreadC": 1.0,
+   "spreadPct": 1.08,
+   "bids": [
+    [
+     0.92,
+     9998
+    ],
+    [
+     0.91,
+     282065
+    ],
+    [
+     0.9,
+     107040
+    ],
+    [
+     0.89,
+     65745
+    ],
+    [
+     0.88,
+     1016
+    ],
+    [
+     0.86,
+     5674
+    ]
+   ],
+   "asks": [
+    [
+     0.93,
+     128017
+    ],
+    [
+     0.94,
+     48963
+    ],
+    [
+     0.95,
+     39538
+    ],
+    [
+     0.96,
+     3750
+    ],
+    [
+     0.97,
+     922
+    ],
+    [
+     0.98,
+     2000
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x16bb9951a36fce71e2ef57890b786145e0ba8492",
+    "action": "BUY",
+    "side": "Wake Forest",
+    "price": 0.08,
+    "usd": 1406,
+    "ts": 1789767661
+   },
+   {
+    "wallet": "0xf5ad564b77ffe531b4b991379c11e44959eadca6",
+    "action": "BUY",
+    "side": "Miami (FL)",
+    "price": 0.93,
+    "usd": 700,
+    "ts": 1789767469
+   },
+   {
+    "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
+    "action": "BUY",
+    "side": "Miami (FL)",
+    "price": 0.93,
+    "usd": 304,
+    "ts": 1789767378
+   },
+   {
+    "wallet": "0xa8cad91ba17a7eefbabd4daed88a75774c1d729a",
+    "action": "BUY",
+    "side": "Miami (FL)",
+    "price": 0.93,
+    "usd": 810,
+    "ts": 1789764645
+   },
+   {
+    "wallet": "0xa8cad91ba17a7eefbabd4daed88a75774c1d729a",
+    "action": "BUY",
+    "side": "Miami (FL)",
+    "price": 0.93,
+    "usd": 499,
+    "ts": 1789764354
+   }
+  ]
+ },
+ "bol1-idp-ant-2026-09-18": {
+  "shares": {
+   "Club Independiente Petrolero": 2710.124115825,
+   "Draw (Club Independiente Petrolero vs. CD San Antonio Bulo Bulo)": 2.60433225,
+   "CD San Antonio Bulo Bulo": 318.01057398
+  },
+  "prices": {
+   "Club Independiente Petrolero": 0.555,
+   "Draw (Club Independiente Petrolero vs. CD San Antonio Bulo Bulo)": 0.225,
+   "CD San Antonio Bulo Bulo": 0.22
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 7825,
+  "whales": [
+   {
+    "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
+    "side": "Club Independiente Petrolero",
+    "usd": 799
+   },
+   {
+    "wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
+    "side": "Club Independiente Petrolero",
+    "usd": 549,
+    "avgPrice": 0.54
+   },
+   {
+    "wallet": "0xb29dd21fe1cf6d5548f9b9c215cb3b933f2e0d26",
+    "side": "Club Independiente Petrolero",
+    "usd": 444,
+    "avgPrice": 0.5762
+   },
+   {
+    "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+    "side": "Club Independiente Petrolero",
+    "usd": 279
+   }
+  ],
+  "hoursToKickoff": 1.09,
+  "capturedAt": "2026-09-18T21:57:44.916224+00:00",
+  "tokens": {
+   "Club Independiente Petrolero": "59237453396598199573715576527510423504040056108745279670189891218134824513313",
+   "Draw (Club Independiente Petrolero vs. CD San Antonio Bulo Bulo)": "19640236595392577861182353823870015435387072529201479846119627461024217361152",
+   "CD San Antonio Bulo Bulo": "110940964767037787825026939223999206470232536777950120302199180436752790059773"
   }
  }
 }
