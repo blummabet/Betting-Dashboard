@@ -2106,3 +2106,71 @@ class TestDasFensterVorDerLebensbilanz(unittest.TestCase):
         knapp = {"n": P.MIN_TR, "wins": 4, "clv": 1.0, "hit": 4 / P.MIN_TR,
                  "von": "2026-09-12", "bis": "2026-09-18", "seit": "2026-09-01"}
         self.assertIn("7 Tage: 4/%d richtig" % P.MIN_TR, self._card(fenster7=knapp))
+
+
+class TestDieGegenseiteZaehltNachBeleg(unittest.TestCase):
+    """18.09.2026 (Lucas, zwei Karten aus Liquid v 3DMAX wenige Minuten auseinander: „Ich werd
+    solche Einsaetze nie verstehen. Beide Top Wallets.").
+
+    Die Rang-Schranke (Top-20) war zu eng, um je zu greifen: ueber die ganze Close-Historie fand
+    sie SIEBEN umkaempfte Maerkte, und von den 14 abgerechneten Public-Pushes, die in einen
+    umkaempften Markt gingen, keinen einzigen. Nach dem Beleg gerechnet sind es 90 Maerkte —
+    und der Unterschied ist gemessen (poly_gegenseite.py): 51,9 % gegen 69,0 %, Band
+    [-22,1, -12,0]. An den echten Pushes: 8/14 gegen 26/35.
+    """
+
+    BROAD = {"m1": {"whales": [{"wallet": "0xgegner", "side": "Liquid", "usd": 13900},
+                               {"wallet": "0xich", "side": "3DMAX", "usd": 31100}]}}
+    POS = {"key": "m1", "side": "3DMAX", "wallet": "0xich"}
+    SCORES = {"0xich": {"n": 371, "wins": 208, "clvSumPP": 300.0},
+              "0xgegner": {"n": 184, "wins": 111, "clvSumPP": 92.0}}
+
+    def test_ohne_zuschaltung_bleibt_es_beim_rang(self):
+        """Der Schalter muss etwas tun. Dieselbe Welt, in der die Gegenseite BEWIESEN ist und
+        nur der Rang sie nicht fasst: ohne Zuschaltung schweigt die Zeile, mit ihr spricht sie.
+        Ohne diesen Vergleich waere `bewiesen_zaehlt` ein Argument, das nichts aendert."""
+        self.assertIsNone(P._conflicting_top_wallet(self.POS, self.BROAD, self.SCORES, top=0))
+        self.assertIsNotNone(P._conflicting_top_wallet(self.POS, self.BROAD, self.SCORES, top=0,
+                                                       bewiesen_zaehlt=True))
+
+    def test_zugeschaltet_faengt_der_beleg_die_gegenseite(self):
+        cf = P._conflicting_top_wallet(self.POS, self.BROAD, self.SCORES, top=0,
+                                       bewiesen_zaehlt=True)
+        self.assertIsNotNone(cf)
+        self.assertEqual(cf["side"], "Liquid")
+        self.assertEqual(cf["grund"], "bewiesen")
+        self.assertIsNone(cf["rank"], "ohne Rang wird keiner erfunden")
+
+    def test_eine_unbewiesene_gegenwette_ist_kein_gegenargument(self):
+        sc = dict(self.SCORES, **{"0xgegner": {"n": 4, "wins": 2, "clvSumPP": 0.0}})
+        self.assertIsNone(P._conflicting_top_wallet(self.POS, self.BROAD, sc, top=0,
+                                                    bewiesen_zaehlt=True))
+
+    def test_der_rang_schlaegt_den_blossen_beleg(self):
+        """Sonst haengt die Zeile davon ab, in welcher Reihenfolge die Wale im Artefakt stehen."""
+        broad = {"m1": {"whales": [{"wallet": "0xnurbeleg", "side": "Liquid", "usd": 5000},
+                                   {"wallet": "0xgegner", "side": "Liquid", "usd": 13900}]}}
+        # `0xgegner` traegt Volumen und steht damit in der Rangliste, `0xnurbeleg` nicht —
+        # genau der Unterschied, den die Zeile benennen soll.
+        sc = {"0xich": dict(self.SCORES["0xich"], usd=4_000_000),
+              "0xgegner": dict(self.SCORES["0xgegner"], usd=2_000_000, clvSqSum=600.0),
+              "0xnurbeleg": {"n": 50, "wins": 30, "clvSumPP": 20.0}}
+        cf = P._conflicting_top_wallet(self.POS, broad, sc, bewiesen_zaehlt=True)
+        self.assertEqual(cf["grund"], "rang")
+        self.assertIsNotNone(cf["rank"])
+
+    def test_die_sperre_liest_das_urteil_und_baut_es_nicht_nach(self):
+        import json, tempfile, os
+        with tempfile.TemporaryDirectory() as d:
+            p = os.path.join(d, "g.json")
+            with open(p, "w") as f:
+                json.dump({"urteil": "umkaempft ist schlechter"}, f)
+            self.assertEqual(P.gegenseite_sperrt(p)[0], True)
+            with open(p, "w") as f:
+                json.dump({"urteil": "nicht entschieden"}, f)
+            self.assertEqual(P.gegenseite_sperrt(p)[0], False)
+
+    def test_ohne_artefakt_wird_nichts_zugeschaltet(self):
+        """Erster Lauf, Datei fehlt: dann bleibt es beim alten Rang-Test. Eine Sperre auf
+        Verdacht waere dasselbe Muster, das die falschen Schliessungen erzeugt hat."""
+        self.assertEqual(P.gegenseite_sperrt("/gibt/es/nicht.json"), (False, None))

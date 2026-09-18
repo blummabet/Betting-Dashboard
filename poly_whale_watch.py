@@ -719,10 +719,18 @@ def build_card(pos: dict, scores: dict, restock: bool, broad: dict = None, extra
         pass
     # 24.08.2026 (Lucas): steht eine andere Top-Wallet dagegen, gehoert das IN die Nachricht —
     # sonst liest sich der Push als Empfehlung, obwohl die Gegenseite genauso gut belegt ist.
-    _cf = _conflicting_top_wallet(pos, broad, scores)
+    _sperrt, _u = gegenseite_sperrt()
+    _cf = _conflicting_top_wallet(pos, broad, scores, bewiesen_zaehlt=_sperrt)
     if _cf:
-        lines.append("⚔️ <b>Rang #%d haelt die Gegenseite</b> — %s (%s)"
-                     % (_cf["rank"], _esc(_cf["side"]), _usd(_cf["usd"])))
+        wer = ("Rang #%d" % _cf["rank"]) if _cf.get("rank") else "Eine bewiesene Wallet"
+        lines.append("⚔️ <b>%s haelt die Gegenseite</b> — %s (%s)"
+                     % (wer, _esc(_cf["side"]), _usd(_cf["usd"])))
+        # 18.09.2026: der Marker stand bisher ohne Folge da. Gemessen ist er eine: in solchen
+        # Maerkten trifft eine bewiesene Wallet deutlich seltener (poly_gegenseite.json). Die
+        # Zahl steht NICHT hier — sie veraltet sonst im Text; das Urteil kommt vom Produzenten.
+        if _sperrt:
+            lines.append("<i>In solchen Maerkten ist Folgen gemessen ein Muenzwurf — "
+                         "im oeffentlichen Kanal geht das gar nicht erst raus.</i>")
     lines.append(_wallet_line(scores, pos.get("wallet")))
     if key:
         lines.append('<a href="https://polymarket.com/event/%s">→ Markt öffnen ↗</a>' % _esc(key))
@@ -1977,15 +1985,34 @@ def _pub_keep(pos, scores):
     return _is_smart(s, PUB_MIN_TR, PUB_MIN_HITRATE)
 
 
-def _conflicting_top_wallet(pos, broad, scores, top=None):
-    """Sitzt eine ANDERE Top-N-Wallet auf einer anderen Seite desselben Markts? REIN/testbar.
+def _conflicting_top_wallet(pos, broad, scores, top=None, bewiesen_zaehlt=False):
+    """Sitzt eine ANDERE glaubwuerdige Wallet auf einer anderen Seite desselben Markts?
+    REIN/testbar.
 
     24.08.2026 (Lucas' INOX-Fall): zwei bewiesene Wallets auf Gegenseiten heben sich als Signal
     weitgehend auf — dem einen zu folgen ist dort ein Muenzwurf. `_contested_market` fing das
-    nicht: es misst DOLLAR (>=$100K je Seite) und laeuft nur im Public-Kanal. Hier zaehlt der
-    RANG, damit auch ein $7K-Gegeneinstieg einer Top-Wallet auffaellt.
+    nicht: es misst DOLLAR (>=$100K je Seite). Hier zaehlt der RANG, damit auch ein
+    $7K-Gegeneinstieg einer Top-Wallet auffaellt.
 
-    Gibt die bestplatzierte Gegen-Wallet zurueck: {"rank", "side", "usd", "wallet"} oder None.
+    🔴 18.09.2026 (Lucas, zwei Karten aus Liquid v 3DMAX wenige Minuten auseinander: „Ich werd
+    solche Einsaetze nie verstehen. Beide Top Wallets."). Die Rang-Schranke war zu eng, um je zu
+    greifen: ueber die ganze Close-Historie fand sie SIEBEN umkaempfte Maerkte. Nimmt man
+    stattdessen dasselbe Mass, mit dem eine Wallet ueberhaupt in einen Push kommt — bewiesen —,
+    sind es neunzig, und der Unterschied ist gemessen (s. `poly_gegenseite.py`):
+
+        unumkaempft  516 Positionen  69,0 %      umkaempft  208 Positionen  51,9 %
+        Differenz  -17,1 pp, Band [-22,1, -12,0]
+
+    Und an den echten Public-Pushes: 14 der 49 abgerechneten gingen in einen Markt, in dem eine
+    bewiesene Wallet dagegenhielt — 8/14 = 57,1 % gegen 26/35 = 74,3 % ohne. Die Rang-Regel fing
+    von diesen vierzehn KEINEN einzigen.
+
+    `bewiesen_zaehlt` schaltet den breiteren Test zu. Der Aufrufer setzt ihn aus dem URTEIL des
+    Produzenten (`poly_gegenseite.json`), nicht aus einer Meinung: dreht die Messung, faellt die
+    Sperre von selbst weg.
+
+    Gibt die bestplatzierte Gegen-Wallet zurueck: {"rank", "side", "usd", "wallet", "grund"}
+    oder None. `rank` ist None, wenn sie nur ueber den Beleg und nicht ueber den Rang zaehlt.
     """
     top = top or CONFLICT_TOP_N
     key, side, me = pos.get("key"), pos.get("side"), str(pos.get("wallet") or "").lower()
@@ -2003,11 +2030,36 @@ def _conflicting_top_wallet(pos, broad, scores, top=None):
         if not w_side or w_side == side or not w_wallet or w_wallet == me:
             continue
         r = ranks.get(w_wallet)
-        if not r or r > top:
+        im_rang = bool(r) and r <= top
+        belegt = bewiesen_zaehlt and _is_smart((scores or {}).get(w_wallet))
+        if not (im_rang or belegt):
             continue
-        if best is None or r < best["rank"]:
-            best = {"rank": r, "side": w_side, "usd": float(w.get("usd") or 0), "wallet": w_wallet}
+        kand = {"rank": r if im_rang else None, "side": w_side,
+                "usd": float(w.get("usd") or 0), "wallet": w_wallet,
+                "grund": "rang" if im_rang else "bewiesen"}
+        # Der Rang schlaegt den blossen Beleg, und unter zwei Raengen der bessere. Sonst haengt
+        # die Zeile davon ab, in welcher Reihenfolge die Wale im Artefakt stehen.
+        if best is None:
+            best = kand
+        elif kand["rank"] is not None and (best["rank"] is None or kand["rank"] < best["rank"]):
+            best = kand
     return best
+
+
+def gegenseite_sperrt(urteil_datei=None) -> tuple:
+    """Zaehlt eine bewiesene Gegen-Wallet? -> (ja, urteil). Liest NUR das Artefakt.
+
+    Das Urteil gehoert dorthin, wo die Zahl entsteht: `poly_gegenseite.py` misst und schreibt
+    `urteil`. Hier wird es gelesen, nicht nachgebaut. Fehlt die Datei (erster Lauf), bleibt es
+    beim alten Rang-Test — kein stilles Zuschalten einer Sperre auf Verdacht.
+    """
+    p = Path(urteil_datei) if urteil_datei else (BASE / "poly_gegenseite.json")
+    try:
+        d = json.loads(p.read_text(encoding="utf-8"))
+    except Exception:
+        return (False, None)
+    u = d.get("urteil") if isinstance(d, dict) else None
+    return (u == "umkaempft ist schlechter", u)
 
 
 def _contested_market(key, broad, min_usd=CONTEST_MIN_USD):
@@ -2079,9 +2131,12 @@ def main():
     # Empfehlungen kurz nacheinander sind im oeffentlichen Kanal das Schlechteste — im Trades-
     # Kanal steht stattdessen die Warnzeile, dort entscheidet Lucas selbst.
     _pre_conf = len(pub_cand)
-    pub_cand = [c for c in pub_cand if not _conflicting_top_wallet(c[1], broad, scores)]
+    _sperrt_bew, _urteil_gs = gegenseite_sperrt()
+    pub_cand = [c for c in pub_cand
+                if not _conflicting_top_wallet(c[1], broad, scores, bewiesen_zaehlt=_sperrt_bew)]
     if _pre_conf != len(pub_cand):
-        print(f"  \u2694\ufe0f  {_pre_conf - len(pub_cand)} Post(s) unterdrueckt — eine andere Top-Wallet haelt die Gegenseite")
+        print(f"  \u2694\ufe0f  {_pre_conf - len(pub_cand)} Post(s) unterdrueckt — eine andere "
+              f"glaubwuerdige Wallet haelt die Gegenseite (Urteil: {_urteil_gs})")
     pub_sent = 0
     for pkey, pos, restock in pub_cand[:MAX_ALERTS]:
         if _tg_public(build_public_card(pos, scores, restock, broad)):

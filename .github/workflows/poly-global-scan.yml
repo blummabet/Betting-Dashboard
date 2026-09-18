@@ -148,6 +148,14 @@ jobs:
         run: ${{ env.POLY_PYTHON }} poly_wallet_norm.py
         continue-on-error: true
 
+      # 18.09.2026 (Lucas, zwei Karten aus Liquid v 3DMAX wenige Minuten auseinander: „Ich werd
+      # solche Einsaetze nie verstehen. Beide Top Wallets."). Misst, was ein Push wert ist, wenn
+      # eine zweite BEWIESENE Wallet dagegenhaelt — und schreibt das Urteil, an dem der
+      # Whale-Watch gleich darunter seine Sperre ausrichtet. Muss deshalb VORHER laufen.
+      - name: ⚔️ Gegenseite messen (was ist ein Push wert, wenn eine bewiesene Wallet dagegenhaelt)
+        run: ${{ env.POLY_PYTHON }} poly_gegenseite.py
+        continue-on-error: true
+
       - name: 🐋 Poly Whale-Watch (Trades-Channel + öffentlicher Whale-Push)
         run: ${{ env.POLY_PYTHON }} poly_whale_watch.py
         continue-on-error: true
@@ -214,7 +222,7 @@ jobs:
             poly_wallet_norm.json poly_wallet_norm_state.json \
             shortlist_push_seen.json shortlist_push_ledger.json shortlist_auto_bets_placed.json \
             poly_dominanz_ledger.json poly_dominanz_seen.json poly_dominanz_record.json \
-            poly_money_klein.json messungen.json \
+            poly_money_klein.json messungen.json poly_gegenseite.json \
             poly_money_broad_live.json poly_money_broad_live_history.json \
             esports_poly_prices.json esports_poly_wallets.json esports_poly_smartmoney.json esports_poly_coherence.json esports_poly_status.json \
             health/poly-global.json; do
