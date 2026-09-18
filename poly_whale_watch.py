@@ -719,6 +719,18 @@ def build_card(pos: dict, scores: dict, restock: bool, broad: dict = None, extra
         pass
     # 24.08.2026 (Lucas): steht eine andere Top-Wallet dagegen, gehoert das IN die Nachricht —
     # sonst liest sich der Push als Empfehlung, obwohl die Gegenseite genauso gut belegt ist.
+    # 18.09.2026: erst die Zustimmung, dann der Widerspruch. Beide koennen nicht zugleich
+    # zutreffen — wer Gegenseite hat, faellt ohnehin unter das andere Urteil.
+    _ag = _agreeing_wallets(pos, broad, scores)
+    _einig, _eu = einigkeit_traegt()
+    if _ag and _einig:
+        _wer = ", ".join(("Rang #%d" % a["rank"]) if a.get("rank") else "eine weitere bewiesene Wallet"
+                         for a in _ag[:2])
+        lines.append("🤝 <b>%d weitere bewiesene Wallet%s auf derselben Seite</b> — %s (%s)"
+                     % (len(_ag), "" if len(_ag) == 1 else "s", _wer,
+                        _usd(sum(a["usd"] for a in _ag))))
+        lines.append("<i>Einigkeit traegt gemessen: solche Seiten treffen deutlich oefter als "
+                     "eine bewiesene Wallet allein.</i>")
     _sperrt, _u = gegenseite_sperrt()
     _cf = _conflicting_top_wallet(pos, broad, scores, bewiesen_zaehlt=_sperrt)
     if _cf:
@@ -2044,6 +2056,56 @@ def _conflicting_top_wallet(pos, broad, scores, top=None, bewiesen_zaehlt=False)
         elif kand["rank"] is not None and (best["rank"] is None or kand["rank"] < best["rank"]):
             best = kand
     return best
+
+
+def _agreeing_wallets(pos, broad, scores) -> list:
+    """Welche ANDEREN bewiesenen Wallets stehen auf DERSELBEN Seite? REIN/testbar.
+
+    18.09.2026 (Lucas: „was ist, wenn zwei Top Wallets auf dieselbe Seite gehen? Haben wir das
+    extra bedacht oder extra erwaehnt im Push?"). Nein — auf der Karte stand dazu kein Wort,
+    waehrend der Streitfall seit August seinen Marker hat. Eine Flaeche, die nur den Widerspruch
+    zeigt, erzaehlt die Haelfte.
+
+    Und es ist nicht die unwichtigere Haelfte. Gemessen (s. `poly_gegenseite.py`):
+
+        eine bewiesene Wallet allein   407 Maerkte   65,1 %
+        mehrere, einig                  54 Maerkte   83,5 %
+        Differenz                     +18,1 pp   Band [+6,8, +28,9]
+
+    Gibt die Gegen-Wallets absteigend nach Einsatz: [{"wallet", "usd", "rank"}].
+    """
+    key, side, me = pos.get("key"), pos.get("side"), str(pos.get("wallet") or "").lower()
+    if not (key and side):
+        return []
+    m = (broad or {}).get(key) if isinstance(broad, dict) else None
+    if not isinstance(m, dict):
+        return []
+    ranks = _sharp_rank_map(scores)
+    out = []
+    for w in (m.get("whales") or []):
+        if not isinstance(w, dict):
+            continue
+        w_wallet = str(w.get("wallet") or "").lower()
+        if w.get("side") != side or not w_wallet or w_wallet == me:
+            continue
+        if not _is_smart((scores or {}).get(w_wallet)):
+            continue
+        out.append({"wallet": w_wallet, "usd": float(w.get("usd") or 0),
+                    "rank": ranks.get(w_wallet)})
+    out.sort(key=lambda x: -x["usd"])
+    return out
+
+
+def einigkeit_traegt(urteil_datei=None) -> tuple:
+    """Traegt Einigkeit? -> (ja, urteil). Liest NUR das Artefakt — wie `gegenseite_sperrt`."""
+    p = Path(urteil_datei) if urteil_datei else (BASE / "poly_gegenseite.json")
+    try:
+        d = json.loads(p.read_text(encoding="utf-8"))
+    except Exception:
+        return (False, None)
+    e = (d or {}).get("einigkeit") if isinstance(d, dict) else None
+    u = e.get("urteil") if isinstance(e, dict) else None
+    return (u == "Einigkeit traegt", u)
 
 
 def gegenseite_sperrt(urteil_datei=None) -> tuple:

@@ -47,6 +47,7 @@ TRACK_FILE = BASE / "poly_wallet_track.json"
 OUT_FILE = BASE / "poly_gegenseite.json"
 
 MIN_MAERKTE = 30        # darunter wird nichts behauptet
+MIN_EINIG = 30          # dasselbe fuer die Gegenprobe (mehrere Wallets auf derselben Seite)
 BOOT = 3000
 SEED = 20260918         # fest, damit zwei Laeufe auf denselben Daten dasselbe Band liefern
 
@@ -86,7 +87,11 @@ def beobachtungen(close: dict, ist_bewiesen) -> list:
         if not seiten:
             continue
         treffer = [s == win for s, c in seiten.items() for _ in range(c)]
-        out.append({"key": key, "umkaempft": len(seiten) >= 2, "treffer": treffer})
+        umk = len(seiten) >= 2
+        # Wie viele bewiesene Wallets stehen auf der EINEN Seite? Nur dann eine Zahl, wenn es
+        # genau eine Seite gibt — bei Streit ist „wie viele sind sich einig" keine Frage mehr.
+        n_seite = None if umk else list(seiten.values())[0]
+        out.append({"key": key, "umkaempft": umk, "treffer": treffer, "nSeite": n_seite})
     return out
 
 
@@ -122,6 +127,32 @@ def _band(um: list, un: list, runs: int = BOOT) -> tuple:
     return (sum(diffs) / len(diffs), lo, hi)
 
 
+def einigkeit_urteil(n_einig: int, diff, lo) -> tuple:
+    """(urteil, grund) fuer die andere Richtung: mehrere bewiesene Wallets auf DERSELBEN Seite.
+
+    18.09.2026 (Lucas: „was ist, wenn zwei Top Wallets auf dieselbe Seite gehen? Haben wir das
+    extra bedacht?"). Nein, hatten wir nicht — auf der Karte stand dazu kein Wort, waehrend der
+    Streitfall seit August einen Marker hat. Die Gegenprobe zur Sperre gehoert aber dazu: wenn
+    Widerspruch etwas kostet, muss man auch fragen, ob Zustimmung etwas bringt.
+
+    Hier muss die UNTERgrenze ueber null liegen — spiegelbildlich zur Sperre, wo die Obergrenze
+    unter null liegen muss. Dieselbe Strenge in beide Richtungen.
+    """
+    if n_einig < MIN_EINIG:
+        return ("zu wenig Daten", "erst %d Maerkte mit Einigkeit, noetig sind %d"
+                % (n_einig, MIN_EINIG))
+    if diff is None or lo is None:
+        return ("zu wenig Daten", "kein Band berechenbar")
+    if lo > 0:
+        return ("Einigkeit traegt",
+                "sind sich mehrere bewiesene Wallets einig, trifft die Seite %.1f pp oefter; "
+                "die Untergrenze des Bandes liegt bei %.1f pp und damit noch ueber null"
+                % (100 * diff, 100 * lo))
+    return ("nicht entschieden",
+            "die Differenz liegt bei %.1f pp, aber das Band reicht bis %.1f pp — unter null"
+            % (100 * diff, 100 * lo))
+
+
 def urteil(n_um: int, diff, hi) -> tuple:
     """(urteil, grund). REIN. Ein Punktschaetzer entscheidet auch hier nichts — das Band muss
     ganz unter null liegen, sonst heisst es „nicht entschieden"."""
@@ -147,6 +178,15 @@ def bericht(close: dict, ist_bewiesen) -> dict:
     q_un, n_un, w_un = _quote(un)
     diff, lo, hi = _band(um, un)
     u, grund = urteil(len(um), diff, hi)
+    # Die Gegenprobe: unter den UNUMKAEMPFTEN Maerkten die mit mehreren einigen Wallets gegen
+    # die mit einer einzigen. Umkaempfte gehoeren hier nicht hinein — dort ist die Frage eine
+    # andere, und sie faellt ohnehin schon unter das Urteil oben.
+    einig = [z for z in un if (z.get("nSeite") or 1) >= 2]
+    allein = [z for z in un if (z.get("nSeite") or 1) < 2]
+    q_ei, n_ei, w_ei = _quote(einig)
+    q_al, n_al, w_al = _quote(allein)
+    e_diff, e_lo, e_hi = _band(einig, allein)
+    e_u, e_grund = einigkeit_urteil(len(einig), e_diff, e_lo)
     def _arm(q, n, w, mk):
         return {"maerkte": mk, "n": n, "wins": w,
                 "hit": None if q is None else round(q, 4),
@@ -161,6 +201,16 @@ def bericht(close: dict, ist_bewiesen) -> dict:
         "urteil": u,
         "grund": grund,
         "minMaerkte": MIN_MAERKTE,
+        "einigkeit": {
+            "einig": _arm(q_ei, n_ei, w_ei, len(einig)),
+            "allein": _arm(q_al, n_al, w_al, len(allein)),
+            "diffPP": None if e_diff is None else round(100 * e_diff, 1),
+            "lo": None if e_lo is None else round(100 * e_lo, 1),
+            "hi": None if e_hi is None else round(100 * e_hi, 1),
+            "urteil": e_u,
+            "grund": e_grund,
+            "minMaerkte": MIN_EINIG,
+        },
     }
 
 

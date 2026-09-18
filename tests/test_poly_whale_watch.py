@@ -2257,3 +2257,59 @@ class TestDerNachtrag(unittest.TestCase):
         karte = P.build_nachtrag_card(pos, cf, self._broad(), self.SCORES)
         self.assertIn("Kein neuer Tipp", karte)
         self.assertIn("Muenzwurf", karte)
+
+
+class TestDieEinigkeitStehtAufDerKarte(unittest.TestCase):
+    """18.09.2026 (Lucas: „was ist, wenn zwei Top Wallets auf dieselbe Seite gehen? Haben wir das
+    extra bedacht oder extra erwaehnt im Push? Sollten wir das machen?").
+
+    Die Karte zeigte seit August den Widerspruch (⚔️) und zur Zustimmung nichts. Gemessen ist
+    sie das staerkere der beiden Signale: 83,5 % gegen 65,1 % bei einer einzelnen bewiesenen
+    Wallet, Differenz +18,1 pp, Band [+6,8, +28,9] (poly_gegenseite.json).
+    """
+
+    SCORES = {"0xich": {"n": 371, "wins": 208, "clvSumPP": 300.0, "usd": 4_000_000},
+              "0xmit": {"n": 184, "wins": 111, "clvSumPP": 92.0, "usd": 2_000_000},
+              "0xschwach": {"n": 6, "wins": 2, "clvSumPP": -3.0, "usd": 60_000}}
+    POS = {"key": "m1", "side": "3DMAX", "wallet": "0xich"}
+
+    def _broad(self, mit="0xmit", seite="3DMAX"):
+        wale = [{"wallet": "0xich", "side": "3DMAX", "usd": 31100}]
+        if mit:
+            wale.append({"wallet": mit, "side": seite, "usd": 13900})
+        return {"m1": {"whales": wale, "shares": {"Liquid": 1, "3DMAX": 1}}}
+
+    def test_eine_zweite_bewiesene_wallet_auf_derselben_seite_wird_gefunden(self):
+        a = P._agreeing_wallets(self.POS, self._broad(), self.SCORES)
+        self.assertEqual(len(a), 1)
+        self.assertEqual(a[0]["wallet"], "0xmit")
+
+    def test_die_gegenseite_ist_keine_einigkeit(self):
+        self.assertEqual(P._agreeing_wallets(self.POS, self._broad(seite="Liquid"), self.SCORES), [])
+
+    def test_eine_unbewiesene_mitwette_zaehlt_nicht(self):
+        """Sonst wird aus „zwei Profis sind sich einig" ein beliebiger Mitlaeufer."""
+        self.assertEqual(P._agreeing_wallets(self.POS, self._broad(mit="0xschwach"), self.SCORES), [])
+
+    def test_die_eigene_position_zaehlt_nicht_als_zustimmung(self):
+        self.assertEqual(P._agreeing_wallets(self.POS, self._broad(mit=None), self.SCORES), [])
+
+    def test_nach_einsatz_sortiert(self):
+        broad = {"m1": {"whales": [{"wallet": "0xich", "side": "3DMAX", "usd": 31100},
+                                   {"wallet": "0xmit", "side": "3DMAX", "usd": 5000},
+                                   {"wallet": "0xmit2", "side": "3DMAX", "usd": 20000}]}}
+        sc = dict(self.SCORES, **{"0xmit2": {"n": 90, "wins": 55, "clvSumPP": 40.0, "usd": 900_000}})
+        a = P._agreeing_wallets(self.POS, broad, sc)
+        self.assertEqual([x["wallet"] for x in a], ["0xmit2", "0xmit"])
+
+    def test_das_urteil_wird_gelesen_und_nicht_nachgebaut(self):
+        import json, tempfile, os
+        with tempfile.TemporaryDirectory() as d:
+            p = os.path.join(d, "g.json")
+            with open(p, "w") as f:
+                json.dump({"einigkeit": {"urteil": "Einigkeit traegt"}}, f)
+            self.assertTrue(P.einigkeit_traegt(p)[0])
+            with open(p, "w") as f:
+                json.dump({"einigkeit": {"urteil": "nicht entschieden"}}, f)
+            self.assertFalse(P.einigkeit_traegt(p)[0])
+        self.assertEqual(P.einigkeit_traegt("/gibt/es/nicht.json"), (False, None))

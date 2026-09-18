@@ -117,3 +117,61 @@ class TestGegenDenEchtenBestand(unittest.TestCase):
             self.skipTest("zu duenn")
         self.assertEqual(r["urteil"], "umkaempft ist schlechter", r["grund"])
         self.assertLess(r["umkaempft"]["hitPct"], r["unumkaempft"]["hitPct"])
+
+
+class TestDieGegenprobeEinigkeit(unittest.TestCase):
+    """18.09.2026 (Lucas: „was ist, wenn zwei Top Wallets auf dieselbe Seite gehen? Haben wir das
+    extra bedacht oder extra erwaehnt im Push?").
+
+    Nein — auf der Karte stand dazu kein Wort, waehrend der Streitfall seit August einen Marker
+    hat. Wenn Widerspruch etwas kostet, gehoert die Frage dazu, ob Zustimmung etwas bringt. Und
+    sie wird mit DERSELBEN Strenge beantwortet: dort muss die Obergrenze unter null liegen, hier
+    die Untergrenze darueber.
+    """
+
+    def _welt(self, n_einig, n_allein, einig_quote, allein_quote):
+        close = {}
+        for i in range(n_einig):
+            gew = "A" if i < round(n_einig * einig_quote) else "B"
+            close["e%d" % i] = _markt([_w("0x1", "A"), _w("0x2", "A")], gew)
+        for i in range(n_allein):
+            gew = "A" if i < round(n_allein * allein_quote) else "B"
+            close["a%d" % i] = _markt([_w("0x3", "A")], gew)
+        return close
+
+    def test_der_klare_fall_heisst_einigkeit_traegt(self):
+        r = G.bericht(self._welt(80, 300, 0.95, 0.55), ALLE)["einigkeit"]
+        self.assertEqual(r["urteil"], "Einigkeit traegt", r["grund"])
+        self.assertGreater(r["lo"], 0, "die Untergrenze muss ueber null liegen")
+
+    def test_ohne_unterschied_wird_nichts_behauptet(self):
+        r = G.bericht(self._welt(80, 300, 0.60, 0.60), ALLE)["einigkeit"]
+        self.assertEqual(r["urteil"], "nicht entschieden", r["grund"])
+
+    def test_einigkeit_die_SCHLECHTER_ist_wird_nicht_zum_beleg(self):
+        """Die Richtung muss stimmen. Ein Band unter null ist kein Beleg, auch kein negativer."""
+        r = G.bericht(self._welt(80, 300, 0.30, 0.70), ALLE)["einigkeit"]
+        self.assertEqual(r["urteil"], "nicht entschieden", r["grund"])
+
+    def test_zu_wenige_einige_maerkte_sind_kein_urteil(self):
+        r = G.bericht(self._welt(5, 300, 0.95, 0.55), ALLE)["einigkeit"]
+        self.assertEqual(r["urteil"], "zu wenig Daten", r["grund"])
+
+    def test_umkaempfte_maerkte_zaehlen_hier_nicht_mit(self):
+        """Sonst wandert der Streitfall in die Gegenprobe und verwaessert beide Aussagen."""
+        welt = self._welt(40, 200, 0.95, 0.55)
+        for i in range(60):
+            welt["u%d" % i] = _markt([_w("0x1", "A"), _w("0x2", "A"), _w("0x9", "B")], "B")
+        r = G.bericht(welt, ALLE)
+        self.assertEqual(r["einigkeit"]["einig"]["maerkte"], 40)
+        self.assertEqual(r["umkaempft"]["maerkte"], 60)
+        # Und sie duerfen auch nicht in den VERGLEICHSARM rutschen: „eine Wallet allein" waere
+        # sonst zur Haelfte aus Maerkten gebaut, in denen zwei sich widersprechen — die Zahl,
+        # gegen die Einigkeit gemessen wird, waere dann eine andere als ihr Name sagt.
+        self.assertEqual(r["einigkeit"]["allein"]["maerkte"], 200)
+        self.assertEqual(r["einigkeit"]["einig"]["maerkte"] + r["einigkeit"]["allein"]["maerkte"],
+                         r["unumkaempft"]["maerkte"])
+
+    def test_die_schranke_ist_spiegelbildlich(self):
+        self.assertEqual(G.einigkeit_urteil(100, 0.18, 0.07)[0], "Einigkeit traegt")
+        self.assertEqual(G.einigkeit_urteil(100, 0.18, -0.02)[0], "nicht entschieden")
