@@ -568,6 +568,66 @@ def _faellig(latch: dict, now):
     return bleibt, weg
 
 
+# Die vier Geldbuecher der Konjunktion. `ZEIT` ist keines — es misst, wie lange die Lage haelt,
+# nicht wer zustimmt. Reihenfolge wie auf der Karte.
+BUECHER = ("BF", "POLY", "PIN", "STAKE")
+
+
+def _buecher_stand(z) -> dict:
+    """{BF: "ja"|"nein"|"unbekannt", ...} aus den `punkte.teile` einer Zeile. REIN.
+
+    Fehlt ein Buch, steht dort „unbekannt" — nicht „nein". Eine fehlende Auskunft ist kein
+    Widerspruch, und genau diese Unterscheidung traegt `buecher_punkte` schon im Kopf
+    („eine Ueber/Unter-Wette widerspricht uns nicht").
+    """
+    teile = (z.get("punkte") or {}).get("teile") if isinstance(z.get("punkte"), dict) else None
+    stand = {b: "unbekannt" for b in BUECHER}
+    for t in (teile or []):
+        if isinstance(t, dict) and t.get("buch") in stand:
+            st = str(t.get("status") or "unbekannt")
+            stand[t["buch"]] = st if st in ("ja", "nein", "unbekannt") else "unbekannt"
+    return stand
+
+
+def einig(zeile) -> int | None:
+    """Wie viele der vier Buecher standen auf „ja"? None, wenn die Zeile den Stand nicht traegt
+    (Altbestand vor dem 17.09.2026) — und None heisst „nicht gemessen", nicht „null"."""
+    b = (zeile or {}).get("buecher")
+    if not isinstance(b, dict) or not b:
+        return None
+    return sum(1 for x in BUECHER if b.get(x) == "ja")
+
+
+def nach_buechern(ledger=None, min_n: int = 10) -> list:
+    """Die Bilanz nach ZUSTIMMUNG statt nach Stufe: eine Zeile je „x von 4 einig". REIN.
+
+    17.09.2026 — die Frage, die die Karte aufwirft und bisher niemand beantworten konnte.
+    Zeilen ohne gespeicherten Stand (Altbestand) laufen als eigene Gruppe mit, damit die Summe
+    aufgeht und niemand sie fuer „0 von 4" haelt.
+    """
+    rows = ledger if ledger is not None else _load(LEDGER_FILE, [])
+    gruppen = {}
+    for r in (rows or []):
+        if not isinstance(r, dict) or not isinstance(r.get("win"), bool):
+            continue
+        o = r.get("haltePreis")
+        if not isinstance(o, (int, float)) or not (MIN_QUOTE <= o <= MAX_QUOTE):
+            continue
+        gruppen.setdefault(einig(r), []).append((o, bool(r["win"])))
+    aus = []
+    for k in sorted(gruppen, key=lambda x: (-1 if x is None else x)):
+        v = gruppen[k]
+        ren = [((o - 1.0) if w else -1.0) for o, w in v]
+        wins = sum(1 for _o, w in v if w)
+        ug = _untergrenze(ren) if len(ren) >= min_n else None
+        aus.append({"einig": k, "n": len(v), "gewonnen": wins,
+                    "trefferPct": round(100.0 * wins / len(v), 1),
+                    "roi": round(sum(ren) / len(ren), 4),
+                    "roiLb": (round(ug, 4) if ug is not None else None),
+                    "belegt": bool(ug is not None and ug > 0)})
+    return aus
+
+
 def _ledger_fortschreiben(ledger: list, angepfiffen: list, results=None, now=None) -> list:
     """Angepfiffene Halte-Zeilen eintragen und aus dem Betfair-Ergebnis abrechnen.
 
@@ -586,6 +646,21 @@ def _ledger_fortschreiben(ledger: list, angepfiffen: list, results=None, now=Non
                        "haltePreis": z.get("haltePreis"), "schlussPreis": z.get("odd"),
                        "stufe": z.get("stufe"), "gehaltenSeit": z.get("gehaltenSeit"),
                        "zuletztAktiv": z.get("zuletztAktiv"), "kickoff": z.get("kickoff"),
+                       # 🔴 17.09.2026 (Lucas: „werten wir das irgendwo aus? … wenn dann quasi
+                       # alle 4 einig sind, was da die Trefferquote waere, wuerde mich
+                       # interessieren"). Die Antwort war: nein, obwohl die Zahl dasteht.
+                       #
+                       # Die Karte zeigt „Betfair 74 % · Poly 86 % · Pinnacle stimmt zu", die
+                       # Uebersicht haengt Stake dran — und `buecher_punkte` bewertet ALLE VIER
+                       # je Zeile, mit ja/nein/unbekannt. Ins Buch wanderte davon nichts ausser
+                       # `stufe`. Damit liess sich die Frage nur als Einmal-Rechnung ueber das
+                       # Stake-Ledger beantworten, und das reicht fuenf Tage weit.
+                       #
+                       # Ab jetzt reist der Stand der vier Buecher mit. Wer in vier Wochen fragt,
+                       # bekommt eine Antwort aus dem eigenen Buch statt aus einem Skript.
+                       "buecher": _buecher_stand(z),
+                       "punkte": (z.get("punkte") or {}).get("punkte")
+                                 if isinstance(z.get("punkte"), dict) else z.get("punkte"),
                        "status": "offen", "win": None, "settledAt": None})
         bekannt.add(k)
     if results is None:
@@ -997,6 +1072,10 @@ def main():
     # gerechnet: baue() lief vorher und kannte die Zeilen dieses Laufs noch nicht, die Bilanz
     # wäre sonst dauerhaft einen Lauf alt (aufgefallen als „offen 4" bei 11 Zeilen im Buch).
     out["bilanz"] = bilanz(led)
+    # 17.09.2026 (Lucas): die Bilanz nach ZUSTIMMUNG, nicht nach Stufe — „wenn dann quasi alle 4
+    # einig sind, was da die Trefferquote waere". Heute stehen dort nur Altbestands-Zeilen ohne
+    # gespeicherten Buch-Stand; sie fuellt sich ab diesem Lauf.
+    out["bilanz"]["jeBuecher"] = nach_buechern(led)
 
     # ── Punkte-Gradient (01.09.2026) ─────────────────────────────────────────────────────
     # Getrennt vom Killer-Buch, weil es etwas anderes misst: dieses hier rechnet JEDES bewertete

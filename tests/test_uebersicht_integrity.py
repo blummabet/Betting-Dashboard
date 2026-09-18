@@ -599,3 +599,64 @@ class TaktGegenCron(unittest.TestCase):
         r = UI.check_takt_stimmt_mit_dem_cron({})
         betfair = [f for f in r["failures"] if f.startswith("betfair.yml")]
         self.assertEqual(betfair, [], "\n".join(betfair))
+
+
+# ── 18.09.2026: „Schalke–Elversberg ist aber noch offen, Brentford–Chelsea auch" ─────────────
+# Zwei Wetten standen als `closed_manual` im Buch, ohne Verkaufs-Beleg, mit Anpfiff in der
+# Zukunft — und damit fuer den Verkaufs-Manager unsichtbar. Genau so verlor Seattle–Austin am
+# 20.08. den vollen Einsatz.
+
+def _zu(**kw):
+    b = {"home": "Brentford", "away": "Chelsea", "market": "Under 2.5 Tore",
+         "status": "closed_manual", "sellPrice": None, "pnl": None,
+         "pnlSource": "manual_unknown", "kickoff": "2099-01-01T19:00:00Z"}
+    b.update(kw)
+    return b
+
+
+def test_geschlossen_ohne_beleg_vor_dem_anpfiff_schlaegt_an():
+    r = UI.check_geschlossen_heisst_belegt({"autoBetsLiga": {"bets": [_zu()]}})
+    assert not r["ok"] and r["severity"] == "error"
+    assert "Brentford" in r["failures"][0]
+
+
+def test_mit_verkaufs_beleg_ist_es_eine_schliessung():
+    r = UI.check_geschlossen_heisst_belegt({"autoBetsLiga": {"bets": [_zu(sellPrice=0.34, pnl=-0.31)]}})
+    assert r["ok"]
+
+
+def test_nach_dem_anpfiff_ist_es_settlement_und_kein_befund():
+    r = UI.check_geschlossen_heisst_belegt({"autoBetsLiga": {"bets": [_zu(kickoff="2020-01-01T19:00:00Z")]}})
+    assert r["ok"]
+
+
+def test_ohne_anpfiff_wird_nichts_behauptet():
+    r = UI.check_geschlossen_heisst_belegt({"autoBetsLiga": {"bets": [_zu(kickoff=None)]}})
+    assert r["ok"]
+
+
+def test_offene_wetten_sind_dem_guard_egal():
+    r = UI.check_geschlossen_heisst_belegt({"autoBetsMls": {"bets": [_zu(status="placed")]}})
+    assert r["ok"]
+
+
+# ── derselbe Tag: der eingefrorene Positionswert ─────────────────────────────────────────────
+def test_ohne_positionsstand_meldet_der_guard_die_luecke():
+    r = UI.check_positionswert_ist_frisch({"balanceLiga": {"positions": 10.12}})
+    assert not r["ok"] and r["severity"] == "warn"
+    assert "positionsStand" in r["failures"][0]
+
+
+def test_ein_alter_positionsstand_schlaegt_an():
+    from datetime import datetime, timedelta, timezone as _tz
+    alt = (datetime.now(_tz.utc) - timedelta(hours=40)).isoformat()
+    r = UI.check_positionswert_ist_frisch({"balanceLiga": {"positions": 10.12, "positionsStand": alt}})
+    assert not r["ok"]
+    assert "40 h" in r["failures"][0]
+
+
+def test_ein_frischer_positionsstand_ist_still():
+    from datetime import datetime, timezone as _tz
+    r = UI.check_positionswert_ist_frisch(
+        {"balanceLiga": {"positions": 10.12, "positionsStand": datetime.now(_tz.utc).isoformat()}})
+    assert r["ok"]

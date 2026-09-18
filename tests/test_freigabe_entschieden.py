@@ -234,7 +234,16 @@ class TestBetfairSchubladenNutzenDieEchteSchranke(unittest.TestCase):
                  # die Form, in der Mehrfachtesten aussieht — drei Treffer am Mindest-n, alle in
                  # demselben Markt, keiner mit einer CLV-Untergrenze. Erst wenn eine davon bei
                  # doppeltem n ueber der Huerde bleibt, ist es ein Befund.
-                 "Italian Serie A · Both teams to Score?"}
+                 "Italian Serie A · Both teams to Score?",
+                 # 18.09.2026 angesehen: n=33, ROI +41,9 %, Untergrenze +6,8 %, P/L +13,81,
+                 # CLV +0,61 pp — wieder ein Mittel ohne Streuung, also ohne Untergrenze, also
+                 # gesperrt. Die vierte Zeile binnen fuenf Tagen, die knapp ueber dem Mindest-n
+                 # mit einem sehr grossen ROI kippt; diesmal ein anderer Markt (Match Odds), aber
+                 # dieselbe Form: n zwischen 30 und 35, ROI zwischen +30 und +42 %, kein CLV mit
+                 # Schranke. Bei ~193 gleichzeitig geprueften Schubladen ist das die Signatur des
+                 # Mehrfachtestens und nicht die einer Kante. Erst wenn eine dieser Zeilen bei
+                 # doppeltem n ueber der Huerde bleibt, ist es ein Befund.
+                 "Egyptian 2nd Division · Match Odds"}
 
     def test_gegen_den_echten_bestand_nimmt_keine_NEUE_betfair_schublade_die_huerde(self):
         """Stand 06.09.: null. Nimmt eine die Huerde, schlaegt dieser Test an — und DAS ist

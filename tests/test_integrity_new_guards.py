@@ -412,3 +412,4 @@ def test_lazy_unterscheidet_fehlend_von_kaputt(tmp_path, monkeypatch):
     assert "gibtsnicht.json" not in W._LAZY_FAILED, "fehlend ist kein Lesefehler"
     W._LAZY_FAILED.clear()
 
+

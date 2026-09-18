@@ -203,6 +203,11 @@ EBENE = {
     # 12.09.2026 (CI-Wachhund): „China League" — die ZWEITE Liga Chinas (China League One, unter
     # der Super League). Guandong GZ-Power gegen Dalian Kun City, beides Zweitligisten.
     "china-league": 3,
+    # 17.09.2026 (CI-Wachhund): „football-national-league" — die russische FNL, also die ZWEITE
+    # Liga (unter der Premier Liga). Beleg aus der Paarung: FC Nizhny Novgorod gegen
+    # Leningradets, beides Zweitligisten. „National League" klingt nach oberster Klasse und ist
+    # in Russland wie in England die Ebene darunter.
+    "football-national-league": 2,
     # 14.09.2026 (CI-Wachhund): Brasileiro Serie C ist die DRITTE brasilianische Klasse
     # (unter Serie A und B). Beleg: Brusque FC gegen AA Internacional Limeira.
     "brasileiro-serie-c": 3,
