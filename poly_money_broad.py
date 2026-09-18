@@ -1166,8 +1166,12 @@ def zeitraum_bilanz(s: dict, bis, tage: int) -> dict | None:
     if not n:
         return None
     schnitt = summe / n
-    aus = {"n": n, "clv": round(schnitt, 2), "hit": round(wins / n, 4),
-           "von": ab, "bis": ende.isoformat(), "clvUg": None}
+    aus = {"n": n, "wins": wins, "clv": round(schnitt, 2), "hit": round(wins / n, 4),
+           "von": ab, "bis": ende.isoformat(), "clvUg": None,
+           # 18.09.2026: das Tages-Gedaechtnis ist am 17.09. angelegt worden. Ein Fenster von
+           # „30 Tagen" enthaelt heute einen einzigen Tag — und saehe ohne dieses Feld genauso
+           # aus wie in vier Wochen. Wer die Zahl zeigt, muss sagen koennen, wie weit sie reicht.
+           "seit": min(t)}
     if n >= WALLET_UG_MIN_N and n > 1:
         roh = (quad - n * schnitt * schnitt) / (n - 1)
         if roh >= -1e-6:
@@ -2010,6 +2014,21 @@ def update_wallet_track(prev, markets, now=None, keep_h=HIST_KEEP_H, frozen=None
             first = None
         if not first or first < cutoff:
             del openp[ok]
+
+    # 18.09.2026 (Lucas: „koennen wir da noch vor lifetime stats die weekly oder 30 Tage
+    # hinzufuegen"). Die Push-Karte zeigte bisher NUR den kumulativen Record seit Trackingbeginn
+    # und die Lebensbilanz — zwei Zahlen, die beide alles mitschleppen. Was die Wallet GERADE
+    # liefert, stand nirgends, obwohl genau das die Frage war („der war die Woche nicht so gut").
+    #
+    # Gerechnet wird es HIER, einmal je Lauf, und als fertiges Feld ausgeliefert. Nicht in der
+    # Karte: `zeitraum_bilanz` haengt an keiner Sperre, und ein Renderer, der sie selbst aufruft,
+    # waere der erste Schritt zurueck zu einer zweiten Rechnung neben der ersten.
+    _heute = now.date().isoformat()
+    for _s in scores.values():
+        if not isinstance(_s, dict) or not _s.get("tage"):
+            continue
+        _s["fenster7"] = zeitraum_bilanz(_s, _heute, 7)
+        _s["fenster30"] = zeitraum_bilanz(_s, _heute, 30)
 
     return {"open": openp, "scores": scores, "updatedAt": now.isoformat()}
 

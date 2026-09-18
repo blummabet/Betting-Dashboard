@@ -2019,3 +2019,90 @@ class ClvUntergrenzeSpiegeltDasDashboard(unittest.TestCase):
     def test_muell_wirft_nicht(self):
         for v in (None, {}, {"n": 0}, "nein", {"n": 3, "clvSumPP": None}):
             self.assertIsInstance(P._clv_ug(v)[0], float)
+
+
+class TestDasFensterVorDerLebensbilanz(unittest.TestCase):
+    """18.09.2026 (Lucas: „koennen wir da noch vor lifetime stats die weekly oder 30 Tage
+    hinzufuegen, und beides fett formatieren").
+
+    Die Karte trug zwei Zahlen, die beide ALLES mitschleppen: den kumulativen Record seit
+    Trackingbeginn (206/366, 56 %) und die Lebensbilanz ueber alle Polymarket-Maerkte
+    (+$927K). Was die Wallet GERADE liefert, stand nirgends — dabei war das Lucas' Frage schon
+    einen Tag zuvor („der war die Woche nicht so gut, aber in dem Monat 600K vorn"). Beim echten
+    Konto 0x29b5 ist der Unterschied nicht klein: kumulativ 56 %, im Fenster 5/14 = 36 %.
+
+    Gerechnet wird das Fenster beim Produzenten (`fenster7`), hier wird nur gelesen.
+    """
+
+    SCORE = {"n": 366, "wins": 206, "clvSumPP": 300.13, "pnl": 927397.5,
+             "fenster7": {"n": 14, "wins": 5, "clv": -0.26, "hit": 0.3571,
+                          "von": "2026-09-12", "bis": "2026-09-18", "seit": "2026-09-17"}}
+
+    def _card(self, **over):
+        s = dict(self.SCORE)
+        s.update(over)
+        return P.build_card(_pos(9000, wallet="0x29b5"), {"0x29b5": s}, False)
+
+    def test_das_fenster_steht_auf_der_karte(self):
+        card = self._card()
+        self.assertIn("7 Tage: 5/14 richtig (36%)", card)
+        self.assertIn("-0.3pp CLV", card)
+
+    def test_es_steht_VOR_der_lebensbilanz(self):
+        card = self._card()
+        self.assertLess(card.index("7 Tage:"), card.index("lifetime"),
+                        "die Reihenfolge war die halbe Bitte")
+
+    def test_beide_zahlen_sind_fett(self):
+        card = self._card()
+        self.assertIn("<b>7 Tage: 5/14 richtig (36%) · -0.3pp CLV</b>", card)
+        self.assertIn("<b>+$927.4K lifetime</b>", card)
+
+    def test_ein_kurzes_gedaechtnis_sagt_das_dazu(self):
+        """Das Tages-Gedaechtnis ist am 17.09. angelegt worden. Ein „7-Tage-Fenster", das zwei
+        Tage kennt, liest sich sonst in vier Wochen genauso wie heute."""
+        self.assertIn("Gedaechtnis erst seit 17.09.", self._card())
+
+    def test_ein_volles_gedaechtnis_kommentiert_sich_nicht(self):
+        voll = dict(self.SCORE["fenster7"], seit="2026-09-01")
+        self.assertNotIn("Gedaechtnis erst seit", self._card(fenster7=voll))
+
+    def test_ohne_fenster_steht_nichts_da(self):
+        card = self._card(fenster7=None)
+        self.assertNotIn("Tage:", card)
+        self.assertIn("lifetime", card)
+
+    def test_ein_leeres_fenster_rendert_nicht_als_null(self):
+        """Fehlende Information darf nicht als „0/0 richtig (0 %)" durchgehen."""
+        card = self._card(fenster7={"n": 0, "wins": 0, "clv": None})
+        self.assertNotIn("Tage:", card)
+
+    def test_das_fenster_entscheidet_nichts(self):
+        """Gemessen am 17.09. sagt der kumulative Schnitt die naechsten Aufloesungen BESSER
+        voraus als jedes Fenster (1,06 gegen 0,74 pp). Das Fenster ist Auskunft, kein Beleg —
+        ein mieses Fenster darf eine bewiesene Wallet nicht abwerten und ein glaenzendes keine
+        unbewiesene adeln."""
+        mies = {"n": 14, "wins": 0, "clv": -9.0, "hit": 0.0,
+                "von": "2026-09-12", "bis": "2026-09-18", "seit": "2026-09-01"}
+        glanz = {"n": 14, "wins": 14, "clv": 9.0, "hit": 1.0,
+                 "von": "2026-09-12", "bis": "2026-09-18", "seit": "2026-09-01"}
+        stark = {"n": 366, "wins": 206, "clvSumPP": 300.13}
+        schwach = {"n": 40, "wins": 15, "clvSumPP": -20.0}
+        self.assertEqual(P._is_smart(dict(stark, fenster7=mies)), P._is_smart(stark))
+        self.assertEqual(P._is_smart(dict(schwach, fenster7=glanz)), P._is_smart(schwach))
+
+    def test_ein_duennes_fenster_wird_gar_nicht_gezeigt(self):
+        """🔴 Gemessen am 18.09. ueber die 165 Wallets mit Tages-Gedaechtnis: der MEDIAN hat im
+        7-Tage-Fenster genau EINE Aufloesung; nur 12 haben zehn oder mehr. Ohne Schranke stuende
+        auf der Mehrzahl der Karten „1/1 richtig (100 %)" — fett, direkt neben einer Quote aus
+        366 Wetten. Dieselbe Schwelle wie fuer den kumulativen Record."""
+        duenn = {"n": 1, "wins": 1, "clv": 4.0, "hit": 1.0,
+                 "von": "2026-09-12", "bis": "2026-09-18", "seit": "2026-09-17"}
+        card = self._card(fenster7=duenn)
+        self.assertNotIn("Tage:", card)
+        self.assertNotIn("(100%)", card)
+
+    def test_genau_an_der_schwelle_wird_gezeigt(self):
+        knapp = {"n": P.MIN_TR, "wins": 4, "clv": 1.0, "hit": 4 / P.MIN_TR,
+                 "von": "2026-09-12", "bis": "2026-09-18", "seit": "2026-09-01"}
+        self.assertIn("7 Tage: 4/%d richtig" % P.MIN_TR, self._card(fenster7=knapp))
