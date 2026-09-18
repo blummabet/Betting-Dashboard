@@ -885,6 +885,86 @@ def _health_abstand(pfad):
     return ab[len(ab) // 4]
 
 
+def check_geschlossen_heisst_belegt(ctx):
+    """18.09.2026 (Lucas: „Schalke–Elversberg ist aber noch offen, Brentford–Chelsea auch").
+
+    Zwei Wetten standen als `closed_manual` im Buch, beide mit `sellPrice: null`, `pnl: null`,
+    `pnlSource: "manual_unknown"` — und beide mit einem Anpfiff, der noch bevorstand. Das ist
+    keine Schliessung, das ist eine Behauptung: die Positions-API hatte den Token in einem Lauf
+    nicht geliefert, und daraus wurde eine Zustandsaenderung.
+
+    Der Schaden hat eine Rechnung: eine so fehlgebuchte Zeile ist fuer den Verkaufs-Manager
+    unsichtbar (er sieht nur `status == "placed"`). Seattle Sounders–Austin lief am 20.08. genau
+    so ins Spiel und verlor den vollen Einsatz. Brentford–Chelsea stand drei Tage und acht
+    Laeufe lang falsch da, Anpfiff 18.09.
+
+    Der Guard prueft den Zustand der Flaeche, nicht den Code drumherum: eine geschlossene Wette
+    ohne jeden Verkaufs-Beleg, deren Spiel noch nicht angepfiffen ist, gibt es nicht.
+    """
+    fails = []
+    for name, key in (("liga_auto_bets_placed.json", "autoBetsLiga"),
+                      ("mls_auto_bets_placed.json", "autoBetsMls")):
+        d = (ctx.get(key) or {})
+        for b in (d.get("bets") or []):
+            if not isinstance(b, dict) or b.get("status") != "closed_manual":
+                continue
+            if b.get("sellPrice") is not None or b.get("pnl") is not None:
+                continue
+            ko = b.get("kickoff")
+            if not ko:
+                continue
+            try:
+                k = datetime.fromisoformat(str(ko).replace("Z", "+00:00"))
+            except (ValueError, TypeError):
+                continue
+            if k.tzinfo is None:
+                k = k.replace(tzinfo=timezone.utc)
+            if k <= datetime.now(timezone.utc):
+                continue
+            fails.append("%s: %s–%s %s als 'manuell geschlossen' gebucht, aber ohne Verkaufs-Beleg "
+                         "(sellPrice/pnl leer) und Anpfiff erst %s — fuer den Verkaufs-Manager "
+                         "unsichtbar" % (name, b.get("home"), b.get("away"), b.get("market"),
+                                         str(ko)[:16]))
+    return _c("geschlossen heisst belegt", "error", fails)
+
+
+def check_positionswert_ist_frisch(ctx):
+    """18.09.2026 — `liga_poly_balance.json` meldete $10,12 an Positionen ueber fuenf Laeufe und
+    zwei Tage, danach $9,28 ueber vier weitere, waehrend die Kurse liefen. Der Positions-Fetch
+    faellt bei einem API-Fehler auf den alten Wert zurueck (richtig — auf null zu fallen waere
+    schlimmer), aber die Datei trug nur `updatedAt`, und das ist der Zeitpunkt des SCHREIBENS.
+
+    Ich selbst bin am 16.09. darauf hereingefallen und habe aus diesem eingefrorenen Wert
+    geschlossen, die Wallet halte Brentford–Chelsea noch. Fehlende Information rendert als
+    harmloser Default; hier als eine Zahl, die aussieht wie gemessen.
+    """
+    fails = []
+    jetzt = datetime.now(timezone.utc)
+    for name, key in (("liga_poly_balance.json", "balanceLiga"),
+                      ("mls_poly_balance.json", "balanceMls")):
+        d = (ctx.get(key) or {})
+        if not d:
+            continue
+        stand = d.get("positionsStand")
+        if stand is None:
+            fails.append("%s: kein `positionsStand` — dann sagt die Datei nicht, wann der "
+                         "Positionswert zuletzt wirklich gemessen wurde" % name)
+            continue
+        try:
+            t = datetime.fromisoformat(str(stand).replace("Z", "+00:00"))
+        except (ValueError, TypeError):
+            fails.append("%s: `positionsStand` unlesbar (%r)" % (name, stand))
+            continue
+        if t.tzinfo is None:
+            t = t.replace(tzinfo=timezone.utc)
+        alter_h = (jetzt - t).total_seconds() / 3600.0
+        if alter_h > 12:
+            fails.append("%s: Positionswert $%.2f stammt aus einem Lauf vor %.0f h — die "
+                         "Positions-API antwortet seither nicht" % (name, d.get("positions") or 0.0,
+                                                                    alter_h))
+    return _c("Positionswert ist frisch", "warn", fails)
+
+
 UEBERSICHT_CHECKS = [
     check_serien_rangfolge,
     check_freigabe_grund,
@@ -907,6 +987,8 @@ UEBERSICHT_CHECKS = [
     check_fade_kontrolle,
     check_clv_urteil_passt_zur_zahl,
     check_takt_stimmt_mit_dem_cron,
+    check_geschlossen_heisst_belegt,
+    check_positionswert_ist_frisch,
 ]
 
 
@@ -945,6 +1027,10 @@ def build_ctx_from_disk() -> dict:
         "signalBilanz": _lade("liga_signal_bilanz.json", {}),
         "fadeUnter": _lade("fade_unter.json", {}),
         "signalBilanzMls": _lade("mls_signal_bilanz.json", {}),
+        "autoBetsLiga": _lade("liga_auto_bets_placed.json", {}),
+        "autoBetsMls": _lade("mls_auto_bets_placed.json", {}),
+        "balanceLiga": _lade("liga_poly_balance.json", {}),
+        "balanceMls": _lade("mls_poly_balance.json", {}),
     }
 
 

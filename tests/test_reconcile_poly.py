@@ -19,6 +19,13 @@ def _getter(positions, trades):
     return g
 
 
+# Seit dem 18.09. ist ein Verkauf beweispflichtig: ohne SELL-Trade wird nicht geschlossen. Wo ein
+# Test die GEGENPROBE fuehrt („die Schranke darf den Zweck nicht abschaffen"), gehoert der Beleg
+# also in die Vorlage — sonst prueft er nur noch, dass nichts passiert.
+def _sell(token="TOK1", price=0.34, size=15.28, ts="2026-09-15T14:00:00Z"):
+    return [{"asset": token, "side": "SELL", "price": price, "size": size, "timestamp": ts}]
+
+
 class TestReconcile(unittest.TestCase):
     def _bet(self, **kw):
         b = {"betKey": "D-2-ENG-GHA|Auswärtssieg", "matchKey": "ENG-GHA", "home": "England",
@@ -66,17 +73,38 @@ class TestReconcile(unittest.TestCase):
         self.assertEqual(changed, [])
         self.assertEqual(bet["status"], "placed")
 
-    def test_no_sell_trade_marks_without_pnl(self):
+    def test_ohne_verkaufs_trade_wird_nicht_geschlossen(self):
+        """🔴 18.09.2026 (Lucas: „Schalke–Elversberg ist aber noch offen, Brentford–Chelsea auch").
+
+        Hier stand bis heute das Gegenteil: derselbe Ablauf, und der Test VERLANGTE, dass die
+        Wette als `closed_manual` mit `pnlSource: "manual_unknown"` gebucht wird. Ein Test, der
+        eine Buchung ohne Beleg festschreibt, haelt die Fehlerklasse am Leben statt sie zu
+        fangen — beide echten Faelle tragen genau dieses Feld.
+
+        Ein manueller Verkauf ist ein Trade. Antwortet `/trades` und steht keiner drin, dann
+        wurde nicht verkauft; dann fehlt die Position nur in der Positions-Liste.
+        """
         bet = self._bet()
         positions = []
         R.reconcile([bet], proxy="0xabc", now_iso="2026-06-23T16:00:00Z",
                     getter=_getter(positions, []))
         changed = R.reconcile([bet], proxy="0xabc", now_iso="2026-06-23T18:00:00Z",
                               getter=_getter(positions, []))
-        self.assertEqual(len(changed), 1)
-        self.assertEqual(bet["status"], "closed_manual")
-        self.assertIsNone(bet["pnl"])
-        self.assertEqual(bet["pnlSource"], "manual_unknown")
+        self.assertEqual(changed, [], "kein Verkaufs-Trade, also kein Verkauf")
+        self.assertEqual(bet["status"], "placed")
+        self.assertIsNone(bet.get("soldAt"))
+
+    def test_antwortet_die_trades_api_nicht_wird_erst_recht_nichts_gebucht(self):
+        """Der Unterschied zwischen „keine Trades" und „keine Antwort" ist der ganze Punkt."""
+        bet = self._bet()
+
+        def g(url):
+            return [] if "/positions" in url else None     # Positionen ok, Trades kaputt
+
+        R.reconcile([bet], proxy="0xabc", now_iso="2026-06-23T16:00:00Z", getter=g)
+        changed = R.reconcile([bet], proxy="0xabc", now_iso="2026-06-23T18:00:00Z", getter=g)
+        self.assertEqual(changed, [])
+        self.assertEqual(bet["status"], "placed")
 
 
 if __name__ == "__main__":
@@ -117,19 +145,19 @@ class TestFrischeWetteWirdNichtGeschlossen(unittest.TestCase):
         """Die Gegenprobe: die Schranken duerfen den Zweck des Abgleichs nicht abschaffen."""
         bet = self._frisch()
         R.reconcile([bet], proxy="0xabc", finished_keys=set(),
-                    now_iso="2026-09-14T16:00:00Z", getter=_getter([], []))   # Marker
+                    now_iso="2026-09-14T16:00:00Z", getter=_getter([], _sell()))   # Marker
         changed = R.reconcile([bet], proxy="0xabc", finished_keys=set(),
                               now_iso="2026-09-14T17:30:00Z",   # Marker + 90 Min
-                              getter=_getter([], []))
+                              getter=_getter([], _sell()))
         self.assertEqual(len(changed), 1)
         self.assertEqual(bet["status"], "closed_manual")
 
     def test_ohne_zeitstempel_bleibt_das_alte_verhalten(self):
         bet = self._frisch(placedAt=None)
         R.reconcile([bet], proxy="0xabc", finished_keys=set(),
-                    now_iso="2026-09-14T14:54:30Z", getter=_getter([], []))
+                    now_iso="2026-09-14T14:54:30Z", getter=_getter([], _sell()))
         changed = R.reconcile([bet], proxy="0xabc", finished_keys=set(),
-                              now_iso="2026-09-14T16:30:00Z", getter=_getter([], []))
+                              now_iso="2026-09-14T16:30:00Z", getter=_getter([], _sell()))
         self.assertEqual(len(changed), 1, "ohne Alter wird nichts behauptet — wie bisher")
 
 
@@ -257,9 +285,10 @@ class TestEineAbwesenheitIstKeinBeleg(unittest.TestCase):
         """Die Schranke darf den Zweck nicht abschaffen: wer wirklich verkauft hat, soll nicht
         ewig Alarme bekommen."""
         bet = self._bet()
-        R.reconcile([bet], proxy="0xabc", now_iso="2026-09-15T14:45:00Z", getter=_getter([], []))
+        R.reconcile([bet], proxy="0xabc", now_iso="2026-09-15T14:45:00Z",
+                    getter=_getter([], _sell()))
         changed = R.reconcile([bet], proxy="0xabc", now_iso="2026-09-15T16:00:00Z",
-                              getter=_getter([], []))
+                              getter=_getter([], _sell()))
         self.assertEqual(len(changed), 1)
         self.assertEqual(bet["status"], "closed_manual")
 
@@ -315,7 +344,7 @@ class TestZeitAlleinReichtNichtWennLaeufeFehlen(unittest.TestCase):
     def test_zwei_echte_laeufe_nach_der_frist_schliessen_sehr_wohl(self):
         bet = self._bet()
         for t in ("2026-09-16T10:00:00Z", "2026-09-16T10:30:00Z", "2026-09-16T11:00:00Z"):
-            changed = R.reconcile([bet], proxy="0xabc", now_iso=t, getter=_getter([], []))
+            changed = R.reconcile([bet], proxy="0xabc", now_iso=t, getter=_getter([], _sell()))
         self.assertEqual(len(changed), 1)
         self.assertEqual(bet["status"], "closed_manual")
 
@@ -327,12 +356,13 @@ class TestZeitAlleinReichtNichtWennLaeufeFehlen(unittest.TestCase):
         R.MIN_FEHLT_LAEUFE = 3
         try:
             bet = self._bet()
-            R.reconcile([bet], proxy="0xabc", now_iso="2026-09-16T10:00:00Z", getter=_getter([], []))
+            R.reconcile([bet], proxy="0xabc", now_iso="2026-09-16T10:00:00Z",
+                        getter=_getter([], _sell()))
             changed = R.reconcile([bet], proxy="0xabc", now_iso="2026-09-16T11:05:00Z",
-                                  getter=_getter([], []))
+                                  getter=_getter([], _sell()))
             self.assertEqual(changed, [], "zwei Fehlanzeigen, verlangt sind drei")
             changed = R.reconcile([bet], proxy="0xabc", now_iso="2026-09-16T12:10:00Z",
-                                  getter=_getter([], []))
+                                  getter=_getter([], _sell()))
             self.assertEqual(len(changed), 1)
         finally:
             R.MIN_FEHLT_LAEUFE = alt
@@ -344,7 +374,108 @@ class TestZeitAlleinReichtNichtWennLaeufeFehlen(unittest.TestCase):
                     getter=_getter([{"asset": "TOK1", "size": 15.0}], []))
         self.assertNotIn("nichtGehaltenLaeufe", bet)
         self.assertNotIn("nichtGehaltenZuletzt", bet)
-        R.reconcile([bet], proxy="0xabc", now_iso="2026-09-16T11:00:00Z", getter=_getter([], []))
+        R.reconcile([bet], proxy="0xabc", now_iso="2026-09-16T11:00:00Z",
+                    getter=_getter([], _sell()))
         changed = R.reconcile([bet], proxy="0xabc", now_iso="2026-09-16T12:05:00Z",
-                              getter=_getter([], []))
+                              getter=_getter([], _sell()))
         self.assertEqual(len(changed), 1, "nach zwei frischen Fehlanzeigen ist es ein Befund")
+
+
+class TestEinVerkaufBrauchtEinenBeleg(unittest.TestCase):
+    """🔴 18.09.2026 (Lucas: „Schalke–Elversberg ist aber noch offen, Brentford–Chelsea auch").
+
+    Der Stand im Buch an dem Morgen, aus `liga_auto_bets_placed.json`:
+
+        Brentford–Chelsea    gekauft 14.09. 14:54   „verkauft" 15.09. 14:45   Anpfiff 18.09. 19:00
+        FC Schalke–Elversb.  gekauft 16.09. 13:19   „verkauft" 16.09. 14:44   Anpfiff 20.09. 15:30
+
+    Beide mit `sellPrice: null`, `pnl: null`, `pnlSource: "manual_unknown"` — die Buchung gibt
+    selbst zu, dass sie keinen Beleg hat. Beide fuer den Verkaufs-Manager unsichtbar (der sieht
+    nur `status == "placed"`), beide auf dem Weg in ihr Spiel. Genau so verlor Seattle–Austin am
+    20.08. den vollen Einsatz.
+
+    Die Schranke vom 16.09. („ueber mehrere Laeufe fehlen") konnte das nicht fangen, und das ist
+    gemessen: `manage-liga-poly.yml` behauptet Cron `0,30 10-21`, gelaufen ist der Workflow vom
+    13. bis 18.09. VIER Mal am Tag, mit Abstaenden von 81 bis 253 Minuten (health/liga-poly.json).
+    „Der naechste Lauf" und „mehrere Laeufe spaeter" sind bei diesem Takt dasselbe.
+
+    Und `zurueckholen` kam an beide nie heran: es verlangt den Token in der Positions-Liste —
+    genau die Liste, die ihn nicht lieferte. Acht Laeufe lang stand Brentford falsch da.
+    """
+
+    def _zu(self, **kw):
+        b = {"betKey": "55-49-Under 2.5 Tore", "home": "Brentford", "away": "Chelsea",
+             "market": "Under 2.5 Tore", "status": "closed_manual", "tokenId": "TOK1",
+             "polyPrice": 0.36, "stake": 5.5, "placedAt": "2026-09-14T14:54:29+00:00",
+             "kickoff": "2026-09-18T19:00:00Z", "soldAt": "2026-09-15T14:45:18+00:00",
+             "sellReason": "manuell auf Polymarket geschlossen",
+             "sellPrice": None, "pnl": None, "pnlSource": "manual_unknown"}
+        b.update(kw)
+        return b
+
+    def test_ohne_verkaufs_trade_und_vor_dem_anpfiff_wird_zurueckgeholt(self):
+        bet = self._zu()
+        changed = R.zurueckholen_ohne_beleg([bet], proxy="0xabc",
+                                            now_iso="2026-09-18T08:00:00Z", getter=_getter([], []))
+        self.assertEqual(len(changed), 1)
+        self.assertEqual(bet["status"], "placed")
+        self.assertIsNone(bet["soldAt"])
+        self.assertIn("Verkaufs-Trade", bet["reopenGrund"])
+
+    def test_mit_verkaufs_trade_bleibt_sie_geschlossen(self):
+        bet = self._zu()
+        changed = R.zurueckholen_ohne_beleg([bet], proxy="0xabc", now_iso="2026-09-18T08:00:00Z",
+                                            getter=_getter([], _sell()))
+        self.assertEqual(changed, [])
+        self.assertEqual(bet["status"], "closed_manual")
+
+    def test_nach_dem_anpfiff_wird_nichts_mehr_angefasst(self):
+        """Laeuft das Spiel, ist die Frage eine andere (Settlement). Eine Wette dann wieder auf
+        `placed` zu drehen, hiesse dem Verkaufs-Manager eine In-Play-Position unterzuschieben."""
+        bet = self._zu()
+        changed = R.zurueckholen_ohne_beleg([bet], proxy="0xabc", now_iso="2026-09-18T20:00:00Z",
+                                            getter=_getter([], []))
+        self.assertEqual(changed, [])
+        self.assertEqual(bet["status"], "closed_manual")
+
+    def test_ohne_anpfiff_im_datensatz_wird_nichts_behauptet(self):
+        bet = self._zu(kickoff=None)
+        self.assertEqual(R.zurueckholen_ohne_beleg([bet], proxy="0xabc",
+                                                   now_iso="2026-09-18T08:00:00Z",
+                                                   getter=_getter([], [])), [])
+
+    def test_eine_belegte_schliessung_ist_nicht_betroffen(self):
+        bet = self._zu(sellPrice=0.34, pnl=-0.31, pnlSource="manual_sell_trade")
+        self.assertEqual(R.zurueckholen_ohne_beleg([bet], proxy="0xabc",
+                                                   now_iso="2026-09-18T08:00:00Z",
+                                                   getter=_getter([], [])), [])
+
+    def test_kaputte_trades_api_holt_nicht_zurueck(self):
+        """Auch die Rueckholung ist beweispflichtig — in BEIDE Richtungen dasselbe Mass."""
+        bet = self._zu()
+        self.assertEqual(R.zurueckholen_ohne_beleg([bet], proxy="0xabc",
+                                                   now_iso="2026-09-18T08:00:00Z",
+                                                   getter=lambda url: None), [])
+        self.assertEqual(bet["status"], "closed_manual")
+
+    def test_reconcile_holt_im_selben_lauf_zurueck(self):
+        """Der Weg zurueck muss ohne Handarbeit an der Datei gehen — beide echten Zeilen haengen
+        daran, dass der naechste regulaere Lauf sie repariert."""
+        bet = self._zu()
+        changed = R.reconcile([bet], proxy="0xabc", finished_keys=set(),
+                              now_iso="2026-09-18T08:00:00Z", getter=_getter([], []))
+        self.assertEqual(len(changed), 1)
+        self.assertEqual(bet["status"], "placed")
+
+    def test_darf_schliessen_trennt_fehlende_trades_von_fehlender_antwort(self):
+        self.assertTrue(R.darf_schliessen({"price": 0.34}, True)[0])
+        self.assertFalse(R.darf_schliessen(None, True)[0])
+        self.assertFalse(R.darf_schliessen(None, False)[0])
+        self.assertIn("nicht erreichbar", R.darf_schliessen(None, False)[1])
+
+    def test_die_kette_ueberdauert_den_gemessenen_tagesabstand(self):
+        """Der groesste gemessene Abstand ZWISCHEN zwei Laeufen am selben Tag war 253 Minuten,
+        die kuerzeste Nachtpause 839. Die Schranke muss dazwischen liegen — sonst zaehlt sie
+        entweder tagsueber staendig von vorn oder verbindet zwei Tage zu einer Kette."""
+        self.assertGreater(R.MAX_KETTE_MIN, 253)
+        self.assertLess(R.MAX_KETTE_MIN, 839)

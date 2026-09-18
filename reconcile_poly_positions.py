@@ -106,9 +106,21 @@ MIN_FEHLT_MIN = float(os.environ.get("RECONCILE_MIN_FEHLT_MIN") or 60)
 MIN_FEHLT_LAEUFE = int(os.environ.get("RECONCILE_MIN_FEHLT_LAEUFE") or 2)
 # Und die Beobachtungen muessen eine KETTE sein, keine zwei Punkte mit einer Nacht dazwischen:
 # reisst der Abstand zwischen zwei Fehlanzeigen weiter als das hier, faengt die Zaehlung von vorn
-# an. 150 Minuten deckt den weitesten regulaeren Abstand dieses Workflows ab (der 08:00-Lauf steht
-# allein, der naechste kommt um 10:00) und bricht die Kette ueber Nacht sicher.
-MAX_KETTE_MIN = float(os.environ.get("RECONCILE_MAX_KETTE_MIN") or 150)
+# an.
+#
+# 🔴 18.09.2026: hier standen 150 Minuten mit der Begruendung, das decke „den weitesten regulaeren
+# Abstand dieses Workflows" ab — abgeleitet aus dem Cron-Ausdruck, nicht aus den Laeufen. Die
+# Laeufe sagen etwas anderes. `health/liga-poly.json`, 13.–18.09., zwanzig Laeufe:
+#
+#     Abstaende tagsueber:  81 · 84 · 85 · 91 · 148 · 175 · 179 · 192 · 192 · 202 · 242 · 243 ·
+#                           246 · 252 Minuten        (der Cron behauptet 30)
+#     Abstaende ueber Nacht: 839 · 917 · 919 · 953 Minuten
+#
+# Vier Laeufe am Tag statt vierundzwanzig — der Runner ist self-hosted auf dem Mac und laeuft,
+# wenn der Mac laeuft. Mit 150 Minuten riss die Kette also mitten am Tag (bei 175 bis 252) und
+# die Zaehlung begann staendig von vorn. 300 liegt ueber dem groessten Tagesabstand und unter der
+# kuerzesten Nacht. Dass die Zahl jetzt aus den Laeufen kommt statt aus dem Cron, ist der Punkt.
+MAX_KETTE_MIN = float(os.environ.get("RECONCILE_MAX_KETTE_MIN") or 300)
 
 
 def _http_get(url: str):
@@ -173,6 +185,20 @@ def fetch_wallet_positions(proxy: str, getter=_http_get):
 def find_sell_trade(proxy: str, token_id: str, after_iso: str | None = None,
                     getter=_http_get) -> dict | None:
     """Jüngster SELL-Trade der Wallet auf token_id (nach after_iso) → {price, size, ts} oder None."""
+    return verkaufs_beleg(proxy, token_id, after_iso, getter=getter)[0]
+
+
+def verkaufs_beleg(proxy: str, token_id: str, after_iso: str | None = None,
+                   getter=_http_get) -> tuple:
+    """Wie `find_sell_trade`, sagt aber zusaetzlich, ob die Trades-API ueberhaupt geantwortet hat.
+
+    Gibt (sell | None, erreichbar: bool). Der Unterschied ist der ganze Punkt: „kein Verkaufs-
+    Trade gefunden" heisst nur dann etwas, wenn die Liste auch wirklich gelesen werden konnte.
+    Ohne diese Unterscheidung ist ein HTTP-Fehler von „nichts verkauft" nicht zu trennen — und
+    genau daraus wurde am 15./16.09. eine Zustandsaenderung.
+    """
+    raw = getter(TRADES_URL.format(user=proxy))
+    erreichbar = raw is not None
     after_dt = None
     if after_iso:
         try:
@@ -180,7 +206,7 @@ def find_sell_trade(proxy: str, token_id: str, after_iso: str | None = None,
         except Exception:
             after_dt = None
     best = None
-    for tr in _rows(getter(TRADES_URL.format(user=proxy))):
+    for tr in _rows(raw):
         if not isinstance(tr, dict) or str(_tok(tr)) != str(token_id):
             continue
         side = str(tr.get("side") or tr.get("type") or "").upper()
@@ -207,7 +233,7 @@ def find_sell_trade(proxy: str, token_id: str, after_iso: str | None = None,
             best = cand
     if best:
         best.pop("_dt", None)
-    return best
+    return (best, erreichbar)
 
 
 def close_bet_manual(bet: dict, sell: dict | None, now_iso: str) -> dict:
@@ -263,6 +289,91 @@ def falsch_geschlossen(bet) -> bool:
     if bet.get("status") != "closed_manual":
         return False
     return bet.get("sellPrice") is None and bet.get("pnl") is None
+
+
+def darf_schliessen(sell, trades_erreichbar: bool) -> tuple:
+    """Gibt es einen BELEG fuer den behaupteten Verkauf? REIN/testbar. -> (ja, grund)
+
+    🔴 18.09.2026 (Lucas: „Schalke–Elversberg ist aber noch offen, Brentford–Chelsea auch").
+    Beide standen als `closed_manual` im Buch, beide mit `pnlSource: "manual_unknown"` — das
+    ist die Buchung, die im selben Atemzug zugibt, dass sie keinen Beleg hat.
+
+    Ein manueller Verkauf auf Polymarket ist ein Trade. Er steht in `/trades`. Fehlt er, waehrend
+    die Trades-API antwortet, dann wurde nicht verkauft — dann fehlt die Position nur in der
+    Positions-Liste. Die Fehlerklasse ist wieder dieselbe wie am 16.09. (*eine Abwesenheit als
+    Beleg lesen*), nur eine Ebene tiefer: damals reichte EIN Lauf ohne Token, seither brauchte es
+    mehrere Laeufe ohne Token — aber nie einen Verkauf, den jemand nachweisen kann.
+
+    Dass die Schranke von damals hier nicht griff, ist gemessen: `manage-liga-poly.yml` behauptet
+    Cron `0,30 10-21` (24 Laeufe/Tag), tatsaechlich lief der Workflow zwischen 13. und 18.09.
+    VIER Mal am Tag mit Abstaenden von 81 bis 253 Minuten (health/liga-poly.json). „Ueber mehrere
+    Laeufe fehlen" war damit beim naechsten Lauf erfuellt. Eine Schranke, die Laeufe zaehlt, ist
+    so gut wie der Takt, den niemand misst — ein Beleg ist es nicht.
+    """
+    if sell:
+        return (True, "")
+    if not trades_erreichbar:
+        return (False, "Trades-API nicht erreichbar — ohne Beleg wird nicht geschlossen")
+    return (False, "kein Verkaufs-Trade in der Wallet — die Position fehlt nur in der "
+                   "Positions-Liste, verkauft wurde sie nicht")
+
+
+def _vor_anpfiff(bet: dict, now_iso: str) -> bool:
+    """Steht der Anpfiff noch aus? Unbekannter/unlesbarer Anpfiff -> False (nichts behaupten)."""
+    ko = bet.get("kickoff")
+    if not ko:
+        return False
+    try:
+        k = datetime.fromisoformat(str(ko).replace("Z", "+00:00"))
+        n = datetime.fromisoformat(str(now_iso).replace("Z", "+00:00"))
+    except (ValueError, TypeError):
+        return False
+    if k.tzinfo is None:
+        k = k.replace(tzinfo=timezone.utc)
+    if n.tzinfo is None:
+        n = n.replace(tzinfo=timezone.utc)
+    return k > n
+
+
+def zurueckholen_ohne_beleg(bets: list, *, proxy: str, now_iso: str | None = None,
+                            getter=_http_get) -> list:
+    """Unbelegte Schliessungen zurueckholen, deren Spiel noch gar nicht angepfiffen ist.
+
+    `zurueckholen` braucht den Token in der Positions-Liste. Genau die hat ihn aber nicht
+    geliefert — sonst waere die Zeile nie geschlossen worden. Brentford–Chelsea stand deshalb
+    drei Tage lang falsch im Buch, ueber acht Laeufe hinweg, ohne dass irgendetwas sie anfasste.
+
+    Hier zaehlt der andere Beleg: gibt es keinen SELL-Trade und laeuft das Spiel noch nicht,
+    dann liegt das Geld im Markt und die Wette ist offen.
+    """
+    now_iso = now_iso or datetime.now(timezone.utc).isoformat()
+    zurueck = []
+    for bet in bets:
+        if not falsch_geschlossen(bet) or not _vor_anpfiff(bet, now_iso):
+            continue
+        tok = str(bet.get("tokenId") or "")
+        if not tok:
+            continue
+        sell, erreichbar = verkaufs_beleg(proxy, tok, bet.get("placedAt"), getter=getter)
+        if sell or not erreichbar:
+            continue
+        bet["status"] = "placed"
+        bet["soldAt"] = None
+        bet["sellReason"] = None
+        bet["sellPrice"] = None
+        bet["pnl"] = None
+        bet["pnlSource"] = None
+        bet.pop("nichtGehaltenSeit", None)
+        bet.pop("nichtGehaltenLaeufe", None)
+        bet.pop("nichtGehaltenZuletzt", None)
+        bet["reopenedAt"] = now_iso
+        bet["reopenGrund"] = ("als manuell geschlossen gebucht, aber die Wallet zeigt keinen "
+                              "Verkaufs-Trade und der Anpfiff steht noch aus — die Position ist "
+                              "offen, die Positions-Liste hatte sie nur nicht geliefert.")
+        zurueck.append(bet)
+        print(f"  ♻️  zurueckgeholt (kein Verkaufs-Trade): {bet.get('home')}–{bet.get('away')} "
+              f"{bet.get('market')} — Anpfiff steht noch aus.")
+    return zurueck
 
 
 def fehlt_lange_genug(bet: dict, now_iso: str) -> tuple:
@@ -366,6 +477,7 @@ def reconcile(bets: list, *, proxy: str, finished_keys: set | None = None,
         return []
     changed = []
     changed += zurueckholen(bets, held, now_iso=now_iso)
+    changed += zurueckholen_ohne_beleg(bets, proxy=proxy, now_iso=now_iso, getter=getter)
     for bet in bets:
         if bet.get("status") != "placed":
             continue
@@ -396,7 +508,11 @@ def reconcile(bets: list, *, proxy: str, finished_keys: set | None = None,
             continue
         if bet.get("betKey") in finished_keys or bet.get("matchKey") in finished_keys:
             continue   # Spiel fertig → Settlement, NICHT als manueller Eingriff werten
-        sell = find_sell_trade(proxy, tok, bet.get("placedAt"), getter=getter)
+        sell, erreichbar = verkaufs_beleg(proxy, tok, bet.get("placedAt"), getter=getter)
+        darf, grund = darf_schliessen(sell, erreichbar)
+        if not darf:
+            print(f"  ⛔ {grund}: {bet.get('home')}–{bet.get('away')} {bet.get('market')}")
+            continue
         close_bet_manual(bet, sell, now_iso)
         changed.append(bet)
         _pnl = bet.get("pnl")

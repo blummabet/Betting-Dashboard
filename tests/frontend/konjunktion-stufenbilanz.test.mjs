@@ -105,10 +105,24 @@ test('am echten Bestand: im Bereich der Tafel trägt keine einzige Stufe', () =>
   // in beide Richtungen nichts. Beide stehen hier als PROTOKOLL, nicht als Freigabe — die
   // Aussage der Tafel („im Bereich traegt keine Stufe") haengt weiter an den Zeilen mit
   // zweistelligem n, und dort ist keine einzige Untergrenze ueber null.
+  // 18.09.2026 angesehen: „10/13 (n=21)" ist dazugekommen — ROI +29,9 %, Untergrenze +1,9 %.
+  // Die erste Stufe mit zweistelligem n ueber null, also genau die Nachricht, auf die der Satz
+  // unten gewartet hat. Angesehen, und sie traegt trotzdem nichts:
+  //
+  //   11/13  n=22   ROI  +9,1 %   UG −24,8 %      ← die STRENGERE Stufe, und sie ist schlechter
+  //   10/13  n=21   ROI +29,9 %   UG  +1,9 %
+  //    9/13  n=13   ROI +13,4 %   UG −24,0 %
+  //
+  // Eine Leiter, deren oberste Sprosse unter der zweitobersten liegt, ist keine Leiter. Und die
+  // Untergrenze steht mit +1,9 % praktisch auf der Null, bei vierzehn gleichzeitig geprueften
+  // Stufen — da ist knapp ein Treffer ueber der Schranke genau das, was der Zufall liefert.
+  // Steht sie in vier Wochen bei doppeltem n immer noch da, und zieht 11/13 mit, ist es ein
+  // Befund. Bis dahin: Protokoll, keine Freigabe.
   assert.deepStrictEqual(traegt.map(e => `${e.punkte}/${e.moeglich} (n=${e.n})`),
-    ['12/13 (n=3)', '6/7 (n=6)'],
+    ['12/13 (n=3)', '10/13 (n=21)', '6/7 (n=6)'],
     'Die Lage hat sich geändert — bitte ansehen, statt den Test anzupassen.');
-  assert.ok(traegt.every(e => e.n < 10),
-    'Eine Stufe mit zweistelligem n ueber null waere eine ANDERE Nachricht als diese '
-    + 'Kleinst-Nenner — die muss auffallen und nicht in der Liste verschwinden.');
+  const elf = oben.find(e => e.punkte === 11 && e.moeglich === 13);
+  assert.ok(elf && (elf.roiLb || -9) <= 0,
+    'Wenn die STRENGERE Stufe 11/13 auch ueber null geht, ist die Leiter zum ersten Mal '
+    + 'monoton — DAS waere der Befund und muss auffallen, statt hier durchzurutschen.');
 });

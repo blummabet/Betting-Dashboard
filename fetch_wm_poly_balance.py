@@ -43,7 +43,7 @@ CHAIN_ID  = 137  # Polygon
 
 
 def _save(usdc: float, usdc_e: float, address: str, error: str | None = None,
-          positions: float | None = None):
+          positions: float | None = None, positions_stand: str | None = None):
     now = datetime.now(timezone.utc).isoformat()
     # 22.07.2026 (Lucas: „Balance passt nicht — sind 122,96, nicht 99,93"): `usdc` ist NUR das freie
     # CLOB-Collateral (was man setzen kann). Das echte Wallet-Guthaben = frei + Wert der OFFENEN
@@ -57,6 +57,16 @@ def _save(usdc: float, usdc_e: float, address: str, error: str | None = None,
         "total":     round(usdc + usdc_e + pos, 4),   # Wallet-Equity (Header)
         "address":   address,
         "updatedAt": now,
+        # 🔴 18.09.2026. `positions` faellt bei einem API-Fehler auf den alten Wert zurueck — und
+        # sah damit aus wie eine frische Zahl. In `liga_poly_balance.json` stand $10,12 ueber
+        # fuenf Laeufe und zwei Tage unveraendert, danach $9,28 ueber vier weitere, waehrend die
+        # Kurse liefen. Ich selbst habe am 16.09. aus diesem eingefrorenen Wert geschlossen, die
+        # Wallet halte Brentford–Chelsea noch — er stammte aus einem Lauf davor.
+        #
+        # `updatedAt` sagt, wann die DATEI geschrieben wurde. Wann der Positionswert zuletzt
+        # wirklich gemessen wurde, sagt erst dieses Feld. Ohne es rendert eine fehlende Messung
+        # als harmloser Default.
+        "positionsStand": positions_stand or (now if positions is not None else None),
     }
     if error:
         out["error"] = error
@@ -283,7 +293,8 @@ def main():
         _save(existing.get("usdc", 0.0), existing.get("usdc_e", 0.0),
               funder_addr or existing.get("address", ""),
               error=f"Missing env: {', '.join(missing)}",
-              positions=existing.get("positions"))
+              positions=existing.get("positions"),
+              positions_stand=existing.get("positionsStand"))
         return
 
     # 25.07.2026 (Lucas: „falsche balance"): der Fetch warf auf dem Runner eine Exception (statt None)
@@ -302,7 +313,8 @@ def main():
         existing = _load_existing()
         _save(existing.get("usdc", 0.0), existing.get("usdc_e", 0.0),
               funder_addr, error="fetch_failed",
-              positions=existing.get("positions"))
+              positions=existing.get("positions"),
+              positions_stand=existing.get("positionsStand"))
         return
 
     # USDC hat 6 Dezimalstellen — API gibt Rohwert in kleinster Einheit zurück
@@ -316,10 +328,14 @@ def main():
     except Exception as exc:
         print(f"  ⚠️  Positions-Fetch warf eine Exception: {exc}")
         positions = None
+    positions_stand = None
     if positions is None:   # API-Fehler → alten Positions-Wert behalten, nicht auf 0 fallen
-        positions = _load_existing().get("positions")
+        _alt = _load_existing()
+        positions = _alt.get("positions")
+        positions_stand = _alt.get("positionsStand")   # der Wert ist alt — das steht jetzt dran
 
-    out = _save(balance, 0.0, funder_addr, positions=positions)
+    out = _save(balance, 0.0, funder_addr, positions=positions,
+                positions_stand=positions_stand)
     print(f"\n✅  {OUT_FILE.name} geschrieben")
     print(f"    Frei (setzbar): ${out['usdc']:.2f}  +  Positionen: ${out['positions']:.2f}  "
           f"=  Wallet-Equity: ${out['total']:.2f} USDC")

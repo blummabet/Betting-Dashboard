@@ -4447,6 +4447,15 @@ function renderTradingCockpit(data) {
   // nicht nur das freie Guthaben. Cap-Berechnung bleibt bewusst auf balanceUsd (frei).
   const balanceTotal = parseFloat(bal?.total ?? bal?.usdc ?? 0);
   const balancePos   = parseFloat(bal?.positions || 0);
+  // 🔴 18.09.2026: `positions` faellt bei einem Fehler der Positions-API auf den alten Wert
+  // zurueck. In `liga_poly_balance.json` stand derselbe Betrag ueber fuenf Laeufe und zwei Tage,
+  // waehrend die Kurse liefen — und las sich wie eine frische Zahl. Der Produzent schreibt jetzt
+  // `positionsStand` (wann zuletzt WIRKLICH gemessen); hier wird er nur gelesen, nicht neu
+  // beurteilt. Fehlt das Feld (Altbestand), wird nichts behauptet.
+  const _posStandH = _polyHoursSince(bal?.positionsStand);
+  const posAlt = _posStandH != null && _posStandH >= 2;
+  const posStandTxt = bal?.positionsStand == null ? ''
+    : posAlt ? ` · Positionswert vor ${_posStandH.toFixed(0)} h gemessen` : '';
   const killEnabled = (kill?.enabled !== false);
   const killReason = kill?.reason || '';
 
@@ -4512,7 +4521,7 @@ function renderTradingCockpit(data) {
     {
       label: 'Balance',
       value: fmtUsd(balanceTotal),
-      sub: balancePos > 0.01 ? `$${balanceUsd.toFixed(2)} frei + $${balancePos.toFixed(2)} in Pos.` : (balanceTotal < 50 ? 'aufladen empfohlen' : `${(balanceTotal / 200 * 100).toFixed(0)}% von Ziel-Bankroll`),
+      sub: balancePos > 0.01 ? `$${balanceUsd.toFixed(2)} frei + $${balancePos.toFixed(2)} in Pos.${posStandTxt}` : (balanceTotal < 50 ? 'aufladen empfohlen' : `${(balanceTotal / 200 * 100).toFixed(0)}% von Ziel-Bankroll`),
       color: balanceTotal < 10 ? '#f85149' : balanceTotal < 50 ? '#e3b341' : '#00d4a1',
       icon: '💼',
     },
