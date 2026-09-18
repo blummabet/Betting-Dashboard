@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-18T18:09:15.246204+00:00",
+"generatedAt": "2026-09-18T18:24:19.714268+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1264,
-"wins": 1070,
-"hitRate": 0.8465,
-"polyN": 1197,
-"polyWins": 937,
-"polyHitRate": 0.7828,
-"pinnN": 165,
-"pinnHitRate": 0.7939,
-"nRoi": 591,
-"roi": 0.4383,
-"roiLb": 0.3855,
-"nClv": 591,
-"clv": 20.72,
-"clvLb": 19.1013
+"n": 1265,
+"wins": 1071,
+"hitRate": 0.8466,
+"polyN": 1198,
+"polyWins": 938,
+"polyHitRate": 0.783,
+"pinnN": 166,
+"pinnHitRate": 0.7952,
+"nRoi": 592,
+"roi": 0.4384,
+"roiLb": 0.3857,
+"nClv": 592,
+"clv": 20.74,
+"clvLb": 19.1247
 },
 "uneinig": {
-"n": 481,
+"n": 482,
 "wins": 149,
-"hitRate": 0.3098,
-"polyN": 442,
+"hitRate": 0.3091,
+"polyN": 443,
 "polyWins": 120,
-"polyHitRate": 0.2715,
-"pinnN": 293,
-"pinnHitRate": 0.628,
-"nRoi": 249,
-"roi": -0.4927,
-"roiLb": -0.5824,
-"nClv": 249,
-"clv": -19.67,
-"clvLb": -23.1457
+"polyHitRate": 0.2709,
+"pinnN": 294,
+"pinnHitRate": 0.6293,
+"nRoi": 250,
+"roi": -0.4947,
+"roiLb": -0.5842,
+"nClv": 250,
+"clv": -19.66,
+"clvLb": -23.1253
 },
 "teil": {
 "n": 24,
@@ -136,6 +136,11 @@
 "wins": 28,
 "hitRate": 0.8235
 },
+"German Bundesliga 2": {
+"n": 32,
+"wins": 24,
+"hitRate": 0.75
+},
 "South Korean K1 League": {
 "n": 32,
 "wins": 25,
@@ -145,11 +150,6 @@
 "n": 32,
 "wins": 21,
 "hitRate": 0.6562
-},
-"German Bundesliga 2": {
-"n": 30,
-"wins": 23,
-"hitRate": 0.7667
 },
 "Colombian Primera A": {
 "n": 29,
@@ -649,37 +649,75 @@
 },
 "byStrength": {
 "strong": {
-"n": 1077,
-"wins": 871,
-"hitRate": 0.8087,
-"nRoi": 553,
-"roi": 0.3051,
-"roiLb": 0.249,
-"nClv": 553,
-"clv": 14.5,
-"clvLb": 12.2835
+"n": 1078,
+"wins": 872,
+"hitRate": 0.8089,
+"nRoi": 554,
+"roi": 0.3055,
+"roiLb": 0.2495,
+"nClv": 554,
+"clv": 14.53,
+"clvLb": 12.3206
 },
 "weak": {
-"n": 659,
+"n": 660,
 "wins": 335,
-"hitRate": 0.5083,
-"nRoi": 302,
-"roi": -0.1443,
-"roiLb": -0.2418,
-"nClv": 302,
-"clv": -4.07,
-"clvLb": -7.1669
+"hitRate": 0.5076,
+"nRoi": 303,
+"roi": -0.1471,
+"roiLb": -0.2444,
+"nClv": 303,
+"clv": -4.11,
+"clvLb": -7.2038
 }
 },
 "divergence": {
-"n": 481,
+"n": 482,
 "betfairWins": 149,
-"betfairRate": 0.3098,
-"polyN": 442,
+"betfairRate": 0.3091,
+"polyN": 443,
 "polyWins": 120,
-"polyRate": 0.2715
+"polyRate": 0.2709
 },
 "recent": [
+{
+"matchId": "36061681",
+"home": "Wolfsburg",
+"away": "SV Darmstadt",
+"league": "German Bundesliga 2",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Wolfsburg",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+5,
+1
+],
+"kickoff": "2026-09-18T16:30:00Z",
+"settledAt": "2026-09-18T18:24:19.503742+00:00"
+},
+{
+"matchId": "36060757",
+"home": "Greuther Furth",
+"away": "FC Magdeburg",
+"league": "German Bundesliga 2",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "FC Magdeburg",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-09-18T16:30:00Z",
+"settledAt": "2026-09-18T18:24:19.503742+00:00"
+},
 {
 "matchId": "36038721",
 "home": "UTA Arad",
@@ -1401,56 +1439,18 @@
 ],
 "kickoff": "2026-09-17T00:30:00Z",
 "settledAt": "2026-09-17T03:34:55.838012+00:00"
-},
-{
-"matchId": "36070143",
-"home": "Colorado",
-"away": "St Louis City SC",
-"league": "US Lamar Hunt U.S Open Cup",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "St Louis City SC",
-"polySide": "home",
-"winner": "away",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-0,
-3
-],
-"kickoff": "2026-09-17T01:30:00Z",
-"settledAt": "2026-09-17T03:34:55.838012+00:00"
-},
-{
-"matchId": "36079914",
-"home": "Inter Miami CF",
-"away": "Cruz Azul",
-"league": "Other Competitions Soccer",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Inter Miami CF",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-09-17T00:00:00Z",
-"settledAt": "2026-09-17T03:04:52.767847+00:00"
 }
 ],
 "global": {
-"n": 1769,
-"wins": 1224,
-"hitRate": 0.6919,
-"nRoi": 855,
-"roi": 0.1464,
-"roiLb": 0.0949,
-"nClv": 855,
+"n": 1771,
+"wins": 1225,
+"hitRate": 0.6917,
+"nRoi": 857,
+"roi": 0.1455,
+"roiLb": 0.0941,
+"nClv": 857,
 "clv": 7.94,
-"clvLb": 6.0712
+"clvLb": 6.0735
 },
 "pending": 41
 }
