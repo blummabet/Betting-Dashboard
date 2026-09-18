@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-18T20:24:46.121022+00:00",
+ "generatedAt": "2026-09-18T20:54:48.014054+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,10 +9,10 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 689,
- "pinnKeys": 271,
- "matched": 197,
- "footballRows": 165,
+ "polyRowsSeen": 686,
+ "pinnKeys": 268,
+ "matched": 194,
+ "footballRows": 162,
  "crossRows": 524,
  "footballSkippedStale": 55,
  "seenBySport": {
@@ -21,17 +21,74 @@
   "icehockey_nhl": 258,
   "boxing_boxing": 26,
   "soccer_mls": 21,
-  "soccer_liga": 144
+  "soccer_liga": 141
  },
  "matchedBySport": {
   "baseball_mlb": 30,
   "boxing_boxing": 2,
   "soccer_mls": 21,
-  "soccer_liga": 144
+  "soccer_liga": 141
  },
  "trackRecord": {
-  "tracked": 297,
+  "tracked": 301,
   "converged": 73
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|miamimarlins-sandiegopadres|miamimarlins",
+   "sport": "baseball_mlb",
+   "event": "Miami Marlins vs San Diego Padres",
+   "market": "Moneyline",
+   "outcome": "Miami Marlins",
+   "polyPP": 34.5,
+   "pinnPP": 41.6,
+   "gapPP": -7.15,
+   "vol": 114161,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-18T20:54:48.013594+00:00"
+  },
+  {
+   "id": "baseball_mlb|miamimarlins-sandiegopadres|sandiegopadres",
+   "sport": "baseball_mlb",
+   "event": "Miami Marlins vs San Diego Padres",
+   "market": "Moneyline",
+   "outcome": "San Diego Padres",
+   "polyPP": 65.5,
+   "pinnPP": 58.4,
+   "gapPP": 7.15,
+   "vol": 114161,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-18T20:54:48.013594+00:00"
+  },
+  {
+   "id": "baseball_mlb|arizonadiamondbacks-newyorkyankees|newyorkyankees",
+   "sport": "baseball_mlb",
+   "event": "New York Yankees vs Arizona Diamondbacks",
+   "market": "Moneyline",
+   "outcome": "New York Yankees",
+   "polyPP": 50.5,
+   "pinnPP": 57.6,
+   "gapPP": -7.14,
+   "vol": 108364,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-18T20:54:48.013594+00:00"
+  },
+  {
+   "id": "baseball_mlb|arizonadiamondbacks-newyorkyankees|arizonadiamondbacks",
+   "sport": "baseball_mlb",
+   "event": "New York Yankees vs Arizona Diamondbacks",
+   "market": "Moneyline",
+   "outcome": "Arizona Diamondbacks",
+   "polyPP": 49.5,
+   "pinnPP": 42.4,
+   "gapPP": 7.14,
+   "vol": 108364,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-18T20:54:48.013594+00:00"
+  }
+ ]
 }
