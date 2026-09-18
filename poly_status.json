@@ -49,11 +49,9 @@
       "id": "public_push_buch",
       "label": "Öffentlicher Push führt sein Buch",
       "severity": "error",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "1 gepushte Zeile(n) seit über 3 Tagen 'pending', obwohl eine Auflösung existiert (z.B. ucl-aek1-lin2-2026-09-08-more-markets) — Key-Mismatch gegen poly_resolutions."
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Wer pusht, misst den Push. Gerechnet wird zum Preis im Moment des Pushs, nicht zum älteren Einstieg der Wallet."
     },
     {
@@ -63,7 +61,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "894 geprueft, davon 111 abgeschnitten"
+      "note": "895 geprueft, davon 111 abgeschnitten"
     },
     {
       "id": "settlement_alive",
@@ -78,15 +76,15 @@
         "epl-new-bou-2026-09-05-more-markets: seit 13.2 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "elc-pne-bbr-2026-09-05-more-markets: seit 13.2 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "bun-scp-fre-2026-09-05-more-markets: seit 13.1 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "bun-s04-bay-2026-09-05-more-markets: seit 13.0 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "sea-fro-ven-2026-09-06-more-markets: seit 12.1 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "fl1-tro-str-2026-09-06-more-markets: seit 12.1 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
+        "bun-s04-bay-2026-09-05-more-markets: seit 13.1 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
+        "sea-fro-ven-2026-09-06-more-markets: seit 12.2 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
+        "fl1-tro-str-2026-09-06-more-markets: seit 12.2 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "sea-par-mon-2026-09-06-more-markets: seit 12.1 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "fl1-ang-ren-2026-09-06-more-markets: seit 12.1 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "spl-kha-riy-2026-09-07-more-markets: seit 11.0 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "spl-haz-taa-2026-09-08-more-markets: seit 10.0 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "ucl-aek1-lin2-2026-09-08-more-markets: seit 10.0 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "grc-ast-ari-2026-09-09-more-markets: seit 8.1 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
+        "grc-ast-ari-2026-09-09-more-markets: seit 8.2 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "ucl-fen-rom-2026-09-10-more-markets: seit 8.0 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "ucl-fen-rom-2026-09-10-more-markets: seit 8.0 Tagen offen — Auflösung existiert, matcht aber den Key nicht!"
       ],
@@ -100,8 +98,8 @@
       "nFail": 3,
       "failures": [
         "TENNIS: nur 279/660 fällige Märkte aufgelöst (42%)",
-        "ESPORTS: nur 338/656 fällige Märkte aufgelöst (52%)",
-        "MLB: nur 172/332 fällige Märkte aufgelöst (52%)"
+        "ESPORTS: nur 337/655 fällige Märkte aufgelöst (51%)",
+        "MLB: nur 172/330 fällige Märkte aufgelöst (52%)"
       ],
       "note": "Fällige Märkte je Liga, die ihre Auflösung finden. < 60% = Settlement läuft ins Leere (Slug-Mismatch), Trefferquoten dieser Liga sind unvollständig."
     },
@@ -115,7 +113,7 @@
         "122/312 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (39%) — Trefferquote allein trügt",
         "   0x84cfffc3f1… n=312 Treffer 52% P&L $-7,663,002",
         "   0xc3c3b3ef30… n=338 Treffer 51% P&L $-3,973,117",
-        "   0xa0f21e6d35… n=90 Treffer 66% P&L $-2,635,720",
+        "   0xa0f21e6d35… n=91 Treffer 66% P&L $-2,635,720",
         "   0xabb89972b2… n=35 Treffer 60% P&L $-2,563,982"
       ],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
@@ -157,6 +155,6 @@
       "note": "poly_direct_bets.py rechnet über poly_resolutions.json ab. Hängt ein Bet, kennt Poly den Ausgang nicht (Markt noch offen/obskur) oder der Slug passt nicht — dann fehlt echtes Geld in der Bilanz."
     }
   ],
-  "nFail": 4,
-  "generatedAt": "2026-09-18T16:29:22.682028+00:00"
+  "nFail": 3,
+  "generatedAt": "2026-09-18T16:59:23.945205+00:00"
 }
