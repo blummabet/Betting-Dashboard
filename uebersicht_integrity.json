@@ -108,7 +108,7 @@
       "label": "Stake-Spielklasse: Tabelle vollstaendig, Richtungen getrennt",
       "severity": "error",
       "failures": [
-        "1 Fussball-Ligen ohne Eintrag in stake_liga_stufe.py (football-national-league) — sie fallen aus jeder Zeile der Ansicht, statt aufzufallen"
+        "2 Fussball-Ligen ohne Eintrag in stake_liga_stufe.py (china-league-2, liga-alef) — sie fallen aus jeder Zeile der Ansicht, statt aufzufallen"
       ],
       "nFail": 1,
       "ok": false,
@@ -117,9 +117,11 @@
     {
       "label": "Poly-Deckung: Money-Scan gegen Liga-Fetcher",
       "severity": "error",
-      "failures": [],
-      "nFail": 0,
-      "ok": true,
+      "failures": [
+        "sea-mon-sas-2026-09-18 (AC Monza v US Sassuolo Calcio, Anpfiff in 6.1h) — der Liga-Fetcher hat den Markt, der Money-Scan nie"
+      ],
+      "nFail": 1,
+      "ok": false,
       "hinweis": ""
     },
     {
@@ -128,7 +130,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "195 Picks im Fenster, 21 % ohne Preis-Signal."
+      "hinweis": "193 Picks im Fenster, 21 % ohne Preis-Signal."
     },
     {
       "label": "Stumme Signale: wer hat nie gefeuert?",
@@ -156,7 +158,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "seit Vorregistrierung n=1937 (UG -7.7 %) · Rueckblick n=2726, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=1971 (UG -8.1 %) · Rueckblick n=2726, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -170,13 +172,34 @@
       "label": "Takt: Cron gegen gemessene Laeufe",
       "severity": "warn",
       "failures": [
-        "poly-live-scan.yml: Cron sagt alle 15 Min, gemessen alle 167 Min (poly-live-scan) — die Schedule-Bilanz rechnet mit 96 Laeufen/Tag, geliefert werden eher 9. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit."
+        "poly-live-scan.yml: Cron sagt alle 15 Min, gemessen alle 166 Min (poly-live-scan) — die Schedule-Bilanz rechnet mit 96 Laeufen/Tag, geliefert werden eher 9. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit."
+      ],
+      "nFail": 1,
+      "ok": false,
+      "hinweis": ""
+    },
+    {
+      "label": "geschlossen heisst belegt",
+      "severity": "error",
+      "failures": [
+        "liga_auto_bets_placed.json: Brentford–Chelsea Under 2.5 Tore als 'manuell geschlossen' gebucht, aber ohne Verkaufs-Beleg (sellPrice/pnl leer) und Anpfiff erst 2026-09-18T19:00 — fuer den Verkaufs-Manager unsichtbar",
+        "liga_auto_bets_placed.json: FC Schalke 04–SV Elversberg Under 2.5 Tore als 'manuell geschlossen' gebucht, aber ohne Verkaufs-Beleg (sellPrice/pnl leer) und Anpfiff erst 2026-09-20T15:30 — fuer den Verkaufs-Manager unsichtbar"
+      ],
+      "nFail": 2,
+      "ok": false,
+      "hinweis": ""
+    },
+    {
+      "label": "Positionswert ist frisch",
+      "severity": "warn",
+      "failures": [
+        "liga_poly_balance.json: kein `positionsStand` — dann sagt die Datei nicht, wann der Positionswert zuletzt wirklich gemessen wurde"
       ],
       "nFail": 1,
       "ok": false,
       "hinweis": ""
     }
   ],
-  "nFail": 3,
-  "generatedAt": "2026-09-17T22:08:06.678476+00:00"
+  "nFail": 6,
+  "generatedAt": "2026-09-18T12:41:26.875450+00:00"
 }

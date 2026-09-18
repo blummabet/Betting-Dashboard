@@ -1,11 +1,11 @@
-# 🟡 Picks Validator — 17.09.2026 21:29
+# 🟡 Picks Validator — 18.09.2026 14:31
 
-**118 Spiele geprüft** · 🔴 0 Fehler · 🟡 82 Warnungen · 🔵 369 Hinweise
+**118 Spiele geprüft** · 🔴 0 Fehler · 🟡 81 Warnungen · 🔵 369 Hinweise
 
 ```
 =================================================================
   🐕 CocoBet — Picks Logik-Check
-  17.09.2026 21:29
+  18.09.2026 14:31
   Filter: nächste 3 Tag(e)
 =================================================================
 
@@ -423,7 +423,7 @@
      Sevilla expH≈1.35 (statischer Proxy) → FV über 1.5 = 39.1%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🟡 WARNUNG [BOTH_DEFENSIVE_OVER_RISK]
      📅 20.09.2026  Getafe vs Malaga
-     Getafe (0.7 Tore/Sp) + Malaga (0.7 Tore/Sp): kombiniert nur ~1.2 erwartete Tore. Over 2.5 Pick wäre kontraindiziert — Modell prüfen.
+     Getafe (0.7 Tore/Sp) + Malaga (0.5 Tore/Sp): kombiniert nur ~1.0 erwartete Tore. Over 2.5 Pick wäre kontraindiziert — Modell prüfen.
   🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
      📅 20.09.2026  Getafe vs Malaga
      Getafe: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
@@ -435,19 +435,19 @@
      Liga-Baserate=3.4 → Poisson FV für Über 4.5 Karten = 25.6%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
   🔵 HINWEIS [LOW_SCORING_PROFILE]
      📅 20.09.2026  Getafe vs Malaga
-     Ø gpg=1.40, H2H Ø=2.4 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt
+     Ø gpg=1.20, H2H Ø=2.4 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt
   🔵 HINWEIS [OVER35_LOW_FV]
      📅 20.09.2026  Getafe vs Malaga
-     Ø gpg=1.40 (statischer Proxy) → Poisson FV für Over 3.5 = 5.4%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
+     Ø gpg=1.20 (statischer Proxy) → Poisson FV für Over 3.5 = 3.4%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
   🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
      📅 20.09.2026  Getafe vs Malaga
-     Getafe expH≈1.20 (statischer Proxy) → FV über 1.5 = 33.7%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
+     Getafe expH≈1.25 (statischer Proxy) → FV über 1.5 = 35.5%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🔵 HINWEIS [TEAM_OVER_AWAY_LOW_FV]
      📅 20.09.2026  Getafe vs Malaga
-     Malaga expA≈0.85 (statischer Proxy) → FV über 1.5 = 20.9%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
+     Malaga expA≈0.75 (statischer Proxy) → FV über 1.5 = 17.3%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🔵 HINWEIS [CORNER_LOW_ATTACK_PROFILE]
      📅 20.09.2026  Getafe vs Malaga
-     Getafe (0.7 T/Sp) + Malaga (0.7 T/Sp): Beide Teams sehr angriffsschwach — Corner-Over-Pick hat schwaches Fundament. FV-Gate (CORN_EST=0.10 bei geschätzten Quoten) sollte Corner-Pick blocken.
+     Getafe (0.7 T/Sp) + Malaga (0.5 T/Sp): Beide Teams sehr angriffsschwach — Corner-Over-Pick hat schwaches Fundament. FV-Gate (CORN_EST=0.10 bei geschätzten Quoten) sollte Corner-Pick blocken.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 20.09.2026  Atletico Madrid vs Real Madrid
      Liga-Baserate=3.4 → Poisson FV für Über 3.5 Karten = 44.2% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+11.4%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
@@ -457,9 +457,6 @@
   🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
      📅 20.09.2026  Atletico Madrid vs Real Madrid
      H2H Schnitt=3.0 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
-  🟡 WARNUNG [HOME_POOR_FORM_HIGH_SCORE]
-     📅 20.09.2026  Villarreal vs Levante
-     Villarreal: formScore=0.11 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 20.09.2026  Villarreal vs Levante
      Liga-Baserate=3.4 → Poisson FV für Über 3.5 Karten = 44.2% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+11.4%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
@@ -468,10 +465,10 @@
      Liga-Baserate=3.4 → Poisson FV für Über 4.5 Karten = 25.6%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
   🔵 HINWEIS [LOW_SCORING_PROFILE]
      📅 20.09.2026  Villarreal vs Levante
-     Ø gpg=1.50, H2H Ø=2.6 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt
+     Ø gpg=1.70, H2H Ø=2.6 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt
   🔵 HINWEIS [OVER35_LOW_FV]
      📅 20.09.2026  Villarreal vs Levante
-     Ø gpg=1.50 (statischer Proxy) → Poisson FV für Over 3.5 = 6.6%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
+     Ø gpg=1.70 (statischer Proxy) → Poisson FV für Over 3.5 = 9.3%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 20.09.2026  Deportivo La Coruna vs Real Betis
      Liga-Baserate=3.4 → Poisson FV für Über 3.5 Karten = 44.2% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+11.4%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
@@ -737,15 +734,6 @@
      📅 19.09.2026  Debreceni VSC vs Vasas
      H2H Schnitt=3.2 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
   🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 20.09.2026  MTK Budapest vs Gyori ETO FC
-     Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 20.09.2026  MTK Budapest vs Gyori ETO FC
-     Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
-     📅 20.09.2026  MTK Budapest vs Gyori ETO FC
-     H2H Schnitt=3.2 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
-  🔵 HINWEIS [CARDS35_LOW_FV]
      📅 20.09.2026  Ujpest vs Zalaegerszegi TE
      Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
   🔵 HINWEIS [CARDS45_LOW_FV]
@@ -757,6 +745,15 @@
   🔵 HINWEIS [TEAM_OVER_AWAY_LOW_FV]
      📅 20.09.2026  Ujpest vs Zalaegerszegi TE
      Zalaegerszegi TE expA≈1.15 (statischer Proxy) → FV über 1.5 = 31.9%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
+  🔵 HINWEIS [CARDS35_LOW_FV]
+     📅 20.09.2026  MTK Budapest vs Gyori ETO FC
+     Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
+  🔵 HINWEIS [CARDS45_LOW_FV]
+     📅 20.09.2026  MTK Budapest vs Gyori ETO FC
+     Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
+  🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
+     📅 20.09.2026  MTK Budapest vs Gyori ETO FC
+     H2H Schnitt=3.2 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
   🟡 WARNUNG [H2H_DOMINATED_HIGH_SCORE]
      📅 20.09.2026  Nyiregyhaza vs Ferencvarosi TC
      Ferencvarosi TC dominiert H2H 7W/1X/1L in 9 Spielen. matchScore=7.5 — Pick-Richtung sollte klar sein, Angle-Text darf den Underdog nicht überbewerten.
@@ -1310,15 +1307,6 @@
      📅 19.09.2026  BSC Young Boys vs Servette FC
      H2H Schnitt=3.0 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
   🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
-     📅 19.09.2026  FC Luzern vs Grasshoppers
-     FC Luzern: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 19.09.2026  FC Luzern vs Grasshoppers
-     Liga-Baserate=3.4 → Poisson FV für Über 3.5 Karten = 44.2% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+11.4%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 19.09.2026  FC Luzern vs Grasshoppers
-     Liga-Baserate=3.4 → Poisson FV für Über 4.5 Karten = 25.6%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
      📅 19.09.2026  FC Sion vs FC Zurich
      FC Zurich: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
   🔵 HINWEIS [CARDS35_LOW_FV]
@@ -1326,6 +1314,15 @@
      Liga-Baserate=3.4 → Poisson FV für Über 3.5 Karten = 44.2% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+11.4%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
   🔵 HINWEIS [CARDS45_LOW_FV]
      📅 19.09.2026  FC Sion vs FC Zurich
+     Liga-Baserate=3.4 → Poisson FV für Über 4.5 Karten = 25.6%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
+  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
+     📅 19.09.2026  FC Luzern vs Grasshoppers
+     FC Luzern: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
+  🔵 HINWEIS [CARDS35_LOW_FV]
+     📅 19.09.2026  FC Luzern vs Grasshoppers
+     Liga-Baserate=3.4 → Poisson FV für Über 3.5 Karten = 44.2% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+11.4%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
+  🔵 HINWEIS [CARDS45_LOW_FV]
+     📅 19.09.2026  FC Luzern vs Grasshoppers
      Liga-Baserate=3.4 → Poisson FV für Über 4.5 Karten = 25.6%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 20.09.2026  FC Vaduz vs FC Thun
@@ -1424,7 +1421,7 @@
 
 ═════════════════════════════════════════════════════════════════
   Geprüft: 118 Spiele
-  🟡 82 Warnungen — manuelle Prüfung empfohlen
+  🟡 81 Warnungen — manuelle Prüfung empfohlen
   🔵 369 Hinweise — Pick-Richtung kontrollieren
 ═════════════════════════════════════════════════════════════════
 
