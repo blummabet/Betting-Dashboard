@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-18T03:22:31.971673+00:00",
+"generatedAt": "2026-09-18T03:37:41.059129+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1253,
-"wins": 1064,
-"hitRate": 0.8492,
-"polyN": 1186,
-"polyWins": 931,
-"polyHitRate": 0.785,
+"n": 1254,
+"wins": 1065,
+"hitRate": 0.8493,
+"polyN": 1187,
+"polyWins": 932,
+"polyHitRate": 0.7852,
 "pinnN": 164,
 "pinnHitRate": 0.7988,
-"nRoi": 580,
-"roi": 0.4492,
-"roiLb": 0.3962,
-"nClv": 580,
-"clv": 20.94,
-"clvLb": 19.333
+"nRoi": 581,
+"roi": 0.4496,
+"roiLb": 0.3967,
+"nClv": 581,
+"clv": 20.97,
+"clvLb": 19.368
 },
 "uneinig": {
-"n": 478,
+"n": 479,
 "wins": 148,
-"hitRate": 0.3096,
-"polyN": 439,
+"hitRate": 0.309,
+"polyN": 440,
 "polyWins": 119,
-"polyHitRate": 0.2711,
+"polyHitRate": 0.2705,
 "pinnN": 293,
 "pinnHitRate": 0.628,
-"nRoi": 246,
-"roi": -0.4906,
-"roiLb": -0.5813,
-"nClv": 246,
-"clv": -19.76,
-"clvLb": -23.2687
+"nRoi": 247,
+"roi": -0.4927,
+"roiLb": -0.5831,
+"nClv": 247,
+"clv": -19.68,
+"clvLb": -23.177
 },
 "teil": {
 "n": 24,
@@ -186,15 +186,15 @@
 "wins": 18,
 "hitRate": 0.8182
 },
+"CONMEBOL Copa Libertadores": {
+"n": 22,
+"wins": 10,
+"hitRate": 0.4545
+},
 "Belgian Pro League": {
 "n": 21,
 "wins": 16,
 "hitRate": 0.7619
-},
-"CONMEBOL Copa Libertadores": {
-"n": 21,
-"wins": 10,
-"hitRate": 0.4762
 },
 "Ecuadorian Serie A": {
 "n": 21,
@@ -210,6 +210,11 @@
 "n": 20,
 "wins": 17,
 "hitRate": 0.85
+},
+"CONMEBOL Copa Sudamericana": {
+"n": 19,
+"wins": 12,
+"hitRate": 0.6316
 },
 "Chilean Primera Division": {
 "n": 19,
@@ -235,11 +240,6 @@
 "n": 19,
 "wins": 15,
 "hitRate": 0.7895
-},
-"CONMEBOL Copa Sudamericana": {
-"n": 18,
-"wins": 11,
-"hitRate": 0.6111
 },
 "Danish Superliga": {
 "n": 18,
@@ -649,37 +649,75 @@
 },
 "byStrength": {
 "strong": {
-"n": 1068,
-"wins": 866,
-"hitRate": 0.8109,
-"nRoi": 544,
-"roi": 0.3128,
-"roiLb": 0.2563,
-"nClv": 544,
-"clv": 14.71,
-"clvLb": 12.4869
+"n": 1069,
+"wins": 867,
+"hitRate": 0.811,
+"nRoi": 545,
+"roi": 0.3135,
+"roiLb": 0.2571,
+"nClv": 545,
+"clv": 14.75,
+"clvLb": 12.5364
 },
 "weak": {
-"n": 654,
+"n": 655,
 "wins": 333,
-"hitRate": 0.5092,
-"nRoi": 297,
-"roi": -0.1399,
-"roiLb": -0.2384,
-"nClv": 297,
-"clv": -4.3,
-"clvLb": -7.4213
+"hitRate": 0.5084,
+"nRoi": 298,
+"roi": -0.1428,
+"roiLb": -0.2411,
+"nClv": 298,
+"clv": -4.28,
+"clvLb": -7.3965
 }
 },
 "divergence": {
-"n": 478,
+"n": 479,
 "betfairWins": 148,
-"betfairRate": 0.3096,
-"polyN": 439,
+"betfairRate": 0.309,
+"polyN": 440,
 "polyWins": 119,
-"polyRate": 0.2711
+"polyRate": 0.2705
 },
 "recent": [
+{
+"matchId": "36058703",
+"home": "Flamengo",
+"away": "Independiente (Ecu)",
+"league": "CONMEBOL Copa Libertadores",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Independiente (Ecu)",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-09-18T00:30:00Z",
+"settledAt": "2026-09-18T03:37:40.860302+00:00"
+},
+{
+"matchId": "35965539",
+"home": "Torque",
+"away": "Cienciano",
+"league": "CONMEBOL Copa Sudamericana",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Torque",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+0
+],
+"kickoff": "2026-09-18T00:30:00Z",
+"settledAt": "2026-09-18T03:37:40.860302+00:00"
+},
 {
 "matchId": "36074053",
 "home": "Atletico Bucaramanga",
@@ -1401,56 +1439,18 @@
 ],
 "kickoff": "2026-09-16T19:00:00Z",
 "settledAt": "2026-09-16T22:04:34.216402+00:00"
-},
-{
-"matchId": "36005281",
-"home": "Sunderland",
-"away": "Az Alkmaar",
-"league": "UEFA Europa League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Sunderland",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-09-16T19:00:00Z",
-"settledAt": "2026-09-16T22:04:34.216402+00:00"
-},
-{
-"matchId": "36004956",
-"home": "Olympiakos",
-"away": "Jagiellonia Bialystock",
-"league": "UEFA Europa League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Olympiakos",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-09-16T19:00:00Z",
-"settledAt": "2026-09-16T22:04:34.216402+00:00"
 }
 ],
 "global": {
-"n": 1755,
-"wins": 1217,
-"hitRate": 0.6934,
-"nRoi": 841,
-"roi": 0.1529,
-"roiLb": 0.101,
-"nClv": 841,
-"clv": 8.0,
-"clvLb": 6.1138
+"n": 1757,
+"wins": 1218,
+"hitRate": 0.6932,
+"nRoi": 843,
+"roi": 0.1522,
+"roiLb": 0.1004,
+"nClv": 843,
+"clv": 8.02,
+"clvLb": 6.1459
 },
-"pending": 20
+"pending": 18
 }
