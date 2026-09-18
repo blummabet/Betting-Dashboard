@@ -352069,7 +352069,13 @@
   "tokens": {
    "BBL": "29685407929754355723974523019326779474380464776119262833025471408643770000786",
    "Liquid": "33265225563398617662938106918179434888794606292443817096457308806193068792729"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "BBL": 1.0,
+   "Liquid": 0.0
+  },
+  "resolvedAt": "2026-09-18T18:32:31.725490+00:00"
  },
  "rou1-fua-sep-2026-09-18": {
   "shares": {
@@ -352713,7 +352719,13 @@
     "usd": 976,
     "ts": 1789745311
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Infinite": 0.0,
+   "EYEBALLERS": 1.0
+  },
+  "resolvedAt": "2026-09-18T18:32:31.725490+00:00"
  },
  "atp-gojo-droguet-2026-09-18": {
   "shares": {
@@ -353117,12 +353129,12 @@
  },
  "cs2-vit-furia-2026-09-18": {
   "shares": {
-   "Vitality": 106878.8718739852,
-   "FURIA": 49148.66904853502
+   "Vitality": 148539.50469022524,
+   "FURIA": 71519.16634102502
   },
   "prices": {
-   "Vitality": 0.685,
-   "FURIA": 0.315
+   "Vitality": 0.675,
+   "FURIA": 0.325
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -353135,30 +353147,30 @@
    {
     "wallet": "0xf5592765133941c40c77e52bc56bbe7ec167f462",
     "side": "Vitality",
-    "usd": 36405,
+    "usd": 35874,
     "avgPrice": 0.6899
    },
    {
     "wallet": "0xafd492974cd531aae7786210438ae46b42047e61",
     "side": "Vitality",
-    "usd": 13700,
+    "usd": 27000,
     "avgPrice": 0.68
+   },
+   {
+    "wallet": "0x79ae097215202b5d01f98e4479fb219102469a4a",
+    "side": "FURIA",
+    "usd": 12277,
+    "avgPrice": 0.3199
    },
    {
     "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
     "side": "FURIA",
-    "usd": 10553,
+    "usd": 10888,
     "avgPrice": 0.3019
-   },
-   {
-    "wallet": "0x994ec8e910b433265f3a46eaf666bfa28b1a6136",
-    "side": "Vitality",
-    "usd": 6850,
-    "avgPrice": 0.6999
    }
   ],
-  "hoursToKickoff": 0.26,
-  "capturedAt": "2026-09-18T18:27:22.915425+00:00",
+  "hoursToKickoff": 0.19,
+  "capturedAt": "2026-09-18T18:32:31.725490+00:00",
   "cond": "0x090073e4a8c1bc2859b7042b7bf4d9d8a1c12fedab477271e83b191a0b12e774",
   "frage": "Counter-Strike: Vitality vs FURIA (BO3) - StarLadder StarSeries Playoffs",
   "tokens": {
@@ -353167,48 +353179,52 @@
   },
   "book": {
    "side": "Vitality",
-   "bid": 0.68,
-   "ask": 0.69,
+   "bid": 0.67,
+   "ask": 0.68,
    "spreadC": 1.0,
-   "spreadPct": 1.45,
+   "spreadPct": 1.47,
    "bids": [
     [
-     0.68,
-     41603
-    ],
-    [
      0.67,
-     48327
+     65002
     ],
     [
      0.66,
-     47175
+     48185
     ],
     [
      0.65,
-     465
+     914
     ],
     [
      0.64,
-     50
+     30
     ],
     [
      0.63,
-     759
+     93
+    ],
+    [
+     0.59,
+     200
     ]
    ],
    "asks": [
     [
+     0.68,
+     3830
+    ],
+    [
      0.69,
-     26290
+     36055
     ],
     [
      0.7,
-     61506
+     56927
     ],
     [
      0.71,
-     3246
+     2779
     ],
     [
      0.72,
@@ -353216,15 +353232,51 @@
     ],
     [
      0.73,
-     1767
-    ],
-    [
-     0.74,
-     1706
+     1692
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x1c5e6a9f80cde40b5180918034c591917342269b",
+    "action": "BUY",
+    "side": "FURIA",
+    "price": 0.33,
+    "usd": 350,
+    "ts": 1789756060
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "action": "BUY",
+    "side": "Vitality",
+    "price": 0.68,
+    "usd": 517,
+    "ts": 1789756033
+   },
+   {
+    "wallet": "0x79ae097215202b5d01f98e4479fb219102469a4a",
+    "action": "BUY",
+    "side": "FURIA",
+    "price": 0.32,
+    "usd": 11988,
+    "ts": 1789756014
+   },
+   {
+    "wallet": "0xefcbc9a7d36584a604e4673dbe8b69a33862c215",
+    "action": "BUY",
+    "side": "Vitality",
+    "price": 0.69,
+    "usd": 1060,
+    "ts": 1789755960
+   },
+   {
+    "wallet": "0x80b933dc9ea4286d7288cbe5187f4a5fdad8cedc",
+    "action": "BUY",
+    "side": "Vitality",
+    "price": 0.69,
+    "usd": 859,
+    "ts": 1789755933
+   },
    {
     "wallet": "0x59847267e2a004e3886d7a02ac53778c5ea176eb",
     "action": "BUY",
@@ -353232,38 +353284,6 @@
     "price": 0.32,
     "usd": 400,
     "ts": 1789755147
-   },
-   {
-    "wallet": "0x689f7d0a49d2646dc199848ffbdb4757242e259c",
-    "action": "BUY",
-    "side": "Vitality",
-    "price": 0.69,
-    "usd": 2803,
-    "ts": 1789754809
-   },
-   {
-    "wallet": "0x2a748ac30ad5fc56eae0f2dbc4d46bdd55d5de59",
-    "action": "BUY",
-    "side": "Vitality",
-    "price": 0.69,
-    "usd": 690,
-    "ts": 1789754374
-   },
-   {
-    "wallet": "0x5f3c2b8e805e93d0ad11ff50a9cc0a429af30cf1",
-    "action": "BUY",
-    "side": "FURIA",
-    "price": 0.32,
-    "usd": 5908,
-    "ts": 1789754346
-   },
-   {
-    "wallet": "0x29a826f06686e6169410d2e0228c10bf6de47b6b",
-    "action": "BUY",
-    "side": "FURIA",
-    "price": 0.32,
-    "usd": 1280,
-    "ts": 1789752070
    }
   ]
  },
@@ -353817,9 +353837,9 @@
  },
  "bun-bay-uni-2026-09-18": {
   "shares": {
-   "FC Bayern München": 1077219.7481014186,
-   "Draw (FC Bayern München vs. 1. FC Union Berlin)": 14648.881053375004,
-   "1. FC Union Berlin": 7362.480337924499
+   "FC Bayern München": 1092660.2665712987,
+   "Draw (FC Bayern München vs. 1. FC Union Berlin)": 14643.881458875003,
+   "1. FC Union Berlin": 8195.271535086007
   },
   "prices": {
    "FC Bayern München": 0.945,
@@ -353859,8 +353879,8 @@
     "avgPrice": 0.9399
    }
   ],
-  "hoursToKickoff": 0.09,
-  "capturedAt": "2026-09-18T18:27:22.915425+00:00",
+  "hoursToKickoff": 0.02,
+  "capturedAt": "2026-09-18T18:32:31.725490+00:00",
   "tokens": {
    "FC Bayern München": "18063892165563136891286975962051256097590482817303847631557437815876853731343",
    "Draw (FC Bayern München vs. 1. FC Union Berlin)": "38816386001585284971635178544877354483949328184785593219016617226914169806432",
@@ -353868,60 +353888,80 @@
   },
   "book": {
    "side": "FC Bayern München",
-   "bid": 0.94,
-   "ask": 0.95,
+   "bid": 0.95,
+   "ask": 0.96,
    "spreadC": 1.0,
-   "spreadPct": 1.05,
+   "spreadPct": 1.04,
    "bids": [
     [
+     0.95,
+     30142
+    ],
+    [
      0.94,
-     215752
+     15801
     ],
     [
      0.93,
-     870736
+     9402
     ],
     [
      0.92,
-     49116
+     19659
     ],
     [
      0.91,
-     48168
+     1312
     ],
     [
      0.9,
-     57588
-    ],
-    [
-     0.89,
-     1011
+     1420
     ]
    ],
    "asks": [
     [
-     0.95,
-     1927424
-    ],
-    [
      0.96,
-     2977267
+     13764
     ],
     [
      0.97,
-     80237
+     24811
     ],
     [
      0.98,
-     117003
+     15330
     ],
     [
      0.99,
-     29200
+     97859
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x0e62671015e00e3826b200e39ea07bd3884e17c2",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.95,
+    "usd": 10000,
+    "ts": 1789755994
+   },
+   {
+    "wallet": "0x4eb8d594d3e0d7b10fc7bd3489371efe55e66730",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.95,
+    "usd": 555,
+    "ts": 1789755979
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.95,
+    "usd": 7463,
+    "ts": 1789755835
+   },
    {
     "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
     "action": "BUY",
@@ -353961,37 +354001,13 @@
     "price": 0.95,
     "usd": 1764,
     "ts": 1789755685
-   },
-   {
-    "wallet": "0xda0a0d3030bd1fd31e3ff0d15b77a9fb123029f8",
-    "action": "BUY",
-    "side": "Yes",
-    "price": 0.95,
-    "usd": 500,
-    "ts": 1789755414
-   },
-   {
-    "wallet": "0x0e62671015e00e3826b200e39ea07bd3884e17c2",
-    "action": "BUY",
-    "side": "Yes",
-    "price": 0.95,
-    "usd": 10000,
-    "ts": 1789755403
-   },
-   {
-    "wallet": "0x352dbb3398ec4a9d78ffc82d9a8f8732b836cb9e",
-    "action": "BUY",
-    "side": "Yes",
-    "price": 0.95,
-    "usd": 1425,
-    "ts": 1789755282
    }
   ]
  },
  "bun-bay-uni-2026-09-18-more-markets": {
   "shares": {
-   "Over": 21052.35660786999,
-   "Under": 14329.588316535006
+   "Over": 26280.188253304994,
+   "Under": 17888.0283441
   },
   "prices": {
    "Over": 0.595,
@@ -354017,20 +354033,20 @@
     "usd": 5545
    },
    {
+    "wallet": "0x0f3433d8b7596000bf1046aa822308d93cf67684",
+    "side": "Over",
+    "usd": 5103,
+    "avgPrice": 0.6079
+   },
+   {
     "wallet": "0xb619ed5b378053f8309c307d2f7adf9c13665068",
     "side": "Under",
     "usd": 2025,
     "avgPrice": 0.4
-   },
-   {
-    "wallet": "0xb8c4482802bbc9256926cde54b3daa03ee8e7385",
-    "side": "Under",
-    "usd": 1572,
-    "avgPrice": 0.4067
    }
   ],
-  "hoursToKickoff": 0.09,
-  "capturedAt": "2026-09-18T18:27:22.915425+00:00",
+  "hoursToKickoff": 0.02,
+  "capturedAt": "2026-09-18T18:32:31.725490+00:00",
   "cond": "0x53d013c6b3b878ee74244c440707e8dc0f96f3d105f90ced2e1babe30cc0a153",
   "frage": "FC Bayern München vs. 1. FC Union Berlin: O/U 4.5",
   "tokens": {
@@ -354039,60 +354055,60 @@
   },
   "book": {
    "side": "Over",
-   "bid": 0.59,
-   "ask": 0.6,
+   "bid": 0.6,
+   "ask": 0.61,
    "spreadC": 1.0,
-   "spreadPct": 1.67,
+   "spreadPct": 1.64,
    "bids": [
     [
+     0.6,
+     128
+    ],
+    [
      0.59,
-     12133
+     762
     ],
     [
      0.58,
-     20492
+     125
     ],
     [
      0.57,
-     19392
-    ],
-    [
-     0.56,
-     21348
+     250
     ],
     [
      0.55,
-     4784
+     182
     ],
     [
      0.54,
-     1591
+     125
     ]
    ],
    "asks": [
     [
-     0.6,
-     1401
-    ],
-    [
      0.61,
-     18221
+     3132
     ],
     [
      0.62,
-     28136
+     6299
     ],
     [
      0.63,
-     36142
+     3824
     ],
     [
-     0.64,
-     33799
+     0.66,
+     123
     ],
     [
-     0.65,
-     9175
+     0.67,
+     1099
+    ],
+    [
+     0.68,
+     186
     ]
    ]
   },
@@ -354133,9 +354149,9 @@
  },
  "sea-mon-sas-2026-09-18": {
   "shares": {
-   "AC Monza": 5881.940683485005,
-   "Draw (AC Monza vs. US Sassuolo Calcio)": 7984.6945601949965,
-   "US Sassuolo Calcio": 48008.09070675002
+   "AC Monza": 5887.961418390005,
+   "Draw (AC Monza vs. US Sassuolo Calcio)": 7998.406907429997,
+   "US Sassuolo Calcio": 48448.824317625025
   },
   "prices": {
    "AC Monza": 0.335,
@@ -354151,6 +354167,12 @@
   "totalUsd": 211324,
   "whales": [
    {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "side": "US Sassuolo Calcio",
+    "usd": 5694,
+    "avgPrice": 0.3737
+   },
+   {
     "wallet": "0x191f77486cb1c5af42e54734621804936a204a8d",
     "side": "US Sassuolo Calcio",
     "usd": 5535,
@@ -354163,20 +354185,14 @@
     "avgPrice": 0.2899
    },
    {
-    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
-    "side": "US Sassuolo Calcio",
-    "usd": 5400,
-    "avgPrice": 0.3734
-   },
-   {
     "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
     "side": "US Sassuolo Calcio",
     "usd": 3805,
     "avgPrice": 0.3817
    }
   ],
-  "hoursToKickoff": 0.34,
-  "capturedAt": "2026-09-18T18:27:22.915425+00:00",
+  "hoursToKickoff": 0.27,
+  "capturedAt": "2026-09-18T18:32:31.725490+00:00",
   "tokens": {
    "AC Monza": "45481748284595958675339111086847328181405867098599840318633687622959964916962",
    "Draw (AC Monza vs. US Sassuolo Calcio)": "62867936314563687368767459540171025815178663029134188001678567095374236008552",
@@ -354191,23 +354207,23 @@
    "bids": [
     [
      0.37,
-     45316
+     48716
     ],
     [
      0.36,
-     62313
+     76022
     ],
     [
      0.35,
-     49357
+     60697
     ],
     [
      0.34,
-     36064
+     41580
     ],
     [
      0.33,
-     10362
+     10959
     ],
     [
      0.32,
@@ -354217,23 +354233,23 @@
    "asks": [
     [
      0.38,
-     43502
+     24497
     ],
     [
      0.39,
-     114242
+     127577
     ],
     [
      0.4,
-     156765
+     185119
     ],
     [
      0.41,
-     35718
+     51420
     ],
     [
      0.42,
-     4344
+     16344
     ],
     [
      0.43,
@@ -354242,6 +354258,14 @@
    ]
   },
   "trades": [
+   {
+    "wallet": "0xe5dec959aa50fe94080b7b529d134c557a83df2a",
+    "action": "BUY",
+    "side": "No",
+    "price": 0.63,
+    "usd": 748,
+    "ts": 1789755993
+   },
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "action": "BUY",
@@ -354273,30 +354297,14 @@
     "price": 0.37,
     "usd": 1328,
     "ts": 1789755006
-   },
-   {
-    "wallet": "0x208cae216d0e7cdb337a2db0db12f03816066b98",
-    "action": "BUY",
-    "side": "Yes",
-    "price": 0.37,
-    "usd": 320,
-    "ts": 1789754413
-   },
-   {
-    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
-    "action": "BUY",
-    "side": "Yes",
-    "price": 0.37,
-    "usd": 306,
-    "ts": 1789754098
    }
   ]
  },
  "fl1-asm-rcl-2026-09-18": {
   "shares": {
-   "AS Monaco FC": 137994.0859510499,
-   "Draw (AS Monaco FC vs. Racing Club de Lens)": 4137.248501854999,
-   "Racing Club de Lens": 10146.334662225003
+   "AS Monaco FC": 138368.85883694966,
+   "Draw (AS Monaco FC vs. Racing Club de Lens)": 4140.010553944999,
+   "Racing Club de Lens": 10145.204238600001
   },
   "prices": {
    "AS Monaco FC": 0.525,
@@ -354314,7 +354322,7 @@
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "side": "AS Monaco FC",
-    "usd": 35861,
+    "usd": 35935,
     "avgPrice": 0.4947
    },
    {
@@ -354336,8 +354344,8 @@
     "avgPrice": 0.4899
    }
   ],
-  "hoursToKickoff": 0.34,
-  "capturedAt": "2026-09-18T18:27:22.915425+00:00",
+  "hoursToKickoff": 0.27,
+  "capturedAt": "2026-09-18T18:32:31.725490+00:00",
   "tokens": {
    "AS Monaco FC": "20331241640889215790131893074421349115528589214818723929271039428901524970584",
    "Draw (AS Monaco FC vs. Racing Club de Lens)": "28347371017345957446480464860999508546321088120386657945992861771957631908479",
@@ -354352,19 +354360,19 @@
    "bids": [
     [
      0.52,
-     63582
+     35100
     ],
     [
      0.51,
-     64340
+     60458
     ],
     [
      0.5,
-     130276
+     133890
     ],
     [
      0.49,
-     34857
+     54190
     ],
     [
      0.48,
@@ -354372,37 +354380,45 @@
     ],
     [
      0.47,
-     61979
+     62035
     ]
    ],
    "asks": [
     [
      0.53,
-     622866
+     669793
     ],
     [
      0.54,
-     320144
+     341973
     ],
     [
      0.55,
-     324329
+     310330
     ],
     [
      0.56,
-     40893
+     65408
     ],
     [
      0.57,
-     10541
+     10257
     ],
     [
      0.58,
-     31819
+     5140
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x2c8019974e5a541c2101191cd108d4abaca808ff",
+    "action": "BUY",
+    "side": "No",
+    "price": 0.48,
+    "usd": 782,
+    "ts": 1789756033
+   },
    {
     "wallet": "0x020d2210ed22b5c5e66b1c7f43896244a18e06ea",
     "action": "BUY",
@@ -354426,30 +354442,6 @@
     "price": 0.53,
     "usd": 3015,
     "ts": 1789755397
-   },
-   {
-    "wallet": "0x2fa944dc56b2b6f99088122407f2d158aaaea486",
-    "action": "BUY",
-    "side": "No",
-    "price": 0.48,
-    "usd": 5000,
-    "ts": 1789755352
-   },
-   {
-    "wallet": "0x840db70940108f4d68b8565ac865f21a69c045b2",
-    "action": "BUY",
-    "side": "No",
-    "price": 0.48,
-    "usd": 3000,
-    "ts": 1789755351
-   },
-   {
-    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
-    "action": "BUY",
-    "side": "Yes",
-    "price": 0.53,
-    "usd": 400,
-    "ts": 1789755337
    }
   ]
  },
@@ -354615,8 +354607,8 @@
  },
  "sea-mon-sas-2026-09-18-more-markets": {
   "shares": {
-   "Over": 42046.828847790064,
-   "Under": 33713.267403260004
+   "Over": 42056.735597790066,
+   "Under": 33721.21065326
   },
   "prices": {
    "Over": 0.555,
@@ -354654,8 +354646,8 @@
     "avgPrice": 0.54
    }
   ],
-  "hoursToKickoff": 0.34,
-  "capturedAt": "2026-09-18T18:27:22.915425+00:00",
+  "hoursToKickoff": 0.27,
+  "capturedAt": "2026-09-18T18:32:31.725490+00:00",
   "cond": "0xe6f8d2ea7b2c305b5a6a62d5d3fd1016be1b0fee9f566486c5da6809be7a89fd",
   "frage": "AC Monza vs. US Sassuolo Calcio: O/U 2.5",
   "tokens": {
@@ -354671,53 +354663,53 @@
    "bids": [
     [
      0.55,
-     4956
+     34125
     ],
     [
      0.54,
-     28829
+     55331
     ],
     [
      0.53,
-     44854
+     32970
     ],
     [
      0.52,
-     61925
+     40245
     ],
     [
      0.51,
-     32620
+     37342
     ],
     [
      0.5,
-     6641
+     6636
     ]
    ],
    "asks": [
     [
      0.56,
-     28256
+     2673
     ],
     [
      0.57,
-     68419
+     17666
     ],
     [
      0.58,
-     29560
+     37780
     ],
     [
      0.59,
-     28887
+     77040
     ],
     [
      0.6,
-     17979
+     21652
     ],
     [
      0.61,
-     4418
+     1923
     ]
    ]
   },
@@ -354782,8 +354774,8 @@
  },
  "fl1-asm-rcl-2026-09-18-more-markets": {
   "shares": {
-   "Over": 14816.260989084994,
-   "Under": 8516.427834634998
+   "Over": 14833.418689084996,
+   "Under": 8526.290134634999
   },
   "prices": {
    "Over": 0.635,
@@ -354820,8 +354812,8 @@
     "avgPrice": 0.5975
    }
   ],
-  "hoursToKickoff": 0.34,
-  "capturedAt": "2026-09-18T18:27:22.915425+00:00",
+  "hoursToKickoff": 0.27,
+  "capturedAt": "2026-09-18T18:32:31.725490+00:00",
   "cond": "0x03080e12edc03237bbbecb5ef4bd0fe920728eaae22c471c6f6cc4ccf14f6a32",
   "frage": "AS Monaco FC vs. Racing Club de Lens: O/U 2.5",
   "tokens": {
@@ -354831,12 +354823,12 @@
  },
  "bun-bay-uni-2026-09-18-total-corners": {
   "shares": {
-   "Over": 13810.615338450001,
-   "Under": 12495.036569349995
+   "Over": 13942.145008340001,
+   "Under": 12363.509868619994
   },
   "prices": {
-   "Over": 0.525,
-   "Under": 0.475
+   "Over": 0.53,
+   "Under": 0.47
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -354849,30 +354841,30 @@
    {
     "wallet": "0xd67942cd1c1af4287f80fe5f11a01db65cf491a0",
     "side": "Under",
-    "usd": 5707,
+    "usd": 5647,
     "avgPrice": 0.4316
    },
    {
     "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
     "side": "Over",
-    "usd": 2792,
+    "usd": 2819,
     "avgPrice": 0.5489
    },
    {
     "wallet": "0xdebbe89ceb32828a99648bca497684f5209ceedb",
     "side": "Under",
-    "usd": 2011,
+    "usd": 1989,
     "avgPrice": 0.457
    },
    {
     "wallet": "0x67d53b9a81a2913fffc2a6d5a211f0a40e49f8a3",
     "side": "Over",
-    "usd": 1546,
+    "usd": 1561,
     "avgPrice": 0.5499
    }
   ],
-  "hoursToKickoff": 0.09,
-  "capturedAt": "2026-09-18T18:27:22.915425+00:00",
+  "hoursToKickoff": 0.02,
+  "capturedAt": "2026-09-18T18:32:31.725490+00:00",
   "cond": "0x8fe793158078a749a65bf136526585720aba61750aa2a887783aa0d59cfe4c96",
   "frage": "FC Bayern München vs. 1. FC Union Berlin: 1. FC Union Berlin O/U 2.5 Corners",
   "tokens": {
@@ -354884,38 +354876,38 @@
   "shares": {
    "FC Bayern München 0 - 0 1. FC Union Berlin": 20.4939516,
    "FC Bayern München 0 - 1 1. FC Union Berlin": 15.978540001499999,
-   "FC Bayern München 1 - 0 1. FC Union Berlin": 52.8714381,
+   "FC Bayern München 1 - 0 1. FC Union Berlin": 50.227866195,
    "FC Bayern München 0 - 2 1. FC Union Berlin": 1.5580848999999999,
-   "FC Bayern München 1 - 1 1. FC Union Berlin": 41.15985,
+   "FC Bayern München 1 - 1 1. FC Union Berlin": 43.903839999999995,
    "FC Bayern München 2 - 0 1. FC Union Berlin": 198.76556435999998,
    "FC Bayern München 0 - 3 1. FC Union Berlin": 4.124779500000001,
-   "FC Bayern München 1 - 2 1. FC Union Berlin": 12.59524,
-   "FC Bayern München 2 - 1 1. FC Union Berlin": 187.47062010599996,
+   "FC Bayern München 1 - 2 1. FC Union Berlin": 11.020835,
+   "FC Bayern München 2 - 1 1. FC Union Berlin": 178.94922828299994,
    "FC Bayern München 3 - 0 1. FC Union Berlin": 1225.906991305,
-   "FC Bayern München 1 - 3 1. FC Union Berlin": 7.319974375000001,
-   "FC Bayern München 2 - 2 1. FC Union Berlin": 47.6558602,
+   "FC Bayern München 1 - 3 1. FC Union Berlin": 7.569974375000001,
+   "FC Bayern München 2 - 2 1. FC Union Berlin": 42.1571071,
    "FC Bayern München 3 - 1 1. FC Union Berlin": 272.59043808000007,
    "FC Bayern München 2 - 3 1. FC Union Berlin": 8.723370000000001,
-   "FC Bayern München 3 - 2 1. FC Union Berlin": 82.514614626,
-   "FC Bayern München 3 - 3 1. FC Union Berlin": 7.9015206000000004,
+   "FC Bayern München 3 - 2 1. FC Union Berlin": 86.85748908,
+   "FC Bayern München 3 - 3 1. FC Union Berlin": 8.5255206,
    "Any Other Score": 2116.21156875
   },
   "prices": {
    "FC Bayern München 0 - 0 1. FC Union Berlin": 0.006,
    "FC Bayern München 0 - 1 1. FC Union Berlin": 0.0045,
-   "FC Bayern München 1 - 0 1. FC Union Berlin": 0.02,
+   "FC Bayern München 1 - 0 1. FC Union Berlin": 0.019,
    "FC Bayern München 0 - 2 1. FC Union Berlin": 0.0005,
-   "FC Bayern München 1 - 1 1. FC Union Berlin": 0.015,
+   "FC Bayern München 1 - 1 1. FC Union Berlin": 0.016,
    "FC Bayern München 2 - 0 1. FC Union Berlin": 0.055,
    "FC Bayern München 0 - 3 1. FC Union Berlin": 0.001,
-   "FC Bayern München 1 - 2 1. FC Union Berlin": 0.004,
-   "FC Bayern München 2 - 1 1. FC Union Berlin": 0.033,
+   "FC Bayern München 1 - 2 1. FC Union Berlin": 0.0035,
+   "FC Bayern München 2 - 1 1. FC Union Berlin": 0.0315,
    "FC Bayern München 3 - 0 1. FC Union Berlin": 0.095,
    "FC Bayern München 1 - 3 1. FC Union Berlin": 0.0025,
-   "FC Bayern München 2 - 2 1. FC Union Berlin": 0.013,
+   "FC Bayern München 2 - 2 1. FC Union Berlin": 0.0115,
    "FC Bayern München 3 - 1 1. FC Union Berlin": 0.06,
    "FC Bayern München 2 - 3 1. FC Union Berlin": 0.003,
-   "FC Bayern München 3 - 2 1. FC Union Berlin": 0.019,
+   "FC Bayern München 3 - 2 1. FC Union Berlin": 0.02,
    "FC Bayern München 3 - 3 1. FC Union Berlin": 0.003,
    "Any Other Score": 0.675
   },
@@ -354952,8 +354944,8 @@
     "avgPrice": 0.6693
    }
   ],
-  "hoursToKickoff": 0.09,
-  "capturedAt": "2026-09-18T18:27:22.915425+00:00",
+  "hoursToKickoff": 0.02,
+  "capturedAt": "2026-09-18T18:32:31.725490+00:00",
   "tokens": {
    "FC Bayern München 0 - 0 1. FC Union Berlin": "74948100866914815583010211006188341670919161019509354508834340264030119615928",
    "FC Bayern München 0 - 1 1. FC Union Berlin": "97022012694360436879420323322467550498303027282385031970707262474555012108729",
@@ -354978,16 +354970,16 @@
   "shares": {
    "AC Monza 0 - 0 US Sassuolo Calcio": 99.22007634500001,
    "AC Monza 0 - 1 US Sassuolo Calcio": 96.45906090000001,
-   "AC Monza 1 - 0 US Sassuolo Calcio": 89.1086025,
+   "AC Monza 1 - 0 US Sassuolo Calcio": 138.4211025,
    "AC Monza 0 - 2 US Sassuolo Calcio": 71.082710985,
    "AC Monza 1 - 1 US Sassuolo Calcio": 986.7412587150001,
-   "AC Monza 2 - 0 US Sassuolo Calcio": 419.6788585,
+   "AC Monza 2 - 0 US Sassuolo Calcio": 426.0368288,
    "AC Monza 0 - 3 US Sassuolo Calcio": 35.360698735,
    "AC Monza 1 - 2 US Sassuolo Calcio": 159.38352342,
    "AC Monza 2 - 1 US Sassuolo Calcio": 107.72061628000002,
    "AC Monza 3 - 0 US Sassuolo Calcio": 58.3178568075,
    "AC Monza 1 - 3 US Sassuolo Calcio": 108.63557476199999,
-   "AC Monza 2 - 2 US Sassuolo Calcio": 201.98852115000003,
+   "AC Monza 2 - 2 US Sassuolo Calcio": 202.36352115000003,
    "AC Monza 3 - 1 US Sassuolo Calcio": 45.62945792649999,
    "AC Monza 2 - 3 US Sassuolo Calcio": 99.75657182399999,
    "AC Monza 3 - 2 US Sassuolo Calcio": 128.91397974,
@@ -355044,8 +355036,8 @@
     "avgPrice": 0.0588
    }
   ],
-  "hoursToKickoff": 0.34,
-  "capturedAt": "2026-09-18T18:27:22.915425+00:00",
+  "hoursToKickoff": 0.27,
+  "capturedAt": "2026-09-18T18:32:31.725490+00:00",
   "tokens": {
    "AC Monza 0 - 0 US Sassuolo Calcio": "65652011633021612830964180089491455382798814828635514096249828476937481822445",
    "AC Monza 0 - 1 US Sassuolo Calcio": "7836482365677583655380702045669475725851516211848835235906950825644384024437",
@@ -355068,22 +355060,22 @@
  },
  "fl1-asm-rcl-2026-09-18-exact-score": {
   "shares": {
-   "AS Monaco FC 0 - 0 Racing Club de Lens": 16.5326535,
+   "AS Monaco FC 0 - 0 Racing Club de Lens": 17.432653499999997,
    "AS Monaco FC 0 - 1 Racing Club de Lens": 25.6496535,
    "AS Monaco FC 1 - 0 Racing Club de Lens": 120.74942249999998,
    "AS Monaco FC 0 - 2 Racing Club de Lens": 14.5037844,
-   "AS Monaco FC 1 - 1 Racing Club de Lens": 51.70541484499999,
+   "AS Monaco FC 1 - 1 Racing Club de Lens": 52.625414844999995,
    "AS Monaco FC 2 - 0 Racing Club de Lens": 79.86135127499999,
-   "AS Monaco FC 0 - 3 Racing Club de Lens": 7.96489605,
+   "AS Monaco FC 0 - 3 Racing Club de Lens": 7.6698999,
    "AS Monaco FC 1 - 2 Racing Club de Lens": 43.060052295000006,
-   "AS Monaco FC 2 - 1 Racing Club de Lens": 350.1815479149999,
-   "AS Monaco FC 3 - 0 Racing Club de Lens": 29.964086965500005,
-   "AS Monaco FC 1 - 3 Racing Club de Lens": 30.370303649999997,
+   "AS Monaco FC 2 - 1 Racing Club de Lens": 350.6565479149999,
+   "AS Monaco FC 3 - 0 Racing Club de Lens": 30.286281449000004,
+   "AS Monaco FC 1 - 3 Racing Club de Lens": 29.17931135,
    "AS Monaco FC 2 - 2 Racing Club de Lens": 39.374583225,
    "AS Monaco FC 3 - 1 Racing Club de Lens": 68.209034229,
-   "AS Monaco FC 2 - 3 Racing Club de Lens": 62.56808787999999,
-   "AS Monaco FC 3 - 2 Racing Club de Lens": 101.83908038,
-   "AS Monaco FC 3 - 3 Racing Club de Lens": 68.67700326,
+   "AS Monaco FC 2 - 3 Racing Club de Lens": 61.38755791999999,
+   "AS Monaco FC 3 - 2 Racing Club de Lens": 106.72658038,
+   "AS Monaco FC 3 - 3 Racing Club de Lens": 65.32690554,
    "Any Other Score": 127.51940249999998
   },
   "prices": {
@@ -355093,16 +355085,16 @@
    "AS Monaco FC 0 - 2 Racing Club de Lens": 0.028,
    "AS Monaco FC 1 - 1 Racing Club de Lens": 0.115,
    "AS Monaco FC 2 - 0 Racing Club de Lens": 0.075,
-   "AS Monaco FC 0 - 3 Racing Club de Lens": 0.0135,
+   "AS Monaco FC 0 - 3 Racing Club de Lens": 0.013,
    "AS Monaco FC 1 - 2 Racing Club de Lens": 0.065,
    "AS Monaco FC 2 - 1 Racing Club de Lens": 0.095,
-   "AS Monaco FC 3 - 0 Racing Club de Lens": 0.0465,
-   "AS Monaco FC 1 - 3 Racing Club de Lens": 0.0255,
+   "AS Monaco FC 3 - 0 Racing Club de Lens": 0.047,
+   "AS Monaco FC 1 - 3 Racing Club de Lens": 0.0245,
    "AS Monaco FC 2 - 2 Racing Club de Lens": 0.075,
    "AS Monaco FC 3 - 1 Racing Club de Lens": 0.063,
-   "AS Monaco FC 2 - 3 Racing Club de Lens": 0.0265,
+   "AS Monaco FC 2 - 3 Racing Club de Lens": 0.026,
    "AS Monaco FC 3 - 2 Racing Club de Lens": 0.0425,
-   "AS Monaco FC 3 - 3 Racing Club de Lens": 0.0205,
+   "AS Monaco FC 3 - 3 Racing Club de Lens": 0.0195,
    "Any Other Score": 0.175
   },
   "splitGuete": {
@@ -355133,11 +355125,11 @@
    {
     "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
     "side": "AS Monaco FC 2 - 1 Racing Club de Lens",
-    "usd": 59
+    "usd": 60
    }
   ],
-  "hoursToKickoff": 0.34,
-  "capturedAt": "2026-09-18T18:27:22.915425+00:00",
+  "hoursToKickoff": 0.27,
+  "capturedAt": "2026-09-18T18:32:31.725490+00:00",
   "tokens": {
    "AS Monaco FC 0 - 0 Racing Club de Lens": "103624935048617910399423202727416836539881950777012094023720050068055100726917",
    "AS Monaco FC 0 - 1 Racing Club de Lens": "89723475762102195422810861864102373560107737291445902496977017085854693270850",
@@ -355196,12 +355188,11 @@
    {
     "wallet": "0xe1e292a578d07497363048d9ec69e2be36b00d29",
     "side": "Under",
-    "usd": 370,
-    "avgPrice": 0.4054
+    "usd": 370
    }
   ],
-  "hoursToKickoff": 0.09,
-  "capturedAt": "2026-09-18T18:27:22.915425+00:00",
+  "hoursToKickoff": 0.02,
+  "capturedAt": "2026-09-18T18:32:31.725490+00:00",
   "cond": "0xfdd24735557e3847ef8f2d199eb68d9bc4e5a3363532d3682dd29f0d3112d407",
   "frage": "Wisla Krakow vs. WKS Slask Wroclaw: O/U 2.5",
   "tokens": {
@@ -355407,14 +355398,14 @@
  },
  "bun-bay-uni-2026-09-18-halftime-result": {
   "shares": {
-   "FC Bayern München": 4986.736922475,
+   "FC Bayern München": 5050.277384624999,
    "Draw": 111.35730589999999,
-   "1. FC Union Berlin": 29.636270279999998
+   "1. FC Union Berlin": 38.525614874999995
   },
   "prices": {
    "FC Bayern München": 0.825,
    "Draw": 0.145,
-   "1. FC Union Berlin": 0.036
+   "1. FC Union Berlin": 0.0375
   },
   "splitGuete": {
    "art": "belastbar",
@@ -355446,8 +355437,8 @@
     "usd": 422
    }
   ],
-  "hoursToKickoff": 0.09,
-  "capturedAt": "2026-09-18T18:27:22.915425+00:00",
+  "hoursToKickoff": 0.02,
+  "capturedAt": "2026-09-18T18:32:31.725490+00:00",
   "tokens": {
    "FC Bayern München": "88598322878042504572764692770871665056991558168561304944516494962192344450139",
    "Draw": "58917297139480815130798876922164984777605517024166253810513903244762344496716",
@@ -355456,12 +355447,12 @@
  },
  "epl-bre-che-2026-09-18": {
   "shares": {
-   "Brentford FC": 40985.54355670503,
-   "Draw (Brentford FC vs. Chelsea FC)": 22648.791289099936,
-   "Chelsea FC": 191795.1995002509
+   "Brentford FC": 357174.85429250525,
+   "Draw (Brentford FC vs. Chelsea FC)": 22649.507505394937,
+   "Chelsea FC": 600663.093472499
   },
   "prices": {
-   "Brentford FC": 0.355,
+   "Brentford FC": 0.365,
    "Draw (Brentford FC vs. Chelsea FC)": 0.265,
    "Chelsea FC": 0.375
   },
@@ -355474,32 +355465,32 @@
   "totalUsd": 970185,
   "whales": [
    {
+    "wallet": "0xf0318c32136c2db7fec88b84869aee6a1106c80c",
+    "side": "Chelsea FC",
+    "usd": 378653,
+    "avgPrice": 0.36
+   },
+   {
+    "wallet": "0x0f6f76ced62a911bccef92f50faaff143854d977",
+    "side": "Brentford FC",
+    "usd": 319632,
+    "avgPrice": 0.3699
+   },
+   {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "side": "Chelsea FC",
-    "usd": 49741,
-    "avgPrice": 0.3913
+    "usd": 53044,
+    "avgPrice": 0.391
    },
    {
     "wallet": "0x85f031d069de300055900c4055c1baeb6bde3f67",
     "side": "Draw (Brentford FC vs. Chelsea FC)",
-    "usd": 17396,
+    "usd": 17397,
     "avgPrice": 0.2599
-   },
-   {
-    "wallet": "0x8a8685a792c184e5c2ee8c7d4d4baba7c2c94998",
-    "side": "Chelsea FC",
-    "usd": 14803,
-    "avgPrice": 0.3799
-   },
-   {
-    "wallet": "0x78becf0a4e4f2640380af0c19ad32e2557e6bde0",
-    "side": "Chelsea FC",
-    "usd": 9868,
-    "avgPrice": 0.3799
    }
   ],
-  "hoursToKickoff": 0.59,
-  "capturedAt": "2026-09-18T18:27:22.915425+00:00",
+  "hoursToKickoff": 0.52,
+  "capturedAt": "2026-09-18T18:32:31.725490+00:00",
   "tokens": {
    "Brentford FC": "61978737479901466625464242078343767295044975327673383203490527451747949395903",
    "Draw (Brentford FC vs. Chelsea FC)": "104914899378560442018178085479142116012502310373450658772348801239854927861654",
@@ -355507,86 +355498,102 @@
   },
   "book": {
    "side": "Chelsea FC",
-   "bid": 0.37,
-   "ask": 0.38,
+   "bid": 0.35,
+   "ask": 0.36,
    "spreadC": 1.0,
-   "spreadPct": 2.63,
+   "spreadPct": 2.78,
    "bids": [
     [
-     0.37,
-     1000873
-    ],
-    [
-     0.36,
-     1123587
-    ],
-    [
      0.35,
-     845428
+     57705
     ],
     [
      0.34,
-     86222
+     53012
     ],
     [
      0.33,
-     24532
+     111414
     ],
     [
      0.32,
-     29290
+     64541
+    ],
+    [
+     0.31,
+     5773
+    ],
+    [
+     0.3,
+     15
     ]
    ],
    "asks": [
     [
+     0.36,
+     986566
+    ],
+    [
+     0.37,
+     85054
+    ],
+    [
      0.38,
-     464289
+     1040787
     ],
     [
      0.39,
-     510615
+     221665
     ],
     [
      0.4,
-     199364
+     149415
     ],
     [
      0.41,
-     88117
-    ],
-    [
-     0.42,
-     31020
-    ],
-    [
-     0.43,
-     19438
+     13455
     ]
    ]
   },
   "trades": [
    {
-    "wallet": "0x073a1caba3c22e9e361ceae83aaa5405706f91e7",
+    "wallet": "0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
     "action": "BUY",
-    "side": "Yes",
-    "price": 0.38,
-    "usd": 2850,
-    "ts": 1789755706
+    "side": "No",
+    "price": 0.64,
+    "usd": 3646,
+    "ts": 1789756098
    },
    {
-    "wallet": "0x53a1a7bbd8c025157adfac80c7c7b2ba630d76b7",
+    "wallet": "0x0f6f76ced62a911bccef92f50faaff143854d977",
+    "action": "BUY",
+    "side": "No",
+    "price": 0.64,
+    "usd": 261379,
+    "ts": 1789756054
+   },
+   {
+    "wallet": "0x0f6f76ced62a911bccef92f50faaff143854d977",
+    "action": "BUY",
+    "side": "No",
+    "price": 0.6398,
+    "usd": 440761,
+    "ts": 1789756054
+   },
+   {
+    "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
     "action": "BUY",
     "side": "Yes",
     "price": 0.38,
-    "usd": 593,
-    "ts": 1789755687
+    "usd": 2162,
+    "ts": 1789756006
    }
   ]
  },
  "epl-bre-che-2026-09-18-more-markets": {
   "shares": {
-   "Over": 49378.60097431504,
-   "Under": 69605.71829757
+   "Over": 50051.40944850004,
+   "Under": 70554.135115035
   },
   "prices": {
    "Over": 0.415,
@@ -355621,12 +355628,12 @@
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "side": "Over",
-    "usd": 4277,
-    "avgPrice": 0.4246
+    "usd": 4457,
+    "avgPrice": 0.4244
    }
   ],
-  "hoursToKickoff": 0.59,
-  "capturedAt": "2026-09-18T18:27:22.915425+00:00",
+  "hoursToKickoff": 0.52,
+  "capturedAt": "2026-09-18T18:32:31.725490+00:00",
   "cond": "0x0ea569c605b1813c3a9b63a41b90548e8f9c1271018d7b11c8b71c1dc9940cdc",
   "frage": "Brentford FC vs. Chelsea FC: O/U 3.5",
   "tokens": {
@@ -355642,57 +355649,65 @@
    "bids": [
     [
      0.58,
-     26303
+     39257
     ],
     [
      0.57,
-     103476
+     92069
     ],
     [
      0.56,
-     50159
+     40146
     ],
     [
      0.55,
-     62765
+     67400
     ],
     [
      0.54,
-     38913
+     36851
     ],
     [
      0.53,
-     8085
+     7997
     ]
    ],
    "asks": [
     [
      0.59,
-     5199
+     6494
     ],
     [
      0.6,
-     29869
+     27607
     ],
     [
      0.61,
-     46825
+     34378
     ],
     [
      0.62,
-     69587
+     71573
     ],
     [
      0.63,
-     34003
+     18469
     ],
     [
      0.64,
-     6499
+     111
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x49514a200aa6ed57b2be804b9412d0b373973038",
+    "action": "BUY",
+    "side": "Over",
+    "price": 0.42,
+    "usd": 307,
+    "ts": 1789756119
+   },
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "action": "BUY",
@@ -355729,8 +355744,8 @@
  },
  "lal-esp-elc-2026-09-18": {
   "shares": {
-   "RCD Espanyol de Barcelona": 55459.06704125523,
-   "Draw (RCD Espanyol de Barcelona vs. Elche CF)": 4403.6887894249985,
+   "RCD Espanyol de Barcelona": 55941.94755321522,
+   "Draw (RCD Espanyol de Barcelona vs. Elche CF)": 4403.6872190349995,
    "Elche CF": 7975.546388549996
   },
   "prices": {
@@ -355749,8 +355764,8 @@
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "side": "RCD Espanyol de Barcelona",
-    "usd": 24644,
-    "avgPrice": 0.5401
+    "usd": 24772,
+    "avgPrice": 0.5402
    },
    {
     "wallet": "0x5fc7fc92cee6a83dbb4e780f9e057abaf90d443f",
@@ -355771,8 +355786,8 @@
     "avgPrice": 0.54
    }
   ],
-  "hoursToKickoff": 0.59,
-  "capturedAt": "2026-09-18T18:27:22.915425+00:00",
+  "hoursToKickoff": 0.52,
+  "capturedAt": "2026-09-18T18:32:31.725490+00:00",
   "tokens": {
    "RCD Espanyol de Barcelona": "61980981631256075009937418566663928362288443278774440162497684153799898163458",
    "Draw (RCD Espanyol de Barcelona vs. Elche CF)": "68288167463858096434662895337083505313119044727753503947959583953338707265797",
@@ -355787,23 +355802,23 @@
    "bids": [
     [
      0.54,
-     53586
+     70767
     ],
     [
      0.53,
-     75911
+     74173
     ],
     [
      0.52,
-     51823
+     53590
     ],
     [
      0.51,
-     67700
+     29982
     ],
     [
      0.5,
-     33228
+     26499
     ],
     [
      0.49,
@@ -355813,31 +355828,39 @@
    "asks": [
     [
      0.55,
-     161718
+     110932
     ],
     [
      0.56,
-     316550
+     308818
     ],
     [
      0.57,
-     310552
+     305276
     ],
     [
      0.58,
-     50542
+     53586
     ],
     [
      0.59,
-     31225
+     35039
     ],
     [
      0.6,
-     5143
+     3643
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x020d2210ed22b5c5e66b1c7f43896244a18e06ea",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.55,
+    "usd": 300,
+    "ts": 1789755981
+   },
    {
     "wallet": "0xc289082ddba5a95e95efa216adbed7cc8ab4ab37",
     "action": "BUY",
@@ -355861,14 +355884,6 @@
     "price": 0.55,
     "usd": 560,
     "ts": 1789753750
-   },
-   {
-    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
-    "action": "BUY",
-    "side": "Yes",
-    "price": 0.55,
-    "usd": 342,
-    "ts": 1789753708
    }
   ]
  },
@@ -355877,19 +355892,19 @@
    "Brentford FC 0 - 0 Chelsea FC": 436.93904094350006,
    "Brentford FC 0 - 1 Chelsea FC": 258.37148348000005,
    "Brentford FC 1 - 0 Chelsea FC": 248.52997405500005,
-   "Brentford FC 0 - 2 Chelsea FC": 246.39045012,
+   "Brentford FC 0 - 2 Chelsea FC": 247.29045011999997,
    "Brentford FC 1 - 1 Chelsea FC": 1950.4165609199995,
-   "Brentford FC 2 - 0 Chelsea FC": 238.36001821049993,
+   "Brentford FC 2 - 0 Chelsea FC": 313.077007262,
    "Brentford FC 0 - 3 Chelsea FC": 206.75746004900003,
    "Brentford FC 1 - 2 Chelsea FC": 2165.72765701,
-   "Brentford FC 2 - 1 Chelsea FC": 1490.8272198549998,
-   "Brentford FC 3 - 0 Chelsea FC": 162.58318237,
-   "Brentford FC 1 - 3 Chelsea FC": 645.2032499999999,
-   "Brentford FC 2 - 2 Chelsea FC": 1425.7876891200003,
+   "Brentford FC 2 - 1 Chelsea FC": 1491.7716643749998,
+   "Brentford FC 3 - 0 Chelsea FC": 162.82818237,
+   "Brentford FC 1 - 3 Chelsea FC": 647.3902499999999,
+   "Brentford FC 2 - 2 Chelsea FC": 1349.2905835500003,
    "Brentford FC 3 - 1 Chelsea FC": 183.86098351200005,
-   "Brentford FC 2 - 3 Chelsea FC": 337.5138243375,
+   "Brentford FC 2 - 3 Chelsea FC": 344.6138793375001,
    "Brentford FC 3 - 2 Chelsea FC": 224.76292820550006,
-   "Brentford FC 3 - 3 Chelsea FC": 183.12671711849998,
+   "Brentford FC 3 - 3 Chelsea FC": 181.8517171185,
    "Any Other Score": 659.5593774899999
   },
   "prices": {
@@ -355898,13 +355913,13 @@
    "Brentford FC 1 - 0 Chelsea FC": 0.055,
    "Brentford FC 0 - 2 Chelsea FC": 0.045,
    "Brentford FC 1 - 1 Chelsea FC": 0.115,
-   "Brentford FC 2 - 0 Chelsea FC": 0.0465,
+   "Brentford FC 2 - 0 Chelsea FC": 0.046,
    "Brentford FC 0 - 3 Chelsea FC": 0.0245,
    "Brentford FC 1 - 2 Chelsea FC": 0.085,
    "Brentford FC 2 - 1 Chelsea FC": 0.085,
    "Brentford FC 3 - 0 Chelsea FC": 0.0245,
    "Brentford FC 1 - 3 Chelsea FC": 0.045,
-   "Brentford FC 2 - 2 Chelsea FC": 0.08,
+   "Brentford FC 2 - 2 Chelsea FC": 0.075,
    "Brentford FC 3 - 1 Chelsea FC": 0.041,
    "Brentford FC 2 - 3 Chelsea FC": 0.0405,
    "Brentford FC 3 - 2 Chelsea FC": 0.0405,
@@ -355943,8 +355958,8 @@
     "usd": 750
    }
   ],
-  "hoursToKickoff": 0.59,
-  "capturedAt": "2026-09-18T18:27:22.915425+00:00",
+  "hoursToKickoff": 0.52,
+  "capturedAt": "2026-09-18T18:32:31.725490+00:00",
   "tokens": {
    "Brentford FC 0 - 0 Chelsea FC": "85930844397066935114187498465792440045947850635035314388283253823858624759959",
    "Brentford FC 0 - 1 Chelsea FC": "2412680180705389161612787753304519749527300458221894193172842299911783778250",
@@ -355963,7 +355978,84 @@
    "Brentford FC 3 - 2 Chelsea FC": "73943349568514619013783885890893593468433478377114907783603446980136841407185",
    "Brentford FC 3 - 3 Chelsea FC": "83501050659466343877009569984222047010279452783140106826501964189875662340816",
    "Any Other Score": "6195770279092242526161335294325031643075517932197458332239129262520575774966"
-  }
+  },
+  "book": {
+   "side": "Brentford FC 1 - 2 Chelsea FC",
+   "bid": 0.08,
+   "ask": 0.09,
+   "spreadC": 1.0,
+   "spreadPct": 11.11,
+   "bids": [
+    [
+     0.08,
+     6874
+    ],
+    [
+     0.07,
+     18500
+    ],
+    [
+     0.06,
+     21132
+    ],
+    [
+     0.05,
+     12359
+    ],
+    [
+     0.04,
+     80
+    ],
+    [
+     0.03,
+     2000
+    ]
+   ],
+   "asks": [
+    [
+     0.09,
+     14041
+    ],
+    [
+     0.1,
+     86714
+    ],
+    [
+     0.11,
+     19584
+    ],
+    [
+     0.12,
+     10000
+    ],
+    [
+     0.13,
+     80
+    ],
+    [
+     0.14,
+     12
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.09,
+    "usd": 566,
+    "ts": 1789745568
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.09,
+    "usd": 857,
+    "ts": 1789738886
+   }
+  ]
  },
  "bl2-fur-fcm-2026-09-18-more-markets": {
   "shares": {
@@ -356018,8 +356110,8 @@
  },
  "lal-esp-elc-2026-09-18-more-markets": {
   "shares": {
-   "Over": 13107.294280160013,
-   "Under": 10942.750567840001
+   "Over": 13131.894589350011,
+   "Under": 10963.28844065
   },
   "prices": {
    "Over": 0.545,
@@ -356057,8 +356149,8 @@
     "avgPrice": 0.4524
    }
   ],
-  "hoursToKickoff": 0.59,
-  "capturedAt": "2026-09-18T18:27:22.915425+00:00",
+  "hoursToKickoff": 0.52,
+  "capturedAt": "2026-09-18T18:32:31.725490+00:00",
   "cond": "0x4fe1dbb4a098b6edf73f0b560fd8535f057a0eafcbf20f4124cd48dce7c0f3e5",
   "frage": "RCD Espanyol de Barcelona vs. Elche CF: O/U 2.5",
   "tokens": {
@@ -356119,8 +356211,8 @@
  },
  "epl-bre-che-2026-09-18-total-corners": {
   "shares": {
-   "Over": 14267.028970075,
-   "Under": 13984.290120734997
+   "Over": 14272.078970075001,
+   "Under": 13989.240120734998
   },
   "prices": {
    "Over": 0.505,
@@ -356159,8 +356251,8 @@
     "avgPrice": 0.4899
    }
   ],
-  "hoursToKickoff": 0.59,
-  "capturedAt": "2026-09-18T18:27:22.915425+00:00",
+  "hoursToKickoff": 0.52,
+  "capturedAt": "2026-09-18T18:32:31.725490+00:00",
   "cond": "0x2f39d703988f4e617fb5125ad6e6d696a2a51b4208084a1813d8291e916f151d",
   "frage": "Brentford FC vs. Chelsea FC: O/U 10.5 Total Corners",
   "tokens": {
@@ -356170,12 +356262,12 @@
  },
  "bel1-kaa-sta-2026-09-18": {
   "shares": {
-   "KAA Gent": 9982.694257199992,
+   "KAA Gent": 10290.012263554989,
    "Draw (KAA Gent vs. Standard Liege)": 23.988945475,
-   "Standard Liege": 1244.4111521149998
+   "Standard Liege": 1256.1864498999998
   },
   "prices": {
-   "KAA Gent": 0.525,
+   "KAA Gent": 0.515,
    "Draw (KAA Gent vs. Standard Liege)": 0.275,
    "Standard Liege": 0.205
   },
@@ -356190,28 +356282,28 @@
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "side": "KAA Gent",
-    "usd": 1741,
-    "avgPrice": 0.5329
+    "usd": 2324,
+    "avgPrice": 0.5286
    },
    {
     "wallet": "0x096f5aa775c6f9904508625a5c3836ffedb9194d",
     "side": "KAA Gent",
-    "usd": 1606,
+    "usd": 1575,
     "avgPrice": 0.5399
    },
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
     "side": "KAA Gent",
-    "usd": 1488
+    "usd": 1460
    },
    {
     "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
     "side": "KAA Gent",
-    "usd": 582
+    "usd": 571
    }
   ],
-  "hoursToKickoff": 0.34,
-  "capturedAt": "2026-09-18T18:27:22.915425+00:00",
+  "hoursToKickoff": 0.27,
+  "capturedAt": "2026-09-18T18:32:31.725490+00:00",
   "tokens": {
    "KAA Gent": "5660152268653614619515558802570926399679610029128917811470880052662248091149",
    "Draw (KAA Gent vs. Standard Liege)": "45787419787721932037634062282637981039896353600259670255437530293417735122522",
@@ -356220,9 +356312,9 @@
  },
  "elc-bri-wat-2026-09-18": {
   "shares": {
-   "Bristol City FC": 9784.898891400007,
+   "Bristol City FC": 9784.894927615005,
    "Draw (Bristol City FC vs. Watford FC)": 26.081285859999998,
-   "Watford FC": 438.82660123499994
+   "Watford FC": 439.8516012349999
   },
   "prices": {
    "Bristol City FC": 0.545,
@@ -356240,14 +356332,13 @@
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "side": "Bristol City FC",
-    "usd": 3964,
+    "usd": 3968,
     "avgPrice": 0.5386
    },
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "Bristol City FC",
-    "usd": 2725,
-    "avgPrice": 0.55
+    "usd": 2712
    },
    {
     "wallet": "0xd48a81db62f742c4e42d86dfc23a7ee345366e90",
@@ -356257,12 +356348,12 @@
    {
     "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
     "side": "Bristol City FC",
-    "usd": 383,
-    "avgPrice": 0.5467
+    "usd": 387,
+    "avgPrice": 0.5466
    }
   ],
-  "hoursToKickoff": 0.59,
-  "capturedAt": "2026-09-18T18:27:22.915425+00:00",
+  "hoursToKickoff": 0.52,
+  "capturedAt": "2026-09-18T18:32:31.725490+00:00",
   "tokens": {
    "Bristol City FC": "19922323178276441799233875220661398681611542639623802201110348545972067359885",
    "Draw (Bristol City FC vs. Watford FC)": "49630889829474480386966535146876994275638751789003815555364083410610619520879",
@@ -356271,8 +356362,8 @@
  },
  "elc-bri-wat-2026-09-18-more-markets": {
   "shares": {
-   "Over": 5031.677496830003,
-   "Under": 4201.172350374999
+   "Over": 7796.142158365003,
+   "Under": 6508.70627498
   },
   "prices": {
    "Over": 0.545,
@@ -356293,23 +356384,23 @@
     "avgPrice": 0.4499
    },
    {
-    "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
     "side": "Over",
-    "usd": 1424
+    "usd": 2053
    },
    {
     "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
     "side": "Over",
-    "usd": 1052
+    "usd": 1754
    },
    {
-    "wallet": "0xd48a81db62f742c4e42d86dfc23a7ee345366e90",
-    "side": "Over",
-    "usd": 973
+    "wallet": "0x224a89dbe0db0d6124b335edabd15b3f877da3d5",
+    "side": "Under",
+    "usd": 1472
    }
   ],
-  "hoursToKickoff": 0.59,
-  "capturedAt": "2026-09-18T18:27:22.915425+00:00",
+  "hoursToKickoff": 0.52,
+  "capturedAt": "2026-09-18T18:32:31.725490+00:00",
   "cond": "0x4c8cef80de4bf663075af547f88b3494dd82d2cdf3bf72b497e52bc5fecc09cd",
   "frage": "Bristol City FC vs. Watford FC: O/U 2.5",
   "tokens": {
@@ -356321,7 +356412,7 @@
   "shares": {
    "RCD Espanyol de Barcelona 0 - 0 Elche CF": 141.83139749999998,
    "RCD Espanyol de Barcelona 0 - 1 Elche CF": 102.8775,
-   "RCD Espanyol de Barcelona 1 - 0 Elche CF": 227.81601832499996,
+   "RCD Espanyol de Barcelona 1 - 0 Elche CF": 228.34101832499996,
    "RCD Espanyol de Barcelona 0 - 2 Elche CF": 55.935825,
    "RCD Espanyol de Barcelona 1 - 1 Elche CF": 269.602885125,
    "RCD Espanyol de Barcelona 2 - 0 Elche CF": 156.57055564,
@@ -356331,7 +356422,7 @@
    "RCD Espanyol de Barcelona 3 - 0 Elche CF": 90.89630000000001,
    "RCD Espanyol de Barcelona 1 - 3 Elche CF": 26.707,
    "RCD Espanyol de Barcelona 2 - 2 Elche CF": 128.74178700500002,
-   "RCD Espanyol de Barcelona 3 - 1 Elche CF": 137.946900065,
+   "RCD Espanyol de Barcelona 3 - 1 Elche CF": 138.27190006499998,
    "RCD Espanyol de Barcelona 2 - 3 Elche CF": 31.347105265000003,
    "RCD Espanyol de Barcelona 3 - 2 Elche CF": 61.105376695500006,
    "RCD Espanyol de Barcelona 3 - 3 Elche CF": 21.985923765,
@@ -356372,7 +356463,7 @@
    {
     "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
     "side": "RCD Espanyol de Barcelona 2 - 1 Elche CF",
-    "usd": 134
+    "usd": 129
    },
    {
     "wallet": "0xfe9455e2cad5257b26547af62cbbfd75c8968a3d",
@@ -356386,8 +356477,8 @@
     "avgPrice": 0.0588
    }
   ],
-  "hoursToKickoff": 0.59,
-  "capturedAt": "2026-09-18T18:27:22.915425+00:00",
+  "hoursToKickoff": 0.52,
+  "capturedAt": "2026-09-18T18:32:31.725490+00:00",
   "tokens": {
    "RCD Espanyol de Barcelona 0 - 0 Elche CF": "71275925681448158837641074762339541995379175200958964947448040085880078510439",
    "RCD Espanyol de Barcelona 0 - 1 Elche CF": "56950734280023591560907785348182428832001652355411768659248774045506032205520",
@@ -356438,7 +356529,7 @@
    "Bristol City FC 0 - 3 Watford FC": 0.0105,
    "Bristol City FC 1 - 2 Watford FC": 0.055,
    "Bristol City FC 2 - 1 Watford FC": 0.105,
-   "Bristol City FC 3 - 0 Watford FC": 0.054,
+   "Bristol City FC 3 - 0 Watford FC": 0.0545,
    "Bristol City FC 1 - 3 Watford FC": 0.019,
    "Bristol City FC 2 - 2 Watford FC": 0.055,
    "Bristol City FC 3 - 1 Watford FC": 0.0575,
@@ -356476,8 +356567,8 @@
     "usd": 38
    }
   ],
-  "hoursToKickoff": 0.59,
-  "capturedAt": "2026-09-18T18:27:22.915425+00:00",
+  "hoursToKickoff": 0.52,
+  "capturedAt": "2026-09-18T18:32:31.725490+00:00",
   "tokens": {
    "Bristol City FC 0 - 0 Watford FC": "16596025795424734223443514221612572699442288039067395113080523917459932160684",
    "Bristol City FC 0 - 1 Watford FC": "84287466654596940432801352410961058003956641569267538841889875049213531085841",
@@ -356541,8 +356632,8 @@
     "avgPrice": 0.0423
    }
   ],
-  "hoursToKickoff": 0.59,
-  "capturedAt": "2026-09-18T18:27:22.915425+00:00",
+  "hoursToKickoff": 0.52,
+  "capturedAt": "2026-09-18T18:32:31.725490+00:00",
   "tokens": {
    "Brentford FC": "56983928133841924264778741823570922781240264217690293594885852079566496988179",
    "Chelsea FC": "23630077168776376573632265616083683795209611064089410064325045975013355801555",
@@ -356938,8 +357029,8 @@
  },
  "lal-esp-elc-2026-09-18-total-corners": {
   "shares": {
-   "Over": 3699.5531631250005,
-   "Under": 3484.045247765001
+   "Over": 3702.658613125,
+   "Under": 3486.9697977650007
   },
   "prices": {
    "Over": 0.515,
@@ -356962,7 +357053,7 @@
    {
     "wallet": "0x73bcd24d510ff4e4d5feac6aec763c5511e246ce",
     "side": "Under",
-    "usd": 1398,
+    "usd": 1468,
     "avgPrice": 0.4799
    },
    {
@@ -356977,8 +357068,8 @@
     "usd": 657
    }
   ],
-  "hoursToKickoff": 0.59,
-  "capturedAt": "2026-09-18T18:27:22.915425+00:00",
+  "hoursToKickoff": 0.52,
+  "capturedAt": "2026-09-18T18:32:31.725490+00:00",
   "cond": "0xa4e945d5ac0630c8a2b8d7cabded2acd93ad8c279c462a6c6439bb3be7991e0a",
   "frage": "RCD Espanyol de Barcelona vs. Elche CF: O/U 8.5 Total Corners",
   "tokens": {
@@ -356988,8 +357079,8 @@
  },
  "lol-sr-sen-2026-09-18": {
   "shares": {
-   "Shopify Rebellion": 3234.542761965,
-   "Sentinels": 8114.736172399997
+   "Shopify Rebellion": 3083.481361965,
+   "Sentinels": 7736.150822399998
   },
   "prices": {
    "Shopify Rebellion": 0.285,
@@ -357016,19 +357107,20 @@
     "avgPrice": 0.7199
    },
    {
-    "wallet": "0x3ae0902b075257fec50d182cc7cdf5b37e55abff",
-    "side": "Sentinels",
-    "usd": 608
-   },
-   {
     "wallet": "0xab963523a92e1779aaaf670bcafe1f800103989f",
     "side": "Sentinels",
     "usd": 562,
     "avgPrice": 0.71
+   },
+   {
+    "wallet": "0x74a83b5a9593a95f73d4cf4a638e65fabe9cdf59",
+    "side": "Sentinels",
+    "usd": 525,
+    "avgPrice": 0.7099
    }
   ],
-  "hoursToKickoff": 1.59,
-  "capturedAt": "2026-09-18T18:27:22.915425+00:00",
+  "hoursToKickoff": 1.52,
+  "capturedAt": "2026-09-18T18:32:31.725490+00:00",
   "cond": "0x306c9eec4e057c4b2d2a6a8f8a118403a1f90fc7aa8d5b2033b30766c6de4967",
   "frage": "LoL: Shopify Rebellion vs Sentinels (BO5) - LCS Playoffs",
   "tokens": {
@@ -357038,7 +357130,7 @@
  },
  "irl1-sha-wat-2026-09-18": {
   "shares": {
-   "Shamrock Rovers": 10909.5534006,
+   "Shamrock Rovers": 10941.803400600003,
    "Draw (Shamrock Rovers vs. Waterford FC)": 109.07535580500002,
    "Waterford FC": 459.179139615
   },
@@ -357064,7 +357156,7 @@
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "Shamrock Rovers",
-    "usd": 1003,
+    "usd": 901,
     "avgPrice": 0.65
    },
    {
@@ -357076,11 +357168,11 @@
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "side": "Shamrock Rovers",
     "usd": 138,
-    "avgPrice": 0.6533
+    "avgPrice": 0.6512
    }
   ],
-  "hoursToKickoff": 0.59,
-  "capturedAt": "2026-09-18T18:27:22.915425+00:00",
+  "hoursToKickoff": 0.52,
+  "capturedAt": "2026-09-18T18:32:31.725490+00:00",
   "tokens": {
    "Shamrock Rovers": "73206599711730209864053265157599265493138236430328080527268460464258952579597",
    "Draw (Shamrock Rovers vs. Waterford FC)": "12097709097395595195156157465041422095423005847450710677661383179691938140850",
@@ -357179,8 +357271,8 @@
     "avgPrice": 0.6999
    }
   ],
-  "hoursToKickoff": 2.09,
-  "capturedAt": "2026-09-18T18:27:22.915425+00:00",
+  "hoursToKickoff": 2.02,
+  "capturedAt": "2026-09-18T18:32:31.725490+00:00",
   "cond": "0x7b204eb2809161357c3c2ccfa5d7948275f58dd86f76fa18d7bff89dadd9d3f3",
   "frage": "Sao Paulo Open: Mary Stoiana vs Paula Badosa",
   "tokens": {
@@ -357230,8 +357322,8 @@
     "avgPrice": 0.6659
    }
   ],
-  "hoursToKickoff": 0.59,
-  "capturedAt": "2026-09-18T18:27:22.915425+00:00",
+  "hoursToKickoff": 0.52,
+  "capturedAt": "2026-09-18T18:32:31.725490+00:00",
   "tokens": {
    "Bohemians Dublin FC": "40138161189688134982138998331944197249004993346850822351175333232065129468033",
    "Draw (Bohemians Dublin FC vs. Drogheda United FC)": "95318598878016353536550492279823116136631360707292575454802054656714783676486",
@@ -357240,12 +357332,12 @@
  },
  "cs2-shin-tdp-2026-09-18": {
   "shares": {
-   "ShindeN": 52394.60892094,
-   "Turma do Pagode": 20884.682195249996
+   "ShindeN": 51667.43247823499,
+   "Turma do Pagode": 21619.827722295
   },
   "prices": {
-   "ShindeN": 0.715,
-   "Turma do Pagode": 0.285
+   "ShindeN": 0.705,
+   "Turma do Pagode": 0.295
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -357258,30 +357350,30 @@
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "side": "ShindeN",
-    "usd": 35267,
+    "usd": 34792,
     "avgPrice": 0.7089
    },
    {
     "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
     "side": "Turma do Pagode",
-    "usd": 8550,
+    "usd": 8850,
     "avgPrice": 0.29
    },
    {
     "wallet": "0xf1ef8705e9f63c790c6fffd6329aea7011718cd6",
     "side": "ShindeN",
-    "usd": 5720,
+    "usd": 5640,
     "avgPrice": 0.71
    },
    {
     "wallet": "0x6b97ebe911d7f2e5e3e8c4a0faad4a5c7c0b8d30",
     "side": "Turma do Pagode",
-    "usd": 1528,
+    "usd": 1581,
     "avgPrice": 0.2899
    }
   ],
-  "hoursToKickoff": 2.59,
-  "capturedAt": "2026-09-18T18:27:22.915425+00:00",
+  "hoursToKickoff": 2.52,
+  "capturedAt": "2026-09-18T18:32:31.725490+00:00",
   "cond": "0xf3ddd57b0697f14bc20727c99272de9ce655af923dfb2defa426f8a3368b1fc8",
   "frage": "Counter-Strike: ShindeN vs Turma do Pagode (BO3) - Circuit X Curitiba Playoffs",
   "tokens": {
@@ -357291,12 +357383,12 @@
  },
  "es2-alb-cor-2026-09-18": {
   "shares": {
-   "Albacete Balompié": 1715.527069495,
+   "Albacete Balompié": 1763.51465325,
    "Draw (Albacete Balompié vs. Córdoba CF)": 60.973781894999995,
-   "Córdoba CF": 2205.0423486100003
+   "Córdoba CF": 2319.7804935400004
   },
   "prices": {
-   "Albacete Balompié": 0.365,
+   "Albacete Balompié": 0.375,
    "Draw (Albacete Balompié vs. Córdoba CF)": 0.265,
    "Córdoba CF": 0.365
   },
@@ -357311,28 +357403,27 @@
    {
     "wallet": "0x2b8f84874b7b671d87028ac7cc3d94021b0b3991",
     "side": "Córdoba CF",
-    "usd": 1887,
-    "avgPrice": 0.3699
+    "usd": 1887
    },
    {
     "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
     "side": "Albacete Balompié",
-    "usd": 583
+    "usd": 599
    },
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "side": "Albacete Balompié",
-    "usd": 306,
+    "usd": 314,
     "avgPrice": 0.3899
    },
    {
     "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
     "side": "Albacete Balompié",
-    "usd": 180
+    "usd": 184
    }
   ],
-  "hoursToKickoff": 0.09,
-  "capturedAt": "2026-09-18T18:27:22.915425+00:00",
+  "hoursToKickoff": 0.02,
+  "capturedAt": "2026-09-18T18:32:31.725490+00:00",
   "tokens": {
    "Albacete Balompié": "8208281523739056328531603581537200478080837442320018830659614737378859748091",
    "Draw (Albacete Balompié vs. Córdoba CF)": "113629226018516610846784913869027944681174585464636896344588015743841406781747",
@@ -357341,12 +357432,12 @@
  },
  "fl1-asm-rcl-2026-09-18-first-to-score": {
   "shares": {
-   "AS Monaco FC": 248.57999220000002,
+   "AS Monaco FC": 246.50849226500003,
    "Racing Club de Lens": 13.2203,
    "Neither": 375.08
   },
   "prices": {
-   "AS Monaco FC": 0.6,
+   "AS Monaco FC": 0.595,
    "Racing Club de Lens": 0.365,
    "Neither": 0.05
   },
@@ -357367,7 +357458,7 @@
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "side": "AS Monaco FC",
-    "usd": 218,
+    "usd": 216,
     "avgPrice": 0.5499
    },
    {
@@ -357381,8 +357472,8 @@
     "usd": 8
    }
   ],
-  "hoursToKickoff": 0.34,
-  "capturedAt": "2026-09-18T18:27:22.915425+00:00",
+  "hoursToKickoff": 0.27,
+  "capturedAt": "2026-09-18T18:32:31.725490+00:00",
   "tokens": {
    "AS Monaco FC": "48537567987048553386315492192841826613159867125007614885926150273311687132649",
    "Racing Club de Lens": "107849057525237019756931668082644122225023322056752854396030068807173551696538",
