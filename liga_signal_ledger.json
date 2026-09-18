@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-09-18T12:41:25Z",
-    "total_records": 148,
+    "updated_at": "2026-09-18T20:58:14Z",
+    "total_records": 153,
     "oddsBackfilled": "2026-09-06 — Quote/entryOdd aus den Pick-Dateien nachgetragen; der Ledger trug sie nie (0 von 318)."
   },
   "records": [
@@ -4346,6 +4346,164 @@
       "clvBasis": "fair"
     },
     {
+      "key": "FRA-5-91-116|Doppelte Chance — 1X",
+      "matchKey": "FRA-5-91-116",
+      "market": "Doppelte Chance — 1X",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": -1.07
+        },
+        {
+          "name": "xg_strength",
+          "score": -1.5
+        },
+        {
+          "name": "chance_creation",
+          "score": -2.31
+        },
+        {
+          "name": "form_rating",
+          "score": 2.69
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        },
+        {
+          "name": "venue_form",
+          "score": -0.93
+        },
+        {
+          "name": "betfair_money",
+          "score": 4.0
+        }
+      ],
+      "resolvedAt": "2026-09-18T20:58:10Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 1.96,
+      "clvResolved": true,
+      "odds": 1.35,
+      "entryOdd": 1.35,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED",
+      "clvBasis": "roh"
+    },
+    {
+      "key": "FRA-5-91-116|Heimsieg",
+      "matchKey": "FRA-5-91-116",
+      "market": "Heimsieg",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "lead_lag_bias",
+          "score": 4.69
+        },
+        {
+          "name": "form_trend",
+          "score": -1.07
+        },
+        {
+          "name": "xg_strength",
+          "score": -1.5
+        },
+        {
+          "name": "apif_predictions",
+          "score": -1.07
+        },
+        {
+          "name": "chance_creation",
+          "score": -2.31
+        },
+        {
+          "name": "form_rating",
+          "score": 2.69
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        },
+        {
+          "name": "venue_form",
+          "score": -0.93
+        },
+        {
+          "name": "betfair_money",
+          "score": 4.0
+        }
+      ],
+      "resolvedAt": "2026-09-18T20:58:10Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 1.41,
+      "clvResolved": true,
+      "odds": 2.02,
+      "entryOdd": 2.02,
+      "entryBook": "soft",
+      "processVerdict": "LUCKY",
+      "clvFairPP": 3.67,
+      "clvBasis": "fair"
+    },
+    {
+      "key": "FRA-5-91-116|Über 2.5 Tore",
+      "matchKey": "FRA-5-91-116",
+      "market": "Über 2.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "injury",
+          "score": 3.5
+        },
+        {
+          "name": "form_trend",
+          "score": 3.6
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 5.0
+        },
+        {
+          "name": "xg_strength",
+          "score": 3.52
+        },
+        {
+          "name": "chance_creation",
+          "score": 2.54
+        },
+        {
+          "name": "streak_momentum",
+          "score": 0.07
+        },
+        {
+          "name": "move_following",
+          "score": 1.2
+        },
+        {
+          "name": "betfair_money",
+          "score": 1.38
+        }
+      ],
+      "resolvedAt": "2026-09-18T20:58:10Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -3.89,
+      "clvResolved": true,
+      "odds": 1.52,
+      "entryOdd": 1.52,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED",
+      "clvFairPP": 0.01,
+      "clvBasis": "fair"
+    },
+    {
       "key": "GER-1-157-172|Über 3.5 Tore",
       "matchKey": "GER-1-157-172",
       "market": "Über 3.5 Tore",
@@ -6821,6 +6979,83 @@
       "entryBook": "pini",
       "processVerdict": "UNLUCKY",
       "clvBasis": "roh"
+    },
+    {
+      "key": "ITA-5-1579-488|Doppelte Chance — 1X",
+      "matchKey": "ITA-5-1579-488",
+      "market": "Doppelte Chance — 1X",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "h2h_pattern",
+          "score": 1.2
+        },
+        {
+          "name": "venue_form",
+          "score": 1.14
+        }
+      ],
+      "resolvedAt": "2026-09-18T20:58:10Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": false,
+      "engineVersion": "v1",
+      "clvPP": -3.63,
+      "clvResolved": true,
+      "odds": 1.49,
+      "entryOdd": 1.49,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED",
+      "clvBasis": "roh"
+    },
+    {
+      "key": "ITA-5-1579-488|Über 2.5 Tore",
+      "matchKey": "ITA-5-1579-488",
+      "market": "Über 2.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "injury",
+          "score": -4.25
+        },
+        {
+          "name": "form_trend",
+          "score": 3.47
+        },
+        {
+          "name": "h2h_pattern",
+          "score": -1.0
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.57
+        },
+        {
+          "name": "chance_creation",
+          "score": 5.01
+        },
+        {
+          "name": "streak_momentum",
+          "score": 0.1
+        },
+        {
+          "name": "move_following",
+          "score": 1.2
+        }
+      ],
+      "resolvedAt": "2026-09-18T20:58:10Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -2.09,
+      "clvResolved": true,
+      "odds": 1.77,
+      "entryOdd": 1.77,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED",
+      "clvFairPP": 0.81,
+      "clvBasis": "fair"
     }
   ]
 }

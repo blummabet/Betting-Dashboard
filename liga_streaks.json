@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "liga",
-    "generatedAt": "2026-09-18T12:23:45.826068+00:00",
+    "generatedAt": "2026-09-18T20:51:12.708007+00:00",
     "minLen": 3,
     "strongLen": 5,
     "sortiert": "zufallPct",
@@ -886,14 +886,15 @@
       "matchupPct": 36,
       "signalInfo": {
         "state": "confirm",
-        "count": 4,
+        "count": 5,
         "conviction": 5,
         "names": [
           "injury",
           "form_trend",
           "xg_strength",
           "transfer_shift",
-          "streak_momentum"
+          "streak_momentum",
+          "move_following"
         ],
         "market": "Unter 3.5 Tore"
       }
@@ -965,10 +966,9 @@
       "matchupPct": 37,
       "signalInfo": {
         "state": "confirm",
-        "count": 5,
-        "conviction": 5,
+        "count": 4,
+        "conviction": 4,
         "names": [
-          "public_static_bias",
           "injury",
           "form_trend",
           "xg_strength",
@@ -2482,10 +2482,9 @@
       "matchupPct": 36,
       "signalInfo": {
         "state": "confirm",
-        "count": 5,
-        "conviction": 5,
+        "count": 4,
+        "conviction": 4,
         "names": [
-          "public_static_bias",
           "injury",
           "form_trend",
           "xg_strength",
@@ -4908,13 +4907,14 @@
       "matchupPct": 56,
       "signalInfo": {
         "state": "confirm",
-        "count": 4,
+        "count": 5,
         "conviction": 4,
         "names": [
           "injury",
           "form_trend",
           "xg_strength",
-          "streak_momentum"
+          "streak_momentum",
+          "move_following"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -4933,7 +4933,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 62,
-        "label": "Eigen 62% + Gegner 60% → 61%"
+        "label": "Eigen 62% + Gegner 60% → 61% · Signale bestätigen"
       },
       "ratePct": 62,
       "seq": [
@@ -4971,7 +4971,21 @@
         "pickKey": "FRA-5-81-85"
       },
       "oppSupportPct": 60,
-      "matchupPct": 61
+      "matchupPct": 61,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 7,
+        "conviction": 4,
+        "names": [
+          "injury",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "chance_creation",
+          "streak_momentum"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "541",
@@ -5188,14 +5202,15 @@
       "matchupPct": 50,
       "signalInfo": {
         "state": "contradict",
-        "count": 4,
+        "count": 5,
         "conviction": 5,
         "names": [
           "injury",
           "form_trend",
           "xg_strength",
           "transfer_shift",
-          "streak_momentum"
+          "streak_momentum",
+          "move_following"
         ],
         "market": "Unter 3.5 Tore"
       }
@@ -5334,7 +5349,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 57,
-        "label": "Eigen 57% + Gegner 67% → 61% · Signale bestätigen"
+        "label": "Eigen 57% + Gegner 67% → 61%"
       },
       "ratePct": 57,
       "seq": [
@@ -5370,19 +5385,7 @@
         "pickKey": "ESP-7-540-797"
       },
       "oppSupportPct": 67,
-      "matchupPct": 61,
-      "signalInfo": {
-        "state": "confirm",
-        "count": 3,
-        "conviction": 5,
-        "names": [
-          "form_trend",
-          "h2h_pattern",
-          "xg_strength",
-          "streak_momentum"
-        ],
-        "market": "Beide Teams treffen — Ja"
-      }
+      "matchupPct": 61
     },
     {
       "teamId": "192",
@@ -5500,7 +5503,17 @@
         "pickKey": "FRA-5-96-111"
       },
       "oppSupportPct": 60,
-      "matchupPct": 58
+      "matchupPct": 58,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 1,
+        "conviction": 4,
+        "names": [
+          "form_trend",
+          "xg_strength"
+        ],
+        "market": "Beide Teams treffen — Ja"
+      }
     },
     {
       "teamId": "35",
@@ -6783,9 +6796,10 @@
       "matchupPct": 50,
       "signalInfo": {
         "state": "confirm",
-        "count": 4,
-        "conviction": 5,
+        "count": 5,
+        "conviction": 6,
         "names": [
+          "lead_lag_bias",
           "injury",
           "chance_creation",
           "opener_move",
@@ -7034,15 +7048,15 @@
       "matchupPct": 79,
       "signalInfo": {
         "state": "confirm",
-        "count": 6,
+        "count": 7,
         "conviction": 6,
         "names": [
+          "lead_lag_bias",
           "form_trend",
           "h2h_pattern",
           "xg_strength",
           "chance_creation",
-          "streak_momentum",
-          "venue_form"
+          "streak_momentum"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -11133,8 +11147,8 @@
       "matchupPct": 58,
       "signalInfo": {
         "state": "confirm",
-        "count": 6,
-        "conviction": 5,
+        "count": 8,
+        "conviction": 6,
         "names": [
           "injury",
           "form_trend",
@@ -11335,13 +11349,14 @@
       "matchupPct": 67,
       "signalInfo": {
         "state": "confirm",
-        "count": 4,
+        "count": 5,
         "conviction": 4,
         "names": [
           "injury",
           "form_trend",
           "xg_strength",
-          "streak_momentum"
+          "streak_momentum",
+          "move_following"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -11478,9 +11493,10 @@
       "matchupPct": 64,
       "signalInfo": {
         "state": "confirm",
-        "count": 4,
-        "conviction": 5,
+        "count": 5,
+        "conviction": 6,
         "names": [
+          "lead_lag_bias",
           "form_trend",
           "h2h_pattern",
           "xg_strength",
@@ -11755,15 +11771,15 @@
       "matchupPct": 82,
       "signalInfo": {
         "state": "confirm",
-        "count": 6,
+        "count": 7,
         "conviction": 6,
         "names": [
+          "lead_lag_bias",
           "form_trend",
           "h2h_pattern",
           "xg_strength",
           "chance_creation",
-          "streak_momentum",
-          "venue_form"
+          "streak_momentum"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -13768,7 +13784,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 73,
-        "label": "Eigen 73% + Gegner 67% → 71% · Signale bestätigen"
+        "label": "Eigen 73% + Gegner 67% → 71%"
       },
       "ratePct": 73,
       "seq": [
@@ -13818,19 +13834,7 @@
         "pickKey": "ESP-7-540-797"
       },
       "oppSupportPct": 67,
-      "matchupPct": 71,
-      "signalInfo": {
-        "state": "confirm",
-        "count": 3,
-        "conviction": 5,
-        "names": [
-          "form_trend",
-          "h2h_pattern",
-          "xg_strength",
-          "streak_momentum"
-        ],
-        "market": "Beide Teams treffen — Ja"
-      }
+      "matchupPct": 71
     },
     {
       "teamId": "1298",
@@ -18096,15 +18100,15 @@
       "matchupPct": 73,
       "signalInfo": {
         "state": "confirm",
-        "count": 4,
+        "count": 5,
         "conviction": 6,
         "names": [
+          "lead_lag_bias",
           "injury",
           "form_trend",
           "h2h_pattern",
           "xg_strength",
-          "chance_creation",
-          "venue_form"
+          "chance_creation"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -18160,15 +18164,15 @@
       "matchupPct": 66,
       "signalInfo": {
         "state": "confirm",
-        "count": 4,
+        "count": 5,
         "conviction": 6,
         "names": [
+          "lead_lag_bias",
           "injury",
           "form_trend",
           "h2h_pattern",
           "xg_strength",
-          "chance_creation",
-          "venue_form"
+          "chance_creation"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -18450,15 +18454,15 @@
       "matchupPct": 65,
       "signalInfo": {
         "state": "confirm",
-        "count": 7,
+        "count": 6,
         "conviction": 5,
         "names": [
-          "public_static_bias",
           "injury",
           "form_trend",
           "h2h_pattern",
           "xg_strength",
-          "chance_creation"
+          "chance_creation",
+          "freshness_leg"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -18530,15 +18534,15 @@
       "matchupPct": 75,
       "signalInfo": {
         "state": "confirm",
-        "count": 6,
+        "count": 7,
         "conviction": 6,
         "names": [
+          "lead_lag_bias",
           "form_trend",
           "h2h_pattern",
           "xg_strength",
           "chance_creation",
-          "streak_momentum",
-          "venue_form"
+          "streak_momentum"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -24747,15 +24751,15 @@
       "matchupPct": 66,
       "signalInfo": {
         "state": "confirm",
-        "count": 4,
+        "count": 5,
         "conviction": 6,
         "names": [
+          "lead_lag_bias",
           "injury",
           "form_trend",
           "h2h_pattern",
           "xg_strength",
-          "chance_creation",
-          "venue_form"
+          "chance_creation"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -25022,7 +25026,7 @@
       "signalInfo": {
         "state": "confirm",
         "count": 7,
-        "conviction": 5,
+        "conviction": 6,
         "names": [
           "injury",
           "form_trend",
@@ -25048,7 +25052,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 83,
-        "label": "Eigen 83% + Gegner 47% → 69%"
+        "label": "Eigen 83% + Gegner 47% → 69% · Signale bestätigen"
       },
       "ratePct": 83,
       "seq": [
@@ -25098,7 +25102,21 @@
         "pickKey": "ENG-5-47-66"
       },
       "oppSupportPct": 47,
-      "matchupPct": 69
+      "matchupPct": 69,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 7,
+        "conviction": 6,
+        "names": [
+          "lead_lag_bias",
+          "injury",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "chance_creation"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "85",
@@ -25114,7 +25132,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 62,
-        "label": "Eigen 62% + Gegner 67% → 64%"
+        "label": "Eigen 62% + Gegner 67% → 64% · Signale bestätigen"
       },
       "ratePct": 62,
       "seq": [
@@ -25151,7 +25169,21 @@
         "pickKey": "FRA-5-81-85"
       },
       "oppSupportPct": 67,
-      "matchupPct": 64
+      "matchupPct": 64,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 7,
+        "conviction": 4,
+        "names": [
+          "injury",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "chance_creation",
+          "streak_momentum"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "97",
@@ -25362,15 +25394,15 @@
       "matchupPct": 65,
       "signalInfo": {
         "state": "confirm",
-        "count": 7,
+        "count": 6,
         "conviction": 5,
         "names": [
-          "public_static_bias",
           "injury",
           "form_trend",
           "h2h_pattern",
           "xg_strength",
-          "chance_creation"
+          "chance_creation",
+          "freshness_leg"
         ],
         "market": "Über 2.5 Tore"
       }
