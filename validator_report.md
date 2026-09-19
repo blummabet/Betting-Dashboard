@@ -1,16 +1,16 @@
-# 🟡 Picks Validator — 18.09.2026 21:10
+# 🟡 Picks Validator — 19.09.2026 07:37
 
-**105 Spiele geprüft** · 🔴 0 Fehler · 🟡 74 Warnungen · 🔵 332 Hinweise
+**105 Spiele geprüft** · 🔴 0 Fehler · 🟡 76 Warnungen · 🔵 332 Hinweise
 
 ```
 =================================================================
   🐕 CocoBet — Picks Logik-Check
-  18.09.2026 21:10
+  19.09.2026 07:37
   Filter: nächste 3 Tag(e)
 =================================================================
 
 ─────────────────────────────────────────────────────────────────
-  🇦🇹 Österreich BL  (rl=26)
+  🇦🇹 Österreich BL  (rl=25)
 ─────────────────────────────────────────────────────────────────
   🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
      📅 19.09.2026  Austria Lustenau vs SCR Altach
@@ -68,7 +68,7 @@
      Sturm Graz expA≈1.00 (statischer Proxy) → FV über 1.5 = 26.4%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
 
 ─────────────────────────────────────────────────────────────────
-  🇧🇪 Jupiler Pro League  (rl=34)
+  🇧🇪 Jupiler Pro League  (rl=33)
 ─────────────────────────────────────────────────────────────────
   🟡 WARNUNG [LOW_SCORING_OVER_RISK]
      📅 19.09.2026  OH Leuven vs RAAL La Louvière
@@ -186,7 +186,7 @@
      Ø gpg=0.30 (statischer Proxy) → Poisson FV für Over 3.5 = 2.0%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
 
 ─────────────────────────────────────────────────────────────────
-  🇭🇷 HNL  (rl=29)
+  🇭🇷 HNL  (rl=28)
 ─────────────────────────────────────────────────────────────────
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 19.09.2026  NK Varazdin vs NK Osijek
@@ -199,7 +199,7 @@
      NK Osijek expA≈1.25 (statischer Proxy) → FV über 1.5 = 35.5%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🟡 WARNUNG [BOTRED_ASYMMETRIC_PRESSURE]
      📅 19.09.2026  Istra 1961 vs HNK Gorica
-     Kellerduell-Narrativ aber asymmetrischer Druck: HNK Gorica pressureRatio=0.34 vs Istra 1961 pressureRatio=0.26. Nur eine Mannschaft kämpft wirklich — Angle zu vereinfacht.
+     Kellerduell-Narrativ aber asymmetrischer Druck: HNK Gorica pressureRatio=0.36 vs Istra 1961 pressureRatio=0.27. Nur eine Mannschaft kämpft wirklich — Angle zu vereinfacht.
   🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
      📅 19.09.2026  Istra 1961 vs HNK Gorica
      Istra 1961: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
@@ -235,7 +235,7 @@
      NK Lokomotiva Zagreb expA≈1.15 (statischer Proxy) → FV über 1.5 = 31.9%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
 
 ─────────────────────────────────────────────────────────────────
-  🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League  (rl=34)
+  🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League  (rl=33)
 ─────────────────────────────────────────────────────────────────
   🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
      📅 19.09.2026  Tottenham vs Aston Villa
@@ -326,7 +326,7 @@
      Liga-Baserate=3.8 → Poisson FV für Über 4.5 Karten = 33.2%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
 
 ─────────────────────────────────────────────────────────────────
-  🇪🇸 La Liga  (rl=32)
+  🇪🇸 La Liga  (rl=31)
 ─────────────────────────────────────────────────────────────────
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 19.09.2026  Osasuna vs Rayo Vallecano
@@ -346,9 +346,6 @@
   🟡 WARNUNG [HOME_POOR_FORM_HIGH_SCORE]
      📅 19.09.2026  Celta Vigo vs Racing Santander
      Celta Vigo: formScore=0.17 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet.
-  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
-     📅 19.09.2026  Celta Vigo vs Racing Santander
-     Celta Vigo: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 19.09.2026  Celta Vigo vs Racing Santander
      Liga-Baserate=3.4 → Poisson FV für Über 3.5 Karten = 44.2% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+11.4%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
@@ -370,6 +367,9 @@
   🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
      📅 19.09.2026  Sevilla vs Barcelona
      Sevilla expH≈1.35 (statischer Proxy) → FV über 1.5 = 39.1%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
+  🟡 WARNUNG [BOTRED_ASYMMETRIC_PRESSURE]
+     📅 20.09.2026  Getafe vs Malaga
+     Kellerduell-Narrativ aber asymmetrischer Druck: Malaga pressureRatio=0.30 vs Getafe pressureRatio=0.28. Nur eine Mannschaft kämpft wirklich — Angle zu vereinfacht.
   🟡 WARNUNG [BOTH_DEFENSIVE_OVER_RISK]
      📅 20.09.2026  Getafe vs Malaga
      Getafe (0.7 Tore/Sp) + Malaga (0.5 Tore/Sp): kombiniert nur ~1.0 erwartete Tore. Over 2.5 Pick wäre kontraindiziert — Modell prüfen.
@@ -427,9 +427,6 @@
   🟡 WARNUNG [HOME_POOR_FORM_HIGH_SCORE]
      📅 20.09.2026  Valencia vs Real Sociedad
      Valencia: formScore=0.22 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet.
-  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
-     📅 20.09.2026  Valencia vs Real Sociedad
-     Valencia: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 20.09.2026  Valencia vs Real Sociedad
      Liga-Baserate=3.4 → Poisson FV für Über 3.5 Karten = 44.2% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+11.4%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
@@ -447,7 +444,7 @@
      Valencia expH≈1.15 (statischer Proxy) → FV über 1.5 = 31.9%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
 
 ─────────────────────────────────────────────────────────────────
-  🇫🇷 Ligue 1  (rl=30)
+  🇫🇷 Ligue 1  (rl=29)
 ─────────────────────────────────────────────────────────────────
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 19.09.2026  Paris FC vs Strasbourg
@@ -559,7 +556,7 @@
      Marseille expH≈1.30 (statischer Proxy) → FV über 1.5 = 37.3%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
 
 ─────────────────────────────────────────────────────────────────
-  🇩🇪 Bundesliga  (rl=31)
+  🇩🇪 Bundesliga  (rl=30)
 ─────────────────────────────────────────────────────────────────
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 19.09.2026  Werder Bremen vs FC Augsburg
@@ -693,7 +690,7 @@
      H2H Schnitt=3.4 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
 
 ─────────────────────────────────────────────────────────────────
-  🇮🇹 Serie A  (rl=34)
+  🇮🇹 Serie A  (rl=33)
 ─────────────────────────────────────────────────────────────────
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 19.09.2026  Udinese vs Cagliari
@@ -707,9 +704,12 @@
   🟡 WARNUNG [HOME_POOR_FORM_HIGH_SCORE]
      📅 19.09.2026  Bologna vs Torino
      Bologna: formScore=0.06 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet.
+  🟡 WARNUNG [BOTH_DEFENSIVE_OVER_RISK]
+     📅 19.09.2026  Bologna vs Torino
+     Bologna (0.5 Tore/Sp) + Torino (0.8 Tore/Sp): kombiniert nur ~1.1 erwartete Tore. Over 2.5 Pick wäre kontraindiziert — Modell prüfen.
   🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
      📅 19.09.2026  Bologna vs Torino
-     Bologna: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
+     Bologna, Torino: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 19.09.2026  Bologna vs Torino
      Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
@@ -718,10 +718,16 @@
      Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
   🔵 HINWEIS [LOW_SCORING_PROFILE]
      📅 19.09.2026  Bologna vs Torino
-     Ø gpg=0.50, H2H Ø=2.4 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt
+     Ø gpg=1.30, H2H Ø=2.4 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt
   🔵 HINWEIS [OVER35_LOW_FV]
      📅 19.09.2026  Bologna vs Torino
-     Ø gpg=0.50 (statischer Proxy) → Poisson FV für Over 3.5 = 2.0%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
+     Ø gpg=1.30 (statischer Proxy) → Poisson FV für Over 3.5 = 4.3%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
+  🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
+     📅 19.09.2026  Bologna vs Torino
+     Bologna expH≈0.90 (statischer Proxy) → FV über 1.5 = 22.8%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
+  🔵 HINWEIS [TEAM_OVER_AWAY_LOW_FV]
+     📅 19.09.2026  Bologna vs Torino
+     Torino expA≈1.25 (statischer Proxy) → FV über 1.5 = 35.5%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 19.09.2026  AS Roma vs Inter
      Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
@@ -808,11 +814,11 @@
      Lecce expA≈1.15 (statischer Proxy) → FV über 1.5 = 31.9%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
 
 ─────────────────────────────────────────────────────────────────
-  🇳🇱 Eredivisie  (rl=28)
+  🇳🇱 Eredivisie  (rl=27)
 ─────────────────────────────────────────────────────────────────
   🟡 WARNUNG [BOTRED_ASYMMETRIC_PRESSURE]
      📅 19.09.2026  ADO Den Haag vs Cambuur
-     Kellerduell-Narrativ aber asymmetrischer Druck: ADO Den Haag pressureRatio=0.31 vs Cambuur pressureRatio=0.27. Nur eine Mannschaft kämpft wirklich — Angle zu vereinfacht.
+     Kellerduell-Narrativ aber asymmetrischer Druck: ADO Den Haag pressureRatio=0.32 vs Cambuur pressureRatio=0.28. Nur eine Mannschaft kämpft wirklich — Angle zu vereinfacht.
   🟡 WARNUNG [HOME_POOR_FORM_HIGH_SCORE]
      📅 19.09.2026  ADO Den Haag vs Cambuur
      ADO Den Haag: formScore=0.06 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet.
@@ -1289,7 +1295,7 @@
 
 ═════════════════════════════════════════════════════════════════
   Geprüft: 105 Spiele
-  🟡 74 Warnungen — manuelle Prüfung empfohlen
+  🟡 76 Warnungen — manuelle Prüfung empfohlen
   🔵 332 Hinweise — Pick-Richtung kontrollieren
 ═════════════════════════════════════════════════════════════════
 
