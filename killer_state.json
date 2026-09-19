@@ -137,7 +137,7 @@
    "markt": "Match Odds",
    "seite": "home",
    "name": "Toulouse",
-   "odd": 1.75,
+   "odd": 1.74,
    "entryOdd": 1.81,
    "anteilPct": 85,
    "stufe": 1,
@@ -185,9 +185,9 @@
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.847,
-       "betrag": 25933,
-       "gesamt": 30617,
+       "anteil": 0.85,
+       "betrag": 31032,
+       "gesamt": 36508,
        "waehrung": "EUR",
        "quelle": "geld"
       },
@@ -209,8 +209,8 @@
       },
       "geld": {
        "anteil": 0.99,
-       "betrag": 88680,
-       "gesamt": 89576,
+       "betrag": 89073,
+       "gesamt": 89973,
        "waehrung": "USD",
        "quelle": "geld"
       },
@@ -261,42 +261,46 @@
    },
    "wertVsPinn": -0.0132,
    "gehaltenSeit": "2026-09-19T16:11:24.588207+00:00",
-   "zuletztAktiv": "2026-09-19T16:11:24.588207+00:00",
+   "zuletztAktiv": "2026-09-19T16:56:26.564690+00:00",
    "haltePreis": 1.75,
-   "aktiv": false
+   "aktiv": true
   },
-  "36071054|Match Odds": {
-   "matchId": "36071054",
-   "home": "Kilmarnock",
-   "away": "Hearts",
-   "league": "Scottish Premiership",
-   "kickoff": "2026-09-19T16:45:00Z",
+  "36073300|Match Odds": {
+   "matchId": "36073300",
+   "home": "Maccabi Netanya",
+   "away": "Maccabi Tel Aviv",
+   "league": "Israeli Premier League",
+   "kickoff": "2026-09-19T17:00:00Z",
    "markt": "Match Odds",
    "seite": "away",
-   "name": "Hearts",
-   "odd": 1.78,
-   "entryOdd": 1.79,
-   "anteilPct": 76,
+   "name": "Maccabi Tel Aviv",
+   "odd": 1.59,
+   "entryOdd": 1.54,
+   "anteilPct": 81,
    "stufe": 2,
    "verstaerker": [
     {
-     "art": "pinn",
-     "text": "Pinnacle stimmt zu",
-     "gewicht": 10
+     "art": "poly",
+     "text": "Poly Preis 62%",
+     "gewicht": 12
     }
    ],
-   "rang": 67.6,
+   "rang": 70.1,
    "track": null,
    "streak": null,
-   "poly": null,
-   "polyStatus": "unbekannt",
-   "polyKey": null,
-   "polySide": null,
+   "poly": {
+    "anteilPct": 62,
+    "usd": 3735,
+    "odd": 1.61
+   },
+   "polyStatus": "ja",
+   "polyKey": "isr-mne-mta-2026-09-19",
+   "polySide": "Maccabi Tel Aviv FC",
    "pinnMovePP": null,
    "punkte": {
     "punkte": 5,
     "moeglich": 7,
-    "dauerH": 0.31,
+    "dauerH": 0.06,
     "teile": [
      {
       "buch": "BF",
@@ -306,48 +310,54 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 76% auf der Seite"
+       "text": "Geld 81% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.757,
-       "betrag": 13318,
-       "gesamt": 17593,
+       "anteil": 0.808,
+       "betrag": 4379,
+       "gesamt": 5420,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 76% auf der Seite"
+      "text": "Geld 81% auf der Seite"
      },
      {
       "buch": "POLY",
       "name": "Polymarket",
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Poly-Preis 62% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein bewiesenes Wallet auf der Seite"
+      },
+      "geld": {
+       "anteil": 0.62,
+       "betrag": null,
+       "gesamt": 3735,
+       "waehrung": "USD",
+       "quelle": "preis"
+      },
+      "text": "Poly-Preis 62% auf derselben Seite"
+     },
+     {
+      "buch": "PIN",
+      "name": "Pinnacle",
       "status": "unbekannt",
       "punkte": 0,
       "moeglich": 0,
       "grund": null,
       "tiefe": null,
       "geld": null,
-      "text": "Polymarket nicht erhoben"
-     },
-     {
-      "buch": "PIN",
-      "name": "Pinnacle",
-      "status": "ja",
-      "punkte": 2,
-      "moeglich": 3,
-      "grund": {
-       "ok": true,
-       "text": "hat dieselbe Seite als Favorit"
-      },
-      "tiefe": {
-       "ok": false,
-       "text": "kein Move gemessen"
-      },
-      "geld": null,
-      "text": "hat dieselbe Seite als Favorit"
+      "text": "Pinnacle nicht erhoben"
      },
      {
       "buch": "STAKE",
@@ -368,17 +378,17 @@
       "moeglich": 1,
       "grund": {
        "ok": false,
-       "text": "steht seit 0.3h vor Anpfiff"
+       "text": "steht seit 0.1h vor Anpfiff"
       },
       "tiefe": null,
-      "text": "steht seit 0.3h vor Anpfiff"
+      "text": "steht seit 0.1h vor Anpfiff"
      }
     ]
    },
-   "wertVsPinn": -0.0028,
-   "gehaltenSeit": "2026-09-19T16:26:20.040589+00:00",
-   "zuletztAktiv": "2026-09-19T16:26:20.040589+00:00",
-   "haltePreis": 1.78,
+   "wertVsPinn": null,
+   "gehaltenSeit": "2026-09-19T16:56:26.564690+00:00",
+   "zuletztAktiv": "2026-09-19T16:56:26.564690+00:00",
+   "haltePreis": 1.59,
    "aktiv": true
   }
  }
