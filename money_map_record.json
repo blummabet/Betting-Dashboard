@@ -1,53 +1,53 @@
 {
-"generatedAt": "2026-09-19T15:56:21.671555+00:00",
+"generatedAt": "2026-09-19T16:11:21.429327+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1316,
-"wins": 1114,
-"hitRate": 0.8465,
-"polyN": 1249,
-"polyWins": 974,
-"polyHitRate": 0.7798,
-"pinnN": 181,
-"pinnHitRate": 0.7901,
-"nRoi": 643,
-"roi": 0.429,
-"roiLb": 0.3788,
-"nClv": 643,
-"clv": 20.55,
-"clvLb": 18.9927
+"n": 1320,
+"wins": 1118,
+"hitRate": 0.847,
+"polyN": 1253,
+"polyWins": 976,
+"polyHitRate": 0.7789,
+"pinnN": 183,
+"pinnHitRate": 0.7923,
+"nRoi": 647,
+"roi": 0.4306,
+"roiLb": 0.3806,
+"nClv": 647,
+"clv": 20.59,
+"clvLb": 19.0358
 },
 "uneinig": {
-"n": 518,
+"n": 519,
 "wins": 159,
-"hitRate": 0.3069,
-"polyN": 479,
+"hitRate": 0.3064,
+"polyN": 480,
 "polyWins": 130,
-"polyHitRate": 0.2714,
-"pinnN": 317,
-"pinnHitRate": 0.6278,
-"nRoi": 286,
-"roi": -0.5046,
-"roiLb": -0.5869,
-"nClv": 286,
-"clv": -20.16,
-"clvLb": -23.3609
+"polyHitRate": 0.2708,
+"pinnN": 318,
+"pinnHitRate": 0.6289,
+"nRoi": 287,
+"roi": -0.5063,
+"roiLb": -0.5883,
+"nClv": 287,
+"clv": -20.23,
+"clvLb": -23.425
 },
 "teil": {
-"n": 24,
+"n": 25,
 "wins": 5,
-"hitRate": 0.2083,
-"polyN": 22,
+"hitRate": 0.2,
+"polyN": 23,
 "polyWins": 4,
-"polyHitRate": 0.1818,
-"pinnN": 24,
-"pinnHitRate": 0.2083,
-"nRoi": 15,
-"roi": -0.7473,
-"roiLb": -1.0394,
-"nClv": 15,
-"clv": -37.25,
-"clvLb": -50.2723
+"polyHitRate": 0.1739,
+"pinnN": 25,
+"pinnHitRate": 0.2,
+"nRoi": 16,
+"roi": -0.7631,
+"roiLb": -1.0376,
+"nClv": 16,
+"clv": -36.93,
+"clvLb": -49.1226
 }
 },
 "byLeague": {
@@ -62,9 +62,9 @@
 "hitRate": 0.6494
 },
 "Spanish La Liga": {
-"n": 61,
+"n": 62,
 "wins": 43,
-"hitRate": 0.7049
+"hitRate": 0.6935
 },
 "Japanese J League": {
 "n": 48,
@@ -87,14 +87,14 @@
 "hitRate": 0.7111
 },
 "English Premier League": {
-"n": 44,
-"wins": 24,
-"hitRate": 0.5455
+"n": 45,
+"wins": 25,
+"hitRate": 0.5556
 },
 "Italian Serie A": {
-"n": 42,
+"n": 43,
 "wins": 31,
-"hitRate": 0.7381
+"hitRate": 0.7209
 },
 "Mexican Liga MX": {
 "n": 41,
@@ -151,20 +151,20 @@
 "wins": 22,
 "hitRate": 0.6471
 },
+"Italian Serie B": {
+"n": 31,
+"wins": 17,
+"hitRate": 0.5484
+},
 "Colombian Primera A": {
 "n": 30,
 "wins": 17,
 "hitRate": 0.5667
 },
-"Italian Serie B": {
-"n": 29,
-"wins": 15,
-"hitRate": 0.5172
-},
 "Swedish Allsvenskan": {
-"n": 28,
-"wins": 19,
-"hitRate": 0.6786
+"n": 29,
+"wins": 20,
+"hitRate": 0.6897
 },
 "German Bundesliga": {
 "n": 27,
@@ -649,37 +649,151 @@
 },
 "byStrength": {
 "strong": {
-"n": 1127,
-"wins": 908,
+"n": 1132,
+"wins": 912,
 "hitRate": 0.8057,
-"nRoi": 603,
-"roi": 0.295,
-"roiLb": 0.2413,
-"nClv": 603,
+"nRoi": 608,
+"roi": 0.2954,
+"roiLb": 0.2419,
+"nClv": 608,
 "clv": 14.3,
-"clvLb": 12.1568
+"clvLb": 12.1709
 },
 "weak": {
-"n": 698,
+"n": 699,
 "wins": 352,
-"hitRate": 0.5043,
-"nRoi": 341,
-"roi": -0.1688,
-"roiLb": -0.2586,
-"nClv": 341,
-"clv": -5.07,
-"clvLb": -7.9536
+"hitRate": 0.5036,
+"nRoi": 342,
+"roi": -0.1712,
+"roiLb": -0.2608,
+"nClv": 342,
+"clv": -5.17,
+"clvLb": -8.0557
 }
 },
 "divergence": {
-"n": 518,
+"n": 519,
 "betfairWins": 159,
-"betfairRate": 0.3069,
-"polyN": 479,
+"betfairRate": 0.3064,
+"polyN": 480,
 "polyWins": 130,
-"polyRate": 0.2714
+"polyRate": 0.2708
 },
 "recent": [
+{
+"matchId": "36036466",
+"home": "Newcastle",
+"away": "Hull",
+"league": "English Premier League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Newcastle",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-09-19T14:00:00Z",
+"settledAt": "2026-09-19T16:11:21.250344+00:00"
+},
+{
+"matchId": "36071854",
+"home": "Athletic Bilbao",
+"away": "Alaves",
+"league": "Spanish La Liga",
+"verdict": "teil",
+"moneySide": "home",
+"moneyName": "Athletic Bilbao",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-09-19T14:15:00Z",
+"settledAt": "2026-09-19T16:11:21.250344+00:00"
+},
+{
+"matchId": "36041258",
+"home": "Bologna",
+"away": "Torino",
+"league": "Italian Serie A",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Bologna",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-09-19T13:00:00Z",
+"settledAt": "2026-09-19T16:11:21.250344+00:00"
+},
+{
+"matchId": "36072474",
+"home": "Palermo",
+"away": "Padova",
+"league": "Italian Serie B",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Palermo",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-09-19T13:00:00Z",
+"settledAt": "2026-09-19T16:11:21.250344+00:00"
+},
+{
+"matchId": "36068299",
+"home": "Brommapojkarna",
+"away": "IFK Goteborg",
+"league": "Swedish Allsvenskan",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "IFK Goteborg",
+"polySide": "draw",
+"winner": "away",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-09-19T13:00:00Z",
+"settledAt": "2026-09-19T16:11:21.250344+00:00"
+},
+{
+"matchId": "36072489",
+"home": "US Cremonese",
+"away": "Entella",
+"league": "Italian Serie B",
+"verdict": "konsens",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-09-19T13:00:00Z",
+"settledAt": "2026-09-19T16:11:21.250344+00:00"
+},
 {
 "matchId": "36036463",
 "home": "Brighton",
@@ -1325,132 +1439,18 @@
 ],
 "kickoff": "2026-09-19T09:30:00Z",
 "settledAt": "2026-09-19T12:41:01.127060+00:00"
-},
-{
-"matchId": "36067620",
-"home": "Urawa",
-"away": "Tokyo-V",
-"league": "Japanese J League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Urawa",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-09-19T09:30:00Z",
-"settledAt": "2026-09-19T12:41:01.127060+00:00"
-},
-{
-"matchId": "36063225",
-"home": "Fujieda Myfc",
-"away": "Omiya",
-"league": "Japanese J League 2",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Fujieda MYFC",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-09-19T09:30:00Z",
-"settledAt": "2026-09-19T12:41:01.127060+00:00"
-},
-{
-"matchId": "36062945",
-"home": "Kawasaki",
-"away": "Kashima",
-"league": "Japanese J League",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Kawasaki",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-3,
-3
-],
-"kickoff": "2026-09-19T09:00:00Z",
-"settledAt": "2026-09-19T12:11:03.962677+00:00"
-},
-{
-"matchId": "36067425",
-"home": "PSM Makassar",
-"away": "Persita Tangerang",
-"league": "Indonesian Super League",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "PSM Makassar",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-09-19T08:30:00Z",
-"settledAt": "2026-09-19T11:40:55.586839+00:00"
-},
-{
-"matchId": "36063213",
-"home": "Fukuoka",
-"away": "Hiroshima",
-"league": "Japanese J League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Hiroshima",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-09-19T09:00:00Z",
-"settledAt": "2026-09-19T11:10:49.810294+00:00"
-},
-{
-"matchId": "36067685",
-"home": "Jeonnam Dragons",
-"away": "Suwon FC",
-"league": "South Korean K2 League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Suwon FC",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-3
-],
-"kickoff": "2026-09-19T07:30:00Z",
-"settledAt": "2026-09-19T10:40:52.056512+00:00"
 }
 ],
 "global": {
-"n": 1858,
-"wins": 1278,
+"n": 1864,
+"wins": 1282,
 "hitRate": 0.6878,
-"nRoi": 944,
-"roi": 0.1275,
-"roiLb": 0.0788,
-"nClv": 944,
-"clv": 7.3,
-"clvLb": 5.5127
+"nRoi": 950,
+"roi": 0.1274,
+"roiLb": 0.0789,
+"nClv": 950,
+"clv": 7.29,
+"clvLb": 5.5064
 },
 "pending": 36
 }
