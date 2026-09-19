@@ -1,15 +1,15 @@
 {
- "n": 472,
+ "n": 478,
  "minOdds": 1.35,
- "moneyHitRate": 0.386,
- "priceHitRate": 0.417,
- "brierMoney": 0.8902,
- "brierPrice": 0.6803,
+ "moneyHitRate": 0.381,
+ "priceHitRate": 0.412,
+ "brierMoney": 0.8955,
+ "brierPrice": 0.683,
  "disagree": {
-  "n": 129,
-  "moneyWon": 17,
-  "priceWon": 32,
-  "neither": 80
+  "n": 133,
+  "moneyWon": 18,
+  "priceWon": 33,
+  "neither": 82
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -32,10 +32,10 @@
   },
   {
    "league": "EPL",
-   "n": 36,
-   "moneyHitRate": 0.194,
-   "brierMoney": 0.9925,
-   "brierPrice": 0.8309,
+   "n": 38,
+   "moneyHitRate": 0.184,
+   "brierMoney": 1.0038,
+   "brierPrice": 0.8383,
    "verdict": "preis_besser"
   },
   {
@@ -88,10 +88,10 @@
   }
  ],
  "guete": {
-  "belastbar": 472,
+  "belastbar": 478,
   "preis_echo": 213,
   "abgeschnitten": 65,
-  "unbekannt": 296,
+  "unbekannt": 294,
   "leer": 0
  },
  "rows": [
@@ -286,6 +286,18 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 787777
+  },
+  {
+   "key": "epl-tot-ast-2026-09-19",
+   "league": "EPL",
+   "winner": "Aston Villa FC",
+   "moneyFav": "Tottenham Hotspur FC",
+   "priceFav": "Tottenham Hotspur FC",
+   "moneyShare": 0.82,
+   "priceProb": 0.512,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 760190
   },
   {
    "key": "lal-mad-osa-2026-09-16",
@@ -562,32 +574,20 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 341463
-  },
-  {
-   "key": "mls-orl-tor-2026-09-12",
-   "league": "MLS",
-   "winner": "Orlando City SC",
-   "moneyFav": "Orlando City SC",
-   "priceFav": "Orlando City SC",
-   "moneyShare": 0.997,
-   "priceProb": 0.518,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 337428
   }
  ],
- "generatedAt": "2026-09-19T12:34:15.954287+00:00",
+ "generatedAt": "2026-09-19T14:00:15.333251+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 419,
   "nfl": 800,
-  "mlb": 694,
+  "mlb": 709,
   "nhl": 584,
   "mls": 702,
-  "epl": 517,
+  "epl": 511,
   "soccer": 800,
-  "tennis": 505,
+  "tennis": 499,
   "ucl": 417,
   "la-liga": 524,
   "bundesliga": 476,
@@ -599,11 +599,11 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 669,
+  "esports": 659,
   "cs2": 421,
   "lol": 427,
   "dota": 9,
-  "valorant": 447,
+  "valorant": 446,
   "ufc": 459,
   "mma": 53,
   "boxing": 271,
@@ -626,9 +626,9 @@
   "europa-conference-league": 411,
   "europa-league": 187,
   "israel-premier-league": 225,
-  "japan-j-league": 435,
-  "japan-j2-league": 530,
-  "k-league": 449,
+  "japan-j-league": 421,
+  "japan-j2-league": 524,
+  "k-league": 448,
   "la-liga-2": 554,
   "liga-mx-apertura": 2,
   "ligue-2": 425,
@@ -637,7 +637,7 @@
   "nations-league": 25,
   "norway-eliteserien": 456,
   "poland-ekstraklasa": 449,
-  "premier-league": 506,
+  "premier-league": 500,
   "saudi-professional-league": 410,
   "scotland-league-cup": 193,
   "scottish-premiership": 447,
@@ -660,8 +660,8 @@
   "sweepAdded": 405
  },
  "vorStats": {
-  "kandidaten": 36,
-  "budgetLeer": 14,
+  "kandidaten": 38,
+  "budgetLeer": 16,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
   "mitAnteilen": 22,
@@ -669,9 +669,9 @@
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1678,
-   "usd": 30194040,
-   "beispiel": "fifwc-fra-esp-2026-07-14"
+   "n": 2282,
+   "usd": 38941801,
+   "beispiel": "fifwc-civ-ecu-2026-06-14"
   },
   "balance": {
    "n": 2,
@@ -679,48 +679,53 @@
    "beispiel": "balance-of-power-2026-midterms"
   },
   "nba": {
-   "n": 125,
-   "usd": 2635078,
-   "beispiel": "nba-mvp-694"
+   "n": 194,
+   "usd": 3080089,
+   "beispiel": "nba-det-cle-2026-05-09"
   },
   "world": {
-   "n": 163,
-   "usd": 1352257,
-   "beispiel": "world-cup-winner"
+   "n": 176,
+   "usd": 1381989,
+   "beispiel": "world-cup-golden-boot-winner"
   },
   "ecs": {
-   "n": 15,
-   "usd": 984045,
+   "n": 13,
+   "usd": 961349,
    "beispiel": "ecs-ars-mci-2026-08-16"
-  },
-  "presidential": {
-   "n": 6,
-   "usd": 576585,
-   "beispiel": "presidential-election-winner-2028"
   },
   "will": {
    "n": 8,
-   "usd": 527790,
+   "usd": 503532,
    "beispiel": "will-the-us-acquire-any-part-of-greenland-in-2026"
   },
+  "presidential": {
+   "n": 16,
+   "usd": 398011,
+   "beispiel": "presidential-election-winner-2028"
+  },
+  "fed": {
+   "n": 20,
+   "usd": 391028,
+   "beispiel": "fed-decision-in-december-20260729232808632"
+  },
   "fif": {
-   "n": 68,
-   "usd": 277995,
+   "n": 96,
+   "usd": 379178,
    "beispiel": "fif-prt-nga-2026-06-10"
   },
   "uef": {
-   "n": 4,
-   "usd": 230785,
+   "n": 7,
+   "usd": 249983,
    "beispiel": "uef-kvx-tur-2026-03-31"
   },
-  "fed": {
-   "n": 14,
-   "usd": 211642,
-   "beispiel": "fed-decision-in-december-20260729232808632"
+  "efa": {
+   "n": 26,
+   "usd": 175856,
+   "beispiel": "efa-cfc-mnc-2026-05-16"
   },
   "clf": {
-   "n": 34,
-   "usd": 169221,
+   "n": 33,
+   "usd": 143562,
    "beispiel": "clf-psg-mun-2026-08-08"
   },
   "cbb": {
@@ -729,44 +734,39 @@
    "beispiel": "cbb-uconn-mich-2026-04-06"
   },
   "nbasl": {
-   "n": 1,
-   "usd": 97044,
+   "n": 3,
+   "usd": 128210,
    "beispiel": "nbasl-cle-nop-2026-07-15"
+  },
+  "2026": {
+   "n": 39,
+   "usd": 118852,
+   "beispiel": "2026-womens-us-open-winner-tennis"
+  },
+  "us": {
+   "n": 8,
+   "usd": 114949,
+   "beispiel": "us-strike-on-cuba-by"
+  },
+  "democratic": {
+   "n": 17,
+   "usd": 113524,
+   "beispiel": "democratic-presidential-nominee-2028"
   },
   "uefa": {
    "n": 40,
-   "usd": 85655,
+   "usd": 82309,
    "beispiel": "uefa-champions-league-winner"
   },
   "ballon": {
    "n": 7,
-   "usd": 80745,
+   "usd": 75549,
    "beispiel": "ballon-dor-winner-2026"
   },
   "bitcoin": {
-   "n": 15,
-   "usd": 75745,
-   "beispiel": "bitcoin-all-time-high-by"
-  },
-  "nobel": {
-   "n": 2,
-   "usd": 63659,
-   "beispiel": "nobel-peace-prize-winner-2026-139"
-  },
-  "kbo": {
-   "n": 21,
-   "usd": 58202,
-   "beispiel": "kbo-kt-ssg-2026-08-22"
-  },
-  "1": {
-   "n": 24,
-   "usd": 50654,
-   "beispiel": "1-searched-person-on-google-this-year"
-  },
-  "democratic": {
-   "n": 1,
-   "usd": 45533,
-   "beispiel": "democratic-presidential-nominee-2028"
+   "n": 14,
+   "usd": 69119,
+   "beispiel": "bitcoin-up-or-down-december-10-9am-et"
   }
  }
 }
