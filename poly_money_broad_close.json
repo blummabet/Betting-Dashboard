@@ -353308,7 +353308,13 @@
     "usd": 349,
     "ts": 1789760286
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "ShindeN": 1.0,
+   "Turma do Pagode": 0.0
+  },
+  "resolvedAt": "2026-09-19T01:40:44.086555+00:00"
  },
  "es2-alb-cor-2026-09-18": {
   "shares": {
@@ -354613,7 +354619,13 @@
   "tokens": {
    "Cristina Bucsa": "6041983590677594976231283333379446993673105929748575647670108017140929100243",
    "Iva Jovic": "41140763946006373550194502240707228184712526673132208467849291341976624016687"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Cristina Bucsa": 0.0,
+   "Iva Jovic": 1.0
+  },
+  "resolvedAt": "2026-09-19T01:28:10.751716+00:00"
  },
  "arg-cac-def-2026-09-18": {
   "shares": {
@@ -355047,7 +355059,14 @@
    "Águilas Doradas Rionegro": "114477091521482979381133763881034110135035961192397405830085473038004802068687",
    "Draw (Águilas Doradas Rionegro vs. Deportivo Pereira)": "75431937525373333818025886219240504875078704297653746073463632987971183730006",
    "Deportivo Pereira": "19287547715189113178736686027388898618308894550173993568753952242881519225607"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Águilas Doradas Rionegro": 0.0,
+   "Draw (Águilas Doradas Rionegro vs. Deportivo Pereira)": 1.0,
+   "Deportivo Pereira": 0.0
+  },
+  "resolvedAt": "2026-09-19T01:28:10.751716+00:00"
  },
  "bra2-vln-afc-2026-09-18": {
   "shares": {
@@ -356208,8 +356227,8 @@
  },
  "mlb-nyy-ari-2026-09-18": {
   "shares": {
-   "New York Yankees": 181038.68278848007,
-   "Arizona Diamondbacks": 184696.33817913503
+   "New York Yankees": 194730.55108848008,
+   "Arizona Diamondbacks": 198664.80770460505
   },
   "prices": {
    "New York Yankees": 0.495,
@@ -356221,8 +356240,14 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 417540,
+  "totalUsd": 442491,
   "whales": [
+   {
+    "wallet": "0x4bff30af91642dc7d2b19a8664378fe55c45fc26",
+    "side": "New York Yankees",
+    "usd": 100697,
+    "avgPrice": 0.4964
+   },
    {
     "wallet": "0x5e9458202b5817a72cf81105ec8a30e6f3705ba1",
     "side": "Arizona Diamondbacks",
@@ -356230,16 +356255,10 @@
     "avgPrice": 0.4943
    },
    {
-    "wallet": "0x4bff30af91642dc7d2b19a8664378fe55c45fc26",
-    "side": "New York Yankees",
-    "usd": 90797,
-    "avgPrice": 0.4972
-   },
-   {
-    "wallet": "0xf6683d202f76fc9b79e5be716ce8519dab5b5c69",
+    "wallet": "0x2759769cd371bee44ec5bfc5e72c7f1f092b2b38",
     "side": "Arizona Diamondbacks",
-    "usd": 54146,
-    "avgPrice": 0.4999
+    "usd": 56671,
+    "avgPrice": 0.5099
    },
    {
     "wallet": "0xcd84d7f9262516865553555751609fb6f52abec6",
@@ -356248,8 +356267,8 @@
     "avgPrice": 0.5
    }
   ],
-  "hoursToKickoff": 0.75,
-  "capturedAt": "2026-09-19T00:58:01.573942+00:00",
+  "hoursToKickoff": 0.04,
+  "capturedAt": "2026-09-19T01:40:44.086555+00:00",
   "cond": "0xcb6a632628337e0fa7ac591d8ebafec9e10ba5a03a58d389736d16b3244886e9",
   "frage": "New York Yankees vs. Arizona Diamondbacks",
   "tokens": {
@@ -356258,86 +356277,118 @@
   },
   "book": {
    "side": "Arizona Diamondbacks",
-   "bid": 0.5,
-   "ask": 0.51,
+   "bid": 0.51,
+   "ask": 0.52,
    "spreadC": 1.0,
-   "spreadPct": 1.96,
+   "spreadPct": 1.92,
    "bids": [
     [
+     0.51,
+     40543
+    ],
+    [
      0.5,
-     203323
+     541
     ],
     [
      0.49,
-     208593
+     2140
     ],
     [
      0.48,
-     132692
-    ],
-    [
-     0.47,
-     5751
+     5000
     ],
     [
      0.46,
-     67
+     720
     ],
     [
      0.45,
-     5234
+     49
     ]
    ],
    "asks": [
     [
-     0.51,
-     109110
-    ],
-    [
      0.52,
-     80388
+     37368
     ],
     [
      0.53,
-     79156
+     742
     ],
     [
      0.54,
-     63951
+     2540
     ],
     [
      0.55,
-     18789
+     5140
     ],
     [
-     0.56,
-     8195
+     0.58,
+     730
+    ],
+    [
+     0.6,
+     10
     ]
    ]
   },
   "trades": [
    {
-    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "wallet": "0x2759769cd371bee44ec5bfc5e72c7f1f092b2b38",
     "action": "BUY",
     "side": "Arizona Diamondbacks",
     "price": 0.51,
-    "usd": 462,
-    "ts": 1789779021
+    "usd": 14111,
+    "ts": 1789781835
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Arizona Diamondbacks",
+    "price": 0.51,
+    "usd": 371,
+    "ts": 1789781745
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Arizona Diamondbacks",
+    "price": 0.51,
+    "usd": 3913,
+    "ts": 1789781464
+   },
+   {
+    "wallet": "0x1b47e9b128e6b671edebfb2cac23dd3efc40d814",
+    "action": "BUY",
+    "side": "Arizona Diamondbacks",
+    "price": 0.51,
+    "usd": 1637,
+    "ts": 1789779979
+   },
+   {
+    "wallet": "0x1b47e9b128e6b671edebfb2cac23dd3efc40d814",
+    "action": "BUY",
+    "side": "Arizona Diamondbacks",
+    "price": 0.51,
+    "usd": 1684,
+    "ts": 1789779714
    },
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "action": "BUY",
     "side": "Arizona Diamondbacks",
     "price": 0.51,
-    "usd": 584,
-    "ts": 1789778251
+    "usd": 2854,
+    "ts": 1789779661
    }
   ]
  },
  "mlb-mia-sd-2026-09-18": {
   "shares": {
-   "Miami Marlins": 25738.810048365005,
-   "San Diego Padres": 48865.21764136003
+   "Miami Marlins": 25880.289620040003,
+   "San Diego Padres": 49133.82378468503
   },
   "prices": {
    "Miami Marlins": 0.345,
@@ -356349,7 +356400,7 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 91866,
+  "totalUsd": 97381,
   "whales": [
    {
     "wallet": "0x16bb9951a36fce71e2ef57890b786145e0ba8492",
@@ -356364,90 +356415,31 @@
     "avgPrice": 0.3499
    },
    {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "wallet": "0xcd84d7f9262516865553555751609fb6f52abec6",
     "side": "San Diego Padres",
-    "usd": 8286,
+    "usd": 8900,
     "avgPrice": 0.65
    },
    {
-    "wallet": "0xcd84d7f9262516865553555751609fb6f52abec6",
+    "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
     "side": "San Diego Padres",
-    "usd": 5964,
+    "usd": 5342,
     "avgPrice": 0.65
    }
   ],
-  "hoursToKickoff": 0.75,
-  "capturedAt": "2026-09-19T00:58:01.573942+00:00",
+  "hoursToKickoff": 0.04,
+  "capturedAt": "2026-09-19T01:40:44.086555+00:00",
   "cond": "0x7d9ba25f111d4adc353e0441fc205c3a39b3e7eef9829999663262055b9911c8",
   "frage": "Miami Marlins vs. San Diego Padres",
   "tokens": {
    "Miami Marlins": "73848646270848472400586073272680073552738030780289176478818196241071896119250",
    "San Diego Padres": "27879818868954288585657345135582291160202152757766391612892761008359576700887"
-  },
-  "book": {
-   "side": "San Diego Padres",
-   "bid": 0.65,
-   "ask": 0.66,
-   "spreadC": 1.0,
-   "spreadPct": 1.52,
-   "bids": [
-    [
-     0.65,
-     50429
-    ],
-    [
-     0.64,
-     71757
-    ],
-    [
-     0.63,
-     117556
-    ],
-    [
-     0.62,
-     25995
-    ],
-    [
-     0.61,
-     29179
-    ],
-    [
-     0.6,
-     9839
-    ]
-   ],
-   "asks": [
-    [
-     0.66,
-     357239
-    ],
-    [
-     0.67,
-     143151
-    ],
-    [
-     0.68,
-     42735
-    ],
-    [
-     0.69,
-     11835
-    ],
-    [
-     0.7,
-     59
-    ],
-    [
-     0.71,
-     5028
-    ]
-   ]
   }
  },
  "mlb-min-laa-2026-09-18": {
   "shares": {
-   "Minnesota Twins": 54010.728870284984,
-   "Los Angeles Angels": 52941.33693040497
+   "Minnesota Twins": 54601.90655569498,
+   "Los Angeles Angels": 53520.47153194498
   },
   "prices": {
    "Minnesota Twins": 0.505,
@@ -356459,7 +356451,7 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 76145,
+  "totalUsd": 127325,
   "whales": [
    {
     "wallet": "0x8a8685a792c184e5c2ee8c7d4d4baba7c2c94998",
@@ -356486,14 +356478,131 @@
     "avgPrice": 0.49
    }
   ],
-  "hoursToKickoff": 0.71,
-  "capturedAt": "2026-09-19T00:58:01.573942+00:00",
+  "hoursToKickoff": 0.0,
+  "capturedAt": "2026-09-19T01:40:44.086555+00:00",
   "cond": "0xb350d2d29c908f48dbfe48462020b26c42a8db76b33b7a690a8d4fb4c761f149",
   "frage": "Minnesota Twins vs. Los Angeles Angels",
   "tokens": {
    "Minnesota Twins": "25627548533576993668543405360462931708595695841967215808995675216518173058418",
    "Los Angeles Angels": "32314594063558022692415238823465685873145195627714660864534291284151940240641"
-  }
+  },
+  "book": {
+   "side": "Minnesota Twins",
+   "bid": 0.51,
+   "ask": 0.52,
+   "spreadC": 1.0,
+   "spreadPct": 1.92,
+   "bids": [
+    [
+     0.51,
+     4070
+    ],
+    [
+     0.5,
+     14954
+    ],
+    [
+     0.49,
+     1379
+    ],
+    [
+     0.48,
+     248
+    ],
+    [
+     0.47,
+     125
+    ],
+    [
+     0.46,
+     312
+    ]
+   ],
+   "asks": [
+    [
+     0.52,
+     18540
+    ],
+    [
+     0.53,
+     3337
+    ],
+    [
+     0.54,
+     2225
+    ],
+    [
+     0.55,
+     2150
+    ],
+    [
+     0.56,
+     100
+    ],
+    [
+     0.57,
+     172
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x125a399cc5cb7cf7cbe8f010a05f0ed673374f02",
+    "action": "BUY",
+    "side": "Los Angeles Angels",
+    "price": 0.5,
+    "usd": 300,
+    "ts": 1789781655
+   },
+   {
+    "wallet": "0x8a8685a792c184e5c2ee8c7d4d4baba7c2c94998",
+    "action": "BUY",
+    "side": "Minnesota Twins",
+    "price": 0.51,
+    "usd": 24990,
+    "ts": 1789779208
+   },
+   {
+    "wallet": "0x93521335308a270795daa9f073b5406938b12227",
+    "action": "BUY",
+    "side": "Los Angeles Angels",
+    "price": 0.5,
+    "usd": 986,
+    "ts": 1789776907
+   },
+   {
+    "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
+    "action": "BUY",
+    "side": "Minnesota Twins",
+    "price": 0.51,
+    "usd": 1006,
+    "ts": 1789776882
+   },
+   {
+    "wallet": "0x8ce7eb8a3ad1d6907b24368865c8487a68fb3150",
+    "action": "BUY",
+    "side": "Minnesota Twins",
+    "price": 0.51,
+    "usd": 1300,
+    "ts": 1789775854
+   },
+   {
+    "wallet": "0xa39a38fbb98ad026c5a6b126d74d891e1be51246",
+    "action": "BUY",
+    "side": "Los Angeles Angels",
+    "price": 0.5,
+    "usd": 850,
+    "ts": 1789773334
+   },
+   {
+    "wallet": "0xc52ce9ab82877004321b12b199a25eaeb5b20078",
+    "action": "BUY",
+    "side": "Los Angeles Angels",
+    "price": 0.5,
+    "usd": 2890,
+    "ts": 1789773114
+   }
+  ]
  },
  "bra2-csc-nov-2026-09-18": {
   "shares": {
@@ -356599,8 +356708,8 @@
  },
  "cfb-portst-ore-2026-09-18": {
   "shares": {
-   "Portland State": 388.0676777505001,
-   "Oregon": 775747.2521700851
+   "Portland State": 389.2746777505001,
+   "Oregon": 778160.045170085
   },
   "prices": {
    "Portland State": 0.0005,
@@ -356612,12 +356721,12 @@
   },
   "league": "CFB",
   "sport": null,
-  "totalUsd": 767752,
+  "totalUsd": 777166,
   "whales": [
    {
     "wallet": "0xd1c769317bd15de7768a70d0214cf0bbcc531d2b",
     "side": "Oregon",
-    "usd": 559079,
+    "usd": 561492,
     "avgPrice": 0.998
    },
    {
@@ -356639,8 +356748,8 @@
     "avgPrice": 0.996
    }
   ],
-  "hoursToKickoff": 1.58,
-  "capturedAt": "2026-09-19T00:58:01.573942+00:00",
+  "hoursToKickoff": 0.87,
+  "capturedAt": "2026-09-19T01:40:44.086555+00:00",
   "cond": "0xdc6484945fb907c5abbc67f78368935d6a3cf43e1b69c9e02c7f34f59f77b11b",
   "frage": "Portland State vs. Oregon",
   "tokens": {
@@ -356676,8 +356785,8 @@
  },
  "mlb-sf-lad-2026-09-18": {
   "shares": {
-   "San Francisco Giants": 10707.812615105002,
-   "Los Angeles Dodgers": 29698.623859274994
+   "San Francisco Giants": 13066.361222200003,
+   "Los Angeles Dodgers": 36240.262836749986
   },
   "prices": {
    "San Francisco Giants": 0.265,
@@ -356689,7 +356798,7 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 48504,
+  "totalUsd": 62847,
   "whales": [
    {
     "wallet": "0x1610db79f753a80207e1d66716be9e91e627ae49",
@@ -356698,10 +356807,9 @@
     "avgPrice": 0.2699
    },
    {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
     "side": "Los Angeles Dodgers",
-    "usd": 6272,
-    "avgPrice": 0.73
+    "usd": 7598
    },
    {
     "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
@@ -356710,14 +356818,14 @@
     "avgPrice": 0.73
    },
    {
-    "wallet": "0x684baa57c338c2549aec0aa3f034f695d72a8409",
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "Los Angeles Dodgers",
-    "usd": 3407,
+    "usd": 5808,
     "avgPrice": 0.73
    }
   ],
-  "hoursToKickoff": 1.33,
-  "capturedAt": "2026-09-19T00:58:01.573942+00:00",
+  "hoursToKickoff": 0.62,
+  "capturedAt": "2026-09-19T01:40:44.086555+00:00",
   "cond": "0xa31bfdf57676ef08341610339abe18aa793d1c945759ef3f2ce529e6e74124c3",
   "frage": "San Francisco Giants vs. Los Angeles Dodgers",
   "tokens": {
@@ -356777,9 +356885,9 @@
  },
  "mex-jua-tig-2026-09-18": {
   "shares": {
-   "FC Juárez": 79.93664325,
+   "FC Juárez": 86.68664325,
    "Draw (FC Juárez vs. Tigres de la UANL)": 359.668682355,
-   "Tigres de la UANL": 16185.262278674994
+   "Tigres de la UANL": 27370.690105170004
   },
   "prices": {
    "FC Juárez": 0.225,
@@ -356792,13 +356900,19 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 38737,
+  "totalUsd": 57741,
   "whales": [
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "side": "Tigres de la UANL",
-    "usd": 6936,
-    "avgPrice": 0.5224
+    "usd": 14234,
+    "avgPrice": 0.521
+   },
+   {
+    "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
+    "side": "Tigres de la UANL",
+    "usd": 6232,
+    "avgPrice": 0.5199
    },
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
@@ -356807,18 +356921,13 @@
     "avgPrice": 0.5236
    },
    {
-    "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
-    "side": "Tigres de la UANL",
-    "usd": 2385
-   },
-   {
     "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
     "side": "Tigres de la UANL",
     "usd": 940
    }
   ],
-  "hoursToKickoff": 2.08,
-  "capturedAt": "2026-09-19T00:58:01.573942+00:00",
+  "hoursToKickoff": 1.37,
+  "capturedAt": "2026-09-19T01:40:44.086555+00:00",
   "tokens": {
    "FC Juárez": "86520572127395103966609393752256564182328143823327057889428422160419933908140",
    "Draw (FC Juárez vs. Tigres de la UANL)": "68772129872076532038045854162064792726252695162786544897566894777882422340023",
@@ -356827,8 +356936,8 @@
  },
  "atp-simakin-heck-2026-09-18": {
   "shares": {
-   "Ilia Simakin": 13286.043909014996,
-   "Hunter Heck": 3425.961007985001
+   "Ilia Simakin": 13372.424634014998,
+   "Hunter Heck": 3448.2352829850006
   },
   "prices": {
    "Ilia Simakin": 0.795,
@@ -356840,7 +356949,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 20040,
+  "totalUsd": 20149,
   "whales": [
    {
     "wallet": "0xb8e32d575b8d360f90bcc95596e9a0bee444aaf2",
@@ -356865,8 +356974,8 @@
     "avgPrice": 0.19
    }
   ],
-  "hoursToKickoff": 2.08,
-  "capturedAt": "2026-09-19T00:58:01.573942+00:00",
+  "hoursToKickoff": 1.37,
+  "capturedAt": "2026-09-19T01:40:44.086555+00:00",
   "cond": "0x60657384794770e01d61ed96f757faacfd2009be5a9c10947a1165213059e72f",
   "frage": "Phan Thiet 4: Ilia Simakin vs Hunter Heck",
   "tokens": {
@@ -356962,6 +357071,55 @@
    "Club Puebla 3 - 2 Atlante FC": "66703847860883995605662308293527236736500567712020563466012115501557065113421",
    "Club Puebla 3 - 3 Atlante FC": "57677146563733305577216542973897847182755199072454716529820494516863337864844",
    "Any Other Score": "62593963016119742748500513320890094468996514025947525968092703327493812146029"
+  }
+ },
+ "wta-ito-lansere-2026-09-19": {
+  "shares": {
+   "Aoi Ito": 5770.010842425002,
+   "Sofya Lansere": 2778.1533685750005
+  },
+  "prices": {
+   "Aoi Ito": 0.675,
+   "Sofya Lansere": 0.325
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 8592,
+  "whales": [
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Aoi Ito",
+    "usd": 3347,
+    "avgPrice": 0.6658
+   },
+   {
+    "wallet": "0xdebbe89ceb32828a99648bca497684f5209ceedb",
+    "side": "Sofya Lansere",
+    "usd": 1869,
+    "avgPrice": 0.3366
+   },
+   {
+    "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
+    "side": "Aoi Ito",
+    "usd": 1075
+   },
+   {
+    "wallet": "0x99d76c8a97a7c7ed25ecedc881d5aed3a73c6435",
+    "side": "Aoi Ito",
+    "usd": 410
+   }
+  ],
+  "hoursToKickoff": 2.87,
+  "capturedAt": "2026-09-19T01:40:44.086555+00:00",
+  "cond": "0x16d78f66d2e6f47ff20aa4e9a8037f0b43c9a3244f13f1c2d6438276cb7b19c8",
+  "frage": "Singapore Open, Qualification: Aoi Ito vs Sofya Lansere",
+  "tokens": {
+   "Aoi Ito": "105924219520138125056024614100639580853131248433487565227004057180760643307014",
+   "Sofya Lansere": "69159755768242310364936152356786274934263692241967058576565362301027273972366"
   }
  }
 }
