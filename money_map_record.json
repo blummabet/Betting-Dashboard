@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-19T01:54:53.165657+00:00",
+"generatedAt": "2026-09-19T02:09:59.469951+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1291,
-"wins": 1094,
-"hitRate": 0.8474,
-"polyN": 1224,
-"polyWins": 956,
-"polyHitRate": 0.781,
+"n": 1293,
+"wins": 1096,
+"hitRate": 0.8476,
+"polyN": 1226,
+"polyWins": 958,
+"polyHitRate": 0.7814,
 "pinnN": 173,
 "pinnHitRate": 0.7919,
-"nRoi": 618,
-"roi": 0.4333,
-"roiLb": 0.3821,
-"nClv": 618,
-"clv": 20.52,
-"clvLb": 18.9279
+"nRoi": 620,
+"roi": 0.4338,
+"roiLb": 0.3828,
+"nClv": 620,
+"clv": 20.56,
+"clvLb": 18.9735
 },
 "uneinig": {
-"n": 492,
-"wins": 153,
-"hitRate": 0.311,
-"polyN": 453,
+"n": 493,
+"wins": 154,
+"hitRate": 0.3124,
+"polyN": 454,
 "polyWins": 125,
-"polyHitRate": 0.2759,
+"polyHitRate": 0.2753,
 "pinnN": 300,
 "pinnHitRate": 0.6233,
-"nRoi": 260,
-"roi": -0.4912,
-"roiLb": -0.5787,
-"nClv": 260,
-"clv": -19.66,
-"clvLb": -23.0762
+"nRoi": 261,
+"roi": -0.4884,
+"roiLb": -0.5756,
+"nClv": 261,
+"clv": -19.58,
+"clvLb": -22.99
 },
 "teil": {
 "n": 24,
@@ -72,9 +72,9 @@
 "hitRate": 0.5833
 },
 "Argentinian Primera Division": {
-"n": 46,
-"wins": 27,
-"hitRate": 0.587
+"n": 47,
+"wins": 28,
+"hitRate": 0.5957
 },
 "Brazilian Serie A": {
 "n": 45,
@@ -176,6 +176,11 @@
 "wins": 17,
 "hitRate": 0.7083
 },
+"Bolivian Liga de Futbol Profesional": {
+"n": 23,
+"wins": 19,
+"hitRate": 0.8261
+},
 "German Cup": {
 "n": 23,
 "wins": 20,
@@ -185,11 +190,6 @@
 "n": 22,
 "wins": 17,
 "hitRate": 0.7727
-},
-"Bolivian Liga de Futbol Profesional": {
-"n": 22,
-"wins": 18,
-"hitRate": 0.8182
 },
 "CONMEBOL Copa Libertadores": {
 "n": 22,
@@ -331,6 +331,11 @@
 "wins": 7,
 "hitRate": 0.6364
 },
+"Colombian Primera B": {
+"n": 9,
+"wins": 6,
+"hitRate": 0.6667
+},
 "Finnish Veikkausliiga": {
 "n": 9,
 "wins": 5,
@@ -342,11 +347,6 @@
 "hitRate": 0.75
 },
 "Chinese League 1": {
-"n": 8,
-"wins": 5,
-"hitRate": 0.625
-},
-"Colombian Primera B": {
 "n": 8,
 "wins": 5,
 "hitRate": 0.625
@@ -649,37 +649,94 @@
 },
 "byStrength": {
 "strong": {
-"n": 1105,
-"wins": 893,
-"hitRate": 0.8081,
-"nRoi": 581,
-"roi": 0.2998,
-"roiLb": 0.2453,
-"nClv": 581,
-"clv": 14.21,
-"clvLb": 12.039
+"n": 1107,
+"wins": 895,
+"hitRate": 0.8085,
+"nRoi": 583,
+"roi": 0.3008,
+"roiLb": 0.2465,
+"nClv": 583,
+"clv": 14.28,
+"clvLb": 12.1107
 },
 "weak": {
-"n": 669,
-"wins": 341,
-"hitRate": 0.5097,
-"nRoi": 312,
-"roi": -0.1454,
-"roiLb": -0.2405,
-"nClv": 312,
-"clv": -3.99,
-"clvLb": -7.037
+"n": 670,
+"wins": 342,
+"hitRate": 0.5104,
+"nRoi": 313,
+"roi": -0.1441,
+"roiLb": -0.2389,
+"nClv": 313,
+"clv": -3.97,
+"clvLb": -7.0146
 }
 },
 "divergence": {
-"n": 492,
-"betfairWins": 153,
-"betfairRate": 0.311,
-"polyN": 453,
+"n": 493,
+"betfairWins": 154,
+"betfairRate": 0.3124,
+"polyN": 454,
 "polyWins": 125,
-"polyRate": 0.2759
+"polyRate": 0.2753
 },
 "recent": [
+{
+"matchId": "36073307",
+"home": "Boyaca Patriotas",
+"away": "Union Magdalena",
+"league": "Colombian Primera B",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Union Magdalena",
+"polySide": "home",
+"winner": "away",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-09-18T23:05:00Z",
+"settledAt": "2026-09-19T02:09:59.287644+00:00"
+},
+{
+"matchId": "36072446",
+"home": "Club Independiente Petrol",
+"away": "San Antonio Bulo Bulo",
+"league": "Bolivian Liga de Futbol Profesional",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "San Antonio Bulo Bulo",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+3
+],
+"kickoff": "2026-09-18T23:00:00Z",
+"settledAt": "2026-09-19T02:09:59.287644+00:00"
+},
+{
+"matchId": "36041715",
+"home": "Racing Club",
+"away": "Sarmiento de Junin",
+"league": "Argentinian Primera Division",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Racing Club",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+1
+],
+"kickoff": "2026-09-19T00:15:00Z",
+"settledAt": "2026-09-19T02:09:59.287644+00:00"
+},
 {
 "matchId": "36074228",
 "home": "Vila Nova",
@@ -1382,75 +1439,18 @@
 ],
 "kickoff": "2026-09-18T16:30:00Z",
 "settledAt": "2026-09-18T18:24:19.503742+00:00"
-},
-{
-"matchId": "36060757",
-"home": "Greuther Furth",
-"away": "FC Magdeburg",
-"league": "German Bundesliga 2",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "FC Magdeburg",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-09-18T16:30:00Z",
-"settledAt": "2026-09-18T18:24:19.503742+00:00"
-},
-{
-"matchId": "36038721",
-"home": "UTA Arad",
-"away": "ACS Sepsi OSK",
-"league": "Romanian Liga I",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "UTA Arad",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-09-18T15:00:00Z",
-"settledAt": "2026-09-18T18:09:15.022216+00:00"
-},
-{
-"matchId": "36071100",
-"home": "FK Aktobe",
-"away": "FK Ulytau Zhezkazgan",
-"league": "Kazakhstan Premier League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "FK Aktobe",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-09-18T15:00:00Z",
-"settledAt": "2026-09-18T18:09:15.022216+00:00"
 }
 ],
 "global": {
-"n": 1807,
-"wins": 1252,
-"hitRate": 0.6929,
-"nRoi": 893,
-"roi": 0.1443,
-"roiLb": 0.0943,
-"nClv": 893,
-"clv": 7.85,
-"clvLb": 6.0206
+"n": 1810,
+"wins": 1255,
+"hitRate": 0.6934,
+"nRoi": 896,
+"roi": 0.1454,
+"roiLb": 0.0956,
+"nClv": 896,
+"clv": 7.9,
+"clvLb": 6.0736
 },
-"pending": 29
+"pending": 26
 }
