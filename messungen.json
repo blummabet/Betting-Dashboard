@@ -1,7 +1,25 @@
 {
- "generatedAt": "2026-09-19T18:30:13.698698+00:00",
+ "generatedAt": "2026-09-19T19:30:19.268031+00:00",
  "heute": "2026-09-19",
  "messungen": [
+  {
+   "id": "horizont-shortlist",
+   "titel": "Zahlt sich ein frueherer Einstieg aus?",
+   "frage": "ROI und CLV der Shortlist-Plays nach Abstand zum Anpfiff — live, 0-3h, 3-12h, 12-24h, >1 Tag.",
+   "warum": "Der CLV ist ueber alle 886 Plays negativ (-2,16pp). Verdacht: die Picks sind gut, der Einstieg ist zu spaet. Wenn das stimmt, ist der Einstiegszeitpunkt der billigste Hebel, den es gibt.",
+   "gestartet": "2026-09-15",
+   "faellig": "2026-09-29",
+   "quelle": "poly_shortlist_track.json -> settled[].htkAtEntry",
+   "messer": "htk_shortlist",
+   "mindestN": 60,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "standN": 150,
+   "zustand": "bereit",
+   "stand": "150 von 60 Beobachtungen · faellig in 10 Tag(en)",
+   "fortschritt": 1.0,
+   "tageBisFaellig": 10
+  },
   {
    "id": "sharp-radar-drift-pushes",
    "titel": "Sharp-Radar-Drift-Pushes: Buch geben oder abschalten?",
@@ -19,24 +37,6 @@
    "stand": "Entscheidung offen · in 3 Tag(en) faellig",
    "fortschritt": null,
    "tageBisFaellig": 3
-  },
-  {
-   "id": "horizont-shortlist",
-   "titel": "Zahlt sich ein frueherer Einstieg aus?",
-   "frage": "ROI und CLV der Shortlist-Plays nach Abstand zum Anpfiff — live, 0-3h, 3-12h, 12-24h, >1 Tag.",
-   "warum": "Der CLV ist ueber alle 886 Plays negativ (-2,16pp). Verdacht: die Picks sind gut, der Einstieg ist zu spaet. Wenn das stimmt, ist der Einstiegszeitpunkt der billigste Hebel, den es gibt.",
-   "gestartet": "2026-09-15",
-   "faellig": "2026-09-29",
-   "quelle": "poly_shortlist_track.json -> settled[].htkAtEntry",
-   "messer": "htk_shortlist",
-   "mindestN": 60,
-   "entscheidung": null,
-   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 0,
-   "zustand": "sammelt",
-   "stand": "0 von 60 Beobachtungen · faellig in 10 Tag(en)",
-   "fortschritt": 0.0,
-   "tageBisFaellig": 10
   },
   {
    "id": "horizont-trader",
@@ -235,9 +235,27 @@
    "stand": "0 von 20000 Beobachtungen · faellig in 57 Tag(en)",
    "fortschritt": 0.0,
    "tageBisFaellig": 57
+  },
+  {
+   "id": "betfair-kursrutsch",
+   "titel": "Traegt ein Kursrutsch ohne nachkommendes Geld?",
+   "frage": "Trefferquote und ROI der gesendeten Kursrutsch-Alarme (Quote >=10 % gefallen seit dem ersten Sehen, Geld NICHT einseitig). Urteil ueber die Renditegrenzen, nicht ueber den Punktschaetzer. Zusaetzlich aufgeteilt nach Rutsch-Hoehe (10-15 / >=15 %) und nach Liquiditaet.",
+   "warum": "19.09.2026 (Lucas): „Alerts wo wir die Schwelle etwas senken, aber dafuer nur schicken, wenn die Quote auch wirklich sinkt ... wirklich Spiele wo die Quote nachweislich gesunken ist um 10 % oder so. Das dann doch ein starkes Signal mmn.“\nRueckblickend gemessen auf 30.918 Ledger-Zeilen (Rendite am SCHLUSSkurs, also am kuerzesten Preis): Rutsch >=10 % UND Geld nicht konzentriert -> n=203, Treffer 48,8 %, ROI +18,3 % [UG +2,3, OG +34,4]. Mit konzentriertem Geld: n=675, ROI -2,6 %. Der Fund haelt die Zeitprobe (erste Haelfte +15,5 %, zweite +21,2 %), ueberlebt das Streichen der drei groessten Gewinner (+11,4 %) und den Cluster-Bootstrap ueber Spiele (UG +2,0 %).\nABER: 22 Schnitte angesehen, und ein Nullmodell ohne jeden Quoten-Effekt liefert in 39 % der Buecher mindestens ein „belegt tragend“ — p = 0,125. Deshalb vorregistriert und NUR im Trades-Kanal. Entscheidung vorab: geht public, sobald die Untergrenze bei n >= 400 frischen Faellen ueber null liegt; faellt die OBERgrenze unter null, wird der Alarm abgeschaltet. Erwartete Rate aus dem Buch: rund 8 Faelle pro Tag.\nDer 15-Minuten-Takt ist dabei KEIN Hindernis, auch das ist gemessen: ein Rutsch >=10 % passiert nur in 0,2 % der Einzelschritte, aber in 7,4 % der ganzen Vor-Anpfiff-Reihen — er sammelt sich ueber Stunden an. Nach dem Sprung laeuft der Preis im Median +-0,0 % weiter, der Sprung selbst faellt im Median 95 Minuten vor Anpfiff.",
+   "gestartet": "2026-09-19",
+   "faellig": "2026-11-15",
+   "quelle": "betfair_rutsch_ledger.json -> abgerechnete Zeilen",
+   "messer": "bf_rutsch",
+   "mindestN": 400,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "standN": 0,
+   "zustand": "sammelt",
+   "stand": "0 von 400 Beobachtungen · faellig in 57 Tag(en)",
+   "fortschritt": 0.0,
+   "tageBisFaellig": 57
   }
  ],
- "n": 13,
- "nOffen": 13,
+ "n": 14,
+ "nOffen": 14,
  "nHandlung": 0
 }
