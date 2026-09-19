@@ -2436,16 +2436,50 @@ class TestDieKarteFuehrtMitDerWette(unittest.TestCase):
     def _card(self, **over):
         return P.build_card(dict(self.POS, **over), self.SC, False, self.BROAD)
 
-    def test_die_erste_zeile_ist_die_wette(self):
-        erste = self._card().split("\n")[0]
-        self.assertIn("Eternal Fire", erste)
-        self.assertIn("88¢", erste)
-        self.assertIn("$2.9K", erste)
+    # 🔴 19.09.2026, zweite Runde (Lucas: „Bitte bessere Zeilenumbrüche") mit einem
+    # ausgeschriebenen Wunschbild. Die Umstellung von heute frueh hatte die REIHENFOLGE
+    # repariert, aber weiter vier Auskuenfte in eine Zeile gepackt („ShindeN @ 56¢ · $2.8K ·
+    # 34 % des Marktes"). Auf dem Handy bricht das um, wo der Platz endet, nicht wo die
+    # naechste Auskunft anfaengt. Ab jetzt: eine Auskunft je Zeile, Gruppen durch Leerzeilen.
+    def _zeilen(self, **over):
+        return self._card(**over).split("\n")
 
-    def test_der_marktanteil_steht_in_derselben_zeile(self):
+    def test_die_karte_beginnt_mit_der_sportart(self):
+        self.assertIn("E-Sport", self._zeilen()[0])
+
+    def test_dann_die_paarung_dann_die_wette(self):
+        z = [x for x in self._zeilen() if x.strip()]
+        self.assertIn("Eternal Fire", z[1])          # Paarung (hier ohne Gegner im Fixture)
+        self.assertIn("88¢", z[2])                   # Seite @ Preis
+        self.assertNotIn("$2.9K", z[2], "der Einsatz gehoert in seine eigene Zeile")
+
+    def test_der_einsatz_und_der_marktanteil_teilen_sich_eine_zeile(self):
         """Wie gross die Position IM MARKT ist, gehoert neben den Betrag — allein sagt „$2.9K"
-        nichts darueber, ob das viel ist."""
-        self.assertIn("34 %", self._card().split("\n")[0])
+        nichts darueber, ob das viel ist. Beides zusammen, aber ohne die Quote davor."""
+        z = [x for x in self._zeilen() if x.strip()]
+        self.assertIn("$2.9K", z[3])
+        self.assertIn("34 %", z[3])
+
+    def test_die_gruppen_sind_durch_leerzeilen_getrennt(self):
+        """Ohne die Abstaende ist es wieder eine Wand. Lucas hat sie ausdruecklich aufgezeichnet:
+        zwei Leerzeilen vor dem Anlass und zwei vor der Wallet, eine zwischen den Kopfzeilen.
+
+        Geprueft wird an der STELLE, nicht mit einem Muster irgendwo in der Karte — die erste
+        Fassung dieses Tests suchte `\\n\\n\\n(🐋|🔥|📐)` und fand den Abstand vor der WALLET,
+        auch wenn der vor dem Anlass auf eine Leerzeile geschrumpft war."""
+        z = self._card().split("\n")
+        def leer_vor(i):
+            n = 0
+            while i - 1 - n >= 0 and z[i - 1 - n] == "":
+                n += 1
+            return n
+        anlass = next(i for i, x in enumerate(z) if "Einstieg" in x or "Scharfe Wallet" in x)
+        wallet = next(i for i, x in enumerate(z) if x.startswith("🐋 "))
+        self.assertEqual(leer_vor(anlass), 2, "zwei Leerzeilen vor dem Anlass")
+        self.assertEqual(leer_vor(wallet), 2, "zwei Leerzeilen vor der Wallet")
+        # und genau eine zwischen Paarung und Wette
+        wette = next(i for i, x in enumerate(z) if "88¢" in x)
+        self.assertEqual(leer_vor(wette), 1)
 
     def test_ein_grosser_anteil_wird_fett_statt_beschrieben(self):
         self.assertIn("<b>34 % des Marktes</b>", self._card())
@@ -2461,10 +2495,13 @@ class TestDieKarteFuehrtMitDerWette(unittest.TestCase):
         k = self._card()
         self.assertLess(k.index("Eternal Fire</b>"), k.index("Einstieg"))
 
-    def test_der_rang_steht_am_wallet_block(self):
+    def test_der_rang_steht_am_wallet_block_das_urteil_darunter(self):
+        """19.09.2026: „🐋 0x… · 🏅 #55 · ✅ bewiesen" waren drei Auskuenfte in einer Zeile, und
+        die dritte ist die wichtigste. Das Urteil bekommt seine eigene."""
         sc = {"0xw": dict(self.SC["0xw"])}
         k = P.build_card(self.POS, sc, False, self.BROAD)
-        self.assertIn("🥇 #1 · ✅ bewiesen", k)
+        self.assertIn("🥇 #1\n✅ bewiesen", k)
+        self.assertNotIn("#1 · ✅ bewiesen", k)
         self.assertNotIn("der Sharp-Rangliste", k)
 
     def test_der_wallet_block_ist_dreizeilig_und_gleich_gebaut(self):
