@@ -67,20 +67,25 @@
       "polyPrice": 0.36,
       "polyOdds": 2.778,
       "pinnFair": 0.3924,
-      "pinnClose": null,
-      "clvPP": null,
+      "pinnClose": 0.365,
+      "clvPP": 0.5,
       "polyClose": 0.355,
       "polyClvPP": -0.5,
       "isSteamLag": false,
-      "result": "PENDING",
-      "pnl": 0.0,
-      "score": null,
+      "result": "LOSS",
+      "pnl": -5.5,
+      "score": "3-0",
       "slug": "epl-bre-che-2026-09-18-more-markets",
       "source": "auto",
       "placedAt": "2026-09-14T14:54:29.403881+00:00",
       "resolvedAt": null,
       "sellPrice": null,
       "sellReason": null,
+      "processVerdict": "DESERVED_LOSS",
+      "processCovered": false,
+      "xgTotal": 2.81,
+      "xgHome": 1.66,
+      "xgAway": 1.14,
       "competition": "epl",
       "competitionLabel": "Premier League"
     },
@@ -97,8 +102,8 @@
       "pinnFair": 0.3256,
       "pinnClose": null,
       "clvPP": null,
-      "polyClose": null,
-      "polyClvPP": null,
+      "polyClose": 0.255,
+      "polyClvPP": -3.5,
       "isSteamLag": false,
       "result": "SOLD",
       "pnl": -1.14,
@@ -181,8 +186,8 @@
       "pinnFair": 0.4807,
       "pinnClose": null,
       "clvPP": null,
-      "polyClose": null,
-      "polyClvPP": null,
+      "polyClose": 0.425,
+      "polyClvPP": -2.5,
       "isSteamLag": false,
       "result": "PENDING",
       "pnl": 0.0,
@@ -199,29 +204,29 @@
   ],
   "summary": {
     "totalBets": 7,
-    "resolved": 4,
-    "pending": 3,
+    "resolved": 5,
+    "pending": 2,
     "sold": 4,
     "wins": 0,
-    "losses": 2,
+    "losses": 3,
     "voids": 0,
     "winRate": 0.0,
     "totalStaked": 38.5,
-    "totalPnl": -2.41,
-    "roi": -6.26,
-    "avgCLV": -7.21,
-    "sharpeEst": null,
+    "totalPnl": -7.91,
+    "roi": -20.55,
+    "avgCLV": -4.64,
+    "sharpeEst": -0.78,
     "postmortem": {
-      "closedN": 4,
-      "realizedPnl": -2.41,
-      "avgClv": -7.21,
-      "clvCoverage": "2/4",
+      "closedN": 5,
+      "realizedPnl": -7.91,
+      "avgClv": -4.64,
+      "clvCoverage": "3/5",
       "byMarket": {
         "O/U": {
-          "n": 4,
-          "pnl": -2.41,
-          "avgClv": -7.21,
-          "clvCoverage": "2/4"
+          "n": 5,
+          "pnl": -7.91,
+          "avgClv": -4.64,
+          "clvCoverage": "3/5"
         }
       },
       "byExit": {
@@ -236,6 +241,12 @@
           "pnl": -1.27,
           "avgClv": null,
           "clvCoverage": "0/1"
+        },
+        "LOSS": {
+          "n": 1,
+          "pnl": -5.5,
+          "avgClv": 0.5,
+          "clvCoverage": "1/1"
         },
         "Sell-sonstig": {
           "n": 2,
@@ -256,12 +267,12 @@
         },
         "epl": {
           "label": "Premier League",
-          "n": 1,
-          "pnl": 0.0,
-          "staked": 5.5,
-          "roi": 0.0,
-          "avgClv": -8.06,
-          "clvCoverage": "1/1"
+          "n": 2,
+          "pnl": -5.5,
+          "staked": 11.0,
+          "roi": -50.0,
+          "avgClv": -3.78,
+          "clvCoverage": "2/2"
         },
         "laliga": {
           "label": "La Liga",
@@ -274,12 +285,12 @@
         }
       },
       "heldToClose": {
-        "n": 3,
+        "n": 5,
         "exitBetter": 2,
-        "holdBetter": 1,
-        "avgDeltaEur": 0.61
+        "holdBetter": 3,
+        "avgDeltaEur": -0.82
       }
     }
   },
-  "updatedAt": "2026-09-18T23:08:59.680370+00:00"
+  "updatedAt": "2026-09-19T12:23:55.629501+00:00"
 }
