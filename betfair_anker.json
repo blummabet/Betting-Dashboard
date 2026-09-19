@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-09-19T06:25:15.922476+00:00",
+"generatedAt": "2026-09-19T06:40:19.737548+00:00",
 "n": 129,
 "hinweis": "Zweitmeinungen OHNE die Radar-Volumenschwelle — Quelle fuer den Buecher-Punktestand. `games` in betfair_consensus.json bleibt die Radar-Liste.",
 "anker": {
@@ -26,7 +26,7 @@
 "league": "German Bundesliga 2",
 "kickoff": "2026-09-19T11:00:00Z",
 "verdict": "konsens",
-"totVol": 1655
+"totVol": 1659
 },
 "36086307": {
 "moneySide": "home",
@@ -50,6 +50,17 @@
 "verdict": "no_anchor",
 "totVol": 55
 },
+"36063441": {
+"moneySide": "home",
+"moneyName": "Karlsruhe",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "German Bundesliga 2",
+"kickoff": "2026-09-19T11:00:00Z",
+"verdict": "no_anchor",
+"totVol": 2571
+},
 "36086309": {
 "moneySide": "home",
 "moneyName": "Reading U21",
@@ -65,7 +76,7 @@
 "moneySide": "home",
 "moneyName": "Holstein Kiel",
 "poly": {
-"vol": 3659,
+"vol": 3754,
 "odd": 1.83,
 "sharePct": 55,
 "shareSrc": "preis",
@@ -75,27 +86,16 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.5476,
-"draw": 0.2328,
-"away": 0.2196,
+"home": 0.5478,
+"draw": 0.234,
+"away": 0.2181,
 "fav": "home"
 },
 "pinnMove": null,
 "league": "German Bundesliga 2",
 "kickoff": "2026-09-19T11:00:00Z",
 "verdict": "konsens",
-"totVol": 5059
-},
-"36063441": {
-"moneySide": "home",
-"moneyName": "Karlsruhe",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "German Bundesliga 2",
-"kickoff": "2026-09-19T11:00:00Z",
-"verdict": "no_anchor",
-"totVol": 2568
+"totVol": 5254
 },
 "36086693": {
 "moneySide": "home",
@@ -130,13 +130,47 @@
 "verdict": "no_anchor",
 "totVol": 13
 },
+"36041096": {
+"moneySide": "home",
+"moneyName": "Eintracht Frankfurt",
+"poly": {
+"vol": 12549,
+"odd": 2.6,
+"sharePct": 70,
+"shareSrc": "geld",
+"key": "bun-ein-fre-2026-09-19",
+"sideKey": "Eintracht Frankfurt",
+"whales": [
+{
+"wallet": "0xb619ed5b378053f8309c307d2f7adf9c13665068",
+"usd": 1925
+},
+{
+"wallet": "0x1ec79c0932ecb281fc830210f046624ab05f12f7",
+"usd": 291
+}
+],
+"whaleUsd": 2216
+},
+"pinn": {
+"home": 0.3824,
+"draw": 0.258,
+"away": 0.3596,
+"fav": "home"
+},
+"pinnMove": null,
+"league": "German Bundesliga",
+"kickoff": "2026-09-19T13:30:00Z",
+"verdict": "konsens",
+"totVol": 17923
+},
 "36041092": {
 "moneySide": "away",
 "moneyName": "FC Koln",
 "poly": {
-"vol": 6877,
-"odd": 2.53,
-"sharePct": 40,
+"vol": 7439,
+"odd": 2.6,
+"sharePct": 38,
 "shareSrc": "preis",
 "key": "bun-hsv-koe-2026-09-19",
 "sideKey": "1. FC Köln",
@@ -153,41 +187,7 @@
 "league": "German Bundesliga",
 "kickoff": "2026-09-19T13:30:00Z",
 "verdict": "konsens",
-"totVol": 8411
-},
-"36041096": {
-"moneySide": "home",
-"moneyName": "Eintracht Frankfurt",
-"poly": {
-"vol": 12380,
-"odd": 2.53,
-"sharePct": 70,
-"shareSrc": "geld",
-"key": "bun-ein-fre-2026-09-19",
-"sideKey": "Eintracht Frankfurt",
-"whales": [
-{
-"wallet": "0xb619ed5b378053f8309c307d2f7adf9c13665068",
-"usd": 1975
-},
-{
-"wallet": "0x1ec79c0932ecb281fc830210f046624ab05f12f7",
-"usd": 298
-}
-],
-"whaleUsd": 2273
-},
-"pinn": {
-"home": 0.3824,
-"draw": 0.258,
-"away": 0.3596,
-"fav": "home"
-},
-"pinnMove": null,
-"league": "German Bundesliga",
-"kickoff": "2026-09-19T13:30:00Z",
-"verdict": "konsens",
-"totVol": 17607
+"totVol": 8430
 },
 "36041024": {
 "moneySide": "away",
@@ -198,7 +198,7 @@
 "league": "German Bundesliga",
 "kickoff": "2026-09-19T13:30:00Z",
 "verdict": "no_anchor",
-"totVol": 12769
+"totVol": 13803
 },
 "36086861": {
 "moneySide": "home",
@@ -215,9 +215,9 @@
 "moneySide": "home",
 "moneyName": "Paris FC",
 "poly": {
-"vol": 129836,
-"odd": 1.98,
-"sharePct": 50,
+"vol": 139861,
+"odd": 1.94,
+"sharePct": 52,
 "shareSrc": "preis",
 "key": "fl1-pfc-str-2026-09-19",
 "sideKey": "Paris FC",
@@ -234,38 +234,13 @@
 "league": "French Ligue 1",
 "kickoff": "2026-09-19T15:15:00Z",
 "verdict": "konsens",
-"totVol": 16972
-},
-"36071860": {
-"moneySide": "home",
-"moneyName": "Celta Vigo",
-"poly": {
-"vol": 3027,
-"odd": 1.87,
-"sharePct": 54,
-"shareSrc": "preis",
-"key": "lal-cel-rrc-2026-09-19",
-"sideKey": "RC Celta de Vigo",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.5209,
-"draw": 0.2497,
-"away": 0.2294,
-"fav": "home"
-},
-"pinnMove": null,
-"league": "Spanish La Liga",
-"kickoff": "2026-09-19T16:30:00Z",
-"verdict": "konsens",
-"totVol": 12962
+"totVol": 17052
 },
 "36041099": {
 "moneySide": "away",
 "moneyName": "Dortmund",
 "poly": {
-"vol": 46177,
+"vol": 46516,
 "odd": 2.82,
 "sharePct": 36,
 "shareSrc": "preis",
@@ -284,7 +259,32 @@
 "league": "German Bundesliga",
 "kickoff": "2026-09-19T16:30:00Z",
 "verdict": "uneinig",
-"totVol": 16539
+"totVol": 16640
+},
+"36071860": {
+"moneySide": "home",
+"moneyName": "Celta Vigo",
+"poly": {
+"vol": 3047,
+"odd": 1.87,
+"sharePct": 54,
+"shareSrc": "preis",
+"key": "lal-cel-rrc-2026-09-19",
+"sideKey": "RC Celta de Vigo",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.5386,
+"draw": 0.2428,
+"away": 0.2186,
+"fav": "home"
+},
+"pinnMove": null,
+"league": "Spanish La Liga",
+"kickoff": "2026-09-19T16:30:00Z",
+"verdict": "konsens",
+"totVol": 14188
 },
 "36086230": {
 "moneySide": "home",
@@ -302,8 +302,8 @@
 "moneyName": "Hertha Berlin",
 "poly": {
 "vol": 400,
-"odd": 2.13,
-"sharePct": 47,
+"odd": 2.17,
+"sharePct": 46,
 "shareSrc": "preis",
 "key": "bl2-dyn-ber-2026-09-19-first-to-score",
 "sideKey": "Hertha BSC",
@@ -311,57 +311,16 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.3749,
-"draw": 0.2397,
-"away": 0.3854,
+"home": 0.375,
+"draw": 0.2395,
+"away": 0.3855,
 "fav": "away"
 },
 "pinnMove": null,
 "league": "German Bundesliga 2",
 "kickoff": "2026-09-19T18:30:00Z",
 "verdict": "konsens",
-"totVol": 3797
-},
-"36039892": {
-"moneySide": "home",
-"moneyName": "Toulouse",
-"poly": {
-"vol": 79627,
-"odd": 1.74,
-"sharePct": 57,
-"shareSrc": "preis",
-"key": "fl1-tou-hac-2026-09-19",
-"sideKey": "Toulouse FC",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.5671,
-"draw": 0.2369,
-"away": 0.196,
-"fav": "home"
-},
-"pinnMove": null,
-"league": "French Ligue 1",
-"kickoff": "2026-09-19T18:45:00Z",
-"verdict": "konsens",
-"totVol": 15848
-},
-"36039873": {
-"moneySide": "home",
-"moneyName": "Lyon",
-"poly": null,
-"pinn": {
-"home": 0.456,
-"draw": 0.2511,
-"away": 0.2929,
-"fav": "home"
-},
-"pinnMove": null,
-"league": "French Ligue 1",
-"kickoff": "2026-09-19T18:45:00Z",
-"verdict": "konsens",
-"totVol": 7711
+"totVol": 3803
 },
 "36039862": {
 "moneySide": "home",
@@ -377,22 +336,38 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.3455,
-"draw": 0.2853,
-"away": 0.3692,
+"home": 0.3429,
+"draw": 0.2852,
+"away": 0.3719,
 "fav": "away"
 },
 "pinnMove": null,
 "league": "French Ligue 1",
 "kickoff": "2026-09-19T18:45:00Z",
 "verdict": "uneinig",
-"totVol": 7804
+"totVol": 8020
+},
+"36039873": {
+"moneySide": "home",
+"moneyName": "Lyon",
+"poly": null,
+"pinn": {
+"home": 0.456,
+"draw": 0.2511,
+"away": 0.2929,
+"fav": "home"
+},
+"pinnMove": null,
+"league": "French Ligue 1",
+"kickoff": "2026-09-19T18:45:00Z",
+"verdict": "konsens",
+"totVol": 7889
 },
 "36039891": {
 "moneySide": "home",
 "moneyName": "Angers",
 "poly": {
-"vol": 5707,
+"vol": 14162,
 "odd": 2.2,
 "sharePct": 46,
 "shareSrc": "preis",
@@ -411,7 +386,48 @@
 "league": "French Ligue 1",
 "kickoff": "2026-09-19T18:45:00Z",
 "verdict": "konsens",
-"totVol": 11855
+"totVol": 11975
+},
+"36039892": {
+"moneySide": "home",
+"moneyName": "Toulouse",
+"poly": {
+"vol": 79764,
+"odd": 1.74,
+"sharePct": 57,
+"shareSrc": "preis",
+"key": "fl1-tou-hac-2026-09-19",
+"sideKey": "Toulouse FC",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.5671,
+"draw": 0.2369,
+"away": 0.196,
+"fav": "home"
+},
+"pinnMove": null,
+"league": "French Ligue 1",
+"kickoff": "2026-09-19T18:45:00Z",
+"verdict": "konsens",
+"totVol": 15921
+},
+"36078671": {
+"moneySide": "away",
+"moneyName": "Charlotte FC",
+"poly": null,
+"pinn": {
+"home": 0.3306,
+"draw": 0.26,
+"away": 0.4094,
+"fav": "away"
+},
+"pinnMove": null,
+"league": "US MLS",
+"kickoff": "2026-09-19T23:30:00Z",
+"verdict": "konsens",
+"totVol": 156
 },
 "36078680": {
 "moneySide": "away",
@@ -438,47 +454,6 @@
 "verdict": "uneinig",
 "totVol": 13
 },
-"36078679": {
-"moneySide": "home",
-"moneyName": "New England Revolution",
-"poly": {
-"vol": 17122,
-"odd": 1.83,
-"sharePct": 55,
-"shareSrc": "preis",
-"key": "mls-ner-orl-2026-09-19",
-"sideKey": "New England Revolution",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.5511,
-"draw": 0.2194,
-"away": 0.2294,
-"fav": "home"
-},
-"pinnMove": null,
-"league": "US MLS",
-"kickoff": "2026-09-19T23:30:00Z",
-"verdict": "konsens",
-"totVol": 11646
-},
-"36078671": {
-"moneySide": "away",
-"moneyName": "Charlotte FC",
-"poly": null,
-"pinn": {
-"home": 0.3306,
-"draw": 0.26,
-"away": 0.4094,
-"fav": "away"
-},
-"pinnMove": null,
-"league": "US MLS",
-"kickoff": "2026-09-19T23:30:00Z",
-"verdict": "konsens",
-"totVol": 156
-},
 "36078682": {
 "moneySide": "away",
 "moneyName": "Los Angeles FC",
@@ -502,32 +477,57 @@
 "league": "US MLS",
 "kickoff": "2026-09-19T23:30:00Z",
 "verdict": "konsens",
-"totVol": 124
+"totVol": 219
 },
-"36078687": {
+"36078679": {
 "moneySide": "home",
-"moneyName": "Houston Dynamo",
+"moneyName": "New England Revolution",
 "poly": {
-"vol": 3977,
-"odd": 1.94,
-"sharePct": 52,
+"vol": 17122,
+"odd": 1.83,
+"sharePct": 55,
 "shareSrc": "preis",
-"key": "mls-hou-fcc-2026-09-19",
-"sideKey": "Houston Dynamo",
+"key": "mls-ner-orl-2026-09-19",
+"sideKey": "New England Revolution",
 "whales": null,
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.5102,
-"draw": 0.2334,
-"away": 0.2565,
+"home": 0.5511,
+"draw": 0.2194,
+"away": 0.2294,
+"fav": "home"
+},
+"pinnMove": null,
+"league": "US MLS",
+"kickoff": "2026-09-19T23:30:00Z",
+"verdict": "konsens",
+"totVol": 11717
+},
+"36078685": {
+"moneySide": "home",
+"moneyName": "St Louis City SC",
+"poly": {
+"vol": 1379,
+"odd": 1.68,
+"sharePct": 60,
+"shareSrc": "preis",
+"key": "mls-stl-tor-2026-09-19",
+"sideKey": "St. Louis City SC",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.5883,
+"draw": 0.214,
+"away": 0.1977,
 "fav": "home"
 },
 "pinnMove": null,
 "league": "US MLS",
 "kickoff": "2026-09-20T00:30:00Z",
 "verdict": "konsens",
-"totVol": 66
+"totVol": 605
 },
 "36078674": {
 "moneySide": "away",
@@ -577,13 +577,38 @@
 "league": "US MLS",
 "kickoff": "2026-09-20T00:30:00Z",
 "verdict": "konsens",
-"totVol": 214
+"totVol": 318
+},
+"36078687": {
+"moneySide": "home",
+"moneyName": "Houston Dynamo",
+"poly": {
+"vol": 3977,
+"odd": 1.94,
+"sharePct": 52,
+"shareSrc": "preis",
+"key": "mls-hou-fcc-2026-09-19",
+"sideKey": "Houston Dynamo",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.5102,
+"draw": 0.2334,
+"away": 0.2565,
+"fav": "home"
+},
+"pinnMove": null,
+"league": "US MLS",
+"kickoff": "2026-09-20T00:30:00Z",
+"verdict": "konsens",
+"totVol": 66
 },
 "36078677": {
 "moneySide": "away",
 "moneyName": "Philadelphia",
 "poly": {
-"vol": 1903,
+"vol": 1937,
 "odd": 1.65,
 "sharePct": 60,
 "shareSrc": "preis",
@@ -602,32 +627,7 @@
 "league": "US MLS",
 "kickoff": "2026-09-20T00:30:00Z",
 "verdict": "konsens",
-"totVol": 1201
-},
-"36078685": {
-"moneySide": "home",
-"moneyName": "St Louis City SC",
-"poly": {
-"vol": 1379,
-"odd": 1.68,
-"sharePct": 60,
-"shareSrc": "preis",
-"key": "mls-stl-tor-2026-09-19",
-"sideKey": "St. Louis City SC",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.5883,
-"draw": 0.214,
-"away": 0.1977,
-"fav": "home"
-},
-"pinnMove": null,
-"league": "US MLS",
-"kickoff": "2026-09-20T00:30:00Z",
-"verdict": "konsens",
-"totVol": 605
+"totVol": 1209
 },
 "36078683": {
 "moneySide": "away",
@@ -652,23 +652,7 @@
 "league": "US MLS",
 "kickoff": "2026-09-20T01:30:00Z",
 "verdict": "konsens",
-"totVol": 1629
-},
-"36078684": {
-"moneySide": "draw",
-"moneyName": "The Draw",
-"poly": null,
-"pinn": {
-"home": 0.5302,
-"draw": 0.2346,
-"away": 0.2352,
-"fav": "home"
-},
-"pinnMove": null,
-"league": "US MLS",
-"kickoff": "2026-09-20T01:30:00Z",
-"verdict": "uneinig",
-"totVol": 70
+"totVol": 1674
 },
 "36078678": {
 "moneySide": "home",
@@ -693,7 +677,23 @@
 "league": "US MLS",
 "kickoff": "2026-09-20T01:30:00Z",
 "verdict": "konsens",
-"totVol": 726
+"totVol": 971
+},
+"36078684": {
+"moneySide": "draw",
+"moneyName": "The Draw",
+"poly": null,
+"pinn": {
+"home": 0.5302,
+"draw": 0.2346,
+"away": 0.2352,
+"fav": "home"
+},
+"pinnMove": null,
+"league": "US MLS",
+"kickoff": "2026-09-20T01:30:00Z",
+"verdict": "uneinig",
+"totVol": 70
 },
 "36078686": {
 "moneySide": "away",
@@ -718,7 +718,7 @@
 "league": "US MLS",
 "kickoff": "2026-09-20T02:30:00Z",
 "verdict": "uneinig",
-"totVol": 3467
+"totVol": 3715
 },
 "36082475": {
 "moneySide": "home",
@@ -730,6 +730,17 @@
 "kickoff": "2026-09-20T07:00:00Z",
 "verdict": "no_anchor",
 "totVol": 1
+},
+"36083405": {
+"moneySide": "away",
+"moneyName": "Japan U23",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Other Competitions Soccer",
+"kickoff": "2026-09-20T10:30:00Z",
+"verdict": "no_anchor",
+"totVol": 31
 },
 "36041242": {
 "moneySide": "away",
@@ -746,42 +757,6 @@
 "kickoff": "2026-09-20T10:30:00Z",
 "verdict": "konsens",
 "totVol": 16468
-},
-"36083405": {
-"moneySide": "away",
-"moneyName": "Japan U23",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Other Competitions Soccer",
-"kickoff": "2026-09-20T10:30:00Z",
-"verdict": "no_anchor",
-"totVol": 31
-},
-"36068272": {
-"moneySide": "away",
-"moneyName": "St Pauli",
-"poly": {
-"vol": 4308,
-"odd": 2.22,
-"sharePct": 45,
-"shareSrc": "preis",
-"key": "bl2-fce-stp-2026-09-20",
-"sideKey": "FC St. Pauli 1910",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.3063,
-"draw": 0.2424,
-"away": 0.4514,
-"fav": "away"
-},
-"pinnMove": null,
-"league": "German Bundesliga 2",
-"kickoff": "2026-09-20T11:30:00Z",
-"verdict": "konsens",
-"totVol": 13585
 },
 "36068339": {
 "moneySide": "away",
@@ -833,11 +808,36 @@
 "verdict": "konsens",
 "totVol": 846
 },
+"36068272": {
+"moneySide": "away",
+"moneyName": "St Pauli",
+"poly": {
+"vol": 4308,
+"odd": 2.22,
+"sharePct": 45,
+"shareSrc": "preis",
+"key": "bl2-fce-stp-2026-09-20",
+"sideKey": "FC St. Pauli 1910",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.3063,
+"draw": 0.2424,
+"away": 0.4514,
+"fav": "away"
+},
+"pinnMove": null,
+"league": "German Bundesliga 2",
+"kickoff": "2026-09-20T11:30:00Z",
+"verdict": "konsens",
+"totVol": 13585
+},
 "36071863": {
 "moneySide": "home",
 "moneyName": "Getafe",
 "poly": {
-"vol": 814,
+"vol": 829,
 "odd": 2.15,
 "sharePct": 46,
 "shareSrc": "preis",
@@ -858,13 +858,29 @@
 "verdict": "konsens",
 "totVol": 14031
 },
+"36039897": {
+"moneySide": "away",
+"moneyName": "Brest",
+"poly": null,
+"pinn": {
+"home": 0.3336,
+"draw": 0.2748,
+"away": 0.3916,
+"fav": "away"
+},
+"pinnMove": null,
+"league": "French Ligue 1",
+"kickoff": "2026-09-20T13:00:00Z",
+"verdict": "konsens",
+"totVol": 11688
+},
 "36041251": {
 "moneySide": "away",
 "moneyName": "Genoa",
 "poly": null,
 "pinn": {
-"home": 0.3043,
-"draw": 0.3132,
+"home": 0.3033,
+"draw": 0.3142,
 "away": 0.3825,
 "fav": "away"
 },
@@ -890,27 +906,11 @@
 "verdict": "konsens",
 "totVol": 16480
 },
-"36039897": {
-"moneySide": "away",
-"moneyName": "Brest",
-"poly": null,
-"pinn": {
-"home": 0.3336,
-"draw": 0.2748,
-"away": 0.3916,
-"fav": "away"
-},
-"pinnMove": null,
-"league": "French Ligue 1",
-"kickoff": "2026-09-20T13:00:00Z",
-"verdict": "konsens",
-"totVol": 11688
-},
 "36041068": {
 "moneySide": "home",
 "moneyName": "Leverkusen",
 "poly": {
-"vol": 3372,
+"vol": 3405,
 "odd": 2.06,
 "sharePct": 48,
 "shareSrc": "preis",
@@ -929,7 +929,7 @@
 "league": "German Bundesliga",
 "kickoff": "2026-09-20T13:30:00Z",
 "verdict": "konsens",
-"totVol": 13441
+"totVol": 13509
 },
 "36039976": {
 "moneySide": "away",
@@ -995,13 +995,13 @@
 "league": "Italian Serie A",
 "kickoff": "2026-09-20T16:00:00Z",
 "verdict": "konsens",
-"totVol": 12210
+"totVol": 12211
 },
 "36071865": {
 "moneySide": "home",
 "moneyName": "Villarreal",
 "poly": {
-"vol": 1847,
+"vol": 1909,
 "odd": 1.55,
 "sharePct": 64,
 "shareSrc": "preis",
@@ -1061,13 +1061,13 @@
 "league": "Italian Serie A",
 "kickoff": "2026-09-20T18:45:00Z",
 "verdict": "konsens",
-"totVol": 4765
+"totVol": 4768
 },
 "36071864": {
 "moneySide": "away",
 "moneyName": "Real Sociedad",
 "poly": {
-"vol": 1809,
+"vol": 1823,
 "odd": 2.74,
 "sharePct": 36,
 "shareSrc": "preis",
@@ -1086,7 +1086,7 @@
 "league": "Spanish La Liga",
 "kickoff": "2026-09-20T19:00:00Z",
 "verdict": "konsens",
-"totVol": 1609
+"totVol": 1690
 },
 "36078681": {
 "moneySide": "home",
@@ -1124,6 +1124,17 @@
 "verdict": "no_anchor",
 "totVol": 1
 },
+"36085747": {
+"moneySide": "home",
+"moneyName": "South Korea (W)",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Other Competitions Soccer",
+"kickoff": "2026-09-21T07:00:00Z",
+"verdict": "no_anchor",
+"totVol": 1
+},
 "36085807": {
 "moneySide": "home",
 "moneyName": "China (W)",
@@ -1138,17 +1149,6 @@
 "36085808": {
 "moneySide": "home",
 "moneyName": "Bangladesh (W)",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Other Competitions Soccer",
-"kickoff": "2026-09-21T07:00:00Z",
-"verdict": "no_anchor",
-"totVol": 1
-},
-"36085747": {
-"moneySide": "home",
-"moneyName": "South Korea (W)",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
@@ -1204,7 +1204,7 @@
 "moneyName": "FC Tokyo",
 "poly": {
 "vol": 5016,
-"odd": 1.63,
+"odd": 1.6,
 "sharePct": 62,
 "shareSrc": "preis",
 "key": "jap-fct-ngr-2026-09-19",
@@ -1213,16 +1213,16 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.6127,
-"draw": 0.2114,
-"away": 0.1759,
+"home": 0.6191,
+"draw": 0.209,
+"away": 0.1719,
 "fav": "home"
 },
 "pinnMove": null,
 "league": "Japanese J League",
 "kickoff": "2026-09-19T10:00:00Z",
 "verdict": "konsens",
-"totVol": 1373
+"totVol": 1388
 },
 "36062945": {
 "moneySide": "draw",
@@ -1238,16 +1238,16 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.3433,
-"draw": 0.2582,
-"away": 0.3985,
+"home": 0.3428,
+"draw": 0.2578,
+"away": 0.3994,
 "fav": "away"
 },
 "pinnMove": null,
 "league": "Japanese J League",
 "kickoff": "2026-09-19T09:00:00Z",
 "verdict": "uneinig",
-"totVol": 612
+"totVol": 834
 },
 "36063213": {
 "moneySide": "away",
@@ -1263,16 +1263,41 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.2003,
-"draw": 0.2396,
-"away": 0.5601,
+"home": 0.2001,
+"draw": 0.2393,
+"away": 0.5606,
 "fav": "away"
 },
 "pinnMove": null,
 "league": "Japanese J League",
 "kickoff": "2026-09-19T09:00:00Z",
 "verdict": "konsens",
-"totVol": 847
+"totVol": 848
+},
+"36067530": {
+"moneySide": "home",
+"moneyName": "Shimizu",
+"poly": {
+"vol": 1844,
+"odd": 1.94,
+"sharePct": 52,
+"shareSrc": "preis",
+"key": "jap-ssp-jef-2026-09-19",
+"sideKey": "Shimizu S-Pulse",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.4976,
+"draw": 0.2839,
+"away": 0.2184,
+"fav": "home"
+},
+"pinnMove": null,
+"league": "Japanese J League",
+"kickoff": "2026-09-19T09:30:00Z",
+"verdict": "konsens",
+"totVol": 864
 },
 "36085596": {
 "moneySide": "away",
@@ -1283,32 +1308,7 @@
 "league": "Hong Kong Senior Shield",
 "kickoff": "2026-09-19T08:00:00Z",
 "verdict": "no_anchor",
-"totVol": 193
-},
-"36067530": {
-"moneySide": "home",
-"moneyName": "Shimizu",
-"poly": {
-"vol": 1844,
-"odd": 1.9,
-"sharePct": 52,
-"shareSrc": "preis",
-"key": "jap-ssp-jef-2026-09-19",
-"sideKey": "Shimizu S-Pulse",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.5079,
-"draw": 0.2805,
-"away": 0.2116,
-"fav": "home"
-},
-"pinnMove": null,
-"league": "Japanese J League",
-"kickoff": "2026-09-19T09:30:00Z",
-"verdict": "konsens",
-"totVol": 840
+"totVol": 195
 },
 "36063225": {
 "moneySide": "home",
@@ -1328,7 +1328,7 @@
 "league": "Japanese J League 2",
 "kickoff": "2026-09-19T09:30:00Z",
 "verdict": "no_anchor",
-"totVol": 113
+"totVol": 120
 },
 "36067317": {
 "moneySide": "home",
@@ -1344,22 +1344,22 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.3246,
-"draw": 0.2837,
-"away": 0.3917,
+"home": 0.3266,
+"draw": 0.2835,
+"away": 0.3898,
 "fav": "away"
 },
 "pinnMove": null,
 "league": "South Korean K1 League",
 "kickoff": "2026-09-19T07:30:00Z",
 "verdict": "uneinig",
-"totVol": 705
+"totVol": 730
 },
 "36063418": {
 "moneySide": "home",
 "moneyName": "Yokohama FM",
 "poly": {
-"vol": 946,
+"vol": 1470,
 "odd": 2.15,
 "sharePct": 46,
 "shareSrc": "preis",
@@ -1378,13 +1378,13 @@
 "league": "Japanese J League",
 "kickoff": "2026-09-19T10:30:00Z",
 "verdict": "konsens",
-"totVol": 211
+"totVol": 220
 },
 "36067660": {
 "moneySide": "away",
 "moneyName": "Ulsan Hyundai Horang-i",
 "poly": {
-"vol": 674,
+"vol": 794,
 "odd": 1.94,
 "sharePct": 52,
 "shareSrc": "preis",
@@ -1403,45 +1403,7 @@
 "league": "South Korean K1 League",
 "kickoff": "2026-09-19T10:00:00Z",
 "verdict": "konsens",
-"totVol": 962
-},
-"36067620": {
-"moneySide": "home",
-"moneyName": "Urawa",
-"poly": {
-"vol": 7810,
-"odd": 2.02,
-"sharePct": 95,
-"shareSrc": "geld",
-"key": "jap-ura-fct1-2026-09-19",
-"sideKey": "Urawa Red Diamonds",
-"whales": [
-{
-"wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-"usd": 2994
-},
-{
-"wallet": "0x94db6fb727a7c8221a1680524166596e454973b8",
-"usd": 62
-},
-{
-"wallet": "0x9a45a7aa67efa75b50e8b657ab3fc947fc0ec92d",
-"usd": 50
-}
-],
-"whaleUsd": 3106
-},
-"pinn": {
-"home": 0.4713,
-"draw": 0.2919,
-"away": 0.2368,
-"fav": "home"
-},
-"pinnMove": null,
-"league": "Japanese J League",
-"kickoff": "2026-09-19T09:30:00Z",
-"verdict": "konsens",
-"totVol": 1185
+"totVol": 1288
 },
 "36067621": {
 "moneySide": "home",
@@ -1457,16 +1419,41 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.5312,
-"draw": 0.2627,
-"away": 0.2061,
+"home": 0.5085,
+"draw": 0.2699,
+"away": 0.2216,
 "fav": "home"
 },
 "pinnMove": null,
 "league": "Japanese J League",
 "kickoff": "2026-09-19T10:00:00Z",
 "verdict": "konsens",
-"totVol": 428
+"totVol": 437
+},
+"36067620": {
+"moneySide": "home",
+"moneyName": "Urawa",
+"poly": {
+"vol": 9440,
+"odd": 2.06,
+"sharePct": 48,
+"shareSrc": "preis",
+"key": "jap-ura-fct1-2026-09-19",
+"sideKey": "Urawa Red Diamonds",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.4688,
+"draw": 0.2927,
+"away": 0.2385,
+"fav": "home"
+},
+"pinnMove": null,
+"league": "Japanese J League",
+"kickoff": "2026-09-19T09:30:00Z",
+"verdict": "konsens",
+"totVol": 1194
 },
 "36069060": {
 "moneySide": "away",
@@ -1477,7 +1464,7 @@
 "league": "Bulgarian A League",
 "kickoff": "2026-09-19T11:00:00Z",
 "verdict": "no_anchor",
-"totVol": 157
+"totVol": 163
 },
 "36063969": {
 "moneySide": "home",
@@ -1488,13 +1475,24 @@
 "league": "Romanian Liga II",
 "kickoff": "2026-09-19T08:00:00Z",
 "verdict": "no_anchor",
-"totVol": 510
+"totVol": 517
+},
+"36067685": {
+"moneySide": "away",
+"moneyName": "Suwon FC",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "South Korean K2 League",
+"kickoff": "2026-09-19T07:30:00Z",
+"verdict": "no_anchor",
+"totVol": 557
 },
 "36075828": {
 "moneySide": "home",
 "moneyName": "FC Kharkiv",
 "poly": {
-"vol": 5862,
+"vol": 8728,
 "odd": 2.15,
 "sharePct": 46,
 "shareSrc": "preis",
@@ -1508,44 +1506,13 @@
 "league": "Ukrainian Premier League",
 "kickoff": "2026-09-19T10:00:00Z",
 "verdict": "no_anchor",
-"totVol": 1315
-},
-"36067685": {
-"moneySide": "away",
-"moneyName": "Suwon FC",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "South Korean K2 League",
-"kickoff": "2026-09-19T07:30:00Z",
-"verdict": "no_anchor",
-"totVol": 543
-},
-"36063357": {
-"moneySide": "home",
-"moneyName": "Shonan",
-"poly": {
-"vol": 1308,
-"odd": 2.27,
-"sharePct": 44,
-"shareSrc": "preis",
-"key": "ja2-sho-bla-2026-09-19",
-"sideKey": "Shōnan Bellmāre",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": null,
-"pinnMove": null,
-"league": "Japanese J League 2",
-"kickoff": "2026-09-19T10:00:00Z",
-"verdict": "no_anchor",
-"totVol": 282
+"totVol": 1346
 },
 "36063226": {
 "moneySide": "away",
 "moneyName": "Cerezo Osaka",
 "poly": {
-"vol": 1237,
+"vol": 1251,
 "odd": 2.2,
 "sharePct": 46,
 "shareSrc": "preis",
@@ -1564,7 +1531,7 @@
 "league": "Japanese J League",
 "kickoff": "2026-09-19T09:30:00Z",
 "verdict": "konsens",
-"totVol": 426
+"totVol": 450
 },
 "36067681": {
 "moneySide": "home",
@@ -1584,7 +1551,27 @@
 "league": "South Korean K2 League",
 "kickoff": "2026-09-19T07:30:00Z",
 "verdict": "no_anchor",
-"totVol": 191
+"totVol": 1070
+},
+"36063357": {
+"moneySide": "home",
+"moneyName": "Shonan",
+"poly": {
+"vol": 1308,
+"odd": 2.27,
+"sharePct": 44,
+"shareSrc": "preis",
+"key": "ja2-sho-bla-2026-09-19",
+"sideKey": "Shōnan Bellmāre",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": null,
+"pinnMove": null,
+"league": "Japanese J League 2",
+"kickoff": "2026-09-19T10:00:00Z",
+"verdict": "no_anchor",
+"totVol": 283
 },
 "36067540": {
 "moneySide": "away",
@@ -1616,6 +1603,17 @@
 "kickoff": "2026-09-19T09:00:00Z",
 "verdict": "no_anchor",
 "totVol": 121
+},
+"36085517": {
+"moneySide": "home",
+"moneyName": "Persebaya Surabaya",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Indonesian Super League",
+"kickoff": "2026-09-19T08:30:00Z",
+"verdict": "no_anchor",
+"totVol": 479
 },
 "36067425": {
 "moneySide": "away",
@@ -1661,9 +1659,9 @@
 "moneySide": "home",
 "moneyName": "Tosu",
 "poly": {
-"vol": 313,
-"odd": 2.06,
-"sharePct": 48,
+"vol": 343,
+"odd": 2.13,
+"sharePct": 47,
 "shareSrc": "preis",
 "key": "ja2-sag-iwa-2026-09-19",
 "sideKey": "Sagan Tosu",
@@ -1675,15 +1673,15 @@
 "league": "Japanese J League 2",
 "kickoff": "2026-09-19T10:00:00Z",
 "verdict": "no_anchor",
-"totVol": 172
+"totVol": 181
 },
 "36063351": {
 "moneySide": "home",
 "moneyName": "Kofu",
 "poly": {
 "vol": 1688,
-"odd": 3.45,
-"sharePct": 29,
+"odd": 3.39,
+"sharePct": 30,
 "shareSrc": "preis",
 "key": "ja2-ven-tok-2026-09-19",
 "sideKey": "Ventforet Kōfu",
@@ -1695,18 +1693,7 @@
 "league": "Japanese J League 2",
 "kickoff": "2026-09-19T10:00:00Z",
 "verdict": "no_anchor",
-"totVol": 12
-},
-"36085517": {
-"moneySide": "home",
-"moneyName": "Persebaya Surabaya",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Indonesian Super League",
-"kickoff": "2026-09-19T08:30:00Z",
-"verdict": "no_anchor",
-"totVol": 373
+"totVol": 13
 },
 "36078783": {
 "moneySide": "away",
@@ -1737,7 +1724,7 @@
 "league": "South Korean K2 League",
 "kickoff": "2026-09-19T10:00:00Z",
 "verdict": "no_anchor",
-"totVol": 215
+"totVol": 219
 },
 "36087030": {
 "moneySide": "away",
@@ -1748,7 +1735,7 @@
 "league": "Japanese Football League",
 "kickoff": "2026-09-19T09:00:00Z",
 "verdict": "no_anchor",
-"totVol": 128
+"totVol": 134
 },
 "36085732": {
 "moneySide": "draw",
@@ -1770,7 +1757,7 @@
 "league": "Japanese Football League",
 "kickoff": "2026-09-19T09:00:00Z",
 "verdict": "no_anchor",
-"totVol": 114
+"totVol": 115
 },
 "36083492": {
 "moneySide": "home",
@@ -1792,7 +1779,7 @@
 "league": "Chinese League 2",
 "kickoff": "2026-09-19T09:00:00Z",
 "verdict": "no_anchor",
-"totVol": 80
+"totVol": 83
 },
 "36083353": {
 "moneySide": "home",
@@ -1816,17 +1803,6 @@
 "verdict": "no_anchor",
 "totVol": 6
 },
-"36064307": {
-"moneySide": "home",
-"moneyName": "CSL Stefanestii de Jos",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Romanian Liga II",
-"kickoff": "2026-09-19T08:00:00Z",
-"verdict": "no_anchor",
-"totVol": 89
-},
 "36083517": {
 "moneySide": "home",
 "moneyName": "Loko Vltavin",
@@ -1836,7 +1812,18 @@
 "league": "Czech 3 Liga",
 "kickoff": "2026-09-19T08:15:00Z",
 "verdict": "no_anchor",
-"totVol": 56
+"totVol": 60
+},
+"36064307": {
+"moneySide": "home",
+"moneyName": "CSL Stefanestii de Jos",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Romanian Liga II",
+"kickoff": "2026-09-19T08:00:00Z",
+"verdict": "no_anchor",
+"totVol": 97
 },
 "36082594": {
 "moneySide": "away",
@@ -1847,7 +1834,7 @@
 "league": "Polish 2 Liga",
 "kickoff": "2026-09-19T10:00:00Z",
 "verdict": "no_anchor",
-"totVol": 44
+"totVol": 47
 },
 "36065254": {
 "moneySide": "home",
@@ -1859,6 +1846,17 @@
 "kickoff": "2026-09-19T08:00:00Z",
 "verdict": "no_anchor",
 "totVol": 101
+},
+"36083617": {
+"moneySide": "away",
+"moneyName": "SK Benesov",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Czech 3 Liga",
+"kickoff": "2026-09-19T08:15:00Z",
+"verdict": "no_anchor",
+"totVol": 104
 },
 "36067539": {
 "moneySide": "away",
@@ -1889,7 +1887,7 @@
 "league": "Romanian Liga II",
 "kickoff": "2026-09-19T08:00:00Z",
 "verdict": "no_anchor",
-"totVol": 15
+"totVol": 18
 },
 "36083352": {
 "moneySide": "home",
@@ -1922,7 +1920,7 @@
 "league": "Romanian Liga II",
 "kickoff": "2026-09-19T08:00:00Z",
 "verdict": "no_anchor",
-"totVol": 77
+"totVol": 78
 },
 "36086856": {
 "moneySide": "away",
@@ -1935,24 +1933,13 @@
 "verdict": "no_anchor",
 "totVol": 102
 },
-"36083617": {
-"moneySide": "away",
-"moneyName": "SK Benesov",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Czech 3 Liga",
-"kickoff": "2026-09-19T08:15:00Z",
-"verdict": "no_anchor",
-"totVol": 104
-},
 "36063353": {
 "moneySide": "home",
 "moneyName": "Yokohama FC",
 "poly": {
-"vol": 877,
-"odd": 1.65,
-"sharePct": 60,
+"vol": 1085,
+"odd": 1.64,
+"sharePct": 61,
 "shareSrc": "preis",
 "key": "ja2-yok-imb-2026-09-19",
 "sideKey": "Yokohama FC",
@@ -1964,7 +1951,7 @@
 "league": "Japanese J League 2",
 "kickoff": "2026-09-19T10:00:00Z",
 "verdict": "no_anchor",
-"totVol": 120
+"totVol": 121
 },
 "36079501": {
 "moneySide": "home",
@@ -2006,7 +1993,7 @@
 "league": "Romanian Liga II",
 "kickoff": "2026-09-19T09:30:00Z",
 "verdict": "no_anchor",
-"totVol": 68
+"totVol": 128
 },
 "36086204": {
 "moneySide": "draw",
@@ -2039,7 +2026,7 @@
 "league": "Polish I Liga",
 "kickoff": "2026-09-19T10:30:00Z",
 "verdict": "no_anchor",
-"totVol": 46
+"totVol": 52
 },
 "36085039": {
 "moneySide": "away",
@@ -2074,17 +2061,6 @@
 "verdict": "no_anchor",
 "totVol": 46
 },
-"36063956": {
-"moneySide": "draw",
-"moneyName": "The Draw",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Romanian Liga II",
-"kickoff": "2026-09-19T08:00:00Z",
-"verdict": "no_anchor",
-"totVol": 10
-},
 "36085612": {
 "moneySide": "away",
 "moneyName": "SC East Bengal (Res)",
@@ -2094,7 +2070,18 @@
 "league": "Indian Calcutta Premier Division",
 "kickoff": "2026-09-19T09:30:00Z",
 "verdict": "no_anchor",
-"totVol": 48
+"totVol": 54
+},
+"36063956": {
+"moneySide": "draw",
+"moneyName": "The Draw",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Romanian Liga II",
+"kickoff": "2026-09-19T08:00:00Z",
+"verdict": "no_anchor",
+"totVol": 11
 },
 "36085084": {
 "moneySide": "draw",
@@ -2105,7 +2092,7 @@
 "league": "Chinese League 2",
 "kickoff": "2026-09-19T08:00:00Z",
 "verdict": "no_anchor",
-"totVol": 22
+"totVol": 48
 },
 "36085138": {
 "moneySide": "home",
@@ -2151,17 +2138,6 @@
 "verdict": "no_anchor",
 "totVol": 7
 },
-"36085522": {
-"moneySide": "draw",
-"moneyName": "The Draw",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Indonesian Championship",
-"kickoff": "2026-09-19T08:30:00Z",
-"verdict": "no_anchor",
-"totVol": 5
-},
 "36086771": {
 "moneySide": "home",
 "moneyName": "Khonkaen",
@@ -2172,6 +2148,17 @@
 "kickoff": "2026-09-19T11:00:00Z",
 "verdict": "no_anchor",
 "totVol": 3
+},
+"36085522": {
+"moneySide": "draw",
+"moneyName": "The Draw",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Indonesian Championship",
+"kickoff": "2026-09-19T08:30:00Z",
+"verdict": "no_anchor",
+"totVol": 7
 },
 "36087231": {
 "moneySide": "home",
@@ -2193,7 +2180,7 @@
 "league": "Norwegian 2nd Division",
 "kickoff": "2026-09-19T11:00:00Z",
 "verdict": "no_anchor",
-"totVol": 14
+"totVol": 16
 },
 "36088210": {
 "moneySide": "home",
