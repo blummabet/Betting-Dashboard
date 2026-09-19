@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-19T11:55:58.201280+00:00",
+ "generatedAt": "2026-09-19T12:26:01.128377+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,7 +10,7 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 671,
- "pinnKeys": 249,
+ "pinnKeys": 247,
  "matched": 175,
  "footballRows": 147,
  "crossRows": 524,
@@ -30,8 +30,51 @@
   "soccer_liga": 129
  },
  "trackRecord": {
-  "tracked": 317,
+  "tracked": 320,
   "converged": 71
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "soccer_liga|osasuna-rayovallecano|hw",
+   "sport": "soccer_liga",
+   "event": "Osasuna vs Rayo Vallecano",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 60.5,
+   "pinnPP": 32.2,
+   "gapPP": 28.27,
+   "vol": 697529,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-19T12:26:01.127992+00:00"
+  },
+  {
+   "id": "soccer_liga|osasuna-rayovallecano|aw",
+   "sport": "soccer_liga",
+   "event": "Osasuna vs Rayo Vallecano",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 15.5,
+   "pinnPP": 35.9,
+   "gapPP": -20.37,
+   "vol": 697529,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-19T12:26:01.127992+00:00"
+  },
+  {
+   "id": "soccer_liga|osasuna-rayovallecano|dr",
+   "sport": "soccer_liga",
+   "event": "Osasuna vs Rayo Vallecano",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 24.5,
+   "pinnPP": 31.9,
+   "gapPP": -7.4,
+   "vol": 697529,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-19T12:26:01.127992+00:00"
+  }
+ ]
 }
