@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-19T19:30:19.268031+00:00",
+ "generatedAt": "2026-09-19T20:00:22.430434+00:00",
  "heute": "2026-09-19",
  "messungen": [
   {
@@ -158,10 +158,10 @@
    "mindestN": 1200,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 0,
+   "standN": 2,
    "zustand": "sammelt",
-   "stand": "0 von 1200 Beobachtungen · faellig in 43 Tag(en)",
-   "fortschritt": 0.0,
+   "stand": "2 von 1200 Beobachtungen · faellig in 43 Tag(en)",
+   "fortschritt": 0.0016666666666666668,
    "tageBisFaellig": 43
   },
   {
@@ -176,10 +176,10 @@
    "mindestN": 1200,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 0,
+   "standN": 2,
    "zustand": "sammelt",
-   "stand": "0 von 1200 Beobachtungen · faellig in 43 Tag(en)",
-   "fortschritt": 0.0,
+   "stand": "2 von 1200 Beobachtungen · faellig in 43 Tag(en)",
+   "fortschritt": 0.0016666666666666668,
    "tageBisFaellig": 43
   },
   {
@@ -238,9 +238,9 @@
   },
   {
    "id": "betfair-kursrutsch",
-   "titel": "Traegt ein Kursrutsch ohne nachkommendes Geld?",
-   "frage": "Trefferquote und ROI der gesendeten Kursrutsch-Alarme (Quote >=10 % gefallen seit dem ersten Sehen, Geld NICHT einseitig). Urteil ueber die Renditegrenzen, nicht ueber den Punktschaetzer. Zusaetzlich aufgeteilt nach Rutsch-Hoehe (10-15 / >=15 %) und nach Liquiditaet.",
-   "warum": "19.09.2026 (Lucas): „Alerts wo wir die Schwelle etwas senken, aber dafuer nur schicken, wenn die Quote auch wirklich sinkt ... wirklich Spiele wo die Quote nachweislich gesunken ist um 10 % oder so. Das dann doch ein starkes Signal mmn.“\nRueckblickend gemessen auf 30.918 Ledger-Zeilen (Rendite am SCHLUSSkurs, also am kuerzesten Preis): Rutsch >=10 % UND Geld nicht konzentriert -> n=203, Treffer 48,8 %, ROI +18,3 % [UG +2,3, OG +34,4]. Mit konzentriertem Geld: n=675, ROI -2,6 %. Der Fund haelt die Zeitprobe (erste Haelfte +15,5 %, zweite +21,2 %), ueberlebt das Streichen der drei groessten Gewinner (+11,4 %) und den Cluster-Bootstrap ueber Spiele (UG +2,0 %).\nABER: 22 Schnitte angesehen, und ein Nullmodell ohne jeden Quoten-Effekt liefert in 39 % der Buecher mindestens ein „belegt tragend“ — p = 0,125. Deshalb vorregistriert und NUR im Trades-Kanal. Entscheidung vorab: geht public, sobald die Untergrenze bei n >= 400 frischen Faellen ueber null liegt; faellt die OBERgrenze unter null, wird der Alarm abgeschaltet. Erwartete Rate aus dem Buch: rund 8 Faelle pro Tag.\nDer 15-Minuten-Takt ist dabei KEIN Hindernis, auch das ist gemessen: ein Rutsch >=10 % passiert nur in 0,2 % der Einzelschritte, aber in 7,4 % der ganzen Vor-Anpfiff-Reihen — er sammelt sich ueber Stunden an. Nach dem Sprung laeuft der Preis im Median +-0,0 % weiter, der Sprung selbst faellt im Median 95 Minuten vor Anpfiff.",
+   "titel": "Traegt ein Kursrutsch ohne nachkommendes Geld — in den Tor-/HZ-Maerkten, vor Anpfiff?",
+   "frage": "Trefferquote und ROI der gesendeten Kursrutsch-Alarme — NUR VOR ANPFIFF und NUR in den Tor-/Halbzeit-Maerkten (Quote >=10 % gefallen seit dem ersten Sehen, Geld NICHT einseitig). Urteil ueber die Renditegrenzen, nicht ueber den Punktschaetzer. Zusaetzlich aufgeteilt nach Rutsch-Hoehe (10-15 / >=15 %) und nach Quotenband.",
+   "warum": "19.09.2026 (Lucas): „Alerts wo wir die Schwelle etwas senken, aber dafuer nur schicken, wenn die Quote auch wirklich sinkt ... wirklich Spiele wo die Quote nachweislich gesunken ist um 10 % oder so. Das dann doch ein starkes Signal mmn.“\nRueckblickend gemessen auf 30.918 Ledger-Zeilen (Rendite am SCHLUSSkurs, also am kuerzesten Preis): Rutsch >=10 % UND Geld nicht konzentriert -> n=203, Treffer 48,8 %, ROI +18,3 % [UG +2,3, OG +34,4]. Mit konzentriertem Geld: n=675, ROI -2,6 %. Der Fund haelt die Zeitprobe (erste Haelfte +15,5 %, zweite +21,2 %), ueberlebt das Streichen der drei groessten Gewinner (+11,4 %) und den Cluster-Bootstrap ueber Spiele (UG +2,0 %).\nABER: 22 Schnitte angesehen, und ein Nullmodell ohne jeden Quoten-Effekt liefert in 39 % der Buecher mindestens ein „belegt tragend“ — p = 0,125. Deshalb vorregistriert und NUR im Trades-Kanal. Entscheidung vorab: geht public, sobald die Untergrenze bei n >= 400 frischen Faellen ueber null liegt; faellt die OBERgrenze unter null, wird der Alarm abgeschaltet. Erwartete Rate aus dem Buch: rund 8 Faelle pro Tag.\nDer 15-Minuten-Takt ist dabei KEIN Hindernis, auch das ist gemessen: ein Rutsch >=10 % passiert nur in 0,2 % der Einzelschritte, aber in 7,4 % der ganzen Vor-Anpfiff-Reihen — er sammelt sich ueber Stunden an. Nach dem Sprung laeuft der Preis im Median +-0,0 % weiter, der Sprung selbst faellt im Median 95 Minuten vor Anpfiff.\n\n🔴 19.09.2026, eine Stunde nach dem Bau (Lucas zum ersten Alarm): „Angers 2.28 → 1.50 (−34,2 %), ⚽ läuft … Der Kursrutsch weil 1:0 gemacht mmn. Dann wertlos.“ Er hatte recht, und es war kein Einzelfall: ALLE DREI Alarme des ersten Abends kamen aus laufenden Spielen (22., 63., 44. Minute). Die Messung oben beschreibt aber ausschliesslich VOR-ANPFIFF-Daten — betfair_track_record.capture aktualisiert die Signale nur `if _is_prematch`. Der Alarm feuerte also auf einer Population, die nie gemessen wurde. Seit heute: nur vor Anpfiff. Die drei live gesendeten Zeilen stehen als void mit Grund im Buch und zaehlen nicht mit.\n\n🔴 19.09.2026, zweiter Anlass (Lucas): „Das sind alles drop weil beim Spielstand was passiert ... Die 3.9 gab's irgendwann zu Spielbeginn, klar dann kurz vor Pause kleinere odd“ — Under 0.5 Goals 3.90 → 1.30, live. Die Live-Sperre faengt genau das. Sein Einwand war aber auch der Anlass, den Fund nach MARKT aufzuteilen, und dort faellt er auseinander:\n    Match Odds        n=103  Treffer 37,9 %  ROI  -9,1 %  [-29,3, +11,1]\n    Tor-/HZ-Maerkte   n=100  Treffer 60,0 %  ROI +46,6 %  [+22,3, +70,9]\nDie Haelfte mit dem groessten n ist negativ — das „+18,3 %“ des Gesamtfunds kam nicht aus dem behaupteten Mechanismus, sondern aus der anderen Haelfte. In den Tor-Maerkten haelt er jede Probe: ohne Half Time +34,4 % [+12,9] (n=83), erste Fensterhaelfte +42,3 %, zweite +50,9 %, Quoten unter 3,0 +23,6 % [+4,8] (n=74), 97 verschiedene Spiele auf 100 Zeilen. Match Odds ist seit heute ausgeschlossen.\nEHRLICH DAZU: diese Aufteilung entstand NACH dem Blick auf die Gesamtzahl. Zwei Gruppen sind eine milde Mehrfachprobe, aber es bleibt ein zweiter Blick auf dieselben Daten — Grund genug, den Alarm im Testlauf zu lassen.",
    "gestartet": "2026-09-19",
    "faellig": "2026-11-15",
    "quelle": "betfair_rutsch_ledger.json -> abgerechnete Zeilen",
@@ -248,10 +248,10 @@
    "mindestN": 400,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 0,
+   "standN": 1,
    "zustand": "sammelt",
-   "stand": "0 von 400 Beobachtungen · faellig in 57 Tag(en)",
-   "fortschritt": 0.0,
+   "stand": "1 von 400 Beobachtungen · faellig in 57 Tag(en)",
+   "fortschritt": 0.0025,
    "tageBisFaellig": 57
   }
  ],
