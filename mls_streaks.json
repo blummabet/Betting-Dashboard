@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "mls",
-    "generatedAt": "2026-09-19T11:55:51.122239+00:00",
+    "generatedAt": "2026-09-19T21:26:34.692534+00:00",
     "minLen": 3,
     "strongLen": 5,
     "sortiert": "zufallPct",
@@ -502,6 +502,84 @@
       "matchupPct": 69
     },
     {
+      "teamId": "1612",
+      "team": "Minnesota United FC",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1612.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "bttsYes",
+      "market": "Beide Teams treffen",
+      "length": 10,
+      "venue": "all",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 47% → 55% · Signale bestätigen"
+      },
+      "ratePct": 60,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 5,
+      "zufallPct": 1.46537,
+      "ligaBasisPct": 66,
+      "seltenheit": {
+        "basis": "eigen",
+        "ratePct": 60,
+        "preN": 5,
+        "einsZu": 165,
+        "erwartet": 5.99,
+        "familie": 990,
+        "bandPct": [
+          27,
+          86
+        ],
+        "einsZuBand": [
+          5,
+          443548
+        ],
+        "erwartetBand": [
+          0.0,
+          212.32
+        ],
+        "urteil": "erwartbar",
+        "grund": "unter 990 geprüften Kombinationen sind 6.0 solcher Läufe zu erwarten"
+      },
+      "next": {
+        "oppId": "1605",
+        "oppName": "Los Angeles Galaxy",
+        "atHome": true,
+        "date": "2026-09-20",
+        "kickoff": "2026-09-20T00:30:00+00:00",
+        "oppRatePct": 47,
+        "pickKey": "MLS-26-1612-1605"
+      },
+      "oppSupportPct": 47,
+      "matchupPct": 55,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 3,
+        "conviction": 5,
+        "names": [
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "streak_momentum"
+        ],
+        "market": "Beide Teams treffen — Ja"
+      }
+    },
+    {
       "teamId": "1617",
       "team": "Portland Timbers",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/1617.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -554,72 +632,6 @@
       },
       "oppSupportPct": 73,
       "matchupPct": 69
-    },
-    {
-      "teamId": "1612",
-      "team": "Minnesota United FC",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1612.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "bttsYes",
-      "market": "Beide Teams treffen",
-      "length": 10,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 47% → 55%"
-      },
-      "ratePct": 60,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 5,
-      "zufallPct": 1.46537,
-      "ligaBasisPct": 66,
-      "seltenheit": {
-        "basis": "eigen",
-        "ratePct": 60,
-        "preN": 5,
-        "einsZu": 165,
-        "erwartet": 5.99,
-        "familie": 990,
-        "bandPct": [
-          27,
-          86
-        ],
-        "einsZuBand": [
-          5,
-          443548
-        ],
-        "erwartetBand": [
-          0.0,
-          212.32
-        ],
-        "urteil": "erwartbar",
-        "grund": "unter 990 geprüften Kombinationen sind 6.0 solcher Läufe zu erwarten"
-      },
-      "next": {
-        "oppId": "1605",
-        "oppName": "Los Angeles Galaxy",
-        "atHome": true,
-        "date": "2026-09-20",
-        "kickoff": "2026-09-20T00:30:00+00:00",
-        "oppRatePct": 47,
-        "pickKey": "MLS-26-1612-1605"
-      },
-      "oppSupportPct": 47,
-      "matchupPct": 55
     },
     {
       "teamId": "1599",
@@ -2758,15 +2770,15 @@
       "matchupPct": 45,
       "signalInfo": {
         "state": "confirm",
-        "count": 7,
-        "conviction": 6,
+        "count": 6,
+        "conviction": 5,
         "names": [
-          "lead_lag_bias",
           "injury",
           "form_trend",
           "h2h_pattern",
           "xg_strength",
-          "chance_creation"
+          "chance_creation",
+          "topscorer_momentum"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -3273,9 +3285,9 @@
       "venue": "H",
       "strong": true,
       "continuation": {
-        "state": "neutral",
+        "state": "intakt",
         "ratePct": 66,
-        "label": "Eigen 66% + Gegner 47% → 58%"
+        "label": "Eigen 66% + Gegner 47% → 58% · Signale bestätigen"
       },
       "ratePct": 66,
       "seq": [
@@ -3313,7 +3325,19 @@
         "pickKey": "MLS-26-1612-1605"
       },
       "oppSupportPct": 47,
-      "matchupPct": 58
+      "matchupPct": 58,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 3,
+        "conviction": 5,
+        "names": [
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "streak_momentum"
+        ],
+        "market": "Beide Teams treffen — Ja"
+      }
     },
     {
       "teamId": "1612",
@@ -3327,9 +3351,9 @@
       "venue": "A",
       "strong": true,
       "continuation": {
-        "state": "neutral",
+        "state": "intakt",
         "ratePct": 66,
-        "label": "Eigen 66% + Gegner 47% → 58%"
+        "label": "Eigen 66% + Gegner 47% → 58% · Signale bestätigen"
       },
       "ratePct": 66,
       "seq": [
@@ -3365,7 +3389,19 @@
         "pickKey": "MLS-26-1612-1605"
       },
       "oppSupportPct": 47,
-      "matchupPct": 58
+      "matchupPct": 58,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 3,
+        "conviction": 5,
+        "names": [
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "streak_momentum"
+        ],
+        "market": "Beide Teams treffen — Ja"
+      }
     },
     {
       "teamId": "9568",
@@ -3476,15 +3512,15 @@
       "matchupPct": 57,
       "signalInfo": {
         "state": "confirm",
-        "count": 7,
-        "conviction": 6,
+        "count": 6,
+        "conviction": 5,
         "names": [
-          "lead_lag_bias",
           "injury",
           "form_trend",
           "h2h_pattern",
           "xg_strength",
-          "chance_creation"
+          "chance_creation",
+          "topscorer_momentum"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -8118,15 +8154,15 @@
       "matchupPct": 65,
       "signalInfo": {
         "state": "confirm",
-        "count": 7,
-        "conviction": 6,
+        "count": 6,
+        "conviction": 5,
         "names": [
-          "lead_lag_bias",
           "injury",
           "form_trend",
           "h2h_pattern",
           "xg_strength",
-          "chance_creation"
+          "chance_creation",
+          "topscorer_momentum"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -8250,15 +8286,15 @@
       "matchupPct": 57,
       "signalInfo": {
         "state": "confirm",
-        "count": 7,
-        "conviction": 6,
+        "count": 6,
+        "conviction": 5,
         "names": [
-          "lead_lag_bias",
           "injury",
           "form_trend",
           "h2h_pattern",
           "xg_strength",
-          "chance_creation"
+          "chance_creation",
+          "topscorer_momentum"
         ],
         "market": "Über 2.5 Tore"
       }
