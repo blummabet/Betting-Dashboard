@@ -452,13 +452,23 @@ class DasKursrutschBuchWirdAbgerechnet(unittest.TestCase):
         q = (Path(__file__).parent.parent / "betfair_public_eval.py").read_text(encoding="utf-8")
         self.assertIn("void_live_rutsch(rutsch)", q)
 
-    def test_das_echte_buch_traegt_keine_live_zeile_in_der_bilanz(self):
+    def test_die_regel_raeumt_auch_das_echte_buch(self):
+        """Gegen die echten Zeilen — aber ueber die REGEL, nicht ueber den Dateizustand.
+
+        19.09.2026: die erste Fassung las den Status direkt aus der Datei und fiel, sobald die
+        Pipeline die Live-Zeilen vor dem Rollout als `won` abgerechnet hatte. Ein Test, der
+        davon abhaengt, WANN der letzte Lauf war, misst den Lauf und nicht die Regel — dieselbe
+        Falle wie heute Abend bei `alter_tage` und der mtime."""
         import json
         from pathlib import Path
         p = Path(__file__).parent.parent / "betfair_rutsch_ledger.json"
         if not p.exists():
             self.skipTest("noch kein Rutsch-Buch")
-        for r in json.loads(p.read_text(encoding="utf-8")):
-            if (r.get("live") or {}).get("time") is not None:
-                self.assertEqual(r.get("status"), "void",
-                                 "live gesendete Zeile zaehlt noch in die Bilanz")
+        buch = json.loads(p.read_text(encoding="utf-8"))
+        live = [r for r in buch if (r.get("live") or {}).get("time") is not None]
+        if not live:
+            self.skipTest("keine Live-Zeilen im Buch")
+        E.void_live_rutsch(buch)
+        for r in live:
+            self.assertEqual(r.get("status"), "void",
+                             "die Regel laesst eine live gesendete Zeile in der Bilanz")

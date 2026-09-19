@@ -2560,3 +2560,58 @@ class TestEineKaputteDateiIstNichtLeer(unittest.TestCase):
         q = (Path(__file__).parent.parent / "poly_whale_watch.py").read_text(encoding="utf-8")
         self.assertIn("_load_pflicht(TRACK_FILE", q)
         self.assertIn("_load_pflicht(BROAD_FILE", q)
+
+
+class TestGesperrteSportartenGehenAuchNichtInTrades(unittest.TestCase):
+    """🔴 19.09.2026 (Lucas, zu einer UFC-Karte im Trades-Kanal):
+
+      „Nimm lieber diese Push bitte raus … Da gibt's auch immer was aus US Sport in trades.
+       Brauch ich nicht, da wir das nur mitlaufen haben im Hintergrund. Das reicht."
+
+    Bis dahin galt die Sperre (`blockedCats`: US-Sport, Kampfsport) nur fuer Public. Trades
+    bekam die Karte weiter, mit einer Zeile „🚫 Sportart aktuell nicht bespielbar … Kein
+    Setzen-Button, kein Public-Post. Steht nur zur Beobachtung hier." Eine Karte, zu der es
+    keinen Knopf gibt, kostet Aufmerksamkeit und sagt nichts, was das Papier-Depot nicht
+    ohnehin mitschreibt. Gemessen am Bestand dieses Abends: 4 von 4 Trades-Kandidaten waren
+    Kampfsport.
+    """
+    CATS = ["US-Sport", "Kampfsport"]
+
+    def _k(self, league):
+        return ("pk-" + league, _pos(9000, league=league), False)
+
+    def test_gesperrte_fallen_raus_und_werden_gezaehlt(self):
+        kand = [self._k("UFC"), self._k("EPL"), self._k("NBA"), self._k("ATP")]
+        uebrig, raus = P.ohne_gesperrte(kand, self.CATS)
+        self.assertEqual(raus, 2)
+        self.assertEqual([c[1]["league"] for c in uebrig], ["EPL", "ATP"])
+
+    def test_eine_leere_liste_heisst_nimm_die_vorgabe_nicht_nichts_gesperrt(self):
+        """Feinheit, die man einmal festhalten sollte: `bet_blocked` faellt bei leerer Liste auf
+        BLOCKED_FALLBACK zurueck, und `blocked_cats` tut dasselbe. Eine leere `blockedCats` im
+        Artefakt oeffnet also NICHT alles — sie bedeutet „Vorgabe". Das ist die sichere Richtung
+        (ein kaputtes Artefakt macht den Kanal nicht auf), aber es ist nicht offensichtlich."""
+        kand = [self._k("UFC"), self._k("EPL")]
+        self.assertEqual(P.ohne_gesperrte(kand, [])[1], 1)
+        self.assertEqual(P.blocked_cats({"blockedCats": []}), list(P.BLOCKED_FALLBACK))
+
+    def test_leere_eingabe_bleibt_leer(self):
+        self.assertEqual(P.ohne_gesperrte(None, self.CATS), ([], 0))
+        self.assertEqual(P.ohne_gesperrte([], self.CATS), ([], 0))
+
+    def test_die_liste_kommt_aus_dem_artefakt_nicht_aus_dem_code(self):
+        """Legt Lucas die Sperre im Papier-Depot um, muss der Kanal mitziehen — zwei Listen
+        waeren genau die Drift, gegen die `blocked_cats` gebaut wurde."""
+        self.assertEqual(P.blocked_cats({"blockedCats": ["Tennis"]}), ["Tennis"])
+        kand = [self._k("ATP"), self._k("UFC")]
+        uebrig, raus = P.ohne_gesperrte(kand, P.blocked_cats({"blockedCats": ["Tennis"]}))
+        self.assertEqual(raus, 1)
+        self.assertEqual([c[1]["league"] for c in uebrig], ["UFC"])
+
+    def test_der_lauf_wendet_es_auf_beide_trades_pfade_an(self):
+        """Karten UND Nachtraege. Die Nachtraege speisen sich aus `seen` — dort stehen die
+        Eintraege von VORHER noch drin, auch wenn nichts Neues mehr hineinkommt."""
+        from pathlib import Path
+        q = (Path(__file__).parent.parent / "poly_whale_watch.py").read_text(encoding="utf-8")
+        self.assertIn("cand, _blk_raus = ohne_gesperrte(cand, _blocked)", q)
+        self.assertIn("faellig, _nb = ohne_gesperrte(faellig, _blocked)", q)

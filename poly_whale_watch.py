@@ -192,6 +192,32 @@ def bet_blocked(pos, cats=None):
     return sport_category(pos.get("league"), pos.get("sport")) in (cats or BLOCKED_FALLBACK)
 
 
+def ohne_gesperrte(kandidaten, cats):
+    """Gesperrte Sportarten raus — ab jetzt in BEIDEN Kanaelen. REIN. -> (uebrig, raus)
+
+    🔴 19.09.2026 (Lucas, zu einer UFC-Karte im Trades-Kanal):
+      „Nimm lieber diese Push bitte raus ... Da gibt's auch immer was aus US Sport in trades.
+       Brauch ich nicht, da wir das nur mitlaufen haben im Hintergrund. Das reicht."
+
+    Bis heute galt die Sperre nur fuer Public; Trades bekam die Karte weiter und trug dafuer
+    eine Zeile „🚫 Sportart aktuell nicht bespielbar — im Papier-Depot klar negativ. Kein
+    Setzen-Button, kein Public-Post." Das war als Beobachtung gedacht, ist aber genau das, was
+    das Papier-Depot ohnehin mitschreibt: eine Karte, zu der es keinen Knopf gibt, kostet
+    Aufmerksamkeit und liefert nichts, was nicht im Hintergrund schon steht.
+
+    Die Liste kommt aus poly_shortlist_track.json (`blockedCats`, heute US-Sport + Kampfsport)
+    und entsteht in poly-wallets.js — legt Lucas sie dort um, zieht auch dieser Filter mit. Die
+    Poly-Engine wird ohnehin „ohne Kampfsport, US-Sport" ausgewertet; der Kanal deckt sich ab
+    jetzt mit der Messung, statt Karten zu zeigen, die in keiner Bilanz auftauchen.
+
+    Die Kandidaten aller drei Trades-Pfade sind (pkey, pos, extra) — `pos` steht ueberall an
+    derselben Stelle, deshalb reicht ein Griff fuer alle.
+    """
+    k = list(kandidaten or [])
+    uebrig = [c for c in k if not bet_blocked(c[1], cats)]
+    return uebrig, len(k) - len(uebrig)
+
+
 # 08.09.2026 (Lucas: „schau dir die ganzen Whales an, ob das alles sauber umgesetzt ist").
 # Hier standen ZWEI Liga→Sport-Zuordnungen in derselben Datei: `sport_category()` (Zeile 146,
 # volle Regex, kennt ligue/serie/eredivisie/elitese/championship/…) und `_sport()` (arm:
@@ -2468,6 +2494,11 @@ def main():
     # (01.08.2026, Lucas: 1a) Trades-Channel bekommt denselben Sanity-Filter wie Public:
     # nur Sport + Preis 3–97¢ → kein @100¢-schon-entschieden, kein Politik/Krypto-Müll.
     cand = [c for c in select(track, seen, now, sharp_floor=MIN_USD_SHARP) if _pub_ok(c[1])]
+    # 19.09.2026 (Lucas): gesperrte Sportarten jetzt auch aus TRADES — s. ohne_gesperrte.
+    cand, _blk_raus = ohne_gesperrte(cand, _blocked)
+    if _blk_raus:
+        print(f"  \U0001f6ab {_blk_raus} Karte(n) unterdrueckt — gesperrte Sportart "
+              f"({', '.join(_blocked)}), laeuft im Hintergrund weiter mit")
     cand, _extra = _dedup_by_wallet(cand, MAX_PER_WALLET)   # je Wallet max MAX_PER_WALLET Karten/Lauf
     print(f"  {len(cand)} alertwürdige Position(en) (Sport + 3–97¢, ≥ {_usd(MIN_USD_TRACKED)} mit / {_usd(MIN_USD_UNTRACKED)} ohne Record, frisch)")
 
@@ -2497,6 +2528,12 @@ def main():
     if not isinstance(nach_seen, dict):
         nach_seen = {}
     faellig = nachtraege(seen, broad, scores, nach_seen, now, bewiesen_zaehlt=_sperrt_bew)
+    # 19.09.2026: auch hier. Neue gesperrte Karten landen zwar gar nicht mehr in `seen`, aber
+    # die Eintraege von VORHER stehen noch drin — ohne diesen Griff kaemen sie als Nachtrag
+    # doch noch durch, und zwar genau so lange, bis der Dedup-Stand durchgelaufen ist.
+    faellig, _nb = ohne_gesperrte(faellig, _blocked)
+    if _nb:
+        print(f"  \U0001f6ab {_nb} Nachtrag/Nachtraege unterdrueckt — gesperrte Sportart")
     n_sent = 0
     for pkey, pos, cf in faellig[:NACHTRAG_MAX]:
         if tg_send(build_nachtrag_card(pos, cf, broad, scores)):
