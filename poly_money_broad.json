@@ -1,15 +1,15 @@
 {
- "n": 500,
+ "n": 503,
  "minOdds": 1.35,
- "moneyHitRate": 0.38,
- "priceHitRate": 0.418,
- "brierMoney": 0.8976,
- "brierPrice": 0.6855,
+ "moneyHitRate": 0.382,
+ "priceHitRate": 0.419,
+ "brierMoney": 0.8952,
+ "brierPrice": 0.6837,
  "disagree": {
-  "n": 141,
-  "moneyWon": 19,
-  "priceWon": 38,
-  "neither": 84
+  "n": 142,
+  "moneyWon": 18,
+  "priceWon": 37,
+  "neither": 87
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -23,19 +23,11 @@
    "verdict": "preis_besser"
   },
   {
-   "league": "EFL-CHAMPIONSHIP",
-   "n": 32,
-   "moneyHitRate": 0.562,
-   "brierMoney": 0.7602,
-   "brierPrice": 0.6055,
-   "verdict": "preis_besser"
-  },
-  {
    "league": "EPL",
-   "n": 39,
-   "moneyHitRate": 0.179,
-   "brierMoney": 1.0072,
-   "brierPrice": 0.8442,
+   "n": 40,
+   "moneyHitRate": 0.2,
+   "brierMoney": 0.9821,
+   "brierPrice": 0.8308,
    "verdict": "preis_besser"
   },
   {
@@ -44,6 +36,14 @@
    "moneyHitRate": 0.324,
    "brierMoney": 0.8252,
    "brierPrice": 0.6534,
+   "verdict": "preis_besser"
+  },
+  {
+   "league": "EFL-CHAMPIONSHIP",
+   "n": 33,
+   "moneyHitRate": 0.545,
+   "brierMoney": 0.781,
+   "brierPrice": 0.6031,
    "verdict": "preis_besser"
   },
   {
@@ -56,10 +56,10 @@
   },
   {
    "league": "LIGUE-1",
-   "n": 27,
-   "moneyHitRate": 0.259,
-   "brierMoney": 0.9624,
-   "brierPrice": 0.7469,
+   "n": 28,
+   "moneyHitRate": 0.286,
+   "brierMoney": 0.9282,
+   "brierPrice": 0.7317,
    "verdict": "preis_besser"
   },
   {
@@ -88,10 +88,10 @@
   }
  ],
  "guete": {
-  "belastbar": 500,
-  "preis_echo": 215,
+  "belastbar": 503,
+  "preis_echo": 211,
   "abgeschnitten": 68,
-  "unbekannt": 275,
+  "unbekannt": 268,
   "leer": 0
  },
  "rows": [
@@ -576,7 +576,7 @@
    "totalUsd": 364386
   }
  ],
- "generatedAt": "2026-09-19T17:30:38.256810+00:00",
+ "generatedAt": "2026-09-19T18:00:32.774823+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -585,21 +585,21 @@
   "mlb": 710,
   "nhl": 586,
   "mls": 702,
-  "epl": 495,
+  "epl": 490,
   "soccer": 800,
-  "tennis": 545,
+  "tennis": 543,
   "ucl": 417,
   "la-liga": 502,
   "bundesliga": 444,
   "serie-a": 51,
-  "ligue-1": 502,
+  "ligue-1": 499,
   "primeira-liga": 472,
   "brazil-serie-a": 477,
   "brasileirao": 0,
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 637,
+  "esports": 635,
   "cs2": 421,
   "lol": 427,
   "dota": 9,
@@ -609,7 +609,7 @@
   "boxing": 271,
   "golf": 411,
   "f1": 381,
-  "cricket": 501,
+  "cricket": 502,
   "afc-champions-league-elite": 133,
   "allsvenskan": 1,
   "austria-bundesliga": 312,
@@ -621,7 +621,7 @@
   "chinese-super-league": 406,
   "czechia-fortuna-liga": 9,
   "denmark-superliga": 440,
-  "efl-championship": 464,
+  "efl-championship": 458,
   "english-premier-league": 2,
   "europa-conference-league": 411,
   "europa-league": 187,
@@ -633,16 +633,16 @@
   "liga-mx-apertura": 2,
   "ligue-2": 411,
   "naitons-league": 1,
-  "national-league": 635,
+  "national-league": 628,
   "nations-league": 25,
   "norway-eliteserien": 456,
   "poland-ekstraklasa": 442,
-  "premier-league": 484,
+  "premier-league": 479,
   "saudi-professional-league": 410,
   "scotland-league-cup": 193,
   "scottish-premiership": 447,
   "serbian-superliga": 434,
-  "serie-b": 445,
+  "serie-b": 443,
   "slovenia-prvaliga": 280,
   "sweden-allsvenskan": 451,
   "switzerland-super-league": 381,
@@ -660,8 +660,8 @@
   "sweepAdded": 413
  },
  "vorStats": {
-  "kandidaten": 34,
-  "budgetLeer": 12,
+  "kandidaten": 36,
+  "budgetLeer": 14,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
   "mitAnteilen": 22,
@@ -669,18 +669,18 @@
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1808,
-   "usd": 33028830,
+   "n": 1744,
+   "usd": 32511139,
    "beispiel": "fifwc-civ-ecu-2026-06-14"
   },
   "nba": {
-   "n": 255,
-   "usd": 3290838,
+   "n": 265,
+   "usd": 3316678,
    "beispiel": "nba-nyk-sas-2026-06-05"
   },
   "ecs": {
-   "n": 13,
-   "usd": 969949,
+   "n": 10,
+   "usd": 919816,
    "beispiel": "ecs-ars-mci-2026-08-16-more-markets"
   },
   "world": {
@@ -688,19 +688,14 @@
    "usd": 878938,
    "beispiel": "world-cup-3rd-place-finish-20260713190252671"
   },
-  "uef": {
-   "n": 15,
-   "usd": 410321,
-   "beispiel": "uef-kvx-tur-2026-03-31"
-  },
   "cbb": {
    "n": 68,
    "usd": 328436,
    "beispiel": "cbb-sfl-lou-2026-03-19"
   },
   "fif": {
-   "n": 75,
-   "usd": 290144,
+   "n": 56,
+   "usd": 243501,
    "beispiel": "fif-prt-nga-2026-06-10"
   },
   "nbasl": {
@@ -708,20 +703,25 @@
    "usd": 227715,
    "beispiel": "nbasl-okc-den-2026-07-14"
   },
+  "2026": {
+   "n": 45,
+   "usd": 183119,
+   "beispiel": "2026-travelers-championship-winner"
+  },
   "efa": {
    "n": 15,
    "usd": 183001,
    "beispiel": "efa-bur5-wrk1-2026-09-19-more-markets"
   },
-  "clf": {
-   "n": 37,
-   "usd": 175392,
-   "beispiel": "clf-psg-mun-2026-08-08"
+  "uef": {
+   "n": 11,
+   "usd": 179536,
+   "beispiel": "uef-kvx-tur-2026-03-31"
   },
-  "2026": {
-   "n": 19,
-   "usd": 125571,
-   "beispiel": "2026-travelers-championship-winner"
+  "clf": {
+   "n": 36,
+   "usd": 174055,
+   "beispiel": "clf-psg-mun-2026-08-08"
   },
   "democratic": {
    "n": 16,
@@ -754,13 +754,13 @@
    "beispiel": "super-bowl-champion-2026-731"
   },
   "clarity": {
-   "n": 1,
-   "usd": 48050,
+   "n": 2,
+   "usd": 49057,
    "beispiel": "clarity-act-signed-into-law-in-2026"
   },
   "kbo": {
    "n": 15,
-   "usd": 45434,
+   "usd": 45200,
    "beispiel": "kbo-kt-ssg-2026-08-22"
   },
   "cricipl": {
