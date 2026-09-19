@@ -253,7 +253,16 @@ class TestBetfairSchubladenNutzenDieEchteSchranke(unittest.TestCase):
                  # bei -1,5 %, +2,7 % und -4,6 % ROI, alle mit n=30. Eine Liga, deren vier
                  # Maerkte so weit auseinanderliegen, hat keine Liga-Kante — sie hat einen
                  # Markt, der gerade oben liegt. Genau so sieht Mehrfachtesten aus.
-                 "Kazakhstan Premier League · Match Odds"}
+                 "Kazakhstan Premier League · Match Odds",
+                 # 19.09.2026 angesehen: n=42, ROI +26,9 %, Untergrenze +1,0 %, CLV +0,11 pp —
+                 # eine Untergrenze, die praktisch auf der Null steht, und ein CLV, der von null
+                 # nicht zu unterscheiden ist. Dazu die Gegenprobe im selben Bewerb, und die ist
+                 # diesmal die ganze Auskunft: sechs weitere Brazilian-Serie-B-Schubladen mit
+                 # n=40..42 stehen bei +20,7 / +15,9 / +9,2 / -0,6 / -6,9 / -25,7 % ROI. Sieben
+                 # Maerkte derselben Liga, gleich grosse Stichproben, Spannweite 52 Punkte — das
+                 # ist die Streuung von Muenzwuerfen, nicht die Handschrift einer Kante. Dass
+                 # ausgerechnet einer davon knapp ueber die Huerde kippt, ist zu erwarten.
+                 "Brazilian Serie B · First Half Goals 0.5"}
 
     def test_gegen_den_echten_bestand_nimmt_keine_NEUE_betfair_schublade_die_huerde(self):
         """Stand 06.09.: null. Nimmt eine die Huerde, schlaegt dieser Test an — und DAS ist

@@ -965,6 +965,45 @@ def check_positionswert_ist_frisch(ctx):
     return _c("Positionswert ist frisch", "warn", fails)
 
 
+def check_public_stille_ist_erklaert(ctx):
+    """19.09.2026 (Lucas: „Gestern kam kein einziger Betfair-Push in Public. Was komisch ist.").
+
+    Es war nicht komisch: der Nachbau des 18.09. aus 40 Preis-Staenden zeigt 39 Alarme am
+    Leader-Gate, von denen nur 8 die 80-%-Einseitigkeit schafften (17.09.: 22 von 34), und die
+    letzten vier starben an `drift` und `under_tore`. Der Trades-Kanal lief normal weiter — 20
+    neue Alarme, so viele wie am 16.09. Ein Tag ohne einseitiges Geld, kein Ausfall.
+
+    Das Problem ist die Ununterscheidbarkeit: ein stummer Kanal sieht gleich aus, ob er nichts
+    zu sagen hat oder kaputt ist. Diese Woche war er beides — der Poly-Public-Kanal schwieg drei
+    Tage, und DAS war ein Defekt (eine Rangliste, die ich selbst umgestellt hatte).
+
+    EIN stiller Tag ist deshalb kein Befund. Mehrere hintereinander, waehrend oben Alarme
+    ankommen, sind einer. Der Guard nennt dann auch gleich die Stufe, an der sie haengen bleiben
+    — sonst beginnt die Suche wieder bei null.
+    """
+    t = ctx.get("bfTrichter") or {}
+    if not isinstance(t, dict) or not t:
+        return _c("Public-Stille ist erklaert", "warn", [])
+    tage = sorted(t)[:-1]          # der laufende Tag zaehlt nicht mit, er ist noch nicht vorbei
+    strecke, gruende = [], {}
+    for tag in reversed(tage):
+        e = t.get(tag) or {}
+        if not isinstance(e, dict) or not e.get("roh"):
+            break
+        if e.get("gesendet"):
+            break
+        strecke.append(tag)
+        for k, v in (e.get("gruende") or {}).items():
+            gruende[k] = gruende.get(k, 0) + int(v or 0)
+    if len(strecke) < 2:
+        return _c("Public-Stille ist erklaert", "warn", [])
+    top = sorted(gruende.items(), key=lambda kv: -kv[1])[:3]
+    return _c("Public-Stille ist erklaert", "warn", [
+        "Betfair-Public schweigt seit %d Tagen (%s), obwohl Alarme ankamen — sie bleiben haengen "
+        "an: %s" % (len(strecke), strecke[-1],
+                    ", ".join("%s (%d)" % (k, v) for k, v in top) or "unbekannt")])
+
+
 UEBERSICHT_CHECKS = [
     check_serien_rangfolge,
     check_freigabe_grund,
@@ -989,6 +1028,7 @@ UEBERSICHT_CHECKS = [
     check_takt_stimmt_mit_dem_cron,
     check_geschlossen_heisst_belegt,
     check_positionswert_ist_frisch,
+    check_public_stille_ist_erklaert,
 ]
 
 
@@ -1031,6 +1071,7 @@ def build_ctx_from_disk() -> dict:
         "autoBetsMls": _lade("mls_auto_bets_placed.json", {}),
         "balanceLiga": _lade("liga_poly_balance.json", {}),
         "balanceMls": _lade("mls_poly_balance.json", {}),
+        "bfTrichter": _lade("betfair_public_trichter.json", {}),
     }
 
 

@@ -660,3 +660,49 @@ def test_ein_frischer_positionsstand_ist_still():
     r = UI.check_positionswert_ist_frisch(
         {"balanceLiga": {"positions": 10.12, "positionsStand": datetime.now(_tz.utc).isoformat()}})
     assert r["ok"]
+
+
+# ── 19.09.2026: ein stiller Kanal muss sich erklaeren koennen ────────────────────────────────
+# Lucas: „Gestern kam kein einziger Betfair-Push in Public. Was komisch ist." — war es nicht,
+# aber das konnte niemand sehen. Drei Tage zuvor schwieg der Poly-Public-Kanal genauso, und DAS
+# war ein Defekt. Beide Male sah die Stille identisch aus.
+
+def _trichter(tage):
+    """tage: [(datum, roh, gesendet, gruende)]"""
+    return {d: {"roh": r, "gesendet": g, "gruende": gr} for d, r, g, gr in tage}
+
+
+def test_ein_einzelner_stiller_tag_ist_kein_befund():
+    """Der 18.09. selbst: 39 Alarme, keiner durch. Ein Tag ohne einseitiges Geld ist normal."""
+    t = _trichter([("2026-09-17", 34, 6, {}), ("2026-09-18", 39, 0, {"einseitig": 31}),
+                   ("2026-09-19", 10, 0, {})])
+    assert UI.check_public_stille_ist_erklaert({"bfTrichter": t})["ok"]
+
+
+def test_zwei_stille_tage_mit_alarmen_sind_einer():
+    t = _trichter([("2026-09-16", 30, 4, {}),
+                   ("2026-09-17", 34, 0, {"einseitig": 20, "drift": 5}),
+                   ("2026-09-18", 39, 0, {"einseitig": 31, "drift": 2}),
+                   ("2026-09-19", 5, 0, {})])
+    r = UI.check_public_stille_ist_erklaert({"bfTrichter": t})
+    assert not r["ok"] and r["severity"] == "warn"
+    assert "2 Tagen" in r["failures"][0]
+    assert "einseitig" in r["failures"][0], "der Guard muss sagen, WO sie haengen bleiben"
+
+
+def test_der_laufende_tag_zaehlt_nicht_mit():
+    """Sonst schlaegt der Guard jeden Morgen an, bevor der Tag eine Chance hatte."""
+    t = _trichter([("2026-09-17", 34, 6, {}), ("2026-09-18", 39, 0, {"einseitig": 31}),
+                   ("2026-09-19", 2, 0, {"einseitig": 2})])
+    assert UI.check_public_stille_ist_erklaert({"bfTrichter": t})["ok"]
+
+
+def test_tage_ganz_ohne_alarme_brechen_die_strecke():
+    """Keine Alarme heisst kein Spielplan — das ist kein stummer Kanal, das ist ein leerer Tag."""
+    t = _trichter([("2026-09-16", 30, 0, {"einseitig": 30}), ("2026-09-17", 0, 0, {}),
+                   ("2026-09-18", 39, 0, {"einseitig": 31}), ("2026-09-19", 1, 0, {})])
+    assert UI.check_public_stille_ist_erklaert({"bfTrichter": t})["ok"]
+
+
+def test_ohne_trichter_wird_nichts_behauptet():
+    assert UI.check_public_stille_ist_erklaert({})["ok"]

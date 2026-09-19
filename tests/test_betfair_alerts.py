@@ -1058,3 +1058,55 @@ class AusgangSchonEntschieden(unittest.TestCase):
         from pathlib import Path
         quelle = (Path(__file__).parent.parent / "betfair_alerts.py").read_text(encoding="utf-8")
         self.assertNotIn("ereignis_gate(alerts)", quelle)
+
+
+# ── 19.09.2026: „Gestern kam kein einziger Betfair-Push in Public. Was komisch ist." ──────────
+# Es war nicht komisch. Der Nachbau des Tages aus 40 Preis-Staenden:
+#
+#     Stufe                  18.09.   17.09. (6 Pushes)
+#     Leader-Gate               39       34
+#     Einseitigkeit >= 80 %      8       22      <- hier bricht der Tag
+#     kein Ereignis-Sprung       4       17
+#     Kohaerenz-Filter           0        9
+#
+# Kein Ausfall, nur ein Tag ohne einseitiges Geld. Der Trades-Kanal lief normal weiter (20 neue
+# Alarme, so viele wie am 16.09.). Das Problem ist, dass man das nicht sehen konnte: ein stummer
+# Kanal sieht gleich aus, ob er nichts zu sagen hat oder kaputt ist — und diese Woche war er
+# beides.
+
+class TestDerTrichterMachtStilleLesbar(unittest.TestCase):
+
+    def test_jede_stufe_wird_gezaehlt(self):
+        alerts = [{"n": i} for i in range(10)]
+        st = BA.trichter_stufen(alerts, [
+            ("a", lambda x: x["n"] < 3),      # 3 raus
+            ("b", lambda x: x["n"] > 7),      # 2 raus
+        ])
+        self.assertEqual(st, [("roh", 10, 0), ("a", 7, 3), ("b", 5, 2)])
+
+    def test_ohne_alarme_bleibt_der_trichter_leer_statt_leise(self):
+        self.assertEqual(BA.trichter_stufen([], [("a", lambda x: True)]),
+                         [("roh", 0, 0), ("a", 0, 0)])
+
+    def test_ein_lauf_addiert_sich_zum_tag(self):
+        from datetime import datetime, timezone
+        jetzt = datetime(2026, 9, 18, 12, 0, tzinfo=timezone.utc)
+        st = [("roh", 5, 0), ("einseitig", 2, 3)]
+        b1 = BA.trichter_buchen(st, 0, {"einseitig": 3}, jetzt=jetzt)
+        b2 = BA.trichter_buchen(st, 1, {"einseitig": 3}, jetzt=jetzt, alt=b1)
+        e = b2["2026-09-18"]
+        self.assertEqual(e["roh"], 10)
+        self.assertEqual(e["einseitig"], 6)
+        self.assertEqual(e["gesendet"], 1)
+        self.assertEqual(e["laeufe"], 2)
+        self.assertEqual(e["gruende"]["einseitig"], 6)
+
+    def test_das_buch_waechst_nicht_unbegrenzt(self):
+        from datetime import datetime, timezone
+        b = {}
+        for tag in range(1, 40):
+            b = BA.trichter_buchen([("roh", 1, 0)], 0, {},
+                                   jetzt=datetime(2026, 8, 1, tzinfo=timezone.utc).replace(day=1)
+                                   .fromisoformat("2026-08-%02dT12:00:00+00:00" % min(tag, 31)),
+                                   alt=b, tage=5)
+        self.assertLessEqual(len(b), 5)
