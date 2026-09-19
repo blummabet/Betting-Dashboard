@@ -798,7 +798,7 @@ null
 "leadOdd": 2.56,
 "value": 66325.48,
 "sentAt": "2026-09-19T21:42:00.857728+00:00",
-"status": "pending",
+"status": "won",
 "htScore": [
 0,
 0
@@ -819,7 +819,17 @@ null
 0,
 0
 ]
-}
+},
+"clvBf": 1.59,
+"clvPinn": 3.13,
+"settledAt": "2026-09-19T23:55:28.871744+00:00",
+"ftScore": [
+1,
+2
+],
+"profit": 1.56,
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36045431:Over/Under 2.5 Goals",
@@ -875,7 +885,7 @@ null
 "leadOdd": 2.0,
 "value": 91993.04,
 "sentAt": "2026-09-19T21:56:57.234466+00:00",
-"status": "pending",
+"status": "lost",
 "htScore": [
 0,
 0
@@ -896,7 +906,17 @@ null
 0,
 0
 ]
-}
+},
+"clvBf": 20.42,
+"clvPinn": null,
+"settledAt": "2026-09-19T23:55:28.871744+00:00",
+"ftScore": [
+1,
+2
+],
+"profit": -1.0,
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36073236:First Half Goals 1.5",
@@ -1029,6 +1049,70 @@ null
 "score": [
 1,
 1
+]
+}
+},
+{
+"k": "fresh:36078671:First Half Goals 0.5",
+"matchId": "36078671",
+"scenario": "fresh",
+"market": "First Half Goals 0.5",
+"league": "US MLS",
+"home": "DC Utd",
+"away": "Charlotte FC",
+"leadName": "Over 0.5 Goals",
+"leadOdd": 1.44,
+"value": 125636.92,
+"sentAt": "2026-09-19T23:55:28.356621+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.9131228304546148,
+"leadDir": "out",
+"onLeader": false,
+"tier": "top",
+"magnitude": 124162.8,
+"schwelle": 100000.0,
+"anteilSchwelle": 1.242,
+"raus": "drift",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 14,
+"score": [
+0,
+0
+]
+}
+},
+{
+"k": "fix:36078671:First Half Goals 0.5",
+"matchId": "36078671",
+"scenario": "fix",
+"market": "First Half Goals 0.5",
+"league": "US MLS",
+"home": "DC Utd",
+"away": "Charlotte FC",
+"leadName": "Over 0.5 Goals",
+"leadOdd": 1.44,
+"value": 125636.92,
+"sentAt": "2026-09-19T23:55:28.356641+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.9131228304546148,
+"leadDir": "out",
+"onLeader": null,
+"tier": "top",
+"magnitude": 0.0,
+"schwelle": 100000.0,
+"anteilSchwelle": 0.0,
+"raus": "fix",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 14,
+"score": [
+0,
+0
 ]
 }
 }
