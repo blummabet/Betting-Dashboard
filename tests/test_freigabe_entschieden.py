@@ -243,7 +243,26 @@ class TestBetfairSchubladenNutzenDieEchteSchranke(unittest.TestCase):
                  # Schranke. Bei ~193 gleichzeitig geprueften Schubladen ist das die Signatur des
                  # Mehrfachtestens und nicht die einer Kante. Erst wenn eine dieser Zeilen bei
                  # doppeltem n ueber der Huerde bleibt, ist es ein Befund.
-                 "Egyptian 2nd Division · Match Odds"}
+                 "Egyptian 2nd Division · Match Odds",
+                 # 19.09.2026 angesehen: n=30 (genau am Mindest-n), ROI +43,8 %, Untergrenze
+                 # +12,6 %, P/L +13,13, CLV +1,70 pp — wieder ein Mittel ohne Streuung, also
+                 # ohne Untergrenze, also gesperrt. Die FUENFTE Zeile binnen sechs Tagen mit
+                 # demselben Zuschnitt: n zwischen 30 und 35, ROI zwischen +30 und +44 %, kein
+                 # CLV mit Schranke. Dazu diesmal die Gegenprobe im selben Bewerb: die drei
+                 # anderen Kasachstan-Schubladen (Over/Under 2.5, Over/Under 3.5, BTTS) stehen
+                 # bei -1,5 %, +2,7 % und -4,6 % ROI, alle mit n=30. Eine Liga, deren vier
+                 # Maerkte so weit auseinanderliegen, hat keine Liga-Kante — sie hat einen
+                 # Markt, der gerade oben liegt. Genau so sieht Mehrfachtesten aus.
+                 "Kazakhstan Premier League · Match Odds",
+                 # 19.09.2026 angesehen: n=42, ROI +26,9 %, Untergrenze +1,0 %, CLV +0,11 pp —
+                 # eine Untergrenze, die praktisch auf der Null steht, und ein CLV, der von null
+                 # nicht zu unterscheiden ist. Dazu die Gegenprobe im selben Bewerb, und die ist
+                 # diesmal die ganze Auskunft: sechs weitere Brazilian-Serie-B-Schubladen mit
+                 # n=40..42 stehen bei +20,7 / +15,9 / +9,2 / -0,6 / -6,9 / -25,7 % ROI. Sieben
+                 # Maerkte derselben Liga, gleich grosse Stichproben, Spannweite 52 Punkte — das
+                 # ist die Streuung von Muenzwuerfen, nicht die Handschrift einer Kante. Dass
+                 # ausgerechnet einer davon knapp ueber die Huerde kippt, ist zu erwarten.
+                 "Brazilian Serie B · First Half Goals 0.5"}
 
     def test_gegen_den_echten_bestand_nimmt_keine_NEUE_betfair_schublade_die_huerde(self):
         """Stand 06.09.: null. Nimmt eine die Huerde, schlaegt dieser Test an — und DAS ist

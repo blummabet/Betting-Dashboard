@@ -1414,6 +1414,65 @@ def _pub_seen_rec(rec):
     return 0.0, 0
 
 
+TRICHTER_FILE = "betfair_public_trichter.json"
+TRICHTER_TAGE = 30
+
+
+def trichter_stufen(alerts, filter_paare) -> list:
+    """Wie viele Alarme ueberleben jede Stufe? REIN/testbar. -> [(name, uebrig, raus)]
+
+    🔴 19.09.2026 (Lucas: „Gestern kam kein einziger Betfair-Push in Public. Was komisch ist.").
+
+    Es war nicht komisch, und es war kein Ausfall — der Nachbau des 18.09. aus 40 Preis-Staenden
+    zeigt das:
+
+        Stufe                      18.09.        17.09. (6 Pushes)
+        Leader-Gate                   39            34
+        Einseitigkeit >= 80 %          8            22      <- hier bricht der Tag
+        kein Ereignis-Sprung           4            17
+        Kohaerenz-Filter               0             9
+        gesendet                       0             6
+
+    Der Tag hatte schlicht kein einseitiges frisches Geld: 21 % der Alarme kamen durch die
+    80-%-Schranke statt 65 % wie am Vortag. Die letzten vier starben an `under_goals` (2) und
+    `drift` (2). Der Trades-Kanal lief derweil normal weiter — 20 neue Alarme, genauso viele wie
+    am 16.09.
+
+    Das Problem ist also nicht die Stille, sondern dass man sie nicht lesen kann. Ein stummer
+    Kanal sieht genau gleich aus, ob er nichts zu sagen hat oder kaputt ist — und diese Woche war
+    er beides: der Poly-Public-Kanal schwieg drei Tage, DAS war ein Defekt. Deshalb schreibt der
+    Lauf ab jetzt mit, wo die Alarme geblieben sind.
+    """
+    out = []
+    uebrig = list(alerts or [])
+    out.append(("roh", len(uebrig), 0))
+    for name, raus in filter_paare:
+        vorher = len(uebrig)
+        uebrig = [a for a in uebrig if not raus(a)]
+        out.append((name, len(uebrig), vorher - len(uebrig)))
+    return out
+
+
+def trichter_buchen(stufen, gesendet, gruende, jetzt=None, alt=None, tage=TRICHTER_TAGE) -> dict:
+    """Die Stufen eines Laufs in die Tagesbilanz addieren. REIN/testbar."""
+    from datetime import datetime, timezone as _tz
+    jetzt = jetzt or datetime.now(_tz.utc)
+    tag = jetzt.strftime("%Y-%m-%d")
+    buch = dict(alt or {})
+    e = dict(buch.get(tag) or {})
+    for name, uebrig, raus in stufen:
+        e[name] = int(e.get(name, 0)) + int(uebrig if name == "roh" else raus)
+    e["gesendet"] = int(e.get("gesendet", 0)) + int(gesendet)
+    e["laeufe"] = int(e.get("laeufe", 0)) + 1
+    g = dict(e.get("gruende") or {})
+    for k, v in (gruende or {}).items():
+        g[k] = int(g.get(k, 0)) + int(v)
+    e["gruende"] = g
+    e["updatedAt"] = jetzt.isoformat()
+    buch[tag] = e
+    return {k: buch[k] for k in sorted(buch)[-tage:]}
+
+
 def should_send_public(seen, key, value) -> bool:
     rec = seen.get(key)
     if rec is None:
@@ -1521,9 +1580,10 @@ def main():
     # 🟡 Öffentlicher Moneyflow (kuratierte, höhere Schwellen) → CocoBet-Community-Channel.
     # Eigener Dedup-State, damit die höhere Public-Schwelle unabhängig vom Trades-Channel greift.
     pub_seen = _load_seen(PUB_SEEN_FILE)
-    pub_alerts = _leader_gate(attach_direction(
-        collect_alerts(prices, hist, PUB_HT_TOP, PUB_HT_REST, PUB_FRESH_TOP, PUB_FRESH_REST), direction),
-        PUB_HT_TOP, PUB_HT_REST, PUB_FRESH_TOP, PUB_FRESH_REST)
+    _pub_roh = attach_direction(
+        collect_alerts(prices, hist, PUB_HT_TOP, PUB_HT_REST, PUB_FRESH_TOP, PUB_FRESH_REST), direction)
+    _pub_nach_leader = _leader_gate(_pub_roh, PUB_HT_TOP, PUB_HT_REST, PUB_FRESH_TOP, PUB_FRESH_REST)
+    pub_alerts = _pub_nach_leader
     # (Lucas 05.08.2026) Public-Kuratierung: frisches Geld nur pushen, wenn es klar einseitig ist
     # (>=PUB_FRESH_MIN_SHARE auf einer Seite) — reines Volumen ohne Richtung raus. HT hat schon sein
     # 85%-Gate; Trades bleibt ungefiltert (obskure Ligen bewusst drin — dort oft Sharp Money).
@@ -1562,7 +1622,39 @@ def main():
                 pub_sent += 1
                 _log_public_push(a, cidx)   # fürs Tracking/Auswerten (+ Konsens-Zweitmeinung)
     _save_seen(PUB_SEEN_FILE, pub_seen)
+
+    # 19.09.2026: mitschreiben, WO die Alarme geblieben sind. Ohne das ist ein stummer Tag von
+    # einem kaputten Kanal nicht zu unterscheiden — s. `trichter_stufen`.
+    _stufen = trichter_stufen(_pub_roh, [
+        ("leader", lambda a: a not in _pub_nach_leader),
+        ("einseitig", lambda a: a.get("scenario") == "fresh"
+                                and (a.get("leadShare") or 0.0) < PUB_FRESH_MIN_SHARE),
+        ("fix", lambda a: a.get("scenario") == "fix"),
+        ("ereignis_sprung", _dir_event_jump),
+        ("draw_inplay", _draw_inplay_chase),
+        ("mo_remis", _draw_mo_public_raus),
+        ("altbestand", geld_ist_altbestand),
+        ("inkohaerent", _pub_incoherent),
+        ("drift", _pub_drift),
+        ("ht_nutzlos", _pub_ht_useless),
+        ("fav_unbestaetigt", _pub_unconfirmed_fav),
+        ("under_tore", _pub_under_goals),
+    ])
+    _gruende = {name: raus for name, _uebrig, raus in _stufen if raus}
+    try:
+        _alt = json.load(open(TRICHTER_FILE, encoding="utf-8"))
+    except Exception:
+        _alt = {}
+    try:
+        json.dump(trichter_buchen(_stufen, pub_sent, _gruende, alt=_alt if isinstance(_alt, dict) else {}),
+                  open(TRICHTER_FILE, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    except Exception as _e:
+        print("  ⚠️  Trichter nicht geschrieben:", _e)
     print("Betfair Public-Moneyflow: %d Kandidaten, %d gesendet" % (len(pub_alerts), pub_sent))
+    if not pub_sent and _stufen[0][1]:
+        _wo = ", ".join("%s −%d" % (n, r) for n, _u, r in _stufen if r)
+        print("  ℹ️  nichts gesendet. Wo die %d Alarme geblieben sind: %s"
+              % (_stufen[0][1], _wo or "—"))
 
 
 if __name__ == "__main__":

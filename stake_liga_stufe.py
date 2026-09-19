@@ -226,6 +226,25 @@ EBENE = {
     # I-League. Beleg aus der Paarung: Laitkyrhong SC gegen Mawtawar SC. Dieselbe Klasse wie
     # „calcutta-1st-division" drueber: „First Division" ist der Name der Staffel, nicht ihr Rang.
     "shillong-first-divison-league": 3,
+    # 19.09.2026 (CI-Wachhund, fuenf Slugs auf einmal). Alle fuenf haben dasselbe Problem: der
+    # Name nennt eine Ordnungszahl oder ein Adjektiv, aber nicht den Rang in seiner Pyramide.
+    #
+    #   2-hnl                 Kroatien, „Druga HNL" — unter der HNL, also Ebene 2.
+    #   china-league-2        China, dritte Ebene (Super League 1 · League One 2 · League Two 3).
+    #                         „League 2" heisst hier NICHT zweite Klasse — genau die Falle.
+    #   ii-liga               Polen, dritte Ebene (Ekstraklasa 1 · I liga 2 · II liga 3). Auch
+    #                         hier zaehlt die roemische Zwei eine Klasse, nicht die Ebene.
+    #   kategoria-superiore   Albanien, die hoechste Klasse — „Superiore" ist der Landesname
+    #                         fuer Ebene 1, kein Zusatz oberhalb einer anderen Liga.
+    #   liga-alef             Israel, dritte Ebene (Premier League 1 · Liga Leumit 2 · Liga
+    #                         Alef 3). Passt zu „liga-bet-south-a": 3 weiter oben — Liga Bet ist
+    #                         die vierte, steht dort aber schon als 3; die Alef gehoert
+    #                         mindestens dorthin.
+    "2-hnl": 2,
+    "china-league-2": 3,
+    "ii-liga": 3,
+    "kategoria-superiore": 1,
+    "liga-alef": 3,
 }
 
 # Wettbewerbe, bei denen „Spielklasse" die falsche Frage ist. Sie bekommen eine eigene Marke
