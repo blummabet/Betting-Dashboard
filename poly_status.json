@@ -4,36 +4,44 @@
       "id": "close_feed_fresh",
       "label": "Close-Feed frisch (frisches Geld kommt rein)",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "Close-Feed: kein/kaputter Zeitstempel (capturedAt) · 0 Märkte im File"
+      ],
       "note": "Jüngster erfasster Markt. Scan alle 30 Min — steht der Feed, sind Preise/CLV/Volumen alt."
     },
     {
       "id": "resolutions_fresh",
       "label": "Auflösungs-Feed lebt (Märkte werden abgerechnet)",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "Auflösungs-Feed: kein/kaputter Zeitstempel (ts) · 0 Auflösungen gesamt"
+      ],
       "note": "Jüngste Markt-Auflösung. Friert er ein, bleiben alle Positionen ewig offen."
     },
     {
       "id": "wallet_track_fresh",
       "label": "Wallet-Lernen frisch",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "Wallet-Track: kein/kaputter Zeitstempel (updatedAt) · 0 Wallets bewertet"
+      ],
       "note": "Grundlage der 'bewiesene Wallet'-Pushes — veraltet = Pushes auf alten Bilanzen."
     },
     {
       "id": "shortlist_tracker_writes",
       "label": "Shortlist-Paper-Tracker schreibt",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "Tracker hat keinen/kaputten Zeitstempel — läuft er überhaupt?"
+      ],
       "note": "Der Emitter (node/jsdom) kann still ausfallen. Hinkt der Tracker dem frischen Scan nach, schreibt er nicht — die Auto-Bet-Entscheidung liefe auf Blindflug."
     },
     {
@@ -58,66 +66,50 @@
       "id": "split_vollstaendig",
       "label": "Geld-Split kennt seine Vollständigkeit",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
-      "note": "993 geprueft, davon 120 abgeschnitten"
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "❔ Close-Datei leer — Vollständigkeit UNBEKANNT."
+      ],
+      "note": "poly_money_broad.py schreibt sie bei jedem Lauf."
     },
     {
       "id": "settlement_alive",
       "label": "Settlement lebt (keine ewig offenen Positionen)",
       "severity": "error",
-      "ok": false,
-      "nFail": 10,
-      "failures": [
-        "sea-fro-ven-2026-09-06-more-markets: seit 13.2 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "fl1-tro-str-2026-09-06-more-markets: seit 13.2 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "sea-par-mon-2026-09-06-more-markets: seit 13.2 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "fl1-ang-ren-2026-09-06-more-markets: seit 13.1 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "spl-kha-riy-2026-09-07-more-markets: seit 12.1 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "spl-haz-taa-2026-09-08-more-markets: seit 11.1 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "ucl-aek1-lin2-2026-09-08-more-markets: seit 11.0 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "grc-ast-ari-2026-09-09-more-markets: seit 9.2 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "ucl-fen-rom-2026-09-10-more-markets: seit 9.1 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "ucl-fen-rom-2026-09-10-more-markets: seit 9.1 Tagen offen — Auflösung existiert, matcht aber den Key nicht!"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
     },
     {
       "id": "resolutions_match_open_keys",
       "label": "Auflösungen matchen unsere Keys",
       "severity": "warn",
-      "ok": false,
-      "nFail": 3,
-      "failures": [
-        "TENNIS: nur 280/685 fällige Märkte aufgelöst (41%)",
-        "ESPORTS: nur 333/658 fällige Märkte aufgelöst (51%)",
-        "MLB: nur 171/328 fällige Märkte aufgelöst (52%)"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Fällige Märkte je Liga, die ihre Auflösung finden. < 60% = Settlement läuft ins Leere (Slug-Mismatch), Trefferquoten dieser Liga sind unvollständig."
     },
     {
       "id": "proven_wallets_profitable",
       "label": "'Bewiesene' Wallets wirklich profitabel",
       "severity": "warn",
-      "ok": false,
-      "nFail": 5,
-      "failures": [
-        "125/318 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (39%) — Trefferquote allein trügt",
-        "   0xc3c3b3ef30… n=338 Treffer 51% P&L $-3,970,703",
-        "   0xa0f21e6d35… n=92 Treffer 66% P&L $-2,635,720",
-        "   0xabb89972b2… n=36 Treffer 61% P&L $-2,563,982",
-        "   0x4bff30af91… n=76 Treffer 50% P&L $-2,420,880"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
     },
     {
       "id": "accuracy_backtest_fresh",
       "label": "Genauigkeits-Backtest frisch & belastbar",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 2,
+      "failures": [
+        "Backtest: kein/kaputter Zeitstempel (generatedAt)",
+        "Backtest hat keine Stichprobengröße n — Datei leer/kaputt?"
+      ],
       "note": "poly_money_broad muss frisch sein und n groß genug, sonst ist 'folgt dem Geld' Zufall."
     },
     {
@@ -148,6 +140,6 @@
       "note": "poly_direct_bets.py rechnet über poly_resolutions.json ab. Hängt ein Bet, kennt Poly den Ausgang nicht (Markt noch offen/obskur) oder der Slug passt nicht — dann fehlt echtes Geld in der Bilanz."
     }
   ],
-  "nFail": 3,
-  "generatedAt": "2026-09-19T18:00:59.279834+00:00"
+  "nFail": 6,
+  "generatedAt": "2026-09-19T18:05:23.210633+00:00"
 }
