@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-19T22:56:46.146030+00:00",
+ "generatedAt": "2026-09-19T23:26:42.051265+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,8 +10,8 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 632,
- "pinnKeys": 156,
- "matched": 104,
+ "pinnKeys": 154,
+ "matched": 102,
  "footballRows": 78,
  "crossRows": 554,
  "footballSkippedStale": 58,
@@ -24,42 +24,126 @@
   "soccer_liga": 60
  },
  "matchedBySport": {
-  "baseball_mlb": 26,
+  "baseball_mlb": 24,
   "soccer_mls": 18,
   "soccer_liga": 60
  },
  "trackRecord": {
-  "tracked": 319,
-  "converged": 71
+  "tracked": 321,
+  "converged": 73
  },
  "discrepancies": [
   {
-   "id": "baseball_mlb|chicagocubs-cincinnatireds|chicagocubs",
+   "id": "baseball_mlb|athletics-clevelandguardians|athletics",
    "sport": "baseball_mlb",
-   "event": "Chicago Cubs vs Cincinnati Reds",
+   "event": "Athletics vs Cleveland Guardians",
    "market": "Moneyline",
-   "outcome": "Chicago Cubs",
-   "polyPP": 59.5,
-   "pinnPP": 53.0,
-   "gapPP": 6.5,
-   "vol": 157199,
-   "richtung": "Poly zu hoch → faden",
-   "convergePP": 54.92,
-   "firstSeen": "2026-08-28T20:49:57.054168+00:00"
+   "outcome": "Athletics",
+   "polyPP": 3.4,
+   "pinnPP": 32.4,
+   "gapPP": -28.96,
+   "vol": 192252,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -22.14,
+   "firstSeen": "2026-09-18T23:36:49.649376+00:00"
   },
   {
-   "id": "baseball_mlb|chicagocubs-cincinnatireds|cincinnatireds",
+   "id": "baseball_mlb|athletics-clevelandguardians|clevelandguardians",
    "sport": "baseball_mlb",
-   "event": "Chicago Cubs vs Cincinnati Reds",
+   "event": "Athletics vs Cleveland Guardians",
    "market": "Moneyline",
-   "outcome": "Cincinnati Reds",
-   "polyPP": 40.5,
-   "pinnPP": 47.0,
-   "gapPP": -6.5,
-   "vol": 157199,
+   "outcome": "Cleveland Guardians",
+   "polyPP": 96.6,
+   "pinnPP": 67.6,
+   "gapPP": 28.96,
+   "vol": 192252,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -22.14,
+   "firstSeen": "2026-09-18T23:36:49.649376+00:00"
+  },
+  {
+   "id": "baseball_mlb|stlouiscardinals-washingtonnationals|washingtonnationals",
+   "sport": "baseball_mlb",
+   "event": "Washington Nationals vs St. Louis Cardinals",
+   "market": "Moneyline",
+   "outcome": "Washington Nationals",
+   "polyPP": 68.5,
+   "pinnPP": 50.8,
+   "gapPP": 17.73,
+   "vol": 251361,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-19T23:26:42.050751+00:00"
+  },
+  {
+   "id": "baseball_mlb|stlouiscardinals-washingtonnationals|stlouiscardinals",
+   "sport": "baseball_mlb",
+   "event": "Washington Nationals vs St. Louis Cardinals",
+   "market": "Moneyline",
+   "outcome": "St. Louis Cardinals",
+   "polyPP": 31.5,
+   "pinnPP": 49.2,
+   "gapPP": -17.73,
+   "vol": 251361,
    "richtung": "Poly zu niedrig → backen",
-   "convergePP": 54.92,
-   "firstSeen": "2026-08-28T20:49:57.054168+00:00"
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-19T23:26:42.050751+00:00"
+  },
+  {
+   "id": "baseball_mlb|texasrangers-torontobluejays|torontobluejays",
+   "sport": "baseball_mlb",
+   "event": "Toronto Blue Jays vs Texas Rangers",
+   "market": "Moneyline",
+   "outcome": "Toronto Blue Jays",
+   "polyPP": 35.5,
+   "pinnPP": 45.5,
+   "gapPP": -10.0,
+   "vol": 114620,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -0.5,
+   "firstSeen": "2026-09-19T00:25:06.622124+00:00"
+  },
+  {
+   "id": "baseball_mlb|texasrangers-torontobluejays|texasrangers",
+   "sport": "baseball_mlb",
+   "event": "Toronto Blue Jays vs Texas Rangers",
+   "market": "Moneyline",
+   "outcome": "Texas Rangers",
+   "polyPP": 64.5,
+   "pinnPP": 54.5,
+   "gapPP": 10.0,
+   "vol": 114620,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -0.5,
+   "firstSeen": "2026-09-19T00:25:06.622124+00:00"
+  },
+  {
+   "id": "baseball_mlb|kansascityroyals-pittsburghpirates|kansascityroyals",
+   "sport": "baseball_mlb",
+   "event": "Kansas City Royals vs Pittsburgh Pirates",
+   "market": "Moneyline",
+   "outcome": "Kansas City Royals",
+   "polyPP": 30.5,
+   "pinnPP": 24.5,
+   "gapPP": 6.03,
+   "vol": 146598,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 5.17,
+   "firstSeen": "2026-09-18T21:54:52.609047+00:00"
+  },
+  {
+   "id": "baseball_mlb|kansascityroyals-pittsburghpirates|pittsburghpirates",
+   "sport": "baseball_mlb",
+   "event": "Kansas City Royals vs Pittsburgh Pirates",
+   "market": "Moneyline",
+   "outcome": "Pittsburgh Pirates",
+   "polyPP": 69.5,
+   "pinnPP": 75.5,
+   "gapPP": -6.03,
+   "vol": 146598,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 5.17,
+   "firstSeen": "2026-09-18T21:54:52.609047+00:00"
   }
  ]
 }
