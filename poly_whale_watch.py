@@ -229,14 +229,54 @@ def _sport(league: str, sport=None):
 
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
+class ArtefaktKaputt(RuntimeError):
+    """Eine Datei ist DA, aber nicht lesbar. Das ist etwas anderes als „noch nicht da"."""
+
+
 def _load(path, default):
+    """Artefakt lesen. Fehlt die Datei -> default (das ist ein legitimer Zustand).
+
+    🔴 19.09.2026 (Lucas: „Heut kein einziger polymarket Push in public (kann nicht sein)").
+    Konnte sehr wohl sein. Der Lauf um 18:05 UTC hatte 15 Poly-Artefakte MIT Git-Konfliktmarkern
+    committet (`<<<<<<< Updated upstream` — die Sprache von `git stash pop`, also vom
+    `--autostash` im Push-Retry). poly_wallet_track.json und poly_money_broad_close.json waren
+    damit kein JSON mehr. Und hier stand `except Exception: pass; return default` — die kaputte
+    Datei wurde zu {}, select() fand null Kandidaten, der Kanal schwieg. Kein Absturz, kein roter
+    Lauf, keine Zeile im Log. Drei Stunden lang.
+
+    Fehlende Information ist kein harmloser Default. Eine unlesbare Datei wird ab jetzt LAUT
+    gemeldet; die Pflicht-Eingaben (s. _load_pflicht) brechen den Lauf ab, statt leise nichts
+    zu tun."""
     try:
-        if path.exists():
-            with open(path, encoding="utf-8") as f:
-                return json.load(f)
-    except Exception:
-        pass
-    return default
+        if not path.exists():
+            return default
+    except OSError:
+        return default
+    try:
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
+    except (ValueError, OSError) as e:
+        _KAPUTTE.append(str(getattr(path, "name", path)))
+        print("  🔴 %s ist DA, aber nicht lesbar (%s) — es wird NICHT als leer behandelt"
+              % (getattr(path, "name", path), type(e).__name__))
+        return default
+
+
+_KAPUTTE = []
+
+
+def _load_pflicht(path, default):
+    """Wie _load, aber fuer Eingaben, ohne die der Lauf sinnlos ist. Unlesbar -> Abbruch.
+
+    Ein stiller Lauf auf leeren Eingaben ist schlimmer als ein roter Lauf: der rote faellt auf."""
+    vorher = len(_KAPUTTE)
+    d = _load(path, default)
+    if len(_KAPUTTE) > vorher:
+        raise ArtefaktKaputt(
+            "%s ist unlesbar — ohne diese Datei waere jeder Kandidat ein Fehlurteil. "
+            "Wahrscheinlichste Ursache: Git-Konfliktmarker im Artefakt (19.09.2026). "
+            "Pruefen mit: grep -c '^<<<<<<< ' %s" % (path, path))
+    return d
 
 def _save(path, data):
     with open(path, "w", encoding="utf-8") as f:
@@ -2416,14 +2456,14 @@ def _contested_market(key, broad, min_usd=CONTEST_MIN_USD):
 
 def main():
     print("=== poly_whale_watch.py ===")
-    track = _load(TRACK_FILE, {})
+    track = _load_pflicht(TRACK_FILE, {})
     if not track:
         print("  ℹ️  Keine poly_wallet_track.json — nichts zu tun."); return
     scores = track.get("scores") or {}
     seen   = _load(SEEN_FILE, {})
     now    = datetime.now(timezone.utc)
 
-    broad = _load(BROAD_FILE, {})   # Matchup/Anpfiff/Preis-Kontext für die Trades-Cards
+    broad = _load_pflicht(BROAD_FILE, {})   # Matchup/Anpfiff/Preis-Kontext für die Trades-Cards
     _blocked = blocked_cats(_load(SHORTLIST_FILE, {}))
     # (01.08.2026, Lucas: 1a) Trades-Channel bekommt denselben Sanity-Filter wie Public:
     # nur Sport + Preis 3–97¢ → kein @100¢-schon-entschieden, kein Politik/Krypto-Müll.

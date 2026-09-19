@@ -59,3 +59,18 @@ if [ "$MODUS" = "rebase" ]; then
 else
   git pull origin "$BRANCH" --no-rebase -X ours --autostash 2>&1 || true
 fi
+
+# ── 19.09.2026: der Pull selbst ist die Quelle der Konfliktmarker ────────────────────────────
+# Lucas: „Heut kein einziger polymarket Push in public (kann nicht sein)." Konnte sehr wohl:
+# `--autostash` oben legt die getrackten Aenderungen weg und holt sie danach zurueck. Kollidiert
+# dieses Zurueckholen mit dem eingehenden Stand, schreibt git `<<<<<<< Updated upstream` IN die
+# Datei und laesst sie so liegen. Der naechste Lauf staged sie, committet sie, und das Artefakt
+# ist kein JSON mehr — am 19.09. traf es 15 Poly-Dateien auf einmal, poly_wallet_track.json
+# darunter. Die Leser fingen die Exception ab und arbeiteten mit {} weiter: drei Stunden
+# stille Funkpause ohne einen einzigen roten Lauf.
+#
+# Deshalb raeumt der Pull hinter sich auf, genau hier, wo der Schaden entsteht — nicht erst
+# beim naechsten `git add`, wo ihn schon jemand mitgenommen haben kann.
+if [ -x scripts/ci_keine_marker.sh ]; then
+  bash scripts/ci_keine_marker.sh || true
+fi

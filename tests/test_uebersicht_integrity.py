@@ -745,3 +745,43 @@ class TestDasSchattenbuchMussWachsenUndAbgerechnetWerden(unittest.TestCase):
             {"bfSchatten": [self._z(2), self._z(24 * 6, "won"), self._z(24 * 3, "lost")]})
         self.assertTrue(r["ok"])
         self.assertIn("2 abgerechnet", r["hinweis"])
+
+
+class TestEinArtefaktDasDaIstAberNichtLesbar(unittest.TestCase):
+    """🔴 19.09.2026 (Lucas: „Heut kein einziger polymarket Push in public (kann nicht sein)").
+
+    15 Poly-Artefakte trugen Git-Konfliktmarker, jeder Leser bekam still einen leeren Default,
+    und die Poly-Seite schwieg drei Stunden — ohne roten Lauf. Aufgefallen ist es einem
+    Menschen. Dieser Guard ist die Maschine, die es beim naechsten Mal merkt."""
+
+    def setUp(self):
+        UI.UNLESBAR.clear()
+
+    def tearDown(self):
+        UI.UNLESBAR.clear()
+
+    def test_ohne_befund_ist_er_still(self):
+        self.assertTrue(UI.check_artefakte_sind_lesbar({})["ok"])
+
+    def test_er_nennt_die_datei_und_den_grund(self):
+        UI.UNLESBAR.append(("poly_wallet_track.json", "Konfliktmarker im Artefakt"))
+        r = UI.check_artefakte_sind_lesbar({})
+        self.assertFalse(r["ok"])
+        self.assertEqual(r["severity"], "error")      # das ist kein „warn"-Fall
+        self.assertIn("poly_wallet_track.json", r["failures"][0])
+        self.assertIn("Konfliktmarker", r["failures"][0])
+
+    def test_lade_unterscheidet_fehlt_von_kaputt(self):
+        import tempfile, pathlib
+        alt = UI.BASE
+        try:
+            UI.BASE = pathlib.Path(tempfile.mkdtemp())
+            self.assertIsNone(UI._lade("gibtsnicht.json"))
+            self.assertEqual(UI.UNLESBAR, [])          # nicht da ist kein Befund
+            (UI.BASE / "kaputt.json").write_text('{\n"a":1,\n<<<<<<< Updated upstream\n',
+                                                 encoding="utf-8")
+            self.assertIsNone(UI._lade("kaputt.json"))
+            self.assertEqual(UI.UNLESBAR[0][0], "kaputt.json")
+            self.assertEqual(UI.UNLESBAR[0][1], "Konfliktmarker im Artefakt")
+        finally:
+            UI.BASE = alt

@@ -38,10 +38,29 @@ BASE = Path(__file__).resolve().parent
 STATUS_FILE = "uebersicht_integrity.json"
 
 
+# 🔴 19.09.2026: welche Artefakte DA, aber unlesbar waren. Vorher war das nicht unterscheidbar
+# — `except Exception: return default` machte aus einer zerschossenen Datei eine leere.
+UNLESBAR = []
+
+
 def _lade(name: str, default=None):
+    """Artefakt lesen. FEHLT die Datei -> default (legitim). Ist sie da und unlesbar -> default,
+    aber gemerkt (s. check_artefakte_sind_lesbar).
+
+    19.09.2026 (Lucas: „Heut kein einziger polymarket Push in public (kann nicht sein)"):
+    15 Poly-Artefakte trugen Git-Konfliktmarker, alle Leser bekamen still {} zurueck, und die
+    Poly-Seite schwieg drei Stunden ohne einen roten Lauf."""
+    pfad = BASE / name
     try:
-        return json.loads((BASE / name).read_text(encoding="utf-8"))
-    except Exception:
+        roh = pfad.read_text(encoding="utf-8")
+    except OSError:
+        return default                      # nicht da = noch kein Zustand, kein Befund
+    try:
+        return json.loads(roh)
+    except ValueError as e:
+        UNLESBAR.append((name, "Konfliktmarker im Artefakt"
+                         if "\n<<<<<<< " in roh or roh.startswith("<<<<<<< ")
+                         else type(e).__name__))
         return default
 
 
@@ -1004,6 +1023,32 @@ def check_public_stille_ist_erklaert(ctx):
                     ", ".join("%s (%d)" % (k, v) for k, v in top) or "unbekannt")])
 
 
+def check_artefakte_sind_lesbar(ctx):
+    """🔴 19.09.2026 (Lucas: „Heut kein einziger polymarket Push in public (kann nicht sein)").
+
+    Konnte sehr wohl sein. Der Lauf „🐋 Poly Global-Scan 18:05 UTC" hatte 15 Poly-Artefakte MIT
+    Git-Konfliktmarkern committet — `<<<<<<< Updated upstream`, die Sprache von `git stash pop`,
+    also vom `--autostash` im Push-Retry. poly_wallet_track.json (13 Konflikte),
+    poly_money_broad_close.json (30), poly_money_upcoming.json (621) und zwoelf weitere waren
+    damit kein JSON mehr.
+
+    Und JEDER Leser im Repo hat dieselbe Zeile: `except Exception: return default`. Aus der
+    zerschossenen Datei wurde ein leeres Dict, select() fand null Kandidaten, der Kanal schwieg.
+    Kein Absturz, kein roter Lauf, keine Zeile im Log — drei Stunden lang, und aufgefallen ist es
+    einem Menschen, nicht der Maschine.
+
+    Dieser Guard ist die Maschine, die es beim naechsten Mal merkt. Er urteilt NICHT ueber den
+    Inhalt, nur darueber, ob die Datei ueberhaupt gelesen werden konnte — das ist die Frage, die
+    vor allen anderen kommt.
+    """
+    if not UNLESBAR:
+        return _c("Artefakte sind lesbar", "error", [])
+    return _c("Artefakte sind lesbar", "error",
+              ["%s ist DA, aber nicht lesbar (%s) — jeder Leser bekommt dafuer still einen "
+               "leeren Default und tut dann nichts" % (name, grund)
+               for name, grund in UNLESBAR])
+
+
 def check_schattenbuch_fuellt_sich(ctx):
     """19.09.2026 (Lucas: „ich glaube, wir haben einfach noch nicht die optimale Einstellung …
     da muessten wir rumtuefteln und das dann rueckrechnen").
@@ -1080,6 +1125,7 @@ UEBERSICHT_CHECKS = [
     check_positionswert_ist_frisch,
     check_public_stille_ist_erklaert,
     check_schattenbuch_fuellt_sich,
+    check_artefakte_sind_lesbar,
 ]
 
 
