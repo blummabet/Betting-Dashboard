@@ -117,6 +117,58 @@
    "mindestN": 90,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist"
+  },
+  {
+   "id": "betfair-einseitigkeit-unterseite",
+   "titel": "Ist 0,80 Einseitigkeit die richtige Schranke — oder liegt darunter dasselbe?",
+   "frage": "Trefferquote und ROI der NICHT gesendeten Kandidaten im Schattenbuch, aufgeteilt nach leadShare (<0,70 / 0,70–0,75 / 0,75–0,80), gegen die gesendeten ab 0,80. Urteil ueber die Renditegrenzen, nicht ueber den Punktschaetzer.",
+   "warum": "19.09.2026 (Lucas): „ich glaube, wir haben einfach noch nicht die optimale Einstellung … da muessten wir rumtuefteln und das dann rueckrechnen.“ Rueckrechnen ging nicht: der Trichter vom 19.09. zeigt roh 69 Kandidaten, 3 gesendet — und 43 davon starben allein an der 80-%-Schranke. Wie diese 43 ausgegangen waeren, stand nirgends, und eine Schwelle, deren Unterseite man nicht kennt, laesst sich nur blind senken. Die bestehende Messung `betfair-einseitigkeit-schwelle` sieht nur die Oberseite (was ab 0,80 durchkam); diese hier sieht die Unterseite. Vorregistriert, BEVOR die erste Zahl da ist.",
+   "gestartet": "2026-09-19",
+   "faellig": "2026-11-01",
+   "quelle": "betfair_public_schatten.json -> abgerechnete Zeilen, quelle=public, raus=einseitig",
+   "messer": "bf_schatten",
+   "mindestN": 1200,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist"
+  },
+  {
+   "id": "betfair-geldschwelle",
+   "titel": "Traegt ein hoeherer Geld-Boden — oder ein niedrigerer?",
+   "frage": "Trefferquote und ROI nach `anteilSchwelle` (Anteil des Geldes an der geltenden Schwelle): 0,5–0,75 / 0,75–1,0 / gesendet ab 1,0 / deutlich darueber. Getrennt nach tier (top / rest), damit die Frage je Ligengruppe beantwortet wird.",
+   "warum": "19.09.2026 (Lucas): „vielleicht auch hoehere, noch hoehere Geldbetraege auf diverse Ligen und ab dann erst.“ Konnte niemand pruefen: gesendet wird ab 30.000 (rest) bzw. 100.000 EUR (top), und was knapp darunter lag, wurde verworfen, ohne je abgerechnet zu werden. Das Schattenbuch haelt beide Richtungen fest — die Kandidaten unter der Schwelle (quelle=trades) sagen, was ein Absenken braechte; `anteilSchwelle` beziffert, um wie viel es fehlte.",
+   "gestartet": "2026-09-19",
+   "faellig": "2026-11-01",
+   "quelle": "betfair_public_schatten.json -> abgerechnete Zeilen mit anteilSchwelle, beide Quellen",
+   "messer": "bf_schatten",
+   "mindestN": 1200,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist"
+  },
+  {
+   "id": "betfair-quote-muss-sinken",
+   "titel": "Nur senden, wenn die Quote seit dem ersten Sehen gesunken ist?",
+   "frage": "ROI der Ledger-Zeilen mit den neuen Zahlen, aufgeteilt nach der Bewegung entryOdd -> odd (verkuerzt / stabil / gedriftet), je Markt und je Quotenband. Urteil ueber die Renditegrenzen.",
+   "warum": "19.09.2026 (Lucas): „oder wirklich nur Quotenbewegung, wenn sie sinkt.“ Das Buch trug die Richtung bisher nur als `dir` beim LETZTEN Vor-Anpfiff-Lauf, also bei Anpfiff — nicht zu dem Zeitpunkt, an dem ein Alarm feuert. Seit heute stehen maxSharePct samt der Minute des Hoechststands in der Zeile, und damit laesst sich „das Geld kam, und die Quote folgte“ von „das Geld kam, und nichts passierte“ trennen. Gemessen wird erst, wenn genug Zeilen die Zahlen tragen — alte koennen die Frage nicht beantworten.",
+   "gestartet": "2026-09-19",
+   "faellig": "2026-11-15",
+   "quelle": "betfair_track_results.json -> Zeilen mit maxSharePct",
+   "messer": "bf_zahlen",
+   "mindestN": 20000,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist"
+  },
+  {
+   "id": "betfair-zeit-vor-anpfiff",
+   "titel": "Ist Geld drei Stunden vor Anpfiff besser als zwanzig Minuten vorher?",
+   "frage": "ROI der Ledger-Zeilen nach `maxShareMinVor` (>=180 / 60–180 / 15–60 / <15 Minuten vor Anpfiff), je Markt. Zusaetzlich: traegt frueh konzentriertes Geld, das bis Anpfiff haelt, mehr als spaetes?",
+   "warum": "19.09.2026 (Lucas): „ich glaube, wir haben einfach noch nicht die optimale Einstellung.“ Eine der Einstellungen, die es nie gab: WANN das Geld kam. capture() ueberschreibt die Signale bei jedem Lauf, im Buch stand nur der Stand bei Anpfiff — der Alarm feuert aber irgendwann davor. maxShareMinVor haelt ab heute die Minute fest, in der die Einseitigkeit ihren Hoechststand hatte.",
+   "gestartet": "2026-09-19",
+   "faellig": "2026-11-15",
+   "quelle": "betfair_track_results.json -> Zeilen mit maxShareMinVor",
+   "messer": "bf_zahlen",
+   "mindestN": 20000,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist"
   }
  ]
 }

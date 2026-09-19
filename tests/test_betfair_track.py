@@ -85,6 +85,59 @@ def test_capture_prematch_signale_mit_flags():
     assert sig["Half Time"]["conc"] is False                 # 5000/10000 = 0.5 < 0.65
 
 
+# ── 19.09.2026 (Lucas: „wir haben noch nicht die optimale Einstellung … das muessten wir
+# rueckrechnen") ───────────────────────────────────────────────────────────────────────────
+# Man konnte es nicht rueckrechnen: share wurde berechnet, ins pending getragen und von
+# settle() weggeworfen; im Buch stand nur „ueber 0,65 ja/nein" und „ueber 2.000 EUR ja/nein".
+# Eine Suche ueber 512 Regelkombinationen fand deshalb auf der ersten Haelfte des Buchs
+# +21,1 % und lieferte auf der zweiten -2,8 % (p=0,58 gegen Buecher ohne Zusammenhang).
+# Diese drei Tests halten fest, dass die ZAHL bis in die abgerechnete Zeile kommt.
+def test_capture_haelt_die_zahlen_nicht_nur_das_urteil():
+    st = T.capture({"matches": [_prematch()]}, HIST, {}, now=NOW)
+    mo = st["pending"]["1"]["signals"]["Match Odds"]
+    assert mo["sharePct"] == 80             # 8000/10000 — die Zahl, nicht nur conc=True
+    assert mo["maxSharePct"] == 80
+    assert mo["mktVol"] == 10000 and mo["entryMktVol"] == 10000
+    assert mo["zuflussMax"] == 4000         # der Betrag, nicht nur inflow=True
+    assert mo["maxShareMinVor"] == 180      # Anpfiff in 3 h
+    assert mo["laeufe"] == 1
+    ht = st["pending"]["1"]["signals"]["Half Time"]
+    assert ht["sharePct"] == 50 and ht["conc"] is False   # unter der Schwelle, trotzdem beziffert
+
+
+def test_hoechststand_ueberlebt_das_zurueckfallen():
+    """Der Alarm feuert irgendwann vor Anpfiff, das Buch hielt nur den Stand BEI Anpfiff.
+    Faellt die Einseitigkeit danach zurueck, muss der Hoechststand samt seiner Minute stehen."""
+    st = T.capture({"matches": [_prematch()]}, HIST, {}, now=NOW)
+    spaeter = _prematch(ko_h=3)          # derselbe Anpfiff, zwei Stunden spaeter gesehen
+    # der Markt ist inzwischen doppelt so gross, das Geld aber gleichmaessig verteilt,
+    # und der letzte Zufluss ist klein — jede dieser drei Zahlen muss anders stehen bleiben
+    # als die von vorhin.
+    spaeter["markets"]["Match Odds"] = _mk([(HOME, 2.0, 10000), ("The Draw", 3.5, 6000), (AWAY, 4.0, 4000)])
+    hist2 = {"1": [{"mkv": {"Match Odds": 19500}}, {"mkv": {"Match Odds": 20000}}]}   # nur +500
+    st = T.capture({"matches": [spaeter]}, hist2, st, now=NOW + timedelta(hours=2))
+    mo = st["pending"]["1"]["signals"]["Match Odds"]
+    assert mo["sharePct"] == 50             # jetzt nur noch die Haelfte
+    assert mo["maxSharePct"] == 80          # ... aber so stand es, als es am staerksten war
+    assert mo["maxShareMinVor"] == 180      # und zwar 3 h vor Anpfiff, nicht 1 h
+    assert T._min_vor(spaeter, NOW + timedelta(hours=2)) == 60   # der zweite Blick war 1 h vorher
+    assert mo["mktVol"] == 20000            # so gross ist der Markt jetzt
+    assert mo["entryMktVol"] == 10000       # ... und so gross war er beim ersten Sehen
+    assert mo["zuflussMax"] == 4000         # der groesste Zufluss, nicht der letzte (+500)
+    assert mo["laeufe"] == 2
+
+
+def test_die_zahlen_kommen_in_der_abgerechneten_zeile_an():
+    st = T.capture({"matches": [_prematch()]}, HIST, {}, now=NOW)
+    st = T.capture({"matches": [_live(gv=(1, 0))]}, HIST, st, now=NOW + timedelta(hours=4))
+    _, res = T.settle({"matches": [_finished(gv=(2, 1))]}, st, [], now=NOW + timedelta(hours=6))
+    mo = {r["market"]: r for r in res}["Match Odds"]
+    for feld, wert in (("sharePct", 80), ("maxSharePct", 80), ("maxShareMinVor", 180),
+                       ("mktVol", 10000), ("entryMktVol", 10000), ("zuflussMax", 4000),
+                       ("laeufe", 1)):
+        assert mo.get(feld) == wert, f"{feld} kommt nicht in der Zeile an: {mo.get(feld)!r}"
+
+
 def test_capture_live_faengt_ht_stand_und_friert_signal():
     st = T.capture({"matches": [_prematch()]}, HIST, {}, now=NOW)
     frozen = dict(st["pending"]["1"]["signals"]["Match Odds"])

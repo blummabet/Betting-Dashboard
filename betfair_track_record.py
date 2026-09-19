@@ -248,6 +248,17 @@ def _is_prematch(m, now):
     return kt > now
 
 
+def _min_vor(m, now):
+    """Minuten bis Anpfiff. REIN. None, wenn der Anpfiff nicht lesbar ist — fehlende
+    Information ist keine Null, sonst steht spaeter ein „0 Minuten vor Anpfiff" im Buch,
+    das niemand gemessen hat."""
+    try:
+        kt = datetime.fromisoformat(str(m.get("kickoff")).replace("Z", "+00:00"))
+    except (ValueError, TypeError):
+        return None
+    return int((kt - now).total_seconds() // 60)
+
+
 # ── capture / settle / aggregate ──────────────────────────────────────────────
 def capture(prices, history, state, now=None, direction=None, consensus=None):
     """Vor-Anpfiff-Signale je Markt festhalten (Closing = letzter Lauf) + HT-Stand live einfangen. REIN."""
@@ -306,7 +317,49 @@ def capture(prices, history, state, now=None, direction=None, consensus=None):
                         if isinstance(_pf, (int, float)) and 0.0 < _pf < 1.0:
                             _pinnFair = _pf
                 _geg = gegenseite(mk, lead)
+                # ── 19.09.2026 (Lucas: „wir haben noch nicht die optimale Einstellung …
+                # da muessten wir rumtuefteln und das dann rueckrechnen") ────────────────
+                # Rueckrechnen ging nicht, und der Grund stand genau hier: `share` wurde
+                # berechnet, ins pending getragen — und von settle() weggeworfen. Vom Geld blieb
+                # im Buch ein ja/nein an der 2.000-EUR-Marke, von der Einseitigkeit ein ja/nein
+                # an 0,65. Eine Schwelle, deren Zahl man nicht kennt, kann man nicht verschieben,
+                # nur blind raten — und genau darum ging jeder Versuch, die Sende-Regel
+                # nachzubessern, ins Leere.
+                # Gemessen am 19.09.: eine Suche ueber 512 Regelkombinationen (conc x inflow x
+                # Richtung x Quote x Markt x Quotenbewegung), auf der ersten Haelfte des Buchs
+                # gesucht, auf der zweiten geprueft — beste Regel +21,1 % in der Suchhaelfte,
+                # -2,8 % in der Pruefhaelfte. Gegen 120 Buecher, in denen der Zusammenhang
+                # vorher zerstoert wurde: p = 0,58. Das Verfahren findet auf reinem Rauschen
+                # dasselbe. Es fehlte nicht die Regel, es fehlte die Zahl.
+                #
+                # ZWEI DINGE, die das Buch bisher nicht sagen konnte, und die hier entstehen:
+                #  · WIE VIEL — share und das gematchte Volumen, statt „ueber 0,65 ja/nein".
+                #  · WANN — der Alarm feuert irgendwann vor Anpfiff, das Buch hielt aber nur den
+                #    Stand beim LETZTEN Lauf, also bei Anpfiff. maxSharePct samt der Minute, in
+                #    der die Einseitigkeit am groessten war, ist der naechstbeste Beleg dafuer,
+                #    wie es aussah, als es am staerksten war.
+                # Bei Favoritenwechsel ist _prev leer (s.o.) — dann faengt auch der Hoechststand
+                # neu an, denn er beschrieb die andere Seite.
+                # KOSTEN, gemessen und nicht geschaetzt: +29 B je Zeile, +25 % auf die Datei
+                # (4,71 -> 5,87 MB bei vollen 40.000 Zeilen). Der erste Entwurf trug share als
+                # Bruch und eine Zeit mehr und lag bei +37 B / +31 % — die Ganzzahl-Prozent und
+                # das Weglassen von erstMinVor sind die Differenz. Das Spaltenformat wurde am
+                # 01.09. genau dafuer eingefuehrt, dass dieser Platz da ist.
+                _zu = _inflow_eur(history, mid, mkid)
+                _mv = _min_vor(m, now)
+                _shp = int(round(share * 100))
+                _maxp = max(_shp, _prev.get("maxSharePct", _shp))
                 sigs[mkid] = {"fav": fav, "share": round(share, 3), "odd": lead.get("odd"),
+                              "sharePct": _shp,
+                              "maxSharePct": _maxp,
+                              # die Minute, in der die Einseitigkeit ihren Hoechststand hatte —
+                              # ohne sie beantwortet maxSharePct nur „wie viel", nicht „wann".
+                              "maxShareMinVor": (_mv if _maxp > _prev.get("maxSharePct", -1)
+                                                 else _prev.get("maxShareMinVor")),
+                              "mktVol": int(tot),
+                              "entryMktVol": _prev.get("entryMktVol", int(tot)),
+                              "zuflussMax": int(max(_zu, _prev.get("zuflussMax", _zu))),
+                              "laeufe": int(_prev.get("laeufe", 0)) + 1,
                               # Der echte Gegenpreis — s. gegenseite(). None heisst „nicht
                               # erhoben", nicht „kein Markt": fehlende Information ist kein Preis.
                               "gegenOdd": (_geg or {}).get("odd"),
@@ -318,7 +371,7 @@ def capture(prices, history, state, now=None, direction=None, consensus=None):
                               "pinnClose": (_pinn if _pinn is not None else _prev.get("pinnClose")),
                               "pinnFair": (_pinnFair if _pinnFair is not None else _prev.get("pinnFair")),
                               "conc": share >= CONC_THRESHOLD,
-                              "inflow": _inflow_eur(history, mid, mkid) >= INFLOW_MIN_EUR,
+                              "inflow": _zu >= INFLOW_MIN_EUR,
                               "dir": (d or {}).get("dir")}   # 'in'=gebackt (Quote kuerzer) · 'out'=gedriftet
             if sigs:
                 pending[mid] = {"league": m.get("league"), "home": home, "away": away,
@@ -355,7 +408,16 @@ def settle(prices, state, results, now=None, results_fetch=None):
                             # Der Gegenpreis wandert bis in die abgerechnete Zeile — sonst
                             # steht er im pending und ist genau dann weg, wenn man ihn braucht.
                             "gegenOdd": sig.get("gegenOdd"), "gegenVol": sig.get("gegenVol"),
-                            "entryGegenOdd": sig.get("entryGegenOdd")})
+                            "entryGegenOdd": sig.get("entryGegenOdd"),
+                            # 19.09.2026: bis hierher kamen die Zahlen schon immer — genau hier
+                            # wurden sie fallengelassen. Das war die Luecke, nicht capture().
+                            "sharePct": sig.get("sharePct"),
+                            "maxSharePct": sig.get("maxSharePct"),
+                            "maxShareMinVor": sig.get("maxShareMinVor"),
+                            "mktVol": sig.get("mktVol"),
+                            "entryMktVol": sig.get("entryMktVol"),
+                            "zuflussMax": sig.get("zuflussMax"),
+                            "laeufe": sig.get("laeufe")})
         pending.pop(mid, None)
 
     # 1) Feed zeigt „finished" → sauber abrechnen (der exakte Endstand).

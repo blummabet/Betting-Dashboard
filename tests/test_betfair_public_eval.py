@@ -389,6 +389,17 @@ class EntschiedenBeimSenden(unittest.TestCase):
         self.assertIn("from betfair_alerts import ausgang_schon_entschieden", q)
 
     def test_der_lauf_ruft_es_auch_auf(self):
+        """19.09.2026: hier stand ein Text-Griff auf „_nv = void_entschiedene(ledger)" in main().
+        Die Kette ist seither in `abrechnen()` gebuendelt, damit das Schattenbuch der
+        Beinahe-Treffer nicht seine eigene Reihenfolge bekommt — der Text-Griff waere daran
+        zerbrochen, ohne dass die Regel weg war. Also pruefen wir jetzt die WIRKUNG."""
+        buch, nvoid = E.abrechnen([self._e()], {}, [], manual={})
+        self.assertEqual(nvoid, 1)
+        self.assertEqual(buch[0]["status"], "void")
+        self.assertEqual(buch[0]["voidGrund"], E.VOID_ENTSCHIEDEN)
+
+    def test_und_der_lauf_faehrt_wirklich_diese_kette(self):
         from pathlib import Path
         q = (Path(__file__).parent.parent / "betfair_public_eval.py").read_text(encoding="utf-8")
-        self.assertIn("_nv = void_entschiedene(ledger)", q)
+        self.assertIn("ledger, _nv = abrechnen(ledger, prices, track_results)", q)
+        self.assertIn("abrechnen(schatten, prices, track_results", q)

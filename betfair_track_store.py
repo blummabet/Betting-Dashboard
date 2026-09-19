@@ -90,6 +90,20 @@ SPALTEN = (
     ("gegenOdd",  "roh",  None),
     ("gegenVol",  "roh",  None),
     ("entryGegenOdd", "roh", None),
+    # 19.09.2026 (Lucas: „wir haben noch nicht die optimale Einstellung … das muessten wir
+    # rueckrechnen"). Die ZAHLEN hinter conc/inflow. Bis heute stand im Buch nur das Urteil
+    # (share >= 0,65 ja/nein, Zufluss >= 2.000 EUR ja/nein) — eine Schwelle, deren Zahl man
+    # nicht kennt, laesst sich nicht verschieben. Siehe betfair_track_record.capture.
+    # share als GANZE PROZENT, nicht als Bruch: 0,837 kostet 5 Zeichen, 84 kostet 2, und die
+    # Frage lautet „0,80 oder 0,85", nicht „0,837 oder 0,841".
+    # ANGEHAENGT, nie dazwischen: alte Zeilen sind kuerzer und lesen weiterhin korrekt.
+    ("sharePct",       "roh", None),
+    ("maxSharePct",    "roh", None),
+    ("maxShareMinVor", "roh", None),
+    ("mktVol",         "roh", None),
+    ("entryMktVol",    "roh", None),
+    ("zuflussMax",     "roh", None),
+    ("laeufe",         "roh", None),
 )
 _NAMEN = frozenset(f for f, _, _ in SPALTEN)
 

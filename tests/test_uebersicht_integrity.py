@@ -706,3 +706,42 @@ def test_tage_ganz_ohne_alarme_brechen_die_strecke():
 
 def test_ohne_trichter_wird_nichts_behauptet():
     assert UI.check_public_stille_ist_erklaert({})["ok"]
+
+
+class TestDasSchattenbuchMussWachsenUndAbgerechnetWerden(unittest.TestCase):
+    """19.09.2026 (Lucas: „wir haben noch nicht die optimale Einstellung … das muessten wir
+    rueckrechnen"). Seit heute schreibt betfair_alerts jeden Beinahe-Treffer mit — 43 von 69
+    Kandidaten starben am 19.09. allein an der 80-%-Einseitigkeit, und wie sie ausgegangen
+    waeren, stand nirgends. Das stille Scheitern dieses Buchs ist, dass es aufhoert zu wachsen
+    oder nie abgerechnet wird: beides faellt niemandem auf, bis in drei Monaten wieder nichts
+    dasteht."""
+
+    def _z(self, stunden, status="pending"):
+        from datetime import datetime, timezone, timedelta
+        return {"sentAt": (datetime.now(timezone.utc) - timedelta(hours=stunden)).isoformat(),
+                "status": status}
+
+    def test_leeres_oder_fehlendes_buch_schlaegt_an(self):
+        self.assertFalse(UI.check_schattenbuch_fuellt_sich({"bfSchatten": []})["ok"])
+        self.assertFalse(UI.check_schattenbuch_fuellt_sich({})["ok"])
+
+    def test_ein_buch_das_nicht_mehr_waechst_schlaegt_an(self):
+        r = UI.check_schattenbuch_fuellt_sich({"bfSchatten": [self._z(80), self._z(200)]})
+        self.assertFalse(r["ok"])
+        self.assertIn("waechst nicht mehr", r["failures"][0])
+
+    def test_ein_buch_ohne_ausgang_beantwortet_keine_schwellenfrage(self):
+        r = UI.check_schattenbuch_fuellt_sich({"bfSchatten": [self._z(2), self._z(24 * 6)]})
+        self.assertFalse(r["ok"])
+        self.assertIn("KEINE abgerechnet", r["failures"][0])
+
+    def test_ein_junges_buch_ohne_ausgang_ist_noch_kein_befund(self):
+        # zwei Tage alt, nichts abgerechnet — die Spiele koennen schlicht noch laufen
+        self.assertTrue(UI.check_schattenbuch_fuellt_sich(
+            {"bfSchatten": [self._z(2), self._z(40)]})["ok"])
+
+    def test_ein_gesundes_buch_meldet_seinen_stand(self):
+        r = UI.check_schattenbuch_fuellt_sich(
+            {"bfSchatten": [self._z(2), self._z(24 * 6, "won"), self._z(24 * 3, "lost")]})
+        self.assertTrue(r["ok"])
+        self.assertIn("2 abgerechnet", r["hinweis"])

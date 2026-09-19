@@ -1110,3 +1110,79 @@ class TestDerTrichterMachtStilleLesbar(unittest.TestCase):
                                    .fromisoformat("2026-08-%02dT12:00:00+00:00" % min(tag, 31)),
                                    alt=b, tage=5)
         self.assertLessEqual(len(b), 5)
+
+
+class TestDasSchattenbuchDerBeinaheTreffer(unittest.TestCase):
+    """19.09.2026 (Lucas: „wir haben noch nicht die optimale Einstellung … das muessten wir
+    rueckrechnen").
+
+    Rueckrechnen ging an zwei Stellen nicht. Die eine war das Buch (s. betfair_track_record).
+    Die andere ist der Ausschnitt: wir sehen nur die Alarme, die durchkommen. Trichter vom
+    19.09. — roh 69, gesendet 3, davon 43 gestorben an der 80-%-Einseitigkeit. Wie diese 43
+    ausgegangen waeren, stand nirgends, und eine Schwelle, deren Unterseite man nicht kennt,
+    kann man nur blind senken.
+    """
+
+    def _alarm(self, mid="7", scen="fresh", markt="Match Odds", share=0.72, inflow=18000.0):
+        return {"matchId": mid, "scenario": scen, "market": markt, "league": "Test",
+                "home": "Alpha", "away": "Beta", "leadName": "Alpha", "leadOdd": 1.8,
+                "value": 240000.0, "leadShare": share, "leadDir": "in", "onLeader": None,
+                "tier": "rest", "inflow": inflow, "total": 0.0, "live": {}}
+
+    def test_beinahe_treffer_kommt_mit_grund_und_zahlen_ins_buch(self):
+        a = self._alarm()
+        buch = BA.schatten_buch([a], set(), [("einseitig", lambda x: (x.get("leadShare") or 0) < 0.80)])
+        self.assertEqual(len(buch), 1)
+        z = buch[0]
+        self.assertEqual(z["raus"], "einseitig")
+        self.assertEqual(z["quelle"], "public")
+        self.assertIs(z["gesendet"], False)
+        self.assertEqual(z["status"], "pending")          # damit settle() ihn anfasst
+        self.assertEqual(z["k"], "fresh:7:Match Odds")
+        # ohne diese drei ist die Zeile nur „fiel raus", nicht „fiel um so viel raus"
+        self.assertEqual(z["magnitude"], 18000.0)
+        self.assertEqual(z["schwelle"], BA.PUB_FRESH_REST)
+        self.assertAlmostEqual(z["anteilSchwelle"], 18000.0 / BA.PUB_FRESH_REST, places=3)
+        self.assertEqual(z["leadShare"], 0.72)
+
+    def test_die_erste_stufe_gewinnt_nicht_irgendeine(self):
+        """Der Grund muss der ERSTE Treffer in derselben Reihenfolge sein, die der Trichter
+        zaehlt — sonst behaupten Trichter und Schattenbuch zwei verschiedene Todesursachen."""
+        a = self._alarm(share=0.5)
+        stufen = [("leader", lambda x: True), ("einseitig", lambda x: True)]
+        self.assertEqual(BA.erste_stufe(a, stufen), "leader")
+        self.assertIsNone(BA.erste_stufe(a, [("x", lambda x: False)]))
+
+    def test_erstsichtung_gewinnt(self):
+        """Der Zustand, in dem er zum ersten Mal Kandidat war, ist der, ueber den die Schwelle
+        entschieden haette — nicht der zehn Minuten spaetere."""
+        stufen = [("einseitig", lambda x: (x.get("leadShare") or 0) < 0.80)]
+        buch = BA.schatten_buch([self._alarm(share=0.72)], set(), stufen)
+        buch = BA.schatten_buch([self._alarm(share=0.61)], set(), stufen, alt=buch)
+        self.assertEqual(len(buch), 1)
+        self.assertEqual(buch[0]["leadShare"], 0.72)
+
+    def test_spaeter_doch_gesendet_wird_markiert_statt_doppelt_gezaehlt(self):
+        stufen = [("einseitig", lambda x: (x.get("leadShare") or 0) < 0.80)]
+        buch = BA.schatten_buch([self._alarm(share=0.72)], set(), stufen)
+        buch = BA.schatten_buch([self._alarm(share=0.91)], {"fresh:7:Match Odds"}, stufen, alt=buch)
+        self.assertEqual(len(buch), 1)
+        self.assertIs(buch[0]["gesendet"], True)
+
+    def test_gesendete_kommen_gar_nicht_erst_hinein(self):
+        buch = BA.schatten_buch([self._alarm()], {"fresh:7:Match Odds"}, [("x", lambda a: True)])
+        self.assertEqual(buch, [])
+
+    def test_die_unterschwelligen_tragen_ihre_eigene_quelle(self):
+        """Ohne diese Haelfte laesst sich die Geldschwelle nur erhoehen, nie begruenden."""
+        buch = BA.schatten_buch([self._alarm(inflow=9000.0)], set(),
+                                [("unter_geldschwelle", lambda a: True)], quelle="trades")
+        self.assertEqual(buch[0]["quelle"], "trades")
+        self.assertEqual(buch[0]["raus"], "unter_geldschwelle")
+        self.assertLess(buch[0]["anteilSchwelle"], 1.0)
+
+    def test_das_buch_wird_gekappt(self):
+        stufen = [("x", lambda a: True)]
+        viele = [self._alarm(mid=str(i)) for i in range(10)]
+        buch = BA.schatten_buch(viele, set(), stufen, keep=4)
+        self.assertEqual(len(buch), 4)

@@ -1004,6 +1004,56 @@ def check_public_stille_ist_erklaert(ctx):
                     ", ".join("%s (%d)" % (k, v) for k, v in top) or "unbekannt")])
 
 
+def check_schattenbuch_fuellt_sich(ctx):
+    """19.09.2026 (Lucas: „ich glaube, wir haben einfach noch nicht die optimale Einstellung …
+    da muessten wir rumtuefteln und das dann rueckrechnen").
+
+    Rueckrechnen ging nicht, weil wir nur sehen, was durchkommt: Trichter vom 19.09. — roh 69,
+    gesendet 3, davon 43 gestorben an der 80-%-Einseitigkeit. Wie diese 43 ausgegangen waeren,
+    stand nirgends. Seit heute schreibt betfair_alerts sie ins Schattenbuch und
+    betfair_public_eval rechnet sie mit derselben Kette ab wie echte Pushes.
+
+    Der Guard passt auf die stille Variante des Scheiterns: eine Datei, die da ist, aber nicht
+    mehr waechst oder nie abgerechnet wird. Die faellt niemandem auf — bis in drei Monaten
+    jemand die Schwellen-Frage stellt und wieder nichts dasteht. Ein Guard ohne Vorfall waere
+    eine Meinung; dieser hat seinen Vorfall in genau der Luecke, die er offenhalten soll.
+    """
+    b = ctx.get("bfSchatten")
+    if not isinstance(b, list) or not b:
+        return _c("Schattenbuch fuellt sich", "warn",
+                  ["betfair_public_schatten.json ist leer oder fehlt — die Unterseite der "
+                   "Schwellen wird nicht mitgeschrieben"])
+    from datetime import datetime as _dt, timezone as _tz, timedelta as _td
+    jetzt = _dt.now(_tz.utc)
+    def _ts(e):
+        try:
+            return _dt.fromisoformat(str(e.get("sentAt")).replace("Z", "+00:00"))
+        except (ValueError, TypeError):
+            return None
+    zeiten = [t for t in (_ts(e) for e in b if isinstance(e, dict)) if t]
+    fehler = []
+    if not zeiten:
+        fehler.append("keine Zeile im Schattenbuch traegt einen lesbaren Zeitstempel")
+    elif max(zeiten) < jetzt - _td(hours=48):
+        fehler.append("juengste Zeile im Schattenbuch ist %s alt — es waechst nicht mehr"
+                      % _alter_kurz(jetzt - max(zeiten)))
+    offen = sum(1 for e in b if isinstance(e, dict) and e.get("status") == "pending")
+    fertig = sum(1 for e in b if isinstance(e, dict) and e.get("status") in ("won", "lost"))
+    if zeiten and min(zeiten) < jetzt - _td(days=4) and not fertig:
+        fehler.append("%d Zeilen im Schattenbuch, die aelteste seit %s — aber KEINE abgerechnet; "
+                      "ein Buch ohne Ausgang beantwortet keine Schwellenfrage"
+                      % (len(b), _alter_kurz(jetzt - min(zeiten))))
+    if fehler:
+        return _c("Schattenbuch fuellt sich", "warn", fehler)
+    return _c("Schattenbuch fuellt sich", "warn", [],
+              hinweis="%d Zeilen · %d abgerechnet · %d offen" % (len(b), fertig, offen))
+
+
+def _alter_kurz(d):
+    st = int(d.total_seconds() // 3600)
+    return "%d h" % st if st < 48 else "%d Tagen" % (st // 24)
+
+
 UEBERSICHT_CHECKS = [
     check_serien_rangfolge,
     check_freigabe_grund,
@@ -1029,6 +1079,7 @@ UEBERSICHT_CHECKS = [
     check_geschlossen_heisst_belegt,
     check_positionswert_ist_frisch,
     check_public_stille_ist_erklaert,
+    check_schattenbuch_fuellt_sich,
 ]
 
 
@@ -1072,6 +1123,7 @@ def build_ctx_from_disk() -> dict:
         "balanceLiga": _lade("liga_poly_balance.json", {}),
         "balanceMls": _lade("mls_poly_balance.json", {}),
         "bfTrichter": _lade("betfair_public_trichter.json", {}),
+        "bfSchatten": _lade("betfair_public_schatten.json", []),
     }
 
 

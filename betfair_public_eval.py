@@ -35,6 +35,13 @@ RECORD_FILE = BASE / "betfair_public_record.json"
 TRACK_RESULTS_FILE = BASE / "betfair_track_results.json"   # der breite Track (~65% Fangquote + Verschwinde-Settle)
 PENDING_TTL_H = 72          # nie „finished" gesehen nach 3 Tagen → als nicht abrechenbar verwerfen
 LEDGER_KEEP = 800
+# 19.09.2026 (Lucas: „wir haben noch nicht die optimale Einstellung … das muessten wir
+# rueckrechnen"). Das Schattenbuch der Beinahe-Treffer aus betfair_alerts wird hier mit
+# DERSELBEN Mechanik abgerechnet wie ein echter Push — ein zweiter Abrechner waere ein zweites
+# Urteil ueber denselben Endstand. Gesendet wurde davon nie etwas.
+SCHATTEN_FILE = BASE / "betfair_public_schatten.json"
+SCHATTEN_RECORD_FILE = BASE / "betfair_public_schatten_bericht.json"
+SCHATTEN_KEEP = 4000
 
 
 def _now():
@@ -406,29 +413,32 @@ def summarize(ledger, now=None):
     return out
 
 
+def abrechnen(buch, prices, track_results, manual=None, keep=LEDGER_KEEP):
+    """Ein Push-Buch durch die ganze Abrechnungskette schicken. Genau die Reihenfolge, die
+    main() seit dem 15.09. faehrt — als Funktion, damit das Schattenbuch nicht seine eigene
+    bekommt und dann irgendwann anders rechnet als das echte."""
+    buch = capture_ht(buch, prices)
+    buch = settle_from_track(buch, track_results)
+    buch = settle(buch, prices, results_fetch=_fetch_results)
+    buch = verify_settled(buch, results_fetch=_fetch_results)
+    buch = apply_manual_results(buch, manual if manual is not None else _load(MANUAL_RESULTS_FILE, {}))
+    nvoid = void_entschiedene(buch)
+    return buch[-keep:], nvoid
+
+
 def main():
     ledger = _load(LEDGER_FILE, [])
     if not isinstance(ledger, list):
         ledger = []
     prices = _load(BASE / "betfair_prices.json", {})
-    ledger = capture_ht(ledger, prices)
     # 07.08.2026: zuerst die Abrechnungen des breiten Tracks erben (realer Endstand, auch fuer Spiele,
     # die DIESER Feed nie als „finished" gesehen hat), dann der eigene Feed-Pfad + TTL-Verfall.
+    # Die ganze Kette steht seit dem 19.09. in `abrechnen()` — EINMAL, damit das Schattenbuch
+    # nicht seine eigene Reihenfolge bekommt und irgendwann anders rechnet als das echte Buch.
     track_results = _store.load(TRACK_RESULTS_FILE)   # 01.09.2026: kompaktes Format, load() nimmt beide
-    ledger = settle_from_track(ledger, track_results)
-    ledger = settle(ledger, prices, results_fetch=_fetch_results)
-    ledger = verify_settled(ledger, results_fetch=_fetch_results)   # 11.08.2026: autoritative Nachkontrolle (Plymouth-Fall)
-    # 11.08.2026 (Lucas): LETZTER Schritt — manuell gepinnte Endstaende (Spiele in keiner Ergebnisquelle,
-    # z.B. EFL-Cup, aus dem Feed verschwunden). Schlaegt Feed/Vanish auch bei bereits abgerechneten Zeilen.
-    ledger = apply_manual_results(ledger, _load(MANUAL_RESULTS_FILE, {}))
-    # 15.09.2026: NACH allen Abrechnungs-Schritten — wer beim Senden schon entschieden war, faellt
-    # aus der Bilanz, egal wie ein Endstand-Fetch ihn vorher bewertet hat. Idempotent, wirkt auch
-    # rueckwirkend auf laengst abgerechnete Zeilen.
-    _nv = void_entschiedene(ledger)
+    ledger, _nv = abrechnen(ledger, prices, track_results)
     if _nv:
         print("  🔇 %d Zeile(n) auf void gesetzt: %s" % (_nv, VOID_ENTSCHIEDEN))
-    # abgeschlossene/verworfene lange behalten fürs Ledger, aber deckeln
-    ledger = ledger[-LEDGER_KEEP:]
     record = summarize(ledger)
     try:
         json.dump(ledger, open(LEDGER_FILE, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
@@ -437,6 +447,21 @@ def main():
         print("Schreibfehler:", e)
     print("Public-Eval: %d abgerechnet (%s%% Treffer, ROI %s) · %d offen"
           % (record["n"], round((record["hitRate"] or 0) * 100), record["roi"], record["pending"]))
+    # ── das Schattenbuch: dieselbe Kette, nie gesendet ────────────────────────────────
+    try:
+        schatten = _load(SCHATTEN_FILE, [])
+        if isinstance(schatten, list) and schatten:
+            schatten, _ = abrechnen(schatten, prices, track_results, keep=SCHATTEN_KEEP)
+            sbericht = summarize(schatten)
+            json.dump(schatten, open(SCHATTEN_FILE, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
+            json.dump(sbericht, open(SCHATTEN_RECORD_FILE, "w", encoding="utf-8"),
+                      ensure_ascii=False, indent=1)
+            print("  🕯️  Schatten-Eval: %d abgerechnet (%s%% Treffer, ROI %s) · %d offen"
+                  % (sbericht["n"], round((sbericht["hitRate"] or 0) * 100),
+                     sbericht["roi"], sbericht["pending"]))
+    except Exception as _e:
+        print("  ⚠️  Schattenbuch nicht abgerechnet:", _e)
+
     cs = record.get("consensusSplit") or {}
     if cs:
         print("  🧭 Konsens-Split: " + " · ".join(

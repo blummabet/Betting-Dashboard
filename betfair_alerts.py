@@ -73,6 +73,15 @@ LEAD_PUSH_FACTOR = 1.75   # 08.08.2026 (Lucas): „Team fuehrt"-Geld flutet an s
                           # der Fuehrung raus, nur wirklich dicke Fuehrungs-Bewegungen bleiben. Back-Gate gilt weiter.
 PUB_SEEN_FILE  = "betfair_public_seen.json"
 PUB_LEDGER_FILE = "betfair_public_ledger.json"   # gesendete Public-Pushs fürs Tracking/Auswerten
+# 19.09.2026 (Lucas: „ich glaube, wir haben einfach noch nicht die optimale Einstellung … da
+# muessten wir rumtuefteln und das dann rueckrechnen"). Das ging nicht, und der Grund ist nicht
+# die Rechnung, sondern der Ausschnitt: wir sehen nur die Alarme, die DURCHKOMMEN. Der Trichter
+# vom 19.09. — roh 69, gesendet 3, davon 43 gestorben an der 80-%-Einseitigkeit. Wie die 43
+# ausgegangen waeren, weiss niemand, und darum laesst sich 0,80 nur blind senken, nie begruendet
+# verschieben. Ab jetzt wird jeder Beinahe-Treffer mitgeschrieben und wie ein echter Push
+# abgerechnet — gesendet wird er NIE.
+SCHATTEN_FILE = "betfair_public_schatten.json"
+SCHATTEN_KEEP = 4000
 DEDUP_FACTOR   = 1.5
 SEEN_FILE      = "betfair_alerts_seen.json"
 
@@ -1121,6 +1130,73 @@ def _serie_fuer_push(a):
         return None
 
 
+def schatten_zeile(a, raus, quelle, ht_top, ht_rest, fresh_top, fresh_rest, jetzt=None) -> dict:
+    """Ein nicht gesendeter Kandidat als Ledger-Zeile. REIN/testbar.
+
+    Gleiche Form wie eine Zeile in betfair_public_ledger.json, damit betfair_public_eval sie mit
+    DERSELBEN settle()-Mechanik abrechnet — ein zweiter Abrechner waere ein zweites Urteil.
+    Dazu die Zahlen, an denen die Schwellen haengen: `magnitude` (das Geld, an dem gemessen wird),
+    `schwelle` (was es haette sein muessen) und `leadShare`. Ohne diese drei ist die Zeile nur
+    die Feststellung, dass etwas rausfiel, und nicht der Beleg, um wie viel."""
+    jetzt = jetzt or datetime.now(timezone.utc)
+    mag = _lead_magnitude(a)
+    thr = _lead_base_thr(a, ht_top, ht_rest, fresh_top, fresh_rest)
+    return {"k": "%s:%s:%s" % (a.get("scenario"), a.get("matchId"), a.get("market")),
+            "matchId": a.get("matchId"), "scenario": a.get("scenario"), "market": a.get("market"),
+            "league": a.get("league"), "home": a.get("home"), "away": a.get("away"),
+            "leadName": a.get("leadName"), "leadOdd": a.get("leadOdd"), "value": a.get("value"),
+            # sentAt heisst hier „gesehen am" — der Name bleibt, weil settle() danach greift.
+            "sentAt": jetzt.isoformat(), "status": "pending", "htScore": None,
+            "leadShare": a.get("leadShare"), "leadDir": a.get("leadDir"),
+            "onLeader": a.get("onLeader"), "tier": a.get("tier"),
+            "magnitude": round(mag, 1), "schwelle": round(thr, 1),
+            "anteilSchwelle": (round(mag / thr, 3) if thr else None),
+            "raus": raus, "quelle": quelle, "gesendet": False,
+            "live": {"time": ((a.get("live") or {}).get("time")),
+                     "score": [(a.get("live") or {}).get("goal_v1"),
+                               (a.get("live") or {}).get("goal_v2")]}}
+
+
+def erste_stufe(a, stufen_filter):
+    """An welcher Stufe stirbt dieser Alarm zuerst? REIN. None = er hat alle ueberlebt.
+
+    Die REIHENFOLGE ist dieselbe Liste, die auch der Trichter zaehlt — zwei Listen waeren zwei
+    Wahrheiten darueber, warum ein Alarm rausfiel."""
+    for name, raus in (stufen_filter or []):
+        try:
+            if raus(a):
+                return name
+        except Exception:
+            continue
+    return None
+
+
+def schatten_buch(roh, gesendet_keys, stufen_filter, alt=None, ht_top=PUB_HT_TOP, ht_rest=PUB_HT_REST,
+                  fresh_top=PUB_FRESH_TOP, fresh_rest=PUB_FRESH_REST, quelle="public",
+                  jetzt=None, keep=SCHATTEN_KEEP) -> list:
+    """Das Schattenbuch um die Beinahe-Treffer dieses Laufs ergaenzen. REIN/testbar.
+
+    Ein Eintrag je scenario:matchId:market, ERSTSICHTUNG gewinnt — der Zustand, in dem der
+    Kandidat zum ersten Mal Kandidat war, ist der, ueber den die Schwelle entschieden haette.
+    Wird ein Schlusselsatz spaeter doch gesendet, bekommt die Zeile `gesendet: True` statt zu
+    verschwinden: sonst faende die Auswertung spaeter einen Beinahe-Treffer, der in Wahrheit ein
+    Push war, und zaehlte ihn doppelt."""
+    buch = list(alt or [])
+    bekannt = {e.get("k"): e for e in buch if isinstance(e, dict)}
+    for a in (roh or []):
+        k = "%s:%s:%s" % (a.get("scenario"), a.get("matchId"), a.get("market"))
+        if k in gesendet_keys:
+            if k in bekannt:
+                bekannt[k]["gesendet"] = True     # war Beinahe-Treffer, ist jetzt Push
+            continue
+        if k in bekannt:
+            continue
+        z = schatten_zeile(a, erste_stufe(a, stufen_filter) or "dedup", quelle,
+                           ht_top, ht_rest, fresh_top, fresh_rest, jetzt=jetzt)
+        buch.append(z); bekannt[k] = z
+    return buch[-keep:]
+
+
 def _log_public_push(a, cidx=None) -> None:
     """Jeden GESENDETEN Public-Push in betfair_public_ledger.json festhalten → betfair_public_eval.py
     rechnet ihn später gegen den Endstand ab. Ein Eintrag je Spiel+Szenario+Markt (kein Doppelzählen).
@@ -1606,6 +1682,7 @@ def main():
     # (Galatasaray 85%@13.50; Wolves Under 87% aber Quote driftet). Trades sieht sie weiter.
     pub_alerts = [a for a in pub_alerts if not _pub_incoherent(a) and not _pub_drift(a) and not _pub_ht_useless(a) and not _pub_unconfirmed_fav(a) and not _pub_under_goals(a)]   # 16.08.2026 (Lucas): Under-Tore aus Public, live UND vor Anpfiff
     pub_sent = 0
+    _gesendet_k = set()          # scenario:matchId:market — dieselbe Form wie im Schattenbuch
     for a in pub_alerts:
         key = a["scenario"] + ":" + a["matchId"]
         if _pub_skip_resend(a, pub_seen):
@@ -1620,12 +1697,13 @@ def main():
                 if a["scenario"] == "fresh":
                     _fresh_cooldown_mark(pub_seen, a["matchId"])
                 pub_sent += 1
+                _gesendet_k.add("%s:%s:%s" % (a.get("scenario"), a.get("matchId"), a.get("market")))
                 _log_public_push(a, cidx)   # fürs Tracking/Auswerten (+ Konsens-Zweitmeinung)
     _save_seen(PUB_SEEN_FILE, pub_seen)
 
     # 19.09.2026: mitschreiben, WO die Alarme geblieben sind. Ohne das ist ein stummer Tag von
     # einem kaputten Kanal nicht zu unterscheiden — s. `trichter_stufen`.
-    _stufen = trichter_stufen(_pub_roh, [
+    _stufen_filter = [
         ("leader", lambda a: a not in _pub_nach_leader),
         ("einseitig", lambda a: a.get("scenario") == "fresh"
                                 and (a.get("leadShare") or 0.0) < PUB_FRESH_MIN_SHARE),
@@ -1639,8 +1717,38 @@ def main():
         ("ht_nutzlos", _pub_ht_useless),
         ("fav_unbestaetigt", _pub_unconfirmed_fav),
         ("under_tore", _pub_under_goals),
-    ])
+    ]
+    _stufen = trichter_stufen(_pub_roh, _stufen_filter)
     _gruende = {name: raus for name, _uebrig, raus in _stufen if raus}
+
+    # ── 19.09.2026: das Schattenbuch der Beinahe-Treffer ─────────────────────────────────
+    # Der Trichter zaehlt, WIE VIELE an welcher Stufe sterben. Er sagt nicht, wie sie ausgegangen
+    # waeren — und ohne das ist jede Schwelle unverschiebbar. Hier wird jeder nicht gesendete
+    # Kandidat mit seinen Zahlen abgelegt; betfair_public_eval rechnet ihn spaeter mit derselben
+    # settle()-Mechanik ab wie einen echten Push. GESENDET WIRD HIER NICHTS.
+    # Zwei Quellen, weil die Schwelle in zwei Richtungen falsch stehen kann:
+    #   · "public" — war ueber der Geldschwelle, starb an einer Kurationsstufe (0,80 usw.),
+    #   · "trades" — haette gereicht, waere die Geldschwelle niedriger; sagt, was ein Absenken
+    #     brachte. Ohne diese Haelfte kann man die Schwelle nur erhoehen, nie begruenden.
+    try:
+        try:
+            _sch_alt = json.load(open(SCHATTEN_FILE, encoding="utf-8"))
+        except Exception:
+            _sch_alt = []
+        if not isinstance(_sch_alt, list):
+            _sch_alt = []
+        _sch = schatten_buch(_pub_roh, _gesendet_k, _stufen_filter, alt=_sch_alt)
+        _pub_k = {"%s:%s:%s" % (a.get("scenario"), a.get("matchId"), a.get("market"))
+                  for a in _pub_roh}
+        _unter = [a for a in alerts
+                  if "%s:%s:%s" % (a.get("scenario"), a.get("matchId"), a.get("market")) not in _pub_k]
+        _sch = schatten_buch(_unter, _gesendet_k, [("unter_geldschwelle", lambda _a: True)],
+                             alt=_sch, quelle="trades")
+        json.dump(_sch, open(SCHATTEN_FILE, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
+        print("  🕯️  Schattenbuch: %d Zeilen (%d neu in diesem Lauf)"
+              % (len(_sch), len(_sch) - len(_sch_alt)))
+    except Exception as _e:
+        print("  ⚠️  Schattenbuch nicht geschrieben:", _e)
     try:
         _alt = json.load(open(TRICHTER_FILE, encoding="utf-8"))
     except Exception:

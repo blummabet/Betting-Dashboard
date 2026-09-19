@@ -163,8 +163,47 @@ def zaehler_bf_leadshare(base_dir):
                and isinstance(r.get("leadShare"), (int, float)))
 
 
+def zaehler_bf_schatten(base_dir):
+    """Abgerechnete Beinahe-Treffer im Betfair-Schattenbuch.
+
+    19.09.2026 (Lucas: „wir haben noch nicht die optimale Einstellung … das muessten wir
+    rueckrechnen"). Ging nicht, weil wir nur sehen, was durchkommt — Trichter vom 19.09.:
+    roh 69, gesendet 3, davon 43 gestorben an der 80-%-Einseitigkeit. Eine Schwelle, deren
+    Unterseite man nicht kennt, laesst sich nur blind senken. Das Schattenbuch haelt diese
+    Unterseite fest; gezaehlt wird, wie viele davon schon einen AUSGANG haben — ein offener
+    Kandidat ist keine Beobachtung.
+    """
+    d = _laden(os.path.join(base_dir, "betfair_public_schatten.json"))
+    if d is None:
+        return 0            # Buch noch nicht angelegt = noch kein Fall, nicht „unbekannt"
+    if not isinstance(d, list):
+        return None
+    return sum(1 for e in d if isinstance(e, dict) and e.get("status") in ("won", "lost"))
+
+
+def zaehler_bf_zahlen(base_dir):
+    """Abgerechnete Ledger-Zeilen, die die ZAHLEN hinter conc/inflow mitfuehren.
+
+    19.09.2026: bis heute stand im Buch nur das Urteil (share >= 0,65 ja/nein, Zufluss >= 2.000
+    EUR ja/nein). Eine Suche ueber 512 Regelkombinationen fand auf der ersten Haelfte des Buchs
+    +21,1 % und lieferte auf der zweiten -2,8 % (p = 0,58 gegen Buecher ohne Zusammenhang) —
+    es fehlte nicht die Regel, es fehlte die Zahl. Gezaehlt werden nur Zeilen MIT der Zahl;
+    alte Zeilen koennen die Frage nicht beantworten.
+    """
+    try:
+        import betfair_track_store as _store
+    except Exception:
+        return None
+    d = _store.load(os.path.join(base_dir, "betfair_track_results.json"))
+    if not isinstance(d, list):
+        return None
+    return sum(1 for r in d if isinstance(r, dict) and isinstance(r.get("maxSharePct"), int))
+
+
 ZAEHLER = {
     "bf_leadshare": zaehler_bf_leadshare,
+    "bf_schatten": zaehler_bf_schatten,
+    "bf_zahlen": zaehler_bf_zahlen,
     "einigkeit_schatten": zaehler_einigkeit_schatten,
     "htk_shortlist": zaehler_htk_shortlist,
     "htk_trader": zaehler_htk_trader,

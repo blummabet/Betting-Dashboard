@@ -321,6 +321,11 @@ jobs:
           git add betfair_public_seen.json 2>/dev/null || true
           git add betfair_public_ledger.json 2>/dev/null || true
           git add betfair_public_record.json 2>/dev/null || true
+          # 19.09.2026: das Schattenbuch der Beinahe-Treffer — wer die Schwelle knapp verfehlt hat,
+          # samt seinen Zahlen, abgerechnet wie ein echter Push. Ohne diese Unterseite laesst sich
+          # keine Schwelle begruendet verschieben, nur blind senken. Eigene Zeile, s.o.
+          git add betfair_public_schatten.json 2>/dev/null || true
+          git add betfair_public_schatten_bericht.json 2>/dev/null || true
           git add betfair_consensus.json 2>/dev/null || true
           git add betfair_anker.json 2>/dev/null || true
           git add betfair_consensus_history.json 2>/dev/null || true
