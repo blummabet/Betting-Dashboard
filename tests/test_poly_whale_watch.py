@@ -768,9 +768,19 @@ class TestConflictingTopWallet(unittest.TestCase):
     def test_trades_card_zeigt_warnzeile(self):
         b = self._broad([{"wallet": "0xccc", "side": "Butterfly", "usd": 7000}])
         card = P.build_card(self._pos(), self._scores(), restock=False, broad=b)
-        self.assertIn("Rang #3", card)
-        self.assertIn("Gegenseite", card)
-        self.assertIn("Butterfly", card)
+        # 19.09.2026: derselbe Bau wie die Einigkeits-Zeile — Seite, Betrag, wer.
+        self.assertIn("🥉 #3", card)
+        self.assertIn("Gegenseite: Butterfly", card)
+        self.assertIn("$7K", card)
+
+    def test_die_gegenseite_steht_wie_die_einigkeit_in_EINER_zeile(self):
+        """19.09.2026 (Lucas: „das sollten wir auch noch optisch gut machen"). Vorher zwei
+        Zeilen, deren zweite auf jeder Karte gleich lautete — dieselbe Wiederholung, die schon
+        die Einigkeits-Zeile aufgeblaeht hat."""
+        b = self._broad([{"wallet": "0xccc", "side": "Butterfly", "usd": 7000}])
+        zeilen = [z for z in P.build_card(self._pos(), self._scores(), restock=False,
+                                          broad=b).split("\n") if "Gegenseite" in z or "Münzwurf" in z]
+        self.assertEqual(len(zeilen), 1)
 
     def test_trades_card_ohne_konflikt_ohne_zeile(self):
         card = P.build_card(self._pos(), self._scores(), restock=False, broad=self._broad([]))

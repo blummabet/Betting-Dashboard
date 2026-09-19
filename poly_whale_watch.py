@@ -811,15 +811,15 @@ def build_card(pos: dict, scores: dict, restock: bool, broad: dict = None, extra
     _sperrt, _u = gegenseite_sperrt()
     _cf = _conflicting_top_wallet(pos, broad, scores, bewiesen_zaehlt=_sperrt)
     if _cf:
-        wer = ("Rang #%d" % _cf["rank"]) if _cf.get("rank") else "Eine bewiesene Wallet"
-        lines.append("⚔️ <b>%s haelt die Gegenseite</b> — %s (%s)"
-                     % (wer, _esc(_cf["side"]), _usd(_cf["usd"])))
-        # 18.09.2026: der Marker stand bisher ohne Folge da. Gemessen ist er eine: in solchen
+        # 19.09.2026: derselbe Bau wie die 🤝-Zeile — wer, wie viel, und in vier Worten, was es
+        # bedeutet. Vorher waren es zwei Zeilen, deren zweite auf jeder Karte gleich lautete.
+        # 18.09.2026: der Marker stand bis dahin ohne Folge da. Gemessen ist er eine: in solchen
         # Maerkten trifft eine bewiesene Wallet deutlich seltener (poly_gegenseite.json). Die
         # Zahl steht NICHT hier — sie veraltet sonst im Text; das Urteil kommt vom Produzenten.
-        if _sperrt:
-            lines.append("<i>In solchen Maerkten ist Folgen gemessen ein Muenzwurf — "
-                         "im oeffentlichen Kanal geht das gar nicht erst raus.</i>")
+        wer = _rang_kurz(_cf["rank"]) if _cf.get("rank") else "eine bewiesene Wallet"
+        lines.append("⚔️ <b>Gegenseite: %s</b> (%s) · %s%s"
+                     % (_esc(_cf["side"]), _usd(_cf["usd"]), wer,
+                        " — gemessen ein Münzwurf, geht nicht public" if _sperrt else ""))
     lines += _wallet_block(scores, pos.get("wallet"),
                            _sharp_rank_map(scores).get(str(pos.get("wallet") or "").lower()))
     if extra and extra > 0:
