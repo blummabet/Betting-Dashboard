@@ -376,9 +376,23 @@ class TestEntfernungZumBeleg(unittest.TestCase):
         self.assertEqual(r["status"], "geprueft")
         self.assertNotIn("nötig", r["grund"])
 
-    def test_gegen_den_echten_bestand_ist_die_entfernung_groesser_als_der_balken(self):
-        """Haelt den Stand vom 06.09. fest: mindestens eine Kandidaten-Zeile braucht mehr Plays
-        als der Balken (n/30) suggeriert. Wird das eines Tages falsch, ist das die Nachricht."""
+    def test_gegen_den_echten_bestand_behauptet_kein_balken_fertig(self):
+        """19.09.2026 — hier stand bis heute: „mindestens eine Kandidaten-Zeile braucht mehr
+        Plays als der Balken (n/30) suggeriert. Wird das eines Tages falsch, ist das die
+        Nachricht." Es wurde falsch, und die Nachricht war eine andere als erwartet.
+
+        Der einzige Kandidat des Tages ist „🔒 Liga · Conviction ab 5": VORANGEMELDET mit
+        zielN=80, n=51, fehltN=29 — und noetigNRoi=25, also statistisch laengst weit genug. Die
+        Entfernung ist hier nicht mehr die Streuung, sondern die Selbstverpflichtung. Der alte
+        Griff (noetigNRoi > minN) misst damit etwas, das es in diesem Bestand nicht mehr gibt.
+
+        Was geprueft gehoert, ist die Klasse dahinter, und die war KAPUTT: das Board rechnete
+        den Balken immer gegen minN=30 und zeigte fuer diese Zeile „51/30" mit vollem Balken —
+        fertig behauptet, waehrend das Verdikt daneben „Kandidat" sagte. Weil damit `n < ziel`
+        falsch war, fiel zusaetzlich die Entfernungs-Notiz weg und die Zeile verlor ihre einzige
+        Erklaerung. Dieselbe Klasse wie am 06.09., nur andersherum: der Balken war zu
+        OPTIMISTISCH statt zu pessimistisch.
+        """
         import json
         from pathlib import Path
         p = Path(__file__).resolve().parents[1] / "freigabe.json"
@@ -388,13 +402,19 @@ class TestEntfernungZumBeleg(unittest.TestCase):
         kand = d.get("kandidaten") or []
         if not kand:
             self.skipTest("keine Kandidaten")
+        minN = (d.get("regeln", {}) or {}).get("minN") or 30
         for r in kand:
-            if r.get("noetigNRoi") is None:
-                continue
-            self.assertIsInstance(r["noetigNRoi"], int)
-        weit = [r for r in kand if (r.get("noetigNRoi") or 0) > (d.get("regeln", {}).get("minN") or 30)]
-        self.assertTrue(weit, "keine Zeile braucht mehr als die Mindestzahl — bitte nachsehen, "
-                              "das waere neu")
+            if r.get("noetigNRoi") is not None:
+                self.assertIsInstance(r["noetigNRoi"], int)
+            # Ein Kandidat ist per Definition NICHT fertig. Also muss die Zahl, gegen die der
+            # Balken misst, ueber seinem n liegen — sonst zeigt das Board einen vollen Balken
+            # ueber einer unfertigen Schublade.
+            ziel = r.get("zielN") or minN
+            self.assertGreater(
+                ziel, r.get("n") or 0,
+                "Kandidat %r haette einen vollen Balken (%s/%s) — entweder fehlt der Zeile ihr "
+                "eigenes zielN, oder sie ist in Wahrheit aus einem anderen Grund Kandidat und "
+                "der Balken erklaert ihn nicht." % (r.get("schublade"), r.get("n"), ziel))
 
 
 class TestDiePrognoseTraegtIhreEigeneSchranke(unittest.TestCase):

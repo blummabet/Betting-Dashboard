@@ -118,9 +118,28 @@ test('am echten Bestand: im Bereich der Tafel trägt keine einzige Stufe', () =>
   // Stufen — da ist knapp ein Treffer ueber der Schranke genau das, was der Zufall liefert.
   // Steht sie in vier Wochen bei doppeltem n immer noch da, und zieht 11/13 mit, ist es ein
   // Befund. Bis dahin: Protokoll, keine Freigabe.
-  assert.deepStrictEqual(traegt.map(e => `${e.punkte}/${e.moeglich} (n=${e.n})`),
-    ['12/13 (n=3)', '10/13 (n=21)', '6/7 (n=6)'],
-    'Die Lage hat sich geändert — bitte ansehen, statt den Test anzupassen.');
+  // 19.09.2026 angesehen — die Antwort kam schneller als die vier Wochen. „10/13" ist nach
+  // EINEM weiteren Play wieder unter null:
+  //
+  //   18.09.   10/13  n=21   ROI +29,9 %   UG +1,9 %
+  //   19.09.   10/13  n=22   ROI +24,1 %   UG −4,4 %
+  //   19.09.   11/13  n=23   ROI +12,7 %   UG −20,2 %   ← die strengere Stufe, weiter schlechter
+  //
+  // Genau das war der Verdacht: eine Untergrenze, die bei vierzehn gleichzeitig geprueften
+  // Stufen knapp ueber der Null steht, ist kein Befund, sondern die Bandbreite. Ein einziger
+  // Play hat sie zurueckgeholt.
+  //
+  // Die feste Liste war deshalb der falsche Griff: sie bricht bei jedem Play, an dem sich nur
+  // das n aendert (12/13 ging von n=3 auf n=4, ohne dass sich irgendetwas an der Aussage
+  // aendert). Gehalten wird ab jetzt der SATZ, um den es geht — im belastbaren Bereich traegt
+  // keine Stufe. Die Zeilen mit einstelligem n bleiben Protokoll und werden benannt, damit sie
+  // nicht unbemerkt wachsen.
+  const belastbar = traegt.filter(e => (e.n || 0) >= 10);
+  assert.deepStrictEqual(belastbar.map(e => `${e.punkte}/${e.moeglich} (n=${e.n})`), [],
+    'Eine Stufe mit zweistelligem n traegt zum ersten Mal — das ist die Nachricht und gehoert '
+    + 'angesehen, statt hier weggetestet zu werden.');
+  assert.ok(traegt.every(e => (e.n || 0) < 10),
+    'Protokollzeilen muessen einstellig bleiben, sonst sind sie keine mehr.');
   const elf = oben.find(e => e.punkte === 11 && e.moeglich === 13);
   assert.ok(elf && (elf.roiLb || -9) <= 0,
     'Wenn die STRENGERE Stufe 11/13 auch ueber null geht, ist die Leiter zum ersten Mal '

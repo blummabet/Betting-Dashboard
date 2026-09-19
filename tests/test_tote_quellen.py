@@ -27,6 +27,7 @@ wenn sie es nicht mehr tut.
 """
 import ast
 import os
+import subprocess
 import re
 import sys
 import glob
@@ -96,13 +97,41 @@ def aktive_module() -> tuple:
     return tuple(sorted(raus))
 
 
+_ALTER_CACHE = {}
+
+
 def alter_tage(datei, jetzt=None):
-    """Alter einer Repo-Datei in Tagen. None = gibt es nicht."""
+    """Alter einer Repo-Datei in Tagen. None = gibt es nicht.
+
+    🔴 19.09.2026: hier stand nur `os.path.getmtime`. Die mtime ist aber keine Eigenschaft der
+    DATEN, sondern des Checkouts: jedes `git checkout`, `stash pop` oder Rebase schreibt die
+    Datei neu und macht sie damit „frisch", ohne dass sich ein Byte geaendert haette. Genau so
+    stand `wm_auto_bets_placed.json` — inhaltlich seit dem 12.07. unveraendert — ploetzlich mit
+    zwoelf Minuten Alter da und riss die Gegenprobe des Waechters.
+
+    Fuer eine getrackte Datei zaehlt deshalb der letzte COMMIT, der sie angefasst hat. Nur fuer
+    ungetrackte faellt es auf die mtime zurueck — dort gibt es nichts Besseres."""
     p = os.path.join(REPO, datei)
-    try:
-        return ((jetzt or time.time()) - os.path.getmtime(p)) / 86400.0
-    except OSError:
+    if not os.path.exists(p):
         return None
+    if datei not in _ALTER_CACHE:
+        ts = None
+        try:
+            out = subprocess.run(["git", "log", "-1", "--format=%ct", "--", datei],
+                                 cwd=REPO, capture_output=True, text=True, timeout=20).stdout.strip()
+            ts = float(out) if out else None
+        except (OSError, ValueError, subprocess.SubprocessError):
+            ts = None
+        if ts is None:
+            try:
+                ts = os.path.getmtime(p)
+            except OSError:
+                ts = None
+        _ALTER_CACHE[datei] = ts
+    ts = _ALTER_CACHE[datei]
+    if ts is None:
+        return None
+    return ((jetzt or time.time()) - ts) / 86400.0
 
 
 def geschwister(datei) -> list:
@@ -230,3 +259,29 @@ class TestKeineTotenQuellen:
         for mod, grund in AUSNAHMEN.items():
             assert re.search(r"\d{2}\.\d{2}\.\d{4}", str(grund)), "%s ohne Datum" % mod
             assert len(str(grund)) > 40, "%s ohne echte Begruendung" % mod
+
+
+def test_eine_getrackte_datei_wird_durch_anfassen_nicht_juenger():
+    """🔴 19.09.2026 — die Gegenprobe zur Gegenprobe.
+
+    `alter_tage` las die mtime, und die ist keine Eigenschaft der Daten: ein `git checkout`,
+    `stash pop` oder Rebase schreibt die Datei neu und macht sie „frisch". Genau so stand
+    `wm_auto_bets_placed.json` — inhaltlich seit dem 12.07. unveraendert — mit zwoelf Minuten
+    Alter da und riss `test_die_regel_faengt_die_heartbeat_falle`. Ein Waechter, dessen Probe
+    davon abhaengt, wer zuletzt im Arbeitsverzeichnis herumgelaufen ist, misst nicht die Sache.
+    """
+    datei = "wm_auto_bets_placed.json"
+    p = os.path.join(REPO, datei)
+    if not os.path.isfile(p):
+        pytest.skip("Probe-Datei gibt es nicht mehr")
+    _ALTER_CACHE.pop(datei, None)
+    vorher = alter_tage(datei)
+    assert vorher is not None
+    os.utime(p, None)                      # genau das, was ein Checkout tut
+    _ALTER_CACHE.pop(datei, None)
+    nachher = alter_tage(datei)
+    assert nachher is not None
+    assert abs(nachher - vorher) < 0.01, (
+        "Anfassen hat die Datei um %.2f Tage verjuengt — dann misst der Waechter den Checkout, "
+        "nicht die Daten." % (vorher - nachher))
+    assert vorher > TOT_AB_TAGEN, "die Probe-Datei muss tot sein, sonst taugt sie nicht als Probe"
