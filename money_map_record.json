@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-19T12:25:57.197566+00:00",
+"generatedAt": "2026-09-19T12:41:01.304045+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1300,
-"wins": 1102,
-"hitRate": 0.8477,
-"polyN": 1233,
-"polyWins": 963,
-"polyHitRate": 0.781,
+"n": 1302,
+"wins": 1103,
+"hitRate": 0.8472,
+"polyN": 1235,
+"polyWins": 964,
+"polyHitRate": 0.7806,
 "pinnN": 173,
 "pinnHitRate": 0.7919,
-"nRoi": 627,
-"roi": 0.4314,
-"roiLb": 0.3807,
-"nClv": 627,
-"clv": 20.6,
-"clvLb": 19.0286
+"nRoi": 629,
+"roi": 0.4304,
+"roiLb": 0.3798,
+"nClv": 629,
+"clv": 20.66,
+"clvLb": 19.0837
 },
 "uneinig": {
-"n": 498,
+"n": 500,
 "wins": 155,
-"hitRate": 0.3112,
-"polyN": 459,
+"hitRate": 0.31,
+"polyN": 461,
 "polyWins": 125,
-"polyHitRate": 0.2723,
-"pinnN": 304,
-"pinnHitRate": 0.625,
-"nRoi": 266,
-"roi": -0.4934,
-"roiLb": -0.5793,
-"nClv": 266,
-"clv": -19.7,
-"clvLb": -23.0631
+"polyHitRate": 0.2711,
+"pinnN": 305,
+"pinnHitRate": 0.6262,
+"nRoi": 268,
+"roi": -0.4972,
+"roiLb": -0.5826,
+"nClv": 268,
+"clv": -19.72,
+"clvLb": -23.0609
 },
 "teil": {
 "n": 24,
@@ -82,9 +82,9 @@
 "hitRate": 0.7111
 },
 "Japanese J League": {
-"n": 42,
-"wins": 31,
-"hitRate": 0.7381
+"n": 45,
+"wins": 32,
+"hitRate": 0.7111
 },
 "English Premier League": {
 "n": 41,
@@ -201,15 +201,15 @@
 "wins": 15,
 "hitRate": 0.6818
 },
+"Japanese J League 2": {
+"n": 21,
+"wins": 15,
+"hitRate": 0.7143
+},
 "Chinese Super League": {
 "n": 20,
 "wins": 14,
 "hitRate": 0.7
-},
-"Japanese J League 2": {
-"n": 20,
-"wins": 15,
-"hitRate": 0.75
 },
 "North American Leagues Cup": {
 "n": 20,
@@ -649,37 +649,113 @@
 },
 "byStrength": {
 "strong": {
-"n": 1114,
-"wins": 900,
-"hitRate": 0.8079,
-"nRoi": 590,
-"roi": 0.2981,
-"roiLb": 0.2441,
-"nClv": 590,
-"clv": 14.29,
-"clvLb": 12.1357
+"n": 1116,
+"wins": 901,
+"hitRate": 0.8073,
+"nRoi": 592,
+"roi": 0.2976,
+"roiLb": 0.2436,
+"nClv": 592,
+"clv": 14.37,
+"clvLb": 12.2173
 },
 "weak": {
-"n": 675,
+"n": 677,
 "wins": 344,
-"hitRate": 0.5096,
-"nRoi": 318,
-"roi": -0.1505,
-"roiLb": -0.2442,
-"nClv": 318,
-"clv": -4.12,
-"clvLb": -7.1268
+"hitRate": 0.5081,
+"nRoi": 320,
+"roi": -0.1558,
+"roiLb": -0.2491,
+"nClv": 320,
+"clv": -4.24,
+"clvLb": -7.2276
 }
 },
 "divergence": {
-"n": 498,
+"n": 500,
 "betfairWins": 155,
-"betfairRate": 0.3112,
-"polyN": 459,
+"betfairRate": 0.31,
+"polyN": 461,
 "polyWins": 125,
-"polyRate": 0.2723
+"polyRate": 0.2711
 },
 "recent": [
+{
+"matchId": "36067530",
+"home": "Shimizu",
+"away": "Jef Utd Chiba",
+"league": "Japanese J League",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Jef Utd Chiba",
+"polySide": "away",
+"winner": "home",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-09-19T09:30:00Z",
+"settledAt": "2026-09-19T12:41:01.127060+00:00"
+},
+{
+"matchId": "36063226",
+"home": "Nagasaki",
+"away": "Cerezo Osaka",
+"league": "Japanese J League",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Nagasaki",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-09-19T09:30:00Z",
+"settledAt": "2026-09-19T12:41:01.127060+00:00"
+},
+{
+"matchId": "36067620",
+"home": "Urawa",
+"away": "Tokyo-V",
+"league": "Japanese J League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Urawa",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+1
+],
+"kickoff": "2026-09-19T09:30:00Z",
+"settledAt": "2026-09-19T12:41:01.127060+00:00"
+},
+{
+"matchId": "36063225",
+"home": "Fujieda Myfc",
+"away": "Omiya",
+"league": "Japanese J League 2",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Fujieda MYFC",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-09-19T09:30:00Z",
+"settledAt": "2026-09-19T12:41:01.127060+00:00"
+},
 {
 "matchId": "36062945",
 "home": "Kawasaki",
@@ -1363,94 +1439,18 @@
 ],
 "kickoff": "2026-09-18T18:45:00Z",
 "settledAt": "2026-09-18T20:39:23.929525+00:00"
-},
-{
-"matchId": "36041020",
-"home": "Bayern Munich",
-"away": "Union Berlin",
-"league": "German Bundesliga",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Bayern Munich",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-7,
-0
-],
-"kickoff": "2026-09-18T18:30:00Z",
-"settledAt": "2026-09-18T20:24:21.242314+00:00"
-},
-{
-"matchId": "36067725",
-"home": "Lyngby",
-"away": "Silkeborg",
-"league": "Danish Superliga",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Lyngby",
-"polySide": "away",
-"winner": "away",
-"moneyWin": false,
-"polyWin": true,
-"ftScore": [
-0,
-4
-],
-"kickoff": "2026-09-18T17:00:00Z",
-"settledAt": "2026-09-18T20:09:25.404987+00:00"
-},
-{
-"matchId": "36069558",
-"home": "Sarpsborg",
-"away": "Kfum Oslo",
-"league": "Norwegian Eliteserien",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "KFUM Oslo",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-3
-],
-"kickoff": "2026-09-18T17:00:00Z",
-"settledAt": "2026-09-18T20:09:25.404987+00:00"
-},
-{
-"matchId": "36041145",
-"home": "FC Groningen",
-"away": "PEC Zwolle",
-"league": "Dutch Eredivisie",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "FC Groningen",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-0
-],
-"kickoff": "2026-09-18T18:00:00Z",
-"settledAt": "2026-09-18T19:54:14.035900+00:00"
 }
 ],
 "global": {
-"n": 1822,
-"wins": 1262,
-"hitRate": 0.6926,
-"nRoi": 908,
-"roi": 0.141,
-"roiLb": 0.0916,
-"nClv": 908,
+"n": 1826,
+"wins": 1263,
+"hitRate": 0.6917,
+"nRoi": 912,
+"roi": 0.1385,
+"roiLb": 0.0891,
+"nClv": 912,
 "clv": 7.84,
-"clvLb": 6.0266
+"clvLb": 6.0279
 },
-"pending": 50
+"pending": 49
 }

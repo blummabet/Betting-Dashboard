@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-19T12:26:01.403384+00:00",
+ "generatedAt": "2026-09-19T12:41:05.445366+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -42,27 +42,27 @@
   {
    "schublade": "Mix money+sharp+steam",
    "strom": "poly",
-   "n": 39,
+   "n": 40,
    "status": "freigegeben",
-   "grund": "ROI belegt (Untergrenze +3.7 %) — der CLV ist gemessen (-1.58 pp), aber nicht belegt: unbekannt ist kein Nein.",
-   "roi": 0.2106,
-   "pl": 8.21,
-   "roiLb": 0.0368,
-   "clv": -1.577,
-   "clvLb": -3.391,
+   "grund": "ROI belegt (Untergrenze +0.4 %) — der CLV ist gemessen (-1.00 pp), aber nicht belegt: unbekannt ist kein Nein.",
+   "roi": 0.1803,
+   "pl": 7.21,
+   "roiLb": 0.0037,
+   "clv": -1.0,
+   "clvLb": -3.007,
    "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.237,
+   "clvOg": 1.007,
    "fehltN": 0,
-   "noetigNRoi": 27,
+   "noetigNRoi": 39,
    "noetigNClv": null,
    "entfernung": {
-    "median": 27,
-    "lo": 6,
-    "hi": 587,
-    "nieAnteil": 0.028,
+    "median": 36,
+    "lo": 7,
+    "hi": 1059,
+    "nieAnteil": 0.063,
     "schaetzbar": false
    },
-   "alterTage": 0.4,
+   "alterTage": 0.0,
    "art": "mix",
    "wert": "money+sharp+steam",
    "nAlt": 11,
@@ -259,11 +259,11 @@
    "zerlegung": "nach Conviction",
    "art": "conviction",
    "gruppen": 7,
-   "basis": "581 von 1004 abgerechneten Plays · nur Engine 2026-09-01 · ohne Kampfsport, US-Sport",
-   "n": 581,
-   "pl": 14.45,
-   "roi": 0.0249,
-   "clv": -2.209,
+   "basis": "582 von 1005 abgerechneten Plays · nur Engine 2026-09-01 · ohne Kampfsport, US-Sport",
+   "n": 582,
+   "pl": 13.45,
+   "roi": 0.0231,
+   "clv": -2.168,
    "belegte": 3
   },
   {
@@ -288,7 +288,7 @@
    "aufloesbar": true,
    "grund": null,
    "laufend": 0,
-   "n": 43,
+   "n": 44,
    "plays": [
     {
      "spiel": "Bologna v Torino",
@@ -453,7 +453,7 @@
     {
      "spiel": "Manchester City v Sunderland",
      "auswahl": "Unter 3.5 Tore",
-     "quote": 1.56,
+     "quote": 1.55,
      "anpfiff": "2026-09-20T13:00:00+00:00",
      "datensatz": "Liga",
      "id": "ENG-5-50-746|Unter 3.5 Tore"
@@ -461,7 +461,7 @@
     {
      "spiel": "Leeds v Crystal Palace",
      "auswahl": "Heimsieg",
-     "quote": 1.72,
+     "quote": 1.71,
      "anpfiff": "2026-09-20T13:00:00+00:00",
      "datensatz": "Liga",
      "id": "ENG-5-63-52|Heimsieg"
@@ -469,7 +469,7 @@
     {
      "spiel": "Leeds v Crystal Palace",
      "auswahl": "Über 2.5 Tore",
-     "quote": 1.74,
+     "quote": 1.71,
      "anpfiff": "2026-09-20T13:00:00+00:00",
      "datensatz": "Liga",
      "id": "ENG-5-63-52|Über 2.5 Tore"
@@ -485,7 +485,7 @@
     {
      "spiel": "Frosinone v Como",
      "auswahl": "Über 2.5 Tore",
-     "quote": 1.46,
+     "quote": 1.44,
      "anpfiff": "2026-09-20T13:00:00+00:00",
      "datensatz": "Liga",
      "id": "ITA-5-512-895|Über 2.5 Tore"
@@ -493,7 +493,7 @@
     {
      "spiel": "Parma v Genoa",
      "auswahl": "Über 1.5 Tore",
-     "quote": 1.46,
+     "quote": 1.44,
      "anpfiff": "2026-09-20T13:00:00+00:00",
      "datensatz": "Liga",
      "id": "ITA-5-523-495|Über 1.5 Tore"
@@ -523,9 +523,17 @@
      "id": "GER-4-174-1660|Über 2.5 Tore"
     },
     {
+     "spiel": "Juventus v Atalanta",
+     "auswahl": "Beide Teams treffen — Nein",
+     "quote": 2.0,
+     "anpfiff": "2026-09-20T16:00:00+00:00",
+     "datensatz": "Liga",
+     "id": "ITA-5-496-499|Beide Teams treffen — Nein"
+    },
+    {
      "spiel": "Villarreal v Levante",
      "auswahl": "Über 2.5 Tore",
-     "quote": 1.47,
+     "quote": 1.48,
      "anpfiff": "2026-09-20T16:30:00+00:00",
      "datensatz": "Liga",
      "id": "ESP-7-533-539|Über 2.5 Tore"
@@ -541,7 +549,7 @@
     {
      "spiel": "Marseille v Paris Saint Germain",
      "auswahl": "Über 2.5 Tore",
-     "quote": 1.37,
+     "quote": 1.36,
      "anpfiff": "2026-09-20T18:45:00+00:00",
      "datensatz": "Liga",
      "id": "FRA-5-81-85|Über 2.5 Tore"
@@ -639,7 +647,7 @@
   {
    "schublade": "Mix money+sharp+steam",
    "strom": "poly",
-   "roiLb": 0.0368,
+   "roiLb": 0.0037,
    "clvUrteil": "gemessen, nicht belegt",
    "aufloesbar": false,
    "grund": "für diesen Schnitt gibt es keine Liste offener Plays — die Schublade rechnet auf Aggregaten, nicht auf einzelnen Zeilen",
@@ -3641,27 +3649,27 @@
   {
    "schublade": "Mix money+sharp+steam",
    "strom": "poly",
-   "n": 39,
+   "n": 40,
    "status": "freigegeben",
-   "grund": "ROI belegt (Untergrenze +3.7 %) — der CLV ist gemessen (-1.58 pp), aber nicht belegt: unbekannt ist kein Nein.",
-   "roi": 0.2106,
-   "pl": 8.21,
-   "roiLb": 0.0368,
-   "clv": -1.577,
-   "clvLb": -3.391,
+   "grund": "ROI belegt (Untergrenze +0.4 %) — der CLV ist gemessen (-1.00 pp), aber nicht belegt: unbekannt ist kein Nein.",
+   "roi": 0.1803,
+   "pl": 7.21,
+   "roiLb": 0.0037,
+   "clv": -1.0,
+   "clvLb": -3.007,
    "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.237,
+   "clvOg": 1.007,
    "fehltN": 0,
-   "noetigNRoi": 27,
+   "noetigNRoi": 39,
    "noetigNClv": null,
    "entfernung": {
-    "median": 27,
-    "lo": 6,
-    "hi": 587,
-    "nieAnteil": 0.028,
+    "median": 36,
+    "lo": 7,
+    "hi": 1059,
+    "nieAnteil": 0.063,
     "schaetzbar": false
    },
-   "alterTage": 0.4,
+   "alterTage": 0.0,
    "art": "mix",
    "wert": "money+sharp+steam",
    "nAlt": 11,
@@ -4454,37 +4462,6 @@
    "naeherung": false
   },
   {
-   "schublade": "Conviction 6",
-   "strom": "poly",
-   "n": 238,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0195,
-   "pl": 4.64,
-   "roiLb": -0.0623,
-   "clv": -1.74,
-   "clvLb": -2.532,
-   "clvUrteil": "negativ belegt",
-   "clvOg": -0.949,
-   "fehltN": 0,
-   "noetigNRoi": 4186,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 1050,
-    "lo": 118,
-    "hi": 110775,
-    "nieAnteil": 0.345,
-    "schaetzbar": false
-   },
-   "alterTage": 0.0,
-   "art": "conviction",
-   "wert": 6,
-   "nAlt": 93,
-   "roiAlt": 0.0229,
-   "clvAlt": 0.077,
-   "engineAlt": true
-  },
-  {
    "schublade": "Conviction 5",
    "strom": "poly",
    "n": 289,
@@ -4513,6 +4490,37 @@
    "nAlt": 110,
    "roiAlt": 0.1047,
    "clvAlt": 0.283,
+   "engineAlt": true
+  },
+  {
+   "schublade": "Conviction 6",
+   "strom": "poly",
+   "n": 239,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0152,
+   "pl": 3.64,
+   "roiLb": -0.0665,
+   "clv": -1.643,
+   "clvLb": -2.448,
+   "clvUrteil": "negativ belegt",
+   "clvOg": -0.839,
+   "fehltN": 0,
+   "noetigNRoi": 6882,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 958,
+    "lo": 133,
+    "hi": 183172,
+    "nieAnteil": 0.412,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "conviction",
+   "wert": 6,
+   "nAlt": 93,
+   "roiAlt": 0.0229,
+   "clvAlt": 0.077,
    "engineAlt": true
   },
   {
