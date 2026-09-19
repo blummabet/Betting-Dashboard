@@ -12,7 +12,10 @@
 "value": 235502.81,
 "sentAt": "2026-09-19T18:26:45.531059+00:00",
 "status": "pending",
-"htScore": null,
+"htScore": [
+1,
+1
+],
 "leadShare": 0.8543322689015898,
 "leadDir": "out",
 "onLeader": false,
@@ -108,7 +111,10 @@ null
 "value": 10116.259999999998,
 "sentAt": "2026-09-19T18:26:45.531128+00:00",
 "status": "pending",
-"htScore": null,
+"htScore": [
+1,
+1
+],
 "leadShare": 0.9275621623010876,
 "leadDir": "out",
 "onLeader": false,
@@ -276,6 +282,102 @@ null
 "magnitude": 68100.3,
 "schwelle": 100000.0,
 "anteilSchwelle": 0.681,
+"raus": "unter_geldschwelle",
+"quelle": "trades",
+"gesendet": false,
+"live": {
+"time": null,
+"score": [
+null,
+null
+]
+}
+},
+{
+"k": "fresh:36071070:Match Odds",
+"matchId": "36071070",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Irish Premier Division",
+"home": "Sligo Rovers",
+"away": "St Patricks",
+"leadName": "St Patricks",
+"leadOdd": 1.41,
+"value": 65507.28,
+"sentAt": "2026-09-19T18:56:48.320245+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.517836490844987,
+"leadDir": "out",
+"onLeader": false,
+"tier": "rest",
+"magnitude": 32746.8,
+"schwelle": 30000.0,
+"anteilSchwelle": 1.092,
+"raus": "einseitig",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 9,
+"score": [
+0,
+0
+]
+}
+},
+{
+"k": "fresh:36039862:Match Odds",
+"matchId": "36039862",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "French Ligue 1",
+"home": "Le Mans",
+"away": "Lorient",
+"leadName": "Le Mans",
+"leadOdd": 1.75,
+"value": 198592.07,
+"sentAt": "2026-09-19T18:56:48.320264+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.6333853612583825,
+"leadDir": "in",
+"onLeader": true,
+"tier": "top",
+"magnitude": 134082.0,
+"schwelle": 100000.0,
+"anteilSchwelle": 1.341,
+"raus": "leader",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 9,
+"score": [
+1,
+0
+]
+}
+},
+{
+"k": "ht:36071858:Half Time",
+"matchId": "36071858",
+"scenario": "ht",
+"market": "Half Time",
+"league": "Spanish La Liga",
+"home": "Sevilla",
+"away": "Barcelona",
+"leadName": "Barcelona",
+"leadOdd": 1.67,
+"value": 18102.77,
+"sentAt": "2026-09-19T18:56:48.320279+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.903114827178382,
+"leadDir": "out",
+"onLeader": null,
+"tier": "top",
+"magnitude": 18102.8,
+"schwelle": 50000.0,
+"anteilSchwelle": 0.362,
 "raus": "unter_geldschwelle",
 "quelle": "trades",
 "gesendet": false,
