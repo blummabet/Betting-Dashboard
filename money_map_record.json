@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-19T03:55:07.864885+00:00",
+"generatedAt": "2026-09-19T04:10:09.499564+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1294,
-"wins": 1097,
-"hitRate": 0.8478,
-"polyN": 1227,
-"polyWins": 959,
-"polyHitRate": 0.7816,
+"n": 1295,
+"wins": 1098,
+"hitRate": 0.8479,
+"polyN": 1228,
+"polyWins": 960,
+"polyHitRate": 0.7818,
 "pinnN": 173,
 "pinnHitRate": 0.7919,
-"nRoi": 621,
-"roi": 0.4332,
-"roiLb": 0.3823,
-"nClv": 621,
-"clv": 20.54,
-"clvLb": 18.9528
+"nRoi": 622,
+"roi": 0.4331,
+"roiLb": 0.3822,
+"nClv": 622,
+"clv": 20.55,
+"clvLb": 18.9624
 },
 "uneinig": {
-"n": 494,
+"n": 495,
 "wins": 154,
-"hitRate": 0.3117,
-"polyN": 455,
+"hitRate": 0.3111,
+"polyN": 456,
 "polyWins": 125,
-"polyHitRate": 0.2747,
-"pinnN": 301,
-"pinnHitRate": 0.6246,
-"nRoi": 262,
-"roi": -0.4903,
-"roiLb": -0.5773,
-"nClv": 262,
+"polyHitRate": 0.2741,
+"pinnN": 302,
+"pinnHitRate": 0.6258,
+"nRoi": 263,
+"roi": -0.4922,
+"roiLb": -0.5789,
+"nClv": 263,
 "clv": -19.69,
-"clvLb": -23.0891
+"clvLb": -23.0769
 },
 "teil": {
 "n": 24,
@@ -96,17 +96,17 @@
 "wins": 30,
 "hitRate": 0.75
 },
+"Mexican Liga MX": {
+"n": 40,
+"wins": 27,
+"hitRate": 0.675
+},
 "Spanish Segunda Division": {
 "n": 40,
 "wins": 29,
 "hitRate": 0.725
 },
 "Dutch Eredivisie": {
-"n": 39,
-"wins": 27,
-"hitRate": 0.6923
-},
-"Mexican Liga MX": {
 "n": 39,
 "wins": 27,
 "hitRate": 0.6923
@@ -211,6 +211,11 @@
 "wins": 13,
 "hitRate": 0.65
 },
+"Peruvian Primera Division": {
+"n": 20,
+"wins": 16,
+"hitRate": 0.8
+},
 "Swiss Super League": {
 "n": 20,
 "wins": 17,
@@ -245,11 +250,6 @@
 "n": 19,
 "wins": 14,
 "hitRate": 0.7368
-},
-"Peruvian Primera Division": {
-"n": 19,
-"wins": 15,
-"hitRate": 0.7895
 },
 "Swedish Superettan": {
 "n": 19,
@@ -649,37 +649,75 @@
 },
 "byStrength": {
 "strong": {
-"n": 1108,
-"wins": 896,
-"hitRate": 0.8087,
-"nRoi": 584,
-"roi": 0.3004,
-"roiLb": 0.2462,
-"nClv": 584,
-"clv": 14.26,
-"clvLb": 12.1008
+"n": 1109,
+"wins": 897,
+"hitRate": 0.8088,
+"nRoi": 585,
+"roi": 0.3005,
+"roiLb": 0.2464,
+"nClv": 585,
+"clv": 14.28,
+"clvLb": 12.1225
 },
 "weak": {
-"n": 671,
+"n": 672,
 "wins": 342,
-"hitRate": 0.5097,
-"nRoi": 314,
-"roi": -0.1468,
-"roiLb": -0.2414,
-"nClv": 314,
-"clv": -4.11,
-"clvLb": -7.153
+"hitRate": 0.5089,
+"nRoi": 315,
+"roi": -0.1495,
+"roiLb": -0.2439,
+"nClv": 315,
+"clv": -4.16,
+"clvLb": -7.1945
 }
 },
 "divergence": {
-"n": 494,
+"n": 495,
 "betfairWins": 154,
-"betfairRate": 0.3117,
-"polyN": 455,
+"betfairRate": 0.3111,
+"polyN": 456,
 "polyWins": 125,
-"polyRate": 0.2747
+"polyRate": 0.2741
 },
 "recent": [
+{
+"matchId": "36071789",
+"home": "Puebla",
+"away": "Atlante",
+"league": "Mexican Liga MX",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Puebla",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-09-19T01:00:00Z",
+"settledAt": "2026-09-19T04:10:09.315583+00:00"
+},
+{
+"matchId": "36066496",
+"home": "Alianza Lima",
+"away": "Asociacion Deportiva Tarma",
+"league": "Peruvian Primera Division",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Alianza Lima",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-09-19T01:00:00Z",
+"settledAt": "2026-09-19T04:10:09.315583+00:00"
+},
 {
 "matchId": "36077832",
 "home": "Aucas",
@@ -1401,56 +1439,18 @@
 ],
 "kickoff": "2026-09-18T16:00:00Z",
 "settledAt": "2026-09-18T19:09:14.988271+00:00"
-},
-{
-"matchId": "36071178",
-"home": "AC Oulu",
-"away": "FC Inter Turku",
-"league": "Finnish Veikkausliiga",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "FC Inter Turku",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-09-18T16:00:00Z",
-"settledAt": "2026-09-18T19:09:14.988271+00:00"
-},
-{
-"matchId": "36067735",
-"home": "Slavia Sofia",
-"away": "CSKA 1948 Sofia",
-"league": "Bulgarian A League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "CSKA 1948 Sofia",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-09-18T17:00:00Z",
-"settledAt": "2026-09-18T18:54:19.420712+00:00"
 }
 ],
 "global": {
-"n": 1812,
-"wins": 1256,
-"hitRate": 0.6932,
-"nRoi": 898,
-"roi": 0.1441,
-"roiLb": 0.0943,
-"nClv": 898,
-"clv": 7.84,
-"clvLb": 6.0112
+"n": 1814,
+"wins": 1257,
+"hitRate": 0.6929,
+"nRoi": 900,
+"roi": 0.143,
+"roiLb": 0.0933,
+"nClv": 900,
+"clv": 7.83,
+"clvLb": 6.0025
 },
-"pending": 26
+"pending": 24
 }
