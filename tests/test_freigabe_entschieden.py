@@ -243,7 +243,17 @@ class TestBetfairSchubladenNutzenDieEchteSchranke(unittest.TestCase):
                  # Schranke. Bei ~193 gleichzeitig geprueften Schubladen ist das die Signatur des
                  # Mehrfachtestens und nicht die einer Kante. Erst wenn eine dieser Zeilen bei
                  # doppeltem n ueber der Huerde bleibt, ist es ein Befund.
-                 "Egyptian 2nd Division · Match Odds"}
+                 "Egyptian 2nd Division · Match Odds",
+                 # 19.09.2026 angesehen: n=30 (genau am Mindest-n), ROI +43,8 %, Untergrenze
+                 # +12,6 %, P/L +13,13, CLV +1,70 pp — wieder ein Mittel ohne Streuung, also
+                 # ohne Untergrenze, also gesperrt. Die FUENFTE Zeile binnen sechs Tagen mit
+                 # demselben Zuschnitt: n zwischen 30 und 35, ROI zwischen +30 und +44 %, kein
+                 # CLV mit Schranke. Dazu diesmal die Gegenprobe im selben Bewerb: die drei
+                 # anderen Kasachstan-Schubladen (Over/Under 2.5, Over/Under 3.5, BTTS) stehen
+                 # bei -1,5 %, +2,7 % und -4,6 % ROI, alle mit n=30. Eine Liga, deren vier
+                 # Maerkte so weit auseinanderliegen, hat keine Liga-Kante — sie hat einen
+                 # Markt, der gerade oben liegt. Genau so sieht Mehrfachtesten aus.
+                 "Kazakhstan Premier League · Match Odds"}
 
     def test_gegen_den_echten_bestand_nimmt_keine_NEUE_betfair_schublade_die_huerde(self):
         """Stand 06.09.: null. Nimmt eine die Huerde, schlaegt dieser Test an — und DAS ist

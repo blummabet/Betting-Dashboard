@@ -875,3 +875,86 @@ class ClvAufDemEchtenFill(unittest.TestCase):
         with open(_o.path.join(d, "shortlist_auto_bets_placed.json"), "w") as f:
             _j.dump({"bets": [{"clvPP": 12.0}, {"status": "placed"}]}, f)
         self.assertEqual(M.zaehler_echte_fills(d), 1)
+
+
+class TestDieWalletIstDieZweiteSchranke(unittest.TestCase):
+    """🔴 19.09.2026 (Lucas: „Push kam 2x. Wurde auch 2x auf Poly gesetzt." — Vila Nova FC vs
+    América FC, 18.09. 23:39 UTC).
+
+    In JEDEM Buch steht der Play genau einmal: eine Zeile im Push-Buch, eine im Dedup-Stand, eine
+    Wette mit einer Order-ID. Zwei Nachrichten und zwei Orders gab es trotzdem. Das geht nur,
+    wenn ein Lauf gesendet und gesetzt hat und sein Gedaechtnis danach verloren ging: Push und
+    Auto-Play wirken sofort und draussen, der Beleg wurde aber erst im Commit-Schritt am Ende des
+    Laufs dauerhaft — zehn Schritte spaeter.
+
+    Der Dedup hing allein an unserer eigenen Datei. Eine Datei, die nicht im Moment der Wirkung
+    dauerhaft wird, ist kein Gedaechtnis. Also dieselbe Regel wie bei den falschen Schliessungen
+    im September: die Wallet ist der Beleg.
+    """
+
+    def test_ein_gehaltener_token_gilt_als_gesetzt(self):
+        self.assertTrue(SAB.schon_im_depot("TOK1", {"TOK1": 6.5}))
+
+    def test_ein_fremder_token_nicht(self):
+        self.assertFalse(SAB.schon_im_depot("TOK1", {"TOK2": 6.5}))
+
+    def test_staub_zaehlt_nicht_als_position(self):
+        """Reste aus einem Teilverkauf duerfen einen neuen Play nicht blockieren."""
+        self.assertFalse(SAB.schon_im_depot("TOK1", {"TOK1": 0.4}))
+
+    def test_ohne_abrufbare_positionen_bleibt_die_schranke_stumpf(self):
+        """None heisst „nicht gewusst" und nicht „nichts gehalten". Die Positions-API dieses
+        Anbieters ist gemessen unzuverlaessig — eine Sperre, die bei jedem Aussetzer das ganze
+        Nachspielen abschaltet, waere die falsche Richtung."""
+        self.assertFalse(SAB.schon_im_depot("TOK1", None))
+
+    def test_kaputte_groesse_blockiert_nicht(self):
+        self.assertFalse(SAB.schon_im_depot("TOK1", {"TOK1": "viel"}))
+
+    def test_ohne_token_wird_nichts_behauptet(self):
+        self.assertFalse(SAB.schon_im_depot(None, {"TOK1": 9.0}))
+
+    def test_die_schranke_haengt_im_lauf(self):
+        """Damit die reine Funktion nicht nur schoen dasteht: sie muss vor dem Kauf gefragt
+        werden — vor `place_market_order`, nicht danach."""
+        import os
+        quelle = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                                   "shortlist_auto_bet.py"), encoding="utf-8").read()
+        self.assertIn("\n        if schon_im_depot(tok, depot):\n", quelle,
+                      "die Schranke muss die Schleife wirklich abbrechen, nicht nur dastehen")
+        self.assertLess(quelle.index("if schon_im_depot(tok, depot):"),
+                        quelle.index("place_market_order("),
+                        "die Pruefung muss VOR dem Kauf stehen")
+
+
+class TestDerBelegWirdSofortDauerhaft(unittest.TestCase):
+    """Die andere Haelfte desselben Vorfalls: nicht der Code war falsch, sondern die Reihenfolge
+    im Workflow. Wer nach draussen wirkt, muss den Beleg sofort schreiben — nicht am Ende."""
+
+    def _yml(self):
+        import os
+        w = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        return open(os.path.join(w, ".github/workflows/poly-global-scan.yml"),
+                    encoding="utf-8").read(), w
+
+    def test_der_dedup_stand_wird_direkt_nach_dem_auto_play_gesichert(self):
+        y, _ = self._yml()
+        i_play = y.index("shortlist_auto_bet.py")
+        i_sichern = y.index("ci_sichern.sh \"Dedup-Stand nach Shortlist-Push/Auto-Play\"")
+        i_ende = y.index("Poly Global-Scan $(date")
+        self.assertLess(i_play, i_sichern, "erst setzen, dann sichern")
+        self.assertLess(i_sichern, i_ende, "und lange vor dem End-Commit")
+
+    def test_auch_der_whale_kanal_sichert_sofort(self):
+        y, _ = self._yml()
+        self.assertLess(y.index("poly_whale_watch.py"),
+                        y.index("ci_sichern.sh \"Dedup-Stand nach Whale-Pushes\""))
+
+    def test_das_sichern_kippt_den_lauf_nie(self):
+        """Ein Schritt, der den Lauf abbrechen kann, waere selbst eine neue Fehlerquelle —
+        dann bliebe alles danach liegen, nur aus einem anderen Grund."""
+        _, w = self._yml()
+        import os
+        sh = open(os.path.join(w, "scripts/ci_sichern.sh"), encoding="utf-8").read()
+        self.assertIn("exit 0", sh)
+        self.assertNotIn("exit 1", sh)

@@ -134,6 +134,16 @@ jobs:
           POLY_API_SECRET:         ${{ secrets.POLY_API_SECRET }}
           POLY_API_PASSPHRASE:     ${{ secrets.POLY_API_PASSPHRASE }}
 
+      # 🔴 19.09.2026 (Lucas: „Push kam 2x. Wurde auch 2x auf Poly gesetzt.") — der Beleg fuer
+      # eine Wirkung wird SOFORT dauerhaft, nicht erst im End-Commit zehn Schritte spaeter.
+      # Begruendung und Tathergang stehen in scripts/ci_sichern.sh.
+      - name: 🔐 Dedup-Stand des Nachspielens sofort sichern
+        if: always()
+        run: bash scripts/ci_sichern.sh "Dedup-Stand nach Shortlist-Push/Auto-Play" shortlist_push_seen.json shortlist_push_ledger.json shortlist_auto_bets_placed.json
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       # 05.09.2026 (Lucas: „250.000 ist fuer mich ein Vermoegen, fuer den ein normaler Bet") —
       # MUSS vor dem Whale-Watch laufen: der baut daraus die Zeile „Normalgroesse fuer dieses
       # Konto". Faellt der Schritt aus, fehlt die Zeile, der Push geht trotzdem raus.
@@ -163,6 +173,15 @@ jobs:
       - name: 🐋 Public-Whale-Pushs abrechnen (Slug → Trefferquote/ROI/CLV)
         run: ${{ env.POLY_PYTHON }} poly_public_eval.py
         continue-on-error: true
+
+      # Dasselbe fuer den Whale-Kanal: auch hier ist die Nachricht draussen, lange bevor der
+      # End-Commit den Dedup-Stand dauerhaft macht.
+      - name: 🔐 Dedup-Stand der Whale-Pushes sofort sichern
+        if: always()
+        run: bash scripts/ci_sichern.sh "Dedup-Stand nach Whale-Pushes" poly_whale_seen.json poly_whale_public_seen.json poly_whale_public_ledger.json poly_whale_nachtrag_seen.json poly_dominanz_seen.json poly_einigkeit_schatten.json
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # 🔬 15.09.2026 (Lucas: „wo sehen wir den Outcome dieser Messungen? Damit wir in 2 Wochen
       # wissen, dass wir das heute gemacht haben"). Schreibt nur das Buch, entscheidet nichts.

@@ -129,6 +129,57 @@ def bet_key(zeile) -> str:
     return str(zeile.get("k") or "%s|%s" % (zeile.get("key"), zeile.get("side")))
 
 
+HELD_EPS = 1.0   # Shares <= EPS = Staub, keine Position
+
+
+def schon_im_depot(tok, positionen, eps: float = HELD_EPS) -> bool:
+    """Haelt die Wallet diesen Token bereits? REIN/testbar.
+
+    🔴 19.09.2026 (Lucas: „Push kam 2x. Wurde auch 2x auf Poly gesetzt." — Vila Nova FC vs
+    América FC, 18.09. 23:39).
+
+    In allen Buechern steht der Play GENAU EINMAL: eine Zeile im Push-Buch, eine im Dedup-Stand,
+    eine gesetzte Wette mit einer Order-ID. Zwei Nachrichten und zwei Orders gab es trotzdem.
+    Das geht nur, wenn ein Lauf gesendet und gesetzt hat und sein Gedaechtnis danach verloren
+    ging: Push (Schritt 11) und Auto-Play (Schritt 12) wirken sofort und draussen, geschrieben
+    wird der Beleg aber erst im Commit-Schritt ganz am Ende (Schritt 23). Alles, was dazwischen
+    den Lauf beendet — das 25-Minuten-Timeout, ein Abbruch, ein gescheiterter Push —, laesst die
+    Wirkung stehen und loescht die Erinnerung. Der naechste Lauf liest den alten Stand und macht
+    beides noch einmal.
+
+    Der Dedup haengt bis heute allein an unserer eigenen Datei (`schon` aus
+    shortlist_auto_bets_placed.json). Eine Datei, die nicht zum Zeitpunkt der Wirkung dauerhaft
+    wird, ist aber kein Gedaechtnis. Deshalb hier derselbe Griff wie bei den falschen
+    Schliessungen im September: **die Wallet ist der Beleg.** Haelt sie den Token, wurde gesetzt
+    — egal, was unser Buch sagt.
+    """
+    if not tok or not isinstance(positionen, dict):
+        return False
+    try:
+        return float(positionen.get(str(tok)) or 0.0) > float(eps)
+    except (TypeError, ValueError):
+        return False
+
+
+def wallet_positionen(getter=None):
+    """{tokenId: shares} der Wallet, oder None wenn nicht zuverlaessig abrufbar.
+
+    None ist ausdruecklich NICHT dasselbe wie {}: bei einer stummen API wird die zweite Schranke
+    einfach nicht scharf, statt jede Wette zu blockieren. Die Positions-API dieses Anbieters ist
+    gemessen unzuverlaessig (s. reconcile_poly_positions) — eine Sperre, die bei jedem Aussetzer
+    das ganze Nachspielen abschaltet, waere die falsche Richtung.
+    """
+    try:
+        import reconcile_poly_positions as R
+        proxy = R._proxy_address()
+        if not proxy:
+            return None
+        return R.fetch_wallet_positions(proxy, getter=getter or R._http_get)
+    except Exception as exc:
+        print(f"  ℹ️  Wallet-Positionen nicht abrufbar ({exc}) — zweite Schranke bleibt stumpf.")
+        return None
+
+
 def faellige_zeilen(ledger, schon_gesetzt, jetzt=None, max_alter_m=None, live_fn=None) -> list:
     """Push-Zeilen, die jetzt gesetzt werden duerfen. REIN/testbar.
 
@@ -610,6 +661,10 @@ def main() -> int:
     # Der Deckel umschliesst den ECHTEN Sender: eine fehlgeschlagene Meldung verbraucht dann
     # kein Kontingent (Vertrag von push_deckel.Deckel).
     melde = PD.Deckel(lambda arg: _melden(arg[0], arg[1], dry=False), MAX_TG, "shortlist-auto-bet")
+    # Einmal je Lauf geholt, nicht je Wette: die zweite Schranke soll nichts kosten.
+    depot = wallet_positionen() if not dry else None
+    if depot is not None:
+        print(f"  🔐 Wallet-Positionen gelesen ({len(depot)} Token) — doppeltes Setzen faellt auf.")
     neu, lauf_offen, dran, liegen = [], offen, 0, []
 
     def _liegen(titel, grund):
@@ -639,6 +694,13 @@ def main() -> int:
               token_aus_feed(feed2, z.get("key"), z.get("side"))
         if not tok:
             _liegen(titel, "kein Token im Feed — es wird nicht geraten")
+            continue
+        if schon_im_depot(tok, depot):
+            # Zweite Schranke, unabhaengig von unserem Buch. Sie greift genau dann, wenn die
+            # erste versagt hat: wenn ein frueherer Lauf gesetzt hat und sein Beleg nie
+            # dauerhaft wurde.
+            _liegen(titel, "die Wallet haelt diesen Token bereits — es wird nicht doppelt "
+                           "gesetzt (unser Buch wusste nichts davon)")
             continue
         buch = buch_holen(tok) if not dry else None
         if buch is None and not dry:
