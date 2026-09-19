@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-19T17:56:25.112440+00:00",
+ "generatedAt": "2026-09-19T19:26:30.991109+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,44 +9,30 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 663,
- "pinnKeys": 207,
- "matched": 141,
- "footballRows": 111,
- "crossRows": 552,
- "footballSkippedStale": 57,
+ "polyRowsSeen": 659,
+ "pinnKeys": 197,
+ "matched": 135,
+ "footballRows": 105,
+ "crossRows": 554,
+ "footballSkippedStale": 59,
  "seenBySport": {
   "americanfootball_nfl": 170,
   "baseball_mlb": 94,
-  "icehockey_nhl": 262,
+  "icehockey_nhl": 264,
   "boxing_boxing": 26,
   "soccer_mls": 18,
-  "soccer_liga": 93
+  "soccer_liga": 87
  },
  "matchedBySport": {
   "baseball_mlb": 30,
   "soccer_mls": 18,
-  "soccer_liga": 93
+  "soccer_liga": 87
  },
  "trackRecord": {
   "tracked": 324,
   "converged": 71
  },
  "discrepancies": [
-  {
-   "id": "soccer_liga|asroma-inter|hw",
-   "sport": "soccer_liga",
-   "event": "AS Roma vs Inter",
-   "market": "1X2",
-   "outcome": "Heim",
-   "polyPP": 84.0,
-   "pinnPP": 60.2,
-   "gapPP": 23.75,
-   "vol": 908350,
-   "richtung": "Poly zu hoch → faden",
-   "convergePP": 0.0,
-   "firstSeen": "2026-09-19T17:26:23.349010+00:00"
-  },
   {
    "id": "soccer_liga|celtavigo-racingsantander|hw",
    "sport": "soccer_liga",
@@ -62,18 +48,32 @@
    "firstSeen": "2026-09-19T17:26:23.349010+00:00"
   },
   {
-   "id": "soccer_liga|asroma-inter|dr",
-   "sport": "soccer_liga",
-   "event": "AS Roma vs Inter",
-   "market": "1X2",
-   "outcome": "Remis",
-   "polyPP": 12.5,
-   "pinnPP": 25.5,
-   "gapPP": -13.02,
-   "vol": 908350,
+   "id": "baseball_mlb|chicagowhitesox-detroittigers|detroittigers",
+   "sport": "baseball_mlb",
+   "event": "Detroit Tigers vs Chicago White Sox",
+   "market": "Moneyline",
+   "outcome": "Detroit Tigers",
+   "polyPP": 49.0,
+   "pinnPP": 32.8,
+   "gapPP": 16.2,
+   "vol": 64850,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -7.75,
+   "firstSeen": "2026-09-17T23:53:05.798957+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagowhitesox-detroittigers|chicagowhitesox",
+   "sport": "baseball_mlb",
+   "event": "Detroit Tigers vs Chicago White Sox",
+   "market": "Moneyline",
+   "outcome": "Chicago White Sox",
+   "polyPP": 51.0,
+   "pinnPP": 67.2,
+   "gapPP": -16.2,
+   "vol": 64850,
    "richtung": "Poly zu niedrig → backen",
-   "convergePP": 0.0,
-   "firstSeen": "2026-09-19T17:26:23.349010+00:00"
+   "convergePP": -7.75,
+   "firstSeen": "2026-09-17T23:53:05.798957+00:00"
   },
   {
    "id": "soccer_liga|celtavigo-racingsantander|dr",
@@ -85,20 +85,6 @@
    "pinnPP": 30.9,
    "gapPP": -10.39,
    "vol": 66368,
-   "richtung": "Poly zu niedrig → backen",
-   "convergePP": 0.0,
-   "firstSeen": "2026-09-19T17:26:23.349010+00:00"
-  },
-  {
-   "id": "soccer_liga|asroma-inter|aw",
-   "sport": "soccer_liga",
-   "event": "AS Roma vs Inter",
-   "market": "1X2",
-   "outcome": "Auswärts",
-   "polyPP": 5.0,
-   "pinnPP": 14.2,
-   "gapPP": -9.23,
-   "vol": 908350,
    "richtung": "Poly zu niedrig → backen",
    "convergePP": 0.0,
    "firstSeen": "2026-09-19T17:26:23.349010+00:00"
