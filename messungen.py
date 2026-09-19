@@ -200,8 +200,27 @@ def zaehler_bf_zahlen(base_dir):
     return sum(1 for r in d if isinstance(r, dict) and isinstance(r.get("maxSharePct"), int))
 
 
+def zaehler_bf_rutsch(base_dir):
+    """Abgerechnete Kursrutsch-Alarme (nur Trades, nie Public).
+
+    19.09.2026 (Lucas): „nur schicken, wenn die Quote auch wirklich sinkt ... um 10 % oder so.
+    Das dann doch ein starkes Signal." Rueckblickend gemessen: Rutsch >= 10 % bei NICHT
+    konzentriertem Geld, n=203, ROI +18,3 % (UG +2,3). Der Fund haelt die Zeitprobe und den
+    Cluster-Bootstrap — aber nach Korrektur fuer 22 angesehene Schnitte p = 0,125. Ein
+    Kandidat, kein Beleg. Deshalb laeuft er als Testlauf im Trades-Kanal und wird abgerechnet.
+    Gezaehlt werden nur Zeilen MIT Ausgang — ein offener Alarm ist keine Beobachtung.
+    """
+    d = _laden(os.path.join(base_dir, "betfair_rutsch_ledger.json"))
+    if d is None:
+        return 0
+    if not isinstance(d, list):
+        return None
+    return sum(1 for e in d if isinstance(e, dict) and e.get("status") in ("won", "lost"))
+
+
 ZAEHLER = {
     "bf_leadshare": zaehler_bf_leadshare,
+    "bf_rutsch": zaehler_bf_rutsch,
     "bf_schatten": zaehler_bf_schatten,
     "bf_zahlen": zaehler_bf_zahlen,
     "einigkeit_schatten": zaehler_einigkeit_schatten,

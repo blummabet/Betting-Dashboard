@@ -1,39 +1,605 @@
 {
- "n": 0,
- "verdict": "zu wenig Daten",
+ "n": 503,
  "minOdds": 1.35,
- "byLeague": [],
+ "moneyHitRate": 0.382,
+ "priceHitRate": 0.419,
+ "brierMoney": 0.8952,
+ "brierPrice": 0.6837,
+ "disagree": {
+  "n": 142,
+  "moneyWon": 18,
+  "priceWon": 37,
+  "neither": 87
+ },
+ "verdict": "preis_besser",
+ "urteilMinN": 30,
+ "byLeague": [
+  {
+   "league": "LA-LIGA",
+   "n": 61,
+   "moneyHitRate": 0.393,
+   "brierMoney": 0.8914,
+   "brierPrice": 0.7532,
+   "verdict": "preis_besser"
+  },
+  {
+   "league": "EPL",
+   "n": 40,
+   "moneyHitRate": 0.2,
+   "brierMoney": 0.9821,
+   "brierPrice": 0.8308,
+   "verdict": "preis_besser"
+  },
+  {
+   "league": "UCL",
+   "n": 34,
+   "moneyHitRate": 0.324,
+   "brierMoney": 0.8252,
+   "brierPrice": 0.6534,
+   "verdict": "preis_besser"
+  },
+  {
+   "league": "EFL-CHAMPIONSHIP",
+   "n": 33,
+   "moneyHitRate": 0.545,
+   "brierMoney": 0.781,
+   "brierPrice": 0.6031,
+   "verdict": "preis_besser"
+  },
+  {
+   "league": "BUNDESLIGA",
+   "n": 37,
+   "moneyHitRate": 0.297,
+   "brierMoney": 0.9281,
+   "brierPrice": 0.7331,
+   "verdict": "preis_besser"
+  },
+  {
+   "league": "LIGUE-1",
+   "n": 28,
+   "moneyHitRate": 0.286,
+   "brierMoney": 0.9282,
+   "brierPrice": 0.7317,
+   "verdict": "preis_besser"
+  },
+  {
+   "league": "K-LEAGUE",
+   "n": 22,
+   "moneyHitRate": 0.409,
+   "brierMoney": 0.9143,
+   "brierPrice": 0.6689,
+   "verdict": "preis_besser"
+  },
+  {
+   "league": "SOCCER:JAP",
+   "n": 22,
+   "moneyHitRate": 0.364,
+   "brierMoney": 0.9605,
+   "brierPrice": 0.6621,
+   "verdict": "preis_besser"
+  },
+  {
+   "league": "MLS",
+   "n": 24,
+   "moneyHitRate": 0.375,
+   "brierMoney": 1.0306,
+   "brierPrice": 0.6895,
+   "verdict": "preis_besser"
+  }
+ ],
  "guete": {
-  "belastbar": 0,
-  "preis_echo": 0,
-  "abgeschnitten": 0,
-  "unbekannt": 0,
+  "belastbar": 503,
+  "preis_echo": 211,
+  "abgeschnitten": 68,
+  "unbekannt": 268,
   "leer": 0
  },
- "generatedAt": "2026-09-19T18:59:48.582624+00:00",
+ "rows": [
+  {
+   "key": "lal-bet-get-2026-09-17",
+   "league": "LA-LIGA",
+   "winner": "Real Betis Balompié",
+   "moneyFav": "Real Betis Balompié",
+   "priceFav": "Real Betis Balompié",
+   "moneyShare": 0.982,
+   "priceProb": 0.658,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 5171631
+  },
+  {
+   "key": "lal-ala-val-2026-09-15",
+   "league": "LA-LIGA",
+   "winner": "Valencia CF",
+   "moneyFav": "Deportivo Alavés",
+   "priceFav": "Deportivo Alavés",
+   "moneyShare": 0.977,
+   "priceProb": 0.574,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 3775748
+  },
+  {
+   "key": "ucl-bru-ast-2026-09-08",
+   "league": "UCL",
+   "winner": "Aston Villa FC",
+   "moneyFav": "Club Brugge KV",
+   "priceFav": "Club Brugge KV",
+   "moneyShare": 0.897,
+   "priceProb": 0.387,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 3152794
+  },
+  {
+   "key": "fl1-ren-olm-2026-09-11",
+   "league": "LIGUE-1",
+   "winner": "Stade Rennais FC 1901",
+   "moneyFav": "Stade Rennais FC 1901",
+   "priceFav": "Stade Rennais FC 1901",
+   "moneyShare": 0.986,
+   "priceProb": 0.487,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 3016899
+  },
+  {
+   "key": "ucl-spo-gal-2026-09-09",
+   "league": "UCL",
+   "winner": "Sporting CP",
+   "moneyFav": "Sporting CP",
+   "priceFav": "Sporting CP",
+   "moneyShare": 0.975,
+   "priceProb": 0.602,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 2623965
+  },
+  {
+   "key": "lal-sev-val-2026-09-11",
+   "league": "LA-LIGA",
+   "winner": "Sevilla FC",
+   "moneyFav": "Sevilla FC",
+   "priceFav": "Sevilla FC",
+   "moneyShare": 0.991,
+   "priceProb": 0.538,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 2064652
+  },
+  {
+   "key": "epl-mun-mac-2026-09-13",
+   "league": "EPL",
+   "winner": "Manchester City FC",
+   "moneyFav": "Manchester City FC",
+   "priceFav": "Manchester City FC",
+   "moneyShare": 0.829,
+   "priceProb": 0.433,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 1721972
+  },
+  {
+   "key": "fl1-ogc-lmf-2026-09-05",
+   "league": "LIGUE-1",
+   "winner": "Draw (OGC Nice vs. Le Mans FC)",
+   "moneyFav": "OGC Nice",
+   "priceFav": "OGC Nice",
+   "moneyShare": 0.992,
+   "priceProb": 0.578,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 1538448
+  },
+  {
+   "key": "ucl-fen-rom-2026-09-10",
+   "league": "UCL",
+   "winner": "Draw (Fenerbahçe SK vs. AS Roma)",
+   "moneyFav": "AS Roma",
+   "priceFav": "AS Roma",
+   "moneyShare": 0.919,
+   "priceProb": 0.498,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 1318556
+  },
+  {
+   "key": "lal-mala-vil-2026-09-17",
+   "league": "LA-LIGA",
+   "winner": "Villarreal CF",
+   "moneyFav": "Villarreal CF",
+   "priceFav": "Villarreal CF",
+   "moneyShare": 0.955,
+   "priceProb": 0.457,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 1226434
+  },
+  {
+   "key": "ucl-rma-int-2026-09-08",
+   "league": "UCL",
+   "winner": "Real Madrid CF",
+   "moneyFav": "Real Madrid CF",
+   "priceFav": "Real Madrid CF",
+   "moneyShare": 0.801,
+   "priceProb": 0.618,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 1200778
+  },
+  {
+   "key": "ucl-lil-bet-2026-09-08",
+   "league": "UCL",
+   "winner": "Real Betis Balompié",
+   "moneyFav": "Lille OSC",
+   "priceFav": "Lille OSC",
+   "moneyShare": 0.771,
+   "priceProb": 0.453,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 1002414
+  },
+  {
+   "key": "epl-ars-che-2026-09-06",
+   "league": "EPL",
+   "winner": "Arsenal FC",
+   "moneyFav": "Arsenal FC",
+   "priceFav": "Arsenal FC",
+   "moneyShare": 0.682,
+   "priceProb": 0.568,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 937420
+  },
+  {
+   "key": "epl-hul-ast-2026-09-05",
+   "league": "EPL",
+   "winner": "Draw (Hull City AFC vs. Aston Villa FC)",
+   "moneyFav": "Aston Villa FC",
+   "priceFav": "Aston Villa FC",
+   "moneyShare": 0.875,
+   "priceProb": 0.513,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 862256
+  },
+  {
+   "key": "epl-lee-new-2026-09-14",
+   "league": "EPL",
+   "winner": "Leeds United FC",
+   "moneyFav": "Newcastle United FC",
+   "priceFav": "Leeds United FC",
+   "moneyShare": 0.578,
+   "priceProb": 0.407,
+   "moneyOK": false,
+   "priceOK": true,
+   "totalUsd": 793615
+  },
+  {
+   "key": "fl1-ang-ren-2026-09-06",
+   "league": "LIGUE-1",
+   "winner": "Stade Rennais FC 1901",
+   "moneyFav": "Stade Rennais FC 1901",
+   "priceFav": "Stade Rennais FC 1901",
+   "moneyShare": 0.992,
+   "priceProb": 0.568,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 787777
+  },
+  {
+   "key": "epl-tot-ast-2026-09-19",
+   "league": "EPL",
+   "winner": "Aston Villa FC",
+   "moneyFav": "Tottenham Hotspur FC",
+   "priceFav": "Tottenham Hotspur FC",
+   "moneyShare": 0.82,
+   "priceProb": 0.512,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 760190
+  },
+  {
+   "key": "lal-mad-osa-2026-09-16",
+   "league": "LA-LIGA",
+   "winner": "Club Atlético de Madrid",
+   "moneyFav": "Club Atlético de Madrid",
+   "priceFav": "Club Atlético de Madrid",
+   "moneyShare": 0.925,
+   "priceProb": 0.739,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 724068
+  },
+  {
+   "key": "epl-new-bou-2026-09-05",
+   "league": "EPL",
+   "winner": "Draw (Newcastle United FC vs. AFC Bournemouth)",
+   "moneyFav": "Newcastle United FC",
+   "priceFav": "Newcastle United FC",
+   "moneyShare": 0.83,
+   "priceProb": 0.453,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 657889
+  },
+  {
+   "key": "epl-not-tot-2026-09-05",
+   "league": "EPL",
+   "winner": "Draw (Nottingham Forest FC vs. Tottenham Hotspur FC)",
+   "moneyFav": "Tottenham Hotspur FC",
+   "priceFav": "Nottingham Forest FC",
+   "moneyShare": 0.584,
+   "priceProb": 0.357,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 632784
+  },
+  {
+   "key": "lal-vil-bet-2026-09-14",
+   "league": "LA-LIGA",
+   "winner": "Real Betis Balompié",
+   "moneyFav": "Real Betis Balompié",
+   "priceFav": "Villarreal CF",
+   "moneyShare": 0.671,
+   "priceProb": 0.493,
+   "moneyOK": true,
+   "priceOK": false,
+   "totalUsd": 616638
+  },
+  {
+   "key": "epl-bri-lee-2026-09-05",
+   "league": "EPL",
+   "winner": "Draw (Brighton & Hove Albion FC vs. Leeds United FC)",
+   "moneyFav": "Brighton & Hove Albion FC",
+   "priceFav": "Brighton & Hove Albion FC",
+   "moneyShare": 0.977,
+   "priceProb": 0.493,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 590538
+  },
+  {
+   "key": "bun-b04-uni-2026-09-05",
+   "league": "BUNDESLIGA",
+   "winner": "Bayer 04 Leverkusen",
+   "moneyFav": "Bayer 04 Leverkusen",
+   "priceFav": "Bayer 04 Leverkusen",
+   "moneyShare": 0.967,
+   "priceProb": 0.709,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 572429
+  },
+  {
+   "key": "epl-tot-eve-2026-09-12",
+   "league": "EPL",
+   "winner": "Draw (Tottenham Hotspur FC vs. Everton FC)",
+   "moneyFav": "Tottenham Hotspur FC",
+   "priceFav": "Tottenham Hotspur FC",
+   "moneyShare": 0.904,
+   "priceProb": 0.478,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 564475
+  },
+  {
+   "key": "ucl-com-rbl-2026-09-10",
+   "league": "UCL",
+   "winner": "Como 1907",
+   "moneyFav": "Como 1907",
+   "priceFav": "Como 1907",
+   "moneyShare": 0.936,
+   "priceProb": 0.572,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 560723
+  },
+  {
+   "key": "mls-sdg-phi-2026-09-13",
+   "league": "MLS",
+   "winner": "Philadelphia Union",
+   "moneyFav": "Philadelphia Union",
+   "priceFav": "Philadelphia Union",
+   "moneyShare": 0.918,
+   "priceProb": 0.433,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 512753
+  },
+  {
+   "key": "mls-hou-rsl-2026-09-09",
+   "league": "MLS",
+   "winner": "Houston Dynamo",
+   "moneyFav": "Houston Dynamo",
+   "priceFav": "Houston Dynamo",
+   "moneyShare": 0.981,
+   "priceProb": 0.542,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 500275
+  },
+  {
+   "key": "epl-ful-cry-2026-09-05",
+   "league": "EPL",
+   "winner": "Crystal Palace FC",
+   "moneyFav": "Fulham FC",
+   "priceFav": "Fulham FC",
+   "moneyShare": 0.554,
+   "priceProb": 0.437,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 476481
+  },
+  {
+   "key": "lal-osa-ray-2026-09-19",
+   "league": "LA-LIGA",
+   "winner": "Draw (CA Osasuna vs. Rayo Vallecano de Madrid)",
+   "moneyFav": "Rayo Vallecano de Madrid",
+   "priceFav": "CA Osasuna",
+   "moneyShare": 0.816,
+   "priceProb": 0.353,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 475793
+  },
+  {
+   "key": "ucl-liv-atm-2026-09-09",
+   "league": "UCL",
+   "winner": "Liverpool FC",
+   "moneyFav": "Liverpool FC",
+   "priceFav": "Liverpool FC",
+   "moneyShare": 0.87,
+   "priceProb": 0.552,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 475718
+  },
+  {
+   "key": "lal-ray-esp-2026-09-15",
+   "league": "LA-LIGA",
+   "winner": "Rayo Vallecano de Madrid",
+   "moneyFav": "Rayo Vallecano de Madrid",
+   "priceFav": "Rayo Vallecano de Madrid",
+   "moneyShare": 0.657,
+   "priceProb": 0.427,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 459593
+  },
+  {
+   "key": "lal-elc-rso-2026-09-07",
+   "league": "LA-LIGA",
+   "winner": "Real Sociedad de Fútbol",
+   "moneyFav": "Real Sociedad de Fútbol",
+   "priceFav": "Real Sociedad de Fútbol",
+   "moneyShare": 0.608,
+   "priceProb": 0.427,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 459463
+  },
+  {
+   "key": "fl1-olm-pfc-2026-09-06",
+   "league": "LIGUE-1",
+   "winner": "Paris FC",
+   "moneyFav": "Olympique de Marseille",
+   "priceFav": "Olympique de Marseille",
+   "moneyShare": 0.946,
+   "priceProb": 0.502,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 450346
+  },
+  {
+   "key": "bra-bra-bah-2026-09-05",
+   "league": "BRAZIL-SERIE-A",
+   "winner": "EC Bahia",
+   "moneyFav": "Red Bull Bragantino",
+   "priceFav": "Red Bull Bragantino",
+   "moneyShare": 0.993,
+   "priceProb": 0.508,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 432365
+  },
+  {
+   "key": "bun-stu-koe-2026-09-04",
+   "league": "BUNDESLIGA",
+   "winner": "VfB Stuttgart",
+   "moneyFav": "VfB Stuttgart",
+   "priceFav": "VfB Stuttgart",
+   "moneyShare": 0.963,
+   "priceProb": 0.668,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 432192
+  },
+  {
+   "key": "mls-phi-fcc-2026-09-09",
+   "league": "MLS",
+   "winner": "Philadelphia Union",
+   "moneyFav": "Philadelphia Union",
+   "priceFav": "Philadelphia Union",
+   "moneyShare": 0.973,
+   "priceProb": 0.598,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 376840
+  },
+  {
+   "key": "por-fam-spo-2026-09-13",
+   "league": "PRIMEIRA-LIGA",
+   "winner": "Draw (FC Famalicão vs. Sporting CP)",
+   "moneyFav": "Sporting CP",
+   "priceFav": "Sporting CP",
+   "moneyShare": 0.955,
+   "priceProb": 0.628,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 374990
+  },
+  {
+   "key": "bra-flu-vas-2026-09-05",
+   "league": "BRAZIL-SERIE-A",
+   "winner": "Fluminense FC",
+   "moneyFav": "Fluminense FC",
+   "priceFav": "Fluminense FC",
+   "moneyShare": 0.943,
+   "priceProb": 0.399,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 372754
+  },
+  {
+   "key": "epl-bre-sun-2026-09-05",
+   "league": "EPL",
+   "winner": "Draw (Brentford FC vs. Sunderland AFC)",
+   "moneyFav": "Brentford FC",
+   "priceFav": "Brentford FC",
+   "moneyShare": 0.967,
+   "priceProb": 0.568,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 367524
+  },
+  {
+   "key": "lal-vil-dep-2026-09-05",
+   "league": "LA-LIGA",
+   "winner": "RC Deportivo A Coruña",
+   "moneyFav": "Villarreal CF",
+   "priceFav": "Villarreal CF",
+   "moneyShare": 0.925,
+   "priceProb": 0.668,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 364386
+  }
+ ],
+ "generatedAt": "2026-09-19T18:00:32.774823+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 419,
   "nfl": 800,
-  "mlb": 798,
+  "mlb": 710,
   "nhl": 586,
   "mls": 702,
-  "epl": 472,
+  "epl": 490,
   "soccer": 800,
-  "tennis": 541,
+  "tennis": 543,
   "ucl": 417,
   "la-liga": 502,
-  "bundesliga": 443,
+  "bundesliga": 444,
   "serie-a": 51,
-  "ligue-1": 495,
-  "primeira-liga": 466,
+  "ligue-1": 499,
+  "primeira-liga": 472,
   "brazil-serie-a": 477,
   "brasileirao": 0,
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 633,
+  "esports": 635,
   "cs2": 421,
   "lol": 427,
   "dota": 9,
@@ -55,7 +621,7 @@
   "chinese-super-league": 406,
   "czechia-fortuna-liga": 9,
   "denmark-superliga": 440,
-  "efl-championship": 432,
+  "efl-championship": 458,
   "english-premier-league": 2,
   "europa-conference-league": 411,
   "europa-league": 187,
@@ -63,18 +629,18 @@
   "japan-j-league": 421,
   "japan-j2-league": 481,
   "k-league": 441,
-  "la-liga-2": 541,
+  "la-liga-2": 547,
   "liga-mx-apertura": 2,
   "ligue-2": 411,
   "naitons-league": 1,
-  "national-league": 610,
+  "national-league": 628,
   "nations-league": 25,
-  "norway-eliteserien": 455,
+  "norway-eliteserien": 456,
   "poland-ekstraklasa": 442,
-  "premier-league": 461,
+  "premier-league": 479,
   "saudi-professional-league": 410,
   "scotland-league-cup": 193,
-  "scottish-premiership": 435,
+  "scottish-premiership": 447,
   "serbian-superliga": 434,
   "serie-b": 443,
   "slovenia-prvaliga": 280,
@@ -85,7 +651,7 @@
   "uefa-europa-league": 18,
   "uefa-nations-league": 435,
   "uefa-womens-champions-league": 2,
-  "ukraine-premier-liha": 434,
+  "ukraine-premier-liha": 435,
   "womens-champions-league": 526
  },
  "sweepStats": {
@@ -94,8 +660,8 @@
   "sweepAdded": 413
  },
  "vorStats": {
-  "kandidaten": 24,
-  "budgetLeer": 2,
+  "kandidaten": 36,
+  "budgetLeer": 14,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
   "mitAnteilen": 22,
@@ -103,104 +669,104 @@
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1274,
-   "usd": 27628422,
-   "beispiel": "fifwc-arg-aut-2026-06-22"
-  },
-  "presidential": {
-   "n": 21,
-   "usd": 5458598,
-   "beispiel": "presidential-election-winner-2028"
-  },
-  "ucl": {
-   "n": 210,
-   "usd": 2480120,
-   "beispiel": "ucl-lil-bet-2026-09-08-more-markets"
+   "n": 1744,
+   "usd": 32511139,
+   "beispiel": "fifwc-civ-ecu-2026-06-14"
   },
   "nba": {
-   "n": 126,
-   "usd": 2235962,
+   "n": 265,
+   "usd": 3316678,
    "beispiel": "nba-nyk-sas-2026-06-05"
   },
-  "sea": {
-   "n": 214,
-   "usd": 2008559,
-   "beispiel": "sea-gen-nap-2026-08-22"
-  },
-  "will": {
-   "n": 53,
-   "usd": 1520770,
-   "beispiel": "will-cmi-declare-a-millennium-prize-problem-solved-by-20260723160122979"
-  },
   "ecs": {
-   "n": 9,
-   "usd": 912488,
-   "beispiel": "ecs-ars-mci-2026-08-16"
+   "n": 10,
+   "usd": 919816,
+   "beispiel": "ecs-ars-mci-2026-08-16-more-markets"
   },
   "world": {
-   "n": 102,
-   "usd": 880579,
-   "beispiel": "world-cup-winner"
+   "n": 101,
+   "usd": 878938,
+   "beispiel": "world-cup-3rd-place-finish-20260713190252671"
   },
-  "efl": {
-   "n": 37,
-   "usd": 780007,
-   "beispiel": "efl-mnc-nor-2026-09-17"
-  },
-  "wnba": {
-   "n": 112,
-   "usd": 637891,
-   "beispiel": "wnba-phx-dal-2026-09-19"
-  },
-  "uel": {
-   "n": 92,
-   "usd": 517778,
-   "beispiel": "uel-ftc-tra1-2026-08-27-more-markets"
-  },
-  "strait": {
-   "n": 6,
-   "usd": 508998,
-   "beispiel": "strait-of-hormuz-traffic-returns-to-normal-by-september-15-20260810150912478"
-  },
-  "col": {
-   "n": 59,
-   "usd": 412904,
-   "beispiel": "col-ilv-stj-2026-07-30"
-  },
-  "mex": {
-   "n": 89,
-   "usd": 403989,
-   "beispiel": "mex-jua-ame-2026-08-21-exact-score"
-  },
-  "spl": {
-   "n": 64,
-   "usd": 375033,
-   "beispiel": "spl-fay-hil-2026-08-20-more-markets"
-  },
-  "lec": {
-   "n": 82,
-   "usd": 360739,
-   "beispiel": "lec-tig-vwh-2026-08-11-exact-score"
-  },
-  "arg": {
-   "n": 69,
-   "usd": 328239,
-   "beispiel": "arg-cac-iac-2026-08-16"
-  },
-  "trump": {
-   "n": 2,
-   "usd": 275535,
-   "beispiel": "trump-out-as-president-before-2027"
-  },
-  "dtrump": {
-   "n": 1,
-   "usd": 241474,
-   "beispiel": "dtrump-out-as-president-by-september-30"
+  "cbb": {
+   "n": 68,
+   "usd": 328436,
+   "beispiel": "cbb-sfl-lou-2026-03-19"
   },
   "fif": {
-   "n": 46,
-   "usd": 217450,
-   "beispiel": "fif-svk-mon-2026-06-05-more-markets"
+   "n": 56,
+   "usd": 243501,
+   "beispiel": "fif-prt-nga-2026-06-10"
+  },
+  "nbasl": {
+   "n": 5,
+   "usd": 227715,
+   "beispiel": "nbasl-okc-den-2026-07-14"
+  },
+  "2026": {
+   "n": 45,
+   "usd": 183119,
+   "beispiel": "2026-travelers-championship-winner"
+  },
+  "efa": {
+   "n": 15,
+   "usd": 183001,
+   "beispiel": "efa-bur5-wrk1-2026-09-19-more-markets"
+  },
+  "uef": {
+   "n": 11,
+   "usd": 179536,
+   "beispiel": "uef-kvx-tur-2026-03-31"
+  },
+  "clf": {
+   "n": 36,
+   "usd": 174055,
+   "beispiel": "clf-psg-mun-2026-08-08"
+  },
+  "democratic": {
+   "n": 16,
+   "usd": 113232,
+   "beispiel": "democratic-presidential-nominee-2028"
+  },
+  "pro": {
+   "n": 23,
+   "usd": 110390,
+   "beispiel": "pro-football-2027-nfc-champion"
+  },
+  "cdr": {
+   "n": 5,
+   "usd": 92289,
+   "beispiel": "cdr-atm-fcb-2026-02-12"
+  },
+  "next": {
+   "n": 4,
+   "usd": 81637,
+   "beispiel": "next-prime-minister-of-sweden"
+  },
+  "presidential": {
+   "n": 12,
+   "usd": 60614,
+   "beispiel": "presidential-election-winner-2028"
+  },
+  "super": {
+   "n": 14,
+   "usd": 57397,
+   "beispiel": "super-bowl-champion-2026-731"
+  },
+  "clarity": {
+   "n": 2,
+   "usd": 49057,
+   "beispiel": "clarity-act-signed-into-law-in-2026"
+  },
+  "kbo": {
+   "n": 15,
+   "usd": 45200,
+   "beispiel": "kbo-kt-ssg-2026-08-22"
+  },
+  "cricipl": {
+   "n": 9,
+   "usd": 42794,
+   "beispiel": "cricipl-del-raj-2026-05-17"
   }
  }
 }

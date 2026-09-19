@@ -1186,3 +1186,98 @@ class TestDasSchattenbuchDerBeinaheTreffer(unittest.TestCase):
         viele = [self._alarm(mid=str(i)) for i in range(10)]
         buch = BA.schatten_buch(viele, set(), stufen, keep=4)
         self.assertEqual(len(buch), 4)
+
+
+class TestKursrutsch(unittest.TestCase):
+    """19.09.2026 (Lucas): „Alerts wo wir die Schwelle etwas senken, aber dafuer nur schicken,
+    wenn die Quote auch wirklich sinkt ... um 10 % oder so. Das dann doch ein starkes Signal."
+
+    Gemessen auf 30.918 Ledger-Zeilen traegt der Rutsch genau dort, wo das Volumen NICHT
+    nachkommt: n=203, ROI +18,3 % (UG +2,3). Mit konzentriertem Geld sind es -2,6 %. Nach
+    Korrektur fuer 22 angesehene Schnitte p = 0,125 — ein Kandidat, kein Beleg, darum nur Trades.
+    """
+
+    def _markt(self, runners):
+        return {"runners": [{"name": n, "odd": o, "vol": v} for n, o, v in runners]}
+
+    def _spiel(self, lead_odd=1.45, lead_vol=5000, gegen_vol=4000, mid=7):
+        # Alpha muss die Seite mit dem MEISTEN Volumen sein — _market_lead geht nach Volumen,
+        # nicht nach Quote. Mit 5000 von 11000 sind das 45 %, also unter der 65-%-Schranke.
+        return {"matchId": mid, "home": "Alpha", "away": "Beta", "league": "Test",
+                "country": "DE", "liveInfo": {},
+                "markets": {"Match Odds": self._markt([
+                    ("Alpha", lead_odd, lead_vol), ("The Draw", 4.0, 2000),
+                    ("Beta", 3.0, gegen_vol)])}}
+
+    def _einstieg(self, odd=1.79, fav="H", mid="7"):
+        return {(mid, "Match Odds"): (odd, fav)}
+
+    def test_der_rutsch_wird_gemeldet(self):
+        a = BA.rutsch_alert(self._spiel(), self._einstieg())
+        self.assertIsNotNone(a)
+        self.assertEqual(a["scenario"], "rutsch")
+        self.assertEqual(a["entryOdd"], 1.79)
+        self.assertEqual(a["leadOdd"], 1.45)
+        self.assertAlmostEqual(a["fall"], (1.79 - 1.45) / 1.79, places=4)
+        self.assertEqual(a["market"], "Match Odds")
+
+    def test_ein_kleiner_rutsch_reicht_nicht(self):
+        self.assertIsNone(BA.rutsch_alert(self._spiel(lead_odd=1.70), self._einstieg()))
+
+    def test_einseitiges_geld_faellt_raus(self):
+        """Mit konzentriertem Geld ist derselbe Rutsch gemessen -2,6 % statt +18,3 %."""
+        self.assertIsNone(BA.rutsch_alert(self._spiel(lead_vol=50000, gegen_vol=1000),
+                                          self._einstieg()))
+
+    def test_ohne_einstiegsquote_wird_nichts_geschaetzt(self):
+        self.assertIsNone(BA.rutsch_alert(self._spiel(), {}))
+
+    def test_ein_toter_markt_ist_kein_signal(self):
+        """Alpha bleibt die fuehrende Seite (200 von 350), der Markt ist nur winzig —
+        sonst prueft der Test den Seiten-Abgleich statt des Liquiditaetsbodens."""
+        m = self._spiel(lead_vol=200, gegen_vol=100)
+        m["markets"]["Match Odds"]["runners"][1]["vol"] = 50      # The Draw klein halten
+        self.assertIsNone(BA.rutsch_alert(m, self._einstieg()))
+        # ... und mit abgesenktem Boden kommt derselbe Fall durch: es liegt WIRKLICH am Volumen
+        self.assertIsNotNone(BA.rutsch_alert(m, self._einstieg(), min_vol=100))
+
+    def test_die_falsche_seite_wird_nicht_verglichen(self):
+        """🔴 Beim ersten Trockenlauf war GENAU das der einzige Kandidat: Kilmarnock jetzt @1.45
+        gegen einen Einstieg von 1.79, der aber Hearts gehoerte — ein „-19 %"-Rutsch, den es nie
+        gegeben hat. capture legt zu jeder Einstiegsquote das Kuerzel der Seite ab; ohne den
+        Abgleich vergleicht man zwei verschiedene Runner."""
+        self.assertIsNone(BA.rutsch_alert(self._spiel(), self._einstieg(fav="A")))
+
+    def test_eine_zu_kurze_quote_bleibt_draussen(self):
+        self.assertIsNone(BA.rutsch_alert(self._spiel(lead_odd=1.20),
+                                          self._einstieg(odd=1.60)))
+
+    def test_ein_beendetes_spiel_meldet_nichts(self):
+        m = self._spiel()
+        m["liveInfo"] = {"finished": True}
+        self.assertIsNone(BA.rutsch_alert(m, self._einstieg()))
+
+    def test_einstiegsquoten_liest_den_track_zustand(self):
+        st = {"pending": {"7": {"signals": {
+            "Match Odds": {"entryOdd": 1.79, "fav": "H"},
+            "Half Time": {"entryOdd": None, "fav": "H"},      # ohne Quote -> nicht uebernommen
+            "Over/Under 2.5 Goals": {"entryOdd": 0.5, "fav": "OVER"}}}}}   # <=1 -> unbrauchbar
+        e = BA.einstiegsquoten(st)
+        self.assertEqual(e, {("7", "Match Odds"): (1.79, "H")})
+
+    def test_einstiegsquoten_vertraegt_muell(self):
+        for mies in (None, {}, {"pending": None}, {"pending": {"7": None}},
+                     {"pending": {"7": {"signals": None}}}):
+            self.assertEqual(BA.einstiegsquoten(mies), {})
+
+    def test_die_karte_ist_nicht_zu_verwechseln(self):
+        """Lucas: „optisch auch eindeutig damit ich den seh"."""
+        a = BA.rutsch_alert(self._spiel(), self._einstieg())
+        k = BA.build_rutsch_message(a)
+        self.assertIn("KURSRUTSCH", k)
+        self.assertIn("1.79", k)
+        self.assertIn("1.45", k)
+        self.assertIn("19.0", k)                 # der Rutsch in Prozent steht auf der Karte
+        self.assertIn("nur Trades", k)           # und dass es ein Testlauf ist
+        self.assertNotIn("🟡", k)                # keine Verwechslung mit „Frisches Geld"
+        self.assertNotIn("🔵", k)                # ... oder Halbzeit-Geld

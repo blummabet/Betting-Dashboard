@@ -39,20 +39,46 @@ if [ -z "$BETROFFEN" ]; then
   exit 0
 fi
 
+# Die letzte Fassung OHNE Marker holen. Meist ist das HEAD — aber wenn der Schaden schon
+# committet wurde (am 19.09. war er das, zweimal hintereinander), steckt er auch in HEAD, und
+# ein `git checkout HEAD -- f` holt ihn nur zurueck. Dann wird die Historie zurueckgelaufen,
+# bis eine saubere Fassung kommt. Ein Waechter, der den Schaden nur benennt, ist keiner.
+# ⚠️ KEINE PIPE in die Pruefung. Der erste Entwurf hatte
+#       if ! git show "$sha:$f" | grep -q '^<<<<<<< '
+#   und meldete fuer ZWOELF kaputte Dateien "geheilt aus HEAD", waehrend die Marker unveraendert
+#   drinstanden: `grep -q` steigt beim ersten Treffer aus, `git show` stirbt an SIGPIPE, und mit
+#   `set -o pipefail` (oben) ist der Status der Pipe dann git's 141 statt grep's 0 — die Bedingung
+#   drehte sich also GENAU dann um, wenn Marker da waren. Deshalb erst in eine Datei schreiben,
+#   dann die Datei pruefen.
+heile() {
+  f="$1"
+  for sha in HEAD $(git log --format=%H -40 -- "$f"); do
+    git show "$sha:$f" > "$f.ci_heil" 2>/dev/null || { rm -f "$f.ci_heil"; continue; }
+    if grep -q '^<<<<<<< ' "$f.ci_heil"; then
+      rm -f "$f.ci_heil"; continue
+    fi
+    mv -f "$f.ci_heil" "$f"
+    echo "$sha"
+    return 0
+  done
+  rm -f "$f.ci_heil"
+  return 1
+}
+
 echo "🔴 Konfliktmarker in getrackten Dateien gefunden — sie werden NICHT committet:"
-N=0
 echo "$BETROFFEN" | while read -r f; do
   [ -n "$f" ] || continue
   ANZ=$(grep -c '^<<<<<<< ' "$f" 2>/dev/null || echo 0)
-  echo "   · $f ($ANZ Konflikt(e)) → zurueck auf den letzten committeten Stand"
-  git checkout HEAD -- "$f" 2>/dev/null || true
-  N=$((N + 1))
+  if SHA=$(heile "$f"); then
+    echo "   · $f ($ANZ Konflikt(e)) → geheilt aus ${SHA:0:10}"
+  else
+    echo "   ⚠️  $f ($ANZ Konflikt(e)) → KEINE saubere Fassung in 40 Commits, bleibt kaputt"
+  fi
 done
-# Kontrolle: ist wirklich nichts mehr uebrig?
+
 REST=$(git grep -l -I -E '^(<<<<<<< |>>>>>>> )' -- '*.json' '*.py' '*.js' '*.mjs' '*.yml' 2>/dev/null || true)
 if [ -n "$REST" ]; then
-  echo "⚠️  Marker ueberleben das Zuruecksetzen — sie stecken im COMMIT selbst:"
+  echo "⚠️  nicht heilbar, von Hand ansehen:"
   echo "$REST" | sed 's/^/   · /'
-  echo "   Das muss von Hand ausgeraeumt werden (letzte gute Fassung aus der Historie holen)."
 fi
 exit 0

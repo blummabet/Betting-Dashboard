@@ -45,6 +45,11 @@ PFAD_LIEST = {"read_text", "read_bytes", "exists", "is_file", "stat", "resolve",
               "unlink", "with_suffix", "as_posix", "touch"}
 LESER = {"_load", "_lade", "load", "load_json", "_lazy", "_load_seen", "load_picks",
          "_laden",   # 14.09.2026: shortlist_auto_bet._laden — liest nur (schreibt ueber _speichern)
+         # 19.09.2026: poly_whale_watch._load_pflicht und betfair_alerts._lade_json — beide lesen
+         # nur. Sie sind entstanden, weil `except Exception: return default` eine zerschossene
+         # Datei still in ein leeres Dict verwandelt hat: 15 Poly-Artefakte trugen
+         # Konfliktmarker, und die Poly-Seite schwieg drei Stunden ohne einen roten Lauf.
+         "_load_pflicht", "_lade_json",
          "_mtime_age_h", "build_cache_index", "isinstance", "exists"}
 KLEMPNEREI = {"file", "join", "str", "Path", "replace", "discard", "add", "glob", "open"}
 

@@ -82,6 +82,52 @@ PUB_LEDGER_FILE = "betfair_public_ledger.json"   # gesendete Public-Pushs fürs 
 # abgerechnet — gesendet wird er NIE.
 SCHATTEN_FILE = "betfair_public_schatten.json"
 SCHATTEN_KEEP = 4000
+
+# -- 📉 Kursrutsch (19.09.2026, Lucas) --------------------------------------------------------
+# „Alerts wo wir die Schwelle etwas senken, aber dafuer nur schicken, wenn die Quote auch
+# wirklich sinkt ... wirklich Spiele wo die Quote nachweislich gesunken ist um 10 % oder so.
+# Das dann doch ein starkes Signal mmn."
+#
+# Sein Einwand war, das 15-Minuten-Fenster sei zu grob. Gemessen an 605 Vor-Anpfiff-Reihen
+# (18.651 Einzelschritte) stimmt das nicht:
+#   * Abstand zwischen zwei Staenden: Median 15,0 min (10 %/90 %: 13,7 / 15,2)
+#   * Rutsch >= 10 % in EINEM Schritt:            46 von 18.651 = 0,2 %
+#   * Rutsch >= 10 % ueber das GANZE Fenster:     45 von 605 Reihen = 7,4 %
+# Der Rutsch passiert also fast nie innerhalb eines Fensters, er sammelt sich ueber Stunden an.
+# Deshalb misst dieser Alarm die KUMULATIVE Bewegung seit dem ersten Sehen (entryOdd aus
+# betfair_track_state.json) statt Schritt gegen Schritt. Genau daran ist `dir` (in/out/flat) als
+# Signal gescheitert: betfair_direction.classify vergleicht Schritt gegen Schritt und sieht damit
+# nur jene 0,2 %.
+# Zu spaet kommen wir davon nicht: nach einem >= 10-%-Sprung laeuft der Preis bis Anpfiff im
+# Median +-0,0 % weiter (28 % rutschen weiter, 26 % springen zurueck), und der Sprung passiert im
+# Median 95 Minuten vor Anpfiff.
+#
+# WAS GEMESSEN IST, und was nicht. 30.918 Ledger-Zeilen, Rendite am SCHLUSSkurs gerechnet (dem
+# kuerzesten Preis -- wer mitten im Fenster einsteigt, bekommt mehr):
+#   * Rutsch >= 10 % UND Geld NICHT konzentriert:  n=203, ROI +18,3 % [UG +2,3, OG +34,4]
+#   * Rutsch >= 10 % UND Geld konzentriert:        n=675, ROI  -2,6 % [-8,7, +3,5]
+# Der Fund haelt die Zeitprobe (erste Haelfte +15,5 %, zweite +21,2 %), ueberlebt das Streichen
+# der drei groessten Gewinner (+11,4 %) und den Cluster-Bootstrap ueber Spiele (UG +2,0 %).
+# ABER: 22 Schnitte angeschaut, und ein Nullmodell ohne jeden Quoten-Effekt liefert in 39 % der
+# Buecher mindestens ein „belegt tragend" -- p = 0,125. Kein Beweis, sondern der beste Kandidat
+# aus einem Tag Messen. Deshalb NUR Trades, nie Public, und jeder Alarm wird abgerechnet
+# (Messung `betfair-kursrutsch` im Register).
+RUTSCH_MIN_FALL    = float(os.environ.get("BF_RUTSCH_MIN_FALL")  or 0.10)
+# 19.09.2026, NACHGEMESSEN und korrigiert: der erste Entwurf verlangte einen frischen Zufluss von
+# der halben Geldschwelle. Das haette das Signal erschlagen -- von den 203 gemessenen Faellen
+# hatten nur 19 ueberhaupt einen frischen Zufluss ueber 2.000 EUR, 184 keinen. Der Effekt lebt
+# also GENAU dort, wo kein Geld nachkommt (ROI ohne Zufluss +20,0 % [UG +2,8] gegen +18,3 %
+# insgesamt) -- das ist die Aussage des Signals, nicht sein Nebeneffekt. Statt einer Geldschwelle
+# steht hier deshalb nur noch ein Liquiditaetsboden, damit kein toter Markt alarmiert.
+# Der Boden ist GERATEN, nicht gemessen: das gematchte Volumen steht erst seit heute im Ledger
+# (mktVol, s. betfair_track_record.capture). Er wandert in jede Ledger-Zeile mit und wird in
+# sechs Wochen kalibriert statt weiter geschaetzt.
+RUTSCH_MIN_VOL     = float(os.environ.get("BF_RUTSCH_MIN_VOL")   or 5000.0)
+RUTSCH_MAX_SHARE   = float(os.environ.get("BF_RUTSCH_MAX_SHARE") or 0.65)
+RUTSCH_SEEN_FILE   = "betfair_rutsch_seen.json"
+RUTSCH_LEDGER_FILE = "betfair_rutsch_ledger.json"
+RUTSCH_LEDGER_KEEP = 800
+RUTSCH_STATE_FILE  = "betfair_track_state.json"   # dort steht entryOdd, beim ERSTEN Sehen eingefroren
 DEDUP_FACTOR   = 1.5
 SEEN_FILE      = "betfair_alerts_seen.json"
 
@@ -509,6 +555,160 @@ def fresh_alert(m, hist, top_thr=FRESH_TOP_EUR, rest_thr=FRESH_REST_EUR):
             "kickoff": m.get("kickoff"), "live": m.get("liveInfo") or {},
             "leadName": lead_name, "leadShare": lead_share, "leadOdd": lead_odd, "onLeader": on_leader,
             "windowMin": window_min, "fromMin": from_min, "toMin": to_min, "eventInWindow": event_win}
+
+
+def einstiegsquoten(state) -> dict:
+    """{(matchId, markt): (entryOdd, favToken)} aus dem Track-Zustand. REIN/testbar.
+
+    betfair_track_record.capture friert `entryOdd` beim ERSTEN Sehen ein und setzt es bei einem
+    Favoritenwechsel zurueck -- ein Rutsch kann hier also nie ein Seitenwechsel sein. Der Lauf
+    schreibt diesen Zustand VOR den Alerts (betfair.yml: Track-Record Schritt 137, Alerts 205),
+    die Datei ist beim Lesen frisch."""
+    out = {}
+    for mid, pend in ((state or {}).get("pending") or {}).items():
+        for markt, sig in ((pend or {}).get("signals") or {}).items():
+            eo = (sig or {}).get("entryOdd")
+            if isinstance(eo, (int, float)) and eo > 1:
+                out[(str(mid), markt)] = (float(eo), (sig or {}).get("fav"))
+    return out
+
+
+def _fav_token(markt, runner, home, away):
+    """Runner-Name -> dasselbe Kuerzel, das betfair_track_record.capture ablegt.
+
+    Import erst hier drin, damit ein Alarm-Lauf nicht am Import des Track-Moduls haengt. Faellt
+    er, wird die Seite NICHT geprueft und der Alarm unterbleibt -- lieber kein Push als einer
+    auf der falschen Seite."""
+    try:
+        from betfair_track_record import fav_token
+    except Exception:
+        return None
+    try:
+        return fav_token(markt, runner, home, away)
+    except Exception:
+        return None
+
+
+def rutsch_alert(m, einstieg, min_fall=RUTSCH_MIN_FALL, max_share=RUTSCH_MAX_SHARE,
+                 min_vol=RUTSCH_MIN_VOL):
+    """Szenario 4 (19.09.2026, Lucas): keine Geldschwelle, dafuer muss die Quote nachweislich
+    gefallen sein -- und das Geld darf NICHT einseitig liegen. REIN/testbar.
+
+    Geprueft wird JEDER Markt des Spiels; gemeldet wird der mit dem groessten Rutsch. Herleitung
+    samt Zahlen oben bei RUTSCH_MIN_FALL."""
+    li = m.get("liveInfo") or {}
+    if li.get("finished"):
+        return None
+    mt = li.get("time")
+    if isinstance(mt, (int, float)) and mt >= FRESH_LATE_MAX_MIN:
+        return None
+    mid = str(m.get("matchId"))
+    bester = None
+    for markt, mk in ((m.get("markets") or {}).items()):
+        eo = einstieg.get((mid, markt))
+        if not eo:
+            continue                      # ohne Einstiegsquote kein Rutsch -- er wird nicht geschaetzt
+        entry_odd, fav = eo[0], eo[1]
+        lead_name, lead_share, lead_odd = _market_lead(m, markt)
+        if not isinstance(lead_odd, (int, float)) or lead_odd < MIN_LEAD_ODD:
+            continue
+        if not isinstance(lead_share, (int, float)) or lead_share >= max_share:
+            continue                      # einseitiges Geld ist die gemessen SCHLECHTERE Haelfte (-2,6 %)
+        # Dieselbe Seite? capture legt `fav` als Kuerzel ab; ohne diese Pruefung vergleicht man
+        # zwei verschiedene Runner. Beim ersten Trockenlauf war GENAU das der einzige Kandidat:
+        # Kilmarnock jetzt @1.45 gegen einen Einstieg von 1.79, der Hearts gehoerte -- "-19 %",
+        # die es nie gab.
+        if fav is not None and _fav_token(markt, lead_name, m.get("home"), m.get("away")) != fav:
+            continue
+        vol = sum((r.get("vol") or 0.0) for r in (mk.get("runners") or []))
+        if vol < min_vol:
+            continue                      # toter Markt: ein Preis ohne Gegenpartei ist kein Signal
+        fall = (entry_odd - lead_odd) / entry_odd
+        if fall < min_fall:
+            continue
+        if bester is None or fall > bester["fall"]:
+            bester = {"scenario": "rutsch", "matchId": mid, "value": vol,
+                      "home": m.get("home"), "away": m.get("away"), "league": m.get("league"),
+                      "flag": _flag(m), "market": markt, "total": vol, "tier": tier_of(m),
+                      "kickoff": m.get("kickoff"), "live": li,
+                      "leadName": lead_name, "leadShare": lead_share, "leadOdd": lead_odd,
+                      "entryOdd": entry_odd, "fall": fall,
+                      "onLeader": _money_on_leader(m, lead_name)}
+    return bester
+
+
+def _lade_json(name, default):
+    """Ein Artefakt lesen. FEHLT es -> default. Ist es DA und unlesbar -> ebenfalls default,
+    aber mit einer Zeile im Log.
+
+    19.09.2026: an genau dieser Unterscheidung hing der Poly-Ausfall -- 15 Artefakte mit
+    Git-Konfliktmarkern wurden von `except Exception: return default` still zu {}, und drei
+    Stunden lang sendete niemand etwas. Hier ist der Default vertretbar (ohne Einstiegsquoten
+    entfaellt nur der Rutsch-Alarm), still darf er nicht sein."""
+    try:
+        with open(name, encoding="utf-8") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return default
+    except Exception as e:
+        print("  \U0001f534 %s ist DA, aber nicht lesbar (%s) -- der Kursrutsch-Alarm entfaellt "
+              "diesen Lauf, statt auf leeren Daten zu urteilen" % (name, type(e).__name__))
+        return default
+
+
+def _log_rutsch(a) -> None:
+    """Jeden gesendeten Kursrutsch ins eigene Buch. Ein Kandidat ohne Abrechnung waere eine
+    Behauptung -- und bei p = 0,125 ist das Abrechnen der halbe Sinn der Sache."""
+    try:
+        led = json.load(open(RUTSCH_LEDGER_FILE, encoding="utf-8"))
+        if not isinstance(led, list):
+            led = []
+    except Exception:
+        led = []
+    k = "rutsch:%s:%s" % (a.get("matchId"), a.get("market"))
+    if any(e.get("k") == k for e in led):
+        return
+    led.append({"k": k, "matchId": a.get("matchId"), "scenario": "rutsch",
+                "market": a.get("market"), "league": a.get("league"),
+                "home": a.get("home"), "away": a.get("away"),
+                "leadName": a.get("leadName"), "leadOdd": a.get("leadOdd"),
+                "entryOdd": a.get("entryOdd"), "fall": round(a.get("fall") or 0.0, 4),
+                "leadShare": a.get("leadShare"), "value": a.get("value"),
+                "mktVol": a.get("total"), "tier": a.get("tier"),
+                "sentAt": datetime.now(timezone.utc).isoformat(),
+                "status": "pending", "htScore": None,
+                "live": {"time": ((a.get("live") or {}).get("time")),
+                         "score": [(a.get("live") or {}).get("goal_v1"),
+                                   (a.get("live") or {}).get("goal_v2")]}})
+    try:
+        json.dump(led[-RUTSCH_LEDGER_KEEP:], open(RUTSCH_LEDGER_FILE, "w", encoding="utf-8"),
+                  ensure_ascii=False, indent=0)
+    except Exception as e:
+        print("Rutsch-Ledger-Schreibfehler:", e)
+
+
+def build_rutsch_message(a) -> str:
+    """Die Karte. Optisch bewusst unverwechselbar (Lucas: „optisch auch eindeutig damit ich den
+    seh") -- kein gelber/blauer/schwarzer Punkt wie die drei bestehenden Szenarien."""
+    fall = (a.get("fall") or 0.0) * 100
+    st = _flow_status(a)
+    t = []
+    t.append("\U0001f4c9\U0001f4c9 <b>KURSRUTSCH</b> · der Preis fällt, das Geld folgt (noch) nicht\n")
+    t.append("━━━━━━━━━━━━━━\n")
+    t.append("<b>%s</b>   <s>%.2f</s> → <b>%.2f</b>   <b>−%.1f %%</b>\n"
+             % (_esc(a.get("leadName") or "?"), a.get("entryOdd") or 0.0,
+                a.get("leadOdd") or 0.0, fall))
+    t.append("%s <b>%s</b> v <b>%s</b>\n<i>%s · %s</i>\n"
+             % (a.get("flag") or "", _esc(a.get("home")), _esc(a.get("away")),
+                _esc(str(a.get("league"))[:40]), _esc(_short_mk(a.get("market")))))
+    if st:
+        t.append(st + "\n")
+    t.append("\U0001f4b6 <b>%s</b> im Markt gematcht\n" % _euro(a.get("total") or 0.0))
+    t.append("\U0001f9ca Geld <b>nicht</b> einseitig (%.0f %%) — genau die Hälfte, die gemessen trägt\n"
+             % ((a.get("leadShare") or 0.0) * 100))
+    t.append("\U0001f52c <i>Testlauf, nur Trades · gemessen +18,3 % (UG +2,3) auf n=203 — "
+             "nicht belegt (p=0,13). Jeder dieser Alarme wird abgerechnet.</i>")
+    return "".join(t)
 
 
 def _event_in_window(p_prev, p_last) -> bool:
@@ -1652,6 +1852,29 @@ def main():
                 sent += 1
     _save_seen(SEEN_FILE, seen)
     print("Betfair-Alerts: %d Kandidaten, %d gesendet" % (len(alerts), sent))
+
+    # -- 📉 Kursrutsch (19.09.2026, Lucas) -- keine Geldschwelle, dafuer muss die Quote
+    # nachweislich gefallen sein. NUR Trades: gemessen +18,3 % (UG +2,3) auf n=203, aber nach
+    # Korrektur fuer 22 angesehene Schnitte p = 0,125 -- das ist ein Kandidat, kein Beleg.
+    # Herleitung samt Zahlen bei RUTSCH_MIN_FALL.
+    try:
+        _rs_seen = _load_seen(RUTSCH_SEEN_FILE)
+        _einstieg = einstiegsquoten(_lade_json(RUTSCH_STATE_FILE, {}))
+        _rutsch = [r for r in (rutsch_alert(m, _einstieg)
+                               for m in (prices.get("matches") or [])) if r]
+        _rs_sent = 0
+        for a in _rutsch:
+            key = "rutsch:" + a["matchId"] + ":" + str(a.get("market"))
+            if should_send(_rs_seen, key, a["value"]):
+                if send_trades_message(build_rutsch_message(a)):
+                    _rs_seen[key] = a["value"]
+                    _rs_sent += 1
+                    _log_rutsch(a)
+        _save_seen(RUTSCH_SEEN_FILE, _rs_seen)
+        print("  \U0001f4c9 Kursrutsch: %d Kandidat(en), %d gesendet (nur Trades, %d Einstiegsquoten gelesen)"
+              % (len(_rutsch), _rs_sent, len(_einstieg)))
+    except Exception as _e:
+        print("  ⚠️  Kursrutsch-Alarm uebersprungen:", _e)
 
     # 🟡 Öffentlicher Moneyflow (kuratierte, höhere Schwellen) → CocoBet-Community-Channel.
     # Eigener Dedup-State, damit die höhere Public-Schwelle unabhängig vom Trades-Channel greift.
