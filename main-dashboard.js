@@ -2305,7 +2305,16 @@
     // (feedback_punktschaetzer_kein_beleg — der Punktschaetzer allein hat hier nichts verloren).
     var frei = r.status === 'freigegeben';
     var col = frei ? A.good : (r.status === 'ruht' ? A.ink3 : A.gold);
-    var n = +r.n || 0, ziel = minN || FG_BAR_MAX;
+    // 🔴 19.09.2026 (Uebersicht-Check). Hier stand `ziel = minN || FG_BAR_MAX` — also IMMER 30,
+    // auch fuer eine Schublade, die sich selbst ein hoeheres Ziel gegeben hat. Am 19.09. war das
+    // „🔒 Liga · Conviction ab 5": vorangemeldet mit zielN=80, n=51, fehltN=29 — und das Board
+    // zeigte „51/30" mit vollem Balken. Der Balken behauptete fertig, das Verdikt daneben sagte
+    // Kandidat, und weil `n < ziel` damit falsch war, fiel auch die Entfernungs-Notiz weg: die
+    // Zeile verlor ihre einzige Erklaerung. Dieselbe Klasse wie am 06.09. („15/30" bei noetigen
+    // ~263), nur andersherum — diesmal war der Balken zu OPTIMISTISCH.
+    // Ein vorangemeldetes Ziel schlaegt die Mindestzahl: 30 ist, ab wann GERECHNET wird,
+    // zielN ist, worauf sich diese Schublade festgelegt hat.
+    var n = +r.n || 0, ziel = +r.zielN || minN || FG_BAR_MAX;
     var pct = Math.max(0, Math.min(100, Math.round(n / ziel * 100)));
     var alt = (r.nAlt ? '<span class="md-kl-c" title="Plays aus einer früheren Engine-Version — sie zählen NICHT für die Freigabe, stehen hier nur als Kontext">'
       + '+' + r.nAlt + ' alt (' + _mdFgZahl(r.roiAlt == null ? null : r.roiAlt * 100, '%') + ')</span>' : '');

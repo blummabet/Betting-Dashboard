@@ -403,3 +403,43 @@ class EntschiedenBeimSenden(unittest.TestCase):
         q = (Path(__file__).parent.parent / "betfair_public_eval.py").read_text(encoding="utf-8")
         self.assertIn("ledger, _nv = abrechnen(ledger, prices, track_results)", q)
         self.assertIn("abrechnen(schatten, prices, track_results", q)
+
+
+class DasKursrutschBuchWirdAbgerechnet(unittest.TestCase):
+    """🔴 19.09.2026, am selben Abend nachgetragen. Der Kursrutsch-Alarm schrieb sein Buch —
+    und niemand rechnete es ab. `zaehler_bf_rutsch` haette bis in alle Ewigkeit 0 gemeldet und
+    die vorregistrierte Messung `betfair-kursrutsch` waere nie faellig geworden.
+
+    Ein Buch ohne Abrechnung ist eine Behauptung. Genau dafuer steht
+    `check_schattenbuch_fuellt_sich` in der Guard-Batterie — und genau daran habe ich beim Bau
+    des Alarms nicht gedacht."""
+
+    def test_der_lauf_faehrt_dieselbe_kette_auch_fuers_rutsch_buch(self):
+        from pathlib import Path
+        q = (Path(__file__).parent.parent / "betfair_public_eval.py").read_text(encoding="utf-8")
+        self.assertIn("abrechnen(rutsch, prices, track_results", q)
+        self.assertIn("RUTSCH_FILE", q)
+
+    def test_eine_rutsch_zeile_laeuft_durch_die_kette(self):
+        """Die Zeile hat die Form einer Public-Zeile — sonst greift settle() sie gar nicht an."""
+        e = {"k": "rutsch:1:Match Odds", "matchId": "1", "scenario": "rutsch",
+             "market": "Match Odds", "leadName": "Alpha", "leadOdd": 1.45, "entryOdd": 1.79,
+             "home": "Alpha", "away": "Beta", "sentAt": "2026-09-19T17:00:00+00:00",
+             "status": "pending", "live": {"time": None, "score": [None, None]}}
+        buch, _ = E.abrechnen([e], {}, [], manual={})
+        self.assertEqual(len(buch), 1)
+        self.assertIn(buch[0]["status"], ("pending", "won", "lost", "void"))
+
+    def test_live_gesendete_zeilen_sind_aus_der_bilanz_genommen(self):
+        """Die drei Alarme des ersten Abends kamen alle aus laufenden Spielen — eine Population,
+        die nie gemessen wurde. Sie stehen als void mit Grund im Buch, nicht als Treffer."""
+        import json
+        from pathlib import Path
+        p = Path(__file__).parent.parent / "betfair_rutsch_ledger.json"
+        if not p.exists():
+            self.skipTest("noch kein Rutsch-Buch")
+        for r in json.loads(p.read_text(encoding="utf-8")):
+            if (r.get("live") or {}).get("time") is not None:
+                self.assertEqual(r.get("status"), "void",
+                                 "live gesendete Zeile zaehlt noch in die Bilanz")
+                self.assertTrue(r.get("voidGrund"), "void ohne Grund ist eine Loeschung")

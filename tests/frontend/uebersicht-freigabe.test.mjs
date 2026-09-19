@@ -205,3 +205,40 @@ test('die Ebenen bleiben untereinander, die Spiele duerfen nebeneinander', () =>
   assert.ok(!/\.md-kl-bl\{[^}]*flex:1[;}]/.test(css),
     'der Fortschrittsbalken darf den Restplatz nicht mehr fressen');
 });
+
+// ── 🔴 19.09.2026 (Übersicht-Check) ───────────────────────────────────────────────────────────
+// Der Balken maß immer gegen `minN` (30). Für „🔒 Liga · Conviction ab 5" — vorangemeldet mit
+// zielN=80, n=51, fehltN=29 — stand damit „51/30" mit vollem Balken auf dem Board, während das
+// Verdikt daneben „Kandidat" sagte. Und weil `n < ziel` dadurch falsch war, fiel auch die
+// Entfernungs-Notiz weg: die Zeile verlor ihre einzige Erklärung.
+// Dieselbe Klasse wie am 06.09. („15/30", nötig wären ~263) — nur war der Balken diesmal zu
+// optimistisch statt zu pessimistisch.
+test('ein vorangemeldetes Ziel schlägt die Mindestzahl im Balken', () => {
+  const z = schublade({
+    schublade: '🔒 Liga · Conviction ab 5', n: 51, zielN: 80, fehltN: 29,
+    roi: 0.2527, roiLb: 0.0763, noetigNRoi: 25,
+    entfernung: { median: 26, lo: 7, hi: 289, nieAnteil: 0.007, schaetzbar: false },
+  });
+  const html = render(reg({ kandidaten: [z], alle: [z] }));
+  assert.ok(/51\/80/.test(html), 'der Balken misst nicht gegen das eigene Ziel der Schublade');
+  assert.ok(!/51\/30/.test(html), 'der Balken behauptet fertig, obwohl 29 Plays fehlen');
+});
+
+test('und die Zeile behält dabei ihre Erklärung', () => {
+  // Der eigentliche Schaden war nicht der Nenner, sondern die Folge: mit ziel=30 war `n < ziel`
+  // falsch und der ganze Block mit der Entfernungs-Notiz wurde übersprungen.
+  const z = schublade({
+    schublade: '🔒 Liga · Conviction ab 5', n: 51, zielN: 80, fehltN: 29,
+    roi: 0.2527, roiLb: 0.0763, noetigNRoi: 25,
+    entfernung: { median: 26, lo: 7, hi: 289, nieAnteil: 0.007, schaetzbar: false },
+  });
+  const html = render(reg({ kandidaten: [z], alle: [z] }));
+  assert.ok(/nicht schätzbar/.test(html),
+    'ohne Notiz steht da eine Kandidaten-Zeile ganz ohne Grund');
+});
+
+test('ohne eigenes Ziel bleibt es bei der Mindestzahl', () => {
+  const z = schublade({ n: 12, zielN: undefined });
+  const html = render(reg({ kandidaten: [z], alle: [z] }));
+  assert.ok(/12\/30/.test(html), 'die Mindestzahl darf nicht verloren gehen');
+});

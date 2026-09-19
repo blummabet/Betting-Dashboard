@@ -326,6 +326,7 @@ jobs:
           # keine Schwelle begruendet verschieben, nur blind senken. Eigene Zeile, s.o.
           # 19.09.2026: der Kursrutsch-Testlauf (nur Trades) und sein Dedup-Stand. Eigene Zeile, s.o.
           git add betfair_rutsch_ledger.json 2>/dev/null || true
+          git add betfair_rutsch_bericht.json 2>/dev/null || true
           git add betfair_rutsch_seen.json 2>/dev/null || true
           git add betfair_public_schatten.json 2>/dev/null || true
           git add betfair_public_schatten_bericht.json 2>/dev/null || true
