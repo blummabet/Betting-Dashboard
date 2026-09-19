@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-19T16:56:10.913996+00:00",
+ "generatedAt": "2026-09-19T17:26:23.349314+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,29 +9,100 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 675,
- "pinnKeys": 223,
- "matched": 155,
- "footballRows": 123,
+ "polyRowsSeen": 663,
+ "pinnKeys": 209,
+ "matched": 143,
+ "footballRows": 111,
  "crossRows": 552,
- "footballSkippedStale": 66,
+ "footballSkippedStale": 57,
  "seenBySport": {
   "americanfootball_nfl": 170,
   "baseball_mlb": 94,
   "icehockey_nhl": 262,
   "boxing_boxing": 26,
   "soccer_mls": 18,
-  "soccer_liga": 105
+  "soccer_liga": 93
  },
  "matchedBySport": {
   "baseball_mlb": 30,
   "boxing_boxing": 2,
   "soccer_mls": 18,
-  "soccer_liga": 105
+  "soccer_liga": 93
  },
  "trackRecord": {
-  "tracked": 319,
+  "tracked": 324,
   "converged": 71
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "soccer_liga|asroma-inter|hw",
+   "sport": "soccer_liga",
+   "event": "AS Roma vs Inter",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 84.0,
+   "pinnPP": 60.2,
+   "gapPP": 23.75,
+   "vol": 908350,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-19T17:26:23.349010+00:00"
+  },
+  {
+   "id": "soccer_liga|celtavigo-racingsantander|hw",
+   "sport": "soccer_liga",
+   "event": "Celta Vigo vs Racing Santander",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 63.5,
+   "pinnPP": 46.4,
+   "gapPP": 17.09,
+   "vol": 66368,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-19T17:26:23.349010+00:00"
+  },
+  {
+   "id": "soccer_liga|asroma-inter|dr",
+   "sport": "soccer_liga",
+   "event": "AS Roma vs Inter",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 12.5,
+   "pinnPP": 25.5,
+   "gapPP": -13.02,
+   "vol": 908350,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-19T17:26:23.349010+00:00"
+  },
+  {
+   "id": "soccer_liga|celtavigo-racingsantander|dr",
+   "sport": "soccer_liga",
+   "event": "Celta Vigo vs Racing Santander",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 20.5,
+   "pinnPP": 30.9,
+   "gapPP": -10.39,
+   "vol": 66368,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-19T17:26:23.349010+00:00"
+  },
+  {
+   "id": "soccer_liga|asroma-inter|aw",
+   "sport": "soccer_liga",
+   "event": "AS Roma vs Inter",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 5.0,
+   "pinnPP": 14.2,
+   "gapPP": -9.23,
+   "vol": 908350,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-19T17:26:23.349010+00:00"
+  }
+ ]
 }
