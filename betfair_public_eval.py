@@ -39,6 +39,14 @@ LEDGER_KEEP = 800
 # rueckrechnen"). Das Schattenbuch der Beinahe-Treffer aus betfair_alerts wird hier mit
 # DERSELBEN Mechanik abgerechnet wie ein echter Push — ein zweiter Abrechner waere ein zweites
 # Urteil ueber denselben Endstand. Gesendet wurde davon nie etwas.
+# 19.09.2026, nachgetragen am selben Abend: das Kursrutsch-Buch wurde geschrieben, aber von
+# NIEMANDEM abgerechnet — `zaehler_bf_rutsch` haette bis in alle Ewigkeit 0 gemeldet und die
+# vorregistrierte Messung `betfair-kursrutsch` waere nie faellig geworden. Ein Buch ohne
+# Abrechnung ist eine Behauptung; genau dafuer steht `check_schattenbuch_fuellt_sich` in der
+# Guard-Batterie, und genau daran habe ich beim Bau nicht gedacht.
+RUTSCH_FILE = BASE / "betfair_rutsch_ledger.json"
+RUTSCH_RECORD_FILE = BASE / "betfair_rutsch_bericht.json"
+RUTSCH_KEEP = 800
 SCHATTEN_FILE = BASE / "betfair_public_schatten.json"
 SCHATTEN_RECORD_FILE = BASE / "betfair_public_schatten_bericht.json"
 SCHATTEN_KEEP = 4000
@@ -461,6 +469,21 @@ def main():
                      sbericht["roi"], sbericht["pending"]))
     except Exception as _e:
         print("  ⚠️  Schattenbuch nicht abgerechnet:", _e)
+
+    # ── das Kursrutsch-Buch: dieselbe Kette, nur Trades ───────────────────────────────
+    try:
+        rutsch = _load(RUTSCH_FILE, [])
+        if isinstance(rutsch, list) and rutsch:
+            rutsch, _ = abrechnen(rutsch, prices, track_results, keep=RUTSCH_KEEP)
+            rbericht = summarize(rutsch)
+            json.dump(rutsch, open(RUTSCH_FILE, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
+            json.dump(rbericht, open(RUTSCH_RECORD_FILE, "w", encoding="utf-8"),
+                      ensure_ascii=False, indent=1)
+            print("  \U0001f4c9 Kursrutsch-Eval: %d abgerechnet (%s%% Treffer, ROI %s) · %d offen"
+                  % (rbericht["n"], round((rbericht["hitRate"] or 0) * 100),
+                     rbericht["roi"], rbericht["pending"]))
+    except Exception as _e:
+        print("  ⚠️  Kursrutsch-Buch nicht abgerechnet:", _e)
 
     cs = record.get("consensusSplit") or {}
     if cs:

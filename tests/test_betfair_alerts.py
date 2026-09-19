@@ -1200,11 +1200,13 @@ class TestKursrutsch(unittest.TestCase):
     def _markt(self, runners):
         return {"runners": [{"name": n, "odd": o, "vol": v} for n, o, v in runners]}
 
-    def _spiel(self, lead_odd=1.45, lead_vol=5000, gegen_vol=4000, mid=7):
+    def _spiel(self, lead_odd=1.45, lead_vol=5000, gegen_vol=4000, mid=7, ko_h=3, live=None):
         # Alpha muss die Seite mit dem MEISTEN Volumen sein — _market_lead geht nach Volumen,
         # nicht nach Quote. Mit 5000 von 11000 sind das 45 %, also unter der 65-%-Schranke.
+        from datetime import datetime, timedelta, timezone as _tz
+        ko = (datetime.now(_tz.utc) + timedelta(hours=ko_h)).isoformat()
         return {"matchId": mid, "home": "Alpha", "away": "Beta", "league": "Test",
-                "country": "DE", "liveInfo": {},
+                "country": "DE", "liveInfo": (live if live is not None else {}), "kickoff": ko,
                 "markets": {"Match Odds": self._markt([
                     ("Alpha", lead_odd, lead_vol), ("The Draw", 4.0, 2000),
                     ("Beta", 3.0, gegen_vol)])}}
@@ -1256,6 +1258,37 @@ class TestKursrutsch(unittest.TestCase):
         m = self._spiel()
         m["liveInfo"] = {"finished": True}
         self.assertIsNone(BA.rutsch_alert(m, self._einstieg()))
+
+    def test_ein_laufendes_spiel_meldet_nichts(self):
+        """🔴 19.09.2026, eine Stunde nach dem Bau. Lucas zum ersten Alarm, den er gesehen hat:
+        „Angers 2.28 → 1.50 (−34,2 %), ⚽ läuft … Der Kursrutsch weil 1:0 gemacht mmn.
+        Dann wertlos."
+
+        Er hatte recht, und es war kein Einzelfall: ALLE DREI Alarme des ersten Abends kamen aus
+        laufenden Spielen (22., 63., 44. Minute). Gemessen wurden aber ausschliesslich
+        Vor-Anpfiff-Daten — capture() aktualisiert die Signale nur `if _is_prematch`. Nach einem
+        Tor preist der Markt neu: die Quote faellt WEGEN des Ereignisses, nicht davor."""
+        for live in ({"time": 44}, {"time": 3}, {"is_ht": True}, {"time": 44, "goal_v1": 1}):
+            self.assertIsNone(BA.rutsch_alert(self._spiel(live=live), self._einstieg()),
+                              "live %r haette nicht melden duerfen" % (live,))
+
+    def test_nach_dem_anpfiff_meldet_nichts_auch_ohne_minute(self):
+        """Der Feed zeigt die Minute nicht immer sofort. Dann entscheidet der Anpfiff."""
+        self.assertIsNone(BA.rutsch_alert(self._spiel(ko_h=-0.5), self._einstieg()))
+
+    def test_ohne_lesbaren_anpfiff_wird_nicht_geraten(self):
+        for ko in (None, "", "morgen", "2026-13-45T99:99:99"):
+            m = self._spiel()
+            m["kickoff"] = ko
+            self.assertIsNone(BA.rutsch_alert(m, self._einstieg()),
+                              "kickoff %r haette nicht melden duerfen" % (ko,))
+
+    def test_die_karte_rundet_die_einseitigkeit_nicht_ueber_die_schranke(self):
+        """0,6499 darf nicht als „65 %" erscheinen, wenn bei 65 % die Schranke liegt — sonst
+        behauptet die Anzeige genau das, was die Regel ausschliesst."""
+        a = BA.rutsch_alert(self._spiel(), self._einstieg())
+        a["leadShare"] = 0.6499
+        self.assertIn("(64 %)", BA.build_rutsch_message(a))
 
     def test_einstiegsquoten_liest_den_track_zustand(self):
         st = {"pending": {"7": {"signals": {

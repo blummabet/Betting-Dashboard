@@ -597,11 +597,33 @@ def rutsch_alert(m, einstieg, min_fall=RUTSCH_MIN_FALL, max_share=RUTSCH_MAX_SHA
     Geprueft wird JEDER Markt des Spiels; gemeldet wird der mit dem groessten Rutsch. Herleitung
     samt Zahlen oben bei RUTSCH_MIN_FALL."""
     li = m.get("liveInfo") or {}
-    if li.get("finished"):
+    # 🔴 19.09.2026, eine Stunde nach dem Bau (Lucas, zum ersten Alarm, den er gesehen hat):
+    #   „Angers 2.28 → 1.50 (−34,2 %), ⚽ läuft … Der Kursrutsch weil 1:0 gemacht mmn.
+    #    Dann wertlos."
+    # Er hat recht, und der Fehler ist groesser als die eine Karte: ALLE DREI Alarme des ersten
+    # Abends kamen aus laufenden Spielen (live 22., 63., 44. Minute). Gemessen habe ich aber
+    # ausschliesslich VOR-ANPFIFF-Daten — betfair_track_record.capture aktualisiert die Signale
+    # nur `if _is_prematch(m, now)`; entryOdd ist die erste Vor-Anpfiff-Quote, `odd` die letzte.
+    # Die n=203 mit ROI +18,3 % beschreiben also eine Population, in der dieser Alarm gar nicht
+    # gefeuert hat.
+    # Live ist der Rutsch auch inhaltlich etwas anderes: nach einem Tor preist der Markt neu, die
+    # Quote faellt WEGEN des Ereignisses, nicht davor. Das ist Nachlaufen, kein Vorlauf — dieselbe
+    # Einsicht, die `_dir_event_jump` und `geld_ist_altbestand` fuer die anderen Szenarien schon
+    # festhalten.
+    # Eine Regel auf einer Population zu fahren, die man nicht gemessen hat, ist kein Testlauf,
+    # sondern Raten mit Beleg-Anstrich.
+    if li.get("finished") or li.get("is_ht") or li.get("time") is not None:
         return None
-    mt = li.get("time")
-    if isinstance(mt, (int, float)) and mt >= FRESH_LATE_MAX_MIN:
-        return None
+    ko = m.get("kickoff")
+    if not ko:
+        return None                  # ohne Anpfiff kein Beleg, dass es davor ist
+    # (streng genommen faengt das except unten denselben Fall — die Zeile steht als Absicht da,
+    #  nicht als Zusicherung; eine Mutation an ihr aendert nichts und faengt folglich kein Test.)
+    try:
+        if datetime.fromisoformat(str(ko).replace("Z", "+00:00")) <= datetime.now(timezone.utc):
+            return None              # Anpfiff vorbei, auch wenn der Feed noch keine Minute zeigt
+    except (ValueError, TypeError):
+        return None                  # unlesbarer Anpfiff heisst: wir wissen es nicht, also nicht senden
     mid = str(m.get("matchId"))
     bester = None
     for markt, mk in ((m.get("markets") or {}).items()):
@@ -704,8 +726,10 @@ def build_rutsch_message(a) -> str:
     if st:
         t.append(st + "\n")
     t.append("\U0001f4b6 <b>%s</b> im Markt gematcht\n" % _euro(a.get("total") or 0.0))
-    t.append("\U0001f9ca Geld <b>nicht</b> einseitig (%.0f %%) — genau die Hälfte, die gemessen trägt\n"
-             % ((a.get("leadShare") or 0.0) * 100))
+    # abgeschnitten statt gerundet: bei einer Schranke von 65 % darf auf der Karte keine
+    # 65 stehen, sonst behauptet die Anzeige genau das, was die Regel ausschliesst.
+    t.append("\U0001f9ca Geld <b>nicht</b> einseitig (%d %%) — genau die Hälfte, die gemessen trägt\n"
+             % int((a.get("leadShare") or 0.0) * 100))
     t.append("\U0001f52c <i>Testlauf, nur Trades · gemessen +18,3 % (UG +2,3) auf n=203 — "
              "nicht belegt (p=0,13). Jeder dieser Alarme wird abgerechnet.</i>")
     return "".join(t)
