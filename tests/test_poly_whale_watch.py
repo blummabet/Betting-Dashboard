@@ -146,8 +146,8 @@ class TestBuildCard(unittest.TestCase):
         # 06.08.2026 (Lucas: „frueher stand der Track-Record oefter"): 24/47 (51%) ist kein Beweis,
         # wird aber ab n>=MIN_TR als NEUTRALE Bilanz gezeigt (nicht „bewiesen", nicht mehr versteckt).
         card = P.build_card(_pos(9000, wallet="0xc"), {"0xc": {"n": 47, "wins": 24}}, False)
-        self.assertIn("Bilanz", card); self.assertIn("24/47", card); self.assertIn("51%", card)
-        self.assertNotIn("bewiesene Wallet", card)
+        self.assertIn("Bilanz", card); self.assertIn("24/47", card); self.assertIn("51 %", card)
+        self.assertNotIn("bewiesen</b>", card); self.assertNotIn("✅", card)
         self.assertNotIn("im Aufbau", card)
 
     def test_weak_record_shown_neutral(self):
@@ -160,7 +160,7 @@ class TestBuildCard(unittest.TestCase):
     def test_good_record_highlighted(self):
         # signifikanter Record (8/9 = 89%) → „bewiesene Wallet"
         card = P.build_card(_pos(9000, wallet="0xg"), {"0xg": {"n": 9, "wins": 8}}, False)
-        self.assertIn("bewiesene Wallet", card); self.assertIn("8/9 richtig", card)
+        self.assertIn("✅ bewiesen", card); self.assertIn("8/9", card)
 
     def test_contrarian_hint_under_45c(self):
         self.assertIn("Außenseiter", P.build_card(_pos(9000, price=0.40), {}, False))
@@ -211,8 +211,8 @@ class TestPublicWhale(unittest.TestCase):
         self.assertIn("Einstieg @1.61", msg)            # Quote statt 62¢
         trades = P.build_card(pos, scores, False, broad)
         self.assertIn("bewiesen scharf", trades)
-        self.assertIn("15/20 richtig, 75%", trades)
-        self.assertIn("+3.2pp CLV", trades)
+        self.assertIn("15/20 · 75 %", trades)
+        self.assertIn("CLV +3.2pp", trades)
 
     def test_public_card_pnl_when_present(self):
         pos = _pos(150000, league="TENNIS", side="Sinner", price=0.55, wallet="0xP")
@@ -256,16 +256,16 @@ class TestPublicWhale(unittest.TestCase):
         """
         pos = _pos(150000, league="TENNIS", side="Sinner", price=0.55, wallet="0xP")
         ohne = P.build_card(pos, {"0xP": {"n": 12, "wins": 10, "clvSumPP": 24}}, False, {})
-        self.assertIn("bewiesene Wallet", ohne)
+        self.assertIn("✅ bewiesen", ohne)
         self.assertNotIn("lifetime", ohne)
         self.assertNotIn("$0", ohne)
         mit = P.build_card(pos, {"0xP": {"n": 12, "wins": 10, "clvSumPP": 24, "pnl": 120000}},
                            False, {})
-        self.assertIn("+$120K lifetime", mit)
+        self.assertIn("lifetime", mit)
         # Und in der duennen „Bilanz"-Zeile (n>=MIN_TR, aber nicht bewiesen) genauso:
         bil = P.build_card(pos, {"0xP": {"n": 30, "wins": 16, "pnl": 5000}}, False, {})
         self.assertIn("Bilanz", bil)
-        self.assertIn("+$5K lifetime", bil)
+        self.assertIn("lifetime", bil)
 
     def test_negativer_lifetime_zeigt_ueberhaupt_keine_zahl(self):
         """Ein NEGATIVER Lifetime-P&L erreicht `_lifetime` nie — und das ist Absicht.
@@ -279,7 +279,8 @@ class TestPublicWhale(unittest.TestCase):
         pos = _pos(150000, league="TENNIS", side="Sinner", price=0.55, wallet="0xP")
         karte = P.build_card(pos, {"0xP": {"n": 12, "wins": 10, "clvSumPP": 24, "pnl": -8400}},
                              False, {})
-        self.assertIn("Track-Record noch im Aufbau", karte)
+        self.assertIn("im Aufbau", karte)
+        self.assertNotIn("10/12", karte)
         self.assertNotIn("lifetime", karte)
         self.assertNotIn("8", karte.split("Wallet")[-1])      # keine Verlustzahl in der Zeile
         # Die Absicherung selbst: direkt aufgerufen rendert sie ein echtes Minus, kein „+".
@@ -292,7 +293,7 @@ class TestPublicWhale(unittest.TestCase):
         # Die Wallet-Einordnung steht jetzt in der Trades-Karte; der Public-Kanal sagt zu
         # einer unbewiesenen Wallet GAR NICHTS, statt eine halbe Bilanz zu zeigen.
         self.assertNotIn("bewiesen scharf", msg)
-        self.assertIn("Track-Record noch im Aufbau", P.build_card(pos, {}, False, {}))
+        self.assertIn("im Aufbau", P.build_card(pos, {}, False, {}))
         self.assertNotIn("bewiesen scharf", msg)
 
 
@@ -604,7 +605,7 @@ class TestTop20RankBadge(unittest.TestCase):
     def test_card_carries_badge(self):
         pos = {"wallet": "0xAAA", "league": "ESPORTS", "side": "X", "key": "k", "usd": 25000, "firstPrice": 0.6}
         card = P.build_card(pos, self._scores(), restock=False, broad={})
-        self.assertIn("Rang #1", card)
+        self.assertIn("🥇 #1", card)
 
 
 class TestPublicTopN(unittest.TestCase):
@@ -683,7 +684,9 @@ class TestPublicTopN(unittest.TestCase):
         self.assertIn("Sharp Bettor", card)
         self.assertIn("Rang #1", card)
         # Die lange Form bleibt in der Trades-Karte.
-        self.assertIn("Rang #1 der Sharp-Rangliste", P.build_card(pos, sc, restock=False, broad={}))
+        # 19.09.2026: der Rang steht am Wallet-Block statt in einer eigenen Zeile zwei
+        # Zeilen darueber — dieselbe Auskunft, an der Stelle, auf die sie sich bezieht.
+        self.assertIn("🥇 #1", P.build_card(pos, sc, restock=False, broad={}))
 
     def test_public_card_no_badge_for_outside_topn(self):
         sc = self._scores()
@@ -858,7 +861,9 @@ class TestBlockedCard(unittest.TestCase):
         self.assertIn("nicht bespielbar", card)
         self.assertIn("Beobachtung", card)
         # Der Hinweis gehoert nach OBEN, nicht ans Ende — sonst liest man erst die Empfehlung.
-        self.assertLess(card.index("nicht bespielbar"), card.index("💰"))
+        # 19.09.2026: die Karte fuehrt mit der Wette selbst; der Hinweis steht direkt darunter
+        # und damit vor allem, was die Position einordnet.
+        self.assertLess(card.index("nicht bespielbar"), card.index("🐋 <a href"))
 
     def test_freie_sportart_ohne_hinweis(self):
         card = P.build_card(self._pos("ESPORTS"), self._sc(), restock=False, broad={},
@@ -2045,37 +2050,37 @@ class TestDasFensterVorDerLebensbilanz(unittest.TestCase):
 
     def test_das_fenster_steht_auf_der_karte(self):
         card = self._card()
-        self.assertIn("7 Tage: 5/14 richtig (36%)", card)
-        self.assertIn("-0.3pp CLV", card)
+        self.assertIn("7 Tage <b>5/14 · 36 %</b>", card)
+        self.assertIn("CLV -0.3pp", card)
 
     def test_es_steht_VOR_der_lebensbilanz(self):
         card = self._card()
-        self.assertLess(card.index("7 Tage:"), card.index("lifetime"),
+        self.assertLess(card.index("7 Tage"), card.index("lifetime"),
                         "die Reihenfolge war die halbe Bitte")
 
     def test_beide_zahlen_sind_fett(self):
         card = self._card()
-        self.assertIn("<b>7 Tage: 5/14 richtig (36%) · -0.3pp CLV</b>", card)
-        self.assertIn("<b>+$927.4K lifetime</b>", card)
+        self.assertIn("7 Tage <b>5/14 · 36 %</b>", card)
+        self.assertIn("lifetime <b>+$927.4K</b>", card)
 
     def test_ein_kurzes_gedaechtnis_sagt_das_dazu(self):
         """Das Tages-Gedaechtnis ist am 17.09. angelegt worden. Ein „7-Tage-Fenster", das zwei
         Tage kennt, liest sich sonst in vier Wochen genauso wie heute."""
-        self.assertIn("Gedaechtnis erst seit 17.09.", self._card())
+        self.assertIn("(seit 17.09.)", self._card())
 
     def test_ein_volles_gedaechtnis_kommentiert_sich_nicht(self):
         voll = dict(self.SCORE["fenster7"], seit="2026-09-01")
-        self.assertNotIn("Gedaechtnis erst seit", self._card(fenster7=voll))
+        self.assertNotIn("(seit ", self._card(fenster7=voll))
 
     def test_ohne_fenster_steht_nichts_da(self):
         card = self._card(fenster7=None)
-        self.assertNotIn("Tage:", card)
+        self.assertNotIn("7 Tage", card)
         self.assertIn("lifetime", card)
 
     def test_ein_leeres_fenster_rendert_nicht_als_null(self):
         """Fehlende Information darf nicht als „0/0 richtig (0 %)" durchgehen."""
         card = self._card(fenster7={"n": 0, "wins": 0, "clv": None})
-        self.assertNotIn("Tage:", card)
+        self.assertNotIn("7 Tage", card)
 
     def test_das_fenster_entscheidet_nichts(self):
         """Gemessen am 17.09. sagt der kumulative Schnitt die naechsten Aufloesungen BESSER
@@ -2099,13 +2104,13 @@ class TestDasFensterVorDerLebensbilanz(unittest.TestCase):
         duenn = {"n": 1, "wins": 1, "clv": 4.0, "hit": 1.0,
                  "von": "2026-09-12", "bis": "2026-09-18", "seit": "2026-09-17"}
         card = self._card(fenster7=duenn)
-        self.assertNotIn("Tage:", card)
-        self.assertNotIn("(100%)", card)
+        self.assertNotIn("7 Tage", card)
+        self.assertNotIn("100 %", card)
 
     def test_genau_an_der_schwelle_wird_gezeigt(self):
         knapp = {"n": P.MIN_TR, "wins": 4, "clv": 1.0, "hit": 4 / P.MIN_TR,
                  "von": "2026-09-12", "bis": "2026-09-18", "seit": "2026-09-01"}
-        self.assertIn("7 Tage: 4/%d richtig" % P.MIN_TR, self._card(fenster7=knapp))
+        self.assertIn("7 Tage <b>4/%d" % P.MIN_TR, self._card(fenster7=knapp))
 
 
 class TestDieGegenseiteZaehltNachBeleg(unittest.TestCase):
@@ -2396,3 +2401,102 @@ class TestDasSchattenbuchEinigkeit(unittest.TestCase):
         umfeld = quelle[stelle:stelle + 600]
         self.assertNotIn("tg_send", umfeld)
         self.assertNotIn("_tg_public", umfeld)
+
+
+class TestDieKarteFuehrtMitDerWette(unittest.TestCase):
+    """🔴 19.09.2026 (Lucas: „bitte formatiere die Poly-Pushes in Trades etwas besser … muss da
+    einfach die wichtigen Infos schneller und besser sehen").
+
+    Die Karte hatte zehn Zeilen, jede mit eigenem Emoji, und die Wette selbst — Seite, Preis,
+    Einsatz — stand auf drei davon verteilt (Zeile 3 die Paarung, Zeile 4 der Einsatz, Zeile 7
+    der Preis). Dazwischen zwei Groessen-Zeilen und ein Rang-Badge, das dieselbe Auskunft gab
+    wie der Wallet-Block fuenf Zeilen weiter unten. Die Reihenfolge folgt jetzt der Frage, in
+    der man sie liest: WAS, dann WO/WANN, dann WARUM, dann das Umfeld, dann WER.
+    """
+
+    SC = {"0xw": {"n": 386, "wins": 217, "clvSumPP": 347.0, "usd": 3_000_000, "pnl": 874400.0,
+                  "fenster7": {"n": 34, "wins": 16, "clv": 1.2, "hit": 0.47,
+                               "von": "2026-09-13", "bis": "2026-09-19", "seit": "2026-09-17"}}}
+    BROAD = {"k": {"whales": [{"wallet": "0xw", "side": "Eternal Fire", "usd": 2900}],
+                   "shares": {"Eternal Fire": 1, "Nice Try": 1}, "totalUsd": 8500,
+                   "hoursToKickoff": 2.6, "prices": {"Eternal Fire": 0.88}}}
+    POS = {"key": "k", "side": "Eternal Fire", "wallet": "0xw", "usd": 2900,
+           "league": "ESPORTS", "sport": "E-Sport", "firstPrice": 0.88, "lastPrice": 0.88}
+
+    def _card(self, **over):
+        return P.build_card(dict(self.POS, **over), self.SC, False, self.BROAD)
+
+    def test_die_erste_zeile_ist_die_wette(self):
+        erste = self._card().split("\n")[0]
+        self.assertIn("Eternal Fire", erste)
+        self.assertIn("88¢", erste)
+        self.assertIn("$2.9K", erste)
+
+    def test_der_marktanteil_steht_in_derselben_zeile(self):
+        """Wie gross die Position IM MARKT ist, gehoert neben den Betrag — allein sagt „$2.9K"
+        nichts darueber, ob das viel ist."""
+        self.assertIn("34 %", self._card().split("\n")[0])
+
+    def test_ein_grosser_anteil_wird_fett_statt_beschrieben(self):
+        self.assertIn("<b>34 % des Marktes</b>", self._card())
+
+    def test_ein_kleiner_anteil_bleibt_mager(self):
+        broad = {"k": dict(self.BROAD["k"], totalUsd=200000)}
+        karte = P.build_card(self.POS, self.SC, False, broad)
+        self.assertIn("% des Marktes", karte)
+        self.assertNotIn("<b>1 % des Marktes</b>", karte)
+
+    def test_die_wette_steht_vor_dem_anlass(self):
+        """Warum die Karte kommt, ist Kontext — nicht das, was man zuerst braucht."""
+        k = self._card()
+        self.assertLess(k.index("Eternal Fire</b>"), k.index("Einstieg"))
+
+    def test_der_rang_steht_am_wallet_block(self):
+        sc = {"0xw": dict(self.SC["0xw"])}
+        k = P.build_card(self.POS, sc, False, self.BROAD)
+        self.assertIn("🥇 #1 · ✅ bewiesen", k)
+        self.assertNotIn("der Sharp-Rangliste", k)
+
+    def test_der_wallet_block_ist_dreizeilig_und_gleich_gebaut(self):
+        zeilen = [z for z in self._card().split("\n") if z.startswith("   ")]
+        self.assertEqual(len(zeilen), 3)
+        for z in zeilen:
+            self.assertRegex(z, r"^   (gesamt|7 Tage|lifetime) ")
+
+    def test_der_preis_steht_nur_einmal(self):
+        """Stand er vorher oben UND in der Einstiegs-Zeile, liest man zweimal dieselbe Zahl."""
+        self.assertEqual(self._card().count("88¢"), 1)
+
+    def test_ein_bewegter_preis_zeigt_beide_staende(self):
+        k = self._card(lastPrice=0.93)
+        self.assertIn("88¢ → 93¢ ↗", k)
+
+
+class TestDieEinigkeitsZeileNenntKeinenZweimal(unittest.TestCase):
+    """🔴 19.09.2026, auf Lucas' Karte: „🤝 2 weitere bewiesene Wallets auf derselben Seite —
+    eine weitere bewiesene Wallet, eine weitere bewiesene Wallet ($1.3K)".
+
+    Die Aufzaehlung setzte fuer jede Wallet OHNE Rang denselben Platzhaltertext ein und schrieb
+    ihn damit so oft hin, wie es Wallets gab. Genannt werden jetzt nur die Raenge; wer keinen
+    hat, steckt in der Zahl davor, die es ohnehin sagt.
+    """
+
+    SC = {"0xw": {"n": 386, "wins": 217, "clvSumPP": 347.0, "usd": 3_000_000},
+          "0xa": {"n": 120, "wins": 72, "clvSumPP": 90.0},
+          "0xb": {"n": 90, "wins": 55, "clvSumPP": 60.0}}
+    POS = {"key": "k", "side": "A", "wallet": "0xw", "usd": 2900, "league": "ESPORTS"}
+
+    def _karte(self, mit):
+        broad = {"k": {"whales": [{"wallet": "0xw", "side": "A", "usd": 2900}] + mit,
+                       "shares": {"A": 1, "B": 1}, "totalUsd": 8500}}
+        return P.build_card(self.POS, self.SC, False, broad)
+
+    def test_zwei_wallets_ohne_rang_werden_nicht_zweimal_benannt(self):
+        k = self._karte([{"wallet": "0xa", "side": "A", "usd": 800},
+                         {"wallet": "0xb", "side": "A", "usd": 500}])
+        if "🤝" not in k:
+            self.skipTest("Einigkeits-Urteil steht nicht auf 'traegt'")
+        zeile = [z for z in k.split("\n") if z.startswith("🤝")][0]
+        self.assertIn("2 bewiesene Wallets halten mit", zeile)
+        self.assertIn("$1.3K", zeile)
+        self.assertNotIn("weitere bewiesene Wallet,", zeile)

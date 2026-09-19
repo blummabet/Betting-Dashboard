@@ -366,6 +366,62 @@ def _lifetime(s) -> str:
     return " · <b>%s%s lifetime</b>" % ("+" if pnl >= 0 else "−", _usd(abs(pnl)))
 
 
+def _wallet_block(scores: dict, wallet, rang=None) -> list:
+    """Die Wallet als BLOCK statt als eine Zeile. -> [Kopfzeile, Unterzeilen…]
+
+    🔴 19.09.2026 (Lucas: „Muss da einfach die wichtigen Infos schneller und besser sehen").
+
+    Die Wallet-Zeile war zuletzt 200 Zeichen lang und trug fuenf verschiedene Zahlen hintereinander
+    weg: Kurz-ID, Urteil, Gesamtbilanz, CLV, Fenster, Fenster-CLV, Gedaechtnis-Hinweis,
+    Lebensbilanz. In einer Telegram-Nachricht bricht das auf dem Handy in vier Zeilen um, und
+    keine davon faengt dort an, wo die naechste Zahl steht. Drei kurze Zeilen mit gleichem
+    Aufbau liest man in einem Blick; eine lange liest man gar nicht.
+
+    Dieselben Zahlen, andere Anordnung — es geht hier ausdruecklich NICHT um weniger Auskunft.
+    """
+    link = _wallet_link(wallet)
+    s = scores.get(wallet) if isinstance(scores, dict) else None
+    n = (s.get("n") or 0) if isinstance(s, dict) else 0
+    marke = ("✅ bewiesen" if _is_smart(s)
+             else "📊 Bilanz" if (isinstance(s, dict) and n >= MIN_TR and not _is_confirmed_loser(s))
+             else "im Aufbau")
+    kopf = "🐋 %s · %s" % (link, marke)
+    if rang:
+        kopf = "🐋 %s · %s · %s" % (link, _rang_kurz(rang), marke)
+    # 02.08.2026 bleibt gueltig: eine schwache oder zu duenne Bilanz wird NICHT als Zahl
+    # gezeigt — eine 1/3-Quote wertet einen legitimen Groessen-Alert ab, und ein bestaetigter
+    # Verlierer bekommt hier keine Buehne. Die volle Historie ist einen Klick entfernt.
+    if marke == "im Aufbau":
+        return [kopf]
+    zeilen = [kopf]
+    wins = s.get("wins") or 0
+    clv = (s.get("clvSumPP") or 0) / n if n else None
+    zeilen.append("   gesamt <b>%d/%d · %d %%</b>%s"
+                  % (wins, n, round(wins / n * 100),
+                     "" if clv is None else " · CLV %+.1fpp" % clv))
+    f = s.get("fenster%d" % FENSTER_TAGE) if isinstance(s, dict) else None
+    if isinstance(f, dict) and (f.get("n") or 0) >= MIN_TR and isinstance(f.get("wins"), int):
+        fn, fw, fclv = f["n"], f["wins"], f.get("clv")
+        seit, von = str(f.get("seit") or ""), str(f.get("von") or "")
+        kurz = " (seit %s)" % _tag_kurz(seit) if seit and von and seit > von else ""
+        zeilen.append("   %d Tage <b>%d/%d · %d %%</b>%s%s"
+                      % (FENSTER_TAGE, fw, fn, round(fw / fn * 100),
+                         "" if not isinstance(fclv, (int, float)) else " · CLV %+.1fpp" % fclv,
+                         kurz))
+    pnl = s.get("pnl")
+    if isinstance(pnl, (int, float)):
+        zeilen.append("   lifetime <b>%s%s</b>" % ("+" if pnl >= 0 else "−", _usd(abs(pnl))))
+    return zeilen
+
+
+def _rang_kurz(r) -> str:
+    """„🥇 #1" / „🏅 #8" — der Rang gehoert an die Wallet, nicht in eine eigene Zeile."""
+    if not r:
+        return ""
+    medal = "🥇" if r == 1 else "🥈" if r == 2 else "🥉" if r == 3 else "🏅"
+    return "%s #%d" % (medal, r)
+
+
 def _wallet_line(scores: dict, wallet) -> str:
     """Nur eine gute Bilanz wird als Zahl gezeigt (Verkaufsargument). Schwacher/kein/zu duenner
     Record → neutral „im Aufbau", damit ein legitimer Groessen-Alert nicht durch eine 1/3-Quote
@@ -690,33 +746,52 @@ def build_card(pos: dict, scores: dict, restock: bool, broad: dict = None, extra
     else:
         # Weder relativ gross noch bewiesen scharf: dann heisst es auch nicht „Großer".
         header = "🐋 <b>Whale-Einstieg</b>"
-    lines = ["%s · %s %s" % (header, emoji, _esc(sport))]
-    _tw = _rank_badge(scores, pos.get("wallet"))
-    if _tw:
-        lines.append(_tw)
-    # 25.08.2026 (Lucas: „haben wir MLB nicht entfernt?"): weit nach oben, direkt unter den
-    # Rang. Ohne diese Zeile liest sich der Push als Empfehlung fuer etwas, wofuer im Dashboard
-    # bewusst kein Setzen-Button existiert.
+    # 🔴 19.09.2026 (Lucas: „Muss da einfach die wichtigen Infos schneller und besser sehen").
+    #
+    # Die Karte hatte zehn Zeilen, jede mit eigenem Emoji, und die Wette selbst — Seite, Preis,
+    # Einsatz — stand auf drei davon verteilt. Die Reihenfolge folgt jetzt der Frage, in der man
+    # sie liest: WAS zuerst, dann WO/WANN, dann WARUM die Karte kommt, dann das Umfeld, dann WER.
+    # Dieselben Zahlen, weniger Suchen.
+    _preis = _cents(pos.get("entryPrice") if isinstance(pos.get("entryPrice"), (int, float))
+                    else pos.get("firstPrice"))
+    _label = ausgang_label(side, _markt_frage(key, broad)) or side
+    _anteil = markt_anteil(pos, broad)
+    kopf = "<b>%s</b>%s · %s" % (_esc(_label), (" @ %s" % _preis) if _preis else "", _usd(usd))
+    if _anteil is not None:
+        # Auffaellig gross wird fett statt beschrieben — „das ist viel" kostete eine halbe Zeile.
+        _a = "%d %% des Marktes" % round(_anteil * 100)
+        kopf += " · " + ("<b>%s</b>" % _a if _anteil >= MARKT_ANTEIL_GROSS else _a)
+    lines = [kopf]
+    l0 = "%s · %s %s" % (_esc(matchup) if matchup else _esc(side), emoji, _esc(sport))
+    if ko:
+        l0 += " · %s" % ko
+    lines.append(l0)
+    # 25.08.2026 (Lucas: „haben wir MLB nicht entfernt?"): weit nach oben. Ohne diese Zeile
+    # liest sich der Push als Empfehlung fuer etwas, wofuer im Dashboard bewusst kein
+    # Setzen-Button existiert.
+    # 19.09.2026: der Rang-Badge stand hier als eigene Zeile („🏅 Top-20-Wallet · Rang #8 der
+    # Sharp-Rangliste"). Er sagt dasselbe wie das „🏅 #8" am Wallet-Block und stand zwei Zeilen
+    # vor der Wallet, auf die er sich bezieht — eine Auskunft, zweimal, an der falschen Stelle.
     if bet_blocked(pos, blocked):
         lines.append("🚫 <b>Sportart aktuell nicht bespielbar</b> — im Papier-Depot klar negativ. "
                      "Kein Setzen-Button, kein Public-Post. Steht nur zur Beobachtung hier.")
-    l2 = _esc(matchup) if matchup else "<b>%s</b>" % _esc(side)
-    if ko:
-        l2 += " · %s" % ko
-    lines.append(l2)
-    # 05.09.2026: dieselbe Beschriftung wie im Public-Kanal — hier stand vorher das nackte
-    # „Over", also die Seite ohne Linie. Zwei Kanaele, ein Label.
-    lines.append("💰 <b>%s</b> auf <b>%s</b>"
-                 % (_usd(usd), _esc(ausgang_label(side, _markt_frage(key, broad)) or side)))
-    lines += _groessen_zeilen(pos, broad)
-    pm = _price_move(pos)
-    if pm:
-        lines.append(pm)
+    # WARUM die Karte kommt, in EINER Zeile: der Anlass, die Groesse relativ zum eigenen Ticket,
+    # und ob der Preis noch der von vorhin ist. Vorher drei Zeilen mit drei Emojis.
+    _warum = [header]
+    _tv = ticket_vergleich(pos)
+    if _tv:
+        _warum.append("📐 <b>%.1f×</b> sein Ticket (Median %s)" % (_tv["faktor"], _usd(_tv["median"]))
+                      if _tv["faktor"] >= TICKET_FAKTOR_GROSS
+                      else "📐 Normalgröße (%.1f× · Median %s)" % (_tv["faktor"], _usd(_tv["median"])))
+    _pm = _price_move_kurz(pos)
+    if _pm:
+        _warum.append(_pm)
     try:
         if float(pos.get("firstPrice")) < 0.45:
-            lines.append("💡 Außenseiter-Seite — die Wallet hält gegen den Markt")
+            _warum.append("💡 Außenseiter")
     except Exception:
         pass
+    lines.append(" · ".join(_warum))
     # 24.08.2026 (Lucas): steht eine andere Top-Wallet dagegen, gehoert das IN die Nachricht —
     # sonst liest sich der Push als Empfehlung, obwohl die Gegenseite genauso gut belegt ist.
     # 18.09.2026: erst die Zustimmung, dann der Widerspruch. Beide koennen nicht zugleich
@@ -724,13 +799,15 @@ def build_card(pos: dict, scores: dict, restock: bool, broad: dict = None, extra
     _ag = _agreeing_wallets(pos, broad, scores)
     _einig, _eu = einigkeit_traegt()
     if _ag and _einig:
-        _wer = ", ".join(("Rang #%d" % a["rank"]) if a.get("rank") else "eine weitere bewiesene Wallet"
-                         for a in _ag[:2])
-        lines.append("🤝 <b>%d weitere bewiesene Wallet%s auf derselben Seite</b> — %s (%s)"
-                     % (len(_ag), "" if len(_ag) == 1 else "s", _wer,
-                        _usd(sum(a["usd"] for a in _ag))))
-        lines.append("<i>Einigkeit traegt gemessen: solche Seiten treffen deutlich oefter als "
-                     "eine bewiesene Wallet allein.</i>")
+        # 🔴 19.09.2026: hier stand eine Aufzaehlung, die fuer jede Wallet OHNE Rang denselben
+        # Text einsetzte — auf Lucas' Karte las sich das als „eine weitere bewiesene Wallet,
+        # eine weitere bewiesene Wallet". Genannt werden jetzt nur die Raenge; wer keinen hat,
+        # steckt in der Zahl davor, die es ohnehin schon sagt.
+        _raenge = [_rang_kurz(a["rank"]) for a in _ag if a.get("rank")][:3]
+        lines.append("🤝 <b>%d bewiesene Wallet%s halten mit</b> (%s)%s — trägt gemessen"
+                     % (len(_ag), "" if len(_ag) == 1 else "s",
+                        _usd(sum(a["usd"] for a in _ag)),
+                        (" · " + ", ".join(_raenge)) if _raenge else ""))
     _sperrt, _u = gegenseite_sperrt()
     _cf = _conflicting_top_wallet(pos, broad, scores, bewiesen_zaehlt=_sperrt)
     if _cf:
@@ -743,11 +820,13 @@ def build_card(pos: dict, scores: dict, restock: bool, broad: dict = None, extra
         if _sperrt:
             lines.append("<i>In solchen Maerkten ist Folgen gemessen ein Muenzwurf — "
                          "im oeffentlichen Kanal geht das gar nicht erst raus.</i>")
-    lines.append(_wallet_line(scores, pos.get("wallet")))
+    lines += _wallet_block(scores, pos.get("wallet"),
+                           _sharp_rank_map(scores).get(str(pos.get("wallet") or "").lower()))
+    if extra and extra > 0:
+        lines.append("   ➕ <i>%d weitere Position dieser Wallet</i>" % extra
+                     if extra == 1 else "   ➕ <i>%d weitere Positionen dieser Wallet</i>" % extra)
     if key:
         lines.append('<a href="https://polymarket.com/event/%s">→ Markt öffnen ↗</a>' % _esc(key))
-    if extra and extra > 0:
-        lines.append("➕ <i>+%d weitere Position(en) dieser Wallet</i>" % extra)
     return "\n".join(lines)
 
 
@@ -968,6 +1047,19 @@ def _price_move(pos):
         return "Einstieg %s" % _cents(entry)   # nur Einstieg, wenn kein/gleicher Jetzt-Preis
     arrow = "↗" if now > entry else "↘"
     return "Einstieg %s → jetzt %s %s" % (_cents(entry), _cents(now), arrow)
+
+
+def _price_move_kurz(pos):
+    """Einstieg → jetzt, in der Kurzform fuer die Warum-Zeile. None, wenn kein Preis bekannt."""
+    entry = pos.get("entryPrice")
+    if not isinstance(entry, (int, float)):
+        entry = pos.get("firstPrice")
+    now = pos.get("lastPrice")
+    if not isinstance(entry, (int, float)):
+        return None
+    if not isinstance(now, (int, float)) or abs(now - entry) < 0.005:
+        return None                      # kein Zug -> der Einstiegspreis steht schon oben
+    return "%s → %s %s" % (_cents(entry), _cents(now), "↗" if now > entry else "↘")
 
 
 def _pub_wallet_line(scores: dict, wallet) -> str:
