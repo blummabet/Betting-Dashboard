@@ -266,3 +266,54 @@ class TestDieEinigkeitsMessungWirdAuchGefuellt(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestDieEinseitigkeitsMessung(unittest.TestCase):
+    """19.09.2026 (Lucas: „Vom Gefuehl her haette ich mehr Pushes erwartet, die die
+    30.000er-Schwelle und ueber 80 % Dominanz auf einer Seite abdecken").
+
+    Die Frage laesst sich nur aus dem Buch beantworten, nicht aus einem Nachbau: der Nachbau
+    konnte nur Alarme bewerten, die im Signal-Track stehen, und das ist die bessere Haelfte
+    (64,9 % gegen 54,2 % Treffer ausserhalb der Top 5). Gezaehlt wird deshalb, wie viele
+    Ledger-Zeilen die Frage ueberhaupt beantworten koennen.
+    """
+
+    def _led(self, rows):
+        import json, tempfile, os
+        d = tempfile.mkdtemp()
+        with open(os.path.join(d, "betfair_public_ledger.json"), "w") as f:
+            json.dump(rows, f)
+        return d
+
+    def _row(self, **kw):
+        r = {"status": "won", "scenario": "fresh", "league": "Turkish Super League",
+             "leadShare": 0.83}
+        r.update(kw)
+        return r
+
+    def test_nur_abgerechnete_zeilen_mit_anteil_zaehlen(self):
+        d = self._led([self._row(), self._row(status="pending"), self._row(leadShare=None),
+                       self._row(scenario="ht")])
+        self.assertEqual(M.zaehler_bf_leadshare(d), 1)
+
+    def test_top_5_ligen_zaehlen_nicht_mit(self):
+        """Die Frage war ausdruecklich die nach den ANDEREN Ligen. Waeren sie drin, waere die
+        Messung in vier Wochen voll und haette die Frage trotzdem nicht beantwortet."""
+        d = self._led([self._row(), self._row(league="Spanish La Liga"),
+                       self._row(league="English Premier League")])
+        self.assertEqual(M.zaehler_bf_leadshare(d), 1)
+
+    def test_ohne_buch_ist_es_null(self):
+        import tempfile
+        self.assertEqual(M.zaehler_bf_leadshare(tempfile.mkdtemp()), 0)
+
+    def test_die_messung_steht_im_register_und_haengt_am_zaehler(self):
+        import json, os
+        reg = json.loads(open(os.path.join(
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+            "messungen_register.json"), encoding="utf-8").read())
+        e = [x for x in reg["messungen"] if x["id"] == "betfair-einseitigkeit-schwelle"]
+        self.assertEqual(len(e), 1)
+        self.assertEqual(e[0]["messer"], "bf_leadshare")
+        self.assertIn(e[0]["messer"], M.ZAEHLER)
+        self.assertIn("betfair_public_ledger.json", e[0]["quelle"])

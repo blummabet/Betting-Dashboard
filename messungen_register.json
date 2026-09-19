@@ -104,6 +104,19 @@
    "mindestN": 40,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist"
+  },
+  {
+   "id": "betfair-einseitigkeit-schwelle",
+   "titel": "Traegt eine hoehere Einseitigkeit ausserhalb der Top-5-Ligen?",
+   "frage": "Trefferquote und ROI der gesendeten Betfair-Public-Pushes, aufgeteilt nach `leadShare` (80–85 / 85–90 / >=90 %), nur frisch, nur ausserhalb der Top-5-Ligen.",
+   "warum": "19.09.2026 (Lucas): „Ich bin am überlegen, ob wir das etwas lockern für diese Ligen — 85 bis 90 % auf einer Seite und dafür geringfügig niedrigere Schwellen.“ Ein Nachbau aus 240 Preis-Staenden legte nahe, dass eine hoehere Einseitigkeit deutlich besser traegt. Der Nachbau war verzerrt: er konnte nur Alarme bewerten, die im Signal-Track stehen, und das ist die bessere Haelfte (64,9 % gegen 54,2 % Treffer ausserhalb der Top 5). An den ECHTEN Pushes sieht es umgekehrt aus: 80–85 % → 66,7 % (n=15), 85–90 % → 77,8 % (n=9), >=90 % → 41,2 % (n=17), bei gleichen Quoten in allen drei Baendern. Zu duenn fuer eine Entscheidung in beide Richtungen — `leadShare` steht seit kurzem in jeder Ledger-Zeile und muss sich erst fuellen.",
+   "gestartet": "2026-09-19",
+   "faellig": "2026-11-14",
+   "quelle": "betfair_public_ledger.json -> Zeilen mit leadShare, scenario=fresh, Liga ausserhalb der Top 5",
+   "messer": "bf_leadshare",
+   "mindestN": 90,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist"
   }
  ]
 }

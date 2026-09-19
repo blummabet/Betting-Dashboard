@@ -141,7 +141,30 @@ def zaehler_einigkeit_schatten(base_dir):
     return sum(1 for e in d if isinstance(e, dict) and e.get("status") == "settled")
 
 
+def zaehler_bf_leadshare(base_dir):
+    """Abgerechnete Betfair-Public-Pushes AUSSERHALB der Top-5-Ligen, die ihren Einseitigkeits-
+    Anteil mitfuehren.
+
+    19.09.2026: `leadShare` steht erst seit kurzem in der Ledger-Zeile. Ohne das Feld laesst
+    sich die Frage nur nachbauen — und der Nachbau war verzerrt. Gezaehlt wird deshalb, wie
+    viele Zeilen die Frage ueberhaupt beantworten koennen.
+    """
+    TOP5 = {"English Premier League", "Italian Serie A", "German Bundesliga",
+            "Spanish La Liga", "French Ligue 1"}
+    d = _laden(os.path.join(base_dir, "betfair_public_ledger.json"))
+    if d is None:
+        return 0
+    if not isinstance(d, list):
+        return None
+    return sum(1 for r in d if isinstance(r, dict)
+               and r.get("status") in ("won", "lost")
+               and r.get("scenario") == "fresh"
+               and r.get("league") not in TOP5
+               and isinstance(r.get("leadShare"), (int, float)))
+
+
 ZAEHLER = {
+    "bf_leadshare": zaehler_bf_leadshare,
     "einigkeit_schatten": zaehler_einigkeit_schatten,
     "htk_shortlist": zaehler_htk_shortlist,
     "htk_trader": zaehler_htk_trader,
