@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-09-19T13:56:08.291815+00:00",
+"generatedAt": "2026-09-19T14:41:33.407524+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1307,
-"wins": 1107,
-"hitRate": 0.847,
-"polyN": 1240,
-"polyWins": 968,
-"polyHitRate": 0.7806,
+"n": 1309,
+"wins": 1108,
+"hitRate": 0.8464,
+"polyN": 1242,
+"polyWins": 969,
+"polyHitRate": 0.7802,
 "pinnN": 176,
 "pinnHitRate": 0.7898,
-"nRoi": 634,
-"roi": 0.4327,
-"roiLb": 0.3821,
-"nClv": 634,
-"clv": 20.77,
-"clvLb": 19.202
+"nRoi": 636,
+"roi": 0.4309,
+"roiLb": 0.3803,
+"nClv": 636,
+"clv": 20.7,
+"clvLb": 19.1219
 },
 "uneinig": {
 "n": 510,
@@ -57,9 +57,9 @@
 "hitRate": 0.5789
 },
 "English Sky Bet Championship": {
-"n": 73,
-"wins": 48,
-"hitRate": 0.6575
+"n": 74,
+"wins": 49,
+"hitRate": 0.6622
 },
 "Spanish La Liga": {
 "n": 60,
@@ -331,6 +331,11 @@
 "wins": 7,
 "hitRate": 0.6364
 },
+"Chinese League 1": {
+"n": 9,
+"wins": 5,
+"hitRate": 0.5556
+},
 "Colombian Primera B": {
 "n": 9,
 "wins": 6,
@@ -345,11 +350,6 @@
 "n": 8,
 "wins": 6,
 "hitRate": 0.75
-},
-"Chinese League 1": {
-"n": 8,
-"wins": 5,
-"hitRate": 0.625
 },
 "Czech 1 Liga": {
 "n": 8,
@@ -649,26 +649,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 1122,
-"wins": 904,
-"hitRate": 0.8057,
-"nRoi": 598,
-"roi": 0.2956,
-"roiLb": 0.2416,
-"nClv": 598,
-"clv": 14.32,
-"clvLb": 12.1654
+"n": 1123,
+"wins": 905,
+"hitRate": 0.8059,
+"nRoi": 599,
+"roi": 0.2964,
+"roiLb": 0.2424,
+"nClv": 599,
+"clv": 14.36,
+"clvLb": 12.2136
 },
 "weak": {
-"n": 686,
+"n": 687,
 "wins": 349,
-"hitRate": 0.5087,
-"nRoi": 329,
-"roi": -0.152,
-"roiLb": -0.2439,
-"nClv": 329,
-"clv": -4.32,
-"clvLb": -7.2608
+"hitRate": 0.508,
+"nRoi": 330,
+"roi": -0.1546,
+"roiLb": -0.2463,
+"nClv": 330,
+"clv": -4.45,
+"clvLb": -7.3905
 }
 },
 "divergence": {
@@ -680,6 +680,44 @@
 "polyRate": 0.2718
 },
 "recent": [
+{
+"matchId": "36064369",
+"home": "Cardiff",
+"away": "Charlton",
+"league": "English Sky Bet Championship",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Cardiff",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+1
+],
+"kickoff": "2026-09-19T11:30:00Z",
+"settledAt": "2026-09-19T14:41:33.167079+00:00"
+},
+{
+"matchId": "36079502",
+"home": "Shenzhen Juniors FC",
+"away": "Changchun Yatai",
+"league": "Chinese League 1",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Shenzhen Juniors FC",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-09-19T11:00:00Z",
+"settledAt": "2026-09-19T14:41:33.167079+00:00"
+},
 {
 "matchId": "36071164",
 "home": "Sociedad B",
@@ -1401,56 +1439,18 @@
 ],
 "kickoff": "2026-09-18T21:00:00Z",
 "settledAt": "2026-09-19T00:09:37.573074+00:00"
-},
-{
-"matchId": "36066661",
-"home": "Alianza Atletico",
-"away": "Comerciantes Unidos",
-"league": "Peruvian Primera Division",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Alianza Atletico",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-09-18T20:00:00Z",
-"settledAt": "2026-09-18T23:09:35.299819+00:00"
-},
-{
-"matchId": "36036322",
-"home": "Brentford",
-"away": "Chelsea",
-"league": "English Premier League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Brentford",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-0
-],
-"kickoff": "2026-09-18T19:00:00Z",
-"settledAt": "2026-09-18T22:09:41.989613+00:00"
 }
 ],
 "global": {
-"n": 1841,
-"wins": 1271,
-"hitRate": 0.6904,
-"nRoi": 927,
-"roi": 0.1368,
-"roiLb": 0.0877,
-"nClv": 927,
-"clv": 7.7,
-"clvLb": 5.901
+"n": 1843,
+"wins": 1272,
+"hitRate": 0.6902,
+"nRoi": 929,
+"roi": 0.1362,
+"roiLb": 0.0872,
+"nClv": 929,
+"clv": 7.68,
+"clvLb": 5.8786
 },
-"pending": 38
+"pending": 39
 }
