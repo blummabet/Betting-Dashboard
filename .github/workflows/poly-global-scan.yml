@@ -252,6 +252,11 @@ jobs:
             health/poly-global.json; do
             [ -f "$f" ] && git add "$f"
           done
+          # 19.09.2026: nichts mit Konfliktmarkern verlaesst diesen Lauf. Am 19.09. gingen so
+          # 15 Poly-Artefakte kaputt (poly_wallet_track.json, poly_money_broad_close.json, ...)
+          # und die Poly-Seite schwieg drei Stunden, weil die Leser {} lasen. s. Skript.
+          bash scripts/ci_keine_marker.sh || true
+          git add -u 2>/dev/null || true      # zurueckgesetzte Dateien auch aus dem Index nehmen
           if git diff --staged --quiet; then
             echo "Keine Änderungen — kein Commit."; exit 0
           fi

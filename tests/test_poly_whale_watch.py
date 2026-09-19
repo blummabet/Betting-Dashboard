@@ -2510,3 +2510,53 @@ class TestDieEinigkeitsZeileNenntKeinenZweimal(unittest.TestCase):
         self.assertIn("2 bewiesene Wallets halten mit", zeile)
         self.assertIn("$1.3K", zeile)
         self.assertNotIn("weitere bewiesene Wallet,", zeile)
+
+
+class TestEineKaputteDateiIstNichtLeer(unittest.TestCase):
+    """🔴 19.09.2026 (Lucas: „Heut kein einziger polymarket Push in public (kann nicht sein)").
+
+    Konnte sehr wohl sein. Der Lauf „🐋 Poly Global-Scan 18:05 UTC" hatte 15 Poly-Artefakte MIT
+    Git-Konfliktmarkern committet (`<<<<<<< Updated upstream` — die Sprache von `git stash pop`,
+    also vom `--autostash` im Push-Retry). poly_wallet_track.json und poly_money_broad_close.json
+    waren damit kein JSON mehr, `_load` fing die Exception ab und gab {} zurueck, select() fand
+    null Kandidaten, und der Kanal schwieg drei Stunden ohne einen einzigen roten Lauf.
+
+    Fehlende Information ist kein harmloser Default.
+    """
+
+    def setUp(self):
+        import tempfile
+        self.dir = Path(tempfile.mkdtemp())
+        P._KAPUTTE.clear()
+
+    def _kaputt(self, name="kaputt.json"):
+        p = self.dir / name
+        p.write_text('{\n  "a": 1,\n<<<<<<< Updated upstream\n  "b": 2\n', encoding="utf-8")
+        return p
+
+    def test_eine_fehlende_datei_bleibt_harmlos(self):
+        self.assertEqual(P._load(self.dir / "gibtsnicht.json", {}), {})
+        self.assertEqual(P._KAPUTTE, [])          # nicht da ist kein Schaden
+
+    def test_eine_unlesbare_datei_wird_gemeldet(self):
+        self.assertEqual(P._load(self._kaputt(), {}), {})
+        self.assertEqual(P._KAPUTTE, ["kaputt.json"])
+
+    def test_eine_pflicht_eingabe_bricht_ab_statt_leise_nichts_zu_tun(self):
+        with self.assertRaises(P.ArtefaktKaputt):
+            P._load_pflicht(self._kaputt(), {})
+
+    def test_eine_gesunde_pflicht_eingabe_kommt_normal_zurueck(self):
+        p = self.dir / "gut.json"
+        p.write_text('{"scores": {"0xab": {}}}', encoding="utf-8")
+        self.assertEqual(P._load_pflicht(p, {}), {"scores": {"0xab": {}}})
+
+    def test_eine_fehlende_pflicht_eingabe_ist_kein_schaden(self):
+        # „noch nicht da" ist ein legitimer Anfangszustand — nur „da und unlesbar" ist der Vorfall
+        self.assertEqual(P._load_pflicht(self.dir / "gibtsnicht.json", {}), {})
+
+    def test_der_lauf_liest_track_und_broad_als_pflicht(self):
+        """Ohne diese beiden ist jeder Kandidat ein Fehlurteil — sie duerfen nicht still leer sein."""
+        q = (Path(__file__).parent.parent / "poly_whale_watch.py").read_text(encoding="utf-8")
+        self.assertIn("_load_pflicht(TRACK_FILE", q)
+        self.assertIn("_load_pflicht(BROAD_FILE", q)

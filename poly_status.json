@@ -4,44 +4,36 @@
       "id": "close_feed_fresh",
       "label": "Close-Feed frisch (frisches Geld kommt rein)",
       "severity": "error",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "Close-Feed: kein/kaputter Zeitstempel (capturedAt) · 0 Märkte im File"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Jüngster erfasster Markt. Scan alle 30 Min — steht der Feed, sind Preise/CLV/Volumen alt."
     },
     {
       "id": "resolutions_fresh",
       "label": "Auflösungs-Feed lebt (Märkte werden abgerechnet)",
       "severity": "error",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "Auflösungs-Feed: kein/kaputter Zeitstempel (ts) · 0 Auflösungen gesamt"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Jüngste Markt-Auflösung. Friert er ein, bleiben alle Positionen ewig offen."
     },
     {
       "id": "wallet_track_fresh",
       "label": "Wallet-Lernen frisch",
       "severity": "error",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "Wallet-Track: kein/kaputter Zeitstempel (updatedAt) · 0 Wallets bewertet"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Grundlage der 'bewiesene Wallet'-Pushes — veraltet = Pushes auf alten Bilanzen."
     },
     {
       "id": "shortlist_tracker_writes",
       "label": "Shortlist-Paper-Tracker schreibt",
       "severity": "error",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "Tracker hat keinen/kaputten Zeitstempel — läuft er überhaupt?"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Der Emitter (node/jsdom) kann still ausfallen. Hinkt der Tracker dem frischen Scan nach, schreibt er nicht — die Auto-Bet-Entscheidung liefe auf Blindflug."
     },
     {
@@ -66,12 +58,10 @@
       "id": "split_vollstaendig",
       "label": "Geld-Split kennt seine Vollständigkeit",
       "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "❔ Close-Datei leer — Vollständigkeit UNBEKANNT."
-      ],
-      "note": "poly_money_broad.py schreibt sie bei jedem Lauf."
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "9 geprueft, davon 1 abgeschnitten"
     },
     {
       "id": "settlement_alive",
@@ -105,10 +95,9 @@
       "label": "Genauigkeits-Backtest frisch & belastbar",
       "severity": "error",
       "ok": false,
-      "nFail": 2,
+      "nFail": 1,
       "failures": [
-        "Backtest: kein/kaputter Zeitstempel (generatedAt)",
-        "Backtest hat keine Stichprobengröße n — Datei leer/kaputt?"
+        "Stichprobe auf n=0 geschrumpft (< 30) — Trefferquoten nicht belastbar"
       ],
       "note": "poly_money_broad muss frisch sein und n groß genug, sonst ist 'folgt dem Geld' Zufall."
     },
@@ -140,6 +129,6 @@
       "note": "poly_direct_bets.py rechnet über poly_resolutions.json ab. Hängt ein Bet, kennt Poly den Ausgang nicht (Markt noch offen/obskur) oder der Slug passt nicht — dann fehlt echtes Geld in der Bilanz."
     }
   ],
-  "nFail": 6,
-  "generatedAt": "2026-09-19T18:05:23.210633+00:00"
+  "nFail": 1,
+  "generatedAt": "2026-09-19T18:30:27.229390+00:00"
 }
