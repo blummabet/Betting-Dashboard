@@ -1200,19 +1200,21 @@ class TestKursrutsch(unittest.TestCase):
     def _markt(self, runners):
         return {"runners": [{"name": n, "odd": o, "vol": v} for n, o, v in runners]}
 
+    MARKT = "Over/Under 2.5 Goals"     # Match Odds ist gemessen negativ und faellt raus
+
     def _spiel(self, lead_odd=1.45, lead_vol=5000, gegen_vol=4000, mid=7, ko_h=3, live=None):
-        # Alpha muss die Seite mit dem MEISTEN Volumen sein — _market_lead geht nach Volumen,
-        # nicht nach Quote. Mit 5000 von 11000 sind das 45 %, also unter der 65-%-Schranke.
+        # „Over" muss die Seite mit dem MEISTEN Volumen sein — _market_lead geht nach Volumen,
+        # nicht nach Quote. 5000 von 9000 sind 55 %, also unter der 65-%-Schranke.
         from datetime import datetime, timedelta, timezone as _tz
         ko = (datetime.now(_tz.utc) + timedelta(hours=ko_h)).isoformat()
         return {"matchId": mid, "home": "Alpha", "away": "Beta", "league": "Test",
                 "country": "DE", "liveInfo": (live if live is not None else {}), "kickoff": ko,
-                "markets": {"Match Odds": self._markt([
-                    ("Alpha", lead_odd, lead_vol), ("The Draw", 4.0, 2000),
-                    ("Beta", 3.0, gegen_vol)])}}
+                "markets": {self.MARKT: self._markt([
+                    ("Over 2.5 Goals", lead_odd, lead_vol),
+                    ("Under 2.5 Goals", 3.0, gegen_vol)])}}
 
-    def _einstieg(self, odd=1.79, fav="H", mid="7"):
-        return {(mid, "Match Odds"): (odd, fav)}
+    def _einstieg(self, odd=1.79, fav="OVER", mid="7"):
+        return {(mid, self.MARKT): (odd, fav)}
 
     def test_der_rutsch_wird_gemeldet(self):
         a = BA.rutsch_alert(self._spiel(), self._einstieg())
@@ -1221,7 +1223,7 @@ class TestKursrutsch(unittest.TestCase):
         self.assertEqual(a["entryOdd"], 1.79)
         self.assertEqual(a["leadOdd"], 1.45)
         self.assertAlmostEqual(a["fall"], (1.79 - 1.45) / 1.79, places=4)
-        self.assertEqual(a["market"], "Match Odds")
+        self.assertEqual(a["market"], self.MARKT)
 
     def test_ein_kleiner_rutsch_reicht_nicht(self):
         self.assertIsNone(BA.rutsch_alert(self._spiel(lead_odd=1.70), self._einstieg()))
@@ -1237,8 +1239,7 @@ class TestKursrutsch(unittest.TestCase):
     def test_ein_toter_markt_ist_kein_signal(self):
         """Alpha bleibt die fuehrende Seite (200 von 350), der Markt ist nur winzig —
         sonst prueft der Test den Seiten-Abgleich statt des Liquiditaetsbodens."""
-        m = self._spiel(lead_vol=200, gegen_vol=100)
-        m["markets"]["Match Odds"]["runners"][1]["vol"] = 50      # The Draw klein halten
+        m = self._spiel(lead_vol=200, gegen_vol=150)   # 200/350 = 57 %, also nicht einseitig
         self.assertIsNone(BA.rutsch_alert(m, self._einstieg()))
         # ... und mit abgesenktem Boden kommt derselbe Fall durch: es liegt WIRKLICH am Volumen
         self.assertIsNotNone(BA.rutsch_alert(m, self._einstieg(), min_vol=100))
@@ -1248,7 +1249,7 @@ class TestKursrutsch(unittest.TestCase):
         gegen einen Einstieg von 1.79, der aber Hearts gehoerte — ein „-19 %"-Rutsch, den es nie
         gegeben hat. capture legt zu jeder Einstiegsquote das Kuerzel der Seite ab; ohne den
         Abgleich vergleicht man zwei verschiedene Runner."""
-        self.assertIsNone(BA.rutsch_alert(self._spiel(), self._einstieg(fav="A")))
+        self.assertIsNone(BA.rutsch_alert(self._spiel(), self._einstieg(fav="UNDER")))
 
     def test_eine_zu_kurze_quote_bleibt_draussen(self):
         self.assertIsNone(BA.rutsch_alert(self._spiel(lead_odd=1.20),
@@ -1289,6 +1290,22 @@ class TestKursrutsch(unittest.TestCase):
         a = BA.rutsch_alert(self._spiel(), self._einstieg())
         a["leadShare"] = 0.6499
         self.assertIn("(64 %)", BA.build_rutsch_message(a))
+
+    def test_match_odds_faellt_raus(self):
+        """🔴 19.09.2026, nach Lucas' zweitem Alarm. Der Fund nach Markt aufgeteilt:
+
+            Match Odds        n=103   Treffer 37,9 %   ROI  -9,1 %  [-29,3, +11,1]
+            Tor-/HZ-Maerkte   n=100   Treffer 60,0 %   ROI +46,6 %  [+22,3, +70,9]
+
+        Die Haelfte mit dem groessten n ist negativ. Das „+18,3 %" des Gesamtfunds kam nicht aus
+        dem Mechanismus, den die Karte behauptet, sondern aus der anderen Haelfte."""
+        m = self._spiel()
+        m["markets"] = {"Match Odds": self._markt([
+            ("Alpha", 1.45, 5000), ("The Draw", 4.0, 2000), ("Beta", 3.0, 4000)])}
+        self.assertIsNone(BA.rutsch_alert(m, {("7", "Match Odds"): (1.79, "H")}))
+        # ... und mit leerer Ausschlussliste kaeme derselbe Fall durch: es liegt WIRKLICH am Markt
+        self.assertIsNotNone(BA.rutsch_alert(m, {("7", "Match Odds"): (1.79, "H")},
+                                             maerkte_aus=set()))
 
     def test_einstiegsquoten_liest_den_track_zustand(self):
         st = {"pending": {"7": {"signals": {

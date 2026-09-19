@@ -123,6 +123,25 @@ RUTSCH_MIN_FALL    = float(os.environ.get("BF_RUTSCH_MIN_FALL")  or 0.10)
 # (mktVol, s. betfair_track_record.capture). Er wandert in jede Ledger-Zeile mit und wird in
 # sechs Wochen kalibriert statt weiter geschaetzt.
 RUTSCH_MIN_VOL     = float(os.environ.get("BF_RUTSCH_MIN_VOL")   or 5000.0)
+# 🔴 19.09.2026, nach dem zweiten Alarm, den Lucas gesehen hat:
+#   „Das sind alles drop weil beim Spielstand was passiert ... Die 3.9 gab's irgendwann zu
+#    Spielbeginn, klar dann kurz vor Pause kleinere odd."
+#     Under 0.5 Goals  3.90 → 1.30 (−66,7 %) · HZ Over/Under 0.5 · ⚽ läuft
+# Die Live-Sperre (s. rutsch_alert) faengt genau das. Sein Einwand hat mich aber dazu gebracht,
+# den Fund selbst nach MARKT aufzuteilen — und dort faellt er auseinander:
+#
+#     Match Odds            n=103   Treffer 37,9 %   ROI  -9,1 %  [-29,3, +11,1]
+#     Tor-/HZ-Maerkte       n=100   Treffer 60,0 %   ROI +46,6 %  [+22,3, +70,9]
+#
+# Die Haelfte mit dem groessten n ist NEGATIV. Das "+18,3 %" des Gesamtfunds kam also nicht aus
+# dem Mechanismus, den die Karte behauptet, sondern aus der anderen Haelfte. In den Tor-Maerkten
+# haelt er jeder Probe stand, die ich fahren konnte: ohne Half Time +34,4 % [+12,9] (n=83),
+# erste Fensterhaelfte +42,3 %, zweite +50,9 %, nur Quoten unter 3,0 +23,6 % [+4,8] (n=74),
+# 97 verschiedene Spiele auf 100 Zeilen.
+# EHRLICH DAZU: diese Aufteilung ist NACH dem Blick auf die Gesamtzahl entstanden. Zwei Gruppen
+# sind eine milde Mehrfachprobe, aber es bleibt ein zweiter Blick auf dieselben Daten — Grund
+# genug, den Alarm im Testlauf zu lassen, nicht ihn zu befoerdern.
+RUTSCH_MAERKTE_AUS = {"Match Odds"}
 RUTSCH_MAX_SHARE   = float(os.environ.get("BF_RUTSCH_MAX_SHARE") or 0.65)
 RUTSCH_SEEN_FILE   = "betfair_rutsch_seen.json"
 RUTSCH_LEDGER_FILE = "betfair_rutsch_ledger.json"
@@ -590,7 +609,7 @@ def _fav_token(markt, runner, home, away):
 
 
 def rutsch_alert(m, einstieg, min_fall=RUTSCH_MIN_FALL, max_share=RUTSCH_MAX_SHARE,
-                 min_vol=RUTSCH_MIN_VOL):
+                 min_vol=RUTSCH_MIN_VOL, maerkte_aus=RUTSCH_MAERKTE_AUS):
     """Szenario 4 (19.09.2026, Lucas): keine Geldschwelle, dafuer muss die Quote nachweislich
     gefallen sein -- und das Geld darf NICHT einseitig liegen. REIN/testbar.
 
@@ -627,6 +646,8 @@ def rutsch_alert(m, einstieg, min_fall=RUTSCH_MIN_FALL, max_share=RUTSCH_MAX_SHA
     mid = str(m.get("matchId"))
     bester = None
     for markt, mk in ((m.get("markets") or {}).items()):
+        if markt in (maerkte_aus or ()):
+            continue                  # gemessen negativ (s. RUTSCH_MAERKTE_AUS)
         eo = einstieg.get((mid, markt))
         if not eo:
             continue                      # ohne Einstiegsquote kein Rutsch -- er wird nicht geschaetzt
