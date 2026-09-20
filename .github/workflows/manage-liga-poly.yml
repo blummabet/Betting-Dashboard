@@ -162,6 +162,17 @@ jobs:
           POLY_API_SECRET:     ${{ secrets.POLY_API_SECRET }}
           POLY_API_PASSPHRASE: ${{ secrets.POLY_API_PASSPHRASE }}
 
+      # 20.09.2026 (Vorfall Toulouse–Le Havre): der Resolver kann nichts abrechnen, wozu in
+      # liga-data.json kein Ergebnis steht — und Ergebnisse schreibt sonst nur der Tagesbau
+      # in update-liga.yml (3 Crons/Tag, am 20.09. fielen beide aus). Dieser Schritt holt
+      # genau die Ergebnisse nach, die fehlen, und laeuft deshalb DIREKT vor dem Resolver.
+      # Ohne offene Zeile macht er keinen einzigen API-Aufruf.
+      - name: 🏁 Fehlende Liga-Ergebnisse nachholen
+        run: ${{ env.POLY_PYTHON }} fetch_liga_ergebnisse.py
+        continue-on-error: true
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+
       - name: 📈 Liga Bets resolven (P&L + CLV)
         run: ${{ env.POLY_PYTHON }} resolve_wm_results.py
         continue-on-error: true
@@ -203,6 +214,7 @@ jobs:
             liga-poly-history.json liga_book_health.json liga_kill_switch.json \
             liga-data.json liga-odds-history.json \
             liga_results.json liga_pick_calibration.json \
+            liga_ergebnis_nachlauf.json \
             liga_poly_book_probe.json liga_poly_slugs.json \
             health/liga-poly.json; do
             [ -f "$f" ] && git add "$f"

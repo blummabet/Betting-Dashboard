@@ -867,3 +867,87 @@ def test_der_guard_haengt_in_der_batterie():
     assert UI.check_offene_wette_hat_den_anpfiff_ueberlebt in UI.UEBERSICHT_CHECKS
     ids = [c["label"] for c in UI.run_checks({"autoBetsLiga": {"bets": [_offen()]}})]
     assert "offene Wette hat den Anpfiff ueberlebt" in ids
+
+
+# ── 20.09.2026: „es ist ins spiel gelaufen und verloren weil 5 tore oder so" ─────────────────
+# Toulouse–Le Havre war verloren, stand aber am naechsten Mittag noch als `placed` im Buch —
+# weil in liga-data.json `"result": null` steht. Der Resolver kann nichts abrechnen, wozu kein
+# Ergebnis da ist. Die teure Haelfte: eine Zeile, die nicht abgerechnet werden kann, faellt aus
+# der Rechnung und nicht negativ auf. Das Buch zeigte einen Verlust, es waren zwei.
+
+def _nachlauf(**kw):
+    from datetime import datetime as _d, timezone as _z
+    b = {"generatedAt": _d.now(_z.utc).isoformat(),
+         "datenbauAt": _d.now(_z.utc).isoformat(),
+         "offen": [{"liga": "FRA", "paarung": "Toulouse–Le Havre",
+                    "kickoff": "2026-09-19T18:45:00Z", "stundenHer": 13.8}],
+         "apiLeer": []}
+    b.update(kw)
+    return b
+
+
+def test_ein_abgepfiffenes_spiel_ohne_ergebnis_schlaegt_an():
+    r = UI.check_ergebnisse_kommen_an({"ergebnisNachlaufLiga": _nachlauf()})
+    assert not r["ok"] and r["severity"] == "error"
+    assert "Toulouse–Le Havre" in r["failures"][0]
+
+
+def test_ein_frisch_abgepfiffenes_spiel_ist_kein_befund():
+    """Die API braucht ihre Zeit — wer nach einer Stunde meldet, meldet jeden Abend."""
+    r = UI.check_ergebnisse_kommen_an({"ergebnisNachlaufLiga": _nachlauf(
+        offen=[{"paarung": "A–B", "stundenHer": 3.0}])})
+    assert r["ok"]
+
+
+def test_ohne_offene_zeile_ist_er_still():
+    assert UI.check_ergebnisse_kommen_an({"ergebnisNachlaufLiga": _nachlauf(offen=[])})["ok"]
+
+
+def test_ohne_bericht_behauptet_er_nichts():
+    """Ein Datensatz, in dem der Nachlauf nie lief, ist Unwissen und kein Befund."""
+    assert UI.check_ergebnisse_kommen_an({})["ok"]
+    assert UI.check_ergebnisse_kommen_an({"ergebnisNachlaufLiga": {}})["ok"]
+
+
+def test_ein_alter_bericht_ist_selbst_der_befund():
+    """Ein eingefrorener Bericht sieht aus wie 'alles erledigt'."""
+    from datetime import datetime as _d, timezone as _z, timedelta as _t
+    r = UI.check_ergebnisse_kommen_an({"ergebnisNachlaufLiga": _nachlauf(
+        generatedAt=(_d.now(_z.utc) - _t(hours=30)).isoformat(), offen=[])})
+    assert not r["ok"]
+    assert "alt" in r["failures"][0]
+
+
+def test_leere_api_antwort_wird_gemeldet_nicht_als_erledigt_gebucht():
+    r = UI.check_ergebnisse_kommen_an({"ergebnisNachlaufLiga": _nachlauf(offen=[],
+                                                                         apiLeer=["FRA"])})
+    assert not r["ok"]
+    assert "FRA" in r["failures"][0]
+
+
+def test_stehengebliebener_datenbau_schlaegt_an():
+    """19.09. 20:43:44 schrieb update-liga 17 Ergebnisse; 31 s spaeter stellte der
+    Odds-Refresh mit `-X ours` seinen aelteren Stand wieder her — alle 17 weg. Ein
+    Zeitstempel, der rueckwaerts laeuft, ist ein ueberschriebener Lauf."""
+    from datetime import datetime as _d, timezone as _z, timedelta as _t
+    r = UI.check_datenbau_ist_nicht_stehengeblieben({"ergebnisNachlaufLiga": _nachlauf(
+        datenbauAt=(_d.now(_z.utc) - _t(hours=20)).isoformat())})
+    assert not r["ok"] and r["severity"] == "error"
+    assert "liga-data.json" in r["failures"][0]
+
+
+def test_ein_frischer_datenbau_ist_in_ordnung():
+    from datetime import datetime as _d, timezone as _z, timedelta as _t
+    r = UI.check_datenbau_ist_nicht_stehengeblieben({"ergebnisNachlaufLiga": _nachlauf(
+        datenbauAt=(_d.now(_z.utc) - _t(hours=11)).isoformat())})
+    assert r["ok"]
+
+
+def test_ohne_zeitstempel_behauptet_er_nichts():
+    assert UI.check_datenbau_ist_nicht_stehengeblieben(
+        {"ergebnisNachlaufLiga": _nachlauf(datenbauAt=None)})["ok"]
+
+
+def test_beide_neuen_guards_haengen_in_der_batterie():
+    assert UI.check_ergebnisse_kommen_an in UI.UEBERSICHT_CHECKS
+    assert UI.check_datenbau_ist_nicht_stehengeblieben in UI.UEBERSICHT_CHECKS

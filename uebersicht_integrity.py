@@ -31,7 +31,7 @@ REIN/testbar: `run_checks(ctx)` bekommt die Artefakte als dict und macht keine D
 from __future__ import annotations
 
 import json
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 BASE = Path(__file__).resolve().parent
@@ -1177,6 +1177,109 @@ def check_offene_wette_hat_den_anpfiff_ueberlebt(ctx):
     return _c("offene Wette hat den Anpfiff ueberlebt", "error", fails)
 
 
+def check_ergebnisse_kommen_an(ctx):
+    """19.09.2026 (Lucas: „es ist ins spiel gelaufen und verloren weil 5 tore oder so").
+
+    Toulouse–Le Havre endete mit fuenf Toren, `Under 2.5 Tore` war verloren. Am naechsten
+    Mittag stand die Wette immer noch als `placed` im Buch — nicht, weil der Resolver
+    versagt haette, sondern weil in liga-data.json `"result": null` steht. Er kann nichts
+    abrechnen, wozu kein Ergebnis da ist.
+
+    Ergebnisse schreibt allein `build_liga_data.py` in update-liga.yml, drei Crons am Tag.
+    Der letzte erfolgreiche Lauf war am 19.09. um 20:34 UTC, sechs Minuten VOR dem
+    Schlusspfiff; die beiden Crons am 20.09. fielen aus (health/liga.json kennt fuer den
+    20.09. keinen Lauf). Gemessen am Bestand: 6 von 23 abgepfiffenen Spielen des 19.09.
+    ohne Ergebnis, Levante–Athletic vom 16.09. seit vier Tagen.
+
+    Die teure Haelfte der Fehlerklasse ist nicht das fehlende Ergebnis, sondern: eine
+    Zeile, die nicht abgerechnet werden kann, faellt aus der Rechnung und nicht negativ
+    auf. Das liga-Buch zeigte einen Verlust, tatsaechlich waren es zwei. Ein Buch, das nur
+    die Spiele bucht, deren Ergebnis rechtzeitig ankommt, wird systematisch zu gut.
+
+    Der Guard liest die Zahl beim Produzenten (`fetch_liga_ergebnisse.py` schreibt sie in
+    seinen Bericht), statt sie aus den 4,7 MB von liga-data.json nachzubauen.
+    """
+    fails = []
+    jetzt = datetime.now(timezone.utc)
+    for name, key in (("liga_ergebnis_nachlauf.json", "ergebnisNachlaufLiga"),
+                      ("mls_ergebnis_nachlauf.json", "ergebnisNachlaufMls")):
+        b = ctx.get(key) or {}
+        if not b:
+            continue   # kein Bericht = der Nachlauf lief hier nie; das sagt dieser Guard nicht
+        gen = b.get("generatedAt")
+        try:
+            t = datetime.fromisoformat(str(gen).replace("Z", "+00:00"))
+            if t.tzinfo is None:
+                t = t.replace(tzinfo=timezone.utc)
+        except (ValueError, TypeError):
+            fails.append("%s: `generatedAt` unlesbar (%r) — dann sagt der Bericht nicht, "
+                         "wann zuletzt nachgesehen wurde" % (name, gen))
+            continue
+        if jetzt - t > timedelta(hours=12):
+            fails.append("%s: juengster Nachlauf ist %s alt — es sieht niemand mehr nach"
+                         % (name, _alter_kurz(jetzt - t)))
+            continue
+        offen = [z for z in (b.get("offen") or []) if isinstance(z, dict)]
+        # Ein frisch abgepfiffenes Spiel darf kurz fehlen: die API braucht ihre Zeit.
+        reif = [z for z in offen if (z.get("stundenHer") or 0) >= 6]
+        if reif:
+            fails.append("%s: %d abgepfiffene Spiele ohne Ergebnis (%s) — der Resolver kann "
+                         "sie nicht abrechnen, sie fallen aus jeder Bilanz heraus"
+                         % (name, len(reif),
+                            "; ".join("%s seit %.0f h" % (z.get("paarung"), z.get("stundenHer") or 0)
+                                      for z in reif[:4])))
+        if b.get("apiLeer"):
+            fails.append("%s: API lieferte fuer %s 0 Fixtures — Quota, Key oder Saison"
+                         % (name, ", ".join(map(str, b["apiLeer"]))))
+    return _c("Ergebnisse kommen an", "error", fails)
+
+
+def check_datenbau_ist_nicht_stehengeblieben(ctx):
+    """20.09.2026, derselbe Vorfall von der anderen Seite.
+
+    `_meta.dataUpdatedAt` in liga-data.json stand am 20.09. um 08:00 UTC auf dem 19.09.
+    12:02 — zwanzig Stunden alt, bei drei geplanten Crons am Tag. Gesehen hat das niemand,
+    weil ein veraltetes Artefakt genauso aussieht wie ein aktuelles: die Zahlen darin sind
+    ja alle richtig, nur eben von gestern.
+
+    Zwei Ursachen laufen hier zusammen, und beide erzeugen dasselbe Bild:
+      · die Crons fallen aus (am 20.09. beide),
+      · ein anderer Workflow committet seinen aelteren Stand darueber. Belegt fuer den
+        19.09.: update-liga schrieb um 20:43:44 einen frischen Bau (dataUpdatedAt 20:34)
+        mit 17 Ergebnissen; 31 Sekunden spaeter stellte der Odds-Refresh mit `-X ours`
+        seinen 10 Minuten alten Stand wieder her — dataUpdatedAt zurueck auf 12:02, alle
+        17 Ergebnisse weg, null dazugekommen.
+
+    Fehlerklasse: ein Zeitstempel, der rueckwaerts laeuft, ist ein ueberschriebener Lauf —
+    und ohne Wecker faellt er nicht auf, weil nichts falsch AUSSIEHT.
+
+    18 h Schwelle, gemessen statt geraten: die Laeufe kommen unregelmaessig (18.09. um
+    11:11, 12:41, 20:58; 19.09. um 11:51, 12:09, 20:43), der groesste normale Abstand lag
+    bei rund 15 h. Der heutige steht bei 20 h. 18 h liegt ueber dem Ueblichen und unter
+    dem Vorfall.
+    """
+    fails = []
+    jetzt = datetime.now(timezone.utc)
+    for name, key in (("liga-data.json", "ergebnisNachlaufLiga"),
+                      ("mls-data.json", "ergebnisNachlaufMls")):
+        b = ctx.get(key) or {}
+        stand = b.get("datenbauAt")
+        if not b or not stand:
+            continue
+        try:
+            t = datetime.fromisoformat(str(stand).replace("Z", "+00:00"))
+            if t.tzinfo is None:
+                t = t.replace(tzinfo=timezone.utc)
+        except (ValueError, TypeError):
+            fails.append("%s: `_meta.dataUpdatedAt` unlesbar (%r)" % (name, stand))
+            continue
+        if jetzt - t > timedelta(hours=18):
+            fails.append("%s: der Datenbau hat zuletzt vor %s geschrieben — entweder ist der "
+                         "Cron ausgefallen oder ein anderer Workflow hat einen aelteren Stand "
+                         "darueber committet" % (name, _alter_kurz(jetzt - t)))
+    return _c("Datenbau ist nicht stehengeblieben", "error", fails)
+
+
 def _alter_kurz(d):
     st = int(d.total_seconds() // 3600)
     return "%d h" % st if st < 48 else "%d Tagen" % (st // 24)
@@ -1211,6 +1314,8 @@ UEBERSICHT_CHECKS = [
     check_artefakte_sind_lesbar,
     check_jeder_push_hat_seinen_beleg,
     check_offene_wette_hat_den_anpfiff_ueberlebt,
+    check_ergebnisse_kommen_an,
+    check_datenbau_ist_nicht_stehengeblieben,
 ]
 
 
@@ -1256,6 +1361,8 @@ def build_ctx_from_disk() -> dict:
         "bfTrichter": _lade("betfair_public_trichter.json", {}),
         "bfSchatten": _lade("betfair_public_schatten.json", []),
         "bfPublicRecord": _lade("betfair_public_record.json", {}),
+        "ergebnisNachlaufLiga": _lade("liga_ergebnis_nachlauf.json", {}),
+        "ergebnisNachlaufMls": _lade("mls_ergebnis_nachlauf.json", {}),
     }
 
 

@@ -44,6 +44,18 @@ jobs:
           FETCH_EXTRA_MARKETS: '1'   # 20.08.2026 (Lucas): Pinnacle-BTTS + alternate_totals pro Spiel holen (Credits aufgeladen) → fair_btts wird berechnet, BTTS handelbar statt ~Modell
         run: python fetch_liga_odds.py
 
+      # 20.09.2026: belegt am 19.09. um 20:43:44 schrieb update-liga einen frischen Bau mit
+      # 17 Ergebnissen; 31 Sekunden spaeter stellte DIESER Workflow seinen 10 Minuten alten
+      # Stand wieder her (`ci_pull.sh` merged mit `-X ours`) — alle 17 Ergebnisse weg, null
+      # dazugekommen. Der Nachlauf hier traegt sie im selben Lauf wieder ein, statt bis zum
+      # naechsten Tagesbau zu warten. Er schreibt NUR das Feld `result`, nie ganze Gruppen —
+      # ein zweiter Vollschreiber waere genau die Bauart, die den Schaden erzeugt hat.
+      - name: 🏁 Fehlende Liga-Ergebnisse nachholen
+        continue-on-error: true
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+        run: python fetch_liga_ergebnisse.py
+
       # 07.09.2026 (Lucas: „wir brauchen eine Lösung, um mehr Edge zu generieren").
       # Value gegen den entvigten Pinnacle-Anker, gemessen an der BESTEN von ~29 Quoten.
       # Laeuft direkt nach dem Fetch, weil er genau dessen `best_*`-Felder liest.
@@ -117,6 +129,9 @@ jobs:
           # Workflow geschrieben, deshalb kann sie mit keinem anderen kollidieren.
           git add health/liga-odds-dense.json 2>/dev/null || true
           git add liga-data.json 2>/dev/null || true
+          # 20.09.2026: der Bericht des Ergebnis-Nachlaufs — die Zahl, ueber die die
+          # Guard-Batterie urteilt. Eigene Zeile je Datei, s.o.
+          git add liga_ergebnis_nachlauf.json 2>/dev/null || true
           git add liga-odds-history.json 2>/dev/null || true
           git add wert_scanner.json 2>/dev/null || true             # Bestpreis gegen entvigtes Pinnacle
           git add liga_closing_lines.json 2>/dev/null || true
