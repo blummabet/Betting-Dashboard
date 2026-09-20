@@ -163,7 +163,7 @@ null
 2,
 2
 ],
-"settledAt": "2026-09-20T12:28:10.382472+00:00"
+"settledAt": "2026-09-20T13:58:20.258158+00:00"
 },
 {
 "k": "fresh:36045433:Match Odds",
@@ -1554,7 +1554,7 @@ null
 "leadOdd": 2.38,
 "value": 180605.88,
 "sentAt": "2026-09-20T10:13:04.572443+00:00",
-"status": "pending",
+"status": "lost",
 "htScore": [
 0,
 1
@@ -1575,7 +1575,17 @@ null
 null,
 null
 ]
-}
+},
+"clvBf": 0.0,
+"clvPinn": 0.36,
+"settledAt": "2026-09-20T12:58:31.242527+00:00",
+"ftScore": [
+1,
+1
+],
+"profit": -1.0,
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36085688:Over/Under 2.5 Goals",
@@ -1624,7 +1634,7 @@ null
 "leadOdd": 2.26,
 "value": 154537.03,
 "sentAt": "2026-09-20T11:13:08.460775+00:00",
-"status": "pending",
+"status": "lost",
 "htScore": [
 0,
 1
@@ -1645,7 +1655,17 @@ null
 0,
 0
 ]
-}
+},
+"clvBf": -1.51,
+"clvPinn": 1.41,
+"settledAt": "2026-09-20T12:58:31.242527+00:00",
+"ftScore": [
+0,
+1
+],
+"profit": -1.0,
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36065369:Match Odds",
@@ -1659,7 +1679,7 @@ null
 "leadOdd": 1.91,
 "value": 108952.63,
 "sentAt": "2026-09-20T11:13:08.460786+00:00",
-"status": "pending",
+"status": "won",
 "htScore": [
 0,
 0
@@ -1680,7 +1700,17 @@ null
 0,
 0
 ]
-}
+},
+"clvBf": -1.07,
+"clvPinn": -0.27,
+"settledAt": "2026-09-20T13:29:45.445544+00:00",
+"ftScore": [
+1,
+0
+],
+"profit": 0.9099999999999999,
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36075869:Over/Under 2.5 Goals",
@@ -1694,7 +1724,7 @@ null
 "leadOdd": 2.1,
 "value": 93766.83,
 "sentAt": "2026-09-20T11:28:12.266094+00:00",
-"status": "pending",
+"status": "lost",
 "htScore": [
 0,
 1
@@ -1715,7 +1745,17 @@ null
 0,
 0
 ]
-}
+},
+"clvBf": 10.52,
+"clvPinn": null,
+"settledAt": "2026-09-20T13:29:45.445544+00:00",
+"ftScore": [
+1,
+1
+],
+"profit": -1.0,
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36036467:Match Odds",
@@ -1730,7 +1770,10 @@ null
 "value": 885553.24,
 "sentAt": "2026-09-20T11:28:12.266657+00:00",
 "status": "pending",
-"htScore": null,
+"htScore": [
+3,
+2
+],
 "leadShare": 0.9028619442462884,
 "leadDir": "flat",
 "onLeader": null,
@@ -1867,7 +1910,10 @@ null
 "value": 347354.96,
 "sentAt": "2026-09-20T11:58:16.510186+00:00",
 "status": "pending",
-"htScore": null,
+"htScore": [
+0,
+0
+],
 "leadShare": 0.8215177926349462,
 "leadDir": "out",
 "onLeader": null,
@@ -1934,7 +1980,10 @@ null
 "value": 325661.27,
 "sentAt": "2026-09-20T12:28:09.033881+00:00",
 "status": "pending",
-"htScore": null,
+"htScore": [
+0,
+0
+],
 "leadShare": 0.5166181105907989,
 "leadDir": "out",
 "onLeader": null,
@@ -1944,6 +1993,420 @@ null
 "anteilSchwelle": 0.586,
 "raus": "unter_geldschwelle",
 "quelle": "trades",
+"gesendet": false,
+"live": {
+"time": null,
+"score": [
+null,
+null
+]
+}
+},
+{
+"k": "fresh:36041250:Match Odds",
+"matchId": "36041250",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Dutch Eredivisie",
+"home": "FC Twente",
+"away": "PSV",
+"leadName": "FC Twente",
+"leadOdd": 1.82,
+"value": 186073.75,
+"sentAt": "2026-09-20T12:58:28.564120+00:00",
+"status": "pending",
+"htScore": [
+1,
+2
+],
+"leadShare": 0.5204774988411852,
+"leadDir": "in",
+"onLeader": true,
+"tier": "rest",
+"magnitude": 147194.0,
+"schwelle": 30000.0,
+"anteilSchwelle": 4.906,
+"raus": "leader",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 24,
+"score": [
+1,
+0
+]
+}
+},
+{
+"k": "fresh:36041251:Match Odds",
+"matchId": "36041251",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Italian Serie A",
+"home": "Parma",
+"away": "Genoa",
+"leadName": "Genoa",
+"leadOdd": 2.58,
+"value": 238130.33,
+"sentAt": "2026-09-20T12:58:28.564139+00:00",
+"status": "pending",
+"htScore": [
+1,
+0
+],
+"leadShare": 0.5156742108407609,
+"leadDir": "in",
+"onLeader": null,
+"tier": "top",
+"magnitude": 132200.0,
+"schwelle": 100000.0,
+"anteilSchwelle": 1.322,
+"raus": "einseitig",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": null,
+"score": [
+null,
+null
+]
+}
+},
+{
+"k": "fix:36091045:First Half Goals 0.5",
+"matchId": "36091045",
+"scenario": "fix",
+"market": "First Half Goals 0.5",
+"league": "FIFA Ladies U20 World Cup",
+"home": "Nigeria U20 (W)",
+"away": "Colombia U20 (W)",
+"leadName": "Under 0.5 Goals",
+"leadOdd": 2.1,
+"value": 2079.42,
+"sentAt": "2026-09-20T13:13:23.137624+00:00",
+"status": "pending",
+"htScore": [
+0,
+0
+],
+"leadShare": 0.969967587115638,
+"leadDir": "in",
+"onLeader": null,
+"tier": "top",
+"magnitude": 0.0,
+"schwelle": 100000.0,
+"anteilSchwelle": 0.0,
+"raus": "fix",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 11,
+"score": [
+0,
+0
+]
+}
+},
+{
+"k": "fresh:36036333:Match Odds",
+"matchId": "36036333",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "English Premier League",
+"home": "Leeds",
+"away": "Crystal Palace",
+"leadName": "Leeds",
+"leadOdd": 1.81,
+"value": 996561.89,
+"sentAt": "2026-09-20T13:13:23.137646+00:00",
+"status": "pending",
+"htScore": [
+0,
+0
+],
+"leadShare": 0.915513335554102,
+"leadDir": "out",
+"onLeader": false,
+"tier": "top",
+"magnitude": 490375.8,
+"schwelle": 100000.0,
+"anteilSchwelle": 4.904,
+"raus": "drift",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 10,
+"score": [
+0,
+0
+]
+}
+},
+{
+"k": "fresh:36068258:Over/Under 3.5 Goals",
+"matchId": "36068258",
+"scenario": "fresh",
+"market": "Over/Under 3.5 Goals",
+"league": "German Bundesliga 2",
+"home": "Hannover",
+"away": "Bochum",
+"leadName": "Under 3.5 Goals",
+"leadOdd": 1.52,
+"value": 144040.95,
+"sentAt": "2026-09-20T13:13:23.137653+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.8807029528755539,
+"leadDir": "out",
+"onLeader": false,
+"tier": "top",
+"magnitude": 121261.5,
+"schwelle": 100000.0,
+"anteilSchwelle": 1.213,
+"raus": "ereignis_sprung",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 84,
+"score": [
+2,
+1
+]
+}
+},
+{
+"k": "fix:36083391:Half Time",
+"matchId": "36083391",
+"scenario": "fix",
+"market": "Half Time",
+"league": "Lithuanian A Lyga",
+"home": "Fk Siauliai",
+"away": "FK Kauno Zalgiris",
+"leadName": "FK Kauno Zalgiris",
+"leadOdd": 2.24,
+"value": 3482.6000000000004,
+"sentAt": "2026-09-20T13:29:44.448087+00:00",
+"status": "pending",
+"htScore": [
+0,
+0
+],
+"leadShare": 0.9327111927869982,
+"leadDir": "out",
+"onLeader": null,
+"tier": "rest",
+"magnitude": 0.0,
+"schwelle": 30000.0,
+"anteilSchwelle": 0.0,
+"raus": "fix",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 27,
+"score": [
+0,
+0
+]
+}
+},
+{
+"k": "fresh:36041255:Match Odds",
+"matchId": "36041255",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Italian Serie A",
+"home": "Frosinone",
+"away": "Como",
+"leadName": "Como",
+"leadOdd": 2.58,
+"value": 505436.64,
+"sentAt": "2026-09-20T13:29:44.448110+00:00",
+"status": "pending",
+"htScore": [
+2,
+0
+],
+"leadShare": 0.7816853760344719,
+"leadDir": "out",
+"onLeader": false,
+"tier": "top",
+"magnitude": 165250.9,
+"schwelle": 100000.0,
+"anteilSchwelle": 1.653,
+"raus": "einseitig",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 22,
+"score": [
+1,
+0
+]
+}
+},
+{
+"k": "fresh:36039897:Over/Under 2.5 Goals",
+"matchId": "36039897",
+"scenario": "fresh",
+"market": "Over/Under 2.5 Goals",
+"league": "French Ligue 1",
+"home": "Auxerre",
+"away": "Brest",
+"leadName": "Over 2.5 Goals",
+"leadOdd": 1.5,
+"value": 102016.42,
+"sentAt": "2026-09-20T13:29:44.448140+00:00",
+"status": "pending",
+"htScore": [
+0,
+1
+],
+"leadShare": 0.8994693207230757,
+"leadDir": "in",
+"onLeader": false,
+"tier": "top",
+"magnitude": 89883.5,
+"schwelle": 100000.0,
+"anteilSchwelle": 0.899,
+"raus": "unter_geldschwelle",
+"quelle": "trades",
+"gesendet": false,
+"live": {
+"time": 27,
+"score": [
+0,
+1
+]
+}
+},
+{
+"k": "fresh:36071848:Match Odds",
+"matchId": "36071848",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Spanish La Liga",
+"home": "Atletico Madrid",
+"away": "Real Madrid",
+"leadName": "Real Madrid",
+"leadOdd": 2.08,
+"value": 322604.25,
+"sentAt": "2026-09-20T13:29:44.448149+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.6876523170417005,
+"leadDir": "flat",
+"onLeader": null,
+"tier": "top",
+"magnitude": 63876.7,
+"schwelle": 100000.0,
+"anteilSchwelle": 0.639,
+"raus": "unter_geldschwelle",
+"quelle": "trades",
+"gesendet": false,
+"live": {
+"time": null,
+"score": [
+null,
+null
+]
+}
+},
+{
+"k": "fresh:36068271:Match Odds",
+"matchId": "36068271",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Danish Superliga",
+"home": "Brondby",
+"away": "FC Copenhagen",
+"leadName": "The Draw",
+"leadOdd": 1.57,
+"value": 190347.84,
+"sentAt": "2026-09-20T13:43:25.265548+00:00",
+"status": "lost",
+"htScore": null,
+"leadShare": 0.5000187026025616,
+"leadDir": "in",
+"onLeader": false,
+"tier": "rest",
+"magnitude": 78723.9,
+"schwelle": 30000.0,
+"anteilSchwelle": 2.624,
+"raus": "einseitig",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 78,
+"score": [
+0,
+0
+]
+},
+"clvBf": -22.03,
+"clvPinn": -18.45,
+"settledAt": "2026-09-20T13:58:20.244942+00:00",
+"ftScore": [
+0,
+1
+],
+"profit": -1.0,
+"via": "track"
+},
+{
+"k": "fresh:36041068:Match Odds",
+"matchId": "36041068",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "German Bundesliga",
+"home": "Leverkusen",
+"away": "RB Leipzig",
+"leadName": "Leverkusen",
+"leadOdd": 2.08,
+"value": 234923.21,
+"sentAt": "2026-09-20T13:43:25.265575+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.7143836490230148,
+"leadDir": "out",
+"onLeader": false,
+"tier": "top",
+"magnitude": 90082.8,
+"schwelle": 100000.0,
+"anteilSchwelle": 0.901,
+"raus": "unter_geldschwelle",
+"quelle": "trades",
+"gesendet": false,
+"live": {
+"time": 11,
+"score": [
+0,
+0
+]
+}
+},
+{
+"k": "fix:36091232:Half Time",
+"matchId": "36091232",
+"scenario": "fix",
+"market": "Half Time",
+"league": "Qatari Stars Cup",
+"home": "Al-Wakra",
+"away": "Al Sailiya",
+"leadName": "Al-Wakra",
+"leadOdd": 2.14,
+"value": 3453.5099999999998,
+"sentAt": "2026-09-20T13:58:18.851013+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.895616343951516,
+"leadDir": "in",
+"onLeader": null,
+"tier": "rest",
+"magnitude": 0.0,
+"schwelle": 30000.0,
+"anteilSchwelle": 0.0,
+"raus": "fix",
+"quelle": "public",
 "gesendet": false,
 "live": {
 "time": null,

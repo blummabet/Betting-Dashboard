@@ -120,8 +120,8 @@
       "label": "Poly-Deckung: Money-Scan gegen Liga-Fetcher",
       "severity": "error",
       "failures": [
-        "sea-juv-ata-2026-09-20 (Juventus FC v Atalanta BC, Anpfiff in 3.3h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
-        "sea-mil-lec-2026-09-20 (AC Milan v US Lecce, Anpfiff in 6.0h) — der Liga-Fetcher hat den Markt, der Money-Scan nie"
+        "sea-juv-ata-2026-09-20 (Juventus FC v Atalanta BC, Anpfiff in 3.1h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
+        "sea-mil-lec-2026-09-20 (AC Milan v US Lecce, Anpfiff in 5.8h) — der Liga-Fetcher hat den Markt, der Money-Scan nie"
       ],
       "nFail": 2,
       "ok": false,
@@ -133,7 +133,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "202 Picks im Fenster, 20 % ohne Preis-Signal."
+      "hinweis": "193 Picks im Fenster, 19 % ohne Preis-Signal."
     },
     {
       "label": "Stumme Signale: wer hat nie gefeuert?",
@@ -161,7 +161,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "seit Vorregistrierung n=2514 (UG -7.1 %) · Rueckblick n=2726, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=2519 (UG -7.0 %) · Rueckblick n=2726, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -193,7 +193,7 @@
       "label": "Positionswert ist frisch",
       "severity": "warn",
       "failures": [
-        "liga_poly_balance.json: Positionswert $5.11 stammt aus einem Lauf vor 14 h — die Positions-API antwortet seither nicht"
+        "liga_poly_balance.json: Positionswert $5.11 stammt aus einem Lauf vor 15 h — die Positions-API antwortet seither nicht"
       ],
       "nFail": 1,
       "ok": false,
@@ -213,7 +213,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "45 Zeilen · 33 abgerechnet · 11 offen"
+      "hinweis": "47 Zeilen · 34 abgerechnet · 12 offen"
     },
     {
       "label": "Artefakte sind lesbar",
@@ -237,7 +237,7 @@
       "label": "offene Wette hat den Anpfiff ueberlebt",
       "severity": "error",
       "failures": [
-        "liga_auto_bets_placed.json: Toulouse–Le Havre Under 2.5 Tore steht seit 17 h offen, Anpfiff war 2026-09-19T18:45 — kein einziger Verkaufsversuch im Buch"
+        "liga_auto_bets_placed.json: Toulouse–Le Havre Under 2.5 Tore steht seit 18 h offen, Anpfiff war 2026-09-19T18:45 — kein einziger Verkaufsversuch im Buch"
       ],
       "nFail": 1,
       "ok": false,
@@ -267,7 +267,7 @@
       "label": "Serien-Buch zeigt beide Buecher",
       "severity": "warn",
       "failures": [
-        "die beiden Serien-Buecher sind 8.8 h auseinander (Liga 16.0 h, MLS 24.7 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+        "die beiden Serien-Buecher sind 8.8 h auseinander (Liga 16.2 h, MLS 24.9 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
       ],
       "nFail": 1,
       "ok": false,
@@ -275,5 +275,5 @@
     }
   ],
   "nFail": 10,
-  "generatedAt": "2026-09-20T12:42:10.278177+00:00"
+  "generatedAt": "2026-09-20T12:54:03.167882+00:00"
 }
