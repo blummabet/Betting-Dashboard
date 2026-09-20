@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-09-20T17:58:37.139130+00:00",
+"generatedAt": "2026-09-20T18:13:40.329691+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1388,
-"wins": 1172,
-"hitRate": 0.8444,
-"polyN": 1318,
-"polyWins": 1025,
-"polyHitRate": 0.7777,
+"n": 1390,
+"wins": 1174,
+"hitRate": 0.8446,
+"polyN": 1320,
+"polyWins": 1027,
+"polyHitRate": 0.778,
 "pinnN": 209,
 "pinnHitRate": 0.7751,
-"nRoi": 721,
-"roi": 0.4222,
-"roiLb": 0.3745,
-"nClv": 721,
-"clv": 20.49,
-"clvLb": 18.9951
+"nRoi": 723,
+"roi": 0.4226,
+"roiLb": 0.375,
+"nClv": 723,
+"clv": 20.53,
+"clvLb": 19.037
 },
 "uneinig": {
 "n": 558,
@@ -271,6 +271,11 @@
 "wins": 14,
 "hitRate": 0.7778
 },
+"Austrian Bundesliga": {
+"n": 17,
+"wins": 12,
+"hitRate": 0.7059
+},
 "North American Leagues Cup": {
 "n": 17,
 "wins": 11,
@@ -280,11 +285,6 @@
 "n": 17,
 "wins": 14,
 "hitRate": 0.8235
-},
-"Austrian Bundesliga": {
-"n": 16,
-"wins": 11,
-"hitRate": 0.6875
 },
 "Dutch Eerste Divisie": {
 "n": 16,
@@ -391,6 +391,11 @@
 "wins": 4,
 "hitRate": 0.5714
 },
+"Ukrainian Premier League": {
+"n": 7,
+"wins": 4,
+"hitRate": 0.5714
+},
 "Venezuelan Primera Division": {
 "n": 7,
 "wins": 6,
@@ -405,11 +410,6 @@
 "n": 6,
 "wins": 5,
 "hitRate": 0.8333
-},
-"Ukrainian Premier League": {
-"n": 6,
-"wins": 3,
-"hitRate": 0.5
 },
 "Uruguayan Primera Division": {
 "n": 6,
@@ -649,15 +649,15 @@
 },
 "byStrength": {
 "strong": {
-"n": 1196,
-"wins": 957,
-"hitRate": 0.8002,
-"nRoi": 672,
-"roi": 0.2888,
-"roiLb": 0.2373,
-"nClv": 672,
-"clv": 14.16,
-"clvLb": 12.0999
+"n": 1198,
+"wins": 959,
+"hitRate": 0.8005,
+"nRoi": 674,
+"roi": 0.2896,
+"roiLb": 0.2383,
+"nClv": 674,
+"clv": 14.22,
+"clvLb": 12.165
 },
 "weak": {
 "n": 756,
@@ -680,6 +680,44 @@
 "polyRate": 0.2713
 },
 "recent": [
+{
+"matchId": "36038844",
+"home": "Red Bull Salzburg",
+"away": "Sturm Graz",
+"league": "Austrian Bundesliga",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Red Bull Salzburg",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+0
+],
+"kickoff": "2026-09-20T15:00:00Z",
+"settledAt": "2026-09-20T18:13:40.142262+00:00"
+},
+{
+"matchId": "36075808",
+"home": "Shakhtar",
+"away": "LNZ-Lebedyn",
+"league": "Ukrainian Premier League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Shakhtar",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+0
+],
+"kickoff": "2026-09-20T15:00:00Z",
+"settledAt": "2026-09-20T18:13:40.142262+00:00"
+},
 {
 "matchId": "36041259",
 "home": "Juventus",
@@ -1401,56 +1439,18 @@
 ],
 "kickoff": "2026-09-20T12:00:00Z",
 "settledAt": "2026-09-20T13:58:09.262241+00:00"
-},
-{
-"matchId": "36068271",
-"home": "Brondby",
-"away": "FC Copenhagen",
-"league": "Danish Superliga",
-"verdict": "konsens",
-"moneySide": "draw",
-"moneyName": "The Draw",
-"polySide": null,
-"winner": "away",
-"moneyWin": false,
-"polyWin": null,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-09-20T12:00:00Z",
-"settledAt": "2026-09-20T13:58:09.262241+00:00"
-},
-{
-"matchId": "36041242",
-"home": "Fiorentina",
-"away": "Napoli",
-"league": "Italian Serie A",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Napoli",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-09-20T10:30:00Z",
-"settledAt": "2026-09-20T13:43:15.483963+00:00"
 }
 ],
 "global": {
-"n": 1979,
-"wins": 1346,
-"hitRate": 0.6801,
-"nRoi": 1071,
-"roi": 0.1109,
-"roiLb": 0.0649,
-"nClv": 1071,
-"clv": 6.74,
-"clvLb": 5.0496
+"n": 1981,
+"wins": 1348,
+"hitRate": 0.6805,
+"nRoi": 1073,
+"roi": 0.1118,
+"roiLb": 0.0659,
+"nClv": 1073,
+"clv": 6.8,
+"clvLb": 5.1033
 },
-"pending": 21
+"pending": 19
 }
