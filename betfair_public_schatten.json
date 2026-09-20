@@ -163,7 +163,7 @@ null
 2,
 2
 ],
-"settledAt": "2026-09-20T15:13:38.173623+00:00"
+"settledAt": "2026-09-20T15:28:41.566962+00:00"
 },
 {
 "k": "fresh:36045433:Match Odds",
@@ -2049,7 +2049,7 @@ null
 "leadOdd": 2.38,
 "value": 325661.27,
 "sentAt": "2026-09-20T12:28:09.033881+00:00",
-"status": "pending",
+"status": "won",
 "htScore": [
 0,
 0
@@ -2070,7 +2070,14 @@ null
 null,
 null
 ]
-}
+},
+"settledAt": "2026-09-20T15:28:41.566962+00:00",
+"ftScore": [
+0,
+1
+],
+"profit": 1.38,
+"resChk": true
 },
 {
 "k": "fresh:36041250:Match Odds",
@@ -2341,7 +2348,7 @@ null
 "leadOdd": 2.58,
 "value": 505436.64,
 "sentAt": "2026-09-20T13:29:44.448110+00:00",
-"status": "pending",
+"status": "lost",
 "htScore": [
 2,
 0
@@ -2362,7 +2369,17 @@ null
 1,
 0
 ]
-}
+},
+"clvBf": 27.47,
+"clvPinn": 29.27,
+"settledAt": "2026-09-20T15:28:41.553244+00:00",
+"ftScore": [
+2,
+0
+],
+"profit": -1.0,
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36039897:Over/Under 2.5 Goals",
@@ -2488,7 +2505,7 @@ null
 "leadOdd": 2.08,
 "value": 234923.21,
 "sentAt": "2026-09-20T13:43:25.265575+00:00",
-"status": "pending",
+"status": "won",
 "htScore": [
 1,
 0
@@ -2509,7 +2526,16 @@ null
 0,
 0
 ]
-}
+},
+"clvBf": 3.74,
+"clvPinn": 5.11,
+"settledAt": "2026-09-20T15:28:41.553244+00:00",
+"ftScore": [
+2,
+0
+],
+"profit": 1.08,
+"via": "track"
 },
 {
 "k": "fix:36091232:Half Time",
@@ -2700,7 +2726,10 @@ null
 "value": 74368.75,
 "sentAt": "2026-09-20T14:58:47.524006+00:00",
 "status": "pending",
-"htScore": null,
+"htScore": [
+0,
+0
+],
 "leadShare": 0.5600259517606521,
 "leadDir": "in",
 "onLeader": false,
@@ -2763,7 +2792,7 @@ null
 "leadOdd": 1.89,
 "value": 454118.42,
 "sentAt": "2026-09-20T15:13:35.783667+00:00",
-"status": "pending",
+"status": "won",
 "htScore": null,
 "leadShare": 0.7629947492550511,
 "leadDir": "in",
@@ -2780,6 +2809,79 @@ null
 "score": [
 2,
 0
+]
+},
+"clvBf": 23.43,
+"clvPinn": null,
+"settledAt": "2026-09-20T15:28:41.553244+00:00",
+"ftScore": [
+2,
+0
+],
+"profit": 0.8899999999999999,
+"via": "track"
+},
+{
+"k": "fresh:36041091:Match Odds",
+"matchId": "36041091",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "German Bundesliga",
+"home": "Schalke 04",
+"away": "Elversberg",
+"leadName": "Schalke 04",
+"leadOdd": 1.96,
+"value": 215064.28,
+"sentAt": "2026-09-20T15:28:40.157175+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.8054557456031285,
+"leadDir": "in",
+"onLeader": null,
+"tier": "top",
+"magnitude": 82681.5,
+"schwelle": 100000.0,
+"anteilSchwelle": 0.827,
+"raus": "unter_geldschwelle",
+"quelle": "trades",
+"gesendet": false,
+"live": {
+"time": null,
+"score": [
+null,
+null
+]
+}
+},
+{
+"k": "fresh:36071862:Match Odds",
+"matchId": "36071862",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Spanish La Liga",
+"home": "Deportivo",
+"away": "Betis",
+"leadName": "Betis",
+"leadOdd": 2.02,
+"value": 236924.74,
+"sentAt": "2026-09-20T15:28:40.157202+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.8594696358008033,
+"leadDir": "in",
+"onLeader": null,
+"tier": "top",
+"magnitude": 51369.4,
+"schwelle": 100000.0,
+"anteilSchwelle": 0.514,
+"raus": "unter_geldschwelle",
+"quelle": "trades",
+"gesendet": false,
+"live": {
+"time": null,
+"score": [
+null,
+null
 ]
 }
 }
