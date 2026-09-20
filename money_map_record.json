@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-20T15:58:21.011489+00:00",
+"generatedAt": "2026-09-20T16:13:31.196412+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1382,
-"wins": 1167,
-"hitRate": 0.8444,
-"polyN": 1312,
-"polyWins": 1021,
-"polyHitRate": 0.7782,
-"pinnN": 206,
-"pinnHitRate": 0.7718,
-"nRoi": 709,
-"roi": 0.4241,
-"roiLb": 0.3761,
-"nClv": 709,
-"clv": 20.51,
-"clvLb": 18.9985
+"n": 1384,
+"wins": 1169,
+"hitRate": 0.8447,
+"polyN": 1314,
+"polyWins": 1023,
+"polyHitRate": 0.7785,
+"pinnN": 207,
+"pinnHitRate": 0.7729,
+"nRoi": 711,
+"roi": 0.4254,
+"roiLb": 0.3775,
+"nClv": 711,
+"clv": 20.54,
+"clvLb": 19.0325
 },
 "uneinig": {
-"n": 554,
+"n": 557,
 "wins": 168,
-"hitRate": 0.3032,
-"polyN": 513,
+"hitRate": 0.3016,
+"polyN": 515,
 "polyWins": 139,
-"polyHitRate": 0.271,
-"pinnN": 343,
-"pinnHitRate": 0.621,
-"nRoi": 322,
-"roi": -0.5079,
-"roiLb": -0.5859,
-"nClv": 322,
-"clv": -20.57,
-"clvLb": -23.5826
+"polyHitRate": 0.2699,
+"pinnN": 345,
+"pinnHitRate": 0.6203,
+"nRoi": 325,
+"roi": -0.5124,
+"roiLb": -0.5898,
+"nClv": 325,
+"clv": -20.61,
+"clvLb": -23.6024
 },
 "teil": {
 "n": 32,
@@ -81,20 +81,20 @@
 "wins": 30,
 "hitRate": 0.6122
 },
+"English Premier League": {
+"n": 49,
+"wins": 27,
+"hitRate": 0.551
+},
+"Italian Serie A": {
+"n": 48,
+"wins": 33,
+"hitRate": 0.6875
+},
 "UEFA Europa Conference Qualifiers": {
 "n": 48,
 "wins": 28,
 "hitRate": 0.5833
-},
-"English Premier League": {
-"n": 47,
-"wins": 26,
-"hitRate": 0.5532
-},
-"Italian Serie A": {
-"n": 47,
-"wins": 32,
-"hitRate": 0.6809
 },
 "Mexican Liga MX": {
 "n": 45,
@@ -112,9 +112,9 @@
 "hitRate": 0.6591
 },
 "French Ligue 1": {
-"n": 41,
+"n": 42,
 "wins": 26,
-"hitRate": 0.6341
+"hitRate": 0.619
 },
 "Saudi Professional League": {
 "n": 39,
@@ -331,6 +331,11 @@
 "wins": 7,
 "hitRate": 0.6364
 },
+"Czech 1 Liga": {
+"n": 10,
+"wins": 7,
+"hitRate": 0.7
+},
 "Israeli Premier League": {
 "n": 10,
 "wins": 8,
@@ -345,11 +350,6 @@
 "n": 9,
 "wins": 6,
 "hitRate": 0.6667
-},
-"Czech 1 Liga": {
-"n": 9,
-"wins": 7,
-"hitRate": 0.7778
 },
 "Finnish Veikkausliiga": {
 "n": 9,
@@ -649,37 +649,132 @@
 },
 "byStrength": {
 "strong": {
-"n": 1186,
-"wins": 951,
-"hitRate": 0.8019,
-"nRoi": 662,
-"roi": 0.2945,
-"roiLb": 0.2427,
-"nClv": 662,
-"clv": 14.24,
-"clvLb": 12.1669
+"n": 1188,
+"wins": 952,
+"hitRate": 0.8013,
+"nRoi": 664,
+"roi": 0.2929,
+"roiLb": 0.2411,
+"nClv": 664,
+"clv": 14.2,
+"clvLb": 12.1383
 },
 "weak": {
-"n": 749,
-"wins": 371,
-"hitRate": 0.4953,
-"nRoi": 392,
-"roi": -0.1965,
-"roiLb": -0.2792,
-"nClv": 392,
-"clv": -5.9,
-"clvLb": -8.5778
+"n": 752,
+"wins": 372,
+"hitRate": 0.4947,
+"nRoi": 395,
+"roi": -0.1968,
+"roiLb": -0.2793,
+"nClv": 395,
+"clv": -5.91,
+"clvLb": -8.5746
 }
 },
 "divergence": {
-"n": 554,
+"n": 557,
 "betfairWins": 168,
-"betfairRate": 0.3032,
-"polyN": 513,
+"betfairRate": 0.3016,
+"polyN": 515,
 "polyWins": 139,
-"polyRate": 0.271
+"polyRate": 0.2699
 },
 "recent": [
+{
+"matchId": "36036333",
+"home": "Leeds",
+"away": "Crystal Palace",
+"league": "English Premier League",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Leeds",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-09-20T13:00:00Z",
+"settledAt": "2026-09-20T16:13:30.982826+00:00"
+},
+{
+"matchId": "36036320",
+"home": "Bournemouth",
+"away": "Liverpool",
+"league": "English Premier League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Liverpool",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-09-20T13:00:00Z",
+"settledAt": "2026-09-20T16:13:30.982826+00:00"
+},
+{
+"matchId": "36041255",
+"home": "Frosinone",
+"away": "Como",
+"league": "Italian Serie A",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Frosinone",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-09-20T13:00:00Z",
+"settledAt": "2026-09-20T16:13:30.982826+00:00"
+},
+{
+"matchId": "36039897",
+"home": "Auxerre",
+"away": "Brest",
+"league": "French Ligue 1",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Brest",
+"polySide": null,
+"winner": "home",
+"moneyWin": false,
+"polyWin": null,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-09-20T13:00:00Z",
+"settledAt": "2026-09-20T16:13:30.982826+00:00"
+},
+{
+"matchId": "36068475",
+"home": "FK Jablonec",
+"away": "Zlin",
+"league": "Czech 1 Liga",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "FK Jablonec",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-09-20T13:00:00Z",
+"settledAt": "2026-09-20T16:13:30.982826+00:00"
+},
 {
 "matchId": "36041260",
 "home": "Az Alkmaar",
@@ -1344,113 +1439,18 @@
 ],
 "kickoff": "2026-09-20T01:15:00Z",
 "settledAt": "2026-09-20T04:27:19.509766+00:00"
-},
-{
-"matchId": "36078678",
-"home": "Colorado",
-"away": "Seattle Sounders",
-"league": "US MLS",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Colorado",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-3,
-3
-],
-"kickoff": "2026-09-20T02:30:00Z",
-"settledAt": "2026-09-20T04:27:19.509766+00:00"
-},
-{
-"matchId": "36066692",
-"home": "Monterrey",
-"away": "Cruz Azul",
-"league": "Mexican Liga MX",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Monterrey",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-09-20T01:10:00Z",
-"settledAt": "2026-09-20T04:12:22.228097+00:00"
-},
-{
-"matchId": "36078683",
-"home": "Real Salt Lake",
-"away": "Vancouver Whitecaps",
-"league": "US MLS",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Vancouver Whitecaps",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-3
-],
-"kickoff": "2026-09-20T01:30:00Z",
-"settledAt": "2026-09-20T03:42:13.873777+00:00"
-},
-{
-"matchId": "36078685",
-"home": "St Louis City SC",
-"away": "Toronto FC",
-"league": "US MLS",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "St Louis City SC",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-09-20T00:30:00Z",
-"settledAt": "2026-09-20T03:34:37.240855+00:00"
-},
-{
-"matchId": "36078684",
-"home": "Nashville SC",
-"away": "Chicago Fire",
-"league": "US MLS",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Nashville SC",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-0
-],
-"kickoff": "2026-09-20T01:30:00Z",
-"settledAt": "2026-09-20T03:34:37.240855+00:00"
 }
 ],
 "global": {
-"n": 1968,
-"wins": 1340,
-"hitRate": 0.6809,
-"nRoi": 1054,
-"roi": 0.1119,
-"roiLb": 0.0656,
-"nClv": 1054,
-"clv": 6.75,
-"clvLb": 5.0384
+"n": 1973,
+"wins": 1342,
+"hitRate": 0.6802,
+"nRoi": 1059,
+"roi": 0.1102,
+"roiLb": 0.064,
+"nClv": 1059,
+"clv": 6.7,
+"clvLb": 4.998
 },
-"pending": 32
+"pending": 27
 }
