@@ -163,7 +163,7 @@ null
 2,
 2
 ],
-"settledAt": "2026-09-20T12:13:12.600467+00:00"
+"settledAt": "2026-09-20T12:28:10.382472+00:00"
 },
 {
 "k": "fresh:36045433:Match Odds",
@@ -1509,7 +1509,7 @@ null
 "leadOdd": 2.06,
 "value": 70440.25,
 "sentAt": "2026-09-20T10:13:04.572411+00:00",
-"status": "pending",
+"status": "lost",
 "htScore": [
 0,
 0
@@ -1530,7 +1530,17 @@ null
 0,
 0
 ]
-}
+},
+"clvBf": 13.18,
+"clvPinn": null,
+"settledAt": "2026-09-20T12:28:10.370226+00:00",
+"ftScore": [
+0,
+2
+],
+"profit": -1.0,
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36041242:Match Odds",
@@ -1752,7 +1762,10 @@ null
 "value": 102038.74,
 "sentAt": "2026-09-20T11:43:20.105241+00:00",
 "status": "pending",
-"htScore": null,
+"htScore": [
+0,
+0
+],
 "leadShare": 0.9723863701178591,
 "leadDir": "out",
 "onLeader": false,
@@ -1784,7 +1797,10 @@ null
 "value": 98652.96,
 "sentAt": "2026-09-20T11:43:20.105284+00:00",
 "status": "pending",
-"htScore": null,
+"htScore": [
+1,
+0
+],
 "leadShare": 0.9844360473319808,
 "leadDir": "out",
 "onLeader": false,
@@ -1816,7 +1832,10 @@ null
 "value": 131904.3,
 "sentAt": "2026-09-20T11:58:16.510164+00:00",
 "status": "pending",
-"htScore": null,
+"htScore": [
+1,
+2
+],
 "leadShare": 0.767487716473231,
 "leadDir": "in",
 "onLeader": true,
@@ -1856,6 +1875,73 @@ null
 "magnitude": 57260.2,
 "schwelle": 100000.0,
 "anteilSchwelle": 0.573,
+"raus": "unter_geldschwelle",
+"quelle": "trades",
+"gesendet": false,
+"live": {
+"time": null,
+"score": [
+null,
+null
+]
+}
+},
+{
+"k": "fresh:36068256:Match Odds",
+"matchId": "36068256",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Belgian Pro League",
+"home": "Antwerp",
+"away": "Union St Gilloise",
+"leadName": "The Draw",
+"leadOdd": 3.2,
+"value": 125334.45,
+"sentAt": "2026-09-20T12:28:09.033849+00:00",
+"status": "pending",
+"htScore": [
+0,
+0
+],
+"leadShare": 0.5168149698666248,
+"leadDir": "in",
+"onLeader": false,
+"tier": "rest",
+"magnitude": 37287.1,
+"schwelle": 30000.0,
+"anteilSchwelle": 1.243,
+"raus": "einseitig",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 45,
+"score": [
+0,
+0
+]
+}
+},
+{
+"k": "fresh:36036320:Match Odds",
+"matchId": "36036320",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "English Premier League",
+"home": "Bournemouth",
+"away": "Liverpool",
+"leadName": "Liverpool",
+"leadOdd": 2.38,
+"value": 325661.27,
+"sentAt": "2026-09-20T12:28:09.033881+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.5166181105907989,
+"leadDir": "out",
+"onLeader": null,
+"tier": "top",
+"magnitude": 58648.2,
+"schwelle": 100000.0,
+"anteilSchwelle": 0.586,
 "raus": "unter_geldschwelle",
 "quelle": "trades",
 "gesendet": false,
