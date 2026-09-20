@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-09-20T13:43:15.669000+00:00",
+"generatedAt": "2026-09-20T13:58:09.472659+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1372,
+"n": 1374,
 "wins": 1160,
-"hitRate": 0.8455,
-"polyN": 1303,
+"hitRate": 0.8443,
+"polyN": 1304,
 "polyWins": 1014,
-"polyHitRate": 0.7782,
-"pinnN": 204,
-"pinnHitRate": 0.7794,
-"nRoi": 699,
-"roi": 0.4272,
-"roiLb": 0.3789,
-"nClv": 699,
-"clv": 20.53,
-"clvLb": 19.0127
+"polyHitRate": 0.7776,
+"pinnN": 206,
+"pinnHitRate": 0.7718,
+"nRoi": 701,
+"roi": 0.4231,
+"roiLb": 0.3748,
+"nClv": 701,
+"clv": 20.45,
+"clvLb": 18.9296
 },
 "uneinig": {
 "n": 544,
@@ -162,9 +162,9 @@
 "hitRate": 0.5938
 },
 "Swedish Allsvenskan": {
-"n": 30,
+"n": 31,
 "wins": 21,
-"hitRate": 0.7
+"hitRate": 0.6774
 },
 "German Bundesliga": {
 "n": 29,
@@ -216,17 +216,17 @@
 "wins": 17,
 "hitRate": 0.7727
 },
+"Danish Superliga": {
+"n": 21,
+"wins": 14,
+"hitRate": 0.6667
+},
 "Norwegian Eliteserien": {
 "n": 21,
 "wins": 15,
 "hitRate": 0.7143
 },
 "Chinese Super League": {
-"n": 20,
-"wins": 14,
-"hitRate": 0.7
-},
-"Danish Superliga": {
 "n": 20,
 "wins": 14,
 "hitRate": 0.7
@@ -649,26 +649,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 1175,
+"n": 1176,
 "wins": 944,
-"hitRate": 0.8034,
-"nRoi": 651,
-"roi": 0.2961,
-"roiLb": 0.244,
-"nClv": 651,
-"clv": 14.27,
-"clvLb": 12.1867
+"hitRate": 0.8027,
+"nRoi": 652,
+"roi": 0.2941,
+"roiLb": 0.242,
+"nClv": 652,
+"clv": 14.22,
+"clvLb": 12.1391
 },
 "weak": {
-"n": 738,
+"n": 739,
 "wins": 369,
-"hitRate": 0.5,
-"nRoi": 381,
-"roi": -0.1809,
-"roiLb": -0.2652,
-"nClv": 381,
-"clv": -5.42,
-"clvLb": -8.147
+"hitRate": 0.4993,
+"nRoi": 382,
+"roi": -0.183,
+"roiLb": -0.2672,
+"nClv": 382,
+"clv": -5.4,
+"clvLb": -8.1257
 }
 },
 "divergence": {
@@ -680,6 +680,44 @@
 "polyRate": 0.2704
 },
 "recent": [
+{
+"matchId": "36071880",
+"home": "Djurgardens",
+"away": "Elfsborg",
+"league": "Swedish Allsvenskan",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Djurgardens",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-09-20T12:00:00Z",
+"settledAt": "2026-09-20T13:58:09.262241+00:00"
+},
+{
+"matchId": "36068271",
+"home": "Brondby",
+"away": "FC Copenhagen",
+"league": "Danish Superliga",
+"verdict": "konsens",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": null,
+"winner": "away",
+"moneyWin": false,
+"polyWin": null,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-09-20T12:00:00Z",
+"settledAt": "2026-09-20T13:58:09.262241+00:00"
+},
 {
 "matchId": "36041242",
 "home": "Fiorentina",
@@ -1401,56 +1439,18 @@
 ],
 "kickoff": "2026-09-19T21:30:00Z",
 "settledAt": "2026-09-19T23:26:53.834462+00:00"
-},
-{
-"matchId": "36045431",
-"home": "Mirassol",
-"away": "Botafogo FR",
-"league": "Brazilian Serie A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Mirassol",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-09-19T20:00:00Z",
-"settledAt": "2026-09-19T23:11:59.693507+00:00"
-},
-{
-"matchId": "36069796",
-"home": "Sporting Lisbon",
-"away": "Arouca",
-"league": "Portuguese Primeira Liga",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Sporting Lisbon",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-09-19T19:30:00Z",
-"settledAt": "2026-09-19T22:41:57.861777+00:00"
 }
 ],
 "global": {
-"n": 1946,
+"n": 1948,
 "wins": 1331,
-"hitRate": 0.684,
-"nRoi": 1032,
-"roi": 0.12,
-"roiLb": 0.0733,
-"nClv": 1032,
-"clv": 7.0,
-"clvLb": 5.2762
+"hitRate": 0.6833,
+"nRoi": 1034,
+"roi": 0.1178,
+"roiLb": 0.0711,
+"nClv": 1034,
+"clv": 6.97,
+"clvLb": 5.2482
 },
 "pending": 40
 }
