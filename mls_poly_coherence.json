@@ -1,19 +1,28 @@
 {
  "dataset": "mls",
- "generatedAt": "2026-09-20T21:31:12.352118+00:00",
+ "generatedAt": "2026-09-20T22:34:14.883718+00:00",
  "stale": false,
  "pricesAgeH": 0.0,
- "arbCount": 0,
+ "arbCount": 1,
  "inversions": 1,
  "warnings": 0,
  "findings": [
   {
    "key": "2242-1615",
    "match": "FC Cincinnati vs. D.C. United SC",
+   "typ": "underround",
+   "markt": "1X2",
+   "summe": 0.98,
+   "edgePP": 2.0,
+   "hinweis": "Alle drei Ergebnisse zusammen < 1.0 → garantierter Ertrag"
+  },
+  {
+   "key": "2242-1615",
+   "match": "FC Cincinnati vs. D.C. United SC",
    "typ": "ladder_inversion",
    "markt": "Über 1.5 vs Über 2.5",
    "summe": null,
-   "edgePP": 2.5,
+   "edgePP": 2.0,
    "hinweis": "Über 2.5 (0.71) > Über 1.5 (0.69) — unmöglich, eine Linie ist falsch"
   }
  ]
