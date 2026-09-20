@@ -121,6 +121,30 @@
     return '<div style="text-align:right;font-size:10px;color:' + col + ';padding:6px 0 2px">Stand vor ' + _ageTxt(m) + '</div>';
   }
 
+  // 🔴 20.09.2026 (Uebersicht-Check). Der Serien-Block zieht aus ZWEI Buechern (Liga und MLS)
+  // und stempelte sich mit `_ageStr(ligaStreaks)` — also mit einem davon. Gemessen an dem Tag:
+  // Liga 6,0 h, MLS 22,0 h. Der Block sah 16 Stunden frischer aus, als er war, und der
+  // Seitenkopf sagte gleichzeitig korrekt „aelteste Quelle Serien-Buch vor 21,2 h" — zwei
+  // Zahlen ueber derselben Flaeche, von denen eine die andere widerlegt.
+  //
+  // Fehlerklasse: eine zusammenfassende Ueberschrift ueber einer Zahl, die nur aus einem Teil
+  // stammt. Eine Flaeche aus mehreren Quellen ist so alt wie ihre AELTESTE.
+  //
+  // `namen` ist optional; steht einer dabei, sagt der Stempel auch WELCHE Quelle die aelteste
+  // ist — sonst sieht man die Zahl und weiss nicht, wo man nachsehen muss.
+  function _ageStrAelteste(objs, namen) {
+    var beste = null, wer = '';
+    (objs || []).forEach(function (o, i) {
+      var m = _ageMin(o);
+      if (m == null) return;
+      if (beste == null || m > beste) { beste = m; wer = (namen && namen[i]) || ''; }
+    });
+    if (beste == null) return '';
+    var col = beste > 35 ? '#f2a6a6' : beste > 15 ? 'var(--gold)' : 'var(--mi3)';
+    return '<div style="text-align:right;font-size:10px;color:' + col + ';padding:6px 0 2px">'
+      + 'Stand vor ' + _ageTxt(beste) + (wer ? ' (' + esc(wer) + ')' : '') + '</div>';
+  }
+
   // ── Länderflaggen ─────────────────────────────────────────────────────────────
   // Quellen liefern Land unterschiedlich: Betfair `country` = ISO-2 ("EC","GB"),
   // Streaks/Fixtures `league` = ISO-3 ("ENG","GER"), Whales `league` = Sport-Kürzel ("MLB").
@@ -1686,7 +1710,11 @@
       var len = +s.length || 0;
       return rowEl(fl(_flagFrom(s.country, s.league, s.leagueName)) + esc(team(s.team)) + ' <span style="color:var(--mi3);font-weight:400">·</span> ' + esc(s.market || s.type || ''),
         len + '×', A.gold, sub, pips(Math.min(len, 10), 10));
-    }).join('') + _mdStreakBuch() + _ageStr(_md.data.ligaStreaks) : empty('Keine langen Serien.');
+    }).join('') + _mdStreakBuch()
+      // Der Block zieht aus beiden Serien-Buechern — also stempelt er sich mit dem aelteren.
+      + _ageStrAelteste([_md.data.ligaStreaks, _md.data.ligaStreakRec, _md.data.mlsStreakRec],
+                        ['Liga', 'Liga-Buch', 'MLS-Buch'])
+      : empty('Keine langen Serien.');
 
     // Betfair — Anteilsbalken
     var bf = bestBetfair();
