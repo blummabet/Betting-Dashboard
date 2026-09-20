@@ -1,15 +1,15 @@
 {
- "n": 543,
+ "n": 546,
  "minOdds": 1.35,
- "moneyHitRate": 0.378,
- "priceHitRate": 0.413,
- "brierMoney": 0.8867,
- "brierPrice": 0.6856,
+ "moneyHitRate": 0.377,
+ "priceHitRate": 0.414,
+ "brierMoney": 0.8871,
+ "brierPrice": 0.6852,
  "disagree": {
   "n": 150,
   "moneyWon": 22,
-  "priceWon": 41,
-  "neither": 87
+  "priceWon": 42,
+  "neither": 86
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -32,10 +32,10 @@
   },
   {
    "league": "LIGUE-1",
-   "n": 34,
+   "n": 37,
    "moneyHitRate": 0.324,
-   "brierMoney": 0.85,
-   "brierPrice": 0.7014,
+   "brierMoney": 0.8599,
+   "brierPrice": 0.6941,
    "verdict": "preis_besser"
   },
   {
@@ -80,7 +80,7 @@
   }
  ],
  "guete": {
-  "belastbar": 543,
+  "belastbar": 546,
   "preis_echo": 199,
   "abgeschnitten": 70,
   "unbekannt": 219,
@@ -368,7 +368,7 @@
    "league": "EPL",
    "winner": "Draw (Nottingham Forest FC vs. Tottenham Hotspur FC)",
    "moneyFav": "Tottenham Hotspur FC",
-   "priceFav": "Nottingham Forest FC",
+   "priceFav": "Tottenham Hotspur FC",
    "moneyShare": 0.584,
    "priceProb": 0.357,
    "moneyOK": false,
@@ -544,6 +544,18 @@
    "totalUsd": 432192
   },
   {
+   "key": "fl1-olm-psg-2026-09-20",
+   "league": "LIGUE-1",
+   "winner": "Paris Saint-Germain FC",
+   "moneyFav": "Paris Saint-Germain FC",
+   "priceFav": "Paris Saint-Germain FC",
+   "moneyShare": 0.916,
+   "priceProb": 0.688,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 404573
+  },
+  {
    "key": "por-fam-spo-2026-09-13",
    "league": "PRIMEIRA-LIGA",
    "winner": "Draw (FC Famalicão vs. Sporting CP)",
@@ -554,27 +566,15 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 374990
-  },
-  {
-   "key": "bra-flu-vas-2026-09-05",
-   "league": "BRAZIL-SERIE-A",
-   "winner": "Fluminense FC",
-   "moneyFav": "Fluminense FC",
-   "priceFav": "Fluminense FC",
-   "moneyShare": 0.943,
-   "priceProb": 0.399,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 372754
   }
  ],
- "generatedAt": "2026-09-20T21:04:19.448702+00:00",
+ "generatedAt": "2026-09-20T21:32:54.647223+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 420,
   "nfl": 800,
-  "mlb": 658,
+  "mlb": 639,
   "nhl": 594,
   "mls": 562,
   "epl": 418,
@@ -584,15 +584,15 @@
   "la-liga": 437,
   "bundesliga": 412,
   "serie-a": 51,
-  "ligue-1": 425,
-  "primeira-liga": 424,
+  "ligue-1": 415,
+  "primeira-liga": 418,
   "brazil-serie-a": 448,
   "brasileirao": 0,
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 604,
-  "cs2": 421,
+  "esports": 620,
+  "cs2": 420,
   "lol": 427,
   "dota": 9,
   "valorant": 446,
@@ -619,7 +619,7 @@
   "europa-league": 187,
   "israel-premier-league": 225,
   "japan-j-league": 407,
-  "japan-j2-league": 509,
+  "japan-j2-league": 534,
   "k-league": 413,
   "la-liga-2": 522,
   "liga-mx-apertura": 2,
@@ -627,7 +627,7 @@
   "naitons-league": 1,
   "national-league": 654,
   "nations-league": 25,
-  "norway-eliteserien": 414,
+  "norway-eliteserien": 413,
   "poland-ekstraklasa": 407,
   "premier-league": 407,
   "saudi-professional-league": 410,
@@ -635,7 +635,7 @@
   "scottish-premiership": 405,
   "serbian-superliga": 419,
   "serie-b": 408,
-  "slovenia-prvaliga": 280,
+  "slovenia-prvaliga": 279,
   "sweden-allsvenskan": 407,
   "switzerland-super-league": 379,
   "uefa-champions-league": 26,
@@ -649,31 +649,36 @@
  "sweepStats": {
   "sweepOpen": 500,
   "sweepClosed": 500,
-  "sweepAdded": 405
+  "sweepAdded": 406
  },
  "vorStats": {
-  "kandidaten": 4,
+  "kandidaten": 3,
   "budgetLeer": 0,
   "ohneGeldSplit": 1,
   "nachgelegt": 0,
-  "mitAnteilen": 3,
-  "calls": 4
+  "mitAnteilen": 2,
+  "calls": 3
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1953,
-   "usd": 54716010,
+   "n": 1565,
+   "usd": 52563728,
    "beispiel": "fifwc-mex-rsa-2026-06-11"
   },
   "world": {
-   "n": 78,
-   "usd": 10048894,
+   "n": 82,
+   "usd": 10066873,
    "beispiel": "world-cup-winner"
   },
   "nba": {
-   "n": 299,
-   "usd": 7949757,
+   "n": 217,
+   "usd": 7301396,
    "beispiel": "nba-sas-okc-2026-05-18"
+  },
+  "balance": {
+   "n": 4,
+   "usd": 6019077,
+   "beispiel": "balance-of-power-2026-midterms"
   },
   "ecs": {
    "n": 10,
@@ -681,13 +686,13 @@
    "beispiel": "ecs-ars-mci-2026-08-16"
   },
   "cbb": {
-   "n": 43,
-   "usd": 1721521,
+   "n": 23,
+   "usd": 1547820,
    "beispiel": "cbb-uconn-mich-2026-04-06"
   },
   "super": {
-   "n": 30,
-   "usd": 554314,
+   "n": 29,
+   "usd": 551800,
    "beispiel": "super-bowl-champion-2026-731"
   },
   "uefa": {
@@ -705,39 +710,24 @@
    "usd": 295828,
    "beispiel": "euroleague-monaco-milano-2026-03-24"
   },
-  "fif": {
-   "n": 67,
-   "usd": 293737,
-   "beispiel": "fif-col-fra-2026-03-29"
-  },
-  "efa": {
-   "n": 14,
-   "usd": 283056,
-   "beispiel": "efa-ast-new-2026-02-14"
-  },
   "ballon": {
-   "n": 18,
-   "usd": 266427,
+   "n": 19,
+   "usd": 285138,
    "beispiel": "ballon-dor-winner-2026"
   },
+  "fif": {
+   "n": 63,
+   "usd": 260477,
+   "beispiel": "fif-pol-nga-2026-06-03"
+  },
   "which": {
-   "n": 25,
-   "usd": 251013,
+   "n": 21,
+   "usd": 180185,
    "beispiel": "which-party-wins-2028-us-presidential-election"
   },
-  "uef": {
-   "n": 14,
-   "usd": 239409,
-   "beispiel": "uef-kvx-tur-2026-03-31"
-  },
-  "cdr": {
-   "n": 7,
-   "usd": 217899,
-   "beispiel": "cdr-atm-fcb-2026-02-12"
-  },
   "2026": {
-   "n": 18,
-   "usd": 181493,
+   "n": 17,
+   "usd": 172817,
    "beispiel": "2026-nhl-stanley-cup-champion"
   },
   "acn": {
@@ -747,18 +737,28 @@
   },
   "bitcoin": {
    "n": 4,
-   "usd": 141256,
+   "usd": 141301,
    "beispiel": "bitcoin-all-time-high-by"
   },
-  "clf": {
-   "n": 23,
-   "usd": 112450,
-   "beispiel": "clf-stk-vcf-2026-08-01"
-  },
-  "nbasl": {
+  "efa": {
    "n": 4,
-   "usd": 101771,
-   "beispiel": "nbasl-cle-nop-2026-07-15"
+   "usd": 134376,
+   "beispiel": "efa-cfc-mnc-2026-05-16"
+  },
+  "fed": {
+   "n": 11,
+   "usd": 130899,
+   "beispiel": "fed-decision-in-december"
+  },
+  "cdr": {
+   "n": 2,
+   "usd": 125610,
+   "beispiel": "cdr-atm-fcb-2026-02-12"
+  },
+  "clf": {
+   "n": 25,
+   "usd": 120409,
+   "beispiel": "clf-mun-lee-2026-08-12"
   }
  }
 }
