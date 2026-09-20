@@ -145,6 +145,15 @@ BASE_DIR              = os.path.dirname(os.path.abspath(__file__))
 # Dataset-aware: wm_* | liga_* | mls_* je COCOBET_DATASET. WM unverändert.
 PRICES_FILE           = str(D.file("wm_poly_prices.json",      "liga_poly_prices.json"))
 PLACED_FILE           = str(D.file("wm_auto_bets_placed.json", "liga_auto_bets_placed.json"))
+# 20.09.2026 (Lucas: „ich bin dafuer wir stellen das Auto trading mal ab und schreiben es nur
+# im Cockpit mit ala paper trading"). Bis hierher endete ein deaktivierter Lauf mit einem
+# `return` nach der Kandidaten-Liste: gedruckt, nie gespeichert. Damit war „aus" gleichbedeutend
+# mit „wir erfahren nichts" — und genau deshalb steht der Fussball-Trader nach Monaten bei sechs
+# abgerechneten Zeilen, waehrend das 95-%-Band seiner verkauften Trades von -4,2 % bis +9,6 %
+# reicht. Das Papierbuch laeuft durch DIESELBEN Tore bis unmittelbar vor die Order: gleiche
+# Edge-Schwelle, gleiches Spread-Gate, gleicher Ask. Nur gekauft wird nicht.
+PAPIER_FILE           = str(D.file("wm_paper_bets.json", "liga_paper_bets.json"))
+PAPIER_PUSH           = (os.environ.get("PAPIER_PUSH") or "").strip().lower() in ("1", "true", "yes")
 BALANCE_FILE          = str(D.file("wm_poly_balance.json",     "liga_poly_balance.json"))
 KILL_SWITCH_FILE      = str(D.file("wm_kill_switch.json",      "liga_kill_switch.json"))
 WM_DATA_FILE          = str(D.data_file())
@@ -1009,6 +1018,11 @@ def main():
     placed_data = load_json(PLACED_FILE, {"bets": [], "updatedAt": ""})
     placed_bets = placed_data.get("bets", [])
     placed_keys = {b["betKey"] for b in placed_bets if b.get("betKey")}
+    # Ohne diese Zeile schriebe jeder Lauf dieselbe Papier-Wette erneut ins Buch — alle 30
+    # Minuten eine, und die Auswertung zaehlte denselben Kandidaten dutzendfach.
+    papier_data = load_json(PAPIER_FILE, {"bets": [], "updatedAt": ""})
+    papier_bets = papier_data.get("bets", [])
+    placed_keys |= {b["betKey"] for b in papier_bets if b.get("betKey")}
     # Match-Level Dedup: zähle wie viele Bets schon auf jedes Match liegen
     # (egal welcher Markt). Verhindert gegenläufige Heim+Auswärts-Positionen.
     # Audit-Fix 18.06.2026: nur OFFENE Positionen zählen (resolved/verkaufte raus). Das
@@ -1098,13 +1112,13 @@ def main():
         print(f"    • {c['home']} vs {c['away']} — {c['market']}")
         print(f"      Edge: +{c['edgePP']}pp{eff_str}  |  Poly: {odds_str}  |  Einsatz: ${c['stake']:.2f} USDC{sig_str}")
 
-    if not is_enabled:
-        print(f"\n⏸️  DEAKTIVIERT — {len(candidates)} Bet(s) würden platziert werden wenn aktiv.\n")
-        return
+    papier = not is_enabled
+    if papier:
+        print(f"\n📝 PAPIERBETRIEB — {len(candidates)} Kandidat(en) werden gebucht, nicht gekauft.\n")
 
     # 4. Bets platzieren via polymarket_bet.py
     private_key = os.environ.get("POLY_PRIVATE_KEY", "").strip()
-    if not private_key:
+    if not private_key and not papier:
         print("❌ POLY_PRIVATE_KEY nicht gesetzt — kann keine Bets platzieren.")
         sys.exit(1)
 
@@ -1282,16 +1296,21 @@ def main():
 
         # Order platzieren (price_hint = realer Ask wenn verfügbar, sonst Mid).
         # Mit Post-Only-/503-Retry: kurze Börsen-Sperren werden im selben Lauf abgefangen.
-        result = place_order_with_retry(
-            place_market_order, token_id, stake, private_key, fill_price,
-        )
+        if papier:
+            # Kein Geld, kein Orderbuch-Eingriff — aber dieselbe Zeile wie ein echter Trade,
+            # damit die Auswertung spaeter nicht zwei Formate vergleichen muss.
+            result = {"status": "papier", "orderId": None, "error": None}
+        else:
+            result = place_order_with_retry(
+                place_market_order, token_id, stake, private_key, fill_price,
+            )
 
         log_bet_to_history(history, order, result)
 
         is_steam = order.get("isSteamLag", False)
         steam_tag = " 🔥 SteamLag" if is_steam else ""
 
-        if result["status"] in ("placed", "dry-run"):
+        if result["status"] in ("placed", "dry-run", "papier"):
             print(f"    ✅ Platziert — Order ID: {result.get('orderId')}{steam_tag}")
 
             # Bankroll-Tally + Match-Position-Tally updaten
@@ -1305,6 +1324,8 @@ def main():
             # ist entfernt. Auto-Bet-Bestätigungen gehen NUR über telegram_trades
             # an den privaten Trades-Channel. Keine Stake/Order-Daten im Public-Channel.
             try:
+                if papier and not PAPIER_PUSH:
+                    raise RuntimeError("Papierbetrieb — kein Push (PAPIER_PUSH=1 schaltet ihn an)")
                 from telegram_trades import notify_trade_opened
                 notify_trade_opened(
                     home=home, away=away, market=market,
@@ -1319,7 +1340,8 @@ def main():
                     dry_run=(result["status"] == "dry-run"),
                 )
             except Exception as e:
-                print(f"    ⚠️  Trades-Channel Fehler: {e}")
+                if not (papier and not PAPIER_PUSH):
+                    print(f"    ⚠️  Trades-Channel Fehler: {e}")
 
             new_placed.append({
                 "betKey":         bet_key_val,
@@ -1347,7 +1369,9 @@ def main():
                 "isSteamLag":     is_steam,
                 # FIX 14.06.2026: source explizit taggen (vorher fehlte es → Frontend/Resolve
                 # mussten auf "default=auto" vertrauen). Betting-Seite filtert auf source.
-                "source":         "auto_steam" if is_steam else "auto",
+                "source":         ("papier" if papier else
+                                   ("auto_steam" if is_steam else "auto")),
+                "papier":         papier,
                 # 18.08.2026 (Lucas): Slug + Wettbewerb mitschreiben -> Resolver/Stats koennen
                 # per-Liga (EPL/LaLiga/... nicht nur "liga") buckten. Rein additiv.
                 "slug":           order.get("slug", ""),
@@ -1371,6 +1395,29 @@ def main():
     # 25.08.2026 (Audit): war die Wett-Datei kaputt, steht `placed_bets` auf leer — dann wuerde
     # dieser Lauf die gesamte Positions-Historie mit seinen paar neuen Zeilen ueberschreiben.
     # Lieber die neuen Bets nur im Log und in picks_history als die alten endgueltig verlieren.
+    # ── Papierbetrieb: eigenes Buch, die echte Wett-Datei bleibt unberuehrt ──────────
+    # Getrennt und nicht mit einem `status`-Filter im selben Buch: der Positions-Manager, der
+    # Resolver, die Bilanz und die Wallet-Abgleiche lesen alle das echte Buch, und jeder von
+    # ihnen muesste den Filter kennen. Eine Papier-Zeile, die irgendwo als offene Position
+    # durchrutscht, waere schlimmer als gar kein Papierbuch.
+    if papier:
+        if new_placed:
+            if str(PAPIER_FILE) in _LOAD_FAILED:
+                print(f"\n  🛑 {PAPIER_FILE} war nicht lesbar — NICHT ueberschrieben.")
+            else:
+                papier_bets.extend(new_placed)
+                papier_data["bets"] = papier_bets
+                papier_data["updatedAt"] = datetime.now(timezone.utc).isoformat()
+                save_json(PAPIER_FILE, papier_data)
+                print(f"\n  📝 {len(new_placed)} Papier-Wette(n) in {PAPIER_FILE} gebucht "
+                      f"(kein Geld bewegt)")
+        else:
+            print("\n  📝 Papierbetrieb: kein Kandidat hat alle Tore passiert.")
+        print(f"\n{'='*55}")
+        print(f"  Fertig — {len(new_placed)} Papier-Wette(n), 0 echte")
+        print(f"{'='*55}\n")
+        return
+
     if new_placed and str(PLACED_FILE) in _LOAD_FAILED:
         print(f"\n  🛑 {PLACED_FILE} war nicht lesbar — NICHT ueberschrieben, sonst waere die "
               f"Positions-Historie weg. {len(new_placed)} neue Bet(s) stehen in picks_history.json.")

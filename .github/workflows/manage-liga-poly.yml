@@ -130,7 +130,15 @@ jobs:
           POLY_API_KEY:              ${{ secrets.POLY_API_KEY }}
           POLY_API_SECRET:           ${{ secrets.POLY_API_SECRET }}
           POLY_API_PASSPHRASE:       ${{ secrets.POLY_API_PASSPHRASE }}
-          AUTO_TRIGGER_ENABLED:      ${{ secrets.LIGA_AUTO_TRIGGER_ENABLED || 'true' }}   # 20.08.2026 (Lucas): Top-5 live traden. Aus: Secret LIGA_AUTO_TRIGGER_ENABLED=false setzen.
+          # 20.09.2026 (Lucas: „ich bin dafuer wir stellen das Auto trading mal ab und schreiben
+          # es nur im Cockpit mit ala paper trading"). Grund ist nicht Vorsicht, sondern eine
+          # fehlende Messung: der Fussball-Trader hat nach Monaten sechs abgerechnete Zeilen, und
+          # das 95-%-Band seiner 27 verkauften Trades reicht von -4,2 % bis +9,6 %. Mit 5,50 $ je
+          # Wette dauert die Entscheidung mit echtem Geld Jahre. Seit diesem Commit bucht ein
+          # deaktivierter Lauf ins Papierbuch (liga_paper_bets.json) statt nur zu drucken —
+          # dieselben Tore, dasselbe Spread-Gate, derselbe Ask, nur keine Order.
+          # Wieder live: Secret LIGA_AUTO_TRIGGER_ENABLED=true setzen.
+          AUTO_TRIGGER_ENABLED:      ${{ secrets.LIGA_AUTO_TRIGGER_ENABLED || 'false' }}
 
       - name: 🔬 Buch-Sonde (wuerden $5 gefuellt? REIN LESEND, platziert nichts)
         run: ${{ env.POLY_PYTHON }} poly_book_probe.py
@@ -148,7 +156,12 @@ jobs:
           POLY_API_KEY:             ${{ secrets.POLY_API_KEY }}
           POLY_API_SECRET:          ${{ secrets.POLY_API_SECRET }}
           POLY_API_PASSPHRASE:      ${{ secrets.POLY_API_PASSPHRASE }}
-          AUTO_SELL_ENABLED:        ${{ secrets.LIGA_AUTO_SELL_ENABLED || 'true' }}   # 22.08.2026 (Lucas: „will Auto-Sell, damit ich nichts selbst machen muss"). Aus: Secret LIGA_AUTO_SELL_ENABLED=false setzen.
+          # 20.09.2026: Auto-Sell bleibt ABSICHTLICH an, obwohl der Trigger aus ist. Es liegen
+          # noch echte Positionen im Buch (Schalke–Elversberg, Anpfiff 20.09. 15:30 UTC). Wer
+          # hier mit abschaltet, nimmt genau den Mechanismus weg, dessen Ausfall gestern
+          # Toulouse–Le Havre ins Spiel und in den Totalverlust laufen liess. Er verkauft nur,
+          # er kauft nichts. Aus: Secret LIGA_AUTO_SELL_ENABLED=false setzen.
+          AUTO_SELL_ENABLED:        ${{ secrets.LIGA_AUTO_SELL_ENABLED || 'true' }}
 
       - name: 🅼 Liga Maker-Orders verwalten (Default AUS)
         run: ${{ env.POLY_PYTHON }} manage_poly_maker_orders.py
@@ -172,6 +185,10 @@ jobs:
         continue-on-error: true
         env:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+
+      - name: 📝 Papierbuch abrechnen (kein Geld, nur Messung)
+        run: ${{ env.POLY_PYTHON }} paper_settle.py
+        continue-on-error: true
 
       - name: 📈 Liga Bets resolven (P&L + CLV)
         run: ${{ env.POLY_PYTHON }} resolve_wm_results.py
@@ -215,6 +232,7 @@ jobs:
             liga-data.json liga-odds-history.json \
             liga_results.json liga_pick_calibration.json \
             liga_ergebnis_nachlauf.json \
+            liga_paper_bets.json liga_paper_bilanz.json \
             liga_poly_book_probe.json liga_poly_slugs.json \
             health/liga-poly.json; do
             [ -f "$f" ] && git add "$f"

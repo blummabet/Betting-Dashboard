@@ -747,10 +747,89 @@ def update_auto_bet_status(bet_key: str, new_status: str,
             bet["sellOrderId"] = sell_result.get("orderId")
             bet["sellError"]   = sell_result.get("error")
             bet["sellReason"]  = sell_reason
+            # 20.09.2026: den realisierten P/L SOFORT mitschreiben. Ohne ihn war ein Verkauf
+            # fuer jede Bilanz ein Nicht-Ereignis — s. `verkaufs_pl`.
+            _pl = verkaufs_pl(bet)
+            if _pl is not None:
+                bet["pnl"] = _pl
+                bet["pnlSource"] = "sell"
             break
 
     data["updatedAt"] = datetime.now(timezone.utc).isoformat()
     write_json_atomic(AUTO_BETS_FILE, data)
+
+
+def verkaufs_pl(bet: dict):
+    """REIN: realisierter P/L einer verkauften Wette, oder None wenn nicht rechenbar.
+
+    Vorfall 20.09.2026 (Lucas: „wir haben nirgends jemals positiv geschlossen ... ich hab den
+    noch nie gruen gesehen als Position"). Nachgerechnet stimmte das nicht: von 27 verkauften
+    WM-Trades schlossen 14 gruen, zusammen +3,98 $ auf 148,50 $ Einsatz. Nur stand davon
+    nirgends etwas — `update_auto_bet_status` schreibt bei einem Verkauf `sellPrice`, aber
+    KEIN `pnl`. 28 der 34 WM-Wetten endeten durch Verkauf; fuer jede Bilanz existieren diese
+    Ausgaenge damit nicht, und uebrig bleiben genau die vier, die bis zur Abrechnung durchliefen
+    und alle verloren.
+
+    Fehlerklasse (dieselbe wie beim gescheiterten Auto-Sell, eine Etage weiter): ein Ausgang,
+    der nicht gebucht wird, gibt es fuer die Rechnung nicht — und was uebrig bleibt, ist keine
+    Stichprobe, sondern eine Auswahl nach Ausgangsart.
+
+    Gerechnet wird aus Shares: Einsatz / Einstieg * (Verkauf - Einstieg). `polyPrice` ist seit
+    dem 17.06. der ehrliche Eintritt (Ask), nicht der Mid.
+    """
+    ein = bet.get("polyPrice")
+    if ein in (None, 0):
+        ein = bet.get("entryAsk")
+    raus = bet.get("sellPrice")
+    einsatz = bet.get("stake")
+    try:
+        ein, raus, einsatz = float(ein), float(raus), float(einsatz)
+    except (TypeError, ValueError):
+        return None
+    if ein <= 0 or einsatz <= 0:
+        return None
+    return round((einsatz / ein) * (raus - ein), 2)
+
+
+def verkaeufe_nachbuchen(data: dict) -> int:
+    """REIN (mutiert `data`): traegt fehlende `pnl` an verkauften Wetten nach. Idempotent —
+    eine Zeile, die schon einen P/L hat, wird nicht angefasst.
+
+    Das laeuft bei jedem Lauf und nicht als einmaliger Nachtrag von Hand: was die Pipeline
+    erzeugt, gehoert der Pipeline, und ein Bestand, den ich einmal haendisch repariere, ist
+    beim naechsten neuen Verkauf wieder lueckenhaft.
+    """
+    n = 0
+    for bet in (data.get("bets") or []):
+        if not isinstance(bet, dict) or bet.get("status") != "sold":
+            continue
+        if isinstance(bet.get("pnl"), (int, float)):
+            continue
+        pl = verkaufs_pl(bet)
+        if pl is None:
+            continue
+        bet["pnl"] = pl
+        bet["pnlSource"] = "sell"
+        n += 1
+    return n
+
+
+def verkaeufe_nachbuchen_datei() -> int:
+    """Schreibt `verkaeufe_nachbuchen` ins Wettbuch."""
+    if not os.path.exists(AUTO_BETS_FILE):
+        return 0
+    try:
+        with open(AUTO_BETS_FILE, encoding="utf-8") as f:
+            data = json.load(f)
+    except Exception as e:
+        print(f"  ⚠️  Verkaufs-P/L nicht nachgebucht (Buch unlesbar): {e}")
+        return 0
+    n = verkaeufe_nachbuchen(data)
+    if n:
+        data["updatedAt"] = datetime.now(timezone.utc).isoformat()
+        write_json_atomic(AUTO_BETS_FILE, data)
+        print(f"  📒 {n} verkaufte Wette(n) mit realisiertem P/L nachgebucht")
+    return n
 
 
 def versuch_eintragen(bet: dict, grund: str, sell_reason: str, current_price,
@@ -1036,6 +1115,7 @@ def main():
     save_positions(data)
     # Echten Bid-Preis + P&L auf offene Auto-Bets persistieren → Betting-Tab zeigt ihn
     # (auch für AH/BTTS, die client-seitig kein Preis-Feld haben).
+    verkaeufe_nachbuchen_datei()
     _valued = persist_auto_bet_valuations(auto_positions)
     if _valued:
         print(f"  💾 {_valued} offene Auto-Bet(s) mit echtem Bid-P&L aktualisiert")

@@ -90,6 +90,12 @@ jobs:
       # Trading-Zyklus auf frischer Pinnacle-fair. WICHTIG: wm2026-data.json wird hier
       # NICHT committet (das macht fetch-wm-data, owner) — Race vermieden; die frischen
       # Edges fliessen über fetch_wm_poly_prices in wm_poly_prices.json (committet).
+      # 20.09.2026: der Trigger steht hier laengst auf 'false' — bis heute hiess das
+      # aber „wir erfahren nichts". Jetzt bucht er ins Papierbuch, und das hier rechnet ab.
+      - name: 📝 Papierbuch abrechnen (kein Geld, nur Messung)
+        run: ${{ env.POLY_PYTHON }} paper_settle.py
+        continue-on-error: true
+
       - name: 📈 Pinnacle-Odds frisch (Phase 1 Steam-Frische)
         run: ${{ env.POLY_PYTHON }} fetch_wm_odds.py
         continue-on-error: true
