@@ -430,16 +430,45 @@ class DasKursrutschBuchWirdAbgerechnet(unittest.TestCase):
         self.assertEqual(len(buch), 1)
         self.assertIn(buch[0]["status"], ("pending", "won", "lost", "void"))
 
-    def test_live_gesendete_zeilen_sind_aus_der_bilanz_genommen(self):
-        """Die drei Alarme des ersten Abends kamen alle aus laufenden Spielen — eine Population,
-        die nie gemessen wurde. Sie stehen als void mit Grund im Buch, nicht als Treffer."""
+    def test_live_gesendete_zeilen_werden_bei_jedem_lauf_aus_der_bilanz_genommen(self):
+        """Die sechs Alarme des ersten Abends kamen ALLE aus laufenden Spielen (22., 63., 44.,
+        40., 38., 45. Minute) — eine Population, die nie gemessen wurde.
+
+        🔴 Und das ist eine REGEL, keine Handkorrektur: ich hatte die Zeilen einmal von Hand auf
+        void gesetzt, und der naechste Pipeline-Lauf hat die Datei neu geschrieben — die
+        Markierung war weg und drei neue Live-Zeilen standen daneben. Die Datei gehoert der
+        Pipeline; was gelten soll, muss im Code stehen."""
+        e = lambda t: {"k": "rutsch:1:X", "matchId": "1", "status": "pending",
+                       "live": {"time": t, "score": [None, None]}}
+        buch = [e(44), e(None), e(3)]
+        self.assertEqual(E.void_live_rutsch(buch), 2)
+        self.assertEqual([x["status"] for x in buch], ["void", "pending", "void"])
+        self.assertTrue(all(x.get("voidGrund") for x in buch if x["status"] == "void"),
+                        "void ohne Grund ist eine Loeschung")
+        self.assertEqual(E.void_live_rutsch(buch), 0, "nicht idempotent")
+
+    def test_der_lauf_wendet_die_regel_auch_an(self):
+        from pathlib import Path
+        q = (Path(__file__).parent.parent / "betfair_public_eval.py").read_text(encoding="utf-8")
+        self.assertIn("void_live_rutsch(rutsch)", q)
+
+    def test_die_regel_raeumt_auch_das_echte_buch(self):
+        """Gegen die echten Zeilen — aber ueber die REGEL, nicht ueber den Dateizustand.
+
+        19.09.2026: die erste Fassung las den Status direkt aus der Datei und fiel, sobald die
+        Pipeline die Live-Zeilen vor dem Rollout als `won` abgerechnet hatte. Ein Test, der
+        davon abhaengt, WANN der letzte Lauf war, misst den Lauf und nicht die Regel — dieselbe
+        Falle wie heute Abend bei `alter_tage` und der mtime."""
         import json
         from pathlib import Path
         p = Path(__file__).parent.parent / "betfair_rutsch_ledger.json"
         if not p.exists():
             self.skipTest("noch kein Rutsch-Buch")
-        for r in json.loads(p.read_text(encoding="utf-8")):
-            if (r.get("live") or {}).get("time") is not None:
-                self.assertEqual(r.get("status"), "void",
-                                 "live gesendete Zeile zaehlt noch in die Bilanz")
-                self.assertTrue(r.get("voidGrund"), "void ohne Grund ist eine Loeschung")
+        buch = json.loads(p.read_text(encoding="utf-8"))
+        live = [r for r in buch if (r.get("live") or {}).get("time") is not None]
+        if not live:
+            self.skipTest("keine Live-Zeilen im Buch")
+        E.void_live_rutsch(buch)
+        for r in live:
+            self.assertEqual(r.get("status"), "void",
+                             "die Regel laesst eine live gesendete Zeile in der Bilanz")
