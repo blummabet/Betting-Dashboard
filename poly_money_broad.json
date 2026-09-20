@@ -1,15 +1,15 @@
 {
- "n": 532,
+ "n": 533,
  "minOdds": 1.35,
- "moneyHitRate": 0.378,
+ "moneyHitRate": 0.377,
  "priceHitRate": 0.417,
- "brierMoney": 0.8861,
- "brierPrice": 0.6853,
+ "brierMoney": 0.8886,
+ "brierPrice": 0.6867,
  "disagree": {
-  "n": 152,
+  "n": 149,
   "moneyWon": 21,
   "priceWon": 42,
-  "neither": 89
+  "neither": 86
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -34,8 +34,8 @@
    "league": "LA-LIGA",
    "n": 67,
    "moneyHitRate": 0.388,
-   "brierMoney": 0.8831,
-   "brierPrice": 0.7494,
+   "brierMoney": 0.8802,
+   "brierPrice": 0.748,
    "verdict": "preis_besser"
   },
   {
@@ -47,19 +47,19 @@
    "verdict": "preis_besser"
   },
   {
-   "league": "EFL-CHAMPIONSHIP",
-   "n": 35,
-   "moneyHitRate": 0.543,
-   "brierMoney": 0.7818,
-   "brierPrice": 0.6037,
-   "verdict": "preis_besser"
-  },
-  {
    "league": "BUNDESLIGA",
    "n": 42,
    "moneyHitRate": 0.31,
    "brierMoney": 0.9151,
    "brierPrice": 0.733,
+   "verdict": "preis_besser"
+  },
+  {
+   "league": "EFL-CHAMPIONSHIP",
+   "n": 36,
+   "moneyHitRate": 0.528,
+   "brierMoney": 0.8134,
+   "brierPrice": 0.6223,
    "verdict": "preis_besser"
   },
   {
@@ -80,10 +80,10 @@
   }
  ],
  "guete": {
-  "belastbar": 532,
-  "preis_echo": 205,
+  "belastbar": 533,
+  "preis_echo": 204,
   "abgeschnitten": 68,
-  "unbekannt": 235,
+  "unbekannt": 228,
   "leer": 0
  },
  "rows": [
@@ -218,6 +218,18 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 1200778
+  },
+  {
+   "key": "lal-mad-rea-2026-09-20",
+   "league": "LA-LIGA",
+   "winner": "Club Atlético de Madrid",
+   "moneyFav": "Real Madrid CF",
+   "priceFav": "Real Madrid CF",
+   "moneyShare": 0.857,
+   "priceProb": 0.473,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 1139361
   },
   {
    "key": "epl-new-hul-2026-09-19",
@@ -356,7 +368,7 @@
    "league": "EPL",
    "winner": "Draw (Nottingham Forest FC vs. Tottenham Hotspur FC)",
    "moneyFav": "Tottenham Hotspur FC",
-   "priceFav": "Nottingham Forest FC",
+   "priceFav": "Tottenham Hotspur FC",
    "moneyShare": 0.584,
    "priceProb": 0.357,
    "moneyOK": false,
@@ -554,21 +566,9 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 372754
-  },
-  {
-   "key": "epl-bre-sun-2026-09-05",
-   "league": "EPL",
-   "winner": "Draw (Brentford FC vs. Sunderland AFC)",
-   "moneyFav": "Brentford FC",
-   "priceFav": "Brentford FC",
-   "moneyShare": 0.967,
-   "priceProb": 0.568,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 367524
   }
  ],
- "generatedAt": "2026-09-20T16:32:39.949262+00:00",
+ "generatedAt": "2026-09-20T17:02:34.870966+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -581,7 +581,7 @@
   "soccer": 800,
   "tennis": 800,
   "ucl": 417,
-  "la-liga": 470,
+  "la-liga": 461,
   "bundesliga": 428,
   "serie-a": 51,
   "ligue-1": 436,
@@ -591,7 +591,7 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 624,
+  "esports": 622,
   "cs2": 421,
   "lol": 427,
   "dota": 9,
@@ -613,7 +613,7 @@
   "chinese-super-league": 406,
   "czechia-fortuna-liga": 9,
   "denmark-superliga": 433,
-  "efl-championship": 415,
+  "efl-championship": 408,
   "english-premier-league": 2,
   "europa-conference-league": 411,
   "europa-league": 187,
@@ -627,12 +627,12 @@
   "naitons-league": 1,
   "national-league": 654,
   "nations-league": 25,
-  "norway-eliteserien": 442,
-  "poland-ekstraklasa": 421,
+  "norway-eliteserien": 437,
+  "poland-ekstraklasa": 416,
   "premier-league": 418,
   "saudi-professional-league": 410,
   "scotland-league-cup": 193,
-  "scottish-premiership": 406,
+  "scottish-premiership": 405,
   "serbian-superliga": 426,
   "serie-b": 429,
   "slovenia-prvaliga": 280,
@@ -643,76 +643,71 @@
   "uefa-europa-league": 18,
   "uefa-nations-league": 435,
   "uefa-womens-champions-league": 2,
-  "ukraine-premier-liha": 420,
+  "ukraine-premier-liha": 415,
   "womens-champions-league": 526
  },
  "sweepStats": {
   "sweepOpen": 500,
   "sweepClosed": 500,
-  "sweepAdded": 408
+  "sweepAdded": 409
  },
  "vorStats": {
-  "kandidaten": 19,
+  "kandidaten": 18,
   "budgetLeer": 0,
-  "ohneGeldSplit": 0,
+  "ohneGeldSplit": 1,
   "nachgelegt": 0,
-  "mitAnteilen": 19,
-  "calls": 19
+  "mitAnteilen": 17,
+  "calls": 18
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1883,
-   "usd": 60516303,
+   "n": 1665,
+   "usd": 59675936,
    "beispiel": "fifwc-jor-alg-2026-06-22"
   },
   "world": {
-   "n": 94,
-   "usd": 10617147,
+   "n": 60,
+   "usd": 10377979,
    "beispiel": "world-cup-winner"
   },
   "nba": {
-   "n": 418,
-   "usd": 7748753,
+   "n": 422,
+   "usd": 7674974,
    "beispiel": "nba-por-was-2026-01-27"
   },
+  "balance": {
+   "n": 5,
+   "usd": 6027994,
+   "beispiel": "balance-of-power-2026-midterms"
+  },
   "ecs": {
-   "n": 11,
-   "usd": 1902344,
-   "beispiel": "ecs-ars-mci-2026-08-16"
+   "n": 14,
+   "usd": 1916948,
+   "beispiel": "ecs-ars-mci-2026-08-16-more-markets"
   },
   "super": {
-   "n": 32,
-   "usd": 569075,
+   "n": 29,
+   "usd": 551800,
    "beispiel": "super-bowl-champion-2026-731"
   },
   "usc": {
-   "n": 4,
-   "usd": 335318,
+   "n": 5,
+   "usd": 337931,
    "beispiel": "usc-psg-av-2026-08-12"
   },
   "fif": {
-   "n": 71,
-   "usd": 289427,
-   "beispiel": "fif-svk-mon-2026-06-05-more-markets"
-  },
-  "uefa": {
-   "n": 15,
-   "usd": 257718,
-   "beispiel": "uefa-champions-league-winner"
+   "n": 72,
+   "usd": 295627,
+   "beispiel": "fif-rus-tri-2026-06-09-more-markets"
   },
   "will": {
    "n": 19,
-   "usd": 252569,
+   "usd": 259883,
    "beispiel": "will-trump-meet-with-zelenskyy-by"
-  },
-  "cbb": {
-   "n": 7,
-   "usd": 241403,
-   "beispiel": "cbb-uconn-ill-2026-04-04"
   },
   "brazil": {
    "n": 16,
-   "usd": 237437,
+   "usd": 237457,
    "beispiel": "brazil-presidential-election"
   },
   "uef": {
@@ -720,15 +715,20 @@
    "usd": 230785,
    "beispiel": "uef-kvx-tur-2026-03-31"
   },
+  "uefa": {
+   "n": 8,
+   "usd": 220844,
+   "beispiel": "uefa-champions-league-winner"
+  },
   "fed": {
-   "n": 12,
-   "usd": 216055,
+   "n": 11,
+   "usd": 214773,
    "beispiel": "fed-decision-in-september-762"
   },
-  "2026": {
-   "n": 24,
-   "usd": 144860,
-   "beispiel": "2026-nba-champion"
+  "republican": {
+   "n": 9,
+   "usd": 171920,
+   "beispiel": "republican-presidential-nominee-2028"
   },
   "presidential": {
    "n": 12,
@@ -736,29 +736,29 @@
    "beispiel": "presidential-election-winner-2028"
   },
   "who": {
-   "n": 12,
-   "usd": 126088,
+   "n": 11,
+   "usd": 124981,
    "beispiel": "who-will-biden-pardon"
   },
-  "republican": {
-   "n": 7,
-   "usd": 121920,
-   "beispiel": "republican-presidential-nominee-2028"
-  },
   "clf": {
-   "n": 20,
-   "usd": 119253,
-   "beispiel": "clf-lfc-wre-2026-07-29"
+   "n": 26,
+   "usd": 124587,
+   "beispiel": "clf-mun-lee-2026-08-12"
   },
   "nbasl": {
    "n": 3,
    "usd": 113076,
    "beispiel": "nbasl-cha-sac-2026-07-17"
   },
-  "democratic": {
-   "n": 17,
-   "usd": 112806,
-   "beispiel": "democratic-presidential-nominee-2028"
+  "next": {
+   "n": 8,
+   "usd": 105560,
+   "beispiel": "next-ministerprasident-of-sachsen-anhalt-20260806155819619"
+  },
+  "us": {
+   "n": 6,
+   "usd": 96550,
+   "beispiel": "us-x-iran-permanent-peace-deal-by"
   }
  }
 }
