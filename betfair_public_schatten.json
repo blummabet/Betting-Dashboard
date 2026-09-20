@@ -163,7 +163,7 @@ null
 2,
 2
 ],
-"settledAt": "2026-09-20T16:43:47.045962+00:00"
+"settledAt": "2026-09-20T16:59:09.938659+00:00"
 },
 {
 "k": "fresh:36045433:Match Odds",
@@ -2580,7 +2580,7 @@ null
 "leadOdd": 2.14,
 "value": 3453.5099999999998,
 "sentAt": "2026-09-20T13:58:18.851013+00:00",
-"status": "pending",
+"status": "won",
 "htScore": [
 1,
 0
@@ -2601,7 +2601,14 @@ null
 null,
 null
 ]
-}
+},
+"settledAt": "2026-09-20T16:59:09.938659+00:00",
+"ftScore": [
+1,
+0
+],
+"profit": 1.1400000000000001,
+"resChk": true
 },
 {
 "k": "fresh:36067672:Match Odds",
@@ -2737,7 +2744,7 @@ null
 "leadOdd": 2.38,
 "value": 64652.88,
 "sentAt": "2026-09-20T14:58:47.523985+00:00",
-"status": "pending",
+"status": "lost",
 "htScore": [
 1,
 1
@@ -2758,7 +2765,17 @@ null
 1,
 1
 ]
-}
+},
+"clvBf": 1.46,
+"clvPinn": 2.63,
+"settledAt": "2026-09-20T16:59:09.928666+00:00",
+"ftScore": [
+1,
+1
+],
+"profit": -1.0,
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36071781:Match Odds",
@@ -2772,7 +2789,7 @@ null
 "leadOdd": 3.25,
 "value": 74368.75,
 "sentAt": "2026-09-20T14:58:47.524006+00:00",
-"status": "pending",
+"status": "won",
 "htScore": [
 0,
 0
@@ -2793,7 +2810,17 @@ null
 0,
 0
 ]
-}
+},
+"clvBf": 33.75,
+"clvPinn": null,
+"settledAt": "2026-09-20T16:59:09.928666+00:00",
+"ftScore": [
+1,
+1
+],
+"profit": 2.25,
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36036319:Match Odds",
@@ -2994,7 +3021,10 @@ null
 "value": 351180.82,
 "sentAt": "2026-09-20T15:43:32.768208+00:00",
 "status": "pending",
-"htScore": null,
+"htScore": [
+1,
+0
+],
 "leadShare": 0.8864255172022208,
 "leadDir": "flat",
 "onLeader": null,
@@ -3100,7 +3130,10 @@ null
 "value": 260570.74,
 "sentAt": "2026-09-20T16:28:41.223788+00:00",
 "status": "pending",
-"htScore": null,
+"htScore": [
+1,
+0
+],
 "leadShare": 0.6029084079048938,
 "leadDir": "out",
 "onLeader": false,
@@ -3132,7 +3165,10 @@ null
 "value": 74833.99,
 "sentAt": "2026-09-20T16:28:41.223807+00:00",
 "status": "pending",
-"htScore": null,
+"htScore": [
+0,
+0
+],
 "leadShare": 0.580563457861862,
 "leadDir": "in",
 "onLeader": false,
@@ -3212,6 +3248,38 @@ null
 "score": [
 0,
 0
+]
+}
+},
+{
+"k": "fresh:36039976:Match Odds",
+"matchId": "36039976",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "French Ligue 1",
+"home": "Nice",
+"away": "Lille",
+"leadName": "Nice",
+"leadOdd": 1.33,
+"value": 498875.98,
+"sentAt": "2026-09-20T16:59:09.045307+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.6634550935885909,
+"leadDir": "out",
+"onLeader": true,
+"tier": "top",
+"magnitude": 118969.3,
+"schwelle": 100000.0,
+"anteilSchwelle": 1.19,
+"raus": "leader",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 83,
+"score": [
+2,
+1
 ]
 }
 }
