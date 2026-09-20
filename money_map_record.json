@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-20T17:13:26.438564+00:00",
+"generatedAt": "2026-09-20T17:28:36.335697+00:00",
 "byVerdict": {
 "konsens": {
 "n": 1384,
-"wins": 1169,
-"hitRate": 0.8447,
+"wins": 1168,
+"hitRate": 0.8439,
 "polyN": 1314,
-"polyWins": 1023,
-"polyHitRate": 0.7785,
+"polyWins": 1022,
+"polyHitRate": 0.7778,
 "pinnN": 208,
 "pinnHitRate": 0.774,
-"nRoi": 716,
-"roi": 0.4213,
-"roiLb": 0.3735,
-"nClv": 716,
-"clv": 20.37,
-"clvLb": 18.8645
+"nRoi": 717,
+"roi": 0.4193,
+"roiLb": 0.3715,
+"nClv": 717,
+"clv": 20.42,
+"clvLb": 18.9142
 },
 "uneinig": {
-"n": 557,
+"n": 558,
 "wins": 168,
-"hitRate": 0.3016,
-"polyN": 515,
-"polyWins": 139,
-"polyHitRate": 0.2699,
+"hitRate": 0.3011,
+"polyN": 516,
+"polyWins": 140,
+"polyHitRate": 0.2713,
 "pinnN": 345,
 "pinnHitRate": 0.6203,
-"nRoi": 325,
-"roi": -0.5124,
-"roiLb": -0.5898,
-"nClv": 325,
-"clv": -20.61,
-"clvLb": -23.6024
+"nRoi": 326,
+"roi": -0.5139,
+"roiLb": -0.5911,
+"nClv": 326,
+"clv": -20.7,
+"clvLb": -23.6836
 },
 "teil": {
 "n": 33,
@@ -62,9 +62,9 @@
 "hitRate": 0.642
 },
 "Spanish La Liga": {
-"n": 65,
+"n": 66,
 "wins": 46,
-"hitRate": 0.7077
+"hitRate": 0.697
 },
 "Brazilian Serie A": {
 "n": 51,
@@ -91,6 +91,11 @@
 "wins": 33,
 "hitRate": 0.6875
 },
+"Spanish Segunda Division": {
+"n": 46,
+"wins": 34,
+"hitRate": 0.7391
+},
 "UEFA Europa Conference Qualifiers": {
 "n": 46,
 "wins": 27,
@@ -100,11 +105,6 @@
 "n": 45,
 "wins": 30,
 "hitRate": 0.6667
-},
-"Spanish Segunda Division": {
-"n": 45,
-"wins": 34,
-"hitRate": 0.7556
 },
 "Dutch Eredivisie": {
 "n": 44,
@@ -316,15 +316,15 @@
 "wins": 10,
 "hitRate": 0.7143
 },
-"Elite Friendlies": {
-"n": 13,
-"wins": 9,
-"hitRate": 0.6923
-},
 "Uzbekistan Super League": {
 "n": 13,
 "wins": 10,
 "hitRate": 0.7692
+},
+"Elite Friendlies": {
+"n": 12,
+"wins": 8,
+"hitRate": 0.6667
 },
 "UEFA Champions League Qualifiers": {
 "n": 11,
@@ -649,15 +649,15 @@
 },
 "byStrength": {
 "strong": {
-"n": 1191,
+"n": 1193,
 "wins": 954,
-"hitRate": 0.801,
-"nRoi": 667,
-"roi": 0.2907,
-"roiLb": 0.2391,
-"nClv": 667,
-"clv": 14.08,
-"clvLb": 12.0218
+"hitRate": 0.7997,
+"nRoi": 669,
+"roi": 0.2868,
+"roiLb": 0.2352,
+"nClv": 669,
+"clv": 14.05,
+"clvLb": 11.9882
 },
 "weak": {
 "n": 755,
@@ -672,14 +672,52 @@
 }
 },
 "divergence": {
-"n": 557,
+"n": 558,
 "betfairWins": 168,
-"betfairRate": 0.3016,
-"polyN": 515,
-"polyWins": 139,
-"polyRate": 0.2699
+"betfairRate": 0.3011,
+"polyN": 516,
+"polyWins": 140,
+"polyRate": 0.2713
 },
 "recent": [
+{
+"matchId": "36071848",
+"home": "Atletico Madrid",
+"away": "Real Madrid",
+"league": "Spanish La Liga",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Real Madrid",
+"polySide": "home",
+"winner": "home",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-09-20T14:15:00Z",
+"settledAt": "2026-09-20T17:28:36.130304+00:00"
+},
+{
+"matchId": "36068695",
+"home": "AD Ceuta FC",
+"away": "Valladolid",
+"league": "Spanish Segunda Division",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Valladolid",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-09-20T14:15:00Z",
+"settledAt": "2026-09-20T17:28:36.130304+00:00"
+},
 {
 "matchId": "36039976",
 "home": "Nice",
@@ -1401,56 +1439,18 @@
 ],
 "kickoff": "2026-09-20T11:00:00Z",
 "settledAt": "2026-09-20T12:58:11.680917+00:00"
-},
-{
-"matchId": "36067431",
-"home": "FC Machida",
-"away": "Kashiwa",
-"league": "Japanese J League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Kashiwa",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-4
-],
-"kickoff": "2026-09-20T08:00:00Z",
-"settledAt": "2026-09-20T11:12:58.386218+00:00"
-},
-{
-"matchId": "36067315",
-"home": "Gangwon",
-"away": "Jeju Utd",
-"league": "South Korean K1 League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Jeju Utd",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-09-20T07:30:00Z",
-"settledAt": "2026-09-20T10:42:50.994023+00:00"
 }
 ],
 "global": {
-"n": 1974,
-"wins": 1343,
-"hitRate": 0.6803,
-"nRoi": 1065,
-"roi": 0.1099,
-"roiLb": 0.0638,
-"nClv": 1065,
-"clv": 6.65,
-"clvLb": 4.9503
+"n": 1975,
+"wins": 1342,
+"hitRate": 0.6795,
+"nRoi": 1067,
+"roi": 0.1078,
+"roiLb": 0.0617,
+"nClv": 1067,
+"clv": 6.64,
+"clvLb": 4.9438
 },
-"pending": 26
+"pending": 25
 }
