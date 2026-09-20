@@ -1,15 +1,15 @@
 {
- "n": 515,
+ "n": 513,
  "minOdds": 1.35,
- "moneyHitRate": 0.381,
- "priceHitRate": 0.419,
- "brierMoney": 0.891,
- "brierPrice": 0.6851,
+ "moneyHitRate": 0.378,
+ "priceHitRate": 0.413,
+ "brierMoney": 0.8916,
+ "brierPrice": 0.6858,
  "disagree": {
-  "n": 146,
+  "n": 147,
   "moneyWon": 21,
-  "priceWon": 41,
-  "neither": 84
+  "priceWon": 39,
+  "neither": 87
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -63,19 +63,19 @@
    "verdict": "preis_besser"
   },
   {
-   "league": "MLS",
-   "n": 20,
-   "moneyHitRate": 0.4,
-   "brierMoney": 0.9088,
-   "brierPrice": 0.6677,
-   "verdict": "preis_besser"
-  },
-  {
    "league": "K-LEAGUE",
    "n": 22,
    "moneyHitRate": 0.409,
    "brierMoney": 0.9143,
    "brierPrice": 0.6689,
+   "verdict": "preis_besser"
+  },
+  {
+   "league": "MLS",
+   "n": 20,
+   "moneyHitRate": 0.35,
+   "brierMoney": 0.9386,
+   "brierPrice": 0.6915,
    "verdict": "preis_besser"
   },
   {
@@ -88,7 +88,7 @@
   }
  ],
  "guete": {
-  "belastbar": 515,
+  "belastbar": 513,
   "preis_echo": 207,
   "abgeschnitten": 68,
   "unbekannt": 252,
@@ -576,15 +576,15 @@
    "totalUsd": 364386
   }
  ],
- "generatedAt": "2026-09-20T05:00:17.817174+00:00",
+ "generatedAt": "2026-09-20T05:29:13.392255+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 420,
   "nfl": 800,
   "mlb": 683,
-  "nhl": 584,
-  "mls": 645,
+  "nhl": 583,
+  "mls": 636,
   "epl": 462,
   "soccer": 800,
   "tennis": 800,
@@ -657,96 +657,106 @@
  "sweepStats": {
   "sweepOpen": 500,
   "sweepClosed": 500,
-  "sweepAdded": 411
+  "sweepAdded": 410
  },
  "vorStats": {
-  "kandidaten": 18,
-  "budgetLeer": 0,
+  "kandidaten": 23,
+  "budgetLeer": 1,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
-  "mitAnteilen": 18,
-  "calls": 18
+  "mitAnteilen": 22,
+  "calls": 22
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1090,
-   "usd": 24774628,
-   "beispiel": "fifwc-ger-kor-2026-06-14"
+   "n": 743,
+   "usd": 12640663,
+   "beispiel": "fifwc-arg-che-2026-07-11"
   },
   "nba": {
-   "n": 208,
-   "usd": 2838659,
-   "beispiel": "nba-mem-atl-2026-03-23"
-  },
-  "ecs": {
-   "n": 5,
-   "usd": 892320,
-   "beispiel": "ecs-ars-mci-2026-08-16-more-markets"
-  },
-  "world": {
-   "n": 7,
-   "usd": 503380,
-   "beispiel": "world-cup-3rd-place-finish-20260713190252671"
-  },
-  "cbb": {
-   "n": 68,
-   "usd": 328436,
-   "beispiel": "cbb-sfl-lou-2026-03-19"
-  },
-  "nbasl": {
-   "n": 4,
-   "usd": 198331,
-   "beispiel": "nbasl-chi-lal-2026-07-16"
+   "n": 52,
+   "usd": 1651749,
+   "beispiel": "nba-det-cle-2026-05-09"
   },
   "fif": {
-   "n": 31,
-   "usd": 155480,
-   "beispiel": "fif-bra-egy-2026-06-06-more-markets"
-  },
-  "will": {
-   "n": 6,
-   "usd": 38790,
-   "beispiel": "will-cmi-declare-a-millennium-prize-problem-solved-by-20260723160122979"
-  },
-  "2026": {
-   "n": 2,
-   "usd": 35278,
-   "beispiel": "2026-travelers-championship-winner"
-  },
-  "clf": {
-   "n": 6,
-   "usd": 31046,
-   "beispiel": "clf-lfc-wre-2026-07-29"
-  },
-  "next": {
-   "n": 3,
-   "usd": 31014,
-   "beispiel": "next-ministerprasident-of-sachsen-anhalt-20260806155819619"
-  },
-  "eurovision": {
-   "n": 6,
-   "usd": 22413,
-   "beispiel": "eurovision-2026-top-5"
-  },
-  "kbo": {
-   "n": 12,
-   "usd": 21133,
-   "beispiel": "kbo-kt-ssg-2026-08-22"
+   "n": 30,
+   "usd": 153417,
+   "beispiel": "fif-svk-mon-2026-06-05-more-markets"
   },
   "fed": {
-   "n": 3,
-   "usd": 16621,
+   "n": 7,
+   "usd": 110783,
    "beispiel": "fed-decision-in-december-20260729232808632"
   },
-  "cricmlc": {
+  "nbasl": {
+   "n": 2,
+   "usd": 98826,
+   "beispiel": "nbasl-uta-lac-2026-07-12"
+  },
+  "clf": {
+   "n": 15,
+   "usd": 97865,
+   "beispiel": "clf-lfc-wre-2026-07-29"
+  },
+  "cbb": {
+   "n": 1,
+   "usd": 67887,
+   "beispiel": "cbb-uconn-mich-2026-04-06"
+  },
+  "us": {
    "n": 5,
-   "usd": 15280,
-   "beispiel": "cricmlc-sea-mi-2026-07-02"
+   "usd": 53750,
+   "beispiel": "us-announces-end-of-iranian-blockade-byptptpt-20260713152715080"
+  },
+  "next": {
+   "n": 4,
+   "usd": 33269,
+   "beispiel": "next-ministerprasident-of-sachsen-anhalt-20260806155819619"
+  },
+  "btc": {
+   "n": 7,
+   "usd": 28337,
+   "beispiel": "btc-updown-5m-1784351400"
+  },
+  "starladder": {
+   "n": 1,
+   "usd": 21628,
+   "beispiel": "starladder-starseries-fall-2026-winner-1788882991655"
   },
   "npb": {
    "n": 7,
    "usd": 13683,
    "beispiel": "npb-ori-fuk-2026-09-17"
+  },
+  "ecs": {
+   "n": 1,
+   "usd": 13587,
+   "beispiel": "ecs-ars-mci-2026-08-16"
+  },
+  "kbo": {
+   "n": 8,
+   "usd": 13312,
+   "beispiel": "kbo-kt-ssg-2026-08-22"
+  },
+  "bkcba": {
+   "n": 2,
+   "usd": 13172,
+   "beispiel": "bkcba-gua-bei-2026-05-09"
+  },
+  "cricmlc": {
+   "n": 3,
+   "usd": 12870,
+   "beispiel": "cricmlc-los-sea-2026-06-28"
+  },
+  "efa": {
+   "n": 2,
+   "usd": 11570,
+   "beispiel": "efa-cfc-mnc-2026-05-16"
+  },
+  "will": {
+   "n": 3,
+   "usd": 11361,
+   "beispiel": "will-cmi-declare-a-millennium-prize-problem-solved-by-20260723160122979"
   },
   "bitcoin": {
    "n": 1,
@@ -757,16 +767,6 @@
    "n": 1,
    "usd": 10081,
    "beispiel": "rlsuper-war-hkr-2026-09-19"
-  },
-  "cricodc": {
-   "n": 2,
-   "usd": 9574,
-   "beispiel": "cricodc-lei-not-2026-08-16"
-  },
-  "crict20blast": {
-   "n": 2,
-   "usd": 7938,
-   "beispiel": "crict20blast-glo-sur-2026-07-04"
   }
  }
 }
