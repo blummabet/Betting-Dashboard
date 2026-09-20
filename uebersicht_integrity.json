@@ -75,13 +75,9 @@
     {
       "label": "Money Map: die Poly-Seite gehoert zum Spiel",
       "severity": "error",
-      "failures": [
-        "Wolves v West Brom (English Sky Bet Championship): Poly-Seite heisst „Wolverhampton Wanderers FC“ und gehoert zu keinem der beiden Teams — $104574 fremdes Geld in einer Konsens-Zeile",
-        "Fulham v Man Utd (English Premier League): Poly-Seite heisst „Manchester United FC“ und gehoert zu keinem der beiden Teams — $99593 fremdes Geld in einer Konsens-Zeile",
-        "Az Alkmaar v SC Telstar (Dutch Eredivisie): Poly-Seite heisst „AZ“ und gehoert zu keinem der beiden Teams — $62349 fremdes Geld in einer Konsens-Zeile"
-      ],
-      "nFail": 3,
-      "ok": false,
+      "failures": [],
+      "nFail": 0,
+      "ok": true,
       "hinweis": ""
     },
     {
@@ -119,12 +115,9 @@
     {
       "label": "Poly-Deckung: Money-Scan gegen Liga-Fetcher",
       "severity": "error",
-      "failures": [
-        "sea-juv-ata-2026-09-20 (Juventus FC v Atalanta BC, Anpfiff in 3.1h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
-        "sea-mil-lec-2026-09-20 (AC Milan v US Lecce, Anpfiff in 5.8h) — der Liga-Fetcher hat den Markt, der Money-Scan nie"
-      ],
-      "nFail": 2,
-      "ok": false,
+      "failures": [],
+      "nFail": 0,
+      "ok": true,
       "hinweis": ""
     },
     {
@@ -133,27 +126,29 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "193 Picks im Fenster, 19 % ohne Preis-Signal."
+      "hinweis": "222 Picks im Fenster, 20 % ohne Preis-Signal."
     },
     {
       "label": "Stumme Signale: wer hat nie gefeuert?",
       "severity": "warn",
       "failures": [
-        "polymarket_sharp: 0 Feuerungen in 288 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
+        "polymarket_sharp: 0 Feuerungen in 308 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
         "betfair_coherence: stumm, aber erklaert — 07.09.2026 gemessen: seit der Fit-Schranke (MAX_RMSE 0,02 + Leave-one-out, 06.09.) feuert es fast nie — richtigerweise. Ueber 633 Sprossen aus 150 Spielen blieben 8 echte Kanten >= 4 pp, alle in duennen Ligen (Kasachstan, Litauen, Norwegen 2, Estland), keine einzige in den Top 5. Die Betfair-Tormarkt-Leiter ist auf unserer Aufloesung arbitragefrei.",
         "game_state_openness: stumm, aber erklaert — 07.09.2026 gemessen: braucht asymmetrische Verzweiflung spaet in der Saison. Aktuell Spieltag 3-4 von 34-38, also 34 Runden offen — der Tabellendruck ist per Konstruktion nahe null. Vor dem Winter ist Stille hier der richtige Zustand."
       ],
       "nFail": 3,
       "ok": false,
-      "hinweis": "9 von 33 Signalen schweigen ueber 288 Picks — davon 6 bewusst abgeschaltet (altitude_signal, incentive_signal, pressure_index, steam_lag, travel_burden, weather_signal), 3 an und trotzdem stumm."
+      "hinweis": "9 von 33 Signalen schweigen ueber 308 Picks — davon 6 bewusst abgeschaltet (altitude_signal, incentive_signal, pressure_index, steam_lag, travel_burden, weather_signal), 3 an und trotzdem stumm."
     },
     {
       "label": "Signal-Bilanz: schadet ein Signal belegt?",
       "severity": "warn",
-      "failures": [],
-      "nFail": 0,
-      "ok": true,
-      "hinweis": "8 Signale belegt beitragend, 0 belegt schaedlich. ~30 Signale gleichzeitig geprueft — 1-2 falsche Treffer sind zu erwarten. Nur was ueber mehrere Wochen haelt, ist ein Befund."
+      "failures": [
+        "injury schadet belegt: Ausgang -0.053 schlechter als ohne (OG -0.008, n=106/90) — abwerten oder nur noch beobachten"
+      ],
+      "nFail": 1,
+      "ok": false,
+      "hinweis": "7 Signale belegt beitragend, 1 belegt schaedlich. ~30 Signale gleichzeitig geprueft — 1-2 falsche Treffer sind zu erwarten. Nur was ueber mehrere Wochen haelt, ist ein Befund."
     },
     {
       "label": "Fade-Unter: haelt die Kontrollgruppe?",
@@ -161,7 +156,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "seit Vorregistrierung n=2519 (UG -7.0 %) · Rueckblick n=2726, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=2747 (UG -7.0 %) · Rueckblick n=2726, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -175,9 +170,11 @@
       "label": "Takt: Cron gegen gemessene Laeufe",
       "severity": "warn",
       "failures": [
-        "poly-live-scan.yml: Cron sagt alle 15 Min, gemessen alle 165 Min (poly-live-scan) — die Schedule-Bilanz rechnet mit 96 Laeufen/Tag, geliefert werden eher 9. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit."
+        "capture-closing-liga.yml: Cron sagt alle 15 Min, gemessen alle 147 Min (closing-liga, im Zeitfenster gemessen) — die Schedule-Bilanz rechnet mit 52 Laeufen/Tag, geliefert werden eher 5. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit.",
+        "manage-liga-poly.yml: Cron sagt alle 30 Min, gemessen alle 91 Min (liga-poly, im Zeitfenster gemessen) — die Schedule-Bilanz rechnet mit 24 Laeufen/Tag, geliefert werden eher 8. Dieser Workflow hat ein 40-Minuten-Fenster zu treffen — bei einem gemessenen Abstand von 91 Min kann er es nicht sicher treffen. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit.",
+        "poly-live-scan.yml: Cron sagt alle 15 Min, gemessen alle 132 Min (poly-live-scan) — die Schedule-Bilanz rechnet mit 96 Laeufen/Tag, geliefert werden eher 11. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit."
       ],
-      "nFail": 1,
+      "nFail": 3,
       "ok": false,
       "hinweis": ""
     },
@@ -192,11 +189,9 @@
     {
       "label": "Positionswert ist frisch",
       "severity": "warn",
-      "failures": [
-        "liga_poly_balance.json: Positionswert $5.11 stammt aus einem Lauf vor 15 h — die Positions-API antwortet seither nicht"
-      ],
-      "nFail": 1,
-      "ok": false,
+      "failures": [],
+      "nFail": 0,
+      "ok": true,
       "hinweis": ""
     },
     {
@@ -213,7 +208,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "47 Zeilen · 34 abgerechnet · 12 offen"
+      "hinweis": "90 Zeilen · 83 abgerechnet · 6 offen"
     },
     {
       "label": "Artefakte sind lesbar",
@@ -236,18 +231,16 @@
     {
       "label": "offene Wette hat den Anpfiff ueberlebt",
       "severity": "error",
-      "failures": [
-        "liga_auto_bets_placed.json: Toulouse–Le Havre Under 2.5 Tore steht seit 18 h offen, Anpfiff war 2026-09-19T18:45 — kein einziger Verkaufsversuch im Buch"
-      ],
-      "nFail": 1,
-      "ok": false,
+      "failures": [],
+      "nFail": 0,
+      "ok": true,
       "hinweis": ""
     },
     {
       "label": "Ergebnisse kommen an",
       "severity": "error",
       "failures": [
-        "liga_ergebnis_nachlauf.json: 1 abgepfiffene Spiele ohne Ergebnis (Levante–Athletic Club seit 88 h) — der Resolver kann sie nicht abrechnen, sie fallen aus jeder Bilanz heraus"
+        "liga_ergebnis_nachlauf.json: 1 abgepfiffene Spiele ohne Ergebnis (Levante–Athletic Club seit 97 h) — der Resolver kann sie nicht abrechnen, sie fallen aus jeder Bilanz heraus"
       ],
       "nFail": 1,
       "ok": false,
@@ -256,24 +249,22 @@
     {
       "label": "Datenbau ist nicht stehengeblieben",
       "severity": "error",
-      "failures": [
-        "liga-data.json: der Datenbau hat zuletzt vor 24 h geschrieben — entweder ist der Cron ausgefallen oder ein anderer Workflow hat einen aelteren Stand darueber committet"
-      ],
-      "nFail": 1,
-      "ok": false,
+      "failures": [],
+      "nFail": 0,
+      "ok": true,
       "hinweis": ""
     },
     {
       "label": "Serien-Buch zeigt beide Buecher",
       "severity": "warn",
       "failures": [
-        "die beiden Serien-Buecher sind 8.8 h auseinander (Liga 16.2 h, MLS 24.9 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+        "die beiden Serien-Buecher sind 16.0 h auseinander (Liga 24.2 h, MLS 8.2 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
       ],
       "nFail": 1,
       "ok": false,
-      "hinweis": "Liga n=72 · MLS n=64 · Urteil beide 'Erwartung zu duenn'"
+      "hinweis": "Liga n=72 · MLS n=65 · Urteil beide 'Erwartung zu duenn'"
     }
   ],
-  "nFail": 10,
-  "generatedAt": "2026-09-20T12:54:03.167882+00:00"
+  "nFail": 6,
+  "generatedAt": "2026-09-20T20:55:03.108520+00:00"
 }
