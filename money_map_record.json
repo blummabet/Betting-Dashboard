@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-09-20T02:57:12.362898+00:00",
+"generatedAt": "2026-09-20T03:12:15.415746+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1355,
-"wins": 1147,
-"hitRate": 0.8465,
-"polyN": 1286,
-"polyWins": 1002,
-"polyHitRate": 0.7792,
+"n": 1357,
+"wins": 1148,
+"hitRate": 0.846,
+"polyN": 1288,
+"polyWins": 1003,
+"polyHitRate": 0.7787,
 "pinnN": 197,
 "pinnHitRate": 0.7817,
-"nRoi": 682,
-"roi": 0.4302,
-"roiLb": 0.3814,
-"nClv": 682,
-"clv": 20.54,
-"clvLb": 19.0197
+"nRoi": 684,
+"roi": 0.4289,
+"roiLb": 0.3801,
+"nClv": 684,
+"clv": 20.43,
+"clvLb": 18.8965
 },
 "uneinig": {
 "n": 540,
@@ -67,9 +67,9 @@
 "hitRate": 0.7031
 },
 "Brazilian Serie A": {
-"n": 49,
-"wins": 35,
-"hitRate": 0.7143
+"n": 50,
+"wins": 36,
+"hitRate": 0.72
 },
 "Argentinian Primera Division": {
 "n": 48,
@@ -176,6 +176,11 @@
 "wins": 17,
 "hitRate": 0.6538
 },
+"Ecuadorian Serie A": {
+"n": 24,
+"wins": 15,
+"hitRate": 0.625
+},
 "Belgian Pro League": {
 "n": 23,
 "wins": 18,
@@ -185,11 +190,6 @@
 "n": 23,
 "wins": 19,
 "hitRate": 0.8261
-},
-"Ecuadorian Serie A": {
-"n": 23,
-"wins": 15,
-"hitRate": 0.6522
 },
 "German Cup": {
 "n": 23,
@@ -649,26 +649,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 1162,
-"wins": 933,
-"hitRate": 0.8029,
-"nRoi": 638,
-"roi": 0.2913,
-"roiLb": 0.2386,
-"nClv": 638,
-"clv": 14.0,
-"clvLb": 11.8935
+"n": 1163,
+"wins": 934,
+"hitRate": 0.8031,
+"nRoi": 639,
+"roi": 0.2924,
+"roiLb": 0.2398,
+"nClv": 639,
+"clv": 14.05,
+"clvLb": 11.9503
 },
 "weak": {
-"n": 729,
+"n": 730,
 "wins": 365,
-"hitRate": 0.5007,
-"nRoi": 372,
-"roi": -0.1823,
-"roiLb": -0.2673,
-"nClv": 372,
-"clv": -5.1,
-"clvLb": -7.8548
+"hitRate": 0.5,
+"nRoi": 373,
+"roi": -0.1845,
+"roiLb": -0.2694,
+"nClv": 373,
+"clv": -5.31,
+"clvLb": -8.0719
 }
 },
 "divergence": {
@@ -680,6 +680,44 @@
 "polyRate": 0.2705
 },
 "recent": [
+{
+"matchId": "36045401",
+"home": "Sao Paulo",
+"away": "Internacional",
+"league": "Brazilian Serie A",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Sao Paulo",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-09-20T00:00:00Z",
+"settledAt": "2026-09-20T03:12:15.202871+00:00"
+},
+{
+"matchId": "36077418",
+"home": "Emelec",
+"away": "Libertad FC",
+"league": "Ecuadorian Serie A",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Emelec",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-09-20T00:00:00Z",
+"settledAt": "2026-09-20T03:12:15.202871+00:00"
+},
 {
 "matchId": "36045430",
 "home": "Vasco da Gama",
@@ -1401,56 +1439,18 @@
 ],
 "kickoff": "2026-09-19T16:00:00Z",
 "settledAt": "2026-09-19T19:26:34.801581+00:00"
-},
-{
-"matchId": "36071877",
-"home": "Orgryte",
-"away": "Sirius",
-"league": "Swedish Allsvenskan",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Sirius",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-09-19T15:30:00Z",
-"settledAt": "2026-09-19T19:26:34.801581+00:00"
-},
-{
-"matchId": "36069062",
-"home": "Molde",
-"away": "Aalesunds",
-"league": "Norwegian Eliteserien",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Aalesunds",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-09-19T16:00:00Z",
-"settledAt": "2026-09-19T19:26:34.801581+00:00"
 }
 ],
 "global": {
-"n": 1924,
-"wins": 1316,
-"hitRate": 0.684,
-"nRoi": 1010,
-"roi": 0.1168,
-"roiLb": 0.0697,
-"nClv": 1010,
-"clv": 6.96,
-"clvLb": 5.225
+"n": 1926,
+"wins": 1317,
+"hitRate": 0.6838,
+"nRoi": 1012,
+"roi": 0.1166,
+"roiLb": 0.0695,
+"nClv": 1012,
+"clv": 6.92,
+"clvLb": 5.1761
 },
-"pending": 32
+"pending": 31
 }
