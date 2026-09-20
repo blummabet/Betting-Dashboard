@@ -427,11 +427,32 @@ def check_consensus_anchor_coverage(ctx):
         anchorable = [g for g in games if isinstance(g, dict) and g.get("league")]
     fails = []
     if len(anchorable) >= COVER_MIN_N and covered == 0:
-        fails.append(f"0 von {len(games)} Konsens-Spielen mit Odds-Anker — the-odds-api-Key tot "
-                     "oder Namens-Match gebrochen?")
+        # 🔴 20.09.2026: hier stand „the-odds-api-Key tot ODER Namens-Match gebrochen?" — zwei
+        # Vermutungen, zwischen denen die Zahl daneben laengst entscheidet. `oddsKeysFetched`
+        # sagt, wie viele Sport-Keys der Lauf geholt hat: waren es 40, ist der Key nicht tot.
+        # Gemessen an diesem Tag: 40 Keys geholt, 12 ankerbare Spiele, 0 mit Anker.
+        #
+        # Fehlerklasse: ein Befund, der seine eigene Unterscheidung nicht trifft, obwohl die
+        # Zahl daneben steht. Ein Waechter, der zwei Verdaechtige nennt und keinen ausschliesst,
+        # verschiebt die Arbeit auf den Leser.
+        geholt = ctx.consensus.get("oddsKeysFetched")
+        if isinstance(geholt, int) and geholt > 0:
+            warum = (f"der Key lebt ({geholt} Sport-Keys geholt) — es ist das Namens-Matching "
+                     f"oder die Liga-Zuordnung")
+        elif geholt == 0:
+            warum = "0 Sport-Keys geholt — der the-odds-api-Key oder das Kontingent ist tot"
+        else:
+            warum = ("`oddsKeysFetched` fehlt im Artefakt — welche der beiden Ursachen es ist, "
+                     "laesst sich hier nicht sagen")
+        # `ankerN` zaehlt seit dem 20.09. die ANKERBAREN Spiele, nicht alle offenen. Ein alter
+        # Stand traegt noch die grosse Zahl; dann steht die Zahl aus `anchorable` daneben.
+        n = ctx.consensus.get("ankerN")
+        n_txt = f"{n}" if isinstance(n, int) else f"{len(anchorable)}"
+        fails.append(f"0 von {n_txt} ankerbaren Konsens-Spielen mit Odds-Anker — {warum}")
     return _chk("consensus_anchor_coverage", "Konsens findet Odds-Anker", "warn", fails,
-                "Anker = Pinnacle/Soft-Quote gematcht. Durchgehend 0 trotz laufender Spiele = API-Key tot "
-                "oder Namens-Matching kaputt (Zweitmeinung waere leer).")
+                "Anker = Pinnacle/Soft-Quote gematcht. Durchgehend 0 trotz laufender Spiele in "
+                "GEMAPPTEN Ligen = Namens-Matching kaputt oder Key tot — `oddsKeysFetched` "
+                "unterscheidet die beiden.")
 
 
 @betfair_check

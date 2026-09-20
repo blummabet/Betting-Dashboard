@@ -1591,18 +1591,39 @@ def main():
             continue          # ein einzelnes Spiel darf den Pool nicht kosten
     _mit_pinn = sum(1 for v in anker.values() if v.get("pinn")) + sum(1 for g in games if g.get("pinn"))
     _n_ges = len(anker) + len(games)
+    # 🔴 20.09.2026: `ankerQuote` stand auf 0,0 % und der Waechter meldete „the-odds-api-Key tot
+    # oder Namens-Match gebrochen". Nachgezaehlt: von 113 offenen Spielen liegen 101 in Ligen, die
+    # in LEAGUE_ODDS_KEY gar nicht gemappt sind — sie KOENNEN nie einen Anker bekommen (Salvadoran
+    # Primera, Jamaican Premier, Serbian First League, Italian Serie C …). Der richtige Nenner sind
+    # die 12 ankerbaren Spiele, nicht alle 113.
+    #
+    # Am 02.09. wurde dieser Nenner schon einmal repariert — damals von `games` (bereits auf
+    # 15.000 EUR gefiltert) auf ALLE offenen Spiele. Er wurde dabei zu weit aufgemacht.
+    #
+    # Fehlerklasse: ein Prozentsatz ohne seinen Nenner — heute zum zweiten Mal.
+    _ankerbar = [v for v in list(anker.values()) + list(games)
+                 if LEAGUE_ODDS_KEY.get(v.get("league"))]
+    _n_ankerbar = len(_ankerbar)
+    _mit_pinn_ankerbar = sum(1 for v in _ankerbar if v.get("pinn"))
     _dump(ANKER_FILE, {"generatedAt": now, "n": len(anker),
                        "hinweis": "Zweitmeinungen OHNE die Radar-Volumenschwelle — Quelle fuer den "
                                   "Buecher-Punktestand. `games` in betfair_consensus.json bleibt die "
                                   "Radar-Liste.",
                        "anker": anker})
-    print("anker: %d Spiele ausserhalb der Radar-Schwelle · Pinnacle auf %d von %d offenen Spielen (%.0f%%)"
-          % (len(anker), _mit_pinn, _n_ges, (_mit_pinn / _n_ges * 100) if _n_ges else 0))
+    print("anker: %d Spiele ausserhalb der Radar-Schwelle · Pinnacle auf %d von %d ANKERBAREN "
+          "Spielen (%.0f%%) · %d offene Spiele insgesamt, %d davon in nicht gemappten Ligen"
+          % (len(anker), _mit_pinn_ankerbar, _n_ankerbar,
+             (_mit_pinn_ankerbar / _n_ankerbar * 100) if _n_ankerbar else 0,
+             _n_ges, _n_ges - _n_ankerbar))
     # ⚠️ 02.09.2026: `ankerQuote` mass vorher gegen `games` — also gegen den bereits auf >=15.000 EUR
     # gefilterten Pool. „100%" hiess dann „100% von drei Spielen", waehrend keines der Spiele im
     # Punktestand einen Anker hatte. Der richtige Nenner sind ALLE offenen Spiele.
-    out["ankerQuote"] = round(_mit_pinn / _n_ges, 3) if _n_ges else None
-    out["ankerN"] = _n_ges
+    # Die Quote rechnet ab jetzt ueber die ankerbaren Spiele. `ankerNOffen` bleibt daneben
+    # stehen, damit sichtbar ist, wie klein der ankerbare Ausschnitt ist.
+    out["ankerQuote"] = round(_mit_pinn_ankerbar / _n_ankerbar, 3) if _n_ankerbar else None
+    out["ankerN"] = _n_ankerbar
+    out["ankerNOffen"] = _n_ges
+    out["ankerMit"] = _mit_pinn_ankerbar
     _dump(OUT_FILE, out)
     _dump(HIST_FILE, new_hist)
     # Money-Map (11.08.2026, Lucas): bubble-fertiger Feed + Konsens-Ledger fuers Tracking. Additiv.
