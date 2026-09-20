@@ -1,15 +1,15 @@
 {
- "n": 518,
+ "n": 519,
  "minOdds": 1.35,
  "moneyHitRate": 0.382,
- "priceHitRate": 0.417,
- "brierMoney": 0.8853,
- "brierPrice": 0.6847,
+ "priceHitRate": 0.42,
+ "brierMoney": 0.8863,
+ "brierPrice": 0.6848,
  "disagree": {
-  "n": 148,
+  "n": 147,
   "moneyWon": 21,
-  "priceWon": 39,
-  "neither": 88
+  "priceWon": 41,
+  "neither": 85
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -80,8 +80,8 @@
   }
  ],
  "guete": {
-  "belastbar": 518,
-  "preis_echo": 202,
+  "belastbar": 519,
+  "preis_echo": 204,
   "abgeschnitten": 67,
   "unbekannt": 247,
   "leer": 0
@@ -344,7 +344,7 @@
    "league": "EPL",
    "winner": "Draw (Nottingham Forest FC vs. Tottenham Hotspur FC)",
    "moneyFav": "Tottenham Hotspur FC",
-   "priceFav": "Nottingham Forest FC",
+   "priceFav": "Tottenham Hotspur FC",
    "moneyShare": 0.584,
    "priceProb": 0.357,
    "moneyOK": false,
@@ -568,20 +568,20 @@
    "totalUsd": 364386
   }
  ],
- "generatedAt": "2026-09-20T14:31:54.691507+00:00",
+ "generatedAt": "2026-09-20T15:04:38.430550+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 420,
   "nfl": 800,
-  "mlb": 714,
+  "mlb": 712,
   "nhl": 581,
   "mls": 562,
   "epl": 462,
   "soccer": 800,
   "tennis": 800,
   "ucl": 417,
-  "la-liga": 475,
+  "la-liga": 470,
   "bundesliga": 436,
   "serie-a": 51,
   "ligue-1": 447,
@@ -632,7 +632,7 @@
   "premier-league": 451,
   "saudi-professional-league": 410,
   "scotland-league-cup": 193,
-  "scottish-premiership": 412,
+  "scottish-premiership": 406,
   "serbian-superliga": 426,
   "serie-b": 429,
   "slovenia-prvaliga": 280,
@@ -643,7 +643,7 @@
   "uefa-europa-league": 18,
   "uefa-nations-league": 435,
   "uefa-womens-champions-league": 2,
-  "ukraine-premier-liha": 427,
+  "ukraine-premier-liha": 422,
   "womens-champions-league": 526
  },
  "sweepStats": {
@@ -652,8 +652,8 @@
   "sweepAdded": 412
  },
  "vorStats": {
-  "kandidaten": 27,
-  "budgetLeer": 5,
+  "kandidaten": 24,
+  "budgetLeer": 2,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
   "mitAnteilen": 22,
@@ -661,13 +661,18 @@
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1921,
-   "usd": 58807996,
+   "n": 1985,
+   "usd": 60664562,
    "beispiel": "fifwc-fra-eng-2026-07-18-more-markets"
   },
+  "world": {
+   "n": 101,
+   "usd": 11358552,
+   "beispiel": "world-cup-winner"
+  },
   "nba": {
-   "n": 633,
-   "usd": 8579925,
+   "n": 630,
+   "usd": 8659905,
    "beispiel": "nba-atl-det-2025-12-01"
   },
   "balance": {
@@ -676,89 +681,84 @@
    "beispiel": "balance-of-power-2026-midterms"
   },
   "ecs": {
-   "n": 10,
-   "usd": 1994923,
+   "n": 12,
+   "usd": 1998820,
    "beispiel": "ecs-ars-mci-2026-08-16-more-markets"
   },
-  "world": {
-   "n": 104,
-   "usd": 1959896,
-   "beispiel": "world-cup-winner"
-  },
   "us": {
-   "n": 71,
-   "usd": 1394694,
+   "n": 72,
+   "usd": 1389039,
    "beispiel": "us-open-jiri-lehecka-vs-carlos-alcaraz-2025-09-02"
+  },
+  "elon": {
+   "n": 108,
+   "usd": 885402,
+   "beispiel": "elon-musk-of-tweets-april-10-april-17"
   },
   "cbb": {
    "n": 83,
-   "usd": 799433,
+   "usd": 788730,
    "beispiel": "cbb-niowa-stjohn-2026-03-20"
   },
+  "presidential": {
+   "n": 18,
+   "usd": 772726,
+   "beispiel": "presidential-election-winner-2028"
+  },
   "will": {
-   "n": 48,
-   "usd": 683460,
+   "n": 51,
+   "usd": 679908,
    "beispiel": "will-russia-capture-pokrovsk-by"
   },
-  "presidential": {
-   "n": 16,
-   "usd": 622854,
-   "beispiel": "presidential-election-winner-2028"
+  "super": {
+   "n": 33,
+   "usd": 572412,
+   "beispiel": "super-bowl-champion-2026-731"
+  },
+  "new": {
+   "n": 19,
+   "usd": 479716,
+   "beispiel": "new-jersey-governor-election-margin-of-victory"
+  },
+  "uef": {
+   "n": 27,
+   "usd": 475471,
+   "beispiel": "uef-fra-ukr-2025-11-13"
+  },
+  "who": {
+   "n": 54,
+   "usd": 468370,
+   "beispiel": "who-will-trump-nominate-as-fed-chair"
+  },
+  "fed": {
+   "n": 35,
+   "usd": 442591,
+   "beispiel": "fed-decision-in-september-762"
+  },
+  "netherlands": {
+   "n": 15,
+   "usd": 396341,
+   "beispiel": "netherlands-parliamentary-election"
   },
   "iran": {
    "n": 28,
    "usd": 388508,
    "beispiel": "iran-agrees-to-end-enrichment-of-uranium-by-july-31"
   },
-  "who": {
-   "n": 35,
-   "usd": 362158,
-   "beispiel": "who-will-trump-nominate-as-fed-chair"
-  },
   "brazil": {
-   "n": 21,
-   "usd": 361098,
+   "n": 24,
+   "usd": 367064,
    "beispiel": "brazil-presidential-election"
   },
-  "usc": {
-   "n": 5,
-   "usd": 336617,
-   "beispiel": "usc-psg-av-2026-08-12"
-  },
-  "uef": {
-   "n": 20,
-   "usd": 331703,
-   "beispiel": "uef-fra-ukr-2025-11-13"
-  },
-  "los": {
-   "n": 8,
-   "usd": 329610,
-   "beispiel": "los-angeles-mayoral-election-117"
-  },
   "next": {
-   "n": 56,
-   "usd": 321854,
+   "n": 61,
+   "usd": 350345,
    "beispiel": "next-prime-minister-of-denmark-after-parliamentary-election"
   },
-  "fif": {
-   "n": 74,
-   "usd": 305725,
-   "beispiel": "fif-svk-mon-2026-06-05-more-markets"
-  },
-  "fed": {
-   "n": 27,
-   "usd": 289705,
-   "beispiel": "fed-decision-in-september-762"
-  },
-  "israel": {
-   "n": 14,
-   "usd": 241121,
-   "beispiel": "israel-strikes-on-yemen-by-friday"
-  },
-  "ballon": {
-   "n": 15,
-   "usd": 183852,
-   "beispiel": "ballon-dor-winner-2026"
+  "usc": {
+   "n": 7,
+   "usd": 340450,
+   "beispiel": "usc-psg-av-2026-08-12"
   }
  }
 }
