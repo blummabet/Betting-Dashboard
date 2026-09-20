@@ -215,6 +215,13 @@ jobs:
           GITHUB_TOKEN:            ${{ secrets.GITHUB_TOKEN }}
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+          # 20.09.2026: das Soll steht im Cron dieses Workflows — das Skript
+          # kann es nicht wissen. RUN_HEALTH_FENSTER_MIN ist das
+          # Pre-Match-Close-Fenster (pre_match_close_hours x 60): so faellt im
+          # Protokoll auf, wenn die gelieferte Taktung es gar nicht treffen kann.
+          RUN_HEALTH_SOLL_PRO_TAG: '25'
+          RUN_HEALTH_FENSTER_MIN:  '40'
+          RUN_HEALTH_STUNDEN:      '10-21'   # der Arbeitstakt; die Nachtluecke ist kein Ausfall
 
       - name: 🛡️ Wipe-Check (kein leerer Datensatz darf committet werden)
         run: ${{ env.POLY_PYTHON }} check_not_wiped.py

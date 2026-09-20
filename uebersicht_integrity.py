@@ -845,22 +845,50 @@ def check_takt_stimmt_mit_dem_cron(ctx):
         if not wf:
             continue
         crons = re.findall(r"^\s*-\s*cron:\s*['\"]([^'\"]+)['\"]", wf[1], re.M)
-        # Nur regelmaessige Crons: genau einer, ohne Stunden-/Tagesfenster. Bei einem Fenster-Cron
-        # („*/15 9-21") ist der Abstand ueber Nacht per Konstruktion riesig — daraus einen
-        # Ausfall zu lesen waere derselbe Fehler, den dieser Guard fangen soll.
-        if len(crons) != 1 or not re.match(r"^\S+\s+\*\s+\*\s+\*\s+\*$", crons[0]):
+        # 20.09.2026: Fenster-Crons werden nicht mehr uebersprungen, sondern IM Fenster
+        # gemessen — siehe `_cron_stunden`. Nur Tages-/Wochen-Felder bleiben draussen.
+        gewaehlt = _dichtester_cron(_messbare_crons(crons))
+        if not gewaehlt:
             continue
-        soll = _cron_minuten(crons[0])
-        ist = _health_abstand(f)
+        soll, stunden = gewaehlt
+        ist = _health_abstand(f, stunden if len(stunden) < 24 else None)
         if soll is None or ist is None:
             continue
         if ist > soll * 1.4:
-            fails.append("%s: Cron sagt alle %.0f Min, gemessen alle %.0f Min (%s) — die "
-                         "Schedule-Bilanz rechnet mit %.0f Laeufen/Tag, geliefert werden eher %.0f. "
+            fenster = _schliessfenster_min(wf[1])
+            zusatz = ""
+            if fenster and ist > fenster:
+                zusatz = (" Dieser Workflow hat ein %.0f-Minuten-Fenster zu treffen — bei einem "
+                          "gemessenen Abstand von %.0f Min kann er es nicht sicher treffen."
+                          % (fenster, ist))
+            fails.append("%s: Cron sagt alle %.0f Min, gemessen alle %.0f Min (%s%s) — die "
+                         "Schedule-Bilanz rechnet mit %.0f Laeufen/Tag, geliefert werden eher %.0f.%s "
                          "Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist "
                          "also eine Obergrenze der Haeufigkeit."
-                         % (wf[0], soll, ist, slug, 1440.0 / soll, 1440.0 / ist))
+                         % (wf[0], soll, ist, slug,
+                            ", im Zeitfenster gemessen" if len(stunden) < 24 else "",
+                            # Bei einem Fenster-Cron ist der Tagessoll nicht 1440/Abstand,
+                            # sondern nur das Fenster: sonst steht neben einer im Fenster
+                            # gemessenen Zahl ein Soll fuer den ganzen Tag.
+                            len(stunden) * 60.0 / soll, len(stunden) * 60.0 / ist, zusatz))
     return _c("Takt: Cron gegen gemessene Laeufe", "warn", fails)
+
+
+def _schliessfenster_min(workflow_text: str):
+    """Das im Workflow deklarierte Zeitfenster in Minuten (RUN_HEALTH_FENSTER_MIN). REIN.
+
+    Es steht dort, weil nur der Workflow es kennt — und es steht ueberhaupt dort, damit „alle
+    30 Min, damit garantiert ein Lauf ins Fenster faellt" eine pruefbare Zusage wird statt
+    eines Kommentars.
+    """
+    import re
+    m = re.search(r"RUN_HEALTH_FENSTER_MIN:\s*['\"]?([0-9.]+)", workflow_text or "")
+    if not m:
+        return None
+    try:
+        return float(m.group(1))
+    except ValueError:
+        return None
 
 
 def _cron_minuten(cron: str):
@@ -886,7 +914,83 @@ def _cron_minuten(cron: str):
     return None
 
 
-def _health_abstand(pfad):
+def _cron_stunden(cron: str):
+    """Die aktiven Stunden eines Crons als Menge. REIN. None = nicht deutbar.
+
+    🔴 20.09.2026. Der Guard darueber sprang bisher nur bei Crons an, die rund um die Uhr
+    laufen (`^\S+ \* \* \* \*`) — mit gutem Grund: bei „0,30 10-21" ist die Luecke ueber
+    Nacht 13 Stunden, und daraus einen Ausfall zu lesen waere genau der Fehler, den er fangen
+    soll. Die Folge war aber, dass er die Workflows mit der SCHAERFSTEN Zeitanforderung gar
+    nicht ansah: `manage-liga-poly` (0,30 10-21) hat ein 40-Minuten-Schliessfenster und liefert
+    5,0 statt 25 Laeufe am Tag — bei 0 von 7 Positionen lag je ein Lauf im Fenster.
+
+    Fehlerklasse: ein Waechter, der die Faelle ueberspringt, fuer die er gebaut wurde.
+
+    Der Ausweg ist nicht, die Nachtluecke mitzuzaehlen, sondern nur INNERHALB des Fensters zu
+    messen.
+    """
+    import re
+    teil = str(cron).split()
+    if len(teil) != 5:
+        return None
+    h = teil[1]
+    if h == "*":
+        return set(range(24))
+    if h.startswith("*/"):
+        try:
+            n = int(h[2:])
+        except ValueError:
+            return None
+        return set(range(0, 24, n)) if n else None
+    raus = set()
+    for stueck in h.split(","):
+        m = re.match(r"^(\d{1,2})-(\d{1,2})$", stueck)
+        if m:
+            a, b = int(m.group(1)), int(m.group(2))
+            if not (0 <= a <= 23 and 0 <= b <= 23):
+                return None
+            raus |= set(range(a, b + 1)) if a <= b else (set(range(a, 24)) | set(range(0, b + 1)))
+        elif re.match(r"^\d{1,2}$", stueck):
+            if int(stueck) > 23:
+                return None
+            raus.add(int(stueck))
+        else:
+            return None
+    return raus or None
+
+
+def _messbare_crons(crons):
+    """Welche Crons dieser Guard ueberhaupt messen kann. REIN.
+
+    Minute und Stunde duerfen alles Deutbare sein — Tag, Monat und Wochentag muessen `*` sein.
+    Ein Wochen- oder Monats-Cron laesst sich aus 20 Laeufen nicht beurteilen.
+
+    Bis zum 20.09.2026 verlangte der Aufrufer hier zusaetzlich ein `*` in der STUNDE und genau
+    EINEN Cron. Damit fielen alle Workflows mit Arbeitsfenster heraus — und das sind die, deren
+    Taktung ueberhaupt etwas zusagt.
+    """
+    import re
+    return [c for c in (crons or []) if re.match(r"^\S+\s+\S+\s+\*\s+\*\s+\*$", str(c))]
+
+
+def _dichtester_cron(crons):
+    """Von mehreren Crons der haeufigste — der, dessen Takt die Zusagen traegt. REIN.
+
+    Ein Housekeeping-Cron („0 8 * * *") neben dem Arbeits-Cron darf nicht dazu fuehren, dass
+    gar nicht geprueft wird; er wird hier schlicht nicht zum Massstab.
+    """
+    bester = None
+    for c in crons or []:
+        ab = _cron_minuten(c)
+        st = _cron_stunden(c)
+        if ab is None or not st:
+            continue
+        if bester is None or ab < bester[0]:
+            bester = (ab, st)
+    return bester
+
+
+def _health_abstand(pfad, stunden=None):
     """Das 25-%-Quantil der Laufabstaende aus einer Gesundheitsdatei. REIN(-genug: liest eine
     Datei). Das Quantil statt des Mittels, damit einzelne Ausfaelle den Wert nicht tragen."""
     try:
@@ -900,7 +1004,17 @@ def _health_abstand(pfad):
         punkte = [datetime.fromisoformat(x.replace("Z", "+00:00")) for x in ts]
     except ValueError:
         return None
-    ab = sorted((punkte[i + 1] - punkte[i]).total_seconds() / 60.0 for i in range(len(punkte) - 1))
+    roh = []
+    for i in range(len(punkte) - 1):
+        a, b = punkte[i], punkte[i + 1]
+        if stunden is not None:
+            # Beide Enden im Fenster UND am selben Tag — sonst misst man die Nacht.
+            if a.hour not in stunden or b.hour not in stunden or a.date() != b.date():
+                continue
+        roh.append((b - a).total_seconds() / 60.0)
+    if len(roh) < 4:
+        return None
+    ab = sorted(roh)
     return ab[len(ab) // 4]
 
 

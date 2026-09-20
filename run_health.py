@@ -89,6 +89,105 @@ def hole_steps(repo, run_id, token, fetch=None):
     return raus
 
 
+def hole_lauf(repo, run_id, token, fetch=None):
+    """Der Lauf selbst: wann wurde er ERZEUGT, wann hat er BEGONNEN.
+
+    🔴 20.09.2026. Im Workflow-Kommentar von `manage-liga-poly` steht seit jeher: „Alle 30 Min,
+    damit garantiert ein Lauf ins 40-Min-Pre-Match-Close-Fenster jedes Spiels faellt." Gemessen
+    an diesem Tag aus diesem Protokoll: 20 Laeufe in 96,7 h, also 5,0 statt 25 am Tag, kleinste
+    Luecke 64 Minuten — groesser als das Fenster. Bei 0 von 7 Liga-Positionen lag je ein Lauf im
+    Schliessfenster. Der Pre-Match-Close hat nie funktioniert.
+
+    Warum er nicht laeuft, liess sich NICHT sagen: das Protokoll hielt nur fest, DASS ein Lauf
+    war, nie wie lange er auf einen Runner gewartet hat. Genau diese eine Zahl trennt die beiden
+    Erklaerungen — „die Macs sind dicht" (lange Wartezeit) von „der Zeitplan feuert nicht"
+    (kurze Wartezeit, trotzdem wenige Laeufe).
+
+    Fehlerklasse: eine Taktung, die als Kommentar existiert und nie nachgezaehlt wurde.
+    """
+    _get = fetch or (lambda u: _get_json(u, token))
+    d = _get(f"{API}/repos/{repo}/actions/runs/{run_id}") or {}
+    return {"createdAt": d.get("created_at"),
+            "startedAt": d.get("run_started_at"),
+            "event": d.get("event"),
+            "attempt": d.get("run_attempt")}
+
+
+def _sekunden_zwischen(a, b):
+    """Sekunden zwischen zwei ISO-Zeitstempeln. None, wenn einer fehlt oder unlesbar ist —
+    `None` heisst „nicht gemessen" und darf nie als 0 durchgehen."""
+    if not a or not b:
+        return None
+    try:
+        ta = datetime.fromisoformat(str(a).replace("Z", "+00:00"))
+        tb = datetime.fromisoformat(str(b).replace("Z", "+00:00"))
+    except (ValueError, TypeError):
+        return None
+    if ta.tzinfo is None:
+        ta = ta.replace(tzinfo=timezone.utc)
+    if tb.tzinfo is None:
+        tb = tb.replace(tzinfo=timezone.utc)
+    return round((tb - ta).total_seconds(), 1)
+
+
+def kadenz(laeufe, soll_pro_tag=None, fenster_min=None, stunden=None):
+    """Was die Taktung WIRKLICH liefert — aus dem Protokoll, nicht aus dem Cron-Kommentar.
+
+    Gibt Laufzahl, Spanne, Laeufe/Tag, die Luecken und — wenn ein `fenster_min` genannt ist —
+    das Urteil, ob ein Zeitfenster dieser Groesse ueberhaupt getroffen werden KANN. Es kann nur
+    dann garantiert getroffen werden, wenn die groesste Luecke kleiner ist als das Fenster; ist
+    schon die KLEINSTE Luecke groesser, ist das Fenster reine Glueckssache.
+    """
+    ts = []
+    for r in (laeufe or []):
+        t = r.get("ts")
+        if not t:
+            continue
+        try:
+            d = datetime.fromisoformat(str(t).replace("Z", "+00:00"))
+        except (ValueError, TypeError):
+            continue
+        ts.append(d if d.tzinfo else d.replace(tzinfo=timezone.utc))
+    ts.sort()
+    raus = {"nLaeufe": len(ts), "spanneH": None, "proTag": None,
+            "lueckeMinMin": None, "lueckeMedianMin": None, "lueckeMaxMin": None,
+            "sollProTag": soll_pro_tag, "liefergradPct": None,
+            "fensterMin": fenster_min, "fensterUrteil": None}
+    if len(ts) < 2:
+        return raus
+    spanne_h = (ts[-1] - ts[0]).total_seconds() / 3600
+    raus["spanneH"] = round(spanne_h, 1)
+    if spanne_h > 0:
+        # n Laeufe spannen n-1 Intervalle. `len(ts)/spanne` zaehlt einen Lauf zu viel und
+        # meldet 50,5 statt 48 — eine Taktung, die sich selbst um 5 % zu gut rechnet.
+        raus["proTag"] = round((len(ts) - 1) / spanne_h * 24, 1)
+        if soll_pro_tag:
+            raus["liefergradPct"] = round(raus["proTag"] / soll_pro_tag * 100)
+    # Nur Luecken INNERHALB des aktiven Fensters: bei „0,30 10-21" ist die Nachtluecke 13
+    # Stunden und per Konstruktion groesser als jedes Schliessfenster — ohne diesen Filter
+    # koennte ein Fenster-Workflow nie „sicher" heissen, egal wie gut er laeuft.
+    roh = []
+    for a, b in zip(ts, ts[1:]):
+        if stunden is not None and (a.hour not in stunden or b.hour not in stunden
+                                    or a.date() != b.date()):
+            continue
+        roh.append((b - a).total_seconds() / 60)
+    if not roh:
+        return raus
+    lue = sorted(roh)
+    raus["lueckeMinMin"] = round(lue[0], 1)
+    raus["lueckeMaxMin"] = round(lue[-1], 1)
+    raus["lueckeMedianMin"] = round(lue[len(lue) // 2], 1)
+    if fenster_min:
+        if raus["lueckeMaxMin"] <= fenster_min:
+            raus["fensterUrteil"] = "sicher"
+        elif raus["lueckeMinMin"] > fenster_min:
+            raus["fensterUrteil"] = "nie sicher"
+        else:
+            raus["fensterUrteil"] = "Glueckssache"
+    return raus
+
+
 def fehlerhafte_steps(steps):
     """Nur die kaputten — in Ausfuehrungsreihenfolge, damit der ERSTE Fehler oben steht."""
     schlecht = [s for s in steps if s[2] in SCHLECHT]
@@ -104,7 +203,7 @@ def lade(pfad):
         return {}
 
 
-def baue_eintrag(workflow, run_id, run_url, steps, api_fehler=None):
+def baue_eintrag(workflow, run_id, run_url, steps, api_fehler=None, lauf=None):
     """Ein Lauf als Zeile fuer die Historie.
 
     `apiError` ist wichtiger als es aussieht: konnten wir die Steps NICHT abfragen, heisst das
@@ -112,6 +211,7 @@ def baue_eintrag(workflow, run_id, run_url, steps, api_fehler=None):
     Information ist keine Erlaubnis.
     """
     fails = fehlerhafte_steps(steps)
+    lauf = lauf or {}
     return {
         "ts": _jetzt(),
         "workflow": workflow,
@@ -121,6 +221,13 @@ def baue_eintrag(workflow, run_id, run_url, steps, api_fehler=None):
         "apiError": api_fehler,
         "ok": (api_fehler is None and not fails),
         "failures": [{"job": j, "step": s, "conclusion": c} for j, s, c, _ in fails],
+        # 20.09.2026: die drei Zahlen, ohne die „der Workflow laeuft nur 5x statt 25x" eine
+        # Vermutung bleibt. `wartetS` ist die entscheidende: sie trennt „Runner dicht" von
+        # „Zeitplan feuert nicht". None heisst „nicht gemessen" und nie 0.
+        "createdAt": lauf.get("createdAt"),
+        "startedAt": lauf.get("startedAt"),
+        "wartetS": _sekunden_zwischen(lauf.get("createdAt"), lauf.get("startedAt")),
+        "event": lauf.get("event"),
     }
 
 
@@ -170,6 +277,48 @@ def tg_send(text):
         return False
 
 
+def _soll_pro_tag():
+    try:
+        v = float(os.environ.get("RUN_HEALTH_SOLL_PRO_TAG") or 0)
+        return v or None
+    except (TypeError, ValueError):
+        return None
+
+
+def _stunden():
+    """Aktive Stunden (UTC) aus RUN_HEALTH_STUNDEN, z.B. „10-21". Ohne Angabe: kein Filter."""
+    roh = (os.environ.get("RUN_HEALTH_STUNDEN") or "").strip()
+    if not roh:
+        return None
+    raus = set()
+    for stueck in roh.split(","):
+        if "-" in stueck:
+            try:
+                a, b = (int(x) for x in stueck.split("-", 1))
+            except ValueError:
+                return None
+            if not (0 <= a <= 23 and 0 <= b <= 23):
+                return None
+            raus |= set(range(a, b + 1)) if a <= b else (set(range(a, 24)) | set(range(0, b + 1)))
+        else:
+            try:
+                v = int(stueck)
+            except ValueError:
+                return None
+            if not 0 <= v <= 23:
+                return None
+            raus.add(v)
+    return raus or None
+
+
+def _fenster_min():
+    try:
+        v = float(os.environ.get("RUN_HEALTH_FENSTER_MIN") or 0)
+        return v or None
+    except (TypeError, ValueError):
+        return None
+
+
 def main(argv=None):
     argv = list(argv if argv is not None else sys.argv[1:])
     slug = "lauf"
@@ -189,7 +338,12 @@ def main(argv=None):
         print("  ⏭️  Kein GitHub-Actions-Kontext (GITHUB_REPOSITORY/RUN_ID fehlen) — nichts zu tun.")
         return 0
 
-    steps, api_fehler = [], None
+    steps, api_fehler, lauf = [], None, None
+    try:
+        lauf = hole_lauf(repo, run_id, token)
+    except Exception as e:                       # noqa: BLE001
+        # Der Lauf-Kopf ist Beiwerk — sein Fehlen darf die Gesundheitsmeldung nicht kippen.
+        print(f"  ⚠️  Lauf-Kopf nicht abrufbar: {str(e)[:80]}")
     try:
         steps = hole_steps(repo, run_id, token)
     except urllib.error.HTTPError as e:
@@ -198,7 +352,7 @@ def main(argv=None):
     except Exception as e:
         api_fehler = str(e)[:120]
 
-    eintrag = baue_eintrag(workflow, run_id, run_url, steps, api_fehler)
+    eintrag = baue_eintrag(workflow, run_id, run_url, steps, api_fehler, lauf)
 
     os.makedirs(HEALTH_DIR, exist_ok=True)
     pfad = os.path.join(HEALTH_DIR, f"{slug}.json")
@@ -206,7 +360,13 @@ def main(argv=None):
     letzter = (datei.get("runs") or [None])[0]
     laeufe = ([eintrag] + (datei.get("runs") or []))[:HISTORIE]
     datei = {"slug": slug, "workflow": workflow, "updatedAt": eintrag["ts"],
-             "ok": eintrag["ok"], "runs": laeufe}
+             "ok": eintrag["ok"],
+             # Die gelieferte Taktung steht im Artefakt, nicht in einem Kommentar im Workflow.
+             "kadenz": kadenz(laeufe,
+                              soll_pro_tag=_soll_pro_tag(),
+                              fenster_min=_fenster_min(),
+                              stunden=_stunden()),
+             "runs": laeufe}
     tmp = pfad + ".tmp"
     with open(tmp, "w", encoding="utf-8") as f:
         json.dump(datei, f, ensure_ascii=False, indent=2)
