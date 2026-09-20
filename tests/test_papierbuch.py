@@ -159,7 +159,20 @@ class TestTriggerUndWorkflows(unittest.TestCase):
         """Vor diesem Commit stand hier ein `return` — 'aus' hiess 'wir erfahren nichts'."""
         q = (REPO / "auto_wm_poly_trigger.py").read_text(encoding="utf-8")
         self.assertNotIn("DEAKTIVIERT — {len(candidates)} Bet(s) würden platziert", q)
-        self.assertIn("papier = not is_enabled", q)
+
+    def test_der_schalter_darf_nur_strenger_machen(self):
+        """20.09.2026: hier stand ein Test, der die ZEILE `papier = not is_enabled` im
+        Quelltext suchte. Als die Entscheidung ins Register wanderte, schlug er an, obwohl
+        das Verhalten besser geworden war — ein Test, der Buchstaben prueft statt Verhalten,
+        meldet Umbauten und keine Fehler.
+
+        Jetzt wird die Regel ausgefuehrt. Sie lautet: Register-Papier bleibt Papier, und ein
+        fehlender lokaler Schalter macht auch aus „live" Papier — nie umgekehrt."""
+        import auto_wm_poly_trigger as AT
+        self.assertTrue(AT.papierbetrieb("papier", True),  "Register sticht den Schalter")
+        self.assertTrue(AT.papierbetrieb("papier", False))
+        self.assertTrue(AT.papierbetrieb("live", False),   "ohne Schalter kein echtes Geld")
+        self.assertFalse(AT.papierbetrieb("live", True),   "beides an = echtes Geld")
 
     def test_papier_platziert_keine_order(self):
         q = (REPO / "auto_wm_poly_trigger.py").read_text(encoding="utf-8")

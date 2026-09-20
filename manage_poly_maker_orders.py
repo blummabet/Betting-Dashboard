@@ -152,7 +152,8 @@ def _taker_replace_fn(private_key: str):
 
     def _place(o):
         return PB.place_market_order(o.get("tokenId"), float(o.get("stakeUsdc") or 0),
-                                     private_key, price_hint=o.get("price"), force_taker=True)
+                                     private_key, price_hint=o.get("price"), force_taker=True,
+                                     pfad="maker")
     return _place
 
 

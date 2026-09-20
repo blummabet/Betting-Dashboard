@@ -463,10 +463,62 @@ def _maker_intent(price_hint, best_bid=None, best_ask=None, hours_to_ko=None):
         return {"mode": "taker", "price": None, "reason": f"decide_entry-Fehler: {e}"}
 
 
+# ── Handelsmodus je Geld-Pfad ────────────────────────────────────────────────
+#
+# 🔴 20.09.2026 (Lucas: „stellen wir das Auto trading mal ab und schreiben es nur im Cockpit
+# mit ala paper trading"). Umgebaut wurde daraufhin `auto_wm_poly_trigger.py` — und gemeldet
+# wurde „Auto-Trading ist aus". Am selben Tag gingen trotzdem VIER echte Orders raus (09:31,
+# 11:31, 13:07, 13:31, je 5 $, mit orderId): sie kommen aus `shortlist_auto_bet.py`, einem
+# zweiten Pfad mit eigenem Schalter und ohne jede Kenntnis vom Papierbetrieb. Vier Skripte
+# rufen diese Order-Schicht auf, EINES kannte das Wort „Papier".
+#
+# Fehlerklasse: ein Schalter, der nur an einer Instanz haengt, waehrend die Klasse mehrere hat.
+# Und die Form, in der sie auffaellt: eine Zusage („Trading ist aus"), die nur fuer einen von
+# mehreren Wegen galt.
+#
+# Deshalb steht der Modus ab hier NICHT mehr im aufrufenden Skript, sondern hier — in der
+# einzigen Schicht, durch die jeder Kauf muss. Ein neuer Pfad kann nicht mehr stillschweigend
+# Geld ausgeben: `place_market_order` verlangt einen deklarierten `pfad`, und ein unbekannter
+# bricht ab, statt zu kaufen.
+#
+# Stand 20.09.2026, von Lucas so gesetzt:
+#   shortlist     LIVE   — „Heute spielenswert" bleibt aktiv („die nicht abdrehen")
+#   auto-trigger  PAPIER — der Liga/MLS/WM-Trigger, bis er belegt positiv ist
+#   maker         PAPIER — ruhende Orders desselben Triggers
+HANDELSPFADE = {
+    "shortlist":    "live",
+    "auto-trigger": "papier",
+    "maker":        "papier",
+}
+
+# Verkaeufe sind KEIN Pfad in diesem Register und koennen nicht auf Papier gestellt werden.
+# Ein Ausgang, den man abschalten kann, ist die Mechanik hinter Toulouse: die Position laeuft
+# ins Spiel, weil niemand sie zugemacht hat. Wer nicht kaufen will, kauft nicht — verkaufen
+# duerfen muss immer.
+
+
+def handelsmodus(pfad: str) -> str:
+    """„live" oder „papier" fuer einen Geld-Pfad. Env-Override: POLY_MODUS_<PFAD>.
+
+    Der Override nimmt Bindestriche wie im Registernamen: POLY_MODUS_AUTO_TRIGGER=live.
+    Ein unbekannter Pfad ist ein Fehler und kein Default — „unbekannt rendert als harmloser
+    Default" ist genau die Klasse, die hier Geld kosten wuerde.
+    """
+    if pfad not in HANDELSPFADE:
+        raise ValueError(
+            "Unbekannter Handelspfad %r — jeder Pfad, der Geld ausgeben kann, muss in "
+            "HANDELSPFADE stehen (bekannt: %s)" % (pfad, ", ".join(sorted(HANDELSPFADE))))
+    roh = os.environ.get("POLY_MODUS_" + pfad.replace("-", "_").upper(), "").strip().lower()
+    if roh in ("live", "papier"):
+        return roh
+    return HANDELSPFADE[pfad]
+
+
 def place_market_order(token_id: str, amount_usdc: float, private_key: str,
                        price_hint: float = None,
                        best_bid: float = None, best_ask: float = None,
-                       hours_to_ko: float = None, force_taker: bool = False) -> dict:
+                       hours_to_ko: float = None, force_taker: bool = False,
+                       pfad: str = None) -> dict:
     """
     Place a BUY order on Polymarket CLOB v2.
 
@@ -483,6 +535,21 @@ def place_market_order(token_id: str, amount_usdc: float, private_key: str,
 
     Returns dict with orderId and status.
     """
+    # Der Kurzschluss steht VOR dem CLOB-Import: im Papierbetrieb wird die Boerse nicht nur
+    # nicht angesprochen, sie wird nicht einmal geladen. Ein Test kann das provozieren, indem
+    # er den Import unmoeglich macht — bleibt die Funktion gruen, hat sie ihn nie gebraucht.
+    if pfad is None:
+        raise ValueError(
+            "place_market_order ohne `pfad` — jeder Aufrufer muss sagen, welcher Geld-Pfad "
+            "er ist (bekannt: %s). Siehe HANDELSPFADE." % ", ".join(sorted(HANDELSPFADE)))
+    _modus = handelsmodus(pfad)
+    if _modus == "papier":
+        print(f"  📝 Papierbetrieb ({pfad}) — keine Order an die Boerse, {amount_usdc} $ notiert")
+        return {"status": "papier", "pfad": pfad, "orderId": None,
+                "amountUsdc": amount_usdc, "tokenId": token_id,
+                "priceHint": price_hint,
+                "ts": datetime.now(timezone.utc).isoformat()}
+
     try:
         from py_clob_client_v2.client import ClobClient
         from py_clob_client_v2.clob_types import (

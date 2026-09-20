@@ -64,6 +64,7 @@ OFFEN_FILE   = BASE / "poly_money_broad_offen.json"
 CLOSE_FILE   = BASE / "poly_money_broad_close.json"
 
 AN            = os.environ.get("SHORTLIST_AUTO_BET", "").strip() in ("1", "true", "yes", "on")
+HANDELSPFAD   = "shortlist"   # Name im Register polymarket_bet.HANDELSPFADE (dort: live)
 STAKE         = float(os.environ.get("SHORTLIST_AUTO_STAKE") or 5.0)
 MAX_OFFEN     = float(os.environ.get("SHORTLIST_AUTO_MAX_OFFEN") or 100.0)
 MAX_LAUF      = int(os.environ.get("SHORTLIST_AUTO_MAX_LAUF") or 3)
@@ -723,8 +724,14 @@ def main() -> int:
             continue
 
         from polymarket_bet import place_market_order
+        # 20.09.2026: `pfad` ist Pflicht. Dieses Skript ist der Pfad, der am 20.09. vier echte
+        # Orders setzte, waehrend „Auto-Trading ist aus" gemeldet war — nicht weil es falsch
+        # lief, sondern weil sein Modus nirgends stand. Jetzt steht er im Register, und Lucas
+        # hat ihn dort ausdruecklich auf live gesetzt („die heute Spielenswert will ich weiter
+        # aktiv haben").
         res = place_market_order(tok, STAKE, key, price_hint=ask,
-                                 best_bid=(buch or {}).get("bid"), best_ask=ask)
+                                 best_bid=(buch or {}).get("bid"), best_ask=ask,
+                                 pfad=HANDELSPFAD)
         if res.get("status") not in ("placed", "dry-run"):
             _liegen(titel, "Boerse hat abgelehnt: " + str(res.get("error") or "")[:120])
             continue

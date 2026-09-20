@@ -153,6 +153,7 @@ PLACED_FILE           = str(D.file("wm_auto_bets_placed.json", "liga_auto_bets_p
 # reicht. Das Papierbuch laeuft durch DIESELBEN Tore bis unmittelbar vor die Order: gleiche
 # Edge-Schwelle, gleiches Spread-Gate, gleicher Ask. Nur gekauft wird nicht.
 PAPIER_FILE           = str(D.file("wm_paper_bets.json", "liga_paper_bets.json"))
+HANDELSPFAD           = "auto-trigger"   # Name im Register polymarket_bet.HANDELSPFADE
 PAPIER_PUSH           = (os.environ.get("PAPIER_PUSH") or "").strip().lower() in ("1", "true", "yes")
 BALANCE_FILE          = str(D.file("wm_poly_balance.json",     "liga_poly_balance.json"))
 KILL_SWITCH_FILE      = str(D.file("wm_kill_switch.json",      "liga_kill_switch.json"))
@@ -481,12 +482,13 @@ def _parse_retry_after_s(err: str) -> int:
     return int(m.group(1)) if m else 0
 
 
-def place_order_with_retry(place_fn, token_id, stake, private_key, fill_price):
+def place_order_with_retry(place_fn, token_id, stake, private_key, fill_price, pfad=None):
     """Market-Order platzieren; bei TRANSIENTEM Börsen-Fehler (Post-Only-Modus / 503) EINMAL
     nach dem von der Börse genannten Backoff (gecappt auf POST_ONLY_RETRY_MAX_S) erneut
     versuchen. Andere Fehler (Creds, FOK, Balance) werden NICHT geretryt — die löst der
     Retry nicht. place_fn = polymarket_bet.place_market_order (injiziert für Testbarkeit)."""
-    result = place_fn(token_id, float(stake), private_key, price_hint=float(fill_price))
+    _extra = {"pfad": pfad} if pfad else {}
+    result = place_fn(token_id, float(stake), private_key, price_hint=float(fill_price), **_extra)
     if result.get("status") in ("placed", "dry-run"):
         return result
     err = str(result.get("error") or "")
@@ -495,7 +497,7 @@ def place_order_with_retry(place_fn, token_id, stake, private_key, fill_price):
     wait = min((_parse_retry_after_s(err) or 100) + 5, POST_ONLY_RETRY_MAX_S)
     print(f"    ⏳ Post-Only/503 (transient) — warte {wait}s und versuche EINMAL erneut…")
     time.sleep(wait)
-    return place_fn(token_id, float(stake), private_key, price_hint=float(fill_price))
+    return place_fn(token_id, float(stake), private_key, price_hint=float(fill_price), **_extra)
 
 
 def odds_alter_h(fix, now=None):
@@ -948,7 +950,67 @@ def melden_vermerken(grund: str, heute: str = None) -> None:
         print("  Melde-Stand nicht schreibbar (nicht fatal):", e)
 
 
+# ── Der Papierlauf hinterlaesst eine Spur, auch wenn er nichts bucht ─────────
+#
+# 🔴 20.09.2026: nach dem Umbau auf Papierbetrieb existierte `liga_paper_bets.json` nicht —
+# keine einzige Zeile. Ob das hiess „kein Kandidat hat die Tore passiert" oder „der Pfad
+# laeuft gar nicht", war von aussen NICHT zu unterscheiden. Genau die Klasse, die schon beim
+# Verkaufsversuch zugeschlagen hat: eine Wirkung, die ausbleibt, hinterlaesst keine Spur.
+#
+# `_main_lauf` hat neun fruehe `return` (Kill-Switch, Tageslimit, Exposure-Cap, keine
+# Kandidaten, …). Ein Marker an jedem waere die Reparatur an der Instanz — deshalb steht er
+# im `finally` von `main`, wo jeder dieser Ausgaenge durchkommt.
+_LAUF = {"kandidaten": None, "gebucht": 0, "grund": "kein Durchlauf"}
+LAUF_KEEP = 300
+
+
+def papierbetrieb(modus, is_enabled) -> bool:
+    """Papier oder echtes Geld — die eine Stelle, an der das hier entschieden wird. Rein.
+
+    Der lokale Schalter (`AUTO_TRIGGER_ENABLED`) darf nur STRENGER machen: fehlt er, wird auch
+    dann nicht gekauft, wenn das Register „live" sagt. Umgekehrt nie — sonst haette dieses
+    Skript wieder eine eigene Meinung zum Modus, und genau das war der Fehler am 20.09.2026.
+    """
+    return modus == "papier" or not is_enabled
+
+
+def papier_lauf_marker(laeufe, modus, kandidaten, gebucht, grund, ts=None, keep=LAUF_KEEP):
+    """Haengt einen Lauf-Vermerk an und kappt die Liste. Rein/testbar."""
+    neu = list(laeufe or [])
+    neu.append({"ts": ts or datetime.now(timezone.utc).isoformat(),
+                "modus": modus, "kandidaten": kandidaten,
+                "gebucht": int(gebucht or 0), "grund": grund})
+    return neu[-keep:] if keep else neu
+
+
+def _papier_lauf_schreiben():
+    """Best effort — ein Protokoll darf einen Lauf nie zum Absturz bringen."""
+    try:
+        from polymarket_bet import handelsmodus as _hm
+        modus = _hm(HANDELSPFAD)
+        if modus != "papier":
+            return
+        if str(PAPIER_FILE) in _LOAD_FAILED:
+            return
+        data = load_json(PAPIER_FILE, {"bets": [], "updatedAt": ""})
+        data.setdefault("bets", [])
+        data["laeufe"] = papier_lauf_marker(
+            data.get("laeufe"), modus, _LAUF.get("kandidaten"),
+            _LAUF.get("gebucht"), _LAUF.get("grund"))
+        data["updatedAt"] = datetime.now(timezone.utc).isoformat()
+        save_json(PAPIER_FILE, data)
+    except Exception as e:                      # noqa: BLE001
+        print(f"  ⚠️  Lauf-Marker nicht geschrieben: {e}")
+
+
 def main():
+    try:
+        return _main_lauf()
+    finally:
+        _papier_lauf_schreiben()
+
+
+def _main_lauf():
     print(f"\n{'='*55}")
     # Datensatz im Header zeigen (12.07.2026): im MLS-Lauf stand hier „WM 2026" → verwirrend.
     print(f"  🤖 {D.active_dataset().upper()} Auto-Trigger — "
@@ -958,6 +1020,7 @@ def main():
     # Kill-Switch zuerst prüfen — hat Vorrang vor allen anderen Schaltern
     killed, kill_reason = is_kill_switch_active()
     if killed:
+        _LAUF.update(grund="Kill-Switch")
         print(f"🛑 KILL-SWITCH AKTIV — Trading pausiert.")
         print(f"   Grund: {kill_reason}")
         print(f"   Resume via GitHub Action 'Kill-Switch' → action=resume\n")
@@ -1083,12 +1146,15 @@ def main():
     print(f"  ⚙️  Adaptive Daily-Cap: ${adaptive_daily_cap:.2f} USDC ({int(ADAPTIVE_DAILY_FRACTION*100)}% × Balance)\n")
 
     if len(bets_today) >= DAILY_BET_CAP:
+        _LAUF.update(grund="Tageslimit")
         print(f"  🛑 Tageslimit erreicht ({len(bets_today)}/{DAILY_BET_CAP} Bets) — Abbruch.\n")
         return
     if stake_today >= adaptive_daily_cap:
+        _LAUF.update(grund="Stake-Cap")
         print(f"  🛑 Adaptive Stake-Cap erreicht (${stake_today:.2f}/${adaptive_daily_cap:.2f}) — Abbruch.\n")
         return
     if open_exposure >= MAX_OPEN_EXPOSURE_USDC:
+        _LAUF.update(grund="Exposure-Cap")
         print(f"  🛑 Open-Exposure-Cap erreicht (${open_exposure:.2f}/${MAX_OPEN_EXPOSURE_USDC:.2f}) — warte auf Close.\n")
         return
 
@@ -1098,6 +1164,7 @@ def main():
     candidates = find_trigger_candidates(fixtures, placed_keys)
 
     if not candidates:
+        _LAUF.update(kandidaten=0, grund="keine Kandidaten")
         print("  ℹ️  Keine neuen Trigger-Kandidaten gefunden.\n")
         return
 
@@ -1112,9 +1179,18 @@ def main():
         print(f"    • {c['home']} vs {c['away']} — {c['market']}")
         print(f"      Edge: +{c['edgePP']}pp{eff_str}  |  Poly: {odds_str}  |  Einsatz: ${c['stake']:.2f} USDC{sig_str}")
 
-    papier = not is_enabled
+    # 20.09.2026: der Modus kommt aus dem Register in `polymarket_bet.HANDELSPFADE`, nicht mehr
+    # aus diesem Skript. Vorher stand er hier allein — und `shortlist_auto_bet.py`, der zweite
+    # Pfad zur selben Order-Schicht, wusste nichts davon und kaufte weiter echt.
+    # Der Schalter darf nur STRENGER machen: fehlt das Secret, ist es auch dann Papier, wenn
+    # das Register „live" sagt. Umgekehrt nie.
+    from polymarket_bet import handelsmodus as _handelsmodus
+    _modus = _handelsmodus(HANDELSPFAD)
+    papier = papierbetrieb(_modus, is_enabled)
     if papier:
-        print(f"\n📝 PAPIERBETRIEB — {len(candidates)} Kandidat(en) werden gebucht, nicht gekauft.\n")
+        _warum = "Register" if _modus == "papier" else "Schalter aus"
+        print(f"\n📝 PAPIERBETRIEB ({_warum}) — {len(candidates)} Kandidat(en) werden "
+              f"gebucht, nicht gekauft.\n")
 
     # 4. Bets platzieren via polymarket_bet.py
     private_key = os.environ.get("POLY_PRIVATE_KEY", "").strip()
@@ -1301,8 +1377,11 @@ def main():
             # damit die Auswertung spaeter nicht zwei Formate vergleichen muss.
             result = {"status": "papier", "orderId": None, "error": None}
         else:
+            # `pfad` geht bis in die Order-Schicht durch: faellt der Zweig hier oben je weg,
+            # haelt das Register trotzdem. Der Riegel liegt dort, wo das Geld rausgeht.
             result = place_order_with_retry(
                 place_market_order, token_id, stake, private_key, fill_price,
+                pfad=HANDELSPFAD,
             )
 
         log_bet_to_history(history, order, result)
@@ -1401,6 +1480,8 @@ def main():
     # ihnen muesste den Filter kennen. Eine Papier-Zeile, die irgendwo als offene Position
     # durchrutscht, waere schlimmer als gar kein Papierbuch.
     if papier:
+        _LAUF.update(kandidaten=len(candidates), gebucht=len(new_placed),
+                     grund="gebucht" if new_placed else "kein Kandidat durch alle Tore")
         if new_placed:
             if str(PAPIER_FILE) in _LOAD_FAILED:
                 print(f"\n  🛑 {PAPIER_FILE} war nicht lesbar — NICHT ueberschrieben.")
