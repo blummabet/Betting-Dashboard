@@ -76,9 +76,10 @@
       "label": "Money Map: die Poly-Seite gehoert zum Spiel",
       "severity": "error",
       "failures": [
-        "Fulham v Man Utd (English Premier League): Poly-Seite heisst „Manchester United FC“ und gehoert zu keinem der beiden Teams — $31357 fremdes Geld in einer Konsens-Zeile"
+        "Fulham v Man Utd (English Premier League): Poly-Seite heisst „Manchester United FC“ und gehoert zu keinem der beiden Teams — $86183 fremdes Geld in einer Konsens-Zeile",
+        "Wolves v West Brom (English Sky Bet Championship): Poly-Seite heisst „Wolverhampton Wanderers FC“ und gehoert zu keinem der beiden Teams — $58989 fremdes Geld in einer Konsens-Zeile"
       ],
-      "nFail": 1,
+      "nFail": 2,
       "ok": false,
       "hinweis": ""
     },
@@ -117,9 +118,14 @@
     {
       "label": "Poly-Deckung: Money-Scan gegen Liga-Fetcher",
       "severity": "error",
-      "failures": [],
-      "nFail": 0,
-      "ok": true,
+      "failures": [
+        "sea-par-gen-2026-09-20 (Parma Calcio 1913 v Genoa CFC, Anpfiff in 1.7h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
+        "sea-fro-com-2026-09-20 (Frosinone Calcio v Como 1907, Anpfiff in 1.7h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
+        "sea-juv-ata-2026-09-20 (Juventus FC v Atalanta BC, Anpfiff in 4.7h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
+        "sea-mil-lec-2026-09-20 (AC Milan v US Lecce, Anpfiff in 7.4h) — der Liga-Fetcher hat den Markt, der Money-Scan nie"
+      ],
+      "nFail": 4,
+      "ok": false,
       "hinweis": ""
     },
     {
@@ -128,29 +134,27 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "196 Picks im Fenster, 20 % ohne Preis-Signal."
+      "hinweis": "194 Picks im Fenster, 20 % ohne Preis-Signal."
     },
     {
       "label": "Stumme Signale: wer hat nie gefeuert?",
       "severity": "warn",
       "failures": [
-        "polymarket_sharp: 0 Feuerungen in 270 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
+        "polymarket_sharp: 0 Feuerungen in 279 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
         "betfair_coherence: stumm, aber erklaert — 07.09.2026 gemessen: seit der Fit-Schranke (MAX_RMSE 0,02 + Leave-one-out, 06.09.) feuert es fast nie — richtigerweise. Ueber 633 Sprossen aus 150 Spielen blieben 8 echte Kanten >= 4 pp, alle in duennen Ligen (Kasachstan, Litauen, Norwegen 2, Estland), keine einzige in den Top 5. Die Betfair-Tormarkt-Leiter ist auf unserer Aufloesung arbitragefrei.",
         "game_state_openness: stumm, aber erklaert — 07.09.2026 gemessen: braucht asymmetrische Verzweiflung spaet in der Saison. Aktuell Spieltag 3-4 von 34-38, also 34 Runden offen — der Tabellendruck ist per Konstruktion nahe null. Vor dem Winter ist Stille hier der richtige Zustand."
       ],
       "nFail": 3,
       "ok": false,
-      "hinweis": "9 von 33 Signalen schweigen ueber 270 Picks — davon 6 bewusst abgeschaltet (altitude_signal, incentive_signal, pressure_index, steam_lag, travel_burden, weather_signal), 3 an und trotzdem stumm."
+      "hinweis": "9 von 33 Signalen schweigen ueber 279 Picks — davon 6 bewusst abgeschaltet (altitude_signal, incentive_signal, pressure_index, steam_lag, travel_burden, weather_signal), 3 an und trotzdem stumm."
     },
     {
       "label": "Signal-Bilanz: schadet ein Signal belegt?",
       "severity": "warn",
-      "failures": [
-        "injury schadet belegt: Ausgang -0.050 schlechter als ohne (OG -0.000, n=89/79) — abwerten oder nur noch beobachten"
-      ],
-      "nFail": 1,
-      "ok": false,
-      "hinweis": "5 Signale belegt beitragend, 1 belegt schaedlich. ~30 Signale gleichzeitig geprueft — 1-2 falsche Treffer sind zu erwarten. Nur was ueber mehrere Wochen haelt, ist ein Befund."
+      "failures": [],
+      "nFail": 0,
+      "ok": true,
+      "hinweis": "7 Signale belegt beitragend, 0 belegt schaedlich. ~30 Signale gleichzeitig geprueft — 1-2 falsche Treffer sind zu erwarten. Nur was ueber mehrere Wochen haelt, ist ein Befund."
     },
     {
       "label": "Fade-Unter: haelt die Kontrollgruppe?",
@@ -158,7 +162,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "seit Vorregistrierung n=2399 (UG -8.1 %) · Rueckblick n=2726, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=2501 (UG -7.3 %) · Rueckblick n=2726, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -189,9 +193,11 @@
     {
       "label": "Positionswert ist frisch",
       "severity": "warn",
-      "failures": [],
-      "nFail": 0,
-      "ok": true,
+      "failures": [
+        "liga_poly_balance.json: Positionswert $5.11 stammt aus einem Lauf vor 13 h — die Positions-API antwortet seither nicht"
+      ],
+      "nFail": 1,
+      "ok": false,
       "hinweis": ""
     },
     {
@@ -208,7 +214,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "16 Zeilen · 10 abgerechnet · 5 offen"
+      "hinweis": "36 Zeilen · 33 abgerechnet · 2 offen"
     },
     {
       "label": "Artefakte sind lesbar",
@@ -217,8 +223,48 @@
       "nFail": 0,
       "ok": true,
       "hinweis": ""
+    },
+    {
+      "label": "Jeder Push hat seinen Beleg",
+      "severity": "warn",
+      "failures": [
+        "4 gesendete(r) Public-Push(es) ohne Ledger-Zeile — sie fehlen in der Bilanz und lassen sich nicht nachtragen (fresh:36035354, fresh:36036326, fresh:36039873, fresh:36071854)"
+      ],
+      "nFail": 1,
+      "ok": false,
+      "hinweis": ""
+    },
+    {
+      "label": "offene Wette hat den Anpfiff ueberlebt",
+      "severity": "error",
+      "failures": [
+        "liga_auto_bets_placed.json: Toulouse–Le Havre Under 2.5 Tore steht seit 16 h offen, Anpfiff war 2026-09-19T18:45 — kein einziger Verkaufsversuch im Buch"
+      ],
+      "nFail": 1,
+      "ok": false,
+      "hinweis": ""
+    },
+    {
+      "label": "Ergebnisse kommen an",
+      "severity": "error",
+      "failures": [
+        "liga_ergebnis_nachlauf.json: 7 abgepfiffene Spiele ohne Ergebnis (Levante–Athletic Club seit 85 h; Sevilla–Barcelona seit 14 h; Le Mans–Lorient seit 14 h; Angers–Estac Troyes seit 14 h) — der Resolver kann sie nicht abrechnen, sie fallen aus jeder Bilanz heraus"
+      ],
+      "nFail": 1,
+      "ok": false,
+      "hinweis": ""
+    },
+    {
+      "label": "Datenbau ist nicht stehengeblieben",
+      "severity": "error",
+      "failures": [
+        "liga-data.json: der Datenbau hat zuletzt vor 23 h geschrieben — entweder ist der Cron ausgefallen oder ein anderer Workflow hat einen aelteren Stand darueber committet"
+      ],
+      "nFail": 1,
+      "ok": false,
+      "hinweis": ""
     }
   ],
-  "nFail": 4,
-  "generatedAt": "2026-09-19T21:33:11.380976+00:00"
+  "nFail": 9,
+  "generatedAt": "2026-09-20T11:18:38.780706+00:00"
 }
