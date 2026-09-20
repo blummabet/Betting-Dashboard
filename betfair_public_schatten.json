@@ -163,7 +163,7 @@ null
 2,
 2
 ],
-"settledAt": "2026-09-20T18:13:54.257408+00:00"
+"settledAt": "2026-09-20T18:58:56.673352+00:00"
 },
 {
 "k": "fresh:36045433:Match Odds",
@@ -2931,7 +2931,7 @@ null
 "leadOdd": 1.96,
 "value": 215064.28,
 "sentAt": "2026-09-20T15:28:40.157175+00:00",
-"status": "pending",
+"status": "lost",
 "htScore": [
 0,
 0
@@ -2952,7 +2952,17 @@ null
 null,
 null
 ]
-}
+},
+"clvBf": 0.0,
+"clvPinn": 1.34,
+"settledAt": "2026-09-20T18:43:50.032685+00:00",
+"ftScore": [
+0,
+0
+],
+"profit": -1.0,
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36071862:Match Odds",
@@ -2966,7 +2976,7 @@ null
 "leadOdd": 2.02,
 "value": 236924.74,
 "sentAt": "2026-09-20T15:28:40.157202+00:00",
-"status": "pending",
+"status": "lost",
 "htScore": [
 0,
 1
@@ -2987,7 +2997,14 @@ null
 null,
 null
 ]
-}
+},
+"settledAt": "2026-09-20T18:43:50.046008+00:00",
+"ftScore": [
+1,
+1
+],
+"profit": -1.0,
+"resChk": true
 },
 {
 "k": "fresh:36077779:Match Odds",
@@ -3240,7 +3257,8 @@ null
 1
 ],
 "profit": 0.5700000000000001,
-"via": "track"
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36069468:Match Odds",
@@ -3254,7 +3272,7 @@ null
 "leadOdd": 1.53,
 "value": 65907.02,
 "sentAt": "2026-09-20T16:43:46.061337+00:00",
-"status": "pending",
+"status": "won",
 "htScore": [
 1,
 0
@@ -3275,7 +3293,17 @@ null
 0,
 0
 ]
-}
+},
+"clvBf": 0.43,
+"clvPinn": null,
+"settledAt": "2026-09-20T18:43:50.032685+00:00",
+"ftScore": [
+3,
+0
+],
+"profit": 0.53,
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36071865:Match Odds",
@@ -3367,7 +3395,10 @@ null
 "value": 126364.31,
 "sentAt": "2026-09-20T17:13:35.820362+00:00",
 "status": "pending",
-"htScore": null,
+"htScore": [
+2,
+1
+],
 "leadShare": 0.7631837660491321,
 "leadDir": "flat",
 "onLeader": null,
@@ -3399,7 +3430,10 @@ null
 "value": 102054.33,
 "sentAt": "2026-09-20T17:58:47.276552+00:00",
 "status": "pending",
-"htScore": null,
+"htScore": [
+0,
+1
+],
 "leadShare": 0.649688749120199,
 "leadDir": "out",
 "onLeader": false,
@@ -3511,6 +3545,112 @@ null
 "anteilSchwelle": 0.52,
 "raus": "unter_geldschwelle",
 "quelle": "trades",
+"gesendet": false,
+"live": {
+"time": null,
+"score": [
+null,
+null
+]
+}
+},
+{
+"k": "fresh:36071780:Match Odds",
+"matchId": "36071780",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Portuguese Primeira Liga",
+"home": "Santa Clara",
+"away": "Braga",
+"leadName": "Braga",
+"leadOdd": 6.2,
+"value": 150707.26,
+"sentAt": "2026-09-20T18:43:48.651857+00:00",
+"status": "lost",
+"htScore": null,
+"leadShare": 0.4009774313460413,
+"leadDir": "out",
+"onLeader": false,
+"tier": "rest",
+"magnitude": 84231.0,
+"schwelle": 30000.0,
+"anteilSchwelle": 2.808,
+"raus": "einseitig",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 81,
+"score": [
+0,
+0
+]
+},
+"clvBf": 27.35,
+"clvPinn": null,
+"settledAt": "2026-09-20T18:58:56.662603+00:00",
+"ftScore": [
+0,
+0
+],
+"profit": -1.0,
+"via": "track",
+"resChk": true
+},
+{
+"k": "fresh:36069521:Match Odds",
+"matchId": "36069521",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Turkish Super League",
+"home": "Goztepe",
+"away": "Rizespor",
+"leadName": "Goztepe",
+"leadOdd": 5.0,
+"value": 76622.08,
+"sentAt": "2026-09-20T18:43:48.651875+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.5969467286714222,
+"leadDir": "out",
+"onLeader": false,
+"tier": "rest",
+"magnitude": 36396.1,
+"schwelle": 30000.0,
+"anteilSchwelle": 1.213,
+"raus": "einseitig",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 78,
+"score": [
+1,
+1
+]
+}
+},
+{
+"k": "fresh:36039902:Match Odds",
+"matchId": "36039902",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "French Ligue 1",
+"home": "Marseille",
+"away": "Paris St-G",
+"leadName": "Paris St-G",
+"leadOdd": 1.45,
+"value": 508773.39,
+"sentAt": "2026-09-20T18:43:48.651885+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.8822888712792153,
+"leadDir": "out",
+"onLeader": null,
+"tier": "top",
+"magnitude": 123717.4,
+"schwelle": 100000.0,
+"anteilSchwelle": 1.237,
+"raus": "drift",
+"quelle": "public",
 "gesendet": false,
 "live": {
 "time": null,

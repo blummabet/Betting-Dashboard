@@ -187,6 +187,32 @@ class TestDerPapierlaufHinterlaesstEineSpur(unittest.TestCase):
         self.assertEqual(len(self.A.papier_lauf_marker(viele, "papier", 1, 0, "x", ts="t")),
                          self.A.LAUF_KEEP)
 
+    def test_der_marker_macht_aus_einer_fremden_datei_kein_papierbuch(self):
+        """🔴 20.09.2026, eine Stunde nach dem Einbau des Markers:
+        `test_beendetes_turnier_kein_stale_alarm` mockt `load_json` global und ruft `main()`.
+        Vorher schrieb der winterisierte Lauf nichts; mit dem Marker im `finally` schrieb er
+        die WM-Fixture DES TESTS als Papierbuch in den echten Baum — `wm_paper_bets.json` mit
+        `groups`/`fixtures` darin, committet und gepusht.
+
+        Fehlerklasse: ein Protokoll, das jede Datei fuer sein eigenes Buch haelt. Der Riegel
+        gehoert in den Code und nicht in den Test: auch im Betrieb darf ein Pfadfehler kein
+        fremdes Artefakt ueberschreiben."""
+        import unittest.mock as mock
+        fremd = {"groups": {"A": {"fixtures": []}}}
+        with mock.patch.object(self.A, "load_json", return_value=fremd), \
+             mock.patch.object(self.A, "save_json") as sp:
+            self.A._papier_lauf_schreiben()
+        sp.assert_not_called()
+
+    def test_ein_echtes_papierbuch_bekommt_seinen_marker(self):
+        """Gegenprobe — sonst waere der Riegel oben auch gruen, wenn NIE geschrieben wird."""
+        import unittest.mock as mock
+        with mock.patch.object(self.A, "load_json", return_value={"bets": [], "updatedAt": ""}), \
+             mock.patch.object(self.A, "save_json") as sp:
+            self.A._papier_lauf_schreiben()
+        sp.assert_called_once()
+        self.assertTrue(sp.call_args[0][1].get("laeufe"), "der Marker muss drinstehen")
+
     def test_der_marker_haengt_am_finally_und_nicht_an_einem_ausgang(self):
         """`_main_lauf` hat neun fruehe `return`. Ein Marker je Ausgang waere die Reparatur an
         der Instanz — der naechste neue Ausgang haette ihn wieder nicht."""

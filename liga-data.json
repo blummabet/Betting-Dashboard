@@ -1219,7 +1219,11 @@
           "kickoff": "2026-09-20T15:30:00Z",
           "venue": "Craven Cottage",
           "fid": 1557411,
-          "result": null,
+          "result": {
+            "status": "FT",
+            "home_score": 1,
+            "away_score": 1
+          },
           "time": "17:30"
         },
         {
@@ -11430,7 +11434,11 @@
           "kickoff": "2026-09-20T15:30:00Z",
           "venue": "VELTINS-Arena",
           "fid": 1575173,
-          "result": null,
+          "result": {
+            "status": "FT",
+            "home_score": 0,
+            "away_score": 0
+          },
           "time": "17:30"
         },
         {
@@ -15890,7 +15898,11 @@
           "kickoff": "2026-09-20T16:00:00Z",
           "venue": "Allianz Stadium",
           "fid": 1550132,
-          "result": null,
+          "result": {
+            "status": "FT",
+            "home_score": 2,
+            "away_score": 0
+          },
           "time": "18:00"
         },
         {
@@ -20951,7 +20963,11 @@
           "kickoff": "2026-09-20T15:15:00Z",
           "venue": "Allianz Riviera",
           "fid": 1552770,
-          "result": null,
+          "result": {
+            "status": "FT",
+            "home_score": 2,
+            "away_score": 1
+          },
           "time": "17:15"
         },
         {
@@ -50885,11 +50901,11 @@
           "pinn_move_pp": 5.56,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 190.0,
+          "hours_since_open": 192.7,
           "open_pinn_odds": 3.08,
           "current_pinn_odds": 2.63,
           "move_age_decay": 1.0,
-          "move_age_days": 7.9
+          "move_age_days": 8.0
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -71159,11 +71175,11 @@
           "pinn_move_pp": 5.57,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 99.3,
+          "hours_since_open": 102.0,
           "open_pinn_odds": 2.15,
           "current_pinn_odds": 1.92,
           "move_age_decay": 1.0,
-          "move_age_days": 4.1
+          "move_age_days": 4.2
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -71399,11 +71415,11 @@
           "pinn_move_pp": 4.13,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 98.6,
+          "hours_since_open": 101.3,
           "open_pinn_odds": 2.18,
           "current_pinn_odds": 2.0,
           "move_age_decay": 1.0,
-          "move_age_days": 4.1
+          "move_age_days": 4.2
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -84385,11 +84401,11 @@
           "pinn_move_pp": 8.56,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 97.5,
+          "hours_since_open": 100.1,
           "open_pinn_odds": 2.01,
           "current_pinn_odds": 1.715,
           "move_age_decay": 1.0,
-          "move_age_days": 4.1
+          "move_age_days": 4.2
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -108801,7 +108817,7 @@
         "odds": 1.88,
         "modelOdds": 1.862,
         "conf": "medium",
-        "verdict": "ABWÄGEN",
+        "verdict": "NOBET",
         "modSig": 0,
         "mktSig": 0,
         "storySig": 0,
@@ -108899,16 +108915,34 @@
               "awayShift": 0.0
             },
             "correlation_discount_applied": 0.4
+          },
+          {
+            "name": "betfair_money",
+            "score": -4.0,
+            "confidence": 0.6,
+            "evidence": "💷 Betfair-Geld warnt gegen Unter: 81% des Geldes (fair 51%) auf €19k · ⚠️ Liga×Markt verliert (ROI-UG -10%, n49) → gefadet",
+            "weight": 1.104,
+            "weighted_score": -2.65,
+            "metadata": {
+              "market": "Over/Under 2.5 Goals",
+              "token": "UNDER",
+              "money_share": 0.812,
+              "fair_share": 0.513,
+              "edge_pp": 29.96,
+              "total_eur": 18676,
+              "track_roi": 0.0829,
+              "track_n": 49
+            }
           }
         ],
-        "signalAdjustmentPP": 0.23,
+        "signalAdjustmentPP": -0.76,
         "signalCountPos": 3,
-        "signalCountNeg": 2,
-        "signalAdjustmentPP_trade": 0.2,
+        "signalCountNeg": 3,
+        "signalAdjustmentPP_trade": -0.8,
         "signalCountPos_trade": 3,
-        "signalCountNeg_trade": 2,
-        "effectiveEdgePP": -1.8,
-        "effectiveEdgePP_trade": -1.8,
+        "signalCountNeg_trade": 3,
+        "effectiveEdgePP": -2.8,
+        "effectiveEdgePP_trade": -2.8,
         "convictionScore": 5,
         "convictionVerdict": "watch",
         "convictionLabel": "👁 Beobachten",
@@ -108924,34 +108958,38 @@
         },
         "origVerdict": "ABWÄGEN",
         "origOdds": 1.88,
-        "nobetReason": "Engine-Netto -0.0pp negativ — Modell gegen den Pick",
+        "nobetReason": "Engine-Netto -0.8pp negativ — Modell gegen den Pick",
         "convBetSchwelle": 8,
         "smartMoney": {
-          "totalUsd": 6809.0,
-          "topTraders": 2,
-          "hoursToKickoff": 2.8,
+          "totalUsd": 82531.0,
+          "topTraders": 21,
+          "hoursToKickoff": 0.2,
           "outcomes": {
             "home": {
-              "usd": 2860.0,
-              "topHolderShare": 0.929,
-              "holders": 43,
-              "share": 0.42,
-              "cluster": 1,
-              "buyUsd": 2301.0,
+              "usd": 45212.0,
+              "topHolderShare": 0.799,
+              "holders": 122,
+              "share": 0.548,
+              "cluster": 6,
+              "buyUsd": 45659.0,
               "sellUsd": 0.0,
-              "netFlowUsd": 2301.0
+              "netFlowUsd": 45659.0
             },
             "draw": {
-              "usd": 273.0,
-              "topHolderShare": 0.798,
-              "holders": 29,
-              "share": 0.04
+              "usd": 638.0,
+              "topHolderShare": 0.669,
+              "holders": 51,
+              "share": 0.008
             },
             "away": {
-              "usd": 3676.0,
-              "topHolderShare": 0.944,
-              "holders": 52,
-              "share": 0.54
+              "usd": 36681.0,
+              "topHolderShare": 0.841,
+              "holders": 139,
+              "share": 0.444,
+              "cluster": 8,
+              "buyUsd": 51983.0,
+              "sellUsd": 2144.0,
+              "netFlowUsd": 49839.0
             }
           }
         },
@@ -113514,7 +113552,7 @@
         "odds": 1.85,
         "modelOdds": 1.964,
         "conf": "high",
-        "verdict": "NOBET",
+        "verdict": "ABWÄGEN",
         "modSig": 0,
         "mktSig": 0,
         "storySig": 0,
@@ -113564,26 +113602,27 @@
         "signals": [
           {
             "name": "lead_lag_bias",
-            "score": -2.42,
+            "score": -1.51,
             "confidence": 0.85,
-            "evidence": "Pinnacle hat Heim um -1.8pp bewegt, und best ziehen schon nach (1) — der Move ist bestätigt.",
+            "evidence": "Pinnacle hat Heim um -1.8pp bewegt, public, best hängen noch hinterher (2) — wir sind früh dran.",
             "weight": 1.199,
-            "weighted_score": -2.47,
+            "weighted_score": -0.62,
             "metadata": {
-              "stage": "confirmed",
+              "stage": "early",
               "pinn_move_pp": -1.82,
               "soft_moves": [
                 {
                   "bk": "public",
-                  "move_pp": -0.29
+                  "move_pp": -0.74
                 },
                 {
                   "bk": "best",
-                  "move_pp": -0.94
+                  "move_pp": -0.69
                 }
               ],
               "outcome": "hw"
-            }
+            },
+            "correlation_discount_applied": 0.4
           },
           {
             "name": "h2h_pattern",
@@ -113682,13 +113721,12 @@
             "confidence": 0.67,
             "evidence": "Sharp-Window: Schon im frühen Fenster nach der Eröffnung zog Pinnacle Heim um +8.9pp an — das ist die schärfste, früheste Geldbewegung, bevor das Public-Volumen kam.",
             "weight": 1.108,
-            "weighted_score": 0.74,
+            "weighted_score": 1.86,
             "metadata": {
               "early_move_pp": 8.94,
               "outcome": "home",
               "opener_odds": 2.14
-            },
-            "correlation_discount_applied": 0.4
+            }
           },
           {
             "name": "move_following",
@@ -113705,14 +113743,14 @@
             "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": -0.47,
+        "signalAdjustmentPP": 0.34,
         "signalCountPos": 5,
         "signalCountNeg": 3,
-        "signalAdjustmentPP_trade": -0.5,
+        "signalAdjustmentPP_trade": 0.3,
         "signalCountPos_trade": 5,
         "signalCountNeg_trade": 3,
-        "effectiveEdgePP": -5.5,
-        "effectiveEdgePP_trade": -5.5,
+        "effectiveEdgePP": -4.7,
+        "effectiveEdgePP_trade": -4.7,
         "convictionScore": 4,
         "convictionVerdict": "watch",
         "convictionLabel": "👁 Beobachten",
@@ -113728,19 +113766,16 @@
           "pinn_move_pp": 7.33,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 75.3,
+          "hours_since_open": 78.0,
           "open_pinn_odds": 2.14,
           "current_pinn_odds": 1.85,
           "move_age_decay": 1.0,
-          "move_age_days": 3.1
+          "move_age_days": 3.2
         },
         "openingMovement": {
           "in_pick_direction": true,
           "move_pp": 7.33
         },
-        "origVerdict": "ABWÄGEN",
-        "origOdds": 1.85,
-        "nobetReason": "Engine-Netto -0.5pp negativ — Modell gegen den Pick",
         "convBetSchwelle": 8,
         "verdictFlips": [
           {
@@ -113757,8 +113792,14 @@
             "ts": "2026-09-20T12:53:56.874239+00:00",
             "von": "ABWÄGEN",
             "auf": "NOBET"
+          },
+          {
+            "ts": "2026-09-20T18:50:36.575147+00:00",
+            "von": "NOBET",
+            "auf": "ABWÄGEN"
           }
         ],
+        "stake": 2.0,
         "engineVersion": "v1"
       }
     ],
@@ -128868,11 +128909,11 @@
           "pinn_move_pp": 5.68,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 97.5,
+          "hours_since_open": 100.1,
           "open_pinn_odds": 3.12,
           "current_pinn_odds": 2.65,
           "move_age_decay": 1.0,
-          "move_age_days": 4.1
+          "move_age_days": 4.2
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -129300,11 +129341,11 @@
           "pinn_move_pp": 4.06,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 97.5,
+          "hours_since_open": 100.1,
           "open_pinn_odds": 3.81,
           "current_pinn_odds": 3.3,
           "move_age_decay": 1.0,
-          "move_age_days": 4.1
+          "move_age_days": 4.2
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -130647,13 +130688,13 @@
     "placeholder": true,
     "season": 2026,
     "dataUpdatedAt": "2026-09-20T12:35:35.945050+00:00",
-    "oddsUpdatedAt": "2026-09-20T17:35:46.626901+00:00",
-    "picksUpdatedAt": "2026-09-20T16:10:45.442928+00:00",
+    "oddsUpdatedAt": "2026-09-20T18:50:31.087987+00:00",
+    "picksUpdatedAt": "2026-09-20T18:50:38.764763+00:00",
     "formUpdatedAt": "2026-09-20T12:35:45.948625+00:00",
     "cornersUpdatedAt": "2026-09-20T12:35:46.212303+00:00",
     "xgUpdatedAt": "2026-09-20T12:35:46.212316+00:00",
     "engineVersion": "v1",
-    "ergebnisNachlaufAt": "2026-09-20T17:35:55.599025+00:00"
+    "ergebnisNachlaufAt": "2026-09-20T18:50:32.263971+00:00"
   },
   "standings": {
     "ENG": [
@@ -130790,6 +130831,18 @@
         "pos": 11
       },
       {
+        "team": "33",
+        "played": 5,
+        "won": 1,
+        "draw": 2,
+        "lost": 2,
+        "points": 5,
+        "gf": 8,
+        "ga": 8,
+        "gd": 0,
+        "pos": 12
+      },
+      {
         "team": "65",
         "played": 5,
         "won": 1,
@@ -130799,18 +130852,6 @@
         "gf": 4,
         "ga": 5,
         "gd": -1,
-        "pos": 12
-      },
-      {
-        "team": "33",
-        "played": 4,
-        "won": 1,
-        "draw": 1,
-        "lost": 2,
-        "points": 4,
-        "gf": 7,
-        "ga": 7,
-        "gd": 0,
         "pos": 13
       },
       {
@@ -130874,6 +130915,18 @@
         "pos": 18
       },
       {
+        "team": "36",
+        "played": 5,
+        "won": 0,
+        "draw": 2,
+        "lost": 3,
+        "points": 2,
+        "gf": 5,
+        "ga": 8,
+        "gd": -3,
+        "pos": 19
+      },
+      {
         "team": "47",
         "played": 5,
         "won": 0,
@@ -130883,18 +130936,6 @@
         "gf": 2,
         "ga": 8,
         "gd": -6,
-        "pos": 19
-      },
-      {
-        "team": "36",
-        "played": 4,
-        "won": 0,
-        "draw": 1,
-        "lost": 3,
-        "points": 1,
-        "gf": 4,
-        "ga": 7,
-        "gd": -3,
         "pos": 20
       }
     ],
@@ -130912,16 +130953,28 @@
         "pos": 1
       },
       {
+        "team": "530",
+        "played": 7,
+        "won": 5,
+        "draw": 1,
+        "lost": 1,
+        "points": 16,
+        "gf": 16,
+        "ga": 7,
+        "gd": 9,
+        "pos": 2
+      },
+      {
         "team": "541",
-        "played": 6,
+        "played": 7,
         "won": 5,
         "draw": 0,
-        "lost": 1,
+        "lost": 2,
         "points": 15,
-        "gf": 17,
-        "ga": 6,
-        "gd": 11,
-        "pos": 2
+        "gf": 18,
+        "ga": 8,
+        "gd": 10,
+        "pos": 3
       },
       {
         "team": "543",
@@ -130933,18 +130986,6 @@
         "gf": 8,
         "ga": 6,
         "gd": 2,
-        "pos": 3
-      },
-      {
-        "team": "530",
-        "played": 6,
-        "won": 4,
-        "draw": 1,
-        "lost": 1,
-        "points": 13,
-        "gf": 14,
-        "ga": 6,
-        "gd": 8,
         "pos": 4
       },
       {
@@ -131214,6 +131255,18 @@
         "pos": 6
       },
       {
+        "team": "1660",
+        "played": 4,
+        "won": 2,
+        "draw": 1,
+        "lost": 1,
+        "points": 7,
+        "gf": 8,
+        "ga": 7,
+        "gd": 1,
+        "pos": 7
+      },
+      {
         "team": "162",
         "played": 4,
         "won": 2,
@@ -131223,7 +131276,7 @@
         "gf": 8,
         "ga": 8,
         "gd": 0,
-        "pos": 7
+        "pos": 8
       },
       {
         "team": "173",
@@ -131235,18 +131288,6 @@
         "gf": 9,
         "ga": 5,
         "gd": 4,
-        "pos": 8
-      },
-      {
-        "team": "1660",
-        "played": 3,
-        "won": 2,
-        "draw": 0,
-        "lost": 1,
-        "points": 6,
-        "gf": 8,
-        "ga": 7,
-        "gd": 1,
         "pos": 9
       },
       {
@@ -131263,11 +131304,11 @@
       },
       {
         "team": "174",
-        "played": 3,
+        "played": 4,
         "won": 1,
-        "draw": 1,
+        "draw": 2,
         "lost": 1,
-        "points": 4,
+        "points": 5,
         "gf": 3,
         "ga": 4,
         "gd": -1,
@@ -131420,6 +131461,18 @@
         "pos": 5
       },
       {
+        "team": "496",
+        "played": 5,
+        "won": 3,
+        "draw": 1,
+        "lost": 1,
+        "points": 10,
+        "gf": 8,
+        "ga": 4,
+        "gd": 4,
+        "pos": 6
+      },
+      {
         "team": "895",
         "played": 5,
         "won": 3,
@@ -131429,7 +131482,7 @@
         "gf": 9,
         "ga": 6,
         "gd": 3,
-        "pos": 6
+        "pos": 7
       },
       {
         "team": "489",
@@ -131441,18 +131494,6 @@
         "gf": 7,
         "ga": 4,
         "gd": 3,
-        "pos": 7
-      },
-      {
-        "team": "496",
-        "played": 4,
-        "won": 2,
-        "draw": 1,
-        "lost": 1,
-        "points": 7,
-        "gf": 6,
-        "ga": 4,
-        "gd": 2,
         "pos": 8
       },
       {
@@ -131481,14 +131522,14 @@
       },
       {
         "team": "499",
-        "played": 4,
+        "played": 5,
         "won": 2,
         "draw": 0,
-        "lost": 2,
+        "lost": 3,
         "points": 6,
         "gf": 5,
-        "ga": 5,
-        "gd": 0,
+        "ga": 7,
+        "gd": -2,
         "pos": 11
       },
       {
@@ -131639,14 +131680,14 @@
       },
       {
         "team": "79",
-        "played": 4,
+        "played": 5,
         "won": 3,
         "draw": 1,
-        "lost": 0,
+        "lost": 1,
         "points": 10,
-        "gf": 7,
-        "ga": 2,
-        "gd": 5,
+        "gf": 8,
+        "ga": 4,
+        "gd": 4,
         "pos": 4
       },
       {
@@ -131758,6 +131799,18 @@
         "pos": 13
       },
       {
+        "team": "84",
+        "played": 5,
+        "won": 1,
+        "draw": 2,
+        "lost": 2,
+        "points": 5,
+        "gf": 3,
+        "ga": 6,
+        "gd": -3,
+        "pos": 14
+      },
+      {
         "team": "116",
         "played": 5,
         "won": 1,
@@ -131767,7 +131820,7 @@
         "gf": 9,
         "ga": 9,
         "gd": 0,
-        "pos": 14
+        "pos": 15
       },
       {
         "team": "110",
@@ -131779,7 +131832,7 @@
         "gf": 4,
         "ga": 11,
         "gd": -7,
-        "pos": 15
+        "pos": 16
       },
       {
         "team": "81",
@@ -131791,7 +131844,7 @@
         "gf": 6,
         "ga": 6,
         "gd": 0,
-        "pos": 16
+        "pos": 17
       },
       {
         "team": "111",
@@ -131803,29 +131856,17 @@
         "gf": 4,
         "ga": 7,
         "gd": -3,
-        "pos": 17
-      },
-      {
-        "team": "84",
-        "played": 4,
-        "won": 0,
-        "draw": 2,
-        "lost": 2,
-        "points": 2,
-        "gf": 1,
-        "ga": 5,
-        "gd": -4,
         "pos": 18
       }
     ]
   },
   "thirdRanking": [
     {
-      "team": "543",
+      "team": "541",
       "group": "ESP",
       "points": 15,
-      "gd": 2,
-      "gf": 8,
+      "gd": 10,
+      "gf": 18,
       "rank": 1,
       "qualifies": true
     },
