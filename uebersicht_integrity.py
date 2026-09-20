@@ -1122,6 +1122,61 @@ def check_schattenbuch_fuellt_sich(ctx):
               hinweis="%d Zeilen · %d abgerechnet · %d offen" % (len(b), fertig, offen))
 
 
+def check_offene_wette_hat_den_anpfiff_ueberlebt(ctx):
+    """19.09.2026 (Lucas: „es wurde vorm spielstart nicht geschlossen und ist nun lost").
+
+    Toulouse–Le Havre, `Under 2.5 Tore`, 5,50 $. Anpfiff 18:45 UTC. Der Positions-Manager
+    lief um 17:06 UTC — mitten im eigenen 2-h-Hard-Close-Fenster — und schrieb in genau
+    diesem Lauf `valuedAt`, hat die Position also gesehen. Verkauft wurde nicht, und ins
+    Buch kam nichts: `status: "placed"`, kein `sellError`, kein Versuch. Eine Wirkung, die
+    ausbleibt, hinterlaesst keine Spur; danach sieht der Schaden aus wie jede andere offene
+    Wette.
+
+    Dieser Guard prueft den Zustand der Flaeche, nicht den Code: eine Wette, die als offen
+    im Buch steht, obwohl ihr Spiel laengst angepfiffen hat, gibt es nicht. Entweder sie
+    wurde verkauft (dann `sold`), oder sie ist abgerechnet (`won`/`lost`), oder jemand hat
+    von Hand geschlossen (`closed_manual`). `placed` nach Anpfiff heisst: der Exit ist
+    ausgefallen und niemand hat es gemerkt.
+
+    Das Gegenstueck zu `check_geschlossen_heisst_belegt` (18.09.), das die andere Richtung
+    faengt — geschlossen behauptet, ohne Beleg. Zusammen decken sie beide Seiten desselben
+    Buchs ab.
+
+    Die rechtzeitige Warnung ist NICHT Aufgabe dieses Guards: er laeuft in update-liga.yml
+    (3x taeglich). Dafuer gibt es `poly_offene_wache.py` im 15-Minuten-Takt von betfair.yml.
+    Hier steht der Nachweis, dass es passiert ist.
+    """
+    fails = []
+    jetzt = datetime.now(timezone.utc)
+    for name, key in (("liga_auto_bets_placed.json", "autoBetsLiga"),
+                      ("mls_auto_bets_placed.json", "autoBetsMls")):
+        for b in ((ctx.get(key) or {}).get("bets") or []):
+            if not isinstance(b, dict) or b.get("status") != "placed":
+                continue
+            ko = b.get("kickoff")
+            if not ko:
+                continue
+            try:
+                k = datetime.fromisoformat(str(ko).replace("Z", "+00:00"))
+            except (ValueError, TypeError):
+                continue
+            if k.tzinfo is None:
+                k = k.replace(tzinfo=timezone.utc)
+            if k > jetzt:
+                continue
+            try:
+                nv = int(b.get("sellVersuche") or 0)
+            except (TypeError, ValueError):
+                nv = 0
+            beleg = ("%d Verkaufsversuch(e), zuletzt: %s"
+                     % (nv, b.get("sellVersuchGrund") or b.get("sellFehler") or "ohne Grund")
+                     ) if nv else "kein einziger Verkaufsversuch im Buch"
+            fails.append("%s: %s–%s %s steht seit %s offen, Anpfiff war %s — %s"
+                         % (name, b.get("home"), b.get("away"), b.get("market"),
+                            _alter_kurz(jetzt - k), str(ko)[:16], beleg))
+    return _c("offene Wette hat den Anpfiff ueberlebt", "error", fails)
+
+
 def _alter_kurz(d):
     st = int(d.total_seconds() // 3600)
     return "%d h" % st if st < 48 else "%d Tagen" % (st // 24)
@@ -1155,6 +1210,7 @@ UEBERSICHT_CHECKS = [
     check_schattenbuch_fuellt_sich,
     check_artefakte_sind_lesbar,
     check_jeder_push_hat_seinen_beleg,
+    check_offene_wette_hat_den_anpfiff_ueberlebt,
 ]
 
 

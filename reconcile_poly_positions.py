@@ -522,6 +522,31 @@ def reconcile(bets: list, *, proxy: str, finished_keys: set | None = None,
     return changed
 
 
+def marker_stand(bets: list) -> list:
+    """Fingerabdruck der Warte-Marker. REIN.
+
+    Vorfall 19.09.2026 (aufgefallen beim Nachgehen zu Toulouse–Le Havre): `run()` schrieb
+    das Buch nur `if changed`, und `changed` enthaelt ausschliesslich Wetten, die in DIESEM
+    Lauf geschlossen oder zurueckgeholt wurden. `fehlt_lange_genug` aendert aber einen
+    ZWEITEN Zustand — `nichtGehaltenSeit/Laeufe/Zuletzt` — und genau der wurde auf jedem
+    Lauf weggeworfen, auf dem sonst nichts passierte. Also auf jedem Lauf, auf dem er
+    gebraucht wurde.
+
+    Die Folge ist keine Kleinigkeit: der Zaehler kommt nie ueber 1, `MIN_FEHLT_LAEUFE = 2`
+    wird nie erreicht, und weil `nichtGehaltenZuletzt` eingefroren bleibt, reisst zusaetzlich
+    bei jedem Lauf die Kette (`MAX_KETTE_MIN = 300`) und setzt von vorn an. Toulouse–Le Havre
+    traegt seit dem 18.09. 12:51:04 — eine Sekunde nach dem Fill — unveraendert
+    `nichtGehaltenLaeufe: 1`, ueber neun Laeufe hinweg. Der Abgleich konnte diese Zeile nie
+    beurteilen; das Buch behauptete bis heute eine offene Position, die die Wallet nicht
+    haelt.
+
+    Fehlerklasse: ein Zaehler, der nur dann gespeichert wird, wenn er nicht gebraucht wird.
+    """
+    return [(b.get("betKey"), b.get("nichtGehaltenSeit"),
+             b.get("nichtGehaltenLaeufe"), b.get("nichtGehaltenZuletzt"))
+            for b in (bets or []) if isinstance(b, dict)]
+
+
 def _load_finished_keys() -> set:
     """Match-Keys fertiger Spiele aus wm2026-data.json (Settlement ≠ manueller Eingriff)."""
     keys = set()
@@ -549,6 +574,7 @@ def run(close_bet_key: str | None = None) -> int:
     data = json.loads(AUTO_BETS_FILE.read_text(encoding="utf-8"))
     bets = data.get("bets", [])
     now_iso = datetime.now(timezone.utc).isoformat()
+    marker_neu = False
     if close_bet_key:
         target = [b for b in bets if b.get("betKey") == close_bet_key and b.get("status") == "placed"]
         if not target:
@@ -560,11 +586,18 @@ def run(close_bet_key: str | None = None) -> int:
             print(f"  ✅ Button-Schließung: {b.get('home')}–{b.get('away')} {b.get('market')}")
         changed = target
     else:
+        _marker_vorher = marker_stand(bets)
         changed = reconcile(bets, proxy=proxy, finished_keys=_load_finished_keys(), now_iso=now_iso)
-    if changed:
+        marker_neu = marker_stand(bets) != _marker_vorher
+    if changed or marker_neu:
         data["updatedAt"] = now_iso
         AUTO_BETS_FILE.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
-        print(f"💾 {len(changed)} Bet(s) als manuell geschlossen markiert → {AUTO_BETS_FILE.name}")
+        if changed:
+            print(f"💾 {len(changed)} Bet(s) als manuell geschlossen markiert → {AUTO_BETS_FILE.name}")
+        else:
+            # Ohne diese Zeile stand der Zaehler still und der Abgleich kam nie zu einem
+            # Urteil — s. `marker_stand`.
+            print(f"💾 Warte-Marker fortgeschrieben → {AUTO_BETS_FILE.name}")
     else:
         print("✅ reconcile: keine manuellen Eingriffe gefunden")
     return 0

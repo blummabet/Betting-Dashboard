@@ -809,3 +809,61 @@ class TestEineBilanzDieIhreLueckeNennt(unittest.TestCase):
         self.assertFalse(r["ok"])
         self.assertIn("4 gesendete", r["failures"][0])
         self.assertIn("fresh:36039873", r["failures"][0])
+
+
+# ── 19.09.2026: „es wurde vorm spielstart nicht geschlossen und ist nun lost" ────────────────
+# Toulouse–Le Havre, Anpfiff 18:45 UTC. Der Positions-Manager lief um 17:06 UTC, im eigenen
+# 2-h-Hard-Close-Fenster, verkaufte nicht und schrieb nichts darueber ins Buch. Die Wette stand
+# danach als `placed` da — nicht zu unterscheiden von einer, bei der nie etwas versucht wurde.
+# Das Gegenstueck zu `check_geschlossen_heisst_belegt`: dort geschlossen ohne Beleg, hier offen
+# nach Anpfiff.
+
+def _offen(**kw):
+    b = {"home": "Toulouse", "away": "Le Havre", "market": "Under 2.5 Tore",
+         "status": "placed", "kickoff": "2020-09-19T18:45:00Z"}
+    b.update(kw)
+    return b
+
+
+def test_offen_nach_dem_anpfiff_schlaegt_an():
+    r = UI.check_offene_wette_hat_den_anpfiff_ueberlebt({"autoBetsLiga": {"bets": [_offen()]}})
+    assert not r["ok"] and r["severity"] == "error"
+    assert "Toulouse" in r["failures"][0]
+    assert "kein einziger Verkaufsversuch" in r["failures"][0]
+
+
+def test_der_guard_nennt_den_gescheiterten_versuch_wenn_es_einen_gab():
+    r = UI.check_offene_wette_hat_den_anpfiff_ueberlebt(
+        {"autoBetsLiga": {"bets": [_offen(sellVersuche=2, sellVersuchGrund="Order abgelehnt")]}})
+    assert not r["ok"]
+    assert "2 Verkaufsversuch(e)" in r["failures"][0]
+    assert "Order abgelehnt" in r["failures"][0]
+
+
+def test_vor_dem_anpfiff_ist_offen_voellig_normal():
+    r = UI.check_offene_wette_hat_den_anpfiff_ueberlebt(
+        {"autoBetsLiga": {"bets": [_offen(kickoff="2099-01-01T19:00:00Z")]}})
+    assert r["ok"]
+
+
+def test_verkaufte_und_abgerechnete_wetten_sind_dem_guard_egal():
+    for st in ("sold", "lost", "won", "closed_manual"):
+        r = UI.check_offene_wette_hat_den_anpfiff_ueberlebt(
+            {"autoBetsLiga": {"bets": [_offen(status=st)]}})
+        assert r["ok"], st
+
+
+def test_ohne_anpfiff_behauptet_der_guard_nichts():
+    r = UI.check_offene_wette_hat_den_anpfiff_ueberlebt(
+        {"autoBetsLiga": {"bets": [_offen(kickoff=None)]}})
+    assert r["ok"]
+    r = UI.check_offene_wette_hat_den_anpfiff_ueberlebt(
+        {"autoBetsMls": {"bets": [_offen(kickoff="demnaechst")]}})
+    assert r["ok"]
+
+
+def test_der_guard_haengt_in_der_batterie():
+    """Ein Guard, den `run_checks` nie aufruft, ist Dekoration."""
+    assert UI.check_offene_wette_hat_den_anpfiff_ueberlebt in UI.UEBERSICHT_CHECKS
+    ids = [c["label"] for c in UI.run_checks({"autoBetsLiga": {"bets": [_offen()]}})]
+    assert "offene Wette hat den Anpfiff ueberlebt" in ids
