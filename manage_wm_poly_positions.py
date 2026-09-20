@@ -753,6 +753,67 @@ def update_auto_bet_status(bet_key: str, new_status: str,
     write_json_atomic(AUTO_BETS_FILE, data)
 
 
+def versuch_eintragen(bet: dict, grund: str, sell_reason: str, current_price,
+                      fehler, now_iso: str) -> dict:
+    """REIN: schreibt einen NICHT geglueckten Verkaufsversuch an den Bet. Mutiert und gibt
+    den Bet zurueck, damit die Regel ohne Datei testbar ist.
+
+    Vorfall 19.09.2026 (Lucas: „es wurde vorm spielstart nicht geschlossen und ist nun
+    lost"). Toulouse–Le Havre, Anpfiff 18:45 UTC; der Manager lief um 17:06 UTC, also
+    mitten im 2-h-Hard-Close-Fenster, und schrieb `valuedAt` — er hat die Position also
+    gesehen. Verkauft wurde nicht. Im Buch steht bis heute `placed` und sonst nichts.
+
+    Der Grund ist die Asymmetrie: `update_auto_bet_status` lief NUR bei
+    `sell_result["status"] == "placed"`. Jeder andere Ausgang — Order abgelehnt, Wallet
+    haelt den Token nicht mehr, Auto-Sell per Secret aus, `tokenId` fehlt — setzte
+    ausschliesslich `pos["status"]`, und `pos` ist eine Kopie, die am Ende des Laufs
+    verschwindet.
+
+    Die Fehlerklasse: eine Wirkung, die ausbleibt, hinterlaesst keine Spur. Danach ist
+    „nie versucht" von „versucht und gescheitert" nicht zu unterscheiden — weder fuer
+    Lucas noch fuer einen Guard. `sellVersuche` zaehlt hoch, `sellVersuchGrund` nennt den
+    Ausgang beim Namen; der Status bleibt `placed`, denn die Wette IST offen.
+    """
+    try:
+        n = int(bet.get("sellVersuche") or 0)
+    except (TypeError, ValueError):
+        n = 0
+    bet["sellVersuche"] = n + 1
+    bet["sellVersuchAm"] = now_iso
+    bet["sellVersuchGrund"] = grund
+    bet["sellVersuchAnlass"] = sell_reason
+    bet["sellVersuchPreis"] = current_price
+    if fehler:
+        bet["sellFehler"] = str(fehler)
+    return bet
+
+
+def vermerke_sell_versuch(bet_key: str, grund: str, sell_reason: str,
+                          current_price=None, fehler=None) -> None:
+    """Schreibt `versuch_eintragen` ins Wettbuch. Wer handelt, schreibt sofort — auch
+    und gerade dann, wenn das Handeln nicht geklappt hat."""
+    if not bet_key or not os.path.exists(AUTO_BETS_FILE):
+        return
+    try:
+        with open(AUTO_BETS_FILE, encoding="utf-8") as f:
+            data = json.load(f)
+    except Exception as e:
+        print(f"  ⚠️  Sell-Versuch nicht festgehalten (Buch unlesbar): {e}")
+        return
+    now_iso = datetime.now(timezone.utc).isoformat()
+    getroffen = False
+    for bet in data.get("bets", []):
+        if bet.get("betKey") == bet_key:
+            versuch_eintragen(bet, grund, sell_reason, current_price, fehler, now_iso)
+            getroffen = True
+            break
+    if not getroffen:
+        return
+    data["updatedAt"] = now_iso
+    write_json_atomic(AUTO_BETS_FILE, data)
+    print(f"    📝 Verkaufsversuch im Buch vermerkt: {grund}")
+
+
 def main():
     print("=== manage_wm_poly_positions.py ===")
     now = datetime.now(timezone.utc)
@@ -890,8 +951,30 @@ def main():
                 else:
                     print(f"    ❌ AUTO-SELL fehlgeschlagen: {sell_result.get('error')}")
                     pos["status"] = "sell_signaled"
+                    vermerke_sell_versuch(
+                        bet_key=pos.get("_betKey", ""),
+                        grund="Order abgelehnt",
+                        sell_reason=sell_reason,
+                        current_price=current,
+                        fehler=sell_result.get("error"),
+                    )
             else:
                 pos["status"] = "sell_signaled"
+                # Auch das Nicht-Versuchen ist ein Ausgang und gehoert ins Buch — sonst
+                # sieht ein abgeschalteter Auto-Sell aus wie ein Manager, der nie lief.
+                if is_auto:
+                    if not auto_sell_on:
+                        _grund = "Auto-Sell aus (Secret/Schalter)"
+                    elif not pos.get("tokenId"):
+                        _grund = "tokenId fehlt — nicht verkaufbar"
+                    else:
+                        _grund = "Auto-Sell nicht ausgefuehrt"
+                    vermerke_sell_versuch(
+                        bet_key=pos.get("_betKey", ""),
+                        grund=_grund,
+                        sell_reason=sell_reason,
+                        current_price=current,
+                    )
 
             # ── Telegram Alert mit H3-Dedup ───────────────────────────────────
             # H3 Fix 05.06.2026: Sell-Alert wurde alle 4h erneut gesendet wenn

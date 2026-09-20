@@ -224,6 +224,20 @@ jobs:
         run: bash scripts/ci_sichern.sh "Beleg der Betfair-Pushes" betfair_public_ledger.json betfair_public_seen.json betfair_alerts_seen.json betfair_public_trichter.json betfair_public_schatten.json betfair_rutsch_ledger.json betfair_rutsch_seen.json
         continue-on-error: true
 
+      # 20.09.2026 (Vorfall Toulouse–Le Havre, 19.09.): eine Poly-Position lief ins Spiel,
+      # weil der Hard-Close des Positions-Managers ausfiel und nichts davon ins Buch kam.
+      # Der Waechter gehoert NICHT in manage-liga-poly.yml: dessen Cron behauptet 25 Laeufe
+      # am Tag, gezaehlt aus health/liga-poly.json kamen am 16.-19.09. vier, vier, fuenf und
+      # fuenf. Ein Waechter mit derselben Luecke wie das Bewachte nuetzt nichts. Dieser
+      # Workflow laeuft alle 15 Minuten auf demselben Mac und tut es nachweislich.
+      # Rein lesend: er verkauft nichts, er meldet nur.
+      - name: 🚨 Offene Poly-Positionen kurz vor Anpfiff (rein lesend)
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+        run: ${{ env.BETFAIR_PY }} poly_offene_wache.py
+
       - name: 📈 Public-Push-Auswertung (Treffer/ROI der Moneyflow-Signale)
         run: ${{ env.BETFAIR_PY }} betfair_public_eval.py
         continue-on-error: true
@@ -343,6 +357,10 @@ jobs:
           git add betfair_rutsch_bericht.json 2>/dev/null || true
           git add betfair_rutsch_seen.json 2>/dev/null || true
           git add betfair_public_schatten.json 2>/dev/null || true
+          # 20.09.2026: die Wache ueber offene Poly-Positionen — Befund und ihr Dedup-Stand.
+          # Eigene Zeile je Datei, s.o.
+          git add poly_offene_wache.json 2>/dev/null || true
+          git add poly_offene_wache_seen.json 2>/dev/null || true
           git add betfair_public_schatten_bericht.json 2>/dev/null || true
           git add betfair_consensus.json 2>/dev/null || true
           git add betfair_anker.json 2>/dev/null || true

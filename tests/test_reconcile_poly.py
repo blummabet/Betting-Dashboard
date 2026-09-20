@@ -479,3 +479,67 @@ class TestEinVerkaufBrauchtEinenBeleg(unittest.TestCase):
         entweder tagsueber staendig von vorn oder verbindet zwei Tage zu einer Kette."""
         self.assertGreater(R.MAX_KETTE_MIN, 253)
         self.assertLess(R.MAX_KETTE_MIN, 839)
+
+
+class TestWarteMarkerWirdGespeichert(unittest.TestCase):
+    """20.09.2026, beim Nachgehen zu Toulouse–Le Havre.
+
+    `run()` schrieb das Buch nur `if changed` — und `changed` enthaelt nur Wetten, die in
+    DIESEM Lauf geschlossen oder zurueckgeholt wurden. `fehlt_lange_genug` aendert aber
+    einen zweiten Zustand, die Warte-Marker, und der wurde genau auf den Laeufen
+    weggeworfen, auf denen er gebraucht wurde. Der Zaehler kam nie ueber 1,
+    `MIN_FEHLT_LAEUFE = 2` wurde nie erreicht, und weil `nichtGehaltenZuletzt` einfror,
+    riss zusaetzlich jedes Mal die Kette (`MAX_KETTE_MIN`).
+
+    Belegt am echten Buch: Toulouse–Le Havre trug vom 18.09. 12:51:04 bis heute
+    unveraendert `nichtGehaltenLaeufe: 1`, ueber neun Laeufe.
+
+    Fehlerklasse: ein Zaehler, der nur gespeichert wird, wenn er nicht gebraucht wird.
+    """
+
+    def test_der_marker_zaehlt_zwischen_zwei_laeufen_hoch(self):
+        bet = {"betKey": "K", "home": "A", "away": "B", "market": "M", "status": "placed",
+               "tokenId": "TOK1", "placedAt": "2026-09-18T12:00:00Z"}
+        g = _getter([], [])
+        R.reconcile([bet], proxy="0xabc", finished_keys=set(),
+                    now_iso="2026-09-18T13:00:00Z", getter=g)
+        self.assertEqual(bet["nichtGehaltenLaeufe"], 1)
+        R.reconcile([bet], proxy="0xabc", finished_keys=set(),
+                    now_iso="2026-09-18T13:30:00Z", getter=g)
+        self.assertEqual(bet["nichtGehaltenLaeufe"], 2)
+
+    def test_marker_stand_sieht_die_aenderung(self):
+        bets = [{"betKey": "K", "nichtGehaltenLaeufe": 1}]
+        vorher = R.marker_stand(bets)
+        bets[0]["nichtGehaltenLaeufe"] = 2
+        self.assertNotEqual(R.marker_stand(bets), vorher)
+
+    def test_marker_stand_meldet_keine_aenderung_wo_keine_ist(self):
+        bets = [{"betKey": "K", "nichtGehaltenLaeufe": 1, "currentPrice": 0.4}]
+        vorher = R.marker_stand(bets)
+        bets[0]["currentPrice"] = 0.9   # kein Marker → kein Schreibgrund
+        self.assertEqual(R.marker_stand(bets), vorher)
+
+    def test_run_schreibt_das_buch_auch_ohne_schliessung(self):
+        import json
+        import tempfile
+        from pathlib import Path as _P
+        bet = {"betKey": "K", "home": "A", "away": "B", "market": "M", "status": "placed",
+               "tokenId": "TOK1", "placedAt": "2026-09-18T12:00:00Z"}
+        tmp = tempfile.NamedTemporaryFile("w", suffix=".json", delete=False, encoding="utf-8")
+        json.dump({"bets": [bet]}, tmp)
+        tmp.close()
+        alt = (R.AUTO_BETS_FILE, R._proxy_address, R.fetch_wallet_positions)
+        try:
+            R.AUTO_BETS_FILE = _P(tmp.name)
+            R._proxy_address = lambda: "0xabc"
+            R.fetch_wallet_positions = lambda *a, **k: {}   # Wallet haelt TOK1 nicht
+            R.run()
+            nachher = json.loads(_P(tmp.name).read_text(encoding="utf-8"))
+            b = nachher["bets"][0]
+            self.assertEqual(b["status"], "placed")          # nichts geschlossen
+            self.assertIn("nichtGehaltenSeit", b)            # aber der Marker steht
+            self.assertEqual(b["nichtGehaltenLaeufe"], 1)
+        finally:
+            (R.AUTO_BETS_FILE, R._proxy_address, R.fetch_wallet_positions) = alt
+            _P(tmp.name).unlink(missing_ok=True)
