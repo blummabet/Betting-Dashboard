@@ -352,7 +352,11 @@ def shortlist_push_plays(ledger=None, track=None) -> list:
 # „MLS-Picks · Trades" hiessen so, gehen aber beide in den PUBLIC-Channel — `notify_new_picks.py`
 # und der Digest in `telegram_wm.py` senden an TELEGRAM_CHAT_ID, nicht an TELEGRAM_TRADES_CHAT_ID.
 # Ein falsches Etikett auf der Seite, von der Lucas Screenshots postet.
-KANAL = {"bf-public": "Public", "whale-public": "Public",
+# 20.09.2026: `whale-trades` fehlte hier, obwohl der Block seit demselben Commit existiert —
+# `test_jeder_push_block_sagt_wohin_er_geht` hat es gefangen („ein Kanal-Block ohne Ziel ist im
+# Telegram-Ueberblick blind"). Genau der Sinn dieses Registers: ein neuer Block muss sein Ziel
+# nennen, sonst steht er im Ueberblick ohne Kanal.
+KANAL = {"bf-public": "Public", "whale-public": "Public", "whale-trades": "Trades",
          "liga-picks": "Public", "mls-picks": "Public",
          "killer": "Trades", "shortlist": "Trades", "stake-burst": "Trades",
          "stake-burst-live": "Trades", "stake-burst-vor": "Trades",

@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-20T13:43:19.226844+00:00",
+ "generatedAt": "2026-09-20T14:13:26.396578+00:00",
  "stakePoly": {
   "lol-tl2-fly-2026-09-20": {
    "usd": 1349,
@@ -26,53 +26,48 @@
    "liga": "Circuit X Curitiba #3"
   }
  },
- "stufe1": [],
- "stufe2": [
+ "stufe1": [
   {
-   "matchId": "36068628",
-   "home": "Sint Truiden",
-   "away": "Westerlo",
-   "league": "Belgian Pro League",
-   "kickoff": "2026-09-20T14:00:00Z",
+   "matchId": "36038844",
+   "home": "Red Bull Salzburg",
+   "away": "Sturm Graz",
+   "league": "Austrian Bundesliga",
+   "kickoff": "2026-09-20T15:00:00Z",
    "markt": "Match Odds",
    "seite": "home",
-   "name": "Sint Truiden",
-   "odd": 1.7,
-   "entryOdd": 1.74,
-   "anteilPct": 73,
-   "stufe": 2,
+   "name": "Red Bull Salzburg",
+   "odd": 1.62,
+   "entryOdd": 1.69,
+   "anteilPct": 81,
+   "stufe": 1,
    "verstaerker": [
+    {
+     "art": "poly",
+     "text": "Poly Preis 60%",
+     "gewicht": 12
+    },
     {
      "art": "pinn",
      "text": "Pinnacle stimmt zu",
      "gewicht": 10
-    },
-    {
-     "art": "track",
-     "text": "Liga trägt (+35% · n30)",
-     "gewicht": 10
     }
    ],
-   "rang": 77.3,
-   "track": {
-    "n": 30,
-    "roi": 0.3473,
-    "roiUg": 0.0221,
-    "roiOg": 0.6726,
-    "traegt": true,
-    "verliert": false,
-    "fade": false
-   },
+   "rang": 80.1,
+   "track": null,
    "streak": null,
-   "poly": null,
-   "polyStatus": "unbekannt",
-   "polyKey": null,
-   "polySide": null,
+   "poly": {
+    "anteilPct": 60,
+    "usd": 294,
+    "odd": 1.65
+   },
+   "polyStatus": "ja",
+   "polyKey": "aut-rbs-stu-2026-09-20",
+   "polySide": "FC Salzburg",
    "pinnMovePP": null,
    "punkte": {
-    "punkte": 5,
-    "moeglich": 7,
-    "dauerH": 0.28,
+    "punkte": 7,
+    "moeglich": 10,
+    "dauerH": 0.78,
     "teile": [
      {
       "buch": "BF",
@@ -82,20 +77,150 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 73% auf der Seite"
+       "text": "Geld 81% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.734,
-       "betrag": 4992,
-       "gesamt": 6801,
+       "anteil": 0.806,
+       "betrag": 5735,
+       "gesamt": 7115,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 73% auf der Seite"
+      "text": "Geld 81% auf der Seite"
+     },
+     {
+      "buch": "POLY",
+      "name": "Polymarket",
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Poly-Preis 60% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein bewiesenes Wallet auf der Seite"
+      },
+      "geld": {
+       "anteil": 0.6,
+       "betrag": null,
+       "gesamt": 294,
+       "waehrung": "USD",
+       "quelle": "preis"
+      },
+      "text": "Poly-Preis 60% auf derselben Seite"
+     },
+     {
+      "buch": "PIN",
+      "name": "Pinnacle",
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "hat dieselbe Seite als Favorit"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein Move gemessen"
+      },
+      "geld": null,
+      "text": "hat dieselbe Seite als Favorit"
+     },
+     {
+      "buch": "STAKE",
+      "name": "Stake-Highroller",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Stake-Highroller nicht erhoben"
+     },
+     {
+      "buch": "ZEIT",
+      "name": "Dauer",
+      "status": "nein",
+      "punkte": 0,
+      "moeglich": 1,
+      "grund": {
+       "ok": false,
+       "text": "steht seit 0.8h vor Anpfiff"
+      },
+      "tiefe": null,
+      "text": "steht seit 0.8h vor Anpfiff"
+     }
+    ]
+   },
+   "wertVsPinn": null,
+   "gehaltenSeit": "2026-09-20T14:13:26.396578+00:00",
+   "zuletztAktiv": "2026-09-20T14:13:26.396578+00:00",
+   "haltePreis": 1.62,
+   "aktiv": true
+  }
+ ],
+ "stufe2": [
+  {
+   "matchId": "36067669",
+   "home": "NFC Volos",
+   "away": "AEK Athens",
+   "league": "Greek Super League",
+   "kickoff": "2026-09-20T15:00:00Z",
+   "markt": "Match Odds",
+   "seite": "away",
+   "name": "AEK Athens",
+   "odd": 1.31,
+   "entryOdd": 1.32,
+   "anteilPct": 97,
+   "stufe": 2,
+   "verstaerker": [
+    {
+     "art": "pinn",
+     "text": "Pinnacle stimmt zu",
+     "gewicht": 10
+    }
+   ],
+   "rang": 69.7,
+   "track": null,
+   "streak": null,
+   "poly": null,
+   "polyStatus": "unbekannt",
+   "polyKey": null,
+   "polySide": null,
+   "pinnMovePP": -0.2,
+   "punkte": {
+    "punkte": 5,
+    "moeglich": 7,
+    "dauerH": 0.78,
+    "teile": [
+     {
+      "buch": "BF",
+      "name": "Betfair",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Geld 97% auf der Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "frischer Zufluss und Quote zieht mit"
+      },
+      "geld": {
+       "anteil": 0.969,
+       "betrag": 19419,
+       "gesamt": 20040,
+       "waehrung": "EUR",
+       "quelle": "geld"
+      },
+      "text": "Geld 97% auf der Seite"
      },
      {
       "buch": "POLY",
@@ -144,245 +269,17 @@
       "moeglich": 1,
       "grund": {
        "ok": false,
-       "text": "steht seit 0.3h vor Anpfiff"
+       "text": "steht seit 0.8h vor Anpfiff"
       },
       "tiefe": null,
-      "text": "steht seit 0.3h vor Anpfiff"
+      "text": "steht seit 0.8h vor Anpfiff"
      }
     ]
    },
-   "wertVsPinn": null,
-   "gehaltenSeit": "2026-09-20T13:43:19.226844+00:00",
-   "zuletztAktiv": "2026-09-20T13:43:19.226844+00:00",
-   "haltePreis": 1.7,
-   "aktiv": true
-  },
-  {
-   "matchId": "36067672",
-   "home": "Levadiakos",
-   "away": "Olympiakos",
-   "league": "Greek Super League",
-   "kickoff": "2026-09-20T14:00:00Z",
-   "markt": "Match Odds",
-   "seite": "away",
-   "name": "Olympiakos",
-   "odd": 1.39,
-   "entryOdd": 1.35,
-   "anteilPct": 90,
-   "stufe": 2,
-   "verstaerker": [
-    {
-     "art": "pinn",
-     "text": "Pinnacle stimmt zu",
-     "gewicht": 10
-    }
-   ],
-   "rang": 69.0,
-   "track": null,
-   "streak": null,
-   "poly": null,
-   "polyStatus": "unbekannt",
-   "polyKey": null,
-   "polySide": null,
-   "pinnMovePP": -2.9,
-   "punkte": {
-    "punkte": 5,
-    "moeglich": 7,
-    "dauerH": 0.51,
-    "teile": [
-     {
-      "buch": "BF",
-      "name": "Betfair",
-      "status": "ja",
-      "punkte": 3,
-      "moeglich": 3,
-      "grund": {
-       "ok": true,
-       "text": "Geld 90% auf der Seite"
-      },
-      "tiefe": {
-       "ok": true,
-       "text": "frischer Zufluss und Quote zieht mit"
-      },
-      "geld": {
-       "anteil": 0.897,
-       "betrag": 22705,
-       "gesamt": 25312,
-       "waehrung": "EUR",
-       "quelle": "geld"
-      },
-      "text": "Geld 90% auf der Seite"
-     },
-     {
-      "buch": "POLY",
-      "name": "Polymarket",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "geld": null,
-      "text": "Polymarket nicht erhoben"
-     },
-     {
-      "buch": "PIN",
-      "name": "Pinnacle",
-      "status": "ja",
-      "punkte": 2,
-      "moeglich": 3,
-      "grund": {
-       "ok": true,
-       "text": "hat dieselbe Seite als Favorit"
-      },
-      "tiefe": {
-       "ok": false,
-       "text": "Move -2.9pp in unsere Richtung"
-      },
-      "geld": null,
-      "text": "hat dieselbe Seite als Favorit"
-     },
-     {
-      "buch": "STAKE",
-      "name": "Stake-Highroller",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "geld": null,
-      "text": "Stake-Highroller nicht erhoben"
-     },
-     {
-      "buch": "ZEIT",
-      "name": "Dauer",
-      "status": "nein",
-      "punkte": 0,
-      "moeglich": 1,
-      "grund": {
-       "ok": false,
-       "text": "steht seit 0.5h vor Anpfiff"
-      },
-      "tiefe": null,
-      "text": "steht seit 0.5h vor Anpfiff"
-     }
-    ]
-   },
-   "wertVsPinn": -0.0152,
-   "gehaltenSeit": "2026-09-20T13:29:38.716733+00:00",
-   "zuletztAktiv": "2026-09-20T13:29:38.716733+00:00",
-   "haltePreis": 1.39,
-   "aktiv": true
-  },
-  {
-   "matchId": "36077779",
-   "home": "Ponte Preta",
-   "away": "CRB",
-   "league": "Brazilian Serie B",
-   "kickoff": "2026-09-20T14:00:00Z",
-   "markt": "Match Odds",
-   "seite": "away",
-   "name": "CRB",
-   "odd": 1.36,
-   "entryOdd": 1.41,
-   "anteilPct": 89,
-   "stufe": 2,
-   "verstaerker": [],
-   "rang": 58.9,
-   "track": {
-    "n": 42,
-    "roi": 0.2112,
-    "roiUg": -0.0711,
-    "roiOg": 0.4934,
-    "traegt": false,
-    "verliert": false,
-    "fade": false
-   },
-   "streak": null,
-   "poly": null,
-   "polyStatus": "unbekannt",
-   "polyKey": null,
-   "polySide": null,
-   "pinnMovePP": null,
-   "punkte": {
-    "punkte": 3,
-    "moeglich": 4,
-    "dauerH": 0.28,
-    "teile": [
-     {
-      "buch": "BF",
-      "name": "Betfair",
-      "status": "ja",
-      "punkte": 3,
-      "moeglich": 3,
-      "grund": {
-       "ok": true,
-       "text": "Geld 89% auf der Seite"
-      },
-      "tiefe": {
-       "ok": true,
-       "text": "frischer Zufluss und Quote zieht mit"
-      },
-      "geld": {
-       "anteil": 0.893,
-       "betrag": 6419,
-       "gesamt": 7188,
-       "waehrung": "EUR",
-       "quelle": "geld"
-      },
-      "text": "Geld 89% auf der Seite"
-     },
-     {
-      "buch": "POLY",
-      "name": "Polymarket",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "geld": null,
-      "text": "Polymarket nicht erhoben"
-     },
-     {
-      "buch": "PIN",
-      "name": "Pinnacle",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "geld": null,
-      "text": "Pinnacle nicht erhoben"
-     },
-     {
-      "buch": "STAKE",
-      "name": "Stake-Highroller",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "geld": null,
-      "text": "Stake-Highroller nicht erhoben"
-     },
-     {
-      "buch": "ZEIT",
-      "name": "Dauer",
-      "status": "nein",
-      "punkte": 0,
-      "moeglich": 1,
-      "grund": {
-       "ok": false,
-       "text": "steht seit 0.3h vor Anpfiff"
-      },
-      "tiefe": null,
-      "text": "steht seit 0.3h vor Anpfiff"
-     }
-    ]
-   },
-   "wertVsPinn": null,
-   "gehaltenSeit": "2026-09-20T13:43:19.226844+00:00",
-   "zuletztAktiv": "2026-09-20T13:43:19.226844+00:00",
-   "haltePreis": 1.36,
+   "wertVsPinn": -0.0313,
+   "gehaltenSeit": "2026-09-20T14:13:26.396578+00:00",
+   "zuletztAktiv": "2026-09-20T14:13:26.396578+00:00",
+   "haltePreis": 1.31,
    "aktiv": true
   }
  ],
@@ -395,11 +292,11 @@
    "away": "Real Madrid",
    "name": "Real Madrid",
    "seite": "away",
-   "odd": 2.06,
+   "odd": 2.04,
    "kickoff": "2026-09-20T14:15:00Z",
    "punkte": 10,
    "moeglich": 13,
-   "dauerH": 0.53,
+   "dauerH": 0.03,
    "teile": [
     {
      "buch": "BF",
@@ -409,20 +306,20 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Geld 72% auf der Seite"
+      "text": "Geld 76% auf der Seite"
      },
      "tiefe": {
       "ok": true,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.722,
-      "betrag": 288966,
-      "gesamt": 400230,
+      "anteil": 0.762,
+      "betrag": 482176,
+      "gesamt": 632777,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 72% auf der Seite"
+     "text": "Geld 76% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -440,8 +337,8 @@
      },
      "geld": {
       "anteil": 0.86,
-      "betrag": 721219,
-      "gesamt": 838627,
+      "betrag": 770348,
+      "gesamt": 895753,
       "waehrung": "USD",
       "quelle": "geld"
      },
@@ -495,10 +392,10 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 0.5h vor Anpfiff"
+      "text": "steht seit 0.0h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 0.5h vor Anpfiff"
+     "text": "steht seit 0.0h vor Anpfiff"
     }
    ],
    "torOk": true
@@ -511,11 +408,11 @@
    "away": "Paris St-G",
    "name": "Paris St-G",
    "seite": "away",
-   "odd": 1.48,
+   "odd": 1.47,
    "kickoff": "2026-09-20T18:45:00Z",
    "punkte": 7,
    "moeglich": 10,
-   "dauerH": 5.03,
+   "dauerH": 4.53,
    "teile": [
     {
      "buch": "BF",
@@ -525,20 +422,20 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Geld 84% auf der Seite"
+      "text": "Geld 83% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.839,
-      "betrag": 92700,
-      "gesamt": 110489,
+      "anteil": 0.831,
+      "betrag": 97070,
+      "gesamt": 116811,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 84% auf der Seite"
+     "text": "Geld 83% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -556,8 +453,8 @@
      },
      "geld": {
       "anteil": 0.89,
-      "betrag": 71428,
-      "gesamt": 80256,
+      "betrag": 71515,
+      "gesamt": 80354,
       "waehrung": "USD",
       "quelle": "geld"
      },
@@ -575,7 +472,7 @@
      },
      "tiefe": {
       "ok": false,
-      "text": "Move -3.1pp in unsere Richtung"
+      "text": "Move -2.7pp in unsere Richtung"
      },
      "geld": null,
      "text": "hat dieselbe Seite als Favorit"
@@ -599,50 +496,50 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 5.0h vor Anpfiff"
+      "text": "steht seit 4.5h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 5.0h vor Anpfiff"
+     "text": "steht seit 4.5h vor Anpfiff"
     }
    ],
    "torOk": false
   },
   {
-   "matchId": "36036319",
+   "matchId": "36041256",
    "markt": "Match Odds",
-   "liga": "English Premier League",
-   "home": "Fulham",
-   "away": "Man Utd",
-   "name": "Man Utd",
-   "seite": "away",
-   "odd": 2.08,
-   "kickoff": "2026-09-20T15:30:00Z",
-   "punkte": 6,
-   "moeglich": 13,
-   "dauerH": 1.78,
+   "liga": "Italian Serie A",
+   "home": "AC Milan",
+   "away": "Lecce",
+   "name": "AC Milan",
+   "seite": "home",
+   "odd": 1.3,
+   "kickoff": "2026-09-20T18:45:00Z",
+   "punkte": 7,
+   "moeglich": 10,
+   "dauerH": 4.53,
    "teile": [
     {
      "buch": "BF",
      "name": "Betfair",
-     "status": "nein",
-     "punkte": 0,
+     "status": "ja",
+     "punkte": 2,
      "moeglich": 3,
      "grund": {
-      "ok": false,
-      "text": "Geld 61% auf der Seite"
+      "ok": true,
+      "text": "Geld 74% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.614,
-      "betrag": 91571,
-      "gesamt": 149139,
+      "anteil": 0.742,
+      "betrag": 69668,
+      "gesamt": 93892,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 61% auf der Seite"
+     "text": "Geld 74% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -652,240 +549,20 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Poly-Geld 92% auf derselben Seite"
+      "text": "Poly-Preis 78% auf derselben Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "kein bewiesenes Wallet auf der Seite"
      },
      "geld": {
-      "anteil": 0.92,
-      "betrag": 100460,
-      "gesamt": 109196,
+      "anteil": 0.78,
+      "betrag": null,
+      "gesamt": 13238,
       "waehrung": "USD",
-      "quelle": "geld"
+      "quelle": "preis"
      },
-     "text": "Poly-Geld 92% auf derselben Seite"
-    },
-    {
-     "buch": "PIN",
-     "name": "Pinnacle",
-     "status": "ja",
-     "punkte": 2,
-     "moeglich": 3,
-     "grund": {
-      "ok": true,
-      "text": "hat dieselbe Seite als Favorit"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "kein Move gemessen"
-     },
-     "geld": null,
-     "text": "hat dieselbe Seite als Favorit"
-    },
-    {
-     "buch": "STAKE",
-     "name": "Stake-Highroller",
-     "status": "ja",
-     "punkte": 2,
-     "moeglich": 3,
-     "grund": {
-      "ok": true,
-      "text": "$1.100 Highroller-Geld auf derselben Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "2 Wetten, nicht eine einzelne"
-     },
-     "geld": {
-      "anteil": 0.3793,
-      "betrag": 1100,
-      "gesamt": 2900,
-      "waehrung": "USD",
-      "quelle": "geld"
-     },
-     "text": "$1.100 Highroller-Geld auf derselben Seite"
-    },
-    {
-     "buch": "ZEIT",
-     "name": "Dauer",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 1,
-     "grund": {
-      "ok": false,
-      "text": "steht seit 1.8h vor Anpfiff"
-     },
-     "tiefe": null,
-     "text": "steht seit 1.8h vor Anpfiff"
-    }
-   ],
-   "torOk": false
-  },
-  {
-   "matchId": "36041091",
-   "markt": "Match Odds",
-   "liga": "German Bundesliga",
-   "home": "Schalke 04",
-   "away": "Elversberg",
-   "name": "Schalke 04",
-   "seite": "home",
-   "odd": 2.02,
-   "kickoff": "2026-09-20T15:30:00Z",
-   "punkte": 6,
-   "moeglich": 10,
-   "dauerH": 1.78,
-   "teile": [
-    {
-     "buch": "BF",
-     "name": "Betfair",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 3,
-     "grund": {
-      "ok": false,
-      "text": "Geld 60% auf der Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "frischer Zufluss und Quote zieht mit"
-     },
-     "geld": {
-      "anteil": 0.596,
-      "betrag": 32254,
-      "gesamt": 54118,
-      "waehrung": "EUR",
-      "quelle": "geld"
-     },
-     "text": "Geld 60% auf der Seite"
-    },
-    {
-     "buch": "POLY",
-     "name": "Polymarket",
-     "status": "ja",
-     "punkte": 3,
-     "moeglich": 3,
-     "grund": {
-      "ok": true,
-      "text": "Poly-Geld 94% auf derselben Seite"
-     },
-     "tiefe": {
-      "ok": true,
-      "text": "1 bewiesene Wallet drauf"
-     },
-     "geld": {
-      "anteil": 0.94,
-      "betrag": 103591,
-      "gesamt": 110203,
-      "waehrung": "USD",
-      "quelle": "geld"
-     },
-     "text": "Poly-Geld 94% auf derselben Seite"
-    },
-    {
-     "buch": "PIN",
-     "name": "Pinnacle",
-     "status": "ja",
-     "punkte": 3,
-     "moeglich": 3,
-     "grund": {
-      "ok": true,
-      "text": "hat dieselbe Seite als Favorit"
-     },
-     "tiefe": {
-      "ok": true,
-      "text": "Move +3.5pp in unsere Richtung"
-     },
-     "geld": null,
-     "text": "hat dieselbe Seite als Favorit"
-    },
-    {
-     "buch": "STAKE",
-     "name": "Stake-Highroller",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Stake-Highroller nicht erhoben"
-    },
-    {
-     "buch": "ZEIT",
-     "name": "Dauer",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 1,
-     "grund": {
-      "ok": false,
-      "text": "steht seit 1.8h vor Anpfiff"
-     },
-     "tiefe": null,
-     "text": "steht seit 1.8h vor Anpfiff"
-    }
-   ],
-   "torOk": false
-  },
-  {
-   "matchId": "36071865",
-   "markt": "Match Odds",
-   "liga": "Spanish La Liga",
-   "home": "Villarreal",
-   "away": "Levante",
-   "name": "Villarreal",
-   "seite": "home",
-   "odd": 1.56,
-   "kickoff": "2026-09-20T16:30:00Z",
-   "punkte": 6,
-   "moeglich": 10,
-   "dauerH": 2.78,
-   "teile": [
-    {
-     "buch": "BF",
-     "name": "Betfair",
-     "status": "ja",
-     "punkte": 2,
-     "moeglich": 3,
-     "grund": {
-      "ok": true,
-      "text": "Geld 77% auf der Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "frischer Zufluss und Quote zieht mit"
-     },
-     "geld": {
-      "anteil": 0.767,
-      "betrag": 38776,
-      "gesamt": 50555,
-      "waehrung": "EUR",
-      "quelle": "geld"
-     },
-     "text": "Geld 77% auf der Seite"
-    },
-    {
-     "buch": "POLY",
-     "name": "Polymarket",
-     "status": "ja",
-     "punkte": 2,
-     "moeglich": 3,
-     "grund": {
-      "ok": true,
-      "text": "Poly-Geld 77% auf derselben Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "kein bewiesenes Wallet auf der Seite"
-     },
-     "geld": {
-      "anteil": 0.77,
-      "betrag": 7459,
-      "gesamt": 9687,
-      "waehrung": "USD",
-      "quelle": "geld"
-     },
-     "text": "Poly-Geld 77% auf derselben Seite"
+     "text": "Poly-Preis 78% auf derselben Seite"
     },
     {
      "buch": "PIN",
@@ -918,15 +595,15 @@
     {
      "buch": "ZEIT",
      "name": "Dauer",
-     "status": "nein",
-     "punkte": 0,
+     "status": "ja",
+     "punkte": 1,
      "moeglich": 1,
      "grund": {
-      "ok": false,
-      "text": "steht seit 2.8h vor Anpfiff"
+      "ok": true,
+      "text": "steht seit 4.5h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 2.8h vor Anpfiff"
+     "text": "steht seit 4.5h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -939,34 +616,34 @@
    "away": "Sturm Graz",
    "name": "Red Bull Salzburg",
    "seite": "home",
-   "odd": 1.66,
+   "odd": 1.62,
    "kickoff": "2026-09-20T15:00:00Z",
-   "punkte": 6,
+   "punkte": 7,
    "moeglich": 10,
-   "dauerH": 1.28,
+   "dauerH": 0.78,
    "teile": [
     {
      "buch": "BF",
      "name": "Betfair",
      "status": "ja",
-     "punkte": 2,
+     "punkte": 3,
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Geld 80% auf der Seite"
+      "text": "Geld 81% auf der Seite"
      },
      "tiefe": {
-      "ok": false,
+      "ok": true,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.803,
-      "betrag": 3070,
-      "gesamt": 3823,
+      "anteil": 0.806,
+      "betrag": 5735,
+      "gesamt": 7115,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 80% auf der Seite"
+     "text": "Geld 81% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -1027,6 +704,122 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
+      "text": "steht seit 0.8h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 0.8h vor Anpfiff"
+    }
+   ],
+   "torOk": true
+  },
+  {
+   "matchId": "36036319",
+   "markt": "Match Odds",
+   "liga": "English Premier League",
+   "home": "Fulham",
+   "away": "Man Utd",
+   "name": "Man Utd",
+   "seite": "away",
+   "odd": 2.06,
+   "kickoff": "2026-09-20T15:30:00Z",
+   "punkte": 6,
+   "moeglich": 13,
+   "dauerH": 1.28,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 3,
+     "grund": {
+      "ok": false,
+      "text": "Geld 61% auf der Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.61,
+      "betrag": 99743,
+      "gesamt": 163513,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 61% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "ja",
+     "punkte": 2,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
+      "text": "Poly-Geld 91% auf derselben Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "kein bewiesenes Wallet auf der Seite"
+     },
+     "geld": {
+      "anteil": 0.91,
+      "betrag": 100322,
+      "gesamt": 110244,
+      "waehrung": "USD",
+      "quelle": "geld"
+     },
+     "text": "Poly-Geld 91% auf derselben Seite"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "ja",
+     "punkte": 2,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
+      "text": "hat dieselbe Seite als Favorit"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "kein Move gemessen"
+     },
+     "geld": null,
+     "text": "hat dieselbe Seite als Favorit"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "ja",
+     "punkte": 2,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
+      "text": "$1.100 Highroller-Geld auf derselben Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "2 Wetten, nicht eine einzelne"
+     },
+     "geld": {
+      "anteil": 0.3793,
+      "betrag": 1100,
+      "gesamt": 2900,
+      "waehrung": "USD",
+      "quelle": "geld"
+     },
+     "text": "$1.100 Highroller-Geld auf derselben Seite"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 1,
+     "grund": {
+      "ok": false,
       "text": "steht seit 1.3h vor Anpfiff"
      },
      "tiefe": null,
@@ -1036,366 +829,78 @@
    "torOk": false
   },
   {
-   "matchId": "36039976",
-   "markt": "Match Odds",
-   "liga": "French Ligue 1",
-   "home": "Nice",
-   "away": "Lille",
-   "name": "Lille",
-   "seite": "away",
-   "odd": 2.24,
-   "kickoff": "2026-09-20T15:15:00Z",
-   "punkte": 5,
-   "moeglich": 10,
-   "dauerH": 1.53,
-   "teile": [
-    {
-     "buch": "BF",
-     "name": "Betfair",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 3,
-     "grund": {
-      "ok": false,
-      "text": "Geld 54% auf der Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "frischer Zufluss und Quote zieht mit"
-     },
-     "geld": {
-      "anteil": 0.542,
-      "betrag": 12796,
-      "gesamt": 23608,
-      "waehrung": "EUR",
-      "quelle": "geld"
-     },
-     "text": "Geld 54% auf der Seite"
-    },
-    {
-     "buch": "POLY",
-     "name": "Polymarket",
-     "status": "ja",
-     "punkte": 2,
-     "moeglich": 3,
-     "grund": {
-      "ok": true,
-      "text": "Poly-Geld 89% auf derselben Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "kein bewiesenes Wallet auf der Seite"
-     },
-     "geld": {
-      "anteil": 0.89,
-      "betrag": 118599,
-      "gesamt": 133257,
-      "waehrung": "USD",
-      "quelle": "geld"
-     },
-     "text": "Poly-Geld 89% auf derselben Seite"
-    },
-    {
-     "buch": "PIN",
-     "name": "Pinnacle",
-     "status": "ja",
-     "punkte": 3,
-     "moeglich": 3,
-     "grund": {
-      "ok": true,
-      "text": "hat dieselbe Seite als Favorit"
-     },
-     "tiefe": {
-      "ok": true,
-      "text": "Move +1.0pp in unsere Richtung"
-     },
-     "geld": null,
-     "text": "hat dieselbe Seite als Favorit"
-    },
-    {
-     "buch": "STAKE",
-     "name": "Stake-Highroller",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Stake-Highroller nicht erhoben"
-    },
-    {
-     "buch": "ZEIT",
-     "name": "Dauer",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 1,
-     "grund": {
-      "ok": false,
-      "text": "steht seit 1.5h vor Anpfiff"
-     },
-     "tiefe": null,
-     "text": "steht seit 1.5h vor Anpfiff"
-    }
-   ],
-   "torOk": false
-  },
-  {
-   "matchId": "36071862",
-   "markt": "Match Odds",
-   "liga": "Spanish La Liga",
-   "home": "Deportivo",
-   "away": "Betis",
-   "name": "Betis",
-   "seite": "away",
-   "odd": 2.06,
-   "kickoff": "2026-09-20T16:30:00Z",
-   "punkte": 5,
-   "moeglich": 7,
-   "dauerH": 2.78,
-   "teile": [
-    {
-     "buch": "BF",
-     "name": "Betfair",
-     "status": "ja",
-     "punkte": 2,
-     "moeglich": 3,
-     "grund": {
-      "ok": true,
-      "text": "Geld 87% auf der Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "frischer Zufluss und Quote zieht mit"
-     },
-     "geld": {
-      "anteil": 0.873,
-      "betrag": 149107,
-      "gesamt": 170798,
-      "waehrung": "EUR",
-      "quelle": "geld"
-     },
-     "text": "Geld 87% auf der Seite"
-    },
-    {
-     "buch": "POLY",
-     "name": "Polymarket",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Polymarket nicht erhoben"
-    },
-    {
-     "buch": "PIN",
-     "name": "Pinnacle",
-     "status": "ja",
-     "punkte": 3,
-     "moeglich": 3,
-     "grund": {
-      "ok": true,
-      "text": "hat dieselbe Seite als Favorit"
-     },
-     "tiefe": {
-      "ok": true,
-      "text": "Move +29.2pp in unsere Richtung"
-     },
-     "geld": null,
-     "text": "hat dieselbe Seite als Favorit"
-    },
-    {
-     "buch": "STAKE",
-     "name": "Stake-Highroller",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Stake-Highroller nicht erhoben"
-    },
-    {
-     "buch": "ZEIT",
-     "name": "Dauer",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 1,
-     "grund": {
-      "ok": false,
-      "text": "steht seit 2.8h vor Anpfiff"
-     },
-     "tiefe": null,
-     "text": "steht seit 2.8h vor Anpfiff"
-    }
-   ],
-   "torOk": false
-  },
-  {
-   "matchId": "36041797",
+   "matchId": "36041091",
    "markt": "Match Odds",
    "liga": "German Bundesliga",
-   "home": "Paderborn",
-   "away": "Hoffenheim",
-   "name": "Hoffenheim",
-   "seite": "away",
-   "odd": 1.78,
-   "kickoff": "2026-09-20T17:30:00Z",
-   "punkte": 5,
+   "home": "Schalke 04",
+   "away": "Elversberg",
+   "name": "Schalke 04",
+   "seite": "home",
+   "odd": 2.02,
+   "kickoff": "2026-09-20T15:30:00Z",
+   "punkte": 6,
    "moeglich": 10,
-   "dauerH": 3.78,
+   "dauerH": 1.28,
    "teile": [
     {
      "buch": "BF",
      "name": "Betfair",
-     "status": "ja",
-     "punkte": 2,
+     "status": "nein",
+     "punkte": 0,
      "moeglich": 3,
      "grund": {
-      "ok": true,
-      "text": "Geld 72% auf der Seite"
+      "ok": false,
+      "text": "Geld 59% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.719,
-      "betrag": 13934,
-      "gesamt": 19379,
+      "anteil": 0.593,
+      "betrag": 35239,
+      "gesamt": 59425,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 72% auf der Seite"
+     "text": "Geld 59% auf der Seite"
     },
     {
      "buch": "POLY",
      "name": "Polymarket",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 3,
-     "grund": {
-      "ok": false,
-      "text": "Poly-Preis 56% auf derselben Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "kein bewiesenes Wallet auf der Seite"
-     },
-     "geld": {
-      "anteil": 0.56,
-      "betrag": null,
-      "gesamt": 4895,
-      "waehrung": "USD",
-      "quelle": "preis"
-     },
-     "text": "Poly-Preis 56% auf derselben Seite"
-    },
-    {
-     "buch": "PIN",
-     "name": "Pinnacle",
-     "status": "ja",
-     "punkte": 2,
-     "moeglich": 3,
-     "grund": {
-      "ok": true,
-      "text": "hat dieselbe Seite als Favorit"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "kein Move gemessen"
-     },
-     "geld": null,
-     "text": "hat dieselbe Seite als Favorit"
-    },
-    {
-     "buch": "STAKE",
-     "name": "Stake-Highroller",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Stake-Highroller nicht erhoben"
-    },
-    {
-     "buch": "ZEIT",
-     "name": "Dauer",
-     "status": "ja",
-     "punkte": 1,
-     "moeglich": 1,
-     "grund": {
-      "ok": true,
-      "text": "steht seit 3.8h vor Anpfiff"
-     },
-     "tiefe": null,
-     "text": "steht seit 3.8h vor Anpfiff"
-    }
-   ],
-   "torOk": false
-  },
-  {
-   "matchId": "36068628",
-   "markt": "Match Odds",
-   "liga": "Belgian Pro League",
-   "home": "Sint Truiden",
-   "away": "Westerlo",
-   "name": "Sint Truiden",
-   "seite": "home",
-   "odd": 1.7,
-   "kickoff": "2026-09-20T14:00:00Z",
-   "punkte": 5,
-   "moeglich": 7,
-   "dauerH": 0.28,
-   "teile": [
-    {
-     "buch": "BF",
-     "name": "Betfair",
      "status": "ja",
      "punkte": 3,
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Geld 73% auf der Seite"
+      "text": "Poly-Geld 95% auf derselben Seite"
      },
      "tiefe": {
       "ok": true,
-      "text": "frischer Zufluss und Quote zieht mit"
+      "text": "1 bewiesene Wallet drauf"
      },
      "geld": {
-      "anteil": 0.734,
-      "betrag": 4992,
-      "gesamt": 6801,
-      "waehrung": "EUR",
+      "anteil": 0.95,
+      "betrag": 136178,
+      "gesamt": 143345,
+      "waehrung": "USD",
       "quelle": "geld"
      },
-     "text": "Geld 73% auf der Seite"
-    },
-    {
-     "buch": "POLY",
-     "name": "Polymarket",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Polymarket nicht erhoben"
+     "text": "Poly-Geld 95% auf derselben Seite"
     },
     {
      "buch": "PIN",
      "name": "Pinnacle",
      "status": "ja",
-     "punkte": 2,
+     "punkte": 3,
      "moeglich": 3,
      "grund": {
       "ok": true,
       "text": "hat dieselbe Seite als Favorit"
      },
      "tiefe": {
-      "ok": false,
-      "text": "kein Move gemessen"
+      "ok": true,
+      "text": "Move +3.5pp in unsere Richtung"
      },
      "geld": null,
      "text": "hat dieselbe Seite als Favorit"
@@ -1419,25 +924,25 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 0.3h vor Anpfiff"
+      "text": "steht seit 1.3h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 0.3h vor Anpfiff"
+     "text": "steht seit 1.3h vor Anpfiff"
     }
    ],
-   "torOk": true
+   "torOk": false
   },
   {
-   "matchId": "36041259",
+   "matchId": "36071865",
    "markt": "Match Odds",
-   "liga": "Italian Serie A",
-   "home": "Juventus",
-   "away": "Atalanta",
-   "name": "Juventus",
+   "liga": "Spanish La Liga",
+   "home": "Villarreal",
+   "away": "Levante",
+   "name": "Villarreal",
    "seite": "home",
-   "odd": 1.77,
-   "kickoff": "2026-09-20T16:00:00Z",
-   "punkte": 4,
+   "odd": 1.57,
+   "kickoff": "2026-09-20T16:30:00Z",
+   "punkte": 6,
    "moeglich": 10,
    "dauerH": 2.28,
    "teile": [
@@ -1449,43 +954,43 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Geld 76% auf der Seite"
+      "text": "Geld 78% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.759,
-      "betrag": 50849,
-      "gesamt": 66995,
+      "anteil": 0.779,
+      "betrag": 46188,
+      "gesamt": 59292,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 76% auf der Seite"
+     "text": "Geld 78% auf der Seite"
     },
     {
      "buch": "POLY",
      "name": "Polymarket",
-     "status": "nein",
-     "punkte": 0,
+     "status": "ja",
+     "punkte": 2,
      "moeglich": 3,
      "grund": {
-      "ok": false,
-      "text": "Poly-Preis 56% auf derselben Seite"
+      "ok": true,
+      "text": "Poly-Geld 79% auf derselben Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "kein bewiesenes Wallet auf der Seite"
      },
      "geld": {
-      "anteil": 0.56,
-      "betrag": null,
-      "gesamt": 17580,
+      "anteil": 0.79,
+      "betrag": 8057,
+      "gesamt": 10199,
       "waehrung": "USD",
-      "quelle": "preis"
+      "quelle": "geld"
      },
-     "text": "Poly-Preis 56% auf derselben Seite"
+     "text": "Poly-Geld 79% auf derselben Seite"
     },
     {
      "buch": "PIN",
@@ -1532,16 +1037,16 @@
    "torOk": false
   },
   {
-   "matchId": "36045388",
+   "matchId": "36071827",
    "markt": "Match Odds",
-   "liga": "Brazilian Serie A",
-   "home": "Gremio",
-   "away": "SE Palmeiras",
-   "name": "SE Palmeiras",
+   "liga": "Swiss Super League",
+   "home": "Lausanne",
+   "away": "Lugano",
+   "name": "Lugano",
    "seite": "away",
-   "odd": 1.98,
-   "kickoff": "2026-09-20T14:00:00Z",
-   "punkte": 4,
+   "odd": 2.04,
+   "kickoff": "2026-09-20T14:30:00Z",
+   "punkte": 6,
    "moeglich": 10,
    "dauerH": 0.28,
    "teile": [
@@ -1553,43 +1058,343 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Geld 70% auf der Seite"
+      "text": "Geld 86% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.705,
-      "betrag": 10340,
-      "gesamt": 14667,
+      "anteil": 0.857,
+      "betrag": 4450,
+      "gesamt": 5192,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 70% auf der Seite"
+     "text": "Geld 86% auf der Seite"
     },
     {
      "buch": "POLY",
      "name": "Polymarket",
-     "status": "nein",
-     "punkte": 0,
+     "status": "ja",
+     "punkte": 2,
      "moeglich": 3,
      "grund": {
-      "ok": false,
-      "text": "Poly-Preis 52% auf derselben Seite"
+      "ok": true,
+      "text": "Poly-Geld 98% auf derselben Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "kein bewiesenes Wallet auf der Seite"
      },
      "geld": {
-      "anteil": 0.52,
+      "anteil": 0.98,
+      "betrag": 8591,
+      "gesamt": 8766,
+      "waehrung": "USD",
+      "quelle": "geld"
+     },
+     "text": "Poly-Geld 98% auf derselben Seite"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "ja",
+     "punkte": 2,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
+      "text": "hat dieselbe Seite als Favorit"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "kein Move gemessen"
+     },
+     "geld": null,
+     "text": "hat dieselbe Seite als Favorit"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Stake-Highroller nicht erhoben"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 1,
+     "grund": {
+      "ok": false,
+      "text": "steht seit 0.3h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 0.3h vor Anpfiff"
+    }
+   ],
+   "torOk": false
+  },
+  {
+   "matchId": "36039976",
+   "markt": "Match Odds",
+   "liga": "French Ligue 1",
+   "home": "Nice",
+   "away": "Lille",
+   "name": "Lille",
+   "seite": "away",
+   "odd": 2.28,
+   "kickoff": "2026-09-20T15:15:00Z",
+   "punkte": 5,
+   "moeglich": 10,
+   "dauerH": 1.03,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 3,
+     "grund": {
+      "ok": false,
+      "text": "Geld 59% auf der Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.586,
+      "betrag": 17030,
+      "gesamt": 29062,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 59% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "ja",
+     "punkte": 2,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
+      "text": "Poly-Geld 89% auf derselben Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "kein bewiesenes Wallet auf der Seite"
+     },
+     "geld": {
+      "anteil": 0.89,
+      "betrag": 118767,
+      "gesamt": 133446,
+      "waehrung": "USD",
+      "quelle": "geld"
+     },
+     "text": "Poly-Geld 89% auf derselben Seite"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "ja",
+     "punkte": 3,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
+      "text": "hat dieselbe Seite als Favorit"
+     },
+     "tiefe": {
+      "ok": true,
+      "text": "Move +1.0pp in unsere Richtung"
+     },
+     "geld": null,
+     "text": "hat dieselbe Seite als Favorit"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Stake-Highroller nicht erhoben"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 1,
+     "grund": {
+      "ok": false,
+      "text": "steht seit 1.0h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 1.0h vor Anpfiff"
+    }
+   ],
+   "torOk": false
+  },
+  {
+   "matchId": "36071862",
+   "markt": "Match Odds",
+   "liga": "Spanish La Liga",
+   "home": "Deportivo",
+   "away": "Betis",
+   "name": "Betis",
+   "seite": "away",
+   "odd": 2.06,
+   "kickoff": "2026-09-20T16:30:00Z",
+   "punkte": 5,
+   "moeglich": 7,
+   "dauerH": 2.28,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
+     "status": "ja",
+     "punkte": 2,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
+      "text": "Geld 87% auf der Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.873,
+      "betrag": 149565,
+      "gesamt": 171323,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 87% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Polymarket nicht erhoben"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "ja",
+     "punkte": 3,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
+      "text": "hat dieselbe Seite als Favorit"
+     },
+     "tiefe": {
+      "ok": true,
+      "text": "Move +29.4pp in unsere Richtung"
+     },
+     "geld": null,
+     "text": "hat dieselbe Seite als Favorit"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Stake-Highroller nicht erhoben"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 1,
+     "grund": {
+      "ok": false,
+      "text": "steht seit 2.3h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 2.3h vor Anpfiff"
+    }
+   ],
+   "torOk": false
+  },
+  {
+   "matchId": "36041797",
+   "markt": "Match Odds",
+   "liga": "German Bundesliga",
+   "home": "Paderborn",
+   "away": "Hoffenheim",
+   "name": "Hoffenheim",
+   "seite": "away",
+   "odd": 1.79,
+   "kickoff": "2026-09-20T17:30:00Z",
+   "punkte": 5,
+   "moeglich": 10,
+   "dauerH": 3.28,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
+     "status": "ja",
+     "punkte": 2,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
+      "text": "Geld 72% auf der Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.721,
+      "betrag": 18048,
+      "gesamt": 25032,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 72% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 3,
+     "grund": {
+      "ok": false,
+      "text": "Poly-Preis 56% auf derselben Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "kein bewiesenes Wallet auf der Seite"
+     },
+     "geld": {
+      "anteil": 0.56,
       "betrag": null,
-      "gesamt": 1822,
+      "gesamt": 5223,
       "waehrung": "USD",
       "quelle": "preis"
      },
-     "text": "Poly-Preis 52% auf derselben Seite"
+     "text": "Poly-Preis 56% auf derselben Seite"
     },
     {
      "buch": "PIN",
@@ -1622,147 +1427,55 @@
     {
      "buch": "ZEIT",
      "name": "Dauer",
-     "status": "nein",
-     "punkte": 0,
+     "status": "ja",
+     "punkte": 1,
      "moeglich": 1,
      "grund": {
-      "ok": false,
-      "text": "steht seit 0.3h vor Anpfiff"
+      "ok": true,
+      "text": "steht seit 3.3h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 0.3h vor Anpfiff"
+     "text": "steht seit 3.3h vor Anpfiff"
     }
    ],
    "torOk": false
   },
   {
-   "matchId": "36065232",
-   "markt": "Match Odds",
-   "liga": "Danish Superliga",
-   "home": "AC Horsens",
-   "away": "AGF",
-   "name": "AGF",
-   "seite": "away",
-   "odd": 1.91,
-   "kickoff": "2026-09-20T14:00:00Z",
-   "punkte": 4,
-   "moeglich": 7,
-   "dauerH": 0.28,
-   "teile": [
-    {
-     "buch": "BF",
-     "name": "Betfair",
-     "status": "ja",
-     "punkte": 2,
-     "moeglich": 3,
-     "grund": {
-      "ok": true,
-      "text": "Geld 83% auf der Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "frischer Zufluss und Quote zieht mit"
-     },
-     "geld": {
-      "anteil": 0.827,
-      "betrag": 6235,
-      "gesamt": 7539,
-      "waehrung": "EUR",
-      "quelle": "geld"
-     },
-     "text": "Geld 83% auf der Seite"
-    },
-    {
-     "buch": "POLY",
-     "name": "Polymarket",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Polymarket nicht erhoben"
-    },
-    {
-     "buch": "PIN",
-     "name": "Pinnacle",
-     "status": "ja",
-     "punkte": 2,
-     "moeglich": 3,
-     "grund": {
-      "ok": true,
-      "text": "hat dieselbe Seite als Favorit"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "kein Move gemessen"
-     },
-     "geld": null,
-     "text": "hat dieselbe Seite als Favorit"
-    },
-    {
-     "buch": "STAKE",
-     "name": "Stake-Highroller",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Stake-Highroller nicht erhoben"
-    },
-    {
-     "buch": "ZEIT",
-     "name": "Dauer",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 1,
-     "grund": {
-      "ok": false,
-      "text": "steht seit 0.3h vor Anpfiff"
-     },
-     "tiefe": null,
-     "text": "steht seit 0.3h vor Anpfiff"
-    }
-   ],
-   "torOk": false
-  },
-  {
-   "matchId": "36067672",
+   "matchId": "36067669",
    "markt": "Match Odds",
    "liga": "Greek Super League",
-   "home": "Levadiakos",
-   "away": "Olympiakos",
-   "name": "Olympiakos",
+   "home": "NFC Volos",
+   "away": "AEK Athens",
+   "name": "AEK Athens",
    "seite": "away",
-   "odd": 1.41,
-   "kickoff": "2026-09-20T14:00:00Z",
-   "punkte": 4,
+   "odd": 1.31,
+   "kickoff": "2026-09-20T15:00:00Z",
+   "punkte": 5,
    "moeglich": 7,
-   "dauerH": 0.51,
+   "dauerH": 0.78,
    "teile": [
     {
      "buch": "BF",
      "name": "Betfair",
      "status": "ja",
-     "punkte": 2,
+     "punkte": 3,
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Geld 89% auf der Seite"
+      "text": "Geld 97% auf der Seite"
      },
      "tiefe": {
-      "ok": false,
+      "ok": true,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.891,
-      "betrag": 24256,
-      "gesamt": 27223,
+      "anteil": 0.969,
+      "betrag": 19419,
+      "gesamt": 20040,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 89% auf der Seite"
+     "text": "Geld 97% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -1787,7 +1500,7 @@
      },
      "tiefe": {
       "ok": false,
-      "text": "Move -3.9pp in unsere Richtung"
+      "text": "kein Move gemessen"
      },
      "geld": null,
      "text": "hat dieselbe Seite als Favorit"
@@ -1811,10 +1524,114 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 0.5h vor Anpfiff"
+      "text": "steht seit 0.8h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 0.5h vor Anpfiff"
+     "text": "steht seit 0.8h vor Anpfiff"
+    }
+   ],
+   "torOk": true
+  },
+  {
+   "matchId": "36041259",
+   "markt": "Match Odds",
+   "liga": "Italian Serie A",
+   "home": "Juventus",
+   "away": "Atalanta",
+   "name": "Juventus",
+   "seite": "home",
+   "odd": 1.78,
+   "kickoff": "2026-09-20T16:00:00Z",
+   "punkte": 4,
+   "moeglich": 10,
+   "dauerH": 1.78,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
+     "status": "ja",
+     "punkte": 2,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
+      "text": "Geld 75% auf der Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.752,
+      "betrag": 51891,
+      "gesamt": 69004,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 75% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 3,
+     "grund": {
+      "ok": false,
+      "text": "Poly-Preis 56% auf derselben Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "kein bewiesenes Wallet auf der Seite"
+     },
+     "geld": {
+      "anteil": 0.56,
+      "betrag": null,
+      "gesamt": 18766,
+      "waehrung": "USD",
+      "quelle": "preis"
+     },
+     "text": "Poly-Preis 56% auf derselben Seite"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "ja",
+     "punkte": 2,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
+      "text": "hat dieselbe Seite als Favorit"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "kein Move gemessen"
+     },
+     "geld": null,
+     "text": "hat dieselbe Seite als Favorit"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Stake-Highroller nicht erhoben"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 1,
+     "grund": {
+      "ok": false,
+      "text": "steht seit 1.8h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 1.8h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -1827,11 +1644,11 @@
    "away": "Hammarby",
    "name": "Hammarby",
    "seite": "away",
-   "odd": 1.35,
+   "odd": 1.38,
    "kickoff": "2026-09-20T14:30:00Z",
    "punkte": 4,
    "moeglich": 10,
-   "dauerH": 0.78,
+   "dauerH": 0.28,
    "teile": [
     {
      "buch": "BF",
@@ -1841,20 +1658,20 @@
      "moeglich": 3,
      "grund": {
       "ok": false,
-      "text": "Geld 49% auf der Seite"
+      "text": "Geld 65% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.49,
-      "betrag": 290,
-      "gesamt": 591,
+      "anteil": 0.647,
+      "betrag": 1528,
+      "gesamt": 2362,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 49% auf der Seite"
+     "text": "Geld 65% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -1915,10 +1732,10 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 0.8h vor Anpfiff"
+      "text": "steht seit 0.3h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 0.8h vor Anpfiff"
+     "text": "steht seit 0.3h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -1931,11 +1748,11 @@
    "away": "Academico de Viseu",
    "name": "Club Football Estrela",
    "seite": "home",
-   "odd": 2.22,
+   "odd": 2.26,
    "kickoff": "2026-09-20T14:30:00Z",
    "punkte": 4,
    "moeglich": 10,
-   "dauerH": 0.78,
+   "dauerH": 0.28,
    "teile": [
     {
      "buch": "BF",
@@ -1945,20 +1762,20 @@
      "moeglich": 3,
      "grund": {
       "ok": false,
-      "text": "Geld 36% auf der Seite"
+      "text": "Geld 44% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.364,
-      "betrag": 1723,
-      "gesamt": 4734,
+      "anteil": 0.436,
+      "betrag": 2755,
+      "gesamt": 6319,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 36% auf der Seite"
+     "text": "Geld 44% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -1976,8 +1793,8 @@
      },
      "geld": {
       "anteil": 0.99,
-      "betrag": 30473,
-      "gesamt": 30781,
+      "betrag": 30525,
+      "gesamt": 30833,
       "waehrung": "USD",
       "quelle": "geld"
      },
@@ -2019,27 +1836,27 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 0.8h vor Anpfiff"
+      "text": "steht seit 0.3h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 0.8h vor Anpfiff"
+     "text": "steht seit 0.3h vor Anpfiff"
     }
    ],
    "torOk": false
   },
   {
-   "matchId": "36071827",
+   "matchId": "36080604",
    "markt": "Match Odds",
-   "liga": "Swiss Super League",
-   "home": "Lausanne",
-   "away": "Lugano",
-   "name": "Lugano",
-   "seite": "away",
-   "odd": 2.0,
+   "liga": "German 3 Liga",
+   "home": "Waldhof Mannheim",
+   "away": "Preussen Munster",
+   "name": "Waldhof Mannheim",
+   "seite": "home",
+   "odd": 2.04,
    "kickoff": "2026-09-20T14:30:00Z",
    "punkte": 4,
-   "moeglich": 10,
-   "dauerH": 0.78,
+   "moeglich": 7,
+   "dauerH": 0.28,
    "teile": [
     {
      "buch": "BF",
@@ -2049,43 +1866,31 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Geld 91% auf der Seite"
+      "text": "Geld 72% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.908,
-      "betrag": 3434,
-      "gesamt": 3782,
+      "anteil": 0.718,
+      "betrag": 842,
+      "gesamt": 1173,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 91% auf der Seite"
+     "text": "Geld 72% auf der Seite"
     },
     {
      "buch": "POLY",
      "name": "Polymarket",
-     "status": "nein",
+     "status": "unbekannt",
      "punkte": 0,
-     "moeglich": 3,
-     "grund": {
-      "ok": false,
-      "text": "Poly-Preis 50% auf derselben Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "kein bewiesenes Wallet auf der Seite"
-     },
-     "geld": {
-      "anteil": 0.5,
-      "betrag": null,
-      "gesamt": 5686,
-      "waehrung": "USD",
-      "quelle": "preis"
-     },
-     "text": "Poly-Preis 50% auf derselben Seite"
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Polymarket nicht erhoben"
     },
     {
      "buch": "PIN",
@@ -2123,10 +1928,10 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 0.8h vor Anpfiff"
+      "text": "steht seit 0.3h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 0.8h vor Anpfiff"
+     "text": "steht seit 0.3h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -2139,11 +1944,11 @@
    "away": "CSKA Sofia",
    "name": "CSKA Sofia",
    "seite": "away",
-   "odd": 1.63,
+   "odd": 1.6,
    "kickoff": "2026-09-20T14:45:00Z",
    "punkte": 4,
    "moeglich": 7,
-   "dauerH": 1.03,
+   "dauerH": 0.53,
    "teile": [
     {
      "buch": "BF",
@@ -2153,20 +1958,20 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Geld 90% auf der Seite"
+      "text": "Geld 88% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.904,
-      "betrag": 1560,
-      "gesamt": 1726,
+      "anteil": 0.882,
+      "betrag": 1665,
+      "gesamt": 1888,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 90% auf der Seite"
+     "text": "Geld 88% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -2221,10 +2026,10 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 1.0h vor Anpfiff"
+      "text": "steht seit 0.5h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 1.0h vor Anpfiff"
+     "text": "steht seit 0.5h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -2237,11 +2042,11 @@
    "away": "Start",
    "name": "Sandefjord",
    "seite": "home",
-   "odd": 2.2,
+   "odd": 2.3,
    "kickoff": "2026-09-20T15:00:00Z",
    "punkte": 4,
    "moeglich": 10,
-   "dauerH": 1.28,
+   "dauerH": 0.78,
    "teile": [
     {
      "buch": "BF",
@@ -2251,20 +2056,20 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Geld 67% auf der Seite"
+      "text": "Geld 66% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.668,
-      "betrag": 1915,
-      "gesamt": 2867,
+      "anteil": 0.659,
+      "betrag": 2058,
+      "gesamt": 3123,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 67% auf der Seite"
+     "text": "Geld 66% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -2325,10 +2130,10 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 1.3h vor Anpfiff"
+      "text": "steht seit 0.8h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 1.3h vor Anpfiff"
+     "text": "steht seit 0.8h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -2345,7 +2150,7 @@
    "kickoff": "2026-09-20T15:00:00Z",
    "punkte": 4,
    "moeglich": 7,
-   "dauerH": 1.28,
+   "dauerH": 0.78,
    "teile": [
     {
      "buch": "BF",
@@ -2362,9 +2167,9 @@
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.934,
-      "betrag": 2920,
-      "gesamt": 3126,
+      "anteil": 0.926,
+      "betrag": 2934,
+      "gesamt": 3168,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -2423,27 +2228,27 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 1.3h vor Anpfiff"
+      "text": "steht seit 0.8h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 1.3h vor Anpfiff"
+     "text": "steht seit 0.8h vor Anpfiff"
     }
    ],
    "torOk": false
   },
   {
-   "matchId": "36067669",
+   "matchId": "36069348",
    "markt": "Match Odds",
-   "liga": "Greek Super League",
-   "home": "NFC Volos",
-   "away": "AEK Athens",
-   "name": "AEK Athens",
+   "liga": "Danish Superliga",
+   "home": "Viborg",
+   "away": "FC Nordsjaelland",
+   "name": "FC Nordsjaelland",
    "seite": "away",
-   "odd": 1.32,
-   "kickoff": "2026-09-20T15:00:00Z",
+   "odd": 2.2,
+   "kickoff": "2026-09-20T16:00:00Z",
    "punkte": 4,
    "moeglich": 7,
-   "dauerH": 1.28,
+   "dauerH": 1.78,
    "teile": [
     {
      "buch": "BF",
@@ -2453,20 +2258,20 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Geld 97% auf der Seite"
+      "text": "Geld 75% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.973,
-      "betrag": 16132,
-      "gesamt": 16580,
+      "anteil": 0.751,
+      "betrag": 1789,
+      "gesamt": 2382,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 97% auf der Seite"
+     "text": "Geld 75% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -2515,10 +2320,10 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 1.3h vor Anpfiff"
+      "text": "steht seit 1.8h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 1.3h vor Anpfiff"
+     "text": "steht seit 1.8h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -2531,11 +2336,11 @@
    "away": "Real Sociedad",
    "name": "Real Sociedad",
    "seite": "away",
-   "odd": 2.66,
+   "odd": 2.7,
    "kickoff": "2026-09-20T19:00:00Z",
    "punkte": 3,
    "moeglich": 13,
-   "dauerH": 5.28,
+   "dauerH": 4.78,
    "teile": [
     {
      "buch": "BF",
@@ -2545,20 +2350,20 @@
      "moeglich": 3,
      "grund": {
       "ok": false,
-      "text": "Geld 50% auf der Seite"
+      "text": "Geld 49% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.501,
-      "betrag": 14983,
-      "gesamt": 29907,
+      "anteil": 0.492,
+      "betrag": 15167,
+      "gesamt": 30828,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 50% auf der Seite"
+     "text": "Geld 49% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -2576,8 +2381,8 @@
      },
      "geld": {
       "anteil": 0.53,
-      "betrag": 9470,
-      "gesamt": 17868,
+      "betrag": 9575,
+      "gesamt": 18066,
       "waehrung": "USD",
       "quelle": "geld"
      },
@@ -2631,99 +2436,13 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 5.3h vor Anpfiff"
+      "text": "steht seit 4.8h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 5.3h vor Anpfiff"
+     "text": "steht seit 4.8h vor Anpfiff"
     }
    ],
    "torOk": false
-  },
-  {
-   "matchId": "36077779",
-   "markt": "Match Odds",
-   "liga": "Brazilian Serie B",
-   "home": "Ponte Preta",
-   "away": "CRB",
-   "name": "CRB",
-   "seite": "away",
-   "odd": 1.36,
-   "kickoff": "2026-09-20T14:00:00Z",
-   "punkte": 3,
-   "moeglich": 4,
-   "dauerH": 0.28,
-   "teile": [
-    {
-     "buch": "BF",
-     "name": "Betfair",
-     "status": "ja",
-     "punkte": 3,
-     "moeglich": 3,
-     "grund": {
-      "ok": true,
-      "text": "Geld 89% auf der Seite"
-     },
-     "tiefe": {
-      "ok": true,
-      "text": "frischer Zufluss und Quote zieht mit"
-     },
-     "geld": {
-      "anteil": 0.893,
-      "betrag": 6419,
-      "gesamt": 7188,
-      "waehrung": "EUR",
-      "quelle": "geld"
-     },
-     "text": "Geld 89% auf der Seite"
-    },
-    {
-     "buch": "POLY",
-     "name": "Polymarket",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Polymarket nicht erhoben"
-    },
-    {
-     "buch": "PIN",
-     "name": "Pinnacle",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Pinnacle nicht erhoben"
-    },
-    {
-     "buch": "STAKE",
-     "name": "Stake-Highroller",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Stake-Highroller nicht erhoben"
-    },
-    {
-     "buch": "ZEIT",
-     "name": "Dauer",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 1,
-     "grund": {
-      "ok": false,
-      "text": "steht seit 0.3h vor Anpfiff"
-     },
-     "tiefe": null,
-     "text": "steht seit 0.3h vor Anpfiff"
-    }
-   ],
-   "torOk": true
   },
   {
    "matchId": "36092610",
@@ -2733,11 +2452,11 @@
    "away": "Vanuatu",
    "name": "Fiji",
    "seite": "home",
-   "odd": 1.99,
+   "odd": 1.96,
    "kickoff": "2026-09-21T07:00:00Z",
    "punkte": 3,
    "moeglich": 4,
-   "dauerH": 17.28,
+   "dauerH": 16.78,
    "teile": [
     {
      "buch": "BF",
@@ -2755,8 +2474,8 @@
      },
      "geld": {
       "anteil": 0.993,
-      "betrag": 1388,
-      "gesamt": 1398,
+      "betrag": 1569,
+      "gesamt": 1580,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -2803,72 +2522,90 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 17.3h vor Anpfiff"
+      "text": "steht seit 16.8h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 17.3h vor Anpfiff"
+     "text": "steht seit 16.8h vor Anpfiff"
     }
    ],
    "torOk": false
   },
   {
-   "matchId": "36071943",
+   "matchId": "36068695",
    "markt": "Match Odds",
-   "liga": "Estonian Premier League",
-   "home": "Trans Narva",
-   "away": "FCI Tallinn",
-   "name": "FCI Tallinn",
+   "liga": "Spanish Segunda Division",
+   "home": "AD Ceuta FC",
+   "away": "Valladolid",
+   "name": "Valladolid",
    "seite": "away",
-   "odd": 1.35,
-   "kickoff": "2026-09-20T14:00:00Z",
+   "odd": 2.48,
+   "kickoff": "2026-09-20T14:15:00Z",
    "punkte": 2,
-   "moeglich": 4,
-   "dauerH": 0.28,
+   "moeglich": 10,
+   "dauerH": 0.03,
    "teile": [
     {
      "buch": "BF",
      "name": "Betfair",
-     "status": "ja",
-     "punkte": 2,
+     "status": "nein",
+     "punkte": 0,
      "moeglich": 3,
      "grund": {
-      "ok": true,
-      "text": "Geld 92% auf der Seite"
+      "ok": false,
+      "text": "Geld 57% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.916,
-      "betrag": 3325,
-      "gesamt": 3630,
+      "anteil": 0.575,
+      "betrag": 12113,
+      "gesamt": 21066,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 92% auf der Seite"
+     "text": "Geld 57% auf der Seite"
     },
     {
      "buch": "POLY",
      "name": "Polymarket",
-     "status": "unbekannt",
+     "status": "nein",
      "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Polymarket nicht erhoben"
+     "moeglich": 3,
+     "grund": {
+      "ok": false,
+      "text": "Poly-Geld 45% auf derselben Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "kein bewiesenes Wallet auf der Seite"
+     },
+     "geld": {
+      "anteil": 0.45,
+      "betrag": 12087,
+      "gesamt": 26859,
+      "waehrung": "USD",
+      "quelle": "geld"
+     },
+     "text": "Poly-Geld 45% auf derselben Seite"
     },
     {
      "buch": "PIN",
      "name": "Pinnacle",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
+     "status": "ja",
+     "punkte": 2,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
+      "text": "hat dieselbe Seite als Favorit"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "kein Move gemessen"
+     },
      "geld": null,
-     "text": "Pinnacle nicht erhoben"
+     "text": "hat dieselbe Seite als Favorit"
     },
     {
      "buch": "STAKE",
@@ -2889,24 +2626,24 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 0.3h vor Anpfiff"
+      "text": "steht seit 0.0h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 0.3h vor Anpfiff"
+     "text": "steht seit 0.0h vor Anpfiff"
     }
    ],
    "torOk": false
   },
   {
-   "matchId": "36068710",
+   "matchId": "36071781",
    "markt": "Match Odds",
-   "liga": "Turkish 1 Lig",
-   "home": "Pendikspor",
-   "away": "Bodrum FK",
-   "name": "Pendikspor",
+   "liga": "Portuguese Primeira Liga",
+   "home": "Guimaraes",
+   "away": "Moreirense",
+   "name": "Guimaraes",
    "seite": "home",
-   "odd": 2.02,
-   "kickoff": "2026-09-20T14:00:00Z",
+   "odd": 1.55,
+   "kickoff": "2026-09-20T14:30:00Z",
    "punkte": 2,
    "moeglich": 4,
    "dauerH": 0.28,
@@ -2919,20 +2656,20 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Geld 66% auf der Seite"
+      "text": "Geld 79% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.655,
-      "betrag": 325,
-      "gesamt": 496,
+      "anteil": 0.793,
+      "betrag": 13326,
+      "gesamt": 16804,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 66% auf der Seite"
+     "text": "Geld 79% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -2984,15 +2721,15 @@
    "torOk": false
   },
   {
-   "matchId": "36090950",
+   "matchId": "36076129",
    "markt": "Match Odds",
-   "liga": "Montenegrin 1st League",
-   "home": "FK Otrant",
-   "away": "Fk Jezero",
-   "name": "FK Otrant",
+   "liga": "Czech 2 Liga",
+   "home": "FC Sellier & Bellot Vlasim",
+   "away": "MAS Taborsko",
+   "name": "FC Sellier & Bellot Vlasim",
    "seite": "home",
-   "odd": 1.63,
-   "kickoff": "2026-09-20T14:00:00Z",
+   "odd": 2.16,
+   "kickoff": "2026-09-20T14:30:00Z",
    "punkte": 2,
    "moeglich": 4,
    "dauerH": 0.28,
@@ -3005,20 +2742,20 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Geld 75% auf der Seite"
+      "text": "Geld 82% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.746,
-      "betrag": 359,
-      "gesamt": 481,
+      "anteil": 0.824,
+      "betrag": 974,
+      "gesamt": 1182,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 75% auf der Seite"
+     "text": "Geld 82% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -3070,276 +2807,18 @@
    "torOk": false
   },
   {
-   "matchId": "36073251",
+   "matchId": "36069082",
    "markt": "Match Odds",
-   "liga": "Turkish 1 Lig",
-   "home": "Manisa FK",
-   "away": "Istanbulspor",
-   "name": "Manisa FK",
-   "seite": "home",
-   "odd": 2.04,
-   "kickoff": "2026-09-20T14:00:00Z",
-   "punkte": 2,
-   "moeglich": 4,
-   "dauerH": 0.28,
-   "teile": [
-    {
-     "buch": "BF",
-     "name": "Betfair",
-     "status": "ja",
-     "punkte": 2,
-     "moeglich": 3,
-     "grund": {
-      "ok": true,
-      "text": "Geld 66% auf der Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "frischer Zufluss und Quote zieht mit"
-     },
-     "geld": {
-      "anteil": 0.66,
-      "betrag": 1637,
-      "gesamt": 2480,
-      "waehrung": "EUR",
-      "quelle": "geld"
-     },
-     "text": "Geld 66% auf der Seite"
-    },
-    {
-     "buch": "POLY",
-     "name": "Polymarket",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Polymarket nicht erhoben"
-    },
-    {
-     "buch": "PIN",
-     "name": "Pinnacle",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Pinnacle nicht erhoben"
-    },
-    {
-     "buch": "STAKE",
-     "name": "Stake-Highroller",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Stake-Highroller nicht erhoben"
-    },
-    {
-     "buch": "ZEIT",
-     "name": "Dauer",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 1,
-     "grund": {
-      "ok": false,
-      "text": "steht seit 0.3h vor Anpfiff"
-     },
-     "tiefe": null,
-     "text": "steht seit 0.3h vor Anpfiff"
-    }
-   ],
-   "torOk": false
-  },
-  {
-   "matchId": "36083364",
-   "markt": "Match Odds",
-   "liga": "English Women's Matches",
-   "home": "Leicester City (W)",
-   "away": "Ipswich (W)",
-   "name": "Leicester City (W)",
-   "seite": "home",
-   "odd": 1.45,
-   "kickoff": "2026-09-20T14:00:00Z",
-   "punkte": 2,
-   "moeglich": 4,
-   "dauerH": 0.28,
-   "teile": [
-    {
-     "buch": "BF",
-     "name": "Betfair",
-     "status": "ja",
-     "punkte": 2,
-     "moeglich": 3,
-     "grund": {
-      "ok": true,
-      "text": "Geld 69% auf der Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "frischer Zufluss und Quote zieht mit"
-     },
-     "geld": {
-      "anteil": 0.686,
-      "betrag": 521,
-      "gesamt": 760,
-      "waehrung": "EUR",
-      "quelle": "geld"
-     },
-     "text": "Geld 69% auf der Seite"
-    },
-    {
-     "buch": "POLY",
-     "name": "Polymarket",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Polymarket nicht erhoben"
-    },
-    {
-     "buch": "PIN",
-     "name": "Pinnacle",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Pinnacle nicht erhoben"
-    },
-    {
-     "buch": "STAKE",
-     "name": "Stake-Highroller",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Stake-Highroller nicht erhoben"
-    },
-    {
-     "buch": "ZEIT",
-     "name": "Dauer",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 1,
-     "grund": {
-      "ok": false,
-      "text": "steht seit 0.3h vor Anpfiff"
-     },
-     "tiefe": null,
-     "text": "steht seit 0.3h vor Anpfiff"
-    }
-   ],
-   "torOk": false
-  },
-  {
-   "matchId": "36081368",
-   "markt": "Match Odds",
-   "liga": "Armenian Premier League",
-   "home": "FC Shirak",
-   "away": "Ararat Armenia",
-   "name": "Ararat Armenia",
+   "liga": "Dutch Eerste Divisie",
+   "home": "De Graafschap",
+   "away": "NAC Breda",
+   "name": "NAC Breda",
    "seite": "away",
-   "odd": 1.5,
-   "kickoff": "2026-09-20T14:00:00Z",
+   "odd": 1.96,
+   "kickoff": "2026-09-20T14:45:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 0.28,
-   "teile": [
-    {
-     "buch": "BF",
-     "name": "Betfair",
-     "status": "ja",
-     "punkte": 2,
-     "moeglich": 3,
-     "grund": {
-      "ok": true,
-      "text": "Geld 89% auf der Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "frischer Zufluss und Quote zieht mit"
-     },
-     "geld": {
-      "anteil": 0.892,
-      "betrag": 111,
-      "gesamt": 124,
-      "waehrung": "EUR",
-      "quelle": "geld"
-     },
-     "text": "Geld 89% auf der Seite"
-    },
-    {
-     "buch": "POLY",
-     "name": "Polymarket",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Polymarket nicht erhoben"
-    },
-    {
-     "buch": "PIN",
-     "name": "Pinnacle",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Pinnacle nicht erhoben"
-    },
-    {
-     "buch": "STAKE",
-     "name": "Stake-Highroller",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Stake-Highroller nicht erhoben"
-    },
-    {
-     "buch": "ZEIT",
-     "name": "Dauer",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 1,
-     "grund": {
-      "ok": false,
-      "text": "steht seit 0.3h vor Anpfiff"
-     },
-     "tiefe": null,
-     "text": "steht seit 0.3h vor Anpfiff"
-    }
-   ],
-   "torOk": false
-  },
-  {
-   "matchId": "36091558",
-   "markt": "Match Odds",
-   "liga": "Uzbekistan Super League",
-   "home": "Sogdiana Jizak",
-   "away": "Olmaliq",
-   "name": "Olmaliq",
-   "seite": "away",
-   "odd": 2.76,
-   "kickoff": "2026-09-20T14:00:00Z",
-   "punkte": 2,
-   "moeglich": 4,
-   "dauerH": 0.28,
+   "dauerH": 0.53,
    "teile": [
     {
      "buch": "BF",
@@ -3356,9 +2835,9 @@
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.716,
-      "betrag": 1154,
-      "gesamt": 1612,
+      "anteil": 0.717,
+      "betrag": 945,
+      "gesamt": 1318,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -3405,50 +2884,50 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 0.3h vor Anpfiff"
+      "text": "steht seit 0.5h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 0.3h vor Anpfiff"
+     "text": "steht seit 0.5h vor Anpfiff"
     }
    ],
    "torOk": false
   },
   {
-   "matchId": "36090736",
+   "matchId": "36041228",
    "markt": "Match Odds",
-   "liga": "Belgian Challenger Pro League",
-   "home": "SC Lokeren-Temse",
-   "away": "Excelsior Virton",
-   "name": "SC Lokeren-Temse",
+   "liga": "Dutch Eredivisie",
+   "home": "NEC Nijmegen",
+   "away": "Go Ahead Eagles",
+   "name": "NEC Nijmegen",
    "seite": "home",
-   "odd": 2.0,
-   "kickoff": "2026-09-20T14:00:00Z",
+   "odd": 2.36,
+   "kickoff": "2026-09-20T14:45:00Z",
    "punkte": 2,
-   "moeglich": 4,
-   "dauerH": 0.28,
+   "moeglich": 7,
+   "dauerH": 0.53,
    "teile": [
     {
      "buch": "BF",
      "name": "Betfair",
-     "status": "ja",
-     "punkte": 2,
+     "status": "nein",
+     "punkte": 0,
      "moeglich": 3,
      "grund": {
-      "ok": true,
-      "text": "Geld 85% auf der Seite"
+      "ok": false,
+      "text": "Geld 49% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.847,
-      "betrag": 3728,
-      "gesamt": 4401,
+      "anteil": 0.486,
+      "betrag": 15110,
+      "gesamt": 31091,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 85% auf der Seite"
+     "text": "Geld 49% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -3464,104 +2943,6 @@
     {
      "buch": "PIN",
      "name": "Pinnacle",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Pinnacle nicht erhoben"
-    },
-    {
-     "buch": "STAKE",
-     "name": "Stake-Highroller",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Stake-Highroller nicht erhoben"
-    },
-    {
-     "buch": "ZEIT",
-     "name": "Dauer",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 1,
-     "grund": {
-      "ok": false,
-      "text": "steht seit 0.3h vor Anpfiff"
-     },
-     "tiefe": null,
-     "text": "steht seit 0.3h vor Anpfiff"
-    }
-   ],
-   "torOk": false
-  },
-  {
-   "matchId": "36068695",
-   "markt": "Match Odds",
-   "liga": "Spanish Segunda Division",
-   "home": "AD Ceuta FC",
-   "away": "Valladolid",
-   "name": "Valladolid",
-   "seite": "away",
-   "odd": 2.54,
-   "kickoff": "2026-09-20T14:15:00Z",
-   "punkte": 2,
-   "moeglich": 10,
-   "dauerH": 0.53,
-   "teile": [
-    {
-     "buch": "BF",
-     "name": "Betfair",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 3,
-     "grund": {
-      "ok": false,
-      "text": "Geld 52% auf der Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "frischer Zufluss und Quote zieht mit"
-     },
-     "geld": {
-      "anteil": 0.515,
-      "betrag": 7101,
-      "gesamt": 13788,
-      "waehrung": "EUR",
-      "quelle": "geld"
-     },
-     "text": "Geld 52% auf der Seite"
-    },
-    {
-     "buch": "POLY",
-     "name": "Polymarket",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 3,
-     "grund": {
-      "ok": false,
-      "text": "Poly-Geld 46% auf derselben Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "kein bewiesenes Wallet auf der Seite"
-     },
-     "geld": {
-      "anteil": 0.46,
-      "betrag": 11172,
-      "gesamt": 24286,
-      "waehrung": "USD",
-      "quelle": "geld"
-     },
-     "text": "Poly-Geld 46% auf derselben Seite"
-    },
-    {
-     "buch": "PIN",
-     "name": "Pinnacle",
      "status": "ja",
      "punkte": 2,
      "moeglich": 3,
@@ -3571,7 +2952,7 @@
      },
      "tiefe": {
       "ok": false,
-      "text": "kein Move gemessen"
+      "text": "Move -2.5pp in unsere Richtung"
      },
      "geld": null,
      "text": "hat dieselbe Seite als Favorit"
@@ -3604,184 +2985,6 @@
    "torOk": false
   },
   {
-   "matchId": "36071781",
-   "markt": "Match Odds",
-   "liga": "Portuguese Primeira Liga",
-   "home": "Guimaraes",
-   "away": "Moreirense",
-   "name": "Guimaraes",
-   "seite": "home",
-   "odd": 1.53,
-   "kickoff": "2026-09-20T14:30:00Z",
-   "punkte": 2,
-   "moeglich": 4,
-   "dauerH": 0.78,
-   "teile": [
-    {
-     "buch": "BF",
-     "name": "Betfair",
-     "status": "ja",
-     "punkte": 2,
-     "moeglich": 3,
-     "grund": {
-      "ok": true,
-      "text": "Geld 80% auf der Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "frischer Zufluss und Quote zieht mit"
-     },
-     "geld": {
-      "anteil": 0.799,
-      "betrag": 8933,
-      "gesamt": 11180,
-      "waehrung": "EUR",
-      "quelle": "geld"
-     },
-     "text": "Geld 80% auf der Seite"
-    },
-    {
-     "buch": "POLY",
-     "name": "Polymarket",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Polymarket nicht erhoben"
-    },
-    {
-     "buch": "PIN",
-     "name": "Pinnacle",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Pinnacle nicht erhoben"
-    },
-    {
-     "buch": "STAKE",
-     "name": "Stake-Highroller",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Stake-Highroller nicht erhoben"
-    },
-    {
-     "buch": "ZEIT",
-     "name": "Dauer",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 1,
-     "grund": {
-      "ok": false,
-      "text": "steht seit 0.8h vor Anpfiff"
-     },
-     "tiefe": null,
-     "text": "steht seit 0.8h vor Anpfiff"
-    }
-   ],
-   "torOk": false
-  },
-  {
-   "matchId": "36041228",
-   "markt": "Match Odds",
-   "liga": "Dutch Eredivisie",
-   "home": "NEC Nijmegen",
-   "away": "Go Ahead Eagles",
-   "name": "NEC Nijmegen",
-   "seite": "home",
-   "odd": 2.26,
-   "kickoff": "2026-09-20T14:45:00Z",
-   "punkte": 2,
-   "moeglich": 7,
-   "dauerH": 1.03,
-   "teile": [
-    {
-     "buch": "BF",
-     "name": "Betfair",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 3,
-     "grund": {
-      "ok": false,
-      "text": "Geld 46% auf der Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "frischer Zufluss und Quote zieht mit"
-     },
-     "geld": {
-      "anteil": 0.464,
-      "betrag": 9014,
-      "gesamt": 19427,
-      "waehrung": "EUR",
-      "quelle": "geld"
-     },
-     "text": "Geld 46% auf der Seite"
-    },
-    {
-     "buch": "POLY",
-     "name": "Polymarket",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Polymarket nicht erhoben"
-    },
-    {
-     "buch": "PIN",
-     "name": "Pinnacle",
-     "status": "ja",
-     "punkte": 2,
-     "moeglich": 3,
-     "grund": {
-      "ok": true,
-      "text": "hat dieselbe Seite als Favorit"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "kein Move gemessen"
-     },
-     "geld": null,
-     "text": "hat dieselbe Seite als Favorit"
-    },
-    {
-     "buch": "STAKE",
-     "name": "Stake-Highroller",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Stake-Highroller nicht erhoben"
-    },
-    {
-     "buch": "ZEIT",
-     "name": "Dauer",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 1,
-     "grund": {
-      "ok": false,
-      "text": "steht seit 1.0h vor Anpfiff"
-     },
-     "tiefe": null,
-     "text": "steht seit 1.0h vor Anpfiff"
-    }
-   ],
-   "torOk": false
-  },
-  {
    "matchId": "36069053",
    "markt": "Match Odds",
    "liga": "Norwegian 1st Division",
@@ -3793,7 +2996,7 @@
    "kickoff": "2026-09-20T15:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 1.28,
+   "dauerH": 0.78,
    "teile": [
     {
      "buch": "BF",
@@ -3859,10 +3062,10 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 1.3h vor Anpfiff"
+      "text": "steht seit 0.8h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 1.3h vor Anpfiff"
+     "text": "steht seit 0.8h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -3875,11 +3078,11 @@
    "away": "Ham-Kam",
    "name": "Tromso",
    "seite": "home",
-   "odd": 1.46,
+   "odd": 1.47,
    "kickoff": "2026-09-20T15:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 1.28,
+   "dauerH": 0.78,
    "teile": [
     {
      "buch": "BF",
@@ -3889,20 +3092,20 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Geld 96% auf der Seite"
+      "text": "Geld 95% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.955,
-      "betrag": 5023,
-      "gesamt": 5260,
+      "anteil": 0.953,
+      "betrag": 5605,
+      "gesamt": 5881,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 96% auf der Seite"
+     "text": "Geld 95% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -3945,10 +3148,10 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 1.3h vor Anpfiff"
+      "text": "steht seit 0.8h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 1.3h vor Anpfiff"
+     "text": "steht seit 0.8h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -3961,11 +3164,11 @@
    "away": "Hammam-Lif",
    "name": "Remis",
    "seite": "draw",
-   "odd": 3.3,
+   "odd": 3.2,
    "kickoff": "2026-09-20T15:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 1.28,
+   "dauerH": 0.78,
    "teile": [
     {
      "buch": "BF",
@@ -3975,20 +3178,20 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Geld 100% auf der Seite"
+      "text": "Geld 95% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 1.0,
-      "betrag": 13,
-      "gesamt": 13,
+      "anteil": 0.95,
+      "betrag": 49,
+      "gesamt": 52,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 100% auf der Seite"
+     "text": "Geld 95% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -4031,10 +3234,10 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 1.3h vor Anpfiff"
+      "text": "steht seit 0.8h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 1.3h vor Anpfiff"
+     "text": "steht seit 0.8h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -4047,8 +3250,966 @@
    "away": "TPV",
    "name": "FC Inter 2",
    "seite": "home",
-   "odd": 1.57,
+   "odd": 1.55,
    "kickoff": "2026-09-20T15:00:00Z",
+   "punkte": 2,
+   "moeglich": 4,
+   "dauerH": 0.78,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
+     "status": "ja",
+     "punkte": 2,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
+      "text": "Geld 79% auf der Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.793,
+      "betrag": 2297,
+      "gesamt": 2897,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 79% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Polymarket nicht erhoben"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Pinnacle nicht erhoben"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Stake-Highroller nicht erhoben"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 1,
+     "grund": {
+      "ok": false,
+      "text": "steht seit 0.8h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 0.8h vor Anpfiff"
+    }
+   ],
+   "torOk": false
+  },
+  {
+   "matchId": "36091232",
+   "markt": "Match Odds",
+   "liga": "Qatari Stars Cup",
+   "home": "Al-Wakra",
+   "away": "Al Sailiya",
+   "name": "Al-Wakra",
+   "seite": "home",
+   "odd": 1.68,
+   "kickoff": "2026-09-20T15:00:00Z",
+   "punkte": 2,
+   "moeglich": 4,
+   "dauerH": 0.78,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
+     "status": "ja",
+     "punkte": 2,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
+      "text": "Geld 92% auf der Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.922,
+      "betrag": 2011,
+      "gesamt": 2181,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 92% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Polymarket nicht erhoben"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Pinnacle nicht erhoben"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Stake-Highroller nicht erhoben"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 1,
+     "grund": {
+      "ok": false,
+      "text": "steht seit 0.8h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 0.8h vor Anpfiff"
+    }
+   ],
+   "torOk": false
+  },
+  {
+   "matchId": "36071720",
+   "markt": "Match Odds",
+   "liga": "Serbian Super League",
+   "home": "Macva Sabac",
+   "away": "Mladost Lucani",
+   "name": "Remis",
+   "seite": "draw",
+   "odd": 3.05,
+   "kickoff": "2026-09-20T15:00:00Z",
+   "punkte": 2,
+   "moeglich": 4,
+   "dauerH": 0.78,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
+     "status": "ja",
+     "punkte": 2,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
+      "text": "Geld 82% auf der Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.815,
+      "betrag": 187,
+      "gesamt": 229,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 82% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Polymarket nicht erhoben"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Pinnacle nicht erhoben"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Stake-Highroller nicht erhoben"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 1,
+     "grund": {
+      "ok": false,
+      "text": "steht seit 0.8h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 0.8h vor Anpfiff"
+    }
+   ],
+   "torOk": false
+  },
+  {
+   "matchId": "36069107",
+   "markt": "Match Odds",
+   "liga": "Norwegian 1st Division",
+   "home": "Odds BK",
+   "away": "Egersund",
+   "name": "Odds BK",
+   "seite": "home",
+   "odd": 1.83,
+   "kickoff": "2026-09-20T15:00:00Z",
+   "punkte": 2,
+   "moeglich": 4,
+   "dauerH": 0.78,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
+     "status": "ja",
+     "punkte": 2,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
+      "text": "Geld 75% auf der Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.754,
+      "betrag": 720,
+      "gesamt": 955,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 75% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Polymarket nicht erhoben"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Pinnacle nicht erhoben"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Stake-Highroller nicht erhoben"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 1,
+     "grund": {
+      "ok": false,
+      "text": "steht seit 0.8h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 0.8h vor Anpfiff"
+    }
+   ],
+   "torOk": false
+  },
+  {
+   "matchId": "36069084",
+   "markt": "Match Odds",
+   "liga": "Norwegian 1st Division",
+   "home": "Lyn",
+   "away": "Ranheim IL",
+   "name": "Lyn",
+   "seite": "home",
+   "odd": 1.78,
+   "kickoff": "2026-09-20T15:00:00Z",
+   "punkte": 2,
+   "moeglich": 4,
+   "dauerH": 0.78,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
+     "status": "ja",
+     "punkte": 2,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
+      "text": "Geld 80% auf der Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.797,
+      "betrag": 1084,
+      "gesamt": 1360,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 80% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Polymarket nicht erhoben"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Pinnacle nicht erhoben"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Stake-Highroller nicht erhoben"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 1,
+     "grund": {
+      "ok": false,
+      "text": "steht seit 0.8h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 0.8h vor Anpfiff"
+    }
+   ],
+   "torOk": false
+  },
+  {
+   "matchId": "36069068",
+   "markt": "Match Odds",
+   "liga": "Norwegian 1st Division",
+   "home": "Raufoss",
+   "away": "Stromsgodset",
+   "name": "Stromsgodset",
+   "seite": "away",
+   "odd": 1.33,
+   "kickoff": "2026-09-20T15:00:00Z",
+   "punkte": 2,
+   "moeglich": 4,
+   "dauerH": 0.78,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
+     "status": "ja",
+     "punkte": 2,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
+      "text": "Geld 85% auf der Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.848,
+      "betrag": 403,
+      "gesamt": 475,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 85% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Polymarket nicht erhoben"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Pinnacle nicht erhoben"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Stake-Highroller nicht erhoben"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 1,
+     "grund": {
+      "ok": false,
+      "text": "steht seit 0.8h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 0.8h vor Anpfiff"
+    }
+   ],
+   "torOk": false
+  },
+  {
+   "matchId": "36069057",
+   "markt": "Match Odds",
+   "liga": "Norwegian Eliteserien",
+   "home": "Viking",
+   "away": "Lillestrom",
+   "name": "Viking",
+   "seite": "home",
+   "odd": 1.38,
+   "kickoff": "2026-09-20T15:00:00Z",
+   "punkte": 2,
+   "moeglich": 7,
+   "dauerH": 0.78,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 3,
+     "grund": {
+      "ok": false,
+      "text": "Geld 55% auf der Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.546,
+      "betrag": 1669,
+      "gesamt": 3057,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 55% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Polymarket nicht erhoben"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "ja",
+     "punkte": 2,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
+      "text": "hat dieselbe Seite als Favorit"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "kein Move gemessen"
+     },
+     "geld": null,
+     "text": "hat dieselbe Seite als Favorit"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Stake-Highroller nicht erhoben"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 1,
+     "grund": {
+      "ok": false,
+      "text": "steht seit 0.8h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 0.8h vor Anpfiff"
+    }
+   ],
+   "torOk": false
+  },
+  {
+   "matchId": "36069095",
+   "markt": "Match Odds",
+   "liga": "Norwegian 1st Division",
+   "home": "Haugesund",
+   "away": "Strommen",
+   "name": "Haugesund",
+   "seite": "home",
+   "odd": 1.36,
+   "kickoff": "2026-09-20T15:00:00Z",
+   "punkte": 2,
+   "moeglich": 4,
+   "dauerH": 0.78,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
+     "status": "ja",
+     "punkte": 2,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
+      "text": "Geld 86% auf der Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.861,
+      "betrag": 595,
+      "gesamt": 691,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 86% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Polymarket nicht erhoben"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Pinnacle nicht erhoben"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Stake-Highroller nicht erhoben"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 1,
+     "grund": {
+      "ok": false,
+      "text": "steht seit 0.8h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 0.8h vor Anpfiff"
+    }
+   ],
+   "torOk": false
+  },
+  {
+   "matchId": "36091360",
+   "markt": "Match Odds",
+   "liga": "Tunisian Ligue Professionelle 1",
+   "home": "Club Africain",
+   "away": "Esperance Sportive Zarzis",
+   "name": "Remis",
+   "seite": "draw",
+   "odd": 3.85,
+   "kickoff": "2026-09-20T15:00:00Z",
+   "punkte": 2,
+   "moeglich": 4,
+   "dauerH": 0.78,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
+     "status": "ja",
+     "punkte": 2,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
+      "text": "Geld 99% auf der Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.986,
+      "betrag": 328,
+      "gesamt": 333,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 99% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Polymarket nicht erhoben"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Pinnacle nicht erhoben"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Stake-Highroller nicht erhoben"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 1,
+     "grund": {
+      "ok": false,
+      "text": "steht seit 0.8h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 0.8h vor Anpfiff"
+    }
+   ],
+   "torOk": false
+  },
+  {
+   "matchId": "36069646",
+   "markt": "Match Odds",
+   "liga": "Croatian HNL",
+   "home": "Rijeka",
+   "away": "Hajduk Split",
+   "name": "Rijeka",
+   "seite": "home",
+   "odd": 2.0,
+   "kickoff": "2026-09-20T15:00:00Z",
+   "punkte": 2,
+   "moeglich": 4,
+   "dauerH": 0.78,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
+     "status": "ja",
+     "punkte": 2,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
+      "text": "Geld 74% auf der Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.744,
+      "betrag": 2390,
+      "gesamt": 3213,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 74% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Polymarket nicht erhoben"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Pinnacle nicht erhoben"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Stake-Highroller nicht erhoben"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 1,
+     "grund": {
+      "ok": false,
+      "text": "steht seit 0.8h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 0.8h vor Anpfiff"
+    }
+   ],
+   "torOk": false
+  },
+  {
+   "matchId": "36072486",
+   "markt": "Match Odds",
+   "liga": "Italian Serie B",
+   "home": "Mantova",
+   "away": "Pisa",
+   "name": "Remis",
+   "seite": "draw",
+   "odd": 3.3,
+   "kickoff": "2026-09-20T15:15:00Z",
+   "punkte": 2,
+   "moeglich": 7,
+   "dauerH": 1.03,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
+     "status": "ja",
+     "punkte": 2,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
+      "text": "Geld 79% auf der Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.792,
+      "betrag": 3853,
+      "gesamt": 4865,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 79% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Polymarket nicht erhoben"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 3,
+     "grund": {
+      "ok": false,
+      "text": "hat dieselbe Seite als Favorit"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "kein Move gemessen"
+     },
+     "geld": null,
+     "text": "hat dieselbe Seite als Favorit"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Stake-Highroller nicht erhoben"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 1,
+     "grund": {
+      "ok": false,
+      "text": "steht seit 1.0h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 1.0h vor Anpfiff"
+    }
+   ],
+   "torOk": false
+  },
+  {
+   "matchId": "36076346",
+   "markt": "Match Odds",
+   "liga": "South African Premier Division",
+   "home": "TS Galaxy FC",
+   "away": "Chippa Utd",
+   "name": "Remis",
+   "seite": "draw",
+   "odd": 3.25,
+   "kickoff": "2026-09-20T15:30:00Z",
    "punkte": 2,
    "moeglich": 4,
    "dauerH": 1.28,
@@ -4061,20 +4222,20 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Geld 81% auf der Seite"
+      "text": "Geld 68% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.81,
-      "betrag": 2295,
-      "gesamt": 2833,
+      "anteil": 0.678,
+      "betrag": 27,
+      "gesamt": 40,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 81% auf der Seite"
+     "text": "Geld 68% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -4126,15 +4287,101 @@
    "torOk": false
   },
   {
-   "matchId": "36091232",
+   "matchId": "36075251",
    "markt": "Match Odds",
-   "liga": "Qatari Stars Cup",
-   "home": "Al-Wakra",
-   "away": "Al Sailiya",
-   "name": "Al-Wakra",
+   "liga": "Italian Serie C",
+   "home": "Potenza",
+   "away": "Cavese 1919",
+   "name": "Potenza",
    "seite": "home",
    "odd": 1.94,
-   "kickoff": "2026-09-20T15:00:00Z",
+   "kickoff": "2026-09-20T15:30:00Z",
+   "punkte": 2,
+   "moeglich": 4,
+   "dauerH": 1.28,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
+     "status": "ja",
+     "punkte": 2,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
+      "text": "Geld 69% auf der Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.686,
+      "betrag": 417,
+      "gesamt": 608,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 69% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Polymarket nicht erhoben"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Pinnacle nicht erhoben"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Stake-Highroller nicht erhoben"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 1,
+     "grund": {
+      "ok": false,
+      "text": "steht seit 1.3h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 1.3h vor Anpfiff"
+    }
+   ],
+   "torOk": false
+  },
+  {
+   "matchId": "36083947",
+   "markt": "Match Odds",
+   "liga": "Italian Serie C",
+   "home": "Arzignanochiampo",
+   "away": "Renate",
+   "name": "Remis",
+   "seite": "draw",
+   "odd": 3.2,
+   "kickoff": "2026-09-20T15:30:00Z",
    "punkte": 2,
    "moeglich": 4,
    "dauerH": 1.28,
@@ -4154,9 +4401,9 @@
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.924,
-      "betrag": 1120,
-      "gesamt": 1212,
+      "anteil": 0.925,
+      "betrag": 204,
+      "gesamt": 221,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -4212,104 +4459,18 @@
    "torOk": false
   },
   {
-   "matchId": "36071720",
+   "matchId": "36091382",
    "markt": "Match Odds",
-   "liga": "Serbian Super League",
-   "home": "Macva Sabac",
-   "away": "Mladost Lucani",
-   "name": "Remis",
-   "seite": "draw",
-   "odd": 3.05,
-   "kickoff": "2026-09-20T15:00:00Z",
-   "punkte": 2,
-   "moeglich": 4,
-   "dauerH": 1.28,
-   "teile": [
-    {
-     "buch": "BF",
-     "name": "Betfair",
-     "status": "ja",
-     "punkte": 2,
-     "moeglich": 3,
-     "grund": {
-      "ok": true,
-      "text": "Geld 80% auf der Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "frischer Zufluss und Quote zieht mit"
-     },
-     "geld": {
-      "anteil": 0.799,
-      "betrag": 116,
-      "gesamt": 145,
-      "waehrung": "EUR",
-      "quelle": "geld"
-     },
-     "text": "Geld 80% auf der Seite"
-    },
-    {
-     "buch": "POLY",
-     "name": "Polymarket",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Polymarket nicht erhoben"
-    },
-    {
-     "buch": "PIN",
-     "name": "Pinnacle",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Pinnacle nicht erhoben"
-    },
-    {
-     "buch": "STAKE",
-     "name": "Stake-Highroller",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Stake-Highroller nicht erhoben"
-    },
-    {
-     "buch": "ZEIT",
-     "name": "Dauer",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 1,
-     "grund": {
-      "ok": false,
-      "text": "steht seit 1.3h vor Anpfiff"
-     },
-     "tiefe": null,
-     "text": "steht seit 1.3h vor Anpfiff"
-    }
-   ],
-   "torOk": false
-  },
-  {
-   "matchId": "36069107",
-   "markt": "Match Odds",
-   "liga": "Norwegian 1st Division",
-   "home": "Odds BK",
-   "away": "Egersund",
-   "name": "Odds BK",
+   "liga": "Saudi 1st Division",
+   "home": "Dhamk",
+   "away": "Al-Adalh",
+   "name": "Dhamk",
    "seite": "home",
-   "odd": 1.97,
-   "kickoff": "2026-09-20T15:00:00Z",
+   "odd": 1.79,
+   "kickoff": "2026-09-20T15:45:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 1.28,
+   "dauerH": 1.53,
    "teile": [
     {
      "buch": "BF",
@@ -4319,20 +4480,20 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Geld 74% auf der Seite"
+      "text": "Geld 93% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.744,
-      "betrag": 670,
-      "gesamt": 901,
+      "anteil": 0.93,
+      "betrag": 94,
+      "gesamt": 101,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 74% auf der Seite"
+     "text": "Geld 93% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -4375,113 +4536,27 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 1.3h vor Anpfiff"
+      "text": "steht seit 1.5h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 1.3h vor Anpfiff"
+     "text": "steht seit 1.5h vor Anpfiff"
     }
    ],
    "torOk": false
   },
   {
-   "matchId": "36069084",
+   "matchId": "36087408",
    "markt": "Match Odds",
-   "liga": "Norwegian 1st Division",
-   "home": "Lyn",
-   "away": "Ranheim IL",
-   "name": "Lyn",
-   "seite": "home",
-   "odd": 1.76,
-   "kickoff": "2026-09-20T15:00:00Z",
-   "punkte": 2,
-   "moeglich": 4,
-   "dauerH": 1.28,
-   "teile": [
-    {
-     "buch": "BF",
-     "name": "Betfair",
-     "status": "ja",
-     "punkte": 2,
-     "moeglich": 3,
-     "grund": {
-      "ok": true,
-      "text": "Geld 77% auf der Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "frischer Zufluss und Quote zieht mit"
-     },
-     "geld": {
-      "anteil": 0.772,
-      "betrag": 523,
-      "gesamt": 678,
-      "waehrung": "EUR",
-      "quelle": "geld"
-     },
-     "text": "Geld 77% auf der Seite"
-    },
-    {
-     "buch": "POLY",
-     "name": "Polymarket",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Polymarket nicht erhoben"
-    },
-    {
-     "buch": "PIN",
-     "name": "Pinnacle",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Pinnacle nicht erhoben"
-    },
-    {
-     "buch": "STAKE",
-     "name": "Stake-Highroller",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Stake-Highroller nicht erhoben"
-    },
-    {
-     "buch": "ZEIT",
-     "name": "Dauer",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 1,
-     "grund": {
-      "ok": false,
-      "text": "steht seit 1.3h vor Anpfiff"
-     },
-     "tiefe": null,
-     "text": "steht seit 1.3h vor Anpfiff"
-    }
-   ],
-   "torOk": false
-  },
-  {
-   "matchId": "36069068",
-   "markt": "Match Odds",
-   "liga": "Norwegian 1st Division",
-   "home": "Raufoss",
-   "away": "Stromsgodset",
-   "name": "Stromsgodset",
+   "liga": "Saudi 1st Division",
+   "home": "Al Jabalain",
+   "away": "Al Orubah",
+   "name": "Al Orubah",
    "seite": "away",
-   "odd": 1.33,
-   "kickoff": "2026-09-20T15:00:00Z",
+   "odd": 5.2,
+   "kickoff": "2026-09-20T15:55:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 1.28,
+   "dauerH": 1.69,
    "teile": [
     {
      "buch": "BF",
@@ -4498,9 +4573,9 @@
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.868,
-      "betrag": 403,
-      "gesamt": 464,
+      "anteil": 0.87,
+      "betrag": 88,
+      "gesamt": 101,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -4547,119 +4622,27 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 1.3h vor Anpfiff"
+      "text": "steht seit 1.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 1.3h vor Anpfiff"
+     "text": "steht seit 1.7h vor Anpfiff"
     }
    ],
    "torOk": false
   },
   {
-   "matchId": "36069057",
+   "matchId": "36087221",
    "markt": "Match Odds",
-   "liga": "Norwegian Eliteserien",
-   "home": "Viking",
-   "away": "Lillestrom",
-   "name": "Viking",
+   "liga": "Saudi 1st Division",
+   "home": "Al-Jndal",
+   "away": "Al-Wahda (KSA)",
+   "name": "Al-Jndal",
    "seite": "home",
-   "odd": 1.37,
-   "kickoff": "2026-09-20T15:00:00Z",
-   "punkte": 2,
-   "moeglich": 7,
-   "dauerH": 1.28,
-   "teile": [
-    {
-     "buch": "BF",
-     "name": "Betfair",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 3,
-     "grund": {
-      "ok": false,
-      "text": "Geld 53% auf der Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "frischer Zufluss und Quote zieht mit"
-     },
-     "geld": {
-      "anteil": 0.532,
-      "betrag": 1564,
-      "gesamt": 2939,
-      "waehrung": "EUR",
-      "quelle": "geld"
-     },
-     "text": "Geld 53% auf der Seite"
-    },
-    {
-     "buch": "POLY",
-     "name": "Polymarket",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Polymarket nicht erhoben"
-    },
-    {
-     "buch": "PIN",
-     "name": "Pinnacle",
-     "status": "ja",
-     "punkte": 2,
-     "moeglich": 3,
-     "grund": {
-      "ok": true,
-      "text": "hat dieselbe Seite als Favorit"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "kein Move gemessen"
-     },
-     "geld": null,
-     "text": "hat dieselbe Seite als Favorit"
-    },
-    {
-     "buch": "STAKE",
-     "name": "Stake-Highroller",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Stake-Highroller nicht erhoben"
-    },
-    {
-     "buch": "ZEIT",
-     "name": "Dauer",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 1,
-     "grund": {
-      "ok": false,
-      "text": "steht seit 1.3h vor Anpfiff"
-     },
-     "tiefe": null,
-     "text": "steht seit 1.3h vor Anpfiff"
-    }
-   ],
-   "torOk": false
-  },
-  {
-   "matchId": "36069095",
-   "markt": "Match Odds",
-   "liga": "Norwegian 1st Division",
-   "home": "Haugesund",
-   "away": "Strommen",
-   "name": "Haugesund",
-   "seite": "home",
-   "odd": 1.4,
-   "kickoff": "2026-09-20T15:00:00Z",
+   "odd": 4.2,
+   "kickoff": "2026-09-20T15:55:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 1.28,
+   "dauerH": 1.69,
    "teile": [
     {
      "buch": "BF",
@@ -4669,20 +4652,20 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Geld 87% auf der Seite"
+      "text": "Geld 93% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.872,
-      "betrag": 588,
-      "gesamt": 674,
+      "anteil": 0.93,
+      "betrag": 61,
+      "gesamt": 66,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 87% auf der Seite"
+     "text": "Geld 93% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -4725,27 +4708,113 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 1.3h vor Anpfiff"
+      "text": "steht seit 1.7h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 1.3h vor Anpfiff"
+     "text": "steht seit 1.7h vor Anpfiff"
     }
    ],
    "torOk": false
   },
   {
-   "matchId": "36069646",
+   "matchId": "36077428",
    "markt": "Match Odds",
-   "liga": "Croatian HNL",
-   "home": "Rijeka",
-   "away": "Hajduk Split",
-   "name": "Rijeka",
+   "liga": "Icelandic Urvalsdeild",
+   "home": "IA Akranes",
+   "away": "Breidablik",
+   "name": "IA Akranes",
    "seite": "home",
-   "odd": 2.02,
-   "kickoff": "2026-09-20T15:00:00Z",
+   "odd": 2.0,
+   "kickoff": "2026-09-20T16:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 1.28,
+   "dauerH": 1.78,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
+     "status": "ja",
+     "punkte": 2,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
+      "text": "Geld 67% auf der Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.669,
+      "betrag": 760,
+      "gesamt": 1136,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 67% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Polymarket nicht erhoben"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Pinnacle nicht erhoben"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Stake-Highroller nicht erhoben"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 1,
+     "grund": {
+      "ok": false,
+      "text": "steht seit 1.8h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 1.8h vor Anpfiff"
+    }
+   ],
+   "torOk": false
+  },
+  {
+   "matchId": "36071144",
+   "markt": "Match Odds",
+   "liga": "Cypriot 1st Division",
+   "home": "Aris FC Limassol",
+   "away": "Karmiotissa Polemidion",
+   "name": "Aris FC Limassol",
+   "seite": "home",
+   "odd": 1.42,
+   "kickoff": "2026-09-20T16:00:00Z",
+   "punkte": 2,
+   "moeglich": 4,
+   "dauerH": 1.78,
    "teile": [
     {
      "buch": "BF",
@@ -4762,9 +4831,9 @@
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.765,
-      "betrag": 2007,
-      "gesamt": 2623,
+      "anteil": 0.76,
+      "betrag": 407,
+      "gesamt": 536,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -4811,27 +4880,27 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 1.3h vor Anpfiff"
+      "text": "steht seit 1.8h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 1.3h vor Anpfiff"
+     "text": "steht seit 1.8h vor Anpfiff"
     }
    ],
    "torOk": false
   },
   {
-   "matchId": "36072486",
+   "matchId": "36069370",
    "markt": "Match Odds",
-   "liga": "Italian Serie B",
-   "home": "Mantova",
-   "away": "Pisa",
-   "name": "Remis",
-   "seite": "draw",
-   "odd": 3.35,
-   "kickoff": "2026-09-20T15:15:00Z",
+   "liga": "Czech 1 Liga",
+   "home": "Slavia Prague",
+   "away": "Plzen",
+   "name": "Slavia Prague",
+   "seite": "home",
+   "odd": 1.59,
+   "kickoff": "2026-09-20T16:00:00Z",
    "punkte": 2,
-   "moeglich": 7,
-   "dauerH": 1.53,
+   "moeglich": 4,
+   "dauerH": 1.78,
    "teile": [
     {
      "buch": "BF",
@@ -4841,20 +4910,20 @@
      "moeglich": 3,
      "grund": {
       "ok": true,
-      "text": "Geld 79% auf der Seite"
+      "text": "Geld 83% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.792,
-      "betrag": 3846,
-      "gesamt": 4856,
+      "anteil": 0.829,
+      "betrag": 3606,
+      "gesamt": 4350,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 79% auf der Seite"
+     "text": "Geld 83% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -4870,11 +4939,183 @@
     {
      "buch": "PIN",
      "name": "Pinnacle",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Pinnacle nicht erhoben"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Stake-Highroller nicht erhoben"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 1,
+     "grund": {
+      "ok": false,
+      "text": "steht seit 1.8h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 1.8h vor Anpfiff"
+    }
+   ],
+   "torOk": false
+  },
+  {
+   "matchId": "36077322",
+   "markt": "Match Odds",
+   "liga": "Uruguayan Primera Division",
+   "home": "Danubio",
+   "away": "Wanderers (Uru)",
+   "name": "Danubio",
+   "seite": "home",
+   "odd": 2.38,
+   "kickoff": "2026-09-20T16:00:00Z",
+   "punkte": 2,
+   "moeglich": 4,
+   "dauerH": 1.78,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
+     "status": "ja",
+     "punkte": 2,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
+      "text": "Geld 70% auf der Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.704,
+      "betrag": 12,
+      "gesamt": 17,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 70% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Polymarket nicht erhoben"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Pinnacle nicht erhoben"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Stake-Highroller nicht erhoben"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 1,
+     "grund": {
+      "ok": false,
+      "text": "steht seit 1.8h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 1.8h vor Anpfiff"
+    }
+   ],
+   "torOk": false
+  },
+  {
+   "matchId": "36067756",
+   "markt": "Match Odds",
+   "liga": "Greek Super League",
+   "home": "OFI",
+   "away": "Asteras Tripolis",
+   "name": "OFI",
+   "seite": "home",
+   "odd": 2.3,
+   "kickoff": "2026-09-20T16:00:00Z",
+   "punkte": 2,
+   "moeglich": 7,
+   "dauerH": 1.78,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
      "status": "nein",
      "punkte": 0,
      "moeglich": 3,
      "grund": {
       "ok": false,
+      "text": "Geld 61% auf der Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.614,
+      "betrag": 2223,
+      "gesamt": 3620,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 61% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Polymarket nicht erhoben"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "ja",
+     "punkte": 2,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
       "text": "hat dieselbe Seite als Favorit"
      },
      "tiefe": {
@@ -4903,10 +5144,96 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 1.5h vor Anpfiff"
+      "text": "steht seit 1.8h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 1.5h vor Anpfiff"
+     "text": "steht seit 1.8h vor Anpfiff"
+    }
+   ],
+   "torOk": false
+  },
+  {
+   "matchId": "36085031",
+   "markt": "Match Odds",
+   "liga": "Georgian Umaglesi Liga",
+   "home": "Dinamo Batumi",
+   "away": "Torpedo Kutaisi",
+   "name": "Dinamo Batumi",
+   "seite": "home",
+   "odd": 1.81,
+   "kickoff": "2026-09-20T16:00:00Z",
+   "punkte": 2,
+   "moeglich": 4,
+   "dauerH": 1.78,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
+     "status": "ja",
+     "punkte": 2,
+     "moeglich": 3,
+     "grund": {
+      "ok": true,
+      "text": "Geld 86% auf der Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.86,
+      "betrag": 332,
+      "gesamt": 386,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 86% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Polymarket nicht erhoben"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Pinnacle nicht erhoben"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Stake-Highroller nicht erhoben"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 1,
+     "grund": {
+      "ok": false,
+      "text": "steht seit 1.8h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 1.8h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -4923,7 +5250,7 @@
    "kickoff": "2026-09-20T23:00:00Z",
    "punkte": 1,
    "moeglich": 10,
-   "dauerH": 9.28,
+   "dauerH": 8.78,
    "teile": [
     {
      "buch": "BF",
@@ -4933,20 +5260,20 @@
      "moeglich": 3,
      "grund": {
       "ok": false,
-      "text": "Geld 52% auf der Seite"
+      "text": "Geld 51% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.519,
+      "anteil": 0.51,
       "betrag": 1195,
-      "gesamt": 2302,
+      "gesamt": 2343,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 52% auf der Seite"
+     "text": "Geld 51% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -4965,7 +5292,7 @@
      "geld": {
       "anteil": 0.16,
       "betrag": null,
-      "gesamt": 5193,
+      "gesamt": 5194,
       "waehrung": "USD",
       "quelle": "preis"
      },
@@ -5007,26 +5334,112 @@
      "moeglich": 1,
      "grund": {
       "ok": true,
-      "text": "steht seit 9.3h vor Anpfiff"
+      "text": "steht seit 8.8h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 9.3h vor Anpfiff"
+     "text": "steht seit 8.8h vor Anpfiff"
     }
    ],
    "torOk": false
   },
   {
-   "matchId": "36081419",
+   "matchId": "36091180",
    "markt": "Match Odds",
-   "liga": "Albanian Superliga",
-   "home": "KF Tirana",
-   "away": "AF Elbasani",
-   "name": "KF Tirana",
-   "seite": "home",
-   "odd": 2.46,
-   "kickoff": "2026-09-20T14:00:00Z",
+   "liga": "Uzbekistan Super League",
+   "home": "Lokomotiv Tashkent",
+   "away": "Neftchi Fargona",
+   "name": "Neftchi Fargona",
+   "seite": "away",
+   "odd": 2.0,
+   "kickoff": "2026-09-20T14:30:00Z",
    "punkte": 0,
    "moeglich": 4,
+   "dauerH": 0.28,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 3,
+     "grund": {
+      "ok": false,
+      "text": "Geld 54% auf der Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.54,
+      "betrag": 1419,
+      "gesamt": 2628,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 54% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Polymarket nicht erhoben"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Pinnacle nicht erhoben"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Stake-Highroller nicht erhoben"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 1,
+     "grund": {
+      "ok": false,
+      "text": "steht seit 0.3h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 0.3h vor Anpfiff"
+    }
+   ],
+   "torOk": false
+  },
+  {
+   "matchId": "36071924",
+   "markt": "Match Odds",
+   "liga": "Swedish Allsvenskan",
+   "home": "Mjallby",
+   "away": "GAIS",
+   "name": "Mjallby",
+   "seite": "home",
+   "odd": 2.98,
+   "kickoff": "2026-09-20T14:30:00Z",
+   "punkte": 0,
+   "moeglich": 10,
    "dauerH": 0.28,
    "teile": [
     {
@@ -5045,368 +5458,12 @@
      },
      "geld": {
       "anteil": 0.505,
-      "betrag": 168,
-      "gesamt": 332,
+      "betrag": 1564,
+      "gesamt": 3097,
       "waehrung": "EUR",
       "quelle": "geld"
      },
      "text": "Geld 50% auf der Seite"
-    },
-    {
-     "buch": "POLY",
-     "name": "Polymarket",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Polymarket nicht erhoben"
-    },
-    {
-     "buch": "PIN",
-     "name": "Pinnacle",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Pinnacle nicht erhoben"
-    },
-    {
-     "buch": "STAKE",
-     "name": "Stake-Highroller",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Stake-Highroller nicht erhoben"
-    },
-    {
-     "buch": "ZEIT",
-     "name": "Dauer",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 1,
-     "grund": {
-      "ok": false,
-      "text": "steht seit 0.3h vor Anpfiff"
-     },
-     "tiefe": null,
-     "text": "steht seit 0.3h vor Anpfiff"
-    }
-   ],
-   "torOk": false
-  },
-  {
-   "matchId": "36068621",
-   "markt": "Match Odds",
-   "liga": "Turkish Super League",
-   "home": "Erzurum BB",
-   "away": "Samsunspor",
-   "name": "Samsunspor",
-   "seite": "away",
-   "odd": 3.35,
-   "kickoff": "2026-09-20T14:00:00Z",
-   "punkte": 0,
-   "moeglich": 7,
-   "dauerH": 0.28,
-   "teile": [
-    {
-     "buch": "BF",
-     "name": "Betfair",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 3,
-     "grund": {
-      "ok": false,
-      "text": "Geld 37% auf der Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "frischer Zufluss und Quote zieht mit"
-     },
-     "geld": {
-      "anteil": 0.371,
-      "betrag": 2574,
-      "gesamt": 6939,
-      "waehrung": "EUR",
-      "quelle": "geld"
-     },
-     "text": "Geld 37% auf der Seite"
-    },
-    {
-     "buch": "POLY",
-     "name": "Polymarket",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Polymarket nicht erhoben"
-    },
-    {
-     "buch": "PIN",
-     "name": "Pinnacle",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 3,
-     "grund": {
-      "ok": false,
-      "text": "hat dieselbe Seite als Favorit"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "kein Move gemessen"
-     },
-     "geld": null,
-     "text": "hat dieselbe Seite als Favorit"
-    },
-    {
-     "buch": "STAKE",
-     "name": "Stake-Highroller",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Stake-Highroller nicht erhoben"
-    },
-    {
-     "buch": "ZEIT",
-     "name": "Dauer",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 1,
-     "grund": {
-      "ok": false,
-      "text": "steht seit 0.3h vor Anpfiff"
-     },
-     "tiefe": null,
-     "text": "steht seit 0.3h vor Anpfiff"
-    }
-   ],
-   "torOk": false
-  },
-  {
-   "matchId": "36080604",
-   "markt": "Match Odds",
-   "liga": "German 3 Liga",
-   "home": "Waldhof Mannheim",
-   "away": "Preussen Munster",
-   "name": "Remis",
-   "seite": "draw",
-   "odd": 3.95,
-   "kickoff": "2026-09-20T14:30:00Z",
-   "punkte": 0,
-   "moeglich": 7,
-   "dauerH": 0.78,
-   "teile": [
-    {
-     "buch": "BF",
-     "name": "Betfair",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 3,
-     "grund": {
-      "ok": false,
-      "text": "Geld 39% auf der Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "frischer Zufluss und Quote zieht mit"
-     },
-     "geld": {
-      "anteil": 0.391,
-      "betrag": 35,
-      "gesamt": 89,
-      "waehrung": "EUR",
-      "quelle": "geld"
-     },
-     "text": "Geld 39% auf der Seite"
-    },
-    {
-     "buch": "POLY",
-     "name": "Polymarket",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Polymarket nicht erhoben"
-    },
-    {
-     "buch": "PIN",
-     "name": "Pinnacle",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 3,
-     "grund": {
-      "ok": false,
-      "text": "hat dieselbe Seite als Favorit"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "kein Move gemessen"
-     },
-     "geld": null,
-     "text": "hat dieselbe Seite als Favorit"
-    },
-    {
-     "buch": "STAKE",
-     "name": "Stake-Highroller",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Stake-Highroller nicht erhoben"
-    },
-    {
-     "buch": "ZEIT",
-     "name": "Dauer",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 1,
-     "grund": {
-      "ok": false,
-      "text": "steht seit 0.8h vor Anpfiff"
-     },
-     "tiefe": null,
-     "text": "steht seit 0.8h vor Anpfiff"
-    }
-   ],
-   "torOk": false
-  },
-  {
-   "matchId": "36091180",
-   "markt": "Match Odds",
-   "liga": "Uzbekistan Super League",
-   "home": "Lokomotiv Tashkent",
-   "away": "Neftchi Fargona",
-   "name": "Neftchi Fargona",
-   "seite": "away",
-   "odd": 2.06,
-   "kickoff": "2026-09-20T14:30:00Z",
-   "punkte": 0,
-   "moeglich": 4,
-   "dauerH": 0.78,
-   "teile": [
-    {
-     "buch": "BF",
-     "name": "Betfair",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 3,
-     "grund": {
-      "ok": false,
-      "text": "Geld 58% auf der Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "frischer Zufluss und Quote zieht mit"
-     },
-     "geld": {
-      "anteil": 0.577,
-      "betrag": 509,
-      "gesamt": 882,
-      "waehrung": "EUR",
-      "quelle": "geld"
-     },
-     "text": "Geld 58% auf der Seite"
-    },
-    {
-     "buch": "POLY",
-     "name": "Polymarket",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Polymarket nicht erhoben"
-    },
-    {
-     "buch": "PIN",
-     "name": "Pinnacle",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Pinnacle nicht erhoben"
-    },
-    {
-     "buch": "STAKE",
-     "name": "Stake-Highroller",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Stake-Highroller nicht erhoben"
-    },
-    {
-     "buch": "ZEIT",
-     "name": "Dauer",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 1,
-     "grund": {
-      "ok": false,
-      "text": "steht seit 0.8h vor Anpfiff"
-     },
-     "tiefe": null,
-     "text": "steht seit 0.8h vor Anpfiff"
-    }
-   ],
-   "torOk": false
-  },
-  {
-   "matchId": "36071924",
-   "markt": "Match Odds",
-   "liga": "Swedish Allsvenskan",
-   "home": "Mjallby",
-   "away": "GAIS",
-   "name": "Mjallby",
-   "seite": "home",
-   "odd": 2.84,
-   "kickoff": "2026-09-20T14:30:00Z",
-   "punkte": 0,
-   "moeglich": 10,
-   "dauerH": 0.78,
-   "teile": [
-    {
-     "buch": "BF",
-     "name": "Betfair",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 3,
-     "grund": {
-      "ok": false,
-      "text": "Geld 64% auf der Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "frischer Zufluss und Quote zieht mit"
-     },
-     "geld": {
-      "anteil": 0.643,
-      "betrag": 948,
-      "gesamt": 1474,
-      "waehrung": "EUR",
-      "quelle": "geld"
-     },
-     "text": "Geld 64% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -5467,96 +5524,10 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 0.8h vor Anpfiff"
+      "text": "steht seit 0.3h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 0.8h vor Anpfiff"
-    }
-   ],
-   "torOk": false
-  },
-  {
-   "matchId": "36076129",
-   "markt": "Match Odds",
-   "liga": "Czech 2 Liga",
-   "home": "FC Sellier & Bellot Vlasim",
-   "away": "MAS Taborsko",
-   "name": "MAS Taborsko",
-   "seite": "away",
-   "odd": 2.7,
-   "kickoff": "2026-09-20T14:30:00Z",
-   "punkte": 0,
-   "moeglich": 4,
-   "dauerH": 0.78,
-   "teile": [
-    {
-     "buch": "BF",
-     "name": "Betfair",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 3,
-     "grund": {
-      "ok": false,
-      "text": "Geld 37% auf der Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "frischer Zufluss und Quote zieht mit"
-     },
-     "geld": {
-      "anteil": 0.368,
-      "betrag": 29,
-      "gesamt": 78,
-      "waehrung": "EUR",
-      "quelle": "geld"
-     },
-     "text": "Geld 37% auf der Seite"
-    },
-    {
-     "buch": "POLY",
-     "name": "Polymarket",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Polymarket nicht erhoben"
-    },
-    {
-     "buch": "PIN",
-     "name": "Pinnacle",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Pinnacle nicht erhoben"
-    },
-    {
-     "buch": "STAKE",
-     "name": "Stake-Highroller",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Stake-Highroller nicht erhoben"
-    },
-    {
-     "buch": "ZEIT",
-     "name": "Dauer",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 1,
-     "grund": {
-      "ok": false,
-      "text": "steht seit 0.8h vor Anpfiff"
-     },
-     "tiefe": null,
-     "text": "steht seit 0.8h vor Anpfiff"
+     "text": "steht seit 0.3h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -5569,11 +5540,11 @@
    "away": "St Gallen",
    "name": "FC Basel",
    "seite": "home",
-   "odd": 2.62,
+   "odd": 2.66,
    "kickoff": "2026-09-20T14:30:00Z",
    "punkte": 0,
    "moeglich": 10,
-   "dauerH": 0.78,
+   "dauerH": 0.28,
    "teile": [
     {
      "buch": "BF",
@@ -5583,20 +5554,20 @@
      "moeglich": 3,
      "grund": {
       "ok": false,
-      "text": "Geld 54% auf der Seite"
+      "text": "Geld 52% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.543,
-      "betrag": 4492,
-      "gesamt": 8272,
+      "anteil": 0.52,
+      "betrag": 4949,
+      "gesamt": 9517,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 54% auf der Seite"
+     "text": "Geld 52% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -5657,96 +5628,10 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 0.8h vor Anpfiff"
+      "text": "steht seit 0.3h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 0.8h vor Anpfiff"
-    }
-   ],
-   "torOk": false
-  },
-  {
-   "matchId": "36069082",
-   "markt": "Match Odds",
-   "liga": "Dutch Eerste Divisie",
-   "home": "De Graafschap",
-   "away": "NAC Breda",
-   "name": "NAC Breda",
-   "seite": "away",
-   "odd": 2.06,
-   "kickoff": "2026-09-20T14:45:00Z",
-   "punkte": 0,
-   "moeglich": 4,
-   "dauerH": 1.03,
-   "teile": [
-    {
-     "buch": "BF",
-     "name": "Betfair",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 3,
-     "grund": {
-      "ok": false,
-      "text": "Geld 35% auf der Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "frischer Zufluss und Quote zieht mit"
-     },
-     "geld": {
-      "anteil": 0.349,
-      "betrag": 105,
-      "gesamt": 300,
-      "waehrung": "EUR",
-      "quelle": "geld"
-     },
-     "text": "Geld 35% auf der Seite"
-    },
-    {
-     "buch": "POLY",
-     "name": "Polymarket",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Polymarket nicht erhoben"
-    },
-    {
-     "buch": "PIN",
-     "name": "Pinnacle",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Pinnacle nicht erhoben"
-    },
-    {
-     "buch": "STAKE",
-     "name": "Stake-Highroller",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Stake-Highroller nicht erhoben"
-    },
-    {
-     "buch": "ZEIT",
-     "name": "Dauer",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 1,
-     "grund": {
-      "ok": false,
-      "text": "steht seit 1.0h vor Anpfiff"
-     },
-     "tiefe": null,
-     "text": "steht seit 1.0h vor Anpfiff"
+     "text": "steht seit 0.3h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -5759,11 +5644,11 @@
    "away": "Hodd",
    "name": "Kongsvinger",
    "seite": "home",
-   "odd": 1.35,
+   "odd": 1.33,
    "kickoff": "2026-09-20T15:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 1.28,
+   "dauerH": 0.78,
    "teile": [
     {
      "buch": "BF",
@@ -5773,20 +5658,20 @@
      "moeglich": 3,
      "grund": {
       "ok": false,
-      "text": "Geld 52% auf der Seite"
+      "text": "Geld 60% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.524,
-      "betrag": 209,
-      "gesamt": 399,
+      "anteil": 0.595,
+      "betrag": 298,
+      "gesamt": 500,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 52% auf der Seite"
+     "text": "Geld 60% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -5829,10 +5714,10 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 1.3h vor Anpfiff"
+      "text": "steht seit 0.8h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 1.3h vor Anpfiff"
+     "text": "steht seit 0.8h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -5845,11 +5730,11 @@
    "away": "Zalaegerszeg",
    "name": "Remis",
    "seite": "draw",
-   "odd": 4.2,
+   "odd": 4.1,
    "kickoff": "2026-09-20T15:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 1.28,
+   "dauerH": 0.78,
    "teile": [
     {
      "buch": "BF",
@@ -5866,9 +5751,9 @@
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.645,
-      "betrag": 290,
-      "gesamt": 450,
+      "anteil": 0.642,
+      "betrag": 306,
+      "gesamt": 477,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -5915,10 +5800,10 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 1.3h vor Anpfiff"
+      "text": "steht seit 0.8h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 1.3h vor Anpfiff"
+     "text": "steht seit 0.8h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -5931,11 +5816,269 @@
    "away": "Sogndal",
    "name": "Stabaek",
    "seite": "home",
-   "odd": 1.4,
+   "odd": 1.39,
    "kickoff": "2026-09-20T15:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 1.28,
+   "dauerH": 0.78,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 3,
+     "grund": {
+      "ok": false,
+      "text": "Geld 61% auf der Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.614,
+      "betrag": 153,
+      "gesamt": 249,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 61% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Polymarket nicht erhoben"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Pinnacle nicht erhoben"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Stake-Highroller nicht erhoben"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 1,
+     "grund": {
+      "ok": false,
+      "text": "steht seit 0.8h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 0.8h vor Anpfiff"
+    }
+   ],
+   "torOk": false
+  },
+  {
+   "matchId": "36076433",
+   "markt": "Match Odds",
+   "liga": "Bosnian Premier League",
+   "home": "Siroki Brijeg",
+   "away": "Borac Banja Luka",
+   "name": "Borac Banja Luka",
+   "seite": "away",
+   "odd": 1.51,
+   "kickoff": "2026-09-20T15:00:00Z",
+   "punkte": 0,
+   "moeglich": 4,
+   "dauerH": 0.78,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 3,
+     "grund": {
+      "ok": false,
+      "text": "Geld 44% auf der Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.435,
+      "betrag": 76,
+      "gesamt": 175,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 44% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Polymarket nicht erhoben"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Pinnacle nicht erhoben"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Stake-Highroller nicht erhoben"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 1,
+     "grund": {
+      "ok": false,
+      "text": "steht seit 0.8h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 0.8h vor Anpfiff"
+    }
+   ],
+   "torOk": false
+  },
+  {
+   "matchId": "36091615",
+   "markt": "Match Odds",
+   "liga": "Tunisian Ligue Professionelle 1",
+   "home": "Club Sportif Sfaxien",
+   "away": "CA Bizertin",
+   "name": "Club Sportif Sfaxien",
+   "seite": "home",
+   "odd": 1.79,
+   "kickoff": "2026-09-20T15:00:00Z",
+   "punkte": 0,
+   "moeglich": 4,
+   "dauerH": 0.78,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 3,
+     "grund": {
+      "ok": false,
+      "text": "Geld 51% auf der Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.511,
+      "betrag": 113,
+      "gesamt": 222,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 51% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Polymarket nicht erhoben"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Pinnacle nicht erhoben"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Stake-Highroller nicht erhoben"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 1,
+     "grund": {
+      "ok": false,
+      "text": "steht seit 0.8h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 0.8h vor Anpfiff"
+    }
+   ],
+   "torOk": false
+  },
+  {
+   "matchId": "36081315",
+   "markt": "Match Odds",
+   "liga": "Latvian Virsliga",
+   "home": "FK Auda",
+   "away": "Rigas Futbola Skola",
+   "name": "Rigas Futbola Skola",
+   "seite": "away",
+   "odd": 1.75,
+   "kickoff": "2026-09-20T15:00:00Z",
+   "punkte": 0,
+   "moeglich": 4,
+   "dauerH": 0.78,
    "teile": [
     {
      "buch": "BF",
@@ -5953,8 +6096,8 @@
      },
      "geld": {
       "anteil": 0.571,
-      "betrag": 125,
-      "gesamt": 219,
+      "betrag": 396,
+      "gesamt": 693,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -6001,268 +6144,10 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 1.3h vor Anpfiff"
+      "text": "steht seit 0.8h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 1.3h vor Anpfiff"
-    }
-   ],
-   "torOk": false
-  },
-  {
-   "matchId": "36076433",
-   "markt": "Match Odds",
-   "liga": "Bosnian Premier League",
-   "home": "Siroki Brijeg",
-   "away": "Borac Banja Luka",
-   "name": "Borac Banja Luka",
-   "seite": "away",
-   "odd": 1.54,
-   "kickoff": "2026-09-20T15:00:00Z",
-   "punkte": 0,
-   "moeglich": 4,
-   "dauerH": 1.28,
-   "teile": [
-    {
-     "buch": "BF",
-     "name": "Betfair",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 3,
-     "grund": {
-      "ok": false,
-      "text": "Geld 45% auf der Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "frischer Zufluss und Quote zieht mit"
-     },
-     "geld": {
-      "anteil": 0.454,
-      "betrag": 72,
-      "gesamt": 159,
-      "waehrung": "EUR",
-      "quelle": "geld"
-     },
-     "text": "Geld 45% auf der Seite"
-    },
-    {
-     "buch": "POLY",
-     "name": "Polymarket",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Polymarket nicht erhoben"
-    },
-    {
-     "buch": "PIN",
-     "name": "Pinnacle",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Pinnacle nicht erhoben"
-    },
-    {
-     "buch": "STAKE",
-     "name": "Stake-Highroller",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Stake-Highroller nicht erhoben"
-    },
-    {
-     "buch": "ZEIT",
-     "name": "Dauer",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 1,
-     "grund": {
-      "ok": false,
-      "text": "steht seit 1.3h vor Anpfiff"
-     },
-     "tiefe": null,
-     "text": "steht seit 1.3h vor Anpfiff"
-    }
-   ],
-   "torOk": false
-  },
-  {
-   "matchId": "36091615",
-   "markt": "Match Odds",
-   "liga": "Tunisian Ligue Professionelle 1",
-   "home": "Club Sportif Sfaxien",
-   "away": "CA Bizertin",
-   "name": "Club Sportif Sfaxien",
-   "seite": "home",
-   "odd": 1.66,
-   "kickoff": "2026-09-20T15:00:00Z",
-   "punkte": 0,
-   "moeglich": 4,
-   "dauerH": 1.28,
-   "teile": [
-    {
-     "buch": "BF",
-     "name": "Betfair",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 3,
-     "grund": {
-      "ok": false,
-      "text": "Geld 50% auf der Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "frischer Zufluss und Quote zieht mit"
-     },
-     "geld": {
-      "anteil": 0.499,
-      "betrag": 88,
-      "gesamt": 176,
-      "waehrung": "EUR",
-      "quelle": "geld"
-     },
-     "text": "Geld 50% auf der Seite"
-    },
-    {
-     "buch": "POLY",
-     "name": "Polymarket",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Polymarket nicht erhoben"
-    },
-    {
-     "buch": "PIN",
-     "name": "Pinnacle",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Pinnacle nicht erhoben"
-    },
-    {
-     "buch": "STAKE",
-     "name": "Stake-Highroller",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Stake-Highroller nicht erhoben"
-    },
-    {
-     "buch": "ZEIT",
-     "name": "Dauer",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 1,
-     "grund": {
-      "ok": false,
-      "text": "steht seit 1.3h vor Anpfiff"
-     },
-     "tiefe": null,
-     "text": "steht seit 1.3h vor Anpfiff"
-    }
-   ],
-   "torOk": false
-  },
-  {
-   "matchId": "36081315",
-   "markt": "Match Odds",
-   "liga": "Latvian Virsliga",
-   "home": "FK Auda",
-   "away": "Rigas Futbola Skola",
-   "name": "Rigas Futbola Skola",
-   "seite": "away",
-   "odd": 1.75,
-   "kickoff": "2026-09-20T15:00:00Z",
-   "punkte": 0,
-   "moeglich": 4,
-   "dauerH": 1.28,
-   "teile": [
-    {
-     "buch": "BF",
-     "name": "Betfair",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 3,
-     "grund": {
-      "ok": false,
-      "text": "Geld 56% auf der Seite"
-     },
-     "tiefe": {
-      "ok": false,
-      "text": "frischer Zufluss und Quote zieht mit"
-     },
-     "geld": {
-      "anteil": 0.563,
-      "betrag": 368,
-      "gesamt": 653,
-      "waehrung": "EUR",
-      "quelle": "geld"
-     },
-     "text": "Geld 56% auf der Seite"
-    },
-    {
-     "buch": "POLY",
-     "name": "Polymarket",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Polymarket nicht erhoben"
-    },
-    {
-     "buch": "PIN",
-     "name": "Pinnacle",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Pinnacle nicht erhoben"
-    },
-    {
-     "buch": "STAKE",
-     "name": "Stake-Highroller",
-     "status": "unbekannt",
-     "punkte": 0,
-     "moeglich": 0,
-     "grund": null,
-     "tiefe": null,
-     "geld": null,
-     "text": "Stake-Highroller nicht erhoben"
-    },
-    {
-     "buch": "ZEIT",
-     "name": "Dauer",
-     "status": "nein",
-     "punkte": 0,
-     "moeglich": 1,
-     "grund": {
-      "ok": false,
-      "text": "steht seit 1.3h vor Anpfiff"
-     },
-     "tiefe": null,
-     "text": "steht seit 1.3h vor Anpfiff"
+     "text": "steht seit 0.8h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -6279,7 +6164,7 @@
    "kickoff": "2026-09-20T15:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 1.28,
+   "dauerH": 0.78,
    "teile": [
     {
      "buch": "BF",
@@ -6296,7 +6181,7 @@
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.612,
+      "anteil": 0.614,
       "betrag": 32,
       "gesamt": 52,
       "waehrung": "EUR",
@@ -6345,10 +6230,10 @@
      "moeglich": 1,
      "grund": {
       "ok": false,
-      "text": "steht seit 1.3h vor Anpfiff"
+      "text": "steht seit 0.8h vor Anpfiff"
      },
      "tiefe": null,
-     "text": "steht seit 1.3h vor Anpfiff"
+     "text": "steht seit 0.8h vor Anpfiff"
     }
    ],
    "torOk": false
@@ -6361,8 +6246,94 @@
    "away": "FK Sumqayit",
    "name": "FK Sumqayit",
    "seite": "away",
-   "odd": 2.76,
+   "odd": 3.1,
    "kickoff": "2026-09-20T15:00:00Z",
+   "punkte": 0,
+   "moeglich": 4,
+   "dauerH": 0.78,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 3,
+     "grund": {
+      "ok": false,
+      "text": "Geld 43% auf der Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.43,
+      "betrag": 25,
+      "gesamt": 57,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 43% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Polymarket nicht erhoben"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Pinnacle nicht erhoben"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Stake-Highroller nicht erhoben"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 1,
+     "grund": {
+      "ok": false,
+      "text": "steht seit 0.8h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 0.8h vor Anpfiff"
+    }
+   ],
+   "torOk": false
+  },
+  {
+   "matchId": "36069360",
+   "markt": "Match Odds",
+   "liga": "Slovenian Premier League",
+   "home": "Mura",
+   "away": "NK Celje",
+   "name": "Remis",
+   "seite": "draw",
+   "odd": 4.0,
+   "kickoff": "2026-09-20T15:30:00Z",
    "punkte": 0,
    "moeglich": 4,
    "dauerH": 1.28,
@@ -6375,20 +6346,20 @@
      "moeglich": 3,
      "grund": {
       "ok": false,
-      "text": "Geld 36% auf der Seite"
+      "text": "Geld 48% auf der Seite"
      },
      "tiefe": {
       "ok": false,
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.359,
-      "betrag": 18,
-      "gesamt": 50,
+      "anteil": 0.48,
+      "betrag": 93,
+      "gesamt": 193,
       "waehrung": "EUR",
       "quelle": "geld"
      },
-     "text": "Geld 36% auf der Seite"
+     "text": "Geld 48% auf der Seite"
     },
     {
      "buch": "POLY",
@@ -6440,15 +6411,451 @@
    "torOk": false
   },
   {
-   "matchId": "36069360",
+   "matchId": "36070600",
    "markt": "Match Odds",
-   "liga": "Slovenian Premier League",
-   "home": "Mura",
-   "away": "NK Celje",
+   "liga": "Polish I Liga",
+   "home": "Podbeskidzie B-B",
+   "away": "Unia Skierniewice",
+   "name": "Podbeskidzie B-B",
+   "seite": "home",
+   "odd": 2.16,
+   "kickoff": "2026-09-20T15:30:00Z",
+   "punkte": 0,
+   "moeglich": 4,
+   "dauerH": 1.28,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 3,
+     "grund": {
+      "ok": false,
+      "text": "Geld 51% auf der Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.51,
+      "betrag": 126,
+      "gesamt": 247,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 51% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Polymarket nicht erhoben"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Pinnacle nicht erhoben"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Stake-Highroller nicht erhoben"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 1,
+     "grund": {
+      "ok": false,
+      "text": "steht seit 1.3h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 1.3h vor Anpfiff"
+    }
+   ],
+   "torOk": false
+  },
+  {
+   "matchId": "36082469",
+   "markt": "Match Odds",
+   "liga": "Italian Serie C",
+   "home": "Nuovo Campobasso",
+   "away": "ASD Pineto Calcio",
+   "name": "Nuovo Campobasso",
+   "seite": "home",
+   "odd": 2.06,
+   "kickoff": "2026-09-20T15:30:00Z",
+   "punkte": 0,
+   "moeglich": 4,
+   "dauerH": 1.28,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 3,
+     "grund": {
+      "ok": false,
+      "text": "Geld 55% auf der Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.553,
+      "betrag": 114,
+      "gesamt": 206,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 55% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Polymarket nicht erhoben"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Pinnacle nicht erhoben"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Stake-Highroller nicht erhoben"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 1,
+     "grund": {
+      "ok": false,
+      "text": "steht seit 1.3h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 1.3h vor Anpfiff"
+    }
+   ],
+   "torOk": false
+  },
+  {
+   "matchId": "36069204",
+   "markt": "Match Odds",
+   "liga": "Polish Ekstraklasa",
+   "home": "Jagiellonia Bialystock",
+   "away": "Legia Warsaw",
+   "name": "Remis",
+   "seite": "draw",
+   "odd": 3.5,
+   "kickoff": "2026-09-20T15:30:00Z",
+   "punkte": 0,
+   "moeglich": 7,
+   "dauerH": 1.28,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 3,
+     "grund": {
+      "ok": false,
+      "text": "Geld 46% auf der Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.458,
+      "betrag": 534,
+      "gesamt": 1165,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 46% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Polymarket nicht erhoben"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 3,
+     "grund": {
+      "ok": false,
+      "text": "hat dieselbe Seite als Favorit"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "kein Move gemessen"
+     },
+     "geld": null,
+     "text": "hat dieselbe Seite als Favorit"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Stake-Highroller nicht erhoben"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 1,
+     "grund": {
+      "ok": false,
+      "text": "steht seit 1.3h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 1.3h vor Anpfiff"
+    }
+   ],
+   "torOk": false
+  },
+  {
+   "matchId": "36071152",
+   "markt": "Match Odds",
+   "liga": "Canadian Premier League",
+   "home": "Atletico Ottawa",
+   "away": "FC Supra du Quebec",
    "name": "Remis",
    "seite": "draw",
    "odd": 4.0,
-   "kickoff": "2026-09-20T15:30:00Z",
+   "kickoff": "2026-09-20T16:00:00Z",
+   "punkte": 0,
+   "moeglich": 4,
+   "dauerH": 1.78,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 3,
+     "grund": {
+      "ok": false,
+      "text": "Geld 39% auf der Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.387,
+      "betrag": 41,
+      "gesamt": 107,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 39% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Polymarket nicht erhoben"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Pinnacle nicht erhoben"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Stake-Highroller nicht erhoben"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 1,
+     "grund": {
+      "ok": false,
+      "text": "steht seit 1.8h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 1.8h vor Anpfiff"
+    }
+   ],
+   "torOk": false
+  },
+  {
+   "matchId": "36077430",
+   "markt": "Match Odds",
+   "liga": "Icelandic Urvalsdeild",
+   "home": "Keflavik",
+   "away": "Fram",
+   "name": "Fram",
+   "seite": "away",
+   "odd": 1.8,
+   "kickoff": "2026-09-20T16:00:00Z",
+   "punkte": 0,
+   "moeglich": 4,
+   "dauerH": 1.78,
+   "teile": [
+    {
+     "buch": "BF",
+     "name": "Betfair",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 3,
+     "grund": {
+      "ok": false,
+      "text": "Geld 54% auf der Seite"
+     },
+     "tiefe": {
+      "ok": false,
+      "text": "frischer Zufluss und Quote zieht mit"
+     },
+     "geld": {
+      "anteil": 0.543,
+      "betrag": 1198,
+      "gesamt": 2207,
+      "waehrung": "EUR",
+      "quelle": "geld"
+     },
+     "text": "Geld 54% auf der Seite"
+    },
+    {
+     "buch": "POLY",
+     "name": "Polymarket",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Polymarket nicht erhoben"
+    },
+    {
+     "buch": "PIN",
+     "name": "Pinnacle",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Pinnacle nicht erhoben"
+    },
+    {
+     "buch": "STAKE",
+     "name": "Stake-Highroller",
+     "status": "unbekannt",
+     "punkte": 0,
+     "moeglich": 0,
+     "grund": null,
+     "tiefe": null,
+     "geld": null,
+     "text": "Stake-Highroller nicht erhoben"
+    },
+    {
+     "buch": "ZEIT",
+     "name": "Dauer",
+     "status": "nein",
+     "punkte": 0,
+     "moeglich": 1,
+     "grund": {
+      "ok": false,
+      "text": "steht seit 1.8h vor Anpfiff"
+     },
+     "tiefe": null,
+     "text": "steht seit 1.8h vor Anpfiff"
+    }
+   ],
+   "torOk": false
+  },
+  {
+   "matchId": "36090921",
+   "markt": "Match Odds",
+   "liga": "Jordanian Premier League",
+   "home": "Al Buqaa",
+   "away": "Al Faisaly SC",
+   "name": "Al Buqaa",
+   "seite": "home",
+   "odd": 13.0,
+   "kickoff": "2026-09-20T16:00:00Z",
    "punkte": 0,
    "moeglich": 4,
    "dauerH": 1.78,
@@ -6468,9 +6875,9 @@
       "text": "frischer Zufluss und Quote zieht mit"
      },
      "geld": {
-      "anteil": 0.508,
-      "betrag": 89,
-      "gesamt": 175,
+      "anteil": 0.512,
+      "betrag": 10,
+      "gesamt": 19,
       "waehrung": "EUR",
       "quelle": "geld"
      },
@@ -6548,33 +6955,69 @@
  },
  "bilanz": {
   "gesamt": {
-   "n": 497,
+   "n": 501,
    "gewonnen": 290,
-   "verloren": 207,
-   "einheiten": 29.68,
-   "roi": 0.0597,
-   "roiLb": -0.0097
+   "verloren": 211,
+   "einheiten": 25.68,
+   "roi": 0.0513,
+   "roiLb": -0.018
   },
   "jeStufe": {
    "1": {
-    "n": 158,
+    "n": 160,
     "gewonnen": 98,
-    "verloren": 60,
-    "einheiten": 13.88,
-    "roi": 0.0878,
-    "roiLb": -0.0286
+    "verloren": 62,
+    "einheiten": 11.88,
+    "roi": 0.0743,
+    "roiLb": -0.0418
    },
    "2": {
-    "n": 339,
+    "n": 341,
     "gewonnen": 192,
-    "verloren": 147,
-    "einheiten": 15.8,
-    "roi": 0.0466,
-    "roiLb": -0.0396
+    "verloren": 149,
+    "einheiten": 13.8,
+    "roi": 0.0405,
+    "roiLb": -0.0455
    }
   },
-  "offen": 8,
+  "offen": 9,
   "zeilen": [
+   {
+    "name": "Hradec Kralove",
+    "liga": "Czech 1 Liga",
+    "stufe": 2,
+    "haltePreis": 1.8,
+    "schlussPreis": 1.71,
+    "win": false,
+    "settledAt": "2026-09-20T14:13:26.559148+00:00"
+   },
+   {
+    "name": "AIK",
+    "liga": "Swedish Allsvenskan",
+    "stufe": 1,
+    "haltePreis": 2.06,
+    "schlussPreis": 2.0,
+    "win": false,
+    "settledAt": "2026-09-20T14:13:26.559148+00:00"
+   },
+   {
+    "name": "Remis",
+    "liga": "Armenian Premier League",
+    "stufe": 2,
+    "haltePreis": 3.55,
+    "schlussPreis": 3.55,
+    "win": false,
+    "settledAt": "2026-09-20T13:58:13.003315+00:00"
+   },
+   {
+    "name": "Djurgardens",
+    "liga": "Swedish Allsvenskan",
+    "stufe": 1,
+    "haltePreis": 1.58,
+    "schlussPreis": 1.58,
+    "win": false,
+    "settledAt": "2026-09-20T13:58:13.003315+00:00"
+   },
    {
     "name": "Feyenoord",
     "liga": "Dutch Eredivisie",
@@ -6763,42 +7206,6 @@
     "schlussPreis": 1.65,
     "win": false,
     "settledAt": "2026-09-19T13:26:10.612904+00:00"
-   },
-   {
-    "name": "Remis",
-    "liga": "Vietnamese National Cup",
-    "stufe": 2,
-    "haltePreis": 3.0,
-    "schlussPreis": 3.0,
-    "win": true,
-    "settledAt": "2026-09-19T12:26:00.808723+00:00"
-   },
-   {
-    "name": "Ulsan Hyundai Horang-i",
-    "liga": "South Korean K1 League",
-    "stufe": 2,
-    "haltePreis": 1.88,
-    "schlussPreis": 1.88,
-    "win": false,
-    "settledAt": "2026-09-19T12:26:00.808723+00:00"
-   },
-   {
-    "name": "CSA Steaua Bucuresti",
-    "liga": "Romanian Liga II",
-    "stufe": 2,
-    "haltePreis": 1.83,
-    "schlussPreis": 1.75,
-    "win": true,
-    "settledAt": "2026-09-19T09:55:35.403344+00:00"
-   },
-   {
-    "name": "Tigres",
-    "liga": "Mexican Liga MX",
-    "stufe": 1,
-    "haltePreis": 1.91,
-    "schlussPreis": 1.91,
-    "win": false,
-    "settledAt": "2026-09-19T05:25:17.067553+00:00"
    }
   ],
   "jeBuecher": [
@@ -6813,11 +7220,11 @@
    },
    {
     "einig": 1,
-    "n": 19,
+    "n": 21,
     "gewonnen": 16,
-    "trefferPct": 84.2,
-    "roi": 0.6253,
-    "roiLb": 0.3082,
+    "trefferPct": 76.2,
+    "roi": 0.4705,
+    "roiLb": 0.1348,
     "belegt": true
    },
    {
@@ -6831,11 +7238,11 @@
    },
    {
     "einig": 3,
-    "n": 8,
+    "n": 10,
     "gewonnen": 6,
-    "trefferPct": 75.0,
-    "roi": 0.3425,
-    "roiLb": null,
+    "trefferPct": 60.0,
+    "roi": 0.074,
+    "roiLb": -0.422,
     "belegt": false
    }
   ]
@@ -6858,9 +7265,9 @@
   {
    "punkte": 10,
    "moeglich": 13,
-   "n": 22,
-   "roi": 0.2405,
-   "roiLb": -0.0437
+   "n": 23,
+   "roi": 0.1865,
+   "roiLb": -0.0992
   },
   {
    "punkte": 10,
@@ -6907,9 +7314,9 @@
   {
    "punkte": 7,
    "moeglich": 10,
-   "n": 75,
-   "roi": 0.0409,
-   "roiLb": -0.1378
+   "n": 76,
+   "roi": 0.0272,
+   "roiLb": -0.1505
   },
   {
    "punkte": 7,
@@ -6970,16 +7377,16 @@
   {
    "punkte": 4,
    "moeglich": 10,
-   "n": 73,
-   "roi": -0.0342,
-   "roiLb": -0.2405
+   "n": 74,
+   "roi": -0.0473,
+   "roiLb": -0.2518
   },
   {
    "punkte": 4,
    "moeglich": 7,
-   "n": 177,
-   "roi": 0.0858,
-   "roiLb": -0.0208
+   "n": 178,
+   "roi": 0.0881,
+   "roiLb": -0.018
   },
   {
    "punkte": 4,
@@ -7005,9 +7412,9 @@
   {
    "punkte": 3,
    "moeglich": 7,
-   "n": 33,
-   "roi": 0.1685,
-   "roiLb": -0.153
+   "n": 34,
+   "roi": 0.1341,
+   "roiLb": -0.1828
   },
   {
    "punkte": 3,
@@ -7033,16 +7440,16 @@
   {
    "punkte": 2,
    "moeglich": 7,
-   "n": 190,
-   "roi": 0.0898,
-   "roiLb": -0.0486
+   "n": 191,
+   "roi": 0.0967,
+   "roiLb": -0.0415
   },
   {
    "punkte": 2,
    "moeglich": 4,
-   "n": 1238,
-   "roi": 0.0409,
-   "roiLb": -0.0167
+   "n": 1242,
+   "roi": 0.0417,
+   "roiLb": -0.0159
   },
   {
    "punkte": 1,
@@ -7082,9 +7489,9 @@
   {
    "punkte": 0,
    "moeglich": 4,
-   "n": 1013,
-   "roi": 0.0404,
-   "roiLb": -0.038
+   "n": 1019,
+   "roi": 0.0377,
+   "roiLb": -0.0403
   }
  ]
 }
