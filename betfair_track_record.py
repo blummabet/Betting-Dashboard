@@ -715,6 +715,22 @@ def _fin(b):
     _fade = bool(_u is not None and _u <= TR_FADE_ROI)
     return {"n": b["n"], "wins": b["wins"], "hitRate": rate(b["wins"], b["n"]),
             "roi": round(b["roiSum"] / b["n"], 4) if b["n"] else None,
+            # 20.09.2026 (Lucas: „Ich will immer roi oder Profit, diese UG sagt mir nichts").
+            # Der Profit stand bis heute in KEINER Zelle der Betfair-Tafel — sie zeigte Liga,
+            # Markt, Spiele, Trefferquote, ROI, Konzentration, Zufluss. Also genau die eine
+            # Zahl nicht, die Lucas will.
+            #
+            # `roiSum` IST der Profit in Einheiten (je Zeile +Quote-1 oder -1, fixer Einsatz 1),
+            # er wurde bisher nur durch n geteilt und dann weggeworfen. Er gehoert hierher und
+            # nicht ins Frontend: eine Division rueckwaerts nachzubauen ist genau die Sorte
+            # Produzenten-Logik, die dort nichts zu suchen hat.
+            #
+            # Und er ist die ehrlichste Spalte der Tafel. Die Spitzenzeile vom 20.09. las sich
+            # als „Swedish Allsvenskan · HT · +87 %" — in Geld sind das **+19,2 Einheiten aus
+            # 22 Spielen**. Daneben stehen 609 Eimer mit n>=20, die zusammen -239,1 Einheiten
+            # machen. Ein Prozentsatz ohne seinen Nenner laesst 22 Spiele aussehen wie einen
+            # Befund; der Profit tut das nicht.
+            "pl": round(b["roiSum"], 1) if b["n"] else None,
             # Der Punktschaetzer bleibt sichtbar — er entscheidet nur nichts mehr.
             "roiUg": round(_u, 4) if _u is not None else None,
             "roiOg": round(_o, 4) if _o is not None else None,
