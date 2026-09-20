@@ -382,6 +382,24 @@ def push_bloecke() -> list:
                     "rendite": (float(_pnl) / float(_st)) if isinstance(_pnl, (int, float)) else None,
                     "clv": None})
     aus.append(("whale-public", "Poly-Whales · Public-Channel", "🐋", _wr, None))
+    # 20.09.2026 (Lucas: „tracken wir eigentlich die trades Channel pushes"). Bis hierher stand
+    # hier nur der Public-Kanal — 77 Karten. Der Trades-Kanal traegt 1705 und hatte kein Buch.
+    # `public is True` faellt raus: diese Karten stehen schon in der Zeile darueber, und eine
+    # Teilmenge zweimal zu zaehlen macht aus einer Gruppe zwei.
+    tl = _load("poly_whale_trades_ledger.json", [])
+    _tr = []
+    for r in (tl if isinstance(tl, list) else []):
+        if r.get("public") is True:
+            continue
+        t = _tag(r.get("sentAt"))
+        if not t:
+            continue
+        _w = True if r.get("result") == "win" else (False if r.get("result") == "loss" else None)
+        _pnl, _st = r.get("pnl"), r.get("stake") or 10.0
+        _tr.append({"tag": t, "gewonnen": _w,
+                    "rendite": (float(_pnl) / float(_st)) if isinstance(_pnl, (int, float)) else None,
+                    "clv": (float(r["clvPP"]) if isinstance(r.get("clvPP"), (int, float)) else None)})
+    aus.append(("whale-trades", "Poly-Whales · Trades-Kanal (nur dort)", "🐋", _tr, None))
     kp = _load("killer_push_ledger.json", [])
     aus.append(("killer", "Konjunktion · Trades", "🔒", _push_plays(
         kp if isinstance(kp, list) else [], "gepushtAm", "pushPreis",

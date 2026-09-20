@@ -42,6 +42,8 @@ BASE = Path(__file__).resolve().parent
 CLOSE_FILE      = "poly_money_broad_close.json"     # {key:{prices,league,capturedAt,hoursToKickoff,…}}
 DIRECT_FILE     = "poly_direct_bets.json"           # 24.08.2026: echte „Heute"-Wetten, über den Slug abgerechnet
 PUB_LEDGER_FILE = "poly_whale_public_ledger.json"   # 02.09.2026: jeder öffentliche Whale-Push, abgerechnet
+TRADES_LEDGER_FILE = "poly_whale_trades_ledger.json"   # 20.09.2026: dasselbe für den Trades-Kanal
+TRADES_SEEN_FILE = "poly_whale_seen.json"
 PUB_SEEN_FILE   = "poly_whale_public_seen.json"      # der aeltere Dedup-Stempel — Gegenprobe fuers Buch
 PUB_PENDING_MAX_D = 3.0                             # Push so lange offen, obwohl aufgeloest = Key-Mismatch
 SPLIT_TRUNC_MAX = 0.30                              # 02.09.2026: mehr abgeschnittene Splits = das Blaettern kommt nicht durch
@@ -306,6 +308,73 @@ def check_shortlist_nachschub(ctx):
                 "Misst den ZUFLUSS, nicht das Schreiben: die Datei kann stuendlich aktualisiert "
                 "werden und trotzdem seit Tagen keinen neuen Kandidaten enthalten. Gesperrte "
                 "Kategorien sind ausgenommen.")
+
+
+@poly_check
+def check_trades_push_buch(ctx):
+    """Die Trades-Karte muss ihr Buch führen — genau wie der Public-Push.
+
+    20.09.2026 (Lucas: „tracken wir eigentlich die trades Channel pushes … echt mühsam dass wir
+    irgendwie nie stringent das durchgezogen haben mit dem tracken").
+
+    Der Befund ist unangenehm, weil er nicht neu ist: `check_public_push_buch` direkt darunter
+    beschreibt am 02.09. wortgleich denselben Mangel — „hielt nur einen Dedup-Stempel: kein
+    Preis, keine Abrechnung". Repariert wurde damals EIN Sender. `poly_whale_watch.py` hat zwei,
+    und der zweite ist der häufigere: 1705 Trades-Karten seit dem 27.07. gegen 77 Public-Pushs.
+
+    Fehlerklasse: eine Reparatur an der Instanz statt an der Klasse. Dieser Guard ist die
+    Klasse — er stellt dieselben drei Fragen wie sein Zwilling, nur für den anderen Kanal.
+
+    Ein fehlendes Buch ist kein Fehler, solange seit der Einführung nichts gesendet wurde.
+    Wächst der Dedup-Stempel aber weiter, während das Buch steht, ist der Schreib-Pfad tot.
+    """
+    rows = _load(TRADES_LEDGER_FILE) or []
+    seen = _load(TRADES_SEEN_FILE) or {}
+    if not isinstance(rows, list):
+        return _chk("trades_push_buch", "Trades-Karte führt ihr Buch", "warn",
+                    [f"{TRADES_LEDGER_FILE} ist keine Liste"], "")
+    if not rows:
+        return _chk("trades_push_buch", "Trades-Karte führt ihr Buch", "warn",
+                    ([f"❔ {TRADES_LEDGER_FILE} leer/fehlt, aber {len(seen)} Karte(n) im "
+                      f"Dedup-Stempel — entweder seit der Einführung (20.09.) nichts gesendet, "
+                      f"oder der Schreib-Pfad ist tot. Nicht unterscheidbar, also nicht grün."]
+                     if seen else []),
+                    "poly_whale_watch.py legt es bei der ersten Karte an.")
+    fails = []
+    ohne_preis = [r for r in rows if isinstance(r, dict) and r.get("pushPrice") in (None, 0)]
+    if ohne_preis:
+        fails.append("%d von %d Zeilen ohne `pushPrice` — sie zählen nie in eine Rendite. Eine "
+                     "Trefferquote ohne die Preise ist keine Zahl."
+                     % (len(ohne_preis), len(rows)))
+    # Der Preis ist nach dem Lauf nicht mehr rekonstruierbar — deshalb hier und nicht später.
+    from datetime import datetime as _dt, timezone as _tz
+    _jetzt = _dt.now(_tz.utc)
+
+    def _alter_tage(v):
+        try:
+            t = _dt.fromisoformat(str(v).replace("Z", "+00:00"))
+        except (ValueError, TypeError):
+            return None
+        if t.tzinfo is None:
+            t = t.replace(tzinfo=_tz.utc)
+        return (_jetzt - t).total_seconds() / 86400.0
+
+    offen_alt = [r for r in rows
+                 if isinstance(r, dict) and r.get("status") == "pending"
+                 and (_alter_tage(r.get("sentAt")) or 0) > 14]
+    if offen_alt:
+        fails.append("%d Zeile(n) stehen seit über 14 Tagen auf `pending` — der Markt ist längst "
+                     "aufgelöst, der Schlüssel passt nicht zu poly_resolutions." % len(offen_alt))
+    unentschieden = [r for r in rows if isinstance(r, dict) and r.get("public") is None
+                     and r.get("status") != "pending"]
+    if len(unentschieden) == len(rows) and rows:
+        fails.append("keine einzige Zeile trägt einen `public`-Marker — dann lässt sich die "
+                     "Teilmenge, die auch public ging, nicht abziehen und beide Bücher "
+                     "zählen dieselben Karten.")
+    return _chk("trades_push_buch", "Trades-Karte führt ihr Buch", "warn", fails,
+                "%d Karte(n) · %d auch public" % (len(rows),
+                                                  sum(1 for r in rows if isinstance(r, dict)
+                                                      and r.get("public") is True)))
 
 
 @poly_check

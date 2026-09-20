@@ -370,8 +370,13 @@ function initPolyWallets(){
     // Wie `markout` liest diese Flaeche bewusst die LIGA-Datei: sie ist die Bank mit der
     // laengsten Historie, und das Urteil traegt seinen Datensatz im Feld mit.
     jf('liga_poly_konvergenz.json'),
-  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist,liveSigTrack,moneyMap,publicRec,walletNorm,markout,domRec,pushLed,konv])=>{
-    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist,liveSigTrack,moneyMap,publicRec,walletNorm,markout,domRec,pushLed,konv};
+    // 20.09.2026 (Lucas: „tracken wir eigentlich die trades Channel pushes"). Der Trades-Kanal
+    // traegt 1705 Karten gegen 77 Public-Pushs — und hatte bis heute kein Buch. Am 02.09. wurde
+    // genau dieser Mangel fuer den Public-Kanal repariert; der zweite Sender in derselben Datei
+    // blieb, wie er war.
+    jf('poly_whale_trades_record.json'),
+  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist,liveSigTrack,moneyMap,publicRec,walletNorm,markout,domRec,pushLed,konv,tradesRec])=>{
+    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist,liveSigTrack,moneyMap,publicRec,walletNorm,markout,domRec,pushLed,konv,tradesRec};
     _pwRender();
   }).catch(err=>{
     // 12.07.2026: Vorher gab es KEIN catch — eine Exception im Render (z.B. der
@@ -3224,6 +3229,41 @@ function _pwDominanz(rec){
     +'</section>';
 }
 
+// ── 🐋 Trades-Kanal: das Buch, das es zwei Monate lang nicht gab (20.09.2026) ──────────────
+// Lucas: „tracken wir eigentlich die trades Channel pushes … echt mühsam dass wir irgendwie nie
+// stringent das durchgezogen haben mit dem tracken."
+//
+// Gemessen: 1705 Trades-Karten seit dem 27.07., 77 Public-Pushs. Der Public-Kanal war seit dem
+// 02.09. vollstaendig verbucht, der Trades-Kanal gar nicht — derselbe Mangel, dieselbe Datei,
+// zwei Sender, einer repariert.
+//
+// Die Zeile zeigt AUSDRUECKLICH nur die Karten, die NICHT auch public gingen. Die Public-Pushs
+// sind eine Teilmenge; wer sie mitrechnet, vergleicht eine Gruppe mit sich selbst. Und was hier
+// steht, beginnt am Tag der Einfuehrung: die 424 aelteren Karten, die zufaellig im
+// Shortlist-Track-Buch stehen, sind der Schnitt mit einem ZWEITEN Filter und keine Stichprobe.
+function _pwTradesPush(rec){
+  const kopf='<section class="pw-sec"><div class="pw-sec-head">'
+    +'<span class="pw-kicker">🐋 Trades-Kanal — die Karten, die nur du siehst</span>'
+    +'<span class="pw-sec-note">Jede gesendete Whale-Karte, beim Absenden mit dem Preis eingebucht, '
+    +'den du in dem Moment bekommen haettest. <b>Ohne die, die auch public gingen</b> — die stehen '
+    +'unten und waeren hier doppelt gezaehlt.</span></div>';
+  if(!rec || !rec.gesamt){
+    return kopf+'<div class="pw-none">Das Buch startet am Tag seiner Einführung (20.09.2026). '
+      +'Die 1705 Karten davor haben keinen Einstiegspreis und keinen Ausgang — rückwirkend etwas '
+      +'daraus zu rechnen wäre keine Messung, sondern eine Auswahl.</div></section>';
+  }
+  const upd=rec.updatedAt?('<div class="pw-mut" style="font-size:11px;margin:2px 0 10px">Stand '
+    +_pwEsc(String(rec.updatedAt).slice(0,16).replace('T',' '))+' · fixer Einsatz $10 je Karte · '
+    +(rec.auchPublic||0)+' davon auch public (hier nicht mitgezählt)</div>'):'';
+  const offen=(rec.offen||rec.unaufloesbar)
+    ? '<div class="pw-mut" style="font-size:11px;margin:-6px 0 12px">'+(rec.offen||0)+' noch offen · '
+      +(rec.unaufloesbar||0)+' unauflösbar</div>'
+    : '';
+  return kopf+upd+offen
+    +_pwPubBlock(rec.nurTrades||rec.agg, '🐋 Nur im Trades-Kanal', '(vorwärts gebucht, seit 20.09.2026)')
+    +_pwPubCats(rec.byCat)+'</section>';
+}
+
 function _pwPublicPush(rec){
   const kopf='<section class="pw-sec"><div class="pw-sec-head">'
     +'<span class="pw-kicker">🐋 Public-Channel — was dort wirklich rausgeht</span>'
@@ -3446,6 +3486,7 @@ function _pwTrackRecord(track){
     +_pwTrackKpis(agg.publicOhneWallet||{n:0}, '🧪 Kontrollgruppe — alles außer der Wallet',
                   '(läuft nur mit, wird nie gesendet: gleiche Conviction + Mehrheit, aber keine bewiesene Wallet)')
     +_pwWalletGateVergleich(agg.public||{n:0}, agg.publicOhneWallet||{n:0})
+    +_pwTradesPush(_pwCache && _pwCache.tradesRec)
     +_pwPublicPush(_pwCache && _pwCache.publicRec)
     +_pwDominanz(_pwCache && _pwCache.domRec)
     +_pwTrackConvTable(agg.byConv)

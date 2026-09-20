@@ -47,6 +47,11 @@ DOM_LEDGER_FILE = BASE / "poly_dominanz_ledger.json"
 SCHATTEN_LEDGER_FILE = BASE / "poly_einigkeit_schatten.json"
 SCHATTEN_OUT_FILE = BASE / "poly_einigkeit_schatten_bericht.json"
 DOM_OUT_FILE    = BASE / "poly_dominanz_record.json"
+# 20.09.2026: der Trades-Kanal. 1705 Karten seit dem 27.07. gegen 77 Public-Pushs — und bis
+# heute ohne jeden Ausgang. Dieselbe Abrechnung, eigenes Buch, eigener Bericht: eine eigene
+# Wahrheit darueber, was ein Treffer ist, gibt es nicht.
+TRADES_LEDGER_FILE = BASE / "poly_whale_trades_ledger.json"
+TRADES_OUT_FILE = BASE / "poly_whale_trades_record.json"
 
 STAKE = 10.0            # Einheits-Einsatz je Push (wie im Papier-Depot) — macht ROI vergleichbar
 PENDING_TTL_D = 10      # nie aufgelöst nach 10 Tagen → unaufloesbar (poly_resolutions hält Wochen)
@@ -358,6 +363,26 @@ def main() -> int:
               f"{_srep['offen']} offen · {_sa['n']} abgerechnet"
               + (f" · ROI {_sa['roi']*100:+.1f}%" if _sa["n"] and _sa["roi"] is not None else "")
               + (f" · Treffer {_sa['hit']*100:.0f}% (UG {_sa['hitUg']*100:.0f}%)" if _sa["n"] else ""))
+
+    # Der Trades-Kanal durch dieselbe Abrechnung. Zusaetzlich getrennt nach `public`: die
+    # Public-Pushs sind eine TEILMENGE der Trades-Karten, und wer sie mitrechnet, vergleicht
+    # eine Gruppe mit sich selbst. `nurTrades` ist die Gruppe, die es vorher nirgends gab.
+    _tr = _load(TRADES_LEDGER_FILE, [])
+    if isinstance(_tr, list) and _tr:
+        _tr = settle(_tr, _res, _close, korrekturen=_korr)
+        write_json_atomic(TRADES_LEDGER_FILE, _tr, indent=0)
+        _trep = report(_tr)
+        _nur = [r for r in _tr if isinstance(r, dict) and r.get("public") is not True]
+        _trep["nurTrades"] = report(_nur)["agg"] if _nur else None
+        _trep["auchPublic"] = sum(1 for r in _tr if isinstance(r, dict) and r.get("public") is True)
+        write_json_atomic(TRADES_OUT_FILE, _trep, indent=1)
+        _ta = _trep["agg"]
+        print(f"  🐋 Trades-Karten: {_trep['gesamt']} gesendet · {_trep['offen']} offen · "
+              f"{_ta['n']} abgerechnet"
+              + (f" · ROI {_ta['roi']*100:+.1f}%" if _ta["n"] and _ta["roi"] is not None else "")
+              + (f" (UG {_ta['roiUg']*100:+.1f}%)" if _ta.get("roiUg") is not None else "")
+              + (f" · Treffer {_ta['hit']*100:.0f}% (UG {_ta['hitUg']*100:.0f}%)" if _ta["n"] else "")
+              + f" · davon auch public {_trep['auchPublic']}")
 
     rep = report(led)
     write_json_atomic(OUT_FILE, rep, indent=1)
