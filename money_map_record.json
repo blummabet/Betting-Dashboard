@@ -1,13 +1,29 @@
 {
-"generatedAt": "2026-09-20T18:58:45.836354+00:00",
+"generatedAt": "2026-09-20T19:13:40.026462+00:00",
 "byVerdict": {
+"konsens": {
+"n": 1392,
+"wins": 1174,
+"hitRate": 0.8434,
+"polyN": 1322,
+"polyWins": 1027,
+"polyHitRate": 0.7769,
+"pinnN": 209,
+"pinnHitRate": 0.7751,
+"nRoi": 727,
+"roi": 0.4164,
+"roiLb": 0.3687,
+"nClv": 727,
+"clv": 20.28,
+"clvLb": 18.7787
+},
 "uneinig": {
-"n": 558,
+"n": 557,
 "wins": 167,
-"hitRate": 0.2993,
-"polyN": 516,
+"hitRate": 0.2998,
+"polyN": 515,
 "polyWins": 140,
-"polyHitRate": 0.2713,
+"polyHitRate": 0.2718,
 "pinnN": 345,
 "pinnHitRate": 0.6203,
 "nRoi": 327,
@@ -16,22 +32,6 @@
 "nClv": 327,
 "clv": -20.77,
 "clvLb": -23.7495
-},
-"konsens": {
-"n": 1391,
-"wins": 1174,
-"hitRate": 0.844,
-"polyN": 1321,
-"polyWins": 1027,
-"polyHitRate": 0.7774,
-"pinnN": 209,
-"pinnHitRate": 0.7751,
-"nRoi": 726,
-"roi": 0.4183,
-"roiLb": 0.3707,
-"nClv": 726,
-"clv": 20.38,
-"clvLb": 18.8856
 },
 "teil": {
 "n": 33,
@@ -206,15 +206,15 @@
 "wins": 17,
 "hitRate": 0.7391
 },
+"Norwegian Eliteserien": {
+"n": 23,
+"wins": 15,
+"hitRate": 0.6522
+},
 "CONMEBOL Copa Libertadores": {
 "n": 22,
 "wins": 10,
 "hitRate": 0.4545
-},
-"Norwegian Eliteserien": {
-"n": 22,
-"wins": 15,
-"hitRate": 0.6818
 },
 "Peruvian Primera Division": {
 "n": 22,
@@ -331,11 +331,6 @@
 "wins": 7,
 "hitRate": 0.7
 },
-"Elite Friendlies": {
-"n": 10,
-"wins": 7,
-"hitRate": 0.7
-},
 "Israeli Premier League": {
 "n": 10,
 "wins": 8,
@@ -350,6 +345,11 @@
 "n": 9,
 "wins": 6,
 "hitRate": 0.6667
+},
+"Elite Friendlies": {
+"n": 9,
+"wins": 7,
+"hitRate": 0.7778
 },
 "Finnish Veikkausliiga": {
 "n": 9,
@@ -655,26 +655,45 @@
 "clvLb": 12.0941
 },
 "weak": {
-"n": 758,
+"n": 759,
 "wins": 375,
-"hitRate": 0.4947,
-"nRoi": 401,
-"roi": -0.1927,
-"roiLb": -0.2747,
-"nClv": 401,
-"clv": -5.89,
-"clvLb": -8.527
+"hitRate": 0.4941,
+"nRoi": 402,
+"roi": -0.1947,
+"roiLb": -0.2766,
+"nClv": 402,
+"clv": -6.0,
+"clvLb": -8.6425
 }
 },
 "divergence": {
-"n": 558,
+"n": 557,
 "betfairWins": 167,
-"betfairRate": 0.2993,
-"polyN": 516,
+"betfairRate": 0.2998,
+"polyN": 515,
 "polyWins": 140,
-"polyRate": 0.2713
+"polyRate": 0.2718
 },
 "recent": [
+{
+"matchId": "36073242",
+"home": "Brann",
+"away": "Bodo Glimt",
+"league": "Norwegian Eliteserien",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Bodo Glimt",
+"polySide": "away",
+"winner": "home",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-09-20T17:15:00Z",
+"settledAt": "2026-09-20T19:13:39.835215+00:00"
+},
 {
 "matchId": "36071780",
 "home": "Santa Clara",
@@ -1415,37 +1434,18 @@
 ],
 "kickoff": "2026-09-20T12:30:00Z",
 "settledAt": "2026-09-20T14:28:19.073248+00:00"
-},
-{
-"matchId": "36069561",
-"home": "Valerenga",
-"away": "Fredrikstad",
-"league": "Norwegian Eliteserien",
-"verdict": "teil",
-"moneySide": "away",
-"moneyName": "Fredrikstad",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-09-20T12:30:00Z",
-"settledAt": "2026-09-20T14:28:19.073248+00:00"
 }
 ],
 "global": {
 "n": 1982,
 "wins": 1347,
 "hitRate": 0.6796,
-"nRoi": 1077,
-"roi": 0.1087,
-"roiLb": 0.0629,
-"nClv": 1077,
-"clv": 6.69,
-"clvLb": 4.9962
+"nRoi": 1078,
+"roi": 0.1077,
+"roiLb": 0.0619,
+"nClv": 1078,
+"clv": 6.63,
+"clvLb": 4.9407
 },
 "pending": 18
 }
