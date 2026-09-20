@@ -14,7 +14,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "Fall liegt aktuell vor: Liga · ABWÄGEN, Public-Kandidaten, Mix money+sharp+steam nehmen die ROI-Huerde und scheitern an CLV — der Satz auf Ebene 1 muss das sagen"
+      "hinweis": "Fall liegt aktuell vor: Liga · ABWÄGEN, Mix money+sharp+steam, 🔒 Liga · Conviction ab 5 nehmen die ROI-Huerde und scheitern an CLV — der Satz auf Ebene 1 muss das sagen"
     },
     {
       "label": "Poly-Kachel gibt sich nicht als Kanal-Bilanz aus",
@@ -76,10 +76,11 @@
       "label": "Money Map: die Poly-Seite gehoert zum Spiel",
       "severity": "error",
       "failures": [
-        "Fulham v Man Utd (English Premier League): Poly-Seite heisst „Manchester United FC“ und gehoert zu keinem der beiden Teams — $86183 fremdes Geld in einer Konsens-Zeile",
-        "Wolves v West Brom (English Sky Bet Championship): Poly-Seite heisst „Wolverhampton Wanderers FC“ und gehoert zu keinem der beiden Teams — $58989 fremdes Geld in einer Konsens-Zeile"
+        "Wolves v West Brom (English Sky Bet Championship): Poly-Seite heisst „Wolverhampton Wanderers FC“ und gehoert zu keinem der beiden Teams — $104574 fremdes Geld in einer Konsens-Zeile",
+        "Fulham v Man Utd (English Premier League): Poly-Seite heisst „Manchester United FC“ und gehoert zu keinem der beiden Teams — $99593 fremdes Geld in einer Konsens-Zeile",
+        "Az Alkmaar v SC Telstar (Dutch Eredivisie): Poly-Seite heisst „AZ“ und gehoert zu keinem der beiden Teams — $62349 fremdes Geld in einer Konsens-Zeile"
       ],
-      "nFail": 2,
+      "nFail": 3,
       "ok": false,
       "hinweis": ""
     },
@@ -119,12 +120,10 @@
       "label": "Poly-Deckung: Money-Scan gegen Liga-Fetcher",
       "severity": "error",
       "failures": [
-        "sea-par-gen-2026-09-20 (Parma Calcio 1913 v Genoa CFC, Anpfiff in 1.7h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
-        "sea-fro-com-2026-09-20 (Frosinone Calcio v Como 1907, Anpfiff in 1.7h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
-        "sea-juv-ata-2026-09-20 (Juventus FC v Atalanta BC, Anpfiff in 4.7h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
-        "sea-mil-lec-2026-09-20 (AC Milan v US Lecce, Anpfiff in 7.4h) — der Liga-Fetcher hat den Markt, der Money-Scan nie"
+        "sea-juv-ata-2026-09-20 (Juventus FC v Atalanta BC, Anpfiff in 3.3h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
+        "sea-mil-lec-2026-09-20 (AC Milan v US Lecce, Anpfiff in 6.0h) — der Liga-Fetcher hat den Markt, der Money-Scan nie"
       ],
-      "nFail": 4,
+      "nFail": 2,
       "ok": false,
       "hinweis": ""
     },
@@ -134,19 +133,19 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "194 Picks im Fenster, 20 % ohne Preis-Signal."
+      "hinweis": "202 Picks im Fenster, 20 % ohne Preis-Signal."
     },
     {
       "label": "Stumme Signale: wer hat nie gefeuert?",
       "severity": "warn",
       "failures": [
-        "polymarket_sharp: 0 Feuerungen in 279 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
+        "polymarket_sharp: 0 Feuerungen in 288 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
         "betfair_coherence: stumm, aber erklaert — 07.09.2026 gemessen: seit der Fit-Schranke (MAX_RMSE 0,02 + Leave-one-out, 06.09.) feuert es fast nie — richtigerweise. Ueber 633 Sprossen aus 150 Spielen blieben 8 echte Kanten >= 4 pp, alle in duennen Ligen (Kasachstan, Litauen, Norwegen 2, Estland), keine einzige in den Top 5. Die Betfair-Tormarkt-Leiter ist auf unserer Aufloesung arbitragefrei.",
         "game_state_openness: stumm, aber erklaert — 07.09.2026 gemessen: braucht asymmetrische Verzweiflung spaet in der Saison. Aktuell Spieltag 3-4 von 34-38, also 34 Runden offen — der Tabellendruck ist per Konstruktion nahe null. Vor dem Winter ist Stille hier der richtige Zustand."
       ],
       "nFail": 3,
       "ok": false,
-      "hinweis": "9 von 33 Signalen schweigen ueber 279 Picks — davon 6 bewusst abgeschaltet (altitude_signal, incentive_signal, pressure_index, steam_lag, travel_burden, weather_signal), 3 an und trotzdem stumm."
+      "hinweis": "9 von 33 Signalen schweigen ueber 288 Picks — davon 6 bewusst abgeschaltet (altitude_signal, incentive_signal, pressure_index, steam_lag, travel_burden, weather_signal), 3 an und trotzdem stumm."
     },
     {
       "label": "Signal-Bilanz: schadet ein Signal belegt?",
@@ -154,7 +153,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "7 Signale belegt beitragend, 0 belegt schaedlich. ~30 Signale gleichzeitig geprueft — 1-2 falsche Treffer sind zu erwarten. Nur was ueber mehrere Wochen haelt, ist ein Befund."
+      "hinweis": "8 Signale belegt beitragend, 0 belegt schaedlich. ~30 Signale gleichzeitig geprueft — 1-2 falsche Treffer sind zu erwarten. Nur was ueber mehrere Wochen haelt, ist ein Befund."
     },
     {
       "label": "Fade-Unter: haelt die Kontrollgruppe?",
@@ -162,7 +161,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "seit Vorregistrierung n=2501 (UG -7.3 %) · Rueckblick n=2726, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=2514 (UG -7.1 %) · Rueckblick n=2726, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -194,7 +193,7 @@
       "label": "Positionswert ist frisch",
       "severity": "warn",
       "failures": [
-        "liga_poly_balance.json: Positionswert $5.11 stammt aus einem Lauf vor 13 h — die Positions-API antwortet seither nicht"
+        "liga_poly_balance.json: Positionswert $5.11 stammt aus einem Lauf vor 14 h — die Positions-API antwortet seither nicht"
       ],
       "nFail": 1,
       "ok": false,
@@ -214,7 +213,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "36 Zeilen · 33 abgerechnet · 2 offen"
+      "hinweis": "45 Zeilen · 33 abgerechnet · 11 offen"
     },
     {
       "label": "Artefakte sind lesbar",
@@ -238,7 +237,7 @@
       "label": "offene Wette hat den Anpfiff ueberlebt",
       "severity": "error",
       "failures": [
-        "liga_auto_bets_placed.json: Toulouse–Le Havre Under 2.5 Tore steht seit 16 h offen, Anpfiff war 2026-09-19T18:45 — kein einziger Verkaufsversuch im Buch"
+        "liga_auto_bets_placed.json: Toulouse–Le Havre Under 2.5 Tore steht seit 17 h offen, Anpfiff war 2026-09-19T18:45 — kein einziger Verkaufsversuch im Buch"
       ],
       "nFail": 1,
       "ok": false,
@@ -248,7 +247,7 @@
       "label": "Ergebnisse kommen an",
       "severity": "error",
       "failures": [
-        "liga_ergebnis_nachlauf.json: 7 abgepfiffene Spiele ohne Ergebnis (Levante–Athletic Club seit 85 h; Sevilla–Barcelona seit 14 h; Le Mans–Lorient seit 14 h; Angers–Estac Troyes seit 14 h) — der Resolver kann sie nicht abrechnen, sie fallen aus jeder Bilanz heraus"
+        "liga_ergebnis_nachlauf.json: 1 abgepfiffene Spiele ohne Ergebnis (Levante–Athletic Club seit 88 h) — der Resolver kann sie nicht abrechnen, sie fallen aus jeder Bilanz heraus"
       ],
       "nFail": 1,
       "ok": false,
@@ -258,13 +257,23 @@
       "label": "Datenbau ist nicht stehengeblieben",
       "severity": "error",
       "failures": [
-        "liga-data.json: der Datenbau hat zuletzt vor 23 h geschrieben — entweder ist der Cron ausgefallen oder ein anderer Workflow hat einen aelteren Stand darueber committet"
+        "liga-data.json: der Datenbau hat zuletzt vor 24 h geschrieben — entweder ist der Cron ausgefallen oder ein anderer Workflow hat einen aelteren Stand darueber committet"
       ],
       "nFail": 1,
       "ok": false,
       "hinweis": ""
+    },
+    {
+      "label": "Serien-Buch zeigt beide Buecher",
+      "severity": "warn",
+      "failures": [
+        "die beiden Serien-Buecher sind 8.8 h auseinander (Liga 16.0 h, MLS 24.7 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+      ],
+      "nFail": 1,
+      "ok": false,
+      "hinweis": "Liga n=72 · MLS n=64 · Urteil beide 'Erwartung zu duenn'"
     }
   ],
-  "nFail": 9,
-  "generatedAt": "2026-09-20T11:18:38.780706+00:00"
+  "nFail": 10,
+  "generatedAt": "2026-09-20T12:42:10.278177+00:00"
 }
