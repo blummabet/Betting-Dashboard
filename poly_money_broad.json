@@ -1,15 +1,15 @@
 {
- "n": 521,
+ "n": 515,
  "minOdds": 1.35,
- "moneyHitRate": 0.38,
- "priceHitRate": 0.413,
- "brierMoney": 0.8946,
+ "moneyHitRate": 0.381,
+ "priceHitRate": 0.419,
+ "brierMoney": 0.891,
  "brierPrice": 0.6851,
  "disagree": {
-  "n": 150,
-  "moneyWon": 22,
-  "priceWon": 39,
-  "neither": 89
+  "n": 146,
+  "moneyWon": 21,
+  "priceWon": 41,
+  "neither": 84
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -63,6 +63,14 @@
    "verdict": "preis_besser"
   },
   {
+   "league": "MLS",
+   "n": 20,
+   "moneyHitRate": 0.4,
+   "brierMoney": 0.9088,
+   "brierPrice": 0.6677,
+   "verdict": "preis_besser"
+  },
+  {
    "league": "K-LEAGUE",
    "n": 22,
    "moneyHitRate": 0.409,
@@ -77,19 +85,11 @@
    "brierMoney": 0.9605,
    "brierPrice": 0.6621,
    "verdict": "preis_besser"
-  },
-  {
-   "league": "MLS",
-   "n": 25,
-   "moneyHitRate": 0.36,
-   "brierMoney": 1.0119,
-   "brierPrice": 0.6826,
-   "verdict": "preis_besser"
   }
  ],
  "guete": {
-  "belastbar": 521,
-  "preis_echo": 206,
+  "belastbar": 515,
+  "preis_echo": 207,
   "abgeschnitten": 68,
   "unbekannt": 252,
   "leer": 0
@@ -432,18 +432,6 @@
    "totalUsd": 512753
   },
   {
-   "key": "mls-hou-rsl-2026-09-09",
-   "league": "MLS",
-   "winner": "Houston Dynamo",
-   "moneyFav": "Houston Dynamo",
-   "priceFav": "Houston Dynamo",
-   "moneyShare": 0.981,
-   "priceProb": 0.542,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 500275
-  },
-  {
    "key": "epl-ful-cry-2026-09-05",
    "league": "EPL",
    "winner": "Crystal Palace FC",
@@ -540,18 +528,6 @@
    "totalUsd": 432192
   },
   {
-   "key": "mls-phi-fcc-2026-09-09",
-   "league": "MLS",
-   "winner": "Philadelphia Union",
-   "moneyFav": "Philadelphia Union",
-   "priceFav": "Philadelphia Union",
-   "moneyShare": 0.973,
-   "priceProb": 0.598,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 376840
-  },
-  {
    "key": "por-fam-spo-2026-09-13",
    "league": "PRIMEIRA-LIGA",
    "winner": "Draw (FC Famalicão vs. Sporting CP)",
@@ -574,17 +550,41 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 372754
+  },
+  {
+   "key": "epl-bre-sun-2026-09-05",
+   "league": "EPL",
+   "winner": "Draw (Brentford FC vs. Sunderland AFC)",
+   "moneyFav": "Brentford FC",
+   "priceFav": "Brentford FC",
+   "moneyShare": 0.967,
+   "priceProb": 0.568,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 367524
+  },
+  {
+   "key": "lal-vil-dep-2026-09-05",
+   "league": "LA-LIGA",
+   "winner": "RC Deportivo A Coruña",
+   "moneyFav": "Villarreal CF",
+   "priceFav": "Villarreal CF",
+   "moneyShare": 0.925,
+   "priceProb": 0.668,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 364386
   }
  ],
- "generatedAt": "2026-09-20T04:30:35.451243+00:00",
+ "generatedAt": "2026-09-20T05:00:17.817174+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 420,
   "nfl": 800,
-  "mlb": 679,
-  "nhl": 586,
-  "mls": 658,
+  "mlb": 683,
+  "nhl": 584,
+  "mls": 645,
   "epl": 462,
   "soccer": 800,
   "tennis": 800,
@@ -599,7 +599,7 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 652,
+  "esports": 654,
   "cs2": 421,
   "lol": 427,
   "dota": 9,
@@ -660,33 +660,28 @@
   "sweepAdded": 411
  },
  "vorStats": {
-  "kandidaten": 14,
+  "kandidaten": 18,
   "budgetLeer": 0,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
-  "mitAnteilen": 14,
-  "calls": 14
+  "mitAnteilen": 18,
+  "calls": 18
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1376,
-   "usd": 28090127,
+   "n": 1090,
+   "usd": 24774628,
    "beispiel": "fifwc-ger-kor-2026-06-14"
   },
-  "balance": {
-   "n": 3,
-   "usd": 6009962,
-   "beispiel": "balance-of-power-2026-midterms"
-  },
   "nba": {
-   "n": 238,
-   "usd": 2908301,
+   "n": 208,
+   "usd": 2838659,
    "beispiel": "nba-mem-atl-2026-03-23"
   },
   "ecs": {
-   "n": 6,
-   "usd": 887739,
-   "beispiel": "ecs-ars-mci-2026-08-16"
+   "n": 5,
+   "usd": 892320,
+   "beispiel": "ecs-ars-mci-2026-08-16-more-markets"
   },
   "world": {
    "n": 7,
@@ -694,79 +689,84 @@
    "beispiel": "world-cup-3rd-place-finish-20260713190252671"
   },
   "cbb": {
-   "n": 73,
-   "usd": 333789,
+   "n": 68,
+   "usd": 328436,
    "beispiel": "cbb-sfl-lou-2026-03-19"
-  },
-  "fif": {
-   "n": 53,
-   "usd": 241676,
-   "beispiel": "fif-bra-egy-2026-06-06-more-markets"
   },
   "nbasl": {
    "n": 4,
    "usd": 198331,
    "beispiel": "nbasl-chi-lal-2026-07-16"
   },
-  "clf": {
-   "n": 23,
-   "usd": 117795,
-   "beispiel": "clf-mun-lee-2026-08-12"
-  },
-  "fed": {
-   "n": 6,
-   "usd": 109197,
-   "beispiel": "fed-decision-in-december-20260729232808632"
-  },
-  "strait": {
-   "n": 3,
-   "usd": 55913,
-   "beispiel": "strait-of-hormuz-traffic-returns-to-normal-by-september-30-20260702154339440"
-  },
-  "us": {
-   "n": 3,
-   "usd": 48711,
-   "beispiel": "us-announces-end-of-iranian-blockade-byptptpt-20260713152715080"
-  },
-  "2026": {
-   "n": 6,
-   "usd": 45009,
-   "beispiel": "2026-travelers-championship-winner"
+  "fif": {
+   "n": 31,
+   "usd": 155480,
+   "beispiel": "fif-bra-egy-2026-06-06-more-markets"
   },
   "will": {
-   "n": 7,
-   "usd": 36296,
-   "beispiel": "will-the-doge-1-lunar-mission-launch-before-2027"
+   "n": 6,
+   "usd": 38790,
+   "beispiel": "will-cmi-declare-a-millennium-prize-problem-solved-by-20260723160122979"
   },
-  "pro": {
-   "n": 9,
-   "usd": 36012,
-   "beispiel": "pro-football-2027-champion-20260729185915366"
+  "2026": {
+   "n": 2,
+   "usd": 35278,
+   "beispiel": "2026-travelers-championship-winner"
+  },
+  "clf": {
+   "n": 6,
+   "usd": 31046,
+   "beispiel": "clf-lfc-wre-2026-07-29"
   },
   "next": {
-   "n": 4,
-   "usd": 33268,
+   "n": 3,
+   "usd": 31014,
    "beispiel": "next-ministerprasident-of-sachsen-anhalt-20260806155819619"
-  },
-  "kbo": {
-   "n": 15,
-   "usd": 24987,
-   "beispiel": "kbo-kt-ssg-2026-08-22"
   },
   "eurovision": {
    "n": 6,
    "usd": 22413,
    "beispiel": "eurovision-2026-top-5"
   },
-  "npb": {
-   "n": 8,
-   "usd": 15683,
-   "beispiel": "npb-sai-fuk-2026-08-07"
+  "kbo": {
+   "n": 12,
+   "usd": 21133,
+   "beispiel": "kbo-kt-ssg-2026-08-22"
   },
-  "bkfibaw": {
+  "fed": {
    "n": 3,
-   "usd": 14559,
-   "beispiel": "bkfibaw-hun-jap-2026-09-08"
+   "usd": 16621,
+   "beispiel": "fed-decision-in-december-20260729232808632"
+  },
+  "cricmlc": {
+   "n": 5,
+   "usd": 15280,
+   "beispiel": "cricmlc-sea-mi-2026-07-02"
+  },
+  "npb": {
+   "n": 7,
+   "usd": 13683,
+   "beispiel": "npb-ori-fuk-2026-09-17"
+  },
+  "bitcoin": {
+   "n": 1,
+   "usd": 10316,
+   "beispiel": "bitcoin-above-on-june-5-2026"
+  },
+  "rlsuper": {
+   "n": 1,
+   "usd": 10081,
+   "beispiel": "rlsuper-war-hkr-2026-09-19"
+  },
+  "cricodc": {
+   "n": 2,
+   "usd": 9574,
+   "beispiel": "cricodc-lei-not-2026-08-16"
+  },
+  "crict20blast": {
+   "n": 2,
+   "usd": 7938,
+   "beispiel": "crict20blast-glo-sur-2026-07-04"
   }
  }
 }
