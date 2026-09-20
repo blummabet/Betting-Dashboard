@@ -1334,14 +1334,31 @@ def check_ergebnisse_kommen_an(ctx):
                          % (name, _alter_kurz(jetzt - t)))
             continue
         offen = [z for z in (b.get("offen") or []) if isinstance(z, dict)]
-        # Ein frisch abgepfiffenes Spiel darf kurz fehlen: die API braucht ihre Zeit.
+        # Ein frisch angepfiffenes Spiel darf kurz fehlen: die API braucht ihre Zeit.
         reif = [z for z in offen if (z.get("stundenHer") or 0) >= 6]
         if reif:
-            fails.append("%s: %d abgepfiffene Spiele ohne Ergebnis (%s) — der Resolver kann "
-                         "sie nicht abrechnen, sie fallen aus jeder Bilanz heraus"
+            # 🔴 20.09.2026: hier stand „abgepfiffene Spiele". Levante–Athletic wurde 95 Stunden
+            # lang so gemeldet — und war nie angepfiffen worden, sondern eine halbe Stunde vor
+            # Beginn wegen Starkregen abgesagt. Wir kennen den geplanten Anpfiff, nicht das
+            # Ereignis; der Satz behauptete mehr, als die Zahl hergibt.
+            # Fehlerklasse: ein Anpfiff, der nur im Kalender stattgefunden hat.
+            fails.append("%s: %d Spiele mit vergangenem Anpfiff ohne Ergebnis (%s) — der "
+                         "Resolver kann sie nicht abrechnen, sie fallen aus jeder Bilanz heraus"
                          % (name, len(reif),
-                            "; ".join("%s seit %.0f h" % (z.get("paarung"), z.get("stundenHer") or 0)
+                            "; ".join("%s seit %.0f h%s"
+                                      % (z.get("paarung"), z.get("stundenHer") or 0,
+                                         ", %s" % z["grund"] if z.get("grund") else "")
                                       for z in reif[:4])))
+        # Abgesagte Spiele sind KEINE ausstehenden Ergebnisse. Sie loesen sich nie von selbst,
+        # und eine offene Wette darauf braucht eine Entscheidung statt Geduld — deshalb eine
+        # eigene Meldung und nicht dieselbe.
+        ab = [z for z in (b.get("abgesagt") or []) if isinstance(z, dict)]
+        if ab:
+            fails.append("%s: %d abgesagtes/verlegtes Spiel (%s) — es kommt an diesem Termin zu "
+                         "keinem Ergebnis; offene Wetten darauf brauchen eine Entscheidung"
+                         % (name, len(ab),
+                            "; ".join("%s (%s)" % (z.get("paarung"), z.get("status"))
+                                      for z in ab[:4])))
         if b.get("apiLeer"):
             fails.append("%s: API lieferte fuer %s 0 Fixtures — Quota, Key oder Saison"
                          % (name, ", ".join(map(str, b["apiLeer"]))))
