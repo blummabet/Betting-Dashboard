@@ -123,6 +123,24 @@ def _is_confirmed_loser(s) -> bool:
 PUB_CHAT   = (os.environ.get("TELEGRAM_CHAT_ID") or "").strip()
 PUB_SEEN_FILE = BASE / "poly_whale_public_seen.json"
 PUB_LEDGER_FILE = BASE / "poly_whale_public_ledger.json"   # 02.09.2026 (Lucas): jeder Public-Push wird abgerechnet
+# 20.09.2026 (Lucas: „tracken wir eigentlich die trades Channel pushes … echt mühsam dass wir
+# irgendwie nie stringent das durchgezogen haben mit dem tracken").
+#
+# Am 02.09. wurde GENAU DIESER Mangel schon einmal repariert — fuer den Public-Kanal. Der
+# Docstring von `check_public_push_buch` beschreibt ihn wortgleich: „hielt nur einen
+# Dedup-Stempel: kein Preis, keine Abrechnung. Rueckwirkend blieb davon eine Trefferquote und
+# sonst nichts." Der Fix ging an EINEN der beiden Sender in dieser Datei. Der andere — die
+# Trades-Karte, mit Abstand der haeufigste Push im Kanal — blieb wie er war.
+#
+# Gemessen am 20.09.: 1705 Trades-Karten seit dem 27.07. gegen 77 Public-Pushs. Von den 1460
+# eindeutigen Markt/Seite-Paaren stehen 424 zufaellig im Shortlist-Track-Buch, weil die
+# Shortlist-Engine dieselbe Auswahl auch empfohlen hat — das ist der Schnitt mit einem ZWEITEN
+# Filter und keine Stichprobe. Wer daraus eine Trefferquote fuer Whale-Pushs ableitet, misst den
+# anderen Filter mit.
+#
+# Fehlerklasse: eine Reparatur an der Instanz statt an der Klasse — derselbe Mangel, dieselbe
+# Datei, zwei Sender, einer repariert.
+TRADES_LEDGER_FILE = BASE / "poly_whale_trades_ledger.json"
 BROAD_FILE    = BASE / "poly_money_broad_close.json"
 WNORM_FILE    = BASE / "poly_wallet_norm.json"   # 05.09.2026: was ist fuer DIESES Konto normal?
 SHORTLIST_FILE = BASE / "poly_shortlist_track.json"   # 25.08.2026: traegt blockedCats — die EINE Sperrliste
@@ -1285,6 +1303,9 @@ def build_public_card(pos: dict, scores: dict, restock: bool, broad: dict) -> st
 # Pushs haette einsteigen koennen (lastPrice; sonst firstPrice) — nicht den guenstigeren
 # Whale-Einstieg, der oft Stunden aelter ist. poly_public_eval.py rechnet gegen den Slug-Sieger ab.
 PUB_LEDGER_KEEP = 800
+# Der Trades-Kanal traegt rund 30 Karten am Tag — 800 waeren vier Wochen. 4000 sind ein halbes
+# Jahr, und erst ueber so ein Fenster laesst sich je Wallet und je Kategorie etwas sagen.
+TRADES_LEDGER_KEEP = 4000
 
 
 def _push_price(pos) -> float | None:
@@ -1920,6 +1941,74 @@ def markt_stempel(pos, broad) -> dict:
     return aus                                  # wie $10K in Cricket? (Median EPL $103K, Cricket $12K)
 
 
+def _log_trades_push(pkey, pos, scores, restock, ts, broad=None) -> None:
+    """Eine gesendete TRADES-Karte festhalten. Ein Eintrag je posKey — derselbe Dedup-Schluessel
+    wie poly_whale_seen.json, also kein Doppelzaehlen bei Aufstockung.
+
+    `pushPrice` wird hier und nicht spaeter geschrieben: der Preis im Moment des Sendens ist die
+    einzige Zahl, gegen die man den Push ehrlich abrechnen kann, und er ist nach dem Lauf nicht
+    mehr rekonstruierbar. Genau daran krankt das Public-Buch bis heute — in 11 von 23 frueheren
+    Zeilen fehlt er, und die zaehlen nie in eine Rendite.
+
+    `public` startet als None und bedeutet „noch nicht entschieden": die Public-Schleife laeuft
+    spaeter im selben Lauf und traegt `True` nach (s. `_markiere_public`). Ein Default `False`
+    waere eine Behauptung ueber etwas, das noch nicht feststeht — fehlende Information darf nicht
+    als harmloser Default rendern.
+    """
+    led = _load(TRADES_LEDGER_FILE, [])
+    if not isinstance(led, list):
+        led = []
+    if any(isinstance(e, dict) and e.get("k") == pkey for e in led):
+        return
+    rank = None
+    try:
+        rank = _sharp_rank_map(scores).get(pos.get("wallet"))
+    except Exception:
+        pass
+    led.append({
+        "k": pkey, "key": pos.get("key"), "side": pos.get("side"),
+        "wallet": pos.get("wallet"), "league": pos.get("league"),
+        "cat": sport_category(pos.get("league")),
+        "usd": round(float(pos.get("usd") or 0), 2),
+        "pushPrice": _push_price(pos),
+        "whaleEntry": (round(float(pos["firstPrice"]), 4)
+                       if isinstance(pos.get("firstPrice"), (int, float)) else None),
+        "walletRank": rank, "restock": bool(restock),
+        "sentAt": ts, "status": "pending",
+        "kanal": "trades",
+        "public": None,
+        **markt_stempel(pos, broad),
+    })
+    try:
+        _save(TRADES_LEDGER_FILE, led[-TRADES_LEDGER_KEEP:])
+    except Exception as e:
+        print("Trades-Ledger-Schreibfehler:", e)
+
+
+def _markiere_public(pkeys) -> None:
+    """Traegt an den Trades-Zeilen nach, dass dieselbe Karte auch public ging.
+
+    Ohne diese Markierung waeren die beiden Buecher nicht trennbar: die Public-Pushs sind eine
+    Teilmenge der Trades-Karten, und wer sie mitrechnet, vergleicht eine Gruppe mit sich selbst.
+    """
+    pk = {k for k in (pkeys or ()) if k}
+    if not pk:
+        return
+    led = _load(TRADES_LEDGER_FILE, [])
+    if not isinstance(led, list):
+        return
+    n = 0
+    for e in led:
+        if isinstance(e, dict) and e.get("k") in pk and e.get("public") is not True:
+            e["public"] = True
+            n += 1
+    if n:
+        try:
+            _save(TRADES_LEDGER_FILE, led)
+        except Exception as e:
+            print("Trades-Ledger-Schreibfehler (public-Marker):", e)
+
+
 def _log_public_push(pkey, pos, scores, restock, ts, broad=None) -> None:
     """Einen gesendeten Public-Push festhalten. Ein Eintrag je posKey (wallet|key|side) — derselbe
     Dedup-Schluessel wie poly_whale_public_seen.json, also kein Doppelzaehlen bei Aufstockung."""
@@ -2535,6 +2624,7 @@ def main():
                           "cf": bool(_cf_jetzt)}
             _log_send(card.split("\n")[1] if "\n" in card else card,
                       {"posKey": pkey, "usd": pos.get("usd"), "league": pos.get("league")})
+            _log_trades_push(pkey, pos, scores, restock, now_iso, broad)
     _save(SEEN_FILE, seen)
     print(f"  ✅  {sent} Whale-Alert(s) (Trades) gesendet.")
 
@@ -2599,6 +2689,9 @@ def main():
             pub_seen[pkey] = {"usd": float(pos.get("usd") or 0), "ts": now_iso}
             _log_public_push(pkey, pos, scores, restock, now_iso, broad)
     _save(PUB_SEEN_FILE, pub_seen)
+    # Dieselbe Karte ging auch public → am Trades-Buch vermerken, damit sich die beiden
+    # Gruppen spaeter sauber trennen lassen (s. `_markiere_public`).
+    _markiere_public([pkey for pkey, _pos, _r in pub_cand[:MAX_ALERTS]])
 
     # ⚖️ Schattenbuch (18.09.2026, Lucas' Vorschlag): mehrere bewiesene Wallets einig, aber
     # keine allein ueber der Geldschwelle. Heute faellt das durch jedes Raster. Gemessen ist die
