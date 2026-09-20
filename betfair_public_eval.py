@@ -448,10 +448,36 @@ def void_live_rutsch(buch, grund=RUTSCH_VOID_LIVE) -> int:
     return n
 
 
+def nachgrade_ungeklaerte(buch) -> int:
+    """void OHNE Grund heisst „konnte nicht abgerechnet werden" — das wird bei jedem Lauf neu
+    versucht. REIN, idempotent. -> Anzahl der zurueckgesetzten Zeilen.
+
+    🔴 20.09.2026 (Lucas: „Beide Spiele stehen nicht in der Betfair-Public-Bilanz. Beide haben
+    gewonnen."). Vasco da Gama gewann 5:0, gewettet zu 1.37 — die Zeile stand auf void, weil
+    `fav_token` den Runner „Vasco Da Gama" nicht auf das Heimteam „Vasco da Gama" abbilden
+    konnte (grosses D). Der Zeichenvergleich ist seit heute normalisiert, aber die Zeile waere
+    trotzdem fuer immer void geblieben: `_grade_ledger_entry` setzt void und schreibt KEINEN
+    Grund, und void ist sonst endgueltig.
+
+    Ein „nicht abrechenbar" ist aber kein Urteil ueber die Wette, sondern eins ueber uns. Es
+    gehoert wiederholt, sobald wir es besser koennen. Ein void MIT Grund (VOID_ENTSCHIEDEN,
+    Kursrutsch-Live) ist dagegen eine Entscheidung und bleibt stehen."""
+    n = 0
+    for e in (buch or []):
+        if not isinstance(e, dict):
+            continue
+        if e.get("status") == "void" and not e.get("voidGrund"):
+            e["status"] = "pending"
+            e.pop("settledAt", None)
+            n += 1
+    return n
+
+
 def abrechnen(buch, prices, track_results, manual=None, keep=LEDGER_KEEP):
     """Ein Push-Buch durch die ganze Abrechnungskette schicken. Genau die Reihenfolge, die
     main() seit dem 15.09. faehrt — als Funktion, damit das Schattenbuch nicht seine eigene
     bekommt und dann irgendwann anders rechnet als das echte."""
+    nachgrade_ungeklaerte(buch)     # „nicht abrechenbar" ist kein Urteil, sondern ein Versuch
     buch = capture_ht(buch, prices)
     buch = settle_from_track(buch, track_results)
     buch = settle(buch, prices, results_fetch=_fetch_results)

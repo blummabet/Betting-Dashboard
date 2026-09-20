@@ -127,11 +127,32 @@ def fav_token(market_id, runner_name, home, away):
     """Runner-Name → kanonisches Token (H/D/A · OVER/UNDER · YES/NO) je Markttyp. None wenn unklar."""
     t = MARKETS.get(market_id)
     if t in ("1x2", "ht1x2"):
-        if runner_name == home:
+        # 🔴 20.09.2026 (Lucas: „Beide Spiele stehen nicht in der Betfair-Public-Bilanz").
+        # Hier stand ein exakter Zeichenvergleich. Die Boerse schreibt den Runner anders als der
+        # Spielplan die Mannschaft:
+        #     Ledger-Zeile:  leadName "Vasco Da Gama"   home "Vasco da Gama"
+        #     Ledger-Zeile:  leadName "VFL Osnabruck"   away "VfL Osnabruck"
+        # Ein grosses D, ein kleines f — und fav_token gibt None zurueck. Dann liefert grade()
+        # (False, False), die Zeile ist „nicht abrechenbar" und faellt als void aus der Bilanz.
+        # Vasco gewann 5:0 auf einer Wette zu 1.37, und die Zahl auf der Seite hat es nie
+        # erfahren. Schlimmer als der eine Fall: dasselbe None laesst `capture()` `continue`
+        # machen — betroffene Maerkte werden gar nicht erst mitgeschrieben.
+        # Gemessen am Feed dieses Morgens: 6 von 1.045 Maerkten (0,6 %) waren so nicht
+        # aufloesbar — „SonderjyskE" vs „Sonderjyske", „Csm Ramnicu-Valcea" vs „CSM
+        # Ramnicu-Valcea", „MIO Biwako Shiga" vs „Mio Biwako Shiga", „Psis Semarang" vs
+        # „PSIS Semarang". Kein Einzelfall, sondern eine Klasse.
+        # Die beiden anderen Zweige dieser Funktion normalisieren laengst (`.lower()`); nur der
+        # 1X2-Zweig tat es nicht.
+        n = str(runner_name or "").strip().casefold()
+        h = str(home or "").strip().casefold()
+        a_ = str(away or "").strip().casefold()
+        if not n:
+            return None
+        if h and n == h:
             return "H"
-        if runner_name == away:
+        if a_ and n == a_:
             return "A"
-        if runner_name == "The Draw":
+        if n == "the draw":
             return "D"
         return None
     if t in ("ou25", "ou35", "fho05", "fho15"):

@@ -472,3 +472,86 @@ class DasKursrutschBuchWirdAbgerechnet(unittest.TestCase):
         for r in live:
             self.assertEqual(r.get("status"), "void",
                              "die Regel laesst eine live gesendete Zeile in der Bilanz")
+
+
+class VoidOhneGrundIstKeinUrteil(unittest.TestCase):
+    """🔴 20.09.2026 (Lucas: „Beide Spiele stehen nicht in der Betfair-Public-Bilanz. Beide
+    haben gewonnen.").
+
+    Vasco da Gama gewann 5:0, gewettet zu 1.37 — die Zeile stand auf `void`, weil `fav_token`
+    den Runner „Vasco Da Gama" nicht auf das Heimteam „Vasco da Gama" abbilden konnte (ein
+    grosses D). Dasselbe traf Bochum v VfL Osnabruck („VFL" statt „VfL"), das ebenfalls
+    gewonnen hatte.
+
+    Der Zeichenvergleich ist seit heute normalisiert — aber die zwei Zeilen waeren trotzdem fuer
+    immer void geblieben: `_grade_ledger_entry` setzt void ohne Grund, und void ist sonst
+    endgueltig. Ein „nicht abrechenbar" ist kein Urteil ueber die Wette, sondern eins ueber uns,
+    und gehoert wiederholt, sobald wir es besser koennen.
+    """
+
+    def test_void_ohne_grund_wird_neu_versucht(self):
+        buch = [{"k": "a", "status": "void", "settledAt": "2026-09-20T02:00:00+00:00"},
+                {"k": "b", "status": "void", "voidGrund": E.VOID_ENTSCHIEDEN},
+                {"k": "c", "status": "won"},
+                {"k": "d", "status": "pending"}]
+        self.assertEqual(E.nachgrade_ungeklaerte(buch), 1)
+        self.assertEqual([x["status"] for x in buch], ["pending", "void", "won", "pending"])
+        self.assertNotIn("settledAt", buch[0], "ein neuer Versuch braucht auch ein neues Datum")
+
+    def test_ein_void_MIT_grund_bleibt_stehen(self):
+        """VOID_ENTSCHIEDEN und die Kursrutsch-Live-Regel sind Entscheidungen, keine Pannen."""
+        buch = [{"k": "b", "status": "void", "voidGrund": E.RUTSCH_VOID_LIVE}]
+        self.assertEqual(E.nachgrade_ungeklaerte(buch), 0)
+        self.assertEqual(buch[0]["status"], "void")
+
+    def test_idempotent(self):
+        buch = [{"k": "a", "status": "void"}]
+        E.nachgrade_ungeklaerte(buch)
+        self.assertEqual(E.nachgrade_ungeklaerte(buch), 0)
+
+    def test_die_kette_versucht_es_auch(self):
+        """Behavioural, nicht per Textgriff: die erste Fassung suchte den Funktionsnamen im
+        Quelltext und fand die DEFINITION — die Mutation „Aufruf entfernt" rutschte durch."""
+        e = {"k": "fresh:1:Match Odds", "matchId": "1", "market": "Match Odds",
+             "leadName": "VFL Osnabruck", "home": "Bochum", "away": "VfL Osnabruck",
+             "leadOdd": 1.85, "sentAt": "2026-08-28T17:15:00+00:00", "status": "void"}
+        spur = [{"matchId": "1", "market": "Match Odds", "ft": [0, 1], "ht": None,
+                 "settledAt": "2026-08-28T21:00:00+00:00"}]
+        buch, _ = E.abrechnen([e], {}, spur, manual={})
+        self.assertEqual(buch[0]["status"], "won",
+                         "die Kette holt eine unabgerechnete Zeile nicht nach")
+
+    def test_der_echte_fall_rechnet_sich_jetzt_ab(self):
+        """Bochum v VfL Osnabruck: gewonnen zu 1.85, stand als void in der Bilanz."""
+        e = {"k": "fresh:1:Match Odds", "matchId": "1", "market": "Match Odds",
+             "leadName": "VFL Osnabruck", "home": "Bochum", "away": "VfL Osnabruck",
+             "leadOdd": 1.85, "sentAt": "2026-08-28T17:15:00+00:00", "status": "void"}
+        self.assertEqual(E.nachgrade_ungeklaerte([e]), 1)
+        from datetime import datetime, timezone
+        E._grade_ledger_entry(e, [0, 1], None, datetime(2026, 8, 28, 21, tzinfo=timezone.utc))
+        self.assertEqual(e["status"], "won")
+        self.assertAlmostEqual(e["profit"], 0.85, places=2)
+
+
+class DerBelegEinesPushsWirdSofortGesichert(unittest.TestCase):
+    """🔴 20.09.2026. Lyon v Rennes WAR gesendet — betfair_public_seen.json trug den Schluessel
+    `fresh:36039873`, den es nur bei erfolgreichem Versand bekommt. Im Ledger stand keine Zeile,
+    und in keinem der letzten 40 Commits hat sie je gestanden. Ueber alle Eintraege geprueft:
+    4 von 277 gesendeten Public-Pushes haben keine Ledger-Zeile (1,4 %).
+
+    Der Grund liegt im Ablauf: der Lauf sendet und committet erst zwoelf Schritte spaeter, nach
+    einem Schritt, der ~12 Minuten schlaeft — bei einem Takt von 15 Minuten. Dieselbe Klasse wie
+    am 19.09. beim doppelten Poly-Play: **wer handelt, schreibt sofort.**"""
+
+    def test_die_betfair_pipeline_sichert_direkt_nach_dem_senden(self):
+        import os
+        from pathlib import Path
+        y = (Path(__file__).parent.parent / ".github/workflows/betfair.yml").read_text(encoding="utf-8")
+        self.assertIn('ci_sichern.sh "Beleg der Betfair-Pushes"', y)
+        i_send = y.index("betfair_alerts.py")
+        i_sich = y.index('ci_sichern.sh "Beleg der Betfair-Pushes"')
+        i_eval = y.index("betfair_public_eval.py")
+        self.assertLess(i_send, i_sich, "gesichert wird NACH dem Senden")
+        self.assertLess(i_sich, i_eval, "und VOR allem, was danach noch schiefgehen kann")
+        for f in ("betfair_public_ledger.json", "betfair_public_seen.json"):
+            self.assertIn(f, y[i_sich:i_sich + 500], "%s wird nicht sofort gesichert" % f)

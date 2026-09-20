@@ -254,6 +254,25 @@ class TestBetfairSchubladenNutzenDieEchteSchranke(unittest.TestCase):
                  # Maerkte so weit auseinanderliegen, hat keine Liga-Kante — sie hat einen
                  # Markt, der gerade oben liegt. Genau so sieht Mehrfachtesten aus.
                  "Kazakhstan Premier League · Match Odds",
+                 # 20.09.2026 angesehen, DREI auf einmal — und alle mit demselben Zuschnitt:
+                 #   Belgian Pro League · Match Odds        n=30  ROI +34,7 %  UG +2,2 %
+                 #   Peruvian Primera Division · Half Time  n=30  ROI +75,0 %  UG +7,3 %
+                 #   Brazilian Serie A · Match Odds         n=35  ROI +29,4 %  UG +1,1 %
+                 # Keine hat einen CLV mit Schranke (CLV None), alle liegen am Mindest-n, und
+                 # die Gegenprobe im eigenen Bewerb ist diesmal besonders deutlich:
+                 #   Belgien  — die anderen SECHS Maerkte: -38,3 / -22,6 / -16,3 / -7,5 /
+                 #              +7,3 / +12,7 %. Eine Liga mit Kante sieht anders aus.
+                 #   Peru     — Half Time +75,0 %, aber Match Odds im selben Bewerb -25,1 %.
+                 #   Brasilien— Match Odds +29,4 %, Over/Under 2.5 im selben Bewerb -20,2 %.
+                 # Eine Liga, deren Maerkte um 100 Prozentpunkte auseinanderliegen, hat keine
+                 # Liga-Kante; sie hat einen Markt, der gerade oben liegt. Das ist die achte,
+                 # neunte und zehnte Zeile binnen sieben Tagen mit exakt dieser Signatur — bei
+                 # ~218 gleichzeitig geprueften Schubladen ist das die erwartete Ausbeute des
+                 # Mehrfachtestens, nicht ein Befund. Angesehen, nicht freigegeben. Erst wenn
+                 # eine dieser Zeilen bei DOPPELTEM n ueber der Huerde bleibt, wird es eine.
+                 "Belgian Pro League · Match Odds",
+                 "Peruvian Primera Division · Half Time",
+                 "Brazilian Serie A · Match Odds",
                  # 19.09.2026 angesehen: n=42, ROI +26,9 %, Untergrenze +1,0 %, CLV +0,11 pp —
                  # eine Untergrenze, die praktisch auf der Null steht, und ein CLV, der von null
                  # nicht zu unterscheiden ist. Dazu die Gegenprobe im selben Bewerb, und die ist

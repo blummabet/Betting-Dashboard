@@ -53,6 +53,43 @@ def test_fav_token():
     assert T.fav_token("First Half Goals 0.5", "Under 0.5 Goals", HOME, AWAY) == "UNDER"
 
 
+def test_fav_token_stolpert_nicht_ueber_gross_klein():
+    """🔴 20.09.2026 (Lucas: „Beide Spiele stehen nicht in der Betfair-Public-Bilanz. Beide haben
+    gewonnen.").
+
+    Die Boerse schreibt den Runner anders als der Spielplan die Mannschaft:
+
+        leadName "Vasco Da Gama"   home "Vasco da Gama"    ← ein grosses D
+        leadName "VFL Osnabruck"   away "VfL Osnabruck"    ← ein kleines f
+
+    fav_token gab None zurueck, grade() lieferte (False, False), und die Zeile fiel als „nicht
+    abrechenbar" aus der Bilanz. Vasco gewann 5:0 auf eine Wette zu 1.37.
+    Und dasselbe None laesst `capture()` `continue` machen: das Match-Odds-Signal dieses Spiels
+    steht gar nicht erst im grossen Ledger — nachgeprueft, dort liegen nur die fuenf Maerkte
+    ohne Teamnamen. Gemessen am Feed dieses Morgens: 6 von 1.045 Maerkten (0,6 %).
+    """
+    assert T.fav_token("Match Odds", "Vasco Da Gama", "Vasco da Gama", "Coritiba") == "H"
+    assert T.fav_token("Match Odds", "VFL Osnabruck", "Bochum", "VfL Osnabruck") == "A"
+    assert T.fav_token("Match Odds", "SonderjyskE", "Sonderjyske", "Randers") == "H"
+    assert T.fav_token("Match Odds", "  Lyon  ", "Lyon", "Rennes") == "H"
+    assert T.fav_token("Half Time", "the draw", HOME, AWAY) == "D"
+    # was NICHT passen darf, passt weiterhin nicht
+    assert T.fav_token("Match Odds", "Irgendwer", HOME, AWAY) is None
+    assert T.fav_token("Match Odds", "", HOME, AWAY) is None
+    assert T.fav_token("Match Odds", None, HOME, AWAY) is None
+    assert T.fav_token("Match Odds", "None", None, None) is None
+
+
+def test_capture_nimmt_den_markt_jetzt_mit():
+    """Die andere Haelfte desselben Fehlers: ohne Token kein Signal, und zwar still."""
+    m = _prematch()
+    m["home"] = "Vasco da Gama"
+    m["markets"]["Match Odds"] = _mk([("Vasco Da Gama", 1.37, 9000), ("The Draw", 5.0, 500),
+                                      (AWAY, 8.0, 500)])
+    st = T.capture({"matches": [m]}, HIST, {}, now=NOW)
+    assert st["pending"]["1"]["signals"]["Match Odds"]["fav"] == "H"
+
+
 def test_winning_token():
     assert T.winning_token("Match Odds", [2, 1], None) == "H"
     assert T.winning_token("Match Odds", [1, 1], None) == "D"

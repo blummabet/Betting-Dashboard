@@ -210,6 +210,20 @@ jobs:
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
           TELEGRAM_CHAT_ID:        ${{ secrets.TELEGRAM_CHAT_ID }}
 
+      # 🔴 20.09.2026 (Lucas: „Beide Spiele stehen nicht in der Betfair-Public-Bilanz").
+      # Eines davon — Lyon v Rennes — war GESENDET: betfair_public_seen.json trug den Schluessel
+      # `fresh:36039873`, den es nur bei erfolgreichem Versand bekommt. Im Ledger stand keine
+      # Zeile, und in KEINEM der letzten 40 Commits hat sie je gestanden. Die Pruefung ueber
+      # alle Eintraege: 4 von 277 gesendeten Public-Pushes haben keine Ledger-Zeile (1,4 %).
+      # Der Grund liegt im Ablauf, nicht im Code: dieser Lauf sendet hier und committet erst
+      # zwoelf Schritte spaeter, nach einem Schritt, der ~12 Minuten schlaeft — bei einem Takt
+      # von 15 Minuten. Alles, was in der Zwischenzeit mit dem Arbeitsverzeichnis passiert,
+      # kostet den Beleg, waehrend die Wirkung (die Nachricht) laengst draussen ist.
+      # Genau dafuer gibt es scripts/ci_sichern.sh — es hing bisher nur an den Poly-Workflows.
+      - name: 🔐 Beleg der gesendeten Pushes sofort sichern
+        run: bash scripts/ci_sichern.sh "Beleg der Betfair-Pushes" betfair_public_ledger.json betfair_public_seen.json betfair_alerts_seen.json betfair_public_trichter.json betfair_public_schatten.json betfair_rutsch_ledger.json betfair_rutsch_seen.json
+        continue-on-error: true
+
       - name: 📈 Public-Push-Auswertung (Treffer/ROI der Moneyflow-Signale)
         run: ${{ env.BETFAIR_PY }} betfair_public_eval.py
         continue-on-error: true
