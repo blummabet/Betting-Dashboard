@@ -1,13 +1,29 @@
 {
-"generatedAt": "2026-09-20T21:13:39.330490+00:00",
+"generatedAt": "2026-09-20T21:52:07.654342+00:00",
 "byVerdict": {
+"konsens": {
+"n": 1397,
+"wins": 1179,
+"hitRate": 0.844,
+"polyN": 1326,
+"polyWins": 1032,
+"polyHitRate": 0.7783,
+"pinnN": 210,
+"pinnHitRate": 0.7714,
+"nRoi": 737,
+"roi": 0.4134,
+"roiLb": 0.366,
+"nClv": 737,
+"clv": 20.08,
+"clvLb": 18.5716
+},
 "uneinig": {
-"n": 558,
+"n": 557,
 "wins": 168,
-"hitRate": 0.3011,
-"polyN": 516,
+"hitRate": 0.3016,
+"polyN": 515,
 "polyWins": 140,
-"polyHitRate": 0.2713,
+"polyHitRate": 0.2718,
 "pinnN": 345,
 "pinnHitRate": 0.6203,
 "nRoi": 328,
@@ -16,22 +32,6 @@
 "nClv": 328,
 "clv": -20.71,
 "clvLb": -23.6789
-},
-"konsens": {
-"n": 1396,
-"wins": 1178,
-"hitRate": 0.8438,
-"polyN": 1325,
-"polyWins": 1031,
-"polyHitRate": 0.7781,
-"pinnN": 210,
-"pinnHitRate": 0.7714,
-"nRoi": 735,
-"roi": 0.4139,
-"roiLb": 0.3664,
-"nClv": 735,
-"clv": 20.09,
-"clvLb": 18.5771
 },
 "teil": {
 "n": 33,
@@ -76,6 +76,11 @@
 "wins": 27,
 "hitRate": 0.54
 },
+"Italian Serie A": {
+"n": 50,
+"wins": 35,
+"hitRate": 0.7
+},
 "Japanese J League": {
 "n": 50,
 "wins": 37,
@@ -85,11 +90,6 @@
 "n": 49,
 "wins": 30,
 "hitRate": 0.6122
-},
-"Italian Serie A": {
-"n": 49,
-"wins": 34,
-"hitRate": 0.6939
 },
 "Spanish Segunda Division": {
 "n": 48,
@@ -221,11 +221,6 @@
 "wins": 14,
 "hitRate": 0.6667
 },
-"CONMEBOL Copa Libertadores": {
-"n": 20,
-"wins": 10,
-"hitRate": 0.5
-},
 "Chinese Super League": {
 "n": 20,
 "wins": 14,
@@ -240,6 +235,11 @@
 "n": 20,
 "wins": 6,
 "hitRate": 0.3
+},
+"CONMEBOL Copa Libertadores": {
+"n": 19,
+"wins": 10,
+"hitRate": 0.5263
 },
 "CONMEBOL Copa Sudamericana": {
 "n": 19,
@@ -256,15 +256,15 @@
 "wins": 14,
 "hitRate": 0.7368
 },
+"Polish Ekstraklasa": {
+"n": 19,
+"wins": 12,
+"hitRate": 0.6316
+},
 "UEFA Europa League Qualifiers": {
 "n": 19,
 "wins": 15,
 "hitRate": 0.7895
-},
-"Polish Ekstraklasa": {
-"n": 18,
-"wins": 11,
-"hitRate": 0.6111
 },
 "UEFA Champions League": {
 "n": 18,
@@ -297,9 +297,9 @@
 "hitRate": 0.4375
 },
 "North American Leagues Cup": {
-"n": 16,
-"wins": 10,
-"hitRate": 0.625
+"n": 15,
+"wins": 9,
+"hitRate": 0.6
 },
 "AFC Champions League": {
 "n": 14,
@@ -644,15 +644,15 @@
 },
 "byStrength": {
 "strong": {
-"n": 1205,
-"wins": 965,
-"hitRate": 0.8008,
-"nRoi": 681,
-"roi": 0.288,
+"n": 1207,
+"wins": 967,
+"hitRate": 0.8012,
+"nRoi": 683,
+"roi": 0.2878,
 "roiLb": 0.2371,
-"nClv": 681,
-"clv": 14.04,
-"clvLb": 11.9942
+"nClv": 683,
+"clv": 14.05,
+"clvLb": 12.0075
 },
 "weak": {
 "n": 763,
@@ -667,14 +667,52 @@
 }
 },
 "divergence": {
-"n": 558,
+"n": 557,
 "betfairWins": 168,
-"betfairRate": 0.3011,
-"polyN": 516,
+"betfairRate": 0.3016,
+"polyN": 515,
 "polyWins": 140,
-"polyRate": 0.2713
+"polyRate": 0.2718
 },
 "recent": [
+{
+"matchId": "36041256",
+"home": "AC Milan",
+"away": "Lecce",
+"league": "Italian Serie A",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "AC Milan",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+0
+],
+"kickoff": "2026-09-20T18:45:00Z",
+"settledAt": "2026-09-20T21:52:07.481097+00:00"
+},
+{
+"matchId": "36069688",
+"home": "Lech Poznan",
+"away": "Radomiak Radom",
+"league": "Polish Ekstraklasa",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Lech Poznan",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+5,
+1
+],
+"kickoff": "2026-09-20T18:15:00Z",
+"settledAt": "2026-09-20T21:52:07.481097+00:00"
+},
 {
 "matchId": "36071864",
 "home": "Valencia",
@@ -1396,56 +1434,18 @@
 ],
 "kickoff": "2026-09-20T12:00:00Z",
 "settledAt": "2026-09-20T15:13:26.631234+00:00"
-},
-{
-"matchId": "36071838",
-"home": "FC Vaduz",
-"away": "Thun",
-"league": "Swiss Super League",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "FC Vaduz",
-"polySide": "home",
-"winner": "away",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-09-20T12:00:00Z",
-"settledAt": "2026-09-20T15:13:26.631234+00:00"
-},
-{
-"matchId": "36071163",
-"home": "Sabadell",
-"away": "Oviedo",
-"league": "Spanish Segunda Division",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Sabadell",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-09-20T12:00:00Z",
-"settledAt": "2026-09-20T15:13:26.631234+00:00"
 }
 ],
 "global": {
 "n": 1987,
-"wins": 1352,
-"hitRate": 0.6804,
-"nRoi": 1087,
-"roi": 0.1082,
-"roiLb": 0.0626,
-"nClv": 1087,
-"clv": 6.59,
-"clvLb": 4.9095
+"wins": 1353,
+"hitRate": 0.6809,
+"nRoi": 1089,
+"roi": 0.1084,
+"roiLb": 0.0629,
+"nClv": 1089,
+"clv": 6.61,
+"clvLb": 4.9308
 },
 "pending": 13
 }
