@@ -993,7 +993,18 @@ def _papier_lauf_schreiben():
         if str(PAPIER_FILE) in _LOAD_FAILED:
             return
         data = load_json(PAPIER_FILE, {"bets": [], "updatedAt": ""})
-        data.setdefault("bets", [])
+        # 🔴 20.09.2026, eine Stunde nach dem Einbau: `test_beendetes_turnier_kein_stale_alarm`
+        # mockt `load_json` global und ruft `main()`. Vorher schrieb der winterisierte Lauf
+        # nichts; mit dem Marker im `finally` schrieb er die WM-Fixture des Tests als
+        # „Papierbuch" in den echten Baum — `wm_paper_bets.json` mit `groups`/`fixtures` drin.
+        #
+        # Fehlerklasse: ein Protokoll, das jede Datei fuer sein eigenes Buch haelt. Der Riegel
+        # gehoert hierher und nicht in den Test: eine Datei, die kein Papierbuch IST, darf
+        # auch im Betrieb nicht zu einem gemacht werden — sonst ueberschreibt ein Lauf-Marker
+        # beim naechsten Pfadfehler ein fremdes Artefakt.
+        if not isinstance(data, dict) or not isinstance(data.get("bets"), list):
+            print(f"  ⚠️  {PAPIER_FILE} ist kein Papierbuch — kein Lauf-Marker geschrieben.")
+            return
         data["laeufe"] = papier_lauf_marker(
             data.get("laeufe"), modus, _LAUF.get("kandidaten"),
             _LAUF.get("gebucht"), _LAUF.get("grund"))
