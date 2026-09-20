@@ -1182,10 +1182,28 @@ def check_jeder_push_hat_seinen_beleg(ctx):
     n = int(r.get("gesendetOhneBeleg") or 0)
     if not n:
         return _c("Jeder Push hat seinen Beleg", "warn", [])
-    keys = ", ".join(r.get("gesendetOhneBelegKeys") or [])[:120]
-    return _c("Jeder Push hat seinen Beleg", "warn",
-              ["%d gesendete(r) Public-Push(es) ohne Ledger-Zeile — sie fehlen in der Bilanz "
-               "und lassen sich nicht nachtragen (%s)" % (n, keys or "—")])
+    # 🔴 20.09.2026, zweiter Teil: die Ursache ist behoben (der Beleg wird jetzt sofort nach dem
+    # Senden committet). Ob die Reparatur HAELT, stand aber in derselben Zahl wie die alte Narbe —
+    # 4 wuerde bei einem fuenften Verlust zu 5, und das sieht in einer Warn-Zeile niemand.
+    # Fehlerklasse: eine Narbe und eine frische Wunde in derselben Zahl.
+    # Der Dedup-Stand stempelt seit dem 20.09. die Sendezeit; jeder DATIERTE Verlust ist also
+    # einer von NACH der Reparatur. Kein gepflegter Ausnahmen-Katalog noetig.
+    neu = int(r.get("gesendetOhneBelegNeu") or 0)
+    alt = max(0, n - neu)
+    fails = []
+    if neu:
+        nk = ", ".join("%s (%s)" % (z.get("key"), str(z.get("t"))[:16])
+                       for z in (r.get("gesendetOhneBelegNeuKeys") or [])[:4])
+        fails.append("%d Public-Push(es) SEIT der Sofort-Sicherung ohne Ledger-Zeile (%s) — der "
+                     "Sicherungsschritt greift nicht" % (neu, nk or "—"))
+    if alt:
+        keys = ", ".join(r.get("gesendetOhneBelegKeys") or [])[:120]
+        fails.append("%d aeltere(r) Push(es) ohne Ledger-Zeile aus der Zeit vor der Sofort-"
+                     "Sicherung (%s) — nicht nachtragbar: von einem verlorenen Push steht die "
+                     "Quote beim Senden nirgends, und nur die aufgefallenen zurueckzuholen waere "
+                     "eine Auswahl nach Ausgang. Die Bilanz nennt ihre Luecke stattdessen."
+                     % (alt, keys or "—"))
+    return _c("Jeder Push hat seinen Beleg", "warn", fails)
 
 
 def check_artefakte_sind_lesbar(ctx):
