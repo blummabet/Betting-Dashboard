@@ -53,6 +53,11 @@ jobs:
     env:
       COCOBET_DATASET: liga
       COCOBET_PROFILE: liga_default
+      # 20.09.2026: job-weit, weil ZWEI Schritte damit rechnen — run_health misst die
+      # gelieferte Taktung im Arbeitsfenster, und der Positions-Manager leitet daraus
+      # seinen Schliess-Vorlauf ab. Zwei Kopien derselben Stundenangabe waren schon
+      # einmal der Fehler.
+      RUN_HEALTH_STUNDEN: '10-21'
 
     steps:
       - name: 📥 Repo auschecken
@@ -221,7 +226,6 @@ jobs:
           # Protokoll auf, wenn die gelieferte Taktung es gar nicht treffen kann.
           RUN_HEALTH_SOLL_PRO_TAG: '25'
           RUN_HEALTH_FENSTER_MIN:  '40'
-          RUN_HEALTH_STUNDEN:      '10-21'   # der Arbeitstakt; die Nachtluecke ist kein Ausfall
 
       - name: 🛡️ Wipe-Check (kein leerer Datensatz darf committet werden)
         run: ${{ env.POLY_PYTHON }} check_not_wiped.py

@@ -120,7 +120,76 @@ AUTO_SELL_ENABLED     = False
 # 40min (statt der zuerst geplanten 20min), weil GitHubs Scheduler real nur ~30min-Kadenz
 # liefert → bei 30min-Läufen landet garantiert einer im Fenster [KO-40,KO-10], sicher
 # pre-match. Pre-match-Märkte driften nur, sie springen nicht — erst nach Anpfiff volatil.
+#
+# 🔴 20.09.2026 — der Satz oben war falsch, und zwar von Anfang an. Gemessen aus
+# `health/liga-poly.json` (jeder Lauf trägt sich dort ein): der Manager liefert 4,7 statt 25
+# Läufe am Tag, die kleinste je gemessene Lücke im Arbeitsfenster ist 63,7 Minuten — größer
+# als das 40-Minuten-Fenster. Bei 0 von 7 Liga-Positionen lag je ein Lauf im Schließfenster.
+# „Landet garantiert einer im Fenster" ist nie eingetreten; der Anlass war Schalke v
+# Elversberg, das um 15:30 anpfiff, während die Position um 15:23 noch offen stand.
+#
+# Fehlerklasse: eine Zusage, die an eine Taktung gekoppelt ist, die niemand nachgezählt hat.
+#
+# Die Antwort ist NICHT ein größeres festes Fenster — das wäre dieselbe Wette auf eine
+# unbelegte Zahl, nur in die andere Richtung, und es würfe die späte Steam weg, auch wenn
+# die Taktung stimmt. Die Antwort ist, das Fenster an die GEMESSENE Lücke zu koppeln:
+# geschlossen wird, wenn dieser Lauf der letzte sein könnte, der es rechtzeitig schafft.
+# Läuft der Manager wieder dicht, zieht sich der Vorlauf von selbst wieder zusammen.
 PRE_MATCH_CLOSE_HOURS = _cfg("trade", "pre_match_close_hours", 2)
+
+# Obergrenze für den gemessenen Vorlauf. Ohne sie würde eine einzelne 15-Stunden-Lücke
+# dazu führen, dass Positionen einen halben Tag vor Anpfiff zugemacht werden — der Schutz
+# wäre dann teurer als der Schaden.
+VORLAUF_DECKEL_H = _cfg("trade", "vorlauf_deckel_h", 3.0)
+# Welches Quantil der gemessenen Lücken als „so lange dauert es bis zum nächsten Lauf" gilt.
+# 0.9: in neun von zehn Fällen kommt der nächste Lauf früher. Nicht das Maximum — ein
+# einzelner Ausfall darf die Regel nicht bestimmen; nicht der Median — dann läge man in der
+# Hälfte der Fälle daneben, und daneben heißt hier: die Position läuft ins Spiel.
+VORLAUF_QUANTIL = _cfg("trade", "vorlauf_quantil", 0.9)
+
+
+def naechste_luecke_h(laeufe, quantil=None, stunden=None, now=None):
+    """Wie lange es erfahrungsgemäß bis zum nächsten Lauf dauert — in Stunden. REIN.
+
+    `laeufe` sind die Einträge aus `health/<slug>.json`. None heißt „nicht gemessen" und darf
+    nie als 0 durchgehen: der Aufrufer fällt dann auf das feste Fenster zurück und sagt es.
+    """
+    ts = []
+    for r in (laeufe or []):
+        roh = r.get("ts") if isinstance(r, dict) else r
+        if not roh:
+            continue
+        try:
+            d = datetime.fromisoformat(str(roh).replace("Z", "+00:00"))
+        except (ValueError, TypeError):
+            continue
+        ts.append(d if d.tzinfo else d.replace(tzinfo=timezone.utc))
+    ts.sort()
+    luecken = []
+    for a, b in zip(ts, ts[1:]):
+        if stunden is not None and (a.hour not in stunden or b.hour not in stunden
+                                    or a.date() != b.date()):
+            continue
+        luecken.append((b - a).total_seconds() / 3600)
+    if len(luecken) < 4:
+        return None
+    luecken.sort()
+    q = VORLAUF_QUANTIL if quantil is None else quantil
+    i = min(len(luecken) - 1, max(0, int(round(q * (len(luecken) - 1)))))
+    return round(luecken[i], 2)
+
+
+def schliess_vorlauf_h(luecke_h, fenster_h=None, deckel_h=None):
+    """Ab wann vor Anpfiff geschlossen werden muss, damit ein Lauf es noch schafft. REIN.
+
+    Ohne Messung bleibt es beim festen Fenster — dann ist der Close so gut wie die Taktung,
+    und genau das soll die Meldung sagen.
+    """
+    fenster = PRE_MATCH_CLOSE_HOURS if fenster_h is None else fenster_h
+    deckel = VORLAUF_DECKEL_H if deckel_h is None else deckel_h
+    if luecke_h is None:
+        return fenster
+    return round(min(fenster + max(0.0, luecke_h), fenster + deckel), 3)
 
 # Früher Stop-Loss (16.06.2026): Da wir jetzt länger halten, kappen wir klare Verlierer
 # VOR dem volatilen Aufstellungs-Fenster. Ab EARLY_STOPLOSS_HOURS vor Anpfiff wird jede
@@ -129,17 +198,72 @@ EARLY_STOPLOSS_HOURS = _cfg("trade", "early_stoploss_hours", 2.0)
 EARLY_STOPLOSS_PCT   = _cfg("trade", "early_stoploss_pct",   0.15)
 
 
-def time_based_exit(h_until, pnl_pct):
+HEALTH_SLUG = {"liga": "liga-poly", "mls": "mls-poly", "wm": "wm-poly"}
+
+
+def _takt_stunden():
+    """Arbeitsstunden (UTC) des Managers, aus RUN_HEALTH_STUNDEN — dieselbe Angabe, mit der
+    auch `run_health.py` rechnet. Ohne sie wird über alle Stunden gemessen, und die
+    Nachtlücke macht den Vorlauf unnötig gross; der Deckel fängt das ab."""
+    roh = (os.environ.get("RUN_HEALTH_STUNDEN") or "").strip()
+    if not roh:
+        return None
+    raus = set()
+    for stueck in roh.split(","):
+        try:
+            if "-" in stueck:
+                x, y = (int(v) for v in stueck.split("-", 1))
+                raus |= set(range(x, y + 1)) if x <= y else (set(range(x, 24)) | set(range(0, y + 1)))
+            else:
+                raus.add(int(stueck))
+        except ValueError:
+            return None
+    return raus or None
+
+
+def gemessener_vorlauf(slug=None, basis=None):
+    """(vorlauf_h, luecke_h, quelle) aus dem Lauf-Protokoll dieses Datensatzes.
+
+    `quelle` ist „gemessen" oder „kein Protokoll" — der Unterschied gehört in die Ausgabe.
+    Ohne Protokoll bleibt es beim festen Fenster, und dann ist der Close so gut wie die
+    Taktung. Das zu verschweigen wäre die Klasse, die diesen Umbau ausgelöst hat.
+    """
+    slug = slug or HEALTH_SLUG.get(D.active_dataset())
+    if not slug:
+        return (PRE_MATCH_CLOSE_HOURS, None, "kein Protokoll")
+    pfad = os.path.join(str(basis or D.BASE), "health", f"{slug}.json")
+    try:
+        with open(pfad, encoding="utf-8") as f:
+            laeufe = (json.load(f) or {}).get("runs") or []
+    except Exception:
+        return (PRE_MATCH_CLOSE_HOURS, None, "kein Protokoll")
+    luecke = naechste_luecke_h(laeufe, stunden=_takt_stunden())
+    if luecke is None:
+        return (PRE_MATCH_CLOSE_HOURS, None, "kein Protokoll")
+    return (schliess_vorlauf_h(luecke), luecke, "gemessen")
+
+
+def time_based_exit(h_until, pnl_pct, vorlauf_h=None):
     """Zeit-basierte Pre-Match-Exits (16.06.2026), reine Funktion → testbar:
-      1. Hard-Close: Anpfiff in ≤ PRE_MATCH_CLOSE_HOURS (20min) → alles schliessen.
+      1. Hard-Close: Anpfiff in ≤ `vorlauf_h` → schliessen. `vorlauf_h` ist das Fenster PLUS
+         der gemessenen Lücke bis zum nächsten Lauf (s. `schliess_vorlauf_h`); ohne Messung
+         ist es das blosse Fenster wie bisher.
       2. Stop-Loss: zwischen Hard-Close und EARLY_STOPLOSS_HOURS (2h) Verlierer ≥15%
          kappen, bevor das volatile Aufstellungs-Fenster kommt.
-    Beides nur pre-match (h_until > 0). Gibt (should_sell, reason) zurück."""
+    Beides nur pre-match (h_until > 0). Gibt (should_sell, reason) zurück.
+
+    20.09.2026: der Schwellwert ist ab hier ein ARGUMENT und keine Konstante mehr. „Dieser
+    Lauf ist vielleicht der letzte vor Anpfiff" ist eine Eigenschaft der Taktung, und die
+    gehört gemessen und hereingereicht, nicht hier drin behauptet.
+    """
     if h_until is None:
         return (False, "")
-    if 0 <= h_until <= PRE_MATCH_CLOSE_HOURS:
-        return (True, f"Pre-Match Close ({h_until:.2f}h vor Anpfiff)")
-    if (PRE_MATCH_CLOSE_HOURS < h_until <= EARLY_STOPLOSS_HOURS
+    schwelle = PRE_MATCH_CLOSE_HOURS if vorlauf_h is None else vorlauf_h
+    if 0 <= h_until <= schwelle:
+        extra = ("" if vorlauf_h is None or abs(schwelle - PRE_MATCH_CLOSE_HOURS) < 1e-9
+                 else f", Fenster {PRE_MATCH_CLOSE_HOURS:.2f}h + gemessene Lücke")
+        return (True, f"Pre-Match Close ({h_until:.2f}h vor Anpfiff{extra})")
+    if (schwelle < h_until <= EARLY_STOPLOSS_HOURS
             and isinstance(pnl_pct, (int, float))
             and pnl_pct <= -EARLY_STOPLOSS_PCT * 100):
         return (True, f"Stop-Loss {pnl_pct:.1f}% ({h_until:.1f}h vor Anpfiff)")
@@ -978,6 +1102,21 @@ def main():
     open_pos = [p for p in all_positions if p.get("status") == "open"]
     print(f"  {len(open_pos)} offene Positionen gefunden")
 
+    # 20.09.2026: der Schliess-Vorlauf kommt aus dem gemessenen Takt dieses Managers, nicht
+    # aus einer Zahl im Kommentar. Er steht hier EINMAL im Log — sonst rät man später, mit
+    # welcher Schwelle ein Lauf entschieden hat.
+    _VORLAUF_H, _LUECKE_H, _QUELLE = gemessener_vorlauf()
+    if _QUELLE == "gemessen":
+        print(f"  ⏱️  Schliess-Vorlauf {_VORLAUF_H:.2f}h "
+              f"(Fenster {PRE_MATCH_CLOSE_HOURS:.2f}h + gemessene Lücke {_LUECKE_H:.2f}h, "
+              f"gedeckelt bei +{VORLAUF_DECKEL_H:.1f}h)")
+        if _VORLAUF_H >= EARLY_STOPLOSS_HOURS:
+            print(f"     ↳ Hinweis: der Vorlauf liegt über dem Stop-Loss-Fenster "
+                  f"({EARLY_STOPLOSS_HOURS:.1f}h) — es wird ohnehin vorher geschlossen.")
+    else:
+        print(f"  ⏱️  Kein Lauf-Protokoll — Schliess-Vorlauf bleibt beim festen Fenster "
+              f"{_VORLAUF_H:.2f}h. Der Close ist damit nur so gut wie die Taktung.")
+
     alerts_sent = 0
     sells_executed = 0
 
@@ -1000,7 +1139,7 @@ def main():
         # ── Zeit-basierte Exits: Hard-Close (20min) + Stop-Loss (16.06.2026) ──
         match_date = pos.get("matchDate", "")
         h_until = hours_until_match(match_date) if match_date else None
-        time_sell, time_reason = time_based_exit(h_until, pnl)
+        time_sell, time_reason = time_based_exit(h_until, pnl, _VORLAUF_H)
         if time_sell:
             print(f"    ⏰ ZEIT-EXIT: {time_reason}")
 
