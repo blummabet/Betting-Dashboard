@@ -165,6 +165,8 @@ def _vor_ist_fussball(league, sport) -> bool:
     return "SOCCER" in s or "SOCCER" in lg or any(x in lg for x in _VOR_FUSS_LIGEN)
 
 UPCOMING_FILE         = "poly_money_upcoming.json"
+LIGA_PREISE_FILE      = "liga_poly_prices.json"   # zweite, unabhaengige Quelle fuers Deckungsbuch
+DECKUNG_FILE          = "poly_deckung_buch.json"
 UPCOMING_WINDOW_H     = float(os.environ.get("POLY_UPCOMING_WINDOW_H") or 120.0)
 # 25.08.2026 (Lucas zeigte den Poly-Link auf Barcelona–Athletic, den wir „nicht gelistet" genannt
 # hatten): 48h war zu eng. Das Spiel lag 55h vor Anpfiff, hatte auf Poly aber schon $21,7K —
@@ -2324,6 +2326,38 @@ def main() -> int:
     # Money-Map (12.08.2026, Lucas): breitere upcoming-Erfassung schreiben (Preis+Vol, kein Holder-Call)
     _upc = prune_upcoming(_load(UPCOMING_FILE), getattr(fetch_markets, "upcoming", {}) or {})
     write_json_atomic((BASE / UPCOMING_FILE), _upc, indent=1)
+
+    # 📒 Deckungsbuch (20.09.2026): was dieser Scan gegen die zweite, unabhaengige Quelle
+    # (`liga_poly_prices.json` vom Liga-Fetcher) NICHT gesehen hat.
+    #
+    # Anlass: die Batterie meldete „AC Milan v US Lecce, Anpfiff in 0.1h — der Liga-Fetcher hat
+    # den Markt, der Money-Scan nie". Zwanzig Minuten spaeter war die Messung leer, weil eine
+    # Luecke mit dem Anpfiff aus dem Fenster faellt. Auf „passiert das oft?" gab es nie eine
+    # Zahl. Fehlerklasse: eine Luecke, die sich durch Zeitablauf selbst erledigt, hinterlaesst
+    # keine Statistik.
+    #
+    # Der Scanner schreibt es selbst — er ist die Stelle, an der die Zahl entsteht, und er hat
+    # beide Seiten in der Hand. Nie fatal: ein Buch darf einen Scan nicht kippen.
+    try:
+        import poly_deckung as _PD
+        _lp = _load(LIGA_PREISE_FILE) or {}
+        if _lp.get("prices"):
+            _bekannt = set(frozen or {}) | set(_upc or {}) | set(_load(HIST_FILE) or {})
+            _luecken = _PD.luecken(_lp, _bekannt)
+            _buch = _PD.buchen(_load(DECKUNG_FILE) or {}, _luecken,
+                               len((_lp.get("prices") or {})), _bekannt)
+            write_json_atomic((BASE / DECKUNG_FILE), _buch, indent=1)
+            _b = _PD.bilanz(_buch)
+            print("[DECKUNG] %d Luecke(n) gegen %d Liga-Maerkte · Buch: %s%%%s Laeufe mit Luecke (%s)"
+                  % (len(_luecken), len((_lp.get("prices") or {})),
+                     _b["quotePct"] if _b["quotePct"] is not None else "—",
+                     " von %d" % _b["nLaeufe"], _b["urteil"]))
+        else:
+            # Ohne zweite Quelle gibt es keine Lueckenmessung — und das ist etwas anderes als
+            # „keine Luecken". Es darf nicht als gruen durchgehen.
+            print("[DECKUNG] keine Liga-Preise als Gegenprobe — keine Deckungsmessung moeglich")
+    except Exception as _e:                      # noqa: BLE001
+        print(f"  Deckungsbuch uebersprungen (nicht fatal): {_e}")
     print(f"[UPCOMING] {len(_upc)} Maerkte fuer die Money-Map (Preis+Vol, <={UPCOMING_WINDOW_H:.0f}h, kein Holder-Call)")
 
     # 🔬 Kleinmarkt-Spur (11.09.2026): Maerkte UNTER MIN_VOL_USD mit Geld-Split. Speist NUR das

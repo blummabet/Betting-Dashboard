@@ -803,12 +803,18 @@ class TestEineBilanzDieIhreLueckeNennt(unittest.TestCase):
         self.assertTrue(UI.check_jeder_push_hat_seinen_beleg({"bfPublicRecord": {}})["ok"])
 
     def test_eine_luecke_wird_benannt_samt_schluessel(self):
+        """20.09.2026, nachmittags: hier stand `assertIn("4 gesendete", ...)` — eine gepruefte
+        FORMULIERUNG. Als die Meldung in alte Narbe und neuen Verlust getrennt wurde, schlug der
+        Test an, obwohl die Auskunft besser geworden war. Derselbe Fehler wie bei
+        `papier = not is_enabled`: ein Test, der Buchstaben prueft, meldet Umbauten.
+        Jetzt wird geprueft, was die Meldung LEISTEN muss."""
         r = UI.check_jeder_push_hat_seinen_beleg(
-            {"bfPublicRecord": {"gesendetOhneBeleg": 4,
+            {"bfPublicRecord": {"gesendetOhneBeleg": 4, "gesendetOhneBelegNeu": 0,
                                 "gesendetOhneBelegKeys": ["fresh:36039873", "fresh:36035354"]}})
         self.assertFalse(r["ok"])
-        self.assertIn("4 gesendete", r["failures"][0])
-        self.assertIn("fresh:36039873", r["failures"][0])
+        text = " ".join(r["failures"])
+        self.assertIn("4", text, "die Anzahl gehoert in die Meldung")
+        self.assertIn("fresh:36039873", text, "und der Schluessel, sonst ist sie nicht pruefbar")
 
 
 # ── 19.09.2026: „es wurde vorm spielstart nicht geschlossen und ist nun lost" ────────────────
