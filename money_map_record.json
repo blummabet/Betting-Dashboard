@@ -1,22 +1,6 @@
 {
-"generatedAt": "2026-09-20T22:28:54.675386+00:00",
+"generatedAt": "2026-09-20T22:43:56.437912+00:00",
 "byVerdict": {
-"konsens": {
-"n": 1399,
-"wins": 1182,
-"hitRate": 0.8449,
-"polyN": 1328,
-"polyWins": 1035,
-"polyHitRate": 0.7794,
-"pinnN": 210,
-"pinnHitRate": 0.7714,
-"nRoi": 740,
-"roi": 0.4123,
-"roiLb": 0.3651,
-"nClv": 740,
-"clv": 20.03,
-"clvLb": 18.5267
-},
 "uneinig": {
 "n": 558,
 "wins": 169,
@@ -32,6 +16,22 @@
 "nClv": 329,
 "clv": -20.52,
 "clvLb": -23.497
+},
+"konsens": {
+"n": 1398,
+"wins": 1181,
+"hitRate": 0.8448,
+"polyN": 1327,
+"polyWins": 1034,
+"polyHitRate": 0.7792,
+"pinnN": 210,
+"pinnHitRate": 0.7714,
+"nRoi": 741,
+"roi": 0.4121,
+"roiLb": 0.365,
+"nClv": 741,
+"clv": 20.02,
+"clvLb": 18.5261
 },
 "teil": {
 "n": 33,
@@ -117,9 +117,9 @@
 "hitRate": 0.6364
 },
 "Portuguese Primeira Liga": {
-"n": 41,
-"wins": 32,
-"hitRate": 0.7805
+"n": 42,
+"wins": 33,
+"hitRate": 0.7857
 },
 "Brazilian Serie B": {
 "n": 39,
@@ -296,11 +296,6 @@
 "wins": 7,
 "hitRate": 0.4375
 },
-"North American Leagues Cup": {
-"n": 15,
-"wins": 9,
-"hitRate": 0.6
-},
 "AFC Champions League": {
 "n": 14,
 "wins": 11,
@@ -315,6 +310,11 @@
 "n": 14,
 "wins": 10,
 "hitRate": 0.7143
+},
+"North American Leagues Cup": {
+"n": 13,
+"wins": 7,
+"hitRate": 0.5385
 },
 "Uzbekistan Super League": {
 "n": 13,
@@ -644,15 +644,15 @@
 },
 "byStrength": {
 "strong": {
-"n": 1209,
-"wins": 969,
-"hitRate": 0.8015,
-"nRoi": 685,
-"roi": 0.2881,
+"n": 1210,
+"wins": 970,
+"hitRate": 0.8017,
+"nRoi": 686,
+"roi": 0.288,
 "roiLb": 0.2375,
-"nClv": 685,
-"clv": 14.07,
-"clvLb": 12.0318
+"nClv": 686,
+"clv": 14.08,
+"clvLb": 12.0405
 },
 "weak": {
 "n": 765,
@@ -675,6 +675,25 @@
 "polyRate": 0.2713
 },
 "recent": [
+{
+"matchId": "36069802",
+"home": "Porto",
+"away": "Benfica",
+"league": "Portuguese Primeira Liga",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Porto",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+1
+],
+"kickoff": "2026-09-20T19:30:00Z",
+"settledAt": "2026-09-20T22:43:56.260563+00:00"
+},
 {
 "matchId": "36045390",
 "home": "Corinthians",
@@ -1415,37 +1434,18 @@
 ],
 "kickoff": "2026-09-20T13:00:00Z",
 "settledAt": "2026-09-20T16:13:30.982826+00:00"
-},
-{
-"matchId": "36041260",
-"home": "Az Alkmaar",
-"away": "SC Telstar",
-"league": "Dutch Eredivisie",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Az Alkmaar",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-09-20T12:30:00Z",
-"settledAt": "2026-09-20T15:43:23.055857+00:00"
 }
 ],
 "global": {
-"n": 1990,
-"wins": 1357,
-"hitRate": 0.6819,
-"nRoi": 1093,
-"roi": 0.1091,
-"roiLb": 0.0638,
-"nClv": 1093,
-"clv": 6.65,
-"clvLb": 4.9711
+"n": 1989,
+"wins": 1356,
+"hitRate": 0.6817,
+"nRoi": 1094,
+"roi": 0.1093,
+"roiLb": 0.0639,
+"nClv": 1094,
+"clv": 6.66,
+"clvLb": 4.9829
 },
-"pending": 10
+"pending": 11
 }
