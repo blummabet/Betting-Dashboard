@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-09-20T17:28:36.335697+00:00",
+"generatedAt": "2026-09-20T17:43:35.318660+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1384,
-"wins": 1168,
-"hitRate": 0.8439,
-"polyN": 1314,
-"polyWins": 1022,
-"polyHitRate": 0.7778,
-"pinnN": 208,
-"pinnHitRate": 0.774,
-"nRoi": 717,
-"roi": 0.4193,
-"roiLb": 0.3715,
-"nClv": 717,
-"clv": 20.42,
-"clvLb": 18.9142
+"n": 1387,
+"wins": 1171,
+"hitRate": 0.8443,
+"polyN": 1317,
+"polyWins": 1024,
+"polyHitRate": 0.7775,
+"pinnN": 209,
+"pinnHitRate": 0.7751,
+"nRoi": 720,
+"roi": 0.4218,
+"roiLb": 0.374,
+"nClv": 720,
+"clv": 20.46,
+"clvLb": 18.965
 },
 "uneinig": {
 "n": 558,
@@ -116,6 +116,11 @@
 "wins": 27,
 "hitRate": 0.6279
 },
+"Portuguese Primeira Liga": {
+"n": 39,
+"wins": 31,
+"hitRate": 0.7949
+},
 "Saudi Professional League": {
 "n": 39,
 "wins": 26,
@@ -135,11 +140,6 @@
 "n": 38,
 "wins": 27,
 "hitRate": 0.7105
-},
-"Portuguese Primeira Liga": {
-"n": 38,
-"wins": 30,
-"hitRate": 0.7895
 },
 "South Korean K1 League": {
 "n": 38,
@@ -176,6 +176,11 @@
 "wins": 17,
 "hitRate": 0.6538
 },
+"Swiss Super League": {
+"n": 26,
+"wins": 20,
+"hitRate": 0.7692
+},
 "Belgian Pro League": {
 "n": 24,
 "wins": 19,
@@ -185,11 +190,6 @@
 "n": 24,
 "wins": 15,
 "hitRate": 0.625
-},
-"Swiss Super League": {
-"n": 24,
-"wins": 18,
-"hitRate": 0.75
 },
 "Bolivian Liga de Futbol Profesional": {
 "n": 23,
@@ -649,26 +649,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 1193,
-"wins": 954,
-"hitRate": 0.7997,
-"nRoi": 669,
-"roi": 0.2868,
-"roiLb": 0.2352,
-"nClv": 669,
-"clv": 14.05,
-"clvLb": 11.9882
+"n": 1195,
+"wins": 956,
+"hitRate": 0.8,
+"nRoi": 671,
+"roi": 0.2881,
+"roiLb": 0.2366,
+"nClv": 671,
+"clv": 14.12,
+"clvLb": 12.0576
 },
 "weak": {
-"n": 755,
-"wins": 374,
-"hitRate": 0.4954,
-"nRoi": 398,
-"roi": -0.1931,
-"roiLb": -0.2753,
-"nClv": 398,
-"clv": -5.81,
-"clvLb": -8.4644
+"n": 756,
+"wins": 375,
+"hitRate": 0.496,
+"nRoi": 399,
+"roi": -0.1886,
+"roiLb": -0.271,
+"nClv": 399,
+"clv": -5.74,
+"clvLb": -8.3892
 }
 },
 "divergence": {
@@ -680,6 +680,63 @@
 "polyRate": 0.2713
 },
 "recent": [
+{
+"matchId": "36071819",
+"home": "FC Basel",
+"away": "St Gallen",
+"league": "Swiss Super League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "St Gallen",
+"polySide": "home",
+"winner": "away",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+1,
+3
+],
+"kickoff": "2026-09-20T14:30:00Z",
+"settledAt": "2026-09-20T17:43:35.118492+00:00"
+},
+{
+"matchId": "36071784",
+"home": "Club Football Estrela",
+"away": "Academico de Viseu",
+"league": "Portuguese Primeira Liga",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Academico de Viseu",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+2
+],
+"kickoff": "2026-09-20T14:30:00Z",
+"settledAt": "2026-09-20T17:43:35.118492+00:00"
+},
+{
+"matchId": "36071827",
+"home": "Lausanne",
+"away": "Lugano",
+"league": "Swiss Super League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Lugano",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+4
+],
+"kickoff": "2026-09-20T14:30:00Z",
+"settledAt": "2026-09-20T17:43:35.118492+00:00"
+},
 {
 "matchId": "36071848",
 "home": "Atletico Madrid",
@@ -1382,75 +1439,18 @@
 ],
 "kickoff": "2026-09-20T10:15:00Z",
 "settledAt": "2026-09-20T13:29:35.054428+00:00"
-},
-{
-"matchId": "36067667",
-"home": "Pohang Steelers",
-"away": "FC Seoul",
-"league": "South Korean K1 League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Pohang Steelers",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-09-20T10:00:00Z",
-"settledAt": "2026-09-20T13:13:13.527792+00:00"
-},
-{
-"matchId": "36067665",
-"home": "Incheon Utd",
-"away": "Daejeon Citizen",
-"league": "South Korean K1 League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Incheon Utd",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-09-20T10:00:00Z",
-"settledAt": "2026-09-20T13:13:13.527792+00:00"
-},
-{
-"matchId": "36071061",
-"home": "Celtic",
-"away": "Rangers",
-"league": "Scottish Premiership",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Rangers",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-09-20T11:00:00Z",
-"settledAt": "2026-09-20T12:58:11.680917+00:00"
 }
 ],
 "global": {
-"n": 1975,
-"wins": 1342,
-"hitRate": 0.6795,
-"nRoi": 1067,
-"roi": 0.1078,
-"roiLb": 0.0617,
-"nClv": 1067,
-"clv": 6.64,
-"clvLb": 4.9438
+"n": 1978,
+"wins": 1345,
+"hitRate": 0.68,
+"nRoi": 1070,
+"roi": 0.1103,
+"roiLb": 0.0643,
+"nClv": 1070,
+"clv": 6.71,
+"clvLb": 5.0166
 },
-"pending": 25
+"pending": 22
 }
