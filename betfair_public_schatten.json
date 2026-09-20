@@ -163,7 +163,7 @@ null
 2,
 2
 ],
-"settledAt": "2026-09-20T16:13:42.583379+00:00"
+"settledAt": "2026-09-20T16:28:42.879927+00:00"
 },
 {
 "k": "fresh:36045433:Match Odds",
@@ -2682,7 +2682,7 @@ null
 "leadOdd": 2.0,
 "value": 111588.21,
 "sentAt": "2026-09-20T14:28:30.075817+00:00",
-"status": "pending",
+"status": "lost",
 "htScore": [
 0,
 0
@@ -2703,7 +2703,17 @@ null
 0,
 0
 ]
-}
+},
+"clvBf": 1.28,
+"clvPinn": 1.81,
+"settledAt": "2026-09-20T16:28:42.869613+00:00",
+"ftScore": [
+0,
+0
+],
+"profit": -1.0,
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36041228:Match Odds",
@@ -2788,7 +2798,10 @@ null
 "value": 267566.0,
 "sentAt": "2026-09-20T14:58:47.524029+00:00",
 "status": "pending",
-"htScore": null,
+"htScore": [
+0,
+0
+],
 "leadShare": 0.6047603208180411,
 "leadDir": "flat",
 "onLeader": null,
@@ -2862,7 +2875,10 @@ null
 "value": 215064.28,
 "sentAt": "2026-09-20T15:28:40.157175+00:00",
 "status": "pending",
-"htScore": null,
+"htScore": [
+0,
+0
+],
 "leadShare": 0.8054557456031285,
 "leadDir": "in",
 "onLeader": null,
@@ -2925,7 +2941,7 @@ null
 "leadOdd": 16.0,
 "value": 111616.41,
 "sentAt": "2026-09-20T15:43:32.768164+00:00",
-"status": "pending",
+"status": "lost",
 "htScore": null,
 "leadShare": 0.5834909042496529,
 "leadDir": "out",
@@ -2943,7 +2959,17 @@ null
 1,
 0
 ]
-}
+},
+"clvBf": 68.94,
+"clvPinn": null,
+"settledAt": "2026-09-20T16:28:42.869613+00:00",
+"ftScore": [
+1,
+0
+],
+"profit": -1.0,
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36041259:Match Odds",
@@ -3038,6 +3064,70 @@ null
 "score": [
 null,
 null
+]
+}
+},
+{
+"k": "fresh:36041259:Over/Under 2.5 Goals",
+"matchId": "36041259",
+"scenario": "fresh",
+"market": "Over/Under 2.5 Goals",
+"league": "Italian Serie A",
+"home": "Juventus",
+"away": "Atalanta",
+"leadName": "Over 2.5 Goals",
+"leadOdd": 2.68,
+"value": 260570.74,
+"sentAt": "2026-09-20T16:28:41.223788+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.6029084079048938,
+"leadDir": "out",
+"onLeader": false,
+"tier": "top",
+"magnitude": 138633.4,
+"schwelle": 100000.0,
+"anteilSchwelle": 1.386,
+"raus": "einseitig",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 24,
+"score": [
+0,
+0
+]
+}
+},
+{
+"k": "fresh:36069370:Match Odds",
+"matchId": "36069370",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Czech 1 Liga",
+"home": "Slavia Prague",
+"away": "Plzen",
+"leadName": "Slavia Prague",
+"leadOdd": 1.57,
+"value": 74833.99,
+"sentAt": "2026-09-20T16:28:41.223807+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.580563457861862,
+"leadDir": "in",
+"onLeader": false,
+"tier": "rest",
+"magnitude": 42977.5,
+"schwelle": 30000.0,
+"anteilSchwelle": 1.433,
+"raus": "einseitig",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 25,
+"score": [
+0,
+0
 ]
 }
 }
