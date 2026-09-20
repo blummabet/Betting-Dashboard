@@ -163,7 +163,7 @@ null
 2,
 2
 ],
-"settledAt": "2026-09-20T13:58:20.258158+00:00"
+"settledAt": "2026-09-20T14:28:31.691813+00:00"
 },
 {
 "k": "fresh:36045433:Match Odds",
@@ -1599,7 +1599,7 @@ null
 "leadOdd": 2.02,
 "value": 117699.1,
 "sentAt": "2026-09-20T11:13:08.460750+00:00",
-"status": "pending",
+"status": "lost",
 "htScore": [
 0,
 0
@@ -1620,7 +1620,17 @@ null
 0,
 0
 ]
-}
+},
+"clvBf": 21.92,
+"clvPinn": null,
+"settledAt": "2026-09-20T14:13:36.209891+00:00",
+"ftScore": [
+0,
+1
+],
+"profit": -1.0,
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36071061:Match Odds",
@@ -1909,7 +1919,7 @@ null
 "leadOdd": 2.02,
 "value": 347354.96,
 "sentAt": "2026-09-20T11:58:16.510186+00:00",
-"status": "pending",
+"status": "won",
 "htScore": [
 0,
 0
@@ -1930,7 +1940,17 @@ null
 null,
 null
 ]
-}
+},
+"clvBf": 0.0,
+"clvPinn": 2.31,
+"settledAt": "2026-09-20T14:28:31.681162+00:00",
+"ftScore": [
+1,
+0
+],
+"profit": 1.02,
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36068256:Match Odds",
@@ -2014,7 +2034,7 @@ null
 "leadOdd": 1.82,
 "value": 186073.75,
 "sentAt": "2026-09-20T12:58:28.564120+00:00",
-"status": "pending",
+"status": "won",
 "htScore": [
 1,
 2
@@ -2035,7 +2055,17 @@ null
 1,
 0
 ]
-}
+},
+"clvBf": -11.47,
+"clvPinn": -9.49,
+"settledAt": "2026-09-20T14:28:31.681162+00:00",
+"ftScore": [
+3,
+2
+],
+"profit": 0.8200000000000001,
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36041251:Match Odds",
@@ -2350,7 +2380,8 @@ null
 1
 ],
 "profit": -1.0,
-"via": "track"
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36041068:Match Odds",
@@ -2365,7 +2396,10 @@ null
 "value": 234923.21,
 "sentAt": "2026-09-20T13:43:25.265575+00:00",
 "status": "pending",
-"htScore": null,
+"htScore": [
+1,
+0
+],
 "leadShare": 0.7143836490230148,
 "leadDir": "out",
 "onLeader": false,
@@ -2413,6 +2447,111 @@ null
 "score": [
 null,
 null
+]
+}
+},
+{
+"k": "fresh:36067672:Match Odds",
+"matchId": "36067672",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Greek Super League",
+"home": "Levadiakos",
+"away": "Olympiakos",
+"leadName": "Olympiakos",
+"leadOdd": 1.41,
+"value": 63707.2,
+"sentAt": "2026-09-20T14:13:33.987661+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.9133901662606425,
+"leadDir": "out",
+"onLeader": false,
+"tier": "rest",
+"magnitude": 32285.9,
+"schwelle": 30000.0,
+"anteilSchwelle": 1.076,
+"raus": "drift",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 10,
+"score": [
+0,
+0
+]
+}
+},
+{
+"k": "fresh:36065400:Match Odds",
+"matchId": "36065400",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "English Sky Bet Championship",
+"home": "Norwich",
+"away": "Bolton",
+"leadName": "Norwich",
+"leadOdd": 16.5,
+"value": 192333.44,
+"sentAt": "2026-09-20T14:13:33.987686+00:00",
+"status": "lost",
+"htScore": null,
+"leadShare": 0.5053909502164574,
+"leadDir": "out",
+"onLeader": false,
+"tier": "rest",
+"magnitude": 61478.2,
+"schwelle": 30000.0,
+"anteilSchwelle": 2.049,
+"raus": "einseitig",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 79,
+"score": [
+3,
+4
+]
+},
+"clvBf": 62.43,
+"clvPinn": 63.87,
+"settledAt": "2026-09-20T14:28:31.681162+00:00",
+"ftScore": [
+3,
+4
+],
+"profit": -1.0,
+"via": "track"
+},
+{
+"k": "fresh:36045388:Match Odds",
+"matchId": "36045388",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Brazilian Serie A",
+"home": "Gremio",
+"away": "SE Palmeiras",
+"leadName": "SE Palmeiras",
+"leadOdd": 2.0,
+"value": 111588.21,
+"sentAt": "2026-09-20T14:28:30.075817+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.7043145507934934,
+"leadDir": "out",
+"onLeader": false,
+"tier": "rest",
+"magnitude": 77616.6,
+"schwelle": 30000.0,
+"anteilSchwelle": 2.587,
+"raus": "einseitig",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 22,
+"score": [
+0,
+0
 ]
 }
 }
