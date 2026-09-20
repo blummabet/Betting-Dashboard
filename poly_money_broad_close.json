@@ -365039,7 +365039,13 @@
     "usd": 702,
     "ts": 1789844747
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "LYON": 0.0,
+   "Cloud9": 1.0
+  },
+  "resolvedAt": "2026-09-20T01:29:41.099202+00:00"
  },
  "daviscup-draxl-halys-2026-09-19": {
   "shares": {
@@ -365960,7 +365966,13 @@
   "tokens": {
    "Marlon Vera": "83521464079740780836837702114983356964235021231550758333618154067115002741273",
    "Charles Jourdain": "80754014515068344351329224834352411906233804756117676124584824646681406332781"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Marlon Vera": 1.0,
+   "Charles Jourdain": 0.0
+  },
+  "resolvedAt": "2026-09-20T01:29:41.099202+00:00"
  },
  "ufc-pat3-dchoi-2026-09-19": {
   "shares": {
@@ -366335,7 +366347,10 @@
   "tokens": {
    "Michael Aswell": "96385986743615694906506288239205131941585057120653326113074962675896491362264",
    "JooSang Yoo": "90642678303888380480424140176063049234708398401404754151528357306368137939419"
-  }
+  },
+  "resolved": true,
+  "resolvedWinner": "Michael Aswell",
+  "resolvedAt": "2026-09-20T01:29:41.099202+00:00"
  },
  "dota2-ty-mouz-2026-09-19": {
   "shares": {
@@ -366862,7 +366877,13 @@
   "tokens": {
    "Peyton Stearns": "114365855011273177846249433394665079058747229910876935981255463993681645187082",
    "Iva Jovic": "4857602645446254834879332715714791401196304146904419127046457451586525362054"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Peyton Stearns": 0.0,
+   "Iva Jovic": 1.0
+  },
+  "resolvedAt": "2026-09-20T01:29:41.099202+00:00"
  },
  "cs2-bst-shin-2026-09-19": {
   "shares": {
@@ -368646,8 +368667,8 @@
  },
  "mlb-min-laa-2026-09-19": {
   "shares": {
-   "Minnesota Twins": 122307.27418917493,
-   "Los Angeles Angels": 135181.76245087505
+   "Minnesota Twins": 133977.52377810006,
+   "Los Angeles Angels": 148080.45971617504
   },
   "prices": {
    "Minnesota Twins": 0.475,
@@ -368659,7 +368680,7 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 283488,
+  "totalUsd": 296144,
   "whales": [
    {
     "wallet": "0x5e9458202b5817a72cf81105ec8a30e6f3705ba1",
@@ -368670,24 +368691,24 @@
    {
     "wallet": "0x4bff30af91642dc7d2b19a8664378fe55c45fc26",
     "side": "Minnesota Twins",
-    "usd": 19480,
+    "usd": 34211,
     "avgPrice": 0.47
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Los Angeles Angels",
+    "usd": 26212,
+    "avgPrice": 0.5299
    },
    {
     "wallet": "0xcd84d7f9262516865553555751609fb6f52abec6",
     "side": "Minnesota Twins",
     "usd": 19388,
     "avgPrice": 0.49
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "side": "Los Angeles Angels",
-    "usd": 14430,
-    "avgPrice": 0.5299
    }
   ],
-  "hoursToKickoff": 0.68,
-  "capturedAt": "2026-09-20T00:59:46.207955+00:00",
+  "hoursToKickoff": 0.19,
+  "capturedAt": "2026-09-20T01:29:41.099202+00:00",
   "cond": "0x31507678b813cbec2b9202fb5502c25c32b75f3502a5521980f82504d3ed083f",
   "frage": "Minnesota Twins vs. Los Angeles Angels",
   "tokens": {
@@ -368703,57 +368724,65 @@
    "bids": [
     [
      0.52,
-     122344
+     177964
     ],
     [
      0.51,
-     162067
+     162700
     ],
     [
      0.5,
-     48185
+     44842
     ],
     [
      0.49,
-     16770
+     10490
     ],
     [
      0.48,
-     8411
+     9347
     ],
     [
      0.47,
-     13617
+     8617
     ]
    ],
    "asks": [
     [
      0.53,
-     63242
+     85464
     ],
     [
      0.54,
-     88016
+     131395
     ],
     [
      0.55,
-     119060
+     113087
     ],
     [
      0.56,
-     18915
+     30674
     ],
     [
      0.57,
-     4183
+     9483
     ],
     [
      0.58,
-     5080
+     130
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x081ba55ed94afaf7dc13260616defb5203951c6a",
+    "action": "BUY",
+    "side": "Los Angeles Angels",
+    "price": 0.53,
+    "usd": 917,
+    "ts": 1789866820
+   },
    {
     "wallet": "0x457f2814dac53a0a9951b5c2ea5a9db20896aa1a",
     "action": "BUY",
@@ -368809,25 +368838,17 @@
     "price": 0.47,
     "usd": 497,
     "ts": 1789860844
-   },
-   {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-    "action": "SELL",
-    "side": "Minnesota Twins",
-    "price": 0.47,
-    "usd": 497,
-    "ts": 1789860729
    }
   ]
  },
  "mls-col-sea-2026-09-19": {
   "shares": {
-   "Colorado Rapids SC": 13824.505786349995,
-   "Draw (Colorado Rapids SC vs. Seattle Sounders FC)": 135.15754703,
-   "Seattle Sounders FC": 272.30689174500003
+   "Colorado Rapids SC": 12784.262846869993,
+   "Draw (Colorado Rapids SC vs. Seattle Sounders FC)": 187.42750827499998,
+   "Seattle Sounders FC": 274.639291745
   },
   "prices": {
-   "Colorado Rapids SC": 0.525,
+   "Colorado Rapids SC": 0.505,
    "Draw (Colorado Rapids SC vs. Seattle Sounders FC)": 0.235,
    "Seattle Sounders FC": 0.245
   },
@@ -368837,34 +368858,34 @@
   },
   "league": "MLS",
   "sport": "Fußball",
-  "totalUsd": 29987,
+  "totalUsd": 31095,
   "whales": [
    {
     "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
     "side": "Colorado Rapids SC",
-    "usd": 1925,
+    "usd": 1777,
     "avgPrice": 0.4994
    },
    {
     "wallet": "0x46809a7ed4c862761865194b2e71e56d6af57d3d",
     "side": "Colorado Rapids SC",
-    "usd": 1386,
+    "usd": 1333,
     "avgPrice": 0.5
-   },
-   {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-    "side": "Colorado Rapids SC",
-    "usd": 1326,
-    "avgPrice": 0.4957
    },
    {
     "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
     "side": "Colorado Rapids SC",
-    "usd": 1205
+    "usd": 1159
+   },
+   {
+    "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
+    "side": "Colorado Rapids SC",
+    "usd": 1154,
+    "avgPrice": 0.4962
    }
   ],
-  "hoursToKickoff": 0.55,
-  "capturedAt": "2026-09-20T00:59:46.207955+00:00",
+  "hoursToKickoff": 0.05,
+  "capturedAt": "2026-09-20T01:29:41.099202+00:00",
   "tokens": {
    "Colorado Rapids SC": "93119195687570783097381390098810355615868852695739888018210396984920409862278",
    "Draw (Colorado Rapids SC vs. Seattle Sounders FC)": "115467810418244806738596368479341878947734281988557891631423695110999395408435",
@@ -369247,9 +369268,9 @@
  },
  "mls-nas-chi-2026-09-19": {
   "shares": {
-   "Nashville SC": 2498.8717124949994,
-   "Draw (Nashville SC vs. Chicago Fire FC)": 22.936955744999995,
-   "Chicago Fire FC": 1118.766021975
+   "Nashville SC": 3678.3295259600004,
+   "Draw (Nashville SC vs. Chicago Fire FC)": 65.67960997,
+   "Chicago Fire FC": 1281.4814853
   },
   "prices": {
    "Nashville SC": 0.545,
@@ -369262,12 +369283,12 @@
   },
   "league": "MLS",
   "sport": "Fußball",
-  "totalUsd": 9561,
+  "totalUsd": 10441,
   "whales": [
    {
     "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
     "side": "Chicago Fire FC",
-    "usd": 685
+    "usd": 708
    },
    {
     "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
@@ -369287,8 +369308,8 @@
     "avgPrice": 0.55
    }
   ],
-  "hoursToKickoff": 0.55,
-  "capturedAt": "2026-09-20T00:59:46.207955+00:00",
+  "hoursToKickoff": 0.05,
+  "capturedAt": "2026-09-20T01:29:41.099202+00:00",
   "tokens": {
    "Nashville SC": "55253226175451969903876163566233254906132369258473283975656246201088666600747",
    "Draw (Nashville SC vs. Chicago Fire FC)": "63532087021060259902743834082329912319456438168043955441040951209730856899794",
@@ -369349,12 +369370,12 @@
  },
  "cfb-frest-sjst-2026-09-19": {
   "shares": {
-   "Fresno State": 258941.06167390494,
-   "San Jose State": 136388.80452279004
+   "Fresno State": 256123.48428430498,
+   "San Jose State": 140967.19010070004
   },
   "prices": {
-   "Fresno State": 0.655,
-   "San Jose State": 0.345
+   "Fresno State": 0.645,
+   "San Jose State": 0.355
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -369362,35 +369383,35 @@
   },
   "league": "CFB",
   "sport": null,
-  "totalUsd": 402105,
+  "totalUsd": 404204,
   "whales": [
    {
     "wallet": "0x4bff30af91642dc7d2b19a8664378fe55c45fc26",
     "side": "Fresno State",
-    "usd": 195390,
+    "usd": 193500,
     "avgPrice": 0.65
    },
    {
     "wallet": "0x67542c3219b37fd1610aad290676ff91cdbfe3bc",
     "side": "San Jose State",
-    "usd": 51181,
+    "usd": 52664,
     "avgPrice": 0.35
    },
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "side": "San Jose State",
-    "usd": 48506,
+    "usd": 50051,
     "avgPrice": 0.35
    },
    {
     "wallet": "0xcd84d7f9262516865553555751609fb6f52abec6",
     "side": "Fresno State",
-    "usd": 37429,
+    "usd": 36857,
     "avgPrice": 0.65
    }
   ],
-  "hoursToKickoff": 2.05,
-  "capturedAt": "2026-09-20T00:59:46.207955+00:00",
+  "hoursToKickoff": 1.55,
+  "capturedAt": "2026-09-20T01:29:41.099202+00:00",
   "cond": "0xf62e88b42bc13b8e2da7133caf5d89d9dff4b86ab7b153f09c5ae2cca0ad4f61",
   "frage": "Fresno State vs. San Jose State",
   "tokens": {
@@ -369399,60 +369420,60 @@
   },
   "book": {
    "side": "Fresno State",
-   "bid": 0.65,
-   "ask": 0.66,
+   "bid": 0.64,
+   "ask": 0.65,
    "spreadC": 1.0,
-   "spreadPct": 1.52,
+   "spreadPct": 1.54,
    "bids": [
     [
-     0.65,
-     1895
-    ],
-    [
      0.64,
-     104619
+     112540
     ],
     [
      0.63,
-     45252
+     29103
     ],
     [
      0.62,
-     62331
+     68315
     ],
     [
      0.61,
-     24407
+     63676
     ],
     [
      0.6,
-     2982
+     510
+    ],
+    [
+     0.59,
+     505
     ]
    ],
    "asks": [
     [
+     0.65,
+     148082
+    ],
+    [
      0.66,
-     339461
+     304336
     ],
     [
      0.67,
-     93021
+     26554
     ],
     [
      0.68,
-     34172
+     9530
     ],
     [
      0.69,
-     10205
+     7680
     ],
     [
      0.7,
-     3660
-    ],
-    [
-     0.71,
-     2105
+     3655
     ]
    ]
   },
@@ -369504,21 +369525,13 @@
     "price": 0.35,
     "usd": 44362,
     "ts": 1789861461
-   },
-   {
-    "wallet": "0x27f738fe203827445690339104aae35b20bc44b0",
-    "action": "BUY",
-    "side": "San Jose State",
-    "price": 0.35,
-    "usd": 990,
-    "ts": 1789860475
    }
   ]
  },
  "atp-pacheco-simakin-2026-09-19": {
   "shares": {
-   "Rodrigo Pacheco": 4970.384652175,
-   "Ilia Simakin": 6724.946855099999
+   "Rodrigo Pacheco": 5123.16482475,
+   "Ilia Simakin": 6931.649441525
   },
   "prices": {
    "Rodrigo Pacheco": 0.425,
@@ -369530,7 +369543,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 11730,
+  "totalUsd": 12344,
   "whales": [
    {
     "wallet": "0xd9dde44ddeababae222bf7aec96c85cbdab6b525",
@@ -369556,8 +369569,8 @@
     "avgPrice": 0.5799
    }
   ],
-  "hoursToKickoff": 2.05,
-  "capturedAt": "2026-09-20T00:59:46.207955+00:00",
+  "hoursToKickoff": 1.55,
+  "capturedAt": "2026-09-20T01:29:41.099202+00:00",
   "cond": "0x5fdf0a09a04d2135068277eca73e74763e3c4a0a0feda67931fa4eab21ec6fe1",
   "frage": "Phan Thiet 4: Rodrigo Pacheco vs Ilia Simakin",
   "tokens": {
@@ -369567,8 +369580,8 @@
  },
  "mls-rsl-vwh-2026-09-19-more-markets": {
   "shares": {
-   "Over": 29592.538350389998,
-   "Under": 38436.285443609995
+   "Over": 30244.116150824997,
+   "Under": 39282.587644175
   },
   "prices": {
    "Over": 0.435,
@@ -369580,24 +369593,24 @@
   },
   "league": "MLS",
   "sport": "Fußball",
-  "totalUsd": 67426,
+  "totalUsd": 68735,
   "whales": [
    {
     "wallet": "0x918b42a06ff25eaaa4a79eca9da6a9de46f4ea63",
     "side": "Over",
-    "usd": 29552,
+    "usd": 29618,
     "avgPrice": 0.4248
    },
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "side": "Under",
-    "usd": 9251,
+    "usd": 9274,
     "avgPrice": 0.5699
    },
    {
     "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
     "side": "Under",
-    "usd": 5311
+    "usd": 5348
    },
    {
     "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
@@ -369606,8 +369619,8 @@
     "avgPrice": 0.5714
    }
   ],
-  "hoursToKickoff": 0.55,
-  "capturedAt": "2026-09-20T00:59:46.207955+00:00",
+  "hoursToKickoff": 0.05,
+  "capturedAt": "2026-09-20T01:29:41.099202+00:00",
   "cond": "0x19f2d3914889ddbe1466561488e620e19b4a0616e7ebb2b0c36ba68899c7e31e",
   "frage": "Real Salt Lake vs. Vancouver Whitecaps FC: O/U 3.5",
   "tokens": {
@@ -369617,9 +369630,9 @@
  },
  "mls-rsl-vwh-2026-09-19": {
   "shares": {
-   "Real Salt Lake": 2597.8995253400008,
-   "Draw (Real Salt Lake vs. Vancouver Whitecaps FC)": 100.89527040000002,
-   "Vancouver Whitecaps FC": 4839.130962225001
+   "Real Salt Lake": 2607.229125340001,
+   "Draw (Real Salt Lake vs. Vancouver Whitecaps FC)": 129.91048785,
+   "Vancouver Whitecaps FC": 5489.374562699999
   },
   "prices": {
    "Real Salt Lake": 0.245,
@@ -369632,7 +369645,7 @@
   },
   "league": "MLS",
   "sport": "Fußball",
-  "totalUsd": 21953,
+  "totalUsd": 23000,
   "whales": [
    {
     "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
@@ -369645,23 +369658,199 @@
     "usd": 1146
    },
    {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Vancouver Whitecaps FC",
+    "usd": 1064,
+    "avgPrice": 0.5303
+   },
+   {
     "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
     "side": "Vancouver Whitecaps FC",
     "usd": 963
-   },
-   {
-    "wallet": "0xad67ba48f09e8289803e38a61d952c5d099245d7",
-    "side": "Vancouver Whitecaps FC",
-    "usd": 788,
-    "avgPrice": 0.54
    }
   ],
-  "hoursToKickoff": 0.55,
-  "capturedAt": "2026-09-20T00:59:46.207955+00:00",
+  "hoursToKickoff": 0.05,
+  "capturedAt": "2026-09-20T01:29:41.099202+00:00",
   "tokens": {
    "Real Salt Lake": "70529995176954184825150173401635787395077479675894899925466280477877005003651",
    "Draw (Real Salt Lake vs. Vancouver Whitecaps FC)": "112630687230241524792495167585797734385863299232156613119692340716959348037078",
    "Vancouver Whitecaps FC": "110486254443726135497365862770086894603077201927903516854471963198094028283083"
   }
+ },
+ "cfb-jmad-sdst-2026-09-19": {
+  "shares": {
+   "Over": 78212.433955095,
+   "Under": 79792.57966978497
+  },
+  "prices": {
+   "Over": 0.495,
+   "Under": 0.505
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "CFB",
+  "sport": null,
+  "totalUsd": 191159,
+  "whales": [
+   {
+    "wallet": "0x224a89dbe0db0d6124b335edabd15b3f877da3d5",
+    "side": "Under",
+    "usd": 62845,
+    "avgPrice": 0.508
+   },
+   {
+    "wallet": "0x924379a79c64b77ad5816ad362122a5f6228658e",
+    "side": "Over",
+    "usd": 52936,
+    "avgPrice": 0.4848
+   },
+   {
+    "wallet": "0xdaef2be2a19ad331737d06545f85615b094554e9",
+    "side": "Over",
+    "usd": 14850,
+    "avgPrice": 0.5
+   },
+   {
+    "wallet": "0x866056133a70de9282a080758858d1a0c8b393ed",
+    "side": "Under",
+    "usd": 7575,
+    "avgPrice": 0.5199
+   }
+  ],
+  "hoursToKickoff": 0.55,
+  "capturedAt": "2026-09-20T01:29:41.099202+00:00",
+  "cond": "0xb0f5d39fd0616c44034d695a1ededabe08db92c1642a758b1588f2c6f3698c06",
+  "frage": "James Madison vs. San Diego State: O/U 46.5",
+  "tokens": {
+   "Over": "21383719221861022282092540306761091247331613513566182570629359690626824700872",
+   "Under": "113757019511743750002271987360198722086746800183716096241059823690383056157959"
+  },
+  "book": {
+   "side": "Under",
+   "bid": 0.5,
+   "ask": 0.51,
+   "spreadC": 1.0,
+   "spreadPct": 1.96,
+   "bids": [
+    [
+     0.5,
+     95404
+    ],
+    [
+     0.49,
+     10973
+    ],
+    [
+     0.48,
+     24168
+    ],
+    [
+     0.47,
+     6075
+    ],
+    [
+     0.46,
+     4615
+    ],
+    [
+     0.45,
+     30
+    ]
+   ],
+   "asks": [
+    [
+     0.51,
+     16558
+    ],
+    [
+     0.52,
+     25175
+    ],
+    [
+     0.53,
+     95833
+    ],
+    [
+     0.54,
+     6705
+    ],
+    [
+     0.55,
+     4235
+    ],
+    [
+     0.56,
+     5
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "action": "BUY",
+    "side": "Under",
+    "price": 0.51,
+    "usd": 374,
+    "ts": 1789865838
+   },
+   {
+    "wallet": "0x7b47a31c97e22de4d7af4a07365545cbc5aed615",
+    "action": "BUY",
+    "side": "Over",
+    "price": 0.5,
+    "usd": 2500,
+    "ts": 1789865577
+   },
+   {
+    "wallet": "0x7b47a31c97e22de4d7af4a07365545cbc5aed615",
+    "action": "BUY",
+    "side": "Over",
+    "price": 0.5,
+    "usd": 2500,
+    "ts": 1789865551
+   },
+   {
+    "wallet": "0x224a89dbe0db0d6124b335edabd15b3f877da3d5",
+    "action": "BUY",
+    "side": "Under",
+    "price": 0.5,
+    "usd": 7840,
+    "ts": 1789860604
+   },
+   {
+    "wallet": "0x224a89dbe0db0d6124b335edabd15b3f877da3d5",
+    "action": "BUY",
+    "side": "Under",
+    "price": 0.5,
+    "usd": 7719,
+    "ts": 1789858666
+   },
+   {
+    "wallet": "0x4483c26cdf27496cf32fb244972fca3f9ee5c565",
+    "action": "BUY",
+    "side": "Over",
+    "price": 0.5,
+    "usd": 500,
+    "ts": 1789853373
+   },
+   {
+    "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
+    "action": "BUY",
+    "side": "Over",
+    "price": 0.5,
+    "usd": 3577,
+    "ts": 1789851143
+   },
+   {
+    "wallet": "0xdf3f3f37965b524007797addfa7c125e45630aa4",
+    "action": "SELL",
+    "side": "Under",
+    "price": 0.5,
+    "usd": 466,
+    "ts": 1789833308
+   }
+  ]
  }
 }
