@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-09-20T14:13:22.554938+00:00",
+"generatedAt": "2026-09-20T14:28:19.270417+00:00",
 "byVerdict": {
 "konsens": {
 "n": 1376,
@@ -18,36 +18,36 @@
 "clvLb": 18.9401
 },
 "uneinig": {
-"n": 545,
+"n": 546,
 "wins": 166,
-"hitRate": 0.3046,
-"polyN": 504,
+"hitRate": 0.304,
+"polyN": 505,
 "polyWins": 137,
-"polyHitRate": 0.2718,
-"pinnN": 336,
-"pinnHitRate": 0.622,
-"nRoi": 313,
-"roi": -0.5066,
-"roiLb": -0.5857,
-"nClv": 313,
-"clv": -20.47,
-"clvLb": -23.5358
+"polyHitRate": 0.2713,
+"pinnN": 337,
+"pinnHitRate": 0.6231,
+"nRoi": 314,
+"roi": -0.5082,
+"roiLb": -0.5871,
+"nClv": 314,
+"clv": -20.6,
+"clvLb": -23.6627
 },
 "teil": {
-"n": 30,
+"n": 32,
 "wins": 5,
-"hitRate": 0.1667,
-"polyN": 27,
+"hitRate": 0.1562,
+"polyN": 29,
 "polyWins": 4,
-"polyHitRate": 0.1481,
-"pinnN": 30,
-"pinnHitRate": 0.1667,
-"nRoi": 21,
-"roi": -0.8195,
-"roiLb": -1.0303,
-"nClv": 21,
-"clv": -36.51,
-"clvLb": -46.4658
+"polyHitRate": 0.1379,
+"pinnN": 32,
+"pinnHitRate": 0.1562,
+"nRoi": 23,
+"roi": -0.8352,
+"roiLb": -1.0281,
+"nClv": 23,
+"clv": -34.9,
+"clvLb": -44.3431
 }
 },
 "byLeague": {
@@ -57,9 +57,9 @@
 "hitRate": 0.5833
 },
 "English Sky Bet Championship": {
-"n": 80,
+"n": 81,
 "wins": 52,
-"hitRate": 0.65
+"hitRate": 0.642
 },
 "Spanish La Liga": {
 "n": 64,
@@ -107,9 +107,9 @@
 "hitRate": 0.75
 },
 "Dutch Eredivisie": {
-"n": 42,
+"n": 43,
 "wins": 28,
-"hitRate": 0.6667
+"hitRate": 0.6512
 },
 "French Ligue 1": {
 "n": 41,
@@ -211,6 +211,11 @@
 "wins": 10,
 "hitRate": 0.4545
 },
+"Norwegian Eliteserien": {
+"n": 22,
+"wins": 15,
+"hitRate": 0.6818
+},
 "Peruvian Primera Division": {
 "n": 22,
 "wins": 17,
@@ -220,11 +225,6 @@
 "n": 21,
 "wins": 14,
 "hitRate": 0.6667
-},
-"Norwegian Eliteserien": {
-"n": 21,
-"wins": 15,
-"hitRate": 0.7143
 },
 "Chinese Super League": {
 "n": 20,
@@ -649,37 +649,94 @@
 },
 "byStrength": {
 "strong": {
-"n": 1177,
+"n": 1178,
 "wins": 945,
-"hitRate": 0.8029,
-"nRoi": 653,
-"roi": 0.295,
-"roiLb": 0.243,
-"nClv": 653,
-"clv": 14.27,
-"clvLb": 12.1903
+"hitRate": 0.8022,
+"nRoi": 654,
+"roi": 0.293,
+"roiLb": 0.241,
+"nClv": 654,
+"clv": 14.19,
+"clvLb": 12.1126
 },
 "weak": {
-"n": 741,
+"n": 743,
 "wins": 369,
-"hitRate": 0.498,
-"nRoi": 384,
-"roi": -0.1873,
-"roiLb": -0.2712,
-"nClv": 384,
-"clv": -5.5,
-"clvLb": -8.2178
+"hitRate": 0.4966,
+"nRoi": 386,
+"roi": -0.1915,
+"roiLb": -0.2751,
+"nClv": 386,
+"clv": -5.63,
+"clvLb": -8.3439
 }
 },
 "divergence": {
-"n": 545,
+"n": 546,
 "betfairWins": 166,
-"betfairRate": 0.3046,
-"polyN": 504,
+"betfairRate": 0.304,
+"polyN": 505,
 "polyWins": 137,
-"polyRate": 0.2718
+"polyRate": 0.2713
 },
 "recent": [
+{
+"matchId": "36065400",
+"home": "Norwich",
+"away": "Bolton",
+"league": "English Sky Bet Championship",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Norwich",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+3,
+4
+],
+"kickoff": "2026-09-20T12:30:00Z",
+"settledAt": "2026-09-20T14:28:19.073248+00:00"
+},
+{
+"matchId": "36041250",
+"home": "FC Twente",
+"away": "PSV",
+"league": "Dutch Eredivisie",
+"verdict": "teil",
+"moneySide": "away",
+"moneyName": "PSV",
+"polySide": "away",
+"winner": "home",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+3,
+2
+],
+"kickoff": "2026-09-20T12:30:00Z",
+"settledAt": "2026-09-20T14:28:19.073248+00:00"
+},
+{
+"matchId": "36069561",
+"home": "Valerenga",
+"away": "Fredrikstad",
+"league": "Norwegian Eliteserien",
+"verdict": "teil",
+"moneySide": "away",
+"moneyName": "Fredrikstad",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-09-20T12:30:00Z",
+"settledAt": "2026-09-20T14:28:19.073248+00:00"
+},
 {
 "matchId": "36065369",
 "home": "Wolves",
@@ -1382,75 +1439,18 @@
 ],
 "kickoff": "2026-09-19T23:30:00Z",
 "settledAt": "2026-09-20T01:42:08.309234+00:00"
-},
-{
-"matchId": "36078682",
-"home": "San Jose Earthquakes",
-"away": "Los Angeles FC",
-"league": "US MLS",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Los Angeles FC",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-09-19T23:30:00Z",
-"settledAt": "2026-09-20T01:42:08.309234+00:00"
-},
-{
-"matchId": "36073236",
-"home": "River Plate",
-"away": "CA Huracan",
-"league": "Argentinian Primera Division",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "CA Huracan",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-09-19T22:00:00Z",
-"settledAt": "2026-09-20T01:12:09.177475+00:00"
-},
-{
-"matchId": "36071842",
-"home": "Atletico San Luis",
-"away": "Necaxa",
-"league": "Mexican Liga MX",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Atletico San Luis",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-09-19T23:00:00Z",
-"settledAt": "2026-09-20T00:57:03.387618+00:00"
 }
 ],
 "global": {
-"n": 1951,
+"n": 1954,
 "wins": 1332,
-"hitRate": 0.6827,
-"nRoi": 1037,
-"roi": 0.1164,
-"roiLb": 0.0698,
-"nClv": 1037,
-"clv": 6.95,
-"clvLb": 5.2272
+"hitRate": 0.6817,
+"nRoi": 1040,
+"roi": 0.1132,
+"roiLb": 0.0666,
+"nClv": 1040,
+"clv": 6.83,
+"clvLb": 5.1139
 },
-"pending": 40
+"pending": 38
 }
