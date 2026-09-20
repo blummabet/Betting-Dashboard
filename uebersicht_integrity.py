@@ -1023,6 +1023,34 @@ def check_public_stille_ist_erklaert(ctx):
                     ", ".join("%s (%d)" % (k, v) for k, v in top) or "unbekannt")])
 
 
+def check_jeder_push_hat_seinen_beleg(ctx):
+    """🔴 20.09.2026 (Lucas: „Beide Spiele stehen nicht in der Betfair-Public-Bilanz. Beide
+    haben gewonnen.").
+
+    Eines davon — Lyon v Rennes — WAR gesendet: der Dedup-Stand trug `fresh:36039873`, und den
+    bekommt ein Spiel nur bei erfolgreichem Versand. Eine Ledger-Zeile hat es nie gegeben, in
+    keinem der letzten 40 Commits. Ueber alle Eintraege geprueft: 4 von 277 gesendeten
+    Public-Pushes haben keine Zeile (1,4 %).
+
+    Nachtragen geht nicht — von einem verlorenen Push steht die Quote beim Senden nirgends, und
+    ausgerechnet die eine zurueckzuholen, die jemandem aufgefallen ist (weil sie gewonnen hat),
+    waere eine Auswahl nach Ausgang. Also bleibt die Luecke und wird stattdessen gezaehlt: eine
+    Bilanz, die ihre eigene Unvollstaendigkeit nennt, ist ehrlicher als eine, die sie
+    verschweigt. Waechst die Zahl weiter, ist der Sicherungsschritt in betfair.yml wirkungslos
+    und das gehoert gesehen.
+    """
+    r = ctx.get("bfPublicRecord")
+    if not isinstance(r, dict) or "gesendetOhneBeleg" not in r:
+        return _c("Jeder Push hat seinen Beleg", "warn", [])
+    n = int(r.get("gesendetOhneBeleg") or 0)
+    if not n:
+        return _c("Jeder Push hat seinen Beleg", "warn", [])
+    keys = ", ".join(r.get("gesendetOhneBelegKeys") or [])[:120]
+    return _c("Jeder Push hat seinen Beleg", "warn",
+              ["%d gesendete(r) Public-Push(es) ohne Ledger-Zeile — sie fehlen in der Bilanz "
+               "und lassen sich nicht nachtragen (%s)" % (n, keys or "—")])
+
+
 def check_artefakte_sind_lesbar(ctx):
     """🔴 19.09.2026 (Lucas: „Heut kein einziger polymarket Push in public (kann nicht sein)").
 
@@ -1126,6 +1154,7 @@ UEBERSICHT_CHECKS = [
     check_public_stille_ist_erklaert,
     check_schattenbuch_fuellt_sich,
     check_artefakte_sind_lesbar,
+    check_jeder_push_hat_seinen_beleg,
 ]
 
 
@@ -1170,6 +1199,7 @@ def build_ctx_from_disk() -> dict:
         "balanceMls": _lade("mls_poly_balance.json", {}),
         "bfTrichter": _lade("betfair_public_trichter.json", {}),
         "bfSchatten": _lade("betfair_public_schatten.json", []),
+        "bfPublicRecord": _lade("betfair_public_record.json", {}),
     }
 
 

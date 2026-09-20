@@ -624,3 +624,44 @@ class DerEndstandGehoertDemSpielNichtDemMarkt(unittest.TestCase):
             self.skipTest("Zeile nicht mehr im Buch (Ledger gekappt)")
         self.assertEqual(vasco["status"], "won",
                          "Vasco gewann 5:0 auf eine Wette zu 1.37 — das gehoert in die Bilanz")
+
+
+class EineBilanzDieIhreLueckeNennt(unittest.TestCase):
+    """🔴 20.09.2026 (Lucas zu Lyon v Rennes: „Ok und was mit Lyon?").
+
+    Der Push war gesendet — der Dedup-Stand trug `fresh:36039873`, den bekommt ein Spiel nur
+    bei erfolgreichem Versand. Eine Ledger-Zeile hat es nie gegeben. 4 von 277 sind so.
+
+    Nachgetragen wird NICHTS, und der Grund ist wichtiger als die vier Zeilen: von einem
+    verlorenen Push steht die Quote beim Senden nirgends, und ausgerechnet die eine
+    zurueckzuholen, die jemandem aufgefallen ist — weil sie gewonnen hat —, waere eine Auswahl
+    nach AUSGANG. Die Bilanz saehe danach besser aus, ohne es zu sein. Also bleibt die Luecke
+    und wird gezaehlt."""
+
+    def test_der_schluessel_ohne_zeile_wird_gefunden(self):
+        seen = {"fresh:1": {"v": 1.0}, "fresh:2": {"v": 2.0}, "ht:3": {"v": 3.0},
+                "cooldown:fresh:1": 123}     # kein Push-Schluessel
+        led = [{"scenario": "fresh", "matchId": "1"}]
+        self.assertEqual(E.gesendet_ohne_beleg(seen, led), ["fresh:2", "ht:3"])
+
+    def test_ein_anderer_markt_desselben_spiels_zaehlt_als_beleg(self):
+        """Der Dedup-Schluessel kennt den Markt nicht — die Zeile darf also jeder Markt sein."""
+        seen = {"fresh:1": {"v": 1.0}}
+        led = [{"scenario": "fresh", "matchId": "1", "market": "Half Time"}]
+        self.assertEqual(E.gesendet_ohne_beleg(seen, led), [])
+
+    def test_ohne_luecke_bleibt_die_liste_leer(self):
+        self.assertEqual(E.gesendet_ohne_beleg({}, []), [])
+        self.assertEqual(E.gesendet_ohne_beleg(None, None), [])
+
+    def test_am_echten_bestand_sind_es_die_vier(self):
+        import json
+        from pathlib import Path
+        p = Path(__file__).parent.parent
+        seen = json.loads((p / "betfair_public_seen.json").read_text(encoding="utf-8"))
+        led = json.loads((p / "betfair_public_ledger.json").read_text(encoding="utf-8"))
+        ohne = E.gesendet_ohne_beleg(seen, led)
+        self.assertIn("fresh:36039873", ohne, "Lyon v Rennes fehlt nicht mehr — bitte ansehen")
+        self.assertLessEqual(len(ohne), 4,
+                             "es sind MEHR geworden: der Sicherungsschritt in betfair.yml wirkt "
+                             "nicht. Gefunden: %s" % ohne)

@@ -12,6 +12,7 @@ Läuft im betfair.yml direkt NACH betfair_alerts.py (Mac-Runner, alle 15 Min). R
 """
 from __future__ import annotations
 import json
+import re
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 import betfair_track_store as _store   # 01.09.2026: Ledger liegt kompakt, load() nimmt beide Formate
@@ -372,6 +373,34 @@ def apply_manual_results(ledger, manual, now=None):
     return ledger
 
 
+_PUSH_KEY = re.compile(r"^(fresh|ht|fix):\d+$")
+
+
+def gesendet_ohne_beleg(seen, ledger) -> list:
+    """Push-Schluessel im Dedup-Stand, zu denen KEINE Ledger-Zeile existiert. REIN. -> sortiert.
+
+    🔴 20.09.2026 (Lucas: „Beide Spiele stehen nicht in der Betfair-Public-Bilanz"). Lyon v
+    Rennes war gesendet — betfair_public_seen.json trug `fresh:36039873`, und diesen Schluessel
+    bekommt ein Spiel nur bei erfolgreichem Versand. Eine Ledger-Zeile gab es nie, in keinem der
+    letzten 40 Commits. Ueber alle Eintraege: 4 von 277 (1,4 %).
+
+    Nachtragen kann man sie nicht: von einem verlorenen Push existiert nur der Schluessel —
+    Markt, Seite und vor allem die QUOTE beim Senden stehen nirgends. Eine Zeile mit
+    geschaetzter Quote waere ein erfundener Beleg.
+    Und eine EINZELNE nachzutragen waere noch schlechter: Lucas ist Lyon aufgefallen, weil es
+    gewonnen hat. Genau die Zeilen zurueckzuholen, die jemandem auffallen, ist eine Auswahl
+    nach Ausgang — die Bilanz sieht danach besser aus, ohne es zu sein.
+
+    Also bleibt die Luecke, aber sie wird SICHTBAR: die Bilanz sagt ab jetzt selbst, wie viele
+    Pushes sie nicht kennt. Eine Zahl, die ihre eigene Unvollstaendigkeit nennt, ist ehrlicher
+    als eine, die sie verschweigt."""
+    have = {"%s:%s" % (e.get("scenario"), e.get("matchId")) for e in (ledger or [])
+            if isinstance(e, dict)}
+    fehlt = [str(k) for k in (seen or {})
+             if _PUSH_KEY.match(str(k)) and str(k) not in have]
+    return sorted(fehlt)
+
+
 def summarize(ledger, now=None):
     now = now or _now()
     res = [e for e in ledger if e.get("status") in ("won", "lost")]
@@ -571,6 +600,20 @@ def main():
                      rbericht["roi"], rbericht["pending"]))
     except Exception as _e:
         print("  ⚠️  Kursrutsch-Buch nicht abgerechnet:", _e)
+
+    # 20.09.2026: die Bilanz nennt ihre eigene Luecke (s. gesendet_ohne_beleg).
+    try:
+        _seen = _load(BASE / "betfair_public_seen.json", {})
+        _ohne = gesendet_ohne_beleg(_seen if isinstance(_seen, dict) else {}, ledger)
+        record["gesendetOhneBeleg"] = len(_ohne)
+        record["gesendetOhneBelegKeys"] = _ohne[:20]
+        if _ohne:
+            print("  ⚠️  %d gesendete(r) Push(es) ohne Ledger-Zeile: %s"
+                  % (len(_ohne), ", ".join(_ohne[:6])))
+            json.dump(record, open(RECORD_FILE, "w", encoding="utf-8"),
+                      ensure_ascii=False, indent=1)
+    except Exception as _e:
+        print("  ⚠️  Beleg-Pruefung uebersprungen:", _e)
 
     cs = record.get("consensusSplit") or {}
     if cs:

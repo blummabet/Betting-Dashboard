@@ -785,3 +785,27 @@ class TestEinArtefaktDasDaIstAberNichtLesbar(unittest.TestCase):
             self.assertEqual(UI.UNLESBAR[0][1], "Konfliktmarker im Artefakt")
         finally:
             UI.BASE = alt
+
+
+class TestEineBilanzDieIhreLueckeNennt(unittest.TestCase):
+    """🔴 20.09.2026 (Lucas: „Ok und was mit Lyon?"). Der Push war gesendet, eine Ledger-Zeile
+    gab es nie — 4 von 277. Nachgetragen wird nichts: die Quote beim Senden steht nirgends, und
+    ausgerechnet die eine zurueckzuholen, die jemandem aufgefallen ist (weil sie gewonnen hat),
+    waere eine Auswahl nach Ausgang. Also wird die Luecke gezaehlt statt verschwiegen."""
+
+    def test_ohne_luecke_ist_er_still(self):
+        self.assertTrue(UI.check_jeder_push_hat_seinen_beleg(
+            {"bfPublicRecord": {"gesendetOhneBeleg": 0}})["ok"])
+
+    def test_ohne_das_feld_behauptet_er_nichts(self):
+        """Ein altes Artefakt kennt das Feld nicht — das ist kein Befund, sondern Unwissen."""
+        self.assertTrue(UI.check_jeder_push_hat_seinen_beleg({})["ok"])
+        self.assertTrue(UI.check_jeder_push_hat_seinen_beleg({"bfPublicRecord": {}})["ok"])
+
+    def test_eine_luecke_wird_benannt_samt_schluessel(self):
+        r = UI.check_jeder_push_hat_seinen_beleg(
+            {"bfPublicRecord": {"gesendetOhneBeleg": 4,
+                                "gesendetOhneBelegKeys": ["fresh:36039873", "fresh:36035354"]}})
+        self.assertFalse(r["ok"])
+        self.assertIn("4 gesendete", r["failures"][0])
+        self.assertIn("fresh:36039873", r["failures"][0])
