@@ -59,3 +59,74 @@ test('die Sortierung bleibt der ROI', () => {
   const sort = JS.slice(JS.indexOf('var all = Object.keys(src)'), JS.indexOf('var total = all.length'));
   assert.ok(/b\.v\.roi \|\| -9\) - \(a\.v\.roi \|\| -9\)/.test(sort), 'nicht mehr nach ROI sortiert');
 });
+
+// ── „sagt was ab" (20.09.2026) ──────────────────────────────────────────────────────────────
+// Lucas: „es ist nicht höher, obwohl dort eine höhere grüne Zahl steht. Ach, ich verstehe es
+// nicht." Er hat die Tafel richtig gelesen — es fehlte der Maßstab daneben.
+//
+// Vorgeführt an seinen Daten: dieselben 32.055 Zeilen, Liga-Namen zufällig vertauscht (also ein
+// garantiert NICHT vorhandener Liga-Effekt) — die Spitze sah aus wie vorher: +65 %, +63 %,
+// +60 % bei 20–34 Spielen. Bei 2254 Eimern mit im Median 11 Spielen muss einer oben stehen.
+//
+// Die Spalte nennt, wie groß der Vorsprung bei DIESEM n sein müsste. Sie ist keine zweite
+// Schwelle neben roiUg, sondern dieselbe in anderer Sprache — nachgewiesen in 2000 von 2000
+// Zufallsfällen: roi > sichtbarAb gilt genau dann, wenn roiUg > 0.
+
+test('die Spalte steht in der Tafel und kommt vom Produzenten', () => {
+  const kopf = JS.slice(JS.indexOf('var head2 ='), JS.indexOf('var head2 =') + 500);
+  assert.ok(kopf.includes("th('sagt was ab', 1)"), 'Spalte fehlt im Kopf');
+  assert.ok(PY.includes('def _sichtbar_ab(n, summe, quadratsumme):'), 'Produzent rechnet sie nicht');
+  assert.ok(PY.includes('"sichtbarAb"'), 'Produzent schreibt sie nicht ins Artefakt');
+  assert.ok(!/Math\.sqrt\(\s*v\.n\s*\)/.test(JS), 'das Frontend rechnet die Schranke selbst nach');
+});
+
+// Ausgeführt statt gegrept: ein Test, der nur Zeichenketten sucht, hält jeder Umbenennung
+// stand und keiner Logik-Änderung. Genau das ist mir hier zuerst passiert — die Mutation
+// „Häkchen immer setzen" ist durchgerutscht, weil der Vergleich noch im Farb-Argument stand.
+function zelle() {
+  const hol = (name) => {
+    const a = JS.indexOf('function ' + name + '(');
+    assert.ok(a > 0, 'Funktion weg: ' + name);
+    let t = 0;
+    for (let j = JS.indexOf('{', a); j < JS.length; j++) {
+      if (JS[j] === '{') t++;
+      else if (JS[j] === '}') { t--; if (!t) return JS.slice(a, j + 1); }
+    }
+    throw new Error('Klammern offen: ' + name);
+  };
+  return new Function("const C={back:'#0f0'};" + hol('_bfSagtWas') + hol('_bfSagtWasTxt')
+    + 'return {ok:_bfSagtWas, txt:_bfSagtWasTxt};')();
+}
+
+test('das Häkchen kommt nur, wenn der ROI die Schranke schlägt', () => {
+  const z = zelle();
+  assert.equal(z.ok({ roi: 0.87, sichtbarAb: 0.64 }), true, 'ROI über der Schranke → ✓');
+  assert.equal(z.ok({ roi: 0.30, sichtbarAb: 0.64 }), false, 'ROI unter der Schranke → kein ✓');
+  assert.equal(z.ok({ roi: 0.64, sichtbarAb: 0.64 }), false, 'gleichauf ist nicht darüber');
+  assert.ok(z.txt({ roi: 0.87, sichtbarAb: 0.64 }).includes('✓'));
+  assert.ok(!z.txt({ roi: 0.30, sichtbarAb: 0.64 }).includes('✓'));
+  assert.ok(z.txt({ roi: 0.87, sichtbarAb: 0.64 }).startsWith('+64%'), 'die Schranke selbst fehlt');
+});
+
+test('zu wenig Spiele rendert als Lücke, nicht als Häkchen', () => {
+  const z = zelle();
+  assert.equal(z.txt({ roi: 5.0, sichtbarAb: null }), '—', 'ohne Schranke keine Zahl');
+  assert.equal(z.ok({ roi: 5.0, sichtbarAb: null }), false, 'ohne Schranke kein ✓');
+  assert.equal(z.ok({ roi: null, sichtbarAb: 0.4 }), false, 'ohne ROI kein ✓');
+});
+
+test('der Fußtext nennt, wie viele Häkchen schon der Zufall bringt', () => {
+  // OHNE diesen Satz wäre die Spalte eine neue Falle: 48 Häkchen sehen nach 48 Ligen aus.
+  // Die Schranke lässt 5 % durch, bei 1257 messbaren Zeilen sind das ~63 — also MEHR als
+  // die 48, die dastehen.
+  assert.ok(JS.includes('_nMessbar * 0.05'), 'die Zufallserwartung wird nicht gerechnet');
+  assert.ok(JS.includes('heißt ') && JS.includes('nicht „diese Liga trägt"'),
+    'das Häkchen wird nicht als das benannt, was es ist');
+});
+
+test('gezählt wird über alle Eimer, nicht über die gezeigten 500', () => {
+  // Sonst hinge die Zahl am Anzeige-Deckel statt am Bestand.
+  const z = JS.slice(JS.indexOf('var _nMessbar'), JS.indexOf('var _nMessbar') + 400);
+  assert.ok(z.includes('all.filter'), 'über rows statt über all gezählt');
+  assert.ok(!z.includes('rows.filter'), 'über rows statt über all gezählt');
+});

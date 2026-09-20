@@ -1743,13 +1743,17 @@
       return (b.v.roi || -9) - (a.v.roi || -9);
     });
     var total = all.length, rows = all.slice(0, CAP);
+    // Ueber ALLE Eimer gezaehlt, nicht nur ueber die gezeigten 500 — sonst haenge die Zahl
+    // am Deckel und nicht am Bestand.
+    var _nMessbar = all.filter(function (r) { return r.v.sichtbarAb != null; }).length;
+    var _nSagtWas = all.filter(function (r) { return _bfSagtWas(r.v); }).length;
     var th = function (s, w) { return '<th style="text-align:' + (w ? 'right' : 'left') + ';padding:6px 8px;font-size:10.5px;color:' + C.dim + ';font-weight:700;white-space:nowrap">' + s + '</th>'; };
     // 20.09.2026 (Lucas: „Ich will immer roi oder Profit"). Der Profit stand hier nicht.
     // Er kommt fertig aus `betfair_track_record.py` (`pl`, Einheiten bei fixem Einsatz 1) —
     // nicht aus roi*n nachgerechnet, sonst stuende dieselbe Rechnung zweimal im Repo.
     // Fehlt das Feld (Artefakt aelter als dieser Code), steht „—" statt einer Zahl: ein
     // Lauf lang eine Luecke ist ehrlicher als ein nachgebauter Wert.
-    var head2 = '<tr>' + th(isTeam ? 'Team' : 'Liga') + th('Markt') + th('Spiele', 1) + th('Trefferquote', 1) + th('ROI', 1) + th('P/L', 1) + th('Konz. (n)', 1) + th('Zufluss (n)', 1) + '</tr>';
+    var head2 = '<tr>' + th(isTeam ? 'Team' : 'Liga') + th('Markt') + th('Spiele', 1) + th('Trefferquote', 1) + th('ROI', 1) + th('P/L', 1) + th('sagt was ab', 1) + th('Konz. (n)', 1) + th('Zufluss (n)', 1) + '</tr>';
     var body = rows.map(function (r) {
       var v = r.v, solid = v.n >= MIN_CONF_N, ht = MK_ID[r.mid] && MK_ID[r.mid].grp === 'HT';
       var td = function (s, col) { return '<td style="text-align:right;padding:6px 8px;font-size:12px;font-weight:700;color:' + (col || C.ink) + '">' + s + '</td>'; };
@@ -1760,6 +1764,12 @@
         td(_pctTxt(v.hitRate)) +
         td(_roiTxt(v.roi), _roiCol(v.roi)) +
         td(v.pl != null ? (v.pl > 0 ? '+' : '') + v.pl.toFixed(1) : '—', v.pl == null ? C.dim : _roiCol(v.pl)) +
+        // 20.09.2026 (Lucas: „es ist nicht höher, obwohl dort eine höhere grüne Zahl steht").
+        // Der Maßstab neben der Zahl: so groß müsste der Vorsprung bei DIESEM n sein, damit er
+        // nicht mehr durch Streuung erklärbar ist. Kommt fertig aus dem Produzenten
+        // (`sichtbarAb`) — es ist dieselbe Schranke wie `roiUg`, nur in Lucas' Sprache:
+        // roi > sichtbarAb gilt genau dann, wenn roiUg > 0. Keine zweite Schwelle.
+        td(_bfSagtWasTxt(v), _bfSagtWas(v) ? C.ink : C.dim) +
         td(v.hitRateConc != null ? _pctTxt(v.hitRateConc) + ' <span style="color:' + C.dim + ';font-weight:600">' + v.nConc + '</span>' : '—', v.hitRateConc != null ? C.ink : C.dim) +
         td(v.hitRateInflow != null ? _pctTxt(v.hitRateInflow) + ' <span style="color:' + C.dim + ';font-weight:600">' + v.nInflow + '</span>' : '—', v.hitRateInflow != null ? C.ink : C.dim) +
         '</tr>';
@@ -1774,11 +1784,38 @@
         'Diese Liste hat 11 Zeilen über +40 % und eine Spitze von +87 % — beides innerhalb dessen, ' +
         'was reiner Zufall erzeugt. Und nachgespielt: die Top 10 der ersten Septemberhälfte machten ' +
         'dort +100,1 Einheiten und in der zweiten Hälfte <b>−26,3</b>. Deshalb die P/L-Spalte: ' +
-        '+87 % sind hier +19,2 Einheiten aus 22 Spielen.</div>') +
+        '+87 % sind hier +19,2 Einheiten aus 22 Spielen.</div>' +
+        '<div style="font-size:10.5px;color:' + C.dim + ';margin-top:6px;line-height:1.5">' +
+        '<b style="color:' + C.mut + '">Die Spalte „sagt was ab".</b> So groß müsste der Vorsprung ' +
+        'bei der Spielzahl DIESER Zeile sein, damit er nicht mehr bloß Streuung sein kann. ' +
+        'Bei 22 Spielen sind das rund +37 %, bei 100 rund +18 %. Steht der ROI darüber, ' +
+        'trägt die Zeile ein <span style="color:' + C.back + '">✓</span> — heute ' +
+        '<b>' + _nSagtWas + '</b> von ' + _nMessbar + ' Zeilen mit genug Spielen. ' +
+        '<b style="color:' + C.mut + '">Und jetzt der Haken daran:</b> die Schranke lässt ' +
+        'auslegungsgemäß 5 % durch, also kämen bei ' + _nMessbar + ' Zeilen schon durch reines ' +
+        'Würfeln rund <b>' + Math.round(_nMessbar * 0.05) + '</b> Häkchen zustande. Ein ✓ heißt ' +
+        'deshalb nicht „diese Liga trägt", sondern nur „diese Zeile ist nicht schon durch ihre ' +
+        'eigene Streuung erklärt". Erst wenn deutlich MEHR Häkchen dastehen als die ' +
+        Math.round(_nMessbar * 0.05) + ', steckt etwas in der Tafel. ' +
+        'Gegenprobe an denselben Spielen mit zufällig vertauschten Liga-Namen, also garantiert ' +
+        'ohne Liga-Effekt: die Spitze sah aus wie hier (+65 %, +63 %, +60 % bei 20–34 Spielen).' +
+        '</div>') +
       '<div style="font-size:10.5px;color:' + C.dim + ';margin-top:8px">Blasse Zeilen: Stichprobe noch zu klein (n&lt;' + MIN_CONF_N + ').' + (isTeam ? ' Team-Ebene: früh, viele Buckets mit n=1.' : '') + '</div>';
   }
 
   // ── Info-Band ────────────────────────────────────────────────────────────────
+  // 20.09.2026: als eigene Funktionen, damit ein Test sie AUSFUEHREN kann statt den Quelltext
+  // zu durchsuchen. Ein Test, der nur nach Zeichenketten sucht, haelt jeder Umbenennung stand
+  // und keiner Logik-Aenderung — genau das ist mir hier zuerst passiert.
+  function _bfSagtWas(v) {
+    return !!(v && v.sichtbarAb != null && v.roi != null && v.roi > v.sichtbarAb);
+  }
+  function _bfSagtWasTxt(v) {
+    if (!v || v.sichtbarAb == null) return '—';
+    return '+' + Math.round(v.sichtbarAb * 100) + '%'
+      + (_bfSagtWas(v) ? ' <span style="color:' + C.back + '">✓</span>' : '');
+  }
+
   function tile(ic, val, lbl, sub, col) {
     return '<div style="flex:1;min-width:135px;background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:12px;padding:12px 14px">' +
       '<div style="font-size:16px">' + ic + '</div>' +

@@ -660,6 +660,42 @@ def _ug(n, summe, quadratsumme):
     return m - UG_Z * (var ** 0.5) / (n ** 0.5)
 
 
+def _sichtbar_ab(n, summe, quadratsumme):
+    """Ab welchem ROI saegt diese Zeile bei IHREM n ueberhaupt etwas? REIN.
+
+    20.09.2026 (Lucas: „ob jetzt dann zum Beispiel bestimmte Ligen hoehere Trefferquote haben
+    … entweder verstehst du mich falsch oder es ist nicht hoeher, obwohl dort eine hoehere
+    gruene Zahl steht. Ach, ich verstehe es nicht.").
+
+    Er hat die Tafel richtig gelesen — die +87 % sind echt passiert. Was fehlte, war der
+    Massstab daneben. Vorgefuehrt an seinen eigenen Daten: dieselben 32.055 Zeilen, nur die
+    Liga-Etiketten zufaellig vertauscht, also ein GARANTIERT nicht vorhandener Liga-Effekt —
+    die Spitze der Tafel sah danach aus wie vorher (+65 %, +63 %, +60 % bei n=20..34). Bei
+    2254 Eimern mit im Median 11 Spielen muss irgendeiner oben stehen.
+
+    Diese Zahl sagt, wie gross der Vorsprung bei diesem n sein muesste, damit er nicht mehr
+    durch Streuung erklaerbar ist: `Z * Streuung / sqrt(n)`. Bei 22 Spielen sind das rund
+    +37 %, bei 100 rund +18 %. Steht der ROI der Zeile darueber, sagt sie etwas; darunter ist
+    sie hoechstens huebsch.
+
+    Es ist KEINE zweite Schwelle neben `roiUg`, sondern dieselbe in anderer Sprache:
+    `roi > sichtbarAb` gilt genau dann, wenn `roiUg > 0`. Zwei Schwellen fuer dieselbe Sache
+    waeren der Fehler, den dieses Repo schon mehrfach hatte. Der Unterschied ist nur, dass
+    diese hier auch unter `UG_MIN_N` eine Zahl liefert — und genau dort sitzt Lucas' Frage:
+    seine Spitzenzeilen haben n=21 bis 30 und trugen deshalb bisher gar keinen Massstab.
+
+    Unter 10 Spielen wird nichts behauptet: die Naeherung taugt dort nicht, und eine Zahl,
+    die man nicht glauben kann, ist schlimmer als keine.
+    """
+    if n < 10:
+        return None
+    m = summe / n
+    var = (quadratsumme - n * m * m) / (n - 1)
+    if var <= 0:
+        return None
+    return UG_Z * (var ** 0.5) / (n ** 0.5)
+
+
 def _og(n, summe, quadratsumme):
     """Das Gegenstueck zu _ug: einseitige 95%-OBERgrenze. REIN.
 
@@ -731,6 +767,9 @@ def _fin(b):
             # machen. Ein Prozentsatz ohne seinen Nenner laesst 22 Spiele aussehen wie einen
             # Befund; der Profit tut das nicht.
             "pl": round(b["roiSum"], 1) if b["n"] else None,
+            # 20.09.2026: der Massstab neben der gruenen Zahl — s. `_sichtbar_ab`.
+            "sichtbarAb": (lambda _s: round(_s, 4) if _s is not None else None)(
+                _sichtbar_ab(b["n"], b["roiSum"], b["roiSqSum"])),
             # Der Punktschaetzer bleibt sichtbar — er entscheidet nur nichts mehr.
             "roiUg": round(_u, 4) if _u is not None else None,
             "roiOg": round(_o, 4) if _o is not None else None,
