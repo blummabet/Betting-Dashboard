@@ -504,6 +504,29 @@ def check_poly_deckung(ctx):
     nah = PD.nah(PD.luecken(lp, keys))
     fails = ["%s (%s v %s, Anpfiff in %.1fh) — der Liga-Fetcher hat den Markt, der Money-Scan nie"
              % (r["slug"], r["home"], r["away"], r["htk"]) for r in nah]
+    # 🔴 20.09.2026: diese Messung ist ein MOMENT. Der Fund vom selben Tag
+    # („sea-mil-lec-2026-09-20, Anpfiff in 0.1h") war zwanzig Minuten spaeter verschwunden —
+    # mit dem Anpfiff faellt die Luecke aus dem Fenster. Auf „passiert das oft?" gab es deshalb
+    # nie eine Zahl, nur „gerade keine".
+    # Fehlerklasse: eine Luecke, die sich durch Zeitablauf selbst erledigt, hinterlaesst keine
+    # Statistik. Der Scanner fuehrt jetzt ein Buch; hier steht, was es sagt.
+    buch = ctx.get("polyDeckungBuch") or {}
+    if buch:
+        b = PD.bilanz(buch)
+        bis_anpfiff = [z for z in (buch.get("slugs") or {}).values()
+                       if isinstance(z, dict) and not z.get("nachgeholt")
+                       and (z.get("minHtk") is not None and z["minHtk"] <= PD.NAH_H)]
+        if bis_anpfiff:
+            fails.append("Buch: %d Markt/Maerkte wurden bis zum Anpfiff nie erfasst (%s) — dort "
+                         "entstanden Picks blind zum Geld"
+                         % (len(bis_anpfiff),
+                            "; ".join("%s (%.1fh)" % (z.get("slug"), z.get("minHtk"))
+                                      for z in sorted(bis_anpfiff,
+                                                      key=lambda x: x.get("minHtk") or 0)[:4])))
+        elif b["quotePct"] is not None and b["nLaeufeMitLuecke"]:
+            fails.append("Buch: in %d von %d Laeufen (%d %%) war eine Deckungsluecke offen — "
+                         "alle wurden noch vor dem Anpfiff nachgeholt (%s)"
+                         % (b["nLaeufeMitLuecke"], b["nLaeufe"], b["quotePct"], b["urteil"]))
     return _c("Poly-Deckung: Money-Scan gegen Liga-Fetcher", "error", fails[:8])
 
 
@@ -1542,6 +1565,7 @@ def build_ctx_from_disk() -> dict:
         "polyUpcoming": _lade("poly_money_upcoming.json", {}),
         "polyHistory": _lade("poly_money_broad_history.json", {}),
         "ligaPoly": _lade("liga_poly_prices.json", {}),
+        "polyDeckungBuch": _lade("poly_deckung_buch.json", {}),
         "ligaLedger": _lade("liga_signal_ledger.json", {}),
         "mlsLedger": _lade("mls_signal_ledger.json", {}),
         "signalBilanz": _lade("liga_signal_bilanz.json", {}),
