@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "liga",
-    "generatedAt": "2026-09-20T11:12:30.120313+00:00",
+    "generatedAt": "2026-09-20T12:35:46.512151+00:00",
     "minLen": 3,
     "strongLen": 5,
     "sortiert": "zufallPct",
@@ -78,12 +78,12 @@
         "count": 4,
         "conviction": 6,
         "names": [
+          "lead_lag_bias",
           "injury",
           "form_trend",
           "h2h_pattern",
           "xg_strength",
-          "chance_creation",
-          "streak_momentum"
+          "chance_creation"
         ],
         "market": "Über 1.5 Tore"
       }
@@ -876,9 +876,10 @@
       "matchupPct": 37,
       "signalInfo": {
         "state": "confirm",
-        "count": 4,
+        "count": 5,
         "conviction": 5,
         "names": [
+          "public_static_bias",
           "injury",
           "form_trend",
           "xg_strength",
@@ -2630,9 +2631,10 @@
       "matchupPct": 36,
       "signalInfo": {
         "state": "confirm",
-        "count": 4,
+        "count": 5,
         "conviction": 5,
         "names": [
+          "public_static_bias",
           "injury",
           "form_trend",
           "xg_strength",
@@ -2640,85 +2642,6 @@
           "transfer_shift"
         ],
         "market": "Unter 3.5 Tore"
-      }
-    },
-    {
-      "teamId": "546",
-      "team": "Getafe",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/546.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "under25",
-      "market": "Unter 2,5 Tore",
-      "length": 4,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 55,
-        "label": "Eigen 55% + Gegner 47% → 52% · Signale bestätigen"
-      },
-      "ratePct": 55,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 11,
-      "zufallPct": 2.09751,
-      "ligaBasisPct": 38,
-      "seltenheit": {
-        "basis": "eigen",
-        "ratePct": 55,
-        "preN": 11,
-        "einsZu": 11,
-        "erwartet": 280.43,
-        "familie": 3168,
-        "bandPct": [
-          32,
-          76
-        ],
-        "einsZuBand": [
-          3,
-          102
-        ],
-        "erwartetBand": [
-          31.21,
-          1045.33
-        ],
-        "urteil": "erwartbar",
-        "grund": "unter 3168 geprüften Kombinationen sind 280.4 solcher Läufe zu erwarten"
-      },
-      "next": {
-        "oppId": "535",
-        "oppName": "Malaga",
-        "atHome": true,
-        "date": "2026-09-20",
-        "kickoff": "2026-09-20T12:00:00+00:00",
-        "oppRatePct": 53,
-        "pickKey": "ESP-7-546-535"
-      },
-      "oppSupportPct": 47,
-      "matchupPct": 52,
-      "signalInfo": {
-        "state": "confirm",
-        "count": 5,
-        "conviction": 5,
-        "names": [
-          "injury",
-          "h2h_pattern",
-          "chance_creation",
-          "fixture_congestion",
-          "transfer_shift"
-        ],
-        "market": "Unter 2.5 Tore"
       }
     },
     {
@@ -2771,6 +2694,72 @@
       },
       "oppSupportPct": 60,
       "matchupPct": 47
+    },
+    {
+      "teamId": "546",
+      "team": "Getafe",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/546.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "under25",
+      "market": "Unter 2,5 Tore",
+      "length": 4,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 55,
+        "label": "Eigen 55% + Gegner 47% → 52%"
+      },
+      "ratePct": 55,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 11,
+      "zufallPct": 2.09751,
+      "ligaBasisPct": 38,
+      "seltenheit": {
+        "basis": "eigen",
+        "ratePct": 55,
+        "preN": 11,
+        "einsZu": 11,
+        "erwartet": 280.43,
+        "familie": 3168,
+        "bandPct": [
+          32,
+          76
+        ],
+        "einsZuBand": [
+          3,
+          102
+        ],
+        "erwartetBand": [
+          31.21,
+          1045.33
+        ],
+        "urteil": "erwartbar",
+        "grund": "unter 3168 geprüften Kombinationen sind 280.4 solcher Läufe zu erwarten"
+      },
+      "next": {
+        "oppId": "535",
+        "oppName": "Malaga",
+        "atHome": true,
+        "date": "2026-09-20",
+        "kickoff": "2026-09-20T12:00:00+00:00",
+        "oppRatePct": 53,
+        "pickKey": "ESP-7-546-535"
+      },
+      "oppSupportPct": 47,
+      "matchupPct": 52
     },
     {
       "teamId": "867",
@@ -4928,8 +4917,9 @@
       "signalInfo": {
         "state": "confirm",
         "count": 4,
-        "conviction": 6,
+        "conviction": 5,
         "names": [
+          "injury",
           "form_trend",
           "xg_strength",
           "streak_momentum",
@@ -4994,8 +4984,8 @@
       "matchupPct": 61,
       "signalInfo": {
         "state": "confirm",
-        "count": 7,
-        "conviction": 5,
+        "count": 6,
+        "conviction": 6,
         "names": [
           "injury",
           "form_trend",
@@ -6437,71 +6427,6 @@
       "matchupPct": 89
     },
     {
-      "teamId": "546",
-      "team": "Getafe",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/546.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "under25",
-      "market": "Unter 2,5 Tore",
-      "length": 3,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 38,
-        "label": "Eigen 38% + Gegner 47% → 42% · Signale bestätigen"
-      },
-      "ratePct": 38,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "liga",
-      "preN": 3,
-      "zufallPct": 5.5116,
-      "ligaBasisPct": 38,
-      "seltenheit": {
-        "basis": "liga",
-        "ratePct": 38,
-        "preN": null,
-        "einsZu": 18,
-        "erwartet": 174.61,
-        "familie": 3168,
-        "urteil": "nicht belegbar",
-        "grund": "keine eigene Vorgeschichte vor der Serie — gemessen wird gegen den Liga-Schnitt, der für ein Durchschnittsteam gilt"
-      },
-      "next": {
-        "oppId": "535",
-        "oppName": "Malaga",
-        "atHome": true,
-        "date": "2026-09-20",
-        "kickoff": "2026-09-20T12:00:00+00:00",
-        "oppRatePct": 53,
-        "pickKey": "ESP-7-546-535"
-      },
-      "oppSupportPct": 47,
-      "matchupPct": 42,
-      "signalInfo": {
-        "state": "confirm",
-        "count": 5,
-        "conviction": 5,
-        "names": [
-          "injury",
-          "h2h_pattern",
-          "chance_creation",
-          "fixture_congestion",
-          "transfer_shift"
-        ],
-        "market": "Unter 2.5 Tore"
-      }
-    },
-    {
       "teamId": "45",
       "team": "Everton",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/45.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -6686,58 +6611,6 @@
       "matchupPct": 48
     },
     {
-      "teamId": "543",
-      "team": "Real Betis",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/543.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "under25",
-      "market": "Unter 2,5 Tore",
-      "length": 3,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 38,
-        "label": "Eigen 38% + Gegner 67% → 50%"
-      },
-      "ratePct": 38,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "liga",
-      "preN": 3,
-      "zufallPct": 5.5116,
-      "ligaBasisPct": 38,
-      "seltenheit": {
-        "basis": "liga",
-        "ratePct": 38,
-        "preN": null,
-        "einsZu": 18,
-        "erwartet": 174.61,
-        "familie": 3168,
-        "urteil": "nicht belegbar",
-        "grund": "keine eigene Vorgeschichte vor der Serie — gemessen wird gegen den Liga-Schnitt, der für ein Durchschnittsteam gilt"
-      },
-      "next": {
-        "oppId": "544",
-        "oppName": "Deportivo La Coruna",
-        "atHome": false,
-        "date": "2026-09-20",
-        "kickoff": "2026-09-20T16:30:00+00:00",
-        "oppRatePct": 33,
-        "pickKey": "ESP-7-544-543"
-      },
-      "oppSupportPct": 67,
-      "matchupPct": 50
-    },
-    {
       "teamId": "536",
       "team": "Sevilla",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/536.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -6802,6 +6675,124 @@
       },
       "oppSupportPct": 33,
       "matchupPct": 38
+    },
+    {
+      "teamId": "543",
+      "team": "Real Betis",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/543.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "under25",
+      "market": "Unter 2,5 Tore",
+      "length": 3,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 38,
+        "label": "Eigen 38% + Gegner 67% → 50% · Linie/Signale dagegen"
+      },
+      "ratePct": 38,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "liga",
+      "preN": 3,
+      "zufallPct": 5.5116,
+      "ligaBasisPct": 38,
+      "seltenheit": {
+        "basis": "liga",
+        "ratePct": 38,
+        "preN": null,
+        "einsZu": 18,
+        "erwartet": 174.61,
+        "familie": 3168,
+        "urteil": "nicht belegbar",
+        "grund": "keine eigene Vorgeschichte vor der Serie — gemessen wird gegen den Liga-Schnitt, der für ein Durchschnittsteam gilt"
+      },
+      "next": {
+        "oppId": "544",
+        "oppName": "Deportivo La Coruna",
+        "atHome": false,
+        "date": "2026-09-20",
+        "kickoff": "2026-09-20T16:30:00+00:00",
+        "oppRatePct": 33,
+        "pickKey": "ESP-7-544-543"
+      },
+      "oppSupportPct": 67,
+      "matchupPct": 50,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 5,
+        "conviction": 6,
+        "names": [
+          "lead_lag_bias",
+          "injury",
+          "xg_strength",
+          "chance_creation",
+          "topscorer_momentum",
+          "move_following"
+        ],
+        "market": "Über 2.5 Tore"
+      }
+    },
+    {
+      "teamId": "546",
+      "team": "Getafe",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/546.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "under25",
+      "market": "Unter 2,5 Tore",
+      "length": 3,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 38,
+        "label": "Eigen 38% + Gegner 47% → 42%"
+      },
+      "ratePct": 38,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "liga",
+      "preN": 3,
+      "zufallPct": 5.5116,
+      "ligaBasisPct": 38,
+      "seltenheit": {
+        "basis": "liga",
+        "ratePct": 38,
+        "preN": null,
+        "einsZu": 18,
+        "erwartet": 174.61,
+        "familie": 3168,
+        "urteil": "nicht belegbar",
+        "grund": "keine eigene Vorgeschichte vor der Serie — gemessen wird gegen den Liga-Schnitt, der für ein Durchschnittsteam gilt"
+      },
+      "next": {
+        "oppId": "535",
+        "oppName": "Malaga",
+        "atHome": true,
+        "date": "2026-09-20",
+        "kickoff": "2026-09-20T12:00:00+00:00",
+        "oppRatePct": 53,
+        "pickKey": "ESP-7-546-535"
+      },
+      "oppSupportPct": 47,
+      "matchupPct": 42
     },
     {
       "teamId": "116",
@@ -10881,8 +10872,9 @@
       "signalInfo": {
         "state": "confirm",
         "count": 4,
-        "conviction": 6,
+        "conviction": 5,
         "names": [
+          "injury",
           "form_trend",
           "xg_strength",
           "streak_momentum",
@@ -10972,7 +10964,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 70,
-        "label": "Eigen 70% + Gegner 73% → 71% · Signale bestätigen"
+        "label": "Eigen 70% + Gegner 73% → 71%"
       },
       "ratePct": 70,
       "seq": [
@@ -11022,21 +11014,7 @@
         "pickKey": "GER-4-174-1660"
       },
       "oppSupportPct": 73,
-      "matchupPct": 71,
-      "signalInfo": {
-        "state": "confirm",
-        "count": 6,
-        "conviction": 6,
-        "names": [
-          "injury",
-          "form_trend",
-          "h2h_pattern",
-          "xg_strength",
-          "chance_creation",
-          "streak_momentum"
-        ],
-        "market": "Über 2.5 Tore"
-      }
+      "matchupPct": 71
     },
     {
       "teamId": "1660",
@@ -11052,7 +11030,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 62,
-        "label": "Eigen 62% + Gegner 73% → 66% · Signale bestätigen"
+        "label": "Eigen 62% + Gegner 73% → 66%"
       },
       "ratePct": 62,
       "seq": [
@@ -11087,21 +11065,7 @@
         "pickKey": "GER-4-174-1660"
       },
       "oppSupportPct": 73,
-      "matchupPct": 66,
-      "signalInfo": {
-        "state": "confirm",
-        "count": 6,
-        "conviction": 6,
-        "names": [
-          "injury",
-          "form_trend",
-          "h2h_pattern",
-          "xg_strength",
-          "chance_creation",
-          "streak_momentum"
-        ],
-        "market": "Über 2.5 Tore"
-      }
+      "matchupPct": 66
     },
     {
       "teamId": "169",
@@ -18266,15 +18230,15 @@
       "matchupPct": 48,
       "signalInfo": {
         "state": "confirm",
-        "count": 4,
+        "count": 5,
         "conviction": 6,
         "names": [
+          "lead_lag_bias",
           "injury",
           "form_trend",
           "h2h_pattern",
           "xg_strength",
-          "chance_creation",
-          "move_following"
+          "chance_creation"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -18332,15 +18296,15 @@
       "matchupPct": 58,
       "signalInfo": {
         "state": "confirm",
-        "count": 4,
+        "count": 5,
         "conviction": 6,
         "names": [
+          "lead_lag_bias",
           "injury",
           "form_trend",
           "h2h_pattern",
           "xg_strength",
-          "chance_creation",
-          "move_following"
+          "chance_creation"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -24684,8 +24648,8 @@
       "matchupPct": 64,
       "signalInfo": {
         "state": "confirm",
-        "count": 7,
-        "conviction": 5,
+        "count": 6,
+        "conviction": 6,
         "names": [
           "injury",
           "form_trend",
@@ -24895,6 +24859,86 @@
       },
       "oppSupportPct": 80,
       "matchupPct": 72
+    },
+    {
+      "teamId": "543",
+      "team": "Real Betis",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/543.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 3,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 33,
+        "label": "Eigen 33% + Gegner 33% → 33% · Signale bestätigen"
+      },
+      "ratePct": 33,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 6,
+      "zufallPct": 23.76799,
+      "ligaBasisPct": 62,
+      "seltenheit": {
+        "basis": "eigen",
+        "ratePct": 33,
+        "preN": 6,
+        "einsZu": 27,
+        "erwartet": 117.33,
+        "familie": 3168,
+        "bandPct": [
+          12,
+          65
+        ],
+        "einsZuBand": [
+          4,
+          620
+        ],
+        "erwartetBand": [
+          5.11,
+          882.15
+        ],
+        "urteil": "erwartbar",
+        "grund": "unter 3168 geprüften Kombinationen sind 117.3 solcher Läufe zu erwarten"
+      },
+      "next": {
+        "oppId": "544",
+        "oppName": "Deportivo La Coruna",
+        "atHome": false,
+        "date": "2026-09-20",
+        "kickoff": "2026-09-20T16:30:00+00:00",
+        "oppRatePct": 33,
+        "pickKey": "ESP-7-544-543"
+      },
+      "oppSupportPct": 33,
+      "matchupPct": 33,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 5,
+        "conviction": 6,
+        "names": [
+          "lead_lag_bias",
+          "injury",
+          "xg_strength",
+          "chance_creation",
+          "topscorer_momentum",
+          "move_following"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "157",
@@ -25160,7 +25204,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 80,
-        "label": "Eigen 80% + Gegner 80% → 80% · Signale bestätigen"
+        "label": "Eigen 80% + Gegner 80% → 80%"
       },
       "ratePct": 80,
       "seq": [
@@ -25210,21 +25254,7 @@
         "pickKey": "GER-4-174-1660"
       },
       "oppSupportPct": 80,
-      "matchupPct": 80,
-      "signalInfo": {
-        "state": "confirm",
-        "count": 6,
-        "conviction": 6,
-        "names": [
-          "injury",
-          "form_trend",
-          "h2h_pattern",
-          "xg_strength",
-          "chance_creation",
-          "streak_momentum"
-        ],
-        "market": "Über 2.5 Tore"
-      }
+      "matchupPct": 80
     },
     {
       "teamId": "175",
@@ -25595,72 +25625,6 @@
       "matchupPct": 49
     },
     {
-      "teamId": "548",
-      "team": "Real Sociedad",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/548.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 58,
-        "label": "Eigen 58% + Gegner 60% → 59%"
-      },
-      "ratePct": 58,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 12,
-      "zufallPct": 23.76799,
-      "ligaBasisPct": 62,
-      "seltenheit": {
-        "basis": "eigen",
-        "ratePct": 58,
-        "preN": 12,
-        "einsZu": 5,
-        "erwartet": 628.83,
-        "familie": 3168,
-        "bandPct": [
-          36,
-          78
-        ],
-        "einsZuBand": [
-          2,
-          22
-        ],
-        "erwartetBand": [
-          142.89,
-          1503.59
-        ],
-        "urteil": "erwartbar",
-        "grund": "unter 3168 geprüften Kombinationen sind 628.8 solcher Läufe zu erwarten"
-      },
-      "next": {
-        "oppId": "532",
-        "oppName": "Valencia",
-        "atHome": false,
-        "date": "2026-09-20",
-        "kickoff": "2026-09-20T19:00:00+00:00",
-        "oppRatePct": 60,
-        "pickKey": "ESP-7-532-548"
-      },
-      "oppSupportPct": 60,
-      "matchupPct": 59
-    },
-    {
       "teamId": "36",
       "team": "Fulham",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/36.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -25793,70 +25757,83 @@
       "matchupPct": 36
     },
     {
-      "teamId": "543",
-      "team": "Real Betis",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/543.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "548",
+      "team": "Real Sociedad",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/548.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "ESP",
       "leagueName": "La Liga",
       "type": "over25",
       "market": "Über 2,5 Tore",
       "length": 3,
-      "venue": "A",
+      "venue": "all",
       "strong": false,
       "continuation": {
         "state": "wackelt",
-        "ratePct": 33,
-        "label": "Eigen 33% + Gegner 33% → 33%"
+        "ratePct": 58,
+        "label": "Eigen 58% + Gegner 60% → 59% · Linie/Signale dagegen"
       },
-      "ratePct": 33,
+      "ratePct": 58,
       "seq": [
         true,
         true,
         true,
         false,
-        false,
+        true,
         true,
         false,
-        false
+        true
       ],
       "xgBacked": null,
       "basis": "prior",
-      "preN": 6,
+      "preN": 12,
       "zufallPct": 23.76799,
       "ligaBasisPct": 62,
       "seltenheit": {
         "basis": "eigen",
-        "ratePct": 33,
-        "preN": 6,
-        "einsZu": 27,
-        "erwartet": 117.33,
+        "ratePct": 58,
+        "preN": 12,
+        "einsZu": 5,
+        "erwartet": 628.83,
         "familie": 3168,
         "bandPct": [
-          12,
-          65
+          36,
+          78
         ],
         "einsZuBand": [
-          4,
-          620
+          2,
+          22
         ],
         "erwartetBand": [
-          5.11,
-          882.15
+          142.89,
+          1503.59
         ],
         "urteil": "erwartbar",
-        "grund": "unter 3168 geprüften Kombinationen sind 117.3 solcher Läufe zu erwarten"
+        "grund": "unter 3168 geprüften Kombinationen sind 628.8 solcher Läufe zu erwarten"
       },
       "next": {
-        "oppId": "544",
-        "oppName": "Deportivo La Coruna",
+        "oppId": "532",
+        "oppName": "Valencia",
         "atHome": false,
         "date": "2026-09-20",
-        "kickoff": "2026-09-20T16:30:00+00:00",
-        "oppRatePct": 33,
-        "pickKey": "ESP-7-544-543"
+        "kickoff": "2026-09-20T19:00:00+00:00",
+        "oppRatePct": 60,
+        "pickKey": "ESP-7-532-548"
       },
-      "oppSupportPct": 33,
-      "matchupPct": 33
+      "oppSupportPct": 60,
+      "matchupPct": 59,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 3,
+        "conviction": 5,
+        "names": [
+          "injury",
+          "form_trend",
+          "h2h_pattern",
+          "chance_creation",
+          "transfer_shift"
+        ],
+        "market": "Unter 2.5 Tore"
+      }
     },
     {
       "teamId": "116",

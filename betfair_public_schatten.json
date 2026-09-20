@@ -163,7 +163,7 @@ null
 2,
 2
 ],
-"settledAt": "2026-09-20T12:28:10.382472+00:00"
+"settledAt": "2026-09-20T13:13:24.769978+00:00"
 },
 {
 "k": "fresh:36045433:Match Odds",
@@ -1554,7 +1554,7 @@ null
 "leadOdd": 2.38,
 "value": 180605.88,
 "sentAt": "2026-09-20T10:13:04.572443+00:00",
-"status": "pending",
+"status": "lost",
 "htScore": [
 0,
 1
@@ -1575,7 +1575,17 @@ null
 null,
 null
 ]
-}
+},
+"clvBf": 0.0,
+"clvPinn": 0.36,
+"settledAt": "2026-09-20T12:58:31.242527+00:00",
+"ftScore": [
+1,
+1
+],
+"profit": -1.0,
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36085688:Over/Under 2.5 Goals",
@@ -1624,7 +1634,7 @@ null
 "leadOdd": 2.26,
 "value": 154537.03,
 "sentAt": "2026-09-20T11:13:08.460775+00:00",
-"status": "pending",
+"status": "lost",
 "htScore": [
 0,
 1
@@ -1645,7 +1655,17 @@ null
 0,
 0
 ]
-}
+},
+"clvBf": -1.51,
+"clvPinn": 1.41,
+"settledAt": "2026-09-20T12:58:31.242527+00:00",
+"ftScore": [
+0,
+1
+],
+"profit": -1.0,
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36065369:Match Odds",
@@ -1867,7 +1887,10 @@ null
 "value": 347354.96,
 "sentAt": "2026-09-20T11:58:16.510186+00:00",
 "status": "pending",
-"htScore": null,
+"htScore": [
+0,
+0
+],
 "leadShare": 0.8215177926349462,
 "leadDir": "out",
 "onLeader": null,
@@ -1950,6 +1973,166 @@ null
 "score": [
 null,
 null
+]
+}
+},
+{
+"k": "fresh:36041250:Match Odds",
+"matchId": "36041250",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Dutch Eredivisie",
+"home": "FC Twente",
+"away": "PSV",
+"leadName": "FC Twente",
+"leadOdd": 1.82,
+"value": 186073.75,
+"sentAt": "2026-09-20T12:58:28.564120+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.5204774988411852,
+"leadDir": "in",
+"onLeader": true,
+"tier": "rest",
+"magnitude": 147194.0,
+"schwelle": 30000.0,
+"anteilSchwelle": 4.906,
+"raus": "leader",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 24,
+"score": [
+1,
+0
+]
+}
+},
+{
+"k": "fresh:36041251:Match Odds",
+"matchId": "36041251",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Italian Serie A",
+"home": "Parma",
+"away": "Genoa",
+"leadName": "Genoa",
+"leadOdd": 2.58,
+"value": 238130.33,
+"sentAt": "2026-09-20T12:58:28.564139+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.5156742108407609,
+"leadDir": "in",
+"onLeader": null,
+"tier": "top",
+"magnitude": 132200.0,
+"schwelle": 100000.0,
+"anteilSchwelle": 1.322,
+"raus": "einseitig",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": null,
+"score": [
+null,
+null
+]
+}
+},
+{
+"k": "fix:36091045:First Half Goals 0.5",
+"matchId": "36091045",
+"scenario": "fix",
+"market": "First Half Goals 0.5",
+"league": "FIFA Ladies U20 World Cup",
+"home": "Nigeria U20 (W)",
+"away": "Colombia U20 (W)",
+"leadName": "Under 0.5 Goals",
+"leadOdd": 2.1,
+"value": 2079.42,
+"sentAt": "2026-09-20T13:13:23.137624+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.969967587115638,
+"leadDir": "in",
+"onLeader": null,
+"tier": "top",
+"magnitude": 0.0,
+"schwelle": 100000.0,
+"anteilSchwelle": 0.0,
+"raus": "fix",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 11,
+"score": [
+0,
+0
+]
+}
+},
+{
+"k": "fresh:36036333:Match Odds",
+"matchId": "36036333",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "English Premier League",
+"home": "Leeds",
+"away": "Crystal Palace",
+"leadName": "Leeds",
+"leadOdd": 1.81,
+"value": 996561.89,
+"sentAt": "2026-09-20T13:13:23.137646+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.915513335554102,
+"leadDir": "out",
+"onLeader": false,
+"tier": "top",
+"magnitude": 490375.8,
+"schwelle": 100000.0,
+"anteilSchwelle": 4.904,
+"raus": "drift",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 10,
+"score": [
+0,
+0
+]
+}
+},
+{
+"k": "fresh:36068258:Over/Under 3.5 Goals",
+"matchId": "36068258",
+"scenario": "fresh",
+"market": "Over/Under 3.5 Goals",
+"league": "German Bundesliga 2",
+"home": "Hannover",
+"away": "Bochum",
+"leadName": "Under 3.5 Goals",
+"leadOdd": 1.52,
+"value": 144040.95,
+"sentAt": "2026-09-20T13:13:23.137653+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.8807029528755539,
+"leadDir": "out",
+"onLeader": false,
+"tier": "top",
+"magnitude": 121261.5,
+"schwelle": 100000.0,
+"anteilSchwelle": 1.213,
+"raus": "ereignis_sprung",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 84,
+"score": [
+2,
+1
 ]
 }
 }
