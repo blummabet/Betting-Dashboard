@@ -6618,7 +6618,11 @@
           "kickoff": "2026-09-16T19:30:00+00:00",
           "venue": "Estadio Ciudad de Valencia",
           "fid": 1570389,
-          "result": null
+          "result": null,
+          "absage": {
+            "status": "PST",
+            "gesehenAt": "2026-09-20T22:28:43.669657+00:00"
+          }
         },
         {
           "home": "543",
@@ -6872,7 +6876,11 @@
           "kickoff": "2026-09-20T19:00:00Z",
           "venue": "Estadio de Mestalla",
           "fid": 1570401,
-          "result": null,
+          "result": {
+            "status": "FT",
+            "home_score": 2,
+            "away_score": 3
+          },
           "time": "21:00"
         },
         {
@@ -49441,8 +49449,8 @@
             "score": 3.25,
             "confidence": 0.61,
             "evidence": "🩹 Offense-Ausfälle: Heim 4.0pp · Auswärts 5.8pp · Defense-Ausfälle: Heim 3.0pp · Auswärts 3.5pp",
-            "weight": 1.006,
-            "weighted_score": 1.99,
+            "weight": 1.001,
+            "weighted_score": 1.98,
             "metadata": {
               "home_off_pp": 4.0,
               "home_def_pp": 3.0,
@@ -49457,8 +49465,8 @@
             "score": -2.4,
             "confidence": 0.8,
             "evidence": "📈 Nach der Form fallen ~3.1 Tore pro Spiel, die Linie liegt bei 2.5 — spricht eher gegen Unter (+0.6 ggü. Linie).",
-            "weight": 1.123,
-            "weighted_score": -2.16,
+            "weight": 1.109,
+            "weighted_score": -2.13,
             "metadata": {
               "expected_total": 3.1,
               "ou_line": 2.5,
@@ -49471,7 +49479,7 @@
             "score": -1.77,
             "confidence": 0.51,
             "evidence": "🎨 Zusammen kreieren beide eher viel Chancen (26.4 aus Schlüsselpässen + Abschlüssen) — spricht eher gegen Under.",
-            "weight": 1.087,
+            "weight": 1.075,
             "weighted_score": -0.39,
             "metadata": {
               "total_threat": 26.43
@@ -49483,7 +49491,7 @@
             "score": 0.0,
             "confidence": 0.5,
             "evidence": "⏸ Move ruht (Drift, letzter Abschnitt +0.0pp) — kein frisches Geld",
-            "weight": 1.072,
+            "weight": 1.098,
             "weighted_score": 0.0,
             "metadata": {
               "state": "drift",
@@ -49498,7 +49506,7 @@
             "score": 0.6,
             "confidence": 0.55,
             "evidence": "Schlüsselspieler abgegeben → geringere Tor-Bedrohung",
-            "weight": 1.024,
+            "weight": 1.03,
             "weighted_score": 0.14,
             "metadata": {
               "homeShift": 1.0,
@@ -49507,7 +49515,7 @@
             "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": -0.17,
+        "signalAdjustmentPP": -0.16,
         "signalCountPos": 2,
         "signalCountNeg": 2,
         "signalAdjustmentPP_trade": -0.2,
@@ -50872,8 +50880,8 @@
             "score": 4.1,
             "confidence": 0.75,
             "evidence": "🩹 Heim 6.0pp (J. Mateta (FWD), C. Riad (DEF)) · Auswärts 1.9pp (N. Savona (?), N. Milenkovic (DEF))",
-            "weight": 1.006,
-            "weighted_score": 3.09,
+            "weight": 1.001,
+            "weighted_score": 3.08,
             "metadata": {
               "home_impact_pp": 6.0,
               "away_impact_pp": 1.9,
@@ -50897,8 +50905,8 @@
             "score": 1.67,
             "confidence": 0.76,
             "evidence": "⚡ xG-Stärke: Heim erspielt sich 1.30 Tor-Chancen (xG) und gibt 2.04 her, Auswärts 1.47 und 1.36 — macht -0.84 Unterschied.",
-            "weight": 1.148,
-            "weighted_score": 1.46,
+            "weight": 1.132,
+            "weighted_score": 1.44,
             "metadata": {
               "home_xg_for": 1.3,
               "home_xg_against": 2.04,
@@ -50914,7 +50922,7 @@
             "score": 1.7,
             "confidence": 0.65,
             "evidence": "🎨 Beim Chancen-Kreieren liegt Heim bei 11.5, Auswärts bei 15.3 (Schlüsselpässe + Abschlüsse) — Vorsprung -3.8.",
-            "weight": 1.087,
+            "weight": 1.075,
             "weighted_score": 0.48,
             "metadata": {
               "home_threat": 11.5,
@@ -50928,7 +50936,7 @@
             "score": 2.43,
             "confidence": 0.53,
             "evidence": "📋 Im Form-Rating steht Heim bei 6.93, Auswärts bei 6.82 — Vorsprung +0.11, in der Abwehr +0.86.",
-            "weight": 1.048,
+            "weight": 1.052,
             "weighted_score": 0.54,
             "metadata": {
               "home_rating": 6.93,
@@ -50943,7 +50951,7 @@
             "score": 0.0,
             "confidence": 0.5,
             "evidence": "⏸ Move ruht (Drift, letzter Abschnitt +0.0pp) — kein frisches Geld",
-            "weight": 1.072,
+            "weight": 1.098,
             "weighted_score": 0.0,
             "metadata": {
               "state": "drift",
@@ -50958,7 +50966,7 @@
             "score": 0.33,
             "confidence": 0.38,
             "evidence": "Neuer Trainer O. Glasner (50d) → Auswärts-Bounce",
-            "weight": 0.979,
+            "weight": 0.958,
             "weighted_score": 0.05,
             "metadata": {
               "homeBounce": 0.0,
@@ -50971,7 +50979,7 @@
             "score": -0.48,
             "confidence": 0.55,
             "evidence": "Schlüssel-Abgang Auswärts 3 / Gegner 1",
-            "weight": 1.024,
+            "weight": 1.03,
             "weighted_score": -0.11,
             "metadata": {
               "homeShift": 0.6,
@@ -50984,8 +50992,8 @@
             "score": 1.2,
             "confidence": 0.6,
             "evidence": "Pinnacle zog Auswärts um +4.5pp an — ein solider Sharp-Move mittlerer Größe, der dem schärfsten Geld folgt.",
-            "weight": 1.147,
-            "weighted_score": 0.83,
+            "weight": 1.136,
+            "weighted_score": 0.82,
             "metadata": {
               "move_pp": 4.52,
               "bucket": "mid",
@@ -50997,7 +51005,7 @@
             "score": -1.39,
             "confidence": 0.66,
             "evidence": "⚡ Ortsform: Heim trifft in 22-Netto daheim, Auswärts -12-Netto auf Reisen (getroffen − kassiert) — +0.35 Unterschied zugunsten Heim. Der Heim/Auswärts-Split ist hier aussagekräftiger als der Gesamtschnitt.",
-            "weight": 1.123,
+            "weight": 1.108,
             "weighted_score": -0.41,
             "metadata": {
               "venue_net_home": 0.222,
@@ -51033,11 +51041,11 @@
           "pinn_move_pp": 5.56,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 194.7,
+          "hours_since_open": 196.3,
           "open_pinn_odds": 3.08,
           "current_pinn_odds": 2.63,
           "move_age_decay": 1.0,
-          "move_age_days": 8.1
+          "move_age_days": 8.2
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -51110,7 +51118,7 @@
             "score": 1.1,
             "confidence": 0.57,
             "evidence": "🩹 Heim 3.8pp (A. Matusiwa (?), J. Taylor (?)) · Auswärts 4.9pp (T. Cairney (?), L. De Fougerolles (DEF))",
-            "weight": 1.006,
+            "weight": 1.001,
             "weighted_score": 0.63,
             "metadata": {
               "home_impact_pp": 3.8,
@@ -51135,8 +51143,8 @@
             "score": -1.0,
             "confidence": 0.85,
             "evidence": "⚔️ Direkte Duelle (10): 1 Heimsiege, 3 Remis, 6 Auswärtssiege — Heim holt davon 25%.",
-            "weight": 1.075,
-            "weighted_score": -0.36,
+            "weight": 1.085,
+            "weighted_score": -0.37,
             "metadata": {
               "games": 10,
               "home_wins": 1,
@@ -51152,7 +51160,7 @@
             "score": -1.94,
             "confidence": 0.77,
             "evidence": "⚡ xG-Stärke: Heim erspielt sich 1.48 Tor-Chancen (xG) und gibt 1.96 her, Auswärts 2.07 und 1.58 — macht -0.97 Unterschied.",
-            "weight": 1.148,
+            "weight": 1.132,
             "weighted_score": -0.68,
             "metadata": {
               "home_xg_for": 1.48,
@@ -51170,8 +51178,8 @@
             "score": -2.81,
             "confidence": 0.75,
             "evidence": "🎨 Beim Chancen-Kreieren liegt Heim bei 12.6, Auswärts bei 18.9 (Schlüsselpässe + Abschlüsse) — Vorsprung -6.2.",
-            "weight": 1.087,
-            "weighted_score": -0.92,
+            "weight": 1.075,
+            "weighted_score": -0.91,
             "metadata": {
               "home_threat": 12.63,
               "away_threat": 18.87,
@@ -51184,8 +51192,8 @@
             "score": -3.68,
             "confidence": 0.6,
             "evidence": "📋 Im Form-Rating steht Heim bei 6.63, Auswärts bei 6.87 — Vorsprung -0.24, in der Abwehr +0.62.",
-            "weight": 1.048,
-            "weighted_score": -2.31,
+            "weight": 1.052,
+            "weighted_score": -2.32,
             "metadata": {
               "home_rating": 6.63,
               "away_rating": 6.87,
@@ -51198,7 +51206,7 @@
             "score": 0.0,
             "confidence": 0.5,
             "evidence": "⏸ Move ruht (Drift, letzter Abschnitt +0.0pp) — kein frisches Geld",
-            "weight": 1.072,
+            "weight": 1.098,
             "weighted_score": 0.0,
             "metadata": {
               "state": "drift",
@@ -51213,7 +51221,7 @@
             "score": -0.48,
             "confidence": 0.55,
             "evidence": "Schlüssel-Abgang Heim 4 / Gegner 1",
-            "weight": 1.024,
+            "weight": 1.03,
             "weighted_score": -0.11,
             "metadata": {
               "homeShift": 1.0,
@@ -51226,8 +51234,8 @@
             "score": 1.2,
             "confidence": 0.6,
             "evidence": "Pinnacle zog Heim um +3.9pp an — ein solider Sharp-Move mittlerer Größe, der dem schärfsten Geld folgt.",
-            "weight": 1.147,
-            "weighted_score": 0.83,
+            "weight": 1.136,
+            "weighted_score": 0.82,
             "metadata": {
               "move_pp": 3.9,
               "bucket": "mid",
@@ -51239,8 +51247,8 @@
             "score": 1.57,
             "confidence": 0.64,
             "evidence": "⚡ Ortsform: Heim trifft in 25-Netto daheim, Auswärts -14-Netto auf Reisen (getroffen − kassiert) — +0.39 Unterschied zugunsten Heim. Der Heim/Auswärts-Split ist hier aussagekräftiger als der Gesamtschnitt.",
-            "weight": 1.123,
-            "weighted_score": 0.45,
+            "weight": 1.108,
+            "weighted_score": 0.44,
             "metadata": {
               "venue_net_home": 0.25,
               "venue_net_away": -0.143,
@@ -51252,7 +51260,7 @@
             "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": -0.62,
+        "signalAdjustmentPP": -0.63,
         "signalCountPos": 3,
         "signalCountNeg": 5,
         "signalAdjustmentPP_trade": -0.6,
@@ -52304,8 +52312,8 @@
             "score": -2.33,
             "confidence": 0.85,
             "evidence": "📈 Letzte 15 Spiele: Heim trifft 1.7 pro Partie und kassiert 1.3, Auswärts 2.3 und 1.1.",
-            "weight": 1.123,
-            "weighted_score": -2.22,
+            "weight": 1.109,
+            "weighted_score": -2.2,
             "metadata": {
               "home_scored": 1.67,
               "home_conceded": 1.27,
@@ -52321,7 +52329,7 @@
             "score": -0.6,
             "confidence": 0.45,
             "evidence": "⚔️ Direkte Duelle (2): 0 Heimsiege, 1 Remis, 1 Auswärtssiege — Heim holt davon 25%.",
-            "weight": 1.075,
+            "weight": 1.085,
             "weighted_score": -0.12,
             "metadata": {
               "games": 2,
@@ -52338,7 +52346,7 @@
             "score": 0.93,
             "confidence": 0.75,
             "evidence": "⚡ xG-Stärke: Heim erspielt sich 1.82 Tor-Chancen (xG) und gibt 1.47 her, Auswärts 2.14 und 2.25 — macht +0.47 Unterschied.",
-            "weight": 1.148,
+            "weight": 1.132,
             "weighted_score": 0.32,
             "metadata": {
               "home_xg_for": 1.82,
@@ -52356,8 +52364,8 @@
             "score": -2.22,
             "confidence": 0.7,
             "evidence": "🎨 Beim Chancen-Kreieren liegt Heim bei 13.1, Auswärts bei 18.0 (Schlüsselpässe + Abschlüsse) — Vorsprung -4.9.",
-            "weight": 1.087,
-            "weighted_score": -0.68,
+            "weight": 1.075,
+            "weighted_score": -0.67,
             "metadata": {
               "home_threat": 13.1,
               "away_threat": 18.03,
@@ -52370,7 +52378,7 @@
             "score": 0.0,
             "confidence": 0.5,
             "evidence": "⏸ Move ruht (Drift, letzter Abschnitt +2.1pp) — kein frisches Geld",
-            "weight": 1.072,
+            "weight": 1.098,
             "weighted_score": 0.0,
             "metadata": {
               "state": "drift",
@@ -52385,7 +52393,7 @@
             "score": -0.48,
             "confidence": 0.55,
             "evidence": "Schlüssel-Abgang Heim 2 / Gegner 1",
-            "weight": 1.024,
+            "weight": 1.03,
             "weighted_score": -0.27,
             "metadata": {
               "homeShift": 1.0,
@@ -52397,8 +52405,8 @@
             "score": -1.2,
             "confidence": 0.55,
             "evidence": "Vorsicht: nur ein kleiner Heim-Move (+2.4pp), und die Team-Daten (xG/Form) sprechen dagegen — genau diese Konstellation verlor historisch deutlich (Top-5).",
-            "weight": 1.147,
-            "weighted_score": -0.76,
+            "weight": 1.136,
+            "weighted_score": -0.75,
             "metadata": {
               "move_pp": 2.37,
               "bucket": "weak_contradict",
@@ -52407,13 +52415,13 @@
             }
           }
         ],
-        "signalAdjustmentPP": -1.06,
+        "signalAdjustmentPP": -1.05,
         "signalCountPos": 1,
         "signalCountNeg": 5,
         "signalAdjustmentPP_trade": -1.1,
         "signalCountPos_trade": 1,
         "signalCountNeg_trade": 5,
-        "effectiveEdgePP": -4.1,
+        "effectiveEdgePP": -4.0,
         "effectiveEdgePP_trade": -4.1,
         "convictionScore": 3,
         "convictionVerdict": "skip",
@@ -52660,8 +52668,8 @@
             "score": -4.5,
             "confidence": 0.68,
             "evidence": "🩹 Offense-Ausfälle: Heim 0.0pp · Auswärts 6.0pp · Defense-Ausfälle: Heim 1.5pp · Auswärts 0.0pp",
-            "weight": 1.006,
-            "weighted_score": -3.08,
+            "weight": 1.001,
+            "weighted_score": -3.06,
             "metadata": {
               "home_off_pp": 0.0,
               "home_def_pp": 1.5,
@@ -52676,8 +52684,8 @@
             "score": 3.2,
             "confidence": 0.8,
             "evidence": "📈 Nach der Form fallen ~3.3 Tore pro Spiel, die Linie liegt bei 2.5 — spricht für Über (+0.8 ggü. Linie).",
-            "weight": 1.123,
-            "weighted_score": 1.15,
+            "weight": 1.109,
+            "weighted_score": 1.14,
             "metadata": {
               "expected_total": 3.3,
               "ou_line": 2.5,
@@ -52691,8 +52699,8 @@
             "score": 1.73,
             "confidence": 0.65,
             "evidence": "⚡ Die xG-Werte deuten auf ~3.00 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Über (+0.50).",
-            "weight": 1.148,
-            "weighted_score": 0.52,
+            "weight": 1.132,
+            "weighted_score": 0.51,
             "metadata": {
               "expected_total": 3.0,
               "ou_line": 2.5,
@@ -52707,8 +52715,8 @@
             "score": 5.19,
             "confidence": 0.68,
             "evidence": "🎨 Zusammen kreieren beide eher viel Chancen (35.0 aus Schlüsselpässen + Abschlüssen) — spricht für Over.",
-            "weight": 1.087,
-            "weighted_score": 3.84,
+            "weight": 1.075,
+            "weighted_score": 3.79,
             "metadata": {
               "total_threat": 34.97
             }
@@ -52718,7 +52726,7 @@
             "score": 0.07,
             "confidence": 0.4,
             "evidence": "🔥 Serien stützen: Chelsea 5× Über 2,5 Tore",
-            "weight": 1.149,
+            "weight": 1.082,
             "weighted_score": 0.01,
             "metadata": {
               "family": "ou",
@@ -52731,7 +52739,7 @@
             "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": 1.08,
+        "signalAdjustmentPP": 1.07,
         "signalCountPos": 4,
         "signalCountNeg": 1,
         "signalAdjustmentPP_trade": 1.1,
@@ -70734,8 +70742,8 @@
             "score": 1.26,
             "confidence": 0.48,
             "evidence": "Die breite Masse (Konsens (13 Books)) unterschätzt Unter 2.5 um 2.1pp (Pinnacle höher) — wir nehmen den Value gegen die Masse.",
-            "weight": 0.994,
-            "weighted_score": 0.6,
+            "weight": 0.972,
+            "weighted_score": 0.59,
             "metadata": {
               "market_key": "u25",
               "diff_pp": -2.11,
@@ -70749,7 +70757,7 @@
             "score": 1.25,
             "confidence": 0.51,
             "evidence": "🩹 Offense-Ausfälle: Heim 3.2pp · Auswärts 6.0pp · Defense-Ausfälle: Heim 3.0pp · Auswärts 5.0pp",
-            "weight": 1.006,
+            "weight": 1.001,
             "weighted_score": 0.64,
             "metadata": {
               "home_off_pp": 3.25,
@@ -70765,8 +70773,8 @@
             "score": 1.73,
             "confidence": 0.8,
             "evidence": "📈 Nach der Form fallen ~2.1 Tore pro Spiel, die Linie liegt bei 2.5 — spricht für Unter (-0.4 ggü. Linie).",
-            "weight": 1.123,
-            "weighted_score": 1.55,
+            "weight": 1.109,
+            "weighted_score": 1.53,
             "metadata": {
               "expected_total": 2.07,
               "ou_line": 2.5,
@@ -70779,7 +70787,7 @@
             "score": -0.8,
             "confidence": 0.75,
             "evidence": "⚔️ Aus den letzten 10 Duellen: im Schnitt 2.7 Tore (Linie 2.5) · in 60% fielen über 2.5 Tore → spricht gegen Unter 2.5.",
-            "weight": 1.075,
+            "weight": 1.085,
             "weighted_score": -0.26,
             "metadata": {
               "games": 10,
@@ -70794,8 +70802,8 @@
             "score": -1.64,
             "confidence": 0.5,
             "evidence": "🎨 Zusammen kreieren beide eher viel Chancen (26.1 aus Schlüsselpässen + Abschlüssen) — spricht eher gegen Under.",
-            "weight": 1.087,
-            "weighted_score": -0.36,
+            "weight": 1.075,
+            "weighted_score": -0.35,
             "metadata": {
               "total_threat": 26.09
             },
@@ -70806,7 +70814,7 @@
             "score": 0.0,
             "confidence": 0.5,
             "evidence": "⏸ Move ruht (Drift, letzter Abschnitt +0.0pp) — kein frisches Geld",
-            "weight": 1.072,
+            "weight": 1.098,
             "weighted_score": 0.0,
             "metadata": {
               "state": "drift",
@@ -70821,7 +70829,7 @@
             "score": 0.6,
             "confidence": 0.55,
             "evidence": "Schlüsselspieler abgegeben → geringere Tor-Bedrohung",
-            "weight": 1.024,
+            "weight": 1.03,
             "weighted_score": 0.14,
             "metadata": {
               "homeShift": 1.0,
@@ -70834,8 +70842,8 @@
             "score": 1.79,
             "confidence": 0.55,
             "evidence": "Reverse Line Move: Das Publikum meidet Unter (-2.1pp), aber Pinnacle zieht die Linie genau dorthin (+2.7pp) — scharfes Geld auf unserer unbeliebten Seite.",
-            "weight": 1.0,
-            "weighted_score": 0.98,
+            "weight": 0.986,
+            "weighted_score": 0.97,
             "metadata": {
               "pinn_move_pp": 2.75,
               "public_lean_pp": -2.11,
@@ -70847,7 +70855,7 @@
             "score": 0.55,
             "confidence": 0.46,
             "evidence": "Sharp-Window: Schon im frühen Fenster nach der Eröffnung zog Pinnacle Unter um +2.0pp an — das ist die schärfste, früheste Geldbewegung, bevor das Public-Volumen kam.",
-            "weight": 1.108,
+            "weight": 1.099,
             "weighted_score": 0.11,
             "metadata": {
               "early_move_pp": 1.97,
@@ -71201,8 +71209,8 @@
             "score": 4.01,
             "confidence": 0.85,
             "evidence": "Pinnacle hat Über 3.5 um +3.0pp bewegt, und best ziehen schon nach (1) — der Move ist bestätigt.",
-            "weight": 1.199,
-            "weighted_score": 4.09,
+            "weight": 1.196,
+            "weighted_score": 4.08,
             "metadata": {
               "stage": "confirmed",
               "pinn_move_pp": 3.0,
@@ -71224,8 +71232,8 @@
             "score": 1.77,
             "confidence": 0.53,
             "evidence": "Die breite Masse (Konsens (13 Books)) unterschätzt Über 3.5 um 3.1pp (Pinnacle höher) — wir nehmen den Value gegen die Masse.",
-            "weight": 0.994,
-            "weighted_score": 0.93,
+            "weight": 0.972,
+            "weighted_score": 0.91,
             "metadata": {
               "market_key": "o35",
               "diff_pp": -3.15,
@@ -71239,7 +71247,7 @@
             "score": -1.0,
             "confidence": 0.5,
             "evidence": "🩹 Offense-Ausfälle: Heim 0.8pp · Auswärts 3.2pp · Defense-Ausfälle: Heim 1.5pp · Auswärts 1.5pp",
-            "weight": 1.006,
+            "weight": 1.001,
             "weighted_score": -0.5,
             "metadata": {
               "home_off_pp": 0.75,
@@ -71255,8 +71263,8 @@
             "score": -3.2,
             "confidence": 0.8,
             "evidence": "📈 Nach der Form fallen ~2.7 Tore pro Spiel, die Linie liegt bei 3.5 — spricht eher gegen Über (-0.8 ggü. Linie).",
-            "weight": 1.123,
-            "weighted_score": -1.15,
+            "weight": 1.109,
+            "weighted_score": -1.14,
             "metadata": {
               "expected_total": 2.7,
               "ou_line": 3.5,
@@ -71270,7 +71278,7 @@
             "score": -1.2,
             "confidence": 0.75,
             "evidence": "⚔️ Aus den letzten 10 Duellen: im Schnitt 2.9 Tore (Linie 3.5) → spricht gegen Über 3.5.",
-            "weight": 1.075,
+            "weight": 1.085,
             "weighted_score": -0.39,
             "metadata": {
               "games": 10,
@@ -71285,8 +71293,8 @@
             "score": 5.0,
             "confidence": 0.67,
             "evidence": "🎨 Zusammen kreieren beide eher viel Chancen (34.5 aus Schlüsselpässen + Abschlüssen) — spricht für Over.",
-            "weight": 1.087,
-            "weighted_score": 3.64,
+            "weight": 1.075,
+            "weighted_score": 3.6,
             "metadata": {
               "total_threat": 34.5
             }
@@ -71296,7 +71304,7 @@
             "score": 0.0,
             "confidence": 0.5,
             "evidence": "⏸ Move ruht (Drift, letzter Abschnitt +0.0pp) — kein frisches Geld",
-            "weight": 1.072,
+            "weight": 1.098,
             "weighted_score": 0.0,
             "metadata": {
               "state": "drift",
@@ -71307,14 +71315,14 @@
             }
           }
         ],
-        "signalAdjustmentPP": 1.66,
+        "signalAdjustmentPP": 1.65,
         "signalCountPos": 3,
         "signalCountNeg": 3,
-        "signalAdjustmentPP_trade": 1.7,
+        "signalAdjustmentPP_trade": 1.6,
         "signalCountPos_trade": 3,
         "signalCountNeg_trade": 3,
-        "effectiveEdgePP": 1.7,
-        "effectiveEdgePP_trade": 1.7,
+        "effectiveEdgePP": 1.6,
+        "effectiveEdgePP_trade": 1.6,
         "convictionScore": 4,
         "convictionVerdict": "watch",
         "convictionLabel": "👁 Beobachten",
@@ -71330,11 +71338,11 @@
           "pinn_move_pp": 5.57,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 104.0,
+          "hours_since_open": 105.6,
           "open_pinn_odds": 2.15,
           "current_pinn_odds": 1.92,
           "move_age_decay": 1.0,
-          "move_age_days": 4.3
+          "move_age_days": 4.4
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -71416,8 +71424,8 @@
             "score": 2.77,
             "confidence": 0.76,
             "evidence": "⚡ xG-Stärke: Heim erspielt sich 1.27 Tor-Chancen (xG) und gibt 2.43 her, Auswärts 1.12 und 0.89 — macht -1.38 Unterschied.",
-            "weight": 1.148,
-            "weighted_score": 2.42,
+            "weight": 1.132,
+            "weighted_score": 2.38,
             "metadata": {
               "home_xg_for": 1.27,
               "home_xg_against": 2.43,
@@ -71433,7 +71441,7 @@
             "score": 1.48,
             "confidence": 0.63,
             "evidence": "🎨 Beim Chancen-Kreieren liegt Heim bei 9.9, Auswärts bei 13.2 (Schlüsselpässe + Abschlüsse) — Vorsprung -3.3.",
-            "weight": 1.087,
+            "weight": 1.075,
             "weighted_score": 0.4,
             "metadata": {
               "home_threat": 9.92,
@@ -71447,7 +71455,7 @@
             "score": 3.25,
             "confidence": 0.51,
             "evidence": "📋 Im Form-Rating steht Heim bei 6.83, Auswärts bei 6.77 — Vorsprung +0.06, in der Abwehr +1.00.",
-            "weight": 1.048,
+            "weight": 1.052,
             "weighted_score": 0.7,
             "metadata": {
               "home_rating": 6.83,
@@ -71462,8 +71470,8 @@
             "score": 2.15,
             "confidence": 0.7,
             "evidence": "✅ Frisch bestätigt: Pinnacle +4.3pp im letzten Abschnitt (für den Pick)",
-            "weight": 1.072,
-            "weighted_score": 1.61,
+            "weight": 1.098,
+            "weighted_score": 1.65,
             "metadata": {
               "state": "confirm",
               "recentMovePP": 4.3,
@@ -71477,7 +71485,7 @@
             "score": 0.33,
             "confidence": 0.38,
             "evidence": "Neuer Trainer D. Tedesco (50d) → Auswärts-Bounce",
-            "weight": 0.979,
+            "weight": 0.958,
             "weighted_score": 0.12,
             "metadata": {
               "homeBounce": 0.0,
@@ -71489,7 +71497,7 @@
             "score": 0.81,
             "confidence": 0.49,
             "evidence": "Sharp-Window: Schon im frühen Fenster nach der Eröffnung zog Pinnacle Auswärts um +2.9pp an — das ist die schärfste, früheste Geldbewegung, bevor das Public-Volumen kam.",
-            "weight": 1.108,
+            "weight": 1.099,
             "weighted_score": 0.18,
             "metadata": {
               "early_move_pp": 2.91,
@@ -71503,8 +71511,8 @@
             "score": 1.2,
             "confidence": 0.6,
             "evidence": "Pinnacle zog Auswärts um +4.3pp an — ein solider Sharp-Move mittlerer Größe, der dem schärfsten Geld folgt.",
-            "weight": 1.147,
-            "weighted_score": 0.83,
+            "weight": 1.136,
+            "weighted_score": 0.82,
             "metadata": {
               "move_pp": 4.3,
               "bucket": "mid",
@@ -71516,8 +71524,8 @@
             "score": -1.1,
             "confidence": 0.6,
             "evidence": "⚡ Ortsform: Heim trifft in -12-Netto daheim, Auswärts -40-Netto auf Reisen (getroffen − kassiert) — +0.28 Unterschied zugunsten Heim. Der Heim/Auswärts-Split ist hier aussagekräftiger als der Gesamtschnitt.",
-            "weight": 1.123,
-            "weighted_score": -0.3,
+            "weight": 1.108,
+            "weighted_score": -0.29,
             "metadata": {
               "venue_net_home": -0.125,
               "venue_net_away": -0.4,
@@ -71529,7 +71537,7 @@
             "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": 1.63,
+        "signalAdjustmentPP": 1.64,
         "signalCountPos": 7,
         "signalCountNeg": 1,
         "signalAdjustmentPP_trade": -0.5,
@@ -71552,11 +71560,11 @@
           "pinn_move_pp": 4.13,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 103.4,
+          "hours_since_open": 104.9,
           "open_pinn_odds": 2.18,
           "current_pinn_odds": 2.0,
           "move_age_decay": 1.0,
-          "move_age_days": 4.3
+          "move_age_days": 4.4
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -84403,8 +84411,8 @@
             "score": 3.3,
             "confidence": 0.85,
             "evidence": "📈 Letzte 15 Spiele: Heim trifft 2.0 pro Partie und kassiert 1.5, Auswärts 1.4 und 2.1.",
-            "weight": 1.123,
-            "weighted_score": 3.15,
+            "weight": 1.109,
+            "weighted_score": 3.11,
             "metadata": {
               "home_scored": 2.0,
               "home_conceded": 1.47,
@@ -84420,8 +84428,8 @@
             "score": 0.8,
             "confidence": 0.85,
             "evidence": "⚔️ Direkte Duelle (10): 6 Heimsiege, 2 Remis, 2 Auswärtssiege — Heim holt davon 70%.",
-            "weight": 1.075,
-            "weighted_score": 0.29,
+            "weight": 1.085,
+            "weighted_score": 0.3,
             "metadata": {
               "games": 10,
               "home_wins": 6,
@@ -84437,7 +84445,7 @@
             "score": -1.9,
             "confidence": 0.74,
             "evidence": "⚡ xG-Stärke: Heim erspielt sich 1.17 Tor-Chancen (xG) und gibt 1.33 her, Auswärts 2.25 und 1.47 — macht -0.95 Unterschied.",
-            "weight": 1.148,
+            "weight": 1.132,
             "weighted_score": -0.64,
             "metadata": {
               "home_xg_for": 1.17,
@@ -84455,8 +84463,8 @@
             "score": -2.27,
             "confidence": 0.7,
             "evidence": "🎨 Beim Chancen-Kreieren liegt Heim bei 11.2, Auswärts bei 16.2 (Schlüsselpässe + Abschlüsse) — Vorsprung -5.0.",
-            "weight": 1.087,
-            "weighted_score": -0.69,
+            "weight": 1.075,
+            "weighted_score": -0.68,
             "metadata": {
               "home_threat": 11.2,
               "away_threat": 16.24,
@@ -84469,7 +84477,7 @@
             "score": 2.63,
             "confidence": 0.6,
             "evidence": "📋 Im Form-Rating steht Heim bei 7.19, Auswärts bei 6.94 — Vorsprung +0.25, in der Abwehr -0.31.",
-            "weight": 1.048,
+            "weight": 1.052,
             "weighted_score": 0.66,
             "metadata": {
               "home_rating": 7.19,
@@ -84484,7 +84492,7 @@
             "score": 0.0,
             "confidence": 0.5,
             "evidence": "⏸ Move ruht (Drift, letzter Abschnitt +0.0pp) — kein frisches Geld",
-            "weight": 1.072,
+            "weight": 1.098,
             "weighted_score": 0.0,
             "metadata": {
               "state": "drift",
@@ -84499,7 +84507,7 @@
             "score": 0.05,
             "confidence": 0.4,
             "evidence": "🔥 Ergebnis-Serie stützt: Monaco 4× Sieg-Serie",
-            "weight": 1.149,
+            "weight": 1.082,
             "weighted_score": 0.01,
             "metadata": {
               "family": "result",
@@ -84513,7 +84521,7 @@
             "score": 1.29,
             "confidence": 0.54,
             "evidence": "Sharp-Window: Schon im frühen Fenster nach der Eröffnung zog Pinnacle Heim um +4.6pp an — das ist die schärfste, früheste Geldbewegung, bevor das Public-Volumen kam.",
-            "weight": 1.108,
+            "weight": 1.099,
             "weighted_score": 0.31,
             "metadata": {
               "early_move_pp": 4.62,
@@ -84527,8 +84535,8 @@
             "score": 2.0,
             "confidence": 0.7,
             "evidence": "Pinnacle hat Heim seit der Eröffnung um +7.1pp verkürzt — ein großer, klarer Sharp-Move. Historisch (Top-5) trägt genau diese Größenklasse den stärksten Edge, unabhängig von der Team-Form.",
-            "weight": 1.147,
-            "weighted_score": 1.61,
+            "weight": 1.136,
+            "weighted_score": 1.59,
             "metadata": {
               "move_pp": 7.07,
               "bucket": "strong",
@@ -84559,7 +84567,7 @@
           "pinn_move_pp": 8.56,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 102.2,
+          "hours_since_open": 103.8,
           "open_pinn_odds": 2.01,
           "current_pinn_odds": 1.715,
           "move_age_decay": 1.0,
@@ -113821,7 +113829,7 @@
             "score": -1.0,
             "confidence": 0.55,
             "evidence": "⚔️ Direkte Duelle (4): 0 Heimsiege, 2 Remis, 2 Auswärtssiege — Heim holt davon 25%.",
-            "weight": 1.075,
+            "weight": 1.085,
             "weighted_score": -0.24,
             "metadata": {
               "games": 4,
@@ -113838,8 +113846,8 @@
             "score": 1.28,
             "confidence": 0.76,
             "evidence": "⚡ xG-Stärke: Heim erspielt sich 1.38 Tor-Chancen (xG) und gibt 1.47 her, Auswärts 0.75 und 1.48 — macht +0.64 Unterschied.",
-            "weight": 1.148,
-            "weighted_score": 0.45,
+            "weight": 1.132,
+            "weighted_score": 0.44,
             "metadata": {
               "home_xg_for": 1.38,
               "home_xg_against": 1.47,
@@ -113856,7 +113864,7 @@
             "score": 1.09,
             "confidence": 0.6,
             "evidence": "🎨 Beim Chancen-Kreieren liegt Heim bei 9.4, Auswärts bei 7.0 (Schlüsselpässe + Abschlüsse) — Vorsprung +2.4.",
-            "weight": 1.087,
+            "weight": 1.075,
             "weighted_score": 0.28,
             "metadata": {
               "home_threat": 9.43,
@@ -113870,8 +113878,8 @@
             "score": -2.16,
             "confidence": 0.51,
             "evidence": "📋 Im Form-Rating steht Heim bei 6.62, Auswärts bei 6.68 — Vorsprung -0.06, in der Abwehr +0.50.",
-            "weight": 1.048,
-            "weighted_score": -1.15,
+            "weight": 1.052,
+            "weighted_score": -1.16,
             "metadata": {
               "home_rating": 6.62,
               "away_rating": 6.68,
@@ -113884,7 +113892,7 @@
             "score": 0.0,
             "confidence": 0.5,
             "evidence": "⏸ Move ruht (Drift, letzter Abschnitt -2.1pp) — kein frisches Geld",
-            "weight": 1.072,
+            "weight": 1.098,
             "weighted_score": 0.0,
             "metadata": {
               "state": "drift",
@@ -113899,8 +113907,8 @@
             "score": 1.2,
             "confidence": 0.6,
             "evidence": "Top-Torjäger M. Zabiri (Bedrohung 100%) stützt Heim",
-            "weight": 1.026,
-            "weighted_score": 0.3,
+            "weight": 1.109,
+            "weighted_score": 0.32,
             "metadata": {
               "homeThreat": 1.0,
               "awayThreat": 0.0
@@ -113912,8 +113920,8 @@
             "score": 2.5,
             "confidence": 0.67,
             "evidence": "Sharp-Window: Schon im frühen Fenster nach der Eröffnung zog Pinnacle Heim um +8.9pp an — das ist die schärfste, früheste Geldbewegung, bevor das Public-Volumen kam.",
-            "weight": 1.108,
-            "weighted_score": 1.86,
+            "weight": 1.099,
+            "weighted_score": 1.84,
             "metadata": {
               "early_move_pp": 8.94,
               "outcome": "home",
@@ -113925,7 +113933,7 @@
             "score": 1.2,
             "confidence": 0.6,
             "evidence": "Pinnacle zog Heim um +4.9pp an — ein solider Sharp-Move mittlerer Größe, der dem schärfsten Geld folgt.",
-            "weight": 1.147,
+            "weight": 1.136,
             "weighted_score": 0.33,
             "metadata": {
               "move_pp": 4.85,
@@ -113935,7 +113943,7 @@
             "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": 0.58,
+        "signalAdjustmentPP": 0.57,
         "signalCountPos": 5,
         "signalCountNeg": 2,
         "signalAdjustmentPP_trade": 0.6,
@@ -113958,11 +113966,11 @@
           "pinn_move_pp": 7.33,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 80.1,
+          "hours_since_open": 81.6,
           "open_pinn_odds": 2.14,
           "current_pinn_odds": 1.85,
           "move_age_decay": 1.0,
-          "move_age_days": 3.3
+          "move_age_days": 3.4
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -114473,8 +114481,8 @@
             "score": 0.8,
             "confidence": 0.85,
             "evidence": "⚔️ Direkte Duelle (10): 2 Heimsiege, 2 Remis, 6 Auswärtssiege — Auswärts holt davon 70%.",
-            "weight": 1.075,
-            "weighted_score": 0.29,
+            "weight": 1.085,
+            "weighted_score": 0.3,
             "metadata": {
               "games": 10,
               "home_wins": 2,
@@ -114490,8 +114498,8 @@
             "score": -1.21,
             "confidence": 0.75,
             "evidence": "⚡ xG-Stärke: Heim erspielt sich 1.41 Tor-Chancen (xG) und gibt 1.22 her, Auswärts 1.14 und 1.56 — macht +0.61 Unterschied.",
-            "weight": 1.148,
-            "weighted_score": -0.42,
+            "weight": 1.132,
+            "weighted_score": -0.41,
             "metadata": {
               "home_xg_for": 1.41,
               "home_xg_against": 1.22,
@@ -114508,8 +114516,8 @@
             "score": 3.0,
             "confidence": 0.77,
             "evidence": "🎨 Beim Chancen-Kreieren liegt Heim bei 10.1, Auswärts bei 16.7 (Schlüsselpässe + Abschlüsse) — Vorsprung -6.7.",
-            "weight": 1.087,
-            "weighted_score": 2.51,
+            "weight": 1.075,
+            "weighted_score": 2.48,
             "metadata": {
               "home_threat": 10.06,
               "away_threat": 16.73,
@@ -114521,7 +114529,7 @@
             "score": 1.23,
             "confidence": 0.55,
             "evidence": "📋 Im Form-Rating steht Heim bei 6.88, Auswärts bei 7.02 — Vorsprung -0.14, in der Abwehr +0.11.",
-            "weight": 1.048,
+            "weight": 1.052,
             "weighted_score": 0.28,
             "metadata": {
               "home_rating": 6.88,
@@ -114536,7 +114544,7 @@
             "score": 0.0,
             "confidence": 0.5,
             "evidence": "⏸ Move ruht (Drift, letzter Abschnitt +4.0pp) — kein frisches Geld",
-            "weight": 1.072,
+            "weight": 1.098,
             "weighted_score": 0.0,
             "metadata": {
               "state": "drift",
@@ -114551,7 +114559,7 @@
             "score": 1.2,
             "confidence": 0.55,
             "evidence": "Schlüssel-Abgang Auswärts 0 / Gegner 2",
-            "weight": 1.024,
+            "weight": 1.03,
             "weighted_score": 0.68,
             "metadata": {
               "homeShift": 1.0,
@@ -114563,7 +114571,7 @@
             "score": 1.12,
             "confidence": 0.52,
             "evidence": "Sharp-Window: Schon im frühen Fenster nach der Eröffnung zog Pinnacle Auswärts um +4.0pp an — das ist die schärfste, früheste Geldbewegung, bevor das Public-Volumen kam.",
-            "weight": 1.108,
+            "weight": 1.099,
             "weighted_score": 0.26,
             "metadata": {
               "early_move_pp": 3.99,
@@ -114577,8 +114585,8 @@
             "score": 1.2,
             "confidence": 0.6,
             "evidence": "Pinnacle zog Auswärts um +4.0pp an — ein solider Sharp-Move mittlerer Größe, der dem schärfsten Geld folgt.",
-            "weight": 1.147,
-            "weighted_score": 0.83,
+            "weight": 1.136,
+            "weighted_score": 0.82,
             "metadata": {
               "move_pp": 3.99,
               "bucket": "mid",
@@ -114590,8 +114598,8 @@
             "score": -1.33,
             "confidence": 0.68,
             "evidence": "⚡ Ortsform: Heim trifft in 33-Netto daheim, Auswärts 0-Netto auf Reisen (getroffen − kassiert) — +0.33 Unterschied zugunsten Heim. Der Heim/Auswärts-Split ist hier aussagekräftiger als der Gesamtschnitt.",
-            "weight": 1.123,
-            "weighted_score": -0.41,
+            "weight": 1.108,
+            "weighted_score": -0.4,
             "metadata": {
               "venue_net_home": 0.333,
               "venue_net_away": 0.0,
@@ -128993,8 +129001,8 @@
             "score": 4.0,
             "confidence": 0.85,
             "evidence": "📈 Letzte 15 Spiele: Heim trifft 4.0 pro Partie und kassiert 0.9, Auswärts 2.7 und 0.9.",
-            "weight": 1.123,
-            "weighted_score": 3.82,
+            "weight": 1.109,
+            "weighted_score": 3.77,
             "metadata": {
               "home_scored": 4.0,
               "home_conceded": 0.93,
@@ -129010,8 +129018,8 @@
             "score": -0.8,
             "confidence": 0.85,
             "evidence": "⚔️ Direkte Duelle (10): 2 Heimsiege, 2 Remis, 6 Auswärtssiege — Heim holt davon 30%.",
-            "weight": 1.075,
-            "weighted_score": -0.29,
+            "weight": 1.085,
+            "weighted_score": -0.3,
             "metadata": {
               "games": 10,
               "home_wins": 2,
@@ -129027,8 +129035,8 @@
             "score": -0.84,
             "confidence": 0.72,
             "evidence": "⚡ xG-Stärke: Heim erspielt sich 2.04 Tor-Chancen (xG) und gibt 0.99 her, Auswärts 2.39 und 0.92 — macht -0.42 Unterschied.",
-            "weight": 1.148,
-            "weighted_score": -0.28,
+            "weight": 1.132,
+            "weighted_score": -0.27,
             "metadata": {
               "home_xg_for": 2.04,
               "home_xg_against": 0.99,
@@ -129045,7 +129053,7 @@
             "score": 0.0,
             "confidence": 0.5,
             "evidence": "⏸ Move ruht (Drift, letzter Abschnitt -0.7pp) — kein frisches Geld",
-            "weight": 1.072,
+            "weight": 1.098,
             "weighted_score": 0.0,
             "metadata": {
               "state": "drift",
@@ -129060,7 +129068,7 @@
             "score": -0.48,
             "confidence": 0.55,
             "evidence": "Schlüssel-Abgang Heim 3 / Gegner 1",
-            "weight": 1.024,
+            "weight": 1.03,
             "weighted_score": -0.27,
             "metadata": {
               "homeShift": 1.0,
@@ -129072,7 +129080,7 @@
             "score": 1.03,
             "confidence": 0.51,
             "evidence": "Sharp-Window: Schon im frühen Fenster nach der Eröffnung zog Pinnacle Heim um +3.7pp an — das ist die schärfste, früheste Geldbewegung, bevor das Public-Volumen kam.",
-            "weight": 1.108,
+            "weight": 1.099,
             "weighted_score": 0.23,
             "metadata": {
               "early_move_pp": 3.67,
@@ -129086,8 +129094,8 @@
             "score": 1.2,
             "confidence": 0.6,
             "evidence": "Pinnacle zog Heim um +4.1pp an — ein solider Sharp-Move mittlerer Größe, der dem schärfsten Geld folgt.",
-            "weight": 1.147,
-            "weighted_score": 0.83,
+            "weight": 1.136,
+            "weighted_score": 0.82,
             "metadata": {
               "move_pp": 4.15,
               "bucket": "mid",
@@ -129095,7 +129103,7 @@
             }
           }
         ],
-        "signalAdjustmentPP": 1.1,
+        "signalAdjustmentPP": 1.09,
         "signalCountPos": 3,
         "signalCountNeg": 3,
         "signalAdjustmentPP_trade": 1.1,
@@ -129118,7 +129126,7 @@
           "pinn_move_pp": 5.68,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 102.2,
+          "hours_since_open": 103.8,
           "open_pinn_odds": 3.12,
           "current_pinn_odds": 2.65,
           "move_age_decay": 1.0,
@@ -129208,8 +129216,8 @@
             "score": 3.6,
             "confidence": 0.85,
             "evidence": "📈 Letzte 15 Spiele: Heim trifft 2.3 pro Partie und kassiert 2.5, Auswärts 2.5 und 1.3.",
-            "weight": 1.123,
-            "weighted_score": 3.44,
+            "weight": 1.109,
+            "weighted_score": 3.39,
             "metadata": {
               "home_scored": 2.33,
               "home_conceded": 2.47,
@@ -129225,7 +129233,7 @@
             "score": 1.68,
             "confidence": 0.65,
             "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 2.33 Tor-Chancen (xG) und gibt 2.47 her, Auswärts 2.53 und 1.27 — macht -1.40 Unterschied.",
-            "weight": 1.148,
+            "weight": 1.132,
             "weighted_score": 0.5,
             "metadata": {
               "home_xg_for": 2.33,
@@ -129243,7 +129251,7 @@
             "score": -0.92,
             "confidence": 0.58,
             "evidence": "🎨 Beim Chancen-Kreieren liegt Heim bei 14.0, Auswärts bei 11.9 (Schlüsselpässe + Abschlüsse) — Vorsprung +2.1.",
-            "weight": 1.087,
+            "weight": 1.075,
             "weighted_score": -0.23,
             "metadata": {
               "home_threat": 14.0,
@@ -129257,7 +129265,7 @@
             "score": 2.02,
             "confidence": 0.64,
             "evidence": "📋 Im Form-Rating steht Heim bei 6.52, Auswärts bei 6.84 — Vorsprung -0.32, in der Abwehr +0.03.",
-            "weight": 1.048,
+            "weight": 1.052,
             "weighted_score": 0.54,
             "metadata": {
               "home_rating": 6.52,
@@ -129272,7 +129280,7 @@
             "score": 0.0,
             "confidence": 0.5,
             "evidence": "⏸ Move ruht (Drift, letzter Abschnitt +0.7pp) — kein frisches Geld",
-            "weight": 1.072,
+            "weight": 1.098,
             "weighted_score": 0.0,
             "metadata": {
               "state": "drift",
@@ -129287,7 +129295,7 @@
             "score": 0.48,
             "confidence": 0.55,
             "evidence": "Schlüssel-Abgang Auswärts 1 / Gegner 3",
-            "weight": 1.024,
+            "weight": 1.03,
             "weighted_score": 0.27,
             "metadata": {
               "homeShift": 1.0,
@@ -129299,7 +129307,7 @@
             "score": 0.07,
             "confidence": 0.4,
             "evidence": "🔥 Ergebnis-Serie stützt: SV Elversberg 6× Ungeschlagen",
-            "weight": 1.149,
+            "weight": 1.082,
             "weighted_score": 0.01,
             "metadata": {
               "family": "result",
@@ -129313,7 +129321,7 @@
             "score": 0.43,
             "confidence": 0.45,
             "evidence": "Sharp-Window: Schon im frühen Fenster nach der Eröffnung zog Pinnacle Auswärts um +1.5pp an — das ist die schärfste, früheste Geldbewegung, bevor das Public-Volumen kam.",
-            "weight": 1.108,
+            "weight": 1.099,
             "weighted_score": 0.08,
             "metadata": {
               "early_move_pp": 1.55,
@@ -129327,8 +129335,8 @@
             "score": 1.2,
             "confidence": 0.6,
             "evidence": "Pinnacle zog Auswärts um +4.0pp an — ein solider Sharp-Move mittlerer Größe, der dem schärfsten Geld folgt.",
-            "weight": 1.147,
-            "weighted_score": 0.83,
+            "weight": 1.136,
+            "weighted_score": 0.82,
             "metadata": {
               "move_pp": 3.96,
               "bucket": "mid",
@@ -129336,7 +129344,7 @@
             }
           }
         ],
-        "signalAdjustmentPP": 1.38,
+        "signalAdjustmentPP": 1.37,
         "signalCountPos": 7,
         "signalCountNeg": 1,
         "signalAdjustmentPP_trade": 1.4,
@@ -129425,8 +129433,8 @@
             "score": 3.43,
             "confidence": 0.85,
             "evidence": "📈 Letzte 15 Spiele: Heim trifft 2.1 pro Partie und kassiert 1.9, Auswärts 2.9 und 1.6.",
-            "weight": 1.123,
-            "weighted_score": 3.27,
+            "weight": 1.109,
+            "weighted_score": 3.23,
             "metadata": {
               "home_scored": 2.07,
               "home_conceded": 1.93,
@@ -129442,8 +129450,8 @@
             "score": -3.48,
             "confidence": 0.77,
             "evidence": "⚡ xG-Stärke: Heim erspielt sich 2.15 Tor-Chancen (xG) und gibt 2.16 her, Auswärts 1.21 und 2.96 — macht +1.74 Unterschied.",
-            "weight": 1.148,
-            "weighted_score": -1.23,
+            "weight": 1.132,
+            "weighted_score": -1.21,
             "metadata": {
               "home_xg_for": 2.15,
               "home_xg_against": 2.16,
@@ -129460,8 +129468,8 @@
             "score": 2.03,
             "confidence": 0.68,
             "evidence": "🎨 Beim Chancen-Kreieren liegt Heim bei 15.8, Auswärts bei 20.3 (Schlüsselpässe + Abschlüsse) — Vorsprung -4.5.",
-            "weight": 1.087,
-            "weighted_score": 0.6,
+            "weight": 1.075,
+            "weighted_score": 0.59,
             "metadata": {
               "home_threat": 15.76,
               "away_threat": 20.28,
@@ -129474,7 +129482,7 @@
             "score": -2.91,
             "confidence": 0.56,
             "evidence": "📋 Im Form-Rating steht Heim bei 6.76, Auswärts bei 6.60 — Vorsprung +0.16, in der Abwehr -0.54.",
-            "weight": 1.048,
+            "weight": 1.052,
             "weighted_score": -0.68,
             "metadata": {
               "home_rating": 6.76,
@@ -129489,7 +129497,7 @@
             "score": 0.0,
             "confidence": 0.5,
             "evidence": "⏸ Move ruht (Drift, letzter Abschnitt +0.8pp) — kein frisches Geld",
-            "weight": 1.072,
+            "weight": 1.098,
             "weighted_score": 0.0,
             "metadata": {
               "state": "drift",
@@ -129504,7 +129512,7 @@
             "score": 0.67,
             "confidence": 0.47,
             "evidence": "Sharp-Window: Schon im frühen Fenster nach der Eröffnung zog Pinnacle Auswärts um +2.4pp an — das ist die schärfste, früheste Geldbewegung, bevor das Public-Volumen kam.",
-            "weight": 1.108,
+            "weight": 1.099,
             "weighted_score": 0.14,
             "metadata": {
               "early_move_pp": 2.39,
@@ -129518,8 +129526,8 @@
             "score": 1.2,
             "confidence": 0.6,
             "evidence": "Pinnacle zog Auswärts um +3.2pp an — ein solider Sharp-Move mittlerer Größe, der dem schärfsten Geld folgt.",
-            "weight": 1.147,
-            "weighted_score": 0.83,
+            "weight": 1.136,
+            "weighted_score": 0.82,
             "metadata": {
               "move_pp": 3.2,
               "bucket": "mid",
@@ -129527,7 +129535,7 @@
             }
           }
         ],
-        "signalAdjustmentPP": 0.9,
+        "signalAdjustmentPP": 0.89,
         "signalCountPos": 4,
         "signalCountNeg": 2,
         "signalAdjustmentPP_trade": 0.9,
@@ -129550,7 +129558,7 @@
           "pinn_move_pp": 4.06,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 102.2,
+          "hours_since_open": 103.8,
           "open_pinn_odds": 3.81,
           "current_pinn_odds": 3.3,
           "move_age_decay": 1.0,
@@ -130897,13 +130905,13 @@
     "placeholder": true,
     "season": 2026,
     "dataUpdatedAt": "2026-09-20T20:45:23.596822+00:00",
-    "oddsUpdatedAt": "2026-09-20T20:54:36.095582+00:00",
-    "picksUpdatedAt": "2026-09-20T20:54:48.863877+00:00",
+    "oddsUpdatedAt": "2026-09-20T22:28:42.213461+00:00",
+    "picksUpdatedAt": "2026-09-20T22:28:47.745093+00:00",
     "formUpdatedAt": "2026-09-20T20:48:02.888681+00:00",
     "cornersUpdatedAt": "2026-09-20T20:48:55.669950+00:00",
     "xgUpdatedAt": "2026-09-20T20:48:55.669954+00:00",
     "engineVersion": "v1",
-    "ergebnisNachlaufAt": "2026-09-20T20:34:10.466389+00:00"
+    "ergebnisNachlaufAt": "2026-09-20T22:28:43.669657+00:00"
   },
   "standings": {
     "ENG": [
@@ -131234,6 +131242,18 @@
         "pos": 7
       },
       {
+        "team": "548",
+        "played": 7,
+        "won": 3,
+        "draw": 1,
+        "lost": 3,
+        "points": 10,
+        "gf": 9,
+        "ga": 13,
+        "gd": -4,
+        "pos": 8
+      },
+      {
         "team": "533",
         "played": 7,
         "won": 2,
@@ -131243,7 +131263,7 @@
         "gf": 13,
         "ga": 12,
         "gd": 1,
-        "pos": 8
+        "pos": 9
       },
       {
         "team": "531",
@@ -131255,7 +131275,7 @@
         "gf": 7,
         "ga": 6,
         "gd": 1,
-        "pos": 9
+        "pos": 10
       },
       {
         "team": "546",
@@ -131267,7 +131287,7 @@
         "gf": 4,
         "ga": 7,
         "gd": -3,
-        "pos": 10
+        "pos": 11
       },
       {
         "team": "728",
@@ -131279,7 +131299,7 @@
         "gf": 11,
         "ga": 16,
         "gd": -5,
-        "pos": 11
+        "pos": 12
       },
       {
         "team": "727",
@@ -131291,7 +131311,7 @@
         "gf": 6,
         "ga": 13,
         "gd": -7,
-        "pos": 12
+        "pos": 13
       },
       {
         "team": "538",
@@ -131303,7 +131323,7 @@
         "gf": 8,
         "ga": 6,
         "gd": 2,
-        "pos": 13
+        "pos": 14
       },
       {
         "team": "540",
@@ -131315,18 +131335,6 @@
         "gf": 10,
         "ga": 10,
         "gd": 0,
-        "pos": 14
-      },
-      {
-        "team": "548",
-        "played": 6,
-        "won": 2,
-        "draw": 1,
-        "lost": 3,
-        "points": 7,
-        "gf": 6,
-        "ga": 11,
-        "gd": -5,
         "pos": 15
       },
       {
@@ -131367,14 +131375,14 @@
       },
       {
         "team": "532",
-        "played": 6,
+        "played": 7,
         "won": 1,
         "draw": 1,
-        "lost": 4,
+        "lost": 5,
         "points": 4,
-        "gf": 2,
-        "ga": 10,
-        "gd": -8,
+        "gf": 4,
+        "ga": 13,
+        "gd": -9,
         "pos": 19
       },
       {
