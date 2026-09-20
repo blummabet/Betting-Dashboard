@@ -421,6 +421,33 @@ def summarize(ledger, now=None):
     return out
 
 
+RUTSCH_VOID_LIVE = ("live gesendet, bevor der Alarm auf Vor-Anpfiff beschraenkt wurde "
+                    "(19.09.2026) — die Messung beschreibt ausschliesslich Vor-Anpfiff-Daten")
+
+
+def void_live_rutsch(buch, grund=RUTSCH_VOID_LIVE) -> int:
+    """Kursrutsch-Zeilen aus LAUFENDEN Spielen auf void setzen. REIN, idempotent. -> Anzahl.
+
+    🔴 19.09.2026. Die ersten sechs Alarme kamen alle aus laufenden Spielen (22., 63., 44., 40.,
+    38., 45. Minute), gemessen wurden aber ausschliesslich Vor-Anpfiff-Daten. Der Alarm ist
+    seither gesperrt — die Zeilen stehen trotzdem im Buch und wuerden die vorregistrierte
+    Messung von Anfang an verderben.
+
+    Warum als REGEL und nicht als einmalige Korrektur an der Datei: die Datei gehoert der
+    Pipeline und wird bei jedem Lauf neu geschrieben. Eine von Hand gesetzte Markierung
+    ueberlebt den naechsten Lauf nicht zwingend — genau das ist heute Abend einmal passiert.
+    Dieselbe Bauweise wie `void_entschiedene`: wirkt bei jedem Lauf neu, auch rueckwirkend."""
+    n = 0
+    for e in (buch or []):
+        if not isinstance(e, dict) or e.get("status") == "void":
+            continue
+        if ((e.get("live") or {}).get("time")) is not None:
+            e["status"] = "void"
+            e["voidGrund"] = grund
+            n += 1
+    return n
+
+
 def abrechnen(buch, prices, track_results, manual=None, keep=LEDGER_KEEP):
     """Ein Push-Buch durch die ganze Abrechnungskette schicken. Genau die Reihenfolge, die
     main() seit dem 15.09. faehrt — als Funktion, damit das Schattenbuch nicht seine eigene
@@ -475,6 +502,10 @@ def main():
         rutsch = _load(RUTSCH_FILE, [])
         if isinstance(rutsch, list) and rutsch:
             rutsch, _ = abrechnen(rutsch, prices, track_results, keep=RUTSCH_KEEP)
+            _nl = void_live_rutsch(rutsch)
+            if _nl:
+                print("  \U0001f507 %d Kursrutsch-Zeile(n) auf void: live gesendet, vor der "
+                      "Vor-Anpfiff-Sperre" % _nl)
             rbericht = summarize(rutsch)
             json.dump(rutsch, open(RUTSCH_FILE, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
             json.dump(rbericht, open(RUTSCH_RECORD_FILE, "w", encoding="utf-8"),

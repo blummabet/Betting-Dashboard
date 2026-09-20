@@ -2436,16 +2436,50 @@ class TestDieKarteFuehrtMitDerWette(unittest.TestCase):
     def _card(self, **over):
         return P.build_card(dict(self.POS, **over), self.SC, False, self.BROAD)
 
-    def test_die_erste_zeile_ist_die_wette(self):
-        erste = self._card().split("\n")[0]
-        self.assertIn("Eternal Fire", erste)
-        self.assertIn("88¢", erste)
-        self.assertIn("$2.9K", erste)
+    # 🔴 19.09.2026, zweite Runde (Lucas: „Bitte bessere Zeilenumbrüche") mit einem
+    # ausgeschriebenen Wunschbild. Die Umstellung von heute frueh hatte die REIHENFOLGE
+    # repariert, aber weiter vier Auskuenfte in eine Zeile gepackt („ShindeN @ 56¢ · $2.8K ·
+    # 34 % des Marktes"). Auf dem Handy bricht das um, wo der Platz endet, nicht wo die
+    # naechste Auskunft anfaengt. Ab jetzt: eine Auskunft je Zeile, Gruppen durch Leerzeilen.
+    def _zeilen(self, **over):
+        return self._card(**over).split("\n")
 
-    def test_der_marktanteil_steht_in_derselben_zeile(self):
+    def test_die_karte_beginnt_mit_der_sportart(self):
+        self.assertIn("E-Sport", self._zeilen()[0])
+
+    def test_dann_die_paarung_dann_die_wette(self):
+        z = [x for x in self._zeilen() if x.strip()]
+        self.assertIn("Eternal Fire", z[1])          # Paarung (hier ohne Gegner im Fixture)
+        self.assertIn("88¢", z[2])                   # Seite @ Preis
+        self.assertNotIn("$2.9K", z[2], "der Einsatz gehoert in seine eigene Zeile")
+
+    def test_der_einsatz_und_der_marktanteil_teilen_sich_eine_zeile(self):
         """Wie gross die Position IM MARKT ist, gehoert neben den Betrag — allein sagt „$2.9K"
-        nichts darueber, ob das viel ist."""
-        self.assertIn("34 %", self._card().split("\n")[0])
+        nichts darueber, ob das viel ist. Beides zusammen, aber ohne die Quote davor."""
+        z = [x for x in self._zeilen() if x.strip()]
+        self.assertIn("$2.9K", z[3])
+        self.assertIn("34 %", z[3])
+
+    def test_die_gruppen_sind_durch_leerzeilen_getrennt(self):
+        """Ohne die Abstaende ist es wieder eine Wand. Lucas hat sie ausdruecklich aufgezeichnet:
+        zwei Leerzeilen vor dem Anlass und zwei vor der Wallet, eine zwischen den Kopfzeilen.
+
+        Geprueft wird an der STELLE, nicht mit einem Muster irgendwo in der Karte — die erste
+        Fassung dieses Tests suchte `\\n\\n\\n(🐋|🔥|📐)` und fand den Abstand vor der WALLET,
+        auch wenn der vor dem Anlass auf eine Leerzeile geschrumpft war."""
+        z = self._card().split("\n")
+        def leer_vor(i):
+            n = 0
+            while i - 1 - n >= 0 and z[i - 1 - n] == "":
+                n += 1
+            return n
+        anlass = next(i for i, x in enumerate(z) if "Einstieg" in x or "Scharfe Wallet" in x)
+        wallet = next(i for i, x in enumerate(z) if x.startswith("🐋 "))
+        self.assertEqual(leer_vor(anlass), 2, "zwei Leerzeilen vor dem Anlass")
+        self.assertEqual(leer_vor(wallet), 2, "zwei Leerzeilen vor der Wallet")
+        # und genau eine zwischen Paarung und Wette
+        wette = next(i for i, x in enumerate(z) if "88¢" in x)
+        self.assertEqual(leer_vor(wette), 1)
 
     def test_ein_grosser_anteil_wird_fett_statt_beschrieben(self):
         self.assertIn("<b>34 % des Marktes</b>", self._card())
@@ -2461,10 +2495,13 @@ class TestDieKarteFuehrtMitDerWette(unittest.TestCase):
         k = self._card()
         self.assertLess(k.index("Eternal Fire</b>"), k.index("Einstieg"))
 
-    def test_der_rang_steht_am_wallet_block(self):
+    def test_der_rang_steht_am_wallet_block_das_urteil_darunter(self):
+        """19.09.2026: „🐋 0x… · 🏅 #55 · ✅ bewiesen" waren drei Auskuenfte in einer Zeile, und
+        die dritte ist die wichtigste. Das Urteil bekommt seine eigene."""
         sc = {"0xw": dict(self.SC["0xw"])}
         k = P.build_card(self.POS, sc, False, self.BROAD)
-        self.assertIn("🥇 #1 · ✅ bewiesen", k)
+        self.assertIn("🥇 #1\n✅ bewiesen", k)
+        self.assertNotIn("#1 · ✅ bewiesen", k)
         self.assertNotIn("der Sharp-Rangliste", k)
 
     def test_der_wallet_block_ist_dreizeilig_und_gleich_gebaut(self):
@@ -2560,3 +2597,58 @@ class TestEineKaputteDateiIstNichtLeer(unittest.TestCase):
         q = (Path(__file__).parent.parent / "poly_whale_watch.py").read_text(encoding="utf-8")
         self.assertIn("_load_pflicht(TRACK_FILE", q)
         self.assertIn("_load_pflicht(BROAD_FILE", q)
+
+
+class TestGesperrteSportartenGehenAuchNichtInTrades(unittest.TestCase):
+    """🔴 19.09.2026 (Lucas, zu einer UFC-Karte im Trades-Kanal):
+
+      „Nimm lieber diese Push bitte raus … Da gibt's auch immer was aus US Sport in trades.
+       Brauch ich nicht, da wir das nur mitlaufen haben im Hintergrund. Das reicht."
+
+    Bis dahin galt die Sperre (`blockedCats`: US-Sport, Kampfsport) nur fuer Public. Trades
+    bekam die Karte weiter, mit einer Zeile „🚫 Sportart aktuell nicht bespielbar … Kein
+    Setzen-Button, kein Public-Post. Steht nur zur Beobachtung hier." Eine Karte, zu der es
+    keinen Knopf gibt, kostet Aufmerksamkeit und sagt nichts, was das Papier-Depot nicht
+    ohnehin mitschreibt. Gemessen am Bestand dieses Abends: 4 von 4 Trades-Kandidaten waren
+    Kampfsport.
+    """
+    CATS = ["US-Sport", "Kampfsport"]
+
+    def _k(self, league):
+        return ("pk-" + league, _pos(9000, league=league), False)
+
+    def test_gesperrte_fallen_raus_und_werden_gezaehlt(self):
+        kand = [self._k("UFC"), self._k("EPL"), self._k("NBA"), self._k("ATP")]
+        uebrig, raus = P.ohne_gesperrte(kand, self.CATS)
+        self.assertEqual(raus, 2)
+        self.assertEqual([c[1]["league"] for c in uebrig], ["EPL", "ATP"])
+
+    def test_eine_leere_liste_heisst_nimm_die_vorgabe_nicht_nichts_gesperrt(self):
+        """Feinheit, die man einmal festhalten sollte: `bet_blocked` faellt bei leerer Liste auf
+        BLOCKED_FALLBACK zurueck, und `blocked_cats` tut dasselbe. Eine leere `blockedCats` im
+        Artefakt oeffnet also NICHT alles — sie bedeutet „Vorgabe". Das ist die sichere Richtung
+        (ein kaputtes Artefakt macht den Kanal nicht auf), aber es ist nicht offensichtlich."""
+        kand = [self._k("UFC"), self._k("EPL")]
+        self.assertEqual(P.ohne_gesperrte(kand, [])[1], 1)
+        self.assertEqual(P.blocked_cats({"blockedCats": []}), list(P.BLOCKED_FALLBACK))
+
+    def test_leere_eingabe_bleibt_leer(self):
+        self.assertEqual(P.ohne_gesperrte(None, self.CATS), ([], 0))
+        self.assertEqual(P.ohne_gesperrte([], self.CATS), ([], 0))
+
+    def test_die_liste_kommt_aus_dem_artefakt_nicht_aus_dem_code(self):
+        """Legt Lucas die Sperre im Papier-Depot um, muss der Kanal mitziehen — zwei Listen
+        waeren genau die Drift, gegen die `blocked_cats` gebaut wurde."""
+        self.assertEqual(P.blocked_cats({"blockedCats": ["Tennis"]}), ["Tennis"])
+        kand = [self._k("ATP"), self._k("UFC")]
+        uebrig, raus = P.ohne_gesperrte(kand, P.blocked_cats({"blockedCats": ["Tennis"]}))
+        self.assertEqual(raus, 1)
+        self.assertEqual([c[1]["league"] for c in uebrig], ["UFC"])
+
+    def test_der_lauf_wendet_es_auf_beide_trades_pfade_an(self):
+        """Karten UND Nachtraege. Die Nachtraege speisen sich aus `seen` — dort stehen die
+        Eintraege von VORHER noch drin, auch wenn nichts Neues mehr hineinkommt."""
+        from pathlib import Path
+        q = (Path(__file__).parent.parent / "poly_whale_watch.py").read_text(encoding="utf-8")
+        self.assertIn("cand, _blk_raus = ohne_gesperrte(cand, _blocked)", q)
+        self.assertIn("faellig, _nb = ohne_gesperrte(faellig, _blocked)", q)

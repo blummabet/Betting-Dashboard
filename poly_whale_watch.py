@@ -192,6 +192,32 @@ def bet_blocked(pos, cats=None):
     return sport_category(pos.get("league"), pos.get("sport")) in (cats or BLOCKED_FALLBACK)
 
 
+def ohne_gesperrte(kandidaten, cats):
+    """Gesperrte Sportarten raus — ab jetzt in BEIDEN Kanaelen. REIN. -> (uebrig, raus)
+
+    🔴 19.09.2026 (Lucas, zu einer UFC-Karte im Trades-Kanal):
+      „Nimm lieber diese Push bitte raus ... Da gibt's auch immer was aus US Sport in trades.
+       Brauch ich nicht, da wir das nur mitlaufen haben im Hintergrund. Das reicht."
+
+    Bis heute galt die Sperre nur fuer Public; Trades bekam die Karte weiter und trug dafuer
+    eine Zeile „🚫 Sportart aktuell nicht bespielbar — im Papier-Depot klar negativ. Kein
+    Setzen-Button, kein Public-Post." Das war als Beobachtung gedacht, ist aber genau das, was
+    das Papier-Depot ohnehin mitschreibt: eine Karte, zu der es keinen Knopf gibt, kostet
+    Aufmerksamkeit und liefert nichts, was nicht im Hintergrund schon steht.
+
+    Die Liste kommt aus poly_shortlist_track.json (`blockedCats`, heute US-Sport + Kampfsport)
+    und entsteht in poly-wallets.js — legt Lucas sie dort um, zieht auch dieser Filter mit. Die
+    Poly-Engine wird ohnehin „ohne Kampfsport, US-Sport" ausgewertet; der Kanal deckt sich ab
+    jetzt mit der Messung, statt Karten zu zeigen, die in keiner Bilanz auftauchen.
+
+    Die Kandidaten aller drei Trades-Pfade sind (pkey, pos, extra) — `pos` steht ueberall an
+    derselben Stelle, deshalb reicht ein Griff fuer alle.
+    """
+    k = list(kandidaten or [])
+    uebrig = [c for c in k if not bet_blocked(c[1], cats)]
+    return uebrig, len(k) - len(uebrig)
+
+
 # 08.09.2026 (Lucas: „schau dir die ganzen Whales an, ob das alles sauber umgesetzt ist").
 # Hier standen ZWEI Liga→Sport-Zuordnungen in derselben Datei: `sport_category()` (Zeile 146,
 # volle Regex, kennt ligue/serie/eredivisie/elitese/championship/…) und `_sport()` (arm:
@@ -425,15 +451,17 @@ def _wallet_block(scores: dict, wallet, rang=None) -> list:
     marke = ("✅ bewiesen" if _is_smart(s)
              else "📊 Bilanz" if (isinstance(s, dict) and n >= MIN_TR and not _is_confirmed_loser(s))
              else "im Aufbau")
-    kopf = "🐋 %s · %s" % (link, marke)
+    # 19.09.2026 (Lucas): das Urteil bekommt seine eigene Zeile. „🐋 0x30c7…ac3b · 🏅 #55 ·
+    # ✅ bewiesen" ist drei Auskuenfte in einer Zeile, und die dritte ist die wichtigste.
+    kopf = "🐋 %s" % link
     if rang:
-        kopf = "🐋 %s · %s · %s" % (link, _rang_kurz(rang), marke)
+        kopf = "🐋 %s · %s" % (link, _rang_kurz(rang))
     # 02.08.2026 bleibt gueltig: eine schwache oder zu duenne Bilanz wird NICHT als Zahl
     # gezeigt — eine 1/3-Quote wertet einen legitimen Groessen-Alert ab, und ein bestaetigter
     # Verlierer bekommt hier keine Buehne. Die volle Historie ist einen Klick entfernt.
     if marke == "im Aufbau":
-        return [kopf]
-    zeilen = [kopf]
+        return [kopf, marke]
+    zeilen = [kopf, marke, ""]
     wins = s.get("wins") or 0
     clv = (s.get("clvSumPP") or 0) / n if n else None
     zeilen.append("   gesamt <b>%d/%d · %d %%</b>%s"
@@ -796,16 +824,29 @@ def build_card(pos: dict, scores: dict, restock: bool, broad: dict = None, extra
                     else pos.get("firstPrice"))
     _label = ausgang_label(side, _markt_frage(key, broad)) or side
     _anteil = markt_anteil(pos, broad)
-    kopf = "<b>%s</b>%s · %s" % (_esc(_label), (" @ %s" % _preis) if _preis else "", _usd(usd))
+    # 🔴 19.09.2026, zweite Runde (Lucas: „Bitte bessere Zeilenumbrüche") mit einem
+    # ausgeschriebenen Wunschbild. Die erste Umstellung heute frueh hat die REIHENFOLGE
+    # repariert (was / wo / warum / wer), aber vier Auskuenfte weiter in eine Zeile gepackt:
+    # „ShindeN @ 56¢ · $2.8K · 34 % des Marktes" und darunter „BESTIA v ShindeN · 🎮 E-Sport ·
+    # Anpfiff in 34 Min". Auf dem Handy bricht das um, wo der Platz endet, nicht wo die naechste
+    # Auskunft anfaengt — und dann steht die Quote am Anfang der zweiten Zeile.
+    # Jetzt: eine Auskunft je Zeile, Gruppen durch Leerzeilen getrennt. Dieselben Zahlen.
+    lines = ["%s <b>%s</b>" % (emoji, _esc(sport)), ""]
+    lines.append("<b>%s</b>" % _esc(matchup if matchup else side))
+    lines.append("")
+    lines.append("<b>%s</b>%s" % (_esc(_label), (" @ %s" % _preis) if _preis else ""))
+    _geld = _usd(usd)
     if _anteil is not None:
         # Auffaellig gross wird fett statt beschrieben — „das ist viel" kostete eine halbe Zeile.
         _a = "%d %% des Marktes" % round(_anteil * 100)
-        kopf += " · " + ("<b>%s</b>" % _a if _anteil >= MARKT_ANTEIL_GROSS else _a)
-    lines = [kopf]
-    l0 = "%s · %s %s" % (_esc(matchup) if matchup else _esc(side), emoji, _esc(sport))
+        _geld += " · " + ("<b>%s</b>" % _a if _anteil >= MARKT_ANTEIL_GROSS else _a)
+    lines.append(_geld)
     if ko:
-        l0 += " · %s" % ko
-    lines.append(l0)
+        lines += ["", ko]
+    # zwei Leerzeilen: hier endet „welche Wette" und es beginnt „warum kommt die Karte".
+    # Lucas hat den Abstand so aufgezeichnet — auf dem Handy ist das der Unterschied zwischen
+    # einem Block, den man ueberfliegt, und einer Wand.
+    lines += ["", ""]
     # 25.08.2026 (Lucas: „haben wir MLB nicht entfernt?"): weit nach oben. Ohne diese Zeile
     # liest sich der Push als Empfehlung fuer etwas, wofuer im Dashboard bewusst kein
     # Setzen-Button existiert.
@@ -844,8 +885,9 @@ def build_card(pos: dict, scores: dict, restock: bool, broad: dict = None, extra
         # eine weitere bewiesene Wallet". Genannt werden jetzt nur die Raenge; wer keinen hat,
         # steckt in der Zahl davor, die es ohnehin schon sagt.
         _raenge = [_rang_kurz(a["rank"]) for a in _ag if a.get("rank")][:3]
-        lines.append("🤝 <b>%d bewiesene Wallet%s halten mit</b> (%s)%s — trägt gemessen"
-                     % (len(_ag), "" if len(_ag) == 1 else "s",
+        # 19.09.2026: „1 bewiesene Wallet halten mit" — das Verb blieb beim Umbau im Plural.
+        lines.append("🤝 <b>%d bewiesene Wallet%s</b> (%s)%s — trägt gemessen"
+                     % (len(_ag), " hält mit" if len(_ag) == 1 else "s halten mit",
                         _usd(sum(a["usd"] for a in _ag)),
                         (" · " + ", ".join(_raenge)) if _raenge else ""))
     _sperrt, _u = gegenseite_sperrt()
@@ -860,6 +902,8 @@ def build_card(pos: dict, scores: dict, restock: bool, broad: dict = None, extra
         lines.append("⚔️ <b>Gegenseite: %s</b> (%s) · %s%s"
                      % (_esc(_cf["side"]), _usd(_cf["usd"]), wer,
                         " — gemessen ein Münzwurf, geht nicht public" if _sperrt else ""))
+    lines.append("")
+    lines.append("")
     lines += _wallet_block(scores, pos.get("wallet"),
                            _sharp_rank_map(scores).get(str(pos.get("wallet") or "").lower()))
     if extra and extra > 0:
@@ -2468,6 +2512,11 @@ def main():
     # (01.08.2026, Lucas: 1a) Trades-Channel bekommt denselben Sanity-Filter wie Public:
     # nur Sport + Preis 3–97¢ → kein @100¢-schon-entschieden, kein Politik/Krypto-Müll.
     cand = [c for c in select(track, seen, now, sharp_floor=MIN_USD_SHARP) if _pub_ok(c[1])]
+    # 19.09.2026 (Lucas): gesperrte Sportarten jetzt auch aus TRADES — s. ohne_gesperrte.
+    cand, _blk_raus = ohne_gesperrte(cand, _blocked)
+    if _blk_raus:
+        print(f"  \U0001f6ab {_blk_raus} Karte(n) unterdrueckt — gesperrte Sportart "
+              f"({', '.join(_blocked)}), laeuft im Hintergrund weiter mit")
     cand, _extra = _dedup_by_wallet(cand, MAX_PER_WALLET)   # je Wallet max MAX_PER_WALLET Karten/Lauf
     print(f"  {len(cand)} alertwürdige Position(en) (Sport + 3–97¢, ≥ {_usd(MIN_USD_TRACKED)} mit / {_usd(MIN_USD_UNTRACKED)} ohne Record, frisch)")
 
@@ -2497,6 +2546,12 @@ def main():
     if not isinstance(nach_seen, dict):
         nach_seen = {}
     faellig = nachtraege(seen, broad, scores, nach_seen, now, bewiesen_zaehlt=_sperrt_bew)
+    # 19.09.2026: auch hier. Neue gesperrte Karten landen zwar gar nicht mehr in `seen`, aber
+    # die Eintraege von VORHER stehen noch drin — ohne diesen Griff kaemen sie als Nachtrag
+    # doch noch durch, und zwar genau so lange, bis der Dedup-Stand durchgelaufen ist.
+    faellig, _nb = ohne_gesperrte(faellig, _blocked)
+    if _nb:
+        print(f"  \U0001f6ab {_nb} Nachtrag/Nachtraege unterdrueckt — gesperrte Sportart")
     n_sent = 0
     for pkey, pos, cf in faellig[:NACHTRAG_MAX]:
         if tg_send(build_nachtrag_card(pos, cf, broad, scores)):
