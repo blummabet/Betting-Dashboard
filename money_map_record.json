@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-20T01:57:11.413803+00:00",
+"generatedAt": "2026-09-20T02:12:04.051168+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1348,
-"wins": 1141,
-"hitRate": 0.8464,
-"polyN": 1279,
-"polyWins": 998,
-"polyHitRate": 0.7803,
+"n": 1350,
+"wins": 1143,
+"hitRate": 0.8467,
+"polyN": 1281,
+"polyWins": 1000,
+"polyHitRate": 0.7806,
 "pinnN": 194,
 "pinnHitRate": 0.7835,
-"nRoi": 675,
+"nRoi": 677,
 "roi": 0.4279,
-"roiLb": 0.3789,
-"nClv": 675,
-"clv": 20.44,
-"clvLb": 18.9118
+"roiLb": 0.3791,
+"nClv": 677,
+"clv": 20.45,
+"clvLb": 18.925
 },
 "uneinig": {
-"n": 538,
+"n": 539,
 "wins": 164,
-"hitRate": 0.3048,
-"polyN": 497,
+"hitRate": 0.3043,
+"polyN": 498,
 "polyWins": 135,
-"polyHitRate": 0.2716,
-"pinnN": 331,
-"pinnHitRate": 0.6224,
-"nRoi": 306,
-"roi": -0.5136,
-"roiLb": -0.5922,
-"nClv": 306,
+"polyHitRate": 0.2711,
+"pinnN": 332,
+"pinnHitRate": 0.6235,
+"nRoi": 307,
+"roi": -0.5152,
+"roiLb": -0.5936,
+"nClv": 307,
 "clv": -19.95,
-"clvLb": -23.0494
+"clvLb": -23.0399
 },
 "teil": {
 "n": 29,
@@ -102,9 +102,9 @@
 "hitRate": 0.75
 },
 "Mexican Liga MX": {
-"n": 42,
+"n": 43,
 "wins": 29,
-"hitRate": 0.6905
+"hitRate": 0.6744
 },
 "Dutch Eredivisie": {
 "n": 41,
@@ -157,9 +157,9 @@
 "hitRate": 0.5455
 },
 "Colombian Primera A": {
-"n": 30,
-"wins": 17,
-"hitRate": 0.5667
+"n": 31,
+"wins": 18,
+"hitRate": 0.5806
 },
 "Swedish Allsvenskan": {
 "n": 30,
@@ -216,6 +216,11 @@
 "wins": 15,
 "hitRate": 0.7143
 },
+"Peruvian Primera Division": {
+"n": 21,
+"wins": 17,
+"hitRate": 0.8095
+},
 "Chinese Super League": {
 "n": 20,
 "wins": 14,
@@ -230,11 +235,6 @@
 "n": 20,
 "wins": 13,
 "hitRate": 0.65
-},
-"Peruvian Primera Division": {
-"n": 20,
-"wins": 16,
-"hitRate": 0.8
 },
 "Swedish Superettan": {
 "n": 20,
@@ -649,37 +649,94 @@
 },
 "byStrength": {
 "strong": {
-"n": 1154,
-"wins": 927,
-"hitRate": 0.8033,
-"nRoi": 630,
-"roi": 0.2893,
-"roiLb": 0.2365,
-"nClv": 630,
-"clv": 13.97,
-"clvLb": 11.863
+"n": 1156,
+"wins": 929,
+"hitRate": 0.8036,
+"nRoi": 632,
+"roi": 0.2897,
+"roiLb": 0.2371,
+"nClv": 632,
+"clv": 14.0,
+"clvLb": 11.8995
 },
 "weak": {
-"n": 728,
+"n": 729,
 "wins": 365,
-"hitRate": 0.5014,
-"nRoi": 371,
-"roi": -0.1801,
-"roiLb": -0.2653,
-"nClv": 371,
-"clv": -5.06,
-"clvLb": -7.8209
+"hitRate": 0.5007,
+"nRoi": 372,
+"roi": -0.1823,
+"roiLb": -0.2673,
+"nClv": 372,
+"clv": -5.1,
+"clvLb": -7.8548
 }
 },
 "divergence": {
-"n": 538,
+"n": 539,
 "betfairWins": 164,
-"betfairRate": 0.3048,
-"polyN": 497,
+"betfairRate": 0.3043,
+"polyN": 498,
 "polyWins": 135,
-"polyRate": 0.2716
+"polyRate": 0.2711
 },
 "recent": [
+{
+"matchId": "36066665",
+"home": "Deportivo Garcilaso",
+"away": "Universitario de Deportes",
+"league": "Peruvian Primera Division",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Deportivo Garcilaso",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+4,
+0
+],
+"kickoff": "2026-09-19T23:00:00Z",
+"settledAt": "2026-09-20T02:12:03.864610+00:00"
+},
+{
+"matchId": "36072709",
+"home": "Deportivo Cali",
+"away": "Cucuta Deportivo",
+"league": "Colombian Primera A",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Deportivo Cali",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+0
+],
+"kickoff": "2026-09-19T23:10:00Z",
+"settledAt": "2026-09-20T02:12:03.864610+00:00"
+},
+{
+"matchId": "36070127",
+"home": "Atlas",
+"away": "Pumas UNAM",
+"league": "Mexican Liga MX",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Atlas",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-09-19T23:00:00Z",
+"settledAt": "2026-09-20T02:12:03.864610+00:00"
+},
 {
 "matchId": "36078679",
 "home": "New England Revolution",
@@ -1382,75 +1439,18 @@
 ],
 "kickoff": "2026-09-19T16:30:00Z",
 "settledAt": "2026-09-19T18:26:35.955537+00:00"
-},
-{
-"matchId": "36072475",
-"home": "Sampdoria",
-"away": "Catanzaro",
-"league": "Italian Serie B",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Sampdoria",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-09-19T15:15:00Z",
-"settledAt": "2026-09-19T18:26:35.955537+00:00"
-},
-{
-"matchId": "36071162",
-"home": "CD Castellon",
-"away": "Tenerife",
-"league": "Spanish Segunda Division",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "CD Castellon",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-5,
-0
-],
-"kickoff": "2026-09-19T16:30:00Z",
-"settledAt": "2026-09-19T18:26:35.955537+00:00"
-},
-{
-"matchId": "36071962",
-"home": "Eldense",
-"away": "Eibar",
-"league": "Spanish Segunda Division",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Eibar",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-09-19T16:30:00Z",
-"settledAt": "2026-09-19T18:26:35.955537+00:00"
 }
 ],
 "global": {
-"n": 1915,
-"wins": 1310,
-"hitRate": 0.6841,
-"nRoi": 1001,
-"roi": 0.1153,
-"roiLb": 0.068,
-"nClv": 1001,
+"n": 1918,
+"wins": 1312,
+"hitRate": 0.684,
+"nRoi": 1004,
+"roi": 0.1148,
+"roiLb": 0.0677,
+"nClv": 1004,
 "clv": 6.92,
-"clvLb": 5.1757
+"clvLb": 5.1862
 },
-"pending": 36
+"pending": 34
 }
