@@ -108,6 +108,55 @@ def _zeit(wert):
     return t.replace(tzinfo=timezone.utc) if t.tzinfo is None else t
 
 
+# 🔴 20.09.2026 — Levante–Athletic Club stand 95 Stunden als „abgepfiffen ohne Ergebnis" im
+# Bericht, und der Guard meldete jeden Tag, der Resolver koenne es nicht abrechnen. Nachgesehen:
+# das Spiel hat nie stattgefunden. Es wurde am 16.09. eine halbe Stunde vor Anpfiff wegen
+# Starkregen abgesagt.
+#
+# Fehlerklasse: ein Anpfiff, der nur im Kalender stattgefunden hat. Unser `kickoff` ist ein PLAN,
+# und alles dahinter behandelt einen vergangenen Plan als Ereignis: der Nachlauf sagt
+# „abgepfiffen", die Wache stuft offene Positionen als „im Spiel" ein, der Resolver wartet ewig.
+#
+# Die drei Zustaende waren bis heute nicht zu unterscheiden, weil der Grund nur GEDRUCKT und nie
+# geschrieben wurde:
+#   · die API kennt das Spiel gar nicht          (fid nicht in der Antwort)
+#   · die API sagt „laeuft noch / noch nicht"     (NS, 1H, HT, …)
+#   · die API sagt „faellt aus"                   (PST, CANC, ABD, SUSP)
+# Der dritte Fall loest sich NIE von selbst. Er gehoert nicht in dieselbe Meldung wie die ersten
+# beiden, und offene Wetten darauf brauchen eine Entscheidung statt Geduld.
+NIE_NORMAL = {"PST", "CANC", "ABD", "SUSP"}   # kommt an diesem Termin zu keinem regulaeren Ergebnis
+
+
+def api_status(item: dict) -> str:
+    """REIN: der Kurzstatus aus einer API-Antwort, oder "" wenn keiner dasteht."""
+    return str((((item or {}).get("fixture") or {}).get("status") or {}).get("short") or "").upper()
+
+
+def ist_abgesagt(item: dict) -> bool:
+    """REIN: sagt die API, dass dieses Spiel an diesem Termin nicht regulaer zustande kommt?"""
+    return api_status(item) in NIE_NORMAL
+
+
+def absage_eintragen(fx: dict, status: str, gesehen_at: str) -> bool:
+    """REIN: vermerkt die Absage AM FIXTURE — bewusst NICHT als `result`.
+
+    Ein `result` wuerde das Spiel fuer jeden Leser zu einem gespielten machen (`hat_ergebnis`
+    prueft nur, ob ein Status dasteht) und es damit in Bilanzen ziehen, in denen es nichts zu
+    suchen hat. Die Absage ist ein eigener Zustand: kein Ergebnis, aber auch kein Warten.
+    """
+    if not status:
+        return False
+    alt = fx.get("absage") or {}
+    if alt.get("status") == status:
+        return False
+    fx["absage"] = {"status": status, "gesehenAt": gesehen_at}
+    return True
+
+
+def ist_abgesagt_vermerkt(fx: dict) -> bool:
+    return bool((fx.get("absage") or {}).get("status"))
+
+
 def hat_ergebnis(fx: dict) -> bool:
     return bool((fx.get("result") or {}).get("status"))
 
@@ -125,7 +174,7 @@ def offene_fixtures(groups: dict, jetzt: datetime, nachlauf_h: float = NACHLAUF_
     offen: dict = {}
     for lk, g in (groups or {}).items():
         for fx in ((g or {}).get("fixtures") or []):
-            if not isinstance(fx, dict) or hat_ergebnis(fx):
+            if not isinstance(fx, dict) or hat_ergebnis(fx) or ist_abgesagt_vermerkt(fx):
                 continue
             k = _zeit(fx.get("kickoff"))
             if k is None or k > grenze or k < zu_alt:
@@ -209,12 +258,18 @@ def main() -> int:
                   for lk, v in sorted(offen.items()) for f in v],
         "ohneAnpfiff": ohne_anpfiff(groups),
         "nachgetragen": 0,
+        "abgesagtNeu": 0,
+        # Abgesagte Spiele sind eine eigene Kategorie und keine ausstehenden Ergebnisse:
+        # sie loesen sich nie von selbst, und offene Wetten darauf brauchen eine Entscheidung.
+        "abgesagt": [],
         "ligenAbgefragt": [],
         "apiLeer": [],
     }
+    gruende: dict = {}
+    abgesagt_neu = 0
 
     if not offen:
-        print("  ✅ kein abgepfiffenes Spiel ohne Ergebnis — kein API-Aufruf noetig.")
+        print("  ✅ kein Spiel mit vergangenem Anpfiff ohne Ergebnis — kein API-Aufruf noetig.")
         write_json_atomic(BERICHT, bericht)
         return 0
 
@@ -252,16 +307,27 @@ def main() -> int:
             if fid is not None:
                 per_fid[str(fid)] = item
         for fx in fxs:
+            paarung = "%s–%s" % (fx.get("homeName"), fx.get("awayName"))
             item = per_fid.get(str(fx.get("fid")))
             if item is None:
-                print("    ↯ %s–%s: fid %s nicht in der API-Antwort"
-                      % (fx.get("homeName"), fx.get("awayName"), fx.get("fid")))
+                # Bis heute wurde dieser Grund nur GEDRUCKT. Ein Grund, der nur im Log steht,
+                # ist fuer jeden spaeteren Leser kein Grund.
+                gruende[paarung] = "fid %s nicht in der API-Antwort" % fx.get("fid")
+                print("    ↯ %s: fid %s nicht in der API-Antwort" % (paarung, fx.get("fid")))
+                continue
+            if ist_abgesagt(item):
+                st = api_status(item)
+                if absage_eintragen(fx, st, jetzt.isoformat()):
+                    abgesagt_neu += 1
+                bericht["abgesagt"].append({"liga": lk, "paarung": paarung,
+                                            "kickoff": fx.get("kickoff"), "status": st})
+                print("    🚫 %s: %s — kommt an diesem Termin zu keinem Ergebnis" % (paarung, st))
                 continue
             erg = ergebnis_aus_api(item)
             if erg is None:
-                print("    ⏳ %s–%s: bei der API noch nicht fertig (%s)"
-                      % (fx.get("homeName"), fx.get("awayName"),
-                         ((item.get("fixture") or {}).get("status") or {}).get("short")))
+                st = api_status(item)
+                gruende[paarung] = "API-Status %s" % (st or "ohne Status")
+                print("    ⏳ %s: bei der API noch nicht fertig (%s)" % (paarung, st))
                 continue
             if eintragen(fx, erg):
                 nachgetragen += 1
@@ -270,15 +336,20 @@ def main() -> int:
                                                    erg["status"]))
 
     bericht["nachgetragen"] = nachgetragen
+    bericht["abgesagtNeu"] = abgesagt_neu
     uebrig = offene_fixtures(groups, jetzt)
     bericht["offenNachher"] = {lk: len(v) for lk, v in uebrig.items()}
     bericht["offen"] = [z for z in bericht["offen"]
                         if any(z["paarung"] == "%s–%s" % (f.get("homeName"), f.get("awayName"))
                                for v in uebrig.values() for f in v)]
-    if nachgetragen:
+    # Der Grund gehoert an die Zeile, nicht ins Log: „1 offen" ohne Grund ist kein Befund.
+    for z in bericht["offen"]:
+        z["grund"] = gruende.get(z["paarung"], "kein API-Vergleich gelaufen")
+    if nachgetragen or abgesagt_neu:
         wm.setdefault("_meta", {})["ergebnisNachlaufAt"] = jetzt.isoformat()
         write_json_atomic(OUT_FILE, wm)
-        print("  💾 %d Ergebnis(se) nachgetragen → %s" % (nachgetragen, OUT_FILE))
+        print("  💾 %d Ergebnis(se), %d Absage(n) vermerkt → %s"
+              % (nachgetragen, abgesagt_neu, OUT_FILE))
     else:
         print("  ℹ️  nichts nachzutragen (API hatte die Spiele auch noch nicht fertig).")
     write_json_atomic(BERICHT, bericht)

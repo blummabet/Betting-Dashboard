@@ -504,6 +504,29 @@ def check_poly_deckung(ctx):
     nah = PD.nah(PD.luecken(lp, keys))
     fails = ["%s (%s v %s, Anpfiff in %.1fh) — der Liga-Fetcher hat den Markt, der Money-Scan nie"
              % (r["slug"], r["home"], r["away"], r["htk"]) for r in nah]
+    # 🔴 20.09.2026: diese Messung ist ein MOMENT. Der Fund vom selben Tag
+    # („sea-mil-lec-2026-09-20, Anpfiff in 0.1h") war zwanzig Minuten spaeter verschwunden —
+    # mit dem Anpfiff faellt die Luecke aus dem Fenster. Auf „passiert das oft?" gab es deshalb
+    # nie eine Zahl, nur „gerade keine".
+    # Fehlerklasse: eine Luecke, die sich durch Zeitablauf selbst erledigt, hinterlaesst keine
+    # Statistik. Der Scanner fuehrt jetzt ein Buch; hier steht, was es sagt.
+    buch = ctx.get("polyDeckungBuch") or {}
+    if buch:
+        b = PD.bilanz(buch)
+        bis_anpfiff = [z for z in (buch.get("slugs") or {}).values()
+                       if isinstance(z, dict) and not z.get("nachgeholt")
+                       and (z.get("minHtk") is not None and z["minHtk"] <= PD.NAH_H)]
+        if bis_anpfiff:
+            fails.append("Buch: %d Markt/Maerkte wurden bis zum Anpfiff nie erfasst (%s) — dort "
+                         "entstanden Picks blind zum Geld"
+                         % (len(bis_anpfiff),
+                            "; ".join("%s (%.1fh)" % (z.get("slug"), z.get("minHtk"))
+                                      for z in sorted(bis_anpfiff,
+                                                      key=lambda x: x.get("minHtk") or 0)[:4])))
+        elif b["quotePct"] is not None and b["nLaeufeMitLuecke"]:
+            fails.append("Buch: in %d von %d Laeufen (%d %%) war eine Deckungsluecke offen — "
+                         "alle wurden noch vor dem Anpfiff nachgeholt (%s)"
+                         % (b["nLaeufeMitLuecke"], b["nLaeufe"], b["quotePct"], b["urteil"]))
     return _c("Poly-Deckung: Money-Scan gegen Liga-Fetcher", "error", fails[:8])
 
 
@@ -1159,10 +1182,28 @@ def check_jeder_push_hat_seinen_beleg(ctx):
     n = int(r.get("gesendetOhneBeleg") or 0)
     if not n:
         return _c("Jeder Push hat seinen Beleg", "warn", [])
-    keys = ", ".join(r.get("gesendetOhneBelegKeys") or [])[:120]
-    return _c("Jeder Push hat seinen Beleg", "warn",
-              ["%d gesendete(r) Public-Push(es) ohne Ledger-Zeile — sie fehlen in der Bilanz "
-               "und lassen sich nicht nachtragen (%s)" % (n, keys or "—")])
+    # 🔴 20.09.2026, zweiter Teil: die Ursache ist behoben (der Beleg wird jetzt sofort nach dem
+    # Senden committet). Ob die Reparatur HAELT, stand aber in derselben Zahl wie die alte Narbe —
+    # 4 wuerde bei einem fuenften Verlust zu 5, und das sieht in einer Warn-Zeile niemand.
+    # Fehlerklasse: eine Narbe und eine frische Wunde in derselben Zahl.
+    # Der Dedup-Stand stempelt seit dem 20.09. die Sendezeit; jeder DATIERTE Verlust ist also
+    # einer von NACH der Reparatur. Kein gepflegter Ausnahmen-Katalog noetig.
+    neu = int(r.get("gesendetOhneBelegNeu") or 0)
+    alt = max(0, n - neu)
+    fails = []
+    if neu:
+        nk = ", ".join("%s (%s)" % (z.get("key"), str(z.get("t"))[:16])
+                       for z in (r.get("gesendetOhneBelegNeuKeys") or [])[:4])
+        fails.append("%d Public-Push(es) SEIT der Sofort-Sicherung ohne Ledger-Zeile (%s) — der "
+                     "Sicherungsschritt greift nicht" % (neu, nk or "—"))
+    if alt:
+        keys = ", ".join(r.get("gesendetOhneBelegKeys") or [])[:120]
+        fails.append("%d aeltere(r) Push(es) ohne Ledger-Zeile aus der Zeit vor der Sofort-"
+                     "Sicherung (%s) — nicht nachtragbar: von einem verlorenen Push steht die "
+                     "Quote beim Senden nirgends, und nur die aufgefallenen zurueckzuholen waere "
+                     "eine Auswahl nach Ausgang. Die Bilanz nennt ihre Luecke stattdessen."
+                     % (alt, keys or "—"))
+    return _c("Jeder Push hat seinen Beleg", "warn", fails)
 
 
 def check_artefakte_sind_lesbar(ctx):
@@ -1334,14 +1375,31 @@ def check_ergebnisse_kommen_an(ctx):
                          % (name, _alter_kurz(jetzt - t)))
             continue
         offen = [z for z in (b.get("offen") or []) if isinstance(z, dict)]
-        # Ein frisch abgepfiffenes Spiel darf kurz fehlen: die API braucht ihre Zeit.
+        # Ein frisch angepfiffenes Spiel darf kurz fehlen: die API braucht ihre Zeit.
         reif = [z for z in offen if (z.get("stundenHer") or 0) >= 6]
         if reif:
-            fails.append("%s: %d abgepfiffene Spiele ohne Ergebnis (%s) — der Resolver kann "
-                         "sie nicht abrechnen, sie fallen aus jeder Bilanz heraus"
+            # 🔴 20.09.2026: hier stand „abgepfiffene Spiele". Levante–Athletic wurde 95 Stunden
+            # lang so gemeldet — und war nie angepfiffen worden, sondern eine halbe Stunde vor
+            # Beginn wegen Starkregen abgesagt. Wir kennen den geplanten Anpfiff, nicht das
+            # Ereignis; der Satz behauptete mehr, als die Zahl hergibt.
+            # Fehlerklasse: ein Anpfiff, der nur im Kalender stattgefunden hat.
+            fails.append("%s: %d Spiele mit vergangenem Anpfiff ohne Ergebnis (%s) — der "
+                         "Resolver kann sie nicht abrechnen, sie fallen aus jeder Bilanz heraus"
                          % (name, len(reif),
-                            "; ".join("%s seit %.0f h" % (z.get("paarung"), z.get("stundenHer") or 0)
+                            "; ".join("%s seit %.0f h%s"
+                                      % (z.get("paarung"), z.get("stundenHer") or 0,
+                                         ", %s" % z["grund"] if z.get("grund") else "")
                                       for z in reif[:4])))
+        # Abgesagte Spiele sind KEINE ausstehenden Ergebnisse. Sie loesen sich nie von selbst,
+        # und eine offene Wette darauf braucht eine Entscheidung statt Geduld — deshalb eine
+        # eigene Meldung und nicht dieselbe.
+        ab = [z for z in (b.get("abgesagt") or []) if isinstance(z, dict)]
+        if ab:
+            fails.append("%s: %d abgesagtes/verlegtes Spiel (%s) — es kommt an diesem Termin zu "
+                         "keinem Ergebnis; offene Wetten darauf brauchen eine Entscheidung"
+                         % (name, len(ab),
+                            "; ".join("%s (%s)" % (z.get("paarung"), z.get("status"))
+                                      for z in ab[:4])))
         if b.get("apiLeer"):
             fails.append("%s: API lieferte fuer %s 0 Fixtures — Quota, Key oder Saison"
                          % (name, ", ".join(map(str, b["apiLeer"]))))
@@ -1525,6 +1583,7 @@ def build_ctx_from_disk() -> dict:
         "polyUpcoming": _lade("poly_money_upcoming.json", {}),
         "polyHistory": _lade("poly_money_broad_history.json", {}),
         "ligaPoly": _lade("liga_poly_prices.json", {}),
+        "polyDeckungBuch": _lade("poly_deckung_buch.json", {}),
         "ligaLedger": _lade("liga_signal_ledger.json", {}),
         "mlsLedger": _lade("mls_signal_ledger.json", {}),
         "signalBilanz": _lade("liga_signal_bilanz.json", {}),

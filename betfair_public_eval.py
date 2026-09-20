@@ -401,6 +401,34 @@ def gesendet_ohne_beleg(seen, ledger) -> list:
     return sorted(fehlt)
 
 
+def gesendet_ohne_beleg_datiert(seen, ledger) -> list:
+    """Die Verluste, die NACH der Reparatur passiert sind. REIN. -> [{"key","t"}], neueste zuerst.
+
+    🔴 20.09.2026, zweiter Teil. Die Ursache der vier verlorenen Zeilen ist gefunden und
+    behoben: `betfair_alerts.py` sendet und schreibt den Beleg sofort, der Commit dafuer stand
+    aber zwoelf Schritte und einen 12-Minuten-Schlaf spaeter, bei einem 15-Minuten-Takt. Seit
+    heute sichert `scripts/ci_sichern.sh` ihn direkt nach dem Senden.
+    Gegenprobe zum Roll-over-Verdacht: das Ledger haelt 282 von erlaubten 800 Zeilen, und alle
+    vier fehlenden matchIds liegen INNERHALB seines Bereichs (35.667.446 … 36.077.729). Sie
+    sind nicht herausgerollt, sie wurden nie geschrieben.
+
+    Ob die Reparatur haelt, war damit aber noch nicht messbar: die Zahl stand bei 4 und ginge
+    bei einem fuenften Verlust auf 5 — in einer Warn-Zeile sieht das niemand.
+    Fehlerklasse: eine Narbe und eine frische Wunde in derselben Zahl.
+
+    Der Dedup-Stand stempelt ab heute die Sendezeit. Vorher wurde nicht gestempelt, also ist
+    jeder DATIERTE Eintrag ohne Beleg einer von NACH der Reparatur — kein gepflegter
+    Ausnahmen-Katalog, der in drei Wochen niemand mehr anfasst.
+    """
+    raus = []
+    for k in gesendet_ohne_beleg(seen, ledger):
+        rec = (seen or {}).get(k)
+        t = rec.get("t") if isinstance(rec, dict) else None
+        if t:
+            raus.append({"key": k, "t": str(t)})
+    return sorted(raus, key=lambda z: z["t"], reverse=True)
+
+
 def summarize(ledger, now=None):
     now = now or _now()
     res = [e for e in ledger if e.get("status") in ("won", "lost")]
@@ -607,6 +635,11 @@ def main():
         _ohne = gesendet_ohne_beleg(_seen if isinstance(_seen, dict) else {}, ledger)
         record["gesendetOhneBeleg"] = len(_ohne)
         record["gesendetOhneBelegKeys"] = _ohne[:20]
+        # Getrennt ausgewiesen: die alte Narbe (undatiert) und alles, was NACH der Reparatur
+        # verloren ging. Nur das zweite ist ein Befund.
+        _neu = gesendet_ohne_beleg_datiert(_seen if isinstance(_seen, dict) else {}, ledger)
+        record["gesendetOhneBelegNeu"] = len(_neu)
+        record["gesendetOhneBelegNeuKeys"] = _neu[:10]
         if _ohne:
             print("  ⚠️  %d gesendete(r) Push(es) ohne Ledger-Zeile: %s"
                   % (len(_ohne), ", ".join(_ohne[:6])))

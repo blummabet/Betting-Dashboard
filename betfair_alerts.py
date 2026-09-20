@@ -1807,8 +1807,17 @@ def should_send_public(seen, key, value) -> bool:
 
 
 def _pub_seen_put(seen, key, value) -> None:
+    # 🔴 20.09.2026: vier von 277 gesendeten Public-Pushes haben keine Ledger-Zeile. Die Ursache
+    # ist repariert (der Beleg wird jetzt sofort nach dem Senden committet, scripts/ci_sichern.sh
+    # haengt seit heute auch an betfair.yml) — aber ob die Reparatur HAELT, liess sich nicht
+    # sagen: die Zahl stand bei 4 und wuerde bei einem fuenften Verlust auf 5 gehen, ohne dass
+    # jemand den Unterschied sieht.
+    #
+    # Deshalb der Zeitstempel. Er trennt die alte Narbe von einem neuen Verlust, ohne dass
+    # jemand eine Liste pflegen muss: vor heute gestempelt wurde nicht, also ist jeder DATIERTE
+    # Verlust einer nach der Reparatur — und nur der ist ein Befund.
     _, n = _pub_seen_rec(seen.get(key))
-    seen[key] = {"v": value, "n": n + 1}
+    seen[key] = {"v": value, "n": n + 1, "t": datetime.now(timezone.utc).isoformat()}
 
 
 def _pub_skip_resend(a, pub_seen) -> bool:

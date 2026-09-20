@@ -280,6 +280,24 @@ jobs:
         run: ${{ env.BETFAIR_PY }} betfair_data_integrity.py
         continue-on-error: true
 
+      # 🔴 20.09.2026 (Lucas: „ich weiß dann nicht, funktioniert das eigentlich, was tracken wir
+      # da … es ist halt sehr viel aktuell"). Drei Guard-Batterien laufen 57 Pruefungen und
+      # schreiben sie in drei Artefakte — und sonst nirgendwohin. Am Abend des 20.09. standen
+      # dort 14 Befunde, darunter Positionen, die seit 13 Tagen offen sind.
+      # Fehlerklasse: ein Messgeraet, dessen Zeiger niemand ansieht.
+      #
+      # Bewusst KEIN eigener Workflow: die Runner sind gesaettigt (zwei Workflows liefern ueber
+      # Soll, alle anderen 2-7 Laeufe am Tag — s. check_takt_stimmt_mit_dem_cron). Dieser Lauf
+      # faehrt zuverlaessig; das Skript entscheidet selbst, ob es dran ist (Fenster 06-10 UTC,
+      # einmal je Tag), und schweigt, wenn nichts kaputt ist.
+      - name: 🩺 Stoerungsmeldung (einmal am Tag, nur wenn etwas kaputt ist)
+        run: ${{ env.BETFAIR_PY }} stoerungsmeldung.py
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+          TELEGRAM_CHAT_ID:        ${{ secrets.TELEGRAM_CHAT_ID }}
+
       # 28.08.2026 (Lucas: „Fehler, die wir gar nicht mitkriegen") — 135 Steps stehen repo-weit
       # auf continue-on-error. Dieser Waechter fragt ueber die GitHub-API die Steps DIESES Laufs
       # ab und meldet jeden gescheiterten, auch wenn der Job gruen bleibt. `if: always()`, damit
@@ -349,6 +367,7 @@ jobs:
           git add betfair_public_seen.json 2>/dev/null || true
           git add betfair_public_ledger.json 2>/dev/null || true
           git add betfair_public_record.json 2>/dev/null || true
+          git add stoerungsmeldung_stand.json 2>/dev/null || true   # sonst kaeme die Meldung jeden Lauf erneut
           # 19.09.2026: das Schattenbuch der Beinahe-Treffer — wer die Schwelle knapp verfehlt hat,
           # samt seinen Zahlen, abgerechnet wie ein echter Push. Ohne diese Unterseite laesst sich
           # keine Schwelle begruendet verschieben, nur blind senken. Eigene Zeile, s.o.
