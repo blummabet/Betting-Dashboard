@@ -1,11 +1,11 @@
-# 🟡 Picks Validator — 19.09.2026 20:34
+# 🟡 Picks Validator — 20.09.2026 08:07
 
-**52 Spiele geprüft** · 🔴 0 Fehler · 🟡 38 Warnungen · 🔵 162 Hinweise
+**52 Spiele geprüft** · 🔴 0 Fehler · 🟡 38 Warnungen · 🔵 163 Hinweise
 
 ```
 =================================================================
   🐕 CocoBet — Picks Logik-Check
-  19.09.2026 20:34
+  20.09.2026 08:07
   Filter: nächste 3 Tag(e)
 =================================================================
 
@@ -281,6 +281,9 @@
   🟡 WARNUNG [H2H_DOMINATED_HIGH_SCORE]
      📅 20.09.2026  Marseille vs Paris Saint Germain
      Paris Saint Germain dominiert H2H 15W/1X/3L in 19 Spielen. matchScore=7.5 — Pick-Richtung sollte klar sein, Angle-Text darf den Underdog nicht überbewerten.
+  🔵 HINWEIS [ASYMMETRIC_STAKE_SCORES]
+     📅 20.09.2026  Marseille vs Paris Saint Germain
+     Score-Differenz 4.0 Punkte: Marseille (8.5) vs Paris Saint Germain (4.5). Pick-Richtung sehr klar — Favoritenpflicht prüfen.
   🟡 WARNUNG [HOME_POOR_FORM_HIGH_SCORE]
      📅 20.09.2026  Marseille vs Paris Saint Germain
      Marseille: formScore=0.17 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet.
@@ -672,7 +675,7 @@
 ═════════════════════════════════════════════════════════════════
   Geprüft: 52 Spiele
   🟡 38 Warnungen — manuelle Prüfung empfohlen
-  🔵 162 Hinweise — Pick-Richtung kontrollieren
+  🔵 163 Hinweise — Pick-Richtung kontrollieren
 ═════════════════════════════════════════════════════════════════
 
 ```
