@@ -555,3 +555,72 @@ class DerBelegEinesPushsWirdSofortGesichert(unittest.TestCase):
         self.assertLess(i_sich, i_eval, "und VOR allem, was danach noch schiefgehen kann")
         for f in ("betfair_public_ledger.json", "betfair_public_seen.json"):
             self.assertIn(f, y[i_sich:i_sich + 500], "%s wird nicht sofort gesichert" % f)
+
+
+class DerEndstandGehoertDemSpielNichtDemMarkt(unittest.TestCase):
+    """🔴 20.09.2026 (Lucas: „sind die dann in der Bilanz richtig drin, es sind immerhin zwei
+    Winner").
+
+    Bochum v VfL Osnabruck rechnete sich nach dem `fav_token`-Fix sofort ab. Vasco da Gama v
+    Coritiba nicht — obwohl der breite Track das Spiel kannte: dort lagen FUENF Maerkte mit
+    ft 5:0, nur ausgerechnet Match Odds fehlte. Genau das Signal hatte `capture()` nie angelegt,
+    weil `fav_token` an „Vasco Da Gama" gescheitert war. Der Fix kommt fuer die bereits
+    gesendete Zeile zu spaet: `settle_from_track` sucht exakt (matchId, market).
+
+    Der Endstand ist aber eine Eigenschaft des SPIELS. Fehlt der eigene Markt, reicht irgendeine
+    Zeile desselben Spiels — fuer ft/ht, NICHT fuer die Schlusskurse.
+    """
+
+    def _push(self, market="Match Odds"):
+        return {"k": "fresh:9:%s" % market, "matchId": "9", "market": market,
+                "leadName": "Vasco Da Gama", "home": "Vasco da Gama", "away": "Coritiba",
+                "leadOdd": 1.37, "sentAt": "2026-09-19T23:42:00+00:00", "status": "pending"}
+
+    def _track_ohne_match_odds(self):
+        return [{"matchId": "9", "market": "Over/Under 2.5 Goals", "ft": [5, 0], "ht": [2, 0],
+                 "odd": 1.9, "pinnClose": 1.85, "settledAt": "2026-09-20T02:00:00+00:00"}]
+
+    def test_der_eigene_markt_gewinnt_wenn_es_ihn_gibt(self):
+        e = self._push()
+        spur = self._track_ohne_match_odds() + [
+            {"matchId": "9", "market": "Match Odds", "ft": [5, 0], "ht": [2, 0],
+             "odd": 1.30, "pinnClose": 1.28, "settledAt": "2026-09-20T02:00:00+00:00"}]
+        E.settle_from_track([e], spur)
+        self.assertEqual(e["status"], "won")
+        self.assertEqual(e["via"], "track")
+        self.assertIsNotNone(e.get("clvBf"), "der eigene Markt liefert auch den Schlusskurs")
+
+    def test_ohne_eigenen_markt_zaehlt_der_endstand_des_spiels(self):
+        e = self._push()
+        E.settle_from_track([e], self._track_ohne_match_odds())
+        self.assertEqual(e["status"], "won")
+        self.assertEqual(e["ftScore"], [5, 0])
+        self.assertAlmostEqual(e["profit"], 0.37, places=2)
+        self.assertEqual(e["via"], "track-spiel", "die Herkunft muss unterscheidbar bleiben")
+
+    def test_aber_der_schlusskurs_wird_NICHT_vom_fremden_markt_geerbt(self):
+        """Ein CLV gegen die Quote eines anderen Marktes waere eine erfundene Zahl."""
+        e = self._push()
+        E.settle_from_track([e], self._track_ohne_match_odds())
+        self.assertIsNone(e.get("clvBf"))
+        self.assertIsNone(e.get("clvPinn"))
+
+    def test_ohne_jede_zeile_des_spiels_bleibt_es_offen(self):
+        e = self._push()
+        E.settle_from_track([e], [{"matchId": "77", "market": "Match Odds", "ft": [1, 0]}])
+        self.assertEqual(e["status"], "pending")
+
+    def test_der_echte_fall_steht_jetzt_als_treffer(self):
+        import json
+        from pathlib import Path
+        import betfair_track_store as _S
+        p = Path(__file__).parent.parent
+        led = json.loads((p / "betfair_public_ledger.json").read_text(encoding="utf-8"))
+        tr = _S.load(str(p / "betfair_track_results.json"))
+        buch, _ = E.abrechnen(led, {}, tr, manual={})
+        treffer = {str(r.get("matchId")): r for r in buch}
+        vasco = treffer.get("36045430")
+        if vasco is None:
+            self.skipTest("Zeile nicht mehr im Buch (Ledger gekappt)")
+        self.assertEqual(vasco["status"], "won",
+                         "Vasco gewann 5:0 auf eine Wette zu 1.37 — das gehoert in die Bilanz")

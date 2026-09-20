@@ -110,6 +110,30 @@ def _track_index(track_results):
     return idx
 
 
+def _track_spiel_index(track_results):
+    """matchId → irgendeine Zeile des breiten Tracks mit Endstand. Neuere gewinnen.
+
+    🔴 20.09.2026 (Lucas: „sind die dann in der Bilanz richtig drin, es sind immerhin zwei
+    Winner"). Vasco da Gama v Coritiba liess sich nicht abrechnen, obwohl der breite Track das
+    Spiel kannte: dort lagen FUENF Maerkte mit ft 5:0 — nur ausgerechnet Match Odds fehlte, weil
+    `fav_token` an „Vasco Da Gama" gescheitert war und `capture()` das Signal deshalb nie
+    angelegt hatte. Der Zeichenvergleich ist repariert, aber fuer die bereits gesendete Zeile
+    kommt das zu spaet: ihr Markt steht im Track nicht, und `settle_from_track` sucht exakt
+    (matchId, market).
+
+    Der Endstand ist aber eine Eigenschaft des SPIELS, nicht des Marktes. Fehlt der eigene
+    Markt, reicht irgendeine Zeile desselben Spiels — fuer ft/ht. NICHT fuer clvBf/clvPinn:
+    die Schlusskurse gehoeren dem jeweiligen Markt und duerfen nicht von einem fremden geerbt
+    werden. Deshalb traegt dieser Weg ein eigenes `via`."""
+    idx = {}
+    for r in (track_results or []):
+        mid = r.get("matchId")
+        if mid is None or r.get("ft") is None:
+            continue
+        idx[str(mid)] = r
+    return idx
+
+
 def settle_from_track(ledger, track_results, now=None):
     """07.08.2026 (Lucas: „wie kann die Trefferquote klappen aber die Push-Bilanz nicht"): die Push-
     Bilanz erbt die Abrechnungen des breiten Track-Records. Sobald der breite Track ein Spiel abgerechnet
@@ -118,6 +142,7 @@ def settle_from_track(ledger, track_results, now=None):
     NACH betfair_track_record.py, liest also die frisch geschriebenen Ergebnisse. REIN."""
     now = now or _now()
     idx = _track_index(track_results)
+    spiel_idx = _track_spiel_index(track_results)
     for e in ledger:
         if e.get("status") != "pending":
             continue
@@ -126,6 +151,11 @@ def settle_from_track(ledger, track_results, now=None):
             e["clvBf"] = _clv_pp(e.get("leadOdd"), row.get("odd"))       # 12.08.2026 (Lucas): Push-CLV vs Betfair-Close
             e["clvPinn"] = _clv_pp(e.get("leadOdd"), row.get("pinnClose"))  # + vs Pinnacle-Close (nur abgedeckte Ligen)
             _settle_entry(e, row.get("ft"), row.get("ht"), now, "track")
+            continue
+        # Eigener Markt nicht im Track — aber der Endstand gehoert dem Spiel (s. _track_spiel_index).
+        row = spiel_idx.get(str(e.get("matchId")))
+        if row:
+            _settle_entry(e, row.get("ft"), row.get("ht"), now, "track-spiel")
     return ledger
 
 
