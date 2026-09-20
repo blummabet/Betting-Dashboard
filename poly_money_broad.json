@@ -1,33 +1,41 @@
 {
- "n": 509,
+ "n": 513,
  "minOdds": 1.35,
- "moneyHitRate": 0.381,
- "priceHitRate": 0.415,
- "brierMoney": 0.8982,
- "brierPrice": 0.6855,
+ "moneyHitRate": 0.378,
+ "priceHitRate": 0.413,
+ "brierMoney": 0.8916,
+ "brierPrice": 0.6858,
  "disagree": {
-  "n": 145,
-  "moneyWon": 20,
-  "priceWon": 37,
-  "neither": 88
+  "n": 147,
+  "moneyWon": 21,
+  "priceWon": 39,
+  "neither": 87
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
  "byLeague": [
   {
    "league": "EPL",
-   "n": 44,
-   "moneyHitRate": 0.227,
-   "brierMoney": 0.9588,
-   "brierPrice": 0.8257,
+   "n": 45,
+   "moneyHitRate": 0.222,
+   "brierMoney": 0.9599,
+   "brierPrice": 0.8294,
+   "verdict": "preis_besser"
+  },
+  {
+   "league": "LIGUE-1",
+   "n": 32,
+   "moneyHitRate": 0.344,
+   "brierMoney": 0.8352,
+   "brierPrice": 0.698,
    "verdict": "preis_besser"
   },
   {
    "league": "LA-LIGA",
-   "n": 61,
-   "moneyHitRate": 0.393,
-   "brierMoney": 0.8914,
-   "brierPrice": 0.7532,
+   "n": 65,
+   "moneyHitRate": 0.369,
+   "brierMoney": 0.9093,
+   "brierPrice": 0.7546,
    "verdict": "preis_besser"
   },
   {
@@ -48,18 +56,10 @@
   },
   {
    "league": "BUNDESLIGA",
-   "n": 37,
-   "moneyHitRate": 0.297,
-   "brierMoney": 0.9281,
-   "brierPrice": 0.7331,
-   "verdict": "preis_besser"
-  },
-  {
-   "league": "LIGUE-1",
-   "n": 28,
-   "moneyHitRate": 0.286,
-   "brierMoney": 0.9282,
-   "brierPrice": 0.7317,
+   "n": 40,
+   "moneyHitRate": 0.3,
+   "brierMoney": 0.9324,
+   "brierPrice": 0.7357,
    "verdict": "preis_besser"
   },
   {
@@ -71,27 +71,27 @@
    "verdict": "preis_besser"
   },
   {
+   "league": "MLS",
+   "n": 20,
+   "moneyHitRate": 0.35,
+   "brierMoney": 0.9386,
+   "brierPrice": 0.6915,
+   "verdict": "preis_besser"
+  },
+  {
    "league": "SOCCER:JAP",
    "n": 22,
    "moneyHitRate": 0.364,
    "brierMoney": 0.9605,
    "brierPrice": 0.6621,
    "verdict": "preis_besser"
-  },
-  {
-   "league": "MLS",
-   "n": 24,
-   "moneyHitRate": 0.375,
-   "brierMoney": 1.0306,
-   "brierPrice": 0.6895,
-   "verdict": "preis_besser"
   }
  ],
  "guete": {
-  "belastbar": 509,
-  "preis_echo": 211,
+  "belastbar": 513,
+  "preis_echo": 207,
   "abgeschnitten": 68,
-  "unbekannt": 260,
+  "unbekannt": 252,
   "leer": 0
  },
  "rows": [
@@ -432,18 +432,6 @@
    "totalUsd": 512753
   },
   {
-   "key": "mls-hou-rsl-2026-09-09",
-   "league": "MLS",
-   "winner": "Houston Dynamo",
-   "moneyFav": "Houston Dynamo",
-   "priceFav": "Houston Dynamo",
-   "moneyShare": 0.981,
-   "priceProb": 0.542,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 500275
-  },
-  {
    "key": "epl-ful-cry-2026-09-05",
    "league": "EPL",
    "winner": "Crystal Palace FC",
@@ -540,18 +528,6 @@
    "totalUsd": 432192
   },
   {
-   "key": "mls-phi-fcc-2026-09-09",
-   "league": "MLS",
-   "winner": "Philadelphia Union",
-   "moneyFav": "Philadelphia Union",
-   "priceFav": "Philadelphia Union",
-   "moneyShare": 0.973,
-   "priceProb": 0.598,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 376840
-  },
-  {
    "key": "por-fam-spo-2026-09-13",
    "league": "PRIMEIRA-LIGA",
    "winner": "Draw (FC Famalicão vs. Sporting CP)",
@@ -574,199 +550,223 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 372754
+  },
+  {
+   "key": "epl-bre-sun-2026-09-05",
+   "league": "EPL",
+   "winner": "Draw (Brentford FC vs. Sunderland AFC)",
+   "moneyFav": "Brentford FC",
+   "priceFav": "Brentford FC",
+   "moneyShare": 0.967,
+   "priceProb": 0.568,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 367524
+  },
+  {
+   "key": "lal-vil-dep-2026-09-05",
+   "league": "LA-LIGA",
+   "winner": "RC Deportivo A Coruña",
+   "moneyFav": "Villarreal CF",
+   "priceFav": "Villarreal CF",
+   "moneyShare": 0.925,
+   "priceProb": 0.668,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 364386
   }
  ],
- "generatedAt": "2026-09-19T20:30:28.324808+00:00",
+ "generatedAt": "2026-09-20T05:29:13.392255+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 420,
   "nfl": 800,
-  "mlb": 794,
-  "nhl": 587,
-  "mls": 702,
-  "epl": 465,
+  "mlb": 683,
+  "nhl": 583,
+  "mls": 636,
+  "epl": 462,
   "soccer": 800,
   "tennis": 800,
   "ucl": 417,
-  "la-liga": 496,
-  "bundesliga": 441,
+  "la-liga": 480,
+  "bundesliga": 436,
   "serie-a": 51,
-  "ligue-1": 493,
-  "primeira-liga": 460,
-  "brazil-serie-a": 483,
+  "ligue-1": 447,
+  "primeira-liga": 444,
+  "brazil-serie-a": 462,
   "brasileirao": 0,
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 651,
+  "esports": 654,
   "cs2": 421,
   "lol": 427,
   "dota": 9,
-  "valorant": 446,
-  "ufc": 459,
-  "mma": 53,
-  "boxing": 271,
+  "valorant": 447,
+  "ufc": 466,
+  "mma": 54,
+  "boxing": 272,
   "golf": 411,
   "f1": 381,
-  "cricket": 502,
+  "cricket": 478,
   "afc-champions-league-elite": 133,
   "allsvenskan": 1,
-  "austria-bundesliga": 312,
+  "austria-bundesliga": 311,
   "brazil-serie-b": 4,
-  "bulgaria-parva-liga": 410,
-  "bundesliga-2": 432,
+  "bulgaria-parva-liga": 409,
+  "bundesliga-2": 425,
   "champions-league": 311,
   "champions-league-final": 12,
   "chinese-super-league": 406,
   "czechia-fortuna-liga": 9,
-  "denmark-superliga": 440,
+  "denmark-superliga": 433,
   "efl-championship": 422,
   "english-premier-league": 2,
   "europa-conference-league": 411,
   "europa-league": 187,
-  "israel-premier-league": 225,
+  "israel-premier-league": 220,
   "japan-j-league": 421,
-  "japan-j2-league": 481,
+  "japan-j2-league": 516,
   "k-league": 441,
-  "la-liga-2": 541,
+  "la-liga-2": 520,
   "liga-mx-apertura": 2,
-  "ligue-2": 411,
+  "ligue-2": 404,
   "naitons-league": 1,
-  "national-league": 577,
+  "national-league": 570,
   "nations-league": 25,
-  "norway-eliteserien": 449,
-  "poland-ekstraklasa": 442,
-  "premier-league": 454,
+  "norway-eliteserien": 442,
+  "poland-ekstraklasa": 428,
+  "premier-league": 451,
   "saudi-professional-league": 410,
   "scotland-league-cup": 193,
-  "scottish-premiership": 419,
-  "serbian-superliga": 434,
-  "serie-b": 443,
-  "slovenia-prvaliga": 280,
-  "sweden-allsvenskan": 449,
+  "scottish-premiership": 412,
+  "serbian-superliga": 426,
+  "serie-b": 429,
+  "slovenia-prvaliga": 279,
+  "sweden-allsvenskan": 442,
   "switzerland-super-league": 381,
   "uefa-champions-league": 26,
   "uefa-conference-league": 29,
   "uefa-europa-league": 18,
   "uefa-nations-league": 435,
   "uefa-womens-champions-league": 2,
-  "ukraine-premier-liha": 432,
+  "ukraine-premier-liha": 427,
   "womens-champions-league": 526
  },
  "sweepStats": {
   "sweepOpen": 500,
   "sweepClosed": 500,
-  "sweepAdded": 408
+  "sweepAdded": 410
  },
  "vorStats": {
-  "kandidaten": 16,
-  "budgetLeer": 0,
+  "kandidaten": 23,
+  "budgetLeer": 1,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
-  "mitAnteilen": 16,
-  "calls": 16
+  "mitAnteilen": 22,
+  "calls": 22
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1768,
-   "usd": 28090143,
-   "beispiel": "fifwc-esp-cvi-2026-06-15-more-markets"
-  },
-  "presidential": {
-   "n": 20,
-   "usd": 5445082,
-   "beispiel": "presidential-election-winner-2028"
+   "n": 743,
+   "usd": 12640663,
+   "beispiel": "fifwc-arg-che-2026-07-11"
   },
   "nba": {
-   "n": 231,
-   "usd": 3281457,
-   "beispiel": "nba-sas-okc-2026-05-18"
-  },
-  "will": {
    "n": 52,
-   "usd": 1546828,
-   "beispiel": "will-trump-acquire-greenland-before-2027"
-  },
-  "ecs": {
-   "n": 10,
-   "usd": 901748,
-   "beispiel": "ecs-ars-mci-2026-08-16-more-markets"
-  },
-  "world": {
-   "n": 71,
-   "usd": 670455,
-   "beispiel": "world-cup-nation-to-reach-final"
-  },
-  "trump": {
-   "n": 2,
-   "usd": 275535,
-   "beispiel": "trump-out-as-president-before-2027"
-  },
-  "dtrump": {
-   "n": 1,
-   "usd": 241474,
-   "beispiel": "dtrump-out-as-president-by-september-30"
+   "usd": 1651749,
+   "beispiel": "nba-det-cle-2026-05-09"
   },
   "fif": {
-   "n": 54,
-   "usd": 207424,
+   "n": 30,
+   "usd": 153417,
    "beispiel": "fif-svk-mon-2026-06-05-more-markets"
   },
-  "cbb": {
-   "n": 6,
-   "usd": 164722,
-   "beispiel": "cbb-uconn-mich-2026-04-06"
-  },
-  "clf": {
-   "n": 34,
-   "usd": 156173,
-   "beispiel": "clf-eve-new-2026-08-12-exact-score"
-  },
-  "new": {
-   "n": 5,
-   "usd": 126487,
-   "beispiel": "new-jersey-republican-senate-primary-winner"
-  },
-  "pro": {
-   "n": 23,
-   "usd": 114532,
-   "beispiel": "pro-football-2027-champion-20260729185915366"
-  },
-  "ballon": {
-   "n": 7,
-   "usd": 107646,
-   "beispiel": "ballon-dor-winner-2026"
-  },
-  "nbasl": {
-   "n": 4,
-   "usd": 101771,
-   "beispiel": "nbasl-cle-nop-2026-07-15"
-  },
-  "democratic": {
-   "n": 17,
-   "usd": 72292,
-   "beispiel": "democratic-presidential-nominee-2028"
-  },
-  "2026": {
-   "n": 16,
-   "usd": 69392,
-   "beispiel": "2026-f1-drivers-champion"
-  },
   "fed": {
-   "n": 13,
-   "usd": 60794,
+   "n": 7,
+   "usd": 110783,
    "beispiel": "fed-decision-in-december-20260729232808632"
   },
-  "super": {
-   "n": 14,
-   "usd": 57397,
-   "beispiel": "super-bowl-champion-2026-731"
+  "nbasl": {
+   "n": 2,
+   "usd": 98826,
+   "beispiel": "nbasl-uta-lac-2026-07-12"
   },
-  "brazil": {
+  "clf": {
+   "n": 15,
+   "usd": 97865,
+   "beispiel": "clf-lfc-wre-2026-07-29"
+  },
+  "cbb": {
+   "n": 1,
+   "usd": 67887,
+   "beispiel": "cbb-uconn-mich-2026-04-06"
+  },
+  "us": {
+   "n": 5,
+   "usd": 53750,
+   "beispiel": "us-announces-end-of-iranian-blockade-byptptpt-20260713152715080"
+  },
+  "next": {
+   "n": 4,
+   "usd": 33269,
+   "beispiel": "next-ministerprasident-of-sachsen-anhalt-20260806155819619"
+  },
+  "btc": {
    "n": 7,
-   "usd": 56326,
-   "beispiel": "brazil-presidential-election"
+   "usd": 28337,
+   "beispiel": "btc-updown-5m-1784351400"
+  },
+  "starladder": {
+   "n": 1,
+   "usd": 21628,
+   "beispiel": "starladder-starseries-fall-2026-winner-1788882991655"
+  },
+  "npb": {
+   "n": 7,
+   "usd": 13683,
+   "beispiel": "npb-ori-fuk-2026-09-17"
+  },
+  "ecs": {
+   "n": 1,
+   "usd": 13587,
+   "beispiel": "ecs-ars-mci-2026-08-16"
+  },
+  "kbo": {
+   "n": 8,
+   "usd": 13312,
+   "beispiel": "kbo-kt-ssg-2026-08-22"
+  },
+  "bkcba": {
+   "n": 2,
+   "usd": 13172,
+   "beispiel": "bkcba-gua-bei-2026-05-09"
+  },
+  "cricmlc": {
+   "n": 3,
+   "usd": 12870,
+   "beispiel": "cricmlc-los-sea-2026-06-28"
+  },
+  "efa": {
+   "n": 2,
+   "usd": 11570,
+   "beispiel": "efa-cfc-mnc-2026-05-16"
+  },
+  "will": {
+   "n": 3,
+   "usd": 11361,
+   "beispiel": "will-cmi-declare-a-millennium-prize-problem-solved-by-20260723160122979"
+  },
+  "bitcoin": {
+   "n": 1,
+   "usd": 10316,
+   "beispiel": "bitcoin-above-on-june-5-2026"
+  },
+  "rlsuper": {
+   "n": 1,
+   "usd": 10081,
+   "beispiel": "rlsuper-war-hkr-2026-09-19"
   }
  }
 }
