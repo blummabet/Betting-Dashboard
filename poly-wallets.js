@@ -3562,7 +3562,28 @@ function _pwCalMixLabel(k){
 function _pwCalibBoard(){
   const agg=_pwComboStatsAll();
   const intro='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🧭 Lern-Board — was die Kalibrierung gelernt hat</span>'
-    +'<span class="pw-sec-note">Jeder Play trägt einen Signal-Mix. Der Lerner misst je Mix den <b>echten ROI</b> des Papier-Depots und verschiebt die Conviction sanft dorthin — nach oben wie nach unten, gewichtet nach Stichprobe. Kein Signal fliegt raus.</span></div>';
+    // 🔴 20.09.2026 (Lucas: „ist das irgendwie aktiv? ist das für die heute spielenswert?
+    // Was macht das"). Hier stand „…und verschiebt die Conviction sanft dorthin" — im Präsens,
+    // als Tatsache. `PW_CALIB_AKTIV` steht aber seit dem 01.09. auf false: der Lerner rechnet,
+    // zeigt, und fasst die Conviction NICHT mehr an. Die Chips daneben lasen sich trotzdem als
+    // „↓ −1 Stufe", also als etwas, das gerade passiert.
+    //
+    // Fehlerklasse: ein Satz behauptet, was der Schalter daneben widerlegt. Und er hat genau
+    // die Frage erzeugt, die Lucas gestellt hat.
+    +'<span class="pw-sec-note">'
+    + (PW_CALIB_AKTIV
+        ? 'Jeder Play trägt einen Signal-Mix. Der Lerner misst je Mix den <b>echten ROI</b> des '
+          + 'Papier-Depots und <b>verschiebt die Conviction</b> sanft dorthin — nach oben wie nach '
+          + 'unten, gewichtet nach Stichprobe. Kein Signal fliegt raus.'
+        : '<b style="color:#e3b341">Schreibt mit, greift nicht ein.</b> Jeder Play trägt einen '
+          + 'Signal-Mix; hier steht je Mix der echte ROI des Papier-Depots und was der Lerner '
+          + '<i>tun würde</i>. Die Conviction bleibt unberührt — auch die von „Heute spielenswert", '
+          + 'vom Public-Tor und vom Auto-Bet. Abgeschaltet am 01.09.2026, nachdem der Walk-Forward '
+          + 'über sechs Startpunkte <b>sechs von sechs Mal</b> zeigte, dass die abgestuften Plays '
+          + 'besser liefen als die hochgestuften: die Reihenfolge der Eimer hält, ihre Größe nicht '
+          + '(bf+money +52,2 % rückblickend → +9,2 % vorwärts). Wieder anschalten erst, wenn '
+          + '<code>scripts/calib_walkforward.py</code> „hoch schlägt runter" zeigt.')
+    +'</span></div>';
   if(!agg||!Object.keys(agg).length){
     return intro+'<div class="pw-none">Noch nichts gelernt — der Lerner braucht abgerechnete Plays aus dem Papier-Depot.</div></section>';
   }
@@ -3603,6 +3624,7 @@ function _pwCalibBoard(){
       : (stufen===0
         ? '<span class="pw-cal-adj pw-cal-adj-off">keine Anpassung</span>'
         : '<span class="pw-cal-adj" style="color:'+(stufen>0?'#3fb950':'#f85149')+';border-color:'+(stufen>0?'rgba(63,185,80,.4)':'rgba(248,81,73,.4)')+'">'
+          +(PW_CALIB_AKTIV?'':'würde ')
           +(stufen>0?'↑ +':'↓ −')+Math.abs(stufen)+' Stufe'+(Math.abs(stufen)===1?'':'n')+'</span>');
     // ROI und Abstand sind ZWEI Zahlen. Der Pfeil gehoert zum Abstand (das zeigt der Balken),
     // nicht zum ROI — sonst stuende bei -0,5% ROI ein ↑, weil es ueber dem Schnitt von -1,5% liegt.
@@ -3623,9 +3645,13 @@ function _pwCalibBoard(){
       +'<div class="pw-cal-out">'+chip+'</div></div>';
   }).join('');
 
-  const fuss='<div class="pw-sec-p" style="margin-top:12px">Die Anpassung wächst mit dem Abstand zum Schnitt <i>und</i> mit der Stichprobe (Vertrauen = n/(n+25)), '
-    +'ist auf <b>−3 bis +2 Stufen</b> geklammert — mehr Abwertung als Boost — und wirkt erst ab acht gewichteten Plays. '
-    +'Plays aus einer älteren Engine zählen halb: ihre ROI-Schätzung bleibt, nur das Vertrauen sinkt.</div>';
+  const fuss='<div class="pw-sec-p" style="margin-top:12px">'
+    +(PW_CALIB_AKTIV?'Die Anpassung':'Die Anpassung <b>würde</b>')+' wächst mit dem Abstand zum Schnitt <i>und</i> mit der Stichprobe (Vertrauen = n/(n+25)), '
+    +'ist auf <b>−3 bis +2 Stufen</b> geklammert — mehr Abwertung als Boost — und '
+    +(PW_CALIB_AKTIV?'wirkt':'wirkte')+' erst ab acht gewichteten Plays. '
+    +'Plays aus einer älteren Engine zählen halb: ihre ROI-Schätzung bleibt, nur das Vertrauen sinkt.'
+    +(PW_CALIB_AKTIV?'':' <b style="color:#e3b341">Nichts davon wirkt gerade</b> — die Zahlen hier '
+      +'ändern an keinem Play etwas.')+'</div>';
   return intro+head+skala+'<div class="pw-cal-board">'+body+'</div>'+fuss+'</section>';
 }
 
