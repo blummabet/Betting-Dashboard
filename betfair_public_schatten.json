@@ -163,7 +163,7 @@ null
 2,
 2
 ],
-"settledAt": "2026-09-20T17:58:48.417584+00:00"
+"settledAt": "2026-09-20T18:13:54.257408+00:00"
 },
 {
 "k": "fresh:36045433:Match Odds",
@@ -3073,7 +3073,8 @@ null
 0
 ],
 "profit": 0.7,
-"via": "track"
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36071848:Over/Under 2.5 Goals",
@@ -3130,7 +3131,10 @@ null
 "value": 2888.1500000000005,
 "sentAt": "2026-09-20T16:13:40.442967+00:00",
 "status": "pending",
-"htScore": null,
+"htScore": [
+0,
+0
+],
 "leadShare": 0.8813635025881619,
 "leadDir": "in",
 "onLeader": null,
@@ -3191,7 +3195,8 @@ null
 0
 ],
 "profit": -1.0,
-"via": "track"
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36069370:Match Odds",
@@ -3205,7 +3210,7 @@ null
 "leadOdd": 1.57,
 "value": 74833.99,
 "sentAt": "2026-09-20T16:28:41.223807+00:00",
-"status": "pending",
+"status": "won",
 "htScore": [
 0,
 0
@@ -3226,7 +3231,16 @@ null
 0,
 0
 ]
-}
+},
+"clvBf": -1.58,
+"clvPinn": null,
+"settledAt": "2026-09-20T18:13:54.246544+00:00",
+"ftScore": [
+2,
+1
+],
+"profit": 0.5700000000000001,
+"via": "track"
 },
 {
 "k": "fresh:36069468:Match Odds",
@@ -3417,7 +3431,10 @@ null
 "value": 100954.52,
 "sentAt": "2026-09-20T17:58:47.276594+00:00",
 "status": "pending",
-"htScore": null,
+"htScore": [
+1,
+1
+],
 "leadShare": 0.8385250110643881,
 "leadDir": "out",
 "onLeader": false,
@@ -3433,6 +3450,73 @@ null
 "score": [
 1,
 1
+]
+}
+},
+{
+"k": "fresh:36069513:Match Odds",
+"matchId": "36069513",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Turkish Super League",
+"home": "Amed Sportif Faaliyetler",
+"away": "Besiktas",
+"leadName": "Amed Sportif Faaliyetler",
+"leadOdd": 1.33,
+"value": 286080.62,
+"sentAt": "2026-09-20T18:13:51.243017+00:00",
+"status": "pending",
+"htScore": [
+2,
+0
+],
+"leadShare": 0.7979278358666868,
+"leadDir": "in",
+"onLeader": true,
+"tier": "rest",
+"magnitude": 188620.6,
+"schwelle": 30000.0,
+"anteilSchwelle": 6.287,
+"raus": "einseitig",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 50,
+"score": [
+2,
+0
+]
+}
+},
+{
+"k": "fresh:36071864:Match Odds",
+"matchId": "36071864",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Spanish La Liga",
+"home": "Valencia",
+"away": "Real Sociedad",
+"leadName": "Real Sociedad",
+"leadOdd": 2.84,
+"value": 145344.74,
+"sentAt": "2026-09-20T18:13:51.243049+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.38269303725748866,
+"leadDir": "out",
+"onLeader": null,
+"tier": "top",
+"magnitude": 52039.0,
+"schwelle": 100000.0,
+"anteilSchwelle": 0.52,
+"raus": "unter_geldschwelle",
+"quelle": "trades",
+"gesendet": false,
+"live": {
+"time": null,
+"score": [
+null,
+null
 ]
 }
 }
