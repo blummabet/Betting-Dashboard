@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-20T00:27:00.752339+00:00",
+"generatedAt": "2026-09-20T00:42:06.855503+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1344,
+"n": 1345,
 "wins": 1139,
-"hitRate": 0.8475,
-"polyN": 1275,
+"hitRate": 0.8468,
+"polyN": 1276,
 "polyWins": 996,
-"polyHitRate": 0.7812,
+"polyHitRate": 0.7806,
 "pinnN": 192,
 "pinnHitRate": 0.7865,
-"nRoi": 671,
-"roi": 0.4317,
-"roiLb": 0.3827,
-"nClv": 671,
-"clv": 20.56,
-"clvLb": 19.0368
+"nRoi": 672,
+"roi": 0.4295,
+"roiLb": 0.3805,
+"nClv": 672,
+"clv": 20.42,
+"clvLb": 18.8873
 },
 "uneinig": {
-"n": 536,
-"wins": 162,
-"hitRate": 0.3022,
-"polyN": 495,
+"n": 537,
+"wins": 163,
+"hitRate": 0.3035,
+"polyN": 496,
 "polyWins": 134,
-"polyHitRate": 0.2707,
-"pinnN": 329,
-"pinnHitRate": 0.6261,
-"nRoi": 304,
-"roi": -0.5222,
-"roiLb": -0.6005,
-"nClv": 304,
-"clv": -20.26,
-"clvLb": -23.3567
+"polyHitRate": 0.2702,
+"pinnN": 330,
+"pinnHitRate": 0.6242,
+"nRoi": 305,
+"roi": -0.5158,
+"roiLb": -0.5946,
+"nClv": 305,
+"clv": -20.03,
+"clvLb": -23.1329
 },
 "teil": {
 "n": 29,
@@ -66,6 +66,11 @@
 "wins": 45,
 "hitRate": 0.7031
 },
+"Brazilian Serie A": {
+"n": 48,
+"wins": 34,
+"hitRate": 0.7083
+},
 "Japanese J League": {
 "n": 48,
 "wins": 35,
@@ -80,11 +85,6 @@
 "n": 47,
 "wins": 28,
 "hitRate": 0.5957
-},
-"Brazilian Serie A": {
-"n": 47,
-"wins": 33,
-"hitRate": 0.7021
 },
 "English Premier League": {
 "n": 46,
@@ -186,6 +186,11 @@
 "wins": 19,
 "hitRate": 0.8261
 },
+"Ecuadorian Serie A": {
+"n": 23,
+"wins": 15,
+"hitRate": 0.6522
+},
 "German Cup": {
 "n": 23,
 "wins": 20,
@@ -205,11 +210,6 @@
 "n": 22,
 "wins": 10,
 "hitRate": 0.4545
-},
-"Ecuadorian Serie A": {
-"n": 22,
-"wins": 15,
-"hitRate": 0.6818
 },
 "Norwegian Eliteserien": {
 "n": 21,
@@ -660,26 +660,64 @@
 "clvLb": 11.8035
 },
 "weak": {
-"n": 725,
-"wins": 363,
+"n": 727,
+"wins": 364,
 "hitRate": 0.5007,
-"nRoi": 368,
-"roi": -0.1832,
-"roiLb": -0.2686,
-"nClv": 368,
-"clv": -5.06,
-"clvLb": -7.8167
+"nRoi": 370,
+"roi": -0.181,
+"roiLb": -0.2664,
+"nClv": 370,
+"clv": -5.09,
+"clvLb": -7.8505
 }
 },
 "divergence": {
-"n": 536,
-"betfairWins": 162,
-"betfairRate": 0.3022,
-"polyN": 495,
+"n": 537,
+"betfairWins": 163,
+"betfairRate": 0.3035,
+"polyN": 496,
 "polyWins": 134,
-"polyRate": 0.2707
+"polyRate": 0.2702
 },
 "recent": [
+{
+"matchId": "36045403",
+"home": "Remo",
+"away": "Santos",
+"league": "Brazilian Serie A",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Santos",
+"polySide": "home",
+"winner": "away",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-09-19T21:30:00Z",
+"settledAt": "2026-09-20T00:42:06.666546+00:00"
+},
+{
+"matchId": "36078516",
+"home": "Guayaquil City",
+"away": "CD Leones del Norte",
+"league": "Ecuadorian Serie A",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "CD Leones del Norte",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-09-19T21:30:00Z",
+"settledAt": "2026-09-20T00:42:06.666546+00:00"
+},
 {
 "matchId": "36074097",
 "home": "Athletic Club",
@@ -1401,56 +1439,18 @@
 ],
 "kickoff": "2026-09-19T15:15:00Z",
 "settledAt": "2026-09-19T17:27:58.337764+00:00"
-},
-{
-"matchId": "36064464",
-"home": "Wrexham",
-"away": "Southampton",
-"league": "English Sky Bet Championship",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Wrexham",
-"polySide": "away",
-"winner": "home",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-09-19T14:00:00Z",
-"settledAt": "2026-09-19T17:11:31.979800+00:00"
-},
-{
-"matchId": "36064454",
-"home": "Burnley",
-"away": "Derby",
-"league": "English Sky Bet Championship",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Burnley",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-09-19T14:00:00Z",
-"settledAt": "2026-09-19T17:11:31.979800+00:00"
 }
 ],
 "global": {
-"n": 1909,
-"wins": 1306,
-"hitRate": 0.6841,
-"nRoi": 995,
-"roi": 0.1153,
-"roiLb": 0.0678,
-"nClv": 995,
-"clv": 6.9,
-"clvLb": 5.1553
+"n": 1911,
+"wins": 1307,
+"hitRate": 0.6839,
+"nRoi": 997,
+"roi": 0.1155,
+"roiLb": 0.0681,
+"nClv": 997,
+"clv": 6.87,
+"clvLb": 5.1206
 },
 "pending": 31
 }
