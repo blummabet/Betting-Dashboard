@@ -1736,10 +1736,47 @@ const _PW_NAME_SUFFIX_RX=/-(more-markets|exact-score|halftime-result|total-corne
 function _pwRealTeams(arr){
   return (arr||[]).filter(n=>{const t=String(n).trim();return t&&!_PW_GEN_RX.test(t)&&!_PW_DRAWP_RX.test(t)&&!_PW_SCORE_RX.test(t);});
 }
+// 🔴 20.09.2026 (Uebersicht-Check). Auf der Uebersicht stand dasselbe Spiel zweimal in
+// entgegengesetzter Reihenfolge: Ebene 3 fuehrte „EDward Gaming Youth Team vs Fuego", die Liste
+// „Spielbar aus Public-Kandidaten" zwei Bloecke darueber „Fuego vs EDward Gaming Youth Team".
+// Dasselbe bei „SSC Napoli vs ACF Fiorentina" (Slug sea-fio-nap, Fiorentina ist Heim) und
+// „AIK vs Halmstads BK" (Slug swe-hal-aik).
+//
+// Die Ursache ist eine Sortierung, die fuer einen anderen Zweck gemacht wurde:
+// `_pwShortlistScore` sortiert `oc` nach Geld, um `moneyFav` zu bestimmen — und gibt DASSELBE
+// sortierte Array 160 Zeilen spaeter an `_pwPlayLabel`. Sechs weitere Aufrufer machen es
+// genauso. Weil die empfohlene Seite fast immer die Geld-Mehrheitsseite ist, steht der Pick
+// praktisch immer vorn: gemessen im Push-Buch 33 von 33 Zeilen, und gegen die echte
+// Marktreihenfolge geprueft 11 von 32 Paarungen gedreht.
+//
+// Fehlerklasse: eine Reihenfolge, die eine Eigenschaft des MARKTES ist, wird aus einer
+// Auswertung abgeleitet. Der Fix gehoert deshalb hierher und nicht in die sieben Aufrufer:
+// die Paarung wird gegen die Outcome-Reihenfolge des Artefakts gestellt, egal was der Aufrufer
+// uebergibt. Ist der Markt nicht (mehr) im Cache, bleibt die uebergebene Reihenfolge stehen —
+// raten waere schlimmer als eine unbekannte Ordnung.
+function _pwMarktReihenfolge(base){
+  const srcs=[_pwCache&&_pwCache.broadLiveNow,_pwCache&&_pwCache.broadLive,
+              _pwCache&&_pwCache.moneyBroad];
+  for(let i=0;i<srcs.length;i++){
+    const bm=srcs[i]&&srcs[i][base]; if(!bm||typeof bm!=='object') continue;
+    const ks=bm.prices?Object.keys(bm.prices):(bm.shares?Object.keys(bm.shares):[]);
+    if(ks.length>=2) return ks;
+  }
+  return null;
+}
+function _pwNachMarkt(teams, base){
+  const ord=_pwMarktReihenfolge(base);
+  if(!ord||!teams||teams.length<2) return teams;
+  const ix=n=>{const i=ord.indexOf(n); return i<0?Number.MAX_SAFE_INTEGER:i;};
+  // Nur umstellen, wenn BEIDE im Markt stehen — sonst entschiede ein Unbekannter die Reihenfolge.
+  if(ix(teams[0])===Number.MAX_SAFE_INTEGER||ix(teams[1])===Number.MAX_SAFE_INTEGER) return teams;
+  return ix(teams[0])<=ix(teams[1])?teams:[teams[1],teams[0]];
+}
 function _pwResolveTeams(key, names){
   const base=String(key||'').replace(_PW_NAME_SUFFIX_RX,'');
   if(base===String(key||'')){                     // kein Prop -> Outcomes SIND die Teams
-    const r=_pwRealTeams(names); return {teams:r.length>=2?r.slice(0,2):null, base};
+    const r=_pwRealTeams(names);
+    return {teams:r.length>=2?_pwNachMarkt(r.slice(0,2), base):null, base};
   }
   // Prop (z.B. -total-corners, -exact-score) -> Teamnamen aus dem Basis-Event ziehen. 23.08.2026 (Lucas):
   // (a) auch prices lesen (Basis-Event hat oft leere shares, die Teamnamen stehen dann nur in prices),
@@ -1750,6 +1787,10 @@ function _pwResolveTeams(key, names){
     const bm=srcs[i]&&srcs[i][base]; if(!bm) continue;
     const keysS=bm.shares?Object.keys(bm.shares):[];
     const keysP=bm.prices?Object.keys(bm.prices):[];
+    // Hier KEIN _pwNachMarkt: dieser Zweig liest die Namen aus genau dem Markt, gegen den
+    // sortiert wuerde — die Reihenfolge ist schon die des Artefakts. Der Aufruf liesse sich
+    // durch keine Mutation zum Anschlagen bringen, und eine Zeile, die nicht falsch werden
+    // kann, sichert auch nichts.
     const r=_pwRealTeams(keysS.length?keysS:keysP);
     if(r.length>=2) return {teams:r.slice(0,2), base};
   }

@@ -951,3 +951,49 @@ def test_ohne_zeitstempel_behauptet_er_nichts():
 def test_beide_neuen_guards_haengen_in_der_batterie():
     assert UI.check_ergebnisse_kommen_an in UI.UEBERSICHT_CHECKS
     assert UI.check_datenbau_ist_nicht_stehengeblieben in UI.UEBERSICHT_CHECKS
+
+
+# ── 20.09.2026 (Übersicht-Check): „📒 Serien-Buch · … 22 von 72 Zeilen" ──────────────────────
+# Das sind die Zahlen des LIGA-Buchs. Daneben steht ein zweites (MLS, n=64, 81,2 %), das auf der
+# Fläche nicht vorkommt: `_mdStreakBuch` summiert n über beide, zeigt aber nur Urteil und Grund
+# des größeren. Heute stimmen beide überein, deshalb ein Wächter und kein Umbau.
+# Und derselbe Kopf: „älteste Quelle Serien-Buch MLS vor 23,3 h" oben gegen „Stand vor 14,7 h"
+# am Block — beide Zahlen richtig, aber der Block stempelt sich mit dem jüngeren seiner Teile.
+
+def _rec(n, urteil, stunden_alt):
+    from datetime import datetime as _d, timezone as _z, timedelta as _t
+    return {"updatedAt": (_d.now(_z.utc) - _t(hours=stunden_alt)).isoformat(),
+            "bilanz": {"n": n, "urteil": urteil, "unaufloesbar": 0, "grund": "…"}}
+
+
+def test_widersprechende_urteile_werden_gemeldet():
+    r = UI.check_serienbuch_zeigt_beide_buecher(
+        {"ligaStreakRec": _rec(72, "traegt sich selbst", 2),
+         "mlsStreakRec": _rec(64, "kehrt um", 2)})
+    assert not r["ok"]
+    assert "kehrt um" in r["failures"][0] and "traegt sich selbst" in r["failures"][0]
+
+
+def test_gleiches_urteil_ist_kein_befund():
+    r = UI.check_serienbuch_zeigt_beide_buecher(
+        {"ligaStreakRec": _rec(72, "Erwartung zu duenn", 2),
+         "mlsStreakRec": _rec(64, "Erwartung zu duenn", 2)})
+    assert r["ok"]
+
+
+def test_ein_gemeinsamer_stempel_ueber_zwei_altersstaenden_schlaegt_an():
+    """Der echte Fall: Liga 14,7 h, MLS 23,5 h, ein Stempel."""
+    r = UI.check_serienbuch_zeigt_beide_buecher(
+        {"ligaStreakRec": _rec(72, "Erwartung zu duenn", 14.7),
+         "mlsStreakRec": _rec(64, "Erwartung zu duenn", 23.5)})
+    assert not r["ok"]
+    assert "8.8 h auseinander" in r["failures"][0]
+
+
+def test_ohne_zweites_buch_behauptet_er_nichts():
+    assert UI.check_serienbuch_zeigt_beide_buecher({"ligaStreakRec": _rec(72, "x", 2)})["ok"]
+    assert UI.check_serienbuch_zeigt_beide_buecher({})["ok"]
+
+
+def test_der_serienbuch_guard_haengt_in_der_batterie():
+    assert UI.check_serienbuch_zeigt_beide_buecher in UI.UEBERSICHT_CHECKS

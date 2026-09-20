@@ -1280,6 +1280,67 @@ def check_datenbau_ist_nicht_stehengeblieben(ctx):
     return _c("Datenbau ist nicht stehengeblieben", "error", fails)
 
 
+def check_serienbuch_zeigt_beide_buecher(ctx):
+    """20.09.2026 (Uebersicht-Check). Auf dem Board stand:
+
+        📒 Serien-Buch · Erwartung zu duenn — erfuellt in 75.0 % (65.8..82.4 %),
+           aber nur 22 von 72 Zeilen tragen eine vor dem Spiel festgeschriebene Erwartung
+
+    Diese Zahlen sind die des LIGA-Buchs. Daneben steht ein zweites, das MLS-Buch, mit n=64 und
+    81,2 % — es kommt auf der Flaeche nicht vor. `_mdStreakBuch` summiert zwar `n` und
+    `unaufloesbar` ueber beide Buecher, zeigt dann aber nur `urteil` und `grund` desjenigen mit
+    dem groesseren n; die summierte Zahl wird nirgends ausgegeben.
+
+    Heute faellt das nicht auf, weil beide Buecher dasselbe Urteil tragen („Erwartung zu duenn").
+    Genau deshalb steht hier ein Waechter und kein Umbau: solange sie uebereinstimmen, ist die
+    verkuerzte Anzeige harmlos, und ein Umbau waere eine Loesung ohne Vorfall. Widersprechen sie
+    sich, behauptet die Flaeche unter einer Ueberschrift im Singular das Urteil des groesseren
+    Buchs und verschweigt das andere — dann ist es einer.
+
+    Fehlerklasse: eine zusammengefasste Ueberschrift ueber einer Zahl, die nur aus einem Teil
+    stammt.
+
+    Derselbe Kopf traegt uebrigens auch den Altersstempel: „aelteste Quelle Serien-Buch MLS vor
+    23,3 h" im Seitenkopf gegen „Stand vor 14,7 h" am Block. Beide Zahlen sind richtig — 23,5 h
+    fuers MLS-Buch, 14,7 h fuers Liga-Buch — aber der Block stempelt sich mit dem juengeren
+    seiner beiden Teile und sieht damit 8,8 h frischer aus, als er ist.
+    """
+    a = (ctx.get("ligaStreakRec") or {}).get("bilanz") or {}
+    b = (ctx.get("mlsStreakRec") or {}).get("bilanz") or {}
+    if not a or not b:
+        return _c("Serien-Buch zeigt beide Buecher", "warn", [])
+    fails = []
+    ua, ub = a.get("urteil"), b.get("urteil")
+    if ua and ub and ua != ub:
+        fails.append("Liga-Buch urteilt '%s' (n=%s), MLS-Buch '%s' (n=%s) — die Flaeche zeigt nur "
+                     "das groessere und verschweigt das andere unter einer Ueberschrift, die nach "
+                     "beiden klingt" % (ua, a.get("n"), ub, b.get("n")))
+    # Der Altersstempel: der Block darf sich nicht mit dem juengeren Teil ausweisen.
+    ta = _zeitstempel_alter(ctx.get("ligaStreakRec"))
+    tb = _zeitstempel_alter(ctx.get("mlsStreakRec"))
+    if ta is not None and tb is not None and abs(ta - tb) > 6:
+        fails.append("die beiden Serien-Buecher sind %.1f h auseinander (Liga %.1f h, MLS %.1f h) "
+                     "— ein gemeinsamer Stempel unterschlaegt den aelteren"
+                     % (abs(ta - tb), ta, tb))
+    return _c("Serien-Buch zeigt beide Buecher", "warn", fails,
+              hinweis="Liga n=%s · MLS n=%s · Urteil beide '%s'" % (a.get("n"), b.get("n"), ua)
+              if ua == ub else None)
+
+
+def _zeitstempel_alter(d):
+    """Alter des `updatedAt` in Stunden, oder None. REIN."""
+    v = (d or {}).get("updatedAt")
+    if not v:
+        return None
+    try:
+        t = datetime.fromisoformat(str(v).replace("Z", "+00:00"))
+    except (ValueError, TypeError):
+        return None
+    if t.tzinfo is None:
+        t = t.replace(tzinfo=timezone.utc)
+    return (datetime.now(timezone.utc) - t).total_seconds() / 3600.0
+
+
 def _alter_kurz(d):
     st = int(d.total_seconds() // 3600)
     return "%d h" % st if st < 48 else "%d Tagen" % (st // 24)
@@ -1316,6 +1377,7 @@ UEBERSICHT_CHECKS = [
     check_offene_wette_hat_den_anpfiff_ueberlebt,
     check_ergebnisse_kommen_an,
     check_datenbau_ist_nicht_stehengeblieben,
+    check_serienbuch_zeigt_beide_buecher,
 ]
 
 
@@ -1363,6 +1425,8 @@ def build_ctx_from_disk() -> dict:
         "bfPublicRecord": _lade("betfair_public_record.json", {}),
         "ergebnisNachlaufLiga": _lade("liga_ergebnis_nachlauf.json", {}),
         "ergebnisNachlaufMls": _lade("mls_ergebnis_nachlauf.json", {}),
+        "ligaStreakRec": _lade("liga_streak_record.json", {}),
+        "mlsStreakRec": _lade("mls_streak_record.json", {}),
     }
 
 
