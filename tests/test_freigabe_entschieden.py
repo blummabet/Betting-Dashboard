@@ -213,17 +213,17 @@ class TestBetfairSchubladenNutzenDieEchteSchranke(unittest.TestCase):
     #     +0,2 %, also praktisch auf der Null, und der CLV ist mit +0,05 pp nicht von null zu
     #     unterscheiden. Kein Freigabe-Kandidat — aber die erste Zeile, die nicht an der
     #     Stichprobe scheitert, sondern an der Groesse der Kante. Beobachten.
-    GESICHTET = {"Swedish Division 1 · Over/Under 2.5 Goals",
-                 "English Sky Bet League 2 · First Half Goals 1.5",
-                 "Colombian Primera A · Both teams to Score?",
-                 "Half Time",
+    GESICHTET = {"Swedish Division 1 · Over/Under 2.5 Goals": 31,
+                 "English Sky Bet League 2 · First Half Goals 1.5": 35,
+                 "Colombian Primera A · Both teams to Score?": 30,
+                 "Half Time": 2637,
                  # 14.09.2026 angesehen: n=30, ROI +35,0 %, Untergrenze +7,7 %, P/L +10,50.
                  # Die ROI-Untergrenze liegt zum ersten Mal ueber null — aber der CLV ist mit
                  # +0,16 pp ein blosses MITTEL ohne Streuung, also ohne Untergrenze. Genau die
                  # Konstellation, fuer die die Freigabe zwei Belege verlangt: 30 Zeilen bei
                  # dreissig Prozent ROI sind auch ein gutes halbes Jahr Glueck. Bleibt gesperrt,
                  # bis der CLV eine eigene Untergrenze hat — angesehen ist nicht freigegeben.
-                 "Brazilian Serie A · Both teams to Score?",
+                 "Brazilian Serie A · Both teams to Score?": 30,
                  # 15.09.2026 angesehen: n=30, ROI +39,6 %, Untergrenze +13,4 %, P/L +11,88,
                  # CLV +1,27 pp — wieder nur ein MITTEL ohne Streuung, also ohne Untergrenze.
                  # Bleibt gesperrt, aus demselben Grund wie die brasilianische Zeile einen Tag
@@ -234,7 +234,7 @@ class TestBetfairSchubladenNutzenDieEchteSchranke(unittest.TestCase):
                  # die Form, in der Mehrfachtesten aussieht — drei Treffer am Mindest-n, alle in
                  # demselben Markt, keiner mit einer CLV-Untergrenze. Erst wenn eine davon bei
                  # doppeltem n ueber der Huerde bleibt, ist es ein Befund.
-                 "Italian Serie A · Both teams to Score?",
+                 "Italian Serie A · Both teams to Score?": 30,
                  # 18.09.2026 angesehen: n=33, ROI +41,9 %, Untergrenze +6,8 %, P/L +13,81,
                  # CLV +0,61 pp — wieder ein Mittel ohne Streuung, also ohne Untergrenze, also
                  # gesperrt. Die vierte Zeile binnen fuenf Tagen, die knapp ueber dem Mindest-n
@@ -243,7 +243,7 @@ class TestBetfairSchubladenNutzenDieEchteSchranke(unittest.TestCase):
                  # Schranke. Bei ~193 gleichzeitig geprueften Schubladen ist das die Signatur des
                  # Mehrfachtestens und nicht die einer Kante. Erst wenn eine dieser Zeilen bei
                  # doppeltem n ueber der Huerde bleibt, ist es ein Befund.
-                 "Egyptian 2nd Division · Match Odds",
+                 "Egyptian 2nd Division · Match Odds": 33,
                  # 19.09.2026 angesehen: n=30 (genau am Mindest-n), ROI +43,8 %, Untergrenze
                  # +12,6 %, P/L +13,13, CLV +1,70 pp — wieder ein Mittel ohne Streuung, also
                  # ohne Untergrenze, also gesperrt. Die FUENFTE Zeile binnen sechs Tagen mit
@@ -253,7 +253,7 @@ class TestBetfairSchubladenNutzenDieEchteSchranke(unittest.TestCase):
                  # bei -1,5 %, +2,7 % und -4,6 % ROI, alle mit n=30. Eine Liga, deren vier
                  # Maerkte so weit auseinanderliegen, hat keine Liga-Kante — sie hat einen
                  # Markt, der gerade oben liegt. Genau so sieht Mehrfachtesten aus.
-                 "Kazakhstan Premier League · Match Odds",
+                 "Kazakhstan Premier League · Match Odds": 30,
                  # 20.09.2026 angesehen, DREI auf einmal — und alle mit demselben Zuschnitt:
                  #   Belgian Pro League · Match Odds        n=30  ROI +34,7 %  UG +2,2 %
                  #   Peruvian Primera Division · Half Time  n=30  ROI +75,0 %  UG +7,3 %
@@ -270,9 +270,9 @@ class TestBetfairSchubladenNutzenDieEchteSchranke(unittest.TestCase):
                  # ~218 gleichzeitig geprueften Schubladen ist das die erwartete Ausbeute des
                  # Mehrfachtestens, nicht ein Befund. Angesehen, nicht freigegeben. Erst wenn
                  # eine dieser Zeilen bei DOPPELTEM n ueber der Huerde bleibt, wird es eine.
-                 "Belgian Pro League · Match Odds",
-                 "Peruvian Primera Division · Half Time",
-                 "Brazilian Serie A · Match Odds",
+                 "Belgian Pro League · Match Odds": 30,
+                 "Peruvian Primera Division · Half Time": 30,
+                 "Brazilian Serie A · Match Odds": 35,
                  # 19.09.2026 angesehen: n=42, ROI +26,9 %, Untergrenze +1,0 %, CLV +0,11 pp —
                  # eine Untergrenze, die praktisch auf der Null steht, und ein CLV, der von null
                  # nicht zu unterscheiden ist. Dazu die Gegenprobe im selben Bewerb, und die ist
@@ -281,25 +281,112 @@ class TestBetfairSchubladenNutzenDieEchteSchranke(unittest.TestCase):
                  # Maerkte derselben Liga, gleich grosse Stichproben, Spannweite 52 Punkte — das
                  # ist die Streuung von Muenzwuerfen, nicht die Handschrift einer Kante. Dass
                  # ausgerechnet einer davon knapp ueber die Huerde kippt, ist zu erwarten.
-                 "Brazilian Serie B · First Half Goals 0.5"}
+                 "Brazilian Serie B · First Half Goals 0.5": 42,
+                 # 20.09.2026 — „South Korean K1 League · Half Time", n=30, ROI +60,2 %,
+                 # Untergrenze +10,8 %, kein CLV mit Streuung. Die ELFTE Zeile mit exakt
+                 # diesem Zuschnitt binnen acht Tagen. Sie ist der Anlass, diesen Wachhund
+                 # umzubauen (s. den Test darunter): elf Mal wurde derselbe Absatz von Hand
+                 # geschrieben, und die Zahl, die ihn jedes Mal traegt, stand nie im Code.
+                 "South Korean K1 League · Half Time": 30}
 
-    def test_gegen_den_echten_bestand_nimmt_keine_NEUE_betfair_schublade_die_huerde(self):
-        """Stand 06.09.: null. Nimmt eine die Huerde, schlaegt dieser Test an — und DAS ist
-        die Nachricht.
-
-        12.09.2026: die erste ist gekommen (s. GESICHTET). Der Wachhund meldet ab jetzt nur noch
-        das, was NEU dazukommt — sonst steht er auf Dauerrot und sagt damit gar nichts mehr.
-        """
+    def _schubladen(self):
         import json
         from pathlib import Path
         p = Path(__file__).resolve().parents[1] / "betfair_track_record.json"
         if not p.exists():
             self.skipTest("kein Track-Record")
-        rows = F.betfair_schubladen(json.loads(p.read_text(encoding="utf-8")))
-        pos = [r["schublade"] for r in rows
-               if r.get("roiLb") is not None and r["roiLb"] > 0
-               and r["schublade"] not in self.GESICHTET]
-        self.assertEqual(pos, [], f"Neu ueber der ROI-Huerde: {pos} — bitte ansehen.")
+        return F.betfair_schubladen(json.loads(p.read_text(encoding="utf-8")))
+
+    def test_die_ausbeute_ueber_der_huerde_bleibt_im_zufallsrahmen(self):
+        """20.09.2026 — der Umbau. Hier stand: „nimmt eine NEUE Schublade die Huerde, schlaegt
+        dieser Test an — und DAS ist die Nachricht." Er hat elf Mal angeschlagen, und elf Mal
+        wurde derselbe Absatz von Hand darunter geschrieben: n am Mindest-n, ROI zwischen +28 und
+        +75 %, kein CLV mit Streuung, „das ist die Signatur des Mehrfachtestens".
+
+        Die Zahl, die das belegt, stand nie im Code — nur in der Prosa, jedes Mal neu getippt und
+        jedes Mal geschaetzt („bei ~193 Schubladen", „bei ~218 Schubladen"). Gemessen am
+        20.09.2026: **332 Schubladen tragen eine Untergrenze, 8 liegen darueber.** Die
+        Zufallserwartung bei einseitigem 5-%-Band ist **16,6**. Wir liegen bei der Haelfte davon.
+        Ein einzelner Name ueber der Huerde ist also keine Nachricht, sondern der Normalfall —
+        und ein Wachhund, dessen Meldung jedes Mal von Hand entkraeftet wird, misst die Pflege
+        und nicht die Sache.
+
+        Fehlerklasse: ein Schwellen-Uebertritt ohne seinen Nenner.
+
+        Ab hier zaehlt die AUSBEUTE. Der Rahmen ist bewusst weit (Erwartung + 3 sigma): die
+        beiden Zerlegungen (Markt, Liga x Markt) schneiden dieselben Plays, sind also nicht
+        unabhaengig, und unter positiver Abhaengigkeit streut die Anzahl staerker als Poisson.
+        Der Test soll einen KLAREN Ueberschuss fangen, keinen knappen — den knappen faengt er
+        ohnehin nicht ehrlich.
+        """
+        a = F.ausbeute_ueber_huerde(self._schubladen())
+        self.assertGreaterEqual(a["nTests"], 50, "zu wenige Schubladen fuer diese Rechnung")
+        self.assertFalse(
+            a["ueberschuss"],
+            "%d von %d Schubladen ueber der ROI-Huerde — der Zufall liefert hier %.1f "
+            "(Schranke %.1f). Das ist mehr, als Mehrfachtesten erklaert: %s"
+            % (a["nUeber"], a["nTests"], a["erwartet"], a["schranke"], a["namen"][:12]))
+
+    # Der Test darueber laeuft gegen den Live-Bestand und ist dort, wenn alles in Ordnung ist,
+    # per Konstruktion gruen — er kann sich also nicht selbst beweisen. Die beiden hier
+    # provozieren die Regel: ein Wachhund, den man nicht zum Anschlagen gebracht hat, ist
+    # Dekoration.
+    @staticmethod
+    def _bestand(n_schubladen, n_ueber):
+        lm = {}
+        for i in range(n_schubladen):
+            lm["Liga %03d|Match Odds" % i] = {
+                "n": 60, "hitRate": 0.5,
+                "roi": 0.45 if i < n_ueber else -0.02,
+                "roiUg": 0.20 if i < n_ueber else -0.05}
+        return {"byLeagueMarket": lm}
+
+    def test_die_regel_schlaegt_bei_echtem_ueberschuss_an(self):
+        # 300 Schubladen erwarten 15 Zufallstreffer, Schranke 26,6. 60 sind kein Zufall mehr.
+        a = F.ausbeute_ueber_huerde(F.betfair_schubladen(self._bestand(300, 60)))
+        self.assertEqual((a["nTests"], a["nUeber"]), (300, 60))
+        self.assertTrue(a["ueberschuss"], "60 von 300 muessen anschlagen (Schranke %.1f)"
+                        % a["schranke"])
+
+    def test_die_regel_schweigt_bei_zufalls_ausbeute(self):
+        # 15 von 300 ist exakt die Erwartung — und genau das darf keine Meldung sein.
+        a = F.ausbeute_ueber_huerde(F.betfair_schubladen(self._bestand(300, 15)))
+        self.assertEqual(a["nUeber"], 15)
+        self.assertFalse(a["ueberschuss"], "die Zufallsausbeute selbst darf nicht melden")
+
+    def test_keine_gesichtete_schublade_haelt_die_huerde_bei_doppeltem_n(self):
+        """Das ist die Nachricht, auf die es wirklich ankommt — elf Mal in den Sichtungen oben
+        als Bedingung genannt („erst wenn eine dieser Zeilen bei DOPPELTEM n ueber der Huerde
+        bleibt, ist es ein Befund"), elf Mal nicht geprueft.
+
+        Eine Schublade, die bei n=30 oben liegt, sagt nichts. Dieselbe Schublade, die bei n=60
+        immer noch oben liegt, hat die Haelfte ihrer Zeilen ausserhalb des Zeitraums gesammelt,
+        in dem sie aufgefallen ist — das ist eine Bewaehrung ausserhalb der Stichprobe, in der
+        sie gefunden wurde. Deshalb traegt GESICHTET ab jetzt das n der Sichtung und nicht nur
+        den Namen: ein Protokoll, das nichts mitmisst, ist eine Stummschaltung.
+        """
+        gehalten = F.haelt_bei_doppeltem_n(self._schubladen(), self.GESICHTET)
+        self.assertEqual(
+            gehalten, [],
+            "Haelt bei doppeltem n ueber der Huerde — DAS ist der Befund, nicht der Uebertritt: "
+            + " | ".join("%(schublade)s: n %(nSichtung)d -> %(n)d, UG %(roiLb)+.3f" % g
+                         for g in gehalten))
+
+    def test_der_doppel_n_waechter_schlaegt_an_wenn_eine_haelt(self):
+        """Gegenprobe zum Test darueber — der ist am Live-Bestand still und beweist sich nicht.
+        Laeuft durch DIESELBE Funktion, nicht durch eine zweite Kopie der Regel."""
+        zeile = {"schublade": "Liga X · Match Odds", "n": 62, "roi": 0.31, "roiLb": 0.08}
+        g = F.haelt_bei_doppeltem_n([zeile], {"Liga X · Match Odds": 30})
+        self.assertEqual([x["schublade"] for x in g], ["Liga X · Match Odds"],
+                         "n 30 -> 62 bei positiver Untergrenze MUSS eine Meldung sein")
+
+        zeile["n"] = 59            # knapp unter doppelt
+        self.assertEqual(F.haelt_bei_doppeltem_n([zeile], {"Liga X · Match Odds": 30}), [])
+
+        zeile["n"] = 62            # wieder doppelt, aber Untergrenze gekippt
+        zeile["roiLb"] = -0.01
+        self.assertEqual(F.haelt_bei_doppeltem_n([zeile], {"Liga X · Match Odds": 30}), [],
+                         "unter der Huerde ist auch bei doppeltem n keine Meldung")
 
     def test_keine_gesichtete_schublade_ist_still_freigegeben_worden(self):
         """Die zweite Haelfte der Sichtung, und die wichtigere: „angesehen" darf nicht zu

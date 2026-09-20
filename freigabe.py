@@ -745,6 +745,64 @@ def betfair_schubladen(rec=None, min_n=None) -> list:
     return clv_urteil_nachziehen(out)
 
 
+def ausbeute_ueber_huerde(rows, alpha=0.05, sigma=3.0) -> dict:
+    """Wie viele Schubladen ueber der ROI-Huerde liegen — und wie viele der Zufall dort
+    hinlegt. 20.09.2026.
+
+    Vorfall: der Wachhund in `tests/test_freigabe_entschieden.py` schlug binnen acht Tagen
+    ELF Mal an, jedes Mal mit demselben Zuschnitt (n am Mindest-n, ROI +28..+75 %, kein CLV mit
+    Streuung), und jedes Mal wurde darunter von Hand derselbe Absatz geschrieben: „bei ~193
+    gleichzeitig geprueften Schubladen ist das die Signatur des Mehrfachtestens". Die Zahl, die
+    das belegt, war nie gerechnet — sie war jedes Mal neu geschaetzt.
+
+    Gerechnet: **332 Schubladen tragen eine Untergrenze, 8 liegen darueber, der Zufall legt bei
+    einseitigem 5-%-Band 16,6 dorthin.** Die Ausbeute ist halb so gross wie der Zufall. Ein
+    einzelner Uebertritt ist damit keine Nachricht, sondern der Normalfall.
+
+    Fehlerklasse: ein Schwellen-Uebertritt ohne seinen Nenner.
+
+    `ueberschuss` ist bewusst weit gefasst (Erwartung + 3 sigma). Die beiden Zerlegungen (Markt,
+    Liga x Markt) schneiden dieselben Plays, sind also NICHT unabhaengig; unter positiver
+    Abhaengigkeit streut die Anzahl staerker als Poisson, ein enges Band waere eine Schaerfe,
+    die die Daten nicht hergeben. Der Wert faengt einen klaren Ueberschuss, keinen knappen —
+    und sagt mit `schranke` selbst, wo seine Grenze liegt.
+    """
+    import math as _math
+    tests = [r for r in (rows or []) if r.get("roiLb") is not None]
+    ueber = [r for r in tests if r["roiLb"] > 0]
+    erwartet = len(tests) * alpha
+    schranke = erwartet + sigma * _math.sqrt(erwartet) if erwartet > 0 else 0.0
+    return {"nTests": len(tests), "nUeber": len(ueber),
+            "erwartet": round(erwartet, 1), "schranke": round(schranke, 1),
+            "ueberschuss": len(ueber) > schranke,
+            "namen": sorted(r["schublade"] for r in ueber)}
+
+
+def haelt_bei_doppeltem_n(rows, gesichtet: dict) -> list:
+    """Welche schon gesichtete Schublade haelt die ROI-Huerde bei mindestens DOPPELTEM n.
+    20.09.2026.
+
+    Elf Sichtungen in `tests/test_freigabe_entschieden.py` nennen genau diese Bedingung als die,
+    die aus einem Uebertritt einen Befund macht („erst wenn eine dieser Zeilen bei doppeltem n
+    ueber der Huerde bleibt") — und keine einzige hat sie geprueft. Eine Schublade bei n=30 oben
+    sagt nichts; dieselbe bei n=60 hat die Haelfte ihrer Zeilen NACH dem Auffallen gesammelt,
+    also ausserhalb der Stichprobe, in der sie gefunden wurde.
+
+    `gesichtet` ist {Schubladenname: n zum Zeitpunkt der Sichtung}. Ein Protokoll, das das n
+    nicht mitfuehrt, ist eine Stummschaltung und keine Sichtung.
+    """
+    stand = {r.get("schublade"): r for r in (rows or [])}
+    raus = []
+    for name, n0 in (gesichtet or {}).items():
+        r = stand.get(name)
+        if not r or r.get("roiLb") is None or r["roiLb"] <= 0 or not n0:
+            continue
+        if (r.get("n") or 0) >= 2 * n0:
+            raus.append({"schublade": name, "nSichtung": n0, "n": r["n"],
+                         "roi": r.get("roi"), "roiLb": r["roiLb"]})
+    return raus
+
+
 def betfair_public_schubladen(rec=None) -> list:
     """Die Betfair-PUBLIC-Pushes als eigene Schublade — das, was wirklich aufs Handy geht.
 
