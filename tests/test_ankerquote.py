@@ -38,27 +38,48 @@ def _spiel(league, pinn=None):
 class TestDerWaechterSchliesstEinenVerdaechtigenAus(unittest.TestCase):
     GEMAPPT = "Argentinian Primera Division"
 
-    def _ctx(self, geholt, n=12, spiele=6):
-        return _Ctx({"games": [_spiel(self.GEMAPPT) for _ in range(spiele)],
-                     "covered": 0, "oddsKeysFetched": geholt, "ankerN": n})
+    # 🔴 21.09.2026. Hier stand `test_geholte_keys_entlasten_den_key`: „40 Keys geholt, also
+    # lebt der Key — es ist das Namens-Matching." Dieser Test hat meinen Fehlschluss vom
+    # 20.09. festgehalten und einen Tag lang verteidigt. Lucas' the-odds-api-Schluessel war
+    # am 20.09. abends ABGELAUFEN. `oddsKeysFetched` zaehlte die VERSUCHTEN Keys; ein toter
+    # Schluessel liefert fuer jeden eine leere Liste, und die Zahl blieb bei 40.
+    # Fehlerklasse: ein Zaehler, der die Absicht zaehlt statt den Erfolg.
+    # Seit dem 21.09. entscheidet `oddsKeysMitDaten` (Keys MIT Daten) plus `oddsKontingent`
+    # (used/remaining/letzterFehler aus den Antwort-Headern).
 
-    def test_geholte_keys_entlasten_den_key(self):
-        c = BI.check_consensus_anchor_coverage(self._ctx(40))
-        t = " ".join(c["failures"])
-        self.assertIn("der Key lebt", t)
-        self.assertIn("40", t)
+    def _ctx(self, geholt, n=12, spiele=6, mit=None, kont=None):
+        d = {"games": [_spiel(self.GEMAPPT) for _ in range(spiele)],
+             "covered": 0, "oddsKeysFetched": geholt, "ankerN": n}
+        if mit is not None:
+            d["oddsKeysMitDaten"] = mit
+        if kont is not None:
+            d["oddsKontingent"] = kont
+        return _Ctx(d)
+
+    def test_keys_mit_daten_entlasten_den_zugang(self):
+        t = " ".join(BI.check_consensus_anchor_coverage(
+            self._ctx(40, mit=38, kont={"letzterFehler": None})) ["failures"])
+        self.assertIn("38 von 40", t)
         self.assertIn("Namens-Matching", t)
 
-    def test_null_geholte_keys_belasten_ihn(self):
-        t = " ".join(BI.check_consensus_anchor_coverage(self._ctx(0))["failures"])
-        self.assertIn("Kontingent", t)
-        self.assertNotIn("der Key lebt", t)
+    def test_null_keys_mit_daten_belasten_ihn(self):
+        """Der echte Fall vom 20./21.09.: 40 Versuche, kein einziger Treffer."""
+        t = " ".join(BI.check_consensus_anchor_coverage(
+            self._ctx(40, mit=0, kont={"letzterFehler": None}))["failures"])
+        self.assertIn("kein einziger von 40", t)
+        self.assertNotIn("Namens-Matching oder die Liga-Zuordnung", t)
 
-    def test_ohne_die_zahl_behauptet_er_keine_ursache(self):
+    def test_ein_http_fehler_schlaegt_alles_andere(self):
+        t = " ".join(BI.check_consensus_anchor_coverage(
+            self._ctx(40, mit=0, kont={"letzterFehler": "HTTP 401"}))["failures"])
+        self.assertIn("HTTP 401", t)
+
+    def test_ohne_den_neuen_zaehler_behauptet_er_keine_ursache(self):
         """„Fehlende Information rendert als harmloser Default" — hier waere der harmlose
-        Default eine Schuldzuweisung."""
-        t = " ".join(BI.check_consensus_anchor_coverage(self._ctx(None))["failures"])
-        self.assertIn("laesst sich hier nicht sagen", t)
+        Default eine Schuldzuweisung. Und genau das war der Fehler: die alte Fassung hat aus
+        `oddsKeysFetched=40` eine Entlastung gemacht, die die Zahl nicht hergab."""
+        t = " ".join(BI.check_consensus_anchor_coverage(self._ctx(40))["failures"])
+        self.assertIn("unterscheidet die beiden Ursachen NICHT", t)
         self.assertNotIn("der Key lebt", t)
 
     def test_er_nennt_den_ankerbaren_nenner_nicht_alle_spiele(self):

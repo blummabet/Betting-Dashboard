@@ -53,7 +53,9 @@ BASE        = Path(__file__).parent
 WM_FILE     = BASE / "wm2026-data.json"
 PROPS_FILE  = BASE / "wm2026-player-props.json"
 
-ODDS_KEY    = os.environ.get("ODDS_API_KEY", "16154a94ee84482dcd5a4af88d521d73")
+# 🔴 21.09.2026: hier stand der Schluessel im Klartext als Rueckfall. Lief das Secret leer
+# oder ab, griff still der tote Key — sichtbar war davon nichts. Kein Schluessel = kein Abruf.
+ODDS_KEY    = (os.environ.get("ODDS_API_KEY") or "").strip()
 ODDS_HOST   = "api.the-odds-api.com"
 DAYS_AHEAD  = int(os.environ.get("DAYS_AHEAD", "4"))
 

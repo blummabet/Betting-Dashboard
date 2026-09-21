@@ -88,6 +88,13 @@ GELD = {
     # 21.09.2026: eine ruhende Order, die als Position gebucht ist, steht mit Geld im Buch,
     # das nie bewegt wurde — genau der Toluca-Fall.
     "ruhende_order_ist_keine_position",
+    # 21.09.2026: eine Zeile, die abgerechnet wurde, ohne dass die Wallet sich bewegt hat —
+    # das ist Geld im Buch, das nie geflossen ist (Toluca, -5,00 $ fuer eine Order, die die
+    # Kasse nie beruehrt hat).
+    "wette_hat_die_kasse_beruehrt",
+    # 21.09.2026: ohne Odds-Zugang gibt es keinen Anker, und ohne Anker entscheidet die
+    # Zweitmeinung nichts mehr. Der Schluessel war einen Tag lang tot, ohne dass es auffiel.
+    "odds_zugang_lebt",
     # blind zum Geld gesetzt
     "poly-deckung: money-scan gegen liga-fetcher",
     "money map: die poly-seite gehoert zum spiel",

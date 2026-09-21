@@ -20,6 +20,7 @@ import json
 import os
 import re
 import unicodedata
+import urllib.error
 import urllib.request
 from datetime import datetime, timezone
 
@@ -37,7 +38,14 @@ try:
     from fetch_betfair_betwatch import fetch_results as _fetch_results  # autoritative Endstaende (Runner)
 except Exception:
     _fetch_results = None
-ODDS_KEY       = os.environ.get("ODDS_API_KEY") or "16154a94ee84482dcd5a4af88d521d73"   # leerer Secret-String -> App-Key
+# 🔴 21.09.2026 (Lucas: „meine api keys sind abgelaufen"). Hier stand der Schluessel als
+# Rueckfall im Klartext. Lief das Secret leer oder ab, griff still der fest verdrahtete — und
+# der war seit dem 20.09. abends TOT. Sichtbar war davon nichts: 40 Abrufe je Lauf wie immer,
+# nur `ankerQuote` fiel von 0,50 auf 0,0, und das fiel erst einen Tag spaeter auf.
+# Fehlerklasse: fehlende Information rendert als harmloser Default — hier war der Default
+# zusaetzlich ein totes Zugangsdatum.
+# Kein Schluessel heisst ab jetzt: kein Abruf, und es steht im Artefakt.
+ODDS_KEY       = (os.environ.get("ODDS_API_KEY") or "").strip()
 ODDS_BASE      = "https://api.the-odds-api.com/v4"
 REGIONS        = "eu,uk,us"     # Pinnacle liegt in eu; Soft-Books ueber uk/us breiter erfasst
 HIST_KEEP      = 24             # letzte n Snapshots je Spiel behalten
@@ -1277,6 +1285,39 @@ def build_game(m, ev, prev, direction, poly=None, totals_ev=None) -> dict:
 
 
 # ── Netzwerk (nur hier; laeuft am Mac-Runner) ────────────────────────────────
+# Was die API ueber unser Kontingent sagt — sie schickt es bei JEDER Antwort mit, gelesen hat
+# es bisher niemand. 🔴 21.09.2026: genau deshalb war ein abgelaufener Schluessel nicht von
+# einem stillen Tag zu unterscheiden. `used`/`remaining` beantworten ausserdem die Frage, die
+# sonst nur zu schaetzen war: wie oft rufen wir Pinnacle eigentlich auf.
+KONTINGENT = {"used": None, "remaining": None, "letzterFehler": None}
+
+
+def zaehle_keys(events_by_key: dict) -> dict:
+    """{versucht, mitDaten, events}. REIN.
+
+    🔴 21.09.2026: die Zahl im Artefakt war `len(events_by_key)` — also die VERSUCHTEN
+    Keys. Ein toter Schluessel liefert fuer jeden Key eine leere Liste, und der Zaehler blieb
+    bei 40. Genau daran habe ich am Morgen die richtige Vermutung „der Key ist tot" widerlegt.
+    Fehlerklasse: ein Zaehler, der die Absicht zaehlt statt den Erfolg.
+    Die Unterscheidung gehoert dorthin, wo die Zahl entsteht — deshalb hier und nicht im Leser.
+    """
+    d = events_by_key if isinstance(events_by_key, dict) else {}
+    return {"versucht": len(d),
+            "mitDaten": sum(1 for v in d.values() if v),
+            "events": sum(len(v) for v in d.values() if hasattr(v, "__len__"))}
+
+
+def _kontingent_merken(resp):
+    for kopf, feld in (("x-requests-used", "used"), ("x-requests-remaining", "remaining")):
+        v = resp.headers.get(kopf)
+        if v is None:
+            continue
+        try:
+            KONTINGENT[feld] = int(float(v))
+        except (TypeError, ValueError):
+            pass
+
+
 def fetch_odds(sport_key):
     if not ODDS_KEY:
         return []
@@ -1285,9 +1326,17 @@ def fetch_odds(sport_key):
     try:
         req = urllib.request.Request(url, headers={"User-Agent": "cocobet-consensus"})
         with urllib.request.urlopen(req, timeout=ODDS_TIMEOUT_S) as r:
+            _kontingent_merken(r)
             data = json.load(r)
         return data if isinstance(data, list) else []
+    except urllib.error.HTTPError as e:
+        # 401/403 = Schluessel tot oder falsch, 429 = Kontingent leer. Das sind KEINE leeren
+        # Spieltage, und sie duerfen sich nicht als solche tarnen.
+        KONTINGENT["letzterFehler"] = "HTTP %s" % e.code
+        print("odds-fetch %s: HTTP %s" % (sport_key, e.code))
+        return []
     except Exception as e:
+        KONTINGENT["letzterFehler"] = str(e)[:120]
         print("odds-fetch %s: %s" % (sport_key, e))
         return []
 
@@ -1571,7 +1620,15 @@ def main():
     out = {"generatedAt": now, "count": len(games), "covered": covered,
            "leaguesCovered": sorted(set(LEAGUE_ODDS_KEY.values())),
            # Was WIRKLICH geholt wurde — die Handliste allein sagt das seit dem 01.09. nicht mehr.
-           "oddsKeysFetched": len(events_by_key),
+           # 🔴 21.09.2026: hier stand `len(events_by_key)` — die Zahl der VERSUCHTEN Keys.
+           # Ein toter Schluessel liefert fuer jeden Key eine leere Liste, der Zaehler blieb
+           # trotzdem bei 40, und genau daran habe ich am Morgen des 21.09. die richtige
+           # Vermutung „der Key ist tot" widerlegt. Er war tot.
+           # Fehlerklasse: ein Zaehler, der die Absicht zaehlt statt den Erfolg.
+           "oddsKeysFetched": zaehle_keys(events_by_key)["versucht"],
+           "oddsKeysMitDaten": zaehle_keys(events_by_key)["mitDaten"],
+           "oddsEvents": zaehle_keys(events_by_key)["events"],
+           "oddsKontingent": dict(KONTINGENT),
            "ankerQuote": (round(sum(1 for g in games if g.get("pinn")) / len(games), 3)
                           if games else None),
            "games": games}

@@ -64,6 +64,10 @@ DERIVED_WARN_H   = float(os.environ.get("BF_DERIVED_WARN_H") or 1.5)   # abgelei
 DERIVED_ERR_H    = float(os.environ.get("BF_DERIVED_ERR_H")  or 6.0)
 MONEY_MIN_VOL    = float(os.environ.get("BF_MONEY_MIN_VOL")  or 10000) # = betfair_consensus.MIN_VOL: Spiel mit echtem 1X2-Geld
 COVER_MIN_N      = int(os.environ.get("BF_COVER_MIN_N")      or 5)     # Coverage-Quoten erst ab so vielen Spielen bewerten
+# Ab wann ist das the-odds-api-Kontingent knapp? Bei rund 13.000 Abrufen am Tag (96 Laeufe mal
+# ~40 Keys mal 3 Regionen) sind 5.000 weniger als ein halber Tag Vorlauf — frueh genug zum
+# Nachlegen, spaet genug, um nicht taeglich zu noergeln.
+ODDS_REST_WARN   = int(os.environ.get("BF_ODDS_REST_WARN")   or 5000)
 DIR_PREV_FLOOR   = float(os.environ.get("BF_DIR_PREV_FLOOR") or 0.60)  # Anteil aufgewaermter Geld-Spiele mit leadPrev, unter dem es rot wird
 MIN_ODD          = float(os.environ.get("BF_MIN_ODD")        or 1.01)  # unter 1.01 ist eine Quote unmoeglich
 MAX_ODD          = float(os.environ.get("BF_MAX_ODD")        or 1001)  # Betfair-Deckel
@@ -401,6 +405,50 @@ def check_consensus_fresh(ctx):
 
 
 @betfair_check
+def check_odds_zugang_lebt(ctx):
+    """Antwortet the-odds-api ueberhaupt noch — und wie viel Kontingent ist uebrig?
+
+    🔴 21.09.2026 (Lucas: „meine api keys sind abgelaufen hab sie verlaengert"). Der
+    Schluessel lief am 20.09. abends ab. Gemerkt hat es einen Tag lang niemand: die Abrufe
+    liefen weiter (40 je Lauf, alle 15 Minuten, rund 13.000 am Tag), jede Antwort war leer, und
+    das einzige Symptom war `ankerQuote` von 0,50 auf 0,0 — eine abgeleitete Zahl, zwei Schritte
+    vom Grund entfernt. Der Grund selbst stand die ganze Zeit in den Antwort-Headern, die
+    niemand gelesen hat.
+
+    Dieser Waechter schaut dorthin, wo es steht, statt auf eine Folge zu warten:
+      · `letzterFehler` — 401/403 heisst Schluessel, 429 heisst Kontingent.
+      · `remaining` — was der Anbieter selbst sagt, nicht was wir schaetzen.
+      · `oddsKeysMitDaten` — wie viele Abrufe wirklich etwas gebracht haben.
+    Fehlt das Kontingent-Feld ganz, ist der Produzent aelter als dieser Waechter; das ist eine
+    eigene Auskunft und kein gruenes Haekchen.
+    """
+    kont = ctx.consensus.get("oddsKontingent")
+    versucht = ctx.consensus.get("oddsKeysFetched")
+    mit = ctx.consensus.get("oddsKeysMitDaten")
+    fails = []
+    if not isinstance(kont, dict):
+        return _chk("odds_zugang_lebt", "Odds-Zugang lebt", "warn", [],
+                    "Der Konsens-Lauf schreibt noch kein `oddsKontingent` — bis er das tut, "
+                    "sagt dieser Waechter nichts. Das ist keine Aussage ueber den Schluessel.")
+    fehler = kont.get("letzterFehler")
+    rest = kont.get("remaining")
+    if fehler:
+        fails.append("the-odds-api antwortet mit %s — der Schluessel ist ungueltig/abgelaufen "
+                     "oder das Kontingent ist leer. Bis das steht, laufen alle Abrufe ins Leere."
+                     % fehler)
+    if isinstance(rest, int) and rest <= ODDS_REST_WARN:
+        fails.append("nur noch %d Abrufe Kontingent uebrig (Grenze %d) — bei rund %s Abrufen je "
+                     "Lauf und 96 Laeufen am Tag ist das bald aufgebraucht."
+                     % (rest, ODDS_REST_WARN, versucht if isinstance(versucht, int) else "?"))
+    if isinstance(versucht, int) and versucht > 0 and mit == 0 and not fehler:
+        fails.append("%d Sport-Keys abgerufen, KEINER hat Daten geliefert — ohne HTTP-Fehler. "
+                     "Das ist kein leerer Spieltag, das ist ein toter Zugang." % versucht)
+    note = "Kontingent: %s verbraucht, %s uebrig%s" % (
+        kont.get("used"), rest, " · letzter Fehler: %s" % fehler if fehler else "")
+    return _chk("odds_zugang_lebt", "Odds-Zugang lebt", "error", fails, note)
+
+
+@betfair_check
 def check_consensus_anchor_coverage(ctx):
     """Findet der Konsens ueberhaupt noch Odds-Anker? Wenn in gecoverten Ligen Spiele laufen, aber
     KEINES einen Pinnacle/Soft-Anker bekommt (verdict != no_anchor), ist entweder der the-odds-api-
@@ -427,23 +475,37 @@ def check_consensus_anchor_coverage(ctx):
         anchorable = [g for g in games if isinstance(g, dict) and g.get("league")]
     fails = []
     if len(anchorable) >= COVER_MIN_N and covered == 0:
-        # 🔴 20.09.2026: hier stand „the-odds-api-Key tot ODER Namens-Match gebrochen?" — zwei
-        # Vermutungen, zwischen denen die Zahl daneben laengst entscheidet. `oddsKeysFetched`
-        # sagt, wie viele Sport-Keys der Lauf geholt hat: waren es 40, ist der Key nicht tot.
-        # Gemessen an diesem Tag: 40 Keys geholt, 12 ankerbare Spiele, 0 mit Anker.
+        # 🔴 20.09.2026 stand hier „Key tot ODER Namens-Match gebrochen?" — zwei Vermutungen
+        # ohne Unterscheidung. Am 20.09. habe ich sie mit `oddsKeysFetched` „entschieden":
+        # 40 Keys geholt, also lebe der Key. Das war FALSCH. `oddsKeysFetched` zaehlte die
+        # VERSUCHTEN Keys; ein toter Schluessel liefert fuer jeden eine leere Liste, und der
+        # Zaehler bleibt bei 40. Lucas' Key war seit dem 20.09. abends abgelaufen, und dieser
+        # Waechter hat einen ganzen Tag lang auf das Namens-Matching gezeigt.
+        # Fehlerklasse: ein Zaehler, der die Absicht zaehlt statt den Erfolg — und ein Urteil,
+        # das darauf gebaut war.
         #
-        # Fehlerklasse: ein Befund, der seine eigene Unterscheidung nicht trifft, obwohl die
-        # Zahl daneben steht. Ein Waechter, der zwei Verdaechtige nennt und keinen ausschliesst,
-        # verschiebt die Arbeit auf den Leser.
-        geholt = ctx.consensus.get("oddsKeysFetched")
-        if isinstance(geholt, int) and geholt > 0:
-            warum = (f"der Key lebt ({geholt} Sport-Keys geholt) — es ist das Namens-Matching "
-                     f"oder die Liga-Zuordnung")
-        elif geholt == 0:
-            warum = "0 Sport-Keys geholt — der the-odds-api-Key oder das Kontingent ist tot"
+        # Seit dem 21.09. traegt das Artefakt beides: `oddsKeysMitDaten` (Keys, die wirklich
+        # Events geliefert haben) und `oddsKontingent` (used/remaining/letzterFehler aus den
+        # Antwort-Headern). Damit ist die Unterscheidung gemessen statt geraten.
+        kont = ctx.consensus.get("oddsKontingent") or {}
+        mit = ctx.consensus.get("oddsKeysMitDaten")
+        versucht = ctx.consensus.get("oddsKeysFetched")
+        fehler = kont.get("letzterFehler") if isinstance(kont, dict) else None
+        rest = kont.get("remaining") if isinstance(kont, dict) else None
+        if fehler:
+            warum = (f"die API antwortet mit {fehler} — Schluessel ungueltig oder Kontingent "
+                     f"leer, das ist KEIN Matching-Problem")
+        elif isinstance(rest, int) and rest <= 0:
+            warum = "das the-odds-api-Kontingent ist aufgebraucht (remaining 0)"
+        elif isinstance(mit, int) and mit == 0:
+            warum = (f"kein einziger von {versucht} Sport-Keys hat Daten geliefert — der "
+                     f"Schluessel oder das Kontingent, nicht das Matching")
+        elif isinstance(mit, int) and mit > 0:
+            warum = (f"{mit} von {versucht} Sport-Keys liefern Daten — es ist das "
+                     f"Namens-Matching oder die Liga-Zuordnung")
         else:
-            warum = ("`oddsKeysFetched` fehlt im Artefakt — welche der beiden Ursachen es ist, "
-                     "laesst sich hier nicht sagen")
+            warum = ("`oddsKeysMitDaten` fehlt im Artefakt — der Produzent ist aelter als der "
+                     "21.09.; `oddsKeysFetched` allein unterscheidet die beiden Ursachen NICHT")
         # `ankerN` zaehlt seit dem 20.09. die ANKERBAREN Spiele, nicht alle offenen. Ein alter
         # Stand traegt noch die grosse Zahl; dann steht die Zahl aus `anchorable` daneben.
         n = ctx.consensus.get("ankerN")
@@ -451,8 +513,9 @@ def check_consensus_anchor_coverage(ctx):
         fails.append(f"0 von {n_txt} ankerbaren Konsens-Spielen mit Odds-Anker — {warum}")
     return _chk("consensus_anchor_coverage", "Konsens findet Odds-Anker", "warn", fails,
                 "Anker = Pinnacle/Soft-Quote gematcht. Durchgehend 0 trotz laufender Spiele in "
-                "GEMAPPTEN Ligen = Namens-Matching kaputt oder Key tot — `oddsKeysFetched` "
-                "unterscheidet die beiden.")
+                "GEMAPPTEN Ligen = Namens-Matching kaputt oder Key/Kontingent tot — "
+                "`oddsKeysMitDaten` und `oddsKontingent` unterscheiden die beiden. "
+                "`oddsKeysFetched` allein tut es NICHT: es zaehlt Versuche.")
 
 
 @betfair_check
