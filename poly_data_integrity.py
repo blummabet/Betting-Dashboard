@@ -614,6 +614,37 @@ def check_split_vollstaendig(ctx):
     return _chk("split_vollstaendig", "Geld-Split kennt seine Vollständigkeit", "warn", fails, note)
 
 
+def _warum_haengt(e, ctx) -> str:
+    """Warum rechnet genau dieser Eintrag nicht ab? REIN.
+
+    🔴 21.09.2026. Hier stand vorher an JEDER Zeile mit vorhandener Auflösung
+    „Auflösung existiert, matcht aber den Key nicht!". Nachgemessen an den sechs Positionen,
+    die seit 10-13 Tagen offen standen: der Key matcht bei allen sechs exakt, die Auflösung
+    liegt unter demselben Schlüssel und nennt einen Sieger. Sie hängen an etwas ganz anderem —
+    der Eintrag weiß nicht, WELCHEN Markt des Bündels er meint (`cond` fehlt), und bei dreien
+    weiß es die Auflösung auch nicht (Altbestand vor dem 10.09.).
+
+    Fehlerklasse: eine Meldung, die einen anderen Grund nennt als den, der zutrifft. Sie hat
+    mich selbst zuerst nach einem Key-Normalisierer suchen lassen, den es nie gebraucht hätte.
+    """
+    key = (e or {}).get("key", "")
+    r = ctx.resolutions.get(key) if isinstance(ctx.resolutions, dict) else None
+    if not (r or {}).get("winner"):
+        return "keine Auflösung gefunden"
+    if "-more-markets" not in str(key):
+        return "Auflösung liegt vor — der Abrechner hat sie noch nicht gesehen"
+    hat_play = bool((e or {}).get("cond"))
+    hat_res = bool((r or {}).get("cond"))
+    if not hat_play and not hat_res:
+        return ("Bündel, beide Seiten ohne Marktkennung — „" + str(r.get("winner"))
+                + "\u201c ist ohne Linie kein Ergebnis (Altbestand vor dem 10.09.)")
+    if not hat_play:
+        return "Bündel: die Auflösung kennt ihren Markt, der Eintrag nicht (Stempel wird nachgetragen)"
+    if not hat_res:
+        return "Bündel: der Eintrag kennt seinen Markt, die Auflösung nicht (Altbestand)"
+    return "Bündel: Eintrag und Auflösung meinen verschiedene Märkte — hier wird nicht geraten"
+
+
 @poly_check
 def check_settlement_alive(ctx):
     """Offene Paper-Positionen, deren Spiel längst gelaufen ist, die aber nie abrechnen — das
@@ -635,13 +666,38 @@ def check_settlement_alive(ctx):
             continue
         age_d = (ctx.now - ref).total_seconds() / 86400.0
         if age_d > STALE_OPEN_DAYS:
-            has_res = key in ctx.resolutions
-            fails.append(f"{key}: seit {age_d:.1f} Tagen offen"
-                         + (" — Auflösung existiert, matcht aber den Key nicht!" if has_res
-                            else " — keine Auflösung gefunden"))
+            fails.append(f"{key}: seit {age_d:.1f} Tagen offen — {_warum_haengt(e, ctx)}")
     return _chk("settlement_alive", "Settlement lebt (keine ewig offenen Positionen)", "error", fails,
-                f"Paper-Positionen älter als {STALE_OPEN_DAYS:.0f} Tage, die nie abrechnen = "
-                "Settlement-Key-Mismatch (Markt löst unter anderem Slug auf).")
+                f"Paper-Positionen älter als {STALE_OPEN_DAYS:.0f} Tage, die nie abrechnen. "
+                "Der Grund steht an jeder Zeile — er ist bei jeder ein anderer.")
+
+
+@poly_check
+def check_buendel_cond_ist_stabil(ctx):
+    """Haelt die Annahme, auf der der Markt-Stempel-Nachtrag steht?
+
+    🔴 21.09.2026. `poly_shortlist_track` traegt fehlende `cond` auf offenen Eintraegen aus
+    der Close-Zeile nach — sonst haengen Buendel-Plays bis zum 14-Tage-Backstop. Das ist nur
+    erlaubt, weil die Kennung einer Buendel-Zeile sich nicht aendert: ueber 22 Staende von
+    `poly_money_broad_close.json` zwischen dem 07. und 21.09.2026 hat keine der sechs haengenden
+    Zeilen ihre `cond` je gewechselt; sie erscheint einmal und bleibt.
+
+    Zieht eine Close-Zeile doch einen anderen Markt, dann ist ein nachgetragener Stempel eine
+    Behauptung. `condDrift` zaehlt genau diese Faelle im Produzenten. Ein Messgeraet, dessen
+    Zeiger niemand ansieht, ist keine Messung — hier wird er angesehen.
+    """
+    drift = (ctx.shortlist or {}).get("condDrift")
+    fails = []
+    if drift is None:
+        fails.append("`condDrift` fehlt im Shortlist-Buch — der Produzent zaehlt nicht (mehr); "
+                     "der Markt-Stempel-Nachtrag steht damit auf einer ungeprueften Annahme.")
+    elif drift:
+        fails.append(f"{drift} offene(r) Buendel-Eintrag/-Eintraege zeigen auf einen anderen Markt "
+                     f"als ihre Close-Zeile. Die Annahme hinter dem Stempel-Nachtrag (eine Buendel-"
+                     f"`cond` bleibt) gilt nicht mehr — der Nachtrag gehoert geprueft.")
+    return _chk("buendel_cond_stabil", "Bündel-Marktkennung bleibt, was sie war", "error", fails,
+                "condDrift = 0 heisst: jede offene Bündel-Zeile meint noch denselben Markt wie "
+                "beim Einstieg." if not fails else "")
 
 
 @poly_check

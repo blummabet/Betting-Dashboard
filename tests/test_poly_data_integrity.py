@@ -92,13 +92,18 @@ def test_settlement_stale_open_play_fires():
     assert not c["ok"] and "offen" in c["failures"][0]
 
 
-def test_settlement_flags_key_mismatch_when_resolution_exists():
-    # Auflösung existiert unter dem Key nicht direkt -> Position hängt, obwohl der Markt aufgelöst ist
+def test_settlement_nennt_den_grund_der_zutrifft():
+    """🔴 21.09.2026. Hier stand vorher `"matcht aber den Key nicht" in failures[0]` — und
+    genau das war an allen sechs haengenden Positionen falsch: der Key matcht exakt, die
+    Auflösung liegt unter demselben Schluessel. Der Test hat die Fehldiagnose festgehalten.
+    Fehlerklasse: eine Meldung, die einen anderen Grund nennt als den, der zutrifft."""
     ctx = pdi.PolyCtx(now=NOW,
         shortlist={"open": {"lol-a-b-2026-07-20|A": {"key": "lol-a-b-2026-07-20", "side": "A"}}},
         resolutions={"lol-a-b-2026-07-20": {"winner": "A", "ts": iso(NOW)}})
     c = pdi.check_settlement_alive(ctx)
-    assert not c["ok"] and "matcht aber den Key nicht" in c["failures"][0]
+    assert not c["ok"]
+    assert "matcht aber den Key nicht" not in c["failures"][0]
+    assert "Auflösung liegt vor" in c["failures"][0]
 
 
 def test_settlement_recent_open_is_ok():

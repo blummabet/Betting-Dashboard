@@ -571,15 +571,37 @@ def update_track(prev, emit, close, resolutions, now=None, stake=STAKE, blocked=
             **_markt_stempel(close.get(key)),
         }
 
+    # Zeiger fuer die Annahme unter dem Nachtrag oben: wie oft zieht eine Buendel-Zeile einen
+    # ANDEREN Markt, als der Eintrag kennt? Gemessen null zwischen dem 07. und 21.09.2026 — aber
+    # ein Messgeraet, dessen Zeiger niemand ansieht, ist keine Messung. Die Zahl geht ins
+    # Artefakt und `check_buendel_cond_ist_stabil` sieht sie an.
+    _cond_drift = 0
+
     # 2) lastPrice aller offenen Plays aus dem Close-File nachziehen (beste Schluss-Referenz für CLV)
     for e in open_.values():
         _row = close.get(e["key"]) or {}
+        # 🔴 21.09.2026 (Lucas' Statusseite: „6 Positionen seit 10-13 Tagen offen").
+        # Der Markt-Stempel vom 10.09. wurde NUR beim Oeffnen gesetzt. Die Eintraege, die den
+        # Riegel ueberhaupt erst ausgeloest haben, standen da schon offen — und blieben es:
+        # ohne `cond` kann `_derselbe_markt` nie Ja sagen, also rechnet nichts mehr ab, bis der
+        # Backstop nach 14 Tagen sie als „Buendel ohne Marktkennung" verfallen laesst. Die
+        # Kennung lag die ganze Zeit in der Close-Zeile daneben.
+        # Fehlerklasse: eine Nachruestung, die nur Neuzugaenge erreicht.
+        #
+        # Nachgetragen wird nur, was FEHLT — ein vorhandener Stempel wird nie ueberschrieben.
+        # Die Annahme dahinter ist gemessen, nicht geglaubt: ueber 22 Staende von
+        # `poly_money_broad_close.json` zwischen dem 07. und 21.09. hat keine dieser Zeilen ihre
+        # `cond` je geaendert; sie erscheint einmal und bleibt. `check_buendel_cond_ist_stabil`
+        # schlaegt an, wenn das aufhoert.
+        if not e.get("cond"):
+            e.update(_markt_stempel(_row))
         # 10.09.2026: dieselbe Frage wie beim Abrechnen, nur frueher — und sie war hier genauso
         # offen. `lastPrice` speist das CLV. Zog der Close-Stand inzwischen einen ANDEREN Markt
         # des Buendels, dann misst „Einstieg -> Schluss" zwei verschiedene Linien gegeneinander
         # und das CLV ist kein CLV. Kennt der Eintrag seinen Markt und der Close-Stand einen
         # anderen, bleibt der alte Preis stehen — eine alte Auskunft schlaegt eine falsche.
         if e.get("cond") and _row.get("cond") and e["cond"] != _row["cond"]:
+            _cond_drift += 1
             continue
         cp = (_row.get("prices") or {}).get(e["side"])
         if _ok_price(cp):
@@ -663,6 +685,7 @@ def update_track(prev, emit, close, resolutions, now=None, stake=STAKE, blocked=
 
     settled = settled[-SETTLED_KEEP:]
     return {"updatedAt": now.isoformat(), "stake": stake, "expired": n_expired,
+            "condDrift": _cond_drift,
             "katNachgetragen": _kat_nachgetragen,
             "blockedCats": _bl, "reentry": reentry_status(settled, _bl),
             # `expired` bleibt der Zaehler DIESES Laufs (Diagnose), `unaufloesbar` ist das Buch.
