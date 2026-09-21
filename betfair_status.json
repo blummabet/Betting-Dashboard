@@ -73,13 +73,22 @@
       "note": "betfair_consensus.json speist die Zweitmeinung der Trades-Frisch-Push. Steht generatedAt, ist die Zweitmeinung alt."
     },
     {
+      "id": "odds_zugang_lebt",
+      "label": "Odds-Zugang lebt",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Kontingent: 210 verbraucht, 4999790 uebrig"
+    },
+    {
       "id": "consensus_anchor_coverage",
       "label": "Konsens findet Odds-Anker",
       "severity": "warn",
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Anker = Pinnacle/Soft-Quote gematcht. Durchgehend 0 trotz laufender Spiele in GEMAPPTEN Ligen = Namens-Matching kaputt oder Key tot — `oddsKeysFetched` unterscheidet die beiden."
+      "note": "Anker = Pinnacle/Soft-Quote gematcht. Durchgehend 0 trotz laufender Spiele in GEMAPPTEN Ligen = Namens-Matching kaputt oder Key/Kontingent tot — `oddsKeysMitDaten` und `oddsKontingent` unterscheiden die beiden. `oddsKeysFetched` allein tut es NICHT: es zaehlt Versuche."
     },
     {
       "id": "track_record_fresh",
@@ -137,5 +146,5 @@
     }
   ],
   "nFail": 0,
-  "generatedAt": "2026-09-21T13:30:45.220965+00:00"
+  "generatedAt": "2026-09-21T13:45:43.021673+00:00"
 }
