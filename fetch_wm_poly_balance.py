@@ -67,6 +67,10 @@ def _save(usdc: float, usdc_e: float, address: str, error: str | None = None,
         # wirklich gemessen wurde, sagt erst dieses Feld. Ohne es rendert eine fehlende Messung
         # als harmloser Default.
         "positionsStand": positions_stand or (now if positions is not None else None),
+        # Der Nenner zur Summe: wie viele Positionszeilen die API geliefert hat. None heisst
+        # „nicht gemessen" (alter Wert mitgeschleppt oder Abruf gescheitert) — und das ist
+        # etwas anderes als 0.
+        "positionsZeilen": LETZTE_MESSUNG.get("zeilen") if positions is not None else None,
     }
     if error:
         out["error"] = error
@@ -330,6 +334,13 @@ def fetch_positions_value(address: str) -> float | None:
         print(f"  ⚠️  {unklar} von {len(rows)} Positionszeilen nicht deutbar — "
               f"Positionswert bleibt UNBEKANNT statt zu klein")
         return None
+    # 🔴 21.09.2026 (Lucas: „meine verknuepfte wallet haelt rund um die 200 dollar ... finde
+    # den fehler"). Ich konnte ihm nicht sagen, ob die 0,00 „die API gab null Zeilen zurueck"
+    # heisst oder „sie gab Zeilen zurueck, die zusammen null wert sind" — weil im Artefakt nur
+    # die SUMME stand. Eine Summe ohne ihren Nenner beantwortet genau die Frage nicht, die man
+    # an sie stellt. Fehlerklasse: eine Zahl ohne den Nenner, aus dem sie entsteht.
+    # `LETZTE_MESSUNG` traegt die Zeilenzahl zum Aufrufer, der sie ins Artefakt schreibt.
+    LETZTE_MESSUNG["zeilen"] = len(rows)
     print(f"  📊 Offene Positionen: ${summe:.2f} (in {len(rows)} Positionen)")
     return summe
 
@@ -349,6 +360,12 @@ def positionen_summe(rows) -> tuple:
             continue
         total += wert
     return round(total, 4), unklar
+
+
+# Was die letzte Positions-Messung ausser der Summe wusste. Wird von `_save` ins Artefakt
+# uebernommen, damit ein spaeterer Leser 0,00 $ deuten kann: 0 Zeilen heisst „die Wallet haelt
+# nichts", n Zeilen mit Summe 0 heisst „sie haelt etwas, das gerade nichts wert ist".
+LETZTE_MESSUNG = {"zeilen": None}
 
 
 def _positions_rows(raw):

@@ -101,6 +101,46 @@ class TestDieSummeWirdNurGanzGeliefert(unittest.TestCase):
         self.assertEqual(B.positionen_summe(["kaputt"])[1], 1)
 
 
+class TestDieSummeTraegtIhrenNenner(unittest.TestCase):
+    """🔴 21.09.2026 (Lucas: „meine verknuepfte wallet haelt rund um die 200 dollar … finde den
+    fehler"). Ich konnte ihm nicht sagen, ob die 0,00 „null Zeilen zurueckbekommen" heisst oder
+    „Zeilen bekommen, die zusammen null wert sind" — weil im Artefakt nur die SUMME stand.
+    Fehlerklasse: eine Zahl ohne den Nenner, aus dem sie entsteht.
+    """
+
+    def _save(self, tmp, positions):
+        from unittest import mock
+        import json
+        with mock.patch.object(B, "OUT_FILE", tmp / "wm_poly_balance.json"):
+            return B._save(200.0, 0.0, "0xabc", positions=positions)
+
+    def test_null_zeilen_und_null_summe_sind_unterscheidbar_von_nicht_gemessen(self):
+        import tempfile
+        tmp = Path(tempfile.mkdtemp())
+        B.LETZTE_MESSUNG["zeilen"] = 0
+        out = self._save(tmp, 0.0)
+        self.assertEqual(out["positions"], 0.0)
+        self.assertEqual(out["positionsZeilen"], 0, "0 Zeilen heisst: die Wallet haelt nichts")
+
+    def test_zeilen_mit_wert_null_sehen_anders_aus(self):
+        import tempfile
+        tmp = Path(tempfile.mkdtemp())
+        B.LETZTE_MESSUNG["zeilen"] = 3
+        out = self._save(tmp, 0.0)
+        self.assertEqual(out["positionsZeilen"], 3,
+                         "3 Zeilen mit Summe 0 ist etwas anderes als eine leere Wallet")
+
+    def test_ohne_messung_steht_dort_nichts(self):
+        """Wird der alte Wert mitgeschleppt (positions=None), ist auch der Nenner unbekannt —
+        und nicht 0."""
+        import tempfile
+        tmp = Path(tempfile.mkdtemp())
+        B.LETZTE_MESSUNG["zeilen"] = 7
+        out = self._save(tmp, None)
+        self.assertIsNone(out["positionsZeilen"])
+        self.assertIsNone(out["positionsStand"])
+
+
 class TestDerWaechterNenntDenGrundDerZutrifft(unittest.TestCase):
     def _ctx(self, updated_vor_h, stand_vor_h, positions=0.0):
         d = {"positions": positions,
