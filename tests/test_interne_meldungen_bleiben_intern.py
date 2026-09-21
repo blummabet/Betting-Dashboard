@@ -107,6 +107,64 @@ class TestDerInterneSenderFaelltNieInsOeffentliche(unittest.TestCase):
             self.assertFalse(TB.tg_send_ops("x"))
 
 
+# ── Wer darf ueberhaupt in den oeffentlichen Kanal? ──────────────────────────
+#
+# Der Vorfall war EIN Modul, aber das Abzaehlen von Hand ist keine Loesung: beim naechsten
+# neuen Sender faellt es wieder niemandem auf. Deshalb eine Liste, die man BEWUSST erweitert.
+# Wer hier nicht steht und trotzdem in den oeffentlichen Kanal kaeme, faellt durch.
+#
+# Stand 21.09.2026, jedes Modul nachgesehen:
+OEFFENTLICH_ERLAUBT = {
+    "telegram_bot.py",              # die Picks selbst — der Kanal-Inhalt
+    "telegram_wm.py",               # WM-Publisher
+    "telegram_wm_preseason.py",     # WM-Vorsaison-Posts
+    "telegram_streaks.py",          # „Serien der Woche"-Digest, ausdruecklich PUBLIC
+    "telegram_streak_watch.py",     # Serien-Watch, ausdruecklich fuer den Public-Channel
+    "generate_wm_player_spotlight.py",   # Spieler-Karten
+    "betfair_alerts.py",            # hat zwei Pfade; `_tg_public` IST der oeffentliche
+}
+
+
+def _kann_oeffentlich_senden():
+    """Module, die die oeffentliche Kanal-ID erreichen koennen — fest verdrahtet oder geerbt."""
+    treffer = set()
+    for f in sorted(BASE.glob("*.py")):
+        code = "\n".join(z for z in f.read_text(encoding="utf-8").splitlines()
+                          if not z.lstrip().startswith("#"))
+        if TB.PUBLIC_CHAT_ID in code:
+            treffer.add(f.name)
+            continue
+        # Geerbt: wer den oeffentlich vorbelegten Sender aus telegram_bot holt.
+        if re.search(r"from\s+telegram_bot\s+import\s+[^\n]*\b(?:%s)\b"
+                     % "|".join(OEFFENTLICHE_SENDER), code):
+            treffer.add(f.name)
+    return treffer
+
+
+class TestNurDerKanalInhaltGehtInDenKanal(unittest.TestCase):
+    def test_kein_unerwartetes_modul_erreicht_den_oeffentlichen_kanal(self):
+        """🔴 Der Vorfall: `stoerungsmeldung.py` stand nicht auf dieser Liste — es gab keine.
+
+        Wer hier rot wird, hat zwei ehrliche Moeglichkeiten: den Sender auf `tg_send_ops`
+        umstellen (wenn der Inhalt intern ist), oder das Modul bewusst in
+        OEFFENTLICH_ERLAUBT eintragen (wenn es Kanal-Inhalt ist). Was nicht geht: es
+        stillschweigend laufen lassen.
+        """
+        unerwartet = sorted(_kann_oeffentlich_senden() - OEFFENTLICH_ERLAUBT)
+        self.assertEqual(unerwartet, [],
+                         "diese Module kaemen in den oeffentlichen Kanal: %s" % unerwartet)
+
+    def test_die_liste_beschreibt_die_wirklichkeit(self):
+        """Ein Eintrag, der nichts mehr erreicht, ist eine veraltete Erlaubnis — er
+        verschleiert beim naechsten Lesen, wer wirklich senden kann."""
+        tot = sorted(OEFFENTLICH_ERLAUBT - _kann_oeffentlich_senden())
+        self.assertEqual(tot, [], "stehen auf der Liste, senden aber nicht (mehr): %s" % tot)
+
+    def test_die_stoerungsmeldung_steht_nicht_darauf(self):
+        self.assertNotIn("stoerungsmeldung.py", _kann_oeffentlich_senden())
+        self.assertNotIn("stoerungsmeldung.py", OEFFENTLICH_ERLAUBT)
+
+
 class TestDerOeffentlicheSenderBleibtWieErWar(unittest.TestCase):
     """Der Fix darf den oeffentlichen Pfad nicht mit abschalten — dort ist der Rueckfall gewollt."""
 
