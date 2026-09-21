@@ -207,8 +207,13 @@ jobs:
         continue-on-error: true
         env:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          # 🔴 21.09.2026: Diese Meldung ging in den OEFFENTLICHEN Kanal. `tg_send` faellt ohne
+          # gesetzte TELEGRAM_CHAT_ID auf die feste oeffentliche ID zurueck, und dieses Secret
+          # ist bewusst leer. `TELEGRAM_CHAT_ID` steht hier deshalb NICHT mehr — sie wuerde nur
+          # wieder in den oeffentlichen Rueckfall fuehren. Der Sender ist jetzt `tg_send_ops`,
+          # er nimmt OPS, sonst TRADES, und sonst sendet er nicht.
+          TELEGRAM_OPS_CHAT_ID:    ${{ secrets.TELEGRAM_OPS_CHAT_ID }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
-          TELEGRAM_CHAT_ID:        ${{ secrets.TELEGRAM_CHAT_ID }}
 
       # 🔴 20.09.2026 (Lucas: „Beide Spiele stehen nicht in der Betfair-Public-Bilanz").
       # Eines davon — Lyon v Rennes — war GESENDET: betfair_public_seen.json trug den Schluessel

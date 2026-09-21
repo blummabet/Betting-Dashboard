@@ -132,6 +132,7 @@ jobs:
           # 20.09.2026: der Bericht des Ergebnis-Nachlaufs — die Zahl, ueber die die
           # Guard-Batterie urteilt. Eigene Zeile je Datei, s.o.
           git add liga_ergebnis_nachlauf.json 2>/dev/null || true
+          git add liga_absagen.json 2>/dev/null || true
           git add liga-odds-history.json 2>/dev/null || true
           git add wert_scanner.json 2>/dev/null || true             # Bestpreis gegen entvigtes Pinnacle
           git add liga_closing_lines.json 2>/dev/null || true

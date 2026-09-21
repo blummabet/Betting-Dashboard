@@ -139,7 +139,7 @@ jobs:
       # Begruendung und Tathergang stehen in scripts/ci_sichern.sh.
       - name: 🔐 Dedup-Stand des Nachspielens sofort sichern
         if: always()
-        run: bash scripts/ci_sichern.sh "Dedup-Stand nach Shortlist-Push/Auto-Play" shortlist_push_seen.json shortlist_push_ledger.json shortlist_auto_bets_placed.json
+        run: bash scripts/ci_sichern.sh "Dedup-Stand nach Shortlist-Push/Auto-Play" shortlist_push_seen.json shortlist_push_ledger.json shortlist_auto_bets_placed.json shortlist_auto_verworfen.json
         continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -246,7 +246,7 @@ jobs:
             poly_cross_sport.json poly_cross_sport_history.json poly_cross_sport_seen.json \
             poly_whale_seen.json poly_whale_public_seen.json poly_whale_nachtrag_seen.json \
             poly_wallet_norm.json poly_wallet_norm_state.json \
-            shortlist_push_seen.json shortlist_push_ledger.json shortlist_auto_bets_placed.json \
+            shortlist_push_seen.json shortlist_push_ledger.json shortlist_auto_bets_placed.json shortlist_auto_verworfen.json \
             poly_dominanz_ledger.json poly_dominanz_seen.json poly_dominanz_record.json \
             poly_money_klein.json messungen.json poly_gegenseite.json poly_einigkeit_schatten.json poly_einigkeit_schatten_bericht.json \
             poly_money_broad_live.json poly_money_broad_live_history.json \

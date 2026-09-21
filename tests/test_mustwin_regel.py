@@ -69,9 +69,54 @@ class TestBeideSeitenBenutzenDieRegel(unittest.TestCase):
                          "die Bedingung steht wieder ausgeschrieben im Validator")
 
 
+class TestDieRegelAmEingefrorenenVorfall(unittest.TestCase):
+    """🔴 21.09.2026 — die beiden Tests, die hier standen, waren seit Tagen rot in der Action.
+
+    Sie verlangten mehr als zehn Zeilen mit hohem Druck ohne `mustWin` im ECHTEN Datenstand.
+    Gemessen: am 20.09. abends fuenf, am 21.09. frueh null — die Zahl schwankt mit jedem Neubau
+    von `season-finish.html`, und im September (Spieltag 3-5) gibt es kaum Tabellendruck. Der
+    Test prueft damit das Wetter und nicht den Code.
+
+    Fehlerklasse: ein Regressionstest, der an der Tageslage haengt. Er wird rot, ohne dass etwas
+    kaputt ist — und dann wird Rot ueberlesen, auch dort, wo es zaehlt.
+
+    Deshalb steht der Vorfall hier als FIXTURE: dieselbe Form wie die 53 Faelle vom 12.09.
+    (hoher Druck, kein mustWin, motivationLevel 'low') plus der eine Fall, der ein echter
+    Widerspruch WAERE. Damit haelt der Test die Regel fest, unabhaengig vom Spieltag.
+    """
+
+    # Die Form des Vorfalls vom 12.09.2026: 53 Zeilen, ALLE mit motivationLevel 'low'.
+    FALSCHALARME = [{"pressureRatio": 0.83, "mustWin": False, "motivationLevel": "low"},
+                    {"pressureRatio": 0.71, "mustWin": False, "motivationLevel": "low"},
+                    {"pressureRatio": 0.95, "mustWin": False, "motivationLevel": "none"}]
+    # Und der Fall, der wirklich einer waere: volle Motivation, Druck ueber der Schwelle,
+    # trotzdem kein mustWin. Den soll die Regel fangen.
+    ECHTER = {"pressureRatio": 0.83, "mustWin": False, "motivationLevel": "full"}
+
+    def test_die_53_falschalarme_sind_keine_widersprueche(self):
+        for st in self.FALSCHALARME:
+            self.assertFalse(
+                MWR.widerspruch(st["pressureRatio"], st["mustWin"], st["motivationLevel"]),
+                f"motivationLevel={st['motivationLevel']!r} unterdrueckt mustWin absichtlich — "
+                "das ist kein Fehler in calc_pressure")
+
+    def test_der_echte_widerspruch_wird_gefangen(self):
+        """Gegenprobe — ohne sie waere der Test oben auch gruen, wenn `widerspruch` immer
+        False zurueckgaebe."""
+        self.assertTrue(MWR.widerspruch(self.ECHTER["pressureRatio"], self.ECHTER["mustWin"],
+                                        self.ECHTER["motivationLevel"]))
+
+    def test_unter_der_schwelle_ist_nie_ein_widerspruch(self):
+        self.assertFalse(MWR.widerspruch(0.40, False, "full"))
+
+
 class TestAmEchtenDatenstand(unittest.TestCase):
-    """Der Test, der den Fund ueberhaupt erst gemacht hat. Ohne echte Daten haette jede
-    ausgedachte Zeile hier gepasst."""
+    """Die Live-Probe. Sie darf NICHT rot werden, wenn der Datenstand gerade duenn ist — sie
+    ueberspringt dann und sagt es. Ein Rot, das „heute ist September" bedeutet, macht Rot
+    wertlos.
+
+    Die Regel selbst haelt die Klasse darueber fest, an einer eingefrorenen Fixture.
+    """
 
     @classmethod
     def setUpClass(cls):
@@ -85,33 +130,24 @@ class TestAmEchtenDatenstand(unittest.TestCase):
                     if isinstance(st, dict):
                         yield key, fx, seite, st
 
-    def test_es_gibt_die_faelle_wirklich(self):
-        """Gegenprobe: gaebe es keine Zeile mit hohem Druck ohne mustWin, waere der Test unten
-        gruen, weil nichts zu pruefen ist — und nicht, weil etwas stimmt."""
-        hoch = [1 for _, _, _, st in self._stakes()
-                if (st.get("pressureRatio") or 0) > 0.65 and not st.get("mustWin")]
-        self.assertGreater(len(hoch), 10,
-                           "Keine Faelle im Datenstand — dieser Test prueft gerade nichts.")
+    def _kandidaten(self):
+        return [x for x in self._stakes()
+                if (x[3].get("pressureRatio") or 0) > 0.65 and not x[3].get("mustWin")]
 
     def test_kein_einziger_dieser_faelle_ist_ein_echter_widerspruch(self):
+        kand = self._kandidaten()
+        if not kand:
+            self.skipTest("kein Fall mit hohem Druck ohne mustWin im aktuellen Datenstand "
+                          "(%d Stake-Zeilen) — die Regel prueft die Fixture-Klasse oben"
+                          % sum(1 for _ in self._stakes()))
         echte = [f"{key} {fx.get('home')} vs {fx.get('away')} ({seite}): "
                  f"pr={st.get('pressureRatio')} motiv={st.get('motivationLevel')}"
-                 for key, fx, seite, st in self._stakes()
+                 for key, fx, seite, st in kand
                  if MWR.widerspruch(st.get("pressureRatio"), st.get("mustWin"),
                                     st.get("motivationLevel"))]
         self.assertEqual(echte, [], "\nEchte Widersprueche (mustWin fehlt bei voller Motivation) — "
                          "die gehoeren in calc_pressure gefixt, nicht in der Regel:\n"
                          + "\n".join(echte))
-
-    def test_der_alte_check_haette_hier_falsch_alarm_geschlagen(self):
-        """Haelt die Groesse des Fehlers fest. Verschwindet der Effekt, ist entweder der
-        Datenstand ausgetauscht oder die Unterdrueckung in update_dashboard weg — beides gehoert
-        angeschaut, nicht stillschweigend hingenommen."""
-        alt = [1 for _, _, _, st in self._stakes()
-               if (st.get("pressureRatio") or 0) > 0.65 and not st.get("mustWin")]
-        self.assertGreater(len(alt), 10,
-                           "Der alte Check haette hier nichts mehr gemeldet — dann ist die "
-                           "Begruendung dieses Tests nicht mehr die Lage im Repo.")
 
 
 if __name__ == "__main__":

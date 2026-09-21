@@ -109,6 +109,12 @@ EBENE = {
     # TABELLE und nicht in einer Regel: „premier" im Namen sagt hier das Gegenteil dessen,
     # was ein Muster daraus lesen wuerde.
     "mizoram-premier-league": 3,
+    # 21.09.2026 (CI-Wachhund, roter Test in der Action): „india-karnataka-super-division".
+    # Dieselbe Familie wie Mizoram: eine indische STAATSliga. „Super Division" klingt nach
+    # oberster Klasse und ist die Landesmeisterschaft Karnatakas — unter ISL, I-League und
+    # I-League 2. Auch sie steht in der TABELLE und nicht in einer Regel: „super" im Namen
+    # sagt hier das Gegenteil dessen, was ein Muster daraus lesen wuerde.
+    "india-karnataka-super-division": 3,
     # 10.09.2026 (CI-Wachhund, vierter und fuenfter Slug): „v-league" — die oberste Klasse
     # Vietnams (Ledger-Paarung „The Cong - Viettel FC - Cong An Ha Noi FC"). Der Slug ist
     # NICHT sportartenrein: in Korea und Japan heisst die Volleyball-Liga genauso. Dass hier
@@ -120,6 +126,13 @@ EBENE = {
     # Tabelleneintrag, der Slug traegt nichts, woraus eine Regel etwas ableiten koennte.
     "erovnuli-liga": 1,
     # ── zweite Spielklassen ────────────────────────────────────────────────
+    # 🔴 21.09.2026 (CI-Wachhund, dritter Slug des Tages): „persha-liga". Ukrainisch „persha"
+    # heisst ERSTE — und die Persha Liha ist die ZWEITE Spielklasse des Landes, unter der
+    # Premjer-Liha. Das Wort im Namen sagt hier das Gegenteil der Klasse, wie schon bei
+    # „mizoram-premier-league" und „india-karnataka-super-division". Genau dafuer ist das eine
+    # TABELLE und keine Regel: ein Muster, das „persha/first/1" liest, haette sie auf die
+    # Ebene der Premjer-Liha gehoben — und die steht in derselben Uebersicht mit +32,3 % ROI.
+    "persha-liga": 2,
     "championship": 2, "2nd-bundesliga": 2, "la-liga-2": 2, "serie-b": 2, "ligue-2": 2,
     "j-league-2": 2, "brasileiro-serie-b": 2, "primera-b": 2, "k-league-2": 2,
     "eerste-divisie": 2, "segunda-liga": 2, "liga-de-expansion-mx-apertura": 2,
@@ -330,8 +343,21 @@ _AUSZEICHNUNG_RX = re.compile(
 
 # Mustererkennung fuer alles, was neu dazukommt. Sie ersetzt die Tabelle nicht, sie faengt
 # nur die Faelle ab, bei denen der Slug die Antwort selbst mitbringt.
+# 🔴 21.09.2026 (CI-Wachhund, „int-friendly-games"). Der zweite offene Slug des Tages, und
+# anders als „india-karnataka-super-division" ist dieser KEINE Spielklasse, der nur die Zeile
+# fehlt: ein Freundschaftsspiel hat keine Ebene. Jede Zahl waere hier falsch — „1", weil
+# Nationalmannschaften spielen, oder „3", weil es um nichts geht. Deshalb eine eigene Marke,
+# wie bei Reserve, Jugend und Pokal: die Tabelle sagt damit „angesehen und kein Rang", statt
+# einen zu erfinden. `randliga()` bleibt fuer diese Slugs False — ein Testspiel ist keine
+# Randliga, es ist gar keine Liga.
+# Als MUSTER und nicht als Zeile: Testspiele tauchen unter vielen Namen auf (club-friendlies,
+# international-friendlies, friendlies-clubs). Gegenprobe am Ledger: die Regel beantwortet
+# genau diesen einen offenen Slug und stuft keinen bereits eingestuften um.
+_FREUNDSCHAFT_RX = re.compile(r"friendl|freundschaft|testspiel|amistoso|amichevol")
+
 _MUSTER = (
     ("srl", lambda s: s.endswith("-srl") or "-srl-" in s),          # Simulated Reality League
+    ("freundschaft", lambda s: bool(_FREUNDSCHAFT_RX.search(s))),
     # 07.09.2026 — am Tag nach dem Bau tauchte „Primera Division Reserve, Clausura" auf und
     # stand als einzige Liga ohne Ebene da. Eine Reserveliga ist keine Spielklasse: es sind
     # zweite Mannschaften eines Vereins, die Aufstellung ist naeher an einer Jugendliga als

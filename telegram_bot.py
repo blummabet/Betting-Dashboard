@@ -44,15 +44,57 @@ LEAGUE_ORDER = [
 ]
 
 # ── Telegram API ───────────────────────────────────────────────────────────────
+# 🔴 21.09.2026 (Lucas: „Wie kann so eine Nachricht aber in public gehen").
+# Die tägliche Störungsmeldung vom 06:14 UTC stand im ÖFFENTLICHEN Kanal: Wallet-Adressen,
+# Markt-Keys, „4 Public-Pushes ohne Ledger-Zeile", „131/326 bewiesene Wallets netto-negativ".
+# Der Weg dahin war kein Fehler im Sendecode, sondern sein Standardwert: `tg_send` faellt auf
+# die feste Kanal-ID zurueck, wenn `TELEGRAM_CHAT_ID` leer ist — und das Secret ist seit dem
+# 04.08.2026 bewusst NICHT gesetzt (Kommentar in betfair_alerts.py), damit genau der
+# oeffentliche Pfad ohne Secret funktioniert. Wer also nichts waehlt, sendet an alle.
+# Fehlerklasse: ein Standard-Empfaenger, der der oeffentliche Kanal ist.
+#
+# Interne Meldungen bekommen deshalb einen eigenen Sender, der diesen Rueckfall NICHT hat.
+# Ohne eigenen Kanal wird NICHT gesendet: eine Diagnose, die ihren Kanal nicht erreicht,
+# schweigt — sie rutscht nicht in den oeffentlichen.
+PUBLIC_CHAT_ID = '-1003819239615'
+
+
+def ops_chat_id() -> str:
+    """Der Kanal fuer INTERNE Meldungen — nie der oeffentliche. "" = keiner eingerichtet. REIN."""
+    for k in ('TELEGRAM_OPS_CHAT_ID', 'TELEGRAM_TRADES_CHAT_ID'):
+        v = (os.environ.get(k) or '').strip()
+        if v and v != PUBLIC_CHAT_ID:
+            return v
+    return ''
+
+
+def tg_send_ops(text: str) -> bool:
+    """Sendet an den internen Kanal. Ohne internen Kanal: Vorschau auf stdout, kein Versand.
+
+    Bewusst fail-closed. Eine nicht gesendete Diagnose kostet einen Blick ins Log; eine
+    versehentlich oeffentliche kostet mehr.
+    """
+    chat = ops_chat_id()
+    if not (TELEGRAM_TOKEN and chat):
+        print('⚠️  Kein interner Telegram-Kanal (TELEGRAM_OPS_CHAT_ID) — NICHT gesendet. Vorschau:')
+        print(text)
+        return False
+    return _tg_post(text, chat)
+
+
 def tg_send(text: str) -> bool:
     if not TELEGRAM_TOKEN:
         print('⚠️  Kein TELEGRAM_TOKEN — Vorschau:')
         print(text)
         print()
         return False  # kein Token → nicht gesendet → NICHT als sent markieren
+    return _tg_post(text, CHAT_ID)
+
+
+def _tg_post(text: str, chat: str) -> bool:
     url  = f'https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage'
     body = json.dumps({
-        'chat_id':    CHAT_ID,
+        'chat_id':    chat,
         'text':       text,
         'parse_mode': 'HTML',
     }).encode('utf-8')

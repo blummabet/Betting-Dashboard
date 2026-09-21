@@ -57,9 +57,11 @@ from __future__ import annotations
 import http.client
 import json
 import os
+import pathlib
 import sys
 from datetime import datetime, timedelta, timezone
 
+import absagen_buch as AB
 import cocobet_dataset as D
 from safe_write import write_json_atomic
 
@@ -67,6 +69,11 @@ APIF_HOST = "v3.football.api-sports.io"
 APIF_KEY = os.environ.get("APISPORTS_KEY", "")
 OUT_FILE = str(D.data_file())
 BERICHT = str(D.file("wm_ergebnis_nachlauf.json", "liga_ergebnis_nachlauf.json"))
+# 🔴 21.09.2026. Der Absage-Vermerk lag bisher NUR am Fixture in liga-data.json — und rollte
+# mit ihm aus dem Fenster. Levante–Athletic (16.09., Starkregen) war fuenf Tage spaeter
+# spurlos weg, waehrend seine drei Picks in picks_history.json bis heute auf `result: null`
+# stehen. Dieses Buch hat einen eigenen Lebenslauf und ueberlebt das Fenster des Datensatzes.
+ABSAGEN = str(D.file("wm_absagen.json", "liga_absagen.json"))
 
 # Wie lange nach Anpfiff ein Spiel als „muesste durch sein" gilt. 2,5 h deckt
 # Nachspielzeit und Halbzeit; Verlaengerung gibt es in den Top-5-Ligen nicht.
@@ -267,6 +274,14 @@ def main() -> int:
     }
     gruende: dict = {}
     abgesagt_neu = 0
+    try:
+        import json as _j
+        buch = _j.loads(pathlib.Path(ABSAGEN).read_text(encoding="utf-8"))
+        if not isinstance(buch, dict):
+            buch = {}
+    except Exception:                     # noqa: BLE001 — kein Buch ist ein leeres Buch
+        buch = {}
+    buch_vorher = dict(buch)
 
     if not offen:
         print("  ✅ kein Spiel mit vergangenem Anpfiff ohne Ergebnis — kein API-Aufruf noetig.")
@@ -319,6 +334,9 @@ def main() -> int:
                 st = api_status(item)
                 if absage_eintragen(fx, st, jetzt.isoformat()):
                     abgesagt_neu += 1
+                # Wer erkennt, schreibt sofort — und zwar dorthin, wo es das Fenster ueberlebt.
+                buch = AB.eintragen(buch, str(fx.get("kickoff"))[:10], fx.get("homeName"),
+                                    fx.get("awayName"), st, jetzt.isoformat(), liga=lk)
                 bericht["abgesagt"].append({"liga": lk, "paarung": paarung,
                                             "kickoff": fx.get("kickoff"), "status": st})
                 print("    🚫 %s: %s — kommt an diesem Termin zu keinem Ergebnis" % (paarung, st))
@@ -352,6 +370,11 @@ def main() -> int:
               % (nachgetragen, abgesagt_neu, OUT_FILE))
     else:
         print("  ℹ️  nichts nachzutragen (API hatte die Spiele auch noch nicht fertig).")
+    buch = AB.aufraeumen(buch, jetzt.date())
+    if buch != buch_vorher:
+        write_json_atomic(ABSAGEN, buch)
+        print("  🚫 Absagen-Buch: %d Eintraege → %s" % (len(buch), ABSAGEN))
+    bericht["absagenBuch"] = len(buch)
     write_json_atomic(BERICHT, bericht)
     return 0
 

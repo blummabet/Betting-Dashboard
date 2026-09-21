@@ -92,13 +92,18 @@ def test_settlement_stale_open_play_fires():
     assert not c["ok"] and "offen" in c["failures"][0]
 
 
-def test_settlement_flags_key_mismatch_when_resolution_exists():
-    # Auflösung existiert unter dem Key nicht direkt -> Position hängt, obwohl der Markt aufgelöst ist
+def test_settlement_nennt_den_grund_der_zutrifft():
+    """🔴 21.09.2026. Hier stand vorher `"matcht aber den Key nicht" in failures[0]` — und
+    genau das war an allen sechs haengenden Positionen falsch: der Key matcht exakt, die
+    Auflösung liegt unter demselben Schluessel. Der Test hat die Fehldiagnose festgehalten.
+    Fehlerklasse: eine Meldung, die einen anderen Grund nennt als den, der zutrifft."""
     ctx = pdi.PolyCtx(now=NOW,
         shortlist={"open": {"lol-a-b-2026-07-20|A": {"key": "lol-a-b-2026-07-20", "side": "A"}}},
         resolutions={"lol-a-b-2026-07-20": {"winner": "A", "ts": iso(NOW)}})
     c = pdi.check_settlement_alive(ctx)
-    assert not c["ok"] and "matcht aber den Key nicht" in c["failures"][0]
+    assert not c["ok"]
+    assert "matcht aber den Key nicht" not in c["failures"][0]
+    assert "Auflösung liegt vor" in c["failures"][0]
 
 
 def test_settlement_recent_open_is_ok():
@@ -109,18 +114,26 @@ def test_settlement_recent_open_is_ok():
 
 
 # ── Auflösungen matchen Keys (Liga-Overlap) ───────────────────────────────────
+# 🔴 21.09.2026: diese Fixtures mussten nie sagen, WANN das Auflösungsbuch beginnt — der Check
+# fragte nicht danach und zaehlte Maerkte aus einer Zeit mit, in der es noch gar kein Buch gab
+# (siehe tests/test_aufloesungsquote_horizont.py). Seit der Check den Horizont kennt, gehoert ein
+# Anker in jede Fixture: eine alte Auflösung, die sagt „das Buch reicht mindestens bis hierher".
+BUCH_ANKER = {"__anker__": {"winner": "A", "ts": "2026-06-01T00:00:00+00:00"}}
+
+
 def test_overlap_flags_league_below_floor():
     close = {}
     kicked = iso(NOW - timedelta(hours=12))       # kickoff = capturedAt + htk(2h) -> 10h her > Karenz 6h
     for i in range(10):
         close[f"esports-x{i}-2026-08-01"] = {"capturedAt": kicked, "hoursToKickoff": 2, "league": "ESPORTS"}
-    resolutions = {"esports-x0-2026-08-01": {"winner": "A", "ts": iso(NOW)}}   # nur 1/10 aufgelöst
+    resolutions = dict(BUCH_ANKER)
+    resolutions["esports-x0-2026-08-01"] = {"winner": "A", "ts": iso(NOW)}     # nur 1/10 aufgelöst
     c = pdi.check_resolutions_match_open_keys(pdi.PolyCtx(now=NOW, close=close, resolutions=resolutions))
     assert not c["ok"] and any("ESPORTS" in f for f in c["failures"])
 
 
 def test_overlap_ok_when_all_resolved():
-    close, resolutions = {}, {}
+    close, resolutions = {}, dict(BUCH_ANKER)
     kicked = iso(NOW - timedelta(hours=12))
     for i in range(10):
         k = f"mlb-x{i}-2026-08-01"

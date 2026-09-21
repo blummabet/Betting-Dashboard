@@ -41,8 +41,13 @@ SCHREIBER = {"_save", "_schreibe", "_dump", "write_json_atomic", "_write", "_sav
 # Fassung komplett uebersehen — und zwar still, also in der gefaehrlichen Richtung: eine Datei
 # galt als „wird nicht geschrieben" und fiel damit aus der Pruefung heraus.
 PFAD_SCHREIBT = {"write_text", "write_bytes"}
+# 21.09.2026: `with_name` gehoert zu `with_suffix` — beide LEITEN einen Pfad ab und ruehren
+# keine Datei an. Aufgefallen an `shortlist_auto_bet.verworfen_datei()`, das das Verworfen-Buch
+# neben das Wett-Buch legt, damit eine Umleitung von `PLACED_FILE` es mitnimmt (der Grund steht
+# dort). Wichtig: die abgeleitete Datei muss selbst in der Commit-Liste ihres Workflows stehen —
+# dieser Eintrag sagt nur, dass `with_name` nicht schreibt, nicht dass das Ergebnis egal ist.
 PFAD_LIEST = {"read_text", "read_bytes", "exists", "is_file", "stat", "resolve", "glob",
-              "unlink", "with_suffix", "as_posix", "touch"}
+              "unlink", "with_suffix", "with_name", "as_posix", "touch"}
 LESER = {"_load", "_lade", "load", "load_json", "_lazy", "_load_seen", "load_picks",
          "_laden",   # 14.09.2026: shortlist_auto_bet._laden — liest nur (schreibt ueber _speichern)
          # 19.09.2026: poly_whale_watch._load_pflicht und betfair_alerts._lade_json — beide lesen
