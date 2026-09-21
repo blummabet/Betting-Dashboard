@@ -49,9 +49,11 @@
       "id": "trades_push_buch",
       "label": "Trades-Karte führt ihr Buch",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "keine einzige Zeile trägt einen `public`-Marker — dann lässt sich die Teilmenge, die auch public ging, nicht abziehen und beide Bücher zählen dieselben Karten."
+      ],
       "note": "12 Karte(n) · 0 auch public"
     },
     {
@@ -84,7 +86,7 @@
         "ucl-aek1-lin2-2026-09-08-more-markets: seit 12.3 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "grc-ast-ari-2026-09-09-more-markets: seit 10.5 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "ucl-fen-rom-2026-09-10-more-markets: seit 10.4 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "ucl-fen-rom-2026-09-10-more-markets: seit 10.3 Tagen offen — Auflösung existiert, matcht aber den Key nicht!"
+        "ucl-fen-rom-2026-09-10-more-markets: seit 10.4 Tagen offen — Auflösung existiert, matcht aber den Key nicht!"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
     },
@@ -95,9 +97,9 @@
       "ok": false,
       "nFail": 7,
       "failures": [
-        "TENNIS: nur 264/677 fällige Märkte aufgelöst (39%)",
+        "TENNIS: nur 264/676 fällige Märkte aufgelöst (39%)",
         "ESPORTS: nur 333/668 fällige Märkte aufgelöst (50%)",
-        "MLB: nur 162/328 fällige Märkte aufgelöst (49%)",
+        "MLB: nur 163/329 fällige Märkte aufgelöst (50%)",
         "MLS: nur 63/115 fällige Märkte aufgelöst (55%)",
         "EFL-CHAMPIONSHIP: nur 19/33 fällige Märkte aufgelöst (58%)",
         "CRICKET: nur 12/23 fällige Märkte aufgelöst (52%)",
@@ -157,6 +159,6 @@
       "note": "poly_direct_bets.py rechnet über poly_resolutions.json ab. Hängt ein Bet, kennt Poly den Ausgang nicht (Markt noch offen/obskur) oder der Slug passt nicht — dann fehlt echtes Geld in der Bilanz."
     }
   ],
-  "nFail": 3,
-  "generatedAt": "2026-09-21T00:38:23.528247+00:00"
+  "nFail": 4,
+  "generatedAt": "2026-09-21T01:04:32.556484+00:00"
 }
