@@ -181,8 +181,8 @@ def wallet_positionen(getter=None):
         return None
 
 
-def faellige_zeilen(ledger, schon_gesetzt, jetzt=None, max_alter_m=None, live_fn=None) -> list:
-    """Push-Zeilen, die jetzt gesetzt werden duerfen. REIN/testbar.
+def sichten(ledger, schon_gesetzt, jetzt=None, max_alter_m=None, live_fn=None) -> dict:
+    """{"faellig": [...], "verworfen": [(zeile, grund), ...]}. REIN/testbar.
 
     Drei Gruende, eine Zeile NICHT zu nehmen:
       · schon gesetzt (ein Play, eine Position — auch nach einem zweiten Push bei hoeherer
@@ -191,19 +191,32 @@ def faellige_zeilen(ledger, schon_gesetzt, jetzt=None, max_alter_m=None, live_fn
         wuerde ein Lauf nach einer Panne das ganze Buch auf einmal nachsetzen (genau die
         Klasse, die im August die Push-Flut ausgeloest hat)
       · unbrauchbar (kein key/side/Preis)
+
+    🔴 21.09.2026 (Lucas: „Zuerst checke wieso das Spiel schon wieder nicht gesetzt
+    wurde"). Ablehnungen INNERHALB der Setz-Schleife melden sich seit jeher selbst
+    (`_liegen` -> Liegengeblieben-Meldung). Was hier davor aussortiert wurde, meldete sich
+    NIE: die Zeile fiel still aus der Schleife, und weil ein zu alter Push nie wieder faellig
+    wird, ist das ein endgueltiger Verlust ohne eine einzige Spur. Ueber das ganze Buch
+    gemessen: 62 Pushes, 39 gesetzt — und fuer keinen der 23 uebrigen stand irgendwo ein Grund.
+    Fehlerklasse: wer ablehnt, schreibt nicht.
+
+    „schon gesetzt" ist KEIN Verlust und steht deshalb nicht im Verworfen-Buch — sonst
+    ertraenkt der Normalfall die Ausnahme.
     """
     jetzt = jetzt or _jetzt()
     grenze = float(max_alter_m if max_alter_m is not None else MAX_ALTER_M)
     gesetzt = set(schon_gesetzt or ())
-    aus = []
+    aus, weg = [], []
     for z in (ledger or []):
         if not isinstance(z, dict) or not z.get("key") or not z.get("side"):
+            weg.append((z if isinstance(z, dict) else {}, "Zeile ohne key/side — unbrauchbar"))
             continue
         if bet_key(z) in gesetzt:
-            continue
+            continue                                  # kein Verlust, kein Eintrag
         ts = _parse(z.get("sentAt"))
         if ts is None:
-            continue                                  # ohne Zeit kein Alter → nicht setzen
+            weg.append((z, "ohne Zeitstempel — ohne Alter wird nicht gesetzt"))
+            continue
         alter_m = (jetzt - ts).total_seconds() / 60.0
         # Live gilt ein engeres Fenster: der BIG-Fall am 14.09. wurde vom NAECHSTEN Lauf aus dem
         # Buch geholt, 31 Minuten nach dem Push — und in der Zeit war der Preis um 25 Punkte
@@ -212,16 +225,97 @@ def faellige_zeilen(ledger, schon_gesetzt, jetzt=None, max_alter_m=None, live_fn
         if live_fn is not None and live_fn(z.get("key")):
             eigene = min(grenze, MAX_ALTER_LIVE_M)
         if alter_m > eigene:
+            weg.append((z, "Fenster zu: %.0f Min nach dem Push (erlaubt %.0f%s) — "
+                           "dieser Push wird nie mehr gesetzt"
+                        % (alter_m, eigene, " live" if eigene < grenze else "")))
             continue
         try:
             p = float(z.get("pushPreis"))
         except (TypeError, ValueError):
-            continue                                  # ohne Push-Preis kein Slippage-Mass
+            weg.append((z, "kein Push-Preis — ohne ihn gibt es kein Slippage-Mass"))
+            continue
         if not (0.0 < p < 1.0):
+            weg.append((z, "Push-Preis unplausibel (%r)" % (z.get("pushPreis"),)))
             continue
         aus.append(z)
     aus.sort(key=lambda z: (-(z.get("conv") or 0), str(z.get("sentAt"))))
-    return aus
+    return {"faellig": aus, "verworfen": weg}
+
+
+VERWORFEN_KEEP = 400          # rollierend; das Buch soll lesbar bleiben, nicht vollstaendig
+
+
+def verworfen_datei():
+    """Das Verworfen-Buch liegt neben dem Wett-Buch — abgeleitet, nicht zweitverdrahtet.
+
+    🔴 21.09.2026, zum ZWEITEN Mal an einem Tag (vormittags derselbe Fall bei
+    `fetch_wm_poly_balance`): `tests/test_shortlist_auto_bet.py` leitet fuer seine Laeufe
+    `PLACED_FILE` nach `tmp_path` um. Mein neuer, zweiter Schreibvorgang hing an einer eigenen
+    Konstanten, lief an der Umleitung vorbei und legte `shortlist_auto_verworfen.json` im
+    echten Baum an — ein Pipeline-Artefakt, erzeugt von der Testsuite.
+    Fehlerklasse: ein zweiter Schreibvorgang, den die Umleitung des ersten nicht mit erfasst.
+    Wer das Wett-Buch umbiegt, biegt das Verworfen-Buch mit.
+    """
+    p = Path(PLACED_FILE)
+    name = p.name.replace("bets_placed", "verworfen")
+    if name == p.name:
+        name = p.stem + "_verworfen" + p.suffix
+    return p.with_name(name)
+
+
+def verworfen_buchen(buch, verworfen, jetzt_iso) -> tuple:
+    """(neues Buch, neu hinzugekommene Eintraege). REIN.
+
+    Ein Push, dessen Fenster zu ist, wird bei JEDEM weiteren Lauf wieder aussortiert. Ohne
+    Dedup stuende er hundertmal im Buch und jede Meldung wiederholte ihn — eine Meldung, die
+    sich wiederholt, wird weggewischt, und dann faellt auch der neue Fall nicht mehr auf.
+    Deshalb: eine Zeile je Push. Der ERSTE Grund bleibt stehen (er ist der, der den Verlust
+    erklaert), spaetere Laeufe zaehlen nur `gesehen` hoch.
+    """
+    b = dict(buch or {})
+    neu = []
+    for z, grund in (verworfen or []):
+        k = bet_key(z) if z.get("key") else None
+        if not k or k == "None|None":
+            continue
+        if k in b and isinstance(b[k], dict):
+            b[k]["gesehen"] = int(b[k].get("gesehen") or 1) + 1
+            b[k]["zuletzt"] = jetzt_iso
+            continue
+        e = {"k": k, "key": z.get("key"), "side": z.get("side"), "match": z.get("match"),
+             "cat": z.get("cat"), "conv": z.get("conv"), "pushPreis": z.get("pushPreis"),
+             "sentAt": z.get("sentAt"), "grund": grund,
+             "erkanntAt": jetzt_iso, "zuletzt": jetzt_iso, "gesehen": 1}
+        b[k] = e
+        neu.append(e)
+    if len(b) > VERWORFEN_KEEP:
+        # Die juengsten behalten — nach `erkanntAt`, nicht nach Einfuegereihenfolge.
+        for k in sorted(b, key=lambda x: str((b[x] or {}).get("erkanntAt")))[:len(b) - VERWORFEN_KEEP]:
+            b.pop(k, None)
+    return b, neu
+
+
+def verworfen_text(neu) -> str:
+    """Die Meldung fuer neu verworfene Pushes. "" = nichts zu melden. REIN."""
+    if not neu:
+        return ""
+    z = ["\u26a0\ufe0f <b>Nicht nachgespielt</b> — %d Push(es) ohne Wette" % len(neu), ""]
+    for e in neu[:6]:
+        z.append("• <b>%s</b>" % (e.get("match") or e.get("key") or "?"))
+        z.append("   \u2192 %s @ %s\u00a2" % (e.get("side"),
+                 round(float(e["pushPreis"]) * 100) if e.get("pushPreis") else "?"))
+        z.append("   %s" % e.get("grund"))
+    if len(neu) > 6:
+        z.append("<i>und %d weitere</i>" % (len(neu) - 6))
+    z.append("")
+    z.append("<i>Der Push stand im Kanal, die Wette kam nicht. Hier steht, warum.</i>")
+    return "\n".join(z)
+
+
+def faellige_zeilen(ledger, schon_gesetzt, jetzt=None, max_alter_m=None, live_fn=None) -> list:
+    """Nur die faelligen Zeilen — duenner Umschlag um `sichten`, damit die Entscheidung,
+    welche Zeile faellig ist, an EINER Stelle steht."""
+    return sichten(ledger, schon_gesetzt, jetzt, max_alter_m, live_fn)["faellig"]
 
 
 def token_aus_feed(feed, key, side):
@@ -643,7 +737,28 @@ def main() -> int:
             return ist_live(live_feed, key)
         return ist_live(feed, key) if key in feed else True
 
-    faellig = faellige_zeilen(ledger if isinstance(ledger, list) else [], schon, live_fn=_live)
+    sicht = sichten(ledger if isinstance(ledger, list) else [], schon, live_fn=_live)
+    faellig = sicht["faellig"]
+
+    # 🔴 21.09.2026: was hier aussortiert wird, meldete sich frueher NIE — und ein Push, dessen
+    # Fenster zu ist, wird nie wieder faellig. Der Verlust war endgueltig und spurlos.
+    vb = _laden(str(verworfen_datei()), {})
+    vb = vb if isinstance(vb, dict) else {}
+    vb, frisch_verworfen = verworfen_buchen(vb, sicht["verworfen"], _iso())
+    if vb:                        # ein leeres Buch ist keine Auskunft und keine Datei wert
+        try:
+            write_json_atomic(str(verworfen_datei()), vb)
+        except Exception as exc:                      # noqa: BLE001
+            print(f"  ⚠️  Verworfen-Buch nicht geschrieben: {exc}")
+    if frisch_verworfen:
+        for e in frisch_verworfen:
+            print(f"  ⛔️ {e.get('match') or e.get('key')}: {e.get('grund')}")
+        try:
+            from telegram_trades import send_trades_message
+            send_trades_message(verworfen_text(frisch_verworfen))
+        except Exception as exc:                      # noqa: BLE001
+            print(f"  ℹ️  Verworfen-Meldung nicht gesendet: {exc}")
+
     if not faellig:
         print(f"  ℹ️  kein frischer Push zum Nachspielen (Fenster {MAX_ALTER_M:.0f} Min).")
         _speichern(bets)
@@ -668,11 +783,20 @@ def main() -> int:
     if depot is not None:
         print(f"  🔐 Wallet-Positionen gelesen ({len(depot)} Token) — doppeltes Setzen faellt auf.")
     neu, lauf_offen, dran, liegen = [], offen, 0, []
+    in_schleife = []
 
-    def _liegen(titel, grund):
-        """Einmal drucken, einmal merken — damit der Grund auch im Channel ankommt."""
+    def _liegen(titel, grund, zeile=None):
+        """Einmal drucken, einmal melden, einmal ins Buch.
+
+        🔴 21.09.2026: der Grund ging bisher NUR in die Liegengeblieben-Meldung — also in einen
+        Chatverlauf. Auf die Frage „wieso wurde das nicht gesetzt" liess sich damit nur
+        antworten, solange man die Nachricht noch scrollen konnte. Jetzt steht er im selben
+        Buch wie die still aussortierten Zeilen: eine Frage, ein Ort.
+        """
         print(f"  ⏭  {titel}: {grund}.")
         liegen.append({"titel": titel, "grund": grund})
+        if isinstance(zeile, dict):
+            in_schleife.append((zeile, grund))
 
     for z in faellig:
         # Der Lauf-Deckel zaehlt im Trockenlauf MIT. Sonst zeigt die Vorschau neun Wetten, wo
@@ -695,26 +819,26 @@ def main() -> int:
         tok = token_aus_feed(feed, z.get("key"), z.get("side")) or \
               token_aus_feed(feed2, z.get("key"), z.get("side"))
         if not tok:
-            _liegen(titel, "kein Token im Feed — es wird nicht geraten")
+            _liegen(titel, "kein Token im Feed — es wird nicht geraten", z)
             continue
         if schon_im_depot(tok, depot):
             # Zweite Schranke, unabhaengig von unserem Buch. Sie greift genau dann, wenn die
             # erste versagt hat: wenn ein frueherer Lauf gesetzt hat und sein Beleg nie
             # dauerhaft wurde.
             _liegen(titel, "die Wallet haelt diesen Token bereits — es wird nicht doppelt "
-                           "gesetzt (unser Buch wusste nichts davon)")
+                           "gesetzt (unser Buch wusste nichts davon)", z)
             continue
         buch = buch_holen(tok) if not dry else None
         if buch is None and not dry:
-            _liegen(titel, "kein Orderbuch abrufbar")
+            _liegen(titel, "kein Orderbuch abrufbar", z)
             continue
         ask = (buch or {}).get("ask") if buch else z.get("pushPreis")
         ok, grund = preis_urteil(z.get("pushPreis"), ask, live=_live(z.get("key")))
         if not ok:
-            _liegen(titel, grund)
+            _liegen(titel, grund, z)
             continue
         if buch is not None and not liquide(buch, STAKE, ask):
-            _liegen(titel, "zu wenig Ask-Volumen fuer $%.2f" % STAKE)
+            _liegen(titel, "zu wenig Ask-Volumen fuer $%.2f" % STAKE, z)
             continue
 
         if dry:
@@ -734,7 +858,7 @@ def main() -> int:
                                  best_bid=(buch or {}).get("bid"), best_ask=ask,
                                  pfad=HANDELSPFAD)
         if res.get("status") not in ("placed", "dry-run"):
-            _liegen(titel, "Boerse hat abgelehnt: " + str(res.get("error") or "")[:120])
+            _liegen(titel, "Boerse hat abgelehnt: " + str(res.get("error") or "")[:120], z)
             continue
         lauf_offen += STAKE
         balance -= STAKE
@@ -764,6 +888,13 @@ def main() -> int:
     # Die eine Meldung je Lauf — nur wenn wirklich etwas liegengeblieben ist. Sie geht auch im
     # Trockenlauf raus, dann als solche gekennzeichnet: sonst wuesste niemand, dass der Schalter
     # aus ist, und Stille hiesse wieder zweierlei.
+    if in_schleife and not dry:
+        vb2, _ = verworfen_buchen(vb, in_schleife, _iso())
+        try:
+            write_json_atomic(str(verworfen_datei()), vb2)
+        except Exception as exc:                      # noqa: BLE001
+            print(f"  ⚠️  Verworfen-Buch nicht fortgeschrieben: {exc}")
+
     if liegen:
         try:
             from telegram_trades import send_trades_message

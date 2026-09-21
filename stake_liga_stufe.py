@@ -126,6 +126,13 @@ EBENE = {
     # Tabelleneintrag, der Slug traegt nichts, woraus eine Regel etwas ableiten koennte.
     "erovnuli-liga": 1,
     # ── zweite Spielklassen ────────────────────────────────────────────────
+    # 🔴 21.09.2026 (CI-Wachhund, dritter Slug des Tages): „persha-liga". Ukrainisch „persha"
+    # heisst ERSTE — und die Persha Liha ist die ZWEITE Spielklasse des Landes, unter der
+    # Premjer-Liha. Das Wort im Namen sagt hier das Gegenteil der Klasse, wie schon bei
+    # „mizoram-premier-league" und „india-karnataka-super-division". Genau dafuer ist das eine
+    # TABELLE und keine Regel: ein Muster, das „persha/first/1" liest, haette sie auf die
+    # Ebene der Premjer-Liha gehoben — und die steht in derselben Uebersicht mit +32,3 % ROI.
+    "persha-liga": 2,
     "championship": 2, "2nd-bundesliga": 2, "la-liga-2": 2, "serie-b": 2, "ligue-2": 2,
     "j-league-2": 2, "brasileiro-serie-b": 2, "primera-b": 2, "k-league-2": 2,
     "eerste-divisie": 2, "segunda-liga": 2, "liga-de-expansion-mx-apertura": 2,

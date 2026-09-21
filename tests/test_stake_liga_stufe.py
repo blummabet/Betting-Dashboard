@@ -289,6 +289,14 @@ def test_ein_testspiel_bekommt_keine_ebene_sondern_eine_marke():
     assert LS.stufe("la-liga") == "1"
 
 
+def test_persha_liha_ist_die_zweite_klasse_trotz_erste_im_namen():
+    """🔴 21.09.2026 (CI-Wachhund): ukrainisch „persha" = erste, die Liga ist die ZWEITE —
+    unter der Premjer-Liha. Dritter Slug an einem Tag, bei dem das Wort im Namen das Gegenteil
+    der Klasse sagt. Deshalb Tabelle statt Regel."""
+    assert LS.stufe("persha-liga") == "2"
+    assert LS.randliga("persha-liga") is True
+
+
 def test_indische_staatsliga_ist_ebene_3():
     """🔴 21.09.2026 (CI-Wachhund): „india-karnataka-super-division". Dieselbe Familie wie
     mizoram-premier-league — „Super Division" klingt nach oberster Klasse und ist die
