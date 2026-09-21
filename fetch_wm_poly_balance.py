@@ -85,8 +85,25 @@ def _save(usdc: float, usdc_e: float, address: str, error: str | None = None,
 # also las sie niemand.
 #
 # Fehlerklasse: eine zweite, unabhaengige Quelle, die es gibt, aber nicht als Reihe vorliegt.
-VERLAUF_FILE = Path(str(D.file("wm_poly_verlauf.json", "liga_poly_verlauf.json")))
 VERLAUF_KEEP = 3000          # ~1 Monat bei 15-Minuten-Takt
+
+
+def verlauf_datei() -> Path:
+    """Der Verlauf liegt neben seinem Stand — abgeleitet, nicht ein zweites Mal verdrahtet.
+
+    🔴 21.09.2026. Der Verlauf hing zuerst an einer eigenen Konstanten. `_save` schreibt
+    seither zwei Dateien; `tests/test_poly_balance_positions.py` biegt fuer seine Faelle aber nur
+    `OUT_FILE` auf `tmp_path` um. Der zweite Schreibvorgang lief an dieser Umleitung vorbei und
+    legte `wm_poly_verlauf.json` mit den Testwerten (usdc 99.9265, danach 50.0) im echten Baum an
+    — ein Pipeline-Artefakt, erzeugt von der Testsuite.
+    Fehlerklasse: ein zweiter Schreibvorgang, den die Umleitung des ersten nicht mit erfasst.
+    Deshalb wird der Pfad aus `OUT_FILE` abgeleitet: wer den Stand umbiegt, biegt den Verlauf mit.
+    """
+    p = Path(OUT_FILE)
+    name = p.name.replace("balance", "verlauf")
+    if name == p.name:            # kein "balance" im Namen -> nie auf den Stand selbst schreiben
+        name = p.name + ".verlauf"
+    return p.with_name(name)
 
 
 def verlauf_anhaengen(verlauf, stand, keep: int = VERLAUF_KEEP) -> list:
@@ -109,12 +126,13 @@ def verlauf_anhaengen(verlauf, stand, keep: int = VERLAUF_KEEP) -> list:
 def _verlauf_fortschreiben(stand):
     """Best effort — ein Protokoll darf den Balance-Abruf nie kippen."""
     try:
+        ziel = verlauf_datei()
         alt = []
-        if VERLAUF_FILE.exists():
-            alt = json.loads(VERLAUF_FILE.read_text(encoding="utf-8")) or []
+        if ziel.exists():
+            alt = json.loads(ziel.read_text(encoding="utf-8")) or []
         if not isinstance(alt, list):
             alt = []
-        VERLAUF_FILE.write_text(
+        ziel.write_text(
             json.dumps(verlauf_anhaengen(alt, stand), ensure_ascii=False), encoding="utf-8")
     except Exception as e:                # noqa: BLE001
         print(f"  ⚠️  Wallet-Verlauf nicht fortgeschrieben: {e}")

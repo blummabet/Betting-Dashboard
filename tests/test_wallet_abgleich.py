@@ -22,6 +22,7 @@ Richtig ist eine Zuordnung: jeder Abgang hat ein Budget, jede Wette verbraucht d
 Einsatz.
 """
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -147,6 +148,34 @@ class TestDerVerlaufWirdFortgeschrieben(unittest.TestCase):
         v = F.verlauf_anhaengen([], {"updatedAt": "T1", "usdc": 100.0})
         v = F.verlauf_anhaengen(v, {"updatedAt": "T2", "usdc": 95.0})
         self.assertEqual([x["usdc"] for x in v], [100.0, 95.0])
+
+    def test_der_verlauf_folgt_dem_stand_wohin_man_ihn_auch_legt(self):
+        """🔴 21.09.2026: die Testsuite legte `wm_poly_verlauf.json` im echten Baum an.
+
+        `test_poly_balance_positions.py` leitet fuer `_save` nur `OUT_FILE` nach `tmp_path` um.
+        Der Verlauf hing an einer eigenen Konstanten und schrieb daran vorbei ins Repo — ein
+        Pipeline-Artefakt aus einem Testlauf. Fehlerklasse: ein zweiter Schreibvorgang, den die
+        Umleitung des ersten nicht mit erfasst.
+        """
+        import fetch_wm_poly_balance as F
+        tmp = Path(tempfile.mkdtemp())
+        alt = F.OUT_FILE
+        try:
+            F.OUT_FILE = tmp / "wm_poly_balance.json"
+            F._save(50.0, 0.0, "0xabc", positions=0.0)
+            self.assertTrue((tmp / "wm_poly_verlauf.json").exists(),
+                            "der Verlauf landet neben seinem Stand")
+        finally:
+            F.OUT_FILE = alt
+
+    def test_ohne_balance_im_namen_wird_der_stand_nicht_ueberschrieben(self):
+        import fetch_wm_poly_balance as F
+        alt = F.OUT_FILE
+        try:
+            F.OUT_FILE = Path("/tmp/irgendwas.json")
+            self.assertNotEqual(F.verlauf_datei(), Path("/tmp/irgendwas.json"))
+        finally:
+            F.OUT_FILE = alt
 
     def test_die_reihe_wird_gekappt(self):
         import fetch_wm_poly_balance as F
