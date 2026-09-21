@@ -18,6 +18,11 @@ const _SEV_META = {
 };
 
 // Feed-Frische: Erwartete Aktualisierungs-Kadenz pro Datei.
+// Ab wann ruht ein Datensatz, statt kaputt zu sein? 14 Tage sind lang genug, dass kein
+// Wochenende und keine Cron-Luecke hineinfaellt, und kurz genug, dass ein echter Ausfall
+// vorher rot wird.
+const _ST_RUHEND_H = 14 * 24;
+
 const _ST_FEEDS = [
   { file: 'wm_poly_prices.json',        icon: '💹', label: 'Polymarket Preise + Edges', ts: 'generatedAt',     warnH: 8,  errH: 24, crit: true },
   { file: 'wm2026-odds-history.json',   icon: '📈', label: 'Pinnacle Odds-Snapshots',   ts: '_newestSnap',     warnH: 8,  errH: 24, crit: true },
@@ -860,6 +865,25 @@ async function _stRenderSignalWeights(fire) {
   }).join('');
 }
 
+// Die Einstufung eines Feeds — als eigene Funktion, damit ein Test sie AUSFUEHREN kann statt
+// im Quelltext nach Woertern zu suchen. Ein Grep-Test waere gruen, sobald das Wort irgendwo
+// steht.
+//
+// 🔴 21.09.2026 (Lucas: „Der WM Mist ist vorbei, interessiert niemand"). Der Readiness-Report
+// der WM war 1529 Stunden alt — 64 Tage — und leuchtete rot, mit drei Befunden vom 19. Juli.
+// Ein Datensatz, der seit zwei Monaten nichts mehr liefert, ist nicht kaputt: er ruht. Rot
+// heisst „etwas ist schiefgegangen"; hier ist nichts schiefgegangen, hier ist ein Turnier
+// vorbei. Die Unterscheidung gibt es im Haus schon — `freigabe.py` kennt `status: "ruht"` fuer
+// Schubladen, deren letzter Play zu lange her ist. Dieselbe Regel, andere Flaeche.
+// Fehlerklasse: ein abgeschlossener Zustand, der als Stoerung gerendert wird.
+function _stFeedStufe(age, f, ts) {
+  if (age === null || age === undefined) return { col: '#6e7681', val: '—', sub: 'kein Zeitstempel' };
+  if (age > _ST_RUHEND_H) return { col: '#6e7681', val: 'ruht',
+    sub: `seit ${Math.round(age / 24)} Tagen still — kein laufender Datensatz` };
+  return { col: age > f.errH ? '#f85149' : age > f.warnH ? '#e3b341' : '#3fb950',
+           val: _stAgo(ts), sub: `Soll < ${f.warnH}h` };
+}
+
 async function _stRenderFeeds() {
   const el = document.getElementById('st_feeds'); if (!el) return;
   const metas = await Promise.all(_ST_FEEDS.map(async f => {
@@ -881,8 +905,7 @@ async function _stRenderFeeds() {
       col = '#3fb950'; val = 'vorhanden'; sub = 'kein Zeitstempel';
     } else {
       const age = _stAgeH(ts);
-      if (age === null) { col = '#6e7681'; val = '—'; sub = 'kein Zeitstempel'; }
-      else { col = age > f.errH ? '#f85149' : age > f.warnH ? '#e3b341' : '#3fb950'; val = _stAgo(ts); sub = `Soll < ${f.warnH}h`; }
+      ({ col, val, sub } = _stFeedStufe(age, f, ts));
     }
     return `<div style="background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:13px 15px;">
       <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;">${f.icon} ${f.label}</div>

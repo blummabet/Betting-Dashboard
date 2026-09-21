@@ -33,6 +33,7 @@ werden — nicht still weggeguardet.
 ═══════════════════════════════════════════════════════════════════════════════
 """
 from __future__ import annotations
+import os
 import re
 from datetime import datetime, timezone, timedelta
 from pathlib import Path as _Path
@@ -334,6 +335,50 @@ def _alter_h(ts, jetzt):
     return (jetzt - d).total_seconds() / 3600.0
 
 
+def _hat_cron(slug: str) -> bool:
+    """Hat der Workflow zu diesem Slug ueberhaupt einen Zeitplan? REIN genug (liest die Datei).
+
+    🔴 21.09.2026 (Lucas' Statusseite): „Stake Radar: seit 336 h kein Lauf mehr
+    verzeichnet" — rot, seit zwei Wochen. Nachgemessen: `stake_highroller.json` traegt
+    `asof` von vor 12 Minuten und `status: ok`. Der Sammler LAEUFT, alle 15 Minuten, seit
+    dem 03.09. als Schritt in betfair.yml. `stake-radar.yml` hat seither BEWUSST keinen
+    Cron (der Kopf des Workflows begruendet es mit der repo-weiten Schedule-Last) und
+    existiert nur noch fuer die Sonde und einen Lauf von Hand.
+
+    Der Waechter hat also von einem Workflow eine Taktung verlangt, die er nie versprochen
+    hat — und dabei zwei Wochen lang die Aufmerksamkeit gekostet, die ein echter Ausfall
+    gebraucht haette.
+    Fehlerklasse: ein Waechter, der die Taktung eines Workflows misst, der bewusst keine hat.
+
+    Findet sich die Workflow-Datei NICHT, gilt weiter „meldet" (True). Das ist die sichere
+    Richtung: nur ein Workflow, den wir gefunden haben UND der nachweislich keinen Cron traegt,
+    darf den Befund entschaerfen. Sonst wuerde jeder Lesefehler einen echten Ausfall
+    stillstellen — fehlende Information als harmloser Default, und zwar in der teuren Richtung.
+    """
+    import re as _re
+    ordner = _Path(__file__).resolve().parent / ".github" / "workflows"
+    if not ordner.is_dir():
+        return True
+    kandidaten = [ordner / ("%s.yml" % slug)] + sorted(ordner.glob("*.yml"))
+    for f in kandidaten:
+        if not f.exists():
+            continue
+        try:
+            text = f.read_text(encoding="utf-8")
+        except Exception:
+            continue
+        if ("run_health.py --slug %s" % slug) not in text and f.stem != slug:
+            continue
+        kopf = text.split("jobs:")[0]
+        for zeile in kopf.splitlines():
+            if zeile.lstrip().startswith("#"):
+                continue
+            if _re.match(r"\s*-\s*cron:", zeile):
+                return True
+        return False
+    return True
+
+
 def _run_health_dateien():
     ordner = _BASE / RUN_HEALTH_DIR
     try:
@@ -384,11 +429,53 @@ def check_run_health(ctx):
             fails.append("%s: Step '%s' %s — Job trotzdem gruen"
                          % (name, f.get("step"), f.get("conclusion")))
         alter = _alter_h(letzter.get("ts"), jetzt)
-        if alter is not None and alter > RUN_HEALTH_STALE_H:
+        if alter is not None and alter > RUN_HEALTH_STALE_H and _hat_cron(d.get("slug") or pfad.stem):
             fails.append("%s: seit %.0f h kein Lauf mehr verzeichnet" % (name, alter))
     return _chk("run_health", "Workflow-Laeufe fehlerfrei", "error", fails,
                 "Quelle: health/*.json (run_health.py). Leere Liste heisst hier wirklich "
                 "'nichts gescheitert' — ein nicht abfragbarer Lauf steht oben als UNBEKANNT.")
+
+
+# Stake liefert im 15-Minuten-Takt (Schritt in betfair.yml). 90 Minuten lassen ein paar
+# Aussetzer durch und fangen einen stehenden Sammler.
+STAKE_STALE_H = float(os.environ.get("STAKE_STALE_H") or 1.5)
+
+
+@integrity_check
+def check_stake_sammelt(ctx):
+    """Kommen Stake-Daten an? Gemessen am Artefakt, nicht am Workflow.
+
+    🔴 21.09.2026. Die Statusseite meldete zwei Wochen lang „Stake Radar: seit 336 h
+    kein Lauf" — und der Sammler lief die ganze Zeit. Der alte Waechter sah auf
+    `health/stake-radar.json`, also auf die Taktung eines Workflows, der seit dem 03.09.
+    bewusst keinen Cron hat; gesammelt wird als Schritt in betfair.yml.
+
+    Die Frage, die wirklich interessiert, ist nicht „lief der Workflow", sondern „sind die
+    Daten frisch" — und die beantwortet `stake_highroller.json` selbst: `asof` sagt wann,
+    `status` sagt ob der Abruf durchkam (ok / fehler / schema_unbekannt; der Sammler schreibt
+    absichtlich einen Fehlerstatus statt einer leeren Liste, weil Stake hinter Cloudflare
+    sitzt und ein 403 sonst wie „heute keine grossen Wetten" aussaehe).
+    """
+    d = _lazy("stake_highroller.json")
+    if not isinstance(d, dict):
+        return _chk("stake_sammelt", "Stake sammelt", "warn", [],
+                    "stake_highroller.json fehlt oder ist unlesbar — dann sagt dieser "
+                    "Waechter nichts ueber den Sammler.")
+    fails = []
+    status = str(d.get("status") or "")
+    if status and status != "ok":
+        fails.append("Stake-Abruf meldet `%s`%s — das ist kein leerer Tag, das ist ein "
+                     "gescheiterter Abruf" % (status, (": %s" % d["notiz"]) if d.get("notiz") else ""))
+    alter = _alter_h(d.get("asof"), ctx.now if getattr(ctx, "now", None) else None)
+    if alter is None:
+        fails.append("`asof` fehlt oder ist unlesbar — ohne Zeitstempel ist „frisch\u201c "
+                     "keine Aussage")
+    elif alter > STAKE_STALE_H:
+        fails.append("frischester Stake-Stand ist %.1f h alt (Grenze %.1f h) — der Sammler "
+                     "in betfair.yml steht" % (alter, STAKE_STALE_H))
+    return _chk("stake_sammelt", "Stake sammelt", "error", fails,
+                "Quelle: stake_highroller.json (`asof`/`status`), geschrieben vom Schritt in "
+                "betfair.yml. NICHT die Taktung von stake-radar.yml — der hat bewusst keinen Cron.")
 
 
 @integrity_check
