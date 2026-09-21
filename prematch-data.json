@@ -1,5 +1,5 @@
 {
-  "ts": 1789976553295,
+  "ts": 1790006539015,
   "fixtures": [
     {
       "fixtureId": 1550127,
@@ -89,7 +89,24 @@
         "home": [],
         "away": []
       },
-      "h2h": null,
+      "h2h": {
+        "games": 10,
+        "homeWins": 8,
+        "draws": 2,
+        "awayWins": 0,
+        "lastMeetingYear": 2026,
+        "avgGoals": 3,
+        "over25Rate": 0.7,
+        "over35Rate": 0.3,
+        "bttsRate": 0.3,
+        "lastResults": [
+          "W",
+          "W",
+          "W",
+          "W",
+          "W"
+        ]
+      },
       "isFinished": true,
       "odds": null,
       "apiPrediction": null,
@@ -931,24 +948,7 @@
         "home": [],
         "away": []
       },
-      "h2h": {
-        "games": 6,
-        "homeWins": 5,
-        "draws": 0,
-        "awayWins": 1,
-        "lastMeetingYear": 2026,
-        "avgGoals": 2.3,
-        "over25Rate": 0.33,
-        "over35Rate": 0,
-        "bttsRate": 0.17,
-        "lastResults": [
-          "W",
-          "W",
-          "W",
-          "L",
-          "W"
-        ]
-      },
+      "h2h": null,
       "isFinished": true,
       "odds": null,
       "apiPrediction": null,
@@ -1292,33 +1292,195 @@
       "date": "2026-09-20",
       "time": "18:00",
       "injuries": {
-        "home": [],
-        "away": []
+        "home": [
+          {
+            "player": "J. Boga",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Muscle Injury"
+          },
+          {
+            "player": "J. Cabal",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Thigh Injury"
+          },
+          {
+            "player": "A. Cambiaso",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Ankle Injury"
+          },
+          {
+            "player": "J. Ekhator",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Muscle Injury"
+          },
+          {
+            "player": "K. Grabara",
+            "position": "G",
+            "type": "Missing Fixture",
+            "reason": "Knee Injury"
+          },
+          {
+            "player": "M. Locatelli",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Knee Injury"
+          },
+          {
+            "player": "A. Milik",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Inactive"
+          },
+          {
+            "player": "K. Thuram",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Knee Injury"
+          },
+          {
+            "player": "K. Yildiz",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Foot Injury"
+          }
+        ],
+        "away": [
+          {
+            "player": "I. Hien",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Muscle Injury"
+          },
+          {
+            "player": "O. Kossounou",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Thigh Injury"
+          },
+          {
+            "player": "K. Sulemana",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Knee Injury"
+          }
+        ]
       },
       "injurySummary": {
         "home": {
-          "goalkeeper": 0,
-          "defense": 0,
-          "midfield": 0,
+          "goalkeeper": 1,
+          "defense": 2,
+          "midfield": 6,
           "attack": 0,
-          "confirmed": 0,
+          "confirmed": 9,
           "questionable": 0,
-          "total": 0,
-          "notes": [],
-          "_raw": [],
-          "impactScore": 0
+          "total": 9,
+          "notes": [
+            "J. Boga (Gesperrt/Verletzt — Muscle Injury)",
+            "J. Cabal (Gesperrt/Verletzt — Thigh Injury)",
+            "A. Cambiaso (Gesperrt/Verletzt — Ankle Injury)",
+            "J. Ekhator (Gesperrt/Verletzt — Muscle Injury)",
+            "K. Grabara (Gesperrt/Verletzt — Knee Injury)",
+            "M. Locatelli (Gesperrt/Verletzt — Knee Injury)",
+            "A. Milik (Gesperrt/Verletzt — Inactive)",
+            "K. Thuram (Gesperrt/Verletzt — Knee Injury)",
+            "K. Yildiz (Gesperrt/Verletzt — Foot Injury)"
+          ],
+          "_raw": [
+            {
+              "player": "J. Boga",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Muscle Injury"
+            },
+            {
+              "player": "J. Cabal",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Thigh Injury"
+            },
+            {
+              "player": "A. Cambiaso",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Ankle Injury"
+            },
+            {
+              "player": "J. Ekhator",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Muscle Injury"
+            },
+            {
+              "player": "K. Grabara",
+              "position": "G",
+              "type": "Missing Fixture",
+              "reason": "Knee Injury"
+            },
+            {
+              "player": "M. Locatelli",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Knee Injury"
+            },
+            {
+              "player": "A. Milik",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Inactive"
+            },
+            {
+              "player": "K. Thuram",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Knee Injury"
+            },
+            {
+              "player": "K. Yildiz",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Foot Injury"
+            }
+          ],
+          "impactScore": 3.8
         },
         "away": {
           "goalkeeper": 0,
-          "defense": 0,
-          "midfield": 0,
+          "defense": 2,
+          "midfield": 1,
           "attack": 0,
-          "confirmed": 0,
+          "confirmed": 3,
           "questionable": 0,
-          "total": 0,
-          "notes": [],
-          "_raw": [],
-          "impactScore": 0
+          "total": 3,
+          "notes": [
+            "I. Hien (Gesperrt/Verletzt — Muscle Injury)",
+            "O. Kossounou (Gesperrt/Verletzt — Thigh Injury)",
+            "K. Sulemana (Gesperrt/Verletzt — Knee Injury)"
+          ],
+          "_raw": [
+            {
+              "player": "I. Hien",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Muscle Injury"
+            },
+            {
+              "player": "O. Kossounou",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Thigh Injury"
+            },
+            {
+              "player": "K. Sulemana",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Knee Injury"
+            }
+          ],
+          "impactScore": 1.5
         }
       },
       "bookings": {
@@ -1651,33 +1813,117 @@
       "date": "2026-09-20",
       "time": "15:00",
       "injuries": {
-        "home": [],
-        "away": []
+        "home": [
+          {
+            "player": "A. Bernabe",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Injury"
+          },
+          {
+            "player": "H. Nicolussi Caviglia",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Groin Injury"
+          },
+          {
+            "player": "L. Valenti",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Coach's decision"
+          }
+        ],
+        "away": [
+          {
+            "player": "E. Havel",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Ankle Injury"
+          },
+          {
+            "player": "J. Vasquez",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Red Card"
+          },
+          {
+            "player": "L. Venturino",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Knee Injury"
+          }
+        ]
       },
       "injurySummary": {
         "home": {
           "goalkeeper": 0,
-          "defense": 0,
-          "midfield": 0,
+          "defense": 1,
+          "midfield": 2,
           "attack": 0,
-          "confirmed": 0,
+          "confirmed": 3,
           "questionable": 0,
-          "total": 0,
-          "notes": [],
-          "_raw": [],
-          "impactScore": 0
+          "total": 3,
+          "notes": [
+            "A. Bernabe (Gesperrt/Verletzt — Injury)",
+            "H. Nicolussi Caviglia (Gesperrt/Verletzt — Groin Injury)",
+            "L. Valenti (Gesperrt/Verletzt — Coach's decision)"
+          ],
+          "_raw": [
+            {
+              "player": "A. Bernabe",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Injury"
+            },
+            {
+              "player": "H. Nicolussi Caviglia",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Groin Injury"
+            },
+            {
+              "player": "L. Valenti",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Coach's decision"
+            }
+          ],
+          "impactScore": 1.2
         },
         "away": {
           "goalkeeper": 0,
-          "defense": 0,
-          "midfield": 0,
+          "defense": 1,
+          "midfield": 2,
           "attack": 0,
-          "confirmed": 0,
+          "confirmed": 3,
           "questionable": 0,
-          "total": 0,
-          "notes": [],
-          "_raw": [],
-          "impactScore": 0
+          "total": 3,
+          "notes": [
+            "E. Havel (Gesperrt/Verletzt — Ankle Injury)",
+            "J. Vasquez (Gesperrt/Verletzt — Red Card)",
+            "L. Venturino (Gesperrt/Verletzt — Knee Injury)"
+          ],
+          "_raw": [
+            {
+              "player": "E. Havel",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Ankle Injury"
+            },
+            {
+              "player": "J. Vasquez",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Red Card"
+            },
+            {
+              "player": "L. Venturino",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Knee Injury"
+            }
+          ],
+          "impactScore": 1.2
         }
       },
       "bookings": {
@@ -1685,7 +1931,24 @@
         "home": [],
         "away": []
       },
-      "h2h": null,
+      "h2h": {
+        "games": 10,
+        "homeWins": 4,
+        "draws": 3,
+        "awayWins": 3,
+        "lastMeetingYear": 2026,
+        "avgGoals": 2.4,
+        "over25Rate": 0.5,
+        "over35Rate": 0.2,
+        "bttsRate": 0.5,
+        "lastResults": [
+          "W",
+          "D",
+          "D",
+          "L",
+          "L"
+        ]
+      },
       "isFinished": true,
       "odds": null,
       "apiPrediction": null,
@@ -2011,33 +2274,143 @@
       "date": "2026-09-20",
       "time": "15:00",
       "injuries": {
-        "home": [],
-        "away": []
+        "home": [
+          {
+            "player": "A. Diousse",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Knee Injury"
+          },
+          {
+            "player": "B. Okoh",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Knee Injury"
+          },
+          {
+            "player": "M. Senaya",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Injury"
+          },
+          {
+            "player": "T. Siwe",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Muscle Injury"
+          }
+        ],
+        "away": [
+          {
+            "player": "R. Cagnon",
+            "position": "G",
+            "type": "Missing Fixture",
+            "reason": "Shoulder Injury"
+          },
+          {
+            "player": "B. Chardonnet",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Calf Injury"
+          },
+          {
+            "player": "M. Diambou",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Ankle Injury"
+          },
+          {
+            "player": "N. Edjouma",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Muscle Injury"
+          }
+        ]
       },
       "injurySummary": {
         "home": {
           "goalkeeper": 0,
-          "defense": 0,
-          "midfield": 0,
+          "defense": 3,
+          "midfield": 1,
           "attack": 0,
-          "confirmed": 0,
+          "confirmed": 4,
           "questionable": 0,
-          "total": 0,
-          "notes": [],
-          "_raw": [],
-          "impactScore": 0
+          "total": 4,
+          "notes": [
+            "A. Diousse (Gesperrt/Verletzt — Knee Injury)",
+            "B. Okoh (Gesperrt/Verletzt — Knee Injury)",
+            "M. Senaya (Gesperrt/Verletzt — Injury)",
+            "T. Siwe (Gesperrt/Verletzt — Muscle Injury)"
+          ],
+          "_raw": [
+            {
+              "player": "A. Diousse",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Knee Injury"
+            },
+            {
+              "player": "B. Okoh",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Knee Injury"
+            },
+            {
+              "player": "M. Senaya",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Injury"
+            },
+            {
+              "player": "T. Siwe",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Muscle Injury"
+            }
+          ],
+          "impactScore": 2.6
         },
         "away": {
-          "goalkeeper": 0,
-          "defense": 0,
-          "midfield": 0,
+          "goalkeeper": 1,
+          "defense": 1,
+          "midfield": 2,
           "attack": 0,
-          "confirmed": 0,
+          "confirmed": 4,
           "questionable": 0,
-          "total": 0,
-          "notes": [],
-          "_raw": [],
-          "impactScore": 0
+          "total": 4,
+          "notes": [
+            "R. Cagnon (Gesperrt/Verletzt — Shoulder Injury)",
+            "B. Chardonnet (Gesperrt/Verletzt — Calf Injury)",
+            "M. Diambou (Gesperrt/Verletzt — Ankle Injury)",
+            "N. Edjouma (Gesperrt/Verletzt — Muscle Injury)"
+          ],
+          "_raw": [
+            {
+              "player": "R. Cagnon",
+              "position": "G",
+              "type": "Missing Fixture",
+              "reason": "Shoulder Injury"
+            },
+            {
+              "player": "B. Chardonnet",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Calf Injury"
+            },
+            {
+              "player": "M. Diambou",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Ankle Injury"
+            },
+            {
+              "player": "N. Edjouma",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Muscle Injury"
+            }
+          ],
+          "impactScore": 2.3
         }
       },
       "bookings": {
@@ -2669,24 +3042,7 @@
         "home": [],
         "away": []
       },
-      "h2h": {
-        "games": 10,
-        "homeWins": 2,
-        "draws": 1,
-        "awayWins": 7,
-        "lastMeetingYear": 2026,
-        "avgGoals": 3.2,
-        "over25Rate": 0.8,
-        "over35Rate": 0.4,
-        "bttsRate": 0.4,
-        "lastResults": [
-          "L",
-          "L",
-          "D",
-          "W",
-          "L"
-        ]
-      },
+      "h2h": null,
       "isFinished": true,
       "odds": null,
       "apiPrediction": null,
@@ -3108,24 +3464,7 @@
         "home": [],
         "away": []
       },
-      "h2h": {
-        "games": 10,
-        "homeWins": 2,
-        "draws": 0,
-        "awayWins": 8,
-        "lastMeetingYear": 2026,
-        "avgGoals": 3.8,
-        "over25Rate": 0.7,
-        "over35Rate": 0.5,
-        "bttsRate": 0.4,
-        "lastResults": [
-          "L",
-          "W",
-          "L",
-          "L",
-          "L"
-        ]
-      },
+      "h2h": null,
       "isFinished": true,
       "odds": null,
       "apiPrediction": null,
@@ -4238,33 +4577,91 @@
       "date": "2026-09-20",
       "time": "15:00",
       "injuries": {
-        "home": [],
-        "away": []
+        "home": [
+          {
+            "player": "P. Foden",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Red Card"
+          }
+        ],
+        "away": [
+          {
+            "player": "H. Diarra",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Hamstring Injury"
+          },
+          {
+            "player": "R. Mandava",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Red Card"
+          },
+          {
+            "player": "R. Mundle",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Knee Injury"
+          }
+        ]
       },
       "injurySummary": {
         "home": {
           "goalkeeper": 0,
           "defense": 0,
-          "midfield": 0,
+          "midfield": 1,
           "attack": 0,
-          "confirmed": 0,
+          "confirmed": 1,
           "questionable": 0,
-          "total": 0,
-          "notes": [],
-          "_raw": [],
-          "impactScore": 0
+          "total": 1,
+          "notes": [
+            "P. Foden (Gesperrt/Verletzt — Red Card)"
+          ],
+          "_raw": [
+            {
+              "player": "P. Foden",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Red Card"
+            }
+          ],
+          "impactScore": 0.3
         },
         "away": {
           "goalkeeper": 0,
-          "defense": 0,
-          "midfield": 0,
+          "defense": 1,
+          "midfield": 2,
           "attack": 0,
-          "confirmed": 0,
+          "confirmed": 3,
           "questionable": 0,
-          "total": 0,
-          "notes": [],
-          "_raw": [],
-          "impactScore": 0
+          "total": 3,
+          "notes": [
+            "H. Diarra (Gesperrt/Verletzt — Hamstring Injury)",
+            "R. Mandava (Gesperrt/Verletzt — Red Card)",
+            "R. Mundle (Gesperrt/Verletzt — Knee Injury)"
+          ],
+          "_raw": [
+            {
+              "player": "H. Diarra",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Hamstring Injury"
+            },
+            {
+              "player": "R. Mandava",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Red Card"
+            },
+            {
+              "player": "R. Mundle",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Knee Injury"
+            }
+          ],
+          "impactScore": 1.2
         }
       },
       "bookings": {
@@ -4567,104 +4964,33 @@
       "date": "2026-09-20",
       "time": "16:15",
       "injuries": {
-        "home": [
-          {
-            "player": "P. Barrios",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Muscle Injury"
-          },
-          {
-            "player": "A. Sorloth",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Muscle Injury"
-          }
-        ],
-        "away": [
-          {
-            "player": "Eder Militao",
-            "position": "D",
-            "type": "Missing Fixture",
-            "reason": "Hamstring Injury"
-          },
-          {
-            "player": "F. Mendy",
-            "position": "D",
-            "type": "Missing Fixture",
-            "reason": "Hip Injury"
-          },
-          {
-            "player": "Rodrygo",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Knee Injury"
-          }
-        ]
+        "home": [],
+        "away": []
       },
       "injurySummary": {
         "home": {
           "goalkeeper": 0,
           "defense": 0,
-          "midfield": 2,
+          "midfield": 0,
           "attack": 0,
-          "confirmed": 2,
+          "confirmed": 0,
           "questionable": 0,
-          "total": 2,
-          "notes": [
-            "P. Barrios (Gesperrt/Verletzt — Muscle Injury)",
-            "A. Sorloth (Gesperrt/Verletzt — Muscle Injury)"
-          ],
-          "_raw": [
-            {
-              "player": "P. Barrios",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Muscle Injury"
-            },
-            {
-              "player": "A. Sorloth",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Muscle Injury"
-            }
-          ],
-          "impactScore": 0.6
+          "total": 0,
+          "notes": [],
+          "_raw": [],
+          "impactScore": 0
         },
         "away": {
           "goalkeeper": 0,
-          "defense": 2,
-          "midfield": 1,
+          "defense": 0,
+          "midfield": 0,
           "attack": 0,
-          "confirmed": 3,
+          "confirmed": 0,
           "questionable": 0,
-          "total": 3,
-          "notes": [
-            "Eder Militao (Gesperrt/Verletzt — Hamstring Injury)",
-            "F. Mendy (Gesperrt/Verletzt — Hip Injury)",
-            "Rodrygo (Gesperrt/Verletzt — Knee Injury)"
-          ],
-          "_raw": [
-            {
-              "player": "Eder Militao",
-              "position": "D",
-              "type": "Missing Fixture",
-              "reason": "Hamstring Injury"
-            },
-            {
-              "player": "F. Mendy",
-              "position": "D",
-              "type": "Missing Fixture",
-              "reason": "Hip Injury"
-            },
-            {
-              "player": "Rodrygo",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Knee Injury"
-            }
-          ],
-          "impactScore": 1.5
+          "total": 0,
+          "notes": [],
+          "_raw": [],
+          "impactScore": 0
         }
       },
       "bookings": {
@@ -5003,33 +5329,104 @@
       "date": "2026-09-20",
       "time": "18:30",
       "injuries": {
-        "home": [],
-        "away": []
+        "home": [
+          {
+            "player": "Angelino",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Red Card"
+          },
+          {
+            "player": "N. Carrillo",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Ankle Injury"
+          }
+        ],
+        "away": [
+          {
+            "player": "D. Llorente",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Broken nose"
+          },
+          {
+            "player": "I. Losada",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Inactive"
+          },
+          {
+            "player": "A. Ruibal",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Knee Injury"
+          }
+        ]
       },
       "injurySummary": {
         "home": {
           "goalkeeper": 0,
-          "defense": 0,
-          "midfield": 0,
+          "defense": 1,
+          "midfield": 1,
           "attack": 0,
-          "confirmed": 0,
+          "confirmed": 2,
           "questionable": 0,
-          "total": 0,
-          "notes": [],
-          "_raw": [],
-          "impactScore": 0
+          "total": 2,
+          "notes": [
+            "Angelino (Gesperrt/Verletzt — Red Card)",
+            "N. Carrillo (Gesperrt/Verletzt — Ankle Injury)"
+          ],
+          "_raw": [
+            {
+              "player": "Angelino",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Red Card"
+            },
+            {
+              "player": "N. Carrillo",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Ankle Injury"
+            }
+          ],
+          "impactScore": 0.9
         },
         "away": {
           "goalkeeper": 0,
-          "defense": 0,
-          "midfield": 0,
+          "defense": 1,
+          "midfield": 2,
           "attack": 0,
-          "confirmed": 0,
+          "confirmed": 3,
           "questionable": 0,
-          "total": 0,
-          "notes": [],
-          "_raw": [],
-          "impactScore": 0
+          "total": 3,
+          "notes": [
+            "D. Llorente (Gesperrt/Verletzt — Broken nose)",
+            "I. Losada (Gesperrt/Verletzt — Inactive)",
+            "A. Ruibal (Gesperrt/Verletzt — Knee Injury)"
+          ],
+          "_raw": [
+            {
+              "player": "D. Llorente",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Broken nose"
+            },
+            {
+              "player": "I. Losada",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Inactive"
+            },
+            {
+              "player": "A. Ruibal",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Knee Injury"
+            }
+          ],
+          "impactScore": 1.2
         }
       },
       "bookings": {
@@ -5883,33 +6280,156 @@
       "date": "2026-09-20",
       "time": "21:00",
       "injuries": {
-        "home": [],
-        "away": []
+        "home": [
+          {
+            "player": "S. Canos",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Knee Injury"
+          },
+          {
+            "player": "J. Copete",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Ankle Injury"
+          },
+          {
+            "player": "M. Diakhaby",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Muscle Injury"
+          },
+          {
+            "player": "D. Foulquier",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Injury"
+          },
+          {
+            "player": "D. Lopez",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Knee Injury"
+          },
+          {
+            "player": "U. Sadiq",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Muscle Injury"
+          },
+          {
+            "player": "C. Tarrega",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Hamstring Injury"
+          }
+        ],
+        "away": [
+          {
+            "player": "A. Odriozola",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Knee Injury"
+          },
+          {
+            "player": "I. Zubeldia",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Injury"
+          }
+        ]
       },
       "injurySummary": {
         "home": {
           "goalkeeper": 0,
-          "defense": 0,
-          "midfield": 0,
+          "defense": 3,
+          "midfield": 4,
           "attack": 0,
-          "confirmed": 0,
+          "confirmed": 7,
           "questionable": 0,
-          "total": 0,
-          "notes": [],
-          "_raw": [],
-          "impactScore": 0
+          "total": 7,
+          "notes": [
+            "S. Canos (Gesperrt/Verletzt — Knee Injury)",
+            "J. Copete (Gesperrt/Verletzt — Ankle Injury)",
+            "M. Diakhaby (Gesperrt/Verletzt — Muscle Injury)",
+            "D. Foulquier (Gesperrt/Verletzt — Injury)",
+            "D. Lopez (Gesperrt/Verletzt — Knee Injury)",
+            "U. Sadiq (Gesperrt/Verletzt — Muscle Injury)",
+            "C. Tarrega (Gesperrt/Verletzt — Hamstring Injury)"
+          ],
+          "_raw": [
+            {
+              "player": "S. Canos",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Knee Injury"
+            },
+            {
+              "player": "J. Copete",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Ankle Injury"
+            },
+            {
+              "player": "M. Diakhaby",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Muscle Injury"
+            },
+            {
+              "player": "D. Foulquier",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Injury"
+            },
+            {
+              "player": "D. Lopez",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Knee Injury"
+            },
+            {
+              "player": "U. Sadiq",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Muscle Injury"
+            },
+            {
+              "player": "C. Tarrega",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Hamstring Injury"
+            }
+          ],
+          "impactScore": 3.5
         },
         "away": {
           "goalkeeper": 0,
-          "defense": 0,
-          "midfield": 0,
+          "defense": 1,
+          "midfield": 1,
           "attack": 0,
-          "confirmed": 0,
+          "confirmed": 2,
           "questionable": 0,
-          "total": 0,
-          "notes": [],
-          "_raw": [],
-          "impactScore": 0
+          "total": 2,
+          "notes": [
+            "A. Odriozola (Gesperrt/Verletzt — Knee Injury)",
+            "I. Zubeldia (Gesperrt/Verletzt — Injury)"
+          ],
+          "_raw": [
+            {
+              "player": "A. Odriozola",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Knee Injury"
+            },
+            {
+              "player": "I. Zubeldia",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Injury"
+            }
+          ],
+          "impactScore": 0.9
         }
       },
       "bookings": {
@@ -6671,143 +7191,33 @@
       "date": "2026-09-20",
       "time": "15:30",
       "injuries": {
-        "home": [
-          {
-            "player": "M. Culbreath",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Injury"
-          },
-          {
-            "player": "G. Doue",
-            "position": "D",
-            "type": "Missing Fixture",
-            "reason": "Muscle Injury"
-          },
-          {
-            "player": "K. Eichhorn",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Illness"
-          },
-          {
-            "player": "N. Tella",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Injury"
-          }
-        ],
-        "away": [
-          {
-            "player": "C. Baumgartner",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Thigh Injury"
-          },
-          {
-            "player": "M. Guiu",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Hamstring Injury"
-          },
-          {
-            "player": "A. Ouedraogo",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Shoulder Injury"
-          },
-          {
-            "player": "R. Reitz",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Muscle Injury"
-          }
-        ]
+        "home": [],
+        "away": []
       },
       "injurySummary": {
         "home": {
           "goalkeeper": 0,
-          "defense": 1,
-          "midfield": 3,
+          "defense": 0,
+          "midfield": 0,
           "attack": 0,
-          "confirmed": 4,
+          "confirmed": 0,
           "questionable": 0,
-          "total": 4,
-          "notes": [
-            "M. Culbreath (Gesperrt/Verletzt — Injury)",
-            "G. Doue (Gesperrt/Verletzt — Muscle Injury)",
-            "K. Eichhorn (Gesperrt/Verletzt — Illness)",
-            "N. Tella (Gesperrt/Verletzt — Injury)"
-          ],
-          "_raw": [
-            {
-              "player": "M. Culbreath",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Injury"
-            },
-            {
-              "player": "G. Doue",
-              "position": "D",
-              "type": "Missing Fixture",
-              "reason": "Muscle Injury"
-            },
-            {
-              "player": "K. Eichhorn",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Illness"
-            },
-            {
-              "player": "N. Tella",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Injury"
-            }
-          ],
-          "impactScore": 1.5
+          "total": 0,
+          "notes": [],
+          "_raw": [],
+          "impactScore": 0
         },
         "away": {
           "goalkeeper": 0,
           "defense": 0,
-          "midfield": 4,
+          "midfield": 0,
           "attack": 0,
-          "confirmed": 4,
+          "confirmed": 0,
           "questionable": 0,
-          "total": 4,
-          "notes": [
-            "C. Baumgartner (Gesperrt/Verletzt — Thigh Injury)",
-            "M. Guiu (Gesperrt/Verletzt — Hamstring Injury)",
-            "A. Ouedraogo (Gesperrt/Verletzt — Shoulder Injury)",
-            "R. Reitz (Gesperrt/Verletzt — Muscle Injury)"
-          ],
-          "_raw": [
-            {
-              "player": "C. Baumgartner",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Thigh Injury"
-            },
-            {
-              "player": "M. Guiu",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Hamstring Injury"
-            },
-            {
-              "player": "A. Ouedraogo",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Shoulder Injury"
-            },
-            {
-              "player": "R. Reitz",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Muscle Injury"
-            }
-          ],
-          "impactScore": 1.2
+          "total": 0,
+          "notes": [],
+          "_raw": [],
+          "impactScore": 0
         }
       },
       "bookings": {
@@ -7110,65 +7520,33 @@
       "date": "2026-09-20",
       "time": "17:30",
       "injuries": {
-        "home": [
-          {
-            "player": "D. Ljubicic",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Knee Injury"
-          }
-        ],
-        "away": [
-          {
-            "player": "L. Seifert",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Ankle Injury"
-          }
-        ]
+        "home": [],
+        "away": []
       },
       "injurySummary": {
         "home": {
           "goalkeeper": 0,
           "defense": 0,
-          "midfield": 1,
+          "midfield": 0,
           "attack": 0,
-          "confirmed": 1,
+          "confirmed": 0,
           "questionable": 0,
-          "total": 1,
-          "notes": [
-            "D. Ljubicic (Gesperrt/Verletzt — Knee Injury)"
-          ],
-          "_raw": [
-            {
-              "player": "D. Ljubicic",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Knee Injury"
-            }
-          ],
-          "impactScore": 0.3
+          "total": 0,
+          "notes": [],
+          "_raw": [],
+          "impactScore": 0
         },
         "away": {
           "goalkeeper": 0,
           "defense": 0,
-          "midfield": 1,
+          "midfield": 0,
           "attack": 0,
-          "confirmed": 1,
+          "confirmed": 0,
           "questionable": 0,
-          "total": 1,
-          "notes": [
-            "L. Seifert (Gesperrt/Verletzt — Ankle Injury)"
-          ],
-          "_raw": [
-            {
-              "player": "L. Seifert",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Ankle Injury"
-            }
-          ],
-          "impactScore": 0.3
+          "total": 0,
+          "notes": [],
+          "_raw": [],
+          "impactScore": 0
         }
       },
       "bookings": {
@@ -7471,91 +7849,33 @@
       "date": "2026-09-20",
       "time": "19:30",
       "injuries": {
-        "home": [
-          {
-            "player": "N. Awortwie-Grant",
-            "position": "D",
-            "type": "Missing Fixture",
-            "reason": "Knee Injury"
-          },
-          {
-            "player": "L. Eickel",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Back Injury"
-          },
-          {
-            "player": "T. Gayret",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Knee Injury"
-          }
-        ],
-        "away": [
-          {
-            "player": "Bernardo",
-            "position": "D",
-            "type": "Missing Fixture",
-            "reason": "Achilles Tendon Injury"
-          }
-        ]
+        "home": [],
+        "away": []
       },
       "injurySummary": {
         "home": {
           "goalkeeper": 0,
-          "defense": 1,
-          "midfield": 2,
+          "defense": 0,
+          "midfield": 0,
           "attack": 0,
-          "confirmed": 3,
+          "confirmed": 0,
           "questionable": 0,
-          "total": 3,
-          "notes": [
-            "N. Awortwie-Grant (Gesperrt/Verletzt — Knee Injury)",
-            "L. Eickel (Gesperrt/Verletzt — Back Injury)",
-            "T. Gayret (Gesperrt/Verletzt — Knee Injury)"
-          ],
-          "_raw": [
-            {
-              "player": "N. Awortwie-Grant",
-              "position": "D",
-              "type": "Missing Fixture",
-              "reason": "Knee Injury"
-            },
-            {
-              "player": "L. Eickel",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Back Injury"
-            },
-            {
-              "player": "T. Gayret",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Knee Injury"
-            }
-          ],
-          "impactScore": 1.2
+          "total": 0,
+          "notes": [],
+          "_raw": [],
+          "impactScore": 0
         },
         "away": {
           "goalkeeper": 0,
-          "defense": 1,
+          "defense": 0,
           "midfield": 0,
           "attack": 0,
-          "confirmed": 1,
+          "confirmed": 0,
           "questionable": 0,
-          "total": 1,
-          "notes": [
-            "Bernardo (Gesperrt/Verletzt — Achilles Tendon Injury)"
-          ],
-          "_raw": [
-            {
-              "player": "Bernardo",
-              "position": "D",
-              "type": "Missing Fixture",
-              "reason": "Achilles Tendon Injury"
-            }
-          ],
-          "impactScore": 0.6
+          "total": 0,
+          "notes": [],
+          "_raw": [],
+          "impactScore": 0
         }
       },
       "bookings": {
