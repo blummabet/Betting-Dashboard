@@ -49,9 +49,11 @@
       "id": "trades_push_buch",
       "label": "Trades-Karte führt ihr Buch",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "keine einzige Zeile trägt einen `public`-Marker — dann lässt sich die Teilmenge, die auch public ging, nicht abziehen und beide Bücher zählen dieselben Karten."
+      ],
       "note": "12 Karte(n) · 0 auch public"
     },
     {
@@ -70,7 +72,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "1079 geprueft, davon 124 abgeschnitten"
+      "note": "1081 geprueft, davon 126 abgeschnitten"
     },
     {
       "id": "settlement_alive",
@@ -79,12 +81,12 @@
       "ok": false,
       "nFail": 6,
       "failures": [
-        "spl-kha-riy-2026-09-07-more-markets: seit 13.2 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "spl-haz-taa-2026-09-08-more-markets: seit 12.2 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "ucl-aek1-lin2-2026-09-08-more-markets: seit 12.2 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "grc-ast-ari-2026-09-09-more-markets: seit 10.3 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "ucl-fen-rom-2026-09-10-more-markets: seit 10.2 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "ucl-fen-rom-2026-09-10-more-markets: seit 10.2 Tagen offen — Auflösung existiert, matcht aber den Key nicht!"
+        "spl-kha-riy-2026-09-07-more-markets: seit 13.5 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
+        "spl-haz-taa-2026-09-08-more-markets: seit 12.5 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
+        "ucl-aek1-lin2-2026-09-08-more-markets: seit 12.5 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
+        "grc-ast-ari-2026-09-09-more-markets: seit 10.6 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
+        "ucl-fen-rom-2026-09-10-more-markets: seit 10.5 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
+        "ucl-fen-rom-2026-09-10-more-markets: seit 10.5 Tagen offen — Auflösung existiert, matcht aber den Key nicht!"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
     },
@@ -95,10 +97,10 @@
       "ok": false,
       "nFail": 7,
       "failures": [
-        "TENNIS: nur 265/678 fällige Märkte aufgelöst (39%)",
-        "ESPORTS: nur 331/665 fällige Märkte aufgelöst (50%)",
-        "MLB: nur 161/332 fällige Märkte aufgelöst (48%)",
-        "MLS: nur 63/115 fällige Märkte aufgelöst (55%)",
+        "TENNIS: nur 262/676 fällige Märkte aufgelöst (39%)",
+        "ESPORTS: nur 333/669 fällige Märkte aufgelöst (50%)",
+        "MLB: nur 167/331 fällige Märkte aufgelöst (50%)",
+        "MLS: nur 62/115 fällige Märkte aufgelöst (54%)",
         "EFL-CHAMPIONSHIP: nur 19/33 fällige Märkte aufgelöst (58%)",
         "CRICKET: nur 12/23 fällige Märkte aufgelöst (52%)",
         "SEA: nur 3/9 fällige Märkte aufgelöst (33%)"
@@ -112,11 +114,11 @@
       "ok": false,
       "nFail": 5,
       "failures": [
-        "131/326 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (40%) — Trefferquote allein trügt",
-        "   0xc3c3b3ef30… n=338 Treffer 51% P&L $-3,968,256",
+        "132/327 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (40%) — Trefferquote allein trügt",
+        "   0xc3c3b3ef30… n=338 Treffer 51% P&L $-3,969,479",
         "   0xa0f21e6d35… n=93 Treffer 67% P&L $-2,635,720",
         "   0xabb89972b2… n=37 Treffer 59% P&L $-2,563,982",
-        "   0x6ac5bb06a9… n=100 Treffer 53% P&L $-1,555,775"
+        "   0x4bff30af91… n=89 Treffer 51% P&L $-2,420,880"
       ],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
     },
@@ -157,6 +159,6 @@
       "note": "poly_direct_bets.py rechnet über poly_resolutions.json ab. Hängt ein Bet, kennt Poly den Ausgang nicht (Markt noch offen/obskur) oder der Slug passt nicht — dann fehlt echtes Geld in der Bilanz."
     }
   ],
-  "nFail": 3,
-  "generatedAt": "2026-09-20T21:04:46.719510+00:00"
+  "nFail": 4,
+  "generatedAt": "2026-09-21T04:02:40.263368+00:00"
 }
