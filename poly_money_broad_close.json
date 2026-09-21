@@ -372693,7 +372693,14 @@
      35
     ]
    ]
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Querétaro FC": 0.0,
+   "Draw (Querétaro FC vs. Club León FC)": 1.0,
+   "Club León FC": 0.0
+  },
+  "resolvedAt": "2026-09-21T06:31:36.639357+00:00"
  },
  "wta-mladeno-hibino-2026-09-21": {
   "shares": {
@@ -372963,7 +372970,13 @@
     "usd": 331,
     "ts": 1789917157
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Xinxin Yao": 0.0,
+   "Maya Joint": 1.0
+  },
+  "resolvedAt": "2026-09-21T06:31:36.639357+00:00"
  },
  "wta-kasatki-sasnovi-2026-09-20": {
   "shares": {
@@ -373366,12 +373379,12 @@
  },
  "lol-fnl-cpd-2026-09-21": {
   "shares": {
-   "FENNEL": 15717.503054660008,
-   "Cupid Esports": 28557.14849405998
+   "FENNEL": 15999.70438231501,
+   "Cupid Esports": 31760.60208950999
   },
   "prices": {
-   "FENNEL": 0.355,
-   "Cupid Esports": 0.645
+   "FENNEL": 0.335,
+   "Cupid Esports": 0.665
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -373379,35 +373392,35 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 44076,
+  "totalUsd": 49695,
   "whales": [
    {
     "wallet": "0x6e70943dafad3442237b4ac2cb333dd9d5d3a900",
     "side": "Cupid Esports",
-    "usd": 14159,
+    "usd": 14598,
     "avgPrice": 0.6699
    },
    {
     "wallet": "0x70dc005e4abe3a4f66d80686372535219fe11dfd",
     "side": "FENNEL",
-    "usd": 10357,
+    "usd": 9774,
     "avgPrice": 0.3395
    },
    {
     "wallet": "0x7e5972bfc25819775ee5a9d4f191919375487b8b",
     "side": "Cupid Esports",
-    "usd": 3225,
+    "usd": 3325,
     "avgPrice": 0.64
    },
    {
-    "wallet": "0xc4fe817476491890086330a639ac417d51bf601f",
+    "wallet": "0x31864feb9d25dee93728c6225ba891530967e9ca",
     "side": "Cupid Esports",
-    "usd": 2066,
-    "avgPrice": 0.64
+    "usd": 2520,
+    "avgPrice": 0.6549
    }
   ],
-  "hoursToKickoff": 1.01,
-  "capturedAt": "2026-09-21T06:01:28.760736+00:00",
+  "hoursToKickoff": 0.51,
+  "capturedAt": "2026-09-21T06:31:36.639357+00:00",
   "cond": "0x6295a6cf4d3266802bdb89ff786dd5505a0210714bc9951273b5f70b95131a48",
   "frage": "LoL: FENNEL vs Cupid Esports (BO1) - World Star Challengers Invitational Group C",
   "tokens": {
@@ -373416,64 +373429,96 @@
   },
   "book": {
    "side": "Cupid Esports",
-   "bid": 0.64,
-   "ask": 0.65,
+   "bid": 0.66,
+   "ask": 0.67,
    "spreadC": 1.0,
-   "spreadPct": 1.54,
+   "spreadPct": 1.49,
    "bids": [
     [
+     0.66,
+     685
+    ],
+    [
+     0.65,
+     179
+    ],
+    [
      0.64,
-     238
+     1141
     ],
     [
      0.63,
-     966
+     499
     ],
     [
      0.62,
-     1556
+     9956
     ],
     [
-     0.59,
-     5
-    ],
-    [
-     0.53,
-     225
-    ],
-    [
-     0.52,
-     200
+     0.61,
+     60
     ]
    ],
    "asks": [
     [
-     0.65,
-     3044
-    ],
-    [
-     0.66,
-     710
-    ],
-    [
      0.67,
-     505
+     822
     ],
     [
      0.68,
-     4330
+     4933
     ],
     [
      0.69,
-     2452
+     836
     ],
     [
      0.7,
-     3700
+     7305
+    ],
+    [
+     0.71,
+     845
+    ],
+    [
+     0.72,
+     5
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x31864feb9d25dee93728c6225ba891530967e9ca",
+    "action": "BUY",
+    "side": "Cupid Esports",
+    "price": 0.6557,
+    "usd": 1161,
+    "ts": 1789971933
+   },
+   {
+    "wallet": "0x31864feb9d25dee93728c6225ba891530967e9ca",
+    "action": "BUY",
+    "side": "Cupid Esports",
+    "price": 0.65,
+    "usd": 749,
+    "ts": 1789971854
+   },
+   {
+    "wallet": "0x6ac5bb06a9eb05641fd5e82640268b92f3ab4b6e",
+    "action": "SELL",
+    "side": "FENNEL",
+    "price": 0.35,
+    "usd": 935,
+    "ts": 1789970903
+   },
+   {
+    "wallet": "0x70dc005e4abe3a4f66d80686372535219fe11dfd",
+    "action": "BUY",
+    "side": "FENNEL",
+    "price": 0.36,
+    "usd": 342,
+    "ts": 1789970309
+   },
    {
     "wallet": "0x70dc005e4abe3a4f66d80686372535219fe11dfd",
     "action": "BUY",
@@ -373505,38 +373550,6 @@
     "price": 0.3593,
     "usd": 1239,
     "ts": 1789968093
-   },
-   {
-    "wallet": "0x70dc005e4abe3a4f66d80686372535219fe11dfd",
-    "action": "BUY",
-    "side": "FENNEL",
-    "price": 0.33,
-    "usd": 6455,
-    "ts": 1789967926
-   },
-   {
-    "wallet": "0x6e70943dafad3442237b4ac2cb333dd9d5d3a900",
-    "action": "BUY",
-    "side": "Cupid Esports",
-    "price": 0.67,
-    "usd": 895,
-    "ts": 1789963629
-   },
-   {
-    "wallet": "0x3ae0902b075257fec50d182cc7cdf5b37e55abff",
-    "action": "BUY",
-    "side": "Cupid Esports",
-    "price": 0.67,
-    "usd": 500,
-    "ts": 1789963048
-   },
-   {
-    "wallet": "0xddf1a93675da40758d20daebd0183384b8f8d4ae",
-    "action": "BUY",
-    "side": "FENNEL",
-    "price": 0.3415,
-    "usd": 512,
-    "ts": 1789962049
    }
   ]
  },
@@ -373685,8 +373698,8 @@
  },
  "cs2-brute-sparta-2026-09-21": {
   "shares": {
-   "Brute": 22896.512324025,
-   "SPARTA": 29739.15678914499
+   "Brute": 30797.90096616003,
+   "SPARTA": 40001.87720855001
   },
   "prices": {
    "Brute": 0.435,
@@ -373698,18 +373711,18 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 53548,
+  "totalUsd": 71122,
   "whales": [
    {
     "wallet": "0xe40ecff63ec661d218a86c048186ac83389a9770",
     "side": "SPARTA",
-    "usd": 27185,
+    "usd": 36711,
     "avgPrice": 0.5599
    },
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "side": "Brute",
-    "usd": 14788,
+    "usd": 21946,
     "avgPrice": 0.4398
    },
    {
@@ -373725,8 +373738,8 @@
     "avgPrice": 0.4336
    }
   ],
-  "hoursToKickoff": 2.01,
-  "capturedAt": "2026-09-21T06:01:28.760736+00:00",
+  "hoursToKickoff": 1.51,
+  "capturedAt": "2026-09-21T06:31:36.639357+00:00",
   "cond": "0xa6877d5a2fea867764fe1064d1839b0301351109d53b3c397e13f588408a7891",
   "frage": "Counter-Strike: Brute vs SPARTA (BO3) - NODWIN Clutch Series Group Stage",
   "tokens": {
@@ -373742,19 +373755,19 @@
    "bids": [
     [
      0.56,
-     53660
+     37627
     ],
     [
      0.55,
-     941
+     1118
     ],
     [
      0.54,
-     2029
+     2294
     ],
     [
      0.53,
-     6759
+     6555
     ],
     [
      0.52,
@@ -373768,31 +373781,55 @@
    "asks": [
     [
      0.57,
-     15530
+     14335
     ],
     [
      0.58,
-     1071
+     1504
     ],
     [
      0.59,
-     484
+     440
     ],
     [
      0.6,
-     520
+     1637
     ],
     [
      0.61,
-     1603
+     1635
     ],
     [
      0.62,
-     1534
+     610
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "action": "BUY",
+    "side": "SPARTA",
+    "price": 0.57,
+    "usd": 476,
+    "ts": 1789972131
+   },
+   {
+    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
+    "action": "BUY",
+    "side": "Brute",
+    "price": 0.44,
+    "usd": 3685,
+    "ts": 1789971308
+   },
+   {
+    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
+    "action": "BUY",
+    "side": "Brute",
+    "price": 0.44,
+    "usd": 3555,
+    "ts": 1789970405
+   },
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "action": "BUY",
@@ -373816,41 +373853,17 @@
     "price": 0.44,
     "usd": 2774,
     "ts": 1789964089
-   },
-   {
-    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
-    "action": "BUY",
-    "side": "Brute",
-    "price": 0.44,
-    "usd": 2727,
-    "ts": 1789963192
-   },
-   {
-    "wallet": "0xf1ef8705e9f63c790c6fffd6329aea7011718cd6",
-    "action": "BUY",
-    "side": "Brute",
-    "price": 0.44,
-    "usd": 3520,
-    "ts": 1789962347
-   },
-   {
-    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
-    "action": "BUY",
-    "side": "Brute",
-    "price": 0.44,
-    "usd": 2684,
-    "ts": 1789962290
    }
   ]
  },
  "lol-gal-sgw-2026-09-21": {
   "shares": {
-   "Galions": 13012.114079300001,
-   "Saigon Warriors": 4571.8272649400005
+   "Galions": 13658.091193930004,
+   "Saigon Warriors": 4674.91884846
   },
   "prices": {
-   "Galions": 0.74,
-   "Saigon Warriors": 0.26
+   "Galions": 0.745,
+   "Saigon Warriors": 0.255
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -373858,35 +373871,35 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 20679,
+  "totalUsd": 20850,
   "whales": [
    {
     "wallet": "0x3078b391f843153c6859702cee974ca7f660a2cb",
     "side": "Galions",
-    "usd": 4440,
+    "usd": 4470,
     "avgPrice": 0.748
    },
    {
     "wallet": "0x4e3c039a5b759a29f88f32d8599898c2b398d370",
     "side": "Galions",
-    "usd": 3974,
+    "usd": 4001,
     "avgPrice": 0.7445
    },
    {
     "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
     "side": "Saigon Warriors",
-    "usd": 1475,
+    "usd": 1447,
     "avgPrice": 0.2509
    },
    {
     "wallet": "0xd70b975d2d2eb3e5f9e7c07ffe2fda8265d9dcb1",
     "side": "Galions",
-    "usd": 1070,
+    "usd": 1077,
     "avgPrice": 0.7599
    }
   ],
-  "hoursToKickoff": 2.01,
-  "capturedAt": "2026-09-21T06:01:28.760736+00:00",
+  "hoursToKickoff": 1.51,
+  "capturedAt": "2026-09-21T06:31:36.639357+00:00",
   "cond": "0x5c4eb8d41bec297230927956993166ebd22b0c37be872867a5e1b9f64e26b76b",
   "frage": "LoL: Galions vs Saigon Warriors (BO1) - World Star Challengers Invitational Group D",
   "tokens": {
@@ -373895,60 +373908,60 @@
   },
   "book": {
    "side": "Galions",
-   "bid": 0.73,
+   "bid": 0.74,
    "ask": 0.75,
-   "spreadC": 2.0,
-   "spreadPct": 2.67,
+   "spreadC": 1.0,
+   "spreadPct": 1.33,
    "bids": [
     [
+     0.74,
+     150
+    ],
+    [
      0.73,
-     74
+     216
     ],
     [
      0.72,
-     205
+     276
     ],
     [
      0.71,
-     228
+     453
     ],
     [
      0.7,
-     3260
+     830
     ],
     [
      0.69,
-     1114
-    ],
-    [
-     0.68,
-     130
+     1104
     ]
    ],
    "asks": [
     [
      0.75,
-     430
+     447
     ],
     [
      0.76,
-     1493
+     745
     ],
     [
      0.77,
-     6455
+     3611
     ],
     [
      0.78,
-     2845
+     2308
     ],
     [
      0.79,
-     24
+     94
     ],
     [
      0.8,
-     311
+     2111
     ]
    ]
   },
@@ -373984,6 +373997,278 @@
     "price": 0.7489,
     "usd": 1309,
     "ts": 1789953850
+   }
+  ]
+ },
+ "dota2-aur1-tc4-2026-09-21": {
+  "shares": {
+   "Aurora": 4988.417322469999,
+   "Team Cobra": 985.8964671600002
+  },
+  "prices": {
+   "Aurora": 0.835,
+   "Team Cobra": 0.165
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 7901,
+  "whales": [
+   {
+    "wallet": "0x48183e17a92b51605fe8e96c60b9a491f06afde0",
+    "side": "Aurora",
+    "usd": 906,
+    "avgPrice": 0.83
+   },
+   {
+    "wallet": "0x5d2a0ed871d09bfa198c58d2aee461abbe1fa0bc",
+    "side": "Aurora",
+    "usd": 855,
+    "avgPrice": 0.8155
+   },
+   {
+    "wallet": "0x60e30101f81028d16ac06b982728b085bfc457b5",
+    "side": "Aurora",
+    "usd": 835,
+    "avgPrice": 0.8099
+   },
+   {
+    "wallet": "0xe1d3e9a9a5f95c537b44fdd44f2c461f9e69b8de",
+    "side": "Aurora",
+    "usd": 345,
+    "avgPrice": 0.8272
+   }
+  ],
+  "hoursToKickoff": 0.51,
+  "capturedAt": "2026-09-21T06:31:36.639357+00:00",
+  "cond": "0xd2e2b5384cfe373c24e7ffbb2cf39506cc84403fe3489ccab3adab124ae59492",
+  "frage": "Dota 2: Aurora vs Team Cobra (BO3) - PGL Wallachia Group Stage",
+  "tokens": {
+   "Aurora": "91056224892900380271296543294901562618678137066724252157845638430503510911861",
+   "Team Cobra": "86014644994623862258570864081010637825714452246245908097589728804689474651097"
+  },
+  "book": {
+   "side": "Aurora",
+   "bid": 0.83,
+   "ask": 0.84,
+   "spreadC": 1.0,
+   "spreadPct": 1.19,
+   "bids": [
+    [
+     0.83,
+     2747
+    ],
+    [
+     0.82,
+     14331
+    ],
+    [
+     0.81,
+     7033
+    ],
+    [
+     0.8,
+     17001
+    ],
+    [
+     0.79,
+     770
+    ],
+    [
+     0.78,
+     31
+    ]
+   ],
+   "asks": [
+    [
+     0.84,
+     1675
+    ],
+    [
+     0.85,
+     4239
+    ],
+    [
+     0.86,
+     3384
+    ],
+    [
+     0.87,
+     3894
+    ],
+    [
+     0.88,
+     260
+    ],
+    [
+     0.89,
+     3761
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xf184bff6a9217f1a76dcba7c0c4888351ebbc2d7",
+    "action": "BUY",
+    "side": "Aurora",
+    "price": 0.82,
+    "usd": 322,
+    "ts": 1789970243
+   },
+   {
+    "wallet": "0x5d2a0ed871d09bfa198c58d2aee461abbe1fa0bc",
+    "action": "BUY",
+    "side": "Aurora",
+    "price": 0.8132,
+    "usd": 539,
+    "ts": 1789964431
+   }
+  ]
+ },
+ "lol-sly-zsk-2026-09-21": {
+  "shares": {
+   "Solary": 3929.5295609150003,
+   "ZSK": 2258.69885533
+  },
+  "prices": {
+   "Solary": 0.635,
+   "ZSK": 0.365
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 7967,
+  "whales": [
+   {
+    "wallet": "0x0235dc24b38772bf3339a9e5ec5db3d3a05fcee5",
+    "side": "Solary",
+    "usd": 1110,
+    "avgPrice": 0.65
+   },
+   {
+    "wallet": "0xa4131264e0cfa60b1e8d994551d29ee5f9806c4a",
+    "side": "Solary",
+    "usd": 992,
+    "avgPrice": 0.64
+   },
+   {
+    "wallet": "0xd70b975d2d2eb3e5f9e7c07ffe2fda8265d9dcb1",
+    "side": "ZSK",
+    "usd": 839,
+    "avgPrice": 0.3499
+   },
+   {
+    "wallet": "0xddf1a93675da40758d20daebd0183384b8f8d4ae",
+    "side": "Solary",
+    "usd": 703,
+    "avgPrice": 0.65
+   }
+  ],
+  "hoursToKickoff": 2.51,
+  "capturedAt": "2026-09-21T06:31:36.639357+00:00",
+  "cond": "0x4b960bdb7c0642bbc99d1cab6990030e592367d3d38c2fe4fcc82a39086d08b6",
+  "frage": "LoL: Solary vs ZSK (BO1) - World Star Challengers Invitational Group D",
+  "tokens": {
+   "Solary": "58578352710346711289433631647207673284954068146036303027979823761928990045129",
+   "ZSK": "12863182479931805606005774998348782001361826625352451586460399184464602211183"
+  },
+  "book": {
+   "side": "Solary",
+   "bid": 0.63,
+   "ask": 0.64,
+   "spreadC": 1.0,
+   "spreadPct": 1.56,
+   "bids": [
+    [
+     0.63,
+     969
+    ],
+    [
+     0.62,
+     174
+    ],
+    [
+     0.61,
+     515
+    ],
+    [
+     0.6,
+     1489
+    ],
+    [
+     0.59,
+     760
+    ],
+    [
+     0.58,
+     38
+    ]
+   ],
+   "asks": [
+    [
+     0.64,
+     5
+    ],
+    [
+     0.65,
+     889
+    ],
+    [
+     0.66,
+     483
+    ],
+    [
+     0.67,
+     407
+    ],
+    [
+     0.68,
+     5254
+    ],
+    [
+     0.69,
+     870
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x3ae0902b075257fec50d182cc7cdf5b37e55abff",
+    "action": "BUY",
+    "side": "ZSK",
+    "price": 0.36,
+    "usd": 300,
+    "ts": 1789967304
+   },
+   {
+    "wallet": "0x3ae0902b075257fec50d182cc7cdf5b37e55abff",
+    "action": "BUY",
+    "side": "Solary",
+    "price": 0.6581,
+    "usd": 500,
+    "ts": 1789963089
+   },
+   {
+    "wallet": "0xddf1a93675da40758d20daebd0183384b8f8d4ae",
+    "action": "BUY",
+    "side": "Solary",
+    "price": 0.65,
+    "usd": 720,
+    "ts": 1789962857
+   },
+   {
+    "wallet": "0xd70b975d2d2eb3e5f9e7c07ffe2fda8265d9dcb1",
+    "action": "BUY",
+    "side": "ZSK",
+    "price": 0.35,
+    "usd": 805,
+    "ts": 1789955726
    }
   ]
  }
