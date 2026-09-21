@@ -95,11 +95,10 @@
       "label": "Settlement lebt (keine ewig offenen Positionen)",
       "severity": "error",
       "ok": false,
-      "nFail": 3,
+      "nFail": 2,
       "failures": [
-        "spl-kha-riy-2026-09-07-more-markets: seit 14.0 Tagen offen — Bündel: der Eintrag kennt seinen Markt, die Auflösung nicht (Altbestand)",
         "spl-haz-taa-2026-09-08-more-markets: seit 13.0 Tagen offen — Bündel: der Eintrag kennt seinen Markt, die Auflösung nicht (Altbestand)",
-        "ucl-aek1-lin2-2026-09-08-more-markets: seit 12.9 Tagen offen — Bündel: der Eintrag kennt seinen Markt, die Auflösung nicht (Altbestand)"
+        "ucl-aek1-lin2-2026-09-08-more-markets: seit 13.0 Tagen offen — Bündel: der Eintrag kennt seinen Markt, die Auflösung nicht (Altbestand)"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen. Der Grund steht an jeder Zeile — er ist bei jeder ein anderer."
     },
@@ -119,7 +118,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Fällige Märkte je Liga, die ihre Auflösung finden — nur ab dem Beginn des Auflösungsbuchs (2026-09-07); 1963 ältere Märkte bleiben draussen, fuer sie kann es keine geben. < 60% = Settlement läuft wirklich ins Leere."
+      "note": "Fällige Märkte je Liga, die ihre Auflösung finden — nur ab dem Beginn des Auflösungsbuchs (2026-09-07); 1957 ältere Märkte bleiben draussen, fuer sie kann es keine geben. < 60% = Settlement läuft wirklich ins Leere."
     },
     {
       "id": "proven_wallets_profitable",
@@ -174,5 +173,5 @@
     }
   ],
   "nFail": 2,
-  "generatedAt": "2026-09-21T15:38:12.857812+00:00"
+  "generatedAt": "2026-09-21T16:35:13.605273+00:00"
 }
