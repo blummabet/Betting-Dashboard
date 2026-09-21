@@ -46,13 +46,13 @@
       "note": "Misst den ZUFLUSS, nicht das Schreiben: die Datei kann stuendlich aktualisiert werden und trotzdem seit Tagen keinen neuen Kandidaten enthalten. Gesperrte Kategorien sind ausgenommen."
     },
     {
-      "id": "ruhende_order_ist_keine_position",
-      "label": "Eine ruhende Order ist keine Position",
+      "id": "wette_hat_die_kasse_beruehrt",
+      "label": "Wette hat die Kasse beruehrt",
       "severity": "error",
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "`method` aus der Order-Schicht unterscheidet market (gekauft) von maker_limit/limit_gtc (liegt im Buch). Fehlt es, ist eine offene Zeile nicht als Position belegt."
+      "note": "Gegenprobe gegen den Wallet-Verlauf: ein Kauf zeigt sich als Abgang im freien Collateral. Zeilen ohne Abgang sind in der Bilanz erfunden."
     },
     {
       "id": "ruhende_order_ist_keine_position",
@@ -70,7 +70,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "24 Karte(n) · 0 auch public"
+      "note": "25 Karte(n) · 0 auch public"
     },
     {
       "id": "public_push_buch",
@@ -95,33 +95,31 @@
       "label": "Settlement lebt (keine ewig offenen Positionen)",
       "severity": "error",
       "ok": false,
-      "nFail": 6,
+      "nFail": 3,
       "failures": [
-        "spl-kha-riy-2026-09-07-more-markets: seit 13.9 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "spl-haz-taa-2026-09-08-more-markets: seit 12.9 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "ucl-aek1-lin2-2026-09-08-more-markets: seit 12.8 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "grc-ast-ari-2026-09-09-more-markets: seit 11.0 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "ucl-fen-rom-2026-09-10-more-markets: seit 10.9 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "ucl-fen-rom-2026-09-10-more-markets: seit 10.8 Tagen offen — Auflösung existiert, matcht aber den Key nicht!"
+        "spl-kha-riy-2026-09-07-more-markets: seit 13.9 Tagen offen — Bündel: der Eintrag kennt seinen Markt, die Auflösung nicht (Altbestand)",
+        "spl-haz-taa-2026-09-08-more-markets: seit 12.9 Tagen offen — Bündel: der Eintrag kennt seinen Markt, die Auflösung nicht (Altbestand)",
+        "ucl-aek1-lin2-2026-09-08-more-markets: seit 12.8 Tagen offen — Bündel: der Eintrag kennt seinen Markt, die Auflösung nicht (Altbestand)"
       ],
-      "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
+      "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen. Der Grund steht an jeder Zeile — er ist bei jeder ein anderer."
+    },
+    {
+      "id": "buendel_cond_stabil",
+      "label": "Bündel-Marktkennung bleibt, was sie war",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "condDrift = 0 heisst: jede offene Bündel-Zeile meint noch denselben Markt wie beim Einstieg."
     },
     {
       "id": "resolutions_match_open_keys",
       "label": "Auflösungen matchen unsere Keys",
       "severity": "warn",
-      "ok": false,
-      "nFail": 7,
-      "failures": [
-        "TENNIS: nur 264/682 fällige Märkte aufgelöst (39%)",
-        "ESPORTS: nur 329/658 fällige Märkte aufgelöst (50%)",
-        "MLB: nur 167/332 fällige Märkte aufgelöst (50%)",
-        "MLS: nur 65/118 fällige Märkte aufgelöst (55%)",
-        "EFL-CHAMPIONSHIP: nur 19/33 fällige Märkte aufgelöst (58%)",
-        "CRICKET: nur 13/24 fällige Märkte aufgelöst (54%)",
-        "SEA: nur 3/9 fällige Märkte aufgelöst (33%)"
-      ],
-      "note": "Fällige Märkte je Liga, die ihre Auflösung finden. < 60% = Settlement läuft ins Leere (Slug-Mismatch), Trefferquoten dieser Liga sind unvollständig."
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Fällige Märkte je Liga, die ihre Auflösung finden — nur ab dem Beginn des Auflösungsbuchs (2026-09-07); 1970 ältere Märkte bleiben draussen, fuer sie kann es keine geben. < 60% = Settlement läuft wirklich ins Leere."
     },
     {
       "id": "proven_wallets_profitable",
@@ -175,6 +173,6 @@
       "note": "poly_direct_bets.py rechnet über poly_resolutions.json ab. Hängt ein Bet, kennt Poly den Ausgang nicht (Markt noch offen/obskur) oder der Slug passt nicht — dann fehlt echtes Geld in der Bilanz."
     }
   ],
-  "nFail": 3,
-  "generatedAt": "2026-09-21T12:40:25.327025+00:00"
+  "nFail": 2,
+  "generatedAt": "2026-09-21T13:05:18.532995+00:00"
 }
