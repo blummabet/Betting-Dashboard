@@ -72,7 +72,52 @@ def _save(usdc: float, usdc_e: float, address: str, error: str | None = None,
         out["error"] = error
     with open(OUT_FILE, "w") as f:
         json.dump(out, f, indent=2)
+    _verlauf_fortschreiben(out)
     return out
+
+
+# 🔴 21.09.2026 (Lucas: „Das kam. Aber auf poly wurde nicht gesetzt"). Die Order um 01:04 hat
+# das Wallet nie beruehrt — usdc stand von 21:53 bis 04:39 unveraendert bei 178,2312 — und das
+# Buch hat sie trotzdem als Verlust abgerechnet.
+#
+# Die Gegenprobe dafuer lag die ganze Zeit im Repo: dieser Schnappschuss wird alle ~15 Minuten
+# geschrieben und committet. Man musste nur die Git-Historie durchsuchen, um sie zu lesen —
+# also las sie niemand.
+#
+# Fehlerklasse: eine zweite, unabhaengige Quelle, die es gibt, aber nicht als Reihe vorliegt.
+VERLAUF_FILE = Path(str(D.file("wm_poly_verlauf.json", "liga_poly_verlauf.json")))
+VERLAUF_KEEP = 3000          # ~1 Monat bei 15-Minuten-Takt
+
+
+def verlauf_anhaengen(verlauf, stand, keep: int = VERLAUF_KEEP) -> list:
+    """Haengt einen Wallet-Stand an die Reihe. REIN.
+
+    Unveraenderte Staende werden NICHT gespeichert: der Abgleich sucht Bewegungen, und eine
+    Reihe aus tausend identischen Zeilen macht die Suche nur langsam. Der letzte Stand bleibt
+    aber immer stehen, damit das Ende der Reihe sagt, bis wann geschaut wurde.
+    """
+    r = list(verlauf or [])
+    neu = {"ts": stand.get("updatedAt"), "usdc": stand.get("usdc"),
+           "positions": stand.get("positions"), "total": stand.get("total")}
+    if r and isinstance(r[-1], dict) and r[-1].get("usdc") == neu["usdc"]:
+        r[-1] = neu                      # gleicher Stand -> nur den Zeitstempel nachziehen
+    else:
+        r.append(neu)
+    return r[-keep:] if keep else r
+
+
+def _verlauf_fortschreiben(stand):
+    """Best effort — ein Protokoll darf den Balance-Abruf nie kippen."""
+    try:
+        alt = []
+        if VERLAUF_FILE.exists():
+            alt = json.loads(VERLAUF_FILE.read_text(encoding="utf-8")) or []
+        if not isinstance(alt, list):
+            alt = []
+        VERLAUF_FILE.write_text(
+            json.dumps(verlauf_anhaengen(alt, stand), ensure_ascii=False), encoding="utf-8")
+    except Exception as e:                # noqa: BLE001
+        print(f"  ⚠️  Wallet-Verlauf nicht fortgeschrieben: {e}")
 
 
 def _load_existing() -> dict:
