@@ -50,13 +50,80 @@ BASE = Path(__file__).resolve().parent
 # Kanal. Wer dieses Modul anfasst und `tg_send` einsetzt, faellt dort durch.
 NUR_INTERN = True
 
-QUELLEN = ("uebersicht_integrity.json", "poly_status.json", "betfair_status.json")
+# 🔴 21.09.2026 (Lucas: „ich merke mir nicht, wo was ist"). Hier stand eine LISTE mit drei
+# Namen. Die groesste Batterie im Haus — `wm_data_integrity` mit rund 80 Waechtern — schreibt
+# je Datensatz nach `{praefix}_status.json`, und keine davon stand darin. Wer nur die Meldung
+# las, sah 3 von 5 Batterien; der Rest war nur auf der Statusseite zu finden, also genau dort,
+# wo Lucas nicht taeglich hinsieht. Der Satz unter der Meldung („kommt nichts, ist nichts
+# kaputt") war damit nicht wahr.
+#
+# Mein erster Anlauf war, die Liste zu verlaengern — und er ging daneben: ich trug
+# `wm_status.json` hart ein und vergass `mls_status.json`, die genauso eine Batterie ist.
+# `tests/test_tote_quellen.py` fing den hartkodierten toten Namen. Den FEHLENDEN haette
+# niemand gefangen: eine zu kurze Liste wirft nichts, sie schweigt bloss.
+#
+# Fehlerklasse: eine Zusammenfassung, die ihre Quellen aufzaehlt statt sie zu finden. Eine
+# Liste vergisst immer genau die Datei, die neu ist. Gesucht wird deshalb nach der FORM —
+# ein Artefakt mit einer Liste unter `checks` ist eine Batterie, alles andere nicht. Damit
+# steht hier kein einziger Datensatz-Name mehr, und die naechste Batterie meldet sich selbst.
+# Heute sind es sechs (uebersicht, poly, betfair, liga, mls, wm); `esports_poly_status.json`
+# heisst wie eine und traegt nur einen Feed-Stand. Dass die WM-Batterie seit dem 19.07. steht,
+# entscheidet nicht `quellen()`, sondern `sammeln()` — sie landet unter „ruht".
 STAND_FILE = "stoerungsmeldung_stand.json"
+
+# Die einzige Batterie ohne `_status`-Namen. Alles andere wird gefunden.
+EXTRA_QUELLEN = ("uebersicht_integrity.json",)
+QUELL_MUSTER = "*_status.json"
+
+
+def ist_batterie(inhalt) -> bool:
+    """Traegt dieses Artefakt eine Pruefbatterie? REIN.
+
+    Am Inhalt, nicht am Namen: eine Liste unter `checks`. `esports_poly_status.json` heisst
+    wie eine Batterie und traegt einen Feed-Stand. Ein Name kann luegen, das Schema nicht.
+    """
+    return isinstance(inhalt, dict) and isinstance(inhalt.get("checks"), list)
+
+
+_UNLESBAR = object()
+
+
+def _laden(p: Path):
+    try:
+        return json.loads(p.read_text(encoding="utf-8"))
+    except Exception:
+        return _UNLESBAR
+
+
+def quellen(basis=None) -> dict:
+    """{Dateiname: Inhalt} aller Batterien unter `basis`. Gefunden, nicht gelistet.
+
+    Eine Datei, die es gibt und die sich NICHT lesen laesst, bleibt drin — `sammeln` meldet
+    sie als „blind". Sie stillschweigend zu uebergehen waere der Fehler, gegen den die ganze
+    Meldung gebaut ist: fehlende Information, die als harmloser Default rendert.
+    """
+    basis = Path(basis) if basis else BASE
+    namen = set(EXTRA_QUELLEN) | {p.name for p in basis.glob(QUELL_MUSTER)}
+    raus = {}
+    for n in sorted(namen):
+        p = basis / n
+        if not p.exists():
+            continue
+        d = _laden(p)
+        if d is _UNLESBAR:
+            raus[n] = None
+        elif ist_batterie(d):
+            raus[n] = d
+    return raus
 
 # Ab wann ist eine Batterie selbst ein Befund? update-liga laeuft dreimal taeglich, die
 # Poly- und Betfair-Batterien oefter — 14 h laesst einen ausgefallenen Lauf durch und faengt
 # einen ausgefallenen Tag.
 ALT_H = 14.0
+# Ab wann ruht eine Batterie, statt blind zu sein? 14 Tage — dieselbe Grenze wie auf der
+# Statusseite (`_ST_RUHEND_H`). Lang genug, dass kein Wochenende und keine Cron-Luecke
+# hineinfaellt; kurz genug, dass ein echter Ausfall vorher als „blind" auffaellt.
+RUHEND_H = 14.0 * 24
 # Das Fenster, in dem gesendet wird (UTC). Frueh genug, dass der Tag noch etwas bringt.
 FENSTER = (6, 10)
 
@@ -103,6 +170,32 @@ GELD = {
     "resolutions_fresh",
     "close_resolution_stamped",
     "track_record_fresh",
+
+    # ── 21.09.2026: die Waechter aus liga_status/mls_status, eingestuft ────────────────
+    # Der Massstab: kostet ein falscher Wert HIER Geld, das bewegt oder gebucht wird?
+    # Alles andere — Abdeckung, Lernen, Anzeige — ist Messung. Die Geld-Sektion bleibt nur
+    # glaubwuerdig, solange sie kurz ist.
+    #
+    # was nicht abrechnet, faellt aus der Bilanz:
+    "absagen_abgerechnet", "picks_resolved", "played_games_resolved",
+    "result_score_final", "resolved_status_propagated", "ko_settlement_ninety_min",
+    # was den Preis bestimmt, zu dem gekauft/verkauft wurde:
+    "entry_priced_at_ask", "profit_sell_real", "ah_btts_position_priced",
+    # eine Wette auf die falsche Seite oder aus einem Platzhalter:
+    "homeaway_consistent", "no_ghost_picks", "no_phantom_odds", "odds_sane",
+    "opening_plausible", "btts_not_templated_traded", "ah_edge_sane", "btts_edge_sane",
+    # ein Edge gegen veraltete oder falsche Preise:
+    "edge_consistent", "odds_freshness", "steam_longshot_ceiling",
+    # offene Position, die niemand mehr sieht oder schliessen kann:
+    "autobet_kickoff", "live_scan_laeuft",
+    # Belege und Buecher, ohne die die Bilanz unvollstaendig ist:
+    "wallet_ledger_growing", "killer_push_buch", "data_not_wiped", "inputs_readable",
+    "run_health",
+    # 21.09.2026, zweiter Durchgang: ohne frische Preise/Feeds handelt der scharfe Pfad blind.
+    "prices_fresh", "close_feed_fresh", "feed_populated", "consensus_fresh",
+    "wallet_track_fresh", "stale_live_markets", "no_stuck_pending", "live_minute_sane",
+    "artefakte sind lesbar", "datenbau ist nicht stehengeblieben",
+    "poly-markt gehoert zur selben mannschaft",
 }
 GEPRUEFT_KEIN_GELD = {
     # angesehen und bewusst NICHT als Geld eingestuft — mit dem Grund daneben.
@@ -123,6 +216,47 @@ GEPRUEFT_KEIN_GELD = {
     "buendel_cond_stabil",
     "grosses_geld_bleibt_im_feed",
     "direction_covers_money",
+
+    # ── 21.09.2026: angesehen und BEWUSST nicht als Geld eingestuft ────────────────────
+    # Abdeckung und Vollstaendigkeit — fehlt etwas, wird weniger gemessen, nicht falsch
+    # abgerechnet:
+    "clv_card_coverage", "trade_clv_coverage", "signal_coverage", "soft_book_history",
+    "soft_opening_captured", "ah_ladder_coverage", "liga_market_coverage",
+    "ko_apif_coverage", "finished_has_stats", "history_snaps_plausible",
+    "injuries_plausible", "lineup_present", "standings_built", "ko_odds_present",
+    "ko_bracket_consistency", "liga_leagues_populated", "liga_odds_round_sane",
+    "poly_vorfenster", "buecher_punkte", "smartmoney_sane", "smartmoney_cluster_sane",
+    "streaks_fresh", "card_link_alive", "betfair_ledger",
+    # Zuordnung und Zeitstempel — wichtig, aber kein Ausgang:
+    "kickoff_present", "time_matches_kickoff", "schedule_date", "venue_resolves",
+    "venue_matches_schedule", "closing_prematch", "closing_capture_fresh",
+    "closing_capture_alive", "odds_field_plausible", "public_consensus",
+    "public_is_multibook", "ou_pinnacle_anchored", "ou_anchor_source",
+    # Lernen und Einstufung — beeinflusst kuenftige Picks, bewegt heute kein Geld:
+    "learning_loop_alive", "engine_version_stamped", "freshness_learning_coupled",
+    "bet_move_fresh", "reverser_demoted", "pick_safe_variant", "safer_line_applied",
+    "card_only_not_in_trade", "no_duplicate_picks", "steam_lag_no_dupes",
+    "vorregistrierung", "betfair_liefert", "poly_global_liefert", "pinn_anker",
+    # 21.09.2026, dritter Durchgang: kam mit `mls_status.json` dazu, als die Quellen nicht mehr
+    # aufgezaehlt, sondern gefunden werden. Eine stehende Poly-Flaeche starrt einen Eingang aus
+    # — Radar, E-Sport-Tab, Geld-Karte —, sie schreibt aber keine falsche Zahl ins Buch. Der
+    # Guard ist selbst als `warn` und ausdruecklich nicht-blockierend gebaut.
+    "poly_surfaces_alive",
+
+    # 21.09.2026, zweiter Durchgang: Messung ueber die Messung, Anzeige, Abdeckung.
+    "accuracy_backtest_fresh", "consensus_anchor_coverage", "direction_present",
+    "history_mkv_present", "league_norm_usable", "odds_and_shape_sane",
+    "public_eval_alive", "split_vollstaendig",
+    "betfair-buckets tragen ihr urteil mit",
+    "jede quelle der uebersicht traegt einen zeitstempel",
+    "public-stille ist erklaert", "schattenbuch fuellt sich",
+    "serien werden nach seltenheit rangiert, nicht nach laenge",
+    "serien-buch zeigt beide buecher",
+    "serien-seltenheit folgt aus der liga-basis, die danebensteht",
+    "serien-seltenheit rechnet mit der rate, die danebensteht",
+    "stake-spielklasse: tabelle vollstaendig, richtungen getrennt",
+    "stumme signale: wer hat nie gefeuert?",
+    "takt: cron gegen gemessene laeufe",
 }
 GELD_WORTE = ("wette", "position", "order", "push", "beleg", "ergebnis", "bilanz",
               "geld", "money", "settle", "resolution", "track_record", "deckung")
@@ -154,11 +288,20 @@ def ist_geld(check: dict) -> bool:
 
 
 def braucht_entscheidung(check: dict) -> bool:
-    """Ein Check mit geldnahem Namen, der weder als Geld noch als geprueft dasteht. REIN."""
-    k = schluessel(check)
-    if k in GELD or k in GEPRUEFT_KEIN_GELD:
-        return False
-    return any(w in k for w in GELD_WORTE)
+    """Ein Check, der weder als Geld noch als geprueft dasteht. REIN.
+
+    🔴 21.09.2026. Hier stand zusaetzlich `return any(w in k for w in GELD_WORTE)` —
+    eine Einstufung war also nur noetig, wenn der NAME geldnah klang. `absagen_abgerechnet`
+    traegt keines dieser Woerter und ist trotzdem Geld: ein Spiel, das nie abrechnet, faellt
+    aus der Bilanz. Beim Mutationstest liess sich der Eintrag ersatzlos entfernen, ohne dass
+    etwas rot wurde.
+
+    Der Kopf dieser Datei sagt es selbst: „Geld ist eine Entscheidung, keine Zeichenkette."
+    Die Wortliste blieb trotzdem das Tor. Jetzt braucht JEDER Check eine Entscheidung; die
+    Wortliste entscheidet nur noch, in welchen Eimer ein noch nicht eingestufter faellt.
+    Fehlerklasse: ein Wächter, der nur die Faelle einfordert, die er ohnehin erkennt.
+    """
+    return schluessel(check) not in GELD and schluessel(check) not in GEPRUEFT_KEIN_GELD
 
 
 def sammeln(artefakte: dict, jetzt=None) -> dict:
@@ -167,7 +310,7 @@ def sammeln(artefakte: dict, jetzt=None) -> dict:
     REIN. `blind` sind Batterien, die zu alt sind, um etwas zu behaupten — sie sind selbst ein
     Befund und nie ein stilles Gruen.
     """
-    geld, messung, offen, blind = [], [], [], []
+    geld, messung, offen, blind, ruht = [], [], [], [], []
     for quelle, inhalt in sorted((artefakte or {}).items()):
         if not isinstance(inhalt, dict):
             blind.append({"quelle": quelle, "grund": "nicht lesbar"})
@@ -175,6 +318,22 @@ def sammeln(artefakte: dict, jetzt=None) -> dict:
         a = alter_h(inhalt.get("generatedAt"), jetzt)
         if a is None:
             blind.append({"quelle": quelle, "grund": "ohne Zeitstempel"})
+            continue
+        if a > RUHEND_H:
+            # 🔴 21.09.2026 (Lucas: „Der WM Mist ist vorbei, interessiert niemand"). Eine
+            # Batterie, deren Datensatz ausgelaufen ist, friert ein und bleibt lesbar. Als
+            # „blind" gemeldet stuende sie ab dann JEDEN Tag in der Nachricht, mit derselben
+            # Zeile, und zwar fuer immer. Blind heisst „diese Pruefung sagt gerade nichts, und
+            # das ist ein Problem"; hier ist kein Problem, hier ist eine Saison vorbei.
+            #
+            # Der Anlass ist die WM: 57 echte Waechter in `wm_status.json`, eingefroren am
+            # 19.07. Sie wird gefunden wie jede andere Batterie — das ist richtig so, sie IST
+            # eine — und erst hier, am Alter, als ruhend erkannt. Der naechste Fall kommt
+            # bestimmt: `mls_status.json` friert ein, sobald die Saison endet.
+            # Dieselbe Unterscheidung wie auf der Statusseite (`_stFeedStufe`) und in
+            # `freigabe.py` (`status: "ruht"`). Ein ruhender Datensatz wird still uebergangen.
+            # Fehlerklasse: ein abgeschlossener Zustand, der als Stoerung gemeldet wird.
+            ruht.append({"quelle": quelle, "alterH": a})
             continue
         if a > ALT_H:
             blind.append({"quelle": quelle, "grund": "%.0f h alt" % a, "alterH": a})
@@ -192,8 +351,52 @@ def sammeln(artefakte: dict, jetzt=None) -> dict:
             else:
                 messung.append(zeile)
     schwer = lambda z: (0 if z.get("severity") == "error" else 1, -(z.get("nFail") or 0))
-    return {"geld": sorted(geld, key=schwer), "messung": sorted(messung, key=schwer),
-            "offen": offen, "blind": blind}
+    return {"geld": sorted(falten(geld), key=schwer), "messung": sorted(falten(messung), key=schwer),
+            "offen": falten(offen), "blind": blind, "ruht": ruht}
+
+
+def falten(rows) -> list:
+    """Dieselbe Stoerung aus mehreren Batterien ist EINE Stoerung. REIN.
+
+    🔴 21.09.2026, direkt nach dem Umbau auf `quellen()`. Mit liga UND mls in der Meldung stand
+    „Stake Radar: seit 337 h kein Lauf" zweimal da, und „Poly-Live-Scan taktet" auch — einmal
+    mit 3,7 h, einmal mit 3,4 h. Beide Batterien pruefen denselben globalen Workflow; es ist
+    EIN Vorfall, und wer ihn zweimal liest, liest die Meldung beim naechsten Mal gar nicht.
+    Fehlerklasse: eine Zaehlung, die die Quellen zaehlt statt die Vorfaelle.
+
+    `nFail` wird deshalb auch nicht summiert, sondern gemaxt: derselbe Ausfall, zweimal
+    gesehen, ist nicht doppelt so schlimm.
+    """
+    raus, index = [], {}
+    for z in rows or []:
+        k = str(z.get("label") or "")
+        t = index.get(k)
+        if t is None:
+            t = dict(z)
+            t["quellen"] = [z.get("quelle")]
+            t["failures"] = list(z.get("failures") or [])
+            index[k] = t
+            raus.append(t)
+            continue
+        if z.get("quelle") not in t["quellen"]:
+            t["quellen"].append(z.get("quelle"))
+        t["nFail"] = max(t.get("nFail") or 0, z.get("nFail") or 0)
+        if z.get("severity") == "error":
+            t["severity"] = "error"
+        for f in z.get("failures") or []:
+            if f not in t["failures"] and len(t["failures"]) < 2:
+                t["failures"].append(f)
+    return raus
+
+
+def _quellen_kurz(zeile) -> str:
+    """„liga, mls" — aber nur, wenn es mehr als eine ist. Bei einer sagt der Name nichts."""
+    qs = [q for q in (zeile.get("quellen") or []) if q]
+    if len(qs) < 2:
+        return ""
+    kurz = [str(q).replace("_status.json", "").replace("_integrity.json", "").replace(".json", "")
+            for q in qs]
+    return " (%s)" % ", ".join(kurz)
 
 
 def _kurz(text: str, n: int = 150) -> str:
@@ -225,12 +428,19 @@ def baue_meldung(befund: dict, jetzt=None) -> str:
         z.append("%s <b>%s</b>" % (zeichen, titel))
         zeigen = rows if deckel is None else rows[:deckel]
         for x in zeigen:
-            z.append("   · <b>%s</b>" % _kurz(x["label"], 70))
+            z.append("   · <b>%s</b>%s" % (_kurz(x["label"], 70), _quellen_kurz(x)))
             for f in (x.get("failures") or [])[:1 if name == "messung" else 2]:
                 z.append("       %s" % _kurz(f))
         if deckel is not None and len(rows) > deckel:
             z.append("   · <i>und %d weitere</i>" % (len(rows) - deckel))
     z.append("")
+    # Eine ruhende Batterie wird NICHT als Stoerung gemeldet — aber auch nicht verschwiegen.
+    # Eine Luecke, die sich durch Zeitablauf selbst erledigt, hinterlaesst sonst keine Spur,
+    # und in drei Monaten weiss niemand mehr, dass diese Pruefung existiert.
+    if b.get("ruht"):
+        z.append("<i>Ruht: %s — wird nicht geprüft, ist auch kein Fehler.</i>"
+                 % ", ".join("%s (%.0f Tage)" % (x["quelle"], x["alterH"] / 24)
+                             for x in b["ruht"]))
     z.append("<i>Nur Störungen. Kommt nichts, ist nichts kaputt — außer die Prüfung selbst "
              "steht oben unter „Blind\".</i>")
     return "\n".join(z)
@@ -253,14 +463,7 @@ def main(argv=None) -> int:
     probe = "--probe" in argv
     jetzt = datetime.now(timezone.utc)
 
-    artefakte = {}
-    for n in QUELLEN:
-        p = BASE / n
-        try:
-            artefakte[n] = json.loads(p.read_text(encoding="utf-8")) if p.exists() else None
-        except Exception:
-            artefakte[n] = None
-
+    artefakte = quellen()
     befund = sammeln(artefakte, jetzt)
     text = baue_meldung(befund, jetzt)
 
