@@ -306,15 +306,18 @@ def fetch_positions_value(address: str) -> float | None:
     import urllib.request
     if not address:
         return None
-    url = POSITIONS_URL.format(user=address)
-    req = urllib.request.Request(url, headers={"User-Agent": "BetEdge/1.0", "Accept": "application/json"})
-    try:
+
+    def _hole(url):
+        req = urllib.request.Request(
+            url, headers={"User-Agent": "BetEdge/1.0", "Accept": "application/json"})
         with urllib.request.urlopen(req, timeout=15) as r:
-            raw = json.loads(r.read())
+            return json.loads(r.read())
+
+    try:
+        rows = _alle_positionen(POSITIONS_URL.format(user=address), _hole)
     except Exception as e:
         print(f"  ⚠️  Positions-Fetch fehlgeschlagen: {e}")
         return None
-    rows = _positions_rows(raw)
     if rows is None:
         # 🔴 21.09.2026 (Lucas: „das ist wichtig und das haben wir damals schon mal gefixt").
         # Hier stand `raw.get("positions") or raw.get("data") or []`. Eine Antwort, die WEDER
@@ -366,6 +369,48 @@ def positionen_summe(rows) -> tuple:
 # uebernommen, damit ein spaeterer Leser 0,00 $ deuten kann: 0 Zeilen heisst „die Wallet haelt
 # nichts", n Zeilen mit Summe 0 heisst „sie haelt etwas, das gerade nichts wert ist".
 LETZTE_MESSUNG = {"zeilen": None}
+
+
+# Die data-api liefert Positionen SEITENWEISE. Ohne `limit`/`offset` kommen die ersten 100.
+SEITE = 500          # Obergrenze je Abruf; die API deckelt selbst, der Code blaettert weiter
+MAX_SEITEN = 12      # Notbremse gegen eine Schleife, falls `offset` je ignoriert wird
+
+
+def _alle_positionen(basis_url: str, hole):
+    """ALLE Positionszeilen, ueber alle Seiten. None = Format nicht deutbar.
+
+    🔴 21.09.2026 (Lucas: „meine verknuepfte wallet haelt rund um die 200 dollar … finde den
+    fehler" — und: „hoer mit dem Buch auf, wir haben die wallet verbunden"). Er hatte recht,
+    und zwar auch mit „das hat schon super geklappt".
+
+    Im Browser an der echten Wallet nachgemessen
+    (0x02e0b17da6f3206c2af8ccdf416aa934f5499633):
+        ohne Blaetterung   100 Zeilen — ALLE mit currentValue 0 -> Summe   0,00 $
+        mit Blaetterung    141 Zeilen — 3 mit Wert              -> Summe  21,20 $
+    Die 100 ist das Seitenlimit der API. Die Wallet schleppt 100 tote WM-Tickets von Juni/Juli
+    mit (wertlos, `redeemable`, nie eingeloest) — und die fuellen die erste Seite vollstaendig.
+    Die drei ECHTEN offenen Positionen (G2 Ares 9,81 $, Vinciguerra 6,35 $, Baris 5,04 $)
+    stehen dahinter und wurden nie gesehen.
+
+    Deshalb „hat es frueher geklappt": solange weniger als 100 Altzeilen im Konto lagen, war
+    das Offene noch auf Seite eins. Es ist nichts kaputtgegangen — die Wallet ist ueber die
+    Seitengrenze gewachsen.
+
+    Fehlerklasse: eine Seite ohne ihre Blaetterung, gelesen als waere sie die ganze Antwort.
+    """
+    alle, offset = [], 0
+    for _ in range(MAX_SEITEN):
+        trenn = "&" if "?" in basis_url else "?"
+        seite = _positions_rows(hole(f"{basis_url}{trenn}limit={SEITE}&offset={offset}"))
+        if seite is None:
+            return None if not alle else alle
+        alle.extend(seite)
+        if len(seite) < SEITE:
+            return alle
+        offset += len(seite)
+    print(f"  ⚠️  Positions-Blaetterung nach {MAX_SEITEN} Seiten abgebrochen "
+          f"({len(alle)} Zeilen) — Summe waere unvollstaendig")
+    return None
 
 
 def _positions_rows(raw):

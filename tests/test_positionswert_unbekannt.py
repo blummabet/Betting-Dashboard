@@ -101,6 +101,75 @@ class TestDieSummeWirdNurGanzGeliefert(unittest.TestCase):
         self.assertEqual(B.positionen_summe(["kaputt"])[1], 1)
 
 
+class TestDieSeiteWirdZuEndeGeblaettert(unittest.TestCase):
+    """🔴 21.09.2026, der eigentliche Fehler. Im Browser an der echten Wallet gemessen
+    (0x02e0b17da6f3206c2af8ccdf416aa934f5499633):
+
+        ohne Blätterung   100 Zeilen — ALLE mit currentValue 0  →  Summe   0,00 $
+        mit Blätterung    141 Zeilen — 3 mit Wert               →  Summe  21,20 $
+
+    100 ist das Seitenlimit der data-api. Die Wallet schleppt 100 tote WM-Tickets von Juni/Juli
+    mit (wertlos, `redeemable`, nie eingelöst); die füllen Seite eins vollständig. Die drei
+    echten offenen Positionen — G2 Ares 9,81 $, Vinciguerra 6,35 $, Baris 5,04 $ — standen
+    dahinter und wurden nie gesehen.
+
+    Lucas' „das hat schon super geklappt" stimmt genau: solange weniger als 100 Altzeilen im
+    Konto lagen, war das Offene noch auf Seite eins. Es ist nichts kaputtgegangen — die Wallet
+    ist über die Seitengrenze gewachsen.
+
+    Fehlerklasse: eine Seite ohne ihre Blätterung, gelesen als wäre sie die ganze Antwort.
+    """
+
+    def _holer(self, seiten):
+        import re
+        gerufen = []
+
+        def hole(url):
+            gerufen.append(url)
+            off = int(re.search(r"offset=(\d+)", url).group(1))
+            return seiten.get(off, [])
+        return hole, gerufen
+
+    def test_der_echte_fall_die_zweite_seite_traegt_den_wert(self):
+        seiten = {0: [{"currentValue": 0}] * B.SEITE,
+                  B.SEITE: [{"currentValue": 9.81}, {"currentValue": 6.35}, {"currentValue": 5.04}]}
+        hole, _ = self._holer(seiten)
+        rows = B._alle_positionen("https://x/positions?user=a", hole)
+        self.assertEqual(len(rows), B.SEITE + 3)
+        self.assertEqual(B.positionen_summe(rows), (21.2, 0))
+
+    def test_eine_volle_erste_seite_allein_ist_kein_ergebnis(self):
+        """Der Kern: genau `SEITE` Zeilen heisst „es koennte mehr geben" — also weiterblaettern."""
+        hole, gerufen = self._holer({0: [{"currentValue": 0}] * B.SEITE})
+        B._alle_positionen("https://x/positions?user=a", hole)
+        self.assertGreaterEqual(len(gerufen), 2, "nach einer vollen Seite muss nachgefragt werden")
+
+    def test_eine_halbe_seite_beendet_die_blaetterung(self):
+        hole, gerufen = self._holer({0: [{"currentValue": 1}] * 7})
+        rows = B._alle_positionen("https://x/positions?user=a", hole)
+        self.assertEqual(len(rows), 7)
+        self.assertEqual(len(gerufen), 1, "ein zweiter Abruf waere verschenkt")
+
+    def test_die_leere_wallet_bleibt_die_leere_wallet(self):
+        hole, _ = self._holer({0: []})
+        self.assertEqual(B._alle_positionen("https://x/positions?user=a", hole), [])
+
+    def test_ein_kaputtes_format_auf_seite_eins_ist_unbekannt(self):
+        self.assertIsNone(B._alle_positionen("https://x/p?u=a", lambda u: {"error": "x"}))
+
+    def test_die_notbremse_liefert_keine_halbe_summe(self):
+        """Ignoriert die API `offset`, kaeme sonst ewig dieselbe volle Seite — und am Ende eine
+        Summe, die niemand pruefen kann."""
+        hole, _ = self._holer({o * B.SEITE: [{"currentValue": 1}] * B.SEITE for o in range(0, 40)})
+        self.assertIsNone(B._alle_positionen("https://x/positions?user=a", hole))
+
+    def test_der_parameter_haengt_sich_richtig_an(self):
+        hole, gerufen = self._holer({0: []})
+        B._alle_positionen("https://x/positions?user=a", hole)
+        self.assertIn("&limit=", gerufen[0])
+        self.assertIn("&offset=0", gerufen[0])
+
+
 class TestDieSummeTraegtIhrenNenner(unittest.TestCase):
     """🔴 21.09.2026 (Lucas: „meine verknuepfte wallet haelt rund um die 200 dollar … finde den
     fehler"). Ich konnte ihm nicht sagen, ob die 0,00 „null Zeilen zurueckbekommen" heisst oder
