@@ -4168,8 +4168,11 @@ const POLY_DATASETS = ['mls', 'liga'];   // aktive Bewerbe (WM winterisiert → 
 // zaehlte der alte JS-Filter als OFFEN — das sind die $5,50 aus dem Phantom-Befund. Und
 // `reconcile_poly_positions.py` schreibt `closed_manual`, bevor `soldAt` steht.
 // Ein Test pinnt die beiden Listen an poly_offen.py, damit sie nicht wieder auseinanderlaufen.
-const PT_TERMINAL_STATUS = ['won', 'lost', 'void', 'sold', 'closed_manual', 'dry-run', 'dry_run'];
-const PT_TERMINAL_RESULT = ['WIN', 'LOSS', 'VOID'];
+// 21.09.2026: `unbelegt` ist terminal wie `dry-run` — eine Zeile, die bewiesen nie die Kasse
+// berührt hat (`wallet_abgleich.entbuchen`), bindet kein Geld. Dieselbe Liste wie in
+// poly_offen.py; stünde sie hier nicht, käme eine entbuchte Zeile als „offen" zurück.
+const PT_TERMINAL_STATUS = ['won', 'lost', 'void', 'sold', 'closed_manual', 'dry-run', 'dry_run', 'unbelegt'];
+const PT_TERMINAL_RESULT = ['WIN', 'LOSS', 'VOID', 'UNBELEGT'];
 
 function _ptIstOffen(b) {
   if (!b || typeof b !== 'object') return false;
@@ -4199,17 +4202,23 @@ function _ptAbgerechnet(bets) {
       .localeCompare(String(a.resolvedAt || a.soldAt || a.placedAt || '')));
 }
 
+// 🔴 21.09.2026 (Lucas: „Das kam. Aber auf poly wurde nicht gesetzt"). Zeilen, die bewiesen nie
+// die Kasse berührt haben, tragen `bilanz: false` — gesetzt dort, wo die Zahl entsteht
+// (`wallet_abgleich.entbuchen`), nicht hier. Sie fallen aus Zähler UND Nenner: ein Einsatz, der
+// nie floss, verwässert auch die Rendite nicht. Gezählt werden sie trotzdem, sonst verschwindet
+// der Vorfall aus der Anzeige und in drei Wochen weiß niemand mehr, dass es ihn gab.
 function _ptBilanz(settled) {
-  let w = 0, l = 0, v = 0, pnl = 0, stake = 0, mitPnl = 0;
+  let w = 0, l = 0, v = 0, u = 0, pnl = 0, stake = 0, mitPnl = 0;
   for (const b of settled) {
     const r = String(b.result || '').toUpperCase();
+    if (b && b.bilanz === false) { u++; continue; }
     if (r === 'WIN') w++; else if (r === 'LOSS') l++; else if (r === 'VOID') v++;
     const p = parseFloat(b.pnl);
     if (Number.isFinite(p)) { pnl += p; mitPnl++; }
     const st = parseFloat(b.stake);
     if (Number.isFinite(st)) stake += st;
   }
-  return { n: settled.length, w, l, v, pnl, stake, mitPnl };
+  return { n: settled.length - u, nAlle: settled.length, w, l, v, u, pnl, stake, mitPnl };
 }
 
 function _ptSettledBlock(bets) {
@@ -4266,7 +4275,11 @@ function _ptSettledBlock(bets) {
   const urteil = bil.n >= PT_MIN_N_URTEIL && bil.stake > 0
     ? `<span style="color:#8b949e">Rendite ${(bil.pnl / bil.stake * 100 >= 0 ? '+' : '')}${(bil.pnl / bil.stake * 100).toFixed(1)} % — Untergrenze siehe 🔬 Messungen</span>`
     : `<span style="color:#6e7681">Rendite erst ab ${PT_MIN_N_URTEIL} Zeilen — darunter ist sie ein Punktschätzer ohne Aussage</span>`;
-  const rechts = `<span style="font-size:11px;font-family:'SF Mono',Menlo,monospace;color:${bil.pnl >= 0 ? '#00d4a1' : '#f85149'};font-weight:800">${bil.n} · ${bil.w}W/${bil.l}L${bil.v ? '/' + bil.v + 'V' : ''} · ${usd(bil.pnl)}</span>`;
+  // Die entbuchten Zeilen stehen daneben, nicht drin. Wer sie nicht nennt, verliert den Vorfall.
+  const unbelegt = bil.u
+    ? `<span style="font-size:10px;color:#e3b341;margin-right:8px" title="bewiesen nie eine Wallet-Bewegung — zählt weder im Zähler noch im Nenner">${bil.u} unbelegt</span>`
+    : '';
+  const rechts = unbelegt + `<span style="font-size:11px;font-family:'SF Mono',Menlo,monospace;color:${bil.pnl >= 0 ? '#00d4a1' : '#f85149'};font-weight:800">${bil.n} · ${bil.w}W/${bil.l}L${bil.v ? '/' + bil.v + 'V' : ''} · ${usd(bil.pnl)}</span>`;
   return `
     <div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;overflow:hidden;margin-bottom:14px">
       ${kopf(rechts)}

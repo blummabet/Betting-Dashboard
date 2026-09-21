@@ -115,7 +115,7 @@ class TestNichtPruefbarIstNichtInOrdnung(unittest.TestCase):
         v = _v((T % "13:00", 100.0), (T % "13:15", 95.0))
         r = W.pruefe_buch([_b("alt", "2026-06-01T10:00:00+00:00")], v)
         self.assertEqual(len(r["unpruefbar"]), 1)
-        self.assertIn("deckt den Zeitpunkt nicht ab", r["unpruefbar"][0]["grund"])
+        self.assertIn("ausserhalb des Verlaufs", r["unpruefbar"][0]["grund"])
 
     def test_ohne_zeitstempel_ist_nicht_pruefbar(self):
         v = _v((T % "13:00", 100.0), (T % "13:15", 95.0))
@@ -141,7 +141,13 @@ class TestDerVerlaufWirdFortgeschrieben(unittest.TestCase):
             v = F.verlauf_anhaengen(v, {"updatedAt": "T%d" % i, "usdc": 100.0,
                                         "positions": 0, "total": 100.0})
         self.assertEqual(len(v), 1, "unveraenderte Staende werden zusammengefasst")
-        self.assertEqual(v[-1]["ts"], "T4", "der letzte Zeitstempel sagt, bis wann geschaut wurde")
+        # 🔴 21.09.2026 korrigiert: hier stand `ts == "T4"` — der Zeitstempel zog mit jedem
+        # ruhigen Lauf nach. Damit wanderte der Moment der letzten AENDERUNG nach vorne: ein
+        # Kauf um 01:15 stand nach drei Stunden Stille als 04:39 in der Reihe, und der Abgleich
+        # (Fenster +/-25 Min) fand seine Wette nicht mehr. `ts` ist jetzt die erste Sichtung
+        # dieses Standes, `bisTs` die letzte.
+        self.assertEqual(v[-1]["ts"], "T0", "wann dieser Stand zuerst gesehen wurde")
+        self.assertEqual(v[-1]["bisTs"], "T4", "bis wann er galt")
 
     def test_eine_aenderung_bekommt_eine_eigene_zeile(self):
         import fetch_wm_poly_balance as F

@@ -382,7 +382,12 @@ def check_wette_hat_die_kasse_beruehrt(ctx):
         bets = d.get("bets") if isinstance(d, dict) else d
         # Nur abgerechnete Zeilen: eine offene Wette hat ihren Ausgang noch vor sich, aber ihr
         # KAUF muesste sich zeigen — den faengt `check_ruhende_order_ist_keine_position`.
-        fertig = [b for b in (bets or []) if isinstance(b, dict) and b.get("result")]
+        # 21.09.2026: und nur solche, die noch IN der Bilanz stehen. Eine Zeile, die
+        # `wallet_abgleich.entbuchen` bereits herausgenommen hat (`bilanz: false`), ist der
+        # erledigte Fall — sie hier weiter zu melden waere ein abgeschlossener Zustand, der als
+        # Stoerung gerendert wird, und zwar taeglich und fuer immer.
+        fertig = [b for b in (bets or [])
+                  if isinstance(b, dict) and b.get("result") and b.get("bilanz") is not False]
         if not fertig:
             continue
         r = _WA.pruefe_buch(fertig, verlauf)

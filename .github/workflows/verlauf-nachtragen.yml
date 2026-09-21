@@ -1,0 +1,43 @@
+# 🔴 21.09.2026 — einmaliger Nachtrag des Wallet-Verlaufs aus der Git-Historie.
+#
+# Anlass: zwei Zeilen im Shortlist-Buch standen mit je -5,00 $ in der Bilanz, ohne dass sich das
+# Wallet je bewegt hat. `wallet_abgleich.entbuchen` nimmt solche Zeilen heraus — aber nur, wenn
+# der Verlauf ihren Zeitpunkt abdeckt. `*_poly_verlauf.json` gibt es erst seit dem 21.09.
+# nachmittags; die Zeilen sind von derselben Nacht.
+#
+# Die Staende liegen seit Monaten in der Historie von `*_poly_balance.json`. Dieser Lauf holt
+# sie zurueck. Er hat KEINEN Zeitplan: ein Nachtrag ist einmalig, und `fetch-depth: 0` waere im
+# Minuten-Takt teuer — genau deshalb holen die anderen Workflows nur den letzten Commit.
+name: 🧾 Wallet-Verlauf nachtragen
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: poly-artefakte
+  cancel-in-progress: false
+
+jobs:
+  nachtragen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0        # ohne die ganze Historie gibt es nichts nachzutragen
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 🧾 Verlauf nachtragen
+        run: python3 verlauf_nachtragen.py
+
+      # Dasselbe Skript wie ueberall sonst — ein eigenes `git pull` hier haette wieder an
+      # untrackten Dateien gescheitert, und genau das faengt tests/test_ci_pull.py.
+      - name: 💾 Sichern
+        run: |
+          bash scripts/ci_sichern.sh "🧾 Wallet-Verlauf aus der Git-Historie nachgetragen" \
+            wm_poly_verlauf.json liga_poly_verlauf.json mls_poly_verlauf.json

@@ -53,6 +53,7 @@ from pathlib import Path
 
 import poly_offen as PO
 import push_deckel as PD
+import wallet_abgleich as WA
 from safe_write import write_json_atomic
 
 BASE = Path(__file__).resolve().parent
@@ -675,6 +676,27 @@ def _melden(zeile, bet, dry):
     )
 
 
+def _wallet_verlauf() -> list:
+    """Der Wallet-Verlauf aller Datensaetze als eine Reihe — eine Wallet, ein Verlauf.
+
+    Die Datensaetze schreiben je eigene Dateien, aber sie teilen sich die Kasse: ein Kauf des
+    Liga-Laufs zeigt sich im selben Collateral wie einer des MLS-Laufs. Wer nur eine Datei
+    liest, sieht Abgaenge fehlen, die es gab.
+    """
+    raus = []
+    for n in ("wm_poly_verlauf.json", "liga_poly_verlauf.json", "mls_poly_verlauf.json"):
+        p = BASE / n
+        if not p.exists():
+            continue
+        try:
+            v = json.loads(p.read_text(encoding="utf-8"))
+        except Exception:                             # noqa: BLE001
+            continue
+        if isinstance(v, list):
+            raus.extend(v)
+    return raus
+
+
 def main() -> int:
     print("=== shortlist_auto_bet.py ===")
     placed_roh = _laden(PLACED_FILE, {"bets": []})
@@ -689,6 +711,7 @@ def main() -> int:
         n_ab = abgleichen(bets, track)
         if n_ab:
             print(f"  📒 {n_ab} Position(en) abgeglichen (Ausgang vom Paper-Tracker).")
+
         # 15.09.2026: eine Position, die das Papier aufgibt, darf nicht nur ein Feld werden.
         _neu_haengend = [b for b in bets if isinstance(b, dict) and b.pop("_neuHaengend", None)]
         if _neu_haengend:
@@ -698,6 +721,18 @@ def main() -> int:
                 send_trades_message(haengend_text(_neu_haengend, not AN))
             except Exception as exc:
                 print(f"  ℹ️  Haengend-Meldung nicht gesendet: {exc}")
+
+    # 🔴 21.09.2026 (Lucas: „Das kam. Aber auf poly wurde nicht gesetzt"). Die Toluca-Zeile
+    # stand mit `result: LOSS, pnl: -5.00` im Buch, und das Wallet hatte sich sieben Stunden
+    # nicht bewegt. `check_wette_hat_die_kasse_beruehrt` hat das seit heute frueh GEMELDET —
+    # gezogen hat die Meldung nichts: die Zeile blieb in der Bilanz, und jeder Leser rechnete
+    # sie mit. Fehlerklasse: ein Befund, der gemeldet, aber nicht gezogen wird.
+    #
+    # Hier, wo die Zahl entsteht, wird sie auch korrigiert — einmal, statt in jedem Frontend.
+    # Nur BEWIESEN unbelegte Zeilen; „nicht pruefbar" bleibt gebucht.
+    entbucht = WA.entbuchen(bets, _wallet_verlauf())
+    if entbucht:
+        print("  🧾 " + WA.entbucht_text(entbucht))
 
     exp = PO.wallet_exposure(str(BASE))
     if exp["unlesbar"]:

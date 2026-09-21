@@ -35,8 +35,12 @@ DATENSATZ_PRAEFIXE = ("wm_", "liga_", "mls_", "shortlist_")
 
 # Ausdrueckliche Terminal-Zustaende. `dry-run` steht hier, weil dabei KEIN Geld floss —
 # eine Simulation darf keinen echten Deckel blockieren.
-TERMINAL_STATUS = {"won", "lost", "void", "sold", "closed_manual", "dry-run", "dry_run"}
-TERMINAL_RESULT = {"WIN", "LOSS", "VOID"}
+# 21.09.2026: `unbelegt` aus demselben Grund. Eine Zeile, die bewiesen nie die Kasse beruehrt
+# hat (`wallet_abgleich.entbuchen`), bindet kein Geld — sie darf den Deckel nicht belegen und
+# schon gar nicht als „wieder offen" zurueckkommen.
+TERMINAL_STATUS = {"won", "lost", "void", "sold", "closed_manual", "dry-run", "dry_run",
+                   "unbelegt"}
+TERMINAL_RESULT = {"WIN", "LOSS", "VOID", "UNBELEGT"}
 
 
 def ist_offen(bet) -> bool:

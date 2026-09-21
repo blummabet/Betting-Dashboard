@@ -114,14 +114,27 @@ def verlauf_anhaengen(verlauf, stand, keep: int = VERLAUF_KEEP) -> list:
     """Haengt einen Wallet-Stand an die Reihe. REIN.
 
     Unveraenderte Staende werden NICHT gespeichert: der Abgleich sucht Bewegungen, und eine
-    Reihe aus tausend identischen Zeilen macht die Suche nur langsam. Der letzte Stand bleibt
-    aber immer stehen, damit das Ende der Reihe sagt, bis wann geschaut wurde.
+    Reihe aus tausend identischen Zeilen macht die Suche nur langsam.
+
+    🔴 21.09.2026. Hier stand `r[-1] = neu` — der gleiche Stand zog den Zeitstempel NACH. Damit
+    wanderte der Moment, in dem sich das Wallet zuletzt geaendert hatte, mit jedem ruhigen Lauf
+    weiter nach vorne: ein Kauf um 01:15 stand nach drei Stunden Stille als 04:39 in der Reihe.
+    `wallet_abgleich` ordnet Abgaenge aber ueber ein Zeitfenster von +/-25 Minuten zu — eine um
+    Stunden verschobene Bewegung findet ihre Wette nie, und die Wette gilt als unbelegt.
+    Fehlerklasse: **eine Reihe, die festhaelt, wann zuletzt geschaut wurde, statt wann sich
+    etwas geaendert hat.**
+
+    `ts` bleibt deshalb stehen: der frueheste Zeitpunkt, zu dem dieser Stand gesehen wurde.
+    `bisTs` sagt, bis wann er galt — das ist die Auskunft, die vorher `ts` ueberschrieben hat.
     """
     r = list(verlauf or [])
     neu = {"ts": stand.get("updatedAt"), "usdc": stand.get("usdc"),
            "positions": stand.get("positions"), "total": stand.get("total")}
     if r and isinstance(r[-1], dict) and r[-1].get("usdc") == neu["usdc"]:
-        r[-1] = neu                      # gleicher Stand -> nur den Zeitstempel nachziehen
+        letzt = dict(r[-1])
+        letzt["bisTs"] = neu["ts"]       # gleicher Stand -> nur das ENDE nachziehen
+        letzt["positions"], letzt["total"] = neu["positions"], neu["total"]
+        r[-1] = letzt
     else:
         r.append(neu)
     return r[-keep:] if keep else r
