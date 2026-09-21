@@ -1,7 +1,7 @@
 {
- "updatedAt": "2026-09-21T16:04:44.383152+00:00",
+ "updatedAt": "2026-09-21T16:34:49.077354+00:00",
  "stake": 10.0,
- "expired": 0,
+ "expired": 1,
  "condDrift": 0,
  "katNachgetragen": 0,
  "blockedCats": [
@@ -222,45 +222,30 @@
    "verfallenTs": "2026-09-20T15:04:41.167010+00:00",
    "alterTage": 14.0,
    "grund": "Bündel ohne Marktkennung"
+  },
+  {
+   "key": "spl-kha-riy-2026-09-07-more-markets",
+   "side": "Under",
+   "cat": "Fußball",
+   "conv": 5,
+   "public": false,
+   "entryPrice": 0.745,
+   "firstTs": "2026-09-07T16:06:38.497456+00:00",
+   "verfallenTs": "2026-09-21T16:34:49.077354+00:00",
+   "alterTage": 14.0,
+   "grund": "Bündel: Auflösung nennt einen anderen Markt"
   }
  ],
  "unaufloesbarAgg": {
-  "n": 16,
+  "n": 17,
   "publicN": 1,
   "nachGrund": {
    "Bündel ohne Marktkennung": 12,
-   "nicht getrackt": 4
+   "nicht getrackt": 4,
+   "Bündel: Auflösung nennt einen anderen Markt": 1
   }
  },
  "open": {
-  "spl-kha-riy-2026-09-07-more-markets|Under": {
-   "key": "spl-kha-riy-2026-09-07-more-markets",
-   "side": "Under",
-   "verdict": "BET",
-   "conv": 5,
-   "league": "SOCCER",
-   "cat": "Fußball",
-   "entryPrice": 0.745,
-   "firstTs": "2026-09-07T16:06:38.497456+00:00",
-   "lastPrice": 0.525,
-   "lastTs": "2026-09-21T16:04:44.383152+00:00",
-   "htkAtEntry": -0.5587602777777778,
-   "public": false,
-   "ohneWallet": false,
-   "reasons": [
-    "großes Geld auf Under (74%) → $97K",
-    "Steam läuft rein (+3.0pp)"
-   ],
-   "signals": [
-    "money",
-    "steam"
-   ],
-   "stake": 10.0,
-   "ev": "2026-09-01",
-   "movePreEntryPP": -32.0,
-   "cond": "0xf5848b77437210e7a92772023c42f0fe712db576bd45f19057acbf5a7c29cf75",
-   "frage": "Al Khaleej Saudi Club vs. Al Riyadh Saudi Club: O/U 2.5"
-  },
   "spl-haz-taa-2026-09-08-more-markets|Over": {
    "key": "spl-haz-taa-2026-09-08-more-markets",
    "side": "Over",
@@ -271,7 +256,7 @@
    "entryPrice": 0.71,
    "firstTs": "2026-09-08T16:08:27.175892+00:00",
    "lastPrice": 0.475,
-   "lastTs": "2026-09-21T16:04:44.383152+00:00",
+   "lastTs": "2026-09-21T16:34:49.077354+00:00",
    "htkAtEntry": -0.1736477777777778,
    "public": false,
    "ohneWallet": false,
@@ -299,7 +284,7 @@
    "entryPrice": 0.705,
    "firstTs": "2026-09-08T17:08:04.501019+00:00",
    "lastPrice": 0.605,
-   "lastTs": "2026-09-21T16:04:44.383152+00:00",
+   "lastTs": "2026-09-21T16:34:49.077354+00:00",
    "htkAtEntry": -0.3228330555555556,
    "public": true,
    "ohneWallet": false,
@@ -329,7 +314,7 @@
    "entryPrice": 0.898,
    "firstTs": "2026-09-21T12:39:48.800372+00:00",
    "lastPrice": 0.9075,
-   "lastTs": "2026-09-21T16:04:44.383152+00:00",
+   "lastTs": "2026-09-21T16:34:49.077354+00:00",
    "htkAtEntry": 2.380893888888889,
    "public": false,
    "ohneWallet": false,
@@ -357,7 +342,7 @@
    "entryPrice": 0.775,
    "firstTs": "2026-09-21T13:33:04.564924+00:00",
    "lastPrice": 0.845,
-   "lastTs": "2026-09-21T16:04:44.383152+00:00",
+   "lastTs": "2026-09-21T16:34:49.077354+00:00",
    "htkAtEntry": 0.4933575,
    "public": false,
    "ohneWallet": false,
@@ -385,7 +370,7 @@
    "entryPrice": 0.795,
    "firstTs": "2026-09-21T15:37:44.056448+00:00",
    "lastPrice": 0.795,
-   "lastTs": "2026-09-21T16:04:44.383152+00:00",
+   "lastTs": "2026-09-21T16:34:49.077354+00:00",
    "htkAtEntry": 2.4244933333333334,
    "public": false,
    "ohneWallet": false,
@@ -412,8 +397,8 @@
    "cat": "Tennis",
    "entryPrice": 0.605,
    "firstTs": "2026-09-21T16:04:44.383152+00:00",
-   "lastPrice": 0.605,
-   "lastTs": "2026-09-21T16:04:44.383152+00:00",
+   "lastPrice": 0.615,
+   "lastTs": "2026-09-21T16:34:49.077354+00:00",
    "htkAtEntry": 1.972958888888889,
    "public": true,
    "ohneWallet": false,
@@ -430,6 +415,32 @@
    "movePreEntryPP": 3.0,
    "cond": "0x1c7411b13681b7591f5b8ab41ecbf69c4c18a53fcebf1e020fa3764932c3d69b",
    "frage": "San Diego 2: Ozan Baris vs Alex Rybakov"
+  },
+  "rou1-fpp-fcm-2026-09-21|FC Petrolul Ploieşti": {
+   "key": "rou1-fpp-fcm-2026-09-21",
+   "side": "FC Petrolul Ploieşti",
+   "verdict": "BET",
+   "conv": 6,
+   "league": "SOCCER",
+   "cat": "Fußball",
+   "entryPrice": 0.655,
+   "firstTs": "2026-09-21T16:34:49.077354+00:00",
+   "lastPrice": 0.655,
+   "lastTs": "2026-09-21T16:34:49.077354+00:00",
+   "htkAtEntry": 1.4845833333333334,
+   "public": false,
+   "ohneWallet": true,
+   "reasons": [
+    "großes Geld auf FC Petrolul Ploieşti (97%) → $76K",
+    "Steam läuft rein (+4.0pp)"
+   ],
+   "signals": [
+    "money",
+    "steam"
+   ],
+   "stake": 10.0,
+   "ev": "2026-09-01",
+   "movePreEntryPP": 3.0
   }
  },
  "settled": [
