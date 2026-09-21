@@ -10663,7 +10663,7 @@
       "ahH_n050": 1.94,
       "poly_hw": 0.495,
       "poly_dr": 0.245,
-      "poly_aw": 0.2615,
+      "poly_aw": 0.2605,
       "poly_vol": 4158.94,
       "poly_slug": "mls-sea-rsl-2026-04-12",
       "marketsCarriedAt": "2026-09-20T12:41:37.472419+00:00",
@@ -11420,7 +11420,7 @@
       "public_u35_open": 1.57
     },
     "1604-1616": {
-      "poly_hw": 0.385,
+      "poly_hw": 0.39,
       "poly_dr": 0.26,
       "poly_aw": 0.345,
       "poly_vol": 1347.55,
@@ -11435,7 +11435,7 @@
     },
     "2242-1615": {
       "poly_hw": 0.465,
-      "poly_dr": 0.245,
+      "poly_dr": 0.25,
       "poly_aw": 0.26,
       "poly_vol": 108378.57,
       "poly_slug": "mls-fcc-dcu-2026-09-05"
@@ -11443,7 +11443,7 @@
     "1595-1611": {
       "poly_hw": 0.525,
       "poly_dr": 0.22,
-      "poly_aw": 0.235,
+      "poly_aw": 0.23,
       "poly_vol": 0,
       "poly_slug": "mls-sea-skc-2026-10-01"
     }
@@ -13775,7 +13775,7 @@
         "odds": 1.87,
         "modelOdds": 1.949,
         "conf": "high",
-        "verdict": "ABWÄGEN",
+        "verdict": "NOBET",
         "modSig": 0,
         "mktSig": 0,
         "storySig": 0,
@@ -13823,29 +13823,6 @@
           "outlierGapPP": 2.1
         },
         "signals": [
-          {
-            "name": "lead_lag_bias",
-            "score": 3.39,
-            "confidence": 0.85,
-            "evidence": "Pinnacle hat Heim um +2.5pp bewegt, und public, best ziehen schon nach (2) — der Move ist bestätigt.",
-            "weight": 1.131,
-            "weighted_score": 3.26,
-            "metadata": {
-              "stage": "confirmed",
-              "pinn_move_pp": 2.54,
-              "soft_moves": [
-                {
-                  "bk": "public",
-                  "move_pp": 2.19
-                },
-                {
-                  "bk": "best",
-                  "move_pp": 2.67
-                }
-              ],
-              "outcome": "hw"
-            }
-          },
           {
             "name": "form_trend",
             "score": -1.57,
@@ -13928,13 +13905,12 @@
             "confidence": 0.48,
             "evidence": "Sharp-Window: Schon im frühen Fenster nach der Eröffnung zog Pinnacle Heim um +2.8pp an — das ist die schärfste, früheste Geldbewegung, bevor das Public-Volumen kam.",
             "weight": 0.939,
-            "weighted_score": 0.14,
+            "weighted_score": 0.35,
             "metadata": {
               "early_move_pp": 2.77,
               "outcome": "home",
               "opener_odds": 2.12
-            },
-            "correlation_discount_applied": 0.4
+            }
           },
           {
             "name": "mls_travel",
@@ -13969,14 +13945,14 @@
             "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": 0.68,
-        "signalCountPos": 5,
+        "signalAdjustmentPP": -0.07,
+        "signalCountPos": 4,
         "signalCountNeg": 3,
-        "signalAdjustmentPP_trade": 0.7,
-        "signalCountPos_trade": 5,
+        "signalAdjustmentPP_trade": -0.1,
+        "signalCountPos_trade": 4,
         "signalCountNeg_trade": 3,
-        "effectiveEdgePP": -3.3,
-        "effectiveEdgePP_trade": -3.3,
+        "effectiveEdgePP": -4.1,
+        "effectiveEdgePP_trade": -4.1,
         "convictionScore": 5,
         "convictionVerdict": "watch",
         "convictionLabel": "👁 Beobachten",
@@ -13990,6 +13966,9 @@
           "in_pick_direction": true,
           "move_pp": 3.34
         },
+        "origVerdict": "ABWÄGEN",
+        "origOdds": 1.87,
+        "nobetReason": "Engine-Netto -0.1pp negativ — Modell gegen den Pick",
         "convBetSchwelle": 8,
         "verdictFlips": [
           {
@@ -14001,9 +13980,13 @@
             "ts": "2026-09-20T05:04:38.366015+00:00",
             "von": "NOBET",
             "auf": "ABWÄGEN"
+          },
+          {
+            "ts": "2026-09-21T05:10:20.903769+00:00",
+            "von": "ABWÄGEN",
+            "auf": "NOBET"
           }
         ],
-        "stake": 2.0,
         "engineVersion": "v1"
       }
     ],
@@ -48779,11 +48762,11 @@
           "pinn_move_pp": 4.11,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 81.9,
+          "hours_since_open": 88.5,
           "open_pinn_odds": 3.1,
           "current_pinn_odds": 2.75,
           "move_age_decay": 1.0,
-          "move_age_days": 3.4
+          "move_age_days": 3.7
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -49138,8 +49121,8 @@
     "formUpdatedAt": "2026-09-20T21:29:16.435408+00:00",
     "cornersUpdatedAt": "2026-09-20T21:29:16.587590+00:00",
     "xgUpdatedAt": "2026-09-20T21:29:16.587599+00:00",
-    "picksUpdatedAt": "2026-09-20T22:34:15.359016+00:00",
-    "oddsUpdatedAt": "2026-09-21T03:30:35.337722+00:00",
+    "picksUpdatedAt": "2026-09-21T05:10:21.026376+00:00",
+    "oddsUpdatedAt": "2026-09-21T05:10:06.214611+00:00",
     "engineVersion": "v1"
   },
   "form": {
