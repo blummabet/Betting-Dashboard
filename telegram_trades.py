@@ -181,6 +181,7 @@ def notify_shortlist_opened(
     deckel: float | None = None,
     push_at: str | None = None,
     dry_run: bool = False,
+    method: str | None = None,
 ) -> bool:
     """14.09.2026 (Lucas: „ich brauch bitte im Trades Channel auch eine Meldung wenn ein
     ‚heute spielenswert‘ gesetzt wurde, so aehnlich wie wirs bei den automatischen trades
@@ -223,13 +224,40 @@ def notify_shortlist_opened(
         except (ValueError, TypeError):
             verzug_line = ""
 
+    # 🔴 21.09.2026, 01:04 UTC (Lucas: „Das kam. Aber auf poly wurde nicht gesetzt").
+    # Deportivo Toluca vs Santos Laguna, $5, Order-ID da, Status „placed" — und keine Position.
+    #
+    # `place_market_order` gibt an DREI Stellen `status: "placed"` zurueck, und nur eine davon
+    # ist ein Kauf:
+    #     method="market"       die Market-Order wurde ausgefuehrt  -> Position
+    #     method="maker_limit"  eine ruhende Limit-Order oben aufs Gebot -> KEINE Position
+    #     method="limit_gtc"    Fallback nach FOK-Kill, liegt im Buch  -> KEINE Position
+    # In zwei von drei Faellen existiert eine Order-ID und nichts ist gekauft. Der Aufrufer
+    # hat `method` weggeworfen, und diese Nachricht nannte den ASK „Fill" — ein Wort, das
+    # „gekauft zu" heisst.
+    #
+    # Fehlerklasse: „angenommen" und „gefuellt" sind zwei verschiedene Dinge, und die Meldung
+    # kannte den Unterschied nicht. Verwandt mit dem Verkaufsversuch vom 19.09.: dort fehlte
+    # die Spur einer ausgebliebenen Wirkung, hier behauptet die Spur eine Wirkung.
+    _ruht = str(method or "") in ("maker_limit", "limit_gtc")
+    _unbekannt = not method
     slip_line = ""
     if push_preis:
         try:
             d_pp = (float(fill) - float(push_preis)) * 100.0
-            slip_line = f"\n\U0001F4C9 Push-Preis: {_c(push_preis)} \u2192 Fill: {_c(fill)} ({d_pp:+.1f}pp)"
+            _wort = "Limit" if _ruht else ("Preis" if _unbekannt else "Fill")
+            slip_line = (f"\n\U0001F4C9 Push-Preis: {_c(push_preis)} \u2192 {_wort}: {_c(fill)} "
+                         f"({d_pp:+.1f}pp)")
         except (TypeError, ValueError):
             slip_line = ""
+    if _ruht:
+        stand_line = ("\n\u23f8\ufe0f <b>Order liegt im Buch \u2014 noch NICHT gefuellt.</b> "
+                      "Erst wenn jemand sie nimmt, ist die Position da.")
+    elif _unbekannt:
+        stand_line = ("\n\u2753 Ob die Order gefuellt wurde, steht nicht fest \u2014 die "
+                      "Order-Schicht hat ihren Weg nicht mitgeliefert.")
+    else:
+        stand_line = ""
 
     conv_line = f"\n\U0001F3AF Conviction: <b>{conv}/10</b>" if conv is not None else ""
     liga_line = f" \u00b7 {league}" if league else ""
@@ -242,7 +270,7 @@ def notify_shortlist_opened(
     poly_link = f"\n\U0001F517 <a href='{_url}'>Polymarket \u00f6ffnen</a>" if _url else ""
 
     text = (
-        f"\U0001F525 <b>{label} PLATZIERT</b> \u2014 Heute spielenswert\n"
+        f"\U0001F525 <b>{label} {'ORDER IM BUCH' if _ruht else 'PLATZIERT'}</b> \u2014 Heute spielenswert\n"
         f"\u2501" * 1 + "\u2501" * 18 + "\n"
         f"\U0001F3C6 {comp_label}{liga_line}\n"
         f"{match}\n"
@@ -251,6 +279,7 @@ def notify_shortlist_opened(
         f"\U0001F4CA Poly: <b>{quote}</b> ({_c(fill)})"
         f"{conv_line}"
         f"{slip_line}"
+        f"{stand_line}"
         f"{verzug_line}"
         f"{deckel_line}"
         f"{order_line}"

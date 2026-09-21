@@ -577,6 +577,7 @@ def _melden(zeile, bet, dry):
         deckel=MAX_OFFEN,
         push_at=zeile.get("sentAt"),
         dry_run=dry,
+        method=bet.get("method"),
     )
 
 
@@ -744,6 +745,11 @@ def main() -> int:
             "conv": z.get("conv"), "pushPreis": z.get("pushPreis"), "pushAt": z.get("sentAt"),
             "polyPrice": ask, "entryAsk": ask, "stake": STAKE,
             "tokenId": tok, "orderId": res.get("orderId"),
+            # 21.09.2026: `method` sagt, welcher der drei „placed"-Wege es war — market (gekauft)
+            # oder maker_limit/limit_gtc (liegt im Buch, nichts gekauft). Die Order-Schicht liefert
+            # es seit jeher mit, hier wurde es weggeworfen. Ohne dieses Feld ist im Buch nicht zu
+            # unterscheiden, ob eine Zeile eine Position ist.
+            "method": res.get("method"),
             "status": res.get("status"), "placedAt": _iso(),
             "source": "auto_shortlist", "slug": z.get("key"),
             "_offenNachher": round(lauf_offen, 2),

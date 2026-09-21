@@ -311,6 +311,62 @@ def check_shortlist_nachschub(ctx):
 
 
 @poly_check
+@poly_check
+def check_ruhende_order_ist_keine_position(ctx):
+    """🔴 21.09.2026, 01:04 UTC (Lucas: „Das kam. Aber auf poly wurde nicht gesetzt").
+
+    Deportivo Toluca vs Santos Laguna, $5, Order-ID vorhanden, Status „placed" — und keine
+    Position im Wallet. `polymarket_bet.place_market_order` gibt an DREI Stellen
+    `status: "placed"` zurueck, und nur eine davon ist ein Kauf:
+
+        method="market"       ausgefuehrt            -> Position
+        method="maker_limit"  ruht oben aufs Gebot   -> KEINE Position
+        method="limit_gtc"    Fallback nach FOK-Kill -> KEINE Position
+
+    Der Aufrufer hat `method` weggeworfen; die Meldung nannte den Ask „Fill".
+
+    Fehlerklasse: „angenommen" und „gefuellt" sind zwei verschiedene Dinge.
+
+    Dazu die Luecke dahinter: `manage_poly_maker_orders` bewacht ruhende Orders ueber
+    `poly_resting_orders.json` — der Shortlist-Pfad traegt seine Orders dort NICHT ein, und
+    die Datei existiert nicht einmal. Eine ruhende Shortlist-Order sieht also niemand an.
+    """
+    import json as _json
+    from pathlib import Path as _P
+    basis = _P(__file__).resolve().parent
+    fails = []
+    ruht = {"maker_limit", "limit_gtc"}
+    for datei in ("shortlist_auto_bets_placed.json", "liga_auto_bets_placed.json",
+                  "wm_auto_bets_placed.json", "mls_auto_bets_placed.json"):
+        p = basis / datei
+        if not p.exists():
+            continue
+        try:
+            d = _json.loads(p.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        bets = d.get("bets") if isinstance(d, dict) else d
+        offen = [b for b in (bets or []) if isinstance(b, dict) and b.get("status") == "placed"]
+        liegt = [b for b in offen if str(b.get("method") or "") in ruht]
+        unklar = [b for b in offen if not b.get("method")]
+        if liegt:
+            fails.append("%s: %d offene Zeile(n) sind RUHENDE Orders, keine Positionen (%s) — "
+                         "sie binden Guthaben und werden von niemandem bewacht"
+                         % (datei, len(liegt),
+                            "; ".join(str(b.get("betKey"))[:40] for b in liegt[:3])))
+        if unklar:
+            fails.append("%s: %d offene Zeile(n) ohne `method` — ob sie Positionen sind oder "
+                         "ruhende Orders, steht nicht im Buch (%s)"
+                         % (datei, len(unklar),
+                            "; ".join(str(b.get("betKey"))[:40] for b in unklar[:3])))
+    return _chk("ruhende_order_ist_keine_position", "Eine ruhende Order ist keine Position",
+                "error", fails,
+                "`method` aus der Order-Schicht unterscheidet market (gekauft) von "
+                "maker_limit/limit_gtc (liegt im Buch). Fehlt es, ist eine offene Zeile nicht "
+                "als Position belegt.")
+
+
+@poly_check
 def check_trades_push_buch(ctx):
     """Die Trades-Karte muss ihr Buch führen — genau wie der Public-Push.
 
