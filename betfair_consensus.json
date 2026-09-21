@@ -1,6 +1,6 @@
 {
-"generatedAt": "2026-09-21T22:16:39.040708+00:00",
-"count": 7,
+"generatedAt": "2026-09-21T22:31:39.340117+00:00",
+"count": 6,
 "covered": 4,
 "leaguesCovered": [
 "soccer_argentina_primera_division",
@@ -34,15 +34,15 @@
 "soccer_turkey_super_league",
 "soccer_usa_mls"
 ],
-"oddsKeysFetched": 34,
-"oddsKeysMitDaten": 34,
-"oddsEvents": 446,
+"oddsKeysFetched": 35,
+"oddsKeysMitDaten": 35,
+"oddsEvents": 448,
 "oddsKontingent": {
-"used": 4374,
-"remaining": 4995626,
+"used": 4485,
+"remaining": 4995515,
 "letzterFehler": null
 },
-"ankerQuote": 0.8,
+"ankerQuote": 1.0,
 "games": [
 {
 "matchId": "36041720",
@@ -54,12 +54,12 @@
 "live": true,
 "moneySide": "away",
 "moneyName": "Independiente Rivadavia",
-"moneySharePct": 54,
-"moneyOdd": 1.44,
+"moneySharePct": 71,
+"moneyOdd": 1.36,
 "moneyDir": "in",
-"totVol": 43394,
-"pinnOdd": null,
-"softOdd": 1.38,
+"totVol": 81217,
+"pinnOdd": 1.36,
+"softOdd": 1.33,
 "softN": 23,
 "poly": {
 "vol": 40081,
@@ -84,11 +84,16 @@
 ],
 "whaleUsd": 10759
 },
-"pinn": null,
+"pinn": {
+"home": 0.0783,
+"draw": 0.2263,
+"away": 0.6954,
+"fav": "away"
+},
 "soft": {
-"home": 0.1068,
-"draw": 0.2259,
-"away": 0.6673,
+"home": 0.0866,
+"draw": 0.2181,
+"away": 0.6953,
 "fav": "away",
 "n": 23
 },
@@ -142,7 +147,7 @@
 "pinnMove": {
 "movePP": 0.0,
 "stepPP": 0.0,
-"n": 8,
+"n": 9,
 "move": false,
 "laeuft": false
 },
@@ -160,12 +165,12 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Norway",
-"moneySharePct": 93,
-"moneyOdd": 1.81,
-"moneyDir": "flat",
-"totVol": 29184,
-"pinnOdd": 1.72,
-"softOdd": 1.71,
+"moneySharePct": 92,
+"moneyOdd": 1.84,
+"moneyDir": "out",
+"totVol": 31710,
+"pinnOdd": 1.81,
+"softOdd": 1.75,
 "softN": 25,
 "poly": {
 "vol": 10444,
@@ -178,25 +183,25 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.5511,
-"draw": 0.2335,
-"away": 0.2154,
+"home": 0.5255,
+"draw": 0.242,
+"away": 0.2325,
 "fav": "home"
 },
 "soft": {
-"home": 0.5433,
-"draw": 0.2386,
-"away": 0.2181,
+"home": 0.5349,
+"draw": 0.2409,
+"away": 0.2241,
 "fav": "home",
 "n": 25
 },
-"pinnMovePP": 0.3,
+"pinnMovePP": -2.3,
 "pinnMove": {
-"movePP": 0.3,
-"stepPP": -0.0,
-"n": 8,
-"move": false,
-"laeuft": false
+"movePP": -2.3,
+"stepPP": -2.6,
+"n": 9,
+"move": true,
+"laeuft": true
 },
 "verdict": "konsens",
 "agree": true,
@@ -212,10 +217,10 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Criciuma",
-"moneySharePct": 65,
-"moneyOdd": 2.04,
-"moneyDir": "flat",
-"totVol": 26288,
+"moneySharePct": 64,
+"moneyOdd": 1.98,
+"moneyDir": "in",
+"totVol": 27544,
 "pinnOdd": 1.97,
 "softOdd": 1.92,
 "softN": 1,
@@ -250,65 +255,13 @@
 "pinnMovePP": -1.0,
 "pinnMove": {
 "movePP": -1.0,
-"stepPP": 0.2,
-"n": 13,
+"stepPP": -0.0,
+"n": 14,
 "move": false,
 "laeuft": false
 },
 "verdict": "konsens",
 "agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36095617",
-"home": "Bogota",
-"away": "Barranquilla",
-"league": "Colombian Primera B",
-"country": "CO",
-"kickoff": "2026-09-21T20:30:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Bogota",
-"moneySharePct": 75,
-"moneyOdd": 5.0,
-"moneyDir": "out",
-"totVol": 275062,
-"pinnOdd": null,
-"softOdd": null,
-"softN": null,
-"poly": {
-"vol": 46779,
-"odd": 1.82,
-"sharePct": 87,
-"shareSrc": "geld",
-"key": "col2-bog-bar-2026-09-21",
-"sideKey": "Bogota FC",
-"whales": [
-{
-"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-"usd": 3800
-},
-{
-"wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
-"usd": 1230
-},
-{
-"wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
-"usd": 888
-},
-{
-"wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
-"usd": 885
-}
-],
-"whaleUsd": 6803
-},
-"pinn": null,
-"soft": null,
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "no_anchor",
-"agree": null,
 "pinnTotals": null
 },
 {
@@ -321,10 +274,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Nueva Chicago",
-"moneySharePct": 77,
-"moneyOdd": 2.3,
-"moneyDir": "flat",
-"totVol": 22797,
+"moneySharePct": 74,
+"moneyOdd": 3.05,
+"moneyDir": "out",
+"totVol": 27868,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -373,10 +326,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Guabira",
-"moneySharePct": 79,
-"moneyOdd": 2.34,
+"moneySharePct": 72,
+"moneyOdd": 2.74,
 "moneyDir": "out",
-"totVol": 12295,
+"totVol": 18245,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -391,6 +344,6 @@
 }
 ],
 "ankerN": 5,
-"ankerNOffen": 146,
-"ankerMit": 4
+"ankerNOffen": 145,
+"ankerMit": 5
 }
