@@ -312,6 +312,76 @@ def check_shortlist_nachschub(ctx):
 
 @poly_check
 @poly_check
+def check_wette_hat_die_kasse_beruehrt(ctx):
+    """🔴 21.09.2026 (Lucas: „Das kam. Aber auf poly wurde nicht gesetzt").
+
+    Die Toluca-Order um 01:04 hat das Wallet nie beruehrt — usdc stand von 21:53 bis 04:39
+    unveraendert bei 178,2312, Positionen durchgehend 0,00. Das Buch hat sie trotzdem
+    abgerechnet: `result: LOSS, pnl: -5.00`.
+
+    Gemessen ueber das ganze Shortlist-Buch gegen den Wallet-Verlauf: 30 von 32 Zeilen sind
+    durch einen Abgang belegt, ZWEI nicht — beide gebuchte Verluste von je 5 $. Die Bilanz war
+    damit 10 $ schlechter als die Wirklichkeit.
+
+    Fehlerklasse: ein Buch, das seine eigene Behauptung nie gegen die Kasse prueft. Es rechnet
+    aus `status: "placed"` plus Spielausgang ab; ob je Geld geflossen ist, fragt es nicht.
+
+    Die Gegenprobe kostet keine einzige API-Abfrage: der Wallet-Stand wird alle ~15 Minuten
+    geschrieben. Er lag nur nie als Reihe vor — `*_poly_verlauf.json` fuehrt sie seit heute.
+    """
+    import json as _json
+    from pathlib import Path as _P
+    try:
+        import wallet_abgleich as _WA
+    except Exception as _e:                  # noqa: BLE001
+        return _chk("wette_hat_die_kasse_beruehrt", "Wette hat die Kasse beruehrt", "error",
+                    ["wallet_abgleich nicht ladbar: %s" % str(_e)[:80]])
+    basis = _P(__file__).resolve().parent
+    verlauf = []
+    for n in ("wm_poly_verlauf.json", "liga_poly_verlauf.json", "mls_poly_verlauf.json"):
+        p = basis / n
+        if not p.exists():
+            continue
+        try:
+            v = _json.loads(p.read_text(encoding="utf-8"))
+            if isinstance(v, list):
+                verlauf.extend(v)
+        except Exception:
+            continue
+    if not verlauf:
+        # Kein Verlauf heisst NICHT „alles in Ordnung" — es heisst, die Gegenprobe fehlt.
+        return _chk("wette_hat_die_kasse_beruehrt", "Wette hat die Kasse beruehrt", "error",
+                    ["kein Wallet-Verlauf (*_poly_verlauf.json) — der Abgleich kann nichts "
+                     "pruefen; er faengt mit dem naechsten Balance-Lauf an"])
+    fails = []
+    for datei in ("shortlist_auto_bets_placed.json", "liga_auto_bets_placed.json",
+                  "wm_auto_bets_placed.json", "mls_auto_bets_placed.json"):
+        p = basis / datei
+        if not p.exists():
+            continue
+        try:
+            d = _json.loads(p.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        bets = d.get("bets") if isinstance(d, dict) else d
+        # Nur abgerechnete Zeilen: eine offene Wette hat ihren Ausgang noch vor sich, aber ihr
+        # KAUF muesste sich zeigen — den faengt `check_ruhende_order_ist_keine_position`.
+        fertig = [b for b in (bets or []) if isinstance(b, dict) and b.get("result")]
+        if not fertig:
+            continue
+        r = _WA.pruefe_buch(fertig, verlauf)
+        if r["ohne"]:
+            pl = sum(float(z.get("pnl") or 0) for z in r["ohne"])
+            fails.append("%s: %d abgerechnete Zeile(n) ohne Wallet-Bewegung — sie stehen mit "
+                         "%+.2f $ in der Bilanz, ohne dass je Geld geflossen ist (%s)"
+                         % (datei, len(r["ohne"]), pl,
+                            "; ".join(str(z.get("betKey"))[:34] for z in r["ohne"][:3])))
+    return _chk("wette_hat_die_kasse_beruehrt", "Wette hat die Kasse beruehrt", "error", fails,
+                "Gegenprobe gegen den Wallet-Verlauf: ein Kauf zeigt sich als Abgang im freien "
+                "Collateral. Zeilen ohne Abgang sind in der Bilanz erfunden.")
+
+
+@poly_check
 def check_ruhende_order_ist_keine_position(ctx):
     """🔴 21.09.2026, 01:04 UTC (Lucas: „Das kam. Aber auf poly wurde nicht gesetzt").
 
