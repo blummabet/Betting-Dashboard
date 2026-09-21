@@ -1,22 +1,6 @@
 {
-"generatedAt": "2026-09-21T00:44:07.057446+00:00",
+"generatedAt": "2026-09-21T00:59:01.412098+00:00",
 "byVerdict": {
-"konsens": {
-"n": 1402,
-"wins": 1185,
-"hitRate": 0.8452,
-"polyN": 1331,
-"polyWins": 1038,
-"polyHitRate": 0.7799,
-"pinnN": 210,
-"pinnHitRate": 0.7714,
-"nRoi": 747,
-"roi": 0.4116,
-"roiLb": 0.3649,
-"nClv": 747,
-"clv": 19.88,
-"clvLb": 18.3927
-},
 "uneinig": {
 "n": 556,
 "wins": 169,
@@ -32,6 +16,22 @@
 "nClv": 329,
 "clv": -20.52,
 "clvLb": -23.497
+},
+"konsens": {
+"n": 1402,
+"wins": 1186,
+"hitRate": 0.8459,
+"polyN": 1331,
+"polyWins": 1039,
+"polyHitRate": 0.7806,
+"pinnN": 210,
+"pinnHitRate": 0.7714,
+"nRoi": 748,
+"roi": 0.4112,
+"roiLb": 0.3645,
+"nClv": 748,
+"clv": 19.87,
+"clvLb": 18.3764
 },
 "teil": {
 "n": 33,
@@ -266,17 +266,17 @@
 "wins": 14,
 "hitRate": 0.7778
 },
-"UEFA Europa League Qualifiers": {
-"n": 18,
-"wins": 14,
-"hitRate": 0.7778
-},
 "Austrian Bundesliga": {
 "n": 17,
 "wins": 12,
 "hitRate": 0.7059
 },
 "UEFA Europa League": {
+"n": 17,
+"wins": 14,
+"hitRate": 0.8235
+},
+"UEFA Europa League Qualifiers": {
 "n": 17,
 "wins": 14,
 "hitRate": 0.8235
@@ -426,6 +426,11 @@
 "wins": 2,
 "hitRate": 0.4
 },
+"Costa Rican Primera Division": {
+"n": 5,
+"wins": 5,
+"hitRate": 1.0
+},
 "English National League": {
 "n": 5,
 "wins": 3,
@@ -462,11 +467,6 @@
 "hitRate": 0.5
 },
 "Chinese Cup": {
-"n": 4,
-"wins": 4,
-"hitRate": 1.0
-},
-"Costa Rican Primera Division": {
 "n": 4,
 "wins": 4,
 "hitRate": 1.0
@@ -644,20 +644,20 @@
 },
 "byStrength": {
 "strong": {
-"n": 1216,
-"wins": 976,
-"hitRate": 0.8026,
-"nRoi": 692,
-"roi": 0.2886,
-"roiLb": 0.2385,
-"nClv": 692,
-"clv": 13.98,
-"clvLb": 11.9557
+"n": 1217,
+"wins": 977,
+"hitRate": 0.8028,
+"nRoi": 693,
+"roi": 0.2883,
+"roiLb": 0.2383,
+"nClv": 693,
+"clv": 13.97,
+"clvLb": 11.9477
 },
 "weak": {
-"n": 764,
+"n": 763,
 "wins": 379,
-"hitRate": 0.4961,
+"hitRate": 0.4967,
 "nRoi": 408,
 "roi": -0.1913,
 "roiLb": -0.2726,
@@ -675,6 +675,25 @@
 "polyRate": 0.2685
 },
 "recent": [
+{
+"matchId": "36070047",
+"home": "Ld Alajuelense",
+"away": "Inter San Carlos",
+"league": "Costa Rican Primera Division",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "LD Alajuelense",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+5,
+0
+],
+"kickoff": "2026-09-20T23:00:00Z",
+"settledAt": "2026-09-21T00:59:01.229925+00:00"
+},
 {
 "matchId": "36045369",
 "home": "Flamengo",
@@ -1415,37 +1434,18 @@
 ],
 "kickoff": "2026-09-20T14:00:00Z",
 "settledAt": "2026-09-20T17:13:26.243332+00:00"
-},
-{
-"matchId": "36072486",
-"home": "Mantova",
-"away": "Pisa",
-"league": "Italian Serie B",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Pisa",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-09-20T15:15:00Z",
-"settledAt": "2026-09-20T17:13:26.243332+00:00"
 }
 ],
 "global": {
 "n": 1991,
-"wins": 1360,
-"hitRate": 0.6831,
-"nRoi": 1100,
+"wins": 1361,
+"hitRate": 0.6836,
+"nRoi": 1101,
 "roi": 0.1106,
 "roiLb": 0.0655,
-"nClv": 1100,
+"nClv": 1101,
 "clv": 6.64,
-"clvLb": 4.9692
+"clvLb": 4.9705
 },
 "pending": 9
 }
