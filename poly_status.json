@@ -67,12 +67,10 @@
       "id": "trades_push_buch",
       "label": "Trades-Karte führt ihr Buch",
       "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "keine einzige Zeile trägt einen `public`-Marker — dann lässt sich die Teilmenge, die auch public ging, nicht abziehen und beide Bücher zählen dieselben Karten."
-      ],
-      "note": "12 Karte(n) · 0 auch public"
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "14 Karte(n) · 0 auch public"
     },
     {
       "id": "public_push_buch",
@@ -99,11 +97,11 @@
       "ok": false,
       "nFail": 6,
       "failures": [
-        "spl-kha-riy-2026-09-07-more-markets: seit 13.5 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "spl-haz-taa-2026-09-08-more-markets: seit 12.5 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
+        "spl-kha-riy-2026-09-07-more-markets: seit 13.6 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
+        "spl-haz-taa-2026-09-08-more-markets: seit 12.6 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "ucl-aek1-lin2-2026-09-08-more-markets: seit 12.5 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "grc-ast-ari-2026-09-09-more-markets: seit 10.7 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
-        "ucl-fen-rom-2026-09-10-more-markets: seit 10.5 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
+        "ucl-fen-rom-2026-09-10-more-markets: seit 10.6 Tagen offen — Auflösung existiert, matcht aber den Key nicht!",
         "ucl-fen-rom-2026-09-10-more-markets: seit 10.5 Tagen offen — Auflösung existiert, matcht aber den Key nicht!"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
@@ -117,10 +115,10 @@
       "failures": [
         "TENNIS: nur 262/676 fällige Märkte aufgelöst (39%)",
         "ESPORTS: nur 333/668 fällige Märkte aufgelöst (50%)",
-        "MLB: nur 167/331 fällige Märkte aufgelöst (50%)",
+        "MLB: nur 168/332 fällige Märkte aufgelöst (51%)",
         "MLS: nur 65/118 fällige Märkte aufgelöst (55%)",
         "EFL-CHAMPIONSHIP: nur 19/33 fällige Märkte aufgelöst (58%)",
-        "CRICKET: nur 12/24 fällige Märkte aufgelöst (50%)",
+        "CRICKET: nur 13/24 fällige Märkte aufgelöst (54%)",
         "SEA: nur 3/9 fällige Märkte aufgelöst (33%)"
       ],
       "note": "Fällige Märkte je Liga, die ihre Auflösung finden. < 60% = Settlement läuft ins Leere (Slug-Mismatch), Trefferquoten dieser Liga sind unvollständig."
@@ -132,7 +130,7 @@
       "ok": false,
       "nFail": 5,
       "failures": [
-        "132/326 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (40%) — Trefferquote allein trügt",
+        "131/326 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (40%) — Trefferquote allein trügt",
         "   0xc3c3b3ef30… n=338 Treffer 51% P&L $-3,970,673",
         "   0xa0f21e6d35… n=93 Treffer 67% P&L $-2,635,720",
         "   0xabb89972b2… n=37 Treffer 59% P&L $-2,563,982",
@@ -177,6 +175,6 @@
       "note": "poly_direct_bets.py rechnet über poly_resolutions.json ab. Hängt ein Bet, kennt Poly den Ausgang nicht (Markt noch offen/obskur) oder der Slug passt nicht — dann fehlt echtes Geld in der Bilanz."
     }
   ],
-  "nFail": 4,
-  "generatedAt": "2026-09-21T05:04:47.367236+00:00"
+  "nFail": 3,
+  "generatedAt": "2026-09-21T05:32:12.980121+00:00"
 }
