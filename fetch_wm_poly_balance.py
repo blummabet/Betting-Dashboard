@@ -310,27 +310,77 @@ def fetch_positions_value(address: str) -> float | None:
     except Exception as e:
         print(f"  ⚠️  Positions-Fetch fehlgeschlagen: {e}")
         return None
-    rows = raw if isinstance(raw, list) else (raw.get("positions") or raw.get("data") or [])
-    total = 0.0
-    for row in rows:
-        if not isinstance(row, dict):
+    rows = _positions_rows(raw)
+    if rows is None:
+        # 🔴 21.09.2026 (Lucas: „das ist wichtig und das haben wir damals schon mal gefixt").
+        # Hier stand `raw.get("positions") or raw.get("data") or []`. Eine Antwort, die WEDER
+        # eine Liste noch einer dieser beiden Umschlaege ist — `{"error": "rate limited"}`
+        # etwa — wurde damit zur leeren Liste und die Summe zu 0,00 $. Das sieht im Artefakt
+        # genauso aus wie „die Wallet haelt nichts", traegt einen frischen `positionsStand`
+        # und ist damit von einer echten Messung nicht zu unterscheiden.
+        # Der Fix vom 18.09. hat den EINGEFRORENEN Wert sichtbar gemacht; die leere Antwort
+        # kam damit nicht ins Licht. Fehlerklasse (dieselbe wie damals, andere Tuer):
+        # fehlende Information rendert als harmloser Default.
+        # Ein nicht deutbares Format ist kein Nullbestand. None heisst „unbekannt", und der
+        # Aufrufer behaelt dann die alte Zahl samt altem `positionsStand`.
+        print("  ⚠️  Positions-Antwort nicht deutbar — Positionswert bleibt UNBEKANNT (nicht 0)")
+        return None
+    summe, unklar = positionen_summe(rows)
+    if unklar:
+        print(f"  ⚠️  {unklar} von {len(rows)} Positionszeilen nicht deutbar — "
+              f"Positionswert bleibt UNBEKANNT statt zu klein")
+        return None
+    print(f"  📊 Offene Positionen: ${summe:.2f} (in {len(rows)} Positionen)")
+    return summe
+
+
+def positionen_summe(rows) -> tuple:
+    """(Summe, Zahl der nicht deutbaren Zeilen). REIN.
+
+    Der Aufrufer liefert die Summe NUR aus, wenn keine Zeile unklar blieb: eine Summe aus einem
+    Teil der Zeilen ist keine Summe. Sie waere systematisch zu klein — und zu klein heisst hier,
+    die Wallet sieht aermer aus, als sie ist, waehrend die Zahl aussieht wie gemessen.
+    """
+    total, unklar = 0.0, 0
+    for row in (rows or []):
+        wert = _positions_wert(row) if isinstance(row, dict) else None
+        if wert is None:
+            unklar += 1
             continue
-        cv = row.get("currentValue")
+        total += wert
+    return round(total, 4), unklar
+
+
+def _positions_rows(raw):
+    """Die Positionszeilen aus einer API-Antwort — oder None, wenn das Format nichts hergibt. REIN.
+
+    Eine leere LISTE ist eine Auskunft („keine Positionen"). Ein Dict ohne bekannten Umschlag,
+    ein String, eine Zahl: das ist keine Auskunft, das ist ein anderes Format.
+    """
+    if isinstance(raw, list):
+        return raw
+    if isinstance(raw, dict):
+        for k in ("positions", "data"):
+            if isinstance(raw.get(k), list):
+                return raw[k]
+    return None
+
+
+def _positions_wert(row: dict):
+    """Marktwert EINER Position — `currentValue`, sonst size x curPrice. None = nicht deutbar. REIN."""
+    cv = row.get("currentValue")
+    if cv is not None:
         try:
-            if cv is not None:
-                total += float(cv)
-                continue
+            return float(cv)
         except (TypeError, ValueError):
-            pass
-        # Fallback: size × curPrice
-        try:
-            sz = float(row.get("size") or row.get("shares") or 0)
-            px = float(row.get("curPrice") or row.get("current_price") or 0)
-            total += sz * px
-        except (TypeError, ValueError):
-            continue
-    print(f"  📊 Offene Positionen: ${total:.2f} (in {len(rows)} Positionen)")
-    return round(total, 4)
+            return None
+    sz, px = row.get("size", row.get("shares")), row.get("curPrice", row.get("current_price"))
+    if sz is None or px is None:
+        return None
+    try:
+        return float(sz) * float(px)
+    except (TypeError, ValueError):
+        return None
 
 
 def main():

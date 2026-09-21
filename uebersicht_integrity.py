@@ -1115,10 +1115,41 @@ def check_positionswert_ist_frisch(ctx):
             t = t.replace(tzinfo=timezone.utc)
         alter_h = (jetzt - t).total_seconds() / 3600.0
         if alter_h > 12:
-            fails.append("%s: Positionswert $%.2f stammt aus einem Lauf vor %.0f h — die "
-                         "Positions-API antwortet seither nicht" % (name, d.get("positions") or 0.0,
-                                                                    alter_h))
+            # 🔴 21.09.2026. Hier stand pauschal „die Positions-API antwortet seither nicht".
+            # Nachgemessen am echten Fall: `liga_poly_balance.json` war 15,5 h alt, weil
+            # `manage-liga-poly` von 25 geplanten Laeufen rund 5 liefert — die Datei wurde gar
+            # nicht geschrieben. Die API hatte damit nichts zu tun.
+            # Die Unterscheidung steht in der Datei selbst und war nur nie gelesen worden:
+            #   `positionsStand` ~ `updatedAt`  -> der Produzent lief nicht
+            #   `positionsStand` < `updatedAt`  -> er lief, die API antwortete nicht
+            # Fehlerklasse: ein Befund, der seine eigene Unterscheidung nicht trifft, obwohl
+            # die Zahl daneben steht. (Zweites Mal an diesem Tag — der Anker-Waechter hatte
+            # dieselbe Krankheit.)
+            warum = "Grund nicht bestimmbar (`updatedAt` fehlt oder ist unlesbar)"
+            geschrieben = _zeit(d.get("updatedAt"))
+            if geschrieben is not None:
+                verzug_min = (geschrieben - t).total_seconds() / 60.0
+                if verzug_min > 5:
+                    warum = ("die Datei wurde vor %.0f h geschrieben, der Positionswert aber "
+                             "%.0f Min frueher gemessen — die Positions-API antwortet nicht, "
+                             "der Wert wird mitgeschleppt"
+                             % ((jetzt - geschrieben).total_seconds() / 3600.0, verzug_min))
+                else:
+                    warum = ("die Datei selbst ist %.0f h alt — der Produzent laeuft nicht, "
+                             "das ist kein API-Problem"
+                             % ((jetzt - geschrieben).total_seconds() / 3600.0))
+            fails.append("%s: Positionswert $%.2f stammt aus einem Lauf vor %.0f h — %s"
+                         % (name, d.get("positions") or 0.0, alter_h, warum))
     return _c("Positionswert ist frisch", "warn", fails)
+
+
+def _zeit(wert):
+    """ISO-Zeitstempel -> aware datetime, oder None. REIN."""
+    try:
+        t = datetime.fromisoformat(str(wert).replace("Z", "+00:00"))
+    except (ValueError, TypeError):
+        return None
+    return t if t.tzinfo else t.replace(tzinfo=timezone.utc)
 
 
 def check_public_stille_ist_erklaert(ctx):
