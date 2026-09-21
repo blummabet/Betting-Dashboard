@@ -39,6 +39,17 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 BASE = Path(__file__).resolve().parent
+# 🔴 21.09.2026 (Lucas: „Wie kann so eine Nachricht aber in public gehen"). Die Meldung vom
+# 06:14 UTC stand im oeffentlichen Kanal — Wallet-Adressen, Markt-Keys, der Stand der Buecher.
+# `tg_send` faellt ohne gesetzte `TELEGRAM_CHAT_ID` auf die feste oeffentliche Kanal-ID zurueck,
+# und dieses Secret ist seit dem 04.08. bewusst leer, damit der oeffentliche Pfad laeuft.
+# Fehlerklasse: ein Standard-Empfaenger, der der oeffentliche Kanal ist.
+#
+# Diese Marke sagt es fuer jeden spaeteren Leser und fuer den Test in
+# tests/test_interne_meldungen_bleiben_intern.py: was hier entsteht, geht NUR an den internen
+# Kanal. Wer dieses Modul anfasst und `tg_send` einsetzt, faellt dort durch.
+NUR_INTERN = True
+
 QUELLEN = ("uebersicht_integrity.json", "poly_status.json", "betfair_status.json")
 STAND_FILE = "stoerungsmeldung_stand.json"
 
@@ -266,11 +277,11 @@ def main(argv=None) -> int:
         print("  ausserhalb des Fensters oder heute schon gesendet.")
         return 0
     try:
-        from telegram_bot import tg_send
+        from telegram_bot import tg_send_ops
     except Exception as e:                       # noqa: BLE001
         print("  Telegram nicht verfuegbar: %s" % e)
         return 0
-    if tg_send(text):
+    if tg_send_ops(text):
         stand["zuletzt"] = jetzt.date().isoformat()
         stand["geld"] = len(befund["geld"])
         stand_p.write_text(json.dumps(stand, ensure_ascii=False, indent=1), encoding="utf-8")
