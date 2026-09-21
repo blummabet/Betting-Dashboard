@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-21T11:00:05.610373+00:00",
+ "generatedAt": "2026-09-21T11:15:13.945671+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -11,6 +11,44 @@
   "text": "freigegeben = n>=30 UND ROI-Untergrenze>0 UND juengster Play juenger als 21 Tage, alles auf der aktuellen Engine-Version. Der CLV blockiert seit 08.09.2026 nicht mehr — er steht als Urteil auf jeder Zeile, mit Warnung bei negativ belegtem CLV."
  },
  "freigegeben": [
+  {
+   "schublade": "🔒 E-Sport ohne Wallet-Nachweis",
+   "strom": "poly",
+   "n": 120,
+   "status": "freigegeben",
+   "grund": "ROI belegt (Untergrenze +6.1 %) — ⚠️ der CLV ist dagegen negativ belegt (Obergrenze -3.63 pp): in unseren Daten liefen Schubladen mit negativem CLV im Schnitt −6,8 %. Freigegeben auf die Rendite, nicht auf eine gemessene Kante.",
+   "roi": 0.1477,
+   "pl": 17.72,
+   "roiLb": 0.0606,
+   "clv": -5.242,
+   "clvLb": -6.852,
+   "clvUrteil": "negativ belegt",
+   "clvOg": -3.631,
+   "fehltN": 0,
+   "noetigNRoi": 42,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 41,
+    "lo": 14,
+    "hi": 270,
+    "nieAnteil": 0.0,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "vorangemeldet",
+   "angemeldet": "2026-09-07T08:15:48.444033+00:00",
+   "zielN": 120,
+   "warum": "Lucas: „was meinst du bei E-Sport? was wuerdest du da aendern?\" Gemessen an 621 abgerechneten Plays, getrennt nach dem, was das Public-Tor DURCHLAESST und was es ABWEIST — beides nur innerhalb E-Sport: durchgelassen n=69, Treffer 78,3 % gegen 73,2 % Break-even (+5,1 pp); abgewiesen n=100, Treffer 71,0 % gegen 66,0 % (+5,0 pp). Zwei disjunkte Gruppen, derselbe Vorsprung — die Wallet-Bedingung trennt dort nichts. Rueckgerechnet haette die Lockerung 89 Plays mehr gebracht: 75,3 % Treffer, +113,01 EUR, ROI +12,7 %, Untergrenze +1,0 %. ⚠️ Der E-Sport-Vorsprung repliziert in zwei unabhaengigen Gruppen — die PREISSCHWELLE 0,55 nicht: die habe ich gesetzt, nachdem ich gesehen habe, dass Aussenseiter darunter 40,5 % gegen 46,9 % treffen. Genau deshalb steht der Zuschnitt hier und nicht als Erfolgsmeldung. Der CLV ist mit -0,65 pp leicht negativ; bei diesem Vorsprung ueber 158 Plays ist das eine Merkwuerdigkeit, kein Veto — aber es gehoert dazugesagt.",
+   "quelle": "poly_shortlist_track.json → settled",
+   "nDavor": 158,
+   "rueckblick": {
+    "n": 158,
+    "roi": 0.1055,
+    "roiLb": 0.0226,
+    "clv": -0.693,
+    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
+   }
+  },
   {
    "schublade": "Liga · ABWÄGEN",
    "strom": "cards",
@@ -42,44 +80,6 @@
  ],
  "kandidaten": [
   {
-   "schublade": "🔒 E-Sport ohne Wallet-Nachweis",
-   "strom": "poly",
-   "n": 119,
-   "status": "kandidat",
-   "grund": "119 von 120 Plays SEIT der Anmeldung (2026-09-07) — vorher abgerechnete zählen nicht",
-   "roi": 0.1462,
-   "pl": 17.4,
-   "roiLb": 0.0584,
-   "clv": -5.252,
-   "clvLb": -6.876,
-   "clvUrteil": "negativ belegt",
-   "clvOg": -3.628,
-   "fehltN": 1,
-   "noetigNRoi": 43,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 42,
-    "lo": 14,
-    "hi": 249,
-    "nieAnteil": 0.007,
-    "schaetzbar": false
-   },
-   "alterTage": 0.4,
-   "art": "vorangemeldet",
-   "angemeldet": "2026-09-07T08:15:48.444033+00:00",
-   "zielN": 120,
-   "warum": "Lucas: „was meinst du bei E-Sport? was wuerdest du da aendern?\" Gemessen an 621 abgerechneten Plays, getrennt nach dem, was das Public-Tor DURCHLAESST und was es ABWEIST — beides nur innerhalb E-Sport: durchgelassen n=69, Treffer 78,3 % gegen 73,2 % Break-even (+5,1 pp); abgewiesen n=100, Treffer 71,0 % gegen 66,0 % (+5,0 pp). Zwei disjunkte Gruppen, derselbe Vorsprung — die Wallet-Bedingung trennt dort nichts. Rueckgerechnet haette die Lockerung 89 Plays mehr gebracht: 75,3 % Treffer, +113,01 EUR, ROI +12,7 %, Untergrenze +1,0 %. ⚠️ Der E-Sport-Vorsprung repliziert in zwei unabhaengigen Gruppen — die PREISSCHWELLE 0,55 nicht: die habe ich gesetzt, nachdem ich gesehen habe, dass Aussenseiter darunter 40,5 % gegen 46,9 % treffen. Genau deshalb steht der Zuschnitt hier und nicht als Erfolgsmeldung. Der CLV ist mit -0,65 pp leicht negativ; bei diesem Vorsprung ueber 158 Plays ist das eine Merkwuerdigkeit, kein Veto — aber es gehoert dazugesagt.",
-   "quelle": "poly_shortlist_track.json → settled",
-   "nDavor": 158,
-   "rueckblick": {
-    "n": 158,
-    "roi": 0.1055,
-    "roiLb": 0.0226,
-    "clv": -0.693,
-    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
-   }
-  },
-  {
    "schublade": "Conviction 8",
    "strom": "poly",
    "n": 10,
@@ -102,7 +102,7 @@
     "nieAnteil": 0.293,
     "schaetzbar": false
    },
-   "alterTage": 7.4,
+   "alterTage": 7.5,
    "art": "conviction",
    "wert": 8,
    "nAlt": 13,
@@ -129,11 +129,11 @@
    "zerlegung": "nach Conviction",
    "art": "conviction",
    "gruppen": 7,
-   "basis": "652 von 1085 abgerechneten Plays · nur Engine 2026-09-01 · ohne Kampfsport, US-Sport",
-   "n": 652,
-   "pl": 5.64,
-   "roi": 0.0087,
-   "clv": -2.363,
+   "basis": "654 von 1087 abgerechneten Plays · nur Engine 2026-09-01 · ohne Kampfsport, US-Sport",
+   "n": 654,
+   "pl": 4.96,
+   "roi": 0.0076,
+   "clv": -2.342,
    "belegte": 1
   },
   {
@@ -150,6 +150,17 @@
   }
  ],
  "spiele": [
+  {
+   "schublade": "🔒 E-Sport ohne Wallet-Nachweis",
+   "strom": "poly",
+   "roiLb": 0.0606,
+   "clvUrteil": "negativ belegt",
+   "aufloesbar": false,
+   "grund": "für diesen Schnitt gibt es keine Liste offener Plays — die Schublade rechnet auf Aggregaten, nicht auf einzelnen Zeilen",
+   "laufend": 0,
+   "n": 0,
+   "plays": []
+  },
   {
    "schublade": "Liga · ABWÄGEN",
    "strom": "cards",
@@ -3164,18 +3175,18 @@
    "sportarten": []
   },
   {
-   "wallet": "0xb8e32d575b8d360f90bcc95596e9a0bee444aaf2",
-   "kurz": "0xb8e3…aaf2",
-   "n": 78,
-   "wins": 59,
-   "hit": 0.7564,
-   "hitLb": 0.6687,
-   "clv": 0.659,
-   "usd": 964446,
-   "pnl": 121799.45,
+   "wallet": "0x3078b391f843153c6859702cee974ca7f660a2cb",
+   "kurz": "0x3078…a2cb",
+   "n": 11,
+   "wins": 10,
+   "hit": 0.9091,
+   "hitLb": 0.6772,
+   "clv": 0.845,
+   "usd": 28300,
+   "pnl": 17765.28,
    "grad": 1.0,
    "sportarten": [
-    "Tennis"
+    "E-Sport"
    ]
   },
   {
@@ -3194,18 +3205,18 @@
    ]
   },
   {
-   "wallet": "0x3078b391f843153c6859702cee974ca7f660a2cb",
-   "kurz": "0x3078…a2cb",
-   "n": 10,
-   "wins": 9,
-   "hit": 0.9,
-   "hitLb": 0.6523,
-   "clv": 1.26,
-   "usd": 24010,
-   "pnl": 17765.28,
+   "wallet": "0xb8e32d575b8d360f90bcc95596e9a0bee444aaf2",
+   "kurz": "0xb8e3…aaf2",
+   "n": 79,
+   "wins": 59,
+   "hit": 0.7468,
+   "hitLb": 0.6591,
+   "clv": 0.637,
+   "usd": 996617,
+   "pnl": 121799.45,
    "grad": 1.0,
    "sportarten": [
-    "E-Sport"
+    "Tennis"
    ]
   },
   {
@@ -3243,6 +3254,44 @@
  ],
  "alle": [
   {
+   "schublade": "🔒 E-Sport ohne Wallet-Nachweis",
+   "strom": "poly",
+   "n": 120,
+   "status": "freigegeben",
+   "grund": "ROI belegt (Untergrenze +6.1 %) — ⚠️ der CLV ist dagegen negativ belegt (Obergrenze -3.63 pp): in unseren Daten liefen Schubladen mit negativem CLV im Schnitt −6,8 %. Freigegeben auf die Rendite, nicht auf eine gemessene Kante.",
+   "roi": 0.1477,
+   "pl": 17.72,
+   "roiLb": 0.0606,
+   "clv": -5.242,
+   "clvLb": -6.852,
+   "clvUrteil": "negativ belegt",
+   "clvOg": -3.631,
+   "fehltN": 0,
+   "noetigNRoi": 42,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 41,
+    "lo": 14,
+    "hi": 270,
+    "nieAnteil": 0.0,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "vorangemeldet",
+   "angemeldet": "2026-09-07T08:15:48.444033+00:00",
+   "zielN": 120,
+   "warum": "Lucas: „was meinst du bei E-Sport? was wuerdest du da aendern?\" Gemessen an 621 abgerechneten Plays, getrennt nach dem, was das Public-Tor DURCHLAESST und was es ABWEIST — beides nur innerhalb E-Sport: durchgelassen n=69, Treffer 78,3 % gegen 73,2 % Break-even (+5,1 pp); abgewiesen n=100, Treffer 71,0 % gegen 66,0 % (+5,0 pp). Zwei disjunkte Gruppen, derselbe Vorsprung — die Wallet-Bedingung trennt dort nichts. Rueckgerechnet haette die Lockerung 89 Plays mehr gebracht: 75,3 % Treffer, +113,01 EUR, ROI +12,7 %, Untergrenze +1,0 %. ⚠️ Der E-Sport-Vorsprung repliziert in zwei unabhaengigen Gruppen — die PREISSCHWELLE 0,55 nicht: die habe ich gesetzt, nachdem ich gesehen habe, dass Aussenseiter darunter 40,5 % gegen 46,9 % treffen. Genau deshalb steht der Zuschnitt hier und nicht als Erfolgsmeldung. Der CLV ist mit -0,65 pp leicht negativ; bei diesem Vorsprung ueber 158 Plays ist das eine Merkwuerdigkeit, kein Veto — aber es gehoert dazugesagt.",
+   "quelle": "poly_shortlist_track.json → settled",
+   "nDavor": 158,
+   "rueckblick": {
+    "n": 158,
+    "roi": 0.1055,
+    "roiLb": 0.0226,
+    "clv": -0.693,
+    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
+   }
+  },
+  {
    "schublade": "Liga · ABWÄGEN",
    "strom": "cards",
    "n": 189,
@@ -3271,44 +3320,6 @@
    "datensatz": "Liga"
   },
   {
-   "schublade": "🔒 E-Sport ohne Wallet-Nachweis",
-   "strom": "poly",
-   "n": 119,
-   "status": "kandidat",
-   "grund": "119 von 120 Plays SEIT der Anmeldung (2026-09-07) — vorher abgerechnete zählen nicht",
-   "roi": 0.1462,
-   "pl": 17.4,
-   "roiLb": 0.0584,
-   "clv": -5.252,
-   "clvLb": -6.876,
-   "clvUrteil": "negativ belegt",
-   "clvOg": -3.628,
-   "fehltN": 1,
-   "noetigNRoi": 43,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 42,
-    "lo": 14,
-    "hi": 249,
-    "nieAnteil": 0.007,
-    "schaetzbar": false
-   },
-   "alterTage": 0.4,
-   "art": "vorangemeldet",
-   "angemeldet": "2026-09-07T08:15:48.444033+00:00",
-   "zielN": 120,
-   "warum": "Lucas: „was meinst du bei E-Sport? was wuerdest du da aendern?\" Gemessen an 621 abgerechneten Plays, getrennt nach dem, was das Public-Tor DURCHLAESST und was es ABWEIST — beides nur innerhalb E-Sport: durchgelassen n=69, Treffer 78,3 % gegen 73,2 % Break-even (+5,1 pp); abgewiesen n=100, Treffer 71,0 % gegen 66,0 % (+5,0 pp). Zwei disjunkte Gruppen, derselbe Vorsprung — die Wallet-Bedingung trennt dort nichts. Rueckgerechnet haette die Lockerung 89 Plays mehr gebracht: 75,3 % Treffer, +113,01 EUR, ROI +12,7 %, Untergrenze +1,0 %. ⚠️ Der E-Sport-Vorsprung repliziert in zwei unabhaengigen Gruppen — die PREISSCHWELLE 0,55 nicht: die habe ich gesetzt, nachdem ich gesehen habe, dass Aussenseiter darunter 40,5 % gegen 46,9 % treffen. Genau deshalb steht der Zuschnitt hier und nicht als Erfolgsmeldung. Der CLV ist mit -0,65 pp leicht negativ; bei diesem Vorsprung ueber 158 Plays ist das eine Merkwuerdigkeit, kein Veto — aber es gehoert dazugesagt.",
-   "quelle": "poly_shortlist_track.json → settled",
-   "nDavor": 158,
-   "rueckblick": {
-    "n": 158,
-    "roi": 0.1055,
-    "roiLb": 0.0226,
-    "clv": -0.693,
-    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
-   }
-  },
-  {
    "schublade": "Conviction 8",
    "strom": "poly",
    "n": 10,
@@ -3331,7 +3342,7 @@
     "nieAnteil": 0.293,
     "schaetzbar": false
    },
-   "alterTage": 7.4,
+   "alterTage": 7.5,
    "art": "conviction",
    "wert": 8,
    "nAlt": 13,
@@ -3720,6 +3731,37 @@
    }
   },
   {
+   "schublade": "Mix money+sharp+steam",
+   "strom": "poly",
+   "n": 43,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.1632,
+   "pl": 7.02,
+   "roiLb": -0.0076,
+   "clv": -1.047,
+   "clvLb": -2.916,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.823,
+   "fehltN": 0,
+   "noetigNRoi": 48,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 44,
+    "lo": 9,
+    "hi": 1814,
+    "nieAnteil": 0.06,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "mix",
+   "wert": "money+sharp+steam",
+   "nAlt": 11,
+   "roiAlt": -0.1875,
+   "clvAlt": 0.818,
+   "engineAlt": true
+  },
+  {
    "schublade": "Brazilian Serie A · Both teams to Score?",
    "strom": "betfair",
    "n": 42,
@@ -3760,37 +3802,6 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
-  },
-  {
-   "schublade": "Mix money+sharp+steam",
-   "strom": "poly",
-   "n": 42,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.1594,
-   "pl": 6.69,
-   "roiLb": -0.0154,
-   "clv": -0.976,
-   "clvLb": -2.887,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.934,
-   "fehltN": 0,
-   "noetigNRoi": 51,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 47,
-    "lo": 9,
-    "hi": 2000,
-    "nieAnteil": 0.073,
-    "schaetzbar": false
-   },
-   "alterTage": 0.5,
-   "art": "mix",
-   "wert": "money+sharp+steam",
-   "nAlt": 11,
-   "roiAlt": -0.1875,
-   "clvAlt": 0.818,
-   "engineAlt": true
   },
   {
    "schublade": "English National League · Both teams to Score?",
@@ -3941,7 +3952,7 @@
     "nieAnteil": 0.157,
     "schaetzbar": false
    },
-   "alterTage": 0.4,
+   "alterTage": 0.5,
    "art": "konjunktion_gehalten",
    "quelle": "killer_ledger.json"
   },
@@ -4030,36 +4041,6 @@
    "naeherung": false
   },
   {
-   "schublade": "Public-Kandidaten",
-   "strom": "poly",
-   "n": 91,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0798,
-   "pl": 7.26,
-   "roiLb": -0.0318,
-   "clv": -1.601,
-   "clvLb": -2.803,
-   "clvUrteil": "negativ belegt",
-   "clvOg": -0.398,
-   "fehltN": 0,
-   "noetigNRoi": 179,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 137,
-    "lo": 25,
-    "hi": 3925,
-    "nieAnteil": 0.113,
-    "schaetzbar": false
-   },
-   "alterTage": 0.4,
-   "art": "gate",
-   "nAlt": 133,
-   "roiAlt": 0.0306,
-   "clvAlt": -0.212,
-   "engineAlt": true
-  },
-  {
    "schublade": "Over/Under 3.5 Goals",
    "strom": "betfair",
    "n": 5149,
@@ -4121,6 +4102,36 @@
    "alterTage": null,
    "art": "markt",
    "naeherung": false
+  },
+  {
+   "schublade": "Public-Kandidaten",
+   "strom": "poly",
+   "n": 93,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0708,
+   "pl": 6.58,
+   "roiLb": -0.0401,
+   "clv": -1.469,
+   "clvLb": -2.675,
+   "clvUrteil": "negativ belegt",
+   "clvOg": -0.264,
+   "fehltN": 0,
+   "noetigNRoi": 229,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 153,
+    "lo": 28,
+    "hi": 4935,
+    "nieAnteil": 0.14,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "gate",
+   "nAlt": 133,
+   "roiAlt": 0.0306,
+   "clvAlt": -0.212,
+   "engineAlt": true
   },
   {
    "schublade": "Egyptian 2nd Division · Over/Under 2.5 Goals",
@@ -4270,37 +4281,6 @@
    "naeherung": false
   },
   {
-   "schublade": "Mix money+sharp",
-   "strom": "poly",
-   "n": 211,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0167,
-   "pl": 3.52,
-   "roiLb": -0.0576,
-   "clv": -3.991,
-   "clvLb": -5.103,
-   "clvUrteil": "negativ belegt",
-   "clvOg": -2.878,
-   "fehltN": 0,
-   "noetigNRoi": 4182,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 867,
-    "lo": 100,
-    "hi": 98006,
-    "nieAnteil": 0.327,
-    "schaetzbar": false
-   },
-   "alterTage": 0.3,
-   "art": "mix",
-   "wert": "money+sharp",
-   "nAlt": 141,
-   "roiAlt": -0.0338,
-   "clvAlt": -0.256,
-   "engineAlt": true
-  },
-  {
    "schublade": "Bolivian Liga de Futbol Profesional · Match Odds",
    "strom": "betfair",
    "n": 30,
@@ -4383,6 +4363,37 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
+  },
+  {
+   "schublade": "Mix money+sharp",
+   "strom": "poly",
+   "n": 212,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0119,
+   "pl": 2.52,
+   "roiLb": -0.0625,
+   "clv": -3.91,
+   "clvLb": -5.025,
+   "clvUrteil": "negativ belegt",
+   "clvOg": -2.796,
+   "fehltN": 0,
+   "noetigNRoi": 8284,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 1087,
+    "lo": 124,
+    "hi": 73735,
+    "nieAnteil": 0.36,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "mix",
+   "wert": "money+sharp",
+   "nAlt": 141,
+   "roiAlt": -0.0338,
+   "clvAlt": -0.256,
+   "engineAlt": true
   },
   {
    "schublade": "🔒 Fade-Unter · Ganzspiel-Torlinie",
@@ -4588,27 +4599,27 @@
   {
    "schublade": "Conviction 6",
    "strom": "poly",
-   "n": 271,
+   "n": 273,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0019,
-   "pl": -0.51,
-   "roiLb": -0.079,
-   "clv": -1.938,
-   "clvLb": -2.766,
+   "roi": -0.0044,
+   "pl": -1.19,
+   "roiLb": -0.0812,
+   "clv": -1.891,
+   "clvLb": -2.718,
    "clvUrteil": "negativ belegt",
-   "clvOg": -1.11,
+   "clvOg": -1.064,
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
    "entfernung": {
-    "median": 1964,
-    "lo": 177,
-    "hi": 643557,
-    "nieAnteil": 0.488,
+    "median": 1937,
+    "lo": 182,
+    "hi": 635384,
+    "nieAnteil": 0.52,
     "schaetzbar": false
    },
-   "alterTage": 0.2,
+   "alterTage": 0.0,
    "art": "conviction",
    "wert": 6,
    "nAlt": 93,
@@ -11916,7 +11927,7 @@
    "noetigNRoi": null,
    "noetigNClv": null,
    "entfernung": null,
-   "alterTage": 0.5,
+   "alterTage": 0.6,
    "art": "mix",
    "wert": "bf+steam"
   },
@@ -12129,10 +12140,10 @@
  ],
  "zusammenfassung": {
   "schubladen": 410,
-  "freigegeben": 1,
-  "kandidaten": 2,
+  "freigegeben": 2,
+  "kandidaten": 1,
   "ruhend": 2,
-  "naechsteFreigabe": 1,
+  "naechsteFreigabe": 20,
   "naechsterBeleg": 121
  }
 }
