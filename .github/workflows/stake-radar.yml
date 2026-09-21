@@ -132,9 +132,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           "${STAKE_PYTHON:-python3}" run_health.py --slug stake-radar || true
-          git add health/stake-radar.json 2>/dev/null || true
-          git diff --staged --quiet || {
-            git commit -m "🩺 Stake-Radar-Gesundheit $(date -u +'%d.%m.%Y %H:%M') UTC [skip ci]" || true
-            bash scripts/ci_pull.sh main || true
-            git push 2>&1 || echo "  Push der Gesundheitsdatei fehlgeschlagen — nicht kritisch"
-          }
+          # 🔴 21.09.2026: hier stand ein eigener commit+push OHNE Retry. Gemessen: der
+          # Live-Scan lief ~60x am Tag (Commits auf poly_money_broad_live.json), seine
+          # Health-Datei kam aber nur 6-8x durch — der Rest verlor das Push-Rennen gegen
+          # die anderen Committer und wurde beim naechsten `actions/checkout --force`
+          # verworfen. Die Batterie las daraus „der Job startet nicht" und meldete rot,
+          # waehrend der Job lief. Fehlerklasse: ein Buch, das seine eigene Zustellung
+          # misst statt des Ereignisses.
+          # `ci_sichern.sh` hat den 3-fach-Retry seit dem 19.09. — er wurde hier nur nie
+          # benutzt. Eine Entscheidung, ein Ort.
+          bash scripts/ci_sichern.sh "🩺 Stake-Radar-Gesundheit" health/stake-radar.json || true
