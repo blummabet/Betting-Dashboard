@@ -109,6 +109,12 @@ EBENE = {
     # TABELLE und nicht in einer Regel: „premier" im Namen sagt hier das Gegenteil dessen,
     # was ein Muster daraus lesen wuerde.
     "mizoram-premier-league": 3,
+    # 21.09.2026 (CI-Wachhund, roter Test in der Action): „india-karnataka-super-division".
+    # Dieselbe Familie wie Mizoram: eine indische STAATSliga. „Super Division" klingt nach
+    # oberster Klasse und ist die Landesmeisterschaft Karnatakas — unter ISL, I-League und
+    # I-League 2. Auch sie steht in der TABELLE und nicht in einer Regel: „super" im Namen
+    # sagt hier das Gegenteil dessen, was ein Muster daraus lesen wuerde.
+    "india-karnataka-super-division": 3,
     # 10.09.2026 (CI-Wachhund, vierter und fuenfter Slug): „v-league" — die oberste Klasse
     # Vietnams (Ledger-Paarung „The Cong - Viettel FC - Cong An Ha Noi FC"). Der Slug ist
     # NICHT sportartenrein: in Korea und Japan heisst die Volleyball-Liga genauso. Dass hier

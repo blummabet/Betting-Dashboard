@@ -114,18 +114,26 @@ def test_settlement_recent_open_is_ok():
 
 
 # ── Auflösungen matchen Keys (Liga-Overlap) ───────────────────────────────────
+# 🔴 21.09.2026: diese Fixtures mussten nie sagen, WANN das Auflösungsbuch beginnt — der Check
+# fragte nicht danach und zaehlte Maerkte aus einer Zeit mit, in der es noch gar kein Buch gab
+# (siehe tests/test_aufloesungsquote_horizont.py). Seit der Check den Horizont kennt, gehoert ein
+# Anker in jede Fixture: eine alte Auflösung, die sagt „das Buch reicht mindestens bis hierher".
+BUCH_ANKER = {"__anker__": {"winner": "A", "ts": "2026-06-01T00:00:00+00:00"}}
+
+
 def test_overlap_flags_league_below_floor():
     close = {}
     kicked = iso(NOW - timedelta(hours=12))       # kickoff = capturedAt + htk(2h) -> 10h her > Karenz 6h
     for i in range(10):
         close[f"esports-x{i}-2026-08-01"] = {"capturedAt": kicked, "hoursToKickoff": 2, "league": "ESPORTS"}
-    resolutions = {"esports-x0-2026-08-01": {"winner": "A", "ts": iso(NOW)}}   # nur 1/10 aufgelöst
+    resolutions = dict(BUCH_ANKER)
+    resolutions["esports-x0-2026-08-01"] = {"winner": "A", "ts": iso(NOW)}     # nur 1/10 aufgelöst
     c = pdi.check_resolutions_match_open_keys(pdi.PolyCtx(now=NOW, close=close, resolutions=resolutions))
     assert not c["ok"] and any("ESPORTS" in f for f in c["failures"])
 
 
 def test_overlap_ok_when_all_resolved():
-    close, resolutions = {}, {}
+    close, resolutions = {}, dict(BUCH_ANKER)
     kicked = iso(NOW - timedelta(hours=12))
     for i in range(10):
         k = f"mlb-x{i}-2026-08-01"

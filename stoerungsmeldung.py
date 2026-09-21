@@ -74,6 +74,9 @@ GELD = {
     "public_push_buch",
     "trades_push_buch",
     "shortlist_tracker_writes",
+    # 21.09.2026: eine ruhende Order, die als Position gebucht ist, steht mit Geld im Buch,
+    # das nie bewegt wurde — genau der Toluca-Fall.
+    "ruhende_order_ist_keine_position",
     # blind zum Geld gesetzt
     "poly-deckung: money-scan gegen liga-fetcher",
     "money map: die poly-seite gehoert zum spiel",
@@ -96,6 +99,10 @@ GEPRUEFT_KEIN_GELD = {
     "freigabe-grund ist aus den daten ableitbar",
     "shortlist_nachschub",
     "proven_wallets_profitable",
+    # 21.09.2026: eine Annahme ueber die Daten, kein Ausgang. Er sagt, ob der Markt-Stempel-
+    # Nachtrag noch tragen darf — schlaegt er an, rechnet nichts falsch ab, sondern der
+    # Nachtrag gehoert geprueft, bevor wieder abgerechnet wird.
+    "buendel_cond_stabil",
     "grosses_geld_bleibt_im_feed",
     "direction_covers_money",
 }

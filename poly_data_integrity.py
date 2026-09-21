@@ -152,7 +152,24 @@ class PolyCtx:
 
 # ── Registry ─────────────────────────────────────────────────────────────────
 POLY_CHECKS = []
+
+
 def poly_check(fn):
+    """Registriert einen Waechter — genau einmal.
+
+    🔴 21.09.2026. `poly_status.json` vom 06:03 fuehrte `ruhende_order_ist_keine_position`
+    ZWEIMAL: beim Einsetzen eines neuen Checks darueber blieb ein `@poly_check` stehen und
+    landete auf dem Nachbarn. Der Waechter lief doppelt, jeder seiner Funde stand zweimal in
+    der Störungsmeldung, `nFail` zaehlte doppelt. An genau dieser Stelle habe ich einem Nachbarn
+    vorher schon einmal den Dekorator WEGgenommen — beides dieselbe Handbewegung.
+    Fehlerklasse: ein Waechter, der sich selbst zweimal meldet.
+
+    Ein Test faengt das erst, wenn ihn jemand laufen laesst. Hier faellt der Import um, also
+    faellt jeder Lauf um — ein doppelter Dekorator kommt nicht mehr bis in ein Artefakt.
+    """
+    name = getattr(fn, "__name__", "?")
+    if name in [f.__name__ for f in POLY_CHECKS]:
+        raise RuntimeError("Check doppelt registriert: %s — steht `@poly_check` zweimal da?" % name)
     POLY_CHECKS.append(fn)
     return fn
 
@@ -310,7 +327,6 @@ def check_shortlist_nachschub(ctx):
                 "Kategorien sind ausgenommen.")
 
 
-@poly_check
 @poly_check
 def check_wette_hat_die_kasse_beruehrt(ctx):
     """🔴 21.09.2026 (Lucas: „Das kam. Aber auf poly wurde nicht gesetzt").
@@ -700,14 +716,44 @@ def check_buendel_cond_ist_stabil(ctx):
                 "beim Einstieg." if not fails else "")
 
 
+def horizont(resolutions):
+    """Ab wann reicht das Auflösungsbuch zurück? None = unbekannt. REIN.
+
+    🔴 21.09.2026 (Lucas' Störungsmeldung): „TENNIS: nur 262/676 fällige Märkte aufgelöst
+    (39 %), ESPORTS 333/668 (50 %)" — rot, seit Wochen, mit der Deutung „Settlement läuft ins
+    Leere, genau in den Ligen der Shortlist". Nachgemessen, je Endtag statt je Sportart:
+
+        04.09.  37/132   28 %        11.09.  112/113   99 %
+        05.09. 101/213   47 %        12.09.  215/216  100 %
+        06.09.  63/157   40 %        ...
+        07.09.  89/ 92   97 %        20.09.  176/177   99 %
+
+    Der Sprung liegt exakt auf dem 07.09. — dem Tag, an dem `poly_resolutions.json` beginnt
+    (älteste Auflösung 07.09. 06:04). `poly_money_broad_close.json` reicht bis zum 22.08.
+    zurück. Jeder Markt, der vor dem Beginn des Buchs endete, wurde als „nicht aufgelöst"
+    gezählt, obwohl nie eine Auflösung für ihn existiert haben kann. Seit dem 07.09. liegt die
+    Quote in JEDER Sportart bei 96-100 %.
+
+    Die Rangfolge der Sportarten war damit keine Aussage über Settlement, sondern darüber, wie
+    viel Altbestand vor dem 07.09. jede noch in der Close-Datei hat.
+    Fehlerklasse: eine Quote, deren Nenner weiter zurückreicht als ihr Zähler.
+    """
+    tse = [t for t in (_parse_ts((v or {}).get("ts"))
+                       for v in (resolutions or {}).values() if isinstance(v, dict)) if t]
+    return min(tse) if tse else None
+
+
 @poly_check
 def check_resolutions_match_open_keys(ctx):
     """Matchen unsere Markt-Keys die Auflösungen? Je Liga: von den Keys, die längst angepfiffen
-    haben (capturedAt + hoursToKickoff + Karenz < jetzt), wie viele finden ihre Auflösung? Bei
-    39 % Esports/16 % Tennis läuft die Hälfte unserer Settlements ins Leere. Genau die Ligen,
-    auf denen die aktuelle Shortlist steht (E-Sport)."""
+    haben (capturedAt + hoursToKickoff + Karenz < jetzt), wie viele finden ihre Auflösung?
+
+    Gezählt wird nur, was NACH dem Beginn des Auflösungsbuchs endete — siehe `horizont`. Ein
+    Markt, für den es gar kein Buch gibt, ist kein Settlement-Fehler, sondern Altbestand.
+    """
     from collections import Counter
-    total = Counter(); ok = Counter()
+    hor = horizont(ctx.resolutions)
+    total = Counter(); ok = Counter(); vor_horizont = 0; faellig = 0
     for k, v in ctx.close.items():
         if not isinstance(v, dict):
             continue
@@ -717,6 +763,10 @@ def check_resolutions_match_open_keys(ctx):
         ko = cap + timedelta(hours=htk)
         if (ctx.now - ko).total_seconds() / 3600.0 <= KICKOFF_GRACE_H:
             continue                                    # noch nicht (sicher) fällig
+        faellig += 1
+        if hor is not None and ko < hor:
+            vor_horizont += 1
+            continue                                    # aelter als das Buch -> keine Aussage
         lg = _league_of(k, v.get("league"))
         total[lg] += 1
         if k in ctx.resolutions:
@@ -728,9 +778,25 @@ def check_resolutions_match_open_keys(ctx):
         rate = ok[lg] / n
         if rate < OVERLAP_FLOOR:
             fails.append(f"{lg}: nur {ok[lg]}/{n} fällige Märkte aufgelöst ({rate*100:.0f}%)")
-    return _chk("resolutions_match_open_keys", "Auflösungen matchen unsere Keys", "warn", fails,
-                f"Fällige Märkte je Liga, die ihre Auflösung finden. < {OVERLAP_FLOOR*100:.0f}% = "
-                "Settlement läuft ins Leere (Slug-Mismatch), Trefferquoten dieser Liga sind unvollständig.")
+    # Steht gar nichts an, sagt dieser Check nichts — weder gut noch schlecht. Erst wenn es
+    # faellige Maerkte GIBT, ist die Frage nach dem Horizont ueberhaupt gestellt.
+    if faellig:
+        if hor is None:
+            fails.append("`poly_resolutions.json` traegt keinen lesbaren Zeitstempel — ohne "
+                         "Horizont ist jede Quote hier eine Behauptung ueber Altbestand.")
+        # Der Horizont-Schnitt darf die Pruefung nicht stillstellen. Wird das Auflösungsbuch
+        # irgendwann gekappt, wandert der Horizont nach vorn — und ein echter Settlement-Ausfall
+        # faende dann immer weniger Maerkte, ueber die er sich zeigen koennte. Zu wenig uebrig
+        # ist deshalb ein Befund und kein gruenes Haekchen.
+        elif sum(total.values()) < OVERLAP_MIN_N:
+            fails.append(f"von {faellig} fälligen Märkten liegen nur {sum(total.values())} im "
+                         f"Auflösungsbuch (ab {hor.date().isoformat()}) — darunter kann dieser "
+                         f"Check nichts feststellen, auch kein Settlement-Ausfall.")
+    note = (f"Fällige Märkte je Liga, die ihre Auflösung finden — nur ab dem Beginn des "
+            f"Auflösungsbuchs ({hor.date().isoformat() if hor else '?'}); "
+            f"{vor_horizont} ältere Märkte bleiben draussen, fuer sie kann es keine geben. "
+            f"< {OVERLAP_FLOOR*100:.0f}% = Settlement läuft wirklich ins Leere.")
+    return _chk("resolutions_match_open_keys", "Auflösungen matchen unsere Keys", "warn", fails, note)
 
 
 @poly_check
