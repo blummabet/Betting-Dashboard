@@ -676,12 +676,32 @@ def _pub_in_top_n(scores, wallet, n=None):
     w = str(wallet).lower() if wallet else ""
     if not w:
         return False
+    ug, _art = _clv_ug((scores or {}).get(w) or (scores or {}).get(wallet) or {})
+    if not (ug is not None and ug > 0):
+        return False
+    # 🔴 21.09.2026 (Lucas: „es kommen seit gestern 11 uhr keine whale pushes mehr").
+    # Letzter Public-Push: 20.09. 09:31 UTC. Der Trichter gemessen: `select()` liefert EINEN
+    # Kandidaten, und dieses Tor wirft ihn raus — Wallet 0x5e6e2c3f…, $103.500 Position,
+    # n=9, Treffer 56 %, CLV-Untergrenze +0,31 pp. Also genau das, was der Kanal zeigen soll.
+    #
+    # Der Grund: `if not rang` hat „gar nicht gerangt" wie „schlecht gerangt" behandelt. Die
+    # Rangliste verlangt in der Schrumpf-Rechnung aber n>=12, das oeffentliche Tor laut
+    # PUB_MIN_TR nur n>=8 — und wer keine `pnl` traegt, faellt dort ohnehin raus. Eine
+    # zweite, strengere Huerde, die niemand als Huerde gemeint hat.
+    #
+    # Der Absatz darueber sagt seit dem 16.09. ausdruecklich: „Der Gate fragt ab jetzt nach der
+    # EIGENSCHAFT statt nach einem Listenplatz." Der Code fragte weiter nach beidem.
+    # Fehlerklasse: ein Satz, der behauptet, was der Code daneben widerlegt — und: ein
+    # fehlender Wert, der wie ein schlechter behandelt wird.
+    #
+    # Die Notbremse bleibt, aber sie bremst nur, was sie auch beurteilen kann: eine Wallet, die
+    # IN der Rangliste steht und dort schlechter als die Grenze liegt. Kein Rang heisst „keine
+    # Auskunft", nicht „durchgefallen".
     grenze = PUB_RANG_NOTBREMSE if n is None else n
     rang = _sharp_rank_map(scores).get(w)
-    if not rang or rang > grenze:
+    if rang is not None and rang > grenze:
         return False
-    ug, _art = _clv_ug((scores or {}).get(w) or (scores or {}).get(wallet) or {})
-    return ug is not None and ug > 0
+    return True
 
 
 # ── Groesse relativ statt absolut (05.09.2026) ────────────────────────────────
