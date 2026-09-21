@@ -216,6 +216,75 @@ def _picks_history_open(history, today=None):
     return offen, aeltester
 
 
+# Wie lange darf ein als abgesagt BEKANNTES Spiel noch unaufgeloest in der Historie stehen?
+# Ein Resolver-Lauf pro Tag reicht; zwei Tage lassen einen Ausfall durch.
+ABSAGE_MAX_OFFEN_TAGE = 2
+
+
+@integrity_check
+def check_absagen_werden_abgerechnet(ctx):
+    """Steht eine bekannte Absage noch als offene Zeile in der Historie?
+
+    🔴 21.09.2026 (Lucas' Störungsmeldung): „Levante–Athletic Club seit 97 h ohne
+    Ergebnis". Das Spiel wurde am 16.09. eine halbe Stunde vor Anpfiff wegen Starkregen
+    abgesagt. Am 20.09. wurde die Absage erkannt und AM FIXTURE vermerkt — und rollte mit dem
+    Fixture aus `liga-data.json`. Danach meldete es niemand mehr, nicht weil es abgerechnet
+    war, sondern weil die Zeile, ueber die gemeldet wurde, weg war. Seine drei Picks standen
+    bis heute auf `result: null`.
+
+    Fehlerklasse: eine Luecke, die sich durch Zeitablauf selbst erledigt, hinterlaesst keine
+    Statistik.
+
+    Seit heute haelt `*_absagen.json` die Absage mit eigenem Lebenslauf fest und
+    `resolve_picks.py` rechnet sie als `void` ab. Dieser Waechter prueft, dass das auch
+    passiert — ein Buch, das niemand liest, ist dasselbe Schweigen mit mehr Dateien.
+    """
+    import datetime as _dt
+    import absagen_buch as _AB
+
+    buch = {}
+    for n in ("liga_absagen.json", "wm_absagen.json", "mls_absagen.json"):
+        b = _lazy(n)
+        if isinstance(b, dict):
+            buch.update(b)
+    if not buch:
+        return _chk("absagen_abgerechnet", "Absagen werden abgerechnet", "warn", [],
+                    "Kein Absagen-Buch vorhanden — dann gibt es auch nichts abzurechnen. "
+                    "Das ist keine Aussage darueber, ob Absagen erkannt werden.")
+
+    hist = _lazy("picks_history.json")
+    if not isinstance(hist, list):
+        return _chk("absagen_abgerechnet", "Absagen werden abgerechnet", "warn", [],
+                    "picks_history.json ist keine Liste — nichts zu pruefen.")
+
+    heute = _dt.date.today()
+    fails, unklar = [], 0
+    for e in hist:
+        if not isinstance(e, dict) or e.get("resolved"):
+            continue
+        d = str(e.get("dateIso") or "")[:10]
+        ab = _AB.nachschlagen(buch, d, e.get("home"), e.get("away"))
+        if ab:
+            try:
+                alter = (heute - _dt.date.fromisoformat(d)).days
+            except (ValueError, TypeError):
+                alter = None
+            if alter is None or alter > ABSAGE_MAX_OFFEN_TAGE:
+                fails.append("%s–%s (%s): seit %s als %s abgesagt bekannt und immer noch "
+                             "unaufgeloest — resolve_picks liest das Buch nicht"
+                             % (e.get("home"), e.get("away"), d,
+                                str(ab.get("gesehenAt"))[:10], ab.get("status")))
+        elif _AB.mehrdeutig(buch, d, e.get("home"), e.get("away")):
+            unklar += 1
+    if unklar:
+        fails.append("%d offene Paarung(en) treffen am selben Tag auf MEHRERE Absagen — sie "
+                     "werden bewusst nicht abgerechnet und brauchen einen Blick" % unklar)
+    return _chk("absagen_abgerechnet", "Absagen werden abgerechnet", "error", fails,
+                "%d Absagen im Buch. Eine bekannte Absage, die laenger als %d Tage offen steht, "
+                "faellt aus jeder Bilanz — und meldet sich von selbst nie wieder."
+                % (len(buch), ABSAGE_MAX_OFFEN_TAGE))
+
+
 @integrity_check
 def check_picks_resolved(ctx):
     """27.08.2026 (Lucas: „Real Madrid war noch nicht ausgewertet"): resolve_picks.py starb an

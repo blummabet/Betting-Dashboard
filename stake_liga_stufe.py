@@ -336,8 +336,21 @@ _AUSZEICHNUNG_RX = re.compile(
 
 # Mustererkennung fuer alles, was neu dazukommt. Sie ersetzt die Tabelle nicht, sie faengt
 # nur die Faelle ab, bei denen der Slug die Antwort selbst mitbringt.
+# 🔴 21.09.2026 (CI-Wachhund, „int-friendly-games"). Der zweite offene Slug des Tages, und
+# anders als „india-karnataka-super-division" ist dieser KEINE Spielklasse, der nur die Zeile
+# fehlt: ein Freundschaftsspiel hat keine Ebene. Jede Zahl waere hier falsch — „1", weil
+# Nationalmannschaften spielen, oder „3", weil es um nichts geht. Deshalb eine eigene Marke,
+# wie bei Reserve, Jugend und Pokal: die Tabelle sagt damit „angesehen und kein Rang", statt
+# einen zu erfinden. `randliga()` bleibt fuer diese Slugs False — ein Testspiel ist keine
+# Randliga, es ist gar keine Liga.
+# Als MUSTER und nicht als Zeile: Testspiele tauchen unter vielen Namen auf (club-friendlies,
+# international-friendlies, friendlies-clubs). Gegenprobe am Ledger: die Regel beantwortet
+# genau diesen einen offenen Slug und stuft keinen bereits eingestuften um.
+_FREUNDSCHAFT_RX = re.compile(r"friendl|freundschaft|testspiel|amistoso|amichevol")
+
 _MUSTER = (
     ("srl", lambda s: s.endswith("-srl") or "-srl-" in s),          # Simulated Reality League
+    ("freundschaft", lambda s: bool(_FREUNDSCHAFT_RX.search(s))),
     # 07.09.2026 — am Tag nach dem Bau tauchte „Primera Division Reserve, Clausura" auf und
     # stand als einzige Liga ohne Ebene da. Eine Reserveliga ist keine Spielklasse: es sind
     # zweite Mannschaften eines Vereins, die Aufstellung ist naeher an einer Jugendliga als

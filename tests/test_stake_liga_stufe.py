@@ -273,6 +273,30 @@ def test_alle_ligen_im_echten_ledger_haben_eine_ebene():
 # `test_alle_ligen_im_echten_ledger_haben_eine_ebene` fiel mit zwei Slugs:
 # „veikkausliiga" und „uefa-youth-league". Genau dafuer gibt es ihn — aber ein Guard, der
 # feuert und danach nur von Hand geflickt wird, feuert beim naechsten Wettbewerb wieder.
+def test_ein_testspiel_bekommt_keine_ebene_sondern_eine_marke():
+    """🔴 21.09.2026 (CI-Wachhund, „int-friendly-games"): anders als eine fehlende Liga ist
+    das kein Loch in der Tabelle — ein Freundschaftsspiel HAT keine Spielklasse. Jede Zahl
+    waere falsch: „1", weil Nationalmannschaften spielen, „3", weil es um nichts geht.
+    Gegenprobe an den 175 Fussball-Slugs des Ledgers: die Regel erfasst genau diesen einen
+    und stuft keinen bereits eingestuften um."""
+    assert LS.stufe("int-friendly-games") == "freundschaft"
+    assert LS.stufe("club-friendlies") == "freundschaft"
+    assert LS.stufe("amistosos-clubes") == "freundschaft"
+    # Ein Testspiel ist keine Randliga — es ist gar keine Liga.
+    assert LS.randliga("int-friendly-games") is False
+    # und die Regel greift nicht in echte Spielklassen hinein
+    assert LS.stufe("premier-league") == "1"
+    assert LS.stufe("la-liga") == "1"
+
+
+def test_indische_staatsliga_ist_ebene_3():
+    """🔴 21.09.2026 (CI-Wachhund): „india-karnataka-super-division". Dieselbe Familie wie
+    mizoram-premier-league — „Super Division" klingt nach oberster Klasse und ist die
+    Landesmeisterschaft Karnatakas, unter ISL, I-League und I-League 2."""
+    assert LS.stufe("india-karnataka-super-division") == "3"
+    assert LS.stufe("mizoram-premier-league") == "3"
+
+
 def test_finnische_spitze_ist_ebene_1():
     # Ykkonen (2) und Kolmonen (3) standen seit dem ersten Tag in der Tabelle — die oberste
     # Klasse desselben Landes fehlte. Eine Tabelle mit einem Loch in der Mitte faellt nicht auf.

@@ -29,6 +29,7 @@ HEADERS = {
 
 # ── results-cache.json lookup ─────────────────────────────────────────────────
 
+import absagen_buch
 import re as _re_norm
 
 def _norm_name(s: str) -> str:
@@ -366,6 +367,27 @@ def main():
     cache_hits      = 0
     sofascore_hits  = 0
     skipped_count   = 0
+    absage_hits     = 0
+    absage_unklar   = 0
+
+    # 🔴 21.09.2026 (Lucas' Störungsmeldung): „Levante–Athletic Club seit 97 h ohne Ergebnis".
+    # Das Spiel wurde am 16.09. wegen Starkregen abgesagt. Ein abgesagtes Spiel kommt weder in
+    # die results-cache noch ueber den Sofascore-Fallback zurueck — es wird jeden Lauf
+    # uebersprungen und bleibt fuer immer `result: null`, waehrend der Melder nach ein paar
+    # Tagen verstummt, weil das Fixture aus liga-data.json herausrollt.
+    # Fehlerklasse: eine Luecke, die sich durch Zeitablauf selbst erledigt, hinterlaesst keine
+    # Statistik. `*_absagen.json` haelt die Absage fest, wo sie erkannt wurde.
+    absagen = {}
+    for _n in ("liga_absagen.json", "wm_absagen.json", "mls_absagen.json"):
+        _p = Path(_n)
+        if not _p.exists():
+            continue
+        try:
+            _b = json.loads(_p.read_text(encoding="utf-8"))
+        except Exception:                                     # noqa: BLE001
+            continue
+        if isinstance(_b, dict):
+            absagen.update(_b)
 
     for entry in pending:
         event_id = entry.get("eventId")
@@ -373,6 +395,26 @@ def main():
         home     = entry.get("home") or "?"
         away     = entry.get("away") or "?"
         date_iso = entry.get("dateIso") or str(entry_date(entry) or "")
+
+        # Erst fragen, ob das Spiel ueberhaupt stattgefunden hat. Eine Absage ist kein
+        # Ergebnis, das noch kommt — sie ist der Grund, dass keines kommt.
+        _ab = absagen_buch.nachschlagen(absagen, date_iso, home, away)
+        if _ab:
+            for p_ in (entry.get("picks") or []):
+                p_["result"] = "void"
+            entry["finalScore"] = str(_ab.get("status") or "POSTPONED").upper()
+            entry["resolved"]   = True
+            entry["absage"]     = {"status": _ab.get("status"), "gesehenAt": _ab.get("gesehenAt")}
+            resolved_count += 1
+            absage_hits += 1
+            print(f"  🚫 {flag} {home} vs {away} ({date_iso}) → "
+                  f"{_ab.get('status')} laut Absagen-Buch — alle Picks void")
+            continue
+        if absagen_buch.mehrdeutig(absagen, date_iso, home, away):
+            # Nicht raten. Aber auch nicht schweigen: sonst sieht es aus wie „nicht abgesagt".
+            absage_unklar += 1
+            print(f"  ❓ {flag} {home} vs {away} ({date_iso}) → mehrere Absagen passen auf "
+                  f"dieses Datum; nicht abgerechnet, das gehoert angesehen")
 
         # ── Primary: results-cache.json (ID + name fallback) ─────────────────
         result, match_method = lookup_cache(event_id, date_iso, home, away,
@@ -487,7 +529,10 @@ def main():
     wr = round(won_picks / (won_picks + lost_picks) * 100, 1) if (won_picks + lost_picks) > 0 else None
 
     print(f"\n✅  Resolved {resolved_count} matches  "
-          f"(cache:{cache_hits} / sofascore:{sofascore_hits} / skipped:{skipped_count})")
+          f"(cache:{cache_hits} / sofascore:{sofascore_hits} / abgesagt:{absage_hits} / "
+          f"skipped:{skipped_count})")
+    if absage_unklar:
+        print(f"   ❓ {absage_unklar} Paarung(en) mit mehrdeutiger Absage — nicht abgerechnet.")
     print(f"   Total history: {total} matches · {total_picks} picks")
     if wr is not None:
         print(f"   Overall win rate: {won_picks}W / {lost_picks}L = {wr}%")
