@@ -767,6 +767,36 @@ def betfair_schubladen(rec=None, min_n=None) -> list:
 STAND_FILE = BASE / "freigabe_stand.json" if "BASE" in dir() else Path(__file__).resolve().parent / "freigabe_stand.json"
 
 
+def darf_stand_schreiben(env=None) -> bool:
+    """Nur der Pipeline-Lauf schreibt das Freigabe-Gedaechtnis fort.
+
+    Vorfall 22.09.2026: ein Lauf von Hand hat zwei Schubladen einen Freigabe-Beginn
+    gestempelt, die nie eine hatten. `FREIGABE_STAND=1` erzwingt das Schreiben von Hand
+    (zum Reparieren), `=0` verbietet es auch in der Pipeline.
+    """
+    env = os.environ if env is None else env
+    erzwungen = str(env.get("FREIGABE_STAND", "")).strip()
+    if erzwungen in ("0", "off", "nein"):
+        return False
+    if erzwungen in ("1", "on", "ja"):
+        return True
+    return str(env.get("GITHUB_ACTIONS", "")).lower() == "true"
+
+
+def stand_schreiben(stand, env=None) -> bool:
+    """Schreibt den Stand — oder sagt laut, warum nicht. Gibt zurueck, ob geschrieben wurde."""
+    if not darf_stand_schreiben(env):
+        print("freigabe_stand.json NICHT geschrieben (kein Pipeline-Lauf; "
+              "FREIGABE_STAND=1 erzwingt es)")
+        return False
+    try:
+        STAND_FILE.write_text(json.dumps(stand, ensure_ascii=False, indent=1), encoding="utf-8")
+        return True
+    except Exception as _e:
+        print("freigabe_stand.json nicht schreibbar:", _e)
+        return False
+
+
 def seit_freigabe(zeilen, stand, now=None) -> tuple:
     """Was eine Schublade geleistet hat, SEIT sie freigegeben wurde. REIN.
 
@@ -1625,11 +1655,15 @@ def baue(engine=None, track=None, cards=None, betfair=None, now=None) -> dict:
         _stand_alt = json.loads(STAND_FILE.read_text(encoding="utf-8")) if STAND_FILE.exists() else {}
     except Exception:
         _stand_alt = {}
+    # 22.09.2026, noch am selben Tag: `baue()` hat den Stand hier SELBST geschrieben. Damit hat
+    # jeder Probelauf — meiner von Hand, jeder Test, der `baue()` aufruft — einen Freigabe-Beginn
+    # in das Protokoll gestempelt. Zwei erfundene Startpunkte ("Conviction 7", "Mix money",
+    # 22.09. 20:25) sind so entstanden und waeren nie wieder verschwunden: ein bestehender
+    # Eintrag wird nie neu gestempelt, das ist der Sinn der Datei. freigabe.json waere davon
+    # harmlos, weil sie jeder Lauf komplett neu schreibt — ein Gedaechtnis aber nicht.
+    # Seither: `baue()` RECHNET den Stand und gibt ihn zurueck, geschrieben wird er nur von
+    # `main()` und nur im Pipeline-Lauf (`stand_schreiben()`).
     _zeilen2, _stand = seit_freigabe(zeilen, _stand_alt, now)
-    try:
-        STAND_FILE.write_text(json.dumps(_stand, ensure_ascii=False, indent=1), encoding="utf-8")
-    except Exception as _e:
-        print("freigabe_stand.json nicht schreibbar:", _e)
     zeilen.sort(key=lambda r: (RANG.get(r["status"], 9), -(r.get("roiLb") or -9), -r["n"]))
     frei = [r for r in zeilen if r["status"] == "freigegeben"]
     kand = [r for r in zeilen if r["status"] == "kandidat"]
@@ -1654,6 +1688,8 @@ def baue(engine=None, track=None, cards=None, betfair=None, now=None) -> dict:
         # Wie viele Schubladen ueber der Huerde liegen — und wie viele der Zufall dort hinlegt.
         # Die Zahl, an der haengt, ob ein Uebertritt eine Nachricht oder der Normalfall ist.
         "ausbeute": _ausbeute,
+        # Der fortgeschriebene Stand — NICHT geschrieben, nur gerechnet (s.o.).
+        "stand": _stand,
         "stroeme": stroeme(zeilen),
         # Zwei eigene Tabellen — KEINE Schubladen, weil sie zweite
         # Zerlegungen derselben Plays sind (Ligen) bzw. gar keine Plays
@@ -1691,6 +1727,9 @@ def main() -> int:
     _ev = os.environ.get("FREIGABE_ENGINE")
     ev = False if str(_ev).lower() == "off" else (_ev or None)
     d = baue(engine=ev)
+    # Der Stand gehoert in SEINE Datei, nicht zusaetzlich in freigabe.json: zwei Kopien
+    # derselben Buchfuehrung driften. Was jede Zeile braucht, steht als `seitFreigabe` an ihr.
+    stand_schreiben(d.pop("stand", None) or {})
     write_json_atomic(BASE / OUT_FILE, d, indent=1)
     z = d["zusammenfassung"]
     print("=== freigabe.py ===")

@@ -176,3 +176,71 @@ def test_der_rekonstruierte_stand_nennt_sich_als_solchen():
     for k in alt:
         assert "rekonstruiert" in str(d[k].get("quelle") or ""), \
             "%s traegt einen Startpunkt vor heute ohne Herkunftsangabe" % k
+
+
+# ── Vorfall 22.09.2026: baue() hat das Gedaechtnis selbst geschrieben ────────────────────
+# Jeder Probelauf (meiner von Hand, jeder Test, der baue() aufruft) hat damit einen
+# Freigabe-Beginn in freigabe_stand.json gestempelt. So sind "Conviction 7" und "Mix money"
+# mit Startpunkt 22.09. 20:25 entstanden — Schubladen, die nie freigegeben waren. Ein
+# bestehender Eintrag wird nie neu gestempelt (das ist der Sinn der Datei), also waeren die
+# beiden Startpunkte fuer immer geblieben.
+
+def test_baue_schreibt_das_gedaechtnis_nicht():
+    """Der Aufruf von baue() darf freigabe_stand.json NICHT anfassen."""
+    import freigabe as F
+    vorher = F.STAND_FILE.read_bytes() if F.STAND_FILE.exists() else None
+    vorher_mtime = F.STAND_FILE.stat().st_mtime_ns if F.STAND_FILE.exists() else None
+    F.baue(engine=False)
+    nachher = F.STAND_FILE.read_bytes() if F.STAND_FILE.exists() else None
+    assert nachher == vorher, "baue() hat freigabe_stand.json ueberschrieben"
+    if vorher_mtime is not None:
+        assert F.STAND_FILE.stat().st_mtime_ns == vorher_mtime, "baue() hat die Datei angefasst"
+
+
+def test_baue_gibt_den_stand_zurueck():
+    """Gerechnet wird er trotzdem — sonst haette die Pipeline nichts zu schreiben."""
+    import freigabe as F
+    d = F.baue(engine=False)
+    assert isinstance(d.get("stand"), dict), "baue() liefert keinen Stand mehr"
+
+
+def test_stand_landet_nicht_zusaetzlich_in_freigabe_json():
+    """Zwei Kopien derselben Buchfuehrung driften — `seitFreigabe` steht an der Zeile."""
+    import json as _j, pathlib as _p
+    f = _p.Path(__file__).resolve().parent.parent / "freigabe.json"
+    if not f.exists():
+        return
+    d = _j.loads(f.read_text(encoding="utf-8"))
+    assert "stand" not in d, "freigabe.json traegt eine zweite Kopie des Gedaechtnisses"
+
+
+def test_nur_der_pipeline_lauf_darf_schreiben():
+    import freigabe as F
+    assert F.darf_stand_schreiben({}) is False
+    assert F.darf_stand_schreiben({"GITHUB_ACTIONS": "true"}) is True
+    assert F.darf_stand_schreiben({"GITHUB_ACTIONS": "false"}) is False
+    # Von Hand erzwingbar (Reparatur) und in der Pipeline abschaltbar
+    assert F.darf_stand_schreiben({"FREIGABE_STAND": "1"}) is True
+    assert F.darf_stand_schreiben({"GITHUB_ACTIONS": "true", "FREIGABE_STAND": "0"}) is False
+
+
+def test_stand_schreiben_schweigt_nicht_wenn_es_nicht_schreibt():
+    """Ein Guard, dessen Stille wie ein Freispruch aussieht — hier: laut sagen, dass nichts kam."""
+    import freigabe as F, io, contextlib
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        ok = F.stand_schreiben({"x": 1}, env={})
+    assert ok is False
+    assert "NICHT geschrieben" in buf.getvalue()
+
+
+def test_das_gedaechtnis_enthaelt_nur_belegte_startpunkte():
+    """Jeder Eintrag nennt seine Herkunft — rekonstruiert oder von der Pipeline gestempelt."""
+    import json as _j, pathlib as _p
+    f = _p.Path(__file__).resolve().parent.parent / "freigabe_stand.json"
+    d = _j.loads(f.read_text(encoding="utf-8"))
+    for name, e in d.items():
+        if name.startswith("_"):
+            continue
+        assert isinstance(e.get("ab"), str) and e["ab"][:2] == "20", (name, e)
+        assert isinstance(e.get("drin"), bool), (name, e)
