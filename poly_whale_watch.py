@@ -79,7 +79,30 @@ PUB_MIN_HITRATE       = float(os.environ.get("WHALE_PUB_MIN_HITRATE")     or 0.5
 PUB_MIN_USD_NOREC     = float(os.environ.get("WHALE_PUB_MIN_USD_NOREC")   or 150000)   # 06.08.2026 (Lucas: Feed straffen): Wallet OHNE belastbaren Record (n<PUB_MIN_TR) nur ab so viel $
 CONTEST_MIN_USD       = float(os.environ.get("WHALE_CONTEST_MIN_USD")     or 100000)   # 12.08.2026 (Lucas): Public — Gross-Einstiege ab so viel auf ZWEI Seiten = umkaempft -> gar nicht posten
 CONFLICT_TOP_N        = int(os.environ.get("WHALE_CONFLICT_TOP_N")        or 20)       # 24.08.2026 (Lucas, INOX-Fall): haelt eine andere Wallet aus den Top-N die Gegenseite, ist das Signal mehrdeutig — RANG statt Dollar, deshalb greift es auch bei $7K.
-PUB_MIN_ODDS          = float(os.environ.get("WHALE_PUB_MIN_ODDS")       or 1.30)     # 22.08.2026 (Lucas): Public — Whale-Bet braucht Mindest-Quote (86c/1.16 = zu wenig Value). Einstieg/Jetzt <= 1/odds.
+# 🎯 Der Quotenboden — EINE Zahl fuer EINE Frage: ab wann ist eine Karte ueberhaupt etwas, dem
+# man folgen kann?
+#
+# 🔴 22.09.2026 (Lucas, zu einer Trades-Karte „T1 Academy @ 95¢", also @1,05): „die Quote ist
+# halt wertlos … was soll ich da wetten? Bitte das auch anpassen, damit nur die durchkommen, die
+# zumindest 1,3 haben."
+#
+# Er hat recht, dass es die Regel gab — sie hing nur am falschen Kanal. Der oeffentliche Trichter
+# prueft die Mindestquote seit dem 22.08., das Dominanz-Band seit dem 11.09. („ab 1,35 erst
+# wieder"), der TRADES-Trichter nie: dort stand nur `_pub_ok`, und das laesst alles zwischen 3 und
+# 97 Cent durch. Fehlerklasse: eine Regel, die fuer eine Teilmenge gilt, obwohl die Frage fuer
+# alle dieselbe ist.
+#
+# Die Zahl ist 1,35 — dieselbe, die Lucas am 11.09. fuer das Band genannt hat und die im Projekt
+# ohnehin der Boden ist (pick-engine.js „Cheap ML filter", stake-radar.js). Damit steigt der
+# oeffentliche Boden von 1,30 auf 1,35; gemessen am Public-Buch kostet das NICHTS: von 44 Pushs
+# mit Preis liegt die niedrigste Quote bei @1,36.
+#
+# ⚠️ Ehrlich dazu: das ist eine BRAUCHBARKEITS-Regel, keine Rendite-Regel — die Zahlen stuetzen
+# sie nicht. Ueber 500 abgerechnete Zeilen des Whale-Follow-Tracks liegt der ROI UNTER 1,35 bei
+# +2,9 % und darueber bei −4,8 %. Wer den Boden als Gewinnfilter verkauft, redet gegen die
+# eigenen Daten. Er kommt, weil eine Karte @1,05 fuer Lucas nichts ist, dem man folgen kann.
+MIN_QUOTE             = float(os.environ.get("WHALE_MIN_QUOTE")          or 1.35)
+PUB_MIN_ODDS          = float(os.environ.get("WHALE_PUB_MIN_ODDS")       or MIN_QUOTE)
 PUB_TOP_N             = int(os.environ.get("WHALE_PUB_TOP_N")            or 10)   # 23.08.2026 (Lucas): Public postet NUR die Top-N der Sharp-Rangliste (kuratiert), optisch mit Rang-Badge wie im Trades-Channel.
 # 16.09.2026: der Public-Gate haengt nicht mehr am Listenplatz, sondern an der CLV-Untergrenze
 # (s. `_pub_in_top_n`). Diese Zahl ist nur noch die Notbremse nach oben — sie begrenzt, wie weit
@@ -1446,7 +1469,10 @@ DOM_MAX_HTK = float(os.environ.get("WHALE_DOM_MAX_HTK") or 1.0)
 #
 # 1,35 ist im Projekt schon der Boden (pick-engine.js „Cheap ML filter", stake-radar.js), also
 # dieselbe Zahl und nicht eine neue.
-DOM_MIN_QUOTE = float(os.environ.get("WHALE_DOM_MIN_QUOTE") or 1.35)
+# 22.09.2026: dieselbe Frage wie im Trades- und im Public-Trichter, also dieselbe Zahl —
+# `MIN_QUOTE` oben. Die Begruendung von damals steht dort weiter; hier bleibt nur der Verweis,
+# damit die Zahl nicht an drei Stellen gepflegt werden muss.
+DOM_MIN_QUOTE = float(os.environ.get("WHALE_DOM_MIN_QUOTE") or MIN_QUOTE)
 
 # 🔬 Die Kleinmarkt-Spur (11.09.2026). Geschrieben von poly_money_broad.py, gelesen NUR hier.
 # Lucas: „ich will ja herausfinden, Spiele bei Poly, die kleine Maerkte sind und wo ein
@@ -2160,12 +2186,19 @@ def _tg_public(text: str) -> bool:
         return False
 
 
-def _pub_min_odds_ok(pos) -> bool:
-    """22.08.2026 (Lucas): Public-Whale nur bei sinnvoller Mindest-Quote. Ein Whale, der bei ~86c
-    (Odds ~1.16) einsteigt, ist fuer den oeffentlichen Feed „recht wenig" Value. Gate auf den
-    Einstieg (firstPrice) UND — falls vorhanden — den Jetzt-Preis (lastPrice): beide muessen Odds
-    >= PUB_MIN_ODDS ergeben (Preis <= 1/odds). Aussenseiter (niedriger Preis, hohe Odds) bleiben drin."""
-    max_price = (1.0 / PUB_MIN_ODDS) if PUB_MIN_ODDS > 0 else 1.0
+def _quote_ok(pos, min_quote: float = MIN_QUOTE) -> bool:
+    """Traegt diese Position die Mindestquote? REIN.
+
+    22.08.2026 (Lucas): ein Whale, der bei ~86c (@1,16) einsteigt, ist „recht wenig" Value.
+    22.09.2026 (Lucas, zu einer TRADES-Karte @1,05): „die Quote ist halt wertlos." Dieselbe
+    Frage, also dieselbe Funktion und dieselbe Zahl fuer beide Kanaele — s. `MIN_QUOTE`.
+
+    Geprueft werden Einstieg (`firstPrice`) UND, falls vorhanden, der Jetzt-Preis (`lastPrice`):
+    beide muessen die Quote tragen. Aussenseiter (niedriger Preis, hohe Quote) bleiben drin.
+    Ohne brauchbaren Preis gibt es keine Quote — und damit auch keine Karte: eine Empfehlung,
+    deren Quote niemand kennt, kann man weder befolgen noch nachpruefen.
+    """
+    max_price = (1.0 / min_quote) if min_quote > 0 else 1.0
     try:
         fp = float(pos.get("firstPrice"))
     except (TypeError, ValueError):
@@ -2176,6 +2209,23 @@ def _pub_min_odds_ok(pos) -> bool:
     if isinstance(lp, (int, float)) and lp > max_price:
         return False
     return True
+
+
+def _pub_min_odds_ok(pos) -> bool:
+    """Der oeffentliche Trichter — seit 22.09.2026 nur noch ein Name fuer `_quote_ok`."""
+    return _quote_ok(pos, PUB_MIN_ODDS)
+
+
+def mit_quote(cand, min_quote: float = MIN_QUOTE):
+    """Die Kandidaten, die den Quotenboden tragen — plus die Zahl der zurueckgehaltenen. REIN.
+
+    Eine eigene Funktion, weil der Boden sonst nur als Zeile in `main()` stuende und kein Test
+    ihn dort anschlagen sehen koennte: die Mutation „Filter wieder raus" blieb im ersten Anlauf
+    gruen, obwohl `_quote_ok` selbst dreifach geprueft war.
+    Fehlerklasse: eine Regel, die geprueft ist, und eine Anwendung, die es nicht ist.
+    """
+    ok = [c for c in (cand or []) if _quote_ok(c[1], min_quote)]
+    return ok, len(cand or []) - len(ok)
 
 
 # 04.09.2026 (Lucas' Zwei-Wochen-Bilanz: „12 Win, 2 lost — 2 Premier League lost").
@@ -2641,6 +2691,15 @@ def main():
     # (01.08.2026, Lucas: 1a) Trades-Channel bekommt denselben Sanity-Filter wie Public:
     # nur Sport + Preis 3–97¢ → kein @100¢-schon-entschieden, kein Politik/Krypto-Müll.
     cand = [c for c in select(track, seen, now, sharp_floor=MIN_USD_SHARP) if _pub_ok(c[1])]
+    # 🔴 22.09.2026 (Lucas, zur Karte „T1 Academy @ 95¢"): „die Quote ist halt wertlos … was soll
+    # ich da wetten?" Der Quotenboden hing bis heute nur am oeffentlichen Trichter und am
+    # Dominanz-Band; hier stand nur `_pub_ok`, und das laesst 3–97 Cent durch — @1,03 inklusive.
+    # Fehlerklasse: eine Regel, die fuer eine Teilmenge gilt, obwohl die Frage fuer alle dieselbe
+    # ist. Was der Boden kostet, steht in der Zeile darunter, damit es nicht still verschwindet.
+    cand, _unter_quote = mit_quote(cand)
+    if _unter_quote:
+        print("  \U0001f3af %d Karte(n) unter Quote %.2f zurueckgehalten"
+              % (_unter_quote, MIN_QUOTE))
     # 19.09.2026 (Lucas): gesperrte Sportarten jetzt auch aus TRADES — s. ohne_gesperrte.
     cand, _blk_raus = ohne_gesperrte(cand, _blocked)
     if _blk_raus:

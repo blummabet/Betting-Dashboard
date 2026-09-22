@@ -471,15 +471,23 @@ class TestSelectSubBreakeven(unittest.TestCase):
 
 
 class TestPubMinOdds(unittest.TestCase):
-    # 22.08.2026 (Lucas): Public-Whale nur bei Mindest-Quote >=1.30 (Einstieg/Jetzt <= ~0.769).
+    # 22.08.2026 (Lucas): Public-Whale nur bei Mindest-Quote (Einstieg/Jetzt <= 1/Quote).
+    # 22.09.2026: der Boden steht jetzt fuer BEIDE Kanaele auf `MIN_QUOTE` (1,35 statt 1,30) —
+    # Anlass war eine Trades-Karte @1,05, s. tests/test_quotenboden_kanal.py. Die Grenze wird
+    # hier deshalb aus der Konstanten gerechnet und nicht mehr als 0.769 hingeschrieben: eine
+    # fest getippte Grenze faellt beim naechsten Verschieben, ohne etwas ueber das Verhalten
+    # zu sagen.
     def test_short_favourite_rejected(self):
         self.assertFalse(P._pub_min_odds_ok(_pos(50000, price=0.86)))   # Odds ~1.16 -> raus
         self.assertFalse(P._pub_min_odds_ok(_pos(50000, price=0.80)))   # Odds 1.25 -> raus
 
     def test_ok_at_or_above_min_odds(self):
-        self.assertTrue(P._pub_min_odds_ok(_pos(50000, price=0.769)))   # ~1.30 Grenze
+        self.assertTrue(P._pub_min_odds_ok(_pos(50000, price=1.0 / P.PUB_MIN_ODDS)))   # Grenze
         self.assertTrue(P._pub_min_odds_ok(_pos(50000, price=0.60)))    # 1.67
         self.assertTrue(P._pub_min_odds_ok(_pos(50000, price=0.30)))    # Aussenseiter 3.33 -> bleibt
+
+    def test_knapp_darunter_faellt_raus(self):
+        self.assertFalse(P._pub_min_odds_ok(_pos(50000, price=1.0 / (P.PUB_MIN_ODDS - 0.02))))
 
     def test_current_price_drifted_short_rejected(self):
         pos = _pos(50000, price=0.70)   # Einstieg 1.43 ok
