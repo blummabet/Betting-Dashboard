@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-22T02:01:01.061865+00:00",
+ "generatedAt": "2026-09-22T02:30:59.406214+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,7 +9,7 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 551,
- "pinnKeys": 133,
+ "pinnKeys": 131,
  "matched": 49,
  "footballRows": 21,
  "crossRows": 530,
@@ -26,8 +26,37 @@
   "soccer_mls": 21
  },
  "trackRecord": {
-  "tracked": 300,
+  "tracked": 302,
   "converged": 69
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|minnesotatwins-sanfranciscogiants|minnesotatwins",
+   "sport": "baseball_mlb",
+   "event": "Minnesota Twins vs San Francisco Giants",
+   "market": "Moneyline",
+   "outcome": "Minnesota Twins",
+   "polyPP": 15.5,
+   "pinnPP": 54.8,
+   "gapPP": -39.32,
+   "vol": 570028,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-22T02:30:59.405905+00:00"
+  },
+  {
+   "id": "baseball_mlb|minnesotatwins-sanfranciscogiants|sanfranciscogiants",
+   "sport": "baseball_mlb",
+   "event": "Minnesota Twins vs San Francisco Giants",
+   "market": "Moneyline",
+   "outcome": "San Francisco Giants",
+   "polyPP": 84.5,
+   "pinnPP": 45.2,
+   "gapPP": 39.32,
+   "vol": 570028,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-22T02:30:59.405905+00:00"
+  }
+ ]
 }
