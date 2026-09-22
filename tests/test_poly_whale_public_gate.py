@@ -65,12 +65,23 @@ class TestDerEchteFall(unittest.TestCase):
 
 
 class TestDieNotbremseBremstWasSieBeurteilenKann(unittest.TestCase):
-    def test_ohne_clv_untergrenze_kein_public(self):
-        """Die EIGENSCHAFT bleibt die Huerde — daran aendert sich nichts."""
+    def test_die_clv_untergrenze_ist_keine_huerde_mehr(self):
+        """🔴 22.09.2026. Hier stand „Die EIGENSCHAFT bleibt die Huerde". Sie war es genau
+        sechs Tage. Lucas: „Man kann CLV anzeigen, aber es darf kein Kriterium sein, dass
+        irgendwas gekickt wird." Sie wird weiter gerechnet und steht auf der Karte."""
         sc = {"0xa": _w(n=20, wins=10, clv_sum=-40.0)}
         ug, _ = W._clv_ug(sc["0xa"])
         self.assertLessEqual(ug, 0)
+        self.assertTrue(W._pub_in_top_n(sc, "0xa"))
+
+    def test_der_gemessene_sportverlust_ist_die_huerde(self):
+        """Was an ihre Stelle getreten ist — und die Regel fuer „nicht gemessen"."""
+        sc = {"0xa": _w(n=20, wins=10, clv_sum=40.0)}
+        self.assertTrue(W._pub_in_top_n(sc, "0xa"))
+        sc["0xa"]["fenster30"] = {"gewinn": -777}
         self.assertFalse(W._pub_in_top_n(sc, "0xa"))
+        sc["0xa"]["fenster30"] = {}
+        self.assertTrue(W._pub_in_top_n(sc, "0xa"))
 
     def test_ein_schlechter_rang_sperrt_weiterhin(self):
         """Wer IN der Liste steht und dort hinten liegt, bleibt draussen."""

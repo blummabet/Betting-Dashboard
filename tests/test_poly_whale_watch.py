@@ -401,21 +401,46 @@ class TestPublicRecordAndTighten(unittest.TestCase):
 
 
 class TestClvGate(unittest.TestCase):
-    """12.08.2026 (Lucas): hohe Trefferquote OHNE positiven CLV = Glueck, kein Edge. Die reale
-    Tennis-Wallet (7/9 = 78% aber Ø CLV negativ, lebenslang -70K) darf NICHT 'bewiesen' sein."""
+    """12.08.2026 stand hier: hohe Trefferquote OHNE positiven CLV = Glueck, kein Edge.
 
-    def test_negative_clv_not_smart(self):
-        self.assertFalse(P._is_smart({"n": 9, "wins": 7, "clvSumPP": -0.59}))   # reale Tennis-Wallet
-        self.assertFalse(P._is_smart({"n": 20, "wins": 15, "clvSumPP": -5}))    # gute Quote, neg CLV
+    🔴 22.09.2026 umgedreht. Lucas, ausdruecklich und nach eigener Angabe seit Wochen:
+    „Den CLV von mir aus messe ihn, aber ich will, dass der nicht irgendwo irgendwie
+    limitiert … man kann ihn anzeigen, aber es darf kein Kriterium sein, dass irgendwas
+    gekickt wird. Und siehst du, dann fliegen gute Wallets raus."
+
+    Er hat recht, und es ist messbar. Am Track vom 22.09.2026 (4.394 Wallets) scheiterten
+    21 von 48 Wallets ALLEIN an einer CLV-Bedingung, 11 davon mit gemessenem 30-Tage-Profit
+    (+$176.456 zusammen) — darunter 87 % Treffer aus 76 Aufloesungen mit +$19.629 bei
+    Ø CLV −0,13pp. Vorwaerts (Auswahl 17.–19.09., gemessen 20.–21.09.) lieferte „Ø CLV >= 0"
+    einen Folge-ROI von −13,6 % gegen −3,8 % Basisrate und −5,3 % fuer genau die Wallets, die
+    es ausschloss: das Tor waehlte die schlechtere Haelfte.
+
+    An seine Stelle tritt der gemessene 30-Tage-Sportverlust — dieselbe Form wie beim P&L:
+    ein Ausschluss, und „nicht gemessen" ist keiner."""
+
+    def test_negativer_clv_kickt_niemanden_mehr(self):
+        self.assertTrue(P._is_smart({"n": 9, "wins": 7, "clvSumPP": -0.59}))    # die Tennis-Wallet
+        self.assertTrue(P._is_smart({"n": 20, "wins": 15, "clvSumPP": -5}))     # gute Quote, neg CLV
+
+    def test_gemessener_sportverlust_kickt_schon(self):
+        gut = {"n": 20, "wins": 15, "clvSumPP": 40}
+        self.assertTrue(P._is_smart(gut))
+        self.assertFalse(P._is_smart({**gut, "fenster30": {"gewinn": -1200}}))
+        self.assertTrue(P._is_smart({**gut, "fenster30": {"gewinn": 1200}}))
+        self.assertTrue(P._is_smart({**gut, "fenster30": {}}),
+                        "nicht gemessen ist kein Verlust — sonst haengt das Tor an der Abdeckung")
 
     def test_nonneg_clv_bleibt_smart(self):
         self.assertTrue(P._is_smart({"n": 20, "wins": 15, "clvSumPP": 40}))     # 75% + pos CLV
         self.assertTrue(P._is_smart({"n": 9, "wins": 8}))                        # CLV fehlt -> 0 -> bleibt smart
 
-    def test_negative_clv_label_nicht_bewiesen(self):
-        line = P._wallet_line({"0xT": {"n": 9, "wins": 7, "clvSumPP": -0.59}}, "0xT")
-        self.assertNotIn("bewiesene Wallet", line)   # kein Schmeichel-Label
-        self.assertIn("Bilanz", line)                # faellt auf neutrale Bilanz
+    def test_negativer_clv_steht_noch_auf_der_zeile(self):
+        """Angezeigt, nicht entscheidend: das Label darf wieder „bewiesen" sagen, aber die
+        Zahl selbst muss sichtbar bleiben — sonst waere der CLV nicht entfernt, sondern
+        verschwiegen."""
+        line = P._wallet_line({"0xT": {"n": 20, "wins": 15, "clvSumPP": -5.0}}, "0xT")
+        self.assertIn("CLV", line)
+        self.assertIn("-0.2", line.replace("−", "-"))
 
     def test_bewiesen_label_zeigt_clv(self):
         line = P._wallet_line({"0xA": {"n": 20, "wins": 15, "clvSumPP": 40}}, "0xA")
@@ -648,23 +673,22 @@ class TestPublicTopN(unittest.TestCase):
                         "Rang 11 mit belegtem CLV gehoert rein — der Platz ist kein Urteil")
         self.assertFalse(P._pub_in_top_n(sc, "0xDEAD"))
 
-    def test_ohne_belegten_clv_hilft_auch_rang_eins_nicht(self):
-        """Die Umkehrung, und der eigentliche Punkt: genau so kamen bis zum 14.09. vier Wallets
-        mit gemessen negativem CLV ins oeffentliche Feed (bis −0,66 pp Untergrenze).
+    def test_eine_negative_clv_untergrenze_sperrt_nicht_mehr(self):
+        """🔴 22.09.2026, die Umkehrung des Tests vom 16.09.
 
-        Nachgebaut wird der ECHTE Fall: positiver CLV-Schnitt (sonst faellt die Wallet schon aus
-        der Rangliste), aber so viel Streuung, dass die einseitige Untergrenze unter null liegt.
-        Ein Schnitt ohne Schranke ist kein Beleg — dieselbe Regel wie ueberall hier.
+        Der Fall ist derselbe: positiver CLV-Schnitt, aber so viel Streuung, dass die
+        einseitige Untergrenze unter null liegt. Bis heute war das der Grund, die Wallet aus
+        dem oeffentlichen Kanal zu halten. Lucas: „es darf kein Kriterium sein, dass irgendwas
+        gekickt wird." Die Untergrenze wird weiter gerechnet und steht auf der Karte.
         """
         sc = self._scores()
-        # 20 Fenster-Zeilen, Schnitt +0,5 pp, Varianz ~25 -> UG = 0,5 − 1,645·sqrt(25/20) < 0
         sc["0x00"] = dict(sc["0x00"], clvSumPP=10, clvFenN=20, clvFenSum=10.0,
                           clvSqSum=20 * 0.5 * 0.5 + 19 * 25.0)
         ug, art = P._clv_ug(sc["0x00"])
         self.assertEqual(art, "ug")
         self.assertLess(ug, 0, "Fixture trifft den Fall nicht")
         self.assertIn(str("0x00").lower(), P._sharp_rank_map(sc), "Wallet muss in der Liste sein")
-        self.assertFalse(P._pub_in_top_n(sc, "0x00"))
+        self.assertTrue(P._pub_in_top_n(sc, "0x00"))
 
     def test_die_notbremse_verengt_weiterhin(self):
         """Wer den Kanal haendisch verengen will, kann — ohne den Beleg-Begriff anzufassen."""
@@ -678,10 +702,27 @@ class TestPublicTopN(unittest.TestCase):
         sc = self._scores()
         self.assertFalse(P._pub_in_top_n(sc, "0x00", n=0))
 
-    def test_eine_wallet_ohne_clv_zaehlt_nicht_als_belegt(self):
-        """Fehlende Information ist kein Beleg — sonst rutscht „unbekannt" als „gut" durch."""
+    def test_ein_fehlender_clv_sperrt_nicht_mehr(self):
+        """🔴 22.09.2026. Hier stand „Fehlende Information ist kein Beleg" — richtig als Regel,
+        falsch als CLV-Regel: Lucas hat den CLV als Ausschluss ueberall abgeschafft. Was
+        stattdessen sperrt, ist der GEMESSENE Verlust, und der hat dieselbe Form."""
         sc = self._scores()
         sc["0x00"] = dict(sc["0x00"], clvSumPP=0)
+        self.assertTrue(P._pub_in_top_n(sc, "0x00"))
+
+    def test_ein_gemessener_sportverlust_sperrt_den_public_kanal(self):
+        sc = self._scores()
+        self.assertTrue(P._pub_in_top_n(sc, "0x00"))
+        sc["0x00"] = dict(sc["0x00"], fenster30={"gewinn": -2500})
+        self.assertFalse(P._pub_in_top_n(sc, "0x00"))
+        sc["0x00"] = dict(sc["0x00"], fenster30={"gewinn": 2500})
+        self.assertTrue(P._pub_in_top_n(sc, "0x00"))
+
+    def test_die_mindest_stichprobe_bleibt(self):
+        """Sie war nie das CLV-Kriterium: sie ist die Antwort auf „eine Untergrenze aus n=1
+        ist keine Untergrenze" (21.09., als 1.622 Wallets durchkamen, 815 davon mit n=1)."""
+        sc = self._scores()
+        sc["0x00"] = dict(sc["0x00"], n=1, wins=1)
         self.assertFalse(P._pub_in_top_n(sc, "0x00"))
 
     def test_public_card_shows_top10_badge(self):
@@ -1748,10 +1789,19 @@ class TestWalletGate(unittest.TestCase):
             self.assertEqual(P.dominanz_kandidaten(self._tr(score), self._br(), now=NOW), [],
                              repr(score))
 
-    def test_negativer_clv_faellt_raus(self):
-        """Eine hohe Trefferquote ohne CLV ist Glueck — steht so in sharp_gate.py."""
-        self.assertEqual(
+    def test_negativer_clv_faellt_NICHT_mehr_raus(self):
+        """🔴 22.09.2026. Hier stand „Eine hohe Trefferquote ohne CLV ist Glueck" — die Zeile
+        in sharp_gate.py, auf die sich das berief, gibt es nicht mehr (Lucas). Am Track
+        gemessen kostete sie 21 von 48 Wallets, 11 davon mit gemessenem 30-Tage-Profit."""
+        self.assertNotEqual(
             P.dominanz_kandidaten(self._tr({"n": 60, "wins": 40, "clvSumPP": -30.0}),
+                                  self._br(), now=NOW), [])
+
+    def test_ein_gemessener_sportverlust_faellt_raus(self):
+        """Was an die Stelle getreten ist, und zwar ueber dieselbe eine Definition."""
+        self.assertEqual(
+            P.dominanz_kandidaten(self._tr({"n": 60, "wins": 40, "clvSumPP": 60.0,
+                                            "fenster30": {"gewinn": -900}}),
                                   self._br(), now=NOW), [])
 
     def test_es_gilt_die_projektweite_definition(self):
@@ -1988,11 +2038,32 @@ class RangNachSchaerfeNichtNachVermoegen(unittest.TestCase):
                       clvFenN=9, clvFenSum=5.0, clvSqSum=4.0)
         self.assertIn("0xduenn", P._sharp_rank_map({"0xduenn": mit}))
 
-    def test_schaerfe_floor_und_vier_stellig_filter_bleiben(self):
+    def test_der_clv_floor_ist_weg_der_rest_bleibt(self):
+        """🔴 22.09.2026: der Schaerfe-Floor hatte zwei Haelften. Die CLV-Haelfte ist raus
+        (Lucas), die Trefferquoten-Haelfte und der 4-stellig-Filter bleiben — sie sind andere
+        Messungen und waren nie gemeint, als er „CLV" sagte."""
         stumpf = self._w(clvSumPP=-6.0, clvFenSum=-6.0)
-        self.assertNotIn("0xneg", P._sharp_rank_map({"0xneg": stumpf}))
+        self.assertIn("0xneg", P._sharp_rank_map({"0xneg": stumpf}),
+                      "ein negativer CLV darf niemanden mehr aus der Rangliste werfen")
         klein = self._w(usd=100.0 * 12)
         self.assertNotIn("0xklein", P._sharp_rank_map({"0xklein": klein}))
+        schlecht = self._w(wins=2)          # Treffer weit unter 45 %
+        self.assertNotIn("0xhit", P._sharp_rank_map({"0xhit": schlecht}))
+        verlust = self._w(fenster30={"gewinn": -1500})
+        self.assertNotIn("0xgeld", P._sharp_rank_map({"0xgeld": verlust}))
+
+    def test_die_rangliste_sortiert_nach_gemessenem_geld(self):
+        """Und zwar mit „ungemessen" hinter „gemessen", nicht bei null: sonst stuende eine
+        Wallet ohne Messung vor einer, die Geld verdient hat."""
+        sc = {
+            "0xviel": self._w(fenster30={"gewinn": 90000}),
+            "0xwenig": self._w(fenster30={"gewinn": 100}),
+            "0xohne": self._w(clvSumPP=99.0, clvFenSum=99.0),     # Traum-CLV, kein Geld gemessen
+        }
+        r = P._sharp_rank_map(sc)
+        self.assertLess(r["0xviel"], r["0xwenig"])
+        self.assertLess(r["0xwenig"], r["0xohne"],
+                        "ungemessen gehoert hinter jede gemessene Zahl, auch bei Traum-CLV")
 
 
 class ClvUntergrenzeSpiegeltDasDashboard(unittest.TestCase):

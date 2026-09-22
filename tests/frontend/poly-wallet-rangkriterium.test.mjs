@@ -65,17 +65,30 @@ const BESTAND = scores({
 });
 const rang = (rows) => rows.map(r => r.wallet);
 
-test('ohne Argument sortiert die Rangliste unverändert nach der CLV-Untergrenze', () => {
+test('⭐ ohne Argument sortiert die Rangliste nach dem gemessenen Profit', () => {
+  // 🔴 22.09.2026, wenige Stunden nach dem Bau der Chips. Hier stand „unverändert nach der
+  // CLV-Untergrenze" — Lucas: „Man kann CLV anzeigen, aber es darf kein Kriterium sein, dass
+  // irgendwas gekickt wird." Eine Sortierung, die bei 20 Zeilen abschneidet, IST ein Kriterium.
   const w = fenster();
   const r = rang(w._pwRankRowsPnl(BESTAND));
-  assert.strictEqual(r[0], '0xb', 'der höchste CLV gehört nach oben, nicht der höchste Profit');
+  assert.strictEqual(r[0], '0xa', 'der höchste 30-Tage-Profit gehört nach oben');
+  // und die Vorgabe steht auch so im Code, nicht nur im Ergebnis dieser Fixture
+  assert.match(readFileSync(new URL('poly-wallets.js', ROOT), 'utf8'),
+    /const PW_RANK_KRIT_STD = 'profit30';/);
 });
 
 test('⭐ nach Profit 30T sortiert steht die Geld-Wallet oben', () => {
   const w = fenster();
-  const r = rang(w._pwRankRowsPnl(BESTAND, 'profit30'));
+  // Floor aus, sonst wirft der gemessene 30-Tage-Verlust 0xc heraus, bevor sortiert wird.
+  const r = rang(w._pwRankRowsPnl(BESTAND, 'profit30', false));
   assert.strictEqual(r[0], '0xa', '+$50.000 über 30 Tage gehört auf #1');
   assert.ok(r.indexOf('0xb') < r.indexOf('0xc'), '+$900 gehört vor −$7.000');
+});
+
+test('⭐ CLV bleibt als Sortier-Option erhalten — er wird gemessen, er entscheidet nur nichts', () => {
+  const w = fenster();
+  const r = rang(w._pwRankRowsPnl(BESTAND, 'clvUg', false));
+  assert.strictEqual(r[0], '0xb', 'wer den Chip auf CLV stellt, bekommt CLV');
 });
 
 test('Profit 7T und Profit 30T sind zwei verschiedene Fenster', () => {
@@ -98,7 +111,7 @@ test('⭐ eine Wallet ohne Auflösung im Fenster steht UNTEN, nicht bei null', (
   const messbar = { '0xc': BESTAND['0xc'], '0xa': BESTAND['0xa'] };
   for (const [name, b] of [['ungemessen zuerst', { '0xd': BESTAND['0xd'], ...messbar }],
                            ['ungemessen zuletzt', { ...messbar, '0xd': BESTAND['0xd'] }]]) {
-    const r = rang(w._pwRankRowsPnl(b, 'profit30'));
+    const r = rang(w._pwRankRowsPnl(b, 'profit30', false));
     assert.ok(r.indexOf('0xd') > r.indexOf('0xc'),
       name + ': ungemessen als 0 sortiert stünde 0xd vor der Wallet, die −$7.000 gemacht hat — '
       + 'die Rangliste behauptete damit eine Auskunft, die sie nicht hat');
@@ -112,9 +125,9 @@ test('⭐ der Vergleich selbst stellt ungemessen hinter gemessen — in beide Ri
   // korrektes Verschieben. Die Mutation `if (wa == null) return 0` ueberlebte genau daran.
   const w = fenster();
   const cmp = w._pwRangVergleich('profit30');
-  const A = w._pwRankRowsPnl({ '0xa': BESTAND['0xa'] }, 'profit30')[0];        // +$50.000
-  const C = w._pwRankRowsPnl({ '0xc': BESTAND['0xc'] }, 'profit30')[0];        // −$7.000
-  const D = w._pwRankRowsPnl({ '0xd': BESTAND['0xd'] }, 'profit30')[0];        // ungemessen
+  const A = w._pwRankRowsPnl({ '0xa': BESTAND['0xa'] }, 'profit30', false)[0];   // +$50.000
+  const C = w._pwRankRowsPnl({ '0xc': BESTAND['0xc'] }, 'profit30', false)[0];   // −$7.000
+  const D = w._pwRankRowsPnl({ '0xd': BESTAND['0xd'] }, 'profit30', false)[0];   // ungemessen
   assert.ok(cmp(D, C) > 0, 'ungemessen gehört HINTER eine Wallet, die Geld verloren hat');
   assert.ok(cmp(C, D) < 0, 'und zwar auch, wenn die Argumente andersherum kommen');
   assert.ok(cmp(A, C) < 0);
@@ -140,18 +153,18 @@ test('⭐ der Sortier-Chip verschiebt NICHT, was der Betting-Tab bekommt', () =>
   // die in diesem Repo schon dreimal zugeschlagen hat.
   const w = fenster({ walletTrack: { scores: BESTAND } });
   const vorher = rang(w._pwRankRows()).join(',');
-  w.eval('_pwSetRankKrit("profit30"); _pwSetRankFloor(false);');
+  w.eval('_pwSetRankKrit("clvUg"); _pwSetRankFloor(false);');
   assert.strictEqual(rang(w._pwRankRows()).join(','), vorher);
-  assert.ok(vorher.startsWith('0xb'), 'und zwar auf der CLV-Untergrenze');
+  assert.ok(vorher.startsWith('0xa'), 'und zwar auf der Vorgabe (gemessener 30-Tage-Profit)');
 });
 
 test('der gerenderte Abschnitt folgt dem Chip', () => {
   const w = fenster({ walletTrack: { scores: BESTAND } });
   const html = () => w.eval('_pwSharpRanking()');
   const vorZuerst = (h, a, b) => h.indexOf(a) < h.indexOf(b);
-  assert.ok(vorZuerst(html(), '0xb', '0xa'));
-  w.eval('_pwSetRankKrit("profit30");');
-  assert.ok(vorZuerst(html(), '0xa', '0xb'), 'die Tabelle ignoriert das gewählte Kriterium');
+  assert.ok(vorZuerst(html(), '0xa', '0xb'), 'Vorgabe ist der Profit');
+  w.eval('_pwSetRankKrit("clvUg");');
+  assert.ok(vorZuerst(html(), '0xb', '0xa'), 'die Tabelle ignoriert das gewählte Kriterium');
 });
 
 test('⭐ der Kopftext behauptet nicht das Kriterium, nach dem gerade NICHT sortiert wird', () => {
@@ -182,13 +195,26 @@ test('der Schärfe-Floor ist an, solange niemand ihn abschaltet', () => {
     'ausgeschaltet muss die Wallet durchkommen, sonst schaltet der Chip nichts');
 });
 
-test('⭐ beide Hälften des Floors wirken einzeln', () => {
-  // Ohne diesen Fall bliebe „&&" statt "||" eine grüne Mutation.
+test('⭐ der Floor filtert nicht mehr nach CLV', () => {
+  // 🔴 22.09.2026. Hier stand, dass ein negativer Ø CLV allein zum Rauswurf reicht.
+  // Genau das war Lucas' Beschwerde: „siehst du, dann fliegen gute Wallets raus."
   const w = fenster();
-  const nurClvSchlecht = { '0xh': wallet({ clv: -1, hit: 0.8 }) };
-  const nurTrefferSchlecht = { '0xi': wallet({ clv: 3, hit: 0.3 }) };
-  assert.strictEqual(w._pwRankRowsPnl(nurClvSchlecht).length, 0, 'negativer Ø CLV allein muss reichen');
-  assert.strictEqual(w._pwRankRowsPnl(nurTrefferSchlecht).length, 0, 'Treffer unter 45 % allein muss reichen');
+  const nurClvSchlecht = { '0xh': wallet({ clv: -5, hit: 0.8 }) };
+  assert.strictEqual(w._pwRankRowsPnl(nurClvSchlecht).length, 1,
+    'ein negativer CLV darf niemanden mehr aus der Liste werfen');
+});
+
+test('⭐ die beiden Hälften, die geblieben sind, wirken einzeln', () => {
+  // Ohne diese Fälle bliebe „&&" statt „||" eine grüne Mutation.
+  const w = fenster();
+  const trefferSchlecht = { '0xi': wallet({ clv: 3, hit: 0.3 }) };
+  const geldVerlust = { '0xj': wallet({ clv: 3, hit: 0.8,
+    extra: { fenster30: { gewinn: -4000, roi: -0.2, n: 30, nGeld: 30 } } }) };
+  const geldUngemessen = { '0xk': wallet({ clv: -3, hit: 0.8 }) };
+  assert.strictEqual(w._pwRankRowsPnl(trefferSchlecht).length, 0, 'Treffer unter 45 % muss reichen');
+  assert.strictEqual(w._pwRankRowsPnl(geldVerlust).length, 0, 'gemessener 30T-Verlust muss reichen');
+  assert.strictEqual(w._pwRankRowsPnl(geldUngemessen).length, 1,
+    '„nicht gemessen" ist kein Verlust — sonst hinge das Tor an der Mess-Abdeckung (9 %)');
 });
 
 test('⭐ die Floor-Bilanz zählt die Zurückgehaltenen — und die davon im Plus', () => {
@@ -225,7 +251,7 @@ test('am echten Bestand: die Profit-Sortierung liefert eine ANDERE Reihenfolge',
   // Wäre sie identisch, hätte der Chip keinen Zweck — und wir hätten es nicht gemerkt.
   const track = JSON.parse(readFileSync(new URL('poly_wallet_track.json', ROOT), 'utf8'));
   const w = fenster({ walletTrack: track });
-  const a = rang(w._pwRankRowsPnl(track.scores)).join(',');
+  const a = rang(w._pwRankRowsPnl(track.scores, 'clvUg')).join(',');
   const b = rang(w._pwRankRowsPnl(track.scores, 'profit30')).join(',');
   if (!a || !b) return;
   assert.notStrictEqual(a, b);

@@ -221,12 +221,30 @@ def test_das_gedaechtnis_haengt_an_keiner_sperre():
              if "poly_money_broad.py" not in z and "/tests/" not in z.replace("\\", "/")]
     assert not fremd, "das Tages-Gedaechtnis rechnet woanders mit: %s" % fremd
 
-    # Und die fertigen Felder duerfen im Tor nicht vorkommen. Die Karte darf sie zeigen; was
-    # entscheidet, wer ueberhaupt gesendet wird, ist `sharp_gate` — dort haben sie nichts zu
-    # suchen, solange das Fenster schlechter vorhersagt als der kumulative Schnitt.
-    tor = subprocess.run(["grep", "-rEn", "fenster7|fenster30", str(BASE / "sharp_gate.py")],
-                         capture_output=True, text=True).stdout.strip()
-    assert not tor, "das Fenster steht im Tor: %s" % tor
+    # Und das CLV-Fenster darf im Tor nicht vorkommen. Die Karte darf es zeigen; was
+    # entscheidet, wer gesendet wird, ist `sharp_gate` — dort hat es nichts zu suchen, solange
+    # es schlechter vorhersagt als der kumulative Schnitt.
+    #
+    # 🔴 22.09.2026 — die Grenze wird praeziser gezogen, nicht aufgehoben. Der Satz oben sagt
+    # „SOLANGE das Fenster schlechter vorhersagt"; die Bedingung stand von Anfang an da. Sie
+    # gilt weiter fuer den CLV. Fuer das GELD-Fenster (`fenster30.gewinn`, seit 21.09.) ist sie
+    # heute gemessen worden, und sie faellt andersherum aus — Auswahl an den Aufloesungen
+    # 17.–19.09., gemessen an denen vom 20.–21.09., einsatzgewichtet:
+    #     alle Wallets (Basisrate)            n=913   Folge-ROI  −3,8 %
+    #     Ø CLV >= 0 (das alte Tor)           n=108   Folge-ROI −13,6 %
+    #     Profit > 0 in der Auswahlperiode    n=205   Folge-ROI  +4,4 %
+    #     Profit <= 0                         n=226   Folge-ROI −34,6 %
+    # Das Geld-Fenster trennt um 39 Prozentpunkte in die richtige Richtung, der kumulative
+    # CLV-Schnitt um 8 in die falsche. Deshalb darf `fenster30.gewinn` im Tor stehen — als
+    # AUSSCHLUSS bei gemessenem Verlust, nie als Beweis, und „nicht gemessen" sperrt nicht.
+    # ⚠️ Duenn: drei Tage Auswahl, zwei Tage Messung. Wiederholen, sobald der Nachtrag tiefer
+    # reicht — die Zahl oben ist die Begruendung fuer diese Ausnahme, nicht ein Freibrief.
+    quelle = (BASE / "sharp_gate.py").read_text(encoding="utf-8")
+    code = "\n".join(z for z in quelle.splitlines() if not z.lstrip().startswith("#"))
+    assert "clvFen" not in code, "das CLV-Fenster steht im Tor"
+    assert "fenster7" not in code, (
+        "das 7-Tage-Fenster steht im Tor — eine ruhige Woche ist kein Verlust, "
+        "und gemessen ist nur das 30-Tage-Fenster")
 
 
 # ── 18.09.2026: das Fenster darf gezeigt werden — aber nur so weit, wie es reicht ────────────

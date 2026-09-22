@@ -147,9 +147,20 @@ class TestBewieseneWallets(unittest.TestCase):
         w = K._bewiesene_wallets({"scores": {"0xA": {"n": 3, "wins": 3, "clvSumPP": 30.0}}})
         self.assertEqual(w, set())
 
-    def test_negativer_clv_zaehlt_nicht(self):
+    def test_negativer_clv_zaehlt_seit_dem_22_09_mit(self):
+        """🔴 22.09.2026 (Lucas): der CLV schliesst nirgends mehr aus — auch nicht hier.
+        `_bewiesene_wallets` fragt bewusst die EINE Definition in sharp_gate, deshalb zieht
+        die Aenderung dort bis in den Buecher-Punktestand durch. Genau so soll es sein."""
         w = K._bewiesene_wallets({"scores": {"0xA": {"n": 20, "wins": 15, "clvSumPP": -5.0}}})
-        self.assertEqual(w, set())
+        self.assertEqual(w, {"0xa"})
+
+    def test_ein_gemessener_sportverlust_zaehlt_nicht(self):
+        """Was an die Stelle getreten ist — ueber dieselbe eine Definition."""
+        gut = {"n": 20, "wins": 15, "clvSumPP": 40.0}
+        self.assertEqual(K._bewiesene_wallets({"scores": {"0xA": gut}}), {"0xa"})
+        self.assertEqual(
+            K._bewiesene_wallets({"scores": {"0xA": {**gut, "fenster30": {"gewinn": -50}}}}),
+            set())
 
     def test_genug_historie_und_positiver_clv_zaehlt(self):
         w = K._bewiesene_wallets({"scores": {"0xAB": {"n": 20, "wins": 15, "clvSumPP": 40.0}}})

@@ -29,8 +29,47 @@ Was hier gilt, und warum:
       darunter eine mit 5/9, CLV +0,03pp und $729 Lebensbilanz. Die Stichprobe entscheidet mit,
       nicht nur der Anteil.
 
-  Ø CLV >= 0
-      Eine hohe Quote ohne CLV ist Glueck. Bleibt wie gehabt.
+  🔴 Ø CLV >= 0 — ENTFERNT am 22.09.2026
+      Lucas, zum wiederholten Mal und diesmal ausdruecklich: „Den CLV von mir aus messe ihn,
+      aber ich will, dass der nicht irgendwo irgendwie limitiert. Nur CLV ist leider nicht das
+      Wichtige, und das sage ich jetzt schon seit Wochen. Wichtiger ist der Profit. Und siehst
+      du, dann fliegen gute Wallets raus." Dieselbe Entscheidung wurde am 08.09. schon fuer das
+      Freigabe-Register getroffen (`freigabe.py`: „Der CLV blockiert nicht mehr, er BESCHREIBT")
+      — auf der Polymarket-Seite ist sie nie nachgezogen worden.
+
+      Was die Zeile gekostet hat, gemessen am Track vom 22.09.2026 (4.394 Wallets):
+          bestehen das Gate heute            27
+          ohne diese eine Zeile              48
+          also NUR an CLV gescheitert        21   davon 11 mit gemessenem 30-Tage-Profit,
+                                                  zusammen +$176.456
+      Darunter eine Wallet mit 87 % Trefferquote aus 76 Aufloesungen und +$19.629 in 30 Tagen,
+      gekickt wegen Ø CLV −0,13pp. Und eine mit 81 % aus 16 und +$95.712 bei −0,34pp.
+
+      Und die Zeile ist nicht nur teuer, sie ist gegenlaeufig. Vorwaertsprobe (Auswahl an den
+      Aufloesungen 17.–19.09., gemessen an denen vom 20.–21.09.; einsatzgewichtet):
+          alle Wallets (Basisrate)      n=913   Folge-ROI  −3,8 %
+          Ø CLV >= 0  (dieses Gate)     n=108   Folge-ROI −13,6 %
+          Ø CLV <  0  (was es kickt)    n=119   Folge-ROI  −5,3 %
+          Profit > 0 in der Auswahl     n=205   Folge-ROI  +4,4 %
+          Profit <= 0                   n=226   Folge-ROI −34,6 %
+          CLV +, aber Profit −          n= 53   Folge-ROI −23,9 %
+          Profit +, aber CLV − (gekickt) n=53   Folge-ROI  −2,8 %
+      Das Gate waehlte die SCHLECHTERE Haelfte. Der Profit trennt um 39 Prozentpunkte, der CLV
+      um −8 (also in die falsche Richtung).
+      ⚠️ Duenn: drei Tage Auswahl, zwei Tage Messung — mehr geben die CLV-Tagesbuckets nicht
+      her (sie reichen erst bis zum 17.09. zurueck). Das „Halten bis zur Aufloesung"-Modell
+      bucht ausserdem Verluste, die niemand genommen hat; verlaesslich ist die ORDNUNG, nicht
+      die Hoehe. Aber die Ordnung sagt in beiden Richtungen dasselbe.
+
+      CLV wird weiter berechnet, mitgeschrieben und ueberall angezeigt. Er entscheidet nichts.
+
+  KEIN gemessener 30-Tage-VERLUST
+      An die Stelle des CLV tritt das, was Lucas als Massstab nennt. Dieselbe Form wie beim
+      P&L: ein AUSSCHLUSS, kein Beweis, und UNBEKANNT ist kein Ausschluss — sonst haengt das
+      Gate an der Mess-Abdeckung statt an der Wallet. Die ist heute 386 von 4.394 (9 %) und
+      waechst erst mit dem naechsten Pipeline-Lauf auf ~2.500.
+      Wirkung: 48 ohne CLV-Zeile → 40 mit dieser. Acht Wallets mit gemessenem 30-Tage-Verlust,
+      die vorher „bewiesen scharf" hiessen.
 
   KEIN bestaetigter Verlierer (P&L bekannt UND < 0)
       P&L ist ein AUSSCHLUSS, kein Beweis. Zwei Gruende: er ist bei 87% der Wallets unbekannt,
@@ -75,10 +114,39 @@ def beats_coinflip(wins, n, z: float = SHARP_Z) -> bool:
     return bool(n) and wilson_lb(wins, n, z) > 0.5
 
 
+def sport_profit(score, fenster: str = "fenster30"):
+    """Der gemessene Sport-Profit dieser Wallet im Fenster — oder None, wenn NICHT GEMESSEN.
+
+    22.09.2026. Nicht zu verwechseln mit `pnl`: das ist Polymarkets plattformweite
+    Lebensbilanz inklusive Wahlen und Krypto. Dies hier ist Fussball, Tennis, E-Sport —
+    gerechnet von `poly_money_broad` aus Anteilen x Einstieg gegen Auszahlung.
+
+    None heisst „nicht gemessen" und darf nie zu 0.0 werden: die Abdeckung liegt heute bei
+    9 % der Wallets, ein Gate auf 0.0 wuerde also 91 % der Wallets fuer die Mess-Abdeckung
+    bestrafen statt fuer ihre Leistung.
+    """
+    if not isinstance(score, dict):
+        return None
+    f = score.get(fenster)
+    if not isinstance(f, dict):
+        return None
+    g = f.get("gewinn")
+    return float(g) if isinstance(g, (int, float)) else None
+
+
+def is_confirmed_money_loser(score, fenster: str = "fenster30") -> bool:
+    """Sport-Profit im Fenster GEMESSEN und negativ. Unbekannt ist kein Verlust-Nachweis."""
+    g = sport_profit(score, fenster)
+    return g is not None and g < 0
+
+
 def _felder(score):
     """Nimmt beide Formen: die rohe aus poly_wallet_track.json ({n, wins, clvSumPP, pnl}) und die
     abgeleitete des Frontends ({n, hit, avgClv, pnl}). Gibt (n, wins, avg_clv, pnl) zurueck;
-    pnl ist None, wenn UNBEKANNT — der Unterschied zu 0.0 ist der ganze Punkt."""
+    pnl ist None, wenn UNBEKANNT — der Unterschied zu 0.0 ist der ganze Punkt.
+
+    `avg_clv` wird weiterhin geliefert — er wird angezeigt, nur nicht mehr gefragt, wenn es
+    ums Ausschliessen geht (s. Modul-Doku, 22.09.2026)."""
     if not isinstance(score, dict):
         return 0, 0, 0.0, None
     n = int(score.get("n") or 0)
@@ -103,9 +171,11 @@ def is_sharp(score, min_n: int = SHARP_MIN_N, z: float = SHARP_Z) -> bool:
         return False
     if not beats_coinflip(wins, n, z):
         return False
-    if avg_clv < 0:
-        return False
+    # 🔴 22.09.2026: hier stand `if avg_clv < 0: return False`. Entfernt — s. Modul-Doku.
+    # Der CLV wird weiter gerechnet und angezeigt; er schliesst niemanden mehr aus.
     if pnl is not None and pnl < 0:      # bestaetigter Verlierer raus; unbekannt bleibt drin
+        return False
+    if is_confirmed_money_loser(score):  # gemessener 30-Tage-Sportverlust; unbekannt bleibt drin
         return False
     return True
 
@@ -144,8 +214,9 @@ def sharp_grade(score, min_n: int = SHARP_MIN_N, z: float = SHARP_Z,
                 floor: float = GRADE_FLOOR_LB) -> float:
     """Wie gut ist diese Wallet BELEGT? 0.0 (gar nicht) bis 1.0 (bewiesen). REIN.
 
-    Die harten Ausschluesse sind dieselben wie in `is_sharp` — zu wenig Plays, negativer CLV,
-    bestaetigter Verlierer geben 0.0. Dazwischen laeuft die Wilson-Untergrenze linear:
+    Die harten Ausschluesse sind dieselben wie in `is_sharp` — zu wenig Plays, bestaetigter
+    Verlierer (Lebensbilanz oder gemessener 30-Tage-Sportverlust) geben 0.0. Der CLV ist am
+    22.09.2026 aus beiden entfernt worden; er beschreibt, er blockiert nicht. Dazwischen laeuft die Wilson-Untergrenze linear:
     bei >50% voll, bei <=`floor` null. Kein Sprung an der 50%-Klippe.
 
     Damit gilt per Konstruktion `is_sharp(s) == (sharp_grade(s) >= 1.0)` — eine Definition,
@@ -154,9 +225,10 @@ def sharp_grade(score, min_n: int = SHARP_MIN_N, z: float = SHARP_Z,
     n, wins, avg_clv, pnl = _felder(score)
     if n < min_n:
         return 0.0
-    if avg_clv < 0:
-        return 0.0
+    # 🔴 22.09.2026: hier stand `if avg_clv < 0: return 0.0`. Entfernt — s. Modul-Doku.
     if pnl is not None and pnl < 0:
+        return 0.0
+    if is_confirmed_money_loser(score):
         return 0.0
     lb = wilson_lb(wins, n, z)
     if lb > 0.5:

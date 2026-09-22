@@ -672,16 +672,30 @@ def _sharp_rank_map(scores):
             # (keine Streuung erfasst), gilt das strengere Gate.
             if n < (_RANK_MIN_N_PNL if art == "ug" else _RANK_MIN_N_CLV):
                 continue
-            if not (avg_clv >= 0 and hit >= _RANK_FLOOR_HIT):   # Schärfe-Floor (P&L-Modus)
+            # 🔴 22.09.2026 (Lucas: „nur CLV ist leider nicht das Wichtige, und das sage ich
+            # schon seit Wochen … es darf kein Kriterium sein, dass irgendwas gekickt wird").
+            # Hier stand `avg_clv >= 0 and hit >= _RANK_FLOOR_HIT`. Die CLV-Haelfte ist raus;
+            # die Trefferquoten-Haelfte bleibt, sie ist eine andere Messung (s. sharp_gate).
+            if hit < _RANK_FLOOR_HIT:
                 continue
-            rows.append((w, (ug, n)))
+            if SG.is_confirmed_money_loser(v):   # gemessener 30T-Sportverlust; unbekannt bleibt
+                continue
+            # Sortiert wird nach dem GEMESSENEN Sport-Profit der letzten 30 Tage. Wer keinen
+            # gemessenen hat, faellt NICHT raus — er sortiert hinter alle gemessenen, nach der
+            # alten CLV-Untergrenze. „Nicht gemessen" ist kein Nullgewinn.
+            geld = SG.sport_profit(v)
+            rows.append((w, (1 if geld is not None else 0, geld if geld is not None else ug, n)))
         else:
             if n < _RANK_MIN_N_CLV:
                 continue
-            raw = avg_clv + (hit - 0.5) * _RANK_HITW
-            rows.append((w, (raw * (n / (n + _RANK_K)), n)))
-    # Bei Gleichstand entscheidet die groessere Stichprobe, nicht das groessere Vermoegen.
-    rows.sort(key=lambda x: (-x[1][0], -x[1][1]))
+            geld = SG.sport_profit(v)
+            if geld is not None:
+                rows.append((w, (1, geld, n)))
+            else:
+                raw = avg_clv + (hit - 0.5) * _RANK_HITW
+                rows.append((w, (0, raw * (n / (n + _RANK_K)), n)))
+    # Gemessenes Geld zuerst, dann die Hoehe, dann die groessere Stichprobe.
+    rows.sort(key=lambda x: (-x[1][0], -x[1][1], -x[1][2]))
     return {str(w).lower(): i + 1 for i, (w, _) in enumerate(rows)}   # volle Rangliste; Anzeige/Gate cappen selbst
 
 
@@ -749,8 +763,24 @@ def _pub_in_top_n(scores, wallet, n=None):
     # Fehlerklasse: eine Huerde entfernt und die zweite, die in ihr steckte, gleich mit.
     if (v.get("n") or 0) < PUB_MIN_TR:
         return False
-    ug, _art = _clv_ug(v)
-    if not (ug is not None and ug > 0):
+    # 🔴 22.09.2026 (Lucas, ausdruecklich und zum wiederholten Mal): „Den CLV von mir aus messe
+    # ihn, aber ich will, dass der nicht irgendwo irgendwie limitiert … man kann ihn anzeigen,
+    # aber es darf kein Kriterium sein, dass irgendwas gekickt wird."
+    #
+    # Hier stand `ug > 0` — die CLV-Untergrenze als Tuersteher des oeffentlichen Kanals, seit
+    # dem 16.09. Sie loeste damals ein echtes Problem (der Rang-Zwang hatte den Kanal erstickt),
+    # aber sie loeste es mit der falschen Zahl. Gemessen am 22.09.2026:
+    #   · im Track scheiterten 21 von 48 Wallets ALLEIN an einer CLV-Bedingung, davon 11 mit
+    #     gemessenem 30-Tage-Profit (+$176.456 zusammen)
+    #   · vorwaerts (Auswahl 17.–19.09., gemessen 20.–21.09.) lieferte „Ø CLV >= 0" einen
+    #     Folge-ROI von −13,6 % — schlechter als die Basisrate (−3,8 %) UND schlechter als
+    #     genau die Wallets, die es ausschloss (−5,3 %). Das Tor waehlte die schlechtere Haelfte.
+    #
+    # An seine Stelle tritt Lucas' Massstab, in derselben Form wie der alte P&L-Ausschluss:
+    # ein GEMESSENER 30-Tage-Sportverlust sperrt, „nicht gemessen" sperrt nicht. Die
+    # Mindest-Stichprobe darueber bleibt — sie war nie das CLV-Kriterium, sondern die Antwort
+    # auf „eine Untergrenze aus n=1 ist keine Untergrenze".
+    if SG.is_confirmed_money_loser(v):
         return False
     # 🔴 21.09.2026 (Lucas: „es kommen seit gestern 11 uhr keine whale pushes mehr").
     # Letzter Public-Push: 20.09. 09:31 UTC. Der Trichter gemessen: `select()` liefert EINEN

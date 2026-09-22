@@ -6,7 +6,8 @@
     "Datei und pruefen ihre jeweilige Implementierung dagegen. Weicht eine ab, faellt es hier auf --",
     "nicht erst, wenn die Seite etwas anderes 'scharf' nennt als der Push.",
     "Die meisten Faelle sind ECHTE Wallets aus poly_wallet_track.json vom 29.08.",
-    "01.09.2026: dazu der REGLER (`grade`). Dieselben harten Ausschluesse, aber die Wilson-Untergrenze laeuft zwischen 40% und 50% linear statt zu springen. `grade` ist auf 2 Nachkommastellen angegeben; beide Seiten muessen so genau treffen."
+    "01.09.2026: dazu der REGLER (`grade`). Dieselben harten Ausschluesse, aber die Wilson-Untergrenze laeuft zwischen 40% und 50% linear statt zu springen. `grade` ist auf 2 Nachkommastellen angegeben; beide Seiten muessen so genau treffen.",
+    "🔴 22.09.2026: die CLV-Bedingung ist aus beiden Implementierungen ENTFERNT (Lucas: 'den CLV von mir aus messe ihn, aber er darf kein Kriterium sein, dass irgendwas gekickt wird'). Die beiden CLV-Faelle unten kehren sich deshalb um und heissen jetzt, was sie pruefen: negativer CLV schliesst NICHT mehr aus. An seine Stelle tritt ein GEMESSENER 30-Tage-Sportverlust (`fenster30.gewinn` < 0) -- dieselbe Form wie beim P&L: ein Ausschluss, und 'nicht gemessen' ist keiner."
   ],
   "cases": [
     {
@@ -93,16 +94,16 @@
       "grade": 1.0
     },
     {
-      "name": "negativer CLV",
+      "name": "negativer CLV schliesst NICHT mehr aus (22.09.2026)",
       "score": {
         "n": 60,
         "wins": 42,
         "clvSumPP": -30.0,
         "pnl": 50000
       },
-      "sharp": false,
-      "warum": "Quote ohne CLV ist Glueck (reale Tennis-Wallet 7/9 bei -70K)",
-      "grade": 0.0
+      "sharp": true,
+      "grade": 1.0,
+      "warum": "n=60, 67% Treffer, Wilson klar ueber 50% -- der CLV von -0.50pp blockiert seit dem 22.09. nicht mehr. Vorher: sharp=false."
     },
     {
       "name": "CLV exakt 0",
@@ -200,7 +201,7 @@
       "warum": "Wilson-UG 27% -- unter dem Boden von 40%, kein Beitrag"
     },
     {
-      "name": "harter Ausschluss schlaegt die Rampe: negativer CLV",
+      "name": "die Rampe laeuft weiter, auch bei negativem CLV (22.09.2026)",
       "score": {
         "n": 65,
         "wins": 39,
@@ -208,8 +209,8 @@
         "pnl": 457319
       },
       "sharp": false,
-      "grade": 0.0,
-      "warum": "CLV<0 ist ein Ausschluss, kein Abschlag -- auch bei guter Quote"
+      "grade": 0.98,
+      "warum": "60% aus 65 Plays: die Wilson-Rampe traegt den Grad, der CLV von -0.08pp setzt ihn nicht mehr auf null. Vorher: grade=0.0."
     },
     {
       "name": "harter Ausschluss schlaegt die Rampe: bestaetigter Verlierer",
@@ -234,6 +235,68 @@
       "sharp": true,
       "grade": 1.0,
       "warum": "is_sharp und grade>=1 muessen IMMER zusammenfallen"
+    },
+    {
+      "name": "gemessener 30-Tage-Sportverlust schliesst aus",
+      "score": {
+        "n": 60,
+        "wins": 40,
+        "clvSumPP": 120.0,
+        "fenster30": {
+          "gewinn": -5000,
+          "einsatz": 20000,
+          "n": 30,
+          "nGeld": 30
+        }
+      },
+      "sharp": false,
+      "grade": 0.0,
+      "warum": "Lucas' Massstab, in beide Richtungen angewandt: wer im gemessenen Fenster Geld verloren hat, ist nicht bewiesen scharf -- egal wie gut Quote und CLV aussehen."
+    },
+    {
+      "name": "gemessener 30-Tage-Sportgewinn aendert nichts am Rest",
+      "score": {
+        "n": 60,
+        "wins": 40,
+        "clvSumPP": -30.0,
+        "fenster30": {
+          "gewinn": 5000,
+          "einsatz": 20000,
+          "n": 30,
+          "nGeld": 30
+        }
+      },
+      "sharp": true,
+      "grade": 1.0,
+      "warum": "Profit positiv, CLV negativ -- genau der Fall, den das alte Gate ausschloss. Vorwaerts gemessen war das die BESSERE Haelfte (-2,8% gegen -23,9% fuer 'CLV +, Profit -')."
+    },
+    {
+      "name": "Sportprofit nicht gemessen ist kein Ausschluss",
+      "score": {
+        "n": 60,
+        "wins": 40,
+        "clvSumPP": -30.0
+      },
+      "sharp": true,
+      "grade": 1.0,
+      "warum": "Die Abdeckung liegt bei 9% der Wallets. Ein Gate auf 'kein Wert = 0' bestrafte die Mess-Abdeckung statt der Wallet -- dieselbe Regel wie beim unbekannten P&L."
+    },
+    {
+      "name": "Sportprofit exakt 0 ist kein Verlust",
+      "score": {
+        "n": 60,
+        "wins": 40,
+        "clvSumPP": 0.0,
+        "fenster30": {
+          "gewinn": 0,
+          "einsatz": 12000,
+          "n": 20,
+          "nGeld": 20
+        }
+      },
+      "sharp": true,
+      "grade": 1.0,
+      "warum": "Die Grenze ist < 0, nicht <= 0 -- wie beim P&L exakt 0."
     }
   ]
 }

@@ -244,20 +244,54 @@ def test_reentry_zaehlt_clv_null_nicht_als_flach():
     assert r["clvN"] == 0 and r["clvAvg"] is None and r["eligible"] is False
 
 
+# 🔴 22.09.2026: das Kriterium war „Ø CLV >= 0", jetzt ist es die Rendite-Untergrenze.
+# Lucas, ausdruecklich und nach eigener Angabe seit Wochen: „Den CLV von mir aus messe ihn,
+# aber ich will, dass der nicht irgendwo irgendwie limitiert … wichtiger ist der Profit."
+# Dieselbe Umstellung wie am 08.09. in freigabe.py und heute in sharp_gate.py.
+def _gewinn(cat="US-Sport", clv=0.0):
+    return _row(cat, "MLB", result="win", pnl=8.0, clv=clv)
+
+
 def test_reentry_meldet_wenn_die_sportart_dreht():
-    settled = [_row("US-Sport", "MLB", clv=1.2) for _ in range(30)] + \
-              [_row("US-Sport", "MLB", clv=0.0) for _ in range(30)]
+    # 60 frische Plays, alle im Plus — die Rendite-Untergrenze liegt ueber null.
+    settled = [_gewinn(clv=1.2) for _ in range(30)] + [_gewinn(clv=0.0) for _ in range(30)]
     r = st.reentry_status(settled, BLOCKED)["US-Sport"]
     assert r["n"] == 60 and r["clvN"] == 30 and r["clvAvg"] == 1.2
+    assert r["roiUg"] is not None and r["roiUg"] > 0
     assert r["eligible"] is True
+
+
+def test_ein_negativer_clv_sperrt_den_wiedereintritt_nicht_mehr():
+    """Der eigentliche Punkt. Dieselben 60 Gewinn-Plays, aber mit klar negativem CLV:
+    frueher blieb die Sportart damit fuer immer gesperrt."""
+    settled = [_gewinn(clv=-5.0) for _ in range(60)]
+    r = st.reentry_status(settled, BLOCKED)["US-Sport"]
+    assert r["clvAvg"] == -5.0
+    assert r["eligible"] is True, "die Rendite entscheidet, nicht der CLV"
+
+
+def test_ein_positiver_clv_oeffnet_ohne_rendite_nicht():
+    """Die Gegenprobe: der CLV darf auch nicht in die ANDERE Richtung entscheiden."""
+    settled = [_row("US-Sport", "MLB", clv=5.0) for _ in range(60)]   # alle verloren
+    r = st.reentry_status(settled, BLOCKED)["US-Sport"]
+    assert r["clvAvg"] == 5.0
+    assert r["eligible"] is False
 
 
 def test_reentry_schaut_nur_auf_die_juengsten_plays():
     # Alte Katastrophe darf eine gedrehte Sportart nicht ewig blockieren.
     alt = [_row("US-Sport", "MLB", clv=-5.0) for _ in range(300)]
-    neu = [_row("US-Sport", "MLB", clv=1.0) for _ in range(60)]
+    neu = [_gewinn(clv=1.0) for _ in range(60)]
     r = st.reentry_status(alt + neu, BLOCKED, window=60)["US-Sport"]
     assert r["clvAvg"] == 1.0 and r["eligible"] is True
+
+
+def test_das_kriterium_steht_in_der_zeile():
+    """Ein umgestelltes Tor, das sich nicht selbst benennt, liest in drei Wochen jemand als
+    das alte."""
+    r = st.reentry_status([_gewinn() for _ in range(60)], BLOCKED)["US-Sport"]
+    assert "Rendite-Untergrenze" in r["kriterium"]
+    assert "CLV" in r["kriterium"]
 
 
 def test_update_track_nimmt_sperrliste_aus_dem_emitter():

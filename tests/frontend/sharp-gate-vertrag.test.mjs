@@ -42,6 +42,12 @@ function alsFrontendScore(s) {
     avgClv: n ? (s.clvSumPP || 0) / n : 0,
     pnl: typeof s.pnl === 'number' ? s.pnl : 0,
     pnlKnown: typeof s.pnl === 'number',
+    // 🔴 22.09.2026: der Adapter liess `fenster30` weg — und damit lief der neue Ausschluss
+    // (gemessener Sportverlust) im JS ins Leere, waehrend Python ihn anwandte. Genau dafuer
+    // gibt es diesen Vertrag; er hat es beim Umbau sofort gemeldet. Ein Uebersetzer, der ein
+    // Feld verschluckt, auf das eine Regel schaut, ist derselbe Fehler wie zwei Regeln.
+    fenster7: s.fenster7 || null,
+    fenster30: s.fenster30 || null,
   };
 }
 

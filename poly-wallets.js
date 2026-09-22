@@ -1091,6 +1091,16 @@ function _pwGlobalWhales(live){
 //  · P&L>0 zwingend -> P&L ist nur noch ein AUSSCHLUSS. Er ist bei 87% der Wallets unbekannt, und
 //    er misst die gesamte Poly-Lebensbilanz (Wahlen, Krypto), waehrend die Trefferquote nur unsere
 //    beobachteten Positionen misst. Zwei Welten, nicht ein Beweis.
+//
+// 🔴 22.09.2026 — die CLV-Bedingung ist RAUS, hier wie in sharp_gate.py. Lucas: „Den CLV von mir
+// aus messe ihn, aber ich will, dass der nicht irgendwo limitiert … und siehst du, dann fliegen
+// gute Wallets raus." Gemessen am Track vom 22.09.: die eine Zeile kickte 21 von 48 Wallets, davon
+// 11 mit gemessenem 30-Tage-Profit (zusammen +$176.456) — darunter 87 % Treffer aus 76 Aufloesungen
+// mit +$19.629, gekickt wegen Ø CLV −0,13pp. Vorwaerts war die Zeile ausserdem GEGENLAEUFIG
+// (Auswahl 17.–19.09., gemessen 20.–21.09.: Ø CLV>=0 → −13,6 % gegen Basisrate −3,8 % und gegen
+// −5,3 % bei genau den Wallets, die sie ausschloss). An ihre Stelle tritt Lucas' Massstab: ein
+// GEMESSENER 30-Tage-Sportverlust schliesst aus, „nicht gemessen" nicht.
+// Der CLV bleibt in jeder Spalte stehen — er beschreibt, er blockiert nicht.
 const PW_SHARP_MIN_N=8;
 const PW_SHARP_Z=1.645;        // 95% einseitig — identisch zu sharp_gate.SHARP_Z
 function _pwWilsonLb(wins,n,z){
@@ -1110,9 +1120,20 @@ function _pwIsSharpScore(sc){
   // wins bevorzugt direkt; sonst aus der Quote rekonstruieren (aeltere Aufrufer geben nur hit).
   const wins=(typeof sc.wins==='number')?sc.wins:Math.round((sc.hit||0)*n);
   if(!_pwBeatsCoinflip(wins,n)) return false;
-  if((sc.avgClv||0)<0) return false;
   if(sc.pnlKnown && (sc.pnl||0)<0) return false;   // bestaetigter Verlierer raus, unbekannt bleibt
+  if(_pwIstGeldVerlierer(sc)) return false;        // gemessener 30T-Sportverlust; unbekannt bleibt
   return true;
+}
+// Der gemessene Sport-Profit im 30-Tage-Fenster — oder null, wenn NICHT GEMESSEN. null darf nie
+// zu 0 werden: die Abdeckung liegt heute bei 9 % der Wallets, ein Gate auf 0 bestrafte also die
+// Mess-Abdeckung statt der Wallet. (Spiegel von sharp_gate.sport_profit.)
+function _pwSportProfit(sc,fenster){
+  const f=sc&&sc[fenster||'fenster30'];
+  return (f&&typeof f.gewinn==='number')?f.gewinn:null;
+}
+function _pwIstGeldVerlierer(sc,fenster){
+  const g=_pwSportProfit(sc,fenster);
+  return g!==null && g<0;
 }
 // ── Der Regler (01.09.2026) — Spiegel von sharp_gate.sharp_grade ─────────────────────────────
 // Gemessen (Wallets am 25.08. klassifiziert, danach ausgewertet was sie WIRKLICH taten):
@@ -1130,8 +1151,8 @@ function _pwSharpGrade(sc){
   if(!sc) return 0;
   const n=sc.n||0;
   if(n<PW_SHARP_MIN_N) return 0;
-  if((sc.avgClv||0)<0) return 0;
   if(sc.pnlKnown && (sc.pnl||0)<0) return 0;
+  if(_pwIstGeldVerlierer(sc)) return 0;
   const wins=(typeof sc.wins==='number')?sc.wins:Math.round((sc.hit||0)*n);
   const lb=_pwWilsonLb(wins,n);
   if(lb>0.5) return 1;
@@ -1146,8 +1167,14 @@ function _pwWalletScore(wallet){
   // 29.08.2026: pnlKnown trennt „unbekannt" von „0". Vorher machte `Number(e.pnl)||0` aus beidem
   // dieselbe Null — und weil das Gate P&L>0 verlangte, flogen 318 Wallets raus, ueber die wir
   // schlicht nichts wussten. wins wandert mit, damit das Gate Wilson rechnen kann.
+  // 🔴 22.09.2026: `fenster30` MUSS mitwandern. Seit heute ist der gemessene Sportverlust der
+  // Ausschluss (statt des CLV) — eine abgeleitete Form, die das Feld weglaesst, laesst das Gate
+  // im Frontend still nie greifen. Der Vertrag in tests/fixtures/sharp_gate_cases.json hat genau
+  // das beim Umbau gefangen. Fehlerklasse: eine Regel, die auf ein Feld schaut, das der
+  // Uebersetzer nicht uebersetzt.
   return {n:e.n, avgClv:e.clvSumPP/e.n, hit:(e.wins||0)/e.n, wins:(e.wins||0),
-          pnl:Number(e.pnl)||0, pnlKnown:(typeof e.pnl==='number' && isFinite(e.pnl))};
+          pnl:Number(e.pnl)||0, pnlKnown:(typeof e.pnl==='number' && isFinite(e.pnl)),
+          fenster7:e.fenster7||null, fenster30:e.fenster30||null};
 }
 function _pwSharpCell(wallet){
   const sc=_pwWalletScore(wallet);
@@ -1212,7 +1239,6 @@ const PW_RANK_MIN_N_PNL = 8;   // sobald echte Poly-P&L da ist, reicht weniger g
 // Stichprobe den Close NICHT schlägt (Ø CLV<0) oder klar unter Münzwurf trifft, fliegt aus der Rangliste —
 // egal wie hoch die Lifetime-P&L (die kommt oft aus Größe/Varianz/Krypto, nicht aus Sport-Schärfe).
 const PW_RANK_FLOOR_N = 8;      // ab so vielen getrackten Wetten greift der Schärfe-Floor
-const PW_RANK_FLOOR_CLV = 0;    // Ø CLV muss ≥ 0 sein (Einstieg schlägt Close)
 const PW_RANK_FLOOR_HIT = 0.45; // und Trefferquote ≥ 45 %
 
 // 23.08.2026 (Lucas: „das Wallet spielt auch hundert-Euro-Beträge, das interessiert mich nicht —
@@ -1323,7 +1349,11 @@ if(typeof window!=='undefined') window._pwSetRankBigOnly=_pwSetRankBigOnly;
 // auf und bleibt auf der CLV-UG. Eine Sortier-Schaltfläche, die still eine andere Auswahl in
 // einen anderen Tab schiebt, wäre genau die Kopplung, die hier schon dreimal zugeschlagen hat.
 // `tests/frontend/poly-wallet-rangkriterium.test.mjs` hält das fest.
-const PW_RANK_KRIT_STD = 'clvUg';
+// 🔴 22.09.2026, wenige Stunden nach dem Bau der Chips: Lucas: „Man kann CLV anzeigen, aber es
+// darf kein Kriterium sein, dass irgendwas gekickt wird." Eine Sortierung, die bei 20 Zeilen
+// abschneidet, IST ein Kriterium — wer nach CLV-UG auf Platz 21 landet, ist gekickt. Die Vorgabe
+// ist deshalb der gemessene 30-Tage-Profit; CLV bleibt als Spalte und als Sortier-Option.
+const PW_RANK_KRIT_STD = 'profit30';
 let _pwRankKrit = PW_RANK_KRIT_STD;
 function _pwSetRankKrit(v){ if(v===_pwRankKrit) return; _pwRankKrit=v; _pwRender(); }
 if(typeof window!=='undefined') window._pwSetRankKrit=_pwSetRankKrit;
@@ -1416,7 +1446,7 @@ function _pwRankKritLeiste(scores){
     +'</div>'
     +'<div style="max-width:1000px;margin:0 auto 12px;display:flex;gap:7px;flex-wrap:wrap;align-items:center">'
     +'<span class="pw-mut" style="font-size:11px;font-weight:700;margin-right:2px">Schaerfe-Floor:</span>'
-    +fchip(true,'an (Ø CLV ≥ 0 &amp; Treffer ≥ '+Math.round(PW_RANK_FLOOR_HIT*100)+'%)')+fchip(false,'aus')+note+'</div>';
+    +fchip(true,'an (Treffer ≥ '+Math.round(PW_RANK_FLOOR_HIT*100)+'% &amp; kein gemessener 30T-Verlust)')+fchip(false,'aus')+note+'</div>';
 }
 
 function _pwRankToggle(){
@@ -1649,7 +1679,17 @@ function _pwRankKandidatenPnl(scores) {
     })
     .filter(function (r) { return !_pwRankBigOnly || (r.n > 0 && r.usd / r.n >= PW_RANK_MIN_AVG_USD); });   // 4-stellig-Filter (Lucas)
 }
-function _pwFloorOk(r) { return r.n < PW_RANK_FLOOR_N || (r.avgClv >= PW_RANK_FLOOR_CLV && r.hit >= PW_RANK_FLOOR_HIT); }
+// 🔴 22.09.2026: hier stand `r.avgClv >= PW_RANK_FLOOR_CLV && r.hit >= PW_RANK_FLOOR_HIT`.
+// Die CLV-Haelfte ist raus (Lucas, s. sharp_gate.py fuer die Messung). Die Trefferquoten-Haelfte
+// bleibt — sie ist eine andere Messung und war nie gemeint, als er „CLV" sagte.
+// Dazu, an der Stelle, wo der CLV stand: der gemessene 30-Tage-Sportverlust. Dieselbe Form wie
+// ueberall sonst — „nicht gemessen" schliesst nicht aus.
+function _pwFloorOk(r) {
+  if (r.n < PW_RANK_FLOOR_N) return true;
+  if (r.hit < PW_RANK_FLOOR_HIT) return false;
+  if (r.f30 && typeof r.f30.gewinn === 'number' && r.f30.gewinn < 0) return false;
+  return true;
+}
 
 // Was der Floor zurueckhaelt — gezaehlt, nicht behauptet. Genau die Zeilen, die die Rangliste
 // sonst zeigen wuerde, durch dieselbe Kette. Der zweite Wert ist der, auf den es ankommt: wie
@@ -1735,7 +1775,7 @@ function _pwRankByPnl(scores, openMap, kick) {
       + 'lieferte „Vorwoche im Plus" einen Folge-ROI von −5,4 % (n=188), das Trefferquoten-Gate −3,4 % (n=46), die Basisrate −12,3 % (n=387) — '
       + 'der Profit der Vorwoche ist der schwächere Vorhersager. Wallets ohne Auflösung im Fenster stehen unten mit „—", nicht bei null.';
   const intro = '<section class="pw-sec"><div class="pw-sec-head">' + kick
-    + '<span class="pw-sec-note">' + (_pwRankFloor ? 'Wallets, die den Close schlagen (Ø CLV ≥ 0 &amp; Treffer ≥ 45 % bei genug n), ' : 'Alle Wallets — der Schärfe-Floor ist <b>aus</b>, CLV und Trefferquote filtern gerade nichts. ')
+    + '<span class="pw-sec-note">' + (_pwRankFloor ? 'Wallets mit Treffer ≥ 45 % bei genug n und ohne gemessenen 30-Tage-Verlust, ' : 'Alle Wallets — der Schärfe-Floor ist <b>aus</b>, es filtert gerade nichts. ')
     + satz + ' · nur Wallets ab $1.000 Ø-Einsatz</span></div>'
     + _pwRankKritLeiste(scores) + _pwRankToggle() + _pwRankSportLeiste(scores) + _pwRankAktivChip();
   if (!rows.length) return intro + '<div class="pw-none">Noch keine Wallet mit P&amp;L-Historie erfasst.</div></section>';
@@ -2726,7 +2766,8 @@ function _pwSharpInfoForKey(key){
     // Regler: unbelegt (0) faellt weiterhin raus, alles darueber traegt anteilig bei.
     const grade=_pwSharpGrade({n:raw.n,avgClv:avgClv,hit:hit,wins:(raw.wins||0),
                                pnl:Number(raw.pnl)||0,
-                               pnlKnown:(typeof raw.pnl==='number' && isFinite(raw.pnl))});
+                               pnlKnown:(typeof raw.pnl==='number' && isFinite(raw.pnl)),
+                               fenster7:raw.fenster7||null, fenster30:raw.fenster30||null});
     if(grade<=0) continue;
     const b=bySide[pos.side]||(bySide[pos.side]={usd:0,n:0,wins:0,pnl:0,clvUsd:0,count:0,gradeUsd:0});
     b.usd+=usd; b.n+=raw.n; b.wins+=(raw.wins||0); b.pnl+=(Number(raw.pnl)||0);

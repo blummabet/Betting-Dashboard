@@ -76,9 +76,44 @@ def test_harte_ausschluesse_schlagen_die_rampe():
     """Ein Ausschluss ist kein Abschlag: er fuehrt zu 0, nicht zu 'ein bisschen'."""
     gut = {"n": 65, "wins": 39, "clvSumPP": 18.2, "pnl": 457319}
     assert SG.sharp_grade(gut) > 0
-    assert SG.sharp_grade({**gut, "clvSumPP": -1.0}) == 0.0        # CLV negativ
     assert SG.sharp_grade({**gut, "pnl": -1}) == 0.0               # bestaetigter Verlierer
     assert SG.sharp_grade({**gut, "n": 7, "wins": 5}) == 0.0       # zu wenig Plays
+    # 🔴 22.09.2026: der gemessene Sportverlust ist an die Stelle des CLV getreten.
+    assert SG.sharp_grade({**gut, "fenster30": {"gewinn": -1}}) == 0.0
+
+
+def test_der_clv_schliesst_niemanden_mehr_aus():
+    """🔴 22.09.2026 (Lucas: „den CLV von mir aus messe ihn, aber ich will, dass der nicht
+    irgendwo irgendwie limitiert … und siehst du, dann fliegen gute Wallets raus").
+
+    Hier stand `sharp_grade({**gut, "clvSumPP": -1.0}) == 0.0`. Gemessen am Track vom
+    22.09.2026 kickte diese eine Zeile 21 von 48 Wallets, darunter 11 mit gemessenem
+    30-Tage-Profit (+$176.456 zusammen) — eine davon mit 87 % Treffer aus 76 Aufloesungen.
+    Vorwaerts war sie gegenlaeufig: Auswahl 17.–19.09., gemessen 20.–21.09., ergab
+    Ø CLV >= 0 einen Folge-ROI von −13,6 % gegen −3,8 % Basisrate und −5,3 % fuer genau die
+    Wallets, die sie ausschloss."""
+    gut = {"n": 65, "wins": 39, "clvSumPP": 18.2, "pnl": 457319}
+    assert SG.sharp_grade({**gut, "clvSumPP": -100.0}) > 0
+    belegt = {"n": 60, "wins": 40, "clvSumPP": -30.0, "pnl": 1000}
+    assert SG.is_sharp(belegt) is True
+    # und der CLV aendert am Grad ueberhaupt nichts mehr
+    assert SG.sharp_grade({**gut, "clvSumPP": -100.0}) == SG.sharp_grade({**gut, "clvSumPP": 100.0})
+
+
+def test_gemessener_sportverlust_schliesst_aus_unbekannter_nicht():
+    """Lucas' Massstab, in beide Richtungen. Und dieselbe Regel wie beim P&L: „nicht gemessen"
+    ist kein Ausschluss — die Abdeckung lag am 22.09. bei 386 von 4.394 Wallets (9 %), ein Gate
+    auf „kein Wert = 0" bestrafte also die Mess-Abdeckung statt der Wallet."""
+    gut = {"n": 60, "wins": 40, "clvSumPP": 0.0, "pnl": 1000}
+    assert SG.is_sharp(gut) is True
+    assert SG.is_sharp({**gut, "fenster30": {"gewinn": -0.01}}) is False
+    assert SG.is_sharp({**gut, "fenster30": {"gewinn": 0}}) is True, "exakt 0 ist kein Verlust"
+    assert SG.is_sharp({**gut, "fenster30": {}}) is True, "Fenster ohne Zahl ist nicht gemessen"
+    assert SG.is_sharp({**gut, "fenster30": None}) is True
+    assert SG.sport_profit(gut) is None
+    assert SG.sport_profit({**gut, "fenster30": {"gewinn": 12.5}}) == 12.5
+    # das 7-Tage-Fenster ist NICHT das Tor — sonst haette eine ruhige Woche dieselbe Wirkung
+    assert SG.is_sharp({**gut, "fenster7": {"gewinn": -9999}}) is True
 
 
 def test_grad_bleibt_im_band():

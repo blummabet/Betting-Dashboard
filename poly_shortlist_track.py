@@ -81,12 +81,22 @@ UNTRACKED_TTL_D = float(os.environ.get("SHORTLIST_UNTRACKED_TTL_D") or 2)    # n
 STALE_TTL_D     = float(os.environ.get("SHORTLIST_STALE_TTL_D") or 14)       # getrackt, aber hängt → Backstop
 
 # 24.08.2026 (Lucas: „was ist, wenn die mal wieder besser werden?"). Gesperrte Sportarten fliegen
-# NICHT aus dem Depot — sie werden weiter mitgeschrieben und auf Wiedereintritt geprüft. Kriterium
-# ist der CLV, NICHT der ROI: CLV ist der Frühindikator (misst, ob wir besser als der Schluss
-# kaufen), ROI der verrauschte Nachlauf. Nur Zeilen mit ECHT erfasstem Schluss zählen — ein clvPP
-# von 0 heißt „keine Schluss-Referenz", nicht „flach" (Lehre vom 07.08., Poly-Shortlist-CLV).
+# NICHT aus dem Depot — sie werden weiter mitgeschrieben und auf Wiedereintritt geprüft.
+#
+# 🔴 22.09.2026: hier stand „Kriterium ist der CLV, NICHT der ROI: CLV ist der Frühindikator".
+# Lucas, ausdrücklich: „Den CLV von mir aus messe ihn, aber ich will, dass der nicht irgendwo
+# irgendwie limitiert … und das sage ich jetzt schon seit Wochen. Wichtiger ist der Profit."
+# Dieselbe Umstellung wie am 08.09. in `freigabe.py` und heute in `sharp_gate.py`.
+#
+# Kriterium ist jetzt die RENDITE-UNTERGRENZE über genug frische Plays — dieselbe Schranke, mit
+# der das Freigabe-Register arbeitet. Der CLV läuft weiter mit und steht in jeder Zeile; er
+# entscheidet nur nichts mehr.
+#
+# ⚠️ Heute ändert das nichts am Ergebnis, und das gehört dazu: US-Sport hat Ø CLV −5,41pp UND
+# ROI −32,6 % (n=64), Kampfsport ist mit n=14 zu dünn für beides. Die Regel ist umgestellt, weil
+# sie falsch stand — nicht, weil sie heute eine Sperre gelöst hätte.
 REENTRY_MIN_N     = int(os.environ.get("SHORTLIST_REENTRY_MIN_N") or 50)     # so viele frische Plays mindestens
-REENTRY_MIN_CLV_N = int(os.environ.get("SHORTLIST_REENTRY_MIN_CLV_N") or 25) # davon mit echter Schluss-Referenz
+REENTRY_MIN_CLV_N = int(os.environ.get("SHORTLIST_REENTRY_MIN_CLV_N") or 25) # nur noch Anzeige: wie viele davon eine Schluss-Referenz haben
 REENTRY_WINDOW    = int(os.environ.get("SHORTLIST_REENTRY_WINDOW") or 200)   # nur die jüngsten N je Sportart
 
 
@@ -493,10 +503,14 @@ def reentry_status(settled, blocked, min_n=REENTRY_MIN_N, min_clv_n=REENTRY_MIN_
     """Je gesperrter Sportart: verdient sie einen zweiten Blick? REIN/testbar.
 
     Bewertet NUR die jüngsten `window` abgerechneten Plays dieser Kategorie — eine Sportart, die
-    vor einem halben Jahr schlecht war, soll sich freilaufen können. Kriterium ist Ø CLV ≥ 0 über
-    genug Zeilen MIT echter Schluss-Referenz. `eligible` schaltet NICHTS frei: es ist ein Hinweis,
-    die Sperre legt Lucas selbst um (echtes Geld auf verrauschten Daten automatisch freizuschalten
-    wäre der falsche Automatismus).
+    vor einem halben Jahr schlecht war, soll sich freilaufen können.
+
+    🔴 22.09.2026: Kriterium war „Ø CLV ≥ 0", jetzt ist es die RENDITE-UNTERGRENZE über null
+    (`roiUg`, dieselbe Schranke wie im Freigabe-Register). Der CLV steht weiter in jeder Zeile —
+    angezeigt, nicht entscheidend.
+
+    `eligible` schaltet NICHTS frei: es ist ein Hinweis, die Sperre legt Lucas selbst um (echtes
+    Geld auf verrauschten Daten automatisch freizuschalten wäre der falsche Automatismus).
     """
     out = {}
     for cat in sorted(set(blocked or ())):
@@ -508,8 +522,10 @@ def reentry_status(settled, blocked, min_n=REENTRY_MIN_N, min_clv_n=REENTRY_MIN_
         out[cat] = {
             "n": len(rows), "clvN": len(clvs), "clvAvg": avg,
             "roi": (a["roi"] if a else None), "hit": (a["hit"] if a else None),
-            "eligible": bool(len(rows) >= min_n and len(clvs) >= min_clv_n
-                             and avg is not None and avg >= 0),
+            "roiUg": (a["roiUg"] if a else None),
+            "eligible": bool(len(rows) >= min_n and a is not None
+                             and a.get("roiUg") is not None and a["roiUg"] > 0),
+            "kriterium": "Rendite-Untergrenze über null (der CLV wird angezeigt, entscheidet aber nicht)",
             "needN": max(0, min_n - len(rows)), "needClvN": max(0, min_clv_n - len(clvs)),
         }
     return out

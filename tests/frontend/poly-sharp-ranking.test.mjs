@@ -86,14 +86,19 @@ const PNL_TRACK = {
 // Verlierer) bleibt gueltig — sie haengt aber am kleinen n, nicht an der P&L. Deshalb prueft der
 // zweite Test unten, dass duenne Stichproben weiterhin draussen bleiben, solange nur der
 // Schrumpf-Schaetzer verfuegbar ist.
-test('rankt nach CLV-Untergrenze, nicht nach Vermoegen', async () => {
+test('rankt nach dem gemessenen Profit, nicht nach Vermoegen — und nicht nach CLV', async () => {
+  // 🔴 22.09.2026: hier stand „rankt nach CLV-Untergrenze". Lucas: „Man kann CLV anzeigen,
+  // aber es darf kein Kriterium sein, dass irgendwas gekickt wird." Eine Rangliste, die bei
+  // 20 Zeilen abschneidet, kickt mit ihrer Sortierung.
   const h = await renderWhales(PNL_TRACK);
   const rank = rankSlice(h);
-  assert.match(rank, /CLV-UG/, 'die Untergrenze ist eine eigene Spalte');
+  assert.match(rank, /CLV-UG/, 'die Untergrenze bleibt eine eigene Spalte — angezeigt, nicht entscheidend');
   assert.match(rank, /Poly-P&/, 'die P&L bleibt als Kontext sichtbar');
-  assert.match(rank, /CLV-Untergrenze/, 'das Label nennt das Rang-Kriterium');
-  assert.doesNotMatch(rank, /sortiert nach <b>echter Poly-Gesamt-Bilanz/,
+  assert.match(rank, /gemessenen Sport-Profit/, 'das Label nennt das Rang-Kriterium');
+  assert.doesNotMatch(rank, /sortiert nach der <b>CLV-Untergrenze/,
     'die alte Zusage darf nicht stehenbleiben');
+  assert.doesNotMatch(rank, /sortiert nach <b>echter Poly-Gesamt-Bilanz/,
+    'und die noch aeltere erst recht nicht');
   // Das −800K-Wallet taucht nicht mehr auf — nicht wegen seiner Bilanz, sondern weil es mit n=10
   // unter dem strengeren Gate liegt, solange die Streuung fehlt. Genau so soll es sein.
   assert.doesNotMatch(rank, /0xP2/, 'n=10 ohne gemessene Streuung ist noch kein Beleg');
