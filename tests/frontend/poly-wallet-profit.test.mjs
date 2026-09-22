@@ -87,3 +87,19 @@ test('die Fläche rechnet den Profit nicht selbst', () => {
   assert.doesNotMatch(zelle, /lastPrice|entryPrice|\/ *entry/,
     'die Zelle darf nur lesen, was der Produzent gerechnet hat');
 });
+
+test('eine rückgerechnete Zahl sagt, dass sie rückgerechnet ist', () => {
+  // ⭐ Wer das nicht dazuschreibt, verkauft eine Rückrechnung als laufende Messung.
+  const h = laden()._pwGeldZelle(f({ nGeldNachtrag: 9 }), '7 Tage');
+  assert.match(h, /rückgerechnet aus der Historie/);
+});
+
+test('teils gemessen, teils rückgerechnet steht auch so da', () => {
+  const h = laden()._pwGeldZelle(f({ nGeldNachtrag: 4 }), '7 Tage');
+  assert.match(h, /teils rückgerechnet/);
+});
+
+test('eine rein gemessene Zahl trägt keinen Zusatz', () => {
+  const h = laden()._pwGeldZelle(f({ nGeldNachtrag: 0 }), '7 Tage');
+  assert.doesNotMatch(h, /rückgerechnet/);
+});

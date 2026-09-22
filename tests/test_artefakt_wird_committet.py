@@ -225,7 +225,13 @@ def _committet(txt, registry):
     for i, zeile in enumerate(zeilen):
         if re.search(r"\bgit checkout\s+--\s+", zeile):
             verworfen |= set(JSON_TOK.findall(zeile))
-        if "git add" in zeile:
+        # 🔴 22.09.2026: der Waechter kannte nur `git add` — aber das Repo hat seit dem 19.09.
+        # eine eigene Commit-Hilfe, `scripts/ci_sichern.sh "<Grund>" datei1.json datei2.json`,
+        # und die macht `git add` INTERN. Ein Workflow, der nur sie benutzt (wie
+        # wallet-profit-nachtragen.yml), galt damit als „schreibt und committet nicht" — ein
+        # Fehlalarm, der dazu erzieht, den Waechter nicht ernst zu nehmen.
+        # Fehlerklasse: ein Waechter, der eine Schreibweise kennt statt einer Wirkung.
+        if "git add" in zeile or "ci_sichern.sh" in zeile:
             raus |= set(JSON_TOK.findall(zeile))
             for ordner in re.findall(r"git add\s+([A-Za-z0-9_./-]+/)(?:\s|$)", zeile):
                 ordner_adds.add(ordner)

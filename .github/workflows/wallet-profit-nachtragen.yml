@@ -1,0 +1,44 @@
+# 🔴 22.09.2026 — einmaliger Nachtrag des Wallet-Profits aus der Git-Historie.
+#
+# Lucas, zweimal am selben Tag: „Mir ist wirklich wichtig, dass wir den Profit und den ROI der
+# letzten sieben und 30 Tage mit tracken … Lifetime ist nett, sagt aber wenig aus."
+#
+# Die Geld-Messung läuft seit dem 22.09. mit — aber eine Wallet bekommt ihre erste Zeile erst,
+# wenn eine ihrer Positionen NACH diesem Tag auflöst. Die 30-Tage-Bilanz wäre damit erst Ende
+# Oktober vollständig. Die Vergangenheit liegt aber vor: `poly_wallet_track.json` wird bei jedem
+# Scan committet. Gemessen über 35 Tage: 1.561 Commits, 33.258 Positionen, 15.085 davon
+# geschlossen UND eindeutig auflösbar.
+#
+# Kein Zeitplan: ein Nachtrag ist einmalig, und `fetch-depth: 0` wäre im Takt teuer.
+name: 💰 Wallet-Profit nachtragen
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: poly-artefakte
+  cancel-in-progress: false
+
+jobs:
+  nachtragen:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20      # gemessen ~2 Min fürs Lesen der Historie, Puffer fürs Repo-Wachstum
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0     # ohne die ganze Historie gibt es nichts nachzutragen
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 💰 Profit nachtragen
+        run: python3 wallet_profit_nachtragen.py
+
+      - name: 💾 Sichern
+        run: |
+          bash scripts/ci_sichern.sh "💰 Wallet-Profit aus der Git-Historie nachgetragen" \
+            poly_wallet_track.json

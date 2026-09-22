@@ -418,6 +418,11 @@ def _geld_zeile(f) -> str:
     if not isinstance(g, (int, float)) or not n_geld:
         return "<i>Profit: noch nicht gemessen</i>"
     teil = "" if n_geld >= n else " <i>(aus %d von %d)</i>" % (n_geld, n)
+    # 22.09.2026: rekonstruiert ist nicht gemessen. Steht die ganze Zahl aus der Git-Historie,
+    # muss das dran — sonst liest sie sich wie eine laufende Messung.
+    nach = (f or {}).get("nGeldNachtrag") or 0
+    if nach:
+        teil += " <i>· %s</i>" % ("rückgerechnet" if nach >= n_geld else "teils rückgerechnet")
     roitxt = "" if not isinstance(roi, (int, float)) else " · ROI %+.1f %%" % (roi * 100)
     return "Profit <b>%s%s</b>%s%s" % ("+" if g >= 0 else "−", _usd(abs(g)), roitxt, teil)
 

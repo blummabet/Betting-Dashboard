@@ -1210,7 +1210,13 @@ def zeitraum_bilanz(s: dict, bis, tage: int) -> dict | None:
     echten Zeitraeumen wiederholbar ist — nicht, damit jemand sie vorher als Gate benutzt.
     """
     t = (s or {}).get("tage") or {}
-    if not isinstance(t, dict) or not t or not tage:
+    tn = (s or {}).get("tageNachtrag") or {}
+    if not isinstance(t, dict):
+        t = {}
+    # 22.09.2026: auch ein Score OHNE laufendes Tages-Gedaechtnis kann eine Bilanz haben — die
+    # rekonstruierte. Vor dem 17.09. gibt es `tage` gar nicht, und genau dort liegt der groesste
+    # Teil einer 30-Tage-Frage.
+    if not tage or (not t and not (isinstance(tn, dict) and tn)):
         return None
     try:
         ende = date.fromisoformat(str(bis)[:10])
@@ -1239,15 +1245,37 @@ def zeitraum_bilanz(s: dict, bis, tage: int) -> dict | None:
                 n_geld += int(v[6]) if len(v) >= 7 else 0
             except (TypeError, ValueError):
                 pass
+    # 22.09.2026: der REKONSTRUIERTE Teil — `tageNachtrag` aus wallet_profit_nachtragen.py,
+    # Form {tag: [nGeld, gewinn, einsatz]}. Getrennt gezaehlt, damit an jeder Zahl ablesbar
+    # bleibt, wie viel davon gemessen und wie viel zurueckgerechnet ist. Er kann sich mit dem
+    # laufenden Betrieb nicht doppeln: der Nachtrag hoert am Tag seines Laufs auf, der Betrieb
+    # faengt dort an.
+    n_nach = 0
+    for k, v in ((s or {}).get("tageNachtrag") or {}).items():
+        if not (isinstance(v, (list, tuple)) and len(v) >= 3) or not (ab <= str(k) <= ende.isoformat()):
+            continue
+        try:
+            n_nach += int(v[0]); gewinn += float(v[1]); einsatz += float(v[2])
+        except (TypeError, ValueError):
+            continue
+    n_geld += n_nach
     if not n:
-        return None
+        # Ein Zeitraum ganz ohne CLV-Tage, aber mit rekonstruiertem Geld, ist immer noch eine
+        # Auskunft — und bei einer 30-Tage-Bilanz vor dem 17.09. sogar die einzige.
+        if not n_nach:
+            return None
+        return {"n": 0, "wins": 0, "clv": None, "hit": None,
+                "gewinn": round(gewinn, 2), "einsatz": round(einsatz, 2),
+                "roi": (round(gewinn / einsatz, 4) if einsatz > 0 else None),
+                "nGeld": n_geld, "nGeldNachtrag": n_nach,
+                "von": ab, "bis": ende.isoformat(), "clvUg": None, "seit": ab}
     schnitt = summe / n
     aus = {"n": n, "wins": wins, "clv": round(schnitt, 2), "hit": round(wins / n, 4),
            # Das Geld. `None` heisst „fuer diesen Zeitraum nicht gemessen" und nie „null Gewinn".
            "gewinn": round(gewinn, 2) if n_geld else None,
            "einsatz": round(einsatz, 2) if n_geld else None,
            "roi": (round(gewinn / einsatz, 4) if (n_geld and einsatz > 0) else None),
-           "nGeld": n_geld,
+           "nGeld": n_geld, "nGeldNachtrag": n_nach,
            "von": ab, "bis": ende.isoformat(), "clvUg": None,
            # 18.09.2026: das Tages-Gedaechtnis ist am 17.09. angelegt worden. Ein Fenster von
            # „30 Tagen" enthaelt heute einen einzigen Tag — und saehe ohne dieses Feld genauso

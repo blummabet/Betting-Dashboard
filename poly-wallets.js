@@ -1497,7 +1497,11 @@ function _pwGeldZelle(f, was) {
   // Die Abdeckung gehört an die Zahl: ein ROI aus 3 von 30 Auflösungen ist nicht derselbe
   // wie einer aus 30.
   const nG = f.nGeld || 0, n = f.n || 0;
-  const teil = (nG && n && nG < n) ? (' · aus ' + nG + ' von ' + n) : '';
+  let teil = (nG && n && nG < n) ? (' · aus ' + nG + ' von ' + n) : '';
+  // 22.09.2026: rekonstruiert ist nicht gemessen. Wer das nicht dazuschreibt, verkauft eine
+  // Rückrechnung als laufende Messung — und in drei Wochen weiss niemand mehr, welche es war.
+  const nach = f.nGeldNachtrag || 0;
+  if (nach) teil += ' · ' + (nach >= nG ? 'rückgerechnet aus der Historie' : 'teils rückgerechnet');
   const tip = was + ': Anteile × Einstieg gegen Auszahlung, unterstellt Halten bis zur Auflösung'
     + (roi == null ? '' : ' · ROI ' + (roi >= 0 ? '+' : '') + (roi * 100).toFixed(1) + '%') + teil;
   return '<td class="pw-cn" style="font-weight:800;color:' + col + '" title="' + tip + '">'
