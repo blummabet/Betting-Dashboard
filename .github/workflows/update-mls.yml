@@ -394,6 +394,12 @@ jobs:
           git config user.email "bot@cocobet.local"
           # EINZELN stagen (atomar — nicht-existente Pfade dürfen den add nicht killen).
           git add health/update-mls.json 2>/dev/null || true
+          # 🪶 22.09.2026 (Lucas: „was ist da jetzt mit diesen 12 Megabyte"): Einrueckung
+          # raus, bevor gestaged wird. Von den 12,7 MB, die die Uebersicht vor der ersten
+          # Kachel parst, sind 3,85 MB reiner Leerraum. Der Schritt steht hier und nicht bei
+          # den Schreibern, weil liga-data.json von 15+ Stellen geschrieben wird — eine
+          # vergessene liesse die Datei zwischen zwei Formaten springen. Idempotent.
+          python3 scripts/json_kompakt.py mls-data.json mls_streaks.json || true
           git add mls-data.json || true
           git add mls-odds-history.json 2>/dev/null || true
           git add mls_lineups.json 2>/dev/null || true

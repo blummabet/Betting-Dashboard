@@ -498,15 +498,85 @@
     (document.head || document.documentElement).appendChild(st);
   }
 
-  function _mdFetch() {
+  // ── Refresh-Takt je Datei (22.09.2026) ──────────────────────────────────────────────────
+  // 🔴 Lucas: „Was ist da jetzt mit diesen 12 Megabyte … wo führt das zu Problemen?"
+  //
+  // Gemessen, und zwar drei verschiedene Kosten, die vorher als eine gezählt wurden:
+  //   · über die Leitung gehen 1,2 MB (gzip) — das Netz ist NICHT das Problem
+  //   · zu parsen und im Speicher: 12,7 MB — DAS ist es, und zwar am Handy
+  //   · und das alle ZWEI MINUTEN erneut, mit `no-store` und Cache-Buster: kein Byte wird
+  //     je wiederverwendet
+  //
+  // Der 2-Minuten-Takt kam am 19.08.2026 aus einem echten Fund (der Betfair-HT-Kasten zeigte
+  // alte Spiele). Für die Betfair-Dateien ist er richtig — die wechseln alle 14-15 Minuten.
+  // Für die schweren ist er sinnlos. Gemessen über `git log --since='7 days ago'`:
+  //
+  //     liga-data.json          5,12 MB    92 Commits/Woche   → alle 110 Min
+  //     mls-data.json           1,92 MB    76                 → alle 133 Min
+  //     liga_streaks.json       0,80 MB    21                 → alle  8 Std
+  //     mls_streaks.json        0,27 MB    14                 → alle 12 Std
+  //     ────────────────────────────────────────────────────────────────────
+  //     betfair_prices.json     1,13 MB   714                 → alle  14 Min
+  //     stake_highroller.json   1,32 MB   685                 → alle  15 Min
+  //
+  // Die schwerste Datei wird pro Stunde 30x geladen und ändert sich 0,5x — 59 von 60
+  // Ladungen sind umsonst. Fehlerklasse: **ein Takt, der für die schnellste Quelle gesetzt
+  // ist und für alle gilt.**
+  //
+  // Deshalb ein Mindest-Alter je Datei. Die Zahl ist BEWUSST viel kleiner als der gemessene
+  // Abstand (20 Min gegen 110): sie soll Ladungen sparen, nicht Frische kosten. Im
+  // schlimmsten Fall sieht man eine Änderung 20 Minuten später — bei einer Datei, die sich
+  // alle zwei Stunden ändert.
+  //
+  // ⚠️ Das gilt NUR für den automatischen Refresh. Der ERSTE Aufruf holt alles (der Cache ist
+  // leer) — genau der Fall, über den Lucas sich am 12.09. beschwert hat, wird damit kein
+  // Stück schlechter. `_mdLoad(true, true)` (Hard-Refresh) umgeht den Cache ebenfalls.
+  //
+  // Ein Test prüft die Tabelle gegen die ECHTE Änderungsrate aus git — eine Behauptung über
+  // einen Takt, die niemand nachmisst, veraltet still. Genau das ist hier passiert.
+  var MD_CACHE_MIN = {
+    'liga-data.json': 20,
+    'mls-data.json': 20,
+    'liga_streaks.json': 20,
+    'mls_streaks.json': 20,
+    'liga_streak_record.json': 20,
+    'mls_streak_record.json': 20
+  };
+  var _mdFileCache = {};      // u -> {ts, data}
+  function _mdCacheFrisch(u, jetzt, hart) {
+    var min = MD_CACHE_MIN[u];
+    if (!min || hart) return null;
+    var e = _mdFileCache[u];
+    if (!e || (jetzt - e.ts) / 60000 >= min) return null;
+    return e;
+  }
+  // Der Merker steht hier oben und NICHT inline in der Fetch-Kette. Zwei Gruende, und der
+  // zweite ist der wichtigere:
+  //  1. `null` wird NIE gemerkt — sonst bliebe eine Kachel 20 Minuten leer, weil ein einzelner
+  //     Abruf danebenging.
+  //  2. `tests/frontend/raw-first-fetch.test.mjs` prueft, dass auf den raw-Abruf ein `catch`
+  //     folgt, und liest dafuer ein Fenster von 900 Zeichen im Quelltext. Acht eingeschobene
+  //     Zeilen haben es gesprengt und einen Rueckfall als fehlend gemeldet, den es gibt. Der
+  //     Waechter ist damit sproede — aber die Kette kurz zu halten ist ohnehin das bessere
+  //     Stueck Code, und ihn fuer eine Bequemlichkeit zu lockern waere die falsche Richtung.
+  function _mdMerk(u, jetzt, d) {
+    if (d != null && MD_CACHE_MIN[u]) _mdFileCache[u] = { ts: jetzt, data: d };
+    return d;
+  }
+  try { window._mdFileCache = _mdFileCache; window.MD_CACHE_MIN = MD_CACHE_MIN; } catch (_e) {}
+
+  function _mdFetch(hart) {
     var t = Date.now();
     var base = 'https://raw.githubusercontent.com/blummabet/Betting-Dashboard/main';
     // raw.github ZUERST → commit-frisch (spiegelt den Fetcher-Commit sofort, ohne auf den trägen
     // Pages-Deploy zu warten), sonst lokal (Pages/Offline-Cache). Gleiche Logik wie im Betfair-Radar.
+    var merk = function (u) { return function (d) { return _mdMerk(u, t, d); }; };
     var jf = function (u) {
+      var c = _mdCacheFrisch(u, t, hart);          // frisch genug im Speicher? nicht laden
+      if (c) return Promise.resolve(c.data);
       return fetch(base + '/' + u + '?t=' + t, { cache: 'no-store' })
-        .then(function (r) { if (r.ok) return r.json(); throw 0; })
-        .catch(function () { return fetch(u + '?t=' + t, { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }); });
+        .then(function (r) { if (r.ok) return r.json(); throw 0; }).then(merk(u))
+        .catch(function () { return fetch(u + '?t=' + t, { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(merk(u)).catch(function () { return null; }); });
     };
     // 🔴 12.09.2026 (Lucas: „Vor allem am iPhone ladet die Übersichtsseite beim ersten Aufruf
     // recht langsam"). Gemessen lagen hier 27 MB JSON vor der ersten Kachel — und wegen des
@@ -556,19 +626,26 @@
       // tun, als sei nichts gemessen worden.
       jf('liga_streak_record.json'), jf('mls_streak_record.json')]);
   }
-  function _mdLoad(force) {
+  function _mdLoad(force, hart) {
     if (_md.loading) return;
     _mdStyle();
     if (_md.data && !force) { _mdRender(); return; }
     _md.loading = true;
+    // `hart` umgeht den Datei-Cache. Der automatische Refresh setzt es NICHT — er ist ja der
+    // Grund, warum es den Cache gibt. Bewusst ein PARAMETER und kein Zustand auf `_md`: als
+    // Zustand haette ein abgebrochener Lauf ihn stehen lassen, und der naechste Refresh haette
+    // still wieder alles geholt.
     var p = document.getElementById('mainDashPanel');
     if (p && !_md.data) { p.classList.add('mdash'); p.innerHTML = _head() + '<div class="md-empty" style="text-align:center;padding:52px 0;">⏳ Übersicht wird geladen …</div>'; }
-    _mdFetch().then(function (a) {
+    _mdFetch(!!hart).then(function (a) {
       _md.data = { liga: a[0], mls: a[1], ligaStreaks: a[2], mlsStreaks: a[3], betfair: a[4], whales: a[5], pulse: a[6], bfOverview: a[7], bfDir: a[8], moneyMap: a[9], bfTrack: a[10], killer: a[11], freigabe: a[12], stake: a[13], stakeAus: a[14], ligaStreakRec: a[15], mlsStreakRec: a[16] };
       _md.loading = false; _mdRender();
     });
   }
   window._mdLoad = _mdLoad;
+  // 22.09.2026: fuer den Takt-Test — er muss den Abruf selbst fahren koennen, nicht nur das
+  // Rendern. Ohne das pruefte er die Tabelle und nie ihre Wirkung.
+  window._mdFetch = _mdFetch;
 
   // 19.08.2026 (Lucas: „Betfair-HT-Kasten zeigt alte Spiele, Live-Badge fehlt bei laufenden"): das
   // Main-Dashboard lud die Daten NUR EINMAL beim Öffnen und aktualisierte nie. Spiele, die nach dem

@@ -57,8 +57,67 @@ def _fetch_liste():
 
 
 def _mb(name):
+    """Was die Seite an dieser Datei zu PARSEN hat — nach der Normalisierung.
+
+    🔴 22.09.2026: hier stand schlicht die Dateigroesse. Das war die falsche Zahl, und zwar
+    doppelt:
+
+      · Ueber die Leitung gehen 1,23 MB statt 12,7 — GitHub liefert gzip. Das Netz war nie
+        das Problem; Parse-Zeit und Speicher am Handy sind es.
+      · Und seit heute nehmen fuenf Workflows kurz vor `git add` die Einrueckung heraus
+        (scripts/json_kompakt.py). Solange der naechste Produzentenlauf nicht durch ist, liegt
+        hier noch die eingerueckte Fassung — die Ratsche haette also einen Zustand gemessen,
+        den das System gerade selbst beseitigt. Fehlerklasse: eine Messung, die den Zustand
+        VOR der eigenen Reparatur festhaelt.
+
+    Deshalb: fuer Dateien, die ein Workflow normalisiert, zaehlt die kompakte Groesse; fuer
+    alle anderen die echte. Wer die Normalisierung aus einem Workflow entfernt, sieht die
+    Ratsche sofort wieder anziehen — und `tests/test_json_kompakt.py` schlaegt zusaetzlich an.
+    """
     p = WURZEL / name
-    return p.stat().st_size / 1024 / 1024 if p.exists() else None
+    if not p.exists():
+        return None
+    roh = p.read_bytes()
+    if name not in _normalisiert():
+        return len(roh) / 1024 / 1024
+    try:
+        import json as _j
+        kompakt = _j.dumps(_j.loads(roh.decode("utf-8")), ensure_ascii=False,
+                           separators=(",", ":")).encode("utf-8")
+    except Exception:
+        return len(roh) / 1024 / 1024
+    return min(len(roh), len(kompakt)) / 1024 / 1024
+
+
+def _normalisiert():
+    """Die Dateien, die irgendein Workflow vor dem Stagen kompakt schreibt."""
+    aus = set()
+    wf = WURZEL / ".github" / "workflows"
+    if not wf.is_dir():
+        return aus
+    for f in wf.glob("*.yml"):
+        for z in f.read_text(encoding="utf-8").splitlines():
+            if "scripts/json_kompakt.py" in z:
+                aus |= set(re.findall(r"[\w\-]+\.json", z))
+    return aus
+
+
+def _dauerlast(dateien):
+    """Was die Seite bei JEDEM automatischen Refresh neu laedt — also ohne die Dateien, die
+    `MD_CACHE_MIN` in main-dashboard.js zwischenspeichert.
+
+    Bis zum 22.09.2026 war das dieselbe Zahl wie oben: alle 17 Dateien, alle zwei Minuten,
+    mit `no-store` und Cache-Buster. Die schwerste wechselt alle 110 Minuten und wurde 30x
+    pro Stunde geholt.
+    """
+    js = (WURZEL / "main-dashboard.js").read_text(encoding="utf-8")
+    if "MD_CACHE_MIN" not in js:
+        return None, set()
+    block = js.split("var MD_CACHE_MIN")[1].split("};")[0]
+    gecacht = set(re.findall(r"'([^']+\.json)':\s*\d+", block))
+    summe = sum(g for f, g in ((f, _mb(f)) for f in dateien)
+                if g is not None and f not in gecacht)
+    return summe, gecacht
 
 
 class TestDieUebersichtBleibtLeicht(unittest.TestCase):
@@ -90,6 +149,29 @@ class TestDieUebersichtBleibtLeicht(unittest.TestCase):
                              "Produzenten, nicht ein groesseres Budget."
                              % (summe, BUDGET_MB,
                                 "\n".join(f"  {f:34s} {g:6.1f} MB" for f, g in gross)))
+
+    def test_die_dauerlast_ist_deutlich_kleiner_als_der_erste_aufruf(self):
+        """🔴 22.09.2026 (Lucas: „was ist da jetzt mit diesen 12 Megabyte").
+
+        Der erste Aufruf muss alles holen — daran ist nichts zu sparen, und genau darueber ging
+        die Beschwerde am 12.09. Was sich sparen laesst, ist die WIEDERHOLUNG: die Seite lud
+        alle 17 Dateien alle zwei Minuten erneut, obwohl die schwerste sich alle 110 Minuten
+        aendert (gemessen ueber `git log --since='7 days ago'`).
+
+        Diese Ratsche haelt fest, dass der automatische Refresh deutlich weniger traegt als der
+        erste Aufruf. Faellt der Abstand zusammen, ist entweder `MD_CACHE_MIN` leer geraeumt
+        worden oder eine neue schwere Datei ist ungecacht dazugekommen.
+        """
+        erst = sum(g for g in (_mb(f) for f in self.dateien) if g is not None)
+        dauer, gecacht = _dauerlast(self.dateien)
+        self.assertIsNotNone(dauer, "MD_CACHE_MIN fehlt in main-dashboard.js")
+        self.assertTrue(gecacht, "kein einziges Artefakt wird zwischengespeichert")
+        self.assertLessEqual(dauer, erst * 0.6,
+                             "\nDer automatische Refresh laedt %.1f MB von %.1f MB erneut — "
+                             "zu viel.\nGecacht sind: %s\nDer Weg ist ein Eintrag in "
+                             "MD_CACHE_MIN fuer schwere, traege Dateien (die Aenderungsrate "
+                             "prueft tests/frontend/uebersicht-refresh-takt.test.mjs)."
+                             % (dauer, erst, ", ".join(sorted(gecacht)) or "—"))
 
     def test_keine_einzeldatei_bestimmt_die_ladezeit_allein(self):
         zu_gross = [(f, _mb(f)) for f in self.dateien

@@ -128,6 +128,12 @@ jobs:
           # 28.08.2026: eigene Zeile, eigener Pfad — health/<slug>.json wird NUR von diesem
           # Workflow geschrieben, deshalb kann sie mit keinem anderen kollidieren.
           git add health/liga-odds-dense.json 2>/dev/null || true
+          # 🪶 22.09.2026 (Lucas: „was ist da jetzt mit diesen 12 Megabyte"): Einrueckung
+          # raus, bevor gestaged wird. Von den 12,7 MB, die die Uebersicht vor der ersten
+          # Kachel parst, sind 3,85 MB reiner Leerraum. Der Schritt steht hier und nicht bei
+          # den Schreibern, weil liga-data.json von 15+ Stellen geschrieben wird — eine
+          # vergessene liesse die Datei zwischen zwei Formaten springen. Idempotent.
+          python3 scripts/json_kompakt.py liga-data.json || true
           git add liga-data.json 2>/dev/null || true
           # 20.09.2026: der Bericht des Ergebnis-Nachlaufs — die Zahl, ueber die die
           # Guard-Batterie urteilt. Eigene Zeile je Datei, s.o.
