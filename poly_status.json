@@ -67,12 +67,10 @@
       "id": "trades_push_buch",
       "label": "Trades-Karte führt ihr Buch",
       "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "keine einzige Zeile trägt einen `public`-Marker — dann lässt sich die Teilmenge, die auch public ging, nicht abziehen und beide Bücher zählen dieselben Karten."
-      ],
-      "note": "27 Karte(n) · 0 auch public"
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "28 Karte(n) · 0 auch public"
     },
     {
       "id": "public_push_buch",
@@ -130,7 +128,7 @@
       "nFail": 5,
       "failures": [
         "139/337 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (41%) — Trefferquote allein trügt",
-        "   0xc3c3b3ef30… n=338 Treffer 51% P&L $-3,971,835",
+        "   0xc3c3b3ef30… n=338 Treffer 51% P&L $-3,971,836",
         "   0xa0f21e6d35… n=96 Treffer 67% P&L $-2,635,720",
         "   0xabb89972b2… n=39 Treffer 62% P&L $-2,563,982",
         "   0x4bff30af91… n=92 Treffer 50% P&L $-2,420,880"
@@ -174,6 +172,6 @@
       "note": "poly_direct_bets.py rechnet über poly_resolutions.json ab. Hängt ein Bet, kennt Poly den Ausgang nicht (Markt noch offen/obskur) oder der Slug passt nicht — dann fehlt echtes Geld in der Bilanz."
     }
   ],
-  "nFail": 3,
-  "generatedAt": "2026-09-22T04:58:45.292745+00:00"
+  "nFail": 2,
+  "generatedAt": "2026-09-22T05:05:18.418718+00:00"
 }
