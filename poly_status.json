@@ -49,11 +49,9 @@
       "id": "wette_hat_die_kasse_beruehrt",
       "label": "Wette hat die Kasse beruehrt",
       "severity": "error",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "shortlist_auto_bets_placed.json: 3 abgerechnete Zeile(n) ohne Wallet-Bewegung — sie stehen mit -8.75 $ in der Bilanz, ohne dass je Geld geflossen ist (atp-simakin-heck-2026-09-18|Ilia S; cs2-inox-sparta-2026-09-20|INOX Di; mex-tol-san-2026-09-20|Deportivo T)"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Gegenprobe gegen den Wallet-Verlauf: ein Kauf zeigt sich als Abgang im freien Collateral. Zeilen ohne Abgang sind in der Bilanz erfunden."
     },
     {
@@ -92,7 +90,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "1095 geprueft, davon 129 abgeschnitten"
+      "note": "1094 geprueft, davon 129 abgeschnitten"
     },
     {
       "id": "settlement_alive",
@@ -176,6 +174,6 @@
       "note": "poly_direct_bets.py rechnet über poly_resolutions.json ab. Hängt ein Bet, kennt Poly den Ausgang nicht (Markt noch offen/obskur) oder der Slug passt nicht — dann fehlt echtes Geld in der Bilanz."
     }
   ],
-  "nFail": 4,
-  "generatedAt": "2026-09-22T04:13:48.773445+00:00"
+  "nFail": 3,
+  "generatedAt": "2026-09-22T04:34:45.719002+00:00"
 }
