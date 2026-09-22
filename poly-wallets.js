@@ -1480,6 +1480,33 @@ function _pwSharpRanking() {
 // 24.08.2026 (Lucas, Whales-Tab): die AUSWAHL der Top-Wallets steckte bisher mitten im HTML-Bauen.
 // Jetzt eigene Funktion, damit der Betting-Tab exakt dieselben Wallets bekommt wie das Wallets-Menü —
 // ein zweites, nachgebautes Ranking wäre genau die Sorte Drift, die uns schon dreimal erwischt hat.
+// 🔴 22.09.2026 (Lucas: „Mir ist wichtig, dass wir den Profit und den ROI der letzten sieben und
+// 30 Tage auch mit tracken … mit CLV bin ich nicht so der grösste Fan, ich will halt immer den
+// Profit haben"). Die Rangliste zeigte CLV, Treffer, Einsatz und Polys Lebensbilanz — die einzige
+// Geld-Zahl darin schleppt Wahlen und Krypto mit und sagt über Sport nichts.
+//
+// Gerechnet wird NICHTS hier: `gewinn`, `einsatz` und `roi` kommen fertig aus poly_money_broad.
+// Eine zweite Rechnung neben der ersten ist in diesem Repo schon dreimal auseinandergelaufen.
+function _pwGeldZelle(f, was) {
+  const g = f && typeof f.gewinn === 'number' ? f.gewinn : null;
+  if (g == null) {
+    return '<td class="pw-cn pw-mut" title="' + was + ': noch keine Auflösung mit Preis — nicht gemessen, nicht null.">—</td>';
+  }
+  const roi = (f && typeof f.roi === 'number') ? f.roi : null;
+  const col = g > 0 ? '#3fb950' : g < 0 ? '#f85149' : '#8b949e';
+  // Die Abdeckung gehört an die Zahl: ein ROI aus 3 von 30 Auflösungen ist nicht derselbe
+  // wie einer aus 30.
+  const nG = f.nGeld || 0, n = f.n || 0;
+  const teil = (nG && n && nG < n) ? (' · aus ' + nG + ' von ' + n) : '';
+  const tip = was + ': Anteile × Einstieg gegen Auszahlung, unterstellt Halten bis zur Auflösung'
+    + (roi == null ? '' : ' · ROI ' + (roi >= 0 ? '+' : '') + (roi * 100).toFixed(1) + '%') + teil;
+  return '<td class="pw-cn" style="font-weight:800;color:' + col + '" title="' + tip + '">'
+    + _pwPnl(g)
+    + (roi == null ? '' : '<div class="pw-mut" style="font-size:10px;font-weight:600">'
+        + (roi >= 0 ? '+' : '') + (roi * 100).toFixed(0) + '%</div>')
+    + '</td>';
+}
+
 function _pwRankRowsPnl(scores) {
   return Object.keys(scores).map(function (w) {
     const roh = scores[w];
@@ -1499,6 +1526,14 @@ function _pwRankRowsPnl(scores) {
     return { wallet: w, pnl: roh.pnl, n: v.n || 0, avgClv: v.n ? (v.clvSumPP || 0) / v.n : 0,
              hit: v.n ? (v.wins || 0) / v.n : 0, usd: Number(roh.usd) || 0,
              clvUg: ug.wert, clvArt: ug.art, sportScore: !sel.global,
+             // 22.09.2026 (Lucas: „ich will halt immer den Profit haben"). Der gemessene
+             // Sport-Profit dieser Wallet und die beiden Zeitraeume — gerechnet vom Produzenten,
+             // hier nur gelesen. NICHT zu verwechseln mit `pnl`: das ist Polymarkets
+             // Lebensbilanz ueber alles, auch Wahlen und Krypto.
+             gewinn: (typeof roh.gewinn === 'number') ? roh.gewinn : null,
+             einsatz: (typeof roh.einsatz === 'number') ? roh.einsatz : null,
+             nGeld: roh.nGeld || 0,
+             f7: roh.fenster7 || null, f30: roh.fenster30 || null,
              lastTs: roh.lastTs || null, recent: roh.recent || null };
   }).filter(Boolean)
     // Aktivitäts-Filter (opt-in): unbekannter Zeitstempel bleibt drin — unbekannt ist kein Urteil.
@@ -1583,12 +1618,13 @@ function _pwRankByPnl(scores, openMap, kick) {
       + '<td class="pw-cn pw-mut">' + r.n + '</td>'
       + '<td class="pw-cn pw-mut">' + _pwUsd(r.usd) + '</td>'
       + '<td class="pw-cn" style="font-weight:700">' + _pwUsd(r.n ? r.usd / r.n : 0) + '</td>'
+      + _pwGeldZelle(r.f7, '7 Tage') + _pwGeldZelle(r.f30, '30 Tage')
       + '<td class="pw-cn pw-mut" style="color:' + pcol + '" title="Plattformweite Poly-Bilanz — Kontext, NICHT das Rang-Kriterium.">' + _pwPnl(r.pnl) + '</td>'
       + '<td class="pw-cn">' + _pwStilleZelle(r) + '</td>'
       + '<td>' + _pwNowCell(openMap, r.wallet) + '</td></tr>';
   }).join('');
   return intro + '<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
-    + '<th>#</th><th>Wallet</th><th title="Einseitige 95%-Untergrenze des Ø CLV — das Rang-Kriterium. * = geschrumpfter Schätzer, solange die Streuung fehlt.">CLV-UG</th><th>Ø CLV</th><th>Treffer</th><th>n</th><th>Einsatz</th><th>Ø/Wette</th><th title="Plattformweite Poly-Bilanz (Wahlen, Krypto inklusive) — nur Kontext.">Poly-P&amp;L</th><th title="Wie lange die letzte Auflösung her ist. ▲/▼ vergleicht die letzten Auflösungen mit dem Lebenszeit-CLV.">zuletzt</th><th>setzt gerade auf</th>'
+    + '<th>#</th><th>Wallet</th><th title="Einseitige 95%-Untergrenze des Ø CLV — das Rang-Kriterium. * = geschrumpfter Schätzer, solange die Streuung fehlt.">CLV-UG</th><th>Ø CLV</th><th>Treffer</th><th>n</th><th>Einsatz</th><th>Ø/Wette</th><th title="Gemessener Sport-Profit der letzten 7 Tage: Anteile x Einstieg gegen Auszahlung. Unterstellt Halten bis zur Auflösung.">Profit 7T</th><th title="Dasselbe über 30 Tage.">Profit 30T</th><th title="Plattformweite Poly-Bilanz (Wahlen, Krypto inklusive) — nur Kontext.">Poly-P&amp;L</th><th title="Wie lange die letzte Auflösung her ist. ▲/▼ vergleicht die letzten Auflösungen mit dem Lebenszeit-CLV.">zuletzt</th><th>setzt gerade auf</th>'
     + '</tr></thead><tbody>' + body + '</tbody></table></div></section>';
 }
 function _pwRankRowsClv(scores) {

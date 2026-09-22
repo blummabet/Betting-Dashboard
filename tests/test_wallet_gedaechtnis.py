@@ -212,8 +212,13 @@ def test_das_gedaechtnis_haengt_an_keiner_sperre():
     # gemeint war: eine zweite Rechnung neben der ersten.
     roots = subprocess.run(["grep", "-rn", "zeitraum_bilanz(", "--include=*.py", "--include=*.js",
                             str(BASE)], capture_output=True, text=True).stdout.splitlines()
+    # 22.09.2026: die Ausnahme galt nur fuer DIESE Testdatei — ein zweiter Test derselben
+    # Funktion (tests/test_wallet_profit.py) schlug damit an, obwohl ein Test sie
+    # selbstverstaendlich aufrufen darf. Verboten ist eine zweite Rechnung im BETRIEB, nicht das
+    # Pruefen der ersten.
+    # Fehlerklasse: eine Regel, die ihren Zweck zu eng fasst und dadurch das Testen bestraft.
     fremd = [z for z in roots
-             if "poly_money_broad.py" not in z and "test_wallet_gedaechtnis" not in z]
+             if "poly_money_broad.py" not in z and "/tests/" not in z.replace("\\", "/")]
     assert not fremd, "das Tages-Gedaechtnis rechnet woanders mit: %s" % fremd
 
     # Und die fertigen Felder duerfen im Tor nicht vorkommen. Die Karte darf sie zeigen; was

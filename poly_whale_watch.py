@@ -400,6 +400,26 @@ def track_record(scores: dict, wallet: str):
 # Welches Fenster die Karte zeigt. Die Zahl steht EINMAL hier; gerechnet wird sie in
 # `poly_money_broad.zeitraum_bilanz` und kommt als fertiges Feld `fenster7` / `fenster30` an.
 FENSTER_TAGE = 7
+# 🔴 22.09.2026 (Lucas: „Mir ist wichtig, dass wir den Profit und den ROI der letzten sieben und
+# 30 Tage auch mit tracken … mit CLV bin ich nicht so der groesste Fan, ich will halt immer den
+# Profit haben"). Beide Fenster auf die Karte, und in beiden das GELD zuerst.
+FENSTER_TAGE_ALLE = (7, 30)
+
+
+def _geld_zeile(f) -> str:
+    """Profit und ROI eines Zeitraums als eine Zeile. REIN.
+
+    Sagt ausdruecklich, wenn nichts gemessen wurde — „—" statt „0 $". Und sie nennt die
+    Abdeckung, wo sie kleiner ist als der Zeitraum: ein ROI aus 3 von 30 Auflösungen darf nicht
+    aussehen wie einer aus 30.
+    """
+    g, e, roi = (f or {}).get("gewinn"), (f or {}).get("einsatz"), (f or {}).get("roi")
+    n, n_geld = (f or {}).get("n") or 0, (f or {}).get("nGeld") or 0
+    if not isinstance(g, (int, float)) or not n_geld:
+        return "<i>Profit: noch nicht gemessen</i>"
+    teil = "" if n_geld >= n else " <i>(aus %d von %d)</i>" % (n_geld, n)
+    roitxt = "" if not isinstance(roi, (int, float)) else " · ROI %+.1f %%" % (roi * 100)
+    return "Profit <b>%s%s</b>%s%s" % ("+" if g >= 0 else "−", _usd(abs(g)), roitxt, teil)
 
 
 def _fenster(s) -> str:
@@ -508,18 +528,23 @@ def _wallet_block(scores: dict, wallet, rang=None) -> list:
     zeilen.append("   gesamt <b>%d/%d · %d %%</b>%s"
                   % (wins, n, round(wins / n * 100),
                      "" if clv is None else " · CLV %+.1fpp" % clv))
-    f = s.get("fenster%d" % FENSTER_TAGE) if isinstance(s, dict) else None
-    if isinstance(f, dict) and (f.get("n") or 0) >= MIN_TR and isinstance(f.get("wins"), int):
+    for tage in FENSTER_TAGE_ALLE:
+        f = s.get("fenster%d" % tage) if isinstance(s, dict) else None
+        if not (isinstance(f, dict) and (f.get("n") or 0) >= MIN_TR
+                and isinstance(f.get("wins"), int)):
+            continue
         fn, fw, fclv = f["n"], f["wins"], f.get("clv")
         seit, von = str(f.get("seit") or ""), str(f.get("von") or "")
         kurz = " (seit %s)" % _tag_kurz(seit) if seit and von and seit > von else ""
         zeilen.append("   %d Tage <b>%d/%d · %d %%</b>%s%s"
-                      % (FENSTER_TAGE, fw, fn, round(fw / fn * 100),
+                      % (tage, fw, fn, round(fw / fn * 100),
                          "" if not isinstance(fclv, (int, float)) else " · CLV %+.1fpp" % fclv,
                          kurz))
+        zeilen.append("      %s" % _geld_zeile(f))
     pnl = s.get("pnl")
     if isinstance(pnl, (int, float)):
-        zeilen.append("   lifetime <b>%s%s</b>" % ("+" if pnl >= 0 else "−", _usd(abs(pnl))))
+        zeilen.append("   lifetime <b>%s%s</b> <i>(alles, auch Wahlen/Krypto)</i>"
+                      % ("+" if pnl >= 0 else "−", _usd(abs(pnl))))
     return zeilen
 
 

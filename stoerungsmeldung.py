@@ -237,6 +237,10 @@ GEPRUEFT_KEIN_GELD = {
     "bet_move_fresh", "reverser_demoted", "pick_safe_variant", "safer_line_applied",
     "card_only_not_in_trade", "no_duplicate_picks", "steam_lag_no_dupes",
     "vorregistrierung", "betfair_liefert", "poly_global_liefert", "pinn_anker",
+    # 22.09.2026: Messung ueber die Messung — schlaegt er an, fehlt eine ZAHL (Profit/ROI je
+    # Zeitraum), es rechnet aber nichts falsch ab. Leer ist besser als falsch.
+    "wallet_profit_wird_gemessen",
+
     # 22.09.2026: kam mit dem ersten Pipeline-Lauf nach dem Bau von `check_stake_sammelt`
     # herein — die Rollout-Luecke, nicht ein neuer Waechter. Der Stake-Radar sammelt fremde
     # Grosswetten fuers Lernen; bleibt er stehen, wird weniger gemessen, es rechnet aber nichts

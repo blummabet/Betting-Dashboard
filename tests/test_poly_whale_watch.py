@@ -2512,11 +2512,25 @@ class TestDieKarteFuehrtMitDerWette(unittest.TestCase):
         self.assertNotIn("#1 · ✅ bewiesen", k)
         self.assertNotIn("der Sharp-Rangliste", k)
 
-    def test_der_wallet_block_ist_dreizeilig_und_gleich_gebaut(self):
+    def test_der_wallet_block_ist_gleich_gebaut(self):
+        """22.09.2026: der Block ist nicht mehr dreizeilig — unter jedem Zeitraum steht seit
+        heute der PROFIT (Lucas: „ich will halt immer den Profit haben"). Was der Test
+        festhaelt, ist deshalb nicht mehr die Anzahl, sondern die FORM: jede Zeile ist entweder
+        eine bekannte Kopfzeile oder eine eingerueckte Geld-Zeile darunter. Eine Anzahl haette
+        beim naechsten Zusatz wieder nur den Test gekostet, ohne etwas ueber die Karte zu sagen."""
         zeilen = [z for z in self._card().split("\n") if z.startswith("   ")]
-        self.assertEqual(len(zeilen), 3)
+        self.assertGreaterEqual(len(zeilen), 3)
         for z in zeilen:
-            self.assertRegex(z, r"^   (gesamt|7 Tage|lifetime) ")
+            self.assertRegex(z, r"^   (gesamt|7 Tage|30 Tage|lifetime) |^      (Profit|<i>Profit)")
+
+    def test_unter_jedem_zeitraum_steht_das_geld(self):
+        """⭐ Der eigentliche Punkt: eine Zeitraum-Zeile ohne ihre Geld-Zeile waere wieder nur
+        Trefferquote und CLV — genau das, was Lucas nicht reicht."""
+        zeilen = [z for z in self._card().split("\n") if z.startswith("   ")]
+        for i, z in enumerate(zeilen):
+            if z.startswith("   7 Tage ") or z.startswith("   30 Tage "):
+                self.assertLess(i + 1, len(zeilen), "nach %r fehlt die Geld-Zeile" % z[:14])
+                self.assertIn("Profit", zeilen[i + 1])
 
     def test_der_preis_steht_nur_einmal(self):
         """Stand er vorher oben UND in der Einstiegs-Zeile, liest man zweimal dieselbe Zahl."""

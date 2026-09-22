@@ -838,6 +838,56 @@ def check_proven_wallets_profitable(ctx):
                 "'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben.")
 
 
+# 🔴 22.09.2026 (Lucas: „Mir ist wichtig, dass wir den Profit und den ROI der letzten sieben und
+# 30 Tage auch mit tracken … mit CLV bin ich nicht so der groesste Fan, ich will halt immer den
+# Profit haben"). Seit heute rechnet `poly_money_broad` je abgerechneter Wallet-Position Gewinn
+# und Einsatz mit. Eine neue Messung, die still bei null bleibt, ist schlimmer als keine — sie
+# sieht auf dem Board aus wie ein Ergebnis. Also sieht ein Waechter zu, DASS sie waechst.
+PROFIT_FENSTER_TAGE = 3     # so weit zurueck wird gefragt, ob die Messung ankommt
+
+
+@poly_check
+def check_wallet_profit_wird_gemessen(ctx):
+    """Kommt die Geld-Messung bei den FRISCHEN Auflösungen an?
+
+    🔴 Erster Anlauf war ein Anteil ueber alle Wallets — und der ist am Tag der Einfuehrung
+    zwangslaeufig klein, ohne dass etwas kaputt waere: eine Wallet bekommt ihre erste Geld-Zeile
+    erst, wenn eine ihrer Positionen NACH der Einfuehrung aufloest. Ein Waechter, der am ersten
+    Tag rot ist und zwei Wochen spaeter gruen, ohne dass sich etwas geaendert hat, misst den
+    Kalender.
+
+    Gefragt wird deshalb nur nach den letzten `PROFIT_FENSTER_TAGE` Tagen: gab es dort
+    Auflösungen, und trug mindestens eine davon Gewinn und Einsatz? Das ist ab dem ersten Lauf
+    beantwortbar und bleibt beantwortbar.
+    Fehlerklasse, gegen die er steht: eine Messung, die nie beginnt, und niemand merkt es.
+    """
+    scores = (ctx.wallet_track.get("scores") or {})
+    ab = (ctx.now - timedelta(days=PROFIT_FENSTER_TAGE)).date().isoformat()
+    n_frisch = n_geld = 0
+    for s in scores.values():
+        if not isinstance(s, dict):
+            continue
+        for tag, v in ((s.get("tage") or {}).items()):
+            if not (isinstance(v, (list, tuple)) and len(v) >= 4) or str(tag) < ab:
+                continue
+            try:
+                n_frisch += int(v[0])
+                n_geld += int(v[6]) if len(v) >= 7 else 0
+            except (TypeError, ValueError):
+                continue
+    fails = []
+    if not n_frisch:
+        fails.append("keine Auflösung in den letzten %d Tagen — die Messung kann nicht anlaufen, "
+                     "und das ist selbst ein Befund" % PROFIT_FENSTER_TAGE)
+    elif not n_geld:
+        fails.append("%d Auflösung(en) in den letzten %d Tagen, davon KEINE mit Gewinn/Einsatz — "
+                     "beim Abrechnen kommt kein Preis an" % (n_frisch, PROFIT_FENSTER_TAGE))
+    return _chk("wallet_profit_wird_gemessen", "Wallet-Profit wird gemessen", "warn", fails,
+                "Seit 22.09. rechnet poly_money_broad je Auflösung Gewinn und Einsatz je Wallet "
+                "mit (Anteile x Einstieg). Kommt dort nichts an, sind Profit und ROI der "
+                "Zeitraeume leer — was besser ist als falsch, aber nicht das Ziel.")
+
+
 @poly_check
 def check_accuracy_backtest_fresh(ctx):
     """Der Genauigkeits-Backtest (poly_money_broad: 'folgt dem Geld / dem Preis?') ist die

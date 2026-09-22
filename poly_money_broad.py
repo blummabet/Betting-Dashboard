@@ -1040,7 +1040,57 @@ WALLET_UG_Z = 1.645
 WALLET_UG_MIN_N = 5
 
 
-def _wallet_zeit(s: dict, clv: float, win: bool, now) -> dict:
+# ── Was die Wallet VERDIENT hat (22.09.2026) ──────────────────────────────────────────────
+# 🔴 Lucas: „Mir ist da wirklich wichtig, dass wir den Profit und den ROI der letzten sieben und
+# 30 Tage auch mit tracken. Du weisst ja, mit CLV bin ich jetzt nicht so der groesste Fan. Ich
+# will halt immer den Profit haben."
+#
+# Er hat recht, und das Loch war groesser als es aussieht: das Tages-Gedaechtnis vom 17.09. haelt
+# je Tag {n, CLV-Summe, Treffer, CLV-Quadratsumme} — vier Zahlen, KEINE davon Geld. `fenster7`
+# und `fenster30` konnten deshalb nur Trefferquote und CLV sagen. Das einzige Geld-Feld an einer
+# Wallet ist `pnl`, und das ist Polymarkets LEBENS-Bilanz ueber alles, auch Wahlen und Krypto —
+# es beantwortet „wie lief der Sport diese Woche" nicht einmal ansatzweise.
+# Fehlerklasse: ein Zeitraum, der alles ausser der Frage misst, die gestellt wurde.
+#
+# Gerechnet wird aus Zahlen, die beim Abrechnen ohnehin dastehen — kein zusaetzlicher Call:
+#
+#     Anteile = usd / lastPrice        (beide im selben Durchlauf gesetzt)
+#     Einsatz = Anteile × Einstieg     (Einstieg = echter Ø-Einstieg aus /positions)
+#     Gewinn  = Anteile − Einsatz      bei Treffer  (der Gewinner zahlt 1,00 je Anteil)
+#             = −Einsatz               sonst
+#
+# ⚠️ Was diese Zahl NICHT ist, und das gehoert an jede Anzeige: sie unterstellt, dass die Wallet
+# bis zur Aufloesung haelt. Wir sehen Positionen, keine Trades — steigt sie vorher aus, buchen
+# wir einen Verlust, den sie nie genommen hat (oder umgekehrt). Es ist die Antwort auf „haette
+# sich Mitgehen gelohnt", nicht auf „was hat die Wallet verdient".
+def _anteile_einsatz(usd, last_price, entry):
+    """(Anteile, Einsatz) einer Position — oder (None, None). REIN.
+
+    None heisst „nicht rechenbar" und nie 0: eine Position ohne brauchbaren Preis darf den
+    Nenner eines ROI nicht mit einer Null verduennen.
+    """
+    try:
+        u, lp, en = float(usd or 0), float(last_price), float(entry)
+    except (TypeError, ValueError):
+        return None, None
+    if not (u > 0 and 0 < lp < 1 and 0 < en < 1):
+        return None, None
+    anteile = u / lp
+    return anteile, anteile * en
+
+
+def geld_aus_position(usd, last_price, entry, win):
+    """(Gewinn, Einsatz) in Dollar — oder (None, None). REIN.
+
+    Der Gewinner zahlt 1,00 je Anteil: aus `Anteile` Stueck werden `Anteile` Dollar.
+    """
+    anteile, einsatz = _anteile_einsatz(usd, last_price, entry)
+    if anteile is None:
+        return None, None
+    return (round(anteile - einsatz, 2) if win else round(-einsatz, 2)), round(einsatz, 2)
+
+
+def _wallet_zeit(s: dict, clv: float, win: bool, now, gewinn=None, einsatz=None) -> dict:
     """Zeitstempel und gleitendes Fenster einer Wallet fortschreiben. REIN/testbar.
 
     `recent` haelt die letzten WALLET_FENSTER Auflösungen als kompakte Tripel
@@ -1066,7 +1116,19 @@ def _wallet_zeit(s: dict, clv: float, win: bool, now) -> dict:
             if isinstance(v, (list, tuple)) and len(v) >= 4}
     e = tage.get(tag) or [0, 0.0, 0, 0.0]
     c = float(clv)
-    tage[tag] = [e[0] + 1, round(e[1] + c, 2), e[2] + (1 if win else 0), round(e[3] + c * c, 2)]
+    # 22.09.2026: zwei Stellen mehr je Tag — Gewinn und Einsatz in Dollar (s. `geld_aus_position`).
+    # Die Zeilen von VOR heute haben nur vier Stellen und bleiben so; `zeitraum_bilanz` zaehlt
+    # deshalb getrennt, ueber wie viele Auflösungen die Geld-Zahl ueberhaupt geht. Eine
+    # Alt-Zeile stillschweigend als „0 $ Gewinn bei 0 $ Einsatz" mitzurechnen waere ein Nenner,
+    # den es nie gab.
+    geld = (len(e) >= 6, isinstance(gewinn, (int, float)) and isinstance(einsatz, (int, float)))
+    neu = [e[0] + 1, round(e[1] + c, 2), e[2] + (1 if win else 0), round(e[3] + c * c, 2)]
+    if geld[0] or geld[1]:
+        alt_g = float(e[4]) if len(e) >= 6 else 0.0
+        alt_s = float(e[5]) if len(e) >= 6 else 0.0
+        neu += [round(alt_g + (gewinn or 0.0), 2), round(alt_s + (einsatz or 0.0), 2),
+                (int(e[6]) if len(e) >= 7 else 0) + (1 if geld[1] else 0)]
+    tage[tag] = neu
     s["tage"] = {k: tage[k] for k in sorted(tage)[-WALLET_TAGE_KEEP:]}
     return s
 
@@ -1157,6 +1219,8 @@ def zeitraum_bilanz(s: dict, bis, tage: int) -> dict | None:
     ab = (ende - timedelta(days=int(tage) - 1)).isoformat()
     n = wins = 0
     summe = quad = 0.0
+    gewinn = einsatz = 0.0
+    n_geld = 0
     for k in sorted(t):
         v = t[k]
         if not (isinstance(v, (list, tuple)) and len(v) >= 4) or not (ab <= str(k) <= ende.isoformat()):
@@ -1165,10 +1229,25 @@ def zeitraum_bilanz(s: dict, bis, tage: int) -> dict | None:
             n += int(v[0]); summe += float(v[1]); wins += int(v[2]); quad += float(v[3])
         except (TypeError, ValueError):
             continue
+        # 22.09.2026 (Lucas: „ich will halt immer den Profit haben"). Die Geld-Stellen gibt es
+        # erst ab heute; Tage davor haben vier Stellen und liefern nichts. `nGeld` sagt, ueber
+        # wie viele Auflösungen die Geld-Zahl wirklich geht — ohne das waere ein ROI aus drei
+        # von dreissig Auflösungen von einem aus dreissig nicht zu unterscheiden.
+        if len(v) >= 6:
+            try:
+                gewinn += float(v[4]); einsatz += float(v[5])
+                n_geld += int(v[6]) if len(v) >= 7 else 0
+            except (TypeError, ValueError):
+                pass
     if not n:
         return None
     schnitt = summe / n
     aus = {"n": n, "wins": wins, "clv": round(schnitt, 2), "hit": round(wins / n, 4),
+           # Das Geld. `None` heisst „fuer diesen Zeitraum nicht gemessen" und nie „null Gewinn".
+           "gewinn": round(gewinn, 2) if n_geld else None,
+           "einsatz": round(einsatz, 2) if n_geld else None,
+           "roi": (round(gewinn / einsatz, 4) if (n_geld and einsatz > 0) else None),
+           "nGeld": n_geld,
            "von": ab, "bis": ende.isoformat(), "clvUg": None,
            # 18.09.2026: das Tages-Gedaechtnis ist am 17.09. angelegt worden. Ein Fenster von
            # „30 Tagen" enthaelt heute einen einzigen Tag — und saehe ohne dieses Feld genauso
@@ -1998,7 +2077,15 @@ def update_wallet_track(prev, markets, now=None, keep_h=HIST_KEEP_H, frozen=None
         if _win:
             s["wins"] += 1
         s["usd"] += e.get("usd") or 0
-        _wallet_zeit(s, clv, _win, now)
+        # 22.09.2026: das Geld dieser Position — s. `geld_aus_position`. Beide Zahlen wandern in
+        # das Tages-Gedaechtnis UND in die Lebenssumme dieser Wallet, getrennt von `pnl` (das ist
+        # Polymarkets Lebensbilanz ueber alles, auch Wahlen und Krypto).
+        _gewinn, _einsatz = geld_aus_position(e.get("usd"), e.get("lastPrice"), entry, _win)
+        if _gewinn is not None:
+            s["gewinn"] = round((s.get("gewinn") or 0.0) + _gewinn, 2)
+            s["einsatz"] = round((s.get("einsatz") or 0.0) + _einsatz, 2)
+            s["nGeld"] = (s.get("nGeld") or 0) + 1
+        _wallet_zeit(s, clv, _win, now, gewinn=_gewinn, einsatz=_einsatz)
         _wallet_sport(s, e.get("sport"), clv, _win)
         _wallet_vorlauf(s, e.get("htkFirst"), clv, _win)
         del openp[ok]
