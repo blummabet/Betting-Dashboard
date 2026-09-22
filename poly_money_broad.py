@@ -2202,7 +2202,13 @@ def update_wallet_track(prev, markets, now=None, keep_h=HIST_KEEP_H, frozen=None
     # waere der erste Schritt zurueck zu einer zweiten Rechnung neben der ersten.
     _heute = now.date().isoformat()
     for _s in scores.values():
-        if not isinstance(_s, dict) or not _s.get("tage"):
+        # 🔴 22.09.2026, direkt nach dem ersten Nachtrag-Lauf: hier stand nur `not _s.get("tage")`.
+        # 2.494 Wallets haben einen rekonstruierten Verlauf, aber nur 386 ein laufendes
+        # Tages-Gedaechtnis (das beginnt erst ab n>=8) — fuer die uebrigen 2.108 wurde also nie
+        # ein Fenster gerechnet, obwohl ihre Zahlen dalagen. Die Rueckrechnung war da, die
+        # Anzeige blieb leer.
+        # Fehlerklasse: eine Vorbedingung, die einen Weg kennt und den zweiten nicht.
+        if not isinstance(_s, dict) or not (_s.get("tage") or _s.get("tageNachtrag")):
             continue
         _s["fenster7"] = zeitraum_bilanz(_s, _heute, 7)
         _s["fenster30"] = zeitraum_bilanz(_s, _heute, 30)

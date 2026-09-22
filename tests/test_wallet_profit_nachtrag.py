@@ -23,6 +23,7 @@ eigenes Feld, und sie hört beim heutigen Tag auf.
 import os
 import sys
 import unittest
+from datetime import datetime, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import poly_money_broad as B
@@ -187,3 +188,34 @@ class TestDieAnzeigeSagtDassEsRueckgerechnetIst(unittest.TestCase):
     def test_rein_gemessen_traegt_keinen_zusatz(self):
         t = self.W._geld_zeile(self._f(0))
         self.assertNotIn("rückgerechnet", t)
+
+
+class TestDerLaufRechnetAuchNurRekonstruierteWallets(unittest.TestCase):
+    """🔴 Direkt nach dem ersten Nachtrag-Lauf gemessen: 2.494 Wallets hatten einen
+    rekonstruierten Verlauf, aber nur 386 ein Fenster. Das laufende Tages-Gedächtnis beginnt
+    erst ab n>=8 — und die Schleife, die `fenster7`/`fenster30` rechnet, verlangte genau das.
+    Für 2.108 Wallets lagen die Zahlen da und wurden nie gerechnet.
+
+    Fehlerklasse: eine Vorbedingung, die einen Weg kennt und den zweiten nicht.
+    """
+
+    from datetime import timedelta
+    T0 = datetime(2026, 9, 22, 12, 0, tzinfo=timezone.utc)
+
+    def _track_mit(self, score):
+        return {"open": {}, "scores": {"0xw": score}}
+
+    def test_eine_wallet_mit_nur_nachtrag_bekommt_ihre_fenster(self):
+        t = self._track_mit({"n": 3, "clvSumPP": 0.0, "wins": 1, "usd": 0,
+                             "tageNachtrag": {"2026-09-18": [5, 120.0, 300.0]}})
+        raus = B.update_wallet_track(t, [], now=self.T0)
+        s = raus["scores"]["0xw"]
+        self.assertIsNotNone(s.get("fenster30"), "ohne Fenster bleibt die Rückrechnung unsichtbar")
+        self.assertEqual(s["fenster30"]["gewinn"], 120.0)
+        self.assertEqual(s["fenster30"]["roi"], 0.4)
+
+    def test_eine_wallet_ganz_ohne_verlauf_bekommt_keine(self):
+        """Gegenprobe: die Bedingung darf nicht einfach wegfallen."""
+        t = self._track_mit({"n": 3, "clvSumPP": 0.0, "wins": 1, "usd": 0})
+        s = B.update_wallet_track(t, [], now=self.T0)["scores"]["0xw"]
+        self.assertIsNone(s.get("fenster30"))
