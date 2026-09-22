@@ -137,6 +137,10 @@ EBENE = {
     "j-league-2": 2, "brasileiro-serie-b": 2, "primera-b": 2, "k-league-2": 2,
     "eerste-divisie": 2, "segunda-liga": 2, "liga-de-expansion-mx-apertura": 2,
     "primera-nacional": 2, "ykkonen": 2, "challenge-league": 2, "ligapro-primera-b": 2,
+    # 22.09.2026 (CI-Wachhund): Irans zweite Ebene unter der Persian Gulf Pro League. Beleg:
+    # „Havadar SC - Besat Kermanshah". Die Ordnungszahl-Regel greift nicht — der Name traegt sie
+    # nicht, und geraten wird hier nichts.
+    "azadegan-league": 2,
     "thai-league-2": 2, "liga-2": 2, "fnl": 2, "segunda-division": 2, "pervaya-liga": 2,
     "mls-next-pro": 2, "1-lig": 2, "first-division-b": 2, "2nd-division": 2,
     # 10.09.2026 (CI-Wachhund): „superettan" — Schwedens ZWEITE Klasse, obwohl „super" im
@@ -166,6 +170,10 @@ EBENE = {
     # die dritte Ebene unter Liga MX und Liga de Expansion MX. Genau deshalb wird hier nicht
     # nach Wortbestandteilen geraten: „premier" und „primera" stehen in beiden Richtungen.
     "liga-primera-premier": 3,
+    # 22.09.2026 (CI-Wachhund, „shillong-premier-league"): „Premier" heisst hier so wenig wie bei
+    # der Liga Primera. Beleg: „Langsning FC - Nangkiew Irat SC" — die Shillong Premier League
+    # ist der Staats-Wettbewerb von Meghalaya, also unterhalb der I-League und der ISL.
+    "shillong-premier-league": 3,
     "liga-portugal-3": 3, "tweede-divisie": 3, "national": 3, "national-league": 3,
     # 13.09.2026 (CI-Wachhund): das Campeonato de Portugal ist die DRITTE portugiesische Klasse
     # (unter Liga Portugal und Liga Portugal 2) — der Name klingt nach Landesmeisterschaft, ist
@@ -308,6 +316,9 @@ ART = {
     # falsch: Vereinswettbewerbe haben ebenfalls Qualifikationsrunden (Champions League), und
     # deren Teilnehmer HABEN eine Spielklasse.
     "africa-cup-of-nations-qualification": "kontinental",
+    # 22.09.2026 (CI-Wachhund, „concacaf-nations-league"): vierter Fall derselben Art. Beleg aus
+    # dem Ledger: „Bahamas - Saint-Martin" — Nationalauswahlen, keine Spielklasse.
+    "concacaf-nations-league": "kontinental",
     # 14.09.2026 (CI-Wachhund): die Professional Development League ist Englands U21-Reserve-
     # wettbewerb. „Swansea City - Huddersfield Town" sieht nach Profifussball aus, es sind die
     # Nachwuchsmannschaften — die Namensregel greift nicht, weil weder U21 noch „youth" im
