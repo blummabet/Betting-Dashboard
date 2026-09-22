@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-09-22T12:35:20.519147+00:00",
+ "updatedAt": "2026-09-22T13:05:31.497796+00:00",
  "stake": 10.0,
  "expired": 0,
  "condDrift": 0,
@@ -246,64 +246,6 @@
   }
  },
  "open": {
-  "spl-haz-taa-2026-09-08-more-markets|Over": {
-   "key": "spl-haz-taa-2026-09-08-more-markets",
-   "side": "Over",
-   "verdict": "BET",
-   "conv": 5,
-   "league": "SOCCER",
-   "cat": "Fußball",
-   "entryPrice": 0.71,
-   "firstTs": "2026-09-08T16:08:27.175892+00:00",
-   "lastPrice": 0.475,
-   "lastTs": "2026-09-22T12:35:20.519147+00:00",
-   "htkAtEntry": -0.1736477777777778,
-   "public": false,
-   "ohneWallet": false,
-   "reasons": [
-    "großes Geld auf Over (71%) → $21K",
-    "🔥 scharfe Wallet (200/363, 55% · +$3.66M)"
-   ],
-   "signals": [
-    "money",
-    "sharp"
-   ],
-   "stake": 10.0,
-   "ev": "2026-09-01",
-   "movePreEntryPP": -4.0,
-   "cond": "0xbd09938bf31a0f6fd1030f571b20fb7655153537663bb9cd94ed8e7d225b4c67",
-   "frage": "Al Hazem SC vs. Al Taawoun Saudi Club: O/U 2.5"
-  },
-  "ucl-aek1-lin2-2026-09-08-more-markets|Under": {
-   "key": "ucl-aek1-lin2-2026-09-08-more-markets",
-   "side": "Under",
-   "verdict": "BET",
-   "conv": 7,
-   "league": "SOCCER",
-   "cat": "Fußball",
-   "entryPrice": 0.705,
-   "firstTs": "2026-09-08T17:08:04.501019+00:00",
-   "lastPrice": 0.605,
-   "lastTs": "2026-09-22T12:35:20.519147+00:00",
-   "htkAtEntry": -0.3228330555555556,
-   "public": true,
-   "ohneWallet": false,
-   "reasons": [
-    "großes Geld auf Under (70%) → $283K",
-    "Steam läuft rein (+2.0pp)",
-    "🔥 scharfe Wallet (200/363, 55% · +$3.66M)"
-   ],
-   "signals": [
-    "money",
-    "steam",
-    "sharp"
-   ],
-   "stake": 10.0,
-   "ev": "2026-09-01",
-   "movePreEntryPP": 2.0,
-   "cond": "0x46180728114a9a2dab0de382593a90150990cfda55d195cedc406bdf84a03fce",
-   "frage": "AEK vs. LASK Linz: O/U 3.5"
-  },
   "cs2-run2-bw-2026-09-22|Bushido Wildcats": {
    "key": "cs2-run2-bw-2026-09-22",
    "side": "Bushido Wildcats",
@@ -314,7 +256,7 @@
    "entryPrice": 0.505,
    "firstTs": "2026-09-22T08:05:32.099033+00:00",
    "lastPrice": 0.51,
-   "lastTs": "2026-09-22T12:35:20.519147+00:00",
+   "lastTs": "2026-09-22T13:05:31.497796+00:00",
    "htkAtEntry": 2.4584780555555557,
    "public": false,
    "ohneWallet": false,
@@ -342,7 +284,7 @@
    "entryPrice": 0.725,
    "firstTs": "2026-09-22T11:04:57.842725+00:00",
    "lastPrice": 0.475,
-   "lastTs": "2026-09-22T12:35:20.519147+00:00",
+   "lastTs": "2026-09-22T13:05:31.497796+00:00",
    "htkAtEntry": -1.0477566666666667,
    "public": false,
    "ohneWallet": false,
@@ -370,7 +312,7 @@
    "entryPrice": 0.71,
    "firstTs": "2026-09-22T12:06:52.192316+00:00",
    "lastPrice": 0.505,
-   "lastTs": "2026-09-22T12:35:20.519147+00:00",
+   "lastTs": "2026-09-22T13:05:31.497796+00:00",
    "htkAtEntry": -1.0676805555555555,
    "public": false,
    "ohneWallet": false,
@@ -27560,32 +27502,87 @@
    "htkAtEntry": 1.9617180555555556,
    "settledTs": "2026-09-22T12:35:20.519147+00:00",
    "resolvedTs": "2026-09-22T12:35:19.423879+00:00"
+  },
+  {
+   "key": "spl-haz-taa-2026-09-08-more-markets",
+   "side": "Over",
+   "verdict": "BET",
+   "conv": 5,
+   "league": "SOCCER",
+   "cat": "Fußball",
+   "entryPrice": 0.71,
+   "closePrice": 0.475,
+   "result": "loss",
+   "winner": "Under",
+   "pnl": -10.0,
+   "clvPP": -23.5,
+   "stake": 10.0,
+   "public": false,
+   "ohneWallet": false,
+   "signals": [
+    "money",
+    "sharp"
+   ],
+   "firstTs": "2026-09-08T16:08:27.175892+00:00",
+   "ev": "2026-09-01",
+   "htkAtEntry": -0.1736477777777778,
+   "settledTs": "2026-09-22T13:05:31.497796+00:00",
+   "resolvedTs": "2026-09-08T20:08:15.877908+00:00",
+   "ausEndstand": true
+  },
+  {
+   "key": "ucl-aek1-lin2-2026-09-08-more-markets",
+   "side": "Under",
+   "verdict": "BET",
+   "conv": 7,
+   "league": "SOCCER",
+   "cat": "Fußball",
+   "entryPrice": 0.705,
+   "closePrice": 0.605,
+   "result": "win",
+   "winner": "Under",
+   "pnl": 4.18,
+   "clvPP": -10.0,
+   "stake": 10.0,
+   "public": true,
+   "ohneWallet": false,
+   "signals": [
+    "money",
+    "steam",
+    "sharp"
+   ],
+   "firstTs": "2026-09-08T17:08:04.501019+00:00",
+   "ev": "2026-09-01",
+   "htkAtEntry": -0.3228330555555556,
+   "settledTs": "2026-09-22T13:05:31.497796+00:00",
+   "resolvedTs": "2026-09-08T19:08:20.895586+00:00",
+   "ausEndstand": true
   }
  ],
  "agg": {
   "all": {
-   "n": 1111,
-   "wins": 709,
-   "hit": 0.6382,
-   "pnl": -68.3,
-   "stake": 11110.0,
-   "roi": -0.0061,
-   "roiUg": -0.047,
+   "n": 1113,
+   "wins": 710,
+   "hit": 0.6379,
+   "pnl": -74.12,
+   "stake": 11130.0,
+   "roi": -0.0067,
+   "roiUg": -0.0474,
    "belegt": false,
-   "clvAvg": -1.66,
-   "clvUg": -2.03
+   "clvAvg": -1.69,
+   "clvUg": -2.06
   },
   "public": {
-   "n": 231,
-   "wins": 165,
-   "hit": 0.7143,
-   "pnl": 111.06,
-   "stake": 2310.0,
-   "roi": 0.0481,
-   "roiUg": -0.028,
+   "n": 232,
+   "wins": 166,
+   "hit": 0.7155,
+   "pnl": 115.24,
+   "stake": 2320.0,
+   "roi": 0.0497,
+   "roiUg": -0.0261,
    "belegt": false,
-   "clvAvg": -0.82,
-   "clvUg": -1.45
+   "clvAvg": -0.86,
+   "clvUg": -1.49
   },
   "publicBlocked": {
    "n": 5,
@@ -27612,25 +27609,25 @@
    "clvUg": -3.57
   },
   "walletTor": {
-   "nMit": 231,
+   "nMit": 232,
    "nOhne": 164,
-   "diffPP": 3.49,
-   "lo": -9.52,
-   "hi": 16.43,
+   "diffPP": 3.65,
+   "lo": -9.43,
+   "hi": 16.74,
    "urteil": "nicht entschieden",
    "grund": "das Band schliesst die Null ein"
   },
   "bettable": {
-   "n": 1033,
-   "wins": 675,
-   "hit": 0.6534,
-   "pnl": 187.4,
-   "stake": 10330.0,
-   "roi": 0.0181,
-   "roiUg": -0.0241,
+   "n": 1035,
+   "wins": 676,
+   "hit": 0.6531,
+   "pnl": 181.58,
+   "stake": 10350.0,
+   "roi": 0.0175,
+   "roiUg": -0.0247,
    "belegt": false,
-   "clvAvg": -1.64,
-   "clvUg": -2.02
+   "clvAvg": -1.67,
+   "clvUg": -2.05
   },
   "blocked": {
    "n": 78,
@@ -27670,16 +27667,16 @@
     "clvUg": -3.43
    },
    "Fußball": {
-    "n": 551,
-    "wins": 314,
-    "hit": 0.5699,
-    "pnl": -69.92,
-    "stake": 5510.0,
-    "roi": -0.0127,
-    "roiUg": -0.0801,
+    "n": 553,
+    "wins": 315,
+    "hit": 0.5696,
+    "pnl": -75.74,
+    "stake": 5530.0,
+    "roi": -0.0137,
+    "roiUg": -0.0809,
     "belegt": false,
-    "clvAvg": -1.39,
-    "clvUg": -1.92
+    "clvAvg": -1.45,
+    "clvUg": -1.98
    },
    "Kampfsport": {
     "n": 14,
@@ -27756,16 +27753,16 @@
     "clvUg": null
    },
    "5": {
-    "n": 490,
+    "n": 491,
     "wins": 307,
-    "hit": 0.6265,
-    "pnl": -110.95,
-    "stake": 4900.0,
-    "roi": -0.0226,
-    "roiUg": -0.0876,
+    "hit": 0.6253,
+    "pnl": -120.95,
+    "stake": 4910.0,
+    "roi": -0.0246,
+    "roiUg": -0.0896,
     "belegt": false,
-    "clvAvg": -2.54,
-    "clvUg": -3.13
+    "clvAvg": -2.58,
+    "clvUg": -3.18
    },
    "6": {
     "n": 404,
@@ -27780,16 +27777,16 @@
     "clvUg": -2.24
    },
    "7": {
-    "n": 171,
-    "wins": 112,
-    "hit": 0.655,
-    "pnl": 87.43,
-    "stake": 1710.0,
-    "roi": 0.0511,
-    "roiUg": -0.0515,
+    "n": 172,
+    "wins": 113,
+    "hit": 0.657,
+    "pnl": 91.61,
+    "stake": 1720.0,
+    "roi": 0.0533,
+    "roiUg": -0.0488,
     "belegt": false,
-    "clvAvg": -0.05,
-    "clvUg": -0.58
+    "clvAvg": -0.11,
+    "clvUg": -0.64
    },
    "8": {
     "n": 23,
@@ -27830,16 +27827,16 @@
   },
   "byVerdict": {
    "BET": {
-    "n": 1111,
-    "wins": 709,
-    "hit": 0.6382,
-    "pnl": -68.3,
-    "stake": 11110.0,
-    "roi": -0.0061,
-    "roiUg": -0.047,
+    "n": 1113,
+    "wins": 710,
+    "hit": 0.6379,
+    "pnl": -74.12,
+    "stake": 11130.0,
+    "roi": -0.0067,
+    "roiUg": -0.0474,
     "belegt": false,
-    "clvAvg": -1.66,
-    "clvUg": -2.03
+    "clvAvg": -1.69,
+    "clvUg": -2.06
    }
   },
   "bySignal": {
@@ -27856,16 +27853,16 @@
     "clvUg": -1.29
    },
    "money": {
-    "n": 983,
-    "wins": 643,
-    "hit": 0.6541,
-    "pnl": -60.08,
-    "stake": 9830.0,
-    "roi": -0.0061,
-    "roiUg": -0.0465,
+    "n": 985,
+    "wins": 644,
+    "hit": 0.6538,
+    "pnl": -65.9,
+    "stake": 9850.0,
+    "roi": -0.0067,
+    "roiUg": -0.047,
     "belegt": false,
-    "clvAvg": -1.82,
-    "clvUg": -2.23
+    "clvAvg": -1.85,
+    "clvUg": -2.26
    },
    "pinn": {
     "n": 11,
@@ -27880,28 +27877,28 @@
     "clvUg": null
    },
    "sharp": {
-    "n": 603,
-    "wins": 394,
-    "hit": 0.6534,
-    "pnl": 62.0,
-    "stake": 6030.0,
-    "roi": 0.0103,
-    "roiUg": -0.046,
+    "n": 605,
+    "wins": 395,
+    "hit": 0.6529,
+    "pnl": 56.18,
+    "stake": 6050.0,
+    "roi": 0.0093,
+    "roiUg": -0.0469,
     "belegt": false,
-    "clvAvg": -1.53,
-    "clvUg": -2.01
+    "clvAvg": -1.58,
+    "clvUg": -2.06
    },
    "steam": {
-    "n": 364,
-    "wins": 240,
-    "hit": 0.6593,
-    "pnl": 5.07,
-    "stake": 3640.0,
-    "roi": 0.0014,
-    "roiUg": -0.0642,
+    "n": 365,
+    "wins": 241,
+    "hit": 0.6603,
+    "pnl": 9.25,
+    "stake": 3650.0,
+    "roi": 0.0025,
+    "roiUg": -0.0629,
     "belegt": false,
-    "clvAvg": -1.92,
-    "clvUg": -2.59
+    "clvAvg": -1.94,
+    "clvUg": -2.62
    }
   },
   "byKalibrierung": {

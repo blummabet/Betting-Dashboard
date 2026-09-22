@@ -70,7 +70,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "37 Karte(n) · 0 auch public"
+      "note": "38 Karte(n) · 0 auch public"
     },
     {
       "id": "public_push_buch",
@@ -94,12 +94,9 @@
       "id": "settlement_alive",
       "label": "Settlement lebt (keine ewig offenen Positionen)",
       "severity": "error",
-      "ok": false,
-      "nFail": 2,
-      "failures": [
-        "spl-haz-taa-2026-09-08-more-markets: seit 13.9 Tagen offen — Bündel: der Eintrag kennt seinen Markt, die Auflösung nicht (Altbestand)",
-        "ucl-aek1-lin2-2026-09-08-more-markets: seit 13.8 Tagen offen — Bündel: der Eintrag kennt seinen Markt, die Auflösung nicht (Altbestand)"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen. Der Grund steht an jeder Zeile — er ist bei jeder ein anderer."
     },
     {
@@ -118,7 +115,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Fällige Märkte je Liga, die ihre Auflösung finden — nur ab dem Beginn des Auflösungsbuchs (2026-09-08); 1914 ältere Märkte bleiben draussen, fuer sie kann es keine geben. < 60% = Settlement läuft wirklich ins Leere."
+      "note": "Fällige Märkte je Liga, die ihre Auflösung finden — nur ab dem Beginn des Auflösungsbuchs (2026-09-08); 1912 ältere Märkte bleiben draussen, fuer sie kann es keine geben. < 60% = Settlement läuft wirklich ins Leere."
     },
     {
       "id": "proven_wallets_profitable",
@@ -134,6 +131,15 @@
         "   0x4bff30af91… n=92 Treffer 50% P&L $-2,420,880"
       ],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
+    },
+    {
+      "id": "wallet_profit_wird_gemessen",
+      "label": "Wallet-Profit wird gemessen",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Seit 22.09. rechnet poly_money_broad je Auflösung Gewinn und Einsatz je Wallet mit (Anteile x Einstieg). Kommt dort nichts an, sind Profit und ROI der Zeitraeume leer — was besser ist als falsch, aber nicht das Ziel."
     },
     {
       "id": "accuracy_backtest_fresh",
@@ -172,6 +178,6 @@
       "note": "poly_direct_bets.py rechnet über poly_resolutions.json ab. Hängt ein Bet, kennt Poly den Ausgang nicht (Markt noch offen/obskur) oder der Slug passt nicht — dann fehlt echtes Geld in der Bilanz."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-09-22T12:35:50.993850+00:00"
+  "nFail": 1,
+  "generatedAt": "2026-09-22T13:06:01.556016+00:00"
 }
