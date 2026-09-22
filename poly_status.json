@@ -70,7 +70,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "39 Karte(n) · 0 auch public"
+      "note": "40 Karte(n) · 0 auch public"
     },
     {
       "id": "public_push_buch",
@@ -88,15 +88,17 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "1101 geprueft, davon 129 abgeschnitten"
+      "note": "1101 geprueft, davon 131 abgeschnitten"
     },
     {
       "id": "settlement_alive",
       "label": "Settlement lebt (keine ewig offenen Positionen)",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "mlb-tb-nyy-2026-05-23: seit 122.7 Tagen offen — keine Auflösung gefunden"
+      ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen. Der Grund steht an jeder Zeile — er ist bei jeder ein anderer."
     },
     {
@@ -115,7 +117,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Fällige Märkte je Liga, die ihre Auflösung finden — nur ab dem Beginn des Auflösungsbuchs (2026-09-08); 1902 ältere Märkte bleiben draussen, fuer sie kann es keine geben. < 60% = Settlement läuft wirklich ins Leere."
+      "note": "Fällige Märkte je Liga, die ihre Auflösung finden — nur ab dem Beginn des Auflösungsbuchs (2026-09-08); 1903 ältere Märkte bleiben draussen, fuer sie kann es keine geben. < 60% = Settlement läuft wirklich ins Leere."
     },
     {
       "id": "proven_wallets_profitable",
@@ -178,6 +180,6 @@
       "note": "poly_direct_bets.py rechnet über poly_resolutions.json ab. Hängt ein Bet, kennt Poly den Ausgang nicht (Markt noch offen/obskur) oder der Slug passt nicht — dann fehlt echtes Geld in der Bilanz."
     }
   ],
-  "nFail": 1,
-  "generatedAt": "2026-09-22T16:07:03.029324+00:00"
+  "nFail": 2,
+  "generatedAt": "2026-09-22T16:36:24.697016+00:00"
 }
