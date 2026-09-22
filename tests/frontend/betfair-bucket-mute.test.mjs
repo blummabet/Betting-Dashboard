@@ -50,7 +50,7 @@ test('das Badge färbt nur, wo ein Urteil existiert', () => {
 });
 
 test('die Kopfzeile nennt die richtige Schwelle', () => {
-  assert.match(JS, /Urteil erst ab n≥30 \(Rendite-Untergrenze\)/);
+  assert.match(JS, /Urteil erst ab n≥30 \(Rendite-Untergrenze — KEIN CLV\)/);
   assert.ok(!/CLV-Bucket = hist\. Kante je Liga \(n≥10\)/.test(JS));
 });
 

@@ -1052,7 +1052,12 @@
   }
 
   // 17.08.2026 (Lucas): 🖥️ TERMINAL — dichtes Profi-Board + Drilldown. Rein lesend & additiv.
-  // Board: Konsens (faire Pinnacle-% -> Edge) + Richtung + Poly-Gegencheck + CLV-Bucket je Liga.
+  // Board: Konsens (faire Pinnacle-% -> Edge) + Richtung + Poly-Gegencheck + Liga-Bilanz.
+  // 🔴 22.09.2026 (Lucas: „check ob wir CLV so implementiert haben, dass es irgendwas blockt").
+  // Die Spalte hiess bis heute „CLV-Bucket" und zeigte eine RENDITE-Untergrenze. Seit dem
+  // 04.09. entscheidet hier `roiUg`, der Name ist seither falsch — und er ist die teuerste
+  // Sorte falsch: er behauptet, der CLV wuerde hier muten. Das Mute laeuft auf der Rendite.
+  // Fehlerklasse: eine Beschriftung, die etwas anderes verspricht als die Zahl darunter.
   // Drilldown: Preis-Kurve (Verlauf) + Volumen, gematcht-je-Quote, inferierte Back/Lay-Richtung, ½-Kelly in €.
   function _tKoTxt(iso){ if(!iso) return '—'; var t=Date.parse(String(iso)); if(isNaN(t)) return '—';
     var m=Math.round((t-Date.now())/60000); if(m<0) return 'live'; if(m<60) return 'in '+m+'′'; return 'in '+Math.floor(m/60)+':'+('0'+(m%60)).slice(-2); }
@@ -1061,7 +1066,7 @@
   function _tFair(g){ var s=g.moneySide, p=(g.pinn&&typeof g.pinn[s]==='number')?g.pinn[s]:null; return (p&&p>0)?(1/p):null; }
   function _tBucket(g){ var t=(_bf.track&&_bf.track.byLeagueMarket)||{}; return t[(g.league||'')+'|Match Odds']||null; }
   // 17.08.2026 (Lucas P1): Auto-Mute — Zeilen, die keine handelbare Kante sind, ausgrauen & nach unten:
-  // (a) kein Pinnacle-Anker (edge==null -> die illiquiden @110/@230-Ligen), (b) historisch schwacher CLV-Bucket.
+  // (a) kein Pinnacle-Anker (edge==null -> die illiquiden @110/@230-Ligen), (b) historisch schwache Liga-Bilanz.
   //
   // 🔴 04.09.2026 (Lucas: „mach ma mal Betfair-Check"). Bedingung (b) war falsch, und zwar teuer.
   // Sie hat auf dem PUNKTSCHÄTZER gemutet: `b.n>=10 && b.roi<=-0.05`. Gemessen an dem Tag standen
@@ -1414,14 +1419,14 @@
     var dot=function(on,c){ return '<i style="display:inline-block;width:8px;height:8px;border-radius:50%;margin-left:3px;background:'+(on?c:'#26324a')+'"></i>'; };
     var th=function(t,a){ return '<th style="font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:'+C.dim+';font-weight:700;text-align:'+(a||'right')+';padding:7px 10px;border-bottom:1px solid '+C.bd+';white-space:nowrap">'+t+'</th>'; };
     var head='<div style="display:flex;align-items:baseline;gap:10px;margin:2px 0 8px;flex-wrap:wrap"><span style="font-size:13px;font-weight:800;color:'+C.ink+'">🖥️ Terminal — handelbare Kanten</span>'
-      +'<span style="font-size:10.5px;color:'+C.dim+'">Edge = faire Pinnacle-% × Quote − 1 · Konviktion = Betfair-Fluss + Pinnacle-Steam + Poly (0–100) · CLV-Bucket = hist. Kante je Liga, Urteil erst ab n≥30 (Rendite-Untergrenze) · Unsere Card = der gepostete Pick; ● grün/rot = Geld auf unserer Seite / dagegen · gemutet = nicht handelbar · Zeile klicken → Drilldown</span></div>';
+      +'<span style="font-size:10.5px;color:'+C.dim+'">Edge = faire Pinnacle-% × Quote − 1 · Konviktion = Betfair-Fluss + Pinnacle-Steam + Poly (0–100) · Liga-Bilanz = hist. Rendite je Liga, Urteil erst ab n≥30 (Rendite-Untergrenze — KEIN CLV) · Unsere Card = der gepostete Pick; ● grün/rot = Geld auf unserer Seite / dagegen · gemutet = nicht handelbar · Zeile klicken → Drilldown</span></div>';
     var bankBar='<div style="display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:11.5px;color:'+C.mut+'">Bankroll <span style="color:'+C.dim+'">€</span>'
       +'<input type="number" value="'+bank+'" min="0" step="50" onchange="_bfTermBank(this.value)" onclick="event.stopPropagation()" style="width:96px;background:'+C.card+';border:1px solid '+C.bd+';border-radius:7px;color:'+C.ink+';padding:4px 8px;font-family:monospace;font-size:12px"/>'
       +'<span style="color:'+C.dim+'">→ ½-Kelly-Stakes in € je Zeile</span>'
       +(nMuted?'<label style="margin-left:auto;display:inline-flex;align-items:center;gap:6px;cursor:pointer;color:'+C.mut+'"><input type="checkbox" '+(hideMuted?'checked':'')+' onchange="_bfTermMute(this.checked)" onclick="event.stopPropagation()" style="cursor:pointer"/> '+nMuted+' gemutet ausblenden</label>':'')
       +'</div>';
     var out=viewToggle()+head+bankBar+'<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12.5px">'
-      +'<thead><tr>'+th('Anpfiff','left')+th('Spiel','left')+th('Geld-Seite','left')+th('Unsere Card','left')+th('Edge')+th('Konviktion')+th('Fluss')+th('× Liga-Norm')+th('CLV-Bucket')+th('½-Kelly €')+'</tr></thead><tbody>';
+      +'<thead><tr>'+th('Anpfiff','left')+th('Spiel','left')+th('Geld-Seite','left')+th('Unsere Card','left')+th('Edge')+th('Konviktion')+th('Fluss')+th('× Liga-Norm')+th('Liga-Bilanz')+th('½-Kelly €')+'</tr></thead><tbody>';
     var mutedStarted=false;
     shown.forEach(function(r){
       var g=r.g,e=r.edge,open=(String(_bf.termOpen)===String(g.matchId));
