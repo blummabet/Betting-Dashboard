@@ -421,14 +421,35 @@ class DasKursrutschBuchWirdAbgerechnet(unittest.TestCase):
         self.assertIn("RUTSCH_FILE", q)
 
     def test_eine_rutsch_zeile_laeuft_durch_die_kette(self):
-        """Die Zeile hat die Form einer Public-Zeile — sonst greift settle() sie gar nicht an."""
+        """Die Zeile hat die Form einer Public-Zeile — sonst greift settle() sie gar nicht an.
+
+        🔴 22.09.2026: der Test hatte ein festes `sentAt` vom 19.09. und verlangte, dass der
+        Status in ("pending", "won", "lost", "void") liegt. Am 22.09. um 14 Uhr war die Zeile
+        aelter als PENDING_TTL_H und bekam korrekt „expired" — der Test wurde rot, ohne dass
+        sich eine Zeile Code geaendert haette.
+
+        Fehlerklasse: ein Test, dessen Ergebnis vom Kalender abhaengt. Genau derselbe Fall wie
+        gestern in test_poly_money_broad (eine Fixture, die aus RESOLUTIONS_KEEP_DAYS
+        herausgealtert ist). Die Frage hier ist „laeuft die Zeile durch die Kette", nicht
+        „welchen Status hat sie heute" — also wird `sentAt` relativ gesetzt und „expired" als
+        gueltiger Ausgang mit aufgenommen.
+        """
+        from datetime import datetime, timedelta, timezone
+        frisch = (datetime.now(timezone.utc) - timedelta(hours=1)).isoformat()
         e = {"k": "rutsch:1:Match Odds", "matchId": "1", "scenario": "rutsch",
              "market": "Match Odds", "leadName": "Alpha", "leadOdd": 1.45, "entryOdd": 1.79,
-             "home": "Alpha", "away": "Beta", "sentAt": "2026-09-19T17:00:00+00:00",
+             "home": "Alpha", "away": "Beta", "sentAt": frisch,
              "status": "pending", "live": {"time": None, "score": [None, None]}}
         buch, _ = E.abrechnen([e], {}, [], manual={})
         self.assertEqual(len(buch), 1)
-        self.assertIn(buch[0]["status"], ("pending", "won", "lost", "void"))
+        self.assertEqual(buch[0]["status"], "pending", "eine Stunde alt ist nicht verfallen")
+
+        # und die Gegenprobe, ebenfalls relativ: zu alt verfaellt, und das ist kein Ausfall
+        # der Kette, sondern ihr Ergebnis.
+        alt = (datetime.now(timezone.utc)
+               - timedelta(hours=E.PENDING_TTL_H + 1)).isoformat()
+        buch2, _ = E.abrechnen([dict(e, sentAt=alt)], {}, [], manual={})
+        self.assertEqual(buch2[0]["status"], "expired")
 
     def test_live_gesendete_zeilen_werden_bei_jedem_lauf_aus_der_bilanz_genommen(self):
         """Die sechs Alarme des ersten Abends kamen ALLE aus laufenden Spielen (22., 63., 44.,

@@ -341,6 +341,290 @@ def bursts(wetten, min_n=None, fenster_s=None, min_usd=None, gesperrt=None,
     return aus
 
 
+# ═══ Die zweite Gruppierung: je SPIEL statt je Auswahl ═══════════════════════════════════════
+# 🔴 22.09.2026 (Lucas schickt einen Fremd-Radar-Post: „⚽️ #Uzbekistan #Pro_League, PFC Terdu –
+# FK Gazalkent, Volume $15.734, Total 5 bets / 5 bets in 7 min" — „genau sowas ist halt das Geile,
+# wenn man sowas findet, und wir HAETTEN es gefunden. Also macht das bitte so, dass man es findet").
+#
+# Wir hatten die Wetten. Sechs Fussballwetten auf genau dieses Spiel standen im Ledger, darunter
+# die aus dem fremden Post ($2.000 x 1,75 auf FK Gazalkent -1,5). Gefunden hat sie niemand, weil
+# `bursts()` je AUSWAHL gruppiert und dieselbe Quote verlangt — der Fremd-Radar gruppiert je SPIEL.
+# Die groesste gleichgerichtete Gruppe war n=3 / $7.262 auf zwei Quoten (1,80 und 1,85). Kein
+# Fehler in der bestehenden Regel: eine andere Frage, die niemand gestellt hat.
+#
+# ── Was den Fall interessant macht, und was nicht ────────────────────────────────────────────
+# „Mehrere Wetten auf ein Spiel" allein ist kein Signal — gemessen am Ledger (16.553
+# Einzelwetten, 5,80 Tage) waeren das 28 bis 55 Meldungen pro Tag, die Haelfte davon Premier
+# League und Serie A. Drei Einschraenkungen, jede einzeln gemessen:
+#
+#   Zuschnitt (je Spiel, US-Sport/Kampfsport gesperrt)          Bursts   pro Tag
+#   >=4 Wetten / 5 Min / ab $10k                                   162      27,9
+#   dazu: KEINE GEGENSEITE (alle gerichteten Wetten ein Team)      144      24,8
+#   dazu: alle Quoten >= 1,35                                       —         —
+#   dazu: Summe >= 2x der Liga-Norm (Median x Anzahl)               —         —
+#   alles zusammen, Fenster 30 Min                                  58      10,0
+#
+# · KEINE GEGENSEITE ist die tragende Regel. Sie unterscheidet „viel Geld auf dieses Spiel"
+#   (zwei Parteien, die sich uneinig sind — das ist ein Markt, kein Signal) von „viel Geld auf
+#   DIESE Mannschaft ueber mehrere Maerkte". Genau das war Lucas' Fall: drei Wetten auf
+#   FK Gazalkent (1x2, 1. Halbzeit, Handicap), drei neutrale auf Over — und keine einzige auf
+#   Terdu. Neutrale Wetten (Over/Under, Torzahl) zaehlen zur Summe, aber nicht als Gegenseite.
+# · Das FENSTER ist 30 Minuten statt 5: die Auswahl-Regel misst einen Schwall auf EINE Auswahl,
+#   hier verteilt sich dasselbe Geld ueber mehrere Maerkte und braucht laenger. Lucas' Fall
+#   spannt 20 Minuten.
+# · Der QUOTENBODEN (1,35) und der NORM-FAKTOR (2x) sind dieselben Zahlen, die im Haus ohnehin
+#   gelten — keine zwei neuen, die man sich merken muss.
+#
+# ⚠️ Was dieser Zuschnitt NICHT kann: die grossen Ligen raushalten. Von den 58 sind 25 Ebene 1
+# (Premier League, Serie A, Bundesliga), wo eine Burst-Summe nach Lucas' eigenem Massstab „0
+# sagt". Der Norm-Faktor faengt das nicht, weil grosse Ligen auch eine grosse Norm haben, und
+# die Spielklasse taugt hier nicht als Filter — Lucas' eigene Liga steht seit heute als
+# „mehrdeutig" in `stake_liga_stufe` (der Slug `pro-league` traegt zwei Klassen). Deshalb steht
+# die Spielklasse auf der KARTE und filtert nicht. Erst messen, dann behaupten.
+#
+# ⚠️ Und es gibt noch keine Rendite-Messung fuer diesen Zuschnitt. Der Auswahl-Burst hat eine
+# (+45,9 %, UG +34,3 %, n=212); die gilt hier NICHT — es ist eine andere Einheit. Das Buch
+# stempelt deshalb `art: "spiel"`, damit die zwei nie in einer Zahl zusammenfallen.
+# ── Die Schwellen, und wie sie zustande kommen ──────────────────────────────────────────────
+# Gemessen am Ledger (16.553 Einzelwetten, 5,80 Tage), je Zeile die Lautstaerke und ob Lucas'
+# eigener Fall (PFC Terdu – FK Gazalkent, 5 Wetten, $15.734, 1,74x) noch durchkommt:
+#
+#     2,00x / ab $10k / >=4 Wetten / >=1 gerichtet     16,4 / Tag     Lucas faellt durch
+#     1,50x / ab $10k / >=4 / >=1                      21,9           ✓
+#     1,50x / ab $15k / >=4 / >=2                      16,2           ✓
+#     1,50x / ab $12k / >=4 / >=2                      16,9           ✓  ← gewaehlt
+#     1,50x / ab $12k / >=4 / >=3                      13,1           faellt durch
+#     2,00x / ab $15k / >=4 / >=2                      12,4           faellt durch
+#
+# ⚠️ EHRLICH GESAGT: diese Schwellen sind NICHT belegt. Sie sind so gesetzt, dass der Fall, den
+# Lucas gezeigt hat, mit etwas Puffer durchkommt („genau sowas ist halt das Geile, wenn man sowas
+# findet … macht das bitte so, dass man es findet") und die Lautstaerke unter 20 am Tag bleibt.
+# Das ist eine Auswahl nach EINEM Beispiel — genau die Klasse, vor der die Schwellen-Treppe des
+# Auswahl-Bursts warnt. Deshalb: eigener Buch-Stempel (`art: "spiel"`), eigener Deckel, und in
+# zwei Wochen dieselbe Schwellen-Treppe wie am 16.09. fuer die Auswahl-Bursts. Bis dahin ist das
+# ein Beobachtungsband, kein Signal.
+#
+# MIN_GERICHTET ist die Regel, die am meisten traegt: mindestens zwei Wetten muessen eine
+# MANNSCHAFT benennen. Vier neutrale Over/Under-Tickets sind ein Torlinien-Handel, keine
+# Richtungswette — und ohne diese Zahl waere jeder Ueber/Unter-Schwall eine Meldung.
+SPIEL_MIN_N = int(os.environ.get("STAKE_SPIEL_MIN_N") or 4)
+SPIEL_MIN_GERICHTET = int(os.environ.get("STAKE_SPIEL_MIN_GERICHTET") or 2)
+SPIEL_FENSTER_S = float(os.environ.get("STAKE_SPIEL_FENSTER_S") or 1800)
+SPIEL_MIN_USD = float(os.environ.get("STAKE_SPIEL_MIN_USD") or 12000)
+SPIEL_MIN_FAKTOR = float(os.environ.get("STAKE_SPIEL_MIN_FAKTOR") or 1.5)
+SPIEL_MAX_PUSH = int(os.environ.get("STAKE_SPIEL_MAX") or 2)
+SPIEL_AN = (os.environ.get("STAKE_SPIEL_PUSH") or "true").strip().lower() \
+    not in ("false", "0", "nein", "off", "aus")
+NORM_FILE = BASE / "stake_league_norm.json"
+
+
+def _teams(event) -> list:
+    """Die beiden Mannschaften aus dem Event-Namen. Leer, wenn das Format nicht passt —
+    dann gibt es keine Seite und der Burst faellt durch, statt eine zu erfinden."""
+    e = str(event or "")
+    return [t.strip() for t in e.split(" - ", 1)] if " - " in e else []
+
+
+def seite(w) -> str | None:
+    """Auf welche MANNSCHAFT zeigt diese Auswahl? None heisst neutral (Over/Under, Torzahl) —
+    nicht „unbekannt" und erst recht nicht „Gegenseite".
+
+    Bewusst nur bei EINDEUTIGEM Treffer: bei „Deportivo La Coruna - Deportivo Alaves" passt
+    „Deportivo" auf beide, und eine geratene Seite waere schlimmer als keine.
+    """
+    a = str((w or {}).get("auswahl") or "").lower()
+    if not a:
+        return None
+    treffer = [t for t in _teams((w or {}).get("event")) if t and t.lower() in a]
+    return treffer[0] if len(treffer) == 1 else None
+
+
+def liga_norm(pfad=None) -> dict:
+    """{Liganame: Median-Einsatz}. Fehlt die Datei oder die Liga, gibt es keinen Faktor —
+    und ohne Faktor kein Push. Fehlende Information ist hier bewusst eine Sperre und kein
+    harmloser Default: „wir kennen die Liga nicht" heisst nicht „der Einsatz ist normal"."""
+    d = _load(pfad or NORM_FILE, {}) or {}
+    aus = {}
+    for name, v in (d.get("ligen") or {}).items():
+        m = (v or {}).get("median")
+        if isinstance(m, (int, float)) and m > 0:
+            aus[str(name)] = float(m)
+    return aus
+
+
+def spiel_bursts(wetten, min_n=None, fenster_s=None, min_usd=None, min_faktor=None,
+                 min_quote=None, max_alter_min=None, gesperrt=None, norm=None, now=None,
+                 min_gerichtet=None) -> list:
+    """Bursts je SPIEL, einseitig. REIN (alles injizierbar).
+
+    Ein Spiel-Burst ist: `min_n` Einzelwetten auf DASSELBE Spiel innerhalb von `fenster_s`,
+    zusammen mindestens `min_usd` UND mindestens `min_faktor` mal der Liga-Norm, alle Quoten
+    ueber `min_quote`, und alle gerichteten Wetten auf DIESELBE Mannschaft.
+
+    Je Spiel hoechstens einer (der erste) — dieselbe Regel wie bei den Auswahl-Bursts, aus
+    demselben Grund: sonst sieht der Kanal ein Ereignis als fuenf.
+    """
+    min_n = SPIEL_MIN_N if min_n is None else min_n
+    min_gerichtet = SPIEL_MIN_GERICHTET if min_gerichtet is None else min_gerichtet
+    fenster_s = SPIEL_FENSTER_S if fenster_s is None else fenster_s
+    min_usd = SPIEL_MIN_USD if min_usd is None else min_usd
+    min_faktor = SPIEL_MIN_FAKTOR if min_faktor is None else min_faktor
+    min_quote = MIN_QUOTE if min_quote is None else min_quote
+    max_alter_min = MAX_ALTER_MIN if max_alter_min is None else max_alter_min
+    gesperrt = list(GESPERRT_FALLBACK) if gesperrt is None else list(gesperrt)
+    norm = liga_norm() if norm is None else norm
+    now = now or datetime.now(timezone.utc)
+
+    je_spiel = {}
+    for w in wetten or []:
+        if not isinstance(w, dict) or w.get("kombi"):
+            continue
+        if w.get("kat") in gesperrt:
+            continue
+        ev, t, u = w.get("eventId"), _ts(w.get("ts")), w.get("einsatzUsd")
+        if not ev or t is None:
+            continue
+        if not isinstance(u, (int, float)) or isinstance(u, bool) or u <= 0:
+            continue
+        # 🔴 Der Quotenboden wirkt hier je ZEILE, nicht je Cluster — anders als beim
+        # Auswahl-Burst, wo ohnehin alle Wetten dieselbe Quote tragen. Zuerst stand hier
+        # `if min(quoten) < min_quote: verwirf das Cluster`, und genau daran fiel Lucas'
+        # eigener Fall durch: fuenf Wetten zwischen 1,65 und 1,85 auf FK Gazalkent, plus eine
+        # Abstauber-Wette @1,03 zwanzig Minuten spaeter. Eine einzelne 1,03 darf die fuenf
+        # anderen nicht entwerten. Sie zaehlt weder zur Anzahl noch zur Summe — sie ist
+        # einfach nicht Teil der Beobachtung.
+        q = _quote(w)
+        if q is None or q < min_quote:
+            continue
+        je_spiel.setdefault(ev, []).append((t, w))
+
+    aus = []
+    for ev, v in je_spiel.items():
+        if len(v) < min_n:
+            continue
+        v.sort(key=lambda z: z[0])
+        for i in range(len(v)):
+            j = i
+            while j + 1 < len(v) and (v[j + 1][0] - v[i][0]).total_seconds() <= fenster_s:
+                j += 1
+            if j - i + 1 < min_n:
+                continue
+            g = [z[1] for z in v[i:j + 1]]
+            gerichtet = [x for x in g if seite(x)]
+            seiten = {seite(x) for x in gerichtet}
+            if len(seiten) != 1:          # keine gerichtete Wette, oder eine Gegenseite
+                continue
+            # Mindestens `min_gerichtet` Tickets muessen eine MANNSCHAFT benennen. Vier neutrale
+            # Over/Under-Wetten plus eine auf die Heimelf sind ein Torlinien-Handel, keine
+            # Richtungswette — und ohne diese Zahl waere jeder Ueber/Unter-Schwall eine Meldung.
+            if len(gerichtet) < min_gerichtet:
+                continue
+            summe = sum(float(x["einsatzUsd"]) for x in g)
+            if summe < min_usd:
+                continue
+            med = norm.get(str(g[0].get("liga") or ""))
+            if not med:
+                continue                  # keine Norm = kein Faktor = kein Urteil
+            faktor = summe / (med * len(g))
+            if faktor < min_faktor:
+                continue
+            if (now - v[j][0]).total_seconds() / 60.0 > max_alter_min:
+                continue                  # zu alt zum Melden — dieselbe Grenze wie oben
+            aus.append({"eventId": ev, "wetten": g, "summe": summe, "faktor": faktor,
+                        "seite": list(seiten)[0], "nGerichtet": len(gerichtet),
+                        "sekunden": (v[j][0] - v[i][0]).total_seconds(),
+                        "von": v[i][0], "bis": v[j][0]})
+            break
+    aus.sort(key=lambda b: b["von"])      # aelteste zuerst — der Deckel ist keine Rangfolge
+    return aus
+
+
+def spiel_key(b) -> str:
+    """Dedup ueber das SPIEL. Ein zweiter Schwall auf dasselbe Spiel ist dieselbe Beobachtung."""
+    return "spiel:%s" % b.get("eventId")
+
+
+def build_spiel_card(b, unterdrueckt=0) -> str:
+    """Die Karte des Spiel-Bursts. Sie sagt in ihrer Kopfzeile, dass sie eine ANDERE Einheit
+    misst als der Auswahl-Burst — sonst liest man die Rendite der einen auf der anderen."""
+    g = b["wetten"]
+    erste = g[0]
+    e = lambda x: html.escape(str(x or ""), quote=False)
+    maerkte = []
+    for x in g:
+        m = str(x.get("markt") or "")
+        if m and m not in maerkte:
+            maerkte.append(m)
+    phase = ("live" if all(x.get("phase") == "live" for x in g)
+             else "vor Anpfiff" if all(x.get("phase") == "vor" for x in g) else "gemischt")
+    try:
+        import stake_liga_stufe as _LS
+        klasse = _LS.stufe(erste.get("ligaSlug"), erste.get("sport"))
+    except Exception:
+        klasse = None
+    KLARTEXT = {"1": "oberste Spielklasse", "2": "zweite Spielklasse",
+                "3": "dritte Klasse und tiefer", "kontinental": "kontinental",
+                "pokal": "Pokal", "frauen": "Frauen", "jugend": "Jugend",
+                "reserve": "Reserve", "srl": "Simulated Reality",
+                "mehrdeutig": "Spielklasse nicht eindeutig", "freundschaft": "Freundschaftsspiel"}
+
+    lines = ["▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓",
+             "🎯 <b>STAKE-SPIEL</b> · <b>%d Wetten</b> auf <b>eine Seite</b> in <b>%s</b>"
+             % (len(g), _sek_text(int(round(b["sekunden"])))),
+             "▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓", ""]
+    lines.append("%s <i>%s</i>" % (_emoji(erste.get("kat")), e(erste.get("kat") or "Sport")))
+    lines.append("<b>%s</b>" % e(erste.get("event")))
+    lines.append("<i>%s%s</i>" % (e(erste.get("liga")),
+                                 (" · " + KLARTEXT.get(klasse, klasse)) if klasse else ""))
+    lines.append("")
+    lines.append("➡️ alles auf <b>%s</b>" % e(b.get("seite")))
+    lines.append("💰 <b>%s</b> über %d %s · <b>%.1fx</b> der Liga-Norm"
+                 % (_usd(b["summe"]), len(maerkte), "Märkte" if len(maerkte) != 1 else "Markt",
+                    b["faktor"]))
+    lines.append("")
+    for x in sorted(g, key=lambda y: -float(y.get("einsatzUsd") or 0))[:6]:
+        t = _ts(x.get("ts"))
+        lines.append("   %s  @%.2f  <i>%s</i>  <code>%s</code>"
+                     % (_usd(x.get("einsatzUsd")), _quote(x), e(x.get("auswahl")),
+                        t.strftime("%H:%M:%S") if t else "?"))
+    lines.append("")
+    lines.append("⏱️ <b>%s</b>" % phase)
+    if unterdrueckt:
+        lines.append("<i>+%d weitere Spiel-Bursts in diesem Lauf nicht gesendet (Deckel %d)</i>"
+                     % (unterdrueckt, SPIEL_MAX_PUSH))
+    lines.append("\n<i>🔬 NEU seit 22.09.2026 und noch OHNE eigene Rendite-Messung. Das ist eine "
+                 "andere Einheit als der ⚡ Stake-Burst — dessen +45,9 %% gelten hier NICHT. "
+                 "Zuschnitt: >=%d Wetten je Spiel (davon >=%d mit Mannschaft), %d Min, ab %s, "
+                 "mindestens %.1fx der Liga-Norm, Quoten ab %.2f, keine Gegenseite. Gemessen am "
+                 "Ledger sind das rund 17 Meldungen pro Tag; die Schwellen sind nach EINEM "
+                 "Beispiel gesetzt und noch nicht belegt.</i>"
+                 % (SPIEL_MIN_N, SPIEL_MIN_GERICHTET, int(SPIEL_FENSTER_S // 60),
+                    _usd(SPIEL_MIN_USD), SPIEL_MIN_FAKTOR, MIN_QUOTE))
+    return "\n".join(lines)
+
+
+def spiel_buch_zeile(b, ts) -> dict:
+    """Eigene Buchzeile mit `art: "spiel"`. Die zwei Arten duerfen NIE in einer Zahl
+    zusammenfallen — sie messen verschiedene Einheiten, und genau daran ist am 07.09. die
+    Spielklassen-Ansicht fast gescheitert."""
+    g = b["wetten"]
+    erste = g[0]
+    return {
+        "k": spiel_key(b), "art": "spiel",
+        "eventId": b["eventId"], "event": erste.get("event"),
+        "liga": erste.get("liga"), "ligaSlug": erste.get("ligaSlug"), "kat": erste.get("kat"),
+        "seite": b.get("seite"), "nGerichtet": b.get("nGerichtet"),
+        "maerkte": sorted({str(x.get("markt") or "") for x in g if x.get("markt")}),
+        "summeUsd": round(float(b["summe"]), 2),
+        "faktor": round(float(b["faktor"]), 2),
+        "nWetten": len(g), "sekunden": round(float(b["sekunden"]), 1),
+        "phase": ("live" if all(x.get("phase") == "live" for x in g)
+                  else "vor" if all(x.get("phase") == "vor" for x in g) else "gemischt"),
+        "betIds": [x.get("id") for x in g],
+        "sentAt": ts, "status": "pending",
+    }
+
+
 def _beinahe(auswahl_id, g, summe, gruende, von, bis) -> dict:
     """Eine Zeile fuers Beinahe-Buch: ein Cluster, das die Regeln NICHT passiert hat.
 
@@ -641,6 +925,42 @@ def main() -> int:
         led.append(z)
         schon.add(k)
         neu_gebucht += 1
+
+    # ── Die zweite Gruppierung: je SPIEL (22.09.2026, Lucas) ────────────────────────────────
+    # Eigener Deckel, eigener Dedup-Schluessel, eigene Buchart. Was hier gesendet wird, ist eine
+    # ANDERE Beobachtung als oben — die beiden teilen nur die Sperrliste und den Kanal.
+    sp_alle = spiel_bursts(wetten, gesperrt=_gesperrt, now=now)
+    sp_neu = [b for b in sp_alle if spiel_key(b) not in seen]
+    sp_senden = sp_neu[:SPIEL_MAX_PUSH] if (SPIEL_AN and PUSH_AN) else []
+    sp_unterdrueckt = max(len(sp_neu) - len(sp_senden), 0)
+    print("🎯 Stake-Spiel: %d frische(r) Spiel-Burst(s), %d davon neu (>=%d Wetten je Spiel, "
+          "davon >=%d mit Mannschaft, %d Min, ab %s, >=%.1fx Liga-Norm, Quote ab %.2f, "
+          "keine Gegenseite)"
+          % (len(sp_alle), len(sp_neu), SPIEL_MIN_N, SPIEL_MIN_GERICHTET,
+             int(SPIEL_FENSTER_S // 60), _usd(SPIEL_MIN_USD), SPIEL_MIN_FAKTOR, MIN_QUOTE))
+    sp_gesendet = 0
+    for i, b in enumerate(sp_senden):
+        text = build_spiel_card(b, sp_unterdrueckt if i == len(sp_senden) - 1 else 0)
+        if not send_trades_message(text):
+            continue
+        sp_gesendet += 1
+        seen[spiel_key(b)] = {"ts": now_iso, "summe": round(float(b["summe"]), 2)}
+    # Auch hier: JEDER erkannte kommt ins Buch, auch der ungesendete. Sonst kennt das Protokoll
+    # nur die Ueberlebenden — die Fehlerklasse, die hier am 13.09. schon einmal repariert wurde.
+    for b in sp_neu:
+        k = spiel_key(b)
+        if k in schon:
+            continue
+        z = spiel_buch_zeile(b, now_iso)
+        z["push"] = k in seen
+        if not z["push"]:
+            z["pushGrund"] = ("Push abgeschaltet" if not (PUSH_AN and SPIEL_AN)
+                              else "Deckel des Laufs erreicht" if k not in {spiel_key(x) for x in sp_senden}
+                              else "Senden fehlgeschlagen")
+        led.append(z)
+        schon.add(k)
+        neu_gebucht += 1
+
     _save(SEEN_FILE, seen)
     _verworfen_buchen(beinahe, now)
     # Bei JEDEM Lauf abrechnen — das Fenster der Quelle ist nur ~5 Tage breit (s. oben).
@@ -652,8 +972,9 @@ def main() -> int:
         _save(LEDGER_FILE, led[-LEDGER_KEEP:])
     except Exception as e:
         print("Stake-Burst-Ledger-Schreibfehler:", e)
-    print("   %d gesendet, %d unterdrueckt (Deckel %d)%s · %d neu im Buch."
-          % (gesendet, unterdrueckt, MAX_PUSH,
+    print("   %d Auswahl-Burst(s) + %d Spiel-Burst(s) gesendet, %d/%d unterdrueckt "
+          "(Deckel %d/%d)%s · %d neu im Buch."
+          % (gesendet, sp_gesendet, unterdrueckt, sp_unterdrueckt, MAX_PUSH, SPIEL_MAX_PUSH,
              "" if PUSH_AN else " — PUSH IST AUS, es wird nur gemessen", neu_gebucht))
     return 0
 
