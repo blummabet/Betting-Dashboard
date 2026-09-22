@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-22T00:46:55.558902+00:00",
+"generatedAt": "2026-09-22T01:01:56.879373+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1400,
-"wins": 1184,
-"hitRate": 0.8457,
-"polyN": 1329,
-"polyWins": 1037,
-"polyHitRate": 0.7803,
+"n": 1401,
+"wins": 1185,
+"hitRate": 0.8458,
+"polyN": 1330,
+"polyWins": 1038,
+"polyHitRate": 0.7805,
 "pinnN": 210,
 "pinnHitRate": 0.7714,
-"nRoi": 758,
-"roi": 0.4061,
-"roiLb": 0.3591,
-"nClv": 758,
+"nRoi": 759,
+"roi": 0.4062,
+"roiLb": 0.3592,
+"nClv": 759,
 "clv": 19.28,
-"clvLb": 17.7456
+"clvLb": 17.7473
 },
 "uneinig": {
-"n": 555,
-"wins": 171,
-"hitRate": 0.3081,
-"polyN": 513,
+"n": 556,
+"wins": 172,
+"hitRate": 0.3094,
+"polyN": 514,
 "polyWins": 138,
-"polyHitRate": 0.269,
+"polyHitRate": 0.2685,
 "pinnN": 345,
 "pinnHitRate": 0.6203,
-"nRoi": 332,
-"roi": -0.4692,
-"roiLb": -0.5646,
-"nClv": 332,
-"clv": -20.01,
-"clvLb": -23.0143
+"nRoi": 333,
+"roi": -0.4675,
+"roiLb": -0.5626,
+"nClv": 333,
+"clv": -19.95,
+"clvLb": -22.9468
 },
 "teil": {
 "n": 33,
@@ -66,15 +66,15 @@
 "wins": 48,
 "hitRate": 0.6957
 },
+"Argentinian Primera Division": {
+"n": 54,
+"wins": 35,
+"hitRate": 0.6481
+},
 "Brazilian Serie A": {
 "n": 54,
 "wins": 39,
 "hitRate": 0.7222
-},
-"Argentinian Primera Division": {
-"n": 53,
-"wins": 34,
-"hitRate": 0.6415
 },
 "English Premier League": {
 "n": 50,
@@ -326,6 +326,11 @@
 "wins": 7,
 "hitRate": 0.6364
 },
+"Argentinian Primera Nacional": {
+"n": 10,
+"wins": 8,
+"hitRate": 0.8
+},
 "Colombian Primera B": {
 "n": 10,
 "wins": 7,
@@ -340,11 +345,6 @@
 "n": 10,
 "wins": 8,
 "hitRate": 0.8
-},
-"Argentinian Primera Nacional": {
-"n": 9,
-"wins": 7,
-"hitRate": 0.7778
 },
 "Chinese League 1": {
 "n": 9,
@@ -644,37 +644,75 @@
 },
 "byStrength": {
 "strong": {
-"n": 1223,
-"wins": 981,
-"hitRate": 0.8021,
-"nRoi": 704,
-"roi": 0.3018,
-"roiLb": 0.2456,
-"nClv": 704,
+"n": 1224,
+"wins": 982,
+"hitRate": 0.8023,
+"nRoi": 705,
+"roi": 0.302,
+"roiLb": 0.2459,
+"nClv": 705,
 "clv": 13.63,
-"clvLb": 11.586
+"clvLb": 11.5965
 },
 "weak": {
-"n": 765,
-"wins": 380,
-"hitRate": 0.4967,
-"nRoi": 410,
-"roi": -0.1914,
-"roiLb": -0.2724,
-"nClv": 410,
-"clv": -5.9,
-"clvLb": -8.5152
+"n": 766,
+"wins": 381,
+"hitRate": 0.4974,
+"nRoi": 411,
+"roi": -0.1907,
+"roiLb": -0.2714,
+"nClv": 411,
+"clv": -5.89,
+"clvLb": -8.4946
 }
 },
 "divergence": {
-"n": 555,
-"betfairWins": 171,
-"betfairRate": 0.3081,
-"polyN": 513,
+"n": 556,
+"betfairWins": 172,
+"betfairRate": 0.3094,
+"polyN": 514,
 "polyWins": 138,
-"polyRate": 0.269
+"polyRate": 0.2685
 },
 "recent": [
+{
+"matchId": "36041720",
+"home": "Barracas Central",
+"away": "Independiente Rivadavia",
+"league": "Argentinian Primera Division",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Independiente Rivadavia",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-09-21T22:00:00Z",
+"settledAt": "2026-09-22T01:01:56.640633+00:00"
+},
+{
+"matchId": "36069863",
+"home": "Nueva Chicago",
+"away": "Patronato",
+"league": "Argentinian Primera Nacional",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-09-21T22:00:00Z",
+"settledAt": "2026-09-22T01:01:56.640633+00:00"
+},
 {
 "matchId": "36095617",
 "home": "Bogota",
@@ -1396,56 +1434,18 @@
 ],
 "kickoff": "2026-09-20T17:00:00Z",
 "settledAt": "2026-09-20T18:58:45.649197+00:00"
-},
-{
-"matchId": "36071709",
-"home": "Crvena Zvezda",
-"away": "Radnicki Nis",
-"league": "Serbian Super League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Crvena Zvezda",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-0
-],
-"kickoff": "2026-09-20T17:00:00Z",
-"settledAt": "2026-09-20T18:58:45.649197+00:00"
-},
-{
-"matchId": "36036319",
-"home": "Fulham",
-"away": "Man Utd",
-"league": "English Premier League",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Man Utd",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-09-20T15:30:00Z",
-"settledAt": "2026-09-20T18:43:36.057980+00:00"
 }
 ],
 "global": {
-"n": 1988,
-"wins": 1361,
-"hitRate": 0.6846,
-"nRoi": 1114,
-"roi": 0.1203,
-"roiLb": 0.0725,
-"nClv": 1114,
+"n": 1990,
+"wins": 1363,
+"hitRate": 0.6849,
+"nRoi": 1116,
+"roi": 0.1205,
+"roiLb": 0.0729,
+"nClv": 1116,
 "clv": 6.44,
-"clvLb": 4.7654
+"clvLb": 4.7738
 },
-"pending": 12
+"pending": 10
 }
