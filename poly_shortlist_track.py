@@ -22,7 +22,28 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from safe_write import write_json_atomic   # 25.08.2026: temp+replace statt halber Datei
-from poly_slug_urteil import aufloesbar, ist_buendel, ist_generisch   # 04.09.2026: Buendel-Slugs nicht raten
+from poly_slug_urteil import (aufloesbar, ist_buendel, ist_generisch,   # 04.09.2026: Buendel-Slugs nicht raten
+                              ausgang_aus_endstand)                    # 22.09.2026: … ausser der Endstand sagt es exakt
+
+# Die beiden Slug-Enden, aus denen der Endstand-Ausweg besteht: das Buendel, das die Frage nicht
+# beantworten kann, und sein Geschwister, das sie beantwortet.
+BUENDEL_SUFFIX  = "-more-markets"
+ENDSTAND_SUFFIX = "-exact-score"
+
+
+def endstand_schluessel(key):
+    """Der Schluessel der Endstand-Aufloesung zu einem Buendel — oder None. REIN.
+
+    Eigene Funktion, weil die Einschraenkung „nur Buendel" sonst nur als Bedingung mitten in
+    der Abrechnungsschleife staende und kein Test sie dort anschlagen sehen koennte: die
+    Mutation „Bedingung weg" blieb im ersten Anlauf gruen, weil ein falsch abgeschnittener
+    Basis-Name zufaellig auf keine Aufloesung trifft. Ein Riegel, der nur zufaellig haelt, ist
+    keiner.
+    """
+    k = str(key or "")
+    if not k.endswith(BUENDEL_SUFFIX):
+        return None
+    return k[:-len(BUENDEL_SUFFIX)] + ENDSTAND_SUFFIX
 
 BASE = Path(__file__).resolve().parent
 CLOSE_FILE = "poly_money_broad_close.json"
@@ -622,6 +643,22 @@ def update_track(prev, emit, close, resolutions, now=None, stake=STAKE, blocked=
         _cond = e.get("cond") if _derselbe_markt(e, r) else None
         if winner and not aufloesbar(e["key"], e.get("side"), winner, cond=_cond):
             winner = None
+        # 🔴 22.09.2026 (Lucas' Stoerungsmeldung, „Kostet Geld"): zwei Buendel-Eintraege vom
+        # 08.09. standen seit 13,6 Tagen offen und waeren morgen als „unaufloesbar" verfallen —
+        # obwohl ihr Ausgang die ganze Zeit danebenlag. Der Riegel oben ist richtig („Under" in
+        # einem Buendel ist ohne `cond` ein Muenzwurf), aber die Aufloesung `…-exact-score`
+        # desselben Spiels traegt den ENDSTAND, und der Eintrag traegt seit dem 10.09. die LINIE
+        # im Klartext. Eine Torlinie gegen eine Torzahl ist keine Schaetzung, sondern Arithmetik.
+        # Fehlerklasse: eine Frage fuer unbeantwortbar erklaert, waehrend ihre Antwort in der
+        # Datei daneben steht.
+        _aus_endstand = False
+        _es_key = endstand_schluessel(e["key"]) if not winner and e.get("frage") else None
+        if _es_key:
+            _es = (resolutions.get(_es_key) or {}) if isinstance(resolutions, dict) else {}
+            _abgeleitet = ausgang_aus_endstand(e.get("frage"), _es.get("winner"))
+            if _abgeleitet:
+                winner, _aus_endstand = _abgeleitet, True
+                r = r or _es
         if not winner:
             continue
         entry = float(e["entryPrice"])
@@ -647,6 +684,11 @@ def update_track(prev, emit, close, resolutions, now=None, stake=STAKE, blocked=
             # die Frage eine Messung statt einer Meinung.
             "htkAtEntry": e.get("htkAtEntry"),
             "settledTs": now.isoformat(), "resolvedTs": (r or {}).get("ts"),
+            # Woher der Ausgang kommt. Ein Abschluss aus dem Endstand ist genauso exakt wie
+            # einer aus der Marktauflösung, aber er ist ein ANDERER Weg — und ein Weg, den
+            # niemand nachzaehlen kann, ist keiner. `None` fuer den Normalfall, damit die
+            # 1108 bestehenden Zeilen nicht rueckwirkend etwas behaupten.
+            "ausEndstand": True if _aus_endstand else None,
         })
         del open_[ok]
 

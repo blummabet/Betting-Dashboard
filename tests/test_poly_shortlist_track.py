@@ -539,3 +539,85 @@ def test_vor_anpfiff_eingestiegen_bleibt_unterscheidbar():
     res = {"soc-a-b": {"winner": "Heim", "ts": NOW.isoformat()}}
     t = st.update_track(prev, _emit([]), {}, res, now=NOW)
     assert t["settled"][0]["htkAtEntry"] == 2.5
+
+
+# ── 22.09.2026: der Ausgang stand die ganze Zeit daneben ──────────────────────────────────
+# 🔴 Lucas' Störungsmeldung, 06:02 UTC, unter „Kostet Geld": zwei Bündel-Einträge vom 08.09.
+# standen seit 13,6 Tagen offen und wären am nächsten Tag als „unauflösbar" verfallen — einer
+# davon ein Treffer. Der Riegel darüber ist richtig, aber die Auflösung `…-exact-score`
+# desselben Spiels trägt den Endstand und der Eintrag seit dem 10.09. die Linie im Klartext.
+# Fehlerklasse: eine Frage für unbeantwortbar erklärt, während ihre Antwort daneben steht.
+BASIS_B = KEY_B[:-len("-more-markets")]
+
+
+def _offen_mit_frage(frage, side="Under", entry=0.705):
+    e = {"key": KEY_B, "side": side, "verdict": "BET", "conv": 7, "league": "SOCCER",
+         "entryPrice": entry, "lastPrice": entry, "public": True, "stake": 10.0,
+         "frage": frage, "firstTs": NOW.isoformat()}
+    return {"open": {KEY_B + "|" + side: e}}
+
+
+def test_der_endstand_rechnet_ab_was_das_buendel_nicht_konnte():
+    """⭐ Der echte Fall: AEK 1:0 LASK, Linie 3,5, Eintrag auf Under → Treffer."""
+    res = {BASIS_B + "-exact-score": {"winner": "AEK 1 - 0 LASK Linz", "ts": NOW.isoformat()}}
+    t = st.update_track(_offen_mit_frage("AEK vs. LASK Linz: O/U 3.5"), _emit([]), {}, res, now=NOW)
+    assert not t["open"], "der Eintrag muss abgerechnet sein"
+    assert t["settled"][0]["result"] == "win"
+    assert t["settled"][0]["ausEndstand"] is True, "der Weg muss nachzählbar sein"
+
+
+def test_auch_der_verlust_wird_gebucht():
+    """Sonst rechnet man nur die guten Fälle nach — das wäre eine Auswahl nach Ausgang."""
+    res = {BASIS_B + "-exact-score": {"winner": "A 1 - 0 B", "ts": NOW.isoformat()}}
+    t = st.update_track(_offen_mit_frage("A vs B: O/U 2.5", side="Over"), _emit([]), {}, res, now=NOW)
+    assert t["settled"][0]["result"] == "loss"
+
+
+def test_ohne_linie_bleibt_er_offen():
+    """Kein Klartext-Markt am Eintrag (Altbestand vor dem 10.09.) → nichts zu rechnen."""
+    res = {BASIS_B + "-exact-score": {"winner": "AEK 1 - 0 LASK Linz", "ts": NOW.isoformat()}}
+    t = st.update_track(_offen(), _emit([]), {}, res, now=NOW)
+    assert t["open"], "ohne Linie darf nichts abgerechnet werden"
+
+
+def test_ohne_endstand_bleibt_er_offen():
+    t = st.update_track(_offen_mit_frage("AEK vs. LASK Linz: O/U 3.5"), _emit([]), {}, {}, now=NOW)
+    assert t["open"]
+
+
+def test_ein_push_wird_nicht_erfunden():
+    """O/U 3 bei 3 Toren hat keinen Sieger. „Under" hinzuschreiben wäre ein erfundener Ausgang."""
+    res = {BASIS_B + "-exact-score": {"winner": "A 2 - 1 B", "ts": NOW.isoformat()}}
+    t = st.update_track(_offen_mit_frage("A vs B: O/U 3"), _emit([]), {}, res, now=NOW)
+    assert t["open"]
+
+
+def test_der_normale_weg_bleibt_der_normale_weg():
+    """Gegenprobe: wo `cond` beide Seiten verbindet, entscheidet weiter die Marktauflösung —
+    und die Zeile trägt dann KEIN `ausEndstand`, sonst wäre der Stempel wertlos."""
+    res = {KEY_B: {"winner": "Under", "ts": NOW.isoformat(), "cond": "0xAAA"}}
+    t = st.update_track(_offen("0xAAA"), _emit([]), {}, res, now=NOW)
+    assert t["settled"][0]["result"] == "win"
+    assert t["settled"][0].get("ausEndstand") is None
+
+
+def test_ein_nicht_buendel_geht_diesen_weg_nie():
+    """Der Ausweg gilt nur für `-more-markets`. Ein normaler Markt hat seine eigene Auflösung."""
+    prev = {"open": {"epl-a-b|Over": {"key": "epl-a-b", "side": "Over", "verdict": "BET",
+            "conv": 7, "league": "SOCCER", "entryPrice": 0.5, "lastPrice": 0.5,
+            "frage": "A vs B: O/U 2.5", "public": True, "stake": 10.0,
+            "firstTs": NOW.isoformat()}}}
+    res = {"epl-a-b-exact-score": {"winner": "A 3 - 1 B", "ts": NOW.isoformat()}}
+    t = st.update_track(prev, _emit([]), {}, res, now=NOW)
+    assert t["open"], "nur Bündel brauchen diesen Umweg"
+
+
+def test_nur_ein_buendel_hat_einen_endstand_schluessel():
+    """🔴 Im ersten Anlauf stand die Einschränkung „nur Bündel" nur als Bedingung in der
+    Schleife — die Mutation „Bedingung weg" blieb grün, weil ein falsch abgeschnittener
+    Basis-Name zufällig auf keine Auflösung trifft. Ein Riegel, der nur zufällig hält, ist
+    keiner."""
+    assert st.endstand_schluessel(KEY_B) == BASIS_B + "-exact-score"
+    assert st.endstand_schluessel("epl-lee-bre-2026-08-30") is None
+    assert st.endstand_schluessel("") is None
+    assert st.endstand_schluessel(None) is None

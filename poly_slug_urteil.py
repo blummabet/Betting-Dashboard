@@ -72,3 +72,84 @@ def aufloesbar(key, seite, sieger=None, cond=None) -> bool:
     if cond:
         return True
     return not (ist_generisch(seite) or ist_generisch(sieger))
+
+
+# ── Der Ausweg über den Endstand (22.09.2026) ────────────────────────────────────────────
+# 🔴 Lucas' Störungsmeldung vom 22.09., 06:02 UTC, unter „Kostet Geld":
+#
+#     spl-haz-taa-2026-09-08-more-markets: seit 13.6 Tagen offen — Bündel: der Eintrag kennt
+#     seinen Markt, die Auflösung nicht (Altbestand)
+#     ucl-aek1-lin2-2026-09-08-more-markets: seit 13.5 Tagen offen — dasselbe
+#
+# Der Riegel ist richtig: die Auflösung sagt „Under", und in einem `-more-markets`-Bündel liegen
+# Under 1,5 und Under 3,5 nebeneinander. Ohne `cond` auf BEIDEN Seiten ist „Under" kein Ergebnis,
+# sondern ein Münzwurf mit Etikett. Abgerechnet wird deshalb nicht — und nach 14 Tagen verfällt
+# der Eintrag als „unauflösbar".
+#
+# Nur: der Ausgang steht daneben. Die Auflösung `…-exact-score` desselben Spiels trägt den
+# ENDSTAND („AEK 1 - 0 LASK Linz"), und der Eintrag trägt seit dem 10.09. die LINIE im Klartext
+# („AEK vs. LASK Linz: O/U 3.5"). Eine Torlinie gegen eine Torzahl ist keine Schätzung, sondern
+# Arithmetik: 1 Tor, Linie 3,5 → Under. Gemessen am Buch: 13 der 17 verfallenen Einträge sind
+# Bündel, bei 10 davon lag der Endstand die ganze Zeit vor.
+#
+# Fehlerklasse: **eine Frage für unbeantwortbar erklärt, während ihre Antwort in der Datei
+# daneben steht.**
+#
+# Die Regel rechnet NUR, wo sie eindeutig ist, und schweigt sonst:
+#   · genau EINE Linie im Text, sonst None
+#   · genau EIN Endstand-Muster, sonst None — Vereinsnamen tragen Ziffern („Schalke 04")
+#   · eine GANZZAHLIGE Linie (O/U 3) kann push sein → None, kein geratener Sieger
+import re as _re
+
+_LINIE = _re.compile(r"(?:O\s*/?\s*U|Over\s*/?\s*Under|Total(?:s)?)\s*([0-9]+(?:[.,][0-9]+)?)", _re.I)
+_ENDSTAND = _re.compile(r"(?<![0-9])([0-9]{1,2})\s*[-–:]\s*([0-9]{1,2})(?![0-9])")
+
+
+def linie(frage):
+    """Die Torlinie aus der Marktfrage. REIN. None = nicht eindeutig.
+
+    „AEK vs. LASK Linz: O/U 3.5" -> 3.5. Zwei Linien im Text heissen zwei Maerkte und damit
+    keine Antwort.
+    """
+    t = str(frage or "")
+    tref = _LINIE.findall(t)
+    if len(tref) != 1:
+        return None
+    try:
+        return float(tref[0].replace(",", "."))
+    except ValueError:
+        return None
+
+
+def endstand(sieger):
+    """Die Tore aus einer `exact-score`-Aufloesung. REIN. None = nicht eindeutig.
+
+    „AEK 1 - 0 LASK Linz" -> (1, 0). Gegen Ziffern in Vereinsnamen helfen zwei Dinge: das
+    Muster verlangt einen Trenner ZWISCHEN zwei Zahlen (in „FC Schalke 04 2 - 1 Hertha" passt
+    nur „2 - 1"), und es nimmt hoechstens zwei Stellen je Seite (eine Jahreszahl wie
+    „FC 1899 - 2000" faellt damit raus). Bleiben trotzdem zwei Treffer, gilt der Endstand als
+    nicht eindeutig — lieber keine Abrechnung als eine aus dem Vereinsnamen.
+    """
+    tref = _ENDSTAND.findall(str(sieger or ""))
+    if len(tref) != 1:
+        return None
+    try:
+        return int(tref[0][0]), int(tref[0][1])
+    except ValueError:
+        return None
+
+
+def ausgang_aus_endstand(frage, exact_sieger):
+    """„Over" | „Under" | None — der Ausgang eines Totals-Marktes aus dem Endstand. REIN.
+
+    None heisst „nicht entscheidbar" und nie „Under": eine ganzzahlige Linie, die genau
+    getroffen wird, ist ein Push und hat keinen Sieger.
+    """
+    ln = linie(frage)
+    es = endstand(exact_sieger)
+    if ln is None or es is None:
+        return None
+    tore = es[0] + es[1]
+    if tore == ln:
+        return None                      # Push — kein Sieger, also auch kein geratener
+    return "Over" if tore > ln else "Under"
