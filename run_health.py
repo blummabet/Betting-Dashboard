@@ -110,6 +110,7 @@ def hole_lauf(repo, run_id, token, fetch=None):
     return {"createdAt": d.get("created_at"),
             "startedAt": d.get("run_started_at"),
             "event": d.get("event"),
+            "workflowId": d.get("workflow_id"),
             "attempt": d.get("run_attempt")}
 
 
@@ -201,6 +202,74 @@ def lade(pfad):
         return d if isinstance(d, dict) else {}
     except Exception:
         return {}
+
+
+# ── Wie viele Laeufe GitHub ueberhaupt ERZEUGT (22.09.2026) ───────────────────────────────
+# 🔴 Lucas' Stoerungsmeldung vom 22.09.: „Letzter Live-Scan vor 1.6h (Takt: 15 Min)". Der
+# Live-Scan liefert 6,1 statt 96 Laeufe am Tag, `manage-liga-poly` 4,7 statt 25.
+#
+# Der Kommentar bei `hole_lauf` (20.09.) nennt die zwei Erklaerungen und die Zahl, die sie
+# trennt: lange Wartezeit = „die Macs sind dicht", kurze Wartezeit = „der Zeitplan feuert nicht".
+# Die Zahl ist inzwischen da, und sie ist eindeutig: **alle 20 protokollierten Laeufe hatten 0,0 s
+# Wartezeit.** Wer lief, fand sofort einen Runner.
+#
+# Damit bleibt die zweite Erklaerung — aber „bleibt uebrig" ist kein Beweis. Es gibt eine dritte
+# Moeglichkeit, die genauso aussieht: GitHub haelt je Concurrency-Gruppe hoechstens EINEN
+# wartenden Lauf; ein neuer verdraengt den alten. Verdraengte Laeufe starten nie und schreiben
+# deshalb nichts — dieses Protokoll kann sie per Bauart nicht sehen.
+#
+# Fehlerklasse: **ein Protokoll, das nur die Ueberlebenden kennt.** Deshalb ab jetzt eine
+# zusaetzliche Frage an die API: wie viele Laeufe hat GitHub fuer diesen Workflow ERZEUGT, und
+# wie viele davon sind gelaufen? Sind beide Zahlen klein, feuert der Zeitplan nicht. Ist die
+# erste gross und die zweite klein, werden sie verdraengt. Eine Messung statt zweier Vermutungen.
+def _zeit(w):
+    """ISO -> datetime (UTC). REIN. None = unlesbar."""
+    try:
+        t = datetime.fromisoformat(str(w).replace("Z", "+00:00"))
+    except (ValueError, TypeError):
+        return None
+    return t.replace(tzinfo=timezone.utc) if t.tzinfo is None else t
+
+
+def hole_erzeugte(repo, workflow_id, token, fetch=None, seiten=1):
+    """Die letzten erzeugten Schedule-Laeufe dieses Workflows. -> [{created,started,status,conclusion}]"""
+    _get = fetch or (lambda u: _get_json(u, token))
+    raus = []
+    for seite in range(1, max(1, seiten) + 1):
+        d = _get("%s/repos/%s/actions/workflows/%s/runs?event=schedule&per_page=100&page=%d"
+                 % (API, repo, workflow_id, seite)) or {}
+        teil = d.get("workflow_runs") or []
+        for r in teil:
+            raus.append({"created": r.get("created_at"), "started": r.get("run_started_at"),
+                         "status": r.get("status"), "conclusion": r.get("conclusion")})
+        if len(teil) < 100:
+            break
+    return raus
+
+
+def erzeugungs_bilanz(erzeugte, jetzt=None):
+    """{erzeugt, gelaufen, verdraengt, spanneH, erzeugtProTag} — REIN. Leer = None.
+
+    `verdraengt` sind Laeufe, die erzeugt wurden und NIE begonnen haben. Das ist die Zahl, die
+    „der Zeitplan feuert nicht" von „die Laeufe werden verdraengt" trennt.
+    """
+    rows = [r for r in (erzeugte or []) if isinstance(r, dict) and r.get("created")]
+    if not rows:
+        return None
+    ts = []
+    for r in rows:
+        t = _zeit(r.get("created"))
+        if t is not None:
+            ts.append(t)
+    if len(ts) < 2:
+        return None
+    spanne_h = (max(ts) - min(ts)).total_seconds() / 3600.0
+    gelaufen = sum(1 for r in rows if r.get("started"))
+    verdraengt = sum(1 for r in rows
+                     if not r.get("started") and r.get("status") == "completed")
+    return {"erzeugt": len(rows), "gelaufen": gelaufen, "verdraengt": verdraengt,
+            "spanneH": round(spanne_h, 1),
+            "erzeugtProTag": round(len(rows) / (spanne_h / 24.0), 1) if spanne_h > 0 else None}
 
 
 def baue_eintrag(workflow, run_id, run_url, steps, api_fehler=None, lauf=None):
@@ -354,6 +423,16 @@ def main(argv=None):
 
     eintrag = baue_eintrag(workflow, run_id, run_url, steps, api_fehler, lauf)
 
+    # 22.09.2026: die eine Frage, die dieses Protokoll bisher nicht beantworten konnte —
+    # wie viele Laeufe hat GitHub ueberhaupt erzeugt? S. `erzeugungs_bilanz`.
+    bilanz = None
+    wf_id = (lauf or {}).get("workflowId")
+    if wf_id:
+        try:
+            bilanz = erzeugungs_bilanz(hole_erzeugte(repo, wf_id, token))
+        except Exception as e:                   # noqa: BLE001
+            print(f"  ⚠️  Erzeugungs-Bilanz nicht abrufbar: {str(e)[:80]}")
+
     os.makedirs(HEALTH_DIR, exist_ok=True)
     pfad = os.path.join(HEALTH_DIR, f"{slug}.json")
     datei = lade(pfad)
@@ -366,6 +445,9 @@ def main(argv=None):
                               soll_pro_tag=_soll_pro_tag(),
                               fenster_min=_fenster_min(),
                               stunden=_stunden()),
+             # None heisst „nicht abgefragt/nicht abrufbar", nie „null Laeufe" — der
+             # Unterschied ist der ganze Zweck dieser Zahl.
+             "erzeugung": bilanz,
              "runs": laeufe}
     tmp = pfad + ".tmp"
     with open(tmp, "w", encoding="utf-8") as f:
