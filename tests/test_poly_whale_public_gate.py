@@ -116,3 +116,54 @@ class TestZweiSchwellenFuerDieselbeFrage(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+# ── 22.09.2026: die zweite Hürde, die in der ersten steckte ─────────────────────────────
+class TestEineUntergrenzeBrauchtEineStichprobe(unittest.TestCase):
+    """🔴 Beim Nachmessen des eigenen Fixes vom 21.09. gefunden.
+
+    Ich hatte den Rang-Zwang entfernt, weil er still eine ZWEITE Mindest-Stichprobe erzwang
+    (n>=12 in der Schrumpf-Rechnung), die niemand als Hürde gemeint hatte. Mit ihm ist aber
+    auch die Stichprobe ganz verschwunden. Gemessen über die 4.376 Wallets des Tracks:
+
+        altes Tor (Rang)                 50
+        der Fix vom 21.09.            1.622   davon 815 mit n=1, weitere 630 mit n=2–7
+        mit der Stichprobe-Zeile        177
+
+    Der einzige Kandidat, der am 22.09. durchkam, hatte n=1 und eine „Untergrenze" von
+    +0,0015 pp — Rauschen mit Vorzeichen. Das Repo sagt es selbst: ein Punktschätzer
+    entscheidet nichts.
+
+    Fehlerklasse: eine Hürde entfernt und die zweite, die in ihr steckte, gleich mit.
+    """
+
+    ADR = "0xaaaa000000000000000000000000000000000001"
+
+    def _scores(self, n, clv_sum=10.49):
+        return {self.ADR: _w(n=n, clv_sum=clv_sum)}
+
+    def test_ein_einziger_trade_ist_keine_untergrenze(self):
+        s = self._scores(n=1, clv_sum=0.002)
+        ug, _ = W._clv_ug(s[self.ADR])
+        self.assertGreater(ug, 0, "die Untergrenze ist rechnerisch positiv …")
+        self.assertFalse(W._pub_in_top_n(s, self.ADR), "… und trotzdem kein Beleg")
+
+    def test_auch_sieben_reichen_nicht(self):
+        self.assertFalse(W._pub_in_top_n(self._scores(n=W.PUB_MIN_TR - 1), self.ADR))
+
+    def test_ab_PUB_MIN_TR_zaehlt_sie(self):
+        """Die Schwelle ist nicht neu erfunden: `PUB_MIN_TR` ist die Stichprobe, ab der dieser
+        Kanal einen Record ohnehin „belastbar" nennt."""
+        self.assertTrue(W._pub_in_top_n(self._scores(n=W.PUB_MIN_TR), self.ADR))
+
+    def test_der_echte_fall_vom_21_09_bleibt_drin(self):
+        """⭐ Die Gegenprobe. Eine Stichprobe-Hürde, die den Anlass des Vorfalls wieder
+        aussperrt, hat nichts repariert — n=9 muss durchkommen, n=12 der Rangliste wäre
+        wieder zu streng."""
+        adr = "0x5e6e2c3f06686f2607b86c90e35f536e81a1be00"
+        self.assertTrue(W._pub_in_top_n({adr: _w(n=9)}, adr))
+        self.assertLess(W.PUB_MIN_TR, W._RANK_MIN_N_CLV)
+
+    def test_eine_wallet_ohne_n_kommt_nicht_durch(self):
+        s = {self.ADR: {"clvSumPP": 10.0, "usd": 249422}}
+        self.assertFalse(W._pub_in_top_n(s, self.ADR))

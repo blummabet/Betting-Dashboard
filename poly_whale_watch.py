@@ -676,7 +676,27 @@ def _pub_in_top_n(scores, wallet, n=None):
     w = str(wallet).lower() if wallet else ""
     if not w:
         return False
-    ug, _art = _clv_ug((scores or {}).get(w) or (scores or {}).get(wallet) or {})
+    v = (scores or {}).get(w) or (scores or {}).get(wallet) or {}
+    # 🔴 22.09.2026, beim Nachmessen des eigenen Fixes von gestern. Ich hatte den Rang-Zwang
+    # entfernt, weil er still eine ZWEITE Mindest-Stichprobe erzwang (n>=12 in der
+    # Schrumpf-Rechnung), die niemand als Huerde gemeint hatte. Mit ihm ist aber auch die
+    # Stichprobe ganz verschwunden — und „CLV-Untergrenze > 0" allein ist bei n=1 keine
+    # Untergrenze, sondern eine einzelne Zahl mit einem Vorzeichen.
+    #
+    # Gemessen ueber die 4.376 Wallets des Tracks:
+    #     altes Tor (Rang)                 50
+    #     mein Fix von gestern          1.622   davon 815 mit n=1, weitere 630 mit n=2–7
+    #     mit dieser Zeile                177
+    # Der einzige Kandidat, der heute durchkam, hatte n=1 und eine Untergrenze von
+    # +0,0015 pp. Das ist Rauschen mit Vorzeichen.
+    #
+    # Die Zahl ist nicht neu erfunden: `PUB_MIN_TR` ist die Stichprobe, ab der dieser Kanal
+    # einen Record ohnehin „belastbar" nennt. Der echte Fall von gestern (n=9) bleibt drin,
+    # die n=12 der Rangliste waeren wieder zu streng.
+    # Fehlerklasse: eine Huerde entfernt und die zweite, die in ihr steckte, gleich mit.
+    if (v.get("n") or 0) < PUB_MIN_TR:
+        return False
+    ug, _art = _clv_ug(v)
     if not (ug is not None and ug > 0):
         return False
     # 🔴 21.09.2026 (Lucas: „es kommen seit gestern 11 uhr keine whale pushes mehr").
