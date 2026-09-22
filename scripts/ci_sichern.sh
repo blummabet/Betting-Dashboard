@@ -39,8 +39,23 @@ if git diff --staged --quiet; then
 fi
 
 git commit -m "🔐 $GRUND $(date -u +'%d.%m.%Y %H:%M') UTC" || { echo "⚠️  commit fehlgeschlagen"; exit 0; }
-git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" 2>/dev/null || true
-git config --local credential.helper "" 2>/dev/null || true
+
+# 🔴 21.09.2026 (Lucas: „das kam als Fehler" — `GITHUB_TOKEN: unbound variable`, Zeile 42).
+# Hier stand `${GITHUB_TOKEN}` blank unter `set -u`. Auf dem self-hosted Mac steht die Variable
+# in der Runner-Umgebung, also lief es dort seit Wochen; der erste Lauf auf `ubuntu-latest` —
+# der Verlauf-Nachtrag — brach genau hier ab. Der Commit war da, der Push nie, und weil der
+# Runner danach verschwindet, war die ganze Arbeit weg.
+#
+# Zwei Dinge daran waren falsch. Das Skript verlangte eine Variable, die es nirgends deklariert
+# und die nur auf EINEM Runner-Typ zufaellig existiert. Und es brauchte sie gar nicht:
+# `actions/checkout` legt den Token als `http.extraheader` in die lokale Git-Config, der Push
+# geht auch ohne. Die Umschreibung ist nur ein Ersatzweg fuer den Fall, dass er fehlt.
+# Fehlerklasse: eine Abhaengigkeit, die nirgends steht und deshalb nur dort auffaellt, wo sie
+# fehlt — also spaet.
+if [ -n "${GITHUB_TOKEN:-}" ] && [ -n "${GITHUB_REPOSITORY:-}" ]; then
+  git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" 2>/dev/null || true
+  git config --local credential.helper "" 2>/dev/null || true
+fi
 for versuch in 1 2 3; do
   bash scripts/ci_pull.sh main || true
   if git push 2>&1; then echo "✅ Beleg gesichert (Versuch $versuch)"; exit 0; fi
