@@ -1304,6 +1304,56 @@ function _pwScoreFuerSport(v){
 let _pwRankBigOnly = true;
 function _pwSetRankBigOnly(v){ if(v===_pwRankBigOnly) return; _pwRankBigOnly=v; _pwRender(); }
 if(typeof window!=='undefined') window._pwSetRankBigOnly=_pwSetRankBigOnly;
+
+// 🔴 22.09.2026 (Lucas: „interessant ist einfach Profit der Wallet in Wahrheit … auf Poly treiben
+// sich gute Leute rum und die gilt es zu erfassen. Können Leute sein, die 5K pro Wette setzen oder
+// auch 50K"). Die Rangliste kannte genau EIN Kriterium: die CLV-Untergrenze. Der gemessene
+// Sport-Profit stand seit heute daneben — und konnte nichts ordnen. 20 Zeilen mit den Augen
+// sortieren ist keine Rangliste.
+//
+// Er ordnet, aber er entscheidet nichts. Gemessen am 22.09.2026 auf der Vorwärtsprobe (Auswahl
+// 08.–14.09., Messung an den Auflösungen 15.–21.09.):
+//    alle Wallets (Basisrate)      n=387   Folge-ROI −12,3 %
+//    Trefferquoten-Gate bestanden  n= 46   Folge-ROI  −3,4 %
+//    Vorwoche im Plus              n=188   Folge-ROI  −5,4 %
+// Der Profit der Vorwoche ist also der SCHWÄCHERE Vorhersager. Deshalb bleibt das Gate, wie es
+// ist; hier wird sortiert, nicht gefiltert.
+//
+// Und es ist eine ANZEIGE-Einstellung: `_pwRankRows()` (Betting-Tab) ruft bewusst ohne Kriterium
+// auf und bleibt auf der CLV-UG. Eine Sortier-Schaltfläche, die still eine andere Auswahl in
+// einen anderen Tab schiebt, wäre genau die Kopplung, die hier schon dreimal zugeschlagen hat.
+// `tests/frontend/poly-wallet-rangkriterium.test.mjs` hält das fest.
+const PW_RANK_KRIT_STD = 'clvUg';
+let _pwRankKrit = PW_RANK_KRIT_STD;
+function _pwSetRankKrit(v){ if(v===_pwRankKrit) return; _pwRankKrit=v; _pwRender(); }
+if(typeof window!=='undefined') window._pwSetRankKrit=_pwSetRankKrit;
+
+// Der Schärfe-Floor (Ø CLV ≥ 0 und Treffer ≥ 45 % ab n≥8) war fest verdrahtet. Solange nach
+// CLV-UG sortiert wurde, war das folgenlos — er warf raus, was ohnehin unten stand.
+//
+// Auf einer Profit-Sortierung ist er es nicht. Gemessen am 22.09.2026 über
+// `poly_wallet_track.json`: von 683 Wallets ab $1.000 Ø-Einsatz wirft der Floor 339 raus, und
+// darunter sind **90 von 142** Wallets mit positivem 30-Tage-Profit. Die zweitbeste Wallet
+// überhaupt (+$864K über 30 Tage, ROI +26,5 %, n=92) fliegt wegen Ø CLV −0,1pp.
+// Eine Profit-Rangliste, aus der ein CLV-Kriterium still zwei Drittel der profitablen Wallets
+// entfernt, beantwortet nicht die Frage, die auf ihr steht. Also: sichtbar und schaltbar,
+// Vorgabe unverändert AN.
+let _pwRankFloor = true;
+function _pwSetRankFloor(v){ if(v===_pwRankFloor) return; _pwRankFloor=v; _pwRender(); }
+if(typeof window!=='undefined') window._pwSetRankFloor=_pwSetRankFloor;
+
+// Der Sortierwert eines Kriteriums — oder null, wenn er für diese Zeile NICHT GEMESSEN ist.
+// null ist hier ausdrücklich nicht 0: eine Wallet ohne aufgelöste Position im Fenster hat keinen
+// Profit von null, sie hat keinen. (Fehlerklasse „fehlende Information rendert als harmloser
+// Default" — hat uns auf dieser Fläche schon zweimal erwischt.)
+function _pwKritWert(r, krit){
+  if(krit==='profit7' || krit==='profit30'){
+    const f = (krit==='profit7') ? (r && r.f7) : (r && r.f30);
+    return (f && typeof f.gewinn==='number') ? f.gewinn : null;
+  }
+  return (r && typeof r.clvUg==='number') ? r.clvUg : null;
+}
+if(typeof window!=='undefined') window._pwKritWert=_pwKritWert;
 // 02.09.2026 — zwei Zuschnitte fuer die Rangliste, beide opt-in und beide ohne Urteil ueber das,
 // was sie ausblenden.
 //
@@ -1338,6 +1388,35 @@ function _pwRankAktivChip(){
     +'<span class="pw-mut" style="font-size:11px;font-weight:700;margin-right:2px">Aktivität:</span>'
     +chip(false,'alle')+chip(true,'⏱ nur aktiv (≤ '+PW_RANK_STILL_TAGE+' Tage)')
     +'<span class="pw-mut" style="font-size:10.5px">Wallets ohne Zeitstempel bleiben drin — unbekannt ist kein Urteil.</span></div>';
+}
+
+// Sortier-Kriterium + Schaerfe-Floor als sichtbare Schalter. Der Floor traegt seine gemessene
+// Wirkung als Zahl mit sich — „ein Guard ohne Vorfall ist eine Meinung", und ein Guard, dessen
+// Wirkung auf der Flaeche nicht steht, ist eine unsichtbare Meinung.
+function _pwRankKritLeiste(scores){
+  const chip=(v,label,titel)=>{const on=_pwRankKrit===v;
+    return '<button onclick="_pwSetRankKrit(\''+v+'\')" title="'+(titel||'')+'" style="padding:4px 11px;border-radius:16px;border:1px solid '
+      +(on?'#5eead4':'var(--border)')+';background:'+(on?'rgba(94,234,212,.16)':'transparent')+';color:'+(on?'#5eead4':'var(--muted)')
+      +';font-size:11.5px;font-weight:'+(on?700:500)+';cursor:pointer;font-family:inherit">'+label+'</button>';};
+  const fchip=(v,label)=>{const on=_pwRankFloor===v;
+    return '<button onclick="_pwSetRankFloor('+(v?'true':'false')+')" style="padding:4px 11px;border-radius:16px;border:1px solid '
+      +(on?'#5eead4':'var(--border)')+';background:'+(on?'rgba(94,234,212,.16)':'transparent')+';color:'+(on?'#5eead4':'var(--muted)')
+      +';font-size:11.5px;font-weight:'+(on?700:500)+';cursor:pointer;font-family:inherit">'+label+'</button>';};
+  const b = _pwFloorBilanz(scores);
+  // Die Zahl steht nur da, wenn sie gemessen ist. Ohne Kandidaten keine Behauptung.
+  const note = b.kandidaten
+    ? '<span class="pw-mut" style="font-size:10.5px">Der Floor haelt gerade <b>'+b.raus+'</b> von '+b.kandidaten
+      +' Wallets zurueck'+(b.imPlus ? ' — darunter <b>'+b.rausImPlus+'</b> von '+b.imPlus+' mit 30-Tage-Profit im Plus' : '')+'.</span>'
+    : '';
+  return '<div style="max-width:1000px;margin:2px auto 6px;display:flex;gap:7px;flex-wrap:wrap;align-items:center">'
+    +'<span class="pw-mut" style="font-size:11px;font-weight:700;margin-right:2px">Sortieren nach:</span>'
+    +chip('clvUg','CLV-UG','Einseitige 95%-Untergrenze des Ø CLV. Misst Timing gegen den Close, nicht Geld.')
+    +chip('profit7','💵 Profit 7T','Gemessener Sport-Profit der letzten 7 Tage. Ungemessene Wallets stehen unten, nicht bei null.')
+    +chip('profit30','💵 Profit 30T','Gemessener Sport-Profit der letzten 30 Tage. Ungemessene Wallets stehen unten, nicht bei null.')
+    +'</div>'
+    +'<div style="max-width:1000px;margin:0 auto 12px;display:flex;gap:7px;flex-wrap:wrap;align-items:center">'
+    +'<span class="pw-mut" style="font-size:11px;font-weight:700;margin-right:2px">Schaerfe-Floor:</span>'
+    +fchip(true,'an (Ø CLV ≥ 0 &amp; Treffer ≥ '+Math.round(PW_RANK_FLOOR_HIT*100)+'%)')+fchip(false,'aus')+note+'</div>';
 }
 
 function _pwRankToggle(){
@@ -1511,7 +1590,29 @@ function _pwGeldZelle(f, was) {
     + '</td>';
 }
 
-function _pwRankRowsPnl(scores) {
+// Der Vergleicher der Rangliste. Eigene Funktion, weil der interessante Fall paarweise ist und
+// sich in einer fertigen Liste nicht zuverlaessig zeigt: eine Sortierung ist stabil, also kann
+// „ungemessen ist gleichwertig" (return 0) in einer bestimmten Eingabe-Reihenfolge dasselbe
+// Ergebnis liefern wie „ungemessen nach unten" — dieselbe Mutation ueberlebte genau so.
+// Geprueft wird deshalb der Vergleich selbst, inklusive Antisymmetrie.
+function _pwRangVergleich(krit) {
+  return function (a, b) {
+    const wa = _pwKritWert(a, krit), wb = _pwKritWert(b, krit);
+    // Ungemessen sortiert NICHT als null, sondern ganz nach unten — sonst stuende eine Wallet
+    // ohne eine einzige Aufloesung im Fenster vor einer, die im Fenster Geld VERLOREN hat, und
+    // die Rangliste behauptete eine Auskunft, die sie nicht hat.
+    if (wa == null && wb == null) return (b.clvUg - a.clvUg) || (b.n - a.n);
+    if (wa == null) return 1;
+    if (wb == null) return -1;
+    return (wb - wa) || (b.clvUg - a.clvUg) || (b.n - a.n);
+  };
+}
+if(typeof window!=='undefined') window._pwRangVergleich=_pwRangVergleich;
+
+// Die Kandidaten der P&L-Rangliste: alles ausser dem Schaerfe-Floor und der Sortierung.
+// Eigene Funktion, damit die Floor-Bilanz unten dieselbe Kette benutzt statt einer zweiten,
+// nachgebauten — zwei Rechnungen nebeneinander sind hier schon dreimal auseinandergelaufen.
+function _pwRankKandidatenPnl(scores) {
   return Object.keys(scores).map(function (w) {
     const roh = scores[w];
     if (!roh || typeof roh.pnl !== 'number') return null;
@@ -1546,15 +1647,39 @@ function _pwRankRowsPnl(scores) {
       const d = _pwStilleTage(r.lastTs);
       return d == null || d <= PW_RANK_STILL_TAGE;
     })
-    // 09.08.2026 (Lucas): Schärfe-Floor — wer genug getrackt ist (n≥FLOOR_N) und den Close NICHT schlägt
-    // (Ø CLV<0) oder klar unter Münzwurf trifft (Treffer<45 %), gehört nicht in die „Schärfste"-Liste,
-    // egal wie hoch die Lifetime-P&L. Zu dünn getrackte (n<FLOOR_N) bleiben (können wir noch nicht beurteilen).
-    .filter(function (r) { return r.n < PW_RANK_FLOOR_N || (r.avgClv >= PW_RANK_FLOOR_CLV && r.hit >= PW_RANK_FLOOR_HIT); })
-    .filter(function (r) { return !_pwRankBigOnly || (r.n > 0 && r.usd / r.n >= PW_RANK_MIN_AVG_USD); })   // 4-stellig-Filter (Lucas)
+    .filter(function (r) { return !_pwRankBigOnly || (r.n > 0 && r.usd / r.n >= PW_RANK_MIN_AVG_USD); });   // 4-stellig-Filter (Lucas)
+}
+function _pwFloorOk(r) { return r.n < PW_RANK_FLOOR_N || (r.avgClv >= PW_RANK_FLOOR_CLV && r.hit >= PW_RANK_FLOOR_HIT); }
+
+// Was der Floor zurueckhaelt — gezaehlt, nicht behauptet. Genau die Zeilen, die die Rangliste
+// sonst zeigen wuerde, durch dieselbe Kette. Der zweite Wert ist der, auf den es ankommt: wie
+// viele der zurueckgehaltenen im 30-Tage-Fenster Geld VERDIENT haben.
+function _pwFloorBilanz(scores) {
+  const kand = _pwRankKandidatenPnl(scores || {});
+  const raus = kand.filter(function (r) { return !_pwFloorOk(r); });
+  const mitProfit = function (l) { return l.filter(function (r) { return r.f30 && typeof r.f30.gewinn === 'number' && r.f30.gewinn > 0; }).length; };
+  return { kandidaten: kand.length, raus: raus.length, rausImPlus: mitProfit(raus), imPlus: mitProfit(kand) };
+}
+
+function _pwRankRowsPnl(scores, krit, floor) {
+  // Vorgabe = CLV-UG und Floor AN: wer ohne Argumente ruft (Betting-Tab), bekommt exakt
+  // dieselbe Auswahl wie vorher.
+  const k = krit || PW_RANK_KRIT_STD;
+  const fl = (floor === undefined) ? true : !!floor;
+  return _pwRankKandidatenPnl(scores)
+    // 09.08.2026 (Lucas): Schärfe-Floor — wer genug getrackt ist (n≥FLOOR_N) und den Close NICHT
+    // schlägt (Ø CLV<0) oder klar unter Münzwurf trifft (Treffer<45 %), gehört nicht in die
+    // „Schärfste"-Liste. Zu dünn getrackte (n<FLOOR_N) bleiben — noch nicht beurteilbar.
+    // Seit 22.09.2026 abschaltbar, s. `_pwRankFloor`.
+    .filter(function (r) { return !fl || _pwFloorOk(r); })
     // 🔴 Hier stand `b.pnl - a.pnl`. Gemessen trug das null Information ueber die Kante (s. Kopf).
-    // Sortiert wird jetzt nach der CLV-UNTERGRENZE; bei Gleichstand entscheidet die groessere
-    // Stichprobe, nicht das groessere Vermoegen.
-    .sort(function (a, b) { return (b.clvUg - a.clvUg) || (b.n - a.n); }).slice(0, 20);
+    // Sortiert wird nach dem GEWAEHLTEN Kriterium (Vorgabe: CLV-UNTERGRENZE); bei Gleichstand
+    // entscheidet die groessere Stichprobe, nicht das groessere Vermoegen.
+    //
+    // Ungemessen sortiert NICHT als null, sondern ganz nach unten — sonst stuende eine Wallet
+    // ohne eine einzige Aufloesung im Fenster vor einer, die im Fenster Geld verloren hat, und
+    // die Rangliste behauptete eine Auskunft, die sie nicht hat.
+    .sort(_pwRangVergleich(k)).slice(0, 20);
 }
 // 01.09.2026 (Lucas: „die Whale-Wallets aendern sich eh, sobald eine bessere erscheint, oder?").
 // Ja — der Pool waechst automatisch (2.956 Wallets), und wer den Close nicht mehr schlaegt, faellt
@@ -1587,13 +1712,32 @@ function _pwStilleZelle(r){
   }
   return '<span style="color:'+col+';font-size:11px;white-space:nowrap">'+txt+'</span>'+fen;
 }
+// Welche Spalte gerade ordnet, steht in der Spalte. Sonst zeigt die Tabelle drei Zahlen und
+// verschweigt, welche davon die Reihenfolge macht.
+function _pwTh(sp, krit, label, titel) {
+  const on = (sp === krit);
+  return '<th title="' + titel + (on ? ' — das aktuelle Rang-Kriterium.' : '') + '"'
+    + (on ? ' style="color:#5eead4"' : '') + '>' + (on ? '▼ ' : '') + label + '</th>';
+}
 function _pwRankByPnl(scores, openMap, kick) {
-  const rows = _pwRankRowsPnl(scores);
+  const krit = _pwRankKrit;
+  const rows = _pwRankRowsPnl(scores, krit, _pwRankFloor);
+  // Der Kopftext beschreibt, was gerade SORTIERT — nicht, was am 02.09. einmal sortiert hat.
+  // Fehlerklasse „ein Satz behauptet, was die Zahl daneben widerlegt": eine feste Prosa ueber der
+  // Tabelle, die auf drei Sortierungen dieselbe bleibt, ist zwei davon falsch.
+  const satz = (krit === 'clvUg')
+    ? 'sortiert nach der <b>CLV-Untergrenze</b> — nicht nach Vermögen. '
+      + 'Gemessen am 02.09.2026 trug die alte P&amp;L-Sortierung <b>null</b> Information über die Kante (Median-CLV der Top-20 = Median aller Qualifizierten, r=0,06); '
+      + 'die Poly-P&amp;L ist plattformweit (Wahlen, Krypto), nicht Sport.'
+    : 'sortiert nach dem <b>gemessenen Sport-Profit</b> der letzten ' + (krit === 'profit7' ? '7' : '30') + ' Tage '
+      + '(Anteile × Einstieg gegen Auszahlung, unterstellt Halten bis zur Auflösung). '
+      + '<b>Ordnet, entscheidet nicht:</b> auf der Vorwärtsprobe vom 22.09.2026 (Auswahl 08.–14.09., gemessen an den Auflösungen 15.–21.09.) '
+      + 'lieferte „Vorwoche im Plus" einen Folge-ROI von −5,4 % (n=188), das Trefferquoten-Gate −3,4 % (n=46), die Basisrate −12,3 % (n=387) — '
+      + 'der Profit der Vorwoche ist der schwächere Vorhersager. Wallets ohne Auflösung im Fenster stehen unten mit „—", nicht bei null.';
   const intro = '<section class="pw-sec"><div class="pw-sec-head">' + kick
-    + '<span class="pw-sec-note">Wallets, die den Close schlagen (Ø CLV ≥ 0 &amp; Treffer ≥ 45 % bei genug n), sortiert nach der <b>CLV-Untergrenze</b> — nicht nach Vermögen. '
-    + 'Gemessen am 02.09.2026 trug die alte P&amp;L-Sortierung <b>null</b> Information über die Kante (Median-CLV der Top-20 = Median aller Qualifizierten, r=0,06); '
-    + 'die Poly-P&amp;L ist plattformweit (Wahlen, Krypto), nicht Sport. · nur Wallets ab $1.000 Ø-Einsatz</span></div>'
-    + _pwRankToggle() + _pwRankSportLeiste(scores) + _pwRankAktivChip();
+    + '<span class="pw-sec-note">' + (_pwRankFloor ? 'Wallets, die den Close schlagen (Ø CLV ≥ 0 &amp; Treffer ≥ 45 % bei genug n), ' : 'Alle Wallets — der Schärfe-Floor ist <b>aus</b>, CLV und Trefferquote filtern gerade nichts. ')
+    + satz + ' · nur Wallets ab $1.000 Ø-Einsatz</span></div>'
+    + _pwRankKritLeiste(scores) + _pwRankToggle() + _pwRankSportLeiste(scores) + _pwRankAktivChip();
   if (!rows.length) return intro + '<div class="pw-none">Noch keine Wallet mit P&amp;L-Historie erfasst.</div></section>';
   const body = rows.map(function (r, i) {
     const pcol = r.pnl >= 0 ? '#3fb950' : '#f85149', clvCol = r.avgClv >= 0 ? '#3fb950' : '#f85149';
@@ -1628,7 +1772,11 @@ function _pwRankByPnl(scores, openMap, kick) {
       + '<td>' + _pwNowCell(openMap, r.wallet) + '</td></tr>';
   }).join('');
   return intro + '<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
-    + '<th>#</th><th>Wallet</th><th title="Einseitige 95%-Untergrenze des Ø CLV — das Rang-Kriterium. * = geschrumpfter Schätzer, solange die Streuung fehlt.">CLV-UG</th><th>Ø CLV</th><th>Treffer</th><th>n</th><th>Einsatz</th><th>Ø/Wette</th><th title="Gemessener Sport-Profit der letzten 7 Tage: Anteile x Einstieg gegen Auszahlung. Unterstellt Halten bis zur Auflösung.">Profit 7T</th><th title="Dasselbe über 30 Tage.">Profit 30T</th><th title="Plattformweite Poly-Bilanz (Wahlen, Krypto inklusive) — nur Kontext.">Poly-P&amp;L</th><th title="Wie lange die letzte Auflösung her ist. ▲/▼ vergleicht die letzten Auflösungen mit dem Lebenszeit-CLV.">zuletzt</th><th>setzt gerade auf</th>'
+    + '<th>#</th><th>Wallet</th>' + _pwTh('clvUg', krit, 'CLV-UG', 'Einseitige 95%-Untergrenze des Ø CLV. * = geschrumpfter Schätzer, solange die Streuung fehlt.')
+    + '<th>Ø CLV</th><th>Treffer</th><th>n</th><th>Einsatz</th><th>Ø/Wette</th>'
+    + _pwTh('profit7', krit, 'Profit 7T', 'Gemessener Sport-Profit der letzten 7 Tage: Anteile x Einstieg gegen Auszahlung. Unterstellt Halten bis zur Auflösung.')
+    + _pwTh('profit30', krit, 'Profit 30T', 'Dasselbe über 30 Tage.')
+    + '<th title="Plattformweite Poly-Bilanz (Wahlen, Krypto inklusive) — nur Kontext.">Poly-P&amp;L</th><th title="Wie lange die letzte Auflösung her ist. ▲/▼ vergleicht die letzten Auflösungen mit dem Lebenszeit-CLV.">zuletzt</th><th>setzt gerade auf</th>'
     + '</tr></thead><tbody>' + body + '</tbody></table></div></section>';
 }
 function _pwRankRowsClv(scores) {
