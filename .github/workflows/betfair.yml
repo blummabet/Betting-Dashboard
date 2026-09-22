@@ -404,6 +404,10 @@ jobs:
           git add punkte_state.json 2>/dev/null || true
           git add punkte_ledger.json 2>/dev/null || true
           git add freigabe.json 2>/dev/null || true
+          # 🔴 22.09.2026: das Gedaechtnis der Freigaben (wann zuerst freigegeben, mit welchem
+          # Stand). Ohne diese Zeile faengt die Vorwaerts-Bilanz bei JEDEM CI-Lauf wieder bei
+          # null an — die Messung saehe aus, als gaebe es sie, und wuerde nie etwas zeigen.
+          git add freigabe_stand.json 2>/dev/null || true
           git add vorregistrierung.json 2>/dev/null || true
           git add killer_push_seen.json 2>/dev/null || true
           git add killer_push_ledger.json 2>/dev/null || true

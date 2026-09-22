@@ -764,6 +764,73 @@ def betfair_schubladen(rec=None, min_n=None) -> list:
     return clv_urteil_nachziehen(out)
 
 
+STAND_FILE = BASE / "freigabe_stand.json" if "BASE" in dir() else Path(__file__).resolve().parent / "freigabe_stand.json"
+
+
+def seit_freigabe(zeilen, stand, now=None) -> tuple:
+    """Was eine Schublade geleistet hat, SEIT sie freigegeben wurde. REIN.
+
+    🔴 22.09.2026 (Lucas: „ja" — auf die Frage, ob die drei freigegebenen Schubladen besser
+    dastehen als die zwölf, die ich gerade auf Kandidat gesetzt habe).
+
+    Die Antwort steckte nur in der git-Historie und musste von Hand rekonstruiert werden. Sie
+    ist die einzige Zahl, die die Mehrfachtest-Frage wirklich entscheidet — und sie stand
+    nirgends. Fehlerklasse: *die Messung, die das Urteil traegt, existiert nur als Rekonstruktion.*
+
+    Rekonstruiert am 22.09.2026 aus 1.392 Laeufen der letzten 14 Tage:
+
+        Schublade                        freigegeben     n / ROI dort    seither        Urteil
+        Liga · ABWÄGEN                   08.09.  100 %    91 / +15,2 %    98 / +9,0 %   haelt
+        Mix money+sharp+steam            16.09.   33 %    32 / +20,1 %    12 / +8,3 %   zu duenn
+        🔒 E-Sport ohne Wallet-Nachweis   21.09.   10 %   120 / +14,8 %    15 / −14,1 %  frisch
+        Public-Kandidaten (heute raus)   08.09.   20 %    35 / +20,8 %    64 / +0,3 %   zum Mittel
+
+    Die letzte Zeile ist der Beleg, dass die Mehrfachtest-Warnung keine Theorie ist: ein ROI von
+    +20,8 % auf 35 Plays fiel ueber 64 neue Plays auf +0,3 % — genau der Rueckfall zum Mittel,
+    den die Rechnung vorhersagt. Und die erste ist der Beleg, dass sie nicht das letzte Wort ist:
+    98 Plays out of sample bei +9,0 % sind eine Bestaetigung, auch ohne Voranmeldung.
+
+    `stand` ist das Gedaechtnis: je Schublade der Zeitpunkt der ERSTEN Freigabe und der Stand
+    (n, roi) zu dem Zeitpunkt. Es wird nie ueberschrieben, solange die Schublade freigegeben
+    bleibt — sonst waere der Vergleich jeden Tag bei null, und die Zahl koennte nie wachsen.
+
+    Faellt eine Schublade wieder heraus, bleibt ihr Eintrag stehen und `raus` zaehlt hoch. Ein
+    Flackern ist selbst ein Befund: „Public-Kandidaten" ist in 14 Tagen elf Mal rein- und
+    rausgefallen und stand am Ende in 20 % der Laeufe. Eine Freigabe, die taeglich wechselt,
+    ist kein Beleg — sie ist eine Zahl, die um null schwankt.
+    """
+    now = now or _now()
+    stand = dict(stand or {})
+    for z in zeilen or []:
+        if not isinstance(z, dict):
+            continue
+        name = str(z.get("schublade") or "")
+        if not name or name.startswith("_"):
+            continue        #  ist Dokumentation, keine Schublade
+        alt = stand.get(name)
+        if z.get("status") == "freigegeben":
+            if not alt:
+                stand[name] = {"ab": now.isoformat(), "nBei": z.get("n"),
+                               "roiBei": z.get("roi"), "raus": 0, "drin": True}
+                alt = stand[name]
+            elif not alt.get("drin"):
+                alt["drin"] = True
+            n_bei, roi_bei = alt.get("nBei"), alt.get("roiBei")
+            n_jetzt, roi_jetzt = z.get("n"), z.get("roi")
+            eintrag = {"ab": alt.get("ab"), "nBei": n_bei, "roiBei": roi_bei,
+                       "rausgefallen": alt.get("raus") or 0}
+            if all(isinstance(x, (int, float)) for x in (n_bei, roi_bei, n_jetzt, roi_jetzt)):
+                d = n_jetzt - n_bei
+                eintrag["nNeu"] = d
+                # Der ROI der NEUEN Plays — nicht der Gesamt-ROI, der die Anfangszahl mitschleppt.
+                eintrag["roiNeu"] = round((roi_jetzt * n_jetzt - roi_bei * n_bei) / d, 4) if d > 0 else None
+            z["seitFreigabe"] = eintrag
+        elif alt and alt.get("drin"):
+            alt["drin"] = False
+            alt["raus"] = (alt.get("raus") or 0) + 1
+    return zeilen, stand
+
+
 def mehrfachtest_nachziehen(zeilen, ausbeute) -> list:
     """Traegt den Mehrfachtest-Befund in die Begruendung der Betfair-Kandidaten nach. REIN.
 
@@ -1552,6 +1619,17 @@ def baue(engine=None, track=None, cards=None, betfair=None, now=None) -> dict:
     # Funktion im Modul und wurde von niemandem aufgerufen.
     _ausbeute = ausbeute_ueber_huerde(zeilen)
     mehrfachtest_nachziehen(zeilen, _ausbeute)
+    # 22.09.2026: die Vorwaerts-Bilanz seit der Freigabe — die einzige Zahl, die die
+    # Mehrfachtest-Frage entscheidet, und bis heute nur als git-Rekonstruktion vorhanden.
+    try:
+        _stand_alt = json.loads(STAND_FILE.read_text(encoding="utf-8")) if STAND_FILE.exists() else {}
+    except Exception:
+        _stand_alt = {}
+    _zeilen2, _stand = seit_freigabe(zeilen, _stand_alt, now)
+    try:
+        STAND_FILE.write_text(json.dumps(_stand, ensure_ascii=False, indent=1), encoding="utf-8")
+    except Exception as _e:
+        print("freigabe_stand.json nicht schreibbar:", _e)
     zeilen.sort(key=lambda r: (RANG.get(r["status"], 9), -(r.get("roiLb") or -9), -r["n"]))
     frei = [r for r in zeilen if r["status"] == "freigegeben"]
     kand = [r for r in zeilen if r["status"] == "kandidat"]
