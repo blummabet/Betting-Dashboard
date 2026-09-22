@@ -733,3 +733,36 @@ def test_der_wachhund_laeuft_gegen_das_echte_ledger():
     assert not r["kandidaten"], (
         "Slugs mit Ebene, hinter denen mehrere Turniere stehen (Abdeckung: %d Zeilen mit "
         "Turnier-ID): %s" % (r["nMitId"], r["kandidaten"]))
+
+
+def test_ein_wettbewerb_mit_zwei_sektionen_ist_nicht_mehrdeutig():
+    """🔴 22.09.2026 abends, der Wachhund von heute Mittag schlug am selben Tag an: `efl-trophy`
+    mit zwei Turnier-IDs. Nachgesehen sind es die Nord- und die Sued-Sektion desselben Pokals
+    (beide „EFL Trophy", beide Fussball, beide League One/Two plus U21-Nachwuchs).
+
+    Der Wachhund zaehlte IDs und meinte KLASSEN — Fehlerklasse: ein Waechter, der ein Symptom
+    zaehlt statt die Wirkung. Dieselbe Regel steht bei `_GRUPPE` schon einmal: eine Gruppe IST
+    ihre Liga."""
+    zeilen = [{"sport": "soccer", "ligaSlug": "efl-trophy", "ligaId": x} for x in ("a", "b")]
+    assert LS.mehrdeutige_kandidaten(zeilen)["kandidaten"] == {}
+    assert "efl-trophy" in LS.EIN_WETTBEWERB
+
+
+def test_die_ausnahme_gilt_nur_fuer_das_was_draufsteht():
+    """Sonst waere die Liste ein Generalschluessel statt eines Protokolls."""
+    zeilen = [{"sport": "soccer", "ligaSlug": "premier-league", "ligaId": x} for x in ("a", "b")]
+    assert LS.mehrdeutige_kandidaten(zeilen)["kandidaten"] == {"premier-league": ["a", "b"]}
+
+
+def test_kein_slug_steht_in_beiden_listen():
+    doppelt = [s for s in LS.EIN_WETTBEWERB if s in LS.MEHRDEUTIG]
+    assert not doppelt, ("ein Schluessel kann nicht zugleich ein Wettbewerb und mehrdeutig "
+                         "sein: %s" % doppelt)
+
+
+def test_jede_ausnahme_traegt_ihre_begruendung():
+    """Eine Ausnahmeliste ohne Begruendung je Zeile ist in drei Wochen eine Liste, die niemand
+    mehr zurueckbauen kann."""
+    for slug, grund in LS.EIN_WETTBEWERB.items():
+        assert len(str(grund)) > 25, "%s steht ohne Begruendung drin" % slug
+        assert "geprueft" in str(grund) or "gemessen" in str(grund), slug

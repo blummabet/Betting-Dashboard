@@ -158,20 +158,30 @@ class TestBetfairSchubladenNutzenDieEchteSchranke(unittest.TestCase):
         self.assertIsNotNone(r["roiLb"])
         self.assertTrue(r["naeherung"])
 
-    def test_gemessener_clv_wird_nicht_als_fehlend_ausgegeben(self):
-        """„kein CLV im Ledger" und „CLV gemessen, aber ohne Streuung" sind zwei verschiedene
-        Zustaende. Kein Urteil ist etwas anderes als ein gemessenes Nein."""
+    def test_der_gemessene_clv_steht_auf_der_zeile_und_entscheidet_nichts(self):
+        """🔴 22.09.2026. Hier stand `assertIn("Streuung", r["grund"])` — die fehlende
+        CLV-Streuung war die Begruendung, warum nicht freigegeben wird. Das war der letzte
+        CLV-Riegel im Haus (Lucas: „es darf kein Kriterium sein, dass irgendwas gekickt wird").
+
+        Der Wert selbst bleibt auf der Zeile: entfernt ist das Kriterium, nicht die Zahl."""
         r = F.betfair_schubladen(self._rec(0.02))[0]
         self.assertGreater(r["roiLb"], 0)
-        self.assertEqual(r["clv"], 0.04)
-        self.assertIn("Streuung", r["grund"])
-        self.assertNotEqual(r["status"], "freigegeben", "ohne CLV-Untergrenze keine Freigabe")
+        self.assertEqual(r["clv"], 0.04, "der gemessene CLV muss weiter dastehen")
+        self.assertNotIn("CLV", r["grund"], r["grund"])
+        self.assertNotEqual(r["status"], "freigegeben")
+        self.assertEqual(r["status"], "kandidat")
 
-    def test_ohne_jeden_clv_sagt_der_grund_genau_das(self):
+    def test_ohne_jeden_clv_faellt_kein_anderes_urteil(self):
+        """22.09.2026: der Grund nannte hier „gar kein CLV" als Ablehnungsgrund. Da der CLV
+        nicht mehr entscheidet, darf sein Fehlen auch nichts mehr begruenden — die Zeile sieht
+        aus wie jede andere mit belegter Rendite."""
         rec = self._rec(0.02)
         rec["byMarket"]["Half Time"].pop("avgClvBf")
         r = F.betfair_schubladen(rec)[0]
-        self.assertIn("gar kein CLV", r["grund"])
+        self.assertNotIn("CLV", r["grund"], r["grund"])
+        self.assertEqual(r["status"], "kandidat")
+        self.assertIsNone(r["clv"], "ohne Messung steht dort None, nicht eine erfundene Zahl")
+        self.assertEqual(r["clvUrteil"], "nicht erhoben")
 
     # Schubladen, die die ROI-Huerde genommen haben und ANGESEHEN wurden. Der Eintrag ist das
     # Protokoll der Sichtung, nicht ihre Abkuerzung — ohne ihn faengt der Wachhund denselben Fall

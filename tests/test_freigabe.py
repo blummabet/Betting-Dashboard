@@ -156,11 +156,20 @@ class TestPolyEngineFilter:
 
 
 class TestBetfair:
-    def test_betfair_wird_nie_freigegeben_solange_kein_clv_im_ledger_steht(self):
+    def test_betfair_wird_nicht_freigegeben_aber_nicht_mehr_wegen_des_clv(self):
+        """🔴 22.09.2026 (Lucas: „check ob wir CLV so implementiert haben, dass es irgendwas
+        blockt"). Hier stand `assert "CLV" in e["grund"]` — der Test hat den letzten CLV-Riegel
+        des Hauses festgeschrieben. Am 08.09. wurde `bewerte()` auf die Rendite umgestellt,
+        dieser Zweig nicht.
+
+        Freigegeben wird die Schublade weiterhin nicht, aber aus dem Grund, der zur Frage
+        passt: das Register prueft 407 Schubladen gleichzeitig, und der Zufall legt allein
+        20,4 davon ueber die Huerde. Kandidat statt Freigabe, Bestaetigung nach vorn."""
         rec = {"byMarket": {"Match Odds": {"n": 5000, "hitRate": 0.60, "roi": 0.25}}}
         e = F.betfair_schubladen(rec)[0]
         assert e["status"] != "freigegeben"
-        assert "CLV" in e["grund"]
+        assert e["status"] == "kandidat", "belegte Rendite ist mindestens ein Kandidat"
+        assert "CLV" not in e["grund"], e["grund"]
         assert e["naeherung"] is True      # die Streuung ist rekonstruiert, nicht gemessen
 
     def test_zu_kleine_liga_markt_eimer_fallen_raus(self):

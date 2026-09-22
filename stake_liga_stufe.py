@@ -426,6 +426,27 @@ MEHRDEUTIG = {
     "1st-division": "Daenemark/Norwegen Ebene 2, Zypern Ebene 1 — derselbe Slug",
 }
 
+# 🔴 22.09.2026 abends: der Wachhund `mehrdeutige_kandidaten` hat am selben Tag zugeschlagen,
+# an dem er gebaut wurde — mit `efl-trophy` und zwei Turnier-IDs. Nachgesehen:
+#
+#     4b60bce4…  13 Wetten  Barnsley–Leeds, Leicester–Fulham U21, Rochdale–Liverpool U21
+#     7807b604…   3 Wetten  Bradford–Newcastle U21, Cheltenham–Exeter, Wigan–Blackpool
+#
+# Beide heissen „EFL Trophy", beide Fussball, beide dieselbe Sorte Paarung (League One/Two plus
+# U21-Nachwuchs). Das sind die Nord- und die Sued-Sektion EINES Wettbewerbs, keine zwei
+# Spielklassen. Der Wachhund zaehlte IDs und meinte KLASSEN — Fehlerklasse: *ein Waechter, der
+# ein Symptom zaehlt statt die Wirkung*.
+#
+# Die Regel dahinter steht in dieser Datei schon einmal, bei `_GRUPPE`: „eine Gruppe IST ihre
+# Liga". Regionalstaffeln teilen eine Spielklasse per Definition. Automatisch von aussen
+# unterscheidbar sind die beiden Faelle nicht — Daenemarks und Zyperns „1st Division" tragen
+# ebenfalls denselben Namen und dieselbe Sportart. Deshalb eine gepruefte Ausnahmeliste, wie
+# bei jedem anderen Wissen in dieser Datei: was hier steht, ist nachgesehen worden, und der
+# Waechter meldet weiterhin ALLES, was nicht draufsteht.
+EIN_WETTBEWERB = {
+    "efl-trophy": "Nord- und Sued-Sektion desselben Pokals (22.09.2026 an den Paarungen geprueft)",
+}
+
 _MUSTER = (
     ("srl", lambda s: s.endswith("-srl") or "-srl-" in s),          # Simulated Reality League
     ("freundschaft", lambda s: bool(_FREUNDSCHAFT_RX.search(s))),
@@ -573,6 +594,10 @@ def mehrdeutige_kandidaten(zeilen, sport: str = SPORT) -> dict:
     `ligaId` aus dem Feed ist sie zaehlbar: ein Schluessel, hinter dem zwei Turnier-IDs
     stehen, kann keine Spielklasse tragen.
 
+    ⚠️ Mehrere IDs heissen nicht automatisch mehrere Spielklassen: ein Wettbewerb mit Nord-
+    und Sued-Sektion hat zwei. Geprueft und fuer gleich befundene Faelle stehen in
+    `EIN_WETTBEWERB` und werden nicht mehr gemeldet — alles andere schon.
+
     Zeilen ohne `ligaId` zaehlen NICHT als „ein Turnier" — sie zaehlen gar nicht. Der Feed
     schreibt die ID erst seit dem 22.09. mit, und das rollierende Fenster traegt sie erst
     nach und nach; fehlende Information ist hier kein Freispruch. `nMitId` sagt, wie weit die
@@ -592,7 +617,7 @@ def mehrdeutige_kandidaten(zeilen, sport: str = SPORT) -> dict:
         je.setdefault(sl, set()).add(str(lid))
     treffer = {sl: sorted(ids) for sl, ids in je.items()
                if len(ids) > 1 and stufe(sl, sport) is not None
-               and sl not in MEHRDEUTIG}
+               and sl not in MEHRDEUTIG and sl not in EIN_WETTBEWERB}
     return {"nMitId": mit_id, "kandidaten": treffer}
 
 

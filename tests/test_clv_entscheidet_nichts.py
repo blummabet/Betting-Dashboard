@@ -212,3 +212,89 @@ def test_am_echten_track_gibt_der_tausch_wallets_frei_und_sperrt_andere():
     assert frei, "der Tausch gibt niemanden frei — dann misst er nichts"
     assert neu_gesperrt, ("der Tausch sperrt niemanden zusaetzlich — dann ist es doch eine "
                           "reine Lockerung und nicht der Wechsel des Massstabs")
+
+
+# ── 22.09.2026 abends, dritter Fund: der letzte CLV-Riegel im Haus ───────────
+# 🔴 Lucas: „Kannst du den ganzen Betfair-Radar auch checken, ob wir da CLV so implementiert
+# haben, dass es irgendwas blockt? Auch das Betfair-Terminal."
+#
+# Radar und Terminal: sauber — der CLV wird dort gemessen und angezeigt, jede Auswahl läuft auf
+# der Rendite (das Terminal-Mute seit 04.09. auf `roiUg`).
+#
+# Das Freigabe-Register aber hatte im BETFAIR-Zweig noch den alten Riegel. Am 08.09.2026 wurde
+# `bewerte()` auf die Rendite umgestellt (`CLV_BLOCKT` aus) — `betfair_schubladen()` nicht.
+# Gemessen kostete das 12 Schubladen mit belegter Rendite-Untergrenze, darunter
+# „Peruvian Primera Division · Half Time" mit +12,9 % Untergrenze über 32 Plays.
+#
+# Dieselbe Fehlerklasse wie überall heute: eine Entscheidung, die an einer Stelle umgesetzt
+# wird und an den anderen stehen bleibt.
+def test_der_betfair_zweig_blockt_nicht_mehr_auf_clv():
+    quelle = (ROOT / "freigabe.py").read_text(encoding="utf-8")
+    code = "\n".join(z for z in quelle.splitlines() if not z.lstrip().startswith("#"))
+    for satz in ("ohne Untergrenze keine Freigabe",
+                 "ohne den keine Freigabe",
+                 "ohne CLV keine Freigabe"):
+        assert satz not in code, "der CLV-Riegel steht wieder im Betfair-Zweig: %r" % satz
+
+
+def test_eine_betfair_schublade_mit_belegter_rendite_wird_kandidat():
+    """Und zwar Kandidat, nicht Freigabe. Der Riegel war falsch begründet, aber er hat zufällig
+    etwas Richtiges verhindert: das Register prüft 407 Schubladen gleichzeitig, und der Zufall
+    legt bei einseitigem 5-%-Band allein 20,4 davon über die Hürde — tatsächlich liegen 15
+    drüber. Auf Einzel-Ebene überlebt keine eine Mehrfachtest-Korrektur (Bonferroni 0,
+    Benjamini-Hochberg bei FDR 20 % ebenfalls 0)."""
+    import freigabe as F
+    eimer = {"n": 32, "roi": 0.763, "roiUg": 0.129, "hitRate": 0.56, "avgClvBf": 0.53,
+             "nClvBf": 32}
+    zeilen = F.betfair_schubladen({"byLeagueMarket": {"Peruvian Primera Division|Half Time": eimer}}) \
+        if hasattr(F, "betfair_schubladen") else None
+    if zeilen is None:
+        pytest.skip("betfair_schubladen heisst anders")
+    treffer = [z for z in zeilen if (z.get("n") or 0) == 32]
+    assert treffer, "die Zeile wurde gar nicht gebaut"
+    z = treffer[0]
+    assert z["status"] == "kandidat", "belegte Rendite muss mindestens Kandidat sein"
+    assert "CLV" not in (z.get("grund") or ""), \
+        "der CLV darf die Begruendung nicht mehr tragen: %r" % z.get("grund")
+    assert z.get("clv") == 0.53, "der CLV-Wert selbst muss auf der Zeile bleiben"
+
+
+def test_der_mehrfachtest_befund_wird_gezogen_nicht_nur_gerechnet():
+    """🔴 `ausbeute_ueber_huerde` gab es seit dem 20.09. und wurde von KEINER Stelle aufgerufen.
+    Fehlerklasse: ein Befund, der gemeldet, aber nicht gezogen wird."""
+    import inspect
+    import freigabe as F
+    q = inspect.getsource(F.baue)
+    assert "ausbeute_ueber_huerde(" in q, "die Ausbeute wird nicht gerechnet"
+    assert "mehrfachtest_nachziehen(" in q, "der Befund landet auf keiner Zeile"
+    assert '"ausbeute"' in q, "die Zahl steht in keinem Artefakt"
+
+
+def test_der_nachtrag_trifft_nur_die_belegten_kandidaten():
+    """Ein Kandidat, dem schlicht Plays fehlen, hat mit Mehrfachtesten nichts zu tun — bekäme
+    er den Satz, stünde auf 300 Zeilen eine Statistik, die sie nicht betrifft."""
+    import freigabe as F
+    zeilen = [{"schublade": "belegt", "status": "kandidat", "roiLb": 0.12, "n": 32},
+              {"schublade": "zu duenn", "status": "kandidat", "roiLb": None, "n": 12,
+               "grund": "12 von 30 Plays"},
+              {"schublade": "negativ", "status": "kandidat", "roiLb": -0.04, "n": 40,
+               "grund": "ROI nicht belegt"},
+              {"schublade": "frei", "status": "freigegeben", "roiLb": 0.03, "n": 134,
+               "grund": "ROI belegt"}]
+    F.mehrfachtest_nachziehen(zeilen, {"nTests": 407, "erwartet": 20.4, "nUeber": 15,
+                                       "ueberschuss": False})
+    assert "gleichzeitig geprüften" in zeilen[0]["grund"]
+    assert zeilen[0]["mehrfachtest"]["nTests"] == 407
+    assert zeilen[1]["grund"] == "12 von 30 Plays"
+    assert zeilen[2]["grund"] == "ROI nicht belegt"
+    assert zeilen[3]["grund"] == "ROI belegt"
+    assert "mehrfachtest" not in zeilen[3]
+
+
+def test_ohne_ausbeute_zahl_wird_nichts_behauptet():
+    import freigabe as F
+    z = [{"schublade": "x", "status": "kandidat", "roiLb": 0.12, "n": 32, "grund": "vorher"}]
+    F.mehrfachtest_nachziehen(z, {})
+    assert z[0]["grund"] == "vorher", "ohne Zahl lieber gar kein Satz"
+    F.mehrfachtest_nachziehen(z, None)
+    assert z[0]["grund"] == "vorher"

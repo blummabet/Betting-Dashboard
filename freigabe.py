@@ -721,28 +721,77 @@ def betfair_schubladen(rec=None, min_n=None) -> list:
             if roi_lb is None or roi_lb <= 0:
                 eintrag["status"], eintrag["grund"] = "geprueft", "ROI nicht belegt über null"
             else:
-                eintrag["status"] = "geprueft"
-                # 06.09.2026: hier stand „kein CLV je Signal im Ledger". Das stimmt fuer die
-                # EINZELZEILE, war aber als Satz falsch: derselbe Eimer traegt `avgClvBf` —
-                # denselben Aggregat-Typ, aus dem hier auch der ROI kommt. Was wirklich fehlt,
-                # ist die STREUUNG, ohne die es keine Untergrenze gibt. Der Unterschied ist
-                # der zwischen „nicht gemessen" und „gemessen, aber nicht belegbar" — und
-                # gerade den soll dieses Register nie verwischen.
+                # 🔴 22.09.2026 (Lucas: „check ob wir CLV so implementiert haben, dass es
+                # irgendwas blockt — auch im Betfair-Radar und im Terminal").
+                #
+                # Hier stand `status = "geprueft"` mit dem Grund „ohne Untergrenze keine
+                # Freigabe". Das war ein CLV-Riegel, und er war der letzte im Haus: am
+                # 08.09.2026 wurde `bewerte()` auf die Rendite umgestellt (`CLV_BLOCKT` aus),
+                # dieser Zweig nicht. Dieselbe Fehlerklasse, die heute schon dreimal
+                # aufgeschlagen ist: **eine Entscheidung, die an einer Stelle umgesetzt wird
+                # und an den anderen stehen bleibt.**
+                #
+                # Gemessen am 22.09.2026 kostete er 12 Schubladen mit belegter
+                # Rendite-Untergrenze, darunter Peruvian Primera Division · Half Time mit
+                # +12,9 % Untergrenze ueber 32 Plays.
+                #
+                # ── Warum sie trotzdem nicht freigegeben werden ───────────────────────────
+                # Weil das Register 407 Schubladen GLEICHZEITIG prueft. Bei einseitigem
+                # 5-%-Band legt der Zufall allein 20,4 davon ueber die Huerde — tatsaechlich
+                # liegen 15 drueber. Die Ausbeute ist KLEINER als der Zufall. Auf
+                # Einzel-Ebene ueberlebt keine einzige Schublade eine
+                # Mehrfachtest-Korrektur (Bonferroni: 0, Benjamini-Hochberg bei FDR 20 %: 0).
+                #
+                # Der CLV-Riegel hat also zufaellig etwas Richtiges verhindert, mit der
+                # falschen Begruendung. Beides zu behalten waere bequem und unehrlich.
+                # Deshalb (Lucas' Entscheidung, 22.09.2026): **Kandidat statt Freigabe.**
+                # Das falsche Kriterium ist weg, und an seine Stelle tritt kein blindes Ja,
+                # sondern die Bedingung, die zur Frage passt — eine Bestaetigung nach vorn.
+                #
+                # Die Mehrfachtest-Zahlen traegt `mehrfachtest_nachziehen()` nach, sobald in
+                # `baue()` alle Zeilen vorliegen; hier sind sie noch nicht bekannt.
+                eintrag["status"] = "kandidat"
+                eintrag["grund"] = ("ROI belegt (Untergrenze %+.1f %%) — Freigabe erst nach "
+                                    "Bestätigung nach vorn" % (100 * roi_lb))
                 _clv = v.get("avgClvBf")
                 if isinstance(_clv, (int, float)):
+                    # Der CLV steht weiter auf der Zeile — angezeigt, nicht entscheidend.
                     eintrag["clv"] = round(float(_clv), 3)
-                    eintrag["grund"] = (
-                        "ROI belegt · gemessener CLV %+.2f pp aus %d Zeilen, aber nur als Mittel "
-                        "ohne Streuung — ohne Untergrenze keine Freigabe"
-                        % (float(_clv), int(v.get("nClvBf") or n)))
-                else:
-                    eintrag["grund"] = ("ROI belegt, aber fuer diesen Eimer ist gar kein CLV "
-                                        "erhoben — ohne den keine Freigabe")
             out.append(eintrag)
     # Das `clv` kommt hier NACH `bewerte()` dazu (s. `clv_urteil`) — also faellt das Urteil auch
     # hier neu, nicht erst in `baue()`. Wer diese Funktion einzeln aufruft (Tests, Skripte),
     # bekommt sonst Zeilen, die „kein CLV" sagen und eine CLV-Zahl tragen.
     return clv_urteil_nachziehen(out)
+
+
+def mehrfachtest_nachziehen(zeilen, ausbeute) -> list:
+    """Traegt den Mehrfachtest-Befund in die Begruendung der Betfair-Kandidaten nach. REIN.
+
+    🔴 22.09.2026. `ausbeute_ueber_huerde` gab es seit dem 20.09. — gerechnet wurde sie nie.
+    Sie stand im Modul, wurde von keiner Stelle aufgerufen und landete in keinem Artefakt.
+    Fehlerklasse: *ein Befund, der gemeldet, aber nicht gezogen wird* — dieselbe, die in diesem
+    Repo am 13.09. das Beinahe-Buch und am 02.09. die Push-Abrechnung gebracht hat.
+
+    Jetzt steht die Zahl dort, wo die Entscheidung erklaert wird: auf der Zeile, die sagt,
+    warum eine Schublade mit belegter Rendite trotzdem nicht freigegeben ist.
+    """
+    a = ausbeute if isinstance(ausbeute, dict) else {}
+    n_tests, erwartet = a.get("nTests"), a.get("erwartet")
+    if not n_tests or erwartet is None:
+        return zeilen                      # ohne Zahl kein Satz — lieber gar nichts behaupten
+    for z in zeilen or []:
+        if not isinstance(z, dict) or z.get("status") != "kandidat":
+            continue
+        if not isinstance(z.get("roiLb"), (int, float)) or z["roiLb"] <= 0:
+            continue                       # die „noch zu wenige Plays"-Kandidaten meint das nicht
+        z["mehrfachtest"] = {"nTests": n_tests, "erwartet": erwartet,
+                             "nUeber": a.get("nUeber"), "ueberschuss": a.get("ueberschuss")}
+        z["grund"] = (
+            "ROI belegt (Untergrenze %+.1f %%) — aber von %d gleichzeitig geprüften Schubladen "
+            "legt der Zufall allein %.1f über diese Hürde, und drüber liegen %s. Freigabe erst "
+            "nach Bestätigung nach vorn."
+            % (100 * z["roiLb"], int(n_tests), float(erwartet), a.get("nUeber")))
+    return zeilen
 
 
 def ausbeute_ueber_huerde(rows, alpha=0.05, sigma=3.0) -> dict:
@@ -1499,6 +1548,10 @@ def baue(engine=None, track=None, cards=None, betfair=None, now=None) -> dict:
     # Nach ALLEN Quellen: die Aggregat-Zweige tragen ihr `clv` erst nach `bewerte()` nach
     # (s. `clv_urteil` — 15.09.2026). Ohne diese Zeile stuende dort ein Urteil von vorher.
     clv_urteil_nachziehen(zeilen)
+    # 22.09.2026: der Mehrfachtest-Befund wird jetzt GERECHNET und gezogen — vorher stand die
+    # Funktion im Modul und wurde von niemandem aufgerufen.
+    _ausbeute = ausbeute_ueber_huerde(zeilen)
+    mehrfachtest_nachziehen(zeilen, _ausbeute)
     zeilen.sort(key=lambda r: (RANG.get(r["status"], 9), -(r.get("roiLb") or -9), -r["n"]))
     frei = [r for r in zeilen if r["status"] == "freigegeben"]
     kand = [r for r in zeilen if r["status"] == "kandidat"]
@@ -1520,6 +1573,9 @@ def baue(engine=None, track=None, cards=None, betfair=None, now=None) -> dict:
                              % (MIN_N, MAX_ALTER_TAGE)))},
         "freigegeben": frei,
         "kandidaten": kand,
+        # Wie viele Schubladen ueber der Huerde liegen — und wie viele der Zufall dort hinlegt.
+        # Die Zahl, an der haengt, ob ein Uebertritt eine Nachricht oder der Normalfall ist.
+        "ausbeute": _ausbeute,
         "stroeme": stroeme(zeilen),
         # Zwei eigene Tabellen — KEINE Schubladen, weil sie zweite
         # Zerlegungen derselben Plays sind (Ligen) bzw. gar keine Plays
