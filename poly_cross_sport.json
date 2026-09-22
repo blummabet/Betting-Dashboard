@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-22T23:02:51.125743+00:00",
+ "generatedAt": "2026-09-22T23:32:55.087053+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,7 +10,7 @@
  "minGapPP": 6.0,
  "polyRowsSeen": 555,
  "pinnKeys": 139,
- "matched": 47,
+ "matched": 49,
  "footballRows": 21,
  "crossRows": 534,
  "footballSkippedStale": 72,
@@ -22,12 +22,69 @@
   "soccer_mls": 21
  },
  "matchedBySport": {
-  "baseball_mlb": 26,
+  "baseball_mlb": 28,
   "soccer_mls": 21
  },
  "trackRecord": {
-  "tracked": 304,
+  "tracked": 306,
   "converged": 69
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|bostonredsox-clevelandguardians|clevelandguardians",
+   "sport": "baseball_mlb",
+   "event": "Cleveland Guardians vs Boston Red Sox",
+   "market": "Moneyline",
+   "outcome": "Cleveland Guardians",
+   "polyPP": 53.5,
+   "pinnPP": 72.3,
+   "gapPP": -18.77,
+   "vol": 361520,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-22T23:32:55.086464+00:00"
+  },
+  {
+   "id": "baseball_mlb|bostonredsox-clevelandguardians|bostonredsox",
+   "sport": "baseball_mlb",
+   "event": "Cleveland Guardians vs Boston Red Sox",
+   "market": "Moneyline",
+   "outcome": "Boston Red Sox",
+   "polyPP": 46.5,
+   "pinnPP": 27.7,
+   "gapPP": 18.77,
+   "vol": 361520,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-22T23:32:55.086464+00:00"
+  },
+  {
+   "id": "baseball_mlb|detroittigers-washingtonnationals|washingtonnationals",
+   "sport": "baseball_mlb",
+   "event": "Washington Nationals vs Detroit Tigers",
+   "market": "Moneyline",
+   "outcome": "Washington Nationals",
+   "polyPP": 48.0,
+   "pinnPP": 54.0,
+   "gapPP": -6.03,
+   "vol": 309329,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 14.81,
+   "firstSeen": "2026-09-21T23:00:45.740294+00:00"
+  },
+  {
+   "id": "baseball_mlb|detroittigers-washingtonnationals|detroittigers",
+   "sport": "baseball_mlb",
+   "event": "Washington Nationals vs Detroit Tigers",
+   "market": "Moneyline",
+   "outcome": "Detroit Tigers",
+   "polyPP": 52.0,
+   "pinnPP": 46.0,
+   "gapPP": 6.03,
+   "vol": 309329,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 14.81,
+   "firstSeen": "2026-09-21T23:00:45.740294+00:00"
+  }
+ ]
 }
