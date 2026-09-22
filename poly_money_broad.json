@@ -2,14 +2,14 @@
  "n": 549,
  "minOdds": 1.35,
  "moneyHitRate": 0.375,
- "priceHitRate": 0.415,
+ "priceHitRate": 0.417,
  "brierMoney": 0.8872,
  "brierPrice": 0.6868,
  "disagree": {
-  "n": 150,
+  "n": 149,
   "moneyWon": 22,
-  "priceWon": 44,
-  "neither": 84
+  "priceWon": 45,
+  "neither": 82
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -89,7 +89,7 @@
  ],
  "guete": {
   "belastbar": 549,
-  "preis_echo": 189,
+  "preis_echo": 190,
   "abgeschnitten": 68,
   "unbekannt": 198,
   "leer": 0
@@ -376,7 +376,7 @@
    "league": "EPL",
    "winner": "Draw (Nottingham Forest FC vs. Tottenham Hotspur FC)",
    "moneyFav": "Tottenham Hotspur FC",
-   "priceFav": "Nottingham Forest FC",
+   "priceFav": "Tottenham Hotspur FC",
    "moneyShare": 0.584,
    "priceProb": 0.357,
    "moneyOK": false,
@@ -576,7 +576,7 @@
    "totalUsd": 374990
   }
  ],
- "generatedAt": "2026-09-22T08:05:30.625453+00:00",
+ "generatedAt": "2026-09-22T08:34:34.049463+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -599,7 +599,7 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 689,
+  "esports": 688,
   "cs2": 420,
   "lol": 429,
   "dota": 9,
@@ -609,7 +609,7 @@
   "boxing": 270,
   "golf": 420,
   "f1": 380,
-  "cricket": 471,
+  "cricket": 479,
   "afc-champions-league-elite": 133,
   "allsvenskan": 1,
   "austria-bundesliga": 312,
@@ -661,58 +661,78 @@
   "sweepAdded": 405
  },
  "vorStats": {
-  "kandidaten": 9,
+  "kandidaten": 10,
   "budgetLeer": 0,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
-  "mitAnteilen": 9,
-  "calls": 9
+  "mitAnteilen": 10,
+  "calls": 10
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 707,
-   "usd": 12871989,
+   "n": 669,
+   "usd": 11226198,
    "beispiel": "fifwc-fra-esp-2026-07-14-more-markets"
   },
   "nba": {
-   "n": 115,
-   "usd": 1938078,
+   "n": 114,
+   "usd": 1935561,
    "beispiel": "nba-nyk-sas-2026-06-05"
+  },
+  "presidential": {
+   "n": 4,
+   "usd": 332065,
+   "beispiel": "presidential-election-winner-2028"
+  },
+  "btc": {
+   "n": 33,
+   "usd": 175349,
+   "beispiel": "btc-updown-5m-1782545100"
   },
   "elon": {
    "n": 35,
    "usd": 162107,
    "beispiel": "elon-musk-of-tweets-april-10-april-17"
   },
-  "btc": {
-   "n": 31,
-   "usd": 160946,
-   "beispiel": "btc-updown-5m-1782545100"
+  "clf": {
+   "n": 23,
+   "usd": 109233,
+   "beispiel": "clf-fey-ata-2026-08-02-more-markets"
+  },
+  "will": {
+   "n": 8,
+   "usd": 107805,
+   "beispiel": "will-pete-hegseth-ban-claude-by-march-31"
   },
   "nbasl": {
    "n": 1,
    "usd": 97044,
    "beispiel": "nbasl-cle-nop-2026-07-15"
   },
-  "balance": {
-   "n": 2,
-   "usd": 90000,
-   "beispiel": "balance-of-power-2026-midterms"
-  },
-  "clf": {
-   "n": 14,
-   "usd": 80134,
-   "beispiel": "clf-fey-ata-2026-08-02-more-markets"
+  "which": {
+   "n": 6,
+   "usd": 77588,
+   "beispiel": "which-crypto-company-will-zachxbt-expose-for-insider-trading"
   },
   "cbb": {
    "n": 1,
    "usd": 67887,
    "beispiel": "cbb-uconn-mich-2026-04-06"
   },
+  "brazil": {
+   "n": 6,
+   "usd": 64928,
+   "beispiel": "brazil-presidential-election"
+  },
   "world": {
    "n": 10,
    "usd": 62236,
    "beispiel": "world-cup-winner"
+  },
+  "kbo": {
+   "n": 15,
+   "usd": 46118,
+   "beispiel": "kbo-ssg-doo-2026-09-09"
   },
   "2026": {
    "n": 16,
@@ -724,50 +744,30 @@
    "usd": 42794,
    "beispiel": "cricipl-del-raj-2026-05-17"
   },
-  "kbo": {
+  "npb": {
+   "n": 14,
+   "usd": 30529,
+   "beispiel": "npb-ori-fuk-2026-09-17"
+  },
+  "next": {
    "n": 5,
-   "usd": 28826,
-   "beispiel": "kbo-sam-lot-2026-09-19"
+   "usd": 29990,
+   "beispiel": "next-french-presidential-election"
+  },
+  "us": {
+   "n": 6,
+   "usd": 26332,
+   "beispiel": "us-obtains-iranian-enriched-uranium-by"
+  },
+  "fed": {
+   "n": 8,
+   "usd": 25860,
+   "beispiel": "fed-decision-in-march-885"
   },
   "j1100": {
    "n": 7,
    "usd": 23199,
    "beispiel": "j1100-vis-cer-2026-04-29"
-  },
-  "brazil": {
-   "n": 2,
-   "usd": 23031,
-   "beispiel": "brazil-presidential-election"
-  },
-  "microstrategy": {
-   "n": 1,
-   "usd": 20509,
-   "beispiel": "microstrategy-sell-any-bitcoin-in-2025"
-  },
-  "npb": {
-   "n": 8,
-   "usd": 20474,
-   "beispiel": "npb-toh-fuk-2026-09-21"
-  },
-  "which": {
-   "n": 1,
-   "usd": 17787,
-   "beispiel": "which-crypto-company-will-zachxbt-expose-for-insider-trading"
-  },
-  "ethereum": {
-   "n": 1,
-   "usd": 14881,
-   "beispiel": "ethereum-all-time-high-by"
-  },
-  "next": {
-   "n": 2,
-   "usd": 13064,
-   "beispiel": "next-french-presidential-election"
-  },
-  "pdcdarts": {
-   "n": 1,
-   "usd": 13049,
-   "beispiel": "pdcdarts-littler-clayton-2026-09-20"
   }
  }
 }
