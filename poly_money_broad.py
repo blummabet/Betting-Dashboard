@@ -882,7 +882,68 @@ def _is_exhibition(oc):
     return False
 
 
-WHALES_PER_MARKET = 4   # 25.07.2026 (Lucas: „was setzen einzelne Wale") — Top-N je Markt mitschreiben
+# 🔴 22.09.2026 (Lucas: „auf poly treiben sich gute leute rum und die gilt es zu erfassen … koennen
+# leute sein die 5K pro wette setzen oder auch 50K").
+#
+# Hier stand 4, und dieser Deckel war die eigentliche Grenze unserer Wallet-Erfassung. Gemessen an
+# den 3.870 Maerkten des Close-Feeds: **3.819 tragen exakt vier Wale** — er greift also praktisch
+# ueberall. `_alle_holder` holt bis zu 1.000 Halter je Ausgang; alles ab Platz 5 wurde verworfen,
+# BEVOR irgendetwas geschrieben wurde.
+#
+# Zwei Folgen, und die zweite ist schlimmer als die erste:
+#   · Entdeckung: wer in einem 500K-Markt mit 5K sehr scharf unterwegs ist, existiert fuer uns
+#     nicht — die vier Plaetze gehen an die Groesse.
+#   · Verzerrung: eine Wallet, die wir laengst verfolgen, VERSCHWINDET aus den Daten, sobald sie
+#     in einem Markt nur Platz 5 ist. Ihr `n` ist damit nicht bloss zu klein, es ist schief — wir
+#     sehen sie ueberwiegend dort, wo sie die Groesste war.
+# Fehlerklasse: eine Stichprobe, die nach derselben Eigenschaft auswaehlt, die sie messen soll.
+#
+# 12 statt 4 (Lucas' Wahl nach den gemessenen Kosten: Close-Datei 7,5 -> ~11 MB). Gegen die
+# Verzerrung hilft der Deckel allein nicht — dafuer `whale_auswahl` gleich darunter.
+WHALES_PER_MARKET = int(os.environ.get("POLY_WHALES_PER_MARKET") or 12)
+
+# Obergrenze inklusive der bekannten Wallets. Sie greift nur, wenn in EINEM Markt sehr viele
+# verfolgte Wallets sitzen — dann ist die Zeile ohnehin die interessanteste des Laufs.
+WHALES_HART = int(os.environ.get("POLY_WHALES_HART") or 40)
+
+# Ab so vielen Auflösungen gilt eine Wallet als „verfolgt" und wird unabhaengig von ihrem Platz
+# mitgeschrieben. 4 ist bewusst niedrig: eine Wallet, die gerade erst Historie aufbaut, ist genau
+# die, deren naechste Zeilen wir brauchen.
+BEKANNT_AB_N = int(os.environ.get("POLY_BEKANNT_AB_N") or 4)
+
+# Wird einmal je Lauf aus dem vorherigen Track gefuellt (s. `main`). Leer heisst „niemand bekannt",
+# und dann verhaelt sich alles wie ein reiner Groessen-Deckel.
+BEKANNTE_WALLETS: set = set()
+
+
+def bekannte_wallets(track, min_n: int = BEKANNT_AB_N) -> set:
+    """Die Wallets, die wir ohnehin verfolgen. REIN."""
+    raus = set()
+    for w, s in ((track or {}).get("scores") or {}).items():
+        if isinstance(s, dict) and (s.get("n") or 0) >= min_n:
+            raus.add(str(w).lower())
+    return raus
+
+
+def whale_auswahl(whales, bekannt=None, deckel: int = None, hart: int = None) -> list:
+    """Die groessten `deckel` — PLUS jede Wallet, die wir ohnehin verfolgen. REIN.
+
+    Der Zusatz kostet fast nichts und behebt die Verzerrung: ohne ihn sehen wir eine verfolgte
+    Wallet nur in den Maerkten, in denen sie zufaellig zu den Groessten gehoerte.
+    """
+    deckel = WHALES_PER_MARKET if deckel is None else deckel
+    hart = WHALES_HART if hart is None else hart
+    sortiert = sorted(whales or [], key=lambda x: -(x.get("usd") or 0))
+    raus = list(sortiert[:deckel])
+    drin = {(str(x.get("wallet") or "").lower(), x.get("side")) for x in raus}
+    for x in sortiert[deckel:]:
+        if len(raus) >= hart:
+            break
+        w = str(x.get("wallet") or "").lower()
+        if w and w in (bekannt or ()) and (w, x.get("side")) not in drin:
+            raus.append(x)
+            drin.add((w, x.get("side")))
+    return raus
 
 
 def _alle_holder(cond, token, http_get, parse):
@@ -944,8 +1005,7 @@ def _market_money(outcomes):
             whales.append({"wallet": w, "side": o["label"], "usd": round(a * price)})
     if sum(usd.values()) <= 0:
         return None
-    whales.sort(key=lambda x: -x["usd"])
-    return {"shares": usd, "whales": whales[:WHALES_PER_MARKET], "trunc": trunc}
+    return {"shares": usd, "whales": whale_auswahl(whales, BEKANNTE_WALLETS), "trunc": trunc}
 
 
 def _money_shares(outcomes):
@@ -2355,6 +2415,12 @@ def close_schreiben(frozen: dict) -> None:
 
 def main() -> int:
     min_vol, min_odds = _cfg()
+    # 22.09.2026: die verfolgten Wallets VOR dem Scan kennen — `_market_money` entscheidet
+    # waehrend des Fetchs, wen es mitschreibt, und laeuft lange vor `update_wallet_track`.
+    global BEKANNTE_WALLETS
+    BEKANNTE_WALLETS = bekannte_wallets(_load(WTRACK_FILE))
+    print("  🐋 %d verfolgte Wallet(s) werden unabhaengig von ihrem Platz mitgeschrieben."
+          % len(BEKANNTE_WALLETS))
     # 10.09.2026: der Close-Stand sagt, welcher Markt eines Buendels schon gilt. Ohne diesen Pin
     # waehlt `_outcomes` in jedem Lauf neu nach Volumen — s. outcomes_gepinnt.
     markets = fetch_markets(pin=pin_von_close(_load(CLOSE_FILE)))
