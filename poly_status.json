@@ -99,8 +99,8 @@
       "ok": false,
       "nFail": 2,
       "failures": [
-        "spl-haz-taa-2026-09-08-more-markets: seit 13.6 Tagen offen — Bündel: der Eintrag kennt seinen Markt, die Auflösung nicht (Altbestand)",
-        "ucl-aek1-lin2-2026-09-08-more-markets: seit 13.6 Tagen offen — Bündel: der Eintrag kennt seinen Markt, die Auflösung nicht (Altbestand)"
+        "spl-haz-taa-2026-09-08-more-markets: seit 13.5 Tagen offen — Bündel: der Eintrag kennt seinen Markt, die Auflösung nicht (Altbestand)",
+        "ucl-aek1-lin2-2026-09-08-more-markets: seit 13.5 Tagen offen — Bündel: der Eintrag kennt seinen Markt, die Auflösung nicht (Altbestand)"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen. Der Grund steht an jeder Zeile — er ist bei jeder ein anderer."
     },
@@ -136,17 +136,6 @@
         "   0x4bff30af91… n=92 Treffer 50% P&L $-2,420,880"
       ],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
-    },
-    {
-      "id": "wallet_profit_wird_gemessen",
-      "label": "Wallet-Profit wird gemessen",
-      "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "2029 Auflösung(en) in den letzten 3 Tagen, davon KEINE mit Gewinn/Einsatz — beim Abrechnen kommt kein Preis an"
-      ],
-      "note": "Seit 22.09. rechnet poly_money_broad je Auflösung Gewinn und Einsatz je Wallet mit (Anteile x Einstieg). Kommt dort nichts an, sind Profit und ROI der Zeitraeume leer — was besser ist als falsch, aber nicht das Ziel."
     },
     {
       "id": "accuracy_backtest_fresh",
@@ -185,6 +174,6 @@
       "note": "poly_direct_bets.py rechnet über poly_resolutions.json ab. Hängt ein Bet, kennt Poly den Ausgang nicht (Markt noch offen/obskur) oder der Slug passt nicht — dann fehlt echtes Geld in der Bilanz."
     }
   ],
-  "nFail": 4,
-  "generatedAt": "2026-09-22T07:15:17.926847+00:00"
+  "nFail": 3,
+  "generatedAt": "2026-09-22T04:34:45.719002+00:00"
 }
