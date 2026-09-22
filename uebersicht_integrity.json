@@ -66,7 +66,7 @@
     },
     {
       "label": "Money Map meldet ihre Luecken",
-      "severity": "warn",
+      "severity": "error",
       "failures": [],
       "nFail": 0,
       "ok": true,
@@ -107,9 +107,11 @@
     {
       "label": "Stake-Spielklasse: Tabelle vollstaendig, Richtungen getrennt",
       "severity": "error",
-      "failures": [],
-      "nFail": 0,
-      "ok": true,
+      "failures": [
+        "1 Fussball-Ligen ohne Eintrag in stake_liga_stufe.py (africa-cup-of-nations-qualification) — sie fallen aus jeder Zeile der Ansicht, statt aufzufallen"
+      ],
+      "nFail": 1,
+      "ok": false,
       "hinweis": ""
     },
     {
@@ -126,7 +128,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "211 Picks im Fenster, 20 % ohne Preis-Signal."
+      "hinweis": "208 Picks im Fenster, 20 % ohne Preis-Signal."
     },
     {
       "label": "Stumme Signale: wer hat nie gefeuert?",
@@ -156,7 +158,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "seit Vorregistrierung n=2834 (UG -6.7 %) · Rueckblick n=2726, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=2905 (UG -5.5 %) · Rueckblick n=2726, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -190,11 +192,9 @@
     {
       "label": "Positionswert ist frisch",
       "severity": "warn",
-      "failures": [
-        "liga_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 16 h — die Positions-API antwortet seither nicht"
-      ],
-      "nFail": 1,
-      "ok": false,
+      "failures": [],
+      "nFail": 0,
+      "ok": true,
       "hinweis": ""
     },
     {
@@ -211,7 +211,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "96 Zeilen · 95 abgerechnet · 0 offen"
+      "hinweis": "107 Zeilen · 103 abgerechnet · 3 offen"
     },
     {
       "label": "Artefakte sind lesbar",
@@ -259,13 +259,13 @@
       "label": "Serien-Buch zeigt beide Buecher",
       "severity": "warn",
       "failures": [
-        "die beiden Serien-Buecher sind 17.3 h auseinander (Liga 17.7 h, MLS 0.4 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+        "die beiden Serien-Buecher sind 7.9 h auseinander (Liga 0.5 h, MLS 8.4 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
       ],
       "nFail": 1,
       "ok": false,
-      "hinweis": "Liga n=77 · MLS n=73 · Urteil beide 'Erwartung zu duenn'"
+      "hinweis": "Liga n=84 · MLS n=73 · Urteil beide 'Erwartung zu duenn'"
     }
   ],
   "nFail": 6,
-  "generatedAt": "2026-09-21T14:36:21.805644+00:00"
+  "generatedAt": "2026-09-21T22:36:06.759677+00:00"
 }
