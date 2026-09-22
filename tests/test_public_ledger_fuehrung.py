@@ -25,10 +25,12 @@ der Begründung „beim Senden ist die Lage immer bekannt". Falsch — bei 7 von
 Pushs gab es keinen Live-Stand, und alle sieben landeten als `False` in der Vergleichsgruppe.
 """
 import json
+import sys
 import unittest
 from pathlib import Path
 
 BASE = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(BASE))
 QUELLE = (BASE / "betfair_alerts.py").read_text(encoding="utf-8")
 
 
@@ -71,10 +73,35 @@ class TestLedgerStempel(unittest.TestCase):
 
         Damit hat mein eigener Test die Fehlerklasse festgeschrieben, die dieses Projekt sonst
         ueberall jagt: fehlende Information als harmloser Default. Jetzt drei Zustaende.
+
+        🔴 NACHTRAG 22.09.2026: hier stand danach `assertIn('"onLeader": a.get("onLeader")')`
+        — eine Suche nach einer SCHREIBWEISE. Beim Umbau von `_log_public_push` (der Beleg darf
+        nicht an seiner Anreicherung scheitern) wanderte das Feld in eine Schleife, und der Test
+        fiel, obwohl das Verhalten unveraendert war. Ein Test, der die Buchstaben festhaelt,
+        haelt das Verhalten nicht — dieselbe Lehre wie bei `nur_code` in test_tote_quellen.py.
+        Jetzt wird die Funktion AUSGEFUEHRT.
         """
         self.assertNotIn('bool(a.get("onLeader"))', LOG,
                          "bool() macht aus 'unbekannt' ein 'nein'")
-        self.assertIn('"onLeader": a.get("onLeader")', LOG)
+        import tempfile
+        import betfair_alerts as BA
+        alarm = {"scenario": "fresh", "matchId": "7", "market": "Match Odds",
+                 "onLeader": None, "leadDir": "home", "leadShare": 0.7}
+        with tempfile.TemporaryDirectory() as d:
+            led = Path(d) / "led.json"
+            led.write_text("[]", encoding="utf-8")
+            alt = BA.PUB_LEDGER_FILE
+            try:
+                BA.PUB_LEDGER_FILE = str(led)
+                BA._log_public_push(dict(alarm))
+            finally:
+                BA.PUB_LEDGER_FILE = alt
+            z = json.loads(led.read_text(encoding="utf-8"))
+        self.assertEqual(len(z), 1)
+        self.assertIn("onLeader", z[0], "das Feld fehlt ganz")
+        self.assertIsNone(z[0]["onLeader"], "unbekannt darf nicht zu False werden")
+        self.assertEqual(z[0]["leadDir"], "home")
+        self.assertEqual(z[0]["leadShare"], 0.7)
 
     def test_die_funktion_selbst_kennt_drei_zustaende(self):
         quelle = _funktion("_money_on_leader")

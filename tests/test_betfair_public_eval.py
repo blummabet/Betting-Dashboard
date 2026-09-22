@@ -654,14 +654,104 @@ class EineBilanzDieIhreLueckeNennt(unittest.TestCase):
         self.assertEqual(E.gesendet_ohne_beleg({}, []), [])
         self.assertEqual(E.gesendet_ohne_beleg(None, None), [])
 
-    def test_am_echten_bestand_sind_es_die_vier(self):
+    # Jeder DATIERTE Verlust ist einer von NACH der Sofort-Sicherung, also ein eigener Vorfall
+    # mit eigener Ursache. Sie stehen hier namentlich, nicht als Zahl: eine Obergrenze laesst
+    # sich hochzaehlen, ohne dass jemand hinsieht — ein Name zwingt zum Nachsehen.
+    BEKANNTE_DATIERTE_VERLUSTE = {
+        # 21.09.2026 22:46:48 — `_log_public_push` baute die Ledger-Zeile in EINEM Ausdruck,
+        # mitsamt `_consensus_for_push`, `_serie_fuer_push` und dem Live-Block. Wirft eine
+        # Anreicherung, steht der Dedup-Stand schon (er wird direkt nach dem Senden gesetzt)
+        # und der Beleg nie. Behoben am 22.09.: Kern zuerst, Anreicherung je fuer sich.
+        "fresh:36041720",
+    }
+
+    def _echt(self):
         import json
         from pathlib import Path
         p = Path(__file__).parent.parent
-        seen = json.loads((p / "betfair_public_seen.json").read_text(encoding="utf-8"))
-        led = json.loads((p / "betfair_public_ledger.json").read_text(encoding="utf-8"))
+        return (json.loads((p / "betfair_public_seen.json").read_text(encoding="utf-8")),
+                json.loads((p / "betfair_public_ledger.json").read_text(encoding="utf-8")))
+
+    def test_am_echten_bestand_bleibt_die_alte_narbe_sichtbar(self):
+        seen, led = self._echt()
         ohne = E.gesendet_ohne_beleg(seen, led)
         self.assertIn("fresh:36039873", ohne, "Lyon v Rennes fehlt nicht mehr — bitte ansehen")
-        self.assertLessEqual(len(ohne), 4,
-                             "es sind MEHR geworden: der Sicherungsschritt in betfair.yml wirkt "
-                             "nicht. Gefunden: %s" % ohne)
+        self.assertLessEqual(len(ohne), 4 + len(self.BEKANNTE_DATIERTE_VERLUSTE),
+                             "mehr Luecken als bekannte Vorfaelle: %s" % ohne)
+
+    def test_kein_unbekannter_verlust_nach_der_sicherung(self):
+        """⭐ Der eigentliche Riegel. Die vier vom 20.09. sind undatiert — von VOR der
+        Sofort-Sicherung. Jeder datierte Eintrag ohne Beleg ist danach entstanden und heisst:
+        die Reparatur traegt nicht. Genau so kam der 22.09.-Fall ans Licht."""
+        seen, led = self._echt()
+        neu = [z["key"] for z in E.gesendet_ohne_beleg_datiert(seen, led)
+               if z["key"] not in self.BEKANNTE_DATIERTE_VERLUSTE]
+        self.assertEqual(neu, [],
+                         "neuer Push ohne Beleg NACH der Sicherung — Ursache suchen, nicht "
+                         "eintragen: %s" % neu)
+
+
+# ── 22.09.2026: der Beleg darf nicht an seiner Anreicherung scheitern ────────────────────
+class TestDerBelegUeberlebtEineKaputteAnreicherung(unittest.TestCase):
+    """🔴 `fresh:36041720`, 21.09. 22:46:48 — gesendet, im Dedup-Stand, ohne Ledger-Zeile.
+    Der fünfte dieser Art und der erste NACH der Sofort-Sicherung, die genau das verhindern
+    sollte.
+
+    Der Aufrufer sendet, schreibt `_pub_seen_put` und ruft dann `_log_public_push`. Dort
+    entstand die Zeile in EINEM Ausdruck, mitsamt `_consensus_for_push`, `_serie_fuer_push`
+    und dem Live-Block. Wirft eine dieser Anreicherungen, gilt der Push als gesendet und hat
+    keinen Beleg — er taucht in keiner Bilanz auf.
+
+    Fehlerklasse: zwei Belege derselben Handlung, von denen einer scheitern kann, während der
+    andere schon steht.
+    """
+
+    ALARM = {"scenario": "fresh", "matchId": "99", "market": "Match Odds", "league": "L",
+             "home": "A", "away": "B", "leadName": "A", "leadOdd": 1.8, "value": 50000.0}
+
+    def _lauf(self, kaputt=()):
+        import json
+        import tempfile
+        from pathlib import Path
+        import betfair_alerts as BA
+        with tempfile.TemporaryDirectory() as d:
+            led = Path(d) / "led.json"
+            led.write_text("[]", encoding="utf-8")
+            alt = {"PUB_LEDGER_FILE": BA.PUB_LEDGER_FILE}
+            for n in kaputt:
+                alt[n] = getattr(BA, n)
+            try:
+                BA.PUB_LEDGER_FILE = str(led)
+                for n in kaputt:
+                    def _wirft(*a, **kw):
+                        raise RuntimeError("Anreicherung kaputt")
+                    setattr(BA, n, _wirft)
+                BA._log_public_push(dict(self.ALARM))
+            finally:
+                for n, v in alt.items():
+                    setattr(BA, n, v)
+            return json.loads(led.read_text(encoding="utf-8"))
+
+    def test_normal_steht_die_zeile_mit_anreicherung(self):
+        z = self._lauf()
+        self.assertEqual(len(z), 1)
+        self.assertEqual(z[0]["matchId"], "99")
+        self.assertIn("serie", z[0])
+        self.assertIn("consensus", z[0])
+
+    def test_eine_kaputte_serie_kostet_die_zeile_nicht(self):
+        """⭐ Der eigentliche Fall."""
+        z = self._lauf(kaputt=("_serie_fuer_push",))
+        self.assertEqual(len(z), 1, "der Beleg ist verloren gegangen")
+        self.assertIsNone(z[0]["serie"], "nicht erhoben heisst None, nicht „nichts gefunden\"")
+        self.assertEqual(z[0]["leadOdd"], 1.8, "der Kern muss vollstaendig sein")
+
+    def test_ein_kaputter_konsens_ebenfalls_nicht(self):
+        z = self._lauf(kaputt=("_consensus_for_push",))
+        self.assertEqual(len(z), 1)
+        self.assertIsNone(z[0]["consensus"])
+
+    def test_auch_beide_zusammen_nicht(self):
+        z = self._lauf(kaputt=("_serie_fuer_push", "_consensus_for_push"))
+        self.assertEqual(len(z), 1)
+        self.assertEqual(z[0]["sentAt"][:4], "2026")
