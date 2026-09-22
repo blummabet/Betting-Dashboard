@@ -925,7 +925,14 @@
     'frauen': ['Frauen', ''],
     'jugend': ['Jugend', ''],
     'srl': ['Simulated Reality', 'simulierte Spiele — keine echte Partie'],
-    'reserve': ['Reserve', 'zweite Mannschaften — keine Spielklasse']
+    'reserve': ['Reserve', 'zweite Mannschaften — keine Spielklasse'],
+    'freundschaft': ['Freundschaftsspiel', 'keine Spielklasse — es geht um nichts'],
+    'auszeichnung': ['Auszeichnung', 'kein Wettbewerb'],
+    // 🔴 22.09.2026 (Lucas schickt einen Fremd-Post aus der uzbekischen Pro League): ihr
+    // Slug heisst im Feed schlicht `pro-league` und trägt daneben Volleyball; `1st-division`
+    // trägt dänische ZWEITE Ligen neben der zyprischen ERSTEN. Der Schlüssel reicht nicht,
+    // also steht hier keine Zahl — und auch keine Leerstelle, die wie „geprüft" aussieht.
+    'mehrdeutig': ['Schlüssel nicht eindeutig', 'ein Liga-Slug, zwei Spielklassen — die Turnier-ID sammelt sich']
   };
   var _SR_KL_SPALTEN = ['<1.5x', '1.5-3x', '3-6x', '>6x'];
 

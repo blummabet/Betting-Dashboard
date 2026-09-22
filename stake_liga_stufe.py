@@ -66,13 +66,19 @@ EBENE = {
     "first-division-a": 1, "chinese-super-league": 1, "indonesian-super-league": 1,
     "k-league-1": 1, "ligapro-primera-a": 1, "super-league": 1, "super-league-1": 1,
     "premiership": 1, "prvaliga": 1, "nb-i": 1, "arabian-gulf-league": 1, "stars-league": 1,
-    "1-liga": 1, "1st-division": 1, "liga-premier-serie-a": 1, "pfl": 1, "thai-league-1": 1,
+    "1-liga": 1, "liga-premier-serie-a": 1, "pfl": 1, "thai-league-1": 1,
     "i-liga": 1, "1-hnl": 1, "cymru-premier": 1, "virsliga": 1, "urvalsdeild": 1,
     "premier-soccer-league": 1, "omani-league": 1, "jordan-league": 1, "top-league": 1,
     "premier-division": 1, "prva-liga": 1, "divizia-nationala": 1, "premium-liiga": 1,
     "national-womens-soccer-league": 1, "first-professional-league": 1,
-    "liga-nacional-apertura": 1, "cambodian-premier-league": 1, "pro-league": 1,
-    "usl-championship": 1, "liga-i": 1, "iraqi-league": 1, "vysshaya-liga": 1,
+    "liga-nacional-apertura": 1, "cambodian-premier-league": 1,
+    "liga-i": 1, "iraqi-league": 1, "vysshaya-liga": 1,
+    # 22.09.2026 — stand hier als Ebene 1. Die USL Championship ist von der USSF als
+    # DIVISION II sanktioniert und liegt unter der MLS; seit 2017, davor sogar Division III.
+    # Das ist kein Mehrdeutigkeits-Fall (der Slug meint genau diese Liga), sondern eine
+    # falsche Zeile: die Tabelle behauptete oberste Klasse fuer die zweite. Genau die
+    # Richtung, die Lucas interessiert — ein grosser Einsatz dort war als Topliga gestempelt.
+    "usl-championship": 2,
     "division-profesional": 1, "liga-portugal": 1,
     # 14.09.2026 (CI-Wachhund): die Canadian Premier League ist die OBERSTE Klasse Kanadas
     # (Pacific FC gegen Cavalry FC, beides Gruendungsklubs). Nicht mit der USL zu verwechseln,
@@ -377,6 +383,49 @@ _AUSZEICHNUNG_RX = re.compile(
 # genau diesen einen offenen Slug und stuft keinen bereits eingestuften um.
 _FREUNDSCHAFT_RX = re.compile(r"friendl|freundschaft|testspiel|amistoso|amichevol")
 
+# ── Mehrdeutige Schluessel ───────────────────────────────────────────────────
+# 🔴 22.09.2026 (Lucas schickt einen Fremd-Radar-Post: „#Uzbekistan #Pro_League, PFC Terdu –
+# FK Gazalkent … Check den Stake Radar, ob wir diese Liga auch nicht haben").
+#
+# Wir hatten sie: sechs Fussballwetten auf genau dieses Spiel stehen im Ledger, darunter die
+# aus dem fremden Post ($2.000 x 1,75 auf FK Gazalkent -1,5). Was wir NICHT hatten, war die
+# richtige Spielklasse. Die uzbekische Pro League ist die ZWEITE Liga, unter der Super League.
+# In der Tabelle stand `"pro-league": 1` — also oberste Klasse. Genau die Unterscheidung, um
+# die Lucas am 07.09. gebeten hat („ne 50k Wette auf Arsenal sagt 0, eine 50k Wette auf ein
+# 2-3. Liga Team ist zumindest jemand der mehr dran glaubt"), stand hier auf dem Kopf.
+#
+# Der Kopf dieser Datei kannte die Fehlerklasse schon halb: „der Slug ist NICHT sportartenrein"
+# (`bundesliga` = Fussball und Handball), deshalb nimmt `stufe()` die Sportart entgegen. Die
+# zweite Achse ist dieselbe Sache und war offen: der Slug ist auch nicht LAENDERREIN. Gemessen
+# am Ledger (20.000 Wetten, 166 Fussball-Slugs):
+#
+#   pro-league    Fussball: PFC Terdu – FK Gazalkent (Uzbekistan, Ebene 2)
+#                 Volleyball: Lions-Pro – Legion-Pro, Sokol-Pro – Berkut
+#   1st-division  Daenemark: AB Gladsaxe – Esbjerg, HB Koege – Hobro    → Ebene 2
+#                 Norwegen:  FK Haugesund – Stroemmen                    → Ebene 2
+#                 Zypern:    Pafos – AEL Limassol, Aris – Karmiotissa    → Ebene 1
+#                 Irak:      Al Hedod – AL Shatra
+#                 Ein Schluessel, zwei Spielklassen. Jede Zahl ist fuer die Haelfte falsch.
+#
+# Gegenprobe, damit das hier nicht zum Rundumschlag wird: die uebrigen laenderuebergreifenden
+# Slugs im Ledger tragen ueberall DIESELBE Klasse und bleiben deshalb unberuehrt — `bundesliga`
+# (Deutschland + Oesterreich), `ligue-1` (Frankreich + Tunesien), `superliga` (Argentinien +
+# Serbien), `premier-league` (England, Russland, Aegypten, Armenien, Kasachstan, Bhutan,
+# St. Kitts), `championship` (England + Nordirland, beide Ebene 2), `primera-division`
+# (Venezuela, Uruguay, Peru). Mehrdeutig ist nicht „mehrere Laender", sondern
+# „mehrere KLASSEN unter einem Schluessel".
+#
+# Warum keine Zahl geraten wird: der Feed hat den richtigen Schluessel bereits. Die GraphQL-
+# Abfrage in `stake_highroller_fetch.py` holt `tournament { id name slug }` und wirft die `id`
+# weg. Mit ihr ist die Liga eindeutig — bis sie mitgeschrieben und genug gesammelt ist, ist
+# „angesehen, und der Schluessel reicht nicht" die einzige ehrliche Auskunft. Deshalb eine
+# eigene Marke wie bei Reserve, Jugend und Pokal, KEINE None: None heisst „noch nie
+# angesehen" und laesst den CI-Wachhund anschlagen, der genau dafuer da ist.
+MEHRDEUTIG = {
+    "pro-league": "Uzbekistan Pro League (Ebene 2) und Volleyball unter demselben Slug",
+    "1st-division": "Daenemark/Norwegen Ebene 2, Zypern Ebene 1 — derselbe Slug",
+}
+
 _MUSTER = (
     ("srl", lambda s: s.endswith("-srl") or "-srl-" in s),          # Simulated Reality League
     ("freundschaft", lambda s: bool(_FREUNDSCHAFT_RX.search(s))),
@@ -440,6 +489,10 @@ def art(slug: str):
     s = (slug or "").lower()
     if not s:
         return None
+    # Mehrdeutig schlaegt alles: ein Schluessel, der zwei Spielklassen bezeichnet, darf keine
+    # tragen — auch dann nicht, wenn er zufaellig in ART oder in einem Muster steht.
+    if s in MEHRDEUTIG:
+        return "mehrdeutig"
     if s in ART:
         return ART[s]
     for name, passt in _MUSTER:
@@ -510,6 +563,37 @@ def stufe(slug: str, sport: str = SPORT):
     s = (slug or "").lower()
     v = EBENE.get(s) or _ebene_aus_slug(s)
     return str(v) if v else None
+
+
+def mehrdeutige_kandidaten(zeilen, sport: str = SPORT) -> dict:
+    """Slugs, die eine Ebene tragen und im Feed MEHRERE Turniere bezeichnen.
+
+    Der Wachhund fuer die Klasse, die am 22.09.2026 aufgefallen ist. Von Hand gefunden wurde
+    sie nur, weil Lucas einen Fremd-Post geschickt hat — das ist keine Methode. Mit der
+    `ligaId` aus dem Feed ist sie zaehlbar: ein Schluessel, hinter dem zwei Turnier-IDs
+    stehen, kann keine Spielklasse tragen.
+
+    Zeilen ohne `ligaId` zaehlen NICHT als „ein Turnier" — sie zaehlen gar nicht. Der Feed
+    schreibt die ID erst seit dem 22.09. mit, und das rollierende Fenster traegt sie erst
+    nach und nach; fehlende Information ist hier kein Freispruch. `nMitId` sagt, wie weit die
+    Abdeckung ist, damit ein leeres Ergebnis nicht als Unbedenklichkeit gelesen wird.
+    """
+    je = {}
+    mit_id = 0
+    for z in zeilen or []:
+        if not isinstance(z, dict) or z.get("kombi"):
+            continue
+        if (z.get("sport") or "") != sport:
+            continue
+        sl, lid = z.get("ligaSlug"), z.get("ligaId")
+        if not sl or lid in (None, ""):
+            continue
+        mit_id += 1
+        je.setdefault(sl, set()).add(str(lid))
+    treffer = {sl: sorted(ids) for sl, ids in je.items()
+               if len(ids) > 1 and stufe(sl, sport) is not None
+               and sl not in MEHRDEUTIG}
+    return {"nMitId": mit_id, "kandidaten": treffer}
 
 
 def randliga(slug: str, sport: str = SPORT) -> bool:
@@ -791,6 +875,11 @@ def block(wetten: list, norm: dict) -> dict:
         "jeEbene": dict(sorted(je_ebene.items())),
         "ohneEbene": ohne[:40],
         "nOhneEbene": len(ohne),
+        # 22.09.2026 — der zweite Wachhund, neben „ohne Ebene". Der erste findet Ligen, die
+        # FEHLEN; dieser findet Ligen, die falsch DRINSTEHEN, weil ihr Schluessel zwei
+        # Turniere bezeichnet. `nMitId` gehoert dazu: solange der Feed die Turnier-ID erst
+        # sammelt, ist eine leere Liste kein Freispruch, sondern eine leere Messung.
+        "mehrdeutig": mehrdeutige_kandidaten(wetten),
         "kandidaten": kandidaten(wetten, norm),
         "kandidatenAuswahl": ("Vereinigung der besten 30 nach Faktor und der besten 30 nach "
                               "Betrag — sonst haenge die Betrags-Sortierung an einer Liste, "

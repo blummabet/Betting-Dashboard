@@ -323,7 +323,11 @@ def test_eine_auszeichnung_ist_kein_wettbewerb():
     # Gegenprobe: „winner" oder „award" in einem echten Ligennamen darf nichts ausloesen.
     assert LS.stufe("premier-league") == "1"
     assert LS.stufe("championship") == LS.stufe("championship")
-    assert LS.stufe("usl-championship") == "1"
+    # 22.09.2026: hier stand `== "1"`. Die Zahl war es nie, was diese Gegenprobe pruefen
+    # wollte — sie prueft, dass die breite Regel keine echte Spielklasse zur MARKE macht.
+    # (Die USL Championship ist Division II; die Zahl selbst steht in ihrem eigenen Test.)
+    assert LS.art("usl-championship") is None
+    assert LS.stufe("usl-championship") in ("1", "2", "3")
 
 
 def test_premier_im_namen_ist_keine_spielklasse():
@@ -358,7 +362,11 @@ def test_reserveliga_in_jeder_sprache():
     assert LS.stufe("primera-division-reserve-clausura") == "reserve"
     assert LS.stufe("campionato-primavera-riserve") in ("reserve", "jugend")
     # Gegenprobe: die breitere Regel darf keine echte Spielklasse verschlucken.
-    assert LS.stufe("usl-championship") == "1"
+    # 22.09.2026: hier stand `== "1"`. Die Zahl war es nie, was diese Gegenprobe pruefen
+    # wollte — sie prueft, dass die breite Regel keine echte Spielklasse zur MARKE macht.
+    # (Die USL Championship ist Division II; die Zahl selbst steht in ihrem eigenen Test.)
+    assert LS.art("usl-championship") is None
+    assert LS.stufe("usl-championship") in ("1", "2", "3")
     assert LS.stufe("la-liga-2") == "2"
 
 
@@ -585,3 +593,143 @@ def test_kein_bereits_eingestufter_slug_wird_umgestuft():
     # … und kein Slug darf ohne Ebene dastehen.
     offen = sorted({s for s in slugs if LS.stufe(s, "soccer") is None})
     assert not offen, "Fussball-Ligen ohne Ebene: %s" % ", ".join(offen[:20])
+
+
+# ── 22.09.2026: der Slug ist auch nicht laenderrein ──────────────────────────
+# 🔴 Lucas schickt einen Fremd-Radar-Post („#Uzbekistan #Pro_League, PFC Terdu - FK Gazalkent")
+# mit der Frage: „Check den Stake Radar, ob wir diese Liga auch nicht haben."
+#
+# Wir hatten sie. Sechs Fussballwetten auf genau dieses Spiel stehen im Ledger, darunter die
+# aus dem fremden Post ($2.000 x 1,75 auf FK Gazalkent -1,5). Was falsch war, war die
+# Spielklasse: die uzbekische Pro League ist die ZWEITE Liga (unter der Super League), in der
+# Tabelle stand `"pro-league": 1`.
+def test_ein_schluessel_fuer_zwei_spielklassen_traegt_keine():
+    """🔴 22.09.2026. `pro-league` meint im Feed die uzbekische ZWEITE Liga und Volleyball;
+    `1st-division` meint daenische und norwegische ZWEITE Ligen und die zyprische ERSTE.
+    Jede Zahl ist fuer die Haelfte falsch — also eine Marke wie bei Reserve, Jugend und Pokal:
+    „angesehen, und der Schluessel reicht nicht"."""
+    for slug in ("pro-league", "1st-division"):
+        assert LS.stufe(slug) == "mehrdeutig", slug
+        assert LS.stufe(slug) != "1", "%s stand als oberste Spielklasse da" % slug
+        # Und das ist keine Randliga-Aussage: wir wissen es nicht, wir behaupten es nicht.
+        assert LS.randliga(slug) is False, slug
+
+
+def test_mehrdeutig_ist_keine_none_sondern_eine_marke():
+    """None heisst „noch nie angesehen" und laesst den CI-Wachhund anschlagen, der genau
+    dafuer da ist. Eine Marke heisst „angesehen, kein Rang" — der Unterschied ist der ganze
+    Zweck der ART-Liste."""
+    assert LS.stufe("pro-league") is not None
+    fehlt = [s for s in LS.MEHRDEUTIG if LS.stufe(s) is None]
+    assert not fehlt, "diese faellt der Wachhund wieder an: %s" % fehlt
+
+
+def test_mehrdeutig_schlaegt_tabelle_und_regel(monkeypatch):
+    """Ohne diesen Fall ueberlebt „Reihenfolge egal": die Eintraege sind heute AUS der Tabelle
+    entfernt, ein spaeteres Nachtragen von Hand wuerde die Marke sonst still ueberstimmen —
+    genau so ist `pro-league` ueberhaupt erst entstanden."""
+    monkeypatch.setitem(LS.EBENE, "pro-league", 1)
+    assert LS.stufe("pro-league") == "mehrdeutig"
+    monkeypatch.setitem(LS.ART, "pro-league", "pokal")
+    assert LS.stufe("pro-league") == "mehrdeutig"
+
+
+def test_kein_slug_steht_gleichzeitig_in_tabelle_und_in_mehrdeutig():
+    doppelt = [s for s in LS.MEHRDEUTIG if s in LS.EBENE or s in LS.ART]
+    assert not doppelt, ("ein Schluessel kann nicht beides sein — die Marke wuerde die Zeile "
+                         "stumm ueberstimmen und niemand saehe, dass die Zeile tot ist: %s"
+                         % doppelt)
+
+
+def test_mehrere_laender_allein_macht_nicht_mehrdeutig():
+    """Die Gegenprobe, damit das kein Rundumschlag wird. Gemessen am Ledger tragen diese
+    Slugs in JEDEM Land dieselbe Klasse und bleiben deshalb, wie sie waren:
+    `bundesliga` (Deutschland + Oesterreich), `ligue-1` (Frankreich + Tunesien),
+    `superliga` (Argentinien + Serbien), `premier-league` (England, Russland, Aegypten,
+    Armenien, Kasachstan, Bhutan, St. Kitts), `championship` (England + Nordirland, beide
+    Ebene 2), `primera-division` (Venezuela, Uruguay, Peru).
+    Mehrdeutig ist nicht „mehrere Laender", sondern „mehrere KLASSEN unter einem Schluessel"."""
+    assert LS.stufe("bundesliga") == "1"
+    assert LS.stufe("ligue-1") == "1"
+    assert LS.stufe("superliga") == "1"
+    assert LS.stufe("premier-league") == "1"
+    assert LS.stufe("primera-division") == "1"
+    assert LS.stufe("championship") == "2"
+
+
+def test_die_usl_championship_ist_die_zweite_klasse():
+    """🔴 22.09.2026, beim Nachzaehlen derselben Tabellenzeile gefunden. Kein
+    Mehrdeutigkeits-Fall — der Slug meint genau eine Liga — sondern eine falsche Zeile: die
+    USL Championship ist von der USSF als Division II sanktioniert und liegt unter der MLS
+    (seit 2017; davor Division III). Sie stand als Ebene 1. Genau die Richtung, um die es
+    Lucas geht: ein grosser Einsatz dort war als Topliga-Einsatz gestempelt."""
+    assert LS.stufe("usl-championship") == "2"
+    assert LS.randliga("usl-championship") is True
+    # und der Pokal-Nachbar bleibt, was er ist
+    assert LS.stufe("canadian-championship") == "pokal"
+
+
+# ── Der Wachhund, damit der naechste Fall nicht wieder per Fremd-Post kommt ──
+def test_zwei_turniere_unter_einem_schluessel_fallen_auf():
+    """Von Hand gefunden wurde die Klasse nur, weil Lucas einen fremden Post geschickt hat.
+    Das ist keine Methode. Der Feed liefert die Antwort laengst mit: die GraphQL-Abfrage holt
+    `tournament { id name slug }` — die `id` wurde bis heute weggeworfen."""
+    zeilen = [
+        {"sport": "soccer", "ligaSlug": "premier-league", "ligaId": "a"},
+        {"sport": "soccer", "ligaSlug": "premier-league", "ligaId": "b"},
+        {"sport": "soccer", "ligaSlug": "la-liga", "ligaId": "c"},
+        {"sport": "soccer", "ligaSlug": "la-liga", "ligaId": "c"},
+    ]
+    r = LS.mehrdeutige_kandidaten(zeilen)
+    assert r["kandidaten"] == {"premier-league": ["a", "b"]}
+    assert r["nMitId"] == 4
+
+
+def test_der_wachhund_meldet_nicht_was_schon_als_mehrdeutig_bekannt_ist():
+    zeilen = [{"sport": "soccer", "ligaSlug": "pro-league", "ligaId": x} for x in ("a", "b")]
+    assert LS.mehrdeutige_kandidaten(zeilen)["kandidaten"] == {}
+
+
+def test_der_wachhund_meldet_nicht_was_gar_keine_ebene_traegt():
+    """Ein Slug ohne Ebene faellt schon beim anderen Wachhund auf. Hier doppelt zu melden
+    hiesse, denselben Fund zweimal zu zaehlen."""
+    zeilen = [{"sport": "soccer", "ligaSlug": "gibt-es-nicht-xyz", "ligaId": x}
+              for x in ("a", "b")]
+    assert LS.mehrdeutige_kandidaten(zeilen)["kandidaten"] == {}
+
+
+def test_zeilen_ohne_turnier_id_zaehlen_nicht_als_ein_turnier():
+    """Sonst waere ein Ledger ohne IDs ein Unbedenklichkeits-Bescheid — „fehlende Information
+    rendert als harmloser Default", die Klasse, an der diese Datei schon zweimal haengt."""
+    zeilen = [{"sport": "soccer", "ligaSlug": "premier-league"},
+              {"sport": "soccer", "ligaSlug": "premier-league", "ligaId": None},
+              {"sport": "soccer", "ligaSlug": "premier-league", "ligaId": "a"}]
+    r = LS.mehrdeutige_kandidaten(zeilen)
+    assert r["nMitId"] == 1, "nur die eine Zeile MIT ID zaehlt"
+    assert r["kandidaten"] == {}
+
+
+def test_kombis_und_fremde_sportarten_bleiben_draussen():
+    zeilen = [{"sport": "soccer", "ligaSlug": "la-liga", "ligaId": "a", "kombi": True},
+              {"sport": "soccer", "ligaSlug": "la-liga", "ligaId": "b", "kombi": True},
+              {"sport": "volleyball", "ligaSlug": "la-liga", "ligaId": "c"},
+              {"sport": "volleyball", "ligaSlug": "la-liga", "ligaId": "d"}]
+    r = LS.mehrdeutige_kandidaten(zeilen)
+    assert r["kandidaten"] == {}
+    assert r["nMitId"] == 0
+
+
+def test_der_wachhund_laeuft_gegen_das_echte_ledger():
+    """Die Anwendung, nicht nur die Regel. Solange die ID sich noch sammelt, steht hier die
+    Abdeckung statt eines Freispruchs — eine Messung, die bei null anfaengt, darf nicht wie
+    ein Ergebnis aussehen."""
+    import json
+    p = ROOT / "stake_bet_ledger.json"
+    if not p.exists():
+        import pytest
+        pytest.skip("kein Ledger im Arbeitsverzeichnis")
+    rows = (json.load(open(p, encoding="utf-8")) or {}).get("wetten") or []
+    r = LS.mehrdeutige_kandidaten(rows)
+    assert not r["kandidaten"], (
+        "Slugs mit Ebene, hinter denen mehrere Turniere stehen (Abdeckung: %d Zeilen mit "
+        "Turnier-ID): %s" % (r["nMitId"], r["kandidaten"]))

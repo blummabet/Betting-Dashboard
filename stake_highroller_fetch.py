@@ -853,6 +853,17 @@ def normalisiere(rec: dict, kurse: dict = None) -> dict:
                                _pfad(erst, "fixture", "tournament", "name")),
         "liga": _pfad(erst, "fixture", "tournament", "name"),
         "ligaSlug": _pfad(erst, "fixture", "tournament", "slug"),
+        # 🔴 22.09.2026 — die Abfrage holt `tournament { id name slug }` seit jeher, und die
+        # `id` wurde hier weggeworfen. Der Slug ist der schlechtere Schluessel: er ist weder
+        # sportarten- noch laenderrein. Unter `pro-league` liegen die uzbekische Pro League
+        # (Ebene 2) und Volleyball, unter `1st-division` daenische und norwegische ZWEITE
+        # Ligen neben der zyprischen ERSTEN. `stake_liga_stufe.py` musste deshalb heute zwei
+        # Eintraege auf „mehrdeutig" zuruecknehmen — mit der Turnier-ID ist die Frage
+        # eindeutig beantwortbar, ohne sie bleibt sie es nicht.
+        #
+        # Nur mitschreiben, nichts entscheiden: die ID sammelt sich erst. Ein Wert, der noch
+        # nicht da ist, darf keine Regel tragen.
+        "ligaId": _pfad(erst, "fixture", "tournament", "id"),
         "event": erst.get("fixtureName") or _erst(rec, {"fixturename", "eventname"}, str),
         "eventId": _pfad(erst, "fixture", "id"),
         "markt": _pfad(erst, "market", "name"),

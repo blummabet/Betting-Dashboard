@@ -466,6 +466,18 @@ def check_stake_spielklasse(ctx):
         fails.append("%d Fussball-Ligen ohne Eintrag in stake_liga_stufe.py (%s) — sie fallen "
                      "aus jeder Zeile der Ansicht, statt aufzufallen"
                      % (n_ohne, ", ".join((r.get("ohneEbene") or [])[:6])))
+    # 🔴 22.09.2026 (Lucas schickt einen Fremd-Post aus der uzbekischen Pro League). Der
+    # Wachhund oben findet Ligen, die FEHLEN. Er findet nicht, was falsch drinsteht: unter
+    # `pro-league` lag die uzbekische ZWEITE Liga als Ebene 1, unter `1st-division` lagen
+    # daenische Zweitligen neben der zyprischen Ersten. Gefunden wurde das nur, weil jemand
+    # einen fremden Radar-Post geschickt hat — das ist keine Methode.
+    # Die Turnier-ID aus dem Feed macht es zaehlbar; sie sammelt sich seit dem 22.09.
+    md = r.get("mehrdeutig") or {}
+    kand = md.get("kandidaten") or {}
+    if kand:
+        fails.append("%d Liga-Schluessel bezeichnen mehrere Turniere und tragen trotzdem eine "
+                     "Spielklasse (%s) — eine Zahl davon ist fuer die Haelfte der Spiele falsch"
+                     % (len(kand), ", ".join(sorted(kand)[:6])))
     sch = a.get("schubladen") or {}
     for name in ("randliga_hoher_einsatz", "topliga_hoher_einsatz"):
         if name not in sch:

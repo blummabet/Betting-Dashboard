@@ -958,3 +958,48 @@ def test_ohne_bilanz_steht_dort_ein_leeres_objekt_keine_erfindung():
     jetzt = datetime.now(timezone.utc)
     s = M.sicht_bauen(_ledger_mit(1, 0, jetzt), jetzt, "ok", "u", "f", "")
     assert s.get("luecken") == {}
+
+
+def test_die_turnier_id_wird_mitgeschrieben():
+    """🔴 22.09.2026 (Lucas schickt einen Fremd-Radar-Post aus der uzbekischen Pro League).
+
+    Die GraphQL-Abfrage holt `tournament { id name slug }` seit jeher — die `id` wurde beim
+    Normalisieren weggeworfen und nur der Slug behalten. Der Slug ist der schlechtere
+    Schluessel: er ist weder sportarten- noch laenderrein. Unter `pro-league` liegen die
+    uzbekische Pro League (ZWEITE Liga) und Volleyball, unter `1st-division` daenische und
+    norwegische Zweitligen neben der zyprischen Ersten. `stake_liga_stufe.py` musste beide
+    deshalb auf „mehrdeutig" zuruecknehmen.
+
+    Nur mitschreiben, nichts entscheiden — aber ohne Mitschreiben bleibt die Frage
+    unbeantwortbar, obwohl ihre Antwort in jeder Zeile des Feeds steht.
+    """
+    rec = {"id": "sport:1", "amount": 100, "currency": "usdt", "odds": 1.9,
+           "createdAt": "2026-09-22T14:16:12Z", "status": "pending",
+           "bet": {"outcomes": [{
+               "id": "o1", "odds": 1.9, "status": "pending",
+               "fixtureName": "PFC Terdu - FK Gazalkent",
+               "market": {"name": "1x2"}, "outcome": {"id": "o1", "name": "FK Gazalkent"},
+               "fixture": {"id": "fx1", "startTime": "2026-09-22T13:00:00Z",
+                           "tournament": {"id": "trn-uz-pro", "name": "Pro League",
+                                          "slug": "pro-league",
+                                          "category": {"sport": {"slug": "soccer",
+                                                                 "name": "Soccer"}}}}}]}}
+    z = M.normalisiere(rec, {})
+    assert z["ligaId"] == "trn-uz-pro"
+    assert z["ligaSlug"] == "pro-league", "der Slug bleibt — die ID kommt dazu, nicht an seine Stelle"
+
+
+def test_ohne_turnier_id_steht_dort_None_und_kein_ersatz():
+    """Ein Wert, der fehlt, darf nicht durch den Slug ersetzt werden: sonst saehe der
+    Mehrdeutigkeits-Wachhund ueberall genau ein „Turnier" und schwiege fuer immer."""
+    rec = {"id": "sport:2", "amount": 100, "currency": "usdt", "odds": 2.0,
+           "createdAt": "2026-09-22T14:16:12Z", "status": "pending",
+           "bet": {"outcomes": [{
+               "id": "o2", "odds": 2.0, "status": "pending", "fixtureName": "A - B",
+               "market": {"name": "1x2"}, "outcome": {"id": "o2", "name": "A"},
+               "fixture": {"id": "fx2", "startTime": "2026-09-22T13:00:00Z",
+                           "tournament": {"name": "Pro League", "slug": "pro-league",
+                                          "category": {"sport": {"slug": "soccer"}}}}}]}}
+    z = M.normalisiere(rec, {})
+    assert z["ligaId"] is None
+    assert z["ligaSlug"] == "pro-league"
