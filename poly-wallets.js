@@ -1120,9 +1120,21 @@ function _pwIsSharpScore(sc){
   // wins bevorzugt direkt; sonst aus der Quote rekonstruieren (aeltere Aufrufer geben nur hit).
   const wins=(typeof sc.wins==='number')?sc.wins:Math.round((sc.hit||0)*n);
   if(!_pwBeatsCoinflip(wins,n)) return false;
-  if(sc.pnlKnown && (sc.pnl||0)<0) return false;   // bestaetigter Verlierer raus, unbekannt bleibt
-  if(_pwIstGeldVerlierer(sc)) return false;        // gemessener 30T-Sportverlust; unbekannt bleibt
+  if(_pwIstVerlierer(sc)) return false;
   return true;
+}
+// 🔴 22.09.2026 abends (Lucas: „sind die Whale-Pushes fuer Public richtig?"). Spiegel von
+// sharp_gate.is_confirmed_loser. Hier standen ZWEI Bedingungen, und die erste konnte die
+// zweite ueberstimmen: `pnl` ist Polymarkets Lebensbilanz ueber alles — Wahlen, Krypto, Sport
+// in einer Zahl. Am Track gemessen wurden dadurch 527 von 1.562 offenen Positionen abgelehnt,
+// 225 davon mit gemessenem 30-Tage-SPORT-Profit im PLUS (die groesste: +$863.781 bei einer
+// Lebensbilanz von −$2,4 Mio — dieselbe Wallet, die auf Rang 2 der Profit-Rangliste steht).
+// Jetzt: gemessen schlaegt ungemessen. Sport-Zahl vorhanden → sie entscheidet; sonst die
+// Lebensbilanz als Notbehelf.
+function _pwIstVerlierer(sc){
+  const g=_pwSportProfit(sc);
+  if(g!==null) return g<0;
+  return !!(sc && sc.pnlKnown && (sc.pnl||0)<0);
 }
 // Der gemessene Sport-Profit im 30-Tage-Fenster — oder null, wenn NICHT GEMESSEN. null darf nie
 // zu 0 werden: die Abdeckung liegt heute bei 9 % der Wallets, ein Gate auf 0 bestrafte also die
@@ -1151,8 +1163,7 @@ function _pwSharpGrade(sc){
   if(!sc) return 0;
   const n=sc.n||0;
   if(n<PW_SHARP_MIN_N) return 0;
-  if(sc.pnlKnown && (sc.pnl||0)<0) return 0;
-  if(_pwIstGeldVerlierer(sc)) return 0;
+  if(_pwIstVerlierer(sc)) return 0;
   const wins=(typeof sc.wins==='number')?sc.wins:Math.round((sc.hit||0)*n);
   const lb=_pwWilsonLb(wins,n);
   if(lb>0.5) return 1;

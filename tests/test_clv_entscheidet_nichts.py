@@ -127,3 +127,88 @@ def test_die_freigabe_hat_es_seit_dem_08_09_richtig():
     quelle = (ROOT / "freigabe.py").read_text(encoding="utf-8")
     assert "Der CLV blockiert nicht mehr" in quelle
     assert hasattr(freigabe, "clv_urteil"), "das BESCHREIBENDE Feld muss es weiter geben"
+
+
+# ── 22.09.2026 abends: derselbe Fehler eine Stufe hoeher ─────────────────────
+# 🔴 Lucas: „Und sind die Whale-Pushes für Public richtig? Funktioniert da alles? Oder wo ein
+# Problem?"
+#
+# Das Problem stand über dem CLV-Tor und ist dieselbe Klasse: **ein Kriterium, das etwas
+# anderes misst als das, wonach entschieden wird.** `_is_confirmed_loser` im Public-Trichter
+# fragte `pnl` — Polymarkets Lebensbilanz über Wahlen, Krypto UND Sport in einer Zahl.
+#
+# Gemessen am Track vom 22.09.2026, 1.562 offene Positionen:
+#     als „bestätigter Verlierer" abgelehnt      527   (ein Drittel)
+#     davon mit gemessenem 30-Tage-Sportprofit   504
+#     davon im PLUS                              225
+# Die größte: +$863.781 Sport in 30 Tagen (n=92), abgelehnt wegen −$2.420.880 Lebensbilanz.
+# Dieselbe Wallet steht auf Rang 2 der Profit-Rangliste des Dashboards.
+def test_der_sport_profit_schlaegt_die_plattform_bilanz():
+    import sharp_gate as SG
+    wallet = {"n": 60, "wins": 40, "clvSumPP": -30.0, "pnl": -2420880,
+              "fenster30": {"gewinn": 863781, "einsatz": 3260000, "n": 92, "nGeld": 92}}
+    assert SG.is_confirmed_loser(wallet) is False
+    assert SG.is_sharp(wallet) is True
+    assert SG.sharp_grade(wallet) == 1.0
+
+
+def test_und_zwar_in_beide_richtungen():
+    """Kein Aufweichen, ein Tausch. Am Track steigt die Zahl der abgelehnten Positionen von
+    527 auf 639 — Wallets mit gemessenem Sport-VERLUST, die vorher durchkamen, weil ihre
+    Lebensbilanz unbekannt war."""
+    import sharp_gate as SG
+    reich_im_falschen_markt = {"n": 60, "wins": 40, "clvSumPP": 120.0, "pnl": 3700000,
+                               "fenster30": {"gewinn": -5000}}
+    assert SG.is_confirmed_loser(reich_im_falschen_markt) is True
+    assert SG.is_sharp(reich_im_falschen_markt) is False
+
+
+def test_ohne_messung_bleibt_die_plattform_bilanz_der_notbehelf():
+    """Die Abdeckung liegt bei 386 von 4.394 Wallets (9 %). Für die übrigen ändert sich
+    nichts — „nicht gemessen" darf nicht zu „unbedenklich" werden."""
+    import sharp_gate as SG
+    assert SG.is_confirmed_loser({"n": 60, "wins": 40, "pnl": -1}) is True
+    assert SG.is_confirmed_loser({"n": 60, "wins": 40}) is False
+    assert SG.is_confirmed_loser({"n": 60, "wins": 40, "fenster30": {}}) is False
+    assert SG.is_confirmed_loser({"n": 60, "wins": 40, "pnl": -1, "fenster30": {"gewinn": 0}}) is False, \
+        "exakt 0 ist kein Verlust — und die Messung liegt vor, also gilt sie"
+
+
+def test_es_gibt_nur_noch_EINE_verlierer_frage():
+    """Vorher standen in `is_sharp` zwei Bedingungen nebeneinander, und die erste (`pnl`)
+    konnte die zweite (Sport) überstimmen. Genau so entsteht die Klasse „eine Regel an zwei
+    Stellen": wer den Vorrang ändert, ändert ihn an einer."""
+    import inspect
+    import sharp_gate as SG
+    for fn in (SG.is_sharp, SG.sharp_grade):
+        q = inspect.getsource(fn)
+        assert "is_confirmed_loser(score)" in q, fn.__name__
+        assert "pnl < 0" not in q, (
+            "%s fragt die Lebensbilanz wieder selbst ab, statt die eine Definition zu "
+            "benutzen" % fn.__name__)
+
+
+def test_der_public_trichter_benutzt_dieselbe_definition():
+    """poly_whale_watch._is_confirmed_loser delegiert — sonst hinge am oeffentlichen Kanal
+    eine zweite Wahrheit."""
+    import inspect
+    import poly_whale_watch as P
+    assert "SG.is_confirmed_loser" in inspect.getsource(P._is_confirmed_loser)
+    assert "SG.is_sharp" in inspect.getsource(P._is_smart)
+
+
+def test_am_echten_track_gibt_der_tausch_wallets_frei_und_sperrt_andere():
+    import json
+    import sharp_gate as SG
+    p = ROOT / "poly_wallet_track.json"
+    if not p.exists():
+        pytest.skip("kein Track im Arbeitsverzeichnis")
+    sc = (json.loads(p.read_text(encoding="utf-8")) or {}).get("scores") or {}
+    nur_pnl = lambda v: isinstance(v.get("pnl"), (int, float)) and v["pnl"] < 0
+    frei = [w for w, v in sc.items()
+            if isinstance(v, dict) and nur_pnl(v) and not SG.is_confirmed_loser(v)]
+    neu_gesperrt = [w for w, v in sc.items()
+                    if isinstance(v, dict) and not nur_pnl(v) and SG.is_confirmed_loser(v)]
+    assert frei, "der Tausch gibt niemanden frei — dann misst er nichts"
+    assert neu_gesperrt, ("der Tausch sperrt niemanden zusaetzlich — dann ist es doch eine "
+                          "reine Lockerung und nicht der Wechsel des Massstabs")

@@ -173,9 +173,10 @@ def is_sharp(score, min_n: int = SHARP_MIN_N, z: float = SHARP_Z) -> bool:
         return False
     # 🔴 22.09.2026: hier stand `if avg_clv < 0: return False`. Entfernt — s. Modul-Doku.
     # Der CLV wird weiter gerechnet und angezeigt; er schliesst niemanden mehr aus.
-    if pnl is not None and pnl < 0:      # bestaetigter Verlierer raus; unbekannt bleibt drin
-        return False
-    if is_confirmed_money_loser(score):  # gemessener 30-Tage-Sportverlust; unbekannt bleibt drin
+    # 22.09.2026 abends: EIN Aufruf statt zwei. `is_confirmed_loser` entscheidet jetzt selbst,
+    # ob die Sport-Zahl oder die Lebensbilanz gilt — vorher standen hier zwei Bedingungen, von
+    # denen die erste (`pnl`) die zweite (Sport) ueberstimmen konnte.
+    if is_confirmed_loser(score):
         return False
     return True
 
@@ -226,9 +227,7 @@ def sharp_grade(score, min_n: int = SHARP_MIN_N, z: float = SHARP_Z,
     if n < min_n:
         return 0.0
     # 🔴 22.09.2026: hier stand `if avg_clv < 0: return 0.0`. Entfernt — s. Modul-Doku.
-    if pnl is not None and pnl < 0:
-        return 0.0
-    if is_confirmed_money_loser(score):
+    if is_confirmed_loser(score):
         return 0.0
     lb = wilson_lb(wins, n, z)
     if lb > 0.5:
@@ -239,8 +238,47 @@ def sharp_grade(score, min_n: int = SHARP_MIN_N, z: float = SHARP_Z,
 
 
 def is_confirmed_loser(score) -> bool:
-    """P&L bekannt UND negativ. Unbekannt ist KEIN Verlierer-Nachweis."""
+    """Ist diese Wallet ein nachgewiesener Verlierer? Unbekannt ist KEIN Nachweis.
+
+    🔴 22.09.2026, abends (Lucas: „und sind die Whale-Pushes fuer Public richtig? Wo ein
+    Problem?"). Das Problem stand eine Stufe ueber dem CLV-Tor, das heute Mittag gefallen ist,
+    und es ist derselbe Fehler: **ein Kriterium, das etwas anderes misst als das, wonach
+    entschieden wird.**
+
+    Hier stand nur `pnl < 0`. `pnl` ist Polymarkets Lebensbilanz ueber ALLES — Wahlen, Krypto,
+    Sport in einer Zahl. Der Modulkopf sagt das seit dem 29.08. selbst: *„Wer +$3,7 Mio aus
+    Wahlmaerkten hat, kann im Fussball trotzdem nichts koennen."* Die Umkehrung stand nie da
+    und gilt genauso.
+
+    Gemessen am Track vom 22.09.2026 (1.562 offene Positionen des Public-Trichters):
+        als „bestaetigter Verlierer" abgelehnt          527  (ein Drittel aller Positionen)
+        davon mit gemessenem 30-Tage-SPORT-Profit       504
+        davon im PLUS                                   225
+    Die groessten Faelle:
+        +$863.781 Sport in 30 Tagen (n=92),  abgelehnt wegen −$2.420.880 Lebensbilanz
+        +$814.563 Sport in 30 Tagen (n=63),  abgelehnt wegen   −$189.546 Lebensbilanz
+        +$418.011 Sport in 30 Tagen (n=986), abgelehnt wegen   −$450.041 Lebensbilanz
+    Die erste davon ist dieselbe Wallet, die auf der Profit-Rangliste des Dashboards auf Rang 2
+    steht. Sie war im oeffentlichen Kanal gesperrt.
+
+    Und die Strafe kam doppelt: `_is_smart` (poly_whale_watch) ruft `is_sharp`, das denselben
+    Ausschluss enthaelt — die Wallet galt damit auch als „unbewiesen" und musste statt $25.000
+    ganze $100.000 auf einer Position haben.
+
+    ── Die Regel jetzt ────────────────────────────────────────────────────────────────────
+    Gemessen schlaegt ungemessen. Liegt ein 30-Tage-SPORT-Profit vor, entscheidet der; sonst
+    bleibt die Lebensbilanz als Notbehelf. Das ist keine Lockerung, sondern ein Tausch: der
+    Zuschnitt wird in BEIDE Richtungen schaerfer. Am Track gemessen steigt die Zahl der
+    abgelehnten Positionen von 527 auf 639 — Wallets mit gemessenem Sport-VERLUST, die vorher
+    durchkamen, weil ihre Lebensbilanz unbekannt war.
+
+    ⚠️ Die Abdeckung des Sport-Profits liegt bei 386 von 4.394 Wallets (9 %) und waechst mit dem
+    naechsten Pipeline-Lauf. Fuer die uebrigen aendert sich nichts.
+    """
     if not isinstance(score, dict):
         return False
+    geld = sport_profit(score)
+    if geld is not None:
+        return geld < 0
     pnl = score.get("pnl")
     return isinstance(pnl, (int, float)) and pnl < 0

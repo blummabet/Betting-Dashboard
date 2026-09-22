@@ -7,7 +7,8 @@
     "nicht erst, wenn die Seite etwas anderes 'scharf' nennt als der Push.",
     "Die meisten Faelle sind ECHTE Wallets aus poly_wallet_track.json vom 29.08.",
     "01.09.2026: dazu der REGLER (`grade`). Dieselben harten Ausschluesse, aber die Wilson-Untergrenze laeuft zwischen 40% und 50% linear statt zu springen. `grade` ist auf 2 Nachkommastellen angegeben; beide Seiten muessen so genau treffen.",
-    "🔴 22.09.2026: die CLV-Bedingung ist aus beiden Implementierungen ENTFERNT (Lucas: 'den CLV von mir aus messe ihn, aber er darf kein Kriterium sein, dass irgendwas gekickt wird'). Die beiden CLV-Faelle unten kehren sich deshalb um und heissen jetzt, was sie pruefen: negativer CLV schliesst NICHT mehr aus. An seine Stelle tritt ein GEMESSENER 30-Tage-Sportverlust (`fenster30.gewinn` < 0) -- dieselbe Form wie beim P&L: ein Ausschluss, und 'nicht gemessen' ist keiner."
+    "🔴 22.09.2026: die CLV-Bedingung ist aus beiden Implementierungen ENTFERNT (Lucas: 'den CLV von mir aus messe ihn, aber er darf kein Kriterium sein, dass irgendwas gekickt wird'). Die beiden CLV-Faelle unten kehren sich deshalb um und heissen jetzt, was sie pruefen: negativer CLV schliesst NICHT mehr aus. An seine Stelle tritt ein GEMESSENER 30-Tage-Sportverlust (`fenster30.gewinn` < 0) -- dieselbe Form wie beim P&L: ein Ausschluss, und 'nicht gemessen' ist keiner.",
+    "🔴 22.09.2026 abends: `pnl` (Polymarkets Lebensbilanz ueber Wahlen, Krypto UND Sport) entscheidet nur noch, solange kein 30-Tage-SPORT-Profit gemessen ist. Am Track gemessen lehnte die alte Regel 527 von 1.562 offenen Positionen ab, 225 davon mit gemessenem Sport-Profit im Plus -- die groesste mit +$863.781 bei einer Lebensbilanz von -$2,4 Mio."
   ],
   "cases": [
     {
@@ -297,6 +298,54 @@
       "sharp": true,
       "grade": 1.0,
       "warum": "Die Grenze ist < 0, nicht <= 0 -- wie beim P&L exakt 0."
+    },
+    {
+      "name": "Sport-Profit schlaegt eine negative Lebensbilanz",
+      "score": {
+        "n": 60,
+        "wins": 40,
+        "clvSumPP": -30.0,
+        "pnl": -2420880,
+        "fenster30": {
+          "gewinn": 863781,
+          "einsatz": 3260000,
+          "n": 92,
+          "nGeld": 92
+        }
+      },
+      "sharp": true,
+      "grade": 1.0,
+      "warum": "Die echte Wallet vom 22.09.2026: -$2,4 Mio ueber alles, +$863.781 im Sport ueber 30 Tage, Rang 2 der Profit-Rangliste. Die alte Regel sperrte sie im oeffentlichen Kanal."
+    },
+    {
+      "name": "Sport-Verlust schlaegt eine positive Lebensbilanz",
+      "score": {
+        "n": 60,
+        "wins": 40,
+        "clvSumPP": 120.0,
+        "pnl": 3700000,
+        "fenster30": {
+          "gewinn": -5000,
+          "einsatz": 40000,
+          "n": 30,
+          "nGeld": 30
+        }
+      },
+      "sharp": false,
+      "grade": 0.0,
+      "warum": "Die Gegenrichtung, und der Grund, warum das kein Aufweichen ist: 'Wer +$3,7 Mio aus Wahlmaerkten hat, kann im Fussball trotzdem nichts koennen' (Modulkopf, 29.08.2026)."
+    },
+    {
+      "name": "ohne Sport-Messung bleibt die Lebensbilanz der Notbehelf",
+      "score": {
+        "n": 60,
+        "wins": 40,
+        "clvSumPP": 0.0,
+        "pnl": -1
+      },
+      "sharp": false,
+      "grade": 0.0,
+      "warum": "Die Abdeckung liegt bei 9 % der Wallets. Fuer die uebrigen 91 % aendert sich nichts."
     }
   ]
 }
