@@ -161,6 +161,11 @@ EBENE = {
     # Grund, warum Gruppe 4 der Tercera (von achtzehn) wieder als Luecke auffiel.
     "serie-c": 3,
     "primera-c": 3, "primera-division-rfef": 3,
+    # 22.09.2026 (CI-Wachhund, „liga-primera-premier"): der Name klingt nach Spitze, die Teams
+    # sagen etwas anderes — „Reboceros de La Piedad - Irapuato" ist Mexikos Liga Premier, also
+    # die dritte Ebene unter Liga MX und Liga de Expansion MX. Genau deshalb wird hier nicht
+    # nach Wortbestandteilen geraten: „premier" und „primera" stehen in beiden Richtungen.
+    "liga-primera-premier": 3,
     "liga-portugal-3": 3, "tweede-divisie": 3, "national": 3, "national-league": 3,
     # 13.09.2026 (CI-Wachhund): das Campeonato de Portugal ist die DRITTE portugiesische Klasse
     # (unter Liga Portugal und Liga Portugal 2) — der Name klingt nach Landesmeisterschaft, ist
@@ -297,6 +302,12 @@ ART = {
     # Tabelle wird nicht nach Haeufigkeit gepflegt, sondern danach, ob die Frage beantwortbar
     # ist. Eine Namensregel waere hier falsch — „nations" steckt auch in Vereinsturnieren.
     "uefa-nations-league": "kontinental",
+    # 22.09.2026 (CI-Wachhund, „africa-cup-of-nations-qualification"): dritter Fall derselben
+    # Art. Beleg aus dem Ledger: „Egypt - Angola" — Nationalauswahlen, und eine
+    # Nationalmannschaft hat keine Spielklasse. Eine Namensregel auf „-qualification" waere
+    # falsch: Vereinswettbewerbe haben ebenfalls Qualifikationsrunden (Champions League), und
+    # deren Teilnehmer HABEN eine Spielklasse.
+    "africa-cup-of-nations-qualification": "kontinental",
     # 14.09.2026 (CI-Wachhund): die Professional Development League ist Englands U21-Reserve-
     # wettbewerb. „Swansea City - Huddersfield Town" sieht nach Profifussball aus, es sind die
     # Nachwuchsmannschaften — die Namensregel greift nicht, weil weder U21 noch „youth" im

@@ -1140,13 +1140,23 @@ def test_fehlende_herkunft_erfindet_kein_feld():
 
 def test_spaeterer_lauf_ergaenzt_die_herkunft_und_loescht_sie_nie():
     """Der Altbestand in poly_resolutions.json hat keine cond. Ein spaeterer Lauf darf sie
-    nachtragen — aber ein Lauf OHNE Herkunft darf eine vorhandene nicht wegnehmen."""
+    nachtragen — aber ein Lauf OHNE Herkunft darf eine vorhandene nicht wegnehmen.
+
+    🔴 22.09.2026: der Test lief heute rot, ohne dass sich eine Zeile Code geaendert haette.
+    Der Eintrag war auf den 08.09. datiert und `now` kam aus der echten Uhr — mit
+    RESOLUTIONS_KEEP_DAYS = 14 war er ab dem 22.09. aelter als das Fenster und wurde geprunt.
+    Der Test sagte also nichts mehr ueber das Nachtragen, sondern ueber das Datum.
+    Fehlerklasse: ein Test, dessen Ergebnis vom Kalender abhaengt. `now` wird jetzt gesetzt.
+    """
+    from datetime import datetime as _dt, timezone as _tz
+    jetzt = _dt(2026, 9, 10, tzinfo=_tz.utc)
     vor = {"k-more-markets": {"winner": "Under", "ts": "2026-09-08T00:00:00+00:00"}}
     mit = B.update_resolutions(vor, [{"key": "k-more-markets", "resolved": True,
-                                      "resolvedPrices": {"Under": 1.0}, "cond": "0xAAA"}])
+                                      "resolvedPrices": {"Under": 1.0}, "cond": "0xAAA"}],
+                               now=jetzt)
     assert mit["k-more-markets"]["cond"] == "0xAAA", "nachtragen muss gehen"
     ohne = B.update_resolutions(mit, [{"key": "k-more-markets", "resolved": True,
-                                       "resolvedPrices": {"Under": 1.0}}])
+                                       "resolvedPrices": {"Under": 1.0}}], now=jetzt)
     assert ohne["k-more-markets"]["cond"] == "0xAAA", "eine bekannte Herkunft darf nie verschwinden"
 
 
