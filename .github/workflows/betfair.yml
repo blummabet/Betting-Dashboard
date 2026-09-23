@@ -37,7 +37,30 @@ concurrency:
 jobs:
   fetch:
     runs-on: [self-hosted, macOS]
-    timeout-minutes: 8
+    # 🔴 23.09.2026 (Lucas: „betfair action hat scheinbar abgebrochen"). Der Lauf um 13:00 UTC
+    # endete mit „The operation was canceled" — im Schritt `ci_sichern.sh`, NACH dem Commit des
+    # Belegs (9a7b361, 3 Dateien, 39 Zeilen) und VOR dessen Push. Der Commit lag nur lokal auf
+    # dem Runner und wurde vom naechsten `actions/checkout` weggeraeumt. Der Radar stand danach
+    # 25 Minuten still, und die Alarme, deren Beleg verloren ging, gelten fuer den naechsten
+    # Lauf als nie gesendet — also werden sie erneut gesendet. Genau der Vorfall vom 19.09.
+    # („Push kam 2x"), gegen den ci_sichern.sh ueberhaupt geschrieben wurde.
+    #
+    # Gemessen an zwoelf Laeufen desselben Tages (Commit-Zeiten gegen den Cron-Slot):
+    #     bis zum Beleg   Median 6,1 Min
+    #     ganzer Lauf     Median 6,3 Min, laengster 6,6 Min
+    # Der Deckel stand auf 8. Eineinhalb Minuten Luft — und die verbraucht der Beleg-Push
+    # selbst, sobald er sich den Branch teilen muss: ci_sichern.sh macht bis zu drei Runden
+    # `ci_pull` + `git push`, und das Repo nimmt an einem Werktag ~130 Commits pro Stunde auf.
+    # Der Deckel schneidet damit bevorzugt an der teuersten Stelle des Laufs.
+    #
+    # Fehlerklasse: ein Deckel, den der Lauf regelmaessig streift, ist kein Deckel, sondern ein
+    # Wuerfel — und er faellt dort, wo gerade die langsamste Operation laeuft.
+    #
+    # 14 statt 8: bleibt unter dem 15-Minuten-Takt (der naechste Lauf verdraengt ohnehin
+    # nichts, `cancel-in-progress: false`) und gibt dem Beleg-Push seine Retry-Runden. Ob der
+    # Deckel wieder eng wird, muss niemand raten — `laeuftSeitS` steht in health/betfair.json
+    # und `check_der_deckel_hat_luft` schlaegt bei 75 % Auslastung an.
+    timeout-minutes: 14
     env:
       # 13.08.2026 (Lucas): BETWATCH_KEY job-weit -> die autoritative /results-Korrektur (verify_settled in
       # betfair_track_record + betfair_public_eval + Money-Map-Settle in betfair_consensus) kann laufen.

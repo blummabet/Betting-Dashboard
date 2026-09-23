@@ -843,6 +843,99 @@ def check_clv_urteil_passt_zur_zahl(ctx):
     return _c("CLV-Urteil passt zur CLV-Zahl", "error", fails)
 
 
+DECKEL_ENG_PCT = 75.0     # ab hier ist der Deckel keine Reserve mehr
+
+
+def _timeout_minuten(workflow_text: str):
+    """Der Job-Deckel in Minuten. REIN. None = keiner gesetzt (dann gilt GitHubs 360)."""
+    import re
+    m = re.search(r"^\s*timeout-minutes:\s*([0-9]+)", workflow_text or "", re.M)
+    return float(m.group(1)) if m else None
+
+
+def _laufzeiten_s(health: dict):
+    """Die gemessenen Laufzeiten aus einem Gesundheits-Protokoll. REIN. -> [Sekunden]"""
+    raus = []
+    for r in (health or {}).get("runs") or []:
+        v = r.get("laeuftSeitS") if isinstance(r, dict) else None
+        if isinstance(v, (int, float)) and v > 0:
+            raus.append(float(v))
+    return raus
+
+
+def deckel_auslastung(health: dict, timeout_min):
+    """Wie viel seines Deckels braucht der Lauf. REIN. -> (pct, median_s, max_s) oder None.
+
+    `laeuftSeitS` misst vom Job-Start bis zum vorletzten Schritt — der Rest ist der
+    End-Commit. Als Auslastung wird der LAENGSTE beobachtete Lauf gerechnet, nicht der
+    mittlere: ein Deckel muss den schlechten Tag aushalten, nicht den guten.
+    """
+    if not timeout_min:
+        return None
+    xs = _laufzeiten_s(health)
+    if len(xs) < 3:
+        return None
+    xs_s = sorted(xs)
+    med = xs_s[len(xs_s) // 2]
+    mx = xs_s[-1]
+    return (100.0 * mx / (timeout_min * 60.0), med, mx)
+
+
+def check_der_deckel_hat_luft(ctx):
+    """🔴 23.09.2026 (Lucas: „betfair action hat scheinbar abgebrochen").
+
+    Der Lauf um 13:00 UTC endete mit „The operation was canceled" — im Schritt `ci_sichern.sh`,
+    nach dem Commit des Belegs und vor dessen Push. Der Beleg lag nur lokal auf dem Runner und
+    war mit dem naechsten `actions/checkout` weg. Die Alarme waren da schon raus; fuer den
+    naechsten Lauf gelten sie als nie gesendet.
+
+    Aus den Commit-Zeiten von zwoelf Laeufen desselben Tages: Median 6,3 Minuten bei einem
+    Deckel von 8. Anderthalb Minuten Luft — und genau die verbraucht der Beleg-Push, wenn er
+    sich den Branch teilen muss. Der Deckel schnitt also bevorzugt an der teuersten Stelle.
+
+    Fehlerklasse: *ein Deckel, den der Lauf regelmaessig streift, ist kein Deckel, sondern ein
+    Wuerfel.* Und weil ein abgebrochener Lauf keinen Gesundheits-Eintrag mehr schreibt, sieht
+    man ihn hinterher nirgends — man sieht nur, dass etwas fehlt.
+
+    Deshalb misst jeder Lauf ab jetzt selbst mit (`laeuftSeitS`), und diese Zahl wird gegen den
+    Deckel gehalten, BEVOR der naechste Abbruch kommt.
+    """
+    import re
+    basis = BASE
+    wf_dir = basis / ".github" / "workflows"
+    h_dir = basis / "health"
+    if not wf_dir.is_dir() or not h_dir.is_dir():
+        return _c("Der Deckel hat Luft", "warn", [], "keine Workflows/Protokolle gefunden")
+    slug2wf = {}
+    for f in sorted(wf_dir.glob("*.y*ml")):
+        t = f.read_text(encoding="utf-8", errors="ignore")
+        for m in re.finditer(r"--slug\s+([a-z0-9\-]+)", t):
+            slug2wf[m.group(1)] = (f.name, t)
+    fails = []
+    geprueft = 0
+    for f in sorted(h_dir.glob("*.json")):
+        wf = slug2wf.get(f.stem)
+        if not wf:
+            continue
+        try:
+            health = json.loads(f.read_text(encoding="utf-8"))
+        except Exception:                                   # noqa: BLE001
+            continue
+        deckel = _timeout_minuten(wf[1])
+        u = deckel_auslastung(health, deckel)
+        if not u:
+            continue
+        geprueft += 1
+        pct, med, mx = u
+        if pct >= DECKEL_ENG_PCT:
+            fails.append("%s: laengster Lauf %.1f Min (Median %.1f) bei einem Deckel von "
+                         "%.0f Min — %.0f %% ausgelastet. Ein Abbruch trifft den letzten "
+                         "Schritt, und das ist der, der die Belege sichert."
+                         % (wf[0], mx / 60.0, med / 60.0, deckel, pct))
+    return _c("Der Deckel hat Luft", "warn", fails,
+              "" if geprueft else "noch keine Laufzeiten im Protokoll (laeuftSeitS)")
+
+
 def check_takt_stimmt_mit_dem_cron(ctx):
     """🔴 17.09.2026 (Lucas: „der Betfair-Cron sollte alle 10 min, tut er aber nicht, weil damals
     irgendwas nicht ging — in Wahrheit rennt er alle 15 min, falls das irgendwo wichtig ist").
@@ -1588,6 +1681,7 @@ UEBERSICHT_CHECKS = [
     check_fade_kontrolle,
     check_clv_urteil_passt_zur_zahl,
     check_takt_stimmt_mit_dem_cron,
+    check_der_deckel_hat_luft,
     check_geschlossen_heisst_belegt,
     check_positionswert_ist_frisch,
     check_public_stille_ist_erklaert,

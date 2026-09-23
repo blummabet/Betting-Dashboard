@@ -121,6 +121,15 @@ EBENE = {
     # I-League 2. Auch sie steht in der TABELLE und nicht in einer Regel: „super" im Namen
     # sagt hier das Gegenteil dessen, was ein Muster daraus lesen wuerde.
     "india-karnataka-super-division": 3,
+    # 23.09.2026 (CI-Wachhund, roter Test): „mumbai-super-league". Dritte aus derselben
+    # Familie und die kleinste davon: Mizoram und Karnataka sind STAATSmeisterschaften,
+    # Mumbai ist eine STADTliga unter der Mumbai Football Association — unter ISL, I-League,
+    # I-League 2 und der Maharashtra-Landesliga. Die Ledger-Paarung sagt es deutlicher als
+    # der Name: „Iron Born Cfci - Kopana FC". Auch hier verspricht „Super League" im Slug das
+    # Gegenteil dessen, was ein Muster daraus lesen wuerde — deshalb TABELLE, keine Regel.
+    # Die Skala endet bei 3; eine vierte Ebene fuer „noch kleiner" gibt es (noch) nicht, und
+    # eine einzufuehren, waere eine Entscheidung ueber alle 50 Ebene-3-Ligen, nicht ueber diese.
+    "mumbai-super-league": 3,
     # 10.09.2026 (CI-Wachhund, vierter und fuenfter Slug): „v-league" — die oberste Klasse
     # Vietnams (Ledger-Paarung „The Cong - Viettel FC - Cong An Ha Noi FC"). Der Slug ist
     # NICHT sportartenrein: in Korea und Japan heisst die Volleyball-Liga genauso. Dass hier

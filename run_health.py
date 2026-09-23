@@ -281,8 +281,9 @@ def baue_eintrag(workflow, run_id, run_url, steps, api_fehler=None, lauf=None):
     """
     fails = fehlerhafte_steps(steps)
     lauf = lauf or {}
+    _ts = _jetzt()
     return {
-        "ts": _jetzt(),
+        "ts": _ts,
         "workflow": workflow,
         "runId": str(run_id or ""),
         "runUrl": run_url,
@@ -296,6 +297,20 @@ def baue_eintrag(workflow, run_id, run_url, steps, api_fehler=None, lauf=None):
         "createdAt": lauf.get("createdAt"),
         "startedAt": lauf.get("startedAt"),
         "wartetS": _sekunden_zwischen(lauf.get("createdAt"), lauf.get("startedAt")),
+        # 🔴 23.09.2026 (Lucas: „betfair action hat scheinbar abgebrochen"). Der Lauf um 13:00 UTC
+        # starb mit „The operation was canceled" — mitten in `ci_sichern.sh`, nach dem Commit des
+        # Belegs und vor dessen Push. Der Beleg ist damit weg, die Alarme waren raus.
+        #
+        # Aus den Commit-Zeiten von zwoelf Laeufen: der Job braucht im Median 6,3 Minuten, der
+        # Deckel steht auf 8. Anderthalb Minuten Luft — und die verbraucht der Beleg-Push selbst,
+        # wenn er sich den Branch mit den ~130 Commits/Stunde teilen muss (drei Runden
+        # pull+push). Der Deckel schneidet also genau dort, wo er am teuersten ist.
+        #
+        # Diese Zeile ist die Zahl, die das sichtbar macht, ohne sie aus git ausgraben zu muessen:
+        # `run_health` laeuft als vorletzter Schritt, also ist „seit Start" hier praktisch die
+        # Laufzeit. Fehlerklasse: ein Deckel, den der Lauf regelmaessig streift, ist kein Deckel,
+        # sondern ein Wuerfel.
+        "laeuftSeitS": _sekunden_zwischen(lauf.get("startedAt"), _ts),
         "event": lauf.get("event"),
     }
 
