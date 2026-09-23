@@ -107,12 +107,9 @@
     {
       "label": "Stake-Spielklasse: Tabelle vollstaendig, Richtungen getrennt",
       "severity": "error",
-      "failures": [
-        "2 Fussball-Ligen ohne Eintrag in stake_liga_stufe.py (mumbai-super-league, professional-league) — sie fallen aus jeder Zeile der Ansicht, statt aufzufallen",
-        "1 Liga-Schluessel bezeichnen mehrere Turniere und tragen trotzdem eine Spielklasse (fa-cup) — eine Zahl davon ist fuer die Haelfte der Spiele falsch"
-      ],
-      "nFail": 2,
-      "ok": false,
+      "failures": [],
+      "nFail": 0,
+      "ok": true,
       "hinweis": ""
     },
     {
@@ -159,7 +156,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "seit Vorregistrierung n=3034 (UG -5.6 %) · Rueckblick n=2726, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=3110 (UG -5.9 %) · Rueckblick n=2726, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -183,6 +180,14 @@
       "hinweis": ""
     },
     {
+      "label": "Der Deckel hat Luft",
+      "severity": "warn",
+      "failures": [],
+      "nFail": 0,
+      "ok": true,
+      "hinweis": ""
+    },
+    {
       "label": "geschlossen heisst belegt",
       "severity": "error",
       "failures": [],
@@ -193,11 +198,9 @@
     {
       "label": "Positionswert ist frisch",
       "severity": "warn",
-      "failures": [
-        "liga_poly_balance.json: Positionswert $18.55 stammt aus einem Lauf vor 15 h — die Datei selbst ist 15 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
-      ],
-      "nFail": 1,
-      "ok": false,
+      "failures": [],
+      "nFail": 0,
+      "ok": true,
       "hinweis": ""
     },
     {
@@ -214,7 +217,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "129 Zeilen · 128 abgerechnet · 0 offen"
+      "hinweis": "135 Zeilen · 133 abgerechnet · 1 offen"
     },
     {
       "label": "Artefakte sind lesbar",
@@ -228,10 +231,9 @@
       "label": "Jeder Push hat seinen Beleg",
       "severity": "warn",
       "failures": [
-        "1 Public-Push(es) SEIT der Sofort-Sicherung ohne Ledger-Zeile (fresh:36041720 (2026-09-21T22:46)) — der Sicherungsschritt greift nicht",
-        "4 aeltere(r) Push(es) ohne Ledger-Zeile aus der Zeit vor der Sofort-Sicherung (fresh:36035354, fresh:36036326, fresh:36039873, fresh:36041720, fresh:36071854) — nicht nachtragbar: von einem verlorenen Push steht die Quote beim Senden nirgends, und nur die aufgefallenen zurueckzuholen waere eine Auswahl nach Ausgang. Die Bilanz nennt ihre Luecke stattdessen."
+        "5 aeltere(r) Push(es) ohne Ledger-Zeile aus der Zeit vor der Sofort-Sicherung (fresh:36035354, fresh:36036326, fresh:36039873, fresh:36041720, fresh:36071854) — nicht nachtragbar: von einem verlorenen Push steht die Quote beim Senden nirgends, und nur die aufgefallenen zurueckzuholen waere eine Auswahl nach Ausgang. Die Bilanz nennt ihre Luecke stattdessen."
       ],
-      "nFail": 2,
+      "nFail": 1,
       "ok": false,
       "hinweis": ""
     },
@@ -263,13 +265,13 @@
       "label": "Serien-Buch zeigt beide Buecher",
       "severity": "warn",
       "failures": [
-        "die beiden Serien-Buecher sind 8.7 h auseinander (Liga 15.9 h, MLS 24.6 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+        "die beiden Serien-Buecher sind 15.7 h auseinander (Liga 24.2 h, MLS 8.5 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
       ],
       "nFail": 1,
       "ok": false,
       "hinweis": "Liga n=84 · MLS n=73 · Urteil beide 'Erwartung zu duenn'"
     }
   ],
-  "nFail": 7,
-  "generatedAt": "2026-09-23T13:14:14.147252+00:00"
+  "nFail": 5,
+  "generatedAt": "2026-09-23T21:34:18.672519+00:00"
 }
