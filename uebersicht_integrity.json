@@ -108,7 +108,7 @@
       "label": "Stake-Spielklasse: Tabelle vollstaendig, Richtungen getrennt",
       "severity": "error",
       "failures": [
-        "1 Liga-Schluessel bezeichnen mehrere Turniere und tragen trotzdem eine Spielklasse (efl-trophy) — eine Zahl davon ist fuer die Haelfte der Spiele falsch"
+        "2 Fussball-Ligen ohne Eintrag in stake_liga_stufe.py (mumbai-super-league, professional-league) — sie fallen aus jeder Zeile der Ansicht, statt aufzufallen"
       ],
       "nFail": 1,
       "ok": false,
@@ -158,7 +158,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "seit Vorregistrierung n=2999 (UG -5.6 %) · Rueckblick n=2726, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=3028 (UG -5.6 %) · Rueckblick n=2726, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -192,9 +192,11 @@
     {
       "label": "Positionswert ist frisch",
       "severity": "warn",
-      "failures": [],
-      "nFail": 0,
-      "ok": true,
+      "failures": [
+        "liga_poly_balance.json: Positionswert $18.55 stammt aus einem Lauf vor 14 h — die Datei selbst ist 14 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
+      ],
+      "nFail": 1,
+      "ok": false,
       "hinweis": ""
     },
     {
@@ -211,7 +213,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "124 Zeilen · 122 abgerechnet · 1 offen"
+      "hinweis": "129 Zeilen · 128 abgerechnet · 0 offen"
     },
     {
       "label": "Artefakte sind lesbar",
@@ -260,13 +262,13 @@
       "label": "Serien-Buch zeigt beide Buecher",
       "severity": "warn",
       "failures": [
-        "die beiden Serien-Buecher sind 8.7 h auseinander (Liga 0.8 h, MLS 9.5 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+        "die beiden Serien-Buecher sind 8.7 h auseinander (Liga 14.2 h, MLS 22.9 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
       ],
       "nFail": 1,
       "ok": false,
       "hinweis": "Liga n=84 · MLS n=73 · Urteil beide 'Erwartung zu duenn'"
     }
   ],
-  "nFail": 6,
-  "generatedAt": "2026-09-22T22:07:26.426764+00:00"
+  "nFail": 7,
+  "generatedAt": "2026-09-23T11:32:33.285645+00:00"
 }
