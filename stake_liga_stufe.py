@@ -130,6 +130,12 @@ EBENE = {
     # Die Skala endet bei 3; eine vierte Ebene fuer „noch kleiner" gibt es (noch) nicht, und
     # eine einzufuehren, waere eine Entscheidung ueber alle 50 Ebene-3-Ligen, nicht ueber diese.
     "mumbai-super-league": 3,
+    # 23.09.2026 (CI-Wachhund): „professional-league" — die Nigeria Professional Football
+    # League, oberste Klasse Nigerias (Ledger-Paarung „Shooting Stars - Katsina United FC").
+    # Wie die South African Premier Division („premier-division": 1) eine nationale Eliteserie,
+    # also Ebene 1. Der Slug ist generisch; taucht ein zweiter Wettbewerb darunter auf, meldet
+    # ihn `mehrdeutige_kandidaten` — seit heute genau deshalb, weil hier eine ZAHL steht.
+    "professional-league": 1,
     # 10.09.2026 (CI-Wachhund, vierter und fuenfter Slug): „v-league" — die oberste Klasse
     # Vietnams (Ledger-Paarung „The Cong - Viettel FC - Cong An Ha Noi FC"). Der Slug ist
     # NICHT sportartenrein: in Korea und Japan heisst die Volleyball-Liga genauso. Dass hier
@@ -624,8 +630,24 @@ def mehrdeutige_kandidaten(zeilen, sport: str = SPORT) -> dict:
             continue
         mit_id += 1
         je.setdefault(sl, set()).add(str(lid))
+    # 🔴 23.09.2026: der Wachhund meldete `fa-cup` mit zwei Turnier-IDs. Nachgesehen an den
+    # Paarungen: der ENGLISCHE FA Cup (Worksop Town–AFC Telford, Wingate & Finchley–Hemel
+    # Hempstead) und der THAILAENDISCHE (Chachoengsao–Bangkok FC, Futera United–Pattaya City).
+    # Zwei Wettbewerbe, zwei Laender — und trotzdem kein Fund: `fa-cup` traegt gar keine Ebene,
+    # sondern die ART „pokal", und ein Pokal ist in England wie in Thailand ein Pokal. Das
+    # Urteil ist fuer beide dasselbe, also ist nichts falsch.
+    #
+    # Der Docstring sagte „Slugs, die eine EBENE tragen", die Bedingung fragte `is not None` —
+    # und traf damit auch „pokal" und „mehrdeutig". Fehlerklasse: *ein Waechter, der zaehlt,
+    # was verschieden ist, statt zu pruefen, ob das Urteil verschieden waere.* Dieselbe Klasse
+    # wie gestern bei `efl-trophy`, eine Ebene tiefer: dort war der Wettbewerb derselbe, hier
+    # ist es die Aussage.
+    #
+    # Nur eine ZAHL ist laenderspezifisch und kann durch einen zweiten Wettbewerb falsch
+    # werden. Deshalb zaehlt der Wachhund ab jetzt nur noch Slugs mit Ebene 1/2/3 — und
+    # `EIN_WETTBEWERB` muss nicht fuer jeden Pokal der Welt gepflegt werden.
     treffer = {sl: sorted(ids) for sl, ids in je.items()
-               if len(ids) > 1 and stufe(sl, sport) is not None
+               if len(ids) > 1 and str(stufe(sl, sport) or "").isdigit()
                and sl not in MEHRDEUTIG and sl not in EIN_WETTBEWERB}
     return {"nMitId": mit_id, "kandidaten": treffer}
 

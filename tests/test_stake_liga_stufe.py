@@ -766,3 +766,41 @@ def test_jede_ausnahme_traegt_ihre_begruendung():
     for slug, grund in LS.EIN_WETTBEWERB.items():
         assert len(str(grund)) > 25, "%s steht ohne Begruendung drin" % slug
         assert "geprueft" in str(grund) or "gemessen" in str(grund), slug
+
+
+# ── 23.09.2026: der Wachhund meldete einen Pokal ────────────────────────────────────────
+# `fa-cup` trug zwei Turnier-IDs: der englische FA Cup (Worksop Town–AFC Telford) und der
+# thailaendische (Chachoengsao–Bangkok FC). Zwei Wettbewerbe, zwei Laender — und trotzdem
+# kein Fund: `fa-cup` traegt keine Ebene, sondern die Art „pokal", und die ist fuer beide
+# dieselbe. Der Docstring sagte „Slugs mit EBENE", die Bedingung fragte `is not None`.
+# Fehlerklasse: ein Waechter, der zaehlt, was verschieden ist, statt zu pruefen, ob das
+# Urteil verschieden waere.
+
+def _z(slug, lid, sport="soccer"):
+    return {"sport": sport, "ligaSlug": slug, "ligaId": lid}
+
+
+def test_ein_pokal_mit_zwei_turnieren_ist_kein_fund():
+    """England und Thailand — beides Pokal, dieselbe Aussage."""
+    r = LS.mehrdeutige_kandidaten([_z("fa-cup", "en"), _z("fa-cup", "th")])
+    assert r["kandidaten"] == {}, r
+
+
+def test_eine_ebene_mit_zwei_turnieren_bleibt_ein_fund():
+    """Eine ZAHL ist laenderspezifisch — sie kann durch einen zweiten Wettbewerb falsch werden."""
+    r = LS.mehrdeutige_kandidaten([_z("premier-league", "a"), _z("premier-league", "b")])
+    assert "premier-league" in r["kandidaten"], r
+
+
+def test_nigerias_eliteserie_traegt_eine_ebene():
+    assert LS.stufe("professional-league", "soccer") == "1"
+
+
+def test_und_wird_deshalb_ueberhaupt_bewacht():
+    """Der generische Slug ist nur tragbar, solange ein Wachhund auf ihn schaut."""
+    r = LS.mehrdeutige_kandidaten([_z("professional-league", "ng"), _z("professional-league", "x")])
+    assert "professional-league" in r["kandidaten"], r
+
+
+def test_mumbai_ist_eingestuft():
+    assert LS.stufe("mumbai-super-league", "soccer") == "3"
