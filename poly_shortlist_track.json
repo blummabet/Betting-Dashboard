@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-09-23T13:09:31.017279+00:00",
+ "updatedAt": "2026-09-23T13:41:26.318454+00:00",
  "stake": 10.0,
  "expired": 0,
  "condDrift": 0,
@@ -250,62 +250,6 @@
   }
  },
  "open": {
-  "cs2-100t-eac-2026-09-23|100 Thieves": {
-   "key": "cs2-100t-eac-2026-09-23",
-   "side": "100 Thieves",
-   "verdict": "BET",
-   "conv": 5,
-   "league": "ESPORTS",
-   "cat": "E-Sport",
-   "entryPrice": 0.785,
-   "firstTs": "2026-09-23T07:07:15.903239+00:00",
-   "lastPrice": 0.785,
-   "lastTs": "2026-09-23T13:09:31.017279+00:00",
-   "htkAtEntry": 2.9251591666666665,
-   "public": false,
-   "ohneWallet": false,
-   "reasons": [
-    "großes Geld auf 100 Thieves (78%) → $44K",
-    "🔥 scharfe Wallets (faktisch belegt) (3 Wallets, zusammen 273/465, 59% · +$924K) · zählt 98%"
-   ],
-   "signals": [
-    "money",
-    "sharp"
-   ],
-   "stake": 10.0,
-   "ev": "2026-09-01",
-   "movePreEntryPP": 1.0,
-   "cond": "0x7febcd2b03fa1f8de7994f835931ab9cc06b61f2baa620973ef1d2c371da686c",
-   "frage": "Counter-Strike: 100 Thieves vs Esport Academy Copenhagen (BO3) - Stake Pulse Beat II Group C"
-  },
-  "cs2-mf-rstr-2026-09-23|Rooster": {
-   "key": "cs2-mf-rstr-2026-09-23",
-   "side": "Rooster",
-   "verdict": "BET",
-   "conv": 6,
-   "league": "ESPORTS",
-   "cat": "E-Sport",
-   "entryPrice": 0.775,
-   "firstTs": "2026-09-23T08:37:15.383007+00:00",
-   "lastPrice": 0.775,
-   "lastTs": "2026-09-23T13:09:31.017279+00:00",
-   "htkAtEntry": 0.43188305555555556,
-   "public": true,
-   "ohneWallet": false,
-   "reasons": [
-    "großes Geld auf Rooster (78%) → $19K",
-    "🔥 scharfe Wallets (4 Wallets, zusammen 230/373, 62% · +$228K)"
-   ],
-   "signals": [
-    "money",
-    "sharp"
-   ],
-   "stake": 10.0,
-   "ev": "2026-09-01",
-   "movePreEntryPP": 8.0,
-   "cond": "0x57c40dd51584c0e0fd0c65f9823ae6fe20eacbecd342435de98bef6fd7d585fa",
-   "frage": "Counter-Strike: Mindfreak vs Rooster (BO3) - ESL Challenger League Oceania Cup #2 Playoffs"
-  },
   "lol-fnl-cpd-2026-09-23|Cupid Esports": {
    "key": "lol-fnl-cpd-2026-09-23",
    "side": "Cupid Esports",
@@ -316,7 +260,7 @@
    "entryPrice": 0.765,
    "firstTs": "2026-09-23T10:06:11.385345+00:00",
    "lastPrice": 0.765,
-   "lastTs": "2026-09-23T13:09:31.017279+00:00",
+   "lastTs": "2026-09-23T13:41:26.318454+00:00",
    "htkAtEntry": 2.698699722222222,
    "public": true,
    "ohneWallet": false,
@@ -344,7 +288,7 @@
    "entryPrice": 0.745,
    "firstTs": "2026-09-23T10:06:11.385345+00:00",
    "lastPrice": 0.715,
-   "lastTs": "2026-09-23T13:09:31.017279+00:00",
+   "lastTs": "2026-09-23T13:41:26.318454+00:00",
    "htkAtEntry": 2.948699722222222,
    "public": false,
    "ohneWallet": false,
@@ -28183,32 +28127,86 @@
    "settledTs": "2026-09-23T12:42:19.656303+00:00",
    "resolvedTs": "2026-09-23T12:42:17.055991+00:00",
    "ausEndstand": null
+  },
+  {
+   "key": "cs2-100t-eac-2026-09-23",
+   "side": "100 Thieves",
+   "verdict": "BET",
+   "conv": 5,
+   "league": "ESPORTS",
+   "cat": "E-Sport",
+   "entryPrice": 0.785,
+   "closePrice": 0.785,
+   "result": "win",
+   "winner": "100 Thieves",
+   "pnl": 2.74,
+   "clvPP": 0.0,
+   "stake": 10.0,
+   "public": false,
+   "ohneWallet": false,
+   "signals": [
+    "money",
+    "sharp"
+   ],
+   "firstTs": "2026-09-23T07:07:15.903239+00:00",
+   "ev": "2026-09-01",
+   "htkAtEntry": 2.9251591666666665,
+   "settledTs": "2026-09-23T13:41:26.318454+00:00",
+   "resolvedTs": "2026-09-23T13:41:23.549098+00:00",
+   "ausEndstand": null
+  },
+  {
+   "key": "cs2-mf-rstr-2026-09-23",
+   "side": "Rooster",
+   "verdict": "BET",
+   "conv": 6,
+   "league": "ESPORTS",
+   "cat": "E-Sport",
+   "entryPrice": 0.775,
+   "closePrice": 0.775,
+   "result": "win",
+   "winner": "Rooster",
+   "pnl": 2.9,
+   "clvPP": 0.0,
+   "stake": 10.0,
+   "public": true,
+   "ohneWallet": false,
+   "signals": [
+    "money",
+    "sharp"
+   ],
+   "firstTs": "2026-09-23T08:37:15.383007+00:00",
+   "ev": "2026-09-01",
+   "htkAtEntry": 0.43188305555555556,
+   "settledTs": "2026-09-23T13:41:26.318454+00:00",
+   "resolvedTs": "2026-09-23T13:41:23.549098+00:00",
+   "ausEndstand": null
   }
  ],
  "agg": {
   "all": {
-   "n": 1135,
-   "wins": 726,
-   "hit": 0.6396,
-   "pnl": -78.16,
-   "stake": 11350.0,
-   "roi": -0.0069,
-   "roiUg": -0.0471,
+   "n": 1137,
+   "wins": 728,
+   "hit": 0.6403,
+   "pnl": -72.52,
+   "stake": 11370.0,
+   "roi": -0.0064,
+   "roiUg": -0.0465,
    "belegt": false,
    "clvAvg": -1.74,
    "clvUg": -2.11
   },
   "public": {
-   "n": 237,
-   "wins": 171,
-   "hit": 0.7215,
-   "pnl": 129.64,
-   "stake": 2370.0,
-   "roi": 0.0547,
-   "roiUg": -0.0196,
+   "n": 238,
+   "wins": 172,
+   "hit": 0.7227,
+   "pnl": 132.54,
+   "stake": 2380.0,
+   "roi": 0.0557,
+   "roiUg": -0.0183,
    "belegt": false,
    "clvAvg": -0.94,
-   "clvUg": -1.6
+   "clvUg": -1.59
   },
   "publicBlocked": {
    "n": 5,
@@ -28235,25 +28233,25 @@
    "clvUg": -3.57
   },
   "walletTor": {
-   "nMit": 237,
+   "nMit": 238,
    "nOhne": 164,
-   "diffPP": 4.15,
-   "lo": -8.78,
-   "hi": 17.04,
+   "diffPP": 4.25,
+   "lo": -8.52,
+   "hi": 16.65,
    "urteil": "nicht entschieden",
    "grund": "das Band schliesst die Null ein"
   },
   "bettable": {
-   "n": 1056,
-   "wins": 691,
-   "hit": 0.6544,
-   "pnl": 170.45,
-   "stake": 10560.0,
-   "roi": 0.0161,
-   "roiUg": -0.0255,
+   "n": 1058,
+   "wins": 693,
+   "hit": 0.655,
+   "pnl": 176.09,
+   "stake": 10580.0,
+   "roi": 0.0166,
+   "roiUg": -0.0249,
    "belegt": false,
    "clvAvg": -1.72,
-   "clvUg": -2.11
+   "clvUg": -2.1
   },
   "blocked": {
    "n": 79,
@@ -28281,16 +28279,16 @@
     "clvUg": null
    },
    "E-Sport": {
-    "n": 318,
-    "wins": 242,
-    "hit": 0.761,
-    "pnl": 288.84,
-    "stake": 3180.0,
-    "roi": 0.0908,
-    "roiUg": 0.0323,
+    "n": 320,
+    "wins": 244,
+    "hit": 0.7625,
+    "pnl": 294.48,
+    "stake": 3200.0,
+    "roi": 0.092,
+    "roiUg": 0.0339,
     "belegt": true,
-    "clvAvg": -2.7,
-    "clvUg": -3.46
+    "clvAvg": -2.68,
+    "clvUg": -3.44
    },
    "Fußball": {
     "n": 556,
@@ -28379,27 +28377,27 @@
     "clvUg": null
    },
    "5": {
-    "n": 508,
-    "wins": 318,
-    "hit": 0.626,
-    "pnl": -139.39,
-    "stake": 5080.0,
-    "roi": -0.0274,
-    "roiUg": -0.0909,
+    "n": 509,
+    "wins": 319,
+    "hit": 0.6267,
+    "pnl": -136.65,
+    "stake": 5090.0,
+    "roi": -0.0268,
+    "roiUg": -0.0902,
     "belegt": false,
     "clvAvg": -2.64,
-    "clvUg": -3.23
+    "clvUg": -3.22
    },
    "6": {
-    "n": 409,
-    "wins": 266,
-    "hit": 0.6504,
-    "pnl": -12.65,
-    "stake": 4090.0,
-    "roi": -0.0031,
-    "roiUg": -0.066,
+    "n": 410,
+    "wins": 267,
+    "hit": 0.6512,
+    "pnl": -9.75,
+    "stake": 4100.0,
+    "roi": -0.0024,
+    "roiUg": -0.0652,
     "belegt": false,
-    "clvAvg": -1.64,
+    "clvAvg": -1.63,
     "clvUg": -2.28
    },
    "7": {
@@ -28453,13 +28451,13 @@
   },
   "byVerdict": {
    "BET": {
-    "n": 1135,
-    "wins": 726,
-    "hit": 0.6396,
-    "pnl": -78.16,
-    "stake": 11350.0,
-    "roi": -0.0069,
-    "roiUg": -0.0471,
+    "n": 1137,
+    "wins": 728,
+    "hit": 0.6403,
+    "pnl": -72.52,
+    "stake": 11370.0,
+    "roi": -0.0064,
+    "roiUg": -0.0465,
     "belegt": false,
     "clvAvg": -1.74,
     "clvUg": -2.11
@@ -28479,16 +28477,16 @@
     "clvUg": -1.29
    },
    "money": {
-    "n": 1006,
-    "wins": 659,
-    "hit": 0.6551,
-    "pnl": -77.03,
-    "stake": 10060.0,
-    "roi": -0.0077,
-    "roiUg": -0.0474,
+    "n": 1008,
+    "wins": 661,
+    "hit": 0.6558,
+    "pnl": -71.39,
+    "stake": 10080.0,
+    "roi": -0.0071,
+    "roiUg": -0.0468,
     "belegt": false,
-    "clvAvg": -1.91,
-    "clvUg": -2.32
+    "clvAvg": -1.9,
+    "clvUg": -2.31
    },
    "pinn": {
     "n": 11,
@@ -28503,13 +28501,13 @@
     "clvUg": null
    },
    "sharp": {
-    "n": 624,
-    "wins": 411,
-    "hit": 0.6587,
-    "pnl": 82.14,
-    "stake": 6240.0,
-    "roi": 0.0132,
-    "roiUg": -0.0416,
+    "n": 626,
+    "wins": 413,
+    "hit": 0.6597,
+    "pnl": 87.78,
+    "stake": 6260.0,
+    "roi": 0.014,
+    "roiUg": -0.0406,
     "belegt": false,
     "clvAvg": -1.65,
     "clvUg": -2.13
