@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-23T19:14:05.822178+00:00",
+ "generatedAt": "2026-09-23T19:38:51.903052+00:00",
  "heute": "2026-09-23",
  "messungen": [
   {
@@ -32,9 +32,9 @@
    "mindestN": 60,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 267,
+   "standN": 268,
    "zustand": "bereit",
-   "stand": "267 von 60 Beobachtungen · faellig in 6 Tag(en)",
+   "stand": "268 von 60 Beobachtungen · faellig in 6 Tag(en)",
    "fortschritt": 1.0,
    "tageBisFaellig": 6
   },
@@ -55,6 +55,24 @@
    "stand": "48 von 25 Beobachtungen · faellig in 6 Tag(en)",
    "fortschritt": 1.0,
    "tageBisFaellig": 6
+  },
+  {
+   "id": "einigkeit-statt-geld",
+   "titel": "Traegt Einigkeit mehrerer bewiesener Wallets, wenn keine allein die Geldschwelle reisst?",
+   "frage": "Trefferquote und ROI der Schattenbuch-Kandidaten (>=2 bewiesene Wallets auf derselben Seite, keine allein >= $25K, kein bewiesener Gegner) — gegen die heutige Public-Regel (eine Wallet >= $25K).",
+   "warum": "18.09.2026 (Lucas): „Fuer Public wuerde es nur Sinn machen, wenn mehrere Top Wallets sich einig sind, aber wir die Schwelle von Geld einzeln nicht erreichen wuerden.“ Die Rueckschau sah glaenzend aus (82,9 %, ROI +26,9 %, UG +6,8 %) und war zirkulaer: „bewiesen“ haengt am heutigen Record, der genau diese Maerkte enthaelt. Leave-one-out bleibt: Einigkeit 77,1 % / ROI +19,9 % / UG -3,0 % gegen heutige Regel 67,2 % / +13,1 % / -4,9 %, Unterschied +6,9 pp mit Band [-28,6, +40,7]. Besser, aber unbelegt — und der Unterschied unentschieden. Also beobachten statt senden, und die Antwort aus der Zukunft holen.",
+   "gestartet": "2026-09-18",
+   "faellig": "2026-10-30",
+   "quelle": "poly_einigkeit_schatten.json (abgerechnet ueber poly_public_eval.settle)",
+   "messer": "einigkeit_schatten",
+   "mindestN": 40,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "standN": 40,
+   "zustand": "bereit",
+   "stand": "40 von 40 Beobachtungen · faellig in 37 Tag(en)",
+   "fortschritt": 1.0,
+   "tageBisFaellig": 37
   },
   {
    "id": "horizont-trader",
@@ -129,24 +147,6 @@
    "tageBisFaellig": 22
   },
   {
-   "id": "einigkeit-statt-geld",
-   "titel": "Traegt Einigkeit mehrerer bewiesener Wallets, wenn keine allein die Geldschwelle reisst?",
-   "frage": "Trefferquote und ROI der Schattenbuch-Kandidaten (>=2 bewiesene Wallets auf derselben Seite, keine allein >= $25K, kein bewiesener Gegner) — gegen die heutige Public-Regel (eine Wallet >= $25K).",
-   "warum": "18.09.2026 (Lucas): „Fuer Public wuerde es nur Sinn machen, wenn mehrere Top Wallets sich einig sind, aber wir die Schwelle von Geld einzeln nicht erreichen wuerden.“ Die Rueckschau sah glaenzend aus (82,9 %, ROI +26,9 %, UG +6,8 %) und war zirkulaer: „bewiesen“ haengt am heutigen Record, der genau diese Maerkte enthaelt. Leave-one-out bleibt: Einigkeit 77,1 % / ROI +19,9 % / UG -3,0 % gegen heutige Regel 67,2 % / +13,1 % / -4,9 %, Unterschied +6,9 pp mit Band [-28,6, +40,7]. Besser, aber unbelegt — und der Unterschied unentschieden. Also beobachten statt senden, und die Antwort aus der Zukunft holen.",
-   "gestartet": "2026-09-18",
-   "faellig": "2026-10-30",
-   "quelle": "poly_einigkeit_schatten.json (abgerechnet ueber poly_public_eval.settle)",
-   "messer": "einigkeit_schatten",
-   "mindestN": 40,
-   "entscheidung": null,
-   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 39,
-   "zustand": "sammelt",
-   "stand": "39 von 40 Beobachtungen · faellig in 37 Tag(en)",
-   "fortschritt": 0.975,
-   "tageBisFaellig": 37
-  },
-  {
    "id": "betfair-einseitigkeit-unterseite",
    "titel": "Ist 0,80 Einseitigkeit die richtige Schranke — oder liegt darunter dasselbe?",
    "frage": "Trefferquote und ROI der NICHT gesendeten Kandidaten im Schattenbuch, aufgeteilt nach leadShare (<0,70 / 0,70–0,75 / 0,75–0,80), gegen die gesendeten ab 0,80. Urteil ueber die Renditegrenzen, nicht ueber den Punktschaetzer.",
@@ -212,10 +212,10 @@
    "mindestN": 20000,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 4733,
+   "standN": 4760,
    "zustand": "sammelt",
-   "stand": "4733 von 20000 Beobachtungen · faellig in 53 Tag(en)",
-   "fortschritt": 0.23665,
+   "stand": "4760 von 20000 Beobachtungen · faellig in 53 Tag(en)",
+   "fortschritt": 0.238,
    "tageBisFaellig": 53
   },
   {
@@ -230,10 +230,10 @@
    "mindestN": 20000,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 4733,
+   "standN": 4760,
    "zustand": "sammelt",
-   "stand": "4733 von 20000 Beobachtungen · faellig in 53 Tag(en)",
-   "fortschritt": 0.23665,
+   "stand": "4760 von 20000 Beobachtungen · faellig in 53 Tag(en)",
+   "fortschritt": 0.238,
    "tageBisFaellig": 53
   },
   {
