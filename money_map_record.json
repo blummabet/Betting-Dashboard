@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-09-22T23:49:29.805188+00:00",
+"generatedAt": "2026-09-23T00:04:27.957115+00:00",
 "byVerdict": {
 "konsens": {
 "n": 1403,
@@ -18,20 +18,20 @@
 "clvLb": 17.8023
 },
 "uneinig": {
-"n": 555,
-"wins": 171,
-"hitRate": 0.3081,
-"polyN": 511,
+"n": 557,
+"wins": 173,
+"hitRate": 0.3106,
+"polyN": 513,
 "polyWins": 137,
-"polyHitRate": 0.2681,
+"polyHitRate": 0.2671,
 "pinnN": 346,
 "pinnHitRate": 0.6214,
-"nRoi": 335,
-"roi": -0.4707,
-"roiLb": -0.5653,
-"nClv": 335,
-"clv": -20.25,
-"clvLb": -23.2527
+"nRoi": 337,
+"roi": -0.4568,
+"roiLb": -0.5523,
+"nClv": 337,
+"clv": -19.83,
+"clvLb": -22.8576
 },
 "teil": {
 "n": 32,
@@ -306,6 +306,11 @@
 "wins": 13,
 "hitRate": 0.9286
 },
+"Colombian Primera B": {
+"n": 13,
+"wins": 10,
+"hitRate": 0.7692
+},
 "UEFA Europa League Qualifiers": {
 "n": 12,
 "wins": 10,
@@ -315,11 +320,6 @@
 "n": 12,
 "wins": 9,
 "hitRate": 0.75
-},
-"Colombian Primera B": {
-"n": 11,
-"wins": 8,
-"hitRate": 0.7273
 },
 "UEFA Champions League Qualifiers": {
 "n": 11,
@@ -654,37 +654,75 @@
 },
 "byStrength": {
 "strong": {
-"n": 1221,
-"wins": 983,
-"hitRate": 0.8051,
-"nRoi": 709,
-"roi": 0.3055,
-"roiLb": 0.2496,
-"nClv": 709,
-"clv": 13.77,
-"clvLb": 11.7375
+"n": 1222,
+"wins": 984,
+"hitRate": 0.8052,
+"nRoi": 710,
+"roi": 0.3086,
+"roiLb": 0.2526,
+"nClv": 710,
+"clv": 13.83,
+"clvLb": 11.8036
 },
 "weak": {
-"n": 769,
-"wins": 383,
-"hitRate": 0.498,
-"nRoi": 416,
-"roi": -0.1917,
-"roiLb": -0.2717,
-"nClv": 416,
-"clv": -6.11,
-"clvLb": -8.7106
+"n": 770,
+"wins": 384,
+"hitRate": 0.4987,
+"nRoi": 417,
+"roi": -0.1883,
+"roiLb": -0.2683,
+"nClv": 417,
+"clv": -6.0,
+"clvLb": -8.6014
 }
 },
 "divergence": {
-"n": 555,
-"betfairWins": 171,
-"betfairRate": 0.3081,
-"polyN": 511,
+"n": 557,
+"betfairWins": 173,
+"betfairRate": 0.3106,
+"polyN": 513,
 "polyWins": 137,
-"polyRate": 0.2681
+"polyRate": 0.2671
 },
 "recent": [
+{
+"matchId": "36098891",
+"home": "Real Santander",
+"away": "Orsomarso",
+"league": "Colombian Primera B",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-09-22T21:00:00Z",
+"settledAt": "2026-09-23T00:04:27.761747+00:00"
+},
+{
+"matchId": "36099023",
+"home": "Independiente Yumbo",
+"away": "Internacional de Palmira",
+"league": "Colombian Primera B",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Internacional de Palmira",
+"polySide": "home",
+"winner": "away",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-09-22T21:00:00Z",
+"settledAt": "2026-09-23T00:04:27.761747+00:00"
+},
 {
 "matchId": "36099035",
 "home": "Atletico FC Cali",
@@ -1406,56 +1444,18 @@
 ],
 "kickoff": "2026-09-20T18:15:00Z",
 "settledAt": "2026-09-20T21:52:07.481097+00:00"
-},
-{
-"matchId": "36071864",
-"home": "Valencia",
-"away": "Real Sociedad",
-"league": "Spanish La Liga",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Real Sociedad",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-3
-],
-"kickoff": "2026-09-20T19:00:00Z",
-"settledAt": "2026-09-20T20:58:39.673478+00:00"
-},
-{
-"matchId": "36069799",
-"home": "Leganes",
-"away": "Granada",
-"league": "Spanish Segunda Division",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Leganes",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-2
-],
-"kickoff": "2026-09-20T19:00:00Z",
-"settledAt": "2026-09-20T20:58:39.673478+00:00"
 }
 ],
 "global": {
-"n": 1990,
-"wins": 1366,
-"hitRate": 0.6864,
-"nRoi": 1125,
-"roi": 0.1216,
-"roiLb": 0.0742,
-"nClv": 1125,
-"clv": 6.42,
-"clvLb": 4.7503
+"n": 1992,
+"wins": 1368,
+"hitRate": 0.6867,
+"nRoi": 1127,
+"roi": 0.1247,
+"roiLb": 0.0772,
+"nClv": 1127,
+"clv": 6.5,
+"clvLb": 4.8282
 },
-"pending": 10
+"pending": 8
 }
