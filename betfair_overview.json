@@ -2,7 +2,7 @@
  "_meta": {
   "description": "Übersicht-Sidecar: Vor-Anpfiff-Steam + frischer Zufluss (leicht, damit der erste Menüpunkt schnell bleibt). Fehlbepreisung rechnet die Übersicht client-seitig über _bfCoherence."
  },
- "generatedAt": "2026-09-23T16:06:28.441835+00:00",
+ "generatedAt": "2026-09-23T16:21:25.336437+00:00",
  "steam": [
   {
    "matchId": 36100602,
@@ -24,8 +24,8 @@
    "league": "Dutch Cup",
    "side": "hw",
    "sideName": "TOGB",
-   "pp": 12.5,
-   "odd": 3.4,
+   "pp": 12.0,
+   "odd": 3.45,
    "kickoff": "2026-09-23T18:00:00Z"
   },
   {
@@ -41,18 +41,6 @@
    "kickoff": "2026-09-23T18:45:00Z"
   },
   {
-   "matchId": 36108552,
-   "home": "Feyenoord (W)",
-   "away": "Valerenga (W)",
-   "country": "International",
-   "league": "UEFA Ladies Europa Cup",
-   "side": "aw",
-   "sideName": "Valerenga (W)",
-   "pp": 8.2,
-   "odd": 2.38,
-   "kickoff": "2026-09-23T17:00:00Z"
-  },
-  {
    "matchId": 36088784,
    "home": "Japan",
    "away": "Uruguay",
@@ -63,39 +51,51 @@
    "pp": 7.4,
    "odd": 1.92,
    "kickoff": "2026-09-24T10:05:00Z"
+  },
+  {
+   "matchId": 36108552,
+   "home": "Feyenoord (W)",
+   "away": "Valerenga (W)",
+   "country": "International",
+   "league": "UEFA Ladies Europa Cup",
+   "side": "aw",
+   "sideName": "Valerenga (W)",
+   "pp": 7.2,
+   "odd": 2.44,
+   "kickoff": "2026-09-23T17:00:00Z"
   }
  ],
  "flow": [
-  {
-   "matchId": 36105116,
-   "home": "Grorud IL",
-   "away": "Moss",
-   "country": "NO",
-   "league": "Norwegian Cup",
-   "deltaEur": 56727,
-   "nowEur": 69644,
-   "market": "Match Odds",
-   "sideName": "Moss",
-   "odd": 2.22,
-   "thin": false,
-   "sharePct": 81,
-   "kickoff": "2026-09-23T16:00:00Z",
-   "dir": "flat"
-  },
   {
    "matchId": 36102221,
    "home": "Iraq",
    "away": "Oman",
    "country": "International",
    "league": "Gulf Cup Matches",
-   "deltaEur": 15085,
-   "nowEur": 40104,
+   "deltaEur": 29838,
+   "nowEur": 69942,
    "market": "Over/Under 2.5 Goals",
    "sideName": "Under 2.5 Goals",
-   "odd": 1.71,
+   "odd": 1.44,
    "thin": false,
-   "sharePct": 38,
+   "sharePct": 43,
    "kickoff": "2026-09-23T14:30:00Z",
+   "dir": "in"
+  },
+  {
+   "matchId": 36105116,
+   "home": "Grorud IL",
+   "away": "Moss",
+   "country": "NO",
+   "league": "Norwegian Cup",
+   "deltaEur": 29176,
+   "nowEur": 98820,
+   "market": "Match Odds",
+   "sideName": "Moss",
+   "odd": 5.3,
+   "thin": false,
+   "sharePct": 30,
+   "kickoff": "2026-09-23T16:00:00Z",
    "dir": "out"
   },
   {
@@ -104,15 +104,15 @@
    "away": "Tajikistan",
    "country": "International",
    "league": "Friendlies International",
-   "deltaEur": 9389,
-   "nowEur": 21832,
+   "deltaEur": 19728,
+   "nowEur": 41560,
    "market": "Match Odds",
    "sideName": "Azerbaijan",
-   "odd": 1.77,
-   "thin": true,
-   "sharePct": 43,
+   "odd": 2.12,
+   "thin": false,
+   "sharePct": 47,
    "kickoff": "2026-09-23T16:00:00Z",
-   "dir": "flat"
+   "dir": "out"
   },
   {
    "matchId": 36100073,
@@ -120,15 +120,47 @@
    "away": "Sao Tome E Principe",
    "country": "International",
    "league": "Friendlies International",
-   "deltaEur": 4223,
-   "nowEur": 10368,
+   "deltaEur": 11644,
+   "nowEur": 22011,
    "market": "Match Odds",
    "sideName": "Gibraltar",
-   "odd": 1.65,
+   "odd": 1.74,
+   "thin": false,
+   "sharePct": 53,
+   "kickoff": "2026-09-23T16:00:00Z",
+   "dir": "out"
+  },
+  {
+   "matchId": 36093644,
+   "home": "Birmingham Legion FC",
+   "away": "Brooklyn FC",
+   "country": "US",
+   "league": "US United Soccer League",
+   "deltaEur": 5900,
+   "nowEur": 12564,
+   "market": "Match Odds",
+   "sideName": "Birmingham Legion FC",
+   "odd": 1.68,
    "thin": true,
-   "sharePct": 41,
+   "sharePct": 47,
    "kickoff": "2026-09-23T16:00:00Z",
    "dir": "flat"
+  },
+  {
+   "matchId": 36105648,
+   "home": "Sparta Prague (W)",
+   "away": "FC Farul Constanta (W)",
+   "country": "International",
+   "league": "UEFA Ladies Europa Cup",
+   "deltaEur": 2422,
+   "nowEur": 3191,
+   "market": "First Half Goals 0.5",
+   "sideName": "Over 0.5 Goals",
+   "odd": 1.35,
+   "thin": true,
+   "sharePct": 76,
+   "kickoff": "2026-09-23T16:00:00Z",
+   "dir": "out"
   }
  ]
 }
