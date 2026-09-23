@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-09-23T20:37:56.012025+00:00",
+ "updatedAt": "2026-09-23T21:11:45.014844+00:00",
  "stake": 10.0,
  "expired": 0,
  "condDrift": 0,
@@ -249,64 +249,7 @@
    "Bündel: Auflösung nennt einen anderen Markt": 1
   }
  },
- "open": {
-  "uwcl-ohl-asr-2026-09-23|AS Roma": {
-   "key": "uwcl-ohl-asr-2026-09-23",
-   "side": "AS Roma",
-   "verdict": "BET",
-   "conv": 6,
-   "league": "SOCCER",
-   "cat": "Fußball",
-   "entryPrice": 0.615,
-   "firstTs": "2026-09-23T15:38:25.055800+00:00",
-   "lastPrice": 0.625,
-   "lastTs": "2026-09-23T20:37:56.012025+00:00",
-   "htkAtEntry": 1.1754205555555555,
-   "public": false,
-   "ohneWallet": true,
-   "reasons": [
-    "großes Geld auf AS Roma (75%) → $16K",
-    "Steam läuft rein (+2.0pp)",
-    "🔎 vielversprechende Wallet (noch nicht belegt) (209/439, 48% · -$7.67M) · zählt 37%"
-   ],
-   "signals": [
-    "money",
-    "steam"
-   ],
-   "stake": 10.0,
-   "ev": "2026-09-01",
-   "movePreEntryPP": 2.0
-  },
-  "atp-shelbay-andrade-2026-09-21|Abedallah Shelbayh": {
-   "key": "atp-shelbay-andrade-2026-09-21",
-   "side": "Abedallah Shelbayh",
-   "verdict": "BET",
-   "conv": 5,
-   "league": "TENNIS",
-   "cat": "Tennis",
-   "entryPrice": 0.6,
-   "firstTs": "2026-09-23T18:12:49.724765+00:00",
-   "lastPrice": 0.585,
-   "lastTs": "2026-09-23T20:37:56.012025+00:00",
-   "htkAtEntry": -0.1560497222222222,
-   "public": false,
-   "ohneWallet": false,
-   "reasons": [
-    "großes Geld auf Abedallah Shelbayh (60%) → $24K",
-    "Steam läuft rein (+4.0pp)",
-    "🔎 vielversprechende Wallet (noch nicht belegt) (196/407, 48% · +$162K) · zählt 41%"
-   ],
-   "signals": [
-    "money",
-    "steam"
-   ],
-   "stake": 10.0,
-   "ev": "2026-09-01",
-   "movePreEntryPP": 3.0,
-   "cond": "0x32c74ca8adfecec1ca73ca7c69929a74fa2b53773b827e2e035792fb0b090a14",
-   "frage": "San Diego 2: Abedallah Shelbayh vs Andres Andrade"
-  }
- },
+ "open": {},
  "settled": [
   {
    "key": "cs2-bmb-inox-2026-08-16",
@@ -28316,17 +28259,71 @@
    "settledTs": "2026-09-23T20:37:56.012025+00:00",
    "resolvedTs": "2026-09-23T20:37:54.308737+00:00",
    "ausEndstand": null
+  },
+  {
+   "key": "uwcl-ohl-asr-2026-09-23",
+   "side": "AS Roma",
+   "verdict": "BET",
+   "conv": 6,
+   "league": "SOCCER",
+   "cat": "Fußball",
+   "entryPrice": 0.615,
+   "closePrice": 0.625,
+   "result": "loss",
+   "winner": "Draw (Oud-Heverlee Leuven Women vs. AS Roma)",
+   "pnl": -10.0,
+   "clvPP": 1.0,
+   "stake": 10.0,
+   "public": false,
+   "ohneWallet": true,
+   "signals": [
+    "money",
+    "steam"
+   ],
+   "firstTs": "2026-09-23T15:38:25.055800+00:00",
+   "ev": "2026-09-01",
+   "htkAtEntry": 1.1754205555555555,
+   "settledTs": "2026-09-23T21:11:45.014844+00:00",
+   "resolvedTs": "2026-09-23T21:11:43.024200+00:00",
+   "ausEndstand": null
+  },
+  {
+   "key": "atp-shelbay-andrade-2026-09-21",
+   "side": "Abedallah Shelbayh",
+   "verdict": "BET",
+   "conv": 5,
+   "league": "TENNIS",
+   "cat": "Tennis",
+   "entryPrice": 0.6,
+   "closePrice": 0.585,
+   "result": "loss",
+   "winner": "Andres Andrade",
+   "pnl": -10.0,
+   "clvPP": -1.5,
+   "stake": 10.0,
+   "public": false,
+   "ohneWallet": false,
+   "signals": [
+    "money",
+    "steam"
+   ],
+   "firstTs": "2026-09-23T18:12:49.724765+00:00",
+   "ev": "2026-09-01",
+   "htkAtEntry": -0.1560497222222222,
+   "settledTs": "2026-09-23T21:11:45.014844+00:00",
+   "resolvedTs": "2026-09-23T21:11:44.082136+00:00",
+   "ausEndstand": null
   }
  ],
  "agg": {
   "all": {
-   "n": 1142,
+   "n": 1144,
    "wins": 733,
-   "hit": 0.6419,
-   "pnl": -48.0,
-   "stake": 11420.0,
-   "roi": -0.0042,
-   "roiUg": -0.0442,
+   "hit": 0.6407,
+   "pnl": -68.0,
+   "stake": 11440.0,
+   "roi": -0.0059,
+   "roiUg": -0.046,
    "belegt": false,
    "clvAvg": -1.73,
    "clvUg": -2.09
@@ -28356,34 +28353,34 @@
    "clvUg": null
   },
   "publicOhneWallet": {
-   "n": 165,
+   "n": 166,
    "wins": 105,
-   "hit": 0.6364,
-   "pnl": 31.81,
-   "stake": 1650.0,
-   "roi": 0.0193,
-   "roiUg": -0.0849,
+   "hit": 0.6325,
+   "pnl": 21.81,
+   "stake": 1660.0,
+   "roi": 0.0131,
+   "roiUg": -0.0909,
    "belegt": false,
-   "clvAvg": -2.29,
-   "clvUg": -3.53
+   "clvAvg": -2.27,
+   "clvUg": -3.51
   },
   "walletTor": {
    "nMit": 239,
-   "nOhne": 165,
-   "diffPP": 3.75,
-   "lo": -9.3,
-   "hi": 16.62,
+   "nOhne": 166,
+   "diffPP": 4.36,
+   "lo": -8.21,
+   "hi": 16.84,
    "urteil": "nicht entschieden",
    "grund": "das Band schliesst die Null ein"
   },
   "bettable": {
-   "n": 1063,
+   "n": 1065,
    "wins": 698,
-   "hit": 0.6566,
-   "pnl": 200.61,
-   "stake": 10630.0,
-   "roi": 0.0189,
-   "roiUg": -0.0225,
+   "hit": 0.6554,
+   "pnl": 180.61,
+   "stake": 10650.0,
+   "roi": 0.017,
+   "roiUg": -0.0244,
    "belegt": false,
    "clvAvg": -1.71,
    "clvUg": -2.09
@@ -28426,16 +28423,16 @@
     "clvUg": -3.39
    },
    "Fußball": {
-    "n": 557,
+    "n": 558,
     "wins": 316,
-    "hit": 0.5673,
-    "pnl": -95.54,
-    "stake": 5570.0,
-    "roi": -0.0172,
-    "roiUg": -0.0841,
+    "hit": 0.5663,
+    "pnl": -105.54,
+    "stake": 5580.0,
+    "roi": -0.0189,
+    "roiUg": -0.0858,
     "belegt": false,
     "clvAvg": -1.43,
-    "clvUg": -1.96
+    "clvUg": -1.95
    },
    "Kampfsport": {
     "n": 14,
@@ -28462,13 +28459,13 @@
     "clvUg": null
    },
    "Tennis": {
-    "n": 174,
+    "n": 175,
     "wins": 129,
-    "hit": 0.7414,
-    "pnl": 8.3,
-    "stake": 1740.0,
-    "roi": 0.0048,
-    "roiUg": -0.0729,
+    "hit": 0.7371,
+    "pnl": -1.7,
+    "stake": 1750.0,
+    "roi": -0.001,
+    "roiUg": -0.0787,
     "belegt": false,
     "clvAvg": -1.01,
     "clvUg": -1.78
@@ -28512,28 +28509,28 @@
     "clvUg": null
    },
    "5": {
-    "n": 512,
+    "n": 513,
     "wins": 322,
-    "hit": 0.6289,
-    "pnl": -125.4,
-    "stake": 5120.0,
-    "roi": -0.0245,
-    "roiUg": -0.0875,
+    "hit": 0.6277,
+    "pnl": -135.4,
+    "stake": 5130.0,
+    "roi": -0.0264,
+    "roiUg": -0.0893,
     "belegt": false,
     "clvAvg": -2.62,
     "clvUg": -3.2
    },
    "6": {
-    "n": 412,
+    "n": 413,
     "wins": 269,
-    "hit": 0.6529,
-    "pnl": 3.52,
-    "stake": 4120.0,
-    "roi": 0.0009,
-    "roiUg": -0.0618,
+    "hit": 0.6513,
+    "pnl": -6.48,
+    "stake": 4130.0,
+    "roi": -0.0016,
+    "roiUg": -0.0642,
     "belegt": false,
-    "clvAvg": -1.62,
-    "clvUg": -2.26
+    "clvAvg": -1.61,
+    "clvUg": -2.25
    },
    "7": {
     "n": 172,
@@ -28586,13 +28583,13 @@
   },
   "byVerdict": {
    "BET": {
-    "n": 1142,
+    "n": 1144,
     "wins": 733,
-    "hit": 0.6419,
-    "pnl": -48.0,
-    "stake": 11420.0,
-    "roi": -0.0042,
-    "roiUg": -0.0442,
+    "hit": 0.6407,
+    "pnl": -68.0,
+    "stake": 11440.0,
+    "roi": -0.0059,
+    "roiUg": -0.046,
     "belegt": false,
     "clvAvg": -1.73,
     "clvUg": -2.09
@@ -28612,16 +28609,16 @@
     "clvUg": -1.28
    },
    "money": {
-    "n": 1013,
+    "n": 1015,
     "wins": 666,
-    "hit": 0.6575,
-    "pnl": -46.87,
-    "stake": 10130.0,
-    "roi": -0.0046,
-    "roiUg": -0.0442,
+    "hit": 0.6562,
+    "pnl": -66.87,
+    "stake": 10150.0,
+    "roi": -0.0066,
+    "roiUg": -0.0461,
     "belegt": false,
     "clvAvg": -1.89,
-    "clvUg": -2.3
+    "clvUg": -2.29
    },
    "pinn": {
     "n": 11,
@@ -28648,16 +28645,16 @@
     "clvUg": -2.11
    },
    "steam": {
-    "n": 369,
+    "n": 371,
     "wins": 242,
-    "hit": 0.6558,
-    "pnl": -13.66,
-    "stake": 3690.0,
-    "roi": -0.0037,
-    "roiUg": -0.0689,
+    "hit": 0.6523,
+    "pnl": -33.66,
+    "stake": 3710.0,
+    "roi": -0.0091,
+    "roiUg": -0.0742,
     "belegt": false,
-    "clvAvg": -1.99,
-    "clvUg": -2.66
+    "clvAvg": -1.98,
+    "clvUg": -2.65
    }
   },
   "byKalibrierung": {
