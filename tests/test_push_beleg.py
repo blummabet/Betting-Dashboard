@@ -31,6 +31,18 @@ def _seen(**kw):
     return kw
 
 
+def _nach_der_reparatur(tage=1):
+    """Ein Zeitstempel sicher NACH der letzten Reparatur — aus der Grenze selbst gerechnet.
+
+    23.09.2026: hier stand ein festes Datum. Ein Test, dessen Ergebnis davon abhaengt, wo die
+    Grenze gerade steht, wird beim naechsten Eintrag in REPARATUREN rot, ohne dass etwas kaputt
+    ist — und wer ihn dann „repariert", verschiebt das Datum wieder um ein Stueck.
+    """
+    from datetime import datetime, timedelta
+    t = datetime.fromisoformat(E.letzte_reparatur())
+    return (t + timedelta(days=tage)).isoformat()
+
+
 class TestDerZeitstempelTrenntNarbeUndWunde(unittest.TestCase):
     LEDGER = [{"scenario": "fresh", "matchId": "100"}]
 
@@ -40,7 +52,10 @@ class TestDerZeitstempelTrenntNarbeUndWunde(unittest.TestCase):
         self.assertEqual(E.gesendet_ohne_beleg_datiert(s, self.LEDGER), [])
 
     def test_ein_datierter_verlust_ist_ein_neuer(self):
-        s = {"fresh:200": {"v": 1, "n": 1, "t": "2026-09-21T10:00:00+00:00"}}
+        # 23.09.2026: die Grenze ist nicht mehr „traegt einen Zeitstempel", sondern „nach der
+        # LETZTEN Reparatur" (s. tests/test_beleg_reparatur_grenze.py). Der Stempel wandert
+        # deshalb hinter E.letzte_reparatur() statt auf ein festes Datum.
+        s = {"fresh:200": {"v": 1, "n": 1, "t": _nach_der_reparatur(1)}}
         d = E.gesendet_ohne_beleg_datiert(s, self.LEDGER)
         self.assertEqual([z["key"] for z in d], ["fresh:200"])
 
@@ -56,8 +71,8 @@ class TestDerZeitstempelTrenntNarbeUndWunde(unittest.TestCase):
         self.assertEqual(E.gesendet_ohne_beleg_datiert(s, self.LEDGER), [])
 
     def test_die_neuesten_zuerst(self):
-        s = {"fresh:200": {"t": "2026-09-21T10:00:00+00:00"},
-             "fresh:201": {"t": "2026-09-22T10:00:00+00:00"}}
+        s = {"fresh:200": {"t": _nach_der_reparatur(1)},
+             "fresh:201": {"t": _nach_der_reparatur(2)}}
         self.assertEqual([z["key"] for z in E.gesendet_ohne_beleg_datiert(s, self.LEDGER)],
                          ["fresh:201", "fresh:200"])
 
@@ -99,9 +114,12 @@ class TestDerGuardMeldetBeidesGetrennt(unittest.TestCase):
 
     def test_ein_neuer_verlust_sagt_dass_die_reparatur_nicht_greift(self):
         c = U.check_jeder_push_hat_seinen_beleg(
-            self._ctx(5, 1, ["fresh:1"], [{"key": "fresh:9", "t": "2026-09-22T10:00:00+00:00"}]))
+            self._ctx(5, 1, ["fresh:1"], [{"key": "fresh:9", "t": "2026-09-30T10:00:00+00:00"}]))
         text = " ".join(c["failures"])
-        self.assertIn("greift nicht", text)
+        # 23.09.2026: „der Sicherungsschritt greift nicht" hiess der Satz, als es nur EINE
+        # Reparatur gab. Inzwischen sind es zwei mit verschiedenen Ursachen — die Meldung nennt
+        # jetzt den Pfad, nicht den einen Schritt.
+        self.assertIn("leckt weiter", text)
         self.assertIn("fresh:9", text)
         self.assertEqual(c["nFail"], 2, "alte Narbe und neuer Verlust sind zwei Meldungen")
 

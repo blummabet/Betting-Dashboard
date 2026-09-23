@@ -1237,10 +1237,15 @@ def check_jeder_push_hat_seinen_beleg(ctx):
     if neu:
         nk = ", ".join("%s (%s)" % (z.get("key"), str(z.get("t"))[:16])
                        for z in (r.get("gesendetOhneBelegNeuKeys") or [])[:4])
-        fails.append("%d Public-Push(es) SEIT der Sofort-Sicherung ohne Ledger-Zeile (%s) — der "
-                     "Sicherungsschritt greift nicht" % (neu, nk or "—"))
+        fails.append("%d Public-Push(es) SEIT der letzten Reparatur (%s) ohne Ledger-Zeile (%s) — "
+                     "der Beleg-Pfad leckt weiter"
+                     % (neu, str(r.get("belegReparaturAb") or "?")[:16], nk or "—"))
     if alt:
-        keys = ", ".join(r.get("gesendetOhneBelegKeys") or [])[:120]
+        # 23.09.2026: hier stand `gesendetOhneBelegKeys` — ALLE Schluessel, auch die frischen.
+        # Die Zeile sagte „4 aeltere" und druckte fuenf darunter. Fehlerklasse: eine Beschriftung,
+        # die etwas anderes verspricht als die Liste daneben.
+        keys = ", ".join(r.get("gesendetOhneBelegAltKeys")
+                         or r.get("gesendetOhneBelegKeys") or [])[:120]
         fails.append("%d aeltere(r) Push(es) ohne Ledger-Zeile aus der Zeit vor der Sofort-"
                      "Sicherung (%s) — nicht nachtragbar: von einem verlorenen Push steht die "
                      "Quote beim Senden nirgends, und nur die aufgefallenen zurueckzuholen waere "

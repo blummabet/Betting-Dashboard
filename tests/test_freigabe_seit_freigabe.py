@@ -244,3 +244,75 @@ def test_das_gedaechtnis_enthaelt_nur_belegte_startpunkte():
             continue
         assert isinstance(e.get("ab"), str) and e["ab"][:2] == "20", (name, e)
         assert isinstance(e.get("drin"), bool), (name, e)
+
+
+# ── 23.09.2026: der Balken der wartenden Kandidaten ─────────────────────────────────────
+# Einen Lauf nachdem der CLV-Riegel gefallen war, meldete
+# `test_gegen_den_echten_bestand_behauptet_kein_balken_fertig`: „Peruvian Primera Division ·
+# Half Time haette einen vollen Balken (32/30)". Die zehn Schubladen warten auf eine
+# Bestaetigung nach vorn, nicht auf Plays — und hatten kein eigenes Ziel, gegen das der
+# Balken haette messen koennen.
+
+def _kand(name="X", n=32, grund=None):
+    return {"schublade": name, "status": "kandidat", "n": n,
+            "grund": grund if grund is not None else
+            "ROI belegt (Untergrenze +12.9 %) — Freigabe erst nach Bestätigung nach vorn"}
+
+
+def test_wartender_kandidat_bekommt_ein_ziel_ueber_seinem_n():
+    import freigabe as F
+    z, st = F.nachweis_ziel_nachziehen([_kand(n=32)], {})
+    assert z[0]["zielN"] == 32 + F.NACHWEIS_N
+    assert z[0]["zielN"] > z[0]["n"], "voller Balken ueber einer unfertigen Schublade"
+    assert z[0]["fehltN"] == F.NACHWEIS_N
+    assert st["X"]["kandidat"]["nBei"] == 32
+
+
+def test_der_anker_waechst_nicht_mit_dem_bestand_mit():
+    """Ein Ziel, das mit n mitwaechst, wird nie erreicht — der Balken stuende fuer immer still."""
+    import freigabe as F
+    _, st = F.nachweis_ziel_nachziehen([_kand(n=32)], {})
+    z2, st2 = F.nachweis_ziel_nachziehen([_kand(n=50)], st)
+    assert z2[0]["zielN"] == 32 + F.NACHWEIS_N, "der Anker ist verrutscht"
+    assert z2[0]["fehltN"] == 32 + F.NACHWEIS_N - 50
+    assert z2[0]["seitKandidat"]["nNeu"] == 18
+
+
+def test_erreichtes_ziel_meldet_nichts_fehlendes():
+    import freigabe as F
+    _, st = F.nachweis_ziel_nachziehen([_kand(n=32)], {})
+    z, _ = F.nachweis_ziel_nachziehen([_kand(n=100)], st)
+    assert z[0]["fehltN"] == 0
+
+
+def test_nur_die_wartenden_bekommen_ein_ziel():
+    """Ein Kandidat aus Mangel an Plays hat seine eigene Erklaerung — die darf nicht ueberschrieben werden."""
+    import freigabe as F
+    z, st = F.nachweis_ziel_nachziehen(
+        [_kand(name="zu duenn", n=10, grund="erst 10 von 30 Plays")], {})
+    assert "zielN" not in z[0]
+    assert st == {}
+
+
+def test_freigegebene_zeilen_bleiben_unberuehrt():
+    import freigabe as F
+    z, _ = F.nachweis_ziel_nachziehen(
+        [{"schublade": "F", "status": "freigegeben", "n": 200, "grund": "Bestätigung nach vorn"}], {})
+    assert "zielN" not in z[0]
+
+
+def test_kein_kandidat_des_echten_bestands_zeigt_einen_vollen_balken():
+    """Gegenprobe am Artefakt — genau die Behauptung, die den Fund ausgeloest hat."""
+    import json as _j, pathlib as _p
+    f = _p.Path(__file__).resolve().parent.parent / "freigabe.json"
+    if not f.exists():
+        return
+    d = _j.loads(f.read_text(encoding="utf-8"))
+    minN = (d.get("regeln") or {}).get("minN") or 30
+    for r in d.get("kandidaten") or []:
+        if "Bestätigung nach vorn" not in str(r.get("grund") or ""):
+            continue
+        # Rollout-Luecke: bis freigabe.py einmal in der Pipeline lief, fehlt das zielN noch.
+        if r.get("zielN") is None:
+            continue
+        assert r["zielN"] > (r.get("n") or 0), r.get("schublade")

@@ -205,9 +205,22 @@ class TestKeineTotenQuellen:
         if a is None:
             pytest.skip("wm_auto_bets_placed.json gibt es nicht mehr")
         assert a > TOT_AB_TAGEN, "die WM-Wettdatei ist wieder frisch — dann taugt sie nicht als Probe"
-        frisch = [g for g in geschwister("wm_auto_bets_placed.json")
-                  if (alter_tage(g) or 99) < FRISCH_BIS_TAGEN]
+        geschw = geschwister("wm_auto_bets_placed.json")
+        assert geschw, "ohne Geschwister kann die Regel hier nichts finden"
+        # 🔴 23.09.2026: hier stand `alter_tage(g)` gegen die echte Uhr — und die Gegenprobe
+        # wurde rot, weil seit dem 21.09. 20:16 kein Auto-Play mehr lief und beide Geschwister
+        # damit 2,1 bzw. 2,5 Tage alt waren, knapp ueber FRISCH_BIS_TAGEN=2. Kaputt war nichts;
+        # das Haus hatte nur ein ruhiges Wochenende.
+        # Fehlerklasse: ein Test, dessen Ergebnis vom Kalender abhaengt — er wird rot, wenn
+        # nichts passiert ist, und dann liest man ueber ihn hinweg.
+        # Die Gegenprobe stellt den Fall deshalb selbst her: `jetzt` wird auf einen halben Tag
+        # nach dem juengsten Geschwister gesetzt. Damit ist per Konstruktion eines frisch und
+        # die Probe weiter 70+ Tage tot — geprueft wird die REGEL, nicht der Kalender.
+        juengstes = min((alter_tage(g) or 99) for g in geschw)
+        jetzt = time.time() - (juengstes - 0.5) * 86400.0
+        frisch = [g for g in geschw if (alter_tage(g, jetzt) or 99) < FRISCH_BIS_TAGEN]
         assert frisch, "kein frisches Geschwister — die Regel koennte hier gar nicht anschlagen"
+        assert (alter_tage("wm_auto_bets_placed.json", jetzt) or 0) > TOT_AB_TAGEN
 
     def test_ein_modul_das_alle_varianten_liest_gilt_nicht_als_blind(self):
         # betfair_alerts fuehrt liga/mls/wm-Serien zu EINEM Pool zusammen — Absicht, kein Fund.

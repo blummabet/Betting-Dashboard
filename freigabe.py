@@ -797,6 +797,63 @@ def stand_schreiben(stand, env=None) -> bool:
         return False
 
 
+# Die Bestaetigung nach vorn: so viele Plays muss eine Schublade NACH ihrer Kandidatur
+# liefern, bevor eine Freigabe zur Debatte steht. Nicht mehr und nicht weniger als das
+# Minimum, das im Haus fuer jede Schublade gilt — der Punkt ist nicht die Groesse, sondern
+# dass diese Plays die Schublade nicht selbst ausgesucht hat.
+NACHWEIS_N = MIN_N
+# Der Grundtext, an dem eine Zeile als „wartet auf Bestaetigung nach vorn" erkennbar ist.
+NACHWEIS_MARKE = "Bestätigung nach vorn"
+
+
+def nachweis_ziel_nachziehen(zeilen, stand, now=None):
+    """Gibt jeder wartenden Kandidaten-Zeile ihr eigenes Ziel-n. -> (zeilen, stand)
+
+    🔴 23.09.2026, gefunden von `test_gegen_den_echten_bestand_behauptet_kein_balken_fertig`,
+    einen Lauf nachdem der CLV-Riegel gefallen war.
+
+    Die zehn Schubladen, die gestern von „freigegeben" auf „kandidat" gesetzt wurden, sind
+    NICHT wegen zu weniger Plays Kandidat — „Peruvian Primera Division · Half Time" hat 32
+    Plays bei +12,9 % Rendite-Untergrenze. Sie warten auf eine Bestaetigung nach vorn. Ohne
+    eigenes `zielN` rechnete das Board ihren Balken aber gegen `minN=30` und zeigte „32/30",
+    voll — fertig behauptet, waehrend das Verdikt daneben „Kandidat" sagt.
+
+    Fehlerklasse: *ein Fortschrittsbalken, der gegen die falsche Huerde misst, weil die
+    richtige nirgends steht.* Dieselbe wie am 06.09. und am 19.09., nur andersherum: zu
+    optimistisch statt zu pessimistisch.
+
+    Der Anker ist das n bei EINTRITT in die Kandidatur, nicht das heutige: ein Ziel, das mit
+    dem Bestand mitwaechst, wird nie erreicht. Er steht im Freigabe-Gedaechtnis, damit er den
+    Lauf ueberlebt. Fehlt er noch (erster Lauf nach dieser Aenderung), wird heute verankert —
+    dann ist das Ziel ab jetzt gueltig statt rueckwirkend erfunden.
+    """
+    now = now or _now()
+    stand = dict(stand or {})
+    for z in zeilen or []:
+        if not isinstance(z, dict) or z.get("status") != "kandidat":
+            continue
+        if NACHWEIS_MARKE not in str(z.get("grund") or ""):
+            continue
+        name = str(z.get("schublade") or "")
+        if not name or name.startswith("_"):
+            continue
+        n = z.get("n")
+        if not isinstance(n, (int, float)):
+            continue
+        eintrag = dict(stand.get(name) or {})
+        k = dict(eintrag.get("kandidat") or {})
+        if not isinstance(k.get("nBei"), (int, float)):
+            k = {"ab": now.isoformat(), "nBei": int(n)}
+        eintrag["kandidat"] = k
+        stand[name] = eintrag
+        ziel = int(k["nBei"]) + NACHWEIS_N
+        z["zielN"] = ziel
+        z["fehltN"] = max(0, ziel - int(n))
+        z["seitKandidat"] = {"ab": k.get("ab"), "nBei": k.get("nBei"),
+                             "nNeu": max(0, int(n) - int(k["nBei"]))}
+    return zeilen, stand
+
+
 def seit_freigabe(zeilen, stand, now=None) -> tuple:
     """Was eine Schublade geleistet hat, SEIT sie freigegeben wurde. REIN.
 
@@ -1663,6 +1720,7 @@ def baue(engine=None, track=None, cards=None, betfair=None, now=None) -> dict:
     # harmlos, weil sie jeder Lauf komplett neu schreibt — ein Gedaechtnis aber nicht.
     # Seither: `baue()` RECHNET den Stand und gibt ihn zurueck, geschrieben wird er nur von
     # `main()` und nur im Pipeline-Lauf (`stand_schreiben()`).
+    zeilen, _stand_alt = nachweis_ziel_nachziehen(zeilen, _stand_alt, now)
     _zeilen2, _stand = seit_freigabe(zeilen, _stand_alt, now)
     zeilen.sort(key=lambda r: (RANG.get(r["status"], 9), -(r.get("roiLb") or -9), -r["n"]))
     frei = [r for r in zeilen if r["status"] == "freigegeben"]

@@ -401,7 +401,27 @@ def gesendet_ohne_beleg(seen, ledger) -> list:
     return sorted(fehlt)
 
 
-def gesendet_ohne_beleg_datiert(seen, ledger) -> list:
+# Jede Reparatur am Beleg-Pfad mit Datum und Grund. Die JUENGSTE ist die Grenze: ein datierter
+# Verlust davor ist eine Narbe, einer danach ein Befund. Wer hier nichts eintraegt, bekommt einen
+# Alarm, der von einem laengst behobenen Fall dauerhaft rot bleibt — und einen dauerhaft roten
+# Alarm liest niemand mehr. Ein Eintrag ohne Grund ist keiner (Test).
+REPARATUREN = [
+    ("2026-09-20T00:00:00+00:00",
+     "Beleg wird sofort nach dem Senden committet (scripts/ci_sichern.sh) statt zwoelf Schritte "
+     "spaeter — die vier undatierten Verluste"),
+    ("2026-09-22T05:14:00+00:00",
+     "Die Ledger-Zeile entsteht in zwei Schritten: erst der Kern, dann die Anreicherung. Vorher "
+     "riss ein werfendes `_consensus_for_push`/`_serie_fuer_push` den ganzen Beleg mit — der "
+     "fuenfte Verlust, `fresh:36041720`, 21.09.2026 22:46"),
+]
+
+
+def letzte_reparatur() -> str:
+    """Der Zeitpunkt, ab dem ein Verlust ein Befund ist. REIN."""
+    return max(t for t, _ in REPARATUREN)
+
+
+def gesendet_ohne_beleg_datiert(seen, ledger, ab=None) -> list:
     """Die Verluste, die NACH der Reparatur passiert sind. REIN. -> [{"key","t"}], neueste zuerst.
 
     🔴 20.09.2026, zweiter Teil. Die Ursache der vier verlorenen Zeilen ist gefunden und
@@ -420,13 +440,32 @@ def gesendet_ohne_beleg_datiert(seen, ledger) -> list:
     jeder DATIERTE Eintrag ohne Beleg einer von NACH der Reparatur — kein gepflegter
     Ausnahmen-Katalog, der in drei Wochen niemand mehr anfasst.
     """
+    ab = ab or letzte_reparatur()
     raus = []
     for k in gesendet_ohne_beleg(seen, ledger):
         rec = (seen or {}).get(k)
         t = rec.get("t") if isinstance(rec, dict) else None
-        if t:
+        # 🔴 23.09.2026: „datiert" hiess bisher „nach der Reparatur". Das stimmte genau einen Tag.
+        # Der fuenfte Verlust (`fresh:36041720`, 21.09. 22:46) hatte eine ANDERE Ursache — die
+        # Anreicherung riss die Zeile mit — und die wurde am 22.09. 05:14 behoben. Er blieb
+        # trotzdem als „frische Wunde" stehen, und die Meldung sagte weiter „der Sicherungsschritt
+        # greift nicht" ueber einen Fall, den der heutige Code nicht mehr erzeugen kann.
+        # Fehlerklasse: ein Alarm, der nie wieder ausgeht, ist keiner — ab dann liest ihn niemand.
+        # Die Grenze ist deshalb die LETZTE Reparatur, nicht die erste, und sie wandert mit.
+        if t and str(t) >= ab:
             raus.append({"key": k, "t": str(t)})
     return sorted(raus, key=lambda z: z["t"], reverse=True)
+
+
+def gesendet_ohne_beleg_narbe(seen, ledger, ab=None) -> list:
+    """Die alten Verluste — undatiert oder VOR der letzten Reparatur. REIN. -> [key]
+
+    Sie gehoeren in die Bilanz (eine Luecke, die man nennt, ist ehrlicher als eine, die man
+    verschweigt), aber nicht in den Alarm. Getrennt ausgewiesen, damit die Meldung nicht vier
+    zaehlt und fuenf Schluessel darunter druckt.
+    """
+    frisch = {z["key"] for z in gesendet_ohne_beleg_datiert(seen, ledger, ab)}
+    return [k for k in gesendet_ohne_beleg(seen, ledger) if k not in frisch]
 
 
 def summarize(ledger, now=None):
@@ -640,6 +679,10 @@ def main():
         _neu = gesendet_ohne_beleg_datiert(_seen if isinstance(_seen, dict) else {}, ledger)
         record["gesendetOhneBelegNeu"] = len(_neu)
         record["gesendetOhneBelegNeuKeys"] = _neu[:10]
+        # Die Narbe getrennt: sonst zaehlt die Meldung die alten und druckt ALLE Schluessel.
+        _narbe = gesendet_ohne_beleg_narbe(_seen if isinstance(_seen, dict) else {}, ledger)
+        record["gesendetOhneBelegAltKeys"] = _narbe[:20]
+        record["belegReparaturAb"] = letzte_reparatur()
         if _ohne:
             print("  ⚠️  %d gesendete(r) Push(es) ohne Ledger-Zeile: %s"
                   % (len(_ohne), ", ".join(_ohne[:6])))
