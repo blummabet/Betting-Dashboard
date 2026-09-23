@@ -368485,7 +368485,13 @@
     "usd": 4200,
     "ts": 1790106832
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Washington Nationals": 1.0,
+   "Detroit Tigers": 0.0
+  },
+  "resolvedAt": "2026-09-23T02:05:59.828628+00:00"
  },
  "mlb-mil-phi-2026-09-22": {
   "shares": {
@@ -368766,7 +368772,13 @@
     "usd": 5199,
     "ts": 1790115344
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Over": 1.0,
+   "Under": 0.0
+  },
+  "resolvedAt": "2026-09-23T02:05:59.828628+00:00"
  },
  "mlb-stl-pit-2026-09-22": {
   "shares": {
@@ -374709,12 +374721,12 @@
  },
  "mlb-sd-lad-2026-09-22": {
   "shares": {
-   "San Diego Padres": 12869.619907234997,
-   "Los Angeles Dodgers": 15415.259074620002
+   "San Diego Padres": 70822.89313615498,
+   "Los Angeles Dodgers": 81484.4040341
   },
   "prices": {
-   "San Diego Padres": 0.455,
-   "Los Angeles Dodgers": 0.545
+   "San Diego Padres": 0.465,
+   "Los Angeles Dodgers": 0.535
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -374722,133 +374734,196 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 32447,
+  "totalUsd": 52793,
   "whales": [
    {
-    "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "side": "San Diego Padres",
-    "usd": 4814,
-    "avgPrice": 0.4494
+    "usd": 34629,
+    "avgPrice": 0.4598
    },
    {
-    "wallet": "0xb357437166e9dc62a8c5aef1f5a8fb78bbeca4ae",
-    "side": "Los Angeles Dodgers",
-    "usd": 2574
-   },
-   {
-    "wallet": "0x31706006a0ef88b2b8f6d093efbc83b359fbc6a0",
-    "side": "Los Angeles Dodgers",
-    "usd": 2501,
-    "avgPrice": 0.5499
-   },
-   {
-    "wallet": "0x4795dd46c5f1376207a0ee04117607d31d490fb0",
-    "side": "Los Angeles Dodgers",
-    "usd": 2123
-   },
-   {
-    "wallet": "0x3e04fbc51adb75418129f6ce2091ae633070564d",
-    "side": "Los Angeles Dodgers",
-    "usd": 1635
-   },
-   {
-    "wallet": "0xbbf379252411511adab081f016dc991aa6bbaa3a",
+    "wallet": "0x26b46988d027c6c03cfa12a7c0c6d778be49b8a9",
     "side": "San Diego Padres",
-    "usd": 1513
+    "usd": 23827,
+    "avgPrice": 0.4683
    },
    {
     "wallet": "0xcd84d7f9262516865553555751609fb6f52abec6",
     "side": "Los Angeles Dodgers",
-    "usd": 1133,
+    "usd": 23239,
     "avgPrice": 0.54
+   },
+   {
+    "wallet": "0xec981ed70ae69c5cbcac08c1ba063e734f6bafcd",
+    "side": "Los Angeles Dodgers",
+    "usd": 9790,
+    "avgPrice": 0.5381
+   },
+   {
+    "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
+    "side": "Los Angeles Dodgers",
+    "usd": 8476
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Los Angeles Dodgers",
+    "usd": 8025,
+    "avgPrice": 0.53
+   },
+   {
+    "wallet": "0x5020e94877430aca70a641a807b4d2007c249f9f",
+    "side": "Los Angeles Dodgers",
+    "usd": 5815
+   },
+   {
+    "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
+    "side": "San Diego Padres",
+    "usd": 4920,
+    "avgPrice": 0.4494
+   },
+   {
+    "wallet": "0x24189b6c233a6b9a5365fe99b380673e900766c8",
+    "side": "Los Angeles Dodgers",
+    "usd": 2799
+   },
+   {
+    "wallet": "0xb357437166e9dc62a8c5aef1f5a8fb78bbeca4ae",
+    "side": "Los Angeles Dodgers",
+    "usd": 2527
+   },
+   {
+    "wallet": "0x31706006a0ef88b2b8f6d093efbc83b359fbc6a0",
+    "side": "Los Angeles Dodgers",
+    "usd": 2455,
+    "avgPrice": 0.5499
+   },
+   {
+    "wallet": "0x8efa1ea8ee2d456a051ae2985079a1e3c9aa894c",
+    "side": "Los Angeles Dodgers",
+    "usd": 2147,
+    "avgPrice": 0.54
+   },
+   {
+    "wallet": "0x224a89dbe0db0d6124b335edabd15b3f877da3d5",
+    "side": "Los Angeles Dodgers",
+    "usd": 2135
+   },
+   {
+    "wallet": "0x3e04fbc51adb75418129f6ce2091ae633070564d",
+    "side": "Los Angeles Dodgers",
+    "usd": 1605
+   },
+   {
+    "wallet": "0xa697d0b3fff7d285a0f92d6ee03a7f97809e59d5",
+    "side": "Los Angeles Dodgers",
+    "usd": 1517,
+    "avgPrice": 0.54
+   },
+   {
+    "wallet": "0x73f6e37f1d9196770337567330b4341aecaca10a",
+    "side": "Los Angeles Dodgers",
+    "usd": 1049,
+    "avgPrice": 0.53
    },
    {
     "wallet": "0xd47dda34a3f41f39e5d3c1c98260a0dd7c0a322b",
     "side": "Los Angeles Dodgers",
-    "usd": 981,
+    "usd": 963,
     "avgPrice": 0.5499
    },
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "side": "Los Angeles Dodgers",
-    "usd": 940,
+    "usd": 922,
     "avgPrice": 0.5296
    },
    {
     "wallet": "0x03f4bd4bd14e0dffa6f012d023387e1a327f7e44",
     "side": "San Diego Padres",
-    "usd": 774,
+    "usd": 790,
     "avgPrice": 0.47
-   },
-   {
-    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
-    "side": "San Diego Padres",
-    "usd": 751,
-    "avgPrice": 0.4554
    },
    {
     "wallet": "0x16bb9951a36fce71e2ef57890b786145e0ba8492",
     "side": "San Diego Padres",
-    "usd": 666
+    "usd": 680
    },
    {
     "wallet": "0xc34cd27593243598c66a9a2820f37bcfb87c2e29",
     "side": "Los Angeles Dodgers",
-    "usd": 555
-   },
-   {
-    "wallet": "0xa697d0b3fff7d285a0f92d6ee03a7f97809e59d5",
-    "side": "San Diego Padres",
-    "usd": 530,
-    "avgPrice": 0.45
+    "usd": 545,
+    "avgPrice": 0.5499
    },
    {
     "wallet": "0xd106952ebf30a3125affd8a23b6c1f30c35fc79c",
     "side": "San Diego Padres",
-    "usd": 481
+    "usd": 492
    },
    {
     "wallet": "0x0235dc24b38772bf3339a9e5ec5db3d3a05fcee5",
     "side": "San Diego Padres",
-    "usd": 467,
+    "usd": 477,
     "avgPrice": 0.45
+   },
+   {
+    "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
+    "side": "San Diego Padres",
+    "usd": 264
    },
    {
     "wallet": "0x5811c8ad5dc5990528357ecf1a6d03311d6c0976",
     "side": "San Diego Padres",
-    "usd": 362
+    "usd": 243
+   },
+   {
+    "wallet": "0xf0b3fee1bb052e25a73cd91cb23ce41c72a2145d",
+    "side": "San Diego Padres",
+    "usd": 173,
+    "avgPrice": 0.4698
    },
    {
     "wallet": "0x3814198398e2d02c0e8fba652345995cf84417bc",
     "side": "Los Angeles Dodgers",
-    "usd": 147,
-    "avgPrice": 0.56
+    "usd": 145
    },
    {
     "wallet": "0x9b11866433281ade9f2811dbde8acdefc45f5375",
     "side": "San Diego Padres",
-    "usd": 136,
+    "usd": 139,
     "avgPrice": 0.45
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Los Angeles Dodgers",
+    "usd": 121,
+    "avgPrice": 0.5302
+   },
+   {
+    "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
+    "side": "San Diego Padres",
+    "usd": 116,
+    "avgPrice": 0.5
    },
    {
     "wallet": "0xb3f8784792d0e7f092b4b91d1a764b0f63d0e0b1",
     "side": "Los Angeles Dodgers",
-    "usd": 99,
+    "usd": 97,
     "avgPrice": 0.5499
-   },
-   {
-    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
-    "side": "San Diego Padres",
-    "usd": 69
    },
    {
     "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
     "side": "San Diego Padres",
-    "usd": 56
+    "usd": 57
    },
    {
     "wallet": "0xdd5ef115f801999575b03d78d0115ad8b2d59040",
     "side": "San Diego Padres",
+    "usd": 55
+   },
+   {
+    "wallet": "0xd619b68e64f256f8ddd185b261c8679eacf0c461",
+    "side": "Los Angeles Dodgers",
     "usd": 54
    },
    {
@@ -374858,19 +374933,20 @@
     "avgPrice": 0.4067
    },
    {
-    "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
-    "side": "San Diego Padres",
-    "usd": 39
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "Los Angeles Dodgers",
+    "usd": 45,
+    "avgPrice": 0.5499
    },
    {
     "wallet": "0x3ca9089f59d506a6773a4d68227a1ac97806424a",
     "side": "San Diego Padres",
-    "usd": 37
+    "usd": 38
    },
    {
     "wallet": "0x56acab44cfca2e88bb9b3406890aea7bfa0cd77e",
     "side": "Los Angeles Dodgers",
-    "usd": 36
+    "usd": 35
    },
    {
     "wallet": "0xd9fe6f0f41ca99fefa93c55d8890000e5a84db0d",
@@ -374878,71 +374954,109 @@
     "usd": 24
    },
    {
-    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
-    "side": "San Diego Padres",
-    "usd": 23
-   },
-   {
-    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
-    "side": "Los Angeles Dodgers",
-    "usd": 23
-   },
-   {
-    "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
-    "side": "San Diego Padres",
-    "usd": 18
-   },
-   {
     "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
     "side": "Los Angeles Dodgers",
     "usd": 18
-   },
-   {
-    "wallet": "0x3da80ca893666957475095ac1504094df93dbe26",
-    "side": "San Diego Padres",
-    "usd": 17
-   },
-   {
-    "wallet": "0x870a742f10c5d80433825e8e90fe4e00ae9b6c6e",
-    "side": "Los Angeles Dodgers",
-    "usd": 13,
-    "avgPrice": 0.61
-   },
-   {
-    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
-    "side": "Los Angeles Dodgers",
-    "usd": 13,
-    "avgPrice": 0.54
-   },
-   {
-    "wallet": "0x602785cdf56a03221130d3d42a577ac6cf444320",
-    "side": "Los Angeles Dodgers",
-    "usd": 7
-   },
-   {
-    "wallet": "0x521070c99db06e54af5e8e4a91d6858decdfbd53",
-    "side": "San Diego Padres",
-    "usd": 5
-   },
-   {
-    "wallet": "0xdc4f58a48ed4467743609fdce11eea483c759804",
-    "side": "San Diego Padres",
-    "usd": 5
    }
   ],
-  "hoursToKickoff": 0.62,
-  "capturedAt": "2026-09-23T01:35:47.967650+00:00",
+  "hoursToKickoff": 0.11,
+  "capturedAt": "2026-09-23T02:05:59.828628+00:00",
   "cond": "0x800b5a4870efed9495bc756287e4e90a44b87a36559de16393643fd72fef4ac7",
   "frage": "San Diego Padres vs. Los Angeles Dodgers",
   "tokens": {
    "San Diego Padres": "102994256345194388498809830444101356730908394976420931982767589684955196994934",
    "Los Angeles Dodgers": "36478292183530690584150847446292746355664607550134212676705097203144984511253"
-  }
+  },
+  "book": {
+   "side": "Los Angeles Dodgers",
+   "bid": 0.53,
+   "ask": 0.54,
+   "spreadC": 1.0,
+   "spreadPct": 1.85,
+   "bids": [
+    [
+     0.53,
+     93314
+    ],
+    [
+     0.52,
+     124097
+    ],
+    [
+     0.51,
+     49981
+    ],
+    [
+     0.5,
+     4224
+    ],
+    [
+     0.49,
+     769
+    ],
+    [
+     0.48,
+     780
+    ]
+   ],
+   "asks": [
+    [
+     0.54,
+     11971
+    ],
+    [
+     0.55,
+     148624
+    ],
+    [
+     0.56,
+     324051
+    ],
+    [
+     0.57,
+     106123
+    ],
+    [
+     0.58,
+     10345
+    ],
+    [
+     0.59,
+     5907
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x26b46988d027c6c03cfa12a7c0c6d778be49b8a9",
+    "action": "BUY",
+    "side": "San Diego Padres",
+    "price": 0.4684,
+    "usd": 24000,
+    "ts": 1790128757
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "action": "BUY",
+    "side": "San Diego Padres",
+    "price": 0.46,
+    "usd": 388,
+    "ts": 1790128721
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "action": "BUY",
+    "side": "San Diego Padres",
+    "price": 0.46,
+    "usd": 728,
+    "ts": 1790128649
+   }
+  ]
  },
  "wta-rakhimo-volynet-2026-09-22": {
   "shares": {
-   "Kamilla Rakhimova": 3040.83019422,
-   "Katie Volynets": 5289.980608105
+   "Kamilla Rakhimova": 3602.84264386,
+   "Katie Volynets": 6267.7282944650005
   },
   "prices": {
    "Kamilla Rakhimova": 0.365,
@@ -374954,12 +375068,23 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 9359,
+  "totalUsd": 9405,
   "whales": [
    {
     "wallet": "0x9cb990f1862568a63d8601efeebe0304225c32f2",
     "side": "Katie Volynets",
     "usd": 4445
+   },
+   {
+    "wallet": "0x684baa57c338c2549aec0aa3f034f695d72a8409",
+    "side": "Kamilla Rakhimova",
+    "usd": 928,
+    "avgPrice": 0.3599
+   },
+   {
+    "wallet": "0xb6b972318ee266210951fd8c8972b39f81326a27",
+    "side": "Katie Volynets",
+    "usd": 916
    },
    {
     "wallet": "0x01c78f8873c0c86d6b6b92ff627e3802237ee995",
@@ -374985,14 +375110,7 @@
    {
     "wallet": "0xa0f21e6d351baa9185716b5c00c2925ed9621848",
     "side": "Katie Volynets",
-    "usd": 403,
-    "avgPrice": 0.65
-   },
-   {
-    "wallet": "0x684baa57c338c2549aec0aa3f034f695d72a8409",
-    "side": "Kamilla Rakhimova",
-    "usd": 378,
-    "avgPrice": 0.3599
+    "usd": 403
    },
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
@@ -375015,11 +375133,6 @@
     "usd": 99
    },
    {
-    "wallet": "0xb4611ed615ca8fb60d203d3b1b0a2ffd1fa29dbe",
-    "side": "Kamilla Rakhimova",
-    "usd": 92
-   },
-   {
     "wallet": "0x20458998cd99f7ed1096d74d39fe2c8ddf46c77c",
     "side": "Katie Volynets",
     "usd": 64
@@ -375038,6 +375151,11 @@
     "wallet": "0x04641b57f332c15ecaa497799c55026d521967da",
     "side": "Katie Volynets",
     "usd": 24
+   },
+   {
+    "wallet": "0x1bfb6053af6856aa0e0015899d588e432d238bea",
+    "side": "Katie Volynets",
+    "usd": 20
    },
    {
     "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
@@ -375070,14 +375188,123 @@
     "usd": 1
    }
   ],
-  "hoursToKickoff": 1.45,
-  "capturedAt": "2026-09-23T01:35:47.967650+00:00",
+  "hoursToKickoff": 0.95,
+  "capturedAt": "2026-09-23T02:05:59.828628+00:00",
   "cond": "0xe2f8304b71292a470f2167df1151c36229c40bd7810497fea703938c655bc865",
   "frage": "Korea Open: Kamilla Rakhimova vs Katie Volynets",
   "tokens": {
    "Kamilla Rakhimova": "59453001507408662425727676418829879349932737493523322255180197125084262559553",
    "Katie Volynets": "14416505575828040237118070696827886472002245054046973768141141171491187682469"
-  }
+  },
+  "book": {
+   "side": "Katie Volynets",
+   "bid": 0.63,
+   "ask": 0.64,
+   "spreadC": 1.0,
+   "spreadPct": 1.56,
+   "bids": [
+    [
+     0.63,
+     28945
+    ],
+    [
+     0.62,
+     6378
+    ],
+    [
+     0.61,
+     2992
+    ],
+    [
+     0.6,
+     2811
+    ],
+    [
+     0.59,
+     970
+    ],
+    [
+     0.58,
+     940
+    ]
+   ],
+   "asks": [
+    [
+     0.64,
+     21672
+    ],
+    [
+     0.65,
+     46027
+    ],
+    [
+     0.66,
+     52273
+    ],
+    [
+     0.67,
+     29148
+    ],
+    [
+     0.68,
+     15076
+    ],
+    [
+     0.69,
+     18445
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xb6b972318ee266210951fd8c8972b39f81326a27",
+    "action": "BUY",
+    "side": "Katie Volynets",
+    "price": 0.64,
+    "usd": 923,
+    "ts": 1790128235
+   },
+   {
+    "wallet": "0x684baa57c338c2549aec0aa3f034f695d72a8409",
+    "action": "BUY",
+    "side": "Kamilla Rakhimova",
+    "price": 0.36,
+    "usd": 371,
+    "ts": 1790122495
+   },
+   {
+    "wallet": "0x5213eb85fcd465c8927a8382f95dd2dc22306a35",
+    "action": "BUY",
+    "side": "Kamilla Rakhimova",
+    "price": 0.35,
+    "usd": 500,
+    "ts": 1790115266
+   },
+   {
+    "wallet": "0xeaac36f714563e13d88db7a4f0a0898388f2d71d",
+    "action": "BUY",
+    "side": "Kamilla Rakhimova",
+    "price": 0.35,
+    "usd": 500,
+    "ts": 1790115266
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Kamilla Rakhimova",
+    "price": 0.35,
+    "usd": 388,
+    "ts": 1790099773
+   },
+   {
+    "wallet": "0x9cb990f1862568a63d8601efeebe0304225c32f2",
+    "action": "BUY",
+    "side": "Katie Volynets",
+    "price": 0.65,
+    "usd": 641,
+    "ts": 1790096893
+   }
+  ]
  },
  "atp-baez-brooksb-2026-09-22": {
   "shares": {
@@ -375094,7 +375321,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 11772,
+  "totalUsd": 11808,
   "whales": [
    {
     "wallet": "0xe8c4d68aff65b38cac46987b9b65e01eb47d395d",
@@ -375121,7 +375348,7 @@
    {
     "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
     "side": "Sebastian Baez",
-    "usd": 726
+    "usd": 725
    },
    {
     "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
@@ -375223,8 +375450,8 @@
     "usd": 1
    }
   ],
-  "hoursToKickoff": 2.45,
-  "capturedAt": "2026-09-23T01:35:47.967650+00:00",
+  "hoursToKickoff": 1.95,
+  "capturedAt": "2026-09-23T02:05:59.828628+00:00",
   "cond": "0x3e499099c06eb9c54f429f17b9b31472acd8ae1a3bc74cd497c484a19dfd9d81",
   "frage": "Chengdu Open: Sebastian Baez vs Jenson Brooksby",
   "tokens": {
@@ -375234,8 +375461,8 @@
  },
  "wta-oliynyk-chwalin-2026-09-22": {
   "shares": {
-   "Oleksandra Oliynykova": 28135.920780499997,
-   "Maja Chwalinska": 58436.08833465001
+   "Oleksandra Oliynykova": 28162.111956225,
+   "Maja Chwalinska": 58490.48539192502
   },
   "prices": {
    "Oleksandra Oliynykova": 0.325,
@@ -375247,7 +375474,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 115633,
+  "totalUsd": 131319,
   "whales": [
    {
     "wallet": "0x2ce8505aa641791eb8460f6ac6bf5c0511e34527",
@@ -375301,8 +375528,7 @@
    {
     "wallet": "0x5b624e3e0426f7aa2ca57f7451fbcea4b125d87f",
     "side": "Oleksandra Oliynykova",
-    "usd": 975,
-    "avgPrice": 0.33
+    "usd": 975
    },
    {
     "wallet": "0xf17aa0cc84c16a2cdfeb04ed21b671731705f7b2",
@@ -375380,12 +375606,12 @@
     "usd": 13
    },
    {
-    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
     "side": "Maja Chwalinska",
-    "usd": 5
+    "usd": 9
    },
    {
-    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
     "side": "Maja Chwalinska",
     "usd": 5
    },
@@ -375395,8 +375621,8 @@
     "usd": 2
    }
   ],
-  "hoursToKickoff": 2.95,
-  "capturedAt": "2026-09-23T01:35:47.967650+00:00",
+  "hoursToKickoff": 2.45,
+  "capturedAt": "2026-09-23T02:05:59.828628+00:00",
   "cond": "0xc0457baabb4467ae507a1fab47906688a92dbb0da2b39d9b0d2a71eb65151436",
   "frage": "Singapore Open: Oleksandra Oliynykova vs Maja Chwalinska",
   "tokens": {
@@ -375412,19 +375638,19 @@
    "bids": [
     [
      0.67,
-     17059
+     19672
     ],
     [
      0.66,
-     53828
+     51282
     ],
     [
      0.65,
-     2500
+     2460
     ],
     [
      0.64,
-     6063
+     5973
     ],
     [
      0.63,
@@ -375438,19 +375664,19 @@
    "asks": [
     [
      0.68,
-     10248
+     12798
     ],
     [
      0.69,
-     26364
+     39790
     ],
     [
      0.7,
-     55933
+     62818
     ],
     [
      0.71,
-     31522
+     40843
     ],
     [
      0.72,
@@ -375458,7 +375684,7 @@
     ],
     [
      0.73,
-     770
+     19846
     ]
    ]
   },
@@ -375528,5 +375754,139 @@
     "ts": 1790097469
    }
   ]
+ },
+ "wta-back-joint-2026-09-22": {
+  "shares": {
+   "Da-Yeon Back": 2456.4304399000002,
+   "Maya Joint": 8968.48627166
+  },
+  "prices": {
+   "Da-Yeon Back": 0.215,
+   "Maya Joint": 0.785
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 11785,
+  "whales": [
+   {
+    "wallet": "0x9cb990f1862568a63d8601efeebe0304225c32f2",
+    "side": "Maya Joint",
+    "usd": 6280
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Da-Yeon Back",
+    "usd": 882,
+    "avgPrice": 0.2121
+   },
+   {
+    "wallet": "0x27f738fe203827445690339104aae35b20bc44b0",
+    "side": "Da-Yeon Back",
+    "usd": 869
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Maya Joint",
+    "usd": 682,
+    "avgPrice": 0.78
+   },
+   {
+    "wallet": "0x0554c046fa6fa1022d753344d13cfa3025221880",
+    "side": "Maya Joint",
+    "usd": 339
+   },
+   {
+    "wallet": "0x185056a052c5e0ab1c866c9b57fb9e9508898903",
+    "side": "Maya Joint",
+    "usd": 328
+   },
+   {
+    "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
+    "side": "Maya Joint",
+    "usd": 307
+   },
+   {
+    "wallet": "0xffb3df819a2c233db1464577910d3fe86daf081e",
+    "side": "Maya Joint",
+    "usd": 300
+   },
+   {
+    "wallet": "0x48399416e58739327e09b3a51a3e9c7effbff4c8",
+    "side": "Maya Joint",
+    "usd": 249
+   },
+   {
+    "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
+    "side": "Da-Yeon Back",
+    "usd": 219
+   },
+   {
+    "wallet": "0x1000008dd9001b968442c1000017eae6e0da00ba",
+    "side": "Da-Yeon Back",
+    "usd": 165
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Maya Joint",
+    "usd": 103
+   },
+   {
+    "wallet": "0x422c44b991bcb56bb16b789e840f015333ef9840",
+    "side": "Da-Yeon Back",
+    "usd": 64
+   },
+   {
+    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+    "side": "Maya Joint",
+    "usd": 51
+   },
+   {
+    "wallet": "0x0ac5faecf8d623a4a074758aedfea9339b24f963",
+    "side": "Maya Joint",
+    "usd": 29
+   },
+   {
+    "wallet": "0x952718df56ab7955e0a0121a9e47fa8f52b6888b",
+    "side": "Da-Yeon Back",
+    "usd": 28
+   },
+   {
+    "wallet": "0xeaac36f714563e13d88db7a4f0a0898388f2d71d",
+    "side": "Da-Yeon Back",
+    "usd": 24
+   },
+   {
+    "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
+    "side": "Da-Yeon Back",
+    "usd": 22
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "Maya Joint",
+    "usd": 9
+   },
+   {
+    "wallet": "0x3da80ca893666957475095ac1504094df93dbe26",
+    "side": "Da-Yeon Back",
+    "usd": 7
+   },
+   {
+    "wallet": "0x01c78f8873c0c86d6b6b92ff627e3802237ee995",
+    "side": "Da-Yeon Back",
+    "usd": 1
+   }
+  ],
+  "hoursToKickoff": 2.95,
+  "capturedAt": "2026-09-23T02:05:59.828628+00:00",
+  "cond": "0xb3cc8fe007fb1fa298d459f8f5f84d2b0734998845a33b9f30a6cdf076e0de9b",
+  "frage": "Korea Open: Da-Yeon Back vs Maya Joint",
+  "tokens": {
+   "Da-Yeon Back": "16753441599002232357819838918659685554021182215448945723192600640590770080185",
+   "Maya Joint": "24184500680622098807193081392403775242804661533171569044796730022457254337765"
+  }
  }
 }
