@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-24T20:30:37.771274+00:00",
+ "generatedAt": "2026-09-24T20:37:24.741366+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -27,7 +27,36 @@
  },
  "trackRecord": {
   "tracked": 304,
-  "converged": 75
+  "converged": 77
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|chicagocubs-miamimarlins|miamimarlins",
+   "sport": "baseball_mlb",
+   "event": "Miami Marlins vs Chicago Cubs",
+   "market": "Moneyline",
+   "outcome": "Miami Marlins",
+   "polyPP": 7.5,
+   "pinnPP": 17.1,
+   "gapPP": -9.63,
+   "vol": 450986,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 4.84,
+   "firstSeen": "2026-09-05T00:59:51.038984+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagocubs-miamimarlins|chicagocubs",
+   "sport": "baseball_mlb",
+   "event": "Miami Marlins vs Chicago Cubs",
+   "market": "Moneyline",
+   "outcome": "Chicago Cubs",
+   "polyPP": 92.5,
+   "pinnPP": 82.9,
+   "gapPP": 9.63,
+   "vol": 450986,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 4.84,
+   "firstSeen": "2026-09-05T00:59:51.038984+00:00"
+  }
+ ]
 }
