@@ -2,14 +2,14 @@
  "n": 575,
  "minOdds": 1.35,
  "moneyHitRate": 0.377,
- "priceHitRate": 0.412,
+ "priceHitRate": 0.416,
  "brierMoney": 0.8829,
  "brierPrice": 0.6862,
  "disagree": {
-  "n": 157,
+  "n": 155,
   "moneyWon": 22,
-  "priceWon": 42,
-  "neither": 93
+  "priceWon": 44,
+  "neither": 89
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -89,7 +89,7 @@
  ],
  "guete": {
   "belastbar": 575,
-  "preis_echo": 203,
+  "preis_echo": 196,
   "abgeschnitten": 69,
   "unbekannt": 147,
   "leer": 0
@@ -388,7 +388,7 @@
    "league": "EPL",
    "winner": "Draw (Nottingham Forest FC vs. Tottenham Hotspur FC)",
    "moneyFav": "Tottenham Hotspur FC",
-   "priceFav": "Nottingham Forest FC",
+   "priceFav": "Tottenham Hotspur FC",
    "moneyShare": 0.584,
    "priceProb": 0.357,
    "moneyOK": false,
@@ -576,13 +576,13 @@
    "totalUsd": 432192
   }
  ],
- "generatedAt": "2026-09-24T23:10:52.980675+00:00",
+ "generatedAt": "2026-09-24T23:31:34.712913+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 422,
   "nfl": 800,
-  "mlb": 698,
+  "mlb": 696,
   "nhl": 586,
   "mls": 559,
   "epl": 422,
@@ -599,7 +599,7 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 754,
+  "esports": 751,
   "cs2": 422,
   "lol": 435,
   "dota": 9,
@@ -658,66 +658,81 @@
  "sweepStats": {
   "sweepOpen": 500,
   "sweepClosed": 500,
-  "sweepAdded": 405
+  "sweepAdded": 406
  },
  "vorStats": {
-  "kandidaten": 11,
+  "kandidaten": 10,
   "budgetLeer": 0,
   "ohneGeldSplit": 2,
   "nachgelegt": 0,
-  "mitAnteilen": 9,
-  "calls": 11
+  "mitAnteilen": 8,
+  "calls": 10
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 2037,
-   "usd": 38117200,
+   "n": 2187,
+   "usd": 34063114,
    "beispiel": "fifwc-ksa-ury-2026-06-15"
   },
   "nba": {
-   "n": 717,
-   "usd": 7318834,
+   "n": 487,
+   "usd": 6623937,
    "beispiel": "nba-nyk-sas-2026-06-05"
   },
   "balance": {
-   "n": 3,
-   "usd": 6001960,
+   "n": 6,
+   "usd": 6017720,
    "beispiel": "balance-of-power-2026-midterms"
+  },
+  "presidential": {
+   "n": 21,
+   "usd": 1052500,
+   "beispiel": "presidential-election-winner-2028"
   },
   "ecs": {
    "n": 10,
-   "usd": 922034,
+   "usd": 928195,
    "beispiel": "ecs-ars-mci-2026-08-16-more-markets"
   },
   "cbb": {
-   "n": 52,
-   "usd": 677012,
+   "n": 37,
+   "usd": 675502,
    "beispiel": "cbb-uconn-ill-2026-04-04"
+  },
+  "republican": {
+   "n": 11,
+   "usd": 623509,
+   "beispiel": "republican-presidential-nominee-2028"
   },
   "super": {
    "n": 29,
    "usd": 551800,
    "beispiel": "super-bowl-champion-2026-731"
   },
-  "world": {
-   "n": 30,
-   "usd": 538726,
-   "beispiel": "world-cup-winner"
-  },
   "which": {
-   "n": 23,
-   "usd": 330506,
+   "n": 29,
+   "usd": 421783,
    "beispiel": "which-party-will-win-the-house-in-2026"
   },
+  "fed": {
+   "n": 21,
+   "usd": 296778,
+   "beispiel": "fed-decision-in-october-20260617190323537"
+  },
   "uefa": {
-   "n": 10,
-   "usd": 223977,
+   "n": 13,
+   "usd": 229436,
    "beispiel": "uefa-champions-league-winner"
   },
-  "fed": {
-   "n": 16,
-   "usd": 196975,
-   "beispiel": "fed-decision-in-october-20260617190323537"
+  "pro": {
+   "n": 35,
+   "usd": 215439,
+   "beispiel": "pro-football-fernando-mendoza-named-raiders-starting-qb-by"
+  },
+  "world": {
+   "n": 34,
+   "usd": 197725,
+   "beispiel": "world-cup-winner"
   },
   "uef": {
    "n": 14,
@@ -725,49 +740,34 @@
    "beispiel": "uef-kvx-tur-2026-03-31"
   },
   "btc": {
-   "n": 37,
-   "usd": 171433,
+   "n": 36,
+   "usd": 167928,
    "beispiel": "btc-updown-4h-1767862800"
+  },
+  "us": {
+   "n": 10,
+   "usd": 148704,
+   "beispiel": "us-announces-end-of-iranian-blockade-byptptpt-20260713152715080"
+  },
+  "will": {
+   "n": 16,
+   "usd": 134014,
+   "beispiel": "will-trump-declare-a-national-emergency-on-his-first-day"
+  },
+  "2026": {
+   "n": 19,
+   "usd": 127534,
+   "beispiel": "2026-nba-champion"
   },
   "cdr": {
    "n": 12,
    "usd": 118119,
    "beispiel": "cdr-atm-fcb-2026-02-12"
   },
-  "pro": {
-   "n": 24,
-   "usd": 117372,
-   "beispiel": "pro-football-fernando-mendoza-named-raiders-starting-qb-by"
-  },
   "nbasl": {
-   "n": 2,
-   "usd": 100143,
-   "beispiel": "nbasl-chi-was-2026-07-14"
-  },
-  "us": {
-   "n": 2,
-   "usd": 99654,
-   "beispiel": "us-announces-end-of-iranian-blockade-byptptpt-20260713152715080"
-  },
-  "how": {
    "n": 3,
-   "usd": 72226,
-   "beispiel": "how-many-fed-rate-cuts-in-2026"
-  },
-  "2026": {
-   "n": 16,
-   "usd": 66906,
-   "beispiel": "2026-nba-champion"
-  },
-  "democratic": {
-   "n": 16,
-   "usd": 64471,
-   "beispiel": "democratic-presidential-nominee-2028"
-  },
-  "presidential": {
-   "n": 13,
-   "usd": 63205,
-   "beispiel": "presidential-election-winner-2028"
+   "usd": 113076,
+   "beispiel": "nbasl-cle-nop-2026-07-15"
   }
  }
 }
