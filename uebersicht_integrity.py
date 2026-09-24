@@ -1369,18 +1369,26 @@ def check_jeder_push_hat_seinen_beleg(ctx):
         fails.append("%d Public-Push(es) SEIT der letzten Reparatur (%s) ohne Ledger-Zeile (%s) — "
                      "der Beleg-Pfad leckt weiter"
                      % (neu, str(r.get("belegReparaturAb") or "?")[:16], nk or "—"))
+    # 🔴 24.09.2026: die Narbe stand als FEHLER da und landete damit jeden Morgen unter
+    # „Kostet Geld" — fuenf Pushes aus der Zeit vor dem 20.09., unveraenderlich, nicht
+    # nachtragbar. Ein roter Punkt, an dem sich nichts mehr aendern kann, ist keine Stoerung;
+    # er bringt nur bei, die rote Liste zu ueberfliegen. Genau die Lehre vom 23.09., eine
+    # Ebene hoeher: damals blieb der Alarm rot, weil die Grenze nicht mitwanderte — hier, weil
+    # eine Narbe im selben Eimer steckt wie eine frische Wunde.
+    #
+    # Die Luecke verschwindet damit NICHT: sie steht als Hinweis an der Bilanz, und genau das
+    # war ihr Zweck („eine Zahl, die ihre eigene Unvollstaendigkeit nennt"). Ein Befund ist
+    # ab jetzt nur, was nach der letzten Reparatur passiert ist.
+    hinweis = ""
     if alt:
-        # 23.09.2026: hier stand `gesendetOhneBelegKeys` — ALLE Schluessel, auch die frischen.
-        # Die Zeile sagte „4 aeltere" und druckte fuenf darunter. Fehlerklasse: eine Beschriftung,
-        # die etwas anderes verspricht als die Liste daneben.
         keys = ", ".join(r.get("gesendetOhneBelegAltKeys")
                          or r.get("gesendetOhneBelegKeys") or [])[:120]
-        fails.append("%d aeltere(r) Push(es) ohne Ledger-Zeile aus der Zeit vor der Sofort-"
-                     "Sicherung (%s) — nicht nachtragbar: von einem verlorenen Push steht die "
-                     "Quote beim Senden nirgends, und nur die aufgefallenen zurueckzuholen waere "
-                     "eine Auswahl nach Ausgang. Die Bilanz nennt ihre Luecke stattdessen."
-                     % (alt, keys or "—"))
-    return _c("Jeder Push hat seinen Beleg", "warn", fails)
+        hinweis = ("%d aeltere(r) Push(es) ohne Ledger-Zeile aus der Zeit vor der letzten "
+                   "Reparatur (%s) — nicht nachtragbar: von einem verlorenen Push steht die "
+                   "Quote beim Senden nirgends, und nur die aufgefallenen zurueckzuholen waere "
+                   "eine Auswahl nach Ausgang. Die Bilanz nennt ihre Luecke stattdessen."
+                   % (alt, keys or "—"))
+    return _c("Jeder Push hat seinen Beleg", "warn", fails, hinweis)
 
 
 def check_artefakte_sind_lesbar(ctx):
