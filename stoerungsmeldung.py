@@ -149,6 +149,9 @@ GELD = {
     "track_record_grading_sane",
     # wer handelt, schreibt sofort — fehlt der Beleg, ist die Bilanz unvollstaendig
     "jeder push hat seinen beleg",
+    # 24.09.2026: zweimal $5 auf Fuego v EDward Gaming, zwei Order-IDs. Das ist kein
+    # Messwert, das ist Geld, das zweimal an der Boerse liegt.
+    "ein play, eine order",
     "public_push_buch",
     "trades_push_buch",
     "shortlist_tracker_writes",

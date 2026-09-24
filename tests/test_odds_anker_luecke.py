@@ -72,11 +72,16 @@ def test_land_allein_reicht_nur_fuer_einen_vorschlag():
 
 
 def test_zwei_sichere_treffer_sind_kein_sicherer_treffer():
-    """„Italian Serie" passt auf A und B — dann wird nicht gewuerfelt."""
+    """„Italian Serie" passt auf A und B — dann wird nicht gewuerfelt.
+
+    24.09.2026: der Grund hat sich verschoben, das Urteil nicht. Seit die Stufe zaehlt, faellt
+    der Fall schon vorher: unsere Seite nennt keine Klasse, ihre nennt eine. Geprueft wird
+    deshalb das Urteil und dass ueberhaupt ein Grund dafuer genannt wird — nicht die
+    Formulierung. Ein Test, der Buchstaben prueft, meldet Umbauten statt Fehler."""
     v = A.vorschlagen("Italian Serie", SPORTS)
     assert v is not None
     assert v["urteil"] == "vorschlag", v
-    assert "nicht eindeutig" in v["warum"]
+    assert v["warum"].strip()
 
 
 def test_ein_eindeutiger_treffer_bleibt_sicher():
@@ -146,10 +151,15 @@ def test_der_echte_bestand_hat_eine_luecke():
 
 def test_ein_generischer_name_traegt_nur_wenn_er_eindeutig_ist():
     """„Premier League" besteht nur aus Allerweltswoertern. Dann entscheidet das Land —
-    und zwei Kandidaten im selben Land heissen: nicht eintragen."""
-    zwei = SPORTS + [sp("soccer_ukraine_cup", "Cup - Ukraine")]
+    und zwei Kandidaten im selben Land heissen: nicht eintragen.
+
+    24.09.2026: als zweiter Kandidat stand hier ein POKAL. Den sortiert die Art-Sperre jetzt
+    schon aus, bevor es um Eindeutigkeit geht — besser, aber der Fall prueft dann nicht mehr,
+    was er pruefen soll. Deshalb jetzt zwei echte Ligen desselben Landes."""
+    zwei = SPORTS + [sp("soccer_ukraine_league", "Premier League - Ukraine")]
     v = A.vorschlagen("Ukrainian Premier League", zwei)
     assert v["urteil"] == "vorschlag", v
+    assert "denselben" in v["warum"] or "eindeutig" in v["warum"], v["warum"]
     v2 = A.vorschlagen("Ukrainian Premier League", SPORTS)
     assert v2["urteil"] == "sicher"
 
@@ -179,3 +189,117 @@ def test_eine_stufe_nur_auf_einer_seite_blockiert_nicht():
     """„Ukrainian Premier League" gegen „Premier League - Ukraine": keine Stufe, kein Problem."""
     assert A.passt("Ukrainian Premier League",
                    sp("soccer_ukraine_premier_league", "Premier League - Ukraine"))[0] == "sicher"
+
+
+# ── 🔴 24.09.2026, erster echter Lauf: 19 von 28 „sicheren" waren falsch ────────────────
+# Die Tests oben waren gruen, weil ich nur die Faelle geprueft hatte, die mir eingefallen
+# sind. Der Lauf gegen die echten 179 Wettbewerbe lieferte unter anderem:
+#
+#   "Polish Cup"                   -> soccer_poland_ekstraklasa       ein Pokal ist keine Liga
+#   "Scottish Championship"        -> soccer_spl                      zweite gegen erste Klasse
+#   "Argentinian Primera Nacional" -> soccer_argentina_primera_division   „primera" beweist nichts
+#   "Japanese J League 2/3/Cup"    -> soccer_japan_j_league           fuenf Ligen, ein Schluessel
+#   "Polish I Liga"                -> soccer_poland_ekstraklasa       I Liga ist Polens ZWEITE
+#   "Scottish League One"          -> soccer_spl                      League One ist die DRITTE
+#
+# Haette Lucas die Liste eingetragen, haetten 19 Ligen still einen Anker auf die falsche Liga
+# bekommen. Fehlerklasse: *eine Aehnlichkeit, die als Beweis zaehlt, obwohl sie das
+# Unterscheidende gerade weglaesst.* Jeder dieser Faelle steht hier jetzt namentlich.
+
+ECHT = [sp("soccer_poland_ekstraklasa", "Ekstraklasa - Poland"),
+        sp("soccer_spl", "Premiership - Scotland"),
+        sp("soccer_argentina_primera_division", "Primera División - Argentina"),
+        sp("soccer_japan_j_league", "J League"),
+        sp("soccer_italy_serie_a", "Serie A - Italy"),
+        sp("soccer_italy_serie_b", "Serie B - Italy"),
+        sp("soccer_greece_super_league", "Super League - Greece"),
+        sp("soccer_spain_segunda_division", "La Liga 2 - Spain"),
+        sp("soccer_france_ligue_two", "Ligue 2 - France"),
+        sp("soccer_england_league1", "League 1"),
+        sp("soccer_chile_campeonato", "Primera División - Chile"),
+        sp("soccer_league_of_ireland", "League of Ireland")]
+
+
+def _u(liga):
+    v = A.vorschlagen(liga, ECHT)
+    return (v or {}).get("urteil"), (v or {}).get("key"), (v or {}).get("warum", "")
+
+
+def test_ein_pokal_ist_keine_liga():
+    u, k, w = _u("Polish Cup")
+    assert u == "vorschlag", (u, k, w)
+    assert "andere Art" in w
+
+
+def test_eine_stufe_im_namen_beweist_nichts():
+    """„Primera Nacional" und „Primera División" teilen genau das Wort, das nichts sagt."""
+    u, k, w = _u("Argentinian Primera Nacional")
+    assert u == "vorschlag", (u, k, w)
+    assert "nacional" in w.lower()
+
+
+def test_eine_ordnungszahl_gegen_ein_schweigen_ist_eine_annahme():
+    """Polens „I Liga" ist die zweite, Schottlands „League One" die dritte Klasse.
+    Beide standen als sicher auf der jeweils ERSTEN."""
+    for liga in ("Polish I Liga", "Scottish League One", "Irish Division 1"):
+        u, k, w = _u(liga)
+        assert u == "vorschlag", (liga, u, k, w)
+
+
+def test_ihr_eigener_name_darf_unserem_nicht_widersprechen():
+    u, k, w = _u("Polish I Liga")
+    assert "ekstraklasa" in w.lower() or "Annahme" in w, w
+
+
+def test_zweite_klasse_landet_nicht_auf_der_ersten():
+    assert _u("Scottish Championship")[0] == "vorschlag"
+    assert _u("Greek Super League 2")[0] == "vorschlag"
+    assert _u("Chilean Primera B")[0] == "vorschlag"
+
+
+def test_mehrdeutige_stufe_im_eigenen_namen_blockiert():
+    """„Primera B" nennt zwei Klassen auf einmal — dann wird nicht geraten."""
+    u, _, w = _u("Chilean Primera B")
+    assert u == "vorschlag" and ("mehrdeutig" in w or "Spielklasse" in w or "Annahme" in w), w
+
+
+def test_fuenf_ligen_ein_schluessel_ist_kein_sicherer_treffer():
+    ligen = [{"liga": "Japanese J League", "n": 350},
+             {"liga": "Japanese J League 2", "n": 270},
+             {"liga": "Japanese Football League", "n": 111}]
+    d = A.abgleich(ligen, {}, ECHT)
+    sicher = [x for x in d["ohneAnkerMitKandidat"] if x["urteil"] == "sicher"]
+    assert sicher == [], [(x["liga"], x["key"]) for x in sicher]
+
+
+def test_die_richtigen_ueberleben_den_umbau():
+    """Schaerfer werden heisst nicht, alles wegzuwerfen — diese sieben sind echt."""
+    for liga, key in (("Spanish Segunda Division", "soccer_spain_segunda_division"),
+                      ("Italian Serie B", "soccer_italy_serie_b"),
+                      ("French Ligue 2", "soccer_france_ligue_two"),
+                      ("Greek Super League", "soccer_greece_super_league")):
+        u, k, w = _u(liga)
+        assert u == "sicher" and k == key, (liga, u, k, w)
+
+
+def test_ziffern_werden_vom_namen_getrennt():
+    """Ohne das steckt die Stufe in `league1` im selben Token wie der Name."""
+    assert A._tokens("soccer_england_league1")[-2:] == ["league", "1"]
+    assert A._stufe(["two"]) == A._stufe(["2"]) == {"t2"}
+
+
+def test_ihr_name_allein_kann_widerlegen():
+    """Der Fall, den erst die Mutationsprobe sichtbar gemacht hat.
+
+    Wenn UNSER Name generisch ist, Art und Stufe passen und trotzdem nichts stimmt, bleibt
+    nur ihr eigener Name als Einwand. „Ekstraklasa" heisst nun einmal Ekstraklasa — wer
+    „Polish Premier League" darauf legt, hat es angenommen, nicht geprueft."""
+    u, k, w = _u("Polish Premier League")
+    assert u == "vorschlag", (u, k, w)
+    assert "ekstraklasa" in w.lower(), w
+
+
+def test_ein_schluessel_ohne_stufe_ist_die_oberste_klasse():
+    """Ohne diese Annahme faellt „Greek Super League 2" gegen „Super League" nicht auf."""
+    assert A._stufe(["super", "league"]) == {"t1"}
+    assert A._stufe(["super", "league", "2"]) == {"t2"}

@@ -35,6 +35,7 @@ import json
 import os
 import re
 import sys
+import unicodedata
 import urllib.request
 from pathlib import Path
 
@@ -84,23 +85,84 @@ LAND_PAARE = {
     ("united", "arab"): "uae",
 }
 # Wörter, die nichts über die Liga aussagen.
-RAUSCHEN = {"the", "of", "league", "liga", "division", "cup", "copa", "coupe", "pokal",
-            "championship", "premier", "professional", "football", "soccer"}
+RAUSCHEN = {"the", "of", "league", "liga", "division", "divisie", "divisao", "premier",
+            "professional", "football", "soccer", "campeonato"}
 
-# Stufenzeichen. Sie sind das Gegenteil von Rauschen: „Serie A" und „Serie C" unterscheiden
-# sich in NICHTS ausser diesem einen Zeichen. Standen sie in RAUSCHEN, galt „Italian Serie C"
-# → `soccer_italy_serie_a` als sicher, weil beide „serie" teilen — der teuerste denkbare
-# Fehler dieses Skripts: ein Anker auf die falsche Liga desselben Landes.
-STUFE = {"1", "2", "3", "4", "a", "b", "c", "d", "i", "ii", "iii",
-         "one", "two", "three", "primera", "segunda", "tercera"}
+# 🔴 24.09.2026, erster echter Lauf: von 28 „sicheren" Zuordnungen waren rund zwei Drittel
+# FALSCH — „Polish Cup" → Ekstraklasa, „Scottish Championship" → SPL, „Argentinian Primera
+# Nacional" → Primera División, „Japanese J League 2/3/Cup" alle → J League. Haette Lucas die
+# Liste eingetragen, haetten 19 Ligen still einen Anker auf die falsche Liga bekommen: genau
+# der Fehler, den dieses Skript verhindern soll. Meine Tests waren gruen, weil ich nur die
+# Faelle geprueft hatte, die mir eingefallen sind.
+# Fehlerklasse: *eine Aehnlichkeit, die als Beweis zaehlt, obwohl sie das Unterscheidende
+# gerade weglaesst.*
+#
+# Drei Unterscheidungen tragen jetzt, und alle drei koennen nur WIDERLEGEN:
+#
+# 1) Die Stufe. „Serie A" und „Serie C" unterscheiden sich in nichts ausser diesem Zeichen.
+#    Geschrieben wird sie in vielen Formen (2 / two / II / B / Segunda) — deshalb auf eine
+#    Normalform gebracht. Fehlt sie ganz, ist die oberste Klasse gemeint: ein Schluessel ohne
+#    Stufe ist die erste Liga des Landes. Nur so faellt „Greek Super League 2" gegen
+#    `soccer_greece_super_league` auf.
+STUFE = {
+    "1": "t1", "one": "t1", "i": "t1", "a": "t1", "primera": "t1", "primeira": "t1",
+    "2": "t2", "two": "t2", "ii": "t2", "b": "t2", "segunda": "t2", "championship": "t2",
+    "3": "t3", "three": "t3", "iii": "t3", "c": "t3", "tercera": "t3",
+    "4": "t4", "d": "t4",
+}
+# 2) Die Art des Wettbewerbs. Ein Pokal ist keine Liga, eine Reserve-Mannschaft kein Verein.
+#    „cup" stand in RAUSCHEN und verschwand damit spurlos — so wurde aus „Polish Cup" ein
+#    Anker auf die Ekstraklasa.
+ART = {
+    "cup": "pokal", "cups": "pokal", "pokal": "pokal", "copa": "pokal", "coppa": "pokal",
+    "coupe": "pokal", "beker": "pokal", "taca": "pokal", "trophy": "pokal",
+    "kupa": "pokal", "kubok": "pokal", "shield": "pokal", "supercup": "pokal",
+    "reserves": "reserve", "reserve": "reserve", "b2": "reserve",
+    "u19": "nachwuchs", "u20": "nachwuchs", "u21": "nachwuchs", "u23": "nachwuchs",
+    "youth": "nachwuchs", "junior": "nachwuchs", "juniors": "nachwuchs",
+    "primavera": "nachwuchs", "development": "nachwuchs",
+    "women": "frauen", "womens": "frauen", "ladies": "frauen", "femenina": "frauen",
+    "feminine": "frauen", "frauen": "frauen",
+    "friendly": "freundschaft", "friendlies": "freundschaft",
+}
 
 
 def _stufe(tokens) -> set:
-    return {t for t in tokens if t in STUFE}
+    """Die Spielklassen in Normalform. Leer heisst: oberste Klasse."""
+    return {STUFE[t] for t in tokens if t in STUFE} or {"t1"}
+
+
+def _stufe_genannt(tokens) -> bool:
+    """Steht die Stufe im Namen, oder ist sie nur angenommen?
+
+    Der Unterschied entscheidet: ein Schluessel OHNE Stufe ist die oberste Klasse des Landes,
+    ein Name MIT Ordnungszahl ist eine benannte Spielklasse — und die ist oft nicht die
+    oberste. „Polish I Liga" ist Polens ZWEITE Liga, „Irish Division 1" Irlands zweite,
+    „Scottish League One" Schottlands dritte. Alle drei standen im ersten Lauf als sicher auf
+    der jeweiligen ERSTEN Liga. Eine Ordnungszahl gegen ein Schweigen ist keine
+    Uebereinstimmung, sondern eine Annahme."""
+    return any(t in STUFE for t in tokens)
+
+
+def _art(tokens) -> set:
+    return {ART[t] for t in tokens if t in ART}
 
 
 def _tokens(s: str) -> list:
-    return [t for t in re.split(r"[^a-z0-9]+", str(s).lower()) if t]
+    """Zerlegt auch an der Grenze Buchstabe/Ziffer: `league1` -> ['league','1'].
+
+    Ohne das steht die Stufe in `soccer_england_league1` in demselben Token wie der Name und
+    ist nicht vergleichbar — und `ligue_two` gegen unser „Ligue 2" waere ein Widerspruch,
+    obwohl es dieselbe Liga ist."""
+    # Akzente zuerst wegnehmen: „Primera División" zerfiel sonst an dem ó zu „divisi"+„n",
+    # und aus einem passenden Namen wurde ein Widerspruch.
+    flach = unicodedata.normalize("NFKD", str(s).lower())
+    flach = "".join(c for c in flach if not unicodedata.combining(c))
+    roh = [t for t in re.split(r"[^a-z0-9]+", flach) if t]
+    raus = []
+    for t in roh:
+        raus.extend(x for x in re.findall(r"[a-z]+|[0-9]+", t) if x)
+    return raus
 
 
 def land_aus_liga(liga: str):
@@ -114,7 +176,11 @@ def land_aus_liga(liga: str):
 
 
 def _kern(tokens) -> set:
-    return {t for t in tokens if t not in RAUSCHEN}
+    """Die Woerter, die eine Zuordnung BELEGEN koennen.
+
+    Stufen- und Art-Woerter gehoeren nicht dazu: sie koennen widerlegen, nie beweisen. „Primera
+    Nacional" und „Primera División" teilen „primera" — und sind zwei verschiedene Ligen."""
+    return {t for t in tokens if t not in RAUSCHEN and t not in STUFE and t not in ART}
 
 
 def passt(liga: str, sport: dict):
@@ -136,24 +202,50 @@ def passt(liga: str, sport: dict):
         return None, "Land nicht erkannt — Eigenschaftswort fehlt in LAND"
     if land not in ktoks and land not in titel:
         return None, "anderes Land"
+    ihre = set(ktoks) | set(titel)
     unser = _kern(rest)
-    # Stufen zuerst: tragen BEIDE Seiten eine und sind sie verschieden, ist es eine andere
-    # Liga — egal wie aehnlich der Rest klingt.
+    # ── Erst widerlegen, dann belegen ───────────────────────────────────────────────────
+    # (1) Die Art: ein Pokal ist keine Liga.
+    au, ai = _art(rest), _art(ktoks) | _art(titel)
+    if au != ai:
+        nur_wir, nur_sie = au - ai, ai - au
+        return "vorschlag", ("Land %s, aber andere Art (%s) — ansehen"
+                             % (land, " / ".join(filter(None, [
+                                 "wir: " + "+".join(sorted(nur_wir)) if nur_wir else "",
+                                 "sie: " + "+".join(sorted(nur_sie)) if nur_sie else ""]))))
+    # (2) Die Stufe. Fehlt sie, ist die oberste gemeint — nur so faellt „Super League 2"
+    #     gegen „Super League" auf.
     su, si = _stufe(rest), _stufe(ktoks) | _stufe(titel)
-    if su and si and not (su & si):
+    if len(su) > 1:
+        return "vorschlag", ("Land %s, aber mehrdeutige Spielklasse (%s) — ansehen"
+                             % (land, "/".join(sorted(su))))
+    if not (su & si):
         return "vorschlag", ("Land %s, aber andere Spielklasse (%s gegen %s) — ansehen"
                              % (land, "/".join(sorted(su)), "/".join(sorted(si))))
-    gemeinsam = unser & (set(ktoks) | set(titel))
+    if _stufe_genannt(rest) != _stufe_genannt(ktoks + titel):
+        return "vorschlag", ("Land %s, aber eine Seite NENNT ihre Spielklasse und die andere "
+                             "nicht — eine Ordnungszahl gegen ein Schweigen ist eine Annahme, "
+                             "keine Uebereinstimmung. Ansehen." % land)
+    # (3) Ihr eigener Name darf unserem nicht widersprechen: heisst ihre Liga „Ekstraklasa"
+    #     und unsere „I Liga", ist das kein Schweigen, sondern ein anderer Name.
+    ihr_kern = {t for t in _kern(ktoks) | _kern(titel) if t != land and len(t) > 2}
+    if ihr_kern and not (ihr_kern & set(rest)):
+        return "vorschlag", ("Land %s, aber ihr Name nennt %s, unserer nicht — ansehen"
+                             % (land, "/".join(sorted(ihr_kern))))
+    # ── Jetzt erst belegen ──────────────────────────────────────────────────────────────
+    gemeinsam = unser & ihre
     if gemeinsam:
         return "sicher", "Land %s + Kennwort %s" % (land, "/".join(sorted(gemeinsam)))
     if not unser:
         # „Ukrainian Premier League" besteht nur aus Allerweltswoertern — da KANN es kein
-        # gemeinsames Kennwort geben. Dann traegt das Land allein, und ob das reicht,
-        # entscheidet die Eindeutigkeit: `vorschlagen` stuft zurueck, sobald es zwei
-        # Kandidaten im selben Land gibt.
-        return "sicher", "Land %s, Name ohne eigenes Kennwort" % land
-    # Unsere Seite hat Kennwoerter, und keines kommt vor: genau hier entstehen falsche Anker.
-    return "vorschlag", "Land %s stimmt, aber kein gemeinsames Kennwort — ansehen" % land
+        # gemeinsames Kennwort geben. Dann tragen Land, Art und Stufe allein, und ob das
+        # reicht, entscheidet die Eindeutigkeit: `vorschlagen` stuft zurueck, sobald ein
+        # zweiter Kandidat im selben Land steht.
+        return "sicher", "Land %s, Stufe %s, Name ohne eigenes Kennwort" % (land, "/".join(su))
+    # Unsere Seite hat ein eigenes Kennwort, und es kommt drueben nicht vor — „Primera
+    # NACIONAL" gegen „Primera División". Genau hier entstehen falsche Anker.
+    return "vorschlag", ("Land %s, Stufe passt, aber unser Kennwort %s kommt drueben nicht vor "
+                         "— ansehen" % (land, "/".join(sorted(unser))))
 
 
 def vorschlagen(liga: str, sports: list):
@@ -210,6 +302,18 @@ def abgleich(ligen: list, zuordnung: dict, sports: list) -> dict:
             else:
                 eintrag["warum"] = "die-odds-api kennt keine Liga in %s dazu" % land
             unbekannt.append(eintrag)
+    # (4) Beanspruchen MEHRERE unserer Ligen denselben Schlüssel, kann höchstens eine recht
+    #     haben — welche, entscheidet hier niemand. Im ersten echten Lauf zeigten „Japanese
+    #     J League", „J League 2", „J League 3", „J League Cup" und „Japanese Football League"
+    #     alle auf `soccer_japan_j_league`, und alle fünf standen als „sicher" da.
+    from collections import Counter
+    beansprucht = Counter(x["key"] for x in ohne if x.get("urteil") == "sicher")
+    for x in ohne:
+        if x.get("urteil") == "sicher" and beansprucht[x["key"]] > 1:
+            x["urteil"] = "vorschlag"
+            x["warum"] += (" — ABER %d unserer Ligen beanspruchen denselben Schlüssel"
+                           % beansprucht[x["key"]])
+
     # Gegenrichtung: Einträge, die auf keinen Ligastring des Ledgers passen (MLS-Fall 01.09.).
     tot = sorted(k for k in (zuordnung or {}) if k not in namen)
     return {
