@@ -70,7 +70,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "54 Karte(n) · 1 auch public"
+      "note": "56 Karte(n) · 1 auch public"
     },
     {
       "id": "public_push_buch",
@@ -94,11 +94,9 @@
       "id": "settlement_alive",
       "label": "Settlement lebt (keine ewig offenen Positionen)",
       "severity": "error",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "mls-sea-rsl-2026-04-12: seit 165.2 Tagen offen — keine Auflösung gefunden"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen. Der Grund steht an jeder Zeile — er ist bei jeder ein anderer."
     },
     {
@@ -117,7 +115,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Fällige Märkte je Liga, die ihre Auflösung finden — nur ab dem Beginn des Auflösungsbuchs (2026-09-10); 1941 ältere Märkte bleiben draussen, fuer sie kann es keine geben. < 60% = Settlement läuft wirklich ins Leere."
+      "note": "Fällige Märkte je Liga, die ihre Auflösung finden — nur ab dem Beginn des Auflösungsbuchs (2026-09-10); 1943 ältere Märkte bleiben draussen, fuer sie kann es keine geben. < 60% = Settlement läuft wirklich ins Leere."
     },
     {
       "id": "proven_wallets_profitable",
@@ -126,7 +124,7 @@
       "ok": false,
       "nFail": 5,
       "failures": [
-        "172/388 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (44%) — Trefferquote allein trügt",
+        "174/390 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (45%) — Trefferquote allein trügt",
         "   0xc3c3b3ef30… n=338 Treffer 51% P&L $-3,974,308",
         "   0xa0f21e6d35… n=105 Treffer 68% P&L $-2,635,720",
         "   0xabb89972b2… n=51 Treffer 59% P&L $-2,563,982",
@@ -180,6 +178,6 @@
       "note": "poly_direct_bets.py rechnet über poly_resolutions.json ab. Hängt ein Bet, kennt Poly den Ausgang nicht (Markt noch offen/obskur) oder der Slug passt nicht — dann fehlt echtes Geld in der Bilanz."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-09-24T05:39:35.898414+00:00"
+  "nFail": 1,
+  "generatedAt": "2026-09-24T06:13:44.253643+00:00"
 }
