@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-24T03:35:45.318397+00:00",
+ "generatedAt": "2026-09-24T04:05:45.431492+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -27,9 +27,37 @@
  },
  "trackRecord": {
   "tracked": 308,
-  "converged": 71
+  "converged": 73
  },
  "discrepancies": [
+  {
+   "id": "baseball_mlb|losangelesdodgers-sandiegopadres|sandiegopadres",
+   "sport": "baseball_mlb",
+   "event": "San Diego Padres vs Los Angeles Dodgers",
+   "market": "Moneyline",
+   "outcome": "San Diego Padres",
+   "polyPP": 84.5,
+   "pinnPP": 39.1,
+   "gapPP": 45.38,
+   "vol": 582024,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -34.75,
+   "firstSeen": "2026-09-23T02:33:07.615013+00:00"
+  },
+  {
+   "id": "baseball_mlb|losangelesdodgers-sandiegopadres|losangelesdodgers",
+   "sport": "baseball_mlb",
+   "event": "San Diego Padres vs Los Angeles Dodgers",
+   "market": "Moneyline",
+   "outcome": "Los Angeles Dodgers",
+   "polyPP": 15.5,
+   "pinnPP": 60.9,
+   "gapPP": -45.38,
+   "vol": 582024,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -34.75,
+   "firstSeen": "2026-09-23T02:33:07.615013+00:00"
+  },
   {
    "id": "soccer_mls|realsaltlake-seattlesounders|hw",
    "sport": "soccer_mls",
@@ -59,32 +87,60 @@
    "firstSeen": "2026-09-24T03:35:45.318109+00:00"
   },
   {
-   "id": "baseball_mlb|losangelesdodgers-sandiegopadres|sandiegopadres",
+   "id": "baseball_mlb|houstonastros-seattlemariners|houstonastros",
    "sport": "baseball_mlb",
-   "event": "San Diego Padres vs Los Angeles Dodgers",
+   "event": "Houston Astros vs Seattle Mariners",
    "market": "Moneyline",
-   "outcome": "San Diego Padres",
-   "polyPP": 48.5,
-   "pinnPP": 39.1,
-   "gapPP": 9.38,
-   "vol": 433891,
-   "richtung": "Poly zu hoch → faden",
-   "convergePP": 1.25,
-   "firstSeen": "2026-09-23T02:33:07.615013+00:00"
+   "outcome": "Houston Astros",
+   "polyPP": 41.5,
+   "pinnPP": 62.0,
+   "gapPP": -20.48,
+   "vol": 671839,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 11.76,
+   "firstSeen": "2026-09-24T03:05:35.391393+00:00"
   },
   {
-   "id": "baseball_mlb|losangelesdodgers-sandiegopadres|losangelesdodgers",
+   "id": "baseball_mlb|houstonastros-seattlemariners|seattlemariners",
    "sport": "baseball_mlb",
-   "event": "San Diego Padres vs Los Angeles Dodgers",
+   "event": "Houston Astros vs Seattle Mariners",
    "market": "Moneyline",
-   "outcome": "Los Angeles Dodgers",
-   "polyPP": 51.5,
-   "pinnPP": 60.9,
-   "gapPP": -9.38,
-   "vol": 433891,
+   "outcome": "Seattle Mariners",
+   "polyPP": 58.5,
+   "pinnPP": 38.0,
+   "gapPP": 20.48,
+   "vol": 671839,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 11.76,
+   "firstSeen": "2026-09-24T03:05:35.391393+00:00"
+  },
+  {
+   "id": "baseball_mlb|athletics-losangelesangels|losangelesangels",
+   "sport": "baseball_mlb",
+   "event": "Los Angeles Angels vs Athletics",
+   "market": "Moneyline",
+   "outcome": "Los Angeles Angels",
+   "polyPP": 4.5,
+   "pinnPP": 17.8,
+   "gapPP": -13.32,
+   "vol": 604726,
    "richtung": "Poly zu niedrig → backen",
-   "convergePP": 1.25,
-   "firstSeen": "2026-09-23T02:33:07.615013+00:00"
+   "convergePP": 30.57,
+   "firstSeen": "2026-09-23T04:33:18.414714+00:00"
+  },
+  {
+   "id": "baseball_mlb|athletics-losangelesangels|athletics",
+   "sport": "baseball_mlb",
+   "event": "Los Angeles Angels vs Athletics",
+   "market": "Moneyline",
+   "outcome": "Athletics",
+   "polyPP": 95.5,
+   "pinnPP": 82.2,
+   "gapPP": 13.32,
+   "vol": 604726,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 30.57,
+   "firstSeen": "2026-09-23T04:33:18.414714+00:00"
   }
  ]
 }
