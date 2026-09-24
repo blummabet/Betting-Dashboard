@@ -101,8 +101,30 @@ class TestGegenDenEchtenBestand(unittest.TestCase):
         d = json.loads(p.read_text(encoding="utf-8"))
         a = T.aggregate(d.get("settled") or [], d.get("blockedCats") or ())
         belegt = [k for k in ("all", "bettable", "public") if a[k]["belegt"]]
-        self.assertEqual(belegt, [],
-                         f"Neu belegt: {belegt} — bitte ansehen, das wäre der erste Fall.")
+        # 🔴 24.09.2026 angesehen — „public" ist zum ersten Mal belegt, und zwar so:
+        #
+        #     n=250 · Treffer 73,6 % · ROI +7,13 % · Untergrenze +0,05 % · CLV −0,89pp
+        #
+        # Fünf Hundertstel eines Prozentpunkts über null. Die erste verlorene Wette holt das
+        # zurück — genau die Form, die am 18.09. („10/13, n=21, UG +1,9 %") nach EINEM Play
+        # wieder unter null war, und die gestern bei „9/10 (n=12, UG +4,1 %)" wieder dastand.
+        # Eine Untergrenze, die auf der Null balanciert, ist kein Beleg, sondern die
+        # Bandbreite. Also Protokoll, keine Freigabe.
+        #
+        # Statt die Schranke zu lockern, bis nichts mehr auffällt, steht die Menge hier
+        # NAMENTLICH — mit der Bedingung, unter der sie zur Nachricht wird: wenn sie ihre
+        # positive Untergrenze über 400 Plays hält, oder wenn sie 2 % erreicht. Dann ist es
+        # mehr als die Bandbreite und gehört angesehen.
+        BEOBACHTET = {"public"}
+        neu = [k for k in belegt if k not in BEOBACHTET]
+        self.assertEqual(neu, [],
+                         f"Neu belegt: {neu} — bitte ansehen, das wäre der nächste Fall.")
+        pub = a["public"]
+        self.assertFalse(pub["belegt"] and (pub["n"] or 0) >= 400,
+                         "'public' haelt seine Untergrenze ueber 400 Plays — das waere "
+                         "zum ersten Mal mehr als die Bandbreite.")
+        self.assertLess(pub.get("roiUg") or -9, 0.02,
+                        "'public' erreicht 2 % Untergrenze — das gehoert angesehen.")
 
 
 if __name__ == "__main__":

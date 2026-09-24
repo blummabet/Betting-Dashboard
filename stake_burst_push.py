@@ -48,6 +48,7 @@ from __future__ import annotations
 import html
 import json
 import os
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -425,18 +426,101 @@ def _teams(event) -> list:
     return [t.strip() for t in e.split(" - ", 1)] if " - " in e else []
 
 
+# Wortteile, die keine Mannschaft bezeichnen, sondern ihre Rechtsform oder ihren Kader.
+# Der Feed setzt sie im Spielnamen und in der Auswahl unterschiedlich — genau daran ist der
+# Fall vom 24.09.2026 gescheitert.
+# 🔴 Zweiter Versuch. Im ersten standen hier auch „atletico", „deportivo", „sporting" und
+# „club" — Woerter, die zur Rechtsform GEHOEREN koennen, aber genauso oft der Name selbst
+# sind. „Atletico Madrid" gegen „Real Madrid" verlor dadurch seine Seite: nach Abzug von
+# „atletico" blieb „madrid", und das haben beide.
+# Fehlerklasse: *eine Rauschliste, die auch das Signal enthaelt.* Drin bleibt nur, was NIE
+# eine Mannschaft bezeichnet — Rechtsform-Kuerzel und Kader-Zusatz. Alles andere trennt
+# `_unterscheidend` ohnehin heraus, sobald beide Namen es tragen.
+_TEAM_RAUSCHEN = {
+    "fc", "cf", "ca", "ac", "sc", "cd", "afc", "afbc", "cfc", "sv", "tsv", "fk", "sk",
+    "vv", "vfb", "vfl", "bsc", "rc", "as", "ss", "us", "ud", "sd", "cs", "cp",
+    "reserve", "reserves", "reserva", "reservas",
+    "u19", "u20", "u21", "u23", "youth", "juniors", "junior",
+    "women", "womens", "ladies", "femenino", "femenina", "frauen",
+}
+
+
+def _team_kern(name: str) -> set:
+    """Die Woerter einer Mannschaft ohne Rechtsform und Kader-Zusatz. REIN."""
+    toks = [t for t in re.split(r"[^a-z0-9]+", str(name or "").lower()) if t]
+    return {t for t in toks if t not in _TEAM_RAUSCHEN} or set(toks)
+
+
+def _unterscheidend(a: str, b: str) -> tuple:
+    """Die Woerter, die A von B trennen — und umgekehrt. REIN.
+
+    🔴 Erster Versuch war „Kern = Woerter ab vier Zeichen". Der hat Lucas' Fall geloest und
+    dabei 167 E-Sport-Zeilen die Seite genommen: „LGD Gaming" gegen „Xtreme Gaming" — `lgd`
+    ist drei Zeichen lang, fiel weg, uebrig blieb `gaming`, und das passt auf beide.
+    Fehlerklasse: *ein Filter, der das Unterscheidende wegwirft, weil es kurz ist.*
+
+    Was eine Mannschaft von der anderen trennt, kann man nicht an der Wortlaenge ablesen —
+    nur am Vergleich mit dem Gegner. Genau der steht hier daneben.
+    """
+    ka, kb = _team_kern(a), _team_kern(b)
+    return ka - kb, kb - ka
+
+
+def _trifft(worte: set, tokens: set) -> bool:
+    """Kommt eines der unterscheidenden Woerter in der Auswahl vor? REIN.
+
+    Auch als Anfang eines laengeren Wortes, ab vier Zeichen: der Feed schreibt „Roma - Inter"
+    im Spielnamen und „Internazionale" in der Auswahl. Kuerzere Anfaenge bleiben draussen,
+    sonst passt „real" auf „realmadrid" genauso wie auf „realidad".
+    """
+    for wort in worte or ():
+        if wort in tokens:
+            return True
+        if len(wort) >= 4 and any(t.startswith(wort) for t in tokens):
+            return True
+    return False
+
+
 def seite(w) -> str | None:
     """Auf welche MANNSCHAFT zeigt diese Auswahl? None heisst neutral (Over/Under, Torzahl) —
     nicht „unbekannt" und erst recht nicht „Gegenseite".
 
     Bewusst nur bei EINDEUTIGEM Treffer: bei „Deportivo La Coruna - Deportivo Alaves" passt
     „Deportivo" auf beide, und eine geratene Seite waere schlimmer als keine.
+
+    🔴 24.09.2026 (Lucas: „Das finden wir nicht im stake burst?" — Deportivo Riestra Reserve
+    gegen Barracas Central Reserve, 14 Wetten, 39.347 $ auf ein Spiel in 57 Minuten). Wir
+    hatten jede einzelne Zeile im Ledger. Der Burst fiel trotzdem durch, und zwar an genau
+    einer Stelle:
+
+        event   „Deportivo Riestra Afbc Reserve - CA Barracas Central Reserve"
+        auswahl „Deportivo Riestra Reserves (-1.5)"
+
+    Hier stand `t.lower() in a` — der volle Mannschaftsname musste woertlich in der Auswahl
+    vorkommen. „Afbc Reserve" gegen „Reserves": dieselbe Mannschaft, zwei Schreibweisen, kein
+    Treffer. Damit war `gerichtet` fuer ALLE 14 Zeilen null, und jedes Fenster fiel an
+    `len(seiten) != 1` durch — obwohl eines davon 28.360 $ bei Faktor 1,82 getragen haette.
+
+    Fehlerklasse: *eine Zuordnung, die auf Zeichengleichheit besteht, wo die Quelle zwei
+    Schreibweisen fuehrt.* Dieselbe, an der am 01.09. der MLS-Anker haengen blieb („US MLS"
+    gegen „Major League Soccer", 105 Zeilen ohne Anker).
+
+    Verglichen wird deshalb ueber den KERN des Namens. Die Vorsicht bleibt: der Kern der
+    anderen Mannschaft darf nicht ebenfalls passen, sonst gibt es weiter keine Seite.
     """
     a = str((w or {}).get("auswahl") or "").lower()
     if not a:
         return None
-    treffer = [t for t in _teams((w or {}).get("event")) if t and t.lower() in a]
-    return treffer[0] if len(treffer) == 1 else None
+    teams = _teams((w or {}).get("event"))
+    if len(teams) != 2 or not all(teams):
+        return None
+    a_tok = {t for t in re.split(r"[^a-z0-9]+", a) if t}
+    da, db = _unterscheidend(teams[0], teams[1])
+    trifft_a = _trifft(da, a_tok)
+    trifft_b = _trifft(db, a_tok)
+    if trifft_a == trifft_b:      # keines von beiden, oder beide — dann wird nicht geraten
+        return None
+    return teams[0] if trifft_a else teams[1]
 
 
 def liga_norm(pfad=None) -> dict:
