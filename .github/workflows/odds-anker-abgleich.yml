@@ -1,0 +1,57 @@
+name: 🧭 Odds-Anker-Abgleich (was koennte einen Pinnacle-Anker haben)
+
+# 🔴 24.09.2026 (Lucas, nach dem ScoutingStats-Check). Gemessen, bevor irgendetwas gekauft wurde:
+#
+#     verbraucht   419.770 Credits / 30 Tage   (287 Messpunkte ueber 70 h)
+#     Tarif        5.000.000                   ->  Auslastung 8,4 %
+#     ungenutzt    ~4,58 Mio Credits, die jeden Monat verfallen
+#
+# Der Anker deckt 31 Ligen ab, die Ledger-Tafel fuehrt 251 mit mindestens 30 Plays. Die Grenze
+# ist keine Kosten-, sondern eine Pflegegrenze: die Tabelle stammt aus EINEM Abgleich am
+# 09.08.2026. Dieser Lauf zieht sie nach.
+#
+# Er laeuft NUR von Hand. Zwei Gruende: der Abgleich aendert nichts (er schlaegt vor), und ein
+# Vorschlag will angesehen werden, nicht abonniert. `/sports` selbst zaehlt bei the-odds-api
+# nicht gegen das Kontingent — der Check kostet also nichts.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: odds-anker-abgleich
+  cancel-in-progress: false
+
+jobs:
+  abgleich:
+    runs-on: [self-hosted, macOS]
+    timeout-minutes: 10
+    steps:
+      - name: 📥 Repo auschecken
+        uses: actions/checkout@v4
+
+      - name: 🐍 Python finden
+        run: |
+          PYTHON=""
+          for PY in /opt/homebrew/bin/python3.13 /opt/homebrew/bin/python3.12 /opt/homebrew/bin/python3.11 /usr/local/bin/python3.13 /usr/local/bin/python3.12 /usr/bin/python3; do
+            if "$PY" --version >/dev/null 2>&1; then PYTHON="$PY"; break; fi
+          done
+          [ -z "$PYTHON" ] && { echo "Kein Python gefunden"; exit 1; }
+          echo "PY=$PYTHON" >> $GITHUB_ENV
+
+      - name: 🧭 Lücke zählen und Kandidaten vorschlagen
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: ${{ env.PY }} odds_anker_luecke.py
+
+      - name: 💾 Bericht sichern
+        run: |
+          git config user.name "cocobet-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add odds_anker_luecke.json 2>/dev/null || true
+          git diff --cached --quiet && { echo "nichts Neues"; exit 0; }
+          git commit -m "🧭 Odds-Anker-Abgleich $(date -u +'%d.%m.%Y %H:%M') UTC [skip ci]"
+          bash scripts/ci_pull.sh main || true
+          git push || echo "⚠️  Push fehlgeschlagen — der Bericht steht im Lauf-Log."
