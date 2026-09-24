@@ -2159,8 +2159,16 @@
 "whaleEntry": 0.555,
 "htkMess": 2.05,
 "sentAt": "2026-09-24T16:10:52Z",
-"status": "pending",
-"nurBeobachtung": true
+"status": "settled",
+"nurBeobachtung": true,
+"result": "loss",
+"winner": "Over",
+"closePrice": null,
+"stake": 10.0,
+"pnl": -10.0,
+"clvPP": 0.0,
+"settledTs": "2026-09-24T23:11:06.282061+00:00",
+"resolvedTs": "2026-09-24T23:10:52.806249+00:00"
 },
 {
 "k": "unl-nor-den-2026-09-24|Norway",
@@ -2181,8 +2189,16 @@
 "whaleEntry": 0.625,
 "htkMess": 2.64,
 "sentAt": "2026-09-24T16:10:52Z",
-"status": "pending",
-"nurBeobachtung": true
+"status": "settled",
+"nurBeobachtung": true,
+"result": "win",
+"winner": "Norway",
+"closePrice": 0.595,
+"stake": 10.0,
+"pnl": 6.0,
+"clvPP": -3.0,
+"settledTs": "2026-09-24T23:11:06.282061+00:00",
+"resolvedTs": "2026-09-24T23:10:52.806249+00:00"
 },
 {
 "k": "unl-prt-wal-2026-09-24|Portugal",
@@ -2204,8 +2220,16 @@
 "whaleEntry": 0.845,
 "htkMess": 2.64,
 "sentAt": "2026-09-24T16:10:52Z",
-"status": "pending",
-"nurBeobachtung": true
+"status": "settled",
+"nurBeobachtung": true,
+"result": "win",
+"winner": "Portugal",
+"closePrice": 0.855,
+"stake": 10.0,
+"pnl": 1.83,
+"clvPP": 1.0,
+"settledTs": "2026-09-24T23:11:06.282061+00:00",
+"resolvedTs": "2026-09-24T23:10:52.806249+00:00"
 },
 {
 "k": "unl-lie-lit-2026-09-24|Lithuania",
@@ -2286,7 +2310,8 @@
 "htkMess": 0.13,
 "sentAt": "2026-09-24T20:42:10Z",
 "status": "pending",
-"nurBeobachtung": true
+"nurBeobachtung": true,
+"nichtAufloesbarGrund": "Buendel-Slug ohne Linie (Under)"
 },
 {
 "k": "mlb-tb-nyy-2026-09-24|Under",
@@ -2328,6 +2353,50 @@
 "whaleEntry": 0.905,
 "htkMess": 2.54,
 "sentAt": "2026-09-24T21:42:21Z",
+"status": "pending",
+"nurBeobachtung": true
+},
+{
+"k": "nfl-atl-gb-2026-09-25|Packers",
+"key": "nfl-atl-gb-2026-09-25",
+"side": "Packers",
+"wallet": "0x66b23cd8bcb651e11b70f6f340ce154864870fdf",
+"wallets": [
+"0x66b23cd8bcb651e11b70f6f340ce154864870fdf",
+"0xd27cc742d023d06ef633a4c880cf1ff1836ec081"
+],
+"nWallets": 2,
+"league": "NFL",
+"cat": "US-Sport",
+"usd": 13752.0,
+"maxEinzel": 11389.0,
+"pushPrice": 0.695,
+"whaleEntry": 0.695,
+"htkMess": 1.12,
+"sentAt": "2026-09-24T23:11:06Z",
+"status": "pending",
+"nurBeobachtung": true
+},
+{
+"k": "gtm-mun-suc-2026-09-24|CSD Municipal",
+"key": "gtm-mun-suc-2026-09-24",
+"side": "CSD Municipal",
+"wallet": "0x04641b57f332c15ecaa497799c55026d521967da",
+"wallets": [
+"0x04641b57f332c15ecaa497799c55026d521967da",
+"0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
+"0xa68e82763af3ef85188a44fce175145b084787d5",
+"0xf6f7e573b3739242e7b162cf5adc0474abb2c7a2"
+],
+"nWallets": 4,
+"league": "SOCCER",
+"cat": "Fußball",
+"usd": 579.0,
+"maxEinzel": 442.0,
+"pushPrice": 0.68,
+"whaleEntry": 0.68,
+"htkMess": 2.87,
+"sentAt": "2026-09-24T23:11:06Z",
 "status": "pending",
 "nurBeobachtung": true
 }
