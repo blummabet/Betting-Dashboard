@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-24T17:36:53.769429+00:00",
+ "generatedAt": "2026-09-24T18:37:02.889483+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -26,8 +26,65 @@
   "soccer_mls": 18
  },
  "trackRecord": {
-  "tracked": 306,
-  "converged": 73
+  "tracked": 308,
+  "converged": 75
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|chicagowhitesox-kansascityroyals|chicagowhitesox",
+   "sport": "baseball_mlb",
+   "event": "Chicago White Sox vs Kansas City Royals",
+   "market": "Moneyline",
+   "outcome": "Chicago White Sox",
+   "polyPP": 93.5,
+   "pinnPP": 77.4,
+   "gapPP": 16.07,
+   "vol": 518909,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-24T18:37:02.889152+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagowhitesox-kansascityroyals|kansascityroyals",
+   "sport": "baseball_mlb",
+   "event": "Chicago White Sox vs Kansas City Royals",
+   "market": "Moneyline",
+   "outcome": "Kansas City Royals",
+   "polyPP": 6.5,
+   "pinnPP": 22.6,
+   "gapPP": -16.07,
+   "vol": 518909,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-24T18:37:02.889152+00:00"
+  },
+  {
+   "id": "baseball_mlb|pittsburghpirates-stlouiscardinals|stlouiscardinals",
+   "sport": "baseball_mlb",
+   "event": "St. Louis Cardinals vs Pittsburgh Pirates",
+   "market": "Moneyline",
+   "outcome": "St. Louis Cardinals",
+   "polyPP": 37.5,
+   "pinnPP": 47.9,
+   "gapPP": -10.41,
+   "vol": 595620,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 42.5,
+   "firstSeen": "2026-09-24T00:53:43.598386+00:00"
+  },
+  {
+   "id": "baseball_mlb|pittsburghpirates-stlouiscardinals|pittsburghpirates",
+   "sport": "baseball_mlb",
+   "event": "St. Louis Cardinals vs Pittsburgh Pirates",
+   "market": "Moneyline",
+   "outcome": "Pittsburgh Pirates",
+   "polyPP": 62.5,
+   "pinnPP": 52.1,
+   "gapPP": 10.41,
+   "vol": 595620,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 42.5,
+   "firstSeen": "2026-09-24T00:53:43.598386+00:00"
+  }
+ ]
 }
