@@ -1,1561 +1,1973 @@
 {
- "sportsGefragt": false,
- "ligenGesamt": 251,
+ "sportsGefragt": true,
+ "ligenGesamt": 252,
  "mitAnker": 30,
- "ohneAnkerMitKandidat": [],
- "ohneAnkerOhneKandidat": [
+ "ohneAnkerMitKandidat": [
   {
    "liga": "Italian Serie C",
    "n": 697,
    "roi": -0.0399,
    "roiLb": -0.1133,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_italy_serie_a",
+   "titel": "Serie A - Italy",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land italy, aber andere Spielklasse (c gegen a) — ansehen",
+   "weitere": [
+    "soccer_italy_serie_b",
+    "soccer_italy_coppa_italia"
+   ]
   },
   {
    "liga": "Argentinian Primera Nacional",
    "n": 453,
    "roi": -0.0192,
    "roiLb": -0.1046,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_argentina_primera_division",
+   "titel": "Primera División - Argentina",
+   "aktiv": true,
+   "urteil": "sicher",
+   "warum": "Land argentina + Kennwort primera"
   },
   {
    "liga": "English National League",
    "n": 391,
    "roi": -0.0125,
    "roiLb": -0.1008,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Other Competitions Soccer",
-   "n": 362,
-   "roi": -0.0946,
-   "roiLb": -0.1731,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Colombian Primera A",
-   "n": 356,
-   "roi": 0.1271,
-   "roiLb": 0.0141,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_england_efl_cup",
+   "titel": "EFL Cup",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land england stimmt, aber kein gemeinsames Kennwort — ansehen",
+   "weitere": [
+    "soccer_england_league1",
+    "soccer_england_league2"
+   ]
   },
   {
    "liga": "Japanese J League",
    "n": 350,
    "roi": 0.0205,
    "roiLb": -0.074,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_japan_j_league",
+   "titel": "J League",
+   "aktiv": false,
+   "urteil": "sicher",
+   "warum": "Land japan + Kennwort j"
   },
   {
    "liga": "Turkish 1 Lig",
    "n": 303,
    "roi": -0.0182,
    "roiLb": -0.1137,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_turkey_super_league",
+   "titel": "Turkey Super League",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land turkey stimmt, aber kein gemeinsames Kennwort — ansehen"
   },
   {
    "liga": "Swedish Division 1",
    "n": 302,
    "roi": -0.0037,
    "roiLb": -0.1044,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_sweden_allsvenskan",
+   "titel": "Allsvenskan - Sweden",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land sweden stimmt, aber kein gemeinsames Kennwort — ansehen",
+   "weitere": [
+    "soccer_sweden_superettan"
+   ]
   },
   {
    "liga": "English Sky Bet League 1",
    "n": 285,
    "roi": -0.0199,
    "roiLb": -0.1302,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_england_league1",
+   "titel": "League 1",
+   "aktiv": true,
+   "urteil": "sicher",
+   "warum": "Land england + Kennwort 1",
+   "weitere": [
+    "soccer_england_efl_cup",
+    "soccer_england_league2"
+   ]
   },
   {
    "liga": "English Sky Bet League 2",
    "n": 277,
    "roi": 0.0224,
    "roiLb": -0.0863,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Venezuelan Primera Division",
-   "n": 277,
-   "roi": 0.0166,
-   "roiLb": -0.0926,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_england_league2",
+   "titel": "League 2",
+   "aktiv": true,
+   "urteil": "sicher",
+   "warum": "Land england + Kennwort 2",
+   "weitere": [
+    "soccer_england_efl_cup",
+    "soccer_england_league1"
+   ]
   },
   {
    "liga": "English Premier League 2 - Div 1",
    "n": 274,
    "roi": -0.0462,
    "roiLb": -0.149,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_england_league1",
+   "titel": "League 1",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land england + Kennwort 1 — ABER mehrere Kandidaten, nicht eindeutig",
+   "weitere": [
+    "soccer_england_league2",
+    "soccer_england_efl_cup"
+   ]
   },
   {
    "liga": "Japanese J League 2",
    "n": 270,
    "roi": 0.001,
    "roiLb": -0.1092,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_japan_j_league",
+   "titel": "J League",
+   "aktiv": false,
+   "urteil": "sicher",
+   "warum": "Land japan + Kennwort j"
   },
   {
    "liga": "Spanish Segunda Division",
    "n": 269,
    "roi": -0.0583,
    "roiLb": -0.1616,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Egyptian Premier",
-   "n": 257,
-   "roi": -0.0293,
-   "roiLb": -0.1277,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_spain_segunda_division",
+   "titel": "La Liga 2 - Spain",
+   "aktiv": true,
+   "urteil": "sicher",
+   "warum": "Land spain + Kennwort segunda",
+   "weitere": [
+    "soccer_spain_la_liga",
+    "soccer_spain_copa_del_rey"
+   ]
   },
   {
    "liga": "Scottish Challenge Cup",
    "n": 254,
    "roi": -0.0682,
    "roiLb": -0.1672,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_spl",
+   "titel": "Premiership - Scotland",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land scotland stimmt, aber kein gemeinsames Kennwort — ansehen"
   },
   {
    "liga": "Norwegian 1st Division",
    "n": 252,
    "roi": -0.0023,
    "roiLb": -0.1026,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Ecuadorian Serie A",
-   "n": 251,
-   "roi": 0.0049,
-   "roiLb": -0.1149,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Romanian Liga II",
-   "n": 245,
-   "roi": 0.077,
-   "roiLb": -0.044,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_norway_eliteserien",
+   "titel": "Eliteserien - Norway",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land norway stimmt, aber kein gemeinsames Kennwort — ansehen"
   },
   {
    "liga": "Swedish Superettan",
    "n": 242,
    "roi": 0.0251,
    "roiLb": -0.0881,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_sweden_superettan",
+   "titel": "Superettan - Sweden",
+   "aktiv": true,
+   "urteil": "sicher",
+   "warum": "Land sweden + Kennwort superettan",
+   "weitere": [
+    "soccer_sweden_allsvenskan"
+   ]
   },
   {
    "liga": "English National League North",
    "n": 240,
    "roi": -0.0185,
    "roiLb": -0.1391,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Peruvian Primera Division",
-   "n": 236,
-   "roi": 0.1712,
-   "roiLb": 0.037,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_england_efl_cup",
+   "titel": "EFL Cup",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land england stimmt, aber kein gemeinsames Kennwort — ansehen",
+   "weitere": [
+    "soccer_england_league1",
+    "soccer_england_league2"
+   ]
   },
   {
    "liga": "Japanese J League 3",
    "n": 236,
    "roi": 0.0381,
    "roiLb": -0.074,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_japan_j_league",
+   "titel": "J League",
+   "aktiv": false,
+   "urteil": "sicher",
+   "warum": "Land japan + Kennwort j"
   },
   {
    "liga": "Mexican Liga MX",
    "n": 235,
    "roi": -0.052,
    "roiLb": -0.163,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_mexico_ligamx",
+   "titel": "Liga MX",
+   "aktiv": true,
+   "urteil": "sicher",
+   "warum": "Land mexico + Kennwort mx"
   },
   {
    "liga": "English National League South",
    "n": 235,
    "roi": -0.1226,
    "roiLb": -0.2333,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_england_efl_cup",
+   "titel": "EFL Cup",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land england stimmt, aber kein gemeinsames Kennwort — ansehen",
+   "weitere": [
+    "soccer_england_league1",
+    "soccer_england_league2"
+   ]
   },
   {
    "liga": "Polish I Liga",
    "n": 232,
    "roi": -0.0687,
    "roiLb": -0.1942,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_poland_ekstraklasa",
+   "titel": "Ekstraklasa - Poland",
+   "aktiv": false,
+   "urteil": "vorschlag",
+   "warum": "Land poland stimmt, aber kein gemeinsames Kennwort — ansehen"
   },
   {
    "liga": "Dutch Eerste Divisie",
    "n": 231,
    "roi": 0.0662,
    "roiLb": -0.0541,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_netherlands_eredivisie",
+   "titel": "Dutch Eredivisie",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land netherlands stimmt, aber kein gemeinsames Kennwort — ansehen"
   },
   {
    "liga": "Italian Serie B",
    "n": 228,
    "roi": -0.107,
    "roiLb": -0.2347,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Egyptian 2nd Division",
-   "n": 223,
-   "roi": -0.0637,
-   "roiLb": -0.1758,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_italy_serie_b",
+   "titel": "Serie B - Italy",
+   "aktiv": true,
+   "urteil": "sicher",
+   "warum": "Land italy + Kennwort b/serie",
+   "weitere": [
+    "soccer_italy_serie_a",
+    "soccer_italy_coppa_italia"
+   ]
   },
   {
    "liga": "Saudi 1st Division",
    "n": 222,
    "roi": 0.0178,
    "roiLb": -0.0969,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Colombian Primera B",
-   "n": 222,
-   "roi": -0.1502,
-   "roiLb": -0.265,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_saudi_arabia_pro_league",
+   "titel": "Saudi Pro League",
+   "aktiv": false,
+   "urteil": "vorschlag",
+   "warum": "Land saudi stimmt, aber kein gemeinsames Kennwort — ansehen"
   },
   {
    "liga": "French Ligue 2",
    "n": 218,
    "roi": 0.1075,
    "roiLb": -0.0194,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "FIFA Ladies U20 World Cup",
-   "n": 217,
-   "roi": 0.0012,
-   "roiLb": -0.1103,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Uruguayan Cup",
-   "n": 212,
-   "roi": -0.0747,
-   "roiLb": -0.1913,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_france_ligue_two",
+   "titel": "Ligue 2 - France",
+   "aktiv": true,
+   "urteil": "sicher",
+   "warum": "Land france + Kennwort 2/ligue",
+   "weitere": [
+    "soccer_france_ligue_one",
+    "soccer_france_coupe_de_france"
+   ]
   },
   {
    "liga": "Chinese League 1",
    "n": 212,
    "roi": -0.0873,
    "roiLb": -0.2036,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_china_superleague",
+   "titel": "Super League - China",
+   "aktiv": false,
+   "urteil": "vorschlag",
+   "warum": "Land china stimmt, aber kein gemeinsames Kennwort — ansehen"
   },
   {
    "liga": "South Korean K2 League",
    "n": 211,
    "roi": -0.0776,
    "roiLb": -0.1916,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_korea_kleague1",
+   "titel": "K League 1",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land korea stimmt, aber kein gemeinsames Kennwort — ansehen"
   },
   {
    "liga": "South Korean K1 League",
    "n": 210,
    "roi": 0.1086,
    "roiLb": -0.0201,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "EFL Trophy",
-   "n": 210,
-   "roi": 0.0153,
-   "roiLb": -0.0947,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Bolivian Liga de Futbol Profesional",
-   "n": 209,
-   "roi": 0.038,
-   "roiLb": -0.066,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Uruguayan Primera Division",
-   "n": 199,
-   "roi": -0.0024,
-   "roiLb": -0.142,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Czech 1 Liga",
-   "n": 194,
-   "roi": 0.0076,
-   "roiLb": -0.1295,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "AFC U20 Asian Cup Qualifiers",
-   "n": 192,
-   "roi": -0.1618,
-   "roiLb": -0.2727,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Kazakhstan Premier League",
-   "n": 189,
-   "roi": 0.0434,
-   "roiLb": -0.0717,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Romanian Liga I",
-   "n": 188,
-   "roi": -0.0855,
-   "roiLb": -0.2162,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Israeli Premier League",
-   "n": 185,
-   "roi": 0.0191,
-   "roiLb": -0.102,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_korea_kleague1",
+   "titel": "K League 1",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land korea stimmt, aber kein gemeinsames Kennwort — ansehen"
   },
   {
    "liga": "Portuguese U23",
    "n": 185,
    "roi": -0.0185,
    "roiLb": -0.1545,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Serbian Super League",
-   "n": 182,
-   "roi": -0.0505,
-   "roiLb": -0.1748,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_portugal_primeira_liga",
+   "titel": "Primeira Liga - Portugal",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land portugal stimmt, aber kein gemeinsames Kennwort — ansehen"
   },
   {
    "liga": "Polish Cup",
    "n": 178,
    "roi": 0.0031,
    "roiLb": -0.1225,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Czech 3 Liga",
-   "n": 178,
-   "roi": 0.0087,
-   "roiLb": -0.1264,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Indonesian Super League",
-   "n": 178,
-   "roi": 0.0037,
-   "roiLb": -0.131,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_poland_ekstraklasa",
+   "titel": "Ekstraklasa - Poland",
+   "aktiv": false,
+   "urteil": "sicher",
+   "warum": "Land poland, Name ohne eigenes Kennwort"
   },
   {
    "liga": "Greek Super League",
    "n": 176,
    "roi": 0.0214,
    "roiLb": -0.0969,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Bulgarian A League",
-   "n": 176,
-   "roi": -0.0294,
-   "roiLb": -0.1588,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Paraguayan Primera Division",
-   "n": 174,
-   "roi": 0.0479,
-   "roiLb": -0.088,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Serbian First League",
-   "n": 170,
-   "roi": -0.0783,
-   "roiLb": -0.2193,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "UEFA Europa Conference Qualifiers",
-   "n": 168,
-   "roi": -0.0293,
-   "roiLb": -0.1595,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Estonian Premier League",
-   "n": 166,
-   "roi": -0.0237,
-   "roiLb": -0.156,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_greece_super_league",
+   "titel": "Super League - Greece",
+   "aktiv": true,
+   "urteil": "sicher",
+   "warum": "Land greece + Kennwort super"
   },
   {
    "liga": "Swiss Super League",
    "n": 165,
    "roi": 0.0239,
    "roiLb": -0.107,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Ukrainian Premier League",
-   "n": 162,
-   "roi": 0.2286,
-   "roiLb": 0.0757,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Bolivian Cup",
-   "n": 161,
-   "roi": 0.0657,
-   "roiLb": -0.0752,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Guatemalan Liga Nacional",
-   "n": 160,
-   "roi": 0.0363,
-   "roiLb": -0.1023,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_switzerland_superleague",
+   "titel": "Swiss Superleague",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land switzerland stimmt, aber kein gemeinsames Kennwort — ansehen"
   },
   {
    "liga": "Danish 1st Division",
    "n": 160,
    "roi": -0.0134,
    "roiLb": -0.1535,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Icelandic Urvalsdeild",
-   "n": 159,
-   "roi": 0.0537,
-   "roiLb": -0.0822,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "UEFA Ladies Europa Cup",
-   "n": 159,
-   "roi": -0.0738,
-   "roiLb": -0.1931,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Czech 2 Liga",
-   "n": 155,
-   "roi": 0.1808,
-   "roiLb": 0.0369,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_denmark_superliga",
+   "titel": "Denmark Superliga",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land denmark stimmt, aber kein gemeinsames Kennwort — ansehen"
   },
   {
    "liga": "Portuguese Segunda Liga",
    "n": 155,
    "roi": 0.0447,
    "roiLb": -0.1054,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_portugal_primeira_liga",
+   "titel": "Primeira Liga - Portugal",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land portugal stimmt, aber kein gemeinsames Kennwort — ansehen"
   },
   {
    "liga": "English U21 Pro Development League",
    "n": 153,
    "roi": -0.011,
    "roiLb": -0.1314,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_england_efl_cup",
+   "titel": "EFL Cup",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land england stimmt, aber kein gemeinsames Kennwort — ansehen",
+   "weitere": [
+    "soccer_england_league1",
+    "soccer_england_league2"
+   ]
   },
   {
    "liga": "Japanese J League Cup",
    "n": 153,
    "roi": -0.1324,
    "roiLb": -0.2654,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Croatian Prva NL",
-   "n": 149,
-   "roi": -0.1989,
-   "roiLb": -0.3364,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Bosnian Premier League",
-   "n": 148,
-   "roi": 0.0202,
-   "roiLb": -0.1242,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Salvadoran Primera Division",
-   "n": 145,
-   "roi": 0.0614,
-   "roiLb": -0.0918,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_japan_j_league",
+   "titel": "J League",
+   "aktiv": false,
+   "urteil": "sicher",
+   "warum": "Land japan + Kennwort j"
   },
   {
    "liga": "Swiss Challenge League",
    "n": 141,
    "roi": 0.0007,
    "roiLb": -0.1524,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_switzerland_superleague",
+   "titel": "Swiss Superleague",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land switzerland stimmt, aber kein gemeinsames Kennwort — ansehen"
   },
   {
    "liga": "Brazilian Serie C",
    "n": 139,
    "roi": 0.0229,
    "roiLb": -0.1357,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Estonian Esiliiga",
-   "n": 139,
-   "roi": -0.0071,
-   "roiLb": -0.159,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Israeli National League",
-   "n": 138,
-   "roi": -0.0674,
-   "roiLb": -0.2151,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Cypriot 1st Division",
-   "n": 136,
-   "roi": -0.0496,
-   "roiLb": -0.1987,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_brazil_campeonato",
+   "titel": "Brazil Série A",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land brazil, aber andere Spielklasse (c gegen a) — ansehen",
+   "weitere": [
+    "soccer_brazil_serie_b"
+   ]
   },
   {
    "liga": "Chilean Primera B",
    "n": 136,
    "roi": -0.1543,
    "roiLb": -0.2978,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_chile_campeonato",
+   "titel": "Primera División - Chile",
+   "aktiv": true,
+   "urteil": "sicher",
+   "warum": "Land chile + Kennwort primera"
   },
   {
    "liga": "Belgian Challenger Pro League",
    "n": 133,
    "roi": 0.0777,
    "roiLb": -0.0786,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_belgium_first_div",
+   "titel": "Belgium First Div",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land belgium stimmt, aber kein gemeinsames Kennwort — ansehen"
   },
   {
    "liga": "Chinese Super League",
    "n": 133,
    "roi": -0.008,
    "roiLb": -0.1475,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Thai League 1",
-   "n": 133,
-   "roi": -0.0574,
-   "roiLb": -0.1988,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Thai League 2",
-   "n": 133,
-   "roi": -0.0962,
-   "roiLb": -0.2395,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Latvian Virsliga",
-   "n": 133,
-   "roi": -0.1732,
-   "roiLb": -0.3081,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_china_superleague",
+   "titel": "Super League - China",
+   "aktiv": false,
+   "urteil": "sicher",
+   "warum": "Land china + Kennwort super"
   },
   {
    "liga": "Chinese League 2",
    "n": 132,
    "roi": -0.0002,
    "roiLb": -0.1454,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Georgian Umaglesi Liga",
-   "n": 132,
-   "roi": -0.0873,
-   "roiLb": -0.241,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_china_superleague",
+   "titel": "Super League - China",
+   "aktiv": false,
+   "urteil": "vorschlag",
+   "warum": "Land china stimmt, aber kein gemeinsames Kennwort — ansehen"
   },
   {
    "liga": "Norwegian 2nd Division",
    "n": 127,
    "roi": -0.0206,
    "roiLb": -0.1548,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Algerian Ligue 1",
-   "n": 127,
-   "roi": -0.0157,
-   "roiLb": -0.1596,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "UEFA Champions League",
-   "n": 126,
-   "roi": -0.0043,
-   "roiLb": -0.1227,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "UEFA Europa League",
-   "n": 126,
-   "roi": -0.0589,
-   "roiLb": -0.1988,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Uzbekistan Super League",
-   "n": 122,
-   "roi": 0.0639,
-   "roiLb": -0.0917,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_norway_eliteserien",
+   "titel": "Eliteserien - Norway",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land norway stimmt, aber kein gemeinsames Kennwort — ansehen"
   },
   {
    "liga": "Finnish Ykkosliiga",
    "n": 122,
    "roi": 0.0609,
    "roiLb": -0.1124,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_finland_veikkausliiga",
+   "titel": "Veikkausliiga - Finland",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land finland stimmt, aber kein gemeinsames Kennwort — ansehen"
   },
   {
    "liga": "English WSL",
    "n": 122,
    "roi": 0.0029,
    "roiLb": -0.1382,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Lithuanian A Lyga",
-   "n": 121,
-   "roi": -0.0083,
-   "roiLb": -0.1822,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Canadian Premier League",
-   "n": 120,
-   "roi": -0.1082,
-   "roiLb": -0.2716,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Croatian HNL",
-   "n": 119,
-   "roi": -0.0055,
-   "roiLb": -0.1762,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_england_efl_cup",
+   "titel": "EFL Cup",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land england stimmt, aber kein gemeinsames Kennwort — ansehen",
+   "weitere": [
+    "soccer_england_league1",
+    "soccer_england_league2"
+   ]
   },
   {
    "liga": "Norwegian Cup",
    "n": 119,
    "roi": -0.0349,
    "roiLb": -0.1801,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Panamanian Premier League",
-   "n": 118,
-   "roi": 0.0251,
-   "roiLb": -0.1525,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_norway_eliteserien",
+   "titel": "Eliteserien - Norway",
+   "aktiv": true,
+   "urteil": "sicher",
+   "warum": "Land norway, Name ohne eigenes Kennwort"
   },
   {
    "liga": "Norwegian 3rd Division",
    "n": 117,
    "roi": -0.1461,
    "roiLb": -0.2802,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Czech Cup",
-   "n": 116,
-   "roi": 0.1762,
-   "roiLb": 0.0391,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "South African Premier Division",
-   "n": 116,
-   "roi": 0.1602,
-   "roiLb": -0.0364,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Azerbaijan Premier League",
-   "n": 114,
-   "roi": -0.0079,
-   "roiLb": -0.1652,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Bulgarian B League",
-   "n": 114,
-   "roi": -0.1168,
-   "roiLb": -0.2705,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "UEFA Youth League",
-   "n": 113,
-   "roi": 0.0909,
-   "roiLb": -0.0712,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Slovenian Premier League",
-   "n": 113,
-   "roi": -0.0793,
-   "roiLb": -0.2296,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Hungarian NB I",
-   "n": 111,
-   "roi": 0.1276,
-   "roiLb": -0.0532,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_norway_eliteserien",
+   "titel": "Eliteserien - Norway",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land norway stimmt, aber kein gemeinsames Kennwort — ansehen"
   },
   {
    "liga": "Japanese Football League",
    "n": 111,
    "roi": 0.1086,
    "roiLb": -0.0729,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_japan_j_league",
+   "titel": "J League",
+   "aktiv": false,
+   "urteil": "sicher",
+   "warum": "Land japan, Name ohne eigenes Kennwort"
   },
   {
    "liga": "Greek Cup",
    "n": 111,
    "roi": 0.0346,
    "roiLb": -0.1232,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "UAE Arabian Gulf League",
-   "n": 110,
-   "roi": -0.0005,
-   "roiLb": -0.1575,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Lithuanian 1 Lyga",
-   "n": 109,
-   "roi": -0.0193,
-   "roiLb": -0.1811,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_greece_super_league",
+   "titel": "Super League - Greece",
+   "aktiv": true,
+   "urteil": "sicher",
+   "warum": "Land greece, Name ohne eigenes Kennwort"
   },
   {
    "liga": "Danish Cup",
    "n": 107,
    "roi": 0.064,
    "roiLb": -0.1085,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "AFC Champions League",
-   "n": 105,
-   "roi": 0.0147,
-   "roiLb": -0.1382,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Israeli Liga Alef",
-   "n": 104,
-   "roi": -0.1543,
-   "roiLb": -0.3101,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Venezuelan Cup",
-   "n": 104,
-   "roi": -0.1598,
-   "roiLb": -0.3291,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Costa Rican Primera Division",
-   "n": 103,
-   "roi": 0.0172,
-   "roiLb": -0.1399,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_denmark_superliga",
+   "titel": "Denmark Superliga",
+   "aktiv": true,
+   "urteil": "sicher",
+   "warum": "Land denmark, Name ohne eigenes Kennwort"
   },
   {
    "liga": "Dutch Cup",
    "n": 103,
    "roi": -0.0383,
    "roiLb": -0.2103,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Armenian Premier League",
-   "n": 102,
-   "roi": 0.1737,
-   "roiLb": -0.0098,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Republic of North Macedonian Soccer",
-   "n": 102,
-   "roi": -0.0483,
-   "roiLb": -0.216,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_netherlands_eredivisie",
+   "titel": "Dutch Eredivisie",
+   "aktiv": true,
+   "urteil": "sicher",
+   "warum": "Land netherlands, Name ohne eigenes Kennwort"
   },
   {
    "liga": "English U21 Premier League Cup",
    "n": 101,
    "roi": 0.055,
    "roiLb": -0.1283,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_england_efl_cup",
+   "titel": "EFL Cup",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land england stimmt, aber kein gemeinsames Kennwort — ansehen",
+   "weitere": [
+    "soccer_england_league1",
+    "soccer_england_league2"
+   ]
   },
   {
    "liga": "Scottish Championship",
    "n": 101,
    "roi": 0.0127,
    "roiLb": -0.1753,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Albanian Superliga",
-   "n": 101,
-   "roi": -0.1525,
-   "roiLb": -0.3361,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "UEFA (W) Champions League Qualifiers",
-   "n": 100,
-   "roi": 0.0102,
-   "roiLb": -0.1563,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_spl",
+   "titel": "Premiership - Scotland",
+   "aktiv": true,
+   "urteil": "sicher",
+   "warum": "Land scotland, Name ohne eigenes Kennwort"
   },
   {
    "liga": "Irish Division 1",
    "n": 100,
    "roi": -0.1712,
    "roiLb": -0.3321,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Hong Kong Premier League",
-   "n": 98,
-   "roi": -0.0153,
-   "roiLb": -0.2222,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "AFC Champions League Two",
-   "n": 98,
-   "roi": -0.0261,
-   "roiLb": -0.2234,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Qatari Stars League",
-   "n": 98,
-   "roi": -0.1038,
-   "roiLb": -0.269,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Indian Mizoram Premier League",
-   "n": 96,
-   "roi": 0.0209,
-   "roiLb": -0.1929,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Hong Kong 1st Division League",
-   "n": 96,
-   "roi": -0.0835,
-   "roiLb": -0.281,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Slovakian Cup",
-   "n": 96,
-   "roi": -0.1517,
-   "roiLb": -0.3382,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Czech MSFL",
-   "n": 95,
-   "roi": -0.0394,
-   "roiLb": -0.2106,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Ecuadorian Serie B",
-   "n": 94,
-   "roi": 0.2123,
-   "roiLb": -0.0547,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_league_of_ireland",
+   "titel": "League of Ireland",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land ireland stimmt, aber kein gemeinsames Kennwort — ansehen"
   },
   {
    "liga": "Mexican Liga de Ascenso",
    "n": 92,
    "roi": -0.1649,
    "roiLb": -0.3374,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_mexico_ligamx",
+   "titel": "Liga MX",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land mexico stimmt, aber kein gemeinsames Kennwort — ansehen"
   },
   {
    "liga": "Finnish Kakkonen",
    "n": 91,
    "roi": 0.0718,
    "roiLb": -0.1309,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_finland_veikkausliiga",
+   "titel": "Veikkausliiga - Finland",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land finland stimmt, aber kein gemeinsames Kennwort — ansehen"
   },
   {
    "liga": "Polish 2 Liga",
    "n": 91,
    "roi": -0.021,
    "roiLb": -0.2141,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Ugandan Premier League",
-   "n": 90,
-   "roi": 0.1401,
-   "roiLb": -0.0581,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Slovakian Super League",
-   "n": 90,
-   "roi": -0.0599,
-   "roiLb": -0.2249,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_poland_ekstraklasa",
+   "titel": "Ekstraklasa - Poland",
+   "aktiv": false,
+   "urteil": "vorschlag",
+   "warum": "Land poland stimmt, aber kein gemeinsames Kennwort — ansehen"
   },
   {
    "liga": "Italian Serie C Cup",
    "n": 89,
    "roi": 0.2263,
    "roiLb": -0.0063,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Honduras Liga Nacional",
-   "n": 89,
-   "roi": 0.1885,
-   "roiLb": -0.0549,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Montenegrin 1st League",
-   "n": 88,
-   "roi": 0.1886,
-   "roiLb": -0.0042,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Azerbaijan 1st Division",
-   "n": 88,
-   "roi": -0.0667,
-   "roiLb": -0.2445,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_italy_serie_a",
+   "titel": "Serie A - Italy",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land italy, aber andere Spielklasse (c gegen a) — ansehen",
+   "weitere": [
+    "soccer_italy_serie_b",
+    "soccer_italy_coppa_italia"
+   ]
   },
   {
    "liga": "German Frauen-Bundesliga",
    "n": 88,
    "roi": -0.0005,
    "roiLb": -0.2815,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Bangalore Super Division League",
-   "n": 87,
-   "roi": -0.102,
-   "roiLb": -0.2799,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_germany_bundesliga",
+   "titel": "Bundesliga - Germany",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land germany + Kennwort bundesliga — ABER mehrere Kandidaten, nicht eindeutig",
+   "weitere": [
+    "soccer_germany_bundesliga2",
+    "soccer_germany_bundesliga_women",
+    "soccer_germany_dfb_pokal"
+   ]
   },
   {
    "liga": "South Korean K3 League",
    "n": 86,
    "roi": 0.1567,
    "roiLb": -0.0527,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_korea_kleague1",
+   "titel": "K League 1",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land korea stimmt, aber kein gemeinsames Kennwort — ansehen"
   },
   {
    "liga": "English National League Cup",
    "n": 86,
    "roi": -0.0352,
    "roiLb": -0.2529,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_england_efl_cup",
+   "titel": "EFL Cup",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land england stimmt, aber kein gemeinsames Kennwort — ansehen",
+   "weitere": [
+    "soccer_england_league1",
+    "soccer_england_league2"
+   ]
   },
   {
    "liga": "Austrian Erste Liga",
    "n": 85,
    "roi": 0.0391,
    "roiLb": -0.1571,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "UEFA Europa League Qualifiers",
-   "n": 84,
-   "roi": 0.0571,
-   "roiLb": -0.1792,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Kosovan Superliga",
-   "n": 84,
-   "roi": -0.0495,
-   "roiLb": -0.2335,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_austria_bundesliga",
+   "titel": "Austrian Football Bundesliga",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land austria stimmt, aber kein gemeinsames Kennwort — ansehen"
   },
   {
    "liga": "Finnish Ykkonen",
    "n": 83,
    "roi": 0.0229,
    "roiLb": -0.1627,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Icelandic 1 Deild",
-   "n": 83,
-   "roi": -0.0664,
-   "roiLb": -0.2548,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Paraguayan Division Intermedia",
-   "n": 81,
-   "roi": 0.3123,
-   "roiLb": 0.1006,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Georgian Liga 3",
-   "n": 80,
-   "roi": 0.2556,
-   "roiLb": 0.0115,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_finland_veikkausliiga",
+   "titel": "Veikkausliiga - Finland",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land finland stimmt, aber kein gemeinsames Kennwort — ansehen"
   },
   {
    "liga": "US National Women Soccer League",
    "n": 79,
    "roi": 0.1685,
    "roiLb": -0.0494,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Copa centroamericana",
-   "n": 79,
-   "roi": 0.1375,
-   "roiLb": -0.0816,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Costa Rican Liga de Ascenso",
-   "n": 79,
-   "roi": 0.0315,
-   "roiLb": -0.1698,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Indian Calcutta Premier Division",
-   "n": 78,
-   "roi": -0.2303,
-   "roiLb": -0.4213,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Indian Shillong Premier League",
-   "n": 76,
-   "roi": -0.1903,
-   "roiLb": -0.3647,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Romanian Cup",
-   "n": 75,
-   "roi": 0.1811,
-   "roiLb": -0.0022,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Croatian Cup",
-   "n": 75,
-   "roi": -0.0049,
-   "roiLb": -0.1654,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Bahraini Premier",
-   "n": 75,
-   "roi": -0.0125,
-   "roiLb": -0.2517,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Uruguayan Segunda Division",
-   "n": 74,
-   "roi": 0.1515,
-   "roiLb": -0.0908,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Faroe Premier League",
-   "n": 74,
-   "roi": -0.062,
-   "roiLb": -0.2395,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Indonesian Championship",
-   "n": 73,
-   "roi": 0.0101,
-   "roiLb": -0.1974,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Welsh Premiership",
-   "n": 72,
-   "roi": 0.0517,
-   "roiLb": -0.1175,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Kuwaiti Premier League",
-   "n": 72,
-   "roi": -0.04,
-   "roiLb": -0.2428,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_usa_mls",
+   "titel": "MLS",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land usa stimmt, aber kein gemeinsames Kennwort — ansehen"
   },
   {
    "liga": "Scottish League One",
    "n": 71,
    "roi": 0.1597,
    "roiLb": -0.0366,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Malaysian Super League",
-   "n": 71,
-   "roi": -0.1092,
-   "roiLb": -0.2916,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Vietnamese V-League",
-   "n": 69,
-   "roi": 0.1639,
-   "roiLb": -0.0517,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Uruguayan Reserves",
-   "n": 69,
-   "roi": 0.0878,
-   "roiLb": -0.1315,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_spl",
+   "titel": "Premiership - Scotland",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land scotland stimmt, aber kein gemeinsames Kennwort — ansehen"
   },
   {
    "liga": "Greek Super League 2",
    "n": 69,
    "roi": -0.2029,
    "roiLb": -0.3977,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Omani Professional League",
-   "n": 68,
-   "roi": -0.0313,
-   "roiLb": -0.2436,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "UAE Division 1",
-   "n": 66,
-   "roi": 0.2412,
-   "roiLb": -0.001,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Uzbekistan 1st Division",
-   "n": 66,
-   "roi": 0.1736,
-   "roiLb": -0.0213,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Malaysian FA Cup",
-   "n": 65,
-   "roi": 0.0262,
-   "roiLb": -0.1751,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Friendlies International",
-   "n": 64,
-   "roi": -0.2062,
-   "roiLb": -0.4313,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "UEFA Women's Champions League",
-   "n": 63,
-   "roi": -0.1229,
-   "roiLb": -0.3198,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Estonian Esiliiga B",
-   "n": 63,
-   "roi": -0.157,
-   "roiLb": -0.3501,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Ukrainian Cup",
-   "n": 62,
-   "roi": -0.1265,
-   "roiLb": -0.338,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_greece_super_league",
+   "titel": "Super League - Greece",
+   "aktiv": true,
+   "urteil": "sicher",
+   "warum": "Land greece + Kennwort super"
   },
   {
    "liga": "Austrian Cup",
    "n": 61,
    "roi": 0.037,
    "roiLb": -0.1456,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_austria_bundesliga",
+   "titel": "Austrian Football Bundesliga",
+   "aktiv": true,
+   "urteil": "sicher",
+   "warum": "Land austria, Name ohne eigenes Kennwort"
   },
   {
    "liga": "Scottish League Two",
    "n": 61,
    "roi": 0.0649,
    "roiLb": -0.1806,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Tanzanian Premier League",
-   "n": 59,
-   "roi": -0.0237,
-   "roiLb": -0.2307,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Slovakian 2 Liga",
-   "n": 56,
-   "roi": -0.182,
-   "roiLb": -0.4212,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_spl",
+   "titel": "Premiership - Scotland",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land scotland stimmt, aber kein gemeinsames Kennwort — ansehen"
   },
   {
    "liga": "Chilean Cup",
    "n": 55,
    "roi": -0.0795,
    "roiLb": -0.2986,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Bhutan Premier League",
-   "n": 54,
-   "roi": 0.1246,
-   "roiLb": -0.091,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Slovenian Cup",
-   "n": 54,
-   "roi": 0.0963,
-   "roiLb": -0.17,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Jordanian Premier League",
-   "n": 54,
-   "roi": 0.0437,
-   "roiLb": -0.1958,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_chile_campeonato",
+   "titel": "Primera División - Chile",
+   "aktiv": true,
+   "urteil": "sicher",
+   "warum": "Land chile, Name ohne eigenes Kennwort"
   },
   {
    "liga": "Argentinian Primera Division Reserves",
    "n": 53,
    "roi": 0.1777,
    "roiLb": -0.0622,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Romanian Liga III",
-   "n": 52,
-   "roi": -0.1213,
-   "roiLb": -0.367,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Qatari Stars Cup",
-   "n": 51,
-   "roi": 0.0173,
-   "roiLb": -0.2274,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "COSAFA U20 Cup",
-   "n": 50,
-   "roi": -0.0458,
-   "roiLb": -0.2829,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Maltese Premier League",
-   "n": 50,
-   "roi": -0.1272,
-   "roiLb": -0.3694,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Czech U19",
-   "n": 50,
-   "roi": -0.272,
-   "roiLb": -0.474,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Tunisian Ligue Professionelle 1",
-   "n": 49,
-   "roi": 0.0133,
-   "roiLb": -0.2208,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_argentina_primera_division",
+   "titel": "Primera División - Argentina",
+   "aktiv": true,
+   "urteil": "sicher",
+   "warum": "Land argentina + Kennwort primera"
   },
   {
    "liga": "Swedish Division 2",
    "n": 49,
    "roi": -0.0037,
    "roiLb": -0.3178,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_sweden_allsvenskan",
+   "titel": "Allsvenskan - Sweden",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land sweden stimmt, aber kein gemeinsames Kennwort — ansehen",
+   "weitere": [
+    "soccer_sweden_superettan"
+   ]
   },
   {
    "liga": "English Ladies League Cup",
    "n": 49,
    "roi": -0.321,
    "roiLb": -0.5172,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "CONCACAF Caribbean Cup",
-   "n": 48,
-   "roi": 0.2631,
-   "roiLb": -0.0184,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Singapore Premier League",
-   "n": 48,
-   "roi": -0.1169,
-   "roiLb": -0.3361,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Ukrainian Persha Liga",
-   "n": 47,
-   "roi": -0.1445,
-   "roiLb": -0.4494,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Paraguayan Reserves",
-   "n": 46,
-   "roi": -0.037,
-   "roiLb": -0.2528,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_england_efl_cup",
+   "titel": "EFL Cup",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land england stimmt, aber kein gemeinsames Kennwort — ansehen",
+   "weitere": [
+    "soccer_england_league1",
+    "soccer_england_league2"
+   ]
   },
   {
    "liga": "Brazilian Cup",
    "n": 46,
    "roi": -0.1389,
    "roiLb": -0.3849,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_brazil_campeonato",
+   "titel": "Brazil Série A",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land brazil, Name ohne eigenes Kennwort — ABER mehrere Kandidaten, nicht eindeutig",
+   "weitere": [
+    "soccer_brazil_serie_b"
+   ]
   },
   {
    "liga": "Japanese Emperor Cup",
    "n": 42,
    "roi": 0.1707,
    "roiLb": -0.0372,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_japan_j_league",
+   "titel": "J League",
+   "aktiv": false,
+   "urteil": "vorschlag",
+   "warum": "Land japan stimmt, aber kein gemeinsames Kennwort — ansehen"
   },
   {
    "liga": "Argentinian Cup",
    "n": 42,
    "roi": 0.1226,
    "roiLb": -0.1815,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "UAE League Cup",
-   "n": 42,
-   "roi": -0.1498,
-   "roiLb": -0.4116,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Israeli Cup",
-   "n": 42,
-   "roi": -0.2376,
-   "roiLb": -0.4632,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_argentina_primera_division",
+   "titel": "Primera División - Argentina",
+   "aktiv": true,
+   "urteil": "sicher",
+   "warum": "Land argentina, Name ohne eigenes Kennwort"
   },
   {
    "liga": "North American Leagues Cup",
    "n": 42,
    "roi": -0.244,
    "roiLb": -0.5005,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Paraguayan Cup",
-   "n": 41,
-   "roi": 0.2241,
-   "roiLb": -0.1217,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Hungarian Cup",
-   "n": 41,
-   "roi": -0.2046,
-   "roiLb": -0.416,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_usa_mls",
+   "titel": "MLS",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land usa stimmt, aber kein gemeinsames Kennwort — ansehen"
   },
   {
    "liga": "French Ligue 3",
    "n": 41,
    "roi": -0.1154,
    "roiLb": -0.4252,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Nigerian Premier League",
-   "n": 40,
-   "roi": -0.05,
-   "roiLb": -0.2629,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Jamaican Premier League",
-   "n": 39,
-   "roi": 0.0662,
-   "roiLb": -0.2651,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Colombian Cup",
-   "n": 37,
-   "roi": 0.1322,
-   "roiLb": -0.1451,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Slovenian 2 SNL",
-   "n": 37,
-   "roi": -0.1922,
-   "roiLb": -0.4647,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_france_ligue_one",
+   "titel": "Ligue 1 - France",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land france, aber andere Spielklasse (3 gegen 1/one) — ansehen",
+   "weitere": [
+    "soccer_france_ligue_two",
+    "soccer_france_coupe_de_france"
+   ]
   },
   {
    "liga": "Danish 2nd Division",
    "n": 35,
    "roi": 0.1729,
    "roiLb": -0.1281,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Kazakhstan 1st Division",
-   "n": 35,
-   "roi": -0.1731,
-   "roiLb": -0.399,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Myanmar National League",
-   "n": 35,
-   "roi": -0.1629,
-   "roiLb": -0.4046,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Egyptian Second Division B",
-   "n": 34,
-   "roi": -0.1276,
-   "roiLb": -0.3905,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Georgian Erovnuli Liga 2",
-   "n": 33,
-   "roi": 0.1558,
-   "roiLb": -0.2311,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "UAE Presidents Cup",
-   "n": 33,
-   "roi": -0.2833,
-   "roiLb": -0.627,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Cambodian Premier League",
-   "n": 32,
-   "roi": 0.3581,
-   "roiLb": -0.2847,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "CAF Champions League Qualifiers",
-   "n": 32,
-   "roi": -0.2341,
-   "roiLb": -0.4704,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Jordan 1st Division",
-   "n": 32,
-   "roi": -0.1756,
-   "roiLb": -0.4917,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_denmark_superliga",
+   "titel": "Denmark Superliga",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land denmark stimmt, aber kein gemeinsames Kennwort — ansehen"
   },
   {
    "liga": "English Women's Matches",
    "n": 31,
    "roi": 0.0142,
    "roiLb": -0.2616,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Rwandan National Football League",
-   "n": 31,
-   "roi": -0.1035,
-   "roiLb": -0.4287,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
-  },
-  {
-   "liga": "Malaysian President Cup",
-   "n": 30,
-   "roi": 0.268,
-   "roiLb": -0.0279,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_england_efl_cup",
+   "titel": "EFL Cup",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land england stimmt, aber kein gemeinsames Kennwort — ansehen",
+   "weitere": [
+    "soccer_england_league1",
+    "soccer_england_league2"
+   ]
   },
   {
    "liga": "Argentinian Primera B Metropolitana",
    "n": 30,
    "roi": 0.3337,
    "roiLb": -0.0291,
-   "warum": "nicht abgefragt — ohne API-Schluessel keine Kandidaten"
+   "key": "soccer_argentina_primera_division",
+   "titel": "Primera División - Argentina",
+   "aktiv": true,
+   "urteil": "sicher",
+   "warum": "Land argentina + Kennwort primera"
+  }
+ ],
+ "ohneAnkerOhneKandidat": [
+  {
+   "liga": "Other Competitions Soccer",
+   "n": 362,
+   "roi": -0.0946,
+   "roiLb": -0.1731,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Colombian Primera A",
+   "n": 356,
+   "roi": 0.1271,
+   "roiLb": 0.0141,
+   "warum": "die-odds-api kennt keine Liga in colombia dazu"
+  },
+  {
+   "liga": "Venezuelan Primera Division",
+   "n": 277,
+   "roi": 0.0166,
+   "roiLb": -0.0926,
+   "warum": "die-odds-api kennt keine Liga in venezuela dazu"
+  },
+  {
+   "liga": "Egyptian 2nd Division",
+   "n": 258,
+   "roi": -0.1017,
+   "roiLb": -0.2046,
+   "warum": "die-odds-api kennt keine Liga in egypt dazu"
+  },
+  {
+   "liga": "Egyptian Premier",
+   "n": 257,
+   "roi": -0.0293,
+   "roiLb": -0.1277,
+   "warum": "die-odds-api kennt keine Liga in egypt dazu"
+  },
+  {
+   "liga": "Ecuadorian Serie A",
+   "n": 251,
+   "roi": 0.0049,
+   "roiLb": -0.1149,
+   "warum": "die-odds-api kennt keine Liga in ecuador dazu"
+  },
+  {
+   "liga": "Romanian Liga II",
+   "n": 245,
+   "roi": 0.077,
+   "roiLb": -0.044,
+   "warum": "die-odds-api kennt keine Liga in romania dazu"
+  },
+  {
+   "liga": "Peruvian Primera Division",
+   "n": 236,
+   "roi": 0.1712,
+   "roiLb": 0.037,
+   "warum": "die-odds-api kennt keine Liga in peru dazu"
+  },
+  {
+   "liga": "Colombian Primera B",
+   "n": 222,
+   "roi": -0.1502,
+   "roiLb": -0.265,
+   "warum": "die-odds-api kennt keine Liga in colombia dazu"
+  },
+  {
+   "liga": "FIFA Ladies U20 World Cup",
+   "n": 217,
+   "roi": 0.0012,
+   "roiLb": -0.1103,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Uruguayan Cup",
+   "n": 212,
+   "roi": -0.0747,
+   "roiLb": -0.1913,
+   "warum": "die-odds-api kennt keine Liga in uruguay dazu"
+  },
+  {
+   "liga": "EFL Trophy",
+   "n": 210,
+   "roi": 0.0153,
+   "roiLb": -0.0947,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Bolivian Liga de Futbol Profesional",
+   "n": 209,
+   "roi": 0.038,
+   "roiLb": -0.066,
+   "warum": "die-odds-api kennt keine Liga in bolivia dazu"
+  },
+  {
+   "liga": "Uruguayan Primera Division",
+   "n": 199,
+   "roi": -0.0024,
+   "roiLb": -0.142,
+   "warum": "die-odds-api kennt keine Liga in uruguay dazu"
+  },
+  {
+   "liga": "Czech 1 Liga",
+   "n": 194,
+   "roi": 0.0076,
+   "roiLb": -0.1295,
+   "warum": "die-odds-api kennt keine Liga in czechia dazu"
+  },
+  {
+   "liga": "AFC U20 Asian Cup Qualifiers",
+   "n": 192,
+   "roi": -0.1618,
+   "roiLb": -0.2727,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Kazakhstan Premier League",
+   "n": 189,
+   "roi": 0.0434,
+   "roiLb": -0.0717,
+   "warum": "die-odds-api kennt keine Liga in kazakhstan dazu"
+  },
+  {
+   "liga": "Romanian Liga I",
+   "n": 188,
+   "roi": -0.0855,
+   "roiLb": -0.2162,
+   "warum": "die-odds-api kennt keine Liga in romania dazu"
+  },
+  {
+   "liga": "Israeli Premier League",
+   "n": 185,
+   "roi": 0.0191,
+   "roiLb": -0.102,
+   "warum": "die-odds-api kennt keine Liga in israel dazu"
+  },
+  {
+   "liga": "Serbian Super League",
+   "n": 182,
+   "roi": -0.0505,
+   "roiLb": -0.1748,
+   "warum": "die-odds-api kennt keine Liga in serbia dazu"
+  },
+  {
+   "liga": "Czech 3 Liga",
+   "n": 178,
+   "roi": 0.0087,
+   "roiLb": -0.1264,
+   "warum": "die-odds-api kennt keine Liga in czechia dazu"
+  },
+  {
+   "liga": "Indonesian Super League",
+   "n": 178,
+   "roi": 0.0037,
+   "roiLb": -0.131,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Bulgarian A League",
+   "n": 176,
+   "roi": -0.0294,
+   "roiLb": -0.1588,
+   "warum": "die-odds-api kennt keine Liga in bulgaria dazu"
+  },
+  {
+   "liga": "Paraguayan Primera Division",
+   "n": 174,
+   "roi": 0.0479,
+   "roiLb": -0.088,
+   "warum": "die-odds-api kennt keine Liga in paraguay dazu"
+  },
+  {
+   "liga": "Serbian First League",
+   "n": 170,
+   "roi": -0.0783,
+   "roiLb": -0.2193,
+   "warum": "die-odds-api kennt keine Liga in serbia dazu"
+  },
+  {
+   "liga": "UEFA Europa Conference Qualifiers",
+   "n": 168,
+   "roi": -0.0293,
+   "roiLb": -0.1595,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Estonian Premier League",
+   "n": 166,
+   "roi": -0.0237,
+   "roiLb": -0.156,
+   "warum": "die-odds-api kennt keine Liga in estonia dazu"
+  },
+  {
+   "liga": "Ukrainian Premier League",
+   "n": 162,
+   "roi": 0.2286,
+   "roiLb": 0.0757,
+   "warum": "die-odds-api kennt keine Liga in ukraine dazu"
+  },
+  {
+   "liga": "Bolivian Cup",
+   "n": 161,
+   "roi": 0.0657,
+   "roiLb": -0.0752,
+   "warum": "die-odds-api kennt keine Liga in bolivia dazu"
+  },
+  {
+   "liga": "Guatemalan Liga Nacional",
+   "n": 160,
+   "roi": 0.0363,
+   "roiLb": -0.1023,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Icelandic Urvalsdeild",
+   "n": 159,
+   "roi": 0.0537,
+   "roiLb": -0.0822,
+   "warum": "die-odds-api kennt keine Liga in iceland dazu"
+  },
+  {
+   "liga": "UEFA Ladies Europa Cup",
+   "n": 159,
+   "roi": -0.0738,
+   "roiLb": -0.1931,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Czech 2 Liga",
+   "n": 155,
+   "roi": 0.1808,
+   "roiLb": 0.0369,
+   "warum": "die-odds-api kennt keine Liga in czechia dazu"
+  },
+  {
+   "liga": "Croatian Prva NL",
+   "n": 149,
+   "roi": -0.1989,
+   "roiLb": -0.3364,
+   "warum": "die-odds-api kennt keine Liga in croatia dazu"
+  },
+  {
+   "liga": "Bosnian Premier League",
+   "n": 148,
+   "roi": 0.0202,
+   "roiLb": -0.1242,
+   "warum": "die-odds-api kennt keine Liga in bosnia dazu"
+  },
+  {
+   "liga": "Salvadoran Primera Division",
+   "n": 145,
+   "roi": 0.0614,
+   "roiLb": -0.0918,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Estonian Esiliiga",
+   "n": 139,
+   "roi": -0.0071,
+   "roiLb": -0.159,
+   "warum": "die-odds-api kennt keine Liga in estonia dazu"
+  },
+  {
+   "liga": "Israeli National League",
+   "n": 138,
+   "roi": -0.0674,
+   "roiLb": -0.2151,
+   "warum": "die-odds-api kennt keine Liga in israel dazu"
+  },
+  {
+   "liga": "Cypriot 1st Division",
+   "n": 136,
+   "roi": -0.0496,
+   "roiLb": -0.1987,
+   "warum": "die-odds-api kennt keine Liga in cyprus dazu"
+  },
+  {
+   "liga": "Thai League 1",
+   "n": 133,
+   "roi": -0.0574,
+   "roiLb": -0.1988,
+   "warum": "die-odds-api kennt keine Liga in thailand dazu"
+  },
+  {
+   "liga": "Thai League 2",
+   "n": 133,
+   "roi": -0.0962,
+   "roiLb": -0.2395,
+   "warum": "die-odds-api kennt keine Liga in thailand dazu"
+  },
+  {
+   "liga": "Latvian Virsliga",
+   "n": 133,
+   "roi": -0.1732,
+   "roiLb": -0.3081,
+   "warum": "die-odds-api kennt keine Liga in latvia dazu"
+  },
+  {
+   "liga": "Georgian Umaglesi Liga",
+   "n": 132,
+   "roi": -0.0873,
+   "roiLb": -0.241,
+   "warum": "die-odds-api kennt keine Liga in georgia dazu"
+  },
+  {
+   "liga": "Algerian Ligue 1",
+   "n": 127,
+   "roi": -0.0157,
+   "roiLb": -0.1596,
+   "warum": "die-odds-api kennt keine Liga in algeria dazu"
+  },
+  {
+   "liga": "UEFA Champions League",
+   "n": 126,
+   "roi": -0.0043,
+   "roiLb": -0.1227,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "UEFA Europa League",
+   "n": 126,
+   "roi": -0.0589,
+   "roiLb": -0.1988,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Uzbekistan Super League",
+   "n": 122,
+   "roi": 0.0639,
+   "roiLb": -0.0917,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Lithuanian A Lyga",
+   "n": 121,
+   "roi": -0.0083,
+   "roiLb": -0.1822,
+   "warum": "die-odds-api kennt keine Liga in lithuania dazu"
+  },
+  {
+   "liga": "Republic of North Macedonian Soccer",
+   "n": 121,
+   "roi": -0.0793,
+   "roiLb": -0.2293,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Canadian Premier League",
+   "n": 120,
+   "roi": -0.1082,
+   "roiLb": -0.2716,
+   "warum": "die-odds-api kennt keine Liga in canada dazu"
+  },
+  {
+   "liga": "Croatian HNL",
+   "n": 119,
+   "roi": -0.0055,
+   "roiLb": -0.1762,
+   "warum": "die-odds-api kennt keine Liga in croatia dazu"
+  },
+  {
+   "liga": "Panamanian Premier League",
+   "n": 118,
+   "roi": 0.0251,
+   "roiLb": -0.1525,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Czech Cup",
+   "n": 116,
+   "roi": 0.1762,
+   "roiLb": 0.0391,
+   "warum": "die-odds-api kennt keine Liga in czechia dazu"
+  },
+  {
+   "liga": "South African Premier Division",
+   "n": 116,
+   "roi": 0.1602,
+   "roiLb": -0.0364,
+   "warum": "die-odds-api kennt keine Liga in south_africa dazu"
+  },
+  {
+   "liga": "Azerbaijan Premier League",
+   "n": 114,
+   "roi": -0.0079,
+   "roiLb": -0.1652,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Israeli Liga Alef",
+   "n": 114,
+   "roi": -0.1171,
+   "roiLb": -0.2667,
+   "warum": "die-odds-api kennt keine Liga in israel dazu"
+  },
+  {
+   "liga": "Bulgarian B League",
+   "n": 114,
+   "roi": -0.1168,
+   "roiLb": -0.2705,
+   "warum": "die-odds-api kennt keine Liga in bulgaria dazu"
+  },
+  {
+   "liga": "UEFA Youth League",
+   "n": 113,
+   "roi": 0.0909,
+   "roiLb": -0.0712,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Slovenian Premier League",
+   "n": 113,
+   "roi": -0.0793,
+   "roiLb": -0.2296,
+   "warum": "die-odds-api kennt keine Liga in slovenia dazu"
+  },
+  {
+   "liga": "Hungarian NB I",
+   "n": 111,
+   "roi": 0.1276,
+   "roiLb": -0.0532,
+   "warum": "die-odds-api kennt keine Liga in hungary dazu"
+  },
+  {
+   "liga": "UAE Arabian Gulf League",
+   "n": 110,
+   "roi": -0.0005,
+   "roiLb": -0.1575,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Lithuanian 1 Lyga",
+   "n": 109,
+   "roi": -0.0193,
+   "roiLb": -0.1811,
+   "warum": "die-odds-api kennt keine Liga in lithuania dazu"
+  },
+  {
+   "liga": "AFC Champions League",
+   "n": 105,
+   "roi": 0.0147,
+   "roiLb": -0.1382,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Venezuelan Cup",
+   "n": 104,
+   "roi": -0.1598,
+   "roiLb": -0.3291,
+   "warum": "die-odds-api kennt keine Liga in venezuela dazu"
+  },
+  {
+   "liga": "Costa Rican Primera Division",
+   "n": 103,
+   "roi": 0.0172,
+   "roiLb": -0.1399,
+   "warum": "die-odds-api kennt keine Liga in costa_rica dazu"
+  },
+  {
+   "liga": "Armenian Premier League",
+   "n": 102,
+   "roi": 0.1737,
+   "roiLb": -0.0098,
+   "warum": "die-odds-api kennt keine Liga in armenia dazu"
+  },
+  {
+   "liga": "Albanian Superliga",
+   "n": 101,
+   "roi": -0.1525,
+   "roiLb": -0.3361,
+   "warum": "die-odds-api kennt keine Liga in albania dazu"
+  },
+  {
+   "liga": "UEFA (W) Champions League Qualifiers",
+   "n": 100,
+   "roi": 0.0102,
+   "roiLb": -0.1563,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Hong Kong Premier League",
+   "n": 98,
+   "roi": -0.0153,
+   "roiLb": -0.2222,
+   "warum": "die-odds-api kennt keine Liga in hong_kong dazu"
+  },
+  {
+   "liga": "AFC Champions League Two",
+   "n": 98,
+   "roi": -0.0261,
+   "roiLb": -0.2234,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Qatari Stars League",
+   "n": 98,
+   "roi": -0.1038,
+   "roiLb": -0.269,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Indian Mizoram Premier League",
+   "n": 96,
+   "roi": 0.0209,
+   "roiLb": -0.1929,
+   "warum": "die-odds-api kennt keine Liga in india dazu"
+  },
+  {
+   "liga": "Hong Kong 1st Division League",
+   "n": 96,
+   "roi": -0.0835,
+   "roiLb": -0.281,
+   "warum": "die-odds-api kennt keine Liga in hong_kong dazu"
+  },
+  {
+   "liga": "Slovakian Cup",
+   "n": 96,
+   "roi": -0.1517,
+   "roiLb": -0.3382,
+   "warum": "die-odds-api kennt keine Liga in slovakia dazu"
+  },
+  {
+   "liga": "Czech MSFL",
+   "n": 95,
+   "roi": -0.0394,
+   "roiLb": -0.2106,
+   "warum": "die-odds-api kennt keine Liga in czechia dazu"
+  },
+  {
+   "liga": "Ecuadorian Serie B",
+   "n": 94,
+   "roi": 0.2123,
+   "roiLb": -0.0547,
+   "warum": "die-odds-api kennt keine Liga in ecuador dazu"
+  },
+  {
+   "liga": "Bangalore Super Division League",
+   "n": 93,
+   "roi": -0.1115,
+   "roiLb": -0.2813,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Ugandan Premier League",
+   "n": 90,
+   "roi": 0.1401,
+   "roiLb": -0.0581,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Slovakian Super League",
+   "n": 90,
+   "roi": -0.0599,
+   "roiLb": -0.2249,
+   "warum": "die-odds-api kennt keine Liga in slovakia dazu"
+  },
+  {
+   "liga": "Honduras Liga Nacional",
+   "n": 89,
+   "roi": 0.1885,
+   "roiLb": -0.0549,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Montenegrin 1st League",
+   "n": 88,
+   "roi": 0.1886,
+   "roiLb": -0.0042,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Azerbaijan 1st Division",
+   "n": 88,
+   "roi": -0.0667,
+   "roiLb": -0.2445,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Friendlies International",
+   "n": 85,
+   "roi": -0.2351,
+   "roiLb": -0.4204,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "UEFA Europa League Qualifiers",
+   "n": 84,
+   "roi": 0.0571,
+   "roiLb": -0.1792,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Kosovan Superliga",
+   "n": 84,
+   "roi": -0.0495,
+   "roiLb": -0.2335,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Icelandic 1 Deild",
+   "n": 83,
+   "roi": -0.0664,
+   "roiLb": -0.2548,
+   "warum": "die-odds-api kennt keine Liga in iceland dazu"
+  },
+  {
+   "liga": "Paraguayan Division Intermedia",
+   "n": 81,
+   "roi": 0.3123,
+   "roiLb": 0.1006,
+   "warum": "die-odds-api kennt keine Liga in paraguay dazu"
+  },
+  {
+   "liga": "Georgian Liga 3",
+   "n": 80,
+   "roi": 0.2556,
+   "roiLb": 0.0115,
+   "warum": "die-odds-api kennt keine Liga in georgia dazu"
+  },
+  {
+   "liga": "Copa centroamericana",
+   "n": 79,
+   "roi": 0.1375,
+   "roiLb": -0.0816,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Costa Rican Liga de Ascenso",
+   "n": 79,
+   "roi": 0.0315,
+   "roiLb": -0.1698,
+   "warum": "die-odds-api kennt keine Liga in costa_rica dazu"
+  },
+  {
+   "liga": "Indian Calcutta Premier Division",
+   "n": 78,
+   "roi": -0.2303,
+   "roiLb": -0.4213,
+   "warum": "die-odds-api kennt keine Liga in india dazu"
+  },
+  {
+   "liga": "Indian Shillong Premier League",
+   "n": 76,
+   "roi": -0.1903,
+   "roiLb": -0.3647,
+   "warum": "die-odds-api kennt keine Liga in india dazu"
+  },
+  {
+   "liga": "Romanian Cup",
+   "n": 75,
+   "roi": 0.1811,
+   "roiLb": -0.0022,
+   "warum": "die-odds-api kennt keine Liga in romania dazu"
+  },
+  {
+   "liga": "Croatian Cup",
+   "n": 75,
+   "roi": -0.0049,
+   "roiLb": -0.1654,
+   "warum": "die-odds-api kennt keine Liga in croatia dazu"
+  },
+  {
+   "liga": "Bahraini Premier",
+   "n": 75,
+   "roi": -0.0125,
+   "roiLb": -0.2517,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Uruguayan Segunda Division",
+   "n": 74,
+   "roi": 0.1515,
+   "roiLb": -0.0908,
+   "warum": "die-odds-api kennt keine Liga in uruguay dazu"
+  },
+  {
+   "liga": "Faroe Premier League",
+   "n": 74,
+   "roi": -0.062,
+   "roiLb": -0.2395,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Indonesian Championship",
+   "n": 73,
+   "roi": 0.0101,
+   "roiLb": -0.1974,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Welsh Premiership",
+   "n": 72,
+   "roi": 0.0517,
+   "roiLb": -0.1175,
+   "warum": "die-odds-api kennt keine Liga in wales dazu"
+  },
+  {
+   "liga": "Kuwaiti Premier League",
+   "n": 72,
+   "roi": -0.04,
+   "roiLb": -0.2428,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Malaysian Super League",
+   "n": 71,
+   "roi": -0.1092,
+   "roiLb": -0.2916,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Vietnamese V-League",
+   "n": 69,
+   "roi": 0.1639,
+   "roiLb": -0.0517,
+   "warum": "die-odds-api kennt keine Liga in vietnam dazu"
+  },
+  {
+   "liga": "Uruguayan Reserves",
+   "n": 69,
+   "roi": 0.0878,
+   "roiLb": -0.1315,
+   "warum": "die-odds-api kennt keine Liga in uruguay dazu"
+  },
+  {
+   "liga": "Omani Professional League",
+   "n": 68,
+   "roi": -0.0313,
+   "roiLb": -0.2436,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "UAE Division 1",
+   "n": 66,
+   "roi": 0.2412,
+   "roiLb": -0.001,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Uzbekistan 1st Division",
+   "n": 66,
+   "roi": 0.1736,
+   "roiLb": -0.0213,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Malaysian FA Cup",
+   "n": 65,
+   "roi": 0.0262,
+   "roiLb": -0.1751,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "UEFA Women's Champions League",
+   "n": 63,
+   "roi": -0.1229,
+   "roiLb": -0.3198,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Estonian Esiliiga B",
+   "n": 63,
+   "roi": -0.157,
+   "roiLb": -0.3501,
+   "warum": "die-odds-api kennt keine Liga in estonia dazu"
+  },
+  {
+   "liga": "Ukrainian Cup",
+   "n": 62,
+   "roi": -0.1265,
+   "roiLb": -0.338,
+   "warum": "die-odds-api kennt keine Liga in ukraine dazu"
+  },
+  {
+   "liga": "Tanzanian Premier League",
+   "n": 59,
+   "roi": -0.0237,
+   "roiLb": -0.2307,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Slovakian 2 Liga",
+   "n": 56,
+   "roi": -0.182,
+   "roiLb": -0.4212,
+   "warum": "die-odds-api kennt keine Liga in slovakia dazu"
+  },
+  {
+   "liga": "Bhutan Premier League",
+   "n": 54,
+   "roi": 0.1246,
+   "roiLb": -0.091,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Slovenian Cup",
+   "n": 54,
+   "roi": 0.0963,
+   "roiLb": -0.17,
+   "warum": "die-odds-api kennt keine Liga in slovenia dazu"
+  },
+  {
+   "liga": "Jordanian Premier League",
+   "n": 54,
+   "roi": 0.0437,
+   "roiLb": -0.1958,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Romanian Liga III",
+   "n": 52,
+   "roi": -0.1213,
+   "roiLb": -0.367,
+   "warum": "die-odds-api kennt keine Liga in romania dazu"
+  },
+  {
+   "liga": "Qatari Stars Cup",
+   "n": 51,
+   "roi": 0.0173,
+   "roiLb": -0.2274,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "COSAFA U20 Cup",
+   "n": 50,
+   "roi": -0.0458,
+   "roiLb": -0.2829,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Maltese Premier League",
+   "n": 50,
+   "roi": -0.1272,
+   "roiLb": -0.3694,
+   "warum": "die-odds-api kennt keine Liga in malta dazu"
+  },
+  {
+   "liga": "Czech U19",
+   "n": 50,
+   "roi": -0.272,
+   "roiLb": -0.474,
+   "warum": "die-odds-api kennt keine Liga in czechia dazu"
+  },
+  {
+   "liga": "Tunisian Ligue Professionelle 1",
+   "n": 49,
+   "roi": 0.0133,
+   "roiLb": -0.2208,
+   "warum": "die-odds-api kennt keine Liga in tunisia dazu"
+  },
+  {
+   "liga": "CONCACAF Caribbean Cup",
+   "n": 48,
+   "roi": 0.2631,
+   "roiLb": -0.0184,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Singapore Premier League",
+   "n": 48,
+   "roi": -0.1169,
+   "roiLb": -0.3361,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Nigerian Premier League",
+   "n": 47,
+   "roi": -0.0396,
+   "roiLb": -0.2309,
+   "warum": "die-odds-api kennt keine Liga in nigeria dazu"
+  },
+  {
+   "liga": "Ukrainian Persha Liga",
+   "n": 47,
+   "roi": -0.1445,
+   "roiLb": -0.4494,
+   "warum": "die-odds-api kennt keine Liga in ukraine dazu"
+  },
+  {
+   "liga": "Paraguayan Reserves",
+   "n": 46,
+   "roi": -0.037,
+   "roiLb": -0.2528,
+   "warum": "die-odds-api kennt keine Liga in paraguay dazu"
+  },
+  {
+   "liga": "UAE League Cup",
+   "n": 42,
+   "roi": -0.1498,
+   "roiLb": -0.4116,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Israeli Cup",
+   "n": 42,
+   "roi": -0.2376,
+   "roiLb": -0.4632,
+   "warum": "die-odds-api kennt keine Liga in israel dazu"
+  },
+  {
+   "liga": "Paraguayan Cup",
+   "n": 41,
+   "roi": 0.2241,
+   "roiLb": -0.1217,
+   "warum": "die-odds-api kennt keine Liga in paraguay dazu"
+  },
+  {
+   "liga": "Hungarian Cup",
+   "n": 41,
+   "roi": -0.2046,
+   "roiLb": -0.416,
+   "warum": "die-odds-api kennt keine Liga in hungary dazu"
+  },
+  {
+   "liga": "Jamaican Premier League",
+   "n": 39,
+   "roi": 0.0662,
+   "roiLb": -0.2651,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Colombian Cup",
+   "n": 37,
+   "roi": 0.1322,
+   "roiLb": -0.1451,
+   "warum": "die-odds-api kennt keine Liga in colombia dazu"
+  },
+  {
+   "liga": "Slovenian 2 SNL",
+   "n": 37,
+   "roi": -0.1922,
+   "roiLb": -0.4647,
+   "warum": "die-odds-api kennt keine Liga in slovenia dazu"
+  },
+  {
+   "liga": "Kazakhstan 1st Division",
+   "n": 35,
+   "roi": -0.1731,
+   "roiLb": -0.399,
+   "warum": "die-odds-api kennt keine Liga in kazakhstan dazu"
+  },
+  {
+   "liga": "Myanmar National League",
+   "n": 35,
+   "roi": -0.1629,
+   "roiLb": -0.4046,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Egyptian Second Division B",
+   "n": 34,
+   "roi": -0.1276,
+   "roiLb": -0.3905,
+   "warum": "die-odds-api kennt keine Liga in egypt dazu"
+  },
+  {
+   "liga": "Georgian Erovnuli Liga 2",
+   "n": 33,
+   "roi": 0.1558,
+   "roiLb": -0.2311,
+   "warum": "die-odds-api kennt keine Liga in georgia dazu"
+  },
+  {
+   "liga": "UAE Presidents Cup",
+   "n": 33,
+   "roi": -0.2833,
+   "roiLb": -0.627,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Israeli Liga Bet",
+   "n": 32,
+   "roi": 0.3219,
+   "roiLb": 0.0117,
+   "warum": "die-odds-api kennt keine Liga in israel dazu"
+  },
+  {
+   "liga": "Cambodian Premier League",
+   "n": 32,
+   "roi": 0.3581,
+   "roiLb": -0.2847,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "CAF Champions League Qualifiers",
+   "n": 32,
+   "roi": -0.2341,
+   "roiLb": -0.4704,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Jordan 1st Division",
+   "n": 32,
+   "roi": -0.1756,
+   "roiLb": -0.4917,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Rwandan National Football League",
+   "n": 31,
+   "roi": -0.1035,
+   "roiLb": -0.4287,
+   "warum": "Land nicht erkannt"
+  },
+  {
+   "liga": "Malaysian President Cup",
+   "n": 30,
+   "roi": 0.268,
+   "roiLb": -0.0279,
+   "warum": "Land nicht erkannt"
   }
  ],
  "eintraegeOhneLiga": [
   "Major League Soccer"
  ],
  "creditsJeLigaMonat": 8640,
- "creditsFuerAlleVorschlaege": 0,
- "sportsAbgerufen": 0
+ "creditsFuerAlleVorschlaege": 673920,
+ "sportsAbgerufen": 179
 }
