@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-24T12:54:05.258647+00:00",
+ "generatedAt": "2026-09-24T13:09:16.664583+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -598,9 +598,9 @@
    "art": "verdict",
    "gruppen": 4,
    "basis": null,
-   "n": 298,
-   "pl": 24.66,
-   "roi": 0.0828,
+   "n": 299,
+   "pl": 25.43,
+   "roi": 0.0851,
    "clv": -1.72,
    "belegte": 1
   },
@@ -775,38 +775,9 @@
    "clvUrteil": "negativ belegt",
    "aufloesbar": true,
    "grund": null,
-   "laufend": 2,
-   "n": 2,
-   "plays": [
-    {
-     "spiel": "CTBC Flying Oyster Academy vs KT Rolster Challengers",
-     "schluessel": "lol-ctbca-ktc-2026-09-24",
-     "auswahl": "KT Rolster Challengers",
-     "quote": 1.08,
-     "anpfiff": "2026-09-24T13:03:29.668611+00:00",
-     "datensatz": "E-Sport",
-     "conv": 6,
-     "warum": [
-      "großes Geld auf KT Rolster Challengers (92%) → $19K",
-      "🔥 scharfe Wallets (2 Wallets, zusammen 22/25, 88% · -$20K)"
-     ],
-     "id": "lol-ctbca-ktc-2026-09-24|KT Rolster Challengers"
-    },
-    {
-     "spiel": "Aurora vs GamerLegion",
-     "schluessel": "dota2-aur1-gl-2026-09-24",
-     "auswahl": "Aurora",
-     "quote": 1.29,
-     "anpfiff": "2026-09-24T13:03:29.669611+00:00",
-     "datensatz": "E-Sport",
-     "conv": 6,
-     "warum": [
-      "großes Geld auf Aurora (77%) → $31K",
-      "🔎 vielversprechende Wallet (noch nicht belegt) (21/33, 64% · -$36K) · zählt 93%"
-     ],
-     "id": "dota2-aur1-gl-2026-09-24|Aurora"
-    }
-   ]
+   "laufend": 4,
+   "n": 0,
+   "plays": []
   }
  ],
  "ligen": [
@@ -5324,6 +5295,33 @@
    "naeherung": false
   },
   {
+   "schublade": "ABWÄGEN · aussortiert",
+   "strom": "cards",
+   "n": 201,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0335,
+   "pl": 6.74,
+   "roiLb": -0.0613,
+   "clv": null,
+   "clvLb": null,
+   "clvUrteil": "nicht erhoben",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": 1607,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 583,
+    "lo": 94,
+    "hi": 32644,
+    "nieAnteil": 0.28,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "push_filter",
+   "quelle": "pick_push_ledger.py"
+  },
+  {
    "schublade": "Bolivian Liga de Futbol Profesional · Both teams to Score?",
    "strom": "betfair",
    "n": 30,
@@ -5395,33 +5393,6 @@
    "roiAlt": 0.0229,
    "clvAlt": 0.077,
    "engineAlt": true
-  },
-  {
-   "schublade": "ABWÄGEN · aussortiert",
-   "strom": "cards",
-   "n": 200,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0299,
-   "pl": 5.97,
-   "roiLb": -0.0652,
-   "clv": null,
-   "clvLb": null,
-   "clvUrteil": "nicht erhoben",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": 2030,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 613,
-    "lo": 88,
-    "hi": 34753,
-    "nieAnteil": 0.31,
-    "schaetzbar": false
-   },
-   "alterTage": 3.7,
-   "art": "push_filter",
-   "quelle": "pick_push_ledger.py"
   },
   {
    "schublade": "Dutch Eredivisie · First Half Goals 0.5",
@@ -5749,6 +5720,34 @@
    "naeherung": false
   },
   {
+   "schublade": "MLS · ABWÄGEN",
+   "strom": "cards",
+   "n": 103,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0306,
+   "pl": 3.15,
+   "roiLb": -0.1035,
+   "clv": -2.575,
+   "clvLb": -3.213,
+   "clvUrteil": "negativ belegt",
+   "clvOg": -1.937,
+   "fehltN": 0,
+   "noetigNRoi": 1980,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 370,
+    "lo": 52,
+    "hi": 27344,
+    "nieAnteil": 0.335,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "verdict",
+   "wert": "ABWÄGEN",
+   "datensatz": "MLS"
+  },
+  {
    "schublade": "🔒 Bücher-Score ≥7 von 10",
    "strom": "betfair",
    "n": 140,
@@ -5890,34 +5889,6 @@
    "hit": 0.5909,
    "hitLb": 0.5382,
    "avgOdd": 1.75
-  },
-  {
-   "schublade": "MLS · ABWÄGEN",
-   "strom": "cards",
-   "n": 102,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0233,
-   "pl": 2.38,
-   "roiLb": -0.1115,
-   "clv": -2.585,
-   "clvLb": -3.229,
-   "clvUrteil": "negativ belegt",
-   "clvOg": -1.941,
-   "fehltN": 0,
-   "noetigNRoi": 3407,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 369,
-    "lo": 44,
-    "hi": 50495,
-    "nieAnteil": 0.418,
-    "schaetzbar": false
-   },
-   "alterTage": 4.0,
-   "art": "verdict",
-   "wert": "ABWÄGEN",
-   "datensatz": "MLS"
   },
   {
    "schublade": "German 3 Liga · Over/Under 2.5 Goals",
