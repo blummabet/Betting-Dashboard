@@ -1,6 +1,6 @@
 {
  "sportsGefragt": true,
- "ligenGesamt": 252,
+ "ligenGesamt": 253,
  "mitAnker": 30,
  "ohneAnkerMitKandidat": [
   {
@@ -12,7 +12,7 @@
    "titel": "Serie A - Italy",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land italy, aber andere Spielklasse (c gegen a) — ansehen",
+   "warum": "Land italy, aber andere Spielklasse (t3 gegen t1) — ansehen",
    "weitere": [
     "soccer_italy_serie_b",
     "soccer_italy_coppa_italia"
@@ -26,8 +26,8 @@
    "key": "soccer_argentina_primera_division",
    "titel": "Primera División - Argentina",
    "aktiv": true,
-   "urteil": "sicher",
-   "warum": "Land argentina + Kennwort primera"
+   "urteil": "vorschlag",
+   "warum": "Land argentina, Stufe passt, aber unser Kennwort nacional kommt drueben nicht vor — ansehen"
   },
   {
    "liga": "English National League",
@@ -38,7 +38,7 @@
    "titel": "EFL Cup",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land england stimmt, aber kein gemeinsames Kennwort — ansehen",
+   "warum": "Land england, aber andere Art (sie: pokal) — ansehen",
    "weitere": [
     "soccer_england_league1",
     "soccer_england_league2"
@@ -52,8 +52,8 @@
    "key": "soccer_japan_j_league",
    "titel": "J League",
    "aktiv": false,
-   "urteil": "sicher",
-   "warum": "Land japan + Kennwort j"
+   "urteil": "vorschlag",
+   "warum": "Land japan + Kennwort j — ABER 2 unserer Ligen beanspruchen denselben Schlüssel"
   },
   {
    "liga": "Turkish 1 Lig",
@@ -64,7 +64,7 @@
    "titel": "Turkey Super League",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land turkey stimmt, aber kein gemeinsames Kennwort — ansehen"
+   "warum": "Land turkey, aber eine Seite NENNT ihre Spielklasse und die andere nicht — eine Ordnungszahl gegen ein Schweigen ist eine Annahme, keine Uebereinstimmung. Ansehen."
   },
   {
    "liga": "Swedish Division 1",
@@ -75,7 +75,7 @@
    "titel": "Allsvenskan - Sweden",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land sweden stimmt, aber kein gemeinsames Kennwort — ansehen",
+   "warum": "Land sweden, aber eine Seite NENNT ihre Spielklasse und die andere nicht — eine Ordnungszahl gegen ein Schweigen ist eine Annahme, keine Uebereinstimmung. Ansehen.",
    "weitere": [
     "soccer_sweden_superettan"
    ]
@@ -85,13 +85,13 @@
    "n": 285,
    "roi": -0.0199,
    "roiLb": -0.1302,
-   "key": "soccer_england_league1",
-   "titel": "League 1",
+   "key": "soccer_england_efl_cup",
+   "titel": "EFL Cup",
    "aktiv": true,
-   "urteil": "sicher",
-   "warum": "Land england + Kennwort 1",
+   "urteil": "vorschlag",
+   "warum": "Land england, aber andere Art (sie: pokal) — ansehen",
    "weitere": [
-    "soccer_england_efl_cup",
+    "soccer_england_league1",
     "soccer_england_league2"
    ]
   },
@@ -100,14 +100,14 @@
    "n": 277,
    "roi": 0.0224,
    "roiLb": -0.0863,
-   "key": "soccer_england_league2",
-   "titel": "League 2",
+   "key": "soccer_england_efl_cup",
+   "titel": "EFL Cup",
    "aktiv": true,
-   "urteil": "sicher",
-   "warum": "Land england + Kennwort 2",
+   "urteil": "vorschlag",
+   "warum": "Land england, aber andere Art (sie: pokal) — ansehen",
    "weitere": [
-    "soccer_england_efl_cup",
-    "soccer_england_league1"
+    "soccer_england_league1",
+    "soccer_england_league2"
    ]
   },
   {
@@ -115,14 +115,14 @@
    "n": 274,
    "roi": -0.0462,
    "roiLb": -0.149,
-   "key": "soccer_england_league1",
-   "titel": "League 1",
+   "key": "soccer_england_efl_cup",
+   "titel": "EFL Cup",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land england + Kennwort 1 — ABER mehrere Kandidaten, nicht eindeutig",
+   "warum": "Land england, aber andere Art (sie: pokal) — ansehen",
    "weitere": [
-    "soccer_england_league2",
-    "soccer_england_efl_cup"
+    "soccer_england_league1",
+    "soccer_england_league2"
    ]
   },
   {
@@ -133,8 +133,8 @@
    "key": "soccer_japan_j_league",
    "titel": "J League",
    "aktiv": false,
-   "urteil": "sicher",
-   "warum": "Land japan + Kennwort j"
+   "urteil": "vorschlag",
+   "warum": "Land japan, aber andere Spielklasse (t2 gegen t1) — ansehen"
   },
   {
    "liga": "Spanish Segunda Division",
@@ -145,7 +145,7 @@
    "titel": "La Liga 2 - Spain",
    "aktiv": true,
    "urteil": "sicher",
-   "warum": "Land spain + Kennwort segunda",
+   "warum": "Land spain, Stufe t2, Name ohne eigenes Kennwort",
    "weitere": [
     "soccer_spain_la_liga",
     "soccer_spain_copa_del_rey"
@@ -160,7 +160,7 @@
    "titel": "Premiership - Scotland",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land scotland stimmt, aber kein gemeinsames Kennwort — ansehen"
+   "warum": "Land scotland, aber andere Art (wir: pokal) — ansehen"
   },
   {
    "liga": "Norwegian 1st Division",
@@ -171,7 +171,7 @@
    "titel": "Eliteserien - Norway",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land norway stimmt, aber kein gemeinsames Kennwort — ansehen"
+   "warum": "Land norway, aber eine Seite NENNT ihre Spielklasse und die andere nicht — eine Ordnungszahl gegen ein Schweigen ist eine Annahme, keine Uebereinstimmung. Ansehen."
   },
   {
    "liga": "Swedish Superettan",
@@ -196,7 +196,7 @@
    "titel": "EFL Cup",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land england stimmt, aber kein gemeinsames Kennwort — ansehen",
+   "warum": "Land england, aber andere Art (sie: pokal) — ansehen",
    "weitere": [
     "soccer_england_league1",
     "soccer_england_league2"
@@ -210,8 +210,8 @@
    "key": "soccer_japan_j_league",
    "titel": "J League",
    "aktiv": false,
-   "urteil": "sicher",
-   "warum": "Land japan + Kennwort j"
+   "urteil": "vorschlag",
+   "warum": "Land japan, aber andere Spielklasse (t3 gegen t1) — ansehen"
   },
   {
    "liga": "Mexican Liga MX",
@@ -221,8 +221,8 @@
    "key": "soccer_mexico_ligamx",
    "titel": "Liga MX",
    "aktiv": true,
-   "urteil": "sicher",
-   "warum": "Land mexico + Kennwort mx"
+   "urteil": "vorschlag",
+   "warum": "Land mexico, aber ihr Name nennt ligamx, unserer nicht — ansehen"
   },
   {
    "liga": "English National League South",
@@ -233,7 +233,7 @@
    "titel": "EFL Cup",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land england stimmt, aber kein gemeinsames Kennwort — ansehen",
+   "warum": "Land england, aber andere Art (sie: pokal) — ansehen",
    "weitere": [
     "soccer_england_league1",
     "soccer_england_league2"
@@ -248,7 +248,7 @@
    "titel": "Ekstraklasa - Poland",
    "aktiv": false,
    "urteil": "vorschlag",
-   "warum": "Land poland stimmt, aber kein gemeinsames Kennwort — ansehen"
+   "warum": "Land poland, aber eine Seite NENNT ihre Spielklasse und die andere nicht — eine Ordnungszahl gegen ein Schweigen ist eine Annahme, keine Uebereinstimmung. Ansehen."
   },
   {
    "liga": "Dutch Eerste Divisie",
@@ -259,7 +259,7 @@
    "titel": "Dutch Eredivisie",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land netherlands stimmt, aber kein gemeinsames Kennwort — ansehen"
+   "warum": "Land netherlands, aber ihr Name nennt dutch/eredivisie, unserer nicht — ansehen"
   },
   {
    "liga": "Italian Serie B",
@@ -270,7 +270,7 @@
    "titel": "Serie B - Italy",
    "aktiv": true,
    "urteil": "sicher",
-   "warum": "Land italy + Kennwort b/serie",
+   "warum": "Land italy + Kennwort serie",
    "weitere": [
     "soccer_italy_serie_a",
     "soccer_italy_coppa_italia"
@@ -285,7 +285,7 @@
    "titel": "Saudi Pro League",
    "aktiv": false,
    "urteil": "vorschlag",
-   "warum": "Land saudi stimmt, aber kein gemeinsames Kennwort — ansehen"
+   "warum": "Land saudi, aber eine Seite NENNT ihre Spielklasse und die andere nicht — eine Ordnungszahl gegen ein Schweigen ist eine Annahme, keine Uebereinstimmung. Ansehen."
   },
   {
    "liga": "French Ligue 2",
@@ -296,7 +296,7 @@
    "titel": "Ligue 2 - France",
    "aktiv": true,
    "urteil": "sicher",
-   "warum": "Land france + Kennwort 2/ligue",
+   "warum": "Land france + Kennwort ligue",
    "weitere": [
     "soccer_france_ligue_one",
     "soccer_france_coupe_de_france"
@@ -311,7 +311,7 @@
    "titel": "Super League - China",
    "aktiv": false,
    "urteil": "vorschlag",
-   "warum": "Land china stimmt, aber kein gemeinsames Kennwort — ansehen"
+   "warum": "Land china, aber eine Seite NENNT ihre Spielklasse und die andere nicht — eine Ordnungszahl gegen ein Schweigen ist eine Annahme, keine Uebereinstimmung. Ansehen."
   },
   {
    "liga": "South Korean K2 League",
@@ -322,7 +322,7 @@
    "titel": "K League 1",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land korea stimmt, aber kein gemeinsames Kennwort — ansehen"
+   "warum": "Land korea, aber andere Spielklasse (t2 gegen t1) — ansehen"
   },
   {
    "liga": "South Korean K1 League",
@@ -333,7 +333,7 @@
    "titel": "K League 1",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land korea stimmt, aber kein gemeinsames Kennwort — ansehen"
+   "warum": "Land korea, aber ihr Name nennt kleague, unserer nicht — ansehen"
   },
   {
    "liga": "Portuguese U23",
@@ -344,7 +344,7 @@
    "titel": "Primeira Liga - Portugal",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land portugal stimmt, aber kein gemeinsames Kennwort — ansehen"
+   "warum": "Land portugal, aber eine Seite NENNT ihre Spielklasse und die andere nicht — eine Ordnungszahl gegen ein Schweigen ist eine Annahme, keine Uebereinstimmung. Ansehen."
   },
   {
    "liga": "Polish Cup",
@@ -354,8 +354,8 @@
    "key": "soccer_poland_ekstraklasa",
    "titel": "Ekstraklasa - Poland",
    "aktiv": false,
-   "urteil": "sicher",
-   "warum": "Land poland, Name ohne eigenes Kennwort"
+   "urteil": "vorschlag",
+   "warum": "Land poland, aber andere Art (wir: pokal) — ansehen"
   },
   {
    "liga": "Greek Super League",
@@ -377,7 +377,7 @@
    "titel": "Swiss Superleague",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land switzerland stimmt, aber kein gemeinsames Kennwort — ansehen"
+   "warum": "Land switzerland, aber ihr Name nennt superleague/swiss, unserer nicht — ansehen"
   },
   {
    "liga": "Danish 1st Division",
@@ -388,7 +388,7 @@
    "titel": "Denmark Superliga",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land denmark stimmt, aber kein gemeinsames Kennwort — ansehen"
+   "warum": "Land denmark, aber eine Seite NENNT ihre Spielklasse und die andere nicht — eine Ordnungszahl gegen ein Schweigen ist eine Annahme, keine Uebereinstimmung. Ansehen."
   },
   {
    "liga": "Portuguese Segunda Liga",
@@ -399,7 +399,7 @@
    "titel": "Primeira Liga - Portugal",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land portugal stimmt, aber kein gemeinsames Kennwort — ansehen"
+   "warum": "Land portugal, aber andere Spielklasse (t2 gegen t1) — ansehen"
   },
   {
    "liga": "English U21 Pro Development League",
@@ -410,7 +410,7 @@
    "titel": "EFL Cup",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land england stimmt, aber kein gemeinsames Kennwort — ansehen",
+   "warum": "Land england, aber andere Art (wir: nachwuchs / sie: pokal) — ansehen",
    "weitere": [
     "soccer_england_league1",
     "soccer_england_league2"
@@ -424,8 +424,8 @@
    "key": "soccer_japan_j_league",
    "titel": "J League",
    "aktiv": false,
-   "urteil": "sicher",
-   "warum": "Land japan + Kennwort j"
+   "urteil": "vorschlag",
+   "warum": "Land japan, aber andere Art (wir: pokal) — ansehen"
   },
   {
    "liga": "Swiss Challenge League",
@@ -436,7 +436,7 @@
    "titel": "Swiss Superleague",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land switzerland stimmt, aber kein gemeinsames Kennwort — ansehen"
+   "warum": "Land switzerland, aber ihr Name nennt superleague/swiss, unserer nicht — ansehen"
   },
   {
    "liga": "Brazilian Serie C",
@@ -447,7 +447,7 @@
    "titel": "Brazil Série A",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land brazil, aber andere Spielklasse (c gegen a) — ansehen",
+   "warum": "Land brazil, aber andere Spielklasse (t3 gegen t1) — ansehen",
    "weitere": [
     "soccer_brazil_serie_b"
    ]
@@ -460,8 +460,8 @@
    "key": "soccer_chile_campeonato",
    "titel": "Primera División - Chile",
    "aktiv": true,
-   "urteil": "sicher",
-   "warum": "Land chile + Kennwort primera"
+   "urteil": "vorschlag",
+   "warum": "Land chile, aber mehrdeutige Spielklasse (t1/t2) — ansehen"
   },
   {
    "liga": "Belgian Challenger Pro League",
@@ -472,7 +472,7 @@
    "titel": "Belgium First Div",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land belgium stimmt, aber kein gemeinsames Kennwort — ansehen"
+   "warum": "Land belgium, aber ihr Name nennt div/first, unserer nicht — ansehen"
   },
   {
    "liga": "Chinese Super League",
@@ -494,7 +494,7 @@
    "titel": "Super League - China",
    "aktiv": false,
    "urteil": "vorschlag",
-   "warum": "Land china stimmt, aber kein gemeinsames Kennwort — ansehen"
+   "warum": "Land china, aber andere Spielklasse (t2 gegen t1) — ansehen"
   },
   {
    "liga": "Norwegian 2nd Division",
@@ -505,7 +505,7 @@
    "titel": "Eliteserien - Norway",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land norway stimmt, aber kein gemeinsames Kennwort — ansehen"
+   "warum": "Land norway, aber andere Spielklasse (t2 gegen t1) — ansehen"
   },
   {
    "liga": "Finnish Ykkosliiga",
@@ -516,7 +516,7 @@
    "titel": "Veikkausliiga - Finland",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land finland stimmt, aber kein gemeinsames Kennwort — ansehen"
+   "warum": "Land finland, aber ihr Name nennt veikkausliiga, unserer nicht — ansehen"
   },
   {
    "liga": "English WSL",
@@ -527,7 +527,7 @@
    "titel": "EFL Cup",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land england stimmt, aber kein gemeinsames Kennwort — ansehen",
+   "warum": "Land england, aber andere Art (sie: pokal) — ansehen",
    "weitere": [
     "soccer_england_league1",
     "soccer_england_league2"
@@ -541,8 +541,8 @@
    "key": "soccer_norway_eliteserien",
    "titel": "Eliteserien - Norway",
    "aktiv": true,
-   "urteil": "sicher",
-   "warum": "Land norway, Name ohne eigenes Kennwort"
+   "urteil": "vorschlag",
+   "warum": "Land norway, aber andere Art (wir: pokal) — ansehen"
   },
   {
    "liga": "Norwegian 3rd Division",
@@ -553,7 +553,7 @@
    "titel": "Eliteserien - Norway",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land norway stimmt, aber kein gemeinsames Kennwort — ansehen"
+   "warum": "Land norway, aber andere Spielklasse (t3 gegen t1) — ansehen"
   },
   {
    "liga": "Japanese Football League",
@@ -563,8 +563,8 @@
    "key": "soccer_japan_j_league",
    "titel": "J League",
    "aktiv": false,
-   "urteil": "sicher",
-   "warum": "Land japan, Name ohne eigenes Kennwort"
+   "urteil": "vorschlag",
+   "warum": "Land japan, Stufe t1, Name ohne eigenes Kennwort — ABER 2 unserer Ligen beanspruchen denselben Schlüssel"
   },
   {
    "liga": "Greek Cup",
@@ -574,8 +574,8 @@
    "key": "soccer_greece_super_league",
    "titel": "Super League - Greece",
    "aktiv": true,
-   "urteil": "sicher",
-   "warum": "Land greece, Name ohne eigenes Kennwort"
+   "urteil": "vorschlag",
+   "warum": "Land greece, aber andere Art (wir: pokal) — ansehen"
   },
   {
    "liga": "Danish Cup",
@@ -585,8 +585,8 @@
    "key": "soccer_denmark_superliga",
    "titel": "Denmark Superliga",
    "aktiv": true,
-   "urteil": "sicher",
-   "warum": "Land denmark, Name ohne eigenes Kennwort"
+   "urteil": "vorschlag",
+   "warum": "Land denmark, aber andere Art (wir: pokal) — ansehen"
   },
   {
    "liga": "Dutch Cup",
@@ -596,8 +596,8 @@
    "key": "soccer_netherlands_eredivisie",
    "titel": "Dutch Eredivisie",
    "aktiv": true,
-   "urteil": "sicher",
-   "warum": "Land netherlands, Name ohne eigenes Kennwort"
+   "urteil": "vorschlag",
+   "warum": "Land netherlands, aber andere Art (wir: pokal) — ansehen"
   },
   {
    "liga": "English U21 Premier League Cup",
@@ -608,7 +608,7 @@
    "titel": "EFL Cup",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land england stimmt, aber kein gemeinsames Kennwort — ansehen",
+   "warum": "Land england, aber ihr Name nennt efl, unserer nicht — ansehen",
    "weitere": [
     "soccer_england_league1",
     "soccer_england_league2"
@@ -622,8 +622,8 @@
    "key": "soccer_spl",
    "titel": "Premiership - Scotland",
    "aktiv": true,
-   "urteil": "sicher",
-   "warum": "Land scotland, Name ohne eigenes Kennwort"
+   "urteil": "vorschlag",
+   "warum": "Land scotland, aber andere Spielklasse (t2 gegen t1) — ansehen"
   },
   {
    "liga": "Irish Division 1",
@@ -634,7 +634,7 @@
    "titel": "League of Ireland",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land ireland stimmt, aber kein gemeinsames Kennwort — ansehen"
+   "warum": "Land ireland, aber eine Seite NENNT ihre Spielklasse und die andere nicht — eine Ordnungszahl gegen ein Schweigen ist eine Annahme, keine Uebereinstimmung. Ansehen."
   },
   {
    "liga": "Mexican Liga de Ascenso",
@@ -645,7 +645,7 @@
    "titel": "Liga MX",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land mexico stimmt, aber kein gemeinsames Kennwort — ansehen"
+   "warum": "Land mexico, aber ihr Name nennt ligamx, unserer nicht — ansehen"
   },
   {
    "liga": "Finnish Kakkonen",
@@ -656,7 +656,7 @@
    "titel": "Veikkausliiga - Finland",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land finland stimmt, aber kein gemeinsames Kennwort — ansehen"
+   "warum": "Land finland, aber ihr Name nennt veikkausliiga, unserer nicht — ansehen"
   },
   {
    "liga": "Polish 2 Liga",
@@ -667,7 +667,7 @@
    "titel": "Ekstraklasa - Poland",
    "aktiv": false,
    "urteil": "vorschlag",
-   "warum": "Land poland stimmt, aber kein gemeinsames Kennwort — ansehen"
+   "warum": "Land poland, aber andere Spielklasse (t2 gegen t1) — ansehen"
   },
   {
    "liga": "Italian Serie C Cup",
@@ -678,7 +678,7 @@
    "titel": "Serie A - Italy",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land italy, aber andere Spielklasse (c gegen a) — ansehen",
+   "warum": "Land italy, aber andere Art (wir: pokal) — ansehen",
    "weitere": [
     "soccer_italy_serie_b",
     "soccer_italy_coppa_italia"
@@ -689,14 +689,14 @@
    "n": 88,
    "roi": -0.0005,
    "roiLb": -0.2815,
-   "key": "soccer_germany_bundesliga",
-   "titel": "Bundesliga - Germany",
-   "aktiv": true,
-   "urteil": "vorschlag",
-   "warum": "Land germany + Kennwort bundesliga — ABER mehrere Kandidaten, nicht eindeutig",
+   "key": "soccer_germany_bundesliga_women",
+   "titel": "Frauen-Bundesliga",
+   "aktiv": false,
+   "urteil": "sicher",
+   "warum": "Land germany + Kennwort bundesliga",
    "weitere": [
+    "soccer_germany_bundesliga",
     "soccer_germany_bundesliga2",
-    "soccer_germany_bundesliga_women",
     "soccer_germany_dfb_pokal"
    ]
   },
@@ -709,7 +709,7 @@
    "titel": "K League 1",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land korea stimmt, aber kein gemeinsames Kennwort — ansehen"
+   "warum": "Land korea, aber andere Spielklasse (t3 gegen t1) — ansehen"
   },
   {
    "liga": "English National League Cup",
@@ -720,7 +720,7 @@
    "titel": "EFL Cup",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land england stimmt, aber kein gemeinsames Kennwort — ansehen",
+   "warum": "Land england, aber ihr Name nennt efl, unserer nicht — ansehen",
    "weitere": [
     "soccer_england_league1",
     "soccer_england_league2"
@@ -735,7 +735,7 @@
    "titel": "Austrian Football Bundesliga",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land austria stimmt, aber kein gemeinsames Kennwort — ansehen"
+   "warum": "Land austria, aber ihr Name nennt austrian/bundesliga, unserer nicht — ansehen"
   },
   {
    "liga": "Finnish Ykkonen",
@@ -746,7 +746,7 @@
    "titel": "Veikkausliiga - Finland",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land finland stimmt, aber kein gemeinsames Kennwort — ansehen"
+   "warum": "Land finland, aber ihr Name nennt veikkausliiga, unserer nicht — ansehen"
   },
   {
    "liga": "US National Women Soccer League",
@@ -757,7 +757,7 @@
    "titel": "MLS",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land usa stimmt, aber kein gemeinsames Kennwort — ansehen"
+   "warum": "Land usa, aber andere Art (wir: frauen) — ansehen"
   },
   {
    "liga": "Scottish League One",
@@ -768,7 +768,7 @@
    "titel": "Premiership - Scotland",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land scotland stimmt, aber kein gemeinsames Kennwort — ansehen"
+   "warum": "Land scotland, aber eine Seite NENNT ihre Spielklasse und die andere nicht — eine Ordnungszahl gegen ein Schweigen ist eine Annahme, keine Uebereinstimmung. Ansehen."
   },
   {
    "liga": "Greek Super League 2",
@@ -778,8 +778,8 @@
    "key": "soccer_greece_super_league",
    "titel": "Super League - Greece",
    "aktiv": true,
-   "urteil": "sicher",
-   "warum": "Land greece + Kennwort super"
+   "urteil": "vorschlag",
+   "warum": "Land greece, aber andere Spielklasse (t2 gegen t1) — ansehen"
   },
   {
    "liga": "Austrian Cup",
@@ -789,8 +789,8 @@
    "key": "soccer_austria_bundesliga",
    "titel": "Austrian Football Bundesliga",
    "aktiv": true,
-   "urteil": "sicher",
-   "warum": "Land austria, Name ohne eigenes Kennwort"
+   "urteil": "vorschlag",
+   "warum": "Land austria, aber andere Art (wir: pokal) — ansehen"
   },
   {
    "liga": "Scottish League Two",
@@ -801,7 +801,7 @@
    "titel": "Premiership - Scotland",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land scotland stimmt, aber kein gemeinsames Kennwort — ansehen"
+   "warum": "Land scotland, aber andere Spielklasse (t2 gegen t1) — ansehen"
   },
   {
    "liga": "Chilean Cup",
@@ -811,8 +811,8 @@
    "key": "soccer_chile_campeonato",
    "titel": "Primera División - Chile",
    "aktiv": true,
-   "urteil": "sicher",
-   "warum": "Land chile, Name ohne eigenes Kennwort"
+   "urteil": "vorschlag",
+   "warum": "Land chile, aber andere Art (wir: pokal) — ansehen"
   },
   {
    "liga": "Argentinian Primera Division Reserves",
@@ -822,8 +822,8 @@
    "key": "soccer_argentina_primera_division",
    "titel": "Primera División - Argentina",
    "aktiv": true,
-   "urteil": "sicher",
-   "warum": "Land argentina + Kennwort primera"
+   "urteil": "vorschlag",
+   "warum": "Land argentina, aber andere Art (wir: reserve) — ansehen"
   },
   {
    "liga": "Swedish Division 2",
@@ -834,7 +834,7 @@
    "titel": "Allsvenskan - Sweden",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land sweden stimmt, aber kein gemeinsames Kennwort — ansehen",
+   "warum": "Land sweden, aber andere Spielklasse (t2 gegen t1) — ansehen",
    "weitere": [
     "soccer_sweden_superettan"
    ]
@@ -848,7 +848,7 @@
    "titel": "EFL Cup",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land england stimmt, aber kein gemeinsames Kennwort — ansehen",
+   "warum": "Land england, aber andere Art (wir: frauen) — ansehen",
    "weitere": [
     "soccer_england_league1",
     "soccer_england_league2"
@@ -863,7 +863,7 @@
    "titel": "Brazil Série A",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land brazil, Name ohne eigenes Kennwort — ABER mehrere Kandidaten, nicht eindeutig",
+   "warum": "Land brazil, aber andere Art (wir: pokal) — ansehen",
    "weitere": [
     "soccer_brazil_serie_b"
    ]
@@ -877,7 +877,7 @@
    "titel": "J League",
    "aktiv": false,
    "urteil": "vorschlag",
-   "warum": "Land japan stimmt, aber kein gemeinsames Kennwort — ansehen"
+   "warum": "Land japan, aber andere Art (wir: pokal) — ansehen"
   },
   {
    "liga": "Argentinian Cup",
@@ -887,8 +887,8 @@
    "key": "soccer_argentina_primera_division",
    "titel": "Primera División - Argentina",
    "aktiv": true,
-   "urteil": "sicher",
-   "warum": "Land argentina, Name ohne eigenes Kennwort"
+   "urteil": "vorschlag",
+   "warum": "Land argentina, aber andere Art (wir: pokal) — ansehen"
   },
   {
    "liga": "North American Leagues Cup",
@@ -899,7 +899,7 @@
    "titel": "MLS",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land usa stimmt, aber kein gemeinsames Kennwort — ansehen"
+   "warum": "Land usa, aber andere Art (wir: pokal) — ansehen"
   },
   {
    "liga": "French Ligue 3",
@@ -910,7 +910,7 @@
    "titel": "Ligue 1 - France",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land france, aber andere Spielklasse (3 gegen 1/one) — ansehen",
+   "warum": "Land france, aber andere Spielklasse (t3 gegen t1) — ansehen",
    "weitere": [
     "soccer_france_ligue_two",
     "soccer_france_coupe_de_france"
@@ -925,7 +925,7 @@
    "titel": "Denmark Superliga",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land denmark stimmt, aber kein gemeinsames Kennwort — ansehen"
+   "warum": "Land denmark, aber andere Spielklasse (t2 gegen t1) — ansehen"
   },
   {
    "liga": "English Women's Matches",
@@ -936,11 +936,22 @@
    "titel": "EFL Cup",
    "aktiv": true,
    "urteil": "vorschlag",
-   "warum": "Land england stimmt, aber kein gemeinsames Kennwort — ansehen",
+   "warum": "Land england, aber andere Art (wir: frauen / sie: pokal) — ansehen",
    "weitere": [
     "soccer_england_league1",
     "soccer_england_league2"
    ]
+  },
+  {
+   "liga": "Argentinian Primera Nacional Reserves",
+   "n": 31,
+   "roi": -0.2439,
+   "roiLb": -0.5341,
+   "key": "soccer_argentina_primera_division",
+   "titel": "Primera División - Argentina",
+   "aktiv": true,
+   "urteil": "vorschlag",
+   "warum": "Land argentina, aber andere Art (wir: reserve) — ansehen"
   },
   {
    "liga": "Argentinian Primera B Metropolitana",
@@ -950,8 +961,8 @@
    "key": "soccer_argentina_primera_division",
    "titel": "Primera División - Argentina",
    "aktiv": true,
-   "urteil": "sicher",
-   "warum": "Land argentina + Kennwort primera"
+   "urteil": "vorschlag",
+   "warum": "Land argentina, aber mehrdeutige Spielklasse (t1/t2) — ansehen"
   }
  ],
  "ohneAnkerOhneKandidat": [
@@ -1145,6 +1156,13 @@
    "warum": "die-odds-api kennt keine Liga in estonia dazu"
   },
   {
+   "liga": "Israeli National League",
+   "n": 165,
+   "roi": -0.0453,
+   "roiLb": -0.178,
+   "warum": "die-odds-api kennt keine Liga in israel dazu"
+  },
+  {
    "liga": "Ukrainian Premier League",
    "n": 162,
    "roi": 0.2286,
@@ -1213,13 +1231,6 @@
    "roi": -0.0071,
    "roiLb": -0.159,
    "warum": "die-odds-api kennt keine Liga in estonia dazu"
-  },
-  {
-   "liga": "Israeli National League",
-   "n": 138,
-   "roi": -0.0674,
-   "roiLb": -0.2151,
-   "warum": "die-odds-api kennt keine Liga in israel dazu"
   },
   {
    "liga": "Cypriot 1st Division",
@@ -1313,6 +1324,13 @@
    "warum": "die-odds-api kennt keine Liga in croatia dazu"
   },
   {
+   "liga": "Israeli Liga Alef",
+   "n": 119,
+   "roi": -0.0939,
+   "roiLb": -0.2436,
+   "warum": "die-odds-api kennt keine Liga in israel dazu"
+  },
+  {
    "liga": "Panamanian Premier League",
    "n": 118,
    "roi": 0.0251,
@@ -1339,13 +1357,6 @@
    "roi": -0.0079,
    "roiLb": -0.1652,
    "warum": "Land nicht erkannt"
-  },
-  {
-   "liga": "Israeli Liga Alef",
-   "n": 114,
-   "roi": -0.1171,
-   "roiLb": -0.2667,
-   "warum": "die-odds-api kennt keine Liga in israel dazu"
   },
   {
    "liga": "Bulgarian B League",
@@ -1817,6 +1828,13 @@
    "warum": "Land nicht erkannt"
   },
   {
+   "liga": "Israeli Liga Bet",
+   "n": 47,
+   "roi": 0.1862,
+   "roiLb": -0.0623,
+   "warum": "die-odds-api kennt keine Liga in israel dazu"
+  },
+  {
    "liga": "Nigerian Premier League",
    "n": 47,
    "roi": -0.0396,
@@ -1836,6 +1854,13 @@
    "roi": -0.037,
    "roiLb": -0.2528,
    "warum": "die-odds-api kennt keine Liga in paraguay dazu"
+  },
+  {
+   "liga": "Jordan 1st Division",
+   "n": 46,
+   "roi": -0.1117,
+   "roiLb": -0.3686,
+   "warum": "Land nicht erkannt"
   },
   {
    "liga": "UAE League Cup",
@@ -1922,13 +1947,6 @@
    "warum": "Land nicht erkannt"
   },
   {
-   "liga": "Israeli Liga Bet",
-   "n": 32,
-   "roi": 0.3219,
-   "roiLb": 0.0117,
-   "warum": "die-odds-api kennt keine Liga in israel dazu"
-  },
-  {
    "liga": "Cambodian Premier League",
    "n": 32,
    "roi": 0.3581,
@@ -1940,13 +1958,6 @@
    "n": 32,
    "roi": -0.2341,
    "roiLb": -0.4704,
-   "warum": "Land nicht erkannt"
-  },
-  {
-   "liga": "Jordan 1st Division",
-   "n": 32,
-   "roi": -0.1756,
-   "roiLb": -0.4917,
    "warum": "Land nicht erkannt"
   },
   {
@@ -1968,6 +1979,6 @@
   "Major League Soccer"
  ],
  "creditsJeLigaMonat": 8640,
- "creditsFuerAlleVorschlaege": 673920,
+ "creditsFuerAlleVorschlaege": 682560,
  "sportsAbgerufen": 179
 }
