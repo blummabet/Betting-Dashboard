@@ -136,3 +136,25 @@ def test_keine_zeile_des_ledgers_verliert_ihre_seite():
     assert not verloren, [(x.get("event"), x.get("auswahl")) for x in verloren[:5]]
     assert not gewechselt, [(x.get("event"), x.get("auswahl")) for x in gewechselt[:5]]
     assert sum(1 for x in rows if SB.seite(x)) > sum(1 for x in rows if alt(x))
+
+
+# ── Akzente: dieselbe Klasse, eine Ebene tiefer ─────────────────────────────────────────
+# Beim Nachmessen des eigenen Fixes gefunden: der Feed schreibt „Atletico Madrid" im
+# Spielnamen und „Atlético Madrid" in der Auswahl. 22 Zeilen scheiterten allein daran.
+# Und es ist derselbe Fehler wie am Vortag in `odds_anker_luecke`, wo „Primera División" am
+# ó zu „divisi" zerfiel — zwei Dateien, dieselbe Woche, dieselbe Annahme.
+
+def test_akzente_trennen_keine_mannschaft():
+    assert SB.seite(w("Atletico Madrid - Real Madrid", "Atlético Madrid")) == "Atletico Madrid"
+    assert SB.seite(w("Velez Sarsfield - Tigre", "Vélez Sársfield")) == "Velez Sarsfield"
+    assert SB.seite(w("Juarez - Tigres", "Juárez")) == "Juarez"
+
+
+def test_akzente_heben_die_vorsicht_nicht_auf():
+    """Entschaerfen heisst nicht: raten. Ein gemeinsames Wort bleibt ein gemeinsames Wort."""
+    assert SB.seite(w("Deportivo La Coruna - Deportivo Alaves", "Deportívo")) is None
+
+
+def test_die_flachform_ist_fuer_sich_pruefbar():
+    assert SB._flach("Atlético Madrid") == "atletico madrid"
+    assert SB._flach("Goiás EC") == "goias ec"

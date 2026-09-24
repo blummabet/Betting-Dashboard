@@ -49,6 +49,7 @@ import html
 import json
 import os
 import re
+import unicodedata
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -445,9 +446,23 @@ _TEAM_RAUSCHEN = {
 }
 
 
+def _flach(s) -> str:
+    """Kleinbuchstaben ohne Akzente. REIN.
+
+    🔴 24.09.2026, beim Nachmessen des eigenen Fixes gefunden: der Feed schreibt „Atletico
+    Madrid" im Spielnamen und „Atlético Madrid" in der Auswahl. 22 Zeilen scheiterten allein
+    daran — neunmal Atletico gegen Real Madrid, dazu Vélez, Tucumán, Juárez, Goztepe.
+    Dieselbe Klasse wie die Schreibweise selbst, nur eine Ebene tiefer: zwei Schreibungen
+    desselben Namens, und ein Vergleich, der auf Zeichengleichheit besteht. Und derselbe
+    Fehler wie gestern in `odds_anker_luecke`, wo „Primera División" am ó zu „divisi" zerfiel
+    — zwei Dateien, dieselbe Woche."""
+    x = unicodedata.normalize("NFKD", str(s or "").lower())
+    return "".join(c for c in x if not unicodedata.combining(c))
+
+
 def _team_kern(name: str) -> set:
     """Die Woerter einer Mannschaft ohne Rechtsform und Kader-Zusatz. REIN."""
-    toks = [t for t in re.split(r"[^a-z0-9]+", str(name or "").lower()) if t]
+    toks = [t for t in re.split(r"[^a-z0-9]+", _flach(name)) if t]
     return {t for t in toks if t not in _TEAM_RAUSCHEN} or set(toks)
 
 
@@ -508,7 +523,7 @@ def seite(w) -> str | None:
     Verglichen wird deshalb ueber den KERN des Namens. Die Vorsicht bleibt: der Kern der
     anderen Mannschaft darf nicht ebenfalls passen, sonst gibt es weiter keine Seite.
     """
-    a = str((w or {}).get("auswahl") or "").lower()
+    a = _flach((w or {}).get("auswahl"))
     if not a:
         return None
     teams = _teams((w or {}).get("event"))
