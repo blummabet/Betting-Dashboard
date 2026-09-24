@@ -94,9 +94,11 @@
       "id": "settlement_alive",
       "label": "Settlement lebt (keine ewig offenen Positionen)",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "mls-sea-rsl-2026-04-12: seit 165.0 Tagen offen — keine Auflösung gefunden"
+      ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen. Der Grund steht an jeder Zeile — er ist bei jeder ein anderer."
     },
     {
@@ -124,7 +126,7 @@
       "ok": false,
       "nFail": 5,
       "failures": [
-        "166/381 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (44%) — Trefferquote allein trügt",
+        "166/383 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (43%) — Trefferquote allein trügt",
         "   0xc3c3b3ef30… n=338 Treffer 51% P&L $-3,971,864",
         "   0xa0f21e6d35… n=103 Treffer 68% P&L $-2,635,720",
         "   0xabb89972b2… n=48 Treffer 58% P&L $-2,563,982",
@@ -178,6 +180,6 @@
       "note": "poly_direct_bets.py rechnet über poly_resolutions.json ab. Hängt ein Bet, kennt Poly den Ausgang nicht (Markt noch offen/obskur) oder der Slug passt nicht — dann fehlt echtes Geld in der Bilanz."
     }
   ],
-  "nFail": 1,
-  "generatedAt": "2026-09-24T00:42:33.620026+00:00"
+  "nFail": 2,
+  "generatedAt": "2026-09-24T00:59:31.372709+00:00"
 }
