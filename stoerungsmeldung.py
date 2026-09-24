@@ -267,6 +267,11 @@ GEPRUEFT_KEIN_GELD = {
     "stake-spielklasse: tabelle vollstaendig, richtungen getrennt",
     "stumme signale: wer hat nie gefeuert?",
     "takt: cron gegen gemessene laeufe",
+    # 24.09.2026: hier gefunden von `test_am_echten_bestand_ist_nichts_uneingestuft`. Der
+    # Waechter kam gestern dazu und war nirgends eingeordnet — ein Befund, der gemeldet, aber
+    # nicht gezogen wird. Er misst, wie viel seines Deckels ein Lauf braucht: eine Messung
+    # ueber den Lauf, kein verlorenes Geld.
+    "der deckel hat luft",
 }
 GELD_WORTE = ("wette", "position", "order", "push", "beleg", "ergebnis", "bilanz",
               "geld", "money", "settle", "resolution", "track_record", "deckung")

@@ -272,6 +272,51 @@ def erzeugungs_bilanz(erzeugte, jetzt=None):
             "erzeugtProTag": round(len(rows) / (spanne_h / 24.0), 1) if spanne_h > 0 else None}
 
 
+WIDERSPRUCH_FAKTOR = 2.0
+
+
+def bilanz_pruefen(bilanz, kadenz_pro_tag, faktor=WIDERSPRUCH_FAKTOR):
+    """Haelt die Erzeugungs-Bilanz gegen die gemessene Kadenz. REIN. -> Bilanz (ggf. markiert).
+
+    🔴 24.09.2026. `erzeugungs_bilanz` wurde am 22.09. gebaut, um genau eine Frage zu
+    beantworten: erzeugt GitHub die Laeufe ueberhaupt? Sie meldet:
+
+        betfair        erzeugtProTag  6,6   ·  gemessene Kadenz 95,9/Tag  (Cron: 96)
+        poly-global    erzeugtProTag  6,5   ·  gemessene Kadenz 47,9/Tag  (Cron: 48)
+        poly-live-scan erzeugtProTag  6,5   ·  gemessene Kadenz  5,1/Tag  (Cron: 96)
+
+    Die gemessene Kadenz stimmt bei den beiden gesunden Workflows auf ein Prozent — sie ist
+    geprueft. Die Bilanz liegt bei betfair um den Faktor 14 daneben und sitzt bei allen
+    schnellen Workflows auf demselben Wert um 6,6: sie ist irgendwo gedeckelt. Warum, laesst
+    sich ohne die Actions-API nicht sagen.
+
+    Sagen laesst sich aber, dass sie nicht stimmen KANN — denn direkt daneben steht eine
+    Messung, die geprueft ist. Fehlerklasse: *eine Zahl, die einer besseren Messung daneben
+    widerspricht und trotzdem als Tatsache dasteht.* Und sie ist ausgerechnet die Zahl, die
+    entscheiden sollte, ob ein Zeitplan feuert.
+
+    Sie wird deshalb nicht geloescht (dann waere sie nie zu reparieren), sondern MARKIERT:
+    `widerspruch` nennt beide Zahlen, und wer sie liest, weiss, dass er sie nicht glauben darf.
+    """
+    if not isinstance(bilanz, dict):
+        return bilanz
+    ist = bilanz.get("erzeugtProTag")
+    if not isinstance(ist, (int, float)) or not isinstance(kadenz_pro_tag, (int, float)):
+        return bilanz
+    if ist <= 0 or kadenz_pro_tag <= 0:
+        return bilanz
+    verh = max(ist, kadenz_pro_tag) / min(ist, kadenz_pro_tag)
+    raus = dict(bilanz)
+    if verh >= faktor:
+        raus["widerspruch"] = (
+            "erzeugtProTag %.1f gegen eine gemessene Kadenz von %.1f/Tag (Faktor %.1f) — "
+            "die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese "
+            "Zahl nicht. NICHT als Beleg verwenden." % (ist, kadenz_pro_tag, verh))
+    else:
+        raus.pop("widerspruch", None)
+    return raus
+
+
 def baue_eintrag(workflow, run_id, run_url, steps, api_fehler=None, lauf=None):
     """Ein Lauf als Zeile fuer die Historie.
 
@@ -453,13 +498,14 @@ def main(argv=None):
     datei = lade(pfad)
     letzter = (datei.get("runs") or [None])[0]
     laeufe = ([eintrag] + (datei.get("runs") or []))[:HISTORIE]
+    _kad = kadenz(laeufe, soll_pro_tag=_soll_pro_tag(),
+                  fenster_min=_fenster_min(), stunden=_stunden())
+    # Die Bilanz wird gegen die geprueft Kadenz gehalten, bevor sie ins Artefakt geht.
+    bilanz = bilanz_pruefen(bilanz, _kad.get("proTag"))
     datei = {"slug": slug, "workflow": workflow, "updatedAt": eintrag["ts"],
              "ok": eintrag["ok"],
              # Die gelieferte Taktung steht im Artefakt, nicht in einem Kommentar im Workflow.
-             "kadenz": kadenz(laeufe,
-                              soll_pro_tag=_soll_pro_tag(),
-                              fenster_min=_fenster_min(),
-                              stunden=_stunden()),
+             "kadenz": _kad,
              # None heisst „nicht abgefragt/nicht abrufbar", nie „null Laeufe" — der
              # Unterschied ist der ganze Zweck dieser Zahl.
              "erzeugung": bilanz,
