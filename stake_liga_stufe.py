@@ -460,6 +460,13 @@ MEHRDEUTIG = {
 # Waechter meldet weiterhin ALLES, was nicht draufsteht.
 EIN_WETTBEWERB = {
     "efl-trophy": "Nord- und Sued-Sektion desselben Pokals (22.09.2026 an den Paarungen geprueft)",
+    # 24.09.2026: zwei IDs, und der Beweis steht in den Paarungen selbst — „America de Cali -
+    # Aguilas Doradas Rionegro" laeuft unter BEIDEN (7x unter 25afe81c…, 3x unter bc8d0d08…).
+    # Dasselbe Spiel kann nicht in zwei Spielklassen liegen. Alle Vereine dahinter sind
+    # kolumbianische Erstligisten (Santa Fe, Deportivo Cali, Medellin, Bucaramanga, Tolima,
+    # Atletico Nacional) — eine Liga, im Feed auf zwei Turnier-IDs verteilt.
+    "primera-a-apertura": "Dasselbe Spiel laeuft unter beiden Turnier-IDs (24.09.2026 an den "
+                          "Paarungen geprueft) — eine Liga, zwei IDs im Feed",
 }
 
 _MUSTER = (

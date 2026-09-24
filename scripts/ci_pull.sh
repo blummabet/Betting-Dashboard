@@ -60,6 +60,27 @@ else
   git pull origin "$BRANCH" --no-rebase -X ours --autostash 2>&1 || true
 fi
 
+# ── 🔴 24.09.2026: `-X ours` hat eine platzierte Order geloescht ─────────────────────────────
+# Lucas: „Kamen 2 Meldungen zum selben Spiel und beide wurden gesetzt". Fuego vs EDward Gaming,
+# 06:13 und 06:18 UTC, zwei Orders. In den Buechern stand danach nur eine: beide Commits trugen
+# 53 Wetten, die zweite Zeile hatte die erste ERSETZT. Order 0xc1c79cbe… steht seither in keiner
+# Datei des Hauses.
+#
+# Der Pull oben zieht mit `-X ours`. Haengen zwei Laeufe je eine Zeile an dieselbe Stelle
+# derselben Datei, ist das fuer git ein Konflikt — und `-X ours` wirft die fremde Seite weg. Fuer
+# ein Artefakt, das jeder Lauf neu erzeugt, ist das richtig. Fuer ein BUCH ist jede Zeile eine
+# Tatsache, und zwei Tatsachen sind kein Konflikt.
+#
+# Deshalb werden die Buecher nach dem Merge wieder VEREINT — gegen FETCH_HEAD, also gegen genau
+# den Stand, den `-X ours` eben verworfen hat. Welche Datei ein Buch ist und was eine Zeile
+# eindeutig macht, steht in `buecher_union.BUECHER` und nirgends sonst.
+if [ -f buecher_union.py ]; then
+  python3 buecher_union.py \
+    shortlist_auto_bets_placed.json shortlist_push_ledger.json shortlist_push_seen.json \
+    betfair_public_ledger.json betfair_public_seen.json betfair_alerts_seen.json \
+    betfair_rutsch_ledger.json betfair_rutsch_seen.json stake_burst_seen.json || true
+fi
+
 # ── 19.09.2026: der Pull selbst ist die Quelle der Konfliktmarker ────────────────────────────
 # Lucas: „Heut kein einziger polymarket Push in public (kann nicht sein)." Konnte sehr wohl:
 # `--autostash` oben legt die getrackten Aenderungen weg und holt sie danach zurueck. Kollidiert

@@ -1296,6 +1296,42 @@ def check_public_stille_ist_erklaert(ctx):
                     ", ".join("%s (%d)" % (k, v) for k, v in top) or "unbekannt")])
 
 
+def check_ein_play_eine_order(ctx):
+    """🔴 24.09.2026 (Lucas: „Kamen 2 Meldungen zum selben Spiel und beide wurden gesetzt").
+
+    Fuego vs EDward Gaming Youth Team, 06:13 und 06:18 UTC, zweimal $5, zwei Order-IDs. Das
+    Buch zeigte danach 53 Wetten wie vorher: der zweite Lauf hatte die Zeile des ersten nicht
+    ergaenzt, sondern ersetzt (`git pull -X ours` in ci_pull.sh). Order 0xc1c79cbe… stand
+    danach in keiner Datei des Hauses.
+
+    Das Haus hat den Vorfall also nicht bemerkt — ein Mensch hat zwei Nachrichten in einem
+    Telegram-Kanal gesehen. Fehlerklasse: *ein Fehler, den nur ein Mensch im Kanal sehen kann,
+    ist nicht ueberwacht.*
+
+    Seit der Vereinigung der Buecher (`buecher_union`) ueberleben beide Zeilen, und damit ist
+    das Doppelsetzen zaehlbar. Dieser Waechter zaehlt es.
+    """
+    import json as _j
+    p = BASE / "shortlist_auto_bets_placed.json"
+    if not p.exists():
+        return _c("Ein Play, eine Order", "error", [])
+    try:
+        d = _j.loads(p.read_text(encoding="utf-8"))
+    except Exception as exc:                                  # noqa: BLE001
+        return _c("Ein Play, eine Order", "error", [],
+                  "shortlist_auto_bets_placed.json nicht lesbar: %s" % str(exc)[:60])
+    try:
+        import buecher_union as BU
+        doppelt = BU.doppelte_plays((d or {}).get("bets"))
+    except Exception as exc:                                  # noqa: BLE001
+        return _c("Ein Play, eine Order", "error", [], "nicht pruefbar: %s" % str(exc)[:60])
+    fails = ["%s: %d Orders auf denselben Play (%s) — es wurde mehrfach gesetzt, und der "
+             "Einsatz-Deckel rechnet mit einer davon."
+             % (k, len(v), ", ".join(x[:18] + "…" for x in v))
+             for k, v in sorted(doppelt.items())]
+    return _c("Ein Play, eine Order", "error", fails)
+
+
 def check_jeder_push_hat_seinen_beleg(ctx):
     """🔴 20.09.2026 (Lucas: „Beide Spiele stehen nicht in der Betfair-Public-Bilanz. Beide
     haben gewonnen.").
@@ -1688,6 +1724,7 @@ UEBERSICHT_CHECKS = [
     check_schattenbuch_fuellt_sich,
     check_artefakte_sind_lesbar,
     check_jeder_push_hat_seinen_beleg,
+    check_ein_play_eine_order,
     check_offene_wette_hat_den_anpfiff_ueberlebt,
     check_ergebnisse_kommen_an,
     check_datenbau_ist_nicht_stehengeblieben,
