@@ -106,9 +106,11 @@ class TestDerGuardMeldetBeidesGetrennt(unittest.TestCase):
                                    "gesendetOhneBelegNeuKeys": list(neu_keys)}}
 
     def test_nur_die_alte_narbe_meldet_als_nicht_nachtragbar(self):
+        # 24.09.2026: die Narbe steht jetzt im HINWEIS, nicht in den Fehlern — sie ist
+        # unveraenderlich und gehoert nicht in den roten Eimer (s. TestDieNarbeIstKeineStoerung).
         c = U.check_jeder_push_hat_seinen_beleg(self._ctx(4, 0, ["fresh:36039873"]))
-        text = " ".join(c["failures"])
-        self.assertIn("vor der Sofort-", text)
+        text = c["hinweis"]
+        self.assertIn("vor der letzten Reparatur", text)
         self.assertIn("Auswahl nach Ausgang", text)
         self.assertNotIn("greift nicht", text)
 
@@ -121,7 +123,11 @@ class TestDerGuardMeldetBeidesGetrennt(unittest.TestCase):
         # jetzt den Pfad, nicht den einen Schritt.
         self.assertIn("leckt weiter", text)
         self.assertIn("fresh:9", text)
-        self.assertEqual(c["nFail"], 2, "alte Narbe und neuer Verlust sind zwei Meldungen")
+        # 24.09.2026: die Narbe ist keine Meldung mehr, sondern ein Hinweis — genau EIN
+        # Fehler, und der ist der frische. Getrennt sind sie weiterhin, nur nicht mehr
+        # im selben Eimer.
+        self.assertEqual(c["nFail"], 1, "nur der frische Verlust ist eine Stoerung")
+        self.assertIn("nicht nachtragbar", c["hinweis"])
 
     def test_ohne_luecke_bleibt_er_still(self):
         self.assertEqual(U.check_jeder_push_hat_seinen_beleg(self._ctx(0, 0))["nFail"], 0)
@@ -151,3 +157,35 @@ class TestDerBelegWirdSofortGesichert(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+# ── 🔴 24.09.2026: die Narbe stand jeden Morgen unter „Kostet Geld" ─────────────────────
+# Fuenf Pushes aus der Zeit vor dem 20.09., unveraenderlich, nicht nachtragbar — und trotzdem
+# als FEHLER gemeldet, also im roten Eimer der Stoerungsmeldung. Ein roter Punkt, an dem sich
+# nichts mehr aendern kann, ist keine Stoerung; er bringt bei, die rote Liste zu ueberfliegen.
+# Dieselbe Lehre wie am 23.09., eine Ebene hoeher: damals blieb der Alarm rot, weil die Grenze
+# nicht mitwanderte — hier, weil Narbe und frische Wunde im selben Eimer steckten.
+
+class TestDieNarbeIstKeineStoerung(unittest.TestCase):
+    def _ctx(self, n, neu, alt_keys, neu_keys=None):
+        return {"bfPublicRecord": {
+            "gesendetOhneBeleg": n, "gesendetOhneBelegNeu": neu,
+            "gesendetOhneBelegKeys": alt_keys, "gesendetOhneBelegAltKeys": alt_keys,
+            "gesendetOhneBelegNeuKeys": neu_keys or [],
+            "belegReparaturAb": "2026-09-22T05:14:00+00:00"}}
+
+    def test_nur_die_narbe_meldet_keinen_fehler(self):
+        c = U.check_jeder_push_hat_seinen_beleg(self._ctx(5, 0, ["fresh:1", "fresh:2"]))
+        self.assertEqual(c["nFail"], 0, c["failures"])
+
+    def test_die_narbe_verschwindet_aber_nicht(self):
+        """Sie war der Zweck der Zahl: eine Bilanz, die ihre eigene Luecke nennt."""
+        c = U.check_jeder_push_hat_seinen_beleg(self._ctx(5, 0, ["fresh:1", "fresh:2"]))
+        self.assertIn("nicht nachtragbar", c["hinweis"])
+        self.assertIn("fresh:1", c["hinweis"])
+
+    def test_eine_frische_wunde_bleibt_ein_fehler(self):
+        c = U.check_jeder_push_hat_seinen_beleg(
+            self._ctx(6, 1, ["fresh:1"], [{"key": "fresh:9", "t": "2026-09-30T10:00"}]))
+        self.assertEqual(c["nFail"], 1)
+        self.assertIn("leckt weiter", " ".join(c["failures"]))

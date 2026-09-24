@@ -883,6 +883,30 @@ def main() -> int:
                   f"(Push {float(z['pushPreis']):.3f})")
             continue
 
+        # 🔴 24.09.2026 (Lucas: „Kamen 2 Meldungen zum selben Spiel und beide wurden gesetzt").
+        # Fuego vs EDward Gaming, 06:13 und 06:18 UTC, zwei Orders. Die zweite Schranke — die
+        # Wallet — haette das fangen muessen und hat es nicht: `depot` wird EINMAL je Lauf ganz
+        # oben geholt, und zwischen diesem Griff und dem Setzen liegen in diesem Job bis zu
+        # zwanzig Minuten. Was ein anderer Lauf in der Zwischenzeit gekauft hat, steht in einem
+        # Schnappschuss von vorhin nicht drin.
+        #
+        # Fehlerklasse: *eine Schranke, die von einem Schnappschuss von vorhin entscheidet.*
+        # Sie ist nicht falsch gebaut, sie ist nur zu frueh gelesen — dieselbe Klasse wie „wer
+        # handelt, schreibt sofort", nur andersherum: **wer handelt, liest zuerst frisch.**
+        #
+        # Deshalb unmittelbar vor der Order noch einmal nachsehen. Das kostet einen Abruf je
+        # tatsaechlicher Wette (eine Handvoll am Tag), nicht je Zeile. None heisst weiterhin
+        # „nicht abrufbar" und nicht „nichts da": dann bleibt es beim Schnappschuss von oben,
+        # denn eine Sperre, die bei jedem API-Aussetzer das Nachspielen abschaltet, waere die
+        # falsche Richtung (s. `wallet_positionen`).
+        depot_jetzt = wallet_positionen()
+        if depot_jetzt is not None:
+            depot = depot_jetzt
+        if schon_im_depot(tok, depot):
+            _liegen(titel, "die Wallet haelt diesen Token seit dem letzten Blick — ein anderer "
+                           "Lauf war schneller, es wird nicht doppelt gesetzt", z)
+            continue
+
         from polymarket_bet import place_market_order
         # 20.09.2026: `pfad` ist Pflicht. Dieses Skript ist der Pfad, der am 20.09. vier echte
         # Orders setzte, waehrend „Auto-Trading ist aus" gemeldet war — nicht weil es falsch

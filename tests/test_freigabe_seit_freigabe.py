@@ -171,8 +171,12 @@ def test_der_rekonstruierte_stand_nennt_sich_als_solchen():
         import pytest
         pytest.skip("kein Stand im Arbeitsverzeichnis")
     d = json.loads(p.read_text(encoding="utf-8"))
+    # 24.09.2026: seit `nachweis_ziel_nachziehen` gibt es eine ZWEITE Sorte Eintrag — der
+    # Anker eines wartenden Kandidaten. Der hat keinen Freigabe-Startpunkt und braucht auch
+    # keine Herkunft: er entsteht live beim Eintritt in die Kandidatur, nicht als Ausgrabung.
     alt = [k for k, v in d.items()
-           if isinstance(v, dict) and str(v.get("ab", "")) < "2026-09-22"]
+           if isinstance(v, dict) and v.get("ab") is not None
+           and str(v.get("ab", "")) < "2026-09-22"]
     for k in alt:
         assert "rekonstruiert" in str(d[k].get("quelle") or ""), \
             "%s traegt einen Startpunkt vor heute ohne Herkunftsangabe" % k
@@ -242,8 +246,18 @@ def test_das_gedaechtnis_enthaelt_nur_belegte_startpunkte():
     for name, e in d.items():
         if name.startswith("_"):
             continue
+        # Zwei Sorten Eintrag, jede mit ihrem eigenen belegten Startpunkt:
+        #   Freigabe-Start   `ab` + `drin`      — seit 22.09.
+        #   Kandidaten-Anker `kandidat.ab/nBei` — seit 23.09., s. nachweis_ziel_nachziehen
+        k = e.get("kandidat")
+        if isinstance(k, dict) and not e.get("ab"):
+            assert isinstance(k.get("ab"), str) and k["ab"][:2] == "20", (name, e)
+            assert isinstance(k.get("nBei"), int), (name, e)
+            continue
         assert isinstance(e.get("ab"), str) and e["ab"][:2] == "20", (name, e)
         assert isinstance(e.get("drin"), bool), (name, e)
+        if isinstance(k, dict):
+            assert isinstance(k.get("ab"), str), (name, e)
 
 
 # ── 23.09.2026: der Balken der wartenden Kandidaten ─────────────────────────────────────

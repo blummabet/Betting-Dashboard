@@ -82,9 +82,10 @@ def test_die_meldung_druckt_die_alten_schluessel_nicht_die_frischen():
          "gesendetOhneBelegAltKeys": ["fresh:a", "fresh:b", "fresh:c", "fresh:d"],
          "belegReparaturAb": "2026-09-22T05:14:00+00:00"}
     c = U.check_jeder_push_hat_seinen_beleg({"bfPublicRecord": r})
-    alt_zeile = [f for f in c["failures"] if "aeltere" in f]
-    assert alt_zeile, c["failures"]
-    assert "fresh:neu" not in alt_zeile[0], alt_zeile[0]
+    # 24.09.2026: die Narbe steht im Hinweis, die frische Wunde in den Fehlern.
+    assert "aeltere" in c["hinweis"], c
+    assert "fresh:neu" not in c["hinweis"], c["hinweis"]
+    assert any("leckt weiter" in f for f in c["failures"]), c["failures"]
 
 
 def test_der_alarm_ist_heute_aus():

@@ -811,8 +811,12 @@ class TestEineBilanzDieIhreLueckeNennt(unittest.TestCase):
         r = UI.check_jeder_push_hat_seinen_beleg(
             {"bfPublicRecord": {"gesendetOhneBeleg": 4, "gesendetOhneBelegNeu": 0,
                                 "gesendetOhneBelegKeys": ["fresh:36039873", "fresh:36035354"]}})
-        self.assertFalse(r["ok"])
-        text = " ".join(r["failures"])
+        # 24.09.2026: die reine Narbe ist keine Stoerung mehr — sie stand sonst jeden Morgen
+        # unter „Kostet Geld", an einem Punkt, an dem sich nichts mehr aendern kann. Was die
+        # Meldung LEISTEN muss, bleibt gleich und wird weiter geprueft: Anzahl und Schluessel.
+        # Nur steht es jetzt im Hinweis statt in den Fehlern.
+        self.assertTrue(r["ok"], "eine unveraenderliche Narbe ist keine Stoerung")
+        text = r["hinweis"]
         self.assertIn("4", text, "die Anzahl gehoert in die Meldung")
         self.assertIn("fresh:36039873", text, "und der Schluessel, sonst ist sie nicht pruefbar")
 
