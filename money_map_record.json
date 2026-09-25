@@ -1,22 +1,6 @@
 {
-"generatedAt": "2026-09-25T21:57:56.859839+00:00",
+"generatedAt": "2026-09-25T22:12:55.757856+00:00",
 "byVerdict": {
-"uneinig": {
-"n": 559,
-"wins": 175,
-"hitRate": 0.3131,
-"polyN": 515,
-"polyWins": 139,
-"polyHitRate": 0.2699,
-"pinnN": 344,
-"pinnHitRate": 0.6221,
-"nRoi": 348,
-"roi": -0.455,
-"roiLb": -0.5489,
-"nClv": 348,
-"clv": -20.32,
-"clvLb": -23.2813
-},
 "konsens": {
 "n": 1398,
 "wins": 1185,
@@ -32,6 +16,22 @@
 "nClv": 800,
 "clv": 18.91,
 "clvLb": 17.381
+},
+"uneinig": {
+"n": 560,
+"wins": 177,
+"hitRate": 0.3161,
+"polyN": 516,
+"polyWins": 138,
+"polyHitRate": 0.2674,
+"pinnN": 344,
+"pinnHitRate": 0.6221,
+"nRoi": 350,
+"roi": -0.4516,
+"roiLb": -0.545,
+"nClv": 350,
+"clv": -20.19,
+"clvLb": -23.1392
 },
 "teil": {
 "n": 32,
@@ -226,11 +226,6 @@
 "wins": 16,
 "hitRate": 0.8
 },
-"Chinese Super League": {
-"n": 19,
-"wins": 13,
-"hitRate": 0.6842
-},
 "Polish Ekstraklasa": {
 "n": 19,
 "wins": 12,
@@ -246,6 +241,11 @@
 "wins": 13,
 "hitRate": 0.7222
 },
+"Chinese Super League": {
+"n": 18,
+"wins": 13,
+"hitRate": 0.7222
+},
 "UEFA Champions League": {
 "n": 18,
 "wins": 14,
@@ -255,6 +255,11 @@
 "n": 17,
 "wins": 10,
 "hitRate": 0.5882
+},
+"Dutch Eerste Divisie": {
+"n": 17,
+"wins": 12,
+"hitRate": 0.7059
 },
 "UEFA Europa League": {
 "n": 17,
@@ -270,11 +275,6 @@
 "n": 16,
 "wins": 10,
 "hitRate": 0.625
-},
-"Dutch Eerste Divisie": {
-"n": 16,
-"wins": 11,
-"hitRate": 0.6875
 },
 "Egyptian Premier": {
 "n": 16,
@@ -551,6 +551,11 @@
 "wins": 2,
 "hitRate": 0.6667
 },
+"CONCACAF Nations League B": {
+"n": 2,
+"wins": 1,
+"hitRate": 0.5
+},
 "CONCACAF Nations League C": {
 "n": 2,
 "wins": 2,
@@ -600,11 +605,6 @@
 "n": 1,
 "wins": 1,
 "hitRate": 1.0
-},
-"CONCACAF Nations League B": {
-"n": 1,
-"wins": 0,
-"hitRate": 0.0
 },
 "Chinese League 2": {
 "n": 1,
@@ -690,26 +690,64 @@
 "clvLb": 11.5655
 },
 "weak": {
-"n": 768,
-"wins": 384,
-"hitRate": 0.5,
-"nRoi": 432,
-"roi": -0.1889,
-"roiLb": -0.2673,
-"nClv": 432,
-"clv": -6.56,
-"clvLb": -9.1195
+"n": 769,
+"wins": 386,
+"hitRate": 0.502,
+"nRoi": 434,
+"roi": -0.1873,
+"roiLb": -0.2655,
+"nClv": 434,
+"clv": -6.52,
+"clvLb": -9.0675
 }
 },
 "divergence": {
-"n": 559,
-"betfairWins": 175,
-"betfairRate": 0.3131,
-"polyN": 515,
-"polyWins": 139,
-"polyRate": 0.2699
+"n": 560,
+"betfairWins": 177,
+"betfairRate": 0.3161,
+"polyN": 516,
+"polyWins": 138,
+"polyRate": 0.2674
 },
 "recent": [
+{
+"matchId": "36088831",
+"home": "FC Dordrecht",
+"away": "Almere City",
+"league": "Dutch Eerste Divisie",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "FC Dordrecht",
+"polySide": "away",
+"winner": "home",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+3,
+2
+],
+"kickoff": "2026-09-25T19:00:00Z",
+"settledAt": "2026-09-25T22:12:55.540757+00:00"
+},
+{
+"matchId": "36108647",
+"home": "Bermuda",
+"away": "Guadeloupe",
+"league": "CONCACAF Nations League B",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Guadeloupe",
+"polySide": "home",
+"winner": "away",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-09-25T19:00:00Z",
+"settledAt": "2026-09-25T22:12:55.540757+00:00"
+},
 {
 "matchId": "35926490",
 "home": "Türkiye",
@@ -1431,56 +1469,18 @@
 ],
 "kickoff": "2026-09-23T19:00:00Z",
 "settledAt": "2026-09-23T22:07:03.547260+00:00"
-},
-{
-"matchId": "36095955",
-"home": "Barcelona (W)",
-"away": "Paris FC (W)",
-"league": "UEFA Women's Champions League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Barcelona (W)",
-"polySide": null,
-"winner": "home",
-"moneyWin": true,
-"polyWin": null,
-"ftScore": [
-5,
-2
-],
-"kickoff": "2026-09-23T19:00:00Z",
-"settledAt": "2026-09-23T20:51:54.814963+00:00"
-},
-{
-"matchId": "36099182",
-"home": "Oud-Heverlee Leuven (W)",
-"away": "AS Roma (W)",
-"league": "UEFA Women's Champions League",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "AS Roma (W)",
-"polySide": null,
-"winner": "draw",
-"moneyWin": false,
-"polyWin": null,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-09-23T16:45:00Z",
-"settledAt": "2026-09-23T19:54:44.232611+00:00"
 }
 ],
 "global": {
-"n": 1989,
-"wins": 1365,
-"hitRate": 0.6863,
-"nRoi": 1173,
+"n": 1990,
+"wins": 1367,
+"hitRate": 0.6869,
+"nRoi": 1175,
 "roi": 0.1225,
-"roiLb": 0.0762,
-"nClv": 1173,
+"roiLb": 0.0763,
+"nClv": 1175,
 "clv": 6.15,
-"clvLb": 4.5107
+"clvLb": 4.5069
 },
-"pending": 11
+"pending": 10
 }
