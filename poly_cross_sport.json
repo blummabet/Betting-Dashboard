@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-25T20:39:32.828019+00:00",
+ "generatedAt": "2026-09-25T21:09:27.108120+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -26,8 +26,37 @@
   "soccer_mls": 21
  },
  "trackRecord": {
-  "tracked": 301,
+  "tracked": 303,
   "converged": 77
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|baltimoreorioles-newyorkyankees|baltimoreorioles",
+   "sport": "baseball_mlb",
+   "event": "Baltimore Orioles vs New York Yankees",
+   "market": "Moneyline",
+   "outcome": "Baltimore Orioles",
+   "polyPP": 93.0,
+   "pinnPP": 50.0,
+   "gapPP": 43.0,
+   "vol": 797853,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-25T21:09:27.107670+00:00"
+  },
+  {
+   "id": "baseball_mlb|baltimoreorioles-newyorkyankees|newyorkyankees",
+   "sport": "baseball_mlb",
+   "event": "Baltimore Orioles vs New York Yankees",
+   "market": "Moneyline",
+   "outcome": "New York Yankees",
+   "polyPP": 7.0,
+   "pinnPP": 50.0,
+   "gapPP": -43.0,
+   "vol": 797853,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-25T21:09:27.107670+00:00"
+  }
+ ]
 }
