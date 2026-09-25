@@ -269,7 +269,14 @@ def test_fuenf_ligen_ein_schluessel_ist_kein_sicherer_treffer():
              {"liga": "Japanese Football League", "n": 111}]
     d = A.abgleich(ligen, {}, ECHT)
     sicher = [x for x in d["ohneAnkerMitKandidat"] if x["urteil"] == "sicher"]
-    assert sicher == [], [(x["liga"], x["key"]) for x in sicher]
+    # 24.09.2026 stand hier `sicher == []`: alle drei sahen gleich gut aus, also durfte keine
+    # gelten. 25.09.2026 unterscheidet Regel (3) sie — „J League 2" an der Stufe, „Japanese
+    # Football League" daran, dass ihr Name das `j` der Gegenseite nicht nennt. Damit
+    # beansprucht nur noch EINE den Schluessel, und die ist die richtige. Die alte Erwartung
+    # war nicht falsch, sie war das Beste, was ohne diese Unterscheidung moeglich war.
+    assert [x["liga"] for x in sicher] == ["Japanese J League"], \
+        [(x["liga"], x["key"], x["warum"]) for x in sicher]
+    assert all(x["key"] == "soccer_japan_j_league" for x in sicher)
 
 
 def test_die_richtigen_ueberleben_den_umbau():
@@ -303,3 +310,166 @@ def test_ein_schluessel_ohne_stufe_ist_die_oberste_klasse():
     """Ohne diese Annahme faellt „Greek Super League 2" gegen „Super League" nicht auf."""
     assert A._stufe(["super", "league"]) == {"t1"}
     assert A._stufe(["super", "league", "2"]) == {"t2"}
+
+
+# ════════════════════════════════════════════════════════════════════════════════════
+# 🔴 25.09.2026, ZWEITER echter Lauf. Von 7 „sicheren" war eine falsch und vier richtige
+# fehlten. Beide Ursachen sassen in Regel (3) bzw. in der Zusammenschreibung.
+# ════════════════════════════════════════════════════════════════════════════════════
+
+def _s(key, titel, aktiv=True):
+    return {"key": key, "title": titel, "active": aktiv}
+
+
+JLEAGUE = _s("soccer_japan_j_league", "J League")
+
+
+def test_kurzer_name_der_gegenseite_widerlegt_wieder():
+    """„Japanese Football League" ist Japans VIERTE Liga und nennt keine Ordnungszahl. Weil
+    der Kern von „J League" nur `j` ist und `len(t) > 2` das wegfilterte, fiel Regel (3)
+    ganz aus — und die JFL stand als sichere Zuordnung auf der ersten Liga Japans."""
+    urteil, warum = A.passt("Japanese Football League", JLEAGUE)
+    assert urteil == "vorschlag", warum
+    assert "nennt j" in warum
+
+
+def test_kurzer_eigener_name_belegt_wieder():
+    """Dieselbe Filterzeile schnitt in die andere Richtung: `k` und `mx` trafen unseren Namen
+    exakt, wurden weggefiltert, und uebrig blieb nur die Klebeform, die nicht traf."""
+    assert A.passt("South Korean K1 League",
+                   _s("soccer_korea_kleague1", "K League 1"))[0] == "sicher"
+    assert A.passt("Mexican Liga MX", _s("soccer_mexico_ligamx", "Liga MX"))[0] == "sicher"
+    assert A.passt("Japanese J League", JLEAGUE)[0] == "sicher"
+
+
+def test_zusammengeschrieben_ist_dasselbe_wort():
+    """die-odds-api schreibt `superleague`, unser Feed „Super League"."""
+    urteil, warum = A.passt("Swiss Super League",
+                            _s("soccer_switzerland_superleague", "Swiss Superleague"))
+    assert urteil == "sicher", warum
+    assert "superleague" in warum
+
+
+def test_klebeform_aus_lauter_allerweltswoertern_belegt_nichts():
+    """Sonst waere „premierleague" gegen „premierleague" ein Kennwort — zweimal dasselbe
+    Schweigen — und die Pruefung fuer namenlose Namen waere umgangen."""
+    assert "premierleague" not in A._klebeformen(["premier", "league"])
+    assert "superleague" in A._klebeformen(["super", "league"])
+    assert "serieb" in A._klebeformen(["serie", "b"])
+
+
+def test_klebeform_erfindet_keine_uebereinstimmung():
+    """Nur BENACHBARTE Tokens werden verklebt, und nur zu 2er/3er-Gruppen."""
+    k = A._klebeformen(["eerste", "divisie"])
+    assert "eerstedivisie" in k and "eredivisie" not in k
+    assert A.passt("Dutch Eerste Divisie",
+                   _s("soccer_netherlands_eredivisie", "Dutch Eredivisie"))[0] == "vorschlag"
+
+
+def test_namenloser_name_wird_von_regel_drei_gefangen_nicht_von_einer_extrasperre():
+    """25.09.2026: ich hatte hier eine zweite Sperre eingebaut („ohne Kennwort UND ohne
+    genannte Stufe"). Sie war ueberfluessig — Regel (3) fing „Japanese Football League"
+    schon — und nahm dafuer richtige Zuordnungen weg. Der Test haelt beides fest: der
+    namenlose Name faellt, der generische Treffer bleibt."""
+    assert A.passt("Japanese Football League", JLEAGUE)[0] == "vorschlag"
+    assert A.passt("Ukrainian Premier League",
+                   _s("soccer_ukraine_premier_league", "Premier League - Ukraine"))[0] == "sicher"
+    assert A.passt("Spanish Segunda Division",
+                   _s("soccer_spain_segunda_division", "La Liga 2 - Spain"))[0] == "sicher"
+
+
+def test_artikel_widerlegen_nicht():
+    """Der Titel „La Liga 2 - Spain" brachte mit dem gefallenen Kurzwort-Filter ein `la` in
+    ihren Kern — und haette die richtige Zuordnung der Segunda widerlegt."""
+    assert "la" in A.RAUSCHEN and "de" in A.RAUSCHEN and "of" in A.RAUSCHEN
+    assert A._kern(["la", "liga"]) == set()
+
+
+def test_die_elf_zuordnungen_aus_dem_echten_lauf():
+    """Die Liste, die Lucas eintragen soll — als Test, damit sie nicht still kippt.
+    Jede Zeile ist von Hand gegen die Spielklasse des Landes geprueft."""
+    fest = [
+        ("Spanish Segunda Division", _s("soccer_spain_segunda_division", "La Liga 2 - Spain")),
+        ("Swedish Superettan",       _s("soccer_sweden_superettan", "Superettan - Sweden")),
+        ("Italian Serie B",          _s("soccer_italy_serie_b", "Serie B - Italy")),
+        ("French Ligue 2",           _s("soccer_france_ligue_two", "Ligue 2 - France")),
+        ("Greek Super League",       _s("soccer_greece_super_league", "Super League - Greece")),
+        ("Chinese Super League",     _s("soccer_china_superleague", "Super League - China")),
+        ("German Frauen-Bundesliga", _s("soccer_germany_bundesliga_women", "Frauen-Bundesliga")),
+        ("Japanese J League",        JLEAGUE),
+        ("Mexican Liga MX",          _s("soccer_mexico_ligamx", "Liga MX")),
+        ("South Korean K1 League",   _s("soccer_korea_kleague1", "K League 1")),
+        ("Swiss Super League",       _s("soccer_switzerland_superleague", "Swiss Superleague")),
+    ]
+    for liga, sport in fest:
+        urteil, warum = A.passt(liga, sport)
+        assert urteil == "sicher", "%s -> %s: %s" % (liga, sport["key"], warum)
+
+
+def test_die_fallen_bleiben_gesperrt():
+    """Alle Zeilen, die im ersten oder zweiten Lauf als „sicher" dastanden und falsch waren.
+    Keine darf durch die Lockerung der Klebeformen zurueckkommen."""
+    fallen = [
+        ("Polish Cup",                   _s("soccer_poland_ekstraklasa", "Ekstraklasa - Poland")),
+        ("Polish I Liga",                _s("soccer_poland_ekstraklasa", "Ekstraklasa - Poland")),
+        ("Polish 2 Liga",                _s("soccer_poland_ekstraklasa", "Ekstraklasa - Poland")),
+        ("Scottish Championship",        _s("soccer_spl", "Premiership - Scotland")),
+        ("Scottish League One",          _s("soccer_spl", "Premiership - Scotland")),
+        ("Scottish Challenge Cup",       _s("soccer_spl", "Premiership - Scotland")),
+        ("Argentinian Primera Nacional", _s("soccer_argentina_primera_division",
+                                            "Primera División - Argentina")),
+        ("Japanese J League 2",          JLEAGUE),
+        ("Japanese J League 3",          JLEAGUE),
+        ("Japanese J League Cup",        JLEAGUE),
+        ("Japanese Football League",     JLEAGUE),
+        ("Turkish 1 Lig",                _s("soccer_turkey_super_league", "Turkey Super League")),
+        ("Swedish Division 1",           _s("soccer_sweden_allsvenskan", "Allsvenskan - Sweden")),
+        ("Norwegian 1st Division",       _s("soccer_norway_eliteserien", "Eliteserien - Norway")),
+        ("Danish 1st Division",          _s("soccer_denmark_superliga", "Denmark Superliga")),
+        ("Dutch Eerste Divisie",         _s("soccer_netherlands_eredivisie", "Dutch Eredivisie")),
+        ("Chinese League 1",             _s("soccer_china_superleague", "Super League - China")),
+        ("Chinese League 2",             _s("soccer_china_superleague", "Super League - China")),
+        ("South Korean K2 League",       _s("soccer_korea_kleague1", "K League 1")),
+        ("South Korean K3 League",       _s("soccer_korea_kleague1", "K League 1")),
+        ("Italian Serie C",              _s("soccer_italy_serie_a", "Serie A - Italy")),
+        ("Italian Serie C Cup",          _s("soccer_italy_serie_a", "Serie A - Italy")),
+        ("Greek Super League 2",         _s("soccer_greece_super_league", "Super League - Greece")),
+        ("Portuguese U23",               _s("soccer_portugal_primeira_liga",
+                                            "Primeira Liga - Portugal")),
+        ("Finnish Ykkosliiga",           _s("soccer_finland_veikkausliiga",
+                                            "Veikkausliiga - Finland")),
+        ("Saudi 1st Division",           _s("soccer_saudi_arabia_pro_league", "Saudi Pro League")),
+        ("English National League",      _s("soccer_england_efl_cup", "EFL Cup")),
+        ("English Sky Bet League 1",     _s("soccer_england_efl_cup", "EFL Cup")),
+        ("English WSL",                  _s("soccer_england_efl_cup", "EFL Cup")),
+    ]
+    for liga, sport in fallen:
+        urteil, warum = A.passt(liga, sport)
+        assert urteil != "sicher", "%s -> %s kam als SICHER zurueck: %s" % (
+            liga, sport["key"], warum)
+
+
+def test_ersatzschreibweise_ist_kein_fund():
+    """„Major League Soccer" feuert nie, aber `"US MLS"` daneben erreicht dasselbe Ziel. Am
+    01.09. bewusst so entschieden — die Meldung machte daraus jeden Lauf einen Fund."""
+    ligen = [{"liga": "US MLS", "n": 518}]
+    zuo = {"US MLS": "soccer_usa_mls", "Major League Soccer": "soccer_usa_mls",
+           "Ruritanian Liga": "soccer_ruritania_liga"}
+    d = A.abgleich(ligen, zuo, [])
+    assert d["eintraegeErsatzschreibweise"] == ["Major League Soccer"]
+    assert d["eintraegeOhneLiga"] == ["Ruritanian Liga"], d["eintraegeOhneLiga"]
+
+
+def test_ansehen_zeile_nennt_die_anderen_kandidaten():
+    """25.09.2026: bei einem abgelehnten Kandidaten haben alle dasselbe Urteil — welcher
+    angezeigt wird, entscheidet dann die alphabetische Reihenfolge. Fuer „English Sky Bet
+    League 1" stand `soccer_england_efl_cup` da (ein Pokal), obwohl `soccer_england_league1`
+    in derselben Kandidatenliste lag und die richtige Antwort ist."""
+    sports = [_s("soccer_england_efl_cup", "EFL Cup"),
+              _s("soccer_england_league1", "League 1 - England")]
+    d = A.abgleich([{"liga": "English Sky Bet League 1", "n": 285}], {}, sports)
+    x = d["ohneAnkerMitKandidat"][0]
+    assert x["urteil"] != "sicher"
+    assert "soccer_england_league1" in ([x["key"]] + (x.get("weitere") or []))
+    text = A.bericht(d)
+    assert "soccer_england_league1" in text, text
