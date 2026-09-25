@@ -86,7 +86,13 @@ LAND_PAARE = {
 }
 # Wörter, die nichts über die Liga aussagen.
 RAUSCHEN = {"the", "of", "league", "liga", "division", "divisie", "divisao", "premier",
-            "professional", "football", "soccer", "campeonato"}
+            "professional", "football", "soccer", "campeonato",
+            # 25.09.2026: Artikel und Praepositionen. Sie stehen in Titeln wie „La Liga 2 -
+            # Spain" und „League of Ireland" und sagen ueber die Liga nichts. Sobald der
+            # Kurzwort-Filter in Regel (3) faellt (s. unten), wuerde sonst ein „la" als
+            # eigener Name gelten und eine richtige Zuordnung widerlegen.
+            "la", "le", "el", "los", "las", "de", "del", "da", "do", "dos", "di", "du",
+            "des", "and", "und", "en", "al"}
 
 # 🔴 24.09.2026, erster echter Lauf: von 28 „sicheren" Zuordnungen waren rund zwei Drittel
 # FALSCH — „Polish Cup" → Ekstraklasa, „Scottish Championship" → SPL, „Argentinian Primera
@@ -165,6 +171,36 @@ def _tokens(s: str) -> list:
     return raus
 
 
+def _klebeformen(tokens) -> set:
+    """Die Tokens plus die Zusammenschreibungen benachbarter Tokens.
+
+    🔴 25.09.2026: die-odds-api schreibt zusammen, was unser Feed trennt —
+    `superleague` gegen „Super League", `ligamx` gegen „Liga MX", `kleague1` gegen
+    „K1 League". Ohne diese Formen widerlegt Regel (3) drei RICHTIGE Zuordnungen mit dem
+    Satz „ihr Name nennt superleague, unserer nicht" — obwohl unserer genau das nennt, nur
+    mit einem Leerzeichen darin.
+
+    Nur BENACHBARTE Tokens werden verklebt, und die Einzelformen bleiben erhalten. Damit
+    entsteht keine Uebereinstimmung, die nicht im Namen steht: „Eerste Divisie" wird
+    `eerstedivisie` und trifft `eredivisie` weiterhin nicht.
+    """
+    t = [x for x in tokens]
+    raus = set(t)
+    for i in range(len(t) - 1):
+        for j in (2, 3):
+            if i + j > len(t):
+                continue
+            teile = t[i:i + j]
+            # Eine Klebeform aus NUR Allerweltswoertern belegt nichts: „premierleague" gegen
+            # „premierleague" ist zweimal dasselbe Schweigen. Mindestens ein Teil muss ein
+            # eigenes Wort sein, sonst umgeht die Klebeform genau die Pruefung, die fuer
+            # namenlose Namen gebaut ist (s. `_stufe_genannt` im Beweis-Schritt).
+            if all(x in RAUSCHEN or x in STUFE or x in ART for x in teile):
+                continue
+            raus.add("".join(teile))
+    return raus
+
+
 def land_aus_liga(liga: str):
     """('ukraine', ['premier','league']) — oder (None, tokens), wenn das Land nicht erkannt ist. REIN."""
     t = _tokens(liga)
@@ -228,12 +264,30 @@ def passt(liga: str, sport: dict):
                              "keine Uebereinstimmung. Ansehen." % land)
     # (3) Ihr eigener Name darf unserem nicht widersprechen: heisst ihre Liga „Ekstraklasa"
     #     und unsere „I Liga", ist das kein Schweigen, sondern ein anderer Name.
-    ihr_kern = {t for t in _kern(ktoks) | _kern(titel) if t != land and len(t) > 2}
-    if ihr_kern and not (ihr_kern & set(rest)):
+    # 🔴 25.09.2026, zweiter echter Lauf: hier stand `len(t) > 2`. Dieselbe Fehlerklasse
+    # wie einen Tag vorher in `stake_burst_push` — *ein Filter, der das Unterscheidende
+    # wegwirft, weil es kurz ist* — und hier schnitt er in BEIDE Richtungen:
+    #   • „J League" hat als Kern nur `j`. Weggefiltert war ihr_kern leer, die Regel fiel
+    #     ganz aus, und „Japanese Football League" (Japans VIERTE Liga, im Namen keine
+    #     Ordnungszahl) stand als sichere Zuordnung auf `soccer_japan_j_league`.
+    #   • „K League 1" -> `k`, „Liga MX" -> `mx`: beide trafen unseren Namen exakt, wurden
+    #     aber weggefiltert, sodass nur die Klebeform (`kleague`, `ligamx`) uebrigblieb —
+    #     und die traf nicht. Zwei richtige Zuordnungen fielen an ihrem eigenen Beweis.
+    # Kurze Woerter sind in Liganamen genau die unterscheidenden: j, k, mx, us. Was hier
+    # wirklich nicht traegt, sind Artikel und Ordnungszahlen — und die stehen in RAUSCHEN
+    # bzw. STUFE.
+    ihr_kern = {t for t in _kern(ktoks) | _kern(titel) if t != land}
+    unser_vgl = _klebeformen(rest)
+    if ihr_kern and not (_klebeformen(ihr_kern) & unser_vgl):
         return "vorschlag", ("Land %s, aber ihr Name nennt %s, unserer nicht — ansehen"
                              % (land, "/".join(sorted(ihr_kern))))
     # ── Jetzt erst belegen ──────────────────────────────────────────────────────────────
-    gemeinsam = unser & ihre
+    # Verglichen wird auf den GEORDNETEN Tokens, nicht auf dem Kern: die Klebeform entsteht
+    # aus der Nachbarschaft, und ein Kern ist eine Menge ohne Reihenfolge. („Swiss Super
+    # League" -> `superleague` gibt es nur, solange `super` und `league` benachbart sind.)
+    beiden = unser_vgl & _klebeformen(list(ktoks) + list(titel))
+    gemeinsam = {t for t in beiden
+                 if t not in RAUSCHEN and t not in STUFE and t not in ART and t != land}
     if gemeinsam:
         return "sicher", "Land %s + Kennwort %s" % (land, "/".join(sorted(gemeinsam)))
     if not unser:
@@ -241,6 +295,14 @@ def passt(liga: str, sport: dict):
         # gemeinsames Kennwort geben. Dann tragen Land, Art und Stufe allein, und ob das
         # reicht, entscheidet die Eindeutigkeit: `vorschlagen` stuft zurueck, sobald ein
         # zweiter Kandidat im selben Land steht.
+        # 25.09.2026, VERWORFEN: hier stand kurz eine Sperre „Name ohne Kennwort UND ohne
+        # genannte Stufe ist kein Beweis". Sie sollte „Japanese Football League" fangen — den
+        # fing aber schon Regel (3), sobald deren Kurzwort-Filter weg war. Was sie zusaetzlich
+        # traf, waren RICHTIGE Zuordnungen: „Ukrainian Premier League" gegen
+        # `soccer_ukraine_premier_league` wurde zum Vorschlag. Drei bestehende Tests wurden
+        # davon rot, und sie hatten recht. Eine Sperre, die nichts Neues widerlegt und dafuer
+        # Richtiges wegnimmt, gehoert nicht ins Haus — die Eindeutigkeitspruefung in
+        # `vorschlagen`/`abgleich` deckt den Rest dieses Zweigs ab.
         return "sicher", "Land %s, Stufe %s, Name ohne eigenes Kennwort" % (land, "/".join(su))
     # Unsere Seite hat ein eigenes Kennwort, und es kommt drueben nicht vor — „Primera
     # NACIONAL" gegen „Primera División". Genau hier entstehen falsche Anker.
@@ -315,7 +377,20 @@ def abgleich(ligen: list, zuordnung: dict, sports: list) -> dict:
                            % beansprucht[x["key"]])
 
     # Gegenrichtung: Einträge, die auf keinen Ligastring des Ledgers passen (MLS-Fall 01.09.).
-    tot = sorted(k for k in (zuordnung or {}) if k not in namen)
+    #
+    # 🔴 25.09.2026: hier stand nur EINE Liste, und „Major League Soccer" stand darin — obwohl
+    # `"US MLS": "soccer_usa_mls"` zwei Zeilen darueber steht und feuert. Am 01.09. wurde
+    # ausdruecklich entschieden, BEIDE Schreibweisen stehen zu lassen („ein Key, der nie
+    # trifft, schadet nicht, ein fehlender schon"). Die Meldung machte aus dieser Entscheidung
+    # jeden Lauf erneut einen Fund — und wer ihr nachgeht, sucht eine Abdeckungsluecke, die es
+    # nicht gibt. Eine zweite Schreibweise neben einer feuernden ist ein ERSATZSCHLUESSEL,
+    # keine Luecke.
+    # Fehlerklasse: *eine Meldung, die eine bewusste Entscheidung jedes Mal als Fund meldet,
+    # verbraucht dieselbe Aufmerksamkeit wie ein echter Fund.*
+    lebende_ziele = {v for k, v in (zuordnung or {}).items() if k in namen}
+    stumm = [k for k in (zuordnung or {}) if k not in namen]
+    tot = sorted(k for k in stumm if zuordnung[k] not in lebende_ziele)
+    ersatz = sorted(k for k in stumm if zuordnung[k] in lebende_ziele)
     return {
         "sportsGefragt": gefragt,
         "ligenGesamt": len(namen),
@@ -323,6 +398,7 @@ def abgleich(ligen: list, zuordnung: dict, sports: list) -> dict:
         "ohneAnkerMitKandidat": ohne,
         "ohneAnkerOhneKandidat": unbekannt,
         "eintraegeOhneLiga": tot,
+        "eintraegeErsatzschreibweise": ersatz,
         "creditsJeLigaMonat": CREDITS_JE_LIGA_MONAT,
         "creditsFuerAlleVorschlaege": CREDITS_JE_LIGA_MONAT * len(ohne),
     }
@@ -367,8 +443,15 @@ def bericht(d: dict) -> str:
             z.append("    %-42s -> %-38s %s" % (x["liga"][:42], x["key"], x["warum"]))
     if d["eintraegeOhneLiga"]:
         z.append("")
-        z.append("  ── Einträge, die auf keinen Ligastring passen (feuern nie) ──")
+        z.append("  ── Einträge ohne Anker-Wirkung: kein Ligastring, kein Ersatz ──")
         for k in d["eintraegeOhneLiga"][:25]:
+            z.append("    %s -> %s" % (k, "(die Liga heisst im Feed anders oder kommt nicht vor)"))
+    if d.get("eintraegeErsatzschreibweise"):
+        z.append("")
+        z.append("  ── Ersatzschreibweisen (harmlos, KEIN Fund) ──")
+        z.append("    Diese Einträge feuern nie, aber ihr Ziel wird von einer anderen,")
+        z.append("    feuernden Schreibweise erreicht. Am 01.09. so entschieden.")
+        for k in d["eintraegeErsatzschreibweise"][:25]:
             z.append("    %s" % k)
     ohne = d["ohneAnkerOhneKandidat"]
     if ohne:
