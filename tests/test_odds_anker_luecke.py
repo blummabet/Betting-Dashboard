@@ -473,3 +473,15 @@ def test_ansehen_zeile_nennt_die_anderen_kandidaten():
     assert "soccer_england_league1" in ([x["key"]] + (x.get("weitere") or []))
     text = A.bericht(d)
     assert "soccer_england_league1" in text, text
+
+
+def test_bericht_nennt_die_handliste_nicht_den_anker():
+    """25.09.2026: die Kopfzeile sagte „30 mit Anker · 223 ohne". Gezaehlt wurde die Handliste.
+    Gemessen hatten am selben Tag 38 Ligen einen Anker, 37 davon ueber den globalen Pool und
+    eine aus der Liste — die Zahl beschrieb eine Luecke, die es fuer 1X2 nicht gibt. Ich bin
+    selbst darauf hereingefallen und habe Lucas eine falsche Abdeckungsquote gemeldet."""
+    d = A.abgleich([{"liga": "Ruritanian Liga", "n": 40}], {"Ruritanian Liga": "soccer_r"}, [])
+    t = A.bericht(d)
+    assert "mit Anker" not in t.split("\n")[1], t.split("\n")[1]
+    assert "in der Handliste" in t
+    assert "TORLINIEN" in t or "Torlinien" in t

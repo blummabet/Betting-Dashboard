@@ -2405,6 +2405,18 @@
     return '<span class="md-kl-c" style="color:' + col + '" title="' + esc(u[2]) + '">' + u[0] + '</span>';
   }
 
+  // Der Grund, warum es keine Hochrechnung gibt — als Text, aber NICHT als Schluss aus einer
+  // Leerstelle. Die Schlüssel kommen aus `freigabe.noetig_grund`; ein unbekannter Schlüssel
+  // rendert gar nichts.
+  var FG_NOETIG_TEXT = {
+    keine_einzelwerte: ['aus einem Aggregat',
+      'Diese Schublade kommt aus einem Aggregat (n, Trefferquote, ROI) statt aus einzelnen Renditen — eine Hochrechnung braucht die Einzelwerte. Über den Schnitt sagt das nichts: die Rendite-Untergrenze daneben ist gemessen.'],
+    zu_wenige: ['für eine Hochrechnung zu wenige Plays',
+      'Aus weniger als 10 Werten lässt sich die Streuung nicht schätzen — und ohne Streuung gibt es keine Entfernung zu einem Beleg.'],
+    nicht_positiv: ['Schnitt nicht positiv',
+      'Bei nicht positivem Schnitt bestätigen weitere Plays das Minus, sie drehen es nicht.']
+  };
+
   function _mdFgZeile(r, minN) {
     // Eine Schublade als Zeile: Name, Stichprobe, ROI und CLV IMMER mit Untergrenze daneben
     // (feedback_punktschaetzer_kein_beleg — der Punktschaetzer allein hat hier nichts verloren).
@@ -2430,8 +2442,19 @@
     // das im Produzenten (`noetigNRoi`) — das Frontend hat die Einzelwerte gar nicht.
     var weit = '';
     if (n < ziel) {
+      // 🔴 25.09.2026 (Übersicht-Check). Hier stand: `if (r.noetigNRoi == null) → "Schnitt
+      // nicht positiv"`. Der Satz wurde aus einer LEERSTELLE geschlossen, und `noetigNRoi` ist
+      // aus drei Gründen leer. Nachgezählt an den 444 Schubladen des Tages: der Satz stand an
+      // 25 Zeilen und traf auf **null** davon zu. 11 der 25 hatten eine BELEGTE
+      // Rendite-Untergrenze — darunter `Kazakhstan Premier League · Match Odds` (ROI +43,8 %,
+      // UG +12,6 %), die im Register daneben als bestes Betfair-Fach mit einem Stern steht.
+      // Zwei Flächen, eine Schublade, entgegengesetzte Auskunft.
+      // Der Grund steht jetzt im Artefakt (`noetigGrund`, s. freigabe.noetig_grund) — dieses
+      // Frontend liest ihn und erfindet ihn nicht. Ein unbekannter Grund rendert als SCHWEIGEN:
+      // nichts zu wissen ist keine Aussage über den Schnitt.
+      var _ng = r.noetigGrund, _ngT = FG_NOETIG_TEXT[_ng];
       if (r.noetigNRoi == null) {
-        weit = '<span class="md-kl-c" style="color:var(--mi3)" title="Bei nicht positivem Schnitt bestätigen weitere Plays das Minus, sie drehen es nicht.">Schnitt nicht positiv</span>';
+        weit = _ngT ? '<span class="md-kl-c" style="color:var(--mi3)" title="' + esc(_ngT[1]) + '">' + _ngT[0] + '</span>' : '';
       } else if (r.entfernung && r.entfernung.schaetzbar === false) {
         // 06.09.2026, zwei Stunden nach der ersten Fassung: hier stand „Beleg erst ab ~263".
         // Ein einziger neuer Play machte daraus 3053. Der Bootstrap sagt, warum — bei diesen

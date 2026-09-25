@@ -418,9 +418,22 @@ def hole_sports(api_key, fetch=None):
 
 def bericht(d: dict) -> str:
     z = []
-    z.append("=== Odds-Anker: was fehlt ===")
-    z.append("  %d Ligen im Ledger · %d mit Anker · %d ohne"
+    z.append("=== Odds-Anker: was der Handliste fehlt ===")
+    # 🔴 25.09.2026: hier stand „%d mit Anker · %d ohne". Das war falsch gerahmt und hat mich
+    # selbst in die Irre gefuehrt. Gezaehlt wird die HANDLISTE, nicht der Anker. Seit dem
+    # 01.09. holt `betfair_consensus` alle aktiven Wettbewerbe und findet die Match Odds ueber
+    # einen globalen Pool: gemessen am 25.09. hatten 38 Ligen einen Pinnacle-Anker, 37 davon
+    # ueber den Pool und nur 1 aus dieser Liste. „223 ohne Anker" beschrieb also eine Luecke,
+    # die es fuer 1X2 gar nicht gibt.
+    # Was ohne Eintrag hier wirklich fehlt, sind die TOTALS: `totals_by_key` wird nur fuer die
+    # kuratierten Keys gefuellt, und `tev` hat keinen zweiten Anlauf im Pool.
+    # Fehlerklasse: *eine Zahl, die einer besseren Messung daneben widerspricht und trotzdem
+    # als Tatsache dasteht.*
+    z.append("  %d Ligen im Ledger · %d in der Handliste · %d nicht"
              % (d["ligenGesamt"], d["mitAnker"], d["ligenGesamt"] - d["mitAnker"]))
+    z.append("  Gezaehlt wird die Handliste, NICHT der Anker. Die Match Odds findet der globale")
+    z.append("  Pool seit 01.09. auch ohne Eintrag; was hier fehlt, sind die Pinnacle-TORLINIEN")
+    z.append("  (`totals_by_key` nur fuer kuratierte Keys, `tev` ohne zweiten Anlauf).")
     sicher = [x for x in d["ohneAnkerMitKandidat"] if x.get("urteil") == "sicher"]
     vorschlag = [x for x in d["ohneAnkerMitKandidat"] if x.get("urteil") != "sicher"]
     if not d.get("sportsGefragt"):

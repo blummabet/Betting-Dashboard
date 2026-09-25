@@ -794,6 +794,79 @@ def check_buecher_punktestand(ctx):
               "Nicht erhobene Buecher senken den Nenner, Tiefe zaehlt nur bei Zustimmung.")
 
 
+def check_kein_grund_widerspricht_seiner_zahl(ctx):
+    """🔴 25.09.2026 (Lucas-Uebersicht-Check) — dieselbe Ursache wie am 15.09., ein Feld weiter.
+
+    Auf dem Board stand an 25 der 444 Schubladen „Schnitt nicht positiv". Nachgezaehlt, auf
+    wie viele der Satz zutraf: **null**.
+
+        Betfair-Aggregat, gar keine Einzelrenditen   12   (11 davon mit BELEGTER Untergrenze)
+        unter 10 Werten, Hochrechnung unmoeglich     12
+        ruhende Zeile, Feld fehlt ganz                1
+        Schnitt wirklich <= 0                         0
+
+    Die schlimmste Zeile: `Kazakhstan Premier League · Match Odds`, ROI +43,8 %, Untergrenze
+    +12,6 % — im Register daneben mit Stern als bestes Betfair-Fach, und im Schubladen-Schrank
+    mit dem Satz, ihr Schnitt sei nicht positiv.
+
+    Ursache ist dieselbe Zeile Code, die am 15.09. `clvUrteil` gekostet hat:
+    `bewerte(name, "betfair", [], [])`. Die Aggregat-Quellen geben leere Listen hinein und
+    setzen die Zahlen danach nach; was `bewerte` aus den leeren Listen ableitet, bleibt stehen.
+    Am 15.09. wurde `clvUrteil` reparaturt — aber niemand hat gefragt, welche ANDEREN Felder
+    dieselbe Herkunft haben. `noetigNRoi` hatte sie.
+
+    Fehlerklasse: *fehlende Information rendert als Behauptung* — hier nicht als harmloser
+    Default, sondern als das Gegenteil der Messung daneben.
+
+    Dieser Guard prueft die Aussage, nicht den Code: kein Grund darf der Zahl widersprechen,
+    die neben ihm steht. Solange das Artefakt noch aus einem Lauf ohne `noetigGrund` stammt,
+    ist das ein Hinweis und kein Fehler — ein Guard, der die Rollout-Luecke als Fund meldet,
+    verbraucht dieselbe Aufmerksamkeit wie ein echter.
+    """
+    f = ctx.get("freigabe") or {}
+    zeilen = [z for z in (f.get("alle") or []) if isinstance(z, dict)]
+    if not zeilen:
+        return _c("kein Grund widerspricht seiner Zahl", "warn", [],
+                  "kein freigabe.json geladen")
+    fails, hinweise = [], []
+    # EINE Bedingung, nicht zwei. Der erste Entwurf hatte hier zwei Zweige — einen fuer die
+    # belegte Untergrenze, einen fuer den positiven Schnitt. Die Mutationsprobe hat den ersten
+    # ersatzlos entfernen lassen, ohne dass etwas rot wurde: `roiLb > 0` heisst immer auch
+    # `roi > 0`, also fing der zweite Zweig denselben Fall und deckte das Loch zu.
+    # Fehlerklasse: *zwei Wachen auf demselben Posten bewachen einander, nicht das Tor.*
+    widerspruch = [z for z in zeilen
+                   if z.get("noetigGrund") == "nicht_positiv"
+                   and ((isinstance(z.get("roiLb"), (int, float)) and z["roiLb"] > 0)
+                        or (isinstance(z.get("roi"), (int, float)) and z["roi"] > 0))]
+    if widerspruch:
+        def _rang(z):
+            return (z.get("roiLb") if isinstance(z.get("roiLb"), (int, float)) else -9,
+                    z.get("roi") or 0)
+        w = max(widerspruch, key=_rang)
+        _ug = ("UG %+.1f %%" % (100 * w["roiLb"])) if isinstance(w.get("roiLb"), (int, float)) \
+            else "ohne Untergrenze"
+        fails.append("%d Zeilen sagen „der Schnitt ist nicht positiv“, obwohl die Zahl daneben "
+                     "positiv ist (schlimmster Fall: %s, ROI %+.1f %%, %s, n%s) — Fund vom 25.09."
+                     % (len(widerspruch), w.get("schublade"), 100 * (w.get("roi") or 0),
+                        _ug, w.get("n")))
+    # (3) Vollstaendigkeit: halb ausgerollt ist schlimmer als gar nicht — dann steht der Grund
+    #     bei einem Teil der Zeilen und bei den anderen raet die Oberflaeche wieder.
+    hat_feld = [z for z in zeilen if "noetigGrund" in z]
+    if not hat_feld:
+        hinweise.append("noch kein Lauf mit `noetigGrund` — der Produzent muss einmal laufen, "
+                        "bevor dieser Guard etwas pruefen kann (Rollout-Luecke, kein Fund)")
+    else:
+        stumm = [z for z in zeilen
+                 if "noetigGrund" not in z and z.get("noetigNRoi") is None
+                 and (z.get("n") or 0) > 0]
+        if stumm:
+            fails.append("%d Zeilen ohne `noetigGrund`, obwohl andere es tragen — bei ihnen "
+                         "raet die Oberflaeche wieder (z. B. %s, n%s)"
+                         % (len(stumm), stumm[0].get("schublade"), stumm[0].get("n")))
+    return _c("kein Grund widerspricht seiner Zahl", "error", fails,
+              " · ".join(hinweise) or None)
+
+
 def check_clv_urteil_passt_zur_zahl(ctx):
     """15.09.2026 (Lucas-Uebersicht-Check) — im Register standen 8 von 200 Zeilen mit einer
     CLV-Zahl NEBEN dem Urteil „· kein CLV": „Public-Pushes −2,35 pp · kein CLV",
@@ -1724,6 +1797,7 @@ UEBERSICHT_CHECKS = [
     check_signal_bilanz,
     check_fade_kontrolle,
     check_clv_urteil_passt_zur_zahl,
+    check_kein_grund_widerspricht_seiner_zahl,
     check_takt_stimmt_mit_dem_cron,
     check_der_deckel_hat_luft,
     check_geschlossen_heisst_belegt,

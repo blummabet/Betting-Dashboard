@@ -250,6 +250,52 @@ def noetiges_n(werte) -> int | None:
     return len(xs) if var <= 0 else int(math.ceil((Z * math.sqrt(var) / m) ** 2))
 
 
+NOETIG_GRUND_TEXT = {
+    "keine_einzelwerte": "aus einem Aggregat gerechnet \u2014 fuer eine Hochrechnung fehlen die "
+                         "Einzelrenditen",
+    "zu_wenige":         "fuer eine Hochrechnung sind es noch zu wenige Plays",
+    "nicht_positiv":     "der ROI-Schnitt ist nicht positiv \u2014 mehr Plays bestaetigen das, "
+                         "sie drehen es nicht",
+}
+
+
+def noetig_grund(werte, n=None):
+    """WARUM es keine Hochrechnung gibt. None heisst: es gibt eine. REIN.
+
+    🔴 25.09.2026 (Uebersicht-Check). `noetiges_n` gibt `None` aus DREI verschiedenen
+    Gruenden zurueck, und der Aufrufer konnte sie nicht unterscheiden. Das Board hat aus der
+    Leerstelle einen einzigen Satz gemacht — „Schnitt nicht positiv" — und ihn an 25 Zeilen
+    geschrieben. Nachgezaehlt, auf welche er zutraf: **null**.
+
+        Betfair-Aggregat, gar keine Einzelrenditen   12   (11 davon mit BELEGTER Untergrenze)
+        unter NOETIG_MIN_N Werten                    12
+        ruhende Zeile, Feld fehlt ganz                1
+        Schnitt wirklich <= 0                         0
+
+    Die schlimmste Zeile war `Kazakhstan Premier League · Match Odds`: ROI +43,8 %,
+    Untergrenze +12,6 %, im Register als bestes Betfair-Fach mit einem Stern — und daneben
+    stand, ihr Schnitt sei nicht positiv. Ursache ist `bewerte(name, "betfair", [], [])`: die
+    Betfair-Faecher kommen aus einem Aggregat (n, hit, roi), `noetiges_n([])` faellt also am
+    Mindest-n und nicht am Vorzeichen.
+
+    Fehlerklasse: *fehlende Information rendert als Behauptung* — und hier nicht als harmloser
+    Default, sondern als das Gegenteil der Wahrheit.
+
+    Der Grund gehoert dorthin, wo die Zahl entsteht. Ein Frontend, das ihn aus einer Leerstelle
+    errechnet, baut Produzenten-Logik nach — in einer Kopie, die weniger weiss als das Original.
+    """
+    xs = [float(x) for x in (werte or []) if isinstance(x, (int, float))]
+    if not xs:
+        # Kein einziger Einzelwert. Traegt die Zeile trotzdem Plays, stammt sie aus einem
+        # Aggregat; ohne Plays ist sie einfach leer.
+        return "keine_einzelwerte" if (n or 0) > 0 else "zu_wenige"
+    if len(xs) < NOETIG_MIN_N:
+        return "zu_wenige"
+    if sum(xs) / len(xs) <= 0:
+        return "nicht_positiv"
+    return None
+
+
 def entfernung(werte, ziehungen: int = 600, saat: int = 7) -> dict | None:
     """Wie weit ist ein Beleg — MIT der Unsicherheit dieser Schaetzung. REIN (feste Saat).
 
@@ -366,6 +412,10 @@ def bewerte(name: str, strom: str, renditen, clvs, meta=None, letzter=None, now=
                 # Zustand als eine ohne CLV; als Leerstelle sahen beide gleich aus.
                 "clvOg": round(clv_og, 3) if clv_og is not None else None,
                 "clvUrteil": clv_urteil(clv, clv_lb, clv_og),
+                # Eine ruhende Zeile hatte das Feld gar nicht — und eine fehlende Angabe
+                # wurde im Board zu einer Aussage ueber ihren Schnitt.
+                "noetigNRoi": None, "noetigNClv": None,
+                "noetigGrund": noetig_grund(renditen, n),
                 "fehltN": 0, "alterTage": round(alter, 1), **(meta or {})}
 
     # Die echte Entfernung zur Freigabe, nicht nur die zur Mindestzahl. `MIN_N` ist die
@@ -461,6 +511,8 @@ def bewerte(name: str, strom: str, renditen, clvs, meta=None, letzter=None, now=
         # gar nicht) und nicht wieder „noch 15" schreibt, wo ~248 gemeint sind.
         "noetigNRoi": _n_roi,
         "noetigNClv": _n_clv,
+        # Warum keine Hochrechnung da ist — damit die Oberflaeche sie nicht raten muss.
+        "noetigGrund": noetig_grund(renditen, n),
         # Die Prognose MIT ihrer eigenen Schranke — ohne die ist sie nur ein Punktschaetzer
         # eine Ebene hoeher (s. `entfernung`).
         "entfernung": _ent,
@@ -717,6 +769,10 @@ def betfair_schubladen(rec=None, min_n=None) -> list:
                             # IST der Schnitt der Renditen), nur aus der anderen Richtung.
                             "pl": round(roi * n, 2),
                             "roiLb": round(roi_lb, 4) if roi_lb is not None else None,
+                            # `bewerte` bekam oben [] — diese Faecher haben keine Einzelrenditen.
+                            # Ohne diese Zeile stand im Artefakt eine Leerstelle, aus der das
+                            # Board „Schnitt nicht positiv" machte (25.09.2026, s. noetig_grund).
+                            "noetigGrund": "keine_einzelwerte",
                             "fehltN": max(0, MIN_N - n)})
             if roi_lb is None or roi_lb <= 0:
                 eintrag["status"], eintrag["grund"] = "geprueft", "ROI nicht belegt über null"
