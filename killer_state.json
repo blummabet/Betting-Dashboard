@@ -272,7 +272,7 @@
    "gehaltenSeit": "2026-09-24T20:55:02.980303+00:00",
    "zuletztAktiv": "2026-09-25T20:57:54.628942+00:00",
    "haltePreis": 1.52,
-   "aktiv": true
+   "aktiv": false
   },
   "36023033|Match Odds": {
    "matchId": "36023033",
@@ -283,7 +283,7 @@
    "markt": "Match Odds",
    "seite": "home",
    "name": "Northern Ireland",
-   "odd": 2.94,
+   "odd": 2.8,
    "entryOdd": 3.0,
    "anteilPct": 82,
    "stufe": 2,
@@ -309,20 +309,20 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 82% auf der Seite"
+       "text": "Geld 85% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.816,
-       "betrag": 5514,
-       "gesamt": 6757,
+       "anteil": 0.854,
+       "betrag": 9982,
+       "gesamt": 11688,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 82% auf der Seite"
+      "text": "Geld 85% auf der Seite"
      },
      {
       "buch": "POLY",
@@ -332,20 +332,20 @@
       "moeglich": 3,
       "grund": {
        "ok": false,
-       "text": "Poly-Preis 33% auf derselben Seite"
+       "text": "Poly-Preis 36% auf derselben Seite"
       },
       "tiefe": {
        "ok": false,
        "text": "kein bewiesenes Wallet auf der Seite"
       },
       "geld": {
-       "anteil": 0.33,
+       "anteil": 0.36,
        "betrag": null,
-       "gesamt": 871,
+       "gesamt": 1091,
        "waehrung": "USD",
        "quelle": "preis"
       },
-      "text": "Poly-Preis 33% auf derselben Seite"
+      "text": "Poly-Preis 36% auf derselben Seite"
      },
      {
       "buch": "PIN",
@@ -386,8 +386,134 @@
    },
    "wertVsPinn": null,
    "gehaltenSeit": "2026-09-25T20:39:39.349561+00:00",
-   "zuletztAktiv": "2026-09-25T20:39:39.349561+00:00",
+   "zuletztAktiv": "2026-09-25T21:27:51.983099+00:00",
    "haltePreis": 2.94,
+   "aktiv": true
+  },
+  "35930803|Match Odds": {
+   "matchId": "35930803",
+   "home": "Albania",
+   "away": "Belarus",
+   "league": "UEFA Nations League",
+   "kickoff": "2026-09-26T18:45:00Z",
+   "markt": "Match Odds",
+   "seite": "home",
+   "name": "Albania",
+   "odd": 1.55,
+   "entryOdd": 1.51,
+   "anteilPct": 78,
+   "stufe": 2,
+   "verstaerker": [
+    {
+     "art": "poly",
+     "text": "Poly Preis 64%",
+     "gewicht": 12
+    }
+   ],
+   "rang": 69.8,
+   "track": null,
+   "streak": null,
+   "poly": {
+    "anteilPct": 64,
+    "usd": 1011,
+    "odd": 1.55
+   },
+   "polyStatus": "ja",
+   "polyKey": "unl-alb-bela-2026-09-26",
+   "polySide": "Albania",
+   "pinnMovePP": null,
+   "punkte": {
+    "punkte": 6,
+    "moeglich": 7,
+    "dauerH": 21.54,
+    "teile": [
+     {
+      "buch": "BF",
+      "name": "Betfair",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Geld 78% auf der Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "frischer Zufluss und Quote zieht mit"
+      },
+      "geld": {
+       "anteil": 0.779,
+       "betrag": 6763,
+       "gesamt": 8682,
+       "waehrung": "EUR",
+       "quelle": "geld"
+      },
+      "text": "Geld 78% auf der Seite"
+     },
+     {
+      "buch": "POLY",
+      "name": "Polymarket",
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Poly-Preis 64% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein bewiesenes Wallet auf der Seite"
+      },
+      "geld": {
+       "anteil": 0.64,
+       "betrag": null,
+       "gesamt": 1011,
+       "waehrung": "USD",
+       "quelle": "preis"
+      },
+      "text": "Poly-Preis 64% auf derselben Seite"
+     },
+     {
+      "buch": "PIN",
+      "name": "Pinnacle",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Pinnacle nicht erhoben"
+     },
+     {
+      "buch": "STAKE",
+      "name": "Stake-Highroller",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Stake-Highroller nicht erhoben"
+     },
+     {
+      "buch": "ZEIT",
+      "name": "Dauer",
+      "status": "ja",
+      "punkte": 1,
+      "moeglich": 1,
+      "grund": {
+       "ok": true,
+       "text": "steht seit 21.5h vor Anpfiff"
+      },
+      "tiefe": null,
+      "text": "steht seit 21.5h vor Anpfiff"
+     }
+    ]
+   },
+   "wertVsPinn": null,
+   "gehaltenSeit": "2026-09-25T21:12:34.103182+00:00",
+   "zuletztAktiv": "2026-09-25T21:12:34.103182+00:00",
+   "haltePreis": 1.55,
    "aktiv": true
   }
  }
