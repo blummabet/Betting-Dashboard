@@ -7046,7 +7046,7 @@ null
 "anteilSchwelle": 0.545,
 "raus": "unter_geldschwelle",
 "quelle": "trades",
-"gesendet": false,
+"gesendet": true,
 "live": {
 "time": null,
 "score": [
@@ -7078,7 +7078,7 @@ null
 "anteilSchwelle": 0.743,
 "raus": "unter_geldschwelle",
 "quelle": "trades",
-"gesendet": false,
+"gesendet": true,
 "live": {
 "time": null,
 "score": [
@@ -7152,5 +7152,69 @@ null
 },
 "profit": 0.0,
 "voidGrund": "Ausgang beim Senden bereits entschieden"
+},
+{
+"k": "fresh:35930709:Match Odds",
+"matchId": "35930709",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "UEFA Nations League",
+"home": "Italy",
+"away": "Belgium",
+"leadName": "Italy",
+"leadOdd": 2.28,
+"value": 482444.09,
+"sentAt": "2026-09-25T18:57:28.873347+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.665947819984695,
+"leadDir": "out",
+"onLeader": false,
+"tier": "top",
+"magnitude": 135702.1,
+"schwelle": 100000.0,
+"anteilSchwelle": 1.357,
+"raus": "einseitig",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 7,
+"score": [
+0,
+0
+]
+}
+},
+{
+"k": "fresh:36108651:Match Odds",
+"matchId": "36108651",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "UEFA U21 Euro Qualifiers",
+"home": "England U21",
+"away": "Kazakhstan U21",
+"leadName": "England U21",
+"leadOdd": 1.31,
+"value": 80367.13,
+"sentAt": "2026-09-25T18:57:28.873381+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.9523356128307681,
+"leadDir": "out",
+"onLeader": false,
+"tier": "top",
+"magnitude": 59159.5,
+"schwelle": 100000.0,
+"anteilSchwelle": 0.592,
+"raus": "unter_geldschwelle",
+"quelle": "trades",
+"gesendet": false,
+"live": {
+"time": 24,
+"score": [
+0,
+1
+]
+}
 }
 ]
