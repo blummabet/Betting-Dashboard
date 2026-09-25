@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-25T19:09:23.833404+00:00",
+ "generatedAt": "2026-09-25T19:39:18.557878+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -13,7 +13,7 @@
  "matched": 51,
  "footballRows": 21,
  "crossRows": 534,
- "footballSkippedStale": 70,
+ "footballSkippedStale": 71,
  "seenBySport": {
   "americanfootball_nfl": 144,
   "baseball_mlb": 36,
@@ -27,7 +27,36 @@
  },
  "trackRecord": {
   "tracked": 303,
-  "converged": 79
+  "converged": 77
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|bostonredsox-chicagocubs|chicagocubs",
+   "sport": "baseball_mlb",
+   "event": "Chicago Cubs vs Boston Red Sox",
+   "market": "Moneyline",
+   "outcome": "Chicago Cubs",
+   "polyPP": 11.5,
+   "pinnPP": 51.5,
+   "gapPP": -40.03,
+   "vol": 662030,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -9.55,
+   "firstSeen": "2026-09-25T17:39:15.974819+00:00"
+  },
+  {
+   "id": "baseball_mlb|bostonredsox-chicagocubs|bostonredsox",
+   "sport": "baseball_mlb",
+   "event": "Chicago Cubs vs Boston Red Sox",
+   "market": "Moneyline",
+   "outcome": "Boston Red Sox",
+   "polyPP": 88.5,
+   "pinnPP": 48.5,
+   "gapPP": 40.03,
+   "vol": 662030,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -9.55,
+   "firstSeen": "2026-09-25T17:39:15.974819+00:00"
+  }
+ ]
 }
