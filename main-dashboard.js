@@ -600,6 +600,16 @@
       '.md-warum{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
       '.md-kl-grp{margin:14px 0 0;}',
       '.md-kl-det{padding-top:9px;}',
+      // Ebene 3: Quellen-Leiste + leise Zellen als kleine Marke statt halber Kartenbreite.
+      // Die Zelle bleibt (sie sagt, dass der Track nichts weiß — s. uebersicht-bftrack.test),
+      // sie nimmt nur nicht mehr den Platz einer Messung ein.
+      '.md-jz-q{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-top:10px;font-size:10.5px;color:var(--mi3);}',
+      '.md-jz-q b{font-weight:700;color:var(--mi2);background:rgba(255,255,255,.04);border:1px solid var(--mln);border-radius:999px;padding:2px 8px;}',
+      '.md-jz-q b i{font-style:normal;color:var(--mi3);font-family:"JetBrains Mono",monospace;}',
+      '.md-sig-c.md-sig-off{flex:0 0 auto;align-self:flex-end;display:flex;align-items:baseline;gap:5px;padding:2px 7px;border:1px dashed var(--mln2);border-radius:6px;opacity:.7;}',
+      '.md-sig-off .md-sig-h{display:contents;}',
+      '.md-sig-off .md-sig-v,.md-sig-off .md-sig-bar{display:none;}',
+      '.md-sig-off .md-sig-sub{margin:0;}',
       // Handy: der Status-Badge rutscht unter die Frage (sonst bricht die Frage Wort fuer Wort),
       // die Buch-Zellen stehen 2×2 statt 4 nebeneinander.
       '@media(max-width:640px){',
@@ -3957,12 +3967,35 @@
     // das steht jetzt im Kopf, statt dass man es aus den Zeilen zusammensucht.
     var _quelleLabel = { poly: 'Poly', bf: 'Betfair-Steam', bfflow: 'Betfair-Fluss',
                          mm: 'Money-Map', card: 'Cards' };
+    // 🎨 25.09.2026 (Lucas: „Ebene 3 ist ja im Gegensatz zum Rest auch mit Nicht-Fußball
+    // befüllt, weil wir da Polymarket in erster Linie hernehmen, richtig?"). Teils: Ebene 3
+    // zieht aus FÜNF Quellen, und nur Poly bringt anderen Sport mit (Tennis, E-Sport …) —
+    // Betfair, Money-Map und Cards sind reiner Fußball. Poly steht oft oben, weil ein Poly-BET
+    // mit 60 + 3,5×Conviction startet und ein Betfair-Steam mit 42 + pp; eine Regel „Poly
+    // zuerst" gibt es nicht, und Betfair hat reservierte Plätze. Welche Quelle und welcher
+    // Sport die Ebene GERADE füllen, stand bisher nur im ⓘ — jetzt als Leiste über den Karten.
+    var _jzQuellen = function (arr) {
+      var z = {}, reihe = [];
+      (arr || []).forEach(function (o) {
+        var ico = '⚽';
+        if (o.src === 'poly' && typeof _pwSportIcon === 'function') {
+          try { ico = _pwSportIcon((o.poly && o.poly.league) || '') || '🎯'; } catch (e) { ico = '🎯'; }
+        }
+        var lbl = ico + ' ' + (_quelleLabel[o.src] || o.src);
+        if (!(lbl in z)) { z[lbl] = 0; reihe.push(lbl); }
+        z[lbl]++;
+      });
+      if (!reihe.length) return '';
+      return '<div class="md-jz-q"><span>jetzt aus</span>' + reihe.map(function (l) {
+        return '<b>' + esc(l) + ' <i>×' + z[l] + '</i></b>';
+      }).join('') + '</div>';
+    };
     return '<div id="mdJetztBox">' + _mdEbene(3, 'Was ist gerade das Stärkste?', 'Rangliste', null,
       'Disjunktion: das stärkste Einzelsignal über alle Flächen. EINE Quelle genügt — deshalb steht hier auch an einem schwachen Tag etwas.',
       'bestes Einzelsignal je Fläche — eine Quelle genügt, kein UND · <b>nicht</b> geprüft, nur sortiert'
         + (_jzGefiltert.length ? ' · ' + _jzGefiltert.length + ' Zeile'
             + (_jzGefiltert.length === 1 ? '' : 'n') + ' ausgefiltert' : ''),
-      null, '<div class="md-jz-paar">' + body + '</div>'
+      null, _jzQuellen(items) + '<div class="md-jz-paar">' + body + '</div>'
         + (_jzGefiltert.length ? '<div class="md-kl-foot" title="'
             + esc(_jzGefiltert.map(function (f) {
                 return f.m + ' (' + f.lg + ', UG ' + Math.round((f.tr.roiUg || 0) * 100) + '% · n' + f.tr.n + ')';
