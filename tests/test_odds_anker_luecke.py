@@ -458,3 +458,18 @@ def test_ersatzschreibweise_ist_kein_fund():
     d = A.abgleich(ligen, zuo, [])
     assert d["eintraegeErsatzschreibweise"] == ["Major League Soccer"]
     assert d["eintraegeOhneLiga"] == ["Ruritanian Liga"], d["eintraegeOhneLiga"]
+
+
+def test_ansehen_zeile_nennt_die_anderen_kandidaten():
+    """25.09.2026: bei einem abgelehnten Kandidaten haben alle dasselbe Urteil — welcher
+    angezeigt wird, entscheidet dann die alphabetische Reihenfolge. Fuer „English Sky Bet
+    League 1" stand `soccer_england_efl_cup` da (ein Pokal), obwohl `soccer_england_league1`
+    in derselben Kandidatenliste lag und die richtige Antwort ist."""
+    sports = [_s("soccer_england_efl_cup", "EFL Cup"),
+              _s("soccer_england_league1", "League 1 - England")]
+    d = A.abgleich([{"liga": "English Sky Bet League 1", "n": 285}], {}, sports)
+    x = d["ohneAnkerMitKandidat"][0]
+    assert x["urteil"] != "sicher"
+    assert "soccer_england_league1" in ([x["key"]] + (x.get("weitere") or []))
+    text = A.bericht(d)
+    assert "soccer_england_league1" in text, text

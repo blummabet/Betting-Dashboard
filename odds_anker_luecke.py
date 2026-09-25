@@ -439,8 +439,18 @@ def bericht(d: dict) -> str:
     if vorschlag:
         z.append("")
         z.append("  ── ansehen, nicht eintragen ──")
+        # 🔴 25.09.2026: hier stand nur `x["key"]`. Der ist bei einem ABGELEHNTEN Kandidaten
+        # fast beliebig gewaehlt: alle Kandidaten haben dasselbe Urteil, also entscheidet die
+        # alphabetische Reihenfolge. Fuer „English Sky Bet League 1" stand damit `efl_cup` da
+        # (ein Pokal), obwohl `soccer_england_league1` in derselben Liste lag und die richtige
+        # Antwort ist. Wer die Zeile liest, sieht den Pokal und blaettert weiter.
+        # Fehlerklasse: *eine Zeile, die von mehreren gleich guten Moeglichkeiten eine zeigt
+        # und die Auswahl nicht nennt, sieht wie ein Befund aus und ist eine Wuerfelzahl.*
         for x in vorschlag[:25]:
             z.append("    %-42s -> %-38s %s" % (x["liga"][:42], x["key"], x["warum"]))
+            weitere = [k for k in (x.get("weitere") or []) if k != x["key"]]
+            if weitere:
+                z.append("    %-42s    auch moeglich: %s" % ("", ", ".join(weitere)))
     if d["eintraegeOhneLiga"]:
         z.append("")
         z.append("  ── Einträge ohne Anker-Wirkung: kein Ligastring, kein Ersatz ──")
