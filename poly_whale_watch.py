@@ -519,9 +519,15 @@ def _wallet_block(scores: dict, wallet, rang=None) -> list:
              else "im Aufbau")
     # 19.09.2026 (Lucas): das Urteil bekommt seine eigene Zeile. „🐋 0x30c7…ac3b · 🏅 #55 ·
     # ✅ bewiesen" ist drei Auskuenfte in einer Zeile, und die dritte ist die wichtigste.
+    # 25.09.2026: die SORTE zuerst, der Geld-Rang danach. Lucas wollte auf einen Blick sehen,
+    # ob ein Push von einer Grossgeld-Wallet kommt oder von einer treffsicheren mit kleinem
+    # Einsatz — beide bewiesen, beide durch dasselbe Tor, verschieden nur im Geld.
+    _kl = klasse_kurz(s)
     kopf = "🐋 %s" % link
+    if _kl:
+        kopf += " · %s" % _kl
     if rang:
-        kopf = "🐋 %s · %s" % (link, _rang_kurz(rang))
+        kopf += " · %s" % _rang_kurz(rang)
     # 02.08.2026 bleibt gueltig: eine schwache oder zu duenne Bilanz wird NICHT als Zahl
     # gezeigt — eine 1/3-Quote wertet einen legitimen Groessen-Alert ab, und ein bestaetigter
     # Verlierer bekommt hier keine Buehne. Die volle Historie ist einen Klick entfernt.
@@ -553,12 +559,95 @@ def _wallet_block(scores: dict, wallet, rang=None) -> list:
     return zeilen
 
 
+# ── Zwei Sorten bewiesener Wallet (25.09.2026) ───────────────────────────────────────
+# Lucas: „da kommen oft Wallets rein mit Nummer 110 und die setzen 3000 Euro — was soll das
+# sein?" Nachgemessen, und die Antwort war nicht die erwartete:
+#
+#     Rang  1-10   Ø-Einsatz $82.762   Trefferquote 59 %
+#     Rang 11-30   Ø-Einsatz $18.754   Trefferquote 51 %   <- die SCHLECHTESTE Quote
+#     Rang 31-60   Ø-Einsatz  $8.839   Trefferquote 62 %
+#     Rang 61-100  Ø-Einsatz  $2.720   Trefferquote 63 %
+#     Rang 101+    Ø-Einsatz  $3.202   Trefferquote 62 %
+#
+#     Korrelation Rang <-> Einsatzgroesse  r = -0,29
+#     Korrelation Rang <-> Trefferquote    r = +0,20
+#
+# Und im Trades-Ledger (74 abgerechnete Pushes, also ein Hinweis und kein Beleg):
+#     Rang  1-30  n=21  48 % (UG 31 %)  ROI  -0,6 %
+#     Rang 31-60  n=25  80 % (UG 64 %)  ROI +27,1 %
+#     Rang >60    n=19  63 % (UG 44 %)  ROI  +6,1 %
+#
+# Der Rang sortiert nach absolutem 30-Tage-Sportprofit. Profit skaliert mit Einsatz, also kann
+# eine Wallet, die $3.000 setzt, strukturell nie gut ranken — egal wie treffsicher sie ist.
+# „#110" hiess also nie „schlecht", sondern „setzt klein". Neben „✅ bewiesen" stand eine
+# MEDAILLE, und die liest sich wie eine Note.
+# Fehlerklasse: *eine Zahl, die etwas anderes behauptet als sie misst.*
+#
+# Beide Sorten gehen durch DASSELBE Tor (`_is_smart` -> `sharp_gate.is_sharp`). Unterschieden
+# wird nur, was sie unterscheidet: die Einsatzgroesse.
+#
+# Getrennt wird am Ø-EINSATZ der Wallet, nicht am Rang. Ein Rang kippt, wenn eine ANDERE Wallet
+# eine gute Woche hat — dann wechselte das Symbol, ohne dass sich an dieser Wallet etwas
+# geaendert hat. Die Grenze ist `PUB_MIN_USD_TRACKED` ($25.000), also die Schwelle, die Lucas
+# fuer „gross genug fuer den oeffentlichen Kanal" schon gesetzt hat — keine zweite erfundene Zahl.
+KLASSE_GELD_GRENZE = PUB_MIN_USD_TRACKED
+
+
+def schnitt_einsatz(s):
+    """Ø Einsatz je Wette dieser Wallet, oder None wenn unbekannt. REIN."""
+    if not isinstance(s, dict):
+        return None
+    n = s.get("n") or 0
+    usd = s.get("usd")
+    if not n or not isinstance(usd, (int, float)):
+        return None
+    return float(usd) / float(n)
+
+
+def wallet_klasse(s, grenze=None):
+    """„geld" (grosses Geld) | „treffer" (bewiesen, kleinerer Einsatz) | None (nicht bewiesen).
+
+    REIN. „treffer" ist keine Abwertung: gemessen hat diese Bande die BESSERE Trefferquote.
+    Eine unbekannte Einsatzgroesse gilt nicht als grosses Geld — fehlende Information ist keine
+    Erlaubnis, auch nicht fuer ein Abzeichen.
+    """
+    if not _is_smart(s):
+        return None
+    e = schnitt_einsatz(s)
+    if e is None:
+        return "treffer"
+    return "geld" if e >= (KLASSE_GELD_GRENZE if grenze is None else grenze) else "treffer"
+
+
+KLASSE_ABZEICHEN = {"geld": ("🏅", "Großes Geld"),
+                    "treffer": ("🎯", "Trefferquote")}
+
+
+def klasse_kurz(s) -> str:
+    """„🏅 Großes Geld · Ø $82K je Wette" bzw. „🎯 Trefferquote · Ø $2.9K je Wette". REIN."""
+    k = wallet_klasse(s)
+    if not k:
+        return ""
+    sym, wort = KLASSE_ABZEICHEN[k]
+    e = schnitt_einsatz(s)
+    if e is None:
+        return "%s %s" % (sym, wort)
+    return "%s %s · Ø %s je Wette" % (sym, wort, _usd(e))
+
+
 def _rang_kurz(r) -> str:
-    """„🥇 #1" / „🏅 #8" — der Rang gehoert an die Wallet, nicht in eine eigene Zeile."""
+    """„💰 Geld-Rang #8" — benannt nach dem, was er sortiert.
+
+    25.09.2026: hier stand eine Medaille („🏅 #106"). Sortiert wird aber nach absolutem
+    30-Tage-Sportprofit, also praktisch nach Einsatzgroesse (Korrelation -0,29 zur
+    Einsatzgroesse, +0,20 zur Trefferquote — wer hinten steht, trifft im Schnitt SAUBERER).
+    Eine Medaille neben „✅ bewiesen" liest sich wie eine Note, und genau so wurde sie
+    gelesen. Das Symbol fuer die Sorte steht jetzt in `klasse_kurz`; hier steht nur noch die
+    Zahl, mit dem Wort dazu, das sie ehrlich macht.
+    """
     if not r:
         return ""
-    medal = "🥇" if r == 1 else "🥈" if r == 2 else "🥉" if r == 3 else "🏅"
-    return "%s #%d" % (medal, r)
+    return "💰 Geld-Rang #%d" % r
 
 
 def _wallet_line(scores: dict, wallet) -> str:
@@ -706,8 +795,11 @@ def _rank_badge(scores, wallet, top=_RANK_TOP):
     r = _sharp_rank_map(scores).get(str(wallet).lower())
     if not r or r > top:
         return None
+    # 25.09.2026: hiess „Sharp-Rangliste". Sortiert wird nach 30-Tage-Sportprofit — also Geld,
+    # nicht Schaerfe. Die Medaille bleibt hier bewusst: diese Zeile kommt NUR fuer die vorderen
+    # Plaetze, und dort ist „grosses Geld" die richtige Auskunft.
     medal = "🥇" if r == 1 else "🥈" if r == 2 else "🥉" if r == 3 else "🏅"
-    return "%s <b>Top-%d-Wallet</b> · Rang #%d der Sharp-Rangliste" % (medal, top, r)
+    return "%s <b>Top-%d nach Geld</b> · Geld-Rang #%d (30-Tage-Sportprofit)" % (medal, top, r)
 
 
 def _pub_in_top_n(scores, wallet, n=None):

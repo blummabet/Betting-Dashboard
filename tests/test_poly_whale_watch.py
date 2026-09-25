@@ -638,7 +638,8 @@ class TestTop20RankBadge(unittest.TestCase):
     def test_card_carries_badge(self):
         pos = {"wallet": "0xAAA", "league": "ESPORTS", "side": "X", "key": "k", "usd": 25000, "firstPrice": 0.6}
         card = P.build_card(pos, self._scores(), restock=False, broad={})
-        self.assertIn("🥇 #1", card)
+        # 25.09.2026: die Medaille war eine Note neben „bewiesen" — der Rang sortiert nach Geld.
+        self.assertIn("💰 Geld-Rang #1", card)
 
 
 class TestPublicTopN(unittest.TestCase):
@@ -735,7 +736,7 @@ class TestPublicTopN(unittest.TestCase):
         # Die lange Form bleibt in der Trades-Karte.
         # 19.09.2026: der Rang steht am Wallet-Block statt in einer eigenen Zeile zwei
         # Zeilen darueber — dieselbe Auskunft, an der Stelle, auf die sie sich bezieht.
-        self.assertIn("🥇 #1", P.build_card(pos, sc, restock=False, broad={}))
+        self.assertIn("💰 Geld-Rang #1", P.build_card(pos, sc, restock=False, broad={}))
 
     def test_public_card_no_badge_for_outside_topn(self):
         sc = self._scores()
@@ -818,7 +819,7 @@ class TestConflictingTopWallet(unittest.TestCase):
         b = self._broad([{"wallet": "0xccc", "side": "Butterfly", "usd": 7000}])
         card = P.build_card(self._pos(), self._scores(), restock=False, broad=b)
         # 19.09.2026: derselbe Bau wie die Einigkeits-Zeile — Seite, Betrag, wer.
-        self.assertIn("🥉 #3", card)
+        self.assertIn("💰 Geld-Rang #3", card)
         self.assertIn("Gegenseite: Butterfly", card)
         self.assertIn("$7K", card)
 
@@ -2579,7 +2580,9 @@ class TestDieKarteFuehrtMitDerWette(unittest.TestCase):
         die dritte ist die wichtigste. Das Urteil bekommt seine eigene."""
         sc = {"0xw": dict(self.SC["0xw"])}
         k = P.build_card(self.POS, sc, False, self.BROAD)
-        self.assertIn("🥇 #1\n✅ bewiesen", k)
+        # Die Entscheidung vom 19.09. gilt unveraendert: das Urteil steht auf seiner EIGENEN
+        # Zeile. Geaendert hat sich nur, wie der Rang geschrieben wird (25.09.).
+        self.assertIn("💰 Geld-Rang #1\n✅ bewiesen", k)
         self.assertNotIn("#1 · ✅ bewiesen", k)
         self.assertNotIn("der Sharp-Rangliste", k)
 
