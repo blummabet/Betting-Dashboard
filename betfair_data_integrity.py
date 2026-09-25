@@ -449,6 +449,32 @@ def check_odds_zugang_lebt(ctx):
 
 
 @betfair_check
+def check_totals_vollstaendig(ctx):
+    """Bekommen alle Handlisten-Ligen ihre Pinnacle-Torlinien — oder frisst das Zeitbudget sie?
+
+    🔴 25.09.2026: `LEAGUE_ODDS_KEY` wuchs von 31 auf 44 Eintraege, um die Totals fuer 13 Ligen
+    zu holen. Die Totals-Schleife bricht bei `ODDS_GESAMT_S` ab und laesst die hinteren Keys
+    aus — bisher nur im Runner-Log sichtbar. Dann sieht eine Liga ohne Torlinie genauso aus wie
+    eine, fuer die Pinnacle keine anbietet, und die Erweiterung waere still wirkungslos.
+    """
+    t = ctx.consensus.get("oddsTotals")
+    if not isinstance(t, dict):
+        return _chk("totals_vollstaendig", "Torlinien fuer alle Handlisten-Ligen geholt", "warn", [],
+                    "Der Konsens-Lauf schreibt noch kein `oddsTotals` — bis er das tut, sagt "
+                    "dieser Waechter nichts.")
+    aus = t.get("ausgelassen") or 0
+    fails = []
+    if aus > 0:
+        fails.append("%d von %s Ligen ohne Totals-Abruf — Zeitbudget BF_ODDS_GESAMT_S erschoepft. "
+                     "Loesung: Budget erhoehen oder Totals nicht mehr in jedem Lauf holen."
+                     % (aus, t.get("gewollt")))
+    note = "Totals: %s gewollt, %s abgerufen, %s mit Daten" % (
+        t.get("gewollt"), t.get("versucht"), t.get("mitDaten"))
+    return _chk("totals_vollstaendig", "Torlinien fuer alle Handlisten-Ligen geholt", "warn",
+                fails, note)
+
+
+@betfair_check
 def check_consensus_anchor_coverage(ctx):
     """Findet der Konsens ueberhaupt noch Odds-Anker? Wenn in gecoverten Ligen Spiele laufen, aber
     KEINES einen Pinnacle/Soft-Anker bekommt (verdict != no_anchor), ist entweder der the-odds-api-

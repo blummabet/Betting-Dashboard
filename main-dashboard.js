@@ -491,7 +491,133 @@
       '.mpc-hint{margin-left:auto;font-size:9.5px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--mi3);}',
       '.md-kpi{cursor:pointer;text-align:left;font:inherit;color:var(--mi);width:100%;display:block;transition:transform .15s,border-color .15s;}',
       '.md-kpi:hover{transform:translateY(-2px);border-color:var(--kc);}',
-      '.md-kpi-top{display:flex;align-items:center;gap:5px;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--mi2);margin-bottom:9px;}'
+      '.md-kpi-top{display:flex;align-items:center;gap:5px;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--mi2);margin-bottom:9px;}',
+      // ══ 🎨 25.09.2026 — „Was kann ich spielen?" aufgeräumt (Lucas: „brutal textlastig") ══════
+      // Steht bewusst AM ENDE: überschreibt die älteren Regeln derselben Klassen, statt sie zu
+      // verstreuen. Grundregeln: (1) jede Ebene hat EINE laute Zahl je Einheit (Strom-ROI,
+      // Schubladen-ROI, Buch-Punkte), (2) Spiele sind Karten mit festem Aufbau — Spiel, Tipp,
+      // Belege —, (3) Erklärsätze stehen hinter dem ⓘ der Ebene, nicht im Fluss.
+      '.md-sp{padding:16px 18px 14px;}',
+      '.md-sp-h{align-items:center;}',
+      '.md-sp-t{font-size:17px;}',
+      '.md-sp-s{display:none;margin-top:8px;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid var(--mln);}',
+      '.md-sp.i-open>.md-sp-h .md-sp-s{display:block;}',
+      '.md-i-b{width:20px;height:20px;border-radius:50%;border:1px solid var(--mln2);background:transparent;color:var(--mi3);font:italic 700 11px Georgia,serif;cursor:pointer;flex-shrink:0;line-height:18px;padding:0;margin-left:8px;}',
+      '.md-i-b:hover{color:var(--mi);border-color:var(--mi3);}',
+      '.md-sp-h>.md-i-b,.md-eb-q+.md-i-b{margin-left:auto;}',
+      '.md-sp.i-open>.md-sp-h>.md-i-b,.md-eb.i-open>.md-eb-h>.md-i-b{background:var(--mln2);color:var(--mi);}',
+      '.md-eb{margin-top:20px;padding-top:15px;}',
+      '.md-eb-h{flex-wrap:nowrap;}',
+      '.md-eb-n{font-size:12px;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;padding:0;}',
+      '.md-eb-n.e1{background:rgba(46,160,71,.14);}.md-eb-n.e2{background:rgba(76,194,255,.12);}.md-eb-n.e3{background:rgba(217,89,38,.12);}',
+      '.md-eb-q{font-size:15px;min-width:0;}',
+      '.md-eb-st{font-size:11px;padding:3px 10px;border-radius:999px;}',
+      '.md-eb-info{display:none;margin:10px 0 4px;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid var(--mln);font-size:11px;color:var(--mi2);line-height:1.55;}',
+      '.md-eb-info>div+div{margin-top:7px;}',
+      '.md-eb-info .md-eb-s{font-size:11px;color:var(--mi2);margin:0;}',
+      '.md-eb-info .md-mech{margin-right:4px;}',
+      '.md-eb.i-open>.md-eb-info{display:block;}',
+      // Ebene 1 · Strom-Kacheln
+      '.fg-stroeme{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:12px 0 4px;}',
+      '.fg-strom{position:relative;overflow:hidden;min-width:0;padding:12px 14px 11px;border-radius:12px;background:var(--m2);border:1px solid var(--mln);display:flex;flex-direction:column;}',
+      '.fg-strom>.fg-strom-b{margin-top:auto;}.fg-strom>.fg-ks{margin-bottom:10px;}',
+      '.fg-strom-q{margin:8px 0 9px;}',
+      '.fg-strom::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--fg-c);}',
+      '.fg-strom-h{font-size:12.5px;margin:0;}',
+      '.fg-ico{font-size:14px;}',
+      '.fg-hero{font-family:"JetBrains Mono",monospace;font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1.1;margin:8px 0 8px;}',
+      '.fg-hero i{font-style:normal;font-size:10px;font-weight:700;color:var(--mi3);margin-left:7px;letter-spacing:.06em;font-family:inherit;}',
+      '.fg-ks{display:flex;gap:16px;flex-wrap:wrap;}',
+      '.fg-k b{display:block;font-family:"JetBrains Mono",monospace;font-size:12.5px;font-weight:800;}',
+      '.fg-k i{display:block;font-style:normal;font-size:9px;color:var(--mi3);text-transform:uppercase;letter-spacing:.05em;margin-top:1px;}',
+      '.fg-strom-q{margin-top:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+      '.fg-strom-b{display:flex;align-items:baseline;gap:6px;margin-top:9px;padding:7px 9px;border:0;border-radius:8px;background:rgba(255,255,255,.035);font-size:11px;}',
+      '.fg-star{color:#e3b341;}',
+      '.fg-bn{font-weight:700;color:var(--mi);min-width:0;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
+      '.fg-bv{font-family:"JetBrains Mono",monospace;font-weight:800;color:#3fb950;}',
+      '.fg-strom-b i{font-style:normal;color:var(--mi3);font-size:10px;white-space:nowrap;}',
+      // Ebene 1 · freigegebene Schubladen als Karten
+      '.fg-karten{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin:14px 0 4px;}',
+      '.fg-karte{background:var(--m2);border:1px solid rgba(46,160,71,.30);border-radius:12px;padding:11px 13px 10px;min-width:0;display:flex;flex-direction:column;}',
+      '.fg-karte>.fg-kf,.fg-karte>.fg-kd{margin-top:auto;}',
+      '.fg-kh{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--mi);}',
+      '.fg-kh b{min-width:0;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
+      '.fg-ok{width:18px;height:18px;border-radius:50%;background:rgba(46,160,71,.18);color:#3fb950;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;flex-shrink:0;}',
+      '.fg-n{font-family:"JetBrains Mono",monospace;font-size:11px;font-weight:800;color:var(--mi2);text-align:right;flex-shrink:0;}',
+      '.fg-n i{font-style:normal;color:var(--mi3);font-weight:600;}',
+      '.fg-nb{display:block;width:44px;height:3px;border-radius:2px;background:var(--mln2);margin:3px 0 0 auto;overflow:hidden;}',
+      '.fg-nb span{display:block;height:3px;background:#3fb950;}',
+      '.fg-kz{display:flex;align-items:baseline;gap:9px;margin-top:8px;}',
+      '.fg-roi{font-family:"JetBrains Mono",monospace;font-size:24px;font-weight:800;letter-spacing:-.02em;line-height:1;}',
+      '.fg-ug{font-size:11px;color:var(--mi2);font-family:"JetBrains Mono",monospace;}',
+      '.fg-sp{position:relative;height:8px;margin:10px 0 10px;border-radius:4px;background:var(--mln);}',
+      '.fg-sp-0{position:absolute;top:-3px;bottom:-3px;width:1px;background:var(--mi3);}',
+      '.fg-sp-r{position:absolute;top:2px;height:4px;border-radius:2px;opacity:.6;}',
+      '.fg-sp-p{position:absolute;top:-1px;width:10px;height:10px;border-radius:50%;margin-left:-5px;box-shadow:0 0 0 2px var(--m2);}',
+      '.fg-kc{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:9px;}',
+      '.fg-kf{font-size:11px;color:var(--mi2);margin-top:9px;padding-top:8px;border-top:1px solid var(--mln);display:flex;align-items:center;gap:6px;list-style:none;}',
+      '.fg-kd>summary{cursor:pointer;}',
+      '.fg-kd>summary::-webkit-details-marker{display:none;}',
+      '.fg-kf-a{margin-left:auto;font-size:10px;color:#4cc2ff;font-weight:700;}',
+      '.fg-kd[open] .fg-kf-a{opacity:.5;}',
+      '.fg-kf.leise,.fg-kf .leise{color:var(--mi3);}',
+      '.fg-gl{display:flex;flex-direction:column;margin-top:2px;}',
+      '.fg-g{display:grid;grid-template-columns:1fr auto;gap:1px 8px;padding:6px 0;border-top:1px solid var(--mln);font-size:11px;}',
+      '.fg-g:first-child{border-top:0;}',
+      '.fg-g-m{font-weight:700;color:var(--mi);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
+      '.fg-g-t{font-size:10px;color:var(--mi3);white-space:nowrap;}',
+      '.fg-g-p{grid-column:1/-1;color:var(--mi2);}',
+      '.fg-g-p b{color:#4cc2ff;font-family:"JetBrains Mono",monospace;}',
+      '.fg-g-p i{font-style:normal;color:var(--mi3);font-size:10px;}',
+      '.fg-schubl{margin-top:10px;}',
+      '.fg-schubl>.md-kl-det{margin-top:0;padding:8px 0;}',
+      // Ebene 2 · Tafel als Karten mit Punkt-Marke
+      '.sz-grid{display:grid;grid-template-columns:1fr;gap:8px;margin-top:12px;}',
+      '@media(min-width:1040px){.sz-grid{grid-template-columns:1fr 1fr;}}',
+      '.sz-r,.sz-r:first-child{display:flex;gap:12px;padding:11px 12px;border:1px solid var(--mln);border-radius:12px;background:var(--m2);min-width:0;}',
+      '.sz-r.bewegt{border-color:rgba(46,160,71,.45);}',
+      '.sz-score{flex-shrink:0;width:48px;height:48px;border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;font-family:"JetBrains Mono",monospace;font-size:18px;font-weight:800;}',
+      '.sz-score i{font-style:normal;font-size:10px;opacity:.7;font-weight:700;}',
+      '.sz-main{flex:1;min-width:0;}',
+      '.sz-h{align-items:center;flex-wrap:nowrap;gap:6px;}',
+      '.sz-m{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:1;}',
+      '.sz-meta{display:flex;gap:6px;align-items:center;margin-top:3px;min-width:0;}',
+      '.sz-meta .md-badge{margin-left:0;}',
+      '.sz-meta .sz-lg{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}',
+      '.sz-w{font-size:12.5px;color:var(--mi);margin-top:6px;}',
+      '.sz-w b{color:#4cc2ff;}',
+      '.sz-q{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin-top:9px;}',
+      '.sz-c{min-width:0;padding:4px 6px 5px;border-color:var(--mln);}',
+      '.sz-c s{display:none;}',
+      '.sz-c i{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+      '.sz-rest{display:block;width:100%;border:0;margin:2px 0 0 15px;padding:0;font-weight:400;}',
+      '.md-kl-bew{margin:18px 0 0;font-size:12.5px;color:var(--mi);}',
+      '.md-kl-bew span{display:block;font-size:10.5px;color:var(--mi3);margin-top:2px;}',
+      // Ebene 2 (bewegt) + Ebene 3: Zeilen werden Karten, der Warum-Satz eine Zeile
+      '.md-kl-paar,.md-jz-paar{display:grid;grid-template-columns:1fr;gap:8px;margin-top:8px;}',
+      '@media(min-width:1040px){.md-kl-paar,.md-jz-paar{grid-template-columns:1fr 1fr;gap:8px;}}',
+      '.md-kl-row,.md-jz-row3,.md-jz-row3:first-of-type,.md-kl-paar>.md-kl-row:nth-child(-n+2),.md-jz-paar>.md-jz-row3:nth-child(-n+2){padding:11px 13px;border:1px solid var(--mln);border-radius:12px;background:var(--m2);min-width:0;}',
+      '.md-warum{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+      '.md-kl-grp{margin:14px 0 0;}',
+      '.md-kl-det{padding-top:9px;}',
+      // Handy: der Status-Badge rutscht unter die Frage (sonst bricht die Frage Wort fuer Wort),
+      // die Buch-Zellen stehen 2×2 statt 4 nebeneinander.
+      '@media(max-width:640px){',
+      '  .md-sp{padding:14px 12px 12px;}',
+      '  .md-eb-h{flex-wrap:wrap;}',
+      '  .md-eb-q{flex:1 1 0;}',
+      '  .md-eb-h>.md-i-b{margin-left:8px;order:4;}',
+      '  .md-eb-st{order:5;margin-left:32px;margin-top:5px;white-space:normal;}',
+      '  .sz-q{grid-template-columns:repeat(2,minmax(0,1fr));}',
+      '  .sz-score{width:40px;height:40px;font-size:15px;}',
+      '  .sz-r,.sz-r:first-child{gap:10px;padding:10px;}',
+      // Nicht erhobene Buecher kosten am Handy eine halbe Kartenhoehe — der Nenner der Punktzahl
+      // sagt es bereits (x/7 statt x/10). Ein Buch, das NEIN sagt (0), bleibt sichtbar.
+      '  .sz-c.leer{display:none;}',
+      '  .md-kl-l1{flex-wrap:wrap;}',
+      '  .md-kl-l1>.md-kl-nm{flex:1 0 100%;}',
+      '  .md-kl-l1>.md-kl-halt,.md-kl-l1>.md-kl-live{margin-left:0;}',
+      '}'
     ].join('');
     var st = document.createElement('style');
     st.id = 'mdash-css'; st.textContent = css;
@@ -2522,19 +2648,32 @@
       .sort(function (a, b) { return b[1] - a[1]; }).slice(0, 3);
     return paare.map(function (p) { return p[1] + '× ' + esc(p[0]); }).join(' · ');
   }
-  function _mdEbene(nr, frage, mech, mechCol, mechTitel, unter, badge, inhalt, regal) {
+  // 🎨 25.09.2026 (Lucas: „das ist echt sehr brutal textlastig und nicht schön — kannst du das
+  // stylisher machen, damit mans wirklich gut erkennt und checkt"). Gemessen: die Sektion war am
+  // Desktop gut 3.000 px hoch, und rund die Haelfte davon waren Erklaersaetze, die man einmal
+  // liest und danach nie wieder braucht.
+  //
+  // Die Saetze bleiben ALLE erhalten — sie sind die Begruendung, warum eine Zahl dasteht, und
+  // wurden einzeln erkaempft (s. die Kommentare an jeder Stelle). Sie wandern nur hinter ein ⓘ
+  // im Kopf der Ebene. Sichtbar bleibt, was man bei jedem Blick braucht: Zahl, Urteil, Spiel.
+  // Fehlerklasse, gegen die das gebaut ist: *eine Erklaerung, die bei jedem Blick mitgelesen
+  // werden muss, verdeckt die Zahl, die sie erklaert.*
+  function _mdEbene(nr, frage, mech, mechCol, mechTitel, unter, badge, inhalt, regal, info) {
     var rand = mechCol === A.good ? 'rgba(46,160,71,.45)' : mechCol === A.blue ? 'rgba(76,194,255,.45)' : 'var(--mln2)';
     if (!mechCol) mechCol = 'var(--mi2)';   // Ebene 3 traegt bewusst KEINE Signalfarbe: sie belegt nichts.
-    return '<div class="md-eb">'
+    var infoHtml = '<div class="md-eb-info">'
+      + '<div><span class="md-mech" style="color:' + mechCol + ';border-color:' + rand + '">' + mech + '</span> '
+      + mechTitel + '</div>'
+      + (unter ? '<div class="md-eb-s">' + unter + '</div>' : '')
+      + (regal ? '<div class="md-eb-s">📚 gerade im Regal: ' + regal + '</div>' : '')
+      + (info || '') + '</div>';
+    return '<div class="md-eb md-eb' + nr + '">'
       + '<div class="md-eb-h"><span class="md-eb-n e' + nr + '">' + nr + '</span>'
       + '<span class="md-eb-q">' + frage + '</span>'
-      + '<span class="md-mech" style="color:' + mechCol + ';border-color:' + rand + '" title="'
-      + mechTitel + '">' + mech + '</span>'
       + (badge ? '<span class="md-eb-st" style="background:' + badge.bg + ';color:' + badge.col + '">' + badge.txt + '</span>' : '')
-      + '<span class="md-eb-s">' + unter + '</span>'
-      + (regal ? '<span class="md-eb-s" style="display:block;color:var(--mi3);font-size:10.5px;margin-top:2px">'
-                 + '📚 gerade im Regal: ' + regal + '</span>' : '')
-      + '</div>' + inhalt + '</div>';
+      + '<button type="button" class="md-i-b" title="Wie ist das gerechnet? (Erklärung ein-/ausblenden)" '
+      + 'onclick="this.closest(\'.md-eb\').classList.toggle(\'i-open\')">i</button>'
+      + '</div>' + infoHtml + inhalt + '</div>';
   }
   // ── Die Tafel von Ebene 2 (08.09.2026) ────────────────────────────────────────────────
   // Lucas: „Ebene 0 hast du heute dazugebaut, da seh ich aber eben nicht den Mehrwert zu
@@ -2623,7 +2762,9 @@
       balken = '<div class="sz-bar"><i style="width:'
         + clamp(Math.round(g.anteil * 100), 0, 100) + '%;background:' + col + '"></i></div>';
     }
-    return '<div class="sz-c" title="' + esc(String(txt)) + '">'
+    // 🎨 25.09.2026: der Fusstext („83 % der Seite · von €201K") steht jetzt im Tooltip der Zelle
+    // statt als dritte Zeile — Betrag + Balken tragen dieselbe Auskunft, der Satz ist das Kleingedruckte.
+    return '<div class="sz-c" title="' + esc(String(fuss) + (txt && txt !== fuss ? ' — ' + txt : '')) + '">'
       + '<b>' + name + '</b>'
       + '<span class="sz-p" style="color:' + col + '">' + wert + '</span>'
       + '<i style="color:' + col + '">' + kopf + '</i>'
@@ -2647,15 +2788,22 @@
       for (var i = 0; i < teile.length; i++) if (teile[i] && teile[i].buch === b) t = teile[i];
       return _klZelle(t);
     }).join('');
-    return '<div class="sz-r"><div class="sz-h">'
-      + '<span class="sz-u" style="background:rgba(76,194,255,.14);color:' + A.blue + '">'
-      + r.punkte + '/' + r.moeglich + '</span>'
-      + _klStufenText(_klStufenBilanz(k, r.punkte, r.moeglich))
-      + '<span class="sz-m">' + paar + '</span>' + uhr
-      + '<span class="sz-lg">' + esc(String(r.liga || '')) + '</span>'
-      + (bewegt ? '<span class="sz-u" style="margin-left:auto;background:rgba(46,160,71,.16);color:' + A.good + '">⚡ Geld bewegt sich</span>' : '')
-      + '</div><div class="sz-q">' + reihe + '</div>'
-      + '<div class="sz-w">auf <b>' + esc(String(r.name || '—')) + '</b>' + quote + '</div></div>';
+    // 🎨 25.09.2026: die Punktzahl steht als grosse Marke links (sie ist die Kennzahl der Zeile),
+    // der Tipp direkt unter dem Spiel statt als letzte Zeile unter den Zellen — vorher las man
+    // vier Buch-Kaesten, bevor man erfuhr, worauf sie sich beziehen.
+    var q = r.moeglich ? r.punkte / r.moeglich : 0;
+    var sc = q >= 0.8 ? A.good : q >= 0.6 ? A.blue : 'var(--mi2)';
+    return '<div class="sz-r' + (bewegt ? ' bewegt' : '') + '">'
+      + '<div class="sz-score" style="color:' + sc + ';border-color:' + sc + '">' + r.punkte
+      + '<i>/' + r.moeglich + '</i></div>'
+      + '<div class="sz-main"><div class="sz-h">'
+      + '<span class="sz-m">' + paar + '</span>'
+      + (bewegt ? '<span class="sz-u" style="background:rgba(46,160,71,.16);color:' + A.good + '">⚡ Geld bewegt sich</span>' : '')
+      + '</div>'
+      + '<div class="sz-meta">' + uhr + '<span class="sz-lg">' + esc(String(r.liga || '')) + '</span></div>'
+      + '<div class="sz-w">→ <b>' + esc(String(r.name || '—')) + '</b>' + quote
+      + _klStufenText(_klStufenBilanz(k, r.punkte, r.moeglich)) + '</div>'
+      + '<div class="sz-q">' + reihe + '</div></div></div>';
   }
 
   // 🔴 12.09.2026 (Lucas, Plattform-Audit). `killer.py` rechnet `punkteBilanz` — je (Punkte,
@@ -2704,7 +2852,7 @@
     var oben = alle.filter(function (r) { return (r.punkte || 0) >= KL_TAFEL_MIN; }).slice(0, KL_TAFEL_MAX);
     var rest = alle.length - oben.length;
     var koerper = oben.length
-      ? oben.map(function (r) { return _klTafelZeile(r, bewegteIds[String(r.matchId)], k); }).join('')
+      ? '<div class="sz-grid">' + oben.map(function (r) { return _klTafelZeile(r, bewegteIds[String(r.matchId)], k); }).join('') + '</div>'
       // 12.09.2026: hier stand „von 13". Der Nenner ist aber je Spiel verschieden — gemessen am
       // Stand heute: 38 Zeilen mit 10, 19 mit 4, 15 mit 7 und genau EINE mit 13. „6 von 13" war
       // also fuer 72 von 73 Zeilen falsch, und ein Spiel mit moeglich=4 kann die 6 nie erreichen,
@@ -2715,15 +2863,17 @@
         + 'Punkten erreicht die Schwelle nie.</span> Das ist ein Ergebnis, kein Fehler.</div>';
     // Die Restzeile ist Pflicht: eine kurze Tafel ohne sie liest sich wie ein Ausfall.
     var beste = alle.length ? (alle[oben.length] || {}).punkte : null;
-    var fuss = rest ? ('<div class="md-kl-foot"><b>' + rest + '</b> weitere Spiele bewertet'
+    // 🎨 25.09.2026: die Restzeile ist weiter Pflicht — sie steht jetzt IN der Aufklapp-Zeile,
+    // statt als eigener Absatz darueber: eine Zeile statt zwei, dieselbe Auskunft.
+    var fuss = rest ? ('<span class="md-kl-foot sz-rest"><b>' + rest + '</b> weitere Spiele bewertet'
       + (beste != null ? ', bestes davon <b>' + beste + '/' + (alle[oben.length].moeglich) + '</b>' : '')
       + ' — sie stehen nicht oben, weil sie unter ' + KL_TAFEL_MIN + ' Punkten liegen oder '
-      + 'weniger Bücher gefragt wurden.</div>') : '';
+      + 'weniger Bücher gefragt wurden.</span>') : '';
     var det = rest ? ('<details class="md-kl-det"><summary class="md-kl-sum">📁 Alle ' + alle.length
-      + ' bewerteten Spiele ansehen</summary><div class="md-kl-bliste">'
+      + ' bewerteten Spiele ansehen' + fuss + '</summary><div class="sz-grid">'
       + alle.map(function (r) { return _klTafelZeile(r, bewegteIds[String(r.matchId)], k); }).join('')
       + '</div></details>') : '';
-    return koerper + fuss + det;
+    return koerper + det;
   }
 
   // ── Ebene 1: das Freigabe-Register ────────────────────────────────────────────────────
@@ -2762,38 +2912,37 @@
     var ico = FG_STROM[r.strom] || ['·', r.strom];
     var col = (r.roi == null) ? 'var(--mi3)' : (r.roi > 0 ? A.good : A.red);
     var z = function (lbl, wert, c) {
-      return '<span class="mpc-sub"><b style="color:' + (c || 'var(--mi)') + '">' + wert + '</b>'
-        + '<i>' + lbl + '</i></span>';
+      return '<span class="fg-k"><b style="color:' + (c || 'var(--mi)') + '">' + wert + '</b><i>' + lbl + '</i></span>';
     };
-    return '<div class="fg-strom">'
-      + '<div class="fg-strom-h">' + ico[0] + ' <b>' + ico[1] + '</b>'
+    // 🎨 25.09.2026: EINE Zahl traegt die Kachel — der ROI, gross. Die Zerlegung („nach
+    // Conviction") und die Basis (welche Plays) stehen weiter dran, aber klein bzw. im Tooltip:
+    // man liest sie einmal, nicht bei jedem Blick. Die Saetze selbst sind unveraendert
+    // (08.09.2026, Lucas: „im Tracking vom Polymarket-Wallet stehen da andere Sachen").
+    return '<div class="fg-strom" style="--fg-c:' + col + '"'
+      + (r.basis ? ' title="Welche Plays in diese Zahl eingehen: ' + esc(String(r.basis))
+          + '. Die Track-Record-Seite der Poly-Wallets zählt ALLE Plays und trennt bespielbar von '
+          + 'nicht bespielbar — deshalb steht dort eine andere Zahl."' : '') + '>'
+      + '<div class="fg-strom-h"><span class="fg-ico">' + ico[0] + '</span><b>' + ico[1] + '</b>'
       + '<span class="fg-strom-z" title="Über diese Zerlegung wurde summiert — die anderen '
       + 'Schubladen desselben Stroms sind Schnitte durch dieselben Plays und würden doppelt zählen">'
       + esc(String(r.zerlegung || '')) + '</span></div>'
-      // 08.09.2026 (Lucas: „aja, und was ist das in Polymarket — im Tracking vom Polymarket-
-      // Wallet stehen da andere Sachen"). Standen da wirklich: −6,6 % hier, +0,1 % dort. Beide
-      // richtig, beide über eine ANDERE Menge, und keine der beiden sagte welche. Die Kachel
-      // sagt es jetzt selbst — das ist derselbe Satz wie „nach Conviction", nur eine Ebene
-      // tiefer: worüber wurde gerechnet.
-      + (r.basis ? '<div class="fg-strom-q" title="Welche Plays in diese Zahl eingehen. Die '
-          + 'Track-Record-Seite der Poly-Wallets zählt ALLE Plays und trennt bespielbar von '
-          + 'nicht bespielbar — deshalb steht dort eine andere Zahl.">'
-          + esc(String(r.basis)) + '</div>' : '')
-      + '<div class="mpc-subs">'
-      + z('ROI', (r.roi == null ? '—' : (r.roi > 0 ? '+' : '') + (r.roi * 100).toFixed(1) + '%'), col)
+      + '<div class="fg-hero" style="color:' + col + '">'
+      + (r.roi == null ? '—' : (r.roi > 0 ? '+' : '') + (r.roi * 100).toFixed(1) + '%')
+      + '<i>ROI</i></div>'
+      + '<div class="fg-ks">'
       + z('P/L', (r.pl == null ? '—' : (r.pl > 0 ? '+' : '') + (+r.pl).toFixed(1)), col)
       + z('Plays', (r.n || 0).toLocaleString('de-DE'))
       + z('CLV', (r.clv == null ? '—' : (r.clv > 0 ? '+' : '') + (+r.clv).toFixed(1) + 'pp'))
-      + z('belegte Schubladen', r.belegte == null ? '—' : r.belegte,
-          r.belegte ? A.good : 'var(--mi3)')
+      + z('belegt', r.belegte == null ? '—' : r.belegte, r.belegte ? A.good : 'var(--mi3)')
       + '</div>'
+      + (r.basis ? '<div class="fg-strom-q">' + esc(String(r.basis)) + '</div>' : '')
       + (beste
         ? '<div class="fg-strom-b" title="Die stärkste Schublade dieses Stroms, deren Rendite-'
-          + 'Untergrenze über null liegt — ihr folgt man, nicht dem Strom-Schnitt">★ '
-          + '<b>' + esc(String(beste.schublade || '')) + '</b> '
-          + (beste.roi > 0 ? '+' : '') + (beste.roi * 100).toFixed(1) + '% '
-          + '<i>(UG ' + (beste.roiLb > 0 ? '+' : '') + (beste.roiLb * 100).toFixed(1) + '%, n='
-          + (beste.n || 0) + ')</i></div>'
+          + 'Untergrenze über null liegt — ihr folgt man, nicht dem Strom-Schnitt">'
+          + '<span class="fg-star">★</span><span class="fg-bn">' + esc(String(beste.schublade || '')) + '</span>'
+          + '<span class="fg-bv">' + (beste.roi > 0 ? '+' : '') + (beste.roi * 100).toFixed(1) + '%</span>'
+          + '<i>UG ' + (beste.roiLb > 0 ? '+' : '') + (beste.roiLb * 100).toFixed(1) + '% · n='
+          + (beste.n || 0) + '</i></div>'
         : '<div class="fg-strom-b" style="color:var(--mi3)" title="Keine einzelne Schublade '
           + 'dieses Stroms hat ihre Rendite-Untergrenze über null — der Strom-Schnitt ist hier '
           + 'alles, was es gibt">· keine belegte Schublade</div>')
@@ -2827,8 +2976,12 @@
     if (!st.length) return '';
     return '<div class="fg-stroeme">' + st.map(function (r) {
         return _mdStromKachel(r, _mdStromBeste(f, r.strom, minN));
-      }).join('') + '</div>'
-      + '<div class="md-kl-foot" style="border-top:0;padding:2px 0 8px">Je Strom über <b>eine '
+      }).join('') + '</div>';
+  }
+  // 🎨 25.09.2026: die Fussnote der Strom-Tafel steht unveraendert — aber hinter dem ⓘ der Ebene.
+  function _mdStroemeInfo(f) {
+    if (!((f && f.stroeme) || []).length) return '';
+    return '<div class="md-eb-s">Je Strom über <b>eine '
       + 'überschneidungsfreie Zerlegung</b> gerechnet — die übrigen Schubladen desselben Stroms '
       + 'sind andere Schnitte durch dieselben Plays und würden doppelt zählen. Ruhende Schubladen '
       + '(z.&nbsp;B. die WM) sind draußen: sie liefern nichts mehr.</div>';
@@ -2990,6 +3143,89 @@
     }).join('');
   }
 
+  // ── 🎨 25.09.2026: freigegebene Schublade als KARTE ───────────────────────────────────
+  // Vorher: eine Zeile je Schublade mit sechs Zahlen in Mono-Schrift, darunter — getrennt davon —
+  // „🎯 Spielbar aus …" mit der Spielliste. Man musste Schublade und Spiele im Kopf
+  // zusammenfuehren. Jetzt traegt die Karte beides: oben das Urteil (ROI gross, die Spanne von
+  // Untergrenze bis Schnitt als Balken gegen die Null), unten die offenen Spiele zum Aufklappen.
+  // Zahlen und Urteile kommen unveraendert aus `_mdFgZeile`s Quellen (roi/roiLb/pl/clv/nAlt,
+  // `_fgClvUrteil`) — hier wird nichts neu gerechnet.
+  function _fgSpanne(lo, hi) {
+    // Skala: mindestens −10 % … +30 %, weiter, wenn die Werte es verlangen. Die Null ist markiert —
+    // ob der Balken rechts von ihr beginnt, IST die Aussage „belegt".
+    if (lo == null || hi == null) return '';
+    var a = Math.min(-0.10, lo, hi), b = Math.max(0.30, lo, hi), w = b - a;
+    var x = function (v) { return ((v - a) / w * 100).toFixed(1) + '%'; };
+    var l = Math.min(lo, hi), r = Math.max(lo, hi);
+    var col = lo > 0 ? A.good : (hi > 0 ? A.gold : A.red);
+    return '<div class="fg-sp" title="Balken = Spanne von der Rendite-Untergrenze (links) bis zum Schnitt (rechts). '
+      + 'Beginnt er rechts der Null-Linie, ist die Schublade belegt.">'
+      + '<i class="fg-sp-0" style="left:' + x(0) + '"></i>'
+      + '<i class="fg-sp-r" style="left:' + x(l) + ';width:calc(' + x(r) + ' - ' + x(l) + ');background:' + col + '"></i>'
+      + '<i class="fg-sp-p" style="left:' + x(hi) + ';background:' + col + '"></i></div>';
+  }
+
+  function _fgSpielKurz(p) {
+    var ko = p.anpfiff ? new Date(p.anpfiff) : null;
+    var zeit = (ko && isFinite(ko.getTime()))
+      ? ko.toLocaleString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit',
+                                     hour: '2-digit', minute: '2-digit' })
+      : '—';
+    return '<div class="fg-g">'
+      + '<span class="fg-g-m">' + esc(String(p.spiel || '—')) + '</span>'
+      + '<span class="fg-g-t">' + esc(zeit) + '</span>'
+      + '<span class="fg-g-p">' + esc(String(p.auswahl || '—'))
+      + (p.quote != null ? ' <b>@' + (+p.quote).toFixed(2) + '</b>' : '')
+      + (p.conv != null ? ' <i>Conv ' + (+p.conv) + '</i>' : '') + '</span></div>';
+  }
+
+  function _fgKarteSpiele(b) {
+    if (!b) return '';
+    if (!b.aufloesbar) {
+      // ⚠️ „Nicht auflösbar" ist NICHT „keine Spiele" (08.09.2026) — der Grund steht im Tooltip.
+      // Der Schubladenname steht schon im Kopf der Karte — hier nur noch, WAS fehlt.
+      return '<div class="fg-kf leise" title="' + esc(String(b.grund || '')) + '">🎯 keine Einzel-Liste '
+        + '<span class="fg-kf-a" style="color:var(--mi3)">warum?</span></div>';
+    }
+    if (!b.n) {
+      var leer = b.laufend
+        ? ('gerade nichts Offenes — ' + b.laufend + ' Kandidat'
+           + (b.laufend === 1 ? ' ist' : 'en sind') + ' bereits angepfiffen')
+        : 'gerade kein offenes Spiel in diesem Schnitt';
+      return '<div class="fg-kf leise">🎯 ' + leer + '</div>';
+    }
+    var oben = (b.plays || []).slice(0, FG_SPIELE_MAX), rest = b.n - oben.length;
+    return '<details class="fg-kd"><summary class="fg-kf"><b>🎯 Spielbar: ' + b.n
+      + (b.n === 1 ? ' offenes Spiel' : ' offene Spiele') + '</b>'
+      + (b.laufend ? ' <span class="leise">· ' + b.laufend + ' schon angepfiffen</span>' : '')
+      + '<span class="fg-kf-a">anzeigen</span></summary>'
+      + '<div class="fg-gl">' + oben.map(_fgSpielKurz).join('') + '</div>'
+      + (rest ? '<div class="fg-kf leise">' + rest + ' weitere in diesem Schnitt.</div>' : '')
+      + '</details>';
+  }
+
+  function _mdFgKarte(r, minN, spielBlock) {
+    var n = +r.n || 0, ziel = +r.zielN || minN || FG_BAR_MAX;
+    var pct = Math.max(0, Math.min(100, Math.round(n / ziel * 100)));
+    var col = (r.roi == null) ? 'var(--mi3)' : (r.roi > 0 ? A.good : A.red);
+    return '<div class="fg-karte">'
+      + '<div class="fg-kh"><span class="fg-ok">✓</span><b>' + esc(String(r.schublade || '—')) + '</b>'
+      + '<span class="fg-n" title="Plays / Ziel">' + n + '<i>/' + ziel + '</i>'
+      + '<span class="fg-nb"><span style="width:' + pct + '%"></span></span></span></div>'
+      + '<div class="fg-kz"><span class="fg-roi" style="color:' + col + '">'
+      + _mdFgZahl(r.roi == null ? null : r.roi * 100, '%', 1) + '</span>'
+      + '<span class="fg-ug">UG ' + _mdFgZahl(r.roiLb == null ? null : r.roiLb * 100, '%', 1) + '</span></div>'
+      + _fgSpanne(r.roiLb, r.roi)
+      + '<div class="fg-kc">'
+      + '<span class="md-kl-c" title="Was die Schublade insgesamt getragen hat — Summe der Renditen in Einheiten Einsatz">P/L '
+      + (r.pl == null ? '—' : (r.pl > 0 ? '+' : '') + (+r.pl).toFixed(1)) + '</span>'
+      + '<span class="md-kl-c" title="CLV mit Untergrenze — bei kleinem n belastbarer als der ROI">CLV '
+      + _mdFgZahl(r.clv, 'pp', 1) + '</span>' + _fgClvUrteil(r)
+      + (r.nAlt ? '<span class="md-kl-c" title="Plays aus einer früheren Engine-Version — sie zählen NICHT für die Freigabe, stehen hier nur als Kontext">'
+          + '+' + r.nAlt + ' alt (' + _mdFgZahl(r.roiAlt == null ? null : r.roiAlt * 100, '%') + ')</span>' : '')
+      + '</div>' + _fgKarteSpiele(spielBlock) + '</div>';
+  }
+
   function _mdFreigabe() {
     var f = _md.data && _md.data.freigabe;
     // 08.09.2026 (Lucas: „ich kapier es einfach nicht — was wird da besonders freigegeben?").
@@ -3037,8 +3273,15 @@
     // seltenere Frage beantwortet.
     var stroeme = _mdStroeme(f, minN);
     var body;
+    var _spielNach = {};
+    ((f && f.spiele) || []).forEach(function (b) { if (b && b.schublade != null) _spielNach[String(b.schublade)] = b; });
+    var _inKarte = {};
     if (frei.length) {
-      body = frei.map(function (r) { return _mdFgZeile(r, minN); }).join('');
+      body = '<div class="fg-karten">' + frei.map(function (r) {
+        var b = _spielNach[String(r.schublade)];
+        if (b) _inKarte[String(r.schublade)] = 1;
+        return _mdFgKarte(r, minN, b);
+      }).join('') + '</div>';
     } else {
       // 🔴 04.09.2026 (Lucas-Übersicht-Check). Der Satz behauptete pauschal „keine Schublade hat
       // ihre Untergrenze über null" — und war falsch. Gemessen an dem Tag:
@@ -3106,9 +3349,15 @@
       + '<div class="md-kl-bliste">' + alle.map(function (r) { return _mdFgZeile(r, minN); }).join('') + '</div>'
       + '<div class="md-kl-foot" style="border-top:0;padding-top:6px">' + esc(regel) + '</div></details>' : '';
 
+    // Spielbar-Bloecke, die zu keiner Karte gehoeren (kommt vor, wenn nichts freigegeben ist),
+    // stehen weiter in ihrer alten Form — sie duerfen nicht verschwinden, nur weil es keine Karte gibt.
+    var _restSpiele = { spiele: ((f && f.spiele) || []).filter(function (b) {
+      return !(b && _inKarte[String(b.schublade)]);
+    }) };
     return _mdEbene(1, frage, 'Register', A.good, mechT, unter, bad,
-      stroeme + body + _mdFgSpiele(f) + _mdLigen(f) + _mdWallets(f)
-      + '<div class="md-kl-foot">' + eng + '</div>' + det);
+      stroeme + body + _mdFgSpiele(_restSpiele)
+      + '<div class="fg-schubl">' + _mdLigen(f) + _mdWallets(f) + det + '</div>',
+      null, _mdStroemeInfo(f) + '<div class="md-eb-s">' + eng + '</div>');
   }
 
   function _mdKiller(polyPlays) {
@@ -3130,7 +3379,7 @@
     // Ebene 3 nicht kennen. `_mdFillJetzt` tauscht deshalb BEIDE Kaesten, nicht nur den unteren
     // — sonst traegt genau eine der zwei Flaechen den Marker, und das ist der Zustand, den
     // Lucas beanstandet hat.
-    var ebene = function (inhalt) {
+    var ebene = function (inhalt, info) {
       return '<div id="mdKillerBox">' + _mdEbene(2, 'Wie viele Bücher sind sich einig?', 'Punktestand', A.blue,
         'Vier Bücher: Betfair, Polymarket, Pinnacle, Stake-Highroller. Je zustimmendem Buch 2 Punkte, 1 für Tiefe im selben Buch, 1 wenn es schon ≥3h vor Anpfiff steht. Nicht erhobene Bücher senken den Nenner — sie kosten keine Punkte, deshalb steht immer x/y da.',
         // 06.09.2026 (Lucas: „ich weiß nicht, ob man das nicht noch verbessern kann … damit
@@ -3142,7 +3391,7 @@
         // Was hier landen KANN, ist durch die Bauart begrenzt: nur Märkte, die alle drei
         // Bücher quotieren — praktisch 1X2. Die Poly-Shortlist spielt überwiegend Über/Unter,
         // trifft sich mit dieser Ebene aber sehr wohl auf 1X2-Spielen (06.09.: Remo v Flamengo).
-        _mdRegal(s1.concat(s2), function (r) { return r.markt || r.market; })) + '</div>';
+        _mdRegal(s1.concat(s2), function (r) { return r.markt || r.market; }), info) + '</div>';
     };
     // 08.09.2026 — die Tafel steht IMMER, auch wenn das Bewegungs-Tor leer ist. Vorher stand
     // hier „Gerade deckt sich nichts", waehrend dieselbe Datei 145 Spiele bewertet hatte: der
@@ -3355,7 +3604,7 @@
         stand + jzB + (ko ? '<span class="md-jz-ko" title="bis Anpfiff">⏱ Anpfiff ' + ko + '</span>' : '') + '</div>' +
         '<div class="md-kl-pick"><span style="color:var(--mi3)">→</span> <b>' + esc(x.name || '—') + '</b>' + oddTxt + '</div>' +
         ((pkt && pkt.warum && pkt.warum.length)
-          ? '<div class="md-warum"><i>warum:</i> ' + esc(pkt.warum.slice(0, 3).join(' · ')) + '</div>'
+          ? '<div class="md-warum" title="' + esc(pkt.warum.slice(0, 3).join(' · ')) + '"><i>warum:</i> ' + esc(pkt.warum.slice(0, 3).join(' · ')) + '</div>'
           : '') +
         '<div class="md-kl-deck">' +
           (pkt
@@ -3391,13 +3640,14 @@
       + 'Ob man einer Zeile blind folgen darf, beantwortet Ebene 1 — nicht diese Liste.'
       + (st && st.clv != null ? ' Gemessenes Tor: ' + (st.n || 0) + ' abgerechnete Zeilen, CLV '
           + (st.clv >= 0 ? '+' : '') + st.clv.toFixed(1) + 'pp.' : '');
+    // 🎨 25.09.2026: die Ueberleitung ist eine Zwischenueberschrift, die Fussnote wandert ins ⓘ.
     return ebene(
       _tafel +
-      '<div class="md-kl-foot" style="padding-top:9px"><b>Und diese bewegen sich gerade</b> — '
-      + 'zusätzlich zur Übereinstimmung fließt frisches Geld und die Quote zieht mit:</div>' +
+      '<div class="md-kl-bew"><b>⚡ Und diese bewegen sich gerade</b>'
+      + '<span>zusätzlich zur Übereinstimmung fließt frisches Geld und die Quote zieht mit</span></div>' +
       grp('🔒 Voll gedeckt — Betfair · Poly · Pinnacle', s1) +
       grp('💷 Betfair-Kern — das gemessene Tor', s2) +
-      '<div class="md-kl-foot">' + esc(fuss) + '</div>' + _mdKlBilanz(bil));
+      _mdKlBilanz(bil), '<div class="md-eb-s">' + esc(fuss) + '</div>');
   }
 
   function _mdJetzt(polyPlays) {
@@ -3698,7 +3948,7 @@
         '<div class="md-jz-l1"><span class="md-jz-n">' + (i + 1) + '</span>' +
         '<span class="md-jz-nm">' + x.match + '</span>' + badge + deck + live + chip +
         (ko ? '<span class="md-jz-ko">⏱ ' + ko + '</span>' : '') + '</div>' +
-        pickLine + '<div class="md-warum"><i>warum:</i> ' + esc(_jzWarum(x)) + '</div>' + sigOf(x) + '</div>';
+        pickLine + '<div class="md-warum" title="' + esc(_jzWarum(x)) + '"><i>warum:</i> ' + esc(_jzWarum(x)) + '</div>' + sigOf(x) + '</div>';
     }).join('');
     // 01.09.2026: Ebene 3 derselben Sektion. Der Kasten behaelt seine id, weil _mdFillJetzt ihn
     // nach dem Poly-Nachladen per outerHTML ersetzt — er muss also allein austauschbar bleiben.
@@ -3742,6 +3992,8 @@
     return '<section class="md-sp md-rise">'
       + '<div class="md-sp-h"><span style="font-size:16px">🎯</span>'
       + '<span class="md-sp-t">Was kann ich spielen?</span>'
+      + '<button type="button" class="md-i-b" title="Wie hängen die drei Ebenen zusammen?" '
+      + 'onclick="this.closest(\'.md-sp\').classList.toggle(\'i-open\')">i</button>'
       + '<span class="md-sp-s">Drei Ebenen von streng nach breit — <b>je weiter unten, desto mehr steht da '
       + 'und desto weniger ist belegt</b>. Ebene 1 sagt, wie ernst man die beiden darunter nehmen darf; '
       + 'Ebene 2 zeigt, wie viele der vier Bücher auf derselben Seite liegen — und braucht dafür keine '

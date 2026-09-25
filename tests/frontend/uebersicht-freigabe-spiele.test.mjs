@@ -55,7 +55,8 @@ function ebene1(w, spiele) {
 
 test('die offenen Spiele einer freigegebenen Schublade stehen im Board', () => {
   const html = ebene1(load(), [block()]);
-  assert.match(html, /Spielbar aus/);
+  // 25.09.2026: die Spiele stehen jetzt IN der Karte der Schublade („🎯 Spielbar: n offene Spiele").
+  assert.match(html, /Spielbar/);
   assert.match(html, /Venezia v Fiorentina/);
   assert.match(html, /Über 2\.5 Tore/);
   assert.match(html, /@1\.78/);

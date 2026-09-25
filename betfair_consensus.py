@@ -1673,6 +1673,14 @@ def main():
            "oddsKeysFetched": zaehle_keys(events_by_key)["versucht"],
            "oddsKeysMitDaten": zaehle_keys(events_by_key)["mitDaten"],
            "oddsEvents": zaehle_keys(events_by_key)["events"],
+           # 🔴 25.09.2026: 13 neue Handlisten-Ligen = 13 weitere Totals-Calls je Lauf gegen
+           # ODDS_GESAMT_S. Reisst das Budget, werden die Totals der HINTEREN Keys ausgelassen —
+           # und das stand bisher nur im Log des Runners. Ohne diese Zahl sieht „keine Torlinie"
+           # in einer Liga genau so aus wie „Pinnacle bietet keine an".
+           # Fehlerklasse: *ein Abbruch, der nur im Log steht, ist fuer jeden Leser ein Nullwert.*
+           "oddsTotals": dict(zaehle_keys(totals_by_key),
+                              gewollt=len(need),
+                              ausgelassen=max(0, len(need) - len(totals_by_key))),
            "oddsKontingent": dict(KONTINGENT),
            "ankerQuote": (round(sum(1 for g in games if g.get("pinn")) / len(games), 3)
                           if games else None),

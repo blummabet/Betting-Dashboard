@@ -182,6 +182,32 @@
    "mindestN": 400,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist"
+  },
+  {
+   "id": "sharp-z-1282",
+   "titel": "Scharfe Wallets: reicht z=1,282 statt 1,645?",
+   "frage": "ROI (auf Aufloesungen mit Geld), Trefferquote und CLV der Wallets, die bei z=1,282 scharf sind, bei 1,645 aber nicht (Band) — gegen die heute scharfen (streng) und alle uebrigen (basis). Kohorten am Anmeldetag eingefroren, gemessen nur an Tagen danach.",
+   "warum": "01.09.2026, z-Sweep auf einem Wochenfenster: 1,645 -> 16 Wallets, n=180, Treffer-UG 48,3 %, CLV +0,26pp; 1,282 -> 24 Wallets, n=251, UG 50,6 %, CLV +0,55pp. Die strengste Einstellung war auf jeder Achse die schlechteste — aber vier z-Werte auf EINEM Fenster, der Beste ist teils Zufall. Belegt war nur, dass 1,645 nicht besser ist. Seitdem stand die Frage als Vorschlag im Code und wurde nie gemessen.\nEntscheidung vorab (in der Signatur eingefroren): bei 150 Band-Aufloesungen mit Geld wird z=1,282 fuer Whale-/Conviction-Gate uebernommen, wenn Band-ROI > Basis-ROI UND Band-ROI >= Streng-ROI - 5pp. Sonst bleibt 1,645. Der Public-Push bleibt in jedem Fall bei 1,645 — dort kostet ein Fehlalarm Glaubwuerdigkeit.",
+   "gestartet": "2026-09-25",
+   "faellig": "2026-10-09",
+   "quelle": "sharp_z_vorwaerts.json -> stand.band.nGeld",
+   "messer": "sharp_z",
+   "mindestN": 150,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist"
+  },
+  {
+   "id": "torlinien-13-ligen",
+   "titel": "Kommen die Pinnacle-Torlinien der 13 neuen Anker-Ligen an?",
+   "frage": "Stehen die 13 am 25.09. ergaenzten Ligen (J League, Segunda, Superettan, Liga MX, Serie B, Ligue 2, K1, Greek SL, Swiss SL, Chinese SL, Frauen-Bundesliga, Sky Bet League 1/2) nach dem ersten Liga-Wochenende in betfair_consensus.json unter `leaguesMitTotals` — und meldet `oddsTotals.ausgelassen` 0?",
+   "warum": "25.09.2026: LEAGUE_ODDS_KEY von 31 auf 44 Eintraege erweitert, damit diese Ligen Pinnacle-TORLINIEN bekommen (die Match Odds findet der globale Pool seit 01.09. auch ohne Eintrag). Alle 13 Eintraege passen auf einen echten Ligastring im Ledger — ob wirklich Torlinien ankommen, war am 25.09. nicht pruefbar: Laenderspielpause, keine der 13 Ligen hatte ein offenes Spiel im Fenster. Zweites Risiko: 13 zusaetzliche Totals-Calls gegen das Zeitbudget BF_ODDS_GESAMT_S (240 s); reisst es, fallen die hinteren Ligen still weg — dafuer seit 25.09. der Waechter `check_totals_vollstaendig`.\nWenn NEIN: Budget erhoehen oder Totals nur in jedem n-ten Lauf holen; bei einzelnen Ligen ohne Totals den Key gegen /sports pruefen (odds_anker_luecke.py von Hand ausloesen).",
+   "gestartet": "2026-09-25",
+   "faellig": "2026-10-12",
+   "quelle": "betfair_consensus.json -> leaguesMitTotals, oddsTotals",
+   "messer": null,
+   "mindestN": null,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist"
   }
  ]
 }

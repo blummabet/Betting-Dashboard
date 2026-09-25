@@ -191,6 +191,14 @@ jobs:
       # neuen Einigkeits-Schattenbuch waere das besonders irrefuehrend gewesen: es entsteht im
       # Whale-Watch und wird erst von poly_public_eval abgerechnet. Jetzt zaehlt das Buch, was
       # dieser Lauf wirklich hergegeben hat.
+      # 25.09.2026: Vorwaertsmessung z=1,282 vs 1,645. Friert beim ERSTEN Lauf die Kohorten ein
+      # und misst danach nur vorwaerts. Die Datei MUSS committet werden — sonst meldet jeder Lauf
+      # neu an und das Fenster bleibt ewig leer (s. vorregistrierung.py). Vor messungen.py, damit
+      # das Buch den frischen Stand zaehlt.
+      - name: 📐 Sharp-Gate z-Vorwaertsmessung
+        run: ${{ env.POLY_PYTHON }} sharp_z_vorwaerts.py
+        continue-on-error: true
+
       - name: 🔬 Buch der laufenden Messungen fortschreiben
         run: ${{ env.POLY_PYTHON }} messungen.py
         continue-on-error: true
@@ -248,7 +256,7 @@ jobs:
             poly_wallet_norm.json poly_wallet_norm_state.json \
             shortlist_push_seen.json shortlist_push_ledger.json shortlist_auto_bets_placed.json shortlist_auto_verworfen.json \
             poly_dominanz_ledger.json poly_dominanz_seen.json poly_dominanz_record.json \
-            poly_money_klein.json messungen.json poly_gegenseite.json poly_einigkeit_schatten.json poly_einigkeit_schatten_bericht.json \
+            poly_money_klein.json messungen.json sharp_z_vorwaerts.json poly_gegenseite.json poly_einigkeit_schatten.json poly_einigkeit_schatten_bericht.json \
             poly_money_broad_live.json poly_money_broad_live_history.json \
             esports_poly_prices.json esports_poly_wallets.json esports_poly_smartmoney.json esports_poly_coherence.json esports_poly_status.json \
             health/poly-global.json; do
