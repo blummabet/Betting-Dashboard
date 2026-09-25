@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-24T23:37:42.462275+00:00",
+ "generatedAt": "2026-09-25T00:07:47.289380+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,8 +9,8 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 550,
- "pinnKeys": 128,
- "matched": 28,
+ "pinnKeys": 130,
+ "matched": 30,
  "footballRows": 18,
  "crossRows": 532,
  "footballSkippedStale": 72,
@@ -22,12 +22,41 @@
   "soccer_mls": 18
  },
  "matchedBySport": {
-  "baseball_mlb": 10,
+  "baseball_mlb": 12,
   "soccer_mls": 18
  },
  "trackRecord": {
   "tracked": 301,
   "converged": 77
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|atlantabraves-cincinnatireds|cincinnatireds",
+   "sport": "baseball_mlb",
+   "event": "Cincinnati Reds vs Atlanta Braves",
+   "market": "Moneyline",
+   "outcome": "Cincinnati Reds",
+   "polyPP": 45.5,
+   "pinnPP": 16.4,
+   "gapPP": 29.12,
+   "vol": 332438,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 2.73,
+   "firstSeen": "2026-09-23T01:03:01.475335+00:00"
+  },
+  {
+   "id": "baseball_mlb|atlantabraves-cincinnatireds|atlantabraves",
+   "sport": "baseball_mlb",
+   "event": "Cincinnati Reds vs Atlanta Braves",
+   "market": "Moneyline",
+   "outcome": "Atlanta Braves",
+   "polyPP": 54.5,
+   "pinnPP": 83.6,
+   "gapPP": -29.12,
+   "vol": 332438,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 2.73,
+   "firstSeen": "2026-09-23T01:03:01.475335+00:00"
+  }
+ ]
 }
