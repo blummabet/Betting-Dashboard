@@ -112,6 +112,37 @@ LEAGUE_ODDS_KEY = {
     "German Bundesliga 2":          "soccer_germany_bundesliga2",
     "Swedish Allsvenskan":          "soccer_sweden_allsvenskan",
     "Saudi Professional League":    "soccer_saudi_arabia_pro_league",
+    # 🔴 25.09.2026, zweiter Lauf des Anker-Abgleichs (`odds_anker_luecke.py`).
+    #
+    # WARUM das ueberhaupt noch etwas bringt, obwohl seit 01.09. alle aktiven Wettbewerbe geholt
+    # werden: der globale Pool ist ein zweiter Anlauf fuer die MATCH ODDS, nicht fuer die Totals.
+    # Gemessen am 25.09.: von 38 Ligen mit Anker kamen 37 aus dem Pool und nur 1 aus dieser
+    # Liste — aber `tev = match_event(m, totals_by_key.get(k, [])) if k else None`, und
+    # `totals_by_key` wird ausdruecklich nur fuer die kuratierten Keys gefuellt (Laufzeit, nicht
+    # Quota). Ohne Eintrag hier gibt es also einen Pinnacle-Anker fuer 1X2, aber NIE einen fuer
+    # die Torlinien. Diese Liste ist damit nicht mehr das Tor zum Anker, sondern das Tor zu den
+    # Totals — und Over/Under 2.5 und 3.5 sind zusammen die groessten Schubladen im Ledger.
+    #
+    # Geprueft mit den echten 253 Ligastrings des Ledgers; jede Zeile zusaetzlich von Hand gegen
+    # die Spielklasse des Landes gehalten. Preis: 13 x 8.640 = 112.320 Credits/Monat, zusammen
+    # 532.090 von 5.000.000 (10,6 %) — und 13 weitere Totals-Calls je Lauf gegen ODDS_GESAMT_S.
+    "Japanese J League":            "soccer_japan_j_league",            # n=350
+    "Spanish Segunda Division":     "soccer_spain_segunda_division",    # n=269
+    "Swedish Superettan":           "soccer_sweden_superettan",         # n=242
+    "Mexican Liga MX":              "soccer_mexico_ligamx",             # n=235
+    "Italian Serie B":              "soccer_italy_serie_b",             # n=228
+    "French Ligue 2":               "soccer_france_ligue_two",          # n=218
+    "South Korean K1 League":       "soccer_korea_kleague1",            # n=210
+    "Greek Super League":           "soccer_greece_super_league",       # n=176
+    "Swiss Super League":           "soccer_switzerland_superleague",   # n=165
+    "Chinese Super League":         "soccer_china_superleague",         # n=133, bei /sports inaktiv
+    "German Frauen-Bundesliga":     "soccer_germany_bundesliga_women",  # n=88,  bei /sports inaktiv
+    # Diese zwei hat das Skript ABGELEHNT, und zwar richtig: unser Feed schreibt den Sponsor mit
+    # („Sky Bet"), die Gegenseite nicht, und dass ein Sponsorname nichts bedeutet und „Nacional"
+    # alles, weiss kein Textvergleich. Hier entscheidet Fussballwissen: Sky Bet League One/Two
+    # sind League One/Two.
+    "English Sky Bet League 1":     "soccer_england_league1",           # n=285
+    "English Sky Bet League 2":     "soccer_england_league2",           # n=277
 }
 
 
@@ -1618,7 +1649,21 @@ def main():
     games.sort(key=lambda g: (g.get("verdict") != "no_anchor", g.get("totVol") or 0), reverse=True)
     covered = sum(1 for g in games if g.get("verdict") != "no_anchor")
     out = {"generatedAt": now, "count": len(games), "covered": covered,
-           "leaguesCovered": sorted(set(LEAGUE_ODDS_KEY.values())),
+           # 🔴 25.09.2026: hier stand `sorted(set(LEAGUE_ODDS_KEY.values()))` unter dem Namen
+           # „leaguesCovered". Das ist keine Messung, sondern die Handliste — das Feld behauptete
+           # Abdeckung aus einer Absichtserklaerung. Seit dem 01.09. holt der Lauf ALLE aktiven
+           # Wettbewerbe, also untertreibt es zusaetzlich: gemessen am 25.09. hatten 38 Ligen einen
+           # Anker, 37 davon ueber den globalen Pool, und keine einzige davon stand in dem Feld.
+           # Wer diese Zahl liest, sucht eine Luecke, die anders aussieht als sie ist.
+           # Fehlerklasse: *eine Zahl, die einer besseren Messung daneben widerspricht und
+           # trotzdem als Tatsache dasteht.*
+           "leaguesKuratiert": sorted(set(LEAGUE_ODDS_KEY.values())),
+           "leaguesMitAnker": sorted({str(g.get("league")) for g in games
+                                      if isinstance(g, dict) and g.get("pinn")
+                                      and g.get("league")}),
+           "leaguesMitTotals": sorted({str(g.get("league")) for g in games
+                                       if isinstance(g, dict) and g.get("pinnTotals")
+                                       and g.get("league")}),
            # Was WIRKLICH geholt wurde — die Handliste allein sagt das seit dem 01.09. nicht mehr.
            # 🔴 21.09.2026: hier stand `len(events_by_key)` — die Zahl der VERSUCHTEN Keys.
            # Ein toter Schluessel liefert fuer jeden Key eine leere Liste, der Zaehler blieb
