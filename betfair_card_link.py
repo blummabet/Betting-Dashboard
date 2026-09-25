@@ -265,17 +265,59 @@ def link(games, fixtures, snaps_by_id=None, now=None) -> dict:
 
 
 def candidates(games, fixtures) -> int:
-    """Wie viele Boersen-Spiele finden am selben Tag ueberhaupt eine Card-Partie? REIN.
+    """Wie viele Boersen-Spiele koennten ueberhaupt eine Card-Partie finden? REIN.
 
     Nur dafuer da, „0 verlinkt" von „0 verlinkbar" zu unterscheiden. Ohne das sieht ein kaputter
     Link (falscher Pfad, veraltete picks_output) im Terminal genauso aus wie ein ruhiger Dienstag
     ohne Top-5-Spiele — und genau diese Verwechslung ist die tote-Kette-Klasse
     ([[project_poly_surfaces_audit]]: Verdrahtung ist nicht Ankunft).
+
+    🔴 25.09.2026. Hier zaehlte der TAG allein, und damit hat der Waechter drei Tage lang einen
+    Bruch gemeldet, den es nicht gab: „6 Boersen-Spiele lagen am selben Tag wie unsere Cards,
+    verlinkt wurde KEINES — Namens-Bruecke oder Fixture-Index gebrochen." Nachgesehen, was an
+    dem Tag auf der Boerse stand:
+
+        Georgia - Northern Ireland, Italy - Belgium, England - Spain, Tuerkiye - France,
+        Sweden - Romania, Serbia - Netherlands, Australia - Brazil   (Nations League)
+
+    und was in unseren Card-Dateien:
+
+        Seattle Sounders - Real Salt Lake, Philadelphia Union - Orlando City, …   (MLS)
+
+    Laenderspiele gegen Klubspiele. Es gab nichts zu verlinken — der WM-Datensatz ruht seit dem
+    20.07., also haben wir in einer Laenderspielpause ueberhaupt keine passenden Partien. Der
+    Tag war dieselbe, der Wettbewerb ein voellig anderer.
+
+    Fehlerklasse: *eine Meldung, die einen anderen Grund nennt als den, der zutrifft* — dieselbe
+    wie am 21.09. bei `_warum_haengt`, wo an jeder haengenden Zeile „Aufloesung matcht den Key
+    nicht" stand und es in Wahrheit die fehlende Marktkennung war. Eine falsche Ursache ist
+    teurer als keine: sie schickt die Suche in die falsche Richtung.
+
+    Ein Kandidat braucht deshalb beides — denselben Tag UND mindestens eine Mannschaft, die in
+    unseren Partien dieses Tages ueberhaupt vorkommt. Kommt keine der beiden vor, ist das Spiel
+    schlicht keines von uns.
     """
-    days = {str(e.get("dateIso") or "")[:10] for e in (fixtures or []) if isinstance(e, dict)}
-    days.discard("")
-    return sum(1 for g in (games or [])
-               if isinstance(g, dict) and str(g.get("kickoff") or "")[:10] in days)
+    je_tag = {}
+    for e in (fixtures or []):
+        if not isinstance(e, dict):
+            continue
+        tag = str(e.get("dateIso") or "")[:10]
+        if not tag:
+            continue
+        for name in (e.get("home"), e.get("away")):
+            n = BR._norm(name)
+            if n:
+                je_tag.setdefault(tag, set()).add(n)
+    n = 0
+    for g in (games or []):
+        if not isinstance(g, dict):
+            continue
+        bekannt = je_tag.get(str(g.get("kickoff") or "")[:10]) or set()
+        if not bekannt:
+            continue
+        if any(BR._norm(x) in bekannt for x in (g.get("home"), g.get("away"))):
+            n += 1
+    return n
 
 
 def _load(path):

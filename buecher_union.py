@@ -175,6 +175,58 @@ def doppelte_plays(bets) -> dict:
             if len(v) > 1 and _paar(v) not in QUITTIERT}
 
 
+NACHTRAG_FILE = "buecher_nachtrag.json"
+
+
+def nachtrag_lesen(pfad=NACHTRAG_FILE) -> dict:
+    """{Buch: [Zeile, ...]} — Zeilen, die ein Buch enthalten MUSS. REIN genug (liest eine Datei).
+
+    🔴 25.09.2026. Die Vereinigung schuetzt vorwaerts: zwei Laeufe, die gleichzeitig je eine
+    Zeile mitbringen, verlieren keine mehr. Eine Zeile, die schon aus origin heraus ist, holt
+    sie nicht zurueck — und genau das war der Fall bei Order 0xc1c79cbe…: viermal von Hand
+    wiederhergestellt, viermal vom naechsten Rebase wieder verloren, nie in origin angekommen.
+
+    Fehlerklasse: *eine Reparatur, die jeden Lauf neu gemacht werden muss, ist keine.*
+
+    Erfunden wird hier nichts. Jeder Eintrag nennt in `_nachtrag.quelle` den Commit, in dem die
+    Zeile woertlich stand — ein Test besteht darauf.
+    """
+    try:
+        with open(pfad, encoding="utf-8") as fh:
+            d = json.load(fh)
+    except (OSError, ValueError):
+        return {}
+    return {k: v for k, v in (d or {}).items()
+            if not k.startswith("_") and isinstance(v, list)}
+
+
+def einrueckung(rohtext, standard=1):
+    """Die Schreibweise des Buchs, so wie sein Produzent sie hinterlassen hat.
+
+    🔴 25.09.2026, gefunden beim Rebase von 8a9ebe8ee3: dieses Skript schrieb JEDES Buch mit
+    `indent=1` zurueck. Die Produzenten schreiben aber drei verschiedene Schreibweisen -
+    `shortlist_auto_bets_placed.json` mit 2 (`safe_write.write_json_atomic`, Standard), die
+    vier `betfair_*`-Buecher mit 0, die uebrigen mit 1. Jeder Merge, der ueberhaupt etwas zu
+    vereinen hatte, formatierte damit 6 von 9 Buechern vollstaendig um: 1907 geloeschte und
+    2205 neue Zeilen fuer EINE nachgetragene Order. Der naechste `git pull` bekam dann keinen
+    Konflikt ueber die eine neue Zeile, sondern einen ueber das ganze Buch - und je mehr Zeilen
+    im Streit stehen, desto oefter entscheidet `-X ours`, also genau die Regel, gegen die
+    dieses Skript gebaut wurde.
+
+    Fehlerklasse: *eine Reparatur, die die Datei beim Reparieren umformatiert, vergroessert
+    genau den Konflikt, den sie entschaerfen soll.*
+
+    Die Schreibweise gehoert deshalb nicht in eine Konstantenliste hier (die vom Produzenten
+    wegdriftet, sobald dort jemand `indent=` aendert), sondern wird aus dem Text gelesen, den
+    wir sowieso schon in der Hand haben.
+    """
+    for zeile in (rohtext or "").split("\n")[1:]:
+        if not zeile.strip():
+            continue
+        return len(zeile) - len(zeile.lstrip(" "))
+    return standard
+
+
 def _git_fassung(pfad, ref="FETCH_HEAD", cwd=None):
     """Die Fassung einer Datei aus einer git-Referenz, oder None."""
     try:
@@ -198,17 +250,23 @@ def main(argv=None) -> int:
             continue
         try:
             with open(pfad, encoding="utf-8") as fh:
-                unser = json.load(fh)
+                rohtext = fh.read()
+            unser = json.loads(rohtext)
         except (OSError, ValueError) as exc:
             print(f"  ⚠️  {name} nicht lesbar ({exc}) — nicht angefasst.")
             continue
         ihr = _git_fassung(pfad, ref)
         if ihr is None:
-            continue
+            ihr = unser          # nichts zu vereinen — der Nachtrag greift trotzdem
         neu = vereinen(unser, ihr, spec)
+        # Und zuletzt das, was das Buch enthalten MUSS — auch wenn es in keiner der beiden
+        # Fassungen mehr steht.
+        pflicht = nachtrag_lesen().get(name)
+        if pflicht:
+            neu = vereinen(neu, {"bets": pflicht} if spec.get("liste") else pflicht, spec)
         if neu != unser:
             with open(pfad, "w", encoding="utf-8") as fh:
-                json.dump(neu, fh, ensure_ascii=False, indent=1)
+                json.dump(neu, fh, ensure_ascii=False, indent=einrueckung(rohtext))
             geaendert.append(name)
     if geaendert:
         print("  🤝 Buch vereint statt ueberschrieben: " + ", ".join(geaendert))

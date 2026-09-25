@@ -804,3 +804,10 @@ def test_und_wird_deshalb_ueberhaupt_bewacht():
 
 def test_mumbai_ist_eingestuft():
     assert LS.stufe("mumbai-super-league", "soccer") == "3"
+
+
+def test_marokkos_oberste_klasse_ist_eingestuft():
+    """25.09.2026 (CI-Wachhund): „botola". Der Slug laesst das „Pro" weg, also greift keine
+    Regel. Belegt an der Paarung „Amal Tiznit - Ittihad Tanger" vom 24.09.2026 — das
+    Eroeffnungsspiel der Botola-Pro-Saison."""
+    assert LS.stufe("botola", "soccer") == "1"
