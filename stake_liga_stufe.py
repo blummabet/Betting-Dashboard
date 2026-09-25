@@ -136,6 +136,11 @@ EBENE = {
     # also Ebene 1. Der Slug ist generisch; taucht ein zweiter Wettbewerb darunter auf, meldet
     # ihn `mehrdeutige_kandidaten` — seit heute genau deshalb, weil hier eine ZAHL steht.
     "professional-league": 1,
+    # 25.09.2026 (CI-Wachhund): „botola" — Marokkos oberste Klasse. Der Slug laesst das „Pro"
+    # weg, deshalb greift keine Regel und der Eintrag muss in die TABELLE. Belegt an der
+    # Paarung: „Union Sportif Amal Tiznit - Ittihad Tanger", 24.09.2026 — nach marokkanischen
+    # Quellen das ERSTE Spiel der Botola-Pro-Saison 2026/27, nicht ein Zweitliga-Spiel.
+    "botola": 1,
     # 10.09.2026 (CI-Wachhund, vierter und fuenfter Slug): „v-league" — die oberste Klasse
     # Vietnams (Ledger-Paarung „The Cong - Viettel FC - Cong An Ha Noi FC"). Der Slug ist
     # NICHT sportartenrein: in Korea und Japan heisst die Volleyball-Liga genauso. Dass hier

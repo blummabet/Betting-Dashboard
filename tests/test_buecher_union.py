@@ -168,3 +168,105 @@ def test_jeder_quittierte_vorfall_nennt_seinen_grund():
 def test_der_heutige_vorfall_ist_quittiert_und_die_batterie_ist_still():
     c = U.check_ein_play_eine_order({})
     assert c["nFail"] == 0, c["failures"]
+
+
+# ── 🔴 25.09.2026: eine Reparatur, die jeden Lauf neu gemacht werden muss, ist keine ────
+# Die Vereinigung schuetzt VORWAERTS. Order 0xc1c79cbe… war da schon aus origin heraus: viermal
+# von Hand wiederhergestellt, viermal vom naechsten Rebase verloren, nie angekommen. Gemessen
+# an 25 Commits des Buches — in keinem einzigen stand sie.
+
+def test_der_nachtrag_holt_eine_verlorene_zeile_zurueck():
+    nach = BU.nachtrag_lesen()
+    assert "shortlist_auto_bets_placed.json" in nach, nach.keys()
+    zeilen = nach["shortlist_auto_bets_placed.json"]
+    assert any(str(z.get("orderId", "")).startswith("0xc1c79cbe") for z in zeilen)
+
+
+def test_jede_nachgetragene_zeile_nennt_ihre_quelle():
+    """Erfunden wird hier nichts: jede Zeile stand woertlich in einem Commit, und der steht dabei."""
+    for buch, zeilen in BU.nachtrag_lesen().items():
+        for z in zeilen:
+            n = z.get("_nachtrag") or {}
+            assert n.get("quelle"), (buch, z.get("orderId"))
+            assert n.get("grund"), (buch, z.get("orderId"))
+
+
+def test_der_nachtrag_dupliziert_nicht():
+    """Steht die Zeile schon im Buch, bleibt sie einmal drin."""
+    zeile = BU.nachtrag_lesen()["shortlist_auto_bets_placed.json"][0]
+    spec = BU.BUECHER["shortlist_auto_bets_placed.json"]
+    doppelt = BU.vereinen({"bets": [zeile]}, {"bets": [zeile]}, spec)
+    assert len(doppelt["bets"]) == 1
+
+
+def test_das_buch_traegt_die_zeile_jetzt():
+    p = pathlib.Path(__file__).resolve().parent.parent / "shortlist_auto_bets_placed.json"
+    if not p.exists():
+        return
+    bets = (json.loads(p.read_text(encoding="utf-8")) or {}).get("bets") or []
+    assert any(str(b.get("orderId", "")).startswith("0xc1c79cbe") for b in bets), \
+        "die nachgetragene Order fehlt erneut — dann greift der Nachtrag nicht"
+
+
+def test_der_nachtrag_wird_beim_vereinen_auch_angewandt(tmp_path, monkeypatch):
+    """Die Mutationsprobe hat den Aufruf ersatzlos entfernen lassen, ohne dass etwas rot wurde —
+    weil das Buch die Zeile auf der Platte schon trug. Geprueft gehoert der WEG dorthin."""
+    import shutil
+    quelle = pathlib.Path(__file__).resolve().parent.parent
+    buch = json.loads((quelle / "shortlist_auto_bets_placed.json").read_text(encoding="utf-8"))
+    ohne = {"updatedAt": buch.get("updatedAt"),
+            "bets": [b for b in buch["bets"]
+                     if not str(b.get("orderId", "")).startswith("0xc1c79cbe")]}
+    (tmp_path / "shortlist_auto_bets_placed.json").write_text(
+        json.dumps(ohne, ensure_ascii=False), encoding="utf-8")
+    shutil.copy(quelle / "buecher_nachtrag.json", tmp_path / "buecher_nachtrag.json")
+    monkeypatch.chdir(tmp_path)
+    BU.main(["shortlist_auto_bets_placed.json"])
+    danach = json.loads((tmp_path / "shortlist_auto_bets_placed.json").read_text(encoding="utf-8"))
+    assert any(str(b.get("orderId", "")).startswith("0xc1c79cbe") for b in danach["bets"]), \
+        "der Nachtrag hat die Zeile nicht zurueckgeholt"
+    assert len(danach["bets"]) == len(ohne["bets"]) + 1
+
+
+# ── 25.09.2026: die Reparatur formatierte das Buch um, das sie reparierte ─────────────
+# Gefunden beim Rebase von 8a9ebe8ee3: 1907 geloeschte / 2205 neue Zeilen fuer EINE
+# nachgetragene Order, weil hier fest `indent=1` stand und die Produzenten 0, 1 und 2
+# schreiben. Ein Konflikt ueber das ganze Buch laesst `-X ours` genau das wegwerfen, was
+# dieses Skript retten soll.
+
+def test_einrueckung_liest_die_schreibweise_aus_der_datei():
+    assert BU.einrueckung('{\n  "a": 1\n}') == 2
+    assert BU.einrueckung('{\n "a": 1\n}') == 1
+    assert BU.einrueckung('{\n"a": 1\n}') == 0
+    assert BU.einrueckung("[\n  {\n    \"k\": 1\n  }\n]") == 2
+    assert BU.einrueckung("{}") == 1          # einzeilig: kein Urteil moeglich
+    assert BU.einrueckung("") == 1
+    assert BU.einrueckung('{\n\n  "a": 1\n}') == 2   # Leerzeile zaehlt nicht
+
+
+def test_jedes_buch_behaelt_beim_vereinen_seine_schreibweise(tmp_path, monkeypatch):
+    """Nicht die Einrueckung pruefen, die wir hineinschreiben, sondern die, die wieder
+    herauskommt — und zwar fuer alle drei im Haus vorkommenden Schreibweisen."""
+    monkeypatch.chdir(tmp_path)
+    for einr in (0, 1, 2):
+        name = "shortlist_push_ledger.json"
+        alt = [{"k": "a", "sentAt": "2026-01-01T00:00:00+00:00"}]
+        (tmp_path / name).write_text(json.dumps(alt, ensure_ascii=False, indent=einr),
+                                     encoding="utf-8")
+        # eine zweite Fassung mit einer weiteren Tatsache, damit wirklich geschrieben wird
+        monkeypatch.setattr(BU, "_git_fassung", lambda *a, **k: [
+            {"k": "b", "sentAt": "2026-01-02T00:00:00+00:00"}])
+        BU.main([name])
+        roh = (tmp_path / name).read_text(encoding="utf-8")
+        assert len(json.loads(roh)) == 2, "die zweite Tatsache fehlt"
+        assert BU.einrueckung(roh, standard=-1) == einr, \
+            f"Buch mit indent={einr} kam als indent={BU.einrueckung(roh, standard=-1)} zurueck"
+
+
+def test_das_buch_auf_der_platte_hat_die_schreibweise_seines_produzenten():
+    """`shortlist_auto_bets_placed.json` wird von `safe_write.write_json_atomic` mit dem
+    Standard indent=2 geschrieben. Liegt es anders da, hat es etwas anderes umformatiert."""
+    p = pathlib.Path(__file__).resolve().parent.parent / "shortlist_auto_bets_placed.json"
+    if not p.exists():
+        return
+    assert BU.einrueckung(p.read_text(encoding="utf-8"), standard=-1) == 2

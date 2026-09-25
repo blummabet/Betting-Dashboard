@@ -3147,10 +3147,16 @@ def check_card_link_alive(ctx):
                     "betfair_card_link.py ab 31.08.2026 schreibt beide Zahlen mit.")
     fails = []
     if cand and not linked:
-        fails.append(f"{cand} Boersen-Spiele lagen am selben Tag wie unsere Cards, verlinkt "
-                     f"wurde KEINES — Namens-Bruecke oder Fixture-Index gebrochen.")
+        # 25.09.2026: der Satz hiess „lagen am selben Tag wie unsere Cards". Derselbe Tag ist
+        # aber kein gemeinsamer Wettbewerb — in der Laenderspielpause stand auf der Boerse die
+        # Nations League und in unseren Dateien die MLS, und der Waechter meldete drei Tage
+        # lang einen Bruch, den es nicht gab. `nCandidates` zaehlt seither Tag UND Mannschaft.
+        fails.append(f"{cand} Boersen-Spiele hatten eine Mannschaft aus unseren Partien "
+                     f"desselben Tages, verlinkt wurde KEINES — Namens-Bruecke oder "
+                     f"Fixture-Index gebrochen.")
     return _chk("card_link_alive", "Terminal-Kartenlink kommt an", "error", fails,
-                "0 von 0 ist ein ruhiger Tag. 0 von N ist ein Bruch.")
+                "0 von 0 ist ein ruhiger Tag (oder eine Laenderspielpause, in der wir "
+                "gar keine passenden Partien haben). 0 von N ist ein Bruch.")
 
 
 # ── Runner ───────────────────────────────────────────────────────────────────
