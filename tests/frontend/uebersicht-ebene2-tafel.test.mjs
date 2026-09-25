@@ -46,7 +46,7 @@ test('die Tafel zeigt die Spitze der bewerteten Spiele — auch ohne Bewegung', 
   const w = load();
   const html = w._mdKlTafelTest(K([zeile()]), {});
   assert.match(html, /Real Madrid/);
-  assert.match(html, /10\/13/, 'Punkte MIT Nenner — 6 aus 7 ist etwas anderes als 6 aus 13');
+  assert.match(html, /10(?:<i>)?\/13/, 'Punkte MIT Nenner — 6 aus 7 ist etwas anderes als 6 aus 13');
 });
 
 test('alle vier Bücher stehen als eigene Spalte da', () => {

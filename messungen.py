@@ -218,7 +218,32 @@ def zaehler_bf_rutsch(base_dir):
     return sum(1 for e in d if isinstance(e, dict) and e.get("status") in ("won", "lost"))
 
 
+def zaehler_sharp_z(base_dir):
+    """Band-Aufloesungen MIT Geld seit der Anmeldung (sharp_z_vorwaerts.json).
+
+    25.09.2026: die Frage „z=1,282 statt 1,645?" stand seit dem 01.09. als Vorschlag im Kopf von
+    sharp_gate.py und nirgends sonst. Gezaehlt wird das Band (scharf bei 1,282, nicht bei 1,645),
+    weil nur dort eine Lockerung etwas aendert. Vor der ersten Anmeldung: 0, nicht „unbekannt".
+    Ist die Signatur gebrochen, misst die Datei nichts mehr — dann None, damit das Board
+    „Quelle unlesbar" zeigt statt eines Balkens, der still stehen bleibt.
+    """
+    d = _laden(os.path.join(base_dir, "sharp_z_vorwaerts.json"))
+    if d is None:
+        return 0
+    if not isinstance(d, dict):
+        return None
+    st = d.get("stand") or {}
+    if st.get("status") in ("ungueltig",):
+        return None
+    b = st.get("band")
+    if not isinstance(b, dict):
+        return 0
+    n = b.get("nGeld")
+    return int(n) if isinstance(n, int) else None
+
+
 ZAEHLER = {
+    "sharp_z": zaehler_sharp_z,
     "bf_leadshare": zaehler_bf_leadshare,
     "bf_rutsch": zaehler_bf_rutsch,
     "bf_schatten": zaehler_bf_schatten,

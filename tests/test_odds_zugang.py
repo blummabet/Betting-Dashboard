@@ -156,3 +156,21 @@ class TestDerAnkerWaechterZeigtNichtMehrAufsMatching(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestTotalsVollstaendig(unittest.TestCase):
+    """25.09.2026: ein Totals-Abbruch am Zeitbudget stand nur im Runner-Log."""
+
+    def test_ausgelassene_totals_melden(self):
+        c = B.check_totals_vollstaendig(_ctx(oddsTotals={"gewollt": 44, "versucht": 30,
+                                                         "mitDaten": 28, "ausgelassen": 14}))
+        self.assertFalse(c["ok"])
+
+    def test_vollstaendig_ist_gruen(self):
+        c = B.check_totals_vollstaendig(_ctx(oddsTotals={"gewollt": 44, "versucht": 44,
+                                                         "mitDaten": 40, "ausgelassen": 0}))
+        self.assertTrue(c["ok"])
+
+    def test_ohne_feld_kein_urteil(self):
+        c = B.check_totals_vollstaendig(_ctx())
+        self.assertTrue(c["ok"])
