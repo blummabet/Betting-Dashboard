@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-25T07:41:16.768268+00:00",
+ "generatedAt": "2026-09-25T07:56:40.201834+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -58,44 +58,6 @@
    }
   },
   {
-   "schublade": "Public-Kandidaten",
-   "strom": "poly",
-   "n": 119,
-   "status": "freigegeben",
-   "grund": "ROI belegt (Untergrenze +3.2 %) — ⚠️ der CLV ist dagegen negativ belegt (Obergrenze -0.55 pp): in unseren Daten liefen Schubladen mit negativem CLV im Schnitt −6,8 %. Freigegeben auf die Rendite, nicht auf eine gemessene Kante.",
-   "roi": 0.1222,
-   "pl": 14.54,
-   "roiLb": 0.0318,
-   "clv": -1.627,
-   "clvLb": -2.707,
-   "clvUrteil": "negativ belegt",
-   "clvOg": -0.547,
-   "fehltN": 0,
-   "noetigNRoi": 66,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 61,
-    "lo": 18,
-    "hi": 747,
-    "nieAnteil": 0.012,
-    "schaetzbar": false
-   },
-   "alterTage": 0.4,
-   "art": "gate",
-   "nAlt": 133,
-   "roiAlt": 0.0306,
-   "clvAlt": -0.212,
-   "engineAlt": true,
-   "seitFreigabe": {
-    "ab": "2026-09-08T18:14:00+00:00",
-    "nBei": 35,
-    "roiBei": 0.208,
-    "rausgefallen": 11,
-    "nNeu": 84,
-    "roiNeu": 0.0865
-   }
-  },
-  {
    "schublade": "Liga · ABWÄGEN",
    "strom": "cards",
    "n": 189,
@@ -129,6 +91,44 @@
     "rausgefallen": 0,
     "nNeu": 98,
     "roiNeu": 0.0897
+   }
+  },
+  {
+   "schublade": "Public-Kandidaten",
+   "strom": "poly",
+   "n": 120,
+   "status": "freigegeben",
+   "grund": "ROI belegt (Untergrenze +2.2 %) — ⚠️ der CLV ist dagegen negativ belegt (Obergrenze -0.54 pp): in unseren Daten liefen Schubladen mit negativem CLV im Schnitt −6,8 %. Freigegeben auf die Rendite, nicht auf eine gemessene Kante.",
+   "roi": 0.1128,
+   "pl": 13.54,
+   "roiLb": 0.0219,
+   "clv": -1.614,
+   "clvLb": -2.685,
+   "clvUrteil": "negativ belegt",
+   "clvOg": -0.543,
+   "fehltN": 0,
+   "noetigNRoi": 78,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 71,
+    "lo": 20,
+    "hi": 1085,
+    "nieAnteil": 0.023,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "gate",
+   "nAlt": 133,
+   "roiAlt": 0.0306,
+   "clvAlt": -0.212,
+   "engineAlt": true,
+   "seitFreigabe": {
+    "ab": "2026-09-08T18:14:00+00:00",
+    "nBei": 35,
+    "roiBei": 0.208,
+    "rausgefallen": 11,
+    "nNeu": 85,
+    "roiNeu": 0.0736
    }
   },
   {
@@ -609,11 +609,11 @@
    "zerlegung": "nach Conviction",
    "art": "conviction",
    "gruppen": 7,
-   "basis": "743 von 1177 abgerechneten Plays · nur Engine 2026-09-01 · ohne Kampfsport, US-Sport",
-   "n": 743,
-   "pl": 7.99,
-   "roi": 0.0108,
-   "clv": -2.564,
+   "basis": "744 von 1178 abgerechneten Plays · nur Engine 2026-09-01 · ohne Kampfsport, US-Sport",
+   "n": 744,
+   "pl": 6.99,
+   "roi": 0.0094,
+   "clv": -2.56,
    "belegte": 3
   },
   {
@@ -640,32 +640,6 @@
    "laufend": 0,
    "n": 0,
    "plays": []
-  },
-  {
-   "schublade": "Public-Kandidaten",
-   "strom": "poly",
-   "roiLb": 0.0318,
-   "clvUrteil": "negativ belegt",
-   "aufloesbar": true,
-   "grund": null,
-   "laufend": 4,
-   "n": 1,
-   "plays": [
-    {
-     "spiel": "FENNEL vs Dplus KIA Challengers",
-     "schluessel": "lol-fnl-dkc-2026-09-25",
-     "auswahl": "Dplus KIA Challengers",
-     "quote": 1.08,
-     "anpfiff": "2026-09-25T10:03:08.295759+00:00",
-     "datensatz": "E-Sport",
-     "conv": 6,
-     "warum": [
-      "großes Geld auf Dplus KIA Challengers (93%) → $43K",
-      "🔥 scharfe Wallets (2 Wallets, zusammen 78/99, 79% · +$507K)"
-     ],
-     "id": "lol-fnl-dkc-2026-09-25|Dplus KIA Challengers"
-    }
-   ]
   },
   {
    "schublade": "Liga · ABWÄGEN",
@@ -776,7 +750,7 @@
     {
      "spiel": "Real Madrid v Sevilla",
      "auswahl": "Unter 3.5 Tore",
-     "quote": 1.85,
+     "quote": 1.89,
      "anpfiff": "2026-10-18T19:00:00+00:00",
      "datensatz": "Liga",
      "id": "ESP-9-541-536|Unter 3.5 Tore"
@@ -788,6 +762,32 @@
      "anpfiff": "2026-10-19T19:00:00+00:00",
      "datensatz": "Liga",
      "id": "ESP-9-546-728|Doppelte Chance — X2"
+    }
+   ]
+  },
+  {
+   "schublade": "Public-Kandidaten",
+   "strom": "poly",
+   "roiLb": 0.0219,
+   "clvUrteil": "negativ belegt",
+   "aufloesbar": true,
+   "grund": null,
+   "laufend": 3,
+   "n": 1,
+   "plays": [
+    {
+     "spiel": "FENNEL vs Dplus KIA Challengers",
+     "schluessel": "lol-fnl-dkc-2026-09-25",
+     "auswahl": "Dplus KIA Challengers",
+     "quote": 1.08,
+     "anpfiff": "2026-09-25T10:03:08.295759+00:00",
+     "datensatz": "E-Sport",
+     "conv": 6,
+     "warum": [
+      "großes Geld auf Dplus KIA Challengers (93%) → $43K",
+      "🔥 scharfe Wallets (2 Wallets, zusammen 78/99, 79% · +$507K)"
+     ],
+     "id": "lol-fnl-dkc-2026-09-25|Dplus KIA Challengers"
     }
    ]
   },
@@ -3913,12 +3913,12 @@
   {
    "wallet": "0x85fb1b29bc068bee293923cc7e072dff890889ba",
    "kurz": "0x85fb…89ba",
-   "n": 20,
-   "wins": 19,
-   "hit": 0.95,
-   "hitLb": 0.804,
-   "clv": 0.251,
-   "usd": 69286,
+   "n": 21,
+   "wins": 20,
+   "hit": 0.9524,
+   "hitLb": 0.8122,
+   "clv": 0.239,
+   "usd": 69487,
    "pnl": -36084.34,
    "grad": 1.0,
    "sportarten": [
@@ -4080,44 +4080,6 @@
    }
   },
   {
-   "schublade": "Public-Kandidaten",
-   "strom": "poly",
-   "n": 119,
-   "status": "freigegeben",
-   "grund": "ROI belegt (Untergrenze +3.2 %) — ⚠️ der CLV ist dagegen negativ belegt (Obergrenze -0.55 pp): in unseren Daten liefen Schubladen mit negativem CLV im Schnitt −6,8 %. Freigegeben auf die Rendite, nicht auf eine gemessene Kante.",
-   "roi": 0.1222,
-   "pl": 14.54,
-   "roiLb": 0.0318,
-   "clv": -1.627,
-   "clvLb": -2.707,
-   "clvUrteil": "negativ belegt",
-   "clvOg": -0.547,
-   "fehltN": 0,
-   "noetigNRoi": 66,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 61,
-    "lo": 18,
-    "hi": 747,
-    "nieAnteil": 0.012,
-    "schaetzbar": false
-   },
-   "alterTage": 0.4,
-   "art": "gate",
-   "nAlt": 133,
-   "roiAlt": 0.0306,
-   "clvAlt": -0.212,
-   "engineAlt": true,
-   "seitFreigabe": {
-    "ab": "2026-09-08T18:14:00+00:00",
-    "nBei": 35,
-    "roiBei": 0.208,
-    "rausgefallen": 11,
-    "nNeu": 84,
-    "roiNeu": 0.0865
-   }
-  },
-  {
    "schublade": "Liga · ABWÄGEN",
    "strom": "cards",
    "n": 189,
@@ -4151,6 +4113,44 @@
     "rausgefallen": 0,
     "nNeu": 98,
     "roiNeu": 0.0897
+   }
+  },
+  {
+   "schublade": "Public-Kandidaten",
+   "strom": "poly",
+   "n": 120,
+   "status": "freigegeben",
+   "grund": "ROI belegt (Untergrenze +2.2 %) — ⚠️ der CLV ist dagegen negativ belegt (Obergrenze -0.54 pp): in unseren Daten liefen Schubladen mit negativem CLV im Schnitt −6,8 %. Freigegeben auf die Rendite, nicht auf eine gemessene Kante.",
+   "roi": 0.1128,
+   "pl": 13.54,
+   "roiLb": 0.0219,
+   "clv": -1.614,
+   "clvLb": -2.685,
+   "clvUrteil": "negativ belegt",
+   "clvOg": -0.543,
+   "fehltN": 0,
+   "noetigNRoi": 78,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 71,
+    "lo": 20,
+    "hi": 1085,
+    "nieAnteil": 0.023,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "gate",
+   "nAlt": 133,
+   "roiAlt": 0.0306,
+   "clvAlt": -0.212,
+   "engineAlt": true,
+   "seitFreigabe": {
+    "ab": "2026-09-08T18:14:00+00:00",
+    "nBei": 35,
+    "roiBei": 0.208,
+    "rausgefallen": 11,
+    "nNeu": 85,
+    "roiNeu": 0.0736
    }
   },
   {
@@ -4630,7 +4630,7 @@
     "nieAnteil": 0.042,
     "schaetzbar": false
    },
-   "alterTage": 4.4,
+   "alterTage": 4.5,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py"
   },
@@ -5120,37 +5120,6 @@
    "naeherung": false
   },
   {
-   "schublade": "Mix money+sharp",
-   "strom": "poly",
-   "n": 260,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0243,
-   "pl": 6.33,
-   "roiLb": -0.0409,
-   "clv": -3.754,
-   "clvLb": -4.724,
-   "clvUrteil": "negativ belegt",
-   "clvOg": -2.784,
-   "fehltN": 0,
-   "noetigNRoi": 1869,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 923,
-    "lo": 129,
-    "hi": 68551,
-    "nieAnteil": 0.285,
-    "schaetzbar": false
-   },
-   "alterTage": 0.1,
-   "art": "mix",
-   "wert": "money+sharp",
-   "nAlt": 141,
-   "roiAlt": -0.0338,
-   "clvAlt": -0.256,
-   "engineAlt": true
-  },
-  {
    "schublade": "🔒 Fade-Unter · Ganzspiel-Torlinie",
    "strom": "betfair",
    "n": 3230,
@@ -5210,6 +5179,37 @@
    "naeherung": false
   },
   {
+   "schublade": "Mix money+sharp",
+   "strom": "poly",
+   "n": 261,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0204,
+   "pl": 5.33,
+   "roiLb": -0.0449,
+   "clv": -3.739,
+   "clvLb": -4.706,
+   "clvUrteil": "negativ belegt",
+   "clvOg": -2.773,
+   "fehltN": 0,
+   "noetigNRoi": 2672,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 1000,
+    "lo": 137,
+    "hi": 74965,
+    "nieAnteil": 0.32,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "mix",
+   "wert": "money+sharp",
+   "nAlt": 141,
+   "roiAlt": -0.0338,
+   "clvAlt": -0.256,
+   "engineAlt": true
+  },
+  {
    "schublade": "Israeli Premier League · Match Odds",
    "strom": "betfair",
    "n": 30,
@@ -5231,37 +5231,6 @@
    "naeherung": false
   },
   {
-   "schublade": "Conviction 6",
-   "strom": "poly",
-   "n": 310,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.022,
-   "pl": 6.83,
-   "roiLb": -0.0485,
-   "clv": -2.07,
-   "clvLb": -2.902,
-   "clvUrteil": "negativ belegt",
-   "clvOg": -1.238,
-   "fehltN": 0,
-   "noetigNRoi": 3180,
-   "noetigNClv": null,
-   "entfernung": {
-    "median": 1026,
-    "lo": 142,
-    "hi": 42501,
-    "nieAnteil": 0.293,
-    "schaetzbar": false
-   },
-   "alterTage": 0.4,
-   "art": "conviction",
-   "wert": 6,
-   "nAlt": 93,
-   "roiAlt": 0.0229,
-   "clvAlt": 0.077,
-   "engineAlt": true
-  },
-  {
    "schublade": "Over/Under 2.5 Goals",
    "strom": "betfair",
    "n": 5788,
@@ -5281,6 +5250,37 @@
    "alterTage": null,
    "art": "markt",
    "naeherung": false
+  },
+  {
+   "schublade": "Conviction 6",
+   "strom": "poly",
+   "n": 311,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0187,
+   "pl": 5.83,
+   "roiLb": -0.0518,
+   "clv": -2.063,
+   "clvLb": -2.893,
+   "clvUrteil": "negativ belegt",
+   "clvOg": -1.234,
+   "fehltN": 0,
+   "noetigNRoi": 4405,
+   "noetigNClv": null,
+   "entfernung": {
+    "median": 1112,
+    "lo": 156,
+    "hi": 59312,
+    "nieAnteil": 0.318,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "conviction",
+   "wert": 6,
+   "nAlt": 93,
+   "roiAlt": 0.0229,
+   "clvAlt": 0.077,
+   "engineAlt": true
   },
   {
    "schublade": "Egyptian 2nd Division · Match Odds",
@@ -7989,7 +7989,7 @@
     "nieAnteil": 0.392,
     "schaetzbar": false
    },
-   "alterTage": 4.2,
+   "alterTage": 4.3,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "top5"
