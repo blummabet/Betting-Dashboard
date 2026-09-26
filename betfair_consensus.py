@@ -262,6 +262,12 @@ _ALIAS = {
     "internazionale": "inter", "napoli": "napoli", "sassuolo": "sassuolo",
     "hoffenheim": "hoffenheim", "leverkusen": "leverkusen",
     "atletico": "atletico", "athletic": "athletic",
+    # 26.09.2026 (Lucas: „da stimmt fix was mit dem Namensabgleich nicht"). Laendernamen, die
+    # Betfair anders schreibt als die-odds-api. „Czechia" gegen „Czech Republic" teilt NULL Tokens
+    # — der Abgleich verlangt aber je Team mindestens eines, also fiel Czechia v Croatia still
+    # durch. Nur Schreibweisen desselben Landes, keine Kuerzel, die zwei Laender treffen koennten.
+    "czechia": "czech", "turkiye": "turkey", "holland": "netherlands",
+    "herzegovina": "bosnia",
 }
 
 
@@ -686,6 +692,49 @@ def pick_poly(m, ms, is_live, poly_close, poly_live, poly_upcoming, poly_liga=()
         # deshalb ganz hinten und als `src="liga"` erkennbar.
         poly = match_poly(m, ms, poly_liga)
     return poly
+
+def anker_grund(m, ev, alle_events, max_h=ANPFIFF_FENSTER_H):
+    """Warum hat dieses Spiel keinen Pinnacle-Anker? None, wenn es einen hat. REIN.
+
+    🔴 26.09.2026 (Lucas: „geh na klar hat the odds api diese Spiele — da stimmt fix was mit dem
+    Namensabgleich nicht"). North Macedonia v Switzerland, Iceland v Estonia, Albania v Belarus,
+    Czechia v Croatia: „Pinnacle nicht erhoben", obwohl der Wettbewerb abgerufen wurde und andere
+    Spiele daraus einen Anker hatten. Ob das Event fehlte, der Name nicht passte, die Anpfiffzeit
+    abwich oder Pinnacle im Event keine Quote hatte, sagte das Artefakt nicht — alle vier Faelle
+    sahen gleich aus. Fehlerklasse: *ein Fehlschlag ohne Grund laesst sich nur raten.*
+
+    Gruende:
+      kein_pinnacle  Event gefunden, aber ohne Pinnacle-Quote darin
+      zeit           Namen passen, Anpfiff weicht mehr als `max_h` Stunden ab
+      name           ein Kandidat teilt Tokens, aber nicht genug (oder nur ein Team)
+      kein_kandidat  kein Event mit auch nur einem gemeinsamen Namens-Token
+    """
+    spiel = "%s v %s" % (m.get("home"), m.get("away"))
+    if ev is not None:
+        if ev.get("pinn"):
+            return None
+        return {"spiel": spiel, "grund": "kein_pinnacle", "kandidat": "%s v %s" % (ev.get("home"), ev.get("away")),
+                "key": ev.get("key"), "nSoft": ev.get("nSoft")}
+    home, away = m.get("home"), m.get("away")
+    best, best_sc, best_both = None, 0.0, False
+    for e in (alle_events or []):
+        hh, aa = _name_score(home, e.get("home")), _name_score(away, e.get("away"))
+        ha, ah = _name_score(home, e.get("away")), _name_score(away, e.get("home"))
+        sc, both = max((hh + aa, hh > 0 and aa > 0), (ha + ah, ha > 0 and ah > 0))
+        if sc > best_sc:
+            best, best_sc, best_both = e, sc, both
+    if best is None:
+        return {"spiel": spiel, "grund": "kein_kandidat"}
+    info = {"spiel": spiel, "kandidat": "%s v %s" % (best.get("home"), best.get("away")), "key": best.get("key"),
+            "score": round(best_sc, 2)}
+    if best_both and best_sc >= MATCH_MIN:
+        d = _stunden(m.get("kickoff"), best.get("commence"))
+        if d is None or d > max_h:
+            return dict(info, grund="zeit", abstandH=(round(d, 1) if d is not None else None))
+        # Sollte nicht vorkommen: dann haette match_event getroffen. Ehrlich melden statt raten.
+        return dict(info, grund="unerklaert")
+    return dict(info, grund="name")
+
 
 def match_event(m, evs, max_h=None):
     """Bestes Odds-Event zum Betfair-Spiel, orientiert auf dessen Heim/Auswaerts. None wenn kein Match.
@@ -1448,7 +1497,9 @@ def main():
         if k not in need and (_time.monotonic() - _t0) > ODDS_BUDGET_S:
             _abbruch += 1
             continue
-        events_by_key[k] = [parse_event(e) for e in (fetch_odds(k) or [])]
+        # 26.09.2026: jedes Event traegt seinen Key — sonst kann die Anker-Diagnose nicht sagen,
+        # aus welchem Wettbewerb ein Kandidat stammt.
+        events_by_key[k] = [dict(parse_event(e), key=k) for e in (fetch_odds(k) or [])]
     if _abbruch:
         print("odds: Zeitbudget %.0fs erschoepft -> %d entdeckte Wettbewerbe diesmal ausgelassen "
               "(kuratierte sind vollstaendig)" % (ODDS_BUDGET_S, _abbruch))
@@ -1466,6 +1517,7 @@ def main():
     # Globaler Pool fuer den zweiten Anlauf — nur die Keys, die NICHT schon in der Handliste stehen,
     # damit ein kuratierter Treffer immer Vorrang behaelt.
     _global_pool = [e for k, evs in events_by_key.items() if k not in need for e in evs]
+    _alle_events = [e for evs in events_by_key.values() for e in evs]
 
     # Poly (globaler Broad-Scan, committet vom Poly-Workflow): nur Basis-Moneylines (kein
     # more-markets/exact-score/total), damit wir die Team-Preise + Volumen matchen koennen.
@@ -1579,6 +1631,8 @@ def main():
         # ausgerechnet fast alle. Ein Feld, das laengst gerechnet ist und nur nicht mitkam.
         _anker = {kk: _g.get(kk) for kk in ("moneySide", "moneyName", "poly", "pinn", "pinnMove",
                                             "league", "kickoff", "verdict", "totVol")}
+        if not _anker.get("pinn"):
+            _anker["ankerGrund"] = anker_grund(m, _ev, _alle_events)
         return _anker, money_map_row(_g, poly_fav(m, _pool))
 
     now = _now_iso()
@@ -1605,6 +1659,8 @@ def main():
         # letzten Snapshot — sonst misst pinn_move zwei Läufe im Abstand von Minuten.
         prev = prevlist
         g = build_game(m, ev, prev, direction, poly, totals_ev=tev)
+        if not g.get("pinn"):
+            g["ankerGrund"] = anker_grund(m, ev, _alle_events)
         games.append(g)
         # Money-Map Poly-Pool (12.08.2026, Lucas): live (laufend) > close (<=3h, mit Shares) >
         # upcoming (weit draussen, nur Preis+Vol). So erscheint die Poly-Blase auch lange vor Anpfiff.
@@ -1734,6 +1790,15 @@ def main():
     out["ankerN"] = _n_ankerbar
     out["ankerNOffen"] = _n_ges
     out["ankerMit"] = _mit_pinn_ankerbar
+    # 26.09.2026: warum die Spiele ohne Anker keinen haben — gezaehlt und mit Beispielen.
+    _ohne = [(mid_, v) for mid_, v in anker.items() if isinstance(v, dict) and v.get("ankerGrund")] \
+        + [(str(g_.get("matchId")), g_) for g_ in games if isinstance(g_, dict) and g_.get("ankerGrund")]
+    from collections import Counter as _Ctr
+    out["ankerDiagnose"] = {
+        "nach": dict(_Ctr(v["ankerGrund"].get("grund") for _, v in _ohne)),
+        "beispiele": [dict(v["ankerGrund"], matchId=mid_, liga=v.get("league"))
+                      for mid_, v in _ohne if v["ankerGrund"].get("grund") != "kein_kandidat"][:40],
+    }
     _dump(OUT_FILE, out)
     _dump(HIST_FILE, new_hist)
     # Money-Map (11.08.2026, Lucas): bubble-fertiger Feed + Konsens-Ledger fuers Tracking. Additiv.

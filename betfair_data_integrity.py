@@ -449,6 +449,33 @@ def check_odds_zugang_lebt(ctx):
 
 
 @betfair_check
+def check_anker_namensabgleich(ctx):
+    """Scheitert der Pinnacle-Anker an unserem Abgleich statt an fehlenden Daten?
+
+    🔴 26.09.2026 (Lucas: „geh na klar hat the odds api diese Spiele — da stimmt fix was mit dem
+    Namensabgleich nicht"). Vier Nations-League-Spiele ohne Anker, obwohl der Wettbewerb abgerufen
+    war; einer davon nachweislich am Namen (Czechia gegen Czech Republic, null gemeinsame Tokens).
+    Seitdem schreibt der Konsens je Spiel ohne Anker den Grund (`ankerDiagnose`). Dieser Waechter
+    meldet die Gruende, die WIR beheben koennen — Name und Anpfiffzeit —, nicht die, bei denen
+    schlicht kein Event existiert.
+    """
+    d = ctx.consensus.get("ankerDiagnose")
+    if not isinstance(d, dict):
+        return _chk("anker_namensabgleich", "Pinnacle-Anker scheitert nicht am eigenen Abgleich", "warn", [],
+                    "Der Konsens-Lauf schreibt noch keine `ankerDiagnose` — bis dahin kein Urteil.")
+    fails = []
+    for b in (d.get("beispiele") or []):
+        if isinstance(b, dict) and b.get("grund") in ("name", "zeit", "unerklaert"):
+            fails.append("%s (%s): %s — bester Kandidat „%s“%s" % (
+                b.get("spiel"), b.get("liga"), b.get("grund"), b.get("kandidat"),
+                (" · %sh Anpfiff-Abstand" % b.get("abstandH")) if b.get("grund") == "zeit" else ""))
+    nach = d.get("nach") or {}
+    note = "ohne Anker: " + (" · ".join("%s %s" % (k, v) for k, v in sorted(nach.items())) or "keine")
+    return _chk("anker_namensabgleich", "Pinnacle-Anker scheitert nicht am eigenen Abgleich", "warn",
+                fails, note + ". Loesung bei „name“: Alias in betfair_consensus._ALIAS.")
+
+
+@betfair_check
 def check_totals_vollstaendig(ctx):
     """Bekommen alle Handlisten-Ligen ihre Pinnacle-Torlinien — oder frisst das Zeitbudget sie?
 

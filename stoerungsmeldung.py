@@ -213,6 +213,7 @@ GEPRUEFT_KEIN_GELD = {
     "freigabe-grund ist aus den daten ableitbar",
     # 25./26.09.2026 — Anzeige- und Messwaechter, bewegen kein Geld:
     "totals_vollstaendig",                                # O/U-Leiter im Terminal, Konsens-1X2 unberuehrt
+    "anker_namensabgleich",                               # Abdeckung des Ankers, meldet Namensluecken
     "kein grund widerspricht seiner zahl",                # Text neben einer Schublade
     "keine roi-untergrenze unter −100 %",                 # Rechenwand einer Anzeige
     "punktestand-urteil hat seine mindestzahl",           # Urteil ueber eine Punktstufe, sendet nichts
