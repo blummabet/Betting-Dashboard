@@ -71,7 +71,9 @@ class TestJederVerworfeneGrundWirdFestgehalten(unittest.TestCase):
         """Der Kern: mit nur einem Grund je Zeile ist „welche Regel kostet uns was" nicht
         beantwortbar."""
         w = _cluster(quote=1.10, usd=500.0)
-        w[0]["quote"] = 1.12                      # zusätzlich uneinheitlich
+        # 26.09.2026: w[1] statt w[0] — 1,12 → 1,10 → 1,10 ist seit heute eine FALLENDE Quote
+        # (eigene Burst-Art). Uneinheitlich ist erst ein Verlauf, der hin und her geht.
+        w[1]["quote"] = 1.12                      # zusätzlich uneinheitlich
         vw = self._lauf(w)
         self.assertEqual(vw[0]["gruende"],
                          ["quote_zu_tief", "quoten_uneinheitlich", "summe_zu_klein"])
