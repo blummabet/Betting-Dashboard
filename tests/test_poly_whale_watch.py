@@ -134,7 +134,9 @@ class TestBuildCard(unittest.TestCase):
         self.assertIn("46¢", card)
         self.assertIn("⚾", card)
         self.assertIn("im Aufbau", card)          # neutral statt abschreckend
-        bad = set(re.findall(r"</?([a-zA-Z0-9-]+)", card)) - {"b", "i", "a"}
+        # 26.09.2026: `blockquote` (auch `expandable`) ist Telegram-HTML seit Bot API 7.0/7.4 —
+        # die Seiten-Bloecke der Karte stehen darin.
+        bad = set(re.findall(r"</?([a-zA-Z0-9-]+)", card)) - {"b", "i", "a", "blockquote"}
         self.assertFalse(bad, f"verbotene Tags: {bad}")
 
     def test_wallet_is_clickable_profile_link(self):
@@ -776,7 +778,10 @@ class TestConflictingTopWallet(unittest.TestCase):
     def test_bestplatzierte_gegenseite_gewinnt(self):
         # Mehrere Gegner -> der BESTE Rang zaehlt, nicht der groesste Einsatz.
         b = self._broad([{"wallet": "0xccc", "side": "Butterfly", "usd": 90000},
-                         {"wallet": "0xbbb", "side": "Butterfly", "usd": 300}])
+                         {"wallet": "0xbbb", "side": "Butterfly", "usd": 1000}])
+        # 26.09.2026: $1.000 statt $300 — unter 10 % des eigenen Einsatzes ($8.500) zaehlt eine
+        # Gegenposition seit heute gar nicht (s. GEWICHT_MIN_ANTEIL). Die Aussage des Tests bleibt:
+        # unter den GEWICHTIGEN Gegnern entscheidet der Rang, nicht der Betrag.
         cf = P._conflicting_top_wallet(self._pos(), b, self._scores())
         self.assertEqual(cf["rank"], 2)
 
@@ -819,8 +824,10 @@ class TestConflictingTopWallet(unittest.TestCase):
         b = self._broad([{"wallet": "0xccc", "side": "Butterfly", "usd": 7000}])
         card = P.build_card(self._pos(), self._scores(), restock=False, broad=b)
         # 19.09.2026: derselbe Bau wie die Einigkeits-Zeile — Seite, Betrag, wer.
+        # 26.09.2026: die Gegenseite ist ein eigener Block mit ihrem Namen („FÜR Butterfly"),
+        # jede Wallet mit Betrag und Kennzahl — ohne gemessenes Fenster mit ihrem Geld-Rang.
+        self.assertIn("🔴 <b>FÜR Butterfly</b>", card)
         self.assertIn("💰 Geld-Rang #3", card)
-        self.assertIn("Gegenseite: Butterfly", card)
         self.assertIn("$7K", card)
 
     def test_die_gegenseite_steht_wie_die_einigkeit_in_EINER_zeile(self):
@@ -829,14 +836,22 @@ class TestConflictingTopWallet(unittest.TestCase):
         die Einigkeits-Zeile aufgeblaeht hat."""
         b = self._broad([{"wallet": "0xccc", "side": "Butterfly", "usd": 7000}])
         zeilen = [z for z in P.build_card(self._pos(), self._scores(), restock=False,
-                                          broad=b).split("\n") if "Gegenseite" in z or "Münzwurf" in z]
+                                          broad=b).split("\n") if "Münzwurf" in z]
+        # 26.09.2026: das Urteil steht EINMAL, im Block der Gegenseite.
         self.assertEqual(len(zeilen), 1)
 
     def test_trades_card_ohne_konflikt_ohne_zeile(self):
+        """26.09.2026 (Lucas: „wenn keine Gegenseite da ist, koennen wir sie trotzdem so
+        strukturieren"). Ohne Gegen-Wallet steht die Gegenseite als EINE Zeile da — „niemand
+        Bewiesenes dagegen" ist die gute Nachricht und soll sichtbar sein. Ohne Halter-Daten
+        dagegen „nicht erhoben", nie eine Entwarnung."""
         card = P.build_card(self._pos(), self._scores(), restock=False, broad=self._broad([]))
-        self.assertNotIn("Gegenseite", card)
-        # und ohne broad ueberhaupt (Default None) faellt die Card nicht um
-        self.assertNotIn("Gegenseite", P.build_card(self._pos(), self._scores(), restock=False))
+        self.assertIn("keine bewiesene Wallet unter den größten Haltern", card)
+        self.assertNotIn("Münzwurf", card)
+        self.assertIn(" : 0 ", card)
+        ohne = P.build_card(self._pos(), self._scores(), restock=False)
+        self.assertIn("nicht erhoben", ohne)
+        self.assertNotIn("keine bewiesene Wallet", ohne)
 
 
 # ── Gesperrte Sportarten im Push (25.08.2026, Lucas) ─────────────────────────
@@ -2554,7 +2569,8 @@ class TestDieKarteFuehrtMitDerWette(unittest.TestCase):
                 n += 1
             return n
         anlass = next(i for i, x in enumerate(z) if "Einstieg" in x or "Scharfe Wallet" in x)
-        wallet = next(i for i, x in enumerate(z) if x.startswith("🐋 "))
+        # 26.09.2026: die Wallets stehen jetzt im Block ihrer Seite — der Abstand gilt vor ihm.
+        wallet = next(i for i, x in enumerate(z) if x.startswith("🟢 <b>FÜR"))
         self.assertEqual(leer_vor(anlass), 2, "zwei Leerzeilen vor dem Anlass")
         self.assertEqual(leer_vor(wallet), 2, "zwei Leerzeilen vor der Wallet")
         # und genau eine zwischen Paarung und Wette
@@ -2748,3 +2764,70 @@ class TestGesperrteSportartenGehenAuchNichtInTrades(unittest.TestCase):
         q = (Path(__file__).parent.parent / "poly_whale_watch.py").read_text(encoding="utf-8")
         self.assertIn("cand, _blk_raus = ohne_gesperrte(cand, _blocked)", q)
         self.assertIn("faellig, _nb = ohne_gesperrte(faellig, _blocked)", q)
+
+
+class TestSeitenWallets(unittest.TestCase):
+    """26.09.2026 (Lucas: „man sieht nicht gleich, auf wen gespielt ist, wo die Gegenseite ist")."""
+
+    SC = {"0xa": {"n": 40, "wins": 32}, "0xb": {"n": 40, "wins": 32}, "0xc": {"n": 40, "wins": 32}}
+    POS = {"key": "k", "side": "Sinners", "wallet": "0xa", "usd": 4000}
+
+    def _broad(self, whales):
+        return {"k": {"whales": whales, "prices": {"Sinners": 0.45, "NIP": 0.55}}}
+
+    def test_seiten_werden_getrennt(self):
+        b = self._broad([{"wallet": "0xb", "side": "Sinners", "usd": 2900},
+                         {"wallet": "0xc", "side": "NIP", "usd": 1200}])
+        sw = P.seiten_wallets(self.POS, b, self.SC, bewiesen_zaehlt=True)
+        self.assertEqual([x["wallet"] for x in sw["fuer"]], ["0xb"])
+        self.assertEqual([x["wallet"] for x in sw["gegen"]], ["0xc"])
+        self.assertEqual(sw["gegenName"], "NIP")
+
+    def test_ohne_gegen_wallet_traegt_die_gegenseite_trotzdem_ihren_namen(self):
+        sw = P.seiten_wallets(self.POS, self._broad([]), self.SC, bewiesen_zaehlt=True)
+        self.assertTrue(sw["erhoben"])
+        self.assertEqual(sw["gegen"], [])
+        self.assertEqual(sw["gegenName"], "NIP")
+
+    def test_ohne_halterliste_ist_nichts_erhoben(self):
+        """Fehlende Information ist keine Entwarnung."""
+        sw = P.seiten_wallets(self.POS, {}, self.SC)
+        self.assertFalse(sw["erhoben"])
+
+    def test_die_statistik_gehoert_sichtbar_zur_push_wallet(self):
+        b = self._broad([{"wallet": "0xc", "side": "NIP", "usd": 1200}])
+        k = P.build_card(dict(self.POS, league="ESPORTS", sport="E-Sport", firstPrice=0.45),
+                         self.SC, False, b)
+        self.assertIn("löst den Push aus", k)
+        self.assertIn("Wallet dieses Pushs", k)
+        # die Push-Wallet steht im Block der EIGENEN Seite, vor dem der Gegenseite
+        self.assertLess(k.index("löst den Push aus"), k.index("FÜR NIP"))
+        self.assertLess(k.index("FÜR Sinners"), k.index("löst den Push aus"))
+
+
+class TestGewicht(unittest.TestCase):
+    """26.09.2026: eine $102-Gegenposition sperrte einen $2K-Push. Gemessen: Gegner unter 10 %
+    des eigenen Einsatzes 80,9 % (n=47), ab 10 % 56,2 % (n=336) — der Effekt sitzt im Gewicht."""
+
+    SC = {"0xa": {"n": 40, "wins": 32}, "0xb": {"n": 40, "wins": 32}}
+    POS = {"key": "k", "side": "Medvedev", "wallet": "0xa", "usd": 2000}
+
+    def _b(self, usd):
+        return {"k": {"whales": [{"wallet": "0xb", "side": "Royer", "usd": usd}],
+                      "prices": {"Medvedev": 0.6, "Royer": 0.4}}}
+
+    def test_mini_gegenposition_sperrt_nicht(self):
+        self.assertIsNone(P._conflicting_top_wallet(self.POS, self._b(102), self.SC, bewiesen_zaehlt=True))
+        self.assertEqual(P.seiten_wallets(self.POS, self._b(102), self.SC, True)["gegen"], [])
+
+    def test_gegenposition_mit_gewicht_sperrt(self):
+        self.assertIsNotNone(P._conflicting_top_wallet(self.POS, self._b(200), self.SC, bewiesen_zaehlt=True))
+
+    def test_mini_mitspieler_zaehlt_nicht_als_einig(self):
+        b = {"k": {"whales": [{"wallet": "0xb", "side": "Medvedev", "usd": 150}]}}
+        self.assertEqual(P._agreeing_wallets(self.POS, b, self.SC), [])
+
+    def test_unbekannter_eigener_einsatz_entlastet_nicht(self):
+        self.assertIsNotNone(P._conflicting_top_wallet(dict(self.POS, usd=None), self._b(1), self.SC,
+                                                       bewiesen_zaehlt=True))
+

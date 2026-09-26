@@ -170,6 +170,43 @@ def urteil(n_um: int, diff, hi) -> tuple:
             % (100 * diff, 100 * hi))
 
 
+def groessen_probe(close: dict, ist_bewiesen, anteil: float = None) -> dict:
+    """Zaehlt eine Gegen-Wallet erst ab `anteil` des eigenen Einsatzes? REIN/testbar.
+
+    26.09.2026: eine $102-Gegenposition sperrte einen $2K-Push fuer Public. Gemessen je
+    POSITION (nicht je Markt), weil die Frage eine Groessen-Relation zwischen zwei Positionen ist:
+    unumkaempft · Gegner klein (< anteil) · Gegner gross (>= anteil). Traegt „klein" wie
+    „unumkaempft" und „gross" wie der Muenzwurf, ist die Grenze richtig gesetzt — und das laeuft
+    ab heute bei jedem Lauf mit, statt einmal gemessen und dann geglaubt zu werden.
+    """
+    if anteil is None:
+        # Die Grenze steht EINMAL — dort, wo ueber den Push entschieden wird.
+        from poly_whale_watch import GEWICHT_MIN_ANTEIL as anteil
+    arme = {"unumkaempft": [], "gegnerKlein": [], "gegnerGross": []}
+    for key, m in (close or {}).items():
+        if not isinstance(m, dict) or not m.get("resolved"):
+            continue
+        win = _gewinner(m)
+        if not win:
+            continue
+        ws = [w for w in (m.get("whales") or []) if isinstance(w, dict) and w.get("side") and w.get("wallet")]
+        bew = [(str(w["wallet"]).lower(), w["side"], float(w.get("usd") or 0)) for w in ws
+               if ist_bewiesen(str(w["wallet"]).lower())]
+        for wal, seite, usd in bew:
+            if usd <= 0:
+                continue
+            geg = [u for (w2, s2, u) in bew if s2 != seite and w2 != wal]
+            arm = ("unumkaempft" if not geg
+                   else "gegnerGross" if max(geg) >= anteil * usd else "gegnerKlein")
+            arme[arm].append({"key": key, "treffer": [seite == win]})
+    out = {"anteil": anteil}
+    for name, zeilen in arme.items():
+        q, n, w = _quote(zeilen)
+        out[name] = {"n": n, "wins": w, "maerkte": len({z["key"] for z in zeilen}),
+                     "hitPct": None if q is None else round(100 * q, 1)}
+    return out
+
+
 def bericht(close: dict, ist_bewiesen) -> dict:
     zeilen = beobachtungen(close, ist_bewiesen)
     um = [z for z in zeilen if z["umkaempft"]]
@@ -201,6 +238,7 @@ def bericht(close: dict, ist_bewiesen) -> dict:
         "urteil": u,
         "grund": grund,
         "minMaerkte": MIN_MAERKTE,
+        "groesse": groessen_probe(close, ist_bewiesen),
         "einigkeit": {
             "einig": _arm(q_ei, n_ei, w_ei, len(einig)),
             "allein": _arm(q_al, n_al, w_al, len(allein)),

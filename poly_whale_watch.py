@@ -79,6 +79,37 @@ PUB_MIN_HITRATE       = float(os.environ.get("WHALE_PUB_MIN_HITRATE")     or 0.5
 PUB_MIN_USD_NOREC     = float(os.environ.get("WHALE_PUB_MIN_USD_NOREC")   or 150000)   # 06.08.2026 (Lucas: Feed straffen): Wallet OHNE belastbaren Record (n<PUB_MIN_TR) nur ab so viel $
 CONTEST_MIN_USD       = float(os.environ.get("WHALE_CONTEST_MIN_USD")     or 100000)   # 12.08.2026 (Lucas): Public — Gross-Einstiege ab so viel auf ZWEI Seiten = umkaempft -> gar nicht posten
 CONFLICT_TOP_N        = int(os.environ.get("WHALE_CONFLICT_TOP_N")        or 20)       # 24.08.2026 (Lucas, INOX-Fall): haelt eine andere Wallet aus den Top-N die Gegenseite, ist das Signal mehrdeutig — RANG statt Dollar, deshalb greift es auch bei $7K.
+
+# 🔴 26.09.2026 (Lucas: Ja zur Nachmessung). Die neue Seiten-Karte zeigte zum ersten Mal die
+# BETRAEGE: beim Medvedev-Push machte eine Gegen-Wallet mit $102 den Markt „umkaempft" und
+# sperrte Public — gegen eine $2K-Position. Die Regel fragte nur „bewiesen?", nie „wie viel?".
+# Nachgemessen (1.591 bewiesene Positionen, 1.040 aufgeloeste Maerkte, Band ueber Maerkte):
+#
+#     unumkaempft                        n=1208   70,4 %  [67,2, 73,6]
+#     Gegner < 10 % des eigenen Einsatzes n=  47   80,9 %  [66,7, 91,8]   <- kein Muenzwurf
+#     Gegner >= 10 %                      n= 336   56,2 %  [52,3, 60,0]   <- hier sitzt der Effekt
+#
+# Der ganze Muenzwurf-Effekt steckt in den Gegnern mit echtem Gewicht. Eine Mini-Position auf der
+# anderen Seite ist Rauschen und darf weder sperren noch als „einig" zaehlen. Fuer die Einigkeit
+# ist dieselbe Grenze kaum messbar (35 von 452 Positionen, 77,1 % gegen 80,8 %) — sie gilt dort
+# aus Konsistenz: wer auf der Gegenseite nicht zaehlt, zaehlt auch auf der eigenen nicht.
+# ⚠️ „bewiesen" wird am heutigen Record gemessen, der diese Maerkte enthaelt — beide Gruppen sind
+# davon gleich betroffen, die Differenz weniger. poly_gegenseite.py misst den Schnitt laufend mit.
+GEWICHT_MIN_ANTEIL = float(os.environ.get("WHALE_GEWICHT_MIN_ANTEIL") or 0.10)
+
+
+def _hat_gewicht(w_usd, pos) -> bool:
+    """Zaehlt eine andere Wallet neben dieser Position? Ab GEWICHT_MIN_ANTEIL ihres Einsatzes.
+    Ist der eigene Einsatz unbekannt, zaehlt sie — fehlende Information ist keine Entlastung."""
+    try:
+        eigen = float(pos.get("usd") or 0)
+    except (TypeError, ValueError):
+        eigen = 0.0
+    if eigen <= 0:
+        return True
+    return float(w_usd or 0) >= GEWICHT_MIN_ANTEIL * eigen
+
+
 # 🎯 Der Quotenboden — EINE Zahl fuer EINE Frage: ab wann ist eine Karte ueberhaupt etwas, dem
 # man folgen kann?
 #
@@ -1022,6 +1053,123 @@ def _ist_gross(pos: dict, broad: dict) -> bool:
     return (pos.get("usd") or 0) >= MIN_USD_UNTRACKED
 
 
+def _wallet_30t(scores, wallet) -> str:
+    """„30T 66 % · +$5.4K" — die Kennzahl einer Wallet fuer ihre Zeile im Seiten-Block. REIN.
+    Ohne gemessenes Fenster steht „30T —": geschaetzt wird hier nichts."""
+    s = scores.get(wallet) if isinstance(scores, dict) else None
+    f = s.get("fenster30") if isinstance(s, dict) else None
+    if not (isinstance(f, dict) and (f.get("n") or 0) >= MIN_TR and isinstance(f.get("wins"), int)):
+        return "30T —"
+    txt = "30T %d %%" % round(f["wins"] / f["n"] * 100)
+    g = f.get("gewinn")
+    if isinstance(g, (int, float)) and (f.get("nGeld") or 0):
+        txt += " · %s%s" % ("+" if g >= 0 else "−", _usd(abs(g)))
+    return txt
+
+
+def _wallet_kennzahl(scores, x) -> str:
+    """30-Tage-Kennzahl der Wallet; ist das Fenster nicht gemessen, wenigstens ihr Geld-Rang —
+    sonst stuende in der Zeile nur „30T —" und nichts, woran man die Wallet einordnen kann."""
+    k = _wallet_30t(scores, x.get("wallet"))
+    if k == "30T —" and x.get("rank"):
+        k += " · " + _rang_kurz(x["rank"])
+    return k
+
+
+def seiten_wallets(pos, broad, scores, bewiesen_zaehlt=False) -> dict:
+    """Wer steht auf welcher Seite? REIN/testbar.
+
+    -> {"erhoben", "fuer": [{wallet, usd, rank}], "gegen": [{wallet, usd, rank, side}], "gegenName"}
+
+    „fuer" ohne die Push-Wallet selbst (= `_agreeing_wallets`). „gegen" nach GENAU der Regel von
+    `_conflicting_top_wallet`, nur vollstaendig statt nur die beste. `erhoben` ist False, wenn
+    fuer den Markt keine Halter-Liste vorliegt — dann darf die Karte NICHT „keine Gegenseite"
+    sagen: fehlende Information ist keine Entwarnung.
+    """
+    key, side, me = pos.get("key"), pos.get("side"), str(pos.get("wallet") or "").lower()
+    m = (broad or {}).get(key) if (isinstance(broad, dict) and key) else None
+    if not (isinstance(m, dict) and isinstance(m.get("whales"), list)):
+        return {"erhoben": False, "fuer": [], "gegen": [], "gegenName": None}
+    ranks = _sharp_rank_map(scores)
+    gegen = []
+    for w in m["whales"]:
+        if not isinstance(w, dict):
+            continue
+        w_side, w_wallet = w.get("side"), str(w.get("wallet") or "").lower()
+        if not w_side or w_side == side or not w_wallet or w_wallet == me:
+            continue
+        if not _hat_gewicht(w.get("usd"), pos):
+            continue
+        r = ranks.get(w_wallet)
+        im_rang = bool(r) and r <= CONFLICT_TOP_N
+        belegt = bewiesen_zaehlt and _is_smart((scores or {}).get(w_wallet))
+        if im_rang or belegt:
+            gegen.append({"wallet": w_wallet, "usd": float(w.get("usd") or 0), "rank": r,
+                          "side": w_side})
+    gegen.sort(key=lambda x: -x["usd"])
+    andere = [k for k in (m.get("prices") or {}) if k != side]
+    gname = gegen[0]["side"] if gegen else (andere[0] if len(andere) == 1 else None)
+    return {"erhoben": True, "fuer": _agreeing_wallets(pos, broad, scores), "gegen": gegen,
+            "gegenName": gname}
+
+
+def _seiten_block(pos, broad, scores, label) -> list:
+    """Block der eigenen Seite, Block der Gegenseite, Bilanz. -> Zeilen."""
+    out = []
+    _sperrt, _u = gegenseite_sperrt()
+    sw = seiten_wallets(pos, broad, scores, bewiesen_zaehlt=_sperrt)
+    ich_roh = pos.get("wallet")
+    ich = str(ich_roh or "").lower()
+    ranks = _sharp_rank_map(scores)
+    fuer = [{"wallet": ich_roh, "usd": float(pos.get("usd") or 0), "ich": True,
+             "rank": ranks.get(ich)}] + sw["fuer"]
+    summe_f = sum(x["usd"] for x in fuer)
+    # 🟢/🔴 statt ✅/❌: „✅" heisst auf dieser Karte schon „bewiesen" — ein zweites ✅ fuer
+    # „unsere Seite" haette eine unbewiesene Wallet wie eine bewiesene aussehen lassen.
+    out.append("🟢 <b>FÜR %s</b> — %d Wallet%s · %s"
+               % (_esc(label), len(fuer), "" if len(fuer) == 1 else "s", _usd(summe_f)))
+    zf = ["🐋 %s · %s · %s%s" % (_wallet_link(x["wallet"]), _usd(x["usd"]),
+                                  _wallet_kennzahl(scores, x),
+                                  "  ← <b>löst den Push aus</b>" if x.get("ich") else "")
+          for x in fuer]
+    _einig, _eu = einigkeit_traegt()
+    if sw["fuer"] and _einig:
+        zf.append("<i>Mitziehen bewiesener Wallets trägt (gemessen)</i>")
+    out.append("<blockquote>%s</blockquote>" % "\n".join(zf))
+    # Die ausfuehrliche Statistik gehoert der Push-Wallet — direkt unter ihrem Block, zugeklappt.
+    wb = [z for z in _wallet_block(scores, ich_roh, ranks.get(ich)) if z != ""]
+    if wb:
+        wb[0] = "📋 <i>Wallet dieses Pushs:</i> " + wb[0].replace("🐋 ", "", 1)
+        out.append("<blockquote expandable>%s</blockquote>" % "\n".join(wb))
+    out.append("")
+    gname = sw.get("gegenName")
+    gtext = (ausgang_label(gname, _markt_frage(pos.get("key"), broad)) or gname) if gname else None
+    gtitel = ("FÜR %s" % _esc(gtext)) if gtext else "GEGENSEITE"
+    bilanz = None
+    if not sw["erhoben"]:
+        out.append("❔ <b>%s</b> — nicht erhoben" % gtitel)
+    elif sw["gegen"]:
+        summe_g = sum(x["usd"] for x in sw["gegen"])
+        out.append("🔴 <b>%s</b> — %d Wallet%s · %s"
+                   % (gtitel, len(sw["gegen"]), "" if len(sw["gegen"]) == 1 else "s", _usd(summe_g)))
+        zg = ["🐋 %s · %s · %s" % (_wallet_link(x["wallet"]), _usd(x["usd"]),
+                                    _wallet_kennzahl(scores, x)) for x in sw["gegen"]]
+        if _sperrt:
+            zg.append("<i>umkämpft: gemessen ein Münzwurf → geht nicht public</i>")
+        out.append("<blockquote>%s</blockquote>" % "\n".join(zg))
+        bilanz = (len(fuer), len(sw["gegen"]), summe_f, summe_g)
+    else:
+        out.append("⚪ <b>%s</b> — keine %s Wallet unter den größten Haltern"
+                   % (gtitel, "bewiesene" if _sperrt else "Top-"))
+        bilanz = (len(fuer), 0, summe_f, 0.0)
+    if bilanz:
+        out += ["", "⚖️ <b>%s %d : %d %s</b> · %s : %s%s"
+                % (_esc(label), bilanz[0], bilanz[1], _esc(gtext or "Gegenseite"),
+                   _usd(bilanz[2]), _usd(bilanz[3]), " · einseitig" if not bilanz[1] else "")]
+    out.append("")
+    return out
+
+
 def build_card(pos: dict, scores: dict, restock: bool, broad: dict = None, extra: int = 0,
                blocked=None) -> str:
     """Trades-Push (01.08.2026, Lucas: „entscheidungsreif") — Matchup, Anpfiff, Einstieg→Jetzt-Preis,
@@ -1106,39 +1254,18 @@ def build_card(pos: dict, scores: dict, restock: bool, broad: dict = None, extra
     except Exception:
         pass
     lines.append(" · ".join(_warum))
-    # 24.08.2026 (Lucas): steht eine andere Top-Wallet dagegen, gehoert das IN die Nachricht —
-    # sonst liest sich der Push als Empfehlung, obwohl die Gegenseite genauso gut belegt ist.
-    # 18.09.2026: erst die Zustimmung, dann der Widerspruch. Beide koennen nicht zugleich
-    # zutreffen — wer Gegenseite hat, faellt ohnehin unter das andere Urteil.
-    _ag = _agreeing_wallets(pos, broad, scores)
-    _einig, _eu = einigkeit_traegt()
-    if _ag and _einig:
-        # 🔴 19.09.2026: hier stand eine Aufzaehlung, die fuer jede Wallet OHNE Rang denselben
-        # Text einsetzte — auf Lucas' Karte las sich das als „eine weitere bewiesene Wallet,
-        # eine weitere bewiesene Wallet". Genannt werden jetzt nur die Raenge; wer keinen hat,
-        # steckt in der Zahl davor, die es ohnehin schon sagt.
-        _raenge = [_rang_kurz(a["rank"]) for a in _ag if a.get("rank")][:3]
-        # 19.09.2026: „1 bewiesene Wallet halten mit" — das Verb blieb beim Umbau im Plural.
-        lines.append("🤝 <b>%d bewiesene Wallet%s</b> (%s)%s — trägt gemessen"
-                     % (len(_ag), " hält mit" if len(_ag) == 1 else "s halten mit",
-                        _usd(sum(a["usd"] for a in _ag)),
-                        (" · " + ", ".join(_raenge)) if _raenge else ""))
-    _sperrt, _u = gegenseite_sperrt()
-    _cf = _conflicting_top_wallet(pos, broad, scores, bewiesen_zaehlt=_sperrt)
-    if _cf:
-        # 19.09.2026: derselbe Bau wie die 🤝-Zeile — wer, wie viel, und in vier Worten, was es
-        # bedeutet. Vorher waren es zwei Zeilen, deren zweite auf jeder Karte gleich lautete.
-        # 18.09.2026: der Marker stand bis dahin ohne Folge da. Gemessen ist er eine: in solchen
-        # Maerkten trifft eine bewiesene Wallet deutlich seltener (poly_gegenseite.json). Die
-        # Zahl steht NICHT hier — sie veraltet sonst im Text; das Urteil kommt vom Produzenten.
-        wer = _rang_kurz(_cf["rank"]) if _cf.get("rank") else "eine bewiesene Wallet"
-        lines.append("⚔️ <b>Gegenseite: %s</b> (%s) · %s%s"
-                     % (_esc(_cf["side"]), _usd(_cf["usd"]), wer,
-                        " — gemessen ein Münzwurf, geht nicht public" if _sperrt else ""))
+    # 🎨 26.09.2026 (Lucas: „man sieht nicht gleich, auf wen da wirklich gespielt ist, wo die
+    # Gegenseite ist, worauf sich der Inhalt bezieht"). Hier standen eine 🤝-Zeile, eine
+    # ⚔️-Zeile und darunter ein Statistik-Block, von dem man nicht sah, zu welcher Wallet er
+    # gehoert — er gehoerte zur Push-Wallet, stand aber unter der Gegenseite. Jetzt nach SEITEN:
+    # je Seite ein Block mit ihren Wallets, jede Wallet mit ihrer eigenen Kennzahl in der Zeile,
+    # die ausfuehrliche Statistik der Push-Wallet direkt unter ihrem Block, zugeklappt.
+    # Die AUSWAHL ist unveraendert (`_agreeing_wallets`, dieselbe Regel wie
+    # `_conflicting_top_wallet`) — geaendert hat sich nur, wo es steht. Der Kopf der Karte
+    # (Wette zuerst, Anlass danach) bleibt, wie Lucas ihn am 19.09. aufgezeichnet hat.
     lines.append("")
     lines.append("")
-    lines += _wallet_block(scores, pos.get("wallet"),
-                           _sharp_rank_map(scores).get(str(pos.get("wallet") or "").lower()))
+    lines += _seiten_block(pos, broad, scores, _label)
     if extra and extra > 0:
         lines.append("   ➕ <i>%d weitere Position dieser Wallet</i>" % extra
                      if extra == 1 else "   ➕ <i>%d weitere Positionen dieser Wallet</i>" % extra)
@@ -2548,6 +2675,8 @@ def _conflicting_top_wallet(pos, broad, scores, top=None, bewiesen_zaehlt=False)
         w_side, w_wallet = w.get("side"), str(w.get("wallet") or "").lower()
         if not w_side or w_side == side or not w_wallet or w_wallet == me:
             continue
+        if not _hat_gewicht(w.get("usd"), pos):
+            continue
         r = ranks.get(w_wallet)
         im_rang = bool(r) and r <= top
         belegt = bewiesen_zaehlt and _is_smart((scores or {}).get(w_wallet))
@@ -2594,6 +2723,8 @@ def _agreeing_wallets(pos, broad, scores) -> list:
             continue
         w_wallet = str(w.get("wallet") or "").lower()
         if w.get("side") != side or not w_wallet or w_wallet == me:
+            continue
+        if not _hat_gewicht(w.get("usd"), pos):
             continue
         if not _is_smart((scores or {}).get(w_wallet)):
             continue
