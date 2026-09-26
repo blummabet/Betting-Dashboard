@@ -693,7 +693,9 @@ def _untergrenze(renditen, z: float = 1.645):
         return None
     m = sum(renditen) / n
     var = sum((x - m) ** 2 for x in renditen) / (n - 1)
-    return round(m - z * (var ** 0.5) / (n ** 0.5), 4)
+    # 🔴 26.09.2026: eine ROI-Untergrenze unter −100 % ist unmoeglich (flach gesetzt verliert man
+    # hoechstens den Einsatz). Die Normalapproximation kennt diese Wand nicht, s. punkte_bilanz.
+    return round(max(-1.0, m - z * (var ** 0.5) / (n ** 0.5)), 4)
 
 
 def bilanz(ledger=None, letzte=25):
@@ -803,6 +805,23 @@ def punkte_fortschreiben(state, bewertet, results, now):
     return bleibt, zugang
 
 
+# 26.09.2026 (Lucas-Uebersicht-Check). Auf dem Board stand an „Iceland v Estonia 6/7":
+# „+59% UG +23% bei n9 · trägt". Neun Wetten. Die Untergrenze kommt aus der Normalapproximation,
+# und die ist bei n=9 und Renditen, die nur −1 oder (Quote−1) sein koennen, schlicht nicht
+# verlaesslich — eine Serie von sieben Treffern genuegt fuer „traegt". Und „traegt" wurde im
+# FRONTEND entschieden (`roiLb > 0`), ohne Mindestzahl — die Schwelle stand also nirgends, wo
+# man sie haette pruefen koennen. Dieselbe Mindestzahl wie im Freigabe-Register (30), und das
+# Urteil steht jetzt im Artefakt.
+PUNKTE_URTEIL_MIN_N = 30
+
+
+def punkte_urteil(n, ug):
+    """'traegt' | 'traegt_nicht' | 'zu_wenige'. REIN. Unter der Mindestzahl gibt es kein Urteil."""
+    if not isinstance(n, int) or n < PUNKTE_URTEIL_MIN_N or ug is None:
+        return "zu_wenige"
+    return "traegt" if ug > 0 else "traegt_nicht"
+
+
 def punkte_bilanz(ledger=None):
     """ROI + Untergrenze JE PUNKTZAHL. Der Gradient ist die eigentliche Aussage. REIN."""
     rows = ledger if ledger is not None else _load(PUNKTE_LEDGER_FILE, [])
@@ -821,9 +840,12 @@ def punkte_bilanz(ledger=None):
         ug = None
         if n >= 3:
             sd = (sum((x - mit) ** 2 for x in rs) / (n - 1)) ** 0.5
-            ug = mit - 1.645 * sd / (n ** 0.5)
+            # 🔴 26.09.2026: stand ungedeckelt da — „7/13: −70 % UG −119 % bei n6" auf dem Board.
+            # Unter −100 % gibt es keinen Verlust; die Zahl war ein Rechenartefakt, kein Befund.
+            ug = max(-1.0, mit - 1.645 * sd / (n ** 0.5))
         out.append({"punkte": p, "moeglich": m, "n": n, "roi": round(mit, 4),
-                    "roiLb": round(ug, 4) if ug is not None else None})
+                    "roiLb": round(ug, 4) if ug is not None else None,
+                    "urteil": punkte_urteil(n, ug), "minN": PUNKTE_URTEIL_MIN_N})
     return out
 
 

@@ -62,9 +62,16 @@ test('⭐ „trägt" steht nur, wenn die Untergrenze über null liegt', () => {
   assert.doesNotMatch(schwach, /md-kl-traegt/,
     '+15 % Rendite mit UG −8 % ist kein Beleg — genau die Stufe, die die Tafel am meisten zeigt');
   assert.doesNotMatch(schwach, /· trägt/);
-  const stark = fn.text({ n: 3, roi: 0.82, roiLb: 0.5897 });
+  // 26.09.2026: das Urteil kommt aus dem Produzenten (`urteil`, ab n=30). Vorher stand hier
+  // n=3 als „stark" — genau das Muster, das auf dem Board „+59 % UG +23 % bei n9 · trägt" ergab.
+  const stark = fn.text({ n: 40, roi: 0.82, roiLb: 0.5897, urteil: 'traegt', minN: 30 });
   assert.match(stark, /md-kl-traegt/);
   assert.match(stark, /· trägt/);
+  const klein = fn.text({ n: 9, roi: 0.5889, roiLb: 0.2342, urteil: 'zu_wenige', minN: 30 });
+  assert.doesNotMatch(klein, /md-kl-traegt/, 'n=9 ist kein Urteil, auch bei positiver UG');
+  assert.match(klein, /zu wenig für ein Urteil/);
+  const alt = fn.text({ n: 9, roi: 0.5889, roiLb: 0.2342 });
+  assert.doesNotMatch(alt, /md-kl-traegt|· trägt/, 'ohne Urteil im Artefakt behauptet das Frontend keins');
 });
 
 test('die Untergrenze steht immer dabei, nicht nur die Rendite', () => {
