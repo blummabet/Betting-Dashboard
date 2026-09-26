@@ -421604,7 +421604,14 @@
     "usd": 1400,
     "ts": 1790379348
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Jamaica": 1.0,
+   "Draw (Jamaica vs. Guatemala)": 0.0,
+   "Guatemala": 0.0
+  },
+  "resolvedAt": "2026-09-26T04:13:17.020648+00:00"
  },
  "mlb-stl-mil-2026-09-25": {
   "shares": {
@@ -422233,7 +422240,14 @@
    "NJ/NY Gotham FC": "63304999671853543472566418553247534090834150870291212695294417205692183901863",
    "Draw (NJ/NY Gotham FC vs. Chicago Stars FC)": "82949657563558738397703659404032423605601905710259078756854704320021113793748",
    "Chicago Stars FC": "37771398421573985272171481568244135673996125632420743203975177436694717218428"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "NJ/NY Gotham FC": 1.0,
+   "Draw (NJ/NY Gotham FC vs. Chicago Stars FC)": 0.0,
+   "Chicago Stars FC": 0.0
+  },
+  "resolvedAt": "2026-09-26T04:13:17.020648+00:00"
  },
  "mlb-tex-min-2026-09-25": {
   "shares": {
@@ -424847,7 +424861,14 @@
    "Vila Nova FC": "10579672393193833099846793792929513337212952516085335323516549242440652488567",
    "Draw (Vila Nova FC vs. Londrina EC)": "9740118100349232362753152621823509131413433493599796007062866107518933375920",
    "Londrina EC": "59067587170836114397604743598749050869852220593960658220708086530176085431895"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Vila Nova FC": 1.0,
+   "Draw (Vila Nova FC vs. Londrina EC)": 0.0,
+   "Londrina EC": 0.0
+  },
+  "resolvedAt": "2026-09-26T04:13:17.020648+00:00"
  },
  "cfb-clmsn-cah-2026-09-25": {
   "shares": {
@@ -426915,7 +426936,13 @@
   "tokens": {
    "BESTIA": "78141270432029605919872837645868870707529961803835278427955066449579491711841",
    "Voca": "96080000383594248077834718179906333252578143451191708900428574388150666373464"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "BESTIA": 0.0,
+   "Voca": 1.0
+  },
+  "resolvedAt": "2026-09-26T04:13:17.020648+00:00"
  },
  "wta-preston-korneev-2026-09-25": {
   "shares": {
@@ -427427,12 +427454,12 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 9862,
+  "totalUsd": 10076,
   "whales": [
    {
     "wallet": "0x72e1597864456eda62878413cf3e60c332e4a45d",
     "side": "Tatiana Prozorova",
-    "usd": 4155
+    "usd": 3826
    },
    {
     "wallet": "0x04641b57f332c15ecaa497799c55026d521967da",
@@ -427443,6 +427470,11 @@
     "wallet": "0x02c6460b69d7e2b3698e1f4c105c2ceca60fb512",
     "side": "Talia Gibson",
     "usd": 495
+   },
+   {
+    "wallet": "0x01c78f8873c0c86d6b6b92ff627e3802237ee995",
+    "side": "Tatiana Prozorova",
+    "usd": 329
    },
    {
     "wallet": "0xc7b8fe5f871a242bff68aa806428c73bfe78851e",
@@ -427512,19 +427544,96 @@
     "usd": 13
    }
   ],
-  "hoursToKickoff": 0.83,
-  "capturedAt": "2026-09-26T03:43:11.090238+00:00",
+  "hoursToKickoff": 0.33,
+  "capturedAt": "2026-09-26T04:13:17.020648+00:00",
   "cond": "0x97b4db6d893922c4089419127d9fc0560e57b188d17bc99d76aad919296abef0",
   "frage": "Singapore Open: Tatiana Prozorova vs Talia Gibson",
   "tokens": {
    "Tatiana Prozorova": "104297601228925104773124896709123403910134322055101268212237658035678854067710",
    "Talia Gibson": "3226874961417144567553415275647512906614720731486408775208521839112727460936"
-  }
+  },
+  "book": {
+   "side": "Talia Gibson",
+   "bid": 0.5,
+   "ask": 0.51,
+   "spreadC": 1.0,
+   "spreadPct": 1.96,
+   "bids": [
+    [
+     0.5,
+     11407
+    ],
+    [
+     0.49,
+     71635
+    ],
+    [
+     0.48,
+     3500
+    ],
+    [
+     0.47,
+     13
+    ],
+    [
+     0.42,
+     5
+    ],
+    [
+     0.41,
+     5
+    ]
+   ],
+   "asks": [
+    [
+     0.51,
+     329977
+    ],
+    [
+     0.52,
+     3689
+    ],
+    [
+     0.53,
+     3863
+    ],
+    [
+     0.54,
+     283
+    ],
+    [
+     0.55,
+     15000
+    ],
+    [
+     0.56,
+     64
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x02c6460b69d7e2b3698e1f4c105c2ceca60fb512",
+    "action": "BUY",
+    "side": "Talia Gibson",
+    "price": 0.51,
+    "usd": 500,
+    "ts": 1790392940
+   },
+   {
+    "wallet": "0x0edf61a94972b17419e7f22f3316f02aecaf7b80",
+    "action": "SELL",
+    "side": "Talia Gibson",
+    "price": 0.5,
+    "usd": 337,
+    "ts": 1790372079
+   }
+  ]
  },
  "atp-cerund-fokina-2026-09-25": {
   "shares": {
-   "Juan Manuel Cerundolo": 7277.972214014997,
-   "Alejandro Davidovich Fokina": 10692.319419704998
+   "Juan Manuel Cerundolo": 7634.992259699999,
+   "Alejandro Davidovich Fokina": 11216.830351019998
   },
   "prices": {
    "Juan Manuel Cerundolo": 0.405,
@@ -427536,7 +427645,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 24235,
+  "totalUsd": 25913,
   "whales": [
    {
     "wallet": "0x9c68e5a4b3004bf6ac9d6735a33ffb5f983a247a",
@@ -427551,7 +427660,7 @@
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "side": "Juan Manuel Cerundolo",
-    "usd": 1050,
+    "usd": 1482,
     "avgPrice": 0.4099
    },
    {
@@ -427577,6 +427686,12 @@
     "usd": 636
    },
    {
+    "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
+    "side": "Alejandro Davidovich Fokina",
+    "usd": 517,
+    "avgPrice": 0.5961
+   },
+   {
     "wallet": "0xdc16718af9f04590b38a8e8aa32dedcd034740a5",
     "side": "Juan Manuel Cerundolo",
     "usd": 461
@@ -427584,7 +427699,8 @@
    {
     "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
     "side": "Juan Manuel Cerundolo",
-    "usd": 353
+    "usd": 353,
+    "avgPrice": 0.4014
    },
    {
     "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
@@ -427595,7 +427711,8 @@
    {
     "wallet": "0xf0b3fee1bb052e25a73cd91cb23ce41c72a2145d",
     "side": "Alejandro Davidovich Fokina",
-    "usd": 312
+    "usd": 312,
+    "avgPrice": 0.6
    },
    {
     "wallet": "0x01c78f8873c0c86d6b6b92ff627e3802237ee995",
@@ -427611,7 +427728,8 @@
    {
     "wallet": "0x7547479d43f4b52d892a6f2254050eea50edd158",
     "side": "Juan Manuel Cerundolo",
-    "usd": 243
+    "usd": 243,
+    "avgPrice": 0.39
    },
    {
     "wallet": "0x02102c95694e58aaacbc467284d87dc8ff774deb",
@@ -427627,7 +427745,8 @@
    {
     "wallet": "0x0eb32f4c1a8672b61b48d9f1493b6dd5a6b1f766",
     "side": "Juan Manuel Cerundolo",
-    "usd": 202
+    "usd": 202,
+    "avgPrice": 0.38
    },
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
@@ -427646,15 +427765,10 @@
     "usd": 159
    },
    {
-    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
-    "side": "Alejandro Davidovich Fokina",
-    "usd": 140,
-    "avgPrice": 0.5951
-   },
-   {
     "wallet": "0x5e020e19bc4cc2cd24ab9b406604ee9df02ab178",
     "side": "Juan Manuel Cerundolo",
-    "usd": 131
+    "usd": 131,
+    "avgPrice": 0.3919
    },
    {
     "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
@@ -427666,11 +427780,6 @@
     "wallet": "0x17d97684d80863e07bc95d1e9f7c1c1dbec884af",
     "side": "Alejandro Davidovich Fokina",
     "usd": 110
-   },
-   {
-    "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
-    "side": "Juan Manuel Cerundolo",
-    "usd": 79
    },
    {
     "wallet": "0xb697ccd520ecf9969fa37e417f66c5c9bf6b5d0c",
@@ -427702,6 +427811,12 @@
     "wallet": "0xcc40e3d54a3206d85d86f305596ff6fb4dc96ae3",
     "side": "Alejandro Davidovich Fokina",
     "usd": 39
+   },
+   {
+    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
+    "side": "Alejandro Davidovich Fokina",
+    "usd": 33,
+    "avgPrice": 0.5951
    },
    {
     "wallet": "0x1b0fcd4c06147cb090681b4bd59cab5b9319b7ae",
@@ -427752,14 +427867,83 @@
     "usd": 4
    }
   ],
-  "hoursToKickoff": 1.33,
-  "capturedAt": "2026-09-26T03:43:11.090238+00:00",
+  "hoursToKickoff": 0.83,
+  "capturedAt": "2026-09-26T04:13:17.020648+00:00",
   "cond": "0x08ba9fd1fdd7830500b9bc6c9bbf16af358e5924b5be9ac710a8947c6e945b6a",
   "frage": "Chengdu Open: Juan Manuel Cerundolo vs Alejandro Davidovich Fokina",
   "tokens": {
    "Juan Manuel Cerundolo": "24920791124539023151825725299490566855605261269955860757825060339531813746648",
    "Alejandro Davidovich Fokina": "5374525460851675250277520766844346493413359248271608226104880951627609133640"
-  }
+  },
+  "book": {
+   "side": "Alejandro Davidovich Fokina",
+   "bid": 0.59,
+   "ask": 0.6,
+   "spreadC": 1.0,
+   "spreadPct": 1.67,
+   "bids": [
+    [
+     0.59,
+     10266
+    ],
+    [
+     0.58,
+     13312
+    ],
+    [
+     0.57,
+     7899
+    ],
+    [
+     0.56,
+     3431
+    ],
+    [
+     0.55,
+     762
+    ],
+    [
+     0.54,
+     82
+    ]
+   ],
+   "asks": [
+    [
+     0.6,
+     33853
+    ],
+    [
+     0.61,
+     35376
+    ],
+    [
+     0.62,
+     16777
+    ],
+    [
+     0.63,
+     10737
+    ],
+    [
+     0.64,
+     7495
+    ],
+    [
+     0.65,
+     2124
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xdc16718af9f04590b38a8e8aa32dedcd034740a5",
+    "action": "BUY",
+    "side": "Juan Manuel Cerundolo",
+    "price": 0.41,
+    "usd": 300,
+    "ts": 1790391384
+   }
+  ]
  },
  "mex-tij-atl-2026-09-25-more-markets": {
   "shares": {
@@ -428125,7 +428309,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 46968,
+  "totalUsd": 46984,
   "whales": [
    {
     "wallet": "0x45e40dbee6f546c7b318498f8c9778560f5a7e20",
@@ -428160,7 +428344,8 @@
    {
     "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
     "side": "Quentin Halys",
-    "usd": 891
+    "usd": 891,
+    "avgPrice": 0.4411
    },
    {
     "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
@@ -428181,7 +428366,7 @@
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "Quentin Halys",
-    "usd": 710,
+    "usd": 703,
     "avgPrice": 0.4313
    },
    {
@@ -428261,7 +428446,8 @@
    {
     "wallet": "0xb4611ed615ca8fb60d203d3b1b0a2ffd1fa29dbe",
     "side": "Quentin Halys",
-    "usd": 159
+    "usd": 159,
+    "avgPrice": 0.451
    },
    {
     "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
@@ -428322,7 +428508,8 @@
    {
     "wallet": "0x35e701f088b6ef25fff6b902769c1cd8b85f8331",
     "side": "Quentin Halys",
-    "usd": 11
+    "usd": 11,
+    "avgPrice": 0.445
    },
    {
     "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
@@ -428335,19 +428522,144 @@
     "usd": 6
    }
   ],
-  "hoursToKickoff": 1.83,
-  "capturedAt": "2026-09-26T03:43:11.090238+00:00",
+  "hoursToKickoff": 1.33,
+  "capturedAt": "2026-09-26T04:13:17.020648+00:00",
   "cond": "0x1910bca3159c8f3181e8b6e5b4b80173f8b465a9d75a51b75ebe709aeac0c378",
   "frage": "Hangzhou Open: Quentin Halys vs Roman Safiullin",
   "tokens": {
    "Quentin Halys": "91493109071930514098366161385264426099521002438401494219196079951594075498206",
    "Roman Safiullin": "16251574009145305964975047175083021919236787267221305020851120982304034330077"
-  }
+  },
+  "book": {
+   "side": "Roman Safiullin",
+   "bid": 0.56,
+   "ask": 0.57,
+   "spreadC": 1.0,
+   "spreadPct": 1.75,
+   "bids": [
+    [
+     0.56,
+     22821
+    ],
+    [
+     0.55,
+     37792
+    ],
+    [
+     0.54,
+     9602
+    ],
+    [
+     0.53,
+     5224
+    ],
+    [
+     0.52,
+     660
+    ],
+    [
+     0.51,
+     310
+    ]
+   ],
+   "asks": [
+    [
+     0.57,
+     17882
+    ],
+    [
+     0.58,
+     34973
+    ],
+    [
+     0.59,
+     13365
+    ],
+    [
+     0.6,
+     9657
+    ],
+    [
+     0.61,
+     6083
+    ],
+    [
+     0.62,
+     3908
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x8e888fd8953b883891328dda14bdd7260eeeb235",
+    "action": "BUY",
+    "side": "Roman Safiullin",
+    "price": 0.57,
+    "usd": 3500,
+    "ts": 1790393303
+   },
+   {
+    "wallet": "0xfed20f7e4d55eb059c20302a9fc626a1a08a4671",
+    "action": "BUY",
+    "side": "Quentin Halys",
+    "price": 0.44,
+    "usd": 750,
+    "ts": 1790380113
+   },
+   {
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "action": "BUY",
+    "side": "Roman Safiullin",
+    "price": 0.56,
+    "usd": 2846,
+    "ts": 1790368811
+   },
+   {
+    "wallet": "0x924379a79c64b77ad5816ad362122a5f6228658e",
+    "action": "BUY",
+    "side": "Roman Safiullin",
+    "price": 0.5462,
+    "usd": 6497,
+    "ts": 1790368803
+   },
+   {
+    "wallet": "0x56acab44cfca2e88bb9b3406890aea7bfa0cd77e",
+    "action": "BUY",
+    "side": "Roman Safiullin",
+    "price": 0.54,
+    "usd": 3832,
+    "ts": 1790362023
+   },
+   {
+    "wallet": "0x45e40dbee6f546c7b318498f8c9778560f5a7e20",
+    "action": "BUY",
+    "side": "Quentin Halys",
+    "price": 0.46,
+    "usd": 3143,
+    "ts": 1790361951
+   },
+   {
+    "wallet": "0x521c0f496be19476a885ae380f18652bb9cef4aa",
+    "action": "BUY",
+    "side": "Roman Safiullin",
+    "price": 0.55,
+    "usd": 300,
+    "ts": 1790352761
+   },
+   {
+    "wallet": "0xe54d37c9c12e5fd3d684ff4d193ef1f44dabfdec",
+    "action": "BUY",
+    "side": "Roman Safiullin",
+    "price": 0.55,
+    "usd": 550,
+    "ts": 1790350952
+   }
+  ]
  },
  "atp-cina-muller-2026-09-24": {
   "shares": {
-   "Federico Cina": 27214.62454647499,
-   "Alexandre Muller": 33941.70471904501
+   "Federico Cina": 27207.423015354994,
+   "Alexandre Muller": 33932.72673379501
   },
   "prices": {
    "Federico Cina": 0.445,
@@ -428359,7 +428671,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 77387,
+  "totalUsd": 78131,
   "whales": [
    {
     "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
@@ -428401,7 +428713,7 @@
    {
     "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
     "side": "Federico Cina",
-    "usd": 1758,
+    "usd": 1700,
     "avgPrice": 0.467
    },
    {
@@ -428428,7 +428740,8 @@
    {
     "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
     "side": "Federico Cina",
-    "usd": 634
+    "usd": 634,
+    "avgPrice": 0.4827
    },
    {
     "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
@@ -428465,17 +428778,19 @@
    {
     "wallet": "0xf0b3fee1bb052e25a73cd91cb23ce41c72a2145d",
     "side": "Alexandre Muller",
-    "usd": 302
+    "usd": 302,
+    "avgPrice": 0.5599
    },
    {
     "wallet": "0x01c78f8873c0c86d6b6b92ff627e3802237ee995",
     "side": "Federico Cina",
-    "usd": 294
+    "usd": 299
    },
    {
     "wallet": "0x7547479d43f4b52d892a6f2254050eea50edd158",
     "side": "Federico Cina",
-    "usd": 267
+    "usd": 267,
+    "avgPrice": 0.49
    },
    {
     "wallet": "0x9d39bcdc1cf42d9d0e0623527c75a023b8bd5408",
@@ -428496,12 +428811,14 @@
    {
     "wallet": "0x419b3250256df94e1dbb2f11b981821272296ea1",
     "side": "Alexandre Muller",
-    "usd": 123
+    "usd": 123,
+    "avgPrice": 0.5399
    },
    {
     "wallet": "0x5e020e19bc4cc2cd24ab9b406604ee9df02ab178",
     "side": "Federico Cina",
-    "usd": 92
+    "usd": 92,
+    "avgPrice": 0.4408
    },
    {
     "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
@@ -428536,6 +428853,12 @@
     "usd": 65
    },
    {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Federico Cina",
+    "usd": 63,
+    "avgPrice": 0.4499
+   },
+   {
     "wallet": "0x9b11866433281ade9f2811dbde8acdefc45f5375",
     "side": "Federico Cina",
     "usd": 53,
@@ -428545,12 +428868,6 @@
     "wallet": "0xbfdd2fb3f69cd098b395eb7390fe973a2158e70e",
     "side": "Alexandre Muller",
     "usd": 51
-   },
-   {
-    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
-    "side": "Federico Cina",
-    "usd": 44,
-    "avgPrice": 0.47
    },
    {
     "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
@@ -428566,8 +428883,7 @@
    {
     "wallet": "0x49c5845733fd0b83d2ae67bfc1baf9d2e3093de7",
     "side": "Federico Cina",
-    "usd": 29,
-    "avgPrice": 0.44
+    "usd": 29
    },
    {
     "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
@@ -428575,8 +428891,8 @@
     "usd": 25
    }
   ],
-  "hoursToKickoff": 2.83,
-  "capturedAt": "2026-09-26T03:43:11.090238+00:00",
+  "hoursToKickoff": 2.33,
+  "capturedAt": "2026-09-26T04:13:17.020648+00:00",
   "cond": "0xaa59cf9c41a0455a3cd3a35b506cb2035c00bc5f3df23e441e31b221fddf3783",
   "frage": "Chengdu Open: Federico Cina vs Alexandre Muller",
   "tokens": {
@@ -428592,15 +428908,15 @@
    "bids": [
     [
      0.55,
-     13301
+     11706
     ],
     [
      0.54,
-     8389
+     9389
     ],
     [
      0.53,
-     15832
+     16692
     ],
     [
      0.52,
@@ -428608,29 +428924,29 @@
     ],
     [
      0.51,
-     7590
+     7620
     ],
     [
      0.5,
-     26015
+     26355
     ]
    ],
    "asks": [
     [
      0.56,
-     3173
+     8211
     ],
     [
      0.57,
-     31503
+     21266
     ],
     [
      0.58,
-     37354
+     37965
     ],
     [
      0.59,
-     9438
+     10388
     ],
     [
      0.6,
@@ -428711,8 +429027,8 @@
  },
  "crint-mys-omn-2026-09-26": {
   "shares": {
-   "Malaysia": 4572.50635061,
-   "Oman": 3520.4287799400004
+   "Malaysia": 4401.65542657,
+   "Oman": 3388.8927378300004
   },
   "prices": {
    "Malaysia": 0.565,
@@ -428724,7 +429040,7 @@
   },
   "league": "CRICKET",
   "sport": "Cricket",
-  "totalUsd": 12243,
+  "totalUsd": 13881,
   "whales": [
    {
     "wallet": "0x3449dd397d165206791e12ef8187d31696234030",
@@ -428743,15 +429059,9 @@
     "usd": 666
    },
    {
-    "wallet": "0xf95e269d7e6c37da86dcbc2fc515e9bbd7741816",
+    "wallet": "0x986be7dad5e37d603d7eb335da46fc89a89e56ef",
     "side": "Malaysia",
-    "usd": 652
-   },
-   {
-    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
-    "side": "Oman",
-    "usd": 601,
-    "avgPrice": 0.3879
+    "usd": 565
    },
    {
     "wallet": "0xf017866a619bd64464470f14f4b34968023d4b7e",
@@ -428759,20 +429069,25 @@
     "usd": 496
    },
    {
-    "wallet": "0x986be7dad5e37d603d7eb335da46fc89a89e56ef",
-    "side": "Malaysia",
-    "usd": 458
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Oman",
+    "usd": 481,
+    "avgPrice": 0.3879
    },
    {
     "wallet": "0xc4fe817476491890086330a639ac417d51bf601f",
     "side": "Oman",
-    "usd": 390,
-    "avgPrice": 0.3873
+    "usd": 460
    },
    {
     "wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
     "side": "Oman",
     "usd": 314
+   },
+   {
+    "wallet": "0xf95e269d7e6c37da86dcbc2fc515e9bbd7741816",
+    "side": "Malaysia",
+    "usd": 253
    },
    {
     "wallet": "0xcfb0988c1ef82475667308c8102f3aedb3971f12",
@@ -428790,6 +429105,11 @@
     "usd": 210
    },
    {
+    "wallet": "0x8488ef25f79c0cf2ffdff307973b2ac10464588c",
+    "side": "Malaysia",
+    "usd": 169
+   },
+   {
     "wallet": "0xd218e474776403a330142299f7796e8ba32eb5c9",
     "side": "Oman",
     "usd": 133
@@ -428797,8 +429117,12 @@
    {
     "wallet": "0x67af214764bd6eda61fadb25cdcbea6d13d761ee",
     "side": "Oman",
-    "usd": 127,
-    "avgPrice": 0.3824
+    "usd": 127
+   },
+   {
+    "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
+    "side": "Malaysia",
+    "usd": 113
    },
    {
     "wallet": "0xbebc1d6b68637138aa50933ee99b593871acec02",
@@ -428841,7 +429165,8 @@
    {
     "wallet": "0x35e701f088b6ef25fff6b902769c1cd8b85f8331",
     "side": "Oman",
-    "usd": 11
+    "usd": 11,
+    "avgPrice": 0.325
    },
    {
     "wallet": "0x5d40576be2e9c61d283f4fd80d7a5ccf2331ba95",
@@ -428874,13 +429199,303 @@
     "usd": 2
    }
   ],
-  "hoursToKickoff": 1.33,
-  "capturedAt": "2026-09-26T03:43:11.090238+00:00",
+  "hoursToKickoff": 0.83,
+  "capturedAt": "2026-09-26T04:13:17.020648+00:00",
   "cond": "0xd4d2d41b6598ade9830bddb9570f12d56131f8c8e18c159ef4108275a66e8804",
   "frage": "Asian Games Men: Malaysia vs Oman",
   "tokens": {
    "Malaysia": "74578429328576309491432360914210288729237491053040447456060352018711608291947",
    "Oman": "10075634767736681373401606420673601829339283844192725666586064313484162793307"
   }
+ },
+ "dota2-xtreme-gl-2026-09-26": {
+  "shares": {
+   "Xtreme Gaming": 28132.651318764998,
+   "GamerLegion": 12936.91445676001
+  },
+  "prices": {
+   "Xtreme Gaming": 0.685,
+   "GamerLegion": 0.315
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 41685,
+  "whales": [
+   {
+    "wallet": "0x1f4bae57c20bd96c9ad2a5d366466ea381be5345",
+    "side": "Xtreme Gaming",
+    "usd": 10275
+   },
+   {
+    "wallet": "0x994ec8e910b433265f3a46eaf666bfa28b1a6136",
+    "side": "Xtreme Gaming",
+    "usd": 6850
+   },
+   {
+    "wallet": "0xe16d3f2a5807999b358affd9445c3a09e45e5e30",
+    "side": "GamerLegion",
+    "usd": 3954
+   },
+   {
+    "wallet": "0x85fb1b29bc068bee293923cc7e072dff890889ba",
+    "side": "Xtreme Gaming",
+    "usd": 3425
+   },
+   {
+    "wallet": "0x988d8d2a3b01f96a115cf0e20e59e134d65a9899",
+    "side": "GamerLegion",
+    "usd": 2462
+   },
+   {
+    "wallet": "0x0d7cc750f6aafafe000210f52d623f3bce49b7db",
+    "side": "Xtreme Gaming",
+    "usd": 2089
+   },
+   {
+    "wallet": "0x31b9265d1e9a59b12897867e69245699011f150b",
+    "side": "Xtreme Gaming",
+    "usd": 1402
+   },
+   {
+    "wallet": "0x52b7fc8a97df5f18974c06a83909f60c81010aa1",
+    "side": "GamerLegion",
+    "usd": 945
+   },
+   {
+    "wallet": "0xf87832ab121f9a9be7f486d54cd565338f70edeb",
+    "side": "Xtreme Gaming",
+    "usd": 682
+   },
+   {
+    "wallet": "0x363cdad35c9ec1129c0bd3cd332d7c218ef09b0e",
+    "side": "GamerLegion",
+    "usd": 630
+   },
+   {
+    "wallet": "0x746295855be6f49fe2da2accd69ea34b3cf23ac3",
+    "side": "GamerLegion",
+    "usd": 572
+   },
+   {
+    "wallet": "0x9a0ea697ae93234076254ecc76ca4dd992a42330",
+    "side": "GamerLegion",
+    "usd": 536
+   },
+   {
+    "wallet": "0xfdc0bd67fbd71aa8edd00121eb2a7fcbddc34b85",
+    "side": "GamerLegion",
+    "usd": 488
+   },
+   {
+    "wallet": "0x59847267e2a004e3886d7a02ac53778c5ea176eb",
+    "side": "GamerLegion",
+    "usd": 457
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "GamerLegion",
+    "usd": 449,
+    "avgPrice": 0.3112
+   },
+   {
+    "wallet": "0x6b97ebe911d7f2e5e3e8c4a0faad4a5c7c0b8d30",
+    "side": "GamerLegion",
+    "usd": 238
+   },
+   {
+    "wallet": "0xd8dca4272c19833d7c751d9d7e17a67b28273669",
+    "side": "Xtreme Gaming",
+    "usd": 228
+   },
+   {
+    "wallet": "0xc8d9c0df291315f2184ecdab4ed8247618acdf36",
+    "side": "GamerLegion",
+    "usd": 158
+   },
+   {
+    "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
+    "side": "Xtreme Gaming",
+    "usd": 137
+   },
+   {
+    "wallet": "0xc670e1bef9fe213d0b5f49e89b06fba76b37b781",
+    "side": "Xtreme Gaming",
+    "usd": 132
+   },
+   {
+    "wallet": "0xbd3a01ef18c402d09b5e1bcdd63c43bd52ad91fd",
+    "side": "GamerLegion",
+    "usd": 98
+   },
+   {
+    "wallet": "0xc104db0d325238b721c407b44f14f70bb6b1e684",
+    "side": "GamerLegion",
+    "usd": 94
+   },
+   {
+    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
+    "side": "GamerLegion",
+    "usd": 71
+   },
+   {
+    "wallet": "0x4bf2845651c0094e8cf3f8cbcb4279e3c166d280",
+    "side": "GamerLegion",
+    "usd": 68
+   },
+   {
+    "wallet": "0xbc59bdd1501d328de7dd14a142b28529e8fc35f7",
+    "side": "GamerLegion",
+    "usd": 51
+   },
+   {
+    "wallet": "0x028602e5b0909dd7864f884f899ff287a72cf61d",
+    "side": "Xtreme Gaming",
+    "usd": 50
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "GamerLegion",
+    "usd": 35
+   },
+   {
+    "wallet": "0x0ac5faecf8d623a4a074758aedfea9339b24f963",
+    "side": "GamerLegion",
+    "usd": 22
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "Xtreme Gaming",
+    "usd": 9
+   },
+   {
+    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+    "side": "Xtreme Gaming",
+    "usd": 9
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Xtreme Gaming",
+    "usd": 6
+   },
+   {
+    "wallet": "0x35e701f088b6ef25fff6b902769c1cd8b85f8331",
+    "side": "GamerLegion",
+    "usd": 5,
+    "avgPrice": 0.32
+   },
+   {
+    "wallet": "0xc846f5368ab49a854d2280b7ecff92669824c413",
+    "side": "Xtreme Gaming",
+    "usd": 3,
+    "avgPrice": 0.67
+   },
+   {
+    "wallet": "0x521070c99db06e54af5e8e4a91d6858decdfbd53",
+    "side": "GamerLegion",
+    "usd": 3
+   },
+   {
+    "wallet": "0xc3a7bca628ccd2fd4bfc72f86c1f257e96e43172",
+    "side": "GamerLegion",
+    "usd": 2
+   }
+  ],
+  "hoursToKickoff": 2.83,
+  "capturedAt": "2026-09-26T04:13:17.020648+00:00",
+  "cond": "0xd77acd3c7667659ef75b6026d564c1ba91aaee799a5198d81e37810cc2bc9011",
+  "frage": "Dota 2: Xtreme Gaming vs GamerLegion (BO3) - PGL Wallachia Playoffs",
+  "tokens": {
+   "Xtreme Gaming": "46901114803508149554063065887985390608802502873311633675731802327841279779260",
+   "GamerLegion": "44301643601925485856060271413994763366069292718677346070847348165153772814103"
+  },
+  "book": {
+   "side": "Xtreme Gaming",
+   "bid": 0.68,
+   "ask": 0.69,
+   "spreadC": 1.0,
+   "spreadPct": 1.45,
+   "bids": [
+    [
+     0.68,
+     786
+    ],
+    [
+     0.67,
+     1671
+    ],
+    [
+     0.66,
+     12015
+    ],
+    [
+     0.65,
+     8830
+    ],
+    [
+     0.64,
+     4048
+    ],
+    [
+     0.63,
+     380
+    ]
+   ],
+   "asks": [
+    [
+     0.69,
+     15865
+    ],
+    [
+     0.7,
+     44165
+    ],
+    [
+     0.71,
+     3947
+    ],
+    [
+     0.72,
+     19349
+    ],
+    [
+     0.73,
+     7185
+    ],
+    [
+     0.74,
+     5152
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x59847267e2a004e3886d7a02ac53778c5ea176eb",
+    "action": "BUY",
+    "side": "GamerLegion",
+    "price": 0.31,
+    "usd": 450,
+    "ts": 1790394320
+   },
+   {
+    "wallet": "0x988d8d2a3b01f96a115cf0e20e59e134d65a9899",
+    "action": "BUY",
+    "side": "GamerLegion",
+    "price": 0.31,
+    "usd": 2423,
+    "ts": 1790388884
+   },
+   {
+    "wallet": "0xc0541e03050453534633b74dd3a0381f0c123fb8",
+    "action": "BUY",
+    "side": "Xtreme Gaming",
+    "price": 0.7,
+    "usd": 346,
+    "ts": 1790388854
+   }
+  ]
  }
 }
