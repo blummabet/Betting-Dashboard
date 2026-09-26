@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-26T22:11:25.838321+00:00",
+ "generatedAt": "2026-09-26T22:41:37.587715+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -8,15 +8,15 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 541,
- "pinnKeys": 113,
+ "polyRowsSeen": 539,
+ "pinnKeys": 109,
  "matched": 41,
  "footballRows": 21,
- "crossRows": 520,
+ "crossRows": 518,
  "footballSkippedStale": 74,
  "seenBySport": {
   "americanfootball_nfl": 144,
-  "baseball_mlb": 38,
+  "baseball_mlb": 36,
   "icehockey_nhl": 320,
   "boxing_boxing": 18,
   "soccer_mls": 21
@@ -26,22 +26,50 @@
   "soccer_mls": 21
  },
  "trackRecord": {
-  "tracked": 283,
+  "tracked": 285,
   "converged": 83
  },
  "discrepancies": [
+  {
+   "id": "baseball_mlb|minnesotatwins-texasrangers|texasrangers",
+   "sport": "baseball_mlb",
+   "event": "Texas Rangers vs Minnesota Twins",
+   "market": "Moneyline",
+   "outcome": "Texas Rangers",
+   "polyPP": 81.5,
+   "pinnPP": 39.5,
+   "gapPP": 42.0,
+   "vol": 117505,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-26T22:41:37.587399+00:00"
+  },
+  {
+   "id": "baseball_mlb|minnesotatwins-texasrangers|minnesotatwins",
+   "sport": "baseball_mlb",
+   "event": "Texas Rangers vs Minnesota Twins",
+   "market": "Moneyline",
+   "outcome": "Minnesota Twins",
+   "polyPP": 18.5,
+   "pinnPP": 60.5,
+   "gapPP": -42.0,
+   "vol": 117505,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-26T22:41:37.587399+00:00"
+  },
   {
    "id": "baseball_mlb|losangelesdodgers-sanfranciscogiants|losangelesdodgers",
    "sport": "baseball_mlb",
    "event": "Los Angeles Dodgers vs San Francisco Giants",
    "market": "Moneyline",
    "outcome": "Los Angeles Dodgers",
-   "polyPP": 68.0,
-   "pinnPP": 90.7,
-   "gapPP": -22.7,
-   "vol": 318230,
-   "richtung": "Poly zu niedrig → backen",
-   "convergePP": -11.06,
+   "polyPP": 90.5,
+   "pinnPP": 76.5,
+   "gapPP": 13.95,
+   "vol": 390004,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -2.31,
    "firstSeen": "2026-09-20T02:56:56.944122+00:00"
   },
   {
@@ -50,12 +78,12 @@
    "event": "Los Angeles Dodgers vs San Francisco Giants",
    "market": "Moneyline",
    "outcome": "San Francisco Giants",
-   "polyPP": 32.0,
-   "pinnPP": 9.3,
-   "gapPP": 22.7,
-   "vol": 318230,
-   "richtung": "Poly zu hoch → faden",
-   "convergePP": -11.06,
+   "polyPP": 9.5,
+   "pinnPP": 23.5,
+   "gapPP": -13.95,
+   "vol": 390004,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -2.31,
    "firstSeen": "2026-09-20T02:56:56.944122+00:00"
   }
  ]
