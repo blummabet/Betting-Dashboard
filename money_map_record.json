@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-26T03:58:15.150531+00:00",
+"generatedAt": "2026-09-26T04:13:27.883625+00:00",
 "byVerdict": {
 "uneinig": {
-"n": 560,
-"wins": 175,
-"hitRate": 0.3125,
-"polyN": 516,
+"n": 561,
+"wins": 176,
+"hitRate": 0.3137,
+"polyN": 517,
 "polyWins": 139,
-"polyHitRate": 0.2694,
+"polyHitRate": 0.2689,
 "pinnN": 344,
 "pinnHitRate": 0.625,
-"nRoi": 352,
-"roi": -0.4547,
-"roiLb": -0.5477,
-"nClv": 352,
-"clv": -20.3,
-"clvLb": -23.2282
+"nRoi": 353,
+"roi": -0.4523,
+"roiLb": -0.5451,
+"nClv": 353,
+"clv": -20.24,
+"clvLb": -23.1639
 },
 "konsens": {
-"n": 1393,
-"wins": 1180,
-"hitRate": 0.8471,
-"polyN": 1321,
-"polyWins": 1030,
-"polyHitRate": 0.7797,
+"n": 1394,
+"wins": 1181,
+"hitRate": 0.8472,
+"polyN": 1322,
+"polyWins": 1031,
+"polyHitRate": 0.7799,
 "pinnN": 206,
 "pinnHitRate": 0.7718,
-"nRoi": 804,
-"roi": 0.4008,
-"roiLb": 0.3557,
-"nClv": 804,
-"clv": 18.89,
-"clvLb": 17.3712
+"nRoi": 805,
+"roi": 0.4004,
+"roiLb": 0.3553,
+"nClv": 805,
+"clv": 18.87,
+"clvLb": 17.348
 },
 "teil": {
 "n": 32,
@@ -87,9 +87,9 @@
 "hitRate": 0.7
 },
 "Mexican Liga MX": {
-"n": 48,
-"wins": 30,
-"hitRate": 0.625
+"n": 49,
+"wins": 31,
+"hitRate": 0.6327
 },
 "Spanish Segunda Division": {
 "n": 48,
@@ -441,6 +441,11 @@
 "wins": 2,
 "hitRate": 0.4
 },
+"CONCACAF Nations League A": {
+"n": 5,
+"wins": 3,
+"hitRate": 0.6
+},
 "Costa Rican Primera Division": {
 "n": 5,
 "wins": 5,
@@ -472,11 +477,6 @@
 "hitRate": 0.8
 },
 "Argentinian Cup": {
-"n": 4,
-"wins": 2,
-"hitRate": 0.5
-},
-"CONCACAF Nations League A": {
 "n": 4,
 "wins": 2,
 "hitRate": 0.5
@@ -679,37 +679,75 @@
 },
 "byStrength": {
 "strong": {
-"n": 1218,
-"wins": 977,
-"hitRate": 0.8021,
-"nRoi": 745,
-"roi": 0.3025,
-"roiLb": 0.2484,
-"nClv": 745,
-"clv": 13.52,
-"clvLb": 11.5227
+"n": 1219,
+"wins": 978,
+"hitRate": 0.8023,
+"nRoi": 746,
+"roi": 0.3022,
+"roiLb": 0.2482,
+"nClv": 746,
+"clv": 13.5,
+"clvLb": 11.5058
 },
 "weak": {
-"n": 767,
-"wins": 383,
-"hitRate": 0.4993,
-"nRoi": 436,
-"roi": -0.1887,
-"roiLb": -0.2665,
-"nClv": 436,
-"clv": -6.56,
-"clvLb": -9.1016
+"n": 768,
+"wins": 384,
+"hitRate": 0.5,
+"nRoi": 437,
+"roi": -0.1874,
+"roiLb": -0.2651,
+"nClv": 437,
+"clv": -6.55,
+"clvLb": -9.0809
 }
 },
 "divergence": {
-"n": 560,
-"betfairWins": 175,
-"betfairRate": 0.3125,
-"polyN": 516,
+"n": 561,
+"betfairWins": 176,
+"betfairRate": 0.3137,
+"polyN": 517,
 "polyWins": 139,
-"polyRate": 0.2694
+"polyRate": 0.2689
 },
 "recent": [
+{
+"matchId": "36093869",
+"home": "Atlante",
+"away": "Monterrey",
+"league": "Mexican Liga MX",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Atlante",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+4,
+2
+],
+"kickoff": "2026-09-26T01:00:00Z",
+"settledAt": "2026-09-26T04:13:27.709537+00:00"
+},
+{
+"matchId": "36108633",
+"home": "Honduras",
+"away": "Suriname",
+"league": "CONCACAF Nations League A",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Suriname",
+"polySide": "home",
+"winner": "away",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+2,
+3
+],
+"kickoff": "2026-09-26T01:00:00Z",
+"settledAt": "2026-09-26T04:13:27.709537+00:00"
+},
 {
 "matchId": "36108616",
 "home": "Jamaica",
@@ -1431,56 +1469,18 @@
 ],
 "kickoff": "2026-09-24T11:00:00Z",
 "settledAt": "2026-09-24T14:09:26.458551+00:00"
-},
-{
-"matchId": "36088784",
-"home": "Japan",
-"away": "Uruguay",
-"league": "Friendlies International",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Japan",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-09-24T10:05:00Z",
-"settledAt": "2026-09-24T13:09:11.929598+00:00"
-},
-{
-"matchId": "36103877",
-"home": "Vancouver FC",
-"away": "Inter Toronto FC",
-"league": "Canadian Premier League",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Vancouver FC",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-3,
-3
-],
-"kickoff": "2026-09-24T02:00:00Z",
-"settledAt": "2026-09-24T05:08:17.701936+00:00"
 }
 ],
 "global": {
-"n": 1985,
-"wins": 1360,
-"hitRate": 0.6851,
-"nRoi": 1181,
-"roi": 0.1212,
-"roiLb": 0.0752,
-"nClv": 1181,
-"clv": 6.11,
-"clvLb": 4.469
+"n": 1987,
+"wins": 1362,
+"hitRate": 0.6855,
+"nRoi": 1183,
+"roi": 0.1213,
+"roiLb": 0.0754,
+"nClv": 1183,
+"clv": 6.09,
+"clvLb": 4.4606
 },
-"pending": 15
+"pending": 13
 }
