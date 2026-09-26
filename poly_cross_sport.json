@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-26T21:41:32.007487+00:00",
+ "generatedAt": "2026-09-26T22:11:25.838321+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -8,26 +8,55 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 549,
- "pinnKeys": 117,
- "matched": 43,
+ "polyRowsSeen": 541,
+ "pinnKeys": 113,
+ "matched": 41,
  "footballRows": 21,
- "crossRows": 528,
+ "crossRows": 520,
  "footballSkippedStale": 74,
  "seenBySport": {
   "americanfootball_nfl": 144,
   "baseball_mlb": 38,
-  "icehockey_nhl": 324,
-  "boxing_boxing": 22,
+  "icehockey_nhl": 320,
+  "boxing_boxing": 18,
   "soccer_mls": 21
  },
  "matchedBySport": {
-  "baseball_mlb": 22,
+  "baseball_mlb": 20,
   "soccer_mls": 21
  },
  "trackRecord": {
   "tracked": 283,
   "converged": 83
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|losangelesdodgers-sanfranciscogiants|losangelesdodgers",
+   "sport": "baseball_mlb",
+   "event": "Los Angeles Dodgers vs San Francisco Giants",
+   "market": "Moneyline",
+   "outcome": "Los Angeles Dodgers",
+   "polyPP": 68.0,
+   "pinnPP": 90.7,
+   "gapPP": -22.7,
+   "vol": 318230,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -11.06,
+   "firstSeen": "2026-09-20T02:56:56.944122+00:00"
+  },
+  {
+   "id": "baseball_mlb|losangelesdodgers-sanfranciscogiants|sanfranciscogiants",
+   "sport": "baseball_mlb",
+   "event": "Los Angeles Dodgers vs San Francisco Giants",
+   "market": "Moneyline",
+   "outcome": "San Francisco Giants",
+   "polyPP": 32.0,
+   "pinnPP": 9.3,
+   "gapPP": 22.7,
+   "vol": 318230,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -11.06,
+   "firstSeen": "2026-09-20T02:56:56.944122+00:00"
+  }
+ ]
 }
