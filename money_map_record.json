@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-26T19:15:08.483094+00:00",
+"generatedAt": "2026-09-26T19:45:23.285262+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1389,
-"wins": 1177,
-"hitRate": 0.8474,
-"polyN": 1325,
-"polyWins": 1035,
-"polyHitRate": 0.7811,
-"pinnN": 210,
-"pinnHitRate": 0.7667,
-"nRoi": 825,
-"roi": 0.394,
-"roiLb": 0.3496,
-"nClv": 825,
-"clv": 18.64,
-"clvLb": 17.1373
+"n": 1391,
+"wins": 1179,
+"hitRate": 0.8476,
+"polyN": 1326,
+"polyWins": 1036,
+"polyHitRate": 0.7813,
+"pinnN": 211,
+"pinnHitRate": 0.7678,
+"nRoi": 827,
+"roi": 0.3953,
+"roiLb": 0.3509,
+"nClv": 827,
+"clv": 18.67,
+"clvLb": 17.166
 },
 "uneinig": {
-"n": 556,
+"n": 557,
 "wins": 175,
-"hitRate": 0.3147,
-"polyN": 518,
+"hitRate": 0.3142,
+"polyN": 519,
 "polyWins": 138,
-"polyHitRate": 0.2664,
-"pinnN": 338,
-"pinnHitRate": 0.6272,
-"nRoi": 362,
-"roi": -0.4619,
-"roiLb": -0.5528,
-"nClv": 362,
-"clv": -20.35,
-"clvLb": -23.2323
+"polyHitRate": 0.2659,
+"pinnN": 339,
+"pinnHitRate": 0.6283,
+"nRoi": 363,
+"roi": -0.4634,
+"roiLb": -0.554,
+"nClv": 363,
+"clv": -20.39,
+"clvLb": -23.2597
 },
 "teil": {
 "n": 33,
@@ -76,6 +76,11 @@
 "wins": 38,
 "hitRate": 0.7308
 },
+"Spanish Segunda Division": {
+"n": 52,
+"wins": 38,
+"hitRate": 0.7308
+},
 "English Premier League": {
 "n": 50,
 "wins": 27,
@@ -85,11 +90,6 @@
 "n": 50,
 "wins": 35,
 "hitRate": 0.7
-},
-"Spanish Segunda Division": {
-"n": 50,
-"wins": 37,
-"hitRate": 0.74
 },
 "Mexican Liga MX": {
 "n": 48,
@@ -291,6 +291,11 @@
 "wins": 7,
 "hitRate": 0.4375
 },
+"English Sky Bet League 2": {
+"n": 15,
+"wins": 8,
+"hitRate": 0.5333
+},
 "Italian Coppa Italia": {
 "n": 15,
 "wins": 10,
@@ -305,11 +310,6 @@
 "n": 14,
 "wins": 11,
 "hitRate": 0.7857
-},
-"English Sky Bet League 2": {
-"n": 14,
-"wins": 7,
-"hitRate": 0.5
 },
 "Bulgarian A League": {
 "n": 13,
@@ -679,37 +679,94 @@
 },
 "byStrength": {
 "strong": {
-"n": 1227,
-"wins": 983,
-"hitRate": 0.8011,
-"nRoi": 767,
+"n": 1229,
+"wins": 984,
+"hitRate": 0.8007,
+"nRoi": 769,
 "roi": 0.2945,
-"roiLb": 0.2415,
-"nClv": 767,
+"roiLb": 0.2414,
+"nClv": 769,
 "clv": 13.16,
-"clvLb": 11.1917
+"clvLb": 11.193
 },
 "weak": {
-"n": 751,
-"wins": 374,
-"hitRate": 0.498,
-"nRoi": 446,
-"roi": -0.1977,
-"roiLb": -0.2743,
-"nClv": 446,
-"clv": -6.61,
-"clvLb": -9.1126
+"n": 752,
+"wins": 375,
+"hitRate": 0.4987,
+"nRoi": 447,
+"roi": -0.1966,
+"roiLb": -0.273,
+"nClv": 447,
+"clv": -6.6,
+"clvLb": -9.0923
 }
 },
 "divergence": {
-"n": 556,
+"n": 557,
 "betfairWins": 175,
-"betfairRate": 0.3147,
-"polyN": 518,
+"betfairRate": 0.3142,
+"polyN": 519,
 "polyWins": 138,
-"polyRate": 0.2664
+"polyRate": 0.2659
 },
 "recent": [
+{
+"matchId": "36093128",
+"home": "Tenerife",
+"away": "Cadiz",
+"league": "Spanish Segunda Division",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Tenerife",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-09-26T16:30:00Z",
+"settledAt": "2026-09-26T19:39:37.899356+00:00"
+},
+{
+"matchId": "36091792",
+"home": "Oldham",
+"away": "Salford City",
+"league": "English Sky Bet League 2",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Salford City",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+4
+],
+"kickoff": "2026-09-26T16:30:00Z",
+"settledAt": "2026-09-26T19:39:37.899356+00:00"
+},
+{
+"matchId": "36097387",
+"home": "Celta Vigo B",
+"away": "Sabadell",
+"league": "Spanish Segunda Division",
+"verdict": "konsens",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": null,
+"winner": "draw",
+"moneyWin": true,
+"polyWin": null,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-09-26T16:30:00Z",
+"settledAt": "2026-09-26T19:39:37.899356+00:00"
+},
 {
 "matchId": "35925542",
 "home": "San Marino",
@@ -1412,75 +1469,18 @@
 ],
 "kickoff": "2026-09-25T23:30:00Z",
 "settledAt": "2026-09-26T01:28:19.446158+00:00"
-},
-{
-"matchId": "36089236",
-"home": "Novorizontino",
-"away": "Sao Bernardo",
-"league": "Brazilian Serie B",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Novorizontino",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-09-25T22:30:00Z",
-"settledAt": "2026-09-26T00:28:02.092895+00:00"
-},
-{
-"matchId": "36088831",
-"home": "FC Dordrecht",
-"away": "Almere City",
-"league": "Dutch Eerste Divisie",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "FC Dordrecht",
-"polySide": "away",
-"winner": "home",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-3,
-2
-],
-"kickoff": "2026-09-25T19:00:00Z",
-"settledAt": "2026-09-25T22:12:55.540757+00:00"
-},
-{
-"matchId": "36108647",
-"home": "Bermuda",
-"away": "Guadeloupe",
-"league": "CONCACAF Nations League B",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Guadeloupe",
-"polySide": "home",
-"winner": "away",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-09-25T19:00:00Z",
-"settledAt": "2026-09-25T22:12:55.540757+00:00"
 }
 ],
 "global": {
-"n": 1978,
-"wins": 1357,
+"n": 1981,
+"wins": 1359,
 "hitRate": 0.686,
-"nRoi": 1213,
-"roi": 0.1135,
-"roiLb": 0.0683,
-"nClv": 1213,
-"clv": 5.89,
-"clvLb": 4.279
+"nRoi": 1216,
+"roi": 0.114,
+"roiLb": 0.0688,
+"nClv": 1216,
+"clv": 5.9,
+"clvLb": 4.2883
 },
-"pending": 22
+"pending": 19
 }
