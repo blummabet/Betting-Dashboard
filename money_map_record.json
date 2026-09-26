@@ -1,22 +1,6 @@
 {
-"generatedAt": "2026-09-26T14:44:37.676462+00:00",
+"generatedAt": "2026-09-26T14:59:27.864795+00:00",
 "byVerdict": {
-"uneinig": {
-"n": 551,
-"wins": 175,
-"hitRate": 0.3176,
-"polyN": 513,
-"polyWins": 138,
-"polyHitRate": 0.269,
-"pinnN": 335,
-"pinnHitRate": 0.6209,
-"nRoi": 354,
-"roi": -0.4498,
-"roiLb": -0.5424,
-"nClv": 354,
-"clv": -20.18,
-"clvLb": -23.1
-},
 "konsens": {
 "n": 1384,
 "wins": 1172,
@@ -32,6 +16,22 @@
 "nClv": 814,
 "clv": 18.71,
 "clvLb": 17.1902
+},
+"uneinig": {
+"n": 551,
+"wins": 175,
+"hitRate": 0.3176,
+"polyN": 513,
+"polyWins": 138,
+"polyHitRate": 0.269,
+"pinnN": 335,
+"pinnHitRate": 0.6209,
+"nRoi": 355,
+"roi": -0.4513,
+"roiLb": -0.5437,
+"nClv": 355,
+"clv": -20.21,
+"clvLb": -23.1202
 },
 "teil": {
 "n": 33,
@@ -87,9 +87,9 @@
 "hitRate": 0.7
 },
 "Mexican Liga MX": {
-"n": 50,
+"n": 49,
 "wins": 31,
-"hitRate": 0.62
+"hitRate": 0.6327
 },
 "Spanish Segunda Division": {
 "n": 48,
@@ -261,6 +261,11 @@
 "wins": 14,
 "hitRate": 0.8235
 },
+"UEFA Nations League": {
+"n": 17,
+"wins": 12,
+"hitRate": 0.7059
+},
 "Austrian Bundesliga": {
 "n": 16,
 "wins": 11,
@@ -285,11 +290,6 @@
 "n": 16,
 "wins": 7,
 "hitRate": 0.4375
-},
-"UEFA Nations League": {
-"n": 16,
-"wins": 12,
-"hitRate": 0.75
 },
 "Italian Coppa Italia": {
 "n": 15,
@@ -693,12 +693,12 @@
 "n": 747,
 "wins": 373,
 "hitRate": 0.4993,
-"nRoi": 438,
-"roi": -0.1859,
-"roiLb": -0.2635,
-"nClv": 438,
-"clv": -6.53,
-"clvLb": -9.0603
+"nRoi": 439,
+"roi": -0.1878,
+"roiLb": -0.2652,
+"nClv": 439,
+"clv": -6.59,
+"clvLb": -9.1099
 }
 },
 "divergence": {
@@ -710,6 +710,25 @@
 "polyRate": 0.269
 },
 "recent": [
+{
+"matchId": "35930785",
+"home": "Slovenia",
+"away": "Scotland",
+"league": "UEFA Nations League",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Slovenia",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-09-26T13:00:00Z",
+"settledAt": "2026-09-26T14:59:27.664315+00:00"
+},
 {
 "matchId": "36112796",
 "home": "Nantong Zhiyun F.C",
@@ -1450,37 +1469,18 @@
 ],
 "kickoff": "2026-09-25T00:00:00Z",
 "settledAt": "2026-09-25T01:55:27.690117+00:00"
-},
-{
-"matchId": "35925550",
-"home": "Norway",
-"away": "Denmark",
-"league": "UEFA Nations League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Norway",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-2
-],
-"kickoff": "2026-09-24T18:45:00Z",
-"settledAt": "2026-09-24T21:55:12.480025+00:00"
 }
 ],
 "global": {
 "n": 1968,
 "wins": 1352,
 "hitRate": 0.687,
-"nRoi": 1194,
-"roi": 0.1201,
-"roiLb": 0.0745,
-"nClv": 1194,
-"clv": 6.04,
-"clvLb": 4.4203
+"nRoi": 1195,
+"roi": 0.1191,
+"roiLb": 0.0735,
+"nClv": 1195,
+"clv": 6.01,
+"clvLb": 4.3906
 },
 "pending": 32
 }
