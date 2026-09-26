@@ -76,12 +76,10 @@
       "id": "odds_zugang_lebt",
       "label": "Odds-Zugang lebt",
       "severity": "error",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "the-odds-api antwortet mit The read operation timed out — der Schluessel ist ungueltig/abgelaufen oder das Kontingent ist leer. Bis das steht, laufen alle Abrufe ins Leere."
-      ],
-      "note": "Kontingent: 78032 verbraucht, 4921968 uebrig · letzter Fehler: The read operation timed out"
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Kontingent: 78193 verbraucht, 4921807 uebrig"
     },
     {
       "id": "anker_namensabgleich",
@@ -90,12 +88,12 @@
       "ok": false,
       "nFail": 31,
       "failures": [
-        "Inter Limeira v Paysandu (Brazilian Serie C): name — bester Kandidat „IF Gnistan v FC Inter Turku“",
-        "Boca Juniors de Cali v Boyaca Patriotas (Colombian Primera B): name — bester Kandidat „Boca Juniors v Union Santa Fe“",
-        "Club Oriental de La Paz v Centro Atletico Fenix (Uruguayan Segunda Division): zeit — bester Kandidat „Gimnasia La Plata v Atlético Tucuman“ · 358.0h Anpfiff-Abstand",
-        "HFX Wanderers v Atletico Ottawa (Canadian Premier League): name — bester Kandidat „Atlético Tucuman v Barracas Central“",
-        "Canada v Chile (Friendlies International): name — bester Kandidat „Universidad de Chile v Ñublense“",
+        "CA Colegiales v Chacarita (Argentinian Primera Nacional): name — bester Kandidat „Real Betis v CA Osasuna“",
         "Antigua And Barbuda v Anguilla (CONCACAF Nations League C): name — bester Kandidat „Manchester City v Brighton and Hove Albion“",
+        "Univ Catolica (Chile) v Union La Calera (Chilean Cup): name — bester Kandidat „Deportes Concepción v Union La Calera“",
+        "Club Oriental de La Paz v Centro Atletico Fenix (Uruguayan Segunda Division): zeit — bester Kandidat „Gimnasia La Plata v Atlético Tucuman“ · 358.0h Anpfiff-Abstand",
+        "Boca Juniors de Cali v Boyaca Patriotas (Colombian Primera B): name — bester Kandidat „Boca Juniors v Union Santa Fe“",
+        "HFX Wanderers v Atletico Ottawa (Canadian Premier League): name — bester Kandidat „Goiás v Atletico Goianiense“",
         "Sint Maarten v Belize (CONCACAF Nations League B): name — bester Kandidat „KV Mechelen v Sint Truiden“",
         "Vanuatu v New Caledonia (Friendlies International): name — bester Kandidat „Atlanta United FC v New York City FC“",
         "Fiji v Papua New Guinea (Friendlies International): name — bester Kandidat „Atlanta United FC v New York City FC“",
@@ -104,19 +102,19 @@
         "Spain U20 (W) v Korea DPR U20 (W) (FIFA Ladies U20 World Cup): name — bester Kandidat „Spain v Croatia“",
         "CD Platense (Res) v Fuerte San Francisco (Res) (Other Competitions Soccer): name — bester Kandidat „Velez Sarsfield BA v Platense“",
         "San Marino v Albania (UEFA Nations League): name — bester Kandidat „Defensa y Justicia v San Lorenzo“",
-        "Univ Catolica (Chile) v Union La Calera (Chilean Cup): name — bester Kandidat „Deportes Concepción v Union La Calera“",
         "Cucuta Deportivo v Llaneros FC (Colombian Primera A): name — bester Kandidat „Deportivo Riestra v Central Córdoba“",
-        "CA Colegiales v Chacarita (Argentinian Primera Nacional): name — bester Kandidat „Real Betis v CA Osasuna“",
         "Halcones Negros v CD San Pedro (Mexican Liga Premier): name — bester Kandidat „Defensa y Justicia v San Lorenzo“",
+        "Torque v Deportivo Maldonado (Uruguayan Primera Division): name — bester Kandidat „Deportivo Riestra v Central Córdoba“",
         "FC Juarez (W) v Club Tijuana (W) (Mexican Liga MX Femenil): name — bester Kandidat „León v FC Juárez“",
         "CD Luis Angel Firpo v CD Aguila (Salvadoran Primera Division): name — bester Kandidat „Pumas v Atlético San Luis“",
-        "Torque v Deportivo Maldonado (Uruguayan Primera Division): name — bester Kandidat „Deportivo Riestra v Central Córdoba“",
         "Shaanxi Union FC v Dalian Kun City FC (Chinese League 1): zeit — bester Kandidat „Philadelphia Union v Orlando City SC“ · 11.5h Anpfiff-Abstand",
         "Tauro FC v San Francisco FC (Panamanian Premier League): name — bester Kandidat „Defensa y Justicia v San Lorenzo“",
         "Man Utd (W) v West Ham United (W) (English WSL): zeit — bester Kandidat „Leeds United v Manchester United“ · 505.0h Anpfiff-Abstand",
-        "Aberdeen (W) v Hibernian (W) (Scottish Ladies Premier League): name — bester Kandidat „Dundee United v Hibernian“"
+        "Aberdeen (W) v Hibernian (W) (Scottish Ladies Premier League): name — bester Kandidat „Dundee United v Hibernian“",
+        "Rangers LFC (W) v Celtic (W) (Scottish Ladies Premier League): name — bester Kandidat „Motherwell v Celtic“",
+        "Portland Thorns (W) v Houston Dash (W) (US National Women Soccer League): name — bester Kandidat „Houston Dynamo v Sporting Kansas City“"
       ],
-      "note": "ohne Anker: kein_kandidat 61 · kein_pinnacle 12 · name 43 · zeit 5. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 61 · kein_pinnacle 12 · name 42 · zeit 5. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "totals_vollstaendig",
@@ -125,7 +123,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 1 gewollt, 1 abgerufen, 0 mit Daten"
+      "note": "Totals: 2 gewollt, 2 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -191,6 +189,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-09-26T23:00:54.933570+00:00"
+  "nFail": 1,
+  "generatedAt": "2026-09-26T23:15:40.876807+00:00"
 }

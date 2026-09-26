@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-09-26T23:00:34.524506+00:00",
-"count": 16,
-"covered": 8,
+"generatedAt": "2026-09-26T23:15:21.186600+00:00",
+"count": 18,
+"covered": 10,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -48,25 +48,27 @@
 "soccer_usa_mls"
 ],
 "leaguesMitAnker": [
+"Brazilian Serie B",
+"Mexican Liga MX",
 "UEFA Nations League"
 ],
 "leaguesMitTotals": [],
 "oddsKeysFetched": 43,
-"oddsKeysMitDaten": 42,
-"oddsEvents": 527,
+"oddsKeysMitDaten": 43,
+"oddsEvents": 543,
 "oddsTotals": {
-"versucht": 1,
+"versucht": 2,
 "mitDaten": 0,
 "events": 0,
-"gewollt": 1,
+"gewollt": 2,
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 78032,
-"remaining": 4921968,
-"letzterFehler": "The read operation timed out"
+"used": 78193,
+"remaining": 4921807,
+"letzterFehler": null
 },
-"ankerQuote": 0.952,
+"ankerQuote": 1.0,
 "games": [
 {
 "matchId": "35930730",
@@ -80,8 +82,8 @@
 "moneyName": "Netherlands",
 "moneySharePct": 89,
 "moneyOdd": 1.43,
-"moneyDir": "in",
-"totVol": 64334,
+"moneyDir": "flat",
+"totVol": 64407,
 "pinnOdd": 1.4,
 "softOdd": 1.37,
 "softN": 25,
@@ -102,9 +104,9 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.1274,
-"draw": 0.1941,
-"away": 0.6785,
+"home": 0.1275,
+"draw": 0.194,
+"away": 0.6784,
 "fav": "away",
 "n": 25
 },
@@ -131,9 +133,9 @@
 "moneySide": "away",
 "moneyName": "Republic of Ireland",
 "moneySharePct": 44,
-"moneyOdd": 2.76,
-"moneyDir": "flat",
-"totVol": 55726,
+"moneyOdd": 2.78,
+"moneyDir": "out",
+"totVol": 56169,
 "pinnOdd": null,
 "softOdd": 2.6,
 "softN": 20,
@@ -180,8 +182,8 @@
 "moneyName": "Germany",
 "moneySharePct": 80,
 "moneyOdd": 1.42,
-"moneyDir": "out",
-"totVol": 45772,
+"moneyDir": "flat",
+"totVol": 46166,
 "pinnOdd": 1.41,
 "softOdd": 1.38,
 "softN": 25,
@@ -211,8 +213,8 @@
 "pinnMovePP": -0.5,
 "pinnMove": {
 "movePP": -0.5,
-"stepPP": -0.2,
-"n": 15,
+"stepPP": -0.0,
+"n": 16,
 "move": false,
 "laeuft": false
 },
@@ -281,7 +283,7 @@
 "moneySharePct": 90,
 "moneyOdd": 1.5,
 "moneyDir": "flat",
-"totVol": 41660,
+"totVol": 41683,
 "pinnOdd": 1.45,
 "softOdd": 1.43,
 "softN": 25,
@@ -321,6 +323,95 @@
 "pinnTotals": null
 },
 {
+"matchId": "36097766",
+"home": "Goias",
+"away": "Atletico GO",
+"league": "Brazilian Serie B",
+"country": "BR",
+"kickoff": "2026-09-26T21:30:00Z",
+"live": true,
+"moneySide": "away",
+"moneyName": "Atletico Go",
+"moneySharePct": 70,
+"moneyOdd": 1.21,
+"moneyDir": "in",
+"totVol": 35388,
+"pinnOdd": 1.23,
+"softOdd": 1.14,
+"softN": 28,
+"poly": null,
+"pinn": {
+"home": 0.0374,
+"draw": 0.1951,
+"away": 0.7676,
+"fav": "away"
+},
+"soft": {
+"home": 0.0241,
+"draw": 0.1723,
+"away": 0.8037,
+"fav": "away",
+"n": 28
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "35926484",
+"home": "Norway",
+"away": "Portugal",
+"league": "UEFA Nations League",
+"country": "International",
+"kickoff": "2026-09-27T18:45:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Norway",
+"moneySharePct": 55,
+"moneyOdd": 2.62,
+"moneyDir": "out",
+"totVol": 23446,
+"pinnOdd": 2.55,
+"softOdd": 2.43,
+"softN": 25,
+"poly": {
+"vol": 34694,
+"odd": 2.6,
+"sharePct": 38,
+"shareSrc": "preis",
+"key": "unl-nor-prt-2026-09-27",
+"sideKey": "Norway",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.38,
+"draw": 0.2612,
+"away": 0.3589,
+"fav": "home"
+},
+"soft": {
+"home": 0.3812,
+"draw": 0.2565,
+"away": 0.3624,
+"fav": "home",
+"n": 25
+},
+"pinnMovePP": -0.1,
+"pinnMove": {
+"movePP": -0.1,
+"stepPP": -0.0,
+"n": 6,
+"move": false,
+"laeuft": false
+},
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
 "matchId": "36023033",
 "home": "Northern Ireland",
 "away": "Hungary",
@@ -332,7 +423,7 @@
 "moneyName": "Northern Ireland",
 "moneySharePct": 81,
 "moneyOdd": 2.78,
-"moneyDir": "in",
+"moneyDir": "flat",
 "totVol": 23253,
 "pinnOdd": null,
 "softOdd": 2.65,
@@ -367,58 +458,6 @@
 "key": "soccer_uefa_nations_league",
 "nSoft": 25
 }
-},
-{
-"matchId": "35926484",
-"home": "Norway",
-"away": "Portugal",
-"league": "UEFA Nations League",
-"country": "International",
-"kickoff": "2026-09-27T18:45:00Z",
-"live": false,
-"moneySide": "home",
-"moneyName": "Norway",
-"moneySharePct": 55,
-"moneyOdd": 2.6,
-"moneyDir": "flat",
-"totVol": 23252,
-"pinnOdd": 2.55,
-"softOdd": 2.43,
-"softN": 25,
-"poly": {
-"vol": 34694,
-"odd": 2.6,
-"sharePct": 38,
-"shareSrc": "preis",
-"key": "unl-nor-prt-2026-09-27",
-"sideKey": "Norway",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.38,
-"draw": 0.2612,
-"away": 0.3589,
-"fav": "home"
-},
-"soft": {
-"home": 0.3812,
-"draw": 0.2565,
-"away": 0.3624,
-"fav": "home",
-"n": 25
-},
-"pinnMovePP": -0.1,
-"pinnMove": {
-"movePP": -0.1,
-"stepPP": -0.0,
-"n": 5,
-"move": false,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
 },
 {
 "matchId": "36091389",
@@ -464,7 +503,7 @@
 "pinnMove": {
 "movePP": -0.7,
 "stepPP": -0.0,
-"n": 9,
+"n": 10,
 "move": false,
 "laeuft": false
 },
@@ -473,19 +512,120 @@
 "pinnTotals": null
 },
 {
+"matchId": "36098091",
+"home": "Cruz Azul",
+"away": "Toluca",
+"league": "Mexican Liga MX",
+"country": "MX",
+"kickoff": "2026-09-26T22:50:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Cruz Azul",
+"moneySharePct": 67,
+"moneyOdd": 1.68,
+"moneyDir": "out",
+"totVol": 13277,
+"pinnOdd": 1.65,
+"softOdd": 1.59,
+"softN": 29,
+"poly": {
+"vol": 22630,
+"odd": 2.74,
+"sharePct": 13,
+"shareSrc": "geld",
+"key": "mex-caz-tol-2026-09-26",
+"sideKey": "CF Cruz Azul",
+"whales": [
+{
+"wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+"usd": 992
+},
+{
+"wallet": "0x5f03a74756aa8a19295dc5be16ba76fede8d8a0d",
+"usd": 7
+},
+{
+"wallet": "0x3e6b98d9dac15f285a18a02644a8c900aab58a98",
+"usd": 6
+},
+{
+"wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
+"usd": 3
+},
+{
+"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+"usd": 2
+},
+{
+"wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
+"usd": 2
+}
+],
+"whaleUsd": 1015
+},
+"pinn": {
+"home": 0.5732,
+"draw": 0.233,
+"away": 0.1938,
+"fav": "home"
+},
+"soft": {
+"home": 0.5736,
+"draw": 0.2376,
+"away": 0.1888,
+"fav": "home",
+"n": 29
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36116256",
+"home": "The Strongest",
+"away": "Guabira",
+"league": "Bolivian Cup",
+"country": "BO",
+"kickoff": "2026-09-26T21:30:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "The Strongest",
+"moneySharePct": 92,
+"moneyOdd": 1.1,
+"moneyDir": "in",
+"totVol": 44866,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": null,
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "The Strongest v Guabira",
+"grund": "kein_kandidat"
+}
+},
+{
 "matchId": "36103489",
 "home": "Vancouver FC",
 "away": "Forge",
 "league": "Canadian Premier League",
 "country": "CA",
 "kickoff": "2026-09-26T23:00:00Z",
-"live": false,
+"live": true,
 "moneySide": "away",
 "moneyName": "Forge",
 "moneySharePct": 97,
 "moneyOdd": 2.36,
-"moneyDir": "out",
-"totVol": 44373,
+"moneyDir": "flat",
+"totVol": 44597,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -506,36 +646,6 @@
 }
 },
 {
-"matchId": "36116256",
-"home": "The Strongest",
-"away": "Guabira",
-"league": "Bolivian Cup",
-"country": "BO",
-"kickoff": "2026-09-26T21:30:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "The Strongest",
-"moneySharePct": 91,
-"moneyOdd": 1.15,
-"moneyDir": "in",
-"totVol": 41117,
-"pinnOdd": null,
-"softOdd": null,
-"softN": null,
-"poly": null,
-"pinn": null,
-"soft": null,
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "no_anchor",
-"agree": null,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "The Strongest v Guabira",
-"grund": "kein_kandidat"
-}
-},
-{
 "matchId": "36107935",
 "home": "Penarol",
 "away": "Boston River",
@@ -545,10 +655,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Penarol",
-"moneySharePct": 85,
-"moneyOdd": 3.15,
+"moneySharePct": 81,
+"moneyOdd": 5.4,
 "moneyDir": "out",
-"totVol": 37495,
+"totVol": 40421,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -612,10 +722,10 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Mexico",
-"moneySharePct": 80,
-"moneyOdd": 2.84,
-"moneyDir": "flat",
-"totVol": 32458,
+"moneySharePct": 76,
+"moneyOdd": 2.86,
+"moneyDir": "out",
+"totVol": 34302,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -633,39 +743,6 @@
 }
 },
 {
-"matchId": "36097766",
-"home": "Goias",
-"away": "Atletico GO",
-"league": "Brazilian Serie B",
-"country": "BR",
-"kickoff": "2026-09-26T21:30:00Z",
-"live": true,
-"moneySide": "away",
-"moneyName": "Atletico Go",
-"moneySharePct": 67,
-"moneyOdd": 1.42,
-"moneyDir": "in",
-"totVol": 29547,
-"pinnOdd": null,
-"softOdd": null,
-"softN": null,
-"poly": null,
-"pinn": null,
-"soft": null,
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "no_anchor",
-"agree": null,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Goias v Atletico GO",
-"kandidat": "Atlético Tucuman v Barracas Central",
-"key": "soccer_argentina_primera_division",
-"score": 0.5,
-"grund": "name"
-}
-},
-{
 "matchId": "36097982",
 "home": "Deportivo Madryn",
 "away": "CA Central Norte",
@@ -675,10 +752,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Deportivo Madryn",
-"moneySharePct": 79,
-"moneyOdd": 2.08,
+"moneySharePct": 78,
+"moneyOdd": 2.16,
 "moneyDir": "out",
-"totVol": 17732,
+"totVol": 20570,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -743,10 +820,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Washington Spirit (W)",
-"moneySharePct": 82,
-"moneyOdd": 2.72,
+"moneySharePct": 80,
+"moneyOdd": 3.35,
 "moneyDir": "out",
-"totVol": 4968,
+"totVol": 5817,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -767,6 +844,39 @@
 }
 },
 {
+"matchId": "36110124",
+"home": "Inter Limeira",
+"away": "Paysandu",
+"league": "Brazilian Serie C",
+"country": "BR",
+"kickoff": "2026-09-26T22:30:00Z",
+"live": true,
+"moneySide": "draw",
+"moneyName": "The Draw",
+"moneySharePct": 46,
+"moneyOdd": 4.0,
+"moneyDir": "out",
+"totVol": 4159,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": null,
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Inter Limeira v Paysandu",
+"kandidat": "IF Gnistan v FC Inter Turku",
+"key": "soccer_finland_veikkausliiga",
+"score": 0.5,
+"grund": "name"
+}
+},
+{
 "matchId": "36116673",
 "home": "Internacional Santa Tecla",
 "away": "Atletico Balboa",
@@ -777,9 +887,9 @@
 "moneySide": "home",
 "moneyName": "Internacional Santa Tecla",
 "moneySharePct": 95,
-"moneyOdd": 1.59,
-"moneyDir": "flat",
-"totVol": 949,
+"moneyOdd": 1.57,
+"moneyDir": "in",
+"totVol": 979,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -793,8 +903,8 @@
 "pinnTotals": null,
 "ankerGrund": {
 "spiel": "Internacional Santa Tecla v Atletico Balboa",
-"kandidat": "Atlético Tucuman v Barracas Central",
-"key": "soccer_argentina_primera_division",
+"kandidat": "Goiás v Atletico Goianiense",
+"key": "soccer_brazil_serie_b",
 "score": 0.5,
 "grund": "name"
 }
@@ -802,32 +912,41 @@
 ],
 "ankerN": 21,
 "ankerNOffen": 149,
-"ankerMit": 20,
+"ankerMit": 21,
 "ankerDiagnose": {
 "nach": {
-"name": 43,
+"name": 42,
 "kein_kandidat": 61,
 "zeit": 5,
 "kein_pinnacle": 12
 },
 "beispiele": [
 {
-"spiel": "Inter Limeira v Paysandu",
-"kandidat": "IF Gnistan v FC Inter Turku",
-"key": "soccer_finland_veikkausliiga",
+"spiel": "CA Colegiales v Chacarita",
+"kandidat": "Real Betis v CA Osasuna",
+"key": "soccer_spain_la_liga",
 "score": 0.5,
 "grund": "name",
-"matchId": "36110124",
-"liga": "Brazilian Serie C"
+"matchId": "36098013",
+"liga": "Argentinian Primera Nacional"
 },
 {
-"spiel": "Boca Juniors de Cali v Boyaca Patriotas",
-"kandidat": "Boca Juniors v Union Santa Fe",
-"key": "soccer_argentina_primera_division",
-"score": 0.67,
+"spiel": "Antigua And Barbuda v Anguilla",
+"kandidat": "Manchester City v Brighton and Hove Albion",
+"key": "soccer_england_efl_cup",
+"score": 0.25,
 "grund": "name",
-"matchId": "36116258",
-"liga": "Colombian Primera B"
+"matchId": "36116372",
+"liga": "CONCACAF Nations League C"
+},
+{
+"spiel": "Univ Catolica (Chile) v Union La Calera",
+"kandidat": "Deportes Concepción v Union La Calera",
+"key": "soccer_chile_campeonato",
+"score": 1.0,
+"grund": "name",
+"matchId": "36112308",
+"liga": "Chilean Cup"
 },
 {
 "spiel": "Club Oriental de La Paz v Centro Atletico Fenix",
@@ -840,31 +959,22 @@
 "liga": "Uruguayan Segunda Division"
 },
 {
-"spiel": "HFX Wanderers v Atletico Ottawa",
-"kandidat": "Atlético Tucuman v Barracas Central",
+"spiel": "Boca Juniors de Cali v Boyaca Patriotas",
+"kandidat": "Boca Juniors v Union Santa Fe",
 "key": "soccer_argentina_primera_division",
+"score": 0.67,
+"grund": "name",
+"matchId": "36116258",
+"liga": "Colombian Primera B"
+},
+{
+"spiel": "HFX Wanderers v Atletico Ottawa",
+"kandidat": "Goiás v Atletico Goianiense",
+"key": "soccer_brazil_serie_b",
 "score": 0.5,
 "grund": "name",
 "matchId": "36103493",
 "liga": "Canadian Premier League"
-},
-{
-"spiel": "Canada v Chile",
-"kandidat": "Universidad de Chile v Ñublense",
-"key": "soccer_chile_campeonato",
-"score": 0.5,
-"grund": "name",
-"matchId": "36090126",
-"liga": "Friendlies International"
-},
-{
-"spiel": "Antigua And Barbuda v Anguilla",
-"kandidat": "Manchester City v Brighton and Hove Albion",
-"key": "soccer_england_efl_cup",
-"score": 0.25,
-"grund": "name",
-"matchId": "36116372",
-"liga": "CONCACAF Nations League C"
 },
 {
 "spiel": "Sint Maarten v Belize",
@@ -907,7 +1017,7 @@
 "grund": "kein_pinnacle",
 "kandidat": "Lithuania v Azerbaijan",
 "key": "soccer_uefa_nations_league",
-"nSoft": 23,
+"nSoft": 24,
 "matchId": "35925907",
 "liga": "UEFA Nations League"
 },
@@ -921,15 +1031,6 @@
 "liga": "Friendlies International U19"
 },
 {
-"spiel": "Spain U20 (W) v Korea DPR U20 (W)",
-"kandidat": "Spain v Croatia",
-"key": "soccer_uefa_nations_league",
-"score": 0.33,
-"grund": "name",
-"matchId": "36116457",
-"liga": "FIFA Ladies U20 World Cup"
-},
-{
 "spiel": "Austria v Kosovo",
 "grund": "kein_pinnacle",
 "kandidat": "Austria v Kosovo",
@@ -937,6 +1038,15 @@
 "nSoft": 25,
 "matchId": "35925546",
 "liga": "UEFA Nations League"
+},
+{
+"spiel": "Spain U20 (W) v Korea DPR U20 (W)",
+"kandidat": "Spain v Croatia",
+"key": "soccer_uefa_nations_league",
+"score": 0.33,
+"grund": "name",
+"matchId": "36116457",
+"liga": "FIFA Ladies U20 World Cup"
 },
 {
 "spiel": "CD Platense (Res) v Fuerte San Francisco (Res)",
@@ -952,7 +1062,7 @@
 "grund": "kein_pinnacle",
 "kandidat": "Georgia v Ukraine",
 "key": "soccer_uefa_nations_league",
-"nSoft": 24,
+"nSoft": 25,
 "matchId": "35926217",
 "liga": "UEFA Nations League"
 },
@@ -975,6 +1085,15 @@
 "liga": "UEFA Nations League"
 },
 {
+"spiel": "Romania v Bosnia",
+"grund": "kein_pinnacle",
+"kandidat": "Romania v Bosnia & Herzegovina",
+"key": "soccer_uefa_nations_league",
+"nSoft": 25,
+"matchId": "36091447",
+"liga": "UEFA Nations League"
+},
+{
 "spiel": "Sweden v Poland",
 "grund": "kein_pinnacle",
 "kandidat": "Sweden v Poland",
@@ -984,12 +1103,12 @@
 "liga": "UEFA Nations League"
 },
 {
-"spiel": "Romania v Bosnia",
+"spiel": "Slovenia v North Macedonia",
 "grund": "kein_pinnacle",
-"kandidat": "Romania v Bosnia & Herzegovina",
+"kandidat": "Slovenia v North Macedonia",
 "key": "soccer_uefa_nations_league",
-"nSoft": 25,
-"matchId": "36091447",
+"nSoft": 20,
+"matchId": "36091449",
 "liga": "UEFA Nations League"
 },
 {
@@ -1011,24 +1130,6 @@
 "liga": "UEFA Nations League"
 },
 {
-"spiel": "Slovenia v North Macedonia",
-"grund": "kein_pinnacle",
-"kandidat": "Slovenia v North Macedonia",
-"key": "soccer_uefa_nations_league",
-"nSoft": 20,
-"matchId": "36091449",
-"liga": "UEFA Nations League"
-},
-{
-"spiel": "Univ Catolica (Chile) v Union La Calera",
-"kandidat": "Deportes Concepción v Union La Calera",
-"key": "soccer_chile_campeonato",
-"score": 1.0,
-"grund": "name",
-"matchId": "36112308",
-"liga": "Chilean Cup"
-},
-{
 "spiel": "Cucuta Deportivo v Llaneros FC",
 "kandidat": "Deportivo Riestra v Central Córdoba",
 "key": "soccer_argentina_primera_division",
@@ -1038,15 +1139,6 @@
 "liga": "Colombian Primera A"
 },
 {
-"spiel": "CA Colegiales v Chacarita",
-"kandidat": "Real Betis v CA Osasuna",
-"key": "soccer_spain_la_liga",
-"score": 0.5,
-"grund": "name",
-"matchId": "36098013",
-"liga": "Argentinian Primera Nacional"
-},
-{
 "spiel": "Halcones Negros v CD San Pedro",
 "kandidat": "Defensa y Justicia v San Lorenzo",
 "key": "soccer_argentina_primera_division",
@@ -1054,6 +1146,15 @@
 "grund": "name",
 "matchId": "36117703",
 "liga": "Mexican Liga Premier"
+},
+{
+"spiel": "Torque v Deportivo Maldonado",
+"kandidat": "Deportivo Riestra v Central Córdoba",
+"key": "soccer_argentina_primera_division",
+"score": 0.5,
+"grund": "name",
+"matchId": "36106852",
+"liga": "Uruguayan Primera Division"
 },
 {
 "spiel": "FC Juarez (W) v Club Tijuana (W)",
@@ -1072,15 +1173,6 @@
 "grund": "name",
 "matchId": "36116368",
 "liga": "Salvadoran Primera Division"
-},
-{
-"spiel": "Torque v Deportivo Maldonado",
-"kandidat": "Deportivo Riestra v Central Córdoba",
-"key": "soccer_argentina_primera_division",
-"score": 0.5,
-"grund": "name",
-"matchId": "36106852",
-"liga": "Uruguayan Primera Division"
 },
 {
 "spiel": "Shaanxi Union FC v Dalian Kun City FC",
@@ -1173,6 +1265,24 @@
 "grund": "name",
 "matchId": "36118707",
 "liga": "Japanese Football League"
+},
+{
+"spiel": "IFK Haninge v Smedby",
+"kandidat": "IFK Mariehamn v Ilves Tampere",
+"key": "soccer_finland_veikkausliiga",
+"score": 0.5,
+"grund": "name",
+"matchId": "36111422",
+"liga": "Swedish Division 2"
+},
+{
+"spiel": "Valencia (W) v UDG Tenerife Sur (W)",
+"kandidat": "Real Racing Club de Santander v Valencia",
+"key": "soccer_spain_la_liga",
+"score": 0.5,
+"grund": "name",
+"matchId": "36111831",
+"liga": "Spanish Liga F"
 }
 ]
 }
