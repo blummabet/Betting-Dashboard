@@ -360,6 +360,7 @@ KANAL = {"bf-public": "Public", "whale-public": "Public", "whale-trades": "Trade
          "liga-picks": "Public", "mls-picks": "Public",
          "killer": "Trades", "shortlist": "Trades", "stake-burst": "Trades",
          "stake-burst-live": "Trades", "stake-burst-vor": "Trades",
+         "stake-burst-fallend": "Trades", "stake-burst-spiel": "Trades",
          "stake-burst-still": "Trades"}
 
 
@@ -589,7 +590,7 @@ def _burst_beinahe_satz() -> str:
             % (str(b.get("von") or "—"), int(b["n"]), ", ".join(teile) or "keines"))
 
 
-def burst_plays(phase=None, gesendet=True) -> list:
+def burst_plays(phase=None, gesendet=True, art="auswahl", quoten_art=None) -> list:
     """Stake-Einsatz-Bursts als Plays (13.09.2026, Lucas: „haette ich auch gerne in den Stats").
 
     ⭐ `rendite` kommt aus der Abrechnung des Bursts (Summe pnl / Summe Einsatz), NICHT aus
@@ -618,6 +619,15 @@ def burst_plays(phase=None, gesendet=True) -> list:
         if gesendet is not None and raus != gesendet:
             continue
         if phase and r.get("phase") != phase:
+            continue
+        # 🔴 26.09.2026: hier wurde nicht nach `art` gefiltert — die Spiel-Bursts (seit 22.09.,
+        # 78 abgerechnet, ROI −5,7 %) liefen in denselben Block wie die Auswahl-Bursts (72,
+        # +4,5 %). stake_burst_push stempelt `art: "spiel"` ausdruecklich, „damit die zwei nie in
+        # einer Zahl zusammenfallen" — die Stats-Seite hat den Stempel nie gelesen.
+        if art and (r.get("art") or "auswahl") != art:
+            continue
+        # 26.09.2026: Auswahl-Bursts mit fallender Quote sind eine eigene Hypothese.
+        if quoten_art and (r.get("quotenArt") or "gleich") != quoten_art:
             continue
         t = _tag(r.get("sentAt"))
         if not t:
@@ -732,9 +742,18 @@ def baue(now=None) -> dict:
     # getrennt — die Vorab-Messung sah +29,0 % (live) gegen +8,8 % (vor), und zusammengerechnet
     # waere keine der beiden Fragen mehr zu beantworten.
     _add("stake-burst", "Stake-Bursts · Trades", "⚡", "Push-Kanäle", burst_plays(),
-         "Ein Burst ist EINE Auswahl, die innerhalb von Sekunden auf mehrere Tickets zur "
-         "gleichen Quote gespielt wurde. Gerechnet wird geldgewichtet über alle Tickets des "
-         "Bursts, nicht je Ticket. " + _burst_beinahe_satz(), "Trades")
+         "Ein Burst ist EINE Auswahl, die innerhalb von Minuten auf mehrere Tickets gespielt "
+         "wurde — zur gleichen oder (seit 26.09.) zu einer mit dem Geld fallenden Quote. Gerechnet "
+         "wird geldgewichtet über alle Tickets des Bursts, nicht je Ticket. Die Spiel-Bursts "
+         "stehen in einem eigenen Block. " + _burst_beinahe_satz(), "Trades")
+    _add("stake-burst-fallend", "Stake-Bursts · Quote fällt", "📉", "Push-Kanäle",
+         burst_plays(quoten_art="fallend"),
+         "Seit 26.09.: die Quote wurde mit jedem Ticket kürzer — das Geld hat den Preis bewegt. "
+         "Eigene Hypothese, eigene Zahl.", "Trades")
+    _add("stake-burst-spiel", "Stake-Bursts · je Spiel", "⚡", "Push-Kanäle",
+         burst_plays(art="spiel"),
+         "Mehrere Wetten auf DASSELBE Spiel, einseitig, über mehrere Märkte — eine andere Einheit "
+         "als der Auswahl-Burst und deshalb nie mit ihm in einer Zahl.", "Trades")
     _add("stake-burst-live", "Stake-Bursts · live", "⚡", "Push-Kanäle", burst_plays("live"),
          None, "Trades")
     _add("stake-burst-vor", "Stake-Bursts · vor Anpfiff", "⚡", "Push-Kanäle", burst_plays("vor"),

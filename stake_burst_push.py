@@ -211,6 +211,74 @@ def gesperrte_kats(quelle=None):
     return kats or list(GESPERRT_FALLBACK)
 
 
+# 📉 Quote faellt mit dem Geld — 26.09.2026 (Lucas schickt einen Fremd-Radar-Post: „#Slovakia
+# #2 #Liga · FC Vion Zlate Moravce – Vrable – FC Petrzalka · 9 bets / 8 bets in 3 min · Draw No
+# Bet – FC Petrzalka" — „Wieso finden wir sowas nicht").
+#
+# Wir hatten jede einzelne Wette: 11 Tickets, $20.015, 190 Sekunden, alle auf dieselbe Auswahl.
+# Das Beinahe-Buch fuehrte den Fall sogar — mit dem Grund `quoten_uneinheitlich`: 1,85 → 1,75 →
+# 1,70. Die Regel verlangte die GLEICHE Quote („der Buchmacher hat auf das Geld nicht reagiert").
+# Hier HAT er reagiert: die Quote wurde mit jedem Ticket kuerzer. Das ist dasselbe Muster, das
+# auf Betfair Steam heisst — das Geld bewegt den Preis —, und die Regel warf es als Rauschen weg.
+#
+# Gemessen am Ledger (20.–26.09., 6,6 Tage, Bursts >=4 Tickets / 5 Min / ab $10k / Quote >=1,35,
+# Rendite aus der Abrechnung der Wetten selbst, Band = 5–95 %-Bootstrap ueber die Bursts):
+#
+#     gleiche Quote (die bisherige Regel)   n= 9   ROI −48,9 %   [−83,6, −12,9]
+#     Quote FAELLT mit jedem Ticket          n=21   ROI +30,2 %   [ −1,4, +59,6]
+#     Quote steigt                           n=12   ROI −18,6 %
+#     gemischt                               n=26   ROI −13,0 %
+#
+# ⚠️ Das ist KEIN Beleg: 21 Bursts, die Untergrenze knapp unter null, eine Woche Basis, und die
+# Aufteilung ist nach dem Blick auf Lucas' Fall entstanden. Genau deshalb wird die Art gestempelt
+# (`quotenArt`) und getrennt abgerechnet — und die „gleiche Quote" verliert nichts: sie laeuft
+# weiter, ihre eigene Zahl steht ab heute auf der Karte statt einer getippten.
+def quoten_art(qs) -> str:
+    """„gleich" | „fallend" | „steigend" | „gemischt" — der Quotenverlauf eines Bursts. REIN.
+    `qs` in zeitlicher Reihenfolge. „fallend" heisst: nie steigend und am Ende kuerzer als am
+    Anfang — jedes Ticket bekam dieselbe oder eine schlechtere Quote als das davor."""
+    qs = [round(float(q), 2) for q in (qs or [])]
+    if not qs or len(set(qs)) == 1:
+        return "gleich"
+    if all(qs[k + 1] <= qs[k] for k in range(len(qs) - 1)):
+        return "fallend"
+    if all(qs[k + 1] >= qs[k] for k in range(len(qs) - 1)):
+        return "steigend"
+    return "gemischt"
+
+
+def buch_bilanz(ledger, quoten_art_=None) -> dict:
+    """Was die gesendeten Auswahl-Bursts dieser Quoten-Art bisher gebracht haben. REIN.
+    Alte Zeilen ohne `quotenArt` sind per Konstruktion „gleich" (nur die gab es)."""
+    rr = [z["rendite"] for z in (ledger or [])
+          if isinstance(z, dict) and (z.get("art") or "auswahl") == "auswahl"
+          and (z.get("quotenArt") or "gleich") == (quoten_art_ or "gleich")
+          and isinstance(z.get("rendite"), (int, float))]
+    if not rr:
+        return {"n": 0}
+    n = len(rr)
+    m = sum(rr) / n
+    ug = None
+    if n >= 10:
+        sd = (sum((x - m) ** 2 for x in rr) / (n - 1)) ** 0.5
+        ug = max(-1.0, m - 1.645 * sd / n ** 0.5)
+    return {"n": n, "roi": m, "ug": ug}
+
+
+def _bilanz_satz(bil, name) -> str:
+    """Ein Satz aus dem eigenen Buch — oder das ehrliche „noch nichts"."""
+    if not bil or not bil.get("n"):
+        return ("Beobachtungsband „%s“ — noch kein gesendeter Burst dieser Art abgerechnet, "
+                "also kein Beleg." % name)
+    t = "Eigenes Buch „%s“: %d abgerechnet · ROI %+.1f %%" % (name, bil["n"], 100 * bil["roi"])
+    if bil.get("ug") is not None:
+        t += " (Untergrenze %+.1f %%)" % (100 * bil["ug"])
+        t += " — trägt" if bil["ug"] > 0 else " — kein Beleg"
+    else:
+        t += " — unter 10 Bursts kein Urteil"
+    return t
+
+
 def bursts(wetten, min_n=None, fenster_s=None, min_usd=None, gesperrt=None,
            min_quote=None, max_alter_min=None, now=None, verworfen=None,
            beobachten_ab_n=None) -> list:
@@ -300,9 +368,13 @@ def bursts(wetten, min_n=None, fenster_s=None, min_usd=None, gesperrt=None,
             # die man spaeter stellt, und die kann man nicht beantworten, wenn nur der erste
             # Grund notiert ist.
             gruende = []
-            if len({round(float(_quote(x)), 2) for x in g}) != 1:
+            qs = [round(float(_quote(x)), 2) for x in g]
+            art = quoten_art(qs)
+            if art not in ("gleich", "fallend"):
                 gruende.append("quoten_uneinheitlich")
-            if float(_quote(g[0])) < min_quote:
+            # Bei fallender Quote zaehlt die LETZTE (niedrigste) gegen den Boden — sonst kaeme ein
+            # Burst durch, dessen Quote beim Einstieg schon unter 1,35 liegt.
+            if min(qs) < min_quote:
                 gruende.append("quote_zu_tief")       # @1,01 ist kein Signal — s. MIN_QUOTE
             if summe < min_usd:
                 gruende.append("summe_zu_klein")
@@ -318,7 +390,7 @@ def bursts(wetten, min_n=None, fenster_s=None, min_usd=None, gesperrt=None,
                 continue                  # zu alt zum Melden — s. MAX_ALTER_MIN
             aus.append({"auswahlId": a, "wetten": g, "summe": summe,
                         "sekunden": (v[j][0] - v[i][0]).total_seconds(),
-                        "von": v[i][0], "bis": v[j][0]})
+                        "von": v[i][0], "bis": v[j][0], "quotenArt": art})
             beinahe = klein = None        # Treffer schlaegt Beinahe — nie beides je Auswahl
             break
         # Ein echter Beinahe-Treffer (genug Tickets, an einer Regel gescheitert) sagt mehr als
@@ -767,7 +839,7 @@ def prune_seen(seen, now=None, keep_h=SEEN_KEEP_H) -> dict:
     return aus
 
 
-def build_burst_card(b, unterdrueckt=0) -> str:
+def build_burst_card(b, unterdrueckt=0, bilanz=None) -> str:
     """Die Telegram-Karte. Bewusst anders gebaut als die Poly-Dominanz-Karte: dort fuehrt der
     ANTEIL, hier die GESCHWINDIGKEIT — das ist die Eigenschaft, um die es geht."""
     g = b["wetten"]
@@ -778,17 +850,26 @@ def build_burst_card(b, unterdrueckt=0) -> str:
              else "vor Anpfiff" if all(x.get("phase") == "vor" for x in g) else "gemischt")
     e = lambda x: html.escape(str(x or ""), quote=False)
 
+    fallend = b.get("quotenArt") == "fallend"
     lines = ["▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓",
-             "⚡ <b>STAKE-BURST</b> · <b>%d Wetten</b> in <b>%s</b>" % (len(g), _sek_text(sek)),
+             "⚡%s <b>STAKE-BURST</b> · <b>%d Wetten</b> in <b>%s</b>"
+             % ("📉" if fallend else "", len(g), _sek_text(sek)),
              "▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓", ""]
     lines.append("%s <i>%s</i>" % (_emoji(erste.get("kat")), e(erste.get("kat") or "Sport")))
     lines.append("<b>%s</b>" % e(erste.get("event")))
     lines.append("<i>%s</i>" % e(erste.get("liga")))
     lines.append("")
     lines.append("🎯 %s — <b>%s</b>" % (e(erste.get("markt")), e(erste.get("auswahl"))))
-    lines.append("💰 <b>%s</b> auf einer Auswahl · alle @<b>%.2f</b>" % (_usd(b["summe"]), q))
+    if fallend:
+        _qs = [_quote(x) for x in g]
+        lines.append("💰 <b>%s</b> auf einer Auswahl" % _usd(b["summe"]))
+        lines.append("📉 <b>Quote fällt mit dem Geld: @%.2f → @%.2f</b>" % (_qs[0], _qs[-1]))
+    else:
+        lines.append("💰 <b>%s</b> auf einer Auswahl · alle @<b>%.2f</b>" % (_usd(b["summe"]), q))
     lines.append("")
-    for x in sorted(g, key=lambda y: -float(y.get("einsatzUsd") or 0))[:6]:
+    # Bei fallender Quote zeitlich statt nach Groesse — der Verlauf IST die Aussage.
+    _reihe = (g if fallend else sorted(g, key=lambda y: -float(y.get("einsatzUsd") or 0)))
+    for x in _reihe[:8 if fallend else 6]:
         t = _ts(x.get("ts"))
         lines.append("   %s  @%.2f  <code>%s</code>" % (_usd(x.get("einsatzUsd")), _quote(x),
                                                         t.strftime("%H:%M:%S") if t else "?"))
@@ -797,11 +878,12 @@ def build_burst_card(b, unterdrueckt=0) -> str:
     if unterdrueckt:
         lines.append("<i>+%d weitere Bursts in diesem Lauf nicht gesendet (Deckel %d)</i>"
                      % (unterdrueckt, MAX_PUSH))
-    # Das Urteil gehoert dorthin, wo die Zahl gelesen wird — nicht in eine Fussnote im Backlog.
-    lines.append("\n<i>🔬 Beobachtungsband — läuft mit, ist noch kein Beleg. Gemessen an 15.646 "
-                 "abgerechneten Wetten, mit Quotenboden %.2f: <b>+45,9 %% ROI</b> "
-                 "(Untergrenze +34,3 %%, n=212). Die gleiche Quote ist die Regel, nicht der "
-                 "Betrag — ab $50.000 dreht es ins Minus.</i>" % MIN_QUOTE)
+    # 🔴 26.09.2026: hier stand fest getippt „+45,9 % ROI (Untergrenze +34,3 %, n=212)" — die
+    # Rueckrechnung vom 12.09. Das eigene Buch sagte am 26.09. etwas anderes: 72 gesendete Bursts,
+    # ROI +4,5 %, Untergrenze −13,8 %. Ein Satz, dem die Zahl daneben widerspricht, stand auf JEDER
+    # Karte. Jetzt steht dort, was die gesendeten Bursts DIESER Art tatsaechlich gebracht haben.
+    lines.append("")
+    lines.append("<i>🔬 " + _bilanz_satz(bilanz, "Quote fällt" if fallend else "gleiche Quote") + "</i>")
     return "\n".join(lines)
 
 
@@ -839,6 +921,9 @@ def buch_zeile(b, ts) -> dict:
         "phase": ("live" if all(x.get("phase") == "live" for x in g)
                   else "vor" if all(x.get("phase") == "vor" for x in g) else "gemischt"),
         "betIds": [x.get("id") for x in g],
+        # 26.09.2026: getrennt messen — „gleich" und „fallend" sind zwei Hypothesen.
+        "quotenArt": b.get("quotenArt") or "gleich",
+        "quotenVerlauf": [_quote(x) for x in g],
         "sentAt": ts, "status": "pending",
     }
 
@@ -989,7 +1074,7 @@ def main() -> int:
     alle = bursts(wetten, gesperrt=_gesperrt, now=now, verworfen=beinahe)
     neu = [b for b in alle if burst_key(b) not in seen]
     print("⚡ Stake-Burst: %d frische(r) Burst(s), %d davon neu (>=%d Wetten, %ds, ab %s, "
-          "Quote ab %.2f, max %.0f Min alt, gleiche Quote; ausgeblendet: %s)"
+          "Quote ab %.2f, max %.0f Min alt, gleiche oder fallende Quote; ausgeblendet: %s)"
           % (len(alle), len(neu), MIN_N, int(FENSTER_S), _usd(MIN_USD), MIN_QUOTE,
              MAX_ALTER_MIN, ", ".join(_gesperrt) or "—"))
 
@@ -1001,7 +1086,8 @@ def main() -> int:
     schon = {e.get("k") for e in led if isinstance(e, dict)}
     gesendet = 0
     for i, b in enumerate(senden):
-        text = build_burst_card(b, unterdrueckt if i == len(senden) - 1 else 0)
+        text = build_burst_card(b, unterdrueckt if i == len(senden) - 1 else 0,
+                                bilanz=buch_bilanz(led, b.get("quotenArt") or "gleich"))
         if not send_trades_message(text):
             continue
         gesendet += 1
