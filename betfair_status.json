@@ -79,7 +79,42 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 71986 verbraucht, 4928014 uebrig"
+      "note": "Kontingent: 72121 verbraucht, 4927879 uebrig"
+    },
+    {
+      "id": "anker_namensabgleich",
+      "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
+      "severity": "warn",
+      "ok": false,
+      "nFail": 32,
+      "failures": [
+        "Lokomotiv GO v Marek Dupnitsa (Bulgarian B League): name — bester Kandidat „Go Ahead Eagles v Sparta Rotterdam“",
+        "Lazio (W) v Parma (W) (Italian Ladies Serie A): name — bester Kandidat „Inter Milan v Parma“",
+        "B93 Copenhagen v Thisted (Danish 2nd Division): name — bester Kandidat „FC Midtjylland v FC Copenhagen“",
+        "Pergolettese v A.C. Trento S.C.S.D. (Italian Serie C): name — bester Kandidat „Vancouver Whitecaps FC v D.C. United“",
+        "PSV Eindhoven (W) v De Graafschap (W) (Dutch Ladies Eredivisie): name — bester Kandidat „PSV Eindhoven v Heerenveen“",
+        "Serbia U19 v Romania U19 (Friendlies International U19): name — bester Kandidat „Serbia v Netherlands“",
+        "Hungary U19 v Bulgaria U19 (Friendlies International U19): name — bester Kandidat „Bulgaria v Luxembourg“",
+        "Georgia U21 v Greece U21 (UEFA U21 Euro Qualifiers): name — bester Kandidat „Germany v Greece“",
+        "Croatia U21 v Hungary U21 (UEFA U21 Euro Qualifiers): name — bester Kandidat „Czech Republic v Croatia“",
+        "Italy U20 (W) v Colombia U20 (W) (FIFA Ladies U20 World Cup): name — bester Kandidat „Turkey v Italy“",
+        "Ukraine U21 v Turkey U21 (UEFA U21 Euro Qualifiers): name — bester Kandidat „Georgia v Ukraine“",
+        "Portugal U20 v Poland U20 (Friendlies International U20): name — bester Kandidat „Norway v Portugal“",
+        "Czech Republic U20 v Switzerland U20 (Friendlies International U20): name — bester Kandidat „Czech Republic v Croatia“",
+        "Latvia U21 v Germany U21 (UEFA U21 Euro Qualifiers): name — bester Kandidat „Germany v Greece“",
+        "Malta U21 v Northern Ireland U21 (UEFA U21 Euro Qualifiers): name — bester Kandidat „Northern Ireland v Hungary“",
+        "St Vincent & Grenadines v French Guyana (CONCACAF Nations League B): name — bester Kandidat „FC St. Pauli v Karlsruher SC“",
+        "Antigua And Barbuda v Anguilla (CONCACAF Nations League C): name — bester Kandidat „Manchester City v Brighton and Hove Albion“",
+        "Canada v Chile (Friendlies International): name — bester Kandidat „Universidad de Chile v Ñublense“",
+        "Sint Maarten v Belize (CONCACAF Nations League B): name — bester Kandidat „KV Mechelen v Sint Truiden“",
+        "China v New Zealand (Friendlies International): name — bester Kandidat „Atlanta United FC v New York City FC“",
+        "Spain U20 (W) v Korea DPR U20 (W) (FIFA Ladies U20 World Cup): name — bester Kandidat „England v Spain“",
+        "Guyana v Cayman Islands (CONCACAF Nations League B): name — bester Kandidat „Faroe Islands v Kazakhstan“",
+        "Ross Co v Hearts B (Scottish Challenge Cup): name — bester Kandidat „Hearts v St Mirren“",
+        "Formartine Utd v Edinburgh City (Scottish Challenge Cup): zeit — bester Kandidat „Sheffield United v Lincoln City“ · 336.0h Anpfiff-Abstand",
+        "Harrogate Town v Eastleigh (English National League): name — bester Kandidat „Swindon Town v Accrington Stanley“"
+      ],
+      "note": "ohne Anker: kein_kandidat 47 · kein_pinnacle 19 · name 46 · zeit 4. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "totals_vollstaendig",
@@ -88,7 +123,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 1 gewollt, 1 abgerufen, 0 mit Daten"
+      "note": "Totals: 2 gewollt, 2 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -154,6 +189,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 0,
-  "generatedAt": "2026-09-26T13:29:49.067607+00:00"
+  "nFail": 1,
+  "generatedAt": "2026-09-26T13:44:39.215258+00:00"
 }
