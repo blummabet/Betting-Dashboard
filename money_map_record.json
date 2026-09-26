@@ -1,13 +1,29 @@
 {
-"generatedAt": "2026-09-26T21:30:17.303343+00:00",
+"generatedAt": "2026-09-26T21:45:19.036917+00:00",
 "byVerdict": {
+"konsens": {
+"n": 1392,
+"wins": 1181,
+"hitRate": 0.8484,
+"polyN": 1327,
+"polyWins": 1038,
+"polyHitRate": 0.7822,
+"pinnN": 210,
+"pinnHitRate": 0.7667,
+"nRoi": 833,
+"roi": 0.3953,
+"roiLb": 0.3513,
+"nClv": 833,
+"clv": 18.7,
+"clvLb": 17.205
+},
 "uneinig": {
-"n": 559,
+"n": 558,
 "wins": 177,
-"hitRate": 0.3166,
-"polyN": 521,
+"hitRate": 0.3172,
+"polyN": 520,
 "polyWins": 140,
-"polyHitRate": 0.2687,
+"polyHitRate": 0.2692,
 "pinnN": 341,
 "pinnHitRate": 0.6246,
 "nRoi": 365,
@@ -16,22 +32,6 @@
 "nClv": 365,
 "clv": -20.05,
 "clvLb": -22.9385
-},
-"konsens": {
-"n": 1391,
-"wins": 1180,
-"hitRate": 0.8483,
-"polyN": 1326,
-"polyWins": 1037,
-"polyHitRate": 0.7821,
-"pinnN": 210,
-"pinnHitRate": 0.7667,
-"nRoi": 832,
-"roi": 0.3955,
-"roiLb": 0.3514,
-"nClv": 832,
-"clv": 18.7,
-"clvLb": 17.2052
 },
 "teil": {
 "n": 33,
@@ -111,11 +111,6 @@
 "wins": 27,
 "hitRate": 0.6429
 },
-"Dutch Eredivisie": {
-"n": 41,
-"wins": 26,
-"hitRate": 0.6341
-},
 "Portuguese Primeira Liga": {
 "n": 41,
 "wins": 32,
@@ -125,6 +120,11 @@
 "n": 40,
 "wins": 29,
 "hitRate": 0.725
+},
+"Dutch Eredivisie": {
+"n": 40,
+"wins": 26,
+"hitRate": 0.65
 },
 "English Football League Cup": {
 "n": 38,
@@ -187,9 +187,9 @@
 "hitRate": 0.7692
 },
 "UEFA Nations League": {
-"n": 25,
-"wins": 18,
-"hitRate": 0.72
+"n": 26,
+"wins": 19,
+"hitRate": 0.7308
 },
 "Ecuadorian Serie A": {
 "n": 24,
@@ -675,14 +675,14 @@
 "byStrength": {
 "strong": {
 "n": 1231,
-"wins": 987,
-"hitRate": 0.8018,
-"nRoi": 776,
-"roi": 0.2979,
-"roiLb": 0.2453,
-"nClv": 776,
+"wins": 988,
+"hitRate": 0.8026,
+"nRoi": 777,
+"roi": 0.2978,
+"roiLb": 0.2452,
+"nClv": 777,
 "clv": 13.3,
-"clvLb": 11.3461
+"clvLb": 11.3534
 },
 "weak": {
 "n": 752,
@@ -697,14 +697,33 @@
 }
 },
 "divergence": {
-"n": 559,
+"n": 558,
 "betfairWins": 177,
-"betfairRate": 0.3166,
-"polyN": 521,
+"betfairRate": 0.3172,
+"polyN": 520,
 "polyWins": 140,
-"polyRate": 0.2687
+"polyRate": 0.2692
 },
 "recent": [
+{
+"matchId": "35925675",
+"home": "Slovakia",
+"away": "Moldova",
+"league": "UEFA Nations League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Slovakia",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-09-26T18:45:00Z",
+"settledAt": "2026-09-26T21:45:18.817728+00:00"
+},
 {
 "matchId": "36093029",
 "home": "FC Volendam",
@@ -1445,37 +1464,18 @@
 ],
 "kickoff": "2026-09-26T03:00:00Z",
 "settledAt": "2026-09-26T06:13:43.108095+00:00"
-},
-{
-"matchId": "36108644",
-"home": "El Salvador",
-"away": "Martinique",
-"league": "CONCACAF Nations League A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "El Salvador",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-09-26T03:00:00Z",
-"settledAt": "2026-09-26T06:13:43.108095+00:00"
 }
 ],
 "global": {
 "n": 1983,
-"wins": 1362,
-"hitRate": 0.6868,
-"nRoi": 1223,
-"roi": 0.1172,
-"roiLb": 0.0722,
-"nClv": 1223,
-"clv": 6.03,
-"clvLb": 4.4244
+"wins": 1363,
+"hitRate": 0.6873,
+"nRoi": 1224,
+"roi": 0.1173,
+"roiLb": 0.0723,
+"nClv": 1224,
+"clv": 6.04,
+"clvLb": 4.4346
 },
 "pending": 17
 }

@@ -1,12 +1,12 @@
 {
   "slug": "betfair",
   "workflow": "🟡 Betfair Radar (Betwatch)",
-  "updatedAt": "2026-09-26T21:30:37.344363+00:00",
+  "updatedAt": "2026-09-26T21:45:51.512164+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
-    "spanneH": 4.8,
-    "proTag": 94.5,
+    "spanneH": 5.0,
+    "proTag": 90.9,
     "lueckeMinMin": 3.9,
     "lueckeMedianMin": 15.0,
     "lueckeMaxMin": 30.1,
@@ -21,9 +21,24 @@
     "verdraengt": 0,
     "spanneH": 370.2,
     "erzeugtProTag": 6.5,
-    "widerspruch": "erzeugtProTag 6.5 gegen eine gemessene Kadenz von 94.5/Tag (Faktor 14.5) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
+    "widerspruch": "erzeugtProTag 6.5 gegen eine gemessene Kadenz von 90.9/Tag (Faktor 14.0) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
   },
   "runs": [
+    {
+      "ts": "2026-09-26T21:45:51.512164+00:00",
+      "workflow": "🟡 Betfair Radar (Betwatch)",
+      "runId": "36273944914",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/36273944914",
+      "nSteps": 34,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-09-26T21:44:09Z",
+      "startedAt": "2026-09-26T21:44:09Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 102.5,
+      "event": "workflow_dispatch"
+    },
     {
       "ts": "2026-09-26T21:30:37.344363+00:00",
       "workflow": "🟡 Betfair Radar (Betwatch)",
@@ -308,21 +323,6 @@
       "wartetS": 0.0,
       "laeuftSeitS": 81.9,
       "event": "workflow_dispatch"
-    },
-    {
-      "ts": "2026-09-26T16:40:59.703187+00:00",
-      "workflow": "🟡 Betfair Radar (Betwatch)",
-      "runId": "36256226460",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/36256226460",
-      "nSteps": 34,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-09-26T16:39:21Z",
-      "startedAt": "2026-09-26T16:39:21Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 98.7,
-      "event": "schedule"
     }
   ]
 }
