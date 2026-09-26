@@ -211,6 +211,11 @@ GEPRUEFT_KEIN_GELD = {
     "clv-urteil passt zur clv-zahl",
     "money map meldet ihre luecken",                      # meldet selbst, kein Ausfall
     "freigabe-grund ist aus den daten ableitbar",
+    # 25./26.09.2026 — Anzeige- und Messwaechter, bewegen kein Geld:
+    "totals_vollstaendig",                                # O/U-Leiter im Terminal, Konsens-1X2 unberuehrt
+    "kein grund widerspricht seiner zahl",                # Text neben einer Schublade
+    "keine roi-untergrenze unter −100 %",                 # Rechenwand einer Anzeige
+    "punktestand-urteil hat seine mindestzahl",           # Urteil ueber eine Punktstufe, sendet nichts
     "shortlist_nachschub",
     "proven_wallets_profitable",
     # 21.09.2026: eine Annahme ueber die Daten, kein Ausgang. Er sagt, ob der Markt-Stempel-

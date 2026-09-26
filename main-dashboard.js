@@ -221,7 +221,7 @@
       // sortierte nach der KLEINSTEN Spanne zwischen den Quellen, wählte also per Konstruktion die
       // Spiele mit fertigem Preis; von 139 Zeilen waren 91 NOBET und nur 2 BET; und in der
       // Ausreißer-Spalte scherte durchgehend „Soft“ aus — dass die langsamen Buchmacher hinterher-
-      // hinken, deckt steam_lag in den Cards längst ab. Die Regeln .md-hero* .md-agree* .md-arow*
+      // hinken, deckt steam_lag in den Cards längst ab. Die Regeln .md-blick* .md-agree* .md-arow*
       // .md-cols .md-col* .md-legend .md-lg gingen mit dem Markup; keine andere Sektion nutzte sie.
       /* tiles */
       '.md-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px;}',
@@ -603,6 +603,32 @@
       // Ebene 3: Quellen-Leiste + leise Zellen als kleine Marke statt halber Kartenbreite.
       // Die Zelle bleibt (sie sagt, dass der Track nichts weiß — s. uebersicht-bftrack.test),
       // sie nimmt nur nicht mehr den Platz einer Messung ein.
+      // Kopf „Auf einen Blick" (26.09.2026)
+      '.md-blick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px;}',
+      '.md-blick-k{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:5px;min-width:0;padding:12px 14px;border-radius:12px;background:var(--m2);border:1px solid var(--mln);border-top:3px solid var(--hc);transition:transform .15s,border-color .15s;}',
+      '.md-blick-k:hover{transform:translateY(-2px);border-color:var(--hc);}',
+      '.md-blick-k:focus-visible{outline:2px solid var(--hc);outline-offset:2px;}',
+      '.md-blick-k.e1{--hc:#2ea047;}.md-blick-k.e2{--hc:#4cc2ff;}.md-blick-k.e3{--hc:#d95926;}',
+      '.md-blick-k.leer{opacity:.6;}',
+      '.md-blick-l{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--mi3);}',
+      '.md-blick-l i{font-style:normal;width:16px;height:16px;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;color:var(--hc);border:1px solid var(--hc);font-size:9.5px;}',
+      '.md-blick-h{font-size:15px;font-weight:800;color:var(--mi);line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+      '.md-blick-h b{font-family:"JetBrains Mono",monospace;font-size:17px;}',
+      '.md-blick-h small{font-size:11px;opacity:.7;}',
+      '.md-blick-h em{font-style:normal;color:var(--mi3);font-weight:700;font-size:12.5px;}',
+      '.md-blick-u{font-size:11px;color:var(--mi2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+      '.md-blick-u b{color:var(--mi);}',
+      '.md-blick-src .md-badge{margin-left:0;}',
+      '@media(max-width:760px){.md-blick{grid-template-columns:1fr;gap:7px;}}',
+      // Ebene 2: Stufen-Leiste über der Tafel (26.09.2026)
+      '.sz-leiste{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:12px;}',
+      '.sz-leiste-t{font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--mi3);margin-right:2px;cursor:help;}',
+      '.sz-st{display:inline-flex;align-items:baseline;gap:6px;padding:3px 9px;border-radius:999px;border:1px solid var(--mln);background:var(--m2);}',
+      '.sz-st.gut{border-color:rgba(46,160,71,.5);}.sz-st.schlecht{border-color:rgba(229,83,75,.45);}',
+      '.sz-st>b{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--mi);}',
+      '.sz-st>b i{font-style:normal;color:var(--mi3);font-size:9.5px;}',
+      '.sz-st .md-kl-stufe{margin-left:0;}',
+      '.sz-st>em{font-style:normal;font-size:10px;color:var(--mi3);}',
       '.md-jz-q{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-top:10px;font-size:10.5px;color:var(--mi3);}',
       '.md-jz-q b{font-weight:700;color:var(--mi2);background:rgba(255,255,255,.04);border:1px solid var(--mln);border-radius:999px;padding:2px 8px;}',
       '.md-jz-q b i{font-style:normal;color:var(--mi3);font-family:"JetBrains Mono",monospace;}',
@@ -624,6 +650,11 @@
       // Nicht erhobene Buecher kosten am Handy eine halbe Kartenhoehe — der Nenner der Punktzahl
       // sagt es bereits (x/7 statt x/10). Ein Buch, das NEIN sagt (0), bleibt sichtbar.
       '  .sz-c.leer{display:none;}',
+      // Strom-Kacheln am Handy: die Basis-Zeile steht weiter im Tooltip der Kachel.
+      '  .fg-strom-q{display:none;}',
+      '  .fg-strom{padding:10px 12px;}',
+      '  .fg-hero{font-size:22px;margin:4px 0 6px;}',
+      '  .fg-strom>.fg-ks{margin-bottom:8px;}',
       '  .md-kl-l1{flex-wrap:wrap;}',
       '  .md-kl-l1>.md-kl-nm{flex:1 0 100%;}',
       '  .md-kl-l1>.md-kl-halt,.md-kl-l1>.md-kl-live{margin-left:0;}',
@@ -1195,7 +1226,7 @@
       '</div>';
   }
   
-  // 30.08.2026: hier standen _SIDE/_SRC/consensusRows/agreeBar/_legend/_mdHero — der
+  // 30.08.2026: hier standen _SIDE/_SRC/consensusRows/agreeBar/_legend/_mdBlick — der
   // Triple-Konsens-Hero. Entfernt, Begründung oben im CSS-Block. `pick.consensus` schreibt
   // generate_wm_picks weiter mit (additiv, try/except) und liegt damit bereit, falls die Frage
   // später doch gemessen statt eingeschätzt werden soll — gezeigt wird es nur nicht mehr.
@@ -2702,6 +2733,7 @@
   //
   // Gezeigt wird die Spitze, nicht die Liste: heute 12 Zeilen ab 6 Punkten, der Rest gezaehlt
   // und aufklappbar. Eine Tafel mit 145 Zeilen waere dasselbe Problem in gruen.
+  var _mdKlTop = null, _mdJzTop = null;   // Spitze von Ebene 2 / 3 — fuer den Kopf „Auf einen Blick"
   var KL_TAFEL_MIN = 6;      // ab so vielen Punkten steht eine Zeile oben
   var KL_TAFEL_MAX = 12;     // ... und nie mehr als so viele, egal wie gut der Tag ist
   var KL_BUCH = { BF: 'Betfair', POLY: 'Polymarket', PIN: 'Pinnacle', STAKE: 'Stake', ZEIT: 'Dauer' };
@@ -2782,7 +2814,7 @@
       + '<s>' + esc(String(fuss)) + '</s></div>';
   }
 
-  function _klTafelZeile(r, bewegt, k) {
+  function _klTafelZeile(r, bewegt, k, inGruppe) {
     var min = r.kickoff ? Math.round((Date.parse(String(r.kickoff).replace('Z', '+00:00')) - Date.now()) / 60000) : null;
     var uhr = (min == null || !isFinite(min)) ? ''
       : '<span class="md-badge" style="background:rgba(57,135,229,.14);color:' + A.blue + '">⏱ '
@@ -2812,7 +2844,7 @@
       + '</div>'
       + '<div class="sz-meta">' + uhr + '<span class="sz-lg">' + esc(String(r.liga || '')) + '</span></div>'
       + '<div class="sz-w">→ <b>' + esc(String(r.name || '—')) + '</b>' + quote
-      + _klStufenText(_klStufenBilanz(k, r.punkte, r.moeglich)) + '</div>'
+      + (inGruppe ? '' : _klStufenText(_klStufenBilanz(k, r.punkte, r.moeglich))) + '</div>'
       + '<div class="sz-q">' + reihe + '</div></div></div>';
   }
 
@@ -2837,6 +2869,10 @@
     return null;
   }
 
+  // 🔴 26.09.2026 (Lucas-Übersicht-Check): hier stand `traegt = e.roiLb > 0` — das Urteil wurde
+  // im Frontend gefällt, ohne Mindestzahl. Auf dem Board: „Iceland v Estonia 6/7 · +59 % UG +23 %
+  // bei n9 · trägt". Neun Wetten. Das Urteil schreibt jetzt `killer.punkte_bilanz` (`urteil`, ab
+  // n=30); fehlt es (altes killer.json), wird NICHTS behauptet.
   function _klStufenText(e) {
     if (!e || !e.n) return '';
     var roi = (e.roi >= 0 ? '+' : '') + Math.round(e.roi * 100) + '%';
@@ -2844,11 +2880,13 @@
       return '<span class="md-kl-stufe" title="Unter n=3 gibt es keine Untergrenze — ein '
         + 'Punktschätzer ist kein Beleg">' + roi + ' bei n' + e.n + ' · kein Urteil</span>';
     }
-    var traegt = e.roiLb > 0;
+    var traegt = e.urteil === 'traegt';
+    var zuWenig = e.urteil === 'zu_wenige';
     return '<span class="md-kl-stufe' + (traegt ? ' md-kl-traegt' : '')
-      + '" title="Rendite dieser Stufe bisher, mit einseitiger 95-%-Untergrenze. Nur über null '
-      + 'trägt sie.">' + roi + ' <i>UG ' + (e.roiLb >= 0 ? '+' : '') + Math.round(e.roiLb * 100)
-      + '%</i> bei n' + e.n + (traegt ? ' · trägt' : '') + '</span>';
+      + '" title="Rendite dieser Stufe bisher, mit einseitiger 95-%-Untergrenze. Ein Urteil gibt es '
+      + 'erst ab n=' + (e.minN || 30) + '; darüber trägt sie nur, wenn die Untergrenze über null liegt.">'
+      + roi + ' <i>UG ' + (e.roiLb >= 0 ? '+' : '') + Math.round(e.roiLb * 100)
+      + '%</i> bei n' + e.n + (traegt ? ' · trägt' : zuWenig ? ' · zu wenig für ein Urteil' : '') + '</span>';
   }
 
   function _klTafel(k, bewegteIds) {
@@ -2861,8 +2899,33 @@
     alle.sort(function (a, b) { return (b.punkte || 0) - (a.punkte || 0) || (a.kickoff < b.kickoff ? -1 : 1); });
     var oben = alle.filter(function (r) { return (r.punkte || 0) >= KL_TAFEL_MIN; }).slice(0, KL_TAFEL_MAX);
     var rest = alle.length - oben.length;
+    _mdKlTop = oben[0] || null;
+    // 🎨 26.09.2026: vorher stand „−3 % UG −20 % bei n76" an fünf Zeilen untereinander —
+    // dieselbe Zahl, weil es derselbe Eimer ist. Jetzt steht jede gezeigte Stufe EINMAL in einer
+    // Leiste über der Tafel, die Karten tragen nur noch ihre Punktzahl. (Eine Gruppierung mit
+    // Zwischenköpfen war die erste Fassung — sie riss das Zweispalten-Raster bei jeder Stufe
+    // mit nur einem Spiel auf und kostete mehr Höhe, als sie sparte.)
+    var _stufen = [], _gesehen = {};
+    oben.forEach(function (r) {
+      var key = r.punkte + '/' + r.moeglich;
+      if (_gesehen[key]) { _gesehen[key].n++; return; }
+      _gesehen[key] = { r: r, n: 1 };
+      _stufen.push(_gesehen[key]);
+    });
+    var _leiste = _stufen.length ? '<div class="sz-leiste"><span class="sz-leiste-t" title="Wie hat jede '
+      + 'Punktstufe bisher abgeschnitten? Rendite mit einseitiger 95-%-Untergrenze aus dem eigenen Buch. '
+      + 'Ein Urteil gibt es erst ab n=30.">bisher je Stufe</span>'
+      + _stufen.map(function (g) {
+          var e = _klStufenBilanz(k, g.r.punkte, g.r.moeglich);
+          var cls = e && e.urteil === 'traegt' ? ' gut' : (e && e.urteil === 'traegt_nicht' ? ' schlecht' : '');
+          return '<span class="sz-st' + cls + '"><b>' + g.r.punkte + '<i>/' + g.r.moeglich + '</i></b>'
+            + (e && e.n ? _klStufenText(e) : '<span class="md-kl-stufe">noch nichts abgerechnet</span>')
+            + '<em>' + g.n + '×</em></span>';
+        }).join('') + '</div>' : '';
     var koerper = oben.length
-      ? '<div class="sz-grid">' + oben.map(function (r) { return _klTafelZeile(r, bewegteIds[String(r.matchId)], k); }).join('') + '</div>'
+      ? _leiste + '<div class="sz-grid">' + oben.map(function (r) {
+          return _klTafelZeile(r, bewegteIds[String(r.matchId)], k, true);
+        }).join('') + '</div>'
       // 12.09.2026: hier stand „von 13". Der Nenner ist aber je Spiel verschieden — gemessen am
       // Stand heute: 38 Zeilen mit 10, 19 mit 4, 15 mit 7 und genau EINE mit 13. „6 von 13" war
       // also fuer 72 von 73 Zeilen falsch, und ein Spiel mit moeglich=4 kann die 6 nie erreichen,
@@ -3870,6 +3933,7 @@
     }, 0));
     // Leer heisst leer — aber die Ebene verschwindet NICHT. Eine fehlende dritte Sprosse laesst
     // die Leiter unvollstaendig aussehen und man sucht nach der Sektion, statt die Aussage zu lesen.
+    _mdJzTop = items[0] || null;
     if (!items.length) return '<div id="mdJetztBox">' + _mdEbene(3, 'Was ist gerade das Stärkste?',
       'Rangliste', null,
       'Disjunktion: das stärkste Einzelsignal über alle Flächen. EINE Quelle genügt.',
@@ -4021,7 +4085,68 @@
   //   Logik    — Ebene 1 urteilt, Ebene 2 ist ein UND, Ebene 3 ein ODER
   // Deshalb jetzt eine Leiter von streng nach breit unter EINER Ueberschrift. Die Reihenfolge ist
   // die Aussage: je weiter unten, desto mehr steht da — und desto weniger ist es belegt.
+  // ── 🎨 26.09.2026: „Auf einen Blick" ──────────────────────────────────────────────────
+  // Lucas: „das ist ein sehr wichtiges Element und sollte wirklich sehr gut umgesetzt sein."
+  // Die Sektion heisst „Was kann ich spielen?" — und die Antwort stand bisher erst nach drei
+  // Ebenen Scrollen. Der Kopf zieht aus jeder Ebene genau EINE Zeile nach oben: was freigegeben
+  // ist, wo die Bücher am einigsten sind, was gerade das stärkste Signal ist. Nichts davon wird
+  // hier neu bewertet — es ist die jeweils erste Zeile der Ebene darunter, dieselbe Auswahl.
+  function _mdBlickKo(iso) {
+    var t = iso ? Date.parse(String(iso).replace('Z', '+00:00')) : NaN;
+    if (!isFinite(t)) return '';
+    var min = Math.round((t - Date.now()) / 60000);
+    if (min < 0) return 'läuft';
+    return min >= 60 ? Math.floor(min / 60) + ' h' : min + ' min';
+  }
+  function _mdBlickKachel(nr, titel, haupt, unter, leer) {
+    return '<button type="button" class="md-blick-k e' + nr + (leer ? ' leer' : '') + '" '
+      + 'onclick="var e=this.closest(\'.md-sp\').querySelector(\'.md-eb' + nr + '\');if(e)e.scrollIntoView({behavior:\'smooth\',block:\'start\'})">'
+      + '<span class="md-blick-l"><i>' + nr + '</i>' + titel + '</span>'
+      + '<span class="md-blick-h">' + haupt + '</span>'
+      + '<span class="md-blick-u">' + unter + '</span></button>';
+  }
+  function _mdBlick() {
+    var f = (_md.data && _md.data.freigabe) || null, frei = (f && f.freigegeben) || [];
+    var k1;
+    if (!f) {
+      k1 = _mdBlickKachel(1, 'Folgen', '❔ unbekannt', 'freigabe.json fehlt', true);
+    } else if (frei.length) {
+      var namen = {}; frei.forEach(function (r) { namen[String(r.schublade)] = 1; });
+      var offen = 0;
+      (f.spiele || []).forEach(function (b) { if (b && namen[String(b.schublade)] && b.aufloesbar) offen += (+b.n || 0); });
+      k1 = _mdBlickKachel(1, 'Folgen', frei.length + ' Schublade' + (frei.length === 1 ? '' : 'n') + ' freigegeben',
+        offen ? '<b>' + offen + '</b> offene Spiele daraus' : 'gerade keine offenen Spiele daraus');
+    } else {
+      k1 = _mdBlickKachel(1, 'Folgen', 'nichts freigegeben', 'heute darf man keiner Schublade blind folgen', true);
+    }
+    var r = _mdKlTop, k2;
+    if (r) {
+      var q = r.moeglich ? r.punkte / r.moeglich : 0;
+      var sc = q >= 0.8 ? A.good : q >= 0.6 ? A.blue : 'var(--mi2)';
+      var ko = _mdBlickKo(r.kickoff);
+      k2 = _mdBlickKachel(2, 'Bücher am einigsten',
+        '<b style="color:' + sc + '">' + r.punkte + '<small>/' + r.moeglich + '</small></b> '
+          + esc(String(r.name || '—')) + (r.odd != null ? ' <em>@' + (+r.odd).toFixed(2) + '</em>' : ''),
+        esc(team(r.home)) + ' v ' + esc(team(r.away)) + (ko ? ' · ⏱ ' + ko : ''));
+    } else {
+      k2 = _mdBlickKachel(2, 'Bücher am einigsten', 'kein Spiel ab ' + KL_TAFEL_MIN + ' Punkten', 'die Tafel ist heute leer', true);
+    }
+    var x = _mdJzTop, k3;
+    if (x) {
+      var min = isFinite(x.k) ? Math.max(0, Math.round((x.k - Date.now()) / 60000)) : null;
+      var ko3 = x.live ? 'live' : (min == null ? '' : (min < 60 ? min + ' min' : Math.floor(min / 60) + ' h'));
+      k3 = _mdBlickKachel(3, 'Stärkstes Signal',
+        (x.pick || '—') + (x.odd != null ? ' <em>@' + (+x.odd).toFixed(2) + '</em>' : ''),
+        '<span class="md-blick-src">' + (x.badge || '') + '</span> ' + x.match + (ko3 ? ' · ⏱ ' + ko3 : ''));
+    } else {
+      k3 = _mdBlickKachel(3, 'Stärkstes Signal', 'gerade nichts', 'meldet sich automatisch', true);
+    }
+    return '<div id="mdBlick" class="md-blick">' + k1 + k2 + k3 + '</div>';
+  }
+
   function _mdSpielbar(polyPlays) {
+    // Erst die Ebenen bauen: sie setzen die Spitzen, aus denen der Kopf liest.
+    var ebenen = _mdFreigabe() + _mdKiller(polyPlays) + _mdJetzt(polyPlays);
     return '<section class="md-sp md-rise">'
       + '<div class="md-sp-h"><span style="font-size:16px">🎯</span>'
       + '<span class="md-sp-t">Was kann ich spielen?</span>'
@@ -4030,8 +4155,8 @@
       + '<span class="md-sp-s">Drei Ebenen von streng nach breit — <b>je weiter unten, desto mehr steht da '
       + 'und desto weniger ist belegt</b>. Ebene 1 sagt, wie ernst man die beiden darunter nehmen darf; '
       + 'Ebene 2 zeigt, wie viele der vier Bücher auf derselben Seite liegen — und braucht dafür keine '
-      + 'Bewegung.</span></div>'
-      + _mdFreigabe() + _mdKiller(polyPlays) + _mdJetzt(polyPlays)
+      + 'Bewegung. Die drei Kacheln oben sind jeweils die erste Zeile der Ebene darunter — ein Klick springt hin.</span></div>'
+      + _mdBlick() + ebenen
       + '</section>';
   }
   // 13.08.2026 (Lucas): Poly-Public-Plays sind erst async da → Box nach dem Laden mit ihnen neu ranken
@@ -4047,6 +4172,10 @@
       var el2 = document.getElementById('mdKillerBox');
       if (el2) el2.outerHTML = _mdKiller(plays);
       el.outerHTML = _mdJetzt(plays);
+      // Der Kopf liest die Spitze von Ebene 3 — nach dem Poly-Nachladen neu, sonst zeigt er die
+      // Rangliste OHNE Poly, während darunter schon die mit Poly steht.
+      var eh = document.getElementById('mdBlick');
+      if (eh) eh.outerHTML = _mdBlick();
     });
   }
   

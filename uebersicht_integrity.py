@@ -794,6 +794,52 @@ def check_buecher_punktestand(ctx):
               "Nicht erhobene Buecher senken den Nenner, Tiefe zaehlt nur bei Zustimmung.")
 
 
+def check_keine_untergrenze_unter_minus_100(ctx):
+    """🔴 26.09.2026 (Lucas-Uebersicht-Check). Ebene 2 zeigte an „England v Spain 7/13":
+    „−70 % UG −119 % bei n6". Eine ROI-Untergrenze unter −100 % gibt es nicht — flach gesetzt
+    verliert man hoechstens den Einsatz. `killer.punkte_bilanz` rechnete die Normalapproximation
+    ungedeckelt; drei der 34 Eimer lagen darunter (−119 %, −132 %, −104 %).
+
+    Fehlerklasse: *eine Rechenregel ohne die Wand, die der Gegenstand hat.* Geprueft wird jede
+    ROI-Untergrenze, die die Uebersicht zeigt — nicht nur die, an der es auffiel.
+    """
+    fails = []
+    k = ctx.get("killer") or {}
+    for b in (k.get("punkteBilanz") or []):
+        if isinstance(b, dict) and isinstance(b.get("roiLb"), (int, float)) and b["roiLb"] < -1.0:
+            fails.append("killer.punkteBilanz %s/%s: roiLb %.4f" % (b.get("punkte"), b.get("moeglich"), b["roiLb"]))
+    g = ((k.get("bilanz") or {}).get("gesamt") or {})
+    if isinstance(g.get("roiLb"), (int, float)) and g["roiLb"] < -1.0:
+        fails.append("killer.bilanz.gesamt: roiLb %.4f" % g["roiLb"])
+    f = ctx.get("freigabe") or {}
+    for feld in ("alle", "ligen", "stroeme"):
+        for r in (f.get(feld) or []):
+            if isinstance(r, dict) and isinstance(r.get("roiLb"), (int, float)) and r["roiLb"] < -1.0:
+                fails.append("freigabe.%s %s: roiLb %.4f" % (feld, r.get("schublade") or r.get("liga") or r.get("strom"), r["roiLb"]))
+    return _c("Keine ROI-Untergrenze unter −100 %", "error", fails[:8],
+              "Flach gesetzt verliert man hoechstens den Einsatz — eine UG darunter ist ein Rechenartefakt.")
+
+
+def check_punkte_urteil_hat_seine_mindestzahl(ctx):
+    """🔴 26.09.2026 (Lucas-Uebersicht-Check). „Iceland v Estonia 6/7 · +59 % UG +23 % bei n9 ·
+    trägt" — das Urteil wurde im Frontend aus `roiLb > 0` gebildet, ohne Mindestzahl. Seit heute
+    schreibt `killer.punkte_bilanz` das Urteil selbst (ab n=30). Der Guard prueft beides: dass es
+    dasteht, und dass kein Eimer unter der Mindestzahl „traegt".
+    """
+    fails = []
+    for b in ((ctx.get("killer") or {}).get("punkteBilanz") or []):
+        if not isinstance(b, dict):
+            continue
+        wer = "%s/%s (n=%s)" % (b.get("punkte"), b.get("moeglich"), b.get("n"))
+        if "urteil" not in b:
+            fails.append("%s: kein `urteil` — das Frontend muesste selbst entscheiden" % wer)
+            continue
+        if b.get("urteil") == "traegt" and (b.get("n") or 0) < (b.get("minN") or 30):
+            fails.append("%s: „traegt“ unter der Mindestzahl" % wer)
+    return _c("Punktestand-Urteil hat seine Mindestzahl", "warn", fails[:8],
+              "Unter n=30 gibt es kein Urteil ueber eine Punktstufe, nur den Schnitt.")
+
+
 def check_kein_grund_widerspricht_seiner_zahl(ctx):
     """🔴 25.09.2026 (Lucas-Uebersicht-Check) — dieselbe Ursache wie am 15.09., ein Feld weiter.
 
@@ -1777,6 +1823,8 @@ def _alter_kurz(d):
 
 
 UEBERSICHT_CHECKS = [
+    check_keine_untergrenze_unter_minus_100,
+    check_punkte_urteil_hat_seine_mindestzahl,
     check_serien_rangfolge,
     check_freigabe_grund,
     check_poly_kachel_ist_keine_kanalbilanz,
