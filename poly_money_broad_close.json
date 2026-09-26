@@ -423957,7 +423957,13 @@
     "usd": 896,
     "ts": 1790349968
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Over": 1.0,
+   "Under": 0.0
+  },
+  "resolvedAt": "2026-09-26T07:13:47.686649+00:00"
  },
  "mlb-hou-oak-2026-09-25": {
   "shares": {
@@ -425691,7 +425697,13 @@
     "usd": 23653,
     "ts": 1790378106
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Los Angeles Angels": 1.0,
+   "Seattle Mariners": 0.0
+  },
+  "resolvedAt": "2026-09-26T07:13:47.686649+00:00"
  },
  "atp-dietric-searle-2026-09-25": {
   "shares": {
@@ -426454,7 +426466,14 @@
    "El Salvador": "43762024005993518599761637246422239648849968320950081128662610556601303532874",
    "Draw (El Salvador vs. Martinique)": "33414736243138040400867805524129814336083346462780494352074751676240872334920",
    "Martinique": "5630986258154012469637287650725616972376603858414490711613563992542173808924"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "El Salvador": 1.0,
+   "Draw (El Salvador vs. Martinique)": 0.0,
+   "Martinique": 0.0
+  },
+  "resolvedAt": "2026-09-26T07:13:47.686649+00:00"
  },
  "cs2-bst-voc-2026-09-25": {
   "shares": {
@@ -427702,7 +427721,13 @@
      2110
     ]
    ]
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Juan Manuel Cerundolo": 0.0,
+   "Alejandro Davidovich Fokina": 1.0
+  },
+  "resolvedAt": "2026-09-26T07:13:47.686649+00:00"
  },
  "mex-tij-atl-2026-09-25-more-markets": {
   "shares": {
@@ -429459,8 +429484,8 @@
  },
  "atp-bu-majchrz-2026-09-25": {
   "shares": {
-   "Yunchaokete Bu": 6997.819324825,
-   "Kamil Majchrzak": 8727.616906740002
+   "Yunchaokete Bu": 7028.46751657,
+   "Kamil Majchrzak": 8765.841055995003
   },
   "prices": {
    "Yunchaokete Bu": 0.445,
@@ -429472,7 +429497,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 21067,
+  "totalUsd": 21144,
   "whales": [
    {
     "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
@@ -429482,8 +429507,8 @@
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "Yunchaokete Bu",
-    "usd": 2319,
-    "avgPrice": 0.4553
+    "usd": 1947,
+    "avgPrice": 0.4551
    },
    {
     "wallet": "0xa2836cd31c36fabe54df526595b1b47fd55461e5",
@@ -429514,6 +429539,11 @@
     "avgPrice": 0.47
    },
    {
+    "wallet": "0x1903062ac644015515c66562b0aa6475ab27f674",
+    "side": "Yunchaokete Bu",
+    "usd": 396
+   },
+   {
     "wallet": "0x521c0f496be19476a885ae380f18652bb9cef4aa",
     "side": "Kamil Majchrzak",
     "usd": 308
@@ -429526,17 +429556,13 @@
    {
     "wallet": "0x03f4bd4bd14e0dffa6f012d023387e1a327f7e44",
     "side": "Yunchaokete Bu",
-    "usd": 222
+    "usd": 222,
+    "avgPrice": 0.46
    },
    {
     "wallet": "0xb5501e658c4155814d49d4735f457332da4a2799",
     "side": "Yunchaokete Bu",
     "usd": 193
-   },
-   {
-    "wallet": "0x28e0e82bc770c3c153b92ff6ad863f12b8132e6b",
-    "side": "Yunchaokete Bu",
-    "usd": 178
    },
    {
     "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
@@ -429581,14 +429607,14 @@
     "usd": 23
    },
    {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "Kamil Majchrzak",
+    "usd": 23
+   },
+   {
     "wallet": "0x35e701f088b6ef25fff6b902769c1cd8b85f8331",
     "side": "Yunchaokete Bu",
     "usd": 11
-   },
-   {
-    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
-    "side": "Yunchaokete Bu",
-    "usd": 5
    },
    {
     "wallet": "0xd37ab1a5eeb25696c568e20e94af72b8d3422358",
@@ -429598,7 +429624,8 @@
    {
     "wallet": "0x0235dc24b38772bf3339a9e5ec5db3d3a05fcee5",
     "side": "Yunchaokete Bu",
-    "usd": 4
+    "usd": 4,
+    "avgPrice": 0.45
    },
    {
     "wallet": "0xa70a523c726929d4566c636e5dacbd4b72ec5772",
@@ -429618,8 +429645,7 @@
    {
     "wallet": "0x3e6b98d9dac15f285a18a02644a8c900aab58a98",
     "side": "Yunchaokete Bu",
-    "usd": 3,
-    "avgPrice": 0.45
+    "usd": 3
    },
    {
     "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
@@ -429627,8 +429653,8 @@
     "usd": 3
    }
   ],
-  "hoursToKickoff": 1.08,
-  "capturedAt": "2026-09-26T06:43:41.934039+00:00",
+  "hoursToKickoff": 0.83,
+  "capturedAt": "2026-09-26T07:13:47.686649+00:00",
   "cond": "0xbc06584b0913a90e8c5f71959822f88c05ac7f6b21ec0865820c18845af9ab28",
   "frage": "Hangzhou Open: Yunchaokete Bu vs Kamil Majchrzak",
   "tokens": {
@@ -429644,57 +429670,65 @@
    "bids": [
     [
      0.55,
-     8046
+     6975
     ],
     [
      0.54,
-     16995
+     13148
     ],
     [
      0.53,
-     16060
+     9851
     ],
     [
      0.52,
-     11438
+     9080
     ],
     [
      0.51,
-     668
+     60
     ],
     [
      0.5,
-     2526
+     2507
     ]
    ],
    "asks": [
     [
      0.56,
-     19896
+     17918
     ],
     [
      0.57,
-     29674
+     36567
     ],
     [
      0.58,
-     21149
+     12416
     ],
     [
      0.59,
-     4769
+     6189
     ],
     [
      0.6,
-     2683
+     5613
     ],
     [
      0.61,
-     2986
+     3762
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x1903062ac644015515c66562b0aa6475ab27f674",
+    "action": "BUY",
+    "side": "Yunchaokete Bu",
+    "price": 0.45,
+    "usd": 400,
+    "ts": 1790406675
+   },
    {
     "wallet": "0xa0f21e6d351baa9185716b5c00c2925ed9621848",
     "action": "BUY",
@@ -429731,8 +429765,8 @@
  },
  "atp-medvede-royer-2026-09-25": {
   "shares": {
-   "Daniil Medvedev": 14788.109081575,
-   "Valentin Royer": 4293.324326024999
+   "Daniil Medvedev": 14793.077028425,
+   "Valentin Royer": 4294.766633174999
   },
   "prices": {
    "Daniil Medvedev": 0.775,
@@ -429744,7 +429778,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 20288,
+  "totalUsd": 20295,
   "whales": [
    {
     "wallet": "0xcad22bcc3c5f2e35f12313d968fd413f376bf315",
@@ -429754,7 +429788,8 @@
    {
     "wallet": "0x03f4bd4bd14e0dffa6f012d023387e1a327f7e44",
     "side": "Daniil Medvedev",
-    "usd": 3875
+    "usd": 3875,
+    "avgPrice": 0.77
    },
    {
     "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
@@ -429770,8 +429805,7 @@
    {
     "wallet": "0xb697ccd520ecf9969fa37e417f66c5c9bf6b5d0c",
     "side": "Daniil Medvedev",
-    "usd": 640,
-    "avgPrice": 0.7775
+    "usd": 640
    },
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
@@ -429828,12 +429862,14 @@
    {
     "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
     "side": "Valentin Royer",
-    "usd": 153
+    "usd": 153,
+    "avgPrice": 0.2241
    },
    {
     "wallet": "0xb4611ed615ca8fb60d203d3b1b0a2ffd1fa29dbe",
     "side": "Daniil Medvedev",
-    "usd": 133
+    "usd": 133,
+    "avgPrice": 0.7699
    },
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
@@ -429859,7 +429895,8 @@
    {
     "wallet": "0x0235dc24b38772bf3339a9e5ec5db3d3a05fcee5",
     "side": "Daniil Medvedev",
-    "usd": 68
+    "usd": 68,
+    "avgPrice": 0.77
    },
    {
     "wallet": "0x01c78f8873c0c86d6b6b92ff627e3802237ee995",
@@ -429869,8 +429906,7 @@
    {
     "wallet": "0xac4c55b85a1dcacb638bd63ea4eeb8d8a9352200",
     "side": "Daniil Medvedev",
-    "usd": 32,
-    "avgPrice": 0.7799
+    "usd": 32
    },
    {
     "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
@@ -429924,8 +429960,8 @@
     "usd": 0
    }
   ],
-  "hoursToKickoff": 2.58,
-  "capturedAt": "2026-09-26T06:43:41.934039+00:00",
+  "hoursToKickoff": 2.33,
+  "capturedAt": "2026-09-26T07:13:47.686649+00:00",
   "cond": "0xdf45f761993a2612caa39834d7808eff9f7b56a80e61ca0be282491a289c2d11",
   "frage": "Hangzhou Open: Daniil Medvedev vs Valentin Royer",
   "tokens": {
@@ -429941,15 +429977,15 @@
    "bids": [
     [
      0.77,
-     18828
+     19101
     ],
     [
      0.76,
-     8286
+     8265
     ],
     [
      0.75,
-     7717
+     5317
     ],
     [
      0.74,
@@ -429967,23 +430003,23 @@
    "asks": [
     [
      0.78,
-     842
+     685
     ],
     [
      0.79,
-     59739
+     50746
     ],
     [
      0.8,
-     19714
+     19725
     ],
     [
      0.81,
-     26819
+     23969
     ],
     [
      0.82,
-     13541
+     13301
     ],
     [
      0.83,
@@ -430044,8 +430080,8 @@
  },
  "atp-vachero-harri-2026-09-25": {
   "shares": {
-   "Valentin Vacherot": 15633.518961470005,
-   "Lloyd Harris": 14722.818012030006
+   "Valentin Vacherot": 15634.509346125005,
+   "Lloyd Harris": 14723.750704375005
   },
   "prices": {
    "Valentin Vacherot": 0.515,
@@ -430057,7 +430093,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 34127,
+  "totalUsd": 34347,
   "whales": [
    {
     "wallet": "0xca4e92ce46d71a9fad74805470a84ee3d576f97e",
@@ -430123,8 +430159,7 @@
    {
     "wallet": "0x45e47fa688432060c52ee0f88d15176efee43c69",
     "side": "Valentin Vacherot",
-    "usd": 486,
-    "avgPrice": 0.5299
+    "usd": 486
    },
    {
     "wallet": "0xe54d37c9c12e5fd3d684ff4d193ef1f44dabfdec",
@@ -430167,12 +430202,14 @@
    {
     "wallet": "0x4c57e16157d4acea7037dcf12284e3804a9da7de",
     "side": "Valentin Vacherot",
-    "usd": 154
+    "usd": 154,
+    "avgPrice": 0.51
    },
    {
     "wallet": "0xb4611ed615ca8fb60d203d3b1b0a2ffd1fa29dbe",
     "side": "Valentin Vacherot",
-    "usd": 121
+    "usd": 121,
+    "avgPrice": 0.5199
    },
    {
     "wallet": "0x04641b57f332c15ecaa497799c55026d521967da",
@@ -430180,13 +430217,13 @@
     "usd": 121
    },
    {
-    "wallet": "0xecc558e1dd2164b451766c89d2a28b35d8405fde",
-    "side": "Valentin Vacherot",
-    "usd": 103
-   },
-   {
     "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
     "side": "Lloyd Harris",
+    "usd": 104
+   },
+   {
+    "wallet": "0xecc558e1dd2164b451766c89d2a28b35d8405fde",
+    "side": "Valentin Vacherot",
     "usd": 103
    },
    {
@@ -430217,7 +430254,7 @@
    {
     "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
     "side": "Lloyd Harris",
-    "usd": 90
+    "usd": 77
    },
    {
     "wallet": "0xdc4f58a48ed4467743609fdce11eea483c759804",
@@ -430232,8 +430269,7 @@
    {
     "wallet": "0x2f0bec54f4f26f749af2db20e52729427a7a5577",
     "side": "Valentin Vacherot",
-    "usd": 50,
-    "avgPrice": 0.5199
+    "usd": 50
    },
    {
     "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
@@ -430259,8 +430295,7 @@
    {
     "wallet": "0x3e6b98d9dac15f285a18a02644a8c900aab58a98",
     "side": "Lloyd Harris",
-    "usd": 19,
-    "avgPrice": 0.48
+    "usd": 19
    },
    {
     "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
@@ -430273,8 +430308,8 @@
     "usd": 8
    }
   ],
-  "hoursToKickoff": 1.83,
-  "capturedAt": "2026-09-26T06:43:41.934039+00:00",
+  "hoursToKickoff": 1.33,
+  "capturedAt": "2026-09-26T07:13:47.686649+00:00",
   "cond": "0x9f5825eb09eb887290d6757ae513de2c88e05d14455e43eededbed485bb32f82",
   "frage": "Chengdu Open: Valentin Vacherot vs Lloyd Harris",
   "tokens": {
@@ -430290,53 +430325,53 @@
    "bids": [
     [
      0.51,
-     7479
+     12129
     ],
     [
      0.5,
-     13538
+     13609
     ],
     [
      0.49,
-     21309
+     20609
     ],
     [
      0.48,
-     15944
+     13314
     ],
     [
      0.47,
-     7111
+     6611
     ],
     [
      0.46,
-     5059
+     3059
     ]
    ],
    "asks": [
     [
      0.52,
-     10482
+     2510
     ],
     [
      0.53,
-     28475
+     29033
     ],
     [
      0.54,
-     21452
+     31023
     ],
     [
      0.55,
-     6828
+     7592
     ],
     [
      0.56,
-     4950
+     6629
     ],
     [
      0.57,
-     2708
+     5308
     ]
    ]
   },
@@ -430393,8 +430428,8 @@
  },
  "val-ge1-vit-2026-09-26": {
   "shares": {
-   "Global Esports": 39604.17283399999,
-   "Team Vitality": 49394.870694990124
+   "Global Esports": 40156.863349309984,
+   "Team Vitality": 50084.18131270513
   },
   "prices": {
    "Global Esports": 0.445,
@@ -430406,18 +430441,19 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 90666,
+  "totalUsd": 92223,
   "whales": [
    {
     "wallet": "0x6ac5bb06a9eb05641fd5e82640268b92f3ab4b6e",
     "side": "Global Esports",
-    "usd": 16556,
-    "avgPrice": 0.4486
+    "usd": 16973,
+    "avgPrice": 0.4484
    },
    {
     "wallet": "0xe3763d38ba82a745900800ec11af21128f0e5149",
     "side": "Team Vitality",
-    "usd": 12674
+    "usd": 12674,
+    "avgPrice": 0.5487
    },
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
@@ -430566,9 +430602,9 @@
     "usd": 156
    },
    {
-    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
-    "side": "Global Esports",
-    "usd": 142
+    "wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
+    "side": "Team Vitality",
+    "usd": 120
    },
    {
     "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
@@ -430596,7 +430632,8 @@
    {
     "wallet": "0x866056133a70de9282a080758858d1a0c8b393ed",
     "side": "Team Vitality",
-    "usd": 47
+    "usd": 47,
+    "avgPrice": 0.52
    },
    {
     "wallet": "0xd619b68e64f256f8ddd185b261c8679eacf0c461",
@@ -430606,13 +430643,19 @@
    {
     "wallet": "0x3d4c523c750f61be22695b27e4117b3d256f67bc",
     "side": "Global Esports",
-    "usd": 40
+    "usd": 40,
+    "avgPrice": 0.4499
    },
    {
     "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
     "side": "Global Esports",
     "usd": 32,
     "avgPrice": 0.4576
+   },
+   {
+    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
+    "side": "Global Esports",
+    "usd": 31
    },
    {
     "wallet": "0x5b624e3e0426f7aa2ca57f7451fbcea4b125d87f",
@@ -430625,18 +430668,14 @@
     "usd": 12
    },
    {
-    "wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
-    "side": "Team Vitality",
-    "usd": 10
-   },
-   {
     "wallet": "0x4442f3819817f6f4ebb883efcf4290d2f482238c",
     "side": "Team Vitality",
-    "usd": 8
+    "usd": 8,
+    "avgPrice": 0.56
    }
   ],
-  "hoursToKickoff": 2.33,
-  "capturedAt": "2026-09-26T06:43:41.934039+00:00",
+  "hoursToKickoff": 1.83,
+  "capturedAt": "2026-09-26T07:13:47.686649+00:00",
   "cond": "0x75cf9d8a545137e1663798682c11bac2def538cf2d279b49406a644ea920a4e3",
   "frage": "Valorant: Global Esports vs Team Vitality (BO3) - VCT Champions Group B",
   "tokens": {
@@ -430652,57 +430691,65 @@
    "bids": [
     [
      0.55,
-     625
+     802
     ],
     [
      0.54,
-     58195
+     58250
     ],
     [
      0.53,
-     41438
+     41338
     ],
     [
      0.52,
-     921
+     1539
     ],
     [
      0.51,
-     301110
+     424425
     ],
     [
      0.5,
-     805
+     30
     ]
    ],
    "asks": [
     [
      0.56,
-     32283
+     31105
     ],
     [
      0.57,
-     42545
+     41782
     ],
     [
      0.58,
-     36250
+     27620
     ],
     [
      0.59,
-     119551
+     12811
     ],
     [
      0.6,
-     4105
+     2938
     ],
     [
      0.61,
-     5000
+     3005
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0xea7aa6e180030beb51f5dbc03306a5a372d441fd",
+    "action": "BUY",
+    "side": "Team Vitality",
+    "price": 0.56,
+    "usd": 315,
+    "ts": 1790406294
+   },
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "action": "BUY",
@@ -430723,8 +430770,8 @@
  },
  "cs2-all-3dmax-2026-09-26": {
   "shares": {
-   "Alliance": 24107.61790418,
-   "3DMAX": 23630.32843182
+   "Alliance": 24273.125217955,
+   "3DMAX": 23792.558373044998
   },
   "prices": {
    "Alliance": 0.505,
@@ -430736,7 +430783,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 48565,
+  "totalUsd": 48817,
   "whales": [
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
@@ -430746,7 +430793,7 @@
    {
     "wallet": "0xe40ecff63ec661d218a86c048186ac83389a9770",
     "side": "Alliance",
-    "usd": 5183
+    "usd": 5326
    },
    {
     "wallet": "0x994ec8e910b433265f3a46eaf666bfa28b1a6136",
@@ -430817,7 +430864,7 @@
    {
     "wallet": "0x10251a3689408681fde34475c97fa4f749367e11",
     "side": "3DMAX",
-    "usd": 543
+    "usd": 564
    },
    {
     "wallet": "0x103721386ec40df5ab93df0bd0964e8fe70b5b09",
@@ -430892,7 +430939,8 @@
    {
     "wallet": "0x0235dc24b38772bf3339a9e5ec5db3d3a05fcee5",
     "side": "3DMAX",
-    "usd": 77
+    "usd": 77,
+    "avgPrice": 0.5
    },
    {
     "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
@@ -430928,8 +430976,7 @@
    {
     "wallet": "0xda770326bd091d26f816917aa83a6baff668683f",
     "side": "3DMAX",
-    "usd": 20,
-    "avgPrice": 0.455
+    "usd": 20
    },
    {
     "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
@@ -430942,8 +430989,8 @@
     "usd": 15
    }
   ],
-  "hoursToKickoff": 2.33,
-  "capturedAt": "2026-09-26T06:43:41.934039+00:00",
+  "hoursToKickoff": 1.83,
+  "capturedAt": "2026-09-26T07:13:47.686649+00:00",
   "cond": "0x49e5e2a90c89212dd5490841521439a0c6458d21442e6a69ac6d56ce6e7dfe81",
   "frage": "Counter-Strike: Alliance vs 3DMAX (BO3) - 1win Private Club #1 Playoffs",
   "tokens": {
@@ -430959,19 +431006,19 @@
    "bids": [
     [
      0.5,
-     109874
+     109585
     ],
     [
      0.49,
-     12083
+     12079
     ],
     [
      0.48,
-     715
+     680
     ],
     [
      0.47,
-     1005
+     913
     ],
     [
      0.46,
@@ -430979,33 +431026,33 @@
     ],
     [
      0.45,
-     791
+     796
     ]
    ],
    "asks": [
     [
      0.51,
-     17762
+     50333
     ],
     [
      0.52,
-     1528
+     1627
     ],
     [
      0.53,
-     36528
+     36361
     ],
     [
      0.54,
-     1628
+     1885
     ],
     [
      0.55,
-     80
+     135
     ],
     [
-     0.57,
-     4000
+     0.56,
+     305
     ]
    ]
   },
@@ -431046,14 +431093,14 @@
  },
  "ja2-bla-alb-2026-09-26": {
   "shares": {
-   "Blaublitz Akita": 1858.3974539099995,
-   "Draw (Blaublitz Akita vs. Albirex Niigata)": 542.9671921349999,
-   "Albirex Niigata": 5776.8632346199975
+   "Blaublitz Akita": 7869.27012699,
+   "Draw (Blaublitz Akita vs. Albirex Niigata)": 545.68867068,
+   "Albirex Niigata": 5618.541593549998
   },
   "prices": {
-   "Blaublitz Akita": 0.415,
+   "Blaublitz Akita": 0.435,
    "Draw (Blaublitz Akita vs. Albirex Niigata)": 0.295,
-   "Albirex Niigata": 0.295
+   "Albirex Niigata": 0.285
   },
   "splitGuete": {
    "art": "belastbar",
@@ -431061,29 +431108,34 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 27587,
+  "totalUsd": 48493,
   "whales": [
+   {
+    "wallet": "0xabb89972b21b304c1bed2bf26f35c8741ac9bba3",
+    "side": "Blaublitz Akita",
+    "usd": 6019
+   },
    {
     "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
     "side": "Albirex Niigata",
-    "usd": 4996,
+    "usd": 4827,
     "avgPrice": 0.3034
    },
    {
     "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
     "side": "Blaublitz Akita",
-    "usd": 941,
+    "usd": 986,
     "avgPrice": 0.4199
    },
    {
     "wallet": "0xeb739f5e4f45b0b68688bb252f08327bc01653b0",
     "side": "Blaublitz Akita",
-    "usd": 504
+    "usd": 528
    },
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "side": "Albirex Niigata",
-    "usd": 393
+    "usd": 388
    },
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
@@ -431094,25 +431146,30 @@
    {
     "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
     "side": "Blaublitz Akita",
-    "usd": 155,
-    "avgPrice": 0.397
+    "usd": 113,
+    "avgPrice": 0.3978
    },
    {
     "wallet": "0x67f8fb08827bc3cacd2636deae34c83cf2456f42",
     "side": "Albirex Niigata",
-    "usd": 95
+    "usd": 92
    },
    {
     "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
     "side": "Blaublitz Akita",
-    "usd": 81,
+    "usd": 85,
     "avgPrice": 0.4099
+   },
+   {
+    "wallet": "0x67af214764bd6eda61fadb25cdcbea6d13d761ee",
+    "side": "Albirex Niigata",
+    "usd": 81
    },
    {
     "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
     "side": "Albirex Niigata",
-    "usd": 74,
-    "avgPrice": 0.308
+    "usd": 76,
+    "avgPrice": 0.3069
    },
    {
     "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
@@ -431125,24 +431182,19 @@
     "usd": 69
    },
    {
-    "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
-    "side": "Blaublitz Akita",
-    "usd": 66
-   },
-   {
     "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
     "side": "Draw (Blaublitz Akita vs. Albirex Niigata)",
     "usd": 63
    },
    {
-    "wallet": "0x67af214764bd6eda61fadb25cdcbea6d13d761ee",
-    "side": "Albirex Niigata",
-    "usd": 61
-   },
-   {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "side": "Blaublitz Akita",
-    "usd": 54
+    "usd": 57
+   },
+   {
+    "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
+    "side": "Blaublitz Akita",
+    "usd": 52
    },
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
@@ -431156,11 +431208,6 @@
     "avgPrice": 0.3095
    },
    {
-    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
-    "side": "Blaublitz Akita",
-    "usd": 21
-   },
-   {
     "wallet": "0xdc4f58a48ed4467743609fdce11eea483c759804",
     "side": "Draw (Blaublitz Akita vs. Albirex Niigata)",
     "usd": 15
@@ -431168,12 +431215,17 @@
    {
     "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
     "side": "Albirex Niigata",
-    "usd": 15
+    "usd": 14
    },
    {
     "wallet": "0xe9045fa8a70479bb2a112d863f0eadc3058f44e9",
     "side": "Albirex Niigata",
     "usd": 11
+   },
+   {
+    "wallet": "0xfe67df6e0c585e50cbe8bdcad804d980c6b8a2e8",
+    "side": "Blaublitz Akita",
+    "usd": 6
    },
    {
     "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
@@ -431191,14 +431243,9 @@
     "usd": 6
    },
    {
-    "wallet": "0xfe67df6e0c585e50cbe8bdcad804d980c6b8a2e8",
-    "side": "Blaublitz Akita",
-    "usd": 5
-   },
-   {
     "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
     "side": "Draw (Blaublitz Akita vs. Albirex Niigata)",
-    "usd": 4
+    "usd": 5
    },
    {
     "wallet": "0xd93d79aa6f3859873c2c6d0e0e66a9dd112427a0",
@@ -431209,134 +431256,113 @@
     "wallet": "0xc3a7bca628ccd2fd4bfc72f86c1f257e96e43172",
     "side": "Albirex Niigata",
     "usd": 1
-   },
-   {
-    "wallet": "0x1f624696c102b99bea92c75a502fa7e4a6d676f6",
-    "side": "Blaublitz Akita",
-    "usd": 0
    }
   ],
-  "hoursToKickoff": 1.33,
-  "capturedAt": "2026-09-26T06:43:41.934039+00:00",
+  "hoursToKickoff": 0.83,
+  "capturedAt": "2026-09-26T07:13:47.686649+00:00",
   "tokens": {
    "Blaublitz Akita": "112781369824593246810337996959478656590799110236147021817205122352978558155994",
    "Draw (Blaublitz Akita vs. Albirex Niigata)": "53331551379978249349170061387733356403765752504162129740933538444850056585058",
    "Albirex Niigata": "57706202793244385425048293252088876302109547621375417092532246944074247797606"
   },
   "book": {
-   "side": "Albirex Niigata",
-   "bid": 0.28,
-   "ask": 0.29,
+   "side": "Blaublitz Akita",
+   "bid": 0.43,
+   "ask": 0.44,
    "spreadC": 1.0,
-   "spreadPct": 3.45,
+   "spreadPct": 2.27,
    "bids": [
     [
-     0.28,
-     3842
+     0.43,
+     593
     ],
     [
-     0.27,
-     3409
+     0.42,
+     4644
     ],
     [
-     0.26,
-     4034
+     0.41,
+     4859
     ],
     [
-     0.25,
-     401
+     0.4,
+     2159
     ],
     [
-     0.24,
-     657
+     0.39,
+     1026
     ],
     [
-     0.19,
-     50
+     0.38,
+     260
     ]
    ],
    "asks": [
     [
-     0.29,
-     3927
+     0.44,
+     10537
     ],
     [
-     0.3,
-     3990
+     0.45,
+     2933
     ],
     [
-     0.31,
-     4530
+     0.46,
+     5132
     ],
     [
-     0.32,
-     7481
+     0.47,
+     3587
     ],
     [
-     0.33,
-     2238
+     0.48,
+     3746
     ],
     [
-     0.34,
-     4075
+     0.49,
+     2117
     ]
    ]
   },
   "trades": [
    {
-    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "wallet": "0xabb89972b21b304c1bed2bf26f35c8741ac9bba3",
     "action": "BUY",
-    "side": "No",
-    "price": 0.71,
-    "usd": 415,
-    "ts": 1790404923
+    "side": "Yes",
+    "price": 0.43,
+    "usd": 3961,
+    "ts": 1790405862
    },
    {
-    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "wallet": "0xabb89972b21b304c1bed2bf26f35c8741ac9bba3",
     "action": "BUY",
-    "side": "No",
-    "price": 0.71,
-    "usd": 318,
-    "ts": 1790404863
-   },
-   {
-    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
-    "action": "BUY",
-    "side": "No",
-    "price": 0.71,
-    "usd": 984,
-    "ts": 1790404676
-   },
-   {
-    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
-    "action": "BUY",
-    "side": "No",
-    "price": 0.71,
-    "usd": 383,
-    "ts": 1790404674
+    "side": "Yes",
+    "price": 0.42,
+    "usd": 1942,
+    "ts": 1790405789
    },
    {
     "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
     "action": "BUY",
     "side": "Yes",
-    "price": 0.3091,
-    "usd": 432,
-    "ts": 1790401568
+    "price": 0.42,
+    "usd": 952,
+    "ts": 1790404941
    },
    {
-    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "wallet": "0xeb739f5e4f45b0b68688bb252f08327bc01653b0",
     "action": "BUY",
     "side": "Yes",
-    "price": 0.3233,
-    "usd": 1125,
-    "ts": 1790401440
+    "price": 0.4118,
+    "usd": 500,
+    "ts": 1790404317
    },
    {
-    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "wallet": "0x03805a13a0b3e058f55f6c6af95389d4f431073d",
     "action": "BUY",
-    "side": "Yes",
-    "price": 0.297,
-    "usd": 3576,
+    "side": "No",
+    "price": 0.59,
+    "usd": 885,
     "ts": 1790401440
    }
   ]
@@ -431349,17 +431375,17 @@
    "Júbilo Iwata 0 - 2 Vanraure Hachinohe FC": 148.396445106,
    "Júbilo Iwata 1 - 1 Vanraure Hachinohe FC": 9.8994,
    "Júbilo Iwata 2 - 0 Vanraure Hachinohe FC": 15.08587158,
-   "Júbilo Iwata 0 - 3 Vanraure Hachinohe FC": 0.61282,
-   "Júbilo Iwata 1 - 2 Vanraure Hachinohe FC": 3.9204545580000003,
+   "Júbilo Iwata 0 - 3 Vanraure Hachinohe FC": 0.65996,
+   "Júbilo Iwata 1 - 2 Vanraure Hachinohe FC": 4.090909104,
    "Júbilo Iwata 2 - 1 Vanraure Hachinohe FC": 10.853945549999999,
-   "Júbilo Iwata 3 - 0 Vanraure Hachinohe FC": 7.49526,
+   "Júbilo Iwata 3 - 0 Vanraure Hachinohe FC": 7.16528,
    "Júbilo Iwata 1 - 3 Vanraure Hachinohe FC": 0.89566,
-   "Júbilo Iwata 2 - 2 Vanraure Hachinohe FC": 8.281105308999999,
+   "Júbilo Iwata 2 - 2 Vanraure Hachinohe FC": 8.3930121375,
    "Júbilo Iwata 3 - 1 Vanraure Hachinohe FC": 5.468240000000001,
    "Júbilo Iwata 2 - 3 Vanraure Hachinohe FC": 0.9428000000000001,
    "Júbilo Iwata 3 - 2 Vanraure Hachinohe FC": 2.2627200000000003,
-   "Júbilo Iwata 3 - 3 Vanraure Hachinohe FC": 6.0457363724999995,
-   "Any Other Score": 10.370800000000001
+   "Júbilo Iwata 3 - 3 Vanraure Hachinohe FC": 5.642687281,
+   "Any Other Score": 10.8422
   },
   "prices": {
    "Júbilo Iwata 0 - 0 Vanraure Hachinohe FC": 0.075,
@@ -431368,17 +431394,17 @@
    "Júbilo Iwata 0 - 2 Vanraure Hachinohe FC": 0.0195,
    "Júbilo Iwata 1 - 1 Vanraure Hachinohe FC": 0.105,
    "Júbilo Iwata 2 - 0 Vanraure Hachinohe FC": 0.13,
-   "Júbilo Iwata 0 - 3 Vanraure Hachinohe FC": 0.0065,
-   "Júbilo Iwata 1 - 2 Vanraure Hachinohe FC": 0.0345,
+   "Júbilo Iwata 0 - 3 Vanraure Hachinohe FC": 0.007,
+   "Júbilo Iwata 1 - 2 Vanraure Hachinohe FC": 0.036,
    "Júbilo Iwata 2 - 1 Vanraure Hachinohe FC": 0.105,
-   "Júbilo Iwata 3 - 0 Vanraure Hachinohe FC": 0.0795,
+   "Júbilo Iwata 3 - 0 Vanraure Hachinohe FC": 0.076,
    "Júbilo Iwata 1 - 3 Vanraure Hachinohe FC": 0.0095,
-   "Júbilo Iwata 2 - 2 Vanraure Hachinohe FC": 0.037,
+   "Júbilo Iwata 2 - 2 Vanraure Hachinohe FC": 0.0375,
    "Júbilo Iwata 3 - 1 Vanraure Hachinohe FC": 0.058,
    "Júbilo Iwata 2 - 3 Vanraure Hachinohe FC": 0.01,
    "Júbilo Iwata 3 - 2 Vanraure Hachinohe FC": 0.024,
-   "Júbilo Iwata 3 - 3 Vanraure Hachinohe FC": 0.0075,
-   "Any Other Score": 0.11
+   "Júbilo Iwata 3 - 3 Vanraure Hachinohe FC": 0.007,
+   "Any Other Score": 0.115
   },
   "splitGuete": {
    "art": "belastbar",
@@ -431386,7 +431412,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 10337,
+  "totalUsd": 10859,
   "whales": [
    {
     "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
@@ -431427,6 +431453,12 @@
     "avgPrice": 0.12
    },
    {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "Any Other Score",
+    "usd": 11,
+    "avgPrice": 0.2599
+   },
+   {
     "wallet": "0xca7c00e2bf8e4571357f31631f05dbf231e6e994",
     "side": "Júbilo Iwata 1 - 1 Vanraure Hachinohe FC",
     "usd": 10
@@ -431435,12 +431467,6 @@
     "wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
     "side": "Júbilo Iwata 2 - 1 Vanraure Hachinohe FC",
     "usd": 10
-   },
-   {
-    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
-    "side": "Any Other Score",
-    "usd": 10,
-    "avgPrice": 0.2599
    },
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
@@ -431515,8 +431541,8 @@
     "usd": 0
    }
   ],
-  "hoursToKickoff": 1.33,
-  "capturedAt": "2026-09-26T06:43:41.934039+00:00",
+  "hoursToKickoff": 0.83,
+  "capturedAt": "2026-09-26T07:13:47.686649+00:00",
   "tokens": {
    "Júbilo Iwata 0 - 0 Vanraure Hachinohe FC": "79383567840430331154837217198618150065166630562824818005964567538454933984907",
    "Júbilo Iwata 0 - 1 Vanraure Hachinohe FC": "61489721858657598165339067879134422129884967200618094438219164153490400012590",
@@ -431535,106 +431561,13 @@
    "Júbilo Iwata 3 - 2 Vanraure Hachinohe FC": "8133843257634186322645004510239561713308615721018437966586937370812897524199",
    "Júbilo Iwata 3 - 3 Vanraure Hachinohe FC": "65110215610454002371194625636994828634032841528759105203414864072219700016204",
    "Any Other Score": "7060404780781869941418119746354778362038460412995269209625046143340919404407"
-  },
-  "book": {
-   "side": "Júbilo Iwata 0 - 2 Vanraure Hachinohe FC",
-   "bid": 0.018,
-   "ask": 0.021,
-   "spreadC": 0.3,
-   "spreadPct": 14.29,
-   "bids": [
-    [
-     0.018,
-     1
-    ],
-    [
-     0.014,
-     51935
-    ],
-    [
-     0.012,
-     200
-    ],
-    [
-     0.01,
-     2000
-    ],
-    [
-     0.009,
-     2222
-    ],
-    [
-     0.008,
-     1925
-    ]
-   ],
-   "asks": [
-    [
-     0.021,
-     5
-    ],
-    [
-     0.022,
-     200
-    ],
-    [
-     0.024,
-     100
-    ],
-    [
-     0.025,
-     100
-    ],
-    [
-     0.026,
-     100
-    ],
-    [
-     0.027,
-     500
-    ]
-   ]
-  },
-  "trades": [
-   {
-    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
-    "action": "BUY",
-    "side": "No",
-    "price": 0.982,
-    "usd": 633,
-    "ts": 1790401926
-   },
-   {
-    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
-    "action": "BUY",
-    "side": "No",
-    "price": 0.982,
-    "usd": 2867,
-    "ts": 1790400522
-   },
-   {
-    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
-    "action": "BUY",
-    "side": "No",
-    "price": 0.982,
-    "usd": 304,
-    "ts": 1790399568
-   },
-   {
-    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
-    "action": "BUY",
-    "side": "No",
-    "price": 0.982,
-    "usd": 1930,
-    "ts": 1790346582
-   }
-  ]
+  }
  },
  "ja2-omi-ven-2026-09-26": {
   "shares": {
-   "RB Ōmiya Ardija": 10274.220068125,
-   "Draw (RB Ōmiya Ardija vs. Ventforet Kōfu)": 356.17719838,
-   "Ventforet Kōfu": 343.44116893499995
+   "RB Ōmiya Ardija": 10336.334453125002,
+   "Draw (RB Ōmiya Ardija vs. Ventforet Kōfu)": 356.17719837999994,
+   "Ventforet Kōfu": 347.083668935
   },
   "prices": {
    "RB Ōmiya Ardija": 0.625,
@@ -431647,7 +431580,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 20556,
+  "totalUsd": 21157,
   "whales": [
    {
     "wallet": "0xbe7ef1907a730226453814dedeee3995c0656d00",
@@ -431656,15 +431589,15 @@
    },
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-    "side": "Draw (RB Ōmiya Ardija vs. Ventforet Kōfu)",
-    "usd": 201,
-    "avgPrice": 0.22
-   },
-   {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "Ventforet Kōfu",
     "usd": 155,
     "avgPrice": 0.17
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Draw (RB Ōmiya Ardija vs. Ventforet Kōfu)",
+    "usd": 135,
+    "avgPrice": 0.22
    },
    {
     "wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
@@ -431680,6 +431613,16 @@
     "wallet": "0x8b89ce7ad40bd55b035d1a15e2f16af87ee19f72",
     "side": "RB Ōmiya Ardija",
     "usd": 62
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "side": "RB Ōmiya Ardija",
+    "usd": 56
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "side": "Draw (RB Ōmiya Ardija vs. Ventforet Kōfu)",
+    "usd": 56
    },
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
@@ -431702,16 +431645,6 @@
     "usd": 26
    },
    {
-    "wallet": "0x3bcb8d716c157a8d7bbcb63a9bb11b0b3d10a2aa",
-    "side": "RB Ōmiya Ardija",
-    "usd": 21
-   },
-   {
-    "wallet": "0xa55c78c190791abbf8b944b62d572d05cde03262",
-    "side": "RB Ōmiya Ardija",
-    "usd": 21
-   },
-   {
     "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
     "side": "Ventforet Kōfu",
     "usd": 16,
@@ -431728,7 +431661,7 @@
     "usd": 10
    },
    {
-    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
     "side": "RB Ōmiya Ardija",
     "usd": 9
    },
@@ -431748,8 +431681,8 @@
     "usd": 2
    }
   ],
-  "hoursToKickoff": 1.33,
-  "capturedAt": "2026-09-26T06:43:41.934039+00:00",
+  "hoursToKickoff": 0.83,
+  "capturedAt": "2026-09-26T07:13:47.686649+00:00",
   "tokens": {
    "RB Ōmiya Ardija": "99179733682481906760782749037496484436382019379689840387186790123655905099536",
    "Draw (RB Ōmiya Ardija vs. Ventforet Kōfu)": "70118475662431633253253591685016658172064914035580377342345261900086041514065",
@@ -431764,23 +431697,23 @@
    "bids": [
     [
      0.62,
-     5234
+     6798
     ],
     [
      0.61,
-     4616
+     3454
     ],
     [
      0.6,
-     1964
+     2236
     ],
     [
      0.59,
-     3352
+     3758
     ],
     [
      0.58,
-     255
+     295
     ],
     [
      0.57,
@@ -431790,27 +431723,27 @@
    "asks": [
     [
      0.63,
-     1626
+     272
     ],
     [
      0.64,
-     391
+     1300
     ],
     [
      0.65,
-     7
+     396
     ],
     [
      0.66,
-     1571
+     1047
     ],
     [
      0.67,
-     5836
+     6846
     ],
     [
      0.68,
-     491
+     795
     ]
    ]
   },
@@ -431822,6 +431755,1160 @@
     "price": 0.6222,
     "usd": 10000,
     "ts": 1790403698
+   }
+  ]
+ },
+ "wta-fernand-chwalin-2026-09-26": {
+  "shares": {
+   "Leylah Fernandez": 6300.680702354995,
+   "Maja Chwalinska": 4469.710774734998
+  },
+  "prices": {
+   "Leylah Fernandez": 0.585,
+   "Maja Chwalinska": 0.415
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 13108,
+  "whales": [
+   {
+    "wallet": "0x9cb990f1862568a63d8601efeebe0304225c32f2",
+    "side": "Leylah Fernandez",
+    "usd": 4836
+   },
+   {
+    "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
+    "side": "Maja Chwalinska",
+    "usd": 1764
+   },
+   {
+    "wallet": "0x8b8992eb0d7dc4ef87f5efb45154de4787c598d6",
+    "side": "Leylah Fernandez",
+    "usd": 992
+   },
+   {
+    "wallet": "0xb0e3fcbe0d7f17168fdce93f89c0168d3fa329eb",
+    "side": "Maja Chwalinska",
+    "usd": 876,
+    "avgPrice": 0.42
+   },
+   {
+    "wallet": "0x5331121e9f2f206d8c06ae6235761b1a3f8d3672",
+    "side": "Maja Chwalinska",
+    "usd": 337
+   },
+   {
+    "wallet": "0x03f4bd4bd14e0dffa6f012d023387e1a327f7e44",
+    "side": "Maja Chwalinska",
+    "usd": 332,
+    "avgPrice": 0.42
+   },
+   {
+    "wallet": "0xfa011919b3ce3222620052757ee0f0c66c41f0a7",
+    "side": "Maja Chwalinska",
+    "usd": 300,
+    "avgPrice": 0.43
+   },
+   {
+    "wallet": "0x398f0d01805b406a008dea6e503df421bb1630f2",
+    "side": "Maja Chwalinska",
+    "usd": 271
+   },
+   {
+    "wallet": "0xac4c55b85a1dcacb638bd63ea4eeb8d8a9352200",
+    "side": "Maja Chwalinska",
+    "usd": 111
+   },
+   {
+    "wallet": "0xfb571cef51fdd251152bceb666cd4857cf4f6719",
+    "side": "Leylah Fernandez",
+    "usd": 101
+   },
+   {
+    "wallet": "0x05c5a55c0eed25f98a846f9b5a1875a99d358181",
+    "side": "Maja Chwalinska",
+    "usd": 97
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Maja Chwalinska",
+    "usd": 82,
+    "avgPrice": 0.42
+   },
+   {
+    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+    "side": "Maja Chwalinska",
+    "usd": 67
+   },
+   {
+    "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
+    "side": "Maja Chwalinska",
+    "usd": 53
+   },
+   {
+    "wallet": "0xe0964ef9026a30bbb28f6413b7bdaaf555848d1b",
+    "side": "Leylah Fernandez",
+    "usd": 50
+   },
+   {
+    "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
+    "side": "Leylah Fernandez",
+    "usd": 50
+   },
+   {
+    "wallet": "0x7547479d43f4b52d892a6f2254050eea50edd158",
+    "side": "Maja Chwalinska",
+    "usd": 22
+   },
+   {
+    "wallet": "0x35e701f088b6ef25fff6b902769c1cd8b85f8331",
+    "side": "Maja Chwalinska",
+    "usd": 10
+   },
+   {
+    "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
+    "side": "Maja Chwalinska",
+    "usd": 7
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Leylah Fernandez",
+    "usd": 2
+   },
+   {
+    "wallet": "0xd37ab1a5eeb25696c568e20e94af72b8d3422358",
+    "side": "Maja Chwalinska",
+    "usd": 2
+   },
+   {
+    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
+    "side": "Maja Chwalinska",
+    "usd": 2
+   },
+   {
+    "wallet": "0x3da80ca893666957475095ac1504094df93dbe26",
+    "side": "Maja Chwalinska",
+    "usd": 1
+   }
+  ],
+  "hoursToKickoff": 2.83,
+  "capturedAt": "2026-09-26T07:13:47.686649+00:00",
+  "cond": "0x2353709e1e6115e3dda905533223d6088989bbfa19b5c270ea6ce8e1fe65552a",
+  "frage": "Singapore Open: Leylah Fernandez vs Maja Chwalinska",
+  "tokens": {
+   "Leylah Fernandez": "98976199128760039303251614827340567772774592878681224694017572732180290678512",
+   "Maja Chwalinska": "111584571208776566855032696232394283473382121248699951646389853185055382293195"
+  },
+  "book": {
+   "side": "Leylah Fernandez",
+   "bid": 0.58,
+   "ask": 0.59,
+   "spreadC": 1.0,
+   "spreadPct": 1.69,
+   "bids": [
+    [
+     0.58,
+     4174
+    ],
+    [
+     0.57,
+     13091
+    ],
+    [
+     0.56,
+     9105
+    ],
+    [
+     0.55,
+     9626
+    ],
+    [
+     0.54,
+     608
+    ],
+    [
+     0.53,
+     125
+    ]
+   ],
+   "asks": [
+    [
+     0.59,
+     22671
+    ],
+    [
+     0.6,
+     43285
+    ],
+    [
+     0.61,
+     18668
+    ],
+    [
+     0.62,
+     5900
+    ],
+    [
+     0.63,
+     7641
+    ],
+    [
+     0.64,
+     1870
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x9cb990f1862568a63d8601efeebe0304225c32f2",
+    "action": "BUY",
+    "side": "Leylah Fernandez",
+    "price": 0.58,
+    "usd": 4604,
+    "ts": 1790406044
+   },
+   {
+    "wallet": "0x5331121e9f2f206d8c06ae6235761b1a3f8d3672",
+    "action": "BUY",
+    "side": "Maja Chwalinska",
+    "price": 0.43,
+    "usd": 350,
+    "ts": 1790402375
+   },
+   {
+    "wallet": "0x8b8992eb0d7dc4ef87f5efb45154de4787c598d6",
+    "action": "BUY",
+    "side": "Leylah Fernandez",
+    "price": 0.58,
+    "usd": 983,
+    "ts": 1790392581
+   },
+   {
+    "wallet": "0xfa011919b3ce3222620052757ee0f0c66c41f0a7",
+    "action": "BUY",
+    "side": "Maja Chwalinska",
+    "price": 0.43,
+    "usd": 310,
+    "ts": 1790374986
+   }
+  ]
+ },
+ "cs2-100t-ast10-2026-09-26": {
+  "shares": {
+   "100 Thieves": 9691.582371380004,
+   "Astralis": 11608.600491459994
+  },
+  "prices": {
+   "100 Thieves": 0.455,
+   "Astralis": 0.545
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 21698,
+  "whales": [
+   {
+    "wallet": "0x4b59e178095b9bb5ba97598244f2ca8b02fc3aa6",
+    "side": "100 Thieves",
+    "usd": 3322
+   },
+   {
+    "wallet": "0x6b97ebe911d7f2e5e3e8c4a0faad4a5c7c0b8d30",
+    "side": "100 Thieves",
+    "usd": 3276,
+    "avgPrice": 0.47
+   },
+   {
+    "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
+    "side": "Astralis",
+    "usd": 2893
+   },
+   {
+    "wallet": "0xbcd24281bb7c69943f07df21d56d9842330643f3",
+    "side": "Astralis",
+    "usd": 2429
+   },
+   {
+    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
+    "side": "100 Thieves",
+    "usd": 1284
+   },
+   {
+    "wallet": "0xa4131264e0cfa60b1e8d994551d29ee5f9806c4a",
+    "side": "Astralis",
+    "usd": 860
+   },
+   {
+    "wallet": "0x513587a2f36a8cb29333052a6a479091ef8a7217",
+    "side": "Astralis",
+    "usd": 835
+   },
+   {
+    "wallet": "0xfd3ee5e7744e613618fb4be81111933720c0feaf",
+    "side": "Astralis",
+    "usd": 630
+   },
+   {
+    "wallet": "0x214039968998abdcdbd998d15d699296f3570e12",
+    "side": "Astralis",
+    "usd": 362,
+    "avgPrice": 0.5299
+   },
+   {
+    "wallet": "0xf2bbdd3a75a7f217125d433f832990a671823250",
+    "side": "Astralis",
+    "usd": 308
+   },
+   {
+    "wallet": "0x2d40ca3ab44c1cf56677c85919a815bbf59cec52",
+    "side": "Astralis",
+    "usd": 272
+   },
+   {
+    "wallet": "0x4a3f86ed9ce6b3dac5b66e2d5478a6bf38cc4333",
+    "side": "100 Thieves",
+    "usd": 268
+   },
+   {
+    "wallet": "0xa032d2358fa08860ba30ba8e8d828b7738202090",
+    "side": "100 Thieves",
+    "usd": 228
+   },
+   {
+    "wallet": "0x2d2d2b32e5199edf833594a99b9c54e5668ab69d",
+    "side": "100 Thieves",
+    "usd": 178
+   },
+   {
+    "wallet": "0xb21bcc4615f7e0e15030c415def696d5936988f9",
+    "side": "100 Thieves",
+    "usd": 173
+   },
+   {
+    "wallet": "0xf2a5c9c77863715c2cc1a6d34670e8b75ba155d6",
+    "side": "Astralis",
+    "usd": 173,
+    "avgPrice": 0.54
+   },
+   {
+    "wallet": "0xfbf3eed601e4950b8676ae6db4c579b854e470e3",
+    "side": "Astralis",
+    "usd": 149
+   },
+   {
+    "wallet": "0x9266337e2deb5c5de22c06dfcd833ca5a20ca9d3",
+    "side": "Astralis",
+    "usd": 123
+   },
+   {
+    "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
+    "side": "Astralis",
+    "usd": 114
+   },
+   {
+    "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
+    "side": "Astralis",
+    "usd": 109
+   },
+   {
+    "wallet": "0xbc59bdd1501d328de7dd14a142b28529e8fc35f7",
+    "side": "Astralis",
+    "usd": 103
+   },
+   {
+    "wallet": "0xbbb4f240cd486a15fc519fee5d8bb99a2f9c0060",
+    "side": "100 Thieves",
+    "usd": 102
+   },
+   {
+    "wallet": "0xc104db0d325238b721c407b44f14f70bb6b1e684",
+    "side": "Astralis",
+    "usd": 82,
+    "avgPrice": 0.53
+   },
+   {
+    "wallet": "0xb66c2855ecdf8d41d6028b749fe7970f291ba0f5",
+    "side": "100 Thieves",
+    "usd": 54
+   },
+   {
+    "wallet": "0xc8d9c0df291315f2184ecdab4ed8247618acdf36",
+    "side": "100 Thieves",
+    "usd": 48
+   },
+   {
+    "wallet": "0x536e4bd582d437cb2a4bc6bbec8384c600cd4fd5",
+    "side": "100 Thieves",
+    "usd": 47
+   },
+   {
+    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
+    "side": "Astralis",
+    "usd": 38
+   },
+   {
+    "wallet": "0x48b0900dc31ac1aadf4777ba76eb72d35048a348",
+    "side": "Astralis",
+    "usd": 29
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "100 Thieves",
+    "usd": 28
+   },
+   {
+    "wallet": "0xa951006f1ce68498c1aef9b013880459e6e08a2f",
+    "side": "Astralis",
+    "usd": 26
+   },
+   {
+    "wallet": "0xa0056fd11e9b79df75815bbd89fb74a666caabb1",
+    "side": "Astralis",
+    "usd": 23
+   },
+   {
+    "wallet": "0x758dac51ba3cc9a246a79787da9df11c5f425d9e",
+    "side": "Astralis",
+    "usd": 16
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "Astralis",
+    "usd": 12
+   },
+   {
+    "wallet": "0xcb478cba19de920f9f7e359c9a8609d7f41c4737",
+    "side": "Astralis",
+    "usd": 8
+   },
+   {
+    "wallet": "0xc846f5368ab49a854d2280b7ecff92669824c413",
+    "side": "Astralis",
+    "usd": 5
+   },
+   {
+    "wallet": "0x0cf18b4294b05509c44a6a0172eff7e97b20d7fe",
+    "side": "100 Thieves",
+    "usd": 4
+   },
+   {
+    "wallet": "0x521070c99db06e54af5e8e4a91d6858decdfbd53",
+    "side": "Astralis",
+    "usd": 3
+   }
+  ],
+  "hoursToKickoff": 2.83,
+  "capturedAt": "2026-09-26T07:13:47.686649+00:00",
+  "cond": "0x3d6c28f962c3f4101626f0f7c9968a1d98739a7e28609aaf1d86727e3f58ade0",
+  "frage": "Counter-Strike: 100 Thieves vs Astralis (BO3) - Stake Pulse Beat II Playoffs",
+  "tokens": {
+   "100 Thieves": "92992567870102260238715441396875941546228648322931759184729896076619521728649",
+   "Astralis": "108668489149547930393777282963841477517603111396035443077449321774495794988527"
+  },
+  "book": {
+   "side": "Astralis",
+   "bid": 0.54,
+   "ask": 0.55,
+   "spreadC": 1.0,
+   "spreadPct": 1.82,
+   "bids": [
+    [
+     0.54,
+     8377
+    ],
+    [
+     0.53,
+     46296
+    ],
+    [
+     0.52,
+     37568
+    ],
+    [
+     0.51,
+     881
+    ],
+    [
+     0.5,
+     564
+    ],
+    [
+     0.49,
+     10
+    ]
+   ],
+   "asks": [
+    [
+     0.55,
+     126635
+    ],
+    [
+     0.56,
+     1400
+    ],
+    [
+     0.57,
+     693
+    ],
+    [
+     0.58,
+     2595
+    ],
+    [
+     0.59,
+     1201
+    ],
+    [
+     0.6,
+     6109
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
+    "action": "BUY",
+    "side": "100 Thieves",
+    "price": 0.44,
+    "usd": 1223,
+    "ts": 1790405145
+   },
+   {
+    "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
+    "action": "BUY",
+    "side": "Astralis",
+    "price": 0.53,
+    "usd": 2813,
+    "ts": 1790398449
+   }
+  ]
+ },
+ "dota2-aur1-navi-2026-09-26": {
+  "shares": {
+   "Aurora": 13532.845086599993,
+   "Natus Vincere": 12243.987451800002
+  },
+  "prices": {
+   "Aurora": 0.525,
+   "Natus Vincere": 0.475
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 21157,
+  "whales": [
+   {
+    "wallet": "0x2f62438899f4e5097cf3b5922cf627579607dd4d",
+    "side": "Aurora",
+    "usd": 5858
+   },
+   {
+    "wallet": "0x38337de21ff0bb0a11a40761507d51e318d633d1",
+    "side": "Natus Vincere",
+    "usd": 2726,
+    "avgPrice": 0.4699
+   },
+   {
+    "wallet": "0x6b97ebe911d7f2e5e3e8c4a0faad4a5c7c0b8d30",
+    "side": "Natus Vincere",
+    "usd": 2217
+   },
+   {
+    "wallet": "0x7e5972bfc25819775ee5a9d4f191919375487b8b",
+    "side": "Aurora",
+    "usd": 2100
+   },
+   {
+    "wallet": "0xbca08c1bc204a34f2fddbe47b438b9bd42ac9705",
+    "side": "Natus Vincere",
+    "usd": 1239
+   },
+   {
+    "wallet": "0x79ae097215202b5d01f98e4479fb219102469a4a",
+    "side": "Natus Vincere",
+    "usd": 1186,
+    "avgPrice": 0.4599
+   },
+   {
+    "wallet": "0x9a0ea697ae93234076254ecc76ca4dd992a42330",
+    "side": "Natus Vincere",
+    "usd": 618
+   },
+   {
+    "wallet": "0xd619b68e64f256f8ddd185b261c8679eacf0c461",
+    "side": "Aurora",
+    "usd": 525
+   },
+   {
+    "wallet": "0xd8dca4272c19833d7c751d9d7e17a67b28273669",
+    "side": "Aurora",
+    "usd": 525,
+    "avgPrice": 0.53
+   },
+   {
+    "wallet": "0x6033ef1860696cc6beb9bfed635b468351fd8a83",
+    "side": "Aurora",
+    "usd": 477
+   },
+   {
+    "wallet": "0xa3b5da76ffbbe3325bb1b40a30f6a4634962941a",
+    "side": "Natus Vincere",
+    "usd": 475,
+    "avgPrice": 0.48
+   },
+   {
+    "wallet": "0x74ef37655b2a0e1b57082e160a16fa2f23571ac6",
+    "side": "Aurora",
+    "usd": 459
+   },
+   {
+    "wallet": "0x5b624e3e0426f7aa2ca57f7451fbcea4b125d87f",
+    "side": "Natus Vincere",
+    "usd": 425
+   },
+   {
+    "wallet": "0x48183e17a92b51605fe8e96c60b9a491f06afde0",
+    "side": "Aurora",
+    "usd": 322,
+    "avgPrice": 0.5499
+   },
+   {
+    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
+    "side": "Aurora",
+    "usd": 259
+   },
+   {
+    "wallet": "0xc8d9c0df291315f2184ecdab4ed8247618acdf36",
+    "side": "Natus Vincere",
+    "usd": 238,
+    "avgPrice": 0.46
+   },
+   {
+    "wallet": "0xe76d35faf17c1c42e0b9b988bd6515ac59835a75",
+    "side": "Aurora",
+    "usd": 210
+   },
+   {
+    "wallet": "0xc104db0d325238b721c407b44f14f70bb6b1e684",
+    "side": "Natus Vincere",
+    "usd": 190,
+    "avgPrice": 0.45
+   },
+   {
+    "wallet": "0x028602e5b0909dd7864f884f899ff287a72cf61d",
+    "side": "Aurora",
+    "usd": 188,
+    "avgPrice": 0.5433
+   },
+   {
+    "wallet": "0xfe67df6e0c585e50cbe8bdcad804d980c6b8a2e8",
+    "side": "Natus Vincere",
+    "usd": 185
+   },
+   {
+    "wallet": "0x8488ef25f79c0cf2ffdff307973b2ac10464588c",
+    "side": "Aurora",
+    "usd": 125
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Aurora",
+    "usd": 101
+   },
+   {
+    "wallet": "0x0235dc24b38772bf3339a9e5ec5db3d3a05fcee5",
+    "side": "Aurora",
+    "usd": 67,
+    "avgPrice": 0.5392
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "Aurora",
+    "usd": 35
+   },
+   {
+    "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
+    "side": "Natus Vincere",
+    "usd": 23
+   },
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Aurora",
+    "usd": 22
+   },
+   {
+    "wallet": "0x521070c99db06e54af5e8e4a91d6858decdfbd53",
+    "side": "Aurora",
+    "usd": 16
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Natus Vincere",
+    "usd": 15
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Natus Vincere",
+    "usd": 14,
+    "avgPrice": 0.46
+   },
+   {
+    "wallet": "0x67af214764bd6eda61fadb25cdcbea6d13d761ee",
+    "side": "Aurora",
+    "usd": 13
+   },
+   {
+    "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
+    "side": "Aurora",
+    "usd": 11
+   },
+   {
+    "wallet": "0x5d40576be2e9c61d283f4fd80d7a5ccf2331ba95",
+    "side": "Aurora",
+    "usd": 10
+   },
+   {
+    "wallet": "0xc3a7bca628ccd2fd4bfc72f86c1f257e96e43172",
+    "side": "Aurora",
+    "usd": 3
+   },
+   {
+    "wallet": "0xc846f5368ab49a854d2280b7ecff92669824c413",
+    "side": "Natus Vincere",
+    "usd": 2
+   },
+   {
+    "wallet": "0x9674d0d14a078c5dd5cd411c64bff82523dfe1a2",
+    "side": "Natus Vincere",
+    "usd": 1
+   }
+  ],
+  "hoursToKickoff": 2.83,
+  "capturedAt": "2026-09-26T07:13:47.686649+00:00",
+  "cond": "0x973f2dd3b2bd3acbc9dd16be039ef9b1d20e7f96ab3e1b757779ead4ed093dad",
+  "frage": "Dota 2: Aurora vs Natus Vincere (BO3) - PGL Wallachia Playoffs",
+  "tokens": {
+   "Aurora": "73985379766625663238223450807989416672726434701303893563370545269669072114883",
+   "Natus Vincere": "2483298187124214637022014403579932513729756302459663316800112294223388263885"
+  },
+  "book": {
+   "side": "Aurora",
+   "bid": 0.52,
+   "ask": 0.53,
+   "spreadC": 1.0,
+   "spreadPct": 1.89,
+   "bids": [
+    [
+     0.52,
+     210
+    ],
+    [
+     0.51,
+     1573
+    ],
+    [
+     0.5,
+     61605
+    ],
+    [
+     0.49,
+     25539
+    ],
+    [
+     0.48,
+     14529
+    ],
+    [
+     0.47,
+     17242
+    ]
+   ],
+   "asks": [
+    [
+     0.53,
+     13152
+    ],
+    [
+     0.54,
+     38296
+    ],
+    [
+     0.55,
+     33564
+    ],
+    [
+     0.56,
+     15080
+    ],
+    [
+     0.57,
+     17038
+    ],
+    [
+     0.58,
+     6320
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xa3b5da76ffbbe3325bb1b40a30f6a4634962941a",
+    "action": "BUY",
+    "side": "Natus Vincere",
+    "price": 0.48,
+    "usd": 480,
+    "ts": 1790406506
+   },
+   {
+    "wallet": "0x38337de21ff0bb0a11a40761507d51e318d633d1",
+    "action": "BUY",
+    "side": "Natus Vincere",
+    "price": 0.47,
+    "usd": 2585,
+    "ts": 1790406282
+   },
+   {
+    "wallet": "0x79ae097215202b5d01f98e4479fb219102469a4a",
+    "action": "BUY",
+    "side": "Natus Vincere",
+    "price": 0.46,
+    "usd": 1017,
+    "ts": 1790404820
+   },
+   {
+    "wallet": "0x48183e17a92b51605fe8e96c60b9a491f06afde0",
+    "action": "BUY",
+    "side": "Aurora",
+    "price": 0.55,
+    "usd": 338,
+    "ts": 1790397485
+   },
+   {
+    "wallet": "0x7e5972bfc25819775ee5a9d4f191919375487b8b",
+    "action": "BUY",
+    "side": "Aurora",
+    "price": 0.55,
+    "usd": 1045,
+    "ts": 1790397417
+   },
+   {
+    "wallet": "0x7e5972bfc25819775ee5a9d4f191919375487b8b",
+    "action": "BUY",
+    "side": "Aurora",
+    "price": 0.55,
+    "usd": 1100,
+    "ts": 1790397416
+   },
+   {
+    "wallet": "0x6033ef1860696cc6beb9bfed635b468351fd8a83",
+    "action": "BUY",
+    "side": "Aurora",
+    "price": 0.55,
+    "usd": 500,
+    "ts": 1790391912
+   },
+   {
+    "wallet": "0xbca08c1bc204a34f2fddbe47b438b9bd42ac9705",
+    "action": "BUY",
+    "side": "Natus Vincere",
+    "price": 0.46,
+    "usd": 300,
+    "ts": 1790388660
+   }
+  ]
+ },
+ "cs2-fnc-is-2026-09-26": {
+  "shares": {
+   "fnatic": 9878.350276900004,
+   "Iberian Soul": 7301.029342675001
+  },
+  "prices": {
+   "fnatic": 0.575,
+   "Iberian Soul": 0.425
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 18834,
+  "whales": [
+   {
+    "wallet": "0x24189b6c233a6b9a5365fe99b380673e900766c8",
+    "side": "fnatic",
+    "usd": 5536
+   },
+   {
+    "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
+    "side": "Iberian Soul",
+    "usd": 4882
+   },
+   {
+    "wallet": "0x88553abcb827281addbf81cf6056eafb4eba7240",
+    "side": "fnatic",
+    "usd": 920
+   },
+   {
+    "wallet": "0xe40ecff63ec661d218a86c048186ac83389a9770",
+    "side": "Iberian Soul",
+    "usd": 721
+   },
+   {
+    "wallet": "0x513587a2f36a8cb29333052a6a479091ef8a7217",
+    "side": "Iberian Soul",
+    "usd": 564
+   },
+   {
+    "wallet": "0xf25358f32e5b8b67306452f846d58bea61d9c69d",
+    "side": "fnatic",
+    "usd": 557
+   },
+   {
+    "wallet": "0xbbaa895f78fa096adbfaf18dd852ad4d3b9fa47f",
+    "side": "fnatic",
+    "usd": 439
+   },
+   {
+    "wallet": "0x6b97ebe911d7f2e5e3e8c4a0faad4a5c7c0b8d30",
+    "side": "Iberian Soul",
+    "usd": 395
+   },
+   {
+    "wallet": "0x77867ef97c600decde075af051934f170161c005",
+    "side": "fnatic",
+    "usd": 296
+   },
+   {
+    "wallet": "0x7e5972bfc25819775ee5a9d4f191919375487b8b",
+    "side": "fnatic",
+    "usd": 288
+   },
+   {
+    "wallet": "0x6033ef1860696cc6beb9bfed635b468351fd8a83",
+    "side": "Iberian Soul",
+    "usd": 255
+   },
+   {
+    "wallet": "0xa292a79b8fdd822d0aa225ad2bfb60cb625a7025",
+    "side": "Iberian Soul",
+    "usd": 170
+   },
+   {
+    "wallet": "0xfd3ee5e7744e613618fb4be81111933720c0feaf",
+    "side": "fnatic",
+    "usd": 153
+   },
+   {
+    "wallet": "0xfbf3eed601e4950b8676ae6db4c579b854e470e3",
+    "side": "fnatic",
+    "usd": 146
+   },
+   {
+    "wallet": "0xc50c405d51c68a156d623704453bce7aff5eca5a",
+    "side": "fnatic",
+    "usd": 141
+   },
+   {
+    "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
+    "side": "fnatic",
+    "usd": 67
+   },
+   {
+    "wallet": "0x4d1452faf4de78b990e6ec7b9d69217c1df636fd",
+    "side": "fnatic",
+    "usd": 57
+   },
+   {
+    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
+    "side": "fnatic",
+    "usd": 57
+   },
+   {
+    "wallet": "0x48b0900dc31ac1aadf4777ba76eb72d35048a348",
+    "side": "Iberian Soul",
+    "usd": 50
+   },
+   {
+    "wallet": "0xa0056fd11e9b79df75815bbd89fb74a666caabb1",
+    "side": "Iberian Soul",
+    "usd": 22
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Iberian Soul",
+    "usd": 13
+   },
+   {
+    "wallet": "0xa951006f1ce68498c1aef9b013880459e6e08a2f",
+    "side": "Iberian Soul",
+    "usd": 13
+   },
+   {
+    "wallet": "0x758dac51ba3cc9a246a79787da9df11c5f425d9e",
+    "side": "Iberian Soul",
+    "usd": 13
+   },
+   {
+    "wallet": "0x5d40576be2e9c61d283f4fd80d7a5ccf2331ba95",
+    "side": "fnatic",
+    "usd": 12
+   },
+   {
+    "wallet": "0xcb478cba19de920f9f7e359c9a8609d7f41c4737",
+    "side": "Iberian Soul",
+    "usd": 8
+   },
+   {
+    "wallet": "0xa68e82763af3ef85188a44fce175145b084787d5",
+    "side": "fnatic",
+    "usd": 6
+   },
+   {
+    "wallet": "0xc846f5368ab49a854d2280b7ecff92669824c413",
+    "side": "fnatic",
+    "usd": 6
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Iberian Soul",
+    "usd": 6
+   },
+   {
+    "wallet": "0x042d8526350dd13dc836201e6acfbab5981f0b81",
+    "side": "Iberian Soul",
+    "usd": 6
+   },
+   {
+    "wallet": "0x2aa586fdd2816678142b6db357ceb2adcfe4ff0f",
+    "side": "Iberian Soul",
+    "usd": 4
+   },
+   {
+    "wallet": "0x650e343e0761e1840eaccd16bc47ef3c309cbea4",
+    "side": "fnatic",
+    "usd": 3
+   },
+   {
+    "wallet": "0xb7201b3523237913581a31aff8f1620f14e2da75",
+    "side": "fnatic",
+    "usd": 1
+   },
+   {
+    "wallet": "0x521070c99db06e54af5e8e4a91d6858decdfbd53",
+    "side": "Iberian Soul",
+    "usd": 1
+   }
+  ],
+  "hoursToKickoff": 1.83,
+  "capturedAt": "2026-09-26T07:13:47.686649+00:00",
+  "cond": "0x2e793f5a3ae998975b8d5b4162f4875fb5265aa32707bcb39907ebf74b1029d5",
+  "frage": "Counter-Strike: fnatic vs Iberian Soul (BO3) - Stake Ranked Episode 5: Closed Qualifier Playoffs",
+  "tokens": {
+   "fnatic": "110894132715650937190608770260479003475027050852742293332898920247687892694039",
+   "Iberian Soul": "81510051502565766987944345140633563808731730608967448526853110345224430381396"
+  },
+  "book": {
+   "side": "fnatic",
+   "bid": 0.57,
+   "ask": 0.58,
+   "spreadC": 1.0,
+   "spreadPct": 1.72,
+   "bids": [
+    [
+     0.57,
+     120
+    ],
+    [
+     0.56,
+     649
+    ],
+    [
+     0.55,
+     230
+    ],
+    [
+     0.54,
+     2851
+    ],
+    [
+     0.53,
+     1005
+    ],
+    [
+     0.52,
+     1045
+    ]
+   ],
+   "asks": [
+    [
+     0.58,
+     1870
+    ],
+    [
+     0.59,
+     27632
+    ],
+    [
+     0.6,
+     125627
+    ],
+    [
+     0.61,
+     6086
+    ],
+    [
+     0.62,
+     8305
+    ],
+    [
+     0.63,
+     2223
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xbbaa895f78fa096adbfaf18dd852ad4d3b9fa47f",
+    "action": "BUY",
+    "side": "fnatic",
+    "price": 0.59,
+    "usd": 450,
+    "ts": 1790406230
+   },
+   {
+    "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
+    "action": "BUY",
+    "side": "Iberian Soul",
+    "price": 0.41,
+    "usd": 4372,
+    "ts": 1790405586
+   },
+   {
+    "wallet": "0xe40ecff63ec661d218a86c048186ac83389a9770",
+    "action": "BUY",
+    "side": "Iberian Soul",
+    "price": 0.4,
+    "usd": 423,
+    "ts": 1790400843
+   },
+   {
+    "wallet": "0x88553abcb827281addbf81cf6056eafb4eba7240",
+    "action": "BUY",
+    "side": "fnatic",
+    "price": 0.6,
+    "usd": 444,
+    "ts": 1790397890
    }
   ]
  }
