@@ -516,110 +516,6 @@
    "haltePreis": 1.55,
    "aktiv": false
   },
-  "36111764|Match Odds": {
-   "matchId": "36111764",
-   "home": "FC Badalona (W)",
-   "away": "Granada (W)",
-   "league": "Spanish Liga F",
-   "kickoff": "2026-09-26T10:00:00Z",
-   "markt": "Match Odds",
-   "seite": "home",
-   "name": "FC Badalona (W)",
-   "odd": 2.04,
-   "entryOdd": 1.94,
-   "anteilPct": 70,
-   "stufe": 2,
-   "verstaerker": [],
-   "rang": 57.0,
-   "track": null,
-   "streak": null,
-   "poly": null,
-   "polyStatus": "unbekannt",
-   "polyKey": null,
-   "polySide": null,
-   "pinnMovePP": null,
-   "punkte": {
-    "punkte": 4,
-    "moeglich": 4,
-    "dauerH": 3.27,
-    "teile": [
-     {
-      "buch": "BF",
-      "name": "Betfair",
-      "status": "ja",
-      "punkte": 3,
-      "moeglich": 3,
-      "grund": {
-       "ok": true,
-       "text": "Geld 70% auf der Seite"
-      },
-      "tiefe": {
-       "ok": true,
-       "text": "frischer Zufluss und Quote zieht mit"
-      },
-      "geld": {
-       "anteil": 0.699,
-       "betrag": 7316,
-       "gesamt": 10466,
-       "waehrung": "EUR",
-       "quelle": "geld"
-      },
-      "text": "Geld 70% auf der Seite"
-     },
-     {
-      "buch": "POLY",
-      "name": "Polymarket",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "geld": null,
-      "text": "Polymarket nicht erhoben"
-     },
-     {
-      "buch": "PIN",
-      "name": "Pinnacle",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "geld": null,
-      "text": "Pinnacle nicht erhoben"
-     },
-     {
-      "buch": "STAKE",
-      "name": "Stake-Highroller",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "geld": null,
-      "text": "Stake-Highroller nicht erhoben"
-     },
-     {
-      "buch": "ZEIT",
-      "name": "Dauer",
-      "status": "ja",
-      "punkte": 1,
-      "moeglich": 1,
-      "grund": {
-       "ok": true,
-       "text": "steht seit 3.3h vor Anpfiff"
-      },
-      "tiefe": null,
-      "text": "steht seit 3.3h vor Anpfiff"
-     }
-    ]
-   },
-   "wertVsPinn": null,
-   "gehaltenSeit": "2026-09-26T06:43:49.718579+00:00",
-   "zuletztAktiv": "2026-09-26T06:43:49.718579+00:00",
-   "haltePreis": 2.04,
-   "aktiv": false
-  },
   "35926091|Match Odds": {
    "matchId": "35926091",
    "home": "Czechia",
@@ -629,21 +525,31 @@
    "markt": "Match Odds",
    "seite": "away",
    "name": "Croatia",
-   "odd": 2.22,
+   "odd": 2.1,
    "entryOdd": 2.26,
    "anteilPct": 83,
    "stufe": 2,
-   "verstaerker": [],
-   "rang": 58.3,
+   "verstaerker": [
+    {
+     "art": "poly",
+     "text": "Poly Geld 86%",
+     "gewicht": 12
+    }
+   ],
+   "rang": 69.3,
    "track": null,
    "streak": null,
-   "poly": null,
+   "poly": {
+    "anteilPct": 86,
+    "usd": 41960,
+    "odd": 2.15
+   },
    "polyStatus": "nein",
    "polyKey": "unl-cze-hrv-2026-09-26",
    "polySide": "Croatia",
    "pinnMovePP": null,
    "punkte": {
-    "punkte": 4,
+    "punkte": 7,
     "moeglich": 7,
     "dauerH": 11.77,
     "teile": [
@@ -655,43 +561,43 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 83% auf der Seite"
+       "text": "Geld 74% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.828,
-       "betrag": 16911,
-       "gesamt": 20424,
+       "anteil": 0.745,
+       "betrag": 55708,
+       "gesamt": 74776,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 83% auf der Seite"
+      "text": "Geld 74% auf der Seite"
      },
      {
       "buch": "POLY",
       "name": "Polymarket",
-      "status": "nein",
-      "punkte": 0,
+      "status": "ja",
+      "punkte": 3,
       "moeglich": 3,
       "grund": {
-       "ok": false,
-       "text": "Poly-Preis 46% auf derselben Seite"
+       "ok": true,
+       "text": "Poly-Geld 84% auf derselben Seite"
       },
       "tiefe": {
-       "ok": false,
-       "text": "kein bewiesenes Wallet auf der Seite"
+       "ok": true,
+       "text": "1 bewiesene Wallet drauf"
       },
       "geld": {
-       "anteil": 0.46,
-       "betrag": null,
-       "gesamt": 26400,
+       "anteil": 0.84,
+       "betrag": 38811,
+       "gesamt": 46204,
        "waehrung": "USD",
-       "quelle": "preis"
+       "quelle": "geld"
       },
-      "text": "Poly-Preis 46% auf derselben Seite"
+      "text": "Poly-Geld 84% auf derselben Seite"
      },
      {
       "buch": "PIN",
@@ -732,9 +638,9 @@
    },
    "wertVsPinn": null,
    "gehaltenSeit": "2026-09-26T06:58:49.532200+00:00",
-   "zuletztAktiv": "2026-09-26T06:58:49.532200+00:00",
+   "zuletztAktiv": "2026-09-26T11:59:11.305097+00:00",
    "haltePreis": 2.22,
-   "aktiv": false
+   "aktiv": true
   },
   "35930777|Match Odds": {
    "matchId": "35930777",
@@ -745,7 +651,7 @@
    "markt": "Match Odds",
    "seite": "away",
    "name": "Switzerland",
-   "odd": 1.38,
+   "odd": 1.39,
    "entryOdd": 1.45,
    "anteilPct": 79,
    "stufe": 2,
@@ -781,20 +687,20 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 82% auf der Seite"
+       "text": "Geld 87% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.817,
-       "betrag": 44074,
-       "gesamt": 53946,
+       "anteil": 0.868,
+       "betrag": 92619,
+       "gesamt": 106704,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 82% auf der Seite"
+      "text": "Geld 87% auf der Seite"
      },
      {
       "buch": "POLY",
@@ -813,7 +719,7 @@
       "geld": {
        "anteil": 0.72,
        "betrag": null,
-       "gesamt": 115224,
+       "gesamt": 127337,
        "waehrung": "USD",
        "quelle": "preis"
       },
@@ -858,8 +764,262 @@
    },
    "wertVsPinn": null,
    "gehaltenSeit": "2026-09-26T07:28:42.905741+00:00",
-   "zuletztAktiv": "2026-09-26T08:58:52.669129+00:00",
+   "zuletztAktiv": "2026-09-26T10:29:05.475627+00:00",
    "haltePreis": 1.4,
+   "aktiv": false
+  },
+  "36091389|Match Odds": {
+   "matchId": "36091389",
+   "home": "Belgium",
+   "away": "France",
+   "league": "UEFA Nations League",
+   "kickoff": "2026-09-28T18:45:00Z",
+   "markt": "Match Odds",
+   "seite": "away",
+   "name": "France",
+   "odd": 2.0,
+   "entryOdd": 1.79,
+   "anteilPct": 86,
+   "stufe": 2,
+   "verstaerker": [
+    {
+     "art": "pinn",
+     "text": "Pinnacle stimmt zu",
+     "gewicht": 10
+    }
+   ],
+   "rang": 68.6,
+   "track": null,
+   "streak": null,
+   "poly": null,
+   "polyStatus": "nein",
+   "polyKey": "unl-bel-fra-2026-09-28",
+   "polySide": "France",
+   "pinnMovePP": null,
+   "punkte": {
+    "punkte": 6,
+    "moeglich": 10,
+    "dauerH": 56.27,
+    "teile": [
+     {
+      "buch": "BF",
+      "name": "Betfair",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Geld 86% auf der Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "frischer Zufluss und Quote zieht mit"
+      },
+      "geld": {
+       "anteil": 0.858,
+       "betrag": 14372,
+       "gesamt": 16750,
+       "waehrung": "EUR",
+       "quelle": "geld"
+      },
+      "text": "Geld 86% auf der Seite"
+     },
+     {
+      "buch": "POLY",
+      "name": "Polymarket",
+      "status": "nein",
+      "punkte": 0,
+      "moeglich": 3,
+      "grund": {
+       "ok": false,
+       "text": "Poly-Preis 52% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein bewiesenes Wallet auf der Seite"
+      },
+      "geld": {
+       "anteil": 0.52,
+       "betrag": null,
+       "gesamt": 64917,
+       "waehrung": "USD",
+       "quelle": "preis"
+      },
+      "text": "Poly-Preis 52% auf derselben Seite"
+     },
+     {
+      "buch": "PIN",
+      "name": "Pinnacle",
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "hat dieselbe Seite als Favorit"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein Move gemessen"
+      },
+      "geld": null,
+      "text": "hat dieselbe Seite als Favorit"
+     },
+     {
+      "buch": "STAKE",
+      "name": "Stake-Highroller",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Stake-Highroller nicht erhoben"
+     },
+     {
+      "buch": "ZEIT",
+      "name": "Dauer",
+      "status": "ja",
+      "punkte": 1,
+      "moeglich": 1,
+      "grund": {
+       "ok": true,
+       "text": "steht seit 56.3h vor Anpfiff"
+      },
+      "tiefe": null,
+      "text": "steht seit 56.3h vor Anpfiff"
+     }
+    ]
+   },
+   "wertVsPinn": null,
+   "gehaltenSeit": "2026-09-26T10:29:05.475627+00:00",
+   "zuletztAktiv": "2026-09-26T10:29:05.475627+00:00",
+   "haltePreis": 2.0,
+   "aktiv": false
+  },
+  "35925583|Match Odds": {
+   "matchId": "35925583",
+   "home": "Iceland",
+   "away": "Estonia",
+   "league": "UEFA Nations League",
+   "kickoff": "2026-09-26T16:00:00Z",
+   "markt": "Match Odds",
+   "seite": "home",
+   "name": "Iceland",
+   "odd": 1.31,
+   "entryOdd": 1.34,
+   "anteilPct": 84,
+   "stufe": 2,
+   "verstaerker": [
+    {
+     "art": "poly",
+     "text": "Poly Geld 92%",
+     "gewicht": 12
+    }
+   ],
+   "rang": 70.4,
+   "track": null,
+   "streak": null,
+   "poly": {
+    "anteilPct": 92,
+    "usd": 21828,
+    "odd": 1.32
+   },
+   "polyStatus": "ja",
+   "polyKey": "unl-isl-est-2026-09-26",
+   "polySide": "Iceland",
+   "pinnMovePP": null,
+   "punkte": {
+    "punkte": 7,
+    "moeglich": 7,
+    "dauerH": 5.02,
+    "teile": [
+     {
+      "buch": "BF",
+      "name": "Betfair",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Geld 84% auf der Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "frischer Zufluss und Quote zieht mit"
+      },
+      "geld": {
+       "anteil": 0.839,
+       "betrag": 18630,
+       "gesamt": 22205,
+       "waehrung": "EUR",
+       "quelle": "geld"
+      },
+      "text": "Geld 84% auf der Seite"
+     },
+     {
+      "buch": "POLY",
+      "name": "Polymarket",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Poly-Geld 92% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "1 bewiesene Wallet drauf"
+      },
+      "geld": {
+       "anteil": 0.92,
+       "betrag": 20082,
+       "gesamt": 21828,
+       "waehrung": "USD",
+       "quelle": "geld"
+      },
+      "text": "Poly-Geld 92% auf derselben Seite"
+     },
+     {
+      "buch": "PIN",
+      "name": "Pinnacle",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Pinnacle nicht erhoben"
+     },
+     {
+      "buch": "STAKE",
+      "name": "Stake-Highroller",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Stake-Highroller nicht erhoben"
+     },
+     {
+      "buch": "ZEIT",
+      "name": "Dauer",
+      "status": "ja",
+      "punkte": 1,
+      "moeglich": 1,
+      "grund": {
+       "ok": true,
+       "text": "steht seit 5.0h vor Anpfiff"
+      },
+      "tiefe": null,
+      "text": "steht seit 5.0h vor Anpfiff"
+     }
+    ]
+   },
+   "wertVsPinn": null,
+   "gehaltenSeit": "2026-09-26T10:59:01.788745+00:00",
+   "zuletztAktiv": "2026-09-26T10:59:01.788745+00:00",
+   "haltePreis": 1.31,
    "aktiv": false
   }
  }

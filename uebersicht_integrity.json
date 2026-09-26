@@ -14,7 +14,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "Fall liegt aktuell vor: 🔒 E-Sport ohne Wallet-Nachweis, Liga · ABWÄGEN, Public-Kandidaten nehmen die ROI-Huerde und scheitern an CLV — der Satz auf Ebene 1 muss das sagen"
+      "hinweis": "Fall liegt aktuell vor: 🔒 E-Sport ohne Wallet-Nachweis, Liga · ABWÄGEN, Kazakhstan Premier League · Match Odds nehmen die ROI-Huerde und scheitern an CLV — der Satz auf Ebene 1 muss das sagen"
     },
     {
       "label": "Poly-Kachel gibt sich nicht als Kanal-Bilanz aus",
@@ -83,9 +83,11 @@
     {
       "label": "Poly-Markt gehoert zur selben Mannschaft",
       "severity": "error",
-      "failures": [],
-      "nFail": 0,
-      "ok": true,
+      "failures": [
+        "Poly-Markt mls-atl-nyc-2026-09-26 haengt an 3 Betfair-Spielen: US MLS/The Draw, Scottish Challenge Cup/Formartine Utd, English National League South/Maidstone Utd"
+      ],
+      "nFail": 1,
+      "ok": false,
       "hinweis": "Nachwuchs- und Frauenteams teilen fast alle Tokens mit der ersten Mannschaft — der Namens-Score kann sie nicht trennen, der Marker schon."
     },
     {
@@ -108,8 +110,8 @@
       "label": "Stake-Spielklasse: Tabelle vollstaendig, Richtungen getrennt",
       "severity": "error",
       "failures": [
-        "1 Fussball-Ligen ohne Eintrag in stake_liga_stufe.py (cymru-championship-south) — sie fallen aus jeder Zeile der Ansicht, statt aufzufallen",
-        "3 Liga-Schluessel bezeichnen mehrere Turniere und tragen trotzdem eine Spielklasse (china-league, eerste-divisie, la-liga-2) — eine Zahl davon ist fuer die Haelfte der Spiele falsch"
+        "2 Fussball-Ligen ohne Eintrag in stake_liga_stufe.py (cfl, cymru-championship-south) — sie fallen aus jeder Zeile der Ansicht, statt aufzufallen",
+        "7 Liga-Schluessel bezeichnen mehrere Turniere und tragen trotzdem eine Spielklasse (brasileiro-serie-b, china-league, eerste-divisie, la-liga-2, premier-league, primera-b) — eine Zahl davon ist fuer die Haelfte der Spiele falsch"
       ],
       "nFail": 2,
       "ok": false,
@@ -129,7 +131,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "203 Picks im Fenster, 20 % ohne Preis-Signal."
+      "hinweis": "194 Picks im Fenster, 21 % ohne Preis-Signal."
     },
     {
       "label": "Stumme Signale: wer hat nie gefeuert?",
@@ -159,7 +161,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "seit Vorregistrierung n=3389 (UG -5.1 %) · Rueckblick n=2726, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=3461 (UG -4.2 %) · Rueckblick n=2726, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -183,7 +185,7 @@
       "failures": [
         "capture-closing-liga.yml: Cron sagt alle 15 Min, gemessen alle 197 Min (closing-liga, im Zeitfenster gemessen) — die Schedule-Bilanz rechnet mit 52 Laeufen/Tag, geliefert werden eher 4. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit.",
         "manage-liga-poly.yml: Cron sagt alle 30 Min, gemessen alle 80 Min (liga-poly, im Zeitfenster gemessen) — die Schedule-Bilanz rechnet mit 24 Laeufen/Tag, geliefert werden eher 9. Dieser Workflow hat ein 40-Minuten-Fenster zu treffen — bei einem gemessenen Abstand von 80 Min kann er es nicht sicher treffen. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit.",
-        "poly-live-scan.yml: Cron sagt alle 15 Min, gemessen alle 216 Min (poly-live-scan) — die Schedule-Bilanz rechnet mit 96 Laeufen/Tag, geliefert werden eher 7. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit."
+        "poly-live-scan.yml: Cron sagt alle 15 Min, gemessen alle 195 Min (poly-live-scan) — die Schedule-Bilanz rechnet mit 96 Laeufen/Tag, geliefert werden eher 7. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit."
       ],
       "nFail": 3,
       "ok": false,
@@ -193,7 +195,7 @@
       "label": "Der Deckel hat Luft",
       "severity": "warn",
       "failures": [
-        "poly-global-scan.yml: laengster Lauf 23.2 Min (Median 6.6) bei einem Deckel von 25 Min — 93 % ausgelastet. Ein Abbruch trifft den letzten Schritt, und das ist der, der die Belege sichert."
+        "betfair.yml: laengster Lauf 12.2 Min (Median 1.4) bei einem Deckel von 14 Min — 87 % ausgelastet. Ein Abbruch trifft den letzten Schritt, und das ist der, der die Belege sichert."
       ],
       "nFail": 1,
       "ok": false,
@@ -210,9 +212,11 @@
     {
       "label": "Positionswert ist frisch",
       "severity": "warn",
-      "failures": [],
-      "nFail": 0,
-      "ok": true,
+      "failures": [
+        "liga_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 14 h — die Datei selbst ist 14 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
+      ],
+      "nFail": 1,
+      "ok": false,
       "hinweis": ""
     },
     {
@@ -229,7 +233,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "173 Zeilen · 168 abgerechnet · 3 offen"
+      "hinweis": "178 Zeilen · 175 abgerechnet · 1 offen"
     },
     {
       "label": "Artefakte sind lesbar",
@@ -283,13 +287,13 @@
       "label": "Serien-Buch zeigt beide Buecher",
       "severity": "warn",
       "failures": [
-        "die beiden Serien-Buecher sind 8.8 h auseinander (Liga 0.7 h, MLS 9.5 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+        "die beiden Serien-Buecher sind 8.8 h auseinander (Liga 14.7 h, MLS 23.5 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
       ],
       "nFail": 1,
       "ok": false,
       "hinweis": "Liga n=84 · MLS n=73 · Urteil beide 'Erwartung zu duenn'"
     }
   ],
-  "nFail": 6,
-  "generatedAt": "2026-09-25T22:16:02.332984+00:00"
+  "nFail": 8,
+  "generatedAt": "2026-09-26T12:20:40.030427+00:00"
 }
