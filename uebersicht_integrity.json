@@ -132,9 +132,10 @@
       "label": "Stake-Spielklasse: Tabelle vollstaendig, Richtungen getrennt",
       "severity": "error",
       "failures": [
-        "2 Fussball-Ligen ohne Eintrag in stake_liga_stufe.py (erste-liga, nb-iii) — sie fallen aus jeder Zeile der Ansicht, statt aufzufallen"
+        "2 Fussball-Ligen ohne Eintrag in stake_liga_stufe.py (erste-liga, nb-iii) — sie fallen aus jeder Zeile der Ansicht, statt aufzufallen",
+        "1 Liga-Schluessel bezeichnen mehrere Turniere und tragen trotzdem eine Spielklasse (primera-division-apertura) — eine Zahl davon ist fuer die Haelfte der Spiele falsch"
       ],
-      "nFail": 1,
+      "nFail": 2,
       "ok": false,
       "hinweis": ""
     },
@@ -182,7 +183,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "seit Vorregistrierung n=3832 (UG -5.0 %) · Rueckblick n=2609, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=3842 (UG -5.0 %) · Rueckblick n=2600, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -217,7 +218,7 @@
       "label": "Der Deckel hat Luft",
       "severity": "warn",
       "failures": [
-        "poly-global-scan.yml: laengster Lauf 22.3 Min (Median 6.6) bei einem Deckel von 25 Min — 89 % ausgelastet. Ein Abbruch trifft den letzten Schritt, und das ist der, der die Belege sichert.",
+        "poly-global-scan.yml: laengster Lauf 22.3 Min (Median 6.4) bei einem Deckel von 25 Min — 89 % ausgelastet. Ein Abbruch trifft den letzten Schritt, und das ist der, der die Belege sichert.",
         "poly-live-scan.yml: laengster Lauf 12.3 Min (Median 3.0) bei einem Deckel von 12 Min — 102 % ausgelastet. Ein Abbruch trifft den letzten Schritt, und das ist der, der die Belege sichert."
       ],
       "nFail": 2,
@@ -254,7 +255,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "221 Zeilen · 215 abgerechnet · 3 offen"
+      "hinweis": "224 Zeilen · 215 abgerechnet · 6 offen"
     },
     {
       "label": "Artefakte sind lesbar",
@@ -308,7 +309,7 @@
       "label": "Serien-Buch zeigt beide Buecher",
       "severity": "warn",
       "failures": [
-        "die beiden Serien-Buecher sind 15.7 h auseinander (Liga 24.2 h, MLS 8.5 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+        "die beiden Serien-Buecher sind 8.5 h auseinander (Liga 0.5 h, MLS 9.0 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
       ],
       "nFail": 1,
       "ok": false,
@@ -316,5 +317,5 @@
     }
   ],
   "nFail": 6,
-  "generatedAt": "2026-09-27T21:36:00.378806+00:00"
+  "generatedAt": "2026-09-27T22:05:15.786270+00:00"
 }
