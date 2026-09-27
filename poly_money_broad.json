@@ -1,15 +1,15 @@
 {
- "n": 622,
+ "n": 623,
  "minOdds": 1.35,
- "moneyHitRate": 0.375,
- "priceHitRate": 0.407,
- "brierMoney": 0.8872,
- "brierPrice": 0.6847,
+ "moneyHitRate": 0.374,
+ "priceHitRate": 0.409,
+ "brierMoney": 0.8867,
+ "brierPrice": 0.686,
  "disagree": {
-  "n": 173,
+  "n": 172,
   "moneyWon": 25,
-  "priceWon": 45,
-  "neither": 103
+  "priceWon": 47,
+  "neither": 100
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -31,19 +31,19 @@
    "verdict": "preis_besser"
   },
   {
+   "league": "SOCCER:UNL",
+   "n": 46,
+   "moneyHitRate": 0.348,
+   "brierMoney": 0.8558,
+   "brierPrice": 0.6991,
+   "verdict": "preis_besser"
+  },
+  {
    "league": "LIGUE-1",
    "n": 37,
    "moneyHitRate": 0.324,
    "brierMoney": 0.8599,
    "brierPrice": 0.6941,
-   "verdict": "preis_besser"
-  },
-  {
-   "league": "SOCCER:UNL",
-   "n": 44,
-   "moneyHitRate": 0.364,
-   "brierMoney": 0.8446,
-   "brierPrice": 0.6786,
    "verdict": "preis_besser"
   },
   {
@@ -104,8 +104,8 @@
   }
  ],
  "guete": {
-  "belastbar": 622,
-  "preis_echo": 213,
+  "belastbar": 623,
+  "preis_echo": 212,
   "abgeschnitten": 77,
   "unbekannt": 123,
   "leer": 0
@@ -316,6 +316,18 @@
    "totalUsd": 937420
   },
   {
+   "key": "unl-ger-grc-2026-09-27",
+   "league": "SOCCER:UNL",
+   "winner": "Greece",
+   "moneyFav": "Germany",
+   "priceFav": "Germany",
+   "moneyShare": 0.745,
+   "priceProb": 0.678,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 921909
+  },
+  {
    "key": "unl-tur-fra-2026-09-25",
    "league": "SOCCER:UNL",
    "winner": "France",
@@ -416,7 +428,7 @@
    "league": "EPL",
    "winner": "Draw (Nottingham Forest FC vs. Tottenham Hotspur FC)",
    "moneyFav": "Tottenham Hotspur FC",
-   "priceFav": "Nottingham Forest FC",
+   "priceFav": "Tottenham Hotspur FC",
    "moneyShare": 0.584,
    "priceProb": 0.357,
    "moneyOK": false,
@@ -578,27 +590,15 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 450346
-  },
-  {
-   "key": "bra-bra-bah-2026-09-05",
-   "league": "BRAZIL-SERIE-A",
-   "winner": "EC Bahia",
-   "moneyFav": "Red Bull Bragantino",
-   "priceFav": "Red Bull Bragantino",
-   "moneyShare": 0.993,
-   "priceProb": 0.508,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 432365
   }
  ],
- "generatedAt": "2026-09-27T22:18:06.015774+00:00",
+ "generatedAt": "2026-09-27T22:48:41.101087+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 423,
   "nfl": 800,
-  "mlb": 505,
+  "mlb": 496,
   "nhl": 598,
   "mls": 554,
   "epl": 470,
@@ -615,11 +615,11 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 687,
+  "esports": 706,
   "cs2": 423,
   "lol": 435,
   "dota": 9,
-  "valorant": 459,
+  "valorant": 461,
   "ufc": 451,
   "mma": 57,
   "boxing": 269,
@@ -646,7 +646,7 @@
   "japan-j-league": 473,
   "japan-j2-league": 524,
   "k-league": 448,
-  "la-liga-2": 516,
+  "la-liga-2": 514,
   "liga-mx-apertura": 2,
   "ligue-2": 460,
   "naitons-league": 1,
@@ -666,7 +666,7 @@
   "uefa-champions-league": 26,
   "uefa-conference-league": 29,
   "uefa-europa-league": 18,
-  "uefa-nations-league": 687,
+  "uefa-nations-league": 691,
   "uefa-womens-champions-league": 2,
   "ukraine-premier-liha": 430,
   "womens-champions-league": 463
@@ -686,69 +686,69 @@
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 2428,
-   "usd": 61782994,
-   "beispiel": "fifwc-arg-cvi-2026-07-03-more-markets"
-  },
-  "world": {
-   "n": 131,
-   "usd": 8680130,
-   "beispiel": "world-cup-winner"
+   "n": 2310,
+   "usd": 56639334,
+   "beispiel": "fifwc-nor-eng-2026-07-11-more-markets"
   },
   "nba": {
-   "n": 449,
-   "usd": 7051511,
+   "n": 466,
+   "usd": 7574839,
    "beispiel": "nba-nyk-atl-2026-04-23"
   },
-  "uefa": {
-   "n": 54,
-   "usd": 5165106,
-   "beispiel": "uefa-nations-league-2026-27-group-b4-winner"
-  },
   "ecs": {
-   "n": 9,
-   "usd": 1880024,
+   "n": 10,
+   "usd": 1884295,
    "beispiel": "ecs-ars-mci-2026-08-16"
   },
   "us": {
-   "n": 45,
-   "usd": 1457850,
+   "n": 42,
+   "usd": 1407975,
    "beispiel": "us-announces-halt-in-iran-offensive-operations-byptptpt-20260718015003096"
   },
-  "will": {
-   "n": 30,
-   "usd": 959406,
-   "beispiel": "will-the-us-invade-iran-before-2027"
+  "world": {
+   "n": 52,
+   "usd": 798242,
+   "beispiel": "world-cup-golden-boot-winner"
   },
-  "which": {
-   "n": 41,
-   "usd": 928369,
-   "beispiel": "which-party-will-win-the-senate-in-2026"
+  "cbb": {
+   "n": 92,
+   "usd": 770361,
+   "beispiel": "cbb-hou-utah-2026-02-10"
   },
   "super": {
    "n": 30,
    "usd": 555180,
    "beispiel": "super-bowl-champion-2026-731"
   },
-  "fed": {
-   "n": 35,
-   "usd": 550907,
-   "beispiel": "fed-decision-in-march-885"
-  },
-  "presidential": {
-   "n": 24,
-   "usd": 455560,
-   "beispiel": "presidential-election-winner-2028"
+  "which": {
+   "n": 31,
+   "usd": 469056,
+   "beispiel": "which-party-will-win-the-senate-in-2026"
   },
   "btc": {
    "n": 68,
    "usd": 453255,
    "beispiel": "btc-updown-15m-1777649400"
   },
-  "cbb": {
-   "n": 26,
-   "usd": 388254,
-   "beispiel": "cbb-uconn-ill-2026-04-04"
+  "uefa": {
+   "n": 17,
+   "usd": 432120,
+   "beispiel": "uefa-nations-league-2026-27-group-b4-winner"
+  },
+  "presidential": {
+   "n": 23,
+   "usd": 425525,
+   "beispiel": "presidential-election-winner-2028"
+  },
+  "will": {
+   "n": 27,
+   "usd": 422428,
+   "beispiel": "will-the-us-invade-iran-before-2027"
+  },
+  "2026": {
+   "n": 32,
+   "usd": 367566,
+   "beispiel": "2026-rocket-classic-winner"
   },
   "strait": {
    "n": 7,
@@ -760,30 +760,30 @@
    "usd": 342166,
    "beispiel": "usc-psg-av-2026-08-12"
   },
-  "ballon": {
-   "n": 20,
-   "usd": 311591,
-   "beispiel": "ballon-dor-winner-2026"
-  },
-  "2026": {
-   "n": 25,
-   "usd": 297115,
-   "beispiel": "2026-f1-drivers-champion"
-  },
   "who": {
    "n": 12,
-   "usd": 279756,
+   "usd": 279763,
    "beispiel": "who-will-trump-nominate-as-fed-chair"
   },
+  "ballon": {
+   "n": 19,
+   "usd": 278382,
+   "beispiel": "ballon-dor-winner-2026"
+  },
   "pro": {
-   "n": 41,
-   "usd": 268409,
-   "beispiel": "pro-football-2027-champion-20260729185915366"
+   "n": 42,
+   "usd": 269543,
+   "beispiel": "pro-football-2027-nfc-champion"
   },
   "col": {
-   "n": 53,
-   "usd": 225153,
+   "n": 61,
+   "usd": 246890,
    "beispiel": "col-gen-flc-2026-07-30"
+  },
+  "fed": {
+   "n": 26,
+   "usd": 226093,
+   "beispiel": "fed-decision-in-december"
   }
  }
 }
