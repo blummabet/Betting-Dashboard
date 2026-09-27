@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-09-27T20:02:38.732674+00:00",
-"count": 11,
-"covered": 8,
+"generatedAt": "2026-09-27T20:17:41.800383+00:00",
+"count": 12,
+"covered": 7,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -54,7 +54,7 @@
 "leaguesMitTotals": [],
 "oddsKeysFetched": 43,
 "oddsKeysMitDaten": 43,
-"oddsEvents": 543,
+"oddsEvents": 541,
 "oddsTotals": {
 "versucht": 2,
 "mitDaten": 0,
@@ -63,8 +63,8 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 90646,
-"remaining": 4909354,
+"used": 90781,
+"remaining": 4909219,
 "letzterFehler": null
 },
 "ankerQuote": 0.857,
@@ -79,12 +79,12 @@
 "live": true,
 "moneySide": "away",
 "moneyName": "Portugal",
-"moneySharePct": 54,
-"moneyOdd": 1.86,
+"moneySharePct": 58,
+"moneyOdd": 1.51,
 "moneyDir": "in",
-"totVol": 3259230,
-"pinnOdd": 1.79,
-"softOdd": 2.59,
+"totVol": 3692649,
+"pinnOdd": 1.51,
+"softOdd": 1.44,
 "softN": 20,
 "poly": {
 "vol": 1433349,
@@ -122,15 +122,15 @@
 "whaleUsd": 97086
 },
 "pinn": {
-"home": 0.2059,
-"draw": 0.2672,
-"away": 0.5269,
+"home": 0.1125,
+"draw": 0.2607,
+"away": 0.6268,
 "fav": "away"
 },
 "soft": {
-"home": 0.2829,
-"draw": 0.3093,
-"away": 0.4078,
+"home": 0.0978,
+"draw": 0.2607,
+"away": 0.6415,
 "fav": "away",
 "n": 20
 },
@@ -151,11 +151,11 @@
 "moneySide": "home",
 "moneyName": "Germany",
 "moneySharePct": 90,
-"moneyOdd": 1.68,
+"moneyOdd": 2.26,
 "moneyDir": "out",
-"totVol": 2648517,
-"pinnOdd": 1.64,
-"softOdd": 1.63,
+"totVol": 2942511,
+"pinnOdd": 1.99,
+"softOdd": 2.1,
 "softN": 20,
 "poly": {
 "vol": 1147281,
@@ -193,23 +193,269 @@
 "whaleUsd": 130849
 },
 "pinn": {
-"home": 0.5764,
-"draw": 0.302,
-"away": 0.1217,
+"home": 0.476,
+"draw": 0.4154,
+"away": 0.1086,
 "fav": "home"
 },
 "soft": {
-"home": 0.5653,
-"draw": 0.3212,
-"away": 0.1135,
-"fav": "home",
+"home": 0.4447,
+"draw": 0.4568,
+"away": 0.0986,
+"fav": "draw",
 "n": 20
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "teil",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36097814",
+"home": "Oviedo",
+"away": "Sporting Gijon",
+"league": "Spanish Segunda Division",
+"country": "ES",
+"kickoff": "2026-09-27T19:00:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Oviedo",
+"moneySharePct": 75,
+"moneyOdd": 1.43,
+"moneyDir": "in",
+"totVol": 81510,
+"pinnOdd": 1.37,
+"softOdd": 1.34,
+"softN": 33,
+"poly": {
+"vol": 7614,
+"odd": 1.44,
+"sharePct": 70,
+"shareSrc": "preis",
+"key": "es2-ovi-spo-2026-09-27",
+"sideKey": "Real Oviedo",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.6912,
+"draw": 0.2332,
+"away": 0.0755,
+"fav": "home"
+},
+"soft": {
+"home": 0.6821,
+"draw": 0.2357,
+"away": 0.0822,
+"fav": "home",
+"n": 33
 },
 "pinnMovePP": null,
 "pinnMove": null,
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
+},
+{
+"matchId": "36023033",
+"home": "Northern Ireland",
+"away": "Hungary",
+"league": "UEFA Nations League",
+"country": "International",
+"kickoff": "2026-09-28T18:45:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Northern Ireland",
+"moneySharePct": 70,
+"moneyOdd": 2.8,
+"moneyDir": "flat",
+"totVol": 41866,
+"pinnOdd": null,
+"softOdd": 2.6,
+"softN": 25,
+"poly": {
+"vol": 1794,
+"odd": 2.82,
+"sharePct": 36,
+"shareSrc": "preis",
+"key": "unl-nir-hun-2026-09-28",
+"sideKey": "Northern Ireland",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": null,
+"soft": {
+"home": 0.3546,
+"draw": 0.311,
+"away": 0.3344,
+"fav": "home",
+"n": 25
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Northern Ireland v Hungary",
+"grund": "kein_pinnacle",
+"kandidat": "Northern Ireland v Hungary",
+"key": "soccer_uefa_nations_league",
+"nSoft": 25
+}
+},
+{
+"matchId": "36091389",
+"home": "Belgium",
+"away": "France",
+"league": "UEFA Nations League",
+"country": "International",
+"kickoff": "2026-09-28T18:45:00Z",
+"live": false,
+"moneySide": "away",
+"moneyName": "France",
+"moneySharePct": 79,
+"moneyOdd": 1.99,
+"moneyDir": "flat",
+"totVol": 30734,
+"pinnOdd": 1.92,
+"softOdd": 1.87,
+"softN": 25,
+"poly": {
+"vol": 235641,
+"odd": 1.94,
+"sharePct": 52,
+"shareSrc": "preis",
+"key": "unl-bel-fra-2026-09-28",
+"sideKey": "France",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.2579,
+"draw": 0.2383,
+"away": 0.5038,
+"fav": "away"
+},
+"soft": {
+"home": 0.2615,
+"draw": 0.2402,
+"away": 0.4983,
+"fav": "away",
+"n": 25
+},
+"pinnMovePP": 0.2,
+"pinnMove": {
+"movePP": 0.2,
+"stepPP": 0.0,
+"n": 25,
+"move": false,
+"laeuft": false
+},
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36023024",
+"home": "Spain",
+"away": "Croatia",
+"league": "UEFA Nations League",
+"country": "International",
+"kickoff": "2026-09-29T18:45:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Spain",
+"moneySharePct": 91,
+"moneyOdd": 1.22,
+"moneyDir": "flat",
+"totVol": 23096,
+"pinnOdd": 1.2,
+"softOdd": 1.19,
+"softN": 24,
+"poly": {
+"vol": 20604,
+"odd": 1.23,
+"sharePct": 82,
+"shareSrc": "preis",
+"key": "unl-esp-hrv-2026-09-29",
+"sideKey": "Spain",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.8005,
+"draw": 0.1269,
+"away": 0.0726,
+"fav": "home"
+},
+"soft": {
+"home": 0.7807,
+"draw": 0.1432,
+"away": 0.0761,
+"fav": "home",
+"n": 24
+},
+"pinnMovePP": 0.7,
+"pinnMove": {
+"movePP": 0.7,
+"stepPP": 0.0,
+"n": 20,
+"move": false,
+"laeuft": false
+},
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36091456",
+"home": "Scotland",
+"away": "Switzerland",
+"league": "UEFA Nations League",
+"country": "International",
+"kickoff": "2026-09-29T18:45:00Z",
+"live": false,
+"moneySide": "away",
+"moneyName": "Switzerland",
+"moneySharePct": 89,
+"moneyOdd": 2.0,
+"moneyDir": "flat",
+"totVol": 21939,
+"pinnOdd": null,
+"softOdd": 1.9,
+"softN": 24,
+"poly": {
+"vol": 5311,
+"odd": 1.98,
+"sharePct": 50,
+"shareSrc": "preis",
+"key": "unl-sco-che-2026-09-29",
+"sideKey": "Switzerland",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": null,
+"soft": {
+"home": 0.2343,
+"draw": 0.2752,
+"away": 0.4905,
+"fav": "away",
+"n": 24
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Scotland v Switzerland",
+"grund": "kein_pinnacle",
+"kandidat": "Scotland v Switzerland",
+"key": "soccer_uefa_nations_league",
+"nSoft": 24
+}
 },
 {
 "matchId": "35926214",
@@ -221,13 +467,13 @@
 "live": true,
 "moneySide": "away",
 "moneyName": "Republic of Ireland",
-"moneySharePct": 67,
-"moneyOdd": 1.02,
+"moneySharePct": 68,
+"moneyOdd": 1.01,
 "moneyDir": "in",
-"totVol": 484522,
+"totVol": 507671,
 "pinnOdd": null,
-"softOdd": 1.01,
-"softN": 11,
+"softOdd": null,
+"softN": null,
 "poly": {
 "vol": 535153,
 "odd": 1.03,
@@ -264,270 +510,48 @@
 "whaleUsd": 67457
 },
 "pinn": null,
-"soft": {
-"home": 0.0101,
-"draw": 0.0282,
-"away": 0.9617,
-"fav": "away",
-"n": 11
-},
+"soft": null,
 "pinnMovePP": null,
 "pinnMove": null,
-"verdict": "konsens",
-"agree": true,
+"verdict": "no_anchor",
+"agree": null,
 "pinnTotals": null,
 "ankerGrund": {
 "spiel": "Israel v Republic of Ireland",
-"grund": "kein_pinnacle",
-"kandidat": "Israel v Republic of Ireland",
+"kandidat": "Republic of Ireland v Austria",
 "key": "soccer_uefa_nations_league",
-"nSoft": 11
+"score": 1.0,
+"grund": "name"
 }
 },
 {
-"matchId": "36097814",
-"home": "Oviedo",
-"away": "Sporting Gijon",
-"league": "Spanish Segunda Division",
-"country": "ES",
-"kickoff": "2026-09-27T19:00:00Z",
+"matchId": "36103835",
+"home": "Pescara",
+"away": "Spezia",
+"league": "Italian Serie C",
+"country": "IT",
+"kickoff": "2026-09-27T18:30:00Z",
 "live": true,
-"moneySide": "home",
-"moneyName": "Oviedo",
-"moneySharePct": 75,
-"moneyOdd": 1.44,
-"moneyDir": "out",
-"totVol": 78186,
-"pinnOdd": 1.37,
-"softOdd": 1.35,
-"softN": 32,
-"poly": {
-"vol": 7614,
-"odd": 1.44,
-"sharePct": 70,
-"shareSrc": "preis",
-"key": "es2-ovi-spo-2026-09-27",
-"sideKey": "Real Oviedo",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.6892,
-"draw": 0.2314,
-"away": 0.0794,
-"fav": "home"
-},
-"soft": {
-"home": 0.679,
-"draw": 0.2324,
-"away": 0.0886,
-"fav": "home",
-"n": 32
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36023033",
-"home": "Northern Ireland",
-"away": "Hungary",
-"league": "UEFA Nations League",
-"country": "International",
-"kickoff": "2026-09-28T18:45:00Z",
-"live": false,
-"moneySide": "home",
-"moneyName": "Northern Ireland",
-"moneySharePct": 73,
-"moneyOdd": 2.8,
-"moneyDir": "flat",
-"totVol": 40036,
+"moneySide": "away",
+"moneyName": "Spezia",
+"moneySharePct": 87,
+"moneyOdd": 1.17,
+"moneyDir": "in",
+"totVol": 26226,
 "pinnOdd": null,
-"softOdd": 2.6,
-"softN": 25,
-"poly": {
-"vol": 1794,
-"odd": 2.82,
-"sharePct": 36,
-"shareSrc": "preis",
-"key": "unl-nir-hun-2026-09-28",
-"sideKey": "Northern Ireland",
-"whales": null,
-"whaleUsd": null
-},
+"softOdd": null,
+"softN": null,
+"poly": null,
 "pinn": null,
-"soft": {
-"home": 0.3552,
-"draw": 0.3104,
-"away": 0.3344,
-"fav": "home",
-"n": 25
-},
+"soft": null,
 "pinnMovePP": null,
 "pinnMove": null,
-"verdict": "konsens",
-"agree": true,
+"verdict": "no_anchor",
+"agree": null,
 "pinnTotals": null,
 "ankerGrund": {
-"spiel": "Northern Ireland v Hungary",
-"grund": "kein_pinnacle",
-"kandidat": "Northern Ireland v Hungary",
-"key": "soccer_uefa_nations_league",
-"nSoft": 25
-}
-},
-{
-"matchId": "36091389",
-"home": "Belgium",
-"away": "France",
-"league": "UEFA Nations League",
-"country": "International",
-"kickoff": "2026-09-28T18:45:00Z",
-"live": false,
-"moneySide": "away",
-"moneyName": "France",
-"moneySharePct": 79,
-"moneyOdd": 1.99,
-"moneyDir": "out",
-"totVol": 30660,
-"pinnOdd": 1.92,
-"softOdd": 1.87,
-"softN": 25,
-"poly": {
-"vol": 235641,
-"odd": 1.94,
-"sharePct": 52,
-"shareSrc": "preis",
-"key": "unl-bel-fra-2026-09-28",
-"sideKey": "France",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.2579,
-"draw": 0.2383,
-"away": 0.5038,
-"fav": "away"
-},
-"soft": {
-"home": 0.2615,
-"draw": 0.2403,
-"away": 0.4982,
-"fav": "away",
-"n": 25
-},
-"pinnMovePP": 0.2,
-"pinnMove": {
-"movePP": 0.2,
-"stepPP": 0.0,
-"n": 25,
-"move": false,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36023024",
-"home": "Spain",
-"away": "Croatia",
-"league": "UEFA Nations League",
-"country": "International",
-"kickoff": "2026-09-29T18:45:00Z",
-"live": false,
-"moneySide": "home",
-"moneyName": "Spain",
-"moneySharePct": 91,
-"moneyOdd": 1.22,
-"moneyDir": "flat",
-"totVol": 23073,
-"pinnOdd": 1.2,
-"softOdd": 1.19,
-"softN": 24,
-"poly": {
-"vol": 20604,
-"odd": 1.23,
-"sharePct": 82,
-"shareSrc": "preis",
-"key": "unl-esp-hrv-2026-09-29",
-"sideKey": "Spain",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.8005,
-"draw": 0.1269,
-"away": 0.0726,
-"fav": "home"
-},
-"soft": {
-"home": 0.7807,
-"draw": 0.1432,
-"away": 0.0761,
-"fav": "home",
-"n": 24
-},
-"pinnMovePP": 0.7,
-"pinnMove": {
-"movePP": 0.7,
-"stepPP": 0.0,
-"n": 19,
-"move": false,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36091456",
-"home": "Scotland",
-"away": "Switzerland",
-"league": "UEFA Nations League",
-"country": "International",
-"kickoff": "2026-09-29T18:45:00Z",
-"live": false,
-"moneySide": "away",
-"moneyName": "Switzerland",
-"moneySharePct": 89,
-"moneyOdd": 2.0,
-"moneyDir": "out",
-"totVol": 21937,
-"pinnOdd": null,
-"softOdd": 1.9,
-"softN": 24,
-"poly": {
-"vol": 5311,
-"odd": 1.98,
-"sharePct": 50,
-"shareSrc": "preis",
-"key": "unl-sco-che-2026-09-29",
-"sideKey": "Switzerland",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": null,
-"soft": {
-"home": 0.2343,
-"draw": 0.2752,
-"away": 0.4905,
-"fav": "away",
-"n": 24
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Scotland v Switzerland",
-"grund": "kein_pinnacle",
-"kandidat": "Scotland v Switzerland",
-"key": "soccer_uefa_nations_league",
-"nSoft": 24
+"spiel": "Pescara v Spezia",
+"grund": "kein_kandidat"
 }
 },
 {
@@ -540,10 +564,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "CRB",
-"moneySharePct": 61,
-"moneyOdd": 1.28,
-"moneyDir": "flat",
-"totVol": 13899,
+"moneySharePct": 70,
+"moneyOdd": 1.05,
+"moneyDir": "in",
+"totVol": 18238,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -574,9 +598,9 @@
 "moneySide": "home",
 "moneyName": "CD MAIPU",
 "moneySharePct": 39,
-"moneyOdd": 2.48,
-"moneyDir": "out",
-"totVol": 1148,
+"moneyOdd": 2.4,
+"moneyDir": "in",
+"totVol": 1503,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -606,10 +630,10 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "A.D. Cofutpa",
-"moneySharePct": 79,
+"moneySharePct": 83,
 "moneyOdd": 1.84,
-"moneyDir": "in",
-"totVol": 503,
+"moneyDir": "flat",
+"totVol": 623,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -631,33 +655,24 @@
 }
 ],
 "ankerN": 7,
-"ankerNOffen": 149,
+"ankerNOffen": 150,
 "ankerMit": 6,
 "ankerDiagnose": {
 "nach": {
+"name": 58,
 "kein_kandidat": 57,
-"name": 56,
-"kein_pinnacle": 15,
+"kein_pinnacle": 14,
 "zeit": 4
 },
 "beispiele": [
 {
-"spiel": "Racing Club v Boca Juniors",
-"kandidat": "Boca Juniors v Union Santa Fe",
-"key": "soccer_argentina_primera_division",
-"score": 1.0,
-"grund": "name",
-"matchId": "36034278",
-"liga": "Argentinian Cup"
-},
-{
-"spiel": "Dynamo Puerto v Bolivar SC",
-"kandidat": "VfL Osnabrück v Dynamo Dresden",
-"key": "soccer_germany_bundesliga2",
+"spiel": "Asociacion Deportiva Tarma v Sporting Cristal",
+"kandidat": "Oviedo v Sporting Gijón",
+"key": "soccer_spain_segunda_division",
 "score": 0.5,
 "grund": "name",
-"matchId": "36120723",
-"liga": "Venezuelan Segunda Division"
+"matchId": "36120696",
+"liga": "Peruvian Copa de la Liga"
 },
 {
 "spiel": "Deportes Colina v Real San Joaquin",
@@ -669,22 +684,31 @@
 "liga": "Chilean Segunda Division"
 },
 {
-"spiel": "Club Atletico Mitre v San Telmo",
-"kandidat": "Atletico Goianiense v América Mineiro",
-"key": "soccer_brazil_serie_b",
+"spiel": "Dynamo Puerto v Bolivar SC",
+"kandidat": "VfL Osnabrück v Dynamo Dresden",
+"key": "soccer_germany_bundesliga2",
 "score": 0.5,
 "grund": "name",
-"matchId": "36098197",
+"matchId": "36120723",
+"liga": "Venezuelan Segunda Division"
+},
+{
+"spiel": "Racing Cordoba v Godoy Cruz",
+"kandidat": "Independiente v Instituto de Córdoba",
+"key": "soccer_argentina_primera_division",
+"score": 0.5,
+"grund": "name",
+"matchId": "36097898",
 "liga": "Argentinian Primera Nacional"
 },
 {
-"spiel": "Guyana v Cayman Islands",
-"kandidat": "Moldova v Faroe Islands",
-"key": "soccer_uefa_nations_league",
-"score": 0.5,
+"spiel": "Racing Club v Boca Juniors",
+"kandidat": "Boca Juniors v Union Santa Fe",
+"key": "soccer_argentina_primera_division",
+"score": 1.0,
 "grund": "name",
-"matchId": "36119341",
-"liga": "CONCACAF Nations League B"
+"matchId": "36034278",
+"liga": "Argentinian Cup"
 },
 {
 "spiel": "Cerrito v La Luz FC",
@@ -705,13 +729,13 @@
 "liga": "Other Competitions Soccer"
 },
 {
-"spiel": "Patronato v San Martin de San Juan",
-"kandidat": "Defensa y Justicia v San Lorenzo",
-"key": "soccer_argentina_primera_division",
-"score": 0.33,
+"spiel": "Envigado v Atletico FC Cali",
+"kandidat": "Atletico Goianiense v América Mineiro",
+"key": "soccer_brazil_serie_b",
+"score": 0.5,
 "grund": "name",
-"matchId": "36098179",
-"liga": "Argentinian Primera Nacional"
+"matchId": "36110051",
+"liga": "Colombian Primera B"
 },
 {
 "spiel": "GV San Jose v INDE",
@@ -723,22 +747,40 @@
 "liga": "Bolivian Cup"
 },
 {
-"spiel": "Envigado v Atletico FC Cali",
+"spiel": "Club Atletico Mitre v San Telmo",
 "kandidat": "Atletico Goianiense v América Mineiro",
 "key": "soccer_brazil_serie_b",
 "score": 0.5,
 "grund": "name",
-"matchId": "36110051",
-"liga": "Colombian Primera B"
+"matchId": "36098197",
+"liga": "Argentinian Primera Nacional"
 },
 {
-"spiel": "S.S.D. Casarano Calcio v Monopoli",
-"kandidat": "Mjällby AIF v Inter Club d'Escaldes",
-"key": "soccer_uefa_europa_conference_league",
+"spiel": "Patronato v San Martin de San Juan",
+"kandidat": "Defensa y Justicia v San Lorenzo",
+"key": "soccer_argentina_primera_division",
 "score": 0.33,
 "grund": "name",
-"matchId": "36103860",
-"liga": "Italian Serie C"
+"matchId": "36098179",
+"liga": "Argentinian Primera Nacional"
+},
+{
+"spiel": "Guyana v Cayman Islands",
+"kandidat": "Moldova v Faroe Islands",
+"key": "soccer_uefa_nations_league",
+"score": 0.5,
+"grund": "name",
+"matchId": "36119341",
+"liga": "CONCACAF Nations League B"
+},
+{
+"spiel": "Defensores de Belgrano v Ferro Carril Oeste",
+"kandidat": "Talleres v Belgrano de Cordoba",
+"key": "soccer_argentina_primera_division",
+"score": 0.5,
+"grund": "name",
+"matchId": "36098187",
+"liga": "Argentinian Primera Nacional"
 },
 {
 "spiel": "Almagro BA v Nueva Chicago",
@@ -748,6 +790,15 @@
 "grund": "name",
 "matchId": "36098174",
 "liga": "Argentinian Primera Nacional"
+},
+{
+"spiel": "S.S.D. Casarano Calcio v Monopoli",
+"kandidat": "Mjällby AIF v Inter Club d'Escaldes",
+"key": "soccer_uefa_europa_conference_league",
+"score": 0.33,
+"grund": "name",
+"matchId": "36103860",
+"liga": "Italian Serie C"
 },
 {
 "spiel": "Los Andes v Deportivo Moron",
@@ -765,15 +816,6 @@
 "score": 0.5,
 "grund": "name",
 "matchId": "36098217",
-"liga": "Argentinian Primera Nacional"
-},
-{
-"spiel": "Defensores de Belgrano v Ferro Carril Oeste",
-"kandidat": "Talleres v Belgrano de Cordoba",
-"key": "soccer_argentina_primera_division",
-"score": 0.5,
-"grund": "name",
-"matchId": "36098187",
 "liga": "Argentinian Primera Nacional"
 },
 {
@@ -823,7 +865,7 @@
 },
 {
 "spiel": "Kyrgyzstan v Republic of Maldives",
-"kandidat": "Israel v Republic of Ireland",
+"kandidat": "Republic of Ireland v Austria",
 "key": "soccer_uefa_nations_league",
 "score": 0.67,
 "grund": "name",
@@ -858,21 +900,21 @@
 "liga": "UEFA Nations League"
 },
 {
-"spiel": "Georgia v Ukraine",
-"grund": "kein_pinnacle",
-"kandidat": "Georgia v Ukraine",
-"key": "soccer_uefa_nations_league",
-"nSoft": 25,
-"matchId": "35926217",
-"liga": "UEFA Nations League"
-},
-{
 "spiel": "Armenia v Montenegro",
 "grund": "kein_pinnacle",
 "kandidat": "Armenia v Montenegro",
 "key": "soccer_uefa_nations_league",
 "nSoft": 25,
 "matchId": "36023029",
+"liga": "UEFA Nations League"
+},
+{
+"spiel": "Georgia v Ukraine",
+"grund": "kein_pinnacle",
+"kandidat": "Georgia v Ukraine",
+"key": "soccer_uefa_nations_league",
+"nSoft": 25,
+"matchId": "35926217",
 "liga": "UEFA Nations League"
 },
 {
@@ -921,12 +963,21 @@
 "liga": "UEFA Nations League"
 },
 {
-"spiel": "San Marino v Albania",
+"spiel": "Luxembourg v Iceland",
 "grund": "kein_pinnacle",
-"kandidat": "San Marino v Albania",
+"kandidat": "Luxembourg v Iceland",
 "key": "soccer_uefa_nations_league",
-"nSoft": 24,
-"matchId": "36024496",
+"nSoft": 22,
+"matchId": "36114192",
+"liga": "UEFA Nations League"
+},
+{
+"spiel": "Slovakia v Kazakhstan",
+"grund": "kein_pinnacle",
+"kandidat": "Slovakia v Kazakhstan",
+"key": "soccer_uefa_nations_league",
+"nSoft": 23,
+"matchId": "36032305",
 "liga": "UEFA Nations League"
 },
 {
@@ -948,21 +999,12 @@
 "liga": "UEFA Nations League"
 },
 {
-"spiel": "Slovakia v Kazakhstan",
+"spiel": "San Marino v Albania",
 "grund": "kein_pinnacle",
-"kandidat": "Slovakia v Kazakhstan",
+"kandidat": "San Marino v Albania",
 "key": "soccer_uefa_nations_league",
-"nSoft": 23,
-"matchId": "36032305",
-"liga": "UEFA Nations League"
-},
-{
-"spiel": "Luxembourg v Iceland",
-"grund": "kein_pinnacle",
-"kandidat": "Luxembourg v Iceland",
-"key": "soccer_uefa_nations_league",
-"nSoft": 22,
-"matchId": "36114192",
+"nSoft": 24,
+"matchId": "36024496",
 "liga": "UEFA Nations League"
 },
 {
@@ -982,24 +1024,6 @@
 "grund": "name",
 "matchId": "36120692",
 "liga": "Chilean Cup"
-},
-{
-"spiel": "Deportivo Cali v Aguilas Doradas",
-"kandidat": "Deportivo Riestra v Central Córdoba",
-"key": "soccer_argentina_primera_division",
-"score": 0.5,
-"grund": "name",
-"matchId": "36084965",
-"liga": "Colombian Primera A"
-},
-{
-"spiel": "Deportivo Mixco v Antigua GFC",
-"kandidat": "Deportivo Riestra v Central Córdoba",
-"key": "soccer_argentina_primera_division",
-"score": 0.5,
-"grund": "name",
-"matchId": "36109908",
-"liga": "Guatemalan Liga Nacional"
 }
 ]
 }
