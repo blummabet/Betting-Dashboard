@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-09-27T22:32:51.978333+00:00",
+"generatedAt": "2026-09-27T22:34:34.699682+00:00",
 "n": 132,
 "hinweis": "Zweitmeinungen OHNE die Radar-Volumenschwelle — Quelle fuer den Buecher-Punktestand. `games` in betfair_consensus.json bleibt die Radar-Liste.",
 "anker": {
@@ -12,7 +12,7 @@
 "league": "Jamaican Premier League",
 "kickoff": "2026-09-27T22:05:00Z",
 "verdict": "no_anchor",
-"totVol": 286,
+"totVol": 300,
 "ankerGrund": {
 "spiel": "Racing United FC v Montego Bay United",
 "kandidat": "Leeds United v Manchester United",
@@ -31,7 +31,7 @@
 "league": "Colombian Primera B",
 "kickoff": "2026-09-27T22:00:00Z",
 "verdict": "no_anchor",
-"totVol": 590,
+"totVol": 598,
 "ankerGrund": {
 "spiel": "Barranquilla v Real Soacha Cundinamarca FC",
 "kandidat": "Philadelphia Union v Real Salt Lake",
@@ -83,27 +83,27 @@
 "league": "Brazilian Serie C",
 "kickoff": "2026-09-27T21:30:00Z",
 "verdict": "no_anchor",
-"totVol": 2641,
+"totVol": 2646,
 "ankerGrund": {
 "spiel": "Brusque FC v Ferroviaria",
 "grund": "kein_kandidat"
 }
 },
-"36098036": {
-"moneySide": "away",
-"moneyName": "Orlando Pride SC (W)",
+"36104523": {
+"moneySide": "home",
+"moneyName": "Defensor Sporting",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
-"league": "US National Women Soccer League",
+"league": "Uruguayan Primera Division",
 "kickoff": "2026-09-27T21:00:00Z",
 "verdict": "no_anchor",
-"totVol": 4425,
+"totVol": 5316,
 "ankerGrund": {
-"spiel": "Bay FC (W) v Orlando Pride SC (W)",
-"kandidat": "Orlando City SC v Columbus Crew SC",
-"key": "soccer_usa_mls",
-"score": 0.33,
+"spiel": "Defensor Sporting v Danubio",
+"kandidat": "Braga v Sporting Lisbon",
+"key": "soccer_portugal_primeira_liga",
+"score": 0.5,
 "grund": "name"
 }
 },
@@ -116,12 +116,101 @@
 "league": "Salvadoran Primera Division",
 "kickoff": "2026-09-27T21:00:00Z",
 "verdict": "no_anchor",
-"totVol": 622,
+"totVol": 624,
 "ankerGrund": {
 "spiel": "CD Platense v Fuerte San Francisco",
 "kandidat": "Velez Sarsfield BA v Platense",
 "key": "soccer_argentina_primera_division",
 "score": 1.0,
+"grund": "name"
+}
+},
+"36098036": {
+"moneySide": "away",
+"moneyName": "Orlando Pride SC (W)",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "US National Women Soccer League",
+"kickoff": "2026-09-27T21:00:00Z",
+"verdict": "no_anchor",
+"totVol": 4449,
+"ankerGrund": {
+"spiel": "Bay FC (W) v Orlando Pride SC (W)",
+"kandidat": "Orlando City SC v Columbus Crew SC",
+"key": "soccer_usa_mls",
+"score": 0.33,
+"grund": "name"
+}
+},
+"36098171": {
+"moneySide": "home",
+"moneyName": "Club Gimnasia y Tiro",
+"poly": {
+"vol": 29646,
+"odd": 1.23,
+"sharePct": 99,
+"shareSrc": "geld",
+"key": "argpn-gyt-ar-2026-09-27",
+"sideKey": "Gimnasia Y Tiro de Salta",
+"whales": [
+{
+"wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
+"usd": 2351
+},
+{
+"wallet": "0x1f624696c102b99bea92c75a502fa7e4a6d676f6",
+"usd": 2227
+},
+{
+"wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+"usd": 2199
+},
+{
+"wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+"usd": 1825
+},
+{
+"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+"usd": 1669
+},
+{
+"wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
+"usd": 1381
+}
+],
+"whaleUsd": 14555
+},
+"pinn": null,
+"pinnMove": null,
+"league": "Argentinian Primera Nacional",
+"kickoff": "2026-09-27T21:00:00Z",
+"verdict": "no_anchor",
+"totVol": 7308,
+"ankerGrund": {
+"spiel": "Club Gimnasia y Tiro v Atletico Rafaela",
+"kandidat": "Gimnasia La Plata v Atlético Tucuman",
+"key": "soccer_argentina_primera_division",
+"score": 0.83,
+"grund": "zeit",
+"abstandH": 288.0
+}
+},
+"36116487": {
+"moneySide": "away",
+"moneyName": "Plaza Amador",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Panamanian Premier League",
+"kickoff": "2026-09-27T21:00:00Z",
+"verdict": "no_anchor",
+"totVol": 4934,
+"ankerGrund": {
+"spiel": "Union Cocle v Plaza Amador",
+"kandidat": "Philadelphia Union v Real Salt Lake",
+"key": "soccer_usa_mls",
+"score": 0.5,
 "grund": "name"
 }
 },
@@ -173,95 +262,6 @@
 "spiel": "Deportivo Mixco v Antigua GFC",
 "kandidat": "Deportivo Riestra v Central Córdoba",
 "key": "soccer_argentina_primera_division",
-"score": 0.5,
-"grund": "name"
-}
-},
-"36098171": {
-"moneySide": "home",
-"moneyName": "Club Gimnasia y Tiro",
-"poly": {
-"vol": 29646,
-"odd": 1.23,
-"sharePct": 99,
-"shareSrc": "geld",
-"key": "argpn-gyt-ar-2026-09-27",
-"sideKey": "Gimnasia Y Tiro de Salta",
-"whales": [
-{
-"wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
-"usd": 2351
-},
-{
-"wallet": "0x1f624696c102b99bea92c75a502fa7e4a6d676f6",
-"usd": 2227
-},
-{
-"wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
-"usd": 2199
-},
-{
-"wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-"usd": 1825
-},
-{
-"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-"usd": 1669
-},
-{
-"wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
-"usd": 1381
-}
-],
-"whaleUsd": 14555
-},
-"pinn": null,
-"pinnMove": null,
-"league": "Argentinian Primera Nacional",
-"kickoff": "2026-09-27T21:00:00Z",
-"verdict": "no_anchor",
-"totVol": 7276,
-"ankerGrund": {
-"spiel": "Club Gimnasia y Tiro v Atletico Rafaela",
-"kandidat": "Gimnasia La Plata v Atlético Tucuman",
-"key": "soccer_argentina_primera_division",
-"score": 0.83,
-"grund": "zeit",
-"abstandH": 288.0
-}
-},
-"36116487": {
-"moneySide": "away",
-"moneyName": "Plaza Amador",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Panamanian Premier League",
-"kickoff": "2026-09-27T21:00:00Z",
-"verdict": "no_anchor",
-"totVol": 4519,
-"ankerGrund": {
-"spiel": "Union Cocle v Plaza Amador",
-"kandidat": "Philadelphia Union v Real Salt Lake",
-"key": "soccer_usa_mls",
-"score": 0.5,
-"grund": "name"
-}
-},
-"36104523": {
-"moneySide": "home",
-"moneyName": "Defensor Sporting",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Uruguayan Primera Division",
-"kickoff": "2026-09-27T21:00:00Z",
-"verdict": "no_anchor",
-"totVol": 4771,
-"ankerGrund": {
-"spiel": "Defensor Sporting v Danubio",
-"kandidat": "Braga v Sporting Lisbon",
-"key": "soccer_portugal_primeira_liga",
 "score": 0.5,
 "grund": "name"
 }
@@ -618,21 +618,6 @@
 "grund": "name"
 }
 },
-"36124499": {
-"moneySide": "home",
-"moneyName": "Equatorial Guinea",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "CAF African Cup of Nations Qualifiers",
-"kickoff": "2026-09-28T16:00:00Z",
-"verdict": "no_anchor",
-"totVol": 35,
-"ankerGrund": {
-"spiel": "Equatorial Guinea v Sierra Leone",
-"grund": "kein_kandidat"
-}
-},
 "36122565": {
 "moneySide": "away",
 "moneyName": "Burkina Faso",
@@ -678,31 +663,19 @@
 "nSoft": 25
 }
 },
-"35926217": {
-"moneySide": "away",
-"moneyName": "Ukraine",
-"poly": {
-"vol": 7539,
-"odd": 2.82,
-"sharePct": 36,
-"shareSrc": "preis",
-"key": "unl-geo-ukr-2026-09-28",
-"sideKey": "Ukraine",
-"whales": null,
-"whaleUsd": null
-},
+"36124499": {
+"moneySide": "home",
+"moneyName": "Equatorial Guinea",
+"poly": null,
 "pinn": null,
 "pinnMove": null,
-"league": "UEFA Nations League",
+"league": "CAF African Cup of Nations Qualifiers",
 "kickoff": "2026-09-28T16:00:00Z",
-"verdict": "konsens",
-"totVol": 2926,
+"verdict": "no_anchor",
+"totVol": 35,
 "ankerGrund": {
-"spiel": "Georgia v Ukraine",
-"grund": "kein_pinnacle",
-"kandidat": "Georgia v Ukraine",
-"key": "soccer_uefa_nations_league",
-"nSoft": 25
+"spiel": "Equatorial Guinea v Sierra Leone",
+"grund": "kein_kandidat"
 }
 },
 "36023029": {
@@ -728,6 +701,33 @@
 "spiel": "Armenia v Montenegro",
 "grund": "kein_pinnacle",
 "kandidat": "Armenia v Montenegro",
+"key": "soccer_uefa_nations_league",
+"nSoft": 25
+}
+},
+"35926217": {
+"moneySide": "away",
+"moneyName": "Ukraine",
+"poly": {
+"vol": 7539,
+"odd": 2.82,
+"sharePct": 36,
+"shareSrc": "preis",
+"key": "unl-geo-ukr-2026-09-28",
+"sideKey": "Ukraine",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": null,
+"pinnMove": null,
+"league": "UEFA Nations League",
+"kickoff": "2026-09-28T16:00:00Z",
+"verdict": "konsens",
+"totVol": 2926,
+"ankerGrund": {
+"spiel": "Georgia v Ukraine",
+"grund": "kein_pinnacle",
+"kandidat": "Georgia v Ukraine",
 "key": "soccer_uefa_nations_league",
 "nSoft": 25
 }
@@ -765,6 +765,33 @@
 "grund": "kein_kandidat"
 }
 },
+"36091447": {
+"moneySide": "home",
+"moneyName": "Romania",
+"poly": {
+"vol": 2750,
+"odd": 2.3,
+"sharePct": 44,
+"shareSrc": "preis",
+"key": "unl-rom-bih-2026-09-28",
+"sideKey": "Romania",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": null,
+"pinnMove": null,
+"league": "UEFA Nations League",
+"kickoff": "2026-09-28T18:45:00Z",
+"verdict": "konsens",
+"totVol": 3080,
+"ankerGrund": {
+"spiel": "Romania v Bosnia",
+"grund": "kein_pinnacle",
+"kandidat": "Romania v Bosnia & Herzegovina",
+"key": "soccer_uefa_nations_league",
+"nSoft": 25
+}
+},
 "36091451": {
 "moneySide": "home",
 "moneyName": "Sweden",
@@ -792,48 +819,6 @@
 "nSoft": 25
 }
 },
-"36091447": {
-"moneySide": "home",
-"moneyName": "Romania",
-"poly": {
-"vol": 2750,
-"odd": 2.3,
-"sharePct": 44,
-"shareSrc": "preis",
-"key": "unl-rom-bih-2026-09-28",
-"sideKey": "Romania",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": null,
-"pinnMove": null,
-"league": "UEFA Nations League",
-"kickoff": "2026-09-28T18:45:00Z",
-"verdict": "konsens",
-"totVol": 3052,
-"ankerGrund": {
-"spiel": "Romania v Bosnia",
-"grund": "kein_pinnacle",
-"kandidat": "Romania v Bosnia & Herzegovina",
-"key": "soccer_uefa_nations_league",
-"nSoft": 25
-}
-},
-"36124502": {
-"moneySide": "home",
-"moneyName": "Tunisia",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "CAF African Cup of Nations Qualifiers",
-"kickoff": "2026-09-28T19:00:00Z",
-"verdict": "no_anchor",
-"totVol": 1,
-"ankerGrund": {
-"spiel": "Tunisia v Botswana",
-"grund": "kein_kandidat"
-}
-},
 "36124603": {
 "moneySide": "away",
 "moneyName": "Barbados",
@@ -855,6 +840,21 @@
 "totVol": 1357,
 "ankerGrund": {
 "spiel": "Guadeloupe v Barbados",
+"grund": "kein_kandidat"
+}
+},
+"36124502": {
+"moneySide": "home",
+"moneyName": "Tunisia",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "CAF African Cup of Nations Qualifiers",
+"kickoff": "2026-09-28T19:00:00Z",
+"verdict": "no_anchor",
+"totVol": 1,
+"ankerGrund": {
+"spiel": "Tunisia v Botswana",
 "grund": "kein_kandidat"
 }
 },
@@ -990,24 +990,9 @@
 "grund": "kein_kandidat"
 }
 },
-"36120569": {
-"moneySide": "away",
-"moneyName": "Morocco",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "CAF African Cup of Nations Qualifiers",
-"kickoff": "2026-09-29T13:00:00Z",
-"verdict": "no_anchor",
-"totVol": 247,
-"ankerGrund": {
-"spiel": "Lesotho v Morocco",
-"grund": "kein_kandidat"
-}
-},
-"36126212": {
+"36126123": {
 "moneySide": "home",
-"moneyName": "Madagascar",
+"moneyName": "Mozambique",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
@@ -1016,7 +1001,7 @@
 "verdict": "no_anchor",
 "totVol": 1,
 "ankerGrund": {
-"spiel": "Madagascar v Tanzania",
+"spiel": "Mozambique v Sudan",
 "grund": "kein_kandidat"
 }
 },
@@ -1035,21 +1020,6 @@
 "grund": "kein_kandidat"
 }
 },
-"36126211": {
-"moneySide": "home",
-"moneyName": "Burundi",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "CAF African Cup of Nations Qualifiers",
-"kickoff": "2026-09-29T13:00:00Z",
-"verdict": "no_anchor",
-"totVol": 1,
-"ankerGrund": {
-"spiel": "Burundi v Algeria",
-"grund": "kein_kandidat"
-}
-},
 "36120571": {
 "moneySide": "away",
 "moneyName": "Egypt",
@@ -1065,9 +1035,9 @@
 "grund": "kein_kandidat"
 }
 },
-"36126123": {
+"36126212": {
 "moneySide": "home",
-"moneyName": "Mozambique",
+"moneyName": "Madagascar",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
@@ -1076,64 +1046,37 @@
 "verdict": "no_anchor",
 "totVol": 1,
 "ankerGrund": {
-"spiel": "Mozambique v Sudan",
+"spiel": "Madagascar v Tanzania",
 "grund": "kein_kandidat"
 }
 },
-"36023026": {
+"36120569": {
 "moneySide": "away",
-"moneyName": "Faroe Islands",
-"poly": {
-"vol": 915,
-"odd": 2.99,
-"sharePct": 34,
-"shareSrc": "preis",
-"key": "unl-mol-far-2026-09-29",
-"sideKey": "Faroe Islands",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": null,
-"pinnMove": null,
-"league": "UEFA Nations League",
-"kickoff": "2026-09-29T16:00:00Z",
-"verdict": "konsens",
-"totVol": 15912,
-"ankerGrund": {
-"spiel": "Moldova v Faroe Islands",
-"grund": "kein_pinnacle",
-"kandidat": "Moldova v Faroe Islands",
-"key": "soccer_uefa_nations_league",
-"nSoft": 20
-}
-},
-"36126139": {
-"moneySide": "home",
-"moneyName": "Zambia",
+"moneyName": "Morocco",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
 "league": "CAF African Cup of Nations Qualifiers",
-"kickoff": "2026-09-29T16:00:00Z",
+"kickoff": "2026-09-29T13:00:00Z",
 "verdict": "no_anchor",
-"totVol": 1,
+"totVol": 247,
 "ankerGrund": {
-"spiel": "Zambia v Togo",
+"spiel": "Lesotho v Morocco",
 "grund": "kein_kandidat"
 }
 },
-"36122567": {
+"36126211": {
 "moneySide": "home",
-"moneyName": "Guinea-Bissau",
+"moneyName": "Burundi",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
 "league": "CAF African Cup of Nations Qualifiers",
-"kickoff": "2026-09-29T16:00:00Z",
+"kickoff": "2026-09-29T13:00:00Z",
 "verdict": "no_anchor",
 "totVol": 1,
 "ankerGrund": {
-"spiel": "Guinea-Bissau v Nigeria",
+"spiel": "Burundi v Algeria",
 "grund": "kein_kandidat"
 }
 },
@@ -1149,6 +1092,21 @@
 "totVol": 1,
 "ankerGrund": {
 "spiel": "Ghana v Gambia",
+"grund": "kein_kandidat"
+}
+},
+"36122567": {
+"moneySide": "home",
+"moneyName": "Guinea-Bissau",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "CAF African Cup of Nations Qualifiers",
+"kickoff": "2026-09-29T16:00:00Z",
+"verdict": "no_anchor",
+"totVol": 1,
+"ankerGrund": {
+"spiel": "Guinea-Bissau v Nigeria",
 "grund": "kein_kandidat"
 }
 },
@@ -1182,31 +1140,46 @@
 "grund": "kein_kandidat"
 }
 },
-"36024493": {
+"36126139": {
+"moneySide": "home",
+"moneyName": "Zambia",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "CAF African Cup of Nations Qualifiers",
+"kickoff": "2026-09-29T16:00:00Z",
+"verdict": "no_anchor",
+"totVol": 1,
+"ankerGrund": {
+"spiel": "Zambia v Togo",
+"grund": "kein_kandidat"
+}
+},
+"36023026": {
 "moneySide": "away",
-"moneyName": "Estonia",
+"moneyName": "Faroe Islands",
 "poly": {
-"vol": 367,
-"odd": 6.67,
-"sharePct": 15,
+"vol": 915,
+"odd": 2.99,
+"sharePct": 34,
 "shareSrc": "preis",
-"key": "unl-bul-est-2026-09-29",
-"sideKey": "Estonia",
+"key": "unl-mol-far-2026-09-29",
+"sideKey": "Faroe Islands",
 "whales": null,
 "whaleUsd": null
 },
 "pinn": null,
 "pinnMove": null,
 "league": "UEFA Nations League",
-"kickoff": "2026-09-29T18:45:00Z",
-"verdict": "uneinig",
-"totVol": 258,
+"kickoff": "2026-09-29T16:00:00Z",
+"verdict": "konsens",
+"totVol": 15912,
 "ankerGrund": {
-"spiel": "Bulgaria v Estonia",
+"spiel": "Moldova v Faroe Islands",
 "grund": "kein_pinnacle",
-"kandidat": "Bulgaria v Estonia",
+"kandidat": "Moldova v Faroe Islands",
 "key": "soccer_uefa_nations_league",
-"nSoft": 23
+"nSoft": 20
 }
 },
 "36032305": {
@@ -1260,6 +1233,60 @@
 "kickoff": "2026-09-29T18:45:00Z",
 "verdict": "konsens",
 "totVol": 7175
+},
+"36114192": {
+"moneySide": "away",
+"moneyName": "Iceland",
+"poly": {
+"vol": 929,
+"odd": 2.47,
+"sharePct": 40,
+"shareSrc": "preis",
+"key": "unl-lux-isl-2026-09-29",
+"sideKey": "Iceland",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": null,
+"pinnMove": null,
+"league": "UEFA Nations League",
+"kickoff": "2026-09-29T18:45:00Z",
+"verdict": "konsens",
+"totVol": 1337,
+"ankerGrund": {
+"spiel": "Luxembourg v Iceland",
+"grund": "kein_pinnacle",
+"kandidat": "Luxembourg v Iceland",
+"key": "soccer_uefa_nations_league",
+"nSoft": 24
+}
+},
+"36024493": {
+"moneySide": "away",
+"moneyName": "Estonia",
+"poly": {
+"vol": 367,
+"odd": 6.67,
+"sharePct": 15,
+"shareSrc": "preis",
+"key": "unl-bul-est-2026-09-29",
+"sideKey": "Estonia",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": null,
+"pinnMove": null,
+"league": "UEFA Nations League",
+"kickoff": "2026-09-29T18:45:00Z",
+"verdict": "uneinig",
+"totVol": 258,
+"ankerGrund": {
+"spiel": "Bulgaria v Estonia",
+"grund": "kein_pinnacle",
+"kandidat": "Bulgaria v Estonia",
+"key": "soccer_uefa_nations_league",
+"nSoft": 23
+}
 },
 "36091449": {
 "moneySide": "home",
@@ -1315,48 +1342,6 @@
 "nSoft": 24
 }
 },
-"36114192": {
-"moneySide": "away",
-"moneyName": "Iceland",
-"poly": {
-"vol": 929,
-"odd": 2.47,
-"sharePct": 40,
-"shareSrc": "preis",
-"key": "unl-lux-isl-2026-09-29",
-"sideKey": "Iceland",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": null,
-"pinnMove": null,
-"league": "UEFA Nations League",
-"kickoff": "2026-09-29T18:45:00Z",
-"verdict": "konsens",
-"totVol": 1337,
-"ankerGrund": {
-"spiel": "Luxembourg v Iceland",
-"grund": "kein_pinnacle",
-"kandidat": "Luxembourg v Iceland",
-"key": "soccer_uefa_nations_league",
-"nSoft": 24
-}
-},
-"36122566": {
-"moneySide": "away",
-"moneyName": "Cameroon",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "CAF African Cup of Nations Qualifiers",
-"kickoff": "2026-09-29T19:00:00Z",
-"verdict": "no_anchor",
-"totVol": 10219,
-"ankerGrund": {
-"spiel": "Congo v Cameroon",
-"grund": "kein_kandidat"
-}
-},
 "36126219": {
 "moneySide": "home",
 "moneyName": "Benin",
@@ -1369,6 +1354,21 @@
 "totVol": 1,
 "ankerGrund": {
 "spiel": "Benin v Mauritania",
+"grund": "kein_kandidat"
+}
+},
+"36122577": {
+"moneySide": "home",
+"moneyName": "Gabon",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "CAF African Cup of Nations Qualifiers",
+"kickoff": "2026-09-29T19:00:00Z",
+"verdict": "no_anchor",
+"totVol": 1,
+"ankerGrund": {
+"spiel": "Gabon v Niger",
 "grund": "kein_kandidat"
 }
 },
@@ -1390,21 +1390,6 @@
 "grund": "name"
 }
 },
-"36122577": {
-"moneySide": "home",
-"moneyName": "Gabon",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "CAF African Cup of Nations Qualifiers",
-"kickoff": "2026-09-29T19:00:00Z",
-"verdict": "no_anchor",
-"totVol": 1,
-"ankerGrund": {
-"spiel": "Gabon v Niger",
-"grund": "kein_kandidat"
-}
-},
 "36126213": {
 "moneySide": "home",
 "moneyName": "Liberia",
@@ -1417,6 +1402,21 @@
 "totVol": 1,
 "ankerGrund": {
 "spiel": "Liberia v Mali",
+"grund": "kein_kandidat"
+}
+},
+"36122566": {
+"moneySide": "away",
+"moneyName": "Cameroon",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "CAF African Cup of Nations Qualifiers",
+"kickoff": "2026-09-29T19:00:00Z",
+"verdict": "no_anchor",
+"totVol": 10219,
+"ankerGrund": {
+"spiel": "Congo v Cameroon",
 "grund": "kein_kandidat"
 }
 },
@@ -1484,22 +1484,6 @@
 "verdict": "konsens",
 "totVol": 1
 },
-"36124426": {
-"moneySide": "home",
-"moneyName": "Paris FC (W)",
-"poly": null,
-"pinn": {
-"home": 0.1303,
-"draw": 0.2031,
-"away": 0.6666,
-"fav": "away"
-},
-"pinnMove": null,
-"league": "UEFA Women's Champions League",
-"kickoff": "2026-09-30T16:45:00Z",
-"verdict": "uneinig",
-"totVol": 1
-},
 "36124362": {
 "moneySide": "away",
 "moneyName": "Barcelona (W)",
@@ -1515,6 +1499,22 @@
 "kickoff": "2026-09-30T16:45:00Z",
 "verdict": "konsens",
 "totVol": 41
+},
+"36124426": {
+"moneySide": "home",
+"moneyName": "Paris FC (W)",
+"poly": null,
+"pinn": {
+"home": 0.1303,
+"draw": 0.2031,
+"away": 0.6666,
+"fav": "away"
+},
+"pinnMove": null,
+"league": "UEFA Women's Champions League",
+"kickoff": "2026-09-30T16:45:00Z",
+"verdict": "uneinig",
+"totVol": 1
 },
 "36124521": {
 "moneySide": "home",
@@ -1598,6 +1598,24 @@
 "verdict": "konsens",
 "totVol": 2261
 },
+"36098030": {
+"moneySide": "away",
+"moneyName": "Tolima",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Colombian Primera A",
+"kickoff": "2026-09-27T23:05:00Z",
+"verdict": "no_anchor",
+"totVol": 9742,
+"ankerGrund": {
+"spiel": "Fortaleza FC v Tolima",
+"kandidat": "Fortaleza v Athletic Club (MG)",
+"key": "soccer_brazil_serie_b",
+"score": 1.0,
+"grund": "name"
+}
+},
 "36098316": {
 "moneySide": "away",
 "moneyName": "CF America",
@@ -1646,25 +1664,7 @@
 "league": "Mexican Liga MX",
 "kickoff": "2026-09-28T03:10:00Z",
 "verdict": "konsens",
-"totVol": 7311
-},
-"36098030": {
-"moneySide": "away",
-"moneyName": "Tolima",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Colombian Primera A",
-"kickoff": "2026-09-27T23:05:00Z",
-"verdict": "no_anchor",
-"totVol": 9350,
-"ankerGrund": {
-"spiel": "Fortaleza FC v Tolima",
-"kandidat": "Fortaleza v Athletic Club (MG)",
-"key": "soccer_brazil_serie_b",
-"score": 1.0,
-"grund": "name"
-}
+"totVol": 7317
 },
 "36084965": {
 "moneySide": "home",
@@ -1718,6 +1718,24 @@
 "grund": "name"
 }
 },
+"36121040": {
+"moneySide": "away",
+"moneyName": "OHiggins",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Chilean Cup",
+"kickoff": "2026-09-27T23:00:00Z",
+"verdict": "no_anchor",
+"totVol": 2500,
+"ankerGrund": {
+"spiel": "Club Deportes Santa Cruz v OHiggins",
+"kandidat": "Boca Juniors v Union Santa Fe",
+"key": "soccer_argentina_primera_division",
+"score": 0.33,
+"grund": "name"
+}
+},
 "36121589": {
 "moneySide": "home",
 "moneyName": "Real Tomayapo",
@@ -1733,6 +1751,42 @@
 "kandidat": "Real Madrid v Villarreal",
 "key": "soccer_spain_la_liga",
 "score": 0.5,
+"grund": "name"
+}
+},
+"36104541": {
+"moneySide": "draw",
+"moneyName": "The Draw",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Uruguayan Primera Division",
+"kickoff": "2026-09-28T23:00:00Z",
+"verdict": "no_anchor",
+"totVol": 1440,
+"ankerGrund": {
+"spiel": "Wanderers (Uru) v Albion FC",
+"kandidat": "Bolton Wanderers v Stoke City",
+"key": "soccer_efl_champ",
+"score": 0.5,
+"grund": "name"
+}
+},
+"36098059": {
+"moneySide": "away",
+"moneyName": "North Carolina (W)",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "US National Women Soccer League",
+"kickoff": "2026-09-27T23:00:00Z",
+"verdict": "no_anchor",
+"totVol": 546,
+"ankerGrund": {
+"spiel": "Utah Royals (W) v North Carolina (W)",
+"kandidat": "Preston North End v Millwall",
+"key": "soccer_efl_champ",
+"score": 0.33,
 "grund": "name"
 }
 },
@@ -1825,24 +1879,6 @@
 "grund": "name"
 }
 },
-"36121040": {
-"moneySide": "away",
-"moneyName": "OHiggins",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Chilean Cup",
-"kickoff": "2026-09-27T23:00:00Z",
-"verdict": "no_anchor",
-"totVol": 2500,
-"ankerGrund": {
-"spiel": "Club Deportes Santa Cruz v OHiggins",
-"kandidat": "Boca Juniors v Union Santa Fe",
-"key": "soccer_argentina_primera_division",
-"score": 0.33,
-"grund": "name"
-}
-},
 "36110136": {
 "moneySide": "home",
 "moneyName": "Tigres (W)",
@@ -1894,24 +1930,6 @@
 "grund": "kein_kandidat"
 }
 },
-"36098059": {
-"moneySide": "away",
-"moneyName": "North Carolina (W)",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "US National Women Soccer League",
-"kickoff": "2026-09-27T23:00:00Z",
-"verdict": "no_anchor",
-"totVol": 546,
-"ankerGrund": {
-"spiel": "Utah Royals (W) v North Carolina (W)",
-"kandidat": "Preston North End v Millwall",
-"key": "soccer_efl_champ",
-"score": 0.33,
-"grund": "name"
-}
-},
 "36100554": {
 "moneySide": "draw",
 "moneyName": "The Draw",
@@ -1948,6 +1966,24 @@
 "grund": "name"
 }
 },
+"36122594": {
+"moneySide": "draw",
+"moneyName": "The Draw",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Panamanian Premier League",
+"kickoff": "2026-09-27T23:15:00Z",
+"verdict": "no_anchor",
+"totVol": 50,
+"ankerGrund": {
+"spiel": "Veraguas FC v Sporting San Miguelito",
+"kandidat": "Seattle Sounders FC v Sporting Kansas City",
+"key": "soccer_usa_mls",
+"score": 0.33,
+"grund": "name"
+}
+},
 "36120624": {
 "moneySide": "home",
 "moneyName": "Waterhouse FC",
@@ -1969,8 +2005,8 @@
 "poly": null,
 "pinn": {
 "home": 0.2572,
-"draw": 0.2877,
-"away": 0.4551,
+"draw": 0.2873,
+"away": 0.4556,
 "fav": "away"
 },
 "pinnMove": null,
@@ -1992,24 +2028,6 @@
 "ankerGrund": {
 "spiel": "Tapatio v CD Tepatitlan De Morelos",
 "grund": "kein_kandidat"
-}
-},
-"36122594": {
-"moneySide": "draw",
-"moneyName": "The Draw",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Panamanian Premier League",
-"kickoff": "2026-09-27T23:15:00Z",
-"verdict": "no_anchor",
-"totVol": 50,
-"ankerGrund": {
-"spiel": "Veraguas FC v Sporting San Miguelito",
-"kandidat": "Seattle Sounders FC v Sporting Kansas City",
-"key": "soccer_usa_mls",
-"score": 0.33,
-"grund": "name"
 }
 },
 "36109030": {
@@ -2130,24 +2148,6 @@
 "grund": "name"
 }
 },
-"36126140": {
-"moneySide": "draw",
-"moneyName": "The Draw",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Uruguayan Reserves",
-"kickoff": "2026-09-28T18:00:00Z",
-"verdict": "no_anchor",
-"totVol": 23,
-"ankerGrund": {
-"spiel": "Nacional Montevideo Res v Central Espanol (Res)",
-"kandidat": "Atlético Tucuman v Barracas Central",
-"key": "soccer_argentina_primera_division",
-"score": 0.33,
-"grund": "name"
-}
-},
 "36126075": {
 "moneySide": "draw",
 "moneyName": "The Draw",
@@ -2179,6 +2179,24 @@
 "ankerGrund": {
 "spiel": "Deportivo Maldonado (Res) v CA Penarol (Res)",
 "kandidat": "Argentinos Juniors v CA Tigre BA",
+"key": "soccer_argentina_primera_division",
+"score": 0.33,
+"grund": "name"
+}
+},
+"36126140": {
+"moneySide": "draw",
+"moneyName": "The Draw",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Uruguayan Reserves",
+"kickoff": "2026-09-28T18:00:00Z",
+"verdict": "no_anchor",
+"totVol": 23,
+"ankerGrund": {
+"spiel": "Nacional Montevideo Res v Central Espanol (Res)",
+"kandidat": "Atlético Tucuman v Barracas Central",
 "key": "soccer_argentina_primera_division",
 "score": 0.33,
 "grund": "name"
@@ -2403,21 +2421,6 @@
 "grund": "kein_kandidat"
 }
 },
-"36124734": {
-"moneySide": "home",
-"moneyName": "Al Kharitiyath",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Qatari Stars Cup",
-"kickoff": "2026-09-28T15:00:00Z",
-"verdict": "no_anchor",
-"totVol": 1,
-"ankerGrund": {
-"spiel": "Al Kharitiyath v Al-Wakra",
-"grund": "kein_kandidat"
-}
-},
 "36124560": {
 "moneySide": "home",
 "moneyName": "Leixoes U23",
@@ -2430,6 +2433,21 @@
 "totVol": 1,
 "ankerGrund": {
 "spiel": "Leixoes U23 v Vizela U23",
+"grund": "kein_kandidat"
+}
+},
+"36124734": {
+"moneySide": "home",
+"moneyName": "Al Kharitiyath",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Qatari Stars Cup",
+"kickoff": "2026-09-28T15:00:00Z",
+"verdict": "no_anchor",
+"totVol": 1,
+"ankerGrund": {
+"spiel": "Al Kharitiyath v Al-Wakra",
 "grund": "kein_kandidat"
 }
 },
@@ -2463,6 +2481,21 @@
 "grund": "kein_kandidat"
 }
 },
+"36124697": {
+"moneySide": "home",
+"moneyName": "FK Dubocica",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Serbian First League",
+"kickoff": "2026-09-28T16:00:00Z",
+"verdict": "no_anchor",
+"totVol": 1,
+"ankerGrund": {
+"spiel": "FK Dubocica v FK Javor Ivanjica",
+"grund": "kein_kandidat"
+}
+},
 "36124469": {
 "moneySide": "home",
 "moneyName": "Hapoel Kfar Shelem",
@@ -2481,36 +2514,6 @@
 "grund": "name"
 }
 },
-"36124697": {
-"moneySide": "home",
-"moneyName": "FK Dubocica",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Serbian First League",
-"kickoff": "2026-09-28T16:00:00Z",
-"verdict": "no_anchor",
-"totVol": 1,
-"ankerGrund": {
-"spiel": "FK Dubocica v FK Javor Ivanjica",
-"grund": "kein_kandidat"
-}
-},
-"36124804": {
-"moneySide": "home",
-"moneyName": "Al Sailiya",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Qatari Stars Cup",
-"kickoff": "2026-09-28T17:15:00Z",
-"verdict": "no_anchor",
-"totVol": 1,
-"ankerGrund": {
-"spiel": "Al Sailiya v Al Rayyan",
-"grund": "kein_kandidat"
-}
-},
 "36124745": {
 "moneySide": "home",
 "moneyName": "AL Shahaniya",
@@ -2526,18 +2529,18 @@
 "grund": "kein_kandidat"
 }
 },
-"36124637": {
+"36124804": {
 "moneySide": "home",
-"moneyName": "FK Loznica",
+"moneyName": "Al Sailiya",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
-"league": "Serbian First League",
-"kickoff": "2026-09-28T18:00:00Z",
+"league": "Qatari Stars Cup",
+"kickoff": "2026-09-28T17:15:00Z",
 "verdict": "no_anchor",
 "totVol": 1,
 "ankerGrund": {
-"spiel": "FK Loznica v FK Spartak",
+"spiel": "Al Sailiya v Al Rayyan",
 "grund": "kein_kandidat"
 }
 },
@@ -2559,20 +2562,35 @@
 "grund": "name"
 }
 },
-"36114219": {
+"36124637": {
 "moneySide": "home",
-"moneyName": "Flandria",
+"moneyName": "FK Loznica",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
-"league": "Argentinian Primera B Metropolitana",
+"league": "Serbian First League",
 "kickoff": "2026-09-28T18:00:00Z",
 "verdict": "no_anchor",
 "totVol": 1,
 "ankerGrund": {
-"spiel": "Flandria v CS Dock Sud",
-"kandidat": "CS Maritimo v FC Porto",
-"key": "soccer_portugal_primeira_liga",
+"spiel": "FK Loznica v FK Spartak",
+"grund": "kein_kandidat"
+}
+},
+"36113204": {
+"moneySide": "home",
+"moneyName": "CSR Espanol BA",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Argentinian Primera C",
+"kickoff": "2026-09-28T18:00:00Z",
+"verdict": "no_anchor",
+"totVol": 1,
+"ankerGrund": {
+"spiel": "CSR Espanol BA v CD Cambaceres",
+"kandidat": "Argentinos Juniors v CA Tigre BA",
+"key": "soccer_argentina_primera_division",
 "score": 0.33,
 "grund": "name"
 }
@@ -2595,6 +2613,24 @@
 "grund": "name"
 }
 },
+"36114219": {
+"moneySide": "home",
+"moneyName": "Flandria",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Argentinian Primera B Metropolitana",
+"kickoff": "2026-09-28T18:00:00Z",
+"verdict": "no_anchor",
+"totVol": 1,
+"ankerGrund": {
+"spiel": "Flandria v CS Dock Sud",
+"kandidat": "CS Maritimo v FC Porto",
+"key": "soccer_portugal_primeira_liga",
+"score": 0.33,
+"grund": "name"
+}
+},
 "36124813": {
 "moneySide": "home",
 "moneyName": "Leones de Rosario",
@@ -2610,24 +2646,6 @@
 "kandidat": "Banfield v Rosario Central",
 "key": "soccer_argentina_primera_division",
 "score": 0.5,
-"grund": "name"
-}
-},
-"36113204": {
-"moneySide": "home",
-"moneyName": "CSR Espanol BA",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Argentinian Primera C",
-"kickoff": "2026-09-28T18:00:00Z",
-"verdict": "no_anchor",
-"totVol": 1,
-"ankerGrund": {
-"spiel": "CSR Espanol BA v CD Cambaceres",
-"kandidat": "Argentinos Juniors v CA Tigre BA",
-"key": "soccer_argentina_primera_division",
-"score": 0.33,
 "grund": "name"
 }
 },
@@ -2664,24 +2682,6 @@
 "kandidat": "St. Louis City SC v LA Galaxy",
 "key": "soccer_usa_mls",
 "score": 0.33,
-"grund": "name"
-}
-},
-"36104541": {
-"moneySide": "draw",
-"moneyName": "The Draw",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Uruguayan Primera Division",
-"kickoff": "2026-09-28T23:00:00Z",
-"verdict": "no_anchor",
-"totVol": 1440,
-"ankerGrund": {
-"spiel": "Wanderers (Uru) v Albion FC",
-"kandidat": "Bolton Wanderers v Stoke City",
-"key": "soccer_efl_champ",
-"score": 0.5,
 "grund": "name"
 }
 },
