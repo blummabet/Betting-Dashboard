@@ -124,7 +124,11 @@ STABLE = {"usdt", "usdc", "busd", "dai", "usd", "tusd", "usdp"}
 # „1st Innings - Narine, Sunil Total · Under 12.5" in der Caribbean Premier League.
 # Gilt wie US-Sport: ausgeblendet, nicht ungesammelt. Die Auswertung fuehrt Cricket weiter in
 # der eigenen Schublade (470 pending Wetten im Bestand) — faellt es dort je auf, sieht man es.
-GESPERRT = {"US-Sport", "Cricket"}
+# 27.09.2026 (Lucas: „Kampfsport und Cricket … nimm sowohl als auch raus … mehr genug mit
+# E-Sport, Tennis und so"). Anlass: Stake sperrte Cricket, liess aber Kampfsport durch
+# (Inoue – Nasukawa stand in „Stake · größtes Geld"), Poly genau umgekehrt. Ab jetzt EINE Liste
+# fuer beide Plattformen; tests/test_sperrliste_eine_fuer_alle.py haelt alle Kopien gleich.
+GESPERRT = {"US-Sport", "Kampfsport", "Cricket"}
 
 _KAT_SLUG = {
     "soccer": "Fußball", "football": "Fußball",

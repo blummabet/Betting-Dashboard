@@ -3478,7 +3478,7 @@ function _heuteSideMatches(rside, p) {
 // Die Liste lebt in poly-wallets.js (PW_BLOCKED_BET_CATS) und wird von dort ueber window geteilt —
 // so lesen Setzen-Button, Public-Gate und Papier-Depot GARANTIERT dieselbe. Der Fallback greift nur,
 // wenn poly-wallets.js nicht geladen ist (isolierte Tests); Werte bewusst identisch.
-const _POLY_HEUTE_BET_FALLBACK = ['US-Sport', 'Kampfsport'];
+const _POLY_HEUTE_BET_FALLBACK = ['US-Sport', 'Kampfsport', 'Cricket'];
 function _polyBlockedCats() {
   try {
     const l = (typeof window !== 'undefined') && window.PW_BLOCKED_BET_CATS;

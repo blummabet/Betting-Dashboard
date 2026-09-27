@@ -279,7 +279,8 @@ const _PW_CAT_ICON={'Fußball':'⚽','US-Sport':'🏀','E-Sport':'🎮','Tennis'
 // NBA hat null Plays. BEWUSST NICHT aus dem Scan/Papier-Depot entfernt: das Mitschreiben ist
 // gratis und die EINZIGE Art, je zu merken, dass eine Sportart dreht (Wiedereintritt ueber CLV,
 // siehe poly_shortlist_track.reentry_status).
-const PW_BLOCKED_BET_CATS=['US-Sport','Kampfsport'];
+// 27.09.2026 (Lucas: „Kampfsport und Cricket … sowohl als auch raus"): + Cricket, gleich mit Stake.
+const PW_BLOCKED_BET_CATS=['US-Sport','Kampfsport','Cricket'];
 try{ window.PW_BLOCKED_BET_CATS=PW_BLOCKED_BET_CATS; }catch(_e){}   // eine Quelle fuer Emitter + Betting-Tab
 function _pwBetBlocked(r){ return PW_BLOCKED_BET_CATS.indexOf(_pwSportCategory(r&&r.league,r&&r.sport))>=0; }
 // Filter-Chip-Leiste aus den tatsächlich vorhandenen Kategorien (order fix, nur präsente zeigen).

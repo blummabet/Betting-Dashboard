@@ -217,6 +217,7 @@ GEPRUEFT_KEIN_GELD = {
     "kein grund widerspricht seiner zahl",                # Text neben einer Schublade
     "keine roi-untergrenze unter −100 %",                 # Rechenwand einer Anzeige
     "punktestand-urteil hat seine mindestzahl",           # Urteil ueber eine Punktstufe, sendet nichts
+    "ein spiel, ein punktestand",                         # Anzeige-Kohaerenz, bewegt kein Geld
     "shortlist_nachschub",
     "proven_wallets_profitable",
     # 21.09.2026: eine Annahme ueber die Daten, kein Ausgang. Er sagt, ob der Markt-Stempel-

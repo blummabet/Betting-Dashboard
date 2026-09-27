@@ -26,6 +26,14 @@ jobs:
       - name: 📥 Repo auschecken
         uses: actions/checkout@v4
 
+      # 🔴 27.09.2026 (Marsborne, 2x $5 im Abstand von 3,5 Min): ein geplanter Lauf, der
+      # hinter einem anderen in der Warteschlange stand, checkt den Commit von SEINEM
+      # Ausloese-Zeitpunkt aus — nicht den neuesten. Jeder Dedup-Stand, den der Lauf davor
+      # gesichert hat, fehlt ihm. Deshalb: auf den neuesten Stand, BEVOR etwas sendet oder setzt.
+      # Waechter: tests/test_workflow_frisch_vor_wirkung.py
+      - name: 🔄 Auf den neuesten Stand (vor jeder Wirkung)
+        run: bash scripts/ci_pull.sh main || true
+
       - name: 🐍 Python einrichten
         uses: actions/setup-python@v5
         with:

@@ -794,6 +794,31 @@ def check_buecher_punktestand(ctx):
               "Nicht erhobene Buecher senken den Nenner, Tiefe zaehlt nur bei Zustimmung.")
 
 
+def check_ein_spiel_ein_punktestand(ctx):
+    """🔴 27.09.2026 (Lucas-Uebersicht-Check). In EINER Sektion stand „Denmark v Wales 9/10"
+    (Tafel) und „10/10" (gehaltene Zeile darunter), „Serbia v Netherlands 10/13" gegen „8/10".
+    Die gehaltene Zeile rechnete ohne Stake und wurde nur aufgefrischt, solange ihr Tor offen
+    war. Geprueft wird: jede gehaltene Zeile traegt denselben Punktestand wie die Tafel fuer
+    dasselbe Spiel.
+    """
+    k = ctx.get("killer") or {}
+    tafel = {str(r.get("matchId")): r for r in (k.get("alleBewertet") or []) if isinstance(r, dict)}
+    fails = []
+    for z in (k.get("stufe1") or []) + (k.get("stufe2") or []):
+        if not isinstance(z, dict):
+            continue
+        t = tafel.get(str(z.get("matchId")))
+        p = z.get("punkte") if isinstance(z.get("punkte"), dict) else None
+        if not t or not p:
+            continue
+        if (p.get("punkte"), p.get("moeglich")) != (t.get("punkte"), t.get("moeglich")):
+            fails.append("%s v %s: gehalten %s/%s, Tafel %s/%s" % (
+                z.get("home"), z.get("away"), p.get("punkte"), p.get("moeglich"),
+                t.get("punkte"), t.get("moeglich")))
+    return _c("Ein Spiel, ein Punktestand", "error", fails[:8],
+              "Gehaltene Zeile und Tafel muessen fuer dasselbe Spiel dieselbe Zahl zeigen.")
+
+
 def check_keine_untergrenze_unter_minus_100(ctx):
     """🔴 26.09.2026 (Lucas-Uebersicht-Check). Ebene 2 zeigte an „England v Spain 7/13":
     „−70 % UG −119 % bei n6". Eine ROI-Untergrenze unter −100 % gibt es nicht — flach gesetzt
@@ -1823,6 +1848,7 @@ def _alter_kurz(d):
 
 
 UEBERSICHT_CHECKS = [
+    check_ein_spiel_ein_punktestand,
     check_keine_untergrenze_unter_minus_100,
     check_punkte_urteil_hat_seine_mindestzahl,
     check_serien_rangfolge,

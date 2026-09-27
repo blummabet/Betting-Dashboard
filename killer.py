@@ -423,7 +423,7 @@ def buecher_punkte(sig, g, seite, gehalten_seit=None, kickoff=None, wallets=None
 
 
 def zeile(mid, eintrag, sig, cons_game, track, streaks, gehalten_seit=None,
-          wallets=None, now=None):
+          wallets=None, now=None, stake=None):
     """Eine Kandidaten-Zeile bauen. Reines Zusammensetzen, keine Entscheidung.
 
     `gehalten_seit` = Zeitpunkt des ERSTEN Latch (None bei einer neuen Zeile -> `now`). Daraus
@@ -514,8 +514,11 @@ def zeile(mid, eintrag, sig, cons_game, track, streaks, gehalten_seit=None,
         # 01.09.2026: der Buecher-Score. Steht auf JEDER Zeile, auch wenn die Oberflaeche nur die
         # besten zeigt — gemessen wird spaeter der Gradient ueber alle Punktzahlen, nicht nur die
         # Spitze. Mitschreiben, nicht filtern.
+        # 🔴 27.09.2026: `stake` fehlte hier — die Zeile rechnete mit drei Buechern, die Tafel
+        # daneben (`alleBewertet`) mit vier. s. `baue`, Block „Ein Spiel, ein Punktestand".
         "punkte": buecher_punkte(sig, g, seite, gehalten_seit=gehalten_seit or (now or _now()),
-                                 kickoff=eintrag.get("kickoff"), wallets=wallets, now=now),
+                                 kickoff=eintrag.get("kickoff"), wallets=wallets, now=now,
+                                 stake=stake),
         # nur mitschreiben, nicht filtern — s. Kopf, Punkt 4
         "wertVsPinn": (round(sig["pinnFair"] * sig["odd"] - 1, 4)
                        if isinstance(sig.get("pinnFair"), (int, float)) and sig.get("odd") else None),
@@ -938,7 +941,8 @@ def baue(state=None, consensus=None, track=None, streaks=None, now=None,
             continue                       # angepfiffen: der Track erfasst nur vor Anpfiff
         _gs = (_latch_vor.get("%s|%s" % (mid, MARKT)) or {}).get("gehaltenSeit")
         z = zeile(mid, e, sig, spiele.get(str(mid)), track, streaks,
-                  gehalten_seit=_gs, wallets=_wallets, now=now)
+                  gehalten_seit=_gs, wallets=_wallets, now=now,
+                  stake=_stake_fuer(e.get("home"), e.get("away"), _stake_idx))
         tr = z.get("track")
         if tr and tr.get("fade"):
             continue                       # tiefe Unterseite (Risiko-Marke) — nicht in eine Empfehlung
@@ -981,6 +985,24 @@ def baue(state=None, consensus=None, track=None, streaks=None, now=None,
 
     # Halten statt live zeigen — Begründung oben bei STATE_FILE.
     latch = _halten((latch_state or {}).get("latch") or {}, zeilen, now)
+    # ── Ein Spiel, ein Punktestand (27.09.2026, Lucas-Uebersicht-Check) ─────────────────
+    # In derselben Sektion stand „Denmark v Wales 9/10" in der Tafel und „10/10" in der Liste
+    # darunter, „Serbia v Netherlands 10/13" gegen „8/10", „Germany v Greece 10/13" gegen „8/10".
+    # Zwei Ursachen: (1) die gehaltene Zeile rechnete ohne Stake (s. `zeile`), (2) ihr Score
+    # wurde nur aufgefrischt, solange das UND-Tor in diesem Lauf noch offen war — `_halten`
+    # sagt „der Score wird IMMER aufgefrischt", tat es aber nur fuer aktive Zeilen. Eine seit
+    # zwei Stunden gehaltene Zeile trug also den Stand von vor zwei Stunden, direkt neben dem
+    # von jetzt. Jetzt bekommt JEDE gehaltene Zeile den Score, den die Tafel fuer dasselbe Spiel
+    # in diesem Lauf rechnet — eine Rechnung, eine Zahl.
+    # Fehlerklasse: *zwei Zahlen fuer dieselbe Sache, aus zwei Rechenwegen, nebeneinander.*
+    _jetzt = {str(r["matchId"]): r for r in alle}
+    for _z in latch.values():
+        _a = _jetzt.get(str(_z.get("matchId")))
+        if not _a:
+            continue
+        _p_neu = {"punkte": _a["punkte"], "moeglich": _a["moeglich"], "dauerH": _a.get("dauerH"),
+                  "teile": _a.get("teile") or []}
+        _z["punkte"] = _p_neu
     latch, angepfiffen = _faellig(latch, now)
 
     gezeigt = sorted(latch.values(), key=lambda r: (r["stufe"], -(r.get("rang") or 0)))

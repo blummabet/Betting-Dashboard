@@ -158,3 +158,26 @@ def test_akzente_heben_die_vorsicht_nicht_auf():
 def test_die_flachform_ist_fuer_sich_pruefbar():
     assert SB._flach("Atlético Madrid") == "atletico madrid"
     assert SB._flach("Goiás EC") == "goias ec"
+
+
+# ── 27.09.2026: ein Wortanfang des Gegners, und ein Name, der ganz im anderen steckt ─────
+def test_ein_wort_der_einen_mannschaft_ist_kein_beleg_fuer_die_andere():
+    """„alex" (de Minaur) passte als Anfang auf „alexander" (Zverev) — 23 Zeilen ohne Seite."""
+    e = "Alexander Zverev - Alex de Minaur"
+    assert SB.seite(w(e, "Alexander Zverev")) == "Alexander Zverev"
+    assert SB.seite(w(e, "Alexander Zverev (-1.5)")) == "Alexander Zverev"
+    assert SB.seite(w(e, "Alex de Minaur")) == "Alex de Minaur"
+
+
+def test_ein_name_der_ganz_im_anderen_steckt():
+    assert SB.seite(w("Wydad AC - Wydad Temara", "Wydad AC or Draw")) == "Wydad AC"
+    assert SB.seite(w("Wydad AC - Wydad Temara", "Wydad Temara")) == "Wydad Temara"
+    assert SB.seite(w("Nigeria - Nigeria A", "Nigeria")) == "Nigeria"
+    assert SB.seite(w("Nigeria - Nigeria A", "Nigeria A")) == "Nigeria A"
+
+
+def test_gegenbeweis_neutrale_auswahl_bleibt_neutral():
+    for aw in ("Draw", "Over 2.5", "Under 1.5", "Yes"):
+        assert SB.seite(w("Nigeria - Nigeria A", aw)) is None, aw
+    # und wo beide wirklich passen, wird weiter nicht geraten
+    assert SB.seite(w("Deportivo La Coruna - Deportivo Alaves", "Deportivo")) is None

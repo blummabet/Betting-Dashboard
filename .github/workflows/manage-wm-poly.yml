@@ -69,6 +69,12 @@ jobs:
       - name: 📥 Repo auschecken
         uses: actions/checkout@v4
 
+      # 🔴 27.09.2026: auf den neuesten Stand, BEVOR etwas sendet oder setzt — ein wartender
+      # Lauf checkt sonst den Commit seines Ausloese-Zeitpunkts aus (Marsborne, 2x $5).
+      # Waechter: tests/test_workflow_frisch_vor_wirkung.py
+      - name: 🔄 Auf den neuesten Stand (vor jeder Wirkung)
+        run: bash scripts/ci_pull.sh main || true
+
       - name: 🐍 Python + py-clob-client-v2 einrichten (Mac)
         run: |
           PYTHON=""

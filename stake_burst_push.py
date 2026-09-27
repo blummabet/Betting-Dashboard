@@ -190,7 +190,7 @@ try:
     from stake_highroller_fetch import GESPERRT as _SAMMLER_GESPERRT
     GESPERRT_FALLBACK = tuple(sorted(_SAMMLER_GESPERRT))
 except Exception:                                            # pragma: no cover
-    GESPERRT_FALLBACK = ("US-Sport", "Cricket")
+    GESPERRT_FALLBACK = ("Cricket", "Kampfsport", "US-Sport")
 
 
 def gesperrte_kats(quelle=None):
@@ -602,9 +602,22 @@ def seite(w) -> str | None:
     if len(teams) != 2 or not all(teams):
         return None
     a_tok = {t for t in re.split(r"[^a-z0-9]+", a) if t}
-    da, db = _unterscheidend(teams[0], teams[1])
-    trifft_a = _trifft(da, a_tok)
-    trifft_b = _trifft(db, a_tok)
+    ka, kb = _team_kern(teams[0]), _team_kern(teams[1])
+    da, db = ka - kb, kb - ka
+    # 🔴 27.09.2026 (Wachhund `test_keine_zeile_des_ledgers_verliert_ihre_seite`, 29 Zeilen):
+    # „Alexander Zverev - Alex de Minaur", Auswahl „Alexander Zverev". Das Wort „alex" von de
+    # Minaur passte als ANFANG auf „alexander" — beide Seiten trafen, also keine Seite. Ein
+    # Auswahl-Wort, das woertlich zur einen Mannschaft gehoert, ist kein Beleg fuer die andere.
+    trifft_a = _trifft(da, a_tok - kb)
+    trifft_b = _trifft(db, a_tok - ka)
+    # Und der zweite Fall derselben Meldung: „Wydad AC - Wydad Temara", „Nigeria - Nigeria A".
+    # Der eine Name steckt GANZ im anderen, die erste Mannschaft hat also kein eigenes Wort —
+    # `da` ist leer und konnte nie treffen. Sie ist gemeint, wenn ihr ganzer Kern in der Auswahl
+    # steht und nichts, was die andere unterscheidet („Wydad AC or Draw", „Nigeria").
+    if not da and not trifft_b and ka and ka <= a_tok:
+        trifft_a = True
+    if not db and not trifft_a and kb and kb <= a_tok:
+        trifft_b = True
     if trifft_a == trifft_b:      # keines von beiden, oder beide — dann wird nicht geraten
         return None
     return teams[0] if trifft_a else teams[1]
@@ -730,7 +743,7 @@ def build_spiel_card(b, unterdrueckt=0) -> str:
              else "vor Anpfiff" if all(x.get("phase") == "vor" for x in g) else "gemischt")
     try:
         import stake_liga_stufe as _LS
-        klasse = _LS.stufe(erste.get("ligaSlug"), erste.get("sport"))
+        klasse = _LS.stufe(erste.get("ligaSlug"), erste.get("sport"), erste.get("ligaId"))
     except Exception:
         klasse = None
     KLARTEXT = {"1": "oberste Spielklasse", "2": "zweite Spielklasse",

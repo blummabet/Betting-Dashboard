@@ -1344,7 +1344,7 @@
 
   function _mdStakeWetten(stundenZurueck) {
     var d = _md.data.stake || {};
-    var sperr = d.gesperrt || ['US-Sport'];
+    var sperr = d.gesperrt || ['US-Sport', 'Kampfsport', 'Cricket'];   // Rueckfall = stake_highroller_fetch.GESPERRT
     var ab = Date.now() - (stundenZurueck || 24) * 3600000;
     return (d.wetten || []).filter(function (w) {
       if (w.einsatzUsd == null) return false;
@@ -1885,7 +1885,7 @@
       var col = _u === 'traegt sich selbst' ? A.good : (_u === 'kehrt um' ? A.red : 'var(--mi3)');
       var _lbl = { 'traegt sich selbst': 'trägt sich selbst', 'kehrt um': 'kehrt um',
                    'kein Unterschied': 'kein Unterschied', 'sammelt': 'sammelt',
-                   'kein Vergleich': 'kein Vergleich' }[_u] || _u;
+                   'kein Vergleich': 'kein Vergleich', 'Erwartung zu duenn': 'Erwartung zu dünn' }[_u] || _u;
       return '<div class="md-kl-foot" style="border-top:0;padding:4px 0 6px">'
         + '📒 <b>Serien-Buch</b> · <span style="color:' + col + '">' + esc(_lbl) + '</span> — '
         + esc(String((bil && bil.grund) || ''))
@@ -1952,7 +1952,11 @@
       }
       var sub = esc(String(s.leagueName || '')) + (s.continuation && s.continuation.state ? ' · ' + esc(s.continuation.state) : '') + _bq;
       var len = +s.length || 0;
-      return rowEl(fl(_flagFrom(s.country, s.league, s.leagueName)) + esc(team(s.team)) + ' <span style="color:var(--mi3);font-weight:400">·</span> ' + esc(s.market || s.type || ''),
+      // 🔴 27.09.2026 (Übersicht-Check): „Barcelona · Sieg-Serie 10×" und darunter „Barcelona ·
+      // Sieg-Serie 8×" — sah aus wie ein Duplikat mit zwei Zahlen. Es sind zwei Serien: alle
+      // Spiele und nur Heimspiele. `venue` stand im Artefakt, gezeigt wurde es nie.
+      var _ort = s.venue === 'H' ? ' · zu Hause' : (s.venue === 'A' ? ' · auswärts' : '');
+      return rowEl(fl(_flagFrom(s.country, s.league, s.leagueName)) + esc(team(s.team)) + ' <span style="color:var(--mi3);font-weight:400">·</span> ' + esc(s.market || s.type || '') + (_ort ? '<span style="color:var(--mi3);font-weight:400">' + _ort + '</span>' : ''),
         len + '×', A.gold, sub, pips(Math.min(len, 10), 10));
     }).join('') + _mdStreakBuch()
       // Der Block zieht aus beiden Serien-Buechern — also stempelt er sich mit dem aelteren.
@@ -3748,6 +3752,12 @@
     };
     var put = function (o) {
       if (isNaN(o.k) || o.k < floor || o.k > soon) return;
+      // 27.09.2026 (Lucas: „laufende Betfair-Spiele … können drin bleiben, es muss halt ein
+      // Live-Badge haben"). Der Steam-Block trug gar kein `live`, der Geld-Block nur den
+      // Feed-Status. Ein Betfair-Spiel, dessen Anpfiff vorbei ist (bis zu 30 Min, s. `floor`),
+      // stand deshalb als „⏱ 0m" da — wie ein Spiel, das gleich beginnt. Gilt NUR für Betfair:
+      // bei Poly steht `k = now` auch für „Anpfiff unbekannt", dort entscheidet `htk`.
+      if ((o.src === 'bf' || o.src === 'bfflow') && !o.live && o.k <= now) o.live = true;
       if (o.exotic) o.score -= 14;                 // duenner/exotischer Markt: Signal weniger verlaesslich
       // Deckungs-Abgleich: über matchId ODER Teamnamen — die Flächen liefern nicht dieselbe ID.
       // Zuerst der exakte Marktschluessel (vom Produzenten gestempelt), dann die IDs, dann
@@ -3818,6 +3828,7 @@
       if (trS && trS.fade) { _jzGefiltert.push({ m: team(x.home) + vsp + team(x.away), lg: x.league, tr: trS }); return; }
       put({ id: 'b' + mid(x.home, x.away, x.matchId), mk: mid(x.home, x.away, x.matchId), mks: mids(x.home, x.away),
         k: x.kickoff ? Date.parse(String(x.kickoff).replace('Z', '+00:00')) : NaN,
+        live: !!_mdBfLiveById(x.matchId),
         exotic: ex, src: 'bf', odd: x.odd, pp: pp, moneyIn: moneyIn, tr: trS,
         match: esc(team(x.home)) + vsp + esc(team(x.away)), pick: esc(short(x.sideName || '') || '—'),
         score: 42 + Math.min(app, 22) - (moneyIn ? 0 : 8) + (trS && trS.traegt ? 10 : 0), badge: '💷 Steam', bc: A.bf });

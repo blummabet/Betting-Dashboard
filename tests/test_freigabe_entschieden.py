@@ -20,9 +20,16 @@ import unittest
 
 import freigabe as F
 
+# 27.09.2026: hier stand fest „2026-09-06T12:00:00Z". Am 27.09. um 12:00 UTC war das genau
+# 21 Tage her — ab da galt jede Test-Schublade als „ruht", und sechs Tests fielen, ohne dass
+# sich am Code etwas geaendert hatte. Ein Test, der mit dem Kalender verfaellt, misst die Uhr.
+# „Frisch" heisst: gestern.
+import datetime as _dt
+FRISCH = (_dt.datetime.now(_dt.timezone.utc) - _dt.timedelta(days=1)).strftime("%Y-%m-%dT%H:%M:%SZ")
+
 
 class TestEntschiedenBleibtEntschieden(unittest.TestCase):
-    def _row(self, renditen, clvs=None, letzter="2026-09-06T12:00:00Z"):
+    def _row(self, renditen, clvs=None, letzter=FRISCH):
         return F.bewerte("Test", "poly", renditen, clvs if clvs is not None else [0.0] * len(renditen),
                          letzter=letzter, now=None)
 
@@ -50,7 +57,7 @@ class TestEntschiedenBleibtEntschieden(unittest.TestCase):
         """Fail-closed war die alte Antwort. Die neue: freigeben und die Luecke benennen —
         „nicht erhoben" ist eine Datenluecke, kein Messergebnis gegen die Schublade."""
         r = F.bewerte("Test", "betfair", [0.4 + (i % 3) * 0.05 for i in range(40)], [],
-                      letzter="2026-09-06T12:00:00Z")
+                      letzter=FRISCH)
         self.assertGreater(r["roiLb"], 0)
         self.assertEqual(r["status"], "freigegeben")
         self.assertEqual(r["clvUrteil"], "nicht erhoben")
@@ -61,7 +68,7 @@ class TestEntschiedenBleibtEntschieden(unittest.TestCase):
         Ohne sie waere „Freigabe locker" ein Datenverlust und nicht eine Lockerung."""
         r = F.bewerte("Test", "poly", [0.4 + (i % 3) * 0.05 for i in range(40)],
                       [-2.0 - (i % 3) * 0.1 for i in range(40)],
-                      letzter="2026-09-06T12:00:00Z")
+                      letzter=FRISCH)
         self.assertGreater(r["roiLb"], 0)
         self.assertLess(r["clvOg"], 0, "die Vorbedingung: der CLV ist wirklich negativ belegt")
         self.assertEqual(r["status"], "freigegeben")
@@ -79,7 +86,7 @@ class TestEntschiedenBleibtEntschieden(unittest.TestCase):
         nichts bewiesen."""
         breit = F.bewerte("Test", "poly", [0.4 + (i % 3) * 0.05 for i in range(40)],
                           [9.0 if i % 2 else -9.0 for i in range(40)],
-                          letzter="2026-09-06T12:00:00Z")
+                          letzter=FRISCH)
         self.assertLess(breit["clvLb"], 0, "die Vorbedingung: die Untergrenze liegt unter null")
         self.assertGreater(breit["clvOg"], 0)
         self.assertEqual(breit["clvUrteil"], "gemessen, nicht belegt")
@@ -91,7 +98,7 @@ class TestEntschiedenBleibtEntschieden(unittest.TestCase):
         try:
             F.CLV_BLOCKT = True
             r = F.bewerte("Test", "betfair", [0.4 + (i % 3) * 0.05 for i in range(40)], [],
-                          letzter="2026-09-06T12:00:00Z")
+                          letzter=FRISCH)
             self.assertEqual(r["status"], "geprueft")
         finally:
             F.CLV_BLOCKT = alt
@@ -99,7 +106,7 @@ class TestEntschiedenBleibtEntschieden(unittest.TestCase):
     def test_beides_belegt_gibt_frei(self):
         r = F.bewerte("Test", "poly", [0.4 + (i % 3) * 0.05 for i in range(40)],
                       [2.0 + (i % 3) * 0.1 for i in range(40)],
-                      letzter="2026-09-06T12:00:00Z")
+                      letzter=FRISCH)
         self.assertEqual(r["status"], "freigegeben")
 
 
@@ -469,7 +476,7 @@ class TestEntfernungZumBeleg(unittest.TestCase):
         # ODER, wenn die Spanne ueber Groessenordnungen geht, ausdruecklich KEINE. Beides ist
         # die echte Entfernung — „noch 15" ist es in keinem Fall.
         r = F.bewerte("Test", "betfair", [0.9, -0.6, 0.8, -0.5, 0.7, -0.4] * 2,
-                      [2.0, 1.5, 2.5, 1.0, 2.2, 1.8] * 2, letzter="2026-09-06T12:00:00Z")
+                      [2.0, 1.5, 2.5, 1.0, 2.2, 1.8] * 2, letzter=FRISCH)
         self.assertEqual(r["status"], "kandidat")
         self.assertTrue("Plays nötig" in r["grund"] or "NICHT schätzen" in r["grund"],
                         "der Grund nennt weder eine Entfernung noch dass es keine gibt")
@@ -480,7 +487,7 @@ class TestEntfernungZumBeleg(unittest.TestCase):
         """Der reale Fall: CLV schon belegt, ROI weit weg. Wer nur „noch 15" liest, sieht nicht,
         dass die eine Huerde langst genommen ist und die ANDERE blockiert."""
         r = F.bewerte("Test", "betfair", [0.9, -0.6, 0.8, -0.5, 0.7, -0.4] * 2,
-                      [2.0, 1.9, 2.1, 2.0, 1.95, 2.05] * 2, letzter="2026-09-06T12:00:00Z")
+                      [2.0, 1.9, 2.1, 2.0, 1.95, 2.05] * 2, letzter=FRISCH)
         # „Belegt" heisst Untergrenze ueber null — die gibt es unter UG_MIN_N gar nicht.
         # Unterhalb sagt der Grund deshalb, welche Huerde BINDET, nicht was bewiesen sei.
         self.assertIn("bindende Hürde ist der ROI", r["grund"])
@@ -488,7 +495,7 @@ class TestEntfernungZumBeleg(unittest.TestCase):
 
     def test_reife_schubladen_bekommen_keine_hochrechnung_in_den_grund(self):
         """Ab n>=MIN_N steht dort ein URTEIL. Eine Hochrechnung daneben wuerde es aufweichen."""
-        r = F.bewerte("Test", "poly", [-0.5] * 40, [0.0] * 40, letzter="2026-09-06T12:00:00Z")
+        r = F.bewerte("Test", "poly", [-0.5] * 40, [0.0] * 40, letzter=FRISCH)
         self.assertEqual(r["status"], "geprueft")
         self.assertNotIn("nötig", r["grund"])
 
@@ -593,13 +600,13 @@ class TestDiePrognoseTraegtIhreEigeneSchranke(unittest.TestCase):
         # ganze Unterschied zwischen schnellem und langsamem Richter waere weg).
         k = F.noetiges_n([0.10] * 12 + [0.09, 0.11])
         self.assertIsNotNone(k)
-        r = F.bewerte("T", "poly", [0.10] * 12 + [0.09, 0.11], [], letzter="2026-09-06T12:00:00Z")
+        r = F.bewerte("T", "poly", [0.10] * 12 + [0.09, 0.11], [], letzter=FRISCH)
         self.assertIn("%d Plays nötig" % max(k, F.MIN_N), r["grund"])
 
     def test_der_grund_sagt_nicht_schaetzbar_statt_einer_zahl(self):
         r = F.bewerte("Test", "betfair",
                       [4.0, -1.0, -1.0, -1.0, 3.0, -1.0, -1.0, 5.0, -1.0, -1.0, -1.0, 2.0],
-                      [], letzter="2026-09-06T12:00:00Z")
+                      [], letzter=FRISCH)
         self.assertIn("NICHT schätzen", r["grund"])
         self.assertIsNotNone(r["entfernung"])
         self.assertFalse(r["entfernung"]["schaetzbar"])

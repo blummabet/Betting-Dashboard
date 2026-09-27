@@ -171,7 +171,7 @@ test('#70 Public Top-Play: dieselbe Konstellation in erlaubter Sportart → Kand
 test('#70 Sperrliste ist EINE Quelle (window.PW_BLOCKED_BET_CATS)', async () => {
   await withData((w) => {
     // Array kommt aus dem jsdom-Realm -> ueber den Inhalt vergleichen, nicht referenzgleich.
-    assert.deepStrictEqual(Array.from(w.PW_BLOCKED_BET_CATS), ['US-Sport', 'Kampfsport']);
+    assert.deepStrictEqual(Array.from(w.PW_BLOCKED_BET_CATS), ['US-Sport', 'Kampfsport', 'Cricket']);   // 27.09.2026: + Cricket (Lucas)
     assert.strictEqual(w._pwBetBlocked({ league: 'MLB' }), true);
     assert.strictEqual(w._pwBetBlocked({ league: 'UFC' }), true);
     assert.strictEqual(w._pwBetBlocked({ league: 'ATP' }), false);

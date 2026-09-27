@@ -56,7 +56,8 @@
   var SR_NUR_SPIELBAR = true;   // nur was noch nicht (oder kaum) läuft — s. o.
   // 12.09.2026: haelt den Rueckfall mit stake_highroller_fetch.GESPERRT gleich („Cricket bitte
   // raus"). Greift nur, wenn die Datei die Liste nicht mitschickt — sonst regiert das Artefakt.
-  var SR_GESPERRT_FALLBACK = ['US-Sport', 'Cricket'];
+  // 27.09.2026: + Kampfsport (Lucas: „sowohl als auch raus") - gleich mit Poly.
+  var SR_GESPERRT_FALLBACK = ['US-Sport', 'Kampfsport', 'Cricket'];
   function _srGesperrt() {
     var d = SR.daten || {};
     return (d.gesperrt && d.gesperrt.length) ? d.gesperrt : SR_GESPERRT_FALLBACK;

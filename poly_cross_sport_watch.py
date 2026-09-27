@@ -98,7 +98,7 @@ def _gesperrt_hinweis(sport_key, cats=None):
     return None
 
 
-_BLOCKED_FALLBACK = ("US-Sport", "Kampfsport")
+_BLOCKED_FALLBACK = ("US-Sport", "Kampfsport", "Cricket")
 
 
 def _blocked_cats():

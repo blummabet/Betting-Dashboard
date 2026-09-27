@@ -206,7 +206,7 @@ _SPORT = {
     "NFL": ("🏈", "NFL"), "NHL": ("🏒", "NHL"), "MMA": ("🥊", "MMA"), "UFC": ("🥊", "UFC"),
     "GOLF": ("⛳", "Golf"), "F1": ("🏎️", "Formel 1"), "CRICKET": ("🏏", "Cricket"),
 }
-BLOCKED_FALLBACK = ("US-Sport", "Kampfsport")   # nur wenn poly_shortlist_track.json fehlt
+BLOCKED_FALLBACK = ("US-Sport", "Kampfsport", "Cricket")   # nur wenn poly_shortlist_track.json fehlt
 
 # Spiegel von _pwSportCategory (poly-wallets.js). Bewusst dieselbe Reihenfolge: spezifische
 # Sportarten zuerst, sonst klauen breite Fussball-Begriffe wie "championship" sie weg.

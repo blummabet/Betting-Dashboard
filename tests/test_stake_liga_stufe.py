@@ -811,3 +811,59 @@ def test_marokkos_oberste_klasse_ist_eingestuft():
     Regel. Belegt an der Paarung „Amal Tiznit - Ittihad Tanger" vom 24.09.2026 — das
     Eroeffnungsspiel der Botola-Pro-Saison."""
     assert LS.stufe("botola", "soccer") == "1"
+
+
+# ── 27.09.2026: zwei IDs, ein Spiel — und drei Slugs, die wirklich zwei Laender sind ──────────
+def _sp(slug, lid, event, ko="2026-09-26T14:00:00Z", kombi=False):
+    return {"sport": "soccer", "ligaSlug": slug, "ligaId": lid, "event": event,
+            "anpfiff": ko, "kombi": kombi}
+
+
+def test_dasselbe_spiel_unter_zwei_ids_ist_ein_turnier():
+    """🔴 27.09.2026: „Girona - Albacete" 25.09. 18:30 lief unter e9a30c04… (Pre-Match) und
+    6911916f… (Live). Sieben von zehn Meldungen waren genau das."""
+    z = [_sp("la-liga-2", "pre", "Girona - Albacete"), _sp("la-liga-2", "live", "Girona - Albacete")]
+    assert LS.mehrdeutige_kandidaten(z)["kandidaten"] == {}
+
+
+def test_eine_kombi_beweist_dasselbe_spiel_zaehlt_aber_nicht_als_turnier():
+    z = [_sp("league-two", "a", "Oldham - Salford"),
+         _sp("league-two", "b", "Oldham - Salford", kombi=True),
+         _sp("league-two", "b", "York - Gillingham")]
+    assert LS.mehrdeutige_kandidaten(z)["kandidaten"] == {}
+
+
+def test_gegenbeweis_zwei_turniere_ohne_gemeinsames_spiel_bleiben_laut():
+    z = [_sp("la-liga-2", "a", "Girona - Albacete"), _sp("la-liga-2", "b", "Ceuta - Cadiz")]
+    assert "la-liga-2" in LS.mehrdeutige_kandidaten(z)["kandidaten"]
+
+
+def test_gleiche_paarung_an_anderem_tag_ist_kein_beweis():
+    z = [_sp("la-liga-2", "a", "Girona - Albacete", ko="2026-09-25T18:30:00Z"),
+         _sp("la-liga-2", "b", "Girona - Albacete", ko="2027-02-01T18:30:00Z")]
+    assert "la-liga-2" in LS.mehrdeutige_kandidaten(z)["kandidaten"]
+
+
+def test_argentiniens_primera_b_ist_die_dritte_klasse():
+    """Chile und Kolumbien: zweite Klasse. Argentinien: Primera B Metropolitana, dritte."""
+    arg = "180b07b7-4b3a-45c4-a1a6-3e56b1f68d78"
+    assert LS.stufe("primera-b", "soccer", arg) == "3"
+    assert LS.stufe("primera-b", "soccer", "ec7f8cc8-357f-46c9-9350-182662cb8487") == "2"
+    assert LS.stufe("primera-b", "soccer") == "2"           # ohne ID: der Slug wie bisher
+    assert LS.stufe("primera-b", "handball", arg) is None   # die Sportart schlaegt alles
+
+
+def test_eine_neue_id_unter_einem_eingestuften_slug_ist_offen():
+    """Auch die Live-Schwester einer eingestuften ID — `stufe()` liest je ID."""
+    arg = "180b07b7-4b3a-45c4-a1a6-3e56b1f68d78"
+    z = [_sp("primera-b", arg, "Liniers - Arsenal"), _sp("primera-b", "neu", "Liniers - Arsenal")]
+    assert LS.mehrdeutige_kandidaten(z)["kandidaten"] == {"primera-b": ["neu"]}
+
+
+def test_wales_tschechien_und_supercups():
+    assert LS.stufe("cymru-championship-south") == "2"
+    assert LS.stufe("cfl", "soccer") == "3"
+    assert LS.stufe("cfl", "american-football") is None
+    assert LS.stufe("1-cfl") == "1"                          # Montenegro bleibt oben
+    for s in ("supercopa-internacional", "supercoppa-italiana", "dfl-supercup"):
+        assert LS.stufe(s) == "pokal", s

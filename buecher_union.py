@@ -143,6 +143,15 @@ QUITTIERT = {
         "liegen an der Boerse. Ursache behoben (frischer Wallet-Griff vor der Order, "
         "Buch-Vereinigung statt -X ours); die zweite Position bleibt und wird normal "
         "abgerechnet.",
+    ("0x1949093e7ffd4061efb38a3283ba5c1a84e1615fc33984ca5f7e41880595d719",
+     "0xc3a7795817e46197b4629fb7230c99a1ea402d9057e5aee34f6d4e45be06cc50"):
+        "26.09.2026, Marsborne (cs2-mars-dtn1-2026-09-26): zwei Laeufe setzten je $5 um 23:41 "
+        "und 23:45. Ein geplanter poly-global-scan wartete in der concurrency-Schlange und "
+        "checkte den SHA vom Ausloesezeitpunkt aus — mit einem shortlist_auto_bets_placed.json, "
+        "in dem die erste Order noch fehlte; die Wallet-Pruefung sah sie wegen API-Verzug auch "
+        "nicht. Ursache behoben: jeder wirkende Workflow zieht direkt nach dem Checkout den "
+        "neuesten Stand (test_workflow_frisch_vor_wirkung). Beide Positionen gewonnen, werden "
+        "normal abgerechnet.",
 }
 
 

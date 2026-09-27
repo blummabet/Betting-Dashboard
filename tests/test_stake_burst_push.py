@@ -160,7 +160,7 @@ class TestGesperrteSportarten(unittest.TestCase):
 
     def test_ohne_artefakt_liste_gilt_der_sichere_rueckfall(self):
         for leer in (None, {}, {"gesperrt": None}, {"gesperrt": []}, "kaputt"):
-            self.assertEqual(sorted(B.gesperrte_kats(leer)), ["Cricket", "US-Sport"], repr(leer))
+            self.assertEqual(sorted(B.gesperrte_kats(leer)), ["Cricket", "Kampfsport", "US-Sport"], repr(leer))
 
     def test_fussball_und_tennis_laufen_weiter(self):
         """Die Gegenprobe — ohne sie koennte die Sperre alles fangen und der Test waere gruen."""

@@ -160,7 +160,17 @@ test('am echten Bestand: im Bereich der Tafel trägt keine einzige Stufe', () =>
   // Also Protokoll, keine Freigabe. Und statt die Schranke zu lockern, bis nichts mehr
   // auffaellt, steht die Zeile hier NAMENTLICH — mit den zwei Bedingungen, unter denen sie zur
   // Nachricht wird.
-  const BEOBACHTET = new Set(['9/10']);
+  // 27.09.2026 angesehen — die Nachricht kam wieder, diesmal auf der /7-Leiter (Spiele, deren
+  // Buecher-Punktestand nur 7 Punkte moeglich hatte):
+  //
+  //    7/7  n=  4   ROI −20,5 %   UG −96,3 %   ← die STRENGERE Stufe, darunter
+  //    6/7  n= 10   ROI +63,2 %   UG +30,7 %   ← genau an der Schwelle n=10
+  //    5/7  n= 96   ROI −14,9 %   UG −29,3 %
+  //
+  // Gleiches Muster wie 10/13 am 18.09. und 9/10 am 24.09. (9/10 steht heute bei UG −15,6 %):
+  // zehn Zeilen, die Leiter kippt nach oben, und die Tafel selbst sagt „zu wenige" (Urteil erst
+  // ab n=30). Protokoll, keine Freigabe — namentlich, mit derselben Bedingung wie 9/10 unten.
+  const BEOBACHTET = new Set(['9/10', '6/7']);
   const belastbar = traegt.filter(e => (e.n || 0) >= 10);
   assert.deepStrictEqual(
     belastbar.map(e => `${e.punkte}/${e.moeglich}`).filter(x => !BEOBACHTET.has(x)), [],
@@ -170,6 +180,9 @@ test('am echten Bestand: im Bereich der Tafel trägt keine einzige Stufe', () =>
   assert.ok(!neun || (neun.n || 0) < 25 || (neun.roiLb || -9) <= 0,
     '9/10 haelt seine positive Untergrenze ueber 25 Zeilen — das waere zum ersten Mal mehr '
     + 'als die Bandbreite und gehoert angesehen.');
+  const sechs7 = oben.find(e => e.punkte === 6 && e.moeglich === 7);
+  assert.ok(!sechs7 || (sechs7.n || 0) < 25 || (sechs7.roiLb || -9) <= 0,
+    '6/7 haelt seine positive Untergrenze ueber 25 Zeilen — mehr als die Bandbreite, ansehen.');
   const zehn = oben.find(e => e.punkte === 10 && e.moeglich === 10);
   assert.ok(!zehn || (zehn.n || 0) < 10 || (zehn.roiLb || -9) <= 0,
     'Wenn die STRENGERE Stufe 10/10 belastbar auch ueber null geht, ist die Leiter zum ersten '

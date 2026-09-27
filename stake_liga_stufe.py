@@ -92,6 +92,16 @@ EBENE = {
     # Montenegros. Beleg aus der Paarung: FK Sutjeska Niksic gegen FK Decic Tuzi, beides
     # montenegrinische Erstligisten (Sutjeska ist Rekordmeister). Der Slug sagt es nicht.
     "1-cfl": 1,
+    # 27.09.2026 (CI-Wachhund): „cymru-championship-south" — Wales' ZWEITE Klasse unter der
+    # Cymru Premier (regional geteilt, Nord und Sued). Beleg: „Caerphilly Athletic FC -
+    # Pontypridd Town". Die Nord-Staffel gleich mit, sonst faellt sie beim ersten Spiel auf.
+    "cymru-championship-south": 2, "cymru-championship-north": 2,
+    # 27.09.2026 (CI-Wachhund): „cfl" im FUSSBALL ist die tschechische ČFL (Česká fotbalová
+    # liga), DRITTE Klasse unter Chance Liga und FNL. Beleg: „Povltavska FA - FK Motorlet
+    # Prague". Derselbe Slug steht im Feed auch fuer die Canadian Football League — die
+    # bekommt nichts, weil `stufe()` nur Fussball beantwortet. Nicht zu verwechseln mit
+    # „1-cfl" (Montenegro, oberste Klasse) direkt darueber.
+    "cfl": 3,
     # 16.09.2026 (CI-Wachhund): „Premijer Liga" — die Premijer Liga BiH, oberste Klasse
     # Bosnien-Herzegowinas. Beleg aus der Paarung: FK Sloga Doboj gegen FK Borac Banja Luka,
     # beides Erstligisten (Borac ist amtierender Meister). Dieselbe Einstufung wie 1. CFL
@@ -381,7 +391,12 @@ _RESERVE_RX = re.compile(r"reserv|riserv")
 # eintragen: der naechste Landespokal heisst wieder anders, meint aber dasselbe.
 _POKAL_RX = re.compile(
     r"(?:^|-)(?:trophy|shield|coupe|taca|kupa(?:s[iı])?|kubok|beker|cupa|cupen"
-    r"|pokal(?:en|et)?)(?:-|$)")
+    r"|pokal(?:en|et)?"
+    # 27.09.2026 (CI-Wachhund, „supercopa-internacional"): Estudiantes - Rosario Central, ein
+    # Supercup — ein einzelnes Titelspiel zwischen Meister und Pokalsieger, keine Spielklasse.
+    # Als Wort in die Pokal-Regel statt als Tabellenzeile: Supercopa/Supercoppa/Supercup gibt
+    # es in fast jedem Verband, und der naechste kommt sonst wieder von Hand.
+    r"|super-?(?:copa|coppa|cup|kupa|pokal))(?:-|$)")
 
 # Auszeichnungen und Langzeitwetten ohne Spielklasse. Wortgrenzen, damit „winner" in einem
 # Marktnamen nicht ganze Ligen zu Auszeichnungen macht.
@@ -472,6 +487,43 @@ EIN_WETTBEWERB = {
     # Atletico Nacional) — eine Liga, im Feed auf zwei Turnier-IDs verteilt.
     "primera-a-apertura": "Dasselbe Spiel laeuft unter beiden Turnier-IDs (24.09.2026 an den "
                           "Paarungen geprueft) — eine Liga, zwei IDs im Feed",
+}
+
+# 🔴 27.09.2026 (CI-Wachhund, zehn Slugs auf einmal). Nachgesehen an den Paarungen: bei SIEBEN
+# davon laufen DIESELBEN Spiele unter beiden IDs („Girona - Albacete" unter e9a30c04… und
+# 6911916f…) — der Feed vergibt je Wettbewerb eine ID fuer Pre-Match und eine fuer Live. Das
+# ist kein zweites Turnier, und der Beweis ist derselbe wie am 24.09. bei primera-a-apertura:
+# dasselbe Spiel kann nicht in zwei Spielklassen liegen. `mehrdeutige_kandidaten` fasst IDs
+# mit gemeinsamem Spiel deshalb jetzt selbst zusammen, statt jede Doppel-ID von Hand in
+# EIN_WETTBEWERB nachzutragen.
+#
+# Echt verschieden waren drei — hier je Turnier-ID von Hand eingestuft, mit Beleg:
+#   premier-league    England (Arsenal - Leeds) und BHUTAN (Ugyen Academy - Drukpa, Thimphu
+#                     FC - Tensung): beide oberste Klasse, das Urteil stimmt fuer beide.
+#   primera-division  Uruguay (Penarol - Boston River) und PERU (AD Tarma - Cienciano): beide
+#                     oberste Klasse.
+#   primera-b         Chile (Cobreloa - Santiago Wanderers) und Kolumbien (Real Santander -
+#                     Orsomarso) sind die ZWEITE Klasse — ARGENTINIEN (Arsenal de Sarandi -
+#                     Liniers, Excursionistas - Real Pilar) ist die Primera B Metropolitana,
+#                     die DRITTE unter Liga Profesional und Primera Nacional. Dort war die „2"
+#                     falsch.
+# Jede weitere ID unter einem dieser Slugs wird vom Wachhund gemeldet, bis sie hier steht —
+# auch wenn sie per gemeinsamem Spiel zu einem eingestuften Turnier gehoert (dann ist es die
+# Live-/Pre-Match-Schwester und braucht nur dieselbe Zeile).
+TURNIER_EBENE = {
+    "premier-league": {
+        "c94f5db7-4fd2-4407-a4fc-9a4e807f0ea1": ("England", 1),
+        "261292f1-ed72-4765-93c3-abee6a5ebee0": ("Bhutan", 1),
+    },
+    "primera-division": {
+        "118c993d-1294-4f73-9afb-c97213bcfab0": ("Uruguay", 1),
+        "d7cebc4a-a25f-4e7c-8511-3ed7f37eaeb8": ("Peru", 1),
+    },
+    "primera-b": {
+        "180b07b7-4b3a-45c4-a1a6-3e56b1f68d78": ("Argentinien, Primera B Metropolitana", 3),
+        "ec7f8cc8-357f-46c9-9350-182662cb8487": ("Chile", 2),
+        "f5da1103-437b-4567-a484-e41513e26725": ("Kolumbien", 2),
+    },
 }
 
 _MUSTER = (
@@ -597,14 +649,18 @@ def _ebene_aus_slug(s: str):
     return None
 
 
-def stufe(slug: str, sport: str = SPORT):
+def stufe(slug: str, sport: str = SPORT, liga_id=None):
     """'1' | '2' | '3' | 'kontinental' | 'pokal' | 'frauen' | 'jugend' | 'srl' — oder None.
 
     None heisst „nicht in der Tabelle" und muss auch so angezeigt werden. Der Slug ist NICHT
     sportartenrein (`bundesliga` = Fussball und Handball), deshalb die Sportart als Bedingung.
+    `liga_id` (Turnier-ID aus dem Feed) schlaegt den Slug, wo TURNIER_EBENE sie kennt.
     """
     if (sport or "") != SPORT:
         return None
+    _t = TURNIER_EBENE.get((slug or "").lower()) or {}
+    if liga_id is not None and str(liga_id) in _t:
+        return str(_t[str(liga_id)][1])
     a = art(slug)
     if a:
         return a
@@ -631,36 +687,68 @@ def mehrdeutige_kandidaten(zeilen, sport: str = SPORT) -> dict:
     Abdeckung ist, damit ein leeres Ergebnis nicht als Unbedenklichkeit gelesen wird.
     """
     je = {}
+    spiele = {}                  # (slug, spiel) -> {ids}
     mit_id = 0
     for z in zeilen or []:
-        if not isinstance(z, dict) or z.get("kombi"):
+        if not isinstance(z, dict):
             continue
         if (z.get("sport") or "") != sport:
             continue
         sl, lid = z.get("ligaSlug"), z.get("ligaId")
         if not sl or lid in (None, ""):
             continue
-        mit_id += 1
-        je.setdefault(sl, set()).add(str(lid))
-    # 🔴 23.09.2026: der Wachhund meldete `fa-cup` mit zwei Turnier-IDs. Nachgesehen an den
-    # Paarungen: der ENGLISCHE FA Cup (Worksop Town–AFC Telford, Wingate & Finchley–Hemel
-    # Hempstead) und der THAILAENDISCHE (Chachoengsao–Bangkok FC, Futera United–Pattaya City).
-    # Zwei Wettbewerbe, zwei Laender — und trotzdem kein Fund: `fa-cup` traegt gar keine Ebene,
-    # sondern die ART „pokal", und ein Pokal ist in England wie in Thailand ein Pokal. Das
-    # Urteil ist fuer beide dasselbe, also ist nichts falsch.
+        # Kombis zaehlen nicht als eigenes Turnier (ihre Liga ist die des ersten Beins), sind
+        # aber ein gueltiger BEWEIS fuer „dasselbe Spiel": Liga, ID, Paarung und Anpfiff kommen
+        # alle aus demselben Bein.
+        if not z.get("kombi"):
+            mit_id += 1
+            je.setdefault(sl, set()).add(str(lid))
+        # Paarung + Anpfiff, NICHT eventId: der Feed fuehrt Pre-Match und Live auch als zwei
+        # Spiel-Objekte („Girona - Albacete" 25.09. 18:30 unter fc9de54d… und 506e8bc2…).
+        if z.get("event") and z.get("anpfiff"):
+            spiele.setdefault((sl, (str(z["event"]), str(z["anpfiff"]))), set()).add(str(lid))
+    # 🔴 23.09.2026: der Wachhund meldete `fa-cup` mit zwei Turnier-IDs — englischer und
+    # thailaendischer FA Cup. Kein Fund: `fa-cup` traegt die ART „pokal", und die ist fuer
+    # beide dieselbe. Fehlerklasse: *ein Waechter, der zaehlt, was verschieden ist, statt zu
+    # pruefen, ob das Urteil verschieden waere.* Deshalb zaehlen nur Slugs mit Ebene 1/2/3.
     #
-    # Der Docstring sagte „Slugs, die eine EBENE tragen", die Bedingung fragte `is not None` —
-    # und traf damit auch „pokal" und „mehrdeutig". Fehlerklasse: *ein Waechter, der zaehlt,
-    # was verschieden ist, statt zu pruefen, ob das Urteil verschieden waere.* Dieselbe Klasse
-    # wie gestern bei `efl-trophy`, eine Ebene tiefer: dort war der Wettbewerb derselbe, hier
-    # ist es die Aussage.
-    #
-    # Nur eine ZAHL ist laenderspezifisch und kann durch einen zweiten Wettbewerb falsch
-    # werden. Deshalb zaehlt der Wachhund ab jetzt nur noch Slugs mit Ebene 1/2/3 — und
-    # `EIN_WETTBEWERB` muss nicht fuer jeden Pokal der Welt gepflegt werden.
-    treffer = {sl: sorted(ids) for sl, ids in je.items()
-               if len(ids) > 1 and str(stufe(sl, sport) or "").isdigit()
-               and sl not in MEHRDEUTIG and sl not in EIN_WETTBEWERB}
+    # 🔴 27.09.2026: dieselbe Klasse eine Stufe weiter. Zwei IDs, unter denen DASSELBE Spiel
+    # laeuft, sind ein Turnier (Pre-Match- und Live-ID). Sie werden hier zusammengefasst —
+    # gemeldet wird nur, was danach noch mehr als ein Turnier ist.
+    def _gruppen(sl, ids):
+        eltern = {i: i for i in ids}
+        def wurzel(i):
+            while eltern[i] != i:
+                eltern[i] = eltern[eltern[i]]
+                i = eltern[i]
+            return i
+        for (s2, _sp), gl in spiele.items():
+            if s2 != sl:
+                continue
+            gl = sorted(i for i in gl if i in eltern)
+            for b in gl[1:]:
+                eltern[wurzel(b)] = wurzel(gl[0])
+        out = {}
+        for i in ids:
+            out.setdefault(wurzel(i), set()).add(i)
+        return list(out.values())
+
+    treffer = {}
+    for sl, ids in je.items():
+        if len(ids) < 2 or sl in MEHRDEUTIG or sl in EIN_WETTBEWERB:
+            continue
+        if not str(stufe(sl, sport) or "").isdigit():
+            continue
+        bekannt = TURNIER_EBENE.get(sl)
+        if bekannt:
+            # Von Hand eingestuft: jede ID, die dort nicht steht, ist offen — auch die
+            # Live-/Pre-Match-Schwester, denn `stufe()` liest je ID.
+            offen = sorted(i for i in ids if i not in bekannt)
+            if offen:
+                treffer[sl] = offen
+            continue
+        if len(_gruppen(sl, ids)) > 1:
+            treffer[sl] = sorted(ids)
     return {"nMitId": mit_id, "kandidaten": treffer}
 
 
@@ -685,7 +773,7 @@ def ebene_median(wetten: list) -> dict:
     for w in wetten or []:
         if w.get("kombi") or not w.get("einsatzUsd"):
             continue
-        st = stufe(w.get("ligaSlug"), w.get("sport"))
+        st = stufe(w.get("ligaSlug"), w.get("sport"), w.get("ligaId"))
         if st:
             je[st].append(float(w["einsatzUsd"]))
     return {k: round(statistics.median(v), 2) for k, v in je.items() if len(v) >= EBENE_MIN_N}
@@ -696,7 +784,7 @@ def referenz(w: dict, norm: dict, ebmed: dict):
 
     `norm` ist der Ligen-Block aus stake_league_norm.json, dort nach ANZEIGENAME verschluesselt.
     """
-    st = stufe(w.get("ligaSlug"), w.get("sport"))
+    st = stufe(w.get("ligaSlug"), w.get("sport"), w.get("ligaId"))
     if not st:
         return None, "unbekannt"
     n = (norm or {}).get(w.get("liga")) or {}
@@ -766,7 +854,7 @@ def kandidaten(wetten: list, norm: dict, ab: float = KAND_AB, max_n: int = 60) -
     for w in wetten or []:
         if w.get("kombi") or not w.get("einsatzUsd"):
             continue
-        st = stufe(w.get("ligaSlug"), w.get("sport"))
+        st = stufe(w.get("ligaSlug"), w.get("sport"), w.get("ligaId"))
         if st not in ("2", "3"):
             continue
         f, basis = faktor(w, norm, ebmed)
@@ -812,7 +900,7 @@ def kreuz(wetten: list, norm: dict) -> dict:
     for w in wetten or []:
         if w.get("kombi") or not w.get("einsatzUsd"):
             continue
-        st = stufe(w.get("ligaSlug"), w.get("sport"))
+        st = stufe(w.get("ligaSlug"), w.get("sport"), w.get("ligaId"))
         if not st:
             continue
         pnl = (w.get("abrechnung") or {}).get("pnlUsd")
@@ -930,12 +1018,12 @@ def block(wetten: list, norm: dict) -> dict:
     ebmed = ebene_median(wetten)
     je_ebene = defaultdict(int)
     for w in wetten or []:
-        st = stufe(w.get("ligaSlug"), w.get("sport"))
+        st = stufe(w.get("ligaSlug"), w.get("sport"), w.get("ligaId"))
         if st:
             je_ebene[st] += 1
     ohne = sorted({w.get("ligaSlug") for w in (wetten or [])
                    if (w.get("sport") == SPORT and w.get("ligaSlug")
-                       and stufe(w.get("ligaSlug"), w.get("sport")) is None)})
+                       and stufe(w.get("ligaSlug"), w.get("sport"), w.get("ligaId")) is None)})
     return {
         "abFaktor": KAND_AB,
         "topAbFaktor": TOP_AB,
