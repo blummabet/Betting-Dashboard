@@ -456621,7 +456621,13 @@
   "tokens": {
    "Avalanche": "59648048285887154110225944583627273208374983810841320801789102198407111607542",
    "Utah": "87519194731056171531273727009199391180511404264667505173648257658595742503887"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Avalanche": 0.0,
+   "Utah": 1.0
+  },
+  "resolvedAt": "2026-09-27T00:14:27.221339+00:00"
  },
  "argpn-dma-ccn-2026-09-26": {
   "shares": {
@@ -459445,12 +459451,12 @@
  },
  "mlb-ari-sd-2026-09-26": {
   "shares": {
-   "Arizona Diamondbacks": 31661.30785635998,
-   "San Diego Padres": 37923.98413564
+   "Over": 46163.52177565001,
+   "Under": 40123.43481435
   },
   "prices": {
-   "Arizona Diamondbacks": 0.455,
-   "San Diego Padres": 0.545
+   "Over": 0.535,
+   "Under": 0.465
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -459458,299 +459464,311 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 62133,
+  "totalUsd": 86785,
   "whales": [
    {
     "wallet": "0xa71093cafc0c099b4ccab24c3cb8018d817923c4",
-    "side": "San Diego Padres",
-    "usd": 30683
-   },
-   {
-    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
-    "side": "Arizona Diamondbacks",
-    "usd": 7180,
-    "avgPrice": 0.46
-   },
-   {
-    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
-    "side": "Arizona Diamondbacks",
-    "usd": 5428
-   },
-   {
-    "wallet": "0xa2b5bafa01d0f81926a2a88e5628a95b59fc4582",
-    "side": "Arizona Diamondbacks",
-    "usd": 5187
-   },
-   {
-    "wallet": "0x34142c0027cccc7a9156a280ef3edd1dd67451a1",
-    "side": "San Diego Padres",
-    "usd": 4459
-   },
-   {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-    "side": "Arizona Diamondbacks",
-    "usd": 3907,
-    "avgPrice": 0.4536
-   },
-   {
-    "wallet": "0x03f4bd4bd14e0dffa6f012d023387e1a327f7e44",
-    "side": "Arizona Diamondbacks",
-    "usd": 2912
-   },
-   {
-    "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
-    "side": "Arizona Diamondbacks",
-    "usd": 1943
-   },
-   {
-    "wallet": "0x64511822c851d4d56d8c6e5376ecfd724c36b57a",
-    "side": "Arizona Diamondbacks",
-    "usd": 976
-   },
-   {
-    "wallet": "0x7c9cb38f0ab4b1153c2bc033336c69df370791e9",
-    "side": "San Diego Padres",
-    "usd": 817
-   },
-   {
-    "wallet": "0x3668135cd49e7343a51ce5e17257116d801dd42a",
-    "side": "San Diego Padres",
-    "usd": 780
-   },
-   {
-    "wallet": "0x00f4cb7f2bb06269b165dcb506a1233383c14089",
-    "side": "Arizona Diamondbacks",
-    "usd": 531
-   },
-   {
-    "wallet": "0xf1404010a21a61c1f5693beee65285273be47cd8",
-    "side": "Arizona Diamondbacks",
-    "usd": 455,
-    "avgPrice": 0.4599
-   },
-   {
-    "wallet": "0x56acab44cfca2e88bb9b3406890aea7bfa0cd77e",
-    "side": "Arizona Diamondbacks",
-    "usd": 437
-   },
-   {
-    "wallet": "0x9b11866433281ade9f2811dbde8acdefc45f5375",
-    "side": "Arizona Diamondbacks",
-    "usd": 364
-   },
-   {
-    "wallet": "0x398f0d01805b406a008dea6e503df421bb1630f2",
-    "side": "Arizona Diamondbacks",
-    "usd": 308,
-    "avgPrice": 0.46
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "side": "Arizona Diamondbacks",
-    "usd": 298,
-    "avgPrice": 0.4686
-   },
-   {
-    "wallet": "0xa73a1952f1f0d94aeb396ffdaf7e111a8eab656a",
-    "side": "San Diego Padres",
-    "usd": 205
-   },
-   {
-    "wallet": "0x125a399cc5cb7cf7cbe8f010a05f0ed673374f02",
-    "side": "San Diego Padres",
-    "usd": 198
-   },
-   {
-    "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
-    "side": "Arizona Diamondbacks",
-    "usd": 161
-   },
-   {
-    "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
-    "side": "San Diego Padres",
-    "usd": 122,
-    "avgPrice": 0.5
+    "side": "Over",
+    "usd": 29613
    },
    {
     "wallet": "0x16bb9951a36fce71e2ef57890b786145e0ba8492",
-    "side": "San Diego Padres",
-    "usd": 104
+    "side": "Over",
+    "usd": 14604
    },
    {
-    "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
-    "side": "Arizona Diamondbacks",
-    "usd": 91
+    "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
+    "side": "Under",
+    "usd": 11439,
+    "avgPrice": 0.475
    },
    {
-    "wallet": "0x49c5845733fd0b83d2ae67bfc1baf9d2e3093de7",
-    "side": "Arizona Diamondbacks",
-    "usd": 63
+    "wallet": "0xec981ed70ae69c5cbcac08c1ba063e734f6bafcd",
+    "side": "Under",
+    "usd": 6696,
+    "avgPrice": 0.473
+   },
+   {
+    "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
+    "side": "Under",
+    "usd": 6225
+   },
+   {
+    "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
+    "side": "Under",
+    "usd": 5262,
+    "avgPrice": 0.4719
+   },
+   {
+    "wallet": "0xf7f0b0b1e9c0fe02ccad926916ee31aef74b912c",
+    "side": "Under",
+    "usd": 2930
+   },
+   {
+    "wallet": "0xa697d0b3fff7d285a0f92d6ee03a7f97809e59d5",
+    "side": "Under",
+    "usd": 1169,
+    "avgPrice": 0.4786
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Under",
+    "usd": 1116,
+    "avgPrice": 0.4708
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "Over",
+    "usd": 1066
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Under",
+    "usd": 1027,
+    "avgPrice": 0.4719
+   },
+   {
+    "wallet": "0x5811c8ad5dc5990528357ecf1a6d03311d6c0976",
+    "side": "Under",
+    "usd": 971
+   },
+   {
+    "wallet": "0x4e73d4ae46d9a9f633938144ad10c19a893dac97",
+    "side": "Over",
+    "usd": 612
+   },
+   {
+    "wallet": "0x21f333307ac6d2e65ac82f014b3dd2b64cbc35e3",
+    "side": "Under",
+    "usd": 479
+   },
+   {
+    "wallet": "0x228b8d11eba89bf1c554f8879a9293b7106daf4c",
+    "side": "Under",
+    "usd": 465
+   },
+   {
+    "wallet": "0x5b624e3e0426f7aa2ca57f7451fbcea4b125d87f",
+    "side": "Under",
+    "usd": 465
+   },
+   {
+    "wallet": "0x9b11866433281ade9f2811dbde8acdefc45f5375",
+    "side": "Under",
+    "usd": 418
+   },
+   {
+    "wallet": "0xe954ddb021c19495f1c556f59dadbd1494821ef1",
+    "side": "Under",
+    "usd": 285,
+    "avgPrice": 0.48
    },
    {
     "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
-    "side": "Arizona Diamondbacks",
-    "usd": 55
+    "side": "Under",
+    "usd": 190,
+    "avgPrice": 0.4782
    },
    {
-    "wallet": "0xb5527654d309c6617addabbb64e47931cf35b70c",
-    "side": "San Diego Padres",
-    "usd": 47
+    "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
+    "side": "Under",
+    "usd": 120
    },
    {
-    "wallet": "0xd9fe6f0f41ca99fefa93c55d8890000e5a84db0d",
-    "side": "Arizona Diamondbacks",
-    "usd": 29
+    "wallet": "0x5e020e19bc4cc2cd24ab9b406604ee9df02ab178",
+    "side": "Under",
+    "usd": 102,
+    "avgPrice": 0.47
    },
    {
-    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
-    "side": "Arizona Diamondbacks",
-    "usd": 27,
-    "avgPrice": 0.4628
-   },
-   {
-    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
-    "side": "Arizona Diamondbacks",
-    "usd": 23
-   },
-   {
-    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
-    "side": "Arizona Diamondbacks",
-    "usd": 23
-   },
-   {
-    "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
-    "side": "Arizona Diamondbacks",
-    "usd": 23
-   },
-   {
-    "wallet": "0x3da80ca893666957475095ac1504094df93dbe26",
-    "side": "Arizona Diamondbacks",
-    "usd": 12
-   },
-   {
-    "wallet": "0x35e701f088b6ef25fff6b902769c1cd8b85f8331",
-    "side": "Arizona Diamondbacks",
-    "usd": 11
-   },
-   {
-    "wallet": "0x3ca9089f59d506a6773a4d68227a1ac97806424a",
-    "side": "Arizona Diamondbacks",
-    "usd": 11
-   },
-   {
-    "wallet": "0xd106952ebf30a3125affd8a23b6c1f30c35fc79c",
-    "side": "Arizona Diamondbacks",
-    "usd": 7
-   },
-   {
-    "wallet": "0xe963d57ab09233f3cb2bf1546660a1b4638e6753",
-    "side": "Arizona Diamondbacks",
-    "usd": 6,
-    "avgPrice": 0.45
-   },
-   {
-    "wallet": "0xd93d79aa6f3859873c2c6d0e0e66a9dd112427a0",
-    "side": "Arizona Diamondbacks",
-    "usd": 5
+    "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
+    "side": "Under",
+    "usd": 93
    },
    {
     "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
-    "side": "Arizona Diamondbacks",
-    "usd": 1,
-    "avgPrice": 0.4549
+    "side": "Under",
+    "usd": 93,
+    "avgPrice": 0.4826
+   },
+   {
+    "wallet": "0x17d97684d80863e07bc95d1e9f7c1c1dbec884af",
+    "side": "Under",
+    "usd": 85
+   },
+   {
+    "wallet": "0x49c5845733fd0b83d2ae67bfc1baf9d2e3093de7",
+    "side": "Under",
+    "usd": 25
+   },
+   {
+    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
+    "side": "Under",
+    "usd": 23,
+    "avgPrice": 0.47
+   },
+   {
+    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
+    "side": "Under",
+    "usd": 23
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "side": "Over",
+    "usd": 20,
+    "avgPrice": 0.5151
+   },
+   {
+    "wallet": "0xd9fe6f0f41ca99fefa93c55d8890000e5a84db0d",
+    "side": "Under",
+    "usd": 17
+   },
+   {
+    "wallet": "0xd619b68e64f256f8ddd185b261c8679eacf0c461",
+    "side": "Under",
+    "usd": 9
+   },
+   {
+    "wallet": "0xefde78f38169634477f6ff46572128b6d21a6505",
+    "side": "Under",
+    "usd": 4,
+    "avgPrice": 0.48
+   },
+   {
+    "wallet": "0xc846f5368ab49a854d2280b7ecff92669824c413",
+    "side": "Under",
+    "usd": 2,
+    "avgPrice": 0.49
+   },
+   {
+    "wallet": "0xdc4f58a48ed4467743609fdce11eea483c759804",
+    "side": "Under",
+    "usd": 2
    }
   ],
-  "hoursToKickoff": 1.04,
-  "capturedAt": "2026-09-26T23:41:17.729963+00:00",
-  "cond": "0x93b81eefe53651000f6719af739f3a89942fb0880361415199516f45c276fc91",
-  "frage": "Arizona Diamondbacks vs. San Diego Padres",
+  "hoursToKickoff": 0.47,
+  "capturedAt": "2026-09-27T00:14:27.221339+00:00",
+  "cond": "0x5110f537424d53b7fa028a46b163ee76da7fb8b7655a1e113dedc21cf1b50ea6",
+  "frage": "Arizona Diamondbacks vs. San Diego Padres: O/U 7.5",
   "tokens": {
-   "Arizona Diamondbacks": "108255416817987717659922263410551724226354104236354098058764611378251357403112",
-   "San Diego Padres": "1757994934997720944684417863330587416755474854904015764960747551753048192366"
+   "Over": "79053044911771741090651644619803885321067734749417351182166405226820239490579",
+   "Under": "20836107732787616736443411194554193951317419379872999700815875519529852491494"
   },
   "book": {
-   "side": "San Diego Padres",
-   "bid": 0.54,
-   "ask": 0.55,
+   "side": "Over",
+   "bid": 0.53,
+   "ask": 0.54,
    "spreadC": 1.0,
-   "spreadPct": 1.82,
+   "spreadPct": 1.85,
    "bids": [
     [
-     0.54,
-     194182
-    ],
-    [
      0.53,
-     122668
+     65441
     ],
     [
      0.52,
-     277509
+     14163
     ],
     [
      0.51,
-     180686
+     41875
     ],
     [
      0.5,
-     23986
+     55222
     ],
     [
      0.49,
-     5135
+     26493
+    ],
+    [
+     0.48,
+     10551
     ]
    ],
    "asks": [
     [
+     0.54,
+     37907
+    ],
+    [
      0.55,
-     213901
+     54192
     ],
     [
      0.56,
-     108468
+     27163
     ],
     [
      0.57,
-     51920
+     7659
     ],
     [
      0.58,
-     25869
+     790
     ],
     [
      0.59,
-     1017
-    ],
-    [
-     0.6,
-     5779
+     35
     ]
    ]
   },
   "trades": [
    {
-    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "wallet": "0xa71093cafc0c099b4ccab24c3cb8018d817923c4",
     "action": "BUY",
-    "side": "Arizona Diamondbacks",
-    "price": 0.46,
-    "usd": 478,
-    "ts": 1790464379
+    "side": "Over",
+    "price": 0.53,
+    "usd": 28206,
+    "ts": 1790467286
    },
    {
-    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "action": "BUY",
-    "side": "Arizona Diamondbacks",
-    "price": 0.46,
-    "usd": 485,
-    "ts": 1790463470
+    "side": "Under",
+    "price": 0.47,
+    "usd": 892,
+    "ts": 1790467286
+   },
+   {
+    "wallet": "0x4e73d4ae46d9a9f633938144ad10c19a893dac97",
+    "action": "BUY",
+    "side": "Over",
+    "price": 0.53,
+    "usd": 424,
+    "ts": 1790466048
+   },
+   {
+    "wallet": "0x16bb9951a36fce71e2ef57890b786145e0ba8492",
+    "action": "BUY",
+    "side": "Over",
+    "price": 0.52,
+    "usd": 11713,
+    "ts": 1790460206
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "action": "BUY",
+    "side": "Over",
+    "price": 0.5195,
+    "usd": 952,
+    "ts": 1790441328
+   },
+   {
+    "wallet": "0x16bb9951a36fce71e2ef57890b786145e0ba8492",
+    "action": "BUY",
+    "side": "Over",
+    "price": 0.51,
+    "usd": 2433,
+    "ts": 1790432231
    }
   ]
  },
  "mls-hou-skc-2026-09-26": {
   "shares": {
-   "Houston Dynamo": 14810.251853075002,
-   "Draw (Houston Dynamo vs. Sporting Kansas City)": 101.48900764000001,
-   "Sporting Kansas City": 136.04761897499998
+   "Houston Dynamo": 46517.21718048999,
+   "Draw (Houston Dynamo vs. Sporting Kansas City)": 106.25809872500001,
+   "Sporting Kansas City": 170.019168975
   },
   "prices": {
    "Houston Dynamo": 0.595,
@@ -459763,7 +459781,7 @@
   },
   "league": "MLS",
   "sport": "Fußball",
-  "totalUsd": 26691,
+  "totalUsd": 80901,
   "whales": [
    {
     "wallet": "0xbeb1c94b4260398f93f418e349a15a40b2ae4687",
@@ -459771,41 +459789,126 @@
     "usd": 6996
    },
    {
+    "wallet": "0x9c3ce009c9b039956665cecc4cd14de862b5e8c9",
+    "side": "Houston Dynamo",
+    "usd": 6051
+   },
+   {
+    "wallet": "0xf5a3504ad3a8b079974620b3aa4fcca3f7579e12",
+    "side": "Houston Dynamo",
+    "usd": 5042
+   },
+   {
+    "wallet": "0x224a89dbe0db0d6124b335edabd15b3f877da3d5",
+    "side": "Houston Dynamo",
+    "usd": 4107
+   },
+   {
     "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
     "side": "Houston Dynamo",
-    "usd": 2426
-   },
-   {
-    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
-    "side": "Houston Dynamo",
-    "usd": 1812
-   },
-   {
-    "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
-    "side": "Houston Dynamo",
-    "usd": 1706
+    "usd": 3681
    },
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "Houston Dynamo",
-    "usd": 760,
-    "avgPrice": 0.5992
+    "usd": 2902,
+    "avgPrice": 0.5924
+   },
+   {
+    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
+    "side": "Houston Dynamo",
+    "usd": 2853
+   },
+   {
+    "wallet": "0x224f7ef690d952cf551a471846d5afb4892e514a",
+    "side": "Houston Dynamo",
+    "usd": 2746
+   },
+   {
+    "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
+    "side": "Houston Dynamo",
+    "usd": 2631
+   },
+   {
+    "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
+    "side": "Houston Dynamo",
+    "usd": 1488
+   },
+   {
+    "wallet": "0x8efa1ea8ee2d456a051ae2985079a1e3c9aa894c",
+    "side": "Houston Dynamo",
+    "usd": 1210,
+    "avgPrice": 0.59
+   },
+   {
+    "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+    "side": "Houston Dynamo",
+    "usd": 867
+   },
+   {
+    "wallet": "0x52d93dcf81444f793dda7fedc370f7a35101fb1a",
+    "side": "Houston Dynamo",
+    "usd": 847
+   },
+   {
+    "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
+    "side": "Houston Dynamo",
+    "usd": 612
+   },
+   {
+    "wallet": "0xb6e087bff0e9925caa6ff945d72aad103bf2ff0f",
+    "side": "Houston Dynamo",
+    "usd": 583,
+    "avgPrice": 0.59
+   },
+   {
+    "wallet": "0x7ea571c40408f340c1c8fc8eaacebab53c1bde7b",
+    "side": "Houston Dynamo",
+    "usd": 366
+   },
+   {
+    "wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
+    "side": "Houston Dynamo",
+    "usd": 346
    },
    {
     "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
     "side": "Houston Dynamo",
-    "usd": 285,
-    "avgPrice": 0.6103
-   },
-   {
-    "wallet": "0x3804fb6b5781d6829f2ac3967647e98021b66136",
-    "side": "Houston Dynamo",
-    "usd": 69
+    "usd": 345,
+    "avgPrice": 0.6068
    },
    {
     "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
     "side": "Houston Dynamo",
-    "usd": 51
+    "usd": 181
+   },
+   {
+    "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
+    "side": "Houston Dynamo",
+    "usd": 124
+   },
+   {
+    "wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
+    "side": "Houston Dynamo",
+    "usd": 108
+   },
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Houston Dynamo",
+    "usd": 98,
+    "avgPrice": 0.5929
+   },
+   {
+    "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
+    "side": "Houston Dynamo",
+    "usd": 69,
+    "avgPrice": 0.5958
+   },
+   {
+    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
+    "side": "Houston Dynamo",
+    "usd": 49,
+    "avgPrice": 0.594
    },
    {
     "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
@@ -459813,45 +459916,24 @@
     "usd": 48
    },
    {
-    "wallet": "0x5e4566d557be04191f9b98aee701d5d94628b092",
-    "side": "Houston Dynamo",
-    "usd": 48
-   },
-   {
-    "wallet": "0x52d93dcf81444f793dda7fedc370f7a35101fb1a",
-    "side": "Houston Dynamo",
-    "usd": 47
-   },
-   {
-    "wallet": "0xfff787f9e84fa73786ced1871442947d8e8b7c28",
-    "side": "Houston Dynamo",
-    "usd": 47
-   },
-   {
-    "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
-    "side": "Houston Dynamo",
-    "usd": 46
-   },
-   {
     "wallet": "0xb341ba2981305703de87e7ab996258f7c074bb28",
     "side": "Sporting Kansas City",
     "usd": 43
    },
    {
-    "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
+    "wallet": "0x49c5845733fd0b83d2ae67bfc1baf9d2e3093de7",
     "side": "Houston Dynamo",
-    "usd": 40,
-    "avgPrice": 0.6
+    "usd": 39
    },
    {
     "wallet": "0x5e020e19bc4cc2cd24ab9b406604ee9df02ab178",
     "side": "Houston Dynamo",
-    "usd": 31
+    "usd": 38
    },
    {
-    "wallet": "0x7ea571c40408f340c1c8fc8eaacebab53c1bde7b",
-    "side": "Houston Dynamo",
-    "usd": 29
+    "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
+    "side": "Sporting Kansas City",
+    "usd": 34
    },
    {
     "wallet": "0x0ab01f65b3bc10cff35406d1922f64298259ba53",
@@ -459869,15 +459951,19 @@
     "usd": 24
    },
    {
-    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
-    "side": "Houston Dynamo",
-    "usd": 19,
-    "avgPrice": 0.6
-   },
-   {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "side": "Sporting Kansas City",
     "usd": 14
+   },
+   {
+    "wallet": "0xb8f6c79e452d7247d0cf47d16eaf7911953c4f7f",
+    "side": "Houston Dynamo",
+    "usd": 13
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Houston Dynamo",
+    "usd": 12
    },
    {
     "wallet": "0x147c2760baa011fdcd0d02ea0f610ffb0fd92540",
@@ -459895,11 +459981,6 @@
     "usd": 10
    },
    {
-    "wallet": "0x224f7ef690d952cf551a471846d5afb4892e514a",
-    "side": "Houston Dynamo",
-    "usd": 9
-   },
-   {
     "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
     "side": "Houston Dynamo",
     "usd": 9
@@ -459908,56 +459989,10 @@
     "wallet": "0x3da80ca893666957475095ac1504094df93dbe26",
     "side": "Houston Dynamo",
     "usd": 9
-   },
-   {
-    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
-    "side": "Draw (Houston Dynamo vs. Sporting Kansas City)",
-    "usd": 5
-   },
-   {
-    "wallet": "0xf10299cf1fff507cff45e1a906800e5b44bf1348",
-    "side": "Draw (Houston Dynamo vs. Sporting Kansas City)",
-    "usd": 4,
-    "avgPrice": 0.1999
-   },
-   {
-    "wallet": "0xdd5ef115f801999575b03d78d0115ad8b2d59040",
-    "side": "Sporting Kansas City",
-    "usd": 4
-   },
-   {
-    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
-    "side": "Sporting Kansas City",
-    "usd": 4
-   },
-   {
-    "wallet": "0x7ea571c40408f340c1c8fc8eaacebab53c1bde7b",
-    "side": "Draw (Houston Dynamo vs. Sporting Kansas City)",
-    "usd": 3
-   },
-   {
-    "wallet": "0x162ca4c5249987872fea1e15c846d7fe80316c47",
-    "side": "Sporting Kansas City",
-    "usd": 3
-   },
-   {
-    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
-    "side": "Houston Dynamo",
-    "usd": 2
-   },
-   {
-    "wallet": "0xfe67df6e0c585e50cbe8bdcad804d980c6b8a2e8",
-    "side": "Sporting Kansas City",
-    "usd": 1
-   },
-   {
-    "wallet": "0x9f41b736a8d04891178df2495921a5a3e88b8f27",
-    "side": "Sporting Kansas City",
-    "usd": 1
    }
   ],
-  "hoursToKickoff": 0.87,
-  "capturedAt": "2026-09-26T23:41:17.729963+00:00",
+  "hoursToKickoff": 0.31,
+  "capturedAt": "2026-09-27T00:14:27.221339+00:00",
   "tokens": {
    "Houston Dynamo": "4202086663540906583534841783251336160081544277227355696269771933754350855167",
    "Draw (Houston Dynamo vs. Sporting Kansas City)": "109117637792663763996979966132919414272641049114765902258500238180426775345692",
@@ -459966,12 +460001,12 @@
  },
  "mls-dal-laf-2026-09-26-more-markets": {
   "shares": {
-   "Over": 2224.974510495,
-   "Under": 5581.953596505
+   "Over": 2255.69629127,
+   "Under": 5390.731814729999
   },
   "prices": {
-   "Over": 0.285,
-   "Under": 0.715
+   "Over": 0.295,
+   "Under": 0.705
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -459984,95 +460019,107 @@
    {
     "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
     "side": "Under",
-    "usd": 4389
+    "usd": 4007
    },
    {
     "wallet": "0x4acb370b2008dfae9c6cdc1d75ff5d07d87bddd3",
     "side": "Under",
-    "usd": 868
+    "usd": 856
    },
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "Over",
-    "usd": 671,
+    "usd": 694,
     "avgPrice": 0.3576
    },
    {
     "wallet": "0x1f624696c102b99bea92c75a502fa7e4a6d676f6",
     "side": "Over",
-    "usd": 285
+    "usd": 295
    },
    {
     "wallet": "0x224f7ef690d952cf551a471846d5afb4892e514a",
     "side": "Over",
-    "usd": 228
-   },
-   {
-    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
-    "side": "Over",
-    "usd": 219,
-    "avgPrice": 0.3562
+    "usd": 236
    },
    {
     "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
     "side": "Over",
-    "usd": 205
+    "usd": 212
    },
    {
     "wallet": "0x2f783c578a64cc51796738d7687274f91a2c13d6",
     "side": "Under",
-    "usd": 199
-   },
-   {
-    "wallet": "0x0eb32f4c1a8672b61b48d9f1493b6dd5a6b1f766",
-    "side": "Over",
-    "usd": 142
-   },
-   {
-    "wallet": "0x340ea8b2e6634b7555a61187d1ea443785cd385b",
-    "side": "Over",
-    "usd": 85
-   },
-   {
-    "wallet": "0xe9045fa8a70479bb2a112d863f0eadc3058f44e9",
-    "side": "Over",
-    "usd": 74
-   },
-   {
-    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
-    "side": "Over",
-    "usd": 74
-   },
-   {
-    "wallet": "0xb4eea1c82f0c4cf7e02e69212bd447a63314cc59",
-    "side": "Under",
-    "usd": 71
+    "usd": 196
    },
    {
     "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
     "side": "Over",
-    "usd": 52
+    "usd": 182,
+    "avgPrice": 0.3174
+   },
+   {
+    "wallet": "0x0eb32f4c1a8672b61b48d9f1493b6dd5a6b1f766",
+    "side": "Over",
+    "usd": 148
+   },
+   {
+    "wallet": "0x594edb9112f526fa6a80b8f858a6379c8a2c1c11",
+    "side": "Under",
+    "usd": 141
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Over",
+    "usd": 139,
+    "avgPrice": 0.3562
+   },
+   {
+    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
+    "side": "Over",
+    "usd": 81
+   },
+   {
+    "wallet": "0xe9045fa8a70479bb2a112d863f0eadc3058f44e9",
+    "side": "Over",
+    "usd": 77
+   },
+   {
+    "wallet": "0xb4eea1c82f0c4cf7e02e69212bd447a63314cc59",
+    "side": "Under",
+    "usd": 70
    },
    {
     "wallet": "0xd619b68e64f256f8ddd185b261c8679eacf0c461",
     "side": "Over",
-    "usd": 45
+    "usd": 47
    },
    {
     "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
     "side": "Over",
-    "usd": 38
+    "usd": 39
    },
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "side": "Under",
-    "usd": 38,
+    "usd": 37,
     "avgPrice": 0.6699
    },
    {
     "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
     "side": "Over",
-    "usd": 31
+    "usd": 32
+   },
+   {
+    "wallet": "0x8d0c8253703b8febbe53f45d182671c5385dc90a",
+    "side": "Under",
+    "usd": 28
+   },
+   {
+    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
+    "side": "Under",
+    "usd": 28,
+    "avgPrice": 0.71
    },
    {
     "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
@@ -460095,14 +460142,9 @@
     "usd": 6
    },
    {
-    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
-    "side": "Over",
-    "usd": 3
-   },
-   {
     "wallet": "0x5e020e19bc4cc2cd24ab9b406604ee9df02ab178",
     "side": "Over",
-    "usd": 2
+    "usd": 3
    },
    {
     "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
@@ -460115,8 +460157,8 @@
     "usd": 1
    }
   ],
-  "hoursToKickoff": 0.87,
-  "capturedAt": "2026-09-26T23:41:17.729963+00:00",
+  "hoursToKickoff": 0.31,
+  "capturedAt": "2026-09-27T00:14:27.221339+00:00",
   "cond": "0x3f329b9496b507a8feaadecb89f709221d765d80ea3beda8b1274bfd8aac889a",
   "frage": "FC Dallas vs. Los Angeles FC: O/U 3.5",
   "tokens": {
@@ -460126,14 +460168,14 @@
  },
  "mls-nas-tor-2026-09-26": {
   "shares": {
-   "Nashville SC": 4913.053523895,
-   "Draw (Nashville SC vs. Toronto FC)": 239.08448323000002,
-   "Toronto FC": 413.25621062500005
+   "Nashville SC": 82912.66376335004,
+   "Draw (Nashville SC vs. Toronto FC)": 2076.5234976499996,
+   "Toronto FC": 1289.63620942
   },
   "prices": {
-   "Nashville SC": 0.695,
-   "Draw (Nashville SC vs. Toronto FC)": 0.185,
-   "Toronto FC": 0.125
+   "Nashville SC": 0.725,
+   "Draw (Nashville SC vs. Toronto FC)": 0.175,
+   "Toronto FC": 0.115
   },
   "splitGuete": {
    "art": "belastbar",
@@ -460141,153 +460183,206 @@
   },
   "league": "MLS",
   "sport": "Fußball",
-  "totalUsd": 17716,
+  "totalUsd": 59790,
   "whales": [
-   {
-    "wallet": "0xb4eea1c82f0c4cf7e02e69212bd447a63314cc59",
-    "side": "Nashville SC",
-    "usd": 1179
-   },
-   {
-    "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
-    "side": "Nashville SC",
-    "usd": 912
-   },
-   {
-    "wallet": "0x224f7ef690d952cf551a471846d5afb4892e514a",
-    "side": "Nashville SC",
-    "usd": 573
-   },
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "side": "Nashville SC",
-    "usd": 479,
-    "avgPrice": 0.6772
+    "usd": 37410,
+    "avgPrice": 0.7227
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Nashville SC",
+    "usd": 23030,
+    "avgPrice": 0.7199
+   },
+   {
+    "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
+    "side": "Nashville SC",
+    "usd": 13883,
+    "avgPrice": 0.7219
+   },
+   {
+    "wallet": "0x0e64bde21d716711fbe59095eb0c88fae55e336d",
+    "side": "Nashville SC",
+    "usd": 3625,
+    "avgPrice": 0.72
+   },
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "side": "Nashville SC",
+    "usd": 2164
+   },
+   {
+    "wallet": "0x2d1ffae8d41b181d1b1734016e07bd1a903a5246",
+    "side": "Draw (Nashville SC vs. Toronto FC)",
+    "usd": 1244
+   },
+   {
+    "wallet": "0xb4eea1c82f0c4cf7e02e69212bd447a63314cc59",
+    "side": "Nashville SC",
+    "usd": 1230
    },
    {
     "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
-    "side": "Nashville SC",
-    "usd": 282
+    "side": "Draw (Nashville SC vs. Toronto FC)",
+    "usd": 498
    },
    {
-    "wallet": "0x8efa1ea8ee2d456a051ae2985079a1e3c9aa894c",
-    "side": "Nashville SC",
-    "usd": 217,
-    "avgPrice": 0.69
-   },
-   {
-    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
-    "side": "Nashville SC",
-    "usd": 196,
-    "avgPrice": 0.6526
-   },
-   {
-    "wallet": "0x0235dc24b38772bf3339a9e5ec5db3d3a05fcee5",
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "Toronto FC",
-    "usd": 178,
-    "avgPrice": 0.15
+    "usd": 331,
+    "avgPrice": 0.11
    },
    {
-    "wallet": "0x20c71b86ff163475e1be5bbe20f937125d5350c9",
-    "side": "Nashville SC",
-    "usd": 171
+    "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
+    "side": "Toronto FC",
+    "usd": 280
    },
    {
     "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
     "side": "Nashville SC",
-    "usd": 145
+    "usd": 180,
+    "avgPrice": 0.6954
    },
    {
-    "wallet": "0x87d3c27f3109dde08794a2cd7826a4c049f8a568",
+    "wallet": "0x20c71b86ff163475e1be5bbe20f937125d5350c9",
     "side": "Nashville SC",
-    "usd": 101
+    "usd": 178
    },
    {
-    "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
-    "side": "Draw (Nashville SC vs. Toronto FC)",
-    "usd": 75
+    "wallet": "0x0235dc24b38772bf3339a9e5ec5db3d3a05fcee5",
+    "side": "Toronto FC",
+    "usd": 164
    },
    {
-    "wallet": "0x9e2a9523ae3344b9b442e6ecb57a36ace3ba39bd",
+    "wallet": "0x8efa1ea8ee2d456a051ae2985079a1e3c9aa894c",
+    "side": "Toronto FC",
+    "usd": 146,
+    "avgPrice": 0.11
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
     "side": "Nashville SC",
-    "usd": 67
+    "usd": 124
    },
    {
     "wallet": "0xb341ba2981305703de87e7ab996258f7c074bb28",
     "side": "Draw (Nashville SC vs. Toronto FC)",
-    "usd": 56
+    "usd": 88
+   },
+   {
+    "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
+    "side": "Toronto FC",
+    "usd": 84
+   },
+   {
+    "wallet": "0x68f8b68c51a6659578cbbd3e34655a55098612c8",
+    "side": "Nashville SC",
+    "usd": 79
+   },
+   {
+    "wallet": "0x9e2a9523ae3344b9b442e6ecb57a36ace3ba39bd",
+    "side": "Nashville SC",
+    "usd": 70
    },
    {
     "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
     "side": "Toronto FC",
-    "usd": 54
+    "usd": 50
    },
    {
     "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
     "side": "Nashville SC",
-    "usd": 46
+    "usd": 48
+   },
+   {
+    "wallet": "0xb341ba2981305703de87e7ab996258f7c074bb28",
+    "side": "Toronto FC",
+    "usd": 34
    },
    {
     "wallet": "0x884b1b7429e19edf3ba1d16be342e43139e4c480",
     "side": "Nashville SC",
-    "usd": 30
+    "usd": 31
    },
    {
-    "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
-    "side": "Toronto FC",
-    "usd": 29
+    "wallet": "0x67af214764bd6eda61fadb25cdcbea6d13d761ee",
+    "side": "Nashville SC",
+    "usd": 28,
+    "avgPrice": 0.72
    },
    {
     "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
     "side": "Draw (Nashville SC vs. Toronto FC)",
-    "usd": 27
+    "usd": 26
    },
    {
-    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
     "side": "Toronto FC",
-    "usd": 12
+    "usd": 26
+   },
+   {
+    "wallet": "0xe90fb148758d3972720beb28bc37a7bb6a56a908",
+    "side": "Nashville SC",
+    "usd": 25
+   },
+   {
+    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
+    "side": "Nashville SC",
+    "usd": 23,
+    "avgPrice": 0.72
+   },
+   {
+    "wallet": "0x5e020e19bc4cc2cd24ab9b406604ee9df02ab178",
+    "side": "Draw (Nashville SC vs. Toronto FC)",
+    "usd": 19
    },
    {
     "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
     "side": "Toronto FC",
-    "usd": 12
+    "usd": 11
    },
    {
-    "wallet": "0x7ea571c40408f340c1c8fc8eaacebab53c1bde7b",
+    "wallet": "0x1549ae307a974fdbbb65ed56532dcc45edf62956",
     "side": "Nashville SC",
+    "usd": 10
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Toronto FC",
     "usd": 10
    },
    {
     "wallet": "0xf10299cf1fff507cff45e1a906800e5b44bf1348",
     "side": "Draw (Nashville SC vs. Toronto FC)",
-    "usd": 10,
-    "avgPrice": 0.1899
+    "usd": 9
    },
    {
     "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
     "side": "Draw (Nashville SC vs. Toronto FC)",
-    "usd": 9
+    "usd": 8
    },
    {
     "wallet": "0xf10299cf1fff507cff45e1a906800e5b44bf1348",
     "side": "Toronto FC",
-    "usd": 9,
-    "avgPrice": 0.14
+    "usd": 8
    },
    {
-    "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
-    "side": "Nashville SC",
+    "wallet": "0x8d0c8253703b8febbe53f45d182671c5385dc90a",
+    "side": "Draw (Nashville SC vs. Toronto FC)",
+    "usd": 7
+   },
+   {
+    "wallet": "0x8d0c8253703b8febbe53f45d182671c5385dc90a",
+    "side": "Toronto FC",
     "usd": 5
-   },
-   {
-    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
-    "side": "Nashville SC",
-    "usd": 4
    },
    {
     "wallet": "0x7e5972bfc25819775ee5a9d4f191919375487b8b",
     "side": "Toronto FC",
-    "usd": 3
+    "usd": 2
    },
    {
     "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
@@ -460300,8 +460395,8 @@
     "usd": 2
    }
   ],
-  "hoursToKickoff": 0.87,
-  "capturedAt": "2026-09-26T23:41:17.729963+00:00",
+  "hoursToKickoff": 0.31,
+  "capturedAt": "2026-09-27T00:14:27.221339+00:00",
   "tokens": {
    "Nashville SC": "63279308104587308653575901818008234990110077850280661379246454765276121233502",
    "Draw (Nashville SC vs. Toronto FC)": "26512710399399366428257369062419125249971041301433698217124503871048469270365",
@@ -460982,12 +461077,12 @@
  },
  "cs2-mars-dtn1-2026-09-26": {
   "shares": {
-   "Marsborne": 17697.605721705007,
-   "Detonate": 4286.929465649998
+   "Marsborne": 17579.307292515008,
+   "Detonate": 4532.956902449998
   },
   "prices": {
-   "Marsborne": 0.805,
-   "Detonate": 0.195
+   "Marsborne": 0.795,
+   "Detonate": 0.205
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -460995,102 +461090,104 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 39842,
+  "totalUsd": 39970,
   "whales": [
    {
     "wallet": "0xb73e43e4d29e57fa90090b6ff3e9a671453bc66f",
     "side": "Marsborne",
-    "usd": 2980
+    "usd": 2943
    },
    {
     "wallet": "0x79827b404f99de0f4643484e34e02fefcc9f968d",
     "side": "Detonate",
-    "usd": 2242
+    "usd": 2357
    },
    {
     "wallet": "0x9c3ce009c9b039956665cecc4cd14de862b5e8c9",
     "side": "Marsborne",
-    "usd": 1176
+    "usd": 1161
    },
    {
     "wallet": "0x7e5e420a5cde8a322f3b5b93a12a164827f47315",
     "side": "Marsborne",
-    "usd": 1073
+    "usd": 1060
    },
    {
     "wallet": "0x513587a2f36a8cb29333052a6a479091ef8a7217",
     "side": "Marsborne",
-    "usd": 1059
+    "usd": 1046
    },
    {
     "wallet": "0xc0cac9da4d845944840a377a0ff827ebf57b7d49",
     "side": "Marsborne",
-    "usd": 895
+    "usd": 884
    },
    {
     "wallet": "0xd6771bf957cab6a10fcb8e2c8c6db9713cf37579",
     "side": "Marsborne",
-    "usd": 860
+    "usd": 849
    },
    {
     "wallet": "0xced18e8e68c37cae3b714ca4116ed8bef996280e",
     "side": "Marsborne",
-    "usd": 820
+    "usd": 810
    },
    {
     "wallet": "0x1d6819679e37b51fc1d01ac7691cb4f408dd4354",
     "side": "Detonate",
-    "usd": 695
+    "usd": 730
    },
    {
     "wallet": "0x7576e41bc6fce96d7bc4e9eb0c9d046d4c2654b6",
     "side": "Marsborne",
-    "usd": 616
+    "usd": 608
    },
    {
     "wallet": "0xb64f48a49f211d247b57595f544203da9e8ac5f4",
     "side": "Marsborne",
-    "usd": 455
+    "usd": 449
    },
    {
     "wallet": "0xb4b6b3a7b6e46cf37d355e0eb466c6d15b9a8739",
     "side": "Marsborne",
-    "usd": 386
+    "usd": 381
    },
    {
     "wallet": "0x97f94bcf13ec97b8ced1aba7a89eb6e6831f0aeb",
     "side": "Marsborne",
-    "usd": 332
+    "usd": 328
    },
    {
     "wallet": "0xcd300069721b481c8be9b2f6323583bf8c74fc9b",
     "side": "Marsborne",
-    "usd": 268
+    "usd": 264
    },
    {
     "wallet": "0x9266337e2deb5c5de22c06dfcd833ca5a20ca9d3",
     "side": "Marsborne",
-    "usd": 196
+    "usd": 194
    },
    {
     "wallet": "0xec340ed6773dce7fb281ed3238be534b41879bb2",
     "side": "Marsborne",
-    "usd": 117
+    "usd": 115
    },
    {
     "wallet": "0xda770326bd091d26f816917aa83a6baff668683f",
     "side": "Marsborne",
-    "usd": 108
+    "usd": 106,
+    "avgPrice": 0.6175
    },
    {
     "wallet": "0xf20b60cc9b8e97cb7678e8ab67bcc3480839e27d",
     "side": "Detonate",
-    "usd": 98
+    "usd": 102
    },
    {
     "wallet": "0x5d40576be2e9c61d283f4fd80d7a5ccf2331ba95",
     "side": "Marsborne",
-    "usd": 92
+    "usd": 91,
+    "avgPrice": 0.6358
    },
    {
     "wallet": "0x1b4ed4def39be7ff22357580e1ee053727e03a74",
@@ -461100,37 +461197,43 @@
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "side": "Detonate",
-    "usd": 61,
+    "usd": 64,
     "avgPrice": 0.28
    },
    {
     "wallet": "0x61f621ed129a8b64f0d2abbef50d23cd52d1e497",
     "side": "Detonate",
-    "usd": 40
+    "usd": 42
    },
    {
     "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
     "side": "Detonate",
-    "usd": 39
+    "usd": 41
    },
    {
     "wallet": "0xa0056fd11e9b79df75815bbd89fb74a666caabb1",
     "side": "Marsborne",
-    "usd": 32
+    "usd": 31
    },
    {
     "wallet": "0xc4fe817476491890086330a639ac417d51bf601f",
     "side": "Marsborne",
-    "usd": 21
+    "usd": 20
    },
    {
-    "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
+    "wallet": "0x67af214764bd6eda61fadb25cdcbea6d13d761ee",
     "side": "Marsborne",
-    "usd": 18
+    "usd": 20,
+    "avgPrice": 0.8012
    },
    {
     "wallet": "0xc2f2d01b227948e59f25aeb3d49564b8975d0ff7",
     "side": "Detonate",
+    "usd": 19
+   },
+   {
+    "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
+    "side": "Marsborne",
     "usd": 18
    },
    {
@@ -461141,6 +461244,11 @@
    {
     "wallet": "0x758dac51ba3cc9a246a79787da9df11c5f425d9e",
     "side": "Detonate",
+    "usd": 12
+   },
+   {
+    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
+    "side": "Detonate",
     "usd": 11
    },
    {
@@ -461149,13 +461257,13 @@
     "usd": 10
    },
    {
-    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
-    "side": "Marsborne",
-    "usd": 9
-   },
-   {
     "wallet": "0xa951006f1ce68498c1aef9b013880459e6e08a2f",
     "side": "Detonate",
+    "usd": 10
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Marsborne",
     "usd": 9
    },
    {
@@ -461174,11 +461282,6 @@
     "usd": 5
    },
    {
-    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
-    "side": "Detonate",
-    "usd": 4
-   },
-   {
     "wallet": "0xcb478cba19de920f9f7e359c9a8609d7f41c4737",
     "side": "Detonate",
     "usd": 4
@@ -461194,8 +461297,8 @@
     "usd": 2
    }
   ],
-  "hoursToKickoff": 1.37,
-  "capturedAt": "2026-09-26T23:41:17.729963+00:00",
+  "hoursToKickoff": 0.81,
+  "capturedAt": "2026-09-27T00:14:27.221339+00:00",
   "cond": "0xe0dfbd91181a0af9e1e75575da560c1a1524e2c5d97d00b49619937cc26c7e6e",
   "frage": "Counter-Strike: Marsborne vs Detonate (BO3) - ESL Challenger League North America Cup #2 Playoffs",
   "tokens": {
@@ -461594,8 +461697,8 @@
  },
  "mlb-laa-sea-2026-09-26": {
   "shares": {
-   "Los Angeles Angels": 0.0,
-   "Seattle Mariners": 40211.43854294
+   "Los Angeles Angels": 29319.823943100007,
+   "Seattle Mariners": 43075.078323305
   },
   "prices": {
    "Los Angeles Angels": 0.405,
@@ -461603,17 +461706,22 @@
   },
   "splitGuete": {
    "art": "preis_echo",
-   "trunc": true
+   "trunc": false
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 87459,
+  "totalUsd": 92076,
   "whales": [
    {
     "wallet": "0x4bff30af91642dc7d2b19a8664378fe55c45fc26",
     "side": "Seattle Mariners",
-    "usd": 23165,
+    "usd": 26029,
     "avgPrice": 0.59
+   },
+   {
+    "wallet": "0x16bb9951a36fce71e2ef57890b786145e0ba8492",
+    "side": "Los Angeles Angels",
+    "usd": 16952
    },
    {
     "wallet": "0x1610db79f753a80207e1d66716be9e91e627ae49",
@@ -461621,14 +461729,48 @@
     "usd": 11406
    },
    {
+    "wallet": "0xbca08c1bc204a34f2fddbe47b438b9bd42ac9705",
+    "side": "Los Angeles Angels",
+    "usd": 3851,
+    "avgPrice": 0.3799
+   },
+   {
     "wallet": "0x224f7ef690d952cf551a471846d5afb4892e514a",
     "side": "Seattle Mariners",
     "usd": 2380
    },
    {
+    "wallet": "0x2b344112f63e69a2e411b0cb7f200cbc0051176e",
+    "side": "Los Angeles Angels",
+    "usd": 2132
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "side": "Los Angeles Angels",
+    "usd": 1999,
+    "avgPrice": 0.4091
+   },
+   {
     "wallet": "0xf7f0b0b1e9c0fe02ccad926916ee31aef74b912c",
     "side": "Seattle Mariners",
     "usd": 1219
+   },
+   {
+    "wallet": "0xa8b380701d5bbc4442d02c9e6b9f0d6a9113aeb0",
+    "side": "Los Angeles Angels",
+    "usd": 1066
+   },
+   {
+    "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
+    "side": "Los Angeles Angels",
+    "usd": 1045,
+    "avgPrice": 0.3899
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Los Angeles Angels",
+    "usd": 865,
+    "avgPrice": 0.4
    },
    {
     "wallet": "0xf1404010a21a61c1f5693beee65285273be47cd8",
@@ -461637,9 +461779,19 @@
     "avgPrice": 0.6039
    },
    {
+    "wallet": "0xa73a1952f1f0d94aeb396ffdaf7e111a8eab656a",
+    "side": "Los Angeles Angels",
+    "usd": 314
+   },
+   {
     "wallet": "0x3814198398e2d02c0e8fba652345995cf84417bc",
     "side": "Seattle Mariners",
     "usd": 298
+   },
+   {
+    "wallet": "0x5e3040eb55cb0f4f86eb0af40cb84c9d3585acbf",
+    "side": "Los Angeles Angels",
+    "usd": 291
    },
    {
     "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
@@ -461648,9 +461800,25 @@
     "avgPrice": 0.61
    },
    {
+    "wallet": "0x3e04fbc51adb75418129f6ce2091ae633070564d",
+    "side": "Los Angeles Angels",
+    "usd": 211
+   },
+   {
+    "wallet": "0xa3b5da76ffbbe3325bb1b40a30f6a4634962941a",
+    "side": "Los Angeles Angels",
+    "usd": 162
+   },
+   {
+    "wallet": "0x398f0d01805b406a008dea6e503df421bb1630f2",
+    "side": "Los Angeles Angels",
+    "usd": 142,
+    "avgPrice": 0.4
+   },
+   {
     "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
     "side": "Seattle Mariners",
-    "usd": 119
+    "usd": 118
    },
    {
     "wallet": "0x3ca9089f59d506a6773a4d68227a1ac97806424a",
@@ -461659,19 +461827,15 @@
     "avgPrice": 0.6172
    },
    {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Los Angeles Angels",
+    "usd": 65,
+    "avgPrice": 0.4068
+   },
+   {
     "wallet": "0xfb07f48542d2b655e9d0bf1cc92a8a6feee8e2cc",
     "side": "Seattle Mariners",
     "usd": 61
-   },
-   {
-    "wallet": "0x119bb2a96d428eb5865034c315358fd7ce2ca6ee",
-    "side": "Seattle Mariners",
-    "usd": 60
-   },
-   {
-    "wallet": "0x3c169155e6e5b8fdd3bd7a4782873bf57f23e71a",
-    "side": "Seattle Mariners",
-    "usd": 60
    },
    {
     "wallet": "0x5811c8ad5dc5990528357ecf1a6d03311d6c0976",
@@ -461709,6 +461873,11 @@
     "usd": 14
    },
    {
+    "wallet": "0xb4cd4d6fe596f360137e5a0441fecc4e1ec9c041",
+    "side": "Los Angeles Angels",
+    "usd": 12
+   },
+   {
     "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
     "side": "Seattle Mariners",
     "usd": 11,
@@ -461726,6 +461895,11 @@
     "usd": 6
    },
    {
+    "wallet": "0xd9fe6f0f41ca99fefa93c55d8890000e5a84db0d",
+    "side": "Los Angeles Angels",
+    "usd": 5
+   },
+   {
     "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
     "side": "Seattle Mariners",
     "usd": 4
@@ -461741,8 +461915,8 @@
     "usd": 1
    }
   ],
-  "hoursToKickoff": 2.04,
-  "capturedAt": "2026-09-26T23:41:17.729963+00:00",
+  "hoursToKickoff": 1.47,
+  "capturedAt": "2026-09-27T00:14:27.221339+00:00",
   "cond": "0xfa4e0ac4a4d522448437a9934cb2077c82d63878b631f7d60f3f0699d94e2997",
   "frage": "Los Angeles Angels vs. Seattle Mariners",
   "tokens": {
@@ -461758,23 +461932,23 @@
    "bids": [
     [
      0.59,
-     163463
+     158505
     ],
     [
      0.58,
-     127692
+     127709
     ],
     [
      0.57,
-     148270
+     152509
     ],
     [
      0.56,
-     51692
+     50593
     ],
     [
      0.55,
-     15551
+     19401
     ],
     [
      0.54,
@@ -461784,23 +461958,23 @@
    "asks": [
     [
      0.6,
-     130856
+     132343
     ],
     [
      0.61,
-     172509
+     173828
     ],
     [
      0.62,
-     61961
+     65091
     ],
     [
      0.63,
-     24467
+     23617
     ],
     [
      0.64,
-     385
+     335
     ],
     [
      0.65,
@@ -461809,6 +461983,22 @@
    ]
   },
   "trades": [
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "action": "BUY",
+    "side": "Los Angeles Angels",
+    "price": 0.41,
+    "usd": 356,
+    "ts": 1790466125
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "action": "BUY",
+    "side": "Los Angeles Angels",
+    "price": 0.41,
+    "usd": 1268,
+    "ts": 1790466125
+   },
    {
     "wallet": "0x16bb9951a36fce71e2ef57890b786145e0ba8492",
     "action": "BUY",
@@ -461832,46 +462022,14 @@
     "price": 0.6,
     "usd": 300,
     "ts": 1790433236
-   },
-   {
-    "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
-    "action": "BUY",
-    "side": "Los Angeles Angels",
-    "price": 0.39,
-    "usd": 1934,
-    "ts": 1790429795
-   },
-   {
-    "wallet": "0xbca08c1bc204a34f2fddbe47b438b9bd42ac9705",
-    "action": "BUY",
-    "side": "Los Angeles Angels",
-    "price": 0.38,
-    "usd": 3613,
-    "ts": 1790429733
-   },
-   {
-    "wallet": "0xa8b380701d5bbc4442d02c9e6b9f0d6a9113aeb0",
-    "action": "BUY",
-    "side": "Los Angeles Angels",
-    "price": 0.38,
-    "usd": 1000,
-    "ts": 1790429649
-   },
-   {
-    "wallet": "0x2b344112f63e69a2e411b0cb7f200cbc0051176e",
-    "action": "BUY",
-    "side": "Los Angeles Angels",
-    "price": 0.38,
-    "usd": 2000,
-    "ts": 1790429648
    }
   ]
  },
  "mls-rsl-ner-2026-09-26": {
   "shares": {
-   "Real Salt Lake": 4276.05892955,
-   "Draw (Real Salt Lake vs. New England Revolution)": 292.5634621,
-   "New England Revolution": 5488.820539990001
+   "Real Salt Lake": 4294.567116345001,
+   "Draw (Real Salt Lake vs. New England Revolution)": 341.5634621,
+   "New England Revolution": 5493.739895055001
   },
   "prices": {
    "Real Salt Lake": 0.445,
@@ -461884,13 +462042,12 @@
   },
   "league": "MLS",
   "sport": "Fußball",
-  "totalUsd": 40640,
+  "totalUsd": 40897,
   "whales": [
    {
     "wallet": "0x0235dc24b38772bf3339a9e5ec5db3d3a05fcee5",
     "side": "New England Revolution",
-    "usd": 1942,
-    "avgPrice": 0.3316
+    "usd": 1942
    },
    {
     "wallet": "0x04cff92a65dc677e102702873a777b1ca8719f77",
@@ -461953,7 +462110,8 @@
    {
     "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
     "side": "Draw (Real Salt Lake vs. New England Revolution)",
-    "usd": 149
+    "usd": 149,
+    "avgPrice": 0.2499
    },
    {
     "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
@@ -461991,7 +462149,13 @@
    {
     "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
     "side": "New England Revolution",
-    "usd": 51
+    "usd": 51,
+    "avgPrice": 0.317
+   },
+   {
+    "wallet": "0xb341ba2981305703de87e7ab996258f7c074bb28",
+    "side": "Draw (Real Salt Lake vs. New England Revolution)",
+    "usd": 49
    },
    {
     "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
@@ -462034,6 +462198,11 @@
     "usd": 20
    },
    {
+    "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
+    "side": "Real Salt Lake",
+    "usd": 19
+   },
+   {
     "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
     "side": "New England Revolution",
     "usd": 13
@@ -462071,8 +462240,7 @@
    {
     "wallet": "0xf10299cf1fff507cff45e1a906800e5b44bf1348",
     "side": "Draw (Real Salt Lake vs. New England Revolution)",
-    "usd": 2,
-    "avgPrice": 0.23
+    "usd": 2
    },
    {
     "wallet": "0xfe67df6e0c585e50cbe8bdcad804d980c6b8a2e8",
@@ -462080,8 +462248,8 @@
     "usd": 1
    }
   ],
-  "hoursToKickoff": 1.87,
-  "capturedAt": "2026-09-26T23:41:17.729963+00:00",
+  "hoursToKickoff": 1.31,
+  "capturedAt": "2026-09-27T00:14:27.221339+00:00",
   "tokens": {
    "Real Salt Lake": "71581390252184834776287495019320679297927079734815539137944511369884387234835",
    "Draw (Real Salt Lake vs. New England Revolution)": "70368682243796595613339795657427746809333110052100212046550288139087857382426",
@@ -462090,12 +462258,12 @@
  },
  "mlb-hou-oak-2026-09-26": {
   "shares": {
-   "Over": 8794.473813125001,
-   "Under": 5276.684287875
+   "Houston Astros": 67186.82955207997,
+   "Athletics": 45732.229305930014
   },
   "prices": {
-   "Over": 0.625,
-   "Under": 0.375
+   "Houston Astros": 0.595,
+   "Athletics": 0.405
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -462103,179 +462271,335 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 14640,
+  "totalUsd": 118614,
   "whales": [
    {
-    "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
-    "side": "Over",
-    "usd": 5844,
-    "avgPrice": 0.5851
+    "wallet": "0xa71093cafc0c099b4ccab24c3cb8018d817923c4",
+    "side": "Athletics",
+    "usd": 43703
    },
    {
-    "wallet": "0x4dd24f21b6c8adc8a059dca1a0346a3aa99214c2",
-    "side": "Under",
-    "usd": 1875
-   },
-   {
-    "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
-    "side": "Over",
-    "usd": 1010
-   },
-   {
-    "wallet": "0xfb07f48542d2b655e9d0bf1cc92a8a6feee8e2cc",
-    "side": "Under",
-    "usd": 654
-   },
-   {
-    "wallet": "0x715ce1ecfa3836fbb10e6829109ebce10a5f19d1",
-    "side": "Under",
-    "usd": 614
-   },
-   {
-    "wallet": "0x224a89dbe0db0d6124b335edabd15b3f877da3d5",
-    "side": "Over",
-    "usd": 563
-   },
-   {
-    "wallet": "0xc2494b32d65dea3a3a80712589d10bc5733f8a61",
-    "side": "Under",
-    "usd": 542
-   },
-   {
-    "wallet": "0x9b11866433281ade9f2811dbde8acdefc45f5375",
-    "side": "Under",
-    "usd": 412
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "side": "Over",
-    "usd": 369,
-    "avgPrice": 0.5456
-   },
-   {
-    "wallet": "0xddb993dbaee76440dbb42408a1925e38b7aaedcd",
-    "side": "Over",
-    "usd": 344
-   },
-   {
-    "wallet": "0x986be7dad5e37d603d7eb335da46fc89a89e56ef",
-    "side": "Under",
-    "usd": 315
-   },
-   {
-    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-    "side": "Over",
-    "usd": 209
-   },
-   {
-    "wallet": "0x48b0900dc31ac1aadf4777ba76eb72d35048a348",
-    "side": "Under",
-    "usd": 188,
-    "avgPrice": 0.416
-   },
-   {
-    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
-    "side": "Over",
-    "usd": 142,
-    "avgPrice": 0.5922
+    "wallet": "0xcd84d7f9262516865553555751609fb6f52abec6",
+    "side": "Houston Astros",
+    "usd": 29750,
+    "avgPrice": 0.6
    },
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
-    "side": "Over",
-    "usd": 123,
-    "avgPrice": 0.6099
+    "side": "Houston Astros",
+    "usd": 10685,
+    "avgPrice": 0.5999
    },
    {
-    "wallet": "0x5e020e19bc4cc2cd24ab9b406604ee9df02ab178",
-    "side": "Under",
-    "usd": 117
+    "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
+    "side": "Houston Astros",
+    "usd": 8772
    },
    {
-    "wallet": "0xcee6a215f2de749afd3a6a74721cc0c4fbb80a45",
-    "side": "Under",
-    "usd": 112
+    "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
+    "side": "Houston Astros",
+    "usd": 4621,
+    "avgPrice": 0.6
    },
    {
-    "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
-    "side": "Under",
-    "usd": 74
+    "wallet": "0x0e64bde21d716711fbe59095eb0c88fae55e336d",
+    "side": "Houston Astros",
+    "usd": 2975,
+    "avgPrice": 0.6
    },
    {
-    "wallet": "0x5e3040eb55cb0f4f86eb0af40cb84c9d3585acbf",
-    "side": "Under",
-    "usd": 60
+    "wallet": "0x16bb9951a36fce71e2ef57890b786145e0ba8492",
+    "side": "Houston Astros",
+    "usd": 2048
    },
    {
-    "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
-    "side": "Over",
-    "usd": 52,
-    "avgPrice": 0.5943
+    "wallet": "0xedbbdd8110aff4e77421df3bd1d7c5c8d4cc63b8",
+    "side": "Houston Astros",
+    "usd": 1322,
+    "avgPrice": 0.6
    },
    {
-    "wallet": "0xcc40e3d54a3206d85d86f305596ff6fb4dc96ae3",
-    "side": "Under",
-    "usd": 37
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Athletics",
+    "usd": 740,
+    "avgPrice": 0.3981
    },
    {
-    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
-    "side": "Under",
-    "usd": 19
+    "wallet": "0x6f11bcdd1e09a7109b61e6c26ddbcfe3f204c524",
+    "side": "Houston Astros",
+    "usd": 631
    },
    {
-    "wallet": "0xd9fe6f0f41ca99fefa93c55d8890000e5a84db0d",
-    "side": "Over",
-    "usd": 18
+    "wallet": "0x74bdef5a242509f5ef3ebae9cbd83ddd7d30d371",
+    "side": "Houston Astros",
+    "usd": 595
    },
    {
-    "wallet": "0x521070c99db06e54af5e8e4a91d6858decdfbd53",
-    "side": "Under",
-    "usd": 18
+    "wallet": "0xa697d0b3fff7d285a0f92d6ee03a7f97809e59d5",
+    "side": "Houston Astros",
+    "usd": 541,
+    "avgPrice": 0.6
+   },
+   {
+    "wallet": "0xa0f21e6d351baa9185716b5c00c2925ed9621848",
+    "side": "Houston Astros",
+    "usd": 536,
+    "avgPrice": 0.6026
+   },
+   {
+    "wallet": "0x419b3250256df94e1dbb2f11b981821272296ea1",
+    "side": "Houston Astros",
+    "usd": 488
+   },
+   {
+    "wallet": "0x5811c8ad5dc5990528357ecf1a6d03311d6c0976",
+    "side": "Houston Astros",
+    "usd": 404
+   },
+   {
+    "wallet": "0xf1404010a21a61c1f5693beee65285273be47cd8",
+    "side": "Houston Astros",
+    "usd": 357,
+    "avgPrice": 0.6
+   },
+   {
+    "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
+    "side": "Houston Astros",
+    "usd": 352
+   },
+   {
+    "wallet": "0x28ef6f21a99d56b9d8a4a7c56ea56e624064ff5e",
+    "side": "Houston Astros",
+    "usd": 351
+   },
+   {
+    "wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
+    "side": "Houston Astros",
+    "usd": 264
+   },
+   {
+    "wallet": "0xb88aed2ba55b1accfbf30b2c004317976ec1f6ad",
+    "side": "Houston Astros",
+    "usd": 196,
+    "avgPrice": 0.6
+   },
+   {
+    "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
+    "side": "Houston Astros",
+    "usd": 174
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Athletics",
+    "usd": 132,
+    "avgPrice": 0.4155
+   },
+   {
+    "wallet": "0x17d97684d80863e07bc95d1e9f7c1c1dbec884af",
+    "side": "Houston Astros",
+    "usd": 95
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Houston Astros",
+    "usd": 74,
+    "avgPrice": 0.59
    },
    {
     "wallet": "0xdd5ef115f801999575b03d78d0115ad8b2d59040",
-    "side": "Over",
-    "usd": 11
+    "side": "Houston Astros",
+    "usd": 67
    },
    {
-    "wallet": "0xc846f5368ab49a854d2280b7ecff92669824c413",
-    "side": "Under",
-    "usd": 9,
-    "avgPrice": 0.44
+    "wallet": "0x49c5845733fd0b83d2ae67bfc1baf9d2e3093de7",
+    "side": "Houston Astros",
+    "usd": 62
+   },
+   {
+    "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
+    "side": "Athletics",
+    "usd": 47,
+    "avgPrice": 0.5
+   },
+   {
+    "wallet": "0x796fc6fda8f8e03c03e2a2d012155989960300f6",
+    "side": "Houston Astros",
+    "usd": 42,
+    "avgPrice": 0.5599
+   },
+   {
+    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
+    "side": "Athletics",
+    "usd": 36
+   },
+   {
+    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
+    "side": "Houston Astros",
+    "usd": 30
+   },
+   {
+    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
+    "side": "Houston Astros",
+    "usd": 30,
+    "avgPrice": 0.6
+   },
+   {
+    "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
+    "side": "Houston Astros",
+    "usd": 30
+   },
+   {
+    "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
+    "side": "Athletics",
+    "usd": 25,
+    "avgPrice": 0.4031
+   },
+   {
+    "wallet": "0xd9fe6f0f41ca99fefa93c55d8890000e5a84db0d",
+    "side": "Athletics",
+    "usd": 24
    },
    {
     "wallet": "0x870a742f10c5d80433825e8e90fe4e00ae9b6c6e",
-    "side": "Under",
-    "usd": 9
-   },
-   {
-    "wallet": "0x9674d0d14a078c5dd5cd411c64bff82523dfe1a2",
-    "side": "Over",
-    "usd": 5
+    "side": "Houston Astros",
+    "usd": 20
    },
    {
     "wallet": "0x3da80ca893666957475095ac1504094df93dbe26",
-    "side": "Over",
-    "usd": 3
+    "side": "Houston Astros",
+    "usd": 18
    },
    {
-    "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
-    "side": "Under",
-    "usd": 3
+    "wallet": "0x398f0d01805b406a008dea6e503df421bb1630f2",
+    "side": "Athletics",
+    "usd": 18,
+    "avgPrice": 0.39
    },
    {
-    "wallet": "0xc3a7bca628ccd2fd4bfc72f86c1f257e96e43172",
-    "side": "Under",
-    "usd": 2
+    "wallet": "0xa278b41b5afda5d18da683eb7f851a7b2dc13369",
+    "side": "Athletics",
+    "usd": 8
+   },
+   {
+    "wallet": "0x3e6b98d9dac15f285a18a02644a8c900aab58a98",
+    "side": "Athletics",
+    "usd": 8
+   },
+   {
+    "wallet": "0x521070c99db06e54af5e8e4a91d6858decdfbd53",
+    "side": "Houston Astros",
+    "usd": 6
    }
   ],
-  "hoursToKickoff": 2.04,
-  "capturedAt": "2026-09-26T23:41:17.729963+00:00",
-  "cond": "0x6f8dce2aff12f5798cd809b15aeeb6df117f962cf2b67f81f9958ebe7a0bf960",
-  "frage": "Houston Astros vs. Athletics: O/U 8.5",
+  "hoursToKickoff": 1.47,
+  "capturedAt": "2026-09-27T00:14:27.221339+00:00",
+  "cond": "0x367a80685bffd95c1de95077e799ad5cee6bede8bd1699245a723488805423fc",
+  "frage": "Houston Astros vs. Athletics",
   "tokens": {
-   "Over": "92812674469711113049385560864389421152993994328216747048599346208804855884923",
-   "Under": "29616507786867815298931525840655654555832852663677986503895790165794313339782"
-  }
+   "Houston Astros": "55525793318131517390918860393998016259386722790765697733740756001625452031287",
+   "Athletics": "93753734446470543268345271754006874931660884042231900619754576358801953601759"
+  },
+  "book": {
+   "side": "Houston Astros",
+   "bid": 0.59,
+   "ask": 0.6,
+   "spreadC": 1.0,
+   "spreadPct": 1.67,
+   "bids": [
+    [
+     0.59,
+     307662
+    ],
+    [
+     0.58,
+     114723
+    ],
+    [
+     0.57,
+     41614
+    ],
+    [
+     0.56,
+     6475
+    ],
+    [
+     0.55,
+     5160
+    ],
+    [
+     0.54,
+     7095
+    ]
+   ],
+   "asks": [
+    [
+     0.6,
+     236374
+    ],
+    [
+     0.61,
+     151774
+    ],
+    [
+     0.62,
+     132354
+    ],
+    [
+     0.63,
+     49932
+    ],
+    [
+     0.64,
+     25728
+    ],
+    [
+     0.65,
+     5285
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x0e64bde21d716711fbe59095eb0c88fae55e336d",
+    "action": "BUY",
+    "side": "Houston Astros",
+    "price": 0.6,
+    "usd": 3000,
+    "ts": 1790466266
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "action": "BUY",
+    "side": "Houston Astros",
+    "price": 0.6,
+    "usd": 10735,
+    "ts": 1790466222
+   },
+   {
+    "wallet": "0xa71093cafc0c099b4ccab24c3cb8018d817923c4",
+    "action": "BUY",
+    "side": "Athletics",
+    "price": 0.4,
+    "usd": 33789,
+    "ts": 1790465775
+   },
+   {
+    "wallet": "0x28ef6f21a99d56b9d8a4a7c56ea56e624064ff5e",
+    "action": "BUY",
+    "side": "Houston Astros",
+    "price": 0.61,
+    "usd": 360,
+    "ts": 1790440121
+   },
+   {
+    "wallet": "0x419b3250256df94e1dbb2f11b981821272296ea1",
+    "action": "BUY",
+    "side": "Houston Astros",
+    "price": 0.61,
+    "usd": 500,
+    "ts": 1790439578
+   }
+  ]
  },
  "itf-abdo1-vaitie1-2026-09-27": {
   "shares": {},
@@ -462405,8 +462729,8 @@
  },
  "atp-basavar-dietric-2026-09-26": {
   "shares": {
-   "Nishesh Basavareddy": 8410.003864245,
-   "Dylan Dietrich": 4628.767625975
+   "Nishesh Basavareddy": 10623.952991460003,
+   "Dylan Dietrich": 5847.294599870001
   },
   "prices": {
    "Nishesh Basavareddy": 0.645,
@@ -462418,8 +462742,13 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 7662,
+  "totalUsd": 16636,
   "whales": [
+   {
+    "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
+    "side": "Nishesh Basavareddy",
+    "usd": 2132
+   },
    {
     "wallet": "0xf5a3504ad3a8b079974620b3aa4fcca3f7579e12",
     "side": "Dylan Dietrich",
@@ -462436,11 +462765,6 @@
     "usd": 1310
    },
    {
-    "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
-    "side": "Nishesh Basavareddy",
-    "usd": 1290
-   },
-   {
     "wallet": "0xd9e0aaca471f489be338fd0f91a26e8669a805f2",
     "side": "Nishesh Basavareddy",
     "usd": 1273,
@@ -462454,7 +462778,7 @@
    {
     "wallet": "0xcb7b55b3ff6ed883b7ae72856c465624ce9a3051",
     "side": "Nishesh Basavareddy",
-    "usd": 967
+    "usd": 986
    },
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
@@ -462478,15 +462802,47 @@
     "usd": 353
    },
    {
-    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
     "side": "Nishesh Basavareddy",
-    "usd": 332,
-    "avgPrice": 0.6367
+    "usd": 350,
+    "avgPrice": 0.64
    },
    {
     "wallet": "0x73e5cd209c144497b2fe399ab6698bffb62ce3d8",
     "side": "Nishesh Basavareddy",
-    "usd": 129
+    "usd": 322
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Nishesh Basavareddy",
+    "usd": 300,
+    "avgPrice": 0.638
+   },
+   {
+    "wallet": "0xedecbb52fe0f21578961ef0422eda61040243b5f",
+    "side": "Dylan Dietrich",
+    "usd": 296
+   },
+   {
+    "wallet": "0x34142c0027cccc7a9156a280ef3edd1dd67451a1",
+    "side": "Dylan Dietrich",
+    "usd": 247
+   },
+   {
+    "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
+    "side": "Dylan Dietrich",
+    "usd": 227
+   },
+   {
+    "wallet": "0x7547479d43f4b52d892a6f2254050eea50edd158",
+    "side": "Dylan Dietrich",
+    "usd": 213
+   },
+   {
+    "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
+    "side": "Dylan Dietrich",
+    "usd": 166,
+    "avgPrice": 0.5
    },
    {
     "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
@@ -462494,10 +462850,20 @@
     "usd": 126
    },
    {
-    "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
+    "wallet": "0x05c5a55c0eed25f98a846f9b5a1875a99d358181",
+    "side": "Nishesh Basavareddy",
+    "usd": 99
+   },
+   {
+    "wallet": "0x012d83ceb6b39b7431284d6dde0be72350019db6",
+    "side": "Nishesh Basavareddy",
+    "usd": 64,
+    "avgPrice": 0.65
+   },
+   {
+    "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
     "side": "Dylan Dietrich",
-    "usd": 55,
-    "avgPrice": 0.5
+    "usd": 55
    },
    {
     "wallet": "0xac4c55b85a1dcacb638bd63ea4eeb8d8a9352200",
@@ -462508,6 +462874,11 @@
     "wallet": "0x301fcd4e6bc88232f7138fcaf252e1dba67ae84c",
     "side": "Nishesh Basavareddy",
     "usd": 25
+   },
+   {
+    "wallet": "0xb4611ed615ca8fb60d203d3b1b0a2ffd1fa29dbe",
+    "side": "Nishesh Basavareddy",
+    "usd": 24
    },
    {
     "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
@@ -462523,6 +462894,11 @@
    {
     "wallet": "0x6a80869c6561210db35da8e7e306a1095275d472",
     "side": "Nishesh Basavareddy",
+    "usd": 10
+   },
+   {
+    "wallet": "0x5e020e19bc4cc2cd24ab9b406604ee9df02ab178",
+    "side": "Dylan Dietrich",
     "usd": 10
    },
    {
@@ -462547,8 +462923,8 @@
    },
    {
     "wallet": "0xd37ab1a5eeb25696c568e20e94af72b8d3422358",
-    "side": "Nishesh Basavareddy",
-    "usd": 3
+    "side": "Dylan Dietrich",
+    "usd": 4
    },
    {
     "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
@@ -462557,23 +462933,18 @@
    },
    {
     "wallet": "0xc846f5368ab49a854d2280b7ecff92669824c413",
-    "side": "Nishesh Basavareddy",
-    "usd": 3,
-    "avgPrice": 0.64
+    "side": "Dylan Dietrich",
+    "usd": 2,
+    "avgPrice": 0.35
    },
    {
     "wallet": "0xe5a25a5fda2487292ef951b63b69d73ed2d15f4c",
     "side": "Dylan Dietrich",
     "usd": 2
-   },
-   {
-    "wallet": "0x5e020e19bc4cc2cd24ab9b406604ee9df02ab178",
-    "side": "Dylan Dietrich",
-    "usd": 1
    }
   ],
-  "hoursToKickoff": 0.22,
-  "capturedAt": "2026-09-26T23:15:05.227380+00:00",
+  "hoursToKickoff": 0.14,
+  "capturedAt": "2026-09-27T00:14:27.221339+00:00",
   "cond": "0x06f45e18b749eb5f7d7902d429b4b46cce61cc3060d855a704e84ad9c57db4a6",
   "frage": "San Diego 2: Nishesh Basavareddy vs Dylan Dietrich",
   "tokens": {
@@ -462956,8 +463327,8 @@
   "sport": "Tennis",
   "totalUsd": 12268,
   "whales": [],
-  "hoursToKickoff": 2.87,
-  "capturedAt": "2026-09-26T23:41:17.729963+00:00",
+  "hoursToKickoff": 2.31,
+  "capturedAt": "2026-09-27T00:14:27.221339+00:00",
   "cond": "0xea0bc413b8969dc17ac0304268a0ad4023621db8acd82f200c4c55e2162b110f",
   "frage": "W15 Maanshan: xu yunzhang vs Alisa Piliptsevich",
   "tokens": {
@@ -462979,8 +463350,8 @@
   "sport": "Tennis",
   "totalUsd": 11653,
   "whales": [],
-  "hoursToKickoff": 2.87,
-  "capturedAt": "2026-09-26T23:41:17.729963+00:00",
+  "hoursToKickoff": 2.31,
+  "capturedAt": "2026-09-27T00:14:27.221339+00:00",
   "cond": "0x33482e6b1a266d0e97d38cb0006dbc9d4f5124e063da2ddb0910485731a3c295",
   "frage": "W15 Maanshan: Yinuo Huang vs Victoria Vidal",
   "tokens": {
@@ -462990,9 +463361,9 @@
  },
  "mls-sea-min-2026-09-26": {
   "shares": {
-   "Seattle Sounders FC": 2099.41684059,
+   "Seattle Sounders FC": 2109.56769201,
    "Draw (Seattle Sounders FC vs. Minnesota United FC)": 93.77549775000001,
-   "Minnesota United FC": 590.4317537399999
+   "Minnesota United FC": 658.7829871049998
   },
   "prices": {
    "Seattle Sounders FC": 0.465,
@@ -463005,7 +463376,7 @@
   },
   "league": "MLS",
   "sport": "Fußball",
-  "totalUsd": 8231,
+  "totalUsd": 8520,
   "whales": [
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
@@ -463046,11 +463417,6 @@
     "usd": 66
    },
    {
-    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
-    "side": "Seattle Sounders FC",
-    "usd": 55
-   },
-   {
     "wallet": "0x03c6fb4ea4f9ce0d4fd5a3414e3e0a94cb6c3dd2",
     "side": "Seattle Sounders FC",
     "usd": 51
@@ -463066,8 +463432,13 @@
     "usd": 35
    },
    {
-    "wallet": "0x00d011c81490302079e8f73465d0077b00567534",
-    "side": "Draw (Seattle Sounders FC vs. Minnesota United FC)",
+    "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
+    "side": "Minnesota United FC",
+    "usd": 35
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Seattle Sounders FC",
     "usd": 32
    },
    {
@@ -463086,6 +463457,12 @@
     "usd": 18
    },
    {
+    "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
+    "side": "Minnesota United FC",
+    "usd": 16,
+    "avgPrice": 0.2854
+   },
+   {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "side": "Draw (Seattle Sounders FC vs. Minnesota United FC)",
     "usd": 15
@@ -463096,6 +463473,11 @@
     "usd": 12
    },
    {
+    "wallet": "0x8d0c8253703b8febbe53f45d182671c5385dc90a",
+    "side": "Minnesota United FC",
+    "usd": 11
+   },
+   {
     "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
     "side": "Seattle Sounders FC",
     "usd": 10,
@@ -463104,8 +463486,7 @@
    {
     "wallet": "0xf10299cf1fff507cff45e1a906800e5b44bf1348",
     "side": "Minnesota United FC",
-    "usd": 10,
-    "avgPrice": 0.28
+    "usd": 10
    },
    {
     "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
@@ -463173,12 +463554,679 @@
     "usd": 1
    }
   ],
-  "hoursToKickoff": 0.87,
-  "capturedAt": "2026-09-26T23:41:17.729963+00:00",
+  "hoursToKickoff": 0.31,
+  "capturedAt": "2026-09-27T00:14:27.221339+00:00",
   "tokens": {
    "Seattle Sounders FC": "104089667322998723583884431862223878131087257535263771683315811489068689486656",
    "Draw (Seattle Sounders FC vs. Minnesota United FC)": "51715582008338025425778180809461521944128863179786023335637996874374134162263",
    "Minnesota United FC": "706393283028105003846768234578701288092856241785832846875514152100060197860"
+  }
+ },
+ "fif-col-mex-2026-09-26": {
+  "shares": {
+   "Colombia": 17198.825154000002,
+   "Draw (Colombia vs. Mexico)": 2130.4729883250006,
+   "Mexico": 54975.147804134955
+  },
+  "prices": {
+   "Colombia": 0.375,
+   "Draw (Colombia vs. Mexico)": 0.275,
+   "Mexico": 0.365
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 231363,
+  "whales": [
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "side": "Mexico",
+    "usd": 31100,
+    "avgPrice": 0.3689
+   },
+   {
+    "wallet": "0x5c3a1a602848565bb16165fcd460b00c3d43020b",
+    "side": "Mexico",
+    "usd": 14716
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "side": "Colombia",
+    "usd": 13439,
+    "avgPrice": 0.3717
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Mexico",
+    "usd": 6166,
+    "avgPrice": 0.3713
+   },
+   {
+    "wallet": "0x4444c2085a1f3ac46d172af008d25a6ad4a6aa0a",
+    "side": "Colombia",
+    "usd": 1224
+   },
+   {
+    "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
+    "side": "Mexico",
+    "usd": 1078,
+    "avgPrice": 0.35
+   },
+   {
+    "wallet": "0x0f34df429a3c1f9270c0437411ae14c62406bf5b",
+    "side": "Colombia",
+    "usd": 1014
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "side": "Draw (Colombia vs. Mexico)",
+    "usd": 910,
+    "avgPrice": 0.2899
+   },
+   {
+    "wallet": "0x33bcb6e9bd44be709122b2940c55e34f1a7e37dc",
+    "side": "Draw (Colombia vs. Mexico)",
+    "usd": 550
+   },
+   {
+    "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
+    "side": "Colombia",
+    "usd": 488
+   },
+   {
+    "wallet": "0xdd5ef115f801999575b03d78d0115ad8b2d59040",
+    "side": "Mexico",
+    "usd": 464
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Mexico",
+    "usd": 391,
+    "avgPrice": 0.3602
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Colombia",
+    "usd": 221,
+    "avgPrice": 0.3499
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Draw (Colombia vs. Mexico)",
+    "usd": 100,
+    "avgPrice": 0.2799
+   },
+   {
+    "wallet": "0x0235dc24b38772bf3339a9e5ec5db3d3a05fcee5",
+    "side": "Colombia",
+    "usd": 95
+   },
+   {
+    "wallet": "0x52341d8cc2e1fe183cd751e35da4d32101f0771c",
+    "side": "Colombia",
+    "usd": 80
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Draw (Colombia vs. Mexico)",
+    "usd": 61,
+    "avgPrice": 0.2899
+   },
+   {
+    "wallet": "0x1f624696c102b99bea92c75a502fa7e4a6d676f6",
+    "side": "Draw (Colombia vs. Mexico)",
+    "usd": 52
+   },
+   {
+    "wallet": "0x6a00004f0cbbcbd7e8ae51bc4a40c9b8790c9158",
+    "side": "Mexico",
+    "usd": 36
+   },
+   {
+    "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
+    "side": "Draw (Colombia vs. Mexico)",
+    "usd": 33
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "Mexico",
+    "usd": 31
+   },
+   {
+    "wallet": "0x0b80a92f5895880340198589980d1e7152c1b21b",
+    "side": "Colombia",
+    "usd": 27
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Colombia",
+    "usd": 23
+   },
+   {
+    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+    "side": "Colombia",
+    "usd": 19
+   },
+   {
+    "wallet": "0xdd5ef115f801999575b03d78d0115ad8b2d59040",
+    "side": "Colombia",
+    "usd": 16
+   },
+   {
+    "wallet": "0x90fe101c0cb837fbf3d350355f8bc00eba1bb7b8",
+    "side": "Mexico",
+    "usd": 9,
+    "avgPrice": 0.38
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "Colombia",
+    "usd": 5
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "Draw (Colombia vs. Mexico)",
+    "usd": 5
+   },
+   {
+    "wallet": "0x885ffdf360e5b0b6e6acb963fb3f8ba2344c8ed9",
+    "side": "Mexico",
+    "usd": 3
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Draw (Colombia vs. Mexico)",
+    "usd": 2
+   },
+   {
+    "wallet": "0xc846f5368ab49a854d2280b7ecff92669824c413",
+    "side": "Draw (Colombia vs. Mexico)",
+    "usd": 1
+   }
+  ],
+  "hoursToKickoff": 0.81,
+  "capturedAt": "2026-09-27T00:14:27.221339+00:00",
+  "tokens": {
+   "Colombia": "64921396946404013246579440132085558082334263961533672292731496372377929942309",
+   "Draw (Colombia vs. Mexico)": "63627935003009217039005893141603578862752901598485666999408840632011406793321",
+   "Mexico": "20851825882948395688179369506711521005165735828645577606357610871975042770887"
+  },
+  "book": {
+   "side": "Mexico",
+   "bid": 0.36,
+   "ask": 0.37,
+   "spreadC": 1.0,
+   "spreadPct": 2.7,
+   "bids": [
+    [
+     0.36,
+     50126
+    ],
+    [
+     0.35,
+     32247
+    ],
+    [
+     0.34,
+     25143
+    ],
+    [
+     0.33,
+     17111
+    ],
+    [
+     0.32,
+     8215
+    ],
+    [
+     0.31,
+     1875
+    ]
+   ],
+   "asks": [
+    [
+     0.37,
+     13206
+    ],
+    [
+     0.38,
+     14101
+    ],
+    [
+     0.39,
+     5211
+    ],
+    [
+     0.4,
+     9203
+    ],
+    [
+     0.41,
+     9654
+    ],
+    [
+     0.42,
+     7416
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.37,
+    "usd": 965,
+    "ts": 1790467353
+   }
+  ]
+ },
+ "mls-aus-sdg-2026-09-26": {
+  "shares": {
+   "Austin FC": 3257.3148632300004,
+   "Draw (Austin FC vs. San Diego FC)": 503.74342939499996,
+   "San Diego FC": 46524.190609820005
+  },
+  "prices": {
+   "Austin FC": 0.355,
+   "Draw (Austin FC vs. San Diego FC)": 0.255,
+   "San Diego FC": 0.385
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "MLS",
+  "sport": "Fußball",
+  "totalUsd": 133328,
+  "whales": [
+   {
+    "wallet": "0x918b42a06ff25eaaa4a79eca9da6a9de46f4ea63",
+    "side": "San Diego FC",
+    "usd": 46078
+   },
+   {
+    "wallet": "0x2d1ffae8d41b181d1b1734016e07bd1a903a5246",
+    "side": "Austin FC",
+    "usd": 1223
+   },
+   {
+    "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
+    "side": "Austin FC",
+    "usd": 816
+   },
+   {
+    "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
+    "side": "Austin FC",
+    "usd": 481
+   },
+   {
+    "wallet": "0x6592dd81456f6bc358f418ace0883c1964802767",
+    "side": "San Diego FC",
+    "usd": 337
+   },
+   {
+    "wallet": "0x0235dc24b38772bf3339a9e5ec5db3d3a05fcee5",
+    "side": "Austin FC",
+    "usd": 329
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Draw (Austin FC vs. San Diego FC)",
+    "usd": 136,
+    "avgPrice": 0.2699
+   },
+   {
+    "wallet": "0x3e6b98d9dac15f285a18a02644a8c900aab58a98",
+    "side": "Austin FC",
+    "usd": 83
+   },
+   {
+    "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
+    "side": "Austin FC",
+    "usd": 83
+   },
+   {
+    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
+    "side": "Draw (Austin FC vs. San Diego FC)",
+    "usd": 75
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Austin FC",
+    "usd": 60
+   },
+   {
+    "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
+    "side": "Draw (Austin FC vs. San Diego FC)",
+    "usd": 60
+   },
+   {
+    "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
+    "side": "Draw (Austin FC vs. San Diego FC)",
+    "usd": 56,
+    "avgPrice": 0.26
+   },
+   {
+    "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
+    "side": "Austin FC",
+    "usd": 37
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "side": "San Diego FC",
+    "usd": 33
+   },
+   {
+    "wallet": "0x0ab01f65b3bc10cff35406d1922f64298259ba53",
+    "side": "Draw (Austin FC vs. San Diego FC)",
+    "usd": 18
+   },
+   {
+    "wallet": "0x5e020e19bc4cc2cd24ab9b406604ee9df02ab178",
+    "side": "Austin FC",
+    "usd": 17
+   },
+   {
+    "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
+    "side": "Draw (Austin FC vs. San Diego FC)",
+    "usd": 15
+   },
+   {
+    "wallet": "0x8d0c8253703b8febbe53f45d182671c5385dc90a",
+    "side": "Austin FC",
+    "usd": 14
+   },
+   {
+    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
+    "side": "Austin FC",
+    "usd": 13,
+    "avgPrice": 0.37
+   },
+   {
+    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
+    "side": "Draw (Austin FC vs. San Diego FC)",
+    "usd": 13
+   },
+   {
+    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
+    "side": "Draw (Austin FC vs. San Diego FC)",
+    "usd": 13,
+    "avgPrice": 0.26
+   },
+   {
+    "wallet": "0x8d0c8253703b8febbe53f45d182671c5385dc90a",
+    "side": "Draw (Austin FC vs. San Diego FC)",
+    "usd": 10
+   },
+   {
+    "wallet": "0x5f03a74756aa8a19295dc5be16ba76fede8d8a0d",
+    "side": "Austin FC",
+    "usd": 7
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "side": "Draw (Austin FC vs. San Diego FC)",
+    "usd": 5
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Austin FC",
+    "usd": 4
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "Draw (Austin FC vs. San Diego FC)",
+    "usd": 4
+   },
+   {
+    "wallet": "0xf10299cf1fff507cff45e1a906800e5b44bf1348",
+    "side": "Draw (Austin FC vs. San Diego FC)",
+    "usd": 2
+   },
+   {
+    "wallet": "0x724924919b3d684ce0400bc307788521d5cef5da",
+    "side": "San Diego FC",
+    "usd": 2
+   },
+   {
+    "wallet": "0x1f624696c102b99bea92c75a502fa7e4a6d676f6",
+    "side": "San Diego FC",
+    "usd": 0
+   }
+  ],
+  "hoursToKickoff": 0.31,
+  "capturedAt": "2026-09-27T00:14:27.221339+00:00",
+  "tokens": {
+   "Austin FC": "19908973271974717711349416353093059992407081621373723990496728583682527178081",
+   "Draw (Austin FC vs. San Diego FC)": "102980447710469626364094753602030109994527977373425474070967581189742271422414",
+   "San Diego FC": "56334720401326878842372896562356807651450200899223179095120216146089279445974"
+  },
+  "book": {
+   "side": "San Diego FC",
+   "bid": 0.38,
+   "ask": 0.39,
+   "spreadC": 1.0,
+   "spreadPct": 2.56,
+   "bids": [
+    [
+     0.38,
+     51338
+    ],
+    [
+     0.37,
+     50166
+    ],
+    [
+     0.36,
+     32537
+    ],
+    [
+     0.35,
+     48198
+    ],
+    [
+     0.34,
+     13323
+    ],
+    [
+     0.33,
+     4746
+    ]
+   ],
+   "asks": [
+    [
+     0.39,
+     21453
+    ],
+    [
+     0.4,
+     36074
+    ],
+    [
+     0.41,
+     27991
+    ],
+    [
+     0.42,
+     14690
+    ],
+    [
+     0.43,
+     3787
+    ],
+    [
+     0.44,
+     959
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x1f624696c102b99bea92c75a502fa7e4a6d676f6",
+    "action": "SELL",
+    "side": "No",
+    "price": 0.61,
+    "usd": 305,
+    "ts": 1790467218
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "No",
+    "price": 0.62,
+    "usd": 453,
+    "ts": 1790466045
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "No",
+    "price": 0.62,
+    "usd": 421,
+    "ts": 1790466045
+   }
+  ]
+ },
+ "mls-hou-skc-2026-09-26-more-markets": {
+  "shares": {
+   "Over": 7896.158835285,
+   "Under": 4943.123823714999
+  },
+  "prices": {
+   "Over": 0.615,
+   "Under": 0.385
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "MLS",
+  "sport": "Fußball",
+  "totalUsd": 12842,
+  "whales": [
+   {
+    "wallet": "0x7ad71d79a3bb90d0a87a06500fa0fe11663842aa",
+    "side": "Over",
+    "usd": 7533
+   },
+   {
+    "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
+    "side": "Under",
+    "usd": 1113
+   },
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Under",
+    "usd": 980,
+    "avgPrice": 0.3899
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Under",
+    "usd": 770,
+    "avgPrice": 0.39
+   },
+   {
+    "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+    "side": "Under",
+    "usd": 738
+   },
+   {
+    "wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
+    "side": "Under",
+    "usd": 339
+   },
+   {
+    "wallet": "0xa3b5da76ffbbe3325bb1b40a30f6a4634962941a",
+    "side": "Over",
+    "usd": 308
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Under",
+    "usd": 212,
+    "avgPrice": 0.3899
+   },
+   {
+    "wallet": "0x224f7ef690d952cf551a471846d5afb4892e514a",
+    "side": "Under",
+    "usd": 196
+   },
+   {
+    "wallet": "0x7ea571c40408f340c1c8fc8eaacebab53c1bde7b",
+    "side": "Under",
+    "usd": 153
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Under",
+    "usd": 107,
+    "avgPrice": 0.3908
+   },
+   {
+    "wallet": "0x1f624696c102b99bea92c75a502fa7e4a6d676f6",
+    "side": "Under",
+    "usd": 96
+   },
+   {
+    "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
+    "side": "Under",
+    "usd": 93
+   },
+   {
+    "wallet": "0xfe67df6e0c585e50cbe8bdcad804d980c6b8a2e8",
+    "side": "Under",
+    "usd": 36
+   },
+   {
+    "wallet": "0x5e020e19bc4cc2cd24ab9b406604ee9df02ab178",
+    "side": "Under",
+    "usd": 33
+   },
+   {
+    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
+    "side": "Under",
+    "usd": 19,
+    "avgPrice": 0.39
+   },
+   {
+    "wallet": "0x8d0c8253703b8febbe53f45d182671c5385dc90a",
+    "side": "Under",
+    "usd": 15
+   },
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "side": "Under",
+    "usd": 14
+   },
+   {
+    "wallet": "0xe90fb148758d3972720beb28bc37a7bb6a56a908",
+    "side": "Under",
+    "usd": 6
+   },
+   {
+    "wallet": "0xd9c9651bfd445b2cddf750662ee79a755f216686",
+    "side": "Under",
+    "usd": 2
+   },
+   {
+    "wallet": "0xc846f5368ab49a854d2280b7ecff92669824c413",
+    "side": "Under",
+    "usd": 2,
+    "avgPrice": 0.39
+   }
+  ],
+  "hoursToKickoff": 0.31,
+  "capturedAt": "2026-09-27T00:14:27.221339+00:00",
+  "cond": "0x088c0fa2c5f681d05493b9df8329e2d188e0c7bd4adb3e0976fac8df3c38dfa8",
+  "frage": "Houston Dynamo vs. Sporting Kansas City: O/U 2.5",
+  "tokens": {
+   "Over": "84026118943620381955929987928938717253377961209238523030982480255392866535338",
+   "Under": "26087049373805792656549172196079435016820866106224678894556773125572206359249"
   }
  }
 }
