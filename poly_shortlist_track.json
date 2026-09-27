@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-09-27T01:49:09.273626+00:00",
+ "updatedAt": "2026-09-27T02:16:00.645508+00:00",
  "stake": 10.0,
  "expired": 0,
  "condDrift": 0,
@@ -260,7 +260,7 @@
    "entryPrice": 0.63,
    "firstTs": "2026-09-24T14:10:58.921549+00:00",
    "lastPrice": 0.54,
-   "lastTs": "2026-09-27T01:49:09.273626+00:00",
+   "lastTs": "2026-09-27T02:16:00.645508+00:00",
    "htkAtEntry": 1.3844191666666665,
    "public": true,
    "ohneWallet": false,
@@ -290,7 +290,7 @@
    "entryPrice": 0.635,
    "firstTs": "2026-09-25T15:16:02.638712+00:00",
    "lastPrice": 0.55,
-   "lastTs": "2026-09-27T01:49:09.273626+00:00",
+   "lastTs": "2026-09-27T02:16:00.645508+00:00",
    "htkAtEntry": 1.7951686111111111,
    "public": true,
    "ohneWallet": false,
@@ -338,32 +338,6 @@
    "cond": "0x32db104268812562648c40185b4799bbaae0741d55b232e6532f89096afa4503",
    "frage": "UFC Fight Night: Ilimbek Akylbek Uulu vs. Mehemmedeli Osmanli (Bantamweight, Main Card)"
   },
-  "argpn-dma-ccn-2026-09-26|Deportivo Madryn": {
-   "key": "argpn-dma-ccn-2026-09-26",
-   "side": "Deportivo Madryn",
-   "verdict": "BET",
-   "conv": 6,
-   "league": "SOCCER",
-   "cat": "Fußball",
-   "entryPrice": 0.47,
-   "firstTs": "2026-09-26T23:15:35.243717+00:00",
-   "lastPrice": 0.615,
-   "lastTs": "2026-09-27T01:49:09.273626+00:00",
-   "htkAtEntry": -1.208411111111111,
-   "public": false,
-   "ohneWallet": true,
-   "reasons": [
-    "großes Geld auf Deportivo Madryn (76%) → $16K",
-    "💷 Betfair-Geld bestätigt: 79% · €18K"
-   ],
-   "signals": [
-    "money",
-    "bf"
-   ],
-   "stake": 10.0,
-   "ev": "2026-09-01",
-   "movePreEntryPP": 0.0
-  },
   "cs2-mars-dtn1-2026-09-26|Marsborne": {
    "key": "cs2-mars-dtn1-2026-09-26",
    "side": "Marsborne",
@@ -374,7 +348,7 @@
    "entryPrice": 0.805,
    "firstTs": "2026-09-26T23:41:30.254982+00:00",
    "lastPrice": 0.825,
-   "lastTs": "2026-09-27T01:49:09.273626+00:00",
+   "lastTs": "2026-09-27T02:16:00.645508+00:00",
    "htkAtEntry": 1.366565,
    "public": true,
    "ohneWallet": false,
@@ -404,7 +378,7 @@
    "entryPrice": 0.725,
    "firstTs": "2026-09-27T00:15:58.214381+00:00",
    "lastPrice": 0.725,
-   "lastTs": "2026-09-27T01:49:09.273626+00:00",
+   "lastTs": "2026-09-27T02:16:00.645508+00:00",
    "htkAtEntry": 0.2847719444444444,
    "public": false,
    "ohneWallet": false,
@@ -431,7 +405,7 @@
    "entryPrice": 0.375,
    "firstTs": "2026-09-27T00:48:52.455973+00:00",
    "lastPrice": 0.375,
-   "lastTs": "2026-09-27T01:49:09.273626+00:00",
+   "lastTs": "2026-09-27T02:16:00.645508+00:00",
    "htkAtEntry": 0.23963638888888888,
    "public": false,
    "ohneWallet": true,
@@ -446,6 +420,32 @@
    "stake": 10.0,
    "ev": "2026-09-01",
    "movePreEntryPP": 1.0
+  },
+  "mls-rsl-ner-2026-09-26|Real Salt Lake": {
+   "key": "mls-rsl-ner-2026-09-26",
+   "side": "Real Salt Lake",
+   "verdict": "BET",
+   "conv": 5,
+   "league": "MLS",
+   "cat": "Fußball",
+   "entryPrice": 0.605,
+   "firstTs": "2026-09-27T02:16:00.645508+00:00",
+   "lastPrice": 0.445,
+   "lastTs": "2026-09-27T02:16:00.645508+00:00",
+   "htkAtEntry": -0.7052477777777777,
+   "public": false,
+   "ohneWallet": false,
+   "reasons": [
+    "großes Geld auf Real Salt Lake (87%) → $129K",
+    "💷 Betfair-Geld bestätigt: 61% · €37K"
+   ],
+   "signals": [
+    "money",
+    "bf"
+   ],
+   "stake": 10.0,
+   "ev": "2026-09-01",
+   "movePreEntryPP": 0.0
   }
  },
  "settled": [
@@ -31338,20 +31338,47 @@
    "settledTs": "2026-09-26T23:15:35.243717+00:00",
    "resolvedTs": "2026-09-26T23:15:32.909888+00:00",
    "ausEndstand": null
+  },
+  {
+   "key": "argpn-dma-ccn-2026-09-26",
+   "side": "Deportivo Madryn",
+   "verdict": "BET",
+   "conv": 6,
+   "league": "SOCCER",
+   "cat": "Fußball",
+   "entryPrice": 0.47,
+   "closePrice": 0.615,
+   "result": "loss",
+   "winner": "Draw (Deportivo Madryn vs. CA Central Norte Salta)",
+   "pnl": -10.0,
+   "clvPP": 14.5,
+   "stake": 10.0,
+   "public": false,
+   "ohneWallet": true,
+   "signals": [
+    "money",
+    "bf"
+   ],
+   "firstTs": "2026-09-26T23:15:35.243717+00:00",
+   "ev": "2026-09-01",
+   "htkAtEntry": -1.208411111111111,
+   "settledTs": "2026-09-27T02:16:00.645508+00:00",
+   "resolvedTs": "2026-09-27T02:15:58.251906+00:00",
+   "ausEndstand": null
   }
  ],
  "agg": {
   "all": {
-   "n": 1248,
+   "n": 1249,
    "wins": 807,
-   "hit": 0.6466,
-   "pnl": -45.38,
-   "stake": 12480.0,
-   "roi": -0.0036,
-   "roiUg": -0.0415,
+   "hit": 0.6461,
+   "pnl": -55.38,
+   "stake": 12490.0,
+   "roi": -0.0044,
+   "roiUg": -0.0422,
    "belegt": false,
-   "clvAvg": -1.74,
-   "clvUg": -2.09
+   "clvAvg": -1.73,
+   "clvUg": -2.08
   },
   "public": {
    "n": 266,
@@ -31378,37 +31405,37 @@
    "clvUg": null
   },
   "publicOhneWallet": {
-   "n": 194,
+   "n": 195,
    "wins": 125,
-   "hit": 0.6443,
-   "pnl": 62.2,
-   "stake": 1940.0,
-   "roi": 0.0321,
-   "roiUg": -0.0636,
+   "hit": 0.641,
+   "pnl": 52.2,
+   "stake": 1950.0,
+   "roi": 0.0268,
+   "roiUg": -0.0688,
    "belegt": false,
-   "clvAvg": -1.88,
-   "clvUg": -2.95
+   "clvAvg": -1.79,
+   "clvUg": -2.87
   },
   "walletTor": {
    "nMit": 266,
-   "nOhne": 194,
-   "diffPP": 2.07,
-   "lo": -9.5,
-   "hi": 13.99,
+   "nOhne": 195,
+   "diffPP": 2.6,
+   "lo": -9.08,
+   "hi": 14.76,
    "urteil": "nicht entschieden",
    "grund": "das Band schliesst die Null ein"
   },
   "bettable": {
-   "n": 1165,
+   "n": 1166,
    "wins": 770,
-   "hit": 0.6609,
-   "pnl": 218.38,
-   "stake": 11650.0,
-   "roi": 0.0187,
-   "roiUg": -0.0203,
+   "hit": 0.6604,
+   "pnl": 208.38,
+   "stake": 11660.0,
+   "roi": 0.0179,
+   "roiUg": -0.0211,
    "belegt": false,
-   "clvAvg": -1.71,
-   "clvUg": -2.07
+   "clvAvg": -1.7,
+   "clvUg": -2.06
   },
   "blocked": {
    "n": 83,
@@ -31448,16 +31475,16 @@
     "clvUg": -3.33
    },
    "Fußball": {
-    "n": 599,
+    "n": 600,
     "wins": 342,
-    "hit": 0.571,
-    "pnl": -104.81,
-    "stake": 5990.0,
-    "roi": -0.0175,
-    "roiUg": -0.0814,
+    "hit": 0.57,
+    "pnl": -114.81,
+    "stake": 6000.0,
+    "roi": -0.0191,
+    "roiUg": -0.083,
     "belegt": false,
-    "clvAvg": -1.34,
-    "clvUg": -1.83
+    "clvAvg": -1.31,
+    "clvUg": -1.81
    },
    "Kampfsport": {
     "n": 14,
@@ -31558,16 +31585,16 @@
     "clvUg": -3.34
    },
    "6": {
-    "n": 461,
+    "n": 462,
     "wins": 304,
-    "hit": 0.6594,
-    "pnl": 34.7,
-    "stake": 4610.0,
-    "roi": 0.0075,
-    "roiUg": -0.0513,
+    "hit": 0.658,
+    "pnl": 24.7,
+    "stake": 4620.0,
+    "roi": 0.0053,
+    "roiUg": -0.0534,
     "belegt": false,
-    "clvAvg": -1.36,
-    "clvUg": -1.94
+    "clvAvg": -1.33,
+    "clvUg": -1.91
    },
    "7": {
     "n": 182,
@@ -31620,42 +31647,42 @@
   },
   "byVerdict": {
    "BET": {
-    "n": 1248,
+    "n": 1249,
     "wins": 807,
-    "hit": 0.6466,
-    "pnl": -45.38,
-    "stake": 12480.0,
-    "roi": -0.0036,
-    "roiUg": -0.0415,
+    "hit": 0.6461,
+    "pnl": -55.38,
+    "stake": 12490.0,
+    "roi": -0.0044,
+    "roiUg": -0.0422,
     "belegt": false,
-    "clvAvg": -1.74,
-    "clvUg": -2.09
+    "clvAvg": -1.73,
+    "clvUg": -2.08
    }
   },
   "bySignal": {
    "bf": {
-    "n": 337,
+    "n": 338,
     "wins": 204,
-    "hit": 0.6053,
-    "pnl": 133.47,
-    "stake": 3370.0,
-    "roi": 0.0396,
-    "roiUg": -0.0406,
+    "hit": 0.6036,
+    "pnl": 123.47,
+    "stake": 3380.0,
+    "roi": 0.0365,
+    "roiUg": -0.0436,
     "belegt": false,
-    "clvAvg": -0.57,
-    "clvUg": -1.16
+    "clvAvg": -0.53,
+    "clvUg": -1.11
    },
    "money": {
-    "n": 1111,
+    "n": 1112,
     "wins": 736,
-    "hit": 0.6625,
-    "pnl": -30.81,
-    "stake": 11110.0,
-    "roi": -0.0028,
-    "roiUg": -0.0402,
+    "hit": 0.6619,
+    "pnl": -40.81,
+    "stake": 11120.0,
+    "roi": -0.0037,
+    "roiUg": -0.0411,
     "belegt": false,
-    "clvAvg": -1.88,
-    "clvUg": -2.27
+    "clvAvg": -1.87,
+    "clvUg": -2.25
    },
    "pinn": {
     "n": 11,
