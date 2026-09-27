@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-27T12:42:46.676946+00:00",
+ "generatedAt": "2026-09-27T13:12:50.586480+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,27 +9,56 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 490,
- "pinnKeys": 76,
- "matched": 26,
- "footballRows": 6,
- "crossRows": 484,
- "footballSkippedStale": 99,
+ "polyRowsSeen": 495,
+ "pinnKeys": 79,
+ "matched": 29,
+ "footballRows": 9,
+ "crossRows": 486,
+ "footballSkippedStale": 98,
  "seenBySport": {
   "basketball_nba": 2,
   "americanfootball_nfl": 144,
-  "baseball_mlb": 32,
+  "baseball_mlb": 34,
   "icehockey_nhl": 304,
   "boxing_boxing": 2,
-  "soccer_mls": 6
+  "soccer_mls": 9
  },
  "matchedBySport": {
   "baseball_mlb": 20,
-  "soccer_mls": 6
+  "soccer_mls": 9
  },
  "trackRecord": {
   "tracked": 285,
-  "converged": 81
+  "converged": 82
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "soccer_mls|newyorkredbulls-stlouiscity|dr",
+   "sport": "soccer_mls",
+   "event": "New York Red Bulls vs St. Louis City",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 51.0,
+   "pinnPP": 23.0,
+   "gapPP": 28.02,
+   "vol": 24277,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -1.0,
+   "firstSeen": "2026-09-27T00:41:46.439990+00:00"
+  },
+  {
+   "id": "soccer_mls|newyorkredbulls-stlouiscity|hw",
+   "sport": "soccer_mls",
+   "event": "New York Red Bulls vs St. Louis City",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 15.0,
+   "pinnPP": 25.7,
+   "gapPP": -10.67,
+   "vol": 24277,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 14.66,
+   "firstSeen": "2026-09-27T00:41:46.439990+00:00"
+  }
+ ]
 }
