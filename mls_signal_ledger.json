@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-09-26T22:17:12Z",
-    "total_records": 112,
+    "updated_at": "2026-09-27T13:03:52Z",
+    "total_records": 116,
     "oddsBackfilled": "2026-09-06 — Quote/entryOdd aus den Pick-Dateien nachgetragen; der Ledger trug sie nie (0 von 318)."
   },
   "records": [
@@ -1400,7 +1400,7 @@
           "score": 4.0
         }
       ],
-      "resolvedAt": "2026-09-26T22:17:12Z",
+      "resolvedAt": "2026-09-27T13:03:52Z",
       "source": "steam",
       "convictionScore": 5,
       "lateEntry": true,
@@ -5421,6 +5421,198 @@
       "entryOdd": 1.44,
       "entryBook": "soft",
       "processVerdict": "DESERVED_LOSS"
+    },
+    {
+      "key": "MLS-27-1595-1612|Doppelte Chance — X2",
+      "matchKey": "MLS-27-1595-1612",
+      "market": "Doppelte Chance — X2",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 1.5
+        },
+        {
+          "name": "h2h_pattern",
+          "score": -0.8
+        },
+        {
+          "name": "freshness_leg",
+          "score": 3.15
+        },
+        {
+          "name": "fixture_congestion",
+          "score": 0.9
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": 0.96
+        },
+        {
+          "name": "transfer_shift",
+          "score": 0.72
+        },
+        {
+          "name": "mls_travel",
+          "score": -0.99
+        }
+      ],
+      "resolvedAt": "2026-09-27T13:03:43Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": false,
+      "engineVersion": "v1",
+      "clvPP": -10.87,
+      "clvResolved": true,
+      "odds": 1.57,
+      "entryOdd": 1.57,
+      "entryBook": "soft",
+      "processVerdict": "DESERVED_LOSS",
+      "clvBasis": "roh"
+    },
+    {
+      "key": "MLS-27-1597-1616|Unter 3.5 Tore",
+      "matchKey": "MLS-27-1597-1616",
+      "market": "Unter 3.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "injury",
+          "score": 1.25
+        },
+        {
+          "name": "form_trend",
+          "score": 2.67
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 1.6
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.36
+        },
+        {
+          "name": "chance_creation",
+          "score": -3.7
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": -0.74
+        },
+        {
+          "name": "transfer_shift",
+          "score": 0.6
+        },
+        {
+          "name": "mls_travel",
+          "score": 0.15
+        }
+      ],
+      "resolvedAt": "2026-09-27T13:03:43Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 5.64,
+      "clvResolved": true,
+      "odds": 1.52,
+      "entryOdd": 1.52,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED",
+      "clvFairPP": 8.9,
+      "clvBasis": "fair"
+    },
+    {
+      "key": "MLS-27-1599-1598|Beide Teams treffen — Ja",
+      "matchKey": "MLS-27-1599-1598",
+      "market": "Beide Teams treffen — Ja",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 1.66
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 2.4
+        },
+        {
+          "name": "xg_strength",
+          "score": 0.92
+        },
+        {
+          "name": "streak_momentum",
+          "score": 0.08
+        }
+      ],
+      "resolvedAt": "2026-09-27T13:03:43Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 0.0,
+      "clvResolved": false,
+      "odds": 1.4,
+      "entryOdd": 1.4,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "MLS-27-1606-1609|Doppelte Chance — X2",
+      "matchKey": "MLS-27-1606-1609",
+      "market": "Doppelte Chance — X2",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 2.74
+        },
+        {
+          "name": "h2h_pattern",
+          "score": -0.8
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.15
+        },
+        {
+          "name": "chance_creation",
+          "score": 1.46
+        },
+        {
+          "name": "form_rating",
+          "score": 2.44
+        },
+        {
+          "name": "league_pressure",
+          "score": 0.42
+        },
+        {
+          "name": "fixture_congestion",
+          "score": 0.9
+        },
+        {
+          "name": "mls_travel",
+          "score": -1.44
+        },
+        {
+          "name": "betfair_money",
+          "score": -1.95
+        }
+      ],
+      "resolvedAt": "2026-09-27T13:03:43Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -8.64,
+      "clvResolved": true,
+      "odds": 1.55,
+      "entryOdd": 1.55,
+      "entryBook": "soft",
+      "processVerdict": "UNLUCKY",
+      "clvBasis": "roh"
     },
     {
       "key": "MLS-7-1595-1606|Heimsieg",
