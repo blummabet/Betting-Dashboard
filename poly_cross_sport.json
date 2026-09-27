@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-26T23:37:50.341644+00:00",
+ "generatedAt": "2026-09-27T00:11:35.795286+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -8,40 +8,96 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 533,
- "pinnKeys": 101,
- "matched": 37,
+ "polyRowsSeen": 527,
+ "pinnKeys": 107,
+ "matched": 41,
  "footballRows": 21,
- "crossRows": 512,
+ "crossRows": 506,
  "footballSkippedStale": 77,
  "seenBySport": {
   "americanfootball_nfl": 144,
   "baseball_mlb": 34,
-  "icehockey_nhl": 318,
-  "boxing_boxing": 16,
+  "icehockey_nhl": 316,
+  "boxing_boxing": 12,
   "soccer_mls": 21
  },
  "matchedBySport": {
-  "baseball_mlb": 16,
+  "baseball_mlb": 20,
   "soccer_mls": 21
  },
  "trackRecord": {
-  "tracked": 285,
+  "tracked": 287,
   "converged": 85
  },
  "discrepancies": [
+  {
+   "id": "baseball_mlb|philadelphiaphillies-tampabayrays|tampabayrays",
+   "sport": "baseball_mlb",
+   "event": "Tampa Bay Rays vs Philadelphia Phillies",
+   "market": "Moneyline",
+   "outcome": "Tampa Bay Rays",
+   "polyPP": 77.5,
+   "pinnPP": 45.5,
+   "gapPP": 31.95,
+   "vol": 245203,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-27T00:11:35.794961+00:00"
+  },
+  {
+   "id": "baseball_mlb|philadelphiaphillies-tampabayrays|philadelphiaphillies",
+   "sport": "baseball_mlb",
+   "event": "Tampa Bay Rays vs Philadelphia Phillies",
+   "market": "Moneyline",
+   "outcome": "Philadelphia Phillies",
+   "polyPP": 22.5,
+   "pinnPP": 54.5,
+   "gapPP": -31.95,
+   "vol": 245203,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-27T00:11:35.794961+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagowhitesox-coloradorockies|coloradorockies",
+   "sport": "baseball_mlb",
+   "event": "Colorado Rockies vs Chicago White Sox",
+   "market": "Moneyline",
+   "outcome": "Colorado Rockies",
+   "polyPP": 55.5,
+   "pinnPP": 33.4,
+   "gapPP": 22.09,
+   "vol": 256579,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -2.64,
+   "firstSeen": "2026-09-26T01:09:51.594068+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagowhitesox-coloradorockies|chicagowhitesox",
+   "sport": "baseball_mlb",
+   "event": "Colorado Rockies vs Chicago White Sox",
+   "market": "Moneyline",
+   "outcome": "Chicago White Sox",
+   "polyPP": 44.5,
+   "pinnPP": 66.6,
+   "gapPP": -22.09,
+   "vol": 256579,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -2.64,
+   "firstSeen": "2026-09-26T01:09:51.594068+00:00"
+  },
   {
    "id": "baseball_mlb|milwaukeebrewers-stlouiscardinals|stlouiscardinals",
    "sport": "baseball_mlb",
    "event": "St. Louis Cardinals vs Milwaukee Brewers",
    "market": "Moneyline",
    "outcome": "St. Louis Cardinals",
-   "polyPP": 51.0,
-   "pinnPP": 43.2,
-   "gapPP": 7.81,
-   "vol": 131555,
+   "polyPP": 45.5,
+   "pinnPP": 32.8,
+   "gapPP": 12.69,
+   "vol": 193049,
    "richtung": "Poly zu hoch → faden",
-   "convergePP": 18.1,
+   "convergePP": 13.22,
    "firstSeen": "2026-09-26T01:09:51.594068+00:00"
   },
   {
@@ -50,12 +106,12 @@
    "event": "St. Louis Cardinals vs Milwaukee Brewers",
    "market": "Moneyline",
    "outcome": "Milwaukee Brewers",
-   "polyPP": 49.0,
-   "pinnPP": 56.8,
-   "gapPP": -7.81,
-   "vol": 131555,
+   "polyPP": 54.5,
+   "pinnPP": 67.2,
+   "gapPP": -12.69,
+   "vol": 193049,
    "richtung": "Poly zu niedrig → backen",
-   "convergePP": 18.1,
+   "convergePP": 13.22,
    "firstSeen": "2026-09-26T01:09:51.594068+00:00"
   }
  ]
