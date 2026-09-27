@@ -105,12 +105,10 @@
       "id": "buendel_cond_stabil",
       "label": "Bündel-Marktkennung bleibt, was sie war",
       "severity": "error",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "2 offene(r) Buendel-Eintrag/-Eintraege zeigen auf einen anderen Markt als ihre Close-Zeile. Die Annahme hinter dem Stempel-Nachtrag (eine Buendel-`cond` bleibt) gilt nicht mehr — der Nachtrag gehoert geprueft."
-      ],
-      "note": ""
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "condDrift = 0 heisst: jede offene Bündel-Zeile meint noch denselben Markt wie beim Einstieg."
     },
     {
       "id": "resolutions_match_open_keys",
@@ -182,6 +180,6 @@
       "note": "poly_direct_bets.py rechnet über poly_resolutions.json ab. Hängt ein Bet, kennt Poly den Ausgang nicht (Markt noch offen/obskur) oder der Slug passt nicht — dann fehlt echtes Geld in der Bilanz."
     }
   ],
-  "nFail": 3,
-  "generatedAt": "2026-09-27T21:42:35.777764+00:00"
+  "nFail": 2,
+  "generatedAt": "2026-09-27T21:47:48.281168+00:00"
 }
