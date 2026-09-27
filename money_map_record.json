@@ -1,13 +1,29 @@
 {
-"generatedAt": "2026-09-27T12:46:55.095709+00:00",
+"generatedAt": "2026-09-27T13:01:56.231190+00:00",
 "byVerdict": {
+"konsens": {
+"n": 1387,
+"wins": 1179,
+"hitRate": 0.85,
+"polyN": 1323,
+"polyWins": 1035,
+"polyHitRate": 0.7823,
+"pinnN": 211,
+"pinnHitRate": 0.7678,
+"nRoi": 853,
+"roi": 0.3931,
+"roiLb": 0.3496,
+"nClv": 853,
+"clv": 18.48,
+"clvLb": 17.0041
+},
 "uneinig": {
-"n": 559,
+"n": 558,
 "wins": 177,
-"hitRate": 0.3166,
-"polyN": 521,
-"polyWins": 140,
-"polyHitRate": 0.2687,
+"hitRate": 0.3172,
+"polyN": 520,
+"polyWins": 139,
+"polyHitRate": 0.2673,
 "pinnN": 342,
 "pinnHitRate": 0.6287,
 "nRoi": 374,
@@ -16,22 +32,6 @@
 "nClv": 374,
 "clv": -20.1,
 "clvLb": -22.9787
-},
-"konsens": {
-"n": 1386,
-"wins": 1178,
-"hitRate": 0.8499,
-"polyN": 1322,
-"polyWins": 1035,
-"polyHitRate": 0.7829,
-"pinnN": 210,
-"pinnHitRate": 0.7667,
-"nRoi": 852,
-"roi": 0.3932,
-"roiLb": 0.3497,
-"nClv": 852,
-"clv": 18.5,
-"clvLb": 17.0244
 },
 "teil": {
 "n": 33,
@@ -142,9 +142,9 @@
 "hitRate": 0.6389
 },
 "South Korean K1 League": {
-"n": 34,
-"wins": 26,
-"hitRate": 0.7647
+"n": 35,
+"wins": 27,
+"hitRate": 0.7714
 },
 "Turkish Super League": {
 "n": 33,
@@ -486,11 +486,6 @@
 "wins": 4,
 "hitRate": 1.0
 },
-"Elite Friendlies": {
-"n": 4,
-"wins": 2,
-"hitRate": 0.5
-},
 "Icelandic Urvalsdeild": {
 "n": 4,
 "wins": 3,
@@ -527,6 +522,11 @@
 "hitRate": 0.6667
 },
 "Croatian HNL": {
+"n": 3,
+"wins": 2,
+"hitRate": 0.6667
+},
+"Elite Friendlies": {
 "n": 3,
 "wins": 2,
 "hitRate": 0.6667
@@ -686,25 +686,44 @@
 },
 "weak": {
 "n": 755,
-"wins": 377,
-"hitRate": 0.4993,
-"nRoi": 456,
-"roi": -0.1958,
-"roiLb": -0.2712,
-"nClv": 456,
-"clv": -6.68,
-"clvLb": -9.1581
+"wins": 378,
+"hitRate": 0.5007,
+"nRoi": 457,
+"roi": -0.1947,
+"roiLb": -0.27,
+"nClv": 457,
+"clv": -6.67,
+"clvLb": -9.1382
 }
 },
 "divergence": {
-"n": 559,
+"n": 558,
 "betfairWins": 177,
-"betfairRate": 0.3166,
-"polyN": 521,
-"polyWins": 140,
-"polyRate": 0.2687
+"betfairRate": 0.3172,
+"polyN": 520,
+"polyWins": 139,
+"polyRate": 0.2673
 },
 "recent": [
+{
+"matchId": "36095055",
+"home": "Gangwon",
+"away": "Incheon Utd",
+"league": "South Korean K1 League",
+"verdict": "konsens",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-09-27T10:00:00Z",
+"settledAt": "2026-09-27T13:01:56.033851+00:00"
+},
 {
 "matchId": "36093876",
 "home": "Tigres",
@@ -1445,37 +1464,18 @@
 ],
 "kickoff": "2026-09-26T16:30:00Z",
 "settledAt": "2026-09-26T19:39:37.899356+00:00"
-},
-{
-"matchId": "35925542",
-"home": "San Marino",
-"away": "Finland",
-"league": "UEFA Nations League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Finland",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-7
-],
-"kickoff": "2026-09-26T16:00:00Z",
-"settledAt": "2026-09-26T19:00:13.943579+00:00"
 }
 ],
 "global": {
 "n": 1978,
-"wins": 1360,
-"hitRate": 0.6876,
-"nRoi": 1252,
-"roi": 0.1175,
-"roiLb": 0.0731,
-"nClv": 1252,
+"wins": 1361,
+"hitRate": 0.6881,
+"nRoi": 1253,
+"roi": 0.1176,
+"roiLb": 0.0733,
+"nClv": 1253,
 "clv": 5.89,
-"clvLb": 4.3072
+"clvLb": 4.3038
 },
 "pending": 22
 }
