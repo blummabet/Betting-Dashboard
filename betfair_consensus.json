@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-09-27T01:15:23.020502+00:00",
-"count": 15,
-"covered": 13,
+"generatedAt": "2026-09-27T01:30:33.617775+00:00",
+"count": 18,
+"covered": 16,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -54,7 +54,7 @@
 "leaguesMitTotals": [],
 "oddsKeysFetched": 43,
 "oddsKeysMitDaten": 43,
-"oddsEvents": 540,
+"oddsEvents": 539,
 "oddsTotals": {
 "versucht": 1,
 "mitDaten": 0,
@@ -63,11 +63,11 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 79591,
-"remaining": 4920409,
+"used": 79720,
+"remaining": 4920280,
 "letzterFehler": null
 },
-"ankerQuote": 0.944,
+"ankerQuote": 0.833,
 "games": [
 {
 "matchId": "36082650",
@@ -79,65 +79,159 @@
 "live": true,
 "moneySide": "away",
 "moneyName": "Chicago Fire",
-"moneySharePct": 45,
-"moneyOdd": 1.37,
+"moneySharePct": 47,
+"moneyOdd": 1.14,
 "moneyDir": "in",
-"totVol": 105384,
-"pinnOdd": 1.39,
-"softOdd": 1.29,
-"softN": 34,
+"totVol": 110547,
+"pinnOdd": null,
+"softOdd": 1.08,
+"softN": 33,
 "poly": {
-"vol": 167868,
-"odd": 2.99,
-"sharePct": 13,
+"vol": 200706,
+"odd": 1.44,
+"sharePct": 60,
 "shareSrc": "geld",
 "key": "mls-clt-chi-2026-09-26",
 "sideKey": "Chicago Fire FC",
 "whales": [
 {
 "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
-"usd": 1590
+"usd": 2440
+},
+{
+"wallet": "0x479e330b07822ee28e20bac5e504f1b7c6b591c3",
+"usd": 1992
+},
+{
+"wallet": "0x20ad085274b280aa032bf6ab99abe6d766a6f368",
+"usd": 1085
 },
 {
 "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
-"usd": 494
+"usd": 1025
 },
 {
 "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-"usd": 486
+"usd": 1008
 },
 {
-"wallet": "0xe91171f655be1568e4c63f29663c0028649e3d4e",
-"usd": 382
-},
-{
-"wallet": "0xf4f88a1e25ff5dfae68326eb62049d6a1b7c5bf1",
-"usd": 304
-},
-{
-"wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
-"usd": 200
+"wallet": "0x8f8883ecf250d19cef876e6be32188b27f2bca10",
+"usd": 907
 }
 ],
-"whaleUsd": 4081
+"whaleUsd": 13264
 },
-"pinn": {
-"home": 0.0685,
-"draw": 0.2495,
-"away": 0.682,
-"fav": "away"
-},
+"pinn": null,
 "soft": {
-"home": 0.0673,
-"draw": 0.2353,
-"away": 0.6975,
+"home": 0.0224,
+"draw": 0.1349,
+"away": 0.8427,
 "fav": "away",
-"n": 34
+"n": 33
 },
 "pinnMovePP": null,
 "pinnMove": null,
 "verdict": "konsens",
 "agree": true,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Charlotte FC v Chicago Fire",
+"grund": "kein_pinnacle",
+"kandidat": "Charlotte FC v Chicago Fire",
+"key": "soccer_usa_mls",
+"nSoft": 33
+}
+},
+{
+"matchId": "36082667",
+"home": "Atlanta Utd",
+"away": "New York City",
+"league": "US MLS",
+"country": "US",
+"kickoff": "2026-09-26T23:30:00Z",
+"live": true,
+"moneySide": "draw",
+"moneyName": "The Draw",
+"moneySharePct": 53,
+"moneyOdd": 1.35,
+"moneyDir": "in",
+"totVol": 97628,
+"pinnOdd": 1.39,
+"softOdd": 1.25,
+"softN": 35,
+"poly": {
+"vol": 269527,
+"odd": null,
+"sharePct": null,
+"shareSrc": null,
+"key": "mls-atl-nyc-2026-09-26",
+"sideKey": null,
+"whales": [],
+"whaleUsd": 0
+},
+"pinn": {
+"home": 0.1649,
+"draw": 0.6785,
+"away": 0.1567,
+"fav": "draw"
+},
+"soft": {
+"home": 0.1422,
+"draw": 0.7248,
+"away": 0.1331,
+"fav": "draw",
+"n": 35
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36082651",
+"home": "CF Montreal",
+"away": "FC Cincinnati",
+"league": "US MLS",
+"country": "US",
+"kickoff": "2026-09-26T23:30:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "CF Montreal",
+"moneySharePct": 61,
+"moneyOdd": 1.02,
+"moneyDir": "in",
+"totVol": 78287,
+"pinnOdd": 4.17,
+"softOdd": 1.01,
+"softN": 27,
+"poly": {
+"vol": 21395,
+"odd": 4.44,
+"sharePct": 22,
+"shareSrc": "preis",
+"key": "mls-mim-fcc-2026-09-26",
+"sideKey": "CF Montréal",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.2248,
+"draw": 0.4508,
+"away": 0.3244,
+"fav": "draw"
+},
+"soft": {
+"home": 0.9262,
+"draw": 0.0561,
+"away": 0.0177,
+"fav": "home",
+"n": 27
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "uneinig",
+"agree": false,
 "pinnTotals": null
 },
 {
@@ -153,52 +247,52 @@
 "moneySharePct": 87,
 "moneyOdd": 1.01,
 "moneyDir": "flat",
-"totVol": 69681,
+"totVol": 69734,
 "pinnOdd": null,
 "softOdd": 1.0,
-"softN": 10,
+"softN": 11,
 "poly": {
-"vol": 109198,
-"odd": 1.09,
-"sharePct": 93,
+"vol": 138994,
+"odd": 1.0,
+"sharePct": 100,
 "shareSrc": "geld",
 "key": "mls-phi-orl-2026-09-26",
 "sideKey": "Philadelphia Union",
 "whales": [
 {
 "wallet": "0x91feec8af2b517f024d91564ee108d707cc0c1c6",
-"usd": 3542
+"usd": 6019
 },
 {
 "wallet": "0x8efa1ea8ee2d456a051ae2985079a1e3c9aa894c",
-"usd": 3025
+"usd": 3291
 },
 {
 "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
-"usd": 2533
-},
-{
-"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
-"usd": 2212
+"usd": 2756
 },
 {
 "wallet": "0x52d8da46bcc56e3d9f9b2099ad16904fb0b599ae",
-"usd": 1719
+"usd": 1870
+},
+{
+"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+"usd": 1707
 },
 {
 "wallet": "0xa3b5da76ffbbe3325bb1b40a30f6a4634962941a",
-"usd": 929
+"usd": 1011
 }
 ],
-"whaleUsd": 18726
+"whaleUsd": 21850
 },
 "pinn": null,
 "soft": {
-"home": 0.8461,
-"draw": 0.0419,
-"away": 0.112,
+"home": 0.9507,
+"draw": 0.0378,
+"away": 0.0115,
 "fav": "home",
-"n": 10
+"n": 11
 },
 "pinnMovePP": null,
 "pinnMove": null,
@@ -210,54 +304,8 @@
 "grund": "kein_pinnacle",
 "kandidat": "Philadelphia Union v Orlando City SC",
 "key": "soccer_usa_mls",
-"nSoft": 10
+"nSoft": 11
 }
-},
-{
-"matchId": "36082651",
-"home": "CF Montreal",
-"away": "FC Cincinnati",
-"league": "US MLS",
-"country": "US",
-"kickoff": "2026-09-26T23:30:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "CF Montreal",
-"moneySharePct": 57,
-"moneyOdd": 1.47,
-"moneyDir": "in",
-"totVol": 67803,
-"pinnOdd": 4.17,
-"softOdd": 1.43,
-"softN": 34,
-"poly": {
-"vol": 14911,
-"odd": 1.9,
-"sharePct": 52,
-"shareSrc": "preis",
-"key": "mls-mim-fcc-2026-09-26",
-"sideKey": "CF Montréal",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.2248,
-"draw": 0.4508,
-"away": 0.3244,
-"fav": "draw"
-},
-"soft": {
-"home": 0.4864,
-"draw": 0.3289,
-"away": 0.1847,
-"fav": "home",
-"n": 34
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "uneinig",
-"agree": false,
-"pinnTotals": null
 },
 {
 "matchId": "35930730",
@@ -270,14 +318,14 @@
 "moneySide": "away",
 "moneyName": "Netherlands",
 "moneySharePct": 87,
-"moneyOdd": 1.42,
-"moneyDir": "flat",
-"totVol": 66132,
+"moneyOdd": 1.43,
+"moneyDir": "out",
+"totVol": 66539,
 "pinnOdd": 1.4,
 "softOdd": 1.37,
 "softN": 25,
 "poly": {
-"vol": 48045,
+"vol": 48724,
 "odd": 1.42,
 "sharePct": 70,
 "shareSrc": "preis",
@@ -293,9 +341,9 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.1268,
-"draw": 0.1938,
-"away": 0.6794,
+"home": 0.1271,
+"draw": 0.1937,
+"away": 0.6792,
 "fav": "away",
 "n": 25
 },
@@ -321,15 +369,15 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "Republic of Ireland",
-"moneySharePct": 43,
-"moneyOdd": 2.76,
+"moneySharePct": 44,
+"moneyOdd": 2.74,
 "moneyDir": "in",
-"totVol": 57923,
+"totVol": 57947,
 "pinnOdd": null,
 "softOdd": 2.6,
 "softN": 20,
 "poly": {
-"vol": 153088,
+"vol": 153093,
 "odd": 2.74,
 "sharePct": 36,
 "shareSrc": "preis",
@@ -369,15 +417,15 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Germany",
-"moneySharePct": 81,
-"moneyOdd": 1.43,
-"moneyDir": "out",
-"totVol": 48262,
+"moneySharePct": 80,
+"moneyOdd": 1.41,
+"moneyDir": "in",
+"totVol": 48307,
 "pinnOdd": 1.41,
 "softOdd": 1.37,
 "softN": 25,
 "poly": {
-"vol": 106256,
+"vol": 106422,
 "odd": 1.42,
 "sharePct": 70,
 "shareSrc": "preis",
@@ -412,75 +460,77 @@
 "pinnTotals": null
 },
 {
-"matchId": "36082667",
-"home": "Atlanta Utd",
-"away": "New York City",
+"matchId": "36082657",
+"home": "Nashville SC",
+"away": "Toronto FC",
 "league": "US MLS",
 "country": "US",
-"kickoff": "2026-09-26T23:30:00Z",
+"kickoff": "2026-09-27T00:30:00Z",
 "live": true,
 "moneySide": "home",
-"moneyName": "Atlanta Utd",
-"moneySharePct": 47,
-"moneyOdd": 25.0,
-"moneyDir": "out",
-"totVol": 47215,
-"pinnOdd": 3.38,
-"softOdd": 15.0,
-"softN": 34,
+"moneyName": "Nashville SC",
+"moneySharePct": 88,
+"moneyOdd": 1.04,
+"moneyDir": "in",
+"totVol": 46295,
+"pinnOdd": null,
+"softOdd": 1.02,
+"softN": 28,
 "poly": {
-"vol": 258241,
-"odd": 3.39,
-"sharePct": 58,
+"vol": 266513,
+"odd": 1.16,
+"sharePct": 98,
 "shareSrc": "geld",
-"key": "mls-atl-nyc-2026-09-26",
-"sideKey": "Atlanta United FC",
+"key": "mls-nas-tor-2026-09-26",
+"sideKey": "Nashville SC",
 "whales": [
 {
-"wallet": "0x224a89dbe0db0d6124b335edabd15b3f877da3d5",
-"usd": 5192
+"wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+"usd": 83401
 },
 {
-"wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-"usd": 4425
+"wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+"usd": 33514
 },
 {
-"wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
-"usd": 3571
+"wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
+"usd": 16468
 },
 {
-"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-"usd": 3399
+"wallet": "0x0e64bde21d716711fbe59095eb0c88fae55e336d",
+"usd": 4300
 },
 {
-"wallet": "0x2d1ffae8d41b181d1b1734016e07bd1a903a5246",
-"usd": 3278
+"wallet": "0x91feec8af2b517f024d91564ee108d707cc0c1c6",
+"usd": 2605
 },
 {
-"wallet": "0x52d93dcf81444f793dda7fedc370f7a35101fb1a",
-"usd": 2401
+"wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+"usd": 2317
 }
 ],
-"whaleUsd": 36162
+"whaleUsd": 149043
 },
-"pinn": {
-"home": 0.279,
-"draw": 0.4013,
-"away": 0.3197,
-"fav": "draw"
-},
+"pinn": null,
 "soft": {
-"home": 0.1165,
-"draw": 0.3345,
-"away": 0.549,
-"fav": "away",
-"n": 34
+"home": 0.9176,
+"draw": 0.0621,
+"away": 0.0204,
+"fav": "home",
+"n": 28
 },
 "pinnMovePP": null,
 "pinnMove": null,
-"verdict": "uneinig",
-"agree": false,
-"pinnTotals": null
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Nashville SC v Toronto FC",
+"grund": "kein_pinnacle",
+"kandidat": "Nashville SC v Toronto FC",
+"key": "soccer_usa_mls",
+"nSoft": 28
+}
 },
 {
 "matchId": "35932973",
@@ -495,7 +545,7 @@
 "moneySharePct": 77,
 "moneyOdd": 2.5,
 "moneyDir": "flat",
-"totVol": 45628,
+"totVol": 45654,
 "pinnOdd": null,
 "softOdd": 2.35,
 "softN": 25,
@@ -531,77 +581,6 @@
 }
 },
 {
-"matchId": "36082657",
-"home": "Nashville SC",
-"away": "Toronto FC",
-"league": "US MLS",
-"country": "US",
-"kickoff": "2026-09-27T00:30:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Nashville SC",
-"moneySharePct": 88,
-"moneyOdd": 1.18,
-"moneyDir": "out",
-"totVol": 45338,
-"pinnOdd": 1.14,
-"softOdd": 1.13,
-"softN": 35,
-"poly": {
-"vol": 249703,
-"odd": 1.38,
-"sharePct": 97,
-"shareSrc": "geld",
-"key": "mls-nas-tor-2026-09-26",
-"sideKey": "Nashville SC",
-"whales": [
-{
-"wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
-"usd": 70309
-},
-{
-"wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-"usd": 28253
-},
-{
-"wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
-"usd": 13883
-},
-{
-"wallet": "0x0e64bde21d716711fbe59095eb0c88fae55e336d",
-"usd": 3625
-},
-{
-"wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
-"usd": 1970
-},
-{
-"wallet": "0xb4eea1c82f0c4cf7e02e69212bd447a63314cc59",
-"usd": 1230
-}
-],
-"whaleUsd": 121436
-},
-"pinn": {
-"home": 0.8324,
-"draw": 0.126,
-"away": 0.0416,
-"fav": "home"
-},
-"soft": {
-"home": 0.8204,
-"draw": 0.1276,
-"away": 0.052,
-"fav": "home",
-"n": 35
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
 "matchId": "35925780",
 "home": "Denmark",
 "away": "Wales",
@@ -614,12 +593,12 @@
 "moneySharePct": 89,
 "moneyOdd": 1.49,
 "moneyDir": "flat",
-"totVol": 42256,
+"totVol": 42522,
 "pinnOdd": 1.45,
 "softOdd": 1.43,
 "softN": 25,
 "poly": {
-"vol": 5875,
+"vol": 5906,
 "odd": 1.48,
 "sharePct": 68,
 "shareSrc": "preis",
@@ -635,9 +614,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.6512,
+"home": 0.6514,
 "draw": 0.2104,
-"away": 0.1385,
+"away": 0.1382,
 "fav": "home",
 "n": 25
 },
@@ -654,6 +633,77 @@
 "pinnTotals": null
 },
 {
+"matchId": "36082707",
+"home": "Houston Dynamo",
+"away": "Kansas City",
+"league": "US MLS",
+"country": "US",
+"kickoff": "2026-09-27T00:30:00Z",
+"live": true,
+"moneySide": "away",
+"moneyName": "Kansas City",
+"moneySharePct": 50,
+"moneyOdd": 1.17,
+"moneyDir": "in",
+"totVol": 30303,
+"pinnOdd": 2.27,
+"softOdd": 1.13,
+"softN": 34,
+"poly": {
+"vol": 91589,
+"odd": 2.53,
+"sharePct": 4,
+"shareSrc": "geld",
+"key": "mls-hou-skc-2026-09-26",
+"sideKey": "Sporting Kansas City",
+"whales": [
+{
+"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+"usd": 165
+},
+{
+"wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+"usd": 140
+},
+{
+"wallet": "0x78e134b50ebce53898ae552c075d83202f327337",
+"usd": 104
+},
+{
+"wallet": "0xb341ba2981305703de87e7ab996258f7c074bb28",
+"usd": 92
+},
+{
+"wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
+"usd": 73
+},
+{
+"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+"usd": 51
+}
+],
+"whaleUsd": 707
+},
+"pinn": {
+"home": 0.2688,
+"draw": 0.3156,
+"away": 0.4156,
+"fav": "away"
+},
+"soft": {
+"home": 0.0942,
+"draw": 0.1519,
+"away": 0.7539,
+"fav": "away",
+"n": 34
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
 "matchId": "35926484",
 "home": "Norway",
 "away": "Portugal",
@@ -664,14 +714,14 @@
 "moneySide": "home",
 "moneyName": "Norway",
 "moneySharePct": 55,
-"moneyOdd": 2.62,
-"moneyDir": "flat",
-"totVol": 24664,
+"moneyOdd": 2.6,
+"moneyDir": "in",
+"totVol": 24855,
 "pinnOdd": 2.55,
 "softOdd": 2.43,
 "softN": 25,
 "poly": {
-"vol": 50574,
+"vol": 53264,
 "odd": 2.6,
 "sharePct": 38,
 "shareSrc": "preis",
@@ -717,8 +767,8 @@
 "moneyName": "Northern Ireland",
 "moneySharePct": 81,
 "moneyOdd": 2.84,
-"moneyDir": "out",
-"totVol": 23365,
+"moneyDir": "flat",
+"totVol": 23371,
 "pinnOdd": null,
 "softOdd": 2.65,
 "softN": 25,
@@ -765,13 +815,13 @@
 "moneyName": "France",
 "moneySharePct": 78,
 "moneyOdd": 1.98,
-"moneyDir": "in",
+"moneyDir": "flat",
 "totVol": 22772,
 "pinnOdd": 1.95,
 "softOdd": 1.87,
 "softN": 25,
 "poly": {
-"vol": 211882,
+"vol": 211905,
 "odd": 1.98,
 "sharePct": 50,
 "shareSrc": "preis",
@@ -806,6 +856,148 @@
 "pinnTotals": null
 },
 {
+"matchId": "36082686",
+"home": "Austin FC",
+"away": "San Diego FC",
+"league": "US MLS",
+"country": "US",
+"kickoff": "2026-09-27T00:30:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Austin FC",
+"moneySharePct": 52,
+"moneyOdd": 2.72,
+"moneyDir": "out",
+"totVol": 22755,
+"pinnOdd": 2.57,
+"softOdd": 2.55,
+"softN": 35,
+"poly": {
+"vol": 149072,
+"odd": 2.53,
+"sharePct": 8,
+"shareSrc": "geld",
+"key": "mls-aus-sdg-2026-09-26",
+"sideKey": "Austin FC",
+"whales": [
+{
+"wallet": "0x2d1ffae8d41b181d1b1734016e07bd1a903a5246",
+"usd": 1361
+},
+{
+"wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
+"usd": 908
+},
+{
+"wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
+"usd": 536
+},
+{
+"wallet": "0x0235dc24b38772bf3339a9e5ec5db3d3a05fcee5",
+"usd": 366
+},
+{
+"wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+"usd": 106
+},
+{
+"wallet": "0x3e6b98d9dac15f285a18a02644a8c900aab58a98",
+"usd": 93
+}
+],
+"whaleUsd": 3569
+},
+"pinn": {
+"home": 0.3671,
+"draw": 0.3547,
+"away": 0.2783,
+"fav": "home"
+},
+"soft": {
+"home": 0.3622,
+"draw": 0.3552,
+"away": 0.2827,
+"fav": "home",
+"n": 35
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36082688",
+"home": "Real Salt Lake",
+"away": "New England Revolution",
+"league": "US MLS",
+"country": "US",
+"kickoff": "2026-09-27T01:30:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Real Salt Lake",
+"moneySharePct": 53,
+"moneyOdd": 2.18,
+"moneyDir": "in",
+"totVol": 21660,
+"pinnOdd": 2.08,
+"softOdd": 2.1,
+"softN": 46,
+"poly": {
+"vol": 43956,
+"odd": 2.25,
+"sharePct": 47,
+"shareSrc": "geld",
+"key": "mls-rsl-ner-2026-09-26",
+"sideKey": "Real Salt Lake",
+"whales": [
+{
+"wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+"usd": 1496
+},
+{
+"wallet": "0xfed13032babfdb49ad387b7136e6a6fbd746eedb",
+"usd": 576
+},
+{
+"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+"usd": 542
+},
+{
+"wallet": "0xe1e292a578d07497363048d9ec69e2be36b00d29",
+"usd": 431
+},
+{
+"wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
+"usd": 340
+},
+{
+"wallet": "0x38f1cfeceedc974a52e8e9d554f5e0beb4fe9ff1",
+"usd": 296
+}
+],
+"whaleUsd": 4689
+},
+"pinn": {
+"home": 0.4654,
+"draw": 0.2457,
+"away": 0.2889,
+"fav": "home"
+},
+"soft": {
+"home": 0.4444,
+"draw": 0.2507,
+"away": 0.3049,
+"fav": "home",
+"n": 46
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
 "matchId": "36090782",
 "home": "Mexico",
 "away": "Colombia",
@@ -815,47 +1007,47 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Mexico",
-"moneySharePct": 60,
-"moneyOdd": 5.0,
+"moneySharePct": 54,
+"moneyOdd": 5.4,
 "moneyDir": "out",
-"totVol": 55867,
+"totVol": 83574,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
 "poly": {
-"vol": 264591,
-"odd": 2.67,
-"sharePct": 78,
+"vol": 377430,
+"odd": 2.3,
+"sharePct": 80,
 "shareSrc": "geld",
 "key": "fif-col-mex-2026-09-26",
 "sideKey": "Mexico",
 "whales": [
 {
 "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
-"usd": 39072
+"usd": 52515
 },
 {
 "wallet": "0x5c3a1a602848565bb16165fcd460b00c3d43020b",
-"usd": 35724
+"usd": 41559
 },
 {
 "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-"usd": 6807
+"usd": 9436
 },
 {
 "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
-"usd": 1107
+"usd": 1285
 },
 {
 "wallet": "0x447bc4ff9da28dd1e55db7291a518632bc6afb5a",
-"usd": 810
+"usd": 942
 },
 {
 "wallet": "0xdd5ef115f801999575b03d78d0115ad8b2d59040",
-"usd": 476
+"usd": 552
 }
 ],
-"whaleUsd": 84479
+"whaleUsd": 107406
 },
 "pinn": null,
 "soft": null,
@@ -879,10 +1071,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Internacional Santa Tecla",
-"moneySharePct": 95,
-"moneyOdd": 1.14,
+"moneySharePct": 94,
+"moneyOdd": 1.13,
 "moneyDir": "in",
-"totVol": 3592,
+"totVol": 3738,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -904,13 +1096,13 @@
 }
 ],
 "ankerN": 18,
-"ankerNOffen": 147,
-"ankerMit": 17,
+"ankerNOffen": 149,
+"ankerMit": 15,
 "ankerDiagnose": {
 "nach": {
-"name": 37,
 "kein_kandidat": 69,
-"kein_pinnacle": 13,
+"name": 39,
+"kein_pinnacle": 15,
 "zeit": 3
 },
 "beispiele": [
@@ -1050,21 +1242,21 @@
 "liga": "UEFA Nations League"
 },
 {
-"spiel": "Georgia v Ukraine",
-"grund": "kein_pinnacle",
-"kandidat": "Georgia v Ukraine",
-"key": "soccer_uefa_nations_league",
-"nSoft": 24,
-"matchId": "35926217",
-"liga": "UEFA Nations League"
-},
-{
 "spiel": "Latvia v Cyprus",
 "grund": "kein_pinnacle",
 "kandidat": "Latvia v Cyprus",
 "key": "soccer_uefa_nations_league",
 "nSoft": 25,
 "matchId": "36023028",
+"liga": "UEFA Nations League"
+},
+{
+"spiel": "Georgia v Ukraine",
+"grund": "kein_pinnacle",
+"kandidat": "Georgia v Ukraine",
+"key": "soccer_uefa_nations_league",
+"nSoft": 24,
+"matchId": "35926217",
 "liga": "UEFA Nations League"
 },
 {
@@ -1104,21 +1296,21 @@
 "liga": "UEFA Nations League"
 },
 {
-"spiel": "Slovenia v North Macedonia",
-"grund": "kein_pinnacle",
-"kandidat": "Slovenia v North Macedonia",
-"key": "soccer_uefa_nations_league",
-"nSoft": 20,
-"matchId": "36091449",
-"liga": "UEFA Nations League"
-},
-{
 "spiel": "San Marino v Albania",
 "kandidat": "Austin FC v San Diego FC",
 "key": "soccer_usa_mls",
 "score": 0.5,
 "grund": "name",
 "matchId": "36024496",
+"liga": "UEFA Nations League"
+},
+{
+"spiel": "Slovenia v North Macedonia",
+"grund": "kein_pinnacle",
+"kandidat": "Slovenia v North Macedonia",
+"key": "soccer_uefa_nations_league",
+"nSoft": 22,
+"matchId": "36091449",
 "liga": "UEFA Nations League"
 },
 {
@@ -1129,6 +1321,15 @@
 "grund": "name",
 "matchId": "36110241",
 "liga": "Friendlies International"
+},
+{
+"spiel": "Liverpool (W) v Everton (W)",
+"kandidat": "Liverpool v Chelsea",
+"key": "soccer_england_efl_cup",
+"score": 0.5,
+"grund": "name",
+"matchId": "36095880",
+"liga": "English WSL"
 },
 {
 "spiel": "Hapoel Bnei Ein Mahel v Bnei Maghar",
@@ -1266,16 +1467,6 @@
 "grund": "name",
 "matchId": "36111831",
 "liga": "Spanish Liga F"
-},
-{
-"spiel": "FC Midtjylland (W) v FC Copenhagen (W)",
-"kandidat": "FC Midtjylland v FC Copenhagen",
-"key": "soccer_denmark_superliga",
-"score": 1.0,
-"grund": "zeit",
-"abstandH": 341.0,
-"matchId": "36116351",
-"liga": "Danish Ladies A-Liga"
 }
 ]
 }
