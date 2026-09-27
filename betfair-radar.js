@@ -592,8 +592,15 @@
     var mv = moveOf(m); if (!mv) return '';
     var backed = mv.pp > 0, col = backed ? C.back : C.lay;
     var side = mv.side === 'hw' ? m.home : mv.side === 'aw' ? m.away : 'Remis';
-    var txt = backed ? ('Geld → ' + String(side).slice(0, 14)) : (String(side).slice(0, 14) + ' driftet');
-    var tip = backed ? 'Quote fällt = auf diesen Ausgang wird gesetzt (Back). ' : 'Quote steigt = Ausgang wird schwächer, Geld dagegen (Lay). ';
+    // 27.09.2026 (Radar-Check, Lithuania v Azerbaijan): die Karte sagte „▼ Geld → Lithuania" und
+    // zwei Zeilen darunter „1X2 → Remis 46 %", der Zufluss lief ebenfalls aufs Remis. Die Pille
+    // liest die PREISbewegung, nicht das Geld — wo das meiste Geld im 1X2 woanders liegt, darf sie
+    // es nicht behaupten. Dann nur die Seite + „Quote fällt".
+    var _mk1 = mkOf(m, 'Match Odds'), _ld1 = _mk1 ? leadRunner(_mk1) : null;
+    var _sideRunner = mv.side === 'hw' ? m.home : mv.side === 'aw' ? m.away : 'The Draw';
+    var _geldWoanders = !!(_ld1 && _ld1.name != null && String(_ld1.name) !== String(_sideRunner));
+    var txt = backed ? ((_geldWoanders ? '' : 'Geld → ') + String(side).slice(0, 14)) : (String(side).slice(0, 14) + ' driftet');
+    var tip = backed ? ('Quote fällt = auf diesen Ausgang wird gesetzt (Back). ' + (_geldWoanders ? 'Das meiste Geld im 1X2 liegt aber auf ' + rLabel(_ld1.name, m) + '. ' : '')) : 'Quote steigt = Ausgang wird schwächer, Geld dagegen (Lay). ';
     return '<span title="' + esc(tip) + Math.abs(mv.pp).toFixed(1) + 'pp seit erstem Snapshot" style="display:inline-flex;gap:4px;align-items:center;padding:2px 9px;border-radius:20px;background:' + (backed ? 'rgba(63,185,80,.14)' : 'rgba(248,81,73,.14)') + ';color:' + col + ';font-size:11px;font-weight:800">' + (backed ? '▼' : '▲') + ' ' + esc(txt) + ' <span style="opacity:.7">' + (backed ? 'Quote fällt' : 'Quote steigt') + '</span></span>';
   }
   function liveMinTxt(m) {
@@ -632,7 +639,22 @@
   }
   // 15.08.2026 (Lucas): live Tore-Unter = reaktiv (Uhr-Zerfall, Tor kippt es -> Lay-Verdacht).
   function reactiveUnder(m, name) { return isLive(m) && /under|unter/i.test(String(name || '')) && /goal|tore/i.test(String(name || '')); }
-  function reactiveTag(m, name) { return reactiveUnder(m, name) ? ' <span style="font-size:9px;font-weight:800;padding:1px 5px;border-radius:6px;background:rgba(248,81,73,.16);color:' + C.live + '" title="Live-Unter läuft mit der Uhr runter — ein Tor kippt es. Reaktives Geld (Lay-Verdacht, Over ist die scharfe Seite).">⚠ reaktiv</span>' : ''; }
+  // 27.09.2026 (Radar-Check, Casertana v Catania 1:1 ~98'): „1X2 → Remis @1.54 ▲ +320 % 🚨" stand
+  // als groesster Sprung oben. Dieselbe Klasse wie Live-Unter: ein Remis bei Gleichstand wird mit
+  // jeder Minute wahrscheinlicher, das Geld laeuft der Uhr hinterher. Reaktiv, kein Alarm.
+  function reactiveDraw(m, name) {
+    if (!isLive(m) || String(name || '') !== 'The Draw') return false;
+    var li = m.liveInfo || {};
+    return typeof li.goal_v1 === 'number' && li.goal_v1 === li.goal_v2;
+  }
+  function reactive(m, name) { return reactiveUnder(m, name) || reactiveDraw(m, name); }
+  function reactiveTag(m, name) {
+    if (!reactive(m, name)) return '';
+    var tip = reactiveDraw(m, name) ? 'Live-Remis bei Gleichstand läuft mit der Uhr runter — ein Tor kippt es. Reaktives Geld, kein Signal.'
+                                    : 'Live-Unter läuft mit der Uhr runter — ein Tor kippt es. Reaktives Geld (Lay-Verdacht, Over ist die scharfe Seite).';
+    return ' <span style="font-size:9px;font-weight:800;padding:1px 5px;border-radius:6px;background:rgba(248,81,73,.16);color:' + C.live + '" title="' + tip + '">⚠ reaktiv</span>';
+  }
+  window._bfReactive = reactive;   // Test-Hook
   function distRows(mk, m) {
     var rs = runnersOf(mk), tot = distTotal(mk) || 1, cols = segCols(rs.length);
     return rs.slice().sort(function (a, b) { return (+b.vol || 0) - (+a.vol || 0); }).map(function (r) {
@@ -661,15 +683,17 @@
   function topLine(m, x) {
     var mk = mkOf(m, x.mm.id), lead = leadRunner(mk), tot = distTotal(mk) || 1;
     var pct = lead ? (+lead.vol || 0) / tot * 100 : 0, ht = x.mm.grp === 'HT';
-    return '<div style="display:flex;align-items:center;gap:10px;margin-top:9px;padding-top:9px;border-top:1px solid ' + C.bd + '">' +
+    // 27.09.2026: flex-wrap — am Handy lief die Zeile (Markt, Seite, %, Balken, €, Badges) 50 px
+    // ueber den Rand hinaus.
+    return '<div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin-top:9px;padding-top:9px;border-top:1px solid ' + C.bd + '">' +
       '<span style="min-width:56px;font-size:11px;font-weight:800;color:' + (ht ? C.purp : C.mut) + '">' + x.mm.label + '</span>' +
       '<span style="font-size:12px;color:' + C.ink + ';font-weight:700">→ ' + esc(lead ? rLabel(lead.name, m) : '—') + reactiveTag(m, lead && lead.name) + '</span>' +
       '<span style="font-size:12px;font-weight:900;color:' + C.gold + '">' + pct.toFixed(0) + '%</span>' +
-      '<span style="flex:1;max-width:160px">' + distBar(mk, true) + '</span>' +
+      '<span style="flex:1;min-width:90px;max-width:160px">' + distBar(mk, true) + '</span>' +
       '<span style="font-size:13px;font-weight:800;color:' + C.vol + '">' + fmtE(mvolG(m, x.mm.id)) + '</span>' +
       dirBadge(m, x.mm.id, lead) +
       fuehrtTag(m, lead && lead.name) +
-      confBadge(m.league, x.mm.id) +
+      confBadge(m.league, x.mm.id, true) +
       '<span style="font-size:11px;color:' + C.dim + '">▸ alle Märkte</span>' +
     '</div>';
   }
@@ -733,15 +757,16 @@
             '<span style="font-size:11px;color:' + C.mut + '">' + esc(String(m.league).slice(0, 44)) + '</span>' + koPill(m) + dirPill(m) +
           '</div>' + cohPillsRow(m) +
         '</div>' +
-        '<div style="text-align:right;min-width:120px">' +
+        '<div style="text-align:right;min-width:120px;margin-left:auto">' +
           '<div style="font-size:20px;font-weight:900;color:' + C.vol + '">' + fmtE(cardMoney(m)) + '</div>' +
           '<div style="font-size:10px;color:' + C.dim + '">' + esc(cardMoneyLbl(m)) + '</div>' +
           '<div style="height:5px;border-radius:3px;background:#0b0f14;overflow:hidden;margin-top:4px"><i style="display:block;height:100%;width:' + barW + '%;background:linear-gradient(90deg,' + C.vol + ',#14b8a6)"></i></div>' +
+          // 27.09.2026 (Radar-Check, Lucas: „optisch … spur intuitiver"): der Deep-Dive-Knopf stand
+          // in einer EIGENEN Fusszeile unter jeder Karte — ein Drittel jeder eingeklappten Karte war
+          // ein Knopf. Jetzt sitzt er kompakt rechts unter dem Geld-Balken.
+          '<button onclick="event.stopPropagation();_bfDrawer(\'' + esc(m.matchId) + '\')" title="Kohärenz-Deep-Dive: alle Märkte, Konsens, Verdikt" style="margin-top:7px;padding:3px 9px;border:1px solid ' + C.bd + ';border-radius:8px;background:transparent;color:' + C.blue + ';font-size:10.5px;font-weight:700;cursor:pointer">🔬 Deep-Dive</button>' +
         '</div>' +
       '</div>' + inner +
-      '<div style="margin-top:9px;padding-top:9px;border-top:1px solid ' + C.bd + ';display:flex;justify-content:flex-end">' +
-        '<button onclick="event.stopPropagation();_bfDrawer(\'' + esc(m.matchId) + '\')" style="padding:5px 11px;border:1px solid ' + C.bd + ';border-radius:8px;background:transparent;color:' + C.blue + ';font-size:11px;font-weight:700;cursor:pointer">🔬 Kohärenz-Deep-Dive</button>' +
-      '</div>' +
     '</div>';
   }
 
@@ -760,6 +785,7 @@
 
   function section(matches, title, accent, sub) {
     if (!matches.length) return '';
+    _sammeltGezeigt = {};   // je Sektion neu: der Fortschritt steht beim ersten Spiel jeder Liga
     var maxTot = matches.reduce(function (a, m) { return Math.max(a, cardMoney(m)); }, 1);
     var key = title.replace(/[^a-zA-Z0-9]/g, '');
     window._bfrCollapsed = window._bfrCollapsed || {};
@@ -822,7 +848,7 @@
         '<div class="bfb-lbl"><div class="bfb-g">' + flag(x.m.country, x.m.league) + ' ' + esc(String(x.m.home).slice(0, 13)) + ' – ' + esc(String(x.m.away).slice(0, 13)) + '</div>' +
         '<div class="bfb-o"><span class="bfb-mk' + (ht ? ' ht' : '') + '">' + esc(x.mm.label) + ' →</span> ' + esc(rLabel(x.lead.name, x.m)) + '</div></div>' +
         '<div class="bfb-bar"><i style="width:' + w + '%;background:' + C.vol + '"></i></div>' +
-        '<div class="bfb-meta"><span class="bfb-v" style="color:' + C.vol + '">' + fmtE(x.v) + '</span><br><span class="bfb-s">' + x.pct.toFixed(0) + '%</span> <span class="bfb-odd">@' + fO(x.lead.odd) + '</span>' + dirBadge(x.m, x.mm.id, x.lead) + fuehrtTag(x.m, x.lead && x.lead.name) + _hlLine(x.m) + '</div></div>';
+        '<div class="bfb-meta"><span class="bfb-v" style="color:' + C.vol + '">' + fmtE(x.v) + '</span><br><span class="bfb-s">' + x.pct.toFixed(0) + '%</span> <span class="bfb-odd">@' + fO(x.lead.odd) + '</span>' + dirBadge(x.m, x.mm.id, x.lead) + fuehrtTag(x.m, x.lead && x.lead.name) + reactiveTag(x.m, x.lead && x.lead.name) + _hlLine(x.m) + '</div></div>';
     }).join('');
     return '<div style="background:linear-gradient(180deg,rgba(255,184,12,.06),transparent);border:1px solid ' + C.bd + ';border-radius:14px;padding:11px 13px;margin:12px 0 14px">' +
       '<div style="font-size:12px;color:' + C.gold + ';font-weight:800;margin-bottom:10px">🔥 Wo das Geld genau liegt — größte Einzel-Ausgänge <span style="color:' + C.dim + ';font-weight:600">· Balken = Anteil des Geldes auf den Ausgang · nur klare Mehrheiten (≥60%) · ab 2K € · Klick springt zum Spiel</span></div>' +
@@ -887,8 +913,10 @@
     } else {
       var w = Math.max(6, Math.round(Math.min(100, x.pct / 300 * 100)));
       bar = '<div class="bfb-bar"><i style="width:' + w + '%;background:' + C.back + '"></i></div>';
-      meta = '<span class="bfb-v" style="color:' + C.back + '">▲ +' + Math.round(x.pct) + '%' + (x.pct >= 200 ? ' 🚨' : '') + '</span><br><span class="bfb-odd">' + fmtE(x.prev) + '→' + fmtE(x.curr) + '</span>';
+      var _re = rawLead && reactive(x.m, rawLead.name);
+      meta = '<span class="bfb-v" style="color:' + C.back + '">▲ +' + Math.round(x.pct) + '%' + (x.pct >= 200 && !_re ? ' 🚨' : '') + '</span><br><span class="bfb-odd">' + fmtE(x.prev) + '→' + fmtE(x.curr) + '</span>';
     }
+    meta += reactiveTag(x.m, rawLead && rawLead.name);
     return '<div class="bfb-row' + _rowHl(x.m) + '" onclick="_bfJump(\'' + esc(x.m.matchId) + '\')">' +
       '<div class="bfb-lbl"><div class="bfb-g">' + flag(x.m.country, x.m.league) + ' ' + esc(String(x.m.home).slice(0, 13)) + ' – ' + esc(String(x.m.away).slice(0, 13)) + '</div>' +
       '<div class="bfb-o">' + lblLine + '</div></div>' + bar +
@@ -979,14 +1007,21 @@
 
   function flowStrip(base) {
     var items = flowItems(base);
-    var eurItems = items.filter(function (x) { return (eur(x.delta) >= FLOW_MIN_EUR || _flowThin(x)) && _leadOddOk(x.m, x.mm); })   // 08.08.2026: Fuehrungs-Geld nicht filtern, „▶ fuehrt". 21.08.2026 (Lucas): + Duenn-Markt-Anomalie-Weg
-      .sort(function (a, b) { return ((_flowThin(b) ? 1 : 0) - (_flowThin(a) ? 1 : 0)) || (b.delta - a.delta); }).slice(0, 8);
+    // 27.09.2026 (Radar-Check): der Duenn-Markt-Weg stand VORNE in „Groesste Zufluesse (€)" —
+    // +€2,3K ueber +€16,7K, unter einer Ueberschrift, die nach Euro sortiert verspricht, und mit
+    // einem Balken relativ zum groessten. Zwei Aussagen in einer Liste. Jetzt zwei Listen: die
+    // Euro-Liste ist wirklich nach Euro sortiert, die Anomalien stehen darunter fuer sich.
+    var eurItems = items.filter(function (x) { return eur(x.delta) >= FLOW_MIN_EUR && _leadOddOk(x.m, x.mm); })   // 08.08.2026: Fuehrungs-Geld nicht filtern, „▶ fuehrt"
+      .sort(function (a, b) { return b.delta - a.delta; }).slice(0, 8);
+    var thinItems = items.filter(function (x) { return _flowThin(x) && _leadOddOk(x.m, x.mm); })   // 21.08.2026 (Lucas): Duenn-Markt-Anomalie-Weg
+      .sort(function (a, b) { return (eur(b.delta) / (eur(b.curr) || 1)) - (eur(a.delta) / (eur(a.curr) || 1)); }).slice(0, 5);
     var surge = items.filter(function (x) { return eur(x.prev) >= SURGE_MIN_BASE && eur(x.delta) >= SURGE_MIN_DELTA && x.pct >= SURGE_MIN_PCT && x.pct < 900 && _leadOddOk(x.m, x.mm); })
       .sort(function (a, b) { return b.pct - a.pct; }).slice(0, 6);
     var head = '<div style="font-size:12px;color:' + C.back + ';font-weight:800;margin-bottom:8px">💸 Frisches Geld — was seit dem letzten Lauf reinfloss &amp; auf welche Seite <span style="color:' + C.dim + ';font-weight:600">(Klick springt zum Spiel)</span></div>';
-    var body = (!eurItems.length && !surge.length)
+    var body = (!eurItems.length && !surge.length && !thinItems.length)
       ? '<div style="font-size:11px;color:' + C.dim + '">sammelt Daten — der Zufluss braucht zwei Fetches (~15–30 Min), dann siehst du hier, auf welchen Markt gerade Geld fließt.</div>'
-      : _flowBars('📈 Größte Zuflüsse (€) — Balken = Zufluss relativ zum größten', eurItems, 'eur') + _flowBars('⚡ Größte Sprünge (%) — Balken = Sprung-Höhe', surge, 'pct');
+      : _flowBars('📈 Größte Zuflüsse (€) — Balken = Zufluss relativ zum größten', eurItems, 'eur') + _flowBars('⚡ Größte Sprünge (%) — Balken = Sprung-Höhe', surge, 'pct')
+        + _flowBars('🔍 Dünne Märkte — ein paar Tausend €, die den Großteil des Marktes ausmachen (Anomalie-Kandidat)', thinItems, 'eur');
     return '<div style="background:linear-gradient(180deg,rgba(63,185,80,.07),transparent);border:1px solid rgba(63,185,80,.25);border-radius:14px;padding:11px 13px;margin:0 0 14px">' + head + body + '</div>';
   }
 
@@ -1029,9 +1064,20 @@
   }
 
   // Kleine Confidence-Chip an einem Markt in der Spielliste.
-  function confBadge(league, marketId) {
+  // 27.09.2026 (Radar-Check): „⏳ sammelt n26/30" stand auf allen elf Nations-League-Karten —
+  // dieselbe Zeile, dieselbe Zahl, weil der Track je Liga×Markt zaehlt und nicht je Spiel. Auf
+  // der eingeklappten Karte steht der Fortschritt deshalb nur beim ERSTEN Spiel einer Liga in
+  // der Sektion; aufgeklappt (alle Maerkte) bleibt er ueberall. Urteile (traegt/verliert/tief)
+  // bleiben auf jeder Karte — die sagen etwas ueber genau diese Wette.
+  var _sammeltGezeigt = {};
+  function confBadge(league, marketId, einmal) {
     var v = trackFor(league, marketId);
     var w = bfTrackWirkung(v);
+    if (einmal && w && w.art === 'sammelt') {
+      var _k = String(league) + '|' + String(marketId);
+      if (_sammeltGezeigt[_k]) return '';
+      _sammeltGezeigt[_k] = true;
+    }
     // 29.08.2026: unter n=12 stand hier gar nichts — man konnte „noch keine Daten" nicht von
     // „nie hingeschaut" unterscheiden. Jetzt zeigt auch der leere Zustand seinen Fortschritt.
     if (!w) return '';
@@ -1573,7 +1619,7 @@
 
   function viewToggle() {
     var b = function (id, lbl) { var on = _bf.view === id; return '<button onclick="_bfSetView(\'' + id + '\')" style="padding:6px 13px;border:1px solid ' + (on ? C.gold : C.bd) + ';background:' + (on ? 'rgba(255,184,12,.12)' : 'transparent') + ';color:' + (on ? C.gold : C.mut) + ';font-size:12px;font-weight:700;cursor:pointer">' + lbl + '</button>'; };
-    return '<div style="display:inline-flex;border-radius:9px;overflow:hidden;border:1px solid ' + C.bd + ';margin:6px 0 12px">' + b('live', '🔴 Live-Radar') + b('record', '📊 Trefferquoten') + b('push', '📈 Push-Bilanz') + b('consensus', '🧭 Konsens') + b('fade', '🔄 Fade-Unter') + b('terminal', '🖥️ Terminal') + '</div>';
+    return '<div class="bfv-tabs" style="display:inline-flex;border-radius:9px;overflow:hidden;border:1px solid ' + C.bd + ';margin:6px 0 12px">' + b('live', '🔴 Live-Radar') + b('record', '📊 Trefferquoten') + b('push', '📈 Push-Bilanz') + b('consensus', '🧭 Konsens') + b('fade', '🔄 Fade-Unter') + b('terminal', '🖥️ Terminal') + '</div>';
   }
 
   // 05.08.2026 (Lucas: wissen wir, ob die Kohle erfolgreich war?): DIE Gesamt-Bilanz. Bisher gab es
@@ -1838,8 +1884,10 @@
     all.forEach(function (m) { var hv = ['Half Time', 'First Half Goals 0.5', 'First Half Goals 1.5'].reduce(function (a, id) { return Math.max(a, mvolG(m, id)); }, 0); if (!htBest || hv > htBest.v) htBest = { m: m, v: hv }; });
     return '<div style="display:flex;gap:9px;flex-wrap:wrap;margin:12px 0 6px">' +
       tile('💰', fmtE(sumG(all)), 'Geld gematcht gesamt', all.length + ' Spiele über Schwelle', C.vol) +
-      tile('⭐', fmtE(sumG(groups.top)), 'Top 5 + MLS', groups.top.length + ' Spiele', C.gold) +
-      tile('🇪🇺', fmtE(sumG(groups.intl)), 'International / UEFA', groups.intl.length + ' Spiele', C.blue) +
+      // 27.09.2026 (Radar-Check, Lucas: „ja"): in der Laenderspielpause stand hier „€0 · 0 Spiele"
+      // — eine Kachel, die nur Platz nimmt. Ohne Spiel keine Kachel.
+      (groups.top.length ? tile('⭐', fmtE(sumG(groups.top)), 'Top 5 + MLS', groups.top.length + ' Spiele', C.gold) : '') +
+      (groups.intl.length ? tile('🇪🇺', fmtE(sumG(groups.intl)), 'International / UEFA', groups.intl.length + ' Spiele', C.blue) : '') +
       tile('🔴', String(live), 'live', live ? 'gerade am Laufen' : '—', live ? C.live : C.mut) +
       tile('📈', steam ? (Math.abs(steam.mv.pp).toFixed(1) + 'pp') : '—', 'stärkster Steam', steam ? esc(String(steam.m.home).slice(0, 12)) : '', steam ? (steam.mv.pp > 0 ? C.back : C.lay) : C.mut) +
       tile('⏱️', htBest && htBest.v ? fmtE(htBest.v) : '—', 'meiste HT-Action', htBest && htBest.v ? esc(String(htBest.m.home).slice(0, 12)) : '', C.purp) +
@@ -1872,6 +1920,11 @@
     return '<div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center;font-size:11px;color:' + C.mut + ';background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:10px;padding:8px 12px;margin-bottom:12px">' +
       '<span style="color:' + C.ink + ';font-weight:700">So liest du den Radar:</span>' +
       '<span>Karte klicken → alle Märkte mit Geld-<b>Verteilung</b> (€ + % je Ausgang).</span>' +
+      // 27.09.2026 (Radar-Check): die drei Farben im Verteilungs-Balken standen nirgends erklärt —
+      // Serbia v Netherlands war fast ganz lila, und ob lila Heim oder Auswärts ist, stand nicht da.
+      '<span>Balken: ' + [['Heim', segCols(3)[0]], ['Remis', segCols(3)[1]], ['Auswärts', segCols(3)[2]]].map(function (x) {
+        return '<i style="display:inline-block;width:14px;height:7px;border-radius:3px;background:' + x[1] + ';margin:0 4px 0 6px;vertical-align:1px"></i>' + x[0];
+      }).join('') + ' <span style="color:' + C.dim + '">(O/U, BTTS: ' + '<i style="display:inline-block;width:14px;height:7px;border-radius:3px;background:' + segCols(2)[0] + ';margin:0 4px;vertical-align:1px"></i>erster · <i style="display:inline-block;width:14px;height:7px;border-radius:3px;background:' + segCols(2)[1] + ';margin:0 4px;vertical-align:1px"></i>zweiter Ausgang)</span></span>' +
       '<span style="color:' + C.back + ';font-weight:700">▼ Quote fällt</span> = auf den Ausgang wird gesetzt (Back).' +
       '<span style="color:' + C.lay + ';font-weight:700">▲ Quote steigt</span> = Ausgang wird schwächer, Geld dagegen (Lay).' +
       '<span style="color:' + C.dim + '">HT-Märkte lila · 🇪🇺 UEFA.</span>' +
@@ -1888,10 +1941,17 @@
     // Runner gemessen 15,0 Minuten lieferte (health/betfair.json, 17 von 19 Abstaenden). Diese
     // Zahl hier war also schon immer die richtige; jetzt stimmt auch die Quelle, aus der sie kommt.
     var CAD_MIN = 15;   // Anzeige-Kadenz in Minuten — deckungsgleich mit dem Cron in betfair.yml.
+    // 27.09.2026 (Radar-Check): „vor 17 Min · nächster überfällig" — bei einem Fetcher, der laut
+    // Commit-Log seit dem Morgen lückenlos um :02/:17/:32/:47 lieferte. Zwischen generatedAt und
+    // „auf der Seite" liegen Commit, Push und Pages-Deploy (1–3 Min). Kurz vor jedem Lauf war der
+    // Chip deshalb REGELMAESSIG gelb — ein Alarm, der jede Viertelstunde kommt, wird ueberlesen,
+    // und dann auch der echte. Gelb erst, wenn wirklich ein Lauf fehlt.
+    var PUFFER_MIN = 5;
     var a = genAgeMin();
     var at = a >= 90 ? Math.round(a / 60) + 'h' : Math.round(a) + ' Min';
-    var col = a > CAD_MIN * 2.5 ? '#f2a6a6' : a > CAD_MIN ? C.amber : C.back;
+    var col = a > CAD_MIN * 2.5 ? '#f2a6a6' : a > CAD_MIN + PUFFER_MIN ? C.amber : C.back;
     var nx = a <= CAD_MIN ? 'nächster ~in ' + Math.max(1, Math.round(CAD_MIN - a)) + ' Min'
+           : a <= CAD_MIN + PUFFER_MIN ? 'nächster gleich'
            : a <= CAD_MIN * 4 ? 'nächster überfällig' : 'Fetcher hängt';
     return '<span style="margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:' + col + ';background:rgba(255,255,255,.03);border:1px solid ' + C.bd + ';border-radius:20px;padding:3px 11px" title="Fetcher läuft ~alle ' + CAD_MIN + ' Min; der Trades-Push feuert beim Lauf">🕐 vor ' + at + ' <span style="color:' + C.dim + ';font-weight:600">· ' + nx + '</span></span>';
   }
@@ -1924,6 +1984,17 @@
       '.bfb-live{box-shadow:inset 0 0 0 1.5px rgba(248,81,73,.75);background:rgba(248,81,73,.07);padding-left:8px;padding-right:8px;}',
       '.bfb-liveb{display:inline-block;font-size:9.5px;font-weight:800;padding:0 5px;margin-left:6px;border:1px solid rgba(248,81,73,.75);color:#f85149;border-radius:6px;letter-spacing:.2px;vertical-align:middle;line-height:15px;}',
       /* 03.08.2026 (Lucas): am iPhone saß der Deep-Dive-Schließen-Button unter der Notch/Statusleiste → nicht tippbar. Safe-Area + Mindestabstand. */
+      /* 27.09.2026 (Radar-Check): am Handy (390 px) war die Seite 464 px breit — die Balken-Zeilen
+         hielten Label 150 px + Balken + nicht umbrechende Meta-Spalte nebeneinander, und die
+         Ansichts-Leiste (Live-Radar … Terminal) brach gar nicht um. Horizontal scrollen am Handy.
+         Jetzt: Label und Zahl oben, der Balken darunter ueber die ganze Breite. */
+      '@media(max-width:560px){',
+      '.bfb-row{grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;}',
+      '.bfb-bar{grid-column:1/-1;grid-row:2;height:9px;}',
+      '.bfb-meta{white-space:normal;}',
+      '.bfv-tabs{display:flex !important;flex-wrap:wrap;}',
+      '.bfv-tabs>button{flex:1 1 auto;}',
+      '}',
       '@media(max-width:760px){',
       '.bfd-hd{padding-top:max(48px,calc(env(safe-area-inset-top,0px) + 16px)) !important;}',
       '.bfd-close{top:max(44px,calc(env(safe-area-inset-top,0px) + 13px)) !important;width:40px;height:40px;font-size:17px;}',
