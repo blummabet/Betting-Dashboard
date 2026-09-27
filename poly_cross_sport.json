@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-27T18:43:12.915503+00:00",
+ "generatedAt": "2026-09-27T19:13:23.328719+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,27 +9,27 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 517,
- "pinnKeys": 91,
- "matched": 33,
+ "polyRowsSeen": 515,
+ "pinnKeys": 89,
+ "matched": 31,
  "footballRows": 9,
- "crossRows": 508,
- "footballSkippedStale": 106,
+ "crossRows": 506,
+ "footballSkippedStale": 107,
  "seenBySport": {
   "basketball_nba": 2,
   "americanfootball_nfl": 144,
-  "baseball_mlb": 34,
+  "baseball_mlb": 32,
   "icehockey_nhl": 326,
   "boxing_boxing": 2,
   "soccer_mls": 9
  },
  "matchedBySport": {
-  "baseball_mlb": 24,
+  "baseball_mlb": 22,
   "soccer_mls": 9
  },
  "trackRecord": {
-  "tracked": 281,
-  "converged": 82
+  "tracked": 279,
+  "converged": 86
  },
  "discrepancies": [
   {
@@ -47,6 +47,62 @@
    "firstSeen": "2026-09-27T00:41:46.439990+00:00"
   },
   {
+   "id": "baseball_mlb|bostonredsox-chicagocubs|chicagocubs",
+   "sport": "baseball_mlb",
+   "event": "Chicago Cubs vs Boston Red Sox",
+   "market": "Moneyline",
+   "outcome": "Chicago Cubs",
+   "polyPP": 70.5,
+   "pinnPP": 52.0,
+   "gapPP": 18.46,
+   "vol": 5073,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 12.02,
+   "firstSeen": "2026-09-25T17:39:15.974819+00:00"
+  },
+  {
+   "id": "baseball_mlb|bostonredsox-chicagocubs|bostonredsox",
+   "sport": "baseball_mlb",
+   "event": "Chicago Cubs vs Boston Red Sox",
+   "market": "Moneyline",
+   "outcome": "Boston Red Sox",
+   "polyPP": 29.5,
+   "pinnPP": 48.0,
+   "gapPP": -18.46,
+   "vol": 5073,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 12.02,
+   "firstSeen": "2026-09-25T17:39:15.974819+00:00"
+  },
+  {
+   "id": "baseball_mlb|detroittigers-pittsburghpirates|pittsburghpirates",
+   "sport": "baseball_mlb",
+   "event": "Pittsburgh Pirates vs Detroit Tigers",
+   "market": "Moneyline",
+   "outcome": "Pittsburgh Pirates",
+   "polyPP": 58.5,
+   "pinnPP": 47.3,
+   "gapPP": 11.17,
+   "vol": 70070,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -2.12,
+   "firstSeen": "2026-09-26T01:39:54.004020+00:00"
+  },
+  {
+   "id": "baseball_mlb|detroittigers-pittsburghpirates|detroittigers",
+   "sport": "baseball_mlb",
+   "event": "Pittsburgh Pirates vs Detroit Tigers",
+   "market": "Moneyline",
+   "outcome": "Detroit Tigers",
+   "polyPP": 41.5,
+   "pinnPP": 52.7,
+   "gapPP": -11.17,
+   "vol": 70070,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -2.12,
+   "firstSeen": "2026-09-26T01:39:54.004020+00:00"
+  },
+  {
    "id": "soccer_mls|newyorkredbulls-stlouiscity|hw",
    "sport": "soccer_mls",
    "event": "New York Red Bulls vs St. Louis City",
@@ -59,6 +115,62 @@
    "richtung": "Poly zu niedrig → backen",
    "convergePP": 14.66,
    "firstSeen": "2026-09-27T00:41:46.439990+00:00"
+  },
+  {
+   "id": "baseball_mlb|philadelphiaphillies-tampabayrays|tampabayrays",
+   "sport": "baseball_mlb",
+   "event": "Tampa Bay Rays vs Philadelphia Phillies",
+   "market": "Moneyline",
+   "outcome": "Tampa Bay Rays",
+   "polyPP": 5.5,
+   "pinnPP": 14.8,
+   "gapPP": -9.26,
+   "vol": 387722,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 22.69,
+   "firstSeen": "2026-09-27T00:11:35.794961+00:00"
+  },
+  {
+   "id": "baseball_mlb|philadelphiaphillies-tampabayrays|philadelphiaphillies",
+   "sport": "baseball_mlb",
+   "event": "Tampa Bay Rays vs Philadelphia Phillies",
+   "market": "Moneyline",
+   "outcome": "Philadelphia Phillies",
+   "polyPP": 94.5,
+   "pinnPP": 85.2,
+   "gapPP": 9.26,
+   "vol": 387722,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 22.69,
+   "firstSeen": "2026-09-27T00:11:35.794961+00:00"
+  },
+  {
+   "id": "baseball_mlb|losangelesdodgers-sanfranciscogiants|losangelesdodgers",
+   "sport": "baseball_mlb",
+   "event": "Los Angeles Dodgers vs San Francisco Giants",
+   "market": "Moneyline",
+   "outcome": "Los Angeles Dodgers",
+   "polyPP": 63.0,
+   "pinnPP": 69.3,
+   "gapPP": -6.28,
+   "vol": 20353,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 5.36,
+   "firstSeen": "2026-09-20T02:56:56.944122+00:00"
+  },
+  {
+   "id": "baseball_mlb|losangelesdodgers-sanfranciscogiants|sanfranciscogiants",
+   "sport": "baseball_mlb",
+   "event": "Los Angeles Dodgers vs San Francisco Giants",
+   "market": "Moneyline",
+   "outcome": "San Francisco Giants",
+   "polyPP": 37.0,
+   "pinnPP": 30.7,
+   "gapPP": 6.28,
+   "vol": 20353,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 5.36,
+   "firstSeen": "2026-09-20T02:56:56.944122+00:00"
   }
  ]
 }
