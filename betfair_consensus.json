@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-09-27T04:00:52.872850+00:00",
+"generatedAt": "2026-09-27T04:15:52.223318+00:00",
 "count": 13,
 "covered": 13,
 "leaguesKuratiert": [
@@ -64,64 +64,12 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 81089,
-"remaining": 4918911,
+"used": 81224,
+"remaining": 4918776,
 "letzterFehler": null
 },
 "ankerQuote": 0.889,
 "games": [
-{
-"matchId": "35930730",
-"home": "Serbia",
-"away": "Netherlands",
-"league": "UEFA Nations League",
-"country": "International",
-"kickoff": "2026-09-27T16:00:00Z",
-"live": false,
-"moneySide": "away",
-"moneyName": "Netherlands",
-"moneySharePct": 90,
-"moneyOdd": 1.45,
-"moneyDir": "flat",
-"totVol": 108848,
-"pinnOdd": 1.41,
-"softOdd": 1.36,
-"softN": 25,
-"poly": {
-"vol": 134801,
-"odd": 1.44,
-"sharePct": 70,
-"shareSrc": "preis",
-"key": "unl-ser-nld-2026-09-27",
-"sideKey": "Netherlands",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.1276,
-"draw": 0.1884,
-"away": 0.684,
-"fav": "away"
-},
-"soft": {
-"home": 0.1276,
-"draw": 0.1933,
-"away": 0.679,
-"fav": "away",
-"n": 25
-},
-"pinnMovePP": 0.6,
-"pinnMove": {
-"movePP": 0.6,
-"stepPP": -0.3,
-"n": 25,
-"move": false,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
 {
 "matchId": "36082664",
 "home": "Vancouver Whitecaps",
@@ -132,13 +80,13 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Vancouver Whitecaps",
-"moneySharePct": 94,
-"moneyOdd": 1.24,
-"moneyDir": "out",
-"totVol": 99990,
-"pinnOdd": 1.19,
-"softOdd": 1.15,
-"softN": 35,
+"moneySharePct": 91,
+"moneyOdd": 1.2,
+"moneyDir": "in",
+"totVol": 116700,
+"pinnOdd": 2.36,
+"softOdd": 1.14,
+"softN": 36,
 "poly": {
 "vol": 8644,
 "odd": 1.31,
@@ -175,22 +123,145 @@
 "whaleUsd": 3564
 },
 "pinn": {
-"home": 0.7992,
-"draw": 0.1607,
-"away": 0.0401,
-"fav": "home"
+"home": 0.4013,
+"draw": 0.4642,
+"away": 0.1345,
+"fav": "draw"
 },
 "soft": {
-"home": 0.8042,
-"draw": 0.1504,
-"away": 0.0454,
+"home": 0.7854,
+"draw": 0.1722,
+"away": 0.0424,
+"fav": "home",
+"n": 36
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "uneinig",
+"agree": false,
+"pinnTotals": null
+},
+{
+"matchId": "35930730",
+"home": "Serbia",
+"away": "Netherlands",
+"league": "UEFA Nations League",
+"country": "International",
+"kickoff": "2026-09-27T16:00:00Z",
+"live": false,
+"moneySide": "away",
+"moneyName": "Netherlands",
+"moneySharePct": 90,
+"moneyOdd": 1.44,
+"moneyDir": "in",
+"totVol": 109012,
+"pinnOdd": 1.41,
+"softOdd": 1.38,
+"softN": 25,
+"poly": {
+"vol": 134801,
+"odd": 1.44,
+"sharePct": 70,
+"shareSrc": "preis",
+"key": "unl-ser-nld-2026-09-27",
+"sideKey": "Netherlands",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.1276,
+"draw": 0.1884,
+"away": 0.684,
+"fav": "away"
+},
+"soft": {
+"home": 0.1288,
+"draw": 0.1941,
+"away": 0.6772,
+"fav": "away",
+"n": 25
+},
+"pinnMovePP": 0.6,
+"pinnMove": {
+"movePP": 0.6,
+"stepPP": 0.0,
+"n": 25,
+"move": false,
+"laeuft": false
+},
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36082682",
+"home": "LA Galaxy",
+"away": "Colorado",
+"league": "US MLS",
+"country": "US",
+"kickoff": "2026-09-27T02:30:00Z",
+"live": true,
+"moneySide": "away",
+"moneyName": "Colorado",
+"moneySharePct": 67,
+"moneyOdd": 28.0,
+"moneyDir": "out",
+"totVol": 72175,
+"pinnOdd": 4.75,
+"softOdd": 22.0,
+"softN": 35,
+"poly": {
+"vol": 54618,
+"odd": 1.21,
+"sharePct": 75,
+"shareSrc": "geld",
+"key": "mls-lag-col-2026-09-26",
+"sideKey": "Colorado Rapids SC",
+"whales": [
+{
+"wallet": "0x8efa1ea8ee2d456a051ae2985079a1e3c9aa894c",
+"usd": 1800
+},
+{
+"wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+"usd": 750
+},
+{
+"wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+"usd": 593
+},
+{
+"wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+"usd": 367
+},
+{
+"wallet": "0x14f3790ce1323c4b1cb351ed068c1866a0c60c3d",
+"usd": 353
+},
+{
+"wallet": "0x6369c529de5561175fe973e4e609d7e6d0957b56",
+"usd": 248
+}
+],
+"whaleUsd": 4818
+},
+"pinn": {
+"home": 0.294,
+"draw": 0.5074,
+"away": 0.1987,
+"fav": "draw"
+},
+"soft": {
+"home": 0.6687,
+"draw": 0.2359,
+"away": 0.0954,
 "fav": "home",
 "n": 35
 },
 "pinnMovePP": null,
 "pinnMove": null,
-"verdict": "konsens",
-"agree": true,
+"verdict": "uneinig",
+"agree": false,
 "pinnTotals": null
 },
 {
@@ -204,9 +275,9 @@
 "moneySide": "home",
 "moneyName": "Germany",
 "moneySharePct": 80,
-"moneyOdd": 1.44,
-"moneyDir": "out",
-"totVol": 59864,
+"moneyOdd": 1.43,
+"moneyDir": "in",
+"totVol": 63980,
 "pinnOdd": 1.42,
 "softOdd": 1.39,
 "softN": 25,
@@ -227,9 +298,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.6756,
-"draw": 0.1889,
-"away": 0.1354,
+"home": 0.6757,
+"draw": 0.1891,
+"away": 0.1352,
 "fav": "home",
 "n": 25
 },
@@ -238,7 +309,7 @@
 "movePP": -1.0,
 "stepPP": -0.0,
 "n": 25,
-"move": false,
+"move": true,
 "laeuft": false
 },
 "verdict": "konsens",
@@ -258,7 +329,7 @@
 "moneySharePct": 43,
 "moneyOdd": 2.78,
 "moneyDir": "flat",
-"totVol": 57994,
+"totVol": 58181,
 "pinnOdd": null,
 "softOdd": 2.6,
 "softN": 20,
@@ -304,10 +375,10 @@
 "moneySide": "home",
 "moneyName": "Tigres",
 "moneySharePct": 91,
-"moneyOdd": 2.0,
+"moneyOdd": 2.06,
 "moneyDir": "out",
-"totVol": 57208,
-"pinnOdd": 1.86,
+"totVol": 57484,
+"pinnOdd": 2.03,
 "softOdd": 1.94,
 "softN": 26,
 "poly": {
@@ -346,88 +417,17 @@
 "whaleUsd": 4583
 },
 "pinn": {
-"home": 0.508,
-"draw": 0.3214,
-"away": 0.1706,
+"home": 0.4658,
+"draw": 0.3723,
+"away": 0.1619,
 "fav": "home"
 },
 "soft": {
-"home": 0.4685,
-"draw": 0.3601,
-"away": 0.1714,
+"home": 0.4702,
+"draw": 0.3595,
+"away": 0.1703,
 "fav": "home",
 "n": 26
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36082682",
-"home": "LA Galaxy",
-"away": "Colorado",
-"league": "US MLS",
-"country": "US",
-"kickoff": "2026-09-27T02:30:00Z",
-"live": true,
-"moneySide": "away",
-"moneyName": "Colorado",
-"moneySharePct": 85,
-"moneyOdd": 1.63,
-"moneyDir": "out",
-"totVol": 52869,
-"pinnOdd": 1.59,
-"softOdd": 1.52,
-"softN": 36,
-"poly": {
-"vol": 54618,
-"odd": 1.21,
-"sharePct": 75,
-"shareSrc": "geld",
-"key": "mls-lag-col-2026-09-26",
-"sideKey": "Colorado Rapids SC",
-"whales": [
-{
-"wallet": "0x8efa1ea8ee2d456a051ae2985079a1e3c9aa894c",
-"usd": 1800
-},
-{
-"wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-"usd": 750
-},
-{
-"wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
-"usd": 593
-},
-{
-"wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
-"usd": 367
-},
-{
-"wallet": "0x14f3790ce1323c4b1cb351ed068c1866a0c60c3d",
-"usd": 353
-},
-{
-"wallet": "0x6369c529de5561175fe973e4e609d7e6d0957b56",
-"usd": 248
-}
-],
-"whaleUsd": 4818
-},
-"pinn": {
-"home": 0.1372,
-"draw": 0.2727,
-"away": 0.5901,
-"fav": "away"
-},
-"soft": {
-"home": 0.1188,
-"draw": 0.2649,
-"away": 0.6163,
-"fav": "away",
-"n": 36
 },
 "pinnMovePP": null,
 "pinnMove": null,
@@ -448,7 +448,7 @@
 "moneySharePct": 77,
 "moneyOdd": 2.48,
 "moneyDir": "flat",
-"totVol": 45699,
+"totVol": 45784,
 "pinnOdd": null,
 "softOdd": 2.35,
 "softN": 25,
@@ -464,9 +464,9 @@
 },
 "pinn": null,
 "soft": {
-"home": 0.2623,
-"draw": 0.34,
-"away": 0.3977,
+"home": 0.262,
+"draw": 0.3403,
+"away": 0.3978,
 "fav": "away",
 "n": 25
 },
@@ -493,10 +493,10 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Denmark",
-"moneySharePct": 89,
-"moneyOdd": 1.49,
-"moneyDir": "flat",
-"totVol": 43565,
+"moneySharePct": 88,
+"moneyOdd": 1.48,
+"moneyDir": "in",
+"totVol": 44013,
 "pinnOdd": 1.45,
 "softOdd": 1.43,
 "softN": 25,
@@ -511,22 +511,22 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.6632,
+"home": 0.6633,
 "draw": 0.2033,
-"away": 0.1336,
+"away": 0.1334,
 "fav": "home"
 },
 "soft": {
-"home": 0.6543,
-"draw": 0.2095,
-"away": 0.1362,
+"home": 0.6536,
+"draw": 0.2091,
+"away": 0.1374,
 "fav": "home",
 "n": 25
 },
 "pinnMovePP": 0.4,
 "pinnMove": {
 "movePP": 0.4,
-"stepPP": -0.0,
+"stepPP": 0.0,
 "n": 25,
 "move": false,
 "laeuft": false
@@ -546,12 +546,12 @@
 "moneySide": "home",
 "moneyName": "San Jose Earthquakes",
 "moneySharePct": 91,
-"moneyOdd": 1.03,
+"moneyOdd": 1.01,
 "moneyDir": "in",
-"totVol": 39853,
+"totVol": 42586,
 "pinnOdd": null,
-"softOdd": 1.01,
-"softN": 30,
+"softOdd": 1.0,
+"softN": 21,
 "poly": {
 "vol": 41503,
 "odd": 1.05,
@@ -589,11 +589,11 @@
 },
 "pinn": null,
 "soft": {
-"home": 0.9415,
-"draw": 0.0435,
-"away": 0.0149,
+"home": 0.9502,
+"draw": 0.0389,
+"away": 0.011,
 "fav": "home",
-"n": 30
+"n": 21
 },
 "pinnMovePP": null,
 "pinnMove": null,
@@ -605,7 +605,7 @@
 "grund": "kein_pinnacle",
 "kandidat": "San Jose Earthquakes v Portland Timbers",
 "key": "soccer_usa_mls",
-"nSoft": 30
+"nSoft": 21
 }
 },
 {
@@ -618,12 +618,12 @@
 "live": true,
 "moneySide": "draw",
 "moneyName": "The Draw",
-"moneySharePct": 46,
+"moneySharePct": 44,
 "moneyOdd": 4.4,
-"moneyDir": "out",
-"totVol": 35633,
-"pinnOdd": 2.65,
-"softOdd": 3.85,
+"moneyDir": "flat",
+"totVol": 38176,
+"pinnOdd": 3.96,
+"softOdd": 3.83,
 "softN": 28,
 "poly": {
 "vol": 269714,
@@ -636,15 +636,15 @@
 "whaleUsd": 0
 },
 "pinn": {
-"home": 0.3744,
-"draw": 0.356,
-"away": 0.2696,
+"home": 0.6572,
+"draw": 0.239,
+"away": 0.1039,
 "fav": "home"
 },
 "soft": {
-"home": 0.6501,
-"draw": 0.2366,
-"away": 0.1133,
+"home": 0.6561,
+"draw": 0.2355,
+"away": 0.1084,
 "fav": "home",
 "n": 28
 },
@@ -667,9 +667,9 @@
 "moneySharePct": 49,
 "moneyOdd": 2.58,
 "moneyDir": "flat",
-"totVol": 31695,
+"totVol": 32003,
 "pinnOdd": 2.55,
-"softOdd": 2.43,
+"softOdd": 2.4,
 "softN": 25,
 "poly": {
 "vol": 60095,
@@ -688,17 +688,17 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.3839,
+"home": 0.3836,
 "draw": 0.2557,
-"away": 0.3604,
+"away": 0.3607,
 "fav": "home",
 "n": 25
 },
 "pinnMovePP": -0.2,
 "pinnMove": {
 "movePP": -0.2,
-"stepPP": -0.1,
-"n": 15,
+"stepPP": 0.0,
+"n": 16,
 "move": false,
 "laeuft": false
 },
@@ -717,11 +717,11 @@
 "moneySide": "home",
 "moneyName": "Northern Ireland",
 "moneySharePct": 81,
-"moneyOdd": 2.84,
-"moneyDir": "flat",
-"totVol": 23371,
+"moneyOdd": 2.86,
+"moneyDir": "out",
+"totVol": 23402,
 "pinnOdd": null,
-"softOdd": 2.65,
+"softOdd": 2.7,
 "softN": 25,
 "poly": {
 "vol": 1524,
@@ -735,9 +735,9 @@
 },
 "pinn": null,
 "soft": {
-"home": 0.3485,
-"draw": 0.3113,
-"away": 0.3403,
+"home": 0.3462,
+"draw": 0.3107,
+"away": 0.3431,
 "fav": "home",
 "n": 25
 },
@@ -768,7 +768,7 @@
 "moneyOdd": 1.97,
 "moneyDir": "flat",
 "totVol": 23340,
-"pinnOdd": 1.94,
+"pinnOdd": 1.93,
 "softOdd": 1.86,
 "softN": 25,
 "poly": {
@@ -782,23 +782,23 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.2625,
-"draw": 0.2397,
-"away": 0.4979,
+"home": 0.2607,
+"draw": 0.2394,
+"away": 0.4999,
 "fav": "away"
 },
 "soft": {
-"home": 0.2636,
-"draw": 0.2389,
-"away": 0.4976,
+"home": 0.2631,
+"draw": 0.2392,
+"away": 0.4978,
 "fav": "away",
 "n": 25
 },
-"pinnMovePP": -0.2,
+"pinnMovePP": -0.0,
 "pinnMove": {
-"movePP": -0.2,
-"stepPP": -0.0,
-"n": 19,
+"movePP": -0.0,
+"stepPP": 0.2,
+"n": 20,
 "move": false,
 "laeuft": false
 },
@@ -864,15 +864,6 @@
 "liga": "Friendlies International U19"
 },
 {
-"spiel": "Austria v Kosovo",
-"grund": "kein_pinnacle",
-"kandidat": "Austria v Kosovo",
-"key": "soccer_uefa_nations_league",
-"nSoft": 25,
-"matchId": "35925546",
-"liga": "UEFA Nations League"
-},
-{
 "spiel": "Spain U20 (W) v Korea DPR U20 (W)",
 "kandidat": "Spain v Croatia",
 "key": "soccer_uefa_nations_league",
@@ -880,6 +871,15 @@
 "grund": "name",
 "matchId": "36116457",
 "liga": "FIFA Ladies U20 World Cup"
+},
+{
+"spiel": "Austria v Kosovo",
+"grund": "kein_pinnacle",
+"kandidat": "Austria v Kosovo",
+"key": "soccer_uefa_nations_league",
+"nSoft": 25,
+"matchId": "35925546",
+"liga": "UEFA Nations League"
 },
 {
 "spiel": "CD Platense (Res) v Fuerte San Francisco (Res)",
@@ -918,15 +918,6 @@
 "liga": "UEFA Nations League"
 },
 {
-"spiel": "Armenia v Montenegro",
-"grund": "kein_pinnacle",
-"kandidat": "Armenia v Montenegro",
-"key": "soccer_uefa_nations_league",
-"nSoft": 25,
-"matchId": "36023029",
-"liga": "UEFA Nations League"
-},
-{
 "spiel": "Central African Republic v Burkina Faso",
 "kandidat": "Atlético Tucuman v Barracas Central",
 "key": "soccer_argentina_primera_division",
@@ -936,12 +927,12 @@
 "liga": "CAF African Cup of Nations Qualifiers"
 },
 {
-"spiel": "Sweden v Poland",
+"spiel": "Armenia v Montenegro",
 "grund": "kein_pinnacle",
-"kandidat": "Sweden v Poland",
+"kandidat": "Armenia v Montenegro",
 "key": "soccer_uefa_nations_league",
 "nSoft": 25,
-"matchId": "36091451",
+"matchId": "36023029",
 "liga": "UEFA Nations League"
 },
 {
@@ -954,11 +945,20 @@
 "liga": "UEFA Nations League"
 },
 {
+"spiel": "Sweden v Poland",
+"grund": "kein_pinnacle",
+"kandidat": "Sweden v Poland",
+"key": "soccer_uefa_nations_league",
+"nSoft": 25,
+"matchId": "36091451",
+"liga": "UEFA Nations League"
+},
+{
 "spiel": "Slovenia v North Macedonia",
 "grund": "kein_pinnacle",
 "kandidat": "Slovenia v North Macedonia",
 "key": "soccer_uefa_nations_league",
-"nSoft": 20,
+"nSoft": 22,
 "matchId": "36091449",
 "liga": "UEFA Nations League"
 },
@@ -1081,13 +1081,13 @@
 "liga": "English WSL"
 },
 {
-"spiel": "Bekasi City v Psms Medan",
-"kandidat": "Orlando City SC v Columbus Crew SC",
-"key": "soccer_usa_mls",
+"spiel": "FK Jablonec B v Kralove B",
+"kandidat": "SC Freiburg v FK Jablonec",
+"key": "soccer_uefa_europa_conference_league",
 "score": 0.5,
 "grund": "name",
-"matchId": "36118658",
-"liga": "Indonesian Championship"
+"matchId": "36118318",
+"liga": "Czech 3 Liga"
 },
 {
 "spiel": "Cercle Brugge II v KVK Tienen",
@@ -1097,6 +1097,15 @@
 "grund": "name",
 "matchId": "36115877",
 "liga": "Belgian National Division 1"
+},
+{
+"spiel": "Bekasi City v Psms Medan",
+"kandidat": "Orlando City SC v Columbus Crew SC",
+"key": "soccer_usa_mls",
+"score": 0.5,
+"grund": "name",
+"matchId": "36118658",
+"liga": "Indonesian Championship"
 },
 {
 "spiel": "Jesenice v NK Dren Vrhnika",
@@ -1115,6 +1124,15 @@
 "grund": "name",
 "matchId": "36109550",
 "liga": "Swedish Division 2"
+},
+{
+"spiel": "NK Croatia Zmijavci v NK Sesvete",
+"kandidat": "NK Celje v Omonoia FC",
+"key": "soccer_uefa_europa_league",
+"score": 0.5,
+"grund": "name",
+"matchId": "36115890",
+"liga": "Croatian Prva NL"
 },
 {
 "spiel": "Athletic Bilbao (W) v Atletico Madrid (W)",
@@ -1153,15 +1171,6 @@
 "liga": "Slovenian 2 SNL"
 },
 {
-"spiel": "NK Croatia Zmijavci v NK Sesvete",
-"kandidat": "NK Celje v Omonoia FC",
-"key": "soccer_uefa_europa_league",
-"score": 0.5,
-"grund": "name",
-"matchId": "36115890",
-"liga": "Croatian Prva NL"
-},
-{
 "spiel": "Lindo FF v IF Eker Örebro",
 "kandidat": "Örebro SK v Ljungskile SK",
 "key": "soccer_sweden_superettan",
@@ -1169,15 +1178,6 @@
 "grund": "name",
 "matchId": "36109549",
 "liga": "Swedish Division 2"
-},
-{
-"spiel": "Slovan Bratislava II v Tatran Presov",
-"kandidat": "ŠK Slovan Bratislava v VfB Stuttgart",
-"key": "soccer_uefa_champs_league",
-"score": 0.67,
-"grund": "name",
-"matchId": "36105064",
-"liga": "Slovakian 2 Liga"
 }
 ]
 }
