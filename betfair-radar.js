@@ -166,7 +166,17 @@
   function topMktVol(m) { var best = 0; for (var i = 0; i < MK.length; i++) { var v = mvolG(m, MK[i].id); if (v > best) best = v; } return best; }
   // Bei aktivem Markt-Filter zeigt der Kopf den GEFILTERTEN Markt, sonst den größten (Lucas 29.07.).
   function cardMoney(m) { if (_bf.market !== 'all') { var v = mvolG(m, _bf.market); if (v > 0) return v; } return topMktVol(m); }
-  function cardMoneyLbl(m) { if (_bf.market !== 'all' && mvolG(m, _bf.market) > 0) { return MK_ID[_bf.market] ? MK_ID[_bf.market].label : shortMk(_bf.market); } return 'größter Markt'; }
+  // 27.09.2026 (Radar-Check, Lucas: „2"): der Kopf sagte „€289K größter Markt" und die Zeile darunter
+  // „1X2 … €289K" — dieselbe Zahl zweimal. Die Summe aller Maerkte waere keine Loesung (29.07.: sie
+  // blaeht den Kopf auf, dasselbe Geld zaehlt in mehreren Maerkten). Also: der Kopf nennt den Markt,
+  // die Zeile laesst die Zahl weg, wenn sie denselben Markt zeigt.
+  function cardMoneyMkt(m) {
+    if (_bf.market !== 'all' && mvolG(m, _bf.market) > 0) return _bf.market;
+    var best = null, bv = 0;
+    for (var i = 0; i < MK.length; i++) { var v = mvolG(m, MK[i].id); if (v > bv) { bv = v; best = MK[i].id; } }
+    return best;
+  }
+  function cardMoneyLbl(m) { var id = cardMoneyMkt(m); return id ? 'auf ' + (MK_ID[id] ? MK_ID[id].label : shortMk(id)) : 'größter Markt'; }
   function runnersOf(mk) { var r = mk && mk.runners; return Array.isArray(r) ? r : []; }
   function distTotal(mk) { return runnersOf(mk).reduce(function (a, r) { return a + (+r.vol || 0); }, 0); }
   function leadRunner(mk) { return runnersOf(mk).reduce(function (a, r) { return (!a || (+r.vol || 0) > (+a.vol || 0)) ? r : a; }, null); }
@@ -690,7 +700,7 @@
       '<span style="font-size:12px;color:' + C.ink + ';font-weight:700">→ ' + esc(lead ? rLabel(lead.name, m) : '—') + reactiveTag(m, lead && lead.name) + '</span>' +
       '<span style="font-size:12px;font-weight:900;color:' + C.gold + '">' + pct.toFixed(0) + '%</span>' +
       '<span style="flex:1;min-width:90px;max-width:160px">' + distBar(mk, true) + '</span>' +
-      '<span style="font-size:13px;font-weight:800;color:' + C.vol + '">' + fmtE(mvolG(m, x.mm.id)) + '</span>' +
+      (x.mm.id === cardMoneyMkt(m) ? '' : '<span style="font-size:13px;font-weight:800;color:' + C.vol + '">' + fmtE(mvolG(m, x.mm.id)) + '</span>') +
       dirBadge(m, x.mm.id, lead) +
       fuehrtTag(m, lead && lead.name) +
       confBadge(m.league, x.mm.id, true) +
@@ -1988,6 +1998,7 @@
          hielten Label 150 px + Balken + nicht umbrechende Meta-Spalte nebeneinander, und die
          Ansichts-Leiste (Live-Radar … Terminal) brach gar nicht um. Horizontal scrollen am Handy.
          Jetzt: Label und Zahl oben, der Balken darunter ueber die ganze Breite. */
+      '@media(min-width:761px){.bf-stick{position:sticky;top:var(--bf-stick-top,0px);z-index:150;background:#0d1117;padding:8px 0 2px;margin:0 -4px;padding-left:4px;padding-right:4px;box-shadow:0 8px 12px -10px rgba(0,0,0,.7);}}',
       '@media(max-width:560px){',
       '.bfb-row{grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;}',
       '.bfb-bar{grid-column:1/-1;grid-row:2;height:9px;}',
@@ -2198,7 +2209,14 @@
     if (_bf.onlyLive) flowBase = flowBase.filter(function (m) { return isLive(m); });
     if (_bf.market !== 'all') flowBase = flowBase.filter(function (m) { return mvolG(m, _bf.market) > 0; });
 
-    var out = head + viewToggle() + infoBand(groups) + hotspotStrip(q) + flowStrip(flowBase) + fixStrip(fixCands) + dateBar(qAll) + controlBar(qAll) + legend() + stale;
+    // 27.09.2026 (Radar-Check, Lucas: „3"): Datum, Ligen, Märkte und „Nur Live" standen unter drei
+    // grossen Bloecken und waren nach dem ersten Scrollen weg. Jetzt kleben sie oben — direkt unter
+    // der App-Leiste (deren Hoehe wird gemessen, sonst rutschen sie darunter). Nur am Desktop: am
+    // Handy waeren das mit zwei Auswahlfeldern ~150 px, ein Drittel des Bildschirms.
+    var _navH = 0;
+    try { var _nav = document.querySelector('.top-nav'); _navH = _nav ? _nav.offsetHeight : 0; } catch (e) { _navH = 0; }
+    var out = head + viewToggle() + infoBand(groups) + hotspotStrip(q) + flowStrip(flowBase) + fixStrip(fixCands)
+      + '<div class="bf-stick" style="--bf-stick-top:' + _navH + 'px">' + dateBar(qAll) + controlBar(qAll) + '</div>' + legend() + stale;
     var t = _bf.tab;
     if (t === 'all' || t === 'top') out += section(groups.top, '⭐ Top 5 + MLS', C.gold, '≥ €20k FT · €10k HT');
     if (t === 'all' || t === 'intl') out += section(groups.intl, '🇪🇺 International / UEFA', C.blue, '≥ €20k FT · €10k HT');

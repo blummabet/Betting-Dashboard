@@ -156,3 +156,21 @@ test('9. Handy: Zeilen brechen um, Ansichts-Leiste bricht um (keine 464 px auf 3
   assert.match(css, /\.bfv-tabs\{display:flex !important;flex-wrap:wrap/);
   assert.match(w._renderBetfairRadar(), /class="bfv-tabs"/);
 });
+
+test('10. Kopf nennt den Markt, die Zeile wiederholt die Zahl nicht; keine Summe über alle Märkte', () => {
+  const m = m1x2(1, 'A', 'B', 7300, 1400, 1400);
+  m.markets['Over/Under 2.5 Goals'] = { vol: 3000, runners: [{ name: 'Over 2.5 Goals', odd: 1.9, vol: 2000 }, { name: 'Under 2.5 Goals', odd: 2.0, vol: 1000 }] };
+  const c = cardOf(boot([m])._renderBetfairRadar(), 1);
+  assert.match(c, /auf 1X2/);
+  assert.equal((c.match(/€10\.1K/g) || []).length, 1, '€10.1K (1X2) genau einmal auf der Karte');
+  assert.doesNotMatch(c, /€13\.1K/, 'nicht die Summe aller Märkte (29.07.: bläht auf)');
+});
+
+test('11. Filterleiste klebt oben (Desktop), unter der App-Leiste', () => {
+  const w = boot([m1x2(1, 'A', 'B', 7200, 1400, 1400)]);
+  const h = w._renderBetfairRadar();
+  const i = h.indexOf('class="bf-stick"');
+  assert.ok(i > 0 && h.indexOf('Nur Live', i) > i && h.indexOf('Alle Ligen', i) > i, 'Filter im klebenden Block');
+  assert.ok(h.indexOf('So liest du den Radar') > h.indexOf('Alle Ligen', i), 'Legende klebt nicht mit');
+  assert.match(w.document.getElementById('bfb-css').textContent, /@media\(min-width:761px\)\{\.bf-stick\{position:sticky;top:var\(--bf-stick-top/);
+});
