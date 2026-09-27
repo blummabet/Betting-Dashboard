@@ -70,7 +70,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "174 Karte(n) · 7 auch public"
+      "note": "175 Karte(n) · 7 auch public"
     },
     {
       "id": "public_push_buch",
@@ -105,10 +105,12 @@
       "id": "buendel_cond_stabil",
       "label": "Bündel-Marktkennung bleibt, was sie war",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
-      "note": "condDrift = 0 heisst: jede offene Bündel-Zeile meint noch denselben Markt wie beim Einstieg."
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "1 offene(r) Buendel-Eintrag/-Eintraege zeigen auf einen anderen Markt als ihre Close-Zeile. Die Annahme hinter dem Stempel-Nachtrag (eine Buendel-`cond` bleibt) gilt nicht mehr — der Nachtrag gehoert geprueft."
+      ],
+      "note": ""
     },
     {
       "id": "resolutions_match_open_keys",
@@ -117,7 +119,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Fällige Märkte je Liga, die ihre Auflösung finden — nur ab dem Beginn des Auflösungsbuchs (2026-09-13); 2164 ältere Märkte bleiben draussen, fuer sie kann es keine geben. < 60% = Settlement läuft wirklich ins Leere."
+      "note": "Fällige Märkte je Liga, die ihre Auflösung finden — nur ab dem Beginn des Auflösungsbuchs (2026-09-13); 2180 ältere Märkte bleiben draussen, fuer sie kann es keine geben. < 60% = Settlement läuft wirklich ins Leere."
     },
     {
       "id": "proven_wallets_profitable",
@@ -126,7 +128,7 @@
       "ok": false,
       "nFail": 5,
       "failures": [
-        "215/480 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (45%) — Trefferquote allein trügt",
+        "217/482 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (45%) — Trefferquote allein trügt",
         "   0xc3c3b3ef30… n=338 Treffer 51% P&L $-3,974,458",
         "   0xa0f21e6d35… n=126 Treffer 63% P&L $-2,635,720",
         "   0xabb89972b2… n=58 Treffer 55% P&L $-2,563,982",
@@ -180,6 +182,6 @@
       "note": "poly_direct_bets.py rechnet über poly_resolutions.json ab. Hängt ein Bet, kennt Poly den Ausgang nicht (Markt noch offen/obskur) oder der Slug passt nicht — dann fehlt echtes Geld in der Bilanz."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-09-27T14:48:27.094986+00:00"
+  "nFail": 3,
+  "generatedAt": "2026-09-27T15:34:44.136067+00:00"
 }
