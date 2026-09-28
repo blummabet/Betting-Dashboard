@@ -97,9 +97,25 @@ def _zaehle_wetten(base_dir, feld, praefixe=None) -> int | None:
     return gesehen if irgendwas else None
 
 
+HTK_FRUEH_AB_H = 3.0
+
+
 def zaehler_htk_shortlist(base_dir):
-    """Abgerechnete Shortlist-Plays, bei denen der Anpfiff-Abstand beim Einstieg feststeht."""
-    return _zaehle_track(base_dir, "htkAtEntry")
+    """Abgerechnete Shortlist-Plays mit FRUEHEM Einstieg (>= 3 h vor Anpfiff) — die knappe Gruppe.
+
+    🔴 27.09.2026 (Messungs-Check, Lucas: „was kam da raus?"). Hier wurden ALLE Plays mit
+    `htkAtEntry` gezaehlt: „391 von 60 · bereit". Die Frage war aber, ob ein FRUEHERER Einstieg
+    traegt — und Einstiege >= 3 h vor Anpfiff gab es null (spaetester: 2,98 h). Die Shortlist
+    speist sich aus dem Close-Pool, der erst drei Stunden vor Anpfiff aufmacht. Der Zaehler
+    meldete eine beantwortbare Frage, deren Vergleichsgruppe leer war.
+    Fehlerklasse: *ein Fortschrittsbalken, der die Summe zaehlt statt der knappsten Gruppe.*
+    """
+    d = _laden(os.path.join(base_dir, "poly_shortlist_track.json"))
+    if not isinstance(d, dict):
+        return None
+    return sum(1 for r in (d.get("settled") or [])
+               if isinstance(r, dict) and isinstance(r.get("htkAtEntry"), (int, float))
+               and r["htkAtEntry"] >= HTK_FRUEH_AB_H)
 
 
 def zaehler_htk_trader(base_dir):

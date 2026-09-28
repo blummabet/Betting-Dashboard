@@ -476,6 +476,42 @@ def check_anker_namensabgleich(ctx):
 
 
 @betfair_check
+def check_pinnacle_nicht_verworfen(ctx):
+    """Stand Pinnacle im Event und wir haben es trotzdem verworfen?
+
+    🔴 27.09.2026 (Lucas: „Nations League muss prinzipiell funktionieren, egal an welcher Stelle —
+    da gibt es zu 100 % Quoten"). Fuenf Nations-League-Spiele in 24 von 24 Laeufen ohne Pinnacle,
+    zwei andere aus demselben Wettbewerb in 24 von 24 mit. Zwei Stellen verloren Pinnacle still:
+    ein Buch, das ein Team anders schreibt als das Event, fiel in `parse_event` heraus, und ein
+    zweites Event zum selben Spiel wurde nie angesehen. Beides ist behoben; seit heute schreibt
+    `ankerGrund` mit, ob Pinnacle ueberhaupt im Event stand (`pinnacleImEvent`, `pinnRoh`).
+
+    Rot, wenn ja — dann liegt es an UNS. Steht Pinnacle nicht im Event, liefert die Quelle es
+    nicht; das zaehlt die Notiz, damit man sieht, wie oft.
+
+    Gegenbeweis: tests/test_nations_league_pinnacle.py (faellt auf dem Stand vom 26.09.).
+    """
+    fails, quelle_fehlt, alt = [], [], 0
+    for g in (ctx.consensus.get("games") or []):
+        a = (g or {}).get("ankerGrund") or {}
+        if a.get("grund") != "kein_pinnacle":
+            continue
+        if "pinnacleImEvent" not in a:
+            alt += 1
+            continue
+        if a.get("pinnacleImEvent") or a.get("pinnRoh"):
+            fails.append("%s (%s): Pinnacle stand im Event, wurde verworfen%s" % (
+                a.get("spiel"), g.get("league"),
+                (" — Pinnacle schreibt: " + ", ".join(a.get("pinnRoh"))) if a.get("pinnRoh") else ""))
+        else:
+            quelle_fehlt.append("%s (%s Buecher, ohne Pinnacle)" % (a.get("spiel"), a.get("nBuecher")))
+    note = ("Quelle ohne Pinnacle: %d%s" % (len(quelle_fehlt), (" — " + "; ".join(quelle_fehlt[:6])) if quelle_fehlt else "")
+            + (" · %d Zeilen noch ohne Buecherliste (Lauf vor dem 27.09.)" % alt if alt else ""))
+    return _chk("pinnacle_nicht_verworfen", "Pinnacle wird nicht verworfen, wo es im Event steht", "error",
+                fails, note)
+
+
+@betfair_check
 def check_totals_vollstaendig(ctx):
     """Bekommen alle Handlisten-Ligen ihre Pinnacle-Torlinien — oder frisst das Zeitbudget sie?
 

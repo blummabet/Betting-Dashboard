@@ -335,8 +335,14 @@ def parse_event(ev) -> dict:
     """the-odds-api-Event -> Probs (de-viggt) UND rohe Dezimal-Quoten je Quelle, [heim, remis, auswaerts]."""
     home, away = ev.get("home_team"), ev.get("away_team")
     pinn, pinn_odds, soft_p, soft_o = None, None, [], []
+    # 27.09.2026 (Lucas: „Nations League muss funktionieren, da gibt es zu 100 % Quoten"): welche
+    # Buecher im Event stehen, war bisher unsichtbar — „kein_pinnacle" konnte heissen „Pinnacle
+    # fehlt" ODER „Pinnacle da, aber verworfen". Jetzt steht es im Artefakt.
+    buecher = sorted({str(bk.get("key")) for bk in (ev.get("bookmakers") or []) if bk.get("key")})
+    pinn_roh = None
     for bk in ev.get("bookmakers") or []:
         h = d = a = None
+        rest = []
         for mkt in bk.get("markets") or []:
             if mkt.get("key") != "h2h":
                 continue
@@ -348,6 +354,22 @@ def parse_event(ev) -> dict:
                     a = pr
                 elif nm and str(nm).lower() == "draw":
                     d = pr
+                else:
+                    rest.append((nm, pr))
+        # 27.09.2026: schreibt ein Buch die Teams anders als das Event („Ireland" statt „Republic
+        # of Ireland"), fiel es bisher STILL heraus — bei Pinnacle hiess das: kein Anker. Genau
+        # eine fehlende Seite + genau ein unbekannter Name + Remis da: ueber den Namensabgleich
+        # zuordnen, aber nur wenn der Name wirklich zu DIESEM Team passt und nicht zum anderen.
+        if d and len(rest) == 1 and (h is None) != (a is None):
+            nm, pr = rest[0]
+            fehlt, anderes = (home, away) if h is None else (away, home)
+            if _name_score(nm, fehlt) > 0 and _name_score(nm, fehlt) > _name_score(nm, anderes):
+                if h is None:
+                    h = pr
+                else:
+                    a = pr
+        if bk.get("key") == "pinnacle" and not (h and d and a):
+            pinn_roh = [str(x[0]) for x in rest] or None
         probs = _devig3(h, d, a) if (h and d and a) else None
         if not probs:
             continue
@@ -362,8 +384,12 @@ def parse_event(ev) -> dict:
     # einzelnes Buch mit irrer (oft live-traeger) Quote den arithmetischen Schnitt hoch und laesst die
     # Anzeige von Scan zu Scan springen (11 -> 34). Der Median ist ausreisser-fest.
     soft_odds = [_median([x[i] for x in soft_o]) for i in range(3)] if soft_o else None
-    return {"home": home, "away": away, "commence": ev.get("commence_time"),
-            "pinn": pinn, "soft": soft, "pinnOdds": pinn_odds, "softOdds": soft_odds, "nSoft": len(soft_p)}
+    out = {"home": home, "away": away, "commence": ev.get("commence_time"),
+           "pinn": pinn, "soft": soft, "pinnOdds": pinn_odds, "softOdds": soft_odds, "nSoft": len(soft_p),
+           "buecher": buecher}
+    if pinn_roh:
+        out["pinnRoh"] = pinn_roh     # Pinnacle stand im Event, liess sich aber nicht zuordnen
+    return out
 
 
 def parse_totals(ev) -> dict:
@@ -408,7 +434,8 @@ def _flip(ev) -> dict:
     return {"home": ev["away"], "away": ev["home"], "commence": ev.get("commence"),
             "pinn": rev(ev.get("pinn")), "soft": rev(ev.get("soft")),
             "pinnOdds": rev(ev.get("pinnOdds")), "softOdds": rev(ev.get("softOdds")), "nSoft": ev.get("nSoft"),
-            "totals": ev.get("totals")}
+            "totals": ev.get("totals"), "key": ev.get("key"), "buecher": ev.get("buecher"),
+            "pinnRoh": ev.get("pinnRoh")}
 
 
 # ── Polymarket (globaler Broad-Scan: poly_money_broad_close.json) ─────────────
@@ -713,8 +740,16 @@ def anker_grund(m, ev, alle_events, max_h=ANPFIFF_FENSTER_H):
     if ev is not None:
         if ev.get("pinn"):
             return None
-        return {"spiel": spiel, "grund": "kein_pinnacle", "kandidat": "%s v %s" % (ev.get("home"), ev.get("away")),
-                "key": ev.get("key"), "nSoft": ev.get("nSoft")}
+        out = {"spiel": spiel, "grund": "kein_pinnacle", "kandidat": "%s v %s" % (ev.get("home"), ev.get("away")),
+               "key": ev.get("key"), "nSoft": ev.get("nSoft")}
+        # 27.09.2026: der Beweis, welcher der Faelle es ist — Pinnacle gar nicht im Event, oder da
+        # und nicht zuordenbar (dann mit den Namen, die Pinnacle schreibt).
+        if ev.get("buecher") is not None:
+            out["pinnacleImEvent"] = "pinnacle" in (ev.get("buecher") or [])
+            out["nBuecher"] = len(ev.get("buecher") or [])
+        if ev.get("pinnRoh"):
+            out["pinnRoh"] = ev.get("pinnRoh")
+        return out
     home, away = m.get("home"), m.get("away")
     best, best_sc, best_both = None, 0.0, False
     for e in (alle_events or []):
@@ -760,6 +795,35 @@ def match_event(m, evs, max_h=None):
         if sc > best_sc:
             best, best_sc = cand, sc
     return best
+
+
+def pinn_nachtragen(m, ev, evs, max_h=None):
+    """Hat das gefundene Event keine Pinnacle-Quote, aber ein ZWEITES Event zum selben Spiel schon,
+    wird Pinnacle von dort uebernommen. REIN.
+
+    🔴 27.09.2026 (Lucas: „Nations League muss funktionieren, egal an welcher Stelle — da gibt es
+    zu 100 % Quoten"). Austria v Kosovo, Gibraltar v Andorra, Israel v Republic of Ireland,
+    Northern Ireland v Hungary, Scotland v Switzerland: 24 von 24 Laeufen ohne Pinnacle, waehrend
+    Norway und Denmark aus demselben Wettbewerb 24 von 24 hatten. `match_event` nimmt EIN Event —
+    bei Gleichstand das erste. Fuehrt die API dasselbe Spiel zweimal (ein Buch schreibt Namen
+    oder Anstoss anders), stand Pinnacle im zweiten, und das wurde nie angesehen.
+
+    Dieselben Regeln wie `match_event` (beide Teams, Schwelle, Anpfiff-Fenster) — nur dass hier
+    unter den Kandidaten MIT Pinnacle gesucht wird. Die Soft-Seite bleibt vom ersten Event.
+    """
+    if ev is None or ev.get("pinn"):
+        return ev
+    mit = [e for e in (evs or []) if e.get("pinn")]
+    if not mit:
+        return ev
+    fenster = max_h if max_h is not None else ANPFIFF_FENSTER_H
+    zweit = match_event(m, mit, max_h=fenster)
+    if zweit is None or not zweit.get("pinn"):
+        return ev
+    out = dict(ev)
+    out["pinn"], out["pinnOdds"] = zweit.get("pinn"), zweit.get("pinnOdds")
+    out["pinnQuelle"] = "%s v %s" % (zweit.get("home"), zweit.get("away"))
+    return out
 
 
 # ── Betfair-Geld-Seite + Richtung ────────────────────────────────────────────
@@ -1456,6 +1520,27 @@ def fetch_totals(sport_key):
         return []
 
 
+def totals_keys(need_keys, live_pool, global_pool, match_fn, max_h=None):
+    """Fuer welche Wettbewerbe die Pinnacle-O/U-Leiter geholt wird. REIN (match_fn wird gereicht).
+
+    🔴 27.09.2026 (Terminal-Check, Denmark v Wales): unter „Andere Maerkte" stand „Noch keine
+    Pinnacle-Totals im Datensatz — erscheinen nach dem naechsten Betfair-Lauf". Sie waeren nie
+    erschienen: die Leiter wurde NUR fuer die Handliste geholt (`need`, gewollt=1 an dem Tag), und
+    die Nations League bekommt ihren Pinnacle-Anker ueber die Entdeckung (globaler Pool). Ein
+    Spiel mit Anker, aber ohne Totals — weil der Totals-Call an einer anderen Liste hing als der
+    Anker. Jetzt: Handliste zuerst, dann jeder entdeckte Key, der einem Radar-Spiel einen
+    PINNACLE-Anker geliefert hat. Ohne Pinnacle im h2h gibt es auch keine Pinnacle-Totals —
+    solche Keys kosten nur einen Call.
+    """
+    out = list(dict.fromkeys(need_keys or []))
+    for m in live_pool or []:
+        ev = match_fn(m, global_pool or [], max_h=max_h)
+        k = (ev or {}).get("key")
+        if k and (ev or {}).get("pinn") and k not in out:
+            out.append(k)
+    return out
+
+
 def main():
     prices = _load(PRICES_FILE, {})
     matches = prices.get("matches") or []
@@ -1507,17 +1592,24 @@ def main():
     # verbraucht, und jeder weitere Call kostet Laufzeit auf einem Runner mit 12-Minuten-Deckel.
     # Totals ebenfalls an die Wanduhr: 30 kuratierte Keys mit je 8s Timeout waeren allein schon
     # 4 Minuten. Die O/U-Leiter ist Komfort (Poly-Terminal) — der Konsens ist es nicht.
-    totals_by_key = {}
-    for k in need:
-        if (_time.monotonic() - _t0) > ODDS_GESAMT_S:
-            print("odds: Gesamtbudget %.0fs erreicht -> Totals fuer %d Ligen ausgelassen"
-                  % (ODDS_GESAMT_S, len(need) - len(totals_by_key)))
-            break
-        totals_by_key[k] = [parse_totals(e) for e in (fetch_totals(k) or [])]
     # Globaler Pool fuer den zweiten Anlauf — nur die Keys, die NICHT schon in der Handliste stehen,
     # damit ein kuratierter Treffer immer Vorrang behaelt.
     _global_pool = [e for k, evs in events_by_key.items() if k not in need for e in evs]
     _alle_events = [e for evs in events_by_key.values() for e in evs]
+
+    # Totals nach dem Pool: die Leiter haengt jetzt an denselben Keys wie der Anker (totals_keys).
+    # Weiter an der Wanduhr — die O/U-Leiter ist Komfort (Poly-Terminal), der Konsens ist es nicht.
+    _tot_keys = totals_keys(
+        list(need.keys()),
+        [m for m in live_pool if not LEAGUE_ODDS_KEY.get(m.get("league"))],
+        _global_pool, match_event, max_h=ANPFIFF_FENSTER_H)
+    totals_by_key = {}
+    for k in _tot_keys:
+        if (_time.monotonic() - _t0) > ODDS_GESAMT_S:
+            print("odds: Gesamtbudget %.0fs erreicht -> Totals fuer %d Ligen ausgelassen"
+                  % (ODDS_GESAMT_S, len(_tot_keys) - len(totals_by_key)))
+            break
+        totals_by_key[k] = [parse_totals(e) for e in (fetch_totals(k) or [])]
 
     # Poly (globaler Broad-Scan, committet vom Poly-Workflow): nur Basis-Moneylines (kein
     # more-markets/exact-score/total), damit wir die Team-Preise + Volumen matchen koennen.
@@ -1613,6 +1705,7 @@ def main():
         _ev = match_event(m, events_by_key.get(_k, [])) if _k else None
         if _ev is None:
             _ev = match_event(m, _global_pool, max_h=ANPFIFF_FENSTER_H)
+        _ev = pinn_nachtragen(m, _ev, _alle_events, ANPFIFF_FENSTER_H)
         _poly = pick_poly(m, _ms, _isl, poly_entries, poly_live_entries, poly_upcoming_entries)
         _g = build_game(m, _ev, hist.get(str(m.get("matchId"))) or [], direction, _poly)
         # 08.09.2026: dieselbe Poly-Pool-Kaskade wie die Money Map, damit die Zentrale-Zeile
@@ -1645,7 +1738,10 @@ def main():
             # Zweiter Anlauf im globalen Pool — MIT Anpfiff-Schranke. So bekommen auch Pokal- und
             # Kleinligaspiele einen Anker, ohne dass die Handliste sie kennen muss.
             ev = match_event(m, _global_pool, max_h=ANPFIFF_FENSTER_H)
-        tev = match_event(m, totals_by_key.get(k, [])) if k else None
+        ev = pinn_nachtragen(m, ev, _alle_events, ANPFIFF_FENSTER_H)
+        # 27.09.2026: Totals ueber den Key des ANKERS, nicht nur ueber die Handliste.
+        _tk = k or (ev or {}).get("key")
+        tev = match_event(m, totals_by_key.get(_tk, [])) if _tk else None
         # Poly-Quelle je nach Phase (18.08.2026, Lucas): LAUFENDES Spiel -> FRISCHE Live-Poly hat Vorrang,
         # sonst zeigte der Terminal auf einem Live-Spiel die eingefrorene Pre-Match-Quote aus dem Close-Pool.
         # Nicht-live: Close (<=3h Freeze, mit Holder-Shares) zuerst, dann die breitere Upcoming-Erfassung
@@ -1735,8 +1831,8 @@ def main():
            # in einer Liga genau so aus wie „Pinnacle bietet keine an".
            # Fehlerklasse: *ein Abbruch, der nur im Log steht, ist fuer jeden Leser ein Nullwert.*
            "oddsTotals": dict(zaehle_keys(totals_by_key),
-                              gewollt=len(need),
-                              ausgelassen=max(0, len(need) - len(totals_by_key))),
+                              gewollt=len(_tot_keys),
+                              ausgelassen=max(0, len(_tot_keys) - len(totals_by_key))),
            "oddsKontingent": dict(KONTINGENT),
            "ankerQuote": (round(sum(1 for g in games if g.get("pinn")) / len(games), 3)
                           if games else None),

@@ -1116,7 +1116,11 @@
   // Fehlerklasse: eine Beschriftung, die etwas anderes verspricht als die Zahl darunter.
   // Drilldown: Preis-Kurve (Verlauf) + Volumen, gematcht-je-Quote, inferierte Back/Lay-Richtung, ½-Kelly in €.
   function _tKoTxt(iso){ if(!iso) return '—'; var t=Date.parse(String(iso)); if(isNaN(t)) return '—';
-    var m=Math.round((t-Date.now())/60000); if(m<0) return 'live'; if(m<60) return 'in '+m+'′'; return 'in '+Math.floor(m/60)+':'+('0'+(m%60)).slice(-2); }
+    // 27.09.2026 (Terminal-Check): „in 25:33" las sich wie eine Uhrzeit (es hiess 25 Std 33 Min).
+    // Jetzt „in 1h 33m", ab einem Tag Wochentag + Uhrzeit.
+    var m=Math.round((t-Date.now())/60000); if(m<0) return 'live'; if(m<60) return 'in '+m+'m';
+    if(m<24*60) return 'in '+Math.floor(m/60)+'h '+('0'+(m%60)).slice(-2)+'m';
+    var d=new Date(t); return ['So','Mo','Di','Mi','Do','Fr','Sa'][d.getDay()]+' '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2); }
   function _tEur(v){ v=Number(v)||0; if(v>=1e6) return '€'+(v/1e6).toFixed(1)+'M'; if(v>=1e3) return '€'+Math.round(v/1e3)+'K'; return '€'+Math.round(v); }
   function _tEdge(g){ var s=g.moneySide, p=(g.pinn&&typeof g.pinn[s]==='number')?g.pinn[s]:null; return (p&&g.moneyOdd>1)?(p*g.moneyOdd-1):null; }
   function _tFair(g){ var s=g.moneySide, p=(g.pinn&&typeof g.pinn[s]==='number')?g.pinn[s]:null; return (p&&p>0)?(1/p):null; }
@@ -1141,8 +1145,16 @@
   //
   // Ab jetzt entscheidet die RENDITE-UNTERGRENZE (roiUg, n>=30 wie überall sonst). Unter 30 Plays
   // gibt es keine Untergrenze und deshalb keinen Mute: nichts zu wissen ist kein Grund wegzublenden.
+  // 27.09.2026 (Terminal-Check): „🔇 kein Anker" stand gleich da, ob das Spiel gar nicht gefunden
+  // wurde oder ob es mit 17 Buchmachern da war und nur Pinnacle fehlte (Austria, Gibraltar,
+  // Israel, N. Irland, Schottland). Der Grund steht laengst im Artefakt (ankerGrund, 26.09.).
+  function _tAnkerTxt(g){ var a=(g&&g.ankerGrund)||{};
+    if(a.grund==='kein_pinnacle') return 'Pinnacle fehlt'+(a.nSoft?' ('+a.nSoft+' andere Bücher da)':'');
+    if(a.grund==='zeit') return 'kein Anker (Anpfiff passt nicht)';
+    if(a.grund==='name'||a.grund==='kein_kandidat') return 'Spiel nicht im Quotenfeed';
+    return 'kein Anker'; }
   function _tMute(g){ var e=_tEdge(g), b=_tBucket(g);
-    if(e==null) return {m:true,r:'kein Anker'};
+    if(e==null) return {m:true,r:_tAnkerTxt(g)};
     // 04.09.2026: dieselbe Quelle wie ueberall — das Urteil kommt aus dem Artefakt, nicht aus
     // einer vierten Schwelle, die hier zufaellig -0.05 statt -0.10 hiess.
     // 07.09.2026: an der Risiko-Marke, nicht am Urteil — unveraendertes Verhalten, ehrlicher Text.
@@ -1155,6 +1167,13 @@
     pts.sort(function(a,b){return a.t-b.t;}); return pts; }
   function _tBank(){ var b=(_bf.bankroll!=null)?_bf.bankroll:1000; _bf.bankroll=b; return b; }
   function _tHalfKelly(g){ var e=_tEdge(g); return (e!=null&&e>0&&g.moneyOdd>1)?(e/(g.moneyOdd-1))*0.5:0; }
+  // 🔴 27.09.2026 (Terminal-Check): „Burgos v Eldense · ● LIVE · 🔇 Bucket-Unterseite UG -37% ·
+  // Konviktion 0 · ½-Kelly €5". Eine gesperrte, laufende Zeile mit Einsatz-Vorschlag. Der Satz
+  // unter der Tabelle sagt seit jeher „ohne Kelly-Stake, weil es dort keinen belastbaren Anker
+  // gibt" — die Rechnung hat es nie gefragt. Live stammen Pinnacle- und Betfair-Quote aus
+  // verschiedenen Minuten, und gemutet heisst „nicht handelbar". Beides: kein Stake.
+  function _tStakeGrund(g, mute){ if(g&&g.live) return 'live — Anker und Quote aus verschiedenen Minuten'; if(mute&&mute.m) return 'gemutet — '+mute.r; return ''; }
+  function _tStake(g, mute){ return _tStakeGrund(g, mute) ? 0 : _tHalfKelly(g); }
   // 17.08.2026 (Lucas P4): Cross-Source-Konviktion — die 3 Quellen (Betfair-Fluss + Pinnacle-Anker/Steam
   // + Poly-Crowd) zu EINER Zahl 0–100 verdichtet. Einig + Geld rein + Sharp-Steam → hoch; Drift/Widerspruch → runter.
   function _tConv(g){
@@ -1364,7 +1383,10 @@
         +'<thead><tr>'+th('Markt','left')+th('Wo das Geld liegt · <span style="color:#4cc2ff">mehr</span> ←→ Gegenseite (Quote · matched €)','left')+th('Edge vs Pinnacle')+th('Fluss ges.')+'</tr></thead><tbody>'+body+'</tbody></table></div>'
       +'<div style="font-size:10px;color:'+C.mut+';margin-top:8px;line-height:1.55">Je Markt beide Seiten mit Quote, gematchtem € und Anteil; der Balken zeigt das Verhältnis (<span style="color:#4cc2ff">blau</span> = mehr Geld). „Back ✓/driftet" steht an der Seite, für die es gilt (aus dem Quotenverlauf). '
         +'Edge vs Pinnacle = faire O/U-% (de-viggt, neuester Pinnacle-Snap) × Betfair-Quote − 1, beste Seite; grün ≥ +2%. '
-        +(hasPT?'':'<b>Noch keine Pinnacle-Totals im Datensatz</b> — erscheinen nach dem nächsten Betfair-Lauf. ')
+        // 27.09.2026: „erscheinen nach dem naechsten Lauf" war fuer jede Liga ohne Handlisten-Eintrag
+        // falsch — sie waeren nie erschienen. Seit heute folgen die Totals dem Anker (totals_keys);
+        // fehlen sie trotzdem, liefert Pinnacle fuer dieses Spiel keine O/U-Leiter.
+        +(hasPT?'':'<b>Keine Pinnacle-O/U-Leiter für dieses Spiel</b> — ohne sie keine O/U-Edge. ')
         +'Linien ohne Pinnacle-Total (BTTS, Ecken, 1.HZ …) bleiben ohne Edge.</div>'
       +'</div>';
   }
@@ -1434,15 +1456,16 @@
   }
 
   function _tDrawer(g){
-    var edge=_tEdge(g),fair=_tFair(g),pts=_tSer(g),bank=_tBank(),hk=_tHalfKelly(g),stake=bank*hk;
+    var _dm=_tMute(g), _dsg=_tStakeGrund(g,_dm);
+    var edge=_tEdge(g),fair=_tFair(g),pts=_tSer(g),bank=_tBank(),hk=_tStake(g,_dm),stake=bank*hk;
     var dir='',dcol=C.mut; if(pts.length>=2){ var d=pts[pts.length-1].o-pts[0].o;
       if(d< -0.01){ dir='BACK — Quote von '+pts[0].o.toFixed(2)+' auf '+pts[pts.length-1].o.toFixed(2)+' gekürzt (Geld rein)'; dcol='#2ee08a'; }
       else if(d>0.01){ dir='DRIFT — Quote von '+pts[0].o.toFixed(2)+' auf '+pts[pts.length-1].o.toFixed(2)+' gestiegen (Geld raus)'; dcol='#ff5d5d'; }
       else { dir='flach — kaum Bewegung ('+pts[0].o.toFixed(2)+' → '+pts[pts.length-1].o.toFixed(2)+')'; } }
     var col2='background:'+C.card+';border:1px solid '+C.bd+';border-radius:10px;padding:10px 12px';
-    var kelly= (edge!=null&&edge>0)
+    var kelly= (edge!=null&&edge>0&&!_dsg)
       ? '<div style="font-size:22px;font-weight:900;color:#2ee08a;font-family:monospace">'+_tEur(stake)+'</div><div style="font-size:10.5px;color:'+C.mut+';margin-top:2px">½-Kelly · '+(hk*100).toFixed(1)+'% der Bankroll ('+_tEur(bank)+')</div>'
-      : '<div style="font-size:15px;font-weight:800;color:'+C.dim+'">kein Stake</div><div style="font-size:10.5px;color:'+C.mut+';margin-top:2px">keine positive Kante — '+(edge==null?'kein Pinnacle-Anker':'Edge '+(edge*100).toFixed(1)+'%')+'</div>';
+      : '<div style="font-size:15px;font-weight:800;color:'+C.dim+'">kein Stake</div><div style="font-size:10.5px;color:'+C.mut+';margin-top:2px">'+(_dsg?esc(_dsg):('keine positive Kante — '+(edge==null?'kein Pinnacle-Anker':'Edge '+(edge*100).toFixed(1)+'%')))+'</div>';
     return '<div style="padding:12px 4px 6px">'
       +'<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px">'
         +'<div style="flex:2;min-width:300px;'+col2+'">'
@@ -1467,7 +1490,10 @@
     var cx=_bf.consensus, games=((cx&&cx.games)||[]).slice();
     if(!games.length) return viewToggle()+'<div style="padding:44px;text-align:center;color:'+C.mut+'">Noch keine Konsens-Daten — das Terminal füllt sich mit dem nächsten Betfair-Lauf.</div>';
     var bank=_tBank();
-    var rows=games.map(function(g){ return {g:g,edge:_tEdge(g),b:_tBucket(g),hk:_tHalfKelly(g),mute:_tMute(g)}; });
+    var rows=games.map(function(g){ var _mu=_tMute(g); return {g:g,edge:_tEdge(g),b:_tBucket(g),hk:_tStake(g,_mu),mute:_tMute(g)}; });
+    // Die Card-Spalte nur, wenn es eine Card gibt — in der Laenderspielpause stand in jeder Zeile
+    // „keine Card", eine ganze Spalte ohne Information.
+    var _hatCard=games.some(function(g){ return !!_tCardLink(g); }), _nCol=_hatCard?10:9;
     rows.sort(function(a,b){ var am=a.mute.m?1:0,bm=b.mute.m?1:0; if(am!==bm) return am-bm; return (b.edge==null?-9:b.edge)-(a.edge==null?-9:a.edge); });
     var nMuted=rows.filter(function(r){return r.mute.m;}).length, hideMuted=!!_bf.termHideMuted;
     var shown=hideMuted?rows.filter(function(r){return !r.mute.m;}):rows;
@@ -1481,12 +1507,13 @@
       +'<span style="color:'+C.dim+'">→ ½-Kelly-Stakes in € je Zeile</span>'
       +(nMuted?'<label style="margin-left:auto;display:inline-flex;align-items:center;gap:6px;cursor:pointer;color:'+C.mut+'"><input type="checkbox" '+(hideMuted?'checked':'')+' onchange="_bfTermMute(this.checked)" onclick="event.stopPropagation()" style="cursor:pointer"/> '+nMuted+' gemutet ausblenden</label>':'')
       +'</div>';
-    var out=viewToggle()+head+bankBar+'<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12.5px">'
-      +'<thead><tr>'+th('Anpfiff','left')+th('Spiel','left')+th('Geld-Seite','left')+th('Unsere Card','left')+th('Edge')+th('Konviktion')+th('Fluss')+th('× Liga-Norm')+th('Liga-Bilanz')+th('½-Kelly €')+'</tr></thead><tbody>';
+    var _cardNote=_hatCard?'':'<div style="font-size:10.5px;color:'+C.dim+';margin:-4px 0 8px">Unsere Card: keine Card zu diesen Spielen — Spalte ausgeblendet, bis eine dazukommt.</div>';
+    var out=viewToggle()+head+bankBar+_cardNote+'<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12.5px">'
+      +'<thead><tr>'+th('Anpfiff','left')+th('Spiel','left')+th('Geld-Seite','left')+(_hatCard?th('Unsere Card','left'):'')+th('Edge')+th('Konviktion')+th('Fluss')+th('× Liga-Norm')+th('Liga-Bilanz')+th('½-Kelly €')+'</tr></thead><tbody>';
     var mutedStarted=false;
     shown.forEach(function(r){
       var g=r.g,e=r.edge,open=(String(_bf.termOpen)===String(g.matchId));
-      if(r.mute.m && !mutedStarted){ mutedStarted=true; out+='<tr><td colspan="10" style="padding:10px 10px 4px;font-size:10px;color:'+C.dim+';border-top:1px dashed '+C.bd+'">🔇 Nicht handelbar (gemutet) — kein Pinnacle-Anker oder ein Bucket, dessen Rendite-UNTERGRENZE negativ ist. Nach unten sortiert.</td></tr>'; }
+      if(r.mute.m && !mutedStarted){ mutedStarted=true; out+='<tr><td colspan="'+_nCol+'" style="padding:10px 10px 4px;font-size:10px;color:'+C.dim+';border-top:1px dashed '+C.bd+'">🔇 Nicht handelbar (gemutet) — kein Pinnacle-Anker oder ein Bucket, dessen Rendite-UNTERGRENZE negativ ist. Nach unten sortiert.</td></tr>'; }
       var dirTag=g.moneyDir==='in'?'<span style="font-size:8.5px;font-weight:800;color:#2ee08a;background:rgba(46,224,138,.14);padding:1px 5px;border-radius:5px">BACK</span>'
                  :g.moneyDir==='out'?'<span style="font-size:8.5px;font-weight:800;color:#ff5d5d;background:rgba(255,93,93,.14);padding:1px 5px;border-radius:5px">DRIFT</span>':'';
       var conv=_tConvMeter(g);
@@ -1505,20 +1532,22 @@
         clv='<span title="ROI '+Math.round((r.b.roi||0)*100)+'% auf nur '+r.b.n+' Plays — unter n='+(r.b.ugAb||30)+' gibt es keine Untergrenze und damit kein Urteil" style="color:'+C.dim+';font-size:10px">kein Urteil · n'+r.b.n+'</span>';
       } else { clv='<span style="color:'+C.dim+';font-size:10px">dünn</span>'; }
       var ko=g.live?'<span style="color:#ff5d5d;font-weight:700;font-family:monospace">● LIVE</span>':'<span style="font-family:monospace;color:'+C.mut+'">'+_tKoTxt(g.kickoff)+'</span>';
-      var stakeCell=r.hk>0?('<b>'+_tEur(bank*r.hk)+'</b> <span style="color:'+C.dim+';font-weight:600">'+(r.hk*100).toFixed(1)+'%</span>'):'—';
+      var _sg=_tStakeGrund(g, r.mute);
+      var stakeCell=r.hk>0?('<b>'+_tEur(bank*r.hk)+'</b> <span style="color:'+C.dim+';font-weight:600">'+(r.hk*100).toFixed(1)+'%</span>'):('<span'+(_sg?' title="kein Stake: '+esc(_sg)+'"':'')+'>—</span>');
       out+='<tr onclick="_bfTermOpen(\''+g.matchId+'\')" style="border-bottom:1px solid rgba(255,255,255,.045);cursor:pointer;opacity:'+(r.mute.m?'0.5':'1')+';background:'+(open?'rgba(76,194,255,.06)':'transparent')+'">'
         +'<td style="padding:7px 10px">'+ko+'</td>'
         +'<td style="padding:7px 10px"><span style="color:'+C.dim+';margin-right:4px">'+(open?'▾':'▸')+'</span><b>'+esc(g.home)+'</b> <span style="color:'+C.dim+'">v '+esc(g.away)+'</span><div style="font-size:10px;color:'+C.dim+';padding-left:14px">'+esc(g.league||'')+'</div></td>'
         +'<td style="padding:7px 10px;font-family:monospace"><b>'+esc(g.moneyName)+'</b> <span style="color:#5eead4">@'+(g.moneyOdd||'—')+'</span>'+(r.mute.m?' <span style="font-family:system-ui;font-size:8.5px;color:'+C.dim+';border:1px solid '+C.bd+';padding:0 4px;border-radius:4px;white-space:nowrap">🔇 '+esc(r.mute.r)+'</span>':'')+'</td>'
-        +'<td style="padding:7px 10px">'+_tCardCell(g)+'</td>'
-        +'<td style="padding:7px 10px;text-align:right;font-family:monospace;font-weight:800;color:'+eCol(e)+'">'+(e==null?'—':(e>=0?'+':'')+(e*100).toFixed(1)+'%')+'</td>'
+        +(_hatCard?'<td style="padding:7px 10px">'+_tCardCell(g)+'</td>':'')
+        // 27.09.2026: live grau — dort ist die Edge ein Zeitversatz, keine Kante (Burgos stand gruen +2,0 %).
+        +'<td'+(g.live&&e!=null?' title="Live: Pinnacle- und Betfair-Quote aus verschiedenen Minuten — kein handelbarer Edge"':'')+' style="padding:7px 10px;text-align:right;font-family:monospace;font-weight:800;color:'+(g.live&&e!=null?C.dim:eCol(e))+'">'+(e==null?'—':(g.live?'~':'')+(e>=0?'+':'')+(e*100).toFixed(1)+'%')+'</td>'
         +'<td style="padding:7px 10px;text-align:right;white-space:nowrap">'+conv+'</td>'
         +'<td style="padding:7px 10px;text-align:right;font-family:monospace;white-space:nowrap">'+_tEur(g.totVol)+' '+dirTag+'</td>'
         +'<td style="padding:7px 10px;text-align:right;font-family:monospace">'+_tNormCell(g)+'</td>'
         +'<td style="padding:7px 10px;text-align:right">'+clv+'</td>'
         +'<td style="padding:7px 10px;text-align:right;font-family:monospace;font-weight:700;color:'+(r.hk>0?C.ink:C.dim)+'">'+stakeCell+'</td>'
         +'</tr>';
-      if(open){ out+='<tr style="background:rgba(76,194,255,.03)"><td colspan="10" style="padding:0 10px 6px">'+_tDrawer(g)+'</td></tr>'; }
+      if(open){ out+='<tr style="background:rgba(76,194,255,.03)"><td colspan="'+_nCol+'" style="padding:0 10px 6px">'+_tDrawer(g)+'</td></tr>'; }
     });
     out+='</tbody></table></div>';
     // 07.09.2026 (Lucas: „verwende ich fast nie, ist aber schade") — der zweite Grund neben der

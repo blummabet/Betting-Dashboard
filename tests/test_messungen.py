@@ -123,7 +123,8 @@ class Buch(unittest.TestCase):
         self._schreib("poly_shortlist_track.json",
                       {"settled": [{"htkAtEntry": 3.0}, {"htkAtEntry": 0.5}, {"x": 1}]})
         b = M.buch({"messungen": [_e()]}, self.dir, heute="2026-09-15")
-        self.assertEqual(b["messungen"][0]["standN"], 2)
+        # 27.09.2026: gezaehlt wird die fruehe Gruppe (>= 3 h) — 3.0 zaehlt, 0.5 nicht.
+        self.assertEqual(b["messungen"][0]["standN"], 1)
 
     def test_werfender_zaehler_kippt_das_buch_nicht(self):
         echt = M.ZAEHLER["htk_shortlist"]
@@ -317,3 +318,20 @@ class TestDieEinseitigkeitsMessung(unittest.TestCase):
         self.assertEqual(e[0]["messer"], "bf_leadshare")
         self.assertIn(e[0]["messer"], M.ZAEHLER)
         self.assertIn("betfair_public_ledger.json", e[0]["quelle"])
+
+
+# 27.09.2026: der Horizont-Zaehler zaehlt die knappe (fruehe) Gruppe, nicht die Summe.
+def test_horizont_zaehlt_nur_fruehe_einstiege(tmp_path):
+    import json as _j
+    import messungen as _M
+    rows = [{"htkAtEntry": h} for h in (0.5, 1.2, 2.98, -1.0)] + [{"htkAtEntry": 3.0}, {"htkAtEntry": 26.0}]
+    (tmp_path / "poly_shortlist_track.json").write_text(_j.dumps({"settled": rows}))
+    assert _M.zaehler_htk_shortlist(str(tmp_path)) == 2
+
+
+def test_gegenbeweis_ohne_fruehe_einstiege_null_statt_bereit(tmp_path):
+    import json as _j
+    import messungen as _M
+    rows = [{"htkAtEntry": h} for h in (0.5, 1.2, 2.98)] * 100
+    (tmp_path / "poly_shortlist_track.json").write_text(_j.dumps({"settled": rows}))
+    assert _M.zaehler_htk_shortlist(str(tmp_path)) == 0

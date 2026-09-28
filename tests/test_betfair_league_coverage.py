@@ -73,24 +73,26 @@ class NeueZuordnungen(unittest.TestCase):
         doppelt = {k: v for k, v in rueck.items() if len(v) > 1}
         self.assertEqual(doppelt, {"soccer_usa_mls": ["US MLS", "Major League Soccer"]}, doppelt)
 
-    def test_totals_haben_keinen_globalen_zweiten_anlauf(self):
-        """DER Grund, warum die Handliste ueberhaupt noch waechst.
+    def test_totals_folgen_dem_anker_und_die_handliste_geht_vor(self):
+        """Neu geschrieben am 27.09.2026 — wie der Vorgaenger es verlangt hat.
 
-        `ev` bekommt einen zweiten Anlauf im globalen Pool, `tev` nicht — `totals_by_key` wird
-        ausdruecklich nur fuer die kuratierten Keys gefuellt (Laufzeit, nicht Quota; der Job
-        hat einen Minuten-Deckel). Ohne Eintrag in der Handliste gibt es also einen
-        Pinnacle-Anker fuer 1X2, aber NIE einen fuer die Torlinien.
+        Bis heute hiess dieser Test `test_totals_haben_keinen_globalen_zweiten_anlauf` und hielt
+        fest: `tev` bekommt keinen Pool-Fallback, Totals nur fuer die Handliste. Dort stand auch:
+        „Bekommt `tev` eines Tages einen Pool-Fallback, wird dieser Test rot — dann ist die
+        Begruendung fuer die 13 Eintraege oben verfallen und gehoert neu geschrieben."
 
-        Bekommt `tev` eines Tages einen Pool-Fallback, wird dieser Test rot — dann ist die
-        Begruendung fuer die 13 Eintraege oben verfallen und gehoert neu geschrieben, nicht
-        der Test geloescht."""
+        Anlass (Terminal-Check): Denmark v Wales hatte einen Pinnacle-Anker ueber den Pool, aber
+        nie Torlinien, und der Terminal versprach sie „nach dem naechsten Lauf". Jetzt holt
+        `totals_keys()` die Leiter auch fuer jeden entdeckten Key mit Pinnacle-Anker.
+
+        Was von der Begruendung bleibt: die Handliste steht in der Reihenfolge VORN. Reisst das
+        Zeitbudget (BF_ODDS_GESAMT_S), fallen zuerst die entdeckten Keys weg, nicht die 13
+        kuratierten — die Messung `torlinien-13-ligen` fragt also weiter das Richtige."""
         src = inspect.getsource(BC)
-        self.assertIn("totals_by_key = {}\n    for k in need:", src,
-                      "Totals werden nicht mehr nur fuer die kuratierten Keys geholt")
-        tev = [l for l in src.split("\n") if re.match(r"\s*tev = ", l)]
-        self.assertTrue(tev, "tev wird nicht mehr gesetzt")
-        for l in tev:
-            self.assertIn("if k else None", l, l)
+        self.assertIn("out = list(dict.fromkeys(need_keys or []))", src, "Handliste muss vorn stehen")
+        main = src[src.index("def main():"):]
+        self.assertIn("list(need.keys()),", main)
+        self.assertIn('_tk = k or (ev or {}).get("key")', main)
         self.assertNotIn("_global_totals", src)
 
     def test_abdeckung_wird_gemessen_nicht_behauptet(self):

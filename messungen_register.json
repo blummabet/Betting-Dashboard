@@ -12,7 +12,8 @@
    "messer": "htk_shortlist",
    "mindestN": 60,
    "entscheidung": null,
-   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist"
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "nachtrag": "27.09.2026: ausgewertet — nicht beantwortbar. 391 abgerechnete Plays, alle zwischen live und 2,98 h vor Anpfiff; Einstiege >= 3 h: null. Die Shortlist liest den Close-Pool (<= 3 h), frueher gibt es keinen Einstieg. Innerhalb der 3 h kein Muster (<1h ROI -1,4 %, 1-2h -13,6 %, 2-3h +4,7 %; alle Untergrenzen negativ). Der Zaehler zaehlt seit heute nur die fruehe Gruppe. Beantwortbar erst, wenn die Shortlist auch aus dem Upcoming-Pool einsteigt."
   },
   {
    "id": "horizont-trader",
@@ -38,7 +39,8 @@
    "messer": "echte_fills",
    "mindestN": 25,
    "entscheidung": null,
-   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist"
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "nachtrag": "27.09.2026: Zwischenstand n=78 abgerechnet. Echt ROI +6,5 % (UG -4,0 %), Papier auf gleichem Einsatz +8,6 %. Der echte Fill kostet im Mittel +0,64 Cent (Median +0,50) gegen den Papierpreis; CLV-Vorsprung -0,59 pp, Band [-1,44, +0,25]."
   },
   {
    "id": "devig-proportional-vs-power",
@@ -103,7 +105,8 @@
    "messer": "einigkeit_schatten",
    "mindestN": 40,
    "entscheidung": null,
-   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist"
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "nachtrag": "27.09.2026: Zwischenstand n=152 (Mindestzahl 40 erreicht). Treffer 66,5 %, ROI -4,5 % (UG -14,3 %), CLV -0,04 pp. Die Rueckschau (77,1 % / +19,9 %) haelt vorwaerts nicht. Heutige Public-Regel seit 03.09.: n=47, ROI +14,2 % (UG -10,0 %)."
   },
   {
    "id": "betfair-einseitigkeit-schwelle",
@@ -204,6 +207,7 @@
    "gestartet": "2026-09-25",
    "faellig": "2026-10-12",
    "quelle": "betfair_consensus.json -> leaguesMitTotals, oddsTotals",
+   "nachtrag": "27.09.2026: Totals werden jetzt ZUSAETZLICH fuer jeden entdeckten Key mit Pinnacle-Anker geholt (totals_keys, Anlass: Denmark v Wales ohne Torlinien). Die Handliste steht in der Reihenfolge vorn, die Frage bleibt gueltig — aber `oddsTotals.gewollt` ist ab jetzt groesser als die Handliste, und `ausgelassen` > 0 kann auch entdeckte Keys meinen.",
    "messer": null,
    "mindestN": null,
    "entscheidung": null,
