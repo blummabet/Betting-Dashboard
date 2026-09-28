@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-28T16:34:54.177148+00:00",
+ "generatedAt": "2026-09-28T16:50:15.921005+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -119,7 +119,7 @@
     "nieAnteil": 0.052,
     "schaetzbar": false
    },
-   "alterTage": 1.1,
+   "alterTage": 1.2,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py",
    "seitFreigabe": {
@@ -599,7 +599,7 @@
     "nieAnteil": 0.337,
     "schaetzbar": false
    },
-   "alterTage": 0.7,
+   "alterTage": 0.8,
    "art": "conviction",
    "wert": 8,
    "nAlt": 12,
@@ -665,8 +665,8 @@
    "gruppen": 7,
    "basis": null,
    "n": 40000,
-   "pl": -317.27,
-   "roi": -0.0079,
+   "pl": -312.36,
+   "roi": -0.0078,
    "clv": null,
    "belegte": 13
   }
@@ -1085,6 +1085,18 @@
    "belegt": false
   },
   {
+   "liga": "Colombian Primera A",
+   "n": 396,
+   "wins": 201,
+   "hit": 0.5076,
+   "hitLb": 0.4663,
+   "roi": 0.0792,
+   "roiLb": -0.027,
+   "pl": 31.37,
+   "clv": 0.063,
+   "belegt": false
+  },
+  {
    "liga": "Malaysian President Cup",
    "n": 30,
    "wins": 21,
@@ -1106,18 +1118,6 @@
    "roiLb": -0.0281,
    "pl": 20.07,
    "clv": 0.111,
-   "belegt": false
-  },
-  {
-   "liga": "Colombian Primera A",
-   "n": 398,
-   "wins": 201,
-   "hit": 0.505,
-   "hitLb": 0.4639,
-   "roi": 0.0738,
-   "roiLb": -0.0321,
-   "pl": 29.37,
-   "clv": 0.059,
    "belegt": false
   },
   {
@@ -3989,6 +3989,18 @@
    "belegt": false
   },
   {
+   "liga": "UAE Presidents Cup",
+   "n": 39,
+   "wins": 15,
+   "hit": 0.3846,
+   "hitLb": 0.268,
+   "roi": -0.2169,
+   "roiLb": -0.5233,
+   "pl": -8.46,
+   "clv": 2.291,
+   "belegt": false
+  },
+  {
    "liga": "French Ligue 3",
    "n": 40,
    "wins": 14,
@@ -3998,18 +4010,6 @@
    "roiLb": -0.577,
    "pl": -12.63,
    "clv": 0.017,
-   "belegt": false
-  },
-  {
-   "liga": "UAE Presidents Cup",
-   "n": 33,
-   "wins": 11,
-   "hit": 0.3333,
-   "hitLb": 0.2156,
-   "roi": -0.2833,
-   "roiLb": -0.627,
-   "pl": -9.35,
-   "clv": 2.98,
    "belegt": false
   }
  ],
@@ -4282,7 +4282,7 @@
     "nieAnteil": 0.052,
     "schaetzbar": false
    },
-   "alterTage": 1.1,
+   "alterTage": 1.2,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py",
    "seitFreigabe": {
@@ -4760,7 +4760,7 @@
     "nieAnteil": 0.337,
     "schaetzbar": false
    },
-   "alterTage": 0.7,
+   "alterTage": 0.8,
    "art": "conviction",
    "wert": 8,
    "nAlt": 12,
@@ -5008,12 +5008,12 @@
   {
    "schublade": "Both teams to Score?",
    "strom": "betfair",
-   "n": 5894,
+   "n": 5893,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0018,
-   "pl": -10.61,
-   "roiLb": -0.0232,
+   "roi": -0.0016,
+   "pl": -9.43,
+   "roiLb": -0.023,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5033,9 +5033,9 @@
    "n": 6293,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0007,
-   "pl": -4.41,
-   "roiLb": -0.0244,
+   "roi": -0.0003,
+   "pl": -1.89,
+   "roiLb": -0.0241,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5371,6 +5371,28 @@
    "naeherung": false
   },
   {
+   "schublade": "Colombian Primera A · Half Time",
+   "strom": "betfair",
+   "n": 55,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.3913,
+   "pl": 21.52,
+   "roiLb": -0.0424,
+   "clv": null,
+   "clvLb": null,
+   "clvUrteil": "nicht erhoben",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "keine_einzelwerte",
+   "entfernung": null,
+   "alterTage": null,
+   "art": "liga_markt",
+   "naeherung": false
+  },
+  {
    "schublade": "Swedish Division 1 · Over/Under 2.5 Goals",
    "strom": "betfair",
    "n": 68,
@@ -5393,45 +5415,6 @@
    "naeherung": false
   },
   {
-   "schublade": "🔒 Fade-Unter · Ganzspiel-Torlinie",
-   "strom": "betfair",
-   "n": 3900,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0084,
-   "pl": -32.82,
-   "roiLb": -0.0443,
-   "clv": null,
-   "clvLb": null,
-   "clvUrteil": "nicht erhoben",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "nicht_positiv",
-   "entfernung": {
-    "median": 28023,
-    "lo": 2536,
-    "hi": 5069452,
-    "nieAnteil": 0.653,
-    "schaetzbar": false
-   },
-   "alterTage": 0.0,
-   "art": "vorangemeldet",
-   "angemeldet": "2026-09-07T06:34:08.582101+00:00",
-   "zielN": 200,
-   "warum": "Lucas: „wenn wir sehen, dass die gespielten Sachen schlecht liefen, könnte man das ins Positive umkehren und faden.\" Gemessen ueber 15.945 abgerechnete Zeilen in getrennter Such- und Pruefhaelfte: von 16 Markt×Seite-Schnitten waren genau zwei in BEIDEN Haelften positiv, und beide sind Ganzspiel-Torlinien mit dem Geld auf UNTER. n=2.720, Geldseite trifft 59,2 % gegen 62,4 % implizit (-3,2 pp); der Fade brachte +5,5 % / +5,2 % nach Kommission. Kontrolle: auf Match Odds, BTTS und der 1.-HZ-Linie ist die Geldseite 1-2 pp BESSER als implizit, und dort verliert derselbe Fade korrekt -5,6 bis -7,8 %. ⚠️ Der Gegenpreis war im Altbestand NICHT erhoben und musste rekonstruiert werden (haelt bis ~1 % Overround, stirbt bei 2 %); ausserdem 12 Tage Basis und ein nachtraeglich gepoolter Schnitt aus 16. Genau deshalb steht er hier: der Rueckblick ist der Fund, nicht der Beleg. zielN=200 statt 40, weil bei einer Streuung von ~1,3 je Play alles darunter nur ein Punktschaetzer waere.",
-   "quelle": "betfair_track_results.json → fade_unter.py",
-   "nDavor": 2564,
-   "rueckblick": {
-    "n": 2720,
-    "roi": 0.0546,
-    "roiLb": 0.0099,
-    "clv": null,
-    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
-   }
-  },
-  {
    "schublade": "Argentinian Primera Division · First Half Goals 1.5",
    "strom": "betfair",
    "n": 57,
@@ -5452,6 +5435,45 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
+  },
+  {
+   "schublade": "🔒 Fade-Unter · Ganzspiel-Torlinie",
+   "strom": "betfair",
+   "n": 3901,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.0087,
+   "pl": -33.82,
+   "roiLb": -0.0445,
+   "clv": null,
+   "clvLb": null,
+   "clvUrteil": "nicht erhoben",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "nicht_positiv",
+   "entfernung": {
+    "median": 27010,
+    "lo": 2595,
+    "hi": 3196751,
+    "nieAnteil": 0.663,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "vorangemeldet",
+   "angemeldet": "2026-09-07T06:34:08.582101+00:00",
+   "zielN": 200,
+   "warum": "Lucas: „wenn wir sehen, dass die gespielten Sachen schlecht liefen, könnte man das ins Positive umkehren und faden.\" Gemessen ueber 15.945 abgerechnete Zeilen in getrennter Such- und Pruefhaelfte: von 16 Markt×Seite-Schnitten waren genau zwei in BEIDEN Haelften positiv, und beide sind Ganzspiel-Torlinien mit dem Geld auf UNTER. n=2.720, Geldseite trifft 59,2 % gegen 62,4 % implizit (-3,2 pp); der Fade brachte +5,5 % / +5,2 % nach Kommission. Kontrolle: auf Match Odds, BTTS und der 1.-HZ-Linie ist die Geldseite 1-2 pp BESSER als implizit, und dort verliert derselbe Fade korrekt -5,6 bis -7,8 %. ⚠️ Der Gegenpreis war im Altbestand NICHT erhoben und musste rekonstruiert werden (haelt bis ~1 % Overround, stirbt bei 2 %); ausserdem 12 Tage Basis und ein nachtraeglich gepoolter Schnitt aus 16. Genau deshalb steht er hier: der Rueckblick ist der Fund, nicht der Beleg. zielN=200 statt 40, weil bei einer Streuung von ~1,3 je Play alles darunter nur ein Punktschaetzer waere.",
+   "quelle": "betfair_track_results.json → fade_unter.py",
+   "nDavor": 2563,
+   "rueckblick": {
+    "n": 2720,
+    "roi": 0.0546,
+    "roiLb": 0.0099,
+    "clv": null,
+    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
+   }
   },
   {
    "schublade": "Israeli Premier League · Match Odds",
@@ -5478,12 +5500,12 @@
   {
    "schublade": "Over/Under 2.5 Goals",
    "strom": "betfair",
-   "n": 6246,
+   "n": 6247,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0314,
-   "pl": -196.12,
-   "roiLb": -0.051,
+   "roi": -0.0312,
+   "pl": -194.91,
+   "roiLb": -0.0508,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5673,31 +5695,9 @@
     "nieAnteil": 0.268,
     "schaetzbar": false
    },
-   "alterTage": 1.1,
+   "alterTage": 1.2,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py"
-  },
-  {
-   "schublade": "Colombian Primera A · Half Time",
-   "strom": "betfair",
-   "n": 56,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.3664,
-   "pl": 20.52,
-   "roiLb": -0.0614,
-   "clv": null,
-   "clvLb": null,
-   "clvUrteil": "nicht erhoben",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "keine_einzelwerte",
-   "entfernung": null,
-   "alterTage": null,
-   "art": "liga_markt",
-   "naeherung": false
   },
   {
    "schublade": "Egyptian 2nd Division · Over/Under 2.5 Goals",
@@ -8381,7 +8381,7 @@
     "nieAnteil": 0.367,
     "schaetzbar": false
    },
-   "alterTage": 1.5,
+   "alterTage": 1.6,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "top5"
@@ -13183,6 +13183,28 @@
    "naeherung": false
   },
   {
+   "schublade": "Colombian Primera A · Match Odds",
+   "strom": "betfair",
+   "n": 57,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.2312,
+   "pl": -13.18,
+   "roiLb": -0.4604,
+   "clv": null,
+   "clvLb": null,
+   "clvUrteil": "nicht erhoben",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "keine_einzelwerte",
+   "entfernung": null,
+   "alterTage": null,
+   "art": "liga_markt",
+   "naeherung": false
+  },
+  {
    "schublade": "Belgian Pro League · Over/Under 2.5 Goals",
    "strom": "betfair",
    "n": 34,
@@ -13235,28 +13257,6 @@
    "roi": -0.2009,
    "pl": -9.24,
    "roiLb": -0.4697,
-   "clv": null,
-   "clvLb": null,
-   "clvUrteil": "nicht erhoben",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "keine_einzelwerte",
-   "entfernung": null,
-   "alterTage": null,
-   "art": "liga_markt",
-   "naeherung": false
-  },
-  {
-   "schublade": "Colombian Primera A · Match Odds",
-   "strom": "betfair",
-   "n": 58,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.2445,
-   "pl": -14.18,
-   "roiLb": -0.4708,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -14440,7 +14440,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 1.8,
+   "alterTage": 1.9,
    "art": "mix",
    "wert": "bf+steam"
   },
