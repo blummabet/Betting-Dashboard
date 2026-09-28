@@ -1,15 +1,15 @@
 {
- "n": 634,
+ "n": 638,
  "minOdds": 1.35,
- "moneyHitRate": 0.372,
- "priceHitRate": 0.41,
- "brierMoney": 0.8864,
- "brierPrice": 0.6856,
+ "moneyHitRate": 0.37,
+ "priceHitRate": 0.404,
+ "brierMoney": 0.8872,
+ "brierPrice": 0.6861,
  "disagree": {
-  "n": 178,
+  "n": 182,
   "moneyWon": 26,
-  "priceWon": 50,
-  "neither": 102
+  "priceWon": 48,
+  "neither": 108
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -32,10 +32,10 @@
   },
   {
    "league": "SOCCER:UNL",
-   "n": 51,
-   "moneyHitRate": 0.333,
-   "brierMoney": 0.8647,
-   "brierPrice": 0.7107,
+   "n": 55,
+   "moneyHitRate": 0.309,
+   "brierMoney": 0.8751,
+   "brierPrice": 0.7149,
    "verdict": "preis_besser"
   },
   {
@@ -104,9 +104,9 @@
   }
  ],
  "guete": {
-  "belastbar": 634,
-  "preis_echo": 218,
-  "abgeschnitten": 77,
+  "belastbar": 638,
+  "preis_echo": 220,
+  "abgeschnitten": 78,
   "unbekannt": 86,
   "leer": 0
  },
@@ -520,6 +520,18 @@
    "totalUsd": 501015
   },
   {
+   "key": "unl-geo-ukr-2026-09-28",
+   "league": "SOCCER:UNL",
+   "winner": "Draw (Georgia vs. Ukraine)",
+   "moneyFav": "Georgia",
+   "priceFav": "Georgia",
+   "moneyShare": 0.647,
+   "priceProb": 0.433,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 489441
+  },
+  {
    "key": "epl-ful-cry-2026-09-05",
    "league": "EPL",
    "winner": "Crystal Palace FC",
@@ -578,27 +590,15 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 459593
-  },
-  {
-   "key": "lal-elc-rso-2026-09-07",
-   "league": "LA-LIGA",
-   "winner": "Real Sociedad de Fútbol",
-   "moneyFav": "Real Sociedad de Fútbol",
-   "priceFav": "Real Sociedad de Fútbol",
-   "moneyShare": 0.608,
-   "priceProb": 0.427,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 459463
   }
  ],
- "generatedAt": "2026-09-28T19:51:06.078664+00:00",
+ "generatedAt": "2026-09-28T20:20:05.067067+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 425,
   "nfl": 800,
-  "mlb": 491,
+  "mlb": 490,
   "nhl": 610,
   "mls": 561,
   "epl": 491,
@@ -615,14 +615,14 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 697,
+  "esports": 695,
   "cs2": 422,
   "lol": 435,
   "dota": 10,
   "valorant": 457,
   "ufc": 452,
   "mma": 58,
-  "boxing": 270,
+  "boxing": 271,
   "golf": 440,
   "f1": 381,
   "cricket": 448,
@@ -637,7 +637,7 @@
   "chinese-super-league": 462,
   "concacaf-nations-league": 591,
   "czechia-fortuna-liga": 9,
-  "denmark-superliga": 440,
+  "denmark-superliga": 445,
   "efl-championship": 492,
   "english-premier-league": 2,
   "europa-conference-league": 411,
@@ -666,7 +666,7 @@
   "uefa-champions-league": 26,
   "uefa-conference-league": 29,
   "uefa-europa-league": 18,
-  "uefa-nations-league": 723,
+  "uefa-nations-league": 745,
   "uefa-womens-champions-league": 2,
   "ukraine-premier-liha": 445,
   "womens-champions-league": 463
@@ -677,37 +677,42 @@
   "sweepAdded": 404
  },
  "vorStats": {
-  "kandidaten": 6,
+  "kandidaten": 5,
   "budgetLeer": 0,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
-  "mitAnteilen": 6,
-  "calls": 6
+  "mitAnteilen": 5,
+  "calls": 5
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 2053,
-   "usd": 48482565,
+   "n": 2048,
+   "usd": 48857080,
    "beispiel": "fifwc-can-qat-2026-06-18"
   },
   "nba": {
-   "n": 201,
-   "usd": 4978350,
+   "n": 199,
+   "usd": 4973197,
    "beispiel": "nba-dal-lal-2026-02-12"
   },
   "ecs": {
-   "n": 14,
-   "usd": 1107272,
+   "n": 17,
+   "usd": 1141012,
    "beispiel": "ecs-ars-mci-2026-08-16"
   },
+  "presidential": {
+   "n": 8,
+   "usd": 1033098,
+   "beispiel": "presidential-election-winner-2028"
+  },
   "world": {
-   "n": 25,
-   "usd": 991279,
+   "n": 30,
+   "usd": 1032975,
    "beispiel": "world-cup-winner"
   },
   "usc": {
-   "n": 4,
-   "usd": 335318,
+   "n": 6,
+   "usd": 339669,
    "beispiel": "usc-psg-av-2026-08-12"
   },
   "col": {
@@ -717,7 +722,7 @@
   },
   "fed": {
    "n": 19,
-   "usd": 230934,
+   "usd": 230935,
    "beispiel": "fed-decision-in-december-20260729232808632"
   },
   "btc": {
@@ -727,7 +732,7 @@
   },
   "pro": {
    "n": 31,
-   "usd": 175374,
+   "usd": 175381,
    "beispiel": "pro-football-2027-champion-20260729185915366"
   },
   "uef": {
@@ -737,23 +742,23 @@
   },
   "which": {
    "n": 19,
-   "usd": 142994,
+   "usd": 142982,
    "beispiel": "which-party-will-win-the-senate-in-2026"
   },
   "us": {
    "n": 7,
-   "usd": 142216,
+   "usd": 142124,
    "beispiel": "us-recession-by-end-of-2026"
+  },
+  "ballon": {
+   "n": 14,
+   "usd": 105669,
+   "beispiel": "ballon-dor-winner-2026"
   },
   "nbasl": {
    "n": 3,
    "usd": 100151,
    "beispiel": "nbasl-cle-nop-2026-07-15"
-  },
-  "ballon": {
-   "n": 13,
-   "usd": 95721,
-   "beispiel": "ballon-dor-winner-2026"
   },
   "cdr": {
    "n": 5,
@@ -761,8 +766,8 @@
    "beispiel": "cdr-atm-fcb-2026-02-12"
   },
   "bitcoin": {
-   "n": 21,
-   "usd": 77062,
+   "n": 20,
+   "usd": 70435,
    "beispiel": "bitcoin-all-time-high-by"
   },
   "cbb": {
@@ -779,11 +784,6 @@
    "n": 14,
    "usd": 49593,
    "beispiel": "2026-f1-drivers-champion"
-  },
-  "eurovision": {
-   "n": 8,
-   "usd": 43712,
-   "beispiel": "eurovision-winner-2026"
   }
  }
 }
