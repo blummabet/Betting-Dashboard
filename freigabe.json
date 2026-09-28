@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-28T02:03:19.048394+00:00",
+ "generatedAt": "2026-09-28T02:18:12.622967+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -119,7 +119,7 @@
     "nieAnteil": 0.052,
     "schaetzbar": false
    },
-   "alterTage": 0.5,
+   "alterTage": 0.6,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py",
    "seitFreigabe": {
@@ -665,8 +665,8 @@
    "gruppen": 7,
    "basis": null,
    "n": 40000,
-   "pl": -311.13,
-   "roi": -0.0078,
+   "pl": -308.53,
+   "roi": -0.0077,
    "clv": null,
    "belegte": 13
   }
@@ -2649,6 +2649,18 @@
    "belegt": false
   },
   {
+   "liga": "UEFA Europa Conference Qualifiers",
+   "n": 35,
+   "wins": 20,
+   "hit": 0.5714,
+   "hitLb": 0.4336,
+   "roi": 0.1186,
+   "roiLb": -0.186,
+   "pl": 4.15,
+   "clv": -0.056,
+   "belegt": false
+  },
+  {
    "liga": "Bulgarian B League",
    "n": 151,
    "wins": 78,
@@ -3093,6 +3105,18 @@
    "belegt": false
   },
   {
+   "liga": "CONCACAF Nations League B",
+   "n": 54,
+   "wins": 28,
+   "hit": 0.5185,
+   "hitLb": 0.4085,
+   "roi": 0.0019,
+   "roiLb": -0.2323,
+   "pl": 0.1,
+   "clv": 0.539,
+   "belegt": false
+  },
+  {
    "liga": "CAF African Cup of Nations Qualifiers",
    "n": 41,
    "wins": 23,
@@ -3138,18 +3162,6 @@
    "roiLb": -0.2352,
    "pl": -12.66,
    "clv": 0.067,
-   "belegt": false
-  },
-  {
-   "liga": "UEFA Europa Conference Qualifiers",
-   "n": 41,
-   "wins": 22,
-   "hit": 0.5366,
-   "hitLb": 0.4102,
-   "roi": 0.0402,
-   "roiLb": -0.2372,
-   "pl": 1.65,
-   "clv": 0.021,
    "belegt": false
   },
   {
@@ -3450,18 +3462,6 @@
    "roiLb": -0.2693,
    "pl": -3.58,
    "clv": -1.008,
-   "belegt": false
-  },
-  {
-   "liga": "CONCACAF Nations League B",
-   "n": 48,
-   "wins": 24,
-   "hit": 0.5,
-   "hitLb": 0.3845,
-   "roi": -0.0158,
-   "roiLb": -0.2696,
-   "pl": -0.76,
-   "clv": 0.38,
    "belegt": false
   },
   {
@@ -4272,7 +4272,7 @@
     "nieAnteil": 0.052,
     "schaetzbar": false
    },
-   "alterTage": 0.5,
+   "alterTage": 0.6,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py",
    "seitFreigabe": {
@@ -5020,12 +5020,12 @@
   {
    "schublade": "Match Odds",
    "strom": "betfair",
-   "n": 6290,
+   "n": 6291,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0005,
-   "pl": -3.15,
-   "roiLb": -0.0243,
+   "roi": -0.0004,
+   "pl": -2.52,
+   "roiLb": -0.0242,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5042,12 +5042,12 @@
   {
    "schublade": "First Half Goals 1.5",
    "strom": "betfair",
-   "n": 5130,
+   "n": 5129,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0012,
-   "pl": -6.16,
-   "roiLb": -0.0251,
+   "roi": -0.0013,
+   "pl": -6.67,
+   "roiLb": -0.0252,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5111,9 +5111,9 @@
    "n": 5894,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0045,
-   "pl": -26.52,
-   "roiLb": -0.0259,
+   "roi": -0.0046,
+   "pl": -27.11,
+   "roiLb": -0.026,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5126,6 +5126,34 @@
    "alterTage": null,
    "art": "markt",
    "naeherung": false
+  },
+  {
+   "schublade": "Konjunktion · gehalten (Haltepreis)",
+   "strom": "betfair",
+   "n": 599,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0361,
+   "pl": 21.63,
+   "roiLb": -0.0263,
+   "clv": null,
+   "clvLb": null,
+   "clvUrteil": "nicht erhoben",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": 1791,
+   "noetigNClv": null,
+   "noetigGrund": null,
+   "entfernung": {
+    "median": 1252,
+    "lo": 218,
+    "hi": 108179,
+    "nieAnteil": 0.173,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "konjunktion_gehalten",
+   "quelle": "killer_ledger.json"
   },
   {
    "schublade": "Mix money+sharp+steam",
@@ -5190,34 +5218,6 @@
    "roiAlt": 0.7042,
    "clvAlt": -1.0,
    "engineAlt": true
-  },
-  {
-   "schublade": "Konjunktion · gehalten (Haltepreis)",
-   "strom": "betfair",
-   "n": 598,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0349,
-   "pl": 20.9,
-   "roiLb": -0.0276,
-   "clv": null,
-   "clvLb": null,
-   "clvUrteil": "nicht erhoben",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": 1913,
-   "noetigNClv": null,
-   "noetigGrund": null,
-   "entfernung": {
-    "median": 1317,
-    "lo": 227,
-    "hi": 60517,
-    "nieAnteil": 0.19,
-    "schaetzbar": false
-   },
-   "alterTage": 0.0,
-   "art": "konjunktion_gehalten",
-   "quelle": "killer_ledger.json"
   },
   {
    "schublade": "English National League · Both teams to Score?",
@@ -5291,9 +5291,9 @@
    "n": 6032,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0113,
-   "pl": -68.16,
-   "roiLb": -0.0325,
+   "roi": -0.0111,
+   "pl": -66.96,
+   "roiLb": -0.0323,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5451,12 +5451,12 @@
   {
    "schublade": "🔒 Fade-Unter · Ganzspiel-Torlinie",
    "strom": "betfair",
-   "n": 3870,
+   "n": 3872,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0087,
-   "pl": -33.84,
-   "roiLb": -0.0448,
+   "roi": -0.0093,
+   "pl": -35.84,
+   "roiLb": -0.0453,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5466,10 +5466,10 @@
    "noetigNClv": null,
    "noetigGrund": "nicht_positiv",
    "entfernung": {
-    "median": 31409,
-    "lo": 2767,
-    "hi": 6099231,
-    "nieAnteil": 0.647,
+    "median": 28992,
+    "lo": 2758,
+    "hi": 1990266,
+    "nieAnteil": 0.663,
     "schaetzbar": false
    },
    "alterTage": 0.0,
@@ -5478,7 +5478,7 @@
    "zielN": 200,
    "warum": "Lucas: „wenn wir sehen, dass die gespielten Sachen schlecht liefen, könnte man das ins Positive umkehren und faden.\" Gemessen ueber 15.945 abgerechnete Zeilen in getrennter Such- und Pruefhaelfte: von 16 Markt×Seite-Schnitten waren genau zwei in BEIDEN Haelften positiv, und beide sind Ganzspiel-Torlinien mit dem Geld auf UNTER. n=2.720, Geldseite trifft 59,2 % gegen 62,4 % implizit (-3,2 pp); der Fade brachte +5,5 % / +5,2 % nach Kommission. Kontrolle: auf Match Odds, BTTS und der 1.-HZ-Linie ist die Geldseite 1-2 pp BESSER als implizit, und dort verliert derselbe Fade korrekt -5,6 bis -7,8 %. ⚠️ Der Gegenpreis war im Altbestand NICHT erhoben und musste rekonstruiert werden (haelt bis ~1 % Overround, stirbt bei 2 %); ausserdem 12 Tage Basis und ein nachtraeglich gepoolter Schnitt aus 16. Genau deshalb steht er hier: der Rueckblick ist der Fund, nicht der Beleg. zielN=200 statt 40, weil bei einer Streuung von ~1,3 je Play alles darunter nur ein Punktschaetzer waere.",
    "quelle": "betfair_track_results.json → fade_unter.py",
-   "nDavor": 2593,
+   "nDavor": 2591,
    "rueckblick": {
     "n": 2720,
     "roi": 0.0546,
@@ -5510,6 +5510,28 @@
    "naeherung": false
   },
   {
+   "schublade": "Over/Under 2.5 Goals",
+   "strom": "betfair",
+   "n": 6244,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.0318,
+   "pl": -198.56,
+   "roiLb": -0.0514,
+   "clv": null,
+   "clvLb": null,
+   "clvUrteil": "nicht erhoben",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "keine_einzelwerte",
+   "entfernung": null,
+   "alterTage": null,
+   "art": "markt",
+   "naeherung": false
+  },
+  {
    "schublade": "Swedish Division 1 · First Half Goals 0.5",
    "strom": "betfair",
    "n": 62,
@@ -5529,28 +5551,6 @@
    "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
-   "naeherung": false
-  },
-  {
-   "schublade": "Over/Under 2.5 Goals",
-   "strom": "betfair",
-   "n": 6244,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0321,
-   "pl": -200.43,
-   "roiLb": -0.0517,
-   "clv": null,
-   "clvLb": null,
-   "clvUrteil": "nicht erhoben",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "keine_einzelwerte",
-   "entfernung": null,
-   "alterTage": null,
-   "art": "markt",
    "naeherung": false
   },
   {
@@ -5707,7 +5707,7 @@
     "nieAnteil": 0.268,
     "schaetzbar": false
    },
-   "alterTage": 0.5,
+   "alterTage": 0.6,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py"
   },
@@ -14430,7 +14430,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 1.2,
+   "alterTage": 1.3,
    "art": "mix",
    "wert": "bf+steam"
   },
@@ -14571,7 +14571,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 14.4,
+   "alterTage": 14.5,
    "art": "mix",
    "wert": "steam",
    "nAlt": 8,
