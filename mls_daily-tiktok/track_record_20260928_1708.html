@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="de">
+<head><meta charset="UTF-8"><title>Track-Record</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#0a0e18; display:flex; align-items:center; justify-content:center;
+       min-height:100vh; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+.card {
+  width:360px; height:640px;
+  background:
+    radial-gradient(circle at 50% 26%, rgba(63,185,80,0.14) 0%, transparent 55%),
+    linear-gradient(180deg, #0a0e18 0%, #080d18 100%);
+  background-image:
+    radial-gradient(circle at 50% 26%, rgba(63,185,80,0.14) 0%, transparent 55%),
+    linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
+  background-size: auto, 24px 24px, 24px 24px;
+  border-radius:24px; padding:22px 22px 18px;
+  position:relative; overflow:hidden;
+  display:flex; flex-direction:column;
+  border:1px solid rgba(255,255,255,0.04);
+}
+.top { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.brand-top { font-size:11px; font-weight:800; letter-spacing:3px; color:#f5c518; }
+.badge-top { font-size:10px; font-weight:700; letter-spacing:1px; color:#3fb950;
+  background:rgba(63,185,80,0.10); border:1px solid rgba(63,185,80,0.40); border-radius:18px; padding:5px 12px; }
+
+.period { font-size:10px; color:rgba(255,255,255,.40); text-align:center;
+  letter-spacing:1.8px; text-transform:uppercase; font-weight:700; margin-bottom:10px; }
+
+.hero { text-align:center; margin-bottom:14px; }
+.hero-label { font-size:10px; color:rgba(255,255,255,.45); letter-spacing:2.2px;
+  text-transform:uppercase; font-weight:800; margin-bottom:2px; }
+.hero-num { font-size:76px; font-weight:900; color:#3fb950; line-height:1;
+  letter-spacing:-3.5px; text-shadow: 0 0 38px rgba(63,185,80,0.50); }
+.hero-num .unit { font-size:32px; font-weight:700; vertical-align:top; margin-left:3px; }
+.hero-sub { font-size:13px; color:#fff; margin-top:6px; letter-spacing:.3px; font-weight:800; }
+.hero-sub .g { color:#3fb950; }
+.hero-sub2 { font-size:10px; color:rgba(255,255,255,.45); margin-top:3px; letter-spacing:.4px; }
+
+.section-lbl { font-size:9px; color:rgba(255,255,255,.45); letter-spacing:1.6px;
+  text-transform:uppercase; font-weight:800; margin:0 2px 7px; }
+.rounds { padding:13px 4px 5px; border-top:1px solid rgba(255,255,255,0.06); }
+.rrow { display:grid; grid-template-columns:96px 1fr 34px 38px; align-items:center;
+  gap:8px; margin-bottom:9px; }
+.rname { font-size:11px; font-weight:700; letter-spacing:.2px; white-space:nowrap; }
+.rbar { height:6px; background:rgba(255,255,255,0.06); border-radius:4px; overflow:hidden; }
+.rbar-fill { height:100%; border-radius:4px; }
+.rrec { font-size:10px; color:rgba(255,255,255,.50); text-align:right; font-weight:600; }
+.rpct { font-size:14px; font-weight:900; text-align:right; letter-spacing:-.5px; }
+
+.form { margin-top:auto; padding:12px 4px 4px; border-top:1px solid rgba(255,255,255,0.06); }
+.form-head { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px; }
+.form-val { font-size:11px; font-weight:800; color:#3fb950; letter-spacing:.3px; }
+.dots { display:flex; gap:5px; margin-bottom:12px; }
+.dot { width:20px; height:6px; border-radius:3px; }
+.curve-label { font-size:9px; color:rgba(255,255,255,.42); letter-spacing:1.5px;
+  text-transform:uppercase; font-weight:800; margin-bottom:3px; padding:0 2px; }
+
+.footer { display:flex; justify-content:space-between; align-items:center;
+  border-top:1px solid rgba(255,255,255,0.05); padding-top:9px; margin-top:10px; }
+.footer .ft { font-size:9px; color:rgba(255,255,255,.30); letter-spacing:.5px; }
+.footer .ft-stand { color:rgba(255,255,255,.55); font-weight:700; }
+</style></head>
+<body>
+<div class="card">
+  <div class="top">
+    <div class="brand-top">COCOBET</div>
+    <div class="badge-top">📊 TRACK-RECORD</div>
+  </div>
+
+  <div class="period">MLS · Gruppenphase</div>
+
+  <div class="hero">
+    <div class="hero-label">Prognose-Genauigkeit</div>
+    <div class="hero-num">59<span class="unit">%</span></div>
+    <div class="hero-sub"><span class="g">68 richtig</span> · 47 daneben</div>
+    <div class="hero-sub2">116 von 191 Prognosen ausgewertet</div>
+  </div>
+
+  <div class="rounds">
+    <div class="section-lbl">Genauigkeit pro Runde</div>
+    
+      <div class="rrow">
+        <div class="rname" style="color:#3fb950;">Gruppenphase 🔥</div>
+        <div class="rbar"><div class="rbar-fill" style="width:59%;background:#3fb950;"></div></div>
+        <div class="rrec">68-47</div>
+        <div class="rpct" style="color:#3fb950;">59%</div>
+      </div>
+  </div>
+
+  <div class="form">
+    <div class="form-head">
+      <div class="section-lbl" style="margin:0;">Aktuelle Form · letzte 10</div>
+      <div class="form-val">5 von 10 richtig</div>
+    </div>
+    <div class="dots"><span class="dot" style="background:rgba(255,90,95,0.85);"></span><span class="dot" style="background:#3fb950;"></span><span class="dot" style="background:#3fb950;"></span><span class="dot" style="background:rgba(255,90,95,0.85);"></span><span class="dot" style="background:rgba(255,90,95,0.85);"></span><span class="dot" style="background:#3fb950;"></span><span class="dot" style="background:#3fb950;"></span><span class="dot" style="background:rgba(255,90,95,0.85);"></span><span class="dot" style="background:#3fb950;"></span><span class="dot" style="background:rgba(255,90,95,0.85);"></span></div>
+    <div class="curve-label">Netto-Treffer-Verlauf</div>
+    
+        <svg viewBox="0 0 312 58" preserveAspectRatio="none" style="width:100%;height:58px;">
+          <defs><linearGradient id="trkg" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stop-color="#3fb950" stop-opacity="0.35"/>
+            <stop offset="100%" stop-color="#3fb950" stop-opacity="0"/>
+          </linearGradient></defs>
+          <line x1="4" y1="43.3" x2="308" y2="43.3"
+                stroke="rgba(255,255,255,0.10)" stroke-dasharray="3,3" stroke-width="1"/>
+          <path d="M 4.0 43.3 L 6.6 45.1 L 9.2 46.9 L 11.9 48.6 L 14.5 46.9 L 17.1 48.6 L 19.7 46.9 L 22.3 48.6 L 25.0 50.4 L 27.6 52.2 L 30.2 50.4 L 32.8 52.2 L 35.4 54.0 L 38.1 52.2 L 40.7 50.4 L 43.3 48.6 L 45.9 50.4 L 48.6 52.2 L 51.2 50.4 L 53.8 48.6 L 56.4 46.9 L 59.0 48.6 L 61.7 46.9 L 64.3 48.6 L 66.9 46.9 L 69.5 45.1 L 72.1 43.3 L 74.8 43.3 L 77.4 45.1 L 80.0 46.9 L 82.6 45.1 L 85.2 46.9 L 87.9 45.1 L 90.5 46.9 L 93.1 48.6 L 95.7 46.9 L 98.3 48.6 L 101.0 46.9 L 103.6 45.1 L 106.2 43.3 L 108.8 41.5 L 111.4 39.7 L 114.1 37.9 L 116.7 36.1 L 119.3 37.9 L 121.9 36.1 L 124.6 34.4 L 127.2 36.1 L 129.8 34.4 L 132.4 36.1 L 135.0 34.4 L 137.7 36.1 L 140.3 34.4 L 142.9 32.6 L 145.5 30.8 L 148.1 29.0 L 150.8 30.8 L 153.4 32.6 L 156.0 34.4 L 158.6 32.6 L 161.2 34.4 L 163.9 32.6 L 166.5 30.8 L 169.1 29.0 L 171.7 30.8 L 174.3 29.0 L 177.0 30.8 L 179.6 29.0 L 182.2 27.2 L 184.8 25.4 L 187.4 27.2 L 190.1 25.4 L 192.7 23.6 L 195.3 21.9 L 197.9 23.6 L 200.6 21.9 L 203.2 23.6 L 205.8 25.4 L 208.4 23.6 L 211.0 25.4 L 213.7 23.6 L 216.3 21.9 L 218.9 23.6 L 221.5 25.4 L 224.1 23.6 L 226.8 21.9 L 229.4 23.6 L 232.0 21.9 L 234.6 20.1 L 237.2 21.9 L 239.9 20.1 L 242.5 18.3 L 245.1 16.5 L 247.7 18.3 L 250.3 16.5 L 253.0 18.3 L 255.6 16.5 L 258.2 14.7 L 260.8 12.9 L 263.4 14.7 L 266.1 12.9 L 268.7 11.1 L 271.3 9.4 L 273.9 11.1 L 276.6 9.4 L 279.2 7.6 L 281.8 5.8 L 284.4 7.6 L 287.0 5.8 L 289.7 4.0 L 292.3 5.8 L 294.9 7.6 L 297.5 5.8 L 300.1 4.0 L 302.8 5.8 L 305.4 4.0 L 308.0 5.8 L 308.0 43.3 L 4.0 43.3 Z" fill="url(#trkg)"/>
+          <path d="M 4.0 43.3 L 6.6 45.1 L 9.2 46.9 L 11.9 48.6 L 14.5 46.9 L 17.1 48.6 L 19.7 46.9 L 22.3 48.6 L 25.0 50.4 L 27.6 52.2 L 30.2 50.4 L 32.8 52.2 L 35.4 54.0 L 38.1 52.2 L 40.7 50.4 L 43.3 48.6 L 45.9 50.4 L 48.6 52.2 L 51.2 50.4 L 53.8 48.6 L 56.4 46.9 L 59.0 48.6 L 61.7 46.9 L 64.3 48.6 L 66.9 46.9 L 69.5 45.1 L 72.1 43.3 L 74.8 43.3 L 77.4 45.1 L 80.0 46.9 L 82.6 45.1 L 85.2 46.9 L 87.9 45.1 L 90.5 46.9 L 93.1 48.6 L 95.7 46.9 L 98.3 48.6 L 101.0 46.9 L 103.6 45.1 L 106.2 43.3 L 108.8 41.5 L 111.4 39.7 L 114.1 37.9 L 116.7 36.1 L 119.3 37.9 L 121.9 36.1 L 124.6 34.4 L 127.2 36.1 L 129.8 34.4 L 132.4 36.1 L 135.0 34.4 L 137.7 36.1 L 140.3 34.4 L 142.9 32.6 L 145.5 30.8 L 148.1 29.0 L 150.8 30.8 L 153.4 32.6 L 156.0 34.4 L 158.6 32.6 L 161.2 34.4 L 163.9 32.6 L 166.5 30.8 L 169.1 29.0 L 171.7 30.8 L 174.3 29.0 L 177.0 30.8 L 179.6 29.0 L 182.2 27.2 L 184.8 25.4 L 187.4 27.2 L 190.1 25.4 L 192.7 23.6 L 195.3 21.9 L 197.9 23.6 L 200.6 21.9 L 203.2 23.6 L 205.8 25.4 L 208.4 23.6 L 211.0 25.4 L 213.7 23.6 L 216.3 21.9 L 218.9 23.6 L 221.5 25.4 L 224.1 23.6 L 226.8 21.9 L 229.4 23.6 L 232.0 21.9 L 234.6 20.1 L 237.2 21.9 L 239.9 20.1 L 242.5 18.3 L 245.1 16.5 L 247.7 18.3 L 250.3 16.5 L 253.0 18.3 L 255.6 16.5 L 258.2 14.7 L 260.8 12.9 L 263.4 14.7 L 266.1 12.9 L 268.7 11.1 L 271.3 9.4 L 273.9 11.1 L 276.6 9.4 L 279.2 7.6 L 281.8 5.8 L 284.4 7.6 L 287.0 5.8 L 289.7 4.0 L 292.3 5.8 L 294.9 7.6 L 297.5 5.8 L 300.1 4.0 L 302.8 5.8 L 305.4 4.0 L 308.0 5.8" stroke="#3fb950" stroke-width="2" fill="none"
+                stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="308.0" cy="5.8" r="3.5" fill="#3fb950"/>
+        </svg>
+  </div>
+
+  <div class="footer">
+    <div class="ft ft-stand">Stand: 28.09.26 · 17:08</div>
+    <div class="ft">cocobet · transparent</div>
+  </div>
+</div>
+</body>
+</html>
