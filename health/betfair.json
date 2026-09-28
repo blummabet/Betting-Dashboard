@@ -1,14 +1,14 @@
 {
   "slug": "betfair",
   "workflow": "🟡 Betfair Radar (Betwatch)",
-  "updatedAt": "2026-09-28T19:50:43.428060+00:00",
+  "updatedAt": "2026-09-28T20:05:46.796567+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
     "spanneH": 4.8,
     "proTag": 95.8,
     "lueckeMinMin": 3.1,
-    "lueckeMedianMin": 15.0,
+    "lueckeMedianMin": 15.1,
     "lueckeMaxMin": 27.1,
     "sollProTag": null,
     "liefergradPct": null,
@@ -19,11 +19,26 @@
     "erzeugt": 100,
     "gelaufen": 100,
     "verdraengt": 0,
-    "spanneH": 862.5,
-    "erzeugtProTag": 2.8,
-    "widerspruch": "erzeugtProTag 2.8 gegen eine gemessene Kadenz von 95.8/Tag (Faktor 34.2) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
+    "spanneH": 380.5,
+    "erzeugtProTag": 6.3,
+    "widerspruch": "erzeugtProTag 6.3 gegen eine gemessene Kadenz von 95.8/Tag (Faktor 15.2) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
   },
   "runs": [
+    {
+      "ts": "2026-09-28T20:05:46.796567+00:00",
+      "workflow": "🟡 Betfair Radar (Betwatch)",
+      "runId": "36476585792",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/36476585792",
+      "nSteps": 35,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-09-28T20:04:13Z",
+      "startedAt": "2026-09-28T20:04:13Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 93.8,
+      "event": "workflow_dispatch"
+    },
     {
       "ts": "2026-09-28T19:50:43.428060+00:00",
       "workflow": "🟡 Betfair Radar (Betwatch)",
@@ -307,21 +322,6 @@
       "startedAt": "2026-09-28T15:18:38Z",
       "wartetS": 0.0,
       "laeuftSeitS": 94.0,
-      "event": "workflow_dispatch"
-    },
-    {
-      "ts": "2026-09-28T15:05:11.269365+00:00",
-      "workflow": "🟡 Betfair Radar (Betwatch)",
-      "runId": "36440688515",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/36440688515",
-      "nSteps": 35,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-09-28T15:03:36Z",
-      "startedAt": "2026-09-28T15:03:36Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 95.3,
       "event": "workflow_dispatch"
     }
   ]
