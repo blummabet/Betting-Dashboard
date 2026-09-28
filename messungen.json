@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-28T17:20:49.950533+00:00",
+ "generatedAt": "2026-09-28T18:26:05.864209+00:00",
  "heute": "2026-09-28",
  "messungen": [
   {
@@ -33,9 +33,9 @@
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "nachtrag": "27.09.2026: Zwischenstand n=78 abgerechnet. Echt ROI +6,5 % (UG -4,0 %), Papier auf gleichem Einsatz +8,6 %. Der echte Fill kostet im Mittel +0,64 Cent (Median +0,50) gegen den Papierpreis; CLV-Vorsprung -0,59 pp, Band [-1,44, +0,25].",
-   "standN": 89,
+   "standN": 91,
    "zustand": "bereit",
-   "stand": "89 von 25 Beobachtungen · faellig in 1 Tag(en)",
+   "stand": "91 von 25 Beobachtungen · faellig in 1 Tag(en)",
    "fortschritt": 1.0,
    "tageBisFaellig": 1
   },
@@ -52,48 +52,11 @@
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "nachtrag": "27.09.2026: Zwischenstand n=152 (Mindestzahl 40 erreicht). Treffer 66,5 %, ROI -4,5 % (UG -14,3 %), CLV -0,04 pp. Die Rueckschau (77,1 % / +19,9 %) haelt vorwaerts nicht. Heutige Public-Regel seit 03.09.: n=47, ROI +14,2 % (UG -10,0 %).",
-   "standN": 178,
+   "standN": 181,
    "zustand": "bereit",
-   "stand": "178 von 40 Beobachtungen · faellig in 32 Tag(en)",
+   "stand": "181 von 40 Beobachtungen · faellig in 32 Tag(en)",
    "fortschritt": 1.0,
    "tageBisFaellig": 32
-  },
-  {
-   "id": "horizont-shortlist",
-   "titel": "Zahlt sich ein frueherer Einstieg aus?",
-   "frage": "ROI und CLV der Shortlist-Plays nach Abstand zum Anpfiff — live, 0-3h, 3-12h, 12-24h, >1 Tag.",
-   "warum": "Der CLV ist ueber alle 886 Plays negativ (-2,16pp). Verdacht: die Picks sind gut, der Einstieg ist zu spaet. Wenn das stimmt, ist der Einstiegszeitpunkt der billigste Hebel, den es gibt.",
-   "gestartet": "2026-09-15",
-   "faellig": "2026-09-29",
-   "quelle": "poly_shortlist_track.json -> settled[].htkAtEntry",
-   "messer": "htk_shortlist",
-   "mindestN": 60,
-   "entscheidung": null,
-   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "nachtrag": "27.09.2026: ausgewertet — nicht beantwortbar. 391 abgerechnete Plays, alle zwischen live und 2,98 h vor Anpfiff; Einstiege >= 3 h: null. Die Shortlist liest den Close-Pool (<= 3 h), frueher gibt es keinen Einstieg. Innerhalb der 3 h kein Muster (<1h ROI -1,4 %, 1-2h -13,6 %, 2-3h +4,7 %; alle Untergrenzen negativ). Der Zaehler zaehlt seit heute nur die fruehe Gruppe. Beantwortbar erst, wenn die Shortlist auch aus dem Upcoming-Pool einsteigt.",
-   "standN": 0,
-   "zustand": "sammelt",
-   "stand": "0 von 60 Beobachtungen · faellig in 1 Tag(en)",
-   "fortschritt": 0.0,
-   "tageBisFaellig": 1
-  },
-  {
-   "id": "horizont-trader",
-   "titel": "Liegt beim Pinnacle-Trader weiter draussen mehr Kante?",
-   "frage": "Edge und Ausgang der Trader-Wetten nach Abstand zum Anpfiff. Gegenthese: Pinnacles fruehe Linien sind die weichsten, die Kante waechst zum Anpfiff hin.",
-   "warum": "15.09.2026 (Lucas): 'Sind wir da auch auf Spiele die weiter in der Zukunft liegen?' Der Trigger hat keine Obergrenze — der Datensatz endet bei ~7 Tagen, und ab 4 Tagen schaffen nur 15 von 43 Maerkten die Mindest-Liquiditaet.",
-   "gestartet": "2026-09-15",
-   "faellig": "2026-09-29",
-   "quelle": "wm_/liga_/mls_auto_bets_placed.json -> bets[].htkAtEntry",
-   "messer": "htk_trader",
-   "mindestN": 20,
-   "entscheidung": null,
-   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 5,
-   "zustand": "sammelt",
-   "stand": "5 von 20 Beobachtungen · faellig in 1 Tag(en)",
-   "fortschritt": 0.25,
-   "tageBisFaellig": 1
   },
   {
    "id": "devig-proportional-vs-power",
@@ -125,10 +88,10 @@
    "mindestN": 150,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 71,
+   "standN": 72,
    "zustand": "sammelt",
-   "stand": "71 von 150 Beobachtungen · faellig in 11 Tag(en)",
-   "fortschritt": 0.47333333333333333,
+   "stand": "72 von 150 Beobachtungen · faellig in 11 Tag(en)",
+   "fortschritt": 0.48,
    "tageBisFaellig": 11
   },
   {
@@ -187,6 +150,25 @@
    "tageBisFaellig": 17
   },
   {
+   "id": "horizont-trader",
+   "titel": "Liegt beim Pinnacle-Trader weiter draussen mehr Kante?",
+   "frage": "Edge und Ausgang der Trader-Wetten nach Abstand zum Anpfiff. Gegenthese: Pinnacles fruehe Linien sind die weichsten, die Kante waechst zum Anpfiff hin.",
+   "warum": "15.09.2026 (Lucas): 'Sind wir da auch auf Spiele die weiter in der Zukunft liegen?' Der Trigger hat keine Obergrenze — der Datensatz endet bei ~7 Tagen, und ab 4 Tagen schaffen nur 15 von 43 Maerkten die Mindest-Liquiditaet.",
+   "gestartet": "2026-09-15",
+   "faellig": "2026-10-20",
+   "quelle": "wm_/liga_/mls_auto_bets_placed.json -> bets[].htkAtEntry",
+   "messer": "htk_trader",
+   "mindestN": 20,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "nachtrag": "28.09.2026 (Lucas: „das Paper Trading … Pinnacle-Drops und ob Polymarket anpasst — das will ich weiter messen\"): Frist vom 29.09. auf 20.10. verlaengert, Stand 5 von 20.",
+   "standN": 5,
+   "zustand": "sammelt",
+   "stand": "5 von 20 Beobachtungen · faellig in 22 Tag(en)",
+   "fortschritt": 0.25,
+   "tageBisFaellig": 22
+  },
+  {
    "id": "betfair-einseitigkeit-unterseite",
    "titel": "Ist 0,80 Einseitigkeit die richtige Schranke — oder liegt darunter dasselbe?",
    "frage": "Trefferquote und ROI der NICHT gesendeten Kandidaten im Schattenbuch, aufgeteilt nach leadShare (<0,70 / 0,70–0,75 / 0,75–0,80), gegen die gesendeten ab 0,80. Urteil ueber die Renditegrenzen, nicht ueber den Punktschaetzer.",
@@ -198,10 +180,10 @@
    "mindestN": 1200,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 225,
+   "standN": 229,
    "zustand": "sammelt",
-   "stand": "225 von 1200 Beobachtungen · faellig in 34 Tag(en)",
-   "fortschritt": 0.1875,
+   "stand": "229 von 1200 Beobachtungen · faellig in 34 Tag(en)",
+   "fortschritt": 0.19083333333333333,
    "tageBisFaellig": 34
   },
   {
@@ -216,10 +198,10 @@
    "mindestN": 1200,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 225,
+   "standN": 229,
    "zustand": "sammelt",
-   "stand": "225 von 1200 Beobachtungen · faellig in 34 Tag(en)",
-   "fortschritt": 0.1875,
+   "stand": "229 von 1200 Beobachtungen · faellig in 34 Tag(en)",
+   "fortschritt": 0.19083333333333333,
    "tageBisFaellig": 34
   },
   {
@@ -252,10 +234,10 @@
    "mindestN": 20000,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 10017,
+   "standN": 10108,
    "zustand": "sammelt",
-   "stand": "10017 von 20000 Beobachtungen · faellig in 48 Tag(en)",
-   "fortschritt": 0.50085,
+   "stand": "10108 von 20000 Beobachtungen · faellig in 48 Tag(en)",
+   "fortschritt": 0.5054,
    "tageBisFaellig": 48
   },
   {
@@ -270,10 +252,10 @@
    "mindestN": 20000,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 10017,
+   "standN": 10108,
    "zustand": "sammelt",
-   "stand": "10017 von 20000 Beobachtungen · faellig in 48 Tag(en)",
-   "fortschritt": 0.50085,
+   "stand": "10108 von 20000 Beobachtungen · faellig in 48 Tag(en)",
+   "fortschritt": 0.5054,
    "tageBisFaellig": 48
   },
   {
@@ -288,14 +270,33 @@
    "mindestN": 400,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 7,
+   "standN": 9,
    "zustand": "sammelt",
-   "stand": "7 von 400 Beobachtungen · faellig in 48 Tag(en)",
-   "fortschritt": 0.0175,
+   "stand": "9 von 400 Beobachtungen · faellig in 48 Tag(en)",
+   "fortschritt": 0.0225,
    "tageBisFaellig": 48
+  },
+  {
+   "id": "horizont-shortlist",
+   "titel": "Zahlt sich ein frueherer Einstieg aus?",
+   "frage": "ROI und CLV der Shortlist-Plays nach Abstand zum Anpfiff — live, 0-3h, 3-12h, 12-24h, >1 Tag.",
+   "warum": "Der CLV ist ueber alle 886 Plays negativ (-2,16pp). Verdacht: die Picks sind gut, der Einstieg ist zu spaet. Wenn das stimmt, ist der Einstiegszeitpunkt der billigste Hebel, den es gibt.",
+   "gestartet": "2026-09-15",
+   "faellig": "2026-09-29",
+   "quelle": "poly_shortlist_track.json -> settled[].htkAtEntry",
+   "messer": "htk_shortlist",
+   "mindestN": 60,
+   "entscheidung": "28.09.2026 beendet (Lucas: „fuer den fruehen Einstieg kannst du auslassen\"). Mit dem heutigen Zuschnitt nicht beantwortbar — die Shortlist steigt nie frueher als 3 h vor Anpfiff ein.",
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "nachtrag": "27.09.2026: ausgewertet — nicht beantwortbar. 391 abgerechnete Plays, alle zwischen live und 2,98 h vor Anpfiff; Einstiege >= 3 h: null. Die Shortlist liest den Close-Pool (<= 3 h), frueher gibt es keinen Einstieg. Innerhalb der 3 h kein Muster (<1h ROI -1,4 %, 1-2h -13,6 %, 2-3h +4,7 %; alle Untergrenzen negativ). Der Zaehler zaehlt seit heute nur die fruehe Gruppe. Beantwortbar erst, wenn die Shortlist auch aus dem Upcoming-Pool einsteigt.",
+   "standN": 0,
+   "zustand": "entschieden",
+   "stand": "28.09.2026 beendet (Lucas: „fuer den fruehen Einstieg kannst du auslassen\"). Mit dem heutigen Zuschnitt nicht beantwortbar — die Shortlist steigt nie frueher als 3 h vor Anpfiff ein.",
+   "fortschritt": 0.0,
+   "tageBisFaellig": 1
   }
  ],
  "n": 16,
- "nOffen": 16,
+ "nOffen": 15,
  "nHandlung": 1
 }

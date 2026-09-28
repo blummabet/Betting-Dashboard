@@ -43,7 +43,8 @@
   // Top 5 + MLS: LAND-qualifizierte Namen verlangen, sonst schnappt „premier league"/„serie a" auch
   // Bhutan/Libanon/Brasilien. Und Freundschafts-/Sommer-/Jugend-Turniere ausschließen (z.B.
   // „English Premier League Summer Series" ist ein Vorbereitungsturnier, keine Liga).
-  var TOP5_RX = /(german bundesliga|english premier league|spanish la ?liga|italian serie a|french ligue 1|\bmls\b|major league soccer)/i;
+  // 28.09.2026: zweite Ligen/U21/MLS Next Pro liefen als Top 5 durch (s. betfair_alerts.TOP5_RX).
+  var TOP5_RX = /(german bundesliga(?!\s*2)|english premier league(?!\s*2)|spanish la ?liga(?!\s*2)|italian serie a|french ligue 1|\bmls\b(?!\s*next)|major league soccer)/i;
   var TOP5_NEG = /(summer series|friendl|reserve|women|u1[0-9]\b|youth|amateur|\bii\b|\bb\b team)/i;
   function isTop5(league) { var l = String(league || ''); return TOP5_RX.test(l) && !TOP5_NEG.test(l); }
   function isIntlCountry(cc) { return /^(int|international|eu|europe)$/i.test(String(cc || '')); }

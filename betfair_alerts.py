@@ -191,7 +191,11 @@ HT_MARKETS     = ("Half Time", "First Half Goals 1.5")   # HZ-1X2 ODER Über/Unt
 HT_LABEL       = {"Half Time": "HZ 1X2", "First Half Goals 1.5": "HZ Over/Under 1.5", "First Half Goals 0.5": "HZ Over/Under 0.5"}
 
 UEFA_RX  = re.compile(r"(champions league|europa league|europa conference|conference league|uefa)", re.I)
-TOP5_RX  = re.compile(r"(german bundesliga|english premier league|spanish la ?liga|italian serie a|french ligue 1|\bmls\b|major league soccer)", re.I)
+# 28.09.2026: „German Bundesliga 2", „English Premier League 2 - Div 1" (U21) und „US MLS Next Pro
+# League" liefen als Top 5 durch — die Suchbegriffe trafen die zweite Liga mit. 537 Signale im
+# Buch, 4 gesendete Pushes. Negativer Lookahead statt Liste; tests/test_top5_eine_regel.py haelt
+# alle Kopien (Python + Radar) gleich.
+TOP5_RX  = re.compile(r"(german bundesliga(?!\s*2)|english premier league(?!\s*2)|spanish la ?liga(?!\s*2)|italian serie a|french ligue 1|\bmls\b(?!\s*next)|major league soccer)", re.I)
 TOP5_NEG = re.compile(r"(summer series|friendl|reserve|women|u1[0-9]\b|youth|amateur)", re.I)
 
 
@@ -1658,6 +1662,56 @@ PUB_INCOHERENT_ODD   = float(os.environ.get("BF_PUB_INCOHERENT_ODD") or 3.0)
 PUB_SHORT_FAV_ODD = float(os.environ.get("BF_PUB_SHORT_FAV_ODD") or 1.35)   # 14.08.2026 (Lucas): 1.50 -> 1.35
 
 
+def _pub_top5_raus(a) -> bool:
+    """Top 5 + MLS nicht mehr in den Public-Kanal — nur noch ins Schattenbuch.
+
+    28.09.2026 (Lucas: „von den Top 5 bin ich aktuell wirklich nicht mehr so ueberzeugt … Ja").
+    Gemessen:
+        gesendete Top-5-Pushes seit 01.09.   n=42      Treffer 50,0 % (noetig 59,8 %)   ROI −16,4 %
+        alle Top-5-Signale seit 27.08.       n=2.548   ROI −4,2 %   Obergrenze −0,9 %  (belegt negativ)
+        dieselben mit Pinnacle-Anker         n=228     ROI −6,5 %
+    Der einzige der drei Bereiche, der belegt verliert, und ohne stabil positiven Teilbereich.
+    Der Rest nach den Regeln vom selben Tag stand bei +11,7 % (n=66) — die Top 5 frassen ihn auf.
+    Entschieden in der Laenderspielpause: der Kanal verliert jetzt nichts, und das Schattenbuch
+    zeigt ab dem ersten Spieltag, ob sie zurueckkommen. Trades sieht sie weiter.
+    """
+    return is_top5(a.get("league"))
+
+
+def _pub_anker_grund(a, cidx):
+    """Public-Regel ausserhalb der Top 5: Pinnacle-Konsens — oder, ohne Anker, eine fallende Quote.
+
+    28.09.2026 (Lucas nach der Auswertung: „Top-Ligen, International, Rest — wir muessen eine
+    bessere Einstellung finden"). Gemessen an den gesendeten Pushes seit 01.09. (ab da lief der
+    Abgleich ueber alle Wettbewerbe):
+        ausserhalb Top 5, MIT Pinnacle-Konsens   n=51   ROI +23,3 %   UG +6,8 %
+        ausserhalb Top 5, OHNE Anker             n=25   ROI −15,4 %
+    Lucas wollte die anker-losen Ligen nicht verlieren („wenn das Geld passt, kann das schon gut
+    sein"). Im Signal-Buch (40.000 Zeilen) traegt der Rest ohne Anker bei FALLENDER Quote
+    +1,9 % zum Einstiegspreis (n=8.709), International ohne Anker in beiden Rechnungen negativ
+    (−4,4 % / −7,8 %, n=984). Gesendet ohne Anker bei stehender Quote: 6 von 6 verloren.
+
+    Also, nur ausserhalb der Top 5 (die Top 5 bleiben unberuehrt — eigene Entscheidung):
+      · Pinnacle-Konsens da                 → wie bisher
+      · International ohne Konsens          → raus ("intl_ohne_anker")
+      · Rest ohne Konsens, Quote faellt     → wie bisher
+      · Rest ohne Konsens, sonst            → raus ("rest_ohne_anker_ohne_fall")
+    „Ohne Konsens" heisst: kein Konsens-Eintrag, kein Anker, oder Pinnacle sieht es anders.
+    Alles, was hier faellt, landet im Schattenbuch und wird weiter abgerechnet.
+    Gibt den Grund zurueck oder None.
+    """
+    if is_top5(a.get("league")):
+        return None
+    v = (_consensus_for_push(a, cidx) or {}).get("verdict")
+    if v == "konsens":
+        return None
+    if a.get("tier") == "top":            # tier_of: nicht Top 5, aber UEFA/Laenderspiel -> International
+        return "intl_ohne_anker"
+    if a.get("leadDir") == "in":
+        return None
+    return "rest_ohne_anker_ohne_fall"
+
+
 def _pub_unconfirmed_fav(a) -> bool:
     """14.08.2026 (Lucas): kurzer Favorit (Geld-Seite < PUB_SHORT_FAV_ODD) OHNE Quoten-Bestaetigung
     (leadDir != 'in') -> erwartbares Favoriten-Geld ohne Rueckhalt, kein Signal. Nur wenn die Quote
@@ -1977,6 +2031,10 @@ def main():
     # 14.08.2026 (Lucas): unnoetige HT/Live-Pushs raus, wo die Geld-% der Quote widersprechen
     # (Galatasaray 85%@13.50; Wolves Under 87% aber Quote driftet). Trades sieht sie weiter.
     pub_alerts = [a for a in pub_alerts if not _pub_incoherent(a) and not _pub_drift(a) and not _pub_ht_useless(a) and not _pub_unconfirmed_fav(a) and not _pub_under_goals(a)]   # 16.08.2026 (Lucas): Under-Tore aus Public, live UND vor Anpfiff
+    # 28.09.2026 (Lucas): ausserhalb der Top 5 Pinnacle-Konsens — oder ohne Anker nur bei fallender
+    # Quote, International ohne Anker gar nicht. Herleitung bei _pub_anker_grund.
+    pub_alerts = [a for a in pub_alerts if not _pub_anker_grund(a, cidx)]
+    pub_alerts = [a for a in pub_alerts if not _pub_top5_raus(a)]   # 28.09.2026 (Lucas): Top 5 nur Schattenbuch
     pub_sent = 0
     _gesendet_k = set()          # scenario:matchId:market — dieselbe Form wie im Schattenbuch
     for a in pub_alerts:
@@ -2013,6 +2071,10 @@ def main():
         ("ht_nutzlos", _pub_ht_useless),
         ("fav_unbestaetigt", _pub_unconfirmed_fav),
         ("under_tore", _pub_under_goals),
+        # 28.09.2026: zwei Stufen, damit das Schattenbuch die beiden Gruende getrennt abrechnet.
+        ("intl_ohne_anker", lambda a: _pub_anker_grund(a, cidx) == "intl_ohne_anker"),
+        ("rest_ohne_anker_ohne_fall", lambda a: _pub_anker_grund(a, cidx) == "rest_ohne_anker_ohne_fall"),
+        ("top5", _pub_top5_raus),
     ]
     _stufen = trichter_stufen(_pub_roh, _stufen_filter)
     _gruende = {name: raus for name, _uebrig, raus in _stufen if raus}

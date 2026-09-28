@@ -60,7 +60,11 @@ MATCH_MIN      = 0.60          # Namens-Match-Schwelle (beide Teams muessen teil
 # Betwatch liefert schon EUR (EURFX=1), distTotal = Summe der Runner-Vols.
 _MK_FT = ("Match Odds", "Over/Under 2.5 Goals", "Over/Under 3.5 Goals", "Both teams to Score?")
 _MK_HT = ("Half Time", "First Half Goals 0.5", "First Half Goals 1.5")
-_TOP5_RX  = re.compile(r"(german bundesliga|english premier league|spanish la ?liga|italian serie a|french ligue 1|\bmls\b|major league soccer)", re.I)
+# 28.09.2026: „German Bundesliga 2", „English Premier League 2 - Div 1" (U21) und „US MLS Next Pro
+# League" liefen als Top 5 durch — die Suchbegriffe trafen die zweite Liga mit. 537 Signale im
+# Buch, 4 gesendete Pushes. Negativer Lookahead statt Liste; tests/test_top5_eine_regel.py haelt
+# alle Kopien (Python + Radar) gleich.
+_TOP5_RX  = re.compile(r"(german bundesliga(?!\s*2)|english premier league(?!\s*2)|spanish la ?liga(?!\s*2)|italian serie a|french ligue 1|\bmls\b(?!\s*next)|major league soccer)", re.I)
 _TOP5_NEG = re.compile(r"(summer series|friendl|reserve|women|u1[0-9]\b|youth|amateur)", re.I)
 _UEFA_RX  = re.compile(r"(champions league|europa league|europa conference|conference league|uefa)", re.I)
 
