@@ -70,7 +70,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "186 Karte(n) · 10 auch public"
+      "note": "187 Karte(n) · 10 auch public"
     },
     {
       "id": "public_push_buch",
@@ -88,16 +88,17 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "1295 geprueft, davon 146 abgeschnitten"
+      "note": "1295 geprueft, davon 145 abgeschnitten"
     },
     {
       "id": "settlement_alive",
       "label": "Settlement lebt (keine ewig offenen Positionen)",
       "severity": "error",
       "ok": false,
-      "nFail": 1,
+      "nFail": 2,
       "failures": [
-        "cs2-bmb-gbc2-2026-09-24: seit 4.0 Tagen offen — keine Auflösung gefunden"
+        "cs2-bmb-gbc2-2026-09-24: seit 4.0 Tagen offen — keine Auflösung gefunden",
+        "cs2-bbl1-brute-2026-09-25: seit 3.0 Tagen offen — keine Auflösung gefunden"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen. Der Grund steht an jeder Zeile — er ist bei jeder ein anderer."
     },
@@ -117,7 +118,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Fällige Märkte je Liga, die ihre Auflösung finden — nur ab dem Beginn des Auflösungsbuchs (2026-09-13); 2238 ältere Märkte bleiben draussen, fuer sie kann es keine geben. < 60% = Settlement läuft wirklich ins Leere."
+      "note": "Fällige Märkte je Liga, die ihre Auflösung finden — nur ab dem Beginn des Auflösungsbuchs (2026-09-14); 2239 ältere Märkte bleiben draussen, fuer sie kann es keine geben. < 60% = Settlement läuft wirklich ins Leere."
     },
     {
       "id": "proven_wallets_profitable",
@@ -126,9 +127,9 @@
       "ok": false,
       "nFail": 5,
       "failures": [
-        "224/496 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (45%) — Trefferquote allein trügt",
+        "224/495 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (45%) — Trefferquote allein trügt",
         "   0xc3c3b3ef30… n=338 Treffer 51% P&L $-3,976,146",
-        "   0xa0f21e6d35… n=142 Treffer 60% P&L $-2,635,720",
+        "   0xa0f21e6d35… n=143 Treffer 59% P&L $-2,635,720",
         "   0xabb89972b2… n=58 Treffer 55% P&L $-2,563,982",
         "   0x6ac5bb06a9… n=116 Treffer 50% P&L $-1,555,775"
       ],
@@ -181,5 +182,5 @@
     }
   ],
   "nFail": 2,
-  "generatedAt": "2026-09-27T23:58:28.679882+00:00"
+  "generatedAt": "2026-09-28T00:05:52.280596+00:00"
 }
