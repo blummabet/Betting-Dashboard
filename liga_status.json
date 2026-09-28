@@ -564,11 +564,9 @@
       "id": "live_scan_laeuft",
       "label": "Poly-Live-Scan taktet",
       "severity": "error",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "Letzter Live-Scan vor 7.7h (Takt: 15 Min) — der Job startet nicht. Runner belegt? Workflow deaktiviert?"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Erwartet alle 15 Min; Alarm ab 90 Min. Live-Preise sind die Schluss-Referenz fuer den CLV — fehlen sie, misst der Nordstern nicht."
     },
     {
@@ -587,7 +585,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "40000/40000 Zeilen · 31.6 Tage Fenster (2026-08-27 bis 2026-09-28). Kurzes Fenster bei freiem Deckel ist normal (der Track fuellt sich); kurzes Fenster AM Deckel ist der Fehler."
+      "note": "40000/40000 Zeilen · 31.6 Tage Fenster (2026-08-28 bis 2026-09-28). Kurzes Fenster bei freiem Deckel ist normal (der Track fuellt sich); kurzes Fenster AM Deckel ist der Fehler."
     },
     {
       "id": "betfair_liefert",
@@ -596,7 +594,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Job vor 1.2h · jüngste Daten vor 1.2h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
+      "note": "Job vor 0.2h · jüngste Daten vor 0.4h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
     },
     {
       "id": "poly_global_liefert",
@@ -605,7 +603,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Job vor 1.4h · jüngste Daten vor 1.4h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
+      "note": "Job vor 0.6h · jüngste Daten vor 0.6h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
     },
     {
       "id": "pinn_anker",
@@ -614,7 +612,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "43 von 43 Ankern der Handliste treffen den Feed · 388 Ligastrings gesehen · Anker liegt auf 67% von 3 offenen Spielen (aus 43 geholten Wettbewerben). Eine niedrige Abdeckung der HANDLISTE ist kein Fehler mehr (der globale Pool faengt den Rest); ein toter Eintrag schon."
+      "note": "43 von 43 Ankern der Handliste treffen den Feed · 390 Ligastrings gesehen · Anker liegt auf 67% von 3 offenen Spielen (aus 43 geholten Wettbewerben). Eine niedrige Abdeckung der HANDLISTE ist kein Fehler mehr (der globale Pool faengt den Rest); ein toter Eintrag schon."
     },
     {
       "id": "buecher_punkte",
@@ -623,7 +621,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "94 Spiele bewertet · 36 mit mindestens einem fremden Buch · beste Punktzahl 11. Ein leeres Fenster ist kein Fehler; ein dauerhaft einsamer Betfair-Score schon."
+      "note": "101 Spiele bewertet · 38 mit mindestens einem fremden Buch · beste Punktzahl 11. Ein leeres Fenster ist kein Fehler; ein dauerhaft einsamer Betfair-Score schon."
     },
     {
       "id": "vorregistrierung",
@@ -632,7 +630,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "🔒 E-Sport ohne Wallet-Nachweis: 204/120 seit 21d · 🔒 Liga · Conviction ab 5: 85/80 seit 17d · 🔒 Fade-Unter · Ganzspiel-Torlinie: 3889/200 seit 21d · 🔒 Poly-Auswahl · von Betfair bestätigt: 274/60 seit 27d · 🔒 Bücher-Score ≥7 von 10: 115/40 seit 27d"
+      "note": "🔒 E-Sport ohne Wallet-Nachweis: 205/120 seit 21d · 🔒 Liga · Conviction ab 5: 85/80 seit 17d · 🔒 Fade-Unter · Ganzspiel-Torlinie: 3895/200 seit 21d · 🔒 Poly-Auswahl · von Betfair bestätigt: 275/60 seit 27d · 🔒 Bücher-Score ≥7 von 10: 115/40 seit 27d"
     },
     {
       "id": "killer_push_buch",
@@ -653,6 +651,6 @@
       "note": "0 von 0 ist ein ruhiger Tag (oder eine Laenderspielpause, in der wir gar keine passenden Partien haben). 0 von N ist ein Bruch."
     }
   ],
-  "nFail": 3,
-  "generatedAt": "2026-09-28T14:45:19.492363+00:00"
+  "nFail": 2,
+  "generatedAt": "2026-09-28T15:57:33.896472+00:00"
 }
