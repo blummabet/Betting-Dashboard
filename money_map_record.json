@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-28T01:48:10.189430+00:00",
+"generatedAt": "2026-09-28T02:03:15.028018+00:00",
 "byVerdict": {
 "uneinig": {
-"n": 561,
+"n": 562,
 "wins": 179,
-"hitRate": 0.3191,
-"polyN": 525,
+"hitRate": 0.3185,
+"polyN": 526,
 "polyWins": 138,
-"polyHitRate": 0.2629,
-"pinnN": 340,
-"pinnHitRate": 0.6324,
-"nRoi": 382,
-"roi": -0.4486,
-"roiLb": -0.537,
-"nClv": 382,
-"clv": -19.88,
-"clvLb": -22.7307
+"polyHitRate": 0.2624,
+"pinnN": 341,
+"pinnHitRate": 0.6305,
+"nRoi": 383,
+"roi": -0.45,
+"roiLb": -0.5383,
+"nClv": 383,
+"clv": -19.95,
+"clvLb": -22.7896
 },
 "konsens": {
-"n": 1388,
-"wins": 1180,
-"hitRate": 0.8501,
-"polyN": 1326,
-"polyWins": 1037,
-"polyHitRate": 0.7821,
+"n": 1389,
+"wins": 1181,
+"hitRate": 0.8503,
+"polyN": 1327,
+"polyWins": 1038,
+"polyHitRate": 0.7822,
 "pinnN": 214,
 "pinnHitRate": 0.771,
-"nRoi": 870,
-"roi": 0.3997,
-"roiLb": 0.3567,
-"nClv": 870,
-"clv": 18.71,
-"clvLb": 17.2438
+"nRoi": 871,
+"roi": 0.3994,
+"roiLb": 0.3564,
+"nClv": 871,
+"clv": 18.7,
+"clvLb": 17.2351
 },
 "teil": {
 "n": 33,
@@ -52,9 +52,9 @@
 },
 "byLeague": {
 "US MLS": {
-"n": 114,
+"n": 115,
 "wins": 69,
-"hitRate": 0.6053
+"hitRate": 0.6
 },
 "English Sky Bet Championship": {
 "n": 71,
@@ -371,6 +371,11 @@
 "wins": 6,
 "hitRate": 0.75
 },
+"CONCACAF Nations League A": {
+"n": 7,
+"wins": 5,
+"hitRate": 0.7143
+},
 "Finnish Veikkausliiga": {
 "n": 7,
 "wins": 4,
@@ -405,11 +410,6 @@
 "n": 7,
 "wins": 6,
 "hitRate": 0.8571
-},
-"CONCACAF Nations League A": {
-"n": 6,
-"wins": 4,
-"hitRate": 0.6667
 },
 "English National League": {
 "n": 6,
@@ -674,37 +674,75 @@
 },
 "byStrength": {
 "strong": {
-"n": 1228,
-"wins": 985,
-"hitRate": 0.8021,
-"nRoi": 815,
-"roi": 0.3029,
-"roiLb": 0.2515,
-"nClv": 815,
-"clv": 13.33,
-"clvLb": 11.4112
+"n": 1229,
+"wins": 986,
+"hitRate": 0.8023,
+"nRoi": 816,
+"roi": 0.3027,
+"roiLb": 0.2514,
+"nClv": 816,
+"clv": 13.32,
+"clvLb": 11.4091
 },
 "weak": {
-"n": 754,
+"n": 755,
 "wins": 379,
-"hitRate": 0.5027,
-"nRoi": 463,
-"roi": -0.1956,
-"roiLb": -0.2702,
-"nClv": 463,
-"clv": -6.58,
-"clvLb": -9.0283
+"hitRate": 0.502,
+"nRoi": 464,
+"roi": -0.1973,
+"roiLb": -0.2718,
+"nClv": 464,
+"clv": -6.66,
+"clvLb": -9.1086
 }
 },
 "divergence": {
-"n": 561,
+"n": 562,
 "betfairWins": 179,
-"betfairRate": 0.3191,
-"polyN": 525,
+"betfairRate": 0.3185,
+"polyN": 526,
 "polyWins": 138,
-"polyRate": 0.2629
+"polyRate": 0.2624
 },
 "recent": [
+{
+"matchId": "36082727",
+"home": "Columbus",
+"away": "Inter Miami CF",
+"league": "US MLS",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Inter Miami CF",
+"polySide": "away",
+"winner": "home",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-09-27T23:00:00Z",
+"settledAt": "2026-09-28T02:03:14.833737+00:00"
+},
+{
+"matchId": "36122896",
+"home": "Haiti",
+"away": "Costa Rica",
+"league": "CONCACAF Nations League A",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Haiti",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-09-27T23:00:00Z",
+"settledAt": "2026-09-28T02:03:14.833737+00:00"
+},
 {
 "matchId": "36100707",
 "home": "Jaguares de Cordoba",
@@ -1426,56 +1464,18 @@
 ],
 "kickoff": "2026-09-27T00:30:00Z",
 "settledAt": "2026-09-27T03:30:53.954781+00:00"
-},
-{
-"matchId": "36090782",
-"home": "Mexico",
-"away": "Colombia",
-"league": "Friendlies International",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Colombia",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-09-27T01:00:00Z",
-"settledAt": "2026-09-27T03:00:45.338363+00:00"
-},
-{
-"matchId": "36082667",
-"home": "Atlanta Utd",
-"away": "New York City",
-"league": "US MLS",
-"verdict": "konsens",
-"moneySide": "draw",
-"moneyName": "The Draw",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-09-26T23:30:00Z",
-"settledAt": "2026-09-27T02:30:48.562702+00:00"
 }
 ],
 "global": {
-"n": 1982,
-"wins": 1364,
-"hitRate": 0.6882,
-"nRoi": 1278,
-"roi": 0.1223,
-"roiLb": 0.0785,
-"nClv": 1278,
-"clv": 6.11,
-"clvLb": 4.5427
+"n": 1984,
+"wins": 1365,
+"hitRate": 0.688,
+"nRoi": 1280,
+"roi": 0.1214,
+"roiLb": 0.0776,
+"nClv": 1280,
+"clv": 6.08,
+"clvLb": 4.507
 },
-"pending": 18
+"pending": 16
 }
