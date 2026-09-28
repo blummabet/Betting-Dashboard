@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-28T11:49:29.415579+00:00",
+ "generatedAt": "2026-09-28T12:04:46.113183+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -119,7 +119,7 @@
     "nieAnteil": 0.052,
     "schaetzbar": false
    },
-   "alterTage": 0.9,
+   "alterTage": 1.0,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py",
    "seitFreigabe": {
@@ -599,7 +599,7 @@
     "nieAnteil": 0.337,
     "schaetzbar": false
    },
-   "alterTage": 0.5,
+   "alterTage": 0.6,
    "art": "conviction",
    "wert": 8,
    "nAlt": 12,
@@ -651,11 +651,11 @@
    "zerlegung": "nach Conviction",
    "art": "conviction",
    "gruppen": 8,
-   "basis": "840 von 1291 abgerechneten Plays · nur Engine 2026-09-01 · ohne Cricket, Kampfsport, US-Sport",
-   "n": 840,
-   "pl": 7.54,
-   "roi": 0.009,
-   "clv": -2.442,
+   "basis": "841 von 1292 abgerechneten Plays · nur Engine 2026-09-01 · ohne Cricket, Kampfsport, US-Sport",
+   "n": 841,
+   "pl": 8.0,
+   "roi": 0.0095,
+   "clv": -2.439,
    "belegte": 1
   },
   {
@@ -4061,12 +4061,12 @@
   {
    "wallet": "0x49e0265d1a3636870df298e2ef5e681e246e9af1",
    "kurz": "0x49e0…9af1",
-   "n": 81,
-   "wins": 71,
-   "hit": 0.8765,
-   "hitLb": 0.804,
-   "clv": -0.128,
-   "usd": 445253,
+   "n": 82,
+   "wins": 72,
+   "hit": 0.878,
+   "hitLb": 0.8063,
+   "clv": -0.127,
+   "usd": 450189,
    "pnl": 5206.6,
    "grad": 1.0,
    "sportarten": [
@@ -4135,18 +4135,18 @@
    ]
   },
   {
-   "wallet": "0xc3973025163de81e367ad29c21e296e51684bb3b",
-   "kurz": "0xc397…bb3b",
-   "n": 8,
-   "wins": 8,
-   "hit": 1.0,
-   "hitLb": 0.7472,
-   "clv": 0.439,
-   "usd": 8328,
-   "pnl": 113201.48,
+   "wallet": "0x2f4beded4082ff033f1c0b7efbde9962220def55",
+   "kurz": "0x2f4b…ef55",
+   "n": 15,
+   "wins": 14,
+   "hit": 0.9333,
+   "hitLb": 0.7492,
+   "clv": -4.191,
+   "usd": 67260,
+   "pnl": -11970.58,
    "grad": 1.0,
    "sportarten": [
-    "E-Sport"
+    "Tennis"
    ]
   }
  ],
@@ -4259,7 +4259,7 @@
     "nieAnteil": 0.052,
     "schaetzbar": false
    },
-   "alterTage": 0.9,
+   "alterTage": 1.0,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py",
    "seitFreigabe": {
@@ -4737,7 +4737,7 @@
     "nieAnteil": 0.337,
     "schaetzbar": false
    },
-   "alterTage": 0.5,
+   "alterTage": 0.6,
    "art": "conviction",
    "wert": 8,
    "nAlt": 12,
@@ -5453,6 +5453,38 @@
    "naeherung": false
   },
   {
+   "schublade": "Mix money+sharp",
+   "strom": "poly",
+   "n": 305,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0096,
+   "pl": 2.92,
+   "roiLb": -0.0508,
+   "clv": -3.382,
+   "clvLb": -4.238,
+   "clvUrteil": "negativ belegt",
+   "clvOg": -2.525,
+   "fehltN": 0,
+   "noetigNRoi": 12091,
+   "noetigNClv": null,
+   "noetigGrund": null,
+   "entfernung": {
+    "median": 1426,
+    "lo": 185,
+    "hi": 93862,
+    "nieAnteil": 0.435,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "mix",
+   "wert": "money+sharp",
+   "nAlt": 140,
+   "roiAlt": -0.035,
+   "clvAlt": -0.265,
+   "engineAlt": true
+  },
+  {
    "schublade": "Swedish Division 1 · First Half Goals 0.5",
    "strom": "betfair",
    "n": 62,
@@ -5495,38 +5527,6 @@
    "alterTage": null,
    "art": "markt",
    "naeherung": false
-  },
-  {
-   "schublade": "Mix money+sharp",
-   "strom": "poly",
-   "n": 304,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0081,
-   "pl": 2.46,
-   "roiLb": -0.0524,
-   "clv": -3.393,
-   "clvLb": -4.252,
-   "clvUrteil": "negativ belegt",
-   "clvOg": -2.534,
-   "fehltN": 0,
-   "noetigNRoi": 16943,
-   "noetigNClv": null,
-   "noetigGrund": null,
-   "entfernung": {
-    "median": 1418,
-    "lo": 174,
-    "hi": 130590,
-    "nieAnteil": 0.445,
-    "schaetzbar": false
-   },
-   "alterTage": 0.1,
-   "art": "mix",
-   "wert": "money+sharp",
-   "nAlt": 140,
-   "roiAlt": -0.035,
-   "clvAlt": -0.265,
-   "engineAlt": true
   },
   {
    "schublade": "Swedish Superettan · First Half Goals 1.5",
@@ -5650,7 +5650,7 @@
     "nieAnteil": 0.268,
     "schaetzbar": false
    },
-   "alterTage": 0.9,
+   "alterTage": 1.0,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py"
   },
@@ -5677,6 +5677,38 @@
    "naeherung": false
   },
   {
+   "schublade": "Conviction 5",
+   "strom": "poly",
+   "n": 408,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.0018,
+   "pl": -0.75,
+   "roiLb": -0.0623,
+   "clv": -3.574,
+   "clvLb": -4.299,
+   "clvUrteil": "negativ belegt",
+   "clvOg": -2.85,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "nicht_positiv",
+   "entfernung": {
+    "median": 2245,
+    "lo": 279,
+    "hi": 209237,
+    "nieAnteil": 0.495,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "conviction",
+   "wert": 5,
+   "nAlt": 110,
+   "roiAlt": 0.1047,
+   "clvAlt": 0.283,
+   "engineAlt": true
+  },
+  {
    "schublade": "Egyptian 2nd Division · Over/Under 2.5 Goals",
    "strom": "betfair",
    "n": 44,
@@ -5697,38 +5729,6 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
-  },
-  {
-   "schublade": "Conviction 5",
-   "strom": "poly",
-   "n": 407,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.003,
-   "pl": -1.21,
-   "roiLb": -0.0636,
-   "clv": -3.583,
-   "clvLb": -4.309,
-   "clvUrteil": "negativ belegt",
-   "clvOg": -2.857,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "nicht_positiv",
-   "entfernung": {
-    "median": 2205,
-    "lo": 309,
-    "hi": 448745,
-    "nieAnteil": 0.502,
-    "schaetzbar": false
-   },
-   "alterTage": 0.1,
-   "art": "conviction",
-   "wert": 5,
-   "nAlt": 110,
-   "roiAlt": 0.1047,
-   "clvAlt": 0.283,
-   "engineAlt": true
   },
   {
    "schublade": "Dutch Eredivisie · First Half Goals 0.5",
@@ -8358,7 +8358,7 @@
     "nieAnteil": 0.367,
     "schaetzbar": false
    },
-   "alterTage": 1.3,
+   "alterTage": 1.4,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "top5"
@@ -14417,7 +14417,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 1.6,
+   "alterTage": 1.7,
    "art": "mix",
    "wert": "bf+steam"
   },
