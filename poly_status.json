@@ -70,15 +70,17 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "198 Karte(n) · 10 auch public"
+      "note": "199 Karte(n) · 10 auch public"
     },
     {
       "id": "public_push_buch",
       "label": "Öffentlicher Push führt sein Buch",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "1 gepushte Zeile(n) seit über 3 Tagen 'pending', obwohl eine Auflösung existiert (z.B. unl-tur-fra-2026-09-25-more-markets) — Key-Mismatch gegen poly_resolutions."
+      ],
       "note": "Wer pusht, misst den Push. Gerechnet wird zum Preis im Moment des Pushs, nicht zum älteren Einstieg der Wallet."
     },
     {
@@ -88,7 +90,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "1320 geprueft, davon 149 abgeschnitten"
+      "note": "1322 geprueft, davon 151 abgeschnitten"
     },
     {
       "id": "settlement_alive",
@@ -118,7 +120,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Fällige Märkte je Liga, die ihre Auflösung finden — nur ab dem Beginn des Auflösungsbuchs (2026-09-14); 2188 ältere Märkte bleiben draussen, fuer sie kann es keine geben. < 60% = Settlement läuft wirklich ins Leere."
+      "note": "Fällige Märkte je Liga, die ihre Auflösung finden — nur ab dem Beginn des Auflösungsbuchs (2026-09-14); 2184 ältere Märkte bleiben draussen, fuer sie kann es keine geben. < 60% = Settlement läuft wirklich ins Leere."
     },
     {
       "id": "proven_wallets_profitable",
@@ -181,6 +183,6 @@
       "note": "poly_direct_bets.py rechnet über poly_resolutions.json ab. Hängt ein Bet, kennt Poly den Ausgang nicht (Markt noch offen/obskur) oder der Slug passt nicht — dann fehlt echtes Geld in der Bilanz."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-09-28T16:01:46.890160+00:00"
+  "nFail": 3,
+  "generatedAt": "2026-09-28T16:20:27.994433+00:00"
 }
