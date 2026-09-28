@@ -1,6 +1,6 @@
 {
-"generatedAt": "2026-09-28T06:03:34.523029+00:00",
-"count": 7,
+"generatedAt": "2026-09-28T06:18:37.515300+00:00",
+"count": 8,
 "covered": 6,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
@@ -62,8 +62,8 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 96519,
-"remaining": 4903481,
+"used": 96651,
+"remaining": 4903349,
 "letzterFehler": null
 },
 "ankerQuote": 0.667,
@@ -81,7 +81,7 @@
 "moneySharePct": 85,
 "moneyOdd": 1.94,
 "moneyDir": "flat",
-"totVol": 83296,
+"totVol": 85869,
 "pinnOdd": 1.87,
 "softOdd": 1.83,
 "softN": 25,
@@ -103,18 +103,18 @@
 },
 "soft": {
 "home": 0.2495,
-"draw": 0.2438,
-"away": 0.5067,
+"draw": 0.2434,
+"away": 0.507,
 "fav": "away",
 "n": 25
 },
 "pinnMovePP": 1.3,
 "pinnMove": {
 "movePP": 1.3,
-"stepPP": 0.8,
+"stepPP": -0.0,
 "n": 25,
 "move": true,
-"laeuft": true
+"laeuft": false
 },
 "verdict": "konsens",
 "agree": true,
@@ -133,7 +133,7 @@
 "moneySharePct": 68,
 "moneyOdd": 3.1,
 "moneyDir": "flat",
-"totVol": 61752,
+"totVol": 61810,
 "pinnOdd": null,
 "softOdd": 2.8,
 "softN": 25,
@@ -149,9 +149,9 @@
 },
 "pinn": null,
 "soft": {
-"home": 0.3324,
-"draw": 0.312,
-"away": 0.3556,
+"home": 0.3313,
+"draw": 0.3127,
+"away": 0.356,
 "fav": "away",
 "n": 25
 },
@@ -182,9 +182,9 @@
 "moneyName": "Türkiye",
 "moneySharePct": 57,
 "moneyOdd": 2.82,
-"moneyDir": "out",
-"totVol": 35830,
-"pinnOdd": 2.71,
+"moneyDir": "flat",
+"totVol": 35872,
+"pinnOdd": 2.7,
 "softOdd": 2.62,
 "softN": 25,
 "poly": {
@@ -198,9 +198,9 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.357,
-"draw": 0.2765,
-"away": 0.3665,
+"home": 0.3585,
+"draw": 0.2749,
+"away": 0.3666,
 "fav": "away"
 },
 "soft": {
@@ -210,11 +210,11 @@
 "fav": "away",
 "n": 25
 },
-"pinnMovePP": -0.7,
+"pinnMovePP": -0.5,
 "pinnMove": {
-"movePP": -0.7,
-"stepPP": 0.0,
-"n": 17,
+"movePP": -0.5,
+"stepPP": 0.1,
+"n": 18,
 "move": false,
 "laeuft": false
 },
@@ -235,7 +235,7 @@
 "moneySharePct": 88,
 "moneyOdd": 1.22,
 "moneyDir": "flat",
-"totVol": 26649,
+"totVol": 27039,
 "pinnOdd": 1.2,
 "softOdd": 1.18,
 "softN": 24,
@@ -384,10 +384,10 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "Senegal",
-"moneySharePct": 94,
-"moneyOdd": 1.71,
+"moneySharePct": 95,
+"moneyOdd": 1.66,
 "moneyDir": "in",
-"totVol": 23021,
+"totVol": 25611,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -412,17 +412,81 @@
 "spiel": "Ethiopia v Senegal",
 "grund": "kein_kandidat"
 }
+},
+{
+"matchId": "36114129",
+"home": "Japan",
+"away": "Venezuela",
+"league": "Friendlies International",
+"country": "International",
+"kickoff": "2026-09-28T10:25:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Japan",
+"moneySharePct": 94,
+"moneyOdd": 1.26,
+"moneyDir": "in",
+"totVol": 20278,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": {
+"vol": 101557,
+"odd": 1.27,
+"sharePct": 96,
+"shareSrc": "geld",
+"key": "fif-jpn-ven-2026-09-28",
+"sideKey": "Japan",
+"whales": [
+{
+"wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+"usd": 24678
+},
+{
+"wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
+"usd": 8679
+},
+{
+"wallet": "0xd3911bd5e070c9ad9a9519c966347802d8f3b109",
+"usd": 6003
+},
+{
+"wallet": "0x79975d5e2db7641cc5eea0acbaf48570044d5e4b",
+"usd": 4669
+},
+{
+"wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+"usd": 1972
+},
+{
+"wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+"usd": 832
+}
+],
+"whaleUsd": 48951
+},
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Japan v Venezuela",
+"grund": "kein_kandidat"
+}
 }
 ],
 "ankerN": 3,
-"ankerNOffen": 119,
+"ankerNOffen": 122,
 "ankerMit": 2,
 "ankerDiagnose": {
 "nach": {
-"name": 36,
+"name": 38,
 "kein_kandidat": 56,
-"kein_pinnacle": 15,
-"zeit": 1
+"zeit": 2,
+"kein_pinnacle": 15
 },
 "beispiele": [
 {
@@ -444,6 +508,25 @@
 "liga": "Friendlies International U19"
 },
 {
+"spiel": "Croatia U19 v France U19",
+"kandidat": "Belgium v France",
+"key": "soccer_uefa_nations_league",
+"score": 0.5,
+"grund": "name",
+"matchId": "36126539",
+"liga": "Friendlies International U19"
+},
+{
+"spiel": "Turkey U19 v Italy U19",
+"kandidat": "Turkey v Italy",
+"key": "soccer_uefa_nations_league",
+"score": 1.0,
+"grund": "zeit",
+"abstandH": 5.2,
+"matchId": "36126548",
+"liga": "Friendlies International U19"
+},
+{
 "spiel": "NK Maribor v HNK Gorica",
 "kandidat": "NK Celje v Omonoia FC",
 "key": "soccer_uefa_europa_league",
@@ -451,6 +534,15 @@
 "grund": "name",
 "matchId": "36124647",
 "liga": "Friendly Matches"
+},
+{
+"spiel": "Slovakia U19 v Poland U19",
+"kandidat": "Sweden v Poland",
+"key": "soccer_uefa_nations_league",
+"score": 0.5,
+"grund": "name",
+"matchId": "36124562",
+"liga": "Friendlies International U19"
 },
 {
 "spiel": "Kyrgyzstan v Republic of Maldives",
@@ -462,13 +554,15 @@
 "liga": "Friendlies International"
 },
 {
-"spiel": "Slovakia U19 v Poland U19",
-"kandidat": "Sweden v Poland",
+"spiel": "Latvia v Cyprus",
+"grund": "kein_pinnacle",
+"kandidat": "Latvia v Cyprus",
 "key": "soccer_uefa_nations_league",
-"score": 0.5,
-"grund": "name",
-"matchId": "36124562",
-"liga": "Friendlies International U19"
+"nSoft": 25,
+"pinnacleImEvent": false,
+"nBuecher": 25,
+"matchId": "36023028",
+"liga": "UEFA Nations League"
 },
 {
 "spiel": "Central African Republic v Burkina Faso",
@@ -488,17 +582,6 @@
 "pinnacleImEvent": false,
 "nBuecher": 25,
 "matchId": "36023029",
-"liga": "UEFA Nations League"
-},
-{
-"spiel": "Latvia v Cyprus",
-"grund": "kein_pinnacle",
-"kandidat": "Latvia v Cyprus",
-"key": "soccer_uefa_nations_league",
-"nSoft": 25,
-"pinnacleImEvent": false,
-"nBuecher": 25,
-"matchId": "36023028",
 "liga": "UEFA Nations League"
 },
 {
@@ -522,17 +605,6 @@
 "liga": "UEFA U21 Euro Qualifiers"
 },
 {
-"spiel": "Sweden v Poland",
-"grund": "kein_pinnacle",
-"kandidat": "Sweden v Poland",
-"key": "soccer_uefa_nations_league",
-"nSoft": 25,
-"pinnacleImEvent": false,
-"nBuecher": 25,
-"matchId": "36091451",
-"liga": "UEFA Nations League"
-},
-{
 "spiel": "Romania v Bosnia",
 "grund": "kein_pinnacle",
 "kandidat": "Romania v Bosnia & Herzegovina",
@@ -541,6 +613,17 @@
 "pinnacleImEvent": false,
 "nBuecher": 25,
 "matchId": "36091447",
+"liga": "UEFA Nations League"
+},
+{
+"spiel": "Sweden v Poland",
+"grund": "kein_pinnacle",
+"kandidat": "Sweden v Poland",
+"key": "soccer_uefa_nations_league",
+"nSoft": 25,
+"pinnacleImEvent": false,
+"nBuecher": 25,
+"matchId": "36091451",
 "liga": "UEFA Nations League"
 },
 {
@@ -555,36 +638,14 @@
 "liga": "UEFA Nations League"
 },
 {
-"spiel": "San Marino v Albania",
+"spiel": "Slovakia v Kazakhstan",
 "grund": "kein_pinnacle",
-"kandidat": "San Marino v Albania",
-"key": "soccer_uefa_nations_league",
-"nSoft": 24,
-"pinnacleImEvent": false,
-"nBuecher": 24,
-"matchId": "36024496",
-"liga": "UEFA Nations League"
-},
-{
-"spiel": "Bulgaria v Estonia",
-"grund": "kein_pinnacle",
-"kandidat": "Bulgaria v Estonia",
+"kandidat": "Slovakia v Kazakhstan",
 "key": "soccer_uefa_nations_league",
 "nSoft": 23,
 "pinnacleImEvent": false,
 "nBuecher": 23,
-"matchId": "36024493",
-"liga": "UEFA Nations League"
-},
-{
-"spiel": "Slovenia v North Macedonia",
-"grund": "kein_pinnacle",
-"kandidat": "Slovenia v North Macedonia",
-"key": "soccer_uefa_nations_league",
-"nSoft": 24,
-"pinnacleImEvent": false,
-"nBuecher": 24,
-"matchId": "36091449",
+"matchId": "36032305",
 "liga": "UEFA Nations League"
 },
 {
@@ -599,14 +660,36 @@
 "liga": "UEFA Nations League"
 },
 {
-"spiel": "Slovakia v Kazakhstan",
+"spiel": "Bulgaria v Estonia",
 "grund": "kein_pinnacle",
-"kandidat": "Slovakia v Kazakhstan",
+"kandidat": "Bulgaria v Estonia",
 "key": "soccer_uefa_nations_league",
 "nSoft": 23,
 "pinnacleImEvent": false,
 "nBuecher": 23,
-"matchId": "36032305",
+"matchId": "36024493",
+"liga": "UEFA Nations League"
+},
+{
+"spiel": "San Marino v Albania",
+"grund": "kein_pinnacle",
+"kandidat": "San Marino v Albania",
+"key": "soccer_uefa_nations_league",
+"nSoft": 24,
+"pinnacleImEvent": false,
+"nBuecher": 24,
+"matchId": "36024496",
+"liga": "UEFA Nations League"
+},
+{
+"spiel": "Slovenia v North Macedonia",
+"grund": "kein_pinnacle",
+"kandidat": "Slovenia v North Macedonia",
+"key": "soccer_uefa_nations_league",
+"nSoft": 24,
+"pinnacleImEvent": false,
+"nBuecher": 24,
+"matchId": "36091449",
 "liga": "UEFA Nations League"
 },
 {
@@ -730,6 +813,15 @@
 "liga": "Uruguayan Reserves"
 },
 {
+"spiel": "Club Leon FC (W) v CF America (W)",
+"kandidat": "América Mineiro v Juventude",
+"key": "soccer_brazil_serie_b",
+"score": 0.5,
+"grund": "name",
+"matchId": "36124775",
+"liga": "Mexican Liga MX Femenil"
+},
+{
 "spiel": "Eastern District U22 v Kowloon City U22",
 "kandidat": "Auckland FC v Melbourne City",
 "key": "soccer_australia_aleague",
@@ -766,15 +858,6 @@
 "liga": "Uruguayan Reserves"
 },
 {
-"spiel": "Club Leon FC (W) v CF America (W)",
-"kandidat": "América Mineiro v Juventude",
-"key": "soccer_brazil_serie_b",
-"score": 0.5,
-"grund": "name",
-"matchId": "36124775",
-"liga": "Mexican Liga MX Femenil"
-},
-{
 "spiel": "Swansea U21 v Queens Park Rangers U21",
 "kandidat": "West Ham United v Queens Park Rangers",
 "key": "soccer_efl_champ",
@@ -791,24 +874,6 @@
 "grund": "name",
 "matchId": "36126080",
 "liga": "Uruguayan Reserves"
-},
-{
-"spiel": "Oriental de La Paz (Res) v Cerro Largo (Res)",
-"kandidat": "Independiente Rivadavia v Gimnasia La Plata",
-"key": "soccer_argentina_primera_division",
-"score": 0.25,
-"grund": "name",
-"matchId": "36126081",
-"liga": "Uruguayan Reserves"
-},
-{
-"spiel": "Justo Jose de Urquiza v Leandro N Alem",
-"kandidat": "Colorado Rapids v San Jose Earthquakes",
-"key": "soccer_usa_mls",
-"score": 0.33,
-"grund": "name",
-"matchId": "36124827",
-"liga": "Argentinian Primera C"
 }
 ]
 }
