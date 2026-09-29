@@ -1,13 +1,29 @@
 {
-"generatedAt": "2026-09-28T23:35:38.912723+00:00",
+"generatedAt": "2026-09-29T00:05:36.928856+00:00",
 "byVerdict": {
+"konsens": {
+"n": 1389,
+"wins": 1182,
+"hitRate": 0.851,
+"polyN": 1327,
+"polyWins": 1039,
+"polyHitRate": 0.783,
+"pinnN": 214,
+"pinnHitRate": 0.771,
+"nRoi": 889,
+"roi": 0.4028,
+"roiLb": 0.3601,
+"nClv": 889,
+"clv": 18.84,
+"clvLb": 17.3715
+},
 "uneinig": {
-"n": 561,
+"n": 560,
 "wins": 181,
-"hitRate": 0.3226,
-"polyN": 526,
-"polyWins": 137,
-"polyHitRate": 0.2605,
+"hitRate": 0.3232,
+"polyN": 525,
+"polyWins": 136,
+"polyHitRate": 0.259,
 "pinnN": 338,
 "pinnHitRate": 0.6331,
 "nRoi": 389,
@@ -16,22 +32,6 @@
 "nClv": 389,
 "clv": -20.04,
 "clvLb": -22.8424
-},
-"konsens": {
-"n": 1388,
-"wins": 1181,
-"hitRate": 0.8509,
-"polyN": 1326,
-"polyWins": 1038,
-"polyHitRate": 0.7828,
-"pinnN": 214,
-"pinnHitRate": 0.771,
-"nRoi": 887,
-"roi": 0.4029,
-"roiLb": 0.3601,
-"nClv": 887,
-"clv": 18.84,
-"clvLb": 17.3754
 },
 "teil": {
 "n": 33,
@@ -52,9 +52,9 @@
 },
 "byLeague": {
 "US MLS": {
-"n": 112,
-"wins": 67,
-"hitRate": 0.5982
+"n": 111,
+"wins": 66,
+"hitRate": 0.5946
 },
 "English Sky Bet Championship": {
 "n": 71,
@@ -87,9 +87,9 @@
 "hitRate": 0.7
 },
 "Argentinian Primera Division": {
-"n": 49,
+"n": 48,
 "wins": 32,
-"hitRate": 0.6531
+"hitRate": 0.6667
 },
 "Colombian Primera A": {
 "n": 47,
@@ -291,6 +291,11 @@
 "wins": 11,
 "hitRate": 0.7333
 },
+"Colombian Primera B": {
+"n": 15,
+"wins": 12,
+"hitRate": 0.8
+},
 "English Sky Bet League 2": {
 "n": 15,
 "wins": 8,
@@ -302,11 +307,6 @@
 "hitRate": 0.7333
 },
 "AFC Champions League": {
-"n": 14,
-"wins": 11,
-"hitRate": 0.7857
-},
-"Colombian Primera B": {
 "n": 14,
 "wins": 11,
 "hitRate": 0.7857
@@ -446,6 +446,11 @@
 "wins": 3,
 "hitRate": 0.6
 },
+"CONCACAF Nations League B": {
+"n": 5,
+"wins": 4,
+"hitRate": 0.8
+},
 "Greek Cup": {
 "n": 5,
 "wins": 4,
@@ -470,11 +475,6 @@
 "n": 5,
 "wins": 4,
 "hitRate": 0.8
-},
-"CONCACAF Nations League B": {
-"n": 4,
-"wins": 3,
-"hitRate": 0.75
 },
 "Canadian Premier League": {
 "n": 4,
@@ -679,20 +679,20 @@
 },
 "byStrength": {
 "strong": {
-"n": 1230,
-"wins": 989,
-"hitRate": 0.8041,
-"nRoi": 832,
-"roi": 0.3111,
-"roiLb": 0.2603,
-"nClv": 832,
-"clv": 13.5,
-"clvLb": 11.5942
+"n": 1231,
+"wins": 990,
+"hitRate": 0.8042,
+"nRoi": 834,
+"roi": 0.3113,
+"roiLb": 0.2605,
+"nClv": 834,
+"clv": 13.51,
+"clvLb": 11.604
 },
 "weak": {
-"n": 752,
+"n": 751,
 "wins": 378,
-"hitRate": 0.5027,
+"hitRate": 0.5033,
 "nRoi": 470,
 "roi": -0.2028,
 "roiLb": -0.2766,
@@ -702,14 +702,52 @@
 }
 },
 "divergence": {
-"n": 561,
+"n": 560,
 "betfairWins": 181,
-"betfairRate": 0.3226,
-"polyN": 526,
-"polyWins": 137,
-"polyRate": 0.2605
+"betfairRate": 0.3232,
+"polyN": 525,
+"polyWins": 136,
+"polyRate": 0.259
 },
 "recent": [
+{
+"matchId": "36127896",
+"home": "Cuba",
+"away": "Bonaire",
+"league": "CONCACAF Nations League B",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Cuba",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-09-28T21:00:00Z",
+"settledAt": "2026-09-29T00:05:36.709099+00:00"
+},
+{
+"matchId": "36124701",
+"home": "Internacional de Palmira",
+"away": "Leones FC",
+"league": "Colombian Primera B",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Internacional de Palmira",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-09-28T21:00:00Z",
+"settledAt": "2026-09-29T00:05:36.709099+00:00"
+},
 {
 "matchId": "36124706",
 "home": "Independiente Yumbo",
@@ -1431,56 +1469,18 @@
 ],
 "kickoff": "2026-09-27T16:30:00Z",
 "settledAt": "2026-09-27T19:32:26.372695+00:00"
-},
-{
-"matchId": "35932973",
-"home": "Gibraltar",
-"away": "Andorra",
-"league": "UEFA Nations League",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Andorra",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-09-27T16:00:00Z",
-"settledAt": "2026-09-27T19:02:38.627228+00:00"
-},
-{
-"matchId": "35930730",
-"home": "Serbia",
-"away": "Netherlands",
-"league": "UEFA Nations League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Netherlands",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-09-27T16:00:00Z",
-"settledAt": "2026-09-27T18:02:16.558506+00:00"
 }
 ],
 "global": {
 "n": 1982,
-"wins": 1367,
-"hitRate": 0.6897,
-"nRoi": 1302,
-"roi": 0.1256,
-"roiLb": 0.0821,
-"nClv": 1302,
-"clv": 6.18,
-"clvLb": 4.6198
+"wins": 1368,
+"hitRate": 0.6902,
+"nRoi": 1304,
+"roi": 0.126,
+"roiLb": 0.0826,
+"nClv": 1304,
+"clv": 6.2,
+"clvLb": 4.6367
 },
 "pending": 18
 }
