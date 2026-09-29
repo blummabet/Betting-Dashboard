@@ -8815,7 +8815,7 @@ null
 0,
 1
 ],
-"settledAt": "2026-09-29T18:38:40.910055+00:00"
+"settledAt": "2026-09-29T18:53:41.141549+00:00"
 },
 {
 "k": "fix:36116256:Half Time",
@@ -10707,7 +10707,7 @@ null
 2,
 1
 ],
-"settledAt": "2026-09-29T18:38:40.910055+00:00"
+"settledAt": "2026-09-29T18:53:41.141549+00:00"
 },
 {
 "k": "fresh:36091410:Match Odds",
@@ -10732,7 +10732,7 @@ null
 "anteilSchwelle": 0.994,
 "raus": "unter_geldschwelle",
 "quelle": "trades",
-"gesendet": false,
+"gesendet": true,
 "live": {
 "time": null,
 "score": [
@@ -10857,6 +10857,70 @@ null
 "score": [
 null,
 null
+]
+}
+},
+{
+"k": "ht:36091410:Half Time",
+"matchId": "36091410",
+"scenario": "ht",
+"market": "Half Time",
+"league": "UEFA Nations League",
+"home": "Czechia",
+"away": "England",
+"leadName": "England",
+"leadOdd": 1.86,
+"value": 75749.18000000001,
+"sentAt": "2026-09-29T18:53:32.875885+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.9000832748288496,
+"leadDir": "out",
+"onLeader": false,
+"tier": "top",
+"magnitude": 75749.2,
+"schwelle": 50000.0,
+"anteilSchwelle": 1.515,
+"raus": "drift",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 5,
+"score": [
+0,
+0
+]
+}
+},
+{
+"k": "fresh:36091456:Match Odds",
+"matchId": "36091456",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "UEFA Nations League",
+"home": "Scotland",
+"away": "Switzerland",
+"leadName": "Switzerland",
+"leadOdd": 1.84,
+"value": 643502.72,
+"sentAt": "2026-09-29T18:53:32.875928+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.6732565481619098,
+"leadDir": "in",
+"onLeader": false,
+"tier": "top",
+"magnitude": 245824.4,
+"schwelle": 100000.0,
+"anteilSchwelle": 2.458,
+"raus": "einseitig",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 5,
+"score": [
+0,
+0
 ]
 }
 }
