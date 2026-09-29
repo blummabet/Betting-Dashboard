@@ -721,6 +721,45 @@ def check_buendel_cond_ist_stabil(ctx):
                 "beim Einstieg." if not fails else "")
 
 
+@poly_check
+def check_shortlist_clv_nach_einstieg(ctx):
+    """Misst der CLV von „Heute spielenswert" einen Schlusskurs von NACH dem Einstieg?
+
+    🔴 29.09.2026 (Lucas: „mach 1"). Auf 1.317 abgerechneten Plays stand der Schlusskurs bei
+    43 % exakt auf dem Einstieg, und 117 Live-Plays wurden gegen den Preis von VOR dem Anpfiff
+    gemessen — also gegen einen Preis von vor ihrer eigenen Wette. Ursache war
+    `close_ref = lastPrice or entry`: eine Referenz ohne Zeitbedingung, und „nicht gemessen"
+    als 0,0. Seit dem Fix zaehlt ein Schluss nur mit `closeQuelle` (close/pfad) und
+    `closeRefTs` nach `firstTs`; sonst ist `clvPP` None mit `clvGrund`.
+    Dieser Guard faellt, wenn eine Zeile wieder eine Zahl traegt, die das nicht erfuellt.
+    """
+    sl = ctx.shortlist or {}
+    rows = list((sl.get("open") or {}).values()) + list(sl.get("settled") or [])
+    fails, gemessen, n_settled = [], 0, 0
+    for r in rows:
+        if not isinstance(r, dict):
+            continue
+        ist_settled = "result" in r
+        n_settled += ist_settled
+        clv = r.get("clvPP")
+        q = r.get("closeQuelle")
+        if ist_settled and isinstance(clv, (int, float)):
+            if q not in ("close", "pfad"):
+                fails.append(f"{r.get('key')} · {r.get('side')}: CLV {clv:+.2f} ohne gepruefte "
+                             f"Schluss-Quelle (closeQuelle={q!r})")
+                continue
+            gemessen += 1
+        if q in ("close", "pfad"):
+            t0, t1 = _parse_ts(r.get("firstTs")), _parse_ts(r.get("closeRefTs"))
+            if t0 is None or t1 is None or t1 <= t0:
+                fails.append(f"{r.get('key')} · {r.get('side')}: Schluss ({r.get('closeRefTs')}) "
+                             f"liegt nicht nach dem Einstieg ({r.get('firstTs')})")
+    note = (f"{gemessen} von {n_settled} abgerechneten Plays haben einen Schluss nach dem "
+            f"Einstieg; der Rest traegt clvGrund statt einer erfundenen 0,0.") if n_settled else ""
+    return _chk("shortlist_clv_nach_einstieg", "Heute-spielenswert-CLV misst nach dem Einstieg",
+                "error", fails, note)
+
+
 def horizont(resolutions):
     """Ab wann reicht das Auflösungsbuch zurück? None = unbekannt. REIN.
 

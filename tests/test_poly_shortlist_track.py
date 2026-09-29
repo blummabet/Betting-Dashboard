@@ -30,7 +30,11 @@ def test_settle_win_pnl_and_clv():
             "conv": 9, "league": "MLB", "entryPrice": 0.62, "lastPrice": 0.68,
             "public": True, "stake": 10.0, "firstTs": NOW.isoformat()}}}
     res = {"mlb-a-b": {"winner": "Team A", "ts": NOW.isoformat()}}
-    t = st.update_track(prev, _emit([]), {}, res, now=NOW)
+    # 29.09.2026: ein Schluss zaehlt nur mit Zeitstempel NACH dem Einstieg (vorher reichte
+    # `lastPrice` ohne Zeit — genau der Fehler, s. test_shortlist_clv_nach_einstieg.py).
+    close = {"mlb-a-b": {"prices": {"Team A": 0.68}, "hoursToKickoff": 0.5,
+                         "capturedAt": (NOW + timedelta(hours=1)).isoformat()}}
+    t = st.update_track(prev, _emit([]), close, res, now=NOW + timedelta(hours=2), pfade={})
     assert not t["open"]
     s = t["settled"][0]
     assert s["result"] == "win"

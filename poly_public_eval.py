@@ -155,6 +155,37 @@ def _korrektur_anwenden(e: dict, korrekturen) -> None:
         e["pnl"] = round((STAKE / preis - STAKE) if k["result"] == "win" else -STAKE, 2)
 
 
+def cond_aus_erfassung(e, close, r=None):
+    """Welchen Markt eines Buendels meint dieser Whale-Push? Aus der Erfassung belegt. REIN.
+
+    🔴 29.09.2026 (Stoerungsmeldung: „unl-tur-fra-2026-09-25-more-markets seit ueber 3 Tagen
+    pending, obwohl eine Aufloesung existiert"). Der Push „Under" auf ein Buendel wusste nicht,
+    welche Linie — also richtig nicht abgerechnet. Die Linie stand aber daneben: die Erfassung
+    (poly_money_broad_close.json) haelt fuer den Slug EINEN Markt fest (`cond`, „Türkiye vs.
+    France: O/U 3.5"), und die Whale-Liste DIESES Markts fuehrt genau die Wallet des Pushes mit
+    genau dieser Seite ($40,6K Under). Die Aufloesung traegt dieselbe conditionId.
+    Fehlerklasse wie am 22.09. beim Endstand: *eine Frage fuer unbeantwortbar erklaert, waehrend
+    ihre Antwort in der Datei daneben steht.*
+
+    Nur wenn ALLES passt: Wallet UND Seite in den Whales des erfassten Markts, und — falls die
+    Aufloesung einen Markt nennt — derselbe Markt. Sonst None: lieber offen als geraten.
+    """
+    if not isinstance(close, dict) or not isinstance(e, dict):
+        return None
+    c = close.get(e.get("key"))
+    if not isinstance(c, dict) or not c.get("cond"):
+        return None
+    if isinstance(r, dict) and r.get("cond") and r["cond"] != c["cond"]:
+        return None
+    w, s = str(e.get("wallet") or "").lower(), e.get("side")
+    if not w or not s:
+        return None
+    for x in (c.get("whales") or []):
+        if isinstance(x, dict) and str(x.get("wallet") or "").lower() == w and x.get("side") == s:
+            return c["cond"]
+    return None
+
+
 def settle(ledger, resolutions, close, now=None, korrekturen=None) -> list[dict]:
     """Jeden pending-Eintrag gegen den Slug-Sieger abrechnen. Verändert den Ledger IN PLACE-frei:
     gibt eine neue Liste zurück. Einmal abgerechnet bleibt abgerechnet (kein Nachbewerten)."""
@@ -187,9 +218,14 @@ def settle(ledger, resolutions, close, now=None, korrekturen=None) -> list[dict]
         # 04.09.2026 (Lucas: „es war Over 2,5, weiss ich weil ich mir den Preis angesehen hab").
         # Genau dieser Push stand hier als Treffer. Ein Buendel-Slug kann Over 1,5 und Over 2,5
         # nicht auseinanderhalten — wo die Linie fehlt, wird nicht abgerechnet.
-        if winner and not aufloesbar(e.get("key"), e.get("side"), winner):
+        _cond = e.get("cond") or cond_aus_erfassung(e, close, r)
+        if winner and not aufloesbar(e.get("key"), e.get("side"), winner, cond=_cond):
             e["nichtAufloesbarGrund"] = "Buendel-Slug ohne Linie (%s)" % (e.get("side") or "?")
             winner = None
+        elif winner and _cond and not e.get("cond"):
+            e["cond"] = _cond                        # 29.09.2026: belegt aus Erfassung + Wallet
+            e["condQuelle"] = "erfassung+wallet"
+            e.pop("nichtAufloesbarGrund", None)
         if not winner:
             age = _age_d(e.get("sentAt"), now)
             if age is not None and age > PENDING_TTL_D:

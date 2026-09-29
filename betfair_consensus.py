@@ -527,6 +527,32 @@ def allerwelts_tokens(poly_entries, anteil: float = _ALLERWELTS_ANTEIL) -> set:
     return {t for t, n in zaehler.items() if n >= grenze}
 
 
+# 🔴 29.09.2026 (Stoerungsmeldung: „Poly-Markt enl-har-ht-2026-09-29 haengt an 3 Betfair-Spielen").
+# Hartlepool v Harrogate Town lag auch an „FC Halifax Town v Boston Utd" und „Slough Town v
+# Ebbsfleet Utd". Geteilt wurde je Seite genau EIN Wort — „town" und „united" — das gibt 0,5 + 0,5
+# = 1,0 und liegt ueber der Direkt-Schwelle 0,99. Die Allerwelts-Liste faengt das nicht: sie zaehlt
+# Haeufigkeit im Poly-POOL, und dort sind englische Fuenftligisten selten. Gattungswoerter sind
+# unabhaengig vom Pool keine Namen. Fehlerklasse: *ein Treffer, der nur auf Gattungswoertern steht.*
+_GATTUNG = frozenset({
+    # NUR Woerter, die nie allein einen Verein bezeichnen. Bewusst NICHT hier: inter, sporting,
+    # athletic, racing, nacional, union — „Inter Milan", „Sporting CP", „Athletic Club" und
+    # „Racing Club" teilen mit der Betfair-Schreibweise oft NUR dieses Wort.
+    "town", "united", "city", "county", "rovers", "wanderers", "albion", "borough",
+    "real", "atletico", "deportivo", "club", "sport", "sports",
+    "fk", "fc", "sc", "afc", "women", "ladies", "reserves", "youth",
+})
+
+
+def _unterscheidet(a, b, allerwelts) -> bool:
+    """Teilen zwei Namen ein Wort, das sie als DIESEN Verein ausweist? REIN.
+
+    Kein Allerwelts-Token des Pools, kein Gattungswort. Bewusst OHNE Mindestlaenge: „AZ" gegen
+    „AZ Alkmaar" teilt nur „az" — Fuellwoerter („de", „fc") nimmt `_norm` schon heraus.
+    """
+    geteilt = (set(_norm(a)) & set(_norm(b))) - set(allerwelts or ()) - _GATTUNG
+    return bool(geteilt)
+
+
 def _teilt_kern_token(a, b, allerwelts) -> bool:
     """Teilen sich zwei Namen ein Token, das ein NAME sein kann — lang genug und im Pool
     nicht Allerwelt? REIN."""
@@ -631,6 +657,9 @@ def _best_poly_entry(m, poly_entries):
             # 08.09.2026: erst die Ebene, dann der Score. Ein Nachwuchs- oder Frauenteam teilt
             # fast alle Tokens mit der ersten Mannschaft — der Score kann die beiden nie trennen.
             if not (gleiche_elf(home, hk) and gleiche_elf(away, ak)):
+                continue
+            # 29.09.2026: beide Seiten brauchen ein unterscheidendes Wort (s. _GATTUNG).
+            if not (_unterscheidet(home, hk, _allerwelts) and _unterscheidet(away, ak, _allerwelts)):
                 continue
             sc = _name_score(home, hk) + _name_score(away, ak)
             # 05.09.2026 (Uebersicht-Check): der Rueckfall oben setzte die Schluessel korrekt,

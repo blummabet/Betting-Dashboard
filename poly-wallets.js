@@ -3169,7 +3169,7 @@ function _pwShortlistScore(key,m){
 // Entscheidungshilfe fürs spätere Auto-Bet), offene Plays, letzte abgerechnete. Setzt/sendet NICHTS.
 const _PW_TRACK_MIN_N = 20;   // ab so vielen abgerechneten Plays gilt eine Sicht/Stufe als belastbar
 function _pwtPct(x){ return (x==null?'—':(Math.round(x*1000)/10)+'%'); }
-function _pwtSig(x){ return (x>=0?'+':'')+x; }
+function _pwtSig(x){ return (x==null||isNaN(x))?'—':((x>=0?'+':'')+x); }   // 29.09.2026: CLV kann None sein (kein Schluss nach Einstieg)
 function _pwtUsd(x){ const v=Math.round(x); return (v>=0?'+$':'-$')+Math.abs(v); }
 function _pwTrackKpis(a, label, hint){
   const thin = a.n < _PW_TRACK_MIN_N;
@@ -3198,8 +3198,9 @@ function _pwTrackKpis(a, label, hint){
             (a.roiUg==null?'#8b949e':(a.belegt?'#3fb950':'#e3b341')),
             (a.roiUg==null?'n&lt;30 — keine Schranke':(a.belegt?'belegt über null':'schließt die Null ein')))
       +card('Netto P&amp;L', a.n?_pwtUsd(a.pnl):'—', roiCol, 'Einsatz $'+Math.round(a.stake||0))
-      +card('Ø CLV', a.n?_pwtSig(a.clvAvg)+'pp':'—', clvCol,
-            (a.clvUg==null?'Einstieg→Schluss':'Einstieg→Schluss · UG '+_pwtSig(a.clvUg)+'pp'))
+      +card('Ø CLV', (a.n&&a.clvAvg!=null)?_pwtSig(a.clvAvg)+'pp':'—', clvCol,
+            (a.clvUg==null?'Einstieg→Schluss':'Einstieg→Schluss · UG '+_pwtSig(a.clvUg)+'pp')
+              +(a.clvN!=null?' · gemessen '+a.clvN+'/'+a.n:''))
     +'</div></div>';
 }
 // 24.08.2026 (Lucas: „ziehen die die Statistik runter?"). Ja — deshalb steht vorne die Zahl, die

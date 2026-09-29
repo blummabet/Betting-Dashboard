@@ -281,6 +281,92 @@ def _ok_price(p):
     return isinstance(p, (int, float)) and 0.0 < float(p) < 1.0
 
 
+# 🔴 29.09.2026 (Lucas: „mach 1" — die CLV-Messung von „Heute spielenswert").
+# Nachgezaehlt auf 1.317 abgerechneten Plays: bei 43 % stand der Schlusskurs EXAKT auf dem
+# Einstieg (CLV 0,00), und die 201 Plays, gegen die der Markt angeblich um 15 pp lief, gewannen
+# +5,2 %. Zwei Ursachen, beide in derselben Zeile `close_ref = lastPrice or entry`:
+#   1. Der Close-Stand wird nah am Anpfiff EINMAL eingefroren. Steigt ein Play danach ein
+#      (live, oder im selben Lauf wie der Freeze), ist der „Schluss" ein Preis von VOR dem
+#      Einstieg — 117 Live-Plays wurden gegen den Vor-Anpfiff-Preis gemessen.
+#   2. Gibt es gar keinen Close-Stand, blieb `lastPrice` der Einstieg — CLV 0,0 als Default.
+#      Dieselbe Klasse wie `sharePct or 0`: „nicht gemessen" sah aus wie „Markt stand still".
+# Fehlerklasse: eine Referenz ohne Zeitbedingung. Ein Schlusskurs zaehlt nur, wenn er NACH dem
+# Einstieg und VOR dem Anpfiff genommen wurde; sonst ist CLV None, mit Grund.
+SCHLUSS_QUELLEN = ("close", "pfad")
+
+
+def schluss_referenz(e, close_row=None, pfad_eintrag=None):
+    """Schlusskurs der Seite `e["side"]`, genommen NACH dem Einstieg und VOR dem Anpfiff.
+
+    -> (preis, iso_ts, quelle) mit quelle in SCHLUSS_QUELLEN, oder (None, None, grund).
+    Quellen: der eingefrorene Close-Stand (poly_money_broad_close) und — als Nachschub, wenn der
+    Freeze vor dem Einstieg lag — der letzte Vor-Anpfiff-Punkt des Preis-Pfads. Der spaetere
+    der beiden gewinnt (naeher am Anpfiff = naeher am Schluss). REIN/testbar.
+    """
+    side = e.get("side")
+    first = _iso(e.get("firstTs"))
+    htk0 = e.get("htkAtEntry")
+    if isinstance(htk0, (int, float)) and htk0 <= 0:
+        return None, None, "live_eingestiegen"
+    if first is None or not side:
+        return None, None, "einstieg_unbekannt"
+    best = None
+    cr = close_row if isinstance(close_row, dict) else {}
+    cap = _iso(cr.get("capturedAt"))
+    cp = (cr.get("prices") or {}).get(side)
+    h = cr.get("hoursToKickoff")
+    _vor = False
+    if cap is not None and _ok_price(cp) and not (isinstance(h, (int, float)) and h <= 0):
+        if cap > first:
+            best = (cap, float(cp), "close")
+        else:
+            _vor = True          # es GIBT einen Schluss — nur von vor dem Einstieg
+    for q in ((pfad_eintrag or {}).get("points") or []) if isinstance(pfad_eintrag, dict) else []:
+        t = _iso(q.get("ts"))
+        pq = (q.get("p") or {}).get(side)
+        hq = q.get("htk")
+        # Ohne htk wissen wir nicht, ob der Punkt vor dem Anpfiff lag -> zaehlt nicht.
+        if t is None or t <= first or not _ok_price(pq) or not isinstance(hq, (int, float)) or hq <= 0:
+            continue
+        if best is None or t > best[0]:
+            best = (t, float(pq), "pfad")
+    if best is None:
+        return None, None, ("schluss_vor_einstieg" if _vor else "kein_schluss_nach_einstieg")
+    return best[1], best[0].isoformat(), best[2]
+
+
+def clv_nachtragen(row, close=None, pfade=None):
+    """Alt-Zeile (vor dem 29.09.2026 abgerechnet, ohne `closeQuelle`) einmalig neu bewerten.
+
+    Findet sich eine gueltige Referenz, ersetzt sie den alten Wert. Sonst wird der alte Wert
+    None — auch wenn sich nicht mehr beweisen laesst, dass er falsch war: nachgemessen lagen die
+    Alt-Werte ohne pruefbare Referenz bei 61 % exakt auf 0,0, und eine Zahl, die niemand
+    nachpruefen kann, darf den Durchschnitt nicht mitschreiben. Der alte Wert bleibt IMMER als
+    `clvPPalt` stehen (nichts wird geloescht, nur nicht mehr gezaehlt).
+    Gibt True zurueck, wenn die Zeile angefasst wurde. Idempotent.
+    """
+    if row.get("closeQuelle") or row.get("clvGrund"):
+        return False
+    key = row.get("key")
+    preis, ts, quelle = schluss_referenz(
+        row, (close or {}).get(key),
+        None if ist_buendel(key or "") else (pfade or {}).get(key))
+    alt = row.get("clvPP")
+    if preis is not None:
+        row["clvPPalt"] = alt
+        row["closePrice"] = round(preis, 4)
+        row["closeRefTs"] = ts
+        row["closeQuelle"] = quelle
+        row["clvPP"] = round((preis - float(row["entryPrice"])) * 100, 2)
+    else:
+        row["clvPPalt"] = alt
+        row["clvPP"] = None
+        row["closePrice"] = None
+        # kein Schluss mehr auffindbar (Close-Stand laengst weggeraeumt) = ungeprueft
+        row["clvGrund"] = "alt_ungeprueft" if quelle == "kein_schluss_nach_einstieg" else quelle
+    return True
+
+
 # Marken, die der LERNER an einen Play haengt — keine Ausloeser-Signale (s. aggregate()).
 KALIB_MARKEN = frozenset({"calib+", "calib-", "turned"})
 
@@ -330,7 +416,6 @@ def _agg_one(rows):
     wins = sum(1 for r in rows if r.get("result") == "win")
     stake = sum(float(r.get("stake") or 0) for r in rows)
     pnl = sum(float(r.get("pnl") or 0) for r in rows)
-    clv = sum(float(r.get("clvPP") or 0) for r in rows)
     roi = (pnl / stake) if stake else 0.0
     # Rendite je Play (nicht der Gesamt-ROI) traegt die Streuung — nur daraus wird eine Schranke.
     renditen = []
@@ -347,7 +432,10 @@ def _agg_one(rows):
             "roi": round(roi, 4),
             "roiUg": (round(roi_ug, 4) if roi_ug is not None else None),
             "belegt": bool(roi_ug is not None and roi_ug > 0),
-            "clvAvg": round(clv / n, 2) if n else 0.0,
+            # 29.09.2026: Mittel ueber die GEMESSENEN Werte, nicht ueber n — ein fehlender
+            # Schlusskurs ist keine Null. `clvN` sagt, auf wie vielen Plays die Zahl steht.
+            "clvAvg": round(sum(clv_werte) / len(clv_werte), 2) if clv_werte else None,
+            "clvN": len(clv_werte),
             "clvUg": (lambda u: round(u, 2) if u is not None else None)(_ug(clv_werte))}
 
 
@@ -531,7 +619,7 @@ def reentry_status(settled, blocked, min_n=REENTRY_MIN_N, min_clv_n=REENTRY_MIN_
     return out
 
 
-def update_track(prev, emit, close, resolutions, now=None, stake=STAKE, blocked=None):
+def update_track(prev, emit, close, resolutions, now=None, stake=STAKE, blocked=None, pfade=None):
     """REIN/testbar. Öffnet neue Plays, zieht lastPrice mit, rechnet aufgelöste ab. Ein Play =
     (marketKey, side); der Einstieg (firstTs/entryPrice) ist der ERSTE Zeitpunkt, an dem der Play
     in der Shortlist auftauchte — genau das, was man live gesetzt hätte."""
@@ -560,6 +648,15 @@ def update_track(prev, emit, close, resolutions, now=None, stake=STAKE, blocked=
             _r["cat"] = _cat_from_league(_r.get("league"))
             _kat_nachgetragen += 1
     settled_keys = {(s.get("key"), s.get("side")) for s in settled}
+
+    # 29.09.2026: Preis-Pfad EINMAL laden (Nachschub fuer den Schlusskurs, s. schluss_referenz).
+    if pfade is None:
+        try:
+            pfade = json.loads((BASE / _PRE_ENTRY_PFAD).read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            pfade = {}
+    pfade = pfade if isinstance(pfade, dict) else {}
+    _clv_nachgetragen = sum(1 for _r in settled if clv_nachtragen(_r, close, pfade))
 
     # 1) Neue Plays öffnen (fixer Einsatz, Entry = Snapshot-Preis der empfohlenen Seite)
     for pl in (emit.get("plays") or []):
@@ -637,7 +734,19 @@ def update_track(prev, emit, close, resolutions, now=None, stake=STAKE, blocked=
         # des Buendels, dann misst „Einstieg -> Schluss" zwei verschiedene Linien gegeneinander
         # und das CLV ist kein CLV. Kennt der Eintrag seinen Markt und der Close-Stand einen
         # anderen, bleibt der alte Preis stehen — eine alte Auskunft schlaegt eine falsche.
-        if e.get("cond") and _row.get("cond") and e["cond"] != _row["cond"]:
+        _fremd = bool(e.get("cond") and _row.get("cond") and e["cond"] != _row["cond"])
+        # 29.09.2026: Schlusskurs NUR nach dem Einstieg und vor dem Anpfiff (s. schluss_referenz).
+        # Ein Close-Stand eines anderen Buendel-Markts zaehlt nicht; den Pfad kennt ein Buendel
+        # nicht je Markt, also auch der nicht.
+        _p, _t, _q = schluss_referenz(
+            e, {} if _fremd else _row,
+            None if ist_buendel(e.get("key") or "") else pfade.get(e.get("key")))
+        if _p is not None:
+            e["closeRef"], e["closeRefTs"], e["closeQuelle"] = round(_p, 4), _t, _q
+            e.pop("clvGrund", None)
+        else:
+            e["clvGrund"] = _q
+        if _fremd:
             _cond_drift += 1
             continue
         cp = (_row.get("prices") or {}).get(e["side"])
@@ -675,19 +784,37 @@ def update_track(prev, emit, close, resolutions, now=None, stake=STAKE, blocked=
             if _abgeleitet:
                 winner, _aus_endstand = _abgeleitet, True
                 r = r or _es
-        if not winner:
+        # 29.09.2026: aufgeloest ohne Sieger (0,5/0,5, abgesagt/annulliert). Jede Seite zahlt
+        # ihren Anteil aus — kein Treffer, kein Totalverlust. Nur ohne Buendel-Zweifel und nur,
+        # wenn die Auflösung GENAU diese Seite nennt.
+        _teil = None
+        if not winner and isinstance((r or {}).get("teilung"), dict) and not _aus_endstand:
+            _t = r["teilung"].get(e["side"])
+            if isinstance(_t, (int, float)) and aufloesbar(e["key"], e.get("side"), e.get("side"), cond=_cond):
+                _teil = float(_t)
+        if not winner and _teil is None:
             continue
         entry = float(e["entryPrice"])
         st = float(e.get("stake") or stake)
-        win = (e["side"] == winner)
-        pnl = (st / entry - st) if win else -st       # Aktien = st/entry, Gewinner zahlt 1.00/Aktie
-        close_ref = float(e.get("lastPrice") or entry)
-        clv = round((close_ref - entry) * 100, 2)
+        win = (winner is not None and e["side"] == winner)
+        if _teil is not None:
+            pnl = st / entry * _teil - st             # Aktien = st/entry, jede zahlt den Anteil
+        else:
+            pnl = (st / entry - st) if win else -st   # Aktien = st/entry, Gewinner zahlt 1.00/Aktie
+        # 29.09.2026: KEIN Rueckfall auf lastPrice/entry mehr — der machte „nicht gemessen" zu 0,0.
+        _ref = e.get("closeRef")
+        close_ref = float(_ref) if _ok_price(_ref) else None
+        clv = round((close_ref - entry) * 100, 2) if close_ref is not None else None
         settled.append({
             "key": e["key"], "side": e["side"], "verdict": e.get("verdict"),
             "conv": e.get("conv"), "league": e.get("league"), "cat": _row_cat(e),
-            "entryPrice": round(entry, 4), "closePrice": round(close_ref, 4),
-            "result": "win" if win else "loss", "winner": winner,
+            "entryPrice": round(entry, 4),
+            "closePrice": (round(close_ref, 4) if close_ref is not None else None),
+            **({"closeRefTs": e.get("closeRefTs"), "closeQuelle": e.get("closeQuelle")}
+               if close_ref is not None else
+               {"clvGrund": e.get("clvGrund") or "kein_schluss_nach_einstieg"}),
+            "result": ("void" if _teil is not None else ("win" if win else "loss")), "winner": winner,
+            **({"auszahlung": _teil} if _teil is not None else {}),
             "pnl": round(pnl, 2), "clvPP": clv, "stake": st,
             "public": bool(e.get("public")), "ohneWallet": bool(e.get("ohneWallet")),
             "signals": list(e.get("signals") or []), "firstTs": e.get("firstTs"),
@@ -744,6 +871,7 @@ def update_track(prev, emit, close, resolutions, now=None, stake=STAKE, blocked=
     settled = settled[-SETTLED_KEEP:]
     return {"updatedAt": now.isoformat(), "stake": stake, "expired": n_expired,
             "condDrift": _cond_drift,
+            "clvNachgetragen": _clv_nachgetragen,
             "katNachgetragen": _kat_nachgetragen,
             "blockedCats": _bl, "reentry": reentry_status(settled, _bl),
             # `expired` bleibt der Zaehler DIESES Laufs (Diagnose), `unaufloesbar` ist das Buch.
@@ -780,7 +908,8 @@ def main() -> int:
 
     a = track["agg"]["all"]
     print(f"📈 Shortlist-Paper-Track: {len(track['open'])} offen · {a['n']} abgerechnet · "
-          f"Treffer {a['hit']*100:.0f}% · ROI {a['roi']*100:+.1f}% · Ø CLV {a['clvAvg']:+.1f}pp "
+          f"Treffer {a['hit']*100:.0f}% · ROI {a['roi']*100:+.1f}% · Ø CLV "
+          f"{('%+.1fpp' % a['clvAvg']) if a.get('clvAvg') is not None else '—'} (n={a.get('clvN', 0)}) "
           f"(Public: {track['agg']['public']['n']}) · {track.get('expired', 0)} verfallen (unauflösbar)")
     return 0
 

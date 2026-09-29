@@ -28,7 +28,7 @@ on:
 
 permissions:
   contents: write
-  actions: read          # run_health.py liest die Steps DIESES Laufs
+  actions: write         # run_health.py liest die Steps DIESES Laufs; write: stoesst den Live-Scan an (s. letzter Schritt)
 
 concurrency:
   group: betfair
@@ -465,3 +465,27 @@ jobs:
             echo "Push-Versuch $attempt fehlgeschlagen — retry…"; sleep 3
           done
           echo "❌ Push nach 5 Versuchen fehlgeschlagen"; exit 1
+
+      # 🔴 29.09.2026 (Stoerungsmeldung: „Letzter Live-Scan vor 1.9h/2.4h"). Der Live-Scan hat
+      # einen 15-Min-Cron (4,19,34,49), laeuft aber seit Wochen nur ~5x am Tag — Luecken von
+      # 2,5 bis 8 Stunden, jeder Lauf, der startet, startet sofort (0 s Wartezeit) und ist in
+      # ~3 Min fertig. Der Runner ist es also nicht; GitHubs Zeitplan liefert die Ticks nicht
+      # (seit 20.09. in run_health.py untersucht, ohne API-Zugriff nicht aufzuloesen). Dieser
+      # Job hier laeuft auf demselben Mac nachweislich alle 15 Min (98,6/Tag).
+      # Also stoesst ER den Live-Scan an: ein workflow_dispatch geht nicht durch den gedrosselten
+      # Scheduler, und GitHub erlaubt ihn ausdruecklich auch mit dem GITHUB_TOKEN. Der Cron im
+      # Live-Scan bleibt als Rueckfall; doppelte Ticks faengt dessen Concurrency-Gruppe ab.
+      # Scheitert der Anstoss, scheitert NUR dieser Schritt — der Betfair-Lauf ist durch.
+      # Waechter: tests/test_live_scan_anstoss.py
+      - name: ⚡ Live-Scan anstossen (statt gedrosseltem Zeitplan)
+        if: always()
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          CODE=$(curl -sS -o /tmp/dispatch.out -w "%{http_code}" -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/poly-live-scan.yml/dispatches" \
+            -d '{"ref":"main"}')
+          echo "Live-Scan-Anstoss: HTTP $CODE"
+          [ "$CODE" = "204" ] || { cat /tmp/dispatch.out; exit 1; }

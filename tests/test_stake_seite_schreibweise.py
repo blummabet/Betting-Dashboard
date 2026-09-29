@@ -128,6 +128,11 @@ def test_keine_zeile_des_ledgers_verliert_ihre_seite():
         a = str((x or {}).get("auswahl") or "").lower()
         if not a:
             return None
+        # 29.09.2026: „Club America/Necaxa" (Halftime/Fulltime) nennt ZWEI Seiten — das alte
+        # Verfahren fand darin nur den vollen Namen „club america" und nannte eine Seite, die der
+        # Tipp nicht hat. Hier ist die neue Antwort (keine Seite) richtig, der Vergleich nicht.
+        if "/" in a:
+            return None
         tr = [t for t in SB._teams((x or {}).get("event")) if t and t.lower() in a]
         return tr[0] if len(tr) == 1 else None
 
@@ -181,3 +186,8 @@ def test_gegenbeweis_neutrale_auswahl_bleibt_neutral():
         assert SB.seite(w("Nigeria - Nigeria A", aw)) is None, aw
     # und wo beide wirklich passen, wird weiter nicht geraten
     assert SB.seite(w("Deportivo La Coruna - Deportivo Alaves", "Deportivo")) is None
+
+
+def test_halbzeit_endstand_tipp_hat_keine_seite():
+    """29.09.2026: „America/Necaxa" heisst America zur Pause, Necaxa am Ende — keine Seite."""
+    assert SB.seite(w("Club Necaxa - Club America", "Club America/Necaxa")) is None

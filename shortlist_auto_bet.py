@@ -472,7 +472,13 @@ def abgleichen(bets, track, jetzt=None) -> int:
                 b["pnl"] = round(-stake, 4)
             else:
                 b["status"], b["result"] = "void", "VOID"
-                b["pnl"] = 0.0
+                # 29.09.2026: aufgeloest ohne Sieger (0,5/0,5) zahlt jede Seite ihren Anteil —
+                # auf den ECHTEN Fuellpreis: stake/fill Anteile × Auszahlung. Ohne Angabe wie bisher 0.
+                _aus = s.get("auszahlung")
+                if isinstance(_aus, (int, float)) and fill > 0:
+                    b["pnl"] = round(stake / fill * float(_aus) - stake, 4)
+                else:
+                    b["pnl"] = 0.0
             b["resolvedAt"] = _iso(jetzt)
             b["winner"] = s.get("winner")
             # 🔴 15.09.2026 (Lucas: „wo sehen wir den Outcome dieser Messungen?"). Bis hierher
@@ -485,6 +491,11 @@ def abgleichen(bets, track, jetzt=None) -> int:
             try:
                 close = float(s.get("closePrice"))
             except (TypeError, ValueError):
+                close = None
+            # 29.09.2026: der Schluss zaehlt nur, wenn er NACH dem echten Fill genommen wurde
+            # (sonst misst er einen Preis von vor der Wette, s. poly_shortlist_track.schluss_referenz).
+            _crt, _pat = _parse(s.get("closeRefTs")), _parse(b.get("placedAt"))
+            if _crt is not None and _pat is not None and _crt <= _pat:
                 close = None
             if close and close > 0 and fill > 0:
                 b["clvPP"] = round((close - fill) * 100, 2)

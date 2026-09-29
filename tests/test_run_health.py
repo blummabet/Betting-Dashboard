@@ -231,8 +231,9 @@ class TestVerdrahtungInDenWorkflows:
 
     @pytest.mark.parametrize("datei", DATEIEN)
     def test_workflow_darf_die_eigenen_steps_lesen(self, datei):
-        """Ohne `actions: read` gibt die API 403 — der Waechter meldete dann ewig UNBEKANNT."""
-        assert re.search(r"^\s*actions:\s*read", self._src(datei), re.M), \
+        """Ohne `actions: read` gibt die API 403 — der Waechter meldete dann ewig UNBEKANNT.
+        29.09.2026: `write` schliesst Lesen ein (betfair.yml stoesst seitdem den Live-Scan an)."""
+        assert re.search(r"^\s*actions:\s*(read|write)", self._src(datei), re.M), \
             f"{datei}: permissions.actions: read fehlt"
 
     @pytest.mark.parametrize("datei", DATEIEN)

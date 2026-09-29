@@ -102,6 +102,11 @@ EBENE = {
     # bekommt nichts, weil `stufe()` nur Fussball beantwortet. Nicht zu verwechseln mit
     # „1-cfl" (Montenegro, oberste Klasse) direkt darueber.
     "cfl": 3,
+    # 29.09.2026 (Stoerungsmeldung): „erste-liga" — Beleg „FC Widnau - FC Freienbach", die
+    # Schweizer 1. Liga (vierte Ebene unter Super League, Challenge League, Promotion League;
+    # „3" heisst hier „dritte Klasse und tiefer"). „nb-iii" — Ungarns NB III, dritte Ebene;
+    # Beleg „Puskas Akademia FC II - Balatonalmadi SE".
+    "erste-liga": 3, "nb-iii": 3,
     # 16.09.2026 (CI-Wachhund): „Premijer Liga" — die Premijer Liga BiH, oberste Klasse
     # Bosnien-Herzegowinas. Beleg aus der Paarung: FK Sloga Doboj gegen FK Borac Banja Luka,
     # beides Erstligisten (Borac ist amtierender Meister). Dieselbe Einstufung wie 1. CFL
@@ -193,6 +198,9 @@ EBENE = {
     # die zweite Liga, in anderen Verbaenden steht es im Namen der OBERSTEN. Ein Muster darauf
     # waere in der Haelfte der Faelle falsch.
     "liga-nacional-de-ascenso": 2,
+    # 29.09.2026: Costa Ricas Liga de Ascenso, zweite Ebene unter der Primera. Beleg „AD Cariari
+    # Pococi - CS Uruguay de Coronado". Die Clausura gleich mit, sonst faellt sie im Januar auf.
+    "liga-de-ascenso-apertura": 2, "liga-de-ascenso-clausura": 2,
     # ── dritte Klasse und tiefer, regional, Amateur ────────────────────────
     "league-one": 3, "league-two": 3, "3rd-liga": 3, "tercera-division": 3,
     # 12.09.2026: hier standen frueher `serie-c-group-a/-b/-c` und `tercera-division-group-7`
@@ -518,6 +526,13 @@ TURNIER_EBENE = {
     "primera-division": {
         "118c993d-1294-4f73-9afb-c97213bcfab0": ("Uruguay", 1),
         "d7cebc4a-a25f-4e7c-8511-3ed7f37eaeb8": ("Peru", 1),
+    },
+    # 29.09.2026: drei Laender unter einem Slug — alle oberste Klasse, das Urteil stimmt fuer alle.
+    "primera-division-apertura": {
+        "73fd62cb-be5d-4a0a-8a6f-41bad1da141c": ("Mexiko, Liga MX (Live)", 1),
+        "278999cd-a15b-4d9c-8d94-86da3b8770a4": ("Mexiko, Liga MX (Pre-Match)", 1),
+        "fb070494-604d-46bb-b14c-479d82849e63": ("Paraguay (Libertad - Olimpia)", 1),
+        "0e9a4e87-f59b-4413-8f14-bf3906b36159": ("El Salvador (Alianza - CD Inca)", 1),
     },
     "primera-b": {
         "180b07b7-4b3a-45c4-a1a6-3e56b1f68d78": ("Argentinien, Primera B Metropolitana", 3),

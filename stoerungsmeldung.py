@@ -225,6 +225,9 @@ GEPRUEFT_KEIN_GELD = {
     # Nachtrag noch tragen darf — schlaegt er an, rechnet nichts falsch ab, sondern der
     # Nachtrag gehoert geprueft, bevor wieder abgerechnet wird.
     "buendel_cond_stabil",
+    # 29.09.2026: eine Messung, kein Ausgang — ein falscher CLV rechnet nichts falsch ab,
+    # er macht nur die Fruehwarnung blind.
+    "shortlist_clv_nach_einstieg",
     "grosses_geld_bleibt_im_feed",
     "direction_covers_money",
 

@@ -181,12 +181,18 @@ def update_resolutions(prev, markets, now=None, keep_days=RESOLUTIONS_KEEP_DAYS)
     out = {k: dict(v) for k, v in (prev or {}).items() if isinstance(v, dict)}
     for key, e in resolutions_mit_markt(markets).items():
         winner = e.get("winner")
-        if not key or not winner:
+        teilung = e.get("teilung")
+        if not key or not (winner or teilung):
             continue
         if key not in out:                       # erste Auflösung gewinnt (Zeitstempel = zuerst gesehen)
             out[key] = {"winner": winner, "ts": now.isoformat()}
         else:
             out[key]["winner"] = winner
+        # 29.09.2026: 0,5/0,5 — aufgeloest ohne Sieger. Ein spaeterer echter Sieger ersetzt sie.
+        if teilung and not winner:
+            out[key]["teilung"] = teilung
+        else:
+            out[key].pop("teilung", None)
         # 10.09.2026: Herkunft mitschreiben, damit die Abrechnung den Markt abgleichen kann.
         # Ein spaeterer Lauf darf sie ERGAENZEN (Altbestand hat sie nicht), aber nie loeschen.
         for f in ("cond", "frage"):
@@ -228,6 +234,48 @@ def winner_from_prices(price_by_outcome: dict, tol: float = 0.02):
         if p > best_p:
             best, best_p = k, p
     return best if best_p >= 1.0 - tol else None
+
+
+def teilung_from_prices(price_by_outcome: dict, tol: float = 0.005):
+    """Aufgeloest OHNE Sieger — jeder Ausgang zahlt denselben Anteil (0,50/0,50). REIN.
+
+    🔴 29.09.2026 (Stoerungsmeldung, „Kostet Geld"): cs2-bmb-gbc2-2026-09-24 und
+    cs2-bbl1-brute-2026-09-25 standen 5 und 4 Tage offen, beide echte $5-Wetten. Polymarket hatte
+    beide Events geschlossen und per UMA aufgeloest — auf 0,5/0,5, wie bei einem abgesagten oder
+    annullierten Spiel. Die Kette kannte nur „wer settlet auf 1,00": ohne Sieger keine Zeile in
+    poly_resolutions.json, ohne Zeile keine Abrechnung, im Buch fuer immer „placed".
+    Fehlerklasse: *eine Abrechnung, die nur ein Ergebnis kennt, das es geben kann.*
+
+    Streng: ALLE Ausgaenge muessen auf 1/n liegen (±0,005). Letzte Handelspreise eines
+    geschlossenen, noch nicht aufgeloesten Markts liegen praktisch nie exakt dort.
+    -> {Ausgang: Auszahlung je Anteil} oder None.
+    """
+    ps = {}
+    for k, v in (price_by_outcome or {}).items():
+        try:
+            ps[k] = float(v)
+        except (TypeError, ValueError):
+            return None
+    n = len(ps)
+    if n < 2:
+        return None
+    soll = 1.0 / n
+    if all(abs(p - soll) <= tol for p in ps.values()):
+        return {k: round(soll, 4) for k in ps}
+    return None
+
+
+def uma_aufgeloest(ev, cond=None) -> bool:
+    """Meldet Polymarket den Markt ausdruecklich als aufgeloest? REIN.
+
+    Gebraucht fuer die Teilung (0,5/0,5): ein geschlossener, noch nicht aufgeloester Markt kann
+    zufaellig bei 0,50 stehen. Mit `cond` zaehlt genau dieser Markt, sonst muessen ALLE Maerkte
+    des Events aufgeloest sein.
+    """
+    ms = [m for m in ((ev or {}).get("markets") or []) if isinstance(m, dict)]
+    if cond:
+        ms = [m for m in ms if m.get("conditionId") == cond]
+    return bool(ms) and all(str(m.get("umaResolutionStatus") or "").lower() == "resolved" for m in ms)
 
 
 def _load(name):
@@ -1499,7 +1547,10 @@ def backfill_resolutions_by_slug(prev_close, seen_keys, get=_get, cap=RESOLVE_LO
             # Ein Buendel ohne festgenagelten Markt bleibt ungeloest — lieber offen als geraten.
             if _sieger and not aufloesbar(key, _sieger, _sieger, cond=_cond):
                 continue
-            if rp and _sieger:   # nur eindeutig aufgelöst (ein Preis ~1.00)
+            # 29.09.2026: aufgeloest OHNE Sieger (0,5/0,5) — nur mit ausdruecklicher UMA-Aufloesung.
+            _teil = (teilung_from_prices(rp) if (rp and not _sieger and uma_aufgeloest(ev, _cond))
+                     else None)
+            if rp and (_sieger or _teil):   # eindeutig aufgelöst (ein Preis ~1.00) oder geteilt
                 out.append({"key": key, "league": _league_from_slug(key),
                             "resolved": True, "resolvedPrices": rp, "cond": _cond,
                             "frage": (prev_close.get(key) or {}).get("frage"),
@@ -1641,6 +1692,9 @@ def fetch_markets(live_only=False, pin=None):
                 # conditionId praezise nach.
                 _sieger = winner_from_prices(rp) if rp else None
                 if rp and not aufloesbar(key, _sieger, _sieger):
+                    continue
+                # 29.09.2026: 0,5/0,5 ohne ausdrueckliche UMA-Aufloesung ist kein Ergebnis.
+                if rp and not _sieger and teilung_from_prices(rp) and not uma_aufgeloest(ev):
                     continue
                 if rp and not _is_exhibition(oc):
                     seen.add((key, True))
@@ -2310,9 +2364,11 @@ def resolutions_mit_markt(markets) -> dict:
         if not m.get("resolved"):
             continue
         w = winner_from_prices(m.get("resolvedPrices") or {})
-        if not w:
+        t = None if w else teilung_from_prices(m.get("resolvedPrices") or {})
+        if not w and not t:
             continue
-        e = {"winner": w}
+        # 29.09.2026: aufgeloest ohne Sieger (0,5/0,5) ist auch eine Aufloesung — s. teilung_from_prices.
+        e = {"winner": w} if w else {"winner": None, "teilung": t}
         # Fehlende Herkunft rendert als NICHTS, nicht als leerer String: „cond unbekannt" und
         # „cond ist ''" muessen beim Abgleich unterscheidbar bleiben.
         if m.get("cond"):
