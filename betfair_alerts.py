@@ -146,6 +146,8 @@ RUTSCH_MAX_SHARE   = float(os.environ.get("BF_RUTSCH_MAX_SHARE") or 0.65)
 RUTSCH_SEEN_FILE   = "betfair_rutsch_seen.json"
 RUTSCH_LEDGER_FILE = "betfair_rutsch_ledger.json"
 RUTSCH_LEDGER_KEEP = 800
+RUTSCH_BERICHT_FILE = "betfair_rutsch_bericht.json"   # schreibt betfair_public_eval (Abrechnung)
+RUTSCH_ZIEL_N      = 400                               # Register `betfair-kursrutsch`: Urteil ab hier
 RUTSCH_STATE_FILE  = "betfair_track_state.json"   # dort steht entryOdd, beim ERSTEN Sehen eingefroren
 DEDUP_FACTOR   = 1.5
 SEEN_FILE      = "betfair_alerts_seen.json"
@@ -734,7 +736,39 @@ def _log_rutsch(a) -> None:
         print("Rutsch-Ledger-Schreibfehler:", e)
 
 
-def build_rutsch_message(a) -> str:
+def rutsch_bilanz_zeile(bericht) -> str:
+    """Die Messzeile der Karte — aus der ABRECHNUNG der gesendeten Alarme, nicht aus der
+    Rueckrechnung.
+
+    🔴 29.09.2026 (Lucas: „Haben wir die wo ausgewertet?"). Die Karte trug fest
+    „gemessen +18,3 % (UG +2,3) auf n=203". Diese Zahl beschreibt die Rueckrechnung ueber ALLE
+    Maerkte — und deren groessere Haelfte waren Match Odds mit −9,1 %, die der Alarm seit dem
+    19.09. gar nicht mehr sendet. Die gesendeten Alarme standen zu dem Zeitpunkt bei 4/9,
+    ROI −28 %. Die Karte zitierte also eine Zahl, die zu keinem Alarm gehoert, den sie
+    verschickt. Fehlerklasse: eine feste Zahl im Text, die die Messung ueberholt hat.
+    Jetzt steht hier, was `betfair_public_eval` abgerechnet hat. REIN.
+    """
+    b = bericht if isinstance(bericht, dict) else {}
+    n = b.get("n") or 0
+    kopf = "\U0001f52c <i>Testlauf, nur Trades · "
+    fuss = " Jeder Alarm wird abgerechnet, Urteil ab n=%d.</i>" % RUTSCH_ZIEL_N
+    if not n:
+        return kopf + "noch kein Alarm abgerechnet." + fuss
+    roi, ug = b.get("roi"), b.get("roiUg")
+    stand = str(b.get("generatedAt") or "")[:10]
+    stand = (" · Stand %s.%s" % (stand[8:10], stand[5:7])) if len(stand) == 10 else ""
+    if ug is None:
+        urteil = "kein Urteil (n&lt;30)"
+    elif b.get("belegt"):
+        urteil = "UG %+.1f %%, belegt" % (100 * ug)
+    else:
+        urteil = "UG %+.1f %%, nicht belegt" % (100 * ug)
+    roi_txt = ("ROI %+.1f %%" % (100 * roi)).replace(".", ",") if isinstance(roi, (int, float)) else "ROI —"
+    return (kopf + "bisher %d/%d getroffen · %s · %s%s." % (b.get("wins") or 0, n, roi_txt,
+                                                          urteil.replace(".", ","), stand) + fuss)
+
+
+def build_rutsch_message(a, bericht=None) -> str:
     """Die Karte. Optisch bewusst unverwechselbar (Lucas: „optisch auch eindeutig damit ich den
     seh") -- kein gelber/blauer/schwarzer Punkt wie die drei bestehenden Szenarien."""
     fall = (a.get("fall") or 0.0) * 100
@@ -755,8 +789,9 @@ def build_rutsch_message(a) -> str:
     # 65 stehen, sonst behauptet die Anzeige genau das, was die Regel ausschliesst.
     t.append("\U0001f9ca Geld <b>nicht</b> einseitig (%d %%) — genau die Hälfte, die gemessen trägt\n"
              % int((a.get("leadShare") or 0.0) * 100))
-    t.append("\U0001f52c <i>Testlauf, nur Trades · gemessen +18,3 % (UG +2,3) auf n=203 — "
-             "nicht belegt (p=0,13). Jeder dieser Alarme wird abgerechnet.</i>")
+    if bericht is None:
+        bericht = _lade_json(RUTSCH_BERICHT_FILE, {})
+    t.append(rutsch_bilanz_zeile(bericht))
     return "".join(t)
 
 
@@ -1981,8 +2016,9 @@ def main():
     print("Betfair-Alerts: %d Kandidaten, %d gesendet" % (len(alerts), sent))
 
     # -- 📉 Kursrutsch (19.09.2026, Lucas) -- keine Geldschwelle, dafuer muss die Quote
-    # nachweislich gefallen sein. NUR Trades: gemessen +18,3 % (UG +2,3) auf n=203, aber nach
-    # Korrektur fuer 22 angesehene Schnitte p = 0,125 -- das ist ein Kandidat, kein Beleg.
+    # nachweislich gefallen sein. NUR Trades: Rueckrechnung +18,3 % auf n=203 (davon Match Odds
+    # −9,1 %, die nicht mehr gesendet werden), p = 0,125 -- ein Kandidat, kein Beleg. Die Karte
+    # zeigt seit dem 29.09.2026 die abgerechneten Alarme (rutsch_bilanz_zeile), nicht diese Zahl.
     # Herleitung samt Zahlen bei RUTSCH_MIN_FALL.
     try:
         _rs_seen = _load_seen(RUTSCH_SEEN_FILE)
