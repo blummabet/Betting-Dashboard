@@ -1,6 +1,22 @@
 {
-"generatedAt": "2026-09-29T01:01:16.041521+00:00",
+"generatedAt": "2026-09-29T01:43:58.883822+00:00",
 "byVerdict": {
+"uneinig": {
+"n": 559,
+"wins": 181,
+"hitRate": 0.3238,
+"polyN": 524,
+"polyWins": 136,
+"polyHitRate": 0.2595,
+"pinnN": 337,
+"pinnHitRate": 0.632,
+"nRoi": 389,
+"roi": -0.4465,
+"roiLb": -0.5338,
+"nClv": 389,
+"clv": -20.04,
+"clvLb": -22.8424
+},
 "konsens": {
 "n": 1389,
 "wins": 1182,
@@ -10,28 +26,12 @@
 "polyHitRate": 0.783,
 "pinnN": 214,
 "pinnHitRate": 0.771,
-"nRoi": 890,
-"roi": 0.4031,
-"roiLb": 0.3605,
-"nClv": 890,
-"clv": 18.86,
-"clvLb": 17.3959
-},
-"uneinig": {
-"n": 560,
-"wins": 181,
-"hitRate": 0.3232,
-"polyN": 525,
-"polyWins": 136,
-"polyHitRate": 0.259,
-"pinnN": 338,
-"pinnHitRate": 0.6331,
-"nRoi": 389,
-"roi": -0.4465,
-"roiLb": -0.5338,
-"nClv": 389,
-"clv": -20.04,
-"clvLb": -22.8424
+"nRoi": 891,
+"roi": 0.4037,
+"roiLb": 0.3611,
+"nClv": 891,
+"clv": 18.88,
+"clvLb": 17.4146
 },
 "teil": {
 "n": 33,
@@ -72,9 +72,9 @@
 "hitRate": 0.7593
 },
 "Mexican Liga MX": {
-"n": 52,
-"wins": 33,
-"hitRate": 0.6346
+"n": 51,
+"wins": 32,
+"hitRate": 0.6275
 },
 "English Premier League": {
 "n": 50,
@@ -112,9 +112,9 @@
 "hitRate": 0.7273
 },
 "Brazilian Serie B": {
-"n": 42,
-"wins": 30,
-"hitRate": 0.7143
+"n": 43,
+"wins": 31,
+"hitRate": 0.7209
 },
 "UEFA Nations League": {
 "n": 42,
@@ -326,15 +326,15 @@
 "wins": 11,
 "hitRate": 0.9167
 },
-"Italian Coppa Italia": {
-"n": 12,
-"wins": 9,
-"hitRate": 0.75
-},
 "UEFA Europa League Qualifiers": {
 "n": 12,
 "wins": 10,
 "hitRate": 0.8333
+},
+"Italian Coppa Italia": {
+"n": 11,
+"wins": 9,
+"hitRate": 0.8182
 },
 "UEFA Champions League Qualifiers": {
 "n": 11,
@@ -679,15 +679,15 @@
 },
 "byStrength": {
 "strong": {
-"n": 1231,
+"n": 1230,
 "wins": 990,
-"hitRate": 0.8042,
-"nRoi": 835,
-"roi": 0.3117,
-"roiLb": 0.2611,
-"nClv": 835,
-"clv": 13.54,
-"clvLb": 11.6368
+"hitRate": 0.8049,
+"nRoi": 836,
+"roi": 0.3124,
+"roiLb": 0.2618,
+"nClv": 836,
+"clv": 13.57,
+"clvLb": 11.6635
 },
 "weak": {
 "n": 751,
@@ -702,14 +702,33 @@
 }
 },
 "divergence": {
-"n": 560,
+"n": 559,
 "betfairWins": 181,
-"betfairRate": 0.3232,
-"polyN": 525,
+"betfairRate": 0.3238,
+"polyN": 524,
 "polyWins": 136,
-"polyRate": 0.259
+"polyRate": 0.2595
 },
 "recent": [
+{
+"matchId": "36100686",
+"home": "America MG",
+"away": "Juventude",
+"league": "Brazilian Serie B",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Juventude",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-09-28T22:30:00Z",
+"settledAt": "2026-09-29T01:43:58.662166+00:00"
+},
 {
 "matchId": "36124554",
 "home": "Suriname",
@@ -1450,37 +1469,18 @@
 ],
 "kickoff": "2026-09-27T16:30:00Z",
 "settledAt": "2026-09-27T19:32:26.372695+00:00"
-},
-{
-"matchId": "36097498",
-"home": "Burgos",
-"away": "Eldense",
-"league": "Spanish Segunda Division",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Burgos",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-09-27T16:30:00Z",
-"settledAt": "2026-09-27T19:32:26.372695+00:00"
 }
 ],
 "global": {
-"n": 1982,
+"n": 1981,
 "wins": 1368,
-"hitRate": 0.6902,
-"nRoi": 1305,
-"roi": 0.1264,
-"roiLb": 0.083,
-"nClv": 1305,
-"clv": 6.22,
-"clvLb": 4.6629
+"hitRate": 0.6906,
+"nRoi": 1306,
+"roi": 0.127,
+"roiLb": 0.0837,
+"nClv": 1306,
+"clv": 6.25,
+"clvLb": 4.6852
 },
-"pending": 18
+"pending": 19
 }
