@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-29T21:18:05.493329+00:00",
+ "generatedAt": "2026-09-29T21:43:58.389172+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,7 +10,7 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 494,
- "pinnKeys": 140,
+ "pinnKeys": 138,
  "matched": 14,
  "footballRows": 6,
  "crossRows": 488,
@@ -28,8 +28,37 @@
   "soccer_mls": 6
  },
  "trackRecord": {
-  "tracked": 257,
+  "tracked": 259,
   "converged": 88
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|chicagowhitesox-houstonastros|chicagowhitesox",
+   "sport": "baseball_mlb",
+   "event": "Chicago White Sox vs Houston Astros",
+   "market": "Moneyline",
+   "outcome": "Chicago White Sox",
+   "polyPP": 81.5,
+   "pinnPP": 58.6,
+   "gapPP": 22.87,
+   "vol": 797681,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-29T21:43:58.388896+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagowhitesox-houstonastros|houstonastros",
+   "sport": "baseball_mlb",
+   "event": "Chicago White Sox vs Houston Astros",
+   "market": "Moneyline",
+   "outcome": "Houston Astros",
+   "polyPP": 18.5,
+   "pinnPP": 41.4,
+   "gapPP": -22.87,
+   "vol": 797681,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-29T21:43:58.388896+00:00"
+  }
+ ]
 }
