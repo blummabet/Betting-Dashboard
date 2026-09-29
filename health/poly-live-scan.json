@@ -1,14 +1,14 @@
 {
   "slug": "poly-live-scan",
   "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
-  "updatedAt": "2026-09-29T19:46:23.869282+00:00",
+  "updatedAt": "2026-09-29T19:49:45.803042+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
-    "spanneH": 28.3,
-    "proTag": 16.1,
+    "spanneH": 22.4,
+    "proTag": 20.3,
     "lueckeMinMin": 2.5,
-    "lueckeMedianMin": 23.2,
+    "lueckeMedianMin": 16.2,
     "lueckeMaxMin": 977.0,
     "sollProTag": null,
     "liefergradPct": null,
@@ -21,9 +21,24 @@
     "verdraengt": 0,
     "spanneH": 402.2,
     "erzeugtProTag": 6.0,
-    "widerspruch": "erzeugtProTag 6.0 gegen eine gemessene Kadenz von 16.1/Tag (Faktor 2.7) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
+    "widerspruch": "erzeugtProTag 6.0 gegen eine gemessene Kadenz von 20.3/Tag (Faktor 3.4) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
   },
   "runs": [
+    {
+      "ts": "2026-09-29T19:49:45.803042+00:00",
+      "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
+      "runId": "36620978769",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/36620978769",
+      "nSteps": 7,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-09-29T19:41:03Z",
+      "startedAt": "2026-09-29T19:41:03Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 522.8,
+      "event": "workflow_dispatch"
+    },
     {
       "ts": "2026-09-29T19:46:23.869282+00:00",
       "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
@@ -307,21 +322,6 @@
       "startedAt": "2026-09-28T21:21:15Z",
       "wartetS": 0.0,
       "laeuftSeitS": 208.1,
-      "event": "schedule"
-    },
-    {
-      "ts": "2026-09-28T15:25:30.724876+00:00",
-      "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
-      "runId": "36443071070",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/36443071070",
-      "nSteps": 7,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-09-28T15:22:23Z",
-      "startedAt": "2026-09-28T15:22:23Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 187.7,
       "event": "schedule"
     }
   ]

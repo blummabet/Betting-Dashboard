@@ -1,14 +1,14 @@
 {
   "slug": "betfair",
   "workflow": "🟡 Betfair Radar (Betwatch)",
-  "updatedAt": "2026-09-29T19:40:31.964904+00:00",
+  "updatedAt": "2026-09-29T19:53:59.708951+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
-    "spanneH": 5.9,
-    "proTag": 77.3,
-    "lueckeMinMin": 14.7,
-    "lueckeMedianMin": 15.2,
+    "spanneH": 5.8,
+    "proTag": 79.0,
+    "lueckeMinMin": 13.5,
+    "lueckeMedianMin": 15.1,
     "lueckeMaxMin": 46.8,
     "sollProTag": null,
     "liefergradPct": null,
@@ -19,11 +19,26 @@
     "erzeugt": 100,
     "gelaufen": 100,
     "verdraengt": 0,
-    "spanneH": 610.0,
-    "erzeugtProTag": 3.9,
-    "widerspruch": "erzeugtProTag 3.9 gegen eine gemessene Kadenz von 77.3/Tag (Faktor 19.8) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
+    "spanneH": 392.6,
+    "erzeugtProTag": 6.1,
+    "widerspruch": "erzeugtProTag 6.1 gegen eine gemessene Kadenz von 79.0/Tag (Faktor 13.0) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
   },
   "runs": [
+    {
+      "ts": "2026-09-29T19:53:59.708951+00:00",
+      "workflow": "🟡 Betfair Radar (Betwatch)",
+      "runId": "36622259631",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/36622259631",
+      "nSteps": 36,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-09-29T19:52:04Z",
+      "startedAt": "2026-09-29T19:52:04Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 115.7,
+      "event": "workflow_dispatch"
+    },
     {
       "ts": "2026-09-29T19:40:31.964904+00:00",
       "workflow": "🟡 Betfair Radar (Betwatch)",
@@ -308,21 +323,6 @@
       "wartetS": 0.0,
       "laeuftSeitS": 93.5,
       "event": "workflow_dispatch"
-    },
-    {
-      "ts": "2026-09-29T13:46:28.648487+00:00",
-      "workflow": "🟡 Betfair Radar (Betwatch)",
-      "runId": "36577420169",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/36577420169",
-      "nSteps": 36,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-09-29T13:45:07Z",
-      "startedAt": "2026-09-29T13:45:07Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 81.6,
-      "event": "schedule"
     }
   ]
 }
