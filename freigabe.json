@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-29T14:22:47.370240+00:00",
+ "generatedAt": "2026-09-29T14:37:53.052070+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -59,6 +59,46 @@
    }
   },
   {
+   "schublade": "Mix money+sharp+steam",
+   "strom": "poly",
+   "n": 62,
+   "status": "freigegeben",
+   "grund": "ROI belegt (Untergrenze +2.7 %) — der CLV ist gemessen (-0.21 pp), aber nicht belegt: unbekannt ist kein Nein.",
+   "roi": 0.1605,
+   "pl": 9.95,
+   "roiLb": 0.0266,
+   "clv": -0.214,
+   "clvLb": -0.815,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.386,
+   "fehltN": 0,
+   "noetigNRoi": 44,
+   "noetigNClv": null,
+   "noetigGrund": null,
+   "entfernung": {
+    "median": 42,
+    "lo": 11,
+    "hi": 1258,
+    "nieAnteil": 0.022,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "mix",
+   "wert": "money+sharp+steam",
+   "nAlt": 11,
+   "roiAlt": -0.1875,
+   "clvAlt": 0.5,
+   "engineAlt": true,
+   "seitFreigabe": {
+    "ab": "2026-09-16T15:03:00+00:00",
+    "nBei": 32,
+    "roiBei": 0.201,
+    "rausgefallen": 6,
+    "nNeu": 30,
+    "roiNeu": 0.1173
+   }
+  },
+  {
    "schublade": "Liga · ABWÄGEN",
    "strom": "cards",
    "n": 189,
@@ -93,46 +133,6 @@
     "rausgefallen": 0,
     "nNeu": 98,
     "roiNeu": 0.0897
-   }
-  },
-  {
-   "schublade": "Mix money+sharp+steam",
-   "strom": "poly",
-   "n": 61,
-   "status": "freigegeben",
-   "grund": "ROI belegt (Untergrenze +1.9 %) — der CLV ist gemessen (-0.22 pp), aber nicht belegt: unbekannt ist kein Nein.",
-   "roi": 0.1553,
-   "pl": 9.47,
-   "roiLb": 0.0194,
-   "clv": -0.221,
-   "clvLb": -0.839,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.398,
-   "fehltN": 0,
-   "noetigNRoi": 47,
-   "noetigNClv": null,
-   "noetigGrund": null,
-   "entfernung": {
-    "median": 44,
-    "lo": 10,
-    "hi": 858,
-    "nieAnteil": 0.038,
-    "schaetzbar": false
-   },
-   "alterTage": 0.0,
-   "art": "mix",
-   "wert": "money+sharp+steam",
-   "nAlt": 11,
-   "roiAlt": -0.1875,
-   "clvAlt": 0.5,
-   "engineAlt": true,
-   "seitFreigabe": {
-    "ab": "2026-09-16T15:03:00+00:00",
-    "nBei": 32,
-    "roiBei": 0.201,
-    "rausgefallen": 6,
-    "nNeu": 29,
-    "roiNeu": 0.1049
    }
   },
   {
@@ -724,11 +724,11 @@
    "zerlegung": "nach Conviction",
    "art": "conviction",
    "gruppen": 8,
-   "basis": "874 von 1326 abgerechneten Plays · nur Engine 2026-09-01 · ohne Cricket, Kampfsport, US-Sport",
-   "n": 874,
-   "pl": 9.44,
-   "roi": 0.0108,
-   "clv": -0.317,
+   "basis": "876 von 1328 abgerechneten Plays · nur Engine 2026-09-01 · ohne Cricket, Kampfsport, US-Sport",
+   "n": 876,
+   "pl": 10.32,
+   "roi": 0.0118,
+   "clv": -0.312,
    "belegte": 2
   },
   {
@@ -749,6 +749,17 @@
    "schublade": "🔒 E-Sport ohne Wallet-Nachweis",
    "strom": "poly",
    "roiLb": 0.0532,
+   "clvUrteil": "gemessen, nicht belegt",
+   "aufloesbar": false,
+   "grund": "für diesen Schnitt gibt es keine Liste offener Plays — die Schublade rechnet auf Aggregaten, nicht auf einzelnen Zeilen",
+   "laufend": 0,
+   "n": 0,
+   "plays": []
+  },
+  {
+   "schublade": "Mix money+sharp+steam",
+   "strom": "poly",
+   "roiLb": 0.0266,
    "clvUrteil": "gemessen, nicht belegt",
    "aufloesbar": false,
    "grund": "für diesen Schnitt gibt es keine Liste offener Plays — die Schublade rechnet auf Aggregaten, nicht auf einzelnen Zeilen",
@@ -903,17 +914,6 @@
      "id": "ESP-9-546-728|Doppelte Chance — X2"
     }
    ]
-  },
-  {
-   "schublade": "Mix money+sharp+steam",
-   "strom": "poly",
-   "roiLb": 0.0194,
-   "clvUrteil": "gemessen, nicht belegt",
-   "aufloesbar": false,
-   "grund": "für diesen Schnitt gibt es keine Liste offener Plays — die Schublade rechnet auf Aggregaten, nicht auf einzelnen Zeilen",
-   "laufend": 0,
-   "n": 0,
-   "plays": []
   },
   {
    "schublade": "ABWÄGEN · gepusht",
@@ -4152,6 +4152,21 @@
    ]
   },
   {
+   "wallet": "0x3957fb024ae4314fafd2fae943965fdebeda35f0",
+   "kurz": "0x3957…35f0",
+   "n": 13,
+   "wins": 13,
+   "hit": 1.0,
+   "hitLb": 0.8277,
+   "clv": 0.117,
+   "usd": 9763,
+   "pnl": 1193.22,
+   "grad": 1.0,
+   "sportarten": [
+    "Tennis"
+   ]
+  },
+  {
    "wallet": "0xaf21b89714840bfbb74f401bc0007710d065d34a",
    "kurz": "0xaf21…d34a",
    "n": 31,
@@ -4167,29 +4182,14 @@
    ]
   },
   {
-   "wallet": "0x3957fb024ae4314fafd2fae943965fdebeda35f0",
-   "kurz": "0x3957…35f0",
-   "n": 12,
-   "wins": 12,
-   "hit": 1.0,
-   "hitLb": 0.816,
-   "clv": 0.001,
-   "usd": 9149,
-   "pnl": 1193.22,
-   "grad": 1.0,
-   "sportarten": [
-    "Tennis"
-   ]
-  },
-  {
    "wallet": "0x49e0265d1a3636870df298e2ef5e681e246e9af1",
    "kurz": "0x49e0…9af1",
-   "n": 82,
-   "wins": 72,
-   "hit": 0.878,
-   "hitLb": 0.8063,
-   "clv": -0.127,
-   "usd": 450189,
+   "n": 83,
+   "wins": 73,
+   "hit": 0.8795,
+   "hitLb": 0.8085,
+   "clv": 0.043,
+   "usd": 459336,
    "pnl": 5206.6,
    "grad": 1.0,
    "sportarten": [
@@ -4293,6 +4293,46 @@
    }
   },
   {
+   "schublade": "Mix money+sharp+steam",
+   "strom": "poly",
+   "n": 62,
+   "status": "freigegeben",
+   "grund": "ROI belegt (Untergrenze +2.7 %) — der CLV ist gemessen (-0.21 pp), aber nicht belegt: unbekannt ist kein Nein.",
+   "roi": 0.1605,
+   "pl": 9.95,
+   "roiLb": 0.0266,
+   "clv": -0.214,
+   "clvLb": -0.815,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.386,
+   "fehltN": 0,
+   "noetigNRoi": 44,
+   "noetigNClv": null,
+   "noetigGrund": null,
+   "entfernung": {
+    "median": 42,
+    "lo": 11,
+    "hi": 1258,
+    "nieAnteil": 0.022,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "mix",
+   "wert": "money+sharp+steam",
+   "nAlt": 11,
+   "roiAlt": -0.1875,
+   "clvAlt": 0.5,
+   "engineAlt": true,
+   "seitFreigabe": {
+    "ab": "2026-09-16T15:03:00+00:00",
+    "nBei": 32,
+    "roiBei": 0.201,
+    "rausgefallen": 6,
+    "nNeu": 30,
+    "roiNeu": 0.1173
+   }
+  },
+  {
    "schublade": "Liga · ABWÄGEN",
    "strom": "cards",
    "n": 189,
@@ -4327,46 +4367,6 @@
     "rausgefallen": 0,
     "nNeu": 98,
     "roiNeu": 0.0897
-   }
-  },
-  {
-   "schublade": "Mix money+sharp+steam",
-   "strom": "poly",
-   "n": 61,
-   "status": "freigegeben",
-   "grund": "ROI belegt (Untergrenze +1.9 %) — der CLV ist gemessen (-0.22 pp), aber nicht belegt: unbekannt ist kein Nein.",
-   "roi": 0.1553,
-   "pl": 9.47,
-   "roiLb": 0.0194,
-   "clv": -0.221,
-   "clvLb": -0.839,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.398,
-   "fehltN": 0,
-   "noetigNRoi": 47,
-   "noetigNClv": null,
-   "noetigGrund": null,
-   "entfernung": {
-    "median": 44,
-    "lo": 10,
-    "hi": 858,
-    "nieAnteil": 0.038,
-    "schaetzbar": false
-   },
-   "alterTage": 0.0,
-   "art": "mix",
-   "wert": "money+sharp+steam",
-   "nAlt": 11,
-   "roiAlt": -0.1875,
-   "clvAlt": 0.5,
-   "engineAlt": true,
-   "seitFreigabe": {
-    "ab": "2026-09-16T15:03:00+00:00",
-    "nBei": 32,
-    "roiBei": 0.201,
-    "rausgefallen": 6,
-    "nNeu": 29,
-    "roiNeu": 0.1049
    }
   },
   {
@@ -5609,6 +5609,38 @@
    }
   },
   {
+   "schublade": "Conviction 6",
+   "strom": "poly",
+   "n": 373,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0163,
+   "pl": 6.09,
+   "roiLb": -0.0475,
+   "clv": -0.254,
+   "clvLb": -0.76,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.252,
+   "fehltN": 0,
+   "noetigNRoi": 5711,
+   "noetigNClv": null,
+   "noetigGrund": null,
+   "entfernung": {
+    "median": 1159,
+    "lo": 173,
+    "hi": 176035,
+    "nieAnteil": 0.337,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "conviction",
+   "wert": 6,
+   "nAlt": 93,
+   "roiAlt": 0.0229,
+   "clvAlt": 0.361,
+   "engineAlt": true
+  },
+  {
    "schublade": "Israeli Premier League · Match Odds",
    "strom": "betfair",
    "n": 30,
@@ -5651,38 +5683,6 @@
    "alterTage": null,
    "art": "markt",
    "naeherung": false
-  },
-  {
-   "schublade": "Conviction 6",
-   "strom": "poly",
-   "n": 371,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.014,
-   "pl": 5.21,
-   "roiLb": -0.0501,
-   "clv": -0.265,
-   "clvLb": -0.776,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.245,
-   "fehltN": 0,
-   "noetigNRoi": 7749,
-   "noetigNClv": null,
-   "noetigGrund": null,
-   "entfernung": {
-    "median": 1312,
-    "lo": 169,
-    "hi": 42067,
-    "nieAnteil": 0.37,
-    "schaetzbar": false
-   },
-   "alterTage": 0.1,
-   "art": "conviction",
-   "wert": 6,
-   "nAlt": 93,
-   "roiAlt": 0.0229,
-   "clvAlt": 0.361,
-   "engineAlt": true
   },
   {
    "schublade": "Turkish 1 Lig · First Half Goals 0.5",
@@ -6129,6 +6129,45 @@
    "naeherung": false
   },
   {
+   "schublade": "🔒 Poly-Auswahl · von Betfair bestätigt",
+   "strom": "poly",
+   "n": 282,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.007,
+   "pl": -1.99,
+   "roiLb": -0.0941,
+   "clv": -0.092,
+   "clvLb": -0.363,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.179,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "nicht_positiv",
+   "entfernung": {
+    "median": 1884,
+    "lo": 191,
+    "hi": 157178,
+    "nieAnteil": 0.552,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "vorangemeldet",
+   "angemeldet": "2026-09-01T18:59:52.671883+00:00",
+   "zielN": 60,
+   "warum": "Die einzige Untergruppe der Rangliste mit einer ROI-Untergrenze ueber null. Traegt nicht die Menge der Poly-Signale, sondern die eine FREMDE Stimme: ohne Betfair liegen dieselben Plays bei -5,1% (n=425).",
+   "quelle": "poly_shortlist_track.json → settled",
+   "nDavor": 75,
+   "rueckblick": {
+    "n": 75,
+    "roi": 0.1811,
+    "roiLb": 0.0106,
+    "clv": 0.24,
+    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
+   }
+  },
+  {
    "schublade": "Brazilian Serie B · Over/Under 3.5 Goals",
    "strom": "betfair",
    "n": 58,
@@ -6193,45 +6232,6 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
-  },
-  {
-   "schublade": "🔒 Poly-Auswahl · von Betfair bestätigt",
-   "strom": "poly",
-   "n": 281,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0085,
-   "pl": -2.39,
-   "roiLb": -0.0959,
-   "clv": -0.105,
-   "clvLb": -0.377,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.167,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "nicht_positiv",
-   "entfernung": {
-    "median": 1911,
-    "lo": 184,
-    "hi": 201808,
-    "nieAnteil": 0.558,
-    "schaetzbar": false
-   },
-   "alterTage": 0.6,
-   "art": "vorangemeldet",
-   "angemeldet": "2026-09-01T18:59:52.671883+00:00",
-   "zielN": 60,
-   "warum": "Die einzige Untergruppe der Rangliste mit einer ROI-Untergrenze ueber null. Traegt nicht die Menge der Poly-Signale, sondern die eine FREMDE Stimme: ohne Betfair liegen dieselben Plays bei -5,1% (n=425).",
-   "quelle": "poly_shortlist_track.json → settled",
-   "nDavor": 75,
-   "rueckblick": {
-    "n": 75,
-    "roi": 0.1811,
-    "roiLb": 0.0106,
-    "clv": 0.24,
-    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
-   }
   },
   {
    "schublade": "Dutch Eerste Divisie · Half Time",
@@ -6399,6 +6399,38 @@
    "nAlt": 123,
    "roiAlt": 0.0376,
    "clvAlt": 0.8,
+   "engineAlt": true
+  },
+  {
+   "schublade": "Mix bf+money+sharp",
+   "strom": "poly",
+   "n": 55,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.1085,
+   "pl": 5.97,
+   "roiLb": -0.1067,
+   "clv": -0.133,
+   "clvLb": -0.738,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.471,
+   "fehltN": 0,
+   "noetigNRoi": 217,
+   "noetigNClv": null,
+   "noetigGrund": null,
+   "entfernung": {
+    "median": 133,
+    "lo": 23,
+    "hi": 7957,
+    "nieAnteil": 0.182,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "mix",
+   "wert": "bf+money+sharp",
+   "nAlt": 9,
+   "roiAlt": 0.3871,
+   "clvAlt": null,
    "engineAlt": true
   },
   {
@@ -6609,38 +6641,6 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
-  },
-  {
-   "schublade": "Mix bf+money+sharp",
-   "strom": "poly",
-   "n": 54,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.1031,
-   "pl": 5.57,
-   "roiLb": -0.1159,
-   "clv": -0.207,
-   "clvLb": null,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": 244,
-   "noetigNClv": null,
-   "noetigGrund": null,
-   "entfernung": {
-    "median": 137,
-    "lo": 24,
-    "hi": 4400,
-    "nieAnteil": 0.193,
-    "schaetzbar": false
-   },
-   "alterTage": 0.6,
-   "art": "mix",
-   "wert": "bf+money+sharp",
-   "nAlt": 9,
-   "roiAlt": 0.3871,
-   "clvAlt": null,
-   "engineAlt": true
   },
   {
    "schublade": "Serbian First League · Both teams to Score?",
@@ -7045,7 +7045,7 @@
     "nieAnteil": 0.748,
     "schaetzbar": false
    },
-   "alterTage": 0.6,
+   "alterTage": 0.7,
    "art": "mix",
    "wert": "bf+money",
    "nAlt": 60,
@@ -14706,7 +14706,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 20.6,
+   "alterTage": 20.7,
    "art": "conviction",
    "wert": 3
   },
