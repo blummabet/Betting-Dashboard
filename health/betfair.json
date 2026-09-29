@@ -1,29 +1,44 @@
 {
   "slug": "betfair",
   "workflow": "🟡 Betfair Radar (Betwatch)",
-  "updatedAt": "2026-09-29T06:06:58.621207+00:00",
+  "updatedAt": "2026-09-29T06:21:44.443659+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
-    "spanneH": 4.9,
-    "proTag": 93.3,
+    "spanneH": 4.6,
+    "proTag": 98.6,
     "lueckeMinMin": 2.8,
-    "lueckeMedianMin": 15.0,
-    "lueckeMaxMin": 30.8,
+    "lueckeMedianMin": 14.9,
+    "lueckeMaxMin": 27.2,
     "sollProTag": null,
     "liefergradPct": null,
     "fensterMin": null,
     "fensterUrteil": null
   },
   "erzeugung": {
-    "erzeugt": 100,
-    "gelaufen": 100,
+    "erzeugt": 73,
+    "gelaufen": 73,
     "verdraengt": 0,
-    "spanneH": 386.1,
-    "erzeugtProTag": 6.2,
-    "widerspruch": "erzeugtProTag 6.2 gegen eine gemessene Kadenz von 93.3/Tag (Faktor 15.0) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
+    "spanneH": 947.9,
+    "erzeugtProTag": 1.8,
+    "widerspruch": "erzeugtProTag 1.8 gegen eine gemessene Kadenz von 98.6/Tag (Faktor 54.8) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
   },
   "runs": [
+    {
+      "ts": "2026-09-29T06:21:44.443659+00:00",
+      "workflow": "🟡 Betfair Radar (Betwatch)",
+      "runId": "36530556133",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/36530556133",
+      "nSteps": 35,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-09-29T06:20:22Z",
+      "startedAt": "2026-09-29T06:20:22Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 82.4,
+      "event": "workflow_dispatch"
+    },
     {
       "ts": "2026-09-29T06:06:58.621207+00:00",
       "workflow": "🟡 Betfair Radar (Betwatch)",
@@ -308,21 +323,6 @@
       "wartetS": 0.0,
       "laeuftSeitS": 573.8,
       "event": "workflow_dispatch"
-    },
-    {
-      "ts": "2026-09-29T01:13:34.385997+00:00",
-      "workflow": "🟡 Betfair Radar (Betwatch)",
-      "runId": "36505786204",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/36505786204",
-      "nSteps": 35,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-09-29T01:00:06Z",
-      "startedAt": "2026-09-29T01:00:06Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 808.4,
-      "event": "schedule"
     }
   ]
 }
