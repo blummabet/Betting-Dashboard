@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-09-29T02:03:15.081330+00:00",
+"generatedAt": "2026-09-29T02:06:01.270346+00:00",
 "count": 11,
 "covered": 9,
 "leaguesKuratiert": [
@@ -62,8 +62,8 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 107494,
-"remaining": 4892506,
+"used": 107623,
+"remaining": 4892377,
 "letzterFehler": null
 },
 "ankerQuote": 0.667,
@@ -81,7 +81,7 @@
 "moneySharePct": 86,
 "moneyOdd": 1.22,
 "moneyDir": "flat",
-"totVol": 59343,
+"totVol": 59374,
 "pinnOdd": 1.19,
 "softOdd": 1.18,
 "softN": 34,
@@ -102,9 +102,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.7951,
+"home": 0.7949,
 "draw": 0.1329,
-"away": 0.072,
+"away": 0.0722,
 "fav": "home",
 "n": 34
 },
@@ -132,7 +132,7 @@
 "moneyName": "Finland",
 "moneySharePct": 90,
 "moneyOdd": 1.66,
-"moneyDir": "out",
+"moneyDir": "flat",
 "totVol": 55054,
 "pinnOdd": null,
 "softOdd": 1.57,
@@ -283,9 +283,9 @@
 "moneySide": "home",
 "moneyName": "Germany",
 "moneySharePct": 96,
-"moneyOdd": 1.3,
-"moneyDir": "flat",
-"totVol": 27497,
+"moneyOdd": 1.29,
+"moneyDir": "in",
+"totVol": 27507,
 "pinnOdd": 1.28,
 "softOdd": 1.25,
 "softN": 32,
@@ -580,7 +580,7 @@
 "moneySharePct": 98,
 "moneyOdd": 1.04,
 "moneyDir": "flat",
-"totVol": 16939,
+"totVol": 16941,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -613,15 +613,6 @@
 },
 "beispiele": [
 {
-"spiel": "AD Cariari Pococi v Uruguay de Coronado",
-"kandidat": "CD Castellón v AD Ceuta FC",
-"key": "soccer_spain_segunda_division",
-"score": 0.33,
-"grund": "name",
-"matchId": "36124159",
-"liga": "Costa Rican Liga de Ascenso"
-},
-{
 "spiel": "Alianza FC (Pan) v Atletico Independiente",
 "kandidat": "Independiente v Instituto de Córdoba",
 "key": "soccer_argentina_primera_division",
@@ -629,6 +620,15 @@
 "grund": "name",
 "matchId": "36125990",
 "liga": "Panamanian Premier League"
+},
+{
+"spiel": "AD Cariari Pococi v Uruguay de Coronado",
+"kandidat": "CD Castellón v AD Ceuta FC",
+"key": "soccer_spain_segunda_division",
+"score": 0.33,
+"grund": "name",
+"matchId": "36124159",
+"liga": "Costa Rican Liga de Ascenso"
 },
 {
 "spiel": "Papua New Guinea (W) v Solomon Islands (W)",
@@ -694,15 +694,6 @@
 "liga": "Friendlies International U19"
 },
 {
-"spiel": "San Antonio FC v SV Darmstadt",
-"kandidat": "SV Darmstadt 98 v FC Energie Cottbus",
-"key": "soccer_germany_bundesliga2",
-"score": 1.0,
-"grund": "name",
-"matchId": "36125788",
-"liga": "Friendly Matches"
-},
-{
 "spiel": "Iceland U21 v Switzerland U21",
 "kandidat": "Luxembourg v Iceland",
 "key": "soccer_uefa_nations_league",
@@ -710,6 +701,15 @@
 "grund": "name",
 "matchId": "36127754",
 "liga": "UEFA U21 Euro Qualifiers"
+},
+{
+"spiel": "San Antonio FC v SV Darmstadt",
+"kandidat": "SV Darmstadt 98 v FC Energie Cottbus",
+"key": "soccer_germany_bundesliga2",
+"score": 1.0,
+"grund": "name",
+"matchId": "36125788",
+"liga": "Friendly Matches"
 },
 {
 "spiel": "Germany U20 v Italy U20",
@@ -748,15 +748,6 @@
 "liga": "UEFA U21 Euro Qualifiers"
 },
 {
-"spiel": "Rep of Ireland U21 v Kazakhstan U21",
-"kandidat": "Slovakia v Kazakhstan",
-"key": "soccer_uefa_nations_league",
-"score": 0.5,
-"grund": "name",
-"matchId": "36127790",
-"liga": "UEFA U21 Euro Qualifiers"
-},
-{
 "spiel": "Belgium U21 v Wales U21",
 "kandidat": "Wales v Norway",
 "key": "soccer_uefa_nations_league",
@@ -766,15 +757,13 @@
 "liga": "UEFA U21 Euro Qualifiers"
 },
 {
-"spiel": "Slovenia v North Macedonia",
-"grund": "kein_pinnacle",
-"kandidat": "Slovenia v North Macedonia",
+"spiel": "Rep of Ireland U21 v Kazakhstan U21",
+"kandidat": "Slovakia v Kazakhstan",
 "key": "soccer_uefa_nations_league",
-"nSoft": 31,
-"pinnacleImEvent": false,
-"nBuecher": 31,
-"matchId": "36091449",
-"liga": "UEFA Nations League"
+"score": 0.5,
+"grund": "name",
+"matchId": "36127790",
+"liga": "UEFA U21 Euro Qualifiers"
 },
 {
 "spiel": "Luxembourg v Iceland",
@@ -796,6 +785,17 @@
 "pinnacleImEvent": false,
 "nBuecher": 29,
 "matchId": "36024493",
+"liga": "UEFA Nations League"
+},
+{
+"spiel": "Slovenia v North Macedonia",
+"grund": "kein_pinnacle",
+"kandidat": "Slovenia v North Macedonia",
+"key": "soccer_uefa_nations_league",
+"nSoft": 31,
+"pinnacleImEvent": false,
+"nBuecher": 31,
+"matchId": "36091449",
 "liga": "UEFA Nations League"
 },
 {
@@ -877,14 +877,14 @@
 "liga": "UEFA Women's Champions League"
 },
 {
-"spiel": "Republic of Ireland v Austria",
+"spiel": "Israel v Kosovo",
 "grund": "kein_pinnacle",
-"kandidat": "Republic of Ireland v Austria",
+"kandidat": "Israel v Kosovo",
 "key": "soccer_uefa_nations_league",
-"nSoft": 25,
+"nSoft": 31,
 "pinnacleImEvent": false,
-"nBuecher": 25,
-"matchId": "36118061",
+"nBuecher": 31,
+"matchId": "36116357",
 "liga": "UEFA Nations League"
 },
 {
@@ -899,14 +899,14 @@
 "liga": "UEFA Nations League"
 },
 {
-"spiel": "Israel v Kosovo",
+"spiel": "Republic of Ireland v Austria",
 "grund": "kein_pinnacle",
-"kandidat": "Israel v Kosovo",
+"kandidat": "Republic of Ireland v Austria",
 "key": "soccer_uefa_nations_league",
-"nSoft": 31,
+"nSoft": 25,
 "pinnacleImEvent": false,
-"nBuecher": 31,
-"matchId": "36116357",
+"nBuecher": 25,
+"matchId": "36118061",
 "liga": "UEFA Nations League"
 },
 {
