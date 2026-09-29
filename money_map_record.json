@@ -1,13 +1,13 @@
 {
-"generatedAt": "2026-09-29T16:53:06.148004+00:00",
+"generatedAt": "2026-09-29T17:37:58.177900+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1389,
-"wins": 1186,
-"hitRate": 0.8539,
-"polyN": 1328,
-"polyWins": 1044,
-"polyHitRate": 0.7861,
+"n": 1387,
+"wins": 1184,
+"hitRate": 0.8536,
+"polyN": 1326,
+"polyWins": 1042,
+"polyHitRate": 0.7858,
 "pinnN": 212,
 "pinnHitRate": 0.7783,
 "nRoi": 903,
@@ -16,22 +16,6 @@
 "nClv": 903,
 "clv": 18.87,
 "clvLb": 17.4186
-},
-"uneinig": {
-"n": 558,
-"wins": 179,
-"hitRate": 0.3208,
-"polyN": 523,
-"polyWins": 136,
-"polyHitRate": 0.26,
-"pinnN": 335,
-"pinnHitRate": 0.6328,
-"nRoi": 391,
-"roi": -0.4493,
-"roiLb": -0.5363,
-"nClv": 391,
-"clv": -20.04,
-"clvLb": -22.8268
 },
 "teil": {
 "n": 33,
@@ -48,6 +32,22 @@
 "nClv": 26,
 "clv": -33.33,
 "clvLb": -41.9505
+},
+"uneinig": {
+"n": 558,
+"wins": 180,
+"hitRate": 0.3226,
+"polyN": 523,
+"polyWins": 135,
+"polyHitRate": 0.2581,
+"pinnN": 335,
+"pinnHitRate": 0.6328,
+"nRoi": 392,
+"roi": -0.4477,
+"roiLb": -0.5345,
+"nClv": 392,
+"clv": -19.99,
+"clvLb": -22.7698
 }
 },
 "byLeague": {
@@ -207,9 +207,9 @@
 "hitRate": 0.8095
 },
 "Dutch Eerste Divisie": {
-"n": 21,
+"n": 20,
 "wins": 16,
-"hitRate": 0.7619
+"hitRate": 0.8
 },
 "Scottish Premiership": {
 "n": 20,
@@ -346,6 +346,11 @@
 "wins": 8,
 "hitRate": 0.7273
 },
+"CAF African Cup of Nations Qualifiers": {
+"n": 10,
+"wins": 8,
+"hitRate": 0.8
+},
 "Chinese League 1": {
 "n": 10,
 "wins": 6,
@@ -362,11 +367,6 @@
 "hitRate": 0.8
 },
 "Italian Coppa Italia": {
-"n": 10,
-"wins": 8,
-"hitRate": 0.8
-},
-"CAF African Cup of Nations Qualifiers": {
 "n": 9,
 "wins": 7,
 "hitRate": 0.7778
@@ -546,11 +546,6 @@
 "wins": 2,
 "hitRate": 0.6667
 },
-"Turkish 1 Lig": {
-"n": 3,
-"wins": 2,
-"hitRate": 0.6667
-},
 "CONCACAF Nations League C": {
 "n": 2,
 "wins": 2,
@@ -585,6 +580,11 @@
 "n": 2,
 "wins": 0,
 "hitRate": 0.0
+},
+"Turkish 1 Lig": {
+"n": 2,
+"wins": 1,
+"hitRate": 0.5
 },
 "UEFA Youth League": {
 "n": 2,
@@ -674,9 +674,9 @@
 },
 "byStrength": {
 "strong": {
-"n": 1233,
-"wins": 996,
-"hitRate": 0.8078,
+"n": 1232,
+"wins": 995,
+"hitRate": 0.8076,
 "nRoi": 848,
 "roi": 0.3138,
 "roiLb": 0.2638,
@@ -685,26 +685,45 @@
 "clvLb": 11.7499
 },
 "weak": {
-"n": 747,
+"n": 746,
 "wins": 374,
-"hitRate": 0.5007,
-"nRoi": 472,
-"roi": -0.2062,
-"roiLb": -0.2797,
-"nClv": 472,
-"clv": -6.83,
-"clvLb": -9.2377
+"hitRate": 0.5013,
+"nRoi": 473,
+"roi": -0.2053,
+"roiLb": -0.2787,
+"nClv": 473,
+"clv": -6.81,
+"clvLb": -9.2183
 }
 },
 "divergence": {
 "n": 558,
-"betfairWins": 179,
-"betfairRate": 0.3208,
+"betfairWins": 180,
+"betfairRate": 0.3226,
 "polyN": 523,
-"polyWins": 136,
-"polyRate": 0.26
+"polyWins": 135,
+"polyRate": 0.2581
 },
 "recent": [
+{
+"matchId": "36126212",
+"home": "Madagascar",
+"away": "Tanzania",
+"league": "CAF African Cup of Nations Qualifiers",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-09-29T14:00:00Z",
+"settledAt": "2026-09-29T17:37:57.957492+00:00"
+},
 {
 "matchId": "36120573",
 "home": "Ethiopia",
@@ -1445,37 +1464,18 @@
 ],
 "kickoff": "2026-09-28T00:00:00Z",
 "settledAt": "2026-09-28T03:03:17.196609+00:00"
-},
-{
-"matchId": "36098030",
-"home": "Fortaleza FC",
-"away": "Tolima",
-"league": "Colombian Primera A",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Tolima",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-09-27T23:05:00Z",
-"settledAt": "2026-09-28T02:18:08.404326+00:00"
 }
 ],
 "global": {
-"n": 1980,
-"wins": 1370,
-"hitRate": 0.6919,
-"nRoi": 1320,
+"n": 1978,
+"wins": 1369,
+"hitRate": 0.6921,
+"nRoi": 1321,
 "roi": 0.1279,
 "roiLb": 0.0849,
-"nClv": 1320,
+"nClv": 1321,
 "clv": 6.31,
-"clvLb": 4.7664
+"clvLb": 4.7627
 },
-"pending": 20
+"pending": 22
 }
