@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-29T16:38:07.148367+00:00",
+ "generatedAt": "2026-09-29T16:53:14.101443+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -159,7 +159,7 @@
     "nieAnteil": 0.052,
     "schaetzbar": false
    },
-   "alterTage": 2.1,
+   "alterTage": 2.2,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py",
    "seitFreigabe": {
@@ -242,40 +242,6 @@
    }
   },
   {
-   "schublade": "Dutch Eerste Divisie · Match Odds",
-   "strom": "betfair",
-   "n": 35,
-   "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +12.8 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 17. Freigabe erst nach Bestätigung nach vorn.",
-   "roi": 0.432,
-   "pl": 15.12,
-   "roiLb": 0.1276,
-   "clv": -0.07,
-   "clvLb": null,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": null,
-   "fehltN": 29,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "keine_einzelwerte",
-   "entfernung": null,
-   "alterTage": null,
-   "art": "liga_markt",
-   "naeherung": false,
-   "mehrfachtest": {
-    "nTests": 448,
-    "erwartet": 22.4,
-    "nUeber": 17,
-    "ueberschuss": false
-   },
-   "zielN": 64,
-   "seitKandidat": {
-    "ab": "2026-09-23T20:22:01.804834+00:00",
-    "nBei": 34,
-    "nNeu": 1
-   }
-  },
-  {
    "schublade": "Kazakhstan Premier League · Match Odds",
    "strom": "betfair",
    "n": 30,
@@ -306,6 +272,40 @@
    "seitKandidat": {
     "ab": "2026-09-23T20:22:01.804834+00:00",
     "nBei": 30,
+    "nNeu": 0
+   }
+  },
+  {
+   "schublade": "Dutch Eerste Divisie · Match Odds",
+   "strom": "betfair",
+   "n": 34,
+   "status": "kandidat",
+   "grund": "ROI belegt (Untergrenze +10.6 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 17. Freigabe erst nach Bestätigung nach vorn.",
+   "roi": 0.4185,
+   "pl": 14.23,
+   "roiLb": 0.1058,
+   "clv": -0.13,
+   "clvLb": null,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": null,
+   "fehltN": 30,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "keine_einzelwerte",
+   "entfernung": null,
+   "alterTage": null,
+   "art": "liga_markt",
+   "naeherung": false,
+   "mehrfachtest": {
+    "nTests": 448,
+    "erwartet": 22.4,
+    "nUeber": 17,
+    "ueberschuss": false
+   },
+   "zielN": 64,
+   "seitKandidat": {
+    "ab": "2026-09-23T20:22:01.804834+00:00",
+    "nBei": 34,
     "nNeu": 0
    }
   },
@@ -639,7 +639,7 @@
     "nieAnteil": 0.435,
     "schaetzbar": false
    },
-   "alterTage": 0.8,
+   "alterTage": 0.9,
    "art": "conviction",
    "wert": 8,
    "nAlt": 12,
@@ -671,7 +671,7 @@
     "nieAnteil": 0.51,
     "schaetzbar": false
    },
-   "alterTage": 0.8,
+   "alterTage": 0.9,
    "art": "mix",
    "wert": "bf+money+steam",
    "nAlt": 5,
@@ -738,8 +738,8 @@
    "gruppen": 7,
    "basis": null,
    "n": 40000,
-   "pl": -294.26,
-   "roi": -0.0074,
+   "pl": -302.6,
+   "roi": -0.0076,
    "clv": null,
    "belegte": 13
   }
@@ -1205,18 +1205,6 @@
    "belegt": false
   },
   {
-   "liga": "French Ligue 2",
-   "n": 197,
-   "wins": 110,
-   "hit": 0.5584,
-   "hitLb": 0.4998,
-   "roi": 0.0952,
-   "roiLb": -0.0357,
-   "pl": 18.75,
-   "clv": 0.106,
-   "belegt": false
-  },
-  {
    "liga": "Scottish League One",
    "n": 71,
    "wins": 44,
@@ -1298,6 +1286,18 @@
    "roiLb": -0.049,
    "pl": 9.1,
    "clv": 0.34,
+   "belegt": false
+  },
+  {
+   "liga": "French Ligue 2",
+   "n": 190,
+   "wins": 105,
+   "hit": 0.5526,
+   "hitLb": 0.493,
+   "roi": 0.0838,
+   "roiLb": -0.0499,
+   "pl": 15.93,
+   "clv": 0.099,
    "belegt": false
   },
   {
@@ -1697,18 +1697,6 @@
    "belegt": false
   },
   {
-   "liga": "Dutch Eerste Divisie",
-   "n": 241,
-   "wins": 133,
-   "hit": 0.5519,
-   "hitLb": 0.4989,
-   "roi": 0.0228,
-   "roiLb": -0.0915,
-   "pl": 5.5,
-   "clv": -0.042,
-   "belegt": false
-  },
-  {
    "liga": "Uzbekistan Super League",
    "n": 122,
    "wins": 69,
@@ -1814,6 +1802,18 @@
    "roiLb": -0.0969,
    "pl": 3.77,
    "clv": 0.151,
+   "belegt": false
+  },
+  {
+   "liga": "Dutch Eerste Divisie",
+   "n": 237,
+   "wins": 130,
+   "hit": 0.5485,
+   "hitLb": 0.4951,
+   "roi": 0.0182,
+   "roiLb": -0.0975,
+   "pl": 4.32,
+   "clv": -0.039,
    "belegt": false
   },
   {
@@ -3545,18 +3545,6 @@
    "belegt": false
   },
   {
-   "liga": "Friendlies International U19",
-   "n": 95,
-   "wins": 48,
-   "hit": 0.5053,
-   "hitLb": 0.4219,
-   "roi": -0.1,
-   "roiLb": -0.2661,
-   "pl": -9.5,
-   "clv": 0.227,
-   "belegt": false
-  },
-  {
    "liga": "Egyptian Second Division B",
    "n": 60,
    "wins": 30,
@@ -3602,6 +3590,18 @@
    "roiLb": -0.2766,
    "pl": -12.96,
    "clv": -0.18,
+   "belegt": false
+  },
+  {
+   "liga": "Friendlies International U19",
+   "n": 101,
+   "wins": 50,
+   "hit": 0.495,
+   "hitLb": 0.4144,
+   "roi": -0.1162,
+   "roiLb": -0.277,
+   "pl": -11.74,
+   "clv": 0.195,
    "belegt": false
   },
   {
@@ -4013,18 +4013,6 @@
    "belegt": false
   },
   {
-   "liga": "UAE Presidents Cup",
-   "n": 51,
-   "wins": 21,
-   "hit": 0.4118,
-   "hitLb": 0.3056,
-   "roi": -0.2198,
-   "roiLb": -0.4696,
-   "pl": -11.21,
-   "clv": 1.877,
-   "belegt": false
-  },
-  {
    "liga": "CAF Champions League Qualifiers",
    "n": 32,
    "wins": 16,
@@ -4034,6 +4022,18 @@
    "roiLb": -0.4704,
    "pl": -7.49,
    "clv": -0.662,
+   "belegt": false
+  },
+  {
+   "liga": "UAE Presidents Cup",
+   "n": 56,
+   "wins": 23,
+   "hit": 0.4107,
+   "hitLb": 0.3091,
+   "roi": -0.2387,
+   "roiLb": -0.4712,
+   "pl": -13.37,
+   "clv": 1.692,
    "belegt": false
   },
   {
@@ -4393,7 +4393,7 @@
     "nieAnteil": 0.052,
     "schaetzbar": false
    },
-   "alterTage": 2.1,
+   "alterTage": 2.2,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py",
    "seitFreigabe": {
@@ -4474,40 +4474,6 @@
    }
   },
   {
-   "schublade": "Dutch Eerste Divisie · Match Odds",
-   "strom": "betfair",
-   "n": 35,
-   "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +12.8 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 17. Freigabe erst nach Bestätigung nach vorn.",
-   "roi": 0.432,
-   "pl": 15.12,
-   "roiLb": 0.1276,
-   "clv": -0.07,
-   "clvLb": null,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": null,
-   "fehltN": 29,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "keine_einzelwerte",
-   "entfernung": null,
-   "alterTage": null,
-   "art": "liga_markt",
-   "naeherung": false,
-   "mehrfachtest": {
-    "nTests": 448,
-    "erwartet": 22.4,
-    "nUeber": 17,
-    "ueberschuss": false
-   },
-   "zielN": 64,
-   "seitKandidat": {
-    "ab": "2026-09-23T20:22:01.804834+00:00",
-    "nBei": 34,
-    "nNeu": 1
-   }
-  },
-  {
    "schublade": "Kazakhstan Premier League · Match Odds",
    "strom": "betfair",
    "n": 30,
@@ -4538,6 +4504,40 @@
    "seitKandidat": {
     "ab": "2026-09-23T20:22:01.804834+00:00",
     "nBei": 30,
+    "nNeu": 0
+   }
+  },
+  {
+   "schublade": "Dutch Eerste Divisie · Match Odds",
+   "strom": "betfair",
+   "n": 34,
+   "status": "kandidat",
+   "grund": "ROI belegt (Untergrenze +10.6 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 17. Freigabe erst nach Bestätigung nach vorn.",
+   "roi": 0.4185,
+   "pl": 14.23,
+   "roiLb": 0.1058,
+   "clv": -0.13,
+   "clvLb": null,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": null,
+   "fehltN": 30,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "keine_einzelwerte",
+   "entfernung": null,
+   "alterTage": null,
+   "art": "liga_markt",
+   "naeherung": false,
+   "mehrfachtest": {
+    "nTests": 448,
+    "erwartet": 22.4,
+    "nUeber": 17,
+    "ueberschuss": false
+   },
+   "zielN": 64,
+   "seitKandidat": {
+    "ab": "2026-09-23T20:22:01.804834+00:00",
+    "nBei": 34,
     "nNeu": 0
    }
   },
@@ -4871,7 +4871,7 @@
     "nieAnteil": 0.435,
     "schaetzbar": false
    },
-   "alterTage": 0.8,
+   "alterTage": 0.9,
    "art": "conviction",
    "wert": 8,
    "nAlt": 12,
@@ -4903,7 +4903,7 @@
     "nieAnteil": 0.51,
     "schaetzbar": false
    },
-   "alterTage": 0.8,
+   "alterTage": 0.9,
    "art": "mix",
    "wert": "bf+money+steam",
    "nAlt": 5,
@@ -5105,28 +5105,6 @@
    "naeherung": false
   },
   {
-   "schublade": "Half Time",
-   "strom": "betfair",
-   "n": 4787,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0123,
-   "pl": 58.88,
-   "roiLb": -0.021,
-   "clv": null,
-   "clvLb": null,
-   "clvUrteil": "nicht erhoben",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "keine_einzelwerte",
-   "entfernung": null,
-   "alterTage": null,
-   "art": "markt",
-   "naeherung": false
-  },
-  {
    "schublade": "Konjunktion · gehalten (Haltepreis)",
    "strom": "betfair",
    "n": 621,
@@ -5155,14 +5133,14 @@
    "quelle": "killer_ledger.json"
   },
   {
-   "schublade": "Match Odds",
+   "schublade": "Half Time",
    "strom": "betfair",
-   "n": 6287,
+   "n": 4787,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0009,
-   "pl": 5.66,
-   "roiLb": -0.0227,
+   "roi": 0.0119,
+   "pl": 56.97,
+   "roiLb": -0.0215,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5196,6 +5174,28 @@
    "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
+   "naeherung": false
+  },
+  {
+   "schublade": "Match Odds",
+   "strom": "betfair",
+   "n": 6287,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0002,
+   "pl": 1.26,
+   "roiLb": -0.0234,
+   "clv": null,
+   "clvLb": null,
+   "clvUrteil": "nicht erhoben",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "keine_einzelwerte",
+   "entfernung": null,
+   "alterTage": null,
+   "art": "markt",
    "naeherung": false
   },
   {
@@ -5248,9 +5248,9 @@
    "n": 5143,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.002,
-   "pl": -10.29,
-   "roiLb": -0.0259,
+   "roi": -0.0026,
+   "pl": -13.37,
+   "roiLb": -0.0265,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5299,12 +5299,12 @@
   {
    "schublade": "Both teams to Score?",
    "strom": "betfair",
-   "n": 5891,
+   "n": 5890,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0053,
-   "pl": -31.22,
-   "roiLb": -0.0267,
+   "roi": -0.0055,
+   "pl": -32.39,
+   "roiLb": -0.0269,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5352,12 +5352,12 @@
   {
    "schublade": "First Half Goals 0.5",
    "strom": "betfair",
-   "n": 5631,
+   "n": 5630,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0083,
-   "pl": -46.74,
-   "roiLb": -0.0291,
+   "roi": -0.0079,
+   "pl": -44.48,
+   "roiLb": -0.0287,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5396,11 +5396,11 @@
   {
    "schublade": "Over/Under 3.5 Goals",
    "strom": "betfair",
-   "n": 6029,
+   "n": 6030,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
    "roi": -0.0119,
-   "pl": -71.75,
+   "pl": -71.76,
    "roiLb": -0.0331,
    "clv": null,
    "clvLb": null,
@@ -5528,12 +5528,12 @@
   {
    "schublade": "🔒 Fade-Unter · Ganzspiel-Torlinie",
    "strom": "betfair",
-   "n": 4020,
+   "n": 4021,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0107,
-   "pl": -43.14,
-   "roiLb": -0.046,
+   "roi": -0.0104,
+   "pl": -41.77,
+   "roiLb": -0.0457,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5543,10 +5543,10 @@
    "noetigNClv": null,
    "noetigGrund": "nicht_positiv",
    "entfernung": {
-    "median": 31752,
-    "lo": 3085,
-    "hi": 2755358,
-    "nieAnteil": 0.683,
+    "median": 29885,
+    "lo": 3172,
+    "hi": 3713401,
+    "nieAnteil": 0.682,
     "schaetzbar": false
    },
    "alterTage": 0.0,
@@ -5555,7 +5555,7 @@
    "zielN": 200,
    "warum": "Lucas: „wenn wir sehen, dass die gespielten Sachen schlecht liefen, könnte man das ins Positive umkehren und faden.\" Gemessen ueber 15.945 abgerechnete Zeilen in getrennter Such- und Pruefhaelfte: von 16 Markt×Seite-Schnitten waren genau zwei in BEIDEN Haelften positiv, und beide sind Ganzspiel-Torlinien mit dem Geld auf UNTER. n=2.720, Geldseite trifft 59,2 % gegen 62,4 % implizit (-3,2 pp); der Fade brachte +5,5 % / +5,2 % nach Kommission. Kontrolle: auf Match Odds, BTTS und der 1.-HZ-Linie ist die Geldseite 1-2 pp BESSER als implizit, und dort verliert derselbe Fade korrekt -5,6 bis -7,8 %. ⚠️ Der Gegenpreis war im Altbestand NICHT erhoben und musste rekonstruiert werden (haelt bis ~1 % Overround, stirbt bei 2 %); ausserdem 12 Tage Basis und ein nachtraeglich gepoolter Schnitt aus 16. Genau deshalb steht er hier: der Rueckblick ist der Fund, nicht der Beleg. zielN=200 statt 40, weil bei einer Streuung von ~1,3 je Play alles darunter nur ein Punktschaetzer waere.",
    "quelle": "betfair_track_results.json → fade_unter.py",
-   "nDavor": 2435,
+   "nDavor": 2433,
    "rueckblick": {
     "n": 2720,
     "roi": 0.0546,
@@ -5665,11 +5665,11 @@
   {
    "schublade": "Over/Under 2.5 Goals",
    "strom": "betfair",
-   "n": 6232,
+   "n": 6233,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
    "roi": -0.0319,
-   "pl": -198.8,
+   "pl": -198.83,
    "roiLb": -0.0516,
    "clv": null,
    "clvLb": null,
@@ -5828,7 +5828,7 @@
     "nieAnteil": 0.268,
     "schaetzbar": false
    },
-   "alterTage": 2.1,
+   "alterTage": 2.2,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py"
   },
@@ -6814,35 +6814,6 @@
    "naeherung": false
   },
   {
-   "schublade": "Konjunktion · übrige Ligen",
-   "strom": "betfair",
-   "n": 237,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0374,
-   "pl": -8.86,
-   "roiLb": -0.1331,
-   "clv": 2.682,
-   "clvLb": 2.093,
-   "clvUrteil": "belegt",
-   "clvOg": 3.27,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": 12,
-   "noetigGrund": "nicht_positiv",
-   "entfernung": {
-    "median": 3735,
-    "lo": 260,
-    "hi": 535406,
-    "nieAnteil": 0.748,
-    "schaetzbar": false
-   },
-   "alterTage": 0.1,
-   "art": "konjunktion",
-   "quelle": "killer.py",
-   "zuschnitt": "rest"
-  },
-  {
    "schublade": "Mix money+steam",
    "strom": "poly",
    "n": 175,
@@ -6919,6 +6890,35 @@
    "naeherung": false
   },
   {
+   "schublade": "Konjunktion · übrige Ligen",
+   "strom": "betfair",
+   "n": 236,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.0413,
+   "pl": -9.75,
+   "roiLb": -0.1372,
+   "clv": 2.684,
+   "clvLb": 2.093,
+   "clvUrteil": "belegt",
+   "clvOg": 3.275,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": 12,
+   "noetigGrund": "nicht_positiv",
+   "entfernung": {
+    "median": 4215,
+    "lo": 254,
+    "hi": 293216,
+    "nieAnteil": 0.757,
+    "schaetzbar": false
+   },
+   "alterTage": 0.1,
+   "art": "konjunktion",
+   "quelle": "killer.py",
+   "zuschnitt": "rest"
+  },
+  {
    "schublade": "South Korean K1 League · Match Odds",
    "strom": "betfair",
    "n": 31,
@@ -6964,7 +6964,7 @@
     "nieAnteil": 0.748,
     "schaetzbar": false
    },
-   "alterTage": 0.7,
+   "alterTage": 0.8,
    "art": "mix",
    "wert": "bf+money",
    "nAlt": 60,
@@ -8888,7 +8888,7 @@
     "nieAnteil": 0.458,
     "schaetzbar": false
    },
-   "alterTage": 2.5,
+   "alterTage": 2.6,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "top5"
@@ -9004,28 +9004,6 @@
    "naeherung": false
   },
   {
-   "schublade": "Dutch Eerste Divisie · First Half Goals 1.5",
-   "strom": "betfair",
-   "n": 34,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0615,
-   "pl": 2.09,
-   "roiLb": -0.2299,
-   "clv": null,
-   "clvLb": null,
-   "clvUrteil": "nicht erhoben",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "keine_einzelwerte",
-   "entfernung": null,
-   "alterTage": null,
-   "art": "liga_markt",
-   "naeherung": false
-  },
-  {
    "schublade": "Italian Serie C · Over/Under 2.5 Goals",
    "strom": "betfair",
    "n": 145,
@@ -9100,6 +9078,28 @@
    "roi": 0.0153,
    "pl": 0.49,
    "roiLb": -0.2313,
+   "clv": null,
+   "clvLb": null,
+   "clvUrteil": "nicht erhoben",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "keine_einzelwerte",
+   "entfernung": null,
+   "alterTage": null,
+   "art": "liga_markt",
+   "naeherung": false
+  },
+  {
+   "schublade": "Dutch Eerste Divisie · First Half Goals 0.5",
+   "strom": "betfair",
+   "n": 33,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0021,
+   "pl": 0.07,
+   "roiLb": -0.232,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -9620,6 +9620,28 @@
    "naeherung": false
   },
   {
+   "schublade": "Dutch Eerste Divisie · First Half Goals 1.5",
+   "strom": "betfair",
+   "n": 33,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0458,
+   "pl": 1.51,
+   "roiLb": -0.2534,
+   "clv": null,
+   "clvLb": null,
+   "clvUrteil": "nicht erhoben",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "keine_einzelwerte",
+   "entfernung": null,
+   "alterTage": null,
+   "art": "liga_markt",
+   "naeherung": false
+  },
+  {
    "schublade": "Spanish Segunda Division · Match Odds",
    "strom": "betfair",
    "n": 49,
@@ -9870,28 +9892,6 @@
    "roi": 0.1384,
    "pl": 4.43,
    "roiLb": -0.2595,
-   "clv": null,
-   "clvLb": null,
-   "clvUrteil": "nicht erhoben",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "keine_einzelwerte",
-   "entfernung": null,
-   "alterTage": null,
-   "art": "liga_markt",
-   "naeherung": false
-  },
-  {
-   "schublade": "Dutch Eerste Divisie · First Half Goals 0.5",
-   "strom": "betfair",
-   "n": 34,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0274,
-   "pl": -0.93,
-   "roiLb": -0.2596,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -13580,28 +13580,6 @@
    "naeherung": false
   },
   {
-   "schublade": "Dutch Eerste Divisie · Both teams to Score?",
-   "strom": "betfair",
-   "n": 36,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.2664,
-   "pl": -9.59,
-   "roiLb": -0.4835,
-   "clv": null,
-   "clvLb": null,
-   "clvUrteil": "nicht erhoben",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "keine_einzelwerte",
-   "entfernung": null,
-   "alterTage": null,
-   "art": "liga_markt",
-   "naeherung": false
-  },
-  {
    "schublade": "Italian Serie A · Over/Under 2.5 Goals",
    "strom": "betfair",
    "n": 40,
@@ -13896,6 +13874,28 @@
    "roi": -0.2456,
    "pl": -8.35,
    "roiLb": -0.5111,
+   "clv": null,
+   "clvLb": null,
+   "clvUrteil": "nicht erhoben",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "keine_einzelwerte",
+   "entfernung": null,
+   "alterTage": null,
+   "art": "liga_markt",
+   "naeherung": false
+  },
+  {
+   "schublade": "Dutch Eerste Divisie · Both teams to Score?",
+   "strom": "betfair",
+   "n": 35,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.2943,
+   "pl": -10.3,
+   "roiLb": -0.5127,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -14613,7 +14613,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 2.8,
+   "alterTage": 2.9,
    "art": "mix",
    "wert": "bf+steam"
   },
