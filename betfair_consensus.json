@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-09-29T21:38:30.294045+00:00",
+"generatedAt": "2026-09-29T21:53:33.168759+00:00",
 "count": 8,
 "covered": 3,
 "leaguesKuratiert": [
@@ -62,8 +62,8 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 118867,
-"remaining": 4881133,
+"used": 119011,
+"remaining": 4880989,
 "letzterFehler": null
 },
 "ankerQuote": 1.0,
@@ -80,13 +80,13 @@
 "moneyName": "Norway",
 "moneySharePct": 96,
 "moneyOdd": 1.56,
-"moneyDir": "in",
-"totVol": 51024,
+"moneyDir": "flat",
+"totVol": 51574,
 "pinnOdd": 1.52,
 "softOdd": 1.5,
 "softN": 38,
 "poly": {
-"vol": 23007,
+"vol": 25081,
 "odd": 1.55,
 "sharePct": 64,
 "shareSrc": "preis",
@@ -103,8 +103,8 @@
 },
 "soft": {
 "home": 0.1611,
-"draw": 0.2102,
-"away": 0.6287,
+"draw": 0.2106,
+"away": 0.6283,
 "fav": "away",
 "n": 38
 },
@@ -132,14 +132,14 @@
 "moneyName": "Germany",
 "moneySharePct": 95,
 "moneyOdd": 1.27,
-"moneyDir": "in",
+"moneyDir": "flat",
 "totVol": 43010,
 "pinnOdd": 1.26,
 "softOdd": 1.24,
 "softN": 38,
 "poly": {
-"vol": 13599,
-"odd": 1.29,
+"vol": 13662,
+"odd": 1.27,
 "sharePct": 78,
 "shareSrc": "preis",
 "key": "unl-ger-ser-2026-10-01",
@@ -148,25 +148,25 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.7605,
-"draw": 0.1576,
-"away": 0.0819,
+"home": 0.7626,
+"draw": 0.1562,
+"away": 0.0812,
 "fav": "home"
 },
 "soft": {
-"home": 0.755,
-"draw": 0.1567,
-"away": 0.0883,
+"home": 0.7583,
+"draw": 0.1541,
+"away": 0.0875,
 "fav": "home",
 "n": 38
 },
-"pinnMovePP": 0.8,
+"pinnMovePP": 0.9,
 "pinnMove": {
-"movePP": 0.8,
-"stepPP": -0.0,
+"movePP": 0.9,
+"stepPP": 0.2,
 "n": 25,
 "move": false,
-"laeuft": false
+"laeuft": true
 },
 "verdict": "konsens",
 "agree": true,
@@ -185,12 +185,12 @@
 "moneySharePct": 37,
 "moneyOdd": 3.8,
 "moneyDir": "flat",
-"totVol": 12209,
+"totVol": 12418,
 "pinnOdd": 3.77,
 "softOdd": 3.6,
 "softN": 38,
 "poly": {
-"vol": 40456,
+"vol": 41635,
 "odd": null,
 "sharePct": null,
 "shareSrc": null,
@@ -206,16 +206,16 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.2791,
-"draw": 0.2595,
-"away": 0.4614,
+"home": 0.2788,
+"draw": 0.26,
+"away": 0.4612,
 "fav": "away",
 "n": 38
 },
 "pinnMovePP": -0.1,
 "pinnMove": {
 "movePP": -0.1,
-"stepPP": -0.2,
+"stepPP": 0.0,
 "n": 25,
 "move": false,
 "laeuft": false
@@ -234,10 +234,10 @@
 "live": true,
 "moneySide": "away",
 "moneyName": "Colo Colo",
-"moneySharePct": 89,
-"moneyOdd": 1.6,
-"moneyDir": "in",
-"totVol": 31573,
+"moneySharePct": 88,
+"moneyOdd": 1.76,
+"moneyDir": "out",
+"totVol": 33780,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -269,13 +269,13 @@
 "moneyName": "Lithuania",
 "moneySharePct": 97,
 "moneyOdd": 1.75,
-"moneyDir": "out",
-"totVol": 23195,
+"moneyDir": "flat",
+"totVol": 23284,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
 "poly": {
-"vol": 2642,
+"vol": 2790,
 "odd": 1.74,
 "sharePct": 57,
 "shareSrc": "preis",
@@ -310,21 +310,46 @@
 "moneySide": "away",
 "moneyName": "Santa Fe",
 "moneySharePct": 59,
-"moneyOdd": 2.7,
+"moneyOdd": 1.35,
 "moneyDir": "in",
-"totVol": 13735,
+"totVol": 22518,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
 "poly": {
-"vol": 14234,
-"odd": 1.34,
-"sharePct": 74,
-"shareSrc": "preis",
+"vol": 30514,
+"odd": 2.41,
+"sharePct": 81,
+"shareSrc": "geld",
 "key": "col1-dep-isf-2026-08-05",
 "sideKey": "Independiente Santa Fe",
-"whales": null,
-"whaleUsd": null
+"whales": [
+{
+"wallet": "0x64e93f87d8a0c1b2cde6f20d71f211372a95eb4c",
+"usd": 3342
+},
+{
+"wallet": "0xe1e292a578d07497363048d9ec69e2be36b00d29",
+"usd": 854
+},
+{
+"wallet": "0xd218e474776403a330142299f7796e8ba32eb5c9",
+"usd": 735
+},
+{
+"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+"usd": 648
+},
+{
+"wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+"usd": 273
+},
+{
+"wallet": "0x0b8cf0871066cbaffecc0579afaf3d44b94ac944",
+"usd": 208
+}
+],
+"whaleUsd": 6648
 },
 "pinn": null,
 "soft": null,
@@ -351,47 +376,22 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "French Guyana",
-"moneySharePct": 87,
-"moneyOdd": 1.73,
+"moneySharePct": 91,
+"moneyOdd": 1.82,
 "moneyDir": "out",
-"totVol": 12499,
+"totVol": 22314,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
 "poly": {
-"vol": 18004,
-"odd": 1.57,
-"sharePct": 97,
-"shareSrc": "geld",
+"vol": 28147,
+"odd": 1.82,
+"sharePct": 55,
+"shareSrc": "preis",
 "key": "conl-guy-sxm-2026-09-29",
 "sideKey": "French Guiana",
-"whales": [
-{
-"wallet": "0xf363b411bcfadc7a20d89a08bc9a17b0b5d1c197",
-"usd": 7160
-},
-{
-"wallet": "0xa0f21e6d351baa9185716b5c00c2925ed9621848",
-"usd": 346
-},
-{
-"wallet": "0x55a6d2770da97d2a1b6d4aed8a3196dd6be9eeb0",
-"usd": 244
-},
-{
-"wallet": "0x15dd406b8fa114570f174ed1d73cc876054895ba",
-"usd": 152
-},
-{
-"wallet": "0xb47e0ebd655e6b0190a26b2814a9a2282dc0c602",
-"usd": 127
-},
-{
-"wallet": "0x4afee32dd756232e1861c4d5cc22df6922fd0906",
-"usd": 74
-}
-],
-"whaleUsd": 8359
+"whales": null,
+"whaleUsd": null
 },
 "pinn": null,
 "soft": null,
@@ -419,9 +419,9 @@
 "moneySide": "home",
 "moneyName": "Aurora",
 "moneySharePct": 87,
-"moneyOdd": 1.6,
+"moneyOdd": 1.62,
 "moneyDir": "out",
-"totVol": 2161,
+"totVol": 2175,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -443,11 +443,11 @@
 }
 ],
 "ankerN": 3,
-"ankerNOffen": 143,
+"ankerNOffen": 145,
 "ankerMit": 3,
 "ankerDiagnose": {
 "nach": {
-"name": 73,
+"name": 75,
 "kein_kandidat": 39,
 "kein_pinnacle": 12,
 "zeit": 3
@@ -508,21 +508,21 @@
 "liga": "Friendlies International"
 },
 {
-"spiel": "Scotland U19 v Ukraine U19",
-"kandidat": "Ukraine v Northern Ireland",
-"key": "soccer_uefa_nations_league",
-"score": 0.5,
-"grund": "name",
-"matchId": "36131597",
-"liga": "Friendlies International U19"
-},
-{
 "spiel": "Finland U19 v Germany U19",
 "kandidat": "Germany v Serbia",
 "key": "soccer_uefa_nations_league",
 "score": 0.5,
 "grund": "name",
 "matchId": "36131595",
+"liga": "Friendlies International U19"
+},
+{
+"spiel": "Scotland U19 v Ukraine U19",
+"kandidat": "Ukraine v Northern Ireland",
+"key": "soccer_uefa_nations_league",
+"score": 0.5,
+"grund": "name",
+"matchId": "36131597",
 "liga": "Friendlies International U19"
 },
 {
@@ -562,6 +562,42 @@
 "liga": "UEFA U21 Euro Qualifiers"
 },
 {
+"spiel": "Faroe Islands U21 v Luxembourg U21",
+"kandidat": "Faroe Islands v Slovakia",
+"key": "soccer_uefa_nations_league",
+"score": 0.67,
+"grund": "name",
+"matchId": "36131051",
+"liga": "UEFA U21 Euro Qualifiers"
+},
+{
+"spiel": "SK Brann (W) v HJK Helsinki (W)",
+"kandidat": "HJK Helsinki v VPS Vaasa",
+"key": "soccer_finland_veikkausliiga",
+"score": 0.67,
+"grund": "name",
+"matchId": "36130541",
+"liga": "UEFA Ladies Europa Cup"
+},
+{
+"spiel": "Malta U21 v Germany U21",
+"kandidat": "Germany v Serbia",
+"key": "soccer_uefa_nations_league",
+"score": 0.5,
+"grund": "name",
+"matchId": "36132174",
+"liga": "UEFA U21 Euro Qualifiers"
+},
+{
+"spiel": "Fortuna Hjorring (W) v PSV Eindhoven (W)",
+"kandidat": "PSV Eindhoven v Heerenveen",
+"key": "soccer_netherlands_eredivisie",
+"score": 0.67,
+"grund": "name",
+"matchId": "36132723",
+"liga": "UEFA Ladies Europa Cup"
+},
+{
 "spiel": "Rosenborg BK (W) v Slovan Liberec (W)",
 "kandidat": "Rosenborg v Sandefjord",
 "key": "soccer_norway_eliteserien",
@@ -580,33 +616,6 @@
 "liga": "UEFA Ladies Europa Cup"
 },
 {
-"spiel": "SK Brann (W) v HJK Helsinki (W)",
-"kandidat": "HJK Helsinki v VPS Vaasa",
-"key": "soccer_finland_veikkausliiga",
-"score": 0.67,
-"grund": "name",
-"matchId": "36130541",
-"liga": "UEFA Ladies Europa Cup"
-},
-{
-"spiel": "Faroe Islands U21 v Luxembourg U21",
-"kandidat": "Faroe Islands v Slovakia",
-"key": "soccer_uefa_nations_league",
-"score": 0.67,
-"grund": "name",
-"matchId": "36131051",
-"liga": "UEFA U21 Euro Qualifiers"
-},
-{
-"spiel": "Malta U21 v Germany U21",
-"kandidat": "Germany v Serbia",
-"key": "soccer_uefa_nations_league",
-"score": 0.5,
-"grund": "name",
-"matchId": "36132174",
-"liga": "UEFA U21 Euro Qualifiers"
-},
-{
 "spiel": "Czechia U21 v Bulgaria U21",
 "kandidat": "Spain v Czech Republic",
 "key": "soccer_uefa_nations_league",
@@ -616,21 +625,12 @@
 "liga": "UEFA U21 Euro Qualifiers"
 },
 {
-"spiel": "Fortuna Hjorring (W) v PSV Eindhoven (W)",
-"kandidat": "PSV Eindhoven v Heerenveen",
-"key": "soccer_netherlands_eredivisie",
+"spiel": "Sturm Graz (W) v Wolfsburg (W)",
+"kandidat": "Austria Wien v Sturm Graz",
+"key": "soccer_austria_bundesliga",
 "score": 0.67,
 "grund": "name",
-"matchId": "36132723",
-"liga": "UEFA Ladies Europa Cup"
-},
-{
-"spiel": "Eintracht Frankfurt (W) v Hafnarfjordur (W)",
-"kandidat": "RB Leipzig v Eintracht Frankfurt",
-"key": "soccer_germany_bundesliga",
-"score": 0.67,
-"grund": "name",
-"matchId": "36130961",
+"matchId": "36130582",
 "liga": "UEFA Ladies Europa Cup"
 },
 {
@@ -643,13 +643,22 @@
 "liga": "Friendlies International U19"
 },
 {
-"spiel": "Sturm Graz (W) v Wolfsburg (W)",
-"kandidat": "Austria Wien v Sturm Graz",
-"key": "soccer_austria_bundesliga",
+"spiel": "Eintracht Frankfurt (W) v Hafnarfjordur (W)",
+"kandidat": "RB Leipzig v Eintracht Frankfurt",
+"key": "soccer_germany_bundesliga",
 "score": 0.67,
 "grund": "name",
-"matchId": "36130582",
+"matchId": "36130961",
 "liga": "UEFA Ladies Europa Cup"
+},
+{
+"spiel": "Kosovo U21 v Cyprus U21",
+"kandidat": "Israel v Kosovo",
+"key": "soccer_uefa_nations_league",
+"score": 0.5,
+"grund": "name",
+"matchId": "36131066",
+"liga": "UEFA U21 Euro Qualifiers"
 },
 {
 "spiel": "Real Sociedad (W) v Hearts (W)",
@@ -670,30 +679,12 @@
 "liga": "UEFA Ladies Europa Cup"
 },
 {
-"spiel": "Kosovo U21 v Cyprus U21",
-"kandidat": "Israel v Kosovo",
-"key": "soccer_uefa_nations_league",
-"score": 0.5,
-"grund": "name",
-"matchId": "36131066",
-"liga": "UEFA U21 Euro Qualifiers"
-},
-{
 "spiel": "Nottingham Forest U21 v Sporting CP U21",
 "kandidat": "Crystal Palace v Nottingham Forest",
 "key": "soccer_epl",
 "score": 0.67,
 "grund": "name",
 "matchId": "36133350",
-"liga": "Other Competitions Soccer"
-},
-{
-"spiel": "Leicester U21 v Real Sociedad U21",
-"kandidat": "Real Sociedad v Deportivo La Coruña",
-"key": "soccer_spain_la_liga",
-"score": 0.67,
-"grund": "name",
-"matchId": "36132345",
 "liga": "Other Competitions Soccer"
 },
 {
@@ -704,6 +695,15 @@
 "grund": "name",
 "matchId": "36130952",
 "liga": "UEFA Ladies Europa Cup"
+},
+{
+"spiel": "Leicester U21 v Real Sociedad U21",
+"kandidat": "Real Sociedad v Deportivo La Coruña",
+"key": "soccer_spain_la_liga",
+"score": 0.67,
+"grund": "name",
+"matchId": "36132345",
+"liga": "Other Competitions Soccer"
 },
 {
 "spiel": "Scotland U21 v Azerbaijan U21",
@@ -798,6 +798,17 @@
 "liga": "UEFA Women's Champions League"
 },
 {
+"spiel": "Republic of Ireland v Austria",
+"grund": "kein_pinnacle",
+"kandidat": "Republic of Ireland v Austria",
+"key": "soccer_uefa_nations_league",
+"nSoft": 29,
+"pinnacleImEvent": false,
+"nBuecher": 29,
+"matchId": "36118061",
+"liga": "UEFA Nations League"
+},
+{
 "spiel": "Malta v Gibraltar",
 "grund": "kein_pinnacle",
 "kandidat": "Malta v Gibraltar",
@@ -806,17 +817,6 @@
 "pinnacleImEvent": false,
 "nBuecher": 36,
 "matchId": "36125966",
-"liga": "UEFA Nations League"
-},
-{
-"spiel": "Israel v Kosovo",
-"grund": "kein_pinnacle",
-"kandidat": "Israel v Kosovo",
-"key": "soccer_uefa_nations_league",
-"nSoft": 36,
-"pinnacleImEvent": false,
-"nBuecher": 36,
-"matchId": "36116357",
 "liga": "UEFA Nations League"
 }
 ]
