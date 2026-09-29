@@ -1,22 +1,6 @@
 {
-"generatedAt": "2026-09-29T20:08:19.911650+00:00",
+"generatedAt": "2026-09-29T20:38:28.991477+00:00",
 "byVerdict": {
-"konsens": {
-"n": 1384,
-"wins": 1181,
-"hitRate": 0.8533,
-"polyN": 1324,
-"polyWins": 1040,
-"polyHitRate": 0.7855,
-"pinnN": 211,
-"pinnHitRate": 0.7773,
-"nRoi": 907,
-"roi": 0.4028,
-"roiLb": 0.3608,
-"nClv": 907,
-"clv": 18.82,
-"clvLb": 17.3781
-},
 "teil": {
 "n": 33,
 "wins": 5,
@@ -33,21 +17,37 @@
 "clv": -33.33,
 "clvLb": -41.9505
 },
+"konsens": {
+"n": 1386,
+"wins": 1183,
+"hitRate": 0.8535,
+"polyN": 1326,
+"polyWins": 1042,
+"polyHitRate": 0.7858,
+"pinnN": 210,
+"pinnHitRate": 0.7762,
+"nRoi": 910,
+"roi": 0.4029,
+"roiLb": 0.3611,
+"nClv": 910,
+"clv": 18.84,
+"clvLb": 17.4056
+},
 "uneinig": {
-"n": 562,
-"wins": 180,
-"hitRate": 0.3203,
-"polyN": 527,
+"n": 564,
+"wins": 181,
+"hitRate": 0.3209,
+"polyN": 529,
 "polyWins": 137,
-"polyHitRate": 0.26,
+"polyHitRate": 0.259,
 "pinnN": 335,
 "pinnHitRate": 0.6328,
-"nRoi": 396,
-"roi": -0.4533,
-"roiLb": -0.5393,
-"nClv": 396,
-"clv": -20.16,
-"clvLb": -22.9257
+"nRoi": 398,
+"roi": -0.4527,
+"roiLb": -0.5384,
+"nClv": 398,
+"clv": -20.23,
+"clvLb": -22.9769
 }
 },
 "byLeague": {
@@ -86,10 +86,15 @@
 "wins": 35,
 "hitRate": 0.7
 },
+"UEFA Nations League": {
+"n": 49,
+"wins": 33,
+"hitRate": 0.6735
+},
 "Argentinian Primera Division": {
-"n": 48,
-"wins": 32,
-"hitRate": 0.6667
+"n": 47,
+"wins": 31,
+"hitRate": 0.6596
 },
 "Colombian Primera A": {
 "n": 47,
@@ -110,11 +115,6 @@
 "n": 44,
 "wins": 32,
 "hitRate": 0.7273
-},
-"UEFA Nations League": {
-"n": 44,
-"wins": 29,
-"hitRate": 0.6591
 },
 "Brazilian Serie B": {
 "n": 43,
@@ -674,15 +674,15 @@
 },
 "byStrength": {
 "strong": {
-"n": 1232,
-"wins": 994,
-"hitRate": 0.8068,
-"nRoi": 853,
-"roi": 0.3117,
-"roiLb": 0.2618,
-"nClv": 853,
-"clv": 13.54,
-"clvLb": 11.6624
+"n": 1236,
+"wins": 997,
+"hitRate": 0.8066,
+"nRoi": 858,
+"roi": 0.3106,
+"roiLb": 0.261,
+"nClv": 858,
+"clv": 13.47,
+"clvLb": 11.6031
 },
 "weak": {
 "n": 747,
@@ -697,14 +697,109 @@
 }
 },
 "divergence": {
-"n": 562,
-"betfairWins": 180,
-"betfairRate": 0.3203,
-"polyN": 527,
+"n": 564,
+"betfairWins": 181,
+"betfairRate": 0.3209,
+"polyN": 529,
 "polyWins": 137,
-"polyRate": 0.26
+"polyRate": 0.259
 },
 "recent": [
+{
+"matchId": "36023024",
+"home": "Spain",
+"away": "Croatia",
+"league": "UEFA Nations League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Spain",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+4,
+1
+],
+"kickoff": "2026-09-29T18:45:00Z",
+"settledAt": "2026-09-29T20:38:28.809698+00:00"
+},
+{
+"matchId": "36091410",
+"home": "Czechia",
+"away": "England",
+"league": "UEFA Nations League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "England",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+2
+],
+"kickoff": "2026-09-29T18:45:00Z",
+"settledAt": "2026-09-29T20:38:28.809698+00:00"
+},
+{
+"matchId": "36032305",
+"home": "Slovakia",
+"away": "Kazakhstan",
+"league": "UEFA Nations League",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Slovakia",
+"polySide": "away",
+"winner": "home",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-09-29T18:45:00Z",
+"settledAt": "2026-09-29T20:38:28.809698+00:00"
+},
+{
+"matchId": "36091449",
+"home": "Slovenia",
+"away": "North Macedonia",
+"league": "UEFA Nations League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Slovenia",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-09-29T18:45:00Z",
+"settledAt": "2026-09-29T20:38:28.809698+00:00"
+},
+{
+"matchId": "36024493",
+"home": "Bulgaria",
+"away": "Estonia",
+"league": "UEFA Nations League",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Bulgaria",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-09-29T18:45:00Z",
+"settledAt": "2026-09-29T20:38:28.809698+00:00"
+},
 {
 "matchId": "36116462",
 "home": "Boreham Wood",
@@ -1369,113 +1464,18 @@
 ],
 "kickoff": "2026-09-28T18:30:00Z",
 "settledAt": "2026-09-28T21:35:25.969222+00:00"
-},
-{
-"matchId": "36124502",
-"home": "Tunisia",
-"away": "Botswana",
-"league": "CAF African Cup of Nations Qualifiers",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Tunisia",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-09-28T19:00:00Z",
-"settledAt": "2026-09-28T21:05:17.903476+00:00"
-},
-{
-"matchId": "36023029",
-"home": "Armenia",
-"away": "Montenegro",
-"league": "UEFA Nations League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Montenegro",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-3
-],
-"kickoff": "2026-09-28T16:00:00Z",
-"settledAt": "2026-09-28T19:05:11.571442+00:00"
-},
-{
-"matchId": "35926217",
-"home": "Georgia",
-"away": "Ukraine",
-"league": "UEFA Nations League",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Georgia",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-09-28T16:00:00Z",
-"settledAt": "2026-09-28T19:05:11.571442+00:00"
-},
-{
-"matchId": "36122565",
-"home": "Central African Republic",
-"away": "Burkina Faso",
-"league": "CAF African Cup of Nations Qualifiers",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Burkina Faso",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-09-28T16:00:00Z",
-"settledAt": "2026-09-28T19:05:11.571442+00:00"
-},
-{
-"matchId": "36127770",
-"home": "Zimbabwe",
-"away": "DR Congo",
-"league": "CAF African Cup of Nations Qualifiers",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "DR Congo",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-09-28T16:00:00Z",
-"settledAt": "2026-09-28T18:05:08.137785+00:00"
 }
 ],
 "global": {
-"n": 1979,
-"wins": 1366,
-"hitRate": 0.6902,
-"nRoi": 1329,
+"n": 1983,
+"wins": 1369,
+"hitRate": 0.6904,
+"nRoi": 1334,
 "roi": 0.1247,
-"roiLb": 0.0819,
-"nClv": 1329,
-"clv": 6.18,
-"clvLb": 4.6425
+"roiLb": 0.082,
+"nClv": 1334,
+"clv": 6.17,
+"clvLb": 4.6316
 },
-"pending": 21
+"pending": 17
 }
