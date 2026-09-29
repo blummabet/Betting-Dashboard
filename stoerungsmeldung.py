@@ -228,6 +228,9 @@ GEPRUEFT_KEIN_GELD = {
     # 29.09.2026: eine Messung, kein Ausgang — ein falscher CLV rechnet nichts falsch ab,
     # er macht nur die Fruehwarnung blind.
     "shortlist_clv_nach_einstieg",
+    # 29.09.2026: Anzeige und Fenster liegen um die Scan-Dauer daneben — kein Geld falsch
+    # abgerechnet, aber jeder Countdown und jede Live-Erkennung.
+    "anpfiff_eine_uhr",
     "grosses_geld_bleibt_im_feed",
     "direction_covers_money",
 

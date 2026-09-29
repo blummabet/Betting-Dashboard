@@ -223,3 +223,20 @@ test('die Lebensbilanz einer Wallet steht ausdrücklich NICHT als Rang', () => {
   assert.doesNotMatch(html, /121\.799|121799/,
     'die Lebensbilanz gehört nicht als Zahl in die Zeile — sie misst etwas anderes');
 });
+
+// ── 29.09.2026 (Lucas' Übersicht-Check) ────────────────────────────────────────────────────
+// „🏆 Welche Ligen tragen — 263 mit mindestens 30 Plays · 8 belegt" stand grün da. Bei 263
+// gleichzeitig geprüften Ligen legt der Zufall allein 13,2 über die Hürde — 8 ist WENIGER als
+// der Zufall. Das Urteil (`ligenAusbeute.ueberschuss`) rechnet freigabe.py.
+test('die Liga-Tafel nennt den Zufall — und färbt „belegt" nicht grün, wenn er es erklärt', () => {
+  const w = load();
+  const au = { nTests: 263, nUeber: 8, erwartet: 13.2, schranke: 24.0, ueberschuss: false };
+  const html = ebene1(w, FG({ ligen: LIGEN, ligenAusbeute: au }));
+  assert.match(html, /Zufall allein ~13,2/);
+  assert.match(html, /kein Fund, sondern das erwartbare Rauschen/);
+  const chip = html.split('Welche Ligen tragen')[1].split('</summary>')[0];
+  assert.doesNotMatch(chip, /#2ea043/,
+    'Gegentest: der alte Code färbte „belegt" grün, sobald eine Liga drüber lag');
+  const ueber = ebene1(load(), FG({ ligen: LIGEN, ligenAusbeute: Object.assign({}, au, { nUeber: 30, ueberschuss: true }) }));
+  assert.match(ueber, /ein Überschuss/);
+});

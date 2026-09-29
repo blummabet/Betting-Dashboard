@@ -623,13 +623,46 @@ def _event_sport(ev):
     return None
 
 
-def _hours_to_ko(ev, now):
+def _ko_zeit(ev):
+    """Anpfiff eines Events als aware datetime, sonst None."""
     ko = ev.get("startTime") or ev.get("gameStartTime") or ev.get("startDate")
+    txt = str(ko).strip().replace("Z", "+00:00").replace(" ", "T", 1)
+    if txt.endswith("+00"):              # gamma: "2026-09-29 18:45:00+00"
+        txt += ":00"
     try:
-        t = datetime.fromisoformat(str(ko).replace("Z", "+00:00"))
-        return (t - now).total_seconds() / 3600
+        t = datetime.fromisoformat(txt)
     except Exception:
         return None
+    return t.replace(tzinfo=timezone.utc) if t.tzinfo is None else t
+
+
+def _hours_to_ko(ev, now):
+    t = _ko_zeit(ev)
+    return None if t is None else (t - now).total_seconds() / 3600
+
+
+# 🔴 29.09.2026 (Lucas' Übersicht-Check: Czechia v England „⏱ 14m" in Ebene 3, „⏱ 9 min" daneben).
+# Polymarket nennt 18:45, aus unserer Close-Zeile rekonstruiert war es 18:50 — bei JEDEM Spiel des
+# Abends genau +5 Min (Finland v Belarus 16:05 statt 16:00). Ursache: `hoursToKickoff` wird zu
+# Beginn des Scans gemessen, `capturedAt` aber erst beim Schreiben gestempelt — zwei Uhren, und
+# die Differenz ist die Laufzeit des Scans. Jeder Leser rechnet `capturedAt + hoursToKickoff`
+# und bekommt einen Anpfiff, der um die Scan-Dauer zu spaet liegt (Countdown, Live-Erkennung,
+# Anpfiff-Fenster, Prune).
+# Fehlerklasse: eine relative Groesse mit dem Stempel einer anderen Uhr. Loesung: der ABSOLUTE
+# Anpfiff (`koTs`) wandert mit, und `hoursToKickoff` wird an jeder Stempelstelle von DERSELBEN
+# Uhr neu gerechnet (htk_zum_stempel).
+def htk_zum_stempel(m, now, fallback=None):
+    """hoursToKickoff zum Zeitpunkt `now` — aus `koTs`, wenn vorhanden. REIN."""
+    kt = (m or {}).get("koTs")
+    if kt:
+        try:
+            t = datetime.fromisoformat(str(kt).replace("Z", "+00:00"))
+            t = t.replace(tzinfo=timezone.utc) if t.tzinfo is None else t
+            return (t - now).total_seconds() / 3600
+        except (TypeError, ValueError):
+            pass
+    h = (m or {}).get("hoursToKickoff") if fallback is None else fallback
+    return h
 
 
 # 06.09.2026 (Lucas mit Polymarket-Screenshot: „Serie A sind alle Spiele da"). Waren sie — bei uns
@@ -1604,6 +1637,7 @@ def fetch_markets(live_only=False, pin=None):
     _fragen = {}                         # conditionId -> Marktfrage (04.09.2026): die Linie,
                                          # ohne die „Over" nichts bezeichnet
     upcoming = {}                        # money-map: weiter draussen liegende Sport-Maerkte, NUR Preis+Vol (kein Holder-Call)
+    _ko_by_key = {}                      # 29.09.2026: absoluter Anpfiff je Markt (s. htk_zum_stempel)
 
     def _ingest(open_evs, closed_evs, league_of, sport_of):
         """Ein Fetch-Ergebnis einsammeln. `league_of(ev, key)` liefert das Liga-Label.
@@ -1615,6 +1649,9 @@ def fetch_markets(live_only=False, pin=None):
                 if not key or (key, False) in seen:
                     continue
                 htk = _hours_to_ko(ev, now)
+                _kz = _ko_zeit(ev)
+                if _kz is not None:
+                    _ko_by_key[key] = _kz.astimezone(timezone.utc).isoformat()
                 cls = _capture_class(htk)
                 # 01.09.2026: „vor"-Maerkte bekommen wie bisher ihren Preis/Volumen-Eintrag in
                 # upcoming — und ZUSAETZLICH eine Chance auf den Holder-Call (eigenes Budget unten).
@@ -1871,6 +1908,13 @@ def fetch_markets(live_only=False, pin=None):
 
     fetch_markets.sweep_stats = {"sweepOpen": len(sweep_open), "sweepClosed": len(sweep_closed),
                                  "sweepAdded": sweep_added}
+    # 29.09.2026: absoluten Anpfiff an JEDE Zeile haengen, die spaeter gestempelt wird.
+    for _m in list(markets) + list(upcoming.values()) + list(klein.values()):
+        if isinstance(_m, dict) and _m.get("key", None) in _ko_by_key:
+            _m.setdefault("koTs", _ko_by_key[_m["key"]])
+    for _k, _m in list(upcoming.items()) + list(klein.items()):
+        if isinstance(_m, dict) and _k in _ko_by_key:
+            _m.setdefault("koTs", _ko_by_key[_k])
     fetch_markets.upcoming = upcoming
     # 02.09.2026: der /positions-Cache wird fuer das Sport-Inventar weitergereicht — dieselben
     # Antworten, die wir fuer den Ø-Einstieg ohnehin geholt haben.
@@ -1957,7 +2001,7 @@ def capture(markets, frozen, now=None, min_vol=MIN_VOL_USD, grace_h=GHOST_GRACE_
     now = now or _now()
     out = dict(frozen or {})
     for m in markets or []:
-        htk = m.get("hoursToKickoff")
+        htk = htk_zum_stempel(m, now)        # 29.09.2026: dieselbe Uhr wie capturedAt
         try:
             htk = float(htk)
         except (TypeError, ValueError):
@@ -1974,6 +2018,7 @@ def capture(markets, frozen, now=None, min_vol=MIN_VOL_USD, grace_h=GHOST_GRACE_
                     "league": m.get("league"), "sport": m.get("sport"), "totalUsd": round(float(m.get("totalUsd") or 0)),
                     "whales": m.get("whales") or [],   # 25.07.2026 (Lucas): Einzel-Wale je Markt (c)
                     "hoursToKickoff": round(htk, 2), "capturedAt": now.isoformat(),
+                    **({"koTs": m["koTs"]} if m.get("koTs") else {}),
                     # 04.09.2026 (Lucas: „leider steht da nur Over und nicht welche Line"):
                     # conditionId nagelt den Markt fest (Abrechnung), die Frage nennt die Linie
                     # (Push + Nachpruefbarkeit). Beide nur wenn vorhanden — kein leeres Feld.
@@ -2030,7 +2075,7 @@ def capture_live(markets, prev, now=None, min_vol=MIN_VOL_USD, keep_h=LIVE_KEEP_
         key = m.get("key")
         if not key or float(m.get("totalUsd") or 0) < min_vol:
             continue
-        htk = m.get("hoursToKickoff")
+        htk = htk_zum_stempel(m, now)        # 29.09.2026: dieselbe Uhr wie capturedAt
         out[key] = {"shares": m.get("shares") or {}, "prices": m.get("prices") or {},
                     "splitGuete": m.get("splitGuete") or split_guete(
                         m.get("shares"), m.get("totalUsd"), (m.get("splitGuete") or {}).get("trunc")),
@@ -2038,6 +2083,7 @@ def capture_live(markets, prev, now=None, min_vol=MIN_VOL_USD, keep_h=LIVE_KEEP_
                     "totalUsd": round(float(m.get("totalUsd") or 0)),
                     "hoursToKickoff": round(float(htk), 2) if isinstance(htk, (int, float)) else None,
                     "capturedAt": now.isoformat(), "live": True,
+                    **({"koTs": m["koTs"]} if m.get("koTs") else {}),
                     **({"cond": m["cond"]} if m.get("cond") else {}),
                     **({"frage": m["frage"]} if m.get("frage") else {}),
                     # 24.08.2026: Token auch live mitschreiben — Live-Plays sollen genauso
@@ -2386,7 +2432,10 @@ def prune_upcoming(prev, fresh, now=None, window_h=UPCOMING_WINDOW_H):
     now = now or _now()
     out = {k: dict(v) for k, v in (prev or {}).items() if isinstance(v, dict)}
     for k, v in (fresh or {}).items():
-        e = dict(v); e["capturedAt"] = now.isoformat(); out[k] = e
+        e = dict(v); e["capturedAt"] = now.isoformat()
+        if e.get("koTs"):                    # 29.09.2026: htk zur selben Uhr wie capturedAt
+            e["hoursToKickoff"] = round(htk_zum_stempel(e, now), 2)
+        out[k] = e
     cutoff = now - timedelta(hours=window_h)
     for k in list(out.keys()):
         e = out[k]

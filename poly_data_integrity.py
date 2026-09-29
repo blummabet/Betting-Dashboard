@@ -760,6 +760,36 @@ def check_shortlist_clv_nach_einstieg(ctx):
                 "error", fails, note)
 
 
+ANPFIFF_TOLERANZ_H = 0.02      # ~1 Minute Rundung (hoursToKickoff steht auf 2 Nachkommastellen)
+
+
+@poly_check
+def check_anpfiff_eine_uhr(ctx):
+    """Ergibt `capturedAt + hoursToKickoff` den Anpfiff, den der Markt selbst nennt (`koTs`)?
+
+    🔴 29.09.2026 (Lucas' Übersicht-Check). Czechia v England stand in Ebene 3 bei „⏱ 14m",
+    daneben bei „⏱ 9 min"; Polymarket nennt 18:45. Aus der Close-Zeile rekonstruiert lag der
+    Anpfiff jedes Spiels des Abends 5 Min zu spaet (18:50, Finland v Belarus 16:05): die Stunden
+    bis Anpfiff kamen vom Scan-Beginn, der Stempel vom Schreiben. Jeder Leser, der beide
+    addiert — Countdown, Live-Erkennung, Anpfiff-Fenster, Prune — lag um die Scan-Dauer daneben.
+    """
+    fails, n = [], 0
+    for key, e in (ctx.close or {}).items():
+        if not isinstance(e, dict) or not e.get("koTs"):
+            continue
+        cap, ko, h = _parse_ts(e.get("capturedAt")), _parse_ts(e.get("koTs")), e.get("hoursToKickoff")
+        if cap is None or ko is None or not isinstance(h, (int, float)):
+            continue
+        n += 1
+        diff = h - (ko - cap).total_seconds() / 3600.0
+        if abs(diff) > ANPFIFF_TOLERANZ_H:
+            fails.append(f"{key}: Stempel {e.get('capturedAt')} + {h:.2f} h ergibt einen Anpfiff "
+                         f"{diff * 60:+.0f} Min neben dem des Markts ({e.get('koTs')})")
+    return _chk("anpfiff_eine_uhr", "Anpfiff: Stunden und Stempel von derselben Uhr", "warn", fails,
+                f"{n} Close-Zeilen mit absolutem Anpfiff geprueft." if n else
+                "Noch keine Close-Zeile mit `koTs` — faengt ab dem ersten Scan nach dem Fix.")
+
+
 def horizont(resolutions):
     """Ab wann reicht das Auflösungsbuch zurück? None = unbekannt. REIN.
 

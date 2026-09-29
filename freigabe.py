@@ -1034,7 +1034,7 @@ def ausbeute_ueber_huerde(rows, alpha=0.05, sigma=3.0) -> dict:
     return {"nTests": len(tests), "nUeber": len(ueber),
             "erwartet": round(erwartet, 1), "schranke": round(schranke, 1),
             "ueberschuss": len(ueber) > schranke,
-            "namen": sorted(r["schublade"] for r in ueber)}
+            "namen": sorted(str(r.get("schublade") or r.get("liga") or "?") for r in ueber)}
 
 
 def haelt_bei_doppeltem_n(rows, gesichtet: dict) -> list:
@@ -1811,7 +1811,13 @@ def baue(engine=None, track=None, cards=None, betfair=None, now=None) -> dict:
         # Welche Spiele fallen JETZT unter eine freigegebene Schublade — die Antwort, an der
         # das Register bisher aufhoerte.
         "spiele": spiele(zeilen),
-        "ligen": betfair_ligen(),
+        "ligen": (_ligen := betfair_ligen()),
+        # 🔴 29.09.2026 (Lucas' Übersicht-Check: „🏆 Welche Ligen tragen — 263 mit mindestens 30
+        # Plays · 8 belegt"). Bei 263 gleichzeitig geprueften Ligen legt der Zufall allein 13,2
+        # ueber die Huerde — „8 belegt" ist WENIGER als der Zufall, stand aber gruen da wie ein
+        # Fund. Dieselbe Rechnung wie `ausbeute` fuer die Schubladen, fuer die zweite Zerlegung.
+        # Fehlerklasse: ein Schwellen-Uebertritt ohne seinen Nenner (s. ausbeute_ueber_huerde).
+        "ligenAusbeute": ausbeute_ueber_huerde(_ligen),
         "wallets": poly_wallets(),
         "alle": zeilen,
         "zusammenfassung": {

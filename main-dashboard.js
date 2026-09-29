@@ -1643,10 +1643,12 @@
   // 23.08.2026 (Lucas: „Fußball hat dieses komische andere Icon"): früher grobe Exakt-Map + Fallback 🎯
   // für Serie A/La Liga/… . Jetzt über den robusten _pwSportCategory (kennt alle Liga-Muster UND den
   // gestempelten Sport aus dem Capture). Fallbacks nur, falls poly-wallets.js (noch) nicht geladen ist.
+  // 🔴 29.09.2026 (Lucas' Übersicht-Check: „🏀 Atlanta Braves" bei den Live-Whales). Genau der Fall
+  // vom 02.09. („MLB bekam 🏀") — dort in _pwSportIcon behoben, aber diese Funktion ging an ihm
+  // vorbei direkt über die KATEGORIE (US-Sport → 🏀). Eine Kopie der Icon-Logik ist ein Fix, der
+  // nur die Hälfte erreicht. Jetzt: die eine Zeilen-Icon-Funktion aus poly-wallets.js.
   function _mdSportIco(lg, sp) {
-    if (typeof _pwSportCategory === 'function' && typeof _PW_CAT_ICON !== 'undefined')
-      return _PW_CAT_ICON[_pwSportCategory(lg, sp)] || '🎯';
-    if (typeof _pwSportIcon === 'function') return _pwSportIcon(lg);
+    if (typeof _pwSportIcon === 'function') return _pwSportIcon(lg, sp);
     var k = String(lg || '').toUpperCase(); return _MD_SPORT_ICO[k] || (k.indexOf('SOCCER') === 0 ? '⚽' : '🎯');
   }
   // 💰 Volumen über Norm (aus dem Großes-Geld-Tab): welche Märkte ziehen verhältnismäßig — Gesamt-$ ÷
@@ -3103,13 +3105,27 @@
     var belegt = lg.filter(function (l) { return l.belegt; });
     var oben = lg.slice(0, FG_LIGA_TOP);
     var unten = lg.slice(-FG_LIGA_FLOP).reverse();
+    // 🔴 29.09.2026: „8 belegt" stand grün da, bei 263 Ligen legt der Zufall allein 13,2 über die
+    // Hürde. Das Urteil (`ueberschuss`) rechnet freigabe.py (`ligenAusbeute`) — hier wird es nur
+    // gelesen. Ohne Urteil keine grüne Zahl.
+    var au = (f && f.ligenAusbeute) || null;
+    var ueber = !!(au && au.ueberschuss);
+    var zufall = (au && au.erwartet != null)
+      ? ' · Zufall allein ~' + String(au.erwartet).replace('.', ',') : '';
     return '<details class="md-kl-det"><summary class="md-kl-sum">🏆 Welche Ligen tragen — '
       + lg.length + ' mit mindestens 30 Plays'
       + '<span class="md-kl-ch" style="margin-left:auto"><span class="md-kl-c" style="color:'
-      + (belegt.length ? A.good : 'var(--mi3)') + '">' + belegt.length + ' belegt</span></span></summary>'
+      + (belegt.length && ueber ? A.good : 'var(--mi3)') + '">' + belegt.length + ' belegt' + zufall + '</span></span></summary>'
       + '<div class="md-kl-foot" style="border-top:0;padding:6px 0 2px">Quer über <b>alle</b> '
       + 'Betfair-Märkte, aus den Einzelzeilen des Ledgers. „Belegt" heißt: die Rendite-'
       + '<b>Untergrenze</b> liegt über null — bei ' + belegt.length + ' von ' + lg.length + ' Ligen. '
+      + (au && au.erwartet != null
+        ? (ueber
+          ? 'Das sind <b>mehr</b>, als der Zufall bei ' + au.nTests + ' gleichzeitig geprüften Ligen hinlegt (~' + au.erwartet + ') — ein Überschuss. '
+          : '<b>Bei ' + au.nTests + ' gleichzeitig geprüften Ligen legt der Zufall allein ~' + au.erwartet
+            + ' über diese Hürde</b> — die Liste ist also kein Fund, sondern das erwartbare Rauschen. '
+            + 'Keine einzelne Liga hier ist für sich ein Beleg. ')
+        : '')
       + 'Das ist eine <b>andere</b> Zerlegung derselben Plays als die Markt-Tafel oben; '
       + 'zusammenzählen darf man die beiden nie.</div>'
       + '<div class="md-kl-bliste">' + oben.map(_mdLigaZeile).join('') + '</div>'

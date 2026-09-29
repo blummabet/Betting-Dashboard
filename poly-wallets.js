@@ -426,6 +426,9 @@ function _pwHoursToKO(iso){if(!iso)return null;const t=Date.parse(String(iso).re
 // Steam-Verdikte in „Heute wetten" / „Chancen" / „Großes Geld". Echten Rest bis Anpfiff aus capturedAt
 // rekonstruieren — dieselbe Idee wie der Momentum-Filter (ts+htk), nur für die Close-Märkte.
 function _pwRealHtk(m){
+  // 29.09.2026: absoluter Anpfiff zuerst — capturedAt+hoursToKickoff lag um die Scan-Dauer
+  // daneben (Czechia v England „⏱ 14m" statt 9, s. poly_money_broad.htk_zum_stempel).
+  if(m&&m.koTs){ const ko=Date.parse(m.koTs); if(!isNaN(ko)) return (ko-Date.now())/3.6e6; }
   if(!m||m.hoursToKickoff==null) return null;
   const cap=m.capturedAt?Date.parse(m.capturedAt):NaN;
   if(isNaN(cap)) return m.hoursToKickoff;   // kein Freeze-Stempel → roher Wert (best effort)
@@ -1912,13 +1915,15 @@ const _PW_SPORT_ICON={soccer:'⚽',basketball:'🏀',americanfootball:'🏈',bas
 // 02.09.2026 (Lucas-Audit): MLB bekam 🏀, weil das Icon an der KATEGORIE („US-Sport") hing und
 // nicht an der Liga. Baseball ist kein Basketball. Liga schlaegt Kategorie, wo wir sie kennen.
 const _PW_LIGA_ICON={MLB:'⚾',NFL:'🏈',NBA:'🏀',WNBA:'🏀',NCAAF:'🏈',NCAAB:'🏀',NHL:'🏒',UFC:'🥊',MMA:'🥊',ATP:'🎾',WTA:'🎾'};
-function _pwSportIcon(sport){
+function _pwSportIcon(sport, gestempelt){
   // 18.08.2026 (Lucas: „für Fußball dieses komische Pfeil-Icon"): frueher grobe Eigen-Map -> Fallback 🎯
   // fuer La-Liga/Serie/Ligue etc. Jetzt ueber den robusten _pwSportCategory (kennt alle Liga-Muster).
+  // 29.09.2026: optional der gestempelte Sport aus dem Capture (2. Argument) — damit ist das hier die
+  // EINE Zeilen-Icon-Funktion, auch fuer die Übersicht (s. main-dashboard.js _mdSportIco).
   const lg=String(sport||'').toUpperCase();
   if(_PW_LIGA_ICON[lg]) return _PW_LIGA_ICON[lg];
   if(sport && _PW_CAT_ICON[sport]) return _PW_CAT_ICON[sport];   // schon eine Kategorie ('Fußball' …)
-  return _PW_CAT_ICON[_pwSportCategory(sport)] || '🎯';
+  return _PW_CAT_ICON[_pwSportCategory(sport, gestempelt)] || '🎯';
 }
 function _pwGlobalEdge(cs){
   const allDisc=(cs&&cs.discrepancies)?cs.discrepancies.slice():[];
