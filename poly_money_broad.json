@@ -1,15 +1,15 @@
 {
- "n": 655,
+ "n": 656,
  "minOdds": 1.35,
- "moneyHitRate": 0.373,
- "priceHitRate": 0.409,
- "brierMoney": 0.8809,
- "brierPrice": 0.6853,
+ "moneyHitRate": 0.372,
+ "priceHitRate": 0.412,
+ "brierMoney": 0.8805,
+ "brierPrice": 0.685,
  "disagree": {
-  "n": 187,
+  "n": 186,
   "moneyWon": 27,
-  "priceWon": 51,
-  "neither": 109
+  "priceWon": 53,
+  "neither": 106
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -87,6 +87,14 @@
    "verdict": "preis_besser"
   },
   {
+   "league": "SOCCER:CONL",
+   "n": 20,
+   "moneyHitRate": 0.35,
+   "brierMoney": 0.8208,
+   "brierPrice": 0.5896,
+   "verdict": "preis_besser"
+  },
+  {
    "league": "SOCCER:JAP",
    "n": 25,
    "moneyHitRate": 0.36,
@@ -104,8 +112,8 @@
   }
  ],
  "guete": {
-  "belastbar": 655,
-  "preis_echo": 219,
+  "belastbar": 656,
+  "preis_echo": 217,
   "abgeschnitten": 86,
   "unbekannt": 60,
   "leer": 0
@@ -440,7 +448,7 @@
    "league": "EPL",
    "winner": "Draw (Nottingham Forest FC vs. Tottenham Hotspur FC)",
    "moneyFav": "Tottenham Hotspur FC",
-   "priceFav": "Nottingham Forest FC",
+   "priceFav": "Tottenham Hotspur FC",
    "moneyShare": 0.584,
    "priceProb": 0.357,
    "moneyOK": false,
@@ -592,13 +600,13 @@
    "totalUsd": 459593
   }
  ],
- "generatedAt": "2026-09-29T23:22:44.238676+00:00",
+ "generatedAt": "2026-09-29T23:52:30.972417+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 430,
   "nfl": 800,
-  "mlb": 489,
+  "mlb": 485,
   "nhl": 613,
   "mls": 561,
   "epl": 499,
@@ -615,7 +623,7 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 679,
+  "esports": 677,
   "cs2": 422,
   "lol": 435,
   "dota": 10,
@@ -650,7 +658,7 @@
   "liga-mx-apertura": 2,
   "ligue-2": 467,
   "naitons-league": 1,
-  "national-league": 574,
+  "national-league": 568,
   "nations-league": 25,
   "norway-eliteserien": 463,
   "poland-ekstraklasa": 400,
@@ -677,78 +685,93 @@
   "sweepAdded": 405
  },
  "vorStats": {
-  "kandidaten": 11,
+  "kandidaten": 10,
   "budgetLeer": 0,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
-  "mitAnteilen": 11,
-  "calls": 11
+  "mitAnteilen": 10,
+  "calls": 10
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1700,
-   "usd": 26829454,
-   "beispiel": "fifwc-ksa-ury-2026-06-15"
+   "n": 1789,
+   "usd": 29687652,
+   "beispiel": "fifwc-col-gha-2026-07-03-more-markets"
+  },
+  "world": {
+   "n": 116,
+   "usd": 8172106,
+   "beispiel": "world-cup-winner"
   },
   "nba": {
-   "n": 913,
-   "usd": 6911325,
+   "n": 920,
+   "usd": 6939701,
    "beispiel": "nba-phi-nyk-2026-05-04"
   },
+  "uefa": {
+   "n": 49,
+   "usd": 4961087,
+   "beispiel": "uefa-champions-league-winner"
+  },
   "presidential": {
-   "n": 3,
-   "usd": 901762,
+   "n": 15,
+   "usd": 1083488,
    "beispiel": "presidential-election-winner-2028"
   },
   "ecs": {
-   "n": 6,
-   "usd": 896355,
+   "n": 5,
+   "usd": 895055,
    "beispiel": "ecs-ars-mci-2026-08-16"
   },
+  "will": {
+   "n": 27,
+   "usd": 698149,
+   "beispiel": "will-trump-acquire-greenland-before-2027"
+  },
   "cbb": {
-   "n": 70,
-   "usd": 634082,
-   "beispiel": "cbb-uconn-mich-2026-04-06"
+   "n": 73,
+   "usd": 664491,
+   "beispiel": "cbb-uconn-ill-2026-04-04"
   },
-  "col": {
-   "n": 54,
-   "usd": 229813,
-   "beispiel": "col-gen-flc-2026-07-30"
-  },
-  "world": {
-   "n": 24,
-   "usd": 203531,
-   "beispiel": "world-cup-winner"
-  },
-  "us": {
-   "n": 19,
-   "usd": 179564,
-   "beispiel": "us-open-marketa-vondrousova-vs-jasmine-paolini-2025-08-29"
-  },
-  "cricipl": {
-   "n": 24,
-   "usd": 175341,
-   "beispiel": "cricipl-raj-guj-2026-05-09"
+  "super": {
+   "n": 30,
+   "usd": 556800,
+   "beispiel": "super-bowl-champion-2026-731"
   },
   "fed": {
-   "n": 16,
-   "usd": 172049,
-   "beispiel": "fed-decision-in-december-20260729232808632"
+   "n": 24,
+   "usd": 413784,
+   "beispiel": "fed-decision-in-december"
+  },
+  "us": {
+   "n": 23,
+   "usd": 220875,
+   "beispiel": "us-announces-end-of-iranian-blockade-byptptpt-20260713152715080"
+  },
+  "col": {
+   "n": 48,
+   "usd": 205712,
+   "beispiel": "col-gen-flc-2026-07-30"
   },
   "ballon": {
-   "n": 12,
-   "usd": 127822,
+   "n": 15,
+   "usd": 167137,
    "beispiel": "ballon-dor-winner-2026"
+  },
+  "cricipl": {
+   "n": 15,
+   "usd": 132547,
+   "beispiel": "cricipl-kol-luc-2026-04-09"
+  },
+  "who": {
+   "n": 11,
+   "usd": 105213,
+   "beispiel": "who-will-be-the-next-prime-minister-of-israel-after-the-next-election"
   },
   "pro": {
    "n": 14,
-   "usd": 102049,
+   "usd": 102129,
    "beispiel": "pro-football-2027-champion-20260729185915366"
-  },
-  "who": {
-   "n": 10,
-   "usd": 101502,
-   "beispiel": "who-will-be-the-next-prime-minister-of-israel-after-the-next-election"
   },
   "nbasl": {
    "n": 2,
@@ -757,33 +780,18 @@
   },
   "how": {
    "n": 13,
-   "usd": 75834,
+   "usd": 75814,
    "beispiel": "how-many-fed-rate-cuts-in-2026"
   },
-  "will": {
-   "n": 19,
-   "usd": 65725,
-   "beispiel": "will-trump-acquire-greenland-before-2027"
-  },
-  "j1100": {
-   "n": 19,
-   "usd": 64470,
-   "beispiel": "j1100-vis-cer-2026-04-29"
+  "nobel": {
+   "n": 1,
+   "usd": 68825,
+   "beispiel": "nobel-peace-prize-winner-2026-139"
   },
   "btc": {
-   "n": 16,
-   "usd": 42642,
-   "beispiel": "btc-updown-5m-1784322000"
-  },
-  "euroleague": {
-   "n": 11,
-   "usd": 41896,
-   "beispiel": "euroleague-efes-madrid-2026-09-29"
-  },
-  "mwoh": {
-   "n": 10,
-   "usd": 41601,
-   "beispiel": "mwoh-swi-fra-2026-02-12"
+   "n": 26,
+   "usd": 61701,
+   "beispiel": "btc-updown-5m-1784351400"
   }
  }
 }
