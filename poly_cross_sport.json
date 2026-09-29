@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-29T19:48:15.592364+00:00",
+ "generatedAt": "2026-09-29T20:17:52.891792+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -29,7 +29,36 @@
  },
  "trackRecord": {
   "tracked": 257,
-  "converged": 86
+  "converged": 88
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|atlantabraves-philadelphiaphillies|philadelphiaphillies",
+   "sport": "baseball_mlb",
+   "event": "Philadelphia Phillies vs Atlanta Braves",
+   "market": "Moneyline",
+   "outcome": "Philadelphia Phillies",
+   "polyPP": 75.5,
+   "pinnPP": 64.2,
+   "gapPP": 11.3,
+   "vol": 1251278,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 1.11,
+   "firstSeen": "2026-09-04T23:03:02.149928+00:00"
+  },
+  {
+   "id": "baseball_mlb|atlantabraves-philadelphiaphillies|atlantabraves",
+   "sport": "baseball_mlb",
+   "event": "Philadelphia Phillies vs Atlanta Braves",
+   "market": "Moneyline",
+   "outcome": "Atlanta Braves",
+   "polyPP": 24.5,
+   "pinnPP": 35.8,
+   "gapPP": -11.3,
+   "vol": 1251278,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 1.11,
+   "firstSeen": "2026-09-04T23:03:02.149928+00:00"
+  }
+ ]
 }
