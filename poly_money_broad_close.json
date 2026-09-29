@@ -504430,7 +504430,13 @@
     "usd": 364,
     "ts": 1790639313
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Eagles": 0.0,
+   "Bears": 1.0
+  },
+  "resolvedAt": "2026-09-29T05:19:34.400779+00:00"
  },
  "nfl-phi-chi-2026-09-29-player-props": {
   "shares": {
@@ -507000,7 +507006,13 @@
     "usd": 2918,
     "ts": 1790637381
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Tomas Machac": 0.0,
+   "Arthur Gea": 1.0
+  },
+  "resolvedAt": "2026-09-29T05:19:34.400779+00:00"
  },
  "atp-munar-kovacev-2026-09-28": {
   "shares": {
@@ -507313,7 +507325,13 @@
     "usd": 362,
     "ts": 1790645781
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Jaume Munar": 1.0,
+   "Aleksandar Kovacevic": 0.0
+  },
+  "resolvedAt": "2026-09-29T05:19:34.400779+00:00"
  },
  "wta-kalieva-shi-2026-09-28": {
   "shares": {
@@ -508888,8 +508906,8 @@
  },
  "wta-zaytsev-hunter-2026-09-28": {
   "shares": {
-   "Ksenia Zaytseva": 5727.363487614995,
-   "Storm Hunter": 13050.863823655001
+   "Ksenia Zaytseva": 5858.077772544995,
+   "Storm Hunter": 13348.720964725
   },
   "prices": {
    "Ksenia Zaytseva": 0.305,
@@ -508901,12 +508919,13 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 19328,
+  "totalUsd": 19756,
   "whales": [
    {
     "wallet": "0x0cdff1e562faf5ece704ef15f6a9fc4232e7ec9e",
     "side": "Storm Hunter",
-    "usd": 10903
+    "usd": 10903,
+    "avgPrice": 0.7012
    },
    {
     "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
@@ -508917,7 +508936,8 @@
    {
     "wallet": "0xbc43c8bfbc4d77c2fc9011adad38ba43b88996d3",
     "side": "Storm Hunter",
-    "usd": 1342
+    "usd": 1342,
+    "avgPrice": 0.6593
    },
    {
     "wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
@@ -508937,6 +508957,11 @@
     "avgPrice": 0.29
    },
    {
+    "wallet": "0xa21de05abe49bd242f45e7aefe34be04c8f2a2b3",
+    "side": "Storm Hunter",
+    "usd": 298
+   },
+   {
     "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
     "side": "Ksenia Zaytseva",
     "usd": 262
@@ -508954,7 +508979,8 @@
    {
     "wallet": "0x7547479d43f4b52d892a6f2254050eea50edd158",
     "side": "Ksenia Zaytseva",
-    "usd": 183
+    "usd": 183,
+    "avgPrice": 0.34
    },
    {
     "wallet": "0x04641b57f332c15ecaa497799c55026d521967da",
@@ -508977,6 +509003,11 @@
     "side": "Ksenia Zaytseva",
     "usd": 121,
     "avgPrice": 0.2996
+   },
+   {
+    "wallet": "0x2396babfc88a7a7dcc0390262ab747d7cbad9485",
+    "side": "Ksenia Zaytseva",
+    "usd": 117
    },
    {
     "wallet": "0xc34b4901be324718c176100e350211d97b199296",
@@ -509011,15 +509042,15 @@
     "usd": 46
    },
    {
+    "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
+    "side": "Ksenia Zaytseva",
+    "usd": 46,
+    "avgPrice": 0.303
+   },
+   {
     "wallet": "0x5e020e19bc4cc2cd24ab9b406604ee9df02ab178",
     "side": "Ksenia Zaytseva",
     "usd": 32
-   },
-   {
-    "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
-    "side": "Ksenia Zaytseva",
-    "usd": 32,
-    "avgPrice": 0.3044
    },
    {
     "wallet": "0x01c78f8873c0c86d6b6b92ff627e3802237ee995",
@@ -509029,18 +509060,13 @@
    {
     "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
     "side": "Ksenia Zaytseva",
-    "usd": 30
+    "usd": 30,
+    "avgPrice": 0.31
    },
    {
     "wallet": "0xc4dbd5631f003f3f7d10bc31338b1fe5c6ff7e0c",
     "side": "Ksenia Zaytseva",
-    "usd": 30,
-    "avgPrice": 0.34
-   },
-   {
-    "wallet": "0x2396babfc88a7a7dcc0390262ab747d7cbad9485",
-    "side": "Ksenia Zaytseva",
-    "usd": 27
+    "usd": 30
    },
    {
     "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
@@ -509085,12 +509111,24 @@
     "avgPrice": 0.6899
    },
    {
-    "wallet": "0x042d8526350dd13dc836201e6acfbab5981f0b81",
+    "wallet": "0x17d97684d80863e07bc95d1e9f7c1c1dbec884af",
     "side": "Ksenia Zaytseva",
     "usd": 7
    },
    {
+    "wallet": "0x042d8526350dd13dc836201e6acfbab5981f0b81",
+    "side": "Ksenia Zaytseva",
+    "usd": 7,
+    "avgPrice": 0.31
+   },
+   {
     "wallet": "0x3e6b98d9dac15f285a18a02644a8c900aab58a98",
+    "side": "Ksenia Zaytseva",
+    "usd": 6,
+    "avgPrice": 0.3
+   },
+   {
+    "wallet": "0x147c2760baa011fdcd0d02ea0f610ffb0fd92540",
     "side": "Ksenia Zaytseva",
     "usd": 6
    },
@@ -509098,41 +509136,110 @@
     "wallet": "0x18617ddf82e34b96963a9afc8fdae202dd88408d",
     "side": "Ksenia Zaytseva",
     "usd": 6
-   },
-   {
-    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
-    "side": "Storm Hunter",
-    "usd": 6
-   },
-   {
-    "wallet": "0xa70a523c726929d4566c636e5dacbd4b72ec5772",
-    "side": "Ksenia Zaytseva",
-    "usd": 4,
-    "avgPrice": 0.32
-   },
-   {
-    "wallet": "0xad5353afe30c2da57709e2704ef3ccdcf67eef24",
-    "side": "Ksenia Zaytseva",
-    "usd": 3
    }
   ],
-  "hoursToKickoff": 1.64,
-  "capturedAt": "2026-09-29T04:49:42.661603+00:00",
+  "hoursToKickoff": 1.15,
+  "capturedAt": "2026-09-29T05:19:34.400779+00:00",
   "cond": "0xe2a299d43119feebb374cdeced80917855fe7cb82939c0b1c2e6bb07de4ce0a5",
   "frage": "China Open, Qualification: Ksenia Zaytseva vs Storm Hunter",
   "tokens": {
    "Ksenia Zaytseva": "113245134534061856075926507900721768118211194253190360207713671538795317493376",
    "Storm Hunter": "104153275630526028291735031371975942135364764114216892849561842643162248130154"
-  }
+  },
+  "book": {
+   "side": "Storm Hunter",
+   "bid": 0.69,
+   "ask": 0.7,
+   "spreadC": 1.0,
+   "spreadPct": 1.43,
+   "bids": [
+    [
+     0.69,
+     29467
+    ],
+    [
+     0.68,
+     2266
+    ],
+    [
+     0.67,
+     163
+    ],
+    [
+     0.66,
+     3179
+    ],
+    [
+     0.65,
+     9
+    ],
+    [
+     0.6,
+     5
+    ]
+   ],
+   "asks": [
+    [
+     0.7,
+     376
+    ],
+    [
+     0.71,
+     18435
+    ],
+    [
+     0.72,
+     16538
+    ],
+    [
+     0.73,
+     25764
+    ],
+    [
+     0.74,
+     3790
+    ],
+    [
+     0.75,
+     2408
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xa21de05abe49bd242f45e7aefe34be04c8f2a2b3",
+    "action": "BUY",
+    "side": "Storm Hunter",
+    "price": 0.7,
+    "usd": 300,
+    "ts": 1790657730
+   },
+   {
+    "wallet": "0x0cdff1e562faf5ece704ef15f6a9fc4232e7ec9e",
+    "action": "BUY",
+    "side": "Storm Hunter",
+    "price": 0.7012,
+    "usd": 11000,
+    "ts": 1790651475
+   },
+   {
+    "wallet": "0xbc43c8bfbc4d77c2fc9011adad38ba43b88996d3",
+    "action": "BUY",
+    "side": "Storm Hunter",
+    "price": 0.66,
+    "usd": 700,
+    "ts": 1790610081
+   }
+  ]
  },
  "atp-zheng-zeng-2026-09-28": {
   "shares": {
-   "Michael Zheng": 19756.39600352,
-   "Yaojie Zeng": 485.81301648
+   "Michael Zheng": 20129.754124130002,
+   "Yaojie Zeng": 526.7406158699999
   },
   "prices": {
-   "Michael Zheng": 0.976,
-   "Yaojie Zeng": 0.024
+   "Michael Zheng": 0.9745,
+   "Yaojie Zeng": 0.0255
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -509145,29 +509252,35 @@
    {
     "wallet": "0xb7cb8bb29780840e3589c2d86320a6057c8ae02f",
     "side": "Michael Zheng",
-    "usd": 17763
+    "usd": 18028
    },
    {
     "wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
     "side": "Michael Zheng",
-    "usd": 1464,
+    "usd": 1462,
     "avgPrice": 0.97
    },
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
     "side": "Michael Zheng",
-    "usd": 293
+    "usd": 292
    },
    {
     "wallet": "0xdc87b19600813a4cadc51bf2761aebf87d18ea3b",
     "side": "Yaojie Zeng",
-    "usd": 240
+    "usd": 275
    },
    {
     "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
     "side": "Yaojie Zeng",
-    "usd": 163,
+    "usd": 173,
     "avgPrice": 0.0215
+   },
+   {
+    "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
+    "side": "Michael Zheng",
+    "usd": 111,
+    "avgPrice": 0.5
    },
    {
     "wallet": "0x5cdc4e820fe30f22f3cf2581796d6e5abedc1f6b",
@@ -509181,16 +509294,15 @@
     "usd": 64
    },
    {
-    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
-    "side": "Yaojie Zeng",
-    "usd": 38,
-    "avgPrice": 0.024
-   },
-   {
     "wallet": "0x61f621ed129a8b64f0d2abbef50d23cd52d1e497",
     "side": "Yaojie Zeng",
+    "usd": 33
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Yaojie Zeng",
     "usd": 31,
-    "avgPrice": 0.0209
+    "avgPrice": 0.024
    },
    {
     "wallet": "0x884b1b7429e19edf3ba1d16be342e43139e4c480",
@@ -509204,15 +509316,9 @@
     "usd": 16
    },
    {
-    "wallet": "0x95b8663f0e7e2502d73a17c03c9e1b2f8c6ee45a",
-    "side": "Michael Zheng",
-    "usd": 10
-   },
-   {
     "wallet": "0x775efa2139f4c4706d56f077f2393b590411e94a",
     "side": "Michael Zheng",
-    "usd": 10,
-    "avgPrice": 0.95
+    "usd": 10
    },
    {
     "wallet": "0x43670feb10084f60417938adfba2506801e2e904",
@@ -509234,8 +509340,7 @@
    {
     "wallet": "0xc4dbd5631f003f3f7d10bc31338b1fe5c6ff7e0c",
     "side": "Yaojie Zeng",
-    "usd": 1,
-    "avgPrice": 0.05
+    "usd": 1
    },
    {
     "wallet": "0xe5a25a5fda2487292ef951b63b69d73ed2d15f4c",
@@ -509248,8 +509353,8 @@
     "usd": 0
    }
   ],
-  "hoursToKickoff": 1.64,
-  "capturedAt": "2026-09-29T04:49:42.661603+00:00",
+  "hoursToKickoff": 1.4,
+  "capturedAt": "2026-09-29T05:19:34.400779+00:00",
   "cond": "0xf24c7dc688079508f48ac2b5f1a9bcfb3ee51b26ae4a674cc0f8b6b2be886d76",
   "frage": "Jingshan: Michael Zheng vs Yaojie Zeng",
   "tokens": {
@@ -509258,22 +509363,18 @@
   },
   "book": {
    "side": "Michael Zheng",
-   "bid": 0.975,
+   "bid": 0.972,
    "ask": 0.977,
-   "spreadC": 0.2,
-   "spreadPct": 0.2,
+   "spreadC": 0.5,
+   "spreadPct": 0.51,
    "bids": [
     [
-     0.975,
-     500
-    ],
-    [
      0.972,
-     250
+     283
     ],
     [
      0.97,
-     152
+     15224
     ],
     [
      0.969,
@@ -509286,32 +509387,36 @@
     [
      0.964,
      5
+    ],
+    [
+     0.963,
+     601
     ]
    ],
    "asks": [
     [
      0.977,
-     81
+     15145
     ],
     [
      0.978,
-     2575
+     2615
     ],
     [
      0.979,
-     5174
+     5846
     ],
     [
      0.98,
-     1079
+     3666
     ],
     [
      0.981,
-     821
+     50
     ],
     [
      0.982,
-     127
+     2432
     ]
    ]
   },
