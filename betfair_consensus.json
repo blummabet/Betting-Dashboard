@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-09-30T05:24:36.123386+00:00",
+"generatedAt": "2026-09-30T05:39:31.005653+00:00",
 "count": 4,
 "covered": 3,
 "leaguesKuratiert": [
@@ -62,8 +62,8 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 123628,
-"remaining": 4876372,
+"used": 123811,
+"remaining": 4876189,
 "letzterFehler": null
 },
 "ankerQuote": 1.0,
@@ -81,14 +81,14 @@
 "moneySharePct": 96,
 "moneyOdd": 1.55,
 "moneyDir": "flat",
-"totVol": 61363,
+"totVol": 62786,
 "pinnOdd": 1.51,
 "softOdd": 1.48,
 "softN": 37,
 "poly": {
-"vol": 37507,
-"odd": 1.54,
-"sharePct": 65,
+"vol": 37628,
+"odd": 1.53,
+"sharePct": 66,
 "shareSrc": "preis",
 "key": "unl-wal-nor-2026-10-01",
 "sideKey": "Norway",
@@ -133,12 +133,12 @@
 "moneySharePct": 93,
 "moneyOdd": 1.27,
 "moneyDir": "flat",
-"totVol": 45242,
+"totVol": 45272,
 "pinnOdd": 1.26,
 "softOdd": 1.22,
 "softN": 37,
 "poly": {
-"vol": 15294,
+"vol": 15358,
 "odd": 1.27,
 "sharePct": 78,
 "shareSrc": "preis",
@@ -183,14 +183,14 @@
 "moneySide": "away",
 "moneyName": "Portugal",
 "moneySharePct": 53,
-"moneyOdd": 2.16,
-"moneyDir": "flat",
-"totVol": 29350,
+"moneyOdd": 2.18,
+"moneyDir": "out",
+"totVol": 29385,
 "pinnOdd": 2.08,
 "softOdd": 2.02,
 "softN": 37,
 "poly": {
-"vol": 89890,
+"vol": 99203,
 "odd": 2.15,
 "sharePct": 46,
 "shareSrc": "preis",
@@ -235,14 +235,14 @@
 "moneySide": "home",
 "moneyName": "Lithuania",
 "moneySharePct": 96,
-"moneyOdd": 1.69,
-"moneyDir": "out",
-"totVol": 26477,
+"moneyOdd": 1.68,
+"moneyDir": "in",
+"totVol": 26526,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
 "poly": {
-"vol": 5961,
+"vol": 6118,
 "odd": 1.68,
 "sharePct": 60,
 "shareSrc": "preis",
@@ -268,16 +268,25 @@
 }
 ],
 "ankerN": 2,
-"ankerNOffen": 149,
+"ankerNOffen": 150,
 "ankerMit": 2,
 "ankerDiagnose": {
 "nach": {
 "name": 80,
-"kein_kandidat": 39,
+"kein_kandidat": 40,
 "kein_pinnacle": 12,
 "zeit": 3
 },
 "beispiele": [
+{
+"spiel": "Roots FC v Sporting Club Bengaluru",
+"kandidat": "Braga v Sporting Lisbon",
+"key": "soccer_portugal_primeira_liga",
+"score": 0.5,
+"grund": "name",
+"matchId": "36132818",
+"liga": "Bangalore Super Division League"
+},
 {
 "spiel": "Papua New Guinea v Solomon Islands",
 "kandidat": "Faroe Islands v Slovakia",
@@ -333,33 +342,6 @@
 "liga": "UEFA Ladies Europa Cup"
 },
 {
-"spiel": "Spartak Myjava (W) v PAOK (W)",
-"kandidat": "PAOK Thessaloniki v Kalamata FC",
-"key": "soccer_greece_super_league",
-"score": 0.5,
-"grund": "name",
-"matchId": "36130569",
-"liga": "UEFA Ladies Europa Cup"
-},
-{
-"spiel": "SK Brann (W) v HJK Helsinki (W)",
-"kandidat": "HJK Helsinki v VPS Vaasa",
-"key": "soccer_finland_veikkausliiga",
-"score": 0.67,
-"grund": "name",
-"matchId": "36130541",
-"liga": "UEFA Ladies Europa Cup"
-},
-{
-"spiel": "Poland U21 v Sweden U21",
-"kandidat": "Bosnia & Herzegovina v Sweden",
-"key": "soccer_uefa_nations_league",
-"score": 0.5,
-"grund": "name",
-"matchId": "36131057",
-"liga": "UEFA U21 Euro Qualifiers"
-},
-{
 "spiel": "Malta U21 v Germany U21",
 "kandidat": "Germany v Serbia",
 "key": "soccer_uefa_nations_league",
@@ -369,13 +351,13 @@
 "liga": "UEFA U21 Euro Qualifiers"
 },
 {
-"spiel": "Fortuna Hjorring (W) v PSV Eindhoven (W)",
-"kandidat": "PSV Eindhoven v Heerenveen",
-"key": "soccer_netherlands_eredivisie",
-"score": 0.67,
+"spiel": "Czechia U21 v Bulgaria U21",
+"kandidat": "Spain v Czech Republic",
+"key": "soccer_uefa_nations_league",
+"score": 0.5,
 "grund": "name",
-"matchId": "36132723",
-"liga": "UEFA Ladies Europa Cup"
+"matchId": "36131302",
+"liga": "UEFA U21 Euro Qualifiers"
 },
 {
 "spiel": "Faroe Islands U21 v Luxembourg U21",
@@ -396,6 +378,42 @@
 "liga": "UEFA Ladies Europa Cup"
 },
 {
+"spiel": "SK Brann (W) v HJK Helsinki (W)",
+"kandidat": "HJK Helsinki v VPS Vaasa",
+"key": "soccer_finland_veikkausliiga",
+"score": 0.67,
+"grund": "name",
+"matchId": "36130541",
+"liga": "UEFA Ladies Europa Cup"
+},
+{
+"spiel": "Spartak Myjava (W) v PAOK (W)",
+"kandidat": "PAOK Thessaloniki v Kalamata FC",
+"key": "soccer_greece_super_league",
+"score": 0.5,
+"grund": "name",
+"matchId": "36130569",
+"liga": "UEFA Ladies Europa Cup"
+},
+{
+"spiel": "Poland U21 v Sweden U21",
+"kandidat": "Bosnia & Herzegovina v Sweden",
+"key": "soccer_uefa_nations_league",
+"score": 0.5,
+"grund": "name",
+"matchId": "36131057",
+"liga": "UEFA U21 Euro Qualifiers"
+},
+{
+"spiel": "Fortuna Hjorring (W) v PSV Eindhoven (W)",
+"kandidat": "PSV Eindhoven v Heerenveen",
+"key": "soccer_netherlands_eredivisie",
+"score": 0.67,
+"grund": "name",
+"matchId": "36132723",
+"liga": "UEFA Ladies Europa Cup"
+},
+{
 "spiel": "Romania U21 v Finland U21",
 "kandidat": "Poland v Romania",
 "key": "soccer_uefa_nations_league",
@@ -403,24 +421,6 @@
 "grund": "name",
 "matchId": "36131063",
 "liga": "UEFA U21 Euro Qualifiers"
-},
-{
-"spiel": "Czechia U21 v Bulgaria U21",
-"kandidat": "Spain v Czech Republic",
-"key": "soccer_uefa_nations_league",
-"score": 0.5,
-"grund": "name",
-"matchId": "36131302",
-"liga": "UEFA U21 Euro Qualifiers"
-},
-{
-"spiel": "Sturm Graz (W) v Wolfsburg (W)",
-"kandidat": "Austria Wien v Sturm Graz",
-"key": "soccer_austria_bundesliga",
-"score": 0.67,
-"grund": "name",
-"matchId": "36130582",
-"liga": "UEFA Ladies Europa Cup"
 },
 {
 "spiel": "Eintracht Frankfurt (W) v Hafnarfjordur (W)",
@@ -432,6 +432,15 @@
 "liga": "UEFA Ladies Europa Cup"
 },
 {
+"spiel": "Sturm Graz (W) v Wolfsburg (W)",
+"kandidat": "Austria Wien v Sturm Graz",
+"key": "soccer_austria_bundesliga",
+"score": 0.67,
+"grund": "name",
+"matchId": "36130582",
+"liga": "UEFA Ladies Europa Cup"
+},
+{
 "spiel": "Portugal U19 v Netherlands U19",
 "kandidat": "Denmark v Portugal",
 "key": "soccer_uefa_nations_league",
@@ -439,6 +448,15 @@
 "grund": "name",
 "matchId": "36132148",
 "liga": "Friendlies International U19"
+},
+{
+"spiel": "Malmo (W) v SKN St. Polten (W)",
+"kandidat": "Malmo FF v Kalmar FF",
+"key": "soccer_sweden_allsvenskan",
+"score": 0.5,
+"grund": "name",
+"matchId": "36130969",
+"liga": "UEFA Ladies Europa Cup"
 },
 {
 "spiel": "Kosovo U21 v Cyprus U21",
@@ -459,13 +477,13 @@
 "liga": "UEFA Ladies Europa Cup"
 },
 {
-"spiel": "Malmo (W) v SKN St. Polten (W)",
-"kandidat": "Malmo FF v Kalmar FF",
-"key": "soccer_sweden_allsvenskan",
-"score": 0.5,
+"spiel": "Leicester U21 v Real Sociedad U21",
+"kandidat": "Real Sociedad v Deportivo La Coruña",
+"key": "soccer_spain_la_liga",
+"score": 0.67,
 "grund": "name",
-"matchId": "36130969",
-"liga": "UEFA Ladies Europa Cup"
+"matchId": "36132345",
+"liga": "Other Competitions Soccer"
 },
 {
 "spiel": "Rangers LFC (W) v Hammarby (W)",
@@ -475,15 +493,6 @@
 "grund": "name",
 "matchId": "36130952",
 "liga": "UEFA Ladies Europa Cup"
-},
-{
-"spiel": "Leicester U21 v Real Sociedad U21",
-"kandidat": "Real Sociedad v Deportivo La Coruña",
-"key": "soccer_spain_la_liga",
-"score": 0.67,
-"grund": "name",
-"matchId": "36132345",
-"liga": "Other Competitions Soccer"
 },
 {
 "spiel": "Nottingham Forest U21 v Sporting CP U21",
@@ -513,15 +522,6 @@
 "liga": "UEFA Ladies Europa Cup"
 },
 {
-"spiel": "Portugal U21 v Gibraltar U21",
-"kandidat": "Denmark v Portugal",
-"key": "soccer_uefa_nations_league",
-"score": 0.5,
-"grund": "name",
-"matchId": "36132198",
-"liga": "UEFA U21 Euro Qualifiers"
-},
-{
 "spiel": "SCU Torreense (W) v Metalist Kharkiv (W)",
 "kandidat": "Torreense v Sunderland",
 "key": "soccer_uefa_europa_league",
@@ -529,6 +529,15 @@
 "grund": "name",
 "matchId": "36130980",
 "liga": "UEFA Ladies Europa Cup"
+},
+{
+"spiel": "Portugal U21 v Gibraltar U21",
+"kandidat": "Denmark v Portugal",
+"key": "soccer_uefa_nations_league",
+"score": 0.5,
+"grund": "name",
+"matchId": "36132198",
+"liga": "UEFA U21 Euro Qualifiers"
 },
 {
 "spiel": "Salcedo FC v Delfines Del Este",
@@ -576,15 +585,6 @@
 "liga": "Friendlies International U19"
 },
 {
-"spiel": "Faroe Islands U19 v Slovenia U19",
-"kandidat": "Faroe Islands v Slovakia",
-"key": "soccer_uefa_nations_league",
-"score": 0.67,
-"grund": "name",
-"matchId": "36133931",
-"liga": "Friendlies International U19"
-},
-{
 "spiel": "Qatar U19 v Ireland U19",
 "kandidat": "Ukraine v Northern Ireland",
 "key": "soccer_uefa_nations_league",
@@ -594,12 +594,30 @@
 "liga": "Friendlies International U19"
 },
 {
+"spiel": "Faroe Islands U19 v Slovenia U19",
+"kandidat": "Faroe Islands v Slovakia",
+"key": "soccer_uefa_nations_league",
+"score": 0.67,
+"grund": "name",
+"matchId": "36133931",
+"liga": "Friendlies International U19"
+},
+{
 "spiel": "Greece U21 v Latvia U21",
 "kandidat": "Greece v Netherlands",
 "key": "soccer_uefa_nations_league",
 "score": 0.5,
 "grund": "name",
 "matchId": "36132210",
+"liga": "UEFA U21 Euro Qualifiers"
+},
+{
+"spiel": "North Macedonia U21 v Montenegro U21",
+"kandidat": "Latvia v Montenegro",
+"key": "soccer_uefa_nations_league",
+"score": 0.5,
+"grund": "name",
+"matchId": "36132138",
 "liga": "UEFA U21 Euro Qualifiers"
 },
 {
@@ -614,15 +632,6 @@
 "liga": "UEFA Nations League"
 },
 {
-"spiel": "North Macedonia U21 v Montenegro U21",
-"kandidat": "Latvia v Montenegro",
-"key": "soccer_uefa_nations_league",
-"score": 0.5,
-"grund": "name",
-"matchId": "36132138",
-"liga": "UEFA U21 Euro Qualifiers"
-},
-{
 "spiel": "Armenia U21 v Italy U21",
 "kandidat": "Jagiellonia Białystok v FC Ararat-Armenia",
 "key": "soccer_uefa_europa_league",
@@ -630,15 +639,6 @@
 "grund": "name",
 "matchId": "36134279",
 "liga": "UEFA U21 Euro Qualifiers"
-},
-{
-"spiel": "Koge (W) v Servette FC (W)",
-"kandidat": "Servette v FC Sion",
-"key": "soccer_switzerland_superleague",
-"score": 0.5,
-"grund": "name",
-"matchId": "36124533",
-"liga": "UEFA Women's Champions League"
 }
 ]
 }
