@@ -70,7 +70,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "237 Karte(n) · 11 auch public"
+      "note": "239 Karte(n) · 11 auch public"
     },
     {
       "id": "public_push_buch",
@@ -94,12 +94,9 @@
       "id": "settlement_alive",
       "label": "Settlement lebt (keine ewig offenen Positionen)",
       "severity": "error",
-      "ok": false,
-      "nFail": 2,
-      "failures": [
-        "cs2-bmb-gbc2-2026-09-24: seit 6.3 Tagen offen — keine Auflösung gefunden",
-        "atp-alcaraz-minaur-2026-09-27: seit 3.3 Tagen offen — keine Auflösung gefunden"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen. Der Grund steht an jeder Zeile — er ist bei jeder ein anderer."
     },
     {
@@ -118,7 +115,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "593 von 1367 abgerechneten Plays haben einen Schluss nach dem Einstieg; der Rest traegt clvGrund statt einer erfundenen 0,0."
+      "note": "595 von 1369 abgerechneten Plays haben einen Schluss nach dem Einstieg; der Rest traegt clvGrund statt einer erfundenen 0,0."
     },
     {
       "id": "anpfiff_eine_uhr",
@@ -127,7 +124,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "47 Close-Zeilen mit absolutem Anpfiff geprueft."
+      "note": "50 Close-Zeilen mit absolutem Anpfiff geprueft."
     },
     {
       "id": "resolutions_match_open_keys",
@@ -136,7 +133,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Fällige Märkte je Liga, die ihre Auflösung finden — nur ab dem Beginn des Auflösungsbuchs (2026-09-16); 2185 ältere Märkte bleiben draussen, fuer sie kann es keine geben. < 60% = Settlement läuft wirklich ins Leere."
+      "note": "Fällige Märkte je Liga, die ihre Auflösung finden — nur ab dem Beginn des Auflösungsbuchs (2026-09-16); 2184 ältere Märkte bleiben draussen, fuer sie kann es keine geben. < 60% = Settlement läuft wirklich ins Leere."
     },
     {
       "id": "proven_wallets_profitable",
@@ -199,6 +196,6 @@
       "note": "poly_direct_bets.py rechnet über poly_resolutions.json ab. Hängt ein Bet, kennt Poly den Ausgang nicht (Markt noch offen/obskur) oder der Slug passt nicht — dann fehlt echtes Geld in der Bilanz."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-09-30T06:53:46.770174+00:00"
+  "nFail": 1,
+  "generatedAt": "2026-09-30T07:23:32.271063+00:00"
 }
