@@ -1,6 +1,6 @@
 {
-"generatedAt": "2026-09-30T06:24:37.724187+00:00",
-"count": 4,
+"generatedAt": "2026-09-30T06:39:42.787311+00:00",
+"count": 5,
 "covered": 3,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
@@ -62,8 +62,8 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 124258,
-"remaining": 4875742,
+"used": 124396,
+"remaining": 4875604,
 "letzterFehler": null
 },
 "ankerQuote": 1.0,
@@ -80,13 +80,13 @@
 "moneyName": "Norway",
 "moneySharePct": 95,
 "moneyOdd": 1.56,
-"moneyDir": "out",
-"totVol": 65352,
+"moneyDir": "flat",
+"totVol": 65361,
 "pinnOdd": 1.51,
 "softOdd": 1.48,
 "softN": 37,
 "poly": {
-"vol": 37901,
+"vol": 39369,
 "odd": 1.53,
 "sharePct": 66,
 "shareSrc": "preis",
@@ -102,9 +102,9 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.1603,
-"draw": 0.209,
-"away": 0.6306,
+"home": 0.1604,
+"draw": 0.2091,
+"away": 0.6305,
 "fav": "away",
 "n": 37
 },
@@ -131,14 +131,14 @@
 "moneySide": "home",
 "moneyName": "Germany",
 "moneySharePct": 93,
-"moneyOdd": 1.28,
-"moneyDir": "out",
-"totVol": 45705,
+"moneyOdd": 1.27,
+"moneyDir": "in",
+"totVol": 45924,
 "pinnOdd": 1.26,
 "softOdd": 1.22,
 "softN": 37,
 "poly": {
-"vol": 15358,
+"vol": 15527,
 "odd": 1.27,
 "sharePct": 78,
 "shareSrc": "preis",
@@ -184,13 +184,13 @@
 "moneyName": "Portugal",
 "moneySharePct": 57,
 "moneyOdd": 2.14,
-"moneyDir": "in",
-"totVol": 32881,
+"moneyDir": "flat",
+"totVol": 32899,
 "pinnOdd": 2.08,
 "softOdd": 2.0,
 "softN": 37,
 "poly": {
-"vol": 102388,
+"vol": 106025,
 "odd": 2.15,
 "sharePct": 46,
 "shareSrc": "preis",
@@ -206,9 +206,9 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.278,
+"home": 0.2779,
 "draw": 0.2594,
-"away": 0.4626,
+"away": 0.4628,
 "fav": "away",
 "n": 37
 },
@@ -235,14 +235,14 @@
 "moneySide": "home",
 "moneyName": "Lithuania",
 "moneySharePct": 96,
-"moneyOdd": 1.68,
-"moneyDir": "flat",
-"totVol": 30362,
+"moneyOdd": 1.69,
+"moneyDir": "out",
+"totVol": 30435,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
 "poly": {
-"vol": 6392,
+"vol": 6506,
 "odd": 1.68,
 "sharePct": 60,
 "shareSrc": "preis",
@@ -265,6 +265,36 @@
 "score": 1.0,
 "grund": "name"
 }
+},
+{
+"matchId": "36124660",
+"home": "South Korea U23",
+"away": "China U23",
+"league": "Other Competitions Soccer",
+"country": "International",
+"kickoff": "2026-09-30T06:00:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "South Korea U23",
+"moneySharePct": 82,
+"moneyOdd": 1.53,
+"moneyDir": "in",
+"totVol": 22844,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": null,
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "South Korea U23 v China U23",
+"grund": "kein_kandidat"
+}
 }
 ],
 "ankerN": 2,
@@ -272,8 +302,8 @@
 "ankerMit": 2,
 "ankerDiagnose": {
 "nach": {
-"kein_kandidat": 38,
-"name": 82,
+"name": 80,
+"kein_kandidat": 40,
 "kein_pinnacle": 12,
 "zeit": 3
 },
@@ -333,6 +363,24 @@
 "liga": "UEFA Ladies Europa Cup"
 },
 {
+"spiel": "Czechia U21 v Bulgaria U21",
+"kandidat": "Spain v Czech Republic",
+"key": "soccer_uefa_nations_league",
+"score": 0.5,
+"grund": "name",
+"matchId": "36131302",
+"liga": "UEFA U21 Euro Qualifiers"
+},
+{
+"spiel": "Faroe Islands U21 v Luxembourg U21",
+"kandidat": "Faroe Islands v Slovakia",
+"key": "soccer_uefa_nations_league",
+"score": 0.67,
+"grund": "name",
+"matchId": "36131051",
+"liga": "UEFA U21 Euro Qualifiers"
+},
+{
 "spiel": "Romania U21 v Finland U21",
 "kandidat": "Poland v Romania",
 "key": "soccer_uefa_nations_league",
@@ -360,24 +408,6 @@
 "liga": "UEFA Ladies Europa Cup"
 },
 {
-"spiel": "Faroe Islands U21 v Luxembourg U21",
-"kandidat": "Faroe Islands v Slovakia",
-"key": "soccer_uefa_nations_league",
-"score": 0.67,
-"grund": "name",
-"matchId": "36131051",
-"liga": "UEFA U21 Euro Qualifiers"
-},
-{
-"spiel": "Poland U21 v Sweden U21",
-"kandidat": "Bosnia & Herzegovina v Sweden",
-"key": "soccer_uefa_nations_league",
-"score": 0.5,
-"grund": "name",
-"matchId": "36131057",
-"liga": "UEFA U21 Euro Qualifiers"
-},
-{
 "spiel": "SK Brann (W) v HJK Helsinki (W)",
 "kandidat": "HJK Helsinki v VPS Vaasa",
 "key": "soccer_finland_veikkausliiga",
@@ -387,12 +417,21 @@
 "liga": "UEFA Ladies Europa Cup"
 },
 {
-"spiel": "Czechia U21 v Bulgaria U21",
-"kandidat": "Spain v Czech Republic",
+"spiel": "Rosenborg BK (W) v Slovan Liberec (W)",
+"kandidat": "Rosenborg v Sandefjord",
+"key": "soccer_norway_eliteserien",
+"score": 0.5,
+"grund": "name",
+"matchId": "36130566",
+"liga": "UEFA Ladies Europa Cup"
+},
+{
+"spiel": "Poland U21 v Sweden U21",
+"kandidat": "Bosnia & Herzegovina v Sweden",
 "key": "soccer_uefa_nations_league",
 "score": 0.5,
 "grund": "name",
-"matchId": "36131302",
+"matchId": "36131057",
 "liga": "UEFA U21 Euro Qualifiers"
 },
 {
@@ -405,12 +444,12 @@
 "liga": "UEFA U21 Euro Qualifiers"
 },
 {
-"spiel": "Rosenborg BK (W) v Slovan Liberec (W)",
-"kandidat": "Rosenborg v Sandefjord",
-"key": "soccer_norway_eliteserien",
-"score": 0.5,
+"spiel": "Eintracht Frankfurt (W) v Hafnarfjordur (W)",
+"kandidat": "RB Leipzig v Eintracht Frankfurt",
+"key": "soccer_germany_bundesliga",
+"score": 0.67,
 "grund": "name",
-"matchId": "36130566",
+"matchId": "36130961",
 "liga": "UEFA Ladies Europa Cup"
 },
 {
@@ -423,15 +462,6 @@
 "liga": "UEFA Ladies Europa Cup"
 },
 {
-"spiel": "Eintracht Frankfurt (W) v Hafnarfjordur (W)",
-"kandidat": "RB Leipzig v Eintracht Frankfurt",
-"key": "soccer_germany_bundesliga",
-"score": 0.67,
-"grund": "name",
-"matchId": "36130961",
-"liga": "UEFA Ladies Europa Cup"
-},
-{
 "spiel": "Portugal U19 v Netherlands U19",
 "kandidat": "Denmark v Portugal",
 "key": "soccer_uefa_nations_league",
@@ -439,6 +469,15 @@
 "grund": "name",
 "matchId": "36132148",
 "liga": "Friendlies International U19"
+},
+{
+"spiel": "Malmo (W) v SKN St. Polten (W)",
+"kandidat": "Malmo FF v Kalmar FF",
+"key": "soccer_sweden_allsvenskan",
+"score": 0.5,
+"grund": "name",
+"matchId": "36130969",
+"liga": "UEFA Ladies Europa Cup"
 },
 {
 "spiel": "Real Sociedad (W) v Hearts (W)",
@@ -459,22 +498,13 @@
 "liga": "UEFA U21 Euro Qualifiers"
 },
 {
-"spiel": "Malmo (W) v SKN St. Polten (W)",
-"kandidat": "Malmo FF v Kalmar FF",
+"spiel": "Rangers LFC (W) v Hammarby (W)",
+"kandidat": "Hammarby IF v Djurgardens IF",
 "key": "soccer_sweden_allsvenskan",
 "score": 0.5,
 "grund": "name",
-"matchId": "36130969",
+"matchId": "36130952",
 "liga": "UEFA Ladies Europa Cup"
-},
-{
-"spiel": "Nottingham Forest U21 v Sporting CP U21",
-"kandidat": "Crystal Palace v Nottingham Forest",
-"key": "soccer_epl",
-"score": 0.67,
-"grund": "name",
-"matchId": "36133350",
-"liga": "Other Competitions Soccer"
 },
 {
 "spiel": "Leicester U21 v Real Sociedad U21",
@@ -486,13 +516,13 @@
 "liga": "Other Competitions Soccer"
 },
 {
-"spiel": "Rangers LFC (W) v Hammarby (W)",
-"kandidat": "Hammarby IF v Djurgardens IF",
-"key": "soccer_sweden_allsvenskan",
-"score": 0.5,
+"spiel": "Nottingham Forest U21 v Sporting CP U21",
+"kandidat": "Crystal Palace v Nottingham Forest",
+"key": "soccer_epl",
+"score": 0.67,
 "grund": "name",
-"matchId": "36130952",
-"liga": "UEFA Ladies Europa Cup"
+"matchId": "36133350",
+"liga": "Other Competitions Soccer"
 },
 {
 "spiel": "Scotland U21 v Azerbaijan U21",
@@ -576,21 +606,21 @@
 "liga": "Friendlies International U19"
 },
 {
-"spiel": "Faroe Islands U19 v Slovenia U19",
-"kandidat": "Faroe Islands v Slovakia",
-"key": "soccer_uefa_nations_league",
-"score": 0.67,
-"grund": "name",
-"matchId": "36133931",
-"liga": "Friendlies International U19"
-},
-{
 "spiel": "Qatar U19 v Ireland U19",
 "kandidat": "Ukraine v Northern Ireland",
 "key": "soccer_uefa_nations_league",
 "score": 0.5,
 "grund": "name",
 "matchId": "36133954",
+"liga": "Friendlies International U19"
+},
+{
+"spiel": "Faroe Islands U19 v Slovenia U19",
+"kandidat": "Faroe Islands v Slovakia",
+"key": "soccer_uefa_nations_league",
+"score": 0.67,
+"grund": "name",
+"matchId": "36133931",
 "liga": "Friendlies International U19"
 },
 {
