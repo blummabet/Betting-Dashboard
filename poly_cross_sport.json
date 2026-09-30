@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-30T00:46:24.501129+00:00",
+ "generatedAt": "2026-09-30T00:53:17.452593+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -29,8 +29,37 @@
   "soccer_mls": 9
  },
  "trackRecord": {
-  "tracked": 259,
+  "tracked": 261,
   "converged": 88
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|bostonredsox-newyorkyankees|bostonredsox",
+   "sport": "baseball_mlb",
+   "event": "Boston Red Sox vs New York Yankees",
+   "market": "Moneyline",
+   "outcome": "Boston Red Sox",
+   "polyPP": 37.5,
+   "pinnPP": 45.1,
+   "gapPP": -7.58,
+   "vol": 775643,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-30T00:53:17.452318+00:00"
+  },
+  {
+   "id": "baseball_mlb|bostonredsox-newyorkyankees|newyorkyankees",
+   "sport": "baseball_mlb",
+   "event": "Boston Red Sox vs New York Yankees",
+   "market": "Moneyline",
+   "outcome": "New York Yankees",
+   "polyPP": 62.5,
+   "pinnPP": 54.9,
+   "gapPP": 7.58,
+   "vol": 775643,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-30T00:53:17.452318+00:00"
+  }
+ ]
 }
