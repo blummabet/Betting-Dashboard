@@ -219,6 +219,9 @@ EBENE = {
     # ist der Staats-Wettbewerb von Meghalaya, also unterhalb der I-League und der ISL.
     "shillong-premier-league": 3,
     "liga-portugal-3": 3, "tweede-divisie": 3, "national": 3, "national-league": 3,
+    # 30.09.2026 (Stoerungsmeldung): die Southern League Premier Division South ist Englands
+    # siebte Ebene (Step 3 im Non-League-System, unter der National League South).
+    "southern-football-league-premier-division-south": 3,
     # 13.09.2026 (CI-Wachhund): das Campeonato de Portugal ist die DRITTE portugiesische Klasse
     # (unter Liga Portugal und Liga Portugal 2) — der Name klingt nach Landesmeisterschaft, ist
     # aber die Amateur-/Regionalebene. Beleg: AD Fazendense gegen O Elvas, beides Drittligisten.
