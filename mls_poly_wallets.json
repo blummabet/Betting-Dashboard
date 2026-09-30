@@ -48,8 +48,22 @@
         },
         {
           "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
-          "usd": 2.0,
+          "usd": 1.0,
           "shares": 10.0,
+          "side": "draw",
+          "pick": "Unentschieden"
+        }
+      ],
+      "bigTrades": []
+    },
+    "1598-1613": {
+      "home": "Orlando City SC",
+      "away": "Columbus Crew",
+      "topPositions": [
+        {
+          "wallet": "0x00d011c81490302079e8f73465d0077b00567534",
+          "usd": 142.0,
+          "shares": 509.0,
           "side": "draw",
           "pick": "Unentschieden"
         }
@@ -406,8 +420,8 @@
         },
         {
           "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
-          "usd": 1231.0,
-          "shares": 2437.0,
+          "usd": 1194.0,
+          "shares": 2365.0,
           "side": "away",
           "pick": "St. Louis City Sieg"
         },
@@ -493,20 +507,6 @@
           "ts": "2026-09-26T20:30:02+00:00"
         }
       ]
-    },
-    "1598-1613": {
-      "home": "Orlando City SC",
-      "away": "Columbus Crew",
-      "topPositions": [
-        {
-          "wallet": "0x00d011c81490302079e8f73465d0077b00567534",
-          "usd": 142.0,
-          "shares": 509.0,
-          "side": "draw",
-          "pick": "Unentschieden"
-        }
-      ],
-      "bigTrades": []
     },
     "1607-1603": {
       "home": "Chicago Fire",
@@ -711,15 +711,6 @@
       "key": "2242-1615"
     },
     {
-      "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
-      "usd": 1231.0,
-      "shares": 2437.0,
-      "side": "away",
-      "pick": "St. Louis City Sieg",
-      "match": "New York Red Bulls – St. Louis City",
-      "key": "1602-20787"
-    },
-    {
       "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
       "usd": 1230.0,
       "shares": 2894.0,
@@ -727,6 +718,15 @@
       "pick": "Vancouver Whitecaps Sieg",
       "match": "Chicago Fire – Vancouver Whitecaps",
       "key": "1607-1603"
+    },
+    {
+      "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
+      "usd": 1194.0,
+      "shares": 2365.0,
+      "side": "away",
+      "pick": "St. Louis City Sieg",
+      "match": "New York Red Bulls – St. Louis City",
+      "key": "1602-20787"
     },
     {
       "wallet": "0x2759769cd371bee44ec5bfc5e72c7f1f092b2b38",
@@ -1080,6 +1080,15 @@
       "key": "1607-1603"
     },
     {
+      "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+      "usd": 86.0,
+      "shares": 323.0,
+      "side": "home",
+      "pick": "New York Red Bulls Sieg",
+      "match": "New York Red Bulls – St. Louis City",
+      "key": "1602-20787"
+    },
+    {
       "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
       "usd": 82.0,
       "shares": 365.0,
@@ -1116,6 +1125,15 @@
       "key": "1604-1616"
     },
     {
+      "wallet": "0x3804fb6b5781d6829f2ac3967647e98021b66136",
+      "usd": 62.0,
+      "shares": 235.0,
+      "side": "home",
+      "pick": "New York Red Bulls Sieg",
+      "match": "New York Red Bulls – St. Louis City",
+      "key": "1602-20787"
+    },
+    {
       "wallet": "0x37525cb351f53968cb1177c1059c09bc25e69d56",
       "usd": 61.0,
       "shares": 248.0,
@@ -1132,24 +1150,6 @@
       "pick": "New York City FC Sieg",
       "match": "New York City FC – Los Angeles FC",
       "key": "1604-1616"
-    },
-    {
-      "wallet": "0xe3726a1b9c6ba2f06585d1c9e01d00afaedaeb38",
-      "usd": 56.0,
-      "shares": 168.0,
-      "side": "away",
-      "pick": "Los Angeles FC Sieg",
-      "match": "New York City FC – Los Angeles FC",
-      "key": "1604-1616"
-    },
-    {
-      "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
-      "usd": 51.0,
-      "shares": 308.0,
-      "side": "away",
-      "pick": "Sporting Kansas City Sieg",
-      "match": "Seattle Sounders – Sporting Kansas City",
-      "key": "1595-1611"
     }
   ],
   "bigTradesAll": [
@@ -1263,7 +1263,7 @@
       "netFlowUsd": 5646.0,
       "buyUsd": 5646.0,
       "sellUsd": 0.0,
-      "hoursToKickoff": 10.7
+      "hoursToKickoff": 9.8
     },
     {
       "key": "2242-1615",
@@ -1274,7 +1274,7 @@
       "netFlowUsd": -1598.0,
       "buyUsd": 0.0,
       "sellUsd": 1598.0,
-      "hoursToKickoff": 514.2
+      "hoursToKickoff": 513.3
     },
     {
       "key": "1607-1603",
@@ -1285,9 +1285,9 @@
       "netFlowUsd": -519.0,
       "buyUsd": 0.0,
       "sellUsd": 519.0,
-      "hoursToKickoff": 155.7
+      "hoursToKickoff": 154.8
     }
   ],
   "emptyReason": null,
-  "updatedAt": "2026-09-30T12:50:32.000611+00:00"
+  "updatedAt": "2026-09-30T13:44:07.647821+00:00"
 }
