@@ -1,14 +1,14 @@
 {
   "slug": "poly-live-scan",
   "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
-  "updatedAt": "2026-09-30T05:39:58.270036+00:00",
+  "updatedAt": "2026-09-30T05:57:58.832839+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
-    "spanneH": 4.7,
-    "proTag": 96.6,
+    "spanneH": 4.3,
+    "proTag": 105.7,
     "lueckeMinMin": 2.3,
-    "lueckeMedianMin": 14.8,
+    "lueckeMedianMin": 12.5,
     "lueckeMaxMin": 41.9,
     "sollProTag": null,
     "liefergradPct": null,
@@ -21,9 +21,45 @@
     "verdraengt": 0,
     "spanneH": 398.0,
     "erzeugtProTag": 6.0,
-    "widerspruch": "erzeugtProTag 6.0 gegen eine gemessene Kadenz von 96.6/Tag (Faktor 16.1) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
+    "widerspruch": "erzeugtProTag 6.0 gegen eine gemessene Kadenz von 105.7/Tag (Faktor 17.6) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
   },
   "runs": [
+    {
+      "ts": "2026-09-30T05:57:58.832839+00:00",
+      "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
+      "runId": "36675625155",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/36675625155",
+      "nSteps": 7,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-09-30T05:55:01Z",
+      "startedAt": "2026-09-30T05:55:01Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 177.8,
+      "event": "workflow_dispatch"
+    },
+    {
+      "ts": "2026-09-30T05:52:33.655044+00:00",
+      "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
+      "runId": "36674460495",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/36674460495",
+      "nSteps": 7,
+      "apiError": null,
+      "ok": false,
+      "failures": [
+        {
+          "job": "live",
+          "step": "⚡ Live-Scan (ein Durchlauf)",
+          "conclusion": "cancelled"
+        }
+      ],
+      "createdAt": "2026-09-30T05:40:06Z",
+      "startedAt": "2026-09-30T05:40:06Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 747.7,
+      "event": "workflow_dispatch"
+    },
     {
       "ts": "2026-09-30T05:39:58.270036+00:00",
       "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
@@ -310,36 +346,6 @@
       "startedAt": "2026-09-30T01:36:03Z",
       "wartetS": 0.0,
       "laeuftSeitS": 188.4,
-      "event": "workflow_dispatch"
-    },
-    {
-      "ts": "2026-09-30T01:12:46.295882+00:00",
-      "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
-      "runId": "36653762003",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/36653762003",
-      "nSteps": 7,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-09-30T01:09:28Z",
-      "startedAt": "2026-09-30T01:09:28Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 198.3,
-      "event": "workflow_dispatch"
-    },
-    {
-      "ts": "2026-09-30T00:56:37.258307+00:00",
-      "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
-      "runId": "36652558522",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/36652558522",
-      "nSteps": 7,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-09-30T00:54:33Z",
-      "startedAt": "2026-09-30T00:54:33Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 124.3,
       "event": "workflow_dispatch"
     }
   ]
