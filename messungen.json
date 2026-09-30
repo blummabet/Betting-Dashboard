@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-30T21:26:25.787708+00:00",
+ "generatedAt": "2026-09-30T22:25:18.819630+00:00",
  "heute": "2026-09-30",
  "messungen": [
   {
@@ -40,6 +40,24 @@
    "tageBisFaellig": -1
   },
   {
+   "id": "sharp-z-1282",
+   "titel": "Scharfe Wallets: reicht z=1,282 statt 1,645?",
+   "frage": "ROI (auf Aufloesungen mit Geld), Trefferquote und CLV der Wallets, die bei z=1,282 scharf sind, bei 1,645 aber nicht (Band) — gegen die heute scharfen (streng) und alle uebrigen (basis). Kohorten am Anmeldetag eingefroren, gemessen nur an Tagen danach.",
+   "warum": "01.09.2026, z-Sweep auf einem Wochenfenster: 1,645 -> 16 Wallets, n=180, Treffer-UG 48,3 %, CLV +0,26pp; 1,282 -> 24 Wallets, n=251, UG 50,6 %, CLV +0,55pp. Die strengste Einstellung war auf jeder Achse die schlechteste — aber vier z-Werte auf EINEM Fenster, der Beste ist teils Zufall. Belegt war nur, dass 1,645 nicht besser ist. Seitdem stand die Frage als Vorschlag im Code und wurde nie gemessen.\nEntscheidung vorab (in der Signatur eingefroren): bei 150 Band-Aufloesungen mit Geld wird z=1,282 fuer Whale-/Conviction-Gate uebernommen, wenn Band-ROI > Basis-ROI UND Band-ROI >= Streng-ROI - 5pp. Sonst bleibt 1,645. Der Public-Push bleibt in jedem Fall bei 1,645 — dort kostet ein Fehlalarm Glaubwuerdigkeit.",
+   "gestartet": "2026-09-25",
+   "faellig": "2026-10-09",
+   "quelle": "sharp_z_vorwaerts.json -> stand.band.nGeld",
+   "messer": "sharp_z",
+   "mindestN": 150,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "standN": 151,
+   "zustand": "bereit",
+   "stand": "151 von 150 Beobachtungen · faellig in 9 Tag(en)",
+   "fortschritt": 1.0,
+   "tageBisFaellig": 9
+  },
+  {
    "id": "einigkeit-statt-geld",
    "titel": "Traegt Einigkeit mehrerer bewiesener Wallets, wenn keine allein die Geldschwelle reisst?",
    "frage": "Trefferquote und ROI der Schattenbuch-Kandidaten (>=2 bewiesene Wallets auf derselben Seite, keine allein >= $25K, kein bewiesener Gegner) — gegen die heutige Public-Regel (eine Wallet >= $25K).",
@@ -52,9 +70,9 @@
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "nachtrag": "27.09.2026: Zwischenstand n=152 (Mindestzahl 40 erreicht). Treffer 66,5 %, ROI -4,5 % (UG -14,3 %), CLV -0,04 pp. Die Rueckschau (77,1 % / +19,9 %) haelt vorwaerts nicht. Heutige Public-Regel seit 03.09.: n=47, ROI +14,2 % (UG -10,0 %).",
-   "standN": 262,
+   "standN": 263,
    "zustand": "bereit",
-   "stand": "262 von 40 Beobachtungen · faellig in 30 Tag(en)",
+   "stand": "263 von 40 Beobachtungen · faellig in 30 Tag(en)",
    "fortschritt": 1.0,
    "tageBisFaellig": 30
   },
@@ -75,24 +93,6 @@
    "stand": "Entscheidung offen · in 4 Tag(en) faellig",
    "fortschritt": null,
    "tageBisFaellig": 4
-  },
-  {
-   "id": "sharp-z-1282",
-   "titel": "Scharfe Wallets: reicht z=1,282 statt 1,645?",
-   "frage": "ROI (auf Aufloesungen mit Geld), Trefferquote und CLV der Wallets, die bei z=1,282 scharf sind, bei 1,645 aber nicht (Band) — gegen die heute scharfen (streng) und alle uebrigen (basis). Kohorten am Anmeldetag eingefroren, gemessen nur an Tagen danach.",
-   "warum": "01.09.2026, z-Sweep auf einem Wochenfenster: 1,645 -> 16 Wallets, n=180, Treffer-UG 48,3 %, CLV +0,26pp; 1,282 -> 24 Wallets, n=251, UG 50,6 %, CLV +0,55pp. Die strengste Einstellung war auf jeder Achse die schlechteste — aber vier z-Werte auf EINEM Fenster, der Beste ist teils Zufall. Belegt war nur, dass 1,645 nicht besser ist. Seitdem stand die Frage als Vorschlag im Code und wurde nie gemessen.\nEntscheidung vorab (in der Signatur eingefroren): bei 150 Band-Aufloesungen mit Geld wird z=1,282 fuer Whale-/Conviction-Gate uebernommen, wenn Band-ROI > Basis-ROI UND Band-ROI >= Streng-ROI - 5pp. Sonst bleibt 1,645. Der Public-Push bleibt in jedem Fall bei 1,645 — dort kostet ein Fehlalarm Glaubwuerdigkeit.",
-   "gestartet": "2026-09-25",
-   "faellig": "2026-10-09",
-   "quelle": "sharp_z_vorwaerts.json -> stand.band.nGeld",
-   "messer": "sharp_z",
-   "mindestN": 150,
-   "entscheidung": null,
-   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 148,
-   "zustand": "sammelt",
-   "stand": "148 von 150 Beobachtungen · faellig in 9 Tag(en)",
-   "fortschritt": 0.9866666666666667,
-   "tageBisFaellig": 9
   },
   {
    "id": "torlinien-13-ligen",
@@ -180,10 +180,10 @@
    "mindestN": 1200,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 254,
+   "standN": 256,
    "zustand": "sammelt",
-   "stand": "254 von 1200 Beobachtungen · faellig in 32 Tag(en)",
-   "fortschritt": 0.21166666666666667,
+   "stand": "256 von 1200 Beobachtungen · faellig in 32 Tag(en)",
+   "fortschritt": 0.21333333333333335,
    "tageBisFaellig": 32
   },
   {
@@ -198,10 +198,10 @@
    "mindestN": 1200,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 254,
+   "standN": 256,
    "zustand": "sammelt",
-   "stand": "254 von 1200 Beobachtungen · faellig in 32 Tag(en)",
-   "fortschritt": 0.21166666666666667,
+   "stand": "256 von 1200 Beobachtungen · faellig in 32 Tag(en)",
+   "fortschritt": 0.21333333333333335,
    "tageBisFaellig": 32
   },
   {
@@ -234,10 +234,10 @@
    "mindestN": 20000,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 11736,
+   "standN": 11810,
    "zustand": "sammelt",
-   "stand": "11736 von 20000 Beobachtungen · faellig in 46 Tag(en)",
-   "fortschritt": 0.5868,
+   "stand": "11810 von 20000 Beobachtungen · faellig in 46 Tag(en)",
+   "fortschritt": 0.5905,
    "tageBisFaellig": 46
   },
   {
@@ -252,10 +252,10 @@
    "mindestN": 20000,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 11736,
+   "standN": 11810,
    "zustand": "sammelt",
-   "stand": "11736 von 20000 Beobachtungen · faellig in 46 Tag(en)",
-   "fortschritt": 0.5868,
+   "stand": "11810 von 20000 Beobachtungen · faellig in 46 Tag(en)",
+   "fortschritt": 0.5905,
    "tageBisFaellig": 46
   },
   {

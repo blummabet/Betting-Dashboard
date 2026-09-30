@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-30T21:41:40.325533+00:00",
+"generatedAt": "2026-09-30T22:26:42.230888+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1386,
-"wins": 1187,
-"hitRate": 0.8564,
-"polyN": 1327,
+"n": 1388,
+"wins": 1188,
+"hitRate": 0.8559,
+"polyN": 1328,
 "polyWins": 1046,
-"polyHitRate": 0.7882,
+"polyHitRate": 0.7877,
 "pinnN": 210,
 "pinnHitRate": 0.7762,
-"nRoi": 925,
-"roi": 0.4035,
-"roiLb": 0.3621,
-"nClv": 925,
+"nRoi": 927,
+"roi": 0.4016,
+"roiLb": 0.3602,
+"nClv": 927,
 "clv": 18.85,
-"clvLb": 17.4232
+"clvLb": 17.4215
 },
 "uneinig": {
-"n": 564,
+"n": 565,
 "wins": 182,
-"hitRate": 0.3227,
+"hitRate": 0.3221,
 "polyN": 529,
 "polyWins": 136,
 "polyHitRate": 0.2571,
-"pinnN": 335,
-"pinnHitRate": 0.6328,
-"nRoi": 401,
-"roi": -0.4468,
-"roiLb": -0.532,
-"nClv": 401,
-"clv": -20.0,
-"clvLb": -22.7393
+"pinnN": 336,
+"pinnHitRate": 0.6339,
+"nRoi": 402,
+"roi": -0.4481,
+"roiLb": -0.5332,
+"nClv": 402,
+"clv": -19.95,
+"clvLb": -22.684
 },
 "teil": {
 "n": 32,
@@ -321,6 +321,11 @@
 "wins": 9,
 "hitRate": 0.6923
 },
+"English National League": {
+"n": 12,
+"wins": 9,
+"hitRate": 0.75
+},
 "Romanian Liga I": {
 "n": 12,
 "wins": 9,
@@ -341,11 +346,6 @@
 "wins": 8,
 "hitRate": 0.7273
 },
-"English National League": {
-"n": 11,
-"wins": 9,
-"hitRate": 0.8182
-},
 "Chinese League 1": {
 "n": 10,
 "wins": 6,
@@ -365,6 +365,11 @@
 "n": 10,
 "wins": 7,
 "hitRate": 0.7
+},
+"UEFA Women's Champions League": {
+"n": 9,
+"wins": 5,
+"hitRate": 0.5556
 },
 "CONCACAF Nations League B": {
 "n": 8,
@@ -407,11 +412,6 @@
 "hitRate": 0.5714
 },
 "Serbian Super League": {
-"n": 7,
-"wins": 4,
-"hitRate": 0.5714
-},
-"UEFA Women's Champions League": {
 "n": 7,
 "wins": 4,
 "hitRate": 0.5714
@@ -674,37 +674,94 @@
 },
 "byStrength": {
 "strong": {
-"n": 1234,
+"n": 1235,
 "wins": 999,
-"hitRate": 0.8096,
-"nRoi": 869,
-"roi": 0.3129,
-"roiLb": 0.2638,
-"nClv": 869,
-"clv": 13.63,
-"clvLb": 11.7789
+"hitRate": 0.8089,
+"nRoi": 870,
+"roi": 0.3113,
+"roiLb": 0.2623,
+"nClv": 870,
+"clv": 13.65,
+"clvLb": 11.8039
 },
 "weak": {
-"n": 748,
-"wins": 375,
+"n": 750,
+"wins": 376,
 "hitRate": 0.5013,
-"nRoi": 483,
-"roi": -0.2027,
-"roiLb": -0.2752,
-"nClv": 483,
-"clv": -6.81,
-"clvLb": -9.1981
+"nRoi": 485,
+"roi": -0.2039,
+"roiLb": -0.2762,
+"nClv": 485,
+"clv": -6.78,
+"clvLb": -9.1604
 }
 },
 "divergence": {
-"n": 564,
+"n": 565,
 "betfairWins": 182,
-"betfairRate": 0.3227,
+"betfairRate": 0.3221,
 "polyN": 529,
 "polyWins": 136,
 "polyRate": 0.2571
 },
 "recent": [
+{
+"matchId": "36124355",
+"home": "S.L. Benfica (W)",
+"away": "Bayern Munich (W)",
+"league": "UEFA Women's Champions League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Bayern Munich (W)",
+"polySide": null,
+"winner": "away",
+"moneyWin": true,
+"polyWin": null,
+"ftScore": [
+0,
+3
+],
+"kickoff": "2026-09-30T19:00:00Z",
+"settledAt": "2026-09-30T22:11:43.801154+00:00"
+},
+{
+"matchId": "36124521",
+"home": "Lyon (W)",
+"away": "Chelsea (W)",
+"league": "UEFA Women's Champions League",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Lyon (W)",
+"polySide": null,
+"winner": "draw",
+"moneyWin": false,
+"polyWin": null,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-09-30T19:00:00Z",
+"settledAt": "2026-09-30T22:11:43.801154+00:00"
+},
+{
+"matchId": "36116508",
+"home": "Eastleigh",
+"away": "Southend",
+"league": "English National League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Southend",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-09-30T18:45:00Z",
+"settledAt": "2026-09-30T21:56:32.404337+00:00"
+},
 {
 "matchId": "36116500",
 "home": "Tamworth FC",
@@ -1407,75 +1464,18 @@
 ],
 "kickoff": "2026-09-29T12:00:00Z",
 "settledAt": "2026-09-29T15:07:47.192027+00:00"
-},
-{
-"matchId": "36120569",
-"home": "Lesotho",
-"away": "Morocco",
-"league": "CAF African Cup of Nations Qualifiers",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Morocco",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-2
-],
-"kickoff": "2026-09-29T13:00:00Z",
-"settledAt": "2026-09-29T14:52:39.362087+00:00"
-},
-{
-"matchId": "36127838",
-"home": "Wuxi Wugou",
-"away": "Ningbo Professional",
-"league": "Chinese League 1",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Wuxi Wugou",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-09-29T11:00:00Z",
-"settledAt": "2026-09-29T14:07:31.039854+00:00"
-},
-{
-"matchId": "36114233",
-"home": "Australia",
-"away": "Brazil",
-"league": "Friendlies International",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Brazil",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-4
-],
-"kickoff": "2026-09-29T10:00:00Z",
-"settledAt": "2026-09-29T13:07:22.805155+00:00"
 }
 ],
 "global": {
-"n": 1982,
-"wins": 1374,
-"hitRate": 0.6932,
-"nRoi": 1352,
-"roi": 0.1287,
-"roiLb": 0.0864,
-"nClv": 1352,
-"clv": 6.33,
-"clvLb": 4.7993
+"n": 1985,
+"wins": 1375,
+"hitRate": 0.6927,
+"nRoi": 1355,
+"roi": 0.1269,
+"roiLb": 0.0847,
+"nClv": 1355,
+"clv": 6.34,
+"clvLb": 4.8132
 },
-"pending": 18
+"pending": 15
 }
