@@ -1061,6 +1061,157 @@ def _verworfen_buchen(beinahe: list, now) -> None:
              or "—"))
 
 
+# ── Kleine Ligen: die einzelne grosse Wette (30.09.2026, Lucas) ────────────────────────────
+#
+# Lucas: „hab ja oft genug erwähnt das ich die kleinen ligen halt gerne hätte — aber bis heute
+# nicht ein burst dafür gekommen". Nachgemessen am 30.09.2026 auf dem Rohbuch (5,7 Tage,
+# 20.000 Wetten): auf Ebene 3 im Fussball standen NIE mehr als 2 Wetten derselben Seite in
+# 30 Minuten, auf Ebene 2 dreimal 4. Die Burst-Regel (>=4 Wetten) kann dort strukturell nie
+# feuern — der Feed zeigt nur Wetten ab $1.000, und davon kommen in kleinen Ligen einzelne an,
+# keine Schwaerme. Das Geld zeigt sich dort als EINE grosse Wette, nicht als Haeufung.
+#
+# Deshalb eine eigene Einheit mit eigenem Buch (`art: "klein"`), NICHT eine gelockerte
+# Burst-Regel: die Burst-Bilanz misst etwas anderes und darf nicht mit dieser vermischt werden.
+#
+# Zuschnitt, VOR der Messung festgelegt (Register `stake-kleine-liga`):
+#   Fussball · Ebene 2 oder 3 (stake_liga_stufe) · vor Anpfiff · Einzelwette · Quote ab 1,35 ·
+#   Einsatz >= 2x Norm der Liga (fehlt sie: Median der Ebene) · max. 30 Min alt.
+# Gemessen gaebe das ~1,4 Meldungen am Tag. Rueckblickend lagen Ebene 2+3 bei -1,8 % (n=274,
+# Untergrenze -10,6 %), vor Anpfiff -12,3 % (n=31) — KEIN Beleg, deshalb nur Trades, Ziel n=100.
+KLEIN_EBENEN = ("2", "3")
+KLEIN_MIN_FAKTOR = float(os.environ.get("STAKE_KLEIN_MIN_FAKTOR") or 2.0)
+KLEIN_MAX_PUSH = int(os.environ.get("STAKE_KLEIN_MAX") or 3)
+KLEIN_AN = (os.environ.get("STAKE_KLEIN_PUSH") or "true").strip().lower() \
+    not in ("0", "false", "no", "off")
+KLEIN_ZIEL_N = 100
+AUSWERTUNG_FILE = BASE / "stake_auswertung.json"
+
+
+def ebenen_median(pfad=None) -> dict:
+    """{Ebene: Median-Einsatz} aus stake_auswertung.json (randliga.ebeneMedian). REIN bis aufs Lesen."""
+    d = _load(pfad or AUSWERTUNG_FILE, {}) or {}
+    em = ((d.get("randliga") or {}).get("ebeneMedian")) or {}
+    return {str(k): float(v) for k, v in em.items() if isinstance(v, (int, float)) and v > 0}
+
+
+def _ebene(w):
+    try:
+        import stake_liga_stufe as _LS
+        return str(_LS.stufe(w.get("ligaSlug"), w.get("sport"), w.get("ligaId")))
+    except Exception:
+        return None
+
+
+def kleine_liga(wetten, norm=None, ebene_median=None, now=None, min_faktor=None,
+                min_quote=None, max_alter_min=None) -> list:
+    """Grosse Einzelwetten vor Anpfiff in kleinen Fussball-Ligen, je Auswahl gebuendelt. REIN.
+
+    Ohne Bezugsgroesse (weder Liga-Norm noch Ebenen-Median) kein Treffer — „wir kennen die
+    Liga nicht" heisst nicht „der Einsatz ist gross" (dieselbe Regel wie `liga_norm`)."""
+    now = now or datetime.now(timezone.utc)
+    norm = norm or {}
+    ebene_median = ebene_median or {}
+    min_faktor = KLEIN_MIN_FAKTOR if min_faktor is None else min_faktor
+    min_quote = MIN_QUOTE if min_quote is None else min_quote
+    max_alter_min = MAX_ALTER_MIN if max_alter_min is None else max_alter_min
+    gruppen = {}
+    for w in wetten or []:
+        if not isinstance(w, dict) or w.get("kat") != "Fußball":
+            continue
+        if w.get("kombi") or int(w.get("nBeine") or 1) != 1 or w.get("phase") != "vor":
+            continue
+        q = _quote(w)
+        if not isinstance(q, (int, float)) or q < min_quote:
+            continue
+        t = _ts(w.get("ts"))
+        if t is None or (now - t).total_seconds() > max_alter_min * 60:
+            continue
+        ko = _ts(w.get("anpfiff"))
+        if ko is not None and ko <= now:
+            continue                      # schon angepfiffen: nicht mehr vor Anpfiff spielbar
+        eb = _ebene(w)
+        if eb not in KLEIN_EBENEN or not w.get("auswahlId"):
+            continue
+        gruppen.setdefault(w["auswahlId"], []).append((w, eb))
+    aus = []
+    for aid, g in gruppen.items():
+        erste, eb = g[0]
+        ref, basis = norm.get(str(erste.get("liga"))), "liga"
+        if not ref:
+            ref, basis = ebene_median.get(eb), "ebene"
+        if not ref:
+            continue
+        summe = sum(float(x.get("einsatzUsd") or 0) for x, _ in g)
+        faktor = summe / ref
+        if faktor < min_faktor:
+            continue
+        aus.append({"auswahlId": aid, "wetten": [x for x, _ in g], "summe": summe,
+                    "faktor": faktor, "ebene": eb, "ref": ref, "refBasis": basis})
+    aus.sort(key=lambda b: -b["faktor"])
+    return aus
+
+
+def klein_key(b) -> str:
+    return "klein:%s" % b.get("auswahlId")
+
+
+def klein_bilanz(ledger) -> dict:
+    """Was die gesendeten Kleine-Liga-Alarme bisher gebracht haben — NUR diese Buchart. REIN."""
+    rr = [z["rendite"] for z in (ledger or []) if isinstance(z, dict) and z.get("art") == "klein"
+          and isinstance(z.get("rendite"), (int, float))]
+    if not rr:
+        return {"n": 0}
+    n, m = len(rr), sum(rr) / len(rr)
+    ug = None
+    if n >= 30:
+        sd = (sum((x - m) ** 2 for x in rr) / (n - 1)) ** 0.5
+        ug = max(-1.0, m - 1.645 * sd / n ** 0.5)
+    return {"n": n, "roi": m, "ug": ug}
+
+
+def build_klein_card(b, bilanz=None) -> str:
+    g = b["wetten"]
+    erste = g[0]
+    e = lambda x: html.escape(str(x or ""), quote=False)
+    ko = _ts(erste.get("anpfiff"))
+    bil = bilanz or {}
+    if not bil.get("n"):
+        mess = "noch keine Meldung abgerechnet"
+    elif bil.get("ug") is None:
+        mess = "bisher %d abgerechnet · ROI %+.1f %% · kein Urteil unter 30" % (bil["n"], 100 * bil["roi"])
+    else:
+        mess = "bisher %d abgerechnet · ROI %+.1f %% · Untergrenze %+.1f %%" % (
+            bil["n"], 100 * bil["roi"], 100 * bil["ug"])
+    lines = ["🔎 <b>KLEINE LIGA</b> · grosse Einzelwette vor Anpfiff", "━━━━━━━━━━━━━━",
+             "⚽ <b>%s</b>" % e(erste.get("event")),
+             "<i>%s · %s</i>" % (e(erste.get("liga")),
+                                 "zweite Spielklasse" if b["ebene"] == "2" else "dritte Klasse und tiefer"),
+             "",
+             "➡️ <b>%s</b> · %s @<b>%.2f</b>" % (e(erste.get("auswahl")), e(erste.get("markt")), _quote(erste)),
+             "💰 <b>%s</b>%s · <b>%.1fx</b> der Norm (%s %s)" % (
+                 _usd(b["summe"]), (" in %d Wetten" % len(g)) if len(g) > 1 else "",
+                 b["faktor"], "Liga" if b["refBasis"] == "liga" else "Ebene", _usd(b["ref"])),
+             "⏱️ Anpfiff %s UTC" % (ko.strftime("%d.%m. %H:%M") if ko else "?"),
+             "",
+             "🔬 <i>Testlauf, nur Trades · %s. Jede Meldung wird abgerechnet, Urteil ab n=%d. "
+             "Rückblickend trugen solche Wetten nicht (Ebene 2+3: −1,8 %%, n=274) — das hier "
+             "misst es nach vorn.</i>" % (mess, KLEIN_ZIEL_N)]
+    return "\n".join(lines)
+
+
+def klein_buch_zeile(b, ts) -> dict:
+    g = b["wetten"]
+    erste = g[0]
+    return {"k": klein_key(b), "art": "klein", "auswahlId": b["auswahlId"],
+            "eventId": erste.get("eventId"), "event": erste.get("event"),
+            "liga": erste.get("liga"), "ligaSlug": erste.get("ligaSlug"), "kat": erste.get("kat"),
+            "ebene": b["ebene"], "markt": erste.get("markt"), "auswahl": erste.get("auswahl"),
+            "quote": _quote(erste), "summeUsd": round(float(b["summe"]), 2),
+            "faktor": round(float(b["faktor"]), 2), "refBasis": b["refBasis"],
+            "nWetten": len(g), "phase": "vor", "anpfiff": erste.get("anpfiff"),
+            "betIds": [x.get("id") for x in g], "sentAt": ts, "status": "pending"}
+
+
 def zu_senden(neu, push_an=None, max_push=None) -> list:
     """Welche der neuen Bursts gehen raus? REIN — damit „Push aus" pruefbar ist.
 
@@ -1158,6 +1309,33 @@ def main() -> int:
         led.append(z)
         schon.add(k)
         neu_gebucht += 1
+
+    # ── Die dritte Einheit: kleine Ligen (30.09.2026, Lucas) ─────────────────────────────
+    kl_alle = kleine_liga(wetten, norm=liga_norm(), ebene_median=ebenen_median(), now=now)
+    kl_neu = [b for b in kl_alle if klein_key(b) not in seen and klein_key(b) not in schon]
+    kl_senden = kl_neu[:KLEIN_MAX_PUSH] if (KLEIN_AN and PUSH_AN) else []
+    print("🔎 Kleine Liga: %d Treffer, %d neu (Fussball Ebene %s, vor Anpfiff, >=%.1fx Norm, "
+          "Quote ab %.2f)" % (len(kl_alle), len(kl_neu), "/".join(KLEIN_EBENEN),
+                              KLEIN_MIN_FAKTOR, MIN_QUOTE))
+    kl_gesendet = 0
+    for b in kl_senden:
+        if not send_trades_message(build_klein_card(b, bilanz=klein_bilanz(led))):
+            continue
+        kl_gesendet += 1
+        seen[klein_key(b)] = {"ts": now_iso, "summe": round(float(b["summe"]), 2)}
+    for b in kl_neu:                      # jeder erkannte ins Buch, auch der ungesendete
+        k = klein_key(b)
+        z = klein_buch_zeile(b, now_iso)
+        z["push"] = k in seen
+        if not z["push"]:
+            z["pushGrund"] = ("Push abgeschaltet" if not (PUSH_AN and KLEIN_AN)
+                              else "Deckel des Laufs erreicht" if k not in {klein_key(x) for x in kl_senden}
+                              else "Senden fehlgeschlagen")
+        led.append(z)
+        schon.add(k)
+        neu_gebucht += 1
+    if kl_gesendet:
+        print("   🔎 %d Kleine-Liga-Meldung(en) gesendet" % kl_gesendet)
 
     _save(SEEN_FILE, seen)
     _verworfen_buchen(beinahe, now)

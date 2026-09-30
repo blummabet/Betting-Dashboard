@@ -213,6 +213,19 @@
    "mindestN": null,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist"
+  },
+  {
+   "id": "stake-kleine-liga",
+   "titel": "Trägt eine große Einzelwette vor Anpfiff in einer kleinen Fußball-Liga?",
+   "frage": "ROI (geldgewichtet je Meldung) der Kleine-Liga-Meldungen: Fußball, Ebene 2 oder 3 (stake_liga_stufe), vor Anpfiff, Einzelwette, Quote ab 1,35, Einsatz >= 2x Norm der Liga (sonst Median der Ebene). Urteil über die Rendite-Untergrenze, nicht über den Punktschätzer.",
+   "warum": "30.09.2026 (Lucas): „hab ja oft genug erwähnt das ich die kleinen ligen halt gerne hätte — aber bis heute nicht ein burst dafür gekommen“. Nachgemessen: die Burst-Regel (>=4 Wetten derselben Seite) kann in kleinen Ligen strukturell nie feuern — auf Ebene 3 standen in 5,7 Tagen Rohbuch nie mehr als 2 Wetten derselben Seite in 30 Min. Das Geld zeigt sich dort als EINZELNE Wette. Rückblickend (5,7 Tage, Einzelwetten mit Ausgang): Ebene 2+3 ROI -1,8 % (n=274, UG -10,6 %), vor Anpfiff -12,3 % (n=31) — kein Beleg. Zuschnitt vor der Messung festgelegt; rund 1,2-1,4 Meldungen pro Tag. Entscheidung vorab: Public erst, wenn die Untergrenze bei n >= 100 über null liegt; fällt die OBERgrenze unter null, wird die Meldung abgeschaltet.",
+   "gestartet": "2026-09-30",
+   "faellig": "2026-12-23",
+   "quelle": "stake_burst_ledger.json -> Zeilen mit art=klein, status=abgerechnet",
+   "messer": "stake_klein",
+   "mindestN": 100,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist"
   }
  ]
 }
