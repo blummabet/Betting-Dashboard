@@ -25,15 +25,14 @@ SKRIPT = Path(__file__).resolve().parent.parent / "scripts" / "ci_keine_marker.s
 # Datei laeuft der fehlerhafte Entwurf zufaellig richtig — genau deshalb hat der Fehler am
 # 19.09. zwoelf echte Artefakte erwischt und waere an einem Mini-Fixture nie aufgefallen.
 _FUELLUNG = ",\n".join('  "f%05d": %d' % (i, i) for i in range(12000))
-KAPUTT = '''{
-<<<<<<< Updated upstream
-  "a": 1,
-=======
-  "a": 2,
->>>>>>> Stashed changes
-%s
-}
-''' % _FUELLUNG
+# 🔴 30.09.2026 (Lucas, Live-Scan-Log 04:51 UTC): „⚠️ tests/test_ci_keine_marker.py (1 Konflikt(e))
+# → KEINE saubere Fassung in 40 Commits, bleibt kaputt". Der Waechter fand seine EIGENE Test-
+# Fixture — seit dem 19.09. in jedem Lauf, als roter Alarm, der nichts bedeutet. Ein Alarm, der
+# immer schlaegt, lehrt, ihn zu ueberlesen; der naechste echte Fund geht darin unter.
+# Die Marker werden deshalb zur Laufzeit gebaut und stehen nicht woertlich am Zeilenanfang.
+_L, _M, _R = "<" * 7, "=" * 7, ">" * 7
+KAPUTT = '{\n%s Updated upstream\n  "a": 1,\n%s\n  "a": 2,\n%s Stashed changes\n%s\n}\n' % (
+    _L, _M, _R, _FUELLUNG)
 
 
 def _git(*args, cwd):
@@ -105,3 +104,12 @@ class TestDerGriffGegenKonfliktmarker(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_das_repo_selbst_loest_den_waechter_nicht_aus():
+    """Gegenbeweis zum 30.09.2026: dieselbe Suche wie der Waechter, gegen das echte Repo.
+    Faellt, sobald wieder eine getrackte Datei Marker am Zeilenanfang traegt — auch eine Fixture."""
+    wurzel = SKRIPT.parent.parent
+    r = _git("grep", "-l", "-I", "-E", "^(" + "<" * 7 + " |" + ">" * 7 + " )", "--",
+             "*.json", "*.py", "*.js", "*.mjs", "*.yml", cwd=wurzel)
+    assert r.stdout.strip() == "", "Marker in getrackten Dateien: " + r.stdout

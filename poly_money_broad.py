@@ -1557,7 +1557,18 @@ def backfill_resolutions_by_slug(prev_close, seen_keys, get=_get, cap=RESOLVE_LO
     _bekannt = {c[0] for c in cand} | set(seen_keys or ())
     for e in (extra or []):
         k = (e.get("key") if isinstance(e, dict) else e)
-        if not k or k in _bekannt or k in prev_close:
+        # 🔴 30.09.2026 (Stoerungsmeldung: „cs2-bmb-gbc2-2026-09-24: seit 6.3 Tagen offen — keine
+        # Aufloesung gefunden"). Polymarket: 0,5/0,5, UMA resolved, seit dem 24.09. Die Close-Zeile
+        # stand seitdem auf `resolved: True` OHNE Sieger (vor dem 29.09. galt 0,5/0,5 nicht als
+        # Ausgang) — und damit fiel die offene Position aus BEIDEN Nachschlag-Wegen: `cand` nimmt
+        # nur nicht-aufgeloeste Close-Zeilen, und hier flog alles raus, was im Close-File steht.
+        # cs2-bbl1-brute (25.09.) rechnete gestern nur ab, weil es noch im Fenster der zuletzt
+        # geschlossenen Events lag.
+        # Fehlerklasse: „die Close-Zeile sagt aufgeloest" fuer „das Aufloesungsbuch kennt den
+        # Ausgang" genommen. Eine OFFENE Position mit Close-Zeile ohne Sieger wird nachgeschlagen.
+        _cz = prev_close.get(k) if k else None
+        _ohne_sieger = isinstance(_cz, dict) and _cz.get("resolved") and not _cz.get("resolvedWinner")
+        if not k or k in _bekannt or (k in prev_close and not _ohne_sieger):
             continue
         _bekannt.add(k)
         extra_cand.append((k, "", (e.get("cond") if isinstance(e, dict) else None)))
