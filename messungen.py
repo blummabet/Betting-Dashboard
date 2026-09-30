@@ -258,7 +258,24 @@ def zaehler_sharp_z(base_dir):
     return int(n) if isinstance(n, int) else None
 
 
+def zaehler_stake_klein(base_dir):
+    """Abgerechnete Kleine-Liga-Meldungen (stake_burst_ledger.json, `art: "klein"`).
+
+    30.09.2026 (Lucas: „die kleinen Ligen hätte ich gerne — bis heute nicht ein Burst dafür").
+    Die Burst-Regel kann dort strukturell nicht feuern; die Einheit ist die EINZELNE grosse
+    Wette. Gezaehlt wird nur, was einen Ausgang hat — offen ist keine Beobachtung.
+    """
+    d = _laden(os.path.join(base_dir, "stake_burst_ledger.json"))
+    if d is None:
+        return 0
+    if not isinstance(d, list):
+        return None
+    return sum(1 for e in d if isinstance(e, dict) and e.get("art") == "klein"
+               and e.get("status") == "abgerechnet")
+
+
 ZAEHLER = {
+    "stake_klein": zaehler_stake_klein,
     "sharp_z": zaehler_sharp_z,
     "bf_leadshare": zaehler_bf_leadshare,
     "bf_rutsch": zaehler_bf_rutsch,
