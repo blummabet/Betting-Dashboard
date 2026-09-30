@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-29T23:39:02.373074+00:00",
+ "generatedAt": "2026-09-30T00:05:37.009148+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -119,7 +119,7 @@
     "nieAnteil": 0.042,
     "schaetzbar": false
    },
-   "alterTage": 0.2,
+   "alterTage": 0.3,
    "art": "mix",
    "wert": "money+sharp+steam",
    "nAlt": 11,
@@ -159,7 +159,7 @@
     "nieAnteil": 0.052,
     "schaetzbar": false
    },
-   "alterTage": 2.4,
+   "alterTage": 2.5,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py",
    "seitFreigabe": {
@@ -741,7 +741,7 @@
     "nieAnteil": 0.533,
     "schaetzbar": false
    },
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "conviction",
    "wert": 8,
    "nAlt": 12,
@@ -829,10 +829,10 @@
    "zerlegung": "nach Conviction",
    "art": "conviction",
    "gruppen": 7,
-   "basis": "908 von 1360 abgerechneten Plays · nur Engine 2026-09-01 · ohne Cricket, Kampfsport, US-Sport",
-   "n": 904,
-   "pl": 4.67,
-   "roi": 0.0052,
+   "basis": "909 von 1361 abgerechneten Plays · nur Engine 2026-09-01 · ohne Cricket, Kampfsport, US-Sport",
+   "n": 905,
+   "pl": 5.09,
+   "roi": 0.0056,
    "clv": -0.276,
    "belegte": 2
   },
@@ -4478,7 +4478,7 @@
     "nieAnteil": 0.042,
     "schaetzbar": false
    },
-   "alterTage": 0.2,
+   "alterTage": 0.3,
    "art": "mix",
    "wert": "money+sharp+steam",
    "nAlt": 11,
@@ -4518,7 +4518,7 @@
     "nieAnteil": 0.052,
     "schaetzbar": false
    },
-   "alterTage": 2.4,
+   "alterTage": 2.5,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py",
    "seitFreigabe": {
@@ -5098,7 +5098,7 @@
     "nieAnteil": 0.533,
     "schaetzbar": false
    },
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "conviction",
    "wert": 8,
    "nAlt": 12,
@@ -5829,25 +5829,25 @@
   {
    "schublade": "Conviction 6",
    "strom": "poly",
-   "n": 390,
+   "n": 391,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.008,
-   "pl": 3.13,
-   "roiLb": -0.0544,
+   "roi": 0.0091,
+   "pl": 3.55,
+   "roiLb": -0.0533,
    "clv": -0.182,
    "clvLb": -0.66,
    "clvUrteil": "gemessen, nicht belegt",
    "clvOg": 0.297,
    "fehltN": 0,
-   "noetigNRoi": 23647,
+   "noetigNRoi": 18463,
    "noetigNClv": null,
    "noetigGrund": null,
    "entfernung": {
-    "median": 1412,
-    "lo": 213,
-    "hi": 80430,
-    "nieAnteil": 0.423,
+    "median": 1585,
+    "lo": 192,
+    "hi": 128757,
+    "nieAnteil": 0.408,
     "schaetzbar": false
    },
    "alterTage": 0.0,
@@ -5957,7 +5957,7 @@
     "nieAnteil": 0.268,
     "schaetzbar": false
    },
-   "alterTage": 2.4,
+   "alterTage": 2.5,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py"
   },
@@ -6061,7 +6061,7 @@
     "nieAnteil": 0.573,
     "schaetzbar": false
    },
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "conviction",
    "wert": 5,
    "nAlt": 110,
@@ -6905,7 +6905,7 @@
     "nieAnteil": 0.235,
     "schaetzbar": false
    },
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "mix",
    "wert": "bf+money+sharp",
    "nAlt": 9,
@@ -6987,6 +6987,38 @@
    "naeherung": false
   },
   {
+   "schublade": "Mix money+steam",
+   "strom": "poly",
+   "n": 181,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.0435,
+   "pl": -7.87,
+   "roiLb": -0.1328,
+   "clv": -0.507,
+   "clvLb": -1.631,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.617,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "nicht_positiv",
+   "entfernung": {
+    "median": 3221,
+    "lo": 230,
+    "hi": 161124,
+    "nieAnteil": 0.787,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "mix",
+   "wert": "money+steam",
+   "nAlt": 68,
+   "roiAlt": -0.0115,
+   "clvAlt": 3.235,
+   "engineAlt": true
+  },
+  {
    "schublade": "Chinese League 1 · Match Odds",
    "strom": "betfair",
    "n": 36,
@@ -7029,38 +7061,6 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
-  },
-  {
-   "schublade": "Mix money+steam",
-   "strom": "poly",
-   "n": 180,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.046,
-   "pl": -8.29,
-   "roiLb": -0.1357,
-   "clv": -0.507,
-   "clvLb": -1.631,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.617,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "nicht_positiv",
-   "entfernung": {
-    "median": 3108,
-    "lo": 278,
-    "hi": 503209,
-    "nieAnteil": 0.808,
-    "schaetzbar": false
-   },
-   "alterTage": 0.1,
-   "art": "mix",
-   "wert": "money+steam",
-   "nAlt": 68,
-   "roiAlt": -0.0115,
-   "clvAlt": 3.235,
-   "engineAlt": true
   },
   {
    "schublade": "South Korean K1 League · Match Odds",
@@ -9071,7 +9071,7 @@
     "nieAnteil": 0.458,
     "schaetzbar": false
    },
-   "alterTage": 2.8,
+   "alterTage": 2.9,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "top5"
@@ -14664,7 +14664,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 3.1,
+   "alterTage": 3.2,
    "art": "mix",
    "wert": "bf+steam"
   },
@@ -14757,7 +14757,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 0.9,
+   "alterTage": 1.0,
    "art": "mix",
    "wert": "bf+sharp"
   },
@@ -14805,7 +14805,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 16.3,
+   "alterTage": 16.4,
    "art": "mix",
    "wert": "steam",
    "nAlt": 8,
@@ -14915,7 +14915,7 @@
    "strom": "cards",
    "n": 133,
    "status": "ruht",
-   "grund": "letzter Play vor 72 Tagen — die Schublade liefert nichts mehr",
+   "grund": "letzter Play vor 73 Tagen — die Schublade liefert nichts mehr",
    "roi": -0.046,
    "pl": -6.12,
    "roiLb": -0.1766,
@@ -14937,7 +14937,7 @@
    "strom": "cards",
    "n": 25,
    "status": "ruht",
-   "grund": "letzter Play vor 87 Tagen — die Schublade liefert nichts mehr",
+   "grund": "letzter Play vor 88 Tagen — die Schublade liefert nichts mehr",
    "roi": 0.17,
    "pl": 4.25,
    "roiLb": null,

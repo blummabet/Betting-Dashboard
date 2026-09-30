@@ -23,7 +23,7 @@
    "polySide": null,
    "pinnMovePP": null,
    "punkte": {
-    "punkte": 3,
+    "punkte": 5,
     "moeglich": 7,
     "dauerH": 32.93,
     "teile": [
@@ -43,8 +43,8 @@
       },
       "geld": {
        "anteil": 0.965,
-       "betrag": 24383,
-       "gesamt": 25267,
+       "betrag": 24740,
+       "gesamt": 25637,
        "waehrung": "EUR",
        "quelle": "geld"
       },
@@ -53,25 +53,25 @@
      {
       "buch": "POLY",
       "name": "Polymarket",
-      "status": "nein",
-      "punkte": 0,
+      "status": "ja",
+      "punkte": 2,
       "moeglich": 3,
       "grund": {
-       "ok": false,
-       "text": "Poly-Preis 58% auf derselben Seite"
+       "ok": true,
+       "text": "Poly-Preis 60% auf derselben Seite"
       },
       "tiefe": {
        "ok": false,
        "text": "kein bewiesenes Wallet auf der Seite"
       },
       "geld": {
-       "anteil": 0.58,
+       "anteil": 0.6,
        "betrag": null,
        "gesamt": 3672,
        "waehrung": "USD",
        "quelle": "preis"
       },
-      "text": "Poly-Preis 58% auf derselben Seite"
+      "text": "Poly-Preis 60% auf derselben Seite"
      },
      {
       "buch": "PIN",
@@ -174,20 +174,20 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 95% auf der Seite"
+       "text": "Geld 96% auf der Seite"
       },
       "tiefe": {
        "ok": false,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.954,
-       "betrag": 53890,
-       "gesamt": 56488,
+       "anteil": 0.955,
+       "betrag": 55114,
+       "gesamt": 57711,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 95% auf der Seite"
+      "text": "Geld 96% auf der Seite"
      },
      {
       "buch": "POLY",
@@ -206,7 +206,7 @@
       "geld": {
        "anteil": 0.64,
        "betrag": null,
-       "gesamt": 31965,
+       "gesamt": 33056,
        "waehrung": "USD",
        "quelle": "preis"
       },
@@ -261,66 +261,88 @@
    "haltePreis": 1.54,
    "aktiv": false
   },
-  "36110241|Match Odds": {
-   "matchId": "36110241",
-   "home": "USA",
-   "away": "Chile",
+  "36122934|Match Odds": {
+   "matchId": "36122934",
+   "home": "Mexico",
+   "away": "Peru",
    "league": "Friendlies International",
-   "kickoff": "2026-09-30T00:00:00Z",
+   "kickoff": "2026-09-30T01:00:00Z",
    "markt": "Match Odds",
    "seite": "home",
-   "name": "USA",
-   "odd": 1.43,
-   "entryOdd": 1.49,
-   "anteilPct": 87,
+   "name": "Mexico",
+   "odd": 1.4,
+   "entryOdd": 1.7,
+   "anteilPct": 88,
    "stufe": 2,
-   "verstaerker": [],
-   "rang": 58.7,
+   "verstaerker": [
+    {
+     "art": "poly",
+     "text": "Poly Geld 98%",
+     "gewicht": 12
+    }
+   ],
+   "rang": 70.8,
    "track": null,
    "streak": null,
-   "poly": null,
-   "polyStatus": "unbekannt",
-   "polyKey": null,
-   "polySide": null,
+   "poly": {
+    "anteilPct": 98,
+    "usd": 141596,
+    "odd": 1.4
+   },
+   "polyStatus": "ja",
+   "polyKey": "fif-mex-per-2026-09-29",
+   "polySide": "Mexico",
    "pinnMovePP": null,
    "punkte": {
-    "punkte": 6,
-    "moeglich": 7,
-    "dauerH": 3.11,
+    "punkte": 9,
+    "moeglich": 10,
+    "dauerH": 0.91,
     "teile": [
      {
       "buch": "BF",
       "name": "Betfair",
       "status": "ja",
-      "punkte": 2,
+      "punkte": 3,
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 87% auf der Seite"
+       "text": "Geld 88% auf der Seite"
       },
       "tiefe": {
-       "ok": false,
+       "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.867,
-       "betrag": 28505,
-       "gesamt": 32878,
+       "anteil": 0.879,
+       "betrag": 25638,
+       "gesamt": 29167,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 87% auf der Seite"
+      "text": "Geld 88% auf der Seite"
      },
      {
       "buch": "POLY",
       "name": "Polymarket",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "geld": null,
-      "text": "Polymarket nicht erhoben"
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Poly-Geld 98% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "1 bewiesene Wallet drauf"
+      },
+      "geld": {
+       "anteil": 0.98,
+       "betrag": 138764,
+       "gesamt": 141596,
+       "waehrung": "USD",
+       "quelle": "geld"
+      },
+      "text": "Poly-Geld 98% auf derselben Seite"
      },
      {
       "buch": "PIN",
@@ -341,41 +363,41 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "$12.158 Highroller-Geld auf derselben Seite"
+       "text": "$279.378 Highroller-Geld auf derselben Seite"
       },
       "tiefe": {
        "ok": true,
-       "text": "5 Wetten, nicht eine einzelne"
+       "text": "9 Wetten, nicht eine einzelne"
       },
       "geld": {
-       "anteil": 0.5746,
-       "betrag": 12158,
-       "gesamt": 21158,
+       "anteil": 0.9921,
+       "betrag": 279378,
+       "gesamt": 281598,
        "waehrung": "USD",
        "quelle": "geld"
       },
-      "text": "$12.158 Highroller-Geld auf derselben Seite"
+      "text": "$279.378 Highroller-Geld auf derselben Seite"
      },
      {
       "buch": "ZEIT",
       "name": "Dauer",
-      "status": "ja",
-      "punkte": 1,
+      "status": "nein",
+      "punkte": 0,
       "moeglich": 1,
       "grund": {
-       "ok": true,
-       "text": "steht seit 3.1h vor Anpfiff"
+       "ok": false,
+       "text": "steht seit 0.9h vor Anpfiff"
       },
       "tiefe": null,
-      "text": "steht seit 3.1h vor Anpfiff"
+      "text": "steht seit 0.9h vor Anpfiff"
      }
     ]
    },
    "wertVsPinn": null,
-   "gehaltenSeit": "2026-09-29T20:53:29.436980+00:00",
-   "zuletztAktiv": "2026-09-29T21:38:40.348584+00:00",
-   "haltePreis": 1.46,
-   "aktiv": false
+   "gehaltenSeit": "2026-09-30T00:05:36.112372+00:00",
+   "zuletztAktiv": "2026-09-30T00:05:36.112372+00:00",
+   "haltePreis": 1.4,
+   "aktiv": true
   }
  }
 }
