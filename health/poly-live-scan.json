@@ -1,12 +1,12 @@
 {
   "slug": "poly-live-scan",
   "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
-  "updatedAt": "2026-09-30T09:58:51.542755+00:00",
+  "updatedAt": "2026-09-30T10:13:43.592402+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
-    "spanneH": 5.1,
-    "proTag": 89.3,
+    "spanneH": 5.3,
+    "proTag": 86.7,
     "lueckeMinMin": 2.4,
     "lueckeMedianMin": 15.0,
     "lueckeMaxMin": 37.0,
@@ -21,9 +21,24 @@
     "verdraengt": 0,
     "spanneH": 400.2,
     "erzeugtProTag": 6.0,
-    "widerspruch": "erzeugtProTag 6.0 gegen eine gemessene Kadenz von 89.3/Tag (Faktor 14.9) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
+    "widerspruch": "erzeugtProTag 6.0 gegen eine gemessene Kadenz von 86.7/Tag (Faktor 14.5) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
   },
   "runs": [
+    {
+      "ts": "2026-09-30T10:13:43.592402+00:00",
+      "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
+      "runId": "36700785376",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/36700785376",
+      "nSteps": 7,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-09-30T10:10:32Z",
+      "startedAt": "2026-09-30T10:10:32Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 191.6,
+      "event": "workflow_dispatch"
+    },
     {
       "ts": "2026-09-30T09:58:51.542755+00:00",
       "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
@@ -319,27 +334,6 @@
       "startedAt": "2026-09-30T04:55:00Z",
       "wartetS": 0.0,
       "laeuftSeitS": 187.9,
-      "event": "workflow_dispatch"
-    },
-    {
-      "ts": "2026-09-30T04:52:20.698911+00:00",
-      "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
-      "runId": "36669846374",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/36669846374",
-      "nSteps": 7,
-      "apiError": null,
-      "ok": false,
-      "failures": [
-        {
-          "job": "live",
-          "step": "⚡ Live-Scan (ein Durchlauf)",
-          "conclusion": "cancelled"
-        }
-      ],
-      "createdAt": "2026-09-30T04:39:47Z",
-      "startedAt": "2026-09-30T04:39:47Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 753.7,
       "event": "workflow_dispatch"
     }
   ]
