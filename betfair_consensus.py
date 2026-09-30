@@ -784,15 +784,29 @@ def anker_grund(m, ev, alle_events, max_h=ANPFIFF_FENSTER_H):
             out["pinnRoh"] = ev.get("pinnRoh")
         return out
     home, away = m.get("home"), m.get("away")
-    best, best_sc, best_both = None, 0.0, False
+    best, best_sc, best_both, best_seite = None, 0.0, False, 0.0
     for e in (alle_events or []):
         hh, aa = _name_score(home, e.get("home")), _name_score(away, e.get("away"))
         ha, ah = _name_score(home, e.get("away")), _name_score(away, e.get("home"))
         sc, both = max((hh + aa, hh > 0 and aa > 0), (ha + ah, ha > 0 and ah > 0))
         if sc > best_sc:
-            best, best_sc, best_both = e, sc, both
+            best, best_sc, best_both, best_seite = e, sc, both, max(hh, aa, ha, ah)
     if best is None:
         return {"spiel": spiel, "grund": "kein_kandidat"}
+    # 🔴 30.09.2026 (Stoerungsmeldung): „Roots FC v Sporting Club Bengaluru (Bangalore Super
+    # Division League): name — bester Kandidat „Braga v Sporting Lisbon"". Gemeinsam war EIN Wort
+    # auf EINER Seite (Score 0,5). Das ist kein Kandidat, das ist ein Allerweltswort — und der
+    # Waechter meldete es als Namensfehler, den wir beheben koennten. Der Fall, fuer den `name`
+    # gebaut wurde (Czechia v Croatia gegen Czech Republic v Croatia), hatte eine Seite VOLL
+    # getroffen (1,0); „Bosnia" gegen „Bosnia and Herzegovina" ist einseitig 0,5 und trotzdem
+    # echt — der Unterschied ist der ANPFIFF: eine Namensluecke ist nur plausibel, wenn die Zeit
+    # passt. Braga v Sporting lag Stunden daneben. Einseitig, unter der Match-Schwelle UND zu
+    # anderer Zeit heisst: kein Kandidat.
+    if not best_both and best_seite < MATCH_MIN:
+        _d = _stunden(m.get("kickoff"), best.get("commence"))
+        if _d is None or _d > max_h:
+            return {"spiel": spiel, "grund": "kein_kandidat",
+                    "naechster": "%s v %s" % (best.get("home"), best.get("away"))}
     info = {"spiel": spiel, "kandidat": "%s v %s" % (best.get("home"), best.get("away")), "key": best.get("key"),
             "score": round(best_sc, 2)}
     if best_both and best_sc >= MATCH_MIN:

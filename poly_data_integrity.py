@@ -650,7 +650,16 @@ def _warum_haengt(e, ctx) -> str:
     """
     key = (e or {}).get("key", "")
     r = ctx.resolutions.get(key) if isinstance(ctx.resolutions, dict) else None
+    if (r or {}).get("teilung") and not (r or {}).get("winner"):
+        return "Auflösung ohne Sieger liegt vor (Teilung) — der Abrechner hat sie noch nicht gesehen"
     if not (r or {}).get("winner"):
+        # 30.09.2026: „keine Auflösung gefunden" stand auch da, wo das Close-File sie kennt —
+        # Alcaraz v de Minaur (Laver Cup, nicht gespielt): Poly 0,5/0,5, UMA noch „proposed".
+        cz = (ctx.close or {}).get(key) if isinstance(ctx.close, dict) else None
+        rp = (cz or {}).get("resolvedPrices") or {}
+        if (cz or {}).get("resolved") and not (cz or {}).get("resolvedWinner") and rp:
+            return ("Poly hat ohne Sieger geschlossen (%s) — wird als void abgerechnet, sobald die "
+                    "UMA-Auflösung final ist" % " / ".join("%.2f" % float(v) for v in rp.values()))
         return "keine Auflösung gefunden"
     if "-more-markets" not in str(key):
         return "Auflösung liegt vor — der Abrechner hat sie noch nicht gesehen"
