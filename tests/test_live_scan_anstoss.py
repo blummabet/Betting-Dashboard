@@ -77,3 +77,24 @@ def test_workflow_fragt_vor_dem_anstoss():
     src = open(".github/workflows/betfair.yml", encoding="utf-8").read()
     schritt = src.split("Live-Scan anstossen")[-1]
     assert schritt.index("live_scan_faellig.py") < schritt.index("dispatches")
+
+
+def test_reihenfolge_der_liste_egal():
+    """30.09.2026: health/poly-live-scan.json steht NEUESTE ZUERST — gelesen wurde runs[-1], der
+    aelteste Lauf, und die Drossel griff nie. Gegentest mit echter Reihenfolge."""
+    neu_zuerst = {"runs": [{"ts": (_JETZT - _td(minutes=m)).isoformat()} for m in (10, 25, 40, 55, 70)]}
+    alt_zuerst = {"runs": list(reversed(neu_zuerst["runs"]))}
+    assert LF.faellig(neu_zuerst, _JETZT) is False
+    assert LF.faellig(alt_zuerst, _JETZT) is False
+    assert round(LF.alter_min(neu_zuerst, _JETZT)) == 10
+
+
+def test_echtes_health_artefakt_hat_diese_reihenfolge():
+    """Haelt die Annahme fest, an der der Fehler hing: die neueste Zeile steht oben."""
+    import json, os
+    p = "health/poly-live-scan.json"
+    if not os.path.exists(p):
+        return
+    runs = json.load(open(p, encoding="utf-8")).get("runs") or []
+    if len(runs) >= 2:
+        assert str(runs[0].get("startedAt")) >= str(runs[-1].get("startedAt"))
