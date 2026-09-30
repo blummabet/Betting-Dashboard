@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-09-30T04:36:12.335259+00:00",
+"generatedAt": "2026-09-30T04:39:11.236887+00:00",
 "count": 4,
 "covered": 3,
 "leaguesKuratiert": [
@@ -62,8 +62,8 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 123064,
-"remaining": 4876936,
+"used": 123202,
+"remaining": 4876798,
 "letzterFehler": null
 },
 "ankerQuote": 1.0,
@@ -80,7 +80,7 @@
 "moneyName": "Norway",
 "moneySharePct": 96,
 "moneyOdd": 1.54,
-"moneyDir": "in",
+"moneyDir": "flat",
 "totVol": 60304,
 "pinnOdd": 1.51,
 "softOdd": 1.48,
@@ -132,7 +132,7 @@
 "moneyName": "Germany",
 "moneySharePct": 93,
 "moneyOdd": 1.27,
-"moneyDir": "in",
+"moneyDir": "flat",
 "totVol": 45234,
 "pinnOdd": 1.26,
 "softOdd": 1.22,
@@ -182,10 +182,10 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "Portugal",
-"moneySharePct": 46,
+"moneySharePct": 54,
 "moneyOdd": 2.16,
 "moneyDir": "flat",
-"totVol": 20869,
+"totVol": 24565,
 "pinnOdd": 2.08,
 "softOdd": 2.03,
 "softN": 37,
@@ -215,7 +215,7 @@
 "pinnMovePP": 0.5,
 "pinnMove": {
 "movePP": 0.5,
-"stepPP": -0.0,
+"stepPP": 0.0,
 "n": 25,
 "move": false,
 "laeuft": false
@@ -236,7 +236,7 @@
 "moneyName": "Lithuania",
 "moneySharePct": 96,
 "moneyOdd": 1.68,
-"moneyDir": "in",
+"moneyDir": "flat",
 "totVol": 26428,
 "pinnOdd": null,
 "softOdd": null,
@@ -272,10 +272,10 @@
 "ankerMit": 2,
 "ankerDiagnose": {
 "nach": {
-"name": 77,
+"name": 76,
 "kein_kandidat": 43,
 "kein_pinnacle": 12,
-"zeit": 2
+"zeit": 3
 },
 "beispiele": [
 {
@@ -297,21 +297,21 @@
 "liga": "Friendlies International"
 },
 {
-"spiel": "Scotland U19 v Ukraine U19",
-"kandidat": "Ukraine v Northern Ireland",
-"key": "soccer_uefa_nations_league",
-"score": 0.5,
-"grund": "name",
-"matchId": "36131597",
-"liga": "Friendlies International U19"
-},
-{
 "spiel": "Finland U19 v Germany U19",
 "kandidat": "Germany v Serbia",
 "key": "soccer_uefa_nations_league",
 "score": 0.5,
 "grund": "name",
 "matchId": "36131595",
+"liga": "Friendlies International U19"
+},
+{
+"spiel": "Scotland U19 v Ukraine U19",
+"kandidat": "Ukraine v Northern Ireland",
+"key": "soccer_uefa_nations_league",
+"score": 0.5,
+"grund": "name",
+"matchId": "36131597",
 "liga": "Friendlies International U19"
 },
 {
@@ -333,30 +333,21 @@
 "liga": "UEFA Ladies Europa Cup"
 },
 {
-"spiel": "Rosenborg BK (W) v Slovan Liberec (W)",
-"kandidat": "Rosenborg v Sandefjord",
-"key": "soccer_norway_eliteserien",
-"score": 0.5,
-"grund": "name",
-"matchId": "36130566",
-"liga": "UEFA Ladies Europa Cup"
-},
-{
-"spiel": "Fortuna Hjorring (W) v PSV Eindhoven (W)",
-"kandidat": "PSV Eindhoven v Heerenveen",
-"key": "soccer_netherlands_eredivisie",
+"spiel": "SK Brann (W) v HJK Helsinki (W)",
+"kandidat": "HJK Helsinki v VPS Vaasa",
+"key": "soccer_finland_veikkausliiga",
 "score": 0.67,
 "grund": "name",
-"matchId": "36132723",
+"matchId": "36130541",
 "liga": "UEFA Ladies Europa Cup"
 },
 {
-"spiel": "Malta U21 v Germany U21",
-"kandidat": "Germany v Serbia",
+"spiel": "Czechia U21 v Bulgaria U21",
+"kandidat": "Spain v Czech Republic",
 "key": "soccer_uefa_nations_league",
 "score": 0.5,
 "grund": "name",
-"matchId": "36132174",
+"matchId": "36131302",
 "liga": "UEFA U21 Euro Qualifiers"
 },
 {
@@ -369,6 +360,24 @@
 "liga": "UEFA U21 Euro Qualifiers"
 },
 {
+"spiel": "Malta U21 v Germany U21",
+"kandidat": "Germany v Serbia",
+"key": "soccer_uefa_nations_league",
+"score": 0.5,
+"grund": "name",
+"matchId": "36132174",
+"liga": "UEFA U21 Euro Qualifiers"
+},
+{
+"spiel": "Rosenborg BK (W) v Slovan Liberec (W)",
+"kandidat": "Rosenborg v Sandefjord",
+"key": "soccer_norway_eliteserien",
+"score": 0.5,
+"grund": "name",
+"matchId": "36130566",
+"liga": "UEFA Ladies Europa Cup"
+},
+{
 "spiel": "Faroe Islands U21 v Luxembourg U21",
 "kandidat": "Faroe Islands v Slovakia",
 "key": "soccer_uefa_nations_league",
@@ -378,22 +387,13 @@
 "liga": "UEFA U21 Euro Qualifiers"
 },
 {
-"spiel": "Romania U21 v Finland U21",
-"kandidat": "Poland v Romania",
-"key": "soccer_uefa_nations_league",
-"score": 0.5,
+"spiel": "Fortuna Hjorring (W) v PSV Eindhoven (W)",
+"kandidat": "PSV Eindhoven v Heerenveen",
+"key": "soccer_netherlands_eredivisie",
+"score": 0.67,
 "grund": "name",
-"matchId": "36131063",
-"liga": "UEFA U21 Euro Qualifiers"
-},
-{
-"spiel": "Czechia U21 v Bulgaria U21",
-"kandidat": "Spain v Czech Republic",
-"key": "soccer_uefa_nations_league",
-"score": 0.5,
-"grund": "name",
-"matchId": "36131302",
-"liga": "UEFA U21 Euro Qualifiers"
+"matchId": "36132723",
+"liga": "UEFA Ladies Europa Cup"
 },
 {
 "spiel": "Spartak Myjava (W) v PAOK (W)",
@@ -405,22 +405,13 @@
 "liga": "UEFA Ladies Europa Cup"
 },
 {
-"spiel": "SK Brann (W) v HJK Helsinki (W)",
-"kandidat": "HJK Helsinki v VPS Vaasa",
-"key": "soccer_finland_veikkausliiga",
-"score": 0.67,
+"spiel": "Romania U21 v Finland U21",
+"kandidat": "Poland v Romania",
+"key": "soccer_uefa_nations_league",
+"score": 0.5,
 "grund": "name",
-"matchId": "36130541",
-"liga": "UEFA Ladies Europa Cup"
-},
-{
-"spiel": "Eintracht Frankfurt (W) v Hafnarfjordur (W)",
-"kandidat": "RB Leipzig v Eintracht Frankfurt",
-"key": "soccer_germany_bundesliga",
-"score": 0.67,
-"grund": "name",
-"matchId": "36130961",
-"liga": "UEFA Ladies Europa Cup"
+"matchId": "36131063",
+"liga": "UEFA U21 Euro Qualifiers"
 },
 {
 "spiel": "Portugal U19 v Netherlands U19",
@@ -441,12 +432,12 @@
 "liga": "UEFA Ladies Europa Cup"
 },
 {
-"spiel": "Real Sociedad (W) v Hearts (W)",
-"kandidat": "Real Sociedad v Deportivo La Coruña",
-"key": "soccer_spain_la_liga",
+"spiel": "Eintracht Frankfurt (W) v Hafnarfjordur (W)",
+"kandidat": "RB Leipzig v Eintracht Frankfurt",
+"key": "soccer_germany_bundesliga",
 "score": 0.67,
 "grund": "name",
-"matchId": "36130667",
+"matchId": "36130961",
 "liga": "UEFA Ladies Europa Cup"
 },
 {
@@ -459,6 +450,15 @@
 "liga": "UEFA Ladies Europa Cup"
 },
 {
+"spiel": "Real Sociedad (W) v Hearts (W)",
+"kandidat": "Real Sociedad v Deportivo La Coruña",
+"key": "soccer_spain_la_liga",
+"score": 0.67,
+"grund": "name",
+"matchId": "36130667",
+"liga": "UEFA Ladies Europa Cup"
+},
+{
 "spiel": "Kosovo U21 v Cyprus U21",
 "kandidat": "Israel v Kosovo",
 "key": "soccer_uefa_nations_league",
@@ -468,12 +468,12 @@
 "liga": "UEFA U21 Euro Qualifiers"
 },
 {
-"spiel": "Leicester U21 v Real Sociedad U21",
-"kandidat": "Real Sociedad v Deportivo La Coruña",
-"key": "soccer_spain_la_liga",
+"spiel": "Nottingham Forest U21 v Sporting CP U21",
+"kandidat": "Crystal Palace v Nottingham Forest",
+"key": "soccer_epl",
 "score": 0.67,
 "grund": "name",
-"matchId": "36132345",
+"matchId": "36133350",
 "liga": "Other Competitions Soccer"
 },
 {
@@ -486,12 +486,12 @@
 "liga": "UEFA Ladies Europa Cup"
 },
 {
-"spiel": "Nottingham Forest U21 v Sporting CP U21",
-"kandidat": "Crystal Palace v Nottingham Forest",
-"key": "soccer_epl",
+"spiel": "Leicester U21 v Real Sociedad U21",
+"kandidat": "Real Sociedad v Deportivo La Coruña",
+"key": "soccer_spain_la_liga",
 "score": 0.67,
 "grund": "name",
-"matchId": "36133350",
+"matchId": "36132345",
 "liga": "Other Competitions Soccer"
 },
 {
@@ -576,21 +576,21 @@
 "liga": "Friendlies International U19"
 },
 {
-"spiel": "Faroe Islands U19 v Slovenia U19",
-"kandidat": "Faroe Islands v Slovakia",
-"key": "soccer_uefa_nations_league",
-"score": 0.67,
-"grund": "name",
-"matchId": "36133931",
-"liga": "Friendlies International U19"
-},
-{
 "spiel": "Qatar U19 v Ireland U19",
 "kandidat": "Ukraine v Northern Ireland",
 "key": "soccer_uefa_nations_league",
 "score": 0.5,
 "grund": "name",
 "matchId": "36133954",
+"liga": "Friendlies International U19"
+},
+{
+"spiel": "Faroe Islands U19 v Slovenia U19",
+"kandidat": "Faroe Islands v Slovakia",
+"key": "soccer_uefa_nations_league",
+"score": 0.67,
+"grund": "name",
+"matchId": "36133931",
 "liga": "Friendlies International U19"
 },
 {
@@ -632,14 +632,14 @@
 "liga": "UEFA Women's Champions League"
 },
 {
-"spiel": "Republic of Ireland v Austria",
+"spiel": "Malta v Gibraltar",
 "grund": "kein_pinnacle",
-"kandidat": "Republic of Ireland v Austria",
+"kandidat": "Malta v Gibraltar",
 "key": "soccer_uefa_nations_league",
-"nSoft": 29,
+"nSoft": 35,
 "pinnacleImEvent": false,
-"nBuecher": 29,
-"matchId": "36118061",
+"nBuecher": 35,
+"matchId": "36125966",
 "liga": "UEFA Nations League"
 }
 ]
