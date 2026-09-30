@@ -1935,14 +1935,21 @@ def fetch_markets(live_only=False, pin=None):
     # (02.08.2026, Lucas) Getrackte, aber verschwundene Märkte GEZIELT per eigenem Slug auflösen —
     # die Auflösung landet damit unter DEMSELBEN Key wie die offene Position (fixt den Settlement-
     # Key-Mismatch, v.a. Esports). Additiv/defensiv: schlägt es fehl, bleibt alles wie bisher.
-    try:
-        _seen_open = {c[1] for c in candidates} | {m.get("key") for m in markets}
-        _bf = backfill_lauf(_seen_open)
-        if _bf:
-            markets += _bf
-            print(f"  \U0001f501 {len(_bf)} getrackte Markt-Auflösung(en) per Slug nachgezogen (Key-Match)")
-    except Exception as _e:
-        print(f"  Resolution-Backfill übersprungen (nicht fatal): {_e}")
+    # 🔴 29.09.2026 (Lucas: „⚡ Live-Scan (ein Durchlauf) (cancelled) — in letzter Zeit paar mal
+    # abgebrochen"). Der Lauf 36627837915 lief 789 s gegen einen Deckel von 12 Min; Median sonst
+    # 251 s. Der Live-Lauf fragte hier jedes Mal bis zu RESOLVE_LOOKUP_MAX (60) Maerkte EINZELN
+    # nach (am Abend 57 offene), je bis 12 s Timeout x 2 Versuche — und `main_live` wirft das
+    # Ergebnis weg: es schreibt nur laufende Maerkte, Aufloesungen schreibt allein `main()`.
+    # Fehlerklasse: teure Arbeit in einem Modus, der ihr Ergebnis nicht verwendet.
+    if not live_only:
+        try:
+            _seen_open = {c[1] for c in candidates} | {m.get("key") for m in markets}
+            _bf = backfill_lauf(_seen_open)
+            if _bf:
+                markets += _bf
+                print(f"  \U0001f501 {len(_bf)} getrackte Markt-Auflösung(en) per Slug nachgezogen (Key-Match)")
+        except Exception as _e:
+            print(f"  Resolution-Backfill übersprungen (nicht fatal): {_e}")
     _save_league_registry(_discovered)   # 16.08.2026 (Lucas): neu entdeckte Fussball-Ligen persistieren -> naechster Lauf fetcht sie voll
     fetch_markets.discovered = sorted(_discovered)   # Diagnose
     fetch_markets.raw_by_tag = raw_by_tag   # 21.07.2026: für die Diagnose im Output
@@ -2491,6 +2498,8 @@ def main_live() -> int:
     # main_live dann VOR dem Schreiben -> die Live-Datei fror auf dem letzten Stand ein (Spiele standen
     # 13h spaeter noch als "live"). Jetzt: bei Fetch-Fehler leer weiterlaufen -> capture_live prunt die
     # alten Eintraege (>LIVE_KEEP_H) raus, die Datei wird ehrlich leer statt eingefroren.
+    import time as _t
+    _t0 = _t.monotonic()
     try:
         markets = fetch_markets(live_only=True, pin=pin_von_close(_load(CLOSE_FILE)))
     except Exception as e:
@@ -2502,7 +2511,8 @@ def main_live() -> int:
     live_hist = append_history(_load(LIVE_HIST_FILE), live, min_vol=min_vol,
                                max_points=LIVE_HIST_MAX_POINTS, keep_h=LIVE_HIST_KEEP_H)
     write_json_atomic((BASE / LIVE_HIST_FILE), live_hist, indent=1)
-    print(f"[LIVE-only] {len(live_store)} laufende Maerkte erfasst (Tail {LIVE_TAIL_H}h, Deckel {MAX_HOLDER_CALLS_LIVE})")
+    print(f"[LIVE-only] {len(live_store)} laufende Maerkte erfasst (Tail {LIVE_TAIL_H}h, Deckel {MAX_HOLDER_CALLS_LIVE})"
+          f" · {_t.monotonic() - _t0:.0f} s")   # 29.09.2026: Dauer ins Log — der naechste Abbruch hat eine Zahl
     return 0
 
 
