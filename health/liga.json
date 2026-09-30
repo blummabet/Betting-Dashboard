@@ -1,14 +1,14 @@
 {
   "slug": "liga",
   "workflow": "⚽ Liga aktualisieren (Top 5)",
-  "updatedAt": "2026-09-30T12:34:44.418107+00:00",
+  "updatedAt": "2026-09-30T14:19:58.708659+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
-    "spanneH": 159.0,
-    "proTag": 2.9,
+    "spanneH": 146.6,
+    "proTag": 3.1,
     "lueckeMinMin": 15.3,
-    "lueckeMedianMin": 514.6,
+    "lueckeMedianMin": 490.9,
     "lueckeMaxMin": 1029.5,
     "sollProTag": null,
     "liefergradPct": null,
@@ -19,10 +19,26 @@
     "erzeugt": 100,
     "gelaufen": 100,
     "verdraengt": 0,
-    "spanneH": 858.1,
-    "erzeugtProTag": 2.8
+    "spanneH": 1673.9,
+    "erzeugtProTag": 1.4,
+    "widerspruch": "erzeugtProTag 1.4 gegen eine gemessene Kadenz von 3.1/Tag (Faktor 2.2) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
   },
   "runs": [
+    {
+      "ts": "2026-09-30T14:19:58.708659+00:00",
+      "workflow": "⚽ Liga aktualisieren (Top 5)",
+      "runId": "36726993035",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/36726993035",
+      "nSteps": 55,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-09-30T14:09:40Z",
+      "startedAt": "2026-09-30T14:09:40Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 618.7,
+      "event": "schedule"
+    },
     {
       "ts": "2026-09-30T12:34:44.418107+00:00",
       "workflow": "⚽ Liga aktualisieren (Top 5)",
@@ -306,21 +322,6 @@
       "startedAt": "2026-09-24T11:35:09Z",
       "wartetS": 0.0,
       "laeuftSeitS": 559.3,
-      "event": "schedule"
-    },
-    {
-      "ts": "2026-09-23T21:34:19.870209+00:00",
-      "workflow": "⚽ Liga aktualisieren (Top 5)",
-      "runId": "35922472145",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/35922472145",
-      "nSteps": 54,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-09-23T21:26:43Z",
-      "startedAt": "2026-09-23T21:26:43Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 456.9,
       "event": "schedule"
     }
   ]
