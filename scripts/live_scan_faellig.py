@@ -25,13 +25,20 @@ def alter_min(health, now=None):
     runs = (health or {}).get("runs") if isinstance(health, dict) else None
     if not runs:
         return None
-    r = runs[-1] or {}
-    try:
-        t = datetime.fromisoformat(str(r.get("ts") or r.get("startedAt")).replace("Z", "+00:00"))
-    except (TypeError, ValueError):
+    # 🔴 30.09.2026: hier stand `runs[-1]` — die Liste steht aber NEUESTE ZUERST. Gelesen wurde
+    # also der aelteste Lauf, der immer > 40 Min alt ist: die Drossel griff nie, der Live-Scan
+    # tickte nach dem Push weiter alle 15 Min. Der juengste Zeitstempel, egal in welcher
+    # Reihenfolge die Liste steht.
+    zeiten = []
+    for r in runs:
+        try:
+            t = datetime.fromisoformat(str((r or {}).get("ts") or (r or {}).get("startedAt")).replace("Z", "+00:00"))
+        except (TypeError, ValueError, AttributeError):
+            continue
+        zeiten.append(t.replace(tzinfo=timezone.utc) if t.tzinfo is None else t)
+    if not zeiten:
         return None
-    t = t.replace(tzinfo=timezone.utc) if t.tzinfo is None else t
-    return (now - t).total_seconds() / 60.0
+    return (now - max(zeiten)).total_seconds() / 60.0
 
 
 def faellig(health, now=None, abstand_min=ABSTAND_MIN) -> bool:
