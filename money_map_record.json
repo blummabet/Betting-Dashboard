@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-30T03:54:13.104571+00:00",
+"generatedAt": "2026-09-30T06:39:45.596948+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1393,
+"n": 1394,
 "wins": 1192,
-"hitRate": 0.8557,
-"polyN": 1334,
+"hitRate": 0.8551,
+"polyN": 1335,
 "polyWins": 1051,
-"polyHitRate": 0.7879,
+"polyHitRate": 0.7873,
 "pinnN": 210,
 "pinnHitRate": 0.7762,
-"nRoi": 920,
-"roi": 0.4053,
-"roiLb": 0.3638,
-"nClv": 920,
-"clv": 18.95,
-"clvLb": 17.5187
+"nRoi": 921,
+"roi": 0.4038,
+"roiLb": 0.3622,
+"nClv": 921,
+"clv": 18.86,
+"clvLb": 17.4243
 },
 "uneinig": {
-"n": 565,
-"wins": 182,
-"hitRate": 0.3221,
-"polyN": 530,
+"n": 566,
+"wins": 183,
+"hitRate": 0.3233,
+"polyN": 531,
 "polyWins": 137,
-"polyHitRate": 0.2585,
+"polyHitRate": 0.258,
 "pinnN": 335,
 "pinnHitRate": 0.6328,
-"nRoi": 400,
-"roi": -0.4495,
-"roiLb": -0.5348,
-"nClv": 400,
-"clv": -20.1,
-"clvLb": -22.8399
+"nRoi": 401,
+"roi": -0.4468,
+"roiLb": -0.532,
+"nClv": 401,
+"clv": -20.0,
+"clvLb": -22.7393
 },
 "teil": {
 "n": 32,
@@ -92,9 +92,9 @@
 "hitRate": 0.62
 },
 "Colombian Primera A": {
-"n": 48,
-"wins": 32,
-"hitRate": 0.6667
+"n": 49,
+"wins": 33,
+"hitRate": 0.6735
 },
 "Argentinian Primera Division": {
 "n": 46,
@@ -256,6 +256,11 @@
 "wins": 11,
 "hitRate": 0.6471
 },
+"Friendlies International": {
+"n": 17,
+"wins": 12,
+"hitRate": 0.7059
+},
 "UEFA Europa League": {
 "n": 17,
 "wins": 14,
@@ -285,11 +290,6 @@
 "n": 16,
 "wins": 7,
 "hitRate": 0.4375
-},
-"Friendlies International": {
-"n": 16,
-"wins": 12,
-"hitRate": 0.75
 },
 "Polish Ekstraklasa": {
 "n": 16,
@@ -685,26 +685,64 @@
 "clvLb": 11.7371
 },
 "weak": {
-"n": 748,
-"wins": 374,
+"n": 750,
+"wins": 375,
 "hitRate": 0.5,
-"nRoi": 479,
-"roi": -0.2043,
-"roiLb": -0.2774,
-"nClv": 479,
-"clv": -6.8,
-"clvLb": -9.1937
+"nRoi": 481,
+"roi": -0.2042,
+"roiLb": -0.2771,
+"nClv": 481,
+"clv": -6.86,
+"clvLb": -9.2546
 }
 },
 "divergence": {
-"n": 565,
-"betfairWins": 182,
-"betfairRate": 0.3221,
-"polyN": 530,
+"n": 566,
+"betfairWins": 183,
+"betfairRate": 0.3233,
+"polyN": 531,
 "polyWins": 137,
-"polyRate": 0.2585
+"polyRate": 0.258
 },
 "recent": [
+{
+"matchId": "36122934",
+"home": "Mexico",
+"away": "Peru",
+"league": "Friendlies International",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Mexico",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-09-30T01:00:00Z",
+"settledAt": "2026-09-30T04:36:14.871903+00:00"
+},
+{
+"matchId": "36114528",
+"home": "Ind Medellin",
+"away": "Millonarios",
+"league": "Colombian Primera A",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-09-30T01:05:00Z",
+"settledAt": "2026-09-30T04:36:14.871903+00:00"
+},
 {
 "matchId": "36100524",
 "home": "Botafogo SP",
@@ -1426,56 +1464,18 @@
 ],
 "kickoff": "2026-09-29T00:00:00Z",
 "settledAt": "2026-09-29T03:06:11.959110+00:00"
-},
-{
-"matchId": "36104541",
-"home": "Wanderers (Uru)",
-"away": "Albion FC",
-"league": "Uruguayan Primera Division",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Wanderers (Uru)",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-09-28T23:00:00Z",
-"settledAt": "2026-09-29T02:03:17.452791+00:00"
-},
-{
-"matchId": "36126382",
-"home": "Quindio",
-"away": "Bogota",
-"league": "Colombian Primera B",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Quindio",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-09-28T23:00:00Z",
-"settledAt": "2026-09-29T02:03:17.452791+00:00"
 }
 ],
 "global": {
-"n": 1990,
-"wins": 1379,
-"hitRate": 0.693,
-"nRoi": 1346,
-"roi": 0.1285,
-"roiLb": 0.0861,
-"nClv": 1346,
-"clv": 6.33,
-"clvLb": 4.8041
+"n": 1992,
+"wins": 1380,
+"hitRate": 0.6928,
+"nRoi": 1348,
+"roi": 0.1281,
+"roiLb": 0.0857,
+"nClv": 1348,
+"clv": 6.29,
+"clvLb": 4.7626
 },
-"pending": 10
+"pending": 8
 }
