@@ -154,3 +154,24 @@ class WorkflowsNutzenDasSkriptTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+
+
+class TestNetzHatEineZeitgrenze(unittest.TestCase):
+    """30.09.2026: Betfair 808/843 s statt 90-120 s, Live-Scan im Pull-Schritt abgebrochen.
+    `git fetch`/`git push` warten von sich aus unbegrenzt auf eine stockende Verbindung."""
+
+    def test_bremse_steht_vor_dem_ersten_netzzugriff(self):
+        src = open(SKRIPT, encoding="utf-8").read()
+        bremse = src.find("git config http.lowSpeedTime")
+        erster = src.find("\ngit fetch origin")
+        self.assertGreater(bremse, 0, "Gegentest: der alte Stand hatte keine Zeitgrenze")
+        self.assertLess(bremse, erster, "die Bremse muss VOR dem ersten Netzzugriff gesetzt sein")
+
+    def test_bremse_landet_in_der_repo_konfiguration(self):
+        """Nur so gilt sie auch fuer die `git push`-Schleifen der Workflows."""
+        with tempfile.TemporaryDirectory() as d:
+            _sh("git init -q && git remote add origin https://example.invalid/x.git", d)
+            subprocess.run(["bash", SKRIPT, "main"], cwd=d, capture_output=True, text=True, timeout=60)
+            out = subprocess.run(["git", "config", "http.lowSpeedTime"], cwd=d,
+                                 capture_output=True, text=True).stdout.strip()
+            self.assertEqual(out, "60")

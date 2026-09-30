@@ -26,6 +26,21 @@
 #   merge  (Standard) = --no-rebase -X ours --autostash, wie ueberall im Repo
 #   rebase             = --rebase --autostash, fuer die zwei Workflows, die das bewusst so machen
 set -uo pipefail
+
+# 🔴 30.09.2026 (Lucas: „paar Fehler aus Poly bzw. Betfair Actions in den letzten 2-3 Stunden",
+# zweimal „Error: The operation was canceled."). Gemessen: Betfair 808 s und 843 s statt 90-120 s
+# (09:23 und 10:23 UTC), der Live-Scan um 09:40 UTC lief 760 s und wurde IM PULL-SCHRITT
+# abgebrochen — bevor er ueberhaupt scannte. Alle drei Workflows gleichzeitig langsam, jedes Mal
+# rund um git. Ein `git fetch`/`git push` hat von sich aus KEINE Zeitgrenze: stockt die
+# Verbindung, wartet er, bis der Job-Deckel ihn abschiesst — und mit ihm alles, was danach
+# gekommen waere.
+# Fehlerklasse: eine Netz-Operation ohne Zeitgrenze. Git hat eine eigene Bremse: faellt die
+# Uebertragung 60 s lang unter 1 kB/s, bricht sie ab (und `|| true` bzw. die Retry-Schleifen
+# fangen das). Als Repo-Konfiguration gesetzt, damit sie auch fuer jedes spaetere `git push`
+# im selben Checkout gilt — 42 Workflows ziehen hierueber, statt 42 Dateien einzeln.
+git config http.lowSpeedLimit 1000 2>/dev/null || true
+git config http.lowSpeedTime 60 2>/dev/null || true
+export GIT_HTTP_LOW_SPEED_LIMIT=1000 GIT_HTTP_LOW_SPEED_TIME=60
 BRANCH="${1:-main}"
 MODUS="${2:-merge}"
 ABLAGE=".ci_kollisionen"
