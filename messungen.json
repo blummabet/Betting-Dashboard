@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-30T11:53:50.601913+00:00",
+ "generatedAt": "2026-09-30T13:07:52.566886+00:00",
  "heute": "2026-09-30",
  "messungen": [
   {
@@ -52,9 +52,9 @@
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "nachtrag": "27.09.2026: Zwischenstand n=152 (Mindestzahl 40 erreicht). Treffer 66,5 %, ROI -4,5 % (UG -14,3 %), CLV -0,04 pp. Die Rueckschau (77,1 % / +19,9 %) haelt vorwaerts nicht. Heutige Public-Regel seit 03.09.: n=47, ROI +14,2 % (UG -10,0 %).",
-   "standN": 240,
+   "standN": 242,
    "zustand": "bereit",
-   "stand": "240 von 40 Beobachtungen · faellig in 30 Tag(en)",
+   "stand": "242 von 40 Beobachtungen · faellig in 30 Tag(en)",
    "fortschritt": 1.0,
    "tageBisFaellig": 30
   },
@@ -88,10 +88,10 @@
    "mindestN": 150,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 119,
+   "standN": 121,
    "zustand": "sammelt",
-   "stand": "119 von 150 Beobachtungen · faellig in 9 Tag(en)",
-   "fortschritt": 0.7933333333333333,
+   "stand": "121 von 150 Beobachtungen · faellig in 9 Tag(en)",
+   "fortschritt": 0.8066666666666666,
    "tageBisFaellig": 9
   },
   {
@@ -234,10 +234,10 @@
    "mindestN": 20000,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 11224,
+   "standN": 11259,
    "zustand": "sammelt",
-   "stand": "11224 von 20000 Beobachtungen · faellig in 46 Tag(en)",
-   "fortschritt": 0.5612,
+   "stand": "11259 von 20000 Beobachtungen · faellig in 46 Tag(en)",
+   "fortschritt": 0.56295,
    "tageBisFaellig": 46
   },
   {
@@ -252,10 +252,10 @@
    "mindestN": 20000,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 11224,
+   "standN": 11259,
    "zustand": "sammelt",
-   "stand": "11224 von 20000 Beobachtungen · faellig in 46 Tag(en)",
-   "fortschritt": 0.5612,
+   "stand": "11259 von 20000 Beobachtungen · faellig in 46 Tag(en)",
+   "fortschritt": 0.56295,
    "tageBisFaellig": 46
   },
   {
@@ -277,6 +277,24 @@
    "tageBisFaellig": 46
   },
   {
+   "id": "stake-kleine-liga",
+   "titel": "Trägt eine große Einzelwette vor Anpfiff in einer kleinen Fußball-Liga?",
+   "frage": "ROI (geldgewichtet je Meldung) der Kleine-Liga-Meldungen: Fußball, Ebene 2 oder 3 (stake_liga_stufe), vor Anpfiff, Einzelwette, Quote ab 1,35, Einsatz >= 2x Norm der Liga (sonst Median der Ebene). Urteil über die Rendite-Untergrenze, nicht über den Punktschätzer.",
+   "warum": "30.09.2026 (Lucas): „hab ja oft genug erwähnt das ich die kleinen ligen halt gerne hätte — aber bis heute nicht ein burst dafür gekommen“. Nachgemessen: die Burst-Regel (>=4 Wetten derselben Seite) kann in kleinen Ligen strukturell nie feuern — auf Ebene 3 standen in 5,7 Tagen Rohbuch nie mehr als 2 Wetten derselben Seite in 30 Min. Das Geld zeigt sich dort als EINZELNE Wette. Rückblickend (5,7 Tage, Einzelwetten mit Ausgang): Ebene 2+3 ROI -1,8 % (n=274, UG -10,6 %), vor Anpfiff -12,3 % (n=31) — kein Beleg. Zuschnitt vor der Messung festgelegt; rund 1,2-1,4 Meldungen pro Tag. Entscheidung vorab: Public erst, wenn die Untergrenze bei n >= 100 über null liegt; fällt die OBERgrenze unter null, wird die Meldung abgeschaltet.",
+   "gestartet": "2026-09-30",
+   "faellig": "2026-12-23",
+   "quelle": "stake_burst_ledger.json -> Zeilen mit art=klein, status=abgerechnet",
+   "messer": "stake_klein",
+   "mindestN": 100,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "standN": 0,
+   "zustand": "sammelt",
+   "stand": "0 von 100 Beobachtungen · faellig in 84 Tag(en)",
+   "fortschritt": 0.0,
+   "tageBisFaellig": 84
+  },
+  {
    "id": "horizont-shortlist",
    "titel": "Zahlt sich ein frueherer Einstieg aus?",
    "frage": "ROI und CLV der Shortlist-Plays nach Abstand zum Anpfiff — live, 0-3h, 3-12h, 12-24h, >1 Tag.",
@@ -296,7 +314,7 @@
    "tageBisFaellig": -1
   }
  ],
- "n": 16,
- "nOffen": 15,
+ "n": 17,
+ "nOffen": 16,
  "nHandlung": 2
 }
