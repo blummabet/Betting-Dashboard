@@ -1,22 +1,6 @@
 {
-"generatedAt": "2026-09-30T20:26:32.492672+00:00",
+"generatedAt": "2026-09-30T20:41:37.047999+00:00",
 "byVerdict": {
-"konsens": {
-"n": 1389,
-"wins": 1190,
-"hitRate": 0.8567,
-"polyN": 1330,
-"polyWins": 1049,
-"polyHitRate": 0.7887,
-"pinnN": 210,
-"pinnHitRate": 0.7762,
-"nRoi": 924,
-"roi": 0.4039,
-"roiLb": 0.3624,
-"nClv": 924,
-"clv": 18.87,
-"clvLb": 17.4373
-},
 "uneinig": {
 "n": 565,
 "wins": 183,
@@ -32,6 +16,22 @@
 "nClv": 401,
 "clv": -20.0,
 "clvLb": -22.7393
+},
+"konsens": {
+"n": 1388,
+"wins": 1189,
+"hitRate": 0.8566,
+"polyN": 1329,
+"polyWins": 1048,
+"polyHitRate": 0.7886,
+"pinnN": 210,
+"pinnHitRate": 0.7762,
+"nRoi": 925,
+"roi": 0.4035,
+"roiLb": 0.3621,
+"nClv": 925,
+"clv": 18.85,
+"clvLb": 17.4232
 },
 "teil": {
 "n": 32,
@@ -76,11 +76,6 @@
 "wins": 36,
 "hitRate": 0.6923
 },
-"English Premier League": {
-"n": 50,
-"wins": 27,
-"hitRate": 0.54
-},
 "Italian Serie A": {
 "n": 50,
 "wins": 35,
@@ -90,6 +85,11 @@
 "n": 49,
 "wins": 33,
 "hitRate": 0.6735
+},
+"English Premier League": {
+"n": 49,
+"wins": 26,
+"hitRate": 0.5306
 },
 "Mexican Liga MX": {
 "n": 49,
@@ -341,6 +341,11 @@
 "wins": 8,
 "hitRate": 0.7273
 },
+"English National League": {
+"n": 11,
+"wins": 9,
+"hitRate": 0.8182
+},
 "Chinese League 1": {
 "n": 10,
 "wins": 6,
@@ -350,11 +355,6 @@
 "n": 10,
 "wins": 7,
 "hitRate": 0.7
-},
-"English National League": {
-"n": 10,
-"wins": 8,
-"hitRate": 0.8
 },
 "Israeli Premier League": {
 "n": 10,
@@ -561,11 +561,6 @@
 "wins": 1,
 "hitRate": 0.5
 },
-"Saudi Kings Cup": {
-"n": 2,
-"wins": 2,
-"hitRate": 1.0
-},
 "Scottish League Cup": {
 "n": 2,
 "wins": 2,
@@ -661,6 +656,11 @@
 "wins": 1,
 "hitRate": 1.0
 },
+"Saudi Kings Cup": {
+"n": 1,
+"wins": 1,
+"hitRate": 1.0
+},
 "Slovakian Super League": {
 "n": 1,
 "wins": 1,
@@ -674,9 +674,9 @@
 },
 "byStrength": {
 "strong": {
-"n": 1237,
-"wins": 1002,
-"hitRate": 0.81,
+"n": 1236,
+"wins": 1001,
+"hitRate": 0.8099,
 "nRoi": 869,
 "roi": 0.3129,
 "roiLb": 0.2638,
@@ -688,12 +688,12 @@
 "n": 749,
 "wins": 376,
 "hitRate": 0.502,
-"nRoi": 482,
-"roi": -0.2032,
-"roiLb": -0.2759,
-"nClv": 482,
-"clv": -6.84,
-"clvLb": -9.2264
+"nRoi": 483,
+"roi": -0.2027,
+"roiLb": -0.2752,
+"nClv": 483,
+"clv": -6.81,
+"clvLb": -9.1981
 }
 },
 "divergence": {
@@ -705,6 +705,25 @@
 "polyRate": 0.2566
 },
 "recent": [
+{
+"matchId": "36116500",
+"home": "Tamworth FC",
+"away": "Sutton Utd",
+"league": "English National League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Tamworth FC",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-09-30T18:45:00Z",
+"settledAt": "2026-09-30T20:41:36.836269+00:00"
+},
 {
 "matchId": "36129960",
 "home": "Lithuania",
@@ -1445,37 +1464,18 @@
 ],
 "kickoff": "2026-09-29T10:00:00Z",
 "settledAt": "2026-09-29T13:07:22.805155+00:00"
-},
-{
-"matchId": "36124962",
-"home": "Guatemala",
-"away": "El Salvador",
-"league": "CONCACAF Nations League A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Guatemala",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-6,
-0
-],
-"kickoff": "2026-09-29T02:00:00Z",
-"settledAt": "2026-09-29T05:06:25.652330+00:00"
 }
 ],
 "global": {
-"n": 1986,
-"wins": 1378,
-"hitRate": 0.6939,
-"nRoi": 1351,
+"n": 1985,
+"wins": 1377,
+"hitRate": 0.6937,
+"nRoi": 1352,
 "roi": 0.1287,
 "roiLb": 0.0864,
-"nClv": 1351,
+"nClv": 1352,
 "clv": 6.33,
-"clvLb": 4.7994
+"clvLb": 4.7993
 },
-"pending": 14
+"pending": 15
 }
