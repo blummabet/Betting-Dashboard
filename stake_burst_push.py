@@ -1212,6 +1212,43 @@ def klein_buch_zeile(b, ts) -> dict:
             "betIds": [x.get("id") for x in g], "sentAt": ts, "status": "pending"}
 
 
+# 🔴 01.10.2026 (Lucas: „diese ganzen Stake-Bursts zu ATP und WTA — die können ja nie positiv
+# sein, oder? Da müssen wir im Filter anpassen"). Nachgerechnet auf 95 abgerechneten Tennis-Bursts:
+#     Spiel-Burst live      n=72  ROI −9,3 %  [−26,1 .. +7,5]
+#     Auswahl-Burst live    n=17  ROI +0,5 %  [−36,1 .. +37,1]
+#     vor Anpfiff           n=2   (beide gewonnen)
+#     ATP/WTA −7,6 % (n=69) · Challenger −12,4 % (n=12) — die Turnierstufe trennt NICHT.
+# Bewiesen negativ ist das nicht (Obergrenze ueber null). Der Grund zum Stummschalten ist der
+# Mechanismus, derselbe wie beim Kursrutsch-Alarm am 19.09.: live im Tennis folgt das Geld dem
+# Spielstand (Break, Satzgewinn) — der Preis hat das schon, bevor die Tickets ankommen. Das ist
+# Reaktion, keine Information. Vor Anpfiff gibt es diesen Mechanismus nicht; dort bleibt alles.
+#
+# Stumm heisst NICHT weg: jeder Burst kommt weiter ins Buch (push=false, pushGrund) und wird
+# abgerechnet. Traegt Tennis live dort irgendwann, steht es im Block „nicht gesendet".
+STUMM_LIVE_KATS = tuple(k.strip() for k in (os.environ.get("STAKE_BURST_STUMM_LIVE") or "Tennis").split(",")
+                        if k.strip())
+
+
+def _phase(g) -> str:
+    return ("live" if all(x.get("phase") == "live" for x in g)
+            else "vor" if all(x.get("phase") == "vor" for x in g) else "gemischt")
+
+
+def stumm_grund(b, kats=None) -> str | None:
+    """Warum dieser Burst NICHT gesendet wird (oder None). REIN.
+
+    Live und gemischt zaehlen beide: ein Burst, der vor Anpfiff beginnt und live weiterlaeuft,
+    traegt die Spielstand-Reaktion schon in sich."""
+    kats = STUMM_LIVE_KATS if kats is None else kats
+    g = (b or {}).get("wetten") or []
+    if not g:
+        return None
+    kat = g[0].get("kat")
+    if kat in kats and _phase(g) != "vor":
+        return f"{kat} live stumm (Geld folgt dem Spielstand)"
+    return None
+
+
 def zu_senden(neu, push_an=None, max_push=None) -> list:
     """Welche der neuen Bursts gehen raus? REIN — damit „Push aus" pruefbar ist.
 
@@ -1242,8 +1279,9 @@ def main() -> int:
           % (len(alle), len(neu), MIN_N, int(FENSTER_S), _usd(MIN_USD), MIN_QUOTE,
              MAX_ALTER_MIN, ", ".join(_gesperrt) or "—"))
 
-    senden = zu_senden(neu)
-    unterdrueckt = max(len(neu) - len(senden), 0)
+    neu_laut = [b for b in neu if not stumm_grund(b)]
+    senden = zu_senden(neu_laut)
+    unterdrueckt = max(len(neu_laut) - len(senden), 0)
     led = _load(LEDGER_FILE, [])
     if not isinstance(led, list):
         led = []
@@ -1268,9 +1306,10 @@ def main() -> int:
         z = buch_zeile(b, now_iso)
         z["push"] = k in seen          # nur ein erfolgreicher Send steht in `seen`
         if not z["push"]:
-            z["pushGrund"] = ("Push abgeschaltet (STAKE_BURST_PUSH)" if not PUSH_AN
-                              else "Deckel des Laufs erreicht" if k not in {burst_key(x) for x in senden}
-                              else "Senden fehlgeschlagen")
+            z["pushGrund"] = stumm_grund(b) or (
+                "Push abgeschaltet (STAKE_BURST_PUSH)" if not PUSH_AN
+                else "Deckel des Laufs erreicht" if k not in {burst_key(x) for x in senden}
+                else "Senden fehlgeschlagen")
         led.append(z)
         schon.add(k)
         neu_gebucht += 1
@@ -1280,8 +1319,9 @@ def main() -> int:
     # ANDERE Beobachtung als oben — die beiden teilen nur die Sperrliste und den Kanal.
     sp_alle = spiel_bursts(wetten, gesperrt=_gesperrt, now=now)
     sp_neu = [b for b in sp_alle if spiel_key(b) not in seen]
-    sp_senden = sp_neu[:SPIEL_MAX_PUSH] if (SPIEL_AN and PUSH_AN) else []
-    sp_unterdrueckt = max(len(sp_neu) - len(sp_senden), 0)
+    sp_laut = [b for b in sp_neu if not stumm_grund(b)]
+    sp_senden = sp_laut[:SPIEL_MAX_PUSH] if (SPIEL_AN and PUSH_AN) else []
+    sp_unterdrueckt = max(len(sp_laut) - len(sp_senden), 0)
     print("🎯 Stake-Spiel: %d frische(r) Spiel-Burst(s), %d davon neu (>=%d Wetten je Spiel, "
           "davon >=%d mit Mannschaft, %d Min, ab %s, >=%.1fx Liga-Norm, Quote ab %.2f, "
           "keine Gegenseite)"
@@ -1303,9 +1343,10 @@ def main() -> int:
         z = spiel_buch_zeile(b, now_iso)
         z["push"] = k in seen
         if not z["push"]:
-            z["pushGrund"] = ("Push abgeschaltet" if not (PUSH_AN and SPIEL_AN)
-                              else "Deckel des Laufs erreicht" if k not in {spiel_key(x) for x in sp_senden}
-                              else "Senden fehlgeschlagen")
+            z["pushGrund"] = stumm_grund(b) or (
+                "Push abgeschaltet" if not (PUSH_AN and SPIEL_AN)
+                else "Deckel des Laufs erreicht" if k not in {spiel_key(x) for x in sp_senden}
+                else "Senden fehlgeschlagen")
         led.append(z)
         schon.add(k)
         neu_gebucht += 1
