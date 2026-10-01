@@ -16,7 +16,16 @@ jobs:
   backend:
     runs-on: ubuntu-latest
     steps:
+      # 🔴 01.10.2026: CI war seit dem 22.09. rot (Frontend) bzw. laenger (Backend), lokal gruen.
+      # Ursache: der Standard-Checkout ist flach (fetch-depth 1) — jede Datei hat dort genau EINEN
+      # Commit. Waechter, die gegen `git log` messen (uebersicht-refresh-takt, tote_quellen),
+      # lasen daraus „alles ist 0 Tage alt / aendert sich alle 10.080 Min" und schlugen an.
+      # Volle Historie, aber ohne alte Datei-Inhalte (blob:none) — git log -- <pfad> braucht nur
+      # Commits und Baeume. Kostet Sekunden, nicht die Hunderte MB der Daten-Historie.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          filter: blob:none
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -28,7 +37,16 @@ jobs:
   frontend:
     runs-on: ubuntu-latest
     steps:
+      # 🔴 01.10.2026: CI war seit dem 22.09. rot (Frontend) bzw. laenger (Backend), lokal gruen.
+      # Ursache: der Standard-Checkout ist flach (fetch-depth 1) — jede Datei hat dort genau EINEN
+      # Commit. Waechter, die gegen `git log` messen (uebersicht-refresh-takt, tote_quellen),
+      # lasen daraus „alles ist 0 Tage alt / aendert sich alle 10.080 Min" und schlugen an.
+      # Volle Historie, aber ohne alte Datei-Inhalte (blob:none) — git log -- <pfad> braucht nur
+      # Commits und Baeume. Kostet Sekunden, nicht die Hunderte MB der Daten-Historie.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          filter: blob:none
       - uses: actions/setup-node@v4
         with:
           node-version: '22'

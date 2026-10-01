@@ -163,7 +163,7 @@ class TestNetzHatEineZeitgrenze(unittest.TestCase):
     def test_bremse_steht_vor_dem_ersten_netzzugriff(self):
         src = open(SKRIPT, encoding="utf-8").read()
         bremse = src.find("git config http.lowSpeedTime")
-        erster = src.find("\ngit fetch origin")
+        erster = src.find("git fetch origin")
         self.assertGreater(bremse, 0, "Gegentest: der alte Stand hatte keine Zeitgrenze")
         self.assertLess(bremse, erster, "die Bremse muss VOR dem ersten Netzzugriff gesetzt sein")
 
@@ -175,3 +175,66 @@ class TestNetzHatEineZeitgrenze(unittest.TestCase):
             out = subprocess.run(["git", "config", "http.lowSpeedTime"], cwd=d,
                                  capture_output=True, text=True).stdout.strip()
             self.assertEqual(out, "60")
+
+
+def _code(src):
+    return "\n".join(z for z in src.splitlines() if not z.lstrip().startswith("#"))
+
+
+class TestEinNetzzugriffMitFrist(_Welt):
+    """01.10.2026, Live-Scan 12:43 UTC: fetch brach an der Bremse ab („curl 28 Operation too slow"),
+    danach holte `git pull` denselben Stand ein ZWEITES Mal, troepfelte knapp ueber 1 kB/s und lief
+    in den 12-Minuten-Deckel. Gegentests zum alten Skript (zwei `git pull`-Zeilen, fetch ohne Frist)."""
+
+    def test_kein_git_pull_mehr_im_skript(self):
+        self.assertNotIn("git pull", _code(open(SKRIPT, encoding="utf-8").read()))
+
+    def test_fetch_hat_eine_harte_frist(self):
+        code = _code(open(SKRIPT, encoding="utf-8").read())
+        self.assertIn("_mit_frist git fetch origin", code)
+        self.assertIn("kill -TERM", code)
+
+    def test_gescheiterter_fetch_merged_nicht_und_endet_sauber(self):
+        _sh("git remote set-url origin /gibt/es/nicht.git", self.A)
+        vorher = _sh("git rev-parse HEAD", self.A).stdout
+        r = self._pull()
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertIn("kein Merge", r.stdout + r.stderr)
+        self.assertEqual(_sh("git rev-parse HEAD", self.A).stdout, vorher)
+
+    def test_frist_greift(self):
+        """Ein haengender fetch (samt Kindprozess, der die Leitung offen haelt) endet nach der Frist."""
+        import time
+        src = open(SKRIPT, encoding="utf-8").read()
+        fn = src[src.index("_mit_frist() {"):src.index("\n}", src.index("_mit_frist() {")) + 2]
+        d = tempfile.mkdtemp()
+        hang = os.path.join(d, "haengt.sh")
+        with open(hang, "w") as f:
+            f.write("#!/bin/sh\nsleep 30 &\nsleep 30\n")
+        os.chmod(hang, 0o755)
+        t0 = time.time()
+        r = subprocess.run(["bash", "-c", "FRIST_S=2\n" + fn + f'\n_mit_frist "{hang}" || echo abgebrochen'],
+                           capture_output=True, text=True, timeout=20)
+        self.assertLess(time.time() - t0, 10, "die Leitung blieb offen")
+        self.assertIn("abgebrochen", r.stdout)
+
+    def test_schneller_befehl_wartet_nicht_auf_die_frist(self):
+        import time
+        src = open(SKRIPT, encoding="utf-8").read()
+        fn = src[src.index("_mit_frist() {"):src.index("\n}", src.index("_mit_frist() {")) + 2]
+        t0 = time.time()
+        r = subprocess.run(["bash", "-c", "FRIST_S=20\n" + fn + "\n_mit_frist true && echo ok"],
+                           capture_output=True, text=True, timeout=30)
+        self.assertLess(time.time() - t0, 5)
+        self.assertIn("ok", r.stdout)
+
+
+class TestCiCheckoutHatHistorie(unittest.TestCase):
+    """01.10.2026: ci-tests.yml war seit dem 22.09. rot, lokal gruen — der flache Standard-Checkout
+    gab jeder Datei genau einen Commit, und die git-log-Waechter schlugen darauf an."""
+
+    def test_jeder_checkout_in_ci_tests_holt_die_historie(self):
+        src = open(os.path.join(REPO, ".github", "workflows", "ci-tests.yml"), encoding="utf-8").read()
+        n = src.count("uses: actions/checkout@")
+        self.assertGreater(n, 0)
+        self.assertEqual(src.count("fetch-depth: 0"), n, "jeder Checkout braucht die Historie")
