@@ -99,6 +99,11 @@ jobs:
       - name: 🔥 Liga-Serien berechnen (Streak-Content)
         run: python compute_streaks.py || true
 
+      # 01.10.2026: Buch zur Serien-Wetten-Tafel — merkt jede gezeigte Wette mit Chance+Quote vor
+      # und rechnet sie nach Spielende ab (Trefferquote gegen angezeigt, ROI zur gezeigten Quote).
+      - name: 📒 Serien-Wetten-Buch
+        run: python serien_wetten_buch.py || true
+
       # 15.07.2026: Spieler-Serien für TikTok-Player-Cards + Wochen-Digest (fehlten der Liga bisher).
       - name: 🧾 Liga Spieler-Match-Stats nachladen (Ledger-Backfill)
         run: python fetch_wm_player_stats.py || true
@@ -468,6 +473,7 @@ jobs:
           git add liga_pick_push_ledger.json 2>/dev/null || true
           git add liga_streak_watch.json 2>/dev/null || true
           git add liga_streak_record.json 2>/dev/null || true   # Serien-Buch (12.09.2026 Audit: der Watch wurde committet, das Buch nie)
+          git add liga_serien_wetten_buch.json 2>/dev/null || true   # Serien-Wetten-Buch (01.10.2026)
           git add liga_poly_prices.json 2>/dev/null || true          # Poly-Preise (Trading-Lag)
           git add liga-poly-history.json 2>/dev/null || true         # Poly-Preis-Historie
           # 28.08.2026 (Bayern–Stuttgart fehlte): Slug-Gedaechtnis fuer den Rescue anpfiff-naher

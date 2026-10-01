@@ -691,6 +691,24 @@ def filter_vergleich(zeilen=None, boot: int = FILTER_BOOT) -> dict | None:
     return aus
 
 
+def serien_wetten_plays(chance_aus=None) -> list:
+    """Serien-Wetten-Buch (Liga + MLS) als Plays. Rendite zur ERSTEN angezeigten Quote (01.10.2026)."""
+    aus = []
+    for name in ("liga_serien_wetten_buch.json", "mls_serien_wetten_buch.json"):
+        d = _load(name, {}) or {}
+        for z in (d.get("zeilen") if isinstance(d, dict) else None) or []:
+            if not isinstance(z, dict) or z.get("status") != "abgerechnet":
+                continue
+            if chance_aus and (z.get("chanceAus") or "modell") != chance_aus:
+                continue
+            ren = z.get("rendite")
+            aus.append({"tag": _tag(z.get("kickoff")),
+                        "gewonnen": z.get("erfuellt") if isinstance(z.get("erfuellt"), bool) else None,
+                        "rendite": float(ren) if isinstance(ren, (int, float)) else None,
+                        "clv": None})
+    return aus
+
+
 def baue(now=None) -> dict:
     heute = (now or _now()).date().isoformat()
     bloecke = []
@@ -727,6 +745,15 @@ def baue(now=None) -> dict:
          + CARDS_HINWEIS)
     _add("cards-liga", "Cards · Liga", "🎯", "Eigene Engine", cards_plays("Liga"), CARDS_HINWEIS)
     _add("cards-mls", "Cards · MLS", "🎯", "Eigene Engine", cards_plays("MLS"), CARDS_HINWEIS)
+    # 01.10.2026: die Serien-Wetten-Tafel, gemessen zur ersten angezeigten Quote.
+    _add("serien-wetten", "Serien-Wetten · Markt-Chance", "🔥", "Eigene Engine",
+         serien_wetten_plays("markt"),
+         "Jede Zeile der Serien-Wetten-Tafel mit Quote im Feed, abgerechnet zur Quote beim ersten "
+         "Erscheinen. Erwartet: Treffer wie angezeigt, Rendite um die Marge im Minus.")
+    _add("serien-wetten-modell", "Serien-Wetten · Modell-Chance", "🔥", "Eigene Engine",
+         serien_wetten_plays("modell"),
+         "Serien ohne Quote im Feed (z. B. Team trifft, zu null). Keine Rendite — gemessen wird, "
+         "ob die angezeigte Chance trifft.")
     _add("betfair", "Betfair · alle Signale", "💷", "Marktdaten", betfair_plays(),
          "Der Ledger hält ein rollierendes Fenster — ältere Perioden sind unvollständig, "
          "nicht schwach.")

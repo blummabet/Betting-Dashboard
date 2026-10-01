@@ -15,3 +15,13 @@ def test_zur_selben_zeit_bleibt_es_ein_namensfehler():
     """Dasselbe Allerweltswort, aber gleicher Anpfiff: dann kann es eine echte Luecke sein."""
     ev = [dict(EVS[0], commence=M["kickoff"])]
     assert B.anker_grund(M, None, ev)["grund"] == "name"
+
+
+def test_anderes_spiel_desselben_vereins_ist_kein_namensfehler():
+    """01.10.2026: Wolfsburg v TSV Havelse (Testspiel) gegen „Jahn Regensburg v TSV Havelse" —
+    eine Seite trifft voll, aber es ist ein anderes Spiel zu anderer Zeit."""
+    m = {"home": "Wolfsburg", "away": "TSV Havelse", "kickoff": "2026-10-01T14:00:00Z"}
+    ev = [{"home": "Jahn Regensburg", "away": "TSV Havelse", "commence": "2026-10-04T12:00:00Z", "key": "k"}]
+    assert B.anker_grund(m, None, ev)["grund"] == "kein_kandidat", "Gegentest: alter Code meldete „name“"
+    ev[0]["commence"] = m["kickoff"]
+    assert B.anker_grund(m, None, ev)["grund"] == "name", "zur selben Zeit bleibt es eine echte Luecke"

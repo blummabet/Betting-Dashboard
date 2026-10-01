@@ -35,7 +35,7 @@ test('Dashboard rendert alle Kacheln', () => {
   const html = w.document.getElementById('mainDashPanel').innerHTML;
   assert.match(html, /Übersicht/);
   assert.match(html, /Beste Cards/);   assert.match(html, /Bayern/);
-  assert.match(html, /Beste Streaks/); assert.match(html, /Bournemouth/);
+  assert.match(html, /Serien-Wetten/); assert.match(html, /Bournemouth/);
   assert.match(html, /Betfair-Kohle/); assert.match(html, /Kairat/);
   assert.match(html, /Poly Whale-Bets/); assert.match(html, /Lakers/);
   assert.match(html, /Pinnacle-Steam/);   // umbenannt von Sharp-Radar   assert.match(html, /\+4\.2pp/);

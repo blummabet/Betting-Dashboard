@@ -274,7 +274,45 @@ def zaehler_stake_klein(base_dir):
                and e.get("status") == "abgerechnet")
 
 
+def zaehler_serien_wetten(base_dir):
+    """Abgerechnete Serien-Wetten (liga_ + mls_serien_wetten_buch.json, status=abgerechnet).
+
+    01.10.2026: die Serien-Wetten-Tafel zeigt Chance und Quote; das Buch prueft beides vorwaerts.
+    Fehlen beide Dateien, ist das „noch nichts gebucht" (0), nicht „unlesbar".
+    """
+    gesamt, gefunden = 0, False
+    for name in ("liga_serien_wetten_buch.json", "mls_serien_wetten_buch.json"):
+        d = _laden(os.path.join(base_dir, name))
+        if d is None:
+            continue
+        if not isinstance(d, dict):
+            return None
+        gefunden = True
+        gesamt += sum(1 for z in (d.get("zeilen") or []) if isinstance(z, dict)
+                      and z.get("status") == "abgerechnet")
+    return gesamt if gefunden else 0
+
+
+def zaehler_autobet_oktober(base_dir):
+    """Abgerechnete Auto-Bets (shortlist_auto_bets_placed.json, won/lost) ab 01.10.2026.
+
+    01.10.2026 (Lucas): „wir lassen es jetzt weiter mit Flat — Ende Oktober entscheiden wir, ob
+    wir aufgrund der Conviction die Stakes anpassen". Gezaehlt wird ab dem Stichtag, damit die
+    Messung nur Wetten enthaelt, die NACH der Festlegung der Fragen gesetzt wurden.
+    """
+    d = _laden(os.path.join(base_dir, "shortlist_auto_bets_placed.json"))
+    if d is None:
+        return 0
+    if not isinstance(d, dict):
+        return None
+    return sum(1 for b in (d.get("bets") or []) if isinstance(b, dict)
+               and b.get("status") in ("won", "lost")
+               and str(b.get("placedAt") or "") >= "2026-10-01")
+
+
 ZAEHLER = {
+    "autobet_oktober": zaehler_autobet_oktober,
+    "serien_wetten": zaehler_serien_wetten,
     "stake_klein": zaehler_stake_klein,
     "sharp_z": zaehler_sharp_z,
     "bf_leadshare": zaehler_bf_leadshare,

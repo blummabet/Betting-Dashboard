@@ -954,6 +954,55 @@
     return s;
   }
   function bestStreaks() { return allStreaks().slice(0, 5); }
+  // ══ Serien-Wetten (01.10.2026, Lucas) ════════════════════════════════════════════════════
+  // „in der Form für mich nicht zu verwenden … ich wette gerne auf Streaks, wenn sie gut sind".
+  // Die Liste rechnet compute_streaks (`wettliste`): nächstes Spiel binnen 7 Tagen, Trefferchance
+  // = faire Marktwahrscheinlichkeit (Backtest: Serien treffen so oft, wie der Markt sagt), sonst
+  // Modell — und dann als Modell markiert. Hier wird nur gelesen und nach Anpfiff gefiltert.
+  function serienWetten(max) {
+    var rows = [], jetzt = Date.now();
+    [_md.data.ligaStreaks, _md.data.mlsStreaks].forEach(function (d) {
+      if (d && Array.isArray(d.wettliste)) rows = rows.concat(d.wettliste);
+    });
+    rows = rows.filter(function (r) {
+      var t = Date.parse(String(r.kickoff || '').replace('Z', '+00:00'));
+      return isFinite(t) && t > jetzt;
+    });
+    rows.sort(function (a, b) { return (+b.trefferPct || 0) - (+a.trefferPct || 0); });
+    return max ? rows.slice(0, max) : rows;
+  }
+  // Buch zur Tafel (serien_wetten_buch.py, via compute_streaks `wettBuch`). Urteil fertig im Buch.
+  function serienBuchZeilen() {
+    var out = [];
+    [['Liga', _md.data.ligaStreaks], ['MLS', _md.data.mlsStreaks]].forEach(function (p) {
+      var b = p[1] && p[1].wettBuch, g = b && b.gesamt;
+      if (!g) return;
+      if (!g.n) { out.push(p[0] + ': ' + (g.offen || 0) + ' vorgemerkt, noch keine abgerechnet'); return; }
+      var mk = b.markt || {};
+      out.push(p[0] + ': ' + g.n + ' abgerechnet · getroffen ' + g.trefferPct + ' % bei angezeigt ' + g.erwartetPct + ' %'
+        + (mk.roiPct != null ? ' · ROI ' + (mk.roiPct > 0 ? '+' : '') + mk.roiPct + ' % (n=' + mk.mitQuote + ')' : '')
+        + ' · ' + g.urteil);
+    });
+    return out;
+  }
+  function _mdSerienWetteZeile(r) {
+    var t = new Date(Date.parse(String(r.kickoff).replace('Z', '+00:00')));
+    var wt = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'][t.getDay()];
+    var zeit = wt + ' ' + ('0' + t.getDate()).slice(-2) + '.' + ('0' + (t.getMonth() + 1)).slice(-2) + '. '
+      + ('0' + t.getHours()).slice(-2) + ':' + ('0' + t.getMinutes()).slice(-2);
+    var markt = r.chanceAus === 'markt';
+    var quote = r.quote ? ' @<b>' + (+r.quote).toFixed(2) + '</b>' : '';
+    var sig = r.signal === 'confirm' ? ' · <span style="color:' + A.good + '">✓ Signale dafür</span>'
+      : (r.signal === 'contradict' ? ' · <span style="color:' + A.red + '">⚠ Signale dagegen</span>' : '');
+    var sub = (r.heim ? 'vs ' : '@ ') + esc(String(r.gegner || '?')) + ' · ' + zeit + ' · '
+      + esc(String(r.markt || r.serie || '')) + quote
+      + ' · <span style="color:var(--mi3)">' + (markt ? 'Chance laut Markt' : 'Chance laut Modell (ohne Quote)') + '</span>' + sig;
+    var pct = Math.round(+r.trefferPct || 0);
+    return _mdDonutRow(fl(_flagFrom(r.country, r.league, r.leagueName)) + esc(team(r.team))
+      + ' <span style="color:var(--mi3);font-weight:400">·</span> ' + esc(String(r.serie || ''))
+      + ' <span style="color:var(--mi3);font-weight:400">' + (+r.length || 0) + '×</span>',
+      sub, pct + '%', markt ? A.good : 'var(--mi2)', pct, markt ? A.good : '#8b949e');
+  }
   function allBetfair() {
     var BF_LEAD_MAX_ODD = 15;   // 09.08.2026 (Lucas): Longshot-Deckel — @>15 = live abgestuerzter Aussenseiter (Hannover @100, St Pauli @80), Geld darauf ist Lay/reaktiv, kein Kohle-Signal. Gegenstueck zum <1.30-Filter, wie der HT-Deckel.
     var ms = (_md.data.betfair && _md.data.betfair.matches) || [], rows = [];
@@ -1896,6 +1945,8 @@
         + '</div>';
     }
 
+    // 01.10.2026: zuerst die spielbaren Serien mit Trefferchance; ohne solche die alte Liste.
+    var _sw = serienWetten(5);
     var streaksBody = st.length ? st.map(function (s) {
       // 08.08.2026 (Lucas: „vernünftig bewerten"): „Grundrate X%" = Rate der Serien-Richtung VOR der Serie
       // (echte Basis). „reine Serie" = Serie füllt das 15-Spiele-Fenster → keine unabhängige Basis (kein Fake-100%).
@@ -1965,6 +2016,13 @@
       + _ageStrAelteste([_md.data.ligaStreaks, _md.data.ligaStreakRec, _md.data.mlsStreakRec],
                         ['Liga', 'Liga-Buch', 'MLS-Buch'])
       : empty('Keine langen Serien.');
+    var _swBody = _sw.length
+      ? '<div class="md-r-s" style="margin:0 0 6px">Nächste 7 Tage, sortiert nach Trefferchance — '
+        + 'die Chance ist die faire Quote (Serien treffen historisch so oft, wie der Markt sagt).</div>'
+        + _sw.map(_mdSerienWetteZeile).join('')
+      : '<div class="md-r-s" style="margin:0 0 6px">Keine Serie mit Spiel in den nächsten 7 Tagen — darunter die längsten aktiven Serien.</div>' + streaksBody;
+    var _swBuch = serienBuchZeilen();
+    if (_swBuch.length) _swBody += '<div class="md-r-s" style="margin:8px 0 0">📒 ' + _swBuch.map(esc).join('<br>📒 ') + '</div>';
 
     // Betfair — Anteilsbalken
     var bf = bestBetfair();
@@ -2006,7 +2064,7 @@
     var grid = '<div class="md-grid">' +
       // Reihe 1 — unsere Picks
       tile('🎯', 'Beste Cards', A.good, 'rgba(46,160,67,.14)', 'rgba(46,160,67,.32)', 'national-cards', 'alle Cards', cardsBody, 40) +
-      tile('🔥', 'Beste Streaks', A.gold, 'rgba(201,133,0,.14)', 'rgba(201,133,0,.32)', 'national-streaks', 'alle Serien', streaksBody, 60) +
+      tile('🔥', 'Serien-Wetten', A.gold, 'rgba(201,133,0,.14)', 'rgba(201,133,0,.32)', 'national-streaks', 'alle Serien', _swBody, 60) +
       '<div id="md-cell-play" class="md-cell">' + tile('🔥', 'Heute spielenswert', A.red, 'rgba(229,83,75,.14)', 'rgba(229,83,75,.32)', 'polywallets', 'alle Plays', empty('lädt …'), 80) + '</div>' +
       // Reihe 2 — Betfair-Geld
       tile('💷', 'Betfair-Kohle', A.bf, 'rgba(217,89,38,.14)', 'rgba(217,89,38,.32)', 'betfair', 'Radar', bfBody, 90) +
@@ -4208,6 +4266,7 @@
   
   window._renderMainDash = _mdRender;
   window._mdState = _md;   // Test-Hook
+  window._mdSerienWettenTest = serienWetten;   // Test-Hook
   window._mdStakeGeldTest = _mdStakeGeldBody;   // Test-Hook (kein Wrapper: der ueberschriebe die Bindung)
   window._mdSignalBoardTest = _mdSignalBoard;   // Test-Hook
   window._mdKlTafelTest = _klTafel;   // Test-Hook

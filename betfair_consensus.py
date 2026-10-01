@@ -802,7 +802,11 @@ def anker_grund(m, ev, alle_events, max_h=ANPFIFF_FENSTER_H):
     # echt — der Unterschied ist der ANPFIFF: eine Namensluecke ist nur plausibel, wenn die Zeit
     # passt. Braga v Sporting lag Stunden daneben. Einseitig, unter der Match-Schwelle UND zu
     # anderer Zeit heisst: kein Kandidat.
-    if not best_both and best_seite < MATCH_MIN:
+    # 01.10.2026 (Stoerungsmeldung): „Wolfsburg v TSV Havelse (Friendly Matches): name — bester
+    # Kandidat „Jahn Regensburg v TSV Havelse"". Hier traf eine Seite VOLL (1,0) — der Kandidat
+    # war aber Havelses Drittliga-Spiel, nicht das Testspiel. Ein Verein spielt nie zwei Spiele
+    # gleichzeitig: trifft nur EINE Seite, entscheidet der Anpfiff, egal wie gut der Name passt.
+    if not best_both:
         _d = _stunden(m.get("kickoff"), best.get("commence"))
         if _d is None or _d > max_h:
             return {"spiel": spiel, "grund": "kein_kandidat",

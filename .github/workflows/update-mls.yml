@@ -89,6 +89,11 @@ jobs:
       - name: 🔥 MLS-Serien berechnen (Streak-Content)
         run: python compute_streaks.py || true
 
+      # 01.10.2026: Buch zur Serien-Wetten-Tafel — merkt jede gezeigte Wette mit Chance+Quote vor
+      # und rechnet sie nach Spielende ab (Trefferquote gegen angezeigt, ROI zur gezeigten Quote).
+      - name: 📒 Serien-Wetten-Buch
+        run: python serien_wetten_buch.py || true
+
       # 15.07.2026: Spieler-Serien (Torserie/Zu-Null) für TikTok-Player-Cards + Wochen-Digest.
       # fetch_wm_player_stats hält das player_form_ledger frisch (MUSS vor compute_player_streaks);
       # beide sind dataset-aware (mls_player_form_ledger.json / mls_player_streaks.json).
@@ -440,6 +445,7 @@ jobs:
           git add mls_pick_push_ledger.json 2>/dev/null || true
           git add mls_streak_watch.json 2>/dev/null || true
           git add mls_streak_record.json 2>/dev/null || true   # Serien-Buch (12.09.2026 Audit: der Watch wurde committet, das Buch nie)
+          git add mls_serien_wetten_buch.json 2>/dev/null || true   # Serien-Wetten-Buch (01.10.2026)
           # Polymarket-MLS (12.07.2026): Preise/Smart-Money/Wallets speisen Signale + 🐋-Tab.
           git add mls_poly_prices.json 2>/dev/null || true
           git add mls_poly_smartmoney.json 2>/dev/null || true

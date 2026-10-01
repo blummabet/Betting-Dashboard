@@ -222,6 +222,9 @@ EBENE = {
     # 30.09.2026 (Stoerungsmeldung): die Southern League Premier Division South ist Englands
     # siebte Ebene (Step 3 im Non-League-System, unter der National League South).
     "southern-football-league-premier-division-south": 3,
+    # 01.10.2026 (Stoerungsmeldung): Isthmian League Premier Division — ebenfalls Englands siebte
+    # Ebene (Step 3), Schwesterliga der Southern League.
+    "isthmian-league-pr-div": 3,
     # 13.09.2026 (CI-Wachhund): das Campeonato de Portugal ist die DRITTE portugiesische Klasse
     # (unter Liga Portugal und Liga Portugal 2) — der Name klingt nach Landesmeisterschaft, ist
     # aber die Amateur-/Regionalebene. Beleg: AD Fazendense gegen O Elvas, beides Drittligisten.
@@ -529,6 +532,10 @@ TURNIER_EBENE = {
     "primera-division": {
         "118c993d-1294-4f73-9afb-c97213bcfab0": ("Uruguay", 1),
         "d7cebc4a-a25f-4e7c-8511-3ed7f37eaeb8": ("Peru", 1),
+        # 01.10.2026 (CI-Wachhund): „AFF Guatemala - Deportivo Fraijanes" — in Guatemala heisst
+        # die OBERSTE Liga Liga Nacional; die Primera Division ist die ZWEITE. Ueber den Slug
+        # allein haette sie als Ebene 1 gegolten.
+        "16c027b0-893a-40de-b829-63d5ea863a64": ("Guatemala, Primera Division (2. Liga)", 2),
     },
     # 29.09.2026: drei Laender unter einem Slug — alle oberste Klasse, das Urteil stimmt fuer alle.
     "primera-division-apertura": {

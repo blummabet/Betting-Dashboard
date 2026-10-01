@@ -61,7 +61,7 @@ test('die Card-Kachel trägt ihr eigenes Alter', () => {
       groups: { g: { fixtures: [{ home: 'Bayern', away: 'Dortmund', league: 'Bundesliga', kickoff: new Date(Date.now() + 4 * 3600e3).toISOString(), picks: [
         { market: 'Heimsieg', verdict: 'BET', convictionScore: 8, odds: 1.8 }] }] } }, picks: {} },
   });
-  const kachel = html.slice(html.indexOf('Beste Cards'), html.indexOf('Beste Streaks'));
+  const kachel = html.slice(html.indexOf('Beste Cards'), html.indexOf('Serien-Wetten'));
   assert.match(kachel, /Stand vor 5,9 h/);
 });
 

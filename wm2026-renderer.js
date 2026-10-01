@@ -142,7 +142,10 @@
     const extra = isLiga ? _rawFirst('mls_streaks.json') : Promise.resolve(null);
     return Promise.all([main, extra]).then(([j, m]) => {
       const streaks = ((j && j.streaks) || []).concat((m && m.streaks) || []);
-      _streaksCache[ds] = { streaks };
+      // 01.10.2026: die Wettliste kommt fertig aus compute_streaks — nur zusammenlegen.
+      const wettliste = ((j && j.wettliste) || []).concat((m && m.wettliste) || []);
+      const buecher = [['Liga', j && j.wettBuch], ['MLS', m && m.wettBuch]];
+      _streaksCache[ds] = { streaks, wettliste, buecher };
       return _streaksCache[ds];
     });
   }
@@ -359,6 +362,60 @@
     </div>`;
   }
 
+  // ── Serien-Wetten (01.10.2026, Lucas: „ich wette gerne auf Streaks, wenn sie gut sind") ──
+  // Spielbare Serien der nächsten 7 Tage, sortiert nach Trefferchance. Die Chance ist die faire
+  // Marktwahrscheinlichkeit (Backtest Top-5, 7.156 Spiele: Serien treffen so oft, wie der Markt
+  // sagt) — ohne Markt das Modell, und dann so beschriftet. Gerechnet in compute_streaks.
+  function _esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]); }
+  // Das Buch zur Tafel (serien_wetten_buch.py): stimmt die angezeigte Chance, was bringt die Quote?
+  // Urteil kommt fertig aus dem Buch — hier wird nur gelesen.
+  function _wettBuchText(label, b) {
+    const g = b && b.gesamt;
+    if (!g) return '';
+    if (!g.n) return `${label}: ${g.offen || 0} vorgemerkt, noch keine abgerechnet`;
+    const mk = b.markt || {};
+    const roi = mk.roiPct != null ? ` · ROI zur gezeigten Quote ${mk.roiPct > 0 ? '+' : ''}${mk.roiPct} % (n=${mk.mitQuote})` : '';
+    return `${label}: ${g.n} abgerechnet · getroffen ${g.trefferPct} % bei angezeigt ${g.erwartetPct} %${roi} · ${g.urteil}`;
+  }
+  function _streakWettenHtml(rows, buecher) {
+    const jetzt = Date.now();
+    const list = (rows || []).filter(r => {
+      const t = Date.parse(String(r.kickoff || '').replace('Z', '+00:00'));
+      return isFinite(t) && t > jetzt;
+    }).sort((a, b) => (+b.trefferPct || 0) - (+a.trefferPct || 0));
+    const kopf = `<div style="display:flex;align-items:baseline;justify-content:space-between;margin:0 2px 6px;">
+      <span style="font-size:14px;font-weight:900;">🎯 Serien-Wetten · nächste 7 Tage</span>
+      <span style="font-size:11px;color:var(--muted);">${list.length} spielbar</span></div>`;
+    const buch = (buecher || []).map(([l, b]) => _wettBuchText(l, b)).filter(Boolean);
+    const buchFuss = buch.length ? `<div style="font-size:11px;color:var(--muted);margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);line-height:1.5;">📒 Buch: ${buch.map(_esc).join('<br>')}</div>` : '';
+    if (!list.length) {
+      return `<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:16px;">${kopf}
+        <div style="font-size:12px;color:var(--muted);">Keine aktive Serie mit Spiel in den nächsten 7 Tagen (Länderspielpause?). Die Serien unten laufen weiter.</div>${buchFuss}</div>`;
+    }
+    const zeile = r => {
+      const t = new Date(Date.parse(String(r.kickoff).replace('Z', '+00:00')));
+      const wt = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'][t.getDay()];
+      const zeit = `${wt} ${String(t.getDate()).padStart(2, '0')}.${String(t.getMonth() + 1).padStart(2, '0')}. ${String(t.getHours()).padStart(2, '0')}:${String(t.getMinutes()).padStart(2, '0')}`;
+      const markt = r.chanceAus === 'markt';
+      const pct = Math.round(+r.trefferPct || 0);
+      const col = markt ? (pct >= 70 ? '#3fb950' : pct >= 55 ? '#e3b341' : '#8b949e') : '#8b949e';
+      const sig = r.signal === 'confirm' ? `<span style="color:#3fb950;"> · ✓ Signale dafür</span>`
+        : r.signal === 'contradict' ? `<span style="color:#f85149;"> · ⚠ Signale dagegen</span>` : '';
+      return `<div style="display:flex;gap:12px;align-items:center;padding:9px 0;border-top:1px solid var(--border);">
+        <div style="min-width:54px;text-align:center;">
+          <div style="font-size:20px;font-weight:900;color:${col};">${pct}%</div>
+          <div style="font-size:9.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.3px;">${markt ? 'Markt' : 'Modell'}</div></div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:13px;font-weight:800;">${_esc(r.team || '')} · ${_esc(r.serie || '')} <span style="color:var(--muted);font-weight:600;">${+r.length || 0}× in Folge</span></div>
+          <div style="font-size:11.5px;color:var(--muted);margin-top:2px;">${r.heim ? 'vs' : '@'} ${_esc(r.gegner || '?')} · ${zeit} · ${_esc(r.leagueName || r.league || '')}${sig}</div>
+          <div style="font-size:11.5px;margin-top:3px;">${_esc(r.markt || '')}${r.quote ? ` @<b>${(+r.quote).toFixed(2)}</b>` : ''}${markt && r.fairQuote ? `<span style="color:var(--muted);"> · faire Quote ${(+r.fairQuote).toFixed(2)}${r.quelle ? ' (' + _esc(r.quelle) + ')' : ''}</span>` : '<span style="color:var(--muted);"> · keine Quote im Feed — Chance aus Eigen- und Gegnerrate</span>'}</div>
+        </div></div>`;
+    };
+    return `<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:16px;">${kopf}
+      <div style="font-size:11px;color:var(--muted);margin:0 2px 4px;line-height:1.5;">Sortiert nach Trefferchance. „Markt" = faire Wahrscheinlichkeit aus der Quote — historisch treffen Serien genau so oft. Hohe Chance heißt niedrige Quote: gewinnen wirst du die meisten, Geld verdient nur, wer über der fairen Quote spielt.</div>
+      ${list.map(zeile).join('')}${buchFuss}</div>`;
+  }
+
   // Voller Serien-Tab. section: 'national'→Liga, sonst WM.
   window.initStreaks = async function (section) {
     _streakSection = section;
@@ -417,6 +474,8 @@
 
     html += `<div style="font-size:11px;color:var(--muted);margin:0 2px 12px;line-height:1.5;">Sortiert nach <b>Seltenheit</b>, nicht nach Länge: „Team trifft" gelingt im Liga-Schnitt in 81 % der Spiele, „Zu null" in 28 % — eine gleich lange Serie heißt dort etwas ganz anderes. 🟢 „Serie intakt" = Tendenz + Gegner + Signale stützen die Strähne · 🟡 „wackelt" = läuft gegen die Stütze (eher Zufall). Reiner Content — keine Wett-Garantie.</div>`;
 
+    // 01.10.2026: zuerst die spielbaren Serien mit Trefferchance (nur National: Liga + MLS).
+    if (isLiga) html += _streakWettenHtml(data && data.wettliste, data && data.buecher);
     // Hero-Spotlight: die heißesten Serien groß oben.
     if (hero.length) {
       html += `<div style="font-size:12px;font-weight:900;margin:0 2px 8px;color:#f0883e;">🔥 Heißeste Serien</div>

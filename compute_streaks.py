@@ -19,6 +19,7 @@ from __future__ import annotations
 import math
 import json
 from datetime import datetime, timezone
+from pathlib import Path
 
 import cocobet_dataset as D
 
@@ -510,6 +511,119 @@ def markiere_impliziert(streaks: list) -> list:
     return streaks
 
 
+# ── Serien-Wettliste (01.10.2026, Lucas) ────────────────────────────────────────────────
+# Lucas: „in der Form für mich nicht zu verwenden — ich bin einer, der gerne auf Streaks wettet,
+# wenn sie gut sind … dass es eingepreist ist, ist mir klar, aber ich will die Wette gewinnen".
+# Backtest vorab (Top-5, 7.156 Spiele, Pinnacle): die Trefferquote von Serien-Wetten liegt jedes
+# Mal fast genau bei der fairen Marktwahrscheinlichkeit (Ungeschlagen 7+: 77,3 % gegen 78,2 %).
+# Die Serie selbst sagt also nichts zusaetzlich — die faire Quote ist die ehrlichste Antwort auf
+# „wie oft haelt das?". Deshalb: Trefferchance = de-viggte Marktwahrscheinlichkeit, wo es einen
+# Markt gibt; sonst unser Modell, und dann ausdruecklich als Modell markiert.
+WETT_FENSTER_H = 168   # eine Woche: in Laenderspielpausen sonst leer (Barcelona spielt erst am 10.10.)
+WETTLISTE_MAX = 30
+_WETT_SCHARF = {"pinnacle", "betfair_ex_eu", "betfair_ex_uk", "betfair"}
+# Serien-Typ -> (Paar-Felder fuer die faire Wahrscheinlichkeit, Seite).
+_WETT_MARKT = {
+    "win": "1x2", "unbeaten": "dc", "over25": ("o25", "u25", 0), "under25": ("o25", "u25", 1),
+    "bttsYes": ("bttsY", "bttsN", 0), "bttsNo": ("bttsY", "bttsN", 1),
+}
+_WETT_LABEL = {"win": "Sieg", "unbeaten": "Doppelte Chance (ungeschlagen)", "over25": "Über 2,5 Tore",
+               "under25": "Unter 2,5 Tore", "bttsYes": "Beide treffen: Ja", "bttsNo": "Beide treffen: Nein"}
+
+
+def _q(x):
+    return float(x) if isinstance(x, (int, float)) and x > 1.0 else None
+
+
+def wette_fuer_serie(s: dict, odds: dict) -> dict | None:
+    """Markt, Quote und Trefferchance fuer das NAECHSTE Spiel einer Serie. REIN.
+
+    Gibt None, wenn es kein naechstes Spiel gibt. Ohne Markt: Modell-Chance (basis "modell")."""
+    nx = s.get("next") or {}
+    if not nx.get("oppId"):
+        return None
+    tid, opp, heim = str(s.get("teamId")), str(nx["oppId"]), bool(nx.get("atHome"))
+    o = (odds or {}).get(f"{tid}-{opp}" if heim else f"{opp}-{tid}") or {}
+    typ = s.get("type")
+    spec = _WETT_MARKT.get(typ)
+    aus = {"markt": _WETT_LABEL.get(typ) or s.get("market"), "chanceAus": "modell", "quote": None,
+           "fairQuote": None, "quelle": None}
+    p = None
+    if spec == "1x2" or spec == "dc":
+        h, d, a = _q(o.get("hw")), _q(o.get("dr")), _q(o.get("aw"))
+        if h and d and a:
+            inv = (1 / h, 1 / d, 1 / a)
+            t = sum(inv)
+            ph, pd, pa = (x / t for x in inv)
+            mine = ph if heim else pa
+            if spec == "1x2":
+                p = mine
+                aus["quote"] = _q(o.get("public_hw" if heim else "public_aw")) or (h if heim else a)
+            else:
+                p = mine + pd
+                # Aus der HAUPTquote abgeleitet, nicht aus den Soft-Quoten: zwei Soft-Margen
+                # addiert ergaben 1,13 bei fairer 1,22 (Seattle ungeschlagen, 01.10.2026).
+                aus["quote"] = _q(o.get("dc1X" if heim else "dcX2")) or round(1 / (1 / (h if heim else a) + 1 / d), 2)
+    elif isinstance(spec, tuple):
+        a_k, b_k, seite = spec
+        qa, qb = _q(o.get(a_k)), _q(o.get(b_k))
+        if qa and qb:
+            pa_, pb_ = 1 / qa, 1 / qb
+            p = (pa_ if seite == 0 else pb_) / (pa_ + pb_)
+            mein = a_k if seite == 0 else b_k
+            aus["quote"] = _q(o.get("public_" + mein)) or (qa if seite == 0 else qb)
+    if p is not None:
+        aus["chanceAus"] = "markt"
+        aus["trefferPct"] = round(100 * p, 1)
+        aus["fairQuote"] = round(1 / p, 2)
+        bk = o.get("bookmaker")
+        aus["quelle"] = bk
+        aus["scharf"] = bk in _WETT_SCHARF
+    else:
+        m = s.get("matchupPct")
+        if m is None:
+            m = (s.get("continuation") or {}).get("ratePct")
+        aus["trefferPct"] = float(m) if isinstance(m, (int, float)) else None
+    if isinstance(aus.get("quote"), float):
+        aus["quote"] = round(aus["quote"], 2)
+    return aus
+
+
+def wettliste(streaks: list, now=None, fenster_h=WETT_FENSTER_H, maximal=WETTLISTE_MAX) -> list:
+    """Spielbare Serien der naechsten `fenster_h` Stunden, nach Trefferchance. REIN.
+
+    Je (Team, Markt) EINE Zeile (die Gesamt-Serie), nichts Abgeleitetes (z. B. „ungeschlagen",
+    wenn schon „Sieg" in Serie steht), nichts ohne Trefferchance."""
+    now = now or datetime.now(timezone.utc)
+    aus, gesehen = [], set()
+    for s in streaks or []:
+        w = s.get("wette") or {}
+        if (s.get("venue") or "all") != "all" or s.get("impliziertVon") or w.get("trefferPct") is None:
+            continue
+        try:
+            ko = datetime.fromisoformat(str((s.get("next") or {}).get("kickoff")).replace("Z", "+00:00"))
+        except (TypeError, ValueError):
+            continue
+        ko = ko if ko.tzinfo else ko.replace(tzinfo=timezone.utc)
+        h = (ko - now).total_seconds() / 3600
+        if not (0 < h <= fenster_h):
+            continue
+        k = (s.get("teamId"), s.get("type"))
+        if k in gesehen:
+            continue
+        gesehen.add(k)
+        sig = (s.get("signalInfo") or {})
+        aus.append({"teamId": s.get("teamId"), "team": s.get("team"), "league": s.get("league"),
+                    "leagueName": s.get("leagueName"), "type": s.get("type"), "serie": s.get("market"),
+                    "length": s.get("length"), "gegner": (s.get("next") or {}).get("oppName"),
+                    "heim": (s.get("next") or {}).get("atHome"), "kickoff": (s.get("next") or {}).get("kickoff"),
+                    "signal": sig.get("state") if sig.get("count") else None,
+                    **w})
+    # Markt-Chancen vor Modell-Chancen bei Gleichstand; sonst nur nach Trefferchance.
+    aus.sort(key=lambda r: (-(r.get("trefferPct") or 0), r.get("chanceAus") != "markt"))
+    return aus[:maximal]
+
+
 def build_streaks(wm: dict) -> dict:
     form = wm.get("form") or {}
     cf = wm.get("cornersForm") or {}
@@ -623,6 +737,9 @@ def build_streaks(wm: dict) -> dict:
                         elif sig["state"] == "contradict":
                             s["continuation"]["state"] = "wackelt"
                             s["continuation"]["label"] += " · Linie/Signale dagegen"
+            w = wette_fuer_serie(s, wm.get("odds") or {})
+            if w:
+                s["wette"] = w
             streaks.append(s)
 
     # Tor-/BTTS-/Team-Märkte (form, venueSeq)
@@ -667,12 +784,23 @@ def build_streaks(wm: dict) -> dict:
                   "sortiert": "zufallPct",
                   "ligaGrundraten": {k: round(v * 100) for k, v in sorted(grundraten.items())}},
         "streaks": streaks,
+        # 01.10.2026: die Wettliste entsteht HIER, wo die Zahl entsteht — Frontends lesen sie nur.
+        "wettliste": wettliste(streaks),
     }
 
 
 def main() -> None:
     wm = json.loads(D.data_file().read_text(encoding="utf-8"))
     out = build_streaks(wm)
+    # 01.10.2026: die Bilanz des Serien-Wetten-Buchs (serien_wetten_buch.py, laeuft danach) reist
+    # mit, damit die Tafel sie ohne eigenen Fetch zeigt. Stand = voriger Lauf; das Urteil
+    # rechnet das Buch, hier wird nur kopiert.
+    try:
+        _b = json.loads((Path(__file__).parent / f"{D.prefix()}serien_wetten_buch.json").read_text(encoding="utf-8"))
+        if isinstance(_b, dict) and isinstance(_b.get("bilanz"), dict):
+            out["wettBuch"] = {**_b["bilanz"], "updatedAt": _b.get("updatedAt")}
+    except (OSError, ValueError):
+        pass
     OUT.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
     n = len(out["streaks"])
     strong = sum(1 for s in out["streaks"] if s["strong"])
