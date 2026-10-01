@@ -1,12 +1,12 @@
 {
   "slug": "betfair",
   "workflow": "🟡 Betfair Radar (Betwatch)",
-  "updatedAt": "2026-10-01T00:12:11.981086+00:00",
+  "updatedAt": "2026-10-01T00:27:16.315961+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
-    "spanneH": 4.3,
-    "proTag": 105.4,
+    "spanneH": 4.5,
+    "proTag": 101.1,
     "lueckeMinMin": 2.7,
     "lueckeMedianMin": 15.0,
     "lueckeMaxMin": 27.5,
@@ -16,14 +16,29 @@
     "fensterUrteil": null
   },
   "erzeugung": {
-    "erzeugt": 100,
-    "gelaufen": 100,
+    "erzeugt": 73,
+    "gelaufen": 73,
     "verdraengt": 0,
-    "spanneH": 402.4,
-    "erzeugtProTag": 6.0,
-    "widerspruch": "erzeugtProTag 6.0 gegen eine gemessene Kadenz von 105.4/Tag (Faktor 17.6) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
+    "spanneH": 947.9,
+    "erzeugtProTag": 1.8,
+    "widerspruch": "erzeugtProTag 1.8 gegen eine gemessene Kadenz von 101.1/Tag (Faktor 56.2) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
   },
   "runs": [
+    {
+      "ts": "2026-10-01T00:27:16.315961+00:00",
+      "workflow": "🟡 Betfair Radar (Betwatch)",
+      "runId": "36796123175",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/36796123175",
+      "nSteps": 36,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-10-01T00:25:40Z",
+      "startedAt": "2026-10-01T00:25:40Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 96.3,
+      "event": "workflow_dispatch"
+    },
     {
       "ts": "2026-10-01T00:12:11.981086+00:00",
       "workflow": "🟡 Betfair Radar (Betwatch)",
@@ -308,21 +323,6 @@
       "wartetS": 0.0,
       "laeuftSeitS": 92.0,
       "event": "workflow_dispatch"
-    },
-    {
-      "ts": "2026-09-30T19:52:41.368153+00:00",
-      "workflow": "🟡 Betfair Radar (Betwatch)",
-      "runId": "36768541230",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/36768541230",
-      "nSteps": 36,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-09-30T19:51:15Z",
-      "startedAt": "2026-09-30T19:51:15Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 86.4,
-      "event": "schedule"
     }
   ]
 }
