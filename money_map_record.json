@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-10-01T02:12:03.626437+00:00",
+"generatedAt": "2026-10-01T02:42:19.470491+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1388,
-"wins": 1189,
-"hitRate": 0.8566,
-"polyN": 1328,
-"polyWins": 1047,
-"polyHitRate": 0.7884,
+"n": 1389,
+"wins": 1190,
+"hitRate": 0.8567,
+"polyN": 1330,
+"polyWins": 1049,
+"polyHitRate": 0.7887,
 "pinnN": 208,
 "pinnHitRate": 0.7837,
-"nRoi": 930,
-"roi": 0.4003,
-"roiLb": 0.359,
-"nClv": 930,
-"clv": 18.8,
-"clvLb": 17.3703
+"nRoi": 932,
+"roi": 0.4006,
+"roiLb": 0.3593,
+"nClv": 932,
+"clv": 18.82,
+"clvLb": 17.3915
 },
 "uneinig": {
 "n": 565,
@@ -52,9 +52,9 @@
 },
 "byLeague": {
 "US MLS": {
-"n": 111,
-"wins": 66,
-"hitRate": 0.5946
+"n": 112,
+"wins": 67,
+"hitRate": 0.5982
 },
 "English Sky Bet Championship": {
 "n": 70,
@@ -261,11 +261,6 @@
 "wins": 14,
 "hitRate": 0.8235
 },
-"CONMEBOL Copa Libertadores": {
-"n": 16,
-"wins": 10,
-"hitRate": 0.625
-},
 "Chinese Super League": {
 "n": 16,
 "wins": 11,
@@ -295,6 +290,11 @@
 "n": 15,
 "wins": 10,
 "hitRate": 0.6667
+},
+"CONMEBOL Copa Libertadores": {
+"n": 15,
+"wins": 9,
+"hitRate": 0.6
 },
 "English Sky Bet League 2": {
 "n": 15,
@@ -516,6 +516,11 @@
 "wins": 2,
 "hitRate": 0.6667
 },
+"Friendly Matches": {
+"n": 3,
+"wins": 3,
+"hitRate": 1.0
+},
 "Icelandic Urvalsdeild": {
 "n": 3,
 "wins": 3,
@@ -542,11 +547,6 @@
 "hitRate": 1.0
 },
 "English WSL": {
-"n": 2,
-"wins": 2,
-"hitRate": 1.0
-},
-"Friendly Matches": {
 "n": 2,
 "wins": 2,
 "hitRate": 1.0
@@ -674,20 +674,20 @@
 },
 "byStrength": {
 "strong": {
-"n": 1236,
-"wins": 1000,
-"hitRate": 0.8091,
-"nRoi": 872,
-"roi": 0.3118,
-"roiLb": 0.2629,
-"nClv": 872,
-"clv": 13.68,
-"clvLb": 11.8358
+"n": 1238,
+"wins": 1002,
+"hitRate": 0.8094,
+"nRoi": 874,
+"roi": 0.3123,
+"roiLb": 0.2635,
+"nClv": 874,
+"clv": 13.71,
+"clvLb": 11.871
 },
 "weak": {
-"n": 749,
-"wins": 376,
-"hitRate": 0.502,
+"n": 748,
+"wins": 375,
+"hitRate": 0.5013,
 "nRoi": 486,
 "roi": -0.2055,
 "roiLb": -0.2777,
@@ -705,6 +705,44 @@
 "polyRate": 0.2571
 },
 "recent": [
+{
+"matchId": "36121644",
+"home": "New York Red Bulls",
+"away": "St Louis City SC",
+"league": "US MLS",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "St Louis City SC",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+3
+],
+"kickoff": "2026-09-30T23:30:00Z",
+"settledAt": "2026-10-01T02:42:19.260994+00:00"
+},
+{
+"matchId": "36115072",
+"home": "DC Utd",
+"away": "Paderborn",
+"league": "Friendly Matches",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Paderborn",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-09-30T23:30:00Z",
+"settledAt": "2026-10-01T02:42:19.260994+00:00"
+},
 {
 "matchId": "36116615",
 "home": "Argentina",
@@ -1426,56 +1464,18 @@
 ],
 "kickoff": "2026-09-29T14:00:00Z",
 "settledAt": "2026-09-29T17:37:57.957492+00:00"
-},
-{
-"matchId": "36120573",
-"home": "Ethiopia",
-"away": "Senegal",
-"league": "CAF African Cup of Nations Qualifiers",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Senegal",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-09-29T13:00:00Z",
-"settledAt": "2026-09-29T16:07:52.049824+00:00"
-},
-{
-"matchId": "36126211",
-"home": "Burundi",
-"away": "Algeria",
-"league": "CAF African Cup of Nations Qualifiers",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Algeria",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-09-29T13:00:00Z",
-"settledAt": "2026-09-29T16:07:52.049824+00:00"
 }
 ],
 "global": {
-"n": 1985,
-"wins": 1376,
-"hitRate": 0.6932,
-"nRoi": 1358,
-"roi": 0.1267,
-"roiLb": 0.0845,
-"nClv": 1358,
-"clv": 6.33,
-"clvLb": 4.8076
+"n": 1986,
+"wins": 1377,
+"hitRate": 0.6934,
+"nRoi": 1360,
+"roi": 0.1273,
+"roiLb": 0.0852,
+"nClv": 1360,
+"clv": 6.36,
+"clvLb": 4.8405
 },
-"pending": 15
+"pending": 14
 }
