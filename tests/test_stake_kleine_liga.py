@@ -36,18 +36,53 @@ def test_einzelne_grosse_wette_in_kleiner_liga_meldet():
 
 
 def test_liga_norm_schlaegt_ebenen_median():
-    r = kl([w(slug="la-liga-2", liga="La Liga 2")], norm={"La Liga 2": 1000.0})
-    assert r[0]["refBasis"] == "liga" and r[0]["ebene"] == "2" and r[0]["faktor"] == 6.0
+    r = kl([w()], norm={"League Two": 1000.0})
+    assert r[0]["refBasis"] == "liga" and r[0]["faktor"] == 6.0
+
+
+def test_ebene_2_ist_keine_kleine_liga_mehr():
+    """01.10.2026 (Lucas): „mit kleinen Ligen meine ich nicht La Liga 2 — dort rennt natürlich auch
+    Geld rein. Ich meine Argentinien Reserve-Liga und so." Gegentest: unter dem alten Zuschnitt
+    meldete La Liga 2 mit $6.000."""
+    assert kl([w(slug="la-liga-2", liga="La Liga 2")]) == []
+
+
+def test_reserve_liga_meldet():
+    r = kl([w(slug="liga-profesional-reserves", liga="Liga Profesional, Reserves")])
+    assert len(r) == 1 and r[0]["ebene"] == "reserve"
+    assert "Reserve-Liga" in B.build_klein_card(r[0])
+
+
+def test_live_meldet_und_traegt_phase_und_minute():
+    """01.10.2026 (Lucas): „Live hat sehr wohl eine Auswirkung, wenn es z. B. 0:0 steht" —
+    live ist erlaubt, aber getrennt gebucht, damit es getrennt abgerechnet werden kann."""
+    x = w(phase="live", ko_h=-0.5)
+    x["spielminute"] = 27
+    r = kl([x])
+    assert len(r) == 1
+    z = B.klein_buch_zeile(r[0], NOW.isoformat())
+    assert z["phase"] == "live" and z["spielminute"] == 27
+    k = B.build_klein_card(r[0])
+    assert "live" in k and "Minute 27" in k
+
+
+def test_live_nach_minute_75_kommt_zu_spaet():
+    """Der Feed kommt alle 15 Min — eine Wette aus der 94. Minute waere nach Abpfiff gemeldet."""
+    x = w(phase="live", ko_h=-1.6)
+    x["spielminute"] = 94
+    assert kl([x]) == []
+    x["spielminute"] = None
+    assert len(kl([x])) == 1, "unbekannte Minute bleibt drin"
 
 
 def test_was_nicht_passt_bleibt_draussen():
     assert kl([w(slug="premier-league", liga="Premier League")]) == [], "Ebene 1 ist keine kleine Liga"
-    assert kl([w(phase="live")]) == [], "nur vor Anpfiff"
     assert kl([w(kombi=True)]) == []
-    assert kl([w(usd=3000)]) == [], "unter 2x Norm"
+    assert kl([w(usd=2900)]) == [], "unter 1,5x Norm"
+    assert len(kl([w(usd=3000)])) == 1, "ab 1,5x Norm (vorher 2x)"
     assert kl([w(quote=1.30)]) == [], "Quotenboden 1,35 wie überall"
     assert kl([w(alter_min=45)]) == [], "zu alt, um den Preis noch zu bekommen"
-    assert kl([w(ko_h=-0.1)]) == [], "schon angepfiffen"
+    assert kl([w(ko_h=-0.1)]) == [], "„vor“-Wette, aber schon angepfiffen"
     assert kl([w(kat="Tennis")]) == [], "die Spielklassen-Tabelle gilt fuer Fussball"
     assert B.kleine_liga([w()], norm={}, ebene_median={}, now=NOW) == [], \
         "ohne Bezugsgroesse kein Treffer — unbekannt ist nicht gross"

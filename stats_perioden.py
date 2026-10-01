@@ -783,8 +783,8 @@ def baue(now=None) -> dict:
          "als der Auswahl-Burst und deshalb nie mit ihm in einer Zahl.", "Trades")
     # 30.09.2026 (Lucas: „die kleinen Ligen hätte ich gerne"): eigene Einheit, eigene Zahl.
     _add("stake-klein", "Stake · kleine Ligen", "🔎", "Push-Kanäle", burst_plays(art="klein"),
-         "Eine große Einzelwette vor Anpfiff in der zweiten oder dritten Fußball-Klasse "
-         "(ab 2× Norm der Liga). Kein Burst — dort kommen die Wetten einzeln an. Vorregistriert, "
+         "Eine große Einzelwette in der dritten Fußball-Klasse oder einer Reserve-Liga, vor Anpfiff "
+         "oder live bis Minute 75 (ab 1,5× Norm der Liga). Kein Burst — dort kommen die Wetten einzeln an. Vorregistriert, "
          "Urteil ab n=100.", "Trades")
     _add("stake-burst-live", "Stake-Bursts · live", "⚡", "Push-Kanäle", burst_plays("live"),
          None, "Trades")
