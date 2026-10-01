@@ -1078,8 +1078,26 @@ def _verworfen_buchen(beinahe: list, now) -> None:
 #   Einsatz >= 2x Norm der Liga (fehlt sie: Median der Ebene) · max. 30 Min alt.
 # Gemessen gaebe das ~1,4 Meldungen am Tag. Rueckblickend lagen Ebene 2+3 bei -1,8 % (n=274,
 # Untergrenze -10,6 %), vor Anpfiff -12,3 % (n=31) — KEIN Beleg, deshalb nur Trades, Ziel n=100.
-KLEIN_EBENEN = ("2", "3")
-KLEIN_MIN_FAKTOR = float(os.environ.get("STAKE_KLEIN_MIN_FAKTOR") or 2.0)
+#
+# 🔴 01.10.2026, Neuzuschnitt BEVOR eine einzige Zeile gebucht war (Lucas: „mit kleinen Ligen
+# meine ich nicht La Liga 2 — dort rennt natürlich auch Geld rein. Ich meine Argentinien
+# Reserve-Liga und so … Live hat sehr wohl eine Auswirkung, wenn es z. B. 0:0 steht"):
+#   · Ebene 2 raus (La Liga 2, Serie B, J2: dort ist $2.000 normales Geld), Reserve-Ligen rein.
+#   · live erlaubt — die Phase und die Spielminute stehen in jeder Buchzeile, damit live und
+#     vor Anpfiff getrennt abgerechnet werden (das Tennis-Argument „Geld folgt dem Spielstand"
+#     ist im Fussball eine offene Frage, keine Annahme).
+#   · Schwelle 2x -> 1,5x Norm.
+# Nachgezaehlt im Rohbuch (5,8 Tage): Ebene 3 + Reserve, Einzelwette, Quote ab 1,35, >= 1,5x Norm
+# -> 19 Wetten, rund 3 am Tag, 18 davon live. Unter den alten Regeln: 0 seit dem Start.
+# EHRLICH DAZU: Lucas' zwei Beispiele (Riestra Reserve, Terdu–Gazalkent) stehen GAR NICHT im
+# Feed — die Quelle sieht solche Spiele nur selten. Der Zuschnitt holt heraus, was da ist.
+KLEIN_EBENEN = tuple(e.strip() for e in (os.environ.get("STAKE_KLEIN_EBENEN") or "3,reserve").split(",")
+                     if e.strip())
+KLEIN_MIN_FAKTOR = float(os.environ.get("STAKE_KLEIN_MIN_FAKTOR") or 1.5)
+# Live nur bis Minute 75: der Feed wird alle 15 Min geholt, eine Meldung zu einer Wette aus der
+# 94. Minute (Boreham Wood, Over 4.5, $116.000) kaeme nach Abpfiff an. Spielbar ist, was danach
+# noch Spielzeit hat. Unbekannte Minute bleibt drin — sie ist meist ein Feed-Loch, kein Spaetkick.
+KLEIN_LIVE_MAX_MIN = float(os.environ.get("STAKE_KLEIN_LIVE_MAX_MIN") or 75)
 KLEIN_MAX_PUSH = int(os.environ.get("STAKE_KLEIN_MAX") or 3)
 KLEIN_AN = (os.environ.get("STAKE_KLEIN_PUSH") or "true").strip().lower() \
     not in ("0", "false", "no", "off")
@@ -1104,7 +1122,7 @@ def _ebene(w):
 
 def kleine_liga(wetten, norm=None, ebene_median=None, now=None, min_faktor=None,
                 min_quote=None, max_alter_min=None) -> list:
-    """Grosse Einzelwetten vor Anpfiff in kleinen Fussball-Ligen, je Auswahl gebuendelt. REIN.
+    """Grosse Einzelwetten in kleinen Fussball-Ligen (vor Anpfiff UND live), je Auswahl gebuendelt. REIN.
 
     Ohne Bezugsgroesse (weder Liga-Norm noch Ebenen-Median) kein Treffer — „wir kennen die
     Liga nicht" heisst nicht „der Einsatz ist gross" (dieselbe Regel wie `liga_norm`)."""
@@ -1118,7 +1136,7 @@ def kleine_liga(wetten, norm=None, ebene_median=None, now=None, min_faktor=None,
     for w in wetten or []:
         if not isinstance(w, dict) or w.get("kat") != "Fußball":
             continue
-        if w.get("kombi") or int(w.get("nBeine") or 1) != 1 or w.get("phase") != "vor":
+        if w.get("kombi") or int(w.get("nBeine") or 1) != 1 or w.get("phase") not in ("vor", "live"):
             continue
         q = _quote(w)
         if not isinstance(q, (int, float)) or q < min_quote:
@@ -1126,9 +1144,15 @@ def kleine_liga(wetten, norm=None, ebene_median=None, now=None, min_faktor=None,
         t = _ts(w.get("ts"))
         if t is None or (now - t).total_seconds() > max_alter_min * 60:
             continue
+        if w.get("phase") == "live":
+            try:
+                if float(w.get("spielminute")) > KLEIN_LIVE_MAX_MIN:
+                    continue
+            except (TypeError, ValueError):
+                pass
         ko = _ts(w.get("anpfiff"))
-        if ko is not None and ko <= now:
-            continue                      # schon angepfiffen: nicht mehr vor Anpfiff spielbar
+        if w.get("phase") == "vor" and ko is not None and ko <= now:
+            continue                      # „vor"-Wette, Spiel laeuft schon: Preis ist weg
         eb = _ebene(w)
         if eb not in KLEIN_EBENEN or not w.get("auswahlId"):
             continue
@@ -1139,6 +1163,10 @@ def kleine_liga(wetten, norm=None, ebene_median=None, now=None, min_faktor=None,
         ref, basis = norm.get(str(erste.get("liga"))), "liga"
         if not ref:
             ref, basis = ebene_median.get(eb), "ebene"
+        if not ref and eb == "reserve":
+            # stake_auswertung fuehrt keinen Reserve-Median (zu wenige Wetten). Die naechste
+            # Bezugsgroesse ist Ebene 3 — „unbekannt" bleibt sonst „kein Treffer".
+            ref, basis = ebene_median.get("3"), "ebene"
         if not ref:
             continue
         summe = sum(float(x.get("einsatzUsd") or 0) for x, _ in g)
@@ -1182,20 +1210,26 @@ def build_klein_card(b, bilanz=None) -> str:
     else:
         mess = "bisher %d abgerechnet · ROI %+.1f %% · Untergrenze %+.1f %%" % (
             bil["n"], 100 * bil["roi"], 100 * bil["ug"])
-    lines = ["🔎 <b>KLEINE LIGA</b> · grosse Einzelwette vor Anpfiff", "━━━━━━━━━━━━━━",
+    ph = _phase(g)
+    minute = next((x.get("spielminute") for x in g if x.get("spielminute") not in (None, "")), None)
+    klasse = {"3": "dritte Klasse und tiefer", "reserve": "Reserve-Liga"}.get(b["ebene"], "kleine Liga")
+    if ph == "vor":
+        zeitzeile = "⏱️ Anpfiff %s UTC" % (ko.strftime("%d.%m. %H:%M") if ko else "?")
+    else:
+        zeitzeile = "🔴 live%s" % ((" · Minute %s" % e(minute)) if minute is not None else "")
+    lines = ["🔎 <b>KLEINE LIGA</b> · grosse Einzelwette %s" % ("vor Anpfiff" if ph == "vor" else "live"),
+             "━━━━━━━━━━━━━━",
              "⚽ <b>%s</b>" % e(erste.get("event")),
-             "<i>%s · %s</i>" % (e(erste.get("liga")),
-                                 "zweite Spielklasse" if b["ebene"] == "2" else "dritte Klasse und tiefer"),
+             "<i>%s · %s</i>" % (e(erste.get("liga")), klasse),
              "",
              "➡️ <b>%s</b> · %s @<b>%.2f</b>" % (e(erste.get("auswahl")), e(erste.get("markt")), _quote(erste)),
              "💰 <b>%s</b>%s · <b>%.1fx</b> der Norm (%s %s)" % (
                  _usd(b["summe"]), (" in %d Wetten" % len(g)) if len(g) > 1 else "",
                  b["faktor"], "Liga" if b["refBasis"] == "liga" else "Ebene", _usd(b["ref"])),
-             "⏱️ Anpfiff %s UTC" % (ko.strftime("%d.%m. %H:%M") if ko else "?"),
+             zeitzeile,
              "",
              "🔬 <i>Testlauf, nur Trades · %s. Jede Meldung wird abgerechnet, Urteil ab n=%d. "
-             "Rückblickend trugen solche Wetten nicht (Ebene 2+3: −1,8 %%, n=274) — das hier "
-             "misst es nach vorn.</i>" % (mess, KLEIN_ZIEL_N)]
+             "Live und vor Anpfiff werden getrennt ausgewertet.</i>" % (mess, KLEIN_ZIEL_N)]
     return "\n".join(lines)
 
 
@@ -1208,7 +1242,9 @@ def klein_buch_zeile(b, ts) -> dict:
             "ebene": b["ebene"], "markt": erste.get("markt"), "auswahl": erste.get("auswahl"),
             "quote": _quote(erste), "summeUsd": round(float(b["summe"]), 2),
             "faktor": round(float(b["faktor"]), 2), "refBasis": b["refBasis"],
-            "nWetten": len(g), "phase": "vor", "anpfiff": erste.get("anpfiff"),
+            "nWetten": len(g), "phase": _phase(g), "anpfiff": erste.get("anpfiff"),
+            "spielminute": next((x.get("spielminute") for x in g
+                                 if x.get("spielminute") not in (None, "")), None),
             "betIds": [x.get("id") for x in g], "sentAt": ts, "status": "pending"}
 
 
@@ -1355,7 +1391,7 @@ def main() -> int:
     kl_alle = kleine_liga(wetten, norm=liga_norm(), ebene_median=ebenen_median(), now=now)
     kl_neu = [b for b in kl_alle if klein_key(b) not in seen and klein_key(b) not in schon]
     kl_senden = kl_neu[:KLEIN_MAX_PUSH] if (KLEIN_AN and PUSH_AN) else []
-    print("🔎 Kleine Liga: %d Treffer, %d neu (Fussball Ebene %s, vor Anpfiff, >=%.1fx Norm, "
+    print("🔎 Kleine Liga: %d Treffer, %d neu (Fussball Ebene %s, vor Anpfiff + live, >=%.1fx Norm, "
           "Quote ab %.2f)" % (len(kl_alle), len(kl_neu), "/".join(KLEIN_EBENEN),
                               KLEIN_MIN_FAKTOR, MIN_QUOTE))
     kl_gesendet = 0

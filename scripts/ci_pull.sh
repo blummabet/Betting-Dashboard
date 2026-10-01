@@ -45,7 +45,36 @@ BRANCH="${1:-main}"
 MODUS="${2:-merge}"
 ABLAGE=".ci_kollisionen"
 
-git fetch origin "$BRANCH" 2>&1 || true
+# 🔴 01.10.2026 (Live-Scan 12:43 UTC abgebrochen): die Bremse oben greift nur, wenn die Leitung
+# UNTER 1 kB/s faellt. Der Lauf zeigte beides: erst „RPC failed; curl 28 Operation too slow" beim
+# fetch (Bremse hat gegriffen) — und dann holte `git pull` DENSELBEN Stand ein zweites Mal ueber
+# die Leitung, troepfelte knapp darueber und lief in den 12-Minuten-Deckel des Jobs.
+# Zwei Regeln gegen die Klasse „Netz-Operation ohne harte Frist":
+#   1. eine harte Frist um den fetch (eigene Funktion: auf dem Mac-Runner gibt es kein `timeout`);
+#   2. genau EIN Netzzugriff. Gemergt wird danach lokal aus FETCH_HEAD — `git pull` waere ein
+#      zweiter fetch. Scheitert der fetch, wird nicht gemergt: der Lauf arbeitet mit dem lokalen
+#      Stand weiter, der Push-Schritt am Ende holt ohnehin nach.
+FRIST_S="${CI_PULL_FRIST_S:-150}"
+# Die Frist beendet die GANZE Prozessgruppe: git fetch startet git-remote-https als Kind, und
+# ein ueberlebendes Kind hielte die Log-Leitung offen — der Schritt haenge weiter (beim Bau
+# so gemessen, mit perl-alarm allein). `set -m` gibt jedem Hintergrund-Job eine eigene Gruppe.
+_mit_frist() {
+  set -m
+  "$@" &
+  local pid=$!
+  ( sleep "$FRIST_S"; kill -TERM -- "-$pid" 2>/dev/null ) >/dev/null 2>&1 &
+  local wd=$!
+  wait "$pid"; local rc=$?
+  kill -TERM -- "-$wd" 2>/dev/null; wait "$wd" 2>/dev/null
+  set +m
+  return $rc
+}
+FETCH_OK=0
+if _mit_frist git fetch origin "$BRANCH" 2>&1; then
+  FETCH_OK=1
+else
+  echo "⚠️  git fetch ohne Erfolg (Frist ${FRIST_S}s oder Leitung) — kein Merge, weiter mit lokalem Stand."
+fi
 
 # Dateien, die der eingehende Stand NEU hinzufuegt (A = added gegenueber unserem HEAD).
 # Gegen FETCH_HEAD, nicht gegen origin/$BRANCH: die Remote-Tracking-Referenz existiert auf einem
@@ -69,10 +98,12 @@ if [ -n "$NEU" ]; then
 fi
 [ "$VERSCHOBEN" -gt 0 ] && echo "↪️  $VERSCHOBEN untrackte Datei(en) aus dem Weg geraeumt."
 
-if [ "$MODUS" = "rebase" ]; then
-  git pull --rebase --autostash origin "$BRANCH" 2>&1 || true
-else
-  git pull origin "$BRANCH" --no-rebase -X ours --autostash 2>&1 || true
+if [ "$FETCH_OK" = 1 ]; then
+  if [ "$MODUS" = "rebase" ]; then
+    git rebase --autostash FETCH_HEAD 2>&1 || { git rebase --abort 2>/dev/null; true; }
+  else
+    git merge FETCH_HEAD --no-edit -X ours --autostash 2>&1 || true
+  fi
 fi
 
 # ── 🔴 24.09.2026: `-X ours` hat eine platzierte Order geloescht ─────────────────────────────
