@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-10-01T03:27:13.604079+00:00",
+"generatedAt": "2026-10-01T03:42:16.014820+00:00",
 "count": 9,
 "covered": 9,
 "leaguesKuratiert": [
@@ -62,8 +62,8 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 2178,
-"remaining": 4997822,
+"used": 2316,
+"remaining": 4997684,
 "letzterFehler": null
 },
 "ankerQuote": 1.0,
@@ -79,9 +79,9 @@
 "moneySide": "away",
 "moneyName": "Norway",
 "moneySharePct": 93,
-"moneyOdd": 1.48,
-"moneyDir": "out",
-"totVol": 488164,
+"moneyOdd": 1.47,
+"moneyDir": "in",
+"totVol": 492899,
 "pinnOdd": 1.44,
 "softOdd": 1.42,
 "softN": 36,
@@ -102,9 +102,9 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.1439,
-"draw": 0.1977,
-"away": 0.6584,
+"home": 0.1434,
+"draw": 0.1975,
+"away": 0.6591,
 "fav": "away",
 "n": 36
 },
@@ -202,7 +202,7 @@
 "pinn": {
 "home": 0.7865,
 "draw": 0.1472,
-"away": 0.0664,
+"away": 0.0663,
 "fav": "home"
 },
 "soft": {
@@ -215,7 +215,7 @@
 "pinnMovePP": 1.5,
 "pinnMove": {
 "movePP": 1.5,
-"stepPP": -0.0,
+"stepPP": 0.0,
 "n": 25,
 "move": true,
 "laeuft": false
@@ -236,8 +236,8 @@
 "moneyName": "Portugal",
 "moneySharePct": 63,
 "moneyOdd": 2.1,
-"moneyDir": "out",
-"totVol": 91231,
+"moneyDir": "flat",
+"totVol": 91238,
 "pinnOdd": 2.04,
 "softOdd": 2.0,
 "softN": 36,
@@ -258,9 +258,9 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.2673,
-"draw": 0.2599,
-"away": 0.4728,
+"home": 0.2677,
+"draw": 0.2598,
+"away": 0.4725,
 "fav": "away",
 "n": 36
 },
@@ -337,11 +337,11 @@
 "moneySide": "away",
 "moneyName": "Netherlands",
 "moneySharePct": 63,
-"moneyOdd": 2.14,
-"moneyDir": "out",
-"totVol": 52749,
+"moneyOdd": 2.12,
+"moneyDir": "in",
+"totVol": 52826,
 "pinnOdd": 2.09,
-"softOdd": 2.04,
+"softOdd": 2.03,
 "softN": 36,
 "poly": {
 "vol": 114961,
@@ -360,9 +360,9 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.2765,
-"draw": 0.2639,
-"away": 0.4596,
+"home": 0.2759,
+"draw": 0.2637,
+"away": 0.4604,
 "fav": "away",
 "n": 36
 },
@@ -491,7 +491,7 @@
 "moneySharePct": 92,
 "moneyOdd": 1.18,
 "moneyDir": "flat",
-"totVol": 22163,
+"totVol": 22168,
 "pinnOdd": null,
 "softOdd": 1.12,
 "softN": 30,
@@ -507,9 +507,9 @@
 },
 "pinn": null,
 "soft": {
-"home": 0.8293,
-"draw": 0.1235,
-"away": 0.0472,
+"home": 0.8338,
+"draw": 0.1202,
+"away": 0.046,
 "fav": "home",
 "n": 30
 },
@@ -541,15 +541,6 @@
 },
 "beispiele": [
 {
-"spiel": "Wolfsburg v TSV Havelse",
-"kandidat": "Jahn Regensburg v TSV Havelse",
-"key": "soccer_germany_liga3",
-"score": 1.0,
-"grund": "name",
-"matchId": "36134633",
-"liga": "Friendly Matches"
-},
-{
 "spiel": "Azerbaijan U19 v UAE U19",
 "kandidat": "Azerbaijan v Liechtenstein",
 "key": "soccer_uefa_nations_league",
@@ -557,6 +548,15 @@
 "grund": "name",
 "matchId": "36134029",
 "liga": "Friendlies International U19"
+},
+{
+"spiel": "Wolfsburg v TSV Havelse",
+"kandidat": "Jahn Regensburg v TSV Havelse",
+"key": "soccer_germany_liga3",
+"score": 1.0,
+"grund": "name",
+"matchId": "36134633",
+"liga": "Friendly Matches"
 },
 {
 "spiel": "Faroe Islands U19 v Slovenia U19",
@@ -663,15 +663,13 @@
 "liga": "Friendlies International U19"
 },
 {
-"spiel": "Kazakhstan v Moldova",
-"grund": "kein_pinnacle",
-"kandidat": "Kazakhstan v Moldova",
+"spiel": "Portugal U20 v Czech Republic U20",
+"kandidat": "Spain v Czech Republic",
 "key": "soccer_uefa_nations_league",
-"nSoft": 29,
-"pinnacleImEvent": false,
-"nBuecher": 29,
-"matchId": "36124696",
-"liga": "UEFA Nations League"
+"score": 0.67,
+"grund": "name",
+"matchId": "36138248",
+"liga": "Friendlies International U20"
 },
 {
 "spiel": "Georgia U19 v Latvia U19",
@@ -683,13 +681,15 @@
 "liga": "Friendlies International U19"
 },
 {
-"spiel": "Portugal U20 v Czech Republic U20",
-"kandidat": "Spain v Czech Republic",
+"spiel": "Kazakhstan v Moldova",
+"grund": "kein_pinnacle",
+"kandidat": "Kazakhstan v Moldova",
 "key": "soccer_uefa_nations_league",
-"score": 0.67,
-"grund": "name",
-"matchId": "36138248",
-"liga": "Friendlies International U20"
+"nSoft": 29,
+"pinnacleImEvent": false,
+"nBuecher": 29,
+"matchId": "36124696",
+"liga": "UEFA Nations League"
 },
 {
 "spiel": "Latvia v Montenegro",
@@ -725,15 +725,13 @@
 "liga": "UEFA Nations League"
 },
 {
-"spiel": "Bosnia v Sweden",
-"grund": "kein_pinnacle",
-"kandidat": "Bosnia & Herzegovina v Sweden",
+"spiel": "England U21 v Slovakia U21",
+"kandidat": "Faroe Islands v Slovakia",
 "key": "soccer_uefa_nations_league",
-"nSoft": 30,
-"pinnacleImEvent": false,
-"nBuecher": 30,
-"matchId": "36131372",
-"liga": "UEFA Nations League"
+"score": 0.5,
+"grund": "name",
+"matchId": "36121717",
+"liga": "UEFA U21 Euro Qualifiers"
 },
 {
 "spiel": "Hungary v Georgia",
@@ -747,13 +745,15 @@
 "liga": "UEFA Nations League"
 },
 {
-"spiel": "England U21 v Slovakia U21",
-"kandidat": "Faroe Islands v Slovakia",
+"spiel": "Bosnia v Sweden",
+"grund": "kein_pinnacle",
+"kandidat": "Bosnia & Herzegovina v Sweden",
 "key": "soccer_uefa_nations_league",
-"score": 0.5,
-"grund": "name",
-"matchId": "36121717",
-"liga": "UEFA U21 Euro Qualifiers"
+"nSoft": 30,
+"pinnacleImEvent": false,
+"nBuecher": 30,
+"matchId": "36131372",
+"liga": "UEFA Nations League"
 },
 {
 "spiel": "Ukraine v Northern Ireland",
