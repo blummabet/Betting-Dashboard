@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-01T12:30:33.392610+00:00",
+ "generatedAt": "2026-10-01T13:02:42.084354+00:00",
  "heute": "2026-10-01",
  "messungen": [
   {
@@ -33,9 +33,9 @@
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "nachtrag": "27.09.2026: Zwischenstand n=78 abgerechnet. Echt ROI +6,5 % (UG -4,0 %), Papier auf gleichem Einsatz +8,6 %. Der echte Fill kostet im Mittel +0,64 Cent (Median +0,50) gegen den Papierpreis; CLV-Vorsprung -0,59 pp, Band [-1,44, +0,25].",
-   "standN": 119,
+   "standN": 120,
    "zustand": "faellig",
-   "stand": "119 von 25 Beobachtungen · Entscheidung faellig",
+   "stand": "120 von 25 Beobachtungen · Entscheidung faellig",
    "fortschritt": 1.0,
    "tageBisFaellig": -2
   },
@@ -51,9 +51,9 @@
    "mindestN": 150,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 164,
+   "standN": 166,
    "zustand": "bereit",
-   "stand": "164 von 150 Beobachtungen · faellig in 8 Tag(en)",
+   "stand": "166 von 150 Beobachtungen · faellig in 8 Tag(en)",
    "fortschritt": 1.0,
    "tageBisFaellig": 8
   },
@@ -70,9 +70,9 @@
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "nachtrag": "27.09.2026: Zwischenstand n=152 (Mindestzahl 40 erreicht). Treffer 66,5 %, ROI -4,5 % (UG -14,3 %), CLV -0,04 pp. Die Rueckschau (77,1 % / +19,9 %) haelt vorwaerts nicht. Heutige Public-Regel seit 03.09.: n=47, ROI +14,2 % (UG -10,0 %).",
-   "standN": 291,
+   "standN": 294,
    "zustand": "bereit",
-   "stand": "291 von 40 Beobachtungen · faellig in 29 Tag(en)",
+   "stand": "294 von 40 Beobachtungen · faellig in 29 Tag(en)",
    "fortschritt": 1.0,
    "tageBisFaellig": 29
   },
@@ -205,6 +205,24 @@
    "tageBisFaellig": 31
   },
   {
+   "id": "poly-autobet-oktober",
+   "titel": "Auto-Bet Oktober (flat $5): wo kommt der Gewinn her — und sortiert die Conviction?",
+   "frage": "Alle im Oktober gesetzten Auto-Bets aus „Heute spielenswert“ (flat $5, unverändert inkl. Fußball), dazu der Papier-Track der Public-Kandidaten im selben Zeitraum. Drei Fragen, vorab festgelegt: (1) je Sportart Trefferquote gegen Preis und ROI mit Grenzen; (2) je Conviction-Stufe — treffen höhere Stufen öfter und rentieren besser als niedrige?; (3) je Preisband — wo entsteht der E-Sport-Gewinn?",
+   "warum": "01.10.2026 (Lucas): „wir lassen das jetzt weiter mit Flat, und Ende Oktober entscheiden wir, ob wir aufgrund der Conviction die Stakes anpassen“ — „mir ist wichtig, dass die Heute-spielenswert-Wetten an Qualität nicht schlechter, sondern weiter verbessert werden“. Stand bis 30.09. (110 Echtgeld-Wetten seit 14.09.): gesamt +6,35 $ / ROI +1,2 % (UG −8 %), Spitze +40 $ am 24.09.; E-Sport 77 Wetten +41,88 $ (83 % getroffen bei 75 % Preis), Tennis 14 ±0 (79 % bei 78 %), Fußball 19 −35,80 $ (47 % bei 65 %). Papier Public-Kandidaten: E-Sport n=160 +5,9 % (UG −1,7), Tennis n=66 +3,4 %, Fußball n=81 −5,8 %. Fußball wurde bewusst NICHT nach dem Hinsehen rausgefiltert. Entscheidung vorab am 01.11.: (a) liegt die ROI-OBERgrenze von Fußball über Echtgeld+Papier unter null, fliegt Fußball aus dem Auto-Bet; (b) steigen Trefferquote-über-Preis und ROI monoton mit der Conviction und trennt die oberste von der untersten Stufe (Grenzen überlappen nicht), wird der Einsatz nach Conviction gestaffelt — sonst bleibt flat und die Conviction-Berechnung wird überarbeitet; (c) das Preisband-Ergebnis geht nur als Hypothese in den November, nicht als Filter.",
+   "gestartet": "2026-10-01",
+   "faellig": "2026-11-01",
+   "quelle": "shortlist_auto_bets_placed.json (status won/lost, placedAt >= 2026-10-01) + poly_shortlist_track.json (public, settled)",
+   "messer": "autobet_oktober",
+   "mindestN": 100,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "standN": 4,
+   "zustand": "sammelt",
+   "stand": "4 von 100 Beobachtungen · faellig in 31 Tag(en)",
+   "fortschritt": 0.04,
+   "tageBisFaellig": 31
+  },
+  {
    "id": "betfair-einseitigkeit-schwelle",
    "titel": "Traegt eine hoehere Einseitigkeit ausserhalb der Top-5-Ligen?",
    "frage": "Trefferquote und ROI der gesendeten Betfair-Public-Pushes, aufgeteilt nach `leadShare` (80–85 / 85–90 / >=90 %), nur frisch, nur ausserhalb der Top-5-Ligen.",
@@ -234,10 +252,10 @@
    "mindestN": 20000,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 12007,
+   "standN": 12033,
    "zustand": "sammelt",
-   "stand": "12007 von 20000 Beobachtungen · faellig in 45 Tag(en)",
-   "fortschritt": 0.60035,
+   "stand": "12033 von 20000 Beobachtungen · faellig in 45 Tag(en)",
+   "fortschritt": 0.60165,
    "tageBisFaellig": 45
   },
   {
@@ -252,10 +270,10 @@
    "mindestN": 20000,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 12007,
+   "standN": 12033,
    "zustand": "sammelt",
-   "stand": "12007 von 20000 Beobachtungen · faellig in 45 Tag(en)",
-   "fortschritt": 0.60035,
+   "stand": "12033 von 20000 Beobachtungen · faellig in 45 Tag(en)",
+   "fortschritt": 0.60165,
    "tageBisFaellig": 45
   },
   {
@@ -275,6 +293,24 @@
    "stand": "11 von 400 Beobachtungen · faellig in 45 Tag(en)",
    "fortschritt": 0.0275,
    "tageBisFaellig": 45
+  },
+  {
+   "id": "serien-wetten",
+   "titel": "Treffen die Serien-Wetten so oft wie angezeigt — und was bringen sie zur angezeigten Quote?",
+   "frage": "Je Zeile der Serien-Wetten-Tafel (Liga + MLS, nächste 7 Tage) beim ERSTEN Erscheinen festgeschrieben: angezeigte Trefferchance und Quote. Nach Spielende: Trefferquote gegen die mittlere angezeigte Chance (Wilson-Band) und ROI zur ersten Quote (Mittelwert-Band) — getrennt nach Markt- und Modell-Chance.",
+   "warum": "01.10.2026 (Lucas): „ich will die Wette ja gewinnen, egal ob gepreist oder nicht“. Die Tafel sortiert nach Trefferchance; Markt-Chance = entmargte Quote, ohne Markt die Modell-Chance aus Eigen- und Gegnerrate. Erwartung vorab aus dem Backtest Top-5 (7.156 Spiele, football-data): Serien treffen so oft, wie der Markt sagt, ROI ≈ minus Marge, auch zu frühen Quoten. Entscheidung vorab: (1) liegt die Markt-Chance im Band, bleibt sie die Anzeige; (2) trifft die Modell-Chance außerhalb des Bands, wird sie korrigiert oder nicht mehr gezeigt; (3) nur wenn die ROI-Untergrenze bei n >= 150 über null liegt, wird ein Teilstück als Signal geprüft.",
+   "gestartet": "2026-10-01",
+   "faellig": "2026-11-30",
+   "quelle": "liga_serien_wetten_buch.json + mls_serien_wetten_buch.json -> Zeilen mit status=abgerechnet",
+   "messer": "serien_wetten",
+   "mindestN": 150,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "standN": 0,
+   "zustand": "sammelt",
+   "stand": "0 von 150 Beobachtungen · faellig in 60 Tag(en)",
+   "fortschritt": 0.0,
+   "tageBisFaellig": 60
   },
   {
    "id": "stake-kleine-liga",
@@ -314,7 +350,7 @@
    "tageBisFaellig": -2
   }
  ],
- "n": 17,
- "nOffen": 16,
+ "n": 19,
+ "nOffen": 18,
  "nHandlung": 2
 }
