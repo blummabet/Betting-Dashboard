@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-01T21:23:47.910570+00:00",
+ "generatedAt": "2026-10-01T21:29:23.841911+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -119,7 +119,7 @@
     "nieAnteil": 0.052,
     "schaetzbar": false
    },
-   "alterTage": 4.3,
+   "alterTage": 4.4,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py",
    "seitFreigabe": {
@@ -648,11 +648,11 @@
    "zerlegung": "nach Conviction",
    "art": "conviction",
    "gruppen": 7,
-   "basis": "977 von 1431 abgerechneten Plays · nur Engine 2026-09-01 · ohne Cricket, Kampfsport, US-Sport",
-   "n": 973,
-   "pl": 2.12,
-   "roi": 0.0022,
-   "clv": -0.278,
+   "basis": "978 von 1432 abgerechneten Plays · nur Engine 2026-09-01 · ohne Cricket, Kampfsport, US-Sport",
+   "n": 974,
+   "pl": 2.74,
+   "roi": 0.0028,
+   "clv": -0.272,
    "belegte": 1
   },
   {
@@ -4342,7 +4342,7 @@
     "nieAnteil": 0.052,
     "schaetzbar": false
    },
-   "alterTage": 4.3,
+   "alterTage": 4.4,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py",
    "seitFreigabe": {
@@ -5581,6 +5581,38 @@
    "naeherung": false
   },
   {
+   "schublade": "Conviction 5",
+   "strom": "poly",
+   "n": 466,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.0003,
+   "pl": -0.13,
+   "roiLb": -0.0561,
+   "clv": -0.402,
+   "clvLb": -0.785,
+   "clvUrteil": "negativ belegt",
+   "clvOg": -0.02,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "nicht_positiv",
+   "entfernung": {
+    "median": 2902,
+    "lo": 338,
+    "hi": 154868,
+    "nieAnteil": 0.467,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "conviction",
+   "wert": 5,
+   "nAlt": 110,
+   "roiAlt": 0.1047,
+   "clvAlt": 2.071,
+   "engineAlt": true
+  },
+  {
    "schublade": "Japanese J League · Over/Under 3.5 Goals",
    "strom": "betfair",
    "n": 40,
@@ -5603,35 +5635,35 @@
    "naeherung": false
   },
   {
-   "schublade": "Conviction 5",
+   "schublade": "Mix money+sharp",
    "strom": "poly",
-   "n": 465,
+   "n": 375,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0016,
-   "pl": -0.75,
-   "roiLb": -0.0576,
-   "clv": -0.415,
-   "clvLb": -0.798,
-   "clvUrteil": "negativ belegt",
-   "clvOg": -0.032,
+   "roi": -0.0042,
+   "pl": -1.57,
+   "roiLb": -0.0578,
+   "clv": -0.28,
+   "clvLb": -0.717,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.157,
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
    "noetigGrund": "nicht_positiv",
    "entfernung": {
-    "median": 3012,
-    "lo": 349,
-    "hi": 236202,
-    "nieAnteil": 0.49,
+    "median": 2534,
+    "lo": 256,
+    "hi": 403948,
+    "nieAnteil": 0.587,
     "schaetzbar": false
    },
    "alterTage": 0.0,
-   "art": "conviction",
-   "wert": 5,
-   "nAlt": 110,
-   "roiAlt": 0.1047,
-   "clvAlt": 2.071,
+   "art": "mix",
+   "wert": "money+sharp",
+   "nAlt": 140,
+   "roiAlt": -0.035,
+   "clvAlt": 0.0,
    "engineAlt": true
   },
   {
@@ -5657,38 +5689,6 @@
    "naeherung": false
   },
   {
-   "schublade": "Mix money+sharp",
-   "strom": "poly",
-   "n": 374,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0059,
-   "pl": -2.19,
-   "roiLb": -0.0596,
-   "clv": -0.294,
-   "clvLb": -0.732,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.145,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "nicht_positiv",
-   "entfernung": {
-    "median": 2873,
-    "lo": 287,
-    "hi": 527245,
-    "nieAnteil": 0.585,
-    "schaetzbar": false
-   },
-   "alterTage": 0.0,
-   "art": "mix",
-   "wert": "money+sharp",
-   "nAlt": 140,
-   "roiAlt": -0.035,
-   "clvAlt": 0.0,
-   "engineAlt": true
-  },
-  {
    "schublade": "ABWÄGEN · aussortiert",
    "strom": "cards",
    "n": 207,
@@ -5712,7 +5712,7 @@
     "nieAnteil": 0.268,
     "schaetzbar": false
    },
-   "alterTage": 4.3,
+   "alterTage": 4.4,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py"
   },
@@ -14560,7 +14560,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 5.0,
+   "alterTage": 5.1,
    "art": "mix",
    "wert": "bf+steam"
   },
