@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-02T02:45:06.920824+00:00",
+ "generatedAt": "2026-10-02T03:00:01.993546+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -14,28 +14,28 @@
   {
    "schublade": "🔒 E-Sport ohne Wallet-Nachweis",
    "strom": "poly",
-   "n": 252,
+   "n": 253,
    "status": "freigegeben",
-   "grund": "ROI belegt (Untergrenze +3.5 %) — der CLV ist gemessen (-0.32 pp), aber nicht belegt: unbekannt ist kein Nein.",
-   "roi": 0.0929,
-   "pl": 23.42,
-   "roiLb": 0.0347,
-   "clv": -0.318,
-   "clvLb": -0.721,
+   "grund": "ROI belegt (Untergrenze +3.6 %) — der CLV ist gemessen (-0.29 pp), aber nicht belegt: unbekannt ist kein Nein.",
+   "roi": 0.0944,
+   "pl": 23.88,
+   "roiLb": 0.0364,
+   "clv": -0.294,
+   "clvLb": -0.696,
    "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.085,
+   "clvOg": 0.109,
    "fehltN": 0,
-   "noetigNRoi": 99,
+   "noetigNRoi": 96,
    "noetigNClv": null,
    "noetigGrund": null,
    "entfernung": {
-    "median": 100,
+    "median": 96,
     "lo": 33,
-    "hi": 678,
-    "nieAnteil": 0.005,
+    "hi": 685,
+    "nieAnteil": 0.008,
     "schaetzbar": false
    },
-   "alterTage": 0.2,
+   "alterTage": 0.0,
    "art": "vorangemeldet",
    "angemeldet": "2026-09-07T08:15:48.444033+00:00",
    "zielN": 120,
@@ -54,8 +54,8 @@
     "nBei": 120,
     "roiBei": 0.148,
     "rausgefallen": 1,
-    "nNeu": 132,
-    "roiNeu": 0.0428
+    "nNeu": 133,
+    "roiNeu": 0.046
    }
   },
   {
@@ -130,6 +130,46 @@
     "nNeu": 0,
     "roiNeu": null
    }
+  },
+  {
+   "schublade": "Mix money+sharp+steam",
+   "strom": "poly",
+   "n": 73,
+   "status": "freigegeben",
+   "grund": "ROI belegt (Untergrenze +0.4 %) — der CLV ist gemessen (-0.53 pp), aber nicht belegt: unbekannt ist kein Nein.",
+   "roi": 0.1278,
+   "pl": 9.33,
+   "roiLb": 0.0036,
+   "clv": -0.527,
+   "clvLb": -1.254,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.2,
+   "fehltN": 0,
+   "noetigNRoi": 69,
+   "noetigNClv": null,
+   "noetigGrund": null,
+   "entfernung": {
+    "median": 63,
+    "lo": 15,
+    "hi": 1735,
+    "nieAnteil": 0.045,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "mix",
+   "wert": "money+sharp+steam",
+   "nAlt": 11,
+   "roiAlt": -0.1875,
+   "clvAlt": 0.5,
+   "engineAlt": true,
+   "seitFreigabe": {
+    "ab": "2026-09-16T15:03:00+00:00",
+    "nBei": 32,
+    "roiBei": 0.201,
+    "rausgefallen": 7,
+    "nNeu": 41,
+    "roiNeu": 0.0707
+   }
   }
  ],
  "kandidaten": [
@@ -138,7 +178,7 @@
    "strom": "betfair",
    "n": 30,
    "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +16.1 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 16. Freigabe erst nach Bestätigung nach vorn.",
+   "grund": "ROI belegt (Untergrenze +16.1 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 17. Freigabe erst nach Bestätigung nach vorn.",
    "roi": 0.538,
    "pl": 16.14,
    "roiLb": 0.1613,
@@ -157,7 +197,7 @@
    "mehrfachtest": {
     "nTests": 448,
     "erwartet": 22.4,
-    "nUeber": 16,
+    "nUeber": 17,
     "ueberschuss": false
    },
    "zielN": 60,
@@ -172,7 +212,7 @@
    "strom": "betfair",
    "n": 34,
    "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +10.8 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 16. Freigabe erst nach Bestätigung nach vorn.",
+   "grund": "ROI belegt (Untergrenze +10.8 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 17. Freigabe erst nach Bestätigung nach vorn.",
    "roi": 0.4035,
    "pl": 13.72,
    "roiLb": 0.108,
@@ -191,7 +231,7 @@
    "mehrfachtest": {
     "nTests": 448,
     "erwartet": 22.4,
-    "nUeber": 16,
+    "nUeber": 17,
     "ueberschuss": false
    },
    "zielN": 60,
@@ -206,7 +246,7 @@
    "strom": "betfair",
    "n": 34,
    "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +10.6 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 16. Freigabe erst nach Bestätigung nach vorn.",
+   "grund": "ROI belegt (Untergrenze +10.6 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 17. Freigabe erst nach Bestätigung nach vorn.",
    "roi": 0.4185,
    "pl": 14.23,
    "roiLb": 0.1058,
@@ -225,7 +265,7 @@
    "mehrfachtest": {
     "nTests": 448,
     "erwartet": 22.4,
-    "nUeber": 16,
+    "nUeber": 17,
     "ueberschuss": false
    },
    "zielN": 64,
@@ -240,7 +280,7 @@
    "strom": "betfair",
    "n": 34,
    "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +5.2 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 16. Freigabe erst nach Bestätigung nach vorn.",
+   "grund": "ROI belegt (Untergrenze +5.2 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 17. Freigabe erst nach Bestätigung nach vorn.",
    "roi": 0.6597,
    "pl": 22.43,
    "roiLb": 0.0518,
@@ -259,7 +299,7 @@
    "mehrfachtest": {
     "nTests": 448,
     "erwartet": 22.4,
-    "nUeber": 16,
+    "nUeber": 17,
     "ueberschuss": false
    },
    "zielN": 62,
@@ -274,7 +314,7 @@
    "strom": "betfair",
    "n": 30,
    "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +4.4 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 16. Freigabe erst nach Bestätigung nach vorn.",
+   "grund": "ROI belegt (Untergrenze +4.4 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 17. Freigabe erst nach Bestätigung nach vorn.",
    "roi": 0.3473,
    "pl": 10.42,
    "roiLb": 0.0438,
@@ -293,7 +333,7 @@
    "mehrfachtest": {
     "nTests": 448,
     "erwartet": 22.4,
-    "nUeber": 16,
+    "nUeber": 17,
     "ueberschuss": false
    },
    "zielN": 61,
@@ -308,7 +348,7 @@
    "strom": "betfair",
    "n": 37,
    "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +3.9 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 16. Freigabe erst nach Bestätigung nach vorn.",
+   "grund": "ROI belegt (Untergrenze +3.9 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 17. Freigabe erst nach Bestätigung nach vorn.",
    "roi": 0.3303,
    "pl": 12.22,
    "roiLb": 0.0387,
@@ -327,7 +367,7 @@
    "mehrfachtest": {
     "nTests": 448,
     "erwartet": 22.4,
-    "nUeber": 16,
+    "nUeber": 17,
     "ueberschuss": false
    },
    "zielN": 72,
@@ -342,7 +382,7 @@
    "strom": "betfair",
    "n": 31,
    "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +3.5 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 16. Freigabe erst nach Bestätigung nach vorn.",
+   "grund": "ROI belegt (Untergrenze +3.5 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 17. Freigabe erst nach Bestätigung nach vorn.",
    "roi": 0.5116,
    "pl": 15.86,
    "roiLb": 0.0346,
@@ -361,7 +401,7 @@
    "mehrfachtest": {
     "nTests": 448,
     "erwartet": 22.4,
-    "nUeber": 16,
+    "nUeber": 17,
     "ueberschuss": false
    },
    "zielN": 61,
@@ -376,7 +416,7 @@
    "strom": "betfair",
    "n": 39,
    "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +2.6 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 16. Freigabe erst nach Bestätigung nach vorn.",
+   "grund": "ROI belegt (Untergrenze +2.6 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 17. Freigabe erst nach Bestätigung nach vorn.",
    "roi": 0.2736,
    "pl": 10.67,
    "roiLb": 0.0262,
@@ -395,7 +435,7 @@
    "mehrfachtest": {
     "nTests": 448,
     "erwartet": 22.4,
-    "nUeber": 16,
+    "nUeber": 17,
     "ueberschuss": false
    },
    "zielN": 69,
@@ -410,7 +450,7 @@
    "strom": "betfair",
    "n": 38,
    "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +2.2 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 16. Freigabe erst nach Bestätigung nach vorn.",
+   "grund": "ROI belegt (Untergrenze +2.2 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 17. Freigabe erst nach Bestätigung nach vorn.",
    "roi": 0.3958,
    "pl": 15.04,
    "roiLb": 0.0219,
@@ -429,7 +469,7 @@
    "mehrfachtest": {
     "nTests": 448,
     "erwartet": 22.4,
-    "nUeber": 16,
+    "nUeber": 17,
     "ueberschuss": false
    },
    "zielN": 68,
@@ -444,7 +484,7 @@
    "strom": "betfair",
    "n": 40,
    "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +2.1 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 16. Freigabe erst nach Bestätigung nach vorn.",
+   "grund": "ROI belegt (Untergrenze +2.1 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 17. Freigabe erst nach Bestätigung nach vorn.",
    "roi": 0.289,
    "pl": 11.56,
    "roiLb": 0.021,
@@ -463,7 +503,7 @@
    "mehrfachtest": {
     "nTests": 448,
     "erwartet": 22.4,
-    "nUeber": 16,
+    "nUeber": 17,
     "ueberschuss": false
    },
    "zielN": 70,
@@ -478,7 +518,7 @@
    "strom": "betfair",
    "n": 57,
    "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +2.0 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 16. Freigabe erst nach Bestätigung nach vorn.",
+   "grund": "ROI belegt (Untergrenze +2.0 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 17. Freigabe erst nach Bestätigung nach vorn.",
    "roi": 0.2377,
    "pl": 13.55,
    "roiLb": 0.0203,
@@ -497,7 +537,7 @@
    "mehrfachtest": {
     "nTests": 448,
     "erwartet": 22.4,
-    "nUeber": 16,
+    "nUeber": 17,
     "ueberschuss": false
    },
    "zielN": 88,
@@ -512,7 +552,7 @@
    "strom": "betfair",
    "n": 37,
    "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +1.2 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 16. Freigabe erst nach Bestätigung nach vorn.",
+   "grund": "ROI belegt (Untergrenze +1.2 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 17. Freigabe erst nach Bestätigung nach vorn.",
    "roi": 0.2614,
    "pl": 9.67,
    "roiLb": 0.0123,
@@ -531,7 +571,7 @@
    "mehrfachtest": {
     "nTests": 448,
     "erwartet": 22.4,
-    "nUeber": 16,
+    "nUeber": 17,
     "ueberschuss": false
    },
    "zielN": 67,
@@ -546,7 +586,7 @@
    "strom": "betfair",
    "n": 54,
    "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +0.5 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 16. Freigabe erst nach Bestätigung nach vorn.",
+   "grund": "ROI belegt (Untergrenze +0.5 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 17. Freigabe erst nach Bestätigung nach vorn.",
    "roi": 0.2444,
    "pl": 13.2,
    "roiLb": 0.0053,
@@ -565,7 +605,7 @@
    "mehrfachtest": {
     "nTests": 448,
     "erwartet": 22.4,
-    "nUeber": 16,
+    "nUeber": 17,
     "ueberschuss": false
    },
    "zielN": 84,
@@ -631,7 +671,7 @@
     "nieAnteil": 0.32,
     "schaetzbar": false
    },
-   "alterTage": 2.1,
+   "alterTage": 2.2,
    "art": "mix",
    "wert": "bf+money+steam",
    "nAlt": 5,
@@ -642,7 +682,7 @@
  ],
  "ausbeute": {
   "nTests": 448,
-  "nUeber": 16,
+  "nUeber": 17,
   "erwartet": 22.4,
   "schranke": 36.6,
   "ueberschuss": false,
@@ -656,6 +696,7 @@
    "Italian Serie A · Both teams to Score?",
    "Italian Serie B · Half Time",
    "Liga · ABWÄGEN",
+   "Mix money+sharp+steam",
    "Paraguayan Primera Division · Match Odds",
    "Peruvian Primera Division · Half Time",
    "Swedish Division 1 · First Half Goals 0.5",
@@ -683,12 +724,12 @@
    "zerlegung": "nach Conviction",
    "art": "conviction",
    "gruppen": 7,
-   "basis": "986 von 1440 abgerechneten Plays · nur Engine 2026-09-01 · ohne Cricket, Kampfsport, US-Sport",
-   "n": 982,
-   "pl": 3.23,
-   "roi": 0.0033,
-   "clv": -0.26,
-   "belegte": 1
+   "basis": "987 von 1441 abgerechneten Plays · nur Engine 2026-09-01 · ohne Cricket, Kampfsport, US-Sport",
+   "n": 983,
+   "pl": 3.69,
+   "roi": 0.0038,
+   "clv": -0.253,
+   "belegte": 2
   },
   {
    "strom": "betfair",
@@ -707,7 +748,7 @@
   {
    "schublade": "🔒 E-Sport ohne Wallet-Nachweis",
    "strom": "poly",
-   "roiLb": 0.0347,
+   "roiLb": 0.0364,
    "clvUrteil": "gemessen, nicht belegt",
    "aufloesbar": false,
    "grund": "für diesen Schnitt gibt es keine Liste offener Plays — die Schublade rechnet auf Aggregaten, nicht auf einzelnen Zeilen",
@@ -860,6 +901,17 @@
    "strom": "cards",
    "roiLb": 0.0056,
    "clvUrteil": "nicht erhoben",
+   "aufloesbar": false,
+   "grund": "für diesen Schnitt gibt es keine Liste offener Plays — die Schublade rechnet auf Aggregaten, nicht auf einzelnen Zeilen",
+   "laufend": 0,
+   "n": 0,
+   "plays": []
+  },
+  {
+   "schublade": "Mix money+sharp+steam",
+   "strom": "poly",
+   "roiLb": 0.0036,
+   "clvUrteil": "gemessen, nicht belegt",
    "aufloesbar": false,
    "grund": "für diesen Schnitt gibt es keine Liste offener Plays — die Schublade rechnet auf Aggregaten, nicht auf einzelnen Zeilen",
    "laufend": 0,
@@ -4286,28 +4338,28 @@
   {
    "schublade": "🔒 E-Sport ohne Wallet-Nachweis",
    "strom": "poly",
-   "n": 252,
+   "n": 253,
    "status": "freigegeben",
-   "grund": "ROI belegt (Untergrenze +3.5 %) — der CLV ist gemessen (-0.32 pp), aber nicht belegt: unbekannt ist kein Nein.",
-   "roi": 0.0929,
-   "pl": 23.42,
-   "roiLb": 0.0347,
-   "clv": -0.318,
-   "clvLb": -0.721,
+   "grund": "ROI belegt (Untergrenze +3.6 %) — der CLV ist gemessen (-0.29 pp), aber nicht belegt: unbekannt ist kein Nein.",
+   "roi": 0.0944,
+   "pl": 23.88,
+   "roiLb": 0.0364,
+   "clv": -0.294,
+   "clvLb": -0.696,
    "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.085,
+   "clvOg": 0.109,
    "fehltN": 0,
-   "noetigNRoi": 99,
+   "noetigNRoi": 96,
    "noetigNClv": null,
    "noetigGrund": null,
    "entfernung": {
-    "median": 100,
+    "median": 96,
     "lo": 33,
-    "hi": 678,
-    "nieAnteil": 0.005,
+    "hi": 685,
+    "nieAnteil": 0.008,
     "schaetzbar": false
    },
-   "alterTage": 0.2,
+   "alterTage": 0.0,
    "art": "vorangemeldet",
    "angemeldet": "2026-09-07T08:15:48.444033+00:00",
    "zielN": 120,
@@ -4326,8 +4378,8 @@
     "nBei": 120,
     "roiBei": 0.148,
     "rausgefallen": 1,
-    "nNeu": 132,
-    "roiNeu": 0.0428
+    "nNeu": 133,
+    "roiNeu": 0.046
    }
   },
   {
@@ -4404,11 +4456,51 @@
    }
   },
   {
+   "schublade": "Mix money+sharp+steam",
+   "strom": "poly",
+   "n": 73,
+   "status": "freigegeben",
+   "grund": "ROI belegt (Untergrenze +0.4 %) — der CLV ist gemessen (-0.53 pp), aber nicht belegt: unbekannt ist kein Nein.",
+   "roi": 0.1278,
+   "pl": 9.33,
+   "roiLb": 0.0036,
+   "clv": -0.527,
+   "clvLb": -1.254,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.2,
+   "fehltN": 0,
+   "noetigNRoi": 69,
+   "noetigNClv": null,
+   "noetigGrund": null,
+   "entfernung": {
+    "median": 63,
+    "lo": 15,
+    "hi": 1735,
+    "nieAnteil": 0.045,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "mix",
+   "wert": "money+sharp+steam",
+   "nAlt": 11,
+   "roiAlt": -0.1875,
+   "clvAlt": 0.5,
+   "engineAlt": true,
+   "seitFreigabe": {
+    "ab": "2026-09-16T15:03:00+00:00",
+    "nBei": 32,
+    "roiBei": 0.201,
+    "rausgefallen": 7,
+    "nNeu": 41,
+    "roiNeu": 0.0707
+   }
+  },
+  {
    "schublade": "Paraguayan Primera Division · Match Odds",
    "strom": "betfair",
    "n": 30,
    "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +16.1 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 16. Freigabe erst nach Bestätigung nach vorn.",
+   "grund": "ROI belegt (Untergrenze +16.1 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 17. Freigabe erst nach Bestätigung nach vorn.",
    "roi": 0.538,
    "pl": 16.14,
    "roiLb": 0.1613,
@@ -4427,7 +4519,7 @@
    "mehrfachtest": {
     "nTests": 448,
     "erwartet": 22.4,
-    "nUeber": 16,
+    "nUeber": 17,
     "ueberschuss": false
    },
    "zielN": 60,
@@ -4442,7 +4534,7 @@
    "strom": "betfair",
    "n": 34,
    "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +10.8 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 16. Freigabe erst nach Bestätigung nach vorn.",
+   "grund": "ROI belegt (Untergrenze +10.8 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 17. Freigabe erst nach Bestätigung nach vorn.",
    "roi": 0.4035,
    "pl": 13.72,
    "roiLb": 0.108,
@@ -4461,7 +4553,7 @@
    "mehrfachtest": {
     "nTests": 448,
     "erwartet": 22.4,
-    "nUeber": 16,
+    "nUeber": 17,
     "ueberschuss": false
    },
    "zielN": 60,
@@ -4476,7 +4568,7 @@
    "strom": "betfair",
    "n": 34,
    "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +10.6 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 16. Freigabe erst nach Bestätigung nach vorn.",
+   "grund": "ROI belegt (Untergrenze +10.6 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 17. Freigabe erst nach Bestätigung nach vorn.",
    "roi": 0.4185,
    "pl": 14.23,
    "roiLb": 0.1058,
@@ -4495,7 +4587,7 @@
    "mehrfachtest": {
     "nTests": 448,
     "erwartet": 22.4,
-    "nUeber": 16,
+    "nUeber": 17,
     "ueberschuss": false
    },
    "zielN": 64,
@@ -4510,7 +4602,7 @@
    "strom": "betfair",
    "n": 34,
    "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +5.2 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 16. Freigabe erst nach Bestätigung nach vorn.",
+   "grund": "ROI belegt (Untergrenze +5.2 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 17. Freigabe erst nach Bestätigung nach vorn.",
    "roi": 0.6597,
    "pl": 22.43,
    "roiLb": 0.0518,
@@ -4529,7 +4621,7 @@
    "mehrfachtest": {
     "nTests": 448,
     "erwartet": 22.4,
-    "nUeber": 16,
+    "nUeber": 17,
     "ueberschuss": false
    },
    "zielN": 62,
@@ -4544,7 +4636,7 @@
    "strom": "betfair",
    "n": 30,
    "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +4.4 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 16. Freigabe erst nach Bestätigung nach vorn.",
+   "grund": "ROI belegt (Untergrenze +4.4 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 17. Freigabe erst nach Bestätigung nach vorn.",
    "roi": 0.3473,
    "pl": 10.42,
    "roiLb": 0.0438,
@@ -4563,7 +4655,7 @@
    "mehrfachtest": {
     "nTests": 448,
     "erwartet": 22.4,
-    "nUeber": 16,
+    "nUeber": 17,
     "ueberschuss": false
    },
    "zielN": 61,
@@ -4578,7 +4670,7 @@
    "strom": "betfair",
    "n": 37,
    "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +3.9 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 16. Freigabe erst nach Bestätigung nach vorn.",
+   "grund": "ROI belegt (Untergrenze +3.9 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 17. Freigabe erst nach Bestätigung nach vorn.",
    "roi": 0.3303,
    "pl": 12.22,
    "roiLb": 0.0387,
@@ -4597,7 +4689,7 @@
    "mehrfachtest": {
     "nTests": 448,
     "erwartet": 22.4,
-    "nUeber": 16,
+    "nUeber": 17,
     "ueberschuss": false
    },
    "zielN": 72,
@@ -4612,7 +4704,7 @@
    "strom": "betfair",
    "n": 31,
    "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +3.5 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 16. Freigabe erst nach Bestätigung nach vorn.",
+   "grund": "ROI belegt (Untergrenze +3.5 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 17. Freigabe erst nach Bestätigung nach vorn.",
    "roi": 0.5116,
    "pl": 15.86,
    "roiLb": 0.0346,
@@ -4631,7 +4723,7 @@
    "mehrfachtest": {
     "nTests": 448,
     "erwartet": 22.4,
-    "nUeber": 16,
+    "nUeber": 17,
     "ueberschuss": false
    },
    "zielN": 61,
@@ -4646,7 +4738,7 @@
    "strom": "betfair",
    "n": 39,
    "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +2.6 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 16. Freigabe erst nach Bestätigung nach vorn.",
+   "grund": "ROI belegt (Untergrenze +2.6 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 17. Freigabe erst nach Bestätigung nach vorn.",
    "roi": 0.2736,
    "pl": 10.67,
    "roiLb": 0.0262,
@@ -4665,7 +4757,7 @@
    "mehrfachtest": {
     "nTests": 448,
     "erwartet": 22.4,
-    "nUeber": 16,
+    "nUeber": 17,
     "ueberschuss": false
    },
    "zielN": 69,
@@ -4680,7 +4772,7 @@
    "strom": "betfair",
    "n": 38,
    "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +2.2 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 16. Freigabe erst nach Bestätigung nach vorn.",
+   "grund": "ROI belegt (Untergrenze +2.2 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 17. Freigabe erst nach Bestätigung nach vorn.",
    "roi": 0.3958,
    "pl": 15.04,
    "roiLb": 0.0219,
@@ -4699,7 +4791,7 @@
    "mehrfachtest": {
     "nTests": 448,
     "erwartet": 22.4,
-    "nUeber": 16,
+    "nUeber": 17,
     "ueberschuss": false
    },
    "zielN": 68,
@@ -4714,7 +4806,7 @@
    "strom": "betfair",
    "n": 40,
    "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +2.1 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 16. Freigabe erst nach Bestätigung nach vorn.",
+   "grund": "ROI belegt (Untergrenze +2.1 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 17. Freigabe erst nach Bestätigung nach vorn.",
    "roi": 0.289,
    "pl": 11.56,
    "roiLb": 0.021,
@@ -4733,7 +4825,7 @@
    "mehrfachtest": {
     "nTests": 448,
     "erwartet": 22.4,
-    "nUeber": 16,
+    "nUeber": 17,
     "ueberschuss": false
    },
    "zielN": 70,
@@ -4748,7 +4840,7 @@
    "strom": "betfair",
    "n": 57,
    "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +2.0 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 16. Freigabe erst nach Bestätigung nach vorn.",
+   "grund": "ROI belegt (Untergrenze +2.0 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 17. Freigabe erst nach Bestätigung nach vorn.",
    "roi": 0.2377,
    "pl": 13.55,
    "roiLb": 0.0203,
@@ -4767,7 +4859,7 @@
    "mehrfachtest": {
     "nTests": 448,
     "erwartet": 22.4,
-    "nUeber": 16,
+    "nUeber": 17,
     "ueberschuss": false
    },
    "zielN": 88,
@@ -4782,7 +4874,7 @@
    "strom": "betfair",
    "n": 37,
    "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +1.2 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 16. Freigabe erst nach Bestätigung nach vorn.",
+   "grund": "ROI belegt (Untergrenze +1.2 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 17. Freigabe erst nach Bestätigung nach vorn.",
    "roi": 0.2614,
    "pl": 9.67,
    "roiLb": 0.0123,
@@ -4801,7 +4893,7 @@
    "mehrfachtest": {
     "nTests": 448,
     "erwartet": 22.4,
-    "nUeber": 16,
+    "nUeber": 17,
     "ueberschuss": false
    },
    "zielN": 67,
@@ -4816,7 +4908,7 @@
    "strom": "betfair",
    "n": 54,
    "status": "kandidat",
-   "grund": "ROI belegt (Untergrenze +0.5 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 16. Freigabe erst nach Bestätigung nach vorn.",
+   "grund": "ROI belegt (Untergrenze +0.5 %) — aber von 448 gleichzeitig geprüften Schubladen legt der Zufall allein 22.4 über diese Hürde, und drüber liegen 17. Freigabe erst nach Bestätigung nach vorn.",
    "roi": 0.2444,
    "pl": 13.2,
    "roiLb": 0.0053,
@@ -4835,7 +4927,7 @@
    "mehrfachtest": {
     "nTests": 448,
     "erwartet": 22.4,
-    "nUeber": 16,
+    "nUeber": 17,
     "ueberschuss": false
    },
    "zielN": 84,
@@ -4901,44 +4993,12 @@
     "nieAnteil": 0.32,
     "schaetzbar": false
    },
-   "alterTage": 2.1,
+   "alterTage": 2.2,
    "art": "mix",
    "wert": "bf+money+steam",
    "nAlt": 5,
    "roiAlt": -0.2778,
    "clvAlt": null,
-   "engineAlt": true
-  },
-  {
-   "schublade": "Mix money+sharp+steam",
-   "strom": "poly",
-   "n": 72,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.1231,
-   "pl": 8.87,
-   "roiLb": -0.0025,
-   "clv": -0.623,
-   "clvLb": -1.35,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.104,
-   "fehltN": 0,
-   "noetigNRoi": 75,
-   "noetigNClv": null,
-   "noetigGrund": null,
-   "entfernung": {
-    "median": 70,
-    "lo": 15,
-    "hi": 1631,
-    "nieAnteil": 0.06,
-    "schaetzbar": false
-   },
-   "alterTage": 0.3,
-   "art": "mix",
-   "wert": "money+sharp+steam",
-   "nAlt": 11,
-   "roiAlt": -0.1875,
-   "clvAlt": 0.5,
    "engineAlt": true
   },
   {
@@ -5697,7 +5757,7 @@
     "nieAnteil": 0.243,
     "schaetzbar": false
    },
-   "alterTage": 0.1,
+   "alterTage": 0.2,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py"
   },
@@ -5744,6 +5804,38 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
+  },
+  {
+   "schublade": "Conviction 6",
+   "strom": "poly",
+   "n": 421,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.002,
+   "pl": 0.82,
+   "roiLb": -0.0578,
+   "clv": -0.087,
+   "clvLb": -0.532,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.357,
+   "fehltN": 0,
+   "noetigNRoi": 392620,
+   "noetigNClv": null,
+   "noetigGrund": null,
+   "entfernung": {
+    "median": 2512,
+    "lo": 251,
+    "hi": 135303,
+    "nieAnteil": 0.46,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "conviction",
+   "wert": 6,
+   "nAlt": 93,
+   "roiAlt": 0.0229,
+   "clvAlt": 0.361,
+   "engineAlt": true
   },
   {
    "schublade": "Mix money+sharp",
@@ -5800,38 +5892,6 @@
    "naeherung": false
   },
   {
-   "schublade": "Conviction 6",
-   "strom": "poly",
-   "n": 420,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0009,
-   "pl": 0.36,
-   "roiLb": -0.059,
-   "clv": -0.101,
-   "clvLb": -0.546,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.345,
-   "fehltN": 0,
-   "noetigNRoi": 2005403,
-   "noetigNClv": null,
-   "noetigGrund": null,
-   "entfernung": {
-    "median": 2406,
-    "lo": 256,
-    "hi": 266015,
-    "nieAnteil": 0.465,
-    "schaetzbar": false
-   },
-   "alterTage": 0.1,
-   "art": "conviction",
-   "wert": 6,
-   "nAlt": 93,
-   "roiAlt": 0.0229,
-   "clvAlt": 0.361,
-   "engineAlt": true
-  },
-  {
    "schublade": "Swedish Division 1 · Over/Under 2.5 Goals",
    "strom": "betfair",
    "n": 58,
@@ -5874,6 +5934,37 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
+  },
+  {
+   "schublade": "Public-Kandidaten",
+   "strom": "poly",
+   "n": 186,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0099,
+   "pl": 1.84,
+   "roiLb": -0.065,
+   "clv": -0.119,
+   "clvLb": -0.575,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.338,
+   "fehltN": 0,
+   "noetigNRoi": 10693,
+   "noetigNClv": null,
+   "noetigGrund": null,
+   "entfernung": {
+    "median": 820,
+    "lo": 100,
+    "hi": 87358,
+    "nieAnteil": 0.428,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "gate",
+   "nAlt": 132,
+   "roiAlt": 0.0298,
+   "clvAlt": -0.2,
+   "engineAlt": true
   },
   {
    "schublade": "Peruvian Primera Division · Over/Under 2.5 Goals",
@@ -5921,43 +6012,12 @@
     "nieAnteil": 0.107,
     "schaetzbar": false
    },
-   "alterTage": 0.2,
+   "alterTage": 0.3,
    "art": "mix",
    "wert": "sharp+steam",
    "nAlt": 5,
    "roiAlt": 0.7042,
    "clvAlt": -4.0,
-   "engineAlt": true
-  },
-  {
-   "schublade": "Public-Kandidaten",
-   "strom": "poly",
-   "n": 185,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0074,
-   "pl": 1.38,
-   "roiLb": -0.0677,
-   "clv": -0.148,
-   "clvLb": -0.606,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.31,
-   "fehltN": 0,
-   "noetigNRoi": 18874,
-   "noetigNClv": null,
-   "noetigGrund": null,
-   "entfernung": {
-    "median": 920,
-    "lo": 99,
-    "hi": 74964,
-    "nieAnteil": 0.457,
-    "schaetzbar": false
-   },
-   "alterTage": 0.3,
-   "art": "gate",
-   "nAlt": 132,
-   "roiAlt": 0.0298,
-   "clvAlt": -0.2,
    "engineAlt": true
   },
   {
@@ -14957,7 +15017,7 @@
  ],
  "zusammenfassung": {
   "schubladen": 464,
-  "freigegeben": 3,
+  "freigegeben": 4,
   "kandidaten": 15,
   "ruhend": 3,
   "naechsteFreigabe": 10,

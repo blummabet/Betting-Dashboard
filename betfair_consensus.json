@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-10-02T02:45:00.263401+00:00",
+"generatedAt": "2026-10-02T02:59:55.372783+00:00",
 "count": 12,
 "covered": 11,
 "leaguesKuratiert": [
@@ -63,8 +63,8 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 16372,
-"remaining": 4983628,
+"used": 16513,
+"remaining": 4983487,
 "letzterFehler": null
 },
 "ankerQuote": 1.0,
@@ -81,13 +81,13 @@
 "moneyName": "Spain",
 "moneySharePct": 100,
 "moneyOdd": 1.1,
-"moneyDir": "out",
+"moneyDir": "flat",
 "totVol": 247586,
 "pinnOdd": 1.06,
 "softOdd": 1.07,
 "softN": 35,
 "poly": {
-"vol": 137640,
+"vol": 138559,
 "odd": 1.1,
 "sharePct": 90,
 "shareSrc": "preis",
@@ -122,6 +122,77 @@
 "pinnTotals": null
 },
 {
+"matchId": "36098983",
+"home": "Seattle Sounders",
+"away": "Kansas City",
+"league": "US MLS",
+"country": "US",
+"kickoff": "2026-10-02T01:30:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Seattle Sounders",
+"moneySharePct": 71,
+"moneyOdd": 2.22,
+"moneyDir": "in",
+"totVol": 90649,
+"pinnOdd": 2.06,
+"softOdd": 2.05,
+"softN": 36,
+"poly": {
+"vol": 25823,
+"odd": 1.65,
+"sharePct": 83,
+"shareSrc": "geld",
+"key": "mls-sea-skc-2026-10-01",
+"sideKey": "Seattle Sounders FC",
+"whales": [
+{
+"wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+"usd": 2934
+},
+{
+"wallet": "0x72f7b4aa5acaff9629917cf4ec34620a41c492f7",
+"usd": 1815
+},
+{
+"wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
+"usd": 1615
+},
+{
+"wallet": "0x755ab1b66743ec425157ef91e8b5b52f3e8c82c4",
+"usd": 921
+},
+{
+"wallet": "0x02b18dfde01fd53b456cabda7d6ec2403322c764",
+"usd": 605
+},
+{
+"wallet": "0x7e2a8ff8da3a83b95588e1fadc0fc89ad827d25c",
+"usd": 496
+}
+],
+"whaleUsd": 9671
+},
+"pinn": {
+"home": 0.4585,
+"draw": 0.3537,
+"away": 0.1878,
+"fav": "home"
+},
+"soft": {
+"home": 0.4472,
+"draw": 0.3678,
+"away": 0.185,
+"fav": "home",
+"n": 36
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
 "matchId": "36135042",
 "home": "Iceland",
 "away": "Bulgaria",
@@ -133,7 +204,7 @@
 "moneyName": "Iceland",
 "moneySharePct": 96,
 "moneyOdd": 1.48,
-"moneyDir": "in",
+"moneyDir": "flat",
 "totVol": 83908,
 "pinnOdd": null,
 "softOdd": 1.4,
@@ -170,77 +241,6 @@
 "pinnacleImEvent": false,
 "nBuecher": 30
 }
-},
-{
-"matchId": "36098983",
-"home": "Seattle Sounders",
-"away": "Kansas City",
-"league": "US MLS",
-"country": "US",
-"kickoff": "2026-10-02T01:30:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Seattle Sounders",
-"moneySharePct": 71,
-"moneyOdd": 3.95,
-"moneyDir": "out",
-"totVol": 65686,
-"pinnOdd": 3.84,
-"softOdd": 3.7,
-"softN": 36,
-"poly": {
-"vol": 71809,
-"odd": 1.92,
-"sharePct": 76,
-"shareSrc": "geld",
-"key": "mls-sea-skc-2026-10-01",
-"sideKey": "Seattle Sounders FC",
-"whales": [
-{
-"wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
-"usd": 2521
-},
-{
-"wallet": "0xf4362f4784eec9e5e3ba93b0b90da08017624591",
-"usd": 2412
-},
-{
-"wallet": "0x479e330b07822ee28e20bac5e504f1b7c6b591c3",
-"usd": 1733
-},
-{
-"wallet": "0x72f7b4aa5acaff9629917cf4ec34620a41c492f7",
-"usd": 1560
-},
-{
-"wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
-"usd": 1388
-},
-{
-"wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
-"usd": 923
-}
-],
-"whaleUsd": 14821
-},
-"pinn": {
-"home": 0.2462,
-"draw": 0.2882,
-"away": 0.4656,
-"fav": "away"
-},
-"soft": {
-"home": 0.2565,
-"draw": 0.2839,
-"away": 0.4596,
-"fav": "away",
-"n": 36
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "uneinig",
-"agree": false,
-"pinnTotals": null
 },
 {
 "matchId": "36127362",
@@ -305,12 +305,12 @@
 "moneySharePct": 78,
 "moneyOdd": 1.46,
 "moneyDir": "flat",
-"totVol": 42220,
+"totVol": 42266,
 "pinnOdd": 1.45,
 "softOdd": 1.43,
 "softN": 35,
 "poly": {
-"vol": 71179,
+"vol": 71863,
 "odd": 1.46,
 "sharePct": 68,
 "shareSrc": "preis",
@@ -326,9 +326,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.6628,
-"draw": 0.1882,
-"away": 0.149,
+"home": 0.6626,
+"draw": 0.1881,
+"away": 0.1493,
 "fav": "home",
 "n": 35
 },
@@ -336,7 +336,7 @@
 "pinnMove": {
 "movePP": 0.0,
 "stepPP": -0.0,
-"n": 15,
+"n": 16,
 "move": false,
 "laeuft": false
 },
@@ -359,7 +359,7 @@
 "moneyDir": "flat",
 "totVol": 41812,
 "pinnOdd": null,
-"softOdd": 1.88,
+"softOdd": 1.89,
 "softN": 31,
 "poly": {
 "vol": 11981,
@@ -373,8 +373,8 @@
 },
 "pinn": null,
 "soft": {
-"home": 0.4972,
-"draw": 0.2853,
+"home": 0.4969,
+"draw": 0.2855,
 "away": 0.2175,
 "fav": "home",
 "n": 31
@@ -407,12 +407,12 @@
 "moneySharePct": 79,
 "moneyOdd": 1.56,
 "moneyDir": "flat",
-"totVol": 39185,
+"totVol": 39248,
 "pinnOdd": 1.53,
 "softOdd": 1.5,
 "softN": 35,
 "poly": {
-"vol": 113669,
+"vol": 114172,
 "odd": 1.57,
 "sharePct": 64,
 "shareSrc": "preis",
@@ -438,7 +438,7 @@
 "pinnMove": {
 "movePP": -0.7,
 "stepPP": -0.0,
-"n": 24,
+"n": 25,
 "move": false,
 "laeuft": false
 },
@@ -461,10 +461,10 @@
 "moneyDir": "flat",
 "totVol": 37970,
 "pinnOdd": 1.82,
-"softOdd": 1.83,
+"softOdd": 1.8,
 "softN": 35,
 "poly": {
-"vol": 37641,
+"vol": 37982,
 "odd": 1.87,
 "sharePct": 54,
 "shareSrc": "preis",
@@ -480,9 +480,9 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.2369,
-"draw": 0.2472,
-"away": 0.5159,
+"home": 0.2366,
+"draw": 0.2471,
+"away": 0.5163,
 "fav": "away",
 "n": 35
 },
@@ -516,7 +516,7 @@
 "softOdd": 1.89,
 "softN": 33,
 "poly": {
-"vol": 12679,
+"vol": 12718,
 "odd": 1.94,
 "sharePct": 52,
 "shareSrc": "preis",
@@ -542,7 +542,7 @@
 "pinnMove": {
 "movePP": 0.0,
 "stepPP": 0.0,
-"n": 8,
+"n": 9,
 "move": false,
 "laeuft": false
 },
@@ -561,9 +561,9 @@
 "moneySide": "away",
 "moneyName": "Norway",
 "moneySharePct": 56,
-"moneyOdd": 4.8,
-"moneyDir": "flat",
-"totVol": 21716,
+"moneyOdd": 4.9,
+"moneyDir": "out",
+"totVol": 21741,
 "pinnOdd": 4.48,
 "softOdd": 4.33,
 "softN": 33,
@@ -593,8 +593,8 @@
 "pinnMovePP": -0.1,
 "pinnMove": {
 "movePP": -0.1,
-"stepPP": -0.0,
-"n": 8,
+"stepPP": 0.0,
+"n": 9,
 "move": false,
 "laeuft": false
 },
@@ -614,13 +614,13 @@
 "moneyName": "Sweden",
 "moneySharePct": 38,
 "moneyOdd": 2.64,
-"moneyDir": "in",
-"totVol": 20742,
+"moneyDir": "flat",
+"totVol": 20744,
 "pinnOdd": null,
 "softOdd": 2.5,
 "softN": 31,
 "poly": {
-"vol": 16860,
+"vol": 16895,
 "odd": 2.6,
 "sharePct": 38,
 "shareSrc": "preis",
@@ -631,9 +631,9 @@
 },
 "pinn": null,
 "soft": {
-"home": 0.3578,
-"draw": 0.2664,
-"away": 0.3758,
+"home": 0.3579,
+"draw": 0.2665,
+"away": 0.3757,
 "fav": "away",
 "n": 31
 },
@@ -662,47 +662,47 @@
 "live": true,
 "moneySide": "away",
 "moneyName": "Costa Rica",
-"moneySharePct": 85,
-"moneyOdd": 2.02,
-"moneyDir": "out",
-"totVol": 69029,
+"moneySharePct": 82,
+"moneyOdd": 1.97,
+"moneyDir": "in",
+"totVol": 73885,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
 "poly": {
-"vol": 72429,
-"odd": 1.74,
-"sharePct": 73,
+"vol": 92232,
+"odd": 2.02,
+"sharePct": 64,
 "shareSrc": "geld",
 "key": "conl-nca-cri-2026-10-01",
 "sideKey": "Costa Rica",
 "whales": [
 {
 "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
-"usd": 6283
+"usd": 5128
 },
 {
 "wallet": "0x722abb5460060870d46728bf45f66a6b1635d6ed",
-"usd": 3676
+"usd": 3165
 },
 {
 "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-"usd": 3484
+"usd": 3000
+},
+{
+"wallet": "0x709d4bfa27891995d6dc011afc30c2889992f749",
+"usd": 1003
 },
 {
 "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
-"usd": 965
+"usd": 831
 },
 {
 "wallet": "0xafdbf243495527dbaf68e7b01a03ed08142cbca0",
-"usd": 546
-},
-{
-"wallet": "0x7d3b7ff761d046f5dc1d972e8a755dc1eccf55b8",
-"usd": 402
+"usd": 470
 }
 ],
-"whaleUsd": 16582
+"whaleUsd": 15277
 },
 "pinn": null,
 "soft": null,
@@ -723,10 +723,21 @@
 "ankerDiagnose": {
 "nach": {
 "kein_kandidat": 122,
-"name": 3,
-"kein_pinnacle": 15
+"kein_pinnacle": 15,
+"name": 3
 },
 "beispiele": [
+{
+"spiel": "Kazakhstan v Moldova",
+"grund": "kein_pinnacle",
+"kandidat": "Kazakhstan v Moldova",
+"key": "soccer_uefa_nations_league",
+"nSoft": 30,
+"pinnacleImEvent": false,
+"nBuecher": 30,
+"matchId": "36124696",
+"liga": "UEFA Nations League"
+},
 {
 "spiel": "Montenegro U19 v Israel U19",
 "kandidat": "Latvia v Montenegro",
@@ -746,14 +757,14 @@
 "liga": "Friendlies International U19"
 },
 {
-"spiel": "Kazakhstan v Moldova",
+"spiel": "Cyprus v Armenia",
 "grund": "kein_pinnacle",
-"kandidat": "Kazakhstan v Moldova",
+"kandidat": "Cyprus v Armenia",
 "key": "soccer_uefa_nations_league",
-"nSoft": 30,
+"nSoft": 31,
 "pinnacleImEvent": false,
-"nBuecher": 30,
-"matchId": "36124696",
+"nBuecher": 31,
+"matchId": "36127675",
 "liga": "UEFA Nations League"
 },
 {
@@ -765,17 +776,6 @@
 "pinnacleImEvent": false,
 "nBuecher": 31,
 "matchId": "36124687",
-"liga": "UEFA Nations League"
-},
-{
-"spiel": "Cyprus v Armenia",
-"grund": "kein_pinnacle",
-"kandidat": "Cyprus v Armenia",
-"key": "soccer_uefa_nations_league",
-"nSoft": 31,
-"pinnacleImEvent": false,
-"nBuecher": 31,
-"matchId": "36127675",
 "liga": "UEFA Nations League"
 },
 {
