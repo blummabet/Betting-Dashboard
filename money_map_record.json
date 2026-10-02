@@ -1,22 +1,6 @@
 {
-"generatedAt": "2026-10-02T21:17:15.523922+00:00",
+"generatedAt": "2026-10-02T21:32:16.369936+00:00",
 "byVerdict": {
-"konsens": {
-"n": 1389,
-"wins": 1193,
-"hitRate": 0.8589,
-"polyN": 1331,
-"polyWins": 1053,
-"polyHitRate": 0.7911,
-"pinnN": 210,
-"pinnHitRate": 0.7857,
-"nRoi": 957,
-"roi": 0.3987,
-"roiLb": 0.358,
-"nClv": 957,
-"clv": 18.82,
-"clvLb": 17.4209
-},
 "uneinig": {
 "n": 559,
 "wins": 178,
@@ -32,6 +16,22 @@
 "nClv": 410,
 "clv": -20.1,
 "clvLb": -22.8031
+},
+"konsens": {
+"n": 1389,
+"wins": 1194,
+"hitRate": 0.8596,
+"polyN": 1331,
+"polyWins": 1054,
+"polyHitRate": 0.7919,
+"pinnN": 211,
+"pinnHitRate": 0.7867,
+"nRoi": 958,
+"roi": 0.3984,
+"roiLb": 0.3578,
+"nClv": 958,
+"clv": 18.8,
+"clvLb": 17.4023
 },
 "teil": {
 "n": 32,
@@ -72,9 +72,9 @@
 "hitRate": 0.7258
 },
 "Spanish Segunda Division": {
-"n": 52,
-"wins": 39,
-"hitRate": 0.75
+"n": 53,
+"wins": 40,
+"hitRate": 0.7547
 },
 "Italian Serie A": {
 "n": 50,
@@ -401,11 +401,6 @@
 "wins": 5,
 "hitRate": 0.7143
 },
-"Qatari Stars League": {
-"n": 7,
-"wins": 4,
-"hitRate": 0.5714
-},
 "Serbian Super League": {
 "n": 7,
 "wins": 4,
@@ -430,6 +425,11 @@
 "n": 6,
 "wins": 5,
 "hitRate": 0.8333
+},
+"Qatari Stars League": {
+"n": 6,
+"wins": 4,
+"hitRate": 0.6667
 },
 "UEFA Champions League Qualifiers": {
 "n": 6,
@@ -686,14 +686,14 @@
 },
 "weak": {
 "n": 740,
-"wins": 372,
-"hitRate": 0.5027,
-"nRoi": 493,
-"roi": -0.2091,
-"roiLb": -0.2806,
-"nClv": 493,
-"clv": -6.9,
-"clvLb": -9.2499
+"wins": 373,
+"hitRate": 0.5041,
+"nRoi": 494,
+"roi": -0.2084,
+"roiLb": -0.2798,
+"nClv": 494,
+"clv": -6.89,
+"clvLb": -9.2312
 }
 },
 "divergence": {
@@ -705,6 +705,25 @@
 "polyRate": 0.2557
 },
 "recent": [
+{
+"matchId": "36126090",
+"home": "Eldense",
+"away": "Oviedo",
+"league": "Spanish Segunda Division",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Eldense",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+4,
+1
+],
+"kickoff": "2026-10-02T18:30:00Z",
+"settledAt": "2026-10-02T21:32:16.133774+00:00"
+},
 {
 "matchId": "36131375",
 "home": "Ukraine",
@@ -1445,37 +1464,18 @@
 ],
 "kickoff": "2026-09-30T19:00:00Z",
 "settledAt": "2026-09-30T22:11:43.801154+00:00"
-},
-{
-"matchId": "36124521",
-"home": "Lyon (W)",
-"away": "Chelsea (W)",
-"league": "UEFA Women's Champions League",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Lyon (W)",
-"polySide": null,
-"winner": "draw",
-"moneyWin": false,
-"polyWin": null,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-09-30T19:00:00Z",
-"settledAt": "2026-09-30T22:11:43.801154+00:00"
 }
 ],
 "global": {
 "n": 1980,
-"wins": 1376,
-"hitRate": 0.6949,
-"nRoi": 1393,
+"wins": 1377,
+"hitRate": 0.6955,
+"nRoi": 1394,
 "roi": 0.1256,
 "roiLb": 0.0841,
-"nClv": 1393,
+"nClv": 1394,
 "clv": 6.39,
-"clvLb": 4.8938
+"clvLb": 4.8902
 },
 "pending": 20
 }
