@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-02T09:15:48.841077+00:00",
+ "generatedAt": "2026-10-02T09:30:52.502571+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -119,7 +119,7 @@
     "nieAnteil": 0.052,
     "schaetzbar": false
    },
-   "alterTage": 4.8,
+   "alterTage": 4.9,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py",
    "seitFreigabe": {
@@ -724,11 +724,11 @@
    "zerlegung": "nach Conviction",
    "art": "conviction",
    "gruppen": 7,
-   "basis": "993 von 1449 abgerechneten Plays · nur Engine 2026-09-01 · ohne Cricket, Kampfsport, US-Sport",
-   "n": 989,
-   "pl": 7.02,
-   "roi": 0.0071,
-   "clv": -0.25,
+   "basis": "994 von 1450 abgerechneten Plays · nur Engine 2026-09-01 · ohne Cricket, Kampfsport, US-Sport",
+   "n": 990,
+   "pl": 7.25,
+   "roi": 0.0073,
+   "clv": -0.247,
    "belegte": 2
   },
   {
@@ -4187,12 +4187,12 @@
   {
    "wallet": "0xd68eba02e662023b16e4d134c1fcd8875c1e8048",
    "kurz": "0xd68e…8048",
-   "n": 37,
-   "wins": 36,
-   "hit": 0.973,
-   "hitLb": 0.8875,
-   "clv": -0.714,
-   "usd": 1096,
+   "n": 38,
+   "wins": 37,
+   "hit": 0.9737,
+   "hitLb": 0.8903,
+   "clv": -0.709,
+   "usd": 1113,
    "pnl": -14789.37,
    "grad": 1.0,
    "sportarten": [
@@ -4456,7 +4456,7 @@
     "nieAnteil": 0.052,
     "schaetzbar": false
    },
-   "alterTage": 4.8,
+   "alterTage": 4.9,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py",
    "seitFreigabe": {
@@ -5687,7 +5687,7 @@
     "nieAnteil": 0.752,
     "schaetzbar": false
    },
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "vorangemeldet",
    "angemeldet": "2026-09-07T06:34:08.582101+00:00",
    "zielN": 200,
@@ -5701,6 +5701,38 @@
     "clv": null,
     "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
    }
+  },
+  {
+   "schublade": "Conviction 6",
+   "strom": "poly",
+   "n": 427,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0084,
+   "pl": 3.58,
+   "roiLb": -0.0508,
+   "clv": -0.079,
+   "clvLb": -0.52,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.362,
+   "fehltN": 0,
+   "noetigNRoi": 21309,
+   "noetigNClv": null,
+   "noetigGrund": null,
+   "entfernung": {
+    "median": 1598,
+    "lo": 232,
+    "hi": 216804,
+    "nieAnteil": 0.402,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "conviction",
+   "wert": 6,
+   "nAlt": 93,
+   "roiAlt": 0.0229,
+   "clvAlt": 0.361,
+   "engineAlt": true
   },
   {
    "schublade": "Czech 3 Liga · Over/Under 3.5 Goals",
@@ -5723,38 +5755,6 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
-  },
-  {
-   "schublade": "Conviction 6",
-   "strom": "poly",
-   "n": 426,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0079,
-   "pl": 3.35,
-   "roiLb": -0.0514,
-   "clv": -0.087,
-   "clvLb": -0.53,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.356,
-   "fehltN": 0,
-   "noetigNRoi": 24234,
-   "noetigNClv": null,
-   "noetigGrund": null,
-   "entfernung": {
-    "median": 1700,
-    "lo": 235,
-    "hi": 178549,
-    "nieAnteil": 0.4,
-    "schaetzbar": false
-   },
-   "alterTage": 0.1,
-   "art": "conviction",
-   "wert": 6,
-   "nAlt": 93,
-   "roiAlt": 0.0229,
-   "clvAlt": 0.361,
-   "engineAlt": true
   },
   {
    "schublade": "German Bundesliga 2 · First Half Goals 0.5",
@@ -5829,6 +5829,38 @@
    "naeherung": false
   },
   {
+   "schublade": "Mix money+sharp",
+   "strom": "poly",
+   "n": 378,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.0025,
+   "pl": -0.94,
+   "roiLb": -0.0557,
+   "clv": -0.27,
+   "clvLb": -0.704,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.164,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "nicht_positiv",
+   "entfernung": {
+    "median": 2616,
+    "lo": 271,
+    "hi": 129671,
+    "nieAnteil": 0.562,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "mix",
+   "wert": "money+sharp",
+   "nAlt": 140,
+   "roiAlt": -0.035,
+   "clvAlt": 0.0,
+   "engineAlt": true
+  },
+  {
    "schublade": "Japanese J League · Over/Under 3.5 Goals",
    "strom": "betfair",
    "n": 40,
@@ -5849,38 +5881,6 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
-  },
-  {
-   "schublade": "Mix money+sharp",
-   "strom": "poly",
-   "n": 377,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0031,
-   "pl": -1.17,
-   "roiLb": -0.0565,
-   "clv": -0.279,
-   "clvLb": -0.714,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.156,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "nicht_positiv",
-   "entfernung": {
-    "median": 3058,
-    "lo": 286,
-    "hi": 661678,
-    "nieAnteil": 0.552,
-    "schaetzbar": false
-   },
-   "alterTage": 0.1,
-   "art": "mix",
-   "wert": "money+sharp",
-   "nAlt": 140,
-   "roiAlt": -0.035,
-   "clvAlt": 0.0,
-   "engineAlt": true
   },
   {
    "schublade": "Argentinian Primera Division · First Half Goals 1.5",
@@ -5972,7 +5972,7 @@
     "nieAnteil": 0.413,
     "schaetzbar": false
    },
-   "alterTage": 0.1,
+   "alterTage": 0.2,
    "art": "gate",
    "nAlt": 132,
    "roiAlt": 0.0298,
@@ -14716,7 +14716,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 5.5,
+   "alterTage": 5.6,
    "art": "mix",
    "wert": "bf+steam"
   },
@@ -14809,7 +14809,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 3.3,
+   "alterTage": 3.4,
    "art": "mix",
    "wert": "bf+sharp"
   },
@@ -14857,7 +14857,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 18.7,
+   "alterTage": 18.8,
    "art": "mix",
    "wert": "steam",
    "nAlt": 8,
