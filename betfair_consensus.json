@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-10-01T23:44:40.637223+00:00",
+"generatedAt": "2026-10-01T23:59:45.444978+00:00",
 "count": 11,
-"covered": 9,
+"covered": 10,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -55,18 +55,18 @@
 "oddsKeysMitDaten": 45,
 "oddsEvents": 556,
 "oddsTotals": {
-"versucht": 1,
+"versucht": 2,
 "mitDaten": 0,
 "events": 0,
-"gewollt": 1,
+"gewollt": 2,
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 14459,
-"remaining": 4985541,
+"used": 14692,
+"remaining": 4985308,
 "letzterFehler": null
 },
-"ankerQuote": 1.0,
+"ankerQuote": 0.75,
 "games": [
 {
 "matchId": "36131340",
@@ -86,7 +86,7 @@
 "softOdd": 1.07,
 "softN": 35,
 "poly": {
-"vol": 134636,
+"vol": 136275,
 "odd": 1.1,
 "sharePct": 90,
 "shareSrc": "preis",
@@ -132,7 +132,7 @@
 "moneyName": "Iceland",
 "moneySharePct": 96,
 "moneyOdd": 1.48,
-"moneyDir": "in",
+"moneyDir": "flat",
 "totVol": 83632,
 "pinnOdd": null,
 "softOdd": 1.4,
@@ -199,9 +199,9 @@
 },
 "pinn": null,
 "soft": {
-"home": 0.2004,
+"home": 0.2005,
 "draw": 0.2673,
-"away": 0.5323,
+"away": 0.5322,
 "fav": "away",
 "n": 31
 },
@@ -231,9 +231,9 @@
 "moneySide": "home",
 "moneyName": "Ukraine",
 "moneySharePct": 92,
-"moneyOdd": 1.97,
-"moneyDir": "flat",
-"totVol": 40515,
+"moneyOdd": 1.98,
+"moneyDir": "out",
+"totVol": 40749,
 "pinnOdd": null,
 "softOdd": 1.89,
 "softN": 31,
@@ -271,58 +271,6 @@
 }
 },
 {
-"matchId": "36130249",
-"home": "Belgium",
-"away": "Türkiye",
-"league": "UEFA Nations League",
-"country": "International",
-"kickoff": "2026-10-02T18:45:00Z",
-"live": false,
-"moneySide": "home",
-"moneyName": "Belgium",
-"moneySharePct": 80,
-"moneyOdd": 1.58,
-"moneyDir": "flat",
-"totVol": 37838,
-"pinnOdd": 1.53,
-"softOdd": 1.5,
-"softN": 35,
-"poly": {
-"vol": 88308,
-"odd": 1.57,
-"sharePct": 64,
-"shareSrc": "preis",
-"key": "unl-bel-tur-2026-10-02",
-"sideKey": "Belgium",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.6289,
-"draw": 0.1992,
-"away": 0.1718,
-"fav": "home"
-},
-"soft": {
-"home": 0.6272,
-"draw": 0.2007,
-"away": 0.1721,
-"fav": "home",
-"n": 35
-},
-"pinnMovePP": -0.8,
-"pinnMove": {
-"movePP": -0.8,
-"stepPP": 0.0,
-"n": 18,
-"move": false,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
 "matchId": "36131173",
 "home": "France",
 "away": "Italy",
@@ -335,12 +283,12 @@
 "moneySharePct": 78,
 "moneyOdd": 1.47,
 "moneyDir": "flat",
-"totVol": 37627,
+"totVol": 38300,
 "pinnOdd": 1.44,
 "softOdd": 1.4,
 "softN": 35,
 "poly": {
-"vol": 49685,
+"vol": 50065,
 "odd": 1.46,
 "sharePct": 68,
 "shareSrc": "preis",
@@ -356,9 +304,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.6638,
-"draw": 0.1874,
-"away": 0.1487,
+"home": 0.6639,
+"draw": 0.1875,
+"away": 0.1486,
 "fav": "home",
 "n": 35
 },
@@ -366,7 +314,59 @@
 "pinnMove": {
 "movePP": 0.4,
 "stepPP": -0.0,
-"n": 9,
+"n": 10,
+"move": false,
+"laeuft": false
+},
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36130249",
+"home": "Belgium",
+"away": "Türkiye",
+"league": "UEFA Nations League",
+"country": "International",
+"kickoff": "2026-10-02T18:45:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Belgium",
+"moneySharePct": 80,
+"moneyOdd": 1.56,
+"moneyDir": "in",
+"totVol": 38075,
+"pinnOdd": 1.53,
+"softOdd": 1.5,
+"softN": 35,
+"poly": {
+"vol": 88770,
+"odd": 1.57,
+"sharePct": 64,
+"shareSrc": "preis",
+"key": "unl-bel-tur-2026-10-02",
+"sideKey": "Belgium",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.6289,
+"draw": 0.1992,
+"away": 0.1718,
+"fav": "home"
+},
+"soft": {
+"home": 0.6273,
+"draw": 0.2006,
+"away": 0.1721,
+"fav": "home",
+"n": 35
+},
+"pinnMovePP": -0.8,
+"pinnMove": {
+"movePP": -0.8,
+"stepPP": 0.0,
+"n": 19,
 "move": false,
 "laeuft": false
 },
@@ -385,16 +385,16 @@
 "moneySide": "away",
 "moneyName": "England",
 "moneySharePct": 76,
-"moneyOdd": 1.9,
-"moneyDir": "flat",
-"totVol": 36999,
+"moneyOdd": 1.88,
+"moneyDir": "in",
+"totVol": 37105,
 "pinnOdd": 1.84,
 "softOdd": 1.83,
 "softN": 35,
 "poly": {
-"vol": 35467,
-"odd": 1.9,
-"sharePct": 52,
+"vol": 36266,
+"odd": 1.87,
+"sharePct": 54,
 "shareSrc": "preis",
 "key": "unl-hrv-eng-2026-10-03",
 "sideKey": "England",
@@ -409,17 +409,17 @@
 },
 "soft": {
 "home": 0.2382,
-"draw": 0.2487,
-"away": 0.5131,
+"draw": 0.2478,
+"away": 0.5141,
 "fav": "away",
 "n": 35
 },
-"pinnMovePP": 1.1,
+"pinnMovePP": 0.6,
 "pinnMove": {
-"movePP": 1.1,
+"movePP": 0.6,
 "stepPP": -0.0,
 "n": 25,
-"move": true,
+"move": false,
 "laeuft": false
 },
 "verdict": "konsens",
@@ -437,9 +437,9 @@
 "moneySide": "away",
 "moneyName": "Germany",
 "moneySharePct": 95,
-"moneyOdd": 1.94,
+"moneyOdd": 1.95,
 "moneyDir": "out",
-"totVol": 22534,
+"totVol": 22569,
 "pinnOdd": 1.91,
 "softOdd": 1.88,
 "softN": 32,
@@ -470,13 +470,88 @@
 "pinnMove": {
 "movePP": 0.0,
 "stepPP": 0.0,
-"n": 2,
+"n": 3,
 "move": false,
 "laeuft": false
 },
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
+},
+{
+"matchId": "36122669",
+"home": "Athletic Club",
+"away": "Sport Recife",
+"league": "Brazilian Serie B",
+"country": "BR",
+"kickoff": "2026-10-01T23:30:00Z",
+"live": true,
+"moneySide": "away",
+"moneyName": "Sport Recife",
+"moneySharePct": 48,
+"moneyOdd": 3.25,
+"moneyDir": "out",
+"totVol": 20693,
+"pinnOdd": null,
+"softOdd": 2.9,
+"softN": 27,
+"poly": {
+"vol": 113054,
+"odd": 1.65,
+"sharePct": 83,
+"shareSrc": "geld",
+"key": "bra2-ath-rec-2026-10-01",
+"sideKey": "SC Recife",
+"whales": [
+{
+"wallet": "0x95c6c9a6727ed203e97230dda61ab19a020e1508",
+"usd": 35841
+},
+{
+"wallet": "0x65503c7f9e142ac88b1ce09df3363ff77f188451",
+"usd": 605
+},
+{
+"wallet": "0x58d4f3be1fd0ed1f7691d1453ac98b9657946551",
+"usd": 474
+},
+{
+"wallet": "0x33352c0259bb5b835e6f847a2d4059e429d24e78",
+"usd": 311
+},
+{
+"wallet": "0x15dd406b8fa114570f174ed1d73cc876054895ba",
+"usd": 216
+},
+{
+"wallet": "0x332ed0b9aeb0e653b07ac6abc842582b5e39fd5d",
+"usd": 178
+}
+],
+"whaleUsd": 37778
+},
+"pinn": null,
+"soft": {
+"home": 0.3577,
+"draw": 0.3315,
+"away": 0.3108,
+"fav": "home",
+"n": 27
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "uneinig",
+"agree": false,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Athletic Club v Sport Recife",
+"grund": "kein_pinnacle",
+"kandidat": "Athletic Club (MG) v Sport Recife",
+"key": "soccer_brazil_serie_b",
+"nSoft": 27,
+"pinnacleImEvent": false,
+"nBuecher": 27
+}
 },
 {
 "matchId": "36131366",
@@ -496,7 +571,7 @@
 "softOdd": 4.31,
 "softN": 32,
 "poly": {
-"vol": 10621,
+"vol": 10625,
 "odd": 4.76,
 "sharePct": 21,
 "shareSrc": "preis",
@@ -522,77 +597,13 @@
 "pinnMove": {
 "movePP": -0.0,
 "stepPP": -0.0,
-"n": 2,
+"n": 3,
 "move": false,
 "laeuft": false
 },
 "verdict": "uneinig",
 "agree": false,
 "pinnTotals": null
-},
-{
-"matchId": "36132231",
-"home": "Curacao",
-"away": "Trinidad & Tobago",
-"league": "CONCACAF Nations League A",
-"country": "International",
-"kickoff": "2026-10-01T22:00:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Curacao",
-"moneySharePct": 90,
-"moneyOdd": 1.04,
-"moneyDir": "in",
-"totVol": 121499,
-"pinnOdd": null,
-"softOdd": null,
-"softN": null,
-"poly": {
-"vol": 107945,
-"odd": 1.12,
-"sharePct": 98,
-"shareSrc": "geld",
-"key": "conl-kor-tri-2026-10-01",
-"sideKey": "Curaçao",
-"whales": [
-{
-"wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-"usd": 9663
-},
-{
-"wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
-"usd": 8092
-},
-{
-"wallet": "0xa0f21e6d351baa9185716b5c00c2925ed9621848",
-"usd": 5285
-},
-{
-"wallet": "0x722abb5460060870d46728bf45f66a6b1635d6ed",
-"usd": 4707
-},
-{
-"wallet": "0xf7314bda11445c7918c4415b9c96643addb1e5c2",
-"usd": 4586
-},
-{
-"wallet": "0xeb34b86ca3ca64eb3cee6c9a0cce668385df7268",
-"usd": 2237
-}
-],
-"whaleUsd": 43131
-},
-"pinn": null,
-"soft": null,
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "no_anchor",
-"agree": null,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Curacao v Trinidad & Tobago",
-"grund": "kein_kandidat"
-}
 },
 {
 "matchId": "36137593",
@@ -604,10 +615,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Bolivar",
-"moneySharePct": 92,
-"moneyOdd": 1.18,
-"moneyDir": "out",
-"totVol": 12971,
+"moneySharePct": 95,
+"moneyOdd": 1.04,
+"moneyDir": "in",
+"totVol": 26487,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -627,23 +638,14 @@
 ],
 "ankerN": 4,
 "ankerNOffen": 149,
-"ankerMit": 4,
+"ankerMit": 3,
 "ankerDiagnose": {
 "nach": {
 "kein_kandidat": 120,
 "name": 3,
-"kein_pinnacle": 15
+"kein_pinnacle": 16
 },
 "beispiele": [
-{
-"spiel": "Montenegro U19 v Israel U19",
-"kandidat": "Latvia v Montenegro",
-"key": "soccer_uefa_nations_league",
-"score": 0.5,
-"grund": "name",
-"matchId": "36138303",
-"liga": "Friendlies International U19"
-},
 {
 "spiel": "Georgia U19 v Latvia U19",
 "kandidat": "Latvia v Montenegro",
@@ -651,6 +653,15 @@
 "score": 0.5,
 "grund": "name",
 "matchId": "36138241",
+"liga": "Friendlies International U19"
+},
+{
+"spiel": "Montenegro U19 v Israel U19",
+"kandidat": "Latvia v Montenegro",
+"key": "soccer_uefa_nations_league",
+"score": 0.5,
+"grund": "name",
+"matchId": "36138303",
 "liga": "Friendlies International U19"
 },
 {
@@ -687,6 +698,17 @@
 "liga": "UEFA Nations League"
 },
 {
+"spiel": "Hungary v Georgia",
+"grund": "kein_pinnacle",
+"kandidat": "Hungary v Georgia",
+"key": "soccer_uefa_nations_league",
+"nSoft": 31,
+"pinnacleImEvent": false,
+"nBuecher": 31,
+"matchId": "36131365",
+"liga": "UEFA Nations League"
+},
+{
 "spiel": "Poland v Romania",
 "grund": "kein_pinnacle",
 "kandidat": "Poland v Romania",
@@ -695,17 +717,6 @@
 "pinnacleImEvent": false,
 "nBuecher": 31,
 "matchId": "36131298",
-"liga": "UEFA Nations League"
-},
-{
-"spiel": "Faroe Islands v Slovakia",
-"grund": "kein_pinnacle",
-"kandidat": "Faroe Islands v Slovakia",
-"key": "soccer_uefa_nations_league",
-"nSoft": 31,
-"pinnacleImEvent": false,
-"nBuecher": 31,
-"matchId": "36132368",
 "liga": "UEFA Nations League"
 },
 {
@@ -720,6 +731,17 @@
 "liga": "UEFA Nations League"
 },
 {
+"spiel": "Faroe Islands v Slovakia",
+"grund": "kein_pinnacle",
+"kandidat": "Faroe Islands v Slovakia",
+"key": "soccer_uefa_nations_league",
+"nSoft": 31,
+"pinnacleImEvent": false,
+"nBuecher": 31,
+"matchId": "36132368",
+"liga": "UEFA Nations League"
+},
+{
 "spiel": "England U21 v Slovakia U21",
 "kandidat": "Faroe Islands v Slovakia",
 "key": "soccer_uefa_nations_league",
@@ -727,17 +749,6 @@
 "grund": "name",
 "matchId": "36121717",
 "liga": "UEFA U21 Euro Qualifiers"
-},
-{
-"spiel": "Hungary v Georgia",
-"grund": "kein_pinnacle",
-"kandidat": "Hungary v Georgia",
-"key": "soccer_uefa_nations_league",
-"nSoft": 31,
-"pinnacleImEvent": false,
-"nBuecher": 31,
-"matchId": "36131365",
-"liga": "UEFA Nations League"
 },
 {
 "spiel": "Finland v Albania",
@@ -826,6 +837,17 @@
 "nBuecher": 31,
 "matchId": "36131375",
 "liga": "UEFA Nations League"
+},
+{
+"spiel": "Athletic Club v Sport Recife",
+"grund": "kein_pinnacle",
+"kandidat": "Athletic Club (MG) v Sport Recife",
+"key": "soccer_brazil_serie_b",
+"nSoft": 27,
+"pinnacleImEvent": false,
+"nBuecher": 27,
+"matchId": "36122669",
+"liga": "Brazilian Serie B"
 }
 ]
 }
