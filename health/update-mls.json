@@ -1,14 +1,14 @@
 {
   "slug": "update-mls",
   "workflow": "⚽ MLS aktualisieren (Brücken-Liga)",
-  "updatedAt": "2026-10-01T23:13:18.860709+00:00",
+  "updatedAt": "2026-10-02T13:53:55.699671+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
-    "spanneH": 240.6,
+    "spanneH": 241.3,
     "proTag": 1.9,
     "lueckeMinMin": 496.7,
-    "lueckeMedianMin": 842.7,
+    "lueckeMedianMin": 844.6,
     "lueckeMaxMin": 1452.0,
     "sollProTag": null,
     "liefergradPct": null,
@@ -16,13 +16,29 @@
     "fensterUrteil": null
   },
   "erzeugung": {
-    "erzeugt": 100,
-    "gelaufen": 100,
+    "erzeugt": 3,
+    "gelaufen": 3,
     "verdraengt": 0,
-    "spanneH": 1203.1,
-    "erzeugtProTag": 2.0
+    "spanneH": 120.2,
+    "erzeugtProTag": 0.6,
+    "widerspruch": "erzeugtProTag 0.6 gegen eine gemessene Kadenz von 1.9/Tag (Faktor 3.2) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
   },
   "runs": [
+    {
+      "ts": "2026-10-02T13:53:55.699671+00:00",
+      "workflow": "⚽ MLS aktualisieren (Brücken-Liga)",
+      "runId": "37015715843",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/37015715843",
+      "nSteps": 55,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-10-02T13:50:39Z",
+      "startedAt": "2026-10-02T13:50:39Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 196.7,
+      "event": "schedule"
+    },
     {
       "ts": "2026-10-01T23:13:18.860709+00:00",
       "workflow": "⚽ MLS aktualisieren (Brücken-Liga)",
@@ -302,20 +318,6 @@
       "failures": [],
       "createdAt": "2026-09-22T12:35:44Z",
       "startedAt": "2026-09-22T12:35:44Z",
-      "wartetS": 0.0,
-      "event": "schedule"
-    },
-    {
-      "ts": "2026-09-21T22:36:08.470722+00:00",
-      "workflow": "⚽ MLS aktualisieren (Brücken-Liga)",
-      "runId": "35663266041",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/35663266041",
-      "nSteps": 53,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-09-21T22:33:14Z",
-      "startedAt": "2026-09-21T22:33:14Z",
       "wartetS": 0.0,
       "event": "schedule"
     }
