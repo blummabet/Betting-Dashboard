@@ -562012,7 +562012,14 @@
    "Dominica": "105627277098770739451313949148680533890917343950425917368475749265929827650928",
    "Draw (Dominica vs. Guyana)": "56714019450592272088044447039610495036603338384459879144433609710787146691589",
    "Guyana": "55659692652678526787571294099849762674047990950972653316567177283224831335148"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Dominica": 0.0,
+   "Draw (Dominica vs. Guyana)": 0.0,
+   "Guyana": 1.0
+  },
+  "resolvedAt": "2026-10-02T01:26:51.306719+00:00"
  },
  "nfl-pit-cle-2026-10-02": {
   "shares": {
@@ -564516,8 +564523,8 @@
  },
  "nhl-fla-sj-2026-10-01": {
   "shares": {
-   "Panthers": 79076.15739194995,
-   "Sharks": 58447.94816685001
+   "Panthers": 79654.31048954993,
+   "Sharks": 58875.27486250002
   },
   "prices": {
    "Panthers": 0.575,
@@ -564529,7 +564536,7 @@
   },
   "league": "NHL",
   "sport": "US-Sport",
-  "totalUsd": 143808,
+  "totalUsd": 145160,
   "whales": [
    {
     "wallet": "0x29b15e8557b2cb5b5ba1ec8b5cbba479ee26f737",
@@ -564542,15 +564549,15 @@
     "usd": 43694
    },
    {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "wallet": "0x684baa57c338c2549aec0aa3f034f695d72a8409",
     "side": "Panthers",
-    "usd": 6037,
+    "usd": 6554,
     "avgPrice": 0.5699
    },
    {
-    "wallet": "0x684baa57c338c2549aec0aa3f034f695d72a8409",
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "Panthers",
-    "usd": 5956,
+    "usd": 6037,
     "avgPrice": 0.5699
    },
    {
@@ -564631,11 +564638,6 @@
     "usd": 595
    },
    {
-    "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
-    "side": "Panthers",
-    "usd": 352
-   },
-   {
     "wallet": "0x56acab44cfca2e88bb9b3406890aea7bfa0cd77e",
     "side": "Panthers",
     "usd": 334
@@ -564644,6 +564646,11 @@
     "wallet": "0x36b321c39e0f5b7d1835467cb91365c2571ae421",
     "side": "Panthers",
     "usd": 333
+   },
+   {
+    "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
+    "side": "Panthers",
+    "usd": 326
    },
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
@@ -564748,8 +564755,8 @@
     "usd": 35
    }
   ],
-  "hoursToKickoff": 1.05,
-  "capturedAt": "2026-10-02T00:56:51.261391+00:00",
+  "hoursToKickoff": 0.55,
+  "capturedAt": "2026-10-02T01:26:51.306719+00:00",
   "koTs": "2026-10-02T02:00:00+00:00",
   "cond": "0x4cfd4f02fc219a9e5dc18d12fa1f163b320c409196beddd8da48efd68ee41179",
   "frage": "Panthers vs. Sharks",
@@ -564766,15 +564773,15 @@
    "bids": [
     [
      0.57,
-     81455
+     86989
     ],
     [
      0.56,
-     256737
+     256802
     ],
     [
      0.55,
-     106968
+     106166
     ],
     [
      0.54,
@@ -564792,15 +564799,15 @@
    "asks": [
     [
      0.58,
-     95385
+     101391
     ],
     [
      0.59,
-     119976
+     117116
     ],
     [
      0.6,
-     98046
+     99046
     ],
     [
      0.61,
@@ -564818,28 +564825,20 @@
   },
   "trades": [
    {
+    "wallet": "0x8ca5b36966f07475431822b35f478940a41357ef",
+    "action": "BUY",
+    "side": "Sharks",
+    "price": 0.43,
+    "usd": 360,
+    "ts": 1790903372
+   },
+   {
     "wallet": "0x50cc8708aff3791f2d6125645c82bda532baa534",
     "action": "BUY",
     "side": "Panthers",
     "price": 0.58,
     "usd": 600,
     "ts": 1790901183
-   },
-   {
-    "wallet": "0x684baa57c338c2549aec0aa3f034f695d72a8409",
-    "action": "BUY",
-    "side": "Panthers",
-    "price": 0.57,
-    "usd": 5581,
-    "ts": 1790893437
-   },
-   {
-    "wallet": "0x3e04fbc51adb75418129f6ce2091ae633070564d",
-    "action": "SELL",
-    "side": "Panthers",
-    "price": 0.56,
-    "usd": 1029,
-    "ts": 1790893347
    }
   ]
  },
@@ -565210,8 +565209,8 @@
  },
  "nhl-edm-van-2026-10-01": {
   "shares": {
-   "Oilers": 34774.742965925,
-   "Canucks": 18316.471916025002
+   "Oilers": 38205.13675233499,
+   "Canucks": 20123.320551615
   },
   "prices": {
    "Oilers": 0.655,
@@ -565223,8 +565222,14 @@
   },
   "league": "NHL",
   "sport": "US-Sport",
-  "totalUsd": 56748,
+  "totalUsd": 62038,
   "whales": [
+   {
+    "wallet": "0xb9c7d35d1f04d08624fabcfd3b6cee2d3c9baade",
+    "side": "Canucks",
+    "usd": 11440,
+    "avgPrice": 0.3399
+   },
    {
     "wallet": "0x1f3a646ce5cbe2c70270e7a46161d89b7c7b895d",
     "side": "Oilers",
@@ -565232,22 +565237,16 @@
     "avgPrice": 0.66
    },
    {
-    "wallet": "0xb9c7d35d1f04d08624fabcfd3b6cee2d3c9baade",
-    "side": "Canucks",
-    "usd": 9615,
-    "avgPrice": 0.3399
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Oilers",
+    "usd": 5526,
+    "avgPrice": 0.6555
    },
    {
     "wallet": "0x3e04fbc51adb75418129f6ce2091ae633070564d",
     "side": "Oilers",
     "usd": 3556,
     "avgPrice": 0.6594
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "side": "Oilers",
-    "usd": 2692,
-    "avgPrice": 0.6509
    },
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
@@ -565275,8 +565274,7 @@
    {
     "wallet": "0x6a892a6e8f874b537cf20a2e013ebbe2d0ab2f26",
     "side": "Oilers",
-    "usd": 1965,
-    "avgPrice": 0.66
+    "usd": 1965
    },
    {
     "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
@@ -565442,8 +565440,8 @@
     "usd": 20
    }
   ],
-  "hoursToKickoff": 1.05,
-  "capturedAt": "2026-10-02T00:56:51.261391+00:00",
+  "hoursToKickoff": 0.55,
+  "capturedAt": "2026-10-02T01:26:51.306719+00:00",
   "koTs": "2026-10-02T02:00:00+00:00",
   "cond": "0x4af167c6d652c6db1459bc3659bd092462809079273950cc7c28f47a84db474a",
   "frage": "Oilers vs. Canucks",
@@ -565460,11 +565458,11 @@
    "bids": [
     [
      0.65,
-     150729
+     162667
     ],
     [
      0.64,
-     85595
+     67810
     ],
     [
      0.63,
@@ -565472,45 +565470,61 @@
     ],
     [
      0.62,
-     8070
+     8065
     ],
     [
      0.61,
-     7796
+     7791
     ],
     [
      0.6,
-     6663
+     6658
     ]
    ],
    "asks": [
     [
      0.66,
-     74775
+     69415
     ],
     [
      0.67,
-     94735
+     63725
     ],
     [
      0.68,
-     91737
+     113153
     ],
     [
      0.69,
-     108925
+     109281
     ],
     [
      0.7,
-     37378
+     39555
     ],
     [
      0.71,
-     11150
+     11155
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0xdb7ce566ad88318a358bcee5d7f324f129cb8eab",
+    "action": "BUY",
+    "side": "Oilers",
+    "price": 0.66,
+    "usd": 600,
+    "ts": 1790903826
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Oilers",
+    "price": 0.66,
+    "usd": 2855,
+    "ts": 1790902703
+   },
    {
     "wallet": "0x6055af2b735b5840988c2d1025c74981dd2c5fde",
     "action": "BUY",
@@ -565558,33 +565572,17 @@
     "price": 0.34,
     "usd": 5780,
     "ts": 1790884593
-   },
-   {
-    "wallet": "0xb9c7d35d1f04d08624fabcfd3b6cee2d3c9baade",
-    "action": "BUY",
-    "side": "Canucks",
-    "price": 0.34,
-    "usd": 2460,
-    "ts": 1790884592
-   },
-   {
-    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
-    "action": "BUY",
-    "side": "Canucks",
-    "price": 0.34,
-    "usd": 2519,
-    "ts": 1790856519
    }
   ]
  },
  "mls-sea-skc-2026-10-01-more-markets": {
   "shares": {
-   "Over": 22096.543825660003,
-   "Under": 19205.407070385005
+   "Over": 101758.20698347503,
+   "Under": 92066.94891949999
   },
   "prices": {
-   "Over": 0.535,
-   "Under": 0.465
+   "Over": 0.525,
+   "Under": 0.475
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -565592,223 +565590,228 @@
   },
   "league": "MLS",
   "sport": "Fußball",
-  "totalUsd": 37176,
+  "totalUsd": 218472,
   "whales": [
+   {
+    "wallet": "0xb7271c112cbd83eb4c1ef1b554ff963604ae2a9d",
+    "side": "Under",
+    "usd": 60557,
+    "avgPrice": 0.4758
+   },
    {
     "wallet": "0x95c6c9a6727ed203e97230dda61ab19a020e1508",
     "side": "Over",
-    "usd": 13093
+    "usd": 52789,
+    "avgPrice": 0.5222
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "side": "Under",
+    "usd": 8566,
+    "avgPrice": 0.4801
+   },
+   {
+    "wallet": "0x3cf6af76c4869d2ace41fe5263cd8057c5ec0cbd",
+    "side": "Over",
+    "usd": 7928,
+    "avgPrice": 0.5299
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Under",
+    "usd": 6108,
+    "avgPrice": 0.4712
    },
    {
     "wallet": "0xe6bff499390d0988f81967d095925b44aad38380",
     "side": "Over",
-    "usd": 5350
+    "usd": 5250,
+    "avgPrice": 0.53
    },
    {
-    "wallet": "0x1f3a646ce5cbe2c70270e7a46161d89b7c7b895d",
-    "side": "Under",
-    "usd": 4274,
-    "avgPrice": 0.4895
+    "wallet": "0xf059aff5075d2bb73405d9fe301f8ae20ed46dd9",
+    "side": "Over",
+    "usd": 4955
+   },
+   {
+    "wallet": "0x0c84d454825e9f42619497f6158b4753cd43a8ed",
+    "side": "Over",
+    "usd": 4725
    },
    {
     "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
     "side": "Under",
-    "usd": 3292,
-    "avgPrice": 0.4967
+    "usd": 4656,
+    "avgPrice": 0.4876
+   },
+   {
+    "wallet": "0x1f3a646ce5cbe2c70270e7a46161d89b7c7b895d",
+    "side": "Under",
+    "usd": 4366,
+    "avgPrice": 0.4895
+   },
+   {
+    "wallet": "0x1b9ccfe8ee4597f6a7d8ed86761390cc43a2b67d",
+    "side": "Over",
+    "usd": 4200
+   },
+   {
+    "wallet": "0xf60235416bfa6c67ecd9b1a526c8ce0bfef27e1d",
+    "side": "Over",
+    "usd": 4200
+   },
+   {
+    "wallet": "0x443bcce588e26763987e9ae44b6b7845f09fe8bb",
+    "side": "Over",
+    "usd": 3150
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Over",
+    "usd": 2100,
+    "avgPrice": 0.52
    },
    {
     "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
     "side": "Under",
-    "usd": 2317
+    "usd": 1656
    },
    {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-    "side": "Under",
-    "usd": 1627,
-    "avgPrice": 0.4742
-   },
-   {
-    "wallet": "0xdf434cabf51bf8c2390fc038a28cdd8496e5ae9a",
+    "wallet": "0x224f7ef690d952cf551a471846d5afb4892e514a",
     "side": "Over",
-    "usd": 1081
+    "usd": 1502
+   },
+   {
+    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
+    "side": "Over",
+    "usd": 1207
    },
    {
     "wallet": "0x125a399cc5cb7cf7cbe8f010a05f0ed673374f02",
     "side": "Under",
-    "usd": 930,
+    "usd": 950,
     "avgPrice": 0.5
    },
    {
     "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
-    "side": "Under",
-    "usd": 878
+    "side": "Over",
+    "usd": 834
    },
    {
     "wallet": "0xe954ddb021c19495f1c556f59dadbd1494821ef1",
     "side": "Under",
-    "usd": 705
-   },
-   {
-    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
-    "side": "Under",
-    "usd": 543
+    "usd": 721
    },
    {
     "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
     "side": "Under",
-    "usd": 541
+    "usd": 597
    },
    {
     "wallet": "0x8efa1ea8ee2d456a051ae2985079a1e3c9aa894c",
     "side": "Under",
-    "usd": 496,
+    "usd": 507,
     "avgPrice": 0.47
    },
    {
     "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
     "side": "Over",
-    "usd": 482
+    "usd": 473
    },
    {
     "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
     "side": "Under",
-    "usd": 401
-   },
-   {
-    "wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
-    "side": "Under",
-    "usd": 333
-   },
-   {
-    "wallet": "0x224f7ef690d952cf551a471846d5afb4892e514a",
-    "side": "Under",
-    "usd": 251
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "side": "Under",
-    "usd": 243,
-    "avgPrice": 0.5
-   },
-   {
-    "wallet": "0x49c5845733fd0b83d2ae67bfc1baf9d2e3093de7",
-    "side": "Under",
-    "usd": 232
+    "usd": 410
    },
    {
     "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
     "side": "Under",
-    "usd": 213,
-    "avgPrice": 0.4885
-   },
-   {
-    "wallet": "0xfe67df6e0c585e50cbe8bdcad804d980c6b8a2e8",
-    "side": "Under",
-    "usd": 204,
-    "avgPrice": 0.4972
+    "usd": 290,
+    "avgPrice": 0.4832
    },
    {
     "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
     "side": "Under",
-    "usd": 192
+    "usd": 269
+   },
+   {
+    "wallet": "0x49c5845733fd0b83d2ae67bfc1baf9d2e3093de7",
+    "side": "Over",
+    "usd": 262
+   },
+   {
+    "wallet": "0x228b8d11eba89bf1c554f8879a9293b7106daf4c",
+    "side": "Under",
+    "usd": 237
+   },
+   {
+    "wallet": "0xfe67df6e0c585e50cbe8bdcad804d980c6b8a2e8",
+    "side": "Under",
+    "usd": 226,
+    "avgPrice": 0.4951
    },
    {
     "wallet": "0x2396babfc88a7a7dcc0390262ab747d7cbad9485",
     "side": "Under",
-    "usd": 192
-   },
-   {
-    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
-    "side": "Over",
-    "usd": 174,
-    "avgPrice": 0.5124
+    "usd": 196
    },
    {
     "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
     "side": "Over",
-    "usd": 165,
-    "avgPrice": 0.5237
+    "usd": 190
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Over",
+    "usd": 171,
+    "avgPrice": 0.5124
    },
    {
     "wallet": "0xe9045fa8a70479bb2a112d863f0eadc3058f44e9",
     "side": "Under",
-    "usd": 145
+    "usd": 148
    },
    {
     "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
     "side": "Under",
-    "usd": 140
+    "usd": 142
    },
    {
-    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
-    "side": "Under",
-    "usd": 117,
-    "avgPrice": 0.4732
-   },
-   {
-    "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
-    "side": "Under",
-    "usd": 67
-   },
-   {
-    "wallet": "0x3804fb6b5781d6829f2ac3967647e98021b66136",
-    "side": "Under",
-    "usd": 66
-   },
-   {
-    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
-    "side": "Under",
-    "usd": 58,
-    "avgPrice": 0.5
-   },
-   {
-    "wallet": "0xc2f7b23f2697bfd5acb8cba237f61fc9a3b17029",
+    "wallet": "0xb4cd4d6fe596f360137e5a0441fecc4e1ec9c041",
     "side": "Over",
-    "usd": 55
-   },
-   {
-    "wallet": "0xcac70909a505ed6f28b1b59a79bcc99ff22937d8",
-    "side": "Over",
-    "usd": 51
-   },
-   {
-    "wallet": "0x594edb9112f526fa6a80b8f858a6379c8a2c1c11",
-    "side": "Under",
-    "usd": 46
-   },
-   {
-    "wallet": "0xb904beba0d36b9a116500c6b45336ca112093ef8",
-    "side": "Under",
-    "usd": 46
-   },
-   {
-    "wallet": "0x5e020e19bc4cc2cd24ab9b406604ee9df02ab178",
-    "side": "Under",
-    "usd": 41
-   },
-   {
-    "wallet": "0xf545bd981d2b6bdbbd32a7a4b2b072726255305b",
-    "side": "Under",
-    "usd": 28
+    "usd": 139,
+    "avgPrice": 0.5266
    },
    {
     "wallet": "0xdc4f58a48ed4467743609fdce11eea483c759804",
     "side": "Under",
-    "usd": 23
+    "usd": 130
    },
    {
-    "wallet": "0xcee6a215f2de749afd3a6a74721cc0c4fbb80a45",
-    "side": "Over",
-    "usd": 19
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Under",
+    "usd": 97,
+    "avgPrice": 0.4704
    },
    {
-    "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
+    "wallet": "0x1f624696c102b99bea92c75a502fa7e4a6d676f6",
     "side": "Over",
-    "usd": 12
+    "usd": 89
+   },
+   {
+    "wallet": "0xa697d0b3fff7d285a0f92d6ee03a7f97809e59d5",
+    "side": "Under",
+    "usd": 71,
+    "avgPrice": 0.47
+   },
+   {
+    "wallet": "0x3804fb6b5781d6829f2ac3967647e98021b66136",
+    "side": "Under",
+    "usd": 68
    }
   ],
-  "hoursToKickoff": 0.55,
-  "capturedAt": "2026-10-02T00:56:51.261391+00:00",
+  "hoursToKickoff": 0.05,
+  "capturedAt": "2026-10-02T01:26:51.306719+00:00",
   "koTs": "2026-10-02T01:30:00+00:00",
   "cond": "0xfdf21543817ccf6550438b18c17c797ed1b69ea21be61a9d7c86b01388905d0c",
   "frage": "Seattle Sounders FC vs. Sporting Kansas City: O/U 3.5",
@@ -565818,106 +565821,138 @@
   },
   "book": {
    "side": "Over",
-   "bid": 0.53,
-   "ask": 0.54,
+   "bid": 0.52,
+   "ask": 0.53,
    "spreadC": 1.0,
-   "spreadPct": 1.85,
+   "spreadPct": 1.89,
    "bids": [
     [
-     0.53,
-     32241
-    ],
-    [
      0.52,
-     32054
+     3278
     ],
     [
      0.51,
-     25068
+     38842
     ],
     [
      0.5,
-     45563
+     20236
     ],
     [
      0.49,
-     14698
+     9022
     ],
     [
      0.48,
-     7502
+     4972
+    ],
+    [
+     0.47,
+     7353
     ]
    ],
    "asks": [
     [
+     0.53,
+     18329
+    ],
+    [
      0.54,
-     21970
+     31630
     ],
     [
      0.55,
-     43724
+     52063
     ],
     [
      0.56,
-     21796
+     9947
     ],
     [
      0.57,
-     6716
+     7473
     ],
     [
      0.58,
-     6134
-    ],
-    [
-     0.59,
-     705
+     5414
     ]
    ]
   },
   "trades": [
    {
-    "wallet": "0xdf434cabf51bf8c2390fc038a28cdd8496e5ae9a",
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "action": "BUY",
-    "side": "Over",
-    "price": 0.54,
-    "usd": 648,
-    "ts": 1790901977
+    "side": "Under",
+    "price": 0.48,
+    "usd": 8596,
+    "ts": 1790903934
+   },
+   {
+    "wallet": "0xb7271c112cbd83eb4c1ef1b554ff963604ae2a9d",
+    "action": "BUY",
+    "side": "Under",
+    "price": 0.48,
+    "usd": 5040,
+    "ts": 1790903663
+   },
+   {
+    "wallet": "0xb7271c112cbd83eb4c1ef1b554ff963604ae2a9d",
+    "action": "BUY",
+    "side": "Under",
+    "price": 0.48,
+    "usd": 4480,
+    "ts": 1790903136
+   },
+   {
+    "wallet": "0xb7271c112cbd83eb4c1ef1b554ff963604ae2a9d",
+    "action": "BUY",
+    "side": "Under",
+    "price": 0.47,
+    "usd": 9996,
+    "ts": 1790903130
    },
    {
     "wallet": "0x95c6c9a6727ed203e97230dda61ab19a020e1508",
     "action": "BUY",
     "side": "Over",
     "price": 0.53,
-    "usd": 2036,
-    "ts": 1790901905
+    "usd": 4736,
+    "ts": 1790903115
    },
    {
-    "wallet": "0xe6bff499390d0988f81967d095925b44aad38380",
+    "wallet": "0xb7271c112cbd83eb4c1ef1b554ff963604ae2a9d",
     "action": "BUY",
-    "side": "Over",
-    "price": 0.53,
-    "usd": 5300,
-    "ts": 1790900709
+    "side": "Under",
+    "price": 0.48,
+    "usd": 9801,
+    "ts": 1790902925
    },
    {
-    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
     "action": "BUY",
-    "side": "Over",
-    "price": 0.51,
-    "usd": 460,
-    "ts": 1790897958
+    "side": "Under",
+    "price": 0.47,
+    "usd": 970,
+    "ts": 1790902886
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Under",
+    "price": 0.47,
+    "usd": 5798,
+    "ts": 1790902875
    }
   ]
  },
  "nhl-chi-utah-2026-10-01": {
   "shares": {
-   "Over": 8391.233247570002,
-   "Under": 9654.431943975
+   "Over": 8701.330435225002,
+   "Under": 6431.414370375001
   },
   "prices": {
-   "Over": 0.465,
-   "Under": 0.535
+   "Over": 0.575,
+   "Under": 0.425
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -565925,107 +565960,149 @@
   },
   "league": "NHL",
   "sport": "US-Sport",
-  "totalUsd": 18256,
+  "totalUsd": 19704,
   "whales": [
    {
     "wallet": "0xa71093cafc0c099b4ccab24c3cb8018d817923c4",
     "side": "Over",
-    "usd": 7905,
-    "avgPrice": 0.4597
+    "usd": 6764,
+    "avgPrice": 0.5768
    },
    {
-    "wallet": "0x676c1bb692c76b57b06f1b93817515acfa5ce139",
+    "wallet": "0xf68a281980f8c13828e84e147e3822381d6e5b1b",
     "side": "Under",
-    "usd": 3210
+    "usd": 2083,
+    "avgPrice": 0.42
    },
    {
-    "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
+    "wallet": "0x44d682939eb6a4a1349fa50411531876a6089858",
     "side": "Under",
-    "usd": 2210
+    "usd": 1275,
+    "avgPrice": 0.43
    },
    {
-    "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
-    "side": "Under",
-    "usd": 1809
-   },
-   {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-    "side": "Under",
-    "usd": 559,
-    "avgPrice": 0.5395
-   },
-   {
-    "wallet": "0x6f11bcdd1e09a7109b61e6c26ddbcfe3f204c524",
-    "side": "Under",
-    "usd": 535
-   },
-   {
-    "wallet": "0x4f29e103339919c4baaea2a60195cf1c8bb27a7e",
-    "side": "Under",
-    "usd": 408
-   },
-   {
-    "wallet": "0x49514a200aa6ed57b2be804b9412d0b373973038",
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
     "side": "Over",
-    "usd": 324
-   },
-   {
-    "wallet": "0x34e341432d2ba9e81b79808083d75b8f2be91b37",
-    "side": "Under",
-    "usd": 251
-   },
-   {
-    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
-    "side": "Under",
-    "usd": 178,
-    "avgPrice": 0.5424
-   },
-   {
-    "wallet": "0xf7f0b0b1e9c0fe02ccad926916ee31aef74b912c",
-    "side": "Under",
-    "usd": 137
-   },
-   {
-    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
-    "side": "Over",
-    "usd": 84,
-    "avgPrice": 0.4499
-   },
-   {
-    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
-    "side": "Under",
-    "usd": 54
-   },
-   {
-    "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
-    "side": "Under",
-    "usd": 32
-   },
-   {
-    "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
-    "side": "Under",
-    "usd": 31,
-    "avgPrice": 0.5443
-   },
-   {
-    "wallet": "0x8d0c8253703b8febbe53f45d182671c5385dc90a",
-    "side": "Under",
-    "usd": 27
-   },
-   {
-    "wallet": "0x3ca9089f59d506a6773a4d68227a1ac97806424a",
-    "side": "Under",
-    "usd": 22
+    "usd": 671
    },
    {
     "wallet": "0xa697d0b3fff7d285a0f92d6ee03a7f97809e59d5",
     "side": "Under",
-    "usd": 21,
-    "avgPrice": 0.54
+    "usd": 452,
+    "avgPrice": 0.4277
    },
    {
-    "wallet": "0xdd5ef115f801999575b03d78d0115ad8b2d59040",
+    "wallet": "0x224f7ef690d952cf551a471846d5afb4892e514a",
+    "side": "Under",
+    "usd": 425
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Under",
+    "usd": 425,
+    "avgPrice": 0.42
+   },
+   {
+    "wallet": "0x4f29e103339919c4baaea2a60195cf1c8bb27a7e",
+    "side": "Under",
+    "usd": 367
+   },
+   {
+    "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
     "side": "Over",
+    "usd": 324,
+    "avgPrice": 0.579
+   },
+   {
+    "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
+    "side": "Over",
+    "usd": 315
+   },
+   {
+    "wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
+    "side": "Under",
+    "usd": 248
+   },
+   {
+    "wallet": "0x0eb75bf6f54794a83bd26095811f30b530161f17",
+    "side": "Over",
+    "usd": 171
+   },
+   {
+    "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
+    "side": "Under",
+    "usd": 150
+   },
+   {
+    "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
+    "side": "Under",
+    "usd": 128
+   },
+   {
+    "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
+    "side": "Under",
+    "usd": 116
+   },
+   {
+    "wallet": "0xf7f0b0b1e9c0fe02ccad926916ee31aef74b912c",
+    "side": "Under",
+    "usd": 109
+   },
+   {
+    "wallet": "0xefde78f38169634477f6ff46572128b6d21a6505",
+    "side": "Over",
+    "usd": 99
+   },
+   {
+    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
+    "side": "Under",
+    "usd": 85
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Under",
+    "usd": 84,
+    "avgPrice": 0.4247
+   },
+   {
+    "wallet": "0x5811c8ad5dc5990528357ecf1a6d03311d6c0976",
+    "side": "Under",
+    "usd": 75
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "side": "Over",
+    "usd": 66,
+    "avgPrice": 0.5668
+   },
+   {
+    "wallet": "0xd619b68e64f256f8ddd185b261c8679eacf0c461",
+    "side": "Under",
+    "usd": 32
+   },
+   {
+    "wallet": "0x3ca9089f59d506a6773a4d68227a1ac97806424a",
+    "side": "Under",
+    "usd": 30
+   },
+   {
+    "wallet": "0x8d0c8253703b8febbe53f45d182671c5385dc90a",
+    "side": "Under",
+    "usd": 21
+   },
+   {
+    "wallet": "0xa278b41b5afda5d18da683eb7f851a7b2dc13369",
+    "side": "Over",
+    "usd": 19
+   },
+   {
+    "wallet": "0x3da80ca893666957475095ac1504094df93dbe26",
+    "side": "Over",
+    "usd": 12
+   },
+   {
+    "wallet": "0x9cb48ddd4185f3e947edf596589e40e574588285",
+    "side": "Under",
     "usd": 9
    },
    {
@@ -566034,26 +566111,32 @@
     "usd": 5
    },
    {
-    "wallet": "0x75177693e4ecdd01a33cb43ba3fe606dcf750353",
-    "side": "Over",
-    "usd": 2
+    "wallet": "0x171544dd3be328dc903b023ad36457bf07dca049",
+    "side": "Under",
+    "usd": 4
+   },
+   {
+    "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
+    "side": "Under",
+    "usd": 3,
+    "avgPrice": 0.42
    }
   ],
-  "hoursToKickoff": 0.55,
-  "capturedAt": "2026-10-02T00:56:51.261391+00:00",
+  "hoursToKickoff": 0.05,
+  "capturedAt": "2026-10-02T01:26:51.306719+00:00",
   "koTs": "2026-10-02T01:30:00+00:00",
-  "cond": "0xc6fba5f93129ac8f6d4365e36c2d0b247e7759565c705b0e511df3e845b32365",
-  "frage": "Blackhawks vs. Utah: O/U 6.5",
+  "cond": "0x0034a118950da9f12e8e3448bf40249c86f6c4b56658eac21a36bf7fa4c3e955",
+  "frage": "Blackhawks vs. Utah: O/U 5.5",
   "tokens": {
-   "Over": "110781217791243358750440101764839682180593199971727950517870831427062803642782",
-   "Under": "98088457596329352329799984454118728479756487282625305170828626333279614423854"
+   "Over": "37875846050829044052753935564945587000814940759738791182232747118894045830850",
+   "Under": "75916309948686599880944599982573153078386463521760904358747194014210050856363"
   }
  },
  "conl-nca-cri-2026-10-01": {
   "shares": {
-   "Nicaragua": 650.0689149000002,
-   "Draw (Nicaragua vs. Costa Rica)": 251.33365786500002,
-   "Costa Rica": 16481.14126499
+   "Nicaragua": 781.4532474000002,
+   "Draw (Nicaragua vs. Costa Rica)": 280.40279760000004,
+   "Costa Rica": 19941.195959000004
   },
   "prices": {
    "Nicaragua": 0.075,
@@ -566066,7 +566149,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 42150,
+  "totalUsd": 46725,
   "whales": [
    {
     "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
@@ -566076,13 +566159,13 @@
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "side": "Costa Rica",
-    "usd": 1500,
+    "usd": 4098,
     "avgPrice": 0.7899
    },
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "side": "Costa Rica",
-    "usd": 1324,
+    "usd": 1318,
     "avgPrice": 0.745
    },
    {
@@ -566092,6 +566175,12 @@
     "avgPrice": 0.6842
    },
    {
+    "wallet": "0xafdbf243495527dbaf68e7b01a03ed08142cbca0",
+    "side": "Costa Rica",
+    "usd": 745,
+    "avgPrice": 0.7899
+   },
+   {
     "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
     "side": "Costa Rica",
     "usd": 514
@@ -566099,8 +566188,13 @@
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "side": "Nicaragua",
-    "usd": 451,
+    "usd": 467,
     "avgPrice": 0.0809
+   },
+   {
+    "wallet": "0x224f7ef690d952cf551a471846d5afb4892e514a",
+    "side": "Costa Rica",
+    "usd": 261
    },
    {
     "wallet": "0x340ea8b2e6634b7555a61187d1ea443785cd385b",
@@ -566110,18 +566204,18 @@
    {
     "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
     "side": "Costa Rica",
-    "usd": 194,
-    "avgPrice": 0.7899
+    "usd": 199
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Nicaragua",
+    "usd": 159,
+    "avgPrice": 0.08
    },
    {
     "wallet": "0x03defd1a1cff15c05dcbbbcee7ba55c1dae74bfd",
     "side": "Costa Rica",
     "usd": 153
-   },
-   {
-    "wallet": "0x224f7ef690d952cf551a471846d5afb4892e514a",
-    "side": "Costa Rica",
-    "usd": 140
    },
    {
     "wallet": "0x0b0afb8403e0abb65f91b766a815a4ca74f5e482",
@@ -566181,20 +566275,14 @@
     "usd": 36
    },
    {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "side": "Nicaragua",
-    "usd": 30,
-    "avgPrice": 0.08
-   },
-   {
     "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
     "side": "Nicaragua",
     "usd": 29
    },
    {
-    "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
-    "side": "Nicaragua",
-    "usd": 26
+    "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
+    "side": "Draw (Nicaragua vs. Costa Rica)",
+    "usd": 29
    },
    {
     "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
@@ -566204,7 +566292,12 @@
    {
     "wallet": "0x340ea8b2e6634b7555a61187d1ea443785cd385b",
     "side": "Draw (Nicaragua vs. Costa Rica)",
-    "usd": 20
+    "usd": 19
+   },
+   {
+    "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
+    "side": "Nicaragua",
+    "usd": 12
    },
    {
     "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
@@ -566245,8 +566338,7 @@
    {
     "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
     "side": "Nicaragua",
-    "usd": 5,
-    "avgPrice": 0.1064
+    "usd": 5
    },
    {
     "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
@@ -566267,21 +566359,10 @@
     "wallet": "0xc846f5368ab49a854d2280b7ecff92669824c413",
     "side": "Nicaragua",
     "usd": 1
-   },
-   {
-    "wallet": "0x75177693e4ecdd01a33cb43ba3fe606dcf750353",
-    "side": "Nicaragua",
-    "usd": 1,
-    "avgPrice": 0.13
-   },
-   {
-    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
-    "side": "Draw (Nicaragua vs. Costa Rica)",
-    "usd": 1
    }
   ],
-  "hoursToKickoff": 1.05,
-  "capturedAt": "2026-10-02T00:56:51.261391+00:00",
+  "hoursToKickoff": 0.55,
+  "capturedAt": "2026-10-02T01:26:51.306719+00:00",
   "koTs": "2026-10-02T02:00:00+00:00",
   "tokens": {
    "Nicaragua": "64844033282473712358584247016706872181233268896646874276639768665920733699365",
@@ -566291,8 +566372,8 @@
  },
  "atp-munar-faria-2026-10-01": {
   "shares": {
-   "Jaume Munar": 10265.51924678,
-   "Jaime Faria": 6987.457539090002
+   "Jaume Munar": 12430.363188880001,
+   "Jaime Faria": 8461.006776990003
   },
   "prices": {
    "Jaume Munar": 0.595,
@@ -566304,7 +566385,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 22059,
+  "totalUsd": 25542,
   "whales": [
    {
     "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
@@ -566312,9 +566393,19 @@
     "usd": 2347
    },
    {
+    "wallet": "0x5f9cb4fd8b07d1b1b47dc54fd043007febcd59a1",
+    "side": "Jaume Munar",
+    "usd": 1943
+   },
+   {
     "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
     "side": "Jaume Munar",
     "usd": 1495
+   },
+   {
+    "wallet": "0x698bbfabc657d1e08b608b8ce0a58ed808b74426",
+    "side": "Jaime Faria",
+    "usd": 1013
    },
    {
     "wallet": "0x081e14554b92ee3dc53a21bd5b01f306692ef76e",
@@ -566340,7 +566431,13 @@
    {
     "wallet": "0x9b11866433281ade9f2811dbde8acdefc45f5375",
     "side": "Jaume Munar",
-    "usd": 688
+    "usd": 688,
+    "avgPrice": 0.59
+   },
+   {
+    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
+    "side": "Jaume Munar",
+    "usd": 662
    },
    {
     "wallet": "0x3d5a9e66f15e6719927972135501c61efc53a0be",
@@ -566358,21 +566455,6 @@
     "usd": 621
    },
    {
-    "wallet": "0x4036e32713ffa939be8212e2d3ae9efbe6c70dd9",
-    "side": "Jaume Munar",
-    "usd": 595
-   },
-   {
-    "wallet": "0xc214dd7a3e8df73bee2799c68de0311b8ca3105d",
-    "side": "Jaume Munar",
-    "usd": 550
-   },
-   {
-    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
-    "side": "Jaume Munar",
-    "usd": 491
-   },
-   {
     "wallet": "0xb5501e658c4155814d49d4735f457332da4a2799",
     "side": "Jaime Faria",
     "usd": 395
@@ -566381,6 +566463,11 @@
     "wallet": "0xc50c405d51c68a156d623704453bce7aff5eca5a",
     "side": "Jaume Munar",
     "usd": 355
+   },
+   {
+    "wallet": "0x8c0b024c17831a0dde038547b7e791ae6a0d7aa5",
+    "side": "Jaime Faria",
+    "usd": 287
    },
    {
     "wallet": "0x38f1cfeceedc974a52e8e9d554f5e0beb4fe9ff1",
@@ -566417,7 +566504,7 @@
    {
     "wallet": "0x01c78f8873c0c86d6b6b92ff627e3802237ee995",
     "side": "Jaime Faria",
-    "usd": 105
+    "usd": 131
    },
    {
     "wallet": "0xa772e2ca9f119162d03330f3e66c0556a2068686",
@@ -566451,19 +566538,20 @@
     "usd": 43
    },
    {
+    "wallet": "0x98db8cca55c32b24cfb414b5b43d273f4e1fdd17",
+    "side": "Jaime Faria",
+    "usd": 40
+   },
+   {
     "wallet": "0xb4f978be63cdf75554b0b46a4262a6db597cc9a7",
     "side": "Jaime Faria",
-    "usd": 21
+    "usd": 21,
+    "avgPrice": 0.3799
    },
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
     "side": "Jaime Faria",
     "usd": 21
-   },
-   {
-    "wallet": "0x98db8cca55c32b24cfb414b5b43d273f4e1fdd17",
-    "side": "Jaime Faria",
-    "usd": 20
    },
    {
     "wallet": "0x8b8992eb0d7dc4ef87f5efb45154de4787c598d6",
@@ -566504,15 +566592,10 @@
     "wallet": "0x3e6b98d9dac15f285a18a02644a8c900aab58a98",
     "side": "Jaime Faria",
     "usd": 9
-   },
-   {
-    "wallet": "0x96d61a3a181c250f89875e1ae0e349c609ef5892",
-    "side": "Jaime Faria",
-    "usd": 5
    }
   ],
-  "hoursToKickoff": 1.05,
-  "capturedAt": "2026-10-02T00:56:51.261391+00:00",
+  "hoursToKickoff": 0.55,
+  "capturedAt": "2026-10-02T01:26:51.306719+00:00",
   "koTs": "2026-10-02T02:00:00+00:00",
   "cond": "0x90dd7c20e7becd75842b415eb52981153a5c50643399255ec22453a83365964b",
   "frage": "Japan Open Tennis Championships: Jaume Munar vs Jaime Faria",
@@ -566523,13 +566606,13 @@
  },
  "mls-sea-skc-2026-10-01": {
   "shares": {
-   "Seattle Sounders FC": 8272.361798310001,
-   "Draw (Seattle Sounders FC vs. Sporting Kansas City)": 403.01987817000014,
-   "Sporting Kansas City": 429.47633412999994
+   "Seattle Sounders FC": 10573.706582010003,
+   "Draw (Seattle Sounders FC vs. Sporting Kansas City)": 555.11306423,
+   "Sporting Kansas City": 1541.2338328349995
   },
   "prices": {
-   "Seattle Sounders FC": 0.615,
-   "Draw (Seattle Sounders FC vs. Sporting Kansas City)": 0.195,
+   "Seattle Sounders FC": 0.605,
+   "Draw (Seattle Sounders FC vs. Sporting Kansas City)": 0.205,
    "Sporting Kansas City": 0.185
   },
   "splitGuete": {
@@ -566538,45 +566621,71 @@
   },
   "league": "MLS",
   "sport": "Fußball",
-  "totalUsd": 14749,
+  "totalUsd": 25823,
   "whales": [
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "side": "Seattle Sounders FC",
-    "usd": 2978,
+    "usd": 2934,
     "avgPrice": 0.6229
    },
    {
     "wallet": "0x72f7b4aa5acaff9629917cf4ec34620a41c492f7",
     "side": "Seattle Sounders FC",
-    "usd": 1845
+    "usd": 1815
+   },
+   {
+    "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
+    "side": "Seattle Sounders FC",
+    "usd": 1615,
+    "avgPrice": 0.6099
+   },
+   {
+    "wallet": "0x675cff7932fc13cc635105d8e57f980756d88c88",
+    "side": "Sporting Kansas City",
+    "usd": 1038
    },
    {
     "wallet": "0x755ab1b66743ec425157ef91e8b5b52f3e8c82c4",
     "side": "Seattle Sounders FC",
-    "usd": 936,
+    "usd": 921,
     "avgPrice": 0.6569
    },
    {
     "wallet": "0x02b18dfde01fd53b456cabda7d6ec2403322c764",
     "side": "Seattle Sounders FC",
-    "usd": 615
+    "usd": 605
+   },
+   {
+    "wallet": "0x7e2a8ff8da3a83b95588e1fadc0fc89ad827d25c",
+    "side": "Seattle Sounders FC",
+    "usd": 496
    },
    {
     "wallet": "0x8ca5b36966f07475431822b35f478940a41357ef",
     "side": "Seattle Sounders FC",
-    "usd": 357
+    "usd": 351
    },
    {
     "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
     "side": "Seattle Sounders FC",
-    "usd": 264,
-    "avgPrice": 0.6226
+    "usd": 259
+   },
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "side": "Draw (Seattle Sounders FC vs. Sporting Kansas City)",
+    "usd": 195
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Seattle Sounders FC",
+    "usd": 193,
+    "avgPrice": 0.6205
    },
    {
     "wallet": "0xf8ab270075d9bc4c2e786f59ced74c72511e13a1",
     "side": "Seattle Sounders FC",
-    "usd": 184
+    "usd": 182
    },
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
@@ -566585,46 +566694,35 @@
     "avgPrice": 0.1699
    },
    {
-    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "wallet": "0x00d011c81490302079e8f73465d0077b00567534",
     "side": "Draw (Seattle Sounders FC vs. Sporting Kansas City)",
-    "usd": 137
+    "usd": 77
    },
    {
-    "wallet": "0xecf933ccdf7ebc6a0658c77e070cfe51ebe5328a",
-    "side": "Seattle Sounders FC",
-    "usd": 128
-   },
-   {
-    "wallet": "0x84fa20d5c0903f4221e9dbd18e354c6efe32f80d",
-    "side": "Seattle Sounders FC",
-    "usd": 119
-   },
-   {
-    "wallet": "0x308f5aa041909f4e961f88728c3f9af7d9be91a8",
-    "side": "Seattle Sounders FC",
-    "usd": 93
+    "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
+    "side": "Draw (Seattle Sounders FC vs. Sporting Kansas City)",
+    "usd": 77
    },
    {
     "wallet": "0x224f7ef690d952cf551a471846d5afb4892e514a",
     "side": "Seattle Sounders FC",
-    "usd": 77
-   },
-   {
-    "wallet": "0x00d011c81490302079e8f73465d0077b00567534",
-    "side": "Draw (Seattle Sounders FC vs. Sporting Kansas City)",
-    "usd": 74
-   },
-   {
-    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
-    "side": "Seattle Sounders FC",
-    "usd": 71,
-    "avgPrice": 0.626
+    "usd": 75
    },
    {
     "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
     "side": "Draw (Seattle Sounders FC vs. Sporting Kansas City)",
-    "usd": 71,
+    "usd": 75,
     "avgPrice": 0.19
+   },
+   {
+    "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
+    "side": "Sporting Kansas City",
+    "usd": 70
+   },
+   {
+    "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
+    "side": "Seattle Sounders FC",
+    "usd": 55
    },
    {
     "wallet": "0x89db471dd3c73f2286c31b7d722669a4a41ed0ef",
@@ -566634,12 +566732,12 @@
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
     "side": "Draw (Seattle Sounders FC vs. Sporting Kansas City)",
-    "usd": 46
+    "usd": 48
    },
    {
     "wallet": "0xc055d87dc16097063a4f22c4c088e5089945336c",
     "side": "Seattle Sounders FC",
-    "usd": 29
+    "usd": 28
    },
    {
     "wallet": "0x91e6ce412d1e83228458c81549a9c5c86c212db1",
@@ -566660,7 +566758,7 @@
    {
     "wallet": "0x56acab44cfca2e88bb9b3406890aea7bfa0cd77e",
     "side": "Draw (Seattle Sounders FC vs. Sporting Kansas City)",
-    "usd": 22
+    "usd": 24
    },
    {
     "wallet": "0xa278b41b5afda5d18da683eb7f851a7b2dc13369",
@@ -566678,6 +566776,11 @@
     "usd": 16
    },
    {
+    "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
+    "side": "Sporting Kansas City",
+    "usd": 15
+   },
+   {
     "wallet": "0x3e6b98d9dac15f285a18a02644a8c900aab58a98",
     "side": "Seattle Sounders FC",
     "usd": 12
@@ -566685,11 +566788,6 @@
    {
     "wallet": "0x724924919b3d684ce0400bc307788521d5cef5da",
     "side": "Seattle Sounders FC",
-    "usd": 11
-   },
-   {
-    "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
-    "side": "Sporting Kansas City",
     "usd": 11
    },
    {
@@ -566703,19 +566801,19 @@
     "usd": 7
    },
    {
-    "wallet": "0xf545bd981d2b6bdbbd32a7a4b2b072726255305b",
-    "side": "Sporting Kansas City",
-    "usd": 6
-   },
-   {
-    "wallet": "0xfd4fb07f091e6a6d212f6e4876bd2ebc91bca4d3",
+    "wallet": "0xb4cd4d6fe596f360137e5a0441fecc4e1ec9c041",
     "side": "Seattle Sounders FC",
-    "usd": 5
+    "usd": 6
    },
    {
     "wallet": "0x3e1ac4bede0a559fc47e78e8a74adeeb6f704d5c",
     "side": "Draw (Seattle Sounders FC vs. Sporting Kansas City)",
-    "usd": 5
+    "usd": 6
+   },
+   {
+    "wallet": "0xf545bd981d2b6bdbbd32a7a4b2b072726255305b",
+    "side": "Sporting Kansas City",
+    "usd": 6
    },
    {
     "wallet": "0xfe67df6e0c585e50cbe8bdcad804d980c6b8a2e8",
@@ -566723,33 +566821,18 @@
     "usd": 5
    },
    {
+    "wallet": "0xfd4fb07f091e6a6d212f6e4876bd2ebc91bca4d3",
+    "side": "Seattle Sounders FC",
+    "usd": 4
+   },
+   {
     "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
     "side": "Sporting Kansas City",
     "usd": 4
-   },
-   {
-    "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
-    "side": "Sporting Kansas City",
-    "usd": 4
-   },
-   {
-    "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
-    "side": "Seattle Sounders FC",
-    "usd": 2
-   },
-   {
-    "wallet": "0xd9c9651bfd445b2cddf750662ee79a755f216686",
-    "side": "Sporting Kansas City",
-    "usd": 2
-   },
-   {
-    "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
-    "side": "Draw (Seattle Sounders FC vs. Sporting Kansas City)",
-    "usd": 1
    }
   ],
-  "hoursToKickoff": 0.55,
-  "capturedAt": "2026-10-02T00:56:51.261391+00:00",
+  "hoursToKickoff": 0.05,
+  "capturedAt": "2026-10-02T01:26:51.306719+00:00",
   "koTs": "2026-10-02T01:30:00+00:00",
   "tokens": {
    "Seattle Sounders FC": "10723915766405731998206515662960225160590105511984361080257048575077189046806",
@@ -566975,42 +567058,42 @@
  },
  "mls-sea-skc-2026-10-01-exact-score": {
   "shares": {
-   "Seattle Sounders FC 0 - 0 Sporting Kansas City": 21.271035191,
-   "Seattle Sounders FC 0 - 1 Sporting Kansas City": 11.630208342500001,
-   "Seattle Sounders FC 1 - 0 Sporting Kansas City": 89.308449549,
-   "Seattle Sounders FC 0 - 2 Sporting Kansas City": 7.834125,
-   "Seattle Sounders FC 1 - 1 Sporting Kansas City": 29.141666774999997,
-   "Seattle Sounders FC 2 - 0 Sporting Kansas City": 46.76801779,
-   "Seattle Sounders FC 0 - 3 Sporting Kansas City": 6.809125,
-   "Seattle Sounders FC 1 - 2 Sporting Kansas City": 40.024600907499995,
-   "Seattle Sounders FC 2 - 1 Sporting Kansas City": 61.47204577,
-   "Seattle Sounders FC 3 - 0 Sporting Kansas City": 19.39863101,
-   "Seattle Sounders FC 1 - 3 Sporting Kansas City": 30.692600147999997,
-   "Seattle Sounders FC 2 - 2 Sporting Kansas City": 55.59384978400001,
-   "Seattle Sounders FC 3 - 1 Sporting Kansas City": 79.809375,
-   "Seattle Sounders FC 2 - 3 Sporting Kansas City": 35.084713793999995,
-   "Seattle Sounders FC 3 - 2 Sporting Kansas City": 62.82125532800001,
-   "Seattle Sounders FC 3 - 3 Sporting Kansas City": 78.09632912800001,
-   "Any Other Score": 178.29894269999997
+   "Seattle Sounders FC 0 - 0 Sporting Kansas City": 22.930137950000002,
+   "Seattle Sounders FC 0 - 1 Sporting Kansas City": 40.416884343,
+   "Seattle Sounders FC 1 - 0 Sporting Kansas City": 92.559981584,
+   "Seattle Sounders FC 0 - 2 Sporting Kansas City": 8.575000000000001,
+   "Seattle Sounders FC 1 - 1 Sporting Kansas City": 40.272291865,
+   "Seattle Sounders FC 2 - 0 Sporting Kansas City": 47.22301779,
+   "Seattle Sounders FC 0 - 3 Sporting Kansas City": 6.69375,
+   "Seattle Sounders FC 1 - 2 Sporting Kansas City": 43.282524084500004,
+   "Seattle Sounders FC 2 - 1 Sporting Kansas City": 64.03704577,
+   "Seattle Sounders FC 3 - 0 Sporting Kansas City": 20.88363101,
+   "Seattle Sounders FC 1 - 3 Sporting Kansas City": 32.00387634199999,
+   "Seattle Sounders FC 2 - 2 Sporting Kansas City": 68.71133202,
+   "Seattle Sounders FC 3 - 1 Sporting Kansas City": 86.053125,
+   "Seattle Sounders FC 2 - 3 Sporting Kansas City": 37.8751744545,
+   "Seattle Sounders FC 3 - 2 Sporting Kansas City": 92.4941811255,
+   "Seattle Sounders FC 3 - 3 Sporting Kansas City": 80.40595315200001,
+   "Any Other Score": 181.55288499999997
   },
   "prices": {
-   "Seattle Sounders FC 0 - 0 Sporting Kansas City": 0.0245,
-   "Seattle Sounders FC 0 - 1 Sporting Kansas City": 0.0275,
-   "Seattle Sounders FC 1 - 0 Sporting Kansas City": 0.0535,
-   "Seattle Sounders FC 0 - 2 Sporting Kansas City": 0.0195,
-   "Seattle Sounders FC 1 - 1 Sporting Kansas City": 0.075,
+   "Seattle Sounders FC 0 - 0 Sporting Kansas City": 0.025,
+   "Seattle Sounders FC 0 - 1 Sporting Kansas City": 0.029,
+   "Seattle Sounders FC 1 - 0 Sporting Kansas City": 0.056,
+   "Seattle Sounders FC 0 - 2 Sporting Kansas City": 0.02,
+   "Seattle Sounders FC 1 - 1 Sporting Kansas City": 0.085,
    "Seattle Sounders FC 2 - 0 Sporting Kansas City": 0.065,
-   "Seattle Sounders FC 0 - 3 Sporting Kansas City": 0.0095,
-   "Seattle Sounders FC 1 - 2 Sporting Kansas City": 0.0475,
+   "Seattle Sounders FC 0 - 3 Sporting Kansas City": 0.009,
+   "Seattle Sounders FC 1 - 2 Sporting Kansas City": 0.0485,
    "Seattle Sounders FC 2 - 1 Sporting Kansas City": 0.095,
    "Seattle Sounders FC 3 - 0 Sporting Kansas City": 0.055,
-   "Seattle Sounders FC 1 - 3 Sporting Kansas City": 0.021,
-   "Seattle Sounders FC 2 - 2 Sporting Kansas City": 0.067,
+   "Seattle Sounders FC 1 - 3 Sporting Kansas City": 0.0215,
+   "Seattle Sounders FC 2 - 2 Sporting Kansas City": 0.068,
    "Seattle Sounders FC 3 - 1 Sporting Kansas City": 0.075,
-   "Seattle Sounders FC 2 - 3 Sporting Kansas City": 0.026,
-   "Seattle Sounders FC 3 - 2 Sporting Kansas City": 0.052,
-   "Seattle Sounders FC 3 - 3 Sporting Kansas City": 0.0235,
-   "Any Other Score": 0.255
+   "Seattle Sounders FC 2 - 3 Sporting Kansas City": 0.0255,
+   "Seattle Sounders FC 3 - 2 Sporting Kansas City": 0.0515,
+   "Seattle Sounders FC 3 - 3 Sporting Kansas City": 0.024,
+   "Any Other Score": 0.25
   },
   "splitGuete": {
    "art": "belastbar",
@@ -567018,17 +567101,17 @@
   },
   "league": "MLS",
   "sport": "Fußball",
-  "totalUsd": 11676,
+  "totalUsd": 14699,
   "whales": [
    {
     "wallet": "0x333f291ea158f13e4f60c9f0ba88044bf2483cd6",
     "side": "Any Other Score",
-    "usd": 89
+    "usd": 87
    },
    {
     "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
     "side": "Any Other Score",
-    "usd": 73
+    "usd": 72
    },
    {
     "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
@@ -567039,8 +567122,13 @@
    {
     "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
     "side": "Seattle Sounders FC 3 - 3 Sporting Kansas City",
-    "usd": 44,
+    "usd": 45,
     "avgPrice": 0.0209
+   },
+   {
+    "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
+    "side": "Seattle Sounders FC 3 - 2 Sporting Kansas City",
+    "usd": 39
    },
    {
     "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
@@ -567050,11 +567138,21 @@
    {
     "wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
     "side": "Seattle Sounders FC 3 - 3 Sporting Kansas City",
-    "usd": 26
+    "usd": 27
    },
    {
     "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
     "side": "Seattle Sounders FC 1 - 1 Sporting Kansas City",
+    "usd": 24
+   },
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "side": "Seattle Sounders FC 2 - 2 Sporting Kansas City",
+    "usd": 23
+   },
+   {
+    "wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
+    "side": "Seattle Sounders FC 1 - 0 Sporting Kansas City",
     "usd": 22
    },
    {
@@ -567063,9 +567161,14 @@
     "usd": 22
    },
    {
-    "wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
+    "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
     "side": "Seattle Sounders FC 1 - 0 Sporting Kansas City",
-    "usd": 21
+    "usd": 19
+   },
+   {
+    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
+    "side": "Seattle Sounders FC 1 - 0 Sporting Kansas City",
+    "usd": 19
    },
    {
     "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
@@ -567078,16 +567181,6 @@
     "usd": 19
    },
    {
-    "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
-    "side": "Seattle Sounders FC 1 - 0 Sporting Kansas City",
-    "usd": 18
-   },
-   {
-    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
-    "side": "Seattle Sounders FC 1 - 0 Sporting Kansas City",
-    "usd": 18
-   },
-   {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "side": "Seattle Sounders FC 2 - 0 Sporting Kansas City",
     "usd": 18,
@@ -567096,6 +567189,16 @@
    {
     "wallet": "0x4f1d5ae26fc31472966e951af3183308736d8de2",
     "side": "Seattle Sounders FC 0 - 0 Sporting Kansas City",
+    "usd": 16
+   },
+   {
+    "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
+    "side": "Seattle Sounders FC 0 - 1 Sporting Kansas City",
+    "usd": 16
+   },
+   {
+    "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
+    "side": "Seattle Sounders FC 1 - 0 Sporting Kansas City",
     "usd": 16
    },
    {
@@ -567110,34 +567213,19 @@
    },
    {
     "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
-    "side": "Seattle Sounders FC 1 - 0 Sporting Kansas City",
-    "usd": 15
-   },
-   {
-    "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
-    "side": "Seattle Sounders FC 3 - 2 Sporting Kansas City",
-    "usd": 15
-   },
-   {
-    "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
     "side": "Seattle Sounders FC 1 - 2 Sporting Kansas City",
-    "usd": 14
-   },
-   {
-    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
-    "side": "Seattle Sounders FC 2 - 2 Sporting Kansas City",
     "usd": 14
    },
    {
     "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
     "side": "Seattle Sounders FC 1 - 2 Sporting Kansas City",
-    "usd": 12,
-    "avgPrice": 0.0468
+    "usd": 14,
+    "avgPrice": 0.0479
    },
    {
-    "wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
-    "side": "Seattle Sounders FC 1 - 2 Sporting Kansas City",
-    "usd": 12
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Any Other Score",
+    "usd": 14
    },
    {
     "wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
@@ -567145,15 +567233,24 @@
     "usd": 12
    },
    {
+    "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
+    "side": "Seattle Sounders FC 0 - 1 Sporting Kansas City",
+    "usd": 11
+   },
+   {
     "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
     "side": "Seattle Sounders FC 3 - 2 Sporting Kansas City",
     "usd": 11
    },
    {
+    "wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
+    "side": "Seattle Sounders FC 1 - 2 Sporting Kansas City",
+    "usd": 10
+   },
+   {
     "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
     "side": "Seattle Sounders FC 2 - 2 Sporting Kansas City",
-    "usd": 10,
-    "avgPrice": 0.0629
+    "usd": 10
    },
    {
     "wallet": "0x37e6844e3dfce2fd060db24ba029f95332ab794e",
@@ -567169,6 +567266,12 @@
     "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
     "side": "Seattle Sounders FC 0 - 1 Sporting Kansas City",
     "usd": 8
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "side": "Seattle Sounders FC 1 - 0 Sporting Kansas City",
+    "usd": 8,
+    "avgPrice": 0.0679
    },
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
@@ -567195,15 +567298,10 @@
     "avgPrice": 0.0239
    },
    {
-    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
-    "side": "Any Other Score",
-    "usd": 8
-   },
-   {
-    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
-    "side": "Seattle Sounders FC 1 - 0 Sporting Kansas City",
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Seattle Sounders FC 2 - 3 Sporting Kansas City",
     "usd": 7,
-    "avgPrice": 0.0679
+    "avgPrice": 0.0253
    },
    {
     "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
@@ -567214,26 +567312,10 @@
     "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
     "side": "Seattle Sounders FC 2 - 0 Sporting Kansas City",
     "usd": 6
-   },
-   {
-    "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
-    "side": "Seattle Sounders FC 1 - 3 Sporting Kansas City",
-    "usd": 6
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "side": "Seattle Sounders FC 3 - 2 Sporting Kansas City",
-    "usd": 6,
-    "avgPrice": 0.0509
-   },
-   {
-    "wallet": "0x3e1ac4bede0a559fc47e78e8a74adeeb6f704d5c",
-    "side": "Seattle Sounders FC 2 - 2 Sporting Kansas City",
-    "usd": 5
    }
   ],
-  "hoursToKickoff": 0.55,
-  "capturedAt": "2026-10-02T00:56:51.261391+00:00",
+  "hoursToKickoff": 0.05,
+  "capturedAt": "2026-10-02T01:26:51.306719+00:00",
   "koTs": "2026-10-02T01:30:00+00:00",
   "tokens": {
    "Seattle Sounders FC 0 - 0 Sporting Kansas City": "58824702081888209269436003387652845442664834120917151007772483455401842034348",
@@ -567615,12 +567697,12 @@
  },
  "atp-shimizu-tomic-2026-09-30": {
   "shares": {
-   "Yuta Shimizu": 14400.913869860005,
-   "Bernard Tomic": 9802.074409110002
+   "Yuta Shimizu": 14591.455456765007,
+   "Bernard Tomic": 9526.753330490003
   },
   "prices": {
-   "Yuta Shimizu": 0.595,
-   "Bernard Tomic": 0.405
+   "Yuta Shimizu": 0.605,
+   "Bernard Tomic": 0.395
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -567628,311 +567710,233 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 53355,
+  "totalUsd": 53525,
   "whales": [
    {
     "wallet": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
     "side": "Yuta Shimizu",
-    "usd": 2655
+    "usd": 2700
    },
    {
     "wallet": "0x02fecaaec1a8c78840142b0bac4ae991663fc5a5",
     "side": "Bernard Tomic",
-    "usd": 2508
+    "usd": 2446
    },
    {
     "wallet": "0xf12f7688a0bc8cc744ef871f70b74c16a976b30f",
     "side": "Yuta Shimizu",
-    "usd": 1607
+    "usd": 1634
    },
    {
     "wallet": "0xa0f21e6d351baa9185716b5c00c2925ed9621848",
     "side": "Bernard Tomic",
-    "usd": 1480,
+    "usd": 1444,
     "avgPrice": 0.435
    },
    {
     "wallet": "0x6485f47d0344c03eb4340f985159f6eb2dcba265",
     "side": "Yuta Shimizu",
-    "usd": 1043
+    "usd": 1061
    },
    {
     "wallet": "0x5c035da7d3df55a0458706830c542eda097a31bb",
     "side": "Yuta Shimizu",
-    "usd": 934
+    "usd": 950
    },
    {
     "wallet": "0x0f17aacbaa5e2382b44fddc45a3ed42f84d70724",
     "side": "Yuta Shimizu",
-    "usd": 910
+    "usd": 926
    },
    {
     "wallet": "0x796fc6fda8f8e03c03e2a2d012155989960300f6",
     "side": "Yuta Shimizu",
-    "usd": 866
+    "usd": 880
    },
    {
     "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
     "side": "Yuta Shimizu",
-    "usd": 835
+    "usd": 849
    },
    {
     "wallet": "0x0828e2ab9f76708970ad6fa20f457f8cc6d0a1a6",
     "side": "Bernard Tomic",
-    "usd": 833
+    "usd": 812
    },
    {
     "wallet": "0x6982049c65e98606f65a0ce71fdb9b61296da165",
     "side": "Bernard Tomic",
-    "usd": 643
+    "usd": 627
    },
    {
     "wallet": "0xcbef04dead0a5d75b28d2bb4ef149a222da10c11",
     "side": "Bernard Tomic",
-    "usd": 608
+    "usd": 593
    },
    {
     "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
     "side": "Bernard Tomic",
-    "usd": 590
+    "usd": 576
    },
    {
     "wallet": "0xa3d0f51b4b7678aeeb3925ccee7271d05ac0ce14",
     "side": "Yuta Shimizu",
-    "usd": 446
+    "usd": 454
    },
    {
     "wallet": "0x7547479d43f4b52d892a6f2254050eea50edd158",
     "side": "Yuta Shimizu",
-    "usd": 357
+    "usd": 363
    },
    {
     "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
     "side": "Yuta Shimizu",
-    "usd": 338
+    "usd": 344
    },
    {
     "wallet": "0xed2f6ba44a3fac9908a51b4f65c1df7b72105e19",
     "side": "Bernard Tomic",
-    "usd": 324
+    "usd": 316
    },
    {
     "wallet": "0xe54d37c9c12e5fd3d684ff4d193ef1f44dabfdec",
     "side": "Yuta Shimizu",
-    "usd": 298
+    "usd": 302
    },
    {
     "wallet": "0xef292327dc97299c63f30e998614740d9a852f1e",
     "side": "Bernard Tomic",
-    "usd": 298
-   },
-   {
-    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
-    "side": "Yuta Shimizu",
-    "usd": 295,
-    "avgPrice": 0.5701
+    "usd": 290
    },
    {
     "wallet": "0xf1f2b3c6c5bea42a6664fe3a8395addc1ab28c8d",
     "side": "Yuta Shimizu",
-    "usd": 273,
+    "usd": 277,
     "avgPrice": 0.4947
    },
    {
     "wallet": "0x98db8cca55c32b24cfb414b5b43d273f4e1fdd17",
+    "side": "Yuta Shimizu",
+    "usd": 275
+   },
+   {
+    "wallet": "0x365f951dc281322d83f6fcda884c7f66a938706a",
     "side": "Yuta Shimizu",
     "usd": 270
    },
    {
     "wallet": "0x7c1ee865a785de4c00ee90ed86a38489fb8bbab3",
     "side": "Bernard Tomic",
-    "usd": 266
+    "usd": 259
    },
    {
-    "wallet": "0x365f951dc281322d83f6fcda884c7f66a938706a",
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
     "side": "Yuta Shimizu",
-    "usd": 265
+    "usd": 227,
+    "avgPrice": 0.5701
    },
    {
     "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
     "side": "Yuta Shimizu",
-    "usd": 203,
+    "usd": 206,
     "avgPrice": 0.5431
    },
    {
     "wallet": "0x9ab303a355bf22a29e485d98fb88d140abb43044",
     "side": "Bernard Tomic",
-    "usd": 202
-   },
-   {
-    "wallet": "0xca3f77cb090cf7cbcf48bcf865e8f27364418078",
-    "side": "Bernard Tomic",
-    "usd": 191
+    "usd": 198
    },
    {
     "wallet": "0x42c99f38d2b951b0dc8e8bd5371fa80c9dd19623",
     "side": "Yuta Shimizu",
+    "usd": 189
+   },
+   {
+    "wallet": "0xca3f77cb090cf7cbcf48bcf865e8f27364418078",
+    "side": "Bernard Tomic",
     "usd": 186
    },
    {
     "wallet": "0xeea3f08e8a36081233e4c4b4142fd61a7b56a6a2",
     "side": "Yuta Shimizu",
-    "usd": 181
+    "usd": 185
    },
    {
     "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
     "side": "Yuta Shimizu",
-    "usd": 178
+    "usd": 181
    },
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
     "side": "Yuta Shimizu",
-    "usd": 126
+    "usd": 128
    },
    {
     "wallet": "0xd37ab1a5eeb25696c568e20e94af72b8d3422358",
     "side": "Bernard Tomic",
-    "usd": 126,
+    "usd": 123,
     "avgPrice": 0.3624
-   },
-   {
-    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
-    "side": "Bernard Tomic",
-    "usd": 118
    },
    {
     "wallet": "0x9674d0d14a078c5dd5cd411c64bff82523dfe1a2",
     "side": "Yuta Shimizu",
-    "usd": 103,
-    "avgPrice": 0.6553
-   },
-   {
-    "wallet": "0xb4d250f58c26840e09723a83ce9c8149aa32ce99",
-    "side": "Bernard Tomic",
-    "usd": 90
+    "usd": 105
    },
    {
     "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
     "side": "Yuta Shimizu",
-    "usd": 69,
+    "usd": 97,
     "avgPrice": 0.6259
    },
    {
-    "wallet": "0x34facd6b9382b427072e0c5dfc8546ed0eb10a20",
+    "wallet": "0xb4d250f58c26840e09723a83ce9c8149aa32ce99",
     "side": "Bernard Tomic",
-    "usd": 65
+    "usd": 88
+   },
+   {
+    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+    "side": "Bernard Tomic",
+    "usd": 66
    },
    {
     "wallet": "0x25bf42fe847ca0d55db331103a11d0496202ef3d",
     "side": "Yuta Shimizu",
-    "usd": 64
+    "usd": 65
+   },
+   {
+    "wallet": "0x34facd6b9382b427072e0c5dfc8546ed0eb10a20",
+    "side": "Bernard Tomic",
+    "usd": 63
    },
    {
     "wallet": "0xd9dde44ddeababae222bf7aec96c85cbdab6b525",
     "side": "Bernard Tomic",
-    "usd": 59
+    "usd": 57
    },
    {
     "wallet": "0x5e020e19bc4cc2cd24ab9b406604ee9df02ab178",
     "side": "Yuta Shimizu",
-    "usd": 47
+    "usd": 48
    }
   ],
-  "hoursToKickoff": 2.05,
-  "capturedAt": "2026-10-02T00:56:51.261391+00:00",
+  "hoursToKickoff": 1.55,
+  "capturedAt": "2026-10-02T01:26:51.306719+00:00",
   "koTs": "2026-10-02T03:00:00+00:00",
   "cond": "0x104da8504024d06a2c9a73d1b3587a685304d659dc91cae6126e4c1a42ea30f0",
   "frage": "Jingshan: Yuta Shimizu vs Bernard Tomic",
   "tokens": {
    "Yuta Shimizu": "91982935136510384393667753464923153886492548922868576966199199892131259117596",
    "Bernard Tomic": "48858864027115877029218405644049595496819527439964398458621678787285208494399"
-  },
-  "book": {
-   "side": "Yuta Shimizu",
-   "bid": 0.59,
-   "ask": 0.6,
-   "spreadC": 1.0,
-   "spreadPct": 1.67,
-   "bids": [
-    [
-     0.59,
-     2
-    ],
-    [
-     0.57,
-     2057
-    ],
-    [
-     0.56,
-     217
-    ],
-    [
-     0.55,
-     549
-    ],
-    [
-     0.54,
-     514
-    ],
-    [
-     0.53,
-     903
-    ]
-   ],
-   "asks": [
-    [
-     0.6,
-     5
-    ],
-    [
-     0.62,
-     522
-    ],
-    [
-     0.63,
-     829
-    ],
-    [
-     0.64,
-     2115
-    ],
-    [
-     0.65,
-     1944
-    ],
-    [
-     0.66,
-     1411
-    ]
-   ]
-  },
-  "trades": [
-   {
-    "wallet": "0xa0f21e6d351baa9185716b5c00c2925ed9621848",
-    "action": "BUY",
-    "side": "Bernard Tomic",
-    "price": 0.45,
-    "usd": 401,
-    "ts": 1790889525
-   },
-   {
-    "wallet": "0xa0f21e6d351baa9185716b5c00c2925ed9621848",
-    "action": "BUY",
-    "side": "Bernard Tomic",
-    "price": 0.43,
-    "usd": 860,
-    "ts": 1790889522
-   }
-  ]
+  }
  },
  "wta-yuan-andreev-2026-10-01": {
   "shares": {
-   "Yue Yuan": 1545.9894735900002,
-   "Mirra Andreeva": 16642.569529785
+   "Yue Yuan": 1364.914810425,
+   "Mirra Andreeva": 16834.401769199998
   },
   "prices": {
-   "Yue Yuan": 0.085,
-   "Mirra Andreeva": 0.915
+   "Yue Yuan": 0.075,
+   "Mirra Andreeva": 0.925
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -567940,83 +567944,88 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 10159,
+  "totalUsd": 18841,
   "whales": [
    {
     "wallet": "0x55f544a537f6b9f50a8d27e662c250e93418e2a0",
     "side": "Mirra Andreeva",
-    "usd": 7927
+    "usd": 8013
    },
    {
     "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
     "side": "Mirra Andreeva",
-    "usd": 3032
+    "usd": 3065
    },
    {
     "wallet": "0x2f4beded4082ff033f1c0b7efbde9962220def55",
     "side": "Mirra Andreeva",
-    "usd": 1968
+    "usd": 1989
    },
    {
     "wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
     "side": "Mirra Andreeva",
-    "usd": 1418
+    "usd": 1434
    },
    {
     "wallet": "0x06a22231b2d42f8704e85ef44c2dda278d9f8015",
     "side": "Mirra Andreeva",
-    "usd": 690
+    "usd": 697
    },
    {
     "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
     "side": "Mirra Andreeva",
-    "usd": 503,
+    "usd": 509,
     "avgPrice": 0.9136
    },
    {
     "wallet": "0xca3f77cb090cf7cbcf48bcf865e8f27364418078",
     "side": "Mirra Andreeva",
-    "usd": 458
+    "usd": 462
    },
    {
     "wallet": "0x01c78f8873c0c86d6b6b92ff627e3802237ee995",
     "side": "Yue Yuan",
-    "usd": 344
+    "usd": 304
    },
    {
     "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
     "side": "Yue Yuan",
-    "usd": 297
+    "usd": 262
    },
    {
     "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
     "side": "Yue Yuan",
-    "usd": 275
+    "usd": 243
    },
    {
     "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
     "side": "Yue Yuan",
-    "usd": 162
+    "usd": 144
+   },
+   {
+    "wallet": "0x5cc82304fd1a7ae5669029dd83262892574fa0e4",
+    "side": "Mirra Andreeva",
+    "usd": 139
    },
    {
     "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
     "side": "Yue Yuan",
-    "usd": 149
+    "usd": 131
    },
    {
     "wallet": "0x23b4b60ecfbc14fce086ad7410c5297d5ae048da",
     "side": "Yue Yuan",
-    "usd": 90
+    "usd": 80
    },
    {
     "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
     "side": "Yue Yuan",
-    "usd": 71
+    "usd": 63
    },
    {
     "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
     "side": "Mirra Andreeva",
-    "usd": 57
+    "usd": 58
    },
    {
     "wallet": "0xdc4f58a48ed4467743609fdce11eea483c759804",
@@ -568026,27 +568035,27 @@
    {
     "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
     "side": "Yue Yuan",
-    "usd": 40
+    "usd": 35
    },
    {
     "wallet": "0x90fe101c0cb837fbf3d350355f8bc00eba1bb7b8",
     "side": "Yue Yuan",
-    "usd": 36
+    "usd": 32
    },
    {
     "wallet": "0x98db8cca55c32b24cfb414b5b43d273f4e1fdd17",
     "side": "Mirra Andreeva",
-    "usd": 27
-   },
-   {
-    "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
-    "side": "Yue Yuan",
-    "usd": 26
+    "usd": 28
    },
    {
     "wallet": "0xa2fc0448a1dce9258ebb91b2f3abcddb98a0b1b4",
     "side": "Mirra Andreeva",
-    "usd": 24
+    "usd": 25
+   },
+   {
+    "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
+    "side": "Yue Yuan",
+    "usd": 22
    },
    {
     "wallet": "0xbfd770b7ff07fb2ece41b0e7c593db65a84cf0bf",
@@ -568062,7 +568071,7 @@
    {
     "wallet": "0x952718df56ab7955e0a0121a9e47fa8f52b6888b",
     "side": "Yue Yuan",
-    "usd": 10
+    "usd": 9
    },
    {
     "wallet": "0x96d61a3a181c250f89875e1ae0e349c609ef5892",
@@ -568070,19 +568079,19 @@
     "usd": 7
    },
    {
-    "wallet": "0xd619b68e64f256f8ddd185b261c8679eacf0c461",
-    "side": "Yue Yuan",
-    "usd": 5
-   },
-   {
     "wallet": "0x2da325618fff9b2ffe64a49253fbcae8c7b9f258",
     "side": "Mirra Andreeva",
     "usd": 5
    },
    {
+    "wallet": "0xd619b68e64f256f8ddd185b261c8679eacf0c461",
+    "side": "Yue Yuan",
+    "usd": 4
+   },
+   {
     "wallet": "0xe954ddb021c19495f1c556f59dadbd1494821ef1",
     "side": "Yue Yuan",
-    "usd": 3
+    "usd": 2
    },
    {
     "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
@@ -568138,15 +568147,10 @@
     "wallet": "0x521070c99db06e54af5e8e4a91d6858decdfbd53",
     "side": "Yue Yuan",
     "usd": 0
-   },
-   {
-    "wallet": "0xb6cc21e7d5a8895556b3a13c659a3a6cc9353d52",
-    "side": "Yue Yuan",
-    "usd": 0
    }
   ],
-  "hoursToKickoff": 2.05,
-  "capturedAt": "2026-10-02T00:56:51.261391+00:00",
+  "hoursToKickoff": 1.55,
+  "capturedAt": "2026-10-02T01:26:51.306719+00:00",
   "koTs": "2026-10-02T03:00:00+00:00",
   "cond": "0xf4e9758b7935c39c406d9c64f650d2218ea61c39ed3a0560bba321867d22e77d",
   "frage": "China Open: Yue Yuan vs Mirra Andreeva",
@@ -568163,19 +568167,19 @@
    "bids": [
     [
      0.92,
-     5
+     15627
     ],
     [
      0.91,
-     18170
+     2395
     ],
     [
      0.9,
-     972
+     1161
     ],
     [
      0.89,
-     548
+     523
     ],
     [
      0.88,
@@ -568189,27 +568193,27 @@
    "asks": [
     [
      0.93,
-     35097
+     34519
     ],
     [
      0.94,
-     42999
+     43624
     ],
     [
      0.95,
-     37646
+     37448
     ],
     [
      0.96,
-     21011
+     21211
     ],
     [
      0.97,
-     10892
+     10899
     ],
     [
      0.98,
-     28508
+     28014
     ]
    ]
   },
@@ -568258,12 +568262,12 @@
  },
  "lol-tpe-kor-2026-10-01": {
   "shares": {
-   "Chinese Taipei": 508.16917942999993,
-   "South Korea": 45689.02358128902
+   "Chinese Taipei": 619.2159673035001,
+   "South Korea": 58353.72792770102
   },
   "prices": {
-   "Chinese Taipei": 0.011,
-   "South Korea": 0.989
+   "Chinese Taipei": 0.0105,
+   "South Korea": 0.9895
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -568271,47 +568275,57 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 46443,
+  "totalUsd": 53606,
   "whales": [
    {
     "wallet": "0xbd43ee245b37222e44e5d444e51325e483a4dbba",
     "side": "South Korea",
-    "usd": 17169
+    "usd": 17178
    },
    {
     "wallet": "0xd991f59a083d4f3090393846b0ef362d5a90c161",
     "side": "South Korea",
-    "usd": 9891
+    "usd": 9896
+   },
+   {
+    "wallet": "0x24ded84d901a743cfee095f8082b0f9f647183cb",
+    "side": "South Korea",
+    "usd": 8510
+   },
+   {
+    "wallet": "0x7635ed586336bc7246b39cd416ed17e4858963f6",
+    "side": "South Korea",
+    "usd": 3958
    },
    {
     "wallet": "0x8548f0fae7636fc17ca6bb2cbae39cbd4fbce4c1",
     "side": "South Korea",
-    "usd": 3037
+    "usd": 3038
    },
    {
     "wallet": "0xe49da39e921cdbda393b075e15abb72ea663c3db",
     "side": "South Korea",
-    "usd": 2127
+    "usd": 2129
    },
    {
     "wallet": "0x0fc50c15e6ffd6f4061ca51d8a70cb0563d8e3b9",
     "side": "South Korea",
-    "usd": 1998
+    "usd": 1999
    },
    {
     "wallet": "0xb175fe652b89b8775ff57b900d9575b312aa0396",
     "side": "South Korea",
-    "usd": 1803
+    "usd": 1804
    },
    {
     "wallet": "0x1becef10f6233ab517dc2e9fa7a1223bdf13df10",
     "side": "South Korea",
-    "usd": 1193
+    "usd": 1194
    },
    {
     "wallet": "0x63a1a5c150c9065e33fc582f7e77710448e00b0c",
     "side": "South Korea",
-    "usd": 1103
+    "usd": 1104
    },
    {
     "wallet": "0x06a22231b2d42f8704e85ef44c2dda278d9f8015",
@@ -568321,7 +568335,7 @@
    {
     "wallet": "0xb489f3aa0dafd8547c65e03a6c03ac7596944944",
     "side": "South Korea",
-    "usd": 1073
+    "usd": 1074
    },
    {
     "wallet": "0x00cb3eedc099e8c59b957beceb55205669e7e987",
@@ -568329,30 +568343,30 @@
     "usd": 805
    },
    {
-    "wallet": "0xb4659e243df36e4f4e404faf46a86dba229e0d8d",
-    "side": "South Korea",
-    "usd": 534
-   },
-   {
     "wallet": "0xfd144099a983b0cfdb88d0b89e0ca049fae22267",
     "side": "Chinese Taipei",
-    "usd": 110
+    "usd": 105
+   },
+   {
+    "wallet": "0x9c42dd4f90d3ee8c68a61f2f149aad23eb3bb792",
+    "side": "Chinese Taipei",
+    "usd": 75
    },
    {
     "wallet": "0x8488ef25f79c0cf2ffdff307973b2ac10464588c",
     "side": "Chinese Taipei",
-    "usd": 59
+    "usd": 56
    },
    {
     "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
     "side": "Chinese Taipei",
-    "usd": 46,
+    "usd": 44,
     "avgPrice": 0.0119
    },
    {
     "wallet": "0x9ffa4f9c3ba1b7e9a13fd6bd202904990a52864c",
     "side": "Chinese Taipei",
-    "usd": 12,
+    "usd": 11,
     "avgPrice": 0.0219
    },
    {
@@ -568387,15 +568401,140 @@
     "usd": 0
    }
   ],
-  "hoursToKickoff": 2.05,
-  "capturedAt": "2026-10-02T00:56:51.261391+00:00",
+  "hoursToKickoff": 1.55,
+  "capturedAt": "2026-10-02T01:26:51.306719+00:00",
   "koTs": "2026-10-02T03:00:00+00:00",
   "cond": "0x3a2c558ba6c14be9355425273749b934890b14d0874c1054b2c7dbe0eabc72e0",
   "frage": "LoL: Chinese Taipei vs South Korea (BO5) - Asian Games Playoffs",
   "tokens": {
    "Chinese Taipei": "13635613029495259447941586894424037146460343256891870428140444076197720634953",
    "South Korea": "45817539564834113097351426620592316232381196831775901821165589638932784925601"
-  }
+  },
+  "book": {
+   "side": "South Korea",
+   "bid": 0.987,
+   "ask": 0.989,
+   "spreadC": 0.2,
+   "spreadPct": 0.2,
+   "bids": [
+    [
+     0.987,
+     5163
+    ],
+    [
+     0.986,
+     10
+    ],
+    [
+     0.985,
+     10
+    ],
+    [
+     0.984,
+     10
+    ],
+    [
+     0.983,
+     10
+    ],
+    [
+     0.977,
+     6
+    ]
+   ],
+   "asks": [
+    [
+     0.989,
+     80
+    ],
+    [
+     0.99,
+     4119
+    ],
+    [
+     0.991,
+     150
+    ],
+    [
+     0.993,
+     125
+    ],
+    [
+     0.994,
+     25
+    ],
+    [
+     0.995,
+     1198
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x7635ed586336bc7246b39cd416ed17e4858963f6",
+    "action": "BUY",
+    "side": "South Korea",
+    "price": 0.99,
+    "usd": 3960,
+    "ts": 1790903847
+   },
+   {
+    "wallet": "0x0fc50c15e6ffd6f4061ca51d8a70cb0563d8e3b9",
+    "action": "BUY",
+    "side": "South Korea",
+    "price": 0.99,
+    "usd": 2000,
+    "ts": 1790901833
+   },
+   {
+    "wallet": "0x00cb3eedc099e8c59b957beceb55205669e7e987",
+    "action": "BUY",
+    "side": "South Korea",
+    "price": 0.9841,
+    "usd": 801,
+    "ts": 1790897738
+   },
+   {
+    "wallet": "0xbd43ee245b37222e44e5d444e51325e483a4dbba",
+    "action": "BUY",
+    "side": "South Korea",
+    "price": 0.9901,
+    "usd": 17187,
+    "ts": 1790895647
+   },
+   {
+    "wallet": "0xb175fe652b89b8775ff57b900d9575b312aa0396",
+    "action": "BUY",
+    "side": "South Korea",
+    "price": 0.9839,
+    "usd": 800,
+    "ts": 1790894378
+   },
+   {
+    "wallet": "0x1fd06adbea5290548df0637cf82cce686b78c6a7",
+    "action": "BUY",
+    "side": "South Korea",
+    "price": 0.99,
+    "usd": 500,
+    "ts": 1790889753
+   },
+   {
+    "wallet": "0x06a22231b2d42f8704e85ef44c2dda278d9f8015",
+    "action": "BUY",
+    "side": "South Korea",
+    "price": 0.99,
+    "usd": 1100,
+    "ts": 1790889674
+   },
+   {
+    "wallet": "0x8548f0fae7636fc17ca6bb2cbae39cbd4fbce4c1",
+    "action": "BUY",
+    "side": "South Korea",
+    "price": 0.99,
+    "usd": 1980,
+    "ts": 1790887956
+   }
+  ]
  },
  "wta-fruhvir-samsono-2026-10-01": {
   "shares": {
@@ -568582,8 +568721,8 @@
     "usd": 1
    }
   ],
-  "hoursToKickoff": 2.05,
-  "capturedAt": "2026-10-02T00:56:51.261391+00:00",
+  "hoursToKickoff": 1.55,
+  "capturedAt": "2026-10-02T01:26:51.306719+00:00",
   "koTs": "2026-10-02T03:00:00+00:00",
   "cond": "0x71fc7aa2ecf7a1e1660dd92383e4434a0986065e7aa841aa90ac0337a5616edd",
   "frage": "China Open: Linda Fruhvirtova vs Liudmila Samsonova",
@@ -568697,8 +568836,7 @@
    {
     "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
     "side": "Federico Cina",
-    "usd": 55,
-    "avgPrice": 0.7037
+    "usd": 55
    },
    {
     "wallet": "0x5e020e19bc4cc2cd24ab9b406604ee9df02ab178",
@@ -568728,8 +568866,7 @@
    {
     "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
     "side": "Federico Cina",
-    "usd": 32,
-    "avgPrice": 0.6799
+    "usd": 32
    },
    {
     "wallet": "0x5d40576be2e9c61d283f4fd80d7a5ccf2331ba95",
@@ -568815,11 +568952,12 @@
    {
     "wallet": "0xb4f978be63cdf75554b0b46a4262a6db597cc9a7",
     "side": "Elias Ymer",
-    "usd": 3
+    "usd": 3,
+    "avgPrice": 0.3299
    }
   ],
-  "hoursToKickoff": 2.05,
-  "capturedAt": "2026-10-02T00:56:51.261391+00:00",
+  "hoursToKickoff": 1.55,
+  "capturedAt": "2026-10-02T01:26:51.306719+00:00",
   "koTs": "2026-10-02T03:00:00+00:00",
   "cond": "0x335318b0199109cc88c1618c411eae99e8a3011721cedd5043bde0b0d21182a4",
   "frage": "Jingshan: Elias Ymer vs Federico Cina",
@@ -569020,8 +569158,8 @@
     "usd": 1
    }
   ],
-  "hoursToKickoff": 2.05,
-  "capturedAt": "2026-10-02T00:56:51.261391+00:00",
+  "hoursToKickoff": 1.55,
+  "capturedAt": "2026-10-02T01:26:51.306719+00:00",
   "koTs": "2026-10-02T03:00:00+00:00",
   "cond": "0x857e40b35c88afd4c02ea256742364cec0914b862734187cb60c5af273108383",
   "frage": "China Open: Janice Tjen vs Diana Shnaider",
@@ -569032,12 +569170,12 @@
  },
  "atp-vachero-tsitsip-2026-10-01": {
   "shares": {
-   "Valentin Vacherot": 13353.057756055001,
-   "Stefanos Tsitsipas": 20452.150713555
+   "Valentin Vacherot": 14543.790358020005,
+   "Stefanos Tsitsipas": 23232.284716035014
   },
   "prices": {
-   "Valentin Vacherot": 0.395,
-   "Stefanos Tsitsipas": 0.605
+   "Valentin Vacherot": 0.385,
+   "Stefanos Tsitsipas": 0.615
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -569045,162 +569183,168 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 49719,
+  "totalUsd": 51550,
   "whales": [
    {
     "wallet": "0xfd4fb07f091e6a6d212f6e4876bd2ebc91bca4d3",
     "side": "Stefanos Tsitsipas",
-    "usd": 9547
+    "usd": 9704
    },
    {
-    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
-    "side": "Valentin Vacherot",
-    "usd": 2363
-   },
-   {
-    "wallet": "0xf5a3504ad3a8b079974620b3aa4fcca3f7579e12",
+    "wallet": "0x0353aaf82abbd3e69c00059df0a825bc198fc2ff",
     "side": "Stefanos Tsitsipas",
-    "usd": 2017
-   },
-   {
-    "wallet": "0x620b63c93967e79585d903072f5fe98fb2512e9f",
-    "side": "Valentin Vacherot",
-    "usd": 1975
+    "usd": 4114
    },
    {
     "wallet": "0xe5241830e8876c115d7dc8311ad9f43d85fdd34f",
     "side": "Valentin Vacherot",
-    "usd": 1912
+    "usd": 2502
    },
    {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
     "side": "Valentin Vacherot",
-    "usd": 1659,
-    "avgPrice": 0.3966
+    "usd": 2303
+   },
+   {
+    "wallet": "0xf5a3504ad3a8b079974620b3aa4fcca3f7579e12",
+    "side": "Stefanos Tsitsipas",
+    "usd": 2050
+   },
+   {
+    "wallet": "0x620b63c93967e79585d903072f5fe98fb2512e9f",
+    "side": "Valentin Vacherot",
+    "usd": 1925
    },
    {
     "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
     "side": "Valentin Vacherot",
-    "usd": 1213
+    "usd": 1182
    },
    {
-    "wallet": "0x0811586db1ad9d8d7e0945f6e4139cea8be85d31",
-    "side": "Stefanos Tsitsipas",
-    "usd": 1107
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Valentin Vacherot",
+    "usd": 954,
+    "avgPrice": 0.3966
    },
    {
     "wallet": "0xb00cf07e6fa25034175f7da649524c23b08fdfa2",
     "side": "Valentin Vacherot",
-    "usd": 945
+    "usd": 921
+   },
+   {
+    "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
+    "side": "Valentin Vacherot",
+    "usd": 777
    },
    {
     "wallet": "0xafe65d1671a61dfaab2b463257450ec7f1fe8192",
     "side": "Stefanos Tsitsipas",
-    "usd": 605
+    "usd": 615
    },
    {
     "wallet": "0x9b11866433281ade9f2811dbde8acdefc45f5375",
     "side": "Stefanos Tsitsipas",
-    "usd": 604
+    "usd": 614,
+    "avgPrice": 0.6
    },
    {
     "wallet": "0x5331121e9f2f206d8c06ae6235761b1a3f8d3672",
     "side": "Stefanos Tsitsipas",
-    "usd": 590,
+    "usd": 600,
     "avgPrice": 0.6099
-   },
-   {
-    "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
-    "side": "Stefanos Tsitsipas",
-    "usd": 511
    },
    {
     "wallet": "0xb767acca4b6c04da69b5042c7b5660b99932d848",
     "side": "Stefanos Tsitsipas",
-    "usd": 499
+    "usd": 507
    },
    {
     "wallet": "0x545d337df3962904469b6bb540c74be3a5d6c122",
     "side": "Valentin Vacherot",
-    "usd": 494
+    "usd": 481
    },
    {
     "wallet": "0xdeff55f3132a313985035c34539e94da7b9178f8",
     "side": "Stefanos Tsitsipas",
-    "usd": 468
+    "usd": 476
    },
    {
     "wallet": "0xd7eff32775e8a29761ac5d8cb6c19f9c65855de1",
     "side": "Stefanos Tsitsipas",
-    "usd": 435
+    "usd": 443
+   },
+   {
+    "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
+    "side": "Valentin Vacherot",
+    "usd": 353
+   },
+   {
+    "wallet": "0xe8c4d68aff65b38cac46987b9b65e01eb47d395d",
+    "side": "Valentin Vacherot",
+    "usd": 308
    },
    {
     "wallet": "0xfa011919b3ce3222620052757ee0f0c66c41f0a7",
     "side": "Stefanos Tsitsipas",
-    "usd": 302
-   },
-   {
-    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
-    "side": "Valentin Vacherot",
-    "usd": 296
+    "usd": 308
    },
    {
     "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
     "side": "Valentin Vacherot",
-    "usd": 230,
-    "avgPrice": 0.3965
+    "usd": 289,
+    "avgPrice": 0.3951
+   },
+   {
+    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
+    "side": "Valentin Vacherot",
+    "usd": 289
    },
    {
     "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
     "side": "Valentin Vacherot",
-    "usd": 230
+    "usd": 224
    },
    {
     "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
     "side": "Stefanos Tsitsipas",
-    "usd": 198,
+    "usd": 202,
     "avgPrice": 0.5961
    },
    {
     "wallet": "0x7547479d43f4b52d892a6f2254050eea50edd158",
     "side": "Valentin Vacherot",
-    "usd": 177
+    "usd": 172
    },
    {
     "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
     "side": "Stefanos Tsitsipas",
-    "usd": 146
-   },
-   {
-    "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
-    "side": "Valentin Vacherot",
-    "usd": 145
+    "usd": 148
    },
    {
     "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
     "side": "Stefanos Tsitsipas",
-    "usd": 144
+    "usd": 147
+   },
+   {
+    "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
+    "side": "Valentin Vacherot",
+    "usd": 141
+   },
+   {
+    "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
+    "side": "Valentin Vacherot",
+    "usd": 116
    },
    {
     "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
     "side": "Valentin Vacherot",
-    "usd": 114,
+    "usd": 111,
     "avgPrice": 0.5
    },
    {
     "wallet": "0xa772e2ca9f119162d03330f3e66c0556a2068686",
     "side": "Valentin Vacherot",
-    "usd": 94
-   },
-   {
-    "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
-    "side": "Valentin Vacherot",
-    "usd": 78
-   },
-   {
-    "wallet": "0x17d97684d80863e07bc95d1e9f7c1c1dbec884af",
-    "side": "Stefanos Tsitsipas",
-    "usd": 50
+    "usd": 91
    },
    {
     "wallet": "0x18617ddf82e34b96963a9afc8fdae202dd88408d",
@@ -569208,59 +569352,97 @@
     "usd": 41
    },
    {
-    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
-    "side": "Valentin Vacherot",
-    "usd": 40
-   },
-   {
     "wallet": "0x06a9865f05e5f379840e6df4feadc98892571a49",
     "side": "Stefanos Tsitsipas",
-    "usd": 40
+    "usd": 41
+   },
+   {
+    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
+    "side": "Valentin Vacherot",
+    "usd": 38
    },
    {
     "wallet": "0x01c78f8873c0c86d6b6b92ff627e3802237ee995",
     "side": "Valentin Vacherot",
-    "usd": 39
+    "usd": 38
    },
    {
     "wallet": "0x2396babfc88a7a7dcc0390262ab747d7cbad9485",
     "side": "Valentin Vacherot",
-    "usd": 39
+    "usd": 38
    },
    {
     "wallet": "0x35e701f088b6ef25fff6b902769c1cd8b85f8331",
     "side": "Valentin Vacherot",
-    "usd": 20
+    "usd": 19
    },
    {
-    "wallet": "0xdc4f58a48ed4467743609fdce11eea483c759804",
-    "side": "Valentin Vacherot",
-    "usd": 14
+    "wallet": "0xb2da92d3584c60037dc9cc8942a9f9677bbcce6a",
+    "side": "Stefanos Tsitsipas",
+    "usd": 13
+   },
+   {
+    "wallet": "0x147c2760baa011fdcd0d02ea0f610ffb0fd92540",
+    "side": "Stefanos Tsitsipas",
+    "usd": 12
    },
    {
     "wallet": "0xf9706baa6dd084f1f0c3b88602a543d0c313f7f6",
     "side": "Valentin Vacherot",
     "usd": 10
-   },
-   {
-    "wallet": "0xac4c55b85a1dcacb638bd63ea4eeb8d8a9352200",
-    "side": "Stefanos Tsitsipas",
-    "usd": 10
-   },
-   {
-    "wallet": "0xb2da92d3584c60037dc9cc8942a9f9677bbcce6a",
-    "side": "Stefanos Tsitsipas",
-    "usd": 9
    }
   ],
-  "hoursToKickoff": 2.55,
-  "capturedAt": "2026-10-02T00:56:51.261391+00:00",
+  "hoursToKickoff": 2.05,
+  "capturedAt": "2026-10-02T01:26:51.306719+00:00",
   "koTs": "2026-10-02T03:30:00+00:00",
   "cond": "0xfd84f2c317ca0b2d49c312d46024607b0cd41d8be87482b63a2f258cdc5c4e5c",
   "frage": "Japan Open Tennis Championships: Valentin Vacherot vs Stefanos Tsitsipas",
   "tokens": {
    "Valentin Vacherot": "16769438334905062976651578090841199678026279534806011971381740985049905342313",
    "Stefanos Tsitsipas": "53296333862320124611561910579105577129590876143472383011973646692423753715982"
+  }
+ },
+ "itf-matsud1-ogura1-2026-10-02": {
+  "shares": {
+   "Ryuki Matsuda": 9.765625,
+   "Kosuke Ogura": 5.859375
+  },
+  "prices": {
+   "Ryuki Matsuda": 0.625,
+   "Kosuke Ogura": 0.375
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 9660,
+  "whales": [
+   {
+    "wallet": "0xe69cdcba9b2b870d8b4e4f1dcf2a8761f8fd7f9b",
+    "side": "Ryuki Matsuda",
+    "usd": 10
+   },
+   {
+    "wallet": "0x7de38fcc0efdd95a4ee3759b94d088834848a410",
+    "side": "Kosuke Ogura",
+    "usd": 4
+   },
+   {
+    "wallet": "0xe5a25a5fda2487292ef951b63b69d73ed2d15f4c",
+    "side": "Kosuke Ogura",
+    "usd": 2
+   }
+  ],
+  "hoursToKickoff": 0.55,
+  "capturedAt": "2026-10-02T01:26:51.306719+00:00",
+  "koTs": "2026-10-02T02:00:00+00:00",
+  "cond": "0xb69eb83222b4d6974e487672ac26176c81691dfaebaeb8b6dc6085b732069faa",
+  "frage": "M15 Luan: Ryuki Matsuda vs Kosuke Ogura",
+  "tokens": {
+   "Ryuki Matsuda": "8412725570618778996887466786427424090491362086774181137251036328563705342205",
+   "Kosuke Ogura": "13917370062875407496524106782794324186208768639734310137005279550600542357879"
   }
  }
 }
