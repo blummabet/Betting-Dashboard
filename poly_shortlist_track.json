@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-02T04:57:45.983642+00:00",
+ "updatedAt": "2026-10-02T05:57:03.519430+00:00",
  "stake": 10.0,
  "expired": 0,
  "condDrift": 0,
@@ -293,37 +293,6 @@
    "closeRefTs": "2026-10-01T23:57:12.537117+00:00",
    "closeQuelle": "pfad"
   },
-  "wta-yuan-andreev-2026-10-01|Mirra Andreeva": {
-   "key": "wta-yuan-andreev-2026-10-01",
-   "side": "Mirra Andreeva",
-   "verdict": "BET",
-   "conv": 6,
-   "league": "TENNIS",
-   "cat": "Tennis",
-   "entryPrice": 0.925,
-   "firstTs": "2026-10-02T01:27:16.361261+00:00",
-   "lastPrice": 0.925,
-   "lastTs": "2026-10-02T04:57:45.983642+00:00",
-   "htkAtEntry": 1.5455030555555556,
-   "public": true,
-   "ohneWallet": false,
-   "reasons": [
-    "großes Geld auf Mirra Andreeva (93%) → $19K",
-    "🔥 scharfe Wallets (2 Wallets, zusammen 33/37, 89% · +$122K)"
-   ],
-   "signals": [
-    "money",
-    "sharp"
-   ],
-   "stake": 10.0,
-   "ev": "2026-09-01",
-   "movePreEntryPP": 0.0,
-   "cond": "0xf4e9758b7935c39c406d9c64f650d2218ea61c39ed3a0560bba321867d22e77d",
-   "frage": "China Open: Yue Yuan vs Mirra Andreeva",
-   "closeRef": 0.925,
-   "closeRefTs": "2026-10-02T04:57:44.602504+00:00",
-   "closeQuelle": "pfad"
-  },
   "conl-nca-cri-2026-10-01|Costa Rica": {
    "key": "conl-nca-cri-2026-10-01",
    "side": "Costa Rica",
@@ -334,7 +303,7 @@
    "entryPrice": 0.495,
    "firstTs": "2026-10-02T02:57:41.945140+00:00",
    "lastPrice": 0.785,
-   "lastTs": "2026-10-02T04:57:45.983642+00:00",
+   "lastTs": "2026-10-02T05:57:03.519430+00:00",
    "htkAtEntry": -0.9616075,
    "public": false,
    "ohneWallet": true,
@@ -363,7 +332,7 @@
    "entryPrice": 0.715,
    "firstTs": "2026-10-02T04:57:45.983642+00:00",
    "lastPrice": 0.525,
-   "lastTs": "2026-10-02T04:57:45.983642+00:00",
+   "lastTs": "2026-10-02T05:57:03.519430+00:00",
    "htkAtEntry": -0.4627280555555556,
    "public": false,
    "ohneWallet": true,
@@ -382,6 +351,37 @@
    "cond": "0xf727b198e1039d28ed4f0b10964c25ce7820945116985f83b25a2800e9c4b2cb",
    "frage": "China Open: Dayana Yastremska vs Maja Chwalinska",
    "clvGrund": "live_eingestiegen"
+  },
+  "atp-medvede-busta-2026-09-30|Daniil Medvedev": {
+   "key": "atp-medvede-busta-2026-09-30",
+   "side": "Daniil Medvedev",
+   "verdict": "BET",
+   "conv": 6,
+   "league": "TENNIS",
+   "cat": "Tennis",
+   "entryPrice": 0.815,
+   "firstTs": "2026-10-02T05:51:28.934663+00:00",
+   "lastPrice": 0.815,
+   "lastTs": "2026-10-02T05:57:03.519430+00:00",
+   "htkAtEntry": 1.1420033333333333,
+   "public": false,
+   "ohneWallet": true,
+   "reasons": [
+    "großes Geld auf Daniil Medvedev (81%) → $24K",
+    "🔥 scharfe Wallets (faktisch belegt) (2 Wallets, zusammen 37/54, 69% · -$273K) · zählt 95%"
+   ],
+   "signals": [
+    "money",
+    "sharp"
+   ],
+   "stake": 10.0,
+   "ev": "2026-09-01",
+   "movePreEntryPP": 1.0,
+   "cond": "0x0deddbc2442cb022ca4e6094f177f483886b2c65a61c42c773834a763d79b25d",
+   "frage": "China Open: Daniil Medvedev vs Pablo Carreno Busta",
+   "closeRef": 0.815,
+   "closeRefTs": "2026-10-02T05:56:56.421015+00:00",
+   "closeQuelle": "close"
   }
  },
  "settled": [
@@ -40095,33 +40095,62 @@
    "settledTs": "2026-10-02T04:27:54.812009+00:00",
    "resolvedTs": "2026-10-02T04:27:53.652610+00:00",
    "ausEndstand": null
+  },
+  {
+   "key": "wta-yuan-andreev-2026-10-01",
+   "side": "Mirra Andreeva",
+   "verdict": "BET",
+   "conv": 6,
+   "league": "TENNIS",
+   "cat": "Tennis",
+   "entryPrice": 0.925,
+   "closePrice": 0.925,
+   "closeRefTs": "2026-10-02T05:27:38.270863+00:00",
+   "closeQuelle": "pfad",
+   "result": "win",
+   "winner": "Mirra Andreeva",
+   "pnl": 0.81,
+   "clvPP": 0.0,
+   "stake": 10.0,
+   "public": true,
+   "ohneWallet": false,
+   "signals": [
+    "money",
+    "sharp"
+   ],
+   "firstTs": "2026-10-02T01:27:16.361261+00:00",
+   "ev": "2026-09-01",
+   "htkAtEntry": 1.5455030555555556,
+   "settledTs": "2026-10-02T05:51:28.934663+00:00",
+   "resolvedTs": "2026-10-02T05:51:26.678928+00:00",
+   "ausEndstand": null
   }
  ],
  "agg": {
   "all": {
-   "n": 1446,
-   "wins": 941,
-   "hit": 0.6508,
-   "pnl": -71.63,
-   "stake": 14460.0,
-   "roi": -0.005,
+   "n": 1447,
+   "wins": 942,
+   "hit": 0.651,
+   "pnl": -70.82,
+   "stake": 14470.0,
+   "roi": -0.0049,
    "roiUg": -0.0395,
    "belegt": false,
    "clvAvg": -0.19,
-   "clvN": 656,
+   "clvN": 657,
    "clvUg": -0.45
   },
   "public": {
-   "n": 318,
-   "wins": 227,
-   "hit": 0.7138,
-   "pnl": 57.67,
-   "stake": 3180.0,
-   "roi": 0.0181,
-   "roiUg": -0.0441,
+   "n": 319,
+   "wins": 228,
+   "hit": 0.7147,
+   "pnl": 58.48,
+   "stake": 3190.0,
+   "roi": 0.0183,
+   "roiUg": -0.0437,
    "belegt": false,
    "clvAvg": -0.12,
-   "clvN": 134,
+   "clvN": 135,
    "clvUg": -0.55
   },
   "publicBlocked": {
@@ -40151,25 +40180,25 @@
    "clvUg": -0.89
   },
   "walletTor": {
-   "nMit": 318,
+   "nMit": 319,
    "nOhne": 248,
-   "diffPP": -0.43,
-   "lo": -10.82,
-   "hi": 10.02,
+   "diffPP": -0.41,
+   "lo": -11.1,
+   "hi": 10.01,
    "urteil": "nicht entschieden",
    "grund": "das Band schliesst die Null ein"
   },
   "bettable": {
-   "n": 1343,
-   "wins": 891,
-   "hit": 0.6634,
-   "pnl": 218.69,
-   "stake": 13430.0,
+   "n": 1344,
+   "wins": 892,
+   "hit": 0.6637,
+   "pnl": 219.5,
+   "stake": 13440.0,
    "roi": 0.0163,
-   "roiUg": -0.0196,
+   "roiUg": -0.0195,
    "belegt": false,
    "clvAvg": -0.17,
-   "clvN": 632,
+   "clvN": 633,
    "clvUg": -0.43
   },
   "blocked": {
@@ -40252,17 +40281,17 @@
     "clvUg": null
    },
    "Tennis": {
-    "n": 232,
-    "wins": 166,
-    "hit": 0.7155,
-    "pnl": -66.77,
-    "stake": 2320.0,
-    "roi": -0.0288,
-    "roiUg": -0.0966,
+    "n": 233,
+    "wins": 167,
+    "hit": 0.7167,
+    "pnl": -65.96,
+    "stake": 2330.0,
+    "roi": -0.0283,
+    "roiUg": -0.0959,
     "belegt": false,
     "clvAvg": -0.25,
-    "clvN": 106,
-    "clvUg": -1.17
+    "clvN": 107,
+    "clvUg": -1.15
    },
    "US-Sport": {
     "n": 76,
@@ -40332,16 +40361,16 @@
     "clvUg": -0.64
    },
    "6": {
-    "n": 549,
-    "wins": 364,
-    "hit": 0.663,
-    "pnl": 0.95,
-    "stake": 5490.0,
-    "roi": 0.0002,
-    "roiUg": -0.0529,
+    "n": 550,
+    "wins": 365,
+    "hit": 0.6636,
+    "pnl": 1.76,
+    "stake": 5500.0,
+    "roi": 0.0003,
+    "roiUg": -0.0526,
     "belegt": false,
     "clvAvg": -0.11,
-    "clvN": 291,
+    "clvN": 292,
     "clvUg": -0.53
    },
    "7": {
@@ -40399,16 +40428,16 @@
   },
   "byVerdict": {
    "BET": {
-    "n": 1446,
-    "wins": 941,
-    "hit": 0.6508,
-    "pnl": -71.63,
-    "stake": 14460.0,
-    "roi": -0.005,
+    "n": 1447,
+    "wins": 942,
+    "hit": 0.651,
+    "pnl": -70.82,
+    "stake": 14470.0,
+    "roi": -0.0049,
     "roiUg": -0.0395,
     "belegt": false,
     "clvAvg": -0.19,
-    "clvN": 656,
+    "clvN": 657,
     "clvUg": -0.45
    }
   },
@@ -40427,16 +40456,16 @@
     "clvUg": -0.24
    },
    "money": {
-    "n": 1305,
-    "wins": 869,
-    "hit": 0.6659,
-    "pnl": -36.11,
-    "stake": 13050.0,
-    "roi": -0.0028,
+    "n": 1306,
+    "wins": 870,
+    "hit": 0.6662,
+    "pnl": -35.3,
+    "stake": 13060.0,
+    "roi": -0.0027,
     "roiUg": -0.0369,
     "belegt": false,
     "clvAvg": -0.18,
-    "clvN": 627,
+    "clvN": 628,
     "clvUg": -0.45
    },
    "pinn": {
@@ -40453,16 +40482,16 @@
     "clvUg": null
    },
    "sharp": {
-    "n": 840,
-    "wins": 560,
-    "hit": 0.6667,
-    "pnl": -17.74,
-    "stake": 8400.0,
-    "roi": -0.0021,
-    "roiUg": -0.0469,
+    "n": 841,
+    "wins": 561,
+    "hit": 0.6671,
+    "pnl": -16.93,
+    "stake": 8410.0,
+    "roi": -0.002,
+    "roiUg": -0.0468,
     "belegt": false,
     "clvAvg": -0.29,
-    "clvN": 393,
+    "clvN": 394,
     "clvUg": -0.58
    },
    "steam": {
