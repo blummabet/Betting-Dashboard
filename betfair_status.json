@@ -76,10 +76,12 @@
       "id": "odds_zugang_lebt",
       "label": "Odds-Zugang lebt",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
-      "note": "Kontingent: 18082 verbraucht, 4981918 uebrig"
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "the-odds-api antwortet mit The read operation timed out — der Schluessel ist ungueltig/abgelaufen oder das Kontingent ist leer. Bis das steht, laufen alle Abrufe ins Leere."
+      ],
+      "note": "Kontingent: 18270 verbraucht, 4981730 uebrig · letzter Fehler: The read operation timed out"
     },
     {
       "id": "anker_namensabgleich",
@@ -176,6 +178,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 1,
-  "generatedAt": "2026-10-02T05:45:29.460113+00:00"
+  "nFail": 2,
+  "generatedAt": "2026-10-02T06:00:47.135555+00:00"
 }
