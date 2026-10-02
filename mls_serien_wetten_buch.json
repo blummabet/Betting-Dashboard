@@ -18,10 +18,13 @@
    "erstQuote": 1.18,
    "erstFair": 1.22,
    "erstGesehen": "2026-10-01T23:07:19.242139+00:00",
-   "status": "offen",
+   "status": "abgerechnet",
    "letztPct": 81.9,
    "letztQuote": 1.18,
-   "letztGesehen": "2026-10-01T23:07:19.242139+00:00"
+   "letztGesehen": "2026-10-01T23:07:19.242139+00:00",
+   "erfuellt": true,
+   "rendite": 0.18,
+   "abgerechnetAm": "2026-10-02T13:51:49.055663+00:00"
   },
   {
    "key": "1595:scored:2026-10-02",
@@ -41,10 +44,12 @@
    "erstQuote": null,
    "erstFair": null,
    "erstGesehen": "2026-10-01T23:07:19.242139+00:00",
-   "status": "offen",
+   "status": "abgerechnet",
    "letztPct": 76.0,
    "letztQuote": null,
-   "letztGesehen": "2026-10-01T23:07:19.242139+00:00"
+   "letztGesehen": "2026-10-01T23:07:19.242139+00:00",
+   "erfuellt": true,
+   "abgerechnetAm": "2026-10-02T13:51:49.055663+00:00"
   },
   {
    "key": "1611:scored:2026-10-02",
@@ -64,10 +69,12 @@
    "erstQuote": null,
    "erstFair": null,
    "erstGesehen": "2026-10-01T23:07:19.242139+00:00",
-   "status": "offen",
+   "status": "abgerechnet",
    "letztPct": 70.0,
    "letztQuote": null,
-   "letztGesehen": "2026-10-01T23:07:19.242139+00:00"
+   "letztGesehen": "2026-10-01T23:07:19.242139+00:00",
+   "erfuellt": true,
+   "abgerechnetAm": "2026-10-02T13:51:49.055663+00:00"
   },
   {
    "key": "1603:over25:2026-10-07",
@@ -90,7 +97,7 @@
    "status": "offen",
    "letztPct": 66.3,
    "letztQuote": 1.44,
-   "letztGesehen": "2026-10-01T23:07:19.242139+00:00"
+   "letztGesehen": "2026-10-02T13:51:49.055663+00:00"
   },
   {
    "key": "1603:scored:2026-10-07",
@@ -113,7 +120,7 @@
    "status": "offen",
    "letztPct": 65.0,
    "letztQuote": null,
-   "letztGesehen": "2026-10-01T23:07:19.242139+00:00"
+   "letztGesehen": "2026-10-02T13:51:49.055663+00:00"
   },
   {
    "key": "1595:cornersOver:2026-10-02",
@@ -133,10 +140,12 @@
    "erstQuote": null,
    "erstFair": null,
    "erstGesehen": "2026-10-01T23:07:19.242139+00:00",
-   "status": "offen",
+   "status": "unaufloesbar",
    "letztPct": 51.0,
    "letztQuote": null,
-   "letztGesehen": "2026-10-01T23:07:19.242139+00:00"
+   "letztGesehen": "2026-10-01T23:07:19.242139+00:00",
+   "erfuellt": null,
+   "abgerechnetAm": "2026-10-02T13:51:49.055663+00:00"
   },
   {
    "key": "1611:cards:2026-10-02",
@@ -156,49 +165,51 @@
    "erstQuote": null,
    "erstFair": null,
    "erstGesehen": "2026-10-01T23:07:19.242139+00:00",
-   "status": "offen",
+   "status": "unaufloesbar",
    "letztPct": 43.0,
    "letztQuote": null,
-   "letztGesehen": "2026-10-01T23:07:19.242139+00:00"
+   "letztGesehen": "2026-10-01T23:07:19.242139+00:00",
+   "erfuellt": null,
+   "abgerechnetAm": "2026-10-02T13:51:49.055663+00:00"
   }
  ],
  "bilanz": {
   "gesamt": {
-   "n": 0,
-   "treffer": 0,
-   "unaufloesbar": 0,
-   "offen": 7,
-   "trefferPct": null,
-   "erwartetPct": null,
-   "mitQuote": 0,
-   "roiPct": null,
+   "n": 3,
+   "treffer": 3,
+   "unaufloesbar": 2,
+   "offen": 2,
+   "trefferPct": 100.0,
+   "erwartetPct": 76.0,
+   "mitQuote": 1,
+   "roiPct": 18.0,
    "urteil": "sammelt",
-   "grund": "0 von 30 abgerechneten Wetten — darunter sagt der Vergleich nichts"
+   "grund": "3 von 30 abgerechneten Wetten — darunter sagt der Vergleich nichts"
   },
   "markt": {
-   "n": 0,
-   "treffer": 0,
+   "n": 1,
+   "treffer": 1,
    "unaufloesbar": 0,
-   "offen": 2,
-   "trefferPct": null,
-   "erwartetPct": null,
-   "mitQuote": 0,
-   "roiPct": null,
+   "offen": 1,
+   "trefferPct": 100.0,
+   "erwartetPct": 81.9,
+   "mitQuote": 1,
+   "roiPct": 18.0,
    "urteil": "sammelt",
-   "grund": "0 von 30 abgerechneten Wetten — darunter sagt der Vergleich nichts"
+   "grund": "1 von 30 abgerechneten Wetten — darunter sagt der Vergleich nichts"
   },
   "modell": {
-   "n": 0,
-   "treffer": 0,
-   "unaufloesbar": 0,
-   "offen": 5,
-   "trefferPct": null,
-   "erwartetPct": null,
+   "n": 2,
+   "treffer": 2,
+   "unaufloesbar": 2,
+   "offen": 1,
+   "trefferPct": 100.0,
+   "erwartetPct": 73.0,
    "mitQuote": 0,
    "roiPct": null,
    "urteil": "sammelt",
-   "grund": "0 von 30 abgerechneten Wetten — darunter sagt der Vergleich nichts"
+   "grund": "2 von 30 abgerechneten Wetten — darunter sagt der Vergleich nichts"
   }
  },
- "updatedAt": "2026-10-01T23:07:19.242139+00:00"
+ "updatedAt": "2026-10-02T13:51:49.055663+00:00"
 }
