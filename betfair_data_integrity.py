@@ -432,6 +432,18 @@ def check_odds_zugang_lebt(ctx):
                     "sagt dieser Waechter nichts. Das ist keine Aussage ueber den Schluessel.")
     fehler = kont.get("letzterFehler")
     rest = kont.get("remaining")
+    # 🔴 02.10.2026: ein einzelner Timeout stand hier als „Schluessel ungueltig/abgelaufen" (🔴
+    # Kostet Geld) — der Zugang war gesund, 45 von 45 Keys lieferten. Aeltere Produzenten
+    # schrieben Netzfehler in `letzterFehler`; nur ein HTTP-Status ist eine Antwort des Anbieters.
+    if fehler and not str(fehler).startswith("HTTP"):
+        kont = dict(kont, netzFehler=max(1, int(kont.get("netzFehler") or 0)),
+                    letzterNetzfehler=fehler)
+        fehler = None
+    netz = int(kont.get("netzFehler") or 0)
+    if netz and isinstance(versucht, int) and versucht > 0 and mit == 0:
+        fails.append("%d Sport-Keys abgerufen, KEINER kam durch — Netzfehler (%s). Kein "
+                     "Schluessel-Problem, aber der Lauf hatte keine Quoten."
+                     % (versucht, kont.get("letzterNetzfehler")))
     if fehler:
         fails.append("the-odds-api antwortet mit %s — der Schluessel ist ungueltig/abgelaufen "
                      "oder das Kontingent ist leer. Bis das steht, laufen alle Abrufe ins Leere."
@@ -440,7 +452,7 @@ def check_odds_zugang_lebt(ctx):
         fails.append("nur noch %d Abrufe Kontingent uebrig (Grenze %d) — bei rund %s Abrufen je "
                      "Lauf und 96 Laeufen am Tag ist das bald aufgebraucht."
                      % (rest, ODDS_REST_WARN, versucht if isinstance(versucht, int) else "?"))
-    if isinstance(versucht, int) and versucht > 0 and mit == 0 and not fehler:
+    if isinstance(versucht, int) and versucht > 0 and mit == 0 and not fehler and not netz:
         fails.append("%d Sport-Keys abgerufen, KEINER hat Daten geliefert — ohne HTTP-Fehler. "
                      "Das ist kein leerer Spieltag, das ist ein toter Zugang." % versucht)
     note = "Kontingent: %s verbraucht, %s uebrig%s" % (

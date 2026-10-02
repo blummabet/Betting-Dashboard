@@ -1484,7 +1484,11 @@ def build_game(m, ev, prev, direction, poly=None, totals_ev=None) -> dict:
 # es bisher niemand. 🔴 21.09.2026: genau deshalb war ein abgelaufener Schluessel nicht von
 # einem stillen Tag zu unterscheiden. `used`/`remaining` beantworten ausserdem die Frage, die
 # sonst nur zu schaetzen war: wie oft rufen wir Pinnacle eigentlich auf.
-KONTINGENT = {"used": None, "remaining": None, "letzterFehler": None}
+# `letzterFehler` NUR fuer Antworten des Anbieters (HTTP-Status). Netzfehler (Timeout, Reset)
+# zaehlen getrennt: 02.10.2026 meldete die Stoerungsmeldung „🔴 Schluessel ungueltig/abgelaufen"
+# wegen EINES Timeouts — der Schluessel war gesund (45/45 Keys mit Daten, 4,98 Mio. Kontingent).
+KONTINGENT = {"used": None, "remaining": None, "letzterFehler": None,
+              "netzFehler": 0, "letzterNetzfehler": None}
 
 
 def zaehle_keys(events_by_key: dict) -> dict:
@@ -1531,7 +1535,8 @@ def fetch_odds(sport_key):
         print("odds-fetch %s: HTTP %s" % (sport_key, e.code))
         return []
     except Exception as e:
-        KONTINGENT["letzterFehler"] = str(e)[:120]
+        KONTINGENT["netzFehler"] = int(KONTINGENT.get("netzFehler") or 0) + 1
+        KONTINGENT["letzterNetzfehler"] = str(e)[:120]
         print("odds-fetch %s: %s" % (sport_key, e))
         return []
 

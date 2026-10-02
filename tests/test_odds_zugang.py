@@ -174,3 +174,43 @@ class TestTotalsVollstaendig(unittest.TestCase):
     def test_ohne_feld_kein_urteil(self):
         c = B.check_totals_vollstaendig(_ctx())
         self.assertTrue(c["ok"])
+
+
+class TestTimeoutIstKeinToterSchluessel(unittest.TestCase):
+    """🔴 02.10.2026: Stoerungsmeldung „🔴 Kostet Geld · Odds-Zugang lebt — the-odds-api antwortet
+    mit The read operation timed out — der Schluessel ist ungueltig/abgelaufen". Im selben Lauf
+    lieferten 45 von 45 Keys Daten, Kontingent 4,98 Mio. Ein Netzfehler ist keine Antwort des
+    Anbieters."""
+
+    def test_einzelner_timeout_alter_produzent_ist_still(self):
+        # Gegentest: genau dieses Artefakt hat die alte Fassung rot gemeldet.
+        c = B.check_odds_zugang_lebt(_ctx(oddsKeysFetched=45, oddsKeysMitDaten=44,
+                                          oddsKontingent={"used": 17626, "remaining": 4982374,
+                                                          "letzterFehler": "The read operation timed out"}))
+        self.assertTrue(c["ok"], c["failures"])
+
+    def test_einzelner_timeout_neuer_produzent_ist_still(self):
+        c = B.check_odds_zugang_lebt(_ctx(oddsKeysFetched=45, oddsKeysMitDaten=44,
+                                          oddsKontingent={"remaining": 4982374, "letzterFehler": None,
+                                                          "netzFehler": 1,
+                                                          "letzterNetzfehler": "timed out"}))
+        self.assertTrue(c["ok"], c["failures"])
+
+    def test_alles_im_timeout_meldet_netz_nicht_schluessel(self):
+        c = B.check_odds_zugang_lebt(_ctx(oddsKeysFetched=45, oddsKeysMitDaten=0,
+                                          oddsKontingent={"netzFehler": 45,
+                                                          "letzterNetzfehler": "timed out"}))
+        self.assertFalse(c["ok"])
+        t = " ".join(c["failures"])
+        self.assertIn("Netzfehler", t)
+        self.assertNotIn("Schluessel ist ungueltig", t)
+
+    def test_produzent_schreibt_timeout_nicht_als_schluesselfehler(self):
+        import betfair_consensus as C
+        from unittest import mock
+        C.KONTINGENT.update({"letzterFehler": None, "netzFehler": 0, "letzterNetzfehler": None})
+        with mock.patch.object(C, "ODDS_KEY", "x"), \
+             mock.patch("urllib.request.urlopen", side_effect=TimeoutError("timed out")):
+            self.assertEqual(C.fetch_odds("soccer_epl"), [])
+        self.assertIsNone(C.KONTINGENT["letzterFehler"])
+        self.assertEqual(C.KONTINGENT["netzFehler"], 1)
