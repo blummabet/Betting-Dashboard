@@ -1,11 +1,11 @@
 {
   "slug": "update-mls",
   "workflow": "⚽ MLS aktualisieren (Brücken-Liga)",
-  "updatedAt": "2026-10-02T13:53:55.699671+00:00",
+  "updatedAt": "2026-10-02T22:58:55.478570+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
-    "spanneH": 241.3,
+    "spanneH": 240.9,
     "proTag": 1.9,
     "lueckeMinMin": 496.7,
     "lueckeMedianMin": 844.6,
@@ -16,14 +16,28 @@
     "fensterUrteil": null
   },
   "erzeugung": {
-    "erzeugt": 3,
-    "gelaufen": 3,
+    "erzeugt": 100,
+    "gelaufen": 100,
     "verdraengt": 0,
-    "spanneH": 120.2,
-    "erzeugtProTag": 0.6,
-    "widerspruch": "erzeugtProTag 0.6 gegen eine gemessene Kadenz von 1.9/Tag (Faktor 3.2) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
+    "spanneH": 1203.0,
+    "erzeugtProTag": 2.0
   },
   "runs": [
+    {
+      "ts": "2026-10-02T22:58:55.478570+00:00",
+      "workflow": "⚽ MLS aktualisieren (Brücken-Liga)",
+      "runId": "37075059468",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/37075059468",
+      "nSteps": 55,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-10-02T22:55:43Z",
+      "startedAt": "2026-10-02T22:55:43Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 192.5,
+      "event": "schedule"
+    },
     {
       "ts": "2026-10-02T13:53:55.699671+00:00",
       "workflow": "⚽ MLS aktualisieren (Brücken-Liga)",
@@ -304,20 +318,6 @@
       "failures": [],
       "createdAt": "2026-09-22T21:59:51Z",
       "startedAt": "2026-09-22T21:59:51Z",
-      "wartetS": 0.0,
-      "event": "schedule"
-    },
-    {
-      "ts": "2026-09-22T12:38:49.954723+00:00",
-      "workflow": "⚽ MLS aktualisieren (Brücken-Liga)",
-      "runId": "35728132160",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/35728132160",
-      "nSteps": 53,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-09-22T12:35:44Z",
-      "startedAt": "2026-09-22T12:35:44Z",
       "wartetS": 0.0,
       "event": "schedule"
     }
