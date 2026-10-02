@@ -199,3 +199,27 @@ class TestDieMeldung(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+# 🔴 01.10.2026 (Lucas: „krieg ich grad 3x die Push") — Estral vs LOS scheiterte drei Laeufe
+# hintereinander an der Preisschranke, und jeder Lauf meldete es neu.
+def test_dieselbe_ablehnung_wird_nur_einmal_gemeldet():
+    import shortlist_auto_bet as A
+    z = {"key": "lol-est-los-2026-10-01", "side": "LOS", "match": "Estral Esports vs LOS",
+         "conv": 6, "pushPreis": 0.68, "sentAt": "2026-10-01T20:00:00+00:00"}
+    grund = "Ask 74¢, das sind +5.5pp ueber dem Push-Preis von 68¢ (max 3.0pp)"
+    liegen = [{"titel": "Estral vs LOS", "grund": grund, "k": A.bet_key(z)},
+              {"titel": "2 weitere Play(s)", "grund": "Lauf-Deckel", "k": None}]
+    buch, frisch = A.verworfen_buchen({}, [(z, grund)], "t1")
+    assert len(A.nur_frisch_melden(liegen, {e["k"] for e in frisch})) == 2   # erster Lauf: melden
+    buch, frisch = A.verworfen_buchen(buch, [(z, grund)], "t2")
+    rest = A.nur_frisch_melden(liegen, {e["k"] for e in frisch})
+    assert [f["titel"] for f in rest] == ["2 weitere Play(s)"], "zweiter Lauf: nicht nochmal"
+    assert buch[A.bet_key(z)]["gesehen"] == 2, "im Buch wird trotzdem mitgezaehlt"
+
+
+def test_main_filtert_vor_dem_senden():
+    import inspect
+    import shortlist_auto_bet as A
+    src = inspect.getsource(A.main)
+    assert src.index("nur_frisch_melden(liegen") < src.index("liegengeblieben_text(liegen")

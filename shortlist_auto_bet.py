@@ -593,6 +593,20 @@ def buch_holen(token_id):
             "bid": bids[0][0] if bids else None, "ask": asks[0][0] if asks else None}
 
 
+def nur_frisch_melden(liegen, frische_keys) -> list:
+    """Nur melden, was zum ERSTEN Mal liegenbleibt. REIN.
+
+    🔴 01.10.2026 (Lucas: „krieg ich grad 3x die Push" — Estral vs LOS, Ask 74¢ gegen Push 68¢).
+    Eine Zeile, die an der Preisschranke scheitert, bleibt im Fenster faellig — richtig so, der
+    Preis kann zurueckkommen. Aber jeder Lauf meldete die Ablehnung neu: dieselbe Nachricht alle
+    15 Min, bis das Fenster zu ist. Das Buch (`verworfen_buchen`) dedupliziert seit dem 21.09.;
+    die Meldung las am Buch vorbei. Jetzt meldet sie nur, was das Buch als NEU fuehrt.
+    Faelle ohne Zeile (Lauf-Deckel) bleiben — sie haben keinen Schluessel und sind selten.
+    """
+    fk = set(frische_keys or ())
+    return [f for f in (liegen or []) if not f.get("k") or f["k"] in fk]
+
+
 def liegengeblieben_text(faelle, dry=False) -> str:
     """Die Meldung „nicht nachgespielt". REIN/testbar.
 
@@ -840,7 +854,8 @@ def main() -> int:
         Buch wie die still aussortierten Zeilen: eine Frage, ein Ort.
         """
         print(f"  ⏭  {titel}: {grund}.")
-        liegen.append({"titel": titel, "grund": grund})
+        liegen.append({"titel": titel, "grund": grund,
+                       "k": bet_key(zeile) if isinstance(zeile, dict) and zeile.get("key") else None})
         if isinstance(zeile, dict):
             in_schleife.append((zeile, grund))
 
@@ -959,11 +974,12 @@ def main() -> int:
     # Trockenlauf raus, dann als solche gekennzeichnet: sonst wuesste niemand, dass der Schalter
     # aus ist, und Stille hiesse wieder zweierlei.
     if in_schleife and not dry:
-        vb2, _ = verworfen_buchen(vb, in_schleife, _iso())
+        vb2, frisch = verworfen_buchen(vb, in_schleife, _iso())
         try:
             write_json_atomic(str(verworfen_datei()), vb2)
         except Exception as exc:                      # noqa: BLE001
             print(f"  ⚠️  Verworfen-Buch nicht fortgeschrieben: {exc}")
+        liegen = nur_frisch_melden(liegen, {e.get("k") for e in frisch})
 
     if liegen:
         try:
