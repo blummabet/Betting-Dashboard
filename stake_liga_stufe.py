@@ -225,6 +225,9 @@ EBENE = {
     # 01.10.2026 (Stoerungsmeldung): Isthmian League Premier Division — ebenfalls Englands siebte
     # Ebene (Step 3), Schwesterliga der Southern League.
     "isthmian-league-pr-div": 3,
+    # 03.10.2026 (Stoerungsmeldung): „National 2" — Frankreichs vierte Klasse (unter Ligue 1,
+    # Ligue 2 und National). Eine andere Liga dieses Namens waere ebenfalls Amateurebene.
+    "national-2": 3,
     # 13.09.2026 (CI-Wachhund): das Campeonato de Portugal ist die DRITTE portugiesische Klasse
     # (unter Liga Portugal und Liga Portugal 2) — der Name klingt nach Landesmeisterschaft, ist
     # aber die Amateur-/Regionalebene. Beleg: AD Fazendense gegen O Elvas, beides Drittligisten.

@@ -54,7 +54,17 @@ ABLAGE=".ci_kollisionen"
 #   2. genau EIN Netzzugriff. Gemergt wird danach lokal aus FETCH_HEAD — `git pull` waere ein
 #      zweiter fetch. Scheitert der fetch, wird nicht gemergt: der Lauf arbeitet mit dem lokalen
 #      Stand weiter, der Push-Schritt am Ende holt ohnehin nach.
-FRIST_S="${CI_PULL_FRIST_S:-150}"
+# 🔴 03.10.2026: 150 s fuer ALLE war zu knapp. Auf GitHubs eigenen Runnern (update-liga 02.10.
+# 22:07, mls-odds-refresh 03.10. 05:29) brauchte der fetch aus dem flachen Checkout zeitweise
+# laenger — die Frist schlug zu, ohne Merge scheiterte jeder Push, fuenf Runden, Schritt rot,
+# liga_status.json 16 h alt. Vor der Frist dauerte derselbe Schritt dort 11-13 Min und ging
+# durch. Dort gibt es keinen engen Job-Deckel, also lange Frist; eng bleibt sie nur auf dem
+# Mac-Runner, wo der Live-Scan 12 Min hat und die Leitung das Problem ist.
+if [ "${RUNNER_ENVIRONMENT:-}" = "github-hosted" ]; then
+  FRIST_S="${CI_PULL_FRIST_S:-600}"
+else
+  FRIST_S="${CI_PULL_FRIST_S:-150}"
+fi
 # Die Frist beendet die GANZE Prozessgruppe: git fetch startet git-remote-https als Kind, und
 # ein ueberlebendes Kind hielte die Log-Leitung offen — der Schritt haenge weiter (beim Bau
 # so gemessen, mit perl-alarm allein). `set -m` gibt jedem Hintergrund-Job eine eigene Gruppe.
