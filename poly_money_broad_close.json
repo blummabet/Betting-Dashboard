@@ -589703,7 +589703,13 @@
   "tokens": {
    "Bangladesh": "60651614091613789387620274877255466144446516563061158604258899096113813143387",
    "Sri Lanka": "13776722855534203720261988358909154670098521418539896666170038463441941622923"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Bangladesh": 0.0,
+   "Sri Lanka": 1.0
+  },
+  "resolvedAt": "2026-10-03T05:29:28.016647+00:00"
  },
  "nhl-ana-las-2026-10-02": {
   "shares": {
@@ -590063,7 +590069,13 @@
     "usd": 366,
     "ts": 1790992416
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Ducks": 1.0,
+   "Golden Knights": 0.0
+  },
+  "resolvedAt": "2026-10-03T05:29:28.016647+00:00"
  },
  "atp-shapova-tabilo-2026-10-02": {
   "shares": {
@@ -590743,7 +590755,14 @@
    "Fortaleza EC": "75475466597778445119344643042853498370920270846270184637897090590841940621526",
    "Draw (Fortaleza EC vs. Clube Náutico Capibaribe)": "51343082845739161647709391987389714329711341222490705943483818680210714966439",
    "Clube Náutico Capibaribe": "1105947308819921612690047746577874076083768092331517297031973863314802490649"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Fortaleza EC": 0.0,
+   "Draw (Fortaleza EC vs. Clube Náutico Capibaribe)": 1.0,
+   "Clube Náutico Capibaribe": 0.0
+  },
+  "resolvedAt": "2026-10-03T05:29:28.016647+00:00"
  },
  "gtm-mrq-ant-2026-10-02": {
   "shares": {
@@ -594318,12 +594337,13 @@
    {
     "wallet": "0xbc43c8bfbc4d77c2fc9011adad38ba43b88996d3",
     "side": "Matteo Berrettini",
-    "usd": 3988
+    "usd": 3988,
+    "avgPrice": 0.6
    },
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "Adolfo Vallejo",
-    "usd": 1068,
+    "usd": 1058,
     "avgPrice": 0.3998
    },
    {
@@ -594397,7 +594417,8 @@
    {
     "wallet": "0xc98bda4538e16519412c98e7d789619a01d9c6f3",
     "side": "Adolfo Vallejo",
-    "usd": 24
+    "usd": 24,
+    "avgPrice": 0.5
    },
    {
     "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
@@ -594412,7 +594433,8 @@
    {
     "wallet": "0xf9706baa6dd084f1f0c3b88602a543d0c313f7f6",
     "side": "Adolfo Vallejo",
-    "usd": 10
+    "usd": 10,
+    "avgPrice": 0.4
    },
    {
     "wallet": "0x35e701f088b6ef25fff6b902769c1cd8b85f8331",
@@ -594442,8 +594464,7 @@
    {
     "wallet": "0x604a2b8ef97c90928c6917769289ad65140cea22",
     "side": "Matteo Berrettini",
-    "usd": 1,
-    "avgPrice": 0.5999
+    "usd": 1
    },
    {
     "wallet": "0xe5a25a5fda2487292ef951b63b69d73ed2d15f4c",
@@ -594461,15 +594482,132 @@
     "usd": 1
    }
   ],
-  "hoursToKickoff": 2.01,
-  "capturedAt": "2026-10-03T04:59:15.430227+00:00",
+  "hoursToKickoff": 1.51,
+  "capturedAt": "2026-10-03T05:29:28.016647+00:00",
   "koTs": "2026-10-03T07:00:00+00:00",
   "cond": "0xfdfe3d52f9b6903cc207ec0305be363c9d7a2aa639e2a9e02a1bc128a8318d87",
   "frage": "Japan Open Tennis Championships: Matteo Berrettini vs Adolfo Vallejo",
   "tokens": {
    "Matteo Berrettini": "89208792044780826744927863489218208197956002357659901185018907265775195359979",
    "Adolfo Vallejo": "83839709313894697641320017772624048980270939478688945829280161241099073735054"
-  }
+  },
+  "book": {
+   "side": "Matteo Berrettini",
+   "bid": 0.6,
+   "ask": 0.61,
+   "spreadC": 1.0,
+   "spreadPct": 1.64,
+   "bids": [
+    [
+     0.6,
+     13849
+    ],
+    [
+     0.59,
+     3293
+    ],
+    [
+     0.58,
+     3219
+    ],
+    [
+     0.57,
+     5346
+    ],
+    [
+     0.56,
+     186
+    ],
+    [
+     0.55,
+     5
+    ]
+   ],
+   "asks": [
+    [
+     0.61,
+     23954
+    ],
+    [
+     0.62,
+     43090
+    ],
+    [
+     0.63,
+     41592
+    ],
+    [
+     0.64,
+     27221
+    ],
+    [
+     0.65,
+     9939
+    ],
+    [
+     0.66,
+     605
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x81f35897a435656e1312ea50e5f0f11ee0ad1f2a",
+    "action": "BUY",
+    "side": "Matteo Berrettini",
+    "price": 0.61,
+    "usd": 787,
+    "ts": 1790988536
+   },
+   {
+    "wallet": "0x755ab1b66743ec425157ef91e8b5b52f3e8c82c4",
+    "action": "BUY",
+    "side": "Adolfo Vallejo",
+    "price": 0.4,
+    "usd": 1000,
+    "ts": 1790940893
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "action": "BUY",
+    "side": "Adolfo Vallejo",
+    "price": 0.4,
+    "usd": 400,
+    "ts": 1790930274
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "action": "BUY",
+    "side": "Adolfo Vallejo",
+    "price": 0.4,
+    "usd": 400,
+    "ts": 1790930222
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "action": "BUY",
+    "side": "Adolfo Vallejo",
+    "price": 0.4,
+    "usd": 400,
+    "ts": 1790930165
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "action": "BUY",
+    "side": "Adolfo Vallejo",
+    "price": 0.4,
+    "usd": 400,
+    "ts": 1790930099
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "action": "BUY",
+    "side": "Adolfo Vallejo",
+    "price": 0.4,
+    "usd": 800,
+    "ts": 1790930048
+   }
+  ]
  },
  "ja2-fuj-sho-2026-10-03": {
   "shares": {
@@ -594611,6 +594749,1083 @@
    "Fujieda MYFC": "36737457660374370645964992086907501342963226279151986507091129660616528830568",
    "Draw (Fujieda MYFC vs. Shōnan Bellmāre)": "38899406435040978007603164754948566661143513793094635345565735338586436231651",
    "Shōnan Bellmāre": "15337905424359539020263536686977600334280371529264929501880987056192076011439"
+  }
+ },
+ "wta-su-bucsa-2026-10-02": {
+  "shares": {
+   "Xinran Sun": 57433.142690279994,
+   "Cristina Bucsa": 124894.29553895496
+  },
+  "prices": {
+   "Xinran Sun": 0.315,
+   "Cristina Bucsa": 0.685
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 187692,
+  "whales": [
+   {
+    "wallet": "0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
+    "side": "Cristina Bucsa",
+    "usd": 61134,
+    "avgPrice": 0.6572
+   },
+   {
+    "wallet": "0xe7870d0e1bfc65a23e3d66caf00ca1b9129e5034",
+    "side": "Xinran Sun",
+    "usd": 45528,
+    "avgPrice": 0.3386
+   },
+   {
+    "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
+    "side": "Cristina Bucsa",
+    "usd": 15163,
+    "avgPrice": 0.6577
+   },
+   {
+    "wallet": "0x0353aaf82abbd3e69c00059df0a825bc198fc2ff",
+    "side": "Xinran Sun",
+    "usd": 9450,
+    "avgPrice": 0.3559
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Cristina Bucsa",
+    "usd": 6270,
+    "avgPrice": 0.6727
+   },
+   {
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "side": "Cristina Bucsa",
+    "usd": 5742
+   },
+   {
+    "wallet": "0x9c3ce009c9b039956665cecc4cd14de862b5e8c9",
+    "side": "Cristina Bucsa",
+    "usd": 5189,
+    "avgPrice": 0.66
+   },
+   {
+    "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
+    "side": "Cristina Bucsa",
+    "usd": 4546
+   },
+   {
+    "wallet": "0x56acab44cfca2e88bb9b3406890aea7bfa0cd77e",
+    "side": "Cristina Bucsa",
+    "usd": 4048,
+    "avgPrice": 0.67
+   },
+   {
+    "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
+    "side": "Cristina Bucsa",
+    "usd": 2799
+   },
+   {
+    "wallet": "0x746e936f43ff75bf508cf8375b7a8e2515ef68ca",
+    "side": "Cristina Bucsa",
+    "usd": 2740,
+    "avgPrice": 0.66
+   },
+   {
+    "wallet": "0x7e5972bfc25819775ee5a9d4f191919375487b8b",
+    "side": "Cristina Bucsa",
+    "usd": 2740,
+    "avgPrice": 0.6449
+   },
+   {
+    "wallet": "0xe954ddb021c19495f1c556f59dadbd1494821ef1",
+    "side": "Cristina Bucsa",
+    "usd": 2490,
+    "avgPrice": 0.65
+   },
+   {
+    "wallet": "0xf5a3504ad3a8b079974620b3aa4fcca3f7579e12",
+    "side": "Cristina Bucsa",
+    "usd": 2076,
+    "avgPrice": 0.66
+   },
+   {
+    "wallet": "0xbc43c8bfbc4d77c2fc9011adad38ba43b88996d3",
+    "side": "Cristina Bucsa",
+    "usd": 1392,
+    "avgPrice": 0.6499
+   },
+   {
+    "wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
+    "side": "Cristina Bucsa",
+    "usd": 1370,
+    "avgPrice": 0.6575
+   },
+   {
+    "wallet": "0xffd4964aa4ca70e51e2354c99b6380cfbb2eb60f",
+    "side": "Cristina Bucsa",
+    "usd": 1056,
+    "avgPrice": 0.6378
+   },
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Cristina Bucsa",
+    "usd": 762,
+    "avgPrice": 0.6599
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Cristina Bucsa",
+    "usd": 638,
+    "avgPrice": 0.6522
+   },
+   {
+    "wallet": "0x1b0fcd4c06147cb090681b4bd59cab5b9319b7ae",
+    "side": "Cristina Bucsa",
+    "usd": 537,
+    "avgPrice": 0.64
+   },
+   {
+    "wallet": "0x02571ed3bfa4162c80b288310745503275a822b2",
+    "side": "Xinran Sun",
+    "usd": 472,
+    "avgPrice": 0.31
+   },
+   {
+    "wallet": "0x00cb3eedc099e8c59b957beceb55205669e7e987",
+    "side": "Cristina Bucsa",
+    "usd": 399,
+    "avgPrice": 0.64
+   },
+   {
+    "wallet": "0x8f1dfd0868d056f11f84e0233e1b89527c262fb6",
+    "side": "Xinran Sun",
+    "usd": 379,
+    "avgPrice": 0.346
+   },
+   {
+    "wallet": "0x0eb32f4c1a8672b61b48d9f1493b6dd5a6b1f766",
+    "side": "Cristina Bucsa",
+    "usd": 342,
+    "avgPrice": 0.66
+   },
+   {
+    "wallet": "0x36b321c39e0f5b7d1835467cb91365c2571ae421",
+    "side": "Cristina Bucsa",
+    "usd": 336,
+    "avgPrice": 0.6699
+   },
+   {
+    "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
+    "side": "Cristina Bucsa",
+    "usd": 311
+   },
+   {
+    "wallet": "0x684baa57c338c2549aec0aa3f034f695d72a8409",
+    "side": "Xinran Sun",
+    "usd": 252,
+    "avgPrice": 0.3099
+   },
+   {
+    "wallet": "0x2095d1d2d6f2026a58475c67e35f296301f08521",
+    "side": "Cristina Bucsa",
+    "usd": 250,
+    "avgPrice": 0.6549
+   },
+   {
+    "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
+    "side": "Cristina Bucsa",
+    "usd": 206
+   },
+   {
+    "wallet": "0xdc4f58a48ed4467743609fdce11eea483c759804",
+    "side": "Cristina Bucsa",
+    "usd": 174
+   },
+   {
+    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
+    "side": "Cristina Bucsa",
+    "usd": 137
+   },
+   {
+    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+    "side": "Cristina Bucsa",
+    "usd": 122
+   },
+   {
+    "wallet": "0x333f291ea158f13e4f60c9f0ba88044bf2483cd6",
+    "side": "Cristina Bucsa",
+    "usd": 116,
+    "avgPrice": 0.6899
+   },
+   {
+    "wallet": "0x4bf2845651c0094e8cf3f8cbcb4279e3c166d280",
+    "side": "Cristina Bucsa",
+    "usd": 104
+   },
+   {
+    "wallet": "0xcad22bcc3c5f2e35f12313d968fd413f376bf315",
+    "side": "Cristina Bucsa",
+    "usd": 102,
+    "avgPrice": 0.6699
+   },
+   {
+    "wallet": "0xf6f7e573b3739242e7b162cf5adc0474abb2c7a2",
+    "side": "Cristina Bucsa",
+    "usd": 72,
+    "avgPrice": 0.6699
+   },
+   {
+    "wallet": "0x98db8cca55c32b24cfb414b5b43d273f4e1fdd17",
+    "side": "Cristina Bucsa",
+    "usd": 70,
+    "avgPrice": 0.6522
+   },
+   {
+    "wallet": "0xa2fc0448a1dce9258ebb91b2f3abcddb98a0b1b4",
+    "side": "Cristina Bucsa",
+    "usd": 68,
+    "avgPrice": 0.67
+   },
+   {
+    "wallet": "0x0ac5faecf8d623a4a074758aedfea9339b24f963",
+    "side": "Cristina Bucsa",
+    "usd": 66,
+    "avgPrice": 0.6663
+   },
+   {
+    "wallet": "0x835b9f8e830f441087babdcd1f8665f7ec4f118f",
+    "side": "Xinran Sun",
+    "usd": 63,
+    "avgPrice": 0.3399
+   }
+  ],
+  "hoursToKickoff": 2.76,
+  "capturedAt": "2026-10-03T05:29:28.016647+00:00",
+  "koTs": "2026-10-03T08:15:00+00:00",
+  "cond": "0x9a254e1fb5dab55b1b97cbcd59cef2ff4333909850c769628ff53a2f3089374d",
+  "frage": "China Open: Xinran Sun vs Cristina Bucsa",
+  "tokens": {
+   "Xinran Sun": "47846665876750332440198767520069977519013885569928470022020270505049023991253",
+   "Cristina Bucsa": "110895244068308651031648643180312585587832713504915927919814768204671280051228"
+  },
+  "book": {
+   "side": "Cristina Bucsa",
+   "bid": 0.68,
+   "ask": 0.69,
+   "spreadC": 1.0,
+   "spreadPct": 1.45,
+   "bids": [
+    [
+     0.68,
+     433
+    ],
+    [
+     0.67,
+     2693
+    ],
+    [
+     0.66,
+     5095
+    ],
+    [
+     0.65,
+     2853
+    ],
+    [
+     0.64,
+     4343
+    ],
+    [
+     0.63,
+     2536
+    ]
+   ],
+   "asks": [
+    [
+     0.69,
+     25641
+    ],
+    [
+     0.7,
+     23526
+    ],
+    [
+     0.71,
+     48076
+    ],
+    [
+     0.72,
+     13990
+    ],
+    [
+     0.73,
+     7333
+    ],
+    [
+     0.74,
+     7470
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
+    "action": "BUY",
+    "side": "Cristina Bucsa",
+    "price": 0.66,
+    "usd": 50686,
+    "ts": 1791004109
+   },
+   {
+    "wallet": "0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
+    "action": "BUY",
+    "side": "Cristina Bucsa",
+    "price": 0.64,
+    "usd": 7968,
+    "ts": 1791004092
+   },
+   {
+    "wallet": "0xffd4964aa4ca70e51e2354c99b6380cfbb2eb60f",
+    "action": "BUY",
+    "side": "Cristina Bucsa",
+    "price": 0.64,
+    "usd": 708,
+    "ts": 1791004088
+   },
+   {
+    "wallet": "0x00cb3eedc099e8c59b957beceb55205669e7e987",
+    "action": "BUY",
+    "side": "Cristina Bucsa",
+    "price": 0.64,
+    "usd": 373,
+    "ts": 1791004088
+   },
+   {
+    "wallet": "0x0353aaf82abbd3e69c00059df0a825bc198fc2ff",
+    "action": "BUY",
+    "side": "Xinran Sun",
+    "price": 0.3518,
+    "usd": 5226,
+    "ts": 1791004086
+   },
+   {
+    "wallet": "0x1b0fcd4c06147cb090681b4bd59cab5b9319b7ae",
+    "action": "BUY",
+    "side": "Cristina Bucsa",
+    "price": 0.64,
+    "usd": 502,
+    "ts": 1791004086
+   },
+   {
+    "wallet": "0xe7870d0e1bfc65a23e3d66caf00ca1b9129e5034",
+    "action": "BUY",
+    "side": "Xinran Sun",
+    "price": 0.34,
+    "usd": 16208,
+    "ts": 1790997869
+   }
+  ]
+ },
+ "lol-red-navi-2026-10-03": {
+  "shares": {
+   "RED Canids": 7034.899179499999,
+   "Natus Vincere": 25685.573830345013
+  },
+  "prices": {
+   "RED Canids": 0.215,
+   "Natus Vincere": 0.785
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 35668,
+  "whales": [
+   {
+    "wallet": "0x03f4bd4bd14e0dffa6f012d023387e1a327f7e44",
+    "side": "Natus Vincere",
+    "usd": 4710
+   },
+   {
+    "wallet": "0xf70f2ba870efc32d07b366c2d685804dfa683c97",
+    "side": "RED Canids",
+    "usd": 2944
+   },
+   {
+    "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
+    "side": "Natus Vincere",
+    "usd": 2474,
+    "avgPrice": 0.785
+   },
+   {
+    "wallet": "0x288e89dc65f9484c4dedb761f6a34151fbe1c02d",
+    "side": "RED Canids",
+    "usd": 1385
+   },
+   {
+    "wallet": "0xbcc321b6336117432f4e9d2d28b20d8b6795ac9c",
+    "side": "Natus Vincere",
+    "usd": 1339
+   },
+   {
+    "wallet": "0xd8dca4272c19833d7c751d9d7e17a67b28273669",
+    "side": "Natus Vincere",
+    "usd": 1249
+   },
+   {
+    "wallet": "0x0235dc24b38772bf3339a9e5ec5db3d3a05fcee5",
+    "side": "Natus Vincere",
+    "usd": 1200,
+    "avgPrice": 0.8
+   },
+   {
+    "wallet": "0x40ce68f1564f3c751b12d88a393d8cc0651dbf90",
+    "side": "Natus Vincere",
+    "usd": 1020
+   },
+   {
+    "wallet": "0x797bf9767e480ab52ddf309151138b3ac72e26d2",
+    "side": "Natus Vincere",
+    "usd": 989
+   },
+   {
+    "wallet": "0xaf7f9146f63d02fdc133028b485fc221fc24edca",
+    "side": "Natus Vincere",
+    "usd": 966
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Natus Vincere",
+    "usd": 954,
+    "avgPrice": 0.7776
+   },
+   {
+    "wallet": "0x53abaa0952659af1fbcc5293c77b72e1138365aa",
+    "side": "Natus Vincere",
+    "usd": 872
+   },
+   {
+    "wallet": "0xd619b68e64f256f8ddd185b261c8679eacf0c461",
+    "side": "Natus Vincere",
+    "usd": 785
+   },
+   {
+    "wallet": "0x5b624e3e0426f7aa2ca57f7451fbcea4b125d87f",
+    "side": "Natus Vincere",
+    "usd": 785
+   },
+   {
+    "wallet": "0x6b97ebe911d7f2e5e3e8c4a0faad4a5c7c0b8d30",
+    "side": "Natus Vincere",
+    "usd": 739
+   },
+   {
+    "wallet": "0x4f4ebbdc7cd5ce12052b0db77ef47e098b3fb690",
+    "side": "Natus Vincere",
+    "usd": 738
+   },
+   {
+    "wallet": "0x21b70de5fa3532afbf51a5d177e76b1e7e17c861",
+    "side": "RED Canids",
+    "usd": 657
+   },
+   {
+    "wallet": "0xfb07f48542d2b655e9d0bf1cc92a8a6feee8e2cc",
+    "side": "Natus Vincere",
+    "usd": 644
+   },
+   {
+    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
+    "side": "Natus Vincere",
+    "usd": 502
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Natus Vincere",
+    "usd": 482,
+    "avgPrice": 0.7899
+   },
+   {
+    "wallet": "0xc4fe817476491890086330a639ac417d51bf601f",
+    "side": "Natus Vincere",
+    "usd": 428
+   },
+   {
+    "wallet": "0xd9fe6f0f41ca99fefa93c55d8890000e5a84db0d",
+    "side": "Natus Vincere",
+    "usd": 401
+   },
+   {
+    "wallet": "0xce0871a82a7799ace36ab2fcd08f95b21cdf510b",
+    "side": "RED Canids",
+    "usd": 346
+   },
+   {
+    "wallet": "0x9c42dd4f90d3ee8c68a61f2f149aad23eb3bb792",
+    "side": "RED Canids",
+    "usd": 308
+   },
+   {
+    "wallet": "0x90e7d1a8550c43873d4b1ba5d025b57c2423ac8e",
+    "side": "RED Canids",
+    "usd": 290
+   },
+   {
+    "wallet": "0x0241074b85d852503ca4caa3cc58d32de9f1fd36",
+    "side": "Natus Vincere",
+    "usd": 260
+   },
+   {
+    "wallet": "0x1c29705c62a6435b5d45c382530012b14c5a167e",
+    "side": "Natus Vincere",
+    "usd": 253
+   },
+   {
+    "wallet": "0x62771058d17ed999f028d53fa660a960b3ab5a3f",
+    "side": "RED Canids",
+    "usd": 249
+   },
+   {
+    "wallet": "0x695d8d90deae05ea1e07d3804130ff9564fd0d7c",
+    "side": "Natus Vincere",
+    "usd": 212
+   },
+   {
+    "wallet": "0xb2da92d3584c60037dc9cc8942a9f9677bbcce6a",
+    "side": "Natus Vincere",
+    "usd": 210
+   },
+   {
+    "wallet": "0xde5314ddd05574a22cdaeef4e9ab2c02ce90e5be",
+    "side": "Natus Vincere",
+    "usd": 147
+   },
+   {
+    "wallet": "0xfbf3eed601e4950b8676ae6db4c579b854e470e3",
+    "side": "Natus Vincere",
+    "usd": 133
+   },
+   {
+    "wallet": "0x10658d371ae1f09eed503a3a14c8ac6a1a936218",
+    "side": "RED Canids",
+    "usd": 120
+   },
+   {
+    "wallet": "0xc670e1bef9fe213d0b5f49e89b06fba76b37b781",
+    "side": "Natus Vincere",
+    "usd": 109
+   },
+   {
+    "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
+    "side": "Natus Vincere",
+    "usd": 108
+   },
+   {
+    "wallet": "0x8f41129e43ebfbfe6075d0804f3b2bb763b3260e",
+    "side": "RED Canids",
+    "usd": 101
+   },
+   {
+    "wallet": "0x489d3df3601288940f89d56b5642b0951129f6e3",
+    "side": "Natus Vincere",
+    "usd": 78,
+    "avgPrice": 0.8
+   },
+   {
+    "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
+    "side": "Natus Vincere",
+    "usd": 59
+   },
+   {
+    "wallet": "0x536e4bd582d437cb2a4bc6bbec8384c600cd4fd5",
+    "side": "RED Canids",
+    "usd": 49
+   },
+   {
+    "wallet": "0x14366189bbd03f3a12fdf442d998b0ee21860121",
+    "side": "Natus Vincere",
+    "usd": 48
+   }
+  ],
+  "hoursToKickoff": 2.51,
+  "capturedAt": "2026-10-03T05:29:28.016647+00:00",
+  "koTs": "2026-10-03T08:00:00+00:00",
+  "cond": "0x2b047b17627c11c56b3df131cab6f2e055e62a22eb7a355a1d7313b935fa7e0e",
+  "frage": "LoL: RED Canids vs Natus Vincere (BO1) - Demacia Cup Global Invitational Group Stage",
+  "tokens": {
+   "RED Canids": "38947966019154143462500357024085964616698759528704790640525235801607454409766",
+   "Natus Vincere": "49638560630779469757379814875316187966330390376647598502567482427842423518559"
+  },
+  "book": {
+   "side": "Natus Vincere",
+   "bid": 0.78,
+   "ask": 0.79,
+   "spreadC": 1.0,
+   "spreadPct": 1.27,
+   "bids": [
+    [
+     0.78,
+     7232
+    ],
+    [
+     0.77,
+     5520
+    ],
+    [
+     0.76,
+     605
+    ],
+    [
+     0.75,
+     19603
+    ],
+    [
+     0.74,
+     175
+    ],
+    [
+     0.72,
+     175
+    ]
+   ],
+   "asks": [
+    [
+     0.79,
+     349
+    ],
+    [
+     0.8,
+     682
+    ],
+    [
+     0.81,
+     13355
+    ],
+    [
+     0.82,
+     21466
+    ],
+    [
+     0.83,
+     8261
+    ],
+    [
+     0.84,
+     4379
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xf70f2ba870efc32d07b366c2d685804dfa683c97",
+    "action": "BUY",
+    "side": "RED Canids",
+    "price": 0.223,
+    "usd": 917,
+    "ts": 1790998785
+   },
+   {
+    "wallet": "0xf70f2ba870efc32d07b366c2d685804dfa683c97",
+    "action": "BUY",
+    "side": "RED Canids",
+    "price": 0.2098,
+    "usd": 998,
+    "ts": 1790998769
+   },
+   {
+    "wallet": "0xf70f2ba870efc32d07b366c2d685804dfa683c97",
+    "action": "BUY",
+    "side": "RED Canids",
+    "price": 0.2088,
+    "usd": 1000,
+    "ts": 1790998745
+   },
+   {
+    "wallet": "0x288e89dc65f9484c4dedb761f6a34151fbe1c02d",
+    "action": "BUY",
+    "side": "RED Canids",
+    "price": 0.2,
+    "usd": 1204,
+    "ts": 1790998617
+   },
+   {
+    "wallet": "0xce0871a82a7799ace36ab2fcd08f95b21cdf510b",
+    "action": "BUY",
+    "side": "RED Canids",
+    "price": 0.2,
+    "usd": 300,
+    "ts": 1790983089
+   },
+   {
+    "wallet": "0xaf7f9146f63d02fdc133028b485fc221fc24edca",
+    "action": "BUY",
+    "side": "Natus Vincere",
+    "price": 0.81,
+    "usd": 996,
+    "ts": 1790977983
+   },
+   {
+    "wallet": "0x797bf9767e480ab52ddf309151138b3ac72e26d2",
+    "action": "BUY",
+    "side": "Natus Vincere",
+    "price": 0.81,
+    "usd": 1020,
+    "ts": 1790969117
+   }
+  ]
+ },
+ "wta-maneiro-falei-2026-10-02": {
+  "shares": {
+   "Jessica Bouzas Maneiro": 7419.9948689699995,
+   "Aliona Falei": 2279.3448290300003
+  },
+  "prices": {
+   "Jessica Bouzas Maneiro": 0.765,
+   "Aliona Falei": 0.235
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 9613,
+  "whales": [
+   {
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "side": "Jessica Bouzas Maneiro",
+    "usd": 7087
+   },
+   {
+    "wallet": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
+    "side": "Aliona Falei",
+    "usd": 1175
+   },
+   {
+    "wallet": "0x9b11866433281ade9f2811dbde8acdefc45f5375",
+    "side": "Aliona Falei",
+    "usd": 284,
+    "avgPrice": 0.2299
+   },
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Aliona Falei",
+    "usd": 275,
+    "avgPrice": 0.22
+   },
+   {
+    "wallet": "0x85fb1b29bc068bee293923cc7e072dff890889ba",
+    "side": "Aliona Falei",
+    "usd": 164
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Aliona Falei",
+    "usd": 129,
+    "avgPrice": 0.2236
+   },
+   {
+    "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
+    "side": "Jessica Bouzas Maneiro",
+    "usd": 93
+   },
+   {
+    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
+    "side": "Jessica Bouzas Maneiro",
+    "usd": 76
+   },
+   {
+    "wallet": "0x3d4c523c750f61be22695b27e4117b3d256f67bc",
+    "side": "Jessica Bouzas Maneiro",
+    "usd": 70
+   },
+   {
+    "wallet": "0x01c78f8873c0c86d6b6b92ff627e3802237ee995",
+    "side": "Aliona Falei",
+    "usd": 67
+   },
+   {
+    "wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
+    "side": "Aliona Falei",
+    "usd": 48,
+    "avgPrice": 0.22
+   },
+   {
+    "wallet": "0x9fe5996fd7bca209a856a1d359c8fbc1e8964745",
+    "side": "Aliona Falei",
+    "usd": 47
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Jessica Bouzas Maneiro",
+    "usd": 39
+   },
+   {
+    "wallet": "0xfa686b1486c0622c54164d86b1d6f784d0bbba5d",
+    "side": "Jessica Bouzas Maneiro",
+    "usd": 23,
+    "avgPrice": 0.76
+   },
+   {
+    "wallet": "0x1e814bedfdb7bde5434791a927777deeeac5ae48",
+    "side": "Aliona Falei",
+    "usd": 21
+   },
+   {
+    "wallet": "0x49c5845733fd0b83d2ae67bfc1baf9d2e3093de7",
+    "side": "Aliona Falei",
+    "usd": 20
+   },
+   {
+    "wallet": "0x98db8cca55c32b24cfb414b5b43d273f4e1fdd17",
+    "side": "Aliona Falei",
+    "usd": 12,
+    "avgPrice": 0.22
+   },
+   {
+    "wallet": "0xcfaa77e8c04bfb48016896da941677afee3b28f7",
+    "side": "Aliona Falei",
+    "usd": 12
+   },
+   {
+    "wallet": "0x1549ae307a974fdbbb65ed56532dcc45edf62956",
+    "side": "Jessica Bouzas Maneiro",
+    "usd": 10
+   },
+   {
+    "wallet": "0x147c2760baa011fdcd0d02ea0f610ffb0fd92540",
+    "side": "Aliona Falei",
+    "usd": 5
+   },
+   {
+    "wallet": "0x2da325618fff9b2ffe64a49253fbcae8c7b9f258",
+    "side": "Jessica Bouzas Maneiro",
+    "usd": 4
+   },
+   {
+    "wallet": "0x2396babfc88a7a7dcc0390262ab747d7cbad9485",
+    "side": "Aliona Falei",
+    "usd": 4,
+    "avgPrice": 0.23
+   },
+   {
+    "wallet": "0xd9c9651bfd445b2cddf750662ee79a755f216686",
+    "side": "Jessica Bouzas Maneiro",
+    "usd": 2
+   },
+   {
+    "wallet": "0xe7025ec23d5d005e53accf41ff060816f5bcd88c",
+    "side": "Jessica Bouzas Maneiro",
+    "usd": 1
+   },
+   {
+    "wallet": "0xf5d15c291fff1b29594bdf56d9dcec4ecca7c460",
+    "side": "Jessica Bouzas Maneiro",
+    "usd": 1
+   },
+   {
+    "wallet": "0xe5a25a5fda2487292ef951b63b69d73ed2d15f4c",
+    "side": "Aliona Falei",
+    "usd": 1
+   },
+   {
+    "wallet": "0x521070c99db06e54af5e8e4a91d6858decdfbd53",
+    "side": "Aliona Falei",
+    "usd": 0
+   },
+   {
+    "wallet": "0xf393a3f0a34a0a3c082fb999d80ee7d049029f39",
+    "side": "Aliona Falei",
+    "usd": 0
+   }
+  ],
+  "hoursToKickoff": 0.01,
+  "capturedAt": "2026-10-03T05:29:28.016647+00:00",
+  "koTs": "2026-10-03T05:30:00+00:00",
+  "cond": "0xbcba9d9b19ee88768ff369c5d6828b90e41fa8bfb6367087853e591c1460c50f",
+  "frage": "Jingshan: Jessica Bouzas Maneiro vs Aliona Falei",
+  "tokens": {
+   "Jessica Bouzas Maneiro": "69907357210986089131229688156274760692101194221512051410888813576963042390028",
+   "Aliona Falei": "92997861447208290591307037041042216104523511674096642529892291830679804260281"
+  }
+ },
+ "ja2-tct-imb-2026-10-03": {
+  "shares": {
+   "Tochigi City FC": 2374.4454943300007,
+   "Draw (Tochigi City FC vs. FC Imabari)": 242.22501702,
+   "FC Imabari": 26.967283965
+  },
+  "prices": {
+   "Tochigi City FC": 0.455,
+   "Draw (Tochigi City FC vs. FC Imabari)": 0.265,
+   "FC Imabari": 0.285
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 7535,
+  "whales": [
+   {
+    "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+    "side": "Tochigi City FC",
+    "usd": 515
+   },
+   {
+    "wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
+    "side": "Tochigi City FC",
+    "usd": 455,
+    "avgPrice": 0.47
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Tochigi City FC",
+    "usd": 365,
+    "avgPrice": 0.4702
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Tochigi City FC",
+    "usd": 355
+   },
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "side": "Draw (Tochigi City FC vs. FC Imabari)",
+    "usd": 218
+   },
+   {
+    "wallet": "0x1f624696c102b99bea92c75a502fa7e4a6d676f6",
+    "side": "Tochigi City FC",
+    "usd": 198
+   },
+   {
+    "wallet": "0x340ea8b2e6634b7555a61187d1ea443785cd385b",
+    "side": "Tochigi City FC",
+    "usd": 136
+   },
+   {
+    "wallet": "0xae2b654c171738df50e6e0a224752057fe0e44b2",
+    "side": "Tochigi City FC",
+    "usd": 91
+   },
+   {
+    "wallet": "0xb6dd8a264ee0b57e11ea6839cb8f53bfeb597af9",
+    "side": "Tochigi City FC",
+    "usd": 59
+   },
+   {
+    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
+    "side": "Tochigi City FC",
+    "usd": 46
+   },
+   {
+    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
+    "side": "Tochigi City FC",
+    "usd": 46
+   },
+   {
+    "wallet": "0x0b80a92f5895880340198589980d1e7152c1b21b",
+    "side": "Tochigi City FC",
+    "usd": 22
+   },
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "side": "FC Imabari",
+    "usd": 22
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Tochigi City FC",
+    "usd": 13
+   },
+   {
+    "wallet": "0x3e6b98d9dac15f285a18a02644a8c900aab58a98",
+    "side": "Tochigi City FC",
+    "usd": 11
+   },
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Draw (Tochigi City FC vs. FC Imabari)",
+    "usd": 10
+   },
+   {
+    "wallet": "0x8182a7354c99f8338eeb3112b09db6dafa2eb13c",
+    "side": "Tochigi City FC",
+    "usd": 9
+   },
+   {
+    "wallet": "0x1dd21c41843601515bd0e2e70a242495f9059e07",
+    "side": "Tochigi City FC",
+    "usd": 7
+   },
+   {
+    "wallet": "0x4488dce4dd0e5ea1f008cbc353139aae65e605ef",
+    "side": "Tochigi City FC",
+    "usd": 7
+   },
+   {
+    "wallet": "0x6daae04265d65cb2aae7fe6db4210568de7d954a",
+    "side": "Tochigi City FC",
+    "usd": 7
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "Draw (Tochigi City FC vs. FC Imabari)",
+    "usd": 5
+   },
+   {
+    "wallet": "0xfe67df6e0c585e50cbe8bdcad804d980c6b8a2e8",
+    "side": "Draw (Tochigi City FC vs. FC Imabari)",
+    "usd": 4
+   },
+   {
+    "wallet": "0x62090f59cb5980cd22efcf910128aa77c54c6767",
+    "side": "Tochigi City FC",
+    "usd": 2
+   },
+   {
+    "wallet": "0xc846f5368ab49a854d2280b7ecff92669824c413",
+    "side": "Tochigi City FC",
+    "usd": 2
+   },
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "FC Imabari",
+    "usd": 2
+   },
+   {
+    "wallet": "0xf545bd981d2b6bdbbd32a7a4b2b072726255305b",
+    "side": "Draw (Tochigi City FC vs. FC Imabari)",
+    "usd": 1
+   },
+   {
+    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
+    "side": "FC Imabari",
+    "usd": 1
+   },
+   {
+    "wallet": "0xfe67df6e0c585e50cbe8bdcad804d980c6b8a2e8",
+    "side": "FC Imabari",
+    "usd": 1
+   },
+   {
+    "wallet": "0x1f624696c102b99bea92c75a502fa7e4a6d676f6",
+    "side": "FC Imabari",
+    "usd": 0
+   }
+  ],
+  "hoursToKickoff": 2.51,
+  "capturedAt": "2026-10-03T05:29:28.016647+00:00",
+  "koTs": "2026-10-03T08:00:00+00:00",
+  "tokens": {
+   "Tochigi City FC": "57874322002968320579483190811043463049208636753232287057415845910136627692885",
+   "Draw (Tochigi City FC vs. FC Imabari)": "110146643605381334431014183927312808692354627853551535015673952826534640828357",
+   "FC Imabari": "106276622356711565560320955301912241758258062024249245924054811071526131720085"
   }
  }
 }
