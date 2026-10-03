@@ -60,8 +60,17 @@ ABLAGE=".ci_kollisionen"
 # liga_status.json 16 h alt. Vor der Frist dauerte derselbe Schritt dort 11-13 Min und ging
 # durch. Dort gibt es keinen engen Job-Deckel, also lange Frist; eng bleibt sie nur auf dem
 # Mac-Runner, wo der Live-Scan 12 Min hat und die Leitung das Problem ist.
+#
+# 🔴 03.10.2026, zweiter Anlauf: auch 600 s waren zu kurz. „Dashboard aktualisieren" 07:44 UTC:
+# fuenf Push-Runden zu je genau 600 s, jede mit „Terminated" — 51 Min, dann rot. Der Fehler
+# daran war nicht die Zahl, sondern die Wirkung: ein abgebrochener fetch WIRFT den halb
+# geladenen Pack weg, also faengt jede Runde wieder bei null an und scheitert an derselben
+# Frist. Ohne Frist (bis 01.10.) brauchte derselbe Schritt 11-13 Min und ging durch.
+# Auf GitHub-Runnern deshalb nur noch eine Notbremse (30 Min) — gegen den echten Stillstand
+# wirkt dort die Geschwindigkeitsbremse oben (unter 1 kB/s fuer 60 s), die greift nur bei
+# einer toten Leitung, nicht bei einem langsamen Pack.
 if [ "${RUNNER_ENVIRONMENT:-}" = "github-hosted" ]; then
-  FRIST_S="${CI_PULL_FRIST_S:-600}"
+  FRIST_S="${CI_PULL_FRIST_S:-1800}"
 else
   FRIST_S="${CI_PULL_FRIST_S:-150}"
 fi

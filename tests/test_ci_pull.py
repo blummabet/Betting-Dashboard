@@ -253,7 +253,9 @@ class TestFristJeRunner(unittest.TestCase):
         return int(r.stdout.strip())
 
     def test_github_runner_lange_frist(self):
-        self.assertGreaterEqual(self._frist({"RUNNER_ENVIRONMENT": "github-hosted"}), 600)
+        """03.10.2026: 600 s liessen „Dashboard aktualisieren" fuenfmal scheitern — jeder
+        Abbruch wirft den halben Pack weg, jede Runde beginnt bei null. Vorher 11-13 Min, gruen."""
+        self.assertGreaterEqual(self._frist({"RUNNER_ENVIRONMENT": "github-hosted"}), 1800)
 
     def test_mac_runner_kurze_frist(self):
         self.assertEqual(self._frist({"RUNNER_ENVIRONMENT": "self-hosted"}), 150)
