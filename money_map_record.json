@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-10-03T02:47:53.990759+00:00",
+"generatedAt": "2026-10-03T03:02:50.409223+00:00",
 "byVerdict": {
 "konsens": {
-"n": 1386,
+"n": 1387,
 "wins": 1190,
-"hitRate": 0.8586,
-"polyN": 1328,
+"hitRate": 0.858,
+"polyN": 1329,
 "polyWins": 1050,
-"polyHitRate": 0.7907,
+"polyHitRate": 0.7901,
 "pinnN": 213,
 "pinnHitRate": 0.784,
-"nRoi": 968,
-"roi": 0.3969,
-"roiLb": 0.3563,
-"nClv": 968,
-"clv": 18.81,
-"clvLb": 17.4097
+"nRoi": 970,
+"roi": 0.3952,
+"roiLb": 0.3546,
+"nClv": 970,
+"clv": 18.7,
+"clvLb": 17.2963
 },
 "uneinig": {
-"n": 561,
+"n": 562,
 "wins": 179,
-"hitRate": 0.3191,
-"polyN": 526,
-"polyWins": 134,
-"polyHitRate": 0.2548,
+"hitRate": 0.3185,
+"polyN": 527,
+"polyWins": 135,
+"polyHitRate": 0.2562,
 "pinnN": 333,
 "pinnHitRate": 0.6306,
-"nRoi": 414,
-"roi": -0.4575,
-"roiLb": -0.5405,
-"nClv": 414,
-"clv": -20.26,
-"clvLb": -22.9486
+"nRoi": 415,
+"roi": -0.4588,
+"roiLb": -0.5417,
+"nClv": 415,
+"clv": -20.41,
+"clvLb": -23.0951
 },
 "teil": {
 "n": 32,
@@ -206,11 +206,6 @@
 "wins": 17,
 "hitRate": 0.8095
 },
-"UEFA Europa Conference Qualifiers": {
-"n": 21,
-"wins": 14,
-"hitRate": 0.6667
-},
 "CAF African Cup of Nations Qualifiers": {
 "n": 20,
 "wins": 15,
@@ -230,6 +225,11 @@
 "n": 20,
 "wins": 16,
 "hitRate": 0.8
+},
+"UEFA Europa Conference Qualifiers": {
+"n": 20,
+"wins": 13,
+"hitRate": 0.65
 },
 "Norwegian Eliteserien": {
 "n": 19,
@@ -261,6 +261,11 @@
 "wins": 14,
 "hitRate": 0.8235
 },
+"CONCACAF Nations League A": {
+"n": 16,
+"wins": 11,
+"hitRate": 0.6875
+},
 "Colombian Primera B": {
 "n": 16,
 "wins": 13,
@@ -285,11 +290,6 @@
 "n": 15,
 "wins": 10,
 "hitRate": 0.6667
-},
-"CONCACAF Nations League A": {
-"n": 15,
-"wins": 11,
-"hitRate": 0.7333
 },
 "Chinese Super League": {
 "n": 15,
@@ -316,6 +316,11 @@
 "wins": 10,
 "hitRate": 0.7143
 },
+"CONCACAF Nations League B": {
+"n": 12,
+"wins": 10,
+"hitRate": 0.8333
+},
 "CONMEBOL Copa Sudamericana": {
 "n": 12,
 "wins": 8,
@@ -340,11 +345,6 @@
 "n": 11,
 "wins": 6,
 "hitRate": 0.5455
-},
-"CONCACAF Nations League B": {
-"n": 10,
-"wins": 9,
-"hitRate": 0.9
 },
 "Chinese League 1": {
 "n": 10,
@@ -674,15 +674,15 @@
 },
 "byStrength": {
 "strong": {
-"n": 1238,
+"n": 1240,
 "wins": 999,
-"hitRate": 0.8069,
-"nRoi": 909,
-"roi": 0.3063,
-"roiLb": 0.2582,
-"nClv": 909,
-"clv": 13.6,
-"clvLb": 11.7937
+"hitRate": 0.8056,
+"nRoi": 912,
+"roi": 0.3032,
+"roiLb": 0.2552,
+"nClv": 912,
+"clv": 13.4,
+"clvLb": 11.5801
 },
 "weak": {
 "n": 741,
@@ -697,14 +697,71 @@
 }
 },
 "divergence": {
-"n": 561,
+"n": 562,
 "betfairWins": 179,
-"betfairRate": 0.3191,
-"polyN": 526,
-"polyWins": 134,
-"polyRate": 0.2548
+"betfairRate": 0.3185,
+"polyN": 527,
+"polyWins": 135,
+"polyRate": 0.2562
 },
 "recent": [
+{
+"matchId": "36138987",
+"home": "Martinique",
+"away": "Honduras",
+"league": "CONCACAF Nations League A",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Honduras",
+"polySide": "away",
+"winner": "home",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-10-03T00:00:00Z",
+"settledAt": "2026-10-03T03:02:50.195176+00:00"
+},
+{
+"matchId": "36138971",
+"home": "Barbados",
+"away": "Bermuda",
+"league": "CONCACAF Nations League B",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Barbados",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+4,
+1
+],
+"kickoff": "2026-10-03T00:00:00Z",
+"settledAt": "2026-10-03T03:02:50.195176+00:00"
+},
+{
+"matchId": "36139063",
+"home": "Bonaire",
+"away": "Grenada",
+"league": "CONCACAF Nations League B",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Bonaire",
+"polySide": "away",
+"winner": "away",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+2,
+3
+],
+"kickoff": "2026-10-03T00:00:00Z",
+"settledAt": "2026-10-03T03:02:50.195176+00:00"
+},
 {
 "matchId": "36069061",
 "home": "Independiente Rivadavia",
@@ -1407,75 +1464,18 @@
 ],
 "kickoff": "2026-10-01T18:45:00Z",
 "settledAt": "2026-10-01T21:59:35.981844+00:00"
-},
-{
-"matchId": "36125966",
-"home": "Malta",
-"away": "Gibraltar",
-"league": "UEFA Nations League",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Malta",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-10-01T18:45:00Z",
-"settledAt": "2026-10-01T21:59:35.981844+00:00"
-},
-{
-"matchId": "36116359",
-"home": "Wales",
-"away": "Norway",
-"league": "UEFA Nations League",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Norway",
-"polySide": "home",
-"winner": "home",
-"moneyWin": false,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-10-01T18:45:00Z",
-"settledAt": "2026-10-01T20:44:15.607397+00:00"
-},
-{
-"matchId": "36116358",
-"home": "Germany",
-"away": "Serbia",
-"league": "UEFA Nations League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Germany",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-10-01T18:45:00Z",
-"settledAt": "2026-10-01T20:44:15.607397+00:00"
 }
 ],
 "global": {
-"n": 1979,
+"n": 1981,
 "wins": 1374,
-"hitRate": 0.6943,
-"nRoi": 1408,
-"roi": 0.1241,
-"roiLb": 0.0828,
-"nClv": 1408,
-"clv": 6.36,
-"clvLb": 4.8628
+"hitRate": 0.6936,
+"nRoi": 1411,
+"roi": 0.1225,
+"roiLb": 0.0812,
+"nClv": 1411,
+"clv": 6.24,
+"clvLb": 4.7427
 },
-"pending": 21
+"pending": 19
 }
