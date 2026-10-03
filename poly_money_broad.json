@@ -1,15 +1,15 @@
 {
  "n": 687,
  "minOdds": 1.35,
- "moneyHitRate": 0.368,
- "priceHitRate": 0.412,
- "brierMoney": 0.8845,
- "brierPrice": 0.6888,
+ "moneyHitRate": 0.37,
+ "priceHitRate": 0.415,
+ "brierMoney": 0.8831,
+ "brierPrice": 0.687,
  "disagree": {
-  "n": 196,
-  "moneyWon": 27,
+  "n": 197,
+  "moneyWon": 26,
   "priceWon": 57,
-  "neither": 112
+  "neither": 114
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -23,19 +23,19 @@
    "verdict": "preis_besser"
   },
   {
-   "league": "UEFA-NATIONS-LEAGUE",
-   "n": 61,
-   "moneyHitRate": 0.246,
-   "brierMoney": 0.9153,
-   "brierPrice": 0.7809,
-   "verdict": "preis_besser"
-  },
-  {
    "league": "EPL",
    "n": 52,
    "moneyHitRate": 0.212,
    "brierMoney": 0.9647,
    "brierPrice": 0.8284,
+   "verdict": "preis_besser"
+  },
+  {
+   "league": "UEFA-NATIONS-LEAGUE",
+   "n": 61,
+   "moneyHitRate": 0.262,
+   "brierMoney": 0.9002,
+   "brierPrice": 0.7604,
    "verdict": "preis_besser"
   },
   {
@@ -113,8 +113,8 @@
  ],
  "guete": {
   "belastbar": 687,
-  "preis_echo": 275,
-  "abgeschnitten": 81,
+  "preis_echo": 277,
+  "abgeschnitten": 80,
   "unbekannt": 0,
   "leer": 0
  },
@@ -436,7 +436,7 @@
    "league": "EPL",
    "winner": "Draw (Nottingham Forest FC vs. Tottenham Hotspur FC)",
    "moneyFav": "Tottenham Hotspur FC",
-   "priceFav": "Tottenham Hotspur FC",
+   "priceFav": "Nottingham Forest FC",
    "moneyShare": 0.584,
    "priceProb": 0.357,
    "moneyOK": false,
@@ -466,6 +466,18 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 598772
+  },
+  {
+   "key": "unl-hrv-eng-2026-10-03",
+   "league": "UEFA-NATIONS-LEAGUE",
+   "winner": "England",
+   "moneyFav": "England",
+   "priceFav": "England",
+   "moneyShare": 0.975,
+   "priceProb": 0.568,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 598450
   },
   {
    "key": "epl-bri-lee-2026-09-05",
@@ -586,21 +598,9 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 475718
-  },
-  {
-   "key": "lal-ray-esp-2026-09-15",
-   "league": "LA-LIGA",
-   "winner": "Rayo Vallecano de Madrid",
-   "moneyFav": "Rayo Vallecano de Madrid",
-   "priceFav": "Rayo Vallecano de Madrid",
-   "moneyShare": 0.657,
-   "priceProb": 0.427,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 459593
   }
  ],
- "generatedAt": "2026-10-03T19:36:43.472453+00:00",
+ "generatedAt": "2026-10-03T20:00:15.993766+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -611,7 +611,7 @@
   "mls": 646,
   "epl": 529,
   "soccer": 800,
-  "tennis": 590,
+  "tennis": 588,
   "ucl": 543,
   "la-liga": 529,
   "bundesliga": 485,
@@ -623,7 +623,7 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 607,
+  "esports": 620,
   "cs2": 422,
   "lol": 439,
   "dota": 10,
@@ -633,7 +633,7 @@
   "boxing": 284,
   "golf": 443,
   "f1": 432,
-  "cricket": 556,
+  "cricket": 554,
   "afc-champions-league-elite": 133,
   "allsvenskan": 1,
   "austria-bundesliga": 330,
@@ -658,9 +658,9 @@
   "liga-mx-apertura": 2,
   "ligue-2": 492,
   "naitons-league": 1,
-  "national-league": 484,
+  "national-league": 483,
   "nations-league": 25,
-  "norway-eliteserien": 463,
+  "norway-eliteserien": 478,
   "poland-ekstraklasa": 400,
   "premier-league": 504,
   "saudi-professional-league": 532,
@@ -674,7 +674,7 @@
   "uefa-champions-league": 26,
   "uefa-conference-league": 29,
   "uefa-europa-league": 18,
-  "uefa-nations-league": 721,
+  "uefa-nations-league": 713,
   "uefa-womens-champions-league": 2,
   "ukraine-premier-liha": 457,
   "womens-champions-league": 400
@@ -685,8 +685,8 @@
   "sweepAdded": 413
  },
  "vorStats": {
-  "kandidaten": 23,
-  "budgetLeer": 1,
+  "kandidaten": 24,
+  "budgetLeer": 2,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
   "mitAnteilen": 22,
@@ -694,104 +694,104 @@
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1255,
-   "usd": 17240676,
+   "n": 1510,
+   "usd": 21119203,
    "beispiel": "fifwc-mex-ecu-2026-06-30"
   },
   "balance": {
-   "n": 2,
-   "usd": 673953,
+   "n": 3,
+   "usd": 680696,
    "beispiel": "balance-of-power-2026-midterms"
   },
   "super": {
-   "n": 29,
-   "usd": 551800,
+   "n": 30,
+   "usd": 555180,
    "beispiel": "super-bowl-champion-2026-731"
   },
   "presidential": {
-   "n": 13,
-   "usd": 334073,
+   "n": 12,
+   "usd": 332287,
    "beispiel": "presidential-election-winner-2028"
   },
   "fed": {
-   "n": 20,
-   "usd": 258523,
-   "beispiel": "fed-decision-in-january-20260729233815502"
+   "n": 22,
+   "usd": 314563,
+   "beispiel": "fed-decision-in-december-20260729232808632"
+  },
+  "cbb": {
+   "n": 92,
+   "usd": 276126,
+   "beispiel": "cbb-uconn-mich-2026-04-06"
   },
   "uefa": {
-   "n": 9,
-   "usd": 226533,
+   "n": 11,
+   "usd": 230558,
    "beispiel": "uefa-champions-league-team-to-advance-to-2027-quarters"
   },
   "col": {
-   "n": 48,
-   "usd": 199123,
+   "n": 42,
+   "usd": 195452,
    "beispiel": "col-cry-ray-2026-05-27"
+  },
+  "world": {
+   "n": 39,
+   "usd": 170651,
+   "beispiel": "world-cup-golden-boot-winner"
   },
   "btc": {
    "n": 23,
    "usd": 148938,
    "beispiel": "btc-updown-5m-1784322000"
   },
-  "world": {
-   "n": 35,
-   "usd": 121186,
-   "beispiel": "world-cup-golden-boot-winner"
+  "2026": {
+   "n": 20,
+   "usd": 132706,
+   "beispiel": "2026-mens-us-open-winner-tennis"
   },
   "nbasl": {
    "n": 1,
    "usd": 97044,
    "beispiel": "nbasl-cle-nop-2026-07-15"
   },
-  "cbb": {
-   "n": 1,
-   "usd": 67887,
-   "beispiel": "cbb-uconn-mich-2026-04-06"
-  },
-  "ecs": {
-   "n": 8,
-   "usd": 67699,
-   "beispiel": "ecs-ars-mci-2026-08-16-more-markets"
-  },
   "democratic": {
    "n": 16,
    "usd": 62644,
    "beispiel": "democratic-presidential-nominee-2028"
   },
-  "2026": {
-   "n": 13,
-   "usd": 58574,
-   "beispiel": "2026-nba-draft-1st-overall-pick"
+  "us": {
+   "n": 7,
+   "usd": 59279,
+   "beispiel": "us-announces-halt-in-iran-offensive-operations-byptptpt-20260718015003096"
   },
   "will": {
-   "n": 11,
-   "usd": 33907,
-   "beispiel": "will-predictfun-launch-a-token-by"
+   "n": 10,
+   "usd": 45504,
+   "beispiel": "will-the-us-confirm-that-aliens-exist-before-2027"
+  },
+  "how": {
+   "n": 4,
+   "usd": 39686,
+   "beispiel": "how-many-fed-rate-cuts-in-2026"
   },
   "ballon": {
-   "n": 7,
-   "usd": 30629,
+   "n": 8,
+   "usd": 31596,
    "beispiel": "ballon-dor-winner-2026"
+  },
+  "coreweave": {
+   "n": 6,
+   "usd": 29977,
+   "beispiel": "coreweave-announces-bankruptcy-by"
   },
   "nato": {
    "n": 1,
-   "usd": 29015,
+   "usd": 28983,
    "beispiel": "nato-x-russia-military-clash-in-2025"
   },
-  "npb": {
-   "n": 7,
-   "usd": 23399,
-   "beispiel": "npb-chi-fuk-2026-06-26"
-  },
-  "usc": {
-   "n": 5,
-   "usd": 21345,
-   "beispiel": "usc-psg-av-2026-08-12"
-  },
-  "microstrategy": {
-   "n": 1,
-   "usd": 20509,
-   "beispiel": "microstrategy-sell-any-bitcoin-in-2025"
+  "khl": {
+   "n": 11,
+   "usd": 28291,
+   "beispiel": "khl-spa-met-2026-10-02"
   }
  }
 }
