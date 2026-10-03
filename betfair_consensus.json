@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-10-03T21:34:46.938563+00:00",
-"count": 21,
-"covered": 12,
+"generatedAt": "2026-10-03T21:49:55.060622+00:00",
+"count": 24,
+"covered": 14,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -50,6 +50,7 @@
 "leaguesMitAnker": [
 "Argentinian Primera Division",
 "Brazilian Serie A",
+"Brazilian Serie B",
 "UEFA Nations League",
 "UEFA Nations League A"
 ],
@@ -65,13 +66,13 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 48103,
-"remaining": 4951897,
+"used": 48288,
+"remaining": 4951712,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
 },
-"ankerQuote": 0.833,
+"ankerQuote": 0.667,
 "games": [
 {
 "matchId": "36068811",
@@ -83,65 +84,98 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Atl Tucuman",
-"moneySharePct": 80,
-"moneyOdd": 21.0,
-"moneyDir": "out",
-"totVol": 171647,
-"pinnOdd": 3.11,
-"softOdd": 11.7,
-"softN": 24,
+"moneySharePct": 55,
+"moneyOdd": 17.5,
+"moneyDir": "in",
+"totVol": 249585,
+"pinnOdd": null,
+"softOdd": 14.49,
+"softN": 23,
 "poly": {
-"vol": 74862,
-"odd": 1.29,
-"sharePct": 99,
+"vol": 83090,
+"odd": 28.57,
+"sharePct": 24,
 "shareSrc": "geld",
 "key": "arg-cat-bar-2026-10-03",
 "sideKey": "CA Tucumán",
 "whales": [
 {
 "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
-"usd": 15119
+"usd": 726
 },
 {
 "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
-"usd": 4069
+"usd": 184
 },
 {
 "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
-"usd": 4045
+"usd": 183
 },
 {
 "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-"usd": 3451
-},
-{
-"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
-"usd": 2170
-},
-{
-"wallet": "0x162ca4c5249987872fea1e15c846d7fe80316c47",
-"usd": 1933
+"usd": 157
 }
 ],
-"whaleUsd": 45742
+"whaleUsd": 1250
 },
-"pinn": {
-"home": 0.3032,
-"draw": 0.5481,
-"away": 0.1487,
-"fav": "draw"
-},
+"pinn": null,
 "soft": {
-"home": 0.1555,
-"draw": 0.3817,
-"away": 0.4629,
-"fav": "away",
-"n": 24
+"home": 0.0736,
+"draw": 0.6249,
+"away": 0.3015,
+"fav": "draw",
+"n": 23
 },
 "pinnMovePP": null,
 "pinnMove": null,
 "verdict": "uneinig",
 "agree": false,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Atl Tucuman v Barracas Central",
+"grund": "kein_pinnacle",
+"kandidat": "Atlético Tucuman v Barracas Central",
+"key": "soccer_argentina_primera_division",
+"nSoft": 23,
+"pinnacleImEvent": false,
+"nBuecher": 23
+}
+},
+{
+"matchId": "36068698",
+"home": "Newells",
+"away": "Lanus",
+"league": "Argentinian Primera Division",
+"country": "AR",
+"kickoff": "2026-10-03T20:00:00Z",
+"live": true,
+"moneySide": "draw",
+"moneyName": "The Draw",
+"moneySharePct": 75,
+"moneyOdd": 1.08,
+"moneyDir": "in",
+"totVol": 113833,
+"pinnOdd": 1.3,
+"softOdd": 1.09,
+"softN": 22,
+"poly": null,
+"pinn": {
+"home": 0.1206,
+"draw": 0.7285,
+"away": 0.1508,
+"fav": "draw"
+},
+"soft": {
+"home": 0.076,
+"draw": 0.8358,
+"away": 0.0882,
+"fav": "draw",
+"n": 22
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
 "pinnTotals": null
 },
 {
@@ -155,11 +189,11 @@
 "moneySide": "home",
 "moneyName": "England",
 "moneySharePct": 100,
-"moneyOdd": 1.17,
-"moneyDir": "in",
-"totVol": 93955,
+"moneyOdd": 1.18,
+"moneyDir": "out",
+"totVol": 99175,
 "pinnOdd": null,
-"softOdd": 1.17,
+"softOdd": 1.15,
 "softN": 26,
 "poly": {
 "vol": 24059,
@@ -173,9 +207,9 @@
 },
 "pinn": null,
 "soft": {
-"home": 0.8041,
-"draw": 0.1394,
-"away": 0.0565,
+"home": 0.806,
+"draw": 0.1377,
+"away": 0.0563,
 "fav": "home",
 "n": 26
 },
@@ -195,6 +229,43 @@
 }
 },
 {
+"matchId": "36100637",
+"home": "Atletico MG",
+"away": "Red Bull Bragantino",
+"league": "Brazilian Serie A",
+"country": "BR",
+"kickoff": "2026-10-03T21:30:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Atletico MG",
+"moneySharePct": 75,
+"moneyOdd": 1.4,
+"moneyDir": "in",
+"totVol": 87491,
+"pinnOdd": 2.08,
+"softOdd": 2.0,
+"softN": 34,
+"poly": null,
+"pinn": {
+"home": 0.4549,
+"draw": 0.2921,
+"away": 0.253,
+"fav": "home"
+},
+"soft": {
+"home": 0.5333,
+"draw": 0.2606,
+"away": 0.2062,
+"fav": "home",
+"n": 34
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
 "matchId": "36130364",
 "home": "Greece",
 "away": "Germany",
@@ -204,10 +275,10 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "Germany",
-"moneySharePct": 87,
-"moneyOdd": 1.93,
-"moneyDir": "out",
-"totVol": 73031,
+"moneySharePct": 86,
+"moneyOdd": 1.92,
+"moneyDir": "in",
+"totVol": 76010,
 "pinnOdd": 1.87,
 "softOdd": 1.83,
 "softN": 35,
@@ -257,9 +328,9 @@
 "moneySide": "home",
 "moneyName": "Republic of Ireland",
 "moneySharePct": 83,
-"moneyOdd": 2.2,
+"moneyOdd": 2.16,
 "moneyDir": "in",
-"totVol": 70120,
+"totVol": 73087,
 "pinnOdd": null,
 "softOdd": 2.06,
 "softN": 24,
@@ -275,9 +346,9 @@
 },
 "pinn": null,
 "soft": {
-"home": 0.447,
-"draw": 0.2805,
-"away": 0.2725,
+"home": 0.4501,
+"draw": 0.2793,
+"away": 0.2706,
 "fav": "home",
 "n": 24
 },
@@ -297,43 +368,6 @@
 }
 },
 {
-"matchId": "36100637",
-"home": "Atletico MG",
-"away": "Red Bull Bragantino",
-"league": "Brazilian Serie A",
-"country": "BR",
-"kickoff": "2026-10-03T21:30:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Atletico MG",
-"moneySharePct": 72,
-"moneyOdd": 2.28,
-"moneyDir": "out",
-"totVol": 60532,
-"pinnOdd": 2.2,
-"softOdd": 2.1,
-"softN": 46,
-"poly": null,
-"pinn": {
-"home": 0.4398,
-"draw": 0.2829,
-"away": 0.2773,
-"fav": "home"
-},
-"soft": {
-"home": 0.4478,
-"draw": 0.2769,
-"away": 0.2753,
-"fav": "home",
-"n": 46
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
 "matchId": "36131366",
 "home": "Portugal",
 "away": "Norway",
@@ -343,10 +377,10 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Portugal",
-"moneySharePct": 54,
-"moneyOdd": 1.7,
-"moneyDir": "out",
-"totVol": 60063,
+"moneySharePct": 56,
+"moneyOdd": 1.69,
+"moneyDir": "in",
+"totVol": 63475,
 "pinnOdd": 1.65,
 "softOdd": 1.62,
 "softN": 35,
@@ -367,9 +401,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.5814,
-"draw": 0.2147,
-"away": 0.2039,
+"home": 0.5816,
+"draw": 0.2146,
+"away": 0.2038,
 "fav": "home",
 "n": 35
 },
@@ -386,43 +420,6 @@
 "pinnTotals": null
 },
 {
-"matchId": "36068698",
-"home": "Newells",
-"away": "Lanus",
-"league": "Argentinian Primera Division",
-"country": "AR",
-"kickoff": "2026-10-03T20:00:00Z",
-"live": true,
-"moneySide": "draw",
-"moneyName": "The Draw",
-"moneySharePct": 44,
-"moneyOdd": 1.43,
-"moneyDir": "in",
-"totVol": 46122,
-"pinnOdd": 1.6,
-"softOdd": 1.42,
-"softN": 22,
-"poly": null,
-"pinn": {
-"home": 0.1806,
-"draw": 0.5894,
-"away": 0.23,
-"fav": "draw"
-},
-"soft": {
-"home": 0.1694,
-"draw": 0.641,
-"away": 0.1896,
-"fav": "draw",
-"n": 22
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
 "matchId": "36133906",
 "home": "Cuiaba",
 "away": "Ponte Preta",
@@ -433,29 +430,54 @@
 "moneySide": "home",
 "moneyName": "Cuiaba",
 "moneySharePct": 97,
-"moneyOdd": 1.09,
-"moneyDir": "flat",
-"totVol": 33199,
+"moneyOdd": 1.01,
+"moneyDir": "in",
+"totVol": 33723,
 "pinnOdd": null,
-"softOdd": 1.04,
-"softN": 21,
+"softOdd": 1.0,
+"softN": 11,
 "poly": {
-"vol": 10639,
-"odd": 1.06,
-"sharePct": 94,
-"shareSrc": "preis",
+"vol": 36907,
+"odd": 1.01,
+"sharePct": 99,
+"shareSrc": "geld",
 "key": "bra2-cui-pop-2026-10-03",
 "sideKey": "Cuiabá EC",
-"whales": null,
-"whaleUsd": null
+"whales": [
+{
+"wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+"usd": 980
+},
+{
+"wallet": "0x882c2e9d90d28e02a15be0d7f8d3636994305d07",
+"usd": 613
+},
+{
+"wallet": "0x65503c7f9e142ac88b1ce09df3363ff77f188451",
+"usd": 444
+},
+{
+"wallet": "0x946fe170c23baaf733fc98ae0334c7b2d5de67c1",
+"usd": 315
+},
+{
+"wallet": "0xff77d2889218cdb54ee358db931ec0f5cdb08773",
+"usd": 242
+},
+{
+"wallet": "0x4e9b311a4025020ad739a2c1966cff87fe742258",
+"usd": 231
+}
+],
+"whaleUsd": 3560
 },
 "pinn": null,
 "soft": {
-"home": 0.8379,
-"draw": 0.1286,
-"away": 0.0335,
+"home": 0.7651,
+"draw": 0.1013,
+"away": 0.1336,
 "fav": "home",
-"n": 21
+"n": 11
 },
 "pinnMovePP": null,
 "pinnMove": null,
@@ -467,9 +489,9 @@
 "grund": "kein_pinnacle",
 "kandidat": "Cuiabá v Ponte Preta",
 "key": "soccer_brazil_serie_b",
-"nSoft": 21,
+"nSoft": 11,
 "pinnacleImEvent": false,
-"nBuecher": 21
+"nBuecher": 11
 }
 },
 {
@@ -483,9 +505,9 @@
 "moneySide": "away",
 "moneyName": "Denmark",
 "moneySharePct": 64,
-"moneyOdd": 2.06,
-"moneyDir": "flat",
-"totVol": 31234,
+"moneyOdd": 2.08,
+"moneyDir": "out",
+"totVol": 31907,
 "pinnOdd": 2.01,
 "softOdd": 1.95,
 "softN": 35,
@@ -506,9 +528,9 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.2588,
-"draw": 0.2597,
-"away": 0.4815,
+"home": 0.2587,
+"draw": 0.2596,
+"away": 0.4817,
 "fav": "away",
 "n": 35
 },
@@ -535,9 +557,9 @@
 "moneySide": "away",
 "moneyName": "Spain",
 "moneySharePct": 99,
-"moneyOdd": 1.34,
-"moneyDir": "in",
-"totVol": 22506,
+"moneyOdd": 1.4,
+"moneyDir": "out",
+"totVol": 22602,
 "pinnOdd": null,
 "softOdd": 1.38,
 "softN": 26,
@@ -553,9 +575,9 @@
 },
 "pinn": null,
 "soft": {
-"home": 0.1304,
-"draw": 0.1903,
-"away": 0.6792,
+"home": 0.1309,
+"draw": 0.1908,
+"away": 0.6783,
 "fav": "away",
 "n": 26
 },
@@ -573,6 +595,89 @@
 "pinnacleImEvent": false,
 "nBuecher": 26
 }
+},
+{
+"matchId": "36142371",
+"home": "Netherlands",
+"away": "Serbia",
+"league": "UEFA Nations League A",
+"country": "International",
+"kickoff": "2026-10-04T18:45:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Netherlands",
+"moneySharePct": 92,
+"moneyOdd": 1.18,
+"moneyDir": "flat",
+"totVol": 21512,
+"pinnOdd": 1.15,
+"softOdd": 1.15,
+"softN": 35,
+"poly": {
+"vol": 31737,
+"odd": 1.18,
+"sharePct": 84,
+"shareSrc": "preis",
+"key": "unl-nld-ser-2026-10-04",
+"sideKey": "Netherlands",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.8281,
+"draw": 0.1118,
+"away": 0.0601,
+"fav": "home"
+},
+"soft": {
+"home": 0.8162,
+"draw": 0.1207,
+"away": 0.0631,
+"fav": "home",
+"n": 35
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36133900",
+"home": "Botafogo SP",
+"away": "Vila Nova",
+"league": "Brazilian Serie B",
+"country": "BR",
+"kickoff": "2026-10-03T21:30:00Z",
+"live": true,
+"moneySide": "away",
+"moneyName": "Vila Nova",
+"moneySharePct": 55,
+"moneyOdd": 3.85,
+"moneyDir": "out",
+"totVol": 19401,
+"pinnOdd": 3.02,
+"softOdd": 3.15,
+"softN": 30,
+"poly": null,
+"pinn": {
+"home": 0.3593,
+"draw": 0.3302,
+"away": 0.3105,
+"fav": "home"
+},
+"soft": {
+"home": 0.3683,
+"draw": 0.3405,
+"away": 0.2912,
+"fav": "home",
+"n": 30
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "uneinig",
+"agree": false,
+"pinnTotals": null
 },
 {
 "matchId": "36139253",
@@ -602,8 +707,8 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.6599,
-"draw": 0.1912,
+"home": 0.6608,
+"draw": 0.1903,
 "away": 0.1489,
 "fav": "home"
 },
@@ -614,10 +719,10 @@
 "fav": "home",
 "n": 35
 },
-"pinnMovePP": 0.3,
+"pinnMovePP": 0.4,
 "pinnMove": {
-"movePP": 0.3,
-"stepPP": 0.3,
+"movePP": 0.4,
+"stepPP": 0.4,
 "n": 25,
 "move": false,
 "laeuft": true
@@ -639,7 +744,7 @@
 "moneySharePct": 71,
 "moneyOdd": 3.2,
 "moneyDir": "flat",
-"totVol": 2779,
+"totVol": 2839,
 "pinnOdd": null,
 "softOdd": 3.1,
 "softN": 31,
@@ -655,9 +760,9 @@
 },
 "pinn": null,
 "soft": {
-"home": 0.3821,
-"draw": 0.3001,
-"away": 0.3178,
+"home": 0.3808,
+"draw": 0.3025,
+"away": 0.3167,
 "fav": "home",
 "n": 31
 },
@@ -688,8 +793,8 @@
 "moneyName": "Scotland",
 "moneySharePct": 100,
 "moneyOdd": 1.83,
-"moneyDir": "out",
-"totVol": 117574,
+"moneyDir": "flat",
+"totVol": 117698,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -726,9 +831,9 @@
 "moneySide": "home",
 "moneyName": "Argentina",
 "moneySharePct": 95,
-"moneyOdd": 1.05,
-"moneyDir": "flat",
-"totVol": 63446,
+"moneyOdd": 1.04,
+"moneyDir": "in",
+"totVol": 63855,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -789,14 +894,23 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Tolima",
-"moneySharePct": 87,
+"moneySharePct": 86,
 "moneyOdd": 1.26,
-"moneyDir": "out",
-"totVol": 27769,
+"moneyDir": "flat",
+"totVol": 29641,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
-"poly": null,
+"poly": {
+"vol": 8542,
+"odd": 1.27,
+"sharePct": 79,
+"shareSrc": "preis",
+"key": "col1-cdt-bcf-2026-10-03",
+"sideKey": "CD Tolima",
+"whales": null,
+"whaleUsd": null
+},
 "pinn": null,
 "soft": null,
 "pinnMovePP": null,
@@ -820,13 +934,22 @@
 "moneySide": "home",
 "moneyName": "Deportivo Maldonado",
 "moneySharePct": 88,
-"moneyOdd": 1.37,
+"moneyOdd": 1.33,
 "moneyDir": "in",
-"totVol": 22981,
+"totVol": 23953,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
-"poly": null,
+"poly": {
+"vol": 11581,
+"odd": 1.36,
+"sharePct": 74,
+"shareSrc": "preis",
+"key": "uru1-mal-esp-2026-10-03",
+"sideKey": "Deportivo Maldonado",
+"whales": null,
+"whaleUsd": null
+},
 "pinn": null,
 "soft": null,
 "pinnMovePP": null,
@@ -853,10 +976,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Guarani (Par)",
-"moneySharePct": 85,
-"moneyOdd": 3.85,
+"moneySharePct": 75,
+"moneyOdd": 13.0,
 "moneyDir": "out",
-"totVol": 18488,
+"totVol": 21653,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -884,10 +1007,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Forge",
-"moneySharePct": 92,
-"moneyOdd": 1.16,
+"moneySharePct": 91,
+"moneyOdd": 1.02,
 "moneyDir": "in",
-"totVol": 8301,
+"totVol": 9002,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -906,6 +1029,37 @@
 }
 },
 {
+"matchId": "36143355",
+"home": "Nacional Potosi",
+"away": "CDT Real Oruro",
+"league": "Bolivian Cup",
+"country": "BO",
+"kickoff": "2026-10-03T21:15:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Nacional Potosi",
+"moneySharePct": 81,
+"moneyOdd": 1.16,
+"moneyDir": "in",
+"totVol": 6517,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": null,
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Nacional Potosi v CDT Real Oruro",
+"grund": "kein_kandidat",
+"naechster": "Rio Ave FC v Nacional"
+}
+},
+{
 "matchId": "36140368",
 "home": "Deportes Temuco",
 "away": "Cobreloa Calama",
@@ -915,10 +1069,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Deportes Temuco",
-"moneySharePct": 60,
-"moneyOdd": 2.76,
-"moneyDir": "in",
-"totVol": 5152,
+"moneySharePct": 61,
+"moneyOdd": 2.86,
+"moneyDir": "out",
+"totVol": 5820,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -946,10 +1100,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Boyaca Patriotas",
-"moneySharePct": 87,
-"moneyOdd": 2.12,
-"moneyDir": "flat",
-"totVol": 2808,
+"moneySharePct": 75,
+"moneyOdd": 7.0,
+"moneyDir": "out",
+"totVol": 3470,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -994,22 +1148,20 @@
 "pinnTotals": null,
 "ankerGrund": {
 "spiel": "AD Isidro Metapan v Atletico Balboa",
-"kandidat": "Atletico Mineiro v Bragantino-SP",
-"key": "soccer_brazil_campeonato",
-"score": 0.5,
-"grund": "name"
+"grund": "kein_kandidat",
+"naechster": "Clube de Regatas Brasil v Atletico Goianiense"
 }
 }
 ],
 "ankerN": 6,
 "ankerNOffen": 150,
-"ankerMit": 5,
+"ankerMit": 4,
 "ankerDiagnose": {
 "nach": {
 "kein_kandidat": 122,
 "zeit": 4,
-"kein_pinnacle": 11,
-"name": 2
+"name": 2,
+"kein_pinnacle": 12
 },
 "beispiele": [
 {
@@ -1021,6 +1173,15 @@
 "abstandH": 284.2,
 "matchId": "36136590",
 "liga": "Colombian Primera B"
+},
+{
+"spiel": "Floresta EC v Botafogo PB",
+"kandidat": "Botafogo-SP v Vila Nova",
+"key": "soccer_brazil_serie_b",
+"score": 0.5,
+"grund": "name",
+"matchId": "36140325",
+"liga": "Brazilian Serie C"
 },
 {
 "spiel": "Azerbaijan v Lithuania",
@@ -1043,17 +1204,6 @@
 "liga": "Friendlies International U19"
 },
 {
-"spiel": "Malta v Andorra",
-"grund": "kein_pinnacle",
-"kandidat": "Malta v Andorra",
-"key": "soccer_uefa_nations_league",
-"nSoft": 31,
-"pinnacleImEvent": false,
-"nBuecher": 31,
-"matchId": "36142548",
-"liga": "UEFA Nations League D"
-},
-{
 "spiel": "Kosovo v Austria",
 "grund": "kein_pinnacle",
 "kandidat": "Kosovo v Austria",
@@ -1065,14 +1215,25 @@
 "liga": "UEFA Nations League B"
 },
 {
-"spiel": "Romania v Sweden",
+"spiel": "Malta v Andorra",
 "grund": "kein_pinnacle",
-"kandidat": "Romania v Sweden",
+"kandidat": "Malta v Andorra",
 "key": "soccer_uefa_nations_league",
 "nSoft": 31,
 "pinnacleImEvent": false,
 "nBuecher": 31,
-"matchId": "36139159",
+"matchId": "36142548",
+"liga": "UEFA Nations League D"
+},
+{
+"spiel": "Ukraine v Hungary",
+"grund": "kein_pinnacle",
+"kandidat": "Ukraine v Hungary",
+"key": "soccer_uefa_nations_league",
+"nSoft": 31,
+"pinnacleImEvent": false,
+"nBuecher": 31,
+"matchId": "36139162",
 "liga": "UEFA Nations League B"
 },
 {
@@ -1087,14 +1248,14 @@
 "liga": "UEFA Nations League B"
 },
 {
-"spiel": "Ukraine v Hungary",
+"spiel": "Romania v Sweden",
 "grund": "kein_pinnacle",
-"kandidat": "Ukraine v Hungary",
+"kandidat": "Romania v Sweden",
 "key": "soccer_uefa_nations_league",
 "nSoft": 31,
 "pinnacleImEvent": false,
 "nBuecher": 31,
-"matchId": "36139162",
+"matchId": "36139159",
 "liga": "UEFA Nations League B"
 },
 {
@@ -1116,6 +1277,17 @@
 "abstandH": 147.0,
 "matchId": "36149197",
 "liga": "Thai League 3"
+},
+{
+"spiel": "Atl Tucuman v Barracas Central",
+"grund": "kein_pinnacle",
+"kandidat": "Atlético Tucuman v Barracas Central",
+"key": "soccer_argentina_primera_division",
+"nSoft": 23,
+"pinnacleImEvent": false,
+"nBuecher": 23,
+"matchId": "36068811",
+"liga": "Argentinian Primera Division"
 },
 {
 "spiel": "England v Czechia",
@@ -1144,9 +1316,9 @@
 "grund": "kein_pinnacle",
 "kandidat": "Cuiabá v Ponte Preta",
 "key": "soccer_brazil_serie_b",
-"nSoft": 21,
+"nSoft": 11,
 "pinnacleImEvent": false,
-"nBuecher": 21,
+"nBuecher": 11,
 "matchId": "36133906",
 "liga": "Brazilian Serie B"
 },
@@ -1181,15 +1353,6 @@
 "abstandH": 46.8,
 "matchId": "36122657",
 "liga": "Uruguayan Primera Division"
-},
-{
-"spiel": "AD Isidro Metapan v Atletico Balboa",
-"kandidat": "Atletico Mineiro v Bragantino-SP",
-"key": "soccer_brazil_campeonato",
-"score": 0.5,
-"grund": "name",
-"matchId": "36140605",
-"liga": "Salvadoran Primera Division"
 }
 ]
 }
