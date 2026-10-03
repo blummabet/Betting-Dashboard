@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-03T19:03:40.481747+00:00",
+ "generatedAt": "2026-10-03T19:31:17.392897+00:00",
  "heute": "2026-10-03",
  "messungen": [
   {
@@ -51,9 +51,9 @@
    "mindestN": 150,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 261,
+   "standN": 266,
    "zustand": "bereit",
-   "stand": "261 von 150 Beobachtungen · faellig in 6 Tag(en)",
+   "stand": "266 von 150 Beobachtungen · faellig in 6 Tag(en)",
    "fortschritt": 1.0,
    "tageBisFaellig": 6
   },
@@ -70,9 +70,9 @@
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "nachtrag": "27.09.2026: Zwischenstand n=152 (Mindestzahl 40 erreicht). Treffer 66,5 %, ROI -4,5 % (UG -14,3 %), CLV -0,04 pp. Die Rueckschau (77,1 % / +19,9 %) haelt vorwaerts nicht. Heutige Public-Regel seit 03.09.: n=47, ROI +14,2 % (UG -10,0 %).",
-   "standN": 400,
+   "standN": 401,
    "zustand": "bereit",
-   "stand": "400 von 40 Beobachtungen · faellig in 27 Tag(en)",
+   "stand": "401 von 40 Beobachtungen · faellig in 27 Tag(en)",
    "fortschritt": 1.0,
    "tageBisFaellig": 27
   },
@@ -223,6 +223,60 @@
    "tageBisFaellig": 29
   },
   {
+   "id": "ligen-watch-betfair",
+   "titel": "Schlagen die 12 eingefrorenen Betfair-Ligen die Top-5 — vorwaerts?",
+   "frage": "ROI aller Betfair-Track-Signale (alle Maerkte, Signalquote minus 2 % Kommission) in den am 03.10. eingefrorenen 12 Ligen, abgerechnet ab 04.10., gegen die Kontrolle Top-5-Ligen (EPL, La Liga, Bundesliga, Serie A, Ligue 1). Urteil ueber die Rendite-Untergrenze der Liste; der Abstand zur Kontrolle steht daneben.",
+   "warum": "03.10.2026 (Lucas: „welche Liga am besten abschneidet … in einem Monat naechster Check“). In freigabe.json lagen 12 Ligen ueber der Huerde — gegen 13,7, die per Zufall zu erwarten waren; Liga-Rendite Haelfte 1 sagte Haelfte 2 nicht voraus (−6,6 %). Eine taeglich neu sortierte Rangliste misst die Auswahl, nicht die Ligen. Deshalb Liste eingefroren (ligen_watch.LISTEN), gezaehlt wird nur, was danach abgerechnet wird. Entscheidung vorab: Untergrenze > 0 bei n >= 300 -> Liga-Filter fuer Betfair-Pushes; Liste nicht besser als Kontrolle -> Liga-Idee fuer Betfair begraben.",
+   "gestartet": "2026-10-04",
+   "faellig": "2026-11-01",
+   "quelle": "ligen_watch.json -> listen.betfair_liste",
+   "messer": "ligen_betfair",
+   "mindestN": 300,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "standN": 0,
+   "zustand": "sammelt",
+   "stand": "0 von 300 Beobachtungen · faellig in 29 Tag(en)",
+   "fortschritt": 0.0,
+   "tageBisFaellig": 29
+  },
+  {
+   "id": "ligen-watch-poly",
+   "titel": "Tragen E-Sport und ITF-Tennis auf Poly weiter — gegen die Top-Fussball-Ligen?",
+   "frage": "ROI der Poly-Shortlist-Plays (pnl/stake) mit erstem Signal ab 04.10. in den Listen E-Sport und ITF-Tennis, gegen die Kontrolle EPL/LaLiga/Bundesliga/Ligue 1. Urteil ueber die Untergrenze je Liste.",
+   "warum": "03.10.2026 (Lucas: „das selbe gilt aber fuer Poly auch … Tennis traegt nirgends bei Poly?“). Bisher: E-Sport +8,1 % (UG +3,3 %), ITF +7,5 % bei n=31, ATP/WTA zusammen −1,5 %, EPL −9,7 %. ITF ist zu klein fuer einen Beleg — eingefroren, damit die naechsten Wochen ihn liefern oder widerlegen. Entscheidung vorab: ITF-UG > 0 -> ITF in den Auto-Bet, ATP/WTA raus; E-Sport-OG < 0 -> E-Sport-Gewicht zurueck.",
+   "gestartet": "2026-10-04",
+   "faellig": "2026-11-01",
+   "quelle": "ligen_watch.json -> listen.poly_esport / poly_itf",
+   "messer": "ligen_poly",
+   "mindestN": 150,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "standN": 0,
+   "zustand": "sammelt",
+   "stand": "0 von 150 Beobachtungen · faellig in 29 Tag(en)",
+   "fortschritt": 0.0,
+   "tageBisFaellig": 29
+  },
+  {
+   "id": "reihenfolge-signale",
+   "titel": "Macht es einen Unterschied, wer zuerst zeigt — Poly, Betfair oder Pinnacle?",
+   "frage": "Je Spiel und Seite vor Anpfiff: erster Zeitpunkt von Betfair-Geld >= 65 %, Poly-Geld >= 65 %, Pinnacle +3 pp. ROI je Muster (z. B. poly>betfair) und je allein-erster Quelle, gewertet zur Quote des Signals, das das Muster komplett macht. Gezaehlt: Seiten mit >= 2 Signalen und eindeutigem Ersten.",
+   "warum": "03.10.2026 (Lucas: „wer war zuerst pini/betfair/poly … dickes Wallet … danach Betfair-Push“). Die Money Map kennt nur den Endstand, nicht die Reihenfolge — nachtraeglich nicht rekonstruierbar, also ab jetzt mitschreiben (reihenfolge_protokoll.py). Entscheidung vorab: zeigt ein Erster (z. B. poly) bei n >= 60 eine Untergrenze > 0 und die anderen nicht -> eigener Push „X zuerst, Y folgt“; sonst ist die Reihenfolge kein Signal.",
+   "gestartet": "2026-10-03",
+   "faellig": "2026-11-01",
+   "quelle": "reihenfolge_protokoll.json -> settled",
+   "messer": "reihenfolge",
+   "mindestN": 60,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "standN": 0,
+   "zustand": "sammelt",
+   "stand": "0 von 60 Beobachtungen · faellig in 29 Tag(en)",
+   "fortschritt": 0.0,
+   "tageBisFaellig": 29
+  },
+  {
    "id": "betfair-einseitigkeit-schwelle",
    "titel": "Traegt eine hoehere Einseitigkeit ausserhalb der Top-5-Ligen?",
    "frage": "Trefferquote und ROI der gesendeten Betfair-Public-Pushes, aufgeteilt nach `leadShare` (80–85 / 85–90 / >=90 %), nur frisch, nur ausserhalb der Top-5-Ligen.",
@@ -280,7 +334,7 @@
    "id": "betfair-kursrutsch",
    "titel": "Traegt ein Kursrutsch ohne nachkommendes Geld — in den Tor-/HZ-Maerkten, vor Anpfiff?",
    "frage": "Trefferquote und ROI der gesendeten Kursrutsch-Alarme — NUR VOR ANPFIFF und NUR in den Tor-/Halbzeit-Maerkten (Quote >=10 % gefallen seit dem ersten Sehen, Geld NICHT einseitig). Urteil ueber die Renditegrenzen, nicht ueber den Punktschaetzer. Zusaetzlich aufgeteilt nach Rutsch-Hoehe (10-15 / >=15 %) und nach Quotenband.",
-   "warum": "19.09.2026 (Lucas): „Alerts wo wir die Schwelle etwas senken, aber dafuer nur schicken, wenn die Quote auch wirklich sinkt ... wirklich Spiele wo die Quote nachweislich gesunken ist um 10 % oder so. Das dann doch ein starkes Signal mmn.“\nRueckblickend gemessen auf 30.918 Ledger-Zeilen (Rendite am SCHLUSSkurs, also am kuerzesten Preis): Rutsch >=10 % UND Geld nicht konzentriert -> n=203, Treffer 48,8 %, ROI +18,3 % [UG +2,3, OG +34,4]. Mit konzentriertem Geld: n=675, ROI -2,6 %. Der Fund haelt die Zeitprobe (erste Haelfte +15,5 %, zweite +21,2 %), ueberlebt das Streichen der drei groessten Gewinner (+11,4 %) und den Cluster-Bootstrap ueber Spiele (UG +2,0 %).\nABER: 22 Schnitte angesehen, und ein Nullmodell ohne jeden Quoten-Effekt liefert in 39 % der Buecher mindestens ein „belegt tragend“ — p = 0,125. Deshalb vorregistriert und NUR im Trades-Kanal. Entscheidung vorab: geht public, sobald die Untergrenze bei n >= 400 frischen Faellen ueber null liegt; faellt die OBERgrenze unter null, wird der Alarm abgeschaltet. Erwartete Rate aus dem Buch: rund 8 Faelle pro Tag.\nDer 15-Minuten-Takt ist dabei KEIN Hindernis, auch das ist gemessen: ein Rutsch >=10 % passiert nur in 0,2 % der Einzelschritte, aber in 7,4 % der ganzen Vor-Anpfiff-Reihen — er sammelt sich ueber Stunden an. Nach dem Sprung laeuft der Preis im Median +-0,0 % weiter, der Sprung selbst faellt im Median 95 Minuten vor Anpfiff.\n\n🔴 19.09.2026, eine Stunde nach dem Bau (Lucas zum ersten Alarm): „Angers 2.28 → 1.50 (−34,2 %), ⚽ läuft … Der Kursrutsch weil 1:0 gemacht mmn. Dann wertlos.“ Er hatte recht, und es war kein Einzelfall: ALLE DREI Alarme des ersten Abends kamen aus laufenden Spielen (22., 63., 44. Minute). Die Messung oben beschreibt aber ausschliesslich VOR-ANPFIFF-Daten — betfair_track_record.capture aktualisiert die Signale nur `if _is_prematch`. Der Alarm feuerte also auf einer Population, die nie gemessen wurde. Seit heute: nur vor Anpfiff. Die drei live gesendeten Zeilen stehen als void mit Grund im Buch und zaehlen nicht mit.\n\n🔴 19.09.2026, zweiter Anlass (Lucas): „Das sind alles drop weil beim Spielstand was passiert ... Die 3.9 gab's irgendwann zu Spielbeginn, klar dann kurz vor Pause kleinere odd“ — Under 0.5 Goals 3.90 → 1.30, live. Die Live-Sperre faengt genau das. Sein Einwand war aber auch der Anlass, den Fund nach MARKT aufzuteilen, und dort faellt er auseinander:\n    Match Odds        n=103  Treffer 37,9 %  ROI  -9,1 %  [-29,3, +11,1]\n    Tor-/HZ-Maerkte   n=100  Treffer 60,0 %  ROI +46,6 %  [+22,3, +70,9]\nDie Haelfte mit dem groessten n ist negativ — das „+18,3 %“ des Gesamtfunds kam nicht aus dem behaupteten Mechanismus, sondern aus der anderen Haelfte. In den Tor-Maerkten haelt er jede Probe: ohne Half Time +34,4 % [+12,9] (n=83), erste Fensterhaelfte +42,3 %, zweite +50,9 %, Quoten unter 3,0 +23,6 % [+4,8] (n=74), 97 verschiedene Spiele auf 100 Zeilen. Match Odds ist seit heute ausgeschlossen.\nEHRLICH DAZU: diese Aufteilung entstand NACH dem Blick auf die Gesamtzahl. Zwei Gruppen sind eine milde Mehrfachprobe, aber es bleibt ein zweiter Blick auf dieselben Daten — Grund genug, den Alarm im Testlauf zu lassen.",
+   "warum": "19.09.2026 (Lucas): „Alerts wo wir die Schwelle etwas senken, aber dafuer nur schicken, wenn die Quote auch wirklich sinkt ... wirklich Spiele wo die Quote nachweislich gesunken ist um 10 % oder so. Das dann doch ein starkes Signal mmn.“\nRueckblickend gemessen auf 30.918 Ledger-Zeilen (Rendite am SCHLUSSkurs, also am kuerzesten Preis): Rutsch >=10 % UND Geld nicht konzentriert -> n=203, Treffer 48,8 %, ROI +18,3 % [UG +2,3, OG +34,4]. Mit konzentriertem Geld: n=675, ROI -2,6 %. Der Fund haelt die Zeitprobe (erste Haelfte +15,5 %, zweite +21,2 %), ueberlebt das Streichen der drei groessten Gewinner (+11,4 %) und den Cluster-Bootstrap ueber Spiele (UG +2,0 %).\nABER: 22 Schnitte angesehen, und ein Nullmodell ohne jeden Quoten-Effekt liefert in 39 % der Buecher mindestens ein „belegt tragend“ — p = 0,125. Deshalb vorregistriert und NUR im Trades-Kanal. Entscheidung vorab: geht public, sobald die Untergrenze bei n >= 400 frischen Faellen ueber null liegt; faellt die OBERgrenze unter null, wird der Alarm abgeschaltet. Erwartete Rate aus dem Buch: rund 8 Faelle pro Tag.\nDer 15-Minuten-Takt ist dabei KEIN Hindernis, auch das ist gemessen: ein Rutsch >=10 % passiert nur in 0,2 % der Einzelschritte, aber in 7,4 % der ganzen Vor-Anpfiff-Reihen — er sammelt sich ueber Stunden an. Nach dem Sprung laeuft der Preis im Median +-0,0 % weiter, der Sprung selbst faellt im Median 95 Minuten vor Anpfiff.\n\n🔴 19.09.2026, eine Stunde nach dem Bau (Lucas zum ersten Alarm): „Angers 2.28 → 1.50 (−34,2 %), ⚽ läuft … Der Kursrutsch weil 1:0 gemacht mmn. Dann wertlos.“ Er hatte recht, und es war kein Einzelfall: ALLE DREI Alarme des ersten Abends kamen aus laufenden Spielen (22., 63., 44. Minute). Die Messung oben beschreibt aber ausschliesslich VOR-ANPFIFF-Daten — betfair_track_record.capture aktualisiert die Signale nur `if _is_prematch`. Der Alarm feuerte also auf einer Population, die nie gemessen wurde. Seit heute: nur vor Anpfiff. Die drei live gesendeten Zeilen stehen als void mit Grund im Buch und zaehlen nicht mit.\n\n🔴 19.09.2026, zweiter Anlass (Lucas): „Das sind alles drop weil beim Spielstand was passiert ... Die 3.9 gab's irgendwann zu Spielbeginn, klar dann kurz vor Pause kleinere odd“ — Under 0.5 Goals 3.90 → 1.30, live. Die Live-Sperre faengt genau das. Sein Einwand war aber auch der Anlass, den Fund nach MARKT aufzuteilen, und dort faellt er auseinander:\n    Match Odds        n=103  Treffer 37,9 %  ROI  -9,1 %  [-29,3, +11,1]\n    Tor-/HZ-Maerkte   n=100  Treffer 60,0 %  ROI +46,6 %  [+22,3, +70,9]\nDie Haelfte mit dem groessten n ist negativ — das „+18,3 %“ des Gesamtfunds kam nicht aus dem behaupteten Mechanismus, sondern aus der anderen Haelfte. In den Tor-Maerkten haelt er jede Probe: ohne Half Time +34,4 % [+12,9] (n=83), erste Fensterhaelfte +42,3 %, zweite +50,9 %, Quoten unter 3,0 +23,6 % [+4,8] (n=74), 97 verschiedene Spiele auf 100 Zeilen. Match Odds ist seit heute ausgeschlossen.\nEHRLICH DAZU: diese Aufteilung entstand NACH dem Blick auf die Gesamtzahl. Zwei Gruppen sind eine milde Mehrfachprobe, aber es bleibt ein zweiter Blick auf dieselben Daten — Grund genug, den Alarm im Testlauf zu lassen.\n\n🔴 03.10.2026, nachgeprueft mit dem ECHTEN Kursverlauf (Lucas: „ob wir den Kursrutsch richtig definiert haben“). 3.107 Staende von betfair_track_state.json aus der Git-Historie, Live-Regel nachgespielt (erster Lauf vor Anpfiff mit >=10 % Fall, Anteil <65 %, Quote >=1,30, kein Match Odds; Quote IN DIESEM MOMENT):\n    bis 18.09. (Fundzeitraum)   n=175  ROI +28,2 %  [UG +8,1]\n    ab 19.09. (vorwaerts)       n=178  ROI  -2,6 %  [-18,4 … +13,2]  Quote sagt 48,0 %, getroffen 45,5 %\nZwei Fehler gefunden, beide in der MESSUNG, nicht im Markt: (1) Die Rueckrechnung und die Zahl vom 03.10. (n=78, -21,5 %) waehlten Faelle nach dem ENDstand (Rutsch noch beim Anpfiff da) und rechneten zur Schlussquote — der Alarm feuert aber beim ersten Ueberschreiten; 26 % der Faelle kippen danach sogar die Geldseite. Fehlerklasse: am Endstand gesucht, am Signalzeitpunkt gefeuert. (2) Der geratene Volumenboden 5.000 EUR liess vorwaerts 9 von 178 Faellen durch (Markt-Median ~300 EUR) — daher die wenigen Pushes. Ergebnis: der Alarm ist nicht kaputt, er ist ungefaehr fair bepreist — der Fund bis 18.09. hat sich vorwaerts nicht wiederholt.",
    "gestartet": "2026-09-19",
    "faellig": "2026-11-15",
    "quelle": "betfair_rutsch_ledger.json -> abgerechnete Zeilen",
@@ -313,6 +367,24 @@
    "tageBisFaellig": 58
   },
   {
+   "id": "poly-wallet-clv",
+   "titel": "Laesst sich belegtes Wallet-Koennen (CLV) mitnehmen, wenn wir nahe an ihrem Preis einsteigen?",
+   "frage": "Papier, $10 je Play: offene Vor-Anpfiff-Positionen von Wallets mit clvFenN >= 20 und CLV-Untergrenze > 0 (eingefroren beim Einstieg), frisch gesehen (<= 90 Min), Wallet-Einstieg bekannt, Sportart nicht gesperrt. Arm „nehmbar“: unser Preis hoechstens 1 Punkt ueber dem Wallet-Einstieg. Arm „zu spaet“: mehr als 1 Punkt, genauso abgerechnet (Gegenprobe). Urteil ueber die ROI-Untergrenze von „nehmbar“, nicht ueber den Punktschaetzer.",
+   "warum": "03.10.2026 (Lucas, Poly-Gesamtschau). Befund: 54 von 560 Wallets (>= 20 gewertete Positionen) schlagen den Schlusskurs belegt, per Zufall ~28 — schwaches, aber messbares Koennen. Gleichzeitig verliert das Top-20-Nachspiel-Depot (Auswahl nach P&L) n=500, ROI −8,8 % (UG −20,4 %), Ø verpasster Move nur 0,37 Punkte — es war also die Auswahl, nicht vor allem die Verspaetung. Dieses Buch trennt beides: Auswahl nach CLV-Untergrenze, Einstieg nur nahe am Wallet-Preis. Erwartung vorab: die meisten Top-CLV-Wallets kaufen Aussenseiter (Trefferquote 3-16 %), die Streuung ist hoch — n wird lange brauchen. Entscheidung vorab: liegt die ROI-Untergrenze von „nehmbar“ bei n >= 150 ueber null, wird ein echter Nachspiel-Push gebaut; liegt die OBERgrenze unter null, wird das Buch beendet. Zeigt „zu spaet“ dasselbe wie „nehmbar“, traegt nicht der Einstieg, sondern die Auswahl.",
+   "gestartet": "2026-10-03",
+   "faellig": "2026-12-15",
+   "quelle": "poly_wallet_clv_follow.json -> settled mit arm=nehmbar",
+   "messer": "wallet_clv",
+   "mindestN": 150,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "standN": 0,
+   "zustand": "sammelt",
+   "stand": "0 von 150 Beobachtungen · faellig in 73 Tag(en)",
+   "fortschritt": 0.0,
+   "tageBisFaellig": 73
+  },
+  {
    "id": "stake-kleine-liga",
    "titel": "Trägt eine große Einzelwette vor Anpfiff in einer kleinen Fußball-Liga?",
    "frage": "ROI (geldgewichtet je Meldung) der Kleine-Liga-Meldungen: Fußball, Ebene 3 oder Reserve-Liga (stake_liga_stufe), Einzelwette, Quote ab 1,35, Einsatz >= 1,5x Norm der Liga (sonst Median der Ebene), vor Anpfiff ODER live bis Minute 75. Live und vor Anpfiff getrennt ausgewertet. Urteil über die Rendite-Untergrenze, nicht über den Punktschätzer.",
@@ -329,6 +401,24 @@
    "stand": "11 von 100 Beobachtungen · faellig in 81 Tag(en)",
    "fortschritt": 0.11,
    "tageBisFaellig": 81
+  },
+  {
+   "id": "betfair-ou35",
+   "titel": "Traegt Over/Under 3.5 mit 65-80 % Geld auf einer Seite — am Spieltag gespielt?",
+   "frage": "ROI der gesendeten Alarme (nur Trades): Betfair-Markt Over/Under 3.5 Goals, fuehrende Seite mit 65-80 % des gematchten Geldes, Quote 1,30-6,0, gesendet hoechstens 3 h vor Anpfiff, je Spiel einmal. Abgerechnet zur Quote beim Senden. Urteil ueber die Rendite-Untergrenze.",
+   "warum": "03.10.2026 (Lucas: „gewisse Schwellen gehoeren geaendert ... wir holen das Maximum noch nicht raus“). Systematische Suche: 12.394 Betfair-Signale, rund 2.000 Kombinationen (Markt, Geldanteil, Quote, Bewegung, Zufluss, Konzentration, Richtung, Volumen, Timing), gefunden bis 25.09., geprueft danach; Rendite zur letzten Vor-Anpfiff-Quote minus 2 % Kommission. In der Breite KEIN Ueberschuss (44 Treffer in beiden Haelften gegen 57-136 im Nullmodell ohne Kante). Einzige Ausnahme, die groesste stabile Gruppe: O/U 3.5 mit 65-80 % — erste Haelfte n=247 +8,8 %, zweite n=267 +8,5 %, in jeder Unterteilung positiv. Unter ~2.000 Schnitten gefunden, also Kandidat, kein Beleg. (Die am selben Tag genannte Kursrutsch-Zahl n=78, −21,5 % war am Endstand gemessen und ist ueberholt, s. betfair-kursrutsch.) Entscheidung vorab: Untergrenze bei n >= 200 ueber null -> eigener Push mit Einsatzempfehlung; Obergrenze unter null -> abschalten.\n\n🔴 03.10.2026 abends, nachgeprueft mit dem echten Kursverlauf: die Suche nahm Anteil und Quote KURZ VOR ANPFIFF (Endstand), der Alarm feuert beim ersten Lauf <= 3 h mit 65-80 %. Live-Regel nachgespielt: bis 25.09. n=2.048 ROI +1,7 % [-2,0 … +5,3], ab 26.09. n=513 +2,9 % [-4,3 … +10,1]. Vom +8,8 % bleibt ein Rest nahe null — und ~60 Spiele am Tag. Deshalb NUR BUCH, kein Push (BF_OU35_PUSH=1 schaltet ihn ein). Die Messung bleibt: jeder Kandidat wird zur Quote im Signalmoment gebucht und abgerechnet.",
+   "gestartet": "2026-10-03",
+   "faellig": "2026-12-31",
+   "quelle": "betfair_ou35_ledger.json -> won/lost",
+   "messer": "bf_ou35",
+   "mindestN": 200,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "standN": 0,
+   "zustand": "sammelt",
+   "stand": "0 von 200 Beobachtungen · faellig in 89 Tag(en)",
+   "fortschritt": 0.0,
+   "tageBisFaellig": 89
   },
   {
    "id": "horizont-shortlist",
@@ -350,7 +440,7 @@
    "tageBisFaellig": -4
   }
  ],
- "n": 19,
- "nOffen": 18,
+ "n": 24,
+ "nOffen": 23,
  "nHandlung": 2
 }
