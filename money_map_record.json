@@ -1,6 +1,22 @@
 {
-"generatedAt": "2026-10-03T14:19:05.954001+00:00",
+"generatedAt": "2026-10-03T14:49:05.283243+00:00",
 "byVerdict": {
+"uneinig": {
+"n": 559,
+"wins": 177,
+"hitRate": 0.3166,
+"polyN": 524,
+"polyWins": 133,
+"polyHitRate": 0.2538,
+"pinnN": 329,
+"pinnHitRate": 0.6353,
+"nRoi": 419,
+"roi": -0.4533,
+"roiLb": -0.536,
+"nClv": 419,
+"clv": -19.94,
+"clvLb": -22.6426
+},
 "konsens": {
 "n": 1380,
 "wins": 1186,
@@ -10,28 +26,12 @@
 "polyHitRate": 0.7912,
 "pinnN": 213,
 "pinnHitRate": 0.784,
-"nRoi": 977,
-"roi": 0.3955,
-"roiLb": 0.3551,
-"nClv": 977,
-"clv": 18.68,
-"clvLb": 17.2807
-},
-"uneinig": {
-"n": 560,
-"wins": 178,
-"hitRate": 0.3179,
-"polyN": 525,
-"polyWins": 133,
-"polyHitRate": 0.2533,
-"pinnN": 330,
-"pinnHitRate": 0.6333,
-"nRoi": 419,
-"roi": -0.4533,
-"roiLb": -0.536,
-"nClv": 419,
-"clv": -19.94,
-"clvLb": -22.6426
+"nRoi": 978,
+"roi": 0.3951,
+"roiLb": 0.3547,
+"nClv": 978,
+"clv": 18.66,
+"clvLb": 17.2627
 },
 "teil": {
 "n": 32,
@@ -102,9 +102,9 @@
 "hitRate": 0.7826
 },
 "English Premier League": {
-"n": 46,
-"wins": 24,
-"hitRate": 0.5217
+"n": 45,
+"wins": 23,
+"hitRate": 0.5111
 },
 "Brazilian Serie B": {
 "n": 44,
@@ -446,6 +446,11 @@
 "wins": 4,
 "hitRate": 0.8
 },
+"Friendly Matches": {
+"n": 5,
+"wins": 5,
+"hitRate": 1.0
+},
 "Greek Cup": {
 "n": 5,
 "wins": 4,
@@ -486,17 +491,7 @@
 "wins": 4,
 "hitRate": 1.0
 },
-"Friendly Matches": {
-"n": 4,
-"wins": 4,
-"hitRate": 1.0
-},
 "Latvian Virsliga": {
-"n": 4,
-"wins": 3,
-"hitRate": 0.75
-},
-"UAE Arabian Gulf League": {
 "n": 4,
 "wins": 3,
 "hitRate": 0.75
@@ -537,6 +532,11 @@
 "hitRate": 1.0
 },
 "South Korean K2 League": {
+"n": 3,
+"wins": 2,
+"hitRate": 0.6667
+},
+"UAE Arabian Gulf League": {
 "n": 3,
 "wins": 2,
 "hitRate": 0.6667
@@ -672,17 +672,17 @@
 "n": 1235,
 "wins": 996,
 "hitRate": 0.8065,
-"nRoi": 920,
-"roi": 0.303,
-"roiLb": 0.2552,
-"nClv": 920,
-"clv": 13.4,
-"clvLb": 11.5863
+"nRoi": 921,
+"roi": 0.3026,
+"roiLb": 0.2549,
+"nClv": 921,
+"clv": 13.38,
+"clvLb": 11.5736
 },
 "weak": {
-"n": 737,
-"wins": 373,
-"hitRate": 0.5061,
+"n": 736,
+"wins": 372,
+"hitRate": 0.5054,
 "nRoi": 502,
 "roi": -0.2038,
 "roiLb": -0.2746,
@@ -692,14 +692,33 @@
 }
 },
 "divergence": {
-"n": 560,
-"betfairWins": 178,
-"betfairRate": 0.3179,
-"polyN": 525,
+"n": 559,
+"betfairWins": 177,
+"betfairRate": 0.3166,
+"polyN": 524,
 "polyWins": 133,
-"polyRate": 0.2533
+"polyRate": 0.2538
 },
 "recent": [
+{
+"matchId": "36142828",
+"home": "Crystal Palace",
+"away": "Bristol City",
+"league": "Friendly Matches",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Bristol City",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+2
+],
+"kickoff": "2026-10-03T11:30:00Z",
+"settledAt": "2026-10-03T14:34:11.532569+00:00"
+},
 {
 "matchId": "36120090",
 "home": "Chesterfield",
@@ -1440,37 +1459,18 @@
 ],
 "kickoff": "2026-10-02T12:00:00Z",
 "settledAt": "2026-10-02T15:16:26.898743+00:00"
-},
-{
-"matchId": "36137619",
-"home": "South Korea",
-"away": "Venezuela",
-"league": "Friendlies International",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "South Korea",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-10-02T11:00:00Z",
-"settledAt": "2026-10-02T14:01:33.317073+00:00"
 }
 ],
 "global": {
-"n": 1972,
-"wins": 1369,
-"hitRate": 0.6942,
-"nRoi": 1422,
+"n": 1971,
+"wins": 1368,
+"hitRate": 0.6941,
+"nRoi": 1423,
 "roi": 0.124,
 "roiLb": 0.0829,
-"nClv": 1422,
+"nClv": 1423,
 "clv": 6.35,
-"clvLb": 4.8589
+"clvLb": 4.8555
 },
-"pending": 28
+"pending": 29
 }
