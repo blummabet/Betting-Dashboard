@@ -238,3 +238,26 @@ class TestCiCheckoutHatHistorie(unittest.TestCase):
         n = src.count("uses: actions/checkout@")
         self.assertGreater(n, 0)
         self.assertEqual(src.count("fetch-depth: 0"), n, "jeder Checkout braucht die Historie")
+
+
+class TestFristJeRunner(unittest.TestCase):
+    """03.10.2026: 150 s auch auf GitHub-Runnern liess update-liga und mls-odds-refresh rot werden
+    (fetch dort zeitweise langsamer, vorher 11-13 Min und erfolgreich)."""
+
+    def _frist(self, env):
+        src = open(SKRIPT, encoding="utf-8").read()
+        a = src.index('if [ "${RUNNER_ENVIRONMENT:-}"')
+        b = src.index("fi", a) + 2
+        r = subprocess.run(["bash", "-c", src[a:b] + '\necho "$FRIST_S"'], capture_output=True,
+                           text=True, env={"PATH": os.environ["PATH"], **env})
+        return int(r.stdout.strip())
+
+    def test_github_runner_lange_frist(self):
+        self.assertGreaterEqual(self._frist({"RUNNER_ENVIRONMENT": "github-hosted"}), 600)
+
+    def test_mac_runner_kurze_frist(self):
+        self.assertEqual(self._frist({"RUNNER_ENVIRONMENT": "self-hosted"}), 150)
+        self.assertEqual(self._frist({}), 150)
+
+    def test_override_gewinnt(self):
+        self.assertEqual(self._frist({"RUNNER_ENVIRONMENT": "github-hosted", "CI_PULL_FRIST_S": "90"}), 90)
