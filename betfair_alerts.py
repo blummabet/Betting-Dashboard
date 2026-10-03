@@ -148,7 +148,34 @@ RUTSCH_LEDGER_FILE = "betfair_rutsch_ledger.json"
 RUTSCH_LEDGER_KEEP = 800
 RUTSCH_BERICHT_FILE = "betfair_rutsch_bericht.json"   # schreibt betfair_public_eval (Abrechnung)
 RUTSCH_ZIEL_N      = 400                               # Register `betfair-kursrutsch`: Urteil ab hier
-RUTSCH_STATE_FILE  = "betfair_track_state.json"   # dort steht entryOdd, beim ERSTEN Sehen eingefroren
+RUTSCH_STATE_FILE  = "betfair_track_state.json"
+
+# -- 🎯 Over/Under 3.5, Geld 65-80 % (03.10.2026, vorangemeldet, Register `betfair-ou35`) ---------
+# Lucas: „gewisse Schwellen gehoeren geaendert ... ich glaube nicht, dass wir das Maximum schon
+# rausholen." Gesucht wurde systematisch: 12.394 Betfair-Signale, rund 2.000 Kombinationen aus
+# Markt, Geldanteil, Quote, Bewegung, Zufluss, Konzentration, Richtung, Volumen und Timing —
+# gefunden in der ersten Haelfte (bis 25.09.), geprueft in der zweiten. Rendite zur letzten
+# Vor-Anpfiff-Quote, minus 2 % Kommission. In der Breite: 44 Kombinationen in beiden Haelften
+# ueber +5 %, ein Nullmodell OHNE Kante liefert 57-136 — also kein Ueberschuss.
+# Die eine Ausnahme ist dieser Schnitt, die groesste stabile Gruppe:
+#     Over/Under 3.5, Geldanteil 65-80 %   erste Haelfte n=247 +8,8 %   zweite n=267 +8,5 %
+# und in jeder Unterteilung positiv (Spieltag/frueh, mit/ohne Zufluss, konzentriert/nicht).
+# EHRLICH: unter 2.000 Versuchen gefunden — ein Kandidat, kein Beleg. Deshalb nur Trades,
+# eigenes Buch, Urteil ab n=200. Gesendet wird am SPIELTAG (<= 3 h vor Anpfiff), weil Lucas so
+# spielt und die Rueckrechnung den letzten Vor-Anpfiff-Stand bewertet hat.
+OU35_MARKT       = "Over/Under 3.5 Goals"
+OU35_SHARE_MIN   = 0.65
+OU35_SHARE_MAX   = 0.80
+OU35_MIN_ODD     = 1.30
+OU35_MAX_ODD     = 6.0
+OU35_FENSTER_H   = float(os.environ.get("BF_OU35_FENSTER_H") or 3.0)
+OU35_SEEN_FILE   = "betfair_ou35_seen.json"
+OU35_LEDGER_FILE = "betfair_ou35_ledger.json"
+OU35_BERICHT_FILE = "betfair_ou35_bericht.json"
+OU35_PUSH        = os.environ.get("BF_OU35_PUSH") == "1"   # 03.10.2026 abends: Standard AUS, s. ou35_runde
+OU35_PUSH_DECKEL = 5
+OU35_KEEP        = 3000   # Buch statt Push: ~60 Eintraege am Tag, 800 waeren nach 13 Tagen herausgerollt
+OU35_ZIEL_N      = 200   # dort steht entryOdd, beim ERSTEN Sehen eingefroren
 DEDUP_FACTOR   = 1.5
 SEEN_FILE      = "betfair_alerts_seen.json"
 
@@ -684,6 +711,115 @@ def rutsch_alert(m, einstieg, min_fall=RUTSCH_MIN_FALL, max_share=RUTSCH_MAX_SHA
                       "entryOdd": entry_odd, "fall": fall,
                       "onLeader": _money_on_leader(m, lead_name)}
     return bester
+
+
+def ou35_alert(m, now=None):
+    """Over/Under 3.5 mit 65-80 % Geld auf der fuehrenden Seite, vor Anpfiff am Spieltag. REIN."""
+    now = now or datetime.now(timezone.utc)
+    li = m.get("liveInfo") or {}
+    if li.get("finished") or li.get("is_ht") or li.get("time") is not None:
+        return None
+    try:
+        ko = datetime.fromisoformat(str(m.get("kickoff")).replace("Z", "+00:00"))
+    except (ValueError, TypeError):
+        return None
+    if ko.tzinfo is None:
+        ko = ko.replace(tzinfo=timezone.utc)
+    h = (ko - now).total_seconds() / 3600
+    if not (0 < h <= OU35_FENSTER_H):
+        return None
+    name, share, odd = _market_lead(m, OU35_MARKT)
+    if not isinstance(share, (int, float)) or not (OU35_SHARE_MIN <= share < OU35_SHARE_MAX):
+        return None
+    if not isinstance(odd, (int, float)) or not (OU35_MIN_ODD <= odd <= OU35_MAX_ODD):
+        return None
+    mk = (m.get("markets") or {}).get(OU35_MARKT) or {}
+    vol = sum((r.get("vol") or 0.0) for r in (mk.get("runners") or []))
+    return {"scenario": "ou35", "matchId": str(m.get("matchId")), "value": vol, "total": vol,
+            "home": m.get("home"), "away": m.get("away"), "league": m.get("league"),
+            "flag": _flag(m), "market": OU35_MARKT, "tier": tier_of(m),
+            "kickoff": m.get("kickoff"), "live": li, "stundenVor": round(h, 2),
+            "leadName": name, "leadShare": share, "leadOdd": odd}
+
+
+def _log_ou35(a) -> None:
+    """Jeden gesendeten O/U-3.5-Alarm ins eigene Buch (Abrechnung: betfair_public_eval)."""
+    try:
+        led = json.load(open(OU35_LEDGER_FILE, encoding="utf-8"))
+        if not isinstance(led, list):
+            led = []
+    except Exception:
+        led = []
+    k = "ou35:%s" % a.get("matchId")
+    if any(e.get("k") == k for e in led):
+        return
+    led.append({"k": k, "matchId": a.get("matchId"), "scenario": "ou35",
+                "market": a.get("market"), "league": a.get("league"),
+                "home": a.get("home"), "away": a.get("away"),
+                "leadName": a.get("leadName"), "leadOdd": a.get("leadOdd"),
+                "leadShare": a.get("leadShare"), "value": a.get("value"),
+                "mktVol": a.get("total"), "tier": a.get("tier"), "stundenVor": a.get("stundenVor"),
+                "sentAt": datetime.now(timezone.utc).isoformat(),
+                "status": "pending", "htScore": None,
+                "live": {"time": None, "score": [None, None]}})
+    try:
+        json.dump(led[-OU35_KEEP:], open(OU35_LEDGER_FILE, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
+    except Exception as e:
+        print("O/U-3.5-Ledger-Schreibfehler:", e)
+
+
+def ou35_runde(kandidaten, seen, senden, buchen, push=None) -> tuple:
+    """Eine Runde O/U 3.5: jeden NEUEN Kandidaten buchen, senden nur wenn OU35_PUSH. -> (gesendet, gebucht)
+
+    🔴 03.10.2026 abends (Lucas: „ob wir den Kursrutsch richtig definiert haben"). Beim
+    Nachpruefen des Kursrutschs mit dem echten Kursverlauf (3.107 Staende von
+    betfair_track_state.json aus der Git-Historie) fiel derselbe Fehler hier auf:
+
+        Raster-Suche (Endstand: Anteil + Quote KURZ VOR ANPFIFF)   n=247  +8,8 %  /  n=302 +6,6 %
+        Live-Regel (erster Lauf <= 3 h mit 65-80 %, Quote DANN)     n=2.048 +1,7 % [-2,0 … +5,3]
+                                                                    n=513   +2,9 % [-4,3 … +10,1]
+
+    Fehlerklasse: *eine Regel am Endstand gesucht, aber am Signalzeitpunkt gefeuert.* Der
+    Endstand weiss, wo das Geld am Ende lag — der Alarm weiss es nicht. Und die Live-Regel trifft
+    rund 60 Spiele AM TAG: als Push waere das Laerm im Trades-Kanal gewesen, kein Signal.
+    Dazu stand `_ou[:5]` VOR dem Dedup: fuenf schon gesehene Kandidaten belegten den Deckel, jeder
+    weitere neue fiel still heraus.
+
+    Deshalb: gebucht wird jeder neue Kandidat (das ist die Messung `betfair-ou35`), gesendet nur,
+    wenn BF_OU35_PUSH=1 gesetzt ist. Zum Senden zurueck erst, wenn das Buch es traegt."""
+    push = OU35_PUSH if push is None else push
+    gesendet = gebucht = 0
+    for a in kandidaten:
+        key = "ou35:" + a["matchId"]
+        if key in seen:
+            continue
+        if push and gesendet < OU35_PUSH_DECKEL:
+            if senden(build_ou35_message(a)):
+                gesendet += 1
+        seen[key] = a["value"]
+        buchen(a)
+        gebucht += 1
+    return gesendet, gebucht
+
+
+def build_ou35_message(a, bericht=None) -> str:
+    """Die Karte — optisch eigen, damit sie nicht mit den anderen Szenarien verwechselt wird."""
+    t = ["\U0001f3af <b>O/U 3.5 · GELD 65–80 %</b> · Kandidat aus der Betfair-Raster-Suche\n",
+         "━━━━━━━━━━━━━━\n",
+         "<b>%s</b> @<b>%.2f</b>\n" % (_esc(a.get("leadName") or "?"), a.get("leadOdd") or 0.0),
+         "%s <b>%s</b> v <b>%s</b>\n<i>%s · Anpfiff in %.1f h</i>\n"
+         % (a.get("flag") or "", _esc(a.get("home")), _esc(a.get("away")),
+            _esc(str(a.get("league"))[:40]), a.get("stundenVor") or 0.0),
+         "\U0001f4b6 %s gematcht · %d %% des Geldes auf dieser Seite\n"
+         % (_euro(a.get("total") or 0.0), int((a.get("leadShare") or 0.0) * 100))]
+    b = bericht if isinstance(bericht, dict) else _lade_json(OU35_BERICHT_FILE, {})
+    n = b.get("n") or 0
+    stand = ("bisher %d/%d getroffen · ROI %+.1f %%" % (b.get("wins") or 0, n, 100 * (b.get("roi") or 0))
+             if n else "noch kein Alarm abgerechnet")
+    t.append("\U0001f52c <i>Testlauf, nur Trades · %s. Live-Regel rueckgerechnet: +1,7 %% / +2,9 %% "
+             "(Intervall schliesst null ein), unter ~2.000 Schnitten gefunden — Urteil ab n=%d.</i>"
+             % (stand, OU35_ZIEL_N))
+    return "".join(t)
 
 
 def _lade_json(name, default):
@@ -2038,6 +2174,18 @@ def main():
               % (len(_rutsch), _rs_sent, len(_einstieg)))
     except Exception as _e:
         print("  ⚠️  Kursrutsch-Alarm uebersprungen:", _e)
+
+    # -- 🎯 O/U 3.5 mit 65-80 % Geld (03.10.2026, vorangemeldet) -- je Spiel EIN Eintrag.
+    #    Seit dem Abend des 03.10. NUR BUCH, kein Push (s. ou35_runde).
+    try:
+        _ou_seen = _load_seen(OU35_SEEN_FILE)
+        _ou = [r for r in (ou35_alert(m) for m in (prices.get("matches") or [])) if r]
+        _ou_sent, _ou_neu = ou35_runde(_ou, _ou_seen, send_trades_message, _log_ou35)
+        _save_seen(OU35_SEEN_FILE, _ou_seen)
+        print("  \U0001f3af O/U 3.5 (65-80 %%): %d Kandidat(en), %d neu gebucht, %d gesendet%s"
+              % (len(_ou), _ou_neu, _ou_sent, "" if OU35_PUSH else " (Push aus, nur Buch)"))
+    except Exception as _e:  # noqa: BLE001
+        print("  ⚠️  O/U-3.5-Alarm uebersprungen:", _e)
 
     # 🟡 Öffentlicher Moneyflow (kuratierte, höhere Schwellen) → CocoBet-Community-Channel.
     # Eigener Dedup-State, damit die höhere Public-Schwelle unabhängig vom Trades-Channel greift.

@@ -157,6 +157,12 @@ jobs:
         run: ${{ env.BETFAIR_PY }} betfair_consensus.py
         continue-on-error: true
 
+      # 03.10.2026 (Lucas: „wer war zuerst pini/betfair/poly"). Liest money_map.json, das der
+      # Schritt darueber schreibt — muss also danach laufen. Nur vor Anpfiff, nur lesend.
+      - name: ⏱️ Reihenfolge-Protokoll (wer zeigt zuerst – Poly, Betfair, Pinnacle)
+        run: ${{ env.BETFAIR_PY }} reihenfolge_protokoll.py
+        continue-on-error: true
+
       - name: 🔗 Terminal-Kartenlink (unsere Card neben die Geld-Seite der Boerse)
         run: ${{ env.BETFAIR_PY }} betfair_card_link.py
         continue-on-error: true
@@ -186,6 +192,12 @@ jobs:
       # Das Freigabe-Register lief bisher gar nicht im Takt — freigabe.json wurde einmal von
       # Hand erzeugt und war seitdem alt. Damit die Sektion oben ihren eigenen Stand ehrlich
       # zeigen kann, muss das Register mitlaufen.
+      # 03.10.2026 (Lucas: „welche Liga am besten abschneidet"). Eingefrorene Ligen-Listen,
+      # gezaehlt ab 04.10. — liest das Track-Ledger, also NACH betfair_track_record.py.
+      - name: 🧊 Ligen-Watch (eingefrorene Listen vorwaerts)
+        run: ${{ env.BETFAIR_PY }} ligen_watch.py
+        continue-on-error: true
+
       - name: ✅ Freigabe-Register neu bewerten
         run: ${{ env.BETFAIR_PY }} freigabe.py
         continue-on-error: true
@@ -257,7 +269,7 @@ jobs:
       # kostet den Beleg, waehrend die Wirkung (die Nachricht) laengst draussen ist.
       # Genau dafuer gibt es scripts/ci_sichern.sh — es hing bisher nur an den Poly-Workflows.
       - name: 🔐 Beleg der gesendeten Pushes sofort sichern
-        run: bash scripts/ci_sichern.sh "Beleg der Betfair-Pushes" betfair_public_ledger.json betfair_public_seen.json betfair_alerts_seen.json betfair_public_trichter.json betfair_public_schatten.json betfair_rutsch_ledger.json betfair_rutsch_seen.json
+        run: bash scripts/ci_sichern.sh "Beleg der Betfair-Pushes" betfair_public_ledger.json betfair_public_seen.json betfair_alerts_seen.json betfair_public_trichter.json betfair_public_schatten.json betfair_rutsch_ledger.json betfair_rutsch_seen.json betfair_ou35_ledger.json betfair_ou35_seen.json
         continue-on-error: true
 
       # 20.09.2026 (Vorfall Toulouse–Le Havre, 19.09.): eine Poly-Position lief ins Spiel,
@@ -397,6 +409,8 @@ jobs:
           git add betfair_track_record.json 2>/dev/null || true
           # eigene Zeile: `git add a b` staged NICHTS, wenn eine der beiden fehlt
           git add betfair_track_kompakt.json 2>/dev/null || true
+          git add reihenfolge_protokoll.json 2>/dev/null || true   # 03.10.2026: wer zeigt zuerst
+          git add ligen_watch.json 2>/dev/null || true             # 03.10.2026: eingefrorene Ligen-Listen
           git add betfair_league_norm.json 2>/dev/null || true
           git add betfair_league_norm_state.json 2>/dev/null || true
           git add betfair_direction.json 2>/dev/null || true
@@ -415,6 +429,10 @@ jobs:
           git add betfair_rutsch_ledger.json 2>/dev/null || true
           git add betfair_rutsch_bericht.json 2>/dev/null || true
           git add betfair_rutsch_seen.json 2>/dev/null || true
+          # 03.10.2026: O/U-3.5-Kandidat (nur Trades), Buch + Bericht + Dedup.
+          git add betfair_ou35_ledger.json 2>/dev/null || true
+          git add betfair_ou35_bericht.json 2>/dev/null || true
+          git add betfair_ou35_seen.json 2>/dev/null || true
           git add betfair_public_schatten.json 2>/dev/null || true
           # 20.09.2026: die Wache ueber offene Poly-Positionen — Befund und ihr Dedup-Stand.
           # Eigene Zeile je Datei, s.o.

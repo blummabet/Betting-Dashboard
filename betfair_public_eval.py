@@ -48,6 +48,9 @@ LEDGER_KEEP = 800
 RUTSCH_FILE = BASE / "betfair_rutsch_ledger.json"
 RUTSCH_RECORD_FILE = BASE / "betfair_rutsch_bericht.json"
 RUTSCH_KEEP = 800
+OU35_KEEP = 3000   # muss zu betfair_alerts.OU35_KEEP passen
+OU35_FILE = BASE / "betfair_ou35_ledger.json"           # 03.10.2026, Register `betfair-ou35`
+OU35_RECORD_FILE = BASE / "betfair_ou35_bericht.json"
 SCHATTEN_FILE = BASE / "betfair_public_schatten.json"
 SCHATTEN_RECORD_FILE = BASE / "betfair_public_schatten_bericht.json"
 SCHATTEN_KEEP = 4000
@@ -667,6 +670,21 @@ def main():
                      rbericht["roi"], rbericht["pending"]))
     except Exception as _e:
         print("  ⚠️  Kursrutsch-Buch nicht abgerechnet:", _e)
+
+    # ── das O/U-3.5-Buch (03.10.2026, vorangemeldet): dieselbe Kette ──────────────────
+    try:
+        ou = _load(OU35_FILE, [])
+        if isinstance(ou, list) and ou:
+            ou, _ = abrechnen(ou, prices, track_results, keep=OU35_KEEP)   # 3000: Buch statt Push, ~60/Tag
+            obericht = summarize(ou)
+            json.dump(ou, open(OU35_FILE, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
+            json.dump(obericht, open(OU35_RECORD_FILE, "w", encoding="utf-8"),
+                      ensure_ascii=False, indent=1)
+            print("  \U0001f3af O/U-3.5-Eval: %d abgerechnet (%s%% Treffer, ROI %s) · %d offen"
+                  % (obericht["n"], round((obericht["hitRate"] or 0) * 100),
+                     obericht["roi"], obericht["pending"]))
+    except Exception as _e:
+        print("  ⚠️  O/U-3.5-Buch nicht abgerechnet:", _e)
 
     # 20.09.2026: die Bilanz nennt ihre eigene Luecke (s. gesendet_ohne_beleg).
     try:

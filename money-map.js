@@ -184,7 +184,10 @@
       +duel
       +'<table class="mm-tbl"><thead><tr><th>Verdikt</th><th class="mm-cn">n</th><th class="mm-cn">trifft</th><th class="mm-cn">Rendite</th><th class="mm-cn">Poly</th><th class="mm-cn">Pinn</th></tr></thead><tbody>'+rows+'</tbody></table>'
       +bsSec+lgSec+gmSec
-      +'<div class="mm-trk-foot">Gesamt: '+(g.n||0)+' abgerechnet · '+(rec.pending||0)+' offen · Poly-Seite = die von Polymarket favorisierte Seite</div>';
+      +'<div class="mm-trk-foot">Gesamt: '+(g.n||0)+' abgerechnet · '+(rec.pending||0)+' offen · Poly-Seite = die von Polymarket favorisierte Seite'
+      // 03.10.2026: bis dahin wurden Zeilen live fortgeschrieben und kannten den Ausgang — sie zaehlen nicht.
+      +(rec.ausgeschlossenLive?'<br>'+rec.ausgeschlossenLive+' ältere Zeilen nicht gewertet: sie wurden bis 03.10. noch während des Spiels fortgeschrieben (Urteil kannte den Spielstand).':'')
+      +'</div>';
   }
 
   function _mmRender(){

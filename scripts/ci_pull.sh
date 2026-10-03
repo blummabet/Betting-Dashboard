@@ -143,7 +143,7 @@ if [ -f buecher_union.py ]; then
   python3 buecher_union.py \
     shortlist_auto_bets_placed.json shortlist_push_ledger.json shortlist_push_seen.json \
     betfair_public_ledger.json betfair_public_seen.json betfair_alerts_seen.json \
-    betfair_rutsch_ledger.json betfair_rutsch_seen.json stake_burst_seen.json || true
+    betfair_rutsch_ledger.json betfair_rutsch_seen.json betfair_ou35_ledger.json betfair_ou35_seen.json stake_burst_seen.json || true
 fi
 
 # ── 19.09.2026: der Pull selbst ist die Quelle der Konfliktmarker ────────────────────────────

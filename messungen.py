@@ -310,7 +310,61 @@ def zaehler_autobet_oktober(base_dir):
                and str(b.get("placedAt") or "") >= "2026-10-01")
 
 
+def zaehler_wallet_clv(base_dir):
+    """Abgerechnete Plays im Arm „nehmbar" (poly_wallet_clv_follow.json). 03.10.2026."""
+    d = _laden(os.path.join(base_dir, "poly_wallet_clv_follow.json"))
+    if d is None:
+        return 0
+    if not isinstance(d, dict):
+        return None
+    return sum(1 for r in (d.get("settled") or []) if isinstance(r, dict)
+               and r.get("arm") == "nehmbar" and r.get("belegt", True)
+               and r.get("result") in ("win", "loss"))
+
+
+def zaehler_bf_ou35(base_dir):
+    """Abgerechnete O/U-3.5-Alarme (betfair_ou35_ledger.json, won/lost). 03.10.2026."""
+    d = _laden(os.path.join(base_dir, "betfair_ou35_ledger.json"))
+    if d is None:
+        return 0
+    if not isinstance(d, list):
+        return None
+    return sum(1 for e in d if isinstance(e, dict) and e.get("status") in ("won", "lost"))
+
+
+
+def zaehler_ligen_watch(base_dir, quelle="betfair_liste"):
+    """Vorwaerts-Zeilen einer eingefrorenen Liste (ligen_watch.json). 03.10.2026."""
+    d = _laden(os.path.join(base_dir, "ligen_watch.json"))
+    if d is None:
+        return 0
+    if not isinstance(d, dict):
+        return None
+    return sum(1 for e in (d.get("zeilen") or {}).values()
+               if isinstance(e, dict) and quelle in (e.get("listen") or ()))
+
+
+def zaehler_ligen_poly(base_dir):
+    """Poly-Listen (E-Sport + ITF) zusammen — die Mindestmenge gilt fuer die E-Sport-Liste."""
+    return zaehler_ligen_watch(base_dir, "poly_esport")
+
+
+def zaehler_reihenfolge(base_dir):
+    """Abgerechnete Seiten mit >= 2 Signalen UND eindeutigem Ersten (reihenfolge_protokoll.json)."""
+    d = _laden(os.path.join(base_dir, "reihenfolge_protokoll.json"))
+    if d is None:
+        return 0
+    if not isinstance(d, dict):
+        return None
+    return sum(1 for e in (d.get("settled") or []) if isinstance(e, dict)
+               and e.get("erster") and isinstance(e.get("r"), (int, float)))
+
 ZAEHLER = {
+    "ligen_betfair": zaehler_ligen_watch,
+    "ligen_poly": zaehler_ligen_poly,
+    "reihenfolge": zaehler_reihenfolge,
+    "bf_ou35": zaehler_bf_ou35,
+    "wallet_clv": zaehler_wallet_clv,
     "autobet_oktober": zaehler_autobet_oktober,
     "serien_wetten": zaehler_serien_wetten,
     "stake_klein": zaehler_stake_klein,

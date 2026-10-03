@@ -34,7 +34,8 @@ def zeile(mid="1", side="home", odd=2.0, **extra):
 def gebucht(mid="1", first=2.0, last=None, win=True, strong=True, verdict="konsens"):
     return {"matchId": mid, "verdict": verdict, "mmStrong": strong, "status": "won" if win else "lost",
             "moneySide": "home", "winner": "home" if win else "away", "moneyWin": win,
-            "moneyOddFirst": first, "moneyOddLast": last, "league": "L"}
+            "moneyOddFirst": first, "moneyOddLast": last, "league": "L",
+            "kickoff": "2026-09-02T18:00:00Z", "updatedAt": "2026-09-02T17:45:00Z"}
 
 
 class TestZeileTraegtDieQuote:
@@ -120,3 +121,25 @@ class TestBilanzRechnetEhrlich:
         assert rec["byVerdict"]["konsens"]["nRoi"] == 2
         assert rec["byStrength"]["strong"]["nRoi"] == 2
         assert rec["byStrength"]["weak"]["nRoi"] == 1
+
+
+
+class TestEingefrorenAbAnpfiff:
+    """🔴 03.10.2026: „Konsens" 89 % Treffer bei 63 % Preis vor Anpfiff, ROI +49 % — die Zeilen
+    wurden live weitergeschrieben und kannten den Ausgang. Gegentests zur alten Fassung."""
+
+    def test_nach_anpfiff_wird_die_zeile_nicht_mehr_angefasst(self):
+        vor = BC.update_mm_ledger([], [zeile(odd=2.0)], now="2026-09-02T17:00:00Z")
+        nach = BC.update_mm_ledger(vor, [zeile(side="away", odd=1.3, verdict="uneinig")],
+                                   now="2026-09-02T18:30:00Z")
+        e = nach[0]
+        assert e["verdict"] == "konsens" and e["moneySide"] == "home" and e["moneyOddLast"] == 2.0
+        assert e["updatedAt"] == "2026-09-02T17:00:00Z"
+
+    def test_erst_nach_anpfiff_gesehen_entsteht_keine_zeile(self):
+        assert BC.update_mm_ledger([], [zeile()], now="2026-09-02T18:05:00Z") == []
+
+    def test_live_fortgeschriebene_altzeile_zaehlt_nicht(self):
+        live = dict(gebucht("L", first=1.6, win=True), updatedAt="2026-09-02T19:40:00Z")
+        rec = BC.mm_summary([live, gebucht("V", first=2.0, win=False)])
+        assert rec["global"]["n"] == 1 and rec["global"]["wins"] == 0

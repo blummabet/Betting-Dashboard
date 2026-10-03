@@ -115,6 +115,11 @@ jobs:
         run: ${{ env.POLY_PYTHON }} poly_shortlist_track.py
         continue-on-error: true
 
+      # 03.10.2026: vorangemeldetes Papierbuch — Wallets mit belegtem CLV, nur nahe an ihrem Preis.
+      - name: 👛 Wallet-CLV-Nachspiel (Papier, read-only)
+        run: ${{ env.POLY_PYTHON }} poly_wallet_clv_follow.py
+        continue-on-error: true
+
       - name: 🔥 Heute-spielenswert → Trades-Channel (Top-Plays der Shortlist)
         run: ${{ env.POLY_PYTHON }} push_shortlist_trades.py
         continue-on-error: true
@@ -255,7 +260,7 @@ jobs:
             poly_money_broad.json poly_money_broad_close.json poly_money_broad_offen.json poly_money_broad_history.json poly_money_upcoming.json poly_wallet_track.json \
             poly_price_path.json \
             poly_resolutions.json poly_shortlist_track.json poly_status.json poly_football_tags.json \
-            poly_direct_bets.json poly_whale_follow_track.json \
+            poly_direct_bets.json poly_whale_follow_track.json poly_wallet_clv_follow.json \
             poly_whale_public_ledger.json poly_public_record.json \
             poly_whale_trades_ledger.json poly_whale_trades_record.json \
             poly_deckung_buch.json \

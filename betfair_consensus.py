@@ -1119,10 +1119,34 @@ def _mm_money_ok(row, single_min=MM_SINGLE_MIN):
     return False
 
 
+def _mm_ts(v):
+    try:
+        t = datetime.fromisoformat(str(v).replace("Z", "+00:00"))
+        return t if t.tzinfo else t.replace(tzinfo=timezone.utc)
+    except (TypeError, ValueError):
+        return None
+
+
+def mm_vor_anpfiff(e) -> bool:
+    """Wurde die Zeile zuletzt VOR Anpfiff geschrieben? Nur dann ist ihr Urteil ein Vorab-Urteil. REIN."""
+    ko, up = _mm_ts((e or {}).get("kickoff")), _mm_ts((e or {}).get("updatedAt"))
+    return ko is not None and up is not None and up <= ko
+
+
 def update_mm_ledger(prev, rows, now=None, keep=2000):
     """11.08.2026 (Lucas Money-Map Tracking): Konsens-Signale mitschreiben (upsert je matchId, solange
-    pending) -> Basis fuers spaetere Settlement (gewann die Konsens-Seite?). REIN/testbar."""
+    pending) -> Basis fuers spaetere Settlement (gewann die Konsens-Seite?). REIN/testbar.
+
+    🔴 03.10.2026 (Poly-Gesamtschau): die Money-Map-Bilanz zeigte „Konsens" mit 89 % Treffern bei
+    einer mittleren Quote von 1,62 (63 % Preis) VOR Anpfiff, ROI +49 %. Das gibt es im Fussball
+    nicht. Ursache: die Zeile wurde bis zum Abpfiff weiter geschrieben — Urteil, Geld-Seite und
+    `moneyOddLast` kamen aus dem LAUFENDEN Spiel (391 von 402 Zeilen zuletzt nach Anpfiff
+    geschrieben), und live fliesst das Geld zu dem, der fuehrt. Die Bilanz kannte den Ausgang.
+    Fehlerklasse: eine Vorab-Behauptung, die nach dem Ereignis weiter fortgeschrieben wird.
+    Ab Anpfiff ist die Zeile eingefroren; eine Zeile, die erst nach Anpfiff auftaucht, entsteht
+    gar nicht."""
     now = now or _now_iso()
+    _jetzt = _mm_ts(now)
     led = {}
     for e in (prev or []):
         if isinstance(e, dict) and e.get("matchId"):
@@ -1134,6 +1158,9 @@ def update_mm_ledger(prev, rows, now=None, keep=2000):
         e = led.get(mid)
         if e and e.get("status") not in (None, "pending"):
             continue                              # schon abgerechnet -> nicht ueberschreiben
+        _ko = _mm_ts(r.get("kickoff") or (e or {}).get("kickoff"))
+        if _ko is not None and _jetzt is not None and _jetzt >= _ko:
+            continue                              # ab Anpfiff eingefroren (s. Docstring)
         bf, pinn, poly = r.get("betfair") or {}, r.get("pinn") or {}, r.get("poly") or {}
         # ZWEI Preise, und zwar bewusst:
         #   moneyOddFirst — die Quote, als die Zeile ZUERST auftauchte. Nur die haette man nehmen
@@ -1263,7 +1290,10 @@ def mm_summary(ledger, now=None, recent_keep=40):
             if isinstance(o2, (int, float)) and o2 > 1:
                 b["clv"].append(round((1.0 / o2 - 1.0 / o1) * 100.0, 2))
 
-    settled = [e for e in (ledger or []) if isinstance(e, dict) and e.get("status") in ("won", "lost")]
+    # 03.10.2026: nur Zeilen, deren letzter Stand VOR Anpfiff liegt. Alles davor wurde live
+    # fortgeschrieben und kennt den Ausgang (s. update_mm_ledger) — es zaehlt nirgends mehr mit.
+    settled = [e for e in (ledger or []) if isinstance(e, dict) and e.get("status") in ("won", "lost")
+               and mm_vor_anpfiff(e)]
     for e in settled:
         w = e.get("winner")
         v = e.get("verdict") or "?"
@@ -1357,7 +1387,11 @@ def mm_summary(ledger, now=None, recent_keep=40):
             "recent": recent,
             "global": dict({"n": gn, "wins": gw, "hitRate": _rate(gw, gn)},
                            **_geldfin({"rend": grend, "clv": gclv})),
-            "pending": sum(1 for e in (ledger or []) if isinstance(e, dict) and e.get("status") == "pending")}
+            "pending": sum(1 for e in (ledger or []) if isinstance(e, dict) and e.get("status") == "pending"),
+            # 03.10.2026: wie viele abgerechnete Zeilen NICHT zaehlen, weil sie live fortgeschrieben
+            # wurden — damit der Sprung von ~2.000 auf eine Handvoll erklaert ist, nicht raetselhaft.
+            "ausgeschlossenLive": sum(1 for e in (ledger or []) if isinstance(e, dict)
+                                      and e.get("status") in ("won", "lost") and not mm_vor_anpfiff(e))}
 
 
 # ── Pinnacle-Bewegung ────────────────────────────────────────────────────────

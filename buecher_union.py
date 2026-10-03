@@ -55,12 +55,14 @@ BUECHER = {
     "shortlist_push_ledger.json":      {"liste": None,    "id": ("k", "sentAt")},
     "betfair_public_ledger.json":      {"liste": None,    "id": ("k",)},
     "betfair_rutsch_ledger.json":      {"liste": None,    "id": ("k",)},
+    "betfair_ou35_ledger.json":        {"liste": None,    "id": ("k",)},   # 03.10.2026
     # Dedup-Staende sind flache Abbildungen Schluessel -> Stempel. Auch sie werden vereint:
     # ein Schluessel, den EIN Lauf gesetzt hat, darf ein anderer nicht zuruecknehmen.
     "shortlist_push_seen.json":        {"abbildung": True},
     "betfair_public_seen.json":        {"abbildung": True},
     "betfair_alerts_seen.json":        {"abbildung": True},
     "betfair_rutsch_seen.json":        {"abbildung": True},
+    "betfair_ou35_seen.json":          {"abbildung": True},
     "stake_burst_seen.json":           {"abbildung": True},
 }
 

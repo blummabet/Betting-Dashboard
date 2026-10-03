@@ -441,9 +441,10 @@ class TestMoneyMapSettle(unittest.TestCase):
 
     def _led(self):
         ko = (self.NOW - timedelta(hours=4)).isoformat()
+        vor = (self.NOW - timedelta(hours=5)).isoformat()   # zuletzt VOR Anpfiff geschrieben (03.10.)
         return [
-            {"matchId": "1", "kickoff": ko, "verdict": "konsens", "moneySide": "home", "pinnFav": "home", "status": "pending"},
-            {"matchId": "2", "kickoff": ko, "verdict": "uneinig", "moneySide": "away", "pinnFav": "home", "status": "pending"},
+            {"matchId": "1", "kickoff": ko, "updatedAt": vor, "verdict": "konsens", "moneySide": "home", "pinnFav": "home", "status": "pending"},
+            {"matchId": "2", "kickoff": ko, "updatedAt": vor, "verdict": "uneinig", "moneySide": "away", "pinnFav": "home", "status": "pending"},
             {"matchId": "3", "kickoff": (self.NOW - timedelta(hours=1)).isoformat(), "verdict": "konsens", "moneySide": "home", "status": "pending"},
         ]
 
