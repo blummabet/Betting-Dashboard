@@ -1,15 +1,15 @@
 {
- "n": 680,
+ "n": 682,
  "minOdds": 1.35,
  "moneyHitRate": 0.368,
- "priceHitRate": 0.416,
- "brierMoney": 0.8855,
- "brierPrice": 0.688,
+ "priceHitRate": 0.413,
+ "brierMoney": 0.8837,
+ "brierPrice": 0.6871,
  "disagree": {
-  "n": 191,
+  "n": 195,
   "moneyWon": 26,
-  "priceWon": 59,
-  "neither": 106
+  "priceWon": 57,
+  "neither": 112
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -24,10 +24,10 @@
   },
   {
    "league": "UEFA-NATIONS-LEAGUE",
-   "n": 57,
-   "moneyHitRate": 0.263,
-   "brierMoney": 0.8976,
-   "brierPrice": 0.7673,
+   "n": 59,
+   "moneyHitRate": 0.271,
+   "brierMoney": 0.8774,
+   "brierPrice": 0.7546,
    "verdict": "preis_besser"
   },
   {
@@ -112,9 +112,9 @@
   }
  ],
  "guete": {
-  "belastbar": 680,
-  "preis_echo": 280,
-  "abgeschnitten": 80,
+  "belastbar": 682,
+  "preis_echo": 283,
+  "abgeschnitten": 79,
   "unbekannt": 0,
   "leer": 0
  },
@@ -226,18 +226,6 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 1538448
-  },
-  {
-   "key": "unl-bel-fra-2026-09-28",
-   "league": "UEFA-NATIONS-LEAGUE",
-   "winner": "France",
-   "moneyFav": "France",
-   "priceFav": "France",
-   "moneyShare": 0.838,
-   "priceProb": 0.443,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 1336534
   },
   {
    "key": "ucl-fen-rom-2026-09-10",
@@ -436,7 +424,7 @@
    "league": "EPL",
    "winner": "Draw (Nottingham Forest FC vs. Tottenham Hotspur FC)",
    "moneyFav": "Tottenham Hotspur FC",
-   "priceFav": "Tottenham Hotspur FC",
+   "priceFav": "Nottingham Forest FC",
    "moneyShare": 0.584,
    "priceProb": 0.357,
    "moneyOK": false,
@@ -598,15 +586,27 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 459463
+  },
+  {
+   "key": "fl1-olm-pfc-2026-09-06",
+   "league": "LIGUE-1",
+   "winner": "Paris FC",
+   "moneyFav": "Olympique de Marseille",
+   "priceFav": "Olympique de Marseille",
+   "moneyShare": 0.946,
+   "priceProb": 0.502,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 450346
   }
  ],
- "generatedAt": "2026-10-03T22:35:55.019321+00:00",
+ "generatedAt": "2026-10-03T23:03:06.619712+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 448,
   "nfl": 800,
-  "mlb": 495,
+  "mlb": 493,
   "nhl": 614,
   "mls": 646,
   "epl": 529,
@@ -623,7 +623,7 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 633,
+  "esports": 632,
   "cs2": 422,
   "lol": 439,
   "dota": 10,
@@ -631,14 +631,14 @@
   "ufc": 463,
   "mma": 58,
   "boxing": 286,
-  "golf": 441,
+  "golf": 440,
   "f1": 432,
   "cricket": 553,
   "afc-champions-league-elite": 133,
   "allsvenskan": 1,
   "austria-bundesliga": 330,
   "brazil-serie-b": 4,
-  "bulgaria-parva-liga": 417,
+  "bulgaria-parva-liga": 420,
   "bundesliga-2": 479,
   "champions-league": 311,
   "champions-league-final": 12,
@@ -661,20 +661,20 @@
   "national-league": 461,
   "nations-league": 25,
   "norway-eliteserien": 478,
-  "poland-ekstraklasa": 400,
+  "poland-ekstraklasa": 420,
   "premier-league": 504,
   "saudi-professional-league": 532,
   "scotland-league-cup": 193,
   "scottish-premiership": 447,
   "serbian-superliga": 423,
   "serie-b": 477,
-  "slovenia-prvaliga": 280,
+  "slovenia-prvaliga": 295,
   "sweden-allsvenskan": 413,
   "switzerland-super-league": 399,
   "uefa-champions-league": 26,
   "uefa-conference-league": 29,
   "uefa-europa-league": 18,
-  "uefa-nations-league": 682,
+  "uefa-nations-league": 656,
   "uefa-womens-champions-league": 2,
   "ukraine-premier-liha": 457,
   "womens-champions-league": 400
@@ -694,29 +694,24 @@
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 2150,
-   "usd": 29151561,
+   "n": 2145,
+   "usd": 29276629,
    "beispiel": "fifwc-civ-ecu-2026-06-14"
   },
-  "balance": {
-   "n": 5,
-   "usd": 688163,
-   "beispiel": "balance-of-power-2026-midterms"
+  "cbb": {
+   "n": 167,
+   "usd": 834324,
+   "beispiel": "cbb-uconn-mich-2026-04-06"
   },
   "world": {
-   "n": 39,
-   "usd": 643062,
+   "n": 42,
+   "usd": 767899,
    "beispiel": "world-cup-winner"
   },
   "super": {
    "n": 32,
    "usd": 569075,
    "beispiel": "super-bowl-champion-2026-731"
-  },
-  "cbb": {
-   "n": 90,
-   "usd": 504240,
-   "beispiel": "cbb-sfl-lou-2026-03-19"
   },
   "uefa": {
    "n": 18,
@@ -725,13 +720,18 @@
   },
   "fed": {
    "n": 18,
-   "usd": 253561,
+   "usd": 253539,
    "beispiel": "fed-decision-in-october-20260617190323537"
   },
   "2026": {
-   "n": 37,
-   "usd": 241338,
+   "n": 38,
+   "usd": 242511,
    "beispiel": "2026-f1-drivers-champion"
+  },
+  "republican": {
+   "n": 10,
+   "usd": 241677,
+   "beispiel": "republican-presidential-nominee-2028"
   },
   "nbasl": {
    "n": 7,
@@ -740,12 +740,12 @@
   },
   "pro": {
    "n": 34,
-   "usd": 222801,
+   "usd": 222783,
    "beispiel": "pro-football-2027-champion-20260729185915366"
   },
   "col": {
-   "n": 48,
-   "usd": 216529,
+   "n": 46,
+   "usd": 213629,
    "beispiel": "col-nor-stg-2026-08-20-more-markets"
   },
   "presidential": {
@@ -755,42 +755,42 @@
   },
   "who": {
    "n": 9,
-   "usd": 97258,
+   "usd": 97261,
    "beispiel": "who-will-be-the-next-prime-minister-of-israel-after-the-next-election"
   },
   "us": {
-   "n": 17,
-   "usd": 79977,
+   "n": 16,
+   "usd": 78822,
    "beispiel": "us-announces-end-of-iranian-blockade-byptptpt-20260713152715080"
   },
   "how": {
    "n": 12,
-   "usd": 74228,
+   "usd": 74236,
    "beispiel": "how-many-fed-rate-cuts-in-2026"
   },
   "btc": {
    "n": 24,
    "usd": 70205,
-   "beispiel": "btc-updown-5m-1773990900"
+   "beispiel": "btc-updown-5m-1784322000"
+  },
+  "ncaa": {
+   "n": 14,
+   "usd": 67236,
+   "beispiel": "ncaa-football-2026-national-champion"
   },
   "will": {
    "n": 17,
-   "usd": 62438,
+   "usd": 66566,
    "beispiel": "will-predictfun-launch-a-token-by"
   },
   "democratic": {
-   "n": 13,
-   "usd": 62264,
+   "n": 14,
+   "usd": 63453,
    "beispiel": "democratic-presidential-nominee-2028"
-  },
-  "ncaa": {
-   "n": 12,
-   "usd": 59487,
-   "beispiel": "ncaa-football-2026-national-champion"
   },
   "kbo": {
    "n": 20,
-   "usd": 56557,
+   "usd": 56562,
    "beispiel": "kbo-ssg-nc-2026-08-08"
   }
  }

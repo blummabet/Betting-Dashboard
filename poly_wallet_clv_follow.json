@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-03T22:35:57.655512+00:00",
+ "updatedAt": "2026-10-03T23:03:09.336174+00:00",
  "stake": 10.0,
  "regel": {
   "minN": 20,
@@ -8,32 +8,10 @@
  },
  "zaehler": {
   "ohneEinstieg": 7,
-  "gesperrt": 57,
-  "alt": 328
+  "gesperrt": 55,
+  "alt": 271
  },
  "open": {
-  "unl-esp-cze-2026-10-03|Spain": {
-   "key": "unl-esp-cze-2026-10-03",
-   "side": "Spain",
-   "cat": "Fußball",
-   "league": "UEFA-NATIONS-LEAGUE",
-   "wallet": "0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
-   "belegt": true,
-   "heiss": false,
-   "walletN": 135,
-   "walletClv": 0.883,
-   "walletUg": 0.511,
-   "clv7": null,
-   "n7": null,
-   "walletEntry": 0.9199,
-   "entryPrice": 0.925,
-   "abstandPP": 0.51,
-   "arm": "nehmbar",
-   "lastPrice": 0.925,
-   "htkAtEntry": 0.31,
-   "firstTs": "2026-10-03T19:31:03.476144+00:00",
-   "stake": 10.0
-  },
   "lol-c9-ly-2026-10-03|LYON": {
    "key": "lol-c9-ly-2026-10-03",
    "side": "LYON",
@@ -277,7 +255,36 @@
    "stake": 10.0
   }
  },
- "settled": [],
+ "settled": [
+  {
+   "key": "unl-esp-cze-2026-10-03",
+   "side": "Spain",
+   "cat": "Fußball",
+   "league": "UEFA-NATIONS-LEAGUE",
+   "wallet": "0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
+   "belegt": true,
+   "heiss": false,
+   "walletN": 135,
+   "walletClv": 0.883,
+   "walletUg": 0.511,
+   "clv7": null,
+   "n7": null,
+   "walletEntry": 0.9199,
+   "entryPrice": 0.925,
+   "abstandPP": 0.51,
+   "arm": "nehmbar",
+   "lastPrice": 0.925,
+   "htkAtEntry": 0.31,
+   "firstTs": "2026-10-03T19:31:03.476144+00:00",
+   "stake": 10.0,
+   "result": "win",
+   "winner": "Spain",
+   "pnl": 0.81,
+   "closePrice": 0.925,
+   "clvPP": 0.0,
+   "settledTs": "2026-10-03T23:03:09.336174+00:00"
+  }
+ ],
  "gesehen": [
   "bra-cam-bra-2026-10-03|CA Mineiro",
   "bra-cam-bra-2026-10-03|Red Bull Bragantino",
@@ -294,7 +301,17 @@
  ],
  "agg": {
   "belegt_nehmbar": {
-   "n": 0
+   "n": 1,
+   "wins": 1,
+   "hit": 1.0,
+   "pnl": 0.81,
+   "stake": 10.0,
+   "roi": 0.081,
+   "roiUg": null,
+   "belegt": false,
+   "clvAvg": 0.0,
+   "clvN": 1,
+   "clvUg": null
   },
   "belegt_zu_spaet": {
    "n": 0
@@ -306,7 +323,32 @@
    "n": 0
   },
   "nehmbar": {
-   "n": 0
+   "n": 1,
+   "wins": 1,
+   "hit": 1.0,
+   "pnl": 0.81,
+   "stake": 10.0,
+   "roi": 0.081,
+   "roiUg": null,
+   "belegt": false,
+   "clvAvg": 0.0,
+   "clvN": 1,
+   "clvUg": null,
+   "byCat": {
+    "Fußball": {
+     "n": 1,
+     "wins": 1,
+     "hit": 1.0,
+     "pnl": 0.81,
+     "stake": 10.0,
+     "roi": 0.081,
+     "roiUg": null,
+     "belegt": false,
+     "clvAvg": 0.0,
+     "clvN": 1,
+     "clvUg": null
+    }
+   }
   },
   "zu_spaet": {
    "n": 0
