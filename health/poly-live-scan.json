@@ -1,13 +1,13 @@
 {
   "slug": "poly-live-scan",
   "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
-  "updatedAt": "2026-10-03T08:51:41.003208+00:00",
+  "updatedAt": "2026-10-03T08:53:44.921317+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
-    "spanneH": 14.5,
-    "proTag": 31.4,
-    "lueckeMinMin": 3.2,
+    "spanneH": 13.6,
+    "proTag": 33.5,
+    "lueckeMinMin": 2.1,
     "lueckeMedianMin": 45.0,
     "lueckeMaxMin": 65.6,
     "sollProTag": null,
@@ -21,9 +21,24 @@
     "verdraengt": 0,
     "spanneH": 417.6,
     "erzeugtProTag": 5.7,
-    "widerspruch": "erzeugtProTag 5.7 gegen eine gemessene Kadenz von 31.4/Tag (Faktor 5.5) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
+    "widerspruch": "erzeugtProTag 5.7 gegen eine gemessene Kadenz von 33.5/Tag (Faktor 5.9) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
   },
   "runs": [
+    {
+      "ts": "2026-10-03T08:53:44.921317+00:00",
+      "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
+      "runId": "37110963033",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/37110963033",
+      "nSteps": 7,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-10-03T08:49:07Z",
+      "startedAt": "2026-10-03T08:49:07Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 277.9,
+      "event": "workflow_dispatch"
+    },
     {
       "ts": "2026-10-03T08:51:41.003208+00:00",
       "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
@@ -307,21 +322,6 @@
       "startedAt": "2026-10-02T19:12:55Z",
       "wartetS": 0.0,
       "laeuftSeitS": 237.9,
-      "event": "workflow_dispatch"
-    },
-    {
-      "ts": "2026-10-02T18:21:02.499058+00:00",
-      "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
-      "runId": "37046429697",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/37046429697",
-      "nSteps": 7,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-10-02T18:17:28Z",
-      "startedAt": "2026-10-02T18:17:28Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 214.5,
       "event": "workflow_dispatch"
     }
   ]
