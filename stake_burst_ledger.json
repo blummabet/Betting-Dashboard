@@ -11076,8 +11076,11 @@
    "sport:663049734"
   ],
   "sentAt": "2026-10-03T10:02:38.973416+00:00",
-  "status": "pending",
-  "push": true
+  "status": "abgerechnet",
+  "push": true,
+  "rendite": -0.9285,
+  "win": false,
+  "settledAt": "2026-10-03T12:17:58.650431+00:00"
  },
  {
   "k": "klein:9064a8b7-2c4e-4fe8-9818-7fd6745f2ef3",
@@ -11135,9 +11138,12 @@
    "sport:663062658"
   ],
   "sentAt": "2026-10-03T10:32:50.945473+00:00",
-  "status": "pending",
+  "status": "abgerechnet",
   "push": false,
-  "pushGrund": "Tennis live stumm (Geld folgt dem Spielstand)"
+  "pushGrund": "Tennis live stumm (Geld folgt dem Spielstand)",
+  "rendite": 0.67,
+  "win": true,
+  "settledAt": "2026-10-03T12:17:58.650431+00:00"
  },
  {
   "k": "spiel:e94dd16d-01fe-4e43-b90f-d3f80310c71f",
@@ -11403,5 +11409,38 @@
   "sentAt": "2026-10-03T12:03:04.971744+00:00",
   "status": "pending",
   "push": true
+ },
+ {
+  "k": "spiel:56b925a6-6202-4267-ad6f-df4138b582e0",
+  "art": "spiel",
+  "eventId": "56b925a6-6202-4267-ad6f-df4138b582e0",
+  "event": "Francisco Cerundolo - Jakub Mensik",
+  "liga": "ATP Beijing, China Men Singles",
+  "ligaSlug": "atp-beijing-china-men-singles",
+  "kat": "Tennis",
+  "seite": "Jakub Mensik",
+  "nGerichtet": 4,
+  "maerkte": [
+   "1st Set - Winner",
+   "Game Handicap",
+   "Will There be a Tiebreak",
+   "Winner"
+  ],
+  "summeUsd": 18430.07,
+  "faktor": 1.84,
+  "nWetten": 5,
+  "sekunden": 870.0,
+  "phase": "live",
+  "betIds": [
+   "sport:663108755",
+   "sport:663113077",
+   "sport:663114536",
+   "sport:663114667",
+   "sport:663116784"
+  ],
+  "sentAt": "2026-10-03T12:17:58.650431+00:00",
+  "status": "pending",
+  "push": false,
+  "pushGrund": "Tennis live stumm (Geld folgt dem Spielstand)"
  }
 ]
