@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-10-03T01:17:32.387550+00:00",
+"generatedAt": "2026-10-03T01:32:41.853622+00:00",
 "count": 23,
-"covered": 17,
+"covered": 16,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -56,7 +56,7 @@
 "leaguesMitTotals": [],
 "oddsKeysFetched": 49,
 "oddsKeysMitDaten": 49,
-"oddsEvents": 556,
+"oddsEvents": 555,
 "oddsTotals": {
 "versucht": 3,
 "mitDaten": 0,
@@ -65,13 +65,13 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 32075,
-"remaining": 4967925,
+"used": 32228,
+"remaining": 4967772,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
 },
-"ankerQuote": 0.625,
+"ankerQuote": 0.714,
 "games": [
 {
 "matchId": "36131340",
@@ -91,7 +91,7 @@
 "softOdd": 1.07,
 "softN": 35,
 "poly": {
-"vol": 220334,
+"vol": 220414,
 "odd": 1.09,
 "sharePct": 92,
 "shareSrc": "preis",
@@ -136,16 +136,16 @@
 "moneySide": "away",
 "moneyName": "England",
 "moneySharePct": 78,
-"moneyOdd": 1.84,
-"moneyDir": "out",
-"totVol": 118741,
+"moneyOdd": 1.83,
+"moneyDir": "in",
+"totVol": 120782,
 "pinnOdd": 1.79,
 "softOdd": 1.75,
 "softN": 35,
 "poly": {
-"vol": 137139,
-"odd": 1.87,
-"sharePct": 54,
+"vol": 140301,
+"odd": 1.83,
+"sharePct": 55,
 "shareSrc": "preis",
 "key": "unl-hrv-eng-2026-10-03",
 "sideKey": "England",
@@ -178,6 +178,81 @@
 "pinnTotals": null
 },
 {
+"matchId": "36068844",
+"home": "Boca Juniors",
+"away": "Union Santa Fe",
+"league": "Argentinian Primera Division",
+"country": "AR",
+"kickoff": "2026-10-03T00:30:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Boca Juniors",
+"moneySharePct": 94,
+"moneyOdd": 1.16,
+"moneyDir": "flat",
+"totVol": 93414,
+"pinnOdd": null,
+"softOdd": 1.12,
+"softN": 23,
+"poly": {
+"vol": 32938,
+"odd": 1.16,
+"sharePct": 84,
+"shareSrc": "geld",
+"key": "arg-boc-uni-2026-10-04",
+"sideKey": "CA Boca Juniors",
+"whales": [
+{
+"wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
+"usd": 1733
+},
+{
+"wallet": "0x20b80ebb96e2051540e1d475e4ce122fc282aa04",
+"usd": 1124
+},
+{
+"wallet": "0x65503c7f9e142ac88b1ce09df3363ff77f188451",
+"usd": 741
+},
+{
+"wallet": "0x49b2f43fd1dbff994bc597a806c57b68eb034aee",
+"usd": 441
+},
+{
+"wallet": "0x16b5436f58958c562b4336ff706f8f358f3c5c88",
+"usd": 173
+},
+{
+"wallet": "0xf0e82336b981bca37cae04002a3e6398236f904c",
+"usd": 149
+}
+],
+"whaleUsd": 4985
+},
+"pinn": null,
+"soft": {
+"home": 0.8342,
+"draw": 0.1306,
+"away": 0.0352,
+"fav": "home",
+"n": 23
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Boca Juniors v Union Santa Fe",
+"grund": "kein_pinnacle",
+"kandidat": "Boca Juniors v Union Santa Fe",
+"key": "soccer_argentina_primera_division",
+"nSoft": 23,
+"pinnacleImEvent": false,
+"nBuecher": 23
+}
+},
+{
 "matchId": "36135042",
 "home": "Iceland",
 "away": "Bulgaria",
@@ -195,7 +270,7 @@
 "softOdd": 1.42,
 "softN": 31,
 "poly": {
-"vol": 4591,
+"vol": 4600,
 "odd": 1.48,
 "sharePct": 68,
 "shareSrc": "preis",
@@ -228,81 +303,6 @@
 }
 },
 {
-"matchId": "36068844",
-"home": "Boca Juniors",
-"away": "Union Santa Fe",
-"league": "Argentinian Primera Division",
-"country": "AR",
-"kickoff": "2026-10-03T00:30:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Boca Juniors",
-"moneySharePct": 94,
-"moneyOdd": 1.16,
-"moneyDir": "in",
-"totVol": 92404,
-"pinnOdd": null,
-"softOdd": 1.12,
-"softN": 24,
-"poly": {
-"vol": 9587,
-"odd": 1.46,
-"sharePct": 64,
-"shareSrc": "geld",
-"key": "arg-boc-uni-2026-10-04",
-"sideKey": "CA Boca Juniors",
-"whales": [
-{
-"wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
-"usd": 616
-},
-{
-"wallet": "0x49b2f43fd1dbff994bc597a806c57b68eb034aee",
-"usd": 349
-},
-{
-"wallet": "0x16b5436f58958c562b4336ff706f8f358f3c5c88",
-"usd": 137
-},
-{
-"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-"usd": 75
-},
-{
-"wallet": "0xcb8fb535f293c5d1bb977181e545ce0ca526bf01",
-"usd": 54
-},
-{
-"wallet": "0xfff787f9e84fa73786ced1871442947d8e8b7c28",
-"usd": 54
-}
-],
-"whaleUsd": 1431
-},
-"pinn": null,
-"soft": {
-"home": 0.8328,
-"draw": 0.1312,
-"away": 0.036,
-"fav": "home",
-"n": 24
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Boca Juniors v Union Santa Fe",
-"grund": "kein_pinnacle",
-"kandidat": "Boca Juniors v Union Santa Fe",
-"key": "soccer_argentina_primera_division",
-"nSoft": 24,
-"pinnacleImEvent": false,
-"nBuecher": 24
-}
-},
-{
 "matchId": "36127362",
 "home": "North Macedonia",
 "away": "Scotland",
@@ -313,14 +313,14 @@
 "moneySide": "away",
 "moneyName": "Scotland",
 "moneySharePct": 75,
-"moneyOdd": 1.82,
-"moneyDir": "in",
-"totVol": 75350,
+"moneyOdd": 1.84,
+"moneyDir": "out",
+"totVol": 75492,
 "pinnOdd": null,
 "softOdd": 1.75,
 "softN": 31,
 "poly": {
-"vol": 45688,
+"vol": 45738,
 "odd": 1.8,
 "sharePct": 56,
 "shareSrc": "preis",
@@ -331,9 +331,9 @@
 },
 "pinn": null,
 "soft": {
-"home": 0.1962,
+"home": 0.1956,
 "draw": 0.2696,
-"away": 0.5343,
+"away": 0.5348,
 "fav": "away",
 "n": 31
 },
@@ -365,7 +365,7 @@
 "moneySharePct": 85,
 "moneyOdd": 2.22,
 "moneyDir": "flat",
-"totVol": 52177,
+"totVol": 52885,
 "pinnOdd": null,
 "softOdd": 2.06,
 "softN": 24,
@@ -381,8 +381,8 @@
 },
 "pinn": null,
 "soft": {
-"home": 0.4523,
-"draw": 0.2794,
+"home": 0.4526,
+"draw": 0.279,
 "away": 0.2683,
 "fav": "home",
 "n": 24
@@ -414,53 +414,53 @@
 "moneyName": "Juventude",
 "moneySharePct": 84,
 "moneyOdd": 1.01,
-"moneyDir": "in",
-"totVol": 50797,
+"moneyDir": "flat",
+"totVol": 50896,
 "pinnOdd": null,
 "softOdd": 1.0,
-"softN": 13,
+"softN": 5,
 "poly": {
-"vol": 46121,
-"odd": 1.06,
-"sharePct": 98,
+"vol": 50714,
+"odd": 1.0,
+"sharePct": 99,
 "shareSrc": "geld",
 "key": "bra2-juv-ope-2026-10-02",
 "sideKey": "EC Juventude",
 "whales": [
 {
 "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-"usd": 2315
+"usd": 5564
 },
 {
 "wallet": "0xe1e292a578d07497363048d9ec69e2be36b00d29",
-"usd": 2035
+"usd": 2145
 },
 {
 "wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
-"usd": 1939
+"usd": 2031
 },
 {
 "wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
-"usd": 1842
+"usd": 1943
 },
 {
 "wallet": "0xd218e474776403a330142299f7796e8ba32eb5c9",
-"usd": 914
+"usd": 963
 },
 {
 "wallet": "0x37c1ff27d21b08d1cae9f38453b895eae2a78de1",
-"usd": 560
+"usd": 591
 }
 ],
-"whaleUsd": 12146
+"whaleUsd": 15861
 },
 "pinn": null,
 "soft": {
-"home": 0.9402,
-"draw": 0.0456,
-"away": 0.0142,
+"home": 0.7725,
+"draw": 0.0196,
+"away": 0.208,
 "fav": "home",
-"n": 13
+"n": 5
 },
 "pinnMovePP": null,
 "pinnMove": null,
@@ -472,9 +472,9 @@
 "grund": "kein_pinnacle",
 "kandidat": "Juventude v Operario PR",
 "key": "soccer_brazil_serie_b",
-"nSoft": 13,
+"nSoft": 5,
 "pinnacleImEvent": false,
-"nBuecher": 15
+"nBuecher": 5
 }
 },
 {
@@ -487,16 +487,16 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Independiente Rivadavia",
-"moneySharePct": 66,
+"moneySharePct": 67,
 "moneyOdd": 1.35,
 "moneyDir": "flat",
-"totVol": 47375,
+"totVol": 49251,
 "pinnOdd": 1.31,
 "softOdd": 1.29,
-"softN": 24,
+"softN": 23,
 "poly": {
-"vol": 77176,
-"odd": 1.4,
+"vol": 79586,
+"odd": 1.34,
 "sharePct": 98,
 "shareSrc": "geld",
 "key": "arg-riv1-gim-2026-10-02",
@@ -504,43 +504,43 @@
 "whales": [
 {
 "wallet": "0xa96274cc1b321afc8cbdc1ba07f7e2d471e6f7c8",
-"usd": 31399
+"usd": 32717
 },
 {
 "wallet": "0x1f3a646ce5cbe2c70270e7a46161d89b7c7b895d",
-"usd": 4832
+"usd": 5034
 },
 {
 "wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
-"usd": 1430
+"usd": 1490
 },
 {
 "wallet": "0x8efa1ea8ee2d456a051ae2985079a1e3c9aa894c",
-"usd": 1370
-},
-{
-"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-"usd": 1288
+"usd": 1428
 },
 {
 "wallet": "0x286bb6ead3c9b8ff8e9387f85828ca9bcbdc3784",
-"usd": 1076
+"usd": 1121
+},
+{
+"wallet": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
+"usd": 1054
 }
 ],
-"whaleUsd": 44328
+"whaleUsd": 45650
 },
 "pinn": {
-"home": 0.7241,
-"draw": 0.2036,
-"away": 0.0724,
+"home": 0.7233,
+"draw": 0.2046,
+"away": 0.0721,
 "fav": "home"
 },
 "soft": {
-"home": 0.7122,
-"draw": 0.2123,
-"away": 0.0755,
+"home": 0.7127,
+"draw": 0.2134,
+"away": 0.0739,
 "fav": "home",
-"n": 24
+"n": 23
 },
 "pinnMovePP": null,
 "pinnMove": null,
@@ -566,7 +566,7 @@
 "softOdd": 4.6,
 "softN": 35,
 "poly": {
-"vol": 17279,
+"vol": 17302,
 "odd": 4.88,
 "sharePct": 20,
 "shareSrc": "preis",
@@ -611,14 +611,14 @@
 "moneySide": "away",
 "moneyName": "Germany",
 "moneySharePct": 93,
-"moneyOdd": 1.91,
-"moneyDir": "flat",
-"totVol": 28891,
+"moneyOdd": 1.92,
+"moneyDir": "out",
+"totVol": 28930,
 "pinnOdd": 1.84,
 "softOdd": 1.83,
 "softN": 35,
 "poly": {
-"vol": 16069,
+"vol": 16078,
 "odd": 1.9,
 "sharePct": 52,
 "shareSrc": "preis",
@@ -648,6 +648,77 @@
 "move": false,
 "laeuft": false
 },
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36126282",
+"home": "Fortaleza EC",
+"away": "Nautico PE",
+"league": "Brazilian Serie B",
+"country": "BR",
+"kickoff": "2026-10-03T00:35:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Fortaleza EC",
+"moneySharePct": 69,
+"moneyOdd": 1.84,
+"moneyDir": "in",
+"totVol": 24439,
+"pinnOdd": 1.79,
+"softOdd": 1.73,
+"softN": 29,
+"poly": {
+"vol": 68969,
+"odd": 1.87,
+"sharePct": 97,
+"shareSrc": "geld",
+"key": "bra2-fec-nau-2026-10-02",
+"sideKey": "Fortaleza EC",
+"whales": [
+{
+"wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+"usd": 6607
+},
+{
+"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+"usd": 2532
+},
+{
+"wallet": "0x52d93dcf81444f793dda7fedc370f7a35101fb1a",
+"usd": 1795
+},
+{
+"wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+"usd": 1605
+},
+{
+"wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
+"usd": 1566
+},
+{
+"wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
+"usd": 1222
+}
+],
+"whaleUsd": 24807
+},
+"pinn": {
+"home": 0.5247,
+"draw": 0.344,
+"away": 0.1313,
+"fav": "home"
+},
+"soft": {
+"home": 0.5244,
+"draw": 0.3306,
+"away": 0.145,
+"fav": "home",
+"n": 29
+},
+"pinnMovePP": null,
+"pinnMove": null,
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
@@ -716,13 +787,13 @@
 "moneyName": "Switzerland",
 "moneySharePct": 91,
 "moneyOdd": 1.34,
-"moneyDir": "in",
+"moneyDir": "flat",
 "totVol": 21384,
 "pinnOdd": null,
 "softOdd": 1.3,
 "softN": 31,
 "poly": {
-"vol": 8359,
+"vol": 8403,
 "odd": 1.32,
 "sharePct": 76,
 "shareSrc": "preis",
@@ -755,77 +826,6 @@
 }
 },
 {
-"matchId": "36126282",
-"home": "Fortaleza EC",
-"away": "Nautico PE",
-"league": "Brazilian Serie B",
-"country": "BR",
-"kickoff": "2026-10-03T00:35:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Fortaleza EC",
-"moneySharePct": 75,
-"moneyOdd": 3.1,
-"moneyDir": "out",
-"totVol": 21138,
-"pinnOdd": 2.84,
-"softOdd": 2.81,
-"softN": 30,
-"poly": {
-"vol": 61050,
-"odd": 2.6,
-"sharePct": 92,
-"shareSrc": "geld",
-"key": "bra2-fec-nau-2026-10-02",
-"sideKey": "Fortaleza EC",
-"whales": [
-{
-"wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
-"usd": 4489
-},
-{
-"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
-"usd": 2115
-},
-{
-"wallet": "0x52d93dcf81444f793dda7fedc370f7a35101fb1a",
-"usd": 1291
-},
-{
-"wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-"usd": 1155
-},
-{
-"wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
-"usd": 1127
-},
-{
-"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-"usd": 1100
-}
-],
-"whaleUsd": 18209
-},
-"pinn": {
-"home": 0.3303,
-"draw": 0.3158,
-"away": 0.3539,
-"fav": "away"
-},
-"soft": {
-"home": 0.3169,
-"draw": 0.311,
-"away": 0.3721,
-"fav": "away",
-"n": 30
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "uneinig",
-"agree": false,
-"pinnTotals": null
-},
-{
 "matchId": "36140284",
 "home": "Belarus",
 "away": "San Marino",
@@ -843,7 +843,7 @@
 "softOdd": 1.07,
 "softN": 29,
 "poly": {
-"vol": 34608,
+"vol": 34968,
 "odd": 1.09,
 "sharePct": 92,
 "shareSrc": "preis",
@@ -854,9 +854,9 @@
 },
 "pinn": null,
 "soft": {
-"home": 0.8758,
-"draw": 0.0887,
-"away": 0.0355,
+"home": 0.8757,
+"draw": 0.089,
+"away": 0.0353,
 "fav": "home",
 "n": 29
 },
@@ -873,81 +873,6 @@
 "nSoft": 29,
 "pinnacleImEvent": false,
 "nBuecher": 29
-}
-},
-{
-"matchId": "36124917",
-"home": "Londrina",
-"away": "Criciuma",
-"league": "Brazilian Serie B",
-"country": "BR",
-"kickoff": "2026-10-02T23:30:00Z",
-"live": true,
-"moneySide": "away",
-"moneyName": "Criciuma",
-"moneySharePct": 66,
-"moneyOdd": 1.03,
-"moneyDir": "in",
-"totVol": 17613,
-"pinnOdd": null,
-"softOdd": 1.01,
-"softN": 19,
-"poly": {
-"vol": 10638,
-"odd": 1.06,
-"sharePct": 98,
-"shareSrc": "geld",
-"key": "bra2-lon-cri-2026-10-02",
-"sideKey": "Criciúma EC",
-"whales": [
-{
-"wallet": "0x224f7ef690d952cf551a471846d5afb4892e514a",
-"usd": 476
-},
-{
-"wallet": "0x8bf976b961ce1ea932a62e1f73af87c9e5228292",
-"usd": 360
-},
-{
-"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-"usd": 232
-},
-{
-"wallet": "0x824978ad8f2aa87ec22da2df99ffbb7d58e0b23a",
-"usd": 222
-},
-{
-"wallet": "0x882c2e9d90d28e02a15be0d7f8d3636994305d07",
-"usd": 194
-},
-{
-"wallet": "0xe76c9b6d6108655887df57e76413b4dc44201c3c",
-"usd": 121
-}
-],
-"whaleUsd": 2437
-},
-"pinn": null,
-"soft": {
-"home": 0.0135,
-"draw": 0.0397,
-"away": 0.9467,
-"fav": "away",
-"n": 19
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Londrina v Criciuma",
-"grund": "kein_pinnacle",
-"kandidat": "Londrina v Criciuma",
-"key": "soccer_brazil_serie_b",
-"nSoft": 19,
-"pinnacleImEvent": false,
-"nBuecher": 19
 }
 },
 {
@@ -984,8 +909,8 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.6449,
-"draw": 0.1973,
+"home": 0.6447,
+"draw": 0.1976,
 "away": 0.1578,
 "fav": "home",
 "n": 35
@@ -1022,9 +947,9 @@
 "poly": null,
 "pinn": null,
 "soft": {
-"home": 0.3683,
-"draw": 0.2919,
-"away": 0.3398,
+"home": 0.3704,
+"draw": 0.2925,
+"away": 0.3371,
 "fav": "home",
 "n": 27
 },
@@ -1044,6 +969,70 @@
 }
 },
 {
+"matchId": "36133407",
+"home": "Colombia",
+"away": "Paraguay",
+"league": "Friendlies International",
+"country": "International",
+"kickoff": "2026-10-03T00:00:00Z",
+"live": true,
+"moneySide": "away",
+"moneyName": "Paraguay",
+"moneySharePct": 51,
+"moneyOdd": 1.59,
+"moneyDir": "in",
+"totVol": 80955,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": {
+"vol": 103143,
+"odd": 1.71,
+"sharePct": 35,
+"shareSrc": "geld",
+"key": "fif-col-par-2026-10-02",
+"sideKey": "Paraguay",
+"whales": [
+{
+"wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+"usd": 1433
+},
+{
+"wallet": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
+"usd": 1365
+},
+{
+"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+"usd": 886
+},
+{
+"wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
+"usd": 402
+},
+{
+"wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
+"usd": 291
+},
+{
+"wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+"usd": 210
+}
+],
+"whaleUsd": 5133
+},
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Colombia v Paraguay",
+"grund": "kein_kandidat"
+}
+},
+{
 "matchId": "36137187",
 "home": "India",
 "away": "Brazil",
@@ -1056,7 +1045,7 @@
 "moneySharePct": 100,
 "moneyOdd": 1.03,
 "moneyDir": "flat",
-"totVol": 72333,
+"totVol": 72419,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -1074,70 +1063,6 @@
 }
 },
 {
-"matchId": "36133407",
-"home": "Colombia",
-"away": "Paraguay",
-"league": "Friendlies International",
-"country": "International",
-"kickoff": "2026-10-03T00:00:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Colombia",
-"moneySharePct": 53,
-"moneyOdd": 3.25,
-"moneyDir": "out",
-"totVol": 44416,
-"pinnOdd": null,
-"softOdd": null,
-"softN": null,
-"poly": {
-"vol": 89205,
-"odd": 2.9,
-"sharePct": 80,
-"shareSrc": "geld",
-"key": "fif-col-par-2026-10-02",
-"sideKey": "Colombia",
-"whales": [
-{
-"wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
-"usd": 13737
-},
-{
-"wallet": "0x65503c7f9e142ac88b1ce09df3363ff77f188451",
-"usd": 2496
-},
-{
-"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
-"usd": 2067
-},
-{
-"wallet": "0x6f1901e9a069db659339b086d50d6e02da93b9ff",
-"usd": 1380
-},
-{
-"wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
-"usd": 1151
-},
-{
-"wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
-"usd": 382
-}
-],
-"whaleUsd": 22018
-},
-"pinn": null,
-"soft": null,
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "no_anchor",
-"agree": null,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Colombia v Paraguay",
-"grund": "kein_kandidat"
-}
-},
-{
 "matchId": "36138987",
 "home": "Martinique",
 "away": "Honduras",
@@ -1147,47 +1072,47 @@
 "live": true,
 "moneySide": "away",
 "moneyName": "Honduras",
-"moneySharePct": 88,
-"moneyOdd": 2.92,
+"moneySharePct": 85,
+"moneyOdd": 4.5,
 "moneyDir": "out",
-"totVol": 43920,
+"totVol": 45505,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
 "poly": {
-"vol": 99408,
-"odd": 2.67,
-"sharePct": 94,
+"vol": 101342,
+"odd": 2.99,
+"sharePct": 93,
 "shareSrc": "geld",
 "key": "conl-mart-hnd-2026-10-02",
 "sideKey": "Honduras",
 "whales": [
 {
 "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-"usd": 10398
+"usd": 9289
 },
 {
 "wallet": "0x5c3a1a602848565bb16165fcd460b00c3d43020b",
-"usd": 8158
+"usd": 7288
 },
 {
 "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
-"usd": 1654
+"usd": 1478
 },
 {
 "wallet": "0x16b251e0f8b8315a871e7a14596a01da3b53aa5a",
-"usd": 1597
+"usd": 1426
 },
 {
 "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
-"usd": 1239
+"usd": 1107
 },
 {
 "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
-"usd": 829
+"usd": 741
 }
 ],
-"whaleUsd": 25561
+"whaleUsd": 22864
 },
 "pinn": null,
 "soft": null,
@@ -1212,9 +1137,9 @@
 "moneySide": "home",
 "moneyName": "Real Potosi",
 "moneySharePct": 85,
-"moneyOdd": 1.82,
+"moneyOdd": 2.12,
 "moneyDir": "out",
-"totVol": 34625,
+"totVol": 39191,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -1233,6 +1158,70 @@
 }
 },
 {
+"matchId": "36139063",
+"home": "Bonaire",
+"away": "Grenada",
+"league": "CONCACAF Nations League B",
+"country": "International",
+"kickoff": "2026-10-03T00:00:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Bonaire",
+"moneySharePct": 70,
+"moneyOdd": 60.0,
+"moneyDir": "out",
+"totVol": 27986,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": {
+"vol": 20996,
+"odd": 7.41,
+"sharePct": 29,
+"shareSrc": "geld",
+"key": "conl-bon-grn-2026-10-02",
+"sideKey": "Bonaire",
+"whales": [
+{
+"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+"usd": 489
+},
+{
+"wallet": "0x65503c7f9e142ac88b1ce09df3363ff77f188451",
+"usd": 469
+},
+{
+"wallet": "0xa3780cf5305b0348d7851ad79a931df6c176f42f",
+"usd": 103
+},
+{
+"wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
+"usd": 14
+},
+{
+"wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+"usd": 4
+},
+{
+"wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
+"usd": 2
+}
+],
+"whaleUsd": 1086
+},
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Bonaire v Grenada",
+"grund": "kein_kandidat"
+}
+},
+{
 "matchId": "36138971",
 "home": "Barbados",
 "away": "Bermuda",
@@ -1243,46 +1232,46 @@
 "moneySide": "home",
 "moneyName": "Barbados",
 "moneySharePct": 85,
-"moneyOdd": 1.05,
+"moneyOdd": 1.04,
 "moneyDir": "in",
-"totVol": 25501,
+"totVol": 27024,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
 "poly": {
-"vol": 73989,
-"odd": 1.08,
-"sharePct": 98,
+"vol": 76462,
+"odd": 1.05,
+"sharePct": 99,
 "shareSrc": "geld",
 "key": "conl-brb-ber-2026-10-02",
 "sideKey": "Barbados",
 "whales": [
 {
 "wallet": "0xebc6a80e75624ca2e5ec890606d8f4587d144608",
-"usd": 7022
+"usd": 7261
 },
 {
 "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
-"usd": 3631
+"usd": 3698
 },
 {
 "wallet": "0x55b9e6a1dcca2defb01636ba41e9f76a0883a814",
-"usd": 1817
+"usd": 1879
 },
 {
 "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-"usd": 1014
+"usd": 1049
 },
 {
 "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
-"usd": 871
+"usd": 900
 },
 {
 "wallet": "0x2396babfc88a7a7dcc0390262ab747d7cbad9485",
-"usd": 850
+"usd": 879
 }
 ],
-"whaleUsd": 16947
+"whaleUsd": 18289
 },
 "pinn": null,
 "soft": null,
@@ -1297,57 +1286,23 @@
 }
 },
 {
-"matchId": "36139063",
-"home": "Bonaire",
-"away": "Grenada",
-"league": "CONCACAF Nations League B",
-"country": "International",
-"kickoff": "2026-10-03T00:00:00Z",
+"matchId": "36126188",
+"home": "Correcaminos UAT",
+"away": "Cruz Azul Hidalgo",
+"league": "Mexican Liga de Ascenso",
+"country": "MX",
+"kickoff": "2026-10-03T01:00:00Z",
 "live": true,
 "moneySide": "home",
-"moneyName": "Bonaire",
-"moneySharePct": 79,
-"moneyOdd": 6.0,
+"moneyName": "Correcaminos Uat",
+"moneySharePct": 95,
+"moneyOdd": 1.62,
 "moneyDir": "out",
-"totVol": 24673,
+"totVol": 21092,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
-"poly": {
-"vol": 17538,
-"odd": 1.26,
-"sharePct": 94,
-"shareSrc": "geld",
-"key": "conl-bon-grn-2026-10-02",
-"sideKey": "Bonaire",
-"whales": [
-{
-"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
-"usd": 2605
-},
-{
-"wallet": "0x65503c7f9e142ac88b1ce09df3363ff77f188451",
-"usd": 2357
-},
-{
-"wallet": "0xa3780cf5305b0348d7851ad79a931df6c176f42f",
-"usd": 608
-},
-{
-"wallet": "0xaed20f18b08da8e96fa10462b41e9b48bd5c1f4c",
-"usd": 568
-},
-{
-"wallet": "0x58a6ebc1511fb2a2c076bfa11566650db93d73d7",
-"usd": 109
-},
-{
-"wallet": "0x56f1c015e1956bc4a96072040c46fabfc0c8e83e",
-"usd": 106
-}
-],
-"whaleUsd": 6526
-},
+"poly": null,
 "pinn": null,
 "soft": null,
 "pinnMovePP": null,
@@ -1356,18 +1311,19 @@
 "agree": null,
 "pinnTotals": null,
 "ankerGrund": {
-"spiel": "Bonaire v Grenada",
-"grund": "kein_kandidat"
+"spiel": "Correcaminos UAT v Cruz Azul Hidalgo",
+"grund": "kein_kandidat",
+"naechster": "Pumas v Cruz Azul"
 }
 }
 ],
-"ankerN": 8,
-"ankerNOffen": 150,
+"ankerN": 7,
+"ankerNOffen": 149,
 "ankerMit": 5,
 "ankerDiagnose": {
 "nach": {
 "kein_kandidat": 117,
-"kein_pinnacle": 17,
+"kein_pinnacle": 16,
 "name": 1,
 "zeit": 2
 },
@@ -1415,17 +1371,6 @@
 "liga": "UEFA Nations League D"
 },
 {
-"spiel": "Malta v Andorra",
-"grund": "kein_pinnacle",
-"kandidat": "Malta v Andorra",
-"key": "soccer_uefa_nations_league",
-"nSoft": 31,
-"pinnacleImEvent": false,
-"nBuecher": 31,
-"matchId": "36142548",
-"liga": "UEFA Nations League D"
-},
-{
 "spiel": "Kosovo v Austria",
 "grund": "kein_pinnacle",
 "kandidat": "Kosovo v Austria",
@@ -1437,15 +1382,15 @@
 "liga": "UEFA Nations League B"
 },
 {
-"spiel": "Romania v Sweden",
+"spiel": "Malta v Andorra",
 "grund": "kein_pinnacle",
-"kandidat": "Romania v Sweden",
+"kandidat": "Malta v Andorra",
 "key": "soccer_uefa_nations_league",
-"nSoft": 26,
+"nSoft": 31,
 "pinnacleImEvent": false,
-"nBuecher": 26,
-"matchId": "36139159",
-"liga": "UEFA Nations League B"
+"nBuecher": 31,
+"matchId": "36142548",
+"liga": "UEFA Nations League D"
 },
 {
 "spiel": "Bosnia v Poland",
@@ -1470,6 +1415,17 @@
 "liga": "UEFA Nations League B"
 },
 {
+"spiel": "Romania v Sweden",
+"grund": "kein_pinnacle",
+"kandidat": "Romania v Sweden",
+"key": "soccer_uefa_nations_league",
+"nSoft": 26,
+"pinnacleImEvent": false,
+"nBuecher": 26,
+"matchId": "36139159",
+"liga": "UEFA Nations League B"
+},
+{
 "spiel": "Man Utd (W) v Liverpool (W)",
 "kandidat": "Liverpool v Manchester City",
 "key": "soccer_epl",
@@ -1490,6 +1446,17 @@
 "liga": "Thai League 3"
 },
 {
+"spiel": "Boca Juniors v Union Santa Fe",
+"grund": "kein_pinnacle",
+"kandidat": "Boca Juniors v Union Santa Fe",
+"key": "soccer_argentina_primera_division",
+"nSoft": 23,
+"pinnacleImEvent": false,
+"nBuecher": 23,
+"matchId": "36068844",
+"liga": "Argentinian Primera Division"
+},
+{
 "spiel": "Iceland v Bulgaria",
 "grund": "kein_pinnacle",
 "kandidat": "Iceland v Bulgaria",
@@ -1499,17 +1466,6 @@
 "nBuecher": 31,
 "matchId": "36135042",
 "liga": "UEFA Nations League"
-},
-{
-"spiel": "Boca Juniors v Union Santa Fe",
-"grund": "kein_pinnacle",
-"kandidat": "Boca Juniors v Union Santa Fe",
-"key": "soccer_argentina_primera_division",
-"nSoft": 24,
-"pinnacleImEvent": false,
-"nBuecher": 24,
-"matchId": "36068844",
-"liga": "Argentinian Primera Division"
 },
 {
 "spiel": "North Macedonia v Scotland",
@@ -1538,9 +1494,9 @@
 "grund": "kein_pinnacle",
 "kandidat": "Juventude v Operario PR",
 "key": "soccer_brazil_serie_b",
-"nSoft": 13,
+"nSoft": 5,
 "pinnacleImEvent": false,
-"nBuecher": 15,
+"nBuecher": 5,
 "matchId": "36128182",
 "liga": "Brazilian Serie B"
 },
@@ -1565,17 +1521,6 @@
 "nBuecher": 29,
 "matchId": "36140284",
 "liga": "UEFA Nations League C"
-},
-{
-"spiel": "Londrina v Criciuma",
-"grund": "kein_pinnacle",
-"kandidat": "Londrina v Criciuma",
-"key": "soccer_brazil_serie_b",
-"nSoft": 19,
-"pinnacleImEvent": false,
-"nBuecher": 19,
-"matchId": "36124917",
-"liga": "Brazilian Serie B"
 },
 {
 "spiel": "Northern Ireland v Georgia",
