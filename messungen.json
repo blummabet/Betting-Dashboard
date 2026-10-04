@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-04T12:33:39.013179+00:00",
+ "generatedAt": "2026-10-04T13:03:19.970849+00:00",
  "heute": "2026-10-04",
  "messungen": [
   {
@@ -33,9 +33,9 @@
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "nachtrag": "27.09.2026: Zwischenstand n=78 abgerechnet. Echt ROI +6,5 % (UG -4,0 %), Papier auf gleichem Einsatz +8,6 %. Der echte Fill kostet im Mittel +0,64 Cent (Median +0,50) gegen den Papierpreis; CLV-Vorsprung -0,59 pp, Band [-1,44, +0,25].",
-   "standN": 141,
+   "standN": 142,
    "zustand": "faellig",
-   "stand": "141 von 25 Beobachtungen · Entscheidung faellig",
+   "stand": "142 von 25 Beobachtungen · Entscheidung faellig",
    "fortschritt": 1.0,
    "tageBisFaellig": -5
   },
@@ -198,10 +198,10 @@
    "mindestN": 100,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 27,
+   "standN": 28,
    "zustand": "sammelt",
-   "stand": "27 von 100 Beobachtungen · faellig in 28 Tag(en)",
-   "fortschritt": 0.27,
+   "stand": "28 von 100 Beobachtungen · faellig in 28 Tag(en)",
+   "fortschritt": 0.28,
    "tageBisFaellig": 28
   },
   {
@@ -234,10 +234,10 @@
    "mindestN": 150,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 1,
+   "standN": 2,
    "zustand": "sammelt",
-   "stand": "1 von 150 Beobachtungen · faellig in 28 Tag(en)",
-   "fortschritt": 0.006666666666666667,
+   "stand": "2 von 150 Beobachtungen · faellig in 28 Tag(en)",
+   "fortschritt": 0.013333333333333334,
    "tageBisFaellig": 28
   },
   {
@@ -262,7 +262,7 @@
    "id": "hz-null-null",
    "titel": "HZ 0:0 in einem Over-Spiel: ist das Tor in der 2. Halbzeit besser als die Quote zur Pause?",
    "frage": "Spiele mit 0:0 zur Pause, in denen vor dem Anpfiff das Betfair-Geld auf Over 2.5 lag (Quote <= 1,75). Gebucht zur Over-0.5-Quote IM MOMENT DER PAUSE, abgerechnet am Endstand, minus 2 % Kommission. Daneben (ohne eigenes Urteil): Over 1.5 zur Pause und Heimsieg zur Pause bei Heimfavorit <= 1,60.",
-   "warum": "04.10.2026 (Lucas: „wenn inplay 0:0 zur Pause steht, es aber ein Over-2.5-Spiel war … dann 2. Halbzeit ok zu wetten. Mach ich selbst oft, nur such ich die Spiele manuell“). Rueckblick im Betfair-Ledger: Over-2.5-erwartete Spiele mit HZ 0:0 n=504, Tor in der 2. HZ 85 % (alle HZ-0:0-Spiele 78 %). Die Pausenquote fuer Tore wurde nie gespeichert — ob 85 % mehr sind als der Markt zur Pause sagt, ist unbekannt. Fuer den Heimsieg liess sie sich nachmessen: eingepreist (Quote 55-65 %, Treffer 56-63 %, ab 19.09. ROI +1 %). Entscheidung vorab: Untergrenze > 0 bei n >= 100 -> Finder wird Empfehlung mit Einsatz; Obergrenze < 0 -> bleibt reine Such-Hilfe ohne Wett-Anspruch.",
+   "warum": "04.10.2026 (Lucas: „wenn inplay 0:0 zur Pause steht, es aber ein Over-2.5-Spiel war … dann 2. Halbzeit ok zu wetten. Mach ich selbst oft, nur such ich die Spiele manuell“). Rueckblick im Betfair-Ledger: Over-2.5-erwartete Spiele mit HZ 0:0 n=504, Tor in der 2. HZ 85 % (alle HZ-0:0-Spiele 78 %). Die Pausenquote fuer Tore wurde nie gespeichert — ob 85 % mehr sind als der Markt zur Pause sagt, ist unbekannt. Fuer den Heimsieg liess sie sich nachmessen: eingepreist (Quote 55-65 %, Treffer 56-63 %, ab 19.09. ROI +1 %). Entscheidung vorab: Untergrenze > 0 bei n >= 100 -> Finder wird Empfehlung mit Einsatz; Obergrenze < 0 -> bleibt reine Such-Hilfe ohne Wett-Anspruch. — 04.10.2026 erweitert (Lucas): je Fund wird mitgeschrieben (1) die Live-Statistik der 1. HZ und die Serie beider Teams rueckwirkend aus API-Football (apif_live.py, Abdeckung in hz_finder.json -> apif), (2) das frische Betfair-Geld auf O/U 1.5/0.5 seit dem letzten Lauf (zufluss). Beides ist KEIN Filter; der Bericht teilt die Wetten nach „mit/ohne Over-Zufluss“ (>= 200, >= 60 % auf Over), damit am 01.11. sichtbar ist, ob das Signal die Treffer gegenueber der Pausenquote verbessert.",
    "gestartet": "2026-10-04",
    "faellig": "2026-11-01",
    "quelle": "hz_finder.json -> bericht['tore/over05']",
@@ -306,10 +306,10 @@
    "mindestN": 20000,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 15690,
+   "standN": 15707,
    "zustand": "sammelt",
-   "stand": "15690 von 20000 Beobachtungen · faellig in 42 Tag(en)",
-   "fortschritt": 0.7845,
+   "stand": "15707 von 20000 Beobachtungen · faellig in 42 Tag(en)",
+   "fortschritt": 0.78535,
    "tageBisFaellig": 42
   },
   {
@@ -324,10 +324,10 @@
    "mindestN": 20000,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 15690,
+   "standN": 15707,
    "zustand": "sammelt",
-   "stand": "15690 von 20000 Beobachtungen · faellig in 42 Tag(en)",
-   "fortschritt": 0.7845,
+   "stand": "15707 von 20000 Beobachtungen · faellig in 42 Tag(en)",
+   "fortschritt": 0.78535,
    "tageBisFaellig": 42
   },
   {
@@ -414,10 +414,10 @@
    "mindestN": 200,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 38,
+   "standN": 39,
    "zustand": "sammelt",
-   "stand": "38 von 200 Beobachtungen · faellig in 88 Tag(en)",
-   "fortschritt": 0.19,
+   "stand": "39 von 200 Beobachtungen · faellig in 88 Tag(en)",
+   "fortschritt": 0.195,
    "tageBisFaellig": 88
   },
   {
