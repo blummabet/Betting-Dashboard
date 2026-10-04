@@ -622325,7 +622325,13 @@
   "tokens": {
    "Henrique Rocha": "31744150597012091937978767271367853124868620243004822855361455969606391434964",
    "Inaki Montes": "32993501144824886055285261002339015886764671616463647458103259409424379445379"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Henrique Rocha": 1.0,
+   "Inaki Montes": 0.0
+  },
+  "resolvedAt": "2026-10-04T13:33:06.928584+00:00"
  },
  "ja2-teg-omi-2026-10-04-more-markets": {
   "shares": {
@@ -630252,8 +630258,8 @@
  },
  "cs2-furia-mouz-2026-10-04": {
   "shares": {
-   "FURIA": 43532.12698774503,
-   "MOUZ": 50085.600304825035
+   "FURIA": 45228.68585731504,
+   "MOUZ": 52037.55923135505
   },
   "prices": {
    "FURIA": 0.465,
@@ -630265,7 +630271,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 109132,
+  "totalUsd": 112768,
   "whales": [
    {
     "wallet": "0xf5592765133941c40c77e52bc56bbe7ec167f462",
@@ -630276,17 +630282,18 @@
    {
     "wallet": "0xe40ecff63ec661d218a86c048186ac83389a9770",
     "side": "FURIA",
-    "usd": 18919
+    "usd": 19708
+   },
+   {
+    "wallet": "0x676c1bb692c76b57b06f1b93817515acfa5ce139",
+    "side": "MOUZ",
+    "usd": 9739,
+    "avgPrice": 0.5299
    },
    {
     "wallet": "0x994ec8e910b433265f3a46eaf666bfa28b1a6136",
     "side": "FURIA",
     "usd": 9300
-   },
-   {
-    "wallet": "0x676c1bb692c76b57b06f1b93817515acfa5ce139",
-    "side": "MOUZ",
-    "usd": 8707
    },
    {
     "wallet": "0x103721386ec40df5ab93df0bd0964e8fe70b5b09",
@@ -630301,8 +630308,8 @@
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
     "side": "FURIA",
-    "usd": 4456,
-    "avgPrice": 0.4499
+    "usd": 4586,
+    "avgPrice": 0.4505
    },
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
@@ -630351,6 +630358,11 @@
     "usd": 232
    },
    {
+    "wallet": "0xfd144099a983b0cfdb88d0b89e0ca049fae22267",
+    "side": "MOUZ",
+    "usd": 214
+   },
+   {
     "wallet": "0x6b97ebe911d7f2e5e3e8c4a0faad4a5c7c0b8d30",
     "side": "FURIA",
     "usd": 205
@@ -630381,6 +630393,11 @@
     "usd": 93
    },
    {
+    "wallet": "0x48b0900dc31ac1aadf4777ba76eb72d35048a348",
+    "side": "MOUZ",
+    "usd": 67
+   },
+   {
     "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
     "side": "MOUZ",
     "usd": 43
@@ -630389,11 +630406,6 @@
     "wallet": "0x5c6d237b7420a8d1b3d86e867a88bbf9ee2bab76",
     "side": "MOUZ",
     "usd": 39
-   },
-   {
-    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
-    "side": "MOUZ",
-    "usd": 20
    },
    {
     "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
@@ -630444,22 +630456,112 @@
     "wallet": "0x0cf18b4294b05509c44a6a0172eff7e97b20d7fe",
     "side": "FURIA",
     "usd": 1
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "FURIA",
+    "usd": 1
    }
   ],
-  "hoursToKickoff": 0.95,
-  "capturedAt": "2026-10-04T13:03:01.305934+00:00",
+  "hoursToKickoff": 0.45,
+  "capturedAt": "2026-10-04T13:33:06.928584+00:00",
   "koTs": "2026-10-04T14:00:00+00:00",
   "cond": "0x5755514a67c87bad297d079340075018c997749a261e285d7e8fdcdaf17ecea7",
   "frage": "Counter-Strike: FURIA vs MOUZ (BO3) - ESL Pro League Group Stage",
   "tokens": {
    "FURIA": "38998266407066202630973118012160497633097798163520805644319464420639222694189",
    "MOUZ": "68299401936173576852240854149387453485725061641048763822919921834389411097358"
-  }
+  },
+  "book": {
+   "side": "MOUZ",
+   "bid": 0.53,
+   "ask": 0.54,
+   "spreadC": 1.0,
+   "spreadPct": 1.85,
+   "bids": [
+    [
+     0.53,
+     140031
+    ],
+    [
+     0.52,
+     14413
+    ],
+    [
+     0.51,
+     35127
+    ],
+    [
+     0.5,
+     15890
+    ],
+    [
+     0.49,
+     11300
+    ],
+    [
+     0.48,
+     16449
+    ]
+   ],
+   "asks": [
+    [
+     0.54,
+     144393
+    ],
+    [
+     0.55,
+     93506
+    ],
+    [
+     0.56,
+     40916
+    ],
+    [
+     0.57,
+     28076
+    ],
+    [
+     0.58,
+     14064
+    ],
+    [
+     0.59,
+     821
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xaa6c4e41b5d58dd8b22454b17bde5fdf867ea9b3",
+    "action": "BUY",
+    "side": "FURIA",
+    "price": 0.47,
+    "usd": 500,
+    "ts": 1791119909
+   },
+   {
+    "wallet": "0x894df6e8ad9f01be25ea47e5733dde6dabfc04e2",
+    "action": "BUY",
+    "side": "MOUZ",
+    "price": 0.54,
+    "usd": 540,
+    "ts": 1791118958
+   },
+   {
+    "wallet": "0xb0d08d71e2a231a50f05463b9e250a37994789ae",
+    "action": "BUY",
+    "side": "MOUZ",
+    "price": 0.54,
+    "usd": 872,
+    "ts": 1791118162
+   }
+  ]
  },
  "cs2-g2-1win-2026-10-04": {
   "shares": {
-   "G2": 145012.77850878003,
-   "1WIN": 49635.23969094001
+   "G2": 169955.06558792005,
+   "1WIN": 58172.53258380001
   },
   "prices": {
    "G2": 0.745,
@@ -630471,18 +630573,22 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 43219,
+  "totalUsd": 226642,
   "whales": [
    {
     "wallet": "0x6ac5bb06a9eb05641fd5e82640268b92f3ab4b6e",
     "side": "G2",
-    "usd": 112213,
-    "avgPrice": 0.7444
+    "usd": 112213
    },
    {
     "wallet": "0x5fdd66ffd0325d4e8d1d86fbec50caa31770a747",
     "side": "1WIN",
     "usd": 25500
+   },
+   {
+    "wallet": "0x0d7cc750f6aafafe000210f52d623f3bce49b7db",
+    "side": "G2",
+    "usd": 19778
    },
    {
     "wallet": "0x994ec8e910b433265f3a46eaf666bfa28b1a6136",
@@ -630492,7 +630598,8 @@
    {
     "wallet": "0x5e6e2c3f06686f2607b86c90e35f536e81a1be00",
     "side": "1WIN",
-    "usd": 7946
+    "usd": 12750,
+    "avgPrice": 0.2559
    },
    {
     "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
@@ -630506,6 +630613,11 @@
     "usd": 3954
    },
    {
+    "wallet": "0x381b9294c1b95b61d018ff56312fbcc4897c4d74",
+    "side": "1WIN",
+    "usd": 3455
+   },
+   {
     "wallet": "0x7b6c6d1279098054b0c630a4b871002a7cd46305",
     "side": "G2",
     "usd": 2571
@@ -630514,6 +630626,11 @@
     "wallet": "0x028602e5b0909dd7864f884f899ff287a72cf61d",
     "side": "1WIN",
     "usd": 2147
+   },
+   {
+    "wallet": "0x0c955ea595bf5f62063a593b5e3437a5aa3610f5",
+    "side": "G2",
+    "usd": 2029
    },
    {
     "wallet": "0xbcd24281bb7c69943f07df21d56d9842330643f3",
@@ -630526,9 +630643,9 @@
     "usd": 1594
    },
    {
-    "wallet": "0x072473e0259a38bb1179e5c5d8c4290171ec9091",
-    "side": "1WIN",
-    "usd": 1541
+    "wallet": "0xee8e24c26b7d591a543972fd7ac424d8a8310a7b",
+    "side": "G2",
+    "usd": 1277
    },
    {
     "wallet": "0x9c3ce009c9b039956665cecc4cd14de862b5e8c9",
@@ -630571,6 +630688,11 @@
     "usd": 714
    },
    {
+    "wallet": "0xe2e7b09800ca9e342048eee4b660aae4202c295b",
+    "side": "G2",
+    "usd": 664
+   },
+   {
     "wallet": "0x5537cf4f47b259a1d753069f6026f4de246af9c8",
     "side": "G2",
     "usd": 497
@@ -630581,29 +630703,29 @@
     "usd": 492
    },
    {
-    "wallet": "0xee8e24c26b7d591a543972fd7ac424d8a8310a7b",
-    "side": "G2",
-    "usd": 491
-   },
-   {
     "wallet": "0x59847267e2a004e3886d7a02ac53778c5ea176eb",
     "side": "1WIN",
     "usd": 440
    },
    {
-    "wallet": "0x795173772d871733c3110a5695d9638e4b50bb41",
+    "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
     "side": "1WIN",
-    "usd": 382
+    "usd": 328
    },
    {
     "wallet": "0xd619b68e64f256f8ddd185b261c8679eacf0c461",
     "side": "1WIN",
-    "usd": 319
+    "usd": 326
    },
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "side": "G2",
     "usd": 277
+   },
+   {
+    "wallet": "0xfd144099a983b0cfdb88d0b89e0ca049fae22267",
+    "side": "1WIN",
+    "usd": 255
    },
    {
     "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
@@ -630639,8 +630761,8 @@
    {
     "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
     "side": "G2",
-    "usd": 113,
-    "avgPrice": 0.7199
+    "usd": 132,
+    "avgPrice": 0.7242
    },
    {
     "wallet": "0x8056189d56833ce5b3945dea9149b62c5111b64d",
@@ -630656,37 +630778,142 @@
     "wallet": "0xb21bcc4615f7e0e15030c415def696d5936988f9",
     "side": "1WIN",
     "usd": 89
-   },
-   {
-    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
-    "side": "1WIN",
-    "usd": 79
-   },
-   {
-    "wallet": "0xb2da92d3584c60037dc9cc8942a9f9677bbcce6a",
-    "side": "G2",
-    "usd": 77
-   },
-   {
-    "wallet": "0x2d2d2b32e5199edf833594a99b9c54e5668ab69d",
-    "side": "G2",
-    "usd": 71
-   },
-   {
-    "wallet": "0x4a3f86ed9ce6b3dac5b66e2d5478a6bf38cc4333",
-    "side": "G2",
-    "usd": 60
    }
   ],
-  "hoursToKickoff": 0.95,
-  "capturedAt": "2026-10-04T13:03:01.305934+00:00",
+  "hoursToKickoff": 0.45,
+  "capturedAt": "2026-10-04T13:33:06.928584+00:00",
   "koTs": "2026-10-04T14:00:00+00:00",
   "cond": "0xd1de24afb6554d761d19943f2ad7bffe2f11bd1531af68892697c912d85a8360",
   "frage": "Counter-Strike: G2 vs 1WIN (BO3) - ESL Pro League Group Stage",
   "tokens": {
    "G2": "12856955147359005020720230399997339976074331580736274668284475591012488713335",
    "1WIN": "112567202904056815411795045586425427255197968135133819546448693913669193175329"
-  }
+  },
+  "book": {
+   "side": "G2",
+   "bid": 0.74,
+   "ask": 0.75,
+   "spreadC": 1.0,
+   "spreadPct": 1.33,
+   "bids": [
+    [
+     0.74,
+     23388
+    ],
+    [
+     0.73,
+     51876
+    ],
+    [
+     0.72,
+     8052
+    ],
+    [
+     0.71,
+     1418
+    ],
+    [
+     0.7,
+     22153
+    ],
+    [
+     0.69,
+     15106
+    ]
+   ],
+   "asks": [
+    [
+     0.75,
+     231166
+    ],
+    [
+     0.76,
+     65596
+    ],
+    [
+     0.77,
+     33855
+    ],
+    [
+     0.78,
+     8145
+    ],
+    [
+     0.79,
+     8142
+    ],
+    [
+     0.8,
+     566
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x58a2d0456c879dbbfc9d02074ebc30090ccbc1c2",
+    "action": "BUY",
+    "side": "G2",
+    "price": 0.75,
+    "usd": 1258,
+    "ts": 1791120422
+   },
+   {
+    "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
+    "action": "BUY",
+    "side": "1WIN",
+    "price": 0.26,
+    "usd": 325,
+    "ts": 1791120029
+   },
+   {
+    "wallet": "0xe2e7b09800ca9e342048eee4b660aae4202c295b",
+    "action": "BUY",
+    "side": "G2",
+    "price": 0.75,
+    "usd": 668,
+    "ts": 1791119926
+   },
+   {
+    "wallet": "0x0d7cc750f6aafafe000210f52d623f3bce49b7db",
+    "action": "BUY",
+    "side": "G2",
+    "price": 0.75,
+    "usd": 19911,
+    "ts": 1791119570
+   },
+   {
+    "wallet": "0x0c955ea595bf5f62063a593b5e3437a5aa3610f5",
+    "action": "BUY",
+    "side": "G2",
+    "price": 0.75,
+    "usd": 2042,
+    "ts": 1791119482
+   },
+   {
+    "wallet": "0xa1a076d3dcd5a851223ebdf726424803ae41f447",
+    "action": "BUY",
+    "side": "G2",
+    "price": 0.75,
+    "usd": 495,
+    "ts": 1791118778
+   },
+   {
+    "wallet": "0x6ac5bb06a9eb05641fd5e82640268b92f3ab4b6e",
+    "action": "BUY",
+    "side": "G2",
+    "price": 0.75,
+    "usd": 50638,
+    "ts": 1791118286
+   },
+   {
+    "wallet": "0x6ac5bb06a9eb05641fd5e82640268b92f3ab4b6e",
+    "action": "BUY",
+    "side": "G2",
+    "price": 0.74,
+    "usd": 61497,
+    "ts": 1791118226
+   }
+  ]
  },
  "es2-rso-gra-2026-10-04": {
   "shares": {
@@ -631126,9 +631353,9 @@
  },
  "fif-kyr-lib-2026-10-04": {
   "shares": {
-   "Kyrgyz Republic": 1816.6515407999996,
-   "Draw (Kyrgyz Republic vs. Lebanon)": 1136.60695416,
-   "Lebanon": 837.0805865149998
+   "Kyrgyz Republic": 1827.0641944649994,
+   "Draw (Kyrgyz Republic vs. Lebanon)": 1148.889515085,
+   "Lebanon": 869.7242518049999
   },
   "prices": {
    "Kyrgyz Republic": 0.485,
@@ -631141,7 +631368,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 13864,
+  "totalUsd": 14001,
   "whales": [
    {
     "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
@@ -631162,8 +631389,8 @@
    {
     "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
     "side": "Lebanon",
-    "usd": 179,
-    "avgPrice": 0.2498
+    "usd": 199,
+    "avgPrice": 0.2488
    },
    {
     "wallet": "0x1f624696c102b99bea92c75a502fa7e4a6d676f6",
@@ -631187,15 +631414,15 @@
     "avgPrice": 0.4944
    },
    {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Kyrgyz Republic",
+    "usd": 59
+   },
+   {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "side": "Kyrgyz Republic",
     "usd": 56,
     "avgPrice": 0.4812
-   },
-   {
-    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
-    "side": "Kyrgyz Republic",
-    "usd": 50
    },
    {
     "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
@@ -631259,6 +631486,11 @@
     "usd": 5
    },
    {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Draw (Kyrgyz Republic vs. Lebanon)",
+    "usd": 5
+   },
+   {
     "wallet": "0xfe67df6e0c585e50cbe8bdcad804d980c6b8a2e8",
     "side": "Lebanon",
     "usd": 4
@@ -631269,9 +631501,9 @@
     "usd": 3
    },
    {
-    "wallet": "0x7ea571c40408f340c1c8fc8eaacebab53c1bde7b",
-    "side": "Draw (Kyrgyz Republic vs. Lebanon)",
-    "usd": 2
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Lebanon",
+    "usd": 3
    },
    {
     "wallet": "0xffd4964aa4ca70e51e2354c99b6380cfbb2eb60f",
@@ -631314,8 +631546,8 @@
     "usd": 0
    }
   ],
-  "hoursToKickoff": 0.95,
-  "capturedAt": "2026-10-04T13:03:01.305934+00:00",
+  "hoursToKickoff": 0.45,
+  "capturedAt": "2026-10-04T13:33:06.928584+00:00",
   "koTs": "2026-10-04T14:00:00+00:00",
   "tokens": {
    "Kyrgyz Republic": "24786852996854392535329191932947494058876736183286261907519832822073023508838",
@@ -631325,12 +631557,12 @@
  },
  "atp-mesa-fernand-2026-10-04": {
   "shares": {
-   "Bernardo Munk Mesa": 3362.141873740001,
-   "Bruno Fernandez": 5485.5998757
+   "Bernardo Munk Mesa": 3415.384614180001,
+   "Bruno Fernandez": 5455.74423045
   },
   "prices": {
-   "Bernardo Munk Mesa": 0.38,
-   "Bruno Fernandez": 0.62
+   "Bernardo Munk Mesa": 0.385,
+   "Bruno Fernandez": 0.615
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -631338,74 +631570,73 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 8897,
+  "totalUsd": 8913,
   "whales": [
    {
     "wallet": "0xb00cf07e6fa25034175f7da649524c23b08fdfa2",
     "side": "Bruno Fernandez",
-    "usd": 5171
+    "usd": 5129
    },
    {
     "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
     "side": "Bernardo Munk Mesa",
-    "usd": 1189
+    "usd": 1205
    },
    {
     "wallet": "0xb4d250f58c26840e09723a83ce9c8149aa32ce99",
     "side": "Bernardo Munk Mesa",
-    "usd": 569,
-    "avgPrice": 0.39
-   },
-   {
-    "wallet": "0x470a194200a12e038053c071973ed4147e0a881e",
-    "side": "Bruno Fernandez",
-    "usd": 230
+    "usd": 576
    },
    {
     "wallet": "0x7547479d43f4b52d892a6f2254050eea50edd158",
     "side": "Bernardo Munk Mesa",
+    "usd": 231
+   },
+   {
+    "wallet": "0x470a194200a12e038053c071973ed4147e0a881e",
+    "side": "Bruno Fernandez",
     "usd": 228
    },
    {
     "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
     "side": "Bernardo Munk Mesa",
-    "usd": 212
+    "usd": 213
    },
    {
     "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
     "side": "Bernardo Munk Mesa",
-    "usd": 184
+    "usd": 186
    },
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "Bernardo Munk Mesa",
-    "usd": 152,
+    "usd": 154,
     "avgPrice": 0.3949
    },
    {
     "wallet": "0xc4fe817476491890086330a639ac417d51bf601f",
     "side": "Bernardo Munk Mesa",
-    "usd": 150
+    "usd": 152
    },
    {
     "wallet": "0x0eb32f4c1a8672b61b48d9f1493b6dd5a6b1f766",
     "side": "Bernardo Munk Mesa",
-    "usd": 143
+    "usd": 145
    },
    {
     "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
     "side": "Bernardo Munk Mesa",
-    "usd": 137
+    "usd": 139
    },
    {
     "wallet": "0x9f15613ebf1f36d4bc679e1211d1fc567cf9bdb3",
     "side": "Bernardo Munk Mesa",
-    "usd": 129
+    "usd": 131
    },
    {
     "wallet": "0xd619b68e64f256f8ddd185b261c8679eacf0c461",
     "side": "Bernardo Munk Mesa",
-    "usd": 82
+    "usd": 83
    },
    {
     "wallet": "0xcac70909a505ed6f28b1b59a79bcc99ff22937d8",
@@ -631415,12 +631646,12 @@
    {
     "wallet": "0x17d97684d80863e07bc95d1e9f7c1c1dbec884af",
     "side": "Bernardo Munk Mesa",
-    "usd": 39
+    "usd": 40
    },
    {
     "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
     "side": "Bernardo Munk Mesa",
-    "usd": 38
+    "usd": 39
    },
    {
     "wallet": "0xc4dbd5631f003f3f7d10bc31338b1fe5c6ff7e0c",
@@ -631448,6 +631679,11 @@
     "usd": 8
    },
    {
+    "wallet": "0xdc4f58a48ed4467743609fdce11eea483c759804",
+    "side": "Bernardo Munk Mesa",
+    "usd": 5
+   },
+   {
     "wallet": "0x01c78f8873c0c86d6b6b92ff627e3802237ee995",
     "side": "Bernardo Munk Mesa",
     "usd": 5
@@ -631456,6 +631692,16 @@
     "wallet": "0x2396babfc88a7a7dcc0390262ab747d7cbad9485",
     "side": "Bernardo Munk Mesa",
     "usd": 5
+   },
+   {
+    "wallet": "0xd93d79aa6f3859873c2c6d0e0e66a9dd112427a0",
+    "side": "Bernardo Munk Mesa",
+    "usd": 4
+   },
+   {
+    "wallet": "0x41edc6c667b9251aa16a3b7b359815e0f84aed90",
+    "side": "Bernardo Munk Mesa",
+    "usd": 2
    },
    {
     "wallet": "0x62090f59cb5980cd22efcf910128aa77c54c6767",
@@ -631468,8 +631714,8 @@
     "usd": 2
    }
   ],
-  "hoursToKickoff": 1.12,
-  "capturedAt": "2026-10-04T13:03:01.305934+00:00",
+  "hoursToKickoff": 0.61,
+  "capturedAt": "2026-10-04T13:33:06.928584+00:00",
   "koTs": "2026-10-04T14:10:00+00:00",
   "cond": "0x86a8cc5e2afe07a334a702944a5fe6fe981aec5aab1535fcee38d6ba16b9c032",
   "frage": "Antofagasta: Bernardo Munk Mesa vs Bruno Fernandez",
@@ -631605,12 +631851,12 @@
  },
  "cs2-gls1-pcy-2026-10-04": {
   "shares": {
-   "Galorys": 41319.774958515,
-   "Procyon Gaming": 13408.407249965003
+   "Galorys": 40821.067170985,
+   "Procyon Gaming": 13972.315178535002
   },
   "prices": {
-   "Galorys": 0.755,
-   "Procyon Gaming": 0.245
+   "Galorys": 0.745,
+   "Procyon Gaming": 0.255
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -631618,195 +631864,200 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 57412,
+  "totalUsd": 57530,
   "whales": [
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "side": "Galorys",
-    "usd": 34933
+    "usd": 34471
    },
    {
     "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
     "side": "Procyon Gaming",
-    "usd": 4900
+    "usd": 5100
    },
    {
     "wallet": "0x6f3e7f25baa7d2d49e15e2d2957ff3dec62cbcf8",
     "side": "Galorys",
-    "usd": 1343,
+    "usd": 1325,
     "avgPrice": 0.74
    },
    {
     "wallet": "0x82d2e4dbb0a849ff8e2f5380719769145648beea",
     "side": "Procyon Gaming",
-    "usd": 1225
+    "usd": 1275
    },
    {
     "wallet": "0xd6771bf957cab6a10fcb8e2c8c6db9713cf37579",
     "side": "Procyon Gaming",
-    "usd": 1020
+    "usd": 1062
    },
    {
     "wallet": "0x52b7fc8a97df5f18974c06a83909f60c81010aa1",
     "side": "Procyon Gaming",
-    "usd": 956
+    "usd": 994
    },
    {
     "wallet": "0x513587a2f36a8cb29333052a6a479091ef8a7217",
     "side": "Galorys",
-    "usd": 907
+    "usd": 895
    },
    {
     "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
     "side": "Galorys",
-    "usd": 858
+    "usd": 847
    },
    {
     "wallet": "0xbdd21cd4bdfa6764c6f43ea6d154c4b414d86657",
     "side": "Procyon Gaming",
-    "usd": 601,
+    "usd": 625,
     "avgPrice": 0.24
    },
    {
     "wallet": "0x4a3f86ed9ce6b3dac5b66e2d5478a6bf38cc4333",
     "side": "Galorys",
-    "usd": 600
+    "usd": 592
    },
    {
     "wallet": "0x0e50849ef225489b1879e3418e5b7633355a2609",
     "side": "Galorys",
-    "usd": 497
+    "usd": 490
    },
    {
     "wallet": "0x59847267e2a004e3886d7a02ac53778c5ea176eb",
     "side": "Procyon Gaming",
-    "usd": 360
+    "usd": 375
    },
    {
     "wallet": "0x806abb0e02f17fb904c37a93a41cac55eaf0b7da",
     "side": "Procyon Gaming",
-    "usd": 341
+    "usd": 354
    },
    {
     "wallet": "0x48b0900dc31ac1aadf4777ba76eb72d35048a348",
     "side": "Procyon Gaming",
-    "usd": 330
+    "usd": 343
    },
    {
     "wallet": "0xc34b4901be324718c176100e350211d97b199296",
     "side": "Galorys",
-    "usd": 305
-   },
-   {
-    "wallet": "0x8f41129e43ebfbfe6075d0804f3b2bb763b3260e",
-    "side": "Galorys",
-    "usd": 279,
-    "avgPrice": 0.73
+    "usd": 301
    },
    {
     "wallet": "0x9e2952f13782f6dc03d605f15f091a2a561b0ddb",
     "side": "Procyon Gaming",
-    "usd": 267
+    "usd": 278
+   },
+   {
+    "wallet": "0x8f41129e43ebfbfe6075d0804f3b2bb763b3260e",
+    "side": "Galorys",
+    "usd": 275,
+    "avgPrice": 0.73
    },
    {
     "wallet": "0x52d8da46bcc56e3d9f9b2099ad16904fb0b599ae",
     "side": "Procyon Gaming",
-    "usd": 260
+    "usd": 270
    },
    {
     "wallet": "0xced18e8e68c37cae3b714ca4116ed8bef996280e",
     "side": "Procyon Gaming",
-    "usd": 240
+    "usd": 250
    },
    {
     "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
     "side": "Procyon Gaming",
-    "usd": 233
+    "usd": 242
    },
    {
     "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
     "side": "Galorys",
-    "usd": 226
+    "usd": 224
    },
    {
     "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
     "side": "Procyon Gaming",
-    "usd": 180
+    "usd": 187
    },
    {
     "wallet": "0x8c8b3c58b60f50f12021d16dd1910e2582877a07",
     "side": "Galorys",
-    "usd": 151
+    "usd": 149
    },
    {
     "wallet": "0xcd300069721b481c8be9b2f6323583bf8c74fc9b",
     "side": "Procyon Gaming",
-    "usd": 135
+    "usd": 140
    },
    {
     "wallet": "0xb21bcc4615f7e0e15030c415def696d5936988f9",
     "side": "Procyon Gaming",
-    "usd": 134
-   },
-   {
-    "wallet": "0x0a7c46489299331559598ab0412f46bda8ce8964",
-    "side": "Galorys",
-    "usd": 125
-   },
-   {
-    "wallet": "0x2d2d2b32e5199edf833594a99b9c54e5668ab69d",
-    "side": "Galorys",
-    "usd": 124
+    "usd": 140
    },
    {
     "wallet": "0x2a25f7cbf3fc823e315c31602d2eccab85788055",
     "side": "Procyon Gaming",
-    "usd": 122
+    "usd": 128
    },
    {
     "wallet": "0x943875922cdd46dbaeaa721b601e279dfa9fe019",
     "side": "Procyon Gaming",
+    "usd": 128
+   },
+   {
+    "wallet": "0x0a7c46489299331559598ab0412f46bda8ce8964",
+    "side": "Galorys",
+    "usd": 124
+   },
+   {
+    "wallet": "0x2d2d2b32e5199edf833594a99b9c54e5668ab69d",
+    "side": "Galorys",
     "usd": 122
    },
    {
     "wallet": "0x238b208810031f7bc51cb9f420bc0703572244eb",
     "side": "Procyon Gaming",
-    "usd": 112
+    "usd": 117
    },
    {
     "wallet": "0x9d39bcdc1cf42d9d0e0623527c75a023b8bd5408",
     "side": "Procyon Gaming",
-    "usd": 98
+    "usd": 102
    },
    {
     "wallet": "0x10658d371ae1f09eed503a3a14c8ac6a1a936218",
     "side": "Procyon Gaming",
-    "usd": 94
+    "usd": 98
    },
    {
     "wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
     "side": "Galorys",
-    "usd": 79
+    "usd": 78
    },
    {
     "wallet": "0x653e1e61a51e2ee4ba1e7ff934b4ea994bbfbbc0",
     "side": "Galorys",
-    "usd": 76
+    "usd": 74
    },
    {
     "wallet": "0xcefda2f799dc8849adb83cb846c08b9d1feed6aa",
     "side": "Procyon Gaming",
-    "usd": 65
+    "usd": 67
+   },
+   {
+    "wallet": "0xde5314ddd05574a22cdaeef4e9ab2c02ce90e5be",
+    "side": "Galorys",
+    "usd": 57
    },
    {
     "wallet": "0x5c6d237b7420a8d1b3d86e867a88bbf9ee2bab76",
     "side": "Galorys",
-    "usd": 56
+    "usd": 55
    },
    {
     "wallet": "0x214039968998abdcdbd998d15d699296f3570e12",
     "side": "Procyon Gaming",
-    "usd": 50
+    "usd": 52
    },
    {
     "wallet": "0x5d40576be2e9c61d283f4fd80d7a5ccf2331ba95",
@@ -631816,16 +632067,11 @@
    {
     "wallet": "0x9674d0d14a078c5dd5cd411c64bff82523dfe1a2",
     "side": "Galorys",
-    "usd": 44
-   },
-   {
-    "wallet": "0x0ac5faecf8d623a4a074758aedfea9339b24f963",
-    "side": "Procyon Gaming",
-    "usd": 40
+    "usd": 43
    }
   ],
-  "hoursToKickoff": 1.95,
-  "capturedAt": "2026-10-04T13:03:01.305934+00:00",
+  "hoursToKickoff": 1.45,
+  "capturedAt": "2026-10-04T13:33:06.928584+00:00",
   "koTs": "2026-10-04T15:00:00+00:00",
   "cond": "0xeb385d5693e54e9e82659f710e20115d9c099dfbc5d33f4c96261f38cc67c7c6",
   "frage": "Counter-Strike: Galorys vs Procyon Gaming (BO3) - CCT South America Series 6 Playoffs",
@@ -631836,8 +632082,8 @@
  },
  "wta-jeanjea-boisson-2026-10-04": {
   "shares": {
-   "Leolia Jeanjean": 8631.426573315,
-   "Lois Boisson": 18769.927627685
+   "Leolia Jeanjean": 8731.596573315,
+   "Lois Boisson": 18987.757627685
   },
   "prices": {
    "Leolia Jeanjean": 0.315,
@@ -631849,7 +632095,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 28779,
+  "totalUsd": 28797,
   "whales": [
    {
     "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
@@ -631880,13 +632126,23 @@
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "Lois Boisson",
-    "usd": 552,
-    "avgPrice": 0.6611
+    "usd": 564,
+    "avgPrice": 0.6615
    },
    {
     "wallet": "0xf6f7e573b3739242e7b162cf5adc0474abb2c7a2",
     "side": "Lois Boisson",
     "usd": 208
+   },
+   {
+    "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
+    "side": "Lois Boisson",
+    "usd": 206
+   },
+   {
+    "wallet": "0xecc558e1dd2164b451766c89d2a28b35d8405fde",
+    "side": "Leolia Jeanjean",
+    "usd": 94
    },
    {
     "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
@@ -631902,11 +632158,6 @@
     "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
     "side": "Leolia Jeanjean",
     "usd": 47
-   },
-   {
-    "wallet": "0xecf944010441ad74b89a050f0e0042a00dd9cbf5",
-    "side": "Leolia Jeanjean",
-    "usd": 41
    },
    {
     "wallet": "0x3da80ca893666957475095ac1504094df93dbe26",
@@ -631949,6 +632200,12 @@
     "usd": 11
    },
    {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Leolia Jeanjean",
+    "usd": 10,
+    "avgPrice": 0.32
+   },
+   {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
     "side": "Leolia Jeanjean",
     "usd": 8
@@ -631962,12 +632219,6 @@
     "wallet": "0x5cdc4e820fe30f22f3cf2581796d6e5abedc1f6b",
     "side": "Lois Boisson",
     "usd": 8
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "side": "Leolia Jeanjean",
-    "usd": 5,
-    "avgPrice": 0.32
    },
    {
     "wallet": "0x3504fccd0aec9dbbd6175f83e3ab19b250db93bd",
@@ -632005,8 +632256,8 @@
     "usd": 0
    }
   ],
-  "hoursToKickoff": 1.95,
-  "capturedAt": "2026-10-04T13:03:01.305934+00:00",
+  "hoursToKickoff": 1.45,
+  "capturedAt": "2026-10-04T13:33:06.928584+00:00",
   "koTs": "2026-10-04T15:00:00+00:00",
   "cond": "0x046a5fb9eb47f4363ed76c72956cfe3d6d003056e7774255600c37c3638ac826",
   "frage": "Adana: Leolia Jeanjean vs Lois Boisson",
@@ -632247,12 +632498,12 @@
  },
  "atp-casanov-leite-2026-10-04": {
   "shares": {
-   "Hernan Casanova": 11632.854129719999,
-   "Wilson Leite": 2298.707698485
+   "Hernan Casanova": 11358.297893079998,
+   "Wilson Leite": 2578.263934665
   },
   "prices": {
-   "Hernan Casanova": 0.835,
-   "Wilson Leite": 0.165
+   "Hernan Casanova": 0.815,
+   "Wilson Leite": 0.185
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -632260,77 +632511,77 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 13983,
+  "totalUsd": 13988,
   "whales": [
    {
     "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
     "side": "Hernan Casanova",
-    "usd": 8168
+    "usd": 7973
    },
    {
     "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
     "side": "Hernan Casanova",
-    "usd": 1800
+    "usd": 1757
    },
    {
     "wallet": "0x5213eb85fcd465c8927a8382f95dd2dc22306a35",
     "side": "Wilson Leite",
-    "usd": 928
-   },
-   {
-    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
-    "side": "Hernan Casanova",
-    "usd": 825
+    "usd": 1041
    },
    {
     "wallet": "0xeaac36f714563e13d88db7a4f0a0898388f2d71d",
     "side": "Wilson Leite",
-    "usd": 825
+    "usd": 925
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Hernan Casanova",
+    "usd": 805
    },
    {
     "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
     "side": "Hernan Casanova",
-    "usd": 626
+    "usd": 611
    },
    {
     "wallet": "0x01c78f8873c0c86d6b6b92ff627e3802237ee995",
     "side": "Wilson Leite",
-    "usd": 285
+    "usd": 320
    },
    {
     "wallet": "0x04641b57f332c15ecaa497799c55026d521967da",
     "side": "Wilson Leite",
-    "usd": 212
+    "usd": 238
    },
    {
     "wallet": "0xeb76f82d4443c35028c662eebf001cd52c8c7ffe",
     "side": "Hernan Casanova",
-    "usd": 96
+    "usd": 94
    },
    {
     "wallet": "0xec6d625b58f205a224d4700ec55be068c3335050",
     "side": "Hernan Casanova",
-    "usd": 42
+    "usd": 41
    },
    {
     "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
     "side": "Hernan Casanova",
-    "usd": 41
+    "usd": 40
    },
    {
     "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
     "side": "Wilson Leite",
-    "usd": 17
+    "usd": 19
    },
    {
     "wallet": "0x5cdc4e820fe30f22f3cf2581796d6e5abedc1f6b",
     "side": "Wilson Leite",
-    "usd": 16
+    "usd": 18
    },
    {
     "wallet": "0x2da325618fff9b2ffe64a49253fbcae8c7b9f258",
     "side": "Hernan Casanova",
-    "usd": 13
+    "usd": 12
    },
    {
     "wallet": "0x62090f59cb5980cd22efcf910128aa77c54c6767",
@@ -632345,11 +632596,16 @@
    {
     "wallet": "0x38a54d2d3c7d7c96b4a86d839420409c1428e97f",
     "side": "Wilson Leite",
-    "usd": 1,
+    "usd": 2,
     "avgPrice": 0.14
    },
    {
     "wallet": "0x2ee37f3b359d558a49e0737fdc6b5edce2652e6a",
+    "side": "Wilson Leite",
+    "usd": 1
+   },
+   {
+    "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
     "side": "Wilson Leite",
     "usd": 1
    },
@@ -632359,8 +632615,8 @@
     "usd": 0
    }
   ],
-  "hoursToKickoff": 1.12,
-  "capturedAt": "2026-10-04T13:03:01.305934+00:00",
+  "hoursToKickoff": 0.61,
+  "capturedAt": "2026-10-04T13:33:06.928584+00:00",
   "koTs": "2026-10-04T14:10:00+00:00",
   "cond": "0x4695b8aecb3daf248f9c25aceb31b7bdca33cea7c39e90e46d0f1efcfa3b11a4",
   "frage": "Antofagasta: Hernan Casanova vs Wilson Leite",
@@ -632370,21 +632626,227 @@
   }
  },
  "lol-koia-ucam1-2026-10-04": {
-  "shares": {},
+  "shares": {
+   "⁠Movistar KOI Fénix": 24228.147270175,
+   "UCAM Esports Club": 7862.1140260950015
+  },
   "prices": {
    "⁠Movistar KOI Fénix": 0.755,
    "UCAM Esports Club": 0.245
   },
   "splitGuete": {
-   "art": "leer",
-   "trunc": null
+   "art": "preis_echo",
+   "trunc": false
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 30322,
-  "whales": [],
-  "hoursToKickoff": 2.95,
-  "capturedAt": "2026-10-04T13:03:01.305934+00:00",
+  "totalUsd": 30426,
+  "whales": [
+   {
+    "wallet": "0x8ab990e55143ef7f620960f06f1aca01d337d821",
+    "side": "⁠Movistar KOI Fénix",
+    "usd": 12888
+   },
+   {
+    "wallet": "0xda3a9b7afff7b44ad4fd75308723194e0a11381f",
+    "side": "UCAM Esports Club",
+    "usd": 4150
+   },
+   {
+    "wallet": "0xa9c4b118095a4f67ba9ba461aadf6a9cfe5e7433",
+    "side": "⁠Movistar KOI Fénix",
+    "usd": 3173
+   },
+   {
+    "wallet": "0x214039968998abdcdbd998d15d699296f3570e12",
+    "side": "⁠Movistar KOI Fénix",
+    "usd": 2174
+   },
+   {
+    "wallet": "0x6918ea182d963b1fb7888860b8a8b8bcfba5782b",
+    "side": "UCAM Esports Club",
+    "usd": 2149
+   },
+   {
+    "wallet": "0x7af0515790acddb3cf7b9adb0f809d43efdf509d",
+    "side": "⁠Movistar KOI Fénix",
+    "usd": 993
+   },
+   {
+    "wallet": "0x54096e86cac2d70d04fd98ee16f633c7e9d479db",
+    "side": "⁠Movistar KOI Fénix",
+    "usd": 982
+   },
+   {
+    "wallet": "0xcd300069721b481c8be9b2f6323583bf8c74fc9b",
+    "side": "⁠Movistar KOI Fénix",
+    "usd": 557
+   },
+   {
+    "wallet": "0xefde78f38169634477f6ff46572128b6d21a6505",
+    "side": "⁠Movistar KOI Fénix",
+    "usd": 542,
+    "avgPrice": 0.7599
+   },
+   {
+    "wallet": "0x97f94bcf13ec97b8ced1aba7a89eb6e6831f0aeb",
+    "side": "⁠Movistar KOI Fénix",
+    "usd": 537
+   },
+   {
+    "wallet": "0xd9ebc42f59c5c8de900658dc1ae15e1c75213e04",
+    "side": "⁠Movistar KOI Fénix",
+    "usd": 512
+   },
+   {
+    "wallet": "0xa3b5da76ffbbe3325bb1b40a30f6a4634962941a",
+    "side": "UCAM Esports Club",
+    "usd": 490
+   },
+   {
+    "wallet": "0xd93ba55778150f95ee0b04dac26336a9c6fecd48",
+    "side": "⁠Movistar KOI Fénix",
+    "usd": 369
+   },
+   {
+    "wallet": "0x1e4b57f70ea89f197b96eb899409335c5eaa0a04",
+    "side": "⁠Movistar KOI Fénix",
+    "usd": 230
+   },
+   {
+    "wallet": "0x52d8da46bcc56e3d9f9b2099ad16904fb0b599ae",
+    "side": "⁠Movistar KOI Fénix",
+    "usd": 148
+   },
+   {
+    "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
+    "side": "UCAM Esports Club",
+    "usd": 147
+   },
+   {
+    "wallet": "0xccaf18a7ef9f11f5dfec8c2c3d317a0ad55eb2db",
+    "side": "UCAM Esports Club",
+    "usd": 98
+   },
+   {
+    "wallet": "0xc104db0d325238b721c407b44f14f70bb6b1e684",
+    "side": "UCAM Esports Club",
+    "usd": 98
+   },
+   {
+    "wallet": "0x16f1c54b50a562b0382c79998f39222ac280e1d1",
+    "side": "UCAM Esports Club",
+    "usd": 60
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "⁠Movistar KOI Fénix",
+    "usd": 54,
+    "avgPrice": 0.7893
+   },
+   {
+    "wallet": "0x14366189bbd03f3a12fdf442d998b0ee21860121",
+    "side": "⁠Movistar KOI Fénix",
+    "usd": 49
+   },
+   {
+    "wallet": "0x9cb48ddd4185f3e947edf596589e40e574588285",
+    "side": "⁠Movistar KOI Fénix",
+    "usd": 41
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "⁠Movistar KOI Fénix",
+    "usd": 29
+   },
+   {
+    "wallet": "0x96960b52e99274179f2f3f33e4a9e74540282bc3",
+    "side": "UCAM Esports Club",
+    "usd": 24
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "UCAM Esports Club",
+    "usd": 22
+   },
+   {
+    "wallet": "0xd218e474776403a330142299f7796e8ba32eb5c9",
+    "side": "UCAM Esports Club",
+    "usd": 12
+   },
+   {
+    "wallet": "0xa951006f1ce68498c1aef9b013880459e6e08a2f",
+    "side": "UCAM Esports Club",
+    "usd": 12
+   },
+   {
+    "wallet": "0x2da325618fff9b2ffe64a49253fbcae8c7b9f258",
+    "side": "⁠Movistar KOI Fénix",
+    "usd": 11
+   },
+   {
+    "wallet": "0xde5314ddd05574a22cdaeef4e9ab2c02ce90e5be",
+    "side": "UCAM Esports Club",
+    "usd": 11
+   },
+   {
+    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
+    "side": "UCAM Esports Club",
+    "usd": 7
+   },
+   {
+    "wallet": "0x1b47e9b128e6b671edebfb2cac23dd3efc40d814",
+    "side": "⁠Movistar KOI Fénix",
+    "usd": 6
+   },
+   {
+    "wallet": "0xa278b41b5afda5d18da683eb7f851a7b2dc13369",
+    "side": "⁠Movistar KOI Fénix",
+    "usd": 6
+   },
+   {
+    "wallet": "0x758dac51ba3cc9a246a79787da9df11c5f425d9e",
+    "side": "UCAM Esports Club",
+    "usd": 6
+   },
+   {
+    "wallet": "0xcb478cba19de920f9f7e359c9a8609d7f41c4737",
+    "side": "UCAM Esports Club",
+    "usd": 5
+   },
+   {
+    "wallet": "0xf20b60cc9b8e97cb7678e8ab67bcc3480839e27d",
+    "side": "⁠Movistar KOI Fénix",
+    "usd": 4
+   },
+   {
+    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+    "side": "UCAM Esports Club",
+    "usd": 4
+   },
+   {
+    "wallet": "0x48b0900dc31ac1aadf4777ba76eb72d35048a348",
+    "side": "UCAM Esports Club",
+    "usd": 3
+   },
+   {
+    "wallet": "0x5d40576be2e9c61d283f4fd80d7a5ccf2331ba95",
+    "side": "UCAM Esports Club",
+    "usd": 2
+   },
+   {
+    "wallet": "0xb6cc21e7d5a8895556b3a13c659a3a6cc9353d52",
+    "side": "UCAM Esports Club",
+    "usd": 1
+   },
+   {
+    "wallet": "0xaff389b0c6e066057c44c25fae7277880b276ecc",
+    "side": "UCAM Esports Club",
+    "usd": 1
+   }
+  ],
+  "hoursToKickoff": 2.45,
+  "capturedAt": "2026-10-04T13:33:06.928584+00:00",
   "koTs": "2026-10-04T16:00:00+00:00",
   "cond": "0xe17b3547ffd034d560ea2d2bb858529ffde67e3c3f3bd0a169265162d432a1a5",
   "frage": "LoL: ⁠Movistar KOI Fénix vs UCAM Esports Club (BO5) - EMEA Masters Knockout Stage",
@@ -632394,10 +632856,1600 @@
   }
  },
  "lol-sly-bar-2026-10-04": {
-  "shares": {},
+  "shares": {
+   "Over": 3681.6357678100007,
+   "Under": 5881.639526805001
+  },
   "prices": {
    "Over": 0.385,
    "Under": 0.615
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 9585,
+  "whales": [
+   {
+    "wallet": "0x6918ea182d963b1fb7888860b8a8b8bcfba5782b",
+    "side": "Under",
+    "usd": 2802
+   },
+   {
+    "wallet": "0x6e32312760e4604d45a8ae69cede9ef9a0b8ab65",
+    "side": "Under",
+    "usd": 1040
+   },
+   {
+    "wallet": "0xf5a3504ad3a8b079974620b3aa4fcca3f7579e12",
+    "side": "Under",
+    "usd": 1019
+   },
+   {
+    "wallet": "0xf20b60cc9b8e97cb7678e8ab67bcc3480839e27d",
+    "side": "Over",
+    "usd": 957
+   },
+   {
+    "wallet": "0xfb07f48542d2b655e9d0bf1cc92a8a6feee8e2cc",
+    "side": "Over",
+    "usd": 805,
+    "avgPrice": 0.3657
+   },
+   {
+    "wallet": "0xa032d2358fa08860ba30ba8e8d828b7738202090",
+    "side": "Under",
+    "usd": 615
+   },
+   {
+    "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
+    "side": "Over",
+    "usd": 423
+   },
+   {
+    "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
+    "side": "Under",
+    "usd": 308,
+    "avgPrice": 0.6
+   },
+   {
+    "wallet": "0xd8dca4272c19833d7c751d9d7e17a67b28273669",
+    "side": "Over",
+    "usd": 254
+   },
+   {
+    "wallet": "0xefe98f8e81b31206ecf1236d21394ff035a3b8ec",
+    "side": "Over",
+    "usd": 233
+   },
+   {
+    "wallet": "0x72908e4a507387a6aef476e9f24fa99edbe2bdf6",
+    "side": "Over",
+    "usd": 186
+   },
+   {
+    "wallet": "0x0df43b68f72c2533523cf7daa38808360a4a2680",
+    "side": "Over",
+    "usd": 126
+   },
+   {
+    "wallet": "0xfbf3eed601e4950b8676ae6db4c579b854e470e3",
+    "side": "Over",
+    "usd": 116
+   },
+   {
+    "wallet": "0x15b181a96458073f16bab64afed8f2054e9af636",
+    "side": "Over",
+    "usd": 108
+   },
+   {
+    "wallet": "0x9cb48ddd4185f3e947edf596589e40e574588285",
+    "side": "Over",
+    "usd": 59
+   },
+   {
+    "wallet": "0x02db2eee0b06db57057dc153fd03327b7db35a8d",
+    "side": "Under",
+    "usd": 24
+   },
+   {
+    "wallet": "0x758dac51ba3cc9a246a79787da9df11c5f425d9e",
+    "side": "Under",
+    "usd": 21
+   },
+   {
+    "wallet": "0xc846f5368ab49a854d2280b7ecff92669824c413",
+    "side": "Over",
+    "usd": 8
+   },
+   {
+    "wallet": "0x0cf18b4294b05509c44a6a0172eff7e97b20d7fe",
+    "side": "Over",
+    "usd": 6
+   }
+  ],
+  "hoursToKickoff": 2.45,
+  "capturedAt": "2026-10-04T13:33:06.928584+00:00",
+  "koTs": "2026-10-04T16:00:00+00:00",
+  "cond": "0x1c757d54d6bee4309950059bcceb25181eaa7dcc0c63957e68ab5695f1894802",
+  "frage": "Games Total: O/U 3.5",
+  "tokens": {
+   "Over": "15317400050332819691924632343782428023854625434099159842369976224772371677038",
+   "Under": "32588108158807152890118300967872382960075013372148299680955721286406035763443"
+  }
+ },
+ "unl-kvx-aut-2026-10-04-more-markets": {
+  "shares": {
+   "Over": 26126.33277862501,
+   "Under": 2118.351306375
+  },
+  "prices": {
+   "Over": 0.925,
+   "Under": 0.075
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 28273,
+  "whales": [
+   {
+    "wallet": "0x700a306c6dd9c87db2f5519b1bfae0340e83a239",
+    "side": "Over",
+    "usd": 19751
+   },
+   {
+    "wallet": "0xdd41f50129ca8f92d8ace0eccc01af5ca8269fb3",
+    "side": "Over",
+    "usd": 4866
+   },
+   {
+    "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
+    "side": "Under",
+    "usd": 611
+   },
+   {
+    "wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
+    "side": "Under",
+    "usd": 498
+   },
+   {
+    "wallet": "0xc24fc1414aedfdc5406fa31e85cfed26704d087f",
+    "side": "Over",
+    "usd": 462
+   },
+   {
+    "wallet": "0x11eb0a1c37d89926f9820885f0677c7e8eed50cb",
+    "side": "Over",
+    "usd": 382
+   },
+   {
+    "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+    "side": "Under",
+    "usd": 338
+   },
+   {
+    "wallet": "0x74fcf01083ba469909e5af254bf2d75664bc492c",
+    "side": "Over",
+    "usd": 278
+   },
+   {
+    "wallet": "0x52d93dcf81444f793dda7fedc370f7a35101fb1a",
+    "side": "Under",
+    "usd": 232,
+    "avgPrice": 0.06
+   },
+   {
+    "wallet": "0xcfa3e0d47b79bd785f98edd7f762e157ebb75dde",
+    "side": "Over",
+    "usd": 199
+   },
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Under",
+    "usd": 176
+   },
+   {
+    "wallet": "0x1f624696c102b99bea92c75a502fa7e4a6d676f6",
+    "side": "Under",
+    "usd": 75
+   },
+   {
+    "wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
+    "side": "Under",
+    "usd": 75
+   },
+   {
+    "wallet": "0x0b0afb8403e0abb65f91b766a815a4ca74f5e482",
+    "side": "Over",
+    "usd": 49
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Under",
+    "usd": 37
+   },
+   {
+    "wallet": "0xf7f0b0b1e9c0fe02ccad926916ee31aef74b912c",
+    "side": "Under",
+    "usd": 19
+   },
+   {
+    "wallet": "0xdc4f58a48ed4467743609fdce11eea483c759804",
+    "side": "Under",
+    "usd": 11
+   },
+   {
+    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
+    "side": "Under",
+    "usd": 8
+   },
+   {
+    "wallet": "0x5d40576be2e9c61d283f4fd80d7a5ccf2331ba95",
+    "side": "Under",
+    "usd": 2
+   },
+   {
+    "wallet": "0x86d021495fbfb33cdb4761100f4d0d184174904e",
+    "side": "Under",
+    "usd": 1
+   },
+   {
+    "wallet": "0xa6ded03ba993d58d265dc8fa3f6ddda3d926256c",
+    "side": "Under",
+    "usd": 0
+   }
+  ],
+  "hoursToKickoff": 2.45,
+  "capturedAt": "2026-10-04T13:33:06.928584+00:00",
+  "koTs": "2026-10-04T16:00:00+00:00",
+  "cond": "0x7a653c1c9eff23d3e4dec5a12130d2f74436ea766fcb88b31e97f560e078b70e",
+  "frage": "Kosovo vs. Austria: O/U 0.5",
+  "tokens": {
+   "Over": "57562650526142559085068695018806910269143014845895773141105764541694378538986",
+   "Under": "100168679518431727860020835349493450612417855655573078831503355272198764576526"
+  }
+ },
+ "unl-kvx-aut-2026-10-04": {
+  "shares": {
+   "Kosovo": 4101.146213385,
+   "Draw (Kosovo vs. Austria)": 333.747487975,
+   "Austria": 24561.714392679958
+  },
+  "prices": {
+   "Kosovo": 0.255,
+   "Draw (Kosovo vs. Austria)": 0.275,
+   "Austria": 0.485
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 52851,
+  "whales": [
+   {
+    "wallet": "0x16602a38e8fb4498ffee0ea81e08d2b421825598",
+    "side": "Austria",
+    "usd": 5151
+   },
+   {
+    "wallet": "0x5fd86de46798abe62b3b1a45911477a6bd6cce32",
+    "side": "Kosovo",
+    "usd": 2805
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Austria",
+    "usd": 2781,
+    "avgPrice": 0.4741
+   },
+   {
+    "wallet": "0xd97db54eee130b96bc41341b198dc379b4a96bf4",
+    "side": "Austria",
+    "usd": 2638
+   },
+   {
+    "wallet": "0x6c46547cb49269ecfe0e1ffa6e73f5131efece2b",
+    "side": "Austria",
+    "usd": 1991
+   },
+   {
+    "wallet": "0x48c938b569bfd33b23f2679bbf01c66a407ce829",
+    "side": "Austria",
+    "usd": 1394
+   },
+   {
+    "wallet": "0x94b9e9764fd9940d6a13d6f1110065923ed12592",
+    "side": "Austria",
+    "usd": 1054
+   },
+   {
+    "wallet": "0x0d23fc6838433dbff11e4667ef5991e9dd9d2d56",
+    "side": "Austria",
+    "usd": 1032
+   },
+   {
+    "wallet": "0x39e2a98137bccf7501b6df9412d1a9377358fb07",
+    "side": "Austria",
+    "usd": 969
+   },
+   {
+    "wallet": "0xf3e9587edbf1862d971572157643697ab3f7ec41",
+    "side": "Austria",
+    "usd": 839
+   },
+   {
+    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
+    "side": "Kosovo",
+    "usd": 544
+   },
+   {
+    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+    "side": "Austria",
+    "usd": 471
+   },
+   {
+    "wallet": "0xa2fc0448a1dce9258ebb91b2f3abcddb98a0b1b4",
+    "side": "Austria",
+    "usd": 471
+   },
+   {
+    "wallet": "0xfd4fb07f091e6a6d212f6e4876bd2ebc91bca4d3",
+    "side": "Austria",
+    "usd": 331
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Austria",
+    "usd": 266
+   },
+   {
+    "wallet": "0xae2b654c171738df50e6e0a224752057fe0e44b2",
+    "side": "Austria",
+    "usd": 211
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "Austria",
+    "usd": 179,
+    "avgPrice": 0.4621
+   },
+   {
+    "wallet": "0xac9ba267c879bbc02c6f7b809b48f4b775fe18eb",
+    "side": "Austria",
+    "usd": 175
+   },
+   {
+    "wallet": "0x7ea571c40408f340c1c8fc8eaacebab53c1bde7b",
+    "side": "Kosovo",
+    "usd": 132
+   },
+   {
+    "wallet": "0xf1404010a21a61c1f5693beee65285273be47cd8",
+    "side": "Kosovo",
+    "usd": 119
+   },
+   {
+    "wallet": "0x6861fe63d4748104932530ffc5d64d55abebb317",
+    "side": "Austria",
+    "usd": 114
+   },
+   {
+    "wallet": "0x6f86ac71c581a997a37adcde3a7fba1b25954fa9",
+    "side": "Austria",
+    "usd": 103
+   },
+   {
+    "wallet": "0xef460652c993d011442553faaa81b13a924cf872",
+    "side": "Austria",
+    "usd": 103
+   },
+   {
+    "wallet": "0xbb42f513bf53e57722d5c2f9da02562049976e09",
+    "side": "Austria",
+    "usd": 101
+   },
+   {
+    "wallet": "0xabe5de1162afa37223e3fae15f268a7842c5d99a",
+    "side": "Austria",
+    "usd": 97
+   },
+   {
+    "wallet": "0x52341d8cc2e1fe183cd751e35da4d32101f0771c",
+    "side": "Austria",
+    "usd": 76
+   },
+   {
+    "wallet": "0x972bf37cae72a169e17ae0e6179821d5778b78ba",
+    "side": "Kosovo",
+    "usd": 62
+   },
+   {
+    "wallet": "0x0b0afb8403e0abb65f91b766a815a4ca74f5e482",
+    "side": "Austria",
+    "usd": 53
+   },
+   {
+    "wallet": "0x3486ef8eeec032111d20acd71cb24f34ef5349ee",
+    "side": "Austria",
+    "usd": 52
+   },
+   {
+    "wallet": "0x536e4bd582d437cb2a4bc6bbec8384c600cd4fd5",
+    "side": "Austria",
+    "usd": 51
+   },
+   {
+    "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
+    "side": "Draw (Kosovo vs. Austria)",
+    "usd": 48
+   },
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "side": "Draw (Kosovo vs. Austria)",
+    "usd": 34
+   },
+   {
+    "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
+    "side": "Kosovo",
+    "usd": 30
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "side": "Austria",
+    "usd": 30
+   },
+   {
+    "wallet": "0xa278b41b5afda5d18da683eb7f851a7b2dc13369",
+    "side": "Kosovo",
+    "usd": 29
+   },
+   {
+    "wallet": "0x5e020e19bc4cc2cd24ab9b406604ee9df02ab178",
+    "side": "Kosovo",
+    "usd": 29
+   },
+   {
+    "wallet": "0x9ecc67d670e93882a7c177ade09b767a4e6d415a",
+    "side": "Draw (Kosovo vs. Austria)",
+    "usd": 29
+   },
+   {
+    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
+    "side": "Kosovo",
+    "usd": 26
+   },
+   {
+    "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
+    "side": "Kosovo",
+    "usd": 22
+   },
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Draw (Kosovo vs. Austria)",
+    "usd": 20
+   }
+  ],
+  "hoursToKickoff": 2.45,
+  "capturedAt": "2026-10-04T13:33:06.928584+00:00",
+  "koTs": "2026-10-04T16:00:00+00:00",
+  "tokens": {
+   "Kosovo": "45475405302037283194613727226274537505938751863986506181720548877485353250887",
+   "Draw (Kosovo vs. Austria)": "45686427917976003750367360205731815249408068024630166584392783856472511925783",
+   "Austria": "30420833935438349060571933946313476746282456578787485093788358279222969532422"
+  }
+ },
+ "unl-mal-and-2026-10-04-more-markets": {
+  "shares": {
+   "Over": 47.414115639,
+   "Under": 15757.291097361
+  },
+  "prices": {
+   "Over": 0.003,
+   "Under": 0.997
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 15805,
+  "whales": [
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Under",
+    "usd": 15516
+   },
+   {
+    "wallet": "0xfe67df6e0c585e50cbe8bdcad804d980c6b8a2e8",
+    "side": "Under",
+    "usd": 200
+   },
+   {
+    "wallet": "0x11ba7897b4455946727c54df1b1a3b56ba940ca0",
+    "side": "Under",
+    "usd": 31
+   },
+   {
+    "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
+    "side": "Over",
+    "usd": 25
+   },
+   {
+    "wallet": "0x4ffe49ba2a4cae123536a8af4fda48faeb609f71",
+    "side": "Over",
+    "usd": 9
+   },
+   {
+    "wallet": "0x3fa7b137757d8d4b032bc4227ccb77e2aa5aeb68",
+    "side": "Under",
+    "usd": 8
+   },
+   {
+    "wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
+    "side": "Over",
+    "usd": 6
+   },
+   {
+    "wallet": "0x5e020e19bc4cc2cd24ab9b406604ee9df02ab178",
+    "side": "Over",
+    "usd": 4
+   },
+   {
+    "wallet": "0xd0698a02ded7b86284ebf25e9db0bb0d787ad078",
+    "side": "Under",
+    "usd": 2
+   },
+   {
+    "wallet": "0xa9b73b68f02f26238e2fa948fe0b7dbeb5bff43c",
+    "side": "Over",
+    "usd": 1
+   },
+   {
+    "wallet": "0x0c28d976bbfaad597a678f6fc3794d6ba56a9844",
+    "side": "Over",
+    "usd": 1
+   },
+   {
+    "wallet": "0xdc4f58a48ed4467743609fdce11eea483c759804",
+    "side": "Over",
+    "usd": 0
+   }
+  ],
+  "hoursToKickoff": 2.45,
+  "capturedAt": "2026-10-04T13:33:06.928584+00:00",
+  "koTs": "2026-10-04T16:00:00+00:00",
+  "cond": "0x56ef1ff8e7afccf216790817ef1ae55e4cc0f9b88b8cfe8663c5ad34586e97a1",
+  "frage": "Malta vs. Andorra: O/U 7.5",
+  "tokens": {
+   "Over": "91579507937582317191262632436591092939452437393746884314351577817112642590427",
+   "Under": "88458992151567442946133018854644468485305163664853129579256028389888726103165"
+  }
+ },
+ "unl-mal-and-2026-10-04": {
+  "shares": {
+   "Malta": 6111.2723514699965,
+   "Draw (Malta vs. Andorra)": 484.23167127500005,
+   "Andorra": 1438.04021775
+  },
+  "prices": {
+   "Malta": 0.605,
+   "Draw (Malta vs. Andorra)": 0.275,
+   "Andorra": 0.125
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 28263,
+  "whales": [
+   {
+    "wallet": "0xe6bf45da92f7d318f2d7ee28f6d5dd02038016b9",
+    "side": "Malta",
+    "usd": 2003
+   },
+   {
+    "wallet": "0x675cff7932fc13cc635105d8e57f980756d88c88",
+    "side": "Andorra",
+    "usd": 696
+   },
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Andorra",
+    "usd": 548
+   },
+   {
+    "wallet": "0x39d807a9c34f226e8c5b7d2a06822bc7ff47f064",
+    "side": "Malta",
+    "usd": 504
+   },
+   {
+    "wallet": "0x5016c48436ab3efa2ab54b117d0c08fa1a4a1eeb",
+    "side": "Malta",
+    "usd": 496
+   },
+   {
+    "wallet": "0x7d3b7ff761d046f5dc1d972e8a755dc1eccf55b8",
+    "side": "Malta",
+    "usd": 307
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "Malta",
+    "usd": 219,
+    "avgPrice": 0.5963
+   },
+   {
+    "wallet": "0xac9ba267c879bbc02c6f7b809b48f4b775fe18eb",
+    "side": "Malta",
+    "usd": 206
+   },
+   {
+    "wallet": "0x04c7d4ac046c6779004241bf3094046c92ddc7a7",
+    "side": "Malta",
+    "usd": 182
+   },
+   {
+    "wallet": "0xfa011919b3ce3222620052757ee0f0c66c41f0a7",
+    "side": "Draw (Malta vs. Andorra)",
+    "usd": 165
+   },
+   {
+    "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
+    "side": "Malta",
+    "usd": 119
+   },
+   {
+    "wallet": "0xed57c40633e068bc1af3177f5536333dc5c26207",
+    "side": "Malta",
+    "usd": 104
+   },
+   {
+    "wallet": "0x3486ef8eeec032111d20acd71cb24f34ef5349ee",
+    "side": "Malta",
+    "usd": 101
+   },
+   {
+    "wallet": "0xef460652c993d011442553faaa81b13a924cf872",
+    "side": "Malta",
+    "usd": 101
+   },
+   {
+    "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
+    "side": "Malta",
+    "usd": 63
+   },
+   {
+    "wallet": "0x1f624696c102b99bea92c75a502fa7e4a6d676f6",
+    "side": "Malta",
+    "usd": 60
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Malta",
+    "usd": 58
+   },
+   {
+    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+    "side": "Malta",
+    "usd": 52
+   },
+   {
+    "wallet": "0x0b0afb8403e0abb65f91b766a815a4ca74f5e482",
+    "side": "Malta",
+    "usd": 51
+   },
+   {
+    "wallet": "0xfe67df6e0c585e50cbe8bdcad804d980c6b8a2e8",
+    "side": "Andorra",
+    "usd": 43
+   },
+   {
+    "wallet": "0xa2fc0448a1dce9258ebb91b2f3abcddb98a0b1b4",
+    "side": "Malta",
+    "usd": 35
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Malta",
+    "usd": 32,
+    "avgPrice": 0.5909
+   },
+   {
+    "wallet": "0x9ecc67d670e93882a7c177ade09b767a4e6d415a",
+    "side": "Malta",
+    "usd": 30
+   },
+   {
+    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
+    "side": "Draw (Malta vs. Andorra)",
+    "usd": 27
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "Andorra",
+    "usd": 24,
+    "avgPrice": 0.1357
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Draw (Malta vs. Andorra)",
+    "usd": 16
+   },
+   {
+    "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
+    "side": "Draw (Malta vs. Andorra)",
+    "usd": 15
+   },
+   {
+    "wallet": "0xaff389b0c6e066057c44c25fae7277880b276ecc",
+    "side": "Malta",
+    "usd": 14
+   },
+   {
+    "wallet": "0xf4f88a1e25ff5dfae68326eb62049d6a1b7c5bf1",
+    "side": "Draw (Malta vs. Andorra)",
+    "usd": 12,
+    "avgPrice": 0.53
+   },
+   {
+    "wallet": "0xda770326bd091d26f816917aa83a6baff668683f",
+    "side": "Andorra",
+    "usd": 11
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Draw (Malta vs. Andorra)",
+    "usd": 9
+   },
+   {
+    "wallet": "0xf10299cf1fff507cff45e1a906800e5b44bf1348",
+    "side": "Draw (Malta vs. Andorra)",
+    "usd": 9
+   },
+   {
+    "wallet": "0x8d0c8253703b8febbe53f45d182671c5385dc90a",
+    "side": "Andorra",
+    "usd": 9
+   },
+   {
+    "wallet": "0x341d4f882c093e978ce8174147bace7d47402995",
+    "side": "Malta",
+    "usd": 8
+   },
+   {
+    "wallet": "0x61f621ed129a8b64f0d2abbef50d23cd52d1e497",
+    "side": "Draw (Malta vs. Andorra)",
+    "usd": 8
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "side": "Andorra",
+    "usd": 8
+   },
+   {
+    "wallet": "0x3e1ac4bede0a559fc47e78e8a74adeeb6f704d5c",
+    "side": "Malta",
+    "usd": 5
+   },
+   {
+    "wallet": "0x6b36973dcfbb4a1e4c6fadfe35b755eee99c0d4b",
+    "side": "Malta",
+    "usd": 5
+   },
+   {
+    "wallet": "0x3e1ac4bede0a559fc47e78e8a74adeeb6f704d5c",
+    "side": "Andorra",
+    "usd": 5
+   },
+   {
+    "wallet": "0xcc40e3d54a3206d85d86f305596ff6fb4dc96ae3",
+    "side": "Andorra",
+    "usd": 5
+   }
+  ],
+  "hoursToKickoff": 2.45,
+  "capturedAt": "2026-10-04T13:33:06.928584+00:00",
+  "koTs": "2026-10-04T16:00:00+00:00",
+  "tokens": {
+   "Malta": "79699711674655971928893061399198976068165688874242146897144674409359653408535",
+   "Draw (Malta vs. Andorra)": "93342898363332445337623441788829476802806531227843216656429809099146490294362",
+   "Andorra": "70562816441476525525108871924557091262539507631896177367018378572182673094175"
+  }
+ },
+ "unl-kvx-aut-2026-10-04-exact-score": {
+  "shares": {
+   "Kosovo 0 - 0 Austria": 4.5,
+   "Kosovo 0 - 1 Austria": 8.886363719999999,
+   "Kosovo 1 - 0 Austria": 52.3125,
+   "Kosovo 0 - 2 Austria": 12.04166678,
+   "Kosovo 1 - 1 Austria": 30.349780380000002,
+   "Kosovo 2 - 0 Austria": 110.124,
+   "Kosovo 0 - 3 Austria": 2.43,
+   "Kosovo 1 - 2 Austria": 129.6960433,
+   "Kosovo 2 - 1 Austria": 14.75909929,
+   "Kosovo 3 - 0 Austria": 0.8775,
+   "Kosovo 1 - 3 Austria": 4.8925,
+   "Kosovo 2 - 2 Austria": 93.1168939725,
+   "Kosovo 3 - 1 Austria": 43.3202272895,
+   "Kosovo 2 - 3 Austria": 1.938057969,
+   "Kosovo 3 - 2 Austria": 45.29998633499999,
+   "Kosovo 3 - 3 Austria": 79.969431507,
+   "Any Other Score": 4.8
+  },
+  "prices": {
+   "Kosovo 0 - 0 Austria": 0.075,
+   "Kosovo 0 - 1 Austria": 0.115,
+   "Kosovo 1 - 0 Austria": 0.075,
+   "Kosovo 0 - 2 Austria": 0.085,
+   "Kosovo 1 - 1 Austria": 0.135,
+   "Kosovo 2 - 0 Austria": 0.038,
+   "Kosovo 0 - 3 Austria": 0.0405,
+   "Kosovo 1 - 2 Austria": 0.1,
+   "Kosovo 2 - 1 Austria": 0.065,
+   "Kosovo 3 - 0 Austria": 0.013,
+   "Kosovo 1 - 3 Austria": 0.0475,
+   "Kosovo 2 - 2 Austria": 0.0575,
+   "Kosovo 3 - 1 Austria": 0.0205,
+   "Kosovo 2 - 3 Austria": 0.0285,
+   "Kosovo 3 - 2 Austria": 0.0185,
+   "Kosovo 3 - 3 Austria": 0.0105,
+   "Any Other Score": 0.08
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 18898,
+  "whales": [
+   {
+    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+    "side": "Kosovo 1 - 2 Austria",
+    "usd": 91
+   },
+   {
+    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+    "side": "Kosovo 2 - 0 Austria",
+    "usd": 86
+   },
+   {
+    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+    "side": "Kosovo 3 - 3 Austria",
+    "usd": 79,
+    "avgPrice": 0.0119
+   },
+   {
+    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+    "side": "Kosovo 3 - 1 Austria",
+    "usd": 42
+   },
+   {
+    "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
+    "side": "Kosovo 2 - 2 Austria",
+    "usd": 40
+   },
+   {
+    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+    "side": "Kosovo 3 - 2 Austria",
+    "usd": 40
+   },
+   {
+    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
+    "side": "Kosovo 1 - 0 Austria",
+    "usd": 33
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "Kosovo 2 - 2 Austria",
+    "usd": 33,
+    "avgPrice": 0.0654
+   },
+   {
+    "wallet": "0xca7c00e2bf8e4571357f31631f05dbf231e6e994",
+    "side": "Kosovo 2 - 0 Austria",
+    "usd": 22
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Kosovo 1 - 2 Austria",
+    "usd": 13
+   },
+   {
+    "wallet": "0xa2463b82329fecf6ac7bbe7c5b4b0b48dcb5b717",
+    "side": "Kosovo 1 - 1 Austria",
+    "usd": 10
+   },
+   {
+    "wallet": "0xa2463b82329fecf6ac7bbe7c5b4b0b48dcb5b717",
+    "side": "Kosovo 1 - 2 Austria",
+    "usd": 10
+   },
+   {
+    "wallet": "0x9ecc67d670e93882a7c177ade09b767a4e6d415a",
+    "side": "Kosovo 2 - 2 Austria",
+    "usd": 10
+   },
+   {
+    "wallet": "0x7be68099bbceff005913bbad06d4ead142495ab8",
+    "side": "Kosovo 1 - 0 Austria",
+    "usd": 9
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Kosovo 1 - 1 Austria",
+    "usd": 9
+   },
+   {
+    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
+    "side": "Kosovo 1 - 2 Austria",
+    "usd": 9
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Kosovo 1 - 1 Austria",
+    "usd": 8
+   },
+   {
+    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
+    "side": "Kosovo 2 - 1 Austria",
+    "usd": 8
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Kosovo 0 - 1 Austria",
+    "usd": 6
+   },
+   {
+    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
+    "side": "Kosovo 2 - 2 Austria",
+    "usd": 6
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Kosovo 0 - 2 Austria",
+    "usd": 5
+   },
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "side": "Kosovo 2 - 2 Austria",
+    "usd": 5
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Any Other Score",
+    "usd": 5
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Kosovo 0 - 0 Austria",
+    "usd": 4
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Kosovo 1 - 0 Austria",
+    "usd": 4
+   },
+   {
+    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
+    "side": "Kosovo 1 - 0 Austria",
+    "usd": 4
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Kosovo 2 - 1 Austria",
+    "usd": 4
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Kosovo 1 - 3 Austria",
+    "usd": 4,
+    "avgPrice": 0.0483
+   },
+   {
+    "wallet": "0x7be68099bbceff005913bbad06d4ead142495ab8",
+    "side": "Kosovo 3 - 2 Austria",
+    "usd": 4
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "Kosovo 0 - 1 Austria",
+    "usd": 2
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "Kosovo 0 - 2 Austria",
+    "usd": 2
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Kosovo 2 - 0 Austria",
+    "usd": 2
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Kosovo 0 - 3 Austria",
+    "usd": 2
+   },
+   {
+    "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
+    "side": "Kosovo 1 - 2 Austria",
+    "usd": 2
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "Kosovo 2 - 1 Austria",
+    "usd": 2
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Kosovo 2 - 3 Austria",
+    "usd": 2
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Kosovo 3 - 0 Austria",
+    "usd": 1
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Kosovo 3 - 1 Austria",
+    "usd": 1
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Kosovo 3 - 2 Austria",
+    "usd": 1
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Kosovo 3 - 3 Austria",
+    "usd": 1
+   }
+  ],
+  "hoursToKickoff": 2.45,
+  "capturedAt": "2026-10-04T13:33:06.928584+00:00",
+  "koTs": "2026-10-04T16:00:00+00:00",
+  "tokens": {
+   "Kosovo 0 - 0 Austria": "71020493172087807036337262821058444370256556961586904112075737963976331860318",
+   "Kosovo 0 - 1 Austria": "70296966590514588195674778655128680560241756648834641971043268604385834163942",
+   "Kosovo 1 - 0 Austria": "28090712852773865778477247753819151775188073369564194362124120094137643450869",
+   "Kosovo 0 - 2 Austria": "83507981660431705389382758486476619704392726753641074387813630994969368811033",
+   "Kosovo 1 - 1 Austria": "83171390954400934856969209862959794127977694750910605017183294994243787737744",
+   "Kosovo 2 - 0 Austria": "79825117953838380766226320325802145250537654717370200903947680849316536031534",
+   "Kosovo 0 - 3 Austria": "96474520087192106269933216010000266888501107397602483474281255364941521459509",
+   "Kosovo 1 - 2 Austria": "54106060120801508254585559311593424584263610415226112017223426617639046228904",
+   "Kosovo 2 - 1 Austria": "91720455199099612834064393373056705266240308805721946022439262294420509809776",
+   "Kosovo 3 - 0 Austria": "2822626211123845392077446149397018266400684157982559521179686211448486561217",
+   "Kosovo 1 - 3 Austria": "13161157520140452409525441025183809314734073504276328691730335926966457331234",
+   "Kosovo 2 - 2 Austria": "88448234143628284817945786854989823634698820256351012451631942559819326539100",
+   "Kosovo 3 - 1 Austria": "81870805887657482224211516846036266914917541204877120544124346765862997057683",
+   "Kosovo 2 - 3 Austria": "72766548919887851426809747689369895534284370024280496645794288442738157031134",
+   "Kosovo 3 - 2 Austria": "114475725357870340491496624228043687690354373277900063953265210592939444959746",
+   "Kosovo 3 - 3 Austria": "93157172656642771440680740543835554645609452383357161503264829765169814797218",
+   "Any Other Score": "28065895754841064703988947858881674095253199676489774165030543115994065011061"
+  }
+ },
+ "unl-mal-and-2026-10-04-exact-score": {
+  "shares": {
+   "Malta 0 - 0 Andorra": 9.629505720000001,
+   "Malta 0 - 1 Andorra": 2.301,
+   "Malta 1 - 0 Andorra": 32.376044220000004,
+   "Malta 0 - 2 Andorra": 194.485545408,
+   "Malta 1 - 1 Andorra": 20.045384695,
+   "Malta 2 - 0 Andorra": 23.06089305,
+   "Malta 0 - 3 Andorra": 0.09,
+   "Malta 1 - 2 Andorra": 0.7799999999999999,
+   "Malta 2 - 1 Andorra": 19.712713545,
+   "Malta 3 - 0 Andorra": 2.1,
+   "Malta 1 - 3 Andorra": 0.31902074999999996,
+   "Malta 2 - 2 Andorra": 20.807098669000002,
+   "Malta 3 - 1 Andorra": 1.2,
+   "Malta 2 - 3 Andorra": 0.12,
+   "Malta 3 - 2 Andorra": 0.36,
+   "Malta 3 - 3 Andorra": 0.09,
+   "Any Other Score": 1.5
+  },
+  "prices": {
+   "Malta 0 - 0 Andorra": 0.135,
+   "Malta 0 - 1 Andorra": 0.065,
+   "Malta 1 - 0 Andorra": 0.195,
+   "Malta 0 - 2 Andorra": 0.016,
+   "Malta 1 - 1 Andorra": 0.115,
+   "Malta 2 - 0 Andorra": 0.135,
+   "Malta 0 - 3 Andorra": 0.003,
+   "Malta 1 - 2 Andorra": 0.026,
+   "Malta 2 - 1 Andorra": 0.085,
+   "Malta 3 - 0 Andorra": 0.07,
+   "Malta 1 - 3 Andorra": 0.0045,
+   "Malta 2 - 2 Andorra": 0.0235,
+   "Malta 3 - 1 Andorra": 0.04,
+   "Malta 2 - 3 Andorra": 0.004,
+   "Malta 3 - 2 Andorra": 0.012,
+   "Malta 3 - 3 Andorra": 0.003,
+   "Any Other Score": 0.05
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 13775,
+  "whales": [
+   {
+    "wallet": "0xca7c00e2bf8e4571357f31631f05dbf231e6e994",
+    "side": "Malta 0 - 2 Andorra",
+    "usd": 89
+   },
+   {
+    "wallet": "0x1e3a86ef98030e7e0519e127d8178e9b45389e14",
+    "side": "Malta 0 - 2 Andorra",
+    "usd": 57
+   },
+   {
+    "wallet": "0x8f41129e43ebfbfe6075d0804f3b2bb763b3260e",
+    "side": "Malta 0 - 2 Andorra",
+    "usd": 46,
+    "avgPrice": 0.017
+   },
+   {
+    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
+    "side": "Malta 1 - 1 Andorra",
+    "usd": 12
+   },
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Malta 1 - 0 Andorra",
+    "usd": 11
+   },
+   {
+    "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
+    "side": "Malta 2 - 2 Andorra",
+    "usd": 11
+   },
+   {
+    "wallet": "0x7be68099bbceff005913bbad06d4ead142495ab8",
+    "side": "Malta 1 - 0 Andorra",
+    "usd": 10
+   },
+   {
+    "wallet": "0x7be68099bbceff005913bbad06d4ead142495ab8",
+    "side": "Malta 2 - 0 Andorra",
+    "usd": 10
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Malta 2 - 0 Andorra",
+    "usd": 8
+   },
+   {
+    "wallet": "0x9ecc67d670e93882a7c177ade09b767a4e6d415a",
+    "side": "Malta 2 - 1 Andorra",
+    "usd": 8
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "Malta 2 - 1 Andorra",
+    "usd": 8,
+    "avgPrice": 0.1
+   },
+   {
+    "wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
+    "side": "Malta 2 - 2 Andorra",
+    "usd": 6
+   },
+   {
+    "wallet": "0x3e1ac4bede0a559fc47e78e8a74adeeb6f704d5c",
+    "side": "Malta 1 - 0 Andorra",
+    "usd": 5
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Malta 0 - 0 Andorra",
+    "usd": 4
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Malta 0 - 0 Andorra",
+    "usd": 4
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "Malta 1 - 1 Andorra",
+    "usd": 4
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Malta 1 - 1 Andorra",
+    "usd": 3
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Malta 2 - 1 Andorra",
+    "usd": 3
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Malta 0 - 1 Andorra",
+    "usd": 2
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Malta 1 - 0 Andorra",
+    "usd": 2
+   },
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "side": "Malta 1 - 0 Andorra",
+    "usd": 2
+   },
+   {
+    "wallet": "0x86d021495fbfb33cdb4761100f4d0d184174904e",
+    "side": "Malta 0 - 2 Andorra",
+    "usd": 2
+   },
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "side": "Malta 2 - 0 Andorra",
+    "usd": 2
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Malta 3 - 0 Andorra",
+    "usd": 2
+   },
+   {
+    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
+    "side": "Malta 2 - 2 Andorra",
+    "usd": 2
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Any Other Score",
+    "usd": 2
+   },
+   {
+    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
+    "side": "Malta 0 - 0 Andorra",
+    "usd": 1
+   },
+   {
+    "wallet": "0x341d4f882c093e978ce8174147bace7d47402995",
+    "side": "Malta 1 - 0 Andorra",
+    "usd": 1
+   },
+   {
+    "wallet": "0x75177693e4ecdd01a33cb43ba3fe606dcf750353",
+    "side": "Malta 2 - 0 Andorra",
+    "usd": 1
+   },
+   {
+    "wallet": "0x341d4f882c093e978ce8174147bace7d47402995",
+    "side": "Malta 2 - 0 Andorra",
+    "usd": 1
+   },
+   {
+    "wallet": "0xca7c00e2bf8e4571357f31631f05dbf231e6e994",
+    "side": "Malta 2 - 0 Andorra",
+    "usd": 1
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Malta 1 - 2 Andorra",
+    "usd": 1
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Malta 2 - 2 Andorra",
+    "usd": 1
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Malta 3 - 1 Andorra",
+    "usd": 1
+   },
+   {
+    "wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
+    "side": "Malta 0 - 1 Andorra",
+    "usd": 0
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Malta 0 - 2 Andorra",
+    "usd": 0
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Malta 0 - 3 Andorra",
+    "usd": 0
+   },
+   {
+    "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
+    "side": "Malta 1 - 3 Andorra",
+    "usd": 0
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Malta 1 - 3 Andorra",
+    "usd": 0
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Malta 2 - 3 Andorra",
+    "usd": 0
+   }
+  ],
+  "hoursToKickoff": 2.45,
+  "capturedAt": "2026-10-04T13:33:06.928584+00:00",
+  "koTs": "2026-10-04T16:00:00+00:00",
+  "tokens": {
+   "Malta 0 - 0 Andorra": "99642298766455884285068442298457798496112288019491023222676425016359243418102",
+   "Malta 0 - 1 Andorra": "94809106859750703443730678489298023728965800963754363005957988275642374010425",
+   "Malta 1 - 0 Andorra": "29851645602188336285923816163739307471486213598749825056416654470155903349771",
+   "Malta 0 - 2 Andorra": "55251732616839074410202886390046147298068852777861595667216209425872327756161",
+   "Malta 1 - 1 Andorra": "101759482519363690697785752218108012069911407292404926394947268042271154548048",
+   "Malta 2 - 0 Andorra": "97270218960889829323354084008362153152373124336258643888477266177775444285113",
+   "Malta 0 - 3 Andorra": "79170613103746930747269962137671296514695660489529482985257639452718901932124",
+   "Malta 1 - 2 Andorra": "106524183390045066409972754797023744582279748924053098744095654053528535105665",
+   "Malta 2 - 1 Andorra": "97853940864414598537655421060492042552719746523330669749730812301597090606774",
+   "Malta 3 - 0 Andorra": "38549437333717404962076803636780561078452431048545540459112377277729985788930",
+   "Malta 1 - 3 Andorra": "11182169514596561225249976831487026059469742058548151827304344274098888394075",
+   "Malta 2 - 2 Andorra": "115723984190516727049762640234000006936997873361924848889276974050192060976363",
+   "Malta 3 - 1 Andorra": "106992113104010922267525528544956323126789950253999254338362269150407099310571",
+   "Malta 2 - 3 Andorra": "63307084847005638407553505325689984673444174341613810277936712270432054311902",
+   "Malta 3 - 2 Andorra": "70838508124931965044097407553415546652006473476380724797889273060226185584013",
+   "Malta 3 - 3 Andorra": "94938263825073212540945418013819260161154050149327177866202706791619909055785",
+   "Any Other Score": "45368670003215700591794349947343403794341398804513720111246042881306121097782"
+  }
+ },
+ "cs2-btf-meg1-2026-10-04": {
+  "shares": {
+   "Butterfly": 9935.170533074997,
+   "megoshort": 2721.0994965200007
+  },
+  "prices": {
+   "Butterfly": 0.785,
+   "megoshort": 0.215
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 7909,
+  "whales": [
+   {
+    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
+    "side": "Butterfly",
+    "usd": 4606
+   },
+   {
+    "wallet": "0x4a3f86ed9ce6b3dac5b66e2d5478a6bf38cc4333",
+    "side": "Butterfly",
+    "usd": 603
+   },
+   {
+    "wallet": "0xcfb0988c1ef82475667308c8102f3aedb3971f12",
+    "side": "Butterfly",
+    "usd": 593
+   },
+   {
+    "wallet": "0xa278b41b5afda5d18da683eb7f851a7b2dc13369",
+    "side": "megoshort",
+    "usd": 556
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "megoshort",
+    "usd": 509,
+    "avgPrice": 0.2273
+   },
+   {
+    "wallet": "0x0e50849ef225489b1879e3418e5b7633355a2609",
+    "side": "Butterfly",
+    "usd": 491
+   },
+   {
+    "wallet": "0x7e5972bfc25819775ee5a9d4f191919375487b8b",
+    "side": "Butterfly",
+    "usd": 336,
+    "avgPrice": 0.7428
+   },
+   {
+    "wallet": "0x66b102468892d00a90c98ed8aec1d2b24904340f",
+    "side": "Butterfly",
+    "usd": 314
+   },
+   {
+    "wallet": "0xc34b4901be324718c176100e350211d97b199296",
+    "side": "Butterfly",
+    "usd": 298
+   },
+   {
+    "wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
+    "side": "Butterfly",
+    "usd": 245
+   },
+   {
+    "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
+    "side": "Butterfly",
+    "usd": 220
+   },
+   {
+    "wallet": "0x8f41129e43ebfbfe6075d0804f3b2bb763b3260e",
+    "side": "Butterfly",
+    "usd": 211,
+    "avgPrice": 0.75
+   },
+   {
+    "wallet": "0x52d8da46bcc56e3d9f9b2099ad16904fb0b599ae",
+    "side": "megoshort",
+    "usd": 206
+   },
+   {
+    "wallet": "0xedc35944a67658dc37d4e8de948cea2a7fa3f923",
+    "side": "megoshort",
+    "usd": 181
+   },
+   {
+    "wallet": "0x0a7c46489299331559598ab0412f46bda8ce8964",
+    "side": "Butterfly",
+    "usd": 125
+   },
+   {
+    "wallet": "0x5213eb85fcd465c8927a8382f95dd2dc22306a35",
+    "side": "Butterfly",
+    "usd": 113
+   },
+   {
+    "wallet": "0xda770326bd091d26f816917aa83a6baff668683f",
+    "side": "Butterfly",
+    "usd": 111
+   },
+   {
+    "wallet": "0xeaac36f714563e13d88db7a4f0a0898388f2d71d",
+    "side": "Butterfly",
+    "usd": 95
+   },
+   {
+    "wallet": "0x62e8b5d5c6060394b0a05200e0d67049511088a1",
+    "side": "megoshort",
+    "usd": 86
+   },
+   {
+    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
+    "side": "Butterfly",
+    "usd": 78
+   },
+   {
+    "wallet": "0xcd300069721b481c8be9b2f6323583bf8c74fc9b",
+    "side": "megoshort",
+    "usd": 75
+   },
+   {
+    "wallet": "0x2d2d2b32e5199edf833594a99b9c54e5668ab69d",
+    "side": "Butterfly",
+    "usd": 71
+   },
+   {
+    "wallet": "0x67af214764bd6eda61fadb25cdcbea6d13d761ee",
+    "side": "Butterfly",
+    "usd": 67
+   },
+   {
+    "wallet": "0xc73ae6b1394edec7445f561a2325256b8dddba42",
+    "side": "megoshort",
+    "usd": 52
+   },
+   {
+    "wallet": "0xcefda2f799dc8849adb83cb846c08b9d1feed6aa",
+    "side": "megoshort",
+    "usd": 51
+   },
+   {
+    "wallet": "0x5d40576be2e9c61d283f4fd80d7a5ccf2331ba95",
+    "side": "Butterfly",
+    "usd": 44
+   },
+   {
+    "wallet": "0xac4c55b85a1dcacb638bd63ea4eeb8d8a9352200",
+    "side": "Butterfly",
+    "usd": 43
+   },
+   {
+    "wallet": "0x238b208810031f7bc51cb9f420bc0703572244eb",
+    "side": "megoshort",
+    "usd": 43
+   },
+   {
+    "wallet": "0xa951006f1ce68498c1aef9b013880459e6e08a2f",
+    "side": "Butterfly",
+    "usd": 38
+   },
+   {
+    "wallet": "0x02db2eee0b06db57057dc153fd03327b7db35a8d",
+    "side": "Butterfly",
+    "usd": 25
+   },
+   {
+    "wallet": "0xfd144099a983b0cfdb88d0b89e0ca049fae22267",
+    "side": "megoshort",
+    "usd": 23
+   },
+   {
+    "wallet": "0xc4fe817476491890086330a639ac417d51bf601f",
+    "side": "Butterfly",
+    "usd": 19
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "megoshort",
+    "usd": 18,
+    "avgPrice": 0.2
+   },
+   {
+    "wallet": "0xb21bcc4615f7e0e15030c415def696d5936988f9",
+    "side": "Butterfly",
+    "usd": 16
+   },
+   {
+    "wallet": "0xcb478cba19de920f9f7e359c9a8609d7f41c4737",
+    "side": "Butterfly",
+    "usd": 16
+   },
+   {
+    "wallet": "0xde5314ddd05574a22cdaeef4e9ab2c02ce90e5be",
+    "side": "megoshort",
+    "usd": 16
+   },
+   {
+    "wallet": "0x3ca9089f59d506a6773a4d68227a1ac97806424a",
+    "side": "Butterfly",
+    "usd": 14
+   },
+   {
+    "wallet": "0xcee6a215f2de749afd3a6a74721cc0c4fbb80a45",
+    "side": "Butterfly",
+    "usd": 11
+   },
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "side": "megoshort",
+    "usd": 11
+   },
+   {
+    "wallet": "0xcca1077390fcc26d2e9f0a46505f5cd4a185d411",
+    "side": "Butterfly",
+    "usd": 8
+   }
+  ],
+  "hoursToKickoff": 0.45,
+  "capturedAt": "2026-10-04T13:33:06.928584+00:00",
+  "koTs": "2026-10-04T14:00:00+00:00",
+  "cond": "0x50c494199a6717d20b493c22fbe6bd3b6503c24a9211aeadc61fc6c5980bad00",
+  "frage": "Counter-Strike: Butterfly vs megoshort (BO3) - CCT Europe Series #10 Group Stage",
+  "tokens": {
+   "Butterfly": "79356209762279931818397631280806165881672533052475451602088005725742834836834",
+   "megoshort": "63466991005178954676335069391908985003328590418404494505569641301667946310883"
+  }
+ },
+ "cs2-vit-navi-2026-10-04": {
+  "shares": {},
+  "prices": {
+   "Vitality": 0.735,
+   "Natus Vincere": 0.265
   },
   "splitGuete": {
    "art": "leer",
@@ -632405,16 +634457,40 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 9585,
+  "totalUsd": 205284,
   "whales": [],
   "hoursToKickoff": 2.95,
-  "capturedAt": "2026-10-04T13:03:01.305934+00:00",
-  "koTs": "2026-10-04T16:00:00+00:00",
-  "cond": "0x1c757d54d6bee4309950059bcceb25181eaa7dcc0c63957e68ab5695f1894802",
-  "frage": "Games Total: O/U 3.5",
+  "capturedAt": "2026-10-04T13:33:06.928584+00:00",
+  "koTs": "2026-10-04T16:30:00+00:00",
+  "cond": "0x63b1bfd93c4a068e1cdb09504bddecaf243c7b1625fc0fc7e875b3e61ece32a1",
+  "frage": "Counter-Strike: Vitality vs Natus Vincere (BO3) - ESL Pro League Group Stage",
   "tokens": {
-   "Over": "15317400050332819691924632343782428023854625434099159842369976224772371677038",
-   "Under": "32588108158807152890118300967872382960075013372148299680955721286406035763443"
+   "Vitality": "52782460002971481677311914765001504065808776081345401565845539635117091902342",
+   "Natus Vincere": "17743789665893422930053458922698570563056891005836963122358706404452826158047"
+  }
+ },
+ "cs2-bb3-m80-2026-10-04": {
+  "shares": {},
+  "prices": {
+   "BetBoom Team": 0.685,
+   "M80": 0.315
+  },
+  "splitGuete": {
+   "art": "leer",
+   "trunc": null
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 10656,
+  "whales": [],
+  "hoursToKickoff": 2.95,
+  "capturedAt": "2026-10-04T13:33:06.928584+00:00",
+  "koTs": "2026-10-04T16:30:00+00:00",
+  "cond": "0xc83cda6de1dcc36e76dd2ec6b3d16afb071bc546a90168250c946dd684dfae25",
+  "frage": "Counter-Strike: BetBoom Team vs M80 (BO3) - ESL Pro League Group Stage",
+  "tokens": {
+   "BetBoom Team": "5425162161148442023339032572712977454206673499715837184915024144622543422158",
+   "M80": "23208839386578690541035401387210845986144113833130479508912099552269460686882"
   }
  }
 }
