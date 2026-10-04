@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-10-04T15:51:45.293958+00:00",
+"generatedAt": "2026-10-04T16:06:47.678503+00:00",
 "byVerdict": {
 "uneinig": {
-"n": 1,
+"n": 2,
 "wins": 0,
 "hitRate": 0.0,
-"polyN": 1,
-"polyWins": 0,
-"polyHitRate": 0.0,
+"polyN": 2,
+"polyWins": 1,
+"polyHitRate": 0.5,
 "pinnN": 1,
 "pinnHitRate": 1.0,
-"nRoi": 1,
+"nRoi": 2,
 "roi": -1.0,
-"roiLb": null,
-"nClv": 1,
-"clv": -1.72,
-"clvLb": null
+"roiLb": -1.0,
+"nClv": 2,
+"clv": -0.32,
+"clvLb": -2.623
 },
 "konsens": {
 "n": 15,
@@ -89,6 +89,11 @@
 "n": 1,
 "wins": 0,
 "hitRate": 0.0
+},
+"UEFA Nations League D": {
+"n": 1,
+"wins": 0,
+"hitRate": 0.0
 }
 },
 "byStrength": {
@@ -104,26 +109,45 @@
 "clvLb": 0.1398
 },
 "weak": {
-"n": 4,
+"n": 5,
 "wins": 2,
-"hitRate": 0.5,
-"nRoi": 4,
-"roi": 0.23,
-"roiLb": -0.9629,
-"nClv": 4,
-"clv": -0.62,
-"clvLb": -2.0047
+"hitRate": 0.4,
+"nRoi": 5,
+"roi": -0.016,
+"roiLb": -1.0248,
+"nClv": 5,
+"clv": -0.28,
+"clvLb": -1.489
 }
 },
 "divergence": {
-"n": 1,
+"n": 2,
 "betfairWins": 0,
 "betfairRate": 0.0,
-"polyN": 1,
-"polyWins": 0,
-"polyRate": 0.0
+"polyN": 2,
+"polyWins": 1,
+"polyRate": 0.5
 },
 "recent": [
+{
+"matchId": "36142556",
+"home": "Azerbaijan",
+"away": "Lithuania",
+"league": "UEFA Nations League D",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "home",
+"winner": "home",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-10-04T13:00:00Z",
+"settledAt": "2026-10-04T16:06:47.440767+00:00"
+},
 {
 "matchId": "36124724",
 "home": "Sociedad B",
@@ -430,16 +454,16 @@
 }
 ],
 "global": {
-"n": 16,
+"n": 17,
 "wins": 6,
-"hitRate": 0.375,
-"nRoi": 16,
-"roi": -0.2519,
-"roiLb": -0.6866,
-"nClv": 16,
-"clv": 0.77,
-"clvLb": -0.1619
+"hitRate": 0.3529,
+"nRoi": 17,
+"roi": -0.2959,
+"roiLb": -0.7106,
+"nClv": 17,
+"clv": 0.79,
+"clvLb": -0.0876
 },
-"pending": 19,
+"pending": 18,
 "ausgeschlossenLive": 1965
 }
