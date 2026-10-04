@@ -684,6 +684,11 @@ class EineBilanzDieIhreLueckeNennt(unittest.TestCase):
         # Anreicherung, steht der Dedup-Stand schon (er wird direkt nach dem Senden gesetzt)
         # und der Beleg nie. Behoben am 22.09.: Kern zuerst, Anreicherung je fuer sich.
         "fresh:36041720",
+        # 03.10.2026 15:34:27 — Lauf auf actions-runner-3: ci_sichern committete lokal, drei
+        # Push-Runden scheiterten, der 14-Min-Deckel brach den End-Commit ab. Der naechste Runner
+        # bekam den Seen-Stand aus dem gemeinsamen Spiegel ~/.cocobet_state, das Ledger hatte
+        # keinen. Behoben am 03.10.: Beleg-Spiegel (tests/test_beleg_spiegel.py).
+        "fresh:36132098",
     }
 
     def _echt(self):
