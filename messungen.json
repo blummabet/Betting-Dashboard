@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-04T11:32:27.270689+00:00",
+ "generatedAt": "2026-10-04T12:03:20.687822+00:00",
  "heute": "2026-10-04",
  "messungen": [
   {
@@ -38,24 +38,6 @@
    "stand": "141 von 25 Beobachtungen · Entscheidung faellig",
    "fortschritt": 1.0,
    "tageBisFaellig": -5
-  },
-  {
-   "id": "devig-proportional-vs-power",
-   "titel": "Proportionale oder Power-De-vig?",
-   "frage": "Welcher faire Wert lag naeher am Schlusskurs — getrennt nach Preisband und Markt, mit einseitiger 95%-Untergrenze.",
-   "warum": "Die proportionale Methode hebt die Edge genau dort an, wo das System handelt: unter 40 Cent im Schnitt +1,47pp. Alle bis dahin platzierten Auto-Trades lagen in diesem Band. Power laeuft seit 14.09. parallel mit, ohne etwas zu entscheiden.",
-   "gestartet": "2026-09-14",
-   "faellig": "2026-10-04",
-   "quelle": "fairPow_hw|dr|aw|o25|u25 in den Poly-Preis-Dateien gegen den Schlusskurs",
-   "messer": null,
-   "mindestN": null,
-   "entscheidung": null,
-   "wecker": "eigene Aufgabe am 04.10.2026, 08:00 UTC + Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": null,
-   "zustand": "faellig",
-   "stand": "Entscheidung faellig",
-   "fortschritt": null,
-   "tageBisFaellig": 0
   },
   {
    "id": "sharp-z-1282",
@@ -324,10 +306,10 @@
    "mindestN": 20000,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 15657,
+   "standN": 15676,
    "zustand": "sammelt",
-   "stand": "15657 von 20000 Beobachtungen · faellig in 42 Tag(en)",
-   "fortschritt": 0.78285,
+   "stand": "15676 von 20000 Beobachtungen · faellig in 42 Tag(en)",
+   "fortschritt": 0.7838,
    "tageBisFaellig": 42
   },
   {
@@ -342,10 +324,10 @@
    "mindestN": 20000,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 15657,
+   "standN": 15676,
    "zustand": "sammelt",
-   "stand": "15657 von 20000 Beobachtungen · faellig in 42 Tag(en)",
-   "fortschritt": 0.78285,
+   "stand": "15676 von 20000 Beobachtungen · faellig in 42 Tag(en)",
+   "fortschritt": 0.7838,
    "tageBisFaellig": 42
   },
   {
@@ -396,10 +378,10 @@
    "mindestN": 150,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 11,
+   "standN": 13,
    "zustand": "sammelt",
-   "stand": "11 von 150 Beobachtungen · faellig in 72 Tag(en)",
-   "fortschritt": 0.07333333333333333,
+   "stand": "13 von 150 Beobachtungen · faellig in 72 Tag(en)",
+   "fortschritt": 0.08666666666666667,
    "tageBisFaellig": 72
   },
   {
@@ -432,10 +414,10 @@
    "mindestN": 200,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 35,
+   "standN": 36,
    "zustand": "sammelt",
-   "stand": "35 von 200 Beobachtungen · faellig in 88 Tag(en)",
-   "fortschritt": 0.175,
+   "stand": "36 von 200 Beobachtungen · faellig in 88 Tag(en)",
+   "fortschritt": 0.18,
    "tageBisFaellig": 88
   },
   {
@@ -456,9 +438,27 @@
    "stand": "28.09.2026 beendet (Lucas: „fuer den fruehen Einstieg kannst du auslassen\"). Mit dem heutigen Zuschnitt nicht beantwortbar — die Shortlist steigt nie frueher als 3 h vor Anpfiff ein.",
    "fortschritt": 0.0,
    "tageBisFaellig": -5
+  },
+  {
+   "id": "devig-proportional-vs-power",
+   "titel": "Proportionale oder Power-De-vig?",
+   "frage": "Welcher faire Wert lag naeher am Schlusskurs — getrennt nach Preisband und Markt, mit einseitiger 95%-Untergrenze.",
+   "warum": "Die proportionale Methode hebt die Edge genau dort an, wo das System handelt: unter 40 Cent im Schnitt +1,47pp. Alle bis dahin platzierten Auto-Trades lagen in diesem Band. Power laeuft seit 14.09. parallel mit, ohne etwas zu entscheiden.",
+   "gestartet": "2026-09-14",
+   "faellig": "2026-10-04",
+   "quelle": "fairPow_hw|dr|aw|o25|u25 in den Poly-Preis-Dateien gegen den Schlusskurs",
+   "messer": null,
+   "mindestN": null,
+   "entscheidung": "04.10.2026 auf POWER umgestellt (Lucas: „ja stell um“). Gemessen am Poly-Schlusskurs, 68 Spiele / 339 Ausgaenge seit 14.09., mittlerer Abstand proportional minus power: alle +0,12pp [90 %: +0,03 … +0,22] zum Einstieg, +0,16pp [+0,08 … +0,25] am Schluss; O/U-Seite unter 40 Cent +0,57pp [+0,23 … +0,88]; 1X2 unter 40 Cent -0,03pp [-0,09 … +0,04], kein Unterschied. Schwellen 4,0pp bleiben. Proportional laeuft als fairProp_* weiter; DEVIG_METHODE=proportional stellt zurueck. BTTS unveraendert (keine Messung).",
+   "wecker": "eigene Aufgabe am 04.10.2026, 08:00 UTC + Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "standN": null,
+   "zustand": "entschieden",
+   "stand": "04.10.2026 auf POWER umgestellt (Lucas: „ja stell um“). Gemessen am Poly-Schlusskurs, 68 Spiele / 339 Ausgaenge seit 14.09., mittlerer Abstand proportional minus power: alle +0,12pp [90 %: +0,03 … +0,22] zum Einstieg, +0,16pp [+0,08 … +0,25] am Schluss; O/U-Seite unter 40 Cent +0,57pp [+0,23 … +0,88]; 1X2 unter 40 Cent -0,03pp [-0,09 … +0,04], kein Unterschied. Schwellen 4,0pp bleiben. Proportional laeuft als fairProp_* weiter; DEVIG_METHODE=proportional stellt zurueck. BTTS unveraendert (keine Messung).",
+   "fortschritt": null,
+   "tageBisFaellig": 0
   }
  ],
  "n": 25,
- "nOffen": 24,
- "nHandlung": 3
+ "nOffen": 23,
+ "nHandlung": 2
 }
