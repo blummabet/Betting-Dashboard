@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-10-04T10:21:09.979568+00:00",
-"count": 17,
-"covered": 13,
+"generatedAt": "2026-10-04T11:06:20.998376+00:00",
+"count": 19,
+"covered": 15,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -64,8 +64,8 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 57305,
-"remaining": 4942695,
+"used": 57773,
+"remaining": 4942227,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
@@ -83,41 +83,66 @@
 "moneySide": "away",
 "moneyName": "Germany",
 "moneySharePct": 80,
-"moneyOdd": 1.9,
-"moneyDir": "out",
-"totVol": 168556,
-"pinnOdd": 1.83,
+"moneyOdd": 1.89,
+"moneyDir": "flat",
+"totVol": 180448,
+"pinnOdd": 1.84,
 "softOdd": 1.8,
-"softN": 35,
+"softN": 38,
 "poly": {
-"vol": 334836,
+"vol": 337851,
 "odd": 1.87,
-"sharePct": 54,
-"shareSrc": "preis",
+"sharePct": 99,
+"shareSrc": "geld",
 "key": "unl-grc-ger-2026-10-04",
 "sideKey": "Germany",
-"whales": null,
-"whaleUsd": null
+"whales": [
+{
+"wallet": "0x85f031d069de300055900c4055c1baeb6bde3f67",
+"usd": 93525
+},
+{
+"wallet": "0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
+"usd": 53500
+},
+{
+"wallet": "0xca6465345246f543b7cb3152d5f5f54096f84f43",
+"usd": 2525
+},
+{
+"wallet": "0xa74f9566070aa0d50d8a9523c1e8d325a750acb2",
+"usd": 1768
+},
+{
+"wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+"usd": 1310
+},
+{
+"wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
+"usd": 1152
+}
+],
+"whaleUsd": 158948
 },
 "pinn": {
-"home": 0.226,
-"draw": 0.2455,
-"away": 0.5285,
+"home": 0.2258,
+"draw": 0.2491,
+"away": 0.5252,
 "fav": "away"
 },
 "soft": {
-"home": 0.2284,
-"draw": 0.2443,
-"away": 0.5273,
+"home": 0.229,
+"draw": 0.2429,
+"away": 0.5281,
 "fav": "away",
-"n": 35
+"n": 38
 },
-"pinnMovePP": 1.2,
+"pinnMovePP": 0.9,
 "pinnMove": {
-"movePP": 1.2,
-"stepPP": 0.1,
+"movePP": 0.9,
+"stepPP": -0.0,
 "n": 25,
-"move": true,
+"move": false,
 "laeuft": false
 },
 "verdict": "konsens",
@@ -135,29 +160,54 @@
 "moneySide": "home",
 "moneyName": "Republic of Ireland",
 "moneySharePct": 83,
-"moneyOdd": 2.3,
+"moneyOdd": 2.22,
 "moneyDir": "flat",
-"totVol": 167215,
+"totVol": 178602,
 "pinnOdd": null,
-"softOdd": 2.17,
-"softN": 24,
+"softOdd": 2.1,
+"softN": 25,
 "poly": {
-"vol": 165696,
+"vol": 168154,
 "odd": 2.25,
-"sharePct": 44,
-"shareSrc": "preis",
+"sharePct": 96,
+"shareSrc": "geld",
 "key": "unl-ire-isr-2026-10-04",
 "sideKey": "Republic of Ireland",
-"whales": null,
-"whaleUsd": null
+"whales": [
+{
+"wallet": "0x3eb095d871501a1d7a3cb086a22d174b52356a68",
+"usd": 8900
+},
+{
+"wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+"usd": 8543
+},
+{
+"wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
+"usd": 5837
+},
+{
+"wallet": "0x3e1352a7659c914b6359359ad79b3eaa82769f22",
+"usd": 4611
+},
+{
+"wallet": "0x8ba27b7c9de2b6367f986bff5f9c8049204c1650",
+"usd": 4514
+},
+{
+"wallet": "0x3ad8112530a48cbc7495d719671a8e559e5cfdc5",
+"usd": 1900
+}
+],
+"whaleUsd": 41569
 },
 "pinn": null,
 "soft": {
-"home": 0.4364,
-"draw": 0.2778,
-"away": 0.2858,
+"home": 0.4451,
+"draw": 0.2756,
+"away": 0.2794,
 "fav": "home",
-"n": 24
+"n": 25
 },
 "pinnMovePP": null,
 "pinnMove": null,
@@ -169,9 +219,9 @@
 "grund": "kein_pinnacle",
 "kandidat": "Republic of Ireland v Israel",
 "key": "soccer_uefa_nations_league",
-"nSoft": 24,
+"nSoft": 25,
 "pinnacleImEvent": false,
-"nBuecher": 24
+"nBuecher": 25
 }
 },
 {
@@ -186,11 +236,11 @@
 "moneyName": "Scotland",
 "moneySharePct": 100,
 "moneyOdd": 1.83,
-"moneyDir": "flat",
-"totVol": 140993,
+"moneyDir": "out",
+"totVol": 142129,
 "pinnOdd": null,
-"softOdd": 1.77,
-"softN": 28,
+"softOdd": 1.78,
+"softN": 30,
 "poly": {
 "vol": 14685,
 "odd": 1.87,
@@ -203,11 +253,11 @@
 },
 "pinn": null,
 "soft": {
-"home": 0.5249,
-"draw": 0.272,
-"away": 0.2031,
+"home": 0.5245,
+"draw": 0.2721,
+"away": 0.2034,
 "fav": "home",
-"n": 28
+"n": 30
 },
 "pinnMovePP": null,
 "pinnMove": null,
@@ -219,9 +269,9 @@
 "grund": "kein_pinnacle",
 "kandidat": "Scotland v Slovenia",
 "key": "soccer_uefa_nations_league",
-"nSoft": 28,
+"nSoft": 30,
 "pinnacleImEvent": false,
-"nBuecher": 28
+"nBuecher": 30
 }
 },
 {
@@ -236,25 +286,50 @@
 "moneyName": "Portugal",
 "moneySharePct": 63,
 "moneyOdd": 1.7,
-"moneyDir": "out",
-"totVol": 125091,
-"pinnOdd": 1.66,
+"moneyDir": "flat",
+"totVol": 133445,
+"pinnOdd": 1.64,
 "softOdd": 1.61,
-"softN": 35,
+"softN": 38,
 "poly": {
-"vol": 63510,
+"vol": 65889,
 "odd": 1.68,
-"sharePct": 60,
-"shareSrc": "preis",
+"sharePct": 79,
+"shareSrc": "geld",
 "key": "unl-prt-nor-2026-10-04",
 "sideKey": "Portugal",
-"whales": null,
-"whaleUsd": null
+"whales": [
+{
+"wallet": "0xac9ba267c879bbc02c6f7b809b48f4b775fe18eb",
+"usd": 2142
+},
+{
+"wallet": "0xe6bf45da92f7d318f2d7ee28f6d5dd02038016b9",
+"usd": 1983
+},
+{
+"wallet": "0xf68aa71cb5187d1e3ceb22fa07ca40aae7e25b13",
+"usd": 1785
+},
+{
+"wallet": "0xe3049094a4a512466cabd538e8f41261b571f4ca",
+"usd": 1586
+},
+{
+"wallet": "0xa4ddf437f6e80ab828ba582c1c46e0cc1eb323ff",
+"usd": 1013
+},
+{
+"wallet": "0x0be65fbbb9e9e4cf1c3b891d45e7c8fe1dfe3b7f",
+"usd": 723
+}
+],
+"whaleUsd": 10893
 },
 "pinn": {
-"home": 0.5819,
-"draw": 0.2161,
-"away": 0.2021,
+"home": 0.5887,
+"draw": 0.215,
+"away": 0.1962,
 "fav": "home"
 },
 "soft": {
@@ -262,12 +337,12 @@
 "draw": 0.2156,
 "away": 0.2009,
 "fav": "home",
-"n": 35
+"n": 38
 },
-"pinnMovePP": -0.4,
+"pinnMovePP": 0.3,
 "pinnMove": {
-"movePP": -0.4,
-"stepPP": 0.1,
+"movePP": 0.3,
+"stepPP": 0.0,
 "n": 25,
 "move": false,
 "laeuft": false
@@ -288,13 +363,13 @@
 "moneyName": "England",
 "moneySharePct": 100,
 "moneyOdd": 1.18,
-"moneyDir": "flat",
-"totVol": 106929,
+"moneyDir": "out",
+"totVol": 107576,
 "pinnOdd": 1.13,
-"softOdd": 1.13,
-"softN": 34,
+"softOdd": 1.14,
+"softN": 36,
 "poly": {
-"vol": 50013,
+"vol": 53903,
 "odd": 1.16,
 "sharePct": 86,
 "shareSrc": "preis",
@@ -310,17 +385,17 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.8273,
-"draw": 0.119,
-"away": 0.0537,
+"home": 0.8274,
+"draw": 0.1191,
+"away": 0.0535,
 "fav": "home",
-"n": 34
+"n": 36
 },
 "pinnMovePP": 0.7,
 "pinnMove": {
 "movePP": 0.7,
 "stepPP": 0.0,
-"n": 21,
+"n": 22,
 "move": false,
 "laeuft": false
 },
@@ -339,39 +414,64 @@
 "moneySide": "away",
 "moneyName": "Denmark",
 "moneySharePct": 60,
-"moneyOdd": 2.06,
+"moneyOdd": 2.04,
 "moneyDir": "flat",
-"totVol": 63088,
-"pinnOdd": 2.0,
+"totVol": 65470,
+"pinnOdd": 1.99,
 "softOdd": 1.95,
-"softN": 35,
+"softN": 38,
 "poly": {
-"vol": 34690,
+"vol": 36929,
 "odd": 2.06,
-"sharePct": 48,
-"shareSrc": "preis",
+"sharePct": 89,
+"shareSrc": "geld",
 "key": "unl-wal-den-2026-10-04",
 "sideKey": "Denmark",
-"whales": null,
-"whaleUsd": null
+"whales": [
+{
+"wallet": "0x224f7ef690d952cf551a471846d5afb4892e514a",
+"usd": 1214
+},
+{
+"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+"usd": 1034
+},
+{
+"wallet": "0x9bde363199cb83e237926eecd6ece1ad2416e6cc",
+"usd": 986
+},
+{
+"wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
+"usd": 508
+},
+{
+"wallet": "0xf99810f99750061bff765304fb12a453a88713f5",
+"usd": 498
+},
+{
+"wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
+"usd": 477
+}
+],
+"whaleUsd": 6419
 },
 "pinn": {
-"home": 0.2437,
-"draw": 0.2725,
-"away": 0.4838,
+"home": 0.2417,
+"draw": 0.2724,
+"away": 0.4859,
 "fav": "away"
 },
 "soft": {
-"home": 0.2508,
-"draw": 0.2671,
-"away": 0.4821,
+"home": 0.2503,
+"draw": 0.267,
+"away": 0.4827,
 "fav": "away",
-"n": 35
+"n": 38
 },
-"pinnMovePP": 0.1,
+"pinnMovePP": 0.3,
 "pinnMove": {
-"movePP": 0.1,
-"stepPP": 0.0,
+"movePP": 0.3,
+"stepPP": -0.0,
 "n": 25,
 "move": false,
 "laeuft": false
@@ -390,93 +490,66 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Netherlands",
-"moneySharePct": 89,
+"moneySharePct": 88,
 "moneyOdd": 1.17,
 "moneyDir": "in",
-"totVol": 54711,
+"totVol": 59280,
 "pinnOdd": 1.14,
-"softOdd": 1.13,
-"softN": 35,
+"softOdd": 1.14,
+"softN": 38,
 "poly": {
-"vol": 88134,
+"vol": 89637,
 "odd": 1.17,
-"sharePct": 86,
-"shareSrc": "preis",
+"sharePct": 99,
+"shareSrc": "geld",
 "key": "unl-nld-ser-2026-10-04",
 "sideKey": "Netherlands",
-"whales": null,
-"whaleUsd": null
+"whales": [
+{
+"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+"usd": 11270
+},
+{
+"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+"usd": 6789
+},
+{
+"wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+"usd": 5891
+},
+{
+"wallet": "0xaf0e578b7a4fcc8132375e2fa7d0d22d31a73197",
+"usd": 3546
+},
+{
+"wallet": "0xe6bf45da92f7d318f2d7ee28f6d5dd02038016b9",
+"usd": 3018
+},
+{
+"wallet": "0xcb894d56b6ed7f458e8534636a086b65e915a2e8",
+"usd": 2904
+}
+],
+"whaleUsd": 42056
 },
 "pinn": {
-"home": 0.8417,
-"draw": 0.1054,
-"away": 0.0529,
+"home": 0.8369,
+"draw": 0.1076,
+"away": 0.0556,
 "fav": "home"
 },
 "soft": {
 "home": 0.8313,
-"draw": 0.1122,
-"away": 0.0565,
+"draw": 0.1124,
+"away": 0.0563,
 "fav": "home",
-"n": 35
+"n": 38
 },
-"pinnMovePP": 1.4,
+"pinnMovePP": 0.9,
 "pinnMove": {
-"movePP": 1.4,
+"movePP": 0.9,
 "stepPP": -0.0,
 "n": 25,
-"move": true,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36139261",
-"home": "Croatia",
-"away": "Spain",
-"league": "UEFA Nations League A",
-"country": "International",
-"kickoff": "2026-10-06T18:45:00Z",
-"live": false,
-"moneySide": "away",
-"moneyName": "Spain",
-"moneySharePct": 98,
-"moneyOdd": 1.34,
-"moneyDir": "flat",
-"totVol": 36507,
-"pinnOdd": 1.31,
-"softOdd": 1.3,
-"softN": 34,
-"poly": {
-"vol": 172360,
-"odd": 1.32,
-"sharePct": 76,
-"shareSrc": "preis",
-"key": "unl-hrv-esp-2026-10-06",
-"sideKey": "Spain",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.111,
-"draw": 0.1572,
-"away": 0.7319,
-"fav": "away"
-},
-"soft": {
-"home": 0.1102,
-"draw": 0.1709,
-"away": 0.7189,
-"fav": "away",
-"n": 34
-},
-"pinnMovePP": 0.8,
-"pinnMove": {
-"movePP": 0.8,
-"stepPP": 0.1,
-"n": 10,
 "move": false,
 "laeuft": false
 },
@@ -494,55 +567,55 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "Austria",
-"moneySharePct": 70,
-"moneyOdd": 2.12,
-"moneyDir": "flat",
-"totVol": 34220,
+"moneySharePct": 69,
+"moneyOdd": 2.14,
+"moneyDir": "out",
+"totVol": 39015,
 "pinnOdd": null,
 "softOdd": 2.05,
-"softN": 31,
+"softN": 34,
 "poly": {
-"vol": 26536,
-"odd": 2.15,
-"sharePct": 94,
+"vol": 34543,
+"odd": 2.11,
+"sharePct": 96,
 "shareSrc": "geld",
 "key": "unl-kvx-aut-2026-10-04",
 "sideKey": "Austria",
 "whales": [
 {
+"wallet": "0xd97db54eee130b96bc41341b198dc379b4a96bf4",
+"usd": 2583
+},
+{
 "wallet": "0x6c46547cb49269ecfe0e1ffa6e73f5131efece2b",
-"usd": 1909
+"usd": 1950
 },
 {
 "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-"usd": 1338
+"usd": 1367
+},
+{
+"wallet": "0x48c938b569bfd33b23f2679bbf01c66a407ce829",
+"usd": 1366
 },
 {
 "wallet": "0x94b9e9764fd9940d6a13d6f1110065923ed12592",
-"usd": 1011
+"usd": 1033
 },
 {
 "wallet": "0x0d23fc6838433dbff11e4667ef5991e9dd9d2d56",
-"usd": 989
-},
-{
-"wallet": "0x39e2a98137bccf7501b6df9412d1a9377358fb07",
-"usd": 929
-},
-{
-"wallet": "0xa2fc0448a1dce9258ebb91b2f3abcddb98a0b1b4",
-"usd": 452
+"usd": 1011
 }
 ],
-"whaleUsd": 7661
+"whaleUsd": 11820
 },
 "pinn": null,
 "soft": {
-"home": 0.2669,
-"draw": 0.2753,
-"away": 0.4578,
+"home": 0.2661,
+"draw": 0.2757,
+"away": 0.4583,
 "fav": "away",
-"n": 31
+"n": 34
 },
 "pinnMovePP": null,
 "pinnMove": null,
@@ -554,10 +627,108 @@
 "grund": "kein_pinnacle",
 "kandidat": "Kosovo v Austria",
 "key": "soccer_uefa_nations_league",
-"nSoft": 31,
+"nSoft": 34,
 "pinnacleImEvent": false,
-"nBuecher": 31
+"nBuecher": 34
 }
+},
+{
+"matchId": "36139261",
+"home": "Croatia",
+"away": "Spain",
+"league": "UEFA Nations League A",
+"country": "International",
+"kickoff": "2026-10-06T18:45:00Z",
+"live": false,
+"moneySide": "away",
+"moneyName": "Spain",
+"moneySharePct": 98,
+"moneyOdd": 1.33,
+"moneyDir": "in",
+"totVol": 36527,
+"pinnOdd": 1.31,
+"softOdd": 1.3,
+"softN": 36,
+"poly": {
+"vol": 173586,
+"odd": 1.32,
+"sharePct": 76,
+"shareSrc": "preis",
+"key": "unl-hrv-esp-2026-10-06",
+"sideKey": "Spain",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.111,
+"draw": 0.1572,
+"away": 0.7319,
+"fav": "away"
+},
+"soft": {
+"home": 0.1101,
+"draw": 0.1702,
+"away": 0.7198,
+"fav": "away",
+"n": 36
+},
+"pinnMovePP": 0.8,
+"pinnMove": {
+"movePP": 0.8,
+"stepPP": -0.0,
+"n": 11,
+"move": false,
+"laeuft": false
+},
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36124724",
+"home": "Sociedad B",
+"away": "Granada",
+"league": "Spanish Segunda Division",
+"country": "ES",
+"kickoff": "2026-10-04T12:00:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Sociedad B",
+"moneySharePct": 63,
+"moneyOdd": 2.48,
+"moneyDir": "in",
+"totVol": 29378,
+"pinnOdd": 2.55,
+"softOdd": 2.46,
+"softN": 40,
+"poly": {
+"vol": 5520,
+"odd": 2.74,
+"sharePct": 36,
+"shareSrc": "preis",
+"key": "es2-rso-gra-2026-10-04",
+"sideKey": "Real Sociedad de Fútbol B",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.3794,
+"draw": 0.2914,
+"away": 0.3291,
+"fav": "home"
+},
+"soft": {
+"home": 0.3719,
+"draw": 0.2887,
+"away": 0.3394,
+"fav": "home",
+"n": 40
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
 },
 {
 "matchId": "36142556",
@@ -569,15 +740,15 @@
 "live": false,
 "moneySide": "draw",
 "moneyName": "The Draw",
-"moneySharePct": 58,
+"moneySharePct": 54,
 "moneyOdd": 3.15,
 "moneyDir": "out",
-"totVol": 20786,
+"totVol": 27994,
 "pinnOdd": null,
-"softOdd": 2.95,
-"softN": 31,
+"softOdd": 3.0,
+"softN": 34,
 "poly": {
-"vol": 15882,
+"vol": 16728,
 "odd": null,
 "sharePct": null,
 "shareSrc": null,
@@ -588,11 +759,11 @@
 },
 "pinn": null,
 "soft": {
-"home": 0.3921,
-"draw": 0.317,
-"away": 0.2909,
+"home": 0.3951,
+"draw": 0.3149,
+"away": 0.29,
 "fav": "home",
-"n": 31
+"n": 34
 },
 "pinnMovePP": null,
 "pinnMove": null,
@@ -604,9 +775,84 @@
 "grund": "kein_pinnacle",
 "kandidat": "Azerbaijan v Lithuania",
 "key": "soccer_uefa_nations_league",
-"nSoft": 31,
+"nSoft": 34,
 "pinnacleImEvent": false,
-"nBuecher": 31
+"nBuecher": 34
+}
+},
+{
+"matchId": "36142548",
+"home": "Malta",
+"away": "Andorra",
+"league": "UEFA Nations League D",
+"country": "International",
+"kickoff": "2026-10-04T16:00:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Malta",
+"moneySharePct": 75,
+"moneyOdd": 1.67,
+"moneyDir": "flat",
+"totVol": 21557,
+"pinnOdd": null,
+"softOdd": 1.58,
+"softN": 34,
+"poly": {
+"vol": 24598,
+"odd": 1.68,
+"sharePct": 71,
+"shareSrc": "geld",
+"key": "unl-mal-and-2026-10-04",
+"sideKey": "Malta",
+"whales": [
+{
+"wallet": "0xe6bf45da92f7d318f2d7ee28f6d5dd02038016b9",
+"usd": 1970
+},
+{
+"wallet": "0x39d807a9c34f226e8c5b7d2a06822bc7ff47f064",
+"usd": 496
+},
+{
+"wallet": "0x7d3b7ff761d046f5dc1d972e8a755dc1eccf55b8",
+"usd": 302
+},
+{
+"wallet": "0xac9ba267c879bbc02c6f7b809b48f4b775fe18eb",
+"usd": 202
+},
+{
+"wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+"usd": 181
+},
+{
+"wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
+"usd": 117
+}
+],
+"whaleUsd": 3471
+},
+"pinn": null,
+"soft": {
+"home": 0.5859,
+"draw": 0.2773,
+"away": 0.1368,
+"fav": "home",
+"n": 34
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Malta v Andorra",
+"grund": "kein_pinnacle",
+"kandidat": "Malta v Andorra",
+"key": "soccer_uefa_nations_league",
+"nSoft": 34,
+"pinnacleImEvent": false,
+"nBuecher": 34
 }
 },
 {
@@ -620,14 +866,14 @@
 "moneySide": "home",
 "moneyName": "Italy",
 "moneySharePct": 95,
-"moneyOdd": 1.49,
-"moneyDir": "flat",
-"totVol": 20406,
+"moneyOdd": 1.48,
+"moneyDir": "out",
+"totVol": 21234,
 "pinnOdd": 1.45,
 "softOdd": 1.43,
-"softN": 35,
+"softN": 38,
 "poly": {
-"vol": 29067,
+"vol": 29104,
 "odd": 1.48,
 "sharePct": 68,
 "shareSrc": "preis",
@@ -643,11 +889,11 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.6568,
-"draw": 0.1928,
-"away": 0.1503,
+"home": 0.6569,
+"draw": 0.1931,
+"away": 0.15,
 "fav": "home",
-"n": 35
+"n": 38
 },
 "pinnMovePP": 0.2,
 "pinnMove": {
@@ -671,15 +917,15 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "CD Castellon",
-"moneySharePct": 98,
+"moneySharePct": 97,
 "moneyOdd": 1.29,
 "moneyDir": "flat",
-"totVol": 20014,
-"pinnOdd": 1.25,
+"totVol": 20150,
+"pinnOdd": 1.26,
 "softOdd": 1.22,
 "softN": 41,
 "poly": {
-"vol": 27352,
+"vol": 27570,
 "odd": 1.29,
 "sharePct": 85,
 "shareSrc": "geld",
@@ -699,40 +945,40 @@
 "usd": 305
 },
 {
-"wallet": "0x1f624696c102b99bea92c75a502fa7e4a6d676f6",
-"usd": 294
-},
-{
 "wallet": "0xa1f770b6c08436a3f42c08c8e061448790e07656",
 "usd": 232
 },
 {
 "wallet": "0xe76c9b6d6108655887df57e76413b4dc44201c3c",
 "usd": 199
+},
+{
+"wallet": "0x594edb9112f526fa6a80b8f858a6379c8a2c1c11",
+"usd": 155
 }
 ],
-"whaleUsd": 7943
+"whaleUsd": 7801
 },
 "pinn": {
-"home": 0.7689,
-"draw": 0.1409,
-"away": 0.0902,
+"home": 0.7665,
+"draw": 0.1422,
+"away": 0.0912,
 "fav": "home"
 },
 "soft": {
-"home": 0.7517,
-"draw": 0.1518,
-"away": 0.0965,
+"home": 0.7526,
+"draw": 0.1501,
+"away": 0.0973,
 "fav": "home",
 "n": 41
 },
-"pinnMovePP": 1.0,
+"pinnMovePP": 0.7,
 "pinnMove": {
-"movePP": 1.0,
-"stepPP": 0.8,
-"n": 4,
+"movePP": 0.7,
+"stepPP": 0.0,
+"n": 6,
 "move": false,
-"laeuft": true
+"laeuft": false
 },
 "verdict": "konsens",
 "agree": true,
@@ -750,13 +996,13 @@
 "moneyName": "The Draw",
 "moneySharePct": 73,
 "moneyOdd": 3.15,
-"moneyDir": "flat",
-"totVol": 3662,
+"moneyDir": "in",
+"totVol": 3807,
 "pinnOdd": null,
-"softOdd": 3.1,
-"softN": 31,
+"softOdd": 3.05,
+"softN": 34,
 "poly": {
-"vol": 1090,
+"vol": 1102,
 "odd": null,
 "sharePct": null,
 "shareSrc": null,
@@ -767,11 +1013,11 @@
 },
 "pinn": null,
 "soft": {
-"home": 0.3853,
-"draw": 0.3049,
-"away": 0.3098,
+"home": 0.3854,
+"draw": 0.3053,
+"away": 0.3092,
 "fav": "home",
-"n": 31
+"n": 34
 },
 "pinnMovePP": null,
 "pinnMove": null,
@@ -783,9 +1029,39 @@
 "grund": "kein_pinnacle",
 "kandidat": "Northern Ireland v Georgia",
 "key": "soccer_uefa_nations_league",
-"nSoft": 31,
+"nSoft": 34,
 "pinnacleImEvent": false,
-"nBuecher": 31
+"nBuecher": 34
+}
+},
+{
+"matchId": "36133296",
+"home": "Vasalunds IF",
+"away": "FC Arlanda",
+"league": "Swedish Division 1",
+"country": "SE",
+"kickoff": "2026-10-04T11:00:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Vasalunds IF",
+"moneySharePct": 96,
+"moneyOdd": 2.44,
+"moneyDir": "out",
+"totVol": 76752,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": null,
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Vasalunds IF v FC Arlanda",
+"grund": "kein_kandidat"
 }
 },
 {
@@ -798,47 +1074,47 @@
 "live": true,
 "moneySide": "away",
 "moneyName": "Omiya",
-"moneySharePct": 65,
-"moneyOdd": 2.76,
-"moneyDir": "flat",
-"totVol": 37641,
+"moneySharePct": 54,
+"moneyOdd": 8.2,
+"moneyDir": "out",
+"totVol": 49224,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
 "poly": {
-"vol": 10566,
-"odd": 2.67,
-"sharePct": 72,
+"vol": 32701,
+"odd": 8.33,
+"sharePct": 18,
 "shareSrc": "geld",
 "key": "ja2-teg-omi-2026-10-04",
 "sideKey": "RB Ōmiya Ardija",
 "whales": [
 {
+"wallet": "0x12d9a4302be53dd8c9f13aabfbdf3518f1c001bb",
+"usd": 360
+},
+{
 "wallet": "0x28141e92bc3523f3e8dd6d2baaa074f268137cd4",
-"usd": 789
+"usd": 253
 },
 {
 "wallet": "0xb8c4482802bbc9256926cde54b3daa03ee8e7385",
-"usd": 562
-},
-{
-"wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
-"usd": 510
+"usd": 180
 },
 {
 "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
-"usd": 394
+"usd": 127
 },
 {
 "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-"usd": 148
+"usd": 112
 },
 {
-"wallet": "0xbfba06280db29761d681f3257b1fa283441c583c",
-"usd": 134
+"wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+"usd": 107
 }
 ],
-"whaleUsd": 2839
+"whaleUsd": 1280
 },
 "pinn": null,
 "soft": null,
@@ -853,19 +1129,19 @@
 }
 },
 {
-"matchId": "36149214",
-"home": "Brazil U20",
-"away": "Mexico U20",
-"league": "Friendlies International U20",
-"country": "International",
-"kickoff": "2026-10-04T09:00:00Z",
+"matchId": "36124393",
+"home": "Farense",
+"away": "Chaves",
+"league": "Portuguese Segunda Liga",
+"country": "PT",
+"kickoff": "2026-10-04T10:00:00Z",
 "live": true,
 "moneySide": "home",
-"moneyName": "Brazil U20",
-"moneySharePct": 97,
-"moneyOdd": 1.03,
+"moneyName": "Farense",
+"moneySharePct": 87,
+"moneyOdd": 1.09,
 "moneyDir": "in",
-"totVol": 35308,
+"totVol": 23612,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -878,63 +1154,24 @@
 "agree": null,
 "pinnTotals": null,
 "ankerGrund": {
-"spiel": "Brazil U20 v Mexico U20",
+"spiel": "Farense v Chaves",
 "grund": "kein_kandidat"
 }
 },
 {
-"matchId": "36146100",
-"home": "PS Barito Putera",
-"away": "Persela Lamongan",
-"league": "Indonesian Championship",
-"country": "ID",
-"kickoff": "2026-10-04T08:30:00Z",
-"live": true,
-"moneySide": "draw",
-"moneyName": "The Draw",
-"moneySharePct": 81,
-"moneyOdd": 7.6,
-"moneyDir": "out",
-"totVol": 32913,
-"pinnOdd": null,
-"softOdd": null,
-"softN": null,
-"poly": {
-"vol": 19237,
-"odd": null,
-"sharePct": null,
-"shareSrc": null,
-"key": "idn2-bar-pla-2026-10-04",
-"sideKey": null,
-"whales": [],
-"whaleUsd": 0
-},
-"pinn": null,
-"soft": null,
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "no_anchor",
-"agree": null,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "PS Barito Putera v Persela Lamongan",
-"grund": "kein_kandidat"
-}
-},
-{
-"matchId": "36132403",
-"home": "Kagoshima Utd",
-"away": "Fukushima Utd",
-"league": "Japanese J League 3",
-"country": "JP",
-"kickoff": "2026-10-04T09:00:00Z",
+"matchId": "36150738",
+"home": "WSE",
+"away": "3 Sing FC",
+"league": "Hong Kong 1st Division League",
+"country": "HK",
+"kickoff": "2026-10-04T09:30:00Z",
 "live": true,
 "moneySide": "home",
-"moneyName": "Kagoshima Utd",
-"moneySharePct": 84,
-"moneyOdd": 1.06,
-"moneyDir": "in",
-"totVol": 22694,
+"moneyName": "WSE",
+"moneySharePct": 99,
+"moneyOdd": 1.1,
+"moneyDir": "flat",
+"totVol": 4527,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -947,47 +1184,22 @@
 "agree": null,
 "pinnTotals": null,
 "ankerGrund": {
-"spiel": "Kagoshima Utd v Fukushima Utd",
-"kandidat": "Leeds United v Manchester United",
-"key": "soccer_epl",
-"score": 1.0,
-"grund": "zeit",
-"abstandH": 340.0
+"spiel": "WSE v 3 Sing FC",
+"grund": "kein_kandidat"
 }
 }
 ],
-"ankerN": 6,
-"ankerNOffen": 148,
-"ankerMit": 6,
+"ankerN": 8,
+"ankerNOffen": 150,
+"ankerMit": 8,
 "ankerDiagnose": {
 "nach": {
-"kein_kandidat": 111,
-"zeit": 7,
+"kein_kandidat": 113,
+"zeit": 5,
 "kein_pinnacle": 14,
 "name": 2
 },
 "beispiele": [
-{
-"spiel": "Samut Sakhon City FC v Hua Hin City",
-"kandidat": "Swansea City v Norwich City",
-"key": "soccer_efl_champ",
-"score": 0.67,
-"grund": "zeit",
-"abstandH": 147.0,
-"matchId": "36149197",
-"liga": "Thai League 3"
-},
-{
-"spiel": "Malta v Andorra",
-"grund": "kein_pinnacle",
-"kandidat": "Malta v Andorra",
-"key": "soccer_uefa_nations_league",
-"nSoft": 31,
-"pinnacleImEvent": false,
-"nBuecher": 31,
-"matchId": "36142548",
-"liga": "UEFA Nations League D"
-},
 {
 "spiel": "Montenegro U21 v Armenia U21",
 "kandidat": "Montenegro v Armenia",
@@ -1003,42 +1215,20 @@
 "grund": "kein_pinnacle",
 "kandidat": "Cyprus v Latvia",
 "key": "soccer_uefa_nations_league",
-"nSoft": 31,
+"nSoft": 33,
 "pinnacleImEvent": false,
-"nBuecher": 31,
+"nBuecher": 33,
 "matchId": "36142892",
 "liga": "UEFA Nations League C"
-},
-{
-"spiel": "Ukraine v Hungary",
-"grund": "kein_pinnacle",
-"kandidat": "Ukraine v Hungary",
-"key": "soccer_uefa_nations_league",
-"nSoft": 31,
-"pinnacleImEvent": false,
-"nBuecher": 31,
-"matchId": "36139162",
-"liga": "UEFA Nations League B"
-},
-{
-"spiel": "Bosnia v Poland",
-"grund": "kein_pinnacle",
-"kandidat": "Bosnia & Herzegovina v Poland",
-"key": "soccer_uefa_nations_league",
-"nSoft": 31,
-"pinnacleImEvent": false,
-"nBuecher": 31,
-"matchId": "36139265",
-"liga": "UEFA Nations League B"
 },
 {
 "spiel": "Montenegro v Armenia",
 "grund": "kein_pinnacle",
 "kandidat": "Montenegro v Armenia",
 "key": "soccer_uefa_nations_league",
-"nSoft": 31,
+"nSoft": 34,
 "pinnacleImEvent": false,
-"nBuecher": 31,
+"nBuecher": 34,
 "matchId": "36142896",
 "liga": "UEFA Nations League C"
 },
@@ -1047,10 +1237,32 @@
 "grund": "kein_pinnacle",
 "kandidat": "Romania v Sweden",
 "key": "soccer_uefa_nations_league",
-"nSoft": 31,
+"nSoft": 34,
 "pinnacleImEvent": false,
-"nBuecher": 31,
+"nBuecher": 34,
 "matchId": "36139159",
+"liga": "UEFA Nations League B"
+},
+{
+"spiel": "Bosnia v Poland",
+"grund": "kein_pinnacle",
+"kandidat": "Bosnia & Herzegovina v Poland",
+"key": "soccer_uefa_nations_league",
+"nSoft": 34,
+"pinnacleImEvent": false,
+"nBuecher": 34,
+"matchId": "36139265",
+"liga": "UEFA Nations League B"
+},
+{
+"spiel": "Ukraine v Hungary",
+"grund": "kein_pinnacle",
+"kandidat": "Ukraine v Hungary",
+"key": "soccer_uefa_nations_league",
+"nSoft": 33,
+"pinnacleImEvent": false,
+"nBuecher": 33,
+"matchId": "36139162",
 "liga": "UEFA Nations League B"
 },
 {
@@ -1058,9 +1270,9 @@
 "grund": "kein_pinnacle",
 "kandidat": "Kazakhstan v Faroe Islands",
 "key": "soccer_uefa_nations_league",
-"nSoft": 30,
+"nSoft": 32,
 "pinnacleImEvent": false,
-"nBuecher": 30,
+"nBuecher": 32,
 "matchId": "36147026",
 "liga": "UEFA Nations League C"
 },
@@ -1069,9 +1281,9 @@
 "grund": "kein_pinnacle",
 "kandidat": "Switzerland v North Macedonia",
 "key": "soccer_uefa_nations_league",
-"nSoft": 24,
+"nSoft": 27,
 "pinnacleImEvent": false,
-"nBuecher": 24,
+"nBuecher": 27,
 "matchId": "36150065",
 "liga": "UEFA Nations League B"
 },
@@ -1080,9 +1292,9 @@
 "grund": "kein_pinnacle",
 "kandidat": "Moldova v Slovakia",
 "key": "soccer_uefa_nations_league",
-"nSoft": 27,
+"nSoft": 29,
 "pinnacleImEvent": false,
-"nBuecher": 27,
+"nBuecher": 29,
 "matchId": "36146979",
 "liga": "UEFA Nations League C"
 },
@@ -1095,6 +1307,16 @@
 "abstandH": 366.0,
 "matchId": "36124829",
 "liga": "English WSL"
+},
+{
+"spiel": "CA Central Norte v Racing De Cordoba",
+"kandidat": "CA Osasuna v Real Racing Club de Santander",
+"key": "soccer_spain_la_liga",
+"score": 0.67,
+"grund": "zeit",
+"abstandH": 328.5,
+"matchId": "36126133",
+"liga": "Argentinian Primera Nacional"
 },
 {
 "spiel": "Sportivo Italiano v Talleres (RE)",
@@ -1135,23 +1357,13 @@
 "liga": "Costa Rican Liga de Ascenso"
 },
 {
-"spiel": "Al-Fujairah FC v Dibba Al-Hisn",
-"kandidat": "Al-Kholood v Al-Qadsiah",
-"key": "soccer_saudi_arabia_pro_league",
-"score": 0.83,
-"grund": "zeit",
-"abstandH": 119.3,
-"matchId": "36148162",
-"liga": "UAE Presidents Cup"
-},
-{
 "spiel": "Republic of Ireland v Israel",
 "grund": "kein_pinnacle",
 "kandidat": "Republic of Ireland v Israel",
 "key": "soccer_uefa_nations_league",
-"nSoft": 24,
+"nSoft": 25,
 "pinnacleImEvent": false,
-"nBuecher": 24,
+"nBuecher": 25,
 "matchId": "36127372",
 "liga": "UEFA Nations League"
 },
@@ -1160,9 +1372,9 @@
 "grund": "kein_pinnacle",
 "kandidat": "Scotland v Slovenia",
 "key": "soccer_uefa_nations_league",
-"nSoft": 28,
+"nSoft": 30,
 "pinnacleImEvent": false,
-"nBuecher": 28,
+"nBuecher": 30,
 "matchId": "36147112",
 "liga": "UEFA Nations League B"
 },
@@ -1171,9 +1383,9 @@
 "grund": "kein_pinnacle",
 "kandidat": "Kosovo v Austria",
 "key": "soccer_uefa_nations_league",
-"nSoft": 31,
+"nSoft": 34,
 "pinnacleImEvent": false,
-"nBuecher": 31,
+"nBuecher": 34,
 "matchId": "36139282",
 "liga": "UEFA Nations League B"
 },
@@ -1182,10 +1394,21 @@
 "grund": "kein_pinnacle",
 "kandidat": "Azerbaijan v Lithuania",
 "key": "soccer_uefa_nations_league",
-"nSoft": 31,
+"nSoft": 34,
 "pinnacleImEvent": false,
-"nBuecher": 31,
+"nBuecher": 34,
 "matchId": "36142556",
+"liga": "UEFA Nations League D"
+},
+{
+"spiel": "Malta v Andorra",
+"grund": "kein_pinnacle",
+"kandidat": "Malta v Andorra",
+"key": "soccer_uefa_nations_league",
+"nSoft": 34,
+"pinnacleImEvent": false,
+"nBuecher": 34,
+"matchId": "36142548",
 "liga": "UEFA Nations League D"
 },
 {
@@ -1193,21 +1416,11 @@
 "grund": "kein_pinnacle",
 "kandidat": "Northern Ireland v Georgia",
 "key": "soccer_uefa_nations_league",
-"nSoft": 31,
+"nSoft": 34,
 "pinnacleImEvent": false,
-"nBuecher": 31,
+"nBuecher": 34,
 "matchId": "36139158",
 "liga": "UEFA Nations League B"
-},
-{
-"spiel": "Kagoshima Utd v Fukushima Utd",
-"kandidat": "Leeds United v Manchester United",
-"key": "soccer_epl",
-"score": 1.0,
-"grund": "zeit",
-"abstandH": 340.0,
-"matchId": "36132403",
-"liga": "Japanese J League 3"
 }
 ]
 }
