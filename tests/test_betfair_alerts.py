@@ -1240,7 +1240,9 @@ class TestKursrutsch(unittest.TestCase):
         """Alpha bleibt die fuehrende Seite (200 von 350), der Markt ist nur winzig —
         sonst prueft der Test den Seiten-Abgleich statt des Liquiditaetsbodens."""
         m = self._spiel(lead_vol=200, gegen_vol=150)   # 200/350 = 57 %, also nicht einseitig
-        self.assertIsNone(BA.rutsch_alert(m, self._einstieg()))
+        # 03.10.2026: der Standard-Boden ist 0 (der geratene 5.000er liess 9 von 178 durch) —
+        # der Mechanismus bleibt und wird hier mit einem gesetzten Boden geprueft.
+        self.assertIsNone(BA.rutsch_alert(m, self._einstieg(), min_vol=5000))
         # ... und mit abgesenktem Boden kommt derselbe Fall durch: es liegt WIRKLICH am Volumen
         self.assertIsNotNone(BA.rutsch_alert(m, self._einstieg(), min_vol=100))
 
@@ -1331,3 +1333,32 @@ class TestKursrutsch(unittest.TestCase):
         self.assertIn("nur Trades", k)           # und dass es ein Testlauf ist
         self.assertNotIn("🟡", k)                # keine Verwechslung mit „Frisches Geld"
         self.assertNotIn("🔵", k)                # ... oder Halbzeit-Geld
+
+
+# ── 03.10.2026 abends: Kursrutsch ohne geratenen Boden, nur Buch (s. rutsch_runde) ─────────
+def _rutsch_kand(n):
+    return [{"matchId": str(i), "market": "Over/Under 2.5 Goals", "value": 300.0, "leadName": "Over 2.5 Goals",
+             "leadOdd": 1.8, "entryOdd": 2.1, "fall": 0.14, "home": "A", "away": "B", "league": "L",
+             "total": 300.0, "leadShare": 0.6, "live": {}} for i in range(n)]
+
+
+def test_rutsch_standard_bucht_ohne_zu_senden():
+    import betfair_alerts as BA
+    gesendet, gebucht = [], []
+    s, b = BA.rutsch_runde(_rutsch_kand(3), {}, lambda t: gesendet.append(t) or True, gebucht.append, push=False)
+    assert (s, b) == (0, 3) and gesendet == []
+    assert BA.RUTSCH_PUSH is False and BA.RUTSCH_MIN_VOL == 0.0, "5.000-EUR-Boden liess 9 von 178 durch"
+
+
+def test_rutsch_bucht_jeden_markt_nur_einmal():
+    import betfair_alerts as BA
+    seen, gebucht = {}, []
+    BA.rutsch_runde(_rutsch_kand(2), seen, lambda t: True, gebucht.append, push=False)
+    BA.rutsch_runde(_rutsch_kand(2), seen, lambda t: True, gebucht.append, push=False)
+    assert len(gebucht) == 2
+
+
+def test_rutsch_buchlaenge_passt_zur_abrechnung():
+    import betfair_alerts as BA
+    import betfair_public_eval as E
+    assert E.RUTSCH_KEEP == BA.RUTSCH_LEDGER_KEEP >= 3000

@@ -359,7 +359,20 @@ def zaehler_reihenfolge(base_dir):
     return sum(1 for e in (d.get("settled") or []) if isinstance(e, dict)
                and e.get("erster") and isinstance(e.get("r"), (int, float)))
 
+
+def zaehler_hz_null(base_dir):
+    """Abgerechnete HZ-0:0-Funde der Gruppe „Tore erwartet" mit Over-0.5-Quote (hz_finder.json). 04.10.2026."""
+    d = _laden(os.path.join(base_dir, "hz_finder.json"))
+    if d is None:
+        return 0
+    if not isinstance(d, dict):
+        return None
+    return sum(1 for e in (d.get("eintraege") or []) if isinstance(e, dict)
+               and e.get("status") == "abgerechnet" and "tore" in (e.get("gruppen") or ())
+               and ((e.get("wetten") or {}).get("over05") or {}).get("r") is not None)
+
 ZAEHLER = {
+    "hz_null": zaehler_hz_null,
     "ligen_betfair": zaehler_ligen_watch,
     "ligen_poly": zaehler_ligen_poly,
     "reihenfolge": zaehler_reihenfolge,

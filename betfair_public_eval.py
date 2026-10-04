@@ -47,7 +47,7 @@ LEDGER_KEEP = 800
 # Guard-Batterie, und genau daran habe ich beim Bau nicht gedacht.
 RUTSCH_FILE = BASE / "betfair_rutsch_ledger.json"
 RUTSCH_RECORD_FILE = BASE / "betfair_rutsch_bericht.json"
-RUTSCH_KEEP = 800
+RUTSCH_KEEP = 3000   # muss zu betfair_alerts.RUTSCH_LEDGER_KEEP passen
 OU35_KEEP = 3000   # muss zu betfair_alerts.OU35_KEEP passen
 OU35_FILE = BASE / "betfair_ou35_ledger.json"           # 03.10.2026, Register `betfair-ou35`
 OU35_RECORD_FILE = BASE / "betfair_ou35_bericht.json"

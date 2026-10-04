@@ -3,7 +3,7 @@
    scharfer Tick. Sub-Menue: Map (Bubble-Cards) | Tracking (Trefferquote je Verdikt). Liest money_map.json
    + money_map_record.json (vom Runner, betfair_consensus.py). Reine Anzeige. */
 (function(){
-  var _mmView='map', _mmFilter='all', _mm={map:null,rec:null}, _mmStyled=false;
+  var _mmView='map', _mmFilter='all', _mm={map:null,rec:null,hz:null}, _mmStyled=false;
 
   function _mmStyle(){
     if(_mmStyled) return; _mmStyled=true;
@@ -57,6 +57,16 @@
 '.mm-src{margin-left:auto;font-size:10.5px;font-weight:800;color:#6b7480;background:#1b2430;border:1px solid #242c38;border-radius:20px;padding:3px 9px}',
 '.mm-trk-intro{color:#8a95ad;font-size:12.5px;line-height:1.55;max-width:760px;margin-bottom:14px}',
 '.mm-tbl{width:100%;border-collapse:collapse;max-width:640px}',
+// 04.10.2026: Reiter ⏸️ HZ 0:0 (hz_finder.json)
+'.hz-intro{color:#8a95ad;font-size:12.5px;line-height:1.55;max-width:820px;margin:0 0 14px}',
+'.hz-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}',
+'@media(max-width:760px){.hz-list{grid-template-columns:1fr}}',
+'.hz-card{background:#151b24;border:1px solid #242c38;border-radius:13px;padding:12px 14px;font-size:12.5px;line-height:1.55}',
+'.hz-card .hz-t{font-weight:800;font-size:14px}.hz-card .hz-lg{color:#6b7480;font-size:11px}',
+'.hz-tag{display:inline-block;font-size:10px;font-weight:800;padding:1px 7px;border-radius:6px;margin-right:5px;border:1px solid #2b3442;color:#9aa4b1}',
+'.hz-tag.hz-tore{color:#8fc0ff;border-color:rgba(57,135,229,.45)}.hz-tag.hz-heim{color:#f2c14e;border-color:rgba(234,185,56,.45)}',
+'.hz-q b{color:#e6ebf5}.hz-ser{color:#8a95ad;font-size:11.5px}',
+'.hz-win{color:#3fb950;font-weight:700}.hz-loss{color:#f0776c;font-weight:700}.hz-off{color:#76819c}',
 '.mm-tbl th{text-align:left;font-size:11px;color:#6b7480;font-weight:700;padding:6px 10px;border-bottom:1px solid #242c38}',
 '.mm-tbl td{font-size:13px;padding:9px 10px;border-bottom:1px solid #1b2430}',
 '.mm-cn{text-align:right;font-variant-numeric:tabular-nums}.mm-mut{color:#8a95ad}',
@@ -190,14 +200,51 @@
       +'</div>';
   }
 
+  // ⏸️ HZ 0:0 (04.10.2026, Lucas: „such ich die Spiele immer manuell"). Reine Anzeige von
+  // hz_finder.json — Urteil, Treffer und Rendite rechnet hz_finder.py, nicht diese Datei.
+  function _hzQ(q){ return (typeof q==='number'&&q>1)?q.toFixed(2):'–'; }
+  function _hzSer(s){ return s?(_esc(s.form)+' · O2.5 '+s.over25+'/'+s.n+' · Ø '+s.toreSchnitt+' Tore'):'noch keine Spiele im Archiv'; }
+  function _hzCard(e){
+    var v=e.vor||{}, q=e.quoten||{}, ser=e.serie||{};
+    var tags=(e.gruppen||[]).map(function(g){ return g==='tore'?'<span class="hz-tag hz-tore">Over 2.5 erwartet @'+_hzQ(v.over25)+'</span>':'<span class="hz-tag hz-heim">Heimfavorit @'+_hzQ(v.heim)+'</span>'; }).join('');
+    var st;
+    if(e.status==='abgerechnet'){
+      var w=e.wetten||{}, lab={over05:'O0.5',over15:'O1.5',heim:'Heim'};
+      st='Ende '+_esc((e.ft||[]).join(':'))+' · '+Object.keys(w).map(function(k){ return '<span class="'+(w[k].win?'hz-win':'hz-loss')+'">'+lab[k]+(w[k].win?' ✓':' ✗')+'</span>'; }).join(' · ');
+    } else if(e.status==='pending'){ st='<span class="hz-off">läuft — wird nach Abpfiff abgerechnet</span>'; }
+    else { st='<span class="hz-off">'+_esc(e.status)+(e.grund?' · '+_esc(e.grund):'')+'</span>'; }
+    var zeit=e.gebuchtAt?new Date(e.gebuchtAt).toLocaleString('de-AT',{weekday:'short',hour:'2-digit',minute:'2-digit'}):'';
+    return '<div class="hz-card"><div class="hz-t">'+_esc(e.home)+' <span class="mm-vs">vs</span> '+_esc(e.away)+'</div>'
+      +'<div class="hz-lg">'+_esc(e.league||'')+' · '+_esc(zeit)+(e.phase==='2.HZ'?' · erst in der 2. HZ gesehen ('+_esc(e.minute)+'\')':' · zur Pause')+'</div>'
+      +'<div style="margin:6px 0 4px">'+tags+'</div>'
+      +'<div class="hz-q">Quote zur Pause: Over 0.5 <b>'+_hzQ(q.over05)+'</b> · Over 1.5 <b>'+_hzQ(q.over15)+'</b> · Heim <b>'+_hzQ(q.heim)+'</b></div>'
+      +'<div class="hz-ser">Serie '+_esc(e.home)+': '+_hzSer(ser.heim)+'<br>Serie '+_esc(e.away)+': '+_hzSer(ser.gast)+'</div>'
+      +'<div style="margin-top:5px">'+st+'</div></div>';
+  }
+  function _mmHz(d){
+    if(!d) return '<div class="mm-loading">⏸️ Lade HZ 0:0…</div>';
+    var b=d.bericht||{}, urt={sammelt:'sammelt',traegt:'✅ trägt',offen:'offen','traegt nicht':'❌ trägt nicht'};
+    var rows=['tore/over05','tore/over15','heim/heim'].map(function(k){
+      var x=b[k]; if(!x) return '';
+      var ok=x.n?(x.trefferPct+' %'):'–', erw=x.n?(x.erwartetPct+' %'):'–', roi=x.n?((x.roi>=0?'+':'')+x.roi+' %'+(x.ug!=null?' <span class="hz-off">['+x.ug+' … '+x.og+']</span>':'')):'–';
+      return '<tr><td>'+(x.gruppe==='tore'?'Tore erwartet':'Heimfavorit')+' · '+_esc(x.text)+'</td><td class="mm-cn">'+x.n+'</td><td class="mm-cn">'+ok+'</td><td class="mm-cn">'+erw+'</td><td class="mm-cn">'+roi+'</td><td class="mm-cn">'+(urt[x.urteil]||_esc(x.urteil))+'</td></tr>';
+    }).join('');
+    var liste=(d.zuletzt||[]);
+    return '<div class="hz-intro">Spiele mit <b>0:0 zur Pause</b>, die vor dem Anpfiff Tore (Betfair-Geld auf Over 2.5, Quote ≤ 1,75) oder einen Heimsieg (Heimquote ≤ 1,60) erwarten ließen. Jeder Fund wird zur Quote <b>der Pause</b> gebucht und am Endstand abgerechnet. Rückblick: Tor in der 2. HZ in 85 % solcher Spiele — ob das mehr ist, als die Pausenquote sagt, misst diese Tabelle (Urteil ab n='+((d.regel||{}).mindestN||100)+').</div>'
+      +'<table class="mm-tbl" style="max-width:820px"><thead><tr><th>Wette zur Pause</th><th class="mm-cn">n</th><th class="mm-cn">trifft</th><th class="mm-cn">Quote sagte</th><th class="mm-cn">Rendite</th><th class="mm-cn">Urteil</th></tr></thead><tbody>'+rows+'</tbody></table>'
+      +(liste.length?'<div class="hz-list">'+liste.map(_hzCard).join('')+'</div>':'<div class="mm-empty">In den letzten 36 Stunden kein HZ-0:0-Fund. Der Finder läuft im Betfair-Takt (15 Min) und meldet jeden Fund auch im Trades-Kanal.</div>');
+  }
+
   function _mmRender(){
     var p=document.getElementById('moneyMapPanel'); if(!p) return;
     var head='<div class="mm-head"><span class="mm-ic">🔗</span><h1>Money Map</h1>'
       +'<span class="mm-sub">Betfair · Poly · Pinnacle — wo das Geld liegt und ob die scharfe Linie mitzieht. Nur Fußball.</span></div>';
     var nav='<div class="mm-nav"><button class="mm-nb'+(_mmView==='map'?' on':'')+'" onclick="_mmSet(\'map\')">🗺️ Map</button>'
-      +'<button class="mm-nb'+(_mmView==='tracking'?' on':'')+'" onclick="_mmSet(\'tracking\')">📈 Tracking</button></div>';
+      +'<button class="mm-nb'+(_mmView==='tracking'?' on':'')+'" onclick="_mmSet(\'tracking\')">📈 Tracking</button>'
+      +'<button class="mm-nb'+(_mmView==='hz'?' on':'')+'" onclick="_mmSet(\'hz\')">⏸️ HZ 0:0</button></div>';
     var body;
     if(_mmView==='tracking'){ body=_mmTracking(_mm.rec); }
+    else if(_mmView==='hz'){ body=_mmHz(_mm.hz); }
     else {
       var allRows=(_mm.map&&_mm.map.rows)||[];
       var nLive=allRows.filter(function(r){return r.live;}).length, nPre=allRows.length-nLive;
@@ -212,7 +259,10 @@
     var banner=_stale?'<div style="background:rgba(201,133,0,.12);border:1px solid rgba(201,133,0,.4);color:#e3b341;border-radius:9px;padding:9px 12px;margin:0 0 12px;font-size:12.5px">⚠️ Daten veraltet — Stand vor '+(_ageH>=24?Math.round(_ageH/24)+' Tg':Math.round(_ageH)+'h')+'. Der Runner steht evtl.; „● Live“ kann beendete Spiele zeigen.</div>':'';
     p.innerHTML=head+nav+banner+body;
   }
-  function _mmSet(v){ if(v===_mmView) return; _mmView=v; _mmRender(); }
+  function _mmSet(v){
+    if(v===_mmView) return; _mmView=v; _mmRender();
+    if(v==='hz'&&!_mm.hz){ rawJson('hz_finder.json').then(function(d){ _mm.hz=d||{bericht:{},zuletzt:[]}; if(_mmView==='hz') _mmRender(); }); }
+  }
   function _mmSetF(f){ if(f===_mmFilter) return; _mmFilter=f; _mmRender(); }
   if(typeof window!=='undefined'){ window._mmSet=_mmSet; window._mmSetF=_mmSetF; }
 
@@ -226,6 +276,6 @@
     Promise.all([rawJson('money_map.json'),rawJson('money_map_record.json')]).then(function(res){ _mm.map=res[0]; _mm.rec=res[1]; _mmRender(); });
   }
   if(typeof window!=='undefined') window.initMoneyMap=initMoneyMap;
-  if(typeof window!=='undefined'){ window._mmCardHtml=_mmCard; window._mmEnsureStyle=_mmStyle; }
+  if(typeof window!=='undefined'){ window._mmCardHtml=_mmCard; window._mmEnsureStyle=_mmStyle; window._mmHzHtml=_mmHz; }
 
 })();

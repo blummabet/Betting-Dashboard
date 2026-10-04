@@ -22,7 +22,7 @@ import os
 import re
 import html
 import urllib.request
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from telegram_trades import send_trades_message
 
@@ -122,7 +122,12 @@ RUTSCH_MIN_FALL    = float(os.environ.get("BF_RUTSCH_MIN_FALL")  or 0.10)
 # Der Boden ist GERATEN, nicht gemessen: das gematchte Volumen steht erst seit heute im Ledger
 # (mktVol, s. betfair_track_record.capture). Er wandert in jede Ledger-Zeile mit und wird in
 # sechs Wochen kalibriert statt weiter geschaetzt.
-RUTSCH_MIN_VOL     = float(os.environ.get("BF_RUTSCH_MIN_VOL")   or 5000.0)
+# 🔴 03.10.2026 abends: der geratene Boden von 5.000 EUR liess vorwaerts 9 von 178 Faellen durch
+# (Markt-Median ~300 EUR) — daher kamen kaum Alarme. Nachgespielt am echten Kursverlauf ist die
+# Regel OHNE Boden gemessen; also steht hier 0 (s. rutsch_runde).
+RUTSCH_MIN_VOL     = float(os.environ.get("BF_RUTSCH_MIN_VOL")   or 0.0)
+RUTSCH_PUSH        = os.environ.get("BF_RUTSCH_PUSH") == "1"   # Standard AUS: nur Buch
+RUTSCH_PUSH_DECKEL = 5
 # 🔴 19.09.2026, nach dem zweiten Alarm, den Lucas gesehen hat:
 #   „Das sind alles drop weil beim Spielstand was passiert ... Die 3.9 gab's irgendwann zu
 #    Spielbeginn, klar dann kurz vor Pause kleinere odd."
@@ -145,7 +150,7 @@ RUTSCH_MAERKTE_AUS = {"Match Odds"}
 RUTSCH_MAX_SHARE   = float(os.environ.get("BF_RUTSCH_MAX_SHARE") or 0.65)
 RUTSCH_SEEN_FILE   = "betfair_rutsch_seen.json"
 RUTSCH_LEDGER_FILE = "betfair_rutsch_ledger.json"
-RUTSCH_LEDGER_KEEP = 800
+RUTSCH_LEDGER_KEEP = 3000   # Buch statt Push, ~13/Tag
 RUTSCH_BERICHT_FILE = "betfair_rutsch_bericht.json"   # schreibt betfair_public_eval (Abrechnung)
 RUTSCH_ZIEL_N      = 400                               # Register `betfair-kursrutsch`: Urteil ab hier
 RUTSCH_STATE_FILE  = "betfair_track_state.json"
@@ -216,6 +221,91 @@ def _save_seen(repo_file: str, seen: dict) -> None:
             json.dump(seen, open(path, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
         except Exception as e:
             print("konnte Seen-State nicht schreiben (%s):" % path, e)
+# 🔴 03.10.2026 (fresh:36132098, Public-Push 15:34 UTC ohne Ledger-Zeile). Ablauf:
+#   Lauf 15:33 auf actions-runner-3: Alarm gesendet 15:34:27, Seen + Ledger geschrieben,
+#   ci_sichern committet LOKAL, drei Push-Runden scheitern (8 Min), End-Commit vom 14-Min-Deckel
+#   abgebrochen. Der lokale Commit stirbt mit dem Checkout.
+#   Lauf 15:48 auf actions-runner-4: der Seen-Stand kommt aus dem LOKALEN SPIEGEL in
+#   ~/.cocobet_state (alle Runner des Macs teilen ihn) und sagt „gesendet". Das Ledger hat keinen
+#   Spiegel — die Zeile ist weg. Der Push zaehlt in keiner Bilanz.
+# Fehlerklasse (dieselbe wie 22.09., eine Ebene tiefer): zwei Belege derselben Handlung mit
+# UNTERSCHIEDLICHER Haltbarkeit. Der Dedup-Stand ueberlebt den Lauf, der Beleg nicht.
+# Reparatur: jede Ledger-Zeile wird beim Schreiben auch in den Spiegel gehaengt (JSONL), und jeder
+# Lauf traegt zu Beginn nach, was im Spiegel steht und im Repo-Ledger fehlt. Nur Schluessel, die
+# fehlen — eine abgerechnete Zeile wird nie durch ihren alten Stand ersetzt — und nur juengere als
+# BELEG_SPIEGEL_TAGE, damit eine Zeile, die regulaer aus dem Deckel gerollt ist, nicht zurueckkommt.
+BELEG_SPIEGEL_TAGE = 3
+BELEG_SPIEGEL_MAX = 3000
+
+
+def _beleg_spiegel_pfad(ledger_file: str) -> str:
+    return _local_mirror(ledger_file) + ".spiegel.jsonl"
+
+
+def _beleg_spiegeln(ledger_file: str, zeile: dict) -> None:
+    """Eine Ledger-Zeile in den Runner-Spiegel haengen. Scheitert still mit Log — der Spiegel ist
+    die zweite Sicherung, nicht die erste."""
+    p = _beleg_spiegel_pfad(ledger_file)
+    try:
+        with open(p, "a", encoding="utf-8") as f:
+            f.write(json.dumps(zeile, ensure_ascii=False) + "\n")
+        with open(p, encoding="utf-8") as f:
+            zeilen = f.readlines()
+        if len(zeilen) > BELEG_SPIEGEL_MAX * 1.2:
+            with open(p, "w", encoding="utf-8") as f:
+                f.writelines(zeilen[-BELEG_SPIEGEL_MAX:])
+    except Exception as e:  # noqa: BLE001
+        print("Beleg-Spiegel nicht geschrieben (%s): %s" % (os.path.basename(p), e))
+
+
+def belege_nachtragen(led, spiegel, jetzt=None, tage=BELEG_SPIEGEL_TAGE) -> list:
+    """Zeilen aus dem Spiegel, deren Schluessel im Ledger fehlt und die juenger als `tage` sind. REIN."""
+    jetzt = jetzt or datetime.now(timezone.utc)
+    grenze = (jetzt - timedelta(days=tage)).isoformat()
+    haben = {e.get("k") for e in led if isinstance(e, dict)}
+    neu = []
+    for z in spiegel:
+        if not isinstance(z, dict) or not z.get("k") or z["k"] in haben:
+            continue
+        if str(z.get("sentAt") or "") < grenze:
+            continue
+        neu.append(z)
+        haben.add(z["k"])
+    return neu
+
+
+def _belege_aus_spiegel(ledger_file: str, keep: int) -> int:
+    """Zu Laufbeginn: fehlende Zeilen aus dem Spiegel ins Repo-Ledger. -> Anzahl."""
+    p = _beleg_spiegel_pfad(ledger_file)
+    if not os.path.exists(p):
+        return 0
+    spiegel = []
+    try:
+        with open(p, encoding="utf-8") as f:
+            for zeile in f:
+                try:
+                    spiegel.append(json.loads(zeile))
+                except ValueError:
+                    continue
+    except Exception as e:  # noqa: BLE001
+        print("Beleg-Spiegel unlesbar (%s): %s" % (os.path.basename(p), e))
+        return 0
+    try:
+        led = json.load(open(ledger_file, encoding="utf-8"))
+        if not isinstance(led, list):
+            return 0          # kaputtes Ledger nicht ueberschreiben
+    except FileNotFoundError:
+        led = []
+    except Exception:
+        return 0
+    neu = belege_nachtragen(led, spiegel)
+    if neu:
+        led.extend(neu)
+        json.dump(led[-keep:], open(ledger_file, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
+        print("  \U0001fa79 %s: %d Beleg(e) aus dem Runner-Spiegel nachgetragen: %s"
+              % (ledger_file, len(neu), ", ".join(z["k"] for z in neu)[:200]))
+    return len(neu)
+
 HT_MARKETS     = ("Half Time", "First Half Goals 1.5")   # HZ-1X2 ODER Über/Unter 1,5 erste Halbzeit
 HT_LABEL       = {"Half Time": "HZ 1X2", "First Half Goals 1.5": "HZ Over/Under 1.5", "First Half Goals 0.5": "HZ Over/Under 0.5"}
 
@@ -762,6 +852,7 @@ def _log_ou35(a) -> None:
                 "sentAt": datetime.now(timezone.utc).isoformat(),
                 "status": "pending", "htScore": None,
                 "live": {"time": None, "score": [None, None]}})
+    _beleg_spiegeln(OU35_LEDGER_FILE, led[-1])
     try:
         json.dump(led[-OU35_KEEP:], open(OU35_LEDGER_FILE, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
     except Exception as e:
@@ -865,11 +956,45 @@ def _log_rutsch(a) -> None:
                 "live": {"time": ((a.get("live") or {}).get("time")),
                          "score": [(a.get("live") or {}).get("goal_v1"),
                                    (a.get("live") or {}).get("goal_v2")]}})
+    _beleg_spiegeln(RUTSCH_LEDGER_FILE, led[-1])
     try:
         json.dump(led[-RUTSCH_LEDGER_KEEP:], open(RUTSCH_LEDGER_FILE, "w", encoding="utf-8"),
                   ensure_ascii=False, indent=0)
     except Exception as e:
         print("Rutsch-Ledger-Schreibfehler:", e)
+
+
+def rutsch_runde(kandidaten, seen, senden, buchen, push=None) -> tuple:
+    """Eine Runde Kursrutsch: jeden NEUEN (Spiel, Markt) buchen, senden nur mit RUTSCH_PUSH. -> (gesendet, gebucht)
+
+    🔴 03.10.2026 abends (Lucas: „ich bin noch immer nicht ueberzeugt, dass wir den Kursrutsch
+    richtig definiert haben"). Er hatte recht — nachgespielt am echten Kursverlauf (3.107 Staende
+    von betfair_track_state.json aus der Git-Historie), Quote im Moment des Ueberschreitens:
+
+        bis 18.09. (Fundzeitraum)   n=175  ROI +28,2 %  [UG +8,1]
+        ab 19.09. (vorwaerts)       n=178  ROI  -2,6 %  [-18,4 … +13,2]   Quote 48,0 % / Treffer 45,5 %
+
+    Zwei Fehler, beide in der Messung: die Rueckrechnung (und die Zahl n=78, -21,5 % vom selben
+    Tag) waehlte nach dem ENDstand und rechnete zur Schlussquote — der Alarm feuert aber beim
+    ersten Ueberschreiten. Und der geratene 5.000-EUR-Boden liess 9 von 178 Faellen durch.
+    Fehlerklasse: *am Endstand gesucht, am Signalzeitpunkt gefeuert.*
+
+    Ergebnis: ungefaehr fair bepreist, keine belegte Kante — bei ~13 Faellen am Tag als Push nur
+    Laerm. Also wird jeder neue Fall zur Quote im Signalmoment GEBUCHT (Messung
+    `betfair-kursrutsch`, n >= 400), gesendet nur mit BF_RUTSCH_PUSH=1."""
+    push = RUTSCH_PUSH if push is None else push
+    gesendet = gebucht = 0
+    for a in kandidaten:
+        key = "rutsch:" + a["matchId"] + ":" + str(a.get("market"))
+        if key in seen:
+            continue
+        if push and gesendet < RUTSCH_PUSH_DECKEL:
+            if senden(build_rutsch_message(a)):
+                gesendet += 1
+        seen[key] = a["value"]
+        buchen(a)
+        gebucht += 1
+    return gesendet, gebucht
 
 
 def rutsch_bilanz_zeile(bericht) -> str:
@@ -1682,6 +1807,7 @@ def _log_public_push(a, cidx=None) -> None:
     for feld in ("onLeader", "leadDir", "leadShare"):
         zeile[feld] = a.get(feld)
     led.append(zeile)
+    _beleg_spiegeln(PUB_LEDGER_FILE, zeile)   # 03.10.2026: Beleg so haltbar wie der Seen-Stand
 
     try:
         json.dump(led[-800:], open(PUB_LEDGER_FILE, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
@@ -2099,6 +2225,13 @@ def collect_alerts(prices: dict, hist: dict, ht_top=HT_TOP_EUR, ht_rest=HT_REST_
 
 
 def main():
+    # 03.10.2026: Belege, die ein abgebrochener Lauf nur lokal hatte, VOR jeder Wirkung nachtragen.
+    for _lf, _keep in ((PUB_LEDGER_FILE, 800), (RUTSCH_LEDGER_FILE, RUTSCH_LEDGER_KEEP),
+                       (OU35_LEDGER_FILE, OU35_KEEP)):
+        try:
+            _belege_aus_spiegel(_lf, _keep)
+        except Exception as _e:  # noqa: BLE001
+            print("  ⚠️  Beleg-Nachtrag %s uebersprungen: %s" % (_lf, _e))
     try:
         prices = json.load(open("betfair_prices.json", encoding="utf-8"))
     except Exception as e:
@@ -2161,17 +2294,11 @@ def main():
         _einstieg = einstiegsquoten(_lade_json(RUTSCH_STATE_FILE, {}))
         _rutsch = [r for r in (rutsch_alert(m, _einstieg)
                                for m in (prices.get("matches") or [])) if r]
-        _rs_sent = 0
-        for a in _rutsch:
-            key = "rutsch:" + a["matchId"] + ":" + str(a.get("market"))
-            if should_send(_rs_seen, key, a["value"]):
-                if send_trades_message(build_rutsch_message(a)):
-                    _rs_seen[key] = a["value"]
-                    _rs_sent += 1
-                    _log_rutsch(a)
+        _rs_sent, _rs_neu = rutsch_runde(_rutsch, _rs_seen, send_trades_message, _log_rutsch)
         _save_seen(RUTSCH_SEEN_FILE, _rs_seen)
-        print("  \U0001f4c9 Kursrutsch: %d Kandidat(en), %d gesendet (nur Trades, %d Einstiegsquoten gelesen)"
-              % (len(_rutsch), _rs_sent, len(_einstieg)))
+        print("  \U0001f4c9 Kursrutsch: %d Kandidat(en), %d neu gebucht, %d gesendet%s (%d Einstiegsquoten gelesen)"
+              % (len(_rutsch), _rs_neu, _rs_sent, "" if RUTSCH_PUSH else " (Push aus, nur Buch)",
+                 len(_einstieg)))
     except Exception as _e:
         print("  ⚠️  Kursrutsch-Alarm uebersprungen:", _e)
 
