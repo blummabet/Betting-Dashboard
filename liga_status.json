@@ -375,7 +375,7 @@
       "ok": false,
       "nFail": 2,
       "failures": [
-        "746-51 Auswärtssieg @2.3: sichere Linie Doppelte Chance — X2 @1.432 verfügbar (≥1.35), nicht abgeleitet",
+        "746-51 Auswärtssieg @2.3: sichere Linie Doppelte Chance — X2 @1.435 verfügbar (≥1.35), nicht abgeleitet",
         "4665-532 Heimsieg @1.85: sichere Linie Doppelte Chance — 1X @1.351 verfügbar (≥1.35), nicht abgeleitet"
       ],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
@@ -564,9 +564,11 @@
       "id": "live_scan_laeuft",
       "label": "Poly-Live-Scan taktet",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "Letzter Live-Scan vor 1.7h (Takt: 15 Min) — der Job startet nicht. Runner belegt? Workflow deaktiviert?"
+      ],
       "note": "Erwartet alle 15 Min; Alarm ab 90 Min. Live-Preise sind die Schluss-Referenz fuer den CLV — fehlen sie, misst der Nordstern nicht."
     },
     {
@@ -585,7 +587,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "40000/40000 Zeilen · 33.9 Tage Fenster (2026-08-31 bis 2026-10-04). Kurzes Fenster bei freiem Deckel ist normal (der Track fuellt sich); kurzes Fenster AM Deckel ist der Fehler."
+      "note": "40000/40000 Zeilen · 34.0 Tage Fenster (2026-08-31 bis 2026-10-04). Kurzes Fenster bei freiem Deckel ist normal (der Track fuellt sich); kurzes Fenster AM Deckel ist der Fehler."
     },
     {
       "id": "betfair_liefert",
@@ -594,16 +596,18 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Job vor 0.2h · jüngste Daten vor 0.2h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
+      "note": "Job vor 1.2h · jüngste Daten vor 1.2h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
     },
     {
       "id": "poly_global_liefert",
       "label": "Poly-Global-Scan-Job liefert auch Daten",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
-      "note": "Job vor 0.5h · jüngste Daten vor 2.0h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "Der Job lief vor 1.3h, aber die jüngste Poly-Global-Scan-Datei ist 10.8h alt (poly_wallet_track 10.8h, poly_money_broad 10.8h). Der Workflow läuft und liefert NICHTS — am 02.09.2026 zweimal passiert: morgens scheiterte `git add` an einem fehlenden Pfad (staged dann gar nichts), abends beim Poly-Scan aus anderer Ursache."
+      ],
+      "note": "Job vor 1.3h · jüngste Daten vor 10.8h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
     },
     {
       "id": "pinn_anker",
@@ -612,7 +616,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "43 von 43 Ankern der Handliste treffen den Feed · 403 Ligastrings gesehen · Anker liegt auf 88% von 8 offenen Spielen (aus 49 geholten Wettbewerben). Eine niedrige Abdeckung der HANDLISTE ist kein Fehler mehr (der globale Pool faengt den Rest); ein toter Eintrag schon."
+      "note": "43 von 43 Ankern der Handliste treffen den Feed · 404 Ligastrings gesehen · Anker liegt auf 100% von 8 offenen Spielen (aus 48 geholten Wettbewerben). Eine niedrige Abdeckung der HANDLISTE ist kein Fehler mehr (der globale Pool faengt den Rest); ein toter Eintrag schon."
     },
     {
       "id": "buecher_punkte",
@@ -621,7 +625,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "98 Spiele bewertet · 35 mit mindestens einem fremden Buch · beste Punktzahl 8. Ein leeres Fenster ist kein Fehler; ein dauerhaft einsamer Betfair-Score schon."
+      "note": "69 Spiele bewertet · 21 mit mindestens einem fremden Buch · beste Punktzahl 8. Ein leeres Fenster ist kein Fehler; ein dauerhaft einsamer Betfair-Score schon."
     },
     {
       "id": "vorregistrierung",
@@ -630,7 +634,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "🔒 E-Sport ohne Wallet-Nachweis: 285/120 seit 27d · 🔒 Liga · Conviction ab 5: 85/80 seit 23d · 🔒 Fade-Unter · Ganzspiel-Torlinie: 4852/200 seit 27d · 🔒 Poly-Auswahl · von Betfair bestätigt: 330/60 seit 33d · 🔒 Bücher-Score ≥7 von 10: 95/40 seit 33d"
+      "note": "🔒 E-Sport ohne Wallet-Nachweis: 289/120 seit 28d · 🔒 Liga · Conviction ab 5: 85/80 seit 23d · 🔒 Fade-Unter · Ganzspiel-Torlinie: 4958/200 seit 28d · 🔒 Poly-Auswahl · von Betfair bestätigt: 330/60 seit 33d · 🔒 Bücher-Score ≥7 von 10: 94/40 seit 33d"
     },
     {
       "id": "killer_push_buch",
@@ -651,6 +655,6 @@
       "note": "0 von 0 ist ein ruhiger Tag (oder eine Laenderspielpause, in der wir gar keine passenden Partien haben). 0 von N ist ein Bruch."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-10-04T13:33:43.943955+00:00"
+  "nFail": 4,
+  "generatedAt": "2026-10-04T22:21:19.437332+00:00"
 }
