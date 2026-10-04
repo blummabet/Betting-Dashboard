@@ -12689,8 +12689,11 @@
    "sport:663686171"
   ],
   "sentAt": "2026-10-04T07:05:00.558245+00:00",
-  "status": "pending",
-  "push": true
+  "status": "abgerechnet",
+  "push": true,
+  "rendite": 0.65,
+  "win": true,
+  "settledAt": "2026-10-04T10:05:26.919017+00:00"
  },
  {
   "k": "db1c25cc-ed29-40eb-bae6-68dc9a12e7dd",
@@ -12752,9 +12755,12 @@
    3
   ],
   "sentAt": "2026-10-04T08:05:03.075669+00:00",
-  "status": "pending",
+  "status": "abgerechnet",
   "push": false,
-  "pushGrund": "Tennis live stumm (Geld folgt dem Spielstand)"
+  "pushGrund": "Tennis live stumm (Geld folgt dem Spielstand)",
+  "rendite": -1.0,
+  "win": false,
+  "settledAt": "2026-10-04T10:05:26.919017+00:00"
  },
  {
   "k": "spiel:e1327fc9-3867-41dd-adc2-32b362e1ca8a",
@@ -12784,9 +12790,12 @@
    "sport:663708497"
   ],
   "sentAt": "2026-10-04T08:20:11.257995+00:00",
-  "status": "pending",
+  "status": "abgerechnet",
   "push": false,
-  "pushGrund": "Tennis live stumm (Geld folgt dem Spielstand)"
+  "pushGrund": "Tennis live stumm (Geld folgt dem Spielstand)",
+  "rendite": 0.8451,
+  "win": true,
+  "settledAt": "2026-10-04T10:05:26.919017+00:00"
  },
  {
   "k": "klein:31a0e304-efe8-44ce-bdec-b9a3f4a0cb74",
@@ -12903,9 +12912,12 @@
    "sport:663723424"
   ],
   "sentAt": "2026-10-04T09:05:12.954522+00:00",
-  "status": "pending",
+  "status": "abgerechnet",
   "push": false,
-  "pushGrund": "Tennis live stumm (Geld folgt dem Spielstand)"
+  "pushGrund": "Tennis live stumm (Geld folgt dem Spielstand)",
+  "rendite": -0.8137,
+  "win": false,
+  "settledAt": "2026-10-04T10:05:26.919017+00:00"
  },
  {
   "k": "klein:2d4ca61e-2995-4536-861f-c924d2ccaba2",
@@ -12960,5 +12972,69 @@
   "sentAt": "2026-10-04T09:20:15.587881+00:00",
   "status": "pending",
   "push": true
+ },
+ {
+  "k": "spiel:8ca53c5a-761f-427d-92c9-ef066b03b835",
+  "art": "spiel",
+  "eventId": "8ca53c5a-761f-427d-92c9-ef066b03b835",
+  "event": "LOUD - Global Esports",
+  "liga": "VALORANT Champions 2026",
+  "ligaSlug": "valorant-champions-2026-t2",
+  "kat": "E-Sport",
+  "seite": "LOUD",
+  "nGerichtet": 2,
+  "maerkte": [
+   "Map 1 Winner - Threeway",
+   "Map 2 - Total Rounds",
+   "Map 2 Winner - Threeway"
+  ],
+  "summeUsd": 103715.89,
+  "faktor": 12.96,
+  "nWetten": 4,
+  "sekunden": 1769.0,
+  "phase": "live",
+  "betIds": [
+   "sport:663735614",
+   "sport:663746060",
+   "sport:663749143",
+   "sport:663750002"
+  ],
+  "sentAt": "2026-10-04T10:05:26.919017+00:00",
+  "status": "pending",
+  "push": true
+ },
+ {
+  "k": "spiel:978450b8-48ec-4b82-a362-b3699d60897b",
+  "art": "spiel",
+  "eventId": "978450b8-48ec-4b82-a362-b3699d60897b",
+  "event": "Daniil Medvedev - Francisco Cerundolo",
+  "liga": "ATP Beijing, China Men Singles",
+  "ligaSlug": "atp-beijing-china-men-singles",
+  "kat": "Tennis",
+  "seite": "Francisco Cerundolo",
+  "nGerichtet": 2,
+  "maerkte": [
+   "2nd Set - Total Games",
+   "2nd Set - Winner",
+   "2nd Set Game 2 - Winner",
+   "Total Games"
+  ],
+  "summeUsd": 63932.99,
+  "faktor": 5.33,
+  "nWetten": 6,
+  "sekunden": 1314.0,
+  "phase": "live",
+  "betIds": [
+   "sport:663743379",
+   "sport:663746330",
+   "sport:663747250",
+   "sport:663749968",
+   "sport:663752156",
+   "sport:663753034"
+  ],
+  "sentAt": "2026-10-04T10:05:26.919017+00:00",
+  "status": "pending",
+  "push": false,
+  "pushGrund": "Tennis live stumm (Geld folgt dem Spielstand)"
  }
 ]
