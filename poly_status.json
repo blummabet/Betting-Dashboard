@@ -21,10 +21,12 @@
     {
       "id": "wallet_track_fresh",
       "label": "Wallet-Lernen frisch",
-      "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "severity": "warn",
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "Wallet-Track: jüngster Stand vor 3.0 h (> 3 h erwartet) · 6770 Wallets bewertet"
+      ],
       "note": "Grundlage der 'bewiesene Wallet'-Pushes — veraltet = Pushes auf alten Bilanzen."
     },
     {
@@ -133,7 +135,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Fällige Märkte je Liga, die ihre Auflösung finden — nur ab dem Beginn des Auflösungsbuchs (2026-09-20); 2292 ältere Märkte bleiben draussen, fuer sie kann es keine geben. < 60% = Settlement läuft wirklich ins Leere."
+      "note": "Fällige Märkte je Liga, die ihre Auflösung finden — nur ab dem Beginn des Auflösungsbuchs (2026-09-20); 2291 ältere Märkte bleiben draussen, fuer sie kann es keine geben. < 60% = Settlement läuft wirklich ins Leere."
     },
     {
       "id": "proven_wallets_profitable",
@@ -162,10 +164,12 @@
     {
       "id": "accuracy_backtest_fresh",
       "label": "Genauigkeits-Backtest frisch & belastbar",
-      "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "severity": "warn",
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "Backtest: jüngster Stand vor 3.0 h (> 3 h erwartet)"
+      ],
       "note": "poly_money_broad muss frisch sein und n groß genug, sonst ist 'folgt dem Geld' Zufall."
     },
     {
@@ -196,6 +200,6 @@
       "note": "poly_direct_bets.py rechnet über poly_resolutions.json ab. Hängt ein Bet, kennt Poly den Ausgang nicht (Markt noch offen/obskur) oder der Slug passt nicht — dann fehlt echtes Geld in der Bilanz."
     }
   ],
-  "nFail": 1,
-  "generatedAt": "2026-10-04T14:27:58.805287+00:00"
+  "nFail": 3,
+  "generatedAt": "2026-10-04T14:33:32.596664+00:00"
 }
