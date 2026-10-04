@@ -120,6 +120,87 @@ def kandidat(m, state_pend, hist_punkte, archiv=None):
             "gruppen": gruppen, "vor": vor, "quoten": quoten, "serie": serie}
 
 
+# ── Frisches Geld rund um die Pause (04.10.2026) ──────────────────────────────────────────
+# Lucas: „kein K.-o.-Kriterium, aber wenn auf Betfair zur Pause oder rund um die Pause noch was
+# auf Over 1.5 gesetzt wird, waere das ein cooles Signal." Die Betfair-Historie fuehrt O/U 0.5/1.5
+# nicht — der Preisstand aber schon, mit dem gematchten Geld je Seite (kumuliert). Also merkt sich
+# der Finder in JEDEM Lauf den Geldstand dieser Maerkte fuer laufende 0:0-Spiele; zur Pause ist
+# der Zufluss = jetzt minus letzter Stand. Kein Filter: gebucht und angezeigt, damit das Buch am
+# Ende sagen kann, ob „Geld auf Over" die Treffer verbessert.
+ZUFLUSS_MAERKTE = (("Over/Under 1.5 Goals", "o15"), ("Over/Under 0.5 Goals", "o05"))
+ZUFLUSS_MAX_ALTER_MIN = 40
+
+
+def geldstand(m) -> dict:
+    """{'o15': {'over': vol, 'under': vol}, …} aus dem aktuellen Preisstand. REIN."""
+    aus = {}
+    for markt, kurz in ZUFLUSS_MAERKTE:
+        o = u = None
+        for r in (((m.get("markets") or {}).get(markt) or {}).get("runners") or []):
+            n = str(r.get("name") or "")
+            if n.startswith("Over"):
+                o = float(r.get("vol") or 0)
+            elif n.startswith("Under"):
+                u = float(r.get("vol") or 0)
+        if o is not None and u is not None:
+            aus[kurz] = {"over": o, "under": u}
+    return aus
+
+
+def zufluss(vorher, jetzt_stand, vorher_ts, jetzt) -> dict | None:
+    """Frisches Geld je Markt seit dem letzten Lauf. None ohne brauchbaren Vergleich. REIN."""
+    t0 = None
+    try:
+        t0 = datetime.fromisoformat(str(vorher_ts).replace("Z", "+00:00"))
+    except ValueError:
+        pass
+    if not vorher or not t0:
+        return None
+    minuten = (jetzt - t0).total_seconds() / 60
+    if minuten <= 0 or minuten > ZUFLUSS_MAX_ALTER_MIN:
+        return None
+    aus = {"minuten": round(minuten)}
+    for kurz in ("o15", "o05"):
+        a, b = (vorher or {}).get(kurz), (jetzt_stand or {}).get(kurz)
+        if not a or not b:
+            continue
+        do, du = max(0.0, b["over"] - a["over"]), max(0.0, b["under"] - a["under"])
+        aus[kurz] = {"over": round(do), "under": round(du),
+                     "overAnteil": round(do / (do + du), 3) if do + du > 0 else None}
+    return aus if len(aus) > 1 else None
+
+
+ZUFLUSS_MIN_EUR = 200
+ZUFLUSS_MIN_ANTEIL = 0.60
+
+
+def over_zufluss(z) -> bool:
+    """Kam rund um die Pause nennenswert frisches Geld auf Over 1.5? REIN."""
+    x = (z or {}).get("o15") or {}
+    return (x.get("over", 0) + x.get("under", 0)) >= ZUFLUSS_MIN_EUR \
+        and (x.get("overAnteil") or 0) >= ZUFLUSS_MIN_ANTEIL
+
+
+def _zufluss_txt(z) -> str | None:
+    if not z:
+        return None
+    teile = []
+    for kurz, lab in (("o15", "O/U 1.5"), ("o05", "O/U 0.5")):
+        x = z.get(kurz)
+        if not x:
+            continue
+        summe = x["over"] + x["under"]
+        if summe < 1:
+            teile.append("%s: kein neues Geld" % lab)
+        else:
+            teile.append("%s: €%s, davon %d %% auf Over" % (lab, _k(summe), round(100 * x["overAnteil"])))
+    return ("💶 <b>Geld letzte %d Min:</b> " % z["minuten"] + " · ".join(teile)) if teile else None
+
+
+def _k(v):
+    return ("%.1fK" % (v / 1000)) if v >= 1000 else "%d" % round(v)
+
+
 # ── Abrechnen ───────────────────────────────────────────────────────────────────────────────
 def ergebnis(ft):
     h, a = ft
@@ -193,7 +274,17 @@ def bericht(eintraege) -> dict:
                      if e.get("status") == "abgerechnet" and g in (e.get("gruppen") or ())
                      for ww, x in (e.get("wetten") or {}).items() if ww == w and x.get("r") is not None]
             k = kennzahlen(paare)
-            aus["%s/%s" % (g, w)] = {"gruppe": g, "wette": w, "text": WETT_TEXT[w], **k, "urteil": urteil(k)}
+            # 04.10.2026: dieselbe Wette, aufgeteilt nach frischem Geld auf Over 1.5 rund um die
+            # Pause (s. zufluss). Kein eigenes Urteil — nur der Vergleich, ob das Signal etwas traegt.
+            mit, ohne = [], []
+            for e in eintraege:
+                x = (e.get("wetten") or {}).get(w)
+                if e.get("status") != "abgerechnet" or g not in (e.get("gruppen") or ()) \
+                        or not x or x.get("r") is None:
+                    continue
+                (mit if over_zufluss(e.get("zufluss")) else ohne).append((x["win"], x["quote"], x["r"]))
+            aus["%s/%s" % (g, w)] = {"gruppe": g, "wette": w, "text": WETT_TEXT[w], **k, "urteil": urteil(k),
+                                     "mitOverZufluss": kennzahlen(mit), "ohneOverZufluss": kennzahlen(ohne)}
     return aus
 
 
@@ -205,7 +296,25 @@ def _esc(s):
 def _serie_txt(s):
     if not s:
         return "noch keine Spiele"
-    return "%s · Ø %.1f Tore · O2.5 %d/%d" % (" ".join(s["form"]), s["toreSchnitt"], s["over25"], s["n"])
+    txt = "%s · Ø %.1f Tore · O2.5 %d/%d" % (" ".join(s["form"]), s["toreSchnitt"], s["over25"], s["n"])
+    if s.get("nHz"):
+        txt += " · Tor in 2. HZ %d/%d" % (s["torIn2hz"], s["nHz"])
+    return txt
+
+
+def _stat_txt(st):
+    """„aufs Tor 5–1 · Schuesse 12–4 · Ecken 6–2 · Ballbesitz 64–36 % · xG 1.10–0.20". REIN."""
+    h, g = st["heim"], st["gast"]
+    teile = []
+    for feld, lab in (("aufsTor", "aufs Tor"), ("schuesse", "Schüsse"), ("ecken", "Ecken"),
+                      ("gefAngriffe", "gef. Angriffe")):
+        if feld in h and feld in g:
+            teile.append("%s %d–%d" % (lab, h[feld], g[feld]))
+    if "ballbesitz" in h and "ballbesitz" in g:
+        teile.append("Ballbesitz %d–%d %%" % (h["ballbesitz"], g["ballbesitz"]))
+    if "xg" in h and "xg" in g:
+        teile.append("xG %.2f–%.2f" % (h["xg"], g["xg"]))
+    return " · ".join(teile) or "–"
 
 
 def _flagge(cc):
@@ -258,7 +367,15 @@ def nachricht(funde, bericht_=None) -> str:
         if q.get("heim"):
             jetzt.append(("<b>Heimsieg %s</b>" if "heim" in f["gruppen"] else "Heimsieg %s") % _q(q["heim"]))
         t.append("💰 <b>Jetzt:</b>\n   %s\n" % ("\n   ".join(jetzt) if jetzt else "–"))
-        s = f.get("serie") or {}
+        zt = _zufluss_txt(f.get("zufluss"))
+        if zt:
+            t.append(zt + "\n")
+        st = ((f.get("apif") or {}).get("statistik")) or {}
+        if st.get("heim") and st.get("gast"):
+            t.append("📊 <b>1. HZ:</b> %s\n" % _stat_txt(st))
+        s = dict(f.get("serie") or {})
+        for seite, ser in (((f.get("apif") or {}).get("serie")) or {}).items():
+            s[seite] = ser                    # die laengere, rueckwirkende Serie gewinnt
         if s.get("heim") or s.get("gast"):
             t.append("📈 <b>Form</b> (neueste zuerst)\n   %s: %s\n   %s: %s\n"
                      % (_esc(f["home"]), _serie_txt(s.get("heim")), _esc(f["away"]), _serie_txt(s.get("gast"))))
@@ -291,16 +408,40 @@ def main(base_dir=BASE, jetzt=None, senden=None) -> int:
 
     import betfair_alerts as BA          # Seen mit Runner-Spiegel (~/.cocobet_state)
     seen = BA._load_seen(pj(SEEN_FILE))
+    beob_alt = stand.get("beobachtung") or {}
+    beob = {}
     neu = []
     for m in prices.get("matches") or []:
         mid = str(m.get("matchId"))
+        li = m.get("liveInfo") or {}
+        # 04.10.2026: Geldstand O/U 0.5/1.5 fuer jedes laufende 0:0 merken (Zufluss zur Pause).
+        if li.get("time") is not None and not li.get("finished") and li.get("goal_v1") == 0 \
+                and li.get("goal_v2") == 0:
+            gs = geldstand(m)
+            if gs:
+                beob[mid] = {"ts": jetzt.isoformat(), "stand": gs}
         f = kandidat(m, pend.get(mid), hist.get(mid), archiv)
         if not f or f["k"] in haben or f["k"] in seen:
             continue
+        alt = beob_alt.get(mid) or {}
+        f["zufluss"] = zufluss(alt.get("stand"), geldstand(m), alt.get("ts"), jetzt)
         f["gebuchtAt"], f["status"] = jetzt.isoformat(), "pending"
         eintraege.append(f)
         haben.add(f["k"])
         neu.append(f)
+
+    # 04.10.2026: Live-Statistik zur Pause + rueckwirkende Serie aus API-Football (apif_live).
+    # Reine Anreicherung — ohne Schluessel oder bei Ausfall laeuft alles wie bisher.
+    apif_z = None
+    if neu and os.environ.get("APISPORTS_KEY"):
+        try:
+            import apif_live
+            apif_z = apif_live.anreichern(neu)
+        except Exception as e:  # noqa: BLE001
+            print("[hz_finder] API-Football-Anreicherung uebersprungen:", e)
+    apif_sum = dict(stand.get("apif") or {})
+    for k_, v_ in (apif_z or {}).items():
+        apif_sum[k_] = apif_sum.get(k_, 0) + v_
 
     endst = {}
     for z in betfair_track_store.load(pj("betfair_track_results.json")):
@@ -316,6 +457,8 @@ def main(base_dir=BASE, jetzt=None, senden=None) -> int:
            "regel": {"toreMaxQuote": TORE_MAX_QUOTE, "heimMaxQuote": HEIM_MAX_QUOTE,
                      "kommission": KOMMISSION, "mindestN": MINDEST_N},
            "bericht": ber,
+           "apif": apif_sum,
+           "beobachtung": beob,   # Geldstand O/U 0.5/1.5 laufender 0:0-Spiele (fuer den naechsten Lauf)   # Abdeckung API-Football seit Start: Funde / gematcht / mit Statistik / mit Serie
            "zuletzt": [e for e in reversed(eintraege) if str(e.get("gebuchtAt") or "") >= grenze][:60],
            "eintraege": eintraege}
     from pathlib import Path

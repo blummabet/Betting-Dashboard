@@ -203,9 +203,18 @@
   // ⏸️ HZ 0:0 (04.10.2026, Lucas: „such ich die Spiele immer manuell"). Reine Anzeige von
   // hz_finder.json — Urteil, Treffer und Rendite rechnet hz_finder.py, nicht diese Datei.
   function _hzQ(q){ return (typeof q==='number'&&q>1)?q.toFixed(2):'–'; }
-  function _hzSer(s){ return s?(_esc(s.form)+' · O2.5 '+s.over25+'/'+s.n+' · Ø '+s.toreSchnitt+' Tore'):'noch keine Spiele im Archiv'; }
+  function _hzSer(s){ return s?(_esc(s.form)+' · O2.5 '+s.over25+'/'+s.n+' · Ø '+s.toreSchnitt+' Tore'+(s.nHz?' · Tor in 2. HZ '+s.torIn2hz+'/'+s.nHz:'')):'noch keine Spiele im Archiv'; }
+  // 04.10.2026: Live-Statistik zur Pause aus API-Football (apif_live.py), wenn die Liga sie fuehrt.
+  function _hzStat(e){
+    var st=((e.apif||{}).statistik)||null; if(!st||!st.heim||!st.gast) return '';
+    var h=st.heim, g=st.gast, t=[];
+    [['aufsTor','aufs Tor'],['schuesse','Schüsse'],['ecken','Ecken']].forEach(function(p){ if(h[p[0]]!=null&&g[p[0]]!=null) t.push(p[1]+' '+h[p[0]]+'–'+g[p[0]]); });
+    if(h.ballbesitz!=null&&g.ballbesitz!=null) t.push('Ballbesitz '+h.ballbesitz+'–'+g.ballbesitz+' %');
+    if(h.xg!=null&&g.xg!=null) t.push('xG '+(+h.xg).toFixed(2)+'–'+(+g.xg).toFixed(2));
+    return t.length?'<div class="hz-q" style="margin-top:3px">📊 1. HZ: '+_esc(t.join(' · '))+'</div>':'';
+  }
   function _hzCard(e){
-    var v=e.vor||{}, q=e.quoten||{}, ser=e.serie||{};
+    var v=e.vor||{}, q=e.quoten||{}, ser=e.serie||{}, ap=e.apif||{};
     var tags=(e.gruppen||[]).map(function(g){ return g==='tore'?'<span class="hz-tag hz-tore">Over 2.5 erwartet @'+_hzQ(v.over25)+'</span>':'<span class="hz-tag hz-heim">Heimfavorit @'+_hzQ(v.heim)+'</span>'; }).join('');
     var st;
     if(e.status==='abgerechnet'){
@@ -218,7 +227,8 @@
       +'<div class="hz-lg">'+_esc(e.league||'')+' · '+_esc(zeit)+(e.phase==='2.HZ'?' · erst in der 2. HZ gesehen ('+_esc(e.minute)+'\')':' · zur Pause')+'</div>'
       +'<div style="margin:6px 0 4px">'+tags+'</div>'
       +'<div class="hz-q">Quote zur Pause: Over 0.5 <b>'+_hzQ(q.over05)+'</b> · Over 1.5 <b>'+_hzQ(q.over15)+'</b> · Heim <b>'+_hzQ(q.heim)+'</b></div>'
-      +'<div class="hz-ser">Serie '+_esc(e.home)+': '+_hzSer(ser.heim)+'<br>Serie '+_esc(e.away)+': '+_hzSer(ser.gast)+'</div>'
+      +_hzStat(e)
+      +'<div class="hz-ser">Serie '+_esc(e.home)+': '+_hzSer((ap.serie||{}).heim||ser.heim)+'<br>Serie '+_esc(e.away)+': '+_hzSer((ap.serie||{}).gast||ser.gast)+'</div>'
       +'<div style="margin-top:5px">'+st+'</div></div>';
   }
   function _mmHz(d){

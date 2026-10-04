@@ -125,3 +125,48 @@ def test_main_bucht_vor_dem_senden_und_nur_einmal(tmp_path, monkeypatch):
     assert len(gesendet) == 1
     d = json.loads((tmp_path / H.AUSGABE_FILE).read_text())
     assert len(d["eintraege"]) == 1 and d["zuletzt"][0]["matchId"] == "9"
+
+
+# ── 04.10.2026: frisches Geld auf O/U 1.5 rund um die Pause ─────────────────────────────────
+def test_zufluss_seit_letztem_lauf():
+    vorher = {"o15": {"over": 1000, "under": 800}, "o05": {"over": 500, "under": 100}}
+    jetzt_ = {"o15": {"over": 3600, "under": 1000}, "o05": {"over": 500, "under": 100}}
+    z = H.zufluss(vorher, jetzt_, (JETZT - timedelta(minutes=15)).isoformat(), JETZT)
+    assert z["minuten"] == 15 and z["o15"] == {"over": 2600, "under": 200, "overAnteil": 0.929}
+    assert z["o05"]["overAnteil"] is None
+    assert H.over_zufluss(z) is True
+    assert "O/U 1.5: €2.8K, davon 93 % auf Over" in H._zufluss_txt(z)
+    assert "O/U 0.5: kein neues Geld" in H._zufluss_txt(z)
+
+
+def test_zufluss_nur_mit_frischem_vergleich():
+    st = {"o15": {"over": 1, "under": 1}}
+    assert H.zufluss(st, st, (JETZT - timedelta(minutes=90)).isoformat(), JETZT) is None, "zu alt"
+    assert H.zufluss(None, st, JETZT.isoformat(), JETZT) is None
+
+
+def test_geldstand_aus_preisstand():
+    m = {"markets": {"Over/Under 1.5 Goals": {"runners": [{"name": "Under 1.5 Goals", "vol": 300},
+                                                          {"name": "Over 1.5 Goals", "vol": 900}]}}}
+    assert H.geldstand(m) == {"o15": {"over": 900.0, "under": 300.0}}
+
+
+def test_main_merkt_geldstand_und_traegt_zufluss_ein(tmp_path, monkeypatch):
+    monkeypatch.setenv("COCOBET_STATE_DIR", str(tmp_path / "state"))
+    monkeypatch.delenv("APISPORTS_KEY", raising=False)
+    def m_(li, o15):
+        x = spiel(li)
+        x["markets"]["Over/Under 1.5 Goals"] = {"runners": [{"name": "Over 1.5 Goals", "odd": 2.3, "vol": o15},
+                                                            {"name": "Under 1.5 Goals", "odd": 1.7, "vol": 500}]}
+        return x
+    (tmp_path / "betfair_track_state.json").write_text(json.dumps({"pending": {"9": PEND_TORE}}))
+    (tmp_path / "betfair_history.json").write_text("{}")
+    (tmp_path / "betfair_track_results.json").write_text("[]")
+    (tmp_path / "betfair_prices.json").write_text(json.dumps({"matches": [m_({"time": 32, "goal_v1": 0, "goal_v2": 0}, 1000)]}))
+    H.main(str(tmp_path), JETZT - timedelta(minutes=15), lambda t: True)
+    (tmp_path / "betfair_prices.json").write_text(json.dumps({"matches": [m_({"is_ht": True, "time": 45, "goal_v1": 0, "goal_v2": 0}, 4000)]}))
+    H.main(str(tmp_path), JETZT, lambda t: True)
+    e = json.loads((tmp_path / H.AUSGABE_FILE).read_text())["eintraege"][0]
+    assert e["zufluss"]["o15"]["over"] == 3000 and e["zufluss"]["o15"]["overAnteil"] == 1.0
+    b = json.loads((tmp_path / H.AUSGABE_FILE).read_text())["bericht"]["tore/over05"]
+    assert "mitOverZufluss" in b and "ohneOverZufluss" in b

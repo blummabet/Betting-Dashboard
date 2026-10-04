@@ -543,6 +543,16 @@ def aggregate(settled, blocked=()):
     for r in settled:
         by_cat.setdefault(_row_cat(r), []).append(r)
     by_cat = {k: _agg_one(v) for k, v in sorted(by_cat.items())}
+
+    # 04.10.2026 (Lucas: „waere noch gut, die Sportarten auch anzuzeigen darunter — dann sieht man
+    # die Stats besser"). byCat gab es nur fuer die ganze Shortlist und nur ganz unten. Jetzt je
+    # Block (Bespielbar / Public / Kontrolle) dieselbe Aufteilung — hier gerechnet, damit die
+    # Untergrenze und die Mindestmenge an EINER Stelle stehen und die Kachel nur anzeigt.
+    def _je_cat(rows):
+        d = {}
+        for r in rows:
+            d.setdefault(_row_cat(r), []).append(r)
+        return {k: _agg_one(v) for k, v in sorted(d.items(), key=lambda kv: -len(kv[1]))}
     by_conv = {}
     for c in range(0, 11):
         rows = [r for r in settled if int(r.get("conv") or 0) == c]
@@ -582,6 +592,8 @@ def aggregate(settled, blocked=()):
             # Schwelle zweimal da und die Flaeche entscheidet am Punktschaetzer (Vorfall 17.09.).
             "walletTor": wallet_tor_vergleich(pub, pub_ow),
             "bettable": _agg_one(bet), "blocked": _agg_one(blk), "byCat": by_cat,
+            "bettableByCat": _je_cat(bet), "publicByCat": _je_cat(pub),
+            "publicOhneWalletByCat": _je_cat(pub_ow),
             "byConv": by_conv, "byVerdict": by_verdict, "bySignal": by_signal,
             "byKalibrierung": by_kalib}
 

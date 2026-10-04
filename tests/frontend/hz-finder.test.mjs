@@ -51,3 +51,11 @@ test('leer: sagt, dass nichts da ist, statt leer zu bleiben', () => {
   const h = load()._mmHzHtml({ bericht: {}, zuletzt: [] });
   assert.match(h, /kein HZ-0:0-Fund/);
 });
+
+test('Karte zeigt Live-Statistik und die rückwirkende Serie aus API-Football', () => {
+  const e = { ...D.zuletzt[0], apif: { statistik: { heim: { aufsTor: 5, schuesse: 12, ballbesitz: 64, xg: 1.1 }, gast: { aufsTor: 1, schuesse: 4, ballbesitz: 36, xg: 0.2 } },
+    serie: { heim: { form: 'SUN', over25: 2, n: 8, toreSchnitt: 3.1, torIn2hz: 7, nHz: 8 } } } };
+  const h = load()._mmHzHtml({ ...D, zuletzt: [e] });
+  assert.match(h, /1\. HZ: aufs Tor 5–1 · Schüsse 12–4 · Ballbesitz 64–36 % · xG 1\.10–0\.20/);
+  assert.match(h, /Tor in 2\. HZ 7\/8/);
+});

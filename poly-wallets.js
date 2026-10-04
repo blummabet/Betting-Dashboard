@@ -3742,6 +3742,23 @@ function _pwUnaufloesbar(track){
     +(gr?('<br>'+gr):'')+'</div>';
 }
 
+// 04.10.2026 (Lucas: „die Sportarten auch anzeigen darunter — dann sieht man die Stats besser").
+// Je Block eine Zeile Chips: Sportart · n · ROI · Untergrenze. Gerechnet in poly_shortlist_track.py
+// (agg.*ByCat), hier nur angezeigt. Unter 30 Plays steht „sammelt" statt einer Untergrenze.
+function _pwCatChips(byCat){
+  const keys=Object.keys(byCat||{}).filter(k=>(byCat[k]||{}).n);
+  if(!keys.length) return '';
+  const chip=k=>{
+    const a=byCat[k], roi=a.roi!=null?Math.round(a.roi*1000)/10:null;
+    const c=roi==null?'#8b949e':roi>0?'#3fb950':roi<0?'#f85149':'#8b949e';
+    const ug=(a.roiUg!=null&&a.n>=30)?('UG '+_pwtSig(Math.round(a.roiUg*1000)/10)+'%'):'sammelt';
+    return '<span style="display:inline-block;margin:0 6px 6px 0;padding:4px 9px;border-radius:8px;background:#161b22;border:1px solid #30363d;font-size:11.5px">'
+      +'<b style="color:#c9d1d9">'+_pwEsc(k)+'</b> <span class="pw-mut">n'+a.n+'</span> · '
+      +'<b style="color:'+c+'">'+(roi!=null?_pwtSig(roi)+'%':'—')+'</b> <span class="pw-mut">'+ug+'</span></span>';
+  };
+  return '<div style="margin:-6px 0 14px"><span class="pw-mut" style="font-size:11px;margin-right:6px">Je Sportart:</span>'+keys.map(chip).join('')+'</div>';
+}
+
 function _pwTrackRecord(track){
   const intro='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">📊 Track-Record — „Heute wetten" als Paper-Trade</span>'
     +'<span class="pw-sec-note">Jeder Scan schreibt die exakten Shortlist-Empfehlungen mit (fixer Einsatz, Einstieg = Snapshot-Preis) und rechnet bei Auflösung ab. <b>Es wird nichts gesetzt</b> — nur mitgeschrieben, damit wir sehen, ob sich echtes Nachspielen lohnt.</span></div>';
@@ -3752,6 +3769,7 @@ function _pwTrackRecord(track){
   const upd=track.updatedAt?('<div class="pw-mut" style="font-size:11px;margin:2px 0 10px">Stand '+_pwEsc(String(track.updatedAt).slice(0,16).replace('T',' '))+' · fixer Einsatz $'+Math.round(track.stake||10)+' je Play</div>'):'';
   return intro+upd
     +_pwTrackKpis(agg.bettable||agg.all||{n:0}, '🟢 Bespielbar', '(alle Sportarten, auf die gesetzt werden darf)')
+    +_pwCatChips(agg.bettableByCat)
     +_pwTrackBlocked(agg, track.reentry, track.blockedCats)
     // 10.09.2026 (Lucas: „ich bin grad etwas verwirrt") — der Untertitel stimmte in BEIDEN
     // Angaben nicht mehr. „sendet nichts": push_shortlist_trades.py schickt genau diese Menge
@@ -3762,6 +3780,7 @@ function _pwTrackRecord(track){
                   '(geht in den TRADES-Channel — nicht in den Public-Channel; Tor: Conv≥'
                   +_pwPublicMinConv()+' + Geld-Mehrheit ≥60% + bewiesene Wallet, E-Sport ab '
                   +Math.round(PW_ESPORT_FREI_AB_PREIS*100)+'¢ auch ohne)')
+    +_pwCatChips(agg.publicByCat)
     +_pwPublicBlocked(agg.publicBlocked)
     +_pwPublicSpiele(track)
     +_pwUnaufloesbar(track)
@@ -3773,6 +3792,7 @@ function _pwTrackRecord(track){
     // kostet es uns Auswahl ohne Gegenwert.
     +_pwTrackKpis(agg.publicOhneWallet||{n:0}, '🧪 Kontrollgruppe — alles außer der Wallet',
                   '(läuft nur mit, wird nie gesendet: gleiche Conviction + Mehrheit, aber keine bewiesene Wallet)')
+    +_pwCatChips(agg.publicOhneWalletByCat)
     +_pwWalletGateVergleich(agg.public||{n:0}, agg.publicOhneWallet||{n:0})
     +_pwTradesPush(_pwCache && _pwCache.tradesRec)
     +_pwPublicPush(_pwCache && _pwCache.publicRec)

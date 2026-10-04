@@ -265,6 +265,7 @@ jobs:
         run: ${{ env.BETFAIR_PY }} hz_finder.py
         continue-on-error: true
         env:
+          APISPORTS_KEY:           ${{ secrets.APISPORTS_KEY }}   # 04.10.2026: Live-Statistik + Serien (apif_live)
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
 
