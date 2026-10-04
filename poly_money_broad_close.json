@@ -614630,7 +614630,13 @@
     "usd": 476,
     "ts": 1791066638
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "San Diego Padres": 0.0,
+   "Milwaukee Brewers": 1.0
+  },
+  "resolvedAt": "2026-10-04T06:31:57.202476+00:00"
  },
  "ufc-ald-ima1-2026-10-03": {
   "shares": {
@@ -616935,7 +616941,14 @@
     "usd": 2381,
     "ts": 1791078569
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "United States": 1.0,
+   "Draw (United States vs. Mexico)": 0.0,
+   "Mexico": 0.0
+  },
+  "resolvedAt": "2026-10-04T06:31:57.202476+00:00"
  },
  "nhl-lak-sj-2026-10-03": {
   "shares": {
@@ -618215,7 +618228,13 @@
     "usd": 1189,
     "ts": 1791076550
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Over": 1.0,
+   "Under": 0.0
+  },
+  "resolvedAt": "2026-10-04T06:31:57.202476+00:00"
  },
  "ufc-nat7-wan2-2026-10-03": {
   "shares": {
@@ -619356,7 +619375,28 @@
    "United States 3 - 2 Mexico": "10340900623446187946223560730101422210884913530420053243872867025902422401960",
    "United States 3 - 3 Mexico": "4406908706879241225153168936090174518587839240012784659824933916801454678064",
    "Any Other Score": "56013324192824009594119627566154433160221725248466698185515263107808872596034"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "United States 0 - 0 Mexico": 0.0,
+   "United States 0 - 1 Mexico": 0.0,
+   "United States 1 - 0 Mexico": 0.0,
+   "United States 0 - 2 Mexico": 0.0,
+   "United States 1 - 1 Mexico": 0.0,
+   "United States 2 - 0 Mexico": 0.0,
+   "United States 0 - 3 Mexico": 0.0,
+   "United States 1 - 2 Mexico": 0.0,
+   "United States 2 - 1 Mexico": 0.0,
+   "United States 3 - 0 Mexico": 1.0,
+   "United States 1 - 3 Mexico": 0.0,
+   "United States 2 - 2 Mexico": 0.0,
+   "United States 3 - 1 Mexico": 0.0,
+   "United States 2 - 3 Mexico": 0.0,
+   "United States 3 - 2 Mexico": 0.0,
+   "United States 3 - 3 Mexico": 0.0,
+   "Any Other Score": 0.0
+  },
+  "resolvedAt": "2026-10-04T06:31:57.202476+00:00"
  },
  "atp-alcaraz-shapova-2026-10-04": {
   "shares": {
@@ -620610,8 +620650,8 @@
  },
  "wta-snigur-preston-2026-10-03": {
   "shares": {
-   "Daria Snigur": 11878.605122499994,
-   "Taylah Preston": 7127.162977499999
+   "Daria Snigur": 12250.36786374999,
+   "Taylah Preston": 7350.220622250001
   },
   "prices": {
    "Daria Snigur": 0.625,
@@ -620623,7 +620663,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 19151,
+  "totalUsd": 19700,
   "whales": [
    {
     "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
@@ -620633,7 +620673,8 @@
    {
     "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
     "side": "Taylah Preston",
-    "usd": 3313
+    "usd": 3313,
+    "avgPrice": 0.3799
    },
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
@@ -620650,13 +620691,14 @@
    {
     "wallet": "0xf5a3504ad3a8b079974620b3aa4fcca3f7579e12",
     "side": "Daria Snigur",
-    "usd": 464,
+    "usd": 825,
     "avgPrice": 0.62
    },
    {
     "wallet": "0x38f1cfeceedc974a52e8e9d554f5e0beb4fe9ff1",
     "side": "Taylah Preston",
-    "usd": 250
+    "usd": 250,
+    "avgPrice": 0.38
    },
    {
     "wallet": "0x7547479d43f4b52d892a6f2254050eea50edd158",
@@ -620666,12 +620708,19 @@
    {
     "wallet": "0xb4611ed615ca8fb60d203d3b1b0a2ffd1fa29dbe",
     "side": "Daria Snigur",
-    "usd": 205
+    "usd": 205,
+    "avgPrice": 0.6099
    },
    {
     "wallet": "0xcad22bcc3c5f2e35f12313d968fd413f376bf315",
     "side": "Daria Snigur",
     "usd": 198
+   },
+   {
+    "wallet": "0x0d0efde748a217f3985ef32ecc7d005f83e50570",
+    "side": "Taylah Preston",
+    "usd": 197,
+    "avgPrice": 0.3799
    },
    {
     "wallet": "0xca3f77cb090cf7cbcf48bcf865e8f27364418078",
@@ -620718,8 +620767,7 @@
    {
     "wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
     "side": "Taylah Preston",
-    "usd": 42,
-    "avgPrice": 0.39
+    "usd": 42
    },
    {
     "wallet": "0x305bc4b3239d3064566dc71531737c65bc56cd21",
@@ -620752,14 +620800,14 @@
     "usd": 25
    },
    {
+    "wallet": "0x17d97684d80863e07bc95d1e9f7c1c1dbec884af",
+    "side": "Taylah Preston",
+    "usd": 22
+   },
+   {
     "wallet": "0xf9706baa6dd084f1f0c3b88602a543d0c313f7f6",
     "side": "Daria Snigur",
     "usd": 21
-   },
-   {
-    "wallet": "0x17d97684d80863e07bc95d1e9f7c1c1dbec884af",
-    "side": "Taylah Preston",
-    "usd": 16
    },
    {
     "wallet": "0xfa686b1486c0622c54164d86b1d6f784d0bbba5d",
@@ -620779,8 +620827,7 @@
    {
     "wallet": "0x3e6b98d9dac15f285a18a02644a8c900aab58a98",
     "side": "Taylah Preston",
-    "usd": 9,
-    "avgPrice": 0.37
+    "usd": 9
    },
    {
     "wallet": "0x147c2760baa011fdcd0d02ea0f610ffb0fd92540",
@@ -620827,91 +620874,17 @@
     "wallet": "0xa278b41b5afda5d18da683eb7f851a7b2dc13369",
     "side": "Daria Snigur",
     "usd": 3
-   },
-   {
-    "wallet": "0xd9c9651bfd445b2cddf750662ee79a755f216686",
-    "side": "Taylah Preston",
-    "usd": 2
    }
   ],
   "hoursToKickoff": 0.47,
-  "capturedAt": "2026-10-04T06:01:51.270500+00:00",
-  "koTs": "2026-10-04T06:30:00+00:00",
+  "capturedAt": "2026-10-04T06:31:57.202476+00:00",
+  "koTs": "2026-10-04T07:00:00+00:00",
   "cond": "0x245e8d0757db5fb2c0be1763a80211cc1fc75618290b47c65172e0de1e4356fe",
   "frage": "China Open: Daria Snigur vs Taylah Preston",
   "tokens": {
    "Daria Snigur": "17507059230069904018172618108111078982106742612365690625819223710350827571096",
    "Taylah Preston": "48175354197678411445010773573945503011892773542822299892139766822520221645287"
-  },
-  "book": {
-   "side": "Daria Snigur",
-   "bid": 0.62,
-   "ask": 0.63,
-   "spreadC": 1.0,
-   "spreadPct": 1.59,
-   "bids": [
-    [
-     0.62,
-     6874
-    ],
-    [
-     0.61,
-     7462
-    ],
-    [
-     0.6,
-     2406
-    ],
-    [
-     0.59,
-     1436
-    ],
-    [
-     0.58,
-     93
-    ],
-    [
-     0.57,
-     10
-    ]
-   ],
-   "asks": [
-    [
-     0.63,
-     741
-    ],
-    [
-     0.64,
-     10548
-    ],
-    [
-     0.65,
-     21055
-    ],
-    [
-     0.66,
-     8148
-    ],
-    [
-     0.67,
-     3056
-    ],
-    [
-     0.68,
-     4581
-    ]
-   ]
-  },
-  "trades": [
-   {
-    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
-    "action": "BUY",
-    "side": "Daria Snigur",
-    "price": 0.6198,
-    "usd": 10628,
-    "ts": 1791062540
-   }
-  ]
+  }
  },
  "wta-noskova-golubic-2026-10-03": {
   "shares": {
@@ -621251,8 +621224,8 @@
  },
  "atp-minaur-rublev-2026-10-04": {
   "shares": {
-   "Alex de Minaur": 33695.46845699999,
-   "Andrey Rublev": 30486.19993197501
+   "Alex de Minaur": 35032.06670407501,
+   "Andrey Rublev": 31695.49870987499
   },
   "prices": {
    "Alex de Minaur": 0.525,
@@ -621264,7 +621237,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 69113,
+  "totalUsd": 74739,
   "whales": [
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
@@ -621275,7 +621248,7 @@
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "Alex de Minaur",
-    "usd": 9086,
+    "usd": 7309,
     "avgPrice": 0.5299
    },
    {
@@ -621318,27 +621291,53 @@
     "avgPrice": 0.53
    },
    {
-    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
-    "side": "Alex de Minaur",
-    "usd": 1663,
-    "avgPrice": 0.53
-   },
-   {
     "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
     "side": "Alex de Minaur",
-    "usd": 1143,
+    "usd": 1133,
     "avgPrice": 0.53
    },
    {
-    "wallet": "0xa31c26cb45331da8389bece7a1250fceb5d6bdf7",
+    "wallet": "0x081e14554b92ee3dc53a21bd5b01f306692ef76e",
     "side": "Alex de Minaur",
-    "usd": 614
+    "usd": 1090
+   },
+   {
+    "wallet": "0x5213eb85fcd465c8927a8382f95dd2dc22306a35",
+    "side": "Alex de Minaur",
+    "usd": 891
+   },
+   {
+    "wallet": "0xeaac36f714563e13d88db7a4f0a0898388f2d71d",
+    "side": "Alex de Minaur",
+    "usd": 792
+   },
+   {
+    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
+    "side": "Alex de Minaur",
+    "usd": 565,
+    "avgPrice": 0.53
    },
    {
     "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
     "side": "Alex de Minaur",
-    "usd": 459,
-    "avgPrice": 0.5
+    "usd": 506
+   },
+   {
+    "wallet": "0xd9e0aaca471f489be338fd0f91a26e8669a805f2",
+    "side": "Alex de Minaur",
+    "usd": 470,
+    "avgPrice": 0.52
+   },
+   {
+    "wallet": "0x0d0efde748a217f3985ef32ecc7d005f83e50570",
+    "side": "Andrey Rublev",
+    "usd": 445,
+    "avgPrice": 0.48
+   },
+   {
+    "wallet": "0xdc4f58a48ed4467743609fdce11eea483c759804",
+    "side": "Alex de Minaur",
+    "usd": 430
    },
    {
     "wallet": "0x521c0f496be19476a885ae380f18652bb9cef4aa",
@@ -621348,20 +621347,17 @@
    {
     "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
     "side": "Alex de Minaur",
-    "usd": 394,
-    "avgPrice": 0.53
+    "usd": 394
    },
    {
     "wallet": "0xe54d37c9c12e5fd3d684ff4d193ef1f44dabfdec",
     "side": "Alex de Minaur",
-    "usd": 368,
-    "avgPrice": 0.54
+    "usd": 368
    },
    {
     "wallet": "0x5331121e9f2f206d8c06ae6235761b1a3f8d3672",
     "side": "Andrey Rublev",
-    "usd": 353,
-    "avgPrice": 0.47
+    "usd": 353
    },
    {
     "wallet": "0x0eb32f4c1a8672b61b48d9f1493b6dd5a6b1f766",
@@ -621384,16 +621380,14 @@
     "usd": 260
    },
    {
-    "wallet": "0xdc4f58a48ed4467743609fdce11eea483c759804",
+    "wallet": "0x50cc8708aff3791f2d6125645c82bda532baa534",
     "side": "Alex de Minaur",
-    "usd": 241,
-    "avgPrice": 0.5254
+    "usd": 198
    },
    {
     "wallet": "0x240b12dca07edc6cd369afe448791df0e7a7c32a",
     "side": "Alex de Minaur",
-    "usd": 191,
-    "avgPrice": 0.5499
+    "usd": 191
    },
    {
     "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
@@ -621403,7 +621397,8 @@
    {
     "wallet": "0x38f1cfeceedc974a52e8e9d554f5e0beb4fe9ff1",
     "side": "Andrey Rublev",
-    "usd": 158
+    "usd": 158,
+    "avgPrice": 0.48
    },
    {
     "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
@@ -621413,13 +621408,23 @@
    {
     "wallet": "0x125a733601a947640cd928d4fd1bd5ddb841df71",
     "side": "Alex de Minaur",
-    "usd": 143,
-    "avgPrice": 0.5299
+    "usd": 143
    },
    {
     "wallet": "0xb4611ed615ca8fb60d203d3b1b0a2ffd1fa29dbe",
     "side": "Andrey Rublev",
-    "usd": 142
+    "usd": 142,
+    "avgPrice": 0.4699
+   },
+   {
+    "wallet": "0x73e5cd209c144497b2fe399ab6698bffb62ce3d8",
+    "side": "Alex de Minaur",
+    "usd": 131
+   },
+   {
+    "wallet": "0x93da0455cf87da0c1e8b736f653ec9a44e3fac64",
+    "side": "Andrey Rublev",
+    "usd": 126
    },
    {
     "wallet": "0x2396babfc88a7a7dcc0390262ab747d7cbad9485",
@@ -621437,58 +621442,19 @@
     "usd": 103
    },
    {
+    "wallet": "0x1e814bedfdb7bde5434791a927777deeeac5ae48",
+    "side": "Alex de Minaur",
+    "usd": 96
+   },
+   {
     "wallet": "0xa772e2ca9f119162d03330f3e66c0556a2068686",
     "side": "Alex de Minaur",
     "usd": 95
-   },
-   {
-    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
-    "side": "Andrey Rublev",
-    "usd": 95,
-    "avgPrice": 0.47
-   },
-   {
-    "wallet": "0x98db8cca55c32b24cfb414b5b43d273f4e1fdd17",
-    "side": "Alex de Minaur",
-    "usd": 76,
-    "avgPrice": 0.5265
-   },
-   {
-    "wallet": "0x3da80ca893666957475095ac1504094df93dbe26",
-    "side": "Andrey Rublev",
-    "usd": 59,
-    "avgPrice": 0.47
-   },
-   {
-    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
-    "side": "Alex de Minaur",
-    "usd": 53
-   },
-   {
-    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
-    "side": "Alex de Minaur",
-    "usd": 42
-   },
-   {
-    "wallet": "0xa2fc0448a1dce9258ebb91b2f3abcddb98a0b1b4",
-    "side": "Alex de Minaur",
-    "usd": 41
-   },
-   {
-    "wallet": "0x01c78f8873c0c86d6b6b92ff627e3802237ee995",
-    "side": "Andrey Rublev",
-    "usd": 33
-   },
-   {
-    "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
-    "side": "Alex de Minaur",
-    "usd": 30,
-    "avgPrice": 0.52
    }
   ],
   "hoursToKickoff": 0.47,
-  "capturedAt": "2026-10-04T06:01:51.270500+00:00",
-  "koTs": "2026-10-04T06:30:00+00:00",
+  "capturedAt": "2026-10-04T06:31:57.202476+00:00",
+  "koTs": "2026-10-04T07:00:00+00:00",
   "cond": "0x7ba08fba2c33648f3ed65a5a0de52d23046be0b5600011383ffc0bd054eec731",
   "frage": "China Open: Alex de Minaur vs Andrey Rublev",
   "tokens": {
@@ -621504,57 +621470,89 @@
    "bids": [
     [
      0.52,
-     6573
+     20044
     ],
     [
      0.51,
-     5644
+     6129
     ],
     [
      0.5,
-     10182
+     7072
     ],
     [
      0.49,
-     5982
+     4525
     ],
     [
      0.48,
-     7015
+     4199
     ],
     [
      0.47,
-     705
+     104
     ]
    ],
    "asks": [
     [
      0.53,
-     13726
+     8007
     ],
     [
      0.54,
-     37105
+     15673
     ],
     [
      0.55,
-     24310
+     30444
     ],
     [
      0.56,
-     25324
+     26569
     ],
     [
      0.57,
-     5383
+     14575
     ],
     [
      0.58,
-     3032
+     3149
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x081e14554b92ee3dc53a21bd5b01f306692ef76e",
+    "action": "BUY",
+    "side": "Alex de Minaur",
+    "price": 0.53,
+    "usd": 1100,
+    "ts": 1791095228
+   },
+   {
+    "wallet": "0x0d0efde748a217f3985ef32ecc7d005f83e50570",
+    "action": "BUY",
+    "side": "Andrey Rublev",
+    "price": 0.48,
+    "usd": 450,
+    "ts": 1791094556
+   },
+   {
+    "wallet": "0xeaac36f714563e13d88db7a4f0a0898388f2d71d",
+    "action": "BUY",
+    "side": "Alex de Minaur",
+    "price": 0.53,
+    "usd": 800,
+    "ts": 1791094295
+   },
+   {
+    "wallet": "0x5213eb85fcd465c8927a8382f95dd2dc22306a35",
+    "action": "BUY",
+    "side": "Alex de Minaur",
+    "price": 0.53,
+    "usd": 900,
+    "ts": 1791094295
+   },
    {
     "wallet": "0x88ce95ec67bee7e3c3de3cb9f255ac537897cb62",
     "action": "BUY",
@@ -621586,90 +621584,58 @@
     "price": 0.47,
     "usd": 341,
     "ts": 1791089459
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "action": "BUY",
-    "side": "Andrey Rublev",
-    "price": 0.4777,
-    "usd": 497,
-    "ts": 1791088801
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "action": "BUY",
-    "side": "Andrey Rublev",
-    "price": 0.47,
-    "usd": 461,
-    "ts": 1791088792
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "action": "BUY",
-    "side": "Andrey Rublev",
-    "price": 0.47,
-    "usd": 376,
-    "ts": 1791088771
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "action": "BUY",
-    "side": "Andrey Rublev",
-    "price": 0.47,
-    "usd": 1839,
-    "ts": 1791088771
    }
   ]
  },
  "f1-bahrain-grand-prix-winner-2026-10-04": {
   "shares": {
-   "Pierre Gasly": 33.114040145,
+   "Pierre Gasly": 17.0495372425,
    "Fernando Alonso": 3.3139292645,
-   "Alexander Albon": 33.11404015,
+   "Alexander Albon": 3.311404015,
    "Gabriel Bortoleto": 3.3194040145000003,
-   "Sergio Perez": 33.16399265,
-   "Charles Leclerc": 682.8622122840002,
+   "Sergio Perez": 3.316399265,
+   "Charles Leclerc": 731.6380845900002,
    "Esteban Ocon": 3.3369292645,
-   "Lando Norris": 246.8034507000001,
-   "Kimi Antonelli": 4446.704608224999,
-   "Max Verstappen": 21164.210430810017,
+   "Lando Norris": 266.5477267560001,
+   "Kimi Antonelli": 5081.445329939998,
+   "Max Verstappen": 21204.132180220007,
    "Franco Colapinto": 3.3169040145,
-   "Carlos Sainz Jr.": 33.114040149999994,
-   "Nico Hulkenberg": 33.424440145,
-   "Valtteri Bottas": 33.16404015,
-   "Lewis Hamilton": 2094.3073005119986,
-   "Oliver Bearman": 33.11404015,
-   "Oscar Piastri": 57.25168992200002,
-   "George Russell": 228.738876864,
-   "Arvid Lindblad": 33.114040145,
-   "Isack Hadjar": 690.0641613,
-   "Liam Lawson": 33.18904014499999,
-   "Lance Stroll": 33.16399265,
+   "Carlos Sainz Jr.": 3.3114040149999995,
+   "Nico Hulkenberg": 3.3424440145,
+   "Valtteri Bottas": 3.316404015,
+   "Lewis Hamilton": 2210.934372128999,
+   "Oliver Bearman": 3.311404015,
+   "Oscar Piastri": 112.164579857,
+   "George Russell": 224.50435928849998,
+   "Arvid Lindblad": 3.3114040145,
+   "Isack Hadjar": 730.49105915,
+   "Liam Lawson": 3.3189040144999997,
+   "Lance Stroll": 3.316399265,
    "Yuki Tsunoda": 33.139292645
   },
   "prices": {
-   "Pierre Gasly": 0.005,
+   "Pierre Gasly": 0.0025,
    "Fernando Alonso": 0.0005,
-   "Alexander Albon": 0.005,
+   "Alexander Albon": 0.0005,
    "Gabriel Bortoleto": 0.0005,
-   "Sergio Perez": 0.005,
-   "Charles Leclerc": 0.028,
+   "Sergio Perez": 0.0005,
+   "Charles Leclerc": 0.03,
    "Esteban Ocon": 0.0005,
-   "Lando Norris": 0.025,
-   "Kimi Antonelli": 0.215,
-   "Max Verstappen": 0.615,
+   "Lando Norris": 0.027,
+   "Kimi Antonelli": 0.21,
+   "Max Verstappen": 0.605,
    "Franco Colapinto": 0.0005,
-   "Carlos Sainz Jr.": 0.005,
-   "Nico Hulkenberg": 0.005,
-   "Valtteri Bottas": 0.005,
-   "Lewis Hamilton": 0.0945,
-   "Oliver Bearman": 0.005,
-   "Oscar Piastri": 0.0085,
-   "George Russell": 0.024,
-   "Arvid Lindblad": 0.005,
-   "Isack Hadjar": 0.018,
-   "Liam Lawson": 0.005,
-   "Lance Stroll": 0.005,
+   "Carlos Sainz Jr.": 0.0005,
+   "Nico Hulkenberg": 0.0005,
+   "Valtteri Bottas": 0.0005,
+   "Lewis Hamilton": 0.097,
+   "Oliver Bearman": 0.0005,
+   "Oscar Piastri": 0.0145,
+   "George Russell": 0.0235,
+   "Arvid Lindblad": 0.0005,
+   "Isack Hadjar": 0.019,
+   "Liam Lawson": 0.0005,
+   "Lance Stroll": 0.0005,
    "Yuki Tsunoda": 0.005
   },
   "splitGuete": {
@@ -621678,160 +621644,180 @@
   },
   "league": "F1",
   "sport": "Motorsport",
-  "totalUsd": 169878,
+  "totalUsd": 175308,
   "whales": [
    {
     "wallet": "0xf802a499d7ff91f329dea4ea9b43abcc72e8d91d",
     "side": "Max Verstappen",
-    "usd": 3424,
+    "usd": 3368,
     "avgPrice": 0.4799
    },
    {
     "wallet": "0x7b5a3075d30e7dc0e11f6eff1a7276ea9f0f7d5e",
     "side": "Max Verstappen",
-    "usd": 3217,
+    "usd": 3165,
     "avgPrice": 0.5951
    },
    {
     "wallet": "0xd4225ee3c77fda4d1360e096669e4e97198a7e43",
     "side": "Max Verstappen",
-    "usd": 2993,
+    "usd": 2944,
     "avgPrice": 0.6185
    },
    {
     "wallet": "0xbd2b2070fc9c7e4fe5f0ed772ff7b7aa69d11a1b",
     "side": "Max Verstappen",
-    "usd": 2597,
+    "usd": 2555,
     "avgPrice": 0.2998
    },
    {
     "wallet": "0xd218e474776403a330142299f7796e8ba32eb5c9",
     "side": "Max Verstappen",
-    "usd": 1814,
-    "avgPrice": 0.1673
+    "usd": 1996,
+    "avgPrice": 0.2117
    },
    {
     "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
     "side": "Max Verstappen",
-    "usd": 1532,
+    "usd": 1507,
     "avgPrice": 0.6178
    },
    {
     "wallet": "0xf6aad816d2b7166e4fc368f339643d897b714e0e",
     "side": "Kimi Antonelli",
-    "usd": 880,
+    "usd": 860,
     "avgPrice": 0.2199
    },
    {
     "wallet": "0xd218e474776403a330142299f7796e8ba32eb5c9",
     "side": "Kimi Antonelli",
-    "usd": 814,
+    "usd": 795,
     "avgPrice": 0.1253
    },
    {
     "wallet": "0xa492e4da2ec550ee2ca8188222badf0ce022adbe",
     "side": "Max Verstappen",
-    "usd": 603,
+    "usd": 593,
     "avgPrice": 0.5283
-   },
-   {
-    "wallet": "0x33db569212d8301e1684ba6b72cf636f5a34b673",
-    "side": "Kimi Antonelli",
-    "usd": 518,
-    "avgPrice": 0.3683
    },
    {
     "wallet": "0x7e5246abed17a5cff43a17b55b30f982f45200f5",
     "side": "Charles Leclerc",
-    "usd": 480,
+    "usd": 515,
     "avgPrice": 0.0487
+   },
+   {
+    "wallet": "0x33db569212d8301e1684ba6b72cf636f5a34b673",
+    "side": "Kimi Antonelli",
+    "usd": 506,
+    "avgPrice": 0.3683
    },
    {
     "wallet": "0xd76050f456aa9e28fa6b60fe94a6dbb746a1f7f5",
     "side": "Lewis Hamilton",
-    "usd": 418,
+    "usd": 429,
     "avgPrice": 0.0677
+   },
+   {
+    "wallet": "0xc785252b25901a591e9d962e09f4342468444ef2",
+    "side": "Isack Hadjar",
+    "usd": 364,
+    "avgPrice": 0.0187
    },
    {
     "wallet": "0x51089c0c128100e6c9210759fd932aecf76d29cb",
     "side": "Max Verstappen",
-    "usd": 367,
+    "usd": 361,
     "avgPrice": 0.3347
    },
    {
     "wallet": "0x9bfe3b19bdbb654414dd167624cbe2dddab54a26",
     "side": "Max Verstappen",
-    "usd": 363,
+    "usd": 357,
     "avgPrice": 0.6167
    },
    {
     "wallet": "0xa76cabeeb7e7dffc7e96e4c0a9bf23d7df97dc83",
     "side": "Kimi Antonelli",
-    "usd": 350,
+    "usd": 342,
     "avgPrice": 0.3067
-   },
-   {
-    "wallet": "0xc785252b25901a591e9d962e09f4342468444ef2",
-    "side": "Isack Hadjar",
-    "usd": 345,
-    "avgPrice": 0.0187
    },
    {
     "wallet": "0xa38a455bbdd4b68486548b7e19da99903f4f821d",
     "side": "Lewis Hamilton",
-    "usd": 262,
+    "usd": 257,
     "avgPrice": 0.09
+   },
+   {
+    "wallet": "0xa38a455bbdd4b68486548b7e19da99903f4f821d",
+    "side": "Kimi Antonelli",
+    "usd": 250,
+    "avgPrice": 0.21
+   },
+   {
+    "wallet": "0x300b4292912c123066a380a344b505b0f353f636",
+    "side": "Kimi Antonelli",
+    "usd": 239,
+    "avgPrice": 0.2199
    },
    {
     "wallet": "0x7300833941f579802d58791eb1d0152c1b17e52c",
     "side": "Lewis Hamilton",
-    "usd": 189,
+    "usd": 194,
     "avgPrice": 0.084
    },
    {
     "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
     "side": "Max Verstappen",
-    "usd": 159
+    "usd": 157
    },
    {
     "wallet": "0xd218e474776403a330142299f7796e8ba32eb5c9",
     "side": "Lewis Hamilton",
-    "usd": 130,
+    "usd": 134,
     "avgPrice": 0.0344
-   },
-   {
-    "wallet": "0x2d40ca3ab44c1cf56677c85919a815bbf59cec52",
-    "side": "Max Verstappen",
-    "usd": 62
-   },
-   {
-    "wallet": "0xd218e474776403a330142299f7796e8ba32eb5c9",
-    "side": "George Russell",
-    "usd": 60,
-    "avgPrice": 0.0446
    },
    {
     "wallet": "0x664a25f165a0150ce687410470f3352f5783fc5f",
     "side": "Lewis Hamilton",
-    "usd": 59,
+    "usd": 61,
     "avgPrice": 0.0804
+   },
+   {
+    "wallet": "0x2d40ca3ab44c1cf56677c85919a815bbf59cec52",
+    "side": "Max Verstappen",
+    "usd": 60,
+    "avgPrice": 0.62
+   },
+   {
+    "wallet": "0xd218e474776403a330142299f7796e8ba32eb5c9",
+    "side": "George Russell",
+    "usd": 58,
+    "avgPrice": 0.0446
    },
    {
     "wallet": "0xd218e474776403a330142299f7796e8ba32eb5c9",
     "side": "Lando Norris",
-    "usd": 53,
+    "usd": 57,
     "avgPrice": 0.0346
+   },
+   {
+    "wallet": "0xd218e474776403a330142299f7796e8ba32eb5c9",
+    "side": "Oscar Piastri",
+    "usd": 46,
+    "avgPrice": 0.0239
    },
    {
     "wallet": "0x42477970683d4d0a52ec7082fee5d760cc5591c4",
     "side": "Charles Leclerc",
-    "usd": 35
+    "usd": 37,
+    "avgPrice": 0.0349
    },
    {
-    "wallet": "0xa38a455bbdd4b68486548b7e19da99903f4f821d",
-    "side": "Kimi Antonelli",
-    "usd": 28,
-    "avgPrice": 0.21
+    "wallet": "0x521bb3255c2ca77cf98a79a86e04679d2a5a55d1",
+    "side": "Lewis Hamilton",
+    "usd": 34,
+    "avgPrice": 0.0899
    },
    {
     "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
@@ -621839,15 +621825,21 @@
     "usd": 27
    },
    {
-    "wallet": "0xd218e474776403a330142299f7796e8ba32eb5c9",
+    "wallet": "0x521bb3255c2ca77cf98a79a86e04679d2a5a55d1",
     "side": "Oscar Piastri",
     "usd": 27,
-    "avgPrice": 0.0239
+    "avgPrice": 0.0095
+   },
+   {
+    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+    "side": "Kimi Antonelli",
+    "usd": 25
    },
    {
     "wallet": "0x33bcb6e9bd44be709122b2940c55e34f1a7e37dc",
     "side": "Lando Norris",
-    "usd": 23
+    "usd": 24,
+    "avgPrice": 0.02
    },
    {
     "wallet": "0xa76cabeeb7e7dffc7e96e4c0a9bf23d7df97dc83",
@@ -621857,64 +621849,40 @@
    },
    {
     "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
-    "side": "Kimi Antonelli",
-    "usd": 21
-   },
-   {
-    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
     "side": "Isack Hadjar",
-    "usd": 19
+    "usd": 20
    },
    {
     "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
     "side": "Lewis Hamilton",
-    "usd": 12
+    "usd": 16
+   },
+   {
+    "wallet": "0x38a54d2d3c7d7c96b4a86d839420409c1428e97f",
+    "side": "Isack Hadjar",
+    "usd": 10,
+    "avgPrice": 0.0179
    },
    {
     "wallet": "0xd218e474776403a330142299f7796e8ba32eb5c9",
-    "side": "Pierre Gasly",
+    "side": "Yuki Tsunoda",
     "usd": 10,
     "avgPrice": 0.0344
    },
    {
-    "wallet": "0xd218e474776403a330142299f7796e8ba32eb5c9",
-    "side": "Alexander Albon",
-    "usd": 10,
-    "avgPrice": 0.0344
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Lewis Hamilton",
+    "usd": 9,
+    "avgPrice": 0.0588
    },
    {
-    "wallet": "0xd218e474776403a330142299f7796e8ba32eb5c9",
-    "side": "Sergio Perez",
-    "usd": 10,
-    "avgPrice": 0.0344
-   },
-   {
-    "wallet": "0xd218e474776403a330142299f7796e8ba32eb5c9",
-    "side": "Carlos Sainz Jr.",
-    "usd": 10,
-    "avgPrice": 0.0344
-   },
-   {
-    "wallet": "0xd218e474776403a330142299f7796e8ba32eb5c9",
-    "side": "Nico Hulkenberg",
-    "usd": 10,
-    "avgPrice": 0.0344
-   },
-   {
-    "wallet": "0xd218e474776403a330142299f7796e8ba32eb5c9",
-    "side": "Valtteri Bottas",
-    "usd": 10,
-    "avgPrice": 0.0344
-   },
-   {
-    "wallet": "0xd218e474776403a330142299f7796e8ba32eb5c9",
-    "side": "Oliver Bearman",
-    "usd": 10,
-    "avgPrice": 0.0344
+    "wallet": "0xc2f2d01b227948e59f25aeb3d49564b8975d0ff7",
+    "side": "Lando Norris",
+    "usd": 6
    }
   ],
-  "hoursToKickoff": 0.97,
-  "capturedAt": "2026-10-04T06:01:51.270500+00:00",
+  "hoursToKickoff": 0.47,
+  "capturedAt": "2026-10-04T06:31:57.202476+00:00",
   "koTs": "2026-10-04T07:00:00+00:00",
   "tokens": {
    "Pierre Gasly": "10695008066160294395127664575939608144309012870764800820664655814710233455414",
@@ -621950,9 +621918,9 @@
   "book": {
    "side": "Max Verstappen",
    "bid": 0.6,
-   "ask": 0.62,
-   "spreadC": 2.0,
-   "spreadPct": 3.23,
+   "ask": 0.61,
+   "spreadC": 1.0,
+   "spreadPct": 1.64,
    "bids": [
     [
      0.6,
@@ -621960,49 +621928,49 @@
     ],
     [
      0.59,
-     675
+     960
     ],
     [
      0.58,
-     2163
+     247
     ],
     [
      0.57,
-     3265
+     1036
     ],
     [
      0.56,
-     3822
+     140
     ],
     [
      0.55,
-     338
+     3154
     ]
    ],
    "asks": [
     [
+     0.61,
+     168
+    ],
+    [
      0.62,
-     4329
+     7670
     ],
     [
      0.63,
-     1885
+     200
     ],
     [
      0.64,
-     8759
+     219
     ],
     [
      0.65,
-     226
+     3463
     ],
     [
      0.66,
-     61
-    ],
-    [
-     0.67,
-     61
+     8367
     ]
    ]
   },
@@ -622014,21 +621982,13 @@
     "price": 0.4,
     "usd": 330,
     "ts": 1791091337
-   },
-   {
-    "wallet": "0xd4225ee3c77fda4d1360e096669e4e97198a7e43",
-    "action": "BUY",
-    "side": "Yes",
-    "price": 0.6185,
-    "usd": 2991,
-    "ts": 1791085462
    }
   ]
  },
  "lol-lgd-fox1-2026-10-04": {
   "shares": {
-   "LGD Gaming": 37284.13085417998,
-   "BNK FEARX": 54775.439299559985
+   "LGD Gaming": 44007.333485804986,
+   "BNK FEARX": 64652.75106825498
   },
   "prices": {
    "LGD Gaming": 0.405,
@@ -622040,7 +622000,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 94254,
+  "totalUsd": 114523,
   "whales": [
    {
     "wallet": "0x6ac5bb06a9eb05641fd5e82640268b92f3ab4b6e",
@@ -622050,13 +622010,12 @@
    {
     "wallet": "0x446884aa55e3dcf7123d9a3d6243c4e34b70b165",
     "side": "LGD Gaming",
-    "usd": 10121
+    "usd": 12150
    },
    {
-    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "wallet": "0xe015b5a2a299167be835a2fd1e86f09c49e06ffd",
     "side": "BNK FEARX",
-    "usd": 8865,
-    "avgPrice": 0.5699
+    "usd": 8514
    },
    {
     "wallet": "0xdd882a70680633a75516f6ed5fce443e2d96dadb",
@@ -622069,6 +622028,12 @@
     "usd": 6075
    },
    {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "BNK FEARX",
+    "usd": 5598,
+    "avgPrice": 0.5708
+   },
+   {
     "wallet": "0x6b97ebe911d7f2e5e3e8c4a0faad4a5c7c0b8d30",
     "side": "LGD Gaming",
     "usd": 4137
@@ -622076,7 +622041,8 @@
    {
     "wallet": "0xac75b6e590720a394364f2a1580b68a2fbe51319",
     "side": "LGD Gaming",
-    "usd": 4050
+    "usd": 4050,
+    "avgPrice": 0.42
    },
    {
     "wallet": "0x664e438f9e05b2c4ee225755ee993223c0bae82a",
@@ -622089,9 +622055,25 @@
     "usd": 2430
    },
    {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "BNK FEARX",
+    "usd": 1740,
+    "avgPrice": 0.5758
+   },
+   {
+    "wallet": "0x00a63721ca4e86b9e6f9d1b3b92c82c28a1eede4",
+    "side": "LGD Gaming",
+    "usd": 1628
+   },
+   {
     "wallet": "0xb9abbf527032ba370e3519de95ff907d0154f282",
     "side": "LGD Gaming",
     "usd": 1620
+   },
+   {
+    "wallet": "0x9b963178d3b8765cfc5af94c00550d6ec6c54389",
+    "side": "BNK FEARX",
+    "usd": 1488
    },
    {
     "wallet": "0x21b70de5fa3532afbf51a5d177e76b1e7e17c861",
@@ -622099,15 +622081,14 @@
     "usd": 1418
    },
    {
-    "wallet": "0xd0520675a584f636a29bbf6ffef31f4c2ee9563d",
+    "wallet": "0x3eb3acfabb3efb4a68cc5d61e495e1c9d3f24d75",
     "side": "BNK FEARX",
-    "usd": 1401
+    "usd": 1333
    },
    {
-    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "wallet": "0x2465e0eb9743a7156575ccc65aad331359185d84",
     "side": "BNK FEARX",
-    "usd": 1325,
-    "avgPrice": 0.5701
+    "usd": 992
    },
    {
     "wallet": "0x4873713d4954ab6ecebaf5fb1b018f622bb515ba",
@@ -622115,9 +622096,20 @@
     "usd": 985
    },
    {
+    "wallet": "0x12e7efd4f1a03c51d4f9417b12bc3749b44239a0",
+    "side": "LGD Gaming",
+    "usd": 851
+   },
+   {
     "wallet": "0x90e7d1a8550c43873d4b1ba5d025b57c2423ac8e",
     "side": "BNK FEARX",
     "usd": 783
+   },
+   {
+    "wallet": "0xf68a281980f8c13828e84e147e3822381d6e5b1b",
+    "side": "LGD Gaming",
+    "usd": 670,
+    "avgPrice": 0.4
    },
    {
     "wallet": "0x8d855dbd3cd64eb4bcccb590808d8945f6c2f4e0",
@@ -622147,17 +622139,13 @@
    {
     "wallet": "0xc34cd27593243598c66a9a2820f37bcfb87c2e29",
     "side": "LGD Gaming",
-    "usd": 460
+    "usd": 460,
+    "avgPrice": 0.4399
    },
    {
     "wallet": "0xf403a1583d518513c1341347a785805fc7cf8a59",
     "side": "LGD Gaming",
     "usd": 450
-   },
-   {
-    "wallet": "0x12e7efd4f1a03c51d4f9417b12bc3749b44239a0",
-    "side": "LGD Gaming",
-    "usd": 405
    },
    {
     "wallet": "0x2b9cf5defa2258503bd22cda0eb28ea531c7a518",
@@ -622185,6 +622173,11 @@
     "usd": 298
    },
    {
+    "wallet": "0x229c24468ef358ffaa2bd8cf45d37948dd6a11eb",
+    "side": "LGD Gaming",
+    "usd": 288
+   },
+   {
     "wallet": "0xc104db0d325238b721c407b44f14f70bb6b1e684",
     "side": "BNK FEARX",
     "usd": 243
@@ -622195,59 +622188,28 @@
     "usd": 188
    },
    {
+    "wallet": "0x60ec17443af511a21945f01430e61c803465f7b0",
+    "side": "LGD Gaming",
+    "usd": 176
+   },
+   {
     "wallet": "0x9d39bcdc1cf42d9d0e0623527c75a023b8bd5408",
     "side": "LGD Gaming",
     "usd": 162
    },
    {
-    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
-    "side": "LGD Gaming",
-    "usd": 130
-   },
-   {
     "wallet": "0xb2da92d3584c60037dc9cc8942a9f9677bbcce6a",
     "side": "BNK FEARX",
-    "usd": 125,
-    "avgPrice": 0.5656
+    "usd": 133
    },
    {
-    "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
-    "side": "LGD Gaming",
-    "usd": 122
-   },
-   {
-    "wallet": "0xa2fc0448a1dce9258ebb91b2f3abcddb98a0b1b4",
+    "wallet": "0x9674d0d14a078c5dd5cd411c64bff82523dfe1a2",
     "side": "BNK FEARX",
-    "usd": 111
-   },
-   {
-    "wallet": "0xa772e2ca9f119162d03330f3e66c0556a2068686",
-    "side": "BNK FEARX",
-    "usd": 100
-   },
-   {
-    "wallet": "0x0a7c46489299331559598ab0412f46bda8ce8964",
-    "side": "LGD Gaming",
-    "usd": 94
-   },
-   {
-    "wallet": "0xc670e1bef9fe213d0b5f49e89b06fba76b37b781",
-    "side": "BNK FEARX",
-    "usd": 69
-   },
-   {
-    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
-    "side": "BNK FEARX",
-    "usd": 55
-   },
-   {
-    "wallet": "0xd9fe6f0f41ca99fefa93c55d8890000e5a84db0d",
-    "side": "LGD Gaming",
-    "usd": 31
+    "usd": 132
    }
   ],
-  "hoursToKickoff": 0.97,
-  "capturedAt": "2026-10-04T06:01:51.270500+00:00",
+  "hoursToKickoff": 0.47,
+  "capturedAt": "2026-10-04T06:31:57.202476+00:00",
   "koTs": "2026-10-04T07:00:00+00:00",
   "cond": "0x78ef4fc814c70c9d9c7ffdabc4fe2c52d0264042efd4038bba7b6b2b23378e05",
   "frage": "LoL: LGD Gaming vs BNK FEARX (BO3) - Demacia Cup Global Invitational Group Stage",
@@ -622264,140 +622226,108 @@
    "bids": [
     [
      0.59,
-     70207
+     57885
     ],
     [
      0.58,
-     84596
+     84679
     ],
     [
      0.57,
-     43631
+     43437
     ],
     [
      0.56,
-     37662
+     29939
     ],
     [
      0.55,
-     9034
+     9467
     ],
     [
      0.54,
-     4264
+     4209
     ]
    ],
    "asks": [
     [
      0.6,
-     16485
+     23841
     ],
     [
      0.61,
-     19571
+     19489
     ],
     [
      0.62,
-     71608
+     69936
     ],
     [
      0.63,
-     58572
+     58297
     ],
     [
      0.64,
-     53605
+     52050
     ],
     [
      0.65,
-     3955
+     1955
     ]
    ]
   },
   "trades": [
    {
-    "wallet": "0xd0520675a584f636a29bbf6ffef31f4c2ee9563d",
+    "wallet": "0x3eb3acfabb3efb4a68cc5d61e495e1c9d3f24d75",
     "action": "BUY",
     "side": "BNK FEARX",
-    "price": 0.59,
-    "usd": 1389,
-    "ts": 1791092425
-   },
-   {
-    "wallet": "0xdd882a70680633a75516f6ed5fce443e2d96dadb",
-    "action": "BUY",
-    "side": "BNK FEARX",
-    "price": 0.58,
-    "usd": 6260,
-    "ts": 1791092387
-   },
-   {
-    "wallet": "0x6ac5bb06a9eb05641fd5e82640268b92f3ab4b6e",
-    "action": "BUY",
-    "side": "BNK FEARX",
-    "price": 0.57,
-    "usd": 16412,
-    "ts": 1791092323
-   },
-   {
-    "wallet": "0x7a0face7188ae921d0fa1301e237280f73041305",
-    "action": "BUY",
-    "side": "BNK FEARX",
-    "price": 0.57,
-    "usd": 1209,
-    "ts": 1791090830
-   },
-   {
-    "wallet": "0x185056a052c5e0ab1c866c9b57fb9e9508898903",
-    "action": "BUY",
-    "side": "BNK FEARX",
-    "price": 0.57,
-    "usd": 300,
-    "ts": 1791089563
+    "price": 0.6,
+    "usd": 1344,
+    "ts": 1791095216
    },
    {
     "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
     "action": "BUY",
-    "side": "LGD Gaming",
-    "price": 0.44,
-    "usd": 434,
-    "ts": 1791089444
+    "side": "BNK FEARX",
+    "price": 0.6,
+    "usd": 405,
+    "ts": 1791094360
    },
    {
-    "wallet": "0x664e438f9e05b2c4ee225755ee993223c0bae82a",
+    "wallet": "0x9b963178d3b8765cfc5af94c00550d6ec6c54389",
     "action": "BUY",
     "side": "BNK FEARX",
-    "price": 0.57,
-    "usd": 3000,
-    "ts": 1791088276
+    "price": 0.6,
+    "usd": 1500,
+    "ts": 1791094316
    }
   ]
  },
  "f1-bahrain-grand-prix-driver-podium-2026-10-04": {
   "shares": {
    "Pierre Gasly": 5.58,
-   "Fernando Alonso": 0.05499999999999999,
-   "Alexander Albon": 0.05,
-   "Gabriel Bortoleto": 0.1,
-   "Sergio Perez": 0.05,
-   "Charles Leclerc": 110.26009823999999,
-   "Esteban Ocon": 0.05499999999999999,
-   "Lando Norris": 406.0097711,
-   "Kimi Antonelli": 3955.976702549999,
-   "Max Verstappen": 1385.5099152900002,
-   "Franco Colapinto": 0.05,
-   "Carlos Sainz Jr.": 0.05,
-   "Nico Hulkenberg": 0.05,
-   "Valtteri Bottas": 0.05,
-   "Lewis Hamilton": 525.9281534399998,
-   "Oliver Bearman": 0.05499999999999999,
-   "Oscar Piastri": 25.762126350000006,
-   "George Russell": 214.52362338,
-   "Arvid Lindblad": 0.05,
-   "Isack Hadjar": 1144.3505352649997,
+   "Fernando Alonso": 1.7049999999999998,
+   "Alexander Albon": 0.55,
+   "Gabriel Bortoleto": 1.1,
+   "Sergio Perez": 0.55,
+   "Charles Leclerc": 108.53728514999999,
+   "Esteban Ocon": 0.605,
+   "Lando Norris": 406.45850637,
+   "Kimi Antonelli": 3784.8981620699988,
+   "Max Verstappen": 1377.0098544600005,
+   "Franco Colapinto": 0.55,
+   "Carlos Sainz Jr.": 0.55,
+   "Nico Hulkenberg": 0.55,
+   "Valtteri Bottas": 0.55,
+   "Lewis Hamilton": 515.5137345599998,
+   "Oliver Bearman": 0.605,
+   "Oscar Piastri": 26.882218800000004,
+   "George Russell": 219.399160275,
+   "Arvid Lindblad": 0.55,
+   "Isack Hadjar": 1430.4780400200002,
    "Liam Lawson": 4.82764275,
-   "Lance Stroll": 0.05,
-   "Yuki Tsunoda": 0.05
+   "Lance Stroll": 0.55,
+   "Yuki Tsunoda": 0.55
   },
   "prices": {
    "Pierre Gasly": 0.0155,
@@ -622405,21 +622335,21 @@
    "Alexander Albon": 0.005,
    "Gabriel Bortoleto": 0.01,
    "Sergio Perez": 0.005,
-   "Charles Leclerc": 0.32,
+   "Charles Leclerc": 0.315,
    "Esteban Ocon": 0.0055,
-   "Lando Norris": 0.215,
-   "Kimi Antonelli": 0.675,
-   "Max Verstappen": 0.815,
+   "Lando Norris": 0.21,
+   "Kimi Antonelli": 0.645,
+   "Max Verstappen": 0.81,
    "Franco Colapinto": 0.005,
    "Carlos Sainz Jr.": 0.005,
    "Nico Hulkenberg": 0.005,
    "Valtteri Bottas": 0.005,
-   "Lewis Hamilton": 0.505,
+   "Lewis Hamilton": 0.495,
    "Oliver Bearman": 0.0055,
-   "Oscar Piastri": 0.115,
-   "George Russell": 0.22,
+   "Oscar Piastri": 0.12,
+   "George Russell": 0.225,
    "Arvid Lindblad": 0.005,
-   "Isack Hadjar": 0.205,
+   "Isack Hadjar": 0.255,
    "Liam Lawson": 0.0105,
    "Lance Stroll": 0.005,
    "Yuki Tsunoda": 0.005
@@ -622430,90 +622360,93 @@
   },
   "league": "F1",
   "sport": "Motorsport",
-  "totalUsd": 20071,
+  "totalUsd": 22950,
   "whales": [
    {
     "wallet": "0xf6aad816d2b7166e4fc368f339643d897b714e0e",
     "side": "Kimi Antonelli",
-    "usd": 1512,
+    "usd": 1445,
     "avgPrice": 0.6699
    },
    {
     "wallet": "0x300b4292912c123066a380a344b505b0f353f636",
     "side": "Kimi Antonelli",
-    "usd": 1231
+    "usd": 1177,
+    "avgPrice": 0.6799
    },
    {
     "wallet": "0x5e0e7fc179e615ac03a0bba844bce9d5e4dbbf45",
     "side": "Kimi Antonelli",
-    "usd": 554
-   },
-   {
-    "wallet": "0x33bcb6e9bd44be709122b2940c55e34f1a7e37dc",
-    "side": "Lando Norris",
-    "usd": 366
-   },
-   {
-    "wallet": "0x0821f5dd8a41f1c6c56ddc6f7cb4e8b361dd41fb",
-    "side": "Max Verstappen",
-    "usd": 325
+    "usd": 529
    },
    {
     "wallet": "0xbd2b2070fc9c7e4fe5f0ed772ff7b7aa69d11a1b",
     "side": "Isack Hadjar",
-    "usd": 311,
+    "usd": 387,
     "avgPrice": 0.2387
+   },
+   {
+    "wallet": "0x33bcb6e9bd44be709122b2940c55e34f1a7e37dc",
+    "side": "Lando Norris",
+    "usd": 358,
+    "avgPrice": 0.2
+   },
+   {
+    "wallet": "0x0821f5dd8a41f1c6c56ddc6f7cb4e8b361dd41fb",
+    "side": "Max Verstappen",
+    "usd": 323
    },
    {
     "wallet": "0xa492e4da2ec550ee2ca8188222badf0ce022adbe",
     "side": "Max Verstappen",
-    "usd": 269,
+    "usd": 267,
     "avgPrice": 0.709
    },
    {
     "wallet": "0x7a5d94f83ff0195387eaf9f4463433d03eda54db",
     "side": "Isack Hadjar",
-    "usd": 205
+    "usd": 255
    },
    {
     "wallet": "0xf1e22c9dbc1975e0cf66dd908a6f7db363c31f9a",
     "side": "Kimi Antonelli",
-    "usd": 182
+    "usd": 174
+   },
+   {
+    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+    "side": "Isack Hadjar",
+    "usd": 165
    },
    {
     "wallet": "0x01019e228bff8e0b7cc6155c0b54eebe18816846",
     "side": "Max Verstappen",
-    "usd": 163
-   },
-   {
-    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
-    "side": "Isack Hadjar",
-    "usd": 133
-   },
-   {
-    "wallet": "0x75c53f5b16feb458700483b8dcd026ede0d25bba",
-    "side": "Max Verstappen",
-    "usd": 126
+    "usd": 162
    },
    {
     "wallet": "0x521bb3255c2ca77cf98a79a86e04679d2a5a55d1",
     "side": "Isack Hadjar",
-    "usd": 108
+    "usd": 134,
+    "avgPrice": 0.2119
    },
    {
     "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
     "side": "Kimi Antonelli",
-    "usd": 93
-   },
-   {
-    "wallet": "0xd218e474776403a330142299f7796e8ba32eb5c9",
-    "side": "Lewis Hamilton",
-    "usd": 57
+    "usd": 89
    },
    {
     "wallet": "0xd218e474776403a330142299f7796e8ba32eb5c9",
     "side": "Isack Hadjar",
-    "usd": 54
+    "usd": 62
+   },
+   {
+    "wallet": "0xd218e474776403a330142299f7796e8ba32eb5c9",
+    "side": "Lewis Hamilton",
+    "usd": 56
+   },
+   {
+    "wallet": "0x49c63e96ed6e75c6444318a02aa6e8f1b7bd74d4",
+    "side": "Isack Hadjar",
+    "usd": 24
    },
    {
     "wallet": "0xd218e474776403a330142299f7796e8ba32eb5c9",
@@ -622521,30 +622454,19 @@
     "usd": 22
    },
    {
-    "wallet": "0x49c63e96ed6e75c6444318a02aa6e8f1b7bd74d4",
-    "side": "Isack Hadjar",
-    "usd": 19
-   },
-   {
     "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
     "side": "Lewis Hamilton",
     "usd": 17
    },
    {
-    "wallet": "0x21ffd2b7a212a6f277ed3eca1a9f8efcbca90d71",
+    "wallet": "0x6b25c5c4d1e681d2203297803793ad8c732b7a69",
     "side": "Isack Hadjar",
-    "usd": 16
+    "usd": 14
    },
    {
     "wallet": "0xf4f88a1e25ff5dfae68326eb62049d6a1b7c5bf1",
     "side": "Lewis Hamilton",
-    "usd": 13,
-    "avgPrice": 0.5
-   },
-   {
-    "wallet": "0x6b25c5c4d1e681d2203297803793ad8c732b7a69",
-    "side": "Isack Hadjar",
-    "usd": 11
+    "usd": 12
    },
    {
     "wallet": "0x664a25f165a0150ce687410470f3352f5783fc5f",
@@ -622554,19 +622476,22 @@
    {
     "wallet": "0xf4f88a1e25ff5dfae68326eb62049d6a1b7c5bf1",
     "side": "Isack Hadjar",
-    "usd": 7,
-    "avgPrice": 0.0863
+    "usd": 9
+   },
+   {
+    "wallet": "0x21ffd2b7a212a6f277ed3eca1a9f8efcbca90d71",
+    "side": "Isack Hadjar",
+    "usd": 7
    },
    {
     "wallet": "0xf4f88a1e25ff5dfae68326eb62049d6a1b7c5bf1",
     "side": "Oscar Piastri",
-    "usd": 5,
-    "avgPrice": 0.15
+    "usd": 5
    },
    {
     "wallet": "0x664a25f165a0150ce687410470f3352f5783fc5f",
     "side": "Isack Hadjar",
-    "usd": 4
+    "usd": 5
    },
    {
     "wallet": "0xd218e474776403a330142299f7796e8ba32eb5c9",
@@ -622576,8 +622501,7 @@
    {
     "wallet": "0xf4f88a1e25ff5dfae68326eb62049d6a1b7c5bf1",
     "side": "Kimi Antonelli",
-    "usd": 3,
-    "avgPrice": 0.66
+    "usd": 3
    },
    {
     "wallet": "0x521070c99db06e54af5e8e4a91d6858decdfbd53",
@@ -622592,7 +622516,8 @@
    {
     "wallet": "0x33bcb6e9bd44be709122b2940c55e34f1a7e37dc",
     "side": "Oscar Piastri",
-    "usd": 1
+    "usd": 1,
+    "avgPrice": 0.1
    },
    {
     "wallet": "0x59fd1ac95bc007242b72446b4cbfe87d37e674c8",
@@ -622638,10 +622563,15 @@
     "wallet": "0x59fd1ac95bc007242b72446b4cbfe87d37e674c8",
     "side": "Nico Hulkenberg",
     "usd": 0
+   },
+   {
+    "wallet": "0x59fd1ac95bc007242b72446b4cbfe87d37e674c8",
+    "side": "Valtteri Bottas",
+    "usd": 0
    }
   ],
-  "hoursToKickoff": 0.97,
-  "capturedAt": "2026-10-04T06:01:51.270500+00:00",
+  "hoursToKickoff": 0.47,
+  "capturedAt": "2026-10-04T06:31:57.202476+00:00",
   "koTs": "2026-10-04T07:00:00+00:00",
   "tokens": {
    "Pierre Gasly": "114117045460783047226632248512528697744850780306946768077131320032611833276031",
@@ -622671,8 +622601,8 @@
  },
  "atp-vachero-fils-2026-10-03": {
   "shares": {
-   "Valentin Vacherot": 1841.5127651800008,
-   "Arthur Fils": 6723.6557323299985
+   "Valentin Vacherot": 1925.0790468800008,
+   "Arthur Fils": 7028.76983063
   },
   "prices": {
    "Valentin Vacherot": 0.215,
@@ -622684,13 +622614,12 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 9276,
+  "totalUsd": 9315,
   "whales": [
    {
     "wallet": "0x03f4bd4bd14e0dffa6f012d023387e1a327f7e44",
     "side": "Arthur Fils",
-    "usd": 4710,
-    "avgPrice": 0.79
+    "usd": 4710
    },
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
@@ -622711,13 +622640,12 @@
    {
     "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
     "side": "Arthur Fils",
-    "usd": 253
+    "usd": 263
    },
    {
     "wallet": "0xb5407cd056488322bc8df0eb529bc7621b7a9ca8",
     "side": "Arthur Fils",
-    "usd": 236,
-    "avgPrice": 0.79
+    "usd": 236
    },
    {
     "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
@@ -622740,6 +622668,11 @@
     "usd": 181
    },
    {
+    "wallet": "0x8b8992eb0d7dc4ef87f5efb45154de4787c598d6",
+    "side": "Arthur Fils",
+    "usd": 162
+   },
+   {
     "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
     "side": "Valentin Vacherot",
     "usd": 150,
@@ -622753,13 +622686,22 @@
    {
     "wallet": "0xa278b41b5afda5d18da683eb7f851a7b2dc13369",
     "side": "Arthur Fils",
-    "usd": 91,
-    "avgPrice": 0.7899
+    "usd": 91
    },
    {
     "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
     "side": "Arthur Fils",
     "usd": 78
+   },
+   {
+    "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
+    "side": "Valentin Vacherot",
+    "usd": 46
+   },
+   {
+    "wallet": "0x2396babfc88a7a7dcc0390262ab747d7cbad9485",
+    "side": "Valentin Vacherot",
+    "usd": 44
    },
    {
     "wallet": "0xcac70909a505ed6f28b1b59a79bcc99ff22937d8",
@@ -622782,17 +622724,17 @@
     "usd": 10
    },
    {
+    "wallet": "0xac4c55b85a1dcacb638bd63ea4eeb8d8a9352200",
+    "side": "Arthur Fils",
+    "usd": 8
+   },
+   {
     "wallet": "0x341d4f882c093e978ce8174147bace7d47402995",
     "side": "Arthur Fils",
     "usd": 7
    },
    {
     "wallet": "0x35e701f088b6ef25fff6b902769c1cd8b85f8331",
-    "side": "Valentin Vacherot",
-    "usd": 5
-   },
-   {
-    "wallet": "0x2396babfc88a7a7dcc0390262ab747d7cbad9485",
     "side": "Valentin Vacherot",
     "usd": 5
    },
@@ -622822,18 +622764,13 @@
     "usd": 2
    },
    {
-    "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
-    "side": "Valentin Vacherot",
-    "usd": 1
-   },
-   {
     "wallet": "0xe5a25a5fda2487292ef951b63b69d73ed2d15f4c",
     "side": "Valentin Vacherot",
     "usd": 1
    }
   ],
-  "hoursToKickoff": 0.97,
-  "capturedAt": "2026-10-04T06:01:51.270500+00:00",
+  "hoursToKickoff": 0.47,
+  "capturedAt": "2026-10-04T06:31:57.202476+00:00",
   "koTs": "2026-10-04T07:00:00+00:00",
   "cond": "0x65d12f4d39fe67f8842f2c8e40b6b1325ade916a99bf828af0f135906234006c",
   "frage": "Japan Open Tennis Championships: Valentin Vacherot vs Arthur Fils",
@@ -623593,8 +623530,8 @@
  },
  "atp-medvede-cerundo-2026-10-04": {
   "shares": {
-   "Daniil Medvedev": 11733.941544779993,
-   "Francisco Cerundolo": 4909.947171220001
+   "Daniil Medvedev": 11794.114783739993,
+   "Francisco Cerundolo": 4935.126044260001
   },
   "prices": {
    "Daniil Medvedev": 0.705,
@@ -623606,7 +623543,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 17810,
+  "totalUsd": 18107,
   "whales": [
    {
     "wallet": "0x45e40dbee6f546c7b318498f8c9778560f5a7e20",
@@ -623647,8 +623584,7 @@
    {
     "wallet": "0x240b12dca07edc6cd369afe448791df0e7a7c32a",
     "side": "Daniil Medvedev",
-    "usd": 298,
-    "avgPrice": 0.7099
+    "usd": 298
    },
    {
     "wallet": "0x9d39bcdc1cf42d9d0e0623527c75a023b8bd5408",
@@ -623658,13 +623594,13 @@
    {
     "wallet": "0xb5407cd056488322bc8df0eb529bc7621b7a9ca8",
     "side": "Daniil Medvedev",
-    "usd": 212,
-    "avgPrice": 0.71
+    "usd": 212
    },
    {
     "wallet": "0x38f1cfeceedc974a52e8e9d554f5e0beb4fe9ff1",
     "side": "Francisco Cerundolo",
-    "usd": 196
+    "usd": 196,
+    "avgPrice": 0.3
    },
    {
     "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
@@ -623682,15 +623618,15 @@
     "usd": 99
    },
    {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Francisco Cerundolo",
+    "usd": 86,
+    "avgPrice": 0.29
+   },
+   {
     "wallet": "0x0a7c46489299331559598ab0412f46bda8ce8964",
     "side": "Daniil Medvedev",
     "usd": 69
-   },
-   {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-    "side": "Francisco Cerundolo",
-    "usd": 61,
-    "avgPrice": 0.29
    },
    {
     "wallet": "0xc3ec148928919476fe3df6fdd269a3f5abaee987",
@@ -623701,6 +623637,11 @@
     "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
     "side": "Francisco Cerundolo",
     "usd": 60
+   },
+   {
+    "wallet": "0xac4c55b85a1dcacb638bd63ea4eeb8d8a9352200",
+    "side": "Daniil Medvedev",
+    "usd": 49
    },
    {
     "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
@@ -623716,7 +623657,8 @@
    {
     "wallet": "0x489d3df3601288940f89d56b5642b0951129f6e3",
     "side": "Daniil Medvedev",
-    "usd": 35
+    "usd": 35,
+    "avgPrice": 0.7
    },
    {
     "wallet": "0xec6d625b58f205a224d4700ec55be068c3335050",
@@ -623741,8 +623683,7 @@
    {
     "wallet": "0xd7eff32775e8a29761ac5d8cb6c19f9c65855de1",
     "side": "Daniil Medvedev",
-    "usd": 15,
-    "avgPrice": 0.68
+    "usd": 15
    },
    {
     "wallet": "0xa278b41b5afda5d18da683eb7f851a7b2dc13369",
@@ -623800,8 +623741,8 @@
     "usd": 1
    }
   ],
-  "hoursToKickoff": 2.47,
-  "capturedAt": "2026-10-04T06:01:51.270500+00:00",
+  "hoursToKickoff": 1.97,
+  "capturedAt": "2026-10-04T06:31:57.202476+00:00",
   "koTs": "2026-10-04T08:30:00+00:00",
   "cond": "0xb39b2389e7b04dba062fcbcc3a26fc6b283a7052a82898e712549a292133386e",
   "frage": "China Open: Daniil Medvedev vs Francisco Cerundolo",
@@ -623809,5 +623750,1222 @@
    "Daniil Medvedev": "71474891806036216943165085858979693139166061804212664638454430963670058910481",
    "Francisco Cerundolo": "39825736794985416065989725975616295933705627669723119393607232422154437960452"
   }
+ },
+ "cs2-ts7-prv-2026-10-04": {
+  "shares": {
+   "Spirit": 68136.51324973004,
+   "PARIVISION": 15466.571600420004
+  },
+  "prices": {
+   "Spirit": 0.815,
+   "PARIVISION": 0.185
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 100688,
+  "whales": [
+   {
+    "wallet": "0x1f4bae57c20bd96c9ad2a5d366466ea381be5345",
+    "side": "Spirit",
+    "usd": 16300,
+    "avgPrice": 0.83
+   },
+   {
+    "wallet": "0x0d7cc750f6aafafe000210f52d623f3bce49b7db",
+    "side": "Spirit",
+    "usd": 8405,
+    "avgPrice": 0.8299
+   },
+   {
+    "wallet": "0xfb07f48542d2b655e9d0bf1cc92a8a6feee8e2cc",
+    "side": "Spirit",
+    "usd": 7751,
+    "avgPrice": 0.81
+   },
+   {
+    "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
+    "side": "Spirit",
+    "usd": 5622,
+    "avgPrice": 0.82
+   },
+   {
+    "wallet": "0x028602e5b0909dd7864f884f899ff287a72cf61d",
+    "side": "Spirit",
+    "usd": 5186,
+    "avgPrice": 0.8119
+   },
+   {
+    "wallet": "0xee8e24c26b7d591a543972fd7ac424d8a8310a7b",
+    "side": "Spirit",
+    "usd": 4075,
+    "avgPrice": 0.8199
+   },
+   {
+    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
+    "side": "PARIVISION",
+    "usd": 3712,
+    "avgPrice": 0.1699
+   },
+   {
+    "wallet": "0xe40ecff63ec661d218a86c048186ac83389a9770",
+    "side": "PARIVISION",
+    "usd": 2828,
+    "avgPrice": 0.1799
+   },
+   {
+    "wallet": "0x5e6e2c3f06686f2607b86c90e35f536e81a1be00",
+    "side": "PARIVISION",
+    "usd": 2201,
+    "avgPrice": 0.17
+   },
+   {
+    "wallet": "0xce0f9e043db5dffacb8782b799baf23bbedc7fc7",
+    "side": "Spirit",
+    "usd": 2145,
+    "avgPrice": 0.8211
+   },
+   {
+    "wallet": "0xfd3ee5e7744e613618fb4be81111933720c0feaf",
+    "side": "Spirit",
+    "usd": 2095,
+    "avgPrice": 0.8204
+   },
+   {
+    "wallet": "0xc548cb509b2dfc09282f8037eb103a8ad7a88e4e",
+    "side": "Spirit",
+    "usd": 1964,
+    "avgPrice": 0.83
+   },
+   {
+    "wallet": "0xac75b6e590720a394364f2a1580b68a2fbe51319",
+    "side": "PARIVISION",
+    "usd": 1850,
+    "avgPrice": 0.1699
+   },
+   {
+    "wallet": "0x94cb63ae6ea292409372506c91d78901cdcf64e3",
+    "side": "PARIVISION",
+    "usd": 1295,
+    "avgPrice": 0.17
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Spirit",
+    "usd": 881,
+    "avgPrice": 0.8199
+   },
+   {
+    "wallet": "0x5b624e3e0426f7aa2ca57f7451fbcea4b125d87f",
+    "side": "Spirit",
+    "usd": 815
+   },
+   {
+    "wallet": "0x01b632423fe9f97d0ad22ec865ed6e3c8e707d7c",
+    "side": "Spirit",
+    "usd": 815,
+    "avgPrice": 0.81
+   },
+   {
+    "wallet": "0x567464a8b6b5794c43282c4a9274e12b48ba8b14",
+    "side": "PARIVISION",
+    "usd": 805,
+    "avgPrice": 0.1853
+   },
+   {
+    "wallet": "0xc49fe658479db29e1a2fefebf0735f657dca9e05",
+    "side": "PARIVISION",
+    "usd": 574
+   },
+   {
+    "wallet": "0xc34cd27593243598c66a9a2820f37bcfb87c2e29",
+    "side": "Spirit",
+    "usd": 497,
+    "avgPrice": 0.8199
+   },
+   {
+    "wallet": "0xd619b68e64f256f8ddd185b261c8679eacf0c461",
+    "side": "Spirit",
+    "usd": 489
+   },
+   {
+    "wallet": "0xa3b5da76ffbbe3325bb1b40a30f6a4634962941a",
+    "side": "PARIVISION",
+    "usd": 400
+   },
+   {
+    "wallet": "0xfb8da48825b3298ff54983199abf43b048e4c980",
+    "side": "Spirit",
+    "usd": 348
+   },
+   {
+    "wallet": "0xc34b4901be324718c176100e350211d97b199296",
+    "side": "PARIVISION",
+    "usd": 257
+   },
+   {
+    "wallet": "0xcad22bcc3c5f2e35f12313d968fd413f376bf315",
+    "side": "Spirit",
+    "usd": 196
+   },
+   {
+    "wallet": "0xb9abbf527032ba370e3519de95ff907d0154f282",
+    "side": "PARIVISION",
+    "usd": 107
+   },
+   {
+    "wallet": "0xf7f0b0b1e9c0fe02ccad926916ee31aef74b912c",
+    "side": "Spirit",
+    "usd": 104
+   },
+   {
+    "wallet": "0xc670e1bef9fe213d0b5f49e89b06fba76b37b781",
+    "side": "Spirit",
+    "usd": 99
+   },
+   {
+    "wallet": "0x099306d309fa27716447d033438308a1e528b350",
+    "side": "Spirit",
+    "usd": 97
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "PARIVISION",
+    "usd": 86,
+    "avgPrice": 0.1899
+   },
+   {
+    "wallet": "0x66b102468892d00a90c98ed8aec1d2b24904340f",
+    "side": "PARIVISION",
+    "usd": 69
+   },
+   {
+    "wallet": "0x61f621ed129a8b64f0d2abbef50d23cd52d1e497",
+    "side": "Spirit",
+    "usd": 65
+   },
+   {
+    "wallet": "0xb2da92d3584c60037dc9cc8942a9f9677bbcce6a",
+    "side": "Spirit",
+    "usd": 59
+   },
+   {
+    "wallet": "0x8726d2642c9cdd9819a30539ff1acf7666090f36",
+    "side": "PARIVISION",
+    "usd": 56
+   },
+   {
+    "wallet": "0x10251a3689408681fde34475c97fa4f749367e11",
+    "side": "PARIVISION",
+    "usd": 56
+   },
+   {
+    "wallet": "0xbb299ce4867ea634a83a254e24d1ffc5c148947a",
+    "side": "Spirit",
+    "usd": 54
+   },
+   {
+    "wallet": "0x02db2eee0b06db57057dc153fd03327b7db35a8d",
+    "side": "PARIVISION",
+    "usd": 31
+   },
+   {
+    "wallet": "0x5c6d237b7420a8d1b3d86e867a88bbf9ee2bab76",
+    "side": "PARIVISION",
+    "usd": 25
+   },
+   {
+    "wallet": "0x333f291ea158f13e4f60c9f0ba88044bf2483cd6",
+    "side": "Spirit",
+    "usd": 23
+   },
+   {
+    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+    "side": "PARIVISION",
+    "usd": 14
+   }
+  ],
+  "hoursToKickoff": 2.47,
+  "capturedAt": "2026-10-04T06:31:57.202476+00:00",
+  "koTs": "2026-10-04T09:00:00+00:00",
+  "cond": "0x2f19e812a852cfe4abd4adee0237283667c4cd0eb5f53fb2cb5872dd7d03d21d",
+  "frage": "Counter-Strike: Spirit vs PARIVISION (BO3) - ESL Pro League Group Stage",
+  "tokens": {
+   "Spirit": "47476247770875481613814394966331252601286266087098184568314318903784749818405",
+   "PARIVISION": "25863355257815250845566592345032495373076752163730611402511145830923995507961"
+  },
+  "book": {
+   "side": "Spirit",
+   "bid": 0.81,
+   "ask": 0.82,
+   "spreadC": 1.0,
+   "spreadPct": 1.22,
+   "bids": [
+    [
+     0.81,
+     16246
+    ],
+    [
+     0.8,
+     213269
+    ],
+    [
+     0.79,
+     51556
+    ],
+    [
+     0.78,
+     2070
+    ],
+    [
+     0.77,
+     50
+    ],
+    [
+     0.76,
+     5231
+    ]
+   ],
+   "asks": [
+    [
+     0.82,
+     253784
+    ],
+    [
+     0.83,
+     84177
+    ],
+    [
+     0.84,
+     51964
+    ],
+    [
+     0.85,
+     41018
+    ],
+    [
+     0.86,
+     30762
+    ],
+    [
+     0.87,
+     40531
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xfb8da48825b3298ff54983199abf43b048e4c980",
+    "action": "BUY",
+    "side": "Spirit",
+    "price": 0.82,
+    "usd": 350,
+    "ts": 1791094847
+   },
+   {
+    "wallet": "0xc34cd27593243598c66a9a2820f37bcfb87c2e29",
+    "action": "BUY",
+    "side": "Spirit",
+    "price": 0.82,
+    "usd": 500,
+    "ts": 1791094345
+   },
+   {
+    "wallet": "0x0d7cc750f6aafafe000210f52d623f3bce49b7db",
+    "action": "SELL",
+    "side": "Spirit",
+    "price": 0.81,
+    "usd": 12150,
+    "ts": 1791092674
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "action": "BUY",
+    "side": "Spirit",
+    "price": 0.82,
+    "usd": 428,
+    "ts": 1791092251
+   }
+  ]
+ },
+ "val-loud-ge1-2026-10-04": {
+  "shares": {
+   "LOUD": 72038.10825360002,
+   "Global Esports": 53245.24179517499
+  },
+  "prices": {
+   "LOUD": 0.575,
+   "Global Esports": 0.425
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 131978,
+  "whales": [
+   {
+    "wallet": "0x7f7351b5ba33a4be08b7111911b227cdd82414f1",
+    "side": "Global Esports",
+    "usd": 34812
+   },
+   {
+    "wallet": "0x866056133a70de9282a080758858d1a0c8b393ed",
+    "side": "LOUD",
+    "usd": 25666
+   },
+   {
+    "wallet": "0x4980930da4ad1194d4f0fd5e29f17b70a42e5709",
+    "side": "LOUD",
+    "usd": 11500
+   },
+   {
+    "wallet": "0xda3a9b7afff7b44ad4fd75308723194e0a11381f",
+    "side": "LOUD",
+    "usd": 7187
+   },
+   {
+    "wallet": "0xdd882a70680633a75516f6ed5fce443e2d96dadb",
+    "side": "LOUD",
+    "usd": 5750
+   },
+   {
+    "wallet": "0x6b97ebe911d7f2e5e3e8c4a0faad4a5c7c0b8d30",
+    "side": "LOUD",
+    "usd": 4310
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Global Esports",
+    "usd": 3228,
+    "avgPrice": 0.4698
+   },
+   {
+    "wallet": "0x67b6ccabe5f6c01a7a9ecad5d420ea0cdc7f00bc",
+    "side": "LOUD",
+    "usd": 2875
+   },
+   {
+    "wallet": "0xfb07f48542d2b655e9d0bf1cc92a8a6feee8e2cc",
+    "side": "Global Esports",
+    "usd": 1700,
+    "avgPrice": 0.43
+   },
+   {
+    "wallet": "0x0284e1c5b93a6fe07aa5e83e8543d6e33f8a97f6",
+    "side": "Global Esports",
+    "usd": 1700
+   },
+   {
+    "wallet": "0x3ffb453b82491003c4fefa798c4d32aa1e73df76",
+    "side": "Global Esports",
+    "usd": 927
+   },
+   {
+    "wallet": "0x52b7fc8a97df5f18974c06a83909f60c81010aa1",
+    "side": "Global Esports",
+    "usd": 892
+   },
+   {
+    "wallet": "0xb9b223e309ed0e5c1967b8e0f30594ac72e38e7d",
+    "side": "Global Esports",
+    "usd": 868
+   },
+   {
+    "wallet": "0xa3b5da76ffbbe3325bb1b40a30f6a4634962941a",
+    "side": "LOUD",
+    "usd": 862
+   },
+   {
+    "wallet": "0x6ac5bb06a9eb05641fd5e82640268b92f3ab4b6e",
+    "side": "LOUD",
+    "usd": 711
+   },
+   {
+    "wallet": "0xedc35944a67658dc37d4e8de948cea2a7fa3f923",
+    "side": "LOUD",
+    "usd": 710
+   },
+   {
+    "wallet": "0x48b0900dc31ac1aadf4777ba76eb72d35048a348",
+    "side": "LOUD",
+    "usd": 687,
+    "avgPrice": 0.5631
+   },
+   {
+    "wallet": "0x0fdbe66eba00ac95d012685715c3815f186f524e",
+    "side": "LOUD",
+    "usd": 605
+   },
+   {
+    "wallet": "0xbd071ed6811dbab8fcf7f889921fcb10b8dd8d16",
+    "side": "LOUD",
+    "usd": 575
+   },
+   {
+    "wallet": "0xf962b99c9b89042c187a9609c5e0c0e8d5001b15",
+    "side": "Global Esports",
+    "usd": 574
+   },
+   {
+    "wallet": "0xf403a1583d518513c1341347a785805fc7cf8a59",
+    "side": "LOUD",
+    "usd": 517
+   },
+   {
+    "wallet": "0x0e50849ef225489b1879e3418e5b7633355a2609",
+    "side": "LOUD",
+    "usd": 513
+   },
+   {
+    "wallet": "0x3c2b0236a49e16eea4b1bf026d945da0320d825e",
+    "side": "Global Esports",
+    "usd": 510
+   },
+   {
+    "wallet": "0xc34cd27593243598c66a9a2820f37bcfb87c2e29",
+    "side": "LOUD",
+    "usd": 503,
+    "avgPrice": 0.5716
+   },
+   {
+    "wallet": "0xf1404010a21a61c1f5693beee65285273be47cd8",
+    "side": "LOUD",
+    "usd": 464
+   },
+   {
+    "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
+    "side": "Global Esports",
+    "usd": 441
+   },
+   {
+    "wallet": "0x5b624e3e0426f7aa2ca57f7451fbcea4b125d87f",
+    "side": "Global Esports",
+    "usd": 425
+   },
+   {
+    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+    "side": "LOUD",
+    "usd": 417
+   },
+   {
+    "wallet": "0x0a5392910ef4f236c60d212b4b4cd2c82adb077b",
+    "side": "Global Esports",
+    "usd": 395
+   },
+   {
+    "wallet": "0xc34b4901be324718c176100e350211d97b199296",
+    "side": "LOUD",
+    "usd": 308
+   },
+   {
+    "wallet": "0x6dd9b2a9559fafebc3fa0bf860b56ca3a56fbfe8",
+    "side": "Global Esports",
+    "usd": 298
+   },
+   {
+    "wallet": "0xe54d37c9c12e5fd3d684ff4d193ef1f44dabfdec",
+    "side": "Global Esports",
+    "usd": 298
+   },
+   {
+    "wallet": "0x8868041209d720d0e90737f7d71045036c86ec09",
+    "side": "Global Esports",
+    "usd": 194
+   },
+   {
+    "wallet": "0x197ffe802d6f058ca5f96d806c5249833faf7cc5",
+    "side": "LOUD",
+    "usd": 172
+   },
+   {
+    "wallet": "0x32ed517a571c01b6e9adecf61ba81ca48ff2f960",
+    "side": "Global Esports",
+    "usd": 131
+   },
+   {
+    "wallet": "0xd619b68e64f256f8ddd185b261c8679eacf0c461",
+    "side": "Global Esports",
+    "usd": 128
+   },
+   {
+    "wallet": "0x12e7efd4f1a03c51d4f9417b12bc3749b44239a0",
+    "side": "Global Esports",
+    "usd": 112
+   },
+   {
+    "wallet": "0x797bf9767e480ab52ddf309151138b3ac72e26d2",
+    "side": "Global Esports",
+    "usd": 111
+   },
+   {
+    "wallet": "0x536e4bd582d437cb2a4bc6bbec8384c600cd4fd5",
+    "side": "LOUD",
+    "usd": 103
+   },
+   {
+    "wallet": "0x1583c5d3f2b55b3ec71c599c6b90d328d49cbdde",
+    "side": "Global Esports",
+    "usd": 84
+   }
+  ],
+  "hoursToKickoff": 2.47,
+  "capturedAt": "2026-10-04T06:31:57.202476+00:00",
+  "koTs": "2026-10-04T09:00:00+00:00",
+  "cond": "0x01fccba6d89ab0be98e6a1e378774176e0c69c72ad2ceca16eb9046fc7243ee1",
+  "frage": "Valorant: LOUD vs Global Esports (BO3) - VCT Champions Group B",
+  "tokens": {
+   "LOUD": "57270804952229080384553246540200059824111589475399464368737737383866264217598",
+   "Global Esports": "12399462969951093016066034369367941355718626378248740210879051129260319976420"
+  },
+  "book": {
+   "side": "LOUD",
+   "bid": 0.57,
+   "ask": 0.58,
+   "spreadC": 1.0,
+   "spreadPct": 1.72,
+   "bids": [
+    [
+     0.57,
+     939
+    ],
+    [
+     0.56,
+     92748
+    ],
+    [
+     0.55,
+     328353
+    ],
+    [
+     0.54,
+     22165
+    ],
+    [
+     0.53,
+     29225
+    ],
+    [
+     0.52,
+     182
+    ]
+   ],
+   "asks": [
+    [
+     0.58,
+     3212
+    ],
+    [
+     0.59,
+     53279
+    ],
+    [
+     0.6,
+     6855
+    ],
+    [
+     0.61,
+     3901
+    ],
+    [
+     0.62,
+     5505
+    ],
+    [
+     0.63,
+     3425
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xc34cd27593243598c66a9a2820f37bcfb87c2e29",
+    "action": "BUY",
+    "side": "LOUD",
+    "price": 0.5717,
+    "usd": 500,
+    "ts": 1791094147
+   },
+   {
+    "wallet": "0x6dd9b2a9559fafebc3fa0bf860b56ca3a56fbfe8",
+    "action": "BUY",
+    "side": "Global Esports",
+    "price": 0.44,
+    "usd": 308,
+    "ts": 1791090310
+   },
+   {
+    "wallet": "0x6aa4eb601e2046ac575fbfd60a657db991aa236c",
+    "action": "SELL",
+    "side": "Global Esports",
+    "price": 0.4216,
+    "usd": 317,
+    "ts": 1791084728
+   }
+  ]
+ },
+ "cs2-shin-lgc-2026-10-04": {
+  "shares": {
+   "ShindeN": 17839.028905734987,
+   "Legacy": 58072.39153762498
+  },
+  "prices": {
+   "ShindeN": 0.235,
+   "Legacy": 0.765
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 69785,
+  "whales": [
+   {
+    "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
+    "side": "Legacy",
+    "usd": 30600
+   },
+   {
+    "wallet": "0x6ac5bb06a9eb05641fd5e82640268b92f3ab4b6e",
+    "side": "ShindeN",
+    "usd": 11061
+   },
+   {
+    "wallet": "0x1f4bae57c20bd96c9ad2a5d366466ea381be5345",
+    "side": "Legacy",
+    "usd": 7650,
+    "avgPrice": 0.78
+   },
+   {
+    "wallet": "0xbdd21cd4bdfa6764c6f43ea6d154c4b414d86657",
+    "side": "Legacy",
+    "usd": 4250
+   },
+   {
+    "wallet": "0xbcd24281bb7c69943f07df21d56d9842330643f3",
+    "side": "Legacy",
+    "usd": 2206
+   },
+   {
+    "wallet": "0xddf796e82987756b1273994f321c9cebed6643b4",
+    "side": "Legacy",
+    "usd": 2114
+   },
+   {
+    "wallet": "0x62771058d17ed999f028d53fa660a960b3ab5a3f",
+    "side": "Legacy",
+    "usd": 1520
+   },
+   {
+    "wallet": "0xe40ecff63ec661d218a86c048186ac83389a9770",
+    "side": "ShindeN",
+    "usd": 1405,
+    "avgPrice": 0.2299
+   },
+   {
+    "wallet": "0xda3407bec4c1f26d40afceb442de75b8260b01a8",
+    "side": "ShindeN",
+    "usd": 1296
+   },
+   {
+    "wallet": "0xa3b5da76ffbbe3325bb1b40a30f6a4634962941a",
+    "side": "Legacy",
+    "usd": 1224
+   },
+   {
+    "wallet": "0x2b9cf5defa2258503bd22cda0eb28ea531c7a518",
+    "side": "Legacy",
+    "usd": 1148
+   },
+   {
+    "wallet": "0x16bc6f47ebbade726497a3a3334af8df0776deca",
+    "side": "ShindeN",
+    "usd": 915
+   },
+   {
+    "wallet": "0xfd3ee5e7744e613618fb4be81111933720c0feaf",
+    "side": "Legacy",
+    "usd": 842,
+    "avgPrice": 0.76
+   },
+   {
+    "wallet": "0x52b7fc8a97df5f18974c06a83909f60c81010aa1",
+    "side": "ShindeN",
+    "usd": 564
+   },
+   {
+    "wallet": "0x513587a2f36a8cb29333052a6a479091ef8a7217",
+    "side": "ShindeN",
+    "usd": 541
+   },
+   {
+    "wallet": "0x59847267e2a004e3886d7a02ac53778c5ea176eb",
+    "side": "ShindeN",
+    "usd": 534
+   },
+   {
+    "wallet": "0xc34cd27593243598c66a9a2820f37bcfb87c2e29",
+    "side": "Legacy",
+    "usd": 497,
+    "avgPrice": 0.7699
+   },
+   {
+    "wallet": "0x66b102468892d00a90c98ed8aec1d2b24904340f",
+    "side": "Legacy",
+    "usd": 371
+   },
+   {
+    "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
+    "side": "Legacy",
+    "usd": 338
+   },
+   {
+    "wallet": "0x787f413f3499d6855f04188d2741fa9af43ed40c",
+    "side": "Legacy",
+    "usd": 337
+   },
+   {
+    "wallet": "0x9d39bcdc1cf42d9d0e0623527c75a023b8bd5408",
+    "side": "Legacy",
+    "usd": 306
+   },
+   {
+    "wallet": "0x6033ef1860696cc6beb9bfed635b468351fd8a83",
+    "side": "ShindeN",
+    "usd": 188
+   },
+   {
+    "wallet": "0xd70b975d2d2eb3e5f9e7c07ffe2fda8265d9dcb1",
+    "side": "ShindeN",
+    "usd": 161
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Legacy",
+    "usd": 153,
+    "avgPrice": 0.765
+   },
+   {
+    "wallet": "0x797bf9767e480ab52ddf309151138b3ac72e26d2",
+    "side": "ShindeN",
+    "usd": 128
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "ShindeN",
+    "usd": 99,
+    "avgPrice": 0.22
+   },
+   {
+    "wallet": "0xc670e1bef9fe213d0b5f49e89b06fba76b37b781",
+    "side": "Legacy",
+    "usd": 98
+   },
+   {
+    "wallet": "0x099306d309fa27716447d033438308a1e528b350",
+    "side": "Legacy",
+    "usd": 97
+   },
+   {
+    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
+    "side": "Legacy",
+    "usd": 76
+   },
+   {
+    "wallet": "0x9674d0d14a078c5dd5cd411c64bff82523dfe1a2",
+    "side": "Legacy",
+    "usd": 73
+   },
+   {
+    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
+    "side": "ShindeN",
+    "usd": 71
+   },
+   {
+    "wallet": "0xb2da92d3584c60037dc9cc8942a9f9677bbcce6a",
+    "side": "Legacy",
+    "usd": 36
+   },
+   {
+    "wallet": "0x1e4b57f70ea89f197b96eb899409335c5eaa0a04",
+    "side": "Legacy",
+    "usd": 30
+   },
+   {
+    "wallet": "0xfd4fb07f091e6a6d212f6e4876bd2ebc91bca4d3",
+    "side": "Legacy",
+    "usd": 29
+   },
+   {
+    "wallet": "0x758dac51ba3cc9a246a79787da9df11c5f425d9e",
+    "side": "ShindeN",
+    "usd": 24
+   },
+   {
+    "wallet": "0x48b0900dc31ac1aadf4777ba76eb72d35048a348",
+    "side": "Legacy",
+    "usd": 20
+   },
+   {
+    "wallet": "0x5c6d237b7420a8d1b3d86e867a88bbf9ee2bab76",
+    "side": "ShindeN",
+    "usd": 19
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "ShindeN",
+    "usd": 17,
+    "avgPrice": 0.2392
+   },
+   {
+    "wallet": "0x0cf18b4294b05509c44a6a0172eff7e97b20d7fe",
+    "side": "ShindeN",
+    "usd": 9
+   },
+   {
+    "wallet": "0xec340ed6773dce7fb281ed3238be534b41879bb2",
+    "side": "Legacy",
+    "usd": 8
+   }
+  ],
+  "hoursToKickoff": 2.47,
+  "capturedAt": "2026-10-04T06:31:57.202476+00:00",
+  "koTs": "2026-10-04T09:00:00+00:00",
+  "cond": "0x4b7d5aa67e49af0f7e3409f60173e399d9bc915d3fd818cd67fc257e69cb5666",
+  "frage": "Counter-Strike: ShindeN vs Legacy (BO3) - ESL Pro League Group Stage",
+  "tokens": {
+   "ShindeN": "5442186481464143034672465820045279636059910515033820959585373063605135683183",
+   "Legacy": "99947297469249170120066532565836247374909958639990299021250007548130418182658"
+  },
+  "book": {
+   "side": "Legacy",
+   "bid": 0.76,
+   "ask": 0.77,
+   "spreadC": 1.0,
+   "spreadPct": 1.3,
+   "bids": [
+    [
+     0.76,
+     13214
+    ],
+    [
+     0.75,
+     25370
+    ],
+    [
+     0.74,
+     1840
+    ],
+    [
+     0.73,
+     12243
+    ],
+    [
+     0.72,
+     31544
+    ],
+    [
+     0.71,
+     19329
+    ]
+   ],
+   "asks": [
+    [
+     0.77,
+     203544
+    ],
+    [
+     0.78,
+     22837
+    ],
+    [
+     0.79,
+     59722
+    ],
+    [
+     0.8,
+     31645
+    ],
+    [
+     0.81,
+     14417
+    ],
+    [
+     0.82,
+     9555
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xc34cd27593243598c66a9a2820f37bcfb87c2e29",
+    "action": "BUY",
+    "side": "Legacy",
+    "price": 0.77,
+    "usd": 500,
+    "ts": 1791094367
+   },
+   {
+    "wallet": "0x6ac5bb06a9eb05641fd5e82640268b92f3ab4b6e",
+    "action": "BUY",
+    "side": "ShindeN",
+    "price": 0.24,
+    "usd": 11296,
+    "ts": 1791093772
+   }
+  ]
+ },
+ "lol-red-kt-2026-10-04": {
+  "shares": {
+   "RED Canids": 1277.892257355,
+   "KT Rolster": 27119.713054815
+  },
+  "prices": {
+   "RED Canids": 0.045,
+   "KT Rolster": 0.955
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 30547,
+  "whales": [
+   {
+    "wallet": "0xa19df895ec6624b12d86ca3036648b85825f3909",
+    "side": "KT Rolster",
+    "usd": 6031
+   },
+   {
+    "wallet": "0x85fb1b29bc068bee293923cc7e072dff890889ba",
+    "side": "KT Rolster",
+    "usd": 5730
+   },
+   {
+    "wallet": "0xb63d2c013589f469350d55d9fce81b47243f239f",
+    "side": "KT Rolster",
+    "usd": 2250
+   },
+   {
+    "wallet": "0xdd882a70680633a75516f6ed5fce443e2d96dadb",
+    "side": "KT Rolster",
+    "usd": 1983
+   },
+   {
+    "wallet": "0x0bf840764ca2efac73ba45dbc67142fdd91403b2",
+    "side": "KT Rolster",
+    "usd": 1528
+   },
+   {
+    "wallet": "0x85c7ca7a05aa09ce03a85925ea73c291cee6fe49",
+    "side": "KT Rolster",
+    "usd": 1027
+   },
+   {
+    "wallet": "0x59fc1605562e665985a2f590309cafe991be0102",
+    "side": "KT Rolster",
+    "usd": 898
+   },
+   {
+    "wallet": "0x7c2367908663b6ffaa8764a50a9ff1eacd45418b",
+    "side": "KT Rolster",
+    "usd": 778
+   },
+   {
+    "wallet": "0xd8dca4272c19833d7c751d9d7e17a67b28273669",
+    "side": "KT Rolster",
+    "usd": 775
+   },
+   {
+    "wallet": "0x0fc50c15e6ffd6f4061ca51d8a70cb0563d8e3b9",
+    "side": "KT Rolster",
+    "usd": 722
+   },
+   {
+    "wallet": "0x03333873d9bf65a51946d2adda1c57702283f234",
+    "side": "KT Rolster",
+    "usd": 573
+   },
+   {
+    "wallet": "0xee1dec8dcd7d09dcfd753c3a1a988057f12bcc3a",
+    "side": "KT Rolster",
+    "usd": 564
+   },
+   {
+    "wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
+    "side": "KT Rolster",
+    "usd": 399
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "KT Rolster",
+    "usd": 325,
+    "avgPrice": 0.9516
+   },
+   {
+    "wallet": "0x14366189bbd03f3a12fdf442d998b0ee21860121",
+    "side": "KT Rolster",
+    "usd": 305
+   },
+   {
+    "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
+    "side": "KT Rolster",
+    "usd": 286
+   },
+   {
+    "wallet": "0x988d8d2a3b01f96a115cf0e20e59e134d65a9899",
+    "side": "RED Canids",
+    "usd": 238
+   },
+   {
+    "wallet": "0x01b632423fe9f97d0ad22ec865ed6e3c8e707d7c",
+    "side": "KT Rolster",
+    "usd": 229,
+    "avgPrice": 0.92
+   },
+   {
+    "wallet": "0xb2da92d3584c60037dc9cc8942a9f9677bbcce6a",
+    "side": "KT Rolster",
+    "usd": 171
+   },
+   {
+    "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
+    "side": "RED Canids",
+    "usd": 95
+   },
+   {
+    "wallet": "0x3724379b7192ddf7fb43aadbba6d8bc3895e69b5",
+    "side": "RED Canids",
+    "usd": 85
+   },
+   {
+    "wallet": "0xd202bf6d89dc6bab1b9f00ead175f75466348973",
+    "side": "RED Canids",
+    "usd": 21
+   },
+   {
+    "wallet": "0xa2fc0448a1dce9258ebb91b2f3abcddb98a0b1b4",
+    "side": "RED Canids",
+    "usd": 13
+   },
+   {
+    "wallet": "0xcd300069721b481c8be9b2f6323583bf8c74fc9b",
+    "side": "RED Canids",
+    "usd": 11
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "RED Canids",
+    "usd": 9,
+    "avgPrice": 0.0502
+   },
+   {
+    "wallet": "0xd9fe6f0f41ca99fefa93c55d8890000e5a84db0d",
+    "side": "KT Rolster",
+    "usd": 9
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "RED Canids",
+    "usd": 3,
+    "avgPrice": 0.0699
+   },
+   {
+    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
+    "side": "RED Canids",
+    "usd": 3
+   },
+   {
+    "wallet": "0xa951006f1ce68498c1aef9b013880459e6e08a2f",
+    "side": "RED Canids",
+    "usd": 2
+   },
+   {
+    "wallet": "0x758dac51ba3cc9a246a79787da9df11c5f425d9e",
+    "side": "RED Canids",
+    "usd": 1
+   },
+   {
+    "wallet": "0xde5314ddd05574a22cdaeef4e9ab2c02ce90e5be",
+    "side": "RED Canids",
+    "usd": 1
+   }
+  ],
+  "hoursToKickoff": 2.47,
+  "capturedAt": "2026-10-04T06:31:57.202476+00:00",
+  "koTs": "2026-10-04T09:00:00+00:00",
+  "cond": "0xcd67e291e5fba4bbff63c4888c3b04b50232301f4065b5a9a22987292cbc9cf4",
+  "frage": "LoL: RED Canids vs KT Rolster (BO3) - Demacia Cup Global Invitational Group Stage",
+  "tokens": {
+   "RED Canids": "112154903634745712190084297032194623312401334590619059617272233015869845893369",
+   "KT Rolster": "597270312441521319150429433735848835511456221478460742807250229063537340374"
+  },
+  "book": {
+   "side": "KT Rolster",
+   "bid": 0.95,
+   "ask": 0.96,
+   "spreadC": 1.0,
+   "spreadPct": 1.04,
+   "bids": [
+    [
+     0.95,
+     13077
+    ],
+    [
+     0.94,
+     16837
+    ],
+    [
+     0.93,
+     13381
+    ],
+    [
+     0.92,
+     5310
+    ],
+    [
+     0.91,
+     369
+    ],
+    [
+     0.9,
+     11355
+    ]
+   ],
+   "asks": [
+    [
+     0.96,
+     46614
+    ],
+    [
+     0.97,
+     64707
+    ],
+    [
+     0.98,
+     109407
+    ],
+    [
+     0.99,
+     9967
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xee1dec8dcd7d09dcfd753c3a1a988057f12bcc3a",
+    "action": "BUY",
+    "side": "KT Rolster",
+    "price": 0.95,
+    "usd": 561,
+    "ts": 1791082246
+   }
+  ]
  }
 }
