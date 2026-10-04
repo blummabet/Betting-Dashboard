@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-04T05:03:46.614016+00:00",
+ "updatedAt": "2026-10-04T05:32:38.595215+00:00",
  "stake": 10.0,
  "regel": {
   "minN": 20,
@@ -7,9 +7,9 @@
   "frischMin": 90.0
  },
  "zaehler": {
-  "ohneEinstieg": 33,
-  "gesperrt": 39,
-  "alt": 292
+  "ohneEinstieg": 28,
+  "gesperrt": 38,
+  "alt": 285
  },
  "open": {
   "unl-mac-sco-2026-10-03-more-markets|Under": {
@@ -228,28 +228,6 @@
    "abstandPP": 1.17,
    "arm": "zu_spaet",
    "lastPrice": 0.765,
-   "htkAtEntry": 0.03,
-   "firstTs": "2026-10-04T02:32:09.375195+00:00",
-   "stake": 10.0
-  },
-  "itf-mushik1-sato4-2026-10-04|Naho Sato": {
-   "key": "itf-mushik1-sato4-2026-10-04",
-   "side": "Naho Sato",
-   "cat": "Tennis",
-   "league": "TENNIS",
-   "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-   "belegt": true,
-   "heiss": false,
-   "walletN": 1102,
-   "walletClv": 0.372,
-   "walletUg": 0.205,
-   "clv7": null,
-   "n7": null,
-   "walletEntry": 0.7825,
-   "entryPrice": 0.735,
-   "abstandPP": -4.75,
-   "arm": "nehmbar",
-   "lastPrice": 0.735,
    "htkAtEntry": 0.03,
    "firstTs": "2026-10-04T02:32:09.375195+00:00",
    "stake": 10.0
@@ -491,9 +469,31 @@
    "entryPrice": 0.505,
    "abstandPP": 2.44,
    "arm": "zu_spaet",
-   "lastPrice": 0.505,
+   "lastPrice": 0.515,
    "htkAtEntry": 1.04,
    "firstTs": "2026-10-04T05:03:46.614016+00:00",
+   "stake": 10.0
+  },
+  "atp-vachero-fils-2026-10-03|Arthur Fils": {
+   "key": "atp-vachero-fils-2026-10-03",
+   "side": "Arthur Fils",
+   "cat": "Tennis",
+   "league": "TENNIS",
+   "wallet": "0x03f4bd4bd14e0dffa6f012d023387e1a327f7e44",
+   "belegt": false,
+   "heiss": true,
+   "walletN": null,
+   "walletClv": null,
+   "walletUg": null,
+   "clv7": 1.12,
+   "n7": 32,
+   "walletEntry": 0.79,
+   "entryPrice": 0.785,
+   "abstandPP": -0.5,
+   "arm": "nehmbar",
+   "lastPrice": 0.785,
+   "htkAtEntry": 2.54,
+   "firstTs": "2026-10-04T05:32:38.595215+00:00",
    "stake": 10.0
   }
  },
@@ -749,12 +749,41 @@
    "closePrice": 0.555,
    "clvPP": 0.0,
    "settledTs": "2026-10-04T05:03:46.614016+00:00"
+  },
+  {
+   "key": "itf-mushik1-sato4-2026-10-04",
+   "side": "Naho Sato",
+   "cat": "Tennis",
+   "league": "TENNIS",
+   "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+   "belegt": true,
+   "heiss": false,
+   "walletN": 1102,
+   "walletClv": 0.372,
+   "walletUg": 0.205,
+   "clv7": null,
+   "n7": null,
+   "walletEntry": 0.7825,
+   "entryPrice": 0.735,
+   "abstandPP": -4.75,
+   "arm": "nehmbar",
+   "lastPrice": 0.735,
+   "htkAtEntry": 0.03,
+   "firstTs": "2026-10-04T02:32:09.375195+00:00",
+   "stake": 10.0,
+   "result": "win",
+   "winner": "Naho Sato",
+   "pnl": 3.61,
+   "closePrice": 0.735,
+   "clvPP": 0.0,
+   "settledTs": "2026-10-04T05:32:38.595215+00:00"
   }
  ],
  "gesehen": [
   "atp-hurkacz-khachan-2026-10-03|Hubert Hurkacz",
   "atp-minaur-rublev-2026-10-04|Alex de Minaur",
   "atp-rai-lomakin-2026-10-03|Grigoriy Lomakin",
+  "atp-vachero-fils-2026-10-03|Arthur Fils",
   "atp-vachero-fils-2026-10-03|Valentin Vacherot",
   "bra-cam-bra-2026-10-03|CA Mineiro",
   "bra-cam-bra-2026-10-03|Red Bull Bragantino",
@@ -786,16 +815,16 @@
  ],
  "agg": {
   "belegt_nehmbar": {
-   "n": 3,
-   "wins": 3,
+   "n": 4,
+   "wins": 4,
    "hit": 1.0,
-   "pnl": 29.46,
-   "stake": 30.0,
-   "roi": 0.982,
+   "pnl": 33.07,
+   "stake": 40.0,
+   "roi": 0.8267,
    "roiUg": null,
    "belegt": false,
    "clvAvg": 0.0,
-   "clvN": 3,
+   "clvN": 4,
    "clvUg": null
   },
   "belegt_zu_spaet": {
@@ -838,16 +867,16 @@
    "clvUg": null
   },
   "nehmbar": {
-   "n": 5,
-   "wins": 5,
+   "n": 6,
+   "wins": 6,
    "hit": 1.0,
-   "pnl": 43.92,
-   "stake": 50.0,
-   "roi": 0.8784,
+   "pnl": 47.53,
+   "stake": 60.0,
+   "roi": 0.7922,
    "roiUg": null,
    "belegt": false,
    "clvAvg": 0.0,
-   "clvN": 5,
+   "clvN": 6,
    "clvUg": null,
    "byCat": {
     "E-Sport": {
@@ -874,6 +903,19 @@
      "belegt": false,
      "clvAvg": 0.0,
      "clvN": 3,
+     "clvUg": null
+    },
+    "Tennis": {
+     "n": 1,
+     "wins": 1,
+     "hit": 1.0,
+     "pnl": 3.61,
+     "stake": 10.0,
+     "roi": 0.361,
+     "roiUg": null,
+     "belegt": false,
+     "clvAvg": 0.0,
+     "clvN": 1,
      "clvUg": null
     }
    }
