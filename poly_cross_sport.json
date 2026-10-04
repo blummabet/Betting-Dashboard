@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-04T01:57:25.761774+00:00",
+ "generatedAt": "2026-10-04T02:28:02.671204+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,29 +10,58 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 681,
- "pinnKeys": 201,
- "matched": 113,
+ "polyRowsSeen": 677,
+ "pinnKeys": 195,
+ "matched": 115,
  "footballRows": 111,
- "crossRows": 570,
+ "crossRows": 566,
  "footballSkippedStale": 101,
  "seenBySport": {
   "basketball_nba": 58,
   "americanfootball_nfl": 114,
   "baseball_mlb": 24,
-  "icehockey_nhl": 344,
+  "icehockey_nhl": 340,
   "boxing_boxing": 30,
   "soccer_mls": 30,
   "soccer_liga": 81
  },
  "matchedBySport": {
-  "baseball_mlb": 2,
+  "baseball_mlb": 4,
   "soccer_mls": 30,
   "soccer_liga": 81
  },
  "trackRecord": {
-  "tracked": 211,
+  "tracked": 213,
   "converged": 73
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|milwaukeebrewers-sandiegopadres|sandiegopadres",
+   "sport": "baseball_mlb",
+   "event": "San Diego Padres vs Milwaukee Brewers",
+   "market": "Moneyline",
+   "outcome": "San Diego Padres",
+   "polyPP": 40.5,
+   "pinnPP": 47.8,
+   "gapPP": -7.28,
+   "vol": 756790,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-04T02:28:02.670969+00:00"
+  },
+  {
+   "id": "baseball_mlb|milwaukeebrewers-sandiegopadres|milwaukeebrewers",
+   "sport": "baseball_mlb",
+   "event": "San Diego Padres vs Milwaukee Brewers",
+   "market": "Moneyline",
+   "outcome": "Milwaukee Brewers",
+   "polyPP": 59.5,
+   "pinnPP": 52.2,
+   "gapPP": 7.28,
+   "vol": 756790,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-04T02:28:02.670969+00:00"
+  }
+ ]
 }
