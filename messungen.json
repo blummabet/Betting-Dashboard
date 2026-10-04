@@ -1,6 +1,6 @@
 {
- "generatedAt": "2026-10-03T23:32:01.014750+00:00",
- "heute": "2026-10-03",
+ "generatedAt": "2026-10-04T00:03:54.872142+00:00",
+ "heute": "2026-10-04",
  "messungen": [
   {
    "id": "sharp-radar-drift-pushes",
@@ -16,9 +16,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": null,
    "zustand": "faellig",
-   "stand": "Entscheidung faellig (seit 11 Tagen)",
+   "stand": "Entscheidung faellig (seit 12 Tagen)",
    "fortschritt": null,
-   "tageBisFaellig": -11
+   "tageBisFaellig": -12
   },
   {
    "id": "echte-fills",
@@ -37,7 +37,25 @@
    "zustand": "faellig",
    "stand": "141 von 25 Beobachtungen · Entscheidung faellig",
    "fortschritt": 1.0,
-   "tageBisFaellig": -4
+   "tageBisFaellig": -5
+  },
+  {
+   "id": "devig-proportional-vs-power",
+   "titel": "Proportionale oder Power-De-vig?",
+   "frage": "Welcher faire Wert lag naeher am Schlusskurs — getrennt nach Preisband und Markt, mit einseitiger 95%-Untergrenze.",
+   "warum": "Die proportionale Methode hebt die Edge genau dort an, wo das System handelt: unter 40 Cent im Schnitt +1,47pp. Alle bis dahin platzierten Auto-Trades lagen in diesem Band. Power laeuft seit 14.09. parallel mit, ohne etwas zu entscheiden.",
+   "gestartet": "2026-09-14",
+   "faellig": "2026-10-04",
+   "quelle": "fairPow_hw|dr|aw|o25|u25 in den Poly-Preis-Dateien gegen den Schlusskurs",
+   "messer": null,
+   "mindestN": null,
+   "entscheidung": null,
+   "wecker": "eigene Aufgabe am 04.10.2026, 08:00 UTC + Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "standN": null,
+   "zustand": "faellig",
+   "stand": "Entscheidung faellig",
+   "fortschritt": null,
+   "tageBisFaellig": 0
   },
   {
    "id": "sharp-z-1282",
@@ -53,9 +71,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 283,
    "zustand": "bereit",
-   "stand": "283 von 150 Beobachtungen · faellig in 6 Tag(en)",
+   "stand": "283 von 150 Beobachtungen · faellig in 5 Tag(en)",
    "fortschritt": 1.0,
-   "tageBisFaellig": 6
+   "tageBisFaellig": 5
   },
   {
    "id": "einigkeit-statt-geld",
@@ -70,29 +88,11 @@
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "nachtrag": "27.09.2026: Zwischenstand n=152 (Mindestzahl 40 erreicht). Treffer 66,5 %, ROI -4,5 % (UG -14,3 %), CLV -0,04 pp. Die Rueckschau (77,1 % / +19,9 %) haelt vorwaerts nicht. Heutige Public-Regel seit 03.09.: n=47, ROI +14,2 % (UG -10,0 %).",
-   "standN": 415,
+   "standN": 416,
    "zustand": "bereit",
-   "stand": "415 von 40 Beobachtungen · faellig in 27 Tag(en)",
+   "stand": "416 von 40 Beobachtungen · faellig in 26 Tag(en)",
    "fortschritt": 1.0,
-   "tageBisFaellig": 27
-  },
-  {
-   "id": "devig-proportional-vs-power",
-   "titel": "Proportionale oder Power-De-vig?",
-   "frage": "Welcher faire Wert lag naeher am Schlusskurs — getrennt nach Preisband und Markt, mit einseitiger 95%-Untergrenze.",
-   "warum": "Die proportionale Methode hebt die Edge genau dort an, wo das System handelt: unter 40 Cent im Schnitt +1,47pp. Alle bis dahin platzierten Auto-Trades lagen in diesem Band. Power laeuft seit 14.09. parallel mit, ohne etwas zu entscheiden.",
-   "gestartet": "2026-09-14",
-   "faellig": "2026-10-04",
-   "quelle": "fairPow_hw|dr|aw|o25|u25 in den Poly-Preis-Dateien gegen den Schlusskurs",
-   "messer": null,
-   "mindestN": null,
-   "entscheidung": null,
-   "wecker": "eigene Aufgabe am 04.10.2026, 08:00 UTC + Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": null,
-   "zustand": "sammelt",
-   "stand": "Entscheidung offen · in 1 Tag(en) faellig",
-   "fortschritt": null,
-   "tageBisFaellig": 1
+   "tageBisFaellig": 26
   },
   {
    "id": "torlinien-13-ligen",
@@ -109,9 +109,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": null,
    "zustand": "sammelt",
-   "stand": "Entscheidung offen · in 9 Tag(en) faellig",
+   "stand": "Entscheidung offen · in 8 Tag(en) faellig",
    "fortschritt": null,
-   "tageBisFaellig": 9
+   "tageBisFaellig": 8
   },
   {
    "id": "entschiedene-ausgaenge",
@@ -127,9 +127,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 1,
    "zustand": "sammelt",
-   "stand": "1 von 20 Beobachtungen · faellig in 10 Tag(en)",
+   "stand": "1 von 20 Beobachtungen · faellig in 9 Tag(en)",
    "fortschritt": 0.05,
-   "tageBisFaellig": 10
+   "tageBisFaellig": 9
   },
   {
    "id": "serie-a-btts-schublade",
@@ -145,9 +145,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": null,
    "zustand": "sammelt",
-   "stand": "Entscheidung offen · in 12 Tag(en) faellig",
+   "stand": "Entscheidung offen · in 11 Tag(en) faellig",
    "fortschritt": null,
-   "tageBisFaellig": 12
+   "tageBisFaellig": 11
   },
   {
    "id": "horizont-trader",
@@ -164,9 +164,9 @@
    "nachtrag": "28.09.2026 (Lucas: „das Paper Trading … Pinnacle-Drops und ob Polymarket anpasst — das will ich weiter messen\"): Frist vom 29.09. auf 20.10. verlaengert, Stand 5 von 20.",
    "standN": 5,
    "zustand": "sammelt",
-   "stand": "5 von 20 Beobachtungen · faellig in 17 Tag(en)",
+   "stand": "5 von 20 Beobachtungen · faellig in 16 Tag(en)",
    "fortschritt": 0.25,
-   "tageBisFaellig": 17
+   "tageBisFaellig": 16
   },
   {
    "id": "betfair-einseitigkeit-unterseite",
@@ -180,11 +180,11 @@
    "mindestN": 1200,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 318,
+   "standN": 319,
    "zustand": "sammelt",
-   "stand": "318 von 1200 Beobachtungen · faellig in 29 Tag(en)",
-   "fortschritt": 0.265,
-   "tageBisFaellig": 29
+   "stand": "319 von 1200 Beobachtungen · faellig in 28 Tag(en)",
+   "fortschritt": 0.2658333333333333,
+   "tageBisFaellig": 28
   },
   {
    "id": "betfair-geldschwelle",
@@ -198,11 +198,11 @@
    "mindestN": 1200,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 318,
+   "standN": 319,
    "zustand": "sammelt",
-   "stand": "318 von 1200 Beobachtungen · faellig in 29 Tag(en)",
-   "fortschritt": 0.265,
-   "tageBisFaellig": 29
+   "stand": "319 von 1200 Beobachtungen · faellig in 28 Tag(en)",
+   "fortschritt": 0.2658333333333333,
+   "tageBisFaellig": 28
   },
   {
    "id": "poly-autobet-oktober",
@@ -218,9 +218,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 27,
    "zustand": "sammelt",
-   "stand": "27 von 100 Beobachtungen · faellig in 29 Tag(en)",
+   "stand": "27 von 100 Beobachtungen · faellig in 28 Tag(en)",
    "fortschritt": 0.27,
-   "tageBisFaellig": 29
+   "tageBisFaellig": 28
   },
   {
    "id": "ligen-watch-betfair",
@@ -236,9 +236,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 0,
    "zustand": "sammelt",
-   "stand": "0 von 300 Beobachtungen · faellig in 29 Tag(en)",
+   "stand": "0 von 300 Beobachtungen · faellig in 28 Tag(en)",
    "fortschritt": 0.0,
-   "tageBisFaellig": 29
+   "tageBisFaellig": 28
   },
   {
    "id": "ligen-watch-poly",
@@ -254,9 +254,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 0,
    "zustand": "sammelt",
-   "stand": "0 von 150 Beobachtungen · faellig in 29 Tag(en)",
+   "stand": "0 von 150 Beobachtungen · faellig in 28 Tag(en)",
    "fortschritt": 0.0,
-   "tageBisFaellig": 29
+   "tageBisFaellig": 28
   },
   {
    "id": "reihenfolge-signale",
@@ -272,9 +272,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 0,
    "zustand": "sammelt",
-   "stand": "0 von 60 Beobachtungen · faellig in 29 Tag(en)",
+   "stand": "0 von 60 Beobachtungen · faellig in 28 Tag(en)",
    "fortschritt": 0.0,
-   "tageBisFaellig": 29
+   "tageBisFaellig": 28
   },
   {
    "id": "betfair-einseitigkeit-schwelle",
@@ -290,9 +290,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 67,
    "zustand": "sammelt",
-   "stand": "67 von 90 Beobachtungen · faellig in 42 Tag(en)",
+   "stand": "67 von 90 Beobachtungen · faellig in 41 Tag(en)",
    "fortschritt": 0.7444444444444445,
-   "tageBisFaellig": 42
+   "tageBisFaellig": 41
   },
   {
    "id": "betfair-quote-muss-sinken",
@@ -306,11 +306,11 @@
    "mindestN": 20000,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 15282,
+   "standN": 15307,
    "zustand": "sammelt",
-   "stand": "15282 von 20000 Beobachtungen · faellig in 43 Tag(en)",
-   "fortschritt": 0.7641,
-   "tageBisFaellig": 43
+   "stand": "15307 von 20000 Beobachtungen · faellig in 42 Tag(en)",
+   "fortschritt": 0.76535,
+   "tageBisFaellig": 42
   },
   {
    "id": "betfair-zeit-vor-anpfiff",
@@ -324,11 +324,11 @@
    "mindestN": 20000,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 15282,
+   "standN": 15307,
    "zustand": "sammelt",
-   "stand": "15282 von 20000 Beobachtungen · faellig in 43 Tag(en)",
-   "fortschritt": 0.7641,
-   "tageBisFaellig": 43
+   "stand": "15307 von 20000 Beobachtungen · faellig in 42 Tag(en)",
+   "fortschritt": 0.76535,
+   "tageBisFaellig": 42
   },
   {
    "id": "betfair-kursrutsch",
@@ -344,9 +344,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 13,
    "zustand": "sammelt",
-   "stand": "13 von 400 Beobachtungen · faellig in 43 Tag(en)",
+   "stand": "13 von 400 Beobachtungen · faellig in 42 Tag(en)",
    "fortschritt": 0.0325,
-   "tageBisFaellig": 43
+   "tageBisFaellig": 42
   },
   {
    "id": "serien-wetten",
@@ -362,9 +362,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 3,
    "zustand": "sammelt",
-   "stand": "3 von 150 Beobachtungen · faellig in 58 Tag(en)",
+   "stand": "3 von 150 Beobachtungen · faellig in 57 Tag(en)",
    "fortschritt": 0.02,
-   "tageBisFaellig": 58
+   "tageBisFaellig": 57
   },
   {
    "id": "poly-wallet-clv",
@@ -380,9 +380,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 1,
    "zustand": "sammelt",
-   "stand": "1 von 150 Beobachtungen · faellig in 73 Tag(en)",
+   "stand": "1 von 150 Beobachtungen · faellig in 72 Tag(en)",
    "fortschritt": 0.006666666666666667,
-   "tageBisFaellig": 73
+   "tageBisFaellig": 72
   },
   {
    "id": "stake-kleine-liga",
@@ -398,9 +398,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 11,
    "zustand": "sammelt",
-   "stand": "11 von 100 Beobachtungen · faellig in 81 Tag(en)",
+   "stand": "11 von 100 Beobachtungen · faellig in 80 Tag(en)",
    "fortschritt": 0.11,
-   "tageBisFaellig": 81
+   "tageBisFaellig": 80
   },
   {
    "id": "betfair-ou35",
@@ -414,11 +414,11 @@
    "mindestN": 200,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 8,
+   "standN": 9,
    "zustand": "sammelt",
-   "stand": "8 von 200 Beobachtungen · faellig in 89 Tag(en)",
-   "fortschritt": 0.04,
-   "tageBisFaellig": 89
+   "stand": "9 von 200 Beobachtungen · faellig in 88 Tag(en)",
+   "fortschritt": 0.045,
+   "tageBisFaellig": 88
   },
   {
    "id": "horizont-shortlist",
@@ -437,10 +437,10 @@
    "zustand": "entschieden",
    "stand": "28.09.2026 beendet (Lucas: „fuer den fruehen Einstieg kannst du auslassen\"). Mit dem heutigen Zuschnitt nicht beantwortbar — die Shortlist steigt nie frueher als 3 h vor Anpfiff ein.",
    "fortschritt": 0.0,
-   "tageBisFaellig": -4
+   "tageBisFaellig": -5
   }
  ],
  "n": 24,
  "nOffen": 23,
- "nHandlung": 2
+ "nHandlung": 3
 }
