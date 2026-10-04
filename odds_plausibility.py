@@ -110,7 +110,12 @@ def devig_power(odds, tol=1e-12, schritte=200):
     40 Cent betraegt der Aufschlag im Schnitt **+1,47pp**. Genau dort lagen alle drei bisherigen
     Auto-Trades (40¢, 35¢, 36¢), und die groesste gemeldete Edge war +3,7pp.
 
-    ⚠️ Diese Funktion ENTSCHEIDET NICHTS. Welche De-Vig naeher an der Wahrheit liegt, ist eine
+    ✅ 04.10.2026 (Lucas: „ja stell um"): seit heute SCHARF im Poly-Edge-Pfad
+    (fetch_wm_poly_prices.DEVIG_METHODE). Gemessen am Poly-Schlusskurs, 68 Spiele / 339 Ausgaenge:
+    Power naeher, alle +0,12pp [+0,03] zum Einstieg, O/U-Aussenseiter +0,57pp [+0,23]; 1X2 unter
+    40 Cent ohne Unterschied. Der Text darunter ist der Stand vom 14.09. und bleibt als Herleitung.
+
+    (14.09.) ⚠️ Diese Funktion ENTSCHEIDET NICHTS. Welche De-Vig naeher an der Wahrheit liegt, ist eine
     Modellwahl und keine Tatsache; sie auf Verdacht umzustellen hiesse, eine unbelegte Zahl durch
     eine andere zu ersetzen. Sie laeuft ab dem 14.09.2026 nur mit, damit in ein paar Wochen der
     CLV entscheiden kann — welcher faire Wert naeher am Schlusskurs lag. Bis dahin bleibt
@@ -143,7 +148,7 @@ def devig_power(odds, tol=1e-12, schritte=200):
 
 
 def devig_1x2_power(hw, dr, aw):
-    """Power-De-Vig fuer 1X2 — hinter demselben Plausibilitaets-Gate wie devig_1x2. NUR Messung."""
+    """Power-De-Vig fuer 1X2 — hinter demselben Plausibilitaets-Gate wie devig_1x2. Seit 04.10.2026 scharf im Poly-Edge-Pfad."""
     if not plausible_1x2(hw, dr, aw):
         return None
     p = devig_power([hw, dr, aw])

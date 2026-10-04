@@ -10,6 +10,7 @@ NOW = datetime(2026, 8, 11, 12, 0, tzinfo=timezone.utc)
 # Kalibrierung des Gates -> Fixtures auf Wallets, die den Test wirklich bestehen (28/40 = Wilson 57%).
 SCORES = {
     "0xsharp": {"n": 40, "clvSumPP": 80, "wins": 28, "pnl": 5000},   # avgClv 2.0 / 70% bei n=40 -> scharf
+    "0xsharpklein": {"n": 40, "clvSumPP": 80, "wins": 28, "pnl": 5000},
     "0xweak":  {"n": 15, "clvSumPP": -10, "wins": 6, "pnl": -2000},  # negativ -> nicht scharf
     "0xthin":  {"n": 2, "clvSumPP": 10, "wins": 2, "pnl": 100},      # zu wenig Historie -> nicht scharf
     "0xsharpdec": {"n": 40, "clvSumPP": 80, "wins": 28, "pnl": 8000},  # scharf, aber Ausgang @100
@@ -18,7 +19,8 @@ SCORES = {
 
 def _live():
     return {"lol-a-b": {"league": "esports", "prices": {"A": 0.6, "B": 0.4, "DEC": 1.0}, "whales": [
-        {"wallet": "0xsharp", "side": "A", "usd": 8000},    # scharf + ueber SHARP_MIN_USD (5000) -> Alarm
+        {"wallet": "0xsharp", "side": "A", "usd": 12000},   # scharf + ueber SHARP_MIN_USD (10000 seit 04.10.2026) -> Alarm
+        {"wallet": "0xsharpklein", "side": "A", "usd": 8000},  # scharf, aber unter 10K -> seit 04.10. kein Alarm
         {"wallet": "0xweak", "side": "B", "usd": 3000},     # schwach, klein -> kein Alarm
         {"wallet": "0xbig", "side": "A", "usd": 30000},     # kein Score, gross (>25K), kompetitiv -> Alarm
         {"wallet": "0xpre", "side": "B", "usd": 20000},     # pre-game drin -> kein Alarm
@@ -53,6 +55,7 @@ class TestFindAlerts:
     def test_schwach_klein_nicht(self):
         al = W.find_alerts(_live(), CLOSE, SCORES, set(), NOW)
         assert "0xweak" not in {a["wallet"] for a in al}
+        assert "0xsharpklein" not in {a["wallet"] for a in al}, "04.10.2026: scharf unter $10K reicht nicht mehr"
 
     def test_pregame_nicht(self):
         al = W.find_alerts(_live(), CLOSE, SCORES, set(), NOW)

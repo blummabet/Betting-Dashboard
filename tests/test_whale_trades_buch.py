@@ -22,16 +22,17 @@ class TestSchreibpfad(unittest.TestCase):
     def test_die_trades_schleife_schreibt_ins_buch(self):
         q = (REPO / "poly_whale_watch.py").read_text(encoding="utf-8")
         # zwischen dem Trades-Send und dem Public-Block muss der Ledger-Aufruf stehen
-        i = q.index('print(f"  ✅  {sent} Whale-Alert(s) (Trades) gesendet.")')
+        # 04.10.2026: die Schleife laeuft je Spiel (nach_spiel_buendeln), s. test_whale_buendel_je_spiel.py
+        i = q.index('print(f"  ✅  {sent} Whale-Alert(s) (Trades) gesendet"')
         j = q.rindex("_log_trades_push(", 0, i)
-        self.assertGreater(j, q.index("for pkey, pos, restock in cand[:MAX_ALERTS]:"),
+        self.assertGreater(j, q.index("for pkey, pos, restock, weitere in _gruppen[:MAX_ALERTS]:"),
                            "der Ledger-Aufruf steht nicht in der Trades-Schleife")
 
     def test_nur_bei_tatsaechlich_gesendeter_karte(self):
         """Ein Buch, das auch die nicht gesendeten Karten enthaelt, ist kein Push-Buch."""
         q = (REPO / "poly_whale_watch.py").read_text(encoding="utf-8")
-        block = q[q.index("for pkey, pos, restock in cand[:MAX_ALERTS]:"):
-                  q.index('print(f"  ✅  {sent} Whale-Alert(s) (Trades) gesendet.")')]
+        block = q[q.index("for pkey, pos, restock, weitere in _gruppen[:MAX_ALERTS]:"):
+                  q.index('print(f"  ✅  {sent} Whale-Alert(s) (Trades) gesendet"')]
         self.assertIn("if tg_send(card):", block)
         self.assertLess(block.index("if tg_send(card):"), block.index("_log_trades_push("))
 

@@ -749,11 +749,12 @@ def baue(now=None) -> dict:
     _add("serien-wetten", "Serien-Wetten · Markt-Chance", "🔥", "Eigene Engine",
          serien_wetten_plays("markt"),
          "Jede Zeile der Serien-Wetten-Tafel mit Quote im Feed, abgerechnet zur Quote beim ersten "
-         "Erscheinen. Erwartet: Treffer wie angezeigt, Rendite um die Marge im Minus.")
+         "Erscheinen. Erwartet: Treffer wie angezeigt, Rendite um die Marge im Minus. "
+         "Steht nur auf der Tafel, wird NICHT gesendet.")
     _add("serien-wetten-modell", "Serien-Wetten · Modell-Chance", "🔥", "Eigene Engine",
          serien_wetten_plays("modell"),
          "Serien ohne Quote im Feed (z. B. Team trifft, zu null). Keine Rendite — gemessen wird, "
-         "ob die angezeigte Chance trifft.")
+         "ob die angezeigte Chance trifft. Steht nur auf der Tafel, wird NICHT gesendet.")
     _add("betfair", "Betfair · alle Signale", "💷", "Marktdaten", betfair_plays(),
          "Der Ledger hält ein rollierendes Fenster — ältere Perioden sind unvollständig, "
          "nicht schwach.")

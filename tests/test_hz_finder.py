@@ -74,7 +74,17 @@ def test_bericht_urteil_erst_ab_mindestmenge():
 def test_nachricht_buendelt_und_deckelt():
     funde = [dict(H.kandidat(spiel(mid=str(i)), PEND_TORE, HIST_HEIM)) for i in range(10)]
     t = H.nachricht(funde)
-    assert t.count("Ararat</b> v") == H.PUSH_DECKEL and "+2 weitere" in t and "O0.5 @1.32" in t
+    assert t.count("<b>Ararat – Noah</b>") == H.PUSH_DECKEL and "+2 weitere" in t
+    assert "Tor in 2. HZ <b>@1.32 <i>(76 %)</i></b>" in t, "Quote mit der Wahrscheinlichkeit, die sie sagt"
+
+
+def test_nachricht_staerkste_erwartung_zuerst():
+    schwach = dict(H.kandidat(spiel(mid="1"), {"signals": {"Over/Under 2.5 Goals": {"fav": "OVER", "odd": 1.74}}}, []), home="Schwach")
+    stark = dict(H.kandidat(spiel(mid="2"), {"signals": {"Over/Under 2.5 Goals": {"fav": "OVER", "odd": 1.40}}}, []), home="Stark")
+    t = H.nachricht([schwach, stark])
+    assert t.index("Stark") < t.index("Schwach")
+    assert "2 Spiele, in denen mehr erwartet war" in t and "┄" in t
+    assert "1 Spiel, in dem mehr" in H.nachricht([stark])
 
 
 # ── Team-Archiv ─────────────────────────────────────────────────────────────────────────────

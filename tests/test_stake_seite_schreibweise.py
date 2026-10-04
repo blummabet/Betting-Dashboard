@@ -115,6 +115,12 @@ def test_ein_rechtsform_kuerzel_auf_nur_einer_seite_stoert_nicht():
                       "VV IJsselmeervogels")) == "IJsselmeervogels"
 
 
+def test_ganz_genannter_kern_schlaegt_den_stadtnamen():
+    """04.10.2026: „montevideo" steckt im Kern von Racing, „penarol" IST der Kern von Penarol."""
+    assert SB.seite(w("Racing Club Montevideo - Penarol", "CA Penarol Montevideo")) == "Penarol"
+    assert SB.seite(w("Deportivo La Coruna - Deportivo Alaves", "Deportivo")) is None
+
+
 # ── Die Gegenprobe am echten Bestand ────────────────────────────────────────────────────
 
 def test_keine_zeile_des_ledgers_verliert_ihre_seite():

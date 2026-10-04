@@ -331,6 +331,30 @@ class ArtefaktKaputt(RuntimeError):
     """Eine Datei ist DA, aber nicht lesbar. Das ist etwas anderes als „noch nicht da"."""
 
 
+# 04.10.2026 (Lucas: „bau mir bitte noch ein, welcher E-Sport — ob CS oder LoL und so").
+# Das Spiel steht im Slug-Praefix; im Trades-Buch seit 20.09.: cs2 153 · lol 53 · val 25 · dota2 23.
+ESPORT_SPIEL = {"cs2": "CS2", "csgo": "CS:GO", "lol": "LoL", "val": "Valorant", "dota2": "Dota 2",
+                "dota": "Dota 2", "r6": "Rainbow Six", "r6s": "Rainbow Six", "ow": "Overwatch",
+                "rl": "Rocket League", "cod": "Call of Duty", "pubg": "PUBG", "mlbb": "Mobile Legends",
+                "sc2": "StarCraft II", "hok": "Honor of Kings", "apex": "Apex Legends"}
+
+
+def esport_spiel(key) -> str | None:
+    """'cs2-spirit-faze-2026-10-04' -> 'CS2'. Unbekannter Praefix -> None (nichts raten). REIN."""
+    pre = str(key or "").split("-", 1)[0].lower()
+    return ESPORT_SPIEL.get(pre)
+
+
+def _sport_pos(pos):
+    """(Emoji, Sport) fuer eine Position — bei E-Sport mit dem Spiel: „E-Sport · Valorant". REIN."""
+    emoji, sport = _sport(pos.get("league"), pos.get("sport"))
+    if sport == "E-Sport":
+        spiel = esport_spiel(pos.get("key"))
+        if spiel:
+            sport = "%s · %s" % (sport, spiel)
+    return emoji, sport
+
+
 def _load(path, default):
     """Artefakt lesen. Fehlt die Datei -> default (das ist ein legitimer Zustand).
 
@@ -963,7 +987,9 @@ def markt_anteil(pos: dict, broad: dict):
     Nenner dem Zaehler — dann gibt es KEINE Zahl, nicht 100 %."""
     usd = pos.get("usd")
     m = (broad or {}).get(pos.get("key")) or {}
-    total = m.get("totalUsd")
+    # 04.10.2026: der Nenner kommt aus demselben Lauf wie der Zaehler (marktUsd an der Position,
+    # s. poly_money_broad.update_wallet_track). Der Close-Feed friert ~1 h vor Anpfiff ein.
+    total = pos.get("marktUsd") if isinstance(pos.get("marktUsd"), (int, float)) else m.get("totalUsd")
     if (not isinstance(usd, (int, float)) or isinstance(usd, bool)
             or not isinstance(total, (int, float)) or isinstance(total, bool)):
         return None
@@ -1171,10 +1197,10 @@ def _seiten_block(pos, broad, scores, label) -> list:
 
 
 def build_card(pos: dict, scores: dict, restock: bool, broad: dict = None, extra: int = 0,
-               blocked=None) -> str:
+               blocked=None, weitere=None) -> str:
     """Trades-Push (01.08.2026, Lucas: „entscheidungsreif") — Matchup, Anpfiff, Einstieg→Jetzt-Preis,
     Wallet-Qualität, Markt-Link. Ein Push = eine fertige Wett-Entscheidung."""
-    emoji, sport = _sport(pos.get("league"), pos.get("sport"))
+    emoji, sport = _sport_pos(pos)
     side  = pos.get("side") or "?"
     key   = pos.get("key")
     usd   = pos.get("usd") or 0
@@ -1269,6 +1295,7 @@ def build_card(pos: dict, scores: dict, restock: bool, broad: dict = None, extra
     if extra and extra > 0:
         lines.append("   ➕ <i>%d weitere Position dieser Wallet</i>" % extra
                      if extra == 1 else "   ➕ <i>%d weitere Positionen dieser Wallet</i>" % extra)
+    lines += _weitere_zeilen(weitere, scores, broad)   # 04.10.2026: ein Spiel = eine Karte je Lauf
     if key:
         lines.append('<a href="https://polymarket.com/event/%s">→ Markt öffnen ↗</a>' % _esc(key))
     return "\n".join(lines)
@@ -1337,6 +1364,85 @@ def _dedup_by_wallet(cand, max_per=1):
             if fk is not None:
                 extras[fk] = extras.get(fk, 0) + 1
     return kept, extras
+
+
+def nach_spiel_buendeln(cand):
+    """Kandidaten eines Laufs je SPIEL buendeln: (pkey, pos, restock, weitere). REIN.
+
+    🔴 04.10.2026 (Lucas: „das Spiel kommt oft mehrmals hintereinander … beim selben Lauf mehrmals
+    dieselbe Nachricht … bei E-Sport bei den grossen Events kommt da einiges rein, und es gehen
+    andere Nachrichten unter"). Je Wallet wurde schon gedeckelt (`_dedup_by_wallet`), je Spiel
+    nicht: fuenf Wallets auf demselben CS2-Match = fuenf volle Karten, jede mit demselben
+    Seiten-Block. Fehlerklasse: gedeckelt nach dem, der handelt, statt nach dem, worueber man liest.
+
+    Spiel = Hauptmarkt (`_basis_key`, Sub-Maerkte wie Karten/Handicap gehoeren dazu). Die groesste
+    Position fuehrt (cand ist nach Einsatz sortiert), die anderen haengen als Kurzzeilen an ihr.
+    """
+    reihe, gruppen = [], {}
+    for pkey, pos, restock in cand:
+        k = pos.get("key")
+        g = _basis_key(k) or k or pkey
+        if g not in gruppen:
+            gruppen[g] = [pkey, pos, restock, []]
+            reihe.append(g)
+        else:
+            gruppen[g][3].append((pkey, pos, restock))
+    return [tuple(gruppen[g]) for g in reihe]
+
+
+def _weitere_zeilen(weitere, scores, broad, max_zeilen=8) -> list:
+    """Kurzzeilen fuer die angehaengten Einstiege desselben Spiels. REIN."""
+    if not weitere:
+        return []
+    out = ["", "➕ <b>Im selben Lauf, selbes Spiel</b> (%d weitere Einstieg%s)"
+           % (len(weitere), "" if len(weitere) == 1 else "e")]
+    for _pkey, p, restock in weitere[:max_zeilen]:
+        lab = ausgang_label(p.get("side"), _markt_frage(p.get("key"), broad)) or p.get("side") or "?"
+        preis = _cents(p.get("entryPrice") if isinstance(p.get("entryPrice"), (int, float))
+                       else p.get("firstPrice"))
+        art = sub_markt_art(p.get("key"))
+        out.append("• <b>%s</b>%s%s · %s%s · %s · %s"
+                   % (_esc(lab), (" @ %s" % preis) if preis else "",
+                      (" <i>(%s)</i>" % _esc(art)) if art else "",
+                      _usd(p.get("usd") or 0), " · stockt auf" if restock else "",
+                      _wallet_link(p.get("wallet")), _wallet_30t(scores, p.get("wallet"))))
+    if len(weitere) > max_zeilen:
+        out.append("   <i>+%d weitere</i>" % (len(weitere) - max_zeilen))
+    return out
+
+
+SPIEL_SPERRE_MIN = int(os.environ.get("WHALE_SPIEL_SPERRE_MIN") or 60)
+
+
+def spiel_zuletzt(seen: dict, spiel: str):
+    """Juengster Push-Zeitpunkt eines Spiels aus dem Dedup-Stand (posKey = wallet|key|seite). REIN."""
+    best = None
+    for pk, v in (seen or {}).items():
+        teile = str(pk).split("|")
+        if len(teile) < 2 or not isinstance(v, dict):
+            continue
+        if (_basis_key(teile[1]) or teile[1]) != spiel:
+            continue
+        t = _iso(v.get("ts"))
+        if t and (best is None or t > best):
+            best = t
+    return best
+
+
+def build_kurz_card(pos, weitere, scores, broad, vor_min) -> str:
+    """Nachschlag fuer ein Spiel, das vor weniger als SPIEL_SPERRE_MIN Minuten schon kam. REIN.
+
+    04.10.2026 (Lucas: „das Spiel kommt oft mehrmals hintereinander"): die volle Karte mit
+    Seiten-Block stand vor Minuten schon im Kanal. Neu ist nur, WER dazukam — also nur das."""
+    emoji, _sport_txt = _sport_pos(pos)
+    matchup = _matchup(pos.get("key"), broad) or pos.get("side") or "?"
+    zeilen = ["%s <b>Nachschlag</b> · %s" % (emoji, _esc(matchup)),
+              "<i>Spiel kam vor %d Min — neu dazu:</i>" % vor_min]
+    rest = _weitere_zeilen([(None, pos, False)] + list(weitere), scores, broad)
+    zeilen += rest[2:]                    # ohne die Ueberschrift „Im selben Lauf"
+    if pos.get("key"):
+        zeilen.append('<a href="https://polymarket.com/event/%s">→ Markt öffnen ↗</a>' % _esc(pos["key"]))
+    return "\n".join(zeilen)
 
 
 def select(track: dict, seen: dict, now: datetime,
@@ -1466,10 +1572,19 @@ def sub_markt_art(key):
             "more-markets": "Nebenmarkt"}.get(suf, suf.replace("-", " "))
 
 
-def _kickoff_txt(key, broad):
-    """„Anpfiff in Xh/Min/d" aus poly_money_broad_close (hoursToKickoff). None wenn unbekannt/vorbei."""
+def _kickoff_txt(key, broad, now=None):
+    """„Anpfiff in Xh/Min/d". None wenn unbekannt/vorbei.
+
+    04.10.2026: zuerst aus dem festen Anpfiff-Zeitpunkt (koTs) gegen JETZT gerechnet. Vorher stand
+    hier nur `hoursToKickoff` aus dem Close-Feed — der friert ~1 h vor Anpfiff ein, und zwei Karten
+    im Abstand von 30 Minuten sagten beide „Anpfiff in 57 Min"."""
     m = (broad or {}).get(key) if isinstance(broad, dict) else None
-    h = (m or {}).get("hoursToKickoff") if isinstance(m, dict) else None
+    h = None
+    kt = _iso((m or {}).get("koTs")) if isinstance(m, dict) else None
+    if kt:
+        h = (kt - (now or datetime.now(timezone.utc))).total_seconds() / 3600
+    if h is None:
+        h = (m or {}).get("hoursToKickoff") if isinstance(m, dict) else None
     if not isinstance(h, (int, float)) or h < 0:
         return None
     if h < 1:
@@ -1593,7 +1708,7 @@ def build_public_card(pos: dict, scores: dict, restock: bool, broad: dict) -> st
     ⚠️ Was hier NICHT mehr steht, steht auch nirgends verkürzt: eine Wallet-Bilanz halb zu
     zeigen wäre schlechter als sie wegzulassen. Weggelassen wird sie ganz.
     """
-    emoji, sport = _sport(pos.get("league"), pos.get("sport"))
+    emoji, sport = _sport_pos(pos)
     side = pos.get("side") or "?"
     key = pos.get("key")
     matchup = _matchup(key, broad)
@@ -1621,6 +1736,11 @@ def build_public_card(pos: dict, scores: dict, restock: bool, broad: dict) -> st
         _unten.append("📊 <b>%d %%</b> des Marktvolumens" % round(a * 100))
     _e = _pub_einstieg(pos)
     if _e:
+        # 04.10.2026: beim Aufstocken auch, wo der Preis JETZT steht — sonst zeigt die zweite
+        # Karte nur den ersten Einstieg, und dass der Markt inzwischen gegen ihn lief, fehlt.
+        _jetzt = _quote(pos.get("lastPrice")) if restock else None
+        if _jetzt and _jetzt != _e.replace("Einstieg ", ""):
+            _e += " · jetzt %s" % _jetzt
         _unten.append(_e)
     if _unten:
         lines += [""] + _unten
@@ -2141,7 +2261,7 @@ def build_dominanz_card(pos, scores, broad, anteil=None, now=None) -> str:
     hat. Eine Karte, die aussieht wie eine Empfehlung, wird als eine gelesen.
     """
     a = seiten_anteil(pos, broad) if anteil is None else anteil
-    emoji, sport = _sport(pos.get("league"), pos.get("sport"))
+    emoji, sport = _sport_pos(pos)
     key = pos.get("key")
     side = pos.get("side") or "?"
     matchup = _matchup(key, broad)
@@ -2994,21 +3114,40 @@ def main():
     now_iso = now.strftime("%Y-%m-%dT%H:%M:%SZ")
     _sperrt_bew, _urteil_gs = gegenseite_sperrt()
     sent = 0
-    for pkey, pos, restock in cand[:MAX_ALERTS]:
-        card = build_card(pos, scores, restock, broad, extra=_extra.get(pkey, 0), blocked=_blocked)
+    # 04.10.2026: je Spiel EINE Karte pro Lauf (s. nach_spiel_buendeln). Der Deckel MAX_ALERTS
+    # zaehlt damit Nachrichten, nicht Positionen — gebuendelte Einstiege kosten keinen Platz.
+    _gruppen = nach_spiel_buendeln(cand)
+    _gebuendelt = sum(len(g[3]) for g in _gruppen)
+    _kurz = 0
+    for pkey, pos, restock, weitere in _gruppen[:MAX_ALERTS]:
+        # 04.10.2026: kam dasselbe Spiel vor < SPIEL_SPERRE_MIN Minuten, nur ein Nachschlag.
+        _spiel = _basis_key(pos.get("key")) or pos.get("key")
+        _zuletzt = spiel_zuletzt(seen, _spiel)
+        _vor = (now - _zuletzt).total_seconds() / 60 if _zuletzt else None
+        if _vor is not None and _vor < SPIEL_SPERRE_MIN:
+            card = build_kurz_card(pos, weitere, scores, broad, int(_vor))
+            _kurz += 1
+        else:
+            card = build_card(pos, scores, restock, broad, extra=_extra.get(pkey, 0), blocked=_blocked,
+                              weitere=weitere)
         if tg_send(card):
             sent += 1
             # 18.09.2026: ob die Karte den ⚔️-Marker TRUG, wird mitgeschrieben. Ohne diesen
             # Merker koennte der Nachtrag unten nicht wissen, ob er etwas Neues sagt oder nur
             # wiederholt, was schon auf der Karte stand.
-            _cf_jetzt = _conflicting_top_wallet(pos, broad, scores, bewiesen_zaehlt=_sperrt_bew)
-            seen[pkey] = {"usd": float(pos.get("usd") or 0), "ts": now_iso,
-                          "cf": bool(_cf_jetzt)}
+            # 04.10.2026: die angehaengten Einstiege gelten als gemeldet (sie stehen auf der
+            # Karte) und gehen einzeln ins Trades-Buch — die Auswertung je Position bleibt.
+            for _pk, _pos, _rs in [(pkey, pos, restock)] + list(weitere):
+                _cf_jetzt = _conflicting_top_wallet(_pos, broad, scores, bewiesen_zaehlt=_sperrt_bew)
+                seen[_pk] = {"usd": float(_pos.get("usd") or 0), "ts": now_iso,
+                             "cf": bool(_cf_jetzt)}
+                _log_trades_push(_pk, _pos, scores, _rs, now_iso, broad)
             _log_send(card.split("\n")[1] if "\n" in card else card,
-                      {"posKey": pkey, "usd": pos.get("usd"), "league": pos.get("league")})
-            _log_trades_push(pkey, pos, scores, restock, now_iso, broad)
+                      {"posKey": pkey, "usd": pos.get("usd"), "league": pos.get("league"),
+                       "gebuendelt": [w[0] for w in weitere]})
     _save(SEEN_FILE, seen)
-    print(f"  ✅  {sent} Whale-Alert(s) (Trades) gesendet.")
+    print(f"  ✅  {sent} Whale-Alert(s) (Trades) gesendet"
+          f" — {_gebuendelt} weitere Einstieg(e) gebuendelt, {_kurz} als Nachschlag (Spiel < {SPIEL_SPERRE_MIN} Min).")
 
     # ⚔️ Nachtrag (18.09.2026, Lucas): eine Karte, die ohne Marker rausging, wird nicht
     # nachtraeglich umgeschrieben — also kommt der Hinweis als eigene kurze Nachricht, sobald

@@ -23,7 +23,7 @@ WTRACK_FILE = BASE / "poly_wallet_track.json"
 SEEN_FILE   = BASE / "poly_live_watch_seen.json"
 
 LIVE_BIG_USD  = float(os.environ.get("POLY_LIVE_BIG_USD") or 25000)    # gross genug fuer Alarm auch OHNE Track-Record
-SHARP_MIN_USD = float(os.environ.get("POLY_LIVE_SHARP_MIN_USD") or 5000)  # 12.08.2026 (Lucas): auch scharfe Wallets brauchen eine Mindest-Summe -- ein $370-Einstieg ist kein Signal
+SHARP_MIN_USD = float(os.environ.get("POLY_LIVE_SHARP_MIN_USD") or 10000)  # 12.08.2026 (Lucas): auch scharfe Wallets brauchen eine Mindest-Summe -- ein $370-Einstieg ist kein Signal
 LIVE_MAX_PRICE = float(os.environ.get("POLY_LIVE_MAX_PRICE") or 0.77)   # 14.08.2026 (Lucas): 0.90->0.77 = Quote 1.30. Ueber 77¢ (Quote <1.30) live = eingepreiste Fuehrung/kurzer Favorit, reaktiv, kein Value (Al-Ettifaq @84¢ 1:0). Sportuebergreifend (auch eSport).
 LIVE_MIN_PRICE = float(os.environ.get("POLY_LIVE_MIN_PRICE") or 0.10)   # <= toter Ausgang -> Lay/Rausch
 LIVE_MAX_POS_FRAC = float(os.environ.get("POLY_LIVE_MAX_POS_FRAC") or 0.5)   # 15.08.2026 (Lucas): eine EINZELNE Position > 50% des ganzen Spiel-Volumens ist kein frischer Einstieg, sondern Positionswert/Artefakt -> raus ($136K in $150K-Spiel = 91%)
@@ -98,7 +98,31 @@ def _contested(m, min_usd=LIVE_CONTEST_MIN_USD):
     return len(big_sides) >= 2
 
 
-def find_alerts(live, close, scores, seen, now=None):
+# 🔴 04.10.2026 (Lucas: „da kommt viel Mist rein — niedrige Einsaetze, komische Ligen aus US-Sport,
+# ATP auch, was keiner braucht"). Nachgesehen in poly_live_signal_track.json (alle Live-Einstiege,
+# 1,6 Tage, 331 die das alte Push-Kriterium erfuellten):
+#     US-Sport 120 · Kampfsport 8 · Cricket 1 — seit 27.09. auf der Sperrliste, hier nie angewandt
+#     Tennis ATP/WTA 61 — CLV −8,5pp (n=59): live folgt das Geld dem Spielstand (wie Stake, 01.10.)
+#     unter $10K 23
+# Fehlerklasse: eine Sperrliste, die nur dort gilt, wo jemand daran gedacht hat. Dieser Kanal holt
+# sie jetzt aus derselben Quelle wie Whale-Watch und Shortlist (blocked_cats). Der Tracker
+# (poly_live_signal_track.py) zeichnet weiter ALLES auf — stumm heisst nicht ungemessen.
+# Nach allen drei Filtern bleiben ~40 % der Kandidaten, Ø CLV +0,4pp (vorher −0,5pp).
+STUMM_TENNIS_TOUR = ("atp-", "wta-")
+
+
+def gesperrt_grund(key, league, cats) -> str | None:
+    """Warum ein Live-Einstieg NICHT gepusht wird (oder None). REIN."""
+    import poly_whale_watch as W
+    kat = W.sport_category(league)
+    if kat in (cats or ()):
+        return "%s gesperrt" % kat
+    if kat == "Tennis" and str(key or "").lower().startswith(STUMM_TENNIS_TOUR):
+        return "ATP/WTA live stumm"
+    return None
+
+
+def find_alerts(live, close, scores, seen, now=None, cats=None):
     """REIN/testbar. Neue Live-Einstiege (scharf ODER >= LIVE_BIG_USD), die vor Anpfiff nicht im Top-4
     waren und noch nicht in `seen` (Menge von sig). -> Liste alert-dicts, nach $ absteigend."""
     out = []
@@ -107,6 +131,8 @@ def find_alerts(live, close, scores, seen, now=None):
             continue
         if _contested(m):
             continue                              # umkaempft: Gross-Geld auf beiden Seiten -> gar kein Live-Signal (Lucas 12.08.2026)
+        if gesperrt_grund(key, m.get("league"), cats):
+            continue                              # 04.10.2026: Sperrliste + ATP/WTA live (s. gesperrt_grund)
         pre = _pregame_wallets(close, key)
         for w in (m.get("whales") or []):
             if not isinstance(w, dict) or not w.get("wallet"):
@@ -181,6 +207,10 @@ def format_alert(a) -> str:
     price = a["prices"].get(a["side"]) if isinstance(a.get("prices"), dict) else None
     ptxt = " @%d¢" % round(price * 100) if isinstance(price, (int, float)) else ""
     url = "https://polymarket.com/event/" + str(a["key"])
+    import poly_whale_watch as W            # 04.10.2026: welches E-Sport-Spiel (CS2, LoL, …)
+    _spiel = W.esport_spiel(a.get("key"))
+    if _spiel:
+        ic = "%s %s ·" % (ic, _spiel)
     return ("⚡ <b>LIVE-Einstieg</b> · %s %s\n"
             "\U0001f534 <code>%s</code> → <b>%s</b> · %s%s%s\n%s"
             % (ic, _esc(_label(a["key"], a["prices"])), _short(a["wallet"]),
@@ -206,9 +236,11 @@ def main() -> int:
     wt = _load(WTRACK_FILE, {})
     scores = (wt.get("scores") if isinstance(wt, dict) else {}) or {}
     seen = _prune_seen(_load(SEEN_FILE, {}), now)
+    import poly_whale_watch as W
+    cats = W.blocked_cats(_load(BASE / "poly_shortlist_track.json", {}))
     alerts = find_alerts(live if isinstance(live, dict) else {},
                          close if isinstance(close, dict) else {},
-                         scores, set(seen.keys()), now)
+                         scores, set(seen.keys()), now, cats=cats)
     sent = 0
     if alerts:
         try:

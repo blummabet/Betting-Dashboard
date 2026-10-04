@@ -204,39 +204,74 @@ def _esc(s):
 
 def _serie_txt(s):
     if not s:
-        return "–"
-    return "%s · O2.5 %d/%d · Ø %.1f Tore" % (s["form"], s["over25"], s["n"], s["toreSchnitt"])
+        return "noch keine Spiele"
+    return "%s · Ø %.1f Tore · O2.5 %d/%d" % (" ".join(s["form"]), s["toreSchnitt"], s["over25"], s["n"])
+
+
+def _flagge(cc):
+    """'NL' -> 🇳🇱; alles andere (International, leer) -> ⚽. REIN."""
+    cc = str(cc or "").strip().upper()
+    if len(cc) == 2 and cc.isalpha():
+        return "".join(chr(0x1F1E6 + ord(c) - 65) for c in cc)
+    return "⚽"
+
+
+def _q(q):
+    """'@1.26 (79 %)' — Quote mit der Wahrscheinlichkeit, die sie sagt. REIN."""
+    return "@%.2f <i>(%d %%)</i>" % (q, round(100 / q)) if q else "–"
+
+
+def staerke(f) -> float:
+    """Wie deutlich war die Erwartung vor dem Spiel? Hoehere Zahl zuerst. REIN.
+    Nur zum Sortieren der Karte — gefiltert wird danach nicht (das Buch entscheidet)."""
+    v = f.get("vor") or {}
+    return max(1 / v["over25"] if v.get("over25") else 0, 1 / v["heim"] if v.get("heim") else 0)
 
 
 def nachricht(funde, bericht_=None) -> str:
-    t = ["⏸️ <b>HZ 0:0</b> · vor dem Spiel war mehr erwartet\n━━━━━━━━━━━━━━\n"]
-    for f in funde[:PUSH_DECKEL]:
+    """🎨 04.10.2026 (Lucas: „optisch ein bisschen schoener … schoener lesbar in Telegram").
+    Je Spiel ein Block: wer/wo, was vorher erwartet war, was die Pause jetzt bietet (mit der
+    Wahrscheinlichkeit, die die Quote sagt), Form beider Teams. Staerkste Erwartung zuerst."""
+    funde = sorted(funde, key=staerke, reverse=True)
+    n = len(funde)
+    t = ["⏸️ <b>HALBZEIT 0:0</b> · %s mehr erwartet war\n━━━━━━━━━━━━━━━━\n"
+         % ("1 Spiel, in dem" if n == 1 else "%d Spiele, in denen" % n)]
+    for i, f in enumerate(funde[:PUSH_DECKEL]):
         q, v = f.get("quoten") or {}, f.get("vor") or {}
+        if i:
+            t.append("┄┄┄┄┄┄┄┄┄┄┄┄┄┄\n")
+        wann = "zur Pause" if f["phase"] == "HZ" else "%s' · 2. HZ läuft schon" % f.get("minute")
+        t.append("%s <b>%s – %s</b>\n<i>%s · %s</i>\n\n"
+                 % (_flagge(f.get("country")), _esc(f["home"]), _esc(f["away"]),
+                    _esc(str(f.get("league") or "")[:38]), wann))
         erw = []
         if "tore" in f["gruppen"]:
-            erw.append("Over 2.5 @%.2f" % v["over25"])
+            erw.append("Over 2.5 %s" % _q(v["over25"]))
         if "heim" in f["gruppen"]:
-            erw.append("Heim @%.2f" % v["heim"])
+            erw.append("Heimsieg %s" % _q(v["heim"]))
+        t.append("🎯 <b>Vorher:</b> %s\n" % " · ".join(erw))
         jetzt = []
-        for w, lab in (("over05", "O0.5"), ("over15", "O1.5"), ("heim", "Heim")):
-            if q.get(w):
-                jetzt.append("%s @%.2f" % (lab, q[w]))
-        t.append("<b>%s</b> v <b>%s</b>%s\n<i>%s</i>\nvorher: %s\njetzt: %s\n"
-                 % (_esc(f["home"]), _esc(f["away"]),
-                    "" if f["phase"] == "HZ" else " · <i>%s' (2. HZ läuft)</i>" % f.get("minute"),
-                    _esc(str(f.get("league") or "")[:40]), " · ".join(erw), " · ".join(jetzt) or "–"))
+        if q.get("over05"):
+            jetzt.append("Tor in 2. HZ <b>%s</b>" % _q(q["over05"]))
+        if q.get("over15"):
+            jetzt.append("2+ Tore %s" % _q(q["over15"]))
+        if q.get("heim"):
+            jetzt.append(("<b>Heimsieg %s</b>" if "heim" in f["gruppen"] else "Heimsieg %s") % _q(q["heim"]))
+        t.append("💰 <b>Jetzt:</b>\n   %s\n" % ("\n   ".join(jetzt) if jetzt else "–"))
         s = f.get("serie") or {}
         if s.get("heim") or s.get("gast"):
-            t.append("Serie H: %s\nSerie G: %s\n" % (_serie_txt(s.get("heim")), _serie_txt(s.get("gast"))))
+            t.append("📈 <b>Form</b> (neueste zuerst)\n   %s: %s\n   %s: %s\n"
+                     % (_esc(f["home"]), _serie_txt(s.get("heim")), _esc(f["away"]), _serie_txt(s.get("gast"))))
         t.append("\n")
-    if len(funde) > PUSH_DECKEL:
-        t.append("<i>+%d weitere in der Money Map → ⏸️ HZ 0:0</i>\n" % (len(funde) - PUSH_DECKEL))
+    if n > PUSH_DECKEL:
+        t.append("<i>+%d weitere → Money Map · ⏸️ HZ 0:0</i>\n" % (n - PUSH_DECKEL))
     b = (bericht_ or {}).get("tore/over05") or {}
     if b.get("n"):
-        t.append("🔬 <i>Buch Tor in 2. HZ: %d abgerechnet · %s %% getroffen, Quote sagte %s %% · ROI %+.1f %%</i>"
+        t.append("🔬 <i>Buch „Tor in 2. HZ“: %d abgerechnet · getroffen %s %%, Quote sagte %s %% · ROI %+.1f %%</i>"
                  % (b["n"], b["trefferPct"], b["erwartetPct"], b["roi"]))
     else:
-        t.append("🔬 <i>Testlauf: jeder Fund wird zur Quote der Pause gebucht — Urteil ab n=%d.</i>" % MINDEST_N)
+        t.append("🔬 <i>Jeder Fund wird zur Pausenquote gebucht · Urteil ab n=%d · Rückblick: Tor in 2. HZ in 85 %% solcher Spiele</i>"
+                 % MINDEST_N)
     return "".join(t)
 
 

@@ -2221,6 +2221,18 @@ def update_wallet_track(prev, markets, now=None, keep_h=HIST_KEEP_H, frozen=None
             else:
                 e["lastPrice"] = round(float(price), 4)
                 e["usd"] = round(float(wh.get("usd") or 0))
+            # 04.10.2026 (FUT v T1, Public-Karte „stockt auf · 68 % des Marktvolumens · Anpfiff in
+            # 57 Min" — 30 Minuten nach der ersten Karte mit denselben „57 Min"). Zaehler (diese
+            # Position) kam frisch, Nenner und Anpfiff aus dem Close-Feed, der ~1 h vor Anpfiff
+            # EINFRIERT. In der halben Stunde dazwischen kamen >$200K auf die Gegenseite — der echte
+            # Anteil war deutlich kleiner. Fehlerklasse: Zaehler und Nenner aus verschiedenen
+            # Zeitpunkten. Deshalb stehen frisches Marktvolumen und Anpfiff-Zeitpunkt an der Position.
+            _e = openp[ok]
+            if isinstance(m.get("totalUsd"), (int, float)) and m["totalUsd"] > 0:
+                _e["marktUsd"] = round(float(m["totalUsd"]))
+                _e["marktTs"] = now.isoformat()
+            if m.get("koTs"):
+                _e["koTs"] = m.get("koTs")
                 e["league"] = m.get("league")
                 e.setdefault("sport", m.get("sport"))
                 # htkFirst wird NICHT aufgefrischt — der Vorlauf ist der beim ERSTEN Sehen. Sonst

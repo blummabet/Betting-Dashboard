@@ -618,6 +618,14 @@ def seite(w) -> str | None:
         trifft_a = True
     if not db and not trifft_a and kb and kb <= a_tok:
         trifft_b = True
+    # 🔴 04.10.2026 (Wachhund, „Racing Club Montevideo - Penarol", Auswahl „CA Penarol Montevideo").
+    # Beide trafen: „penarol" ist der GANZE Kern der einen Mannschaft, „montevideo" nur der
+    # Stadtname im Kern der anderen. Ein vollstaendig genannter Kern schlaegt einen Teiltreffer —
+    # aber nur dann; sind beide ganz oder beide halb genannt, wird weiter nicht geraten.
+    if trifft_a and trifft_b:
+        voll_a, voll_b = bool(da) and da <= a_tok, bool(db) and db <= a_tok
+        if voll_a != voll_b:
+            return teams[0] if voll_a else teams[1]
     if trifft_a == trifft_b:      # keines von beiden, oder beide — dann wird nicht geraten
         return None
     return teams[0] if trifft_a else teams[1]
@@ -1265,6 +1273,9 @@ STUMM_LIVE_KATS = tuple(k.strip() for k in (os.environ.get("STAKE_BURST_STUMM_LI
                         if k.strip())
 
 
+_TOUR_RX = __import__("re").compile(r"\b(atp|wta)\b", __import__("re").I)
+
+
 def _phase(g) -> str:
     return ("live" if all(x.get("phase") == "live" for x in g)
             else "vor" if all(x.get("phase") == "vor" for x in g) else "gemischt")
@@ -1282,6 +1293,13 @@ def stumm_grund(b, kats=None) -> str | None:
     kat = g[0].get("kat")
     if kat in kats and _phase(g) != "vor":
         return f"{kat} live stumm (Geld folgt dem Spielstand)"
+    # 04.10.2026 (Lucas, zur Karte „STAKE-SPIEL Zverev - Djokovic, ATP Beijing, vor Anpfiff":
+    # „Haben wir nicht gesagt, ATP zeigen wir in Bursts nicht?"). Am 01.10. wurde nur Tennis LIVE
+    # stumm geschaltet — vor Anpfiff gab es zwei Faelle (beide gewonnen), also keinen Grund aus den
+    # Daten. Lucas will ATP/WTA ganz aus dem Kanal; das ist eine Entscheidung, keine Messung.
+    # Gebucht wird weiter (push=false), ITF bleibt laut.
+    if kat == "Tennis" and _TOUR_RX.search(str(g[0].get("liga") or "")):
+        return "ATP/WTA stumm (Lucas 04.10.)"
     return None
 
 

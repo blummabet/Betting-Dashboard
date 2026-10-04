@@ -68,7 +68,10 @@ def _kickoff_passed(fx):
 
 import cocobet_dataset as D   # 29.06.2026: dataset-aware (WM / Liga / MLS-Poly-Dry-Run)
 from odds_plausibility import (plausible_1x2, devig_1x2,   # 19.07.2026: Platzhalter-Quoten raus
-                               devig_power, devig_1x2_power)   # 14.09.2026: laeuft parallel mit, entscheidet nichts
+                               devig_power, devig_1x2_power)   # 14.09.2026 Messung, seit 04.10.2026 scharf (DEVIG_METHODE)
+# 04.10.2026: welche De-Vig scharf ist (Messung und Begruendung beim Edge-Block in der Fixture-Schleife).
+# "proportional" stellt den alten Pfad wieder her, ohne Code-Aenderung.
+DEVIG_METHODE = "proportional" if os.environ.get("DEVIG_METHODE", "").strip().lower() == "proportional" else "power"
 try:                                  # 28.08.2026: Slug-Gedächtnis atomar schreiben
     from safe_write import write_json_atomic
 except Exception:                     # safe_write fehlt → lieber schreiben als abbrechen
@@ -1259,13 +1262,30 @@ def main():
         # 14.09.2026: die Power-De-Vig laeuft PARALLEL mit — sie entscheidet nichts, sie wird
         # nur mitgeschrieben, damit in ein paar Wochen der CLV sagen kann, welcher faire Wert
         # naeher am Schlusskurs lag. Scharf bleibt `devig_1x2` (proportional).
+        # 🔴 04.10.2026 UMGESTELLT (Lucas: „ja stell um"). Gemessen am Poly-Schlusskurs, 68 Spiele /
+        # 339 Ausgaenge seit 14.09., mittlerer Abstand proportional MINUS power (Bootstrap ueber
+        # Spiele, 90 %):
+        #     alle              Einstieg +0,12pp [+0,03 … +0,22]   Schluss +0,16pp [+0,08 … +0,25]
+        #     O/U Seite < 40 ¢  Einstieg +0,57pp [+0,23 … +0,88]   Schluss +0,49pp [+0,23 … +0,79]
+        #     1X2 < 40 ¢        Einstieg -0,03pp [-0,09 … +0,04]   (kein Unterschied)
+        # Power liegt belegt naeher; in O/U hob proportional die Aussenseiter-Seite um ~1,1pp an —
+        # Edge, die es nicht gab. Scharf ist jetzt POWER (DEVIG_METHODE). Proportional laeuft als
+        # `fairProp_*` weiter mit, damit die Gegenprobe nicht abreisst. `fairPow_*` bleibt als
+        # Feld erhalten (gleiche Werte wie fair_*), weil Auswertungen es lesen.
+        # Edge-Schwellen (AUTO_TRIGGER_EDGE_PP / MIN_ASK_EDGE_PP 4,0) bleiben: der Methoden-
+        # Unterschied liegt weit darunter. BTTS bleibt proportional — dort gibt es keine Messung.
         fairPow_hw = fairPow_dr = fairPow_aw = None
         fairPow_o25 = fairPow_u25 = None
+        fairProp_hw = fairProp_dr = fairProp_aw = None
+        fairProp_o25 = fairProp_u25 = None
         _fairp = devig_1x2_power(pinn_hw, pinn_dr, pinn_aw)
         if _fairp:
             fairPow_hw, fairPow_dr, fairPow_aw = _fairp["home"], _fairp["draw"], _fairp["away"]
+        _fairq = devig_1x2(pinn_hw, pinn_dr, pinn_aw)
+        if _fairq:
+            fairProp_hw, fairProp_dr, fairProp_aw = _fairq["home"], _fairq["draw"], _fairq["away"]
 
-        _fair = devig_1x2(pinn_hw, pinn_dr, pinn_aw)
+        _fair = _fairp if DEVIG_METHODE == "power" else _fairq
         if _fair:
             fair_hw, fair_dr, fair_aw = _fair["home"], _fair["draw"], _fair["away"]
             edge_hw = round((fair_hw - p["hw"]) * 100, 1)
@@ -1292,11 +1312,14 @@ def main():
 
         if pinn_o25 and pinn_u25 and pinn_o25 > 1 and poly_o25:
             ou_margin  = 1/pinn_o25 + 1/pinn_u25
-            fair_o25   = round((1/pinn_o25) / ou_margin, 4)
-            fair_u25   = round((1/pinn_u25) / ou_margin, 4)
-            _pw = devig_power([pinn_o25, pinn_u25])      # nur Messung, s. odds_plausibility
+            fairProp_o25 = round((1/pinn_o25) / ou_margin, 4)
+            fairProp_u25 = round((1/pinn_u25) / ou_margin, 4)
+            fair_o25, fair_u25 = fairProp_o25, fairProp_u25
+            _pw = devig_power([pinn_o25, pinn_u25])      # 04.10.2026: scharf (s. DEVIG_METHODE)
             if _pw:
                 fairPow_o25, fairPow_u25 = _pw[0], _pw[1]
+                if DEVIG_METHODE == "power":
+                    fair_o25, fair_u25 = fairPow_o25, fairPow_u25
             edge_o25   = round((fair_o25 - poly_o25) * 100, 1)
             edge_u25   = round((fair_u25 - (poly_u25 or 0)) * 100, 1) if poly_u25 else None
 
@@ -1401,6 +1424,13 @@ def main():
             "fairPow_aw":   fairPow_aw,
             "fairPow_o25":  fairPow_o25,
             "fairPow_u25":  fairPow_u25,
+            # 04.10.2026: proportional laeuft als Gegenprobe weiter; `devig` sagt, welche scharf ist.
+            "fairProp_hw":  fairProp_hw,
+            "fairProp_dr":  fairProp_dr,
+            "fairProp_aw":  fairProp_aw,
+            "fairProp_o25": fairProp_o25,
+            "fairProp_u25": fairProp_u25,
+            "devig":        DEVIG_METHODE,
             "pinnBooks":    {k: v for k, v in {
                                 "h2h":     (pinn or {}).get("bookmaker"),
                                 "totals":  (pinn or {}).get("bookmaker_totals"),
