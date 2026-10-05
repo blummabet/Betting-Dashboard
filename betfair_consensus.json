@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-10-05T23:10:25.114452+00:00",
+"generatedAt": "2026-10-05T23:25:37.817243+00:00",
 "count": 14,
 "covered": 9,
 "leaguesKuratiert": [
@@ -63,8 +63,8 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 84539,
-"remaining": 4915461,
+"used": 84686,
+"remaining": 4915314,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
@@ -83,10 +83,10 @@
 "moneyName": "England",
 "moneySharePct": 98,
 "moneyOdd": 1.14,
-"moneyDir": "out",
-"totVol": 201783,
+"moneyDir": "flat",
+"totVol": 202212,
 "pinnOdd": 1.12,
-"softOdd": 1.11,
+"softOdd": 1.1,
 "softN": 38,
 "poly": {
 "vol": 55042,
@@ -105,9 +105,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.8525,
+"home": 0.8528,
 "draw": 0.1002,
-"away": 0.0473,
+"away": 0.0471,
 "fav": "home",
 "n": 38
 },
@@ -152,9 +152,9 @@
 },
 "pinn": null,
 "soft": {
-"home": 0.5362,
-"draw": 0.2664,
-"away": 0.1974,
+"home": 0.5367,
+"draw": 0.2659,
+"away": 0.1973,
 "fav": "home",
 "n": 34
 },
@@ -184,11 +184,11 @@
 "moneySide": "away",
 "moneyName": "Spain",
 "moneySharePct": 95,
-"moneyOdd": 1.27,
-"moneyDir": "flat",
-"totVol": 155297,
-"pinnOdd": 1.26,
-"softOdd": 1.25,
+"moneyOdd": 1.29,
+"moneyDir": "out",
+"totVol": 155361,
+"pinnOdd": 1.25,
+"softOdd": 1.24,
 "softN": 38,
 "poly": {
 "vol": 180594,
@@ -201,25 +201,25 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.0968,
-"draw": 0.1428,
-"away": 0.7604,
+"home": 0.0937,
+"draw": 0.1402,
+"away": 0.7661,
 "fav": "away"
 },
 "soft": {
-"home": 0.0938,
-"draw": 0.1519,
-"away": 0.7543,
+"home": 0.0914,
+"draw": 0.1501,
+"away": 0.7585,
 "fav": "away",
 "n": 38
 },
-"pinnMovePP": 1.1,
+"pinnMovePP": 1.2,
 "pinnMove": {
-"movePP": 1.1,
-"stepPP": 0.0,
+"movePP": 1.2,
+"stepPP": 0.6,
 "n": 25,
 "move": true,
-"laeuft": false
+"laeuft": true
 },
 "verdict": "konsens",
 "agree": true,
@@ -235,26 +235,97 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Estudiantes",
-"moneySharePct": 80,
-"moneyOdd": 2.56,
+"moneySharePct": 74,
+"moneyOdd": 3.3,
 "moneyDir": "out",
-"totVol": 80484,
-"pinnOdd": 2.31,
-"softOdd": 2.38,
+"totVol": 97076,
+"pinnOdd": 2.59,
+"softOdd": 3.05,
 "softN": 24,
 "poly": null,
 "pinn": {
-"home": 0.4087,
-"draw": 0.4177,
-"away": 0.1735,
+"home": 0.3653,
+"draw": 0.4803,
+"away": 0.1544,
 "fav": "draw"
 },
 "soft": {
-"home": 0.3865,
-"draw": 0.4373,
-"away": 0.1762,
+"home": 0.3052,
+"draw": 0.539,
+"away": 0.1558,
 "fav": "draw",
 "n": 24
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "uneinig",
+"agree": false,
+"pinnTotals": null
+},
+{
+"matchId": "36068708",
+"home": "Velez Sarsfield",
+"away": "CA Platense",
+"league": "Argentinian Primera Division",
+"country": "AR",
+"kickoff": "2026-10-05T22:00:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Velez Sarsfield",
+"moneySharePct": 61,
+"moneyOdd": 1.35,
+"moneyDir": "in",
+"totVol": 71855,
+"pinnOdd": 2.83,
+"softOdd": 1.28,
+"softN": 23,
+"poly": {
+"vol": 59967,
+"odd": 2.82,
+"sharePct": 68,
+"shareSrc": "geld",
+"key": "arg-vel-pla-2026-10-05",
+"sideKey": "CA Vélez Sarsfield",
+"whales": [
+{
+"wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+"usd": 1537
+},
+{
+"wallet": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
+"usd": 1058
+},
+{
+"wallet": "0xbd9f5f1ad6d3e068824fe11b32ed0c8bb5ecc675",
+"usd": 958
+},
+{
+"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+"usd": 794
+},
+{
+"wallet": "0x02b18dfde01fd53b456cabda7d6ec2403322c764",
+"usd": 532
+},
+{
+"wallet": "0xa31c26cb45331da8389bece7a1250fceb5d6bdf7",
+"usd": 418
+}
+],
+"whaleUsd": 6715
+},
+"pinn": {
+"home": 0.3337,
+"draw": 0.4476,
+"away": 0.2186,
+"fav": "draw"
+},
+"soft": {
+"home": 0.7087,
+"draw": 0.2259,
+"away": 0.0654,
+"fav": "home",
+"n": 23
 },
 "pinnMovePP": null,
 "pinnMove": null,
@@ -313,77 +384,6 @@
 }
 },
 {
-"matchId": "36068708",
-"home": "Velez Sarsfield",
-"away": "CA Platense",
-"league": "Argentinian Primera Division",
-"country": "AR",
-"kickoff": "2026-10-05T22:00:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Velez Sarsfield",
-"moneySharePct": 59,
-"moneyOdd": 2.84,
-"moneyDir": "in",
-"totVol": 54270,
-"pinnOdd": 2.74,
-"softOdd": 2.62,
-"softN": 22,
-"poly": {
-"vol": 59967,
-"odd": 2.82,
-"sharePct": 68,
-"shareSrc": "geld",
-"key": "arg-vel-pla-2026-10-05",
-"sideKey": "CA Vélez Sarsfield",
-"whales": [
-{
-"wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-"usd": 1537
-},
-{
-"wallet": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
-"usd": 1058
-},
-{
-"wallet": "0xbd9f5f1ad6d3e068824fe11b32ed0c8bb5ecc675",
-"usd": 958
-},
-{
-"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-"usd": 794
-},
-{
-"wallet": "0x02b18dfde01fd53b456cabda7d6ec2403322c764",
-"usd": 532
-},
-{
-"wallet": "0xa31c26cb45331da8389bece7a1250fceb5d6bdf7",
-"usd": 418
-}
-],
-"whaleUsd": 6715
-},
-"pinn": {
-"home": 0.3444,
-"draw": 0.4309,
-"away": 0.2247,
-"fav": "draw"
-},
-"soft": {
-"home": 0.3583,
-"draw": 0.4145,
-"away": 0.2272,
-"fav": "draw",
-"n": 22
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "uneinig",
-"agree": false,
-"pinnTotals": null
-},
-{
 "matchId": "36151669",
 "home": "Estonia",
 "away": "Iceland",
@@ -394,9 +394,9 @@
 "moneySide": "away",
 "moneyName": "Iceland",
 "moneySharePct": 97,
-"moneyOdd": 1.65,
-"moneyDir": "flat",
-"totVol": 48732,
+"moneyOdd": 1.64,
+"moneyDir": "in",
+"totVol": 48813,
 "pinnOdd": null,
 "softOdd": 1.57,
 "softN": 31,
@@ -462,9 +462,9 @@
 },
 "pinn": null,
 "soft": {
-"home": 0.8612,
-"draw": 0.0989,
-"away": 0.0398,
+"home": 0.8613,
+"draw": 0.0987,
+"away": 0.04,
 "fav": "home",
 "n": 34
 },
@@ -494,9 +494,9 @@
 "moneySide": "away",
 "moneyName": "Finland",
 "moneySharePct": 50,
-"moneyOdd": 2.14,
-"moneyDir": "flat",
-"totVol": 5525,
+"moneyOdd": 2.12,
+"moneyDir": "in",
+"totVol": 5576,
 "pinnOdd": null,
 "softOdd": 2.0,
 "softN": 32,
@@ -512,9 +512,9 @@
 },
 "pinn": null,
 "soft": {
-"home": 0.243,
-"draw": 0.29,
-"away": 0.467,
+"home": 0.2429,
+"draw": 0.2899,
+"away": 0.4672,
 "fav": "away",
 "n": 32
 },
@@ -543,10 +543,10 @@
 "live": true,
 "moneySide": "away",
 "moneyName": "El Salvador",
-"moneySharePct": 46,
-"moneyOdd": 1.84,
-"moneyDir": "in",
-"totVol": 33704,
+"moneySharePct": 42,
+"moneyOdd": 5.9,
+"moneyDir": "out",
+"totVol": 49591,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -607,10 +607,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Cerro Porteno",
-"moneySharePct": 77,
-"moneyOdd": 3.55,
+"moneySharePct": 75,
+"moneyOdd": 3.9,
 "moneyDir": "out",
-"totVol": 25653,
+"totVol": 27870,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -637,10 +637,10 @@
 "live": true,
 "moneySide": "away",
 "moneyName": "Envigado",
-"moneySharePct": 51,
-"moneyOdd": 1.09,
+"moneySharePct": 55,
+"moneyOdd": 1.07,
 "moneyDir": "in",
-"totVol": 7749,
+"totVol": 8676,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -701,10 +701,10 @@
 "live": true,
 "moneySide": "away",
 "moneyName": "Gen Caballero",
-"moneySharePct": 40,
-"moneyOdd": 1.59,
+"moneySharePct": 48,
+"moneyOdd": 1.15,
 "moneyDir": "in",
-"totVol": 606,
+"totVol": 728,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -785,30 +785,21 @@
 "liga": "UEFA Nations League C"
 },
 {
+"spiel": "Lithuania U21 v Croatia U21",
+"kandidat": "Croatia v Spain",
+"key": "soccer_uefa_nations_league",
+"score": 0.5,
+"grund": "name",
+"matchId": "36155725",
+"liga": "UEFA U21 Euro Qualifiers"
+},
+{
 "spiel": "France U21 v Switzerland U21",
 "kandidat": "Switzerland v North Macedonia",
 "key": "soccer_uefa_nations_league",
 "score": 0.5,
 "grund": "name",
 "matchId": "36155681",
-"liga": "UEFA U21 Euro Qualifiers"
-},
-{
-"spiel": "Cyprus U21 v San Marino U21",
-"kandidat": "Albania v San Marino",
-"key": "soccer_uefa_nations_league",
-"score": 0.67,
-"grund": "name",
-"matchId": "36155665",
-"liga": "UEFA U21 Euro Qualifiers"
-},
-{
-"spiel": "Rep of Ireland U21 v England U21",
-"kandidat": "England v Czech Republic",
-"key": "soccer_uefa_nations_league",
-"score": 0.5,
-"grund": "name",
-"matchId": "36146957",
 "liga": "UEFA U21 Euro Qualifiers"
 },
 {
@@ -821,21 +812,12 @@
 "liga": "UEFA U21 Euro Qualifiers"
 },
 {
-"spiel": "Lithuania U21 v Croatia U21",
-"kandidat": "Croatia v Spain",
+"spiel": "Cyprus U21 v San Marino U21",
+"kandidat": "Albania v San Marino",
 "key": "soccer_uefa_nations_league",
-"score": 0.5,
+"score": 0.67,
 "grund": "name",
-"matchId": "36155725",
-"liga": "UEFA U21 Euro Qualifiers"
-},
-{
-"spiel": "Luxembourg U21 v Estonia U21",
-"kandidat": "Luxembourg v Bulgaria",
-"key": "soccer_uefa_nations_league",
-"score": 0.5,
-"grund": "name",
-"matchId": "36155683",
+"matchId": "36155665",
 "liga": "UEFA U21 Euro Qualifiers"
 },
 {
@@ -845,6 +827,24 @@
 "score": 0.5,
 "grund": "name",
 "matchId": "36155677",
+"liga": "UEFA U21 Euro Qualifiers"
+},
+{
+"spiel": "Rep of Ireland U21 v England U21",
+"kandidat": "England v Czech Republic",
+"key": "soccer_uefa_nations_league",
+"score": 0.5,
+"grund": "name",
+"matchId": "36146957",
+"liga": "UEFA U21 Euro Qualifiers"
+},
+{
+"spiel": "Luxembourg U21 v Estonia U21",
+"kandidat": "Luxembourg v Bulgaria",
+"key": "soccer_uefa_nations_league",
+"score": 0.5,
+"grund": "name",
+"matchId": "36155683",
 "liga": "UEFA U21 Euro Qualifiers"
 },
 {
@@ -921,17 +921,6 @@
 "liga": "English U21 Pro Development League"
 },
 {
-"spiel": "Halesowen Town v Stafford Rangers",
-"grund": "kein_pinnacle",
-"kandidat": "Halesowen Town FC v Stafford Rangers FC",
-"key": "soccer_fa_cup",
-"nSoft": 20,
-"pinnacleImEvent": false,
-"nBuecher": 20,
-"matchId": "36152580",
-"liga": "English FA Cup Qualifiers"
-},
-{
 "spiel": "Scarborough Athletic v Macclesfield",
 "grund": "kein_pinnacle",
 "kandidat": "Scarborough Athletic FC v Macclesfield Town",
@@ -940,6 +929,17 @@
 "pinnacleImEvent": false,
 "nBuecher": 21,
 "matchId": "36154662",
+"liga": "English FA Cup Qualifiers"
+},
+{
+"spiel": "Spalding Utd v Bury Town",
+"grund": "kein_pinnacle",
+"kandidat": "Spalding United FC v Bury Town FC",
+"key": "soccer_fa_cup",
+"nSoft": 18,
+"pinnacleImEvent": false,
+"nBuecher": 18,
+"matchId": "36152387",
 "liga": "English FA Cup Qualifiers"
 },
 {
