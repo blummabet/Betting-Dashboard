@@ -1,13 +1,13 @@
 {
   "slug": "betfair",
   "workflow": "🟡 Betfair Radar (Betwatch)",
-  "updatedAt": "2026-10-05T16:25:11.782279+00:00",
+  "updatedAt": "2026-10-05T16:40:19.864972+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
-    "spanneH": 4.6,
-    "proTag": 99.1,
-    "lueckeMinMin": 5.5,
+    "spanneH": 4.8,
+    "proTag": 95.7,
+    "lueckeMinMin": 11.5,
     "lueckeMedianMin": 15.0,
     "lueckeMaxMin": 18.5,
     "sollProTag": null,
@@ -19,11 +19,26 @@
     "erzeugt": 100,
     "gelaufen": 100,
     "verdraengt": 0,
-    "spanneH": 684.3,
-    "erzeugtProTag": 3.5,
-    "widerspruch": "erzeugtProTag 3.5 gegen eine gemessene Kadenz von 99.1/Tag (Faktor 28.3) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
+    "spanneH": 418.3,
+    "erzeugtProTag": 5.7,
+    "widerspruch": "erzeugtProTag 5.7 gegen eine gemessene Kadenz von 95.7/Tag (Faktor 16.8) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
   },
   "runs": [
+    {
+      "ts": "2026-10-05T16:40:19.864972+00:00",
+      "workflow": "🟡 Betfair Radar (Betwatch)",
+      "runId": "37342389805",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/37342389805",
+      "nSteps": 39,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-10-05T16:38:30Z",
+      "startedAt": "2026-10-05T16:38:30Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 109.9,
+      "event": "workflow_dispatch"
+    },
     {
       "ts": "2026-10-05T16:25:11.782279+00:00",
       "workflow": "🟡 Betfair Radar (Betwatch)",
@@ -307,21 +322,6 @@
       "startedAt": "2026-10-05T11:52:50Z",
       "wartetS": 0.0,
       "laeuftSeitS": 97.1,
-      "event": "workflow_dispatch"
-    },
-    {
-      "ts": "2026-10-05T11:48:59.026658+00:00",
-      "workflow": "🟡 Betfair Radar (Betwatch)",
-      "runId": "37304165583",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/37304165583",
-      "nSteps": 39,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-10-05T11:37:48Z",
-      "startedAt": "2026-10-05T11:37:48Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 671.0,
       "event": "workflow_dispatch"
     }
   ]
