@@ -1,14 +1,14 @@
 {
   "slug": "poly-global",
   "workflow": "🐋 Poly Global-Scan (alle Sportarten, häufig)",
-  "updatedAt": "2026-10-05T14:35:28.597859+00:00",
+  "updatedAt": "2026-10-05T15:05:39.232199+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
     "spanneH": 9.5,
-    "proTag": 47.9,
+    "proTag": 47.8,
     "lueckeMinMin": 28.7,
-    "lueckeMedianMin": 30.1,
+    "lueckeMedianMin": 30.2,
     "lueckeMaxMin": 31.4,
     "sollProTag": null,
     "liefergradPct": null,
@@ -16,14 +16,29 @@
     "fensterUrteil": null
   },
   "erzeugung": {
-    "erzeugt": 100,
-    "gelaufen": 100,
+    "erzeugt": 19,
+    "gelaufen": 19,
     "verdraengt": 0,
-    "spanneH": 365.5,
-    "erzeugtProTag": 6.6,
-    "widerspruch": "erzeugtProTag 6.6 gegen eine gemessene Kadenz von 47.9/Tag (Faktor 7.3) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
+    "spanneH": 119.6,
+    "erzeugtProTag": 3.8,
+    "widerspruch": "erzeugtProTag 3.8 gegen eine gemessene Kadenz von 47.8/Tag (Faktor 12.6) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
   },
   "runs": [
+    {
+      "ts": "2026-10-05T15:05:39.232199+00:00",
+      "workflow": "🐋 Poly Global-Scan (alle Sportarten, häufig)",
+      "runId": "37329265319",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/37329265319",
+      "nSteps": 28,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-10-05T15:00:06Z",
+      "startedAt": "2026-10-05T15:00:06Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 333.2,
+      "event": "workflow_dispatch"
+    },
     {
       "ts": "2026-10-05T14:35:28.597859+00:00",
       "workflow": "🐋 Poly Global-Scan (alle Sportarten, häufig)",
@@ -307,21 +322,6 @@
       "startedAt": "2026-10-05T05:29:13Z",
       "wartetS": 0.0,
       "laeuftSeitS": 261.3,
-      "event": "workflow_dispatch"
-    },
-    {
-      "ts": "2026-10-05T05:03:46.123052+00:00",
-      "workflow": "🐋 Poly Global-Scan (alle Sportarten, häufig)",
-      "runId": "37265805075",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/37265805075",
-      "nSteps": 28,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-10-05T04:59:10Z",
-      "startedAt": "2026-10-05T04:59:10Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 276.1,
       "event": "workflow_dispatch"
     }
   ]
