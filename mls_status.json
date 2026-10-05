@@ -389,7 +389,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "1607-1603 Auswärtssieg @1.85: sichere Linie Doppelte Chance — X2 @1.456 verfügbar (≥1.35), nicht abgeleitet"
+        "1607-1603 Auswärtssieg @1.85: sichere Linie Doppelte Chance — X2 @1.443 verfügbar (≥1.35), nicht abgeleitet"
       ],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
     },
@@ -601,7 +601,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "40000/40000 Zeilen · 34.0 Tage Fenster (2026-08-31 bis 2026-10-04). Kurzes Fenster bei freiem Deckel ist normal (der Track fuellt sich); kurzes Fenster AM Deckel ist der Fehler."
+      "note": "40000/40000 Zeilen · 33.9 Tage Fenster (2026-09-01 bis 2026-10-05). Kurzes Fenster bei freiem Deckel ist normal (der Track fuellt sich); kurzes Fenster AM Deckel ist der Fehler."
     },
     {
       "id": "betfair_liefert",
@@ -619,9 +619,9 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "Der Job lief vor 0.2h, aber die jüngste Poly-Global-Scan-Datei ist 10.8h alt (poly_wallet_track 10.8h, poly_money_broad 10.8h). Der Workflow läuft und liefert NICHTS — am 02.09.2026 zweimal passiert: morgens scheiterte `git add` an einem fehlenden Pfad (staged dann gar nichts), abends beim Poly-Scan aus anderer Ursache."
+        "Der Job lief vor 0.5h, aber die jüngste Poly-Global-Scan-Datei ist 28.6h alt (poly_wallet_track 28.6h, poly_money_broad 28.6h). Der Workflow läuft und liefert NICHTS — am 02.09.2026 zweimal passiert: morgens scheiterte `git add` an einem fehlenden Pfad (staged dann gar nichts), abends beim Poly-Scan aus anderer Ursache."
       ],
-      "note": "Job vor 0.2h · jüngste Daten vor 10.8h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
+      "note": "Job vor 0.5h · jüngste Daten vor 28.6h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
     },
     {
       "id": "pinn_anker",
@@ -630,7 +630,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "43 von 43 Ankern der Handliste treffen den Feed · 404 Ligastrings gesehen · Anker liegt auf 100% von 7 offenen Spielen (aus 48 geholten Wettbewerben). Eine niedrige Abdeckung der HANDLISTE ist kein Fehler mehr (der globale Pool faengt den Rest); ein toter Eintrag schon."
+      "note": "43 von 43 Ankern der Handliste treffen den Feed · 407 Ligastrings gesehen · Anker liegt auf 100% von 6 offenen Spielen (aus 48 geholten Wettbewerben). Eine niedrige Abdeckung der HANDLISTE ist kein Fehler mehr (der globale Pool faengt den Rest); ein toter Eintrag schon."
     },
     {
       "id": "buecher_punkte",
@@ -639,7 +639,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "68 Spiele bewertet · 21 mit mindestens einem fremden Buch · beste Punktzahl 8. Ein leeres Fenster ist kein Fehler; ein dauerhaft einsamer Betfair-Score schon."
+      "note": "85 Spiele bewertet · 19 mit mindestens einem fremden Buch · beste Punktzahl 12. Ein leeres Fenster ist kein Fehler; ein dauerhaft einsamer Betfair-Score schon."
     },
     {
       "id": "vorregistrierung",
@@ -648,7 +648,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "🔒 E-Sport ohne Wallet-Nachweis: 289/120 seit 28d · 🔒 Liga · Conviction ab 5: 85/80 seit 23d · 🔒 Fade-Unter · Ganzspiel-Torlinie: 4964/200 seit 28d · 🔒 Poly-Auswahl · von Betfair bestätigt: 330/60 seit 33d · 🔒 Bücher-Score ≥7 von 10: 94/40 seit 33d"
+      "note": "🔒 E-Sport ohne Wallet-Nachweis: 290/120 seit 28d · 🔒 Liga · Conviction ab 5: 85/80 seit 24d · 🔒 Fade-Unter · Ganzspiel-Torlinie: 5040/200 seit 28d · 🔒 Poly-Auswahl · von Betfair bestätigt: 330/60 seit 34d · 🔒 Bücher-Score ≥7 von 10: 92/40 seit 34d"
     },
     {
       "id": "killer_push_buch",
@@ -670,5 +670,5 @@
     }
   ],
   "nFail": 5,
-  "generatedAt": "2026-10-04T22:21:16.611586+00:00"
+  "generatedAt": "2026-10-05T16:07:17.697255+00:00"
 }
