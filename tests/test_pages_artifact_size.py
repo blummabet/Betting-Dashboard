@@ -65,6 +65,10 @@ WF = os.path.join(REPO, ".github", "workflows", "deploy-pages.yml")
 # 42,7 MB, von niemandem gelesen. Nach Generator-Fix + Migration: 100,8 MB.
 # Das Budget geht mit runter (115 statt 140), sonst waechst der gewonnene Platz stillschweigend
 # wieder zu — genau das ist am 02.09. schon einmal passiert.
+# 06.10.2026 (Lucas: „schau dir das mit dem Pages Artefakt an"): 129 MB. Kein neuer Ballast —
+# ~22 MB waren Einrueckung (`indent=1/2`) in den Wurzel-JSONs, allen voran
+# poly_money_broad_close.json (15 MB, 30-Tage-Fenster). Fix: der Deploy schreibt die Wurzel-JSONs
+# kompakt (scripts/pages_ballast.py --verdichten), der Test misst sie so. Budget bleibt 115.
 ARTEFAKT_BUDGET_MB = 115
 
 
@@ -111,13 +115,14 @@ def _groessen_nach_cleanup():
         if "/" in f and _passt(top, muster):
             continue
         try:
-            gr[top] += os.path.getsize(os.path.join(REPO, f))
+            # 06.10.2026: Wurzel-JSONs zaehlen VERDICHTET — so, wie der Deploy sie hochlaedt.
+            gr[top] += BALLAST.artefakt_groesse(os.path.join(REPO, f))
         except OSError:
             pass
     # Einzeln geloeschte Wurzel-Dateien (rm -f) abziehen.
     for f in _geloeschte_dateien():
         try:
-            gr["(Wurzel)"] -= os.path.getsize(os.path.join(REPO, f))
+            gr["(Wurzel)"] -= BALLAST.artefakt_groesse(os.path.join(REPO, f))
         except OSError:
             pass
     return gr
@@ -351,3 +356,41 @@ class TestBallastRegelLeck:
         raus = set(_geloeschte_dateien())
         if os.path.exists(os.path.join(REPO, "stake_bet_ledger.json")):
             assert "stake_bet_ledger.json" in raus
+
+
+class TestVerdichten:
+    """06.10.2026: 129 MB > 115 — der Deploy schrieb Wurzel-JSONs eingerueckt in das Artefakt."""
+
+    def test_workflow_verdichtet_nach_dem_loeschen(self):
+        src = open(WF, encoding="utf-8").read()
+        assert "pages_ballast.py --verdichten" in src, "Deploy verdichtet die Wurzel-JSONs nicht mehr"
+        assert src.index("--loeschen") < src.index("--verdichten")
+        assert src.index("--verdichten") < src.index("upload-pages-artifact")
+
+    def test_inhalt_bleibt_nach_parse_identisch(self, tmp_path):
+        import json
+        daten = {"z": [1, 2.5, None, "äöü €"], "a": {"b": True, "nan": float("nan")}, "x": 10**20}
+        p = tmp_path / "x.json"
+        p.write_text(json.dumps(daten, indent=2, ensure_ascii=False), encoding="utf-8")
+        v = BALLAST.verdichtet(str(p))
+        assert v is not None and len(v) < p.stat().st_size
+        zurueck = json.loads(v.decode("utf-8"))
+        assert list(zurueck) == ["z", "a", "x"]          # Reihenfolge bleibt
+        assert zurueck["z"] == daten["z"] and zurueck["x"] == 10**20
+        assert zurueck["a"]["nan"] != zurueck["a"]["nan"]  # NaN bleibt NaN
+
+    def test_kaputtes_json_bleibt_unangetastet(self, tmp_path):
+        p = tmp_path / "kaputt.json"
+        p.write_text('{"a": 1,\n "b": ', encoding="utf-8")
+        assert BALLAST.verdichtet(str(p)) is None
+        q = tmp_path / "schon_kompakt.json"
+        q.write_text('{"a":1}', encoding="utf-8")
+        assert BALLAST.verdichtet(str(q)) is None
+
+    def test_schreiben_nur_auf_wunsch(self, tmp_path):
+        p = tmp_path / "d.json"
+        p.write_text('{\n  "a": [1, 2, 3]\n}', encoding="utf-8")
+        vo, na = BALLAST.wurzel_jsons_verdichten(["d.json", "sub/e.json"], str(tmp_path))
+        assert na < vo and p.read_text(encoding="utf-8").startswith("{\n")
+        BALLAST.wurzel_jsons_verdichten(["d.json"], str(tmp_path), schreiben=True)
+        assert p.read_text(encoding="utf-8") == '{"a":[1,2,3]}'

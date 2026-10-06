@@ -311,6 +311,98 @@ def alter_h(wert, jetzt=None):
     return round(((jetzt or datetime.now(timezone.utc)) - t).total_seconds() / 3600.0, 1)
 
 
+# ── Datenquellen, von denen alles abhaengt ──────────────────────────────────
+#
+# 🔴 06.10.2026 (Lucas: „gestern kam nur 1 spiel … klemmt da wo was?"). `poly_money_broad.py`
+# stuerzte ab 04.10. 13:32 bei jeder neuen Position ab; der Whale-Scan stand 45 h. Die Meldung
+# vom 06.10. 06:11 UTC wusste es — als „Wallet-Lernen 42.6h", „Auflösungs-Feed 4.0h",
+# „Poly-Global-Scan liefert keine Daten", „Backtest" und „11 weitere", gleichrangig neben Kleinkram.
+# Lucas fand es erst ueber die Folge: „Heute spielenswert" fiel von ~40 Eintraegen am Tag auf 1.
+#
+# Fehlerklasse: eine Ursache, die nur als ihre Symptome gemeldet wird — verteilt auf viele
+# Zeilen, keine davon sagt „hier steht die Quelle". Dazu: einmal am Tag im Fenster heisst, ein
+# Ausfall um 13:30 wird fruehestens am naechsten Morgen gesehen.
+#
+# Deshalb: eine kurze, ausdrueckliche Liste der Quellen, OHNE die die Kette leer laeuft, gemessen
+# an ihrem eigenen Zeitstempel. Steht eine, kommt SOFORT ein eigener Alarm (nicht erst im
+# Fenster), danach hoechstens alle ERINNERUNG_H eine Erinnerung, und eine Entwarnung, wenn sie
+# wieder laeuft. In der Tagesmeldung steht sie ganz oben, ueber allem.
+# (datei, zeitfeld, grenze_h, name, was haengt dran)
+DATENQUELLEN = (
+    ("poly_money_broad.json", "generatedAt", 3.0, "Poly-Whale-Scan",
+     "Whale-Pushes, Heute spielenswert, Wallet-Lernen, Auflösungen"),
+    ("poly_live_signal_track.json", "updatedAt", 3.0, "Poly-Live-Scan",
+     "Live-Pushes, Live-Signal-Buch"),
+    ("stake_highroller.json", "asof", 3.0, "Stake-Highroller",
+     "Stake-Bursts, Über der Norm"),
+)
+ERINNERUNG_H = 12.0
+
+
+def stehende_quellen(inhalte: dict, jetzt=None, quellen_def=DATENQUELLEN) -> list:
+    """{datei: inhalt|None} -> stehende Quellen. REIN.
+
+    Fehlt die Datei, ist sie unlesbar oder fehlt der Zeitstempel, steht sie ebenfalls — eine
+    Quelle, deren Alter man nicht kennt, ist keine laufende Quelle.
+    """
+    raus = []
+    for datei, feld, grenze, name, dran in quellen_def:
+        d = (inhalte or {}).get(datei)
+        a = alter_h(d.get(feld), jetzt) if isinstance(d, dict) else None
+        if a is not None and a <= grenze:
+            continue
+        raus.append({"datei": datei, "name": name, "dran": dran, "alterH": a,
+                     "grund": ("%.0f h kein neuer Stand" % a) if a is not None
+                     else "ohne lesbaren Zeitstempel"})
+    return raus
+
+
+def quellen_laden(basis=None, quellen_def=DATENQUELLEN) -> dict:
+    basis = Path(basis) if basis else BASE
+    raus = {}
+    for datei, *_ in quellen_def:
+        d = _laden(basis / datei) if (basis / datei).exists() else None
+        raus[datei] = None if d is _UNLESBAR else d
+    return raus
+
+
+def _quelle_zeile(x) -> str:
+    return "   · <b>%s</b> — %s\n       betroffen: %s" % (x["name"], x["grund"], x["dran"])
+
+
+def quellen_alarm(stehend: list, stand: dict, jetzt=None, erinnerung_h=ERINNERUNG_H):
+    """Was jetzt sofort raus muss, und der neue Stand. REIN.
+
+    -> (text_oder_leer, neuer_alarm_stand). `stand` ist {datei: iso des letzten Alarms}.
+    Neu stehend -> Alarm. Weiter stehend -> Erinnerung nach `erinnerung_h`. Wieder laufend ->
+    Entwarnung. Sonst still — ein Alarm, der jeden Lauf kommt, wird weggewischt.
+    """
+    jetzt = jetzt or datetime.now(timezone.utc)
+    alt = dict(stand or {})
+    neu, faellig = {}, []
+    for x in stehend:
+        zuletzt = alt.get(x["datei"])
+        a = alter_h(zuletzt, jetzt)
+        if a is None or a >= erinnerung_h:
+            faellig.append(x)
+            neu[x["datei"]] = jetzt.isoformat()
+        else:
+            neu[x["datei"]] = zuletzt
+    stehend_namen = {x["datei"] for x in stehend}
+    wieder = [d for d in alt if d not in stehend_namen]
+    z = []
+    if faellig:
+        z.append("⛔ <b>Datenquelle steht</b> · %s" % jetzt.strftime("%d.%m. %H:%M UTC"))
+        z.extend(_quelle_zeile(x) for x in faellig)
+        z.append("<i>Alles, was darauf aufbaut, läuft leer. Erst die Quelle, dann der Rest.</i>")
+    if wieder:
+        name = {q[0]: q[3] for q in DATENQUELLEN}
+        if z:
+            z.append("")
+        z.append("✅ <b>Wieder da:</b> %s" % ", ".join(name.get(d, d) for d in wieder))
+    return "\n".join(z), neu
+
+
 def schluessel(check: dict) -> str:
     return str(check.get("id") or check.get("label") or "").strip().lower()
 
@@ -439,10 +531,16 @@ def _kurz(text: str, n: int = 150) -> str:
 def baue_meldung(befund: dict, jetzt=None) -> str:
     """Der Text. REIN. Leer = nichts zu melden, dann wird nicht gesendet."""
     b = befund or {}
-    if not (b.get("geld") or b.get("messung") or b.get("blind") or b.get("offen")):
+    if not (b.get("geld") or b.get("messung") or b.get("blind") or b.get("offen")
+            or b.get("quellen")):
         return ""
     jetzt = jetzt or datetime.now(timezone.utc)
     z = ["🩺 <b>Störungsmeldung</b> · %s" % jetzt.strftime("%d.%m. %H:%M UTC")]
+    if b.get("quellen"):
+        # 06.10.2026: die Ursache zuerst — was darunter steht, ist oft nur ihre Folge.
+        z.append("")
+        z.append("⛔ <b>Datenquelle steht</b> — vieles darunter ist Folge davon:")
+        z.extend(_quelle_zeile(x) for x in b["quellen"])
     if b.get("blind"):
         z.append("")
         z.append("⚫️ <b>Blind</b> — diese Prüfung sagt gerade gar nichts:")
@@ -497,6 +595,7 @@ def main(argv=None) -> int:
 
     artefakte = quellen()
     befund = sammeln(artefakte, jetzt)
+    befund["quellen"] = stehende_quellen(quellen_laden(), jetzt)
     text = baue_meldung(befund, jetzt)
 
     stand_p = BASE / STAND_FILE
@@ -504,6 +603,27 @@ def main(argv=None) -> int:
         stand = json.loads(stand_p.read_text(encoding="utf-8"))
     except Exception:
         stand = {}
+
+    # 06.10.2026: eine stehende Quelle wartet NICHT aufs Fenster.
+    alarm, alarm_stand = quellen_alarm(befund["quellen"], stand.get("quellenAlarm"), jetzt)
+    print("  Datenquellen stehend: %d" % len(befund["quellen"]))
+    if probe:
+        print(alarm or "  (keine Quelle steht)")
+    elif alarm:
+        try:
+            from telegram_bot import tg_send_ops as _ops
+        except Exception as e:                   # noqa: BLE001
+            _ops = None
+            print("  Telegram nicht verfuegbar: %s" % e)
+        if _ops and _ops(alarm):
+            stand["quellenAlarm"] = alarm_stand
+            stand_p.write_text(json.dumps(stand, ensure_ascii=False, indent=1), encoding="utf-8")
+            print("  Quellen-Alarm gesendet.")
+        else:
+            print("  Quellen-Alarm NICHT gesendet — naechster Lauf versucht es erneut.")
+    elif alarm_stand != (stand.get("quellenAlarm") or {}):
+        stand["quellenAlarm"] = alarm_stand
+        stand_p.write_text(json.dumps(stand, ensure_ascii=False, indent=1), encoding="utf-8")
 
     print("=== stoerungsmeldung ===")
     print("  Geld %d · Messung %d · nicht eingestuft %d · blind %d"

@@ -29,6 +29,14 @@ zwei Sicherungen:
 Aufruf im Workflow (nur im ephemeren Runner-Checkout, das Repo bleibt unberuehrt):
     python3 scripts/pages_ballast.py --loeschen
 Ohne Flag wird nur aufgelistet.
+
+06.10.2026 (Lucas: „schau dir das mit dem Pages Artefakt an") — 129 MB gegen 115 MB Budget.
+Ursache KEIN neuer Ballast, sondern Einrueckung: die Erzeuger schreiben mit `indent=1/2`, und
+`poly_money_broad_close.json` (30-Tage-Fenster, 3.800 Maerkte) allein ist dadurch 15 MB. Von 92 MB
+ausgelieferten Wurzel-JSONs sind ~22 MB Leerzeichen und Zeilenumbrueche. Das Repo behaelt die
+lesbare Form (Diffs!), das Deploy-Artefakt bekommt die kompakte — inhaltlich bitgleich nach
+`JSON.parse`. Aufruf: `--verdichten` (nach `--loeschen`). Was sich nicht parsen laesst, bleibt
+unangetastet.
 """
 from __future__ import annotations
 import os
@@ -108,9 +116,59 @@ def unbenutzte_wurzel_jsons(dateien=None, repo=REPO):
     return sorted(raus)
 
 
+def verdichtet(pfad):
+    """Kompakte Bytes desselben JSON — oder None (nicht parsebar / kein Gewinn). REIN/testbar.
+
+    Nach `JSON.parse` identisch: Schluessel-Reihenfolge bleibt, UTF-8 bleibt (ensure_ascii=False),
+    NaN/Infinity werden so zurueckgeschrieben, wie sie gelesen wurden.
+    """
+    import json
+    try:
+        with open(pfad, "rb") as f:
+            roh = f.read()
+        neu = json.dumps(json.loads(roh.decode("utf-8")), ensure_ascii=False,
+                         separators=(",", ":")).encode("utf-8")
+    except (OSError, ValueError, UnicodeDecodeError):
+        return None
+    return neu if len(neu) < len(roh) else None
+
+
+def artefakt_groesse(pfad):
+    """Groesse, mit der eine Datei im Artefakt landet (Wurzel-JSON: verdichtet)."""
+    if os.path.basename(pfad).endswith(".json") and os.path.dirname(os.path.relpath(pfad, REPO)) in ("",):
+        v = verdichtet(pfad)
+        if v is not None:
+            return len(v)
+    return os.path.getsize(pfad)
+
+
+def wurzel_jsons_verdichten(dateien=None, repo=REPO, schreiben=False):
+    """Alle Wurzel-JSONs kompakt schreiben. Gibt (vorher_bytes, nachher_bytes) zurueck."""
+    dateien = dateien if dateien is not None else tracked(repo)
+    vorher = nachher = 0
+    for f in dateien:
+        if "/" in f or not f.endswith(".json"):
+            continue
+        p = os.path.join(repo, f)
+        if not os.path.exists(p):
+            continue
+        alt = os.path.getsize(p)
+        v = verdichtet(p)
+        vorher += alt
+        nachher += len(v) if v is not None else alt
+        if v is not None and schreiben:
+            with open(p, "wb") as fh:
+                fh.write(v)
+    return vorher, nachher
+
+
 def main(argv=None):
     argv = list(sys.argv[1:] if argv is None else argv)
     loeschen = "--loeschen" in argv
+    if "--verdichten" in argv:
+        vo, na = wurzel_jsons_verdichten(schreiben=True)
+        print(f"🗜️ Wurzel-JSONs verdichtet: {vo/1e6:.1f} MB -> {na/1e6:.1f} MB")
+        return 0
     raus = unbenutzte_wurzel_jsons()
     mb = 0.0
     for f in raus:

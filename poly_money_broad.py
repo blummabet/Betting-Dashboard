@@ -2221,18 +2221,6 @@ def update_wallet_track(prev, markets, now=None, keep_h=HIST_KEEP_H, frozen=None
             else:
                 e["lastPrice"] = round(float(price), 4)
                 e["usd"] = round(float(wh.get("usd") or 0))
-            # 04.10.2026 (FUT v T1, Public-Karte „stockt auf · 68 % des Marktvolumens · Anpfiff in
-            # 57 Min" — 30 Minuten nach der ersten Karte mit denselben „57 Min"). Zaehler (diese
-            # Position) kam frisch, Nenner und Anpfiff aus dem Close-Feed, der ~1 h vor Anpfiff
-            # EINFRIERT. In der halben Stunde dazwischen kamen >$200K auf die Gegenseite — der echte
-            # Anteil war deutlich kleiner. Fehlerklasse: Zaehler und Nenner aus verschiedenen
-            # Zeitpunkten. Deshalb stehen frisches Marktvolumen und Anpfiff-Zeitpunkt an der Position.
-            _e = openp[ok]
-            if isinstance(m.get("totalUsd"), (int, float)) and m["totalUsd"] > 0:
-                _e["marktUsd"] = round(float(m["totalUsd"]))
-                _e["marktTs"] = now.isoformat()
-            if m.get("koTs"):
-                _e["koTs"] = m.get("koTs")
                 e["league"] = m.get("league")
                 e.setdefault("sport", m.get("sport"))
                 # htkFirst wird NICHT aufgefrischt — der Vorlauf ist der beim ERSTEN Sehen. Sonst
@@ -2240,6 +2228,23 @@ def update_wallet_track(prev, markets, now=None, keep_h=HIST_KEEP_H, frozen=None
                 # Last-Minute-Einstieg aus.
                 if _avg is not None:
                     e["entryPrice"] = _avg   # Ø-Einstieg mitziehen (Wal stockt evtl. auf)
+            # 04.10.2026 (FUT v T1, Public-Karte „stockt auf · 68 % des Marktvolumens · Anpfiff in
+            # 57 Min" — 30 Minuten nach der ersten Karte mit denselben „57 Min"). Zaehler (diese
+            # Position) kam frisch, Nenner und Anpfiff aus dem Close-Feed, der ~1 h vor Anpfiff
+            # EINFRIERT. Fehlerklasse: Zaehler und Nenner aus verschiedenen Zeitpunkten. Deshalb
+            # stehen frisches Marktvolumen und Anpfiff-Zeitpunkt an der Position.
+            # 🔴 06.10.2026: dieser Block stand zuerst MITTEN im else-Zweig — die drei Zeilen
+            # darueber (league/sport/entryPrice) rutschten unter `if koTs`. Jede NEUE Position mit
+            # Anpfiff-Zeit lief damit in `e["league"]` mit e=None → TypeError, poly_money_broad.py
+            # brach nach dem Close-Feed ab, und poly_money_broad.json + poly_wallet_track.json
+            # standen 37 h still (Status-Seite: „Job frisch, Daten alt"). Der Test kannte nur
+            # bestehende Positionen. Gegentest: test_whale_karte_frische_zahlen.py.
+            _e = openp[ok]
+            if isinstance(m.get("totalUsd"), (int, float)) and m["totalUsd"] > 0:
+                _e["marktUsd"] = round(float(m["totalUsd"]))
+                _e["marktTs"] = now.isoformat()
+            if m.get("koTs"):
+                _e["koTs"] = m.get("koTs")
 
     # 2) Positionen werten, deren Markt gerade aufgelöst ist
     winners = {m.get("key"): winner_from_prices(m.get("resolvedPrices") or {})

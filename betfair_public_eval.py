@@ -416,6 +416,11 @@ REPARATUREN = [
      "Die Ledger-Zeile entsteht in zwei Schritten: erst der Kern, dann die Anreicherung. Vorher "
      "riss ein werfendes `_consensus_for_push`/`_serie_fuer_push` den ganzen Beleg mit — der "
      "fuenfte Verlust, `fresh:36041720`, 21.09.2026 22:46"),
+    ("2026-10-04T07:34:59+00:00",
+     "Beleg-Spiegel in ~/.cocobet_state: jede Ledger-Zeile auch lokal, Nachtrag zu Laufbeginn. "
+     "Vorher hatte nur der Dedup-Stand einen Spiegel — ein abgebrochener Lauf (Push-Runden "
+     "gescheitert, 14-Min-Deckel) verlor die Zeile, der naechste Runner wusste trotzdem "
+     "„gesendet“. Der sechste Verlust, `fresh:36132098`, 03.10.2026 15:34"),
 ]
 
 

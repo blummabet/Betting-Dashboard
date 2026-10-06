@@ -23,6 +23,7 @@ on:
 permissions:
   contents: write
   actions: read          # run_health.py liest die Steps DIESES Laufs
+  checks: read          # 06.10.2026: run_health liest Check-Run-Annotationen (verschluckte Abbrueche, s. run_health.verschluckte_abbrueche)
 
 concurrency:
   group: capture-closing-liga

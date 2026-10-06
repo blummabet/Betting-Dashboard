@@ -34,6 +34,7 @@ on:
 permissions:
   contents: write
   actions: read          # run_health.py liest die Steps DIESES Laufs
+  checks: read          # 06.10.2026: run_health liest Check-Run-Annotationen (verschluckte Abbrueche, s. run_health.verschluckte_abbrueche)
 
 concurrency:
   # 28.08.2026: EIGENE Gruppe. Vorher teilte sich dieser Workflow die Gruppe „update-liga" mit
