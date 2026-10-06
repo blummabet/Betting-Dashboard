@@ -177,11 +177,14 @@ def markout(pfad, key, side, ab_ts, minuten=30):
 
 def main() -> int:
     from safe_write import write_json_atomic
-    prev = _load(OUT_FILE)
+    # 06.10.2026: Pfad-Speicher liegt im Runner-Stand, nicht im Repo (s. runner_state.py) —
+    # ~8 MB je Global-Scan, die jeder andere Mac-Lauf vor seinem Push abholen musste.
+    import runner_state
+    prev = runner_state.lesen(OUT_FILE, BASE, {})
     up = _load(UPCOMING_FILE)
     close = _load(CLOSE_FILE)
     d = update(prev, [up, close])
-    write_json_atomic(BASE / OUT_FILE, d, indent=None)
+    runner_state.schreiben(OUT_FILE, d)
     pts = [len(v.get("points") or []) for v in d.values()]
     pts.sort()
     med = pts[len(pts) // 2] if pts else 0

@@ -192,8 +192,10 @@ def main() -> int:
     if not pos:
         print("  ℹ️  keine Positionen gefunden — nichts nachzutragen (kein Wipe).")
         return 0
-    state = nachtragen(_lade(STATE_FILE, {}), pos, jetzt)
-    _schreibe(STATE_FILE, state)
+    # 06.10.2026: Zwischenstand liegt im Runner-Stand, nicht im Repo (s. runner_state.py).
+    import runner_state
+    state = nachtragen(runner_state.lesen(STATE_FILE.name, BASE, {}), pos, jetzt)
+    runner_state.schreiben(STATE_FILE.name, state)
     norm = norm_bauen(state)
     _schreibe(OUT_FILE, {"generatedAt": state["generatedAt"], "minN": MIN_N,
                          "jeWalletMax": JE_WALLET_MAX, "alterMaxTage": ALTER_MAX_TAGE,
