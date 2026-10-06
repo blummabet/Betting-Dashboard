@@ -51,7 +51,7 @@ def test_verlust_vor_der_letzten_reparatur_ist_keine_frische_wunde():
 
 
 def test_verlust_nach_der_letzten_reparatur_ist_ein_befund():
-    seen = _seen(**{"fresh:99": "2026-09-23T04:00:00+00:00"})
+    seen = _seen(**{"fresh:99": "2026-10-05T04:00:00+00:00"})   # nach der juengsten Reparatur (04.10.)
     frisch = E.gesendet_ohne_beleg_datiert(seen, LEDGER)
     assert [z["key"] for z in frisch] == ["fresh:99"]
     assert E.gesendet_ohne_beleg_narbe(seen, LEDGER) == []
@@ -101,3 +101,10 @@ def test_der_alarm_ist_heute_aus():
         return
     for z in (r.get("gesendetOhneBelegNeuKeys") or []):
         assert str(z.get("t")) >= ab, ("Verlust VOR der letzten Reparatur als Befund gemeldet", z)
+
+
+def test_der_sechste_verlust_ist_seit_dem_beleg_spiegel_eine_narbe():
+    """06.10.2026: fresh:36132098 (03.10. 15:34) lag vor dem Beleg-Spiegel (04.10.)."""
+    seen = _seen(**{"fresh:36132098": "2026-10-03T15:34:27+00:00"})
+    assert E.gesendet_ohne_beleg_datiert(seen, LEDGER) == []
+    assert E.gesendet_ohne_beleg_narbe(seen, LEDGER) == ["fresh:36132098"]

@@ -56,7 +56,9 @@ def test_der_burst_feuert_jetzt():
     if not f.exists():
         return
     rows = [x for x in (json.loads(f.read_text(encoding="utf-8")).get("wetten") or [])
-            if "Riestra" in str(x.get("event") or "")]
+            # 06.10.2026: nur DAS Spiel vom 24.09. — am 05.10. stand ein anderes Riestra-Spiel
+            # (Riestra AFBC - Central Cordoba) im Fenster, und der Test pruefte das falsche.
+            if "Riestra Afbc Reserve" in str(x.get("event") or "")]
     if len(rows) < 8:
         return                      # das rollierende Fenster hat den Fall verlassen
     now = max(SB._ts(x["ts"]) for x in rows) + dt.timedelta(minutes=1)

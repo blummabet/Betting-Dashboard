@@ -219,6 +219,7 @@ EBENE = {
     # ist der Staats-Wettbewerb von Meghalaya, also unterhalb der I-League und der ISL.
     "shillong-premier-league": 3,
     "liga-portugal-3": 3, "tweede-divisie": 3, "national": 3, "national-league": 3,
+    "scotland-league-one": 3,   # 06.10.2026 (Wachhund): Scottish League One = 3. Klasse nach Premiership/Championship
     # 30.09.2026 (Stoerungsmeldung): die Southern League Premier Division South ist Englands
     # siebte Ebene (Step 3 im Non-League-System, unter der National League South).
     "southern-football-league-premier-division-south": 3,
@@ -504,6 +505,13 @@ EIN_WETTBEWERB = {
     # Atletico Nacional) — eine Liga, im Feed auf zwei Turnier-IDs verteilt.
     "primera-a-apertura": "Dasselbe Spiel laeuft unter beiden Turnier-IDs (24.09.2026 an den "
                           "Paarungen geprueft) — eine Liga, zwei IDs im Feed",
+    # 06.10.2026 (Wachhund): „San Francisco FC - Umecit" unter 6b79bf59…, „San Francisco - UMECIT"
+    # unter e98fc544… — dasselbe Spiel, zwei Schreibweisen; alle Vereine Panamas oberste Liga.
+    "liga-panamena-de-futbol-apertura": "Pre-Match-/Live-ID derselben Liga (06.10.2026 an den "
+                                        "Paarungen geprueft: San Francisco - Umecit unter beiden)",
+    # 06.10.2026: beide IDs englische National League (Eastleigh, Southend, Kidderminster, Sutton,
+    # Barrow, Wealdstone, Hartlepool, Gateshead) — ein Wettbewerb, 5. Klasse Englands.
+    "national-league": "Beide IDs englische National League (06.10.2026 an den Paarungen geprueft)",
 }
 
 # 🔴 27.09.2026 (CI-Wachhund, zehn Slugs auf einmal). Nachgesehen an den Paarungen: bei SIEBEN
@@ -531,6 +539,9 @@ TURNIER_EBENE = {
     "premier-league": {
         "c94f5db7-4fd2-4407-a4fc-9a4e807f0ea1": ("England", 1),
         "261292f1-ed72-4765-93c3-abee6a5ebee0": ("Bhutan", 1),
+        # 06.10.2026 (Wachhund): beide oberste Klasse.
+        "47043c57-9221-4bce-86bb-ed83826a230e": ("Ukraine (Veres Rivne - FK Kudrivka)", 1),
+        "5dbb8017-40fc-496e-9b05-352444d232b1": ("Bangladesch (Fortis FC - City Club)", 1),
     },
     "primera-division": {
         "118c993d-1294-4f73-9afb-c97213bcfab0": ("Uruguay", 1),
@@ -539,6 +550,17 @@ TURNIER_EBENE = {
         # die OBERSTE Liga Liga Nacional; die Primera Division ist die ZWEITE. Ueber den Slug
         # allein haette sie als Ebene 1 gegolten.
         "16c027b0-893a-40de-b829-63d5ea863a64": ("Guatemala, Primera Division (2. Liga)", 2),
+        # 06.10.2026 (Wachhund): „Universidad de Concepcion - Huachipato" — Chiles oberste Liga.
+        "4b9f9ae2-1d49-4296-9d87-bc4e84dc0d31": ("Chile (U. de Concepcion - Huachipato)", 1),
+    },
+    # 06.10.2026 (Wachhund): Venezuela (Urena SC, Barinas, Deportivo Lara, Real Frontera) ist die
+    # ZWEITE Klasse. Paraguay (b072c9f7…, „Sportivo Carapegua - Deportivo Capiata"): eingestuft
+    # ueber die VEREINE, nicht ueber den Namen — beide spielen in der Division Intermedia, der
+    # zweiten Klasse unter der Division Profesional. Kommt unter dieser ID ein Verein aus der
+    # Primera B (3.), ist die Zahl falsch — dann gehoert die ID nach MEHRDEUTIG.
+    "segunda-division": {
+        "7e76a474-ef1d-4b36-9ff8-7e0b34ac9054": ("Venezuela, Segunda Division", 2),
+        "b072c9f7-4707-4bb4-be98-0ac3db79b1a0": ("Paraguay, Division Intermedia (ueber die Vereine)", 2),
     },
     # 29.09.2026: drei Laender unter einem Slug — alle oberste Klasse, das Urteil stimmt fuer alle.
     "primera-division-apertura": {

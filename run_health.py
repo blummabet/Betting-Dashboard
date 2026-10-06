@@ -14,8 +14,9 @@ rot wird. Zwei bewiesene Faelle aus genau diesem Muster:
     sieht aus wie Erfolg.
 
 Dieses Skript deckt den ERSTEN Fall ab, und zwar vollstaendig: es fragt ueber die GitHub-API die
-Steps des eigenen Laufs ab und meldet jeden mit conclusion=failure — auch die, die
-continue-on-error gerade eben stillgelegt hat. Kein Log-Parsen, kein Raten.
+Steps des eigenen Laufs ab und meldet jeden mit conclusion=failure. ⚠️ 06.10.2026: Steps mit
+continue-on-error stehen dort trotz Absturz auf „success" — die erkennt erst
+`verschluckte_abbrueche` ueber die Check-Run-Annotationen (s. dort).
 
 Aufruf am Ende eines Jobs, VOR dem Commit-Schritt:
 
@@ -86,6 +87,46 @@ def hole_steps(repo, run_id, token, fetch=None):
         if len(jobs) < 100:
             break
         seite += 1
+    return raus
+
+
+# 🔴 06.10.2026 (Status-Seite: „Poly-Global-Scan-Job liefert auch Daten — Job vor 0.7 h, Daten
+# vor 36.8 h"). poly_money_broad.py stuerzte 37 Stunden lang in JEDEM Lauf ab (TypeError,
+# Exit-Code 1). Dieses Skript meldete jeden dieser Laeufe als `ok: true, failures: []`.
+#
+# Der Grund steht in der GitHub-API selbst: ein Step mit `continue-on-error: true`, der
+# scheitert, hat dort `conclusion: "success"` — das „failure" steht nur in `outcome`, und das
+# liefert die REST-API nicht. Nachgesehen am Lauf 37414103069, Step 7: conclusion „success",
+# gleichzeitig Check-Run-Annotation „failure · Process completed with exit code 1".
+# Die Annahme im Kopf dieser Datei („meldet jeden mit conclusion=failure — auch die, die
+# continue-on-error stillgelegt hat") war damit falsch, und zwar genau fuer den Fall, fuer den
+# das Skript gebaut wurde. Fehlerklasse: ein Waechter, der seine eigene Quelle nie gegen einen
+# echten Fehlerfall geprueft hat.
+#
+# Die Annotationen tragen keinen Step-Namen. Gemeldet wird deshalb die ANZAHL verschluckter
+# Abbrueche je Job (minus die Steps, die schon ueber conclusion=failure zaehlen) — der Name
+# steht im Log. Lieber „1 Schritt ohne Namen gescheitert" als „alles gruen".
+EXIT_RX = "Process completed with exit code"
+
+
+def verschluckte_abbrueche(repo, run_id, token, steps, fetch=None):
+    """[(job_name, Platzhalter-Step, 'failure (exit code)', None)] je verschlucktem Abbruch.
+
+    `steps` sind die schon geholten (job, step, conclusion, nr) — was dort bereits als failure
+    steht, wird nicht doppelt gezaehlt."""
+    _get = fetch or (lambda u: _get_json(u, token))
+    daten = _get(f"{API}/repos/{repo}/actions/runs/{run_id}/jobs?per_page=100&filter=latest") or {}
+    raus = []
+    for job in daten.get("jobs") or []:
+        jid, name = job.get("id"), job.get("name") or "?"
+        if not jid:
+            continue
+        ann = _get(f"{API}/repos/{repo}/check-runs/{jid}/annotations?per_page=100") or []
+        n_exit = sum(1 for a in ann if isinstance(a, dict) and a.get("annotation_level") == "failure"
+                     and EXIT_RX in str(a.get("message") or ""))
+        schon = sum(1 for j, _s, c, _n in steps if j == name and c in SCHLECHT)
+        for i in range(max(0, n_exit - schon)):
+            raus.append((name, "Schritt mit continue-on-error (Name im Log)", "failure (exit code)", None))
     return raus
 
 
@@ -191,7 +232,7 @@ def kadenz(laeufe, soll_pro_tag=None, fenster_min=None, stunden=None):
 
 def fehlerhafte_steps(steps):
     """Nur die kaputten — in Ausfuehrungsreihenfolge, damit der ERSTE Fehler oben steht."""
-    schlecht = [s for s in steps if s[2] in SCHLECHT]
+    schlecht = [s for s in steps if s[2] in SCHLECHT or s[2] == "failure (exit code)"]
     return sorted(schlecht, key=lambda s: (s[0], s[3] if s[3] is not None else 0))
 
 
@@ -475,6 +516,10 @@ def main(argv=None):
         print(f"  ⚠️  Lauf-Kopf nicht abrufbar: {str(e)[:80]}")
     try:
         steps = hole_steps(repo, run_id, token)
+        try:
+            steps = steps + verschluckte_abbrueche(repo, run_id, token, steps)
+        except Exception as e:                   # noqa: BLE001
+            print(f"  ⚠️  Annotationen nicht abrufbar: {str(e)[:80]}")
     except urllib.error.HTTPError as e:
         api_fehler = f"HTTP {e.code}" + (" — fehlt `permissions: actions: read`?"
                                          if e.code in (403, 404) else "")

@@ -184,7 +184,15 @@ class TestBetfair:
 
 class TestBau:
     def test_leeres_register_ist_ein_gueltiges_ergebnis(self):
-        d = F.baue(track={"settled": []}, cards=[], betfair={})
+        # 06.10.2026: der Test las ueber `baue()` die Schubladen von der PLATTE mit (Push-
+        # Schattenbuch, Killer, Betfair-Public) — seit „ABWAEGEN · gepusht" dort freigegeben ist,
+        # war er rot, obwohl er „leere Eingabe" prueft. Die Platten-Quellen werden hier stillgelegt.
+        from unittest import mock
+        with mock.patch.object(F, "push_schubladen", lambda now=None: []), \
+                mock.patch.object(F, "killer_schublade", lambda now=None: []), \
+                mock.patch.object(F, "betfair_public_schubladen", lambda: []), \
+                mock.patch.object(F, "vorregistrierte_schubladen", lambda track, now=None: []):
+            d = F.baue(track={"settled": []}, cards=[], betfair={})
         assert d["freigegeben"] == [] and d["zusammenfassung"]["freigegeben"] == 0
         assert "minN" in d["regeln"]
 

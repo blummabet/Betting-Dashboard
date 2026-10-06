@@ -29,6 +29,7 @@ on:
 permissions:
   contents: write
   actions: write         # run_health.py liest die Steps DIESES Laufs; write: stoesst den Live-Scan an (s. letzter Schritt)
+  checks: read          # 06.10.2026: run_health liest Check-Run-Annotationen (verschluckte Abbrueche, s. run_health.verschluckte_abbrueche)
 
 concurrency:
   group: betfair
@@ -258,17 +259,6 @@ jobs:
           TELEGRAM_OPS_CHAT_ID:    ${{ secrets.TELEGRAM_OPS_CHAT_ID }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
 
-      # 04.10.2026 (Lucas: „0:0 zur Pause, aber ein Over-2.5-Spiel … such ich immer manuell").
-      # Direkt nach den Alerts, damit die Pause (15 Min) im 15-Min-Takt sicher getroffen wird.
-      # Bucht zur Pausenquote, DANN Push; der Beleg-Schritt darunter sichert beides sofort.
-      - name: ⏸️ HZ-0:0-Finder (Team-Archiv + Buch + Trades-Push)
-        run: ${{ env.BETFAIR_PY }} hz_finder.py
-        continue-on-error: true
-        env:
-          APISPORTS_KEY:           ${{ secrets.APISPORTS_KEY }}   # 04.10.2026: Live-Statistik + Serien (apif_live)
-          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
-          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
-
       # 🔴 20.09.2026 (Lucas: „Beide Spiele stehen nicht in der Betfair-Public-Bilanz").
       # Eines davon — Lyon v Rennes — war GESENDET: betfair_public_seen.json trug den Schluessel
       # `fresh:36039873`, den es nur bei erfolgreichem Versand bekommt. Im Ledger stand keine
@@ -280,8 +270,25 @@ jobs:
       # kostet den Beleg, waehrend die Wirkung (die Nachricht) laengst draussen ist.
       # Genau dafuer gibt es scripts/ci_sichern.sh — es hing bisher nur an den Poly-Workflows.
       - name: 🔐 Beleg der gesendeten Pushes sofort sichern
-        run: bash scripts/ci_sichern.sh "Beleg der Betfair-Pushes" betfair_public_ledger.json betfair_public_seen.json betfair_alerts_seen.json betfair_public_trichter.json betfair_public_schatten.json betfair_rutsch_ledger.json betfair_rutsch_seen.json betfair_ou35_ledger.json betfair_ou35_seen.json hz_finder.json hz_finder_seen.json
+        run: bash scripts/ci_sichern.sh "Beleg der Betfair-Pushes" betfair_public_ledger.json betfair_public_seen.json betfair_alerts_seen.json betfair_public_trichter.json betfair_public_schatten.json betfair_rutsch_ledger.json betfair_rutsch_seen.json betfair_ou35_ledger.json betfair_ou35_seen.json
         continue-on-error: true
+
+      # 04.10.2026 (Lucas: „0:0 zur Pause, aber ein Over-2.5-Spiel … such ich immer manuell").
+      # 06.10.2026: stand zuerst ZWISCHEN Alerts und Beleg-Sicherung — genau der Abstand, den
+      # tests/test_push_beleg.py verbietet (CI rot seit 04.10.). Jetzt direkt dahinter, mit
+      # eigener Sofort-Sicherung: Buch zur Pausenquote, Push, Beleg — ohne Schritt dazwischen.
+      - name: ⏸️ HZ-0:0-Finder (Team-Archiv + Buch + Trades-Push)
+        run: ${{ env.BETFAIR_PY }} hz_finder.py
+        continue-on-error: true
+        env:
+          APISPORTS_KEY:           ${{ secrets.APISPORTS_KEY }}   # 04.10.2026: Live-Statistik + Serien (apif_live)
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+
+      - name: 🔐 Beleg des HZ-0:0-Pushs sofort sichern
+        run: bash scripts/ci_sichern.sh "Beleg der HZ-0:0-Pushes" hz_finder.json hz_finder_seen.json
+        continue-on-error: true
+
 
       # 20.09.2026 (Vorfall Toulouse–Le Havre, 19.09.): eine Poly-Position lief ins Spiel,
       # weil der Hard-Close des Positions-Managers ausfiel und nichts davon ins Buch kam.

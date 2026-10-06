@@ -102,6 +102,9 @@ jobs:
           # Datei erwaehnt, wird nicht ausgeliefert. Das gilt auch fuer die naechste Datei, die
           # jemand anlegt, ohne dass sie hier eingetragen werden muss.
           python3 scripts/pages_ballast.py --loeschen || true
+          # 06.10.2026: 129 MB > 115 MB — ~22 MB davon waren Einrueckung in den Wurzel-JSONs.
+          # Repo bleibt lesbar, das Artefakt bekommt die kompakte Form (nach JSON.parse identisch).
+          python3 scripts/pages_ballast.py --verdichten || true
           echo "Artefakt-Größe nach dem Aufräumen:"
           du -sh . || true
 

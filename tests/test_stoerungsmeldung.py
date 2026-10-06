@@ -353,3 +353,69 @@ class TestDieselbeStoerungAusZweiBatterien:
         for topf in ("geld", "messung", "offen"):
             labels = [x["label"] for x in b[topf]]
             assert len(labels) == len(set(labels)), "%s doppelt: %s" % (topf, labels)
+
+
+class TestEineStehendeQuelleKommtSofortUndZuerst:
+    """🔴 06.10.2026 (Lucas: „gestern kam nur 1 spiel … klemmt da wo was?").
+
+    Der Whale-Scan stand 45 h (Absturz in poly_money_broad.py ab 04.10. 13:32). Die Meldung vom
+    06.10. 06:11 UTC trug ihn nur als Symptome, verteilt auf „Wallet-Lernen 42.6h",
+    „Auflösungs-Feed 4.0h", „Poly-Global-Scan liefert keine Daten" und „11 weitere" — und das
+    erst am naechsten Morgen. Lucas fand es ueber die Folge: „Heute spielenswert" fiel von ~40
+    am Tag auf 1.
+    """
+    J = datetime(2026, 10, 6, 6, 11, tzinfo=timezone.utc)
+
+    def _inhalte(self, broad_h=45.0, live_h=0.3, stake_h=0.2):
+        t = lambda h: (self.J - timedelta(hours=h)).isoformat()
+        return {"poly_money_broad.json": {"generatedAt": t(broad_h)},
+                "poly_live_signal_track.json": {"updatedAt": t(live_h)},
+                "stake_highroller.json": {"asof": t(stake_h)}}
+
+    def test_der_fall_vom_04_10_wird_als_quelle_erkannt(self):
+        st = S.stehende_quellen(self._inhalte(), self.J)
+        assert [x["name"] for x in st] == ["Poly-Whale-Scan"]
+        assert "Heute spielenswert" in st[0]["dran"]
+
+    def test_laufende_quellen_sind_still(self):
+        assert S.stehende_quellen(self._inhalte(broad_h=0.5), self.J) == []
+        text, stand = S.quellen_alarm([], {}, self.J)
+        assert text == "" and stand == {}
+
+    def test_fehlende_oder_zeitlose_quelle_steht(self):
+        inh = self._inhalte(broad_h=0.5)
+        inh["stake_highroller.json"] = {"asof": None}
+        inh.pop("poly_live_signal_track.json")
+        namen = {x["name"] for x in S.stehende_quellen(inh, self.J)}
+        assert namen == {"Stake-Highroller", "Poly-Live-Scan"}
+
+    def test_alarm_sofort_dann_erinnerung_dann_entwarnung(self):
+        st = S.stehende_quellen(self._inhalte(), self.J)
+        text, stand = S.quellen_alarm(st, {}, self.J)
+        assert "Datenquelle steht" in text and "Poly-Whale-Scan" in text
+        # 15 Min spaeter: still — sonst kaeme der Alarm jeden Lauf
+        text2, stand2 = S.quellen_alarm(st, stand, self.J + timedelta(minutes=15))
+        assert text2 == "" and stand2 == stand
+        # nach der Erinnerungsfrist: wieder
+        text3, _ = S.quellen_alarm(st, stand, self.J + timedelta(hours=S.ERINNERUNG_H))
+        assert "Poly-Whale-Scan" in text3
+        # Quelle laeuft wieder: Entwarnung, Stand leer
+        text4, stand4 = S.quellen_alarm([], stand, self.J + timedelta(hours=1))
+        assert "Wieder da" in text4 and "Poly-Whale-Scan" in text4 and stand4 == {}
+
+    def test_in_der_tagesmeldung_steht_die_quelle_ueber_allem(self):
+        b = S.sammeln({"poly_status.json": {"generatedAt": self.J.isoformat(), "checks": [
+            {"id": "wallet_track_fresh", "label": "Wallet-Lernen frisch", "ok": False,
+             "severity": "error", "nFail": 1, "failures": ["42.6 h"]}]}}, self.J)
+        b["quellen"] = S.stehende_quellen(self._inhalte(), self.J)
+        text = S.baue_meldung(b, self.J)
+        assert text.index("Datenquelle steht") < text.index("Kostet Geld")
+
+    def test_nur_die_quelle_reicht_fuer_eine_tagesmeldung(self):
+        b = S.sammeln({}, self.J)
+        b["quellen"] = S.stehende_quellen(self._inhalte(), self.J)
+        assert S.baue_meldung(b, self.J) != ""
+
+    def test_alarm_geht_nur_intern(self):
+        src = Path(S.__file__).read_text(encoding="utf-8")
+        assert "tg_send(" not in src.replace("tg_send_ops(", "")

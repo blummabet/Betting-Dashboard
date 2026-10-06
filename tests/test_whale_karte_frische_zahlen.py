@@ -66,3 +66,25 @@ def test_live_einstieg_nennt_das_spiel():
     t = P.format_alert({"key": "lol-t1-geng-2026-10-04", "league": "esports", "wallet": "0xw", "side": "T1",
                         "usd": 20000, "prices": {"T1": 0.6, "GenG": 0.4}, "sharp": False, "score": None})
     assert "LoL ·" in t.split("\n")[0]
+
+
+# ── 06.10.2026: der Einbau oben legte poly_money_broad 37 h lahm ───────────────────────────
+def test_neue_position_mit_anpfiff_stuerzt_nicht_ab():
+    """Alter Fehler: der marktUsd/koTs-Block stand mitten im else-Zweig, `e["league"]` lief fuer
+    jede NEUE Position mit koTs auf e=None → TypeError, der ganze Scan schrieb nichts mehr."""
+    m = {"key": "k", "league": "ESPORTS", "sport": "E-Sport", "prices": {"T1": 0.5}, "totalUsd": 9000,
+         "koTs": "2026-10-04T12:00:00+00:00", "whales": [{"wallet": "0xneu", "side": "T1", "usd": 5000}]}
+    t = B.update_wallet_track({}, [m], now=NOW)
+    e = t["open"]["0xneu|k|T1"]
+    assert e["marktUsd"] == 9000 and e["koTs"] == "2026-10-04T12:00:00+00:00" and e["league"] == "ESPORTS"
+
+
+def test_bestehende_position_ohne_anpfiff_bekommt_liga_und_einstieg_weiter():
+    """Zweite Folge desselben Fehlers: league/sport/entryPrice wurden nur noch MIT koTs aufgefrischt."""
+    m = {"key": "k", "league": "NEU-LIGA", "sport": "E-Sport", "prices": {"T1": 0.5},
+         "whales": [{"wallet": "0xw", "side": "T1", "usd": 5000, "avgPrice": 0.47}]}
+    t = B.update_wallet_track({"open": {"0xw|k|T1": {"wallet": "0xw", "key": "k", "side": "T1", "usd": 1,
+                                                     "firstPrice": 0.5, "lastPrice": 0.5, "league": "ALT"}}},
+                              [m], now=NOW)
+    e = t["open"]["0xw|k|T1"]
+    assert e["league"] == "NEU-LIGA" and e["entryPrice"] == 0.47 and e["sport"] == "E-Sport"
