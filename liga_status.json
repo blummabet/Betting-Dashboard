@@ -31,9 +31,11 @@
       "id": "run_health",
       "label": "Workflow-Laeufe fehlerfrei",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "⚡ Poly Live-Scan (nur laufende Spiele, schnell): Step '⚡ Live-Scan (ein Durchlauf)' cancelled — Job trotzdem gruen"
+      ],
       "note": "Quelle: health/*.json (run_health.py). Leere Liste heisst hier wirklich 'nichts gescheitert' — ein nicht abfragbarer Lauf steht oben als UNBEKANNT."
     },
     {
@@ -376,7 +378,7 @@
       "nFail": 2,
       "failures": [
         "746-51 Auswärtssieg @2.3: sichere Linie Doppelte Chance — X2 @1.423 verfügbar (≥1.35), nicht abgeleitet",
-        "4665-532 Heimsieg @1.85: sichere Linie Doppelte Chance — 1X @1.381 verfügbar (≥1.35), nicht abgeleitet"
+        "4665-532 Heimsieg @1.85: sichere Linie Doppelte Chance — 1X @1.394 verfügbar (≥1.35), nicht abgeleitet"
       ],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
     },
@@ -576,7 +578,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "22 von 34 Vor-Kandidaten mit Anteilen (22 Calls) · 0 ohne Geld-Split · 12 ueber Budget · 0 nachgelegt. Leeres Fenster ist kein Fehler; Kandidaten ohne einen einzigen Anteil schon."
+      "note": "22 von 33 Vor-Kandidaten mit Anteilen (22 Calls) · 0 ohne Geld-Split · 11 ueber Budget · 0 nachgelegt. Leeres Fenster ist kein Fehler; Kandidaten ohne einen einzigen Anteil schon."
     },
     {
       "id": "betfair_ledger",
@@ -585,7 +587,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "40000/40000 Zeilen · 34.0 Tage Fenster (2026-09-02 bis 2026-10-06). Kurzes Fenster bei freiem Deckel ist normal (der Track fuellt sich); kurzes Fenster AM Deckel ist der Fehler."
+      "note": "40000/40000 Zeilen · 34.1 Tage Fenster (2026-09-02 bis 2026-10-06). Kurzes Fenster bei freiem Deckel ist normal (der Track fuellt sich); kurzes Fenster AM Deckel ist der Fehler."
     },
     {
       "id": "betfair_liefert",
@@ -594,7 +596,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Job vor 0.4h · jüngste Daten vor 0.4h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
+      "note": "Job vor 1.4h · jüngste Daten vor 1.4h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
     },
     {
       "id": "poly_global_liefert",
@@ -603,7 +605,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Job vor 0.7h · jüngste Daten vor 0.7h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
+      "note": "Job vor 1.4h · jüngste Daten vor 1.4h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
     },
     {
       "id": "pinn_anker",
@@ -621,7 +623,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "97 Spiele bewertet · 21 mit mindestens einem fremden Buch · beste Punktzahl 11. Ein leeres Fenster ist kein Fehler; ein dauerhaft einsamer Betfair-Score schon."
+      "note": "89 Spiele bewertet · 21 mit mindestens einem fremden Buch · beste Punktzahl 11. Ein leeres Fenster ist kein Fehler; ein dauerhaft einsamer Betfair-Score schon."
     },
     {
       "id": "vorregistrierung",
@@ -630,7 +632,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "🔒 E-Sport ohne Wallet-Nachweis: 291/120 seit 29d · 🔒 Liga · Conviction ab 5: 85/80 seit 25d · 🔒 Fade-Unter · Ganzspiel-Torlinie: 5125/200 seit 29d · 🔒 Poly-Auswahl · von Betfair bestätigt: 346/60 seit 35d · 🔒 Bücher-Score ≥7 von 10: 94/40 seit 35d"
+      "note": "🔒 E-Sport ohne Wallet-Nachweis: 291/120 seit 29d · 🔒 Liga · Conviction ab 5: 85/80 seit 25d · 🔒 Fade-Unter · Ganzspiel-Torlinie: 5126/200 seit 29d · 🔒 Poly-Auswahl · von Betfair bestätigt: 346/60 seit 35d · 🔒 Bücher-Score ≥7 von 10: 94/40 seit 35d"
     },
     {
       "id": "killer_push_buch",
@@ -651,6 +653,6 @@
       "note": "0 von 0 ist ein ruhiger Tag (oder eine Laenderspielpause, in der wir gar keine passenden Partien haben). 0 von N ist ein Bruch."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-10-06T13:21:25.525363+00:00"
+  "nFail": 3,
+  "generatedAt": "2026-10-06T14:38:29.760254+00:00"
 }
