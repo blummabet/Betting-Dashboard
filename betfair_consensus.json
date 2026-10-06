@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-10-06T22:13:57.256950+00:00",
-"count": 7,
-"covered": 0,
+"generatedAt": "2026-10-06T22:43:43.347852+00:00",
+"count": 10,
+"covered": 2,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -47,27 +47,171 @@
 "soccer_turkey_super_league",
 "soccer_usa_mls"
 ],
-"leaguesMitAnker": [],
+"leaguesMitAnker": [
+"Brazilian Serie B"
+],
 "leaguesMitTotals": [],
 "oddsKeysFetched": 48,
 "oddsKeysMitDaten": 48,
 "oddsEvents": 593,
 "oddsTotals": {
-"versucht": 0,
+"versucht": 1,
 "mitDaten": 0,
 "events": 0,
-"gewollt": 0,
+"gewollt": 1,
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 102253,
-"remaining": 4897747,
+"used": 103372,
+"remaining": 4896628,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
 },
-"ankerQuote": 0.95,
+"ankerQuote": 0.952,
 "games": [
+{
+"matchId": "36145526",
+"home": "Sport Recife",
+"away": "Sao Bernardo",
+"league": "Brazilian Serie B",
+"country": "BR",
+"kickoff": "2026-10-06T22:30:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Sport Recife",
+"moneySharePct": 63,
+"moneyOdd": 1.81,
+"moneyDir": "out",
+"totVol": 18283,
+"pinnOdd": 1.73,
+"softOdd": 1.72,
+"softN": 35,
+"poly": {
+"vol": 20013,
+"odd": 1.8,
+"sharePct": 88,
+"shareSrc": "geld",
+"key": "bra2-rec-ber-2026-10-06",
+"sideKey": "SC Recife",
+"whales": [
+{
+"wallet": "0x59091e6a5e24c64242e31b240fda56f57eeff7ca",
+"usd": 1665
+},
+{
+"wallet": "0x162ca4c5249987872fea1e15c846d7fe80316c47",
+"usd": 1587
+},
+{
+"wallet": "0xeb739f5e4f45b0b68688bb252f08327bc01653b0",
+"usd": 838
+},
+{
+"wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+"usd": 484
+},
+{
+"wallet": "0x7198a17a3388eec509e5a24d6481f3a618895094",
+"usd": 252
+},
+{
+"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+"usd": 161
+}
+],
+"whaleUsd": 5894
+},
+"pinn": {
+"home": 0.5415,
+"draw": 0.2692,
+"away": 0.1893,
+"fav": "home"
+},
+"soft": {
+"home": 0.5324,
+"draw": 0.271,
+"away": 0.1966,
+"fav": "home",
+"n": 35
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36141600",
+"home": "Goias",
+"away": "Athletic Club",
+"league": "Brazilian Serie B",
+"country": "BR",
+"kickoff": "2026-10-06T23:30:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Goias",
+"moneySharePct": 83,
+"moneyOdd": 2.12,
+"moneyDir": "in",
+"totVol": 15362,
+"pinnOdd": 2.09,
+"softOdd": 2.01,
+"softN": 35,
+"poly": {
+"vol": 15162,
+"odd": 2.2,
+"sharePct": 92,
+"shareSrc": "geld",
+"key": "bra2-goi-ath-2026-10-06",
+"sideKey": "Goiás EC",
+"whales": [
+{
+"wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
+"usd": 1125
+},
+{
+"wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+"usd": 1095
+},
+{
+"wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
+"usd": 1094
+},
+{
+"wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
+"usd": 835
+},
+{
+"wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+"usd": 442
+},
+{
+"wallet": "0xb588f6e481fbb374f60b170edf5b0bf8a54d2c11",
+"usd": 182
+}
+],
+"whaleUsd": 5419
+},
+"pinn": {
+"home": 0.4605,
+"draw": 0.3075,
+"away": 0.2319,
+"fav": "home"
+},
+"soft": {
+"home": 0.4695,
+"draw": 0.2958,
+"away": 0.2347,
+"fav": "home",
+"n": 35
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
 {
 "matchId": "36132793",
 "home": "Argentina",
@@ -79,14 +223,14 @@
 "moneySide": "home",
 "moneyName": "Argentina",
 "moneySharePct": 99,
-"moneyOdd": 1.03,
+"moneyOdd": 1.02,
 "moneyDir": "out",
-"totVol": 135036,
+"totVol": 192502,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
 "poly": {
-"vol": 302992,
+"vol": 425571,
 "odd": 1.02,
 "sharePct": 99,
 "shareSrc": "geld",
@@ -95,30 +239,30 @@
 "whales": [
 {
 "wallet": "0xe015b5a2a299167be835a2fd1e86f09c49e06ffd",
-"usd": 68976
+"usd": 69329
 },
 {
 "wallet": "0x2cc8cc54f50dbb45fe346612821ca93b6e93262b",
-"usd": 57007
+"usd": 57299
 },
 {
 "wallet": "0xe8d78397160e13edc306a63b1d88c9c1f3dd1252",
-"usd": 23608
+"usd": 23728
+},
+{
+"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+"usd": 19318
+},
+{
+"wallet": "0x3d8aa318e8e733c9a5574d1d2b91005cc1784d5f",
+"usd": 14939
 },
 {
 "wallet": "0xd991f59a083d4f3090393846b0ef362d5a90c161",
-"usd": 13573
-},
-{
-"wallet": "0x7ea571c40408f340c1c8fc8eaacebab53c1bde7b",
-"usd": 11667
-},
-{
-"wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-"usd": 9868
+"usd": 13643
 }
 ],
-"whaleUsd": 227669
+"whaleUsd": 260641
 },
 "pinn": null,
 "soft": null,
@@ -133,6 +277,40 @@
 }
 },
 {
+"matchId": "36156987",
+"home": "Real Potosi",
+"away": "San Antonio Bulo Bulo",
+"league": "Bolivian Cup",
+"country": "BO",
+"kickoff": "2026-10-06T22:00:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Real Potosi",
+"moneySharePct": 90,
+"moneyOdd": 1.7,
+"moneyDir": "in",
+"totVol": 59321,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": null,
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Real Potosi v San Antonio Bulo Bulo",
+"kandidat": "Real Salt Lake v San Jose Earthquakes",
+"key": "soccer_usa_mls",
+"score": 0.67,
+"grund": "zeit",
+"abstandH": 195.5
+}
+},
+{
 "matchId": "36136171",
 "home": "Colo Colo",
 "away": "Puerto Montt",
@@ -142,10 +320,10 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Colo Colo",
-"moneySharePct": 84,
-"moneyOdd": 1.55,
+"moneySharePct": 86,
+"moneyOdd": 1.58,
 "moneyDir": "out",
-"totVol": 23061,
+"totVol": 31543,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -164,37 +342,6 @@
 }
 },
 {
-"matchId": "36156635",
-"home": "Uni San Martin",
-"away": "Alianza Universidad",
-"league": "Peruvian Segunda Division",
-"country": "PE",
-"kickoff": "2026-10-06T20:30:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Uni San Martin",
-"moneySharePct": 92,
-"moneyOdd": 1.01,
-"moneyDir": "in",
-"totVol": 21960,
-"pinnOdd": null,
-"softOdd": null,
-"softN": null,
-"poly": null,
-"pinn": null,
-"soft": null,
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "no_anchor",
-"agree": null,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Uni San Martin v Alianza Universidad",
-"grund": "kein_kandidat",
-"naechster": "Cobresal v Universidad de Concepción"
-}
-},
-{
 "matchId": "36152652",
 "home": "USA",
 "away": "Canada",
@@ -205,9 +352,9 @@
 "moneySide": "home",
 "moneyName": "USA",
 "moneySharePct": 70,
-"moneyOdd": 1.84,
+"moneyOdd": 1.83,
 "moneyDir": "in",
-"totVol": 20067,
+"totVol": 22156,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -237,12 +384,12 @@
 "moneySharePct": 92,
 "moneyOdd": 1.01,
 "moneyDir": "flat",
-"totVol": 19544,
+"totVol": 19690,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
 "poly": {
-"vol": 21304,
+"vol": 24857,
 "odd": 1.01,
 "sharePct": 100,
 "shareSrc": "geld",
@@ -251,30 +398,30 @@
 "whales": [
 {
 "wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
-"usd": 6237
+"usd": 6263
 },
 {
 "wallet": "0xb5527654d309c6617addabbb64e47931cf35b70c",
-"usd": 5216
+"usd": 5237
 },
 {
 "wallet": "0x52d93dcf81444f793dda7fedc370f7a35101fb1a",
-"usd": 1124
+"usd": 1128
 },
 {
 "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
-"usd": 1108
+"usd": 1113
 },
 {
 "wallet": "0x4c57e16157d4acea7037dcf12284e3804a9da7de",
-"usd": 1097
+"usd": 1102
 },
 {
 "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
-"usd": 839
+"usd": 843
 }
 ],
-"whaleUsd": 17855
+"whaleUsd": 18272
 },
 "pinn": null,
 "soft": null,
@@ -287,6 +434,37 @@
 "spiel": "St Vincent & Grenadines v Sint Maarten",
 "grund": "kein_kandidat",
 "naechster": "KV Mechelen v Sint Truiden"
+}
+},
+{
+"matchId": "36133902",
+"home": "Olimpia",
+"away": "Nacional (Par)",
+"league": "Paraguayan Primera Division",
+"country": "PY",
+"kickoff": "2026-10-06T22:15:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Olimpia",
+"moneySharePct": 51,
+"moneyOdd": 3.7,
+"moneyDir": "out",
+"totVol": 19074,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": null,
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Olimpia v Nacional (Par)",
+"grund": "kein_kandidat",
+"naechster": "Rio Ave FC v Nacional"
 }
 },
 {
@@ -320,19 +498,19 @@
 }
 },
 {
-"matchId": "36156987",
-"home": "Real Potosi",
-"away": "San Antonio Bulo Bulo",
-"league": "Bolivian Cup",
-"country": "BO",
-"kickoff": "2026-10-06T22:00:00Z",
+"matchId": "36141142",
+"home": "Deportivo Santani",
+"away": "Guairena",
+"league": "Paraguayan Division Intermedia",
+"country": "PY",
+"kickoff": "2026-10-06T22:30:00Z",
 "live": true,
 "moneySide": "home",
-"moneyName": "Real Potosi",
-"moneySharePct": 87,
-"moneyOdd": 1.3,
+"moneyName": "Deportivo Santani",
+"moneySharePct": 72,
+"moneyOdd": 1.74,
 "moneyDir": "out",
-"totVol": 16486,
+"totVol": 2669,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -345,25 +523,31 @@
 "agree": null,
 "pinnTotals": null,
 "ankerGrund": {
-"spiel": "Real Potosi v San Antonio Bulo Bulo",
-"kandidat": "Real Salt Lake v San Jose Earthquakes",
-"key": "soccer_usa_mls",
-"score": 0.67,
-"grund": "zeit",
-"abstandH": 195.5
+"spiel": "Deportivo Santani v Guairena",
+"grund": "kein_kandidat",
+"naechster": "San Lorenzo v Deportivo Riestra"
 }
 }
 ],
-"ankerN": 20,
-"ankerNOffen": 142,
-"ankerMit": 19,
+"ankerN": 21,
+"ankerNOffen": 144,
+"ankerMit": 20,
 "ankerDiagnose": {
 "nach": {
-"kein_kandidat": 119,
-"name": 1,
+"kein_kandidat": 118,
+"name": 3,
 "zeit": 3
 },
 "beispiele": [
+{
+"spiel": "CRB v Atletico GO",
+"kandidat": "Clube de Regatas Brasil v Atletico Goianiense",
+"key": "soccer_brazil_serie_b",
+"score": 0.5,
+"grund": "name",
+"matchId": "36145535",
+"liga": "Brazilian Serie B"
+},
 {
 "spiel": "Inter Toronto FC v FC Supra du Quebec",
 "kandidat": "IF Gnistan v FC Inter Turku",
@@ -392,6 +576,15 @@
 "abstandH": 45.8,
 "matchId": "36158916",
 "liga": "Bahraini King's Cup"
+},
+{
+"spiel": "Club Atletico Libertad v CA Bella Vista",
+"kandidat": "Clube de Regatas Brasil v Atletico Goianiense",
+"key": "soccer_brazil_serie_b",
+"score": 0.5,
+"grund": "name",
+"matchId": "36161120",
+"liga": "Uruguayan Cup"
 },
 {
 "spiel": "Real Potosi v San Antonio Bulo Bulo",

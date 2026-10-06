@@ -1,14 +1,14 @@
 {
   "slug": "liga",
   "workflow": "⚽ Liga aktualisieren (Top 5)",
-  "updatedAt": "2026-10-06T14:38:32.686061+00:00",
+  "updatedAt": "2026-10-06T22:46:15.256356+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
-    "spanneH": 160.1,
-    "proTag": 2.8,
+    "spanneH": 154.2,
+    "proTag": 3.0,
     "lueckeMinMin": 53.7,
-    "lueckeMedianMin": 498.6,
+    "lueckeMedianMin": 487.7,
     "lueckeMaxMin": 1303.4,
     "sollProTag": null,
     "liefergradPct": null,
@@ -16,14 +16,28 @@
     "fensterUrteil": null
   },
   "erzeugung": {
-    "erzeugt": 25,
-    "gelaufen": 25,
+    "erzeugt": 100,
+    "gelaufen": 100,
     "verdraengt": 0,
-    "spanneH": 1728.5,
-    "erzeugtProTag": 0.3,
-    "widerspruch": "erzeugtProTag 0.3 gegen eine gemessene Kadenz von 2.8/Tag (Faktor 9.3) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
+    "spanneH": 793.7,
+    "erzeugtProTag": 3.0
   },
   "runs": [
+    {
+      "ts": "2026-10-06T22:46:15.256356+00:00",
+      "workflow": "⚽ Liga aktualisieren (Top 5)",
+      "runId": "37541659386",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/37541659386",
+      "nSteps": 56,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-10-06T22:36:35Z",
+      "startedAt": "2026-10-06T22:36:35Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 580.3,
+      "event": "schedule"
+    },
     {
       "ts": "2026-10-06T14:38:32.686061+00:00",
       "workflow": "⚽ Liga aktualisieren (Top 5)",
@@ -307,21 +321,6 @@
       "startedAt": "2026-09-30T12:25:25Z",
       "wartetS": 0.0,
       "laeuftSeitS": 559.4,
-      "event": "schedule"
-    },
-    {
-      "ts": "2026-09-29T22:35:08.749486+00:00",
-      "workflow": "⚽ Liga aktualisieren (Top 5)",
-      "runId": "36637951214",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/36637951214",
-      "nSteps": 55,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-09-29T22:10:17Z",
-      "startedAt": "2026-09-29T22:10:17Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 1491.7,
       "event": "schedule"
     }
   ]
