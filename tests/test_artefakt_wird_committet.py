@@ -36,7 +36,11 @@ JSON_TOK = re.compile(r"[A-Za-z0-9_./-]+\.json")
 # sonst stillschweigend als „liest nur" durchgehen — und das ist genau die Blindheit, die dieser
 # Test verhindern soll. Lieber ein lauter Test als ein Waechter mit Loch.
 SCHREIBER = {"_save", "_schreibe", "_dump", "write_json_atomic", "_write", "_save_seen",
-             "write_json_guarded", "dump"}
+             "write_json_guarded", "dump",
+             # 06.10.2026: runner_state.schreiben — schreibt in ~/.cocobet_state, NICHT ins Repo.
+             # Trotzdem als Schreiber gefuehrt, damit jede so abgelegte Datei unten in AUSNAHMEN
+             # mit Grund stehen muss, statt still aus der Pruefung zu fallen.
+             "schreiben"}
 # Methoden AUF einem Pfad: `NORM_FILE.write_text(...)`. Die hat der Scanner in seiner ersten
 # Fassung komplett uebersehen — und zwar still, also in der gefaehrlichen Richtung: eine Datei
 # galt als „wird nicht geschrieben" und fiel damit aus der Pruefung heraus.
@@ -55,7 +59,8 @@ LESER = {"_load", "_lade", "load", "load_json", "_lazy", "_load_seen", "load_pic
          # Datei still in ein leeres Dict verwandelt hat: 15 Poly-Artefakte trugen
          # Konfliktmarker, und die Poly-Seite schwieg drei Stunden ohne einen roten Lauf.
          "_load_pflicht", "_lade_json",
-         "_mtime_age_h", "build_cache_index", "isinstance", "exists"}
+         "_mtime_age_h", "build_cache_index", "isinstance", "exists",
+         "lesen"}   # 06.10.2026: runner_state.lesen — Runner-Stand, Repo-Fassung nur als Startwert
 KLEMPNEREI = {"file", "join", "str", "Path", "replace", "discard", "add", "glob", "open"}
 
 # ── Ausnahmen: Datei wird geschrieben, aber bewusst NICHT von diesem Workflow committet ──────
@@ -79,6 +84,12 @@ AUSNAHMEN = {
         "naechsten Turnier gehoert die Zustaendigkeit einmal sauber entschieden.",
     ("fetch-wm-data.yml", "wm2026-player-picks.json"):
         "WM vorbei, letzte Aenderung 19.07.2026, kein Workflow committet sie mehr.",
+    # 06.10.2026 (Lucas: „wieso funktioniert der mist nicht mehr"): reine Runner-Zwischenstaende,
+    # ~17 MB je Global-Scan, die jeder andere Mac-Lauf vor seinem Push abholen musste (curl 28,
+    # Push abgelehnt). Sie liegen in ~/.cocobet_state, den beide Mac-Runner teilen; keine Seite
+    # fetcht sie, kein anderer Workflow liest sie. s. runner_state.py.
+    ("poly-global-scan.yml", "poly_price_path.json"):
+        "Runner-Zwischenstand in ~/.cocobet_state (runner_state.py) — bewusst nicht im Repo.",
 }
 # `telegram-log.json` schreiben sieben Workflows ueber die gemeinsame Sende-Hilfe, committet wird
 # sie nur von update-liga / update-mls / telegram-manual. Der Log ist damit unvollstaendig — als

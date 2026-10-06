@@ -210,9 +210,10 @@ def _pre_entry_move(key, side, now, pfade=None, stunden: float = PRE_ENTRY_STUND
     """
     from datetime import timedelta
     if pfade is None:
-        try:
-            pfade = json.loads((BASE / _PRE_ENTRY_PFAD).read_text(encoding="utf-8"))
-        except (OSError, ValueError):
+        # 06.10.2026: der Pfad liegt im Runner-Stand (runner_state.py), Repo nur als Startwert.
+        import runner_state
+        pfade = runner_state.lesen(_PRE_ENTRY_PFAD, BASE, None) or None
+        if pfade is None:
             return None
     eintrag = (pfade or {}).get(key)
     if not isinstance(eintrag, dict):
