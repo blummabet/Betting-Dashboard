@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-06T01:31:25.763899+00:00",
+ "generatedAt": "2026-10-06T02:01:37.913332+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,14 +10,14 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 709,
- "pinnKeys": 303,
+ "polyRowsSeen": 707,
+ "pinnKeys": 301,
  "matched": 189,
  "footballRows": 177,
- "crossRows": 532,
+ "crossRows": 530,
  "footballSkippedStale": 129,
  "seenBySport": {
-  "basketball_nba": 68,
+  "basketball_nba": 66,
   "americanfootball_nfl": 92,
   "baseball_mlb": 24,
   "icehockey_nhl": 334,
@@ -35,5 +35,34 @@
   "tracked": 175,
   "converged": 61
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|newyorkyankees-tampabayrays|newyorkyankees",
+   "sport": "baseball_mlb",
+   "event": "New York Yankees vs Tampa Bay Rays",
+   "market": "Moneyline",
+   "outcome": "New York Yankees",
+   "polyPP": 17.5,
+   "pinnPP": 46.1,
+   "gapPP": -28.59,
+   "vol": 470851,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -0.89,
+   "firstSeen": "2026-09-22T18:02:17.017707+00:00"
+  },
+  {
+   "id": "baseball_mlb|newyorkyankees-tampabayrays|tampabayrays",
+   "sport": "baseball_mlb",
+   "event": "New York Yankees vs Tampa Bay Rays",
+   "market": "Moneyline",
+   "outcome": "Tampa Bay Rays",
+   "polyPP": 82.5,
+   "pinnPP": 53.9,
+   "gapPP": 28.59,
+   "vol": 470851,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -0.89,
+   "firstSeen": "2026-09-22T18:02:17.017707+00:00"
+  }
+ ]
 }
