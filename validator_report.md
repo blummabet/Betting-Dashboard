@@ -1,11 +1,11 @@
-# 🟡 Picks Validator — 06.10.2026 00:21
+# 🟡 Picks Validator — 06.10.2026 09:14
 
-**11 Spiele geprüft** · 🔴 0 Fehler · 🟡 8 Warnungen · 🔵 35 Hinweise
+**11 Spiele geprüft** · 🔴 0 Fehler · 🟡 8 Warnungen · 🔵 36 Hinweise
 
 ```
 =================================================================
   🐕 CocoBet — Picks Logik-Check
-  06.10.2026 00:21
+  06.10.2026 09:14
   Filter: nächste 3 Tag(e)
 =================================================================
 
@@ -78,6 +78,9 @@
   🔵 HINWEIS [CARDS45_LOW_FV]
      📅 09.10.2026  Lens vs Lyon
      Liga-Baserate=3.6 → Poisson FV für Über 4.5 Karten = 29.4%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
+  🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
+     📅 09.10.2026  Lens vs Lyon
+     Lens expH≈1.15 (statischer Proxy) → FV über 1.5 = 31.9%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
 
 ─────────────────────────────────────────────────────────────────
   🇩🇪 Bundesliga  (rl=30)
@@ -177,7 +180,7 @@
 ═════════════════════════════════════════════════════════════════
   Geprüft: 11 Spiele
   🟡 8 Warnungen — manuelle Prüfung empfohlen
-  🔵 35 Hinweise — Pick-Richtung kontrollieren
+  🔵 36 Hinweise — Pick-Richtung kontrollieren
 ═════════════════════════════════════════════════════════════════
 
 ```
