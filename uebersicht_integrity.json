@@ -153,7 +153,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "82 Picks im Fenster, 18 % ohne Preis-Signal."
+      "hinweis": "74 Picks im Fenster, 20 % ohne Preis-Signal."
     },
     {
       "label": "Stumme Signale: wer hat nie gefeuert?",
@@ -181,11 +181,11 @@
       "label": "Fade-Unter: haelt die Kontrollgruppe?",
       "severity": "error",
       "failures": [
-        "Match Odds H: der Fade gewinnt hier BELEGT (+4.6 %, UG +0.5 %, Geldseite +1.2 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
+        "Match Odds H: der Fade gewinnt hier BELEGT (+4.5 %, UG +0.3 %, Geldseite +1.3 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
       ],
       "nFail": 1,
       "ok": false,
-      "hinweis": "seit Vorregistrierung n=5069 (UG -5.6 %) · Rueckblick n=1350, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=5113 (UG -5.5 %) · Rueckblick n=1319, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -218,11 +218,9 @@
     {
       "label": "Der Deckel hat Luft",
       "severity": "warn",
-      "failures": [
-        "betfair.yml: laengster Lauf 11.2 Min (Median 1.9) bei einem Deckel von 14 Min — 80 % ausgelastet. Ein Abbruch trifft den letzten Schritt, und das ist der, der die Belege sichert."
-      ],
-      "nFail": 1,
-      "ok": false,
+      "failures": [],
+      "nFail": 0,
+      "ok": true,
       "hinweis": ""
     },
     {
@@ -236,11 +234,9 @@
     {
       "label": "Positionswert ist frisch",
       "severity": "warn",
-      "failures": [
-        "liga_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 18 h — die Datei selbst ist 18 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
-      ],
-      "nFail": 1,
-      "ok": false,
+      "failures": [],
+      "nFail": 0,
+      "ok": true,
       "hinweis": ""
     },
     {
@@ -257,7 +253,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "359 Zeilen · 352 abgerechnet · 1 offen"
+      "hinweis": "365 Zeilen · 359 abgerechnet · 0 offen"
     },
     {
       "label": "Artefakte sind lesbar",
@@ -313,13 +309,13 @@
       "label": "Serien-Buch zeigt beide Buecher",
       "severity": "warn",
       "failures": [
-        "die beiden Serien-Buecher sind 17.8 h auseinander (Liga 18.1 h, MLS 0.3 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+        "die beiden Serien-Buecher sind 17.8 h auseinander (Liga 25.9 h, MLS 8.2 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
       ],
       "nFail": 1,
       "ok": false,
       "hinweis": "Liga n=84 · MLS n=78 · Urteil beide 'Erwartung zu duenn'"
     }
   ],
-  "nFail": 9,
-  "generatedAt": "2026-10-05T16:27:50.587358+00:00"
+  "nFail": 7,
+  "generatedAt": "2026-10-06T00:17:52.884345+00:00"
 }
