@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-10-06T19:58:46.420638+00:00",
+"generatedAt": "2026-10-06T20:14:04.110484+00:00",
 "byVerdict": {
 "uneinig": {
-"n": 4,
+"n": 5,
 "wins": 1,
-"hitRate": 0.25,
-"polyN": 4,
+"hitRate": 0.2,
+"polyN": 5,
 "polyWins": 2,
-"polyHitRate": 0.5,
+"polyHitRate": 0.4,
 "pinnN": 1,
 "pinnHitRate": 1.0,
-"nRoi": 4,
-"roi": -0.2125,
-"roiLb": -1.5079,
-"nClv": 4,
-"clv": 0.23,
-"clvLb": -0.8635
+"nRoi": 5,
+"roi": -0.37,
+"roiLb": -1.4064,
+"nClv": 5,
+"clv": -0.31,
+"clvLb": -1.5244
 },
 "konsens": {
 "n": 36,
@@ -40,6 +40,11 @@
 "wins": 1,
 "hitRate": 0.2
 },
+"Friendlies International": {
+"n": 4,
+"wins": 2,
+"hitRate": 0.5
+},
 "Spanish Segunda Division": {
 "n": 4,
 "wins": 1,
@@ -49,11 +54,6 @@
 "n": 4,
 "wins": 2,
 "hitRate": 0.5
-},
-"Friendlies International": {
-"n": 3,
-"wins": 2,
-"hitRate": 0.6667
 },
 "Spanish La Liga": {
 "n": 3,
@@ -128,15 +128,15 @@
 },
 "byStrength": {
 "strong": {
-"n": 29,
+"n": 30,
 "wins": 15,
-"hitRate": 0.5172,
-"nRoi": 29,
-"roi": -0.1603,
-"roiLb": -0.4256,
-"nClv": 29,
-"clv": 0.8,
-"clvLb": 0.1731
+"hitRate": 0.5,
+"nRoi": 30,
+"roi": -0.1883,
+"roiLb": -0.4487,
+"nClv": 30,
+"clv": 0.7,
+"clvLb": 0.061
 },
 "weak": {
 "n": 11,
@@ -151,14 +151,33 @@
 }
 },
 "divergence": {
-"n": 4,
+"n": 5,
 "betfairWins": 1,
-"betfairRate": 0.25,
-"polyN": 4,
+"betfairRate": 0.2,
+"polyN": 5,
 "polyWins": 2,
-"polyRate": 0.5
+"polyRate": 0.4
 },
 "recent": [
+{
+"matchId": "36155235",
+"home": "Jordan",
+"away": "Venezuela",
+"league": "Friendlies International",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Jordan",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-10-06T17:00:00Z",
+"settledAt": "2026-10-06T20:14:03.885564+00:00"
+},
 {
 "matchId": "36152589",
 "home": "India",
@@ -899,38 +918,19 @@
 ],
 "kickoff": "2026-09-07T18:30:00Z",
 "settledAt": "2026-09-08T06:27:38.384196+00:00"
-},
-{
-"matchId": "36032450",
-"home": "Al-Hilal",
-"away": "NEOM Sports Club",
-"league": "Saudi Professional League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Al-Hilal",
-"polySide": "home",
-"winner": "away",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-2
-],
-"kickoff": "2026-09-07T18:00:00Z",
-"settledAt": "2026-09-08T06:27:38.384196+00:00"
 }
 ],
 "global": {
-"n": 40,
+"n": 41,
 "wins": 19,
-"hitRate": 0.475,
-"nRoi": 40,
-"roi": -0.1413,
-"roiLb": -0.3982,
-"nClv": 40,
-"clv": 0.44,
-"clvLb": -0.1391
+"hitRate": 0.4634,
+"nRoi": 41,
+"roi": -0.1622,
+"roiLb": -0.4152,
+"nClv": 41,
+"clv": 0.37,
+"clvLb": -0.2067
 },
-"pending": 15,
+"pending": 14,
 "ausgeschlossenLive": 1945
 }
