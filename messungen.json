@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-06T19:40:35.109481+00:00",
+ "generatedAt": "2026-10-06T20:10:24.286297+00:00",
  "heute": "2026-10-06",
  "messungen": [
   {
@@ -33,9 +33,9 @@
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "nachtrag": "27.09.2026: Zwischenstand n=78 abgerechnet. Echt ROI +6,5 % (UG -4,0 %), Papier auf gleichem Einsatz +8,6 %. Der echte Fill kostet im Mittel +0,64 Cent (Median +0,50) gegen den Papierpreis; CLV-Vorsprung -0,59 pp, Band [-1,44, +0,25].",
-   "standN": 147,
+   "standN": 148,
    "zustand": "faellig",
-   "stand": "147 von 25 Beobachtungen · Entscheidung faellig",
+   "stand": "148 von 25 Beobachtungen · Entscheidung faellig",
    "fortschritt": 1.0,
    "tageBisFaellig": -7
   },
@@ -70,11 +70,29 @@
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "nachtrag": "27.09.2026: Zwischenstand n=152 (Mindestzahl 40 erreicht). Treffer 66,5 %, ROI -4,5 % (UG -14,3 %), CLV -0,04 pp. Die Rueckschau (77,1 % / +19,9 %) haelt vorwaerts nicht. Heutige Public-Regel seit 03.09.: n=47, ROI +14,2 % (UG -10,0 %).",
-   "standN": 492,
+   "standN": 493,
    "zustand": "bereit",
-   "stand": "492 von 40 Beobachtungen · faellig in 24 Tag(en)",
+   "stand": "493 von 40 Beobachtungen · faellig in 24 Tag(en)",
    "fortschritt": 1.0,
    "tageBisFaellig": 24
+  },
+  {
+   "id": "betfair-ou35",
+   "titel": "Traegt Over/Under 3.5 mit 65-80 % Geld auf einer Seite — am Spieltag gespielt?",
+   "frage": "ROI der gesendeten Alarme (nur Trades): Betfair-Markt Over/Under 3.5 Goals, fuehrende Seite mit 65-80 % des gematchten Geldes, Quote 1,30-6,0, gesendet hoechstens 3 h vor Anpfiff, je Spiel einmal. Abgerechnet zur Quote beim Senden. Urteil ueber die Rendite-Untergrenze.",
+   "warum": "03.10.2026 (Lucas: „gewisse Schwellen gehoeren geaendert ... wir holen das Maximum noch nicht raus“). Systematische Suche: 12.394 Betfair-Signale, rund 2.000 Kombinationen (Markt, Geldanteil, Quote, Bewegung, Zufluss, Konzentration, Richtung, Volumen, Timing), gefunden bis 25.09., geprueft danach; Rendite zur letzten Vor-Anpfiff-Quote minus 2 % Kommission. In der Breite KEIN Ueberschuss (44 Treffer in beiden Haelften gegen 57-136 im Nullmodell ohne Kante). Einzige Ausnahme, die groesste stabile Gruppe: O/U 3.5 mit 65-80 % — erste Haelfte n=247 +8,8 %, zweite n=267 +8,5 %, in jeder Unterteilung positiv. Unter ~2.000 Schnitten gefunden, also Kandidat, kein Beleg. (Die am selben Tag genannte Kursrutsch-Zahl n=78, −21,5 % war am Endstand gemessen und ist ueberholt, s. betfair-kursrutsch.) Entscheidung vorab: Untergrenze bei n >= 200 ueber null -> eigener Push mit Einsatzempfehlung; Obergrenze unter null -> abschalten.\n\n🔴 03.10.2026 abends, nachgeprueft mit dem echten Kursverlauf: die Suche nahm Anteil und Quote KURZ VOR ANPFIFF (Endstand), der Alarm feuert beim ersten Lauf <= 3 h mit 65-80 %. Live-Regel nachgespielt: bis 25.09. n=2.048 ROI +1,7 % [-2,0 … +5,3], ab 26.09. n=513 +2,9 % [-4,3 … +10,1]. Vom +8,8 % bleibt ein Rest nahe null — und ~60 Spiele am Tag. Deshalb NUR BUCH, kein Push (BF_OU35_PUSH=1 schaltet ihn ein). Die Messung bleibt: jeder Kandidat wird zur Quote im Signalmoment gebucht und abgerechnet.",
+   "gestartet": "2026-10-03",
+   "faellig": "2026-12-31",
+   "quelle": "betfair_ou35_ledger.json -> won/lost",
+   "messer": "bf_ou35",
+   "mindestN": 200,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "standN": 205,
+   "zustand": "bereit",
+   "stand": "205 von 200 Beobachtungen · faellig in 86 Tag(en)",
+   "fortschritt": 1.0,
+   "tageBisFaellig": 86
   },
   {
    "id": "torlinien-13-ligen",
@@ -198,10 +216,10 @@
    "mindestN": 100,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 33,
+   "standN": 34,
    "zustand": "sammelt",
-   "stand": "33 von 100 Beobachtungen · faellig in 26 Tag(en)",
-   "fortschritt": 0.33,
+   "stand": "34 von 100 Beobachtungen · faellig in 26 Tag(en)",
+   "fortschritt": 0.34,
    "tageBisFaellig": 26
   },
   {
@@ -270,10 +288,10 @@
    "mindestN": 100,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 21,
+   "standN": 25,
    "zustand": "sammelt",
-   "stand": "21 von 100 Beobachtungen · faellig in 26 Tag(en)",
-   "fortschritt": 0.21,
+   "stand": "25 von 100 Beobachtungen · faellig in 26 Tag(en)",
+   "fortschritt": 0.25,
    "tageBisFaellig": 26
   },
   {
@@ -306,10 +324,10 @@
    "mindestN": 20000,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 17661,
+   "standN": 17765,
    "zustand": "sammelt",
-   "stand": "17661 von 20000 Beobachtungen · faellig in 40 Tag(en)",
-   "fortschritt": 0.88305,
+   "stand": "17765 von 20000 Beobachtungen · faellig in 40 Tag(en)",
+   "fortschritt": 0.88825,
    "tageBisFaellig": 40
   },
   {
@@ -324,10 +342,10 @@
    "mindestN": 20000,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 17661,
+   "standN": 17765,
    "zustand": "sammelt",
-   "stand": "17661 von 20000 Beobachtungen · faellig in 40 Tag(en)",
-   "fortschritt": 0.88305,
+   "stand": "17765 von 20000 Beobachtungen · faellig in 40 Tag(en)",
+   "fortschritt": 0.88825,
    "tageBisFaellig": 40
   },
   {
@@ -342,10 +360,10 @@
    "mindestN": 400,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 39,
+   "standN": 42,
    "zustand": "sammelt",
-   "stand": "39 von 400 Beobachtungen · faellig in 40 Tag(en)",
-   "fortschritt": 0.0975,
+   "stand": "42 von 400 Beobachtungen · faellig in 40 Tag(en)",
+   "fortschritt": 0.105,
    "tageBisFaellig": 40
   },
   {
@@ -378,10 +396,10 @@
    "mindestN": 150,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 32,
+   "standN": 33,
    "zustand": "sammelt",
-   "stand": "32 von 150 Beobachtungen · faellig in 70 Tag(en)",
-   "fortschritt": 0.21333333333333335,
+   "stand": "33 von 150 Beobachtungen · faellig in 70 Tag(en)",
+   "fortschritt": 0.22,
    "tageBisFaellig": 70
   },
   {
@@ -401,24 +419,6 @@
    "stand": "21 von 100 Beobachtungen · faellig in 78 Tag(en)",
    "fortschritt": 0.21,
    "tageBisFaellig": 78
-  },
-  {
-   "id": "betfair-ou35",
-   "titel": "Traegt Over/Under 3.5 mit 65-80 % Geld auf einer Seite — am Spieltag gespielt?",
-   "frage": "ROI der gesendeten Alarme (nur Trades): Betfair-Markt Over/Under 3.5 Goals, fuehrende Seite mit 65-80 % des gematchten Geldes, Quote 1,30-6,0, gesendet hoechstens 3 h vor Anpfiff, je Spiel einmal. Abgerechnet zur Quote beim Senden. Urteil ueber die Rendite-Untergrenze.",
-   "warum": "03.10.2026 (Lucas: „gewisse Schwellen gehoeren geaendert ... wir holen das Maximum noch nicht raus“). Systematische Suche: 12.394 Betfair-Signale, rund 2.000 Kombinationen (Markt, Geldanteil, Quote, Bewegung, Zufluss, Konzentration, Richtung, Volumen, Timing), gefunden bis 25.09., geprueft danach; Rendite zur letzten Vor-Anpfiff-Quote minus 2 % Kommission. In der Breite KEIN Ueberschuss (44 Treffer in beiden Haelften gegen 57-136 im Nullmodell ohne Kante). Einzige Ausnahme, die groesste stabile Gruppe: O/U 3.5 mit 65-80 % — erste Haelfte n=247 +8,8 %, zweite n=267 +8,5 %, in jeder Unterteilung positiv. Unter ~2.000 Schnitten gefunden, also Kandidat, kein Beleg. (Die am selben Tag genannte Kursrutsch-Zahl n=78, −21,5 % war am Endstand gemessen und ist ueberholt, s. betfair-kursrutsch.) Entscheidung vorab: Untergrenze bei n >= 200 ueber null -> eigener Push mit Einsatzempfehlung; Obergrenze unter null -> abschalten.\n\n🔴 03.10.2026 abends, nachgeprueft mit dem echten Kursverlauf: die Suche nahm Anteil und Quote KURZ VOR ANPFIFF (Endstand), der Alarm feuert beim ersten Lauf <= 3 h mit 65-80 %. Live-Regel nachgespielt: bis 25.09. n=2.048 ROI +1,7 % [-2,0 … +5,3], ab 26.09. n=513 +2,9 % [-4,3 … +10,1]. Vom +8,8 % bleibt ein Rest nahe null — und ~60 Spiele am Tag. Deshalb NUR BUCH, kein Push (BF_OU35_PUSH=1 schaltet ihn ein). Die Messung bleibt: jeder Kandidat wird zur Quote im Signalmoment gebucht und abgerechnet.",
-   "gestartet": "2026-10-03",
-   "faellig": "2026-12-31",
-   "quelle": "betfair_ou35_ledger.json -> won/lost",
-   "messer": "bf_ou35",
-   "mindestN": 200,
-   "entscheidung": null,
-   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 192,
-   "zustand": "sammelt",
-   "stand": "192 von 200 Beobachtungen · faellig in 86 Tag(en)",
-   "fortschritt": 0.96,
-   "tageBisFaellig": 86
   },
   {
    "id": "horizont-shortlist",
