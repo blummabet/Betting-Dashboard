@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-10-06T07:26:31.793955+00:00",
+"generatedAt": "2026-10-06T07:28:25.618140+00:00",
 "count": 8,
 "covered": 8,
 "leaguesKuratiert": [
@@ -62,8 +62,8 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 90680,
-"remaining": 4909320,
+"used": 90827,
+"remaining": 4909173,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
@@ -82,8 +82,8 @@
 "moneyName": "Spain",
 "moneySharePct": 95,
 "moneyOdd": 1.32,
-"moneyDir": "out",
-"totVol": 267504,
+"moneyDir": "flat",
+"totVol": 267691,
 "pinnOdd": 1.29,
 "softOdd": 1.29,
 "softN": 36,
@@ -104,9 +104,9 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.1013,
-"draw": 0.158,
-"away": 0.7407,
+"home": 0.1017,
+"draw": 0.1583,
+"away": 0.74,
 "fav": "away",
 "n": 36
 },
@@ -134,10 +134,10 @@
 "moneyName": "Scotland",
 "moneySharePct": 94,
 "moneyOdd": 1.92,
-"moneyDir": "out",
-"totVol": 238355,
+"moneyDir": "flat",
+"totVol": 238509,
 "pinnOdd": null,
-"softOdd": 1.79,
+"softOdd": 1.8,
 "softN": 32,
 "poly": {
 "vol": 15737,
@@ -151,9 +151,9 @@
 },
 "pinn": null,
 "soft": {
-"home": 0.5271,
-"draw": 0.2779,
-"away": 0.1951,
+"home": 0.5266,
+"draw": 0.2781,
+"away": 0.1953,
 "fav": "home",
 "n": 32
 },
@@ -183,9 +183,9 @@
 "moneySide": "home",
 "moneyName": "England",
 "moneySharePct": 97,
-"moneyOdd": 1.14,
-"moneyDir": "flat",
-"totVol": 223736,
+"moneyOdd": 1.13,
+"moneyDir": "in",
+"totVol": 224096,
 "pinnOdd": 1.11,
 "softOdd": 1.1,
 "softN": 36,
@@ -206,9 +206,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.8584,
-"draw": 0.0969,
-"away": 0.0448,
+"home": 0.8586,
+"draw": 0.0968,
+"away": 0.0446,
 "fav": "home",
 "n": 36
 },
@@ -253,9 +253,9 @@
 },
 "pinn": null,
 "soft": {
-"home": 0.9319,
-"draw": 0.0522,
-"away": 0.0159,
+"home": 0.9323,
+"draw": 0.0518,
+"away": 0.0158,
 "fav": "home",
 "n": 23
 },
@@ -336,7 +336,7 @@
 "moneyName": "Switzerland",
 "moneySharePct": 97,
 "moneyOdd": 1.11,
-"moneyDir": "in",
+"moneyDir": "flat",
 "totVol": 33786,
 "pinnOdd": null,
 "softOdd": 1.08,
@@ -353,9 +353,9 @@
 },
 "pinn": null,
 "soft": {
-"home": 0.8723,
+"home": 0.8721,
 "draw": 0.093,
-"away": 0.0348,
+"away": 0.0349,
 "fav": "home",
 "n": 32
 },
@@ -386,7 +386,7 @@
 "moneyName": "The Draw",
 "moneySharePct": 56,
 "moneyOdd": 3.15,
-"moneyDir": "in",
+"moneyDir": "flat",
 "totVol": 27415,
 "pinnOdd": null,
 "softOdd": 2.96,
@@ -437,7 +437,7 @@
 "moneySharePct": 70,
 "moneyOdd": 2.1,
 "moneyDir": "flat",
-"totVol": 12608,
+"totVol": 12664,
 "pinnOdd": null,
 "softOdd": 1.98,
 "softN": 31,
@@ -514,21 +514,21 @@
 "liga": "UEFA U21 Euro Qualifiers"
 },
 {
-"spiel": "Lithuania U21 v Croatia U21",
-"kandidat": "Croatia v Spain",
-"key": "soccer_uefa_nations_league",
-"score": 0.5,
-"grund": "name",
-"matchId": "36155725",
-"liga": "UEFA U21 Euro Qualifiers"
-},
-{
 "spiel": "France U21 v Switzerland U21",
 "kandidat": "Switzerland v North Macedonia",
 "key": "soccer_uefa_nations_league",
 "score": 0.5,
 "grund": "name",
 "matchId": "36155681",
+"liga": "UEFA U21 Euro Qualifiers"
+},
+{
+"spiel": "Lithuania U21 v Croatia U21",
+"kandidat": "Croatia v Spain",
+"key": "soccer_uefa_nations_league",
+"score": 0.5,
+"grund": "name",
+"matchId": "36155725",
 "liga": "UEFA U21 Euro Qualifiers"
 },
 {
@@ -591,16 +591,6 @@
 "liga": "English U21 Pro Development League"
 },
 {
-"spiel": "Farnham Town v Truro City",
-"kandidat": "Cheltenham Town v Salford City",
-"key": "soccer_england_league2",
-"score": 1.0,
-"grund": "zeit",
-"abstandH": 91.2,
-"matchId": "36151141",
-"liga": "English National League South"
-},
-{
 "spiel": "Real Potosi v San Antonio Bulo Bulo",
 "kandidat": "Real Salt Lake v San Jose Earthquakes",
 "key": "soccer_usa_mls",
@@ -611,14 +601,25 @@
 "liga": "Bolivian Cup"
 },
 {
-"spiel": "Alianza Atletico v Sport Boys (Per)",
-"kandidat": "Atletico Goianiense v Sport Recife",
-"key": "soccer_brazil_serie_b",
-"score": 0.83,
+"spiel": "Farnham Town v Truro City",
+"kandidat": "Cheltenham Town v Salford City",
+"key": "soccer_england_league2",
+"score": 1.0,
 "grund": "zeit",
-"abstandH": 119.2,
-"matchId": "36156568",
-"liga": "Peruvian Copa de la Liga"
+"abstandH": 91.2,
+"matchId": "36151141",
+"liga": "English National League South"
+},
+{
+"spiel": "Wingate and Finchley v Bedford Town",
+"grund": "kein_pinnacle",
+"kandidat": "Wingate and Finchley FC v Bedford Town FC",
+"key": "soccer_fa_cup",
+"nSoft": 15,
+"pinnacleImEvent": false,
+"nBuecher": 15,
+"matchId": "36152101",
+"liga": "English FA Cup Qualifiers"
 },
 {
 "spiel": "Atherton Collieries AFC v Trafford FC",
@@ -632,15 +633,14 @@
 "liga": "English FA Cup Qualifiers"
 },
 {
-"spiel": "Wingate and Finchley v Bedford Town",
-"grund": "kein_pinnacle",
-"kandidat": "Wingate and Finchley FC v Bedford Town FC",
-"key": "soccer_fa_cup",
-"nSoft": 15,
-"pinnacleImEvent": false,
-"nBuecher": 15,
-"matchId": "36152101",
-"liga": "English FA Cup Qualifiers"
+"spiel": "Alianza Atletico v Sport Boys (Per)",
+"kandidat": "Atletico Goianiense v Sport Recife",
+"key": "soccer_brazil_serie_b",
+"score": 0.83,
+"grund": "zeit",
+"abstandH": 119.2,
+"matchId": "36156568",
+"liga": "Peruvian Copa de la Liga"
 },
 {
 "spiel": "Scarborough Athletic v Macclesfield",
@@ -674,17 +674,6 @@
 "liga": "English U21 Pro Development League"
 },
 {
-"spiel": "Halesowen Town v Stafford Rangers",
-"grund": "kein_pinnacle",
-"kandidat": "Halesowen Town FC v Stafford Rangers FC",
-"key": "soccer_fa_cup",
-"nSoft": 19,
-"pinnacleImEvent": false,
-"nBuecher": 19,
-"matchId": "36152580",
-"liga": "English FA Cup Qualifiers"
-},
-{
 "spiel": "Spalding Utd v Bury Town",
 "grund": "kein_pinnacle",
 "kandidat": "Spalding United FC v Bury Town FC",
@@ -693,6 +682,17 @@
 "pinnacleImEvent": false,
 "nBuecher": 17,
 "matchId": "36152387",
+"liga": "English FA Cup Qualifiers"
+},
+{
+"spiel": "Halesowen Town v Stafford Rangers",
+"grund": "kein_pinnacle",
+"kandidat": "Halesowen Town FC v Stafford Rangers FC",
+"key": "soccer_fa_cup",
+"nSoft": 19,
+"pinnacleImEvent": false,
+"nBuecher": 19,
+"matchId": "36152580",
 "liga": "English FA Cup Qualifiers"
 },
 {
