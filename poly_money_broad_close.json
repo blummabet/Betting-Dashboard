@@ -654017,7 +654017,13 @@
   "tokens": {
    "Over": "54387797279933121691521824629210473983528123131487246895365945046368101611666",
    "Under": "8825279775640537147720437096276393553393179415788636345572324526566896442792"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Over": 0.0,
+   "Under": 1.0
+  },
+  "resolvedAt": "2026-10-07T05:09:20.365594+00:00"
  },
  "ufc-alibie-sumonl-2026-10-06": {
   "shares": {
@@ -655182,7 +655188,14 @@
    "AA Ponte Preta": "108254325833410855196261965824422431198285956957376139649321947269322874572843",
    "Draw (AA Ponte Preta vs. EC Juventude)": "90817860378008463936044545051629059925193189007496270600547459438636241482470",
    "EC Juventude": "113175917129771810774581383021026233338842704086560826820759949159429749598803"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "AA Ponte Preta": 0.0,
+   "Draw (AA Ponte Preta vs. EC Juventude)": 0.0,
+   "EC Juventude": 1.0
+  },
+  "resolvedAt": "2026-10-07T05:09:20.365594+00:00"
  },
  "mlb-mil-sd-2026-10-06": {
   "shares": {
@@ -655925,7 +655938,13 @@
   "tokens": {
    "Lakers": "109206589052870969454209147485550589005265743581607090031678628372504157859841",
    "Warriors": "66492833041031280952052819506521377720925370691920990225930644447142483227031"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Lakers": 0.0,
+   "Warriors": 1.0
+  },
+  "resolvedAt": "2026-10-07T05:09:20.365594+00:00"
  },
  "nhl-las-sea-2026-10-06": {
   "shares": {
@@ -658499,8 +658518,8 @@
  },
  "wta-jovic-swiatek-2026-10-05": {
   "shares": {
-   "Iva Jovic": 14220.989889404997,
-   "Iga Swiatek": 26998.559545744985
+   "Iva Jovic": 30436.548552390024,
+   "Iga Swiatek": 57784.531472080074
   },
   "prices": {
    "Iva Jovic": 0.345,
@@ -658512,8 +658531,24 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 23737,
+  "totalUsd": 45514,
   "whales": [
+   {
+    "wallet": "0x684baa57c338c2549aec0aa3f034f695d72a8409",
+    "side": "Iga Swiatek",
+    "usd": 16375
+   },
+   {
+    "wallet": "0x26b46988d027c6c03cfa12a7c0c6d778be49b8a9",
+    "side": "Iva Jovic",
+    "usd": 13371
+   },
+   {
+    "wallet": "0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
+    "side": "Iga Swiatek",
+    "usd": 11859,
+    "avgPrice": 0.63
+   },
    {
     "wallet": "0x1e386b0e0f1fc58c67ce738d7bbc4ba7ec74fd47",
     "side": "Iga Swiatek",
@@ -658523,12 +658558,6 @@
     "wallet": "0x9c3ce009c9b039956665cecc4cd14de862b5e8c9",
     "side": "Iva Jovic",
     "usd": 5073
-   },
-   {
-    "wallet": "0x684baa57c338c2549aec0aa3f034f695d72a8409",
-    "side": "Iga Swiatek",
-    "usd": 4729,
-    "avgPrice": 0.6499
    },
    {
     "wallet": "0x56acab44cfca2e88bb9b3406890aea7bfa0cd77e",
@@ -658551,9 +658580,40 @@
     "usd": 2029
    },
    {
+    "wallet": "0x479e330b07822ee28e20bac5e504f1b7c6b591c3",
+    "side": "Iga Swiatek",
+    "usd": 1985
+   },
+   {
+    "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
+    "side": "Iva Jovic",
+    "usd": 1440
+   },
+   {
+    "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
+    "side": "Iga Swiatek",
+    "usd": 1102
+   },
+   {
+    "wallet": "0xdc87b19600813a4cadc51bf2761aebf87d18ea3b",
+    "side": "Iva Jovic",
+    "usd": 1028
+   },
+   {
+    "wallet": "0xc0a5ecceff48cd8f313cd658cdb609e8b5231f5f",
+    "side": "Iga Swiatek",
+    "usd": 992,
+    "avgPrice": 0.6599
+   },
+   {
     "wallet": "0xda5fff24aa9d889d6366da205029c73093102e9b",
     "side": "Iva Jovic",
     "usd": 789
+   },
+   {
+    "wallet": "0x0eb32f4c1a8672b61b48d9f1493b6dd5a6b1f766",
+    "side": "Iga Swiatek",
+    "usd": 655
    },
    {
     "wallet": "0xc1519e026778e01d2482b9759d4294b560f82501",
@@ -658573,18 +658633,17 @@
    {
     "wallet": "0x3957fb024ae4314fafd2fae943965fdebeda35f0",
     "side": "Iga Swiatek",
-    "usd": 494,
-    "avgPrice": 0.6599
+    "usd": 494
    },
    {
-    "wallet": "0xdc87b19600813a4cadc51bf2761aebf87d18ea3b",
-    "side": "Iva Jovic",
-    "usd": 345
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Iga Swiatek",
+    "usd": 444
    },
    {
     "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
     "side": "Iga Swiatek",
-    "usd": 325
+    "usd": 304
    },
    {
     "wallet": "0xecc558e1dd2164b451766c89d2a28b35d8405fde",
@@ -658592,10 +658651,19 @@
     "usd": 197
    },
    {
-    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
     "side": "Iga Swiatek",
-    "usd": 139,
-    "avgPrice": 0.6537
+    "usd": 196
+   },
+   {
+    "wallet": "0xbaac4adee9e1b1eff4097ab2e2cc5a25ba22ff10",
+    "side": "Iga Swiatek",
+    "usd": 131
+   },
+   {
+    "wallet": "0x1cba5593c7f29eca329a4749e447a81b4ec1b694",
+    "side": "Iga Swiatek",
+    "usd": 130
    },
    {
     "wallet": "0xa34f2df7d3e8a46990a680bf8a1cb617c8934d3a",
@@ -658634,11 +658702,6 @@
     "usd": 66
    },
    {
-    "wallet": "0x98db8cca55c32b24cfb414b5b43d273f4e1fdd17",
-    "side": "Iga Swiatek",
-    "usd": 66
-   },
-   {
     "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
     "side": "Iva Jovic",
     "usd": 62
@@ -658647,6 +658710,11 @@
     "wallet": "0xa2fc0448a1dce9258ebb91b2f3abcddb98a0b1b4",
     "side": "Iga Swiatek",
     "usd": 61
+   },
+   {
+    "wallet": "0x98db8cca55c32b24cfb414b5b43d273f4e1fdd17",
+    "side": "Iva Jovic",
+    "usd": 59
    },
    {
     "wallet": "0x7547479d43f4b52d892a6f2254050eea50edd158",
@@ -658667,61 +658735,11 @@
     "wallet": "0x3e6b98d9dac15f285a18a02644a8c900aab58a98",
     "side": "Iga Swiatek",
     "usd": 40
-   },
-   {
-    "wallet": "0x835b9f8e830f441087babdcd1f8665f7ec4f118f",
-    "side": "Iva Jovic",
-    "usd": 34
-   },
-   {
-    "wallet": "0xb904beba0d36b9a116500c6b45336ca112093ef8",
-    "side": "Iva Jovic",
-    "usd": 34
-   },
-   {
-    "wallet": "0x3ca9089f59d506a6773a4d68227a1ac97806424a",
-    "side": "Iga Swiatek",
-    "usd": 24
-   },
-   {
-    "wallet": "0x01c78f8873c0c86d6b6b92ff627e3802237ee995",
-    "side": "Iva Jovic",
-    "usd": 21
-   },
-   {
-    "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
-    "side": "Iva Jovic",
-    "usd": 13
-   },
-   {
-    "wallet": "0x8b8992eb0d7dc4ef87f5efb45154de4787c598d6",
-    "side": "Iva Jovic",
-    "usd": 10
-   },
-   {
-    "wallet": "0xf9706baa6dd084f1f0c3b88602a543d0c313f7f6",
-    "side": "Iga Swiatek",
-    "usd": 10
-   },
-   {
-    "wallet": "0x35e701f088b6ef25fff6b902769c1cd8b85f8331",
-    "side": "Iva Jovic",
-    "usd": 9
-   },
-   {
-    "wallet": "0xa278b41b5afda5d18da683eb7f851a7b2dc13369",
-    "side": "Iga Swiatek",
-    "usd": 9
-   },
-   {
-    "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
-    "side": "Iva Jovic",
-    "usd": 8
    }
   ],
-  "hoursToKickoff": 0.34,
-  "capturedAt": "2026-10-07T04:39:21.862852+00:00",
-  "koTs": "2026-10-07T05:00:00+00:00",
+  "hoursToKickoff": 0.01,
+  "capturedAt": "2026-10-07T05:09:20.365594+00:00",
+  "koTs": "2026-10-07T05:10:00+00:00",
   "cond": "0x3c3ee80470401b94270ed0261731dcf76140e0396b3acee062dca8bfe02a4836",
   "frage": "China Open: Iva Jovic vs Iga Swiatek",
   "tokens": {
@@ -658730,64 +658748,96 @@
   },
   "book": {
    "side": "Iga Swiatek",
-   "bid": 0.65,
-   "ask": 0.66,
+   "bid": 0.64,
+   "ask": 0.65,
    "spreadC": 1.0,
-   "spreadPct": 1.52,
+   "spreadPct": 1.54,
    "bids": [
     [
-     0.65,
-     27474
-    ],
-    [
      0.64,
-     4172
+     1983
     ],
     [
      0.63,
-     5984
+     53858
     ],
     [
      0.62,
-     1661
+     2289
     ],
     [
      0.61,
-     5
+     402
     ],
     [
      0.6,
-     10
+     3106
+    ],
+    [
+     0.56,
+     2104
     ]
    ],
    "asks": [
     [
+     0.65,
+     7822
+    ],
+    [
      0.66,
-     17878
+     30592
     ],
     [
      0.67,
-     37051
+     69149
     ],
     [
      0.68,
-     43171
+     10086
     ],
     [
      0.69,
-     32592
+     36160
     ],
     [
      0.7,
-     35964
-    ],
-    [
-     0.71,
-     9193
+     9096
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0xb7584314a69e6baf3b814447b1ed7a1bf1324699",
+    "action": "BUY",
+    "side": "Iga Swiatek",
+    "price": 0.66,
+    "usd": 1044,
+    "ts": 1791349668
+   },
+   {
+    "wallet": "0x479e330b07822ee28e20bac5e504f1b7c6b591c3",
+    "action": "BUY",
+    "side": "Iga Swiatek",
+    "price": 0.66,
+    "usd": 2000,
+    "ts": 1791349611
+   },
+   {
+    "wallet": "0xc0a5ecceff48cd8f313cd658cdb609e8b5231f5f",
+    "action": "BUY",
+    "side": "Iga Swiatek",
+    "price": 0.66,
+    "usd": 1000,
+    "ts": 1791349544
+   },
+   {
+    "wallet": "0x779a9702c5043ab56bcb7dc90b4a1f27ad77b689",
+    "action": "BUY",
+    "side": "Iva Jovic",
+    "price": 0.35,
+    "usd": 500,
+    "ts": 1791349431
+   },
    {
     "wallet": "0x1e386b0e0f1fc58c67ce738d7bbc4ba7ec74fd47",
     "action": "BUY",
@@ -658819,22 +658869,6 @@
     "price": 0.66,
     "usd": 498,
     "ts": 1791347237
-   },
-   {
-    "wallet": "0x56acab44cfca2e88bb9b3406890aea7bfa0cd77e",
-    "action": "BUY",
-    "side": "Iga Swiatek",
-    "price": 0.66,
-    "usd": 4372,
-    "ts": 1791338462
-   },
-   {
-    "wallet": "0xc1519e026778e01d2482b9759d4294b560f82501",
-    "action": "BUY",
-    "side": "Iga Swiatek",
-    "price": 0.66,
-    "usd": 620,
-    "ts": 1791334159
    }
   ]
  },
@@ -658985,12 +659019,12 @@
  },
  "atp-mannari-basilas-2026-10-07": {
   "shares": {
-   "Adrian Mannarino": 29016.431574214992,
-   "Nikoloz Basilashvili": 27326.14348470999
+   "Adrian Mannarino": 29972.56539794999,
+   "Nikoloz Basilashvili": 27118.029804924983
   },
   "prices": {
-   "Adrian Mannarino": 0.515,
-   "Nikoloz Basilashvili": 0.485
+   "Adrian Mannarino": 0.525,
+   "Nikoloz Basilashvili": 0.475
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -658998,218 +659032,216 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 76747,
+  "totalUsd": 77655,
   "whales": [
    {
     "wallet": "0xb4f978be63cdf75554b0b46a4262a6db597cc9a7",
     "side": "Adrian Mannarino",
-    "usd": 9883
+    "usd": 10075
    },
    {
     "wallet": "0x45e40dbee6f546c7b318498f8c9778560f5a7e20",
     "side": "Nikoloz Basilashvili",
-    "usd": 7275
+    "usd": 7330
    },
    {
     "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
     "side": "Adrian Mannarino",
-    "usd": 5141
+    "usd": 5241
    },
    {
     "wallet": "0x6b97ebe911d7f2e5e3e8c4a0faad4a5c7c0b8d30",
     "side": "Nikoloz Basilashvili",
-    "usd": 4977,
+    "usd": 4874,
     "avgPrice": 0.4899
    },
    {
     "wallet": "0x2ce8505aa641791eb8460f6ac6bf5c0511e34527",
     "side": "Adrian Mannarino",
-    "usd": 3621
+    "usd": 3691
    },
    {
     "wallet": "0x2c8d4bed2950e9238137a6ec3dc1ad486a4165e7",
     "side": "Adrian Mannarino",
-    "usd": 3090
+    "usd": 3150
    },
    {
     "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
     "side": "Nikoloz Basilashvili",
-    "usd": 3011
+    "usd": 2949,
+    "avgPrice": 0.5
    },
    {
     "wallet": "0xf12f7688a0bc8cc744ef871f70b74c16a976b30f",
     "side": "Nikoloz Basilashvili",
-    "usd": 2780
+    "usd": 2722
    },
    {
     "wallet": "0x77d581f2b6e5e3a12c1bdb743bcc7e47a344732e",
     "side": "Nikoloz Basilashvili",
-    "usd": 1455
+    "usd": 1425
    },
    {
     "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
     "side": "Adrian Mannarino",
-    "usd": 1393
+    "usd": 1420
    },
    {
     "wallet": "0xe98c6194374418b1d1b27321f025bd64ac2c8792",
     "side": "Adrian Mannarino",
-    "usd": 1166
+    "usd": 1189
    },
    {
     "wallet": "0x2b9cf5defa2258503bd22cda0eb28ea531c7a518",
     "side": "Nikoloz Basilashvili",
-    "usd": 970,
-    "avgPrice": 0.5249
+    "usd": 950
    },
    {
     "wallet": "0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
     "side": "Nikoloz Basilashvili",
-    "usd": 868
+    "usd": 850
    },
    {
     "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
     "side": "Nikoloz Basilashvili",
-    "usd": 776
+    "usd": 760
    },
    {
     "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
     "side": "Adrian Mannarino",
-    "usd": 740
+    "usd": 754
    },
    {
     "wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
     "side": "Nikoloz Basilashvili",
-    "usd": 727
+    "usd": 712
    },
    {
     "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
     "side": "Adrian Mannarino",
-    "usd": 614
-   },
-   {
-    "wallet": "0x0235dc24b38772bf3339a9e5ec5db3d3a05fcee5",
-    "side": "Nikoloz Basilashvili",
-    "usd": 551
-   },
-   {
-    "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
-    "side": "Adrian Mannarino",
-    "usd": 493
-   },
-   {
-    "wallet": "0x45e47fa688432060c52ee0f88d15176efee43c69",
-    "side": "Nikoloz Basilashvili",
-    "usd": 466
+    "usd": 565
    },
    {
     "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
     "side": "Nikoloz Basilashvili",
-    "usd": 429,
-    "avgPrice": 0.5
+    "usd": 548
    },
    {
-    "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
+    "wallet": "0x0235dc24b38772bf3339a9e5ec5db3d3a05fcee5",
     "side": "Nikoloz Basilashvili",
-    "usd": 365
+    "usd": 540,
+    "avgPrice": 0.5298
+   },
+   {
+    "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
+    "side": "Adrian Mannarino",
+    "usd": 503
+   },
+   {
+    "wallet": "0x45e47fa688432060c52ee0f88d15176efee43c69",
+    "side": "Nikoloz Basilashvili",
+    "usd": 457
    },
    {
     "wallet": "0x01c78f8873c0c86d6b6b92ff627e3802237ee995",
     "side": "Adrian Mannarino",
-    "usd": 355
+    "usd": 361
+   },
+   {
+    "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
+    "side": "Nikoloz Basilashvili",
+    "usd": 358
    },
    {
     "wallet": "0x5331121e9f2f206d8c06ae6235761b1a3f8d3672",
     "side": "Adrian Mannarino",
-    "usd": 346,
-    "avgPrice": 0.52
+    "usd": 353
    },
    {
     "wallet": "0x38f1cfeceedc974a52e8e9d554f5e0beb4fe9ff1",
     "side": "Adrian Mannarino",
-    "usd": 343
+    "usd": 350
    },
    {
     "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
     "side": "Nikoloz Basilashvili",
-    "usd": 329,
-    "avgPrice": 0.4918
+    "usd": 322
    },
    {
     "wallet": "0xe54d37c9c12e5fd3d684ff4d193ef1f44dabfdec",
     "side": "Nikoloz Basilashvili",
-    "usd": 291
+    "usd": 285
    },
    {
     "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
     "side": "Nikoloz Basilashvili",
-    "usd": 247,
-    "avgPrice": 0.505
+    "usd": 242
    },
    {
     "wallet": "0x943875922cdd46dbaeaa721b601e279dfa9fe019",
     "side": "Nikoloz Basilashvili",
-    "usd": 242,
+    "usd": 238,
     "avgPrice": 0.51
    },
    {
     "wallet": "0x6aadd3537e005de11bd3d6c4db2b737dfe3720ae",
     "side": "Adrian Mannarino",
-    "usd": 198
+    "usd": 202
    },
    {
     "wallet": "0x9d39bcdc1cf42d9d0e0623527c75a023b8bd5408",
     "side": "Nikoloz Basilashvili",
-    "usd": 194
+    "usd": 190,
+    "avgPrice": 0.54
    },
    {
     "wallet": "0xdc81f14a6e9af07af6ca443f63de558c7612e889",
     "side": "Adrian Mannarino",
-    "usd": 160
+    "usd": 163
+   },
+   {
+    "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
+    "side": "Adrian Mannarino",
+    "usd": 158
    },
    {
     "wallet": "0xef460652c993d011442553faaa81b13a924cf872",
     "side": "Adrian Mannarino",
-    "usd": 149
+    "usd": 151
    },
    {
     "wallet": "0x125a733601a947640cd928d4fd1bd5ddb841df71",
     "side": "Adrian Mannarino",
-    "usd": 145
+    "usd": 148
    },
    {
     "wallet": "0x8f1dfd0868d056f11f84e0233e1b89527c262fb6",
     "side": "Nikoloz Basilashvili",
-    "usd": 116
+    "usd": 114
    },
    {
     "wallet": "0xd4a40515779fc89b5e2be5cc2e988bc8335a3c66",
     "side": "Adrian Mannarino",
-    "usd": 103
-   },
-   {
-    "wallet": "0xdc4f58a48ed4467743609fdce11eea483c759804",
-    "side": "Nikoloz Basilashvili",
-    "usd": 101
+    "usd": 105
    },
    {
     "wallet": "0xb5501e658c4155814d49d4735f457332da4a2799",
     "side": "Adrian Mannarino",
+    "usd": 101
+   },
+   {
+    "wallet": "0xdc4f58a48ed4467743609fdce11eea483c759804",
+    "side": "Nikoloz Basilashvili",
     "usd": 99
    },
    {
     "wallet": "0x0a7c46489299331559598ab0412f46bda8ce8964",
     "side": "Nikoloz Basilashvili",
-    "usd": 94
-   },
-   {
-    "wallet": "0x3e6b98d9dac15f285a18a02644a8c900aab58a98",
-    "side": "Nikoloz Basilashvili",
-    "usd": 93
+    "usd": 92
    }
   ],
-  "hoursToKickoff": 0.93,
-  "capturedAt": "2026-10-07T04:39:21.862852+00:00",
+  "hoursToKickoff": 0.43,
+  "capturedAt": "2026-10-07T05:09:20.365594+00:00",
   "koTs": "2026-10-07T05:35:00+00:00",
   "cond": "0x00a806ea376492839079ded2431efdb78b48fc3081e917581769eb31c84a52ac",
   "frage": "Shanghai Rolex Masters: Adrian Mannarino vs Nikoloz Basilashvili",
@@ -659226,23 +659258,23 @@
    "bids": [
     [
      0.51,
-     64491
+     53697
     ],
     [
      0.5,
-     21885
+     21867
     ],
     [
      0.49,
-     27507
+     33509
     ],
     [
      0.48,
-     28177
+     19988
     ],
     [
      0.47,
-     8912
+     5244
     ],
     [
      0.46,
@@ -659252,27 +659284,27 @@
    "asks": [
     [
      0.52,
-     4030
+     11537
     ],
     [
      0.53,
-     16095
+     13704
     ],
     [
      0.54,
-     50689
+     42719
     ],
     [
      0.55,
-     37531
+     26168
     ],
     [
      0.56,
-     8702
+     11914
     ],
     [
      0.57,
-     7795
+     19548
     ]
    ]
   },
@@ -659316,30 +659348,6 @@
     "price": 0.48,
     "usd": 2124,
     "ts": 1791330347
-   },
-   {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-    "action": "SELL",
-    "side": "Nikoloz Basilashvili",
-    "price": 0.49,
-    "usd": 617,
-    "ts": 1791330133
-   },
-   {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-    "action": "SELL",
-    "side": "Nikoloz Basilashvili",
-    "price": 0.5,
-    "usd": 529,
-    "ts": 1791329410
-   },
-   {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-    "action": "SELL",
-    "side": "Nikoloz Basilashvili",
-    "price": 0.5,
-    "usd": 630,
-    "ts": 1791329335
    }
   ]
  },
@@ -659357,8 +659365,8 @@
   "sport": "Tennis",
   "totalUsd": 14248,
   "whales": [],
-  "hoursToKickoff": 1.34,
-  "capturedAt": "2026-10-07T04:39:21.862852+00:00",
+  "hoursToKickoff": 0.84,
+  "capturedAt": "2026-10-07T05:09:20.365594+00:00",
   "koTs": "2026-10-07T06:00:00+00:00",
   "cond": "0x1b36d223595dbd1fd762d449d6ac7a5374e19e47bfedec0511aaaec9d8b092c8",
   "frage": "W15 Islamabad: Anna Simkina vs Sevil Yuldasheva",
@@ -659370,8 +659378,8 @@
  "itf-sohail1-kupare1-2026-10-07": {
   "shares": {},
   "prices": {
-   "HAJRA SOHAIL": 0.275,
-   "Anastasiya Kuparev": 0.725
+   "HAJRA SOHAIL": 0.12,
+   "Anastasiya Kuparev": 0.88
   },
   "splitGuete": {
    "art": "leer",
@@ -659381,8 +659389,8 @@
   "sport": "Tennis",
   "totalUsd": 14222,
   "whales": [],
-  "hoursToKickoff": 1.34,
-  "capturedAt": "2026-10-07T04:39:21.862852+00:00",
+  "hoursToKickoff": 0.84,
+  "capturedAt": "2026-10-07T05:09:20.365594+00:00",
   "koTs": "2026-10-07T06:00:00+00:00",
   "cond": "0x7c6f885224c9b4a6316706bb98a881f3a77c196c9dc4754758d8015095ac93bf",
   "frage": "W15 Islamabad: HAJRA SOHAIL vs Anastasiya Kuparev",
@@ -659394,8 +659402,8 @@
  "itf-jamshi1-khokha1-2026-10-07": {
   "shares": {},
   "prices": {
-   "Elena Jamshidi": 0.535,
-   "Meheq Khokhar": 0.465
+   "Elena Jamshidi": 0.905,
+   "Meheq Khokhar": 0.095
   },
   "splitGuete": {
    "art": "leer",
@@ -659405,8 +659413,8 @@
   "sport": "Tennis",
   "totalUsd": 14132,
   "whales": [],
-  "hoursToKickoff": 1.34,
-  "capturedAt": "2026-10-07T04:39:21.862852+00:00",
+  "hoursToKickoff": 0.84,
+  "capturedAt": "2026-10-07T05:09:20.365594+00:00",
   "koTs": "2026-10-07T06:00:00+00:00",
   "cond": "0x7d16e08a24f6770e40040e0b772c801f39153d97785d6526d7a9bab748cac7d2",
   "frage": "W15 Islamabad: Elena Jamshidi vs Meheq Khokhar",
@@ -659430,7 +659438,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 9118,
+  "totalUsd": 9134,
   "whales": [
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
@@ -659452,14 +659460,12 @@
    {
     "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
     "side": "Tomas Machac",
-    "usd": 506,
-    "avgPrice": 0.6879
+    "usd": 506
    },
    {
     "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
     "side": "Tomas Machac",
-    "usd": 480,
-    "avgPrice": 0.69
+    "usd": 480
    },
    {
     "wallet": "0x7e5972bfc25819775ee5a9d4f191919375487b8b",
@@ -659514,8 +659520,7 @@
    {
     "wallet": "0x3da80ca893666957475095ac1504094df93dbe26",
     "side": "Zhizhen Zhang",
-    "usd": 50,
-    "avgPrice": 0.29
+    "usd": 50
    },
    {
     "wallet": "0x05c5a55c0eed25f98a846f9b5a1875a99d358181",
@@ -659530,8 +659535,7 @@
    {
     "wallet": "0xfa686b1486c0622c54164d86b1d6f784d0bbba5d",
     "side": "Tomas Machac",
-    "usd": 40,
-    "avgPrice": 0.68
+    "usd": 40
    },
    {
     "wallet": "0x305bc4b3239d3064566dc71531737c65bc56cd21",
@@ -659615,20 +659619,105 @@
     "usd": 3
    }
   ],
-  "hoursToKickoff": 0.93,
-  "capturedAt": "2026-10-07T04:39:21.862852+00:00",
+  "hoursToKickoff": 0.43,
+  "capturedAt": "2026-10-07T05:09:20.365594+00:00",
   "koTs": "2026-10-07T05:35:00+00:00",
   "cond": "0x02020dbb728dc2003d98b7d7b41c5fa204339aa443ec076198f4285c012e90bb",
   "frage": "Shanghai Rolex Masters: Zhizhen Zhang vs Tomas Machac",
   "tokens": {
    "Zhizhen Zhang": "69259846397637405169474186651266384310917369351322500389261166380527363584714",
    "Tomas Machac": "76932104222537965677109673793773947375195284495353930280661015097587729855262"
-  }
+  },
+  "book": {
+   "side": "Tomas Machac",
+   "bid": 0.67,
+   "ask": 0.68,
+   "spreadC": 1.0,
+   "spreadPct": 1.47,
+   "bids": [
+    [
+     0.67,
+     16815
+    ],
+    [
+     0.66,
+     4089
+    ],
+    [
+     0.65,
+     1648
+    ],
+    [
+     0.64,
+     1593
+    ],
+    [
+     0.63,
+     1720
+    ],
+    [
+     0.62,
+     5
+    ]
+   ],
+   "asks": [
+    [
+     0.68,
+     9057
+    ],
+    [
+     0.69,
+     25899
+    ],
+    [
+     0.7,
+     35311
+    ],
+    [
+     0.71,
+     30140
+    ],
+    [
+     0.72,
+     55478
+    ],
+    [
+     0.73,
+     6645
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xed2f6ba44a3fac9908a51b4f65c1df7b72105e19",
+    "action": "BUY",
+    "side": "Tomas Machac",
+    "price": 0.68,
+    "usd": 748,
+    "ts": 1791344904
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Zhizhen Zhang",
+    "price": 0.31,
+    "usd": 512,
+    "ts": 1791309023
+   },
+   {
+    "wallet": "0x452c565bc2f42fe1a2dc79177bfc45cb796cf96f",
+    "action": "BUY",
+    "side": "Zhizhen Zhang",
+    "price": 0.31,
+    "usd": 419,
+    "ts": 1791284032
+   }
+  ]
  },
  "lol-gam-fly-2026-10-07": {
   "shares": {
-   "GAM Esports": 22289.622392675024,
-   "FlyQuest": 58763.54999217503
+   "GAM Esports": 22359.365835675024,
+   "FlyQuest": 58947.39801662505
   },
   "prices": {
    "GAM Esports": 0.275,
@@ -659640,12 +659729,12 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 81150,
+  "totalUsd": 82887,
   "whales": [
    {
     "wallet": "0x6ac5bb06a9eb05641fd5e82640268b92f3ab4b6e",
     "side": "FlyQuest",
-    "usd": 37645,
+    "usd": 37766,
     "avgPrice": 0.7199
    },
    {
@@ -659717,7 +659806,7 @@
    {
     "wallet": "0x6b97ebe911d7f2e5e3e8c4a0faad4a5c7c0b8d30",
     "side": "GAM Esports",
-    "usd": 1027
+    "usd": 1091
    },
    {
     "wallet": "0x1958513132accb7dd17f2cf7beebbc165776b24e",
@@ -659752,38 +659841,38 @@
    {
     "wallet": "0xa3b5da76ffbbe3325bb1b40a30f6a4634962941a",
     "side": "GAM Esports",
-    "usd": 687
+    "usd": 687,
+    "avgPrice": 0.2879
    },
    {
     "wallet": "0xb580b3480b139ec8732db38df63b3f5497b09ba2",
     "side": "FlyQuest",
-    "usd": 497
+    "usd": 497,
+    "avgPrice": 0.7299
    },
    {
     "wallet": "0x0235dc24b38772bf3339a9e5ec5db3d3a05fcee5",
     "side": "FlyQuest",
-    "usd": 350
+    "usd": 350,
+    "avgPrice": 0.73
    },
    {
     "wallet": "0x53abaa0952659af1fbcc5293c77b72e1138365aa",
     "side": "GAM Esports",
-    "usd": 339
+    "usd": 339,
+    "avgPrice": 0.28
    },
    {
     "wallet": "0xcd300069721b481c8be9b2f6323583bf8c74fc9b",
     "side": "FlyQuest",
-    "usd": 321
+    "usd": 321,
+    "avgPrice": 0.7248
    },
    {
     "wallet": "0x6552f4d9d85e9d5724716659af62414cfbabbaa4",
     "side": "FlyQuest",
-    "usd": 298
-   },
-   {
-    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
-    "side": "FlyQuest",
-    "usd": 277,
-    "avgPrice": 0.7295
+    "usd": 298,
+    "avgPrice": 0.7299
    },
    {
     "wallet": "0x5b624e3e0426f7aa2ca57f7451fbcea4b125d87f",
@@ -659791,19 +659880,28 @@
     "usd": 275
    },
    {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "FlyQuest",
+    "usd": 252,
+    "avgPrice": 0.7295
+   },
+   {
     "wallet": "0xccaf18a7ef9f11f5dfec8c2c3d317a0ad55eb2db",
     "side": "GAM Esports",
-    "usd": 220
+    "usd": 220,
+    "avgPrice": 0.2899
    },
    {
     "wallet": "0xc104db0d325238b721c407b44f14f70bb6b1e684",
     "side": "FlyQuest",
-    "usd": 217
+    "usd": 217,
+    "avgPrice": 0.72
    },
    {
     "wallet": "0x12e7efd4f1a03c51d4f9417b12bc3749b44239a0",
     "side": "GAM Esports",
-    "usd": 187
+    "usd": 187,
+    "avgPrice": 0.2826
    },
    {
     "wallet": "0x943875922cdd46dbaeaa721b601e279dfa9fe019",
@@ -659824,12 +659922,14 @@
    {
     "wallet": "0x9d39bcdc1cf42d9d0e0623527c75a023b8bd5408",
     "side": "GAM Esports",
-    "usd": 110
+    "usd": 110,
+    "avgPrice": 0.28
    },
    {
     "wallet": "0xd7c85753b4ab8ed9532e0fef1123a13727d82313",
     "side": "GAM Esports",
-    "usd": 110
+    "usd": 110,
+    "avgPrice": 0.28
    },
    {
     "wallet": "0x4a3f86ed9ce6b3dac5b66e2d5478a6bf38cc4333",
@@ -659839,23 +659939,26 @@
    {
     "wallet": "0xfd4fb07f091e6a6d212f6e4876bd2ebc91bca4d3",
     "side": "FlyQuest",
-    "usd": 96,
+    "usd": 98,
     "avgPrice": 0.7299
    },
    {
     "wallet": "0x1c29705c62a6435b5d45c382530012b14c5a167e",
     "side": "GAM Esports",
-    "usd": 89
+    "usd": 89,
+    "avgPrice": 0.2899
    },
    {
     "wallet": "0xd6771bf957cab6a10fcb8e2c8c6db9713cf37579",
     "side": "FlyQuest",
-    "usd": 73
+    "usd": 73,
+    "avgPrice": 0.7299
    },
    {
     "wallet": "0x229c24468ef358ffaa2bd8cf45d37948dd6a11eb",
     "side": "GAM Esports",
-    "usd": 72
+    "usd": 72,
+    "avgPrice": 0.28
    },
    {
     "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
@@ -659863,8 +659966,8 @@
     "usd": 72
    }
   ],
-  "hoursToKickoff": 2.34,
-  "capturedAt": "2026-10-07T04:39:21.862852+00:00",
+  "hoursToKickoff": 1.84,
+  "capturedAt": "2026-10-07T05:09:20.365594+00:00",
   "koTs": "2026-10-07T07:00:00+00:00",
   "cond": "0x4b3a3eb755775e20c995c9a442354a036dfc06f3526cf0f5ff70ff2b3adef648",
   "frage": "LoL: GAM Esports vs FlyQuest (BO3) - Demacia Cup Global Invitational Group Stage",
@@ -659881,11 +659984,11 @@
    "bids": [
     [
      0.72,
-     58957
+     63949
     ],
     [
      0.71,
-     44671
+     39091
     ],
     [
      0.7,
@@ -659893,33 +659996,33 @@
     ],
     [
      0.69,
-     495
+     175
     ],
     [
      0.68,
-     1450
+     5450
     ],
     [
      0.67,
-     4472
+     472
     ]
    ],
    "asks": [
     [
      0.73,
-     103655
+     102558
     ],
     [
      0.74,
-     47041
+     42198
     ],
     [
      0.75,
-     223083
+     228223
     ],
     [
      0.76,
-     8622
+     7132
     ],
     [
      0.77,
@@ -659927,7 +660030,7 @@
     ],
     [
      0.78,
-     788
+     2261
     ]
    ]
   },
@@ -659947,21 +660050,13 @@
     "price": 0.73,
     "usd": 1863,
     "ts": 1791346443
-   },
-   {
-    "wallet": "0x2465e0eb9743a7156575ccc65aad331359185d84",
-    "action": "BUY",
-    "side": "GAM Esports",
-    "price": 0.28,
-    "usd": 1000,
-    "ts": 1791340136
    }
   ]
  },
  "wta-gauff-mertens-2026-10-06": {
   "shares": {
-   "Coco Gauff": 9248.2177906,
-   "Elise Mertens": 2532.9503922249987
+   "Coco Gauff": 9259.186919804999,
+   "Elise Mertens": 2535.9546760199987
   },
   "prices": {
    "Coco Gauff": 0.785,
@@ -659973,7 +660068,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 8866,
+  "totalUsd": 13338,
   "whales": [
    {
     "wallet": "0x48eb25e4eef92260c718758301bb80220152e9db",
@@ -659988,7 +660083,7 @@
    {
     "wallet": "0x333f291ea158f13e4f60c9f0ba88044bf2483cd6",
     "side": "Coco Gauff",
-    "usd": 970
+    "usd": 975
    },
    {
     "wallet": "0x15683d9f4c2d7bd1f95181836102d5467091c958",
@@ -660009,7 +660104,7 @@
    {
     "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
     "side": "Elise Mertens",
-    "usd": 594
+    "usd": 519
    },
    {
     "wallet": "0xcad22bcc3c5f2e35f12313d968fd413f376bf315",
@@ -660032,14 +660127,9 @@
     "usd": 207
    },
    {
-    "wallet": "0xb66e10a3a6eb9015e07b8216397b2c962b331b8f",
-    "side": "Coco Gauff",
-    "usd": 157
-   },
-   {
     "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
     "side": "Elise Mertens",
-    "usd": 156
+    "usd": 159
    },
    {
     "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
@@ -660079,8 +660169,7 @@
    {
     "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
     "side": "Elise Mertens",
-    "usd": 27,
-    "avgPrice": 0.5
+    "usd": 27
    },
    {
     "wallet": "0x5e020e19bc4cc2cd24ab9b406604ee9df02ab178",
@@ -660169,14 +660258,459 @@
     "usd": 1
    }
   ],
-  "hoursToKickoff": 1.84,
-  "capturedAt": "2026-10-07T04:39:21.862852+00:00",
+  "hoursToKickoff": 1.34,
+  "capturedAt": "2026-10-07T05:09:20.365594+00:00",
   "koTs": "2026-10-07T06:30:00+00:00",
   "cond": "0x9bdbab5cfe4f0c078dba657999fa1584def2ff9d403d767beea1cc2d24503ee9",
   "frage": "China Open: Coco Gauff vs Elise Mertens",
   "tokens": {
    "Coco Gauff": "1831380963875261345136970820872551649465384256256028720456229424031294448144",
    "Elise Mertens": "111584988293825190006238634502889332908219076181822886470274978657912618426374"
-  }
+  },
+  "book": {
+   "side": "Coco Gauff",
+   "bid": 0.78,
+   "ask": 0.79,
+   "spreadC": 1.0,
+   "spreadPct": 1.27,
+   "bids": [
+    [
+     0.78,
+     12038
+    ],
+    [
+     0.77,
+     7233
+    ],
+    [
+     0.76,
+     4255
+    ],
+    [
+     0.75,
+     1605
+    ],
+    [
+     0.74,
+     1875
+    ],
+    [
+     0.73,
+     10
+    ]
+   ],
+   "asks": [
+    [
+     0.79,
+     58173
+    ],
+    [
+     0.8,
+     76010
+    ],
+    [
+     0.81,
+     44246
+    ],
+    [
+     0.82,
+     29372
+    ],
+    [
+     0.83,
+     43217
+    ],
+    [
+     0.84,
+     10305
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x48eb25e4eef92260c718758301bb80220152e9db",
+    "action": "BUY",
+    "side": "Coco Gauff",
+    "price": 0.79,
+    "usd": 3223,
+    "ts": 1791347354
+   },
+   {
+    "wallet": "0x333f291ea158f13e4f60c9f0ba88044bf2483cd6",
+    "action": "BUY",
+    "side": "Coco Gauff",
+    "price": 0.79,
+    "usd": 975,
+    "ts": 1791345926
+   },
+   {
+    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+    "action": "BUY",
+    "side": "Coco Gauff",
+    "price": 0.7854,
+    "usd": 1127,
+    "ts": 1791340758
+   },
+   {
+    "wallet": "0xcad22bcc3c5f2e35f12313d968fd413f376bf315",
+    "action": "BUY",
+    "side": "Coco Gauff",
+    "price": 0.78,
+    "usd": 400,
+    "ts": 1791335657
+   },
+   {
+    "wallet": "0x15683d9f4c2d7bd1f95181836102d5467091c958",
+    "action": "BUY",
+    "side": "Coco Gauff",
+    "price": 0.78,
+    "usd": 791,
+    "ts": 1791329935
+   }
+  ]
+ },
+ "wta-pridank-blinkov-2026-10-05": {
+  "shares": {
+   "Elena Pridankina": 4787.258023484998,
+   "Anna Blinkova": 10410.721176240002
+  },
+  "prices": {
+   "Elena Pridankina": 0.315,
+   "Anna Blinkova": 0.685
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 33830,
+  "whales": [
+   {
+    "wallet": "0xb4d250f58c26840e09723a83ce9c8149aa32ce99",
+    "side": "Anna Blinkova",
+    "usd": 3962,
+    "avgPrice": 0.6528
+   },
+   {
+    "wallet": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
+    "side": "Elena Pridankina",
+    "usd": 2302
+   },
+   {
+    "wallet": "0xd9e0aaca471f489be338fd0f91a26e8669a805f2",
+    "side": "Anna Blinkova",
+    "usd": 988,
+    "avgPrice": 0.66
+   },
+   {
+    "wallet": "0x277ba20ae11cd6a022e2f087dc7ee3835ab031fa",
+    "side": "Anna Blinkova",
+    "usd": 855
+   },
+   {
+    "wallet": "0x365f951dc281322d83f6fcda884c7f66a938706a",
+    "side": "Anna Blinkova",
+    "usd": 684
+   },
+   {
+    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+    "side": "Anna Blinkova",
+    "usd": 645
+   },
+   {
+    "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
+    "side": "Elena Pridankina",
+    "usd": 630
+   },
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Anna Blinkova",
+    "usd": 605,
+    "avgPrice": 0.675
+   },
+   {
+    "wallet": "0xf422113ed01be6862f901aceb0789a6a91af5753",
+    "side": "Anna Blinkova",
+    "usd": 342
+   },
+   {
+    "wallet": "0xbd5cc5ccd98bf9f10af35b21d8540394de298ae8",
+    "side": "Anna Blinkova",
+    "usd": 337
+   },
+   {
+    "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
+    "side": "Elena Pridankina",
+    "usd": 315
+   },
+   {
+    "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
+    "side": "Elena Pridankina",
+    "usd": 290
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Anna Blinkova",
+    "usd": 277
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Elena Pridankina",
+    "usd": 274,
+    "avgPrice": 0.32
+   },
+   {
+    "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
+    "side": "Elena Pridankina",
+    "usd": 214
+   },
+   {
+    "wallet": "0xbaac4adee9e1b1eff4097ab2e2cc5a25ba22ff10",
+    "side": "Anna Blinkova",
+    "usd": 206
+   },
+   {
+    "wallet": "0xc4fe817476491890086330a639ac417d51bf601f",
+    "side": "Anna Blinkova",
+    "usd": 206
+   },
+   {
+    "wallet": "0x1b0fcd4c06147cb090681b4bd59cab5b9319b7ae",
+    "side": "Elena Pridankina",
+    "usd": 168
+   },
+   {
+    "wallet": "0x73e5cd209c144497b2fe399ab6698bffb62ce3d8",
+    "side": "Elena Pridankina",
+    "usd": 158
+   },
+   {
+    "wallet": "0xecc558e1dd2164b451766c89d2a28b35d8405fde",
+    "side": "Anna Blinkova",
+    "usd": 110
+   },
+   {
+    "wallet": "0x1cba5593c7f29eca329a4749e447a81b4ec1b694",
+    "side": "Anna Blinkova",
+    "usd": 98
+   },
+   {
+    "wallet": "0x01c78f8873c0c86d6b6b92ff627e3802237ee995",
+    "side": "Elena Pridankina",
+    "usd": 89
+   },
+   {
+    "wallet": "0xf1f2b3c6c5bea42a6664fe3a8395addc1ab28c8d",
+    "side": "Anna Blinkova",
+    "usd": 77,
+    "avgPrice": 0.6928
+   },
+   {
+    "wallet": "0x98db8cca55c32b24cfb414b5b43d273f4e1fdd17",
+    "side": "Anna Blinkova",
+    "usd": 69
+   },
+   {
+    "wallet": "0x489d3df3601288940f89d56b5642b0951129f6e3",
+    "side": "Anna Blinkova",
+    "usd": 34
+   },
+   {
+    "wallet": "0xec6d625b58f205a224d4700ec55be068c3335050",
+    "side": "Anna Blinkova",
+    "usd": 34
+   },
+   {
+    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
+    "side": "Elena Pridankina",
+    "usd": 32
+   },
+   {
+    "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
+    "side": "Elena Pridankina",
+    "usd": 22
+   },
+   {
+    "wallet": "0x5e020e19bc4cc2cd24ab9b406604ee9df02ab178",
+    "side": "Elena Pridankina",
+    "usd": 17
+   },
+   {
+    "wallet": "0x952718df56ab7955e0a0121a9e47fa8f52b6888b",
+    "side": "Elena Pridankina",
+    "usd": 16,
+    "avgPrice": 0.3164
+   },
+   {
+    "wallet": "0x99fb27843152178165372024b0e022333421acba",
+    "side": "Anna Blinkova",
+    "usd": 16
+   },
+   {
+    "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
+    "side": "Elena Pridankina",
+    "usd": 14,
+    "avgPrice": 0.3
+   },
+   {
+    "wallet": "0xf9706baa6dd084f1f0c3b88602a543d0c313f7f6",
+    "side": "Elena Pridankina",
+    "usd": 10
+   },
+   {
+    "wallet": "0x1bfb6053af6856aa0e0015899d588e432d238bea",
+    "side": "Elena Pridankina",
+    "usd": 9
+   },
+   {
+    "wallet": "0x35e701f088b6ef25fff6b902769c1cd8b85f8331",
+    "side": "Elena Pridankina",
+    "usd": 8
+   },
+   {
+    "wallet": "0x3e1ac4bede0a559fc47e78e8a74adeeb6f704d5c",
+    "side": "Elena Pridankina",
+    "usd": 5
+   },
+   {
+    "wallet": "0x64c6369df26ea4ab6010b3a35b4c26e9d747e917",
+    "side": "Elena Pridankina",
+    "usd": 3
+   },
+   {
+    "wallet": "0x5bb6fa00189a1417d39dcc1566cabe1340f031c5",
+    "side": "Elena Pridankina",
+    "usd": 2
+   },
+   {
+    "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
+    "side": "Elena Pridankina",
+    "usd": 2
+   },
+   {
+    "wallet": "0x2ee37f3b359d558a49e0737fdc6b5edce2652e6a",
+    "side": "Elena Pridankina",
+    "usd": 2
+   }
+  ],
+  "hoursToKickoff": 2.84,
+  "capturedAt": "2026-10-07T05:09:20.365594+00:00",
+  "koTs": "2026-10-07T08:00:00+00:00",
+  "cond": "0x01c0895c23fbd54af54f5b2c768709910648edb3746d129319bd11445f64d217",
+  "frage": "Samsun: Elena Pridankina vs Anna Blinkova",
+  "tokens": {
+   "Elena Pridankina": "52567887421131252453861963741721832120418194448070952356896931890023458126089",
+   "Anna Blinkova": "114901885342013877341870357068038813422852205467139842094732716382349025079688"
+  },
+  "book": {
+   "side": "Anna Blinkova",
+   "bid": 0.68,
+   "ask": 0.69,
+   "spreadC": 1.0,
+   "spreadPct": 1.45,
+   "bids": [
+    [
+     0.68,
+     18868
+    ],
+    [
+     0.67,
+     815
+    ],
+    [
+     0.66,
+     141
+    ],
+    [
+     0.65,
+     5
+    ],
+    [
+     0.64,
+     217
+    ],
+    [
+     0.63,
+     10
+    ]
+   ],
+   "asks": [
+    [
+     0.69,
+     3629
+    ],
+    [
+     0.7,
+     17086
+    ],
+    [
+     0.71,
+     16153
+    ],
+    [
+     0.72,
+     28885
+    ],
+    [
+     0.73,
+     12716
+    ],
+    [
+     0.74,
+     3094
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x99fb27843152178165372024b0e022333421acba",
+    "action": "SELL",
+    "side": "Anna Blinkova",
+    "price": 0.69,
+    "usd": 759,
+    "ts": 1791307502
+   },
+   {
+    "wallet": "0x0d0efde748a217f3985ef32ecc7d005f83e50570",
+    "action": "SELL",
+    "side": "Anna Blinkova",
+    "price": 0.69,
+    "usd": 507,
+    "ts": 1791305493
+   },
+   {
+    "wallet": "0x3957fb024ae4314fafd2fae943965fdebeda35f0",
+    "action": "SELL",
+    "side": "Anna Blinkova",
+    "price": 0.69,
+    "usd": 507,
+    "ts": 1791303482
+   },
+   {
+    "wallet": "0x99fb27843152178165372024b0e022333421acba",
+    "action": "BUY",
+    "side": "Anna Blinkova",
+    "price": 0.7,
+    "usd": 918,
+    "ts": 1791303338
+   },
+   {
+    "wallet": "0x08a30a0a0fb71ebddc8907145791030782b88666",
+    "action": "SELL",
+    "side": "Anna Blinkova",
+    "price": 0.6581,
+    "usd": 7242,
+    "ts": 1791300969
+   },
+   {
+    "wallet": "0x08a30a0a0fb71ebddc8907145791030782b88666",
+    "action": "SELL",
+    "side": "Anna Blinkova",
+    "price": 0.7,
+    "usd": 306,
+    "ts": 1791300824
+   }
+  ]
  }
 }
