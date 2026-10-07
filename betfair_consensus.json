@@ -1,6 +1,6 @@
 {
-"generatedAt": "2026-10-07T15:31:01.201055+00:00",
-"count": 11,
+"generatedAt": "2026-10-07T15:46:04.520827+00:00",
+"count": 13,
 "covered": 8,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
@@ -65,8 +65,8 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 115832,
-"remaining": 4884168,
+"used": 115982,
+"remaining": 4884018,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
@@ -85,8 +85,8 @@
 "moneyName": "Arsenal",
 "moneySharePct": 80,
 "moneyOdd": 1.42,
-"moneyDir": "out",
-"totVol": 57011,
+"moneyDir": "flat",
+"totVol": 57113,
 "pinnOdd": 1.37,
 "softOdd": 1.38,
 "softN": 49,
@@ -107,9 +107,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.6871,
-"draw": 0.1925,
-"away": 0.1204,
+"home": 0.6876,
+"draw": 0.1921,
+"away": 0.1202,
 "fav": "home",
 "n": 49
 },
@@ -117,7 +117,7 @@
 "pinnMove": {
 "movePP": 0.9,
 "stepPP": 0.0,
-"n": 8,
+"n": 9,
 "move": false,
 "laeuft": false
 },
@@ -135,10 +135,10 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "Brighton",
-"moneySharePct": 58,
+"moneySharePct": 57,
 "moneyOdd": 2.42,
-"moneyDir": "out",
-"totVol": 40561,
+"moneyDir": "flat",
+"totVol": 40628,
 "pinnOdd": 2.38,
 "softOdd": 2.3,
 "softN": 49,
@@ -159,9 +159,9 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.3203,
+"home": 0.3202,
 "draw": 0.2726,
-"away": 0.4071,
+"away": 0.4072,
 "fav": "away",
 "n": 49
 },
@@ -169,7 +169,59 @@
 "pinnMove": {
 "movePP": -0.0,
 "stepPP": -0.0,
-"n": 3,
+"n": 4,
+"move": false,
+"laeuft": false
+},
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36103406",
+"home": "Gnistan",
+"away": "FC Inter Turku",
+"league": "Finnish Veikkausliiga",
+"country": "FI",
+"kickoff": "2026-10-07T16:00:00Z",
+"live": false,
+"moneySide": "away",
+"moneyName": "FC Inter Turku",
+"moneySharePct": 60,
+"moneyOdd": 1.79,
+"moneyDir": "out",
+"totVol": 33870,
+"pinnOdd": 1.72,
+"softOdd": 1.67,
+"softN": 39,
+"poly": {
+"vol": 34612,
+"odd": 1.77,
+"sharePct": 0,
+"shareSrc": "geld",
+"key": "fin1-gni-int-2026-10-07",
+"sideKey": "FC Inter Turku",
+"whales": [],
+"whaleUsd": 0
+},
+"pinn": {
+"home": 0.1999,
+"draw": 0.2397,
+"away": 0.5603,
+"fav": "away"
+},
+"soft": {
+"home": 0.2096,
+"draw": 0.2391,
+"away": 0.5512,
+"fav": "away",
+"n": 39
+},
+"pinnMovePP": 0.9,
+"pinnMove": {
+"movePP": 0.9,
+"stepPP": -0.0,
+"n": 5,
 "move": false,
 "laeuft": false
 },
@@ -188,14 +240,14 @@
 "moneySide": "home",
 "moneyName": "Chelsea",
 "moneySharePct": 72,
-"moneyOdd": 1.75,
-"moneyDir": "flat",
-"totVol": 29289,
+"moneyOdd": 1.74,
+"moneyDir": "in",
+"totVol": 29440,
 "pinnOdd": 1.72,
 "softOdd": 1.7,
 "softN": 49,
 "poly": {
-"vol": 10562,
+"vol": 10576,
 "odd": 1.74,
 "sharePct": 57,
 "shareSrc": "preis",
@@ -221,86 +273,9 @@
 "pinnMove": {
 "movePP": 0.0,
 "stepPP": 0.0,
-"n": 3,
-"move": false,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36103406",
-"home": "Gnistan",
-"away": "FC Inter Turku",
-"league": "Finnish Veikkausliiga",
-"country": "FI",
-"kickoff": "2026-10-07T16:00:00Z",
-"live": false,
-"moneySide": "away",
-"moneyName": "FC Inter Turku",
-"moneySharePct": 65,
-"moneyOdd": 1.77,
-"moneyDir": "out",
-"totVol": 27616,
-"pinnOdd": 1.72,
-"softOdd": 1.67,
-"softN": 39,
-"poly": {
-"vol": 25058,
-"odd": 1.74,
-"sharePct": 93,
-"shareSrc": "geld",
-"key": "fin1-gni-int-2026-10-07",
-"sideKey": "FC Inter Turku",
-"whales": [
-{
-"wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
-"usd": 3426
-},
-{
-"wallet": "0x162ca4c5249987872fea1e15c846d7fe80316c47",
-"usd": 2147
-},
-{
-"wallet": "0xe1e292a578d07497363048d9ec69e2be36b00d29",
-"usd": 1627
-},
-{
-"wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
-"usd": 898
-},
-{
-"wallet": "0xbeb1c94b4260398f93f418e349a15a40b2ae4687",
-"usd": 744
-},
-{
-"wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
-"usd": 287
-}
-],
-"whaleUsd": 10331
-},
-"pinn": {
-"home": 0.1992,
-"draw": 0.2404,
-"away": 0.5604,
-"fav": "away"
-},
-"soft": {
-"home": 0.2092,
-"draw": 0.2399,
-"away": 0.5509,
-"fav": "away",
-"n": 39
-},
-"pinnMovePP": 0.9,
-"pinnMove": {
-"movePP": 0.9,
-"stepPP": 0.5,
 "n": 4,
 "move": false,
-"laeuft": true
+"laeuft": false
 },
 "verdict": "konsens",
 "agree": true,
@@ -318,14 +293,14 @@
 "moneyName": "Remo",
 "moneySharePct": 79,
 "moneyOdd": 2.1,
-"moneyDir": "out",
-"totVol": 25533,
+"moneyDir": "flat",
+"totVol": 26089,
 "pinnOdd": 2.03,
 "softOdd": 1.96,
 "softN": 43,
 "poly": {
-"vol": 35408,
-"odd": 2.02,
+"vol": 38126,
+"odd": 2.06,
 "sharePct": 97,
 "shareSrc": "geld",
 "key": "bra-cre-gre-2026-10-07",
@@ -333,51 +308,51 @@
 "whales": [
 {
 "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
-"usd": 10737
+"usd": 10520
 },
 {
 "wallet": "0xb7aba0e44edb6773c3b3a8308aae8a24781fa2d1",
-"usd": 1462
+"usd": 1432
 },
 {
 "wallet": "0xbc5613462ce3902eea10874a11cf74191f4a8f28",
-"usd": 513
+"usd": 503
 },
 {
 "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
-"usd": 335
+"usd": 328
 },
 {
 "wallet": "0x2d1ffae8d41b181d1b1734016e07bd1a903a5246",
-"usd": 157
+"usd": 154
 },
 {
 "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-"usd": 67
+"usd": 65
 }
 ],
-"whaleUsd": 13435
+"whaleUsd": 13162
 },
 "pinn": {
-"home": 0.4767,
-"draw": 0.2726,
-"away": 0.2507,
+"home": 0.4763,
+"draw": 0.2739,
+"away": 0.2498,
 "fav": "home"
 },
 "soft": {
-"home": 0.4732,
-"draw": 0.2687,
-"away": 0.2581,
+"home": 0.4709,
+"draw": 0.27,
+"away": 0.2591,
 "fav": "home",
 "n": 43
 },
-"pinnMovePP": -0.7,
+"pinnMovePP": -0.8,
 "pinnMove": {
-"movePP": -0.7,
-"stepPP": -1.4,
-"n": 8,
+"movePP": -0.8,
+"stepPP": -0.0,
+"n": 9,
 "move": false,
-"laeuft": true
+"laeuft": false
 },
 "verdict": "konsens",
 "agree": true,
@@ -401,7 +376,7 @@
 "softOdd": 1.35,
 "softN": 48,
 "poly": {
-"vol": 22992,
+"vol": 23037,
 "odd": 1.38,
 "sharePct": 72,
 "shareSrc": "preis",
@@ -417,9 +392,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.6984,
-"draw": 0.1745,
-"away": 0.1271,
+"home": 0.6985,
+"draw": 0.1744,
+"away": 0.1272,
 "fav": "home",
 "n": 48
 },
@@ -427,7 +402,7 @@
 "pinnMove": {
 "movePP": -0.0,
 "stepPP": -0.0,
-"n": 3,
+"n": 4,
 "move": false,
 "laeuft": false
 },
@@ -448,12 +423,12 @@
 "moneySharePct": 46,
 "moneyOdd": 3.05,
 "moneyDir": "flat",
-"totVol": 16890,
+"totVol": 17889,
 "pinnOdd": 2.91,
 "softOdd": 2.9,
 "softN": 47,
 "poly": {
-"vol": 15716,
+"vol": 16765,
 "odd": null,
 "sharePct": null,
 "shareSrc": null,
@@ -463,23 +438,23 @@
 "whaleUsd": 0
 },
 "pinn": {
-"home": 0.3823,
-"draw": 0.3324,
-"away": 0.2853,
+"home": 0.3814,
+"draw": 0.3329,
+"away": 0.2857,
 "fav": "home"
 },
 "soft": {
-"home": 0.3951,
-"draw": 0.3198,
-"away": 0.2851,
+"home": 0.3944,
+"draw": 0.3206,
+"away": 0.285,
 "fav": "home",
 "n": 47
 },
 "pinnMovePP": 0.5,
 "pinnMove": {
 "movePP": 0.5,
-"stepPP": 0.2,
-"n": 4,
+"stepPP": 0.0,
+"n": 5,
 "move": false,
 "laeuft": false
 },
@@ -500,12 +475,12 @@
 "moneySharePct": 63,
 "moneyOdd": 2.38,
 "moneyDir": "flat",
-"totVol": 15165,
+"totVol": 15580,
 "pinnOdd": 2.26,
 "softOdd": 2.23,
 "softN": 46,
 "poly": {
-"vol": 6063,
+"vol": 6169,
 "odd": 2.35,
 "sharePct": 42,
 "shareSrc": "preis",
@@ -522,13 +497,19 @@
 },
 "soft": {
 "home": 0.3152,
-"draw": 0.2664,
-"away": 0.4183,
+"draw": 0.2667,
+"away": 0.4181,
 "fav": "away",
 "n": 46
 },
-"pinnMovePP": null,
-"pinnMove": null,
+"pinnMovePP": 0.0,
+"pinnMove": {
+"movePP": 0.0,
+"stepPP": 0.0,
+"n": 2,
+"move": false,
+"laeuft": false
+},
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
@@ -545,8 +526,8 @@
 "moneyName": "Al Ahly Cairo",
 "moneySharePct": 93,
 "moneyOdd": 1.01,
-"moneyDir": "in",
-"totVol": 58037,
+"moneyDir": "flat",
+"totVol": 58079,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -574,47 +555,47 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Neftchi Fargona",
-"moneySharePct": 77,
-"moneyOdd": 2.0,
-"moneyDir": "in",
-"totVol": 40484,
+"moneySharePct": 74,
+"moneyOdd": 3.15,
+"moneyDir": "out",
+"totVol": 48047,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
 "poly": {
-"vol": 57234,
-"odd": 2.44,
-"sharePct": 71,
+"vol": 62764,
+"odd": 2.38,
+"sharePct": 86,
 "shareSrc": "geld",
 "key": "uzb1-nef-xor-2026-10-07",
 "sideKey": "FK Neftchi Fargona",
 "whales": [
 {
 "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
-"usd": 6694
+"usd": 7514
 },
 {
 "wallet": "0x722abb5460060870d46728bf45f66a6b1635d6ed",
-"usd": 3192
+"usd": 3270
 },
 {
 "wallet": "0x1f624696c102b99bea92c75a502fa7e4a6d676f6",
-"usd": 929
+"usd": 951
 },
 {
 "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-"usd": 454
+"usd": 465
+},
+{
+"wallet": "0x02b18dfde01fd53b456cabda7d6ec2403322c764",
+"usd": 252
 },
 {
 "wallet": "0x131e218d893b15e2e1b941101b5e435465dd9d7f",
-"usd": 176
-},
-{
-"wallet": "0xf6f7e573b3739242e7b162cf5adc0474abb2c7a2",
-"usd": 96
+"usd": 180
 }
 ],
-"whaleUsd": 11675
+"whaleUsd": 13169
 },
 "pinn": null,
 "soft": null,
@@ -639,9 +620,9 @@
 "moneySide": "away",
 "moneyName": "ZED FC",
 "moneySharePct": 91,
-"moneyOdd": 1.52,
-"moneyDir": "in",
-"totVol": 28549,
+"moneyOdd": 1.54,
+"moneyDir": "out",
+"totVol": 29100,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -657,6 +638,103 @@
 "spiel": "Zamalek v ZED FC",
 "grund": "kein_kandidat"
 }
+},
+{
+"matchId": "36152134",
+"home": "Inter Toronto FC",
+"away": "FC Supra du Quebec",
+"league": "Canadian Premier League",
+"country": "CA",
+"kickoff": "2026-10-07T15:00:00Z",
+"live": true,
+"moneySide": "away",
+"moneyName": "FC Supra du Quebec",
+"moneySharePct": 62,
+"moneyOdd": 1.94,
+"moneyDir": "in",
+"totVol": 5281,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": {
+"vol": 13219,
+"odd": 2.02,
+"sharePct": 76,
+"shareSrc": "geld",
+"key": "canpl-int-sup-2026-10-07",
+"sideKey": "FC Supra Du Quebec",
+"whales": [
+{
+"wallet": "0xee586017922db8b2ff244c91ae6b66f661c3d209",
+"usd": 956
+},
+{
+"wallet": "0x051adea0d16c85df8a8a9c7e400e0655905d1db9",
+"usd": 492
+},
+{
+"wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+"usd": 276
+},
+{
+"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+"usd": 186
+},
+{
+"wallet": "0x65503c7f9e142ac88b1ce09df3363ff77f188451",
+"usd": 155
+},
+{
+"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+"usd": 130
+}
+],
+"whaleUsd": 2507
+},
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Inter Toronto FC v FC Supra du Quebec",
+"kandidat": "IF Gnistan v FC Inter Turku",
+"key": "soccer_finland_veikkausliiga",
+"score": 0.5,
+"grund": "name"
+}
+},
+{
+"matchId": "36159254",
+"home": "Shooting Stars",
+"away": "Kano Pillars FC",
+"league": "Nigerian Premier League",
+"country": "NG",
+"kickoff": "2026-10-07T15:00:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Shooting Stars",
+"moneySharePct": 60,
+"moneyOdd": 1.9,
+"moneyDir": "out",
+"totVol": 2707,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": null,
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Shooting Stars v Kano Pillars FC",
+"grund": "kein_kandidat"
+}
 }
 ],
 "ankerN": 36,
@@ -665,19 +743,10 @@
 "ankerDiagnose": {
 "nach": {
 "kein_kandidat": 102,
-"name": 1,
-"zeit": 11
+"zeit": 11,
+"name": 1
 },
 "beispiele": [
-{
-"spiel": "Inter Toronto FC v FC Supra du Quebec",
-"kandidat": "IF Gnistan v FC Inter Turku",
-"key": "soccer_finland_veikkausliiga",
-"score": 0.5,
-"grund": "name",
-"matchId": "36152134",
-"liga": "Canadian Premier League"
-},
 {
 "spiel": "KuPS Akatemia v FC Inter 2",
 "kandidat": "FC Inter Turku v KuPS Kuopio",
@@ -739,16 +808,6 @@
 "liga": "Thai U21 League"
 },
 {
-"spiel": "Al Sarhan v Etihad Al Ramtha",
-"kandidat": "Al-Kholood v Al-Qadsiah",
-"key": "soccer_saudi_arabia_pro_league",
-"score": 0.83,
-"grund": "zeit",
-"abstandH": 24.8,
-"matchId": "36160669",
-"liga": "Jordanian Cup"
-},
-{
 "spiel": "Hayy Al-Amir Hassan v Al Tora",
 "kandidat": "Al-Kholood v Al-Qadsiah",
 "key": "soccer_saudi_arabia_pro_league",
@@ -756,6 +815,16 @@
 "grund": "zeit",
 "abstandH": 24.8,
 "matchId": "36160480",
+"liga": "Jordanian Cup"
+},
+{
+"spiel": "Al Sarhan v Etihad Al Ramtha",
+"kandidat": "Al-Kholood v Al-Qadsiah",
+"key": "soccer_saudi_arabia_pro_league",
+"score": 0.83,
+"grund": "zeit",
+"abstandH": 24.8,
+"matchId": "36160669",
 "liga": "Jordanian Cup"
 },
 {
@@ -787,6 +856,15 @@
 "abstandH": 75.0,
 "matchId": "36159914",
 "liga": "Jordanian Premier League"
+},
+{
+"spiel": "Inter Toronto FC v FC Supra du Quebec",
+"kandidat": "IF Gnistan v FC Inter Turku",
+"key": "soccer_finland_veikkausliiga",
+"score": 0.5,
+"grund": "name",
+"matchId": "36152134",
+"liga": "Canadian Premier League"
 }
 ]
 }

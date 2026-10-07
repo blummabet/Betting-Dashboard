@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-07T15:31:09.221848+00:00",
+ "generatedAt": "2026-10-07T15:46:12.528260+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -35,7 +35,7 @@
     "nieAnteil": 0.023,
     "schaetzbar": false
    },
-   "alterTage": 17.1,
+   "alterTage": 17.2,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "Liga",
@@ -654,10 +654,10 @@
    "zerlegung": "nach Conviction",
    "art": "conviction",
    "gruppen": 6,
-   "basis": "1143 von 1615 abgerechneten Plays · nur Engine 2026-09-01 · ohne Cricket, Kampfsport, US-Sport",
-   "n": 1137,
-   "pl": 8.8,
-   "roi": 0.0077,
+   "basis": "1144 von 1616 abgerechneten Plays · nur Engine 2026-09-01 · ohne Cricket, Kampfsport, US-Sport",
+   "n": 1138,
+   "pl": 9.17,
+   "roi": 0.0081,
    "clv": -0.207,
    "belegte": 2
   },
@@ -4420,7 +4420,7 @@
     "nieAnteil": 0.023,
     "schaetzbar": false
    },
-   "alterTage": 17.1,
+   "alterTage": 17.2,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "Liga",
@@ -5145,7 +5145,7 @@
     "nieAnteil": 0.175,
     "schaetzbar": false
    },
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "konjunktion_gehalten",
    "quelle": "killer_ledger.json"
   },
@@ -5382,28 +5382,28 @@
   {
    "schublade": "Conviction 5",
    "strom": "poly",
-   "n": 521,
+   "n": 522,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0015,
-   "pl": 0.79,
-   "roiLb": -0.0528,
+   "roi": 0.0022,
+   "pl": 1.16,
+   "roiLb": -0.052,
    "clv": -0.253,
    "clvLb": -0.595,
    "clvUrteil": "gemessen, nicht belegt",
    "clvOg": 0.089,
    "fehltN": 0,
-   "noetigNRoi": 663793,
+   "noetigNRoi": 309350,
    "noetigNClv": null,
    "noetigGrund": null,
    "entfernung": {
-    "median": 3409,
-    "lo": 352,
-    "hi": 492165,
-    "nieAnteil": 0.455,
+    "median": 3251,
+    "lo": 324,
+    "hi": 225012,
+    "nieAnteil": 0.46,
     "schaetzbar": false
    },
-   "alterTage": 0.1,
+   "alterTage": 0.0,
    "art": "conviction",
    "wert": 5,
    "nAlt": 110,
@@ -5773,7 +5773,7 @@
     "nieAnteil": 0.46,
     "schaetzbar": false
    },
-   "alterTage": 0.3,
+   "alterTage": 0.4,
    "art": "vorangemeldet",
    "angemeldet": "2026-09-01T18:59:52.671883+00:00",
    "zielN": 60,
@@ -5834,7 +5834,7 @@
     "nieAnteil": 0.372,
     "schaetzbar": false
    },
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "rest"
@@ -5950,6 +5950,38 @@
    "naeherung": false
   },
   {
+   "schublade": "Mix money+steam",
+   "strom": "poly",
+   "n": 222,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.01,
+   "pl": -2.23,
+   "roiLb": -0.0921,
+   "clv": -0.075,
+   "clvLb": -0.956,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.806,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "nicht_positiv",
+   "entfernung": {
+    "median": 1398,
+    "lo": 167,
+    "hi": 332000,
+    "nieAnteil": 0.627,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "mix",
+   "wert": "money+steam",
+   "nAlt": 68,
+   "roiAlt": -0.0115,
+   "clvAlt": 3.235,
+   "engineAlt": true
+  },
+  {
    "schublade": "Friendlies International · Both teams to Score?",
    "strom": "betfair",
    "n": 59,
@@ -5970,38 +6002,6 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
-  },
-  {
-   "schublade": "Mix money+steam",
-   "strom": "poly",
-   "n": 221,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0117,
-   "pl": -2.6,
-   "roiLb": -0.0942,
-   "clv": -0.075,
-   "clvLb": -0.956,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.806,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "nicht_positiv",
-   "entfernung": {
-    "median": 1661,
-    "lo": 176,
-    "hi": 228455,
-    "nieAnteil": 0.632,
-    "schaetzbar": false
-   },
-   "alterTage": 0.2,
-   "art": "mix",
-   "wert": "money+steam",
-   "nAlt": 68,
-   "roiAlt": -0.0115,
-   "clvAlt": 3.235,
-   "engineAlt": true
   },
   {
    "schublade": "Public · frisches Signal",
@@ -6271,7 +6271,7 @@
     "nieAnteil": 0.37,
     "schaetzbar": false
    },
-   "alterTage": 0.1,
+   "alterTage": 0.2,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "MLS"
@@ -6964,7 +6964,7 @@
     "nieAnteil": 0.468,
     "schaetzbar": false
    },
-   "alterTage": 0.3,
+   "alterTage": 0.4,
    "art": "mix",
    "wert": "bf+money+sharp",
    "nAlt": 9,
@@ -12650,7 +12650,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 17.1,
+   "alterTage": 17.2,
    "art": "verdict",
    "wert": "BET",
    "datensatz": "MLS"
@@ -12673,7 +12673,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 8.5,
+   "alterTage": 8.6,
    "art": "conviction",
    "wert": 9,
    "nAlt": 11,
@@ -12770,7 +12770,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 11.7,
+   "alterTage": 11.8,
    "art": "conviction",
    "wert": 2
   },
@@ -12843,7 +12843,7 @@
    "noetigNClv": null,
    "noetigGrund": "nicht_positiv",
    "fehltN": 0,
-   "alterTage": 80.1,
+   "alterTage": 80.2,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "WM"
@@ -12865,7 +12865,7 @@
    "noetigNClv": null,
    "noetigGrund": null,
    "fehltN": 0,
-   "alterTage": 95.1,
+   "alterTage": 95.2,
    "art": "verdict",
    "wert": "BET",
    "datensatz": "WM"
