@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-10-07T13:30:35.273701+00:00",
-"count": 3,
-"covered": 2,
+"generatedAt": "2026-10-07T13:45:40.427993+00:00",
+"count": 6,
+"covered": 3,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -49,27 +49,28 @@
 ],
 "leaguesMitAnker": [
 "Brazilian Serie A",
-"English Premier League"
+"English Premier League",
+"Finnish Veikkausliiga"
 ],
 "leaguesMitTotals": [],
 "oddsKeysFetched": 48,
 "oddsKeysMitDaten": 48,
 "oddsEvents": 589,
 "oddsTotals": {
-"versucht": 2,
+"versucht": 3,
 "mitDaten": 0,
 "events": 0,
-"gewollt": 2,
+"gewollt": 3,
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 114473,
-"remaining": 4885527,
+"used": 114623,
+"remaining": 4885377,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
 },
-"ankerQuote": 0.958,
+"ankerQuote": 0.966,
 "games": [
 {
 "matchId": "36065339",
@@ -81,15 +82,15 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Arsenal",
-"moneySharePct": 78,
-"moneyOdd": 1.42,
-"moneyDir": "flat",
-"totVol": 44625,
+"moneySharePct": 80,
+"moneyOdd": 1.41,
+"moneyDir": "in",
+"totVol": 49931,
 "pinnOdd": 1.39,
 "softOdd": 1.38,
 "softN": 49,
 "poly": {
-"vol": 25208,
+"vol": 25209,
 "odd": 1.42,
 "sharePct": 70,
 "shareSrc": "preis",
@@ -105,8 +106,8 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.6867,
-"draw": 0.1926,
+"home": 0.6868,
+"draw": 0.1925,
 "away": 0.1207,
 "fav": "home",
 "n": 49
@@ -115,7 +116,7 @@
 "pinnMove": {
 "movePP": -0.0,
 "stepPP": -0.0,
-"n": 4,
+"n": 5,
 "move": false,
 "laeuft": false
 },
@@ -134,14 +135,14 @@
 "moneySide": "home",
 "moneyName": "Remo",
 "moneySharePct": 81,
-"moneyOdd": 2.04,
-"moneyDir": "in",
-"totVol": 23142,
+"moneyOdd": 2.08,
+"moneyDir": "out",
+"totVol": 23265,
 "pinnOdd": 1.99,
 "softOdd": 1.96,
 "softN": 43,
 "poly": {
-"vol": 34418,
+"vol": 34527,
 "odd": 2.06,
 "sharePct": 48,
 "shareSrc": "preis",
@@ -157,8 +158,8 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.4754,
-"draw": 0.2672,
+"home": 0.4753,
+"draw": 0.2673,
 "away": 0.2574,
 "fav": "home",
 "n": 43
@@ -167,10 +168,81 @@
 "pinnMove": {
 "movePP": 0.2,
 "stepPP": 0.0,
-"n": 4,
+"n": 5,
 "move": false,
 "laeuft": false
 },
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36103406",
+"home": "Gnistan",
+"away": "FC Inter Turku",
+"league": "Finnish Veikkausliiga",
+"country": "FI",
+"kickoff": "2026-10-07T16:00:00Z",
+"live": false,
+"moneySide": "away",
+"moneyName": "FC Inter Turku",
+"moneySharePct": 72,
+"moneyOdd": 1.81,
+"moneyDir": "out",
+"totVol": 15454,
+"pinnOdd": 1.75,
+"softOdd": 1.69,
+"softN": 39,
+"poly": {
+"vol": 16074,
+"odd": 1.77,
+"sharePct": 94,
+"shareSrc": "geld",
+"key": "fin1-gni-int-2026-10-07",
+"sideKey": "FC Inter Turku",
+"whales": [
+{
+"wallet": "0x162ca4c5249987872fea1e15c846d7fe80316c47",
+"usd": 2110
+},
+{
+"wallet": "0xe1e292a578d07497363048d9ec69e2be36b00d29",
+"usd": 1599
+},
+{
+"wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
+"usd": 882
+},
+{
+"wallet": "0xbeb1c94b4260398f93f418e349a15a40b2ae4687",
+"usd": 731
+},
+{
+"wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
+"usd": 169
+},
+{
+"wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+"usd": 165
+}
+],
+"whaleUsd": 6547
+},
+"pinn": {
+"home": 0.2132,
+"draw": 0.235,
+"away": 0.5518,
+"fav": "away"
+},
+"soft": {
+"home": 0.2136,
+"draw": 0.2393,
+"away": 0.5471,
+"fav": "away",
+"n": 39
+},
+"pinnMovePP": null,
+"pinnMove": null,
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
@@ -186,9 +258,9 @@
 "moneySide": "away",
 "moneyName": "ZED FC",
 "moneySharePct": 92,
-"moneyOdd": 1.56,
+"moneyOdd": 1.62,
 "moneyDir": "out",
-"totVol": 26043,
+"totVol": 26706,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -204,11 +276,72 @@
 "spiel": "Zamalek v ZED FC",
 "grund": "kein_kandidat"
 }
+},
+{
+"matchId": "36159699",
+"home": "Alexandria Petroleum",
+"away": "Badr SC",
+"league": "Egyptian Second Division B",
+"country": "EG",
+"kickoff": "2026-10-07T12:30:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Alexandria Petroleum",
+"moneySharePct": 99,
+"moneyOdd": 2.38,
+"moneyDir": "in",
+"totVol": 26076,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": null,
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Alexandria Petroleum v Badr SC",
+"grund": "kein_kandidat"
+}
+},
+{
+"matchId": "36158894",
+"home": "Asyut Petroleum",
+"away": "Al Ahly Cairo",
+"league": "Egyptian League Cup",
+"country": "EG",
+"kickoff": "2026-10-07T14:00:00Z",
+"live": false,
+"moneySide": "away",
+"moneyName": "Al Ahly Cairo",
+"moneySharePct": 90,
+"moneyOdd": 1.58,
+"moneyDir": "out",
+"totVol": 15681,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": null,
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Asyut Petroleum v Al Ahly Cairo",
+"grund": "kein_kandidat",
+"naechster": "Al-Kholood v Al-Qadsiah"
+}
 }
 ],
-"ankerN": 24,
-"ankerNOffen": 135,
-"ankerMit": 23,
+"ankerN": 29,
+"ankerNOffen": 140,
+"ankerMit": 28,
 "ankerDiagnose": {
 "nach": {
 "kein_kandidat": 102,
