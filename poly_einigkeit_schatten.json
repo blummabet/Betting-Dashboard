@@ -5265,8 +5265,9 @@
 "whaleEntry": 0.165,
 "htkMess": 0.28,
 "sentAt": "2026-09-27T20:49:12Z",
-"status": "pending",
-"nurBeobachtung": true
+"status": "unaufloesbar",
+"nurBeobachtung": true,
+"ageDays": 10.04
 },
 {
 "k": "cs2-bsta-pcy-2026-09-27|Procyon Gaming",
@@ -17766,8 +17767,16 @@
 "whaleEntry": 0.865,
 "htkMess": 2.79,
 "sentAt": "2026-10-07T14:13:38Z",
-"status": "pending",
-"nurBeobachtung": true
+"status": "settled",
+"nurBeobachtung": true,
+"result": "win",
+"winner": "Spirit",
+"closePrice": 0.865,
+"stake": 10.0,
+"pnl": 1.56,
+"clvPP": 0.0,
+"settledTs": "2026-10-07T21:43:48.008362+00:00",
+"resolvedTs": "2026-10-07T21:43:34.892465+00:00"
 },
 {
 "k": "lol-hrts-g2nord-2026-10-07|G2 NORD",
@@ -17787,8 +17796,18 @@
 "whaleEntry": 0.705,
 "htkMess": 1.35,
 "sentAt": "2026-10-07T14:40:01Z",
-"status": "pending",
-"nurBeobachtung": true
+"status": "settled",
+"nurBeobachtung": true,
+"cond": "0x3897b0222281050dd96e391da5559488bd8a8acc7dd774e269f3d24d30d8c8bc",
+"condQuelle": "erfassung+wallet",
+"result": "win",
+"winner": "G2 NORD",
+"closePrice": 0.71,
+"stake": 10.0,
+"pnl": 4.18,
+"clvPP": 0.5,
+"settledTs": "2026-10-07T21:43:48.008362+00:00",
+"resolvedTs": "2026-10-07T21:43:34.892465+00:00"
 },
 {
 "k": "atp-mcdonal-nijboer-2026-10-06|Ryan Nijboer",
@@ -17958,6 +17977,49 @@
 "whaleEntry": 0.745,
 "htkMess": 0.32,
 "sentAt": "2026-10-07T20:41:38Z",
+"status": "pending",
+"nurBeobachtung": true
+},
+{
+"k": "nba-min-ind-2026-10-07|Timberwolves",
+"key": "nba-min-ind-2026-10-07",
+"side": "Timberwolves",
+"wallet": "0x018eec8d14a6a38c445351a4d5a21e70f8e55c3d",
+"wallets": [
+"0x018eec8d14a6a38c445351a4d5a21e70f8e55c3d",
+"0xce0f9e043db5dffacb8782b799baf23bbedc7fc7"
+],
+"nWallets": 2,
+"league": "NBA",
+"cat": "US-Sport",
+"usd": 655.0,
+"maxEinzel": 486.0,
+"pushPrice": 0.565,
+"whaleEntry": 0.565,
+"htkMess": 1.33,
+"sentAt": "2026-10-07T21:43:47Z",
+"status": "pending",
+"nurBeobachtung": true
+},
+{
+"k": "nba-mil-okc-2026-10-07|Thunder",
+"key": "nba-mil-okc-2026-10-07",
+"side": "Thunder",
+"wallet": "0x018eec8d14a6a38c445351a4d5a21e70f8e55c3d",
+"wallets": [
+"0x018eec8d14a6a38c445351a4d5a21e70f8e55c3d",
+"0x1e4b57f70ea89f197b96eb899409335c5eaa0a04",
+"0xa0f21e6d351baa9185716b5c00c2925ed9621848"
+],
+"nWallets": 3,
+"league": "NBA",
+"cat": "US-Sport",
+"usd": 1768.0,
+"maxEinzel": 598.0,
+"pushPrice": 0.825,
+"whaleEntry": 0.825,
+"htkMess": 2.33,
+"sentAt": "2026-10-07T21:43:47Z",
 "status": "pending",
 "nurBeobachtung": true
 }
