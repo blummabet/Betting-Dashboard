@@ -58,7 +58,10 @@ def test_der_burst_feuert_jetzt():
     rows = [x for x in (json.loads(f.read_text(encoding="utf-8")).get("wetten") or [])
             # 06.10.2026: nur DAS Spiel vom 24.09. — am 05.10. stand ein anderes Riestra-Spiel
             # (Riestra AFBC - Central Cordoba) im Fenster, und der Test pruefte das falsche.
-            if "Riestra Afbc Reserve" in str(x.get("event") or "")]
+            # 07.10.2026: und schon wieder — Riestra Reserve gegen Rivadavia Reserve (reine
+            # Over-Wetten) traf den Filter. Jetzt am Gegner festgemacht, nicht am Vereinsnamen.
+            if "Riestra Afbc Reserve" in str(x.get("event") or "")
+            and "Barracas" in str(x.get("event") or "")]
     if len(rows) < 8:
         return                      # das rollierende Fenster hat den Fall verlassen
     now = max(SB._ts(x["ts"]) for x in rows) + dt.timedelta(minutes=1)

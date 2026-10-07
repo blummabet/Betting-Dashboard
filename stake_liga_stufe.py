@@ -219,6 +219,7 @@ EBENE = {
     # ist der Staats-Wettbewerb von Meghalaya, also unterhalb der I-League und der ISL.
     "shillong-premier-league": 3,
     "liga-portugal-3": 3, "tweede-divisie": 3, "national": 3, "national-league": 3,
+    "national-league-south": 3,  # 07.10.2026 (Wachhund): England 6. Klasse (Braintree - Walton & Hersham)
     "scotland-league-one": 3,   # 06.10.2026 (Wachhund): Scottish League One = 3. Klasse nach Premiership/Championship
     # 30.09.2026 (Stoerungsmeldung): die Southern League Premier Division South ist Englands
     # siebte Ebene (Step 3 im Non-League-System, unter der National League South).
@@ -335,7 +336,7 @@ ART = {
     "caf-confederations-cup": "kontinental", "copa-libertadores": "kontinental",
     "copa-sudamericana": "kontinental", "leagues-cup": "kontinental",
     "copa-do-brasil": "pokal", "fa-cup": "pokal", "efl-cup": "pokal", "ofb-cup": "pokal",
-    "coppa-italia": "pokal", "greece-cup": "pokal", "copa-uruguay": "pokal",
+    "coppa-italia": "pokal", "coppa-italia-serie-d": "pokal",  # 07.10.: Nocerina - Turris "greece-cup": "pokal", "copa-uruguay": "pokal",
     "copa-paulista": "pokal", "dfb-pokal": "pokal", "copa-del-rey": "pokal",
     # 14.09.2026 (CI-Wachhund): die AFC Champions League ist das asiatische Gegenstueck zu UEFA-
     # und CAF-Champions-League — Vereine aus verschiedenen Verbaenden, also keine Spielklasse.
@@ -512,6 +513,12 @@ EIN_WETTBEWERB = {
     # 06.10.2026: beide IDs englische National League (Eastleigh, Southend, Kidderminster, Sutton,
     # Barrow, Wealdstone, Hartlepool, Gateshead) — ein Wettbewerb, 5. Klasse Englands.
     "national-league": "Beide IDs englische National League (06.10.2026 an den Paarungen geprueft)",
+    # 07.10.2026 (Wachhund): Nanjing City - Shaanxi Union unter fc23edd2…, Foshan Nanshi - Guangxi
+    # Hengchen unter 6fe69359… — alle vier Vereine China League One. UNSICHER, nur ueber die Vereine
+    # geprueft, kein gemeinsames Spiel; taucht ein League-Two-Verein auf, gehoert der Slug nach
+    # TURNIER_EBENE.
+    "china-league": "Beide IDs China League One (07.10.2026 an den Vereinen geprueft, kein "
+                    "gemeinsames Spiel)",
 }
 
 # 🔴 27.09.2026 (CI-Wachhund, zehn Slugs auf einmal). Nachgesehen an den Paarungen: bei SIEBEN
@@ -536,6 +543,12 @@ EIN_WETTBEWERB = {
 # auch wenn sie per gemeinsamem Spiel zu einem eingestuften Turnier gehoert (dann ist es die
 # Live-/Pre-Match-Schwester und braucht nur dieselbe Zeile).
 TURNIER_EBENE = {
+    # 07.10.2026 (Wachhund): Frankreich (AS Monaco - Toulouse) und ALGERIEN (CS Constantine - US
+    # Biskra) — beide oberste Klasse ihres Landes.
+    "ligue-1": {
+        "4ec37b6b-a7f8-456a-b18b-e127f06d52b7": ("Frankreich", 1),
+        "418bdc1c-59bc-4e65-9c37-b049bcbb88f0": ("Algerien (CS Constantine - US Biskra)", 1),
+    },
     "premier-league": {
         "c94f5db7-4fd2-4407-a4fc-9a4e807f0ea1": ("England", 1),
         "261292f1-ed72-4765-93c3-abee6a5ebee0": ("Bhutan", 1),

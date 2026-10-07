@@ -38,4 +38,5 @@ def test_main_filtert_vor_dem_deckel_und_bucht_trotzdem():
     src = inspect.getsource(S.main)
     assert "zu_senden(neu_laut)" in src
     assert "sp_laut[:SPIEL_MAX_PUSH]" in src
-    assert src.count("stumm_grund(b) or (") == 2, "der Grund steht im Buch (push=false, pushGrund)"
+    # 07.10.2026: drei Buecher mit Stumm-Grund — Auswahl, Spiel und Torlinie (art=tore).
+    assert src.count("stumm_grund(b) or (") == 3, "der Grund steht im Buch (push=false, pushGrund)"
