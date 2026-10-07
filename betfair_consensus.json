@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-10-07T16:16:02.803269+00:00",
-"count": 12,
-"covered": 8,
+"generatedAt": "2026-10-07T16:30:55.974010+00:00",
+"count": 15,
+"covered": 10,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -51,28 +51,75 @@
 "Brazilian Serie A",
 "English Premier League",
 "Finnish Veikkausliiga",
-"German Bundesliga"
+"German Bundesliga",
+"Spanish La Liga"
 ],
 "leaguesMitTotals": [],
 "oddsKeysFetched": 48,
 "oddsKeysMitDaten": 48,
 "oddsEvents": 589,
 "oddsTotals": {
-"versucht": 4,
+"versucht": 5,
 "mitDaten": 0,
 "events": 0,
-"gewollt": 4,
+"gewollt": 5,
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 116276,
-"remaining": 4883724,
+"used": 116420,
+"remaining": 4883580,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
 },
-"ankerQuote": 0.973,
+"ankerQuote": 0.975,
 "games": [
+{
+"matchId": "36100904",
+"home": "Barcelona",
+"away": "Getafe",
+"league": "Spanish La Liga",
+"country": "ES",
+"kickoff": "2026-10-10T16:30:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Barcelona",
+"moneySharePct": 98,
+"moneyOdd": 1.1,
+"moneyDir": "flat",
+"totVol": 207419,
+"pinnOdd": 1.08,
+"softOdd": 1.07,
+"softN": 44,
+"poly": {
+"vol": 107643,
+"odd": 1.09,
+"sharePct": 92,
+"shareSrc": "preis",
+"key": "lal-bar-get-2026-10-10",
+"sideKey": "FC Barcelona",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.8924,
+"draw": 0.0646,
+"away": 0.043,
+"fav": "home"
+},
+"soft": {
+"home": 0.888,
+"draw": 0.0729,
+"away": 0.039,
+"fav": "home",
+"n": 44
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
 {
 "matchId": "36103406",
 "home": "Gnistan",
@@ -83,60 +130,60 @@
 "live": true,
 "moneySide": "away",
 "moneyName": "FC Inter Turku",
-"moneySharePct": 73,
-"moneyOdd": 1.68,
-"moneyDir": "flat",
-"totVol": 65539,
-"pinnOdd": 1.66,
-"softOdd": 1.62,
-"softN": 31,
+"moneySharePct": 75,
+"moneyOdd": 1.9,
+"moneyDir": "out",
+"totVol": 87179,
+"pinnOdd": 1.81,
+"softOdd": 1.73,
+"softN": 29,
 "poly": {
 "vol": 39693,
-"odd": 1.74,
-"sharePct": 91,
+"odd": 1.56,
+"sharePct": 93,
 "shareSrc": "geld",
 "key": "fin1-gni-int-2026-10-07",
 "sideKey": "FC Inter Turku",
 "whales": [
 {
 "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
-"usd": 4340
+"usd": 4851
 },
 {
 "wallet": "0x162ca4c5249987872fea1e15c846d7fe80316c47",
-"usd": 2147
+"usd": 2390
 },
 {
 "wallet": "0xe1e292a578d07497363048d9ec69e2be36b00d29",
-"usd": 1627
+"usd": 1811
 },
 {
 "wallet": "0xb6b94d715c8a722e842af477aa9ab5da4b76b487",
-"usd": 1437
+"usd": 1600
 },
 {
 "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
-"usd": 1275
+"usd": 1419
 },
 {
 "wallet": "0x580a4378ef152410cb25d10c177e1b5f8ec3ded5",
-"usd": 983
+"usd": 1094
 }
 ],
-"whaleUsd": 15169
+"whaleUsd": 16045
 },
 "pinn": {
-"home": 0.1809,
-"draw": 0.2504,
-"away": 0.5687,
+"home": 0.1918,
+"draw": 0.2868,
+"away": 0.5214,
 "fav": "away"
 },
 "soft": {
-"home": 0.1897,
-"draw": 0.2448,
-"away": 0.5655,
+"home": 0.2056,
+"draw": 0.2724,
+"away": 0.522,
 "fav": "away",
-"n": 31
+"n": 29
 },
 "pinnMovePP": null,
 "pinnMove": null,
@@ -157,7 +204,7 @@
 "moneySharePct": 80,
 "moneyOdd": 1.42,
 "moneyDir": "flat",
-"totVol": 57294,
+"totVol": 58487,
 "pinnOdd": 1.37,
 "softOdd": 1.38,
 "softN": 49,
@@ -178,9 +225,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.6879,
+"home": 0.6878,
 "draw": 0.1919,
-"away": 0.1202,
+"away": 0.1203,
 "fav": "home",
 "n": 49
 },
@@ -208,7 +255,7 @@
 "moneyName": "Brighton",
 "moneySharePct": 57,
 "moneyOdd": 2.4,
-"moneyDir": "in",
+"moneyDir": "flat",
 "totVol": 40643,
 "pinnOdd": 2.38,
 "softOdd": 2.3,
@@ -249,6 +296,52 @@
 "pinnTotals": null
 },
 {
+"matchId": "36065343",
+"home": "Man Utd",
+"away": "Tottenham",
+"league": "English Premier League",
+"country": "GB",
+"kickoff": "2026-10-10T16:30:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Man Utd",
+"moneySharePct": 68,
+"moneyOdd": 1.75,
+"moneyDir": "flat",
+"totVol": 34326,
+"pinnOdd": 1.72,
+"softOdd": 1.7,
+"softN": 49,
+"poly": {
+"vol": 82477,
+"odd": 1.74,
+"sharePct": 57,
+"shareSrc": "preis",
+"key": "epl-mun-tot-2026-10-10",
+"sideKey": "Manchester United FC",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.5604,
+"draw": 0.2216,
+"away": 0.2181,
+"fav": "home"
+},
+"soft": {
+"home": 0.5593,
+"draw": 0.2268,
+"away": 0.2139,
+"fav": "home",
+"n": 49
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
 "matchId": "36065354",
 "home": "Chelsea",
 "away": "Bournemouth",
@@ -282,7 +375,7 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.5572,
+"home": 0.5573,
 "draw": 0.2291,
 "away": 0.2137,
 "fav": "home",
@@ -313,7 +406,7 @@
 "moneySharePct": 79,
 "moneyOdd": 2.1,
 "moneyDir": "flat",
-"totVol": 26401,
+"totVol": 26517,
 "pinnOdd": 2.04,
 "softOdd": 2.0,
 "softN": 43,
@@ -353,25 +446,25 @@
 "whaleUsd": 13026
 },
 "pinn": {
-"home": 0.4744,
-"draw": 0.2749,
-"away": 0.2507,
+"home": 0.4737,
+"draw": 0.2753,
+"away": 0.251,
 "fav": "home"
 },
 "soft": {
-"home": 0.4694,
-"draw": 0.2703,
-"away": 0.2603,
+"home": 0.4692,
+"draw": 0.2702,
+"away": 0.2606,
 "fav": "home",
 "n": 43
 },
 "pinnMovePP": -1.0,
 "pinnMove": {
 "movePP": -1.0,
-"stepPP": -0.2,
+"stepPP": -0.3,
 "n": 10,
-"move": false,
-"laeuft": false
+"move": true,
+"laeuft": true
 },
 "verdict": "konsens",
 "agree": true,
@@ -390,7 +483,7 @@
 "moneySharePct": 86,
 "moneyOdd": 1.39,
 "moneyDir": "flat",
-"totVol": 21331,
+"totVol": 21371,
 "pinnOdd": 1.37,
 "softOdd": 1.35,
 "softN": 48,
@@ -411,9 +504,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.7011,
-"draw": 0.1737,
-"away": 0.1252,
+"home": 0.7028,
+"draw": 0.1729,
+"away": 0.1243,
 "fav": "home",
 "n": 48
 },
@@ -441,10 +534,10 @@
 "moneyName": "The Draw",
 "moneySharePct": 45,
 "moneyOdd": 3.05,
-"moneyDir": "out",
-"totVol": 18412,
+"moneyDir": "flat",
+"totVol": 18570,
 "pinnOdd": 2.91,
-"softOdd": 2.9,
+"softOdd": 2.88,
 "softN": 47,
 "poly": {
 "vol": 18934,
@@ -457,15 +550,15 @@
 "whaleUsd": 0
 },
 "pinn": {
-"home": 0.3883,
-"draw": 0.3323,
-"away": 0.2794,
+"home": 0.387,
+"draw": 0.3325,
+"away": 0.2805,
 "fav": "home"
 },
 "soft": {
-"home": 0.393,
-"draw": 0.3221,
-"away": 0.285,
+"home": 0.3867,
+"draw": 0.3247,
+"away": 0.2887,
 "fav": "home",
 "n": 47
 },
@@ -493,9 +586,9 @@
 "moneyName": "Vasco Da Gama",
 "moneySharePct": 62,
 "moneyOdd": 2.34,
-"moneyDir": "in",
-"totVol": 15821,
-"pinnOdd": 2.28,
+"moneyDir": "flat",
+"totVol": 16040,
+"pinnOdd": 2.26,
 "softOdd": 2.23,
 "softN": 46,
 "poly": {
@@ -509,29 +602,60 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.3123,
+"home": 0.3084,
 "draw": 0.2631,
-"away": 0.4246,
+"away": 0.4285,
 "fav": "away"
 },
 "soft": {
-"home": 0.3152,
+"home": 0.3147,
 "draw": 0.2667,
-"away": 0.4181,
+"away": 0.4186,
 "fav": "away",
 "n": 46
 },
-"pinnMovePP": -0.3,
+"pinnMovePP": 0.1,
 "pinnMove": {
-"movePP": -0.3,
-"stepPP": 0.0,
+"movePP": 0.1,
+"stepPP": 0.4,
 "n": 3,
 "move": false,
-"laeuft": false
+"laeuft": true
 },
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
+},
+{
+"matchId": "36159679",
+"home": "Jordan (W)",
+"away": "Armenia (W)",
+"league": "Friendlies Women's International",
+"country": "International",
+"kickoff": "2026-10-07T15:00:00Z",
+"live": true,
+"moneySide": "away",
+"moneyName": "Armenia (W)",
+"moneySharePct": 85,
+"moneyOdd": 1.04,
+"moneyDir": "in",
+"totVol": 52727,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": null,
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Jordan (W) v Armenia (W)",
+"grund": "kein_kandidat",
+"naechster": "Jagiellonia Białystok v FC Ararat-Armenia"
+}
 },
 {
 "matchId": "36158812",
@@ -544,9 +668,9 @@
 "moneySide": "away",
 "moneyName": "ZED FC",
 "moneySharePct": 90,
-"moneyOdd": 1.39,
-"moneyDir": "out",
-"totVol": 35352,
+"moneyOdd": 1.32,
+"moneyDir": "in",
+"totVol": 41251,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -573,17 +697,17 @@
 "live": true,
 "moneySide": "away",
 "moneyName": "FC Supra du Quebec",
-"moneySharePct": 69,
-"moneyOdd": 1.36,
-"moneyDir": "flat",
-"totVol": 8097,
+"moneySharePct": 71,
+"moneyOdd": 1.38,
+"moneyDir": "out",
+"totVol": 9617,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
 "poly": {
 "vol": 17604,
 "odd": 1.34,
-"sharePct": 90,
+"sharePct": 91,
 "shareSrc": "geld",
 "key": "canpl-int-sup-2026-10-07",
 "sideKey": "FC Supra Du Quebec",
@@ -598,7 +722,7 @@
 },
 {
 "wallet": "0x65503c7f9e142ac88b1ce09df3363ff77f188451",
-"usd": 447
+"usd": 454
 },
 {
 "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
@@ -613,7 +737,7 @@
 "usd": 279
 }
 ],
-"whaleUsd": 4333
+"whaleUsd": 4328
 },
 "pinn": null,
 "soft": null,
@@ -640,10 +764,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Shooting Stars",
-"moneySharePct": 71,
-"moneyOdd": 1.95,
-"moneyDir": "in",
-"totVol": 7325,
+"moneySharePct": 66,
+"moneyOdd": 2.22,
+"moneyDir": "out",
+"totVol": 9170,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -668,12 +792,12 @@
 "country": "PE",
 "kickoff": "2026-10-07T15:45:00Z",
 "live": true,
-"moneySide": "home",
-"moneyName": "AD Cantolao",
-"moneySharePct": 41,
-"moneyOdd": 2.48,
-"moneyDir": "out",
-"totVol": 4265,
+"moneySide": "away",
+"moneyName": "Santos FC de Ica",
+"moneySharePct": 52,
+"moneyOdd": 1.58,
+"moneyDir": "in",
+"totVol": 6037,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -692,26 +816,16 @@
 }
 }
 ],
-"ankerN": 37,
+"ankerN": 40,
 "ankerNOffen": 149,
-"ankerMit": 36,
+"ankerMit": 39,
 "ankerDiagnose": {
 "nach": {
+"kein_kandidat": 97,
 "zeit": 12,
-"kein_kandidat": 100,
 "name": 1
 },
 "beispiele": [
-{
-"spiel": "Al Tadamun Buri v Etihad Al Reef",
-"kandidat": "Al-Kholood v Al-Qadsiah",
-"key": "soccer_saudi_arabia_pro_league",
-"score": 0.67,
-"grund": "zeit",
-"abstandH": 45.8,
-"matchId": "36158916",
-"liga": "Bahraini King's Cup"
-},
 {
 "spiel": "KuPS Akatemia v FC Inter 2",
 "kandidat": "FC Inter Turku v KuPS Kuopio",
@@ -721,6 +835,16 @@
 "abstandH": 92.0,
 "matchId": "36116349",
 "liga": "Finnish Ykkonen"
+},
+{
+"spiel": "Al Tadamun Buri v Etihad Al Reef",
+"kandidat": "Al-Kholood v Al-Qadsiah",
+"key": "soccer_saudi_arabia_pro_league",
+"score": 0.67,
+"grund": "zeit",
+"abstandH": 45.8,
+"matchId": "36158916",
+"liga": "Bahraini King's Cup"
 },
 {
 "spiel": "Al-Akhdoud v Al-Ula FC",
@@ -773,16 +897,6 @@
 "liga": "Thai U21 League"
 },
 {
-"spiel": "Al Sarhan v Etihad Al Ramtha",
-"kandidat": "Al-Kholood v Al-Qadsiah",
-"key": "soccer_saudi_arabia_pro_league",
-"score": 0.83,
-"grund": "zeit",
-"abstandH": 24.8,
-"matchId": "36160669",
-"liga": "Jordanian Cup"
-},
-{
 "spiel": "Hayy Al-Amir Hassan v Al Tora",
 "kandidat": "Al-Kholood v Al-Qadsiah",
 "key": "soccer_saudi_arabia_pro_league",
@@ -793,14 +907,14 @@
 "liga": "Jordanian Cup"
 },
 {
-"spiel": "Al Orooba U21 v Al-Thaid U21",
+"spiel": "Al Sarhan v Etihad Al Ramtha",
 "kandidat": "Al-Kholood v Al-Qadsiah",
 "key": "soccer_saudi_arabia_pro_league",
-"score": 0.67,
+"score": 0.83,
 "grund": "zeit",
-"abstandH": 24.7,
-"matchId": "36163579",
-"liga": "UAE U21"
+"abstandH": 24.8,
+"matchId": "36160669",
+"liga": "Jordanian Cup"
 },
 {
 "spiel": "Shabab Al Ahli Dubai FC U21 v Al-Sharjah U21",
@@ -810,6 +924,16 @@
 "grund": "zeit",
 "abstandH": 25.8,
 "matchId": "36163561",
+"liga": "UAE U21"
+},
+{
+"spiel": "Al Orooba U21 v Al-Thaid U21",
+"kandidat": "Al-Kholood v Al-Qadsiah",
+"key": "soccer_saudi_arabia_pro_league",
+"score": 0.67,
+"grund": "zeit",
+"abstandH": 24.7,
+"matchId": "36163579",
 "liga": "UAE U21"
 },
 {
