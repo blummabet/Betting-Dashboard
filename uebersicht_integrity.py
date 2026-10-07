@@ -522,6 +522,7 @@ def check_poly_deckung(ctx):
     # nie eine Zahl, nur „gerade keine".
     # Fehlerklasse: eine Luecke, die sich durch Zeitablauf selbst erledigt, hinterlaesst keine
     # Statistik. Der Scanner fuehrt jetzt ein Buch; hier steht, was es sagt.
+    blind = bool(fails)                   # Luecke JETZT, kurz vor Anpfiff
     buch = ctx.get("polyDeckungBuch") or {}
     if buch:
         b = PD.bilanz(buch)
@@ -529,6 +530,7 @@ def check_poly_deckung(ctx):
                        if isinstance(z, dict) and not z.get("nachgeholt")
                        and (z.get("minHtk") is not None and z["minHtk"] <= PD.NAH_H)]
         if bis_anpfiff:
+            blind = True
             fails.append("Buch: %d Markt/Maerkte wurden bis zum Anpfiff nie erfasst (%s) — dort "
                          "entstanden Picks blind zum Geld"
                          % (len(bis_anpfiff),
@@ -539,7 +541,15 @@ def check_poly_deckung(ctx):
             fails.append("Buch: in %d von %d Laeufen (%d %%) war eine Deckungsluecke offen — "
                          "alle wurden noch vor dem Anpfiff nachgeholt (%s)"
                          % (b["nLaeufeMitLuecke"], b["nLaeufe"], b["quotePct"], b["urteil"]))
-    return _c("Poly-Deckung: Money-Scan gegen Liga-Fetcher", "error", fails[:8])
+    # 🔴 07.10.2026 (Lucas, Statusseite: „🔴 Poly-Deckung … alle wurden noch vor dem Anpfiff
+    # nachgeholt"). Rot stand hier fuer JEDEN Befund — auch fuer die reine Quote, deren eigener
+    # Satz sagt, dass kein Pick blind zum Geld entstand. Die Batterie zaehlt rot als „kostet Geld";
+    # ein Befund, der das Gegenteil sagt, darf nicht in derselben Farbe stehen. Der Test hiess
+    # sogar schon „nachgeholte Luecken melden als Quote, nicht als Stoerung" — geprueft wurde nur
+    # der Text, nicht die Farbe.
+    # Fehlerklasse: eine Schwere, die am Vorhandensein eines Befunds haengt statt an seinem Inhalt.
+    return _c("Poly-Deckung: Money-Scan gegen Liga-Fetcher", "error" if blind else "warn",
+              fails[:8])
 
 
 def check_preis_signal_deckung(ctx):

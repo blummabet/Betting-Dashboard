@@ -114,6 +114,7 @@ class TestDerGuardLiestDasBuch(unittest.TestCase):
         text = " ".join(c["failures"])
         self.assertIn("bis zum Anpfiff nie erfasst", text)
         self.assertIn("blind zum Geld", text)
+        self.assertEqual(c["severity"], "error")
 
     def test_nachgeholte_luecken_melden_als_quote_nicht_als_stoerung(self):
         b = PD.buchen({}, [_l(htk=40.0)], 10, set(), now=T0)
@@ -122,6 +123,8 @@ class TestDerGuardLiestDasBuch(unittest.TestCase):
         text = " ".join(c["failures"])
         self.assertIn("nachgeholt", text)
         self.assertNotIn("blind zum Geld", text)
+        # 07.10.2026: und nicht ROT — die Statusseite zeigte die reine Quote als Stoerung.
+        self.assertEqual(c["severity"], "warn")
 
     def test_ein_leeres_buch_meldet_nichts(self):
         self.assertEqual(U.check_poly_deckung(self._ctx({}))["nFail"], 0)
