@@ -274,6 +274,21 @@ def zaehler_stake_klein(base_dir):
                and e.get("status") == "abgerechnet")
 
 
+def zaehler_stake_tore(base_dir):
+    """Abgerechnete Torlinien-Bursts (stake_burst_ledger.json, `art: "tore"`).
+
+    07.10.2026 (Lucas: „ja will sowas für over under"). Riestra Reserve: 10 Wetten auf Over
+    ueber vier Linien — kein Burst, weil die Spiel-Regel eine Mannschaft verlangte.
+    """
+    d = _laden(os.path.join(base_dir, "stake_burst_ledger.json"))
+    if d is None:
+        return 0
+    if not isinstance(d, list):
+        return None
+    return sum(1 for e in d if isinstance(e, dict) and e.get("art") == "tore"
+               and e.get("status") == "abgerechnet")
+
+
 def zaehler_serien_wetten(base_dir):
     """Abgerechnete Serien-Wetten (liga_ + mls_serien_wetten_buch.json, status=abgerechnet).
 
@@ -381,6 +396,7 @@ ZAEHLER = {
     "autobet_oktober": zaehler_autobet_oktober,
     "serien_wetten": zaehler_serien_wetten,
     "stake_klein": zaehler_stake_klein,
+    "stake_tore": zaehler_stake_tore,
     "sharp_z": zaehler_sharp_z,
     "bf_leadshare": zaehler_bf_leadshare,
     "bf_rutsch": zaehler_bf_rutsch,

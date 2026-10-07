@@ -330,6 +330,19 @@
    "mindestN": 100,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist"
+  },
+  {
+   "id": "stake-torlinien-burst",
+   "titel": "Trägt einseitiges Geld auf Spieltor-Linien (Over ODER Under, Linie egal)?",
+   "frage": "ROI (geldgewichtet je Meldung) der Torlinien-Bursts: Fußball, Einzelwetten auf Spieltor-Linien des ganzen Spiels (Asian Total / Total Goals / Total), >=4 Wetten desselben Spiels in 30 Min, alle in dieselbe Richtung, keine Gegenrichtung im Fenster, zusammen >= 12.000 $ und >= 1,5x Liga-Norm je Wette, Quote ab 1,35. Vor Anpfiff und live GETRENNT ausgewertet. Urteil über die Rendite-Untergrenze, nicht über den Punktschätzer.",
+   "warum": "07.10.2026 (Lucas: „wieso war es eigentlich kein Burst? … ja will sowas für over under, vor allem hier ist es cool weil es ne kleine Liga auch noch ist“). Riestra Reserve – Rivadavia Reserve: 10 Wetten, ~28 K$, alle Over auf vier Linien; der Spiel-Burst scheiterte nur an der Pflicht, dass >=2 Wetten eine Mannschaft nennen. Nachgezaehlt im Rohbuch (5 Tage, gleiche Schwellen): 4 Faelle, alle Over, 2 vor Anpfiff, 2 live — Ergebnisse dabei NICHT angesehen (fast alle offen). Zuschnitt vor der Messung festgelegt, rund 0,8 Faelle am Tag. Entscheidung vorab: Public erst, wenn die Untergrenze bei n >= 100 (je Phase getrennt betrachtet) über null liegt; fällt die OBERgrenze unter null, wird die Meldung abgeschaltet.",
+   "gestartet": "2026-10-07",
+   "faellig": "2027-01-31",
+   "quelle": "stake_burst_ledger.json -> Zeilen mit art=tore, status=abgerechnet",
+   "messer": "stake_tore",
+   "mindestN": 100,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist"
   }
  ]
 }

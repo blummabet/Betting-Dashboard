@@ -817,6 +817,236 @@ def spiel_buch_zeile(b, ts) -> dict:
     }
 
 
+# ── Torlinien-Burst je Spiel (07.10.2026, Lucas) ───────────────────────────────────────────
+# 🔴 07.10.2026 (Lucas: „wieso war es eigentlich kein Burst? … ja will sowas für over under,
+# dachte sowas haben wir eh auch"). Riestra Reserve – Rivadavia Reserve: 10 Wetten, ~28 K$, ALLE
+# auf Over, verteilt auf 2.25 / 2.5 / 2.75 / 3, vor Anpfiff. Wir hatten jede Zeile im Ledger.
+#   · Der Auswahl-Burst sah vier Linien und je Linie hoechstens 2 Wetten in 5 Min.
+#   · Der Spiel-Burst haette im Fenster 17:34-17:51 UTC getragen (4 Wetten, 18,5 K$, 2,7x Norm)
+#     — und fiel an `min_gerichtet`: mindestens 2 Wetten muessen eine MANNSCHAFT nennen. Die Regel
+#     stand mit Absicht da („sonst waere jeder Ueber/Unter-Schwall eine Meldung").
+# Diese Sorge war nie gemessen. Nachgezaehlt im Rohbuch (5 Tage, Fussball, dieselben Schwellen,
+# nur Spieltor-Linien, eine Richtung): 4 Faelle — keine Flut, sondern genau das gesuchte Muster.
+# Ergebnisse waren dabei nicht angesehen (fast alles noch offen).
+# Fehlerklasse: eine Einheit, die die Beobachtung nach der falschen Achse zerschneidet — hier nach
+# LINIE statt nach RICHTUNG. Over 2.25 und Over 3 sind dieselbe Meinung, nur anders bepreist.
+# Eigene Einheit, eigener Dedup, eigenes Buch (`art: "tore"`), erst nur Trades-Kanal.
+TOR_MAERKTE = {"asian total", "total goals", "total"}   # ganzes Spiel, beide Teams — nichts sonst
+TOR_MIN_N = int(os.environ.get("STAKE_TOR_MIN_N") or 4)
+TOR_FENSTER_S = float(os.environ.get("STAKE_TOR_FENSTER_S") or 1800)
+TOR_MIN_USD = float(os.environ.get("STAKE_TOR_MIN_USD") or 12000)
+TOR_MIN_FAKTOR = float(os.environ.get("STAKE_TOR_MIN_FAKTOR") or 1.5)
+TOR_MAX_PUSH = int(os.environ.get("STAKE_TOR_MAX") or 2)
+TOR_AN = (os.environ.get("STAKE_TOR_PUSH") or "true").strip().lower() \
+    not in ("0", "false", "no", "off")
+TOR_ZIEL_N = 100
+_TOR_RX = re.compile(r"^(over|under)\s+\d+(?:\.\d+)?\s*$", re.I)
+
+
+def richtung_tore(w):
+    """„Over" / „Under" fuer eine Spieltor-Linie des GANZEN Spiels, sonst None. REIN.
+
+    Bewusst eine Positivliste: „1st Half - Asian Total", „Total Corners", „Spain Total" (Teamtore),
+    „Total & Both Teams to Score" sind andere Wetten und zaehlen nicht mit."""
+    m = str((w or {}).get("markt") or "").strip().lower()
+    if m not in TOR_MAERKTE:
+        return None
+    a = str((w or {}).get("auswahl") or "").strip()
+    if not _TOR_RX.match(a):
+        return None
+    return "Over" if a.lower().startswith("over") else "Under"
+
+
+def tor_bursts(wetten, min_n=None, fenster_s=None, min_usd=None, min_faktor=None,
+               min_quote=None, max_alter_min=None, gesperrt=None, norm=None, now=None) -> list:
+    """Torlinien-Bursts je Spiel, eine Richtung. REIN (alles injizierbar).
+
+    `min_n` Einzelwetten auf Spieltor-Linien DESSELBEN Spiels in `fenster_s`, alle in DIESELBE
+    Richtung (Linie egal), zusammen >= `min_usd` UND >= `min_faktor` x Liga-Norm je Wette. Eine
+    einzige Torlinien-Wette in die Gegenrichtung im Fenster verwirft es. Wetten auf andere Maerkte
+    spielen keine Rolle — dafuer gibt es den Spiel-Burst. Je Spiel hoechstens einer.
+    """
+    min_n = TOR_MIN_N if min_n is None else min_n
+    fenster_s = TOR_FENSTER_S if fenster_s is None else fenster_s
+    min_usd = TOR_MIN_USD if min_usd is None else min_usd
+    min_faktor = TOR_MIN_FAKTOR if min_faktor is None else min_faktor
+    min_quote = MIN_QUOTE if min_quote is None else min_quote
+    max_alter_min = MAX_ALTER_MIN if max_alter_min is None else max_alter_min
+    gesperrt = list(GESPERRT_FALLBACK) if gesperrt is None else list(gesperrt)
+    norm = liga_norm() if norm is None else norm
+    now = now or datetime.now(timezone.utc)
+
+    je_spiel = {}
+    for w in wetten or []:
+        if not isinstance(w, dict) or w.get("kombi") or int(w.get("nBeine") or 1) != 1:
+            continue
+        if w.get("kat") != "Fußball" or w.get("kat") in gesperrt:
+            continue
+        r = richtung_tore(w)
+        ev, t, u = w.get("eventId"), _ts(w.get("ts")), w.get("einsatzUsd")
+        if not r or not ev or t is None:
+            continue
+        if not isinstance(u, (int, float)) or isinstance(u, bool) or u <= 0:
+            continue
+        q = _quote(w)
+        if q is None or q < min_quote:
+            continue
+        je_spiel.setdefault(ev, []).append((t, r, w))
+
+    aus = []
+    for ev, v in je_spiel.items():
+        if len(v) < min_n:
+            continue
+        v.sort(key=lambda z: z[0])
+        for i in range(len(v)):
+            j = i
+            while j + 1 < len(v) and (v[j + 1][0] - v[i][0]).total_seconds() <= fenster_s:
+                j += 1
+            if j - i + 1 < min_n:
+                continue
+            fenster = v[i:j + 1]
+            richtungen = {z[1] for z in fenster}
+            if len(richtungen) != 1:
+                continue                  # Gegenrichtung im Fenster: kein einseitiges Geld
+            g = [z[2] for z in fenster]
+            summe = sum(float(x["einsatzUsd"]) for x in g)
+            if summe < min_usd:
+                continue
+            med = norm.get(str(g[0].get("liga") or ""))
+            if not med:
+                continue                  # keine Norm = kein Faktor = kein Urteil
+            faktor = summe / (med * len(g))
+            if faktor < min_faktor:
+                continue
+            if (now - v[j][0]).total_seconds() / 60.0 > max_alter_min:
+                continue
+            aus.append({"eventId": ev, "wetten": g, "summe": summe, "faktor": faktor,
+                        "richtung": fenster[0][1],
+                        "sekunden": (v[j][0] - v[i][0]).total_seconds(),
+                        "von": v[i][0], "bis": v[j][0]})
+            break
+    aus.sort(key=lambda b: b["von"])
+    return aus
+
+
+def buch_kuerzen(led, keep=None) -> list:
+    """Die letzten `keep` Zeilen JE BUCHART, Reihenfolge bleibt. REIN.
+
+    🔴 07.10.2026, gefunden beim Bau der Torlinien-Bursts: hier stand `led[-LEDGER_KEEP:]` ueber
+    ALLE Arten. 501 Zeilen in 25 Tagen, davon 328 Spiel-Bursts — in gut zwei Wochen waere der
+    Deckel erreicht, und dann haetten die haeufigen Spiel-Bursts die seltenen Kleine-Liga- und
+    Torlinien-Zeilen hinausgeschoben, BEVOR deren Messung (Ziel n=100) fertig ist. Der Zaehler in
+    messungen.py liest genau dieses Buch.
+    Fehlerklasse: ein gemeinsamer Deckel fuer Einheiten mit sehr verschiedener Rate — die seltene
+    verliert still gegen die haeufige.
+    """
+    keep = LEDGER_KEEP if keep is None else keep
+    zaehl, behalten = {}, []
+    for z in reversed(led or []):
+        art = (z.get("art") if isinstance(z, dict) else None) or "auswahl"
+        zaehl[art] = zaehl.get(art, 0) + 1
+        if zaehl[art] <= keep:
+            behalten.append(z)
+    return list(reversed(behalten))
+
+
+def tor_key(b) -> str:
+    return "tore:%s" % b.get("eventId")
+
+
+def art_bilanz(ledger, art, phase=None) -> dict:
+    """n, mittlere Rendite, einseitige Untergrenze (z=1,645 ab n=30) fuer EINE Buchart. REIN."""
+    rr = [z["rendite"] for z in (ledger or []) if isinstance(z, dict) and z.get("art") == art
+          and (phase is None or z.get("phase") == phase)
+          and isinstance(z.get("rendite"), (int, float))]
+    if not rr:
+        return {"n": 0}
+    n, m = len(rr), sum(rr) / len(rr)
+    ug = None
+    if n >= 30:
+        sd = (sum((x - m) ** 2 for x in rr) / (n - 1)) ** 0.5
+        ug = max(-1.0, m - 1.645 * sd / n ** 0.5)
+    return {"n": n, "roi": m, "ug": ug}
+
+
+def build_tor_card(b, bilanz=None, unterdrueckt=0) -> str:
+    g = b["wetten"]
+    erste = g[0]
+    e = lambda x: html.escape(str(x or ""), quote=False)
+    try:
+        import stake_liga_stufe as _LS
+        klasse = str(_LS.stufe(erste.get("ligaSlug"), erste.get("sport"), erste.get("ligaId")))
+    except Exception:
+        klasse = None
+    KLARTEXT = {"1": "oberste Spielklasse", "2": "zweite Spielklasse",
+                "3": "dritte Klasse und tiefer", "reserve": "Reserve-Liga", "jugend": "Jugend",
+                "frauen": "Frauen", "pokal": "Pokal", "kontinental": "kontinental"}
+    klein = klasse in ("3", "reserve")
+    linien = {}
+    for x in g:
+        linien.setdefault(str(x.get("auswahl") or ""), []).append(x)
+    phase = _phase(g)
+    ko = _ts(erste.get("anpfiff"))
+    lines = ["📈 <b>STAKE-TORE</b> · <b>%d Wetten</b> auf <b>%s</b> in <b>%s</b>%s"
+             % (len(g), b["richtung"].upper(), _sek_text(int(round(b["sekunden"]))),
+                " · 🔎 <b>kleine Liga</b>" if klein else ""),
+             "━━━━━━━━━━━━━━",
+             "⚽ <b>%s</b>" % e(erste.get("event")),
+             "<i>%s%s</i>" % (e(erste.get("liga")),
+                             (" · " + KLARTEXT.get(klasse, klasse)) if klasse else ""),
+             "",
+             "💰 <b>%s</b> · <b>%.1fx</b> der Liga-Norm je Wette" % (_usd(b["summe"]), b["faktor"])]
+    for a in sorted(linien, key=lambda k: -sum(float(y.get("einsatzUsd") or 0) for y in linien[k])):
+        xs = linien[a]
+        qs = [_quote(y) for y in xs if _quote(y)]
+        lines.append("   ➡️ %s · %s in %d %s · @%s"
+                     % (e(a), _usd(sum(float(y.get("einsatzUsd") or 0) for y in xs)), len(xs),
+                        "Wette" if len(xs) == 1 else "Wetten",
+                        "/".join("%.2f" % q for q in sorted(set(qs), reverse=True))))
+    lines.append("")
+    if phase == "vor" and ko:
+        lines.append("⏱️ vor Anpfiff · Anpfiff %s UTC" % ko.strftime("%d.%m. %H:%M"))
+    else:
+        lines.append("⏱️ %s" % ("live" if phase == "live" else "teils vor Anpfiff, teils live"))
+    bil = bilanz or {}
+    if not bil.get("n"):
+        mess = "noch keine Meldung abgerechnet"
+    else:
+        mess = "bisher %d abgerechnet · ROI %+.1f %%" % (bil["n"], bil["roi"] * 100)
+        mess += (" · Untergrenze %+.1f %%" % (bil["ug"] * 100)) if bil.get("ug") is not None \
+            else " · kein Urteil unter 30"
+    lines.append("")
+    lines.append("<i>🔬 Testlauf seit 07.10.2026, nur Trades · %s (%s). Zuschnitt: >=%d Wetten "
+                 "auf Spieltor-Linien in %d Min, eine Richtung, ab %s, >=%.1fx Norm, Quote ab %.2f. "
+                 "Urteil ab n=%d, vor Anpfiff und live getrennt.</i>"
+                 % (mess, "vor Anpfiff" if phase == "vor" else "live/gemischt", TOR_MIN_N,
+                    int(TOR_FENSTER_S // 60), _usd(TOR_MIN_USD), TOR_MIN_FAKTOR, MIN_QUOTE,
+                    TOR_ZIEL_N))
+    if unterdrueckt:
+        lines.append("<i>+%d weitere Torlinien-Bursts in diesem Lauf nicht gesendet (Deckel %d)</i>"
+                     % (unterdrueckt, TOR_MAX_PUSH))
+    return "\n".join(lines)
+
+
+def tor_buch_zeile(b, ts) -> dict:
+    g = b["wetten"]
+    erste = g[0]
+    return {
+        "k": tor_key(b), "art": "tore",
+        "eventId": b["eventId"], "event": erste.get("event"),
+        "liga": erste.get("liga"), "ligaSlug": erste.get("ligaSlug"), "kat": erste.get("kat"),
+        "ebene": _ebene(erste),
+        "richtung": b["richtung"],
+        "linien": sorted({str(x.get("auswahl") or "") for x in g}),
+        "summeUsd": round(float(b["summe"]), 2),
+        "faktor": round(float(b["faktor"]), 2),
+        "nWetten": len(g), "sekunden": round(float(b["sekunden"]), 1),
+        "phase": _phase(g), "anpfiff": erste.get("anpfiff"),
+        "betIds": [x.get("id") for x in g],
+        "sentAt": ts, "status": "pending",
+    }
+
+
 def _beinahe(auswahl_id, g, summe, gruende, von, bis) -> dict:
     """Eine Zeile fuers Beinahe-Buch: ein Cluster, das die Regeln NICHT passiert hat.
 
@@ -1405,6 +1635,35 @@ def main() -> int:
         schon.add(k)
         neu_gebucht += 1
 
+    # ── Torlinien je Spiel, eine Richtung (07.10.2026, Lucas) ───────────────────────────
+    to_alle = tor_bursts(wetten, gesperrt=_gesperrt, now=now)
+    to_neu = [b for b in to_alle if tor_key(b) not in seen and tor_key(b) not in schon]
+    to_laut = [b for b in to_neu if not stumm_grund(b)]
+    to_senden = to_laut[:TOR_MAX_PUSH] if (TOR_AN and PUSH_AN) else []
+    to_unterdrueckt = max(len(to_laut) - len(to_senden), 0)
+    print("📈 Stake-Tore: %d Torlinien-Burst(s), %d neu (>=%d Wetten je Spiel, eine Richtung, "
+          "%d Min, ab %s, >=%.1fx Norm)" % (len(to_alle), len(to_neu), TOR_MIN_N,
+                                             int(TOR_FENSTER_S // 60), _usd(TOR_MIN_USD),
+                                             TOR_MIN_FAKTOR))
+    for i, b in enumerate(to_senden):
+        text = build_tor_card(b, bilanz=art_bilanz(led, "tore", _phase(b["wetten"])),
+                              unterdrueckt=to_unterdrueckt if i == len(to_senden) - 1 else 0)
+        if not send_trades_message(text):
+            continue
+        seen[tor_key(b)] = {"ts": now_iso, "summe": round(float(b["summe"]), 2)}
+    for b in to_neu:                      # jeder erkannte ins Buch, auch der ungesendete
+        k = tor_key(b)
+        z = tor_buch_zeile(b, now_iso)
+        z["push"] = k in seen
+        if not z["push"]:
+            z["pushGrund"] = stumm_grund(b) or (
+                "Push abgeschaltet" if not (PUSH_AN and TOR_AN)
+                else "Deckel des Laufs erreicht" if k not in {tor_key(x) for x in to_senden}
+                else "Senden fehlgeschlagen")
+        led.append(z)
+        schon.add(k)
+        neu_gebucht += 1
+
     # ── Die dritte Einheit: kleine Ligen (30.09.2026, Lucas) ─────────────────────────────
     kl_alle = kleine_liga(wetten, norm=liga_norm(), ebene_median=ebenen_median(), now=now)
     kl_neu = [b for b in kl_alle if klein_key(b) not in seen and klein_key(b) not in schon]
@@ -1440,7 +1699,7 @@ def main() -> int:
     print("   📒 Buch: +%d abgerechnet · %d offen%s"
           % (_fertig, _offen, (" · %d aufgegeben (Wetten aus dem Ledger gefallen)" % _tot) if _tot else ""))
     try:
-        _save(LEDGER_FILE, led[-LEDGER_KEEP:])
+        _save(LEDGER_FILE, buch_kuerzen(led))
     except Exception as e:
         print("Stake-Burst-Ledger-Schreibfehler:", e)
     print("   %d Auswahl-Burst(s) + %d Spiel-Burst(s) gesendet, %d/%d unterdrueckt "
