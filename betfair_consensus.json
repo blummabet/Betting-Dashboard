@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-10-07T14:15:50.226465+00:00",
-"count": 10,
-"covered": 6,
+"generatedAt": "2026-10-07T14:30:52.721787+00:00",
+"count": 11,
+"covered": 7,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -50,27 +50,28 @@
 "leaguesMitAnker": [
 "Brazilian Serie A",
 "English Premier League",
-"Finnish Veikkausliiga"
+"Finnish Veikkausliiga",
+"German Bundesliga"
 ],
 "leaguesMitTotals": [],
 "oddsKeysFetched": 48,
 "oddsKeysMitDaten": 48,
 "oddsEvents": 589,
 "oddsTotals": {
-"versucht": 3,
+"versucht": 4,
 "mitDaten": 0,
 "events": 0,
-"gewollt": 3,
+"gewollt": 4,
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 114917,
-"remaining": 4885083,
+"used": 115061,
+"remaining": 4884939,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
 },
-"ankerQuote": 0.97,
+"ankerQuote": 0.971,
 "games": [
 {
 "matchId": "36065339",
@@ -83,9 +84,9 @@
 "moneySide": "home",
 "moneyName": "Arsenal",
 "moneySharePct": 80,
-"moneyOdd": 1.41,
-"moneyDir": "in",
-"totVol": 52632,
+"moneyOdd": 1.42,
+"moneyDir": "out",
+"totVol": 52719,
 "pinnOdd": 1.39,
 "softOdd": 1.38,
 "softN": 49,
@@ -106,9 +107,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.6866,
+"home": 0.6868,
 "draw": 0.1924,
-"away": 0.121,
+"away": 0.1208,
 "fav": "home",
 "n": 49
 },
@@ -134,10 +135,10 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "Brighton",
-"moneySharePct": 59,
+"moneySharePct": 58,
 "moneyOdd": 2.42,
 "moneyDir": "flat",
-"totVol": 39635,
+"totVol": 39754,
 "pinnOdd": 2.38,
 "softOdd": 2.3,
 "softN": 49,
@@ -158,14 +159,20 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.3205,
-"draw": 0.273,
-"away": 0.4065,
+"home": 0.32,
+"draw": 0.2727,
+"away": 0.4074,
 "fav": "away",
 "n": 49
 },
-"pinnMovePP": null,
-"pinnMove": null,
+"pinnMovePP": -0.0,
+"pinnMove": {
+"movePP": -0.0,
+"stepPP": -0.0,
+"n": 2,
+"move": false,
+"laeuft": false
+},
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
@@ -206,12 +213,18 @@
 "soft": {
 "home": 0.559,
 "draw": 0.2283,
-"away": 0.2127,
+"away": 0.2128,
 "fav": "home",
 "n": 49
 },
-"pinnMovePP": null,
-"pinnMove": null,
+"pinnMovePP": 0.0,
+"pinnMove": {
+"movePP": 0.0,
+"stepPP": 0.0,
+"n": 2,
+"move": false,
+"laeuft": false
+},
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
@@ -229,8 +242,8 @@
 "moneySharePct": 81,
 "moneyOdd": 2.06,
 "moneyDir": "flat",
-"totVol": 23481,
-"pinnOdd": 1.99,
+"totVol": 23565,
+"pinnOdd": 1.96,
 "softOdd": 1.95,
 "softN": 43,
 "poly": {
@@ -244,26 +257,72 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.486,
-"draw": 0.2628,
-"away": 0.2512,
+"home": 0.4933,
+"draw": 0.2606,
+"away": 0.246,
 "fav": "home"
 },
 "soft": {
-"home": 0.4775,
-"draw": 0.2669,
-"away": 0.2556,
+"home": 0.4773,
+"draw": 0.267,
+"away": 0.2557,
 "fav": "home",
 "n": 43
 },
-"pinnMovePP": 0.2,
+"pinnMovePP": 0.9,
 "pinnMove": {
-"movePP": 0.2,
-"stepPP": 0.2,
+"movePP": 0.9,
+"stepPP": 0.9,
 "n": 6,
 "move": false,
-"laeuft": false
+"laeuft": true
 },
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36099853",
+"home": "Dortmund",
+"away": "Werder Bremen",
+"league": "German Bundesliga",
+"country": "DE",
+"kickoff": "2026-10-09T18:30:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Dortmund",
+"moneySharePct": 86,
+"moneyOdd": 1.39,
+"moneyDir": "flat",
+"totVol": 20517,
+"pinnOdd": 1.37,
+"softOdd": 1.35,
+"softN": 48,
+"poly": {
+"vol": 10680,
+"odd": 1.4,
+"sharePct": 72,
+"shareSrc": "preis",
+"key": "bun-dor-wer-2026-10-09",
+"sideKey": "BV Borussia 09 Dortmund",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.7033,
+"draw": 0.1684,
+"away": 0.1283,
+"fav": "home"
+},
+"soft": {
+"home": 0.6983,
+"draw": 0.1745,
+"away": 0.1272,
+"fav": "home",
+"n": 48
+},
+"pinnMovePP": null,
+"pinnMove": null,
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
@@ -278,11 +337,11 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "FC Inter Turku",
-"moneySharePct": 69,
-"moneyOdd": 1.8,
-"moneyDir": "flat",
-"totVol": 17398,
-"pinnOdd": 1.75,
+"moneySharePct": 68,
+"moneyOdd": 1.79,
+"moneyDir": "in",
+"totVol": 18003,
+"pinnOdd": 1.76,
 "softOdd": 1.69,
 "softN": 39,
 "poly": {
@@ -321,25 +380,25 @@
 "whaleUsd": 6709
 },
 "pinn": {
-"home": 0.211,
-"draw": 0.2381,
-"away": 0.551,
+"home": 0.2101,
+"draw": 0.241,
+"away": 0.549,
 "fav": "away"
 },
 "soft": {
 "home": 0.213,
-"draw": 0.2391,
-"away": 0.5479,
+"draw": 0.2403,
+"away": 0.5467,
 "fav": "away",
 "n": 39
 },
-"pinnMovePP": -0.1,
+"pinnMovePP": -0.3,
 "pinnMove": {
-"movePP": -0.1,
-"stepPP": -0.1,
-"n": 2,
+"movePP": -0.3,
+"stepPP": -0.2,
+"n": 3,
 "move": false,
-"laeuft": false
+"laeuft": true
 },
 "verdict": "konsens",
 "agree": true,
@@ -356,9 +415,9 @@
 "moneySide": "draw",
 "moneyName": "The Draw",
 "moneySharePct": 49,
-"moneyOdd": 3.15,
-"moneyDir": "flat",
-"totVol": 15655,
+"moneyOdd": 3.1,
+"moneyDir": "in",
+"totVol": 15860,
 "pinnOdd": 2.96,
 "softOdd": 2.95,
 "softN": 47,
@@ -379,9 +438,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.4006,
-"draw": 0.3149,
-"away": 0.2845,
+"home": 0.3984,
+"draw": 0.3176,
+"away": 0.2839,
 "fav": "home",
 "n": 47
 },
@@ -408,9 +467,9 @@
 "moneySide": "away",
 "moneyName": "Al Ahly Cairo",
 "moneySharePct": 93,
-"moneyOdd": 1.18,
+"moneyOdd": 1.12,
 "moneyDir": "in",
-"totVol": 45313,
+"totVol": 49106,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -438,10 +497,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Alexandria Petroleum",
-"moneySharePct": 95,
-"moneyOdd": 4.5,
+"moneySharePct": 82,
+"moneyOdd": 8.4,
 "moneyDir": "out",
-"totVol": 28329,
+"totVol": 33013,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -469,9 +528,9 @@
 "moneySide": "away",
 "moneyName": "ZED FC",
 "moneySharePct": 92,
-"moneyOdd": 1.59,
-"moneyDir": "in",
-"totVol": 26822,
+"moneyOdd": 1.6,
+"moneyDir": "out",
+"totVol": 27125,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -499,9 +558,9 @@
 "moneySide": "home",
 "moneyName": "Neftchi Fargona",
 "moneySharePct": 92,
-"moneyOdd": 1.8,
-"moneyDir": "out",
-"totVol": 16888,
+"moneyOdd": 1.37,
+"moneyDir": "in",
+"totVol": 21745,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -553,12 +612,12 @@
 }
 }
 ],
-"ankerN": 33,
-"ankerNOffen": 149,
-"ankerMit": 32,
+"ankerN": 34,
+"ankerNOffen": 147,
+"ankerMit": 33,
 "ankerDiagnose": {
 "nach": {
-"kein_kandidat": 105,
+"kein_kandidat": 102,
 "zeit": 11,
 "name": 1
 },
@@ -633,16 +692,6 @@
 "liga": "Thai U21 League"
 },
 {
-"spiel": "Al Sarhan v Etihad Al Ramtha",
-"kandidat": "Al-Kholood v Al-Qadsiah",
-"key": "soccer_saudi_arabia_pro_league",
-"score": 0.83,
-"grund": "zeit",
-"abstandH": 24.8,
-"matchId": "36160669",
-"liga": "Jordanian Cup"
-},
-{
 "spiel": "Hayy Al-Amir Hassan v Al Tora",
 "kandidat": "Al-Kholood v Al-Qadsiah",
 "key": "soccer_saudi_arabia_pro_league",
@@ -650,6 +699,16 @@
 "grund": "zeit",
 "abstandH": 24.8,
 "matchId": "36160480",
+"liga": "Jordanian Cup"
+},
+{
+"spiel": "Al Sarhan v Etihad Al Ramtha",
+"kandidat": "Al-Kholood v Al-Qadsiah",
+"key": "soccer_saudi_arabia_pro_league",
+"score": 0.83,
+"grund": "zeit",
+"abstandH": 24.8,
+"matchId": "36160669",
 "liga": "Jordanian Cup"
 },
 {
