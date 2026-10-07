@@ -970,6 +970,9 @@ def art_bilanz(ledger, art, phase=None) -> dict:
 
 
 def build_tor_card(b, bilanz=None, unterdrueckt=0) -> str:
+    """Dieselbe Bauform wie die STAKE-SPIEL-Karte (07.10.2026, Lucas: „wieso sieht es optisch
+    nicht wie eine normale Burst-Nachricht aus") — Kopfbalken, Sportzeile, Spiel, Liga, Richtung,
+    Summe, die Einzelwetten mit Uhrzeit, Phase, Fussnote. Wer die eine lesen kann, liest die andere."""
     g = b["wetten"]
     erste = g[0]
     e = lambda x: html.escape(str(x or ""), quote=False)
@@ -979,35 +982,48 @@ def build_tor_card(b, bilanz=None, unterdrueckt=0) -> str:
     except Exception:
         klasse = None
     KLARTEXT = {"1": "oberste Spielklasse", "2": "zweite Spielklasse",
-                "3": "dritte Klasse und tiefer", "reserve": "Reserve-Liga", "jugend": "Jugend",
-                "frauen": "Frauen", "pokal": "Pokal", "kontinental": "kontinental"}
+                "3": "dritte Klasse und tiefer", "kontinental": "kontinental",
+                "pokal": "Pokal", "frauen": "Frauen", "jugend": "Jugend",
+                "reserve": "Reserve", "srl": "Simulated Reality",
+                "mehrdeutig": "Spielklasse nicht eindeutig", "freundschaft": "Freundschaftsspiel"}
     klein = klasse in ("3", "reserve")
-    linien = {}
+    linien = []
     for x in g:
-        linien.setdefault(str(x.get("auswahl") or ""), []).append(x)
+        a = str(x.get("auswahl") or "")
+        if a and a not in linien:
+            linien.append(a)
     phase = _phase(g)
-    ko = _ts(erste.get("anpfiff"))
-    lines = ["📈 <b>STAKE-TORE</b> · <b>%d Wetten</b> auf <b>%s</b> in <b>%s</b>%s"
-             % (len(g), b["richtung"].upper(), _sek_text(int(round(b["sekunden"]))),
-                " · 🔎 <b>kleine Liga</b>" if klein else ""),
-             "━━━━━━━━━━━━━━",
-             "⚽ <b>%s</b>" % e(erste.get("event")),
-             "<i>%s%s</i>" % (e(erste.get("liga")),
-                             (" · " + KLARTEXT.get(klasse, klasse)) if klasse else ""),
-             "",
-             "💰 <b>%s</b> · <b>%.1fx</b> der Liga-Norm je Wette" % (_usd(b["summe"]), b["faktor"])]
-    for a in sorted(linien, key=lambda k: -sum(float(y.get("einsatzUsd") or 0) for y in linien[k])):
-        xs = linien[a]
-        qs = [_quote(y) for y in xs if _quote(y)]
-        lines.append("   ➡️ %s · %s in %d %s · @%s"
-                     % (e(a), _usd(sum(float(y.get("einsatzUsd") or 0) for y in xs)), len(xs),
-                        "Wette" if len(xs) == 1 else "Wetten",
-                        "/".join("%.2f" % q for q in sorted(set(qs), reverse=True))))
+
+    lines = ["▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓",
+             "📈 <b>STAKE-TORE</b> · <b>%d Wetten</b> auf <b>%s</b> in <b>%s</b>"
+             % (len(g), b["richtung"].upper(), _sek_text(int(round(b["sekunden"])))),
+             "▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓", ""]
+    lines.append("%s <i>%s</i>%s" % (_emoji(erste.get("kat")), e(erste.get("kat") or "Sport"),
+                                    " · 🔎 <b>kleine Liga</b>" if klein else ""))
+    lines.append("<b>%s</b>" % e(erste.get("event")))
+    lines.append("<i>%s%s</i>" % (e(erste.get("liga")),
+                                 (" · " + KLARTEXT.get(klasse, klasse)) if klasse else ""))
     lines.append("")
-    if phase == "vor" and ko:
-        lines.append("⏱️ vor Anpfiff · Anpfiff %s UTC" % ko.strftime("%d.%m. %H:%M"))
+    lines.append("➡️ alles auf <b>%s</b> · Torlinien" % b["richtung"].upper())
+    lines.append("💰 <b>%s</b> über %d %s · <b>%.1fx</b> der Liga-Norm"
+                 % (_usd(b["summe"]), len(linien), "Linien" if len(linien) != 1 else "Linie",
+                    b["faktor"]))
+    lines.append("")
+    for x in sorted(g, key=lambda y: -float(y.get("einsatzUsd") or 0))[:6]:
+        t = _ts(x.get("ts"))
+        lines.append("   %s  @%.2f  <i>%s</i>  <code>%s</code>"
+                     % (_usd(x.get("einsatzUsd")), _quote(x), e(x.get("auswahl")),
+                        t.strftime("%H:%M:%S") if t else "?"))
+    lines.append("")
+    ko = _ts(erste.get("anpfiff"))
+    if phase == "vor":
+        lines.append("⏱️ <b>vor Anpfiff</b>%s" % (" · Anpfiff %s UTC" % ko.strftime("%d.%m. %H:%M")
+                                                  if ko else ""))
     else:
-        lines.append("⏱️ %s" % ("live" if phase == "live" else "teils vor Anpfiff, teils live"))
+        lines.append("⏱️ <b>%s</b>" % phase)
+    if unterdrueckt:
+        lines.append("<i>+%d weitere Torlinien-Bursts in diesem Lauf nicht gesendet (Deckel %d)</i>"
+                     % (unterdrueckt, TOR_MAX_PUSH))
     bil = bilanz or {}
     if not bil.get("n"):
         mess = "noch keine Meldung abgerechnet"
@@ -1015,16 +1031,13 @@ def build_tor_card(b, bilanz=None, unterdrueckt=0) -> str:
         mess = "bisher %d abgerechnet · ROI %+.1f %%" % (bil["n"], bil["roi"] * 100)
         mess += (" · Untergrenze %+.1f %%" % (bil["ug"] * 100)) if bil.get("ug") is not None \
             else " · kein Urteil unter 30"
-    lines.append("")
-    lines.append("<i>🔬 Testlauf seit 07.10.2026, nur Trades · %s (%s). Zuschnitt: >=%d Wetten "
-                 "auf Spieltor-Linien in %d Min, eine Richtung, ab %s, >=%.1fx Norm, Quote ab %.2f. "
-                 "Urteil ab n=%d, vor Anpfiff und live getrennt.</i>"
+    lines.append("\n<i>🔬 Testlauf seit 07.10.2026, nur Trades · %s (%s). Zuschnitt: >=%d Wetten "
+                 "auf Spieltor-Linien je Spiel, %d Min, eine Richtung (Linie egal), ab %s, "
+                 "mindestens %.1fx der Liga-Norm, Quoten ab %.2f, keine Gegenrichtung. Urteil ab "
+                 "n=%d, vor Anpfiff und live getrennt.</i>"
                  % (mess, "vor Anpfiff" if phase == "vor" else "live/gemischt", TOR_MIN_N,
                     int(TOR_FENSTER_S // 60), _usd(TOR_MIN_USD), TOR_MIN_FAKTOR, MIN_QUOTE,
                     TOR_ZIEL_N))
-    if unterdrueckt:
-        lines.append("<i>+%d weitere Torlinien-Bursts in diesem Lauf nicht gesendet (Deckel %d)</i>"
-                     % (unterdrueckt, TOR_MAX_PUSH))
     return "\n".join(lines)
 
 

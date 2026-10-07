@@ -97,6 +97,14 @@ def test_karte_nennt_richtung_linien_und_kleine_liga():
     assert "kleine Liga" in t and "nur Trades" in t
 
 
+def test_karte_hat_die_bauform_der_spiel_karte():
+    """07.10.2026 (Lucas: „wieso sieht es optisch nicht wie eine normale Burst-Nachricht aus")."""
+    tor = S.build_tor_card(_tor(_riestra())[0]).split("\n")
+    assert tor[0] == tor[2] == "▓" * 20
+    assert tor[5].startswith("<b>") and "➡️ alles auf <b>OVER</b>" in "\n".join(tor)
+    assert "17:49:18" in "\n".join(tor)                 # Einzelwetten mit Uhrzeit wie beim Spiel
+
+
 def test_buchzeile_eigene_art_und_phase():
     z = S.tor_buch_zeile(_tor(_riestra())[0], NOW.isoformat())
     assert z["art"] == "tore" and z["k"] == "tore:ev-riestra" and z["phase"] == "vor"
