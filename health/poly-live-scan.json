@@ -1,12 +1,12 @@
 {
   "slug": "poly-live-scan",
   "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
-  "updatedAt": "2026-10-07T07:33:59.940989+00:00",
+  "updatedAt": "2026-10-07T08:19:47.836619+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
-    "spanneH": 15.3,
-    "proTag": 29.9,
+    "spanneH": 15.0,
+    "proTag": 30.4,
     "lueckeMinMin": 31.6,
     "lueckeMedianMin": 45.3,
     "lueckeMaxMin": 72.6,
@@ -21,9 +21,24 @@
     "verdraengt": 0,
     "spanneH": 439.2,
     "erzeugtProTag": 5.5,
-    "widerspruch": "erzeugtProTag 5.5 gegen eine gemessene Kadenz von 29.9/Tag (Faktor 5.4) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
+    "widerspruch": "erzeugtProTag 5.5 gegen eine gemessene Kadenz von 30.4/Tag (Faktor 5.5) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
   },
   "runs": [
+    {
+      "ts": "2026-10-07T08:19:47.836619+00:00",
+      "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
+      "runId": "37592587268",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/37592587268",
+      "nSteps": 7,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-10-07T08:15:40Z",
+      "startedAt": "2026-10-07T08:15:40Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 247.8,
+      "event": "workflow_dispatch"
+    },
     {
       "ts": "2026-10-07T07:33:59.940989+00:00",
       "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
@@ -308,21 +323,6 @@
       "wartetS": 0.0,
       "laeuftSeitS": 359.3,
       "event": "workflow_dispatch"
-    },
-    {
-      "ts": "2026-10-06T16:17:25.342193+00:00",
-      "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
-      "runId": "37494022194",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/37494022194",
-      "nSteps": 7,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-10-06T16:13:42Z",
-      "startedAt": "2026-10-06T16:13:42Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 223.3,
-      "event": "schedule"
     }
   ]
 }
