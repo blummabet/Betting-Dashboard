@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-08T07:11:11.118058+00:00",
+ "updatedAt": "2026-10-08T07:42:22.542990+00:00",
  "stake": 10.0,
  "regel": {
   "minN": 20,
@@ -7,9 +7,9 @@
   "frischMin": 90.0
  },
  "zaehler": {
-  "ohneEinstieg": 21,
+  "ohneEinstieg": 16,
   "gesperrt": 15,
-  "alt": 108
+  "alt": 106
  },
  "open": {
   "unl-mac-sco-2026-10-03-more-markets|Under": {
@@ -1750,28 +1750,6 @@
    "firstTs": "2026-10-07T22:17:48.332900+00:00",
    "stake": 10.0
   },
-  "atp-carabel-simakin-2026-10-07|Camilo Ugo Carabelli": {
-   "key": "atp-carabel-simakin-2026-10-07",
-   "side": "Camilo Ugo Carabelli",
-   "cat": "Tennis",
-   "league": "TENNIS",
-   "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
-   "belegt": true,
-   "heiss": false,
-   "walletN": 568,
-   "walletClv": 0.496,
-   "walletUg": 0.26,
-   "clv7": null,
-   "n7": null,
-   "walletEntry": 0.31,
-   "entryPrice": 0.315,
-   "abstandPP": 0.5,
-   "arm": "nehmbar",
-   "lastPrice": 0.305,
-   "htkAtEntry": 2.87,
-   "firstTs": "2026-10-08T01:10:37.185428+00:00",
-   "stake": 10.0
-  },
   "atp-hurkacz-duckwor-2026-10-06|Hubert Hurkacz": {
    "key": "atp-hurkacz-duckwor-2026-10-06",
    "side": "Hubert Hurkacz",
@@ -1967,28 +1945,6 @@
    "arm": "nehmbar",
    "lastPrice": 0.455,
    "htkAtEntry": 2.87,
-   "firstTs": "2026-10-08T05:13:08.195507+00:00",
-   "stake": 10.0
-  },
-  "atp-tomic-arnaldi-2026-10-07|Bernard Tomic": {
-   "key": "atp-tomic-arnaldi-2026-10-07",
-   "side": "Bernard Tomic",
-   "cat": "Tennis",
-   "league": "TENNIS",
-   "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
-   "belegt": true,
-   "heiss": false,
-   "walletN": 579,
-   "walletClv": 0.492,
-   "walletUg": 0.26,
-   "clv7": null,
-   "n7": null,
-   "walletEntry": 0.32,
-   "entryPrice": 0.325,
-   "abstandPP": 0.5,
-   "arm": "nehmbar",
-   "lastPrice": 0.325,
-   "htkAtEntry": 0.37,
    "firstTs": "2026-10-08T05:13:08.195507+00:00",
    "stake": 10.0
   },
@@ -8843,6 +8799,62 @@
    "closePrice": 0.355,
    "clvPP": 0.0,
    "settledTs": "2026-10-08T07:11:11.118058+00:00"
+  },
+  {
+   "key": "atp-carabel-simakin-2026-10-07",
+   "side": "Camilo Ugo Carabelli",
+   "cat": "Tennis",
+   "league": "TENNIS",
+   "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
+   "belegt": true,
+   "heiss": false,
+   "walletN": 568,
+   "walletClv": 0.496,
+   "walletUg": 0.26,
+   "clv7": null,
+   "n7": null,
+   "walletEntry": 0.31,
+   "entryPrice": 0.315,
+   "abstandPP": 0.5,
+   "arm": "nehmbar",
+   "lastPrice": 0.305,
+   "htkAtEntry": 2.87,
+   "firstTs": "2026-10-08T01:10:37.185428+00:00",
+   "stake": 10.0,
+   "result": "win",
+   "winner": "Camilo Ugo Carabelli",
+   "pnl": 21.75,
+   "closePrice": 0.305,
+   "clvPP": -1.0,
+   "settledTs": "2026-10-08T07:42:22.542990+00:00"
+  },
+  {
+   "key": "atp-tomic-arnaldi-2026-10-07",
+   "side": "Bernard Tomic",
+   "cat": "Tennis",
+   "league": "TENNIS",
+   "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
+   "belegt": true,
+   "heiss": false,
+   "walletN": 579,
+   "walletClv": 0.492,
+   "walletUg": 0.26,
+   "clv7": null,
+   "n7": null,
+   "walletEntry": 0.32,
+   "entryPrice": 0.325,
+   "abstandPP": 0.5,
+   "arm": "nehmbar",
+   "lastPrice": 0.325,
+   "htkAtEntry": 0.37,
+   "firstTs": "2026-10-08T05:13:08.195507+00:00",
+   "stake": 10.0,
+   "result": "loss",
+   "winner": "Matteo Arnaldi",
+   "pnl": -10.0,
+   "closePrice": 0.325,
+   "clvPP": 0.0,
+   "settledTs": "2026-10-08T07:42:22.542990+00:00"
   }
  ],
  "gesehen": [
@@ -9186,16 +9198,16 @@
  ],
  "agg": {
   "belegt_nehmbar": {
-   "n": 136,
-   "wins": 46,
-   "hit": 0.3382,
-   "pnl": 225.89,
-   "stake": 1360.0,
-   "roi": 0.1661,
-   "roiUg": -0.4026,
+   "n": 138,
+   "wins": 47,
+   "hit": 0.3406,
+   "pnl": 237.64,
+   "stake": 1380.0,
+   "roi": 0.1722,
+   "roiUg": -0.3889,
    "belegt": false,
-   "clvAvg": 0.09,
-   "clvN": 136,
+   "clvAvg": 0.08,
+   "clvN": 138,
    "clvUg": -0.17
   },
   "belegt_zu_spaet": {
@@ -9238,17 +9250,17 @@
    "clvUg": null
   },
   "nehmbar": {
-   "n": 164,
-   "wins": 58,
-   "hit": 0.3537,
-   "pnl": 154.56,
-   "stake": 1640.0,
-   "roi": 0.0942,
-   "roiUg": -0.3799,
+   "n": 166,
+   "wins": 59,
+   "hit": 0.3554,
+   "pnl": 166.31,
+   "stake": 1660.0,
+   "roi": 0.1002,
+   "roiUg": -0.3689,
    "belegt": false,
-   "clvAvg": 0.07,
-   "clvN": 164,
-   "clvUg": -0.14,
+   "clvAvg": 0.06,
+   "clvN": 166,
+   "clvUg": -0.15,
    "byCat": {
     "E-Sport": {
      "n": 60,
@@ -9277,17 +9289,17 @@
      "clvUg": -0.19
     },
     "Tennis": {
-     "n": 39,
-     "wins": 18,
-     "hit": 0.4615,
-     "pnl": 2.62,
-     "stake": 390.0,
-     "roi": 0.0067,
-     "roiUg": -0.3395,
+     "n": 41,
+     "wins": 19,
+     "hit": 0.4634,
+     "pnl": 14.37,
+     "stake": 410.0,
+     "roi": 0.035,
+     "roiUg": -0.308,
      "belegt": false,
-     "clvAvg": 0.02,
-     "clvN": 39,
-     "clvUg": -0.36
+     "clvAvg": -0.01,
+     "clvN": 41,
+     "clvUg": -0.37
     }
    }
   },
