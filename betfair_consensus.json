@@ -1,6 +1,6 @@
 {
-"generatedAt": "2026-10-08T21:49:30.944517+00:00",
-"count": 22,
+"generatedAt": "2026-10-08T22:04:40.136688+00:00",
+"count": 20,
 "covered": 16,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
@@ -68,8 +68,8 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 141671,
-"remaining": 4858329,
+"used": 141815,
+"remaining": 4858185,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
@@ -140,7 +140,7 @@
 "moneyName": "Arsenal",
 "moneySharePct": 79,
 "moneyOdd": 1.41,
-"moneyDir": "in",
+"moneyDir": "flat",
 "totVol": 106947,
 "pinnOdd": 1.38,
 "softOdd": 1.38,
@@ -171,7 +171,7 @@
 "pinnMovePP": -0.8,
 "pinnMove": {
 "movePP": -0.8,
-"stepPP": -0.0,
+"stepPP": 0.0,
 "n": 25,
 "move": false,
 "laeuft": false
@@ -192,8 +192,8 @@
 "moneyName": "Man City",
 "moneySharePct": 47,
 "moneyOdd": 2.56,
-"moneyDir": "in",
-"totVol": 95784,
+"moneyDir": "flat",
+"totVol": 95890,
 "pinnOdd": 2.52,
 "softOdd": 2.45,
 "softN": 49,
@@ -233,6 +233,83 @@
 "pinnTotals": null
 },
 {
+"matchId": "36072069",
+"home": "Santos",
+"away": "Flamengo",
+"league": "Brazilian Serie A",
+"country": "BR",
+"kickoff": "2026-10-08T22:30:00Z",
+"live": false,
+"moneySide": "away",
+"moneyName": "Flamengo",
+"moneySharePct": 80,
+"moneyOdd": 1.82,
+"moneyDir": "in",
+"totVol": 67447,
+"pinnOdd": 1.79,
+"softOdd": 1.75,
+"softN": 47,
+"poly": {
+"vol": 31862,
+"odd": 1.8,
+"sharePct": 69,
+"shareSrc": "geld",
+"key": "bra-san-fla-2026-10-08",
+"sideKey": "CR Flamengo",
+"whales": [
+{
+"wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+"usd": 1985
+},
+{
+"wallet": "0x5da448db0773df48a63837e37b33b62ff4bec144",
+"usd": 991
+},
+{
+"wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+"usd": 611
+},
+{
+"wallet": "0x0f0b4289a59c2e22b620cde0d3f1aad4d3e3027f",
+"usd": 505
+},
+{
+"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+"usd": 283
+},
+{
+"wallet": "0x5de39c9483af5d39893175b91548e5735c703ad2",
+"usd": 277
+}
+],
+"whaleUsd": 5777
+},
+"pinn": {
+"home": 0.2169,
+"draw": 0.2425,
+"away": 0.5406,
+"fav": "away"
+},
+"soft": {
+"home": 0.221,
+"draw": 0.2429,
+"away": 0.5362,
+"fav": "away",
+"n": 47
+},
+"pinnMovePP": -0.2,
+"pinnMove": {
+"movePP": -0.2,
+"stepPP": -0.2,
+"n": 8,
+"move": false,
+"laeuft": false
+},
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
 "matchId": "36099853",
 "home": "Dortmund",
 "away": "Werder Bremen",
@@ -245,10 +322,10 @@
 "moneySharePct": 82,
 "moneyOdd": 1.36,
 "moneyDir": "flat",
-"totVol": 64245,
+"totVol": 64305,
 "pinnOdd": 1.32,
 "softOdd": 1.3,
-"softN": 46,
+"softN": 47,
 "poly": {
 "vol": 75424,
 "odd": 1.34,
@@ -266,15 +343,15 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.7212,
+"home": 0.7211,
 "draw": 0.1656,
 "away": 0.1133,
 "fav": "home",
-"n": 46
+"n": 47
 },
-"pinnMovePP": 2.1,
+"pinnMovePP": 2.0,
 "pinnMove": {
-"movePP": 2.1,
+"movePP": 2.0,
 "stepPP": 0.0,
 "n": 25,
 "move": true,
@@ -337,83 +414,6 @@
 "pinnTotals": null
 },
 {
-"matchId": "36072069",
-"home": "Santos",
-"away": "Flamengo",
-"league": "Brazilian Serie A",
-"country": "BR",
-"kickoff": "2026-10-08T22:30:00Z",
-"live": false,
-"moneySide": "away",
-"moneyName": "Flamengo",
-"moneySharePct": 74,
-"moneyOdd": 1.83,
-"moneyDir": "out",
-"totVol": 50572,
-"pinnOdd": 1.78,
-"softOdd": 1.74,
-"softN": 47,
-"poly": {
-"vol": 31862,
-"odd": 1.8,
-"sharePct": 69,
-"shareSrc": "geld",
-"key": "bra-san-fla-2026-10-08",
-"sideKey": "CR Flamengo",
-"whales": [
-{
-"wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
-"usd": 1985
-},
-{
-"wallet": "0x5da448db0773df48a63837e37b33b62ff4bec144",
-"usd": 991
-},
-{
-"wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
-"usd": 611
-},
-{
-"wallet": "0x0f0b4289a59c2e22b620cde0d3f1aad4d3e3027f",
-"usd": 505
-},
-{
-"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
-"usd": 283
-},
-{
-"wallet": "0x5de39c9483af5d39893175b91548e5735c703ad2",
-"usd": 277
-}
-],
-"whaleUsd": 5777
-},
-"pinn": {
-"home": 0.2173,
-"draw": 0.2406,
-"away": 0.5421,
-"fav": "away"
-},
-"soft": {
-"home": 0.2204,
-"draw": 0.243,
-"away": 0.5366,
-"fav": "away",
-"n": 47
-},
-"pinnMovePP": -0.0,
-"pinnMove": {
-"movePP": -0.0,
-"stepPP": -0.1,
-"n": 7,
-"move": false,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
 "matchId": "36065343",
 "home": "Man Utd",
 "away": "Tottenham",
@@ -426,7 +426,7 @@
 "moneySharePct": 69,
 "moneyOdd": 1.75,
 "moneyDir": "flat",
-"totVol": 49783,
+"totVol": 49842,
 "pinnOdd": 1.71,
 "softOdd": 1.68,
 "softN": 49,
@@ -476,9 +476,9 @@
 "moneySide": "home",
 "moneyName": "Betis",
 "moneySharePct": 98,
-"moneyOdd": 1.6,
-"moneyDir": "flat",
-"totVol": 45877,
+"moneyOdd": 1.61,
+"moneyDir": "out",
+"totVol": 46776,
 "pinnOdd": 1.55,
 "softOdd": 1.55,
 "softN": 44,
@@ -499,8 +499,8 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.6105,
-"draw": 0.2224,
+"home": 0.6102,
+"draw": 0.2226,
 "away": 0.1671,
 "fav": "home",
 "n": 44
@@ -530,7 +530,7 @@
 "moneySharePct": 68,
 "moneyOdd": 1.74,
 "moneyDir": "flat",
-"totVol": 36405,
+"totVol": 36551,
 "pinnOdd": 1.72,
 "softOdd": 1.68,
 "softN": 49,
@@ -580,9 +580,9 @@
 "moneySide": "home",
 "moneyName": "Lens",
 "moneySharePct": 51,
-"moneyOdd": 2.48,
-"moneyDir": "out",
-"totVol": 31068,
+"moneyOdd": 2.46,
+"moneyDir": "in",
+"totVol": 31102,
 "pinnOdd": 2.39,
 "softOdd": 2.35,
 "softN": 46,
@@ -594,8 +594,8 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.4004,
-"draw": 0.2564,
+"home": 0.4005,
+"draw": 0.2563,
 "away": 0.3432,
 "fav": "home",
 "n": 46
@@ -625,7 +625,7 @@
 "moneySharePct": 84,
 "moneyOdd": 1.4,
 "moneyDir": "flat",
-"totVol": 29755,
+"totVol": 29930,
 "pinnOdd": 1.38,
 "softOdd": 1.36,
 "softN": 44,
@@ -647,14 +647,14 @@
 },
 "soft": {
 "home": 0.6953,
-"draw": 0.1658,
-"away": 0.1389,
+"draw": 0.166,
+"away": 0.1387,
 "fav": "home",
 "n": 44
 },
-"pinnMovePP": -1.5,
+"pinnMovePP": -1.4,
 "pinnMove": {
-"movePP": -1.5,
+"movePP": -1.4,
 "stepPP": -0.0,
 "n": 25,
 "move": true,
@@ -677,7 +677,7 @@
 "moneySharePct": 47,
 "moneyOdd": 2.72,
 "moneyDir": "flat",
-"totVol": 27002,
+"totVol": 27032,
 "pinnOdd": 2.61,
 "softOdd": 2.58,
 "softN": 49,
@@ -752,7 +752,7 @@
 "soft": {
 "home": 0.3393,
 "draw": 0.2704,
-"away": 0.3903,
+"away": 0.3902,
 "fav": "away",
 "n": 49
 },
@@ -760,7 +760,7 @@
 "pinnMove": {
 "movePP": -0.2,
 "stepPP": 0.0,
-"n": 24,
+"n": 25,
 "move": false,
 "laeuft": false
 },
@@ -778,12 +778,12 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "Novorizontino",
-"moneySharePct": 72,
-"moneyOdd": 1.83,
+"moneySharePct": 74,
+"moneyOdd": 1.84,
 "moneyDir": "out",
-"totVol": 22495,
-"pinnOdd": 1.73,
-"softOdd": 1.7,
+"totVol": 24632,
+"pinnOdd": 1.75,
+"softOdd": 1.72,
 "softN": 38,
 "poly": {
 "vol": 31880,
@@ -821,22 +821,22 @@
 "whaleUsd": 50860
 },
 "pinn": {
-"home": 0.2037,
-"draw": 0.2417,
-"away": 0.5546,
+"home": 0.2046,
+"draw": 0.2459,
+"away": 0.5495,
 "fav": "away"
 },
 "soft": {
-"home": 0.2119,
-"draw": 0.2473,
-"away": 0.5408,
+"home": 0.2155,
+"draw": 0.2488,
+"away": 0.5357,
 "fav": "away",
 "n": 38
 },
-"pinnMovePP": -1.3,
+"pinnMovePP": -1.8,
 "pinnMove": {
-"movePP": -1.3,
-"stepPP": -1.3,
+"movePP": -1.8,
+"stepPP": -1.8,
 "n": 2,
 "move": true,
 "laeuft": true
@@ -858,9 +858,9 @@
 "moneySharePct": 49,
 "moneyOdd": 3.3,
 "moneyDir": "flat",
-"totVol": 21408,
+"totVol": 21433,
 "pinnOdd": 3.15,
-"softOdd": 3.17,
+"softOdd": 3.2,
 "softN": 44,
 "poly": {
 "vol": 3549,
@@ -879,9 +879,9 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.3468,
-"draw": 0.2987,
-"away": 0.3544,
+"home": 0.347,
+"draw": 0.2985,
+"away": 0.3546,
 "fav": "away",
 "n": 44
 },
@@ -908,9 +908,9 @@
 "moneySide": "home",
 "moneyName": "Napoli",
 "moneySharePct": 59,
-"moneyOdd": 1.5,
-"moneyDir": "flat",
-"totVol": 20120,
+"moneyOdd": 1.51,
+"moneyDir": "out",
+"totVol": 20124,
 "pinnOdd": 1.48,
 "softOdd": 1.44,
 "softN": 48,
@@ -931,9 +931,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.656,
-"draw": 0.196,
-"away": 0.1479,
+"home": 0.6561,
+"draw": 0.1965,
+"away": 0.1474,
 "fav": "home",
 "n": 48
 },
@@ -950,70 +950,6 @@
 "pinnTotals": null
 },
 {
-"matchId": "36159742",
-"home": "MAS Maghrib A Fes",
-"away": "Raja Casablanca",
-"league": "Moroccan Botola Pro 1",
-"country": "MA",
-"kickoff": "2026-10-08T20:00:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Mas Maghrib A Fes",
-"moneySharePct": 58,
-"moneyOdd": 6.4,
-"moneyDir": "out",
-"totVol": 49871,
-"pinnOdd": null,
-"softOdd": null,
-"softN": null,
-"poly": {
-"vol": 53215,
-"odd": 3.28,
-"sharePct": 53,
-"shareSrc": "geld",
-"key": "mar1-mad-rca-2026-10-08",
-"sideKey": "Maghreb AS de Fès",
-"whales": [
-{
-"wallet": "0x77d581f2b6e5e3a12c1bdb743bcc7e47a344732e",
-"usd": 640
-},
-{
-"wallet": "0x0c84d454825e9f42619497f6158b4753cd43a8ed",
-"usd": 540
-},
-{
-"wallet": "0x089e53b9ea79fb295fa2507e62f80397519e6e0e",
-"usd": 468
-},
-{
-"wallet": "0xcc32068e0d0b19790e3376bc1751552adcca92d2",
-"usd": 308
-},
-{
-"wallet": "0x8ae599cc1fdeb17c95e2af00bd75a38034bd4f22",
-"usd": 253
-},
-{
-"wallet": "0x9086ecc713bc35f307d7ba3c87d1c1c1c1514d46",
-"usd": 242
-}
-],
-"whaleUsd": 3279
-},
-"pinn": null,
-"soft": null,
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "no_anchor",
-"agree": null,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "MAS Maghrib A Fes v Raja Casablanca",
-"grund": "kein_kandidat"
-}
-},
-{
 "matchId": "36137978",
 "home": "Atletico Grau",
 "away": "CD Los Chankas",
@@ -1023,10 +959,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Atletico Grau",
-"moneySharePct": 74,
-"moneyOdd": 2.32,
-"moneyDir": "out",
-"totVol": 38908,
+"moneySharePct": 75,
+"moneyOdd": 1.91,
+"moneyDir": "in",
+"totVol": 50489,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -1090,8 +1026,8 @@
 "moneyName": "Athletico-PR",
 "moneySharePct": 67,
 "moneyOdd": 2.18,
-"moneyDir": "in",
-"totVol": 28029,
+"moneyDir": "flat",
+"totVol": 29154,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -1110,19 +1046,19 @@
 }
 },
 {
-"matchId": "36163433",
-"home": "CD Bentín Tacna Heroica",
-"away": "Carlos Mannucci",
-"league": "Peruvian Segunda Division",
-"country": "PE",
-"kickoff": "2026-10-08T20:00:00Z",
+"matchId": "36165411",
+"home": "Deportivo Santo Domingo",
+"away": "LDU de Portoviejo",
+"league": "Ecuadorian Serie B",
+"country": "EC",
+"kickoff": "2026-10-08T20:30:00Z",
 "live": true,
 "moneySide": "draw",
 "moneyName": "The Draw",
-"moneySharePct": 63,
-"moneyOdd": 1.33,
-"moneyDir": "in",
-"totVol": 5383,
+"moneySharePct": 56,
+"moneyOdd": 50.0,
+"moneyDir": "out",
+"totVol": 5609,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -1135,8 +1071,9 @@
 "agree": null,
 "pinnTotals": null,
 "ankerGrund": {
-"spiel": "CD Bentín Tacna Heroica v Carlos Mannucci",
-"grund": "kein_kandidat"
+"spiel": "Deportivo Santo Domingo v LDU de Portoviejo",
+"grund": "kein_kandidat",
+"naechster": "Real Sociedad v Deportivo La Coruña"
 }
 },
 {
@@ -1149,10 +1086,10 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "Correcaminos Uat",
-"moneySharePct": 78,
-"moneyOdd": 1.75,
-"moneyDir": "flat",
-"totVol": 4032,
+"moneySharePct": 79,
+"moneyOdd": 1.74,
+"moneyDir": "in",
+"totVol": 4180,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -1177,45 +1114,14 @@
 "spiel": "Alebrijes de Oaxaca v Correcaminos UAT",
 "grund": "kein_kandidat"
 }
-},
-{
-"matchId": "36165411",
-"home": "Deportivo Santo Domingo",
-"away": "LDU de Portoviejo",
-"league": "Ecuadorian Serie B",
-"country": "EC",
-"kickoff": "2026-10-08T20:30:00Z",
-"live": true,
-"moneySide": "draw",
-"moneyName": "The Draw",
-"moneySharePct": 78,
-"moneyOdd": 1.76,
-"moneyDir": "in",
-"totVol": 3865,
-"pinnOdd": null,
-"softOdd": null,
-"softN": null,
-"poly": null,
-"pinn": null,
-"soft": null,
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "no_anchor",
-"agree": null,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Deportivo Santo Domingo v LDU de Portoviejo",
-"grund": "kein_kandidat",
-"naechster": "Real Sociedad v Deportivo La Coruña"
-}
 }
 ],
 "ankerN": 78,
-"ankerNOffen": 150,
+"ankerNOffen": 149,
 "ankerMit": 75,
 "ankerDiagnose": {
 "nach": {
-"kein_kandidat": 71,
+"kein_kandidat": 70,
 "name": 4
 },
 "beispiele": [
