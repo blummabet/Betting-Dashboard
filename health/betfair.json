@@ -1,12 +1,12 @@
 {
   "slug": "betfair",
   "workflow": "🟡 Betfair Radar (Betwatch)",
-  "updatedAt": "2026-10-08T02:17:33.134960+00:00",
+  "updatedAt": "2026-10-08T02:32:26.261414+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
     "spanneH": 4.5,
-    "proTag": 101.9,
+    "proTag": 101.2,
     "lueckeMinMin": 3.1,
     "lueckeMedianMin": 15.0,
     "lueckeMaxMin": 15.2,
@@ -21,9 +21,24 @@
     "verdraengt": 0,
     "spanneH": 440.1,
     "erzeugtProTag": 5.5,
-    "widerspruch": "erzeugtProTag 5.5 gegen eine gemessene Kadenz von 101.9/Tag (Faktor 18.5) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
+    "widerspruch": "erzeugtProTag 5.5 gegen eine gemessene Kadenz von 101.2/Tag (Faktor 18.4) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
   },
   "runs": [
+    {
+      "ts": "2026-10-08T02:32:26.261414+00:00",
+      "workflow": "🟡 Betfair Radar (Betwatch)",
+      "runId": "37718241422",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/37718241422",
+      "nSteps": 40,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-10-08T02:30:53Z",
+      "startedAt": "2026-10-08T02:30:53Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 93.3,
+      "event": "workflow_dispatch"
+    },
     {
       "ts": "2026-10-08T02:17:33.134960+00:00",
       "workflow": "🟡 Betfair Radar (Betwatch)",
@@ -308,21 +323,6 @@
       "wartetS": 0.0,
       "laeuftSeitS": 106.2,
       "event": "workflow_dispatch"
-    },
-    {
-      "ts": "2026-10-07T21:49:10.966144+00:00",
-      "workflow": "🟡 Betfair Radar (Betwatch)",
-      "runId": "37691776167",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/37691776167",
-      "nSteps": 40,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-10-07T21:46:44Z",
-      "startedAt": "2026-10-07T21:46:44Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 147.0,
-      "event": "schedule"
     }
   ]
 }
