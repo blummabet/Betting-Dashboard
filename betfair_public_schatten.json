@@ -17419,7 +17419,7 @@ null
 "leadOdd": 2.18,
 "value": 4283.280000000001,
 "sentAt": "2026-10-07T21:31:51.962739+00:00",
-"status": "pending",
+"status": "won",
 "htScore": [
 0,
 2
@@ -17440,7 +17440,15 @@ null
 0,
 1
 ]
-}
+},
+"settledAt": "2026-10-08T00:02:14.013782+00:00",
+"ftScore": [
+0,
+2
+],
+"profit": 1.1800000000000002,
+"via": "track-spiel",
+"resChk": true
 },
 {
 "k": "fresh:36071856:Match Odds",
@@ -17455,7 +17463,10 @@ null
 "value": 77631.72,
 "sentAt": "2026-10-07T22:46:47.508823+00:00",
 "status": "pending",
-"htScore": null,
+"htScore": [
+1,
+0
+],
 "leadShare": 0.5592084008959224,
 "leadDir": "in",
 "onLeader": true,
@@ -17465,12 +17476,146 @@ null
 "anteilSchwelle": 1.065,
 "raus": "leader",
 "quelle": "public",
-"gesendet": false,
+"gesendet": true,
 "live": {
 "time": 14,
 "score": [
 1,
 0
+]
+}
+},
+{
+"k": "fresh:36071859:Match Odds",
+"matchId": "36071859",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Brazilian Serie A",
+"home": "Red Bull Bragantino",
+"away": "Mirassol",
+"leadName": "Red Bull Bragantino",
+"leadOdd": 1.44,
+"value": 144122.34,
+"sentAt": "2026-10-07T23:16:59.046987+00:00",
+"status": "pending",
+"htScore": [
+0,
+0
+],
+"leadShare": 0.8466062235736667,
+"leadDir": "out",
+"onLeader": false,
+"tier": "rest",
+"magnitude": 57136.9,
+"schwelle": 30000.0,
+"anteilSchwelle": 1.905,
+"raus": "drift",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 45,
+"score": [
+0,
+0
+]
+}
+},
+{
+"k": "fresh:36072081:Match Odds",
+"matchId": "36072081",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Brazilian Serie A",
+"home": "Botafogo FR",
+"away": "Vasco Da Gama",
+"leadName": "Vasco Da Gama",
+"leadOdd": 2.38,
+"value": 113510.2,
+"sentAt": "2026-10-07T23:16:59.047008+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.6324183201157252,
+"leadDir": "flat",
+"onLeader": null,
+"tier": "rest",
+"magnitude": 43118.7,
+"schwelle": 30000.0,
+"anteilSchwelle": 1.437,
+"raus": "einseitig",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": null,
+"score": [
+null,
+null
+]
+}
+},
+{
+"k": "fresh:36072048:Match Odds",
+"matchId": "36072048",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Brazilian Serie A",
+"home": "Remo",
+"away": "Gremio",
+"leadName": "Remo",
+"leadOdd": 7.8,
+"value": 221843.52,
+"sentAt": "2026-10-07T23:47:00.352785+00:00",
+"status": "pending",
+"htScore": [
+0,
+1
+],
+"leadShare": 0.6546633861561518,
+"leadDir": "out",
+"onLeader": false,
+"tier": "rest",
+"magnitude": 34327.9,
+"schwelle": 30000.0,
+"anteilSchwelle": 1.144,
+"raus": "einseitig",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 53,
+"score": [
+0,
+1
+]
+}
+},
+{
+"k": "fix:36159259:First Half Goals 1.5",
+"matchId": "36159259",
+"scenario": "fix",
+"market": "First Half Goals 1.5",
+"league": "Guatemalan Primera Division de Ascenso",
+"home": "CSD Sacachispas",
+"away": "Fraijanes FC",
+"leadName": "Under 1.5 Goals",
+"leadOdd": 1.88,
+"value": 2421.72,
+"sentAt": "2026-10-07T23:47:00.352808+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.6745453644517121,
+"leadDir": "flat",
+"onLeader": null,
+"tier": "rest",
+"magnitude": 0.0,
+"schwelle": 30000.0,
+"anteilSchwelle": 0.0,
+"raus": "fix",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": null,
+"score": [
+null,
+null
 ]
 }
 }
