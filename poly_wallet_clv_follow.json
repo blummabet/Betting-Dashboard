@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-08T15:15:42.262816+00:00",
+ "updatedAt": "2026-10-08T15:46:57.316453+00:00",
  "stake": 10.0,
  "regel": {
   "minN": 20,
@@ -7,9 +7,9 @@
   "frischMin": 90.0
  },
  "zaehler": {
-  "ohneEinstieg": 22,
+  "ohneEinstieg": 5,
   "gesperrt": 0,
-  "alt": 64
+  "alt": 77
  },
  "open": {
   "unl-mac-sco-2026-10-03-more-markets|Under": {
@@ -1816,28 +1816,6 @@
    "firstTs": "2026-10-08T11:13:39.781617+00:00",
    "stake": 10.0
   },
-  "cs2-nem-sin2-2026-10-08|Team Nemesis": {
-   "key": "cs2-nem-sin2-2026-10-08",
-   "side": "Team Nemesis",
-   "cat": "E-Sport",
-   "league": "ESPORTS",
-   "wallet": "0x76451b711ca9bd422155bc3dfe23ab1dfed03117",
-   "belegt": false,
-   "heiss": true,
-   "walletN": null,
-   "walletClv": null,
-   "walletUg": null,
-   "clv7": 1.42,
-   "n7": 19,
-   "walletEntry": 0.52,
-   "entryPrice": 0.525,
-   "abstandPP": 0.5,
-   "arm": "nehmbar",
-   "lastPrice": 0.525,
-   "htkAtEntry": 0.86,
-   "firstTs": "2026-10-08T11:13:39.781617+00:00",
-   "stake": 10.0
-  },
   "cs2-xdm-the9-2026-10-08|TEAM XDM": {
    "key": "cs2-xdm-the9-2026-10-08",
    "side": "TEAM XDM",
@@ -2320,6 +2298,28 @@
    "lastPrice": 0.335,
    "htkAtEntry": 2.36,
    "firstTs": "2026-10-08T15:15:42.262816+00:00",
+   "stake": 10.0
+  },
+  "fin1-kups-aco-2026-10-08-more-markets|Over": {
+   "key": "fin1-kups-aco-2026-10-08-more-markets",
+   "side": "Over",
+   "cat": "Fußball",
+   "league": "SOCCER",
+   "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+   "belegt": true,
+   "heiss": false,
+   "walletN": 1231,
+   "walletClv": 0.355,
+   "walletUg": 0.194,
+   "clv7": null,
+   "n7": null,
+   "walletEntry": 0.4801,
+   "entryPrice": 0.485,
+   "abstandPP": 0.49,
+   "arm": "nehmbar",
+   "lastPrice": 0.485,
+   "htkAtEntry": 0.36,
+   "firstTs": "2026-10-08T15:46:57.316453+00:00",
    "stake": 10.0
   }
  },
@@ -9771,6 +9771,34 @@
    "closePrice": 0.645,
    "clvPP": -1.0,
    "settledTs": "2026-10-08T15:15:42.262816+00:00"
+  },
+  {
+   "key": "cs2-nem-sin2-2026-10-08",
+   "side": "Team Nemesis",
+   "cat": "E-Sport",
+   "league": "ESPORTS",
+   "wallet": "0x76451b711ca9bd422155bc3dfe23ab1dfed03117",
+   "belegt": false,
+   "heiss": true,
+   "walletN": null,
+   "walletClv": null,
+   "walletUg": null,
+   "clv7": 1.42,
+   "n7": 19,
+   "walletEntry": 0.52,
+   "entryPrice": 0.525,
+   "abstandPP": 0.5,
+   "arm": "nehmbar",
+   "lastPrice": 0.525,
+   "htkAtEntry": 0.86,
+   "firstTs": "2026-10-08T11:13:39.781617+00:00",
+   "stake": 10.0,
+   "result": "loss",
+   "winner": "Sinners",
+   "pnl": -10.0,
+   "closePrice": 0.525,
+   "clvPP": 0.0,
+   "settledTs": "2026-10-08T15:46:57.316453+00:00"
   }
  ],
  "gesehen": [
@@ -10001,6 +10029,7 @@
   "fin1-gni-int-2026-10-07|IF Gnistan",
   "fin1-hjk-vps-2026-10-08-more-markets|Over",
   "fin1-hjk-vps-2026-10-08|Vaasan Palloseura",
+  "fin1-kups-aco-2026-10-08-more-markets|Over",
   "fin1-kups-aco-2026-10-08-more-markets|Under",
   "fin1-kups-aco-2026-10-08|Draw (Kuopion Palloseura vs. AC Oulu)",
   "fin1-kups-aco-2026-10-08|Kuopion Palloseura",
@@ -10174,16 +10203,16 @@
    "clvUg": -0.32
   },
   "heiss_nehmbar": {
-   "n": 51,
+   "n": 52,
    "wins": 20,
-   "hit": 0.3922,
-   "pnl": -52.52,
-   "stake": 510.0,
-   "roi": -0.103,
-   "roiUg": -0.5173,
+   "hit": 0.3846,
+   "pnl": -62.52,
+   "stake": 520.0,
+   "roi": -0.1202,
+   "roiUg": -0.5275,
    "belegt": false,
    "clvAvg": -0.06,
-   "clvN": 51,
+   "clvN": 52,
    "clvUg": -0.24
   },
   "heiss_zu_spaet": {
@@ -10200,30 +10229,30 @@
    "clvUg": null
   },
   "nehmbar": {
-   "n": 186,
+   "n": 187,
    "wins": 69,
-   "hit": 0.371,
-   "pnl": 179.33,
-   "stake": 1860.0,
-   "roi": 0.0964,
-   "roiUg": -0.3245,
+   "hit": 0.369,
+   "pnl": 169.33,
+   "stake": 1870.0,
+   "roi": 0.0906,
+   "roiUg": -0.3282,
    "belegt": false,
    "clvAvg": 0.04,
-   "clvN": 186,
+   "clvN": 187,
    "clvUg": -0.15,
    "byCat": {
     "E-Sport": {
-     "n": 66,
+     "n": 67,
      "wins": 31,
-     "hit": 0.4697,
-     "pnl": 14.55,
-     "stake": 660.0,
-     "roi": 0.022,
-     "roiUg": -0.317,
+     "hit": 0.4627,
+     "pnl": 4.55,
+     "stake": 670.0,
+     "roi": 0.0068,
+     "roiUg": -0.3281,
      "belegt": false,
      "clvAvg": 0.16,
-     "clvN": 66,
-     "clvUg": -0.28
+     "clvN": 67,
+     "clvUg": -0.27
     },
     "Fußball": {
      "n": 65,
