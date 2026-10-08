@@ -1,6 +1,6 @@
 {
-"generatedAt": "2026-10-08T04:02:32.758066+00:00",
-"count": 7,
+"generatedAt": "2026-10-08T04:17:18.772353+00:00",
+"count": 8,
 "covered": 7,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
@@ -64,8 +64,8 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 126823,
-"remaining": 4873177,
+"used": 126973,
+"remaining": 4873027,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
@@ -106,8 +106,8 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.8853,
-"draw": 0.0757,
+"home": 0.8855,
+"draw": 0.0755,
 "away": 0.039,
 "fav": "home",
 "n": 44
@@ -135,9 +135,9 @@
 "moneySide": "home",
 "moneyName": "Arsenal",
 "moneySharePct": 79,
-"moneyOdd": 1.41,
-"moneyDir": "flat",
-"totVol": 69296,
+"moneyOdd": 1.4,
+"moneyDir": "in",
+"totVol": 69831,
 "pinnOdd": 1.36,
 "softOdd": 1.36,
 "softN": 49,
@@ -240,13 +240,13 @@
 "moneyName": "Man Utd",
 "moneySharePct": 66,
 "moneyOdd": 1.75,
-"moneyDir": "out",
+"moneyDir": "flat",
 "totVol": 36561,
 "pinnOdd": 1.72,
 "softOdd": 1.7,
 "softN": 49,
 "poly": {
-"vol": 83095,
+"vol": 83223,
 "odd": 1.74,
 "sharePct": 57,
 "shareSrc": "preis",
@@ -314,7 +314,7 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.5583,
+"home": 0.5584,
 "draw": 0.2292,
 "away": 0.2124,
 "fav": "home",
@@ -435,14 +435,44 @@
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
+},
+{
+"matchId": "36159259",
+"home": "CSD Sacachispas",
+"away": "Fraijanes FC",
+"league": "Guatemalan Primera Division de Ascenso",
+"country": "GT",
+"kickoff": "2026-10-09T16:00:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "CSD Sacachispas",
+"moneySharePct": 93,
+"moneyOdd": 1.13,
+"moneyDir": "flat",
+"totVol": 2263,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": null,
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "CSD Sacachispas v Fraijanes FC",
+"grund": "kein_kandidat"
+}
 }
 ],
 "ankerN": 49,
-"ankerNOffen": 149,
+"ankerNOffen": 150,
 "ankerMit": 49,
 "ankerDiagnose": {
 "nach": {
-"kein_kandidat": 88,
+"kein_kandidat": 89,
 "zeit": 12
 },
 "beispiele": [
@@ -507,16 +537,6 @@
 "liga": "Jordanian Cup"
 },
 {
-"spiel": "Al Ain v Al-Ittihad Kalba",
-"kandidat": "Al-Hilal v Al-Ittihad",
-"key": "soccer_saudi_arabia_pro_league",
-"score": 1.17,
-"grund": "zeit",
-"abstandH": 52.8,
-"matchId": "36163208",
-"liga": "UAE League Cup"
-},
-{
 "spiel": "Al-Khaleej Khor Fakkan v Al Wasl",
 "kandidat": "Al-Ettifaq v Al-Khaleej",
 "key": "soccer_saudi_arabia_pro_league",
@@ -524,6 +544,16 @@
 "grund": "zeit",
 "abstandH": 47.2,
 "matchId": "36163184",
+"liga": "UAE League Cup"
+},
+{
+"spiel": "Al Ain v Al-Ittihad Kalba",
+"kandidat": "Al-Hilal v Al-Ittihad",
+"key": "soccer_saudi_arabia_pro_league",
+"score": 1.17,
+"grund": "zeit",
+"abstandH": 52.8,
+"matchId": "36163208",
 "liga": "UAE League Cup"
 },
 {
@@ -535,6 +565,16 @@
 "abstandH": 24.7,
 "matchId": "36163579",
 "liga": "UAE U21"
+},
+{
+"spiel": "Shabab Al Ordon v Al Buqaa",
+"kandidat": "Al-Shabab v Al-Taawoun",
+"key": "soccer_saudi_arabia_pro_league",
+"score": 1.17,
+"grund": "zeit",
+"abstandH": 75.0,
+"matchId": "36159914",
+"liga": "Jordanian Premier League"
 },
 {
 "spiel": "Al-Ansar v Al Hikma",
@@ -555,16 +595,6 @@
 "abstandH": 25.8,
 "matchId": "36163561",
 "liga": "UAE U21"
-},
-{
-"spiel": "Shabab Al Ordon v Al Buqaa",
-"kandidat": "Al-Shabab v Al-Taawoun",
-"key": "soccer_saudi_arabia_pro_league",
-"score": 1.17,
-"grund": "zeit",
-"abstandH": 75.0,
-"matchId": "36159914",
-"liga": "Jordanian Premier League"
 }
 ]
 }
