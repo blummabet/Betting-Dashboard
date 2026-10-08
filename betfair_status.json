@@ -22,11 +22,9 @@
       "id": "grosses_geld_bleibt_im_feed",
       "label": "Grosses Geld faellt nicht aus dem Feed",
       "severity": "error",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "36159259: zuletzt 28.053 € und Anpfiff erst in 24.4 h — trotzdem nicht mehr im Feed"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Der Detail-Deckel darf nicht das teuerste Spiel schneiden — genau das ist am 08.09. passiert (alle vier CL-Spiele, Real Madrid mit 102.861 €)."
     },
     {
@@ -81,26 +79,25 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 136140 verbraucht, 4863860 uebrig"
+      "note": "Kontingent: 136290 verbraucht, 4863710 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 9,
+      "nFail": 8,
       "failures": [
+        "Al-Khaleej Khor Fakkan v Al Wasl (UAE League Cup): zeit — bester Kandidat „Al-Ettifaq v Al-Khaleej“ · 47.2h Anpfiff-Abstand",
         "Shabab Al Ordon v Al Buqaa (Jordanian Premier League): zeit — bester Kandidat „Al-Shabab v Al-Taawoun“ · 75.0h Anpfiff-Abstand",
         "St Pauli v Karlsruhe (German Bundesliga 2): name — bester Kandidat „FC St. Pauli v Karlsruher SC“",
         "FC Koln v Mgladbach (German Bundesliga): name — bester Kandidat „1. FC Köln v Borussia Monchengladbach“",
         "Al-Akhdoud v Al-Ula FC (Saudi 1st Division): zeit — bester Kandidat „Al-Kholood v Al-Qadsiah“ · 20.8h Anpfiff-Abstand",
         "Al-Wakra v Al Gharafa (Qatari Stars League): zeit — bester Kandidat „Al-Kholood v Al-Qadsiah“ · 20.8h Anpfiff-Abstand",
-        "Al-Khaleej Khor Fakkan v Al Wasl (UAE League Cup): zeit — bester Kandidat „Al-Ettifaq v Al-Khaleej“ · 47.2h Anpfiff-Abstand",
         "Lanus (Res) v C Cor'ba (Res) (Argentinian Primera Division Reserves): zeit — bester Kandidat „Lanus v Velez Sarsfield BA“ · 97.0h Anpfiff-Abstand",
-        "Al Sadd U20 v Al-Arabi U20 (Qatari U20 League): zeit — bester Kandidat „Al-Kholood v Al-Qadsiah“ · 22.2h Anpfiff-Abstand",
         "Al Shamal v Al-Duhail SC (Qatari Stars League): zeit — bester Kandidat „Al-Kholood v Al-Qadsiah“ · 23.1h Anpfiff-Abstand"
       ],
-      "note": "ohne Anker: kein_kandidat 77 · kein_pinnacle 1 · name 2 · zeit 7. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 79 · kein_pinnacle 1 · name 2 · zeit 6. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -109,7 +106,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 1 — HJK Helsinki v VPS (26 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 1 — HJK Helsinki v VPS (19 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -184,6 +181,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-10-08T15:35:42.820634+00:00"
+  "nFail": 1,
+  "generatedAt": "2026-10-08T15:49:31.067300+00:00"
 }
