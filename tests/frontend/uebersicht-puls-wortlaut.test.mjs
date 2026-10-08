@@ -61,3 +61,19 @@ test('ohne Track-Record bleibt der Puls-Block der Rueckfall — keine leere Kach
   const h = w.document.getElementById('mainDashPanel').innerHTML;
   assert.match(h, /n25876/);
 });
+
+// 🔴 07.10.2026 (Übersicht-Check): „💷 Betfair n40000 · -0.9 % ROI" — ohne Urteil und ohne
+// Zeitfenster. n40000 ist die KAPPUNG des Buchs (RESULTS_KEEP), der Produzent liefert
+// `fenster.tage`, `roiUg` und `urteil: "verliert"`; gelesen wurden drei Felder.
+test('die Betfair-Kachel nennt Fenster, Untergrenze und das Urteil des Buchs', () => {
+  const w = load();
+  seed(w, { bfTrack: { generatedAt: new Date().toISOString(),
+                       fenster: { n: 40000, tage: 34.7 },
+                       global: { n: 40000, hitRate: 0.5304, roi: -0.009, roiUg: -0.0178,
+                                 urteil: 'verliert' } } });
+  w._renderMainDash();
+  const h = w.document.getElementById('mainDashPanel').innerHTML;
+  assert.match(h, /n40000 · 35 Tage/);
+  assert.match(h, /UG -1\.8%/);
+  assert.match(h, /verliert/);
+});

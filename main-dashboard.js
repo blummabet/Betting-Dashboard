@@ -1162,6 +1162,24 @@
   // 03.08.2026 (Lucas: „Einsätze sehr low?“): der Feed nennt schon ~$1.5K eine „Whale"-Position (Median).
   // Für die Übersicht-Kachel zählt erst ab MD_WHALE_MIN_USD als Whale — sonst zeigt ein ruhiger Slate $821.
   var MD_WHALE_MIN_USD = 10000;
+  // 🔴 07.10.2026 (Übersicht-Check: „🐋 Poly Whale-Bets · Cleveland Guardians vs Chicago White
+  // Sox · MLB" — zweimal, $58,1K und $37,2K). US-Sport ist seit dem 27.09. auf Polymarket UND
+  // Stake gesperrt („interessiert mich überhaupt nicht"). Die Stake-Kachel hielt sich daran
+  // (_mdStakeWetten, seit dem MLB-Fund dort), die vier Poly-Kacheln nicht: Whale-Bets,
+  // Volumen über Norm, Live-Whales, Live-Zufluss. Fehlerklasse: eine Sperre, die je Fläche
+  // nachgebaut wird — die vergessene Fläche zeigt das Gesperrte.
+  // EINE Prüfung hier, und die Liste kommt aus poly-wallets.js (PW_BLOCKED_BET_CATS), nicht aus
+  // einer Kopie — die Kopie unten greift nur, wenn poly-wallets.js nicht geladen ist.
+  var _MD_POLY_SPERRE_RUECKFALL = ['US-Sport', 'Kampfsport', 'Cricket'];
+  function _mdPolyGesperrt(league, sport) {
+    var liste = (typeof window !== 'undefined' && Array.isArray(window.PW_BLOCKED_BET_CATS))
+      ? window.PW_BLOCKED_BET_CATS : _MD_POLY_SPERRE_RUECKFALL;
+    var kat = (typeof _pwSportCategory === 'function') ? _pwSportCategory(league, sport) : sport;
+    return liste.indexOf(kat) >= 0;
+  }
+  function _mdOhneGesperrte(rows, n) {
+    return (rows || []).filter(function (r) { return r && !_mdPolyGesperrt(r.league, r.sport); }).slice(0, n);
+  }
   function allWhales() {
     var w = _md.data.whales || {}, all = [];
     for (var k in w) {
@@ -1169,6 +1187,7 @@
       if (!mk || mk.resolved != null || !Array.isArray(mk.whales)) continue;   // aufgelöst → raus
       var rh = _mdRealHtk(mk);
       if (rh != null && rh < -4) continue;                                     // >4h nach Anpfiff = durch
+      if (_mdPolyGesperrt(mk.league, mk.sport)) continue;                        // 07.10.: Sperrliste
       mk.whales.forEach(function (wh) {
         if ((+wh.usd || 0) < MD_WHALE_MIN_USD) return;   // kein Kleinvieh als „Whale"
         all.push({ usd: +wh.usd || 0, side: wh.side, league: mk.league, hrs: rh, key: k, wallet: wh.wallet });
@@ -1734,7 +1753,7 @@
     _pwEnsurePlaysData(function () {
       var w = document.getElementById('md-cell-whale');
       var over = [];
-      try { over = _pwOverNormTop(5) || []; } catch (e) { over = []; }
+      try { over = _mdOhneGesperrte(_pwOverNormTop(25), 5); } catch (e) { over = []; }
       if (w) w.innerHTML = tile('💰', 'Volumen über Norm', A.poly, 'rgba(25,158,112,.14)', 'rgba(25,158,112,.32)', 'polywallets', 'Wallets', _mdOverNormBody(over), 0);
     });
   }
@@ -1849,8 +1868,8 @@
     _pwEnsurePlaysData(function () {
       var b = document.getElementById('md-cell-live'); if (!b) return;
       var whales = [], inflow = [];
-      try { whales = _pwLiveTopWhales(5) || []; } catch (e) { whales = []; }
-      try { inflow = _pwLiveTopInflow(5) || []; } catch (e) { inflow = []; }
+      try { whales = _mdOhneGesperrte(_pwLiveTopWhales(25), 5); } catch (e) { whales = []; }
+      try { inflow = _mdOhneGesperrte(_pwLiveTopInflow(25), 5); } catch (e) { inflow = []; }
       b.innerHTML = _mdLiveHtml(whales, inflow);
       try { _mdRefreshAsof(); } catch (e) { /* Kopf bleibt, wie er war */ }
     });
@@ -2124,9 +2143,19 @@
     // KEIN Nachbau von Produzenten-Logik: drei Felder lesen und formatieren, kein Urteil.
     var _bfg = (_md.data.bfTrack && _md.data.bfTrack.global) || null;
     if (_bfg && _bfg.n) {
+      // 🔴 07.10.2026 (Übersicht-Check): „💷 Betfair n40000 · -0.9 % ROI" — ohne Urteil, während
+      // die Poly-Kachel daneben „UG -4.2 % · nicht belegt" sagt. Der Produzent hatte beides
+      // (`roiUg`, `urteil: "verliert"`), gelesen wurden drei Felder. Und n40000 ist die
+      // KAPPUNG des Buchs (RESULTS_KEEP), keine Zaehlung — ohne das Zeitfenster daneben liest es
+      // sich wie „alle Signale seit Beginn". Fehlerklasse: eine Zahl ohne ihr Urteil und ohne
+      // ihren Nenner, wo der Produzent beides liefert.
+      var _bff = (_md.data.bfTrack && _md.data.bfTrack.fenster) || null;
       bf = { n: _bfg.n,
              hitPct: _bfg.hitRate == null ? null : Math.round(1000 * _bfg.hitRate) / 10,
-             roiPct: _bfg.roi == null ? null : Math.round(1000 * _bfg.roi) / 10 };
+             roiPct: _bfg.roi == null ? null : Math.round(1000 * _bfg.roi) / 10,
+             ugPct: _bfg.roiUg == null ? null : Math.round(1000 * _bfg.roiUg) / 10,
+             urteil: _bfg.urteil || null,
+             tage: (_bff && _bff.tage != null) ? Math.round(+_bff.tage) : null };
     }
     if (!d.n && !(bf && bf.n) && !(pl && pl.n) && !mmRows.length) return '<section class="md-pulse md-rise"><div class="md-pulse-h">📈 Puls</div>' +
       '<div class="md-pulse-l" style="color:var(--mi2)">Noch keine abgerechneten Picks/Plays — füllt sich, sobald die ersten resolven.</div></section>';
@@ -2160,10 +2189,13 @@
     }
     if (bf && bf.n) {
       cards.push('<button class="mpc" style="--ac:' + A.bf + '" onclick="showView(\'betfair\')" title="→ Betfair Radar">' +
-        '<span class="mpc-h">💷 Betfair<b>n' + bf.n + '</b></span>' +
+        '<span class="mpc-h">💷 Betfair<b>n' + bf.n + (bf.tage != null ? ' · ' + bf.tage + ' Tage' : '') + '</b></span>' +
         '<div class="mpc-big">' + (bf.hitPct == null ? '—' : (+bf.hitPct).toFixed(1) + '%') + '</div><div class="mpc-cap">Treffer · Geld-Seite</div>' +
         meter(bf.hitPct, A.good) +
-        '<div class="mpc-subs">' + sub(bf.roiPct == null ? '—' : (bf.roiPct > 0 ? '+' : '') + (+bf.roiPct).toFixed(1) + '%', 'ROI', col0(bf.roiPct)) + '</div></button>');
+        '<div class="mpc-subs">' + sub(bf.roiPct == null ? '—' : (bf.roiPct > 0 ? '+' : '') + (+bf.roiPct).toFixed(1) + '%',
+          'ROI' + (bf.ugPct != null ? ' · UG ' + (bf.ugPct > 0 ? '+' : '') + (+bf.ugPct).toFixed(1) + '%' : ''), col0(bf.roiPct)) +
+          (bf.urteil ? sub(esc(bf.urteil), 'Urteil des Buchs', bf.urteil === 'verliert' ? A.red : 'var(--mi)') : '') +
+          '</div></button>');
     }
     if (pl && pl.n) {
       cards.push('<button class="mpc" style="--ac:' + A.poly + '" onclick="showView(\'polywallets\')" title="→ Polymarket · Heute wetten">' +
