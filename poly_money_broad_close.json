@@ -676554,7 +676554,14 @@
    "HJK Helsinki": "96371475463063041433554006134754477487865267692889927349035038059846937896491",
    "Draw (HJK Helsinki vs. Vaasan Palloseura)": "43385301646894780314890797782477047758121309526825853847181832721600748442771",
    "Vaasan Palloseura": "66305538002508961057816001493268450373158151356658193305118075206885485454503"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "HJK Helsinki": 1.0,
+   "Draw (HJK Helsinki vs. Vaasan Palloseura)": 0.0,
+   "Vaasan Palloseura": 0.0
+  },
+  "resolvedAt": "2026-10-08T19:14:05.585003+00:00"
  },
  "fin1-kups-aco-2026-10-08": {
   "shares": {
@@ -677650,7 +677657,14 @@
    "Al-Shamal": "95168735145953931559135978334216932696571210360692969934755636813402471259902",
    "Draw (Al-Shamal vs. Al Duhail SC)": "44575593457625223217210061594777003926203437205289770337433046702785917671477",
    "Al Duhail SC": "19664975332194082970637610535272572912567755830734896407935076609409654655660"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Al-Shamal": 0.0,
+   "Draw (Al-Shamal vs. Al Duhail SC)": 0.0,
+   "Al Duhail SC": 1.0
+  },
+  "resolvedAt": "2026-10-08T19:14:05.585003+00:00"
  },
  "cs2-faze-sng2-2026-10-08": {
   "shares": {
@@ -679050,8 +679064,8 @@
  },
  "lol-mvu-cpd-2026-10-08": {
   "shares": {
-   "Maryville University": 16397.887035175,
-   "Cupid Esports": 29793.33680841
+   "Maryville University": 16786.915605259994,
+   "Cupid Esports": 30500.163365325006
   },
   "prices": {
    "Maryville University": 0.355,
@@ -679063,37 +679077,43 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 49777,
+  "totalUsd": 49870,
   "whales": [
    {
     "wallet": "0x9c3ce009c9b039956665cecc4cd14de862b5e8c9",
     "side": "Maryville University",
-    "usd": 3765
+    "usd": 3765,
+    "avgPrice": 0.33
    },
    {
     "wallet": "0x0fc50c15e6ffd6f4061ca51d8a70cb0563d8e3b9",
     "side": "Cupid Esports",
-    "usd": 3764
+    "usd": 3764,
+    "avgPrice": 0.6575
    },
    {
     "wallet": "0x9b963178d3b8765cfc5af94c00550d6ec6c54389",
     "side": "Cupid Esports",
-    "usd": 3225
+    "usd": 3225,
+    "avgPrice": 0.6699
    },
    {
     "wallet": "0x54b00cd9433bc60fd7fed197748f6707d5fadf70",
     "side": "Cupid Esports",
-    "usd": 2602
+    "usd": 2602,
+    "avgPrice": 0.6684
    },
    {
     "wallet": "0x6918ea182d963b1fb7888860b8a8b8bcfba5782b",
     "side": "Maryville University",
-    "usd": 2596
+    "usd": 2596,
+    "avgPrice": 0.4088
    },
    {
     "wallet": "0x760907c8840491c8c86fddb843d3f1d801786c4e",
     "side": "Maryville University",
-    "usd": 2485
+    "usd": 2485,
+    "avgPrice": 0.3428
    },
    {
     "wallet": "0xd202bf6d89dc6bab1b9f00ead175f75466348973",
@@ -679116,14 +679136,14 @@
     "usd": 1608
    },
    {
+    "wallet": "0x234c00dbfb982faccefdd88fafc26a0c81932eea",
+    "side": "Cupid Esports",
+    "usd": 1183
+   },
+   {
     "wallet": "0xba437745c058346319971651197bef40c3cbc6c0",
     "side": "Maryville University",
     "usd": 1171
-   },
-   {
-    "wallet": "0x234c00dbfb982faccefdd88fafc26a0c81932eea",
-    "side": "Cupid Esports",
-    "usd": 1146
    },
    {
     "wallet": "0xf5a3504ad3a8b079974620b3aa4fcca3f7579e12",
@@ -679131,15 +679151,21 @@
     "usd": 1076
    },
    {
+    "wallet": "0xda3a9b7afff7b44ad4fd75308723194e0a11381f",
+    "side": "Maryville University",
+    "usd": 995,
+    "avgPrice": 0.3499
+   },
+   {
     "wallet": "0x7e5972bfc25819775ee5a9d4f191919375487b8b",
     "side": "Cupid Esports",
-    "usd": 968
+    "usd": 968,
+    "avgPrice": 0.6333
    },
    {
     "wallet": "0x214039968998abdcdbd998d15d699296f3570e12",
     "side": "Cupid Esports",
-    "usd": 896,
-    "avgPrice": 0.6601
+    "usd": 896
    },
    {
     "wallet": "0x6e32312760e4604d45a8ae69cede9ef9a0b8ab65",
@@ -679162,10 +679188,9 @@
     "usd": 645
    },
    {
-    "wallet": "0xda3a9b7afff7b44ad4fd75308723194e0a11381f",
-    "side": "Maryville University",
-    "usd": 626,
-    "avgPrice": 0.3499
+    "wallet": "0x52d8da46bcc56e3d9f9b2099ad16904fb0b599ae",
+    "side": "Cupid Esports",
+    "usd": 523
    },
    {
     "wallet": "0x1b4ed4def39be7ff22357580e1ee053727e03a74",
@@ -679261,16 +679286,12 @@
    {
     "wallet": "0xfd4fb07f091e6a6d212f6e4876bd2ebc91bca4d3",
     "side": "Cupid Esports",
-    "usd": 96
-   },
-   {
-    "wallet": "0x336a19edb925a959bbd7e301a26fc43e12241915",
-    "side": "Cupid Esports",
-    "usd": 61
+    "usd": 96,
+    "avgPrice": 0.6499
    }
   ],
-  "hoursToKickoff": 2.26,
-  "capturedAt": "2026-10-08T18:44:26.289344+00:00",
+  "hoursToKickoff": 1.77,
+  "capturedAt": "2026-10-08T19:14:05.585003+00:00",
   "koTs": "2026-10-08T21:00:00+00:00",
   "cond": "0x392b215d7dfd09e5403d173847dd39daa13d0207f7d2e4f3098f723f2ee51a11",
   "frage": "LoL: Maryville University vs Cupid Esports (BO5) - LCS Promotion Playoffs",
@@ -679287,19 +679308,19 @@
    "bids": [
     [
      0.64,
-     2456
+     6233
     ],
     [
      0.63,
-     320
+     438
     ],
     [
      0.62,
-     2579
+     2544
     ],
     [
      0.61,
-     6704
+     10128
     ],
     [
      0.6,
@@ -679307,37 +679328,45 @@
     ],
     [
      0.59,
-     22
+     27
     ]
    ],
    "asks": [
     [
      0.65,
-     3808
+     3015
     ],
     [
      0.66,
-     839
+     637
     ],
     [
      0.67,
-     1550
+     1682
     ],
     [
      0.68,
-     2838
+     5718
     ],
     [
      0.69,
-     5192
+     997
     ],
     [
      0.7,
-     6000
+     6252
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x52d8da46bcc56e3d9f9b2099ad16904fb0b599ae",
+    "action": "BUY",
+    "side": "Cupid Esports",
+    "price": 0.65,
+    "usd": 527,
+    "ts": 1791486405
+   },
    {
     "wallet": "0xc754a408bae814a02f5ff998415e0aee24624b1d",
     "action": "BUY",
@@ -679393,21 +679422,13 @@
     "price": 0.65,
     "usd": 582,
     "ts": 1791477836
-   },
-   {
-    "wallet": "0xf6b6f36c8a681d20cbff0d401b5cc138ea6fc527",
-    "action": "BUY",
-    "side": "Maryville University",
-    "price": 0.3603,
-    "usd": 500,
-    "ts": 1791476937
    }
   ]
  },
  "cs2-gls1-lowcor1-2026-10-08": {
   "shares": {
-   "Galorys": 14146.823872214994,
-   "Low Cortisol": 7785.942881850002
+   "Galorys": 14797.041848039999,
+   "Low Cortisol": 8143.814791025
   },
   "prices": {
    "Galorys": 0.645,
@@ -679419,12 +679440,12 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 24247,
+  "totalUsd": 25257,
   "whales": [
    {
     "wallet": "0xb73e43e4d29e57fa90090b6ff3e9a671453bc66f",
     "side": "Low Cortisol",
-    "usd": 2821
+    "usd": 2929
    },
    {
     "wallet": "0xd6771bf957cab6a10fcb8e2c8c6db9713cf37579",
@@ -679447,6 +679468,11 @@
     "usd": 850
    },
    {
+    "wallet": "0x82d2e4dbb0a849ff8e2f5380719769145648beea",
+    "side": "Low Cortisol",
+    "usd": 824
+   },
+   {
     "wallet": "0x513587a2f36a8cb29333052a6a479091ef8a7217",
     "side": "Galorys",
     "usd": 797
@@ -679462,14 +679488,14 @@
     "usd": 741
    },
    {
-    "wallet": "0x82d2e4dbb0a849ff8e2f5380719769145648beea",
-    "side": "Low Cortisol",
-    "usd": 699
-   },
-   {
     "wallet": "0xb4c05ebc0d242534f587730c5fa4baae152192d8",
     "side": "Galorys",
     "usd": 651
+   },
+   {
+    "wallet": "0xb6a511ec8b6c13d4f62a693460d41b0ad65fa4b2",
+    "side": "Galorys",
+    "usd": 600
    },
    {
     "wallet": "0x17645df4cc3f674448364167699d623132da7acb",
@@ -679477,24 +679503,16 @@
     "usd": 565
    },
    {
-    "wallet": "0x41d5c108a55aaa1d2c3d61e26b71ef1c35c5042b",
-    "side": "Low Cortisol",
-    "usd": 528
-   },
-   {
-    "wallet": "0xb6a511ec8b6c13d4f62a693460d41b0ad65fa4b2",
-    "side": "Galorys",
-    "usd": 402
-   },
-   {
     "wallet": "0x5d40576be2e9c61d283f4fd80d7a5ccf2331ba95",
     "side": "Galorys",
-    "usd": 383
+    "usd": 422,
+    "avgPrice": 0.6794
    },
    {
     "wallet": "0x7e5972bfc25819775ee5a9d4f191919375487b8b",
     "side": "Galorys",
-    "usd": 311
+    "usd": 311,
+    "avgPrice": 0.7327
    },
    {
     "wallet": "0xfbf3eed601e4950b8676ae6db4c579b854e470e3",
@@ -679509,8 +679527,7 @@
    {
     "wallet": "0xda770326bd091d26f816917aa83a6baff668683f",
     "side": "Galorys",
-    "usd": 157,
-    "avgPrice": 0.6548
+    "usd": 157
    },
    {
     "wallet": "0x336a19edb925a959bbd7e301a26fc43e12241915",
@@ -679543,6 +679560,16 @@
     "usd": 124
    },
    {
+    "wallet": "0xfd144099a983b0cfdb88d0b89e0ca049fae22267",
+    "side": "Low Cortisol",
+    "usd": 122
+   },
+   {
+    "wallet": "0xe90fb148758d3972720beb28bc37a7bb6a56a908",
+    "side": "Galorys",
+    "usd": 109
+   },
+   {
     "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
     "side": "Low Cortisol",
     "usd": 106
@@ -679563,6 +679590,11 @@
     "usd": 81
    },
    {
+    "wallet": "0x4f29e103339919c4baaea2a60195cf1c8bb27a7e",
+    "side": "Galorys",
+    "usd": 75
+   },
+   {
     "wallet": "0xce0f9e043db5dffacb8782b799baf23bbedc7fc7",
     "side": "Galorys",
     "usd": 70
@@ -679575,7 +679607,8 @@
    {
     "wallet": "0x3e9f9ef866c4f864a1e8e4cc386b948e7eb63988",
     "side": "Galorys",
-    "usd": 67
+    "usd": 67,
+    "avgPrice": 0.6694
    },
    {
     "wallet": "0x8f41129e43ebfbfe6075d0804f3b2bb763b3260e",
@@ -679587,6 +679620,12 @@
     "wallet": "0x05c5a55c0eed25f98a846f9b5a1875a99d358181",
     "side": "Galorys",
     "usd": 49
+   },
+   {
+    "wallet": "0x67af214764bd6eda61fadb25cdcbea6d13d761ee",
+    "side": "Galorys",
+    "usd": 48,
+    "avgPrice": 0.6433
    },
    {
     "wallet": "0xc8d9c0df291315f2184ecdab4ed8247618acdf36",
@@ -679607,25 +679646,10 @@
     "wallet": "0x7f98c607fe70939ecdb4d18b5b18de0f6c76698b",
     "side": "Galorys",
     "usd": 41
-   },
-   {
-    "wallet": "0x12631ebbc4e2f14a8c62a6a704631c9f6730f241",
-    "side": "Galorys",
-    "usd": 40
-   },
-   {
-    "wallet": "0xbfd770b7ff07fb2ece41b0e7c593db65a84cf0bf",
-    "side": "Galorys",
-    "usd": 33
-   },
-   {
-    "wallet": "0x94d22bf045f9a1d1cb37a40a4a8c86fd8917cfbd",
-    "side": "Low Cortisol",
-    "usd": 32
    }
   ],
-  "hoursToKickoff": 2.26,
-  "capturedAt": "2026-10-08T18:44:26.289344+00:00",
+  "hoursToKickoff": 1.77,
+  "capturedAt": "2026-10-08T19:14:05.585003+00:00",
   "koTs": "2026-10-08T21:00:00+00:00",
   "cond": "0xe747888f2f96aa8e78cb49dec19fc95b29e4b6a24244300d4c4b24b3d4701d28",
   "frage": "Counter-Strike: Galorys vs Low Cortisol (BO3) - ESL Challenger League South America Cup #3 Playoffs",
@@ -679635,44 +679659,48 @@
   },
   "book": {
    "side": "Galorys",
-   "bid": 0.64,
-   "ask": 0.65,
+   "bid": 0.63,
+   "ask": 0.64,
    "spreadC": 1.0,
-   "spreadPct": 1.54,
+   "spreadPct": 1.56,
    "bids": [
     [
-     0.64,
-     59
-    ],
-    [
      0.63,
-     44
+     50
     ],
     [
-     0.59,
+     0.62,
      10
     ],
     [
-     0.58,
-     63
+     0.59,
+     50
     ],
     [
-     0.57,
-     30
+     0.58,
+     41
     ],
     [
      0.56,
-     24
+     54
+    ],
+    [
+     0.55,
+     10
     ]
    ],
    "asks": [
     [
+     0.64,
+     4
+    ],
+    [
      0.65,
-     360
+     413
     ],
     [
      0.66,
-     761
+     656
     ],
     [
      0.67,
@@ -679680,15 +679708,11 @@
     ],
     [
      0.68,
-     1200
+     800
     ],
     [
      0.69,
      800
-    ],
-    [
-     0.7,
-     3103
     ]
    ]
   },
@@ -679724,14 +679748,6 @@
     "price": 0.6899,
     "usd": 537,
     "ts": 1791480770
-   },
-   {
-    "wallet": "0xb31d4a4c949e223916fe367f10f9e3d9c94b6f38",
-    "action": "BUY",
-    "side": "Galorys",
-    "price": 0.6658,
-    "usd": 487,
-    "ts": 1791478884
    }
   ]
  },
