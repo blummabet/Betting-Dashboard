@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-08T13:45:16.375011+00:00",
+ "generatedAt": "2026-10-08T14:12:42.242757+00:00",
  "heute": "2026-10-08",
  "messungen": [
   {
@@ -70,11 +70,29 @@
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "nachtrag": "27.09.2026: Zwischenstand n=152 (Mindestzahl 40 erreicht). Treffer 66,5 %, ROI -4,5 % (UG -14,3 %), CLV -0,04 pp. Die Rueckschau (77,1 % / +19,9 %) haelt vorwaerts nicht. Heutige Public-Regel seit 03.09.: n=47, ROI +14,2 % (UG -10,0 %).",
-   "standN": 555,
+   "standN": 556,
    "zustand": "bereit",
-   "stand": "555 von 40 Beobachtungen · faellig in 22 Tag(en)",
+   "stand": "556 von 40 Beobachtungen · faellig in 22 Tag(en)",
    "fortschritt": 1.0,
    "tageBisFaellig": 22
+  },
+  {
+   "id": "poly-wallet-clv",
+   "titel": "Laesst sich belegtes Wallet-Koennen (CLV) mitnehmen, wenn wir nahe an ihrem Preis einsteigen?",
+   "frage": "Papier, $10 je Play: offene Vor-Anpfiff-Positionen von Wallets mit clvFenN >= 20 und CLV-Untergrenze > 0 (eingefroren beim Einstieg), frisch gesehen (<= 90 Min), Wallet-Einstieg bekannt, Sportart nicht gesperrt. Arm „nehmbar“: unser Preis hoechstens 1 Punkt ueber dem Wallet-Einstieg. Arm „zu spaet“: mehr als 1 Punkt, genauso abgerechnet (Gegenprobe). Urteil ueber die ROI-Untergrenze von „nehmbar“, nicht ueber den Punktschaetzer.",
+   "warum": "03.10.2026 (Lucas, Poly-Gesamtschau). Befund: 54 von 560 Wallets (>= 20 gewertete Positionen) schlagen den Schlusskurs belegt, per Zufall ~28 — schwaches, aber messbares Koennen. Gleichzeitig verliert das Top-20-Nachspiel-Depot (Auswahl nach P&L) n=500, ROI −8,8 % (UG −20,4 %), Ø verpasster Move nur 0,37 Punkte — es war also die Auswahl, nicht vor allem die Verspaetung. Dieses Buch trennt beides: Auswahl nach CLV-Untergrenze, Einstieg nur nahe am Wallet-Preis. Erwartung vorab: die meisten Top-CLV-Wallets kaufen Aussenseiter (Trefferquote 3-16 %), die Streuung ist hoch — n wird lange brauchen. Entscheidung vorab: liegt die ROI-Untergrenze von „nehmbar“ bei n >= 150 ueber null, wird ein echter Nachspiel-Push gebaut; liegt die OBERgrenze unter null, wird das Buch beendet. Zeigt „zu spaet“ dasselbe wie „nehmbar“, traegt nicht der Einstieg, sondern die Auswahl.",
+   "gestartet": "2026-10-03",
+   "faellig": "2026-12-15",
+   "quelle": "poly_wallet_clv_follow.json -> settled mit arm=nehmbar",
+   "messer": "wallet_clv",
+   "mindestN": 150,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "standN": 151,
+   "zustand": "bereit",
+   "stand": "151 von 150 Beobachtungen · faellig in 68 Tag(en)",
+   "fortschritt": 1.0,
+   "tageBisFaellig": 68
   },
   {
    "id": "betfair-ou35",
@@ -252,10 +270,10 @@
    "mindestN": 150,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 24,
+   "standN": 26,
    "zustand": "sammelt",
-   "stand": "24 von 150 Beobachtungen · faellig in 24 Tag(en)",
-   "fortschritt": 0.16,
+   "stand": "26 von 150 Beobachtungen · faellig in 24 Tag(en)",
+   "fortschritt": 0.17333333333333334,
    "tageBisFaellig": 24
   },
   {
@@ -324,10 +342,10 @@
    "mindestN": 20000,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 18948,
+   "standN": 18963,
    "zustand": "sammelt",
-   "stand": "18948 von 20000 Beobachtungen · faellig in 38 Tag(en)",
-   "fortschritt": 0.9474,
+   "stand": "18963 von 20000 Beobachtungen · faellig in 38 Tag(en)",
+   "fortschritt": 0.94815,
    "tageBisFaellig": 38
   },
   {
@@ -342,10 +360,10 @@
    "mindestN": 20000,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 18948,
+   "standN": 18963,
    "zustand": "sammelt",
-   "stand": "18948 von 20000 Beobachtungen · faellig in 38 Tag(en)",
-   "fortschritt": 0.9474,
+   "stand": "18963 von 20000 Beobachtungen · faellig in 38 Tag(en)",
+   "fortschritt": 0.94815,
    "tageBisFaellig": 38
   },
   {
@@ -383,24 +401,6 @@
    "stand": "5 von 150 Beobachtungen · faellig in 53 Tag(en)",
    "fortschritt": 0.03333333333333333,
    "tageBisFaellig": 53
-  },
-  {
-   "id": "poly-wallet-clv",
-   "titel": "Laesst sich belegtes Wallet-Koennen (CLV) mitnehmen, wenn wir nahe an ihrem Preis einsteigen?",
-   "frage": "Papier, $10 je Play: offene Vor-Anpfiff-Positionen von Wallets mit clvFenN >= 20 und CLV-Untergrenze > 0 (eingefroren beim Einstieg), frisch gesehen (<= 90 Min), Wallet-Einstieg bekannt, Sportart nicht gesperrt. Arm „nehmbar“: unser Preis hoechstens 1 Punkt ueber dem Wallet-Einstieg. Arm „zu spaet“: mehr als 1 Punkt, genauso abgerechnet (Gegenprobe). Urteil ueber die ROI-Untergrenze von „nehmbar“, nicht ueber den Punktschaetzer.",
-   "warum": "03.10.2026 (Lucas, Poly-Gesamtschau). Befund: 54 von 560 Wallets (>= 20 gewertete Positionen) schlagen den Schlusskurs belegt, per Zufall ~28 — schwaches, aber messbares Koennen. Gleichzeitig verliert das Top-20-Nachspiel-Depot (Auswahl nach P&L) n=500, ROI −8,8 % (UG −20,4 %), Ø verpasster Move nur 0,37 Punkte — es war also die Auswahl, nicht vor allem die Verspaetung. Dieses Buch trennt beides: Auswahl nach CLV-Untergrenze, Einstieg nur nahe am Wallet-Preis. Erwartung vorab: die meisten Top-CLV-Wallets kaufen Aussenseiter (Trefferquote 3-16 %), die Streuung ist hoch — n wird lange brauchen. Entscheidung vorab: liegt die ROI-Untergrenze von „nehmbar“ bei n >= 150 ueber null, wird ein echter Nachspiel-Push gebaut; liegt die OBERgrenze unter null, wird das Buch beendet. Zeigt „zu spaet“ dasselbe wie „nehmbar“, traegt nicht der Einstieg, sondern die Auswahl.",
-   "gestartet": "2026-10-03",
-   "faellig": "2026-12-15",
-   "quelle": "poly_wallet_clv_follow.json -> settled mit arm=nehmbar",
-   "messer": "wallet_clv",
-   "mindestN": 150,
-   "entscheidung": null,
-   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 148,
-   "zustand": "sammelt",
-   "stand": "148 von 150 Beobachtungen · faellig in 68 Tag(en)",
-   "fortschritt": 0.9866666666666667,
-   "tageBisFaellig": 68
   },
   {
    "id": "stake-kleine-liga",
