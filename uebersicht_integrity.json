@@ -100,7 +100,7 @@
       "label": "Money Map: die Poly-Seite gehoert zum Spiel",
       "severity": "error",
       "failures": [
-        "Man Utd v Tottenham (English Premier League): Poly-Seite heisst „Manchester United FC“ und gehoert zu keinem der beiden Teams — $83061 fremdes Geld in einer Konsens-Zeile"
+        "Man Utd v Tottenham (English Premier League): Poly-Seite heisst „Manchester United FC“ und gehoert zu keinem der beiden Teams — $83429 fremdes Geld in einer Konsens-Zeile"
       ],
       "nFail": 1,
       "ok": false,
@@ -134,7 +134,7 @@
       "label": "Stake-Spielklasse: Tabelle vollstaendig, Richtungen getrennt",
       "severity": "error",
       "failures": [
-        "2 Liga-Schluessel bezeichnen mehrere Turniere und tragen trotzdem eine Spielklasse (premier-league, segunda-division) — eine Zahl davon ist fuer die Haelfte der Spiele falsch"
+        "3 Liga-Schluessel bezeichnen mehrere Turniere und tragen trotzdem eine Spielklasse (premier-league, primera-division, segunda-division) — eine Zahl davon ist fuer die Haelfte der Spiele falsch"
       ],
       "nFail": 1,
       "ok": false,
@@ -144,7 +144,7 @@
       "label": "Poly-Deckung: Money-Scan gegen Liga-Fetcher",
       "severity": "warn",
       "failures": [
-        "Buch: in 70 von 500 Laeufen (14 %) war eine Deckungsluecke offen — alle wurden noch vor dem Anpfiff nachgeholt (Deckung hat Loecher)"
+        "Buch: in 99 von 500 Laeufen (20 %) war eine Deckungsluecke offen — alle wurden noch vor dem Anpfiff nachgeholt (Deckung hat Loecher)"
       ],
       "nFail": 1,
       "ok": false,
@@ -183,12 +183,10 @@
     {
       "label": "Fade-Unter: haelt die Kontrollgruppe?",
       "severity": "error",
-      "failures": [
-        "Match Odds H: der Fade gewinnt hier BELEGT (+4.7 %, UG +0.5 %, Geldseite +1.6 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
-      ],
-      "nFail": 1,
-      "ok": false,
-      "hinweis": "seit Vorregistrierung n=5373 (UG -5.7 %) · Rueckblick n=1065, nicht Teil des Urteils."
+      "failures": [],
+      "nFail": 0,
+      "ok": true,
+      "hinweis": "seit Vorregistrierung n=5404 (UG -5.8 %) · Rueckblick n=1023, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -210,9 +208,9 @@
       "label": "Takt: Cron gegen gemessene Laeufe",
       "severity": "warn",
       "failures": [
-        "capture-closing-liga.yml: Cron sagt alle 15 Min, gemessen alle 223 Min (closing-liga, im Zeitfenster gemessen) — die Schedule-Bilanz rechnet mit 52 Laeufen/Tag, geliefert werden eher 3. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit.",
+        "capture-closing-liga.yml: Cron sagt alle 15 Min, gemessen alle 203 Min (closing-liga, im Zeitfenster gemessen) — die Schedule-Bilanz rechnet mit 52 Laeufen/Tag, geliefert werden eher 4. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit.",
         "manage-liga-poly.yml: Cron sagt alle 30 Min, gemessen alle 99 Min (liga-poly, im Zeitfenster gemessen) — die Schedule-Bilanz rechnet mit 24 Laeufen/Tag, geliefert werden eher 7. Dieser Workflow hat ein 40-Minuten-Fenster zu treffen — bei einem gemessenen Abstand von 99 Min kann er es nicht sicher treffen. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit.",
-        "poly-live-scan.yml: Cron sagt alle 15 Min, gemessen alle 44 Min (poly-live-scan) — die Schedule-Bilanz rechnet mit 96 Laeufen/Tag, geliefert werden eher 32. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit."
+        "poly-live-scan.yml: Cron sagt alle 15 Min, gemessen alle 45 Min (poly-live-scan) — die Schedule-Bilanz rechnet mit 96 Laeufen/Tag, geliefert werden eher 32. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit."
       ],
       "nFail": 3,
       "ok": false,
@@ -237,9 +235,11 @@
     {
       "label": "Positionswert ist frisch",
       "severity": "warn",
-      "failures": [],
-      "nFail": 0,
-      "ok": true,
+      "failures": [
+        "liga_poly_balance.json: Positionswert $6.06 stammt aus einem Lauf vor 15 h — die Datei selbst ist 15 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
+      ],
+      "nFail": 1,
+      "ok": false,
       "hinweis": ""
     },
     {
@@ -256,7 +256,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "397 Zeilen · 388 abgerechnet · 2 offen"
+      "hinweis": "404 Zeilen · 396 abgerechnet · 1 offen"
     },
     {
       "label": "Artefakte sind lesbar",
@@ -310,7 +310,7 @@
       "label": "Serien-Buch zeigt beide Buecher",
       "severity": "warn",
       "failures": [
-        "die beiden Serien-Buecher sind 15.8 h auseinander (Liga 25.3 h, MLS 9.5 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+        "die beiden Serien-Buecher sind 9.5 h auseinander (Liga 13.3 h, MLS 22.8 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
       ],
       "nFail": 1,
       "ok": false,
@@ -318,5 +318,5 @@
     }
   ],
   "nFail": 8,
-  "generatedAt": "2026-10-08T00:06:32.109252+00:00"
+  "generatedAt": "2026-10-08T13:25:25.160235+00:00"
 }
