@@ -1,6 +1,6 @@
 {
-"generatedAt": "2026-10-08T04:47:34.228956+00:00",
-"count": 7,
+"generatedAt": "2026-10-08T05:02:29.635603+00:00",
+"count": 8,
 "covered": 7,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
@@ -64,8 +64,8 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 127366,
-"remaining": 4872634,
+"used": 127510,
+"remaining": 4872490,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
@@ -84,7 +84,7 @@
 "moneyName": "Barcelona",
 "moneySharePct": 98,
 "moneyOdd": 1.11,
-"moneyDir": "out",
+"moneyDir": "flat",
 "totVol": 208282,
 "pinnOdd": 1.07,
 "softOdd": 1.07,
@@ -108,7 +108,7 @@
 "soft": {
 "home": 0.8854,
 "draw": 0.0756,
-"away": 0.039,
+"away": 0.0389,
 "fav": "home",
 "n": 44
 },
@@ -116,7 +116,7 @@
 "pinnMove": {
 "movePP": 0.4,
 "stepPP": 0.0,
-"n": 24,
+"n": 25,
 "move": false,
 "laeuft": false
 },
@@ -135,9 +135,9 @@
 "moneySide": "home",
 "moneyName": "Arsenal",
 "moneySharePct": 79,
-"moneyOdd": 1.4,
-"moneyDir": "flat",
-"totVol": 70158,
+"moneyOdd": 1.41,
+"moneyDir": "out",
+"totVol": 70291,
 "pinnOdd": 1.36,
 "softOdd": 1.36,
 "softN": 49,
@@ -158,8 +158,8 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.6918,
-"draw": 0.1906,
+"home": 0.692,
+"draw": 0.1904,
 "away": 0.1176,
 "fav": "home",
 "n": 49
@@ -210,9 +210,9 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.3201,
-"draw": 0.2726,
-"away": 0.4073,
+"home": 0.3199,
+"draw": 0.273,
+"away": 0.4072,
 "fav": "away",
 "n": 49
 },
@@ -272,7 +272,7 @@
 "pinnMove": {
 "movePP": -0.0,
 "stepPP": -0.0,
-"n": 24,
+"n": 25,
 "move": false,
 "laeuft": false
 },
@@ -314,9 +314,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.5584,
+"home": 0.5585,
 "draw": 0.2292,
-"away": 0.2124,
+"away": 0.2122,
 "fav": "home",
 "n": 49
 },
@@ -346,7 +346,7 @@
 "moneyOdd": 1.38,
 "moneyDir": "flat",
 "totVol": 30457,
-"pinnOdd": 1.37,
+"pinnOdd": 1.36,
 "softOdd": 1.33,
 "softN": 48,
 "poly": {
@@ -360,25 +360,25 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.7033,
-"draw": 0.1687,
-"away": 0.128,
+"home": 0.7062,
+"draw": 0.1667,
+"away": 0.127,
 "fav": "home"
 },
 "soft": {
-"home": 0.7051,
-"draw": 0.1724,
-"away": 0.1225,
+"home": 0.7055,
+"draw": 0.1723,
+"away": 0.1222,
 "fav": "home",
 "n": 48
 },
-"pinnMovePP": 0.0,
+"pinnMovePP": 0.3,
 "pinnMove": {
-"movePP": 0.0,
-"stepPP": 0.0,
+"movePP": 0.3,
+"stepPP": 0.3,
 "n": 25,
 "move": false,
-"laeuft": false
+"laeuft": true
 },
 "verdict": "konsens",
 "agree": true,
@@ -428,21 +428,51 @@
 "pinnMove": {
 "movePP": 0.4,
 "stepPP": 0.0,
-"n": 20,
+"n": 21,
 "move": false,
 "laeuft": false
 },
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
+},
+{
+"matchId": "36159259",
+"home": "CSD Sacachispas",
+"away": "Fraijanes FC",
+"league": "Guatemalan Primera Division de Ascenso",
+"country": "GT",
+"kickoff": "2026-10-09T16:00:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "CSD Sacachispas",
+"moneySharePct": 93,
+"moneyOdd": 1.13,
+"moneyDir": "flat",
+"totVol": 2263,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": null,
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "CSD Sacachispas v Fraijanes FC",
+"grund": "kein_kandidat"
+}
 }
 ],
 "ankerN": 49,
-"ankerNOffen": 149,
+"ankerNOffen": 150,
 "ankerMit": 49,
 "ankerDiagnose": {
 "nach": {
-"kein_kandidat": 88,
+"kein_kandidat": 89,
 "zeit": 12
 },
 "beispiele": [
@@ -487,6 +517,16 @@
 "liga": "Jordanian Cup"
 },
 {
+"spiel": "Al Ain v Al-Ittihad Kalba",
+"kandidat": "Al-Hilal v Al-Ittihad",
+"key": "soccer_saudi_arabia_pro_league",
+"score": 1.17,
+"grund": "zeit",
+"abstandH": 52.8,
+"matchId": "36163208",
+"liga": "UAE League Cup"
+},
+{
 "spiel": "Buriram United U21 v Pattaya United U21",
 "kandidat": "Leeds United v Manchester United",
 "key": "soccer_epl",
@@ -514,16 +554,6 @@
 "grund": "zeit",
 "abstandH": 47.2,
 "matchId": "36163184",
-"liga": "UAE League Cup"
-},
-{
-"spiel": "Al Ain v Al-Ittihad Kalba",
-"kandidat": "Al-Hilal v Al-Ittihad",
-"key": "soccer_saudi_arabia_pro_league",
-"score": 1.17,
-"grund": "zeit",
-"abstandH": 52.8,
-"matchId": "36163208",
 "liga": "UAE League Cup"
 },
 {
