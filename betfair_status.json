@@ -22,9 +22,11 @@
       "id": "grosses_geld_bleibt_im_feed",
       "label": "Grosses Geld faellt nicht aus dem Feed",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "36159259: zuletzt 28.053 € und Anpfiff erst in 35.5 h — trotzdem nicht mehr im Feed"
+      ],
       "note": "Der Detail-Deckel darf nicht das teuerste Spiel schneiden — genau das ist am 08.09. passiert (alle vier CL-Spiele, Real Madrid mit 102.861 €)."
     },
     {
@@ -79,7 +81,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 126973 verbraucht, 4873027 uebrig"
+      "note": "Kontingent: 127117 verbraucht, 4872883 uebrig"
     },
     {
       "id": "anker_namensabgleich",
@@ -101,7 +103,7 @@
         "Al-Ansar v Al Hikma (Lebanese Premier League): zeit — bester Kandidat „Al-Kholood v Al-Qadsiah“ · 24.8h Anpfiff-Abstand",
         "Shabab Al Ahli Dubai FC U21 v Al-Sharjah U21 (UAE U21): zeit — bester Kandidat „Al-Fateh v Al-Ahli“ · 25.8h Anpfiff-Abstand"
       ],
-      "note": "ohne Anker: kein_kandidat 89 · zeit 12. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 88 · zeit 12. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -185,6 +187,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 1,
-  "generatedAt": "2026-10-08T04:17:42.733227+00:00"
+  "nFail": 2,
+  "generatedAt": "2026-10-08T04:32:39.596680+00:00"
 }
