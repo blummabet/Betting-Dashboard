@@ -343,6 +343,19 @@
    "mindestN": 100,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist"
+  },
+  {
+   "id": "poly-public-klasse",
+   "titel": "Trägt die aussortierte Whale-Gruppe (Rang 11–60, unter 50 K$) doch?",
+   "frage": "ROI (Folge-Einsatz je Karte) der Trades-Karten mit publicKlasseGesperrt=true: bewiesene Wallet, alle übrigen Public-Filter bestanden, aber weder Top-10 der Sharp-Rangliste noch Position ab 50.000 $. Urteil über die Untergrenze (z=1,645).",
+   "warum": "09.10.2026 (Lucas, Public-Karte 1WIN v Aurora Gaming, 31,7 K$, Rang 25: „sieht nicht so nach Riesen-Einsatz aus“). Public-Buch, 55 abgerechnet: Top-10 oder ab 50 K$ n=44, ROI +34,0 %; Rang 11–60 und unter 50 K$ n=11, ROI −51,3 %. Die Grenze ist NACH dem Blick auf die Zahlen gezogen — deshalb geht die Gruppe nicht verloren, sondern wird im Trades-Kanal weiter gemessen. Entscheidung vorab: liegt die Untergrenze bei n >= 30 über null, kommt die Gruppe zurück in den Public-Kanal; sonst bleibt sie draußen.",
+   "gestartet": "2026-10-09",
+   "faellig": "2026-12-31",
+   "quelle": "poly_whale_trades_ledger.json -> Zeilen mit publicKlasseGesperrt=true, status=settled",
+   "messer": "poly_public_klasse",
+   "mindestN": 30,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist"
   }
  ]
 }

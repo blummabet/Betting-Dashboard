@@ -140,6 +140,17 @@ PUB_TOP_N             = int(os.environ.get("WHALE_PUB_TOP_N")            or 10) 
 # unten in der Rangliste eine belegte Wallet noch posten darf. 47 von 100 Wallets haben heute
 # eine Untergrenze ueber null; die schlechteste davon steht auf Rang 49.
 PUB_RANG_NOTBREMSE    = int(os.environ.get("WHALE_PUB_RANG_NOTBREMSE") or 60)
+# 🔴 09.10.2026 (Lucas, zur Karte „1WIN v Aurora Gaming · $31.7K · 17 % des Marktvolumens":
+# „sieht nicht so nach Riesen-Einsatz aus"). Die Wallet war bewiesen (163/288) und stand auf Rang
+# 25 — unter der Notbremse 60, ueber der Schwelle $25K. Das Public-Buch (55 abgerechnet) teilt
+# sich an genau dieser Stelle:
+#     Top-10 ODER Position >= $50K   n=44  Treffer 31  ROI +34,0 %
+#     Rang 11-60 UND unter $50K      n=11  Treffer  3  ROI -51,3 %
+# EHRLICH: die Grenze ist NACH dem Blick auf die Zahlen gezogen, n=11 ist wenig. Deshalb geht die
+# Gruppe nicht verloren: sie laeuft weiter im Trades-Kanal und wird dort als
+# `publicKlasseGesperrt` markiert (Register `poly-public-klasse`). Traegt sie dort bei n>=30
+# (Untergrenze > 0), kommt sie zurueck in den Public-Kanal.
+PUB_STARK_USD         = float(os.environ.get("WHALE_PUB_STARK_USD") or 50000)
 
 
 # 03.08.2026 (Lucas: „50% ist Münzwurf, kein Beweis"): „bewiesen" heißt jetzt STATISTISCH über
@@ -1685,6 +1696,22 @@ def _pub_einstieg(pos: dict):
     return ("Einstieg %s" % q) if q else None
 
 
+def _pub_klasse_ok(scores, pos, top=None, stark_usd=None) -> bool:
+    """Public nur fuer eine Top-10-Wallet ODER eine Position ab $50K (09.10.2026). REIN.
+
+    Kein Rang heisst „keine Auskunft" — dann entscheidet allein die Groesse. Eine unbekannte
+    Groesse ist kein grosses Geld."""
+    top = PUB_TOP_N if top is None else top
+    stark_usd = PUB_STARK_USD if stark_usd is None else stark_usd
+    rang = _sharp_rank_map(scores).get(str((pos or {}).get("wallet") or "").lower())
+    if rang is not None and rang <= top:
+        return True
+    try:
+        return float((pos or {}).get("usd") or 0) >= stark_usd
+    except (TypeError, ValueError):
+        return False
+
+
 def _pub_rang_zeile(scores, wallet, top=PUB_TOP_N):
     """„🏅 Rang #9 Sharp Bettor hat gewettet" — kurz, ohne Rangliste-Jargon."""
     if not wallet:
@@ -2450,8 +2477,11 @@ def _log_trades_push(pkey, pos, scores, restock, ts, broad=None) -> None:
         print("Trades-Ledger-Schreibfehler:", e)
 
 
-def _markiere_public(pkeys) -> None:
+def _markiere_public(pkeys, feld="public") -> None:
     """Traegt an den Trades-Zeilen nach, dass dieselbe Karte auch public ging.
+
+    09.10.2026: `feld` traegt auch `publicKlasseGesperrt` — die Karten, die nur an der
+    Klassen-Schwelle (Top-10 oder $50K) scheiterten. So bleibt die aussortierte Gruppe messbar.
 
     Ohne diese Markierung waeren die beiden Buecher nicht trennbar: die Public-Pushs sind eine
     Teilmenge der Trades-Karten, und wer sie mitrechnet, vergleicht eine Gruppe mit sich selbst.
@@ -2464,8 +2494,8 @@ def _markiere_public(pkeys) -> None:
         return
     n = 0
     for e in led:
-        if isinstance(e, dict) and e.get("k") in pk and e.get("public") is not True:
-            e["public"] = True
+        if isinstance(e, dict) and e.get("k") in pk and e.get(feld) is not True:
+            e[feld] = True
             n += 1
     if n:
         try:
@@ -3203,6 +3233,14 @@ def main():
     if _pre_conf != len(pub_cand):
         print(f"  \u2694\ufe0f  {_pre_conf - len(pub_cand)} Post(s) unterdrueckt — eine andere "
               f"glaubwuerdige Wallet haelt die Gegenseite (Urteil: {_urteil_gs})")
+    # 09.10.2026: die Klassen-Schwelle steht ZULETZT — was hier faellt, haette sonst gesendet.
+    # Genau diese Gruppe wird im Trades-Buch markiert und dort weiter gemessen.
+    _klasse_raus = [c for c in pub_cand if not _pub_klasse_ok(scores, c[1])]
+    pub_cand = [c for c in pub_cand if _pub_klasse_ok(scores, c[1])]
+    if _klasse_raus:
+        print(f"  \U0001f4cf {len(_klasse_raus)} Post(s) nur Trades — weder Top-{PUB_TOP_N} "
+              f"noch ab {_usd(PUB_STARK_USD)} (Register poly-public-klasse)")
+        _markiere_public([k for k, _p, _r in _klasse_raus], feld="publicKlasseGesperrt")
     pub_sent = 0
     for pkey, pos, restock in pub_cand[:MAX_ALERTS]:
         if _tg_public(build_public_card(pos, scores, restock, broad)):

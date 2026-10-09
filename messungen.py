@@ -289,6 +289,21 @@ def zaehler_stake_tore(base_dir):
                and e.get("status") == "abgerechnet")
 
 
+def zaehler_poly_public_klasse(base_dir):
+    """Abgerechnete Trades-Karten, die NUR an der Public-Klassen-Schwelle scheiterten
+    (poly_whale_trades_ledger.json, `publicKlasseGesperrt: true`, status=settled).
+
+    09.10.2026 (Lucas, Aurora-Karte $31.7K, Rang 25): public nur noch Top-10 oder ab $50K.
+    """
+    d = _laden(os.path.join(base_dir, "poly_whale_trades_ledger.json"))
+    if d is None:
+        return 0
+    if not isinstance(d, list):
+        return None
+    return sum(1 for e in d if isinstance(e, dict) and e.get("publicKlasseGesperrt") is True
+               and e.get("status") == "settled")
+
+
 def zaehler_serien_wetten(base_dir):
     """Abgerechnete Serien-Wetten (liga_ + mls_serien_wetten_buch.json, status=abgerechnet).
 
@@ -396,6 +411,7 @@ ZAEHLER = {
     "autobet_oktober": zaehler_autobet_oktober,
     "serien_wetten": zaehler_serien_wetten,
     "stake_klein": zaehler_stake_klein,
+    "poly_public_klasse": zaehler_poly_public_klasse,
     "stake_tore": zaehler_stake_tore,
     "sharp_z": zaehler_sharp_z,
     "bf_leadshare": zaehler_bf_leadshare,

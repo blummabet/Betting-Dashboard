@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-09T06:05:22.172637+00:00",
+ "generatedAt": "2026-10-09T06:20:32.451486+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -108,7 +108,7 @@
     "nieAnteil": 0.063,
     "schaetzbar": false
    },
-   "alterTage": 0.1,
+   "alterTage": 0.2,
    "art": "vorangemeldet",
    "angemeldet": "2026-09-07T08:15:48.444033+00:00",
    "zielN": 120,
@@ -613,10 +613,10 @@
    "zerlegung": "nach Conviction",
    "art": "conviction",
    "gruppen": 6,
-   "basis": "1178 von 1654 abgerechneten Plays · nur Engine 2026-09-01 · ohne Cricket, Kampfsport, US-Sport",
-   "n": 1172,
-   "pl": 6.83,
-   "roi": 0.0058,
+   "basis": "1179 von 1656 abgerechneten Plays · nur Engine 2026-09-01 · ohne Cricket, Kampfsport, US-Sport",
+   "n": 1173,
+   "pl": 5.83,
+   "roi": 0.005,
    "clv": -0.203,
    "belegte": 1
   },
@@ -4249,6 +4249,22 @@
    ]
   },
   {
+   "wallet": "0x0be34ffafafa7f3a2998b15b05e04d36cb2835fe",
+   "kurz": "0x0be3…35fe",
+   "n": 40,
+   "wins": 38,
+   "hit": 0.95,
+   "hitLb": 0.8597,
+   "clv": -0.181,
+   "usd": 10916,
+   "pnl": -2813.01,
+   "grad": 1.0,
+   "sportarten": [
+    "E-Sport",
+    "Tennis"
+   ]
+  },
+  {
    "wallet": "0xd68eba02e662023b16e4d134c1fcd8875c1e8048",
    "kurz": "0xd68e…8048",
    "n": 59,
@@ -4261,22 +4277,6 @@
    "grad": 1.0,
    "sportarten": [
     "Cricket",
-    "E-Sport",
-    "Tennis"
-   ]
-  },
-  {
-   "wallet": "0x0be34ffafafa7f3a2998b15b05e04d36cb2835fe",
-   "kurz": "0x0be3…35fe",
-   "n": 39,
-   "wins": 37,
-   "hit": 0.9487,
-   "hitLb": 0.8563,
-   "clv": -0.16,
-   "usd": 10612,
-   "pnl": -2813.01,
-   "grad": 1.0,
-   "sportarten": [
     "E-Sport",
     "Tennis"
    ]
@@ -4490,7 +4490,7 @@
     "nieAnteil": 0.063,
     "schaetzbar": false
    },
-   "alterTage": 0.1,
+   "alterTage": 0.2,
    "art": "vorangemeldet",
    "angemeldet": "2026-09-07T08:15:48.444033+00:00",
    "zielN": 120,
@@ -5339,28 +5339,28 @@
   {
    "schublade": "Conviction 5",
    "strom": "poly",
-   "n": 536,
+   "n": 537,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0073,
-   "pl": 3.93,
-   "roiLb": -0.0461,
+   "roi": 0.0055,
+   "pl": 2.93,
+   "roiLb": -0.048,
    "clv": -0.255,
    "clvLb": -0.588,
    "clvUrteil": "gemessen, nicht belegt",
    "clvOg": 0.079,
    "fehltN": 0,
-   "noetigNRoi": 28489,
+   "noetigNRoi": 51512,
    "noetigNClv": null,
    "noetigGrund": null,
    "entfernung": {
-    "median": 2087,
-    "lo": 324,
-    "hi": 154666,
-    "nieAnteil": 0.4,
+    "median": 2259,
+    "lo": 351,
+    "hi": 275956,
+    "nieAnteil": 0.422,
     "schaetzbar": false
    },
-   "alterTage": 0.1,
+   "alterTage": 0.0,
    "art": "conviction",
    "wert": 5,
    "nAlt": 110,
@@ -5517,7 +5517,7 @@
     "nieAnteil": 0.278,
     "schaetzbar": false
    },
-   "alterTage": 1.6,
+   "alterTage": 1.7,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py"
   },
@@ -5610,38 +5610,6 @@
    "naeherung": false
   },
   {
-   "schublade": "Mix money+sharp",
-   "strom": "poly",
-   "n": 448,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0181,
-   "pl": -8.1,
-   "roiLb": -0.0675,
-   "clv": -0.183,
-   "clvLb": -0.543,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.177,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "nicht_positiv",
-   "entfernung": {
-    "median": 6125,
-    "lo": 518,
-    "hi": 1386774,
-    "nieAnteil": 0.733,
-    "schaetzbar": false
-   },
-   "alterTage": 0.1,
-   "art": "mix",
-   "wert": "money+sharp",
-   "nAlt": 140,
-   "roiAlt": -0.035,
-   "clvAlt": 0.0,
-   "engineAlt": true
-  },
-  {
    "schublade": "UEFA Nations League · Match Odds",
    "strom": "betfair",
    "n": 79,
@@ -5662,6 +5630,38 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
+  },
+  {
+   "schublade": "Mix money+sharp",
+   "strom": "poly",
+   "n": 449,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.0203,
+   "pl": -9.1,
+   "roiLb": -0.0697,
+   "clv": -0.183,
+   "clvLb": -0.543,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.177,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "nicht_positiv",
+   "entfernung": {
+    "median": 6518,
+    "lo": 695,
+    "hi": 486040,
+    "nieAnteil": 0.755,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "mix",
+   "wert": "money+sharp",
+   "nAlt": 140,
+   "roiAlt": -0.035,
+   "clvAlt": 0.0,
+   "engineAlt": true
   },
   {
    "schublade": "Friendlies International · First Half Goals 0.5",
@@ -5748,7 +5748,7 @@
     "nieAnteil": 0.587,
     "schaetzbar": false
    },
-   "alterTage": 0.1,
+   "alterTage": 0.2,
    "art": "gate",
    "nAlt": 132,
    "roiAlt": 0.0298,
@@ -5874,7 +5874,7 @@
     "nieAnteil": 0.562,
     "schaetzbar": false
    },
-   "alterTage": 0.7,
+   "alterTage": 0.8,
    "art": "mix",
    "wert": "money+steam",
    "nAlt": 68,
@@ -12627,7 +12627,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 13.3,
+   "alterTage": 13.4,
    "art": "conviction",
    "wert": 2
   },

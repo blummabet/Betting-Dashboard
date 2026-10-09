@@ -1413,6 +1413,9 @@
   function _mdStakeWetten(stundenZurueck) {
     var d = _md.data.stake || {};
     var sperr = d.gesperrt || ['US-Sport', 'Kampfsport', 'Cricket'];   // Rueckfall = stake_highroller_fetch.GESPERRT
+    var ligaSperre = null;
+    try { ligaSperre = new RegExp(String(d.gesperrtLigenMuster || '\\b(atp|wta)\\b').replace(/^\(\?i\)/, ''), 'i'); }
+    catch (e) { ligaSperre = /\b(atp|wta)\b/i; }
     var ab = Date.now() - (stundenZurueck || 24) * 3600000;
     return (d.wetten || []).filter(function (w) {
       if (w.einsatzUsd == null) return false;
@@ -1421,7 +1424,12 @@
       if (w.quote != null && w.quote < MD_STAKE_MIN_QUOTE) return false;
       var k = _mdStakeKat(w);
       if (!k) return false;                 // unbekannt ist keine Erlaubnis
-      return sperr.indexOf(k) < 0;
+      if (sperr.indexOf(k) >= 0) return false;
+      // 08.10.2026 (Lucas, nach dem Übersicht-Check: „Ben Shelton - Daniel Altmaier · ATP
+      // Shanghai · $76.4K" ganz oben in „Stake · größtes Geld" — „ATP und WTA können wir da draus
+      // nehmen"). Die Sperre galt seit 04.10. nur in den Pushes. Das Muster kommt aus dem
+      // Artefakt (stake_highroller_fetch.GESPERRT_LIGEN_MUSTER), nicht aus einer Kopie hier.
+      return !(ligaSperre && ligaSperre.test(String(w.liga || '')));
     });
   }
 
