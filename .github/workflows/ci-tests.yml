@@ -6,8 +6,33 @@ name: ✅ CI — Tests (Backend + Frontend)
 on:
   push:
     branches: [main]
+    # 🔴 09.10.2026 (Lucas: „irgendwie failen auch oft die Tests in den Actions beim Merge").
+    # Hier stand kein Pfad-Filter. Jeder Daten-Commit der Pipeline ohne [skip ci] — Global-Scan,
+    # „Beleg der Betfair-Pushes", „Dedup-Stand …", alle 15–30 Min — startete die VOLLE Suite
+    # (gemessen 4.591 Tests, ~7–20 Min). Die Waechter „gegen den echten Bestand" liefen damit auf
+    # jedem neuen Datenstand, und wenn die Daten sich bewegten, wurde ein Commit rot, der keine
+    # Zeile Code enthielt. Fehlerklasse: ein Code-Test, der von Daten-Commits ausgeloest wird.
+    # Ab jetzt nur noch, wenn sich CODE aendert. Die Daten prueft die Guard-Batterie in den
+    # Pipelines (uebersicht_integrity, poly/betfair_status) — dafuer ist sie da.
+    paths:
+      - '**.py'
+      - '**.js'
+      - '**.mjs'
+      - '**.html'
+      - '**.css'
+      - '**.sh'
+      - '.github/workflows/**'
+      - 'tests/**'
+      - 'requirements.txt'
+      - 'package.json'
+      - 'package-lock.json'
   pull_request:
   workflow_dispatch:
+
+# Zwei Code-Pushes kurz hintereinander: nur der neuere zaehlt.
+concurrency:
+  group: ci-tests-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read

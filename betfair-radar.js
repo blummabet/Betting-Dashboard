@@ -1615,6 +1615,11 @@
       + '<div style="font-size:12.5px;color:' + C.ink + ';margin-top:6px;line-height:1.55">' + esc(r.text) + '</div>'
       + '<div style="font-size:11px;color:' + C.mut + ';margin-top:5px">Gilt für ' + esc((r.maerkte || []).join(' · ')) + ' · gerechnet nach ' + _fdZahl(r.kommissionPct, ' %') + ' Kommission auf Gewinne.</div>'
       + '</div>';
+    // 09.10.2026: das Urteil kommt vom Erzeuger (fade_unter.urteil_aus) — hier wird nur gezeigt.
+    if (f.urteil === 'widerlegt') {
+      kopf += '<div style="background:rgba(248,81,73,.10);border:1px solid rgba(248,81,73,.45);color:#f2a6a6;border-radius:12px;padding:10px 14px;margin-top:10px;font-size:12.5px;line-height:1.55">'
+        + '❌ <b>Widerlegt.</b> ' + esc(f.grund || '') + '. Die Zahlen unten sind damit keine Kante, sondern ein Rechenfehler der Konstruktion.</div>';
+    }
     var bil = '<div style="background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:14px;padding:12px 16px;margin-top:10px">'
       + '<div style="font-size:12px;color:' + C.mut + ';margin-bottom:2px">Stand</div>'
       + _fdMenge('seit Vorregistrierung', vr, 'Der einzige echte Beleg: diese Plays sind entstanden, NACHDEM die Regel feststand.', true)

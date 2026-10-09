@@ -142,7 +142,35 @@ def bilanz(zeilen=None) -> dict:
         "vorreg": _menge(nach),         # ab der Vorregistrierung — das ist der Beleg
         "mitGeld": _menge(mitgeld),     # nur wo die Gegenseite auch Volumen trug
         "kontrolle": _kontrolle(zeilen),
-    }
+    } | urteil_aus(_kontrolle(zeilen))
+
+
+def urteil_aus(kontrolle) -> dict:
+    """{urteil, grund} — das Urteil steht im ARTEFAKT, nicht im Test. REIN.
+
+    🔴 09.10.2026 (Lucas: „irgendwie failen auch oft die Tests in den Actions beim Merge").
+    `test_gegen_den_echten_bestand_verliert_der_fade_in_den_kontrollmaerkten` war seit dem 06.10.
+    bei JEDEM Push rot, in beiden Test-Workflows: Match Odds H, n=3.475, Fade ROI +7,5 %,
+    Untergrenze +1,5 % — der Fade gewinnt BELEGT in einem Markt, in dem er verlieren muss. Das ist
+    kein Code-Fehler, das ist der Befund, gegen den der Test gebaut war: die Rechnung misst sich
+    selbst. Ein Test, der eine MARKTLAGE behauptet, wird rot, sobald der Markt sich bewegt — und
+    macht damit jeden unbeteiligten Push rot.
+    Fehlerklasse: ein Urteil ueber Daten, das im Test statt beim Erzeuger steht.
+    Jetzt: der Erzeuger schreibt „widerlegt", sobald eine Kontrolle belegt gewinnt; der Test prueft
+    nur noch, dass er das tut. Die Batterie (check_fade_kontrolle) meldet es weiter.
+    """
+    schuldig = [k for k in (kontrolle or [])
+                if isinstance(k.get("roiUg"), (int, float)) and k["roiUg"] > 0]
+    if schuldig:
+        k = schuldig[0]
+        return {"urteil": "widerlegt",
+                "grund": "%s %s: der Fade gewinnt hier BELEGT (ROI %+.1f %%, UG %+.1f %%) — die "
+                         "Rechnung erzeugt eine Kante aus sich selbst" % (
+                             k.get("markt"), k.get("seite"), 100 * (k.get("roi") or 0),
+                             100 * k["roiUg"])}
+    if not kontrolle:
+        return {"urteil": "ohne Kontrolle", "grund": "keine Kontrollmaerkte mit genug Faellen"}
+    return {"urteil": "beobachten", "grund": "alle Kontrollen verlieren oder sind offen"}
 
 
 def _kontrolle(zeilen) -> list:

@@ -7,40 +7,19 @@ name: 🧪 Tests
 on:
   push:
     branches: [main]
-    paths-ignore:
-      # Reine Daten/State-Commits müssen die Tests nicht triggern —
-      # die werden vom Pipeline-Bot in hoher Frequenz committet.
-      - 'wm2026-data.json'
-      - 'wm2026-odds-history.json'
-      - 'wm2026-poly-history.json'
-      - 'wm_poly_prices.json'
-      - 'wm_results.json'
-      - 'wm_poly_positions.json'
-      - 'wm_auto_bets_placed.json'
-      - 'wm_poly_balance.json'
-      - 'position_health.json'
-      - 'position_health_alerts.json'
-      - 'pick_confidence_stats.json'
-      - 'picks_snapshot.json'
-      - 'pick_changes_log.json'
-      - 'pick_validation_report.json'
-      - 'pick_changes_digest_state.json'
-      - 'telegram-log.json'
-      - 'wm_sharp_dedup.json'
-      - 'wm_sharp_moves_log.json'
-      - 'wm_edge_alert_dedup.json'
-      - 'steam_lag_log.json'
-      - 'steam_lag_sell_dedup.json'
-      - 'wm_preseason_sent.json'
-      - 'wm_live_story_state.json'
-      - 'wm_story_proposals.json'
-      - 'wm_live_story_outputs/**'
-      - 'track_record_state.json'
-      - 'tiktok_sent.json'
-      - 'bizarre_quote_sent.json'
-      - 'daily-tiktok/**'
-      - 'matches/data/**'
-      - 'matches/wm-index.json'
+    # 09.10.2026: dieselbe Positivliste wie ci-tests.yml — die alte paths-ignore-Liste kannte nur
+    # WM-Dateien und liess jeden Liga-/Poly-/Betfair-Daten-Commit durch.
+    paths:
+      - '**.py'
+      - '**.js'
+      - '**.mjs'
+      - '**.html'
+      - '**.css'
+      - '**.sh'
+      - '.github/workflows/**'
+      - 'tests/**'
+      - 'requirements.txt'
+      - 'package.json'
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -82,12 +61,18 @@ jobs:
           # PyYAML steht jetzt in requirements.txt, wo ein fehlgeschlagener Install auffällt.
           pip install -r requirements.txt
 
-      - name: ✅ Tests laufen lassen
+      # 🔴 09.10.2026 (Lucas: „irgendwie failen auch oft die Tests in den Actions beim Merge").
+      # Hier lief die GANZE Suite ein zweites Mal (`unittest discover`) — dieselbe, die
+      # ci-tests.yml mit pytest faehrt — unter einem Deckel von 5 Minuten. Gemessen am 09.10.:
+      # 4.591 Tests in 6:53 Min. Der Lauf wurde also bei jedem Push abgebrochen und war rot,
+      # egal ob ein Test fehlschlug. Fehlerklasse: ein Deckel, der mit dem Ding, das er deckelt,
+      # nicht mitgewachsen ist — und eine Pruefung, die doppelt laeuft und deshalb zweimal rot wird.
+      # Die volle Suite laeuft ab jetzt EINMAL: ci-tests.yml (pytest, Backend + Frontend). Hier
+      # bleiben die schnellen Eigenheiten dieses Workflows (Smoketests, Syntax, Trade-Konsistenz).
+      - name: ✅ Test-Architektur (volle Suite → ci-tests.yml)
         run: |
-          echo "─── Test-Architektur ───"
           ls tests/*.py | wc -l | xargs echo "Test-Files:"
-          echo ""
-          python3 -m unittest discover tests -v 2>&1 | tail -80
+          echo "Die Suite selbst laeuft in ci-tests.yml (pytest)."
 
       - name: 🛡️  Smoketest — Foundations importierbar
         run: |

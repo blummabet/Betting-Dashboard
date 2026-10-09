@@ -155,34 +155,28 @@ class TestKontrollgruppe(unittest.TestCase):
         b = F.bilanz([_z() for _ in range(5)])
         self.assertIn("kontrolle", b)
 
-    def test_gegen_den_echten_bestand_verliert_der_fade_in_den_kontrollmaerkten(self):
-        """Der wichtigste Test der Datei. Wo die Geldseite recht hat, MUSS derselbe Fade
-        verlieren — sonst misst die Konstruktion sich selbst und der Befund oben ist wertlos.
-        Stand 06.09.: Match Odds H -4,6 %, BTTS YES -6,9 %, 1.HZ 1,5 UNDER -7,5 %.
+    def test_gewinnt_eine_kontrolle_belegt_steht_widerlegt_im_artefakt(self):
+        """🔴 09.10.2026 — Nachfolger von `test_gegen_den_echten_bestand_verliert_der_fade_in_den_
+        kontrollmaerkten`. Der behauptete eine MARKTLAGE (der Fade verliert in den Kontrollen) und
+        war seit dem 06.10. bei jedem Push rot: Match Odds H, n=3.475, ROI +7,5 %, UG +1,5 %. Der
+        Befund war richtig — falsch war der Ort. Ein Test, der den Markt prueft, macht jeden
+        unbeteiligten Push rot (Lucas: „irgendwie failen auch oft die Tests beim Merge").
+        Jetzt fragt der Test den CODE: steht das Urteil beim Erzeuger, wenn eine Kontrolle belegt
+        gewinnt? Der echte Stand steht in fade_unter.json und in der Batterie."""
+        belegt = [{"markt": "Match Odds", "seite": "H", "n": 3475, "roi": 0.0748,
+                   "roiUg": 0.0152, "vorsprungPP": 1.5},
+                  {"markt": "Both teams to Score?", "seite": "YES", "n": 3628, "roi": -0.0116,
+                   "roiUg": -0.0482, "vorsprungPP": -0.5}]
+        u = F.urteil_aus(belegt)
+        self.assertEqual(u["urteil"], "widerlegt")
+        self.assertIn("Match Odds H", u["grund"])
+        self.assertEqual(F.urteil_aus(belegt[1:])["urteil"], "beobachten")
+        self.assertEqual(F.urteil_aus([])["urteil"], "ohne Kontrolle")
 
-        🔴 16.09.2026: der Test schlug an, und zwar auf einen PUNKTSCHAETZER — Match Odds H
-        stand bei ROI +0,47 % mit Untergrenze −4,18 % (n=2.329). Das ist kein Gewinn, das ist
-        Rauschen um die Null, und „ein Punktschaetzer entscheidet nichts" ist in diesem Repo
-        sonst ueberall die Regel (zuletzt am 07.09. am Betfair-Urteil „verliert", das an der
-        falschen Schranke hing). Ein Waechter, der an der Null umkippt, steht die halbe Zeit
-        auf Rot und sagt damit gar nichts mehr.
-
-        Er faellt jetzt, wenn die Kontrolle BELEGT gewinnt (Untergrenze ueber null). Die
-        Bewegung selbst bleibt trotzdem die Nachricht: dieselbe Kontrolle stand am 06.09. bei
-        −4,6 %, heute bei +0,5 %. Klettert sie weiter, steht der Befund oben zur Debatte —
-        aber dann mit einer Schranke, nicht mit einem Schnitt.
-        """
-        p = BASE / "betfair_track_results.json"
-        if not p.exists():
-            self.skipTest("kein Ledger")
-        import betfair_track_store as S
-        k = F._kontrolle(S.load(str(p)))
-        if not k:
-            self.skipTest("Kontrollmaerkte zu duenn")
-        schuldig = [x for x in k if x.get("roiUg") is not None and x["roiUg"] > 0]
-        self.assertEqual(schuldig, [],
-                         "Der Fade gewinnt BELEGT in einem Kontrollmarkt — dann erzeugt die "
-                         "Rechnung eine Kante aus sich selbst: " + str(schuldig))
+    def test_bilanz_traegt_das_urteil(self):
+        b = F.bilanz([_z() for _ in range(5)])
+        self.assertIn(b["urteil"], ("widerlegt", "beobachten", "ohne Kontrolle"))
+        self.assertIn("grund", b)
 
     def test_eine_kontrolle_ohne_schranke_entscheidet_nichts(self):
         """Der Gegenbeweis zum Test darueber: ein positiver Schnitt mit einer Untergrenze
