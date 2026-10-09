@@ -100,7 +100,7 @@
       "label": "Money Map: die Poly-Seite gehoert zum Spiel",
       "severity": "error",
       "failures": [
-        "Man Utd v Tottenham (English Premier League): Poly-Seite heisst „Manchester United FC“ und gehoert zu keinem der beiden Teams — $92015 fremdes Geld in einer Konsens-Zeile"
+        "Man Utd v Tottenham (English Premier League): Poly-Seite heisst „Manchester United FC“ und gehoert zu keinem der beiden Teams — $103787 fremdes Geld in einer Konsens-Zeile"
       ],
       "nFail": 1,
       "ok": false,
@@ -145,7 +145,7 @@
       "label": "Poly-Deckung: Money-Scan gegen Liga-Fetcher",
       "severity": "warn",
       "failures": [
-        "Buch: in 147 von 500 Laeufen (29 %) war eine Deckungsluecke offen — alle wurden noch vor dem Anpfiff nachgeholt (Deckung hat Loecher)"
+        "Buch: in 149 von 500 Laeufen (30 %) war eine Deckungsluecke offen — alle wurden noch vor dem Anpfiff nachgeholt (Deckung hat Loecher)"
       ],
       "nFail": 1,
       "ok": false,
@@ -185,11 +185,11 @@
       "label": "Fade-Unter: haelt die Kontrollgruppe?",
       "severity": "error",
       "failures": [
-        "Match Odds H: der Fade gewinnt hier BELEGT (+7.7 %, UG +1.7 %, Geldseite +1.6 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
+        "Match Odds H: der Fade gewinnt hier BELEGT (+7.8 %, UG +1.9 %, Geldseite +1.5 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
       ],
       "nFail": 1,
       "ok": false,
-      "hinweis": "seit Vorregistrierung n=5549 (UG -5.0 %) · Rueckblick n=862, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=5570 (UG -5.0 %) · Rueckblick n=841, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -223,9 +223,10 @@
       "label": "Der Deckel hat Luft",
       "severity": "warn",
       "failures": [
+        "poly-global-scan.yml: laengster Lauf 28.6 Min (Median 6.7) bei einem Deckel von 25 Min — 114 % ausgelastet. Ein Abbruch trifft den letzten Schritt, und das ist der, der die Belege sichert.",
         "poly-live-scan.yml: laengster Lauf 18.2 Min (Median 4.0) bei einem Deckel von 12 Min — 152 % ausgelastet. Ein Abbruch trifft den letzten Schritt, und das ist der, der die Belege sichert."
       ],
-      "nFail": 1,
+      "nFail": 2,
       "ok": false,
       "hinweis": ""
     },
@@ -241,7 +242,7 @@
       "label": "Positionswert ist frisch",
       "severity": "warn",
       "failures": [
-        "liga_poly_balance.json: Positionswert $1.96 stammt aus einem Lauf vor 15 h — die Datei selbst ist 15 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
+        "liga_poly_balance.json: Positionswert $1.96 stammt aus einem Lauf vor 16 h — die Datei selbst ist 16 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
       ],
       "nFail": 1,
       "ok": false,
@@ -261,7 +262,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "422 Zeilen · 414 abgerechnet · 1 offen"
+      "hinweis": "422 Zeilen · 415 abgerechnet · 0 offen"
     },
     {
       "label": "Artefakte sind lesbar",
@@ -315,7 +316,7 @@
       "label": "Serien-Buch zeigt beide Buecher",
       "severity": "warn",
       "failures": [
-        "die beiden Serien-Buecher sind 8.7 h auseinander (Liga 14.0 h, MLS 22.7 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+        "die beiden Serien-Buecher sind 8.7 h auseinander (Liga 15.3 h, MLS 24.1 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
       ],
       "nFail": 1,
       "ok": false,
@@ -323,5 +324,5 @@
     }
   ],
   "nFail": 10,
-  "generatedAt": "2026-10-09T13:24:52.094665+00:00"
+  "generatedAt": "2026-10-09T14:45:24.276480+00:00"
 }
