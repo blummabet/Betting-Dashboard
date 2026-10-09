@@ -29,8 +29,11 @@ const basis = (o) => ({ conv: 6, moneyPct: 0.70, ...o });
 
 test('E-Sport kommt ohne Wallet-Nachweis durch — ab der Preisschwelle', () => {
   assert.strictEqual(W._pwTermIsPublic(basis({ league: 'CS2 Blast', price: 0.62 })), true);
-  assert.strictEqual(W._pwTermIsPublic(basis({ league: 'CS2 Blast', price: 0.55 })), true,
-    'die Schwelle ist einschließend gemeint');
+  // 09.10.2026: das Preisband 0,60–0,90 gilt VOR jeder Ausnahme (poly-wallets.js
+  // _pwImPreisband). 0,55 war die E-Sport-Schwelle — sie liegt jetzt unter dem Band.
+  assert.strictEqual(W._pwTermIsPublic(basis({ league: 'CS2 Blast', price: 0.55 })), false,
+    'das Preisband schlägt die E-Sport-Ausnahme');
+  assert.strictEqual(W._pwTermIsPublic(basis({ league: 'CS2 Blast', price: 0.60 })), true);
 });
 
 test('Außenseiter unter der Schwelle bleiben draußen', () => {
@@ -90,9 +93,11 @@ test('was durch die E-Sport-Ausnahme GESENDET wird, ist keine Kontrollgruppe', (
     'dieses Play wird gesendet — es kann nicht die Kontrolle dafür sein');
   assert.strictEqual(W._pwTermIsPublic(basis({ league: 'CS2 Blast', price: 0.62 })), true,
     'und es wird wirklich gesendet (die Ausnahme selbst bleibt unangetastet)');
-  // Unterhalb der Preisschwelle greift die Ausnahme nicht — dort ist es weiter Kontrolle.
-  assert.strictEqual(W._pwTermIsPublicOhneWallet(basis({ league: 'CS2 Blast', price: 0.40 })), true,
-    'ohne Ausnahme und ohne Wallet: genau der Fall, den die Kontrolle messen soll');
+  // 09.10.2026: die Kontrolle („gleiches Tor, nur ohne Wallet") misst seit dem Preisband
+  // INNERHALB des Bands — ein Außenseiter @2,50 ist weder Kandidat noch Kontrolle.
+  assert.strictEqual(W._pwTermIsPublicOhneWallet(basis({ league: 'CS2 Blast', price: 0.40 })), false);
+  assert.strictEqual(W._pwTermIsPublicOhneWallet(basis({ league: 'EPL', price: 0.70 })), true,
+    'ohne Ausnahme und ohne Wallet, im Band: genau der Fall, den die Kontrolle messen soll');
   assert.strictEqual(W._pwTermIsPublicOhneWallet(basis({ league: 'EPL', price: 0.62, sharp: SHARP })), false);
 });
 

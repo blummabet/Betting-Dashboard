@@ -115,7 +115,19 @@ class TestToken(unittest.TestCase):
         self.assertIsNone(SAB.token_aus_feed(self.FEED, "m2", "Under"))
 
 
-class TestPreisUrteil(unittest.TestCase):
+class _AltesPreisband:
+    """09.10.2026: diese Klassen pruefen den SCHLUPF gegen den Push-Preis, nicht das Preisband.
+    Sie arbeiten mit Preisen um 0,40–0,55, die seit dem Band 0,60–0,90 (test_shortlist_preisband)
+    schon am Band scheitern wuerden. Das alte Band hier, damit jede Klasse ihre eine Sache prueft."""
+    def setUp(self):
+        self._band = (SAB.MIN_PREIS, SAB.MAX_PREIS)
+        SAB.MIN_PREIS, SAB.MAX_PREIS = 0.15, 0.92
+
+    def tearDown(self):
+        SAB.MIN_PREIS, SAB.MAX_PREIS = self._band
+
+
+class TestPreisUrteil(_AltesPreisband, unittest.TestCase):
 
     def test_gleicher_preis_ist_ok(self):
         ok, _ = SAB.preis_urteil(0.50, 0.50)
@@ -152,7 +164,7 @@ class TestPreisUrteil(unittest.TestCase):
         self.assertFalse(ok)
 
 
-class TestDerPreisDarfAuchNichtEINBRECHEN(unittest.TestCase):
+class TestDerPreisDarfAuchNichtEINBRECHEN(_AltesPreisband, unittest.TestCase):
     """🔴 14.09.2026, zweiter Anlauf (Lucas: „übrigens wurde dieses esport Match BIG doch
     gesetzt auf poly, hab ich grad gesehen").
 

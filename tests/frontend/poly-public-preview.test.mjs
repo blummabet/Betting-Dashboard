@@ -256,8 +256,18 @@ function ladePublicGate() {
   return g;
 }
 const PG = ladePublicGate();
-const play = (over = {}) => ({ conv: PG.minConv, moneyPct: 0.7,
+const play = (over = {}) => ({ conv: PG.minConv, moneyPct: 0.7, price: 0.72,
   sharp: { n: 20, hit: 0.6, grade: 1 }, ...over });
+
+// 🔴 09.10.2026 (Lucas: „Heute spielenswert … seit 2 Wochen fast nur Miese"): Preisband
+// 0,60–0,90. Ausserhalb: 443 Plays −6,8 % (beide Zeithälften negativ), Auto-Plays −37,9 %.
+test('Public-Gate: nur im Preisband 0,60–0,90 — unbekannter Preis ist keine Erlaubnis', () => {
+  assert.strictEqual(PG.isPublic(play({ price: 0.45 })), false, 'Außenseiter @2,22');
+  assert.strictEqual(PG.isPublic(play({ price: 0.93 })), false, '@1,08 frisst die Marge');
+  assert.strictEqual(PG.isPublic(play({ price: 0.60 })), true);
+  assert.strictEqual(PG.isPublic(play({ price: 0.899 })), true);
+  assert.strictEqual(PG.isPublic(play({ price: null })), false);
+});
 
 test('Public-Gate: bewiesene Wallet kommt durch', () => {
   assert.strictEqual(PG.isPublic(play()), true);

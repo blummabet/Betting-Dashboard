@@ -3975,9 +3975,24 @@ function _pwTermWalletOk(r){
   return !!(r && r.sharp && r.sharp.n>=8 && r.sharp.hit>=0.55
             && (r.sharp.grade==null || r.sharp.grade>=1));   // nur BEWIESEN geht oeffentlich
 }
+// 🔴 09.10.2026 (Lucas: „Heute spielenswert … am Anfang recht gut, seit 2 Wochen fast nur
+// Miese"). Gemessen an 1.172 abgerechneten Plays der Engine 2026-09-01 (ohne gesperrte
+// Sportarten), Zeitteilung am 19.09.:
+//     Preis 0,60–0,90 (@1,11–1,67)   n=729  ROI +5,4 % (UG +1,7)   1. Hälfte +10,0 · 2. +1,0
+//     ausserhalb                      n=443  ROI −6,8 %             1. Hälfte  −9,0 · 2. −4,5
+// Bei den echten Auto-Plays: 23 ausserhalb → −37,9 % (2 Treffer aus 12 Aussenseitern), das ist
+// der GESAMTE Verlust; die 151 im Band +0,8 %. Die Conviction selbst sortiert nicht (Stufe 5–7
+// alle ≈ ±0, Treffer = Preis). EHRLICH: die Grenzen sind aus den Daten gewählt — vorregistriert
+// als `poly-preisband`, das Schattenbuch der Aussortierten läuft im Track weiter.
+// Unbekannter Preis ist keine Erlaubnis.
+const PW_PUB_PREIS_MIN=0.60, PW_PUB_PREIS_MAX=0.90;
+function _pwImPreisband(r){
+  const p=r&&r.price;
+  return typeof p==='number' && p>=PW_PUB_PREIS_MIN && p<PW_PUB_PREIS_MAX;
+}
 // Alles am Public-Gate AUSSER der Wallet.
 function _pwTermPublicRest(r){
-  return !!(r && r.conv>=PW_PUBLIC_MIN_CONV && r.moneyPct>=0.60);
+  return !!(r && r.conv>=PW_PUBLIC_MIN_CONV && r.moneyPct>=0.60 && _pwImPreisband(r));
 }
 // 07.09.2026 (Lucas: „was meinst du bei E-Sport? was wuerdest du da aendern?").
 //

@@ -91,8 +91,13 @@ MAX_RUTSCH_LIVE_PP = float(os.environ.get("SHORTLIST_AUTO_MAX_RUTSCH_LIVE_PP") o
 # Und das Fenster: ein blockierter Play wurde vom NAECHSTEN Lauf aus dem Buch geholt — 31 Minuten
 # spaeter. Vor Anpfiff ist das harmlos, live sind 31 Minuten eine andere Lage.
 MAX_ALTER_LIVE_M   = float(os.environ.get("SHORTLIST_AUTO_MAX_ALTER_LIVE_M") or 10)
-MIN_PREIS     = float(os.environ.get("SHORTLIST_AUTO_MIN_PREIS") or 0.15)
-MAX_PREIS     = float(os.environ.get("SHORTLIST_AUTO_MAX_PREIS") or 0.92)
+# 🔴 09.10.2026 (Lucas: „wir verlieren da nur die ganze Zeit"). Hier stand 0,15–0,92. Gemessen
+# an den 174 abgerechneten Auto-Plays: 151 im Band 0,60–0,90 → +0,8 %, 23 ausserhalb → −37,9 %
+# (12 Aussenseiter unter 0,60: 2 Treffer). Ueber alle 1.172 Plays der Engine haelt der Schnitt in
+# beiden Zeithaelften. Dasselbe Band wie im Public-Gate (poly-wallets.js PW_PUB_PREIS_MIN/MAX),
+# hier gegen den ECHTEN Ask — der Preis, zu dem tatsaechlich gekauft wird.
+MIN_PREIS     = float(os.environ.get("SHORTLIST_AUTO_MIN_PREIS") or 0.60)
+MAX_PREIS     = float(os.environ.get("SHORTLIST_AUTO_MAX_PREIS") or 0.90)
 BALANCE_PUFFER = float(os.environ.get("SHORTLIST_AUTO_BALANCE_PUFFER") or 1.0)
 MAX_TG        = int(os.environ.get("SHORTLIST_AUTO_MAX_TG") or 6)
 HAENGT_WARN_ANTEIL = 0.25      # ab so viel haengender Exposure am Deckel: melden
