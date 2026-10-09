@@ -59,3 +59,18 @@ test('Karte zeigt Live-Statistik und die rückwirkende Serie aus API-Football', 
   assert.match(h, /1\. HZ: aufs Tor 5–1 · Schüsse 12–4 · Ballbesitz 64–36 % · xG 1\.10–0\.20/);
   assert.match(h, /Tor in 2\. HZ 7\/8/);
 });
+
+// 09.10.2026 (Lucas lässt Nationalteams aus): je Wette zwei Unterzeilen aus dem Erzeuger.
+test('Bilanz zeigt Vereine und Nationalteams getrennt — nur wenn es Fälle gibt', () => {
+  const b = JSON.parse(JSON.stringify(D));
+  b.bericht['tore/over15'] = { gruppe: 'tore', wette: 'over15', text: 'Over 1.5 (2+ Tore)', n: 45,
+    trefferPct: 62.2, erwartetPct: 51.1, roi: 20.5, ug: -3.5, og: 44.4, urteil: 'sammelt',
+    vereine: { n: 31, trefferPct: 64.5, erwartetPct: 51.3, roi: 25.9, ug: -2.1, og: 53.9 },
+    nationalteams: { n: 14, trefferPct: 57.1, erwartetPct: 50.5, roi: 8.5, ug: null, og: null } };
+  const h = load()._mmHzHtml(b);
+  assert.match(h, /↳ nur Vereine<\/td><td class="mm-cn">31<\/td>/);
+  assert.match(h, /↳ nur Nationalteams<\/td><td class="mm-cn">14<\/td>/);
+  assert.match(h, /\+25\.9 %/);
+  // over05 im Fixture hat keine Aufteilung (alter Stand) → keine leeren Unterzeilen
+  assert.strictEqual((h.match(/↳ nur Vereine/g) || []).length, 1);
+});

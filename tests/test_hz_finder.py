@@ -170,3 +170,31 @@ def test_main_merkt_geldstand_und_traegt_zufluss_ein(tmp_path, monkeypatch):
     assert e["zufluss"]["o15"]["over"] == 3000 and e["zufluss"]["o15"]["overAnteil"] == 1.0
     b = json.loads((tmp_path / H.AUSGABE_FILE).read_text())["bericht"]["tore/over05"]
     assert "mitOverZufluss" in b and "ohneOverZufluss" in b
+
+
+# ── 09.10.2026: Vereine / Nationalteams getrennt ────────────────────────────────────────────
+# Lucas: „hab die Spiele der Nationalteams ausgelassen, weil die nicht gut als Streak messbar
+# sind mmn — und hab da echt viele Winner mitgenommen". Die Tabelle mass das ganze Feature.
+
+def test_nationalteam_am_wettbewerb_erkannt():
+    import hz_finder as H
+    for lg in ("Friendlies International", "Friendlies International U20", "UEFA U21 Euro Qualifiers",
+               "CONCACAF Nations League B", "UEFA Nations League C", "Friendlies Women's U23 Internationals",
+               "World Cup Qualifiers - Europe", "Africa Cup of Nations"):
+        assert H.ist_nationalteam(lg), lg
+    for lg in ("EFL Trophy", "Argentinian Primera Division Reserves", "Elite Friendlies",
+               "Japanese Emperor Cup", "Chinese U20", None, ""):
+        assert not H.ist_nationalteam(lg), lg
+
+
+def test_bericht_teilt_jede_wette_auf():
+    import hz_finder as H
+    def e(league, win):
+        return {"status": "abgerechnet", "gruppen": ["tore"], "league": league,
+                "wetten": {"over15": {"win": win, "quote": 2.0, "r": 0.98 if win else -1.0}}}
+    eintraege = [e("Friendlies International", False), e("Friendlies International", False),
+                 e("EFL Trophy", True), e("Dutch Eerste Divisie", True), e("EFL Trophy", False)]
+    b = H.bericht(eintraege)["tore/over15"]
+    assert b["n"] == 5
+    assert b["vereine"]["n"] == 3 and b["vereine"]["trefferPct"] == 66.7
+    assert b["nationalteams"]["n"] == 2 and b["nationalteams"]["trefferPct"] == 0.0
