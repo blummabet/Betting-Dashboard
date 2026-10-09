@@ -1,6 +1,6 @@
 {
-"generatedAt": "2026-10-09T18:37:07.592585+00:00",
-"count": 27,
+"generatedAt": "2026-10-09T18:52:03.204665+00:00",
+"count": 29,
 "rows": [
 {
 "matchId": "36099853",
@@ -13,22 +13,22 @@
 "betfair": {
 "side": "home",
 "name": "Dortmund",
-"sharePct": 88,
-"eur": 971199,
-"odd": 1.4
+"sharePct": 90,
+"eur": 1285758,
+"odd": 1.46
 },
 "poly": {
 "side": "home",
 "name": "BV Borussia 09 Dortmund",
 "sharePct": 94,
-"usd": 543190,
-"src": "close"
+"usd": 639421,
+"src": "live"
 },
 "pinn": {
 "fav": "home",
-"home": 0.7016,
-"draw": 0.181,
-"away": 0.1174
+"home": 0.6667,
+"draw": 0.2227,
+"away": 0.1106
 },
 "mmStrong": true,
 "polyGeld": true,
@@ -45,15 +45,20 @@
 "betfair": {
 "side": "home",
 "name": "Galatasaray",
-"sharePct": 93,
-"eur": 776077,
-"odd": 3.9
+"sharePct": 84,
+"eur": 898340,
+"odd": 5.0
 },
 "poly": null,
-"pinn": null,
+"pinn": {
+"fav": "draw",
+"home": 0.2454,
+"draw": 0.5482,
+"away": 0.2065
+},
 "mmStrong": false,
 "polyGeld": false,
-"nSources": 1
+"nSources": 2
 },
 {
 "matchId": "36100904",
@@ -67,14 +72,14 @@
 "side": "home",
 "name": "Barcelona",
 "sharePct": 98,
-"eur": 389582,
-"odd": 1.12
+"eur": 389809,
+"odd": 1.13
 },
 "poly": {
 "side": "home",
 "name": "FC Barcelona",
 "sharePct": 90,
-"usd": 179780,
+"usd": 185431,
 "src": "upcoming"
 },
 "pinn": {
@@ -98,26 +103,52 @@
 "betfair": {
 "side": "draw",
 "name": "The Draw",
-"sharePct": 38,
-"eur": 301996,
+"sharePct": 37,
+"eur": 346678,
 "odd": 3.4
 },
 "poly": {
 "side": "away",
 "name": "RCD Espanyol de Barcelona",
-"sharePct": 48,
-"usd": 111885,
+"sharePct": 51,
+"usd": 117758,
 "src": "close"
 },
 "pinn": {
 "fav": "away",
-"home": 0.3347,
-"draw": 0.2978,
-"away": 0.3675
+"home": 0.3315,
+"draw": 0.298,
+"away": 0.3705
 },
 "mmStrong": false,
 "polyGeld": true,
 "nSources": 3
+},
+{
+"matchId": "36100446",
+"home": "Lens",
+"away": "Lyon",
+"league": "French Ligue 1",
+"live": true,
+"kickoff": "2026-10-09T18:45:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "home",
+"name": "Lens",
+"sharePct": 43,
+"eur": 250929,
+"odd": 2.84
+},
+"poly": null,
+"pinn": {
+"fav": "home",
+"home": 0.3685,
+"draw": 0.2629,
+"away": 0.3685
+},
+"mmStrong": false,
+"polyGeld": false,
+"nSources": 2
 },
 {
 "matchId": "36065339",
@@ -130,15 +161,15 @@
 "betfair": {
 "side": "home",
 "name": "Arsenal",
-"sharePct": 82,
-"eur": 210111,
-"odd": 1.44
+"sharePct": 84,
+"eur": 231701,
+"odd": 1.45
 },
 "poly": {
 "side": "home",
 "name": "Arsenal FC",
 "sharePct": 70,
-"usd": 52319,
+"usd": 53645,
 "src": "upcoming"
 },
 "pinn": {
@@ -152,29 +183,30 @@
 "nSources": 3
 },
 {
-"matchId": "36100446",
-"home": "Lens",
-"away": "Lyon",
-"league": "French Ligue 1",
-"live": false,
-"kickoff": "2026-10-09T18:45:00Z",
+"matchId": "36100873",
+"home": "Brann",
+"away": "Viking",
+"league": "Norwegian Eliteserien",
+"live": true,
+"kickoff": "2026-10-09T17:00:00Z",
 "verdict": "konsens",
 "betfair": {
-"side": "home",
-"name": "Lens",
-"sharePct": 44,
-"eur": 202092,
-"odd": 2.7
+"side": "away",
+"name": "Viking",
+"sharePct": 90,
+"eur": 201960,
+"odd": 1.02
 },
-"poly": null,
-"pinn": {
-"fav": "home",
-"home": 0.3685,
-"draw": 0.2629,
-"away": 0.3685
+"poly": {
+"side": "away",
+"name": "Viking FK",
+"sharePct": 100,
+"usd": 202917,
+"src": "live"
 },
-"mmStrong": false,
-"polyGeld": false,
+"pinn": null,
+"mmStrong": true,
+"polyGeld": true,
 "nSources": 2
 },
 {
@@ -189,7 +221,7 @@
 "side": "away",
 "name": "Man City",
 "sharePct": 58,
-"eur": 190857,
+"eur": 191347,
 "odd": 2.36
 },
 "poly": {
@@ -210,33 +242,6 @@
 "nSources": 3
 },
 {
-"matchId": "36100873",
-"home": "Brann",
-"away": "Viking",
-"league": "Norwegian Eliteserien",
-"live": true,
-"kickoff": "2026-10-09T17:00:00Z",
-"verdict": "konsens",
-"betfair": {
-"side": "away",
-"name": "Viking",
-"sharePct": 89,
-"eur": 177948,
-"odd": 1.15
-},
-"poly": {
-"side": "away",
-"name": "Viking FK",
-"sharePct": 98,
-"usd": 197651,
-"src": "live"
-},
-"pinn": null,
-"mmStrong": true,
-"polyGeld": true,
-"nSources": 2
-},
-{
 "matchId": "36159092",
 "home": "PSV",
 "away": "Heerenveen",
@@ -247,22 +252,22 @@
 "betfair": {
 "side": "home",
 "name": "PSV",
-"sharePct": 80,
-"eur": 147076,
-"odd": 1.21
+"sharePct": 82,
+"eur": 170071,
+"odd": 1.23
 },
 "poly": {
 "side": "home",
 "name": "PSV",
-"sharePct": 92,
-"usd": 63836,
+"sharePct": 97,
+"usd": 70963,
 "src": "live"
 },
 "pinn": {
 "fav": "home",
-"home": 0.6656,
-"draw": 0.1911,
-"away": 0.1433
+"home": 0.7967,
+"draw": 0.1412,
+"away": 0.0621
 },
 "mmStrong": true,
 "polyGeld": true,
@@ -287,14 +292,14 @@
 "side": "away",
 "name": "Brighton & Hove Albion FC",
 "sharePct": 42,
-"usd": 232591,
+"usd": 234621,
 "src": "upcoming"
 },
 "pinn": {
 "fav": "away",
-"home": 0.3135,
-"draw": 0.276,
-"away": 0.4105
+"home": 0.3142,
+"draw": 0.2757,
+"away": 0.4101
 },
 "mmStrong": false,
 "polyGeld": true,
@@ -312,14 +317,14 @@
 "side": "home",
 "name": "Man Utd",
 "sharePct": 69,
-"eur": 79100,
+"eur": 82920,
 "odd": 1.78
 },
 "poly": {
 "side": "home",
 "name": "Manchester United FC",
 "sharePct": 57,
-"usd": 110528,
+"usd": 111565,
 "src": "upcoming"
 },
 "pinn": {
@@ -327,38 +332,6 @@
 "home": 0.5615,
 "draw": 0.2225,
 "away": 0.216
-},
-"mmStrong": true,
-"polyGeld": true,
-"nSources": 3
-},
-{
-"matchId": "36100481",
-"home": "Betis",
-"away": "Osasuna",
-"league": "Spanish La Liga",
-"live": false,
-"kickoff": "2026-10-11T16:30:00Z",
-"verdict": "konsens",
-"betfair": {
-"side": "home",
-"name": "Betis",
-"sharePct": 95,
-"eur": 71348,
-"odd": 1.58
-},
-"poly": {
-"side": "home",
-"name": "Real Betis Balompié",
-"sharePct": 64,
-"usd": 74304,
-"src": "upcoming"
-},
-"pinn": {
-"fav": "home",
-"home": 0.6353,
-"draw": 0.209,
-"away": 0.1557
 },
 "mmStrong": true,
 "polyGeld": true,
@@ -376,14 +349,14 @@
 "side": "home",
 "name": "Chelsea",
 "sharePct": 68,
-"eur": 69369,
+"eur": 70301,
 "odd": 1.77
 },
 "poly": {
 "side": "home",
 "name": "Chelsea FC",
 "sharePct": 56,
-"usd": 52290,
+"usd": 52365,
 "src": "upcoming"
 },
 "pinn": {
@@ -408,21 +381,21 @@
 "side": "away",
 "name": "Gil Vicente",
 "sharePct": 45,
-"eur": 50013,
-"odd": 2.86
+"eur": 52064,
+"odd": 2.9
 },
 "poly": {
 "side": "away",
 "name": "Gil Vicente FC",
-"sharePct": 40,
-"usd": 10079,
+"sharePct": 35,
+"usd": 10290,
 "src": "live"
 },
 "pinn": {
 "fav": "draw",
-"home": 0.2127,
-"draw": 0.4413,
-"away": 0.346
+"home": 0.2163,
+"draw": 0.4375,
+"away": 0.3462
 },
 "mmStrong": false,
 "polyGeld": true,
@@ -440,14 +413,14 @@
 "side": "away",
 "name": "Brentford",
 "sharePct": 47,
-"eur": 49253,
-"odd": 2.66
+"eur": 49391,
+"odd": 2.64
 },
 "poly": {
 "side": "away",
 "name": "Brentford FC",
 "sharePct": 38,
-"usd": 21343,
+"usd": 21362,
 "src": "upcoming"
 },
 "pinn": {
@@ -461,6 +434,60 @@
 "nSources": 3
 },
 {
+"matchId": "36119290",
+"home": "ACS Sepsi OSK",
+"away": "Dinamo Bucharest",
+"league": "Romanian Liga I",
+"live": true,
+"kickoff": "2026-10-09T18:00:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "away",
+"name": "Dinamo Bucharest",
+"sharePct": 76,
+"eur": 46750,
+"odd": 1.09
+},
+"poly": {
+"side": "away",
+"name": "Dinamo 1948",
+"sharePct": 92,
+"usd": 7798,
+"src": "live"
+},
+"pinn": null,
+"mmStrong": true,
+"polyGeld": true,
+"nSources": 2
+},
+{
+"matchId": "36152230",
+"home": "Roda JC",
+"away": "Jong PSV Eindhoven",
+"league": "Dutch Eerste Divisie",
+"live": true,
+"kickoff": "2026-10-09T18:00:00Z",
+"verdict": "uneinig",
+"betfair": {
+"side": "draw",
+"name": "The Draw",
+"sharePct": 50,
+"eur": 44777,
+"odd": 2.98
+},
+"poly": {
+"side": "home",
+"name": "Roda JC Kerkrade",
+"sharePct": 55,
+"usd": 8333,
+"src": "live"
+},
+"pinn": null,
+"mmStrong": false,
+"polyGeld": true,
+"nSources": 2
+},
+{
 "matchId": "36100455",
 "home": "Real Madrid",
 "away": "Villarreal",
@@ -472,14 +499,14 @@
 "side": "home",
 "name": "Real Madrid",
 "sharePct": 87,
-"eur": 43760,
+"eur": 43791,
 "odd": 1.39
 },
 "poly": {
 "side": "home",
 "name": "Real Madrid CF",
 "sharePct": 72,
-"usd": 56694,
+"usd": 56842,
 "src": "upcoming"
 },
 "pinn": {
@@ -493,31 +520,68 @@
 "nSources": 3
 },
 {
-"matchId": "36152230",
-"home": "Roda JC",
-"away": "Jong PSV Eindhoven",
-"league": "Dutch Eerste Divisie",
+"matchId": "36100219",
+"home": "Calcio Avellino SSD",
+"away": "Sampdoria",
+"league": "Italian Serie B",
+"live": true,
+"kickoff": "2026-10-09T18:30:00Z",
+"verdict": "uneinig",
+"betfair": {
+"side": "draw",
+"name": "The Draw",
+"sharePct": 64,
+"eur": 35364,
+"odd": 2.56
+},
+"poly": {
+"side": "home",
+"name": "US Avellino 1912",
+"sharePct": 34,
+"usd": 33616,
+"src": "live"
+},
+"pinn": {
+"fav": "away",
+"home": 0.3267,
+"draw": 0.3348,
+"away": 0.3384
+},
+"mmStrong": false,
+"polyGeld": true,
+"nSources": 3
+},
+{
+"matchId": "36103448",
+"home": "Montpellier",
+"away": "Grenoble",
+"league": "French Ligue 2",
 "live": true,
 "kickoff": "2026-10-09T18:00:00Z",
 "verdict": "konsens",
 "betfair": {
 "side": "home",
-"name": "Roda JC",
-"sharePct": 56,
-"eur": 32371,
-"odd": 1.8
+"name": "Montpellier",
+"sharePct": 80,
+"eur": 32943,
+"odd": 1.26
 },
 "poly": {
 "side": "home",
-"name": "Roda JC Kerkrade",
-"sharePct": 60,
-"usd": 8264,
+"name": "Montpellier HSC",
+"sharePct": 78,
+"usd": 11692,
 "src": "live"
 },
-"pinn": null,
+"pinn": {
+"fav": "home",
+"home": 0.7646,
+"draw": 0.1812,
+"away": 0.0542
+},
 "mmStrong": true,
 "polyGeld": true,
-"nSources": 2
+"nSources": 3
 },
 {
 "matchId": "36065335",
@@ -531,8 +595,8 @@
 "side": "home",
 "name": "Ipswich",
 "sharePct": 49,
-"eur": 31799,
-"odd": 2.86
+"eur": 32475,
+"odd": 2.84
 },
 "poly": {
 "side": "away",
@@ -552,70 +616,6 @@
 "nSources": 3
 },
 {
-"matchId": "36103448",
-"home": "Montpellier",
-"away": "Grenoble",
-"league": "French Ligue 2",
-"live": true,
-"kickoff": "2026-10-09T18:00:00Z",
-"verdict": "konsens",
-"betfair": {
-"side": "home",
-"name": "Montpellier",
-"sharePct": 80,
-"eur": 30161,
-"odd": 1.29
-},
-"poly": {
-"side": "home",
-"name": "Montpellier HSC",
-"sharePct": 52,
-"usd": 11532,
-"src": "live"
-},
-"pinn": {
-"fav": "home",
-"home": 0.4866,
-"draw": 0.3318,
-"away": 0.1816
-},
-"mmStrong": false,
-"polyGeld": true,
-"nSources": 3
-},
-{
-"matchId": "36100219",
-"home": "Calcio Avellino SSD",
-"away": "Sampdoria",
-"league": "Italian Serie B",
-"live": true,
-"kickoff": "2026-10-09T18:30:00Z",
-"verdict": "uneinig",
-"betfair": {
-"side": "draw",
-"name": "The Draw",
-"sharePct": 70,
-"eur": 27229,
-"odd": 3.15
-},
-"poly": {
-"side": "away",
-"name": "UC Sampdoria",
-"sharePct": 50,
-"usd": 19962,
-"src": "close"
-},
-"pinn": {
-"fav": "home",
-"home": 0.3446,
-"draw": 0.3144,
-"away": 0.341
-},
-"mmStrong": false,
-"polyGeld": true,
-"nSources": 3
-},
-{
 "matchId": "36099822",
 "home": "Napoli",
 "away": "Frosinone",
@@ -627,7 +627,7 @@
 "side": "home",
 "name": "Napoli",
 "sharePct": 59,
-"eur": 26639,
+"eur": 26685,
 "odd": 1.5
 },
 "poly": {
@@ -680,6 +680,38 @@
 "nSources": 3
 },
 {
+"matchId": "36065349",
+"home": "Hull",
+"away": "Everton",
+"league": "English Premier League",
+"live": false,
+"kickoff": "2026-10-11T13:00:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "away",
+"name": "Everton",
+"sharePct": 55,
+"eur": 24608,
+"odd": 2.2
+},
+"poly": {
+"side": "away",
+"name": "Everton FC",
+"sharePct": 46,
+"usd": 1954,
+"src": "upcoming"
+},
+"pinn": {
+"fav": "away",
+"home": 0.2574,
+"draw": 0.275,
+"away": 0.4676
+},
+"mmStrong": false,
+"polyGeld": true,
+"nSources": 3
+},
+{
 "matchId": "36099818",
 "home": "Como",
 "away": "Roma",
@@ -691,7 +723,7 @@
 "side": "away",
 "name": "Roma",
 "sharePct": 35,
-"eur": 22013,
+"eur": 22031,
 "odd": 2.8
 },
 "poly": {
@@ -730,7 +762,7 @@
 "side": "away",
 "name": "Club Atlético de Madrid",
 "sharePct": 54,
-"usd": 25069,
+"usd": 25269,
 "src": "upcoming"
 },
 "pinn": {
@@ -738,38 +770,6 @@
 "home": 0.2158,
 "draw": 0.2531,
 "away": 0.5312
-},
-"mmStrong": false,
-"polyGeld": true,
-"nSources": 3
-},
-{
-"matchId": "36103479",
-"home": "Sochaux",
-"away": "Boulogne",
-"league": "French Ligue 2",
-"live": true,
-"kickoff": "2026-10-09T18:00:00Z",
-"verdict": "konsens",
-"betfair": {
-"side": "home",
-"name": "Sochaux",
-"sharePct": 48,
-"eur": 17884,
-"odd": 1.48
-},
-"poly": {
-"side": "home",
-"name": "FC Sochaux-Montbéliard",
-"sharePct": 66,
-"usd": 7831,
-"src": "live"
-},
-"pinn": {
-"fav": "home",
-"home": 0.6609,
-"draw": 0.2364,
-"away": 0.1027
 },
 "mmStrong": false,
 "polyGeld": true,
@@ -786,15 +786,74 @@
 "betfair": {
 "side": "away",
 "name": "Bandirmaspor",
-"sharePct": 60,
-"eur": 17633,
-"odd": 1.03
+"sharePct": 64,
+"eur": 19552,
+"odd": 1.02
 },
 "poly": {
 "side": "away",
 "name": "Bandirmaspor",
-"sharePct": 88,
-"usd": 10608,
+"sharePct": 98,
+"usd": 10831,
+"src": "live"
+},
+"pinn": null,
+"mmStrong": true,
+"polyGeld": true,
+"nSources": 2
+},
+{
+"matchId": "36103479",
+"home": "Sochaux",
+"away": "Boulogne",
+"league": "French Ligue 2",
+"live": true,
+"kickoff": "2026-10-09T18:00:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "home",
+"name": "Sochaux",
+"sharePct": 51,
+"eur": 19101,
+"odd": 1.41
+},
+"poly": {
+"side": "home",
+"name": "FC Sochaux-Montbéliard",
+"sharePct": 70,
+"usd": 7982,
+"src": "live"
+},
+"pinn": {
+"fav": "home",
+"home": 0.666,
+"draw": 0.242,
+"away": 0.092
+},
+"mmStrong": false,
+"polyGeld": true,
+"nSources": 3
+},
+{
+"matchId": "36145339",
+"home": "Al-Sadd",
+"away": "Al Arabi (QAT)",
+"league": "Qatari Stars League",
+"live": true,
+"kickoff": "2026-10-09T17:00:00Z",
+"verdict": "uneinig",
+"betfair": {
+"side": "home",
+"name": "Al-Sadd",
+"sharePct": 61,
+"eur": 15337,
+"odd": 29.0
+},
+"poly": {
+"side": "away",
+"name": "Al Arabi Doha SC",
+"sharePct": 60,
+"usd": 7723,
 "src": "live"
 },
 "pinn": null,
@@ -814,29 +873,41 @@
 "side": "home",
 "name": "Aldosivi",
 "sharePct": 46,
-"eur": 8124,
-"odd": 3.6
+"eur": 9080,
+"odd": 3.95
 },
 "poly": {
 "side": "home",
 "name": "CA Aldosivi",
 "sharePct": 28,
-"usd": 16773,
+"usd": 16885,
 "src": "live"
 },
 "pinn": {
 "fav": "draw",
-"home": 0.2818,
-"draw": 0.4516,
-"away": 0.2666
+"home": 0.2678,
+"draw": 0.4726,
+"away": 0.2597
 },
 "mmStrong": false,
 "polyGeld": true,
 "nSources": 3
 }
 ],
-"nameMatchMisses": 18,
+"nameMatchMisses": 19,
 "nameMatchMissList": [
+{
+"matchId": "36100446",
+"home": "Lens",
+"away": "Lyon",
+"league": "French Ligue 1"
+},
+{
+"matchId": "36100606",
+"home": "Shelbourne",
+"away": "Sligo Rovers",
+"league": "Irish Premier Division"
+},
 {
 "matchId": "36103470",
 "home": "Pau",
@@ -844,10 +915,28 @@
 "league": "French Ligue 2"
 },
 {
+"matchId": "36149423",
+"home": "Almere City",
+"away": "FC Eindhoven",
+"league": "Dutch Eerste Divisie"
+},
+{
+"matchId": "36164493",
+"home": "FC Volendam",
+"away": "Vitesse Arnhem",
+"league": "Dutch Eerste Divisie"
+},
+{
 "matchId": "36103458",
 "home": "Nancy",
 "away": "Guingamp",
 "league": "French Ligue 2"
+},
+{
+"matchId": "36166930",
+"home": "Mosta",
+"away": "Birzebbuga St Peters",
+"league": "Maltese Premier League"
 },
 {
 "matchId": "36149420",
@@ -862,22 +951,10 @@
 "league": "Dutch Eerste Divisie"
 },
 {
-"matchId": "36103454",
-"home": "Dunkerque",
-"away": "Annecy",
-"league": "French Ligue 2"
-},
-{
 "matchId": "36149409",
 "home": "Jong AZ Alkmaar",
 "away": "Den Bosch",
 "league": "Dutch Eerste Divisie"
-},
-{
-"matchId": "36119290",
-"home": "ACS Sepsi OSK",
-"away": "Dinamo Bucharest",
-"league": "Romanian Liga I"
 },
 {
 "matchId": "36145500",
@@ -886,16 +963,10 @@
 "league": "Saudi Professional League"
 },
 {
-"matchId": "36166930",
-"home": "Mosta",
-"away": "Birzebbuga St Peters",
-"league": "Maltese Premier League"
-},
-{
-"matchId": "36149423",
-"home": "Almere City",
-"away": "FC Eindhoven",
-"league": "Dutch Eerste Divisie"
+"matchId": "36103454",
+"home": "Dunkerque",
+"away": "Annecy",
+"league": "French Ligue 2"
 },
 {
 "matchId": "36145330",
@@ -904,10 +975,10 @@
 "league": "Swiss Challenge League"
 },
 {
-"matchId": "36145317",
-"home": "Penafiel",
-"away": "AVS Futebol SAD",
-"league": "Portuguese Segunda Liga"
+"matchId": "36103229",
+"home": "Galatasaray",
+"away": "Kasimpasa",
+"league": "Turkish Super League"
 },
 {
 "matchId": "36103223",
@@ -916,28 +987,22 @@
 "league": "Swedish Allsvenskan"
 },
 {
+"matchId": "36145317",
+"home": "Penafiel",
+"away": "AVS Futebol SAD",
+"league": "Portuguese Segunda Liga"
+},
+{
+"matchId": "36145302",
+"home": "Umraniyespor",
+"away": "Sariyer G.K.",
+"league": "Turkish 1 Lig"
+},
+{
 "matchId": "36167059",
 "home": "Romania (W)",
 "away": "Norway (W)",
 "league": "FIFA Ladies World Cup Qualifiers"
-},
-{
-"matchId": "36103229",
-"home": "Galatasaray",
-"away": "Kasimpasa",
-"league": "Turkish Super League"
-},
-{
-"matchId": "36167022",
-"home": "Croatia (W)",
-"away": "Iceland (W)",
-"league": "FIFA Ladies World Cup Qualifiers"
-},
-{
-"matchId": "36100446",
-"home": "Lens",
-"away": "Lyon",
-"league": "French Ligue 1"
 },
 {
 "matchId": "36100483",

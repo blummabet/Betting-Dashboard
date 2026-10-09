@@ -22,9 +22,11 @@
       "id": "grosses_geld_bleibt_im_feed",
       "label": "Grosses Geld faellt nicht aus dem Feed",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "36100481: zuletzt 72.536 € und Anpfiff erst in 45.6 h — trotzdem nicht mehr im Feed"
+      ],
       "note": "Der Detail-Deckel darf nicht das teuerste Spiel schneiden — genau das ist am 08.09. passiert (alle vier CL-Spiele, Real Madrid mit 102.861 €)."
     },
     {
@@ -79,31 +81,32 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 159648 verbraucht, 4840352 uebrig"
+      "note": "Kontingent: 159798 verbraucht, 4840202 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 14,
+      "nFail": 15,
       "failures": [
+        "Bohemians v Waterford (Irish FAI Cup): zeit — bester Kandidat „Bohemians v Waterford FC“ · 168.0h Anpfiff-Abstand",
+        "Athlone Town v Treaty United (Irish Division 1): zeit — bester Kandidat „Mansfield Town v Oxford United“ · 144.2h Anpfiff-Abstand",
         "Stade Nyonnais v Aarau (Swiss Challenge League): name — bester Kandidat „Pau FC v Stade Lavallois“",
         "Libertad FC v CD Leones del Norte (Ecuadorian Serie A): name — bester Kandidat „Aldosivi Mar del Plata v Sarmiento de Junin“",
         "Southampton U21 v Queens Park Rangers U21 (English U21 Premier League Cup): name — bester Kandidat „West Ham United v Queens Park Rangers“",
         "Millwall U21 v West Ham U21 (English U21 Premier League Cup): name — bester Kandidat „West Ham United v Queens Park Rangers“",
         "Kazma Sc v Al Arabi Kuwait (Kuwaiti Premier League): name — bester Kandidat „Al-Nassr v Diriyah Club“",
-        "Al-Sadd v Al Arabi (QAT) (Qatari Stars League): zeit — bester Kandidat „Al-Ettifaq v Al-Khaleej“ · 21.9h Anpfiff-Abstand",
         "Sollentuna FF v IFK Stocksund (Swedish Division 1): name — bester Kandidat „IFK Goteborg v Västerås SK“",
         "Arsenal U21 v Sunderland U21 (English Premier League 2 - Div 1): name — bester Kandidat „Arsenal v Leeds United“",
         "St Pauli v Karlsruhe (German Bundesliga 2): name — bester Kandidat „FC St. Pauli v Karlsruher SC“",
         "FC Koln v Mgladbach (German Bundesliga): name — bester Kandidat „1. FC Köln v Borussia Monchengladbach“",
         "Roda JC v Jong PSV Eindhoven (Dutch Eerste Divisie): name — bester Kandidat „PSV Eindhoven v Heerenveen“",
         "Pau v Laval (French Ligue 2): name — bester Kandidat „Pau FC v Stade Lavallois“",
-        "Almere City v FC Eindhoven (Dutch Eerste Divisie): name — bester Kandidat „PSV Eindhoven v Heerenveen“",
+        "Al-Sadd v Al Arabi (QAT) (Qatari Stars League): zeit — bester Kandidat „Al-Ettifaq v Al-Khaleej“ · 21.9h Anpfiff-Abstand",
         "Rapperswil-Jona v Stade Lausanne-Ouchy (Swiss Challenge League): name — bester Kandidat „Pau FC v Stade Lavallois“"
       ],
-      "note": "ohne Anker: kein_kandidat 56 · kein_pinnacle 2 · name 13 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 59 · kein_pinnacle 2 · name 12 · zeit 3. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -112,7 +115,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 2 — Galatasaray v Kasimpasa (31 Buecher, ohne Pinnacle); Brann v Viking (33 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 2 — Brann v Viking (23 Buecher, ohne Pinnacle); IFK Goteborg v Vasteras SK (26 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -121,7 +124,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 15 gewollt, 15 abgerufen, 0 mit Daten"
+      "note": "Totals: 18 gewollt, 18 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -187,6 +190,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 1,
-  "generatedAt": "2026-10-09T18:37:37.811713+00:00"
+  "nFail": 2,
+  "generatedAt": "2026-10-09T18:52:32.805596+00:00"
 }
