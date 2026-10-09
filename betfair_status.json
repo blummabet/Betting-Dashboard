@@ -25,7 +25,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "36159259: zuletzt 28.053 € und Anpfiff erst in 0.9 h — trotzdem nicht mehr im Feed"
+        "36159259: zuletzt 28.053 € und Anpfiff erst in 0.6 h — trotzdem nicht mehr im Feed"
       ],
       "note": "Der Detail-Deckel darf nicht das teuerste Spiel schneiden — genau das ist am 08.09. passiert (alle vier CL-Spiele, Real Madrid mit 102.861 €)."
     },
@@ -81,21 +81,30 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 155512 verbraucht, 4844488 uebrig"
+      "note": "Kontingent: 155995 verbraucht, 4844005 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 4,
+      "nFail": 13,
       "failures": [
+        "Al Nasar (KUW) v Kuwait SC (Kuwaiti Premier League): name — bester Kandidat „Al-Kholood v Al-Qadsiah“",
+        "Qatar SC v Al Rayyan (Qatari Stars League): name — bester Kandidat „Al-Kholood v Al-Qadsiah“",
+        "Al Hussein v Al Arabi (Jor) (Jordanian Premier League): unerklaert — bester Kandidat „Al-Kholood v Al-Qadsiah“",
+        "Samma v Al Ahli Amman (Jordanian Cup): name — bester Kandidat „Al-Fateh v Al-Ahli“",
+        "FK Kokand 1912 v Mash al Mubarek (Uzbekistan Super League): name — bester Kandidat „Al-Kholood v Al-Qadsiah“",
+        "Jwaya SC v Al-Mabarrah (Lebanese Premier League): name — bester Kandidat „Al-Kholood v Al-Qadsiah“",
         "Arsenal U21 v Sunderland U21 (English Premier League 2 - Div 1): name — bester Kandidat „Arsenal v Leeds United“",
         "St Pauli v Karlsruhe (German Bundesliga 2): name — bester Kandidat „FC St. Pauli v Karlsruher SC“",
         "FC Koln v Mgladbach (German Bundesliga): name — bester Kandidat „1. FC Köln v Borussia Monchengladbach“",
-        "Wieczysta Krakow v Wisla Plock (Polish Ekstraklasa): name — bester Kandidat „Wieczysta Kraków v Wisła Płock“"
+        "Wieczysta Krakow v Wisla Plock (Polish Ekstraklasa): name — bester Kandidat „Wieczysta Kraków v Wisła Płock“",
+        "Al Msnaa v Sohar (Omani Professional League): name — bester Kandidat „Al-Kholood v Al-Qadsiah“",
+        "Al Sharjah v Al Jazira (UAE League Cup): unerklaert — bester Kandidat „Al-Kholood v Al-Qadsiah“",
+        "Al Khalidiyah v Al-Muharraq (Bahraini Premier): zeit — bester Kandidat „Al-Kholood v Al-Qadsiah“ · 2.1h Anpfiff-Abstand"
       ],
-      "note": "ohne Anker: kein_kandidat 78 · name 4. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 68 · name 10 · unerklaert 2 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -113,7 +122,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 7 gewollt, 7 abgerufen, 0 mit Daten"
+      "note": "Totals: 8 gewollt, 8 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -180,5 +189,5 @@
     }
   ],
   "nFail": 2,
-  "generatedAt": "2026-10-09T15:07:12.592672+00:00"
+  "generatedAt": "2026-10-09T15:22:09.542696+00:00"
 }
