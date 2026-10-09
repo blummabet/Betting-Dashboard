@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-09T06:17:55.589782+00:00",
+ "generatedAt": "2026-10-09T07:15:22.460362+00:00",
  "heute": "2026-10-09",
  "messungen": [
   {
@@ -51,9 +51,9 @@
    "mindestN": 150,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 390,
+   "standN": 391,
    "zustand": "faellig",
-   "stand": "390 von 150 Beobachtungen · Entscheidung faellig",
+   "stand": "391 von 150 Beobachtungen · Entscheidung faellig",
    "fortschritt": 1.0,
    "tageBisFaellig": 0
   },
@@ -70,9 +70,9 @@
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "nachtrag": "27.09.2026: Zwischenstand n=152 (Mindestzahl 40 erreicht). Treffer 66,5 %, ROI -4,5 % (UG -14,3 %), CLV -0,04 pp. Die Rueckschau (77,1 % / +19,9 %) haelt vorwaerts nicht. Heutige Public-Regel seit 03.09.: n=47, ROI +14,2 % (UG -10,0 %).",
-   "standN": 577,
+   "standN": 578,
    "zustand": "bereit",
-   "stand": "577 von 40 Beobachtungen · faellig in 21 Tag(en)",
+   "stand": "578 von 40 Beobachtungen · faellig in 21 Tag(en)",
    "fortschritt": 1.0,
    "tageBisFaellig": 21
   },
@@ -88,9 +88,9 @@
    "mindestN": 150,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 167,
+   "standN": 169,
    "zustand": "bereit",
-   "stand": "167 von 150 Beobachtungen · faellig in 67 Tag(en)",
+   "stand": "169 von 150 Beobachtungen · faellig in 67 Tag(en)",
    "fortschritt": 1.0,
    "tageBisFaellig": 67
   },
@@ -106,9 +106,9 @@
    "mindestN": 200,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 326,
+   "standN": 327,
    "zustand": "bereit",
-   "stand": "326 von 200 Beobachtungen · faellig in 83 Tag(en)",
+   "stand": "327 von 200 Beobachtungen · faellig in 83 Tag(en)",
    "fortschritt": 1.0,
    "tageBisFaellig": 83
   },
@@ -421,6 +421,24 @@
    "tageBisFaellig": 75
   },
   {
+   "id": "poly-public-klasse",
+   "titel": "Trägt die aussortierte Whale-Gruppe (Rang 11–60, unter 50 K$) doch?",
+   "frage": "ROI (Folge-Einsatz je Karte) der Trades-Karten mit publicKlasseGesperrt=true: bewiesene Wallet, alle übrigen Public-Filter bestanden, aber weder Top-10 der Sharp-Rangliste noch Position ab 50.000 $. Urteil über die Untergrenze (z=1,645).",
+   "warum": "09.10.2026 (Lucas, Public-Karte 1WIN v Aurora Gaming, 31,7 K$, Rang 25: „sieht nicht so nach Riesen-Einsatz aus“). Public-Buch, 55 abgerechnet: Top-10 oder ab 50 K$ n=44, ROI +34,0 %; Rang 11–60 und unter 50 K$ n=11, ROI −51,3 %. Die Grenze ist NACH dem Blick auf die Zahlen gezogen — deshalb geht die Gruppe nicht verloren, sondern wird im Trades-Kanal weiter gemessen. Entscheidung vorab: liegt die Untergrenze bei n >= 30 über null, kommt die Gruppe zurück in den Public-Kanal; sonst bleibt sie draußen.",
+   "gestartet": "2026-10-09",
+   "faellig": "2026-12-31",
+   "quelle": "poly_whale_trades_ledger.json -> Zeilen mit publicKlasseGesperrt=true, status=settled",
+   "messer": "poly_public_klasse",
+   "mindestN": 30,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "standN": 0,
+   "zustand": "sammelt",
+   "stand": "0 von 30 Beobachtungen · faellig in 83 Tag(en)",
+   "fortschritt": 0.0,
+   "tageBisFaellig": 83
+  },
+  {
    "id": "stake-torlinien-burst",
    "titel": "Trägt einseitiges Geld auf Spieltor-Linien (Over ODER Under, Linie egal)?",
    "frage": "ROI (geldgewichtet je Meldung) der Torlinien-Bursts: Fußball, Einzelwetten auf Spieltor-Linien des ganzen Spiels (Asian Total / Total Goals / Total), >=4 Wetten desselben Spiels in 30 Min, alle in dieselbe Richtung, keine Gegenrichtung im Fenster, zusammen >= 12.000 $ und >= 1,5x Liga-Norm je Wette, Quote ab 1,35. Vor Anpfiff und live GETRENNT ausgewertet. Urteil über die Rendite-Untergrenze, nicht über den Punktschätzer.",
@@ -476,7 +494,7 @@
    "tageBisFaellig": -5
   }
  ],
- "n": 26,
- "nOffen": 24,
+ "n": 27,
+ "nOffen": 25,
  "nHandlung": 3
 }
