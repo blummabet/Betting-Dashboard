@@ -60,6 +60,17 @@ jobs:
     # Label 'macOS' trifft NUR den Mac, NICHT den (noch laufenden) Linux-VPS (der würde
     # wieder geoblockt). VPS kann gekündigt werden — wird hier nicht mehr genutzt.
     runs-on: [self-hosted, macOS]
+    # 🔴 09.10.2026 (Lucas: „wieder mal ein fail in einer action" — „💹 WM Poly Update 09:30 UTC",
+    # fünf Push-Runden, rot). Die WM ist seit dem 20.07. winterisiert, der Zeitplan oben
+    # auskommentiert — aber der Mac-Timer `com.blummabet.polytrigger` (POLY_TRIGGER_SETUP.md)
+    # stoesst diesen Workflow weiter alle 15 Minuten an: 131 Laeufe in 33 Stunden, jeder belegt
+    # einen der zwei Mac-Runner, schreibt neun WM-Dateien mit neuem Zeitstempel und pusht —
+    # mitten in das Gedraenge, an dem Betfair, Global-Scan und Live-Scan schon scheitern.
+    # Fehlerklasse: ein abgeschalteter Dienst mit einem zweiten, vergessenen Ausloeser.
+    # Der Job laeuft nur noch, wenn die Repo-Variable WM_POLY_AKTIV auf 'true' steht. Die
+    # Bedingung wird VOR der Runner-Vergabe geprueft — ein Anstoss kostet damit keinen Runner.
+    # Reaktivieren (naechstes Turnier): Settings → Secrets and variables → Actions → Variables.
+    if: ${{ vars.WM_POLY_AKTIV == 'true' }}
     # 28.08.2026: ohne timeout gilt GitHubs Default von 360 Minuten — ein haengender Lauf
     # besetzt dann einen der zwei Mac-Runner einen halben Tag und blockiert die Poly-
     # Manager von Liga und MLS gleich mit. betfair.yml steht seit jeher auf 8.
