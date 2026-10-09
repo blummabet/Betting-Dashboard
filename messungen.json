@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-09T07:15:22.460362+00:00",
+ "generatedAt": "2026-10-09T07:44:41.224545+00:00",
  "heute": "2026-10-09",
  "messungen": [
   {
@@ -58,6 +58,24 @@
    "tageBisFaellig": 0
   },
   {
+   "id": "poly-preisband",
+   "titel": "Hält das Preisband 0,60–0,90 für Heute spielenswert vorwärts?",
+   "frage": "ROI der abgerechneten Shortlist-Plays (Engine 2026-09-01, ohne gesperrte Sportarten) ab dem 10.10.2026, getrennt: Preis beim Einstieg 0,60–0,90 gegen außerhalb. Die Aussortierten stehen weiter im Track (poly_shortlist_track, alle Plays werden abgerechnet), nur nicht mehr öffentlich bzw. als Auto-Order. Urteil über die Untergrenze (z=1,645).",
+   "warum": "09.10.2026 (Lucas: „Heute spielenswert … am Anfang recht gut, seit 2 Wochen fast nur Miese“). Rückblick 1.172 Plays: im Band n=729 ROI +5,4 % (UG +1,7), außerhalb n=443 ROI −6,8 %, beide Zeithälften gleichgerichtet. Auto-Plays: außerhalb n=23 ROI −37,9 % (der gesamte Verlust), im Band n=151 +0,8 %. Die Conviction-Stufen 5–7 sortieren nicht (Treffer = Preis). EHRLICH: die Grenzen sind aus denselben Daten gewählt — deshalb vorwärts gemessen. Entscheidung vorab: liegt bei n >= 150 frischen Plays die ROI-Untergrenze IM Band unter der von AUSSERHALB oder fällt die Obergrenze im Band unter null, wird das Band zurückgenommen.",
+   "gestartet": "2026-10-09",
+   "faellig": "2026-11-15",
+   "quelle": "poly_shortlist_track.json -> settled, firstTs >= 2026-10-10, nach entryPrice getrennt",
+   "messer": null,
+   "mindestN": 150,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "standN": null,
+   "zustand": "quelle unlesbar",
+   "stand": "Quelle nicht lesbar — Stand unbekannt",
+   "fortschritt": null,
+   "tageBisFaellig": 37
+  },
+  {
    "id": "einigkeit-statt-geld",
    "titel": "Traegt Einigkeit mehrerer bewiesener Wallets, wenn keine allein die Geldschwelle reisst?",
    "frage": "Trefferquote und ROI der Schattenbuch-Kandidaten (>=2 bewiesene Wallets auf derselben Seite, keine allein >= $25K, kein bewiesener Gegner) — gegen die heutige Public-Regel (eine Wallet >= $25K).",
@@ -70,9 +88,9 @@
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "nachtrag": "27.09.2026: Zwischenstand n=152 (Mindestzahl 40 erreicht). Treffer 66,5 %, ROI -4,5 % (UG -14,3 %), CLV -0,04 pp. Die Rueckschau (77,1 % / +19,9 %) haelt vorwaerts nicht. Heutige Public-Regel seit 03.09.: n=47, ROI +14,2 % (UG -10,0 %).",
-   "standN": 578,
+   "standN": 579,
    "zustand": "bereit",
-   "stand": "578 von 40 Beobachtungen · faellig in 21 Tag(en)",
+   "stand": "579 von 40 Beobachtungen · faellig in 21 Tag(en)",
    "fortschritt": 1.0,
    "tageBisFaellig": 21
   },
@@ -106,9 +124,9 @@
    "mindestN": 200,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 327,
+   "standN": 328,
    "zustand": "bereit",
-   "stand": "327 von 200 Beobachtungen · faellig in 83 Tag(en)",
+   "stand": "328 von 200 Beobachtungen · faellig in 83 Tag(en)",
    "fortschritt": 1.0,
    "tageBisFaellig": 83
   },
@@ -494,7 +512,7 @@
    "tageBisFaellig": -5
   }
  ],
- "n": 27,
- "nOffen": 25,
- "nHandlung": 3
+ "n": 28,
+ "nOffen": 26,
+ "nHandlung": 4
 }
