@@ -1,11 +1,11 @@
-# 🟡 Picks Validator — 09.10.2026 09:09
+# 🟡 Picks Validator — 09.10.2026 17:15
 
-**118 Spiele geprüft** · 🔴 0 Fehler · 🟡 83 Warnungen · 🔵 360 Hinweise
+**116 Spiele geprüft** · 🔴 0 Fehler · 🟡 83 Warnungen · 🔵 354 Hinweise
 
 ```
 =================================================================
   🐕 CocoBet — Picks Logik-Check
-  09.10.2026 09:09
+  09.10.2026 17:15
   Filter: nächste 3 Tag(e)
 =================================================================
 
@@ -209,12 +209,6 @@
 ─────────────────────────────────────────────────────────────────
   🇭🇷 HNL  (rl=28)
 ─────────────────────────────────────────────────────────────────
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 09.10.2026  HNK Gorica vs Rudes
-     Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 09.10.2026  HNK Gorica vs Rudes
-     Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 10.10.2026  HNK Hajduk Split vs Dinamo Zagreb
      Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
@@ -937,18 +931,6 @@
 ─────────────────────────────────────────────────────────────────
   🇵🇱 Ekstraklasa  (rl=25)
 ─────────────────────────────────────────────────────────────────
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 09.10.2026  Wieczysta Kraków vs Wisla Plock
-     Liga-Baserate=3.6 → Poisson FV für Über 3.5 Karten = 48.5% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+7.1%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 09.10.2026  Wieczysta Kraków vs Wisla Plock
-     Liga-Baserate=3.6 → Poisson FV für Über 4.5 Karten = 29.4%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🔵 HINWEIS [LOW_SCORING_PROFILE]
-     📅 09.10.2026  Wieczysta Kraków vs Wisla Plock
-     Ø gpg=1.30 — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt
-  🔵 HINWEIS [OVER35_LOW_FV]
-     📅 09.10.2026  Wieczysta Kraków vs Wisla Plock
-     Ø gpg=1.30 (statischer Proxy) → Poisson FV für Over 3.5 = 4.3%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
   🟡 WARNUNG [H2H_DOMINATED_HIGH_SCORE]
      📅 09.10.2026  Raków Częstochowa vs GKS Katowice
      Raków Częstochowa dominiert H2H 6W/1X/1L in 8 Spielen. matchScore=7.5 — Pick-Richtung sollte klar sein, Angle-Text darf den Underdog nicht überbewerten.
@@ -1399,9 +1381,9 @@
      Ø gpg=2.10 (statischer Proxy) → Poisson FV für Over 3.5 = 16.1%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
 
 ═════════════════════════════════════════════════════════════════
-  Geprüft: 118 Spiele
+  Geprüft: 116 Spiele
   🟡 83 Warnungen — manuelle Prüfung empfohlen
-  🔵 360 Hinweise — Pick-Richtung kontrollieren
+  🔵 354 Hinweise — Pick-Richtung kontrollieren
 ═════════════════════════════════════════════════════════════════
 
 ```
