@@ -22,11 +22,9 @@
       "id": "grosses_geld_bleibt_im_feed",
       "label": "Grosses Geld faellt nicht aus dem Feed",
       "severity": "error",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "36100481: zuletzt 72.536 € und Anpfiff erst in 45.6 h — trotzdem nicht mehr im Feed"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Der Detail-Deckel darf nicht das teuerste Spiel schneiden — genau das ist am 08.09. passiert (alle vier CL-Spiele, Real Madrid mit 102.861 €)."
     },
     {
@@ -81,32 +79,30 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 159798 verbraucht, 4840202 uebrig"
+      "note": "Kontingent: 159948 verbraucht, 4840052 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 15,
+      "nFail": 13,
       "failures": [
         "Bohemians v Waterford (Irish FAI Cup): zeit — bester Kandidat „Bohemians v Waterford FC“ · 168.0h Anpfiff-Abstand",
         "Athlone Town v Treaty United (Irish Division 1): zeit — bester Kandidat „Mansfield Town v Oxford United“ · 144.2h Anpfiff-Abstand",
         "Stade Nyonnais v Aarau (Swiss Challenge League): name — bester Kandidat „Pau FC v Stade Lavallois“",
+        "Millwall U21 v West Ham U21 (English U21 Premier League Cup): name — bester Kandidat „West Ham United v Queens Park Rangers“",
         "Libertad FC v CD Leones del Norte (Ecuadorian Serie A): name — bester Kandidat „Aldosivi Mar del Plata v Sarmiento de Junin“",
         "Southampton U21 v Queens Park Rangers U21 (English U21 Premier League Cup): name — bester Kandidat „West Ham United v Queens Park Rangers“",
-        "Millwall U21 v West Ham U21 (English U21 Premier League Cup): name — bester Kandidat „West Ham United v Queens Park Rangers“",
-        "Kazma Sc v Al Arabi Kuwait (Kuwaiti Premier League): name — bester Kandidat „Al-Nassr v Diriyah Club“",
-        "Sollentuna FF v IFK Stocksund (Swedish Division 1): name — bester Kandidat „IFK Goteborg v Västerås SK“",
         "Arsenal U21 v Sunderland U21 (English Premier League 2 - Div 1): name — bester Kandidat „Arsenal v Leeds United“",
         "St Pauli v Karlsruhe (German Bundesliga 2): name — bester Kandidat „FC St. Pauli v Karlsruher SC“",
         "FC Koln v Mgladbach (German Bundesliga): name — bester Kandidat „1. FC Köln v Borussia Monchengladbach“",
+        "West Ham v QPR (English Sky Bet Championship): name — bester Kandidat „West Ham United v Queens Park Rangers“",
         "Roda JC v Jong PSV Eindhoven (Dutch Eerste Divisie): name — bester Kandidat „PSV Eindhoven v Heerenveen“",
         "Pau v Laval (French Ligue 2): name — bester Kandidat „Pau FC v Stade Lavallois“",
-        "Al-Sadd v Al Arabi (QAT) (Qatari Stars League): zeit — bester Kandidat „Al-Ettifaq v Al-Khaleej“ · 21.9h Anpfiff-Abstand",
         "Rapperswil-Jona v Stade Lausanne-Ouchy (Swiss Challenge League): name — bester Kandidat „Pau FC v Stade Lavallois“"
       ],
-      "note": "ohne Anker: kein_kandidat 59 · kein_pinnacle 2 · name 12 · zeit 3. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 53 · name 11 · zeit 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -115,7 +111,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 2 — Brann v Viking (23 Buecher, ohne Pinnacle); IFK Goteborg v Vasteras SK (26 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 0"
     },
     {
       "id": "totals_vollstaendig",
@@ -124,7 +120,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 18 gewollt, 18 abgerufen, 0 mit Daten"
+      "note": "Totals: 15 gewollt, 15 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -190,6 +186,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-10-09T18:52:32.805596+00:00"
+  "nFail": 1,
+  "generatedAt": "2026-10-09T19:07:38.492707+00:00"
 }
