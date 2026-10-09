@@ -20275,8 +20275,18 @@
 "whaleEntry": 0.615,
 "htkMess": 0.23,
 "sentAt": "2026-10-09T17:17:42Z",
-"status": "pending",
-"nurBeobachtung": true
+"status": "settled",
+"nurBeobachtung": true,
+"cond": "0x6938be5f5dca96067dbf986613e398205c8a99fdef8f80c23ade23d2e1744f05",
+"condQuelle": "erfassung+wallet",
+"result": "win",
+"winner": "Aurora",
+"closePrice": 0.615,
+"stake": 10.0,
+"pnl": 6.26,
+"clvPP": 0.0,
+"settledTs": "2026-10-09T21:48:15.120143+00:00",
+"resolvedTs": "2026-10-09T21:48:03.759321+00:00"
 },
 {
 "k": "wwcquefa-hun-net-2026-10-09|Netherlands",
@@ -20317,18 +20327,18 @@
 "whaleEntry": 0.555,
 "htkMess": 0.23,
 "sentAt": "2026-10-09T19:06:51Z",
-"status": "settled",
+"status": "unaufloesbar",
 "nurBeobachtung": true,
 "cond": "0xc95e62ea2d1d269fa1328e4a2ce26d0613154ce4ac7a523fd702c535baa9a611",
 "condQuelle": "erfassung+wallet",
-"result": "loss",
-"winner": "Over",
 "closePrice": 0.555,
-"stake": 10.0,
-"pnl": -10.0,
-"clvPP": 0.0,
 "settledTs": "2026-10-09T21:20:04.150108+00:00",
-"resolvedTs": "2026-10-09T21:19:49.275120+00:00"
+"resolvedTs": "2026-10-09T21:19:49.275120+00:00",
+"zurueckgenommen": {
+"war": "loss",
+"am": "2026-10-09T21:48:15.120143+00:00",
+"grund": "Buendel-Slug ohne Linie — Ausgang nie ableitbar"
+}
 },
 {
 "k": "elc-whu-qpr-2026-10-09|West Ham United FC",
@@ -20390,6 +20400,30 @@
 "whaleEntry": 0.87,
 "htkMess": 0.24,
 "sentAt": "2026-10-09T20:46:49Z",
+"status": "pending",
+"nurBeobachtung": true
+},
+{
+"k": "cs2-gz1-kzg-2026-10-09|Ground Zero",
+"key": "cs2-gz1-kzg-2026-10-09",
+"side": "Ground Zero",
+"wallet": "0x1549ae307a974fdbbb65ed56532dcc45edf62956",
+"wallets": [
+"0x1549ae307a974fdbbb65ed56532dcc45edf62956",
+"0x2d2d2b32e5199edf833594a99b9c54e5668ab69d",
+"0x4a3f86ed9ce6b3dac5b66e2d5478a6bf38cc4333",
+"0xb66c2855ecdf8d41d6028b749fe7970f291ba0f5",
+"0xc34b4901be324718c176100e350211d97b199296"
+],
+"nWallets": 5,
+"league": "ESPORTS",
+"cat": "E-Sport",
+"usd": 659.0,
+"maxEinzel": 306.0,
+"pushPrice": 0.785,
+"whaleEntry": 0.785,
+"htkMess": 1.74,
+"sentAt": "2026-10-09T21:48:14Z",
 "status": "pending",
 "nurBeobachtung": true
 }
