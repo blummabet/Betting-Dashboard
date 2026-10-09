@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-10-09T09:20:40.150682+00:00",
-"count": 22,
-"covered": 16,
+"generatedAt": "2026-10-09T09:36:01.218286+00:00",
+"count": 21,
+"covered": 15,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -52,6 +52,7 @@
 "French Ligue 1",
 "German Bundesliga",
 "Italian Serie A",
+"Japanese J League",
 "Spanish La Liga"
 ],
 "leaguesMitTotals": [],
@@ -66,13 +67,13 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 151658,
-"remaining": 4848342,
+"used": 151939,
+"remaining": 4848061,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
 },
-"ankerQuote": 0.947,
+"ankerQuote": 0.973,
 "games": [
 {
 "matchId": "36100904",
@@ -87,12 +88,12 @@
 "moneySharePct": 97,
 "moneyOdd": 1.1,
 "moneyDir": "flat",
-"totVol": 230676,
+"totVol": 230687,
 "pinnOdd": 1.07,
 "softOdd": 1.07,
 "softN": 44,
 "poly": {
-"vol": 158203,
+"vol": 158617,
 "odd": 1.1,
 "sharePct": 90,
 "shareSrc": "preis",
@@ -108,9 +109,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.8869,
-"draw": 0.0747,
-"away": 0.0384,
+"home": 0.8859,
+"draw": 0.0749,
+"away": 0.0392,
 "fav": "home",
 "n": 44
 },
@@ -137,16 +138,16 @@
 "moneySide": "home",
 "moneyName": "Dortmund",
 "moneySharePct": 84,
-"moneyOdd": 1.4,
-"moneyDir": "flat",
-"totVol": 189490,
+"moneyOdd": 1.39,
+"moneyDir": "in",
+"totVol": 191239,
 "pinnOdd": 1.37,
 "softOdd": 1.33,
 "softN": 47,
 "poly": {
-"vol": 96029,
-"odd": 1.36,
-"sharePct": 74,
+"vol": 121638,
+"odd": 1.4,
+"sharePct": 72,
 "shareSrc": "preis",
 "key": "bun-dor-wer-2026-10-09",
 "sideKey": "BV Borussia 09 Dortmund",
@@ -160,9 +161,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.7086,
-"draw": 0.1701,
-"away": 0.1214,
+"home": 0.7089,
+"draw": 0.1695,
+"away": 0.1217,
 "fav": "home",
 "n": 47
 },
@@ -191,12 +192,12 @@
 "moneySharePct": 79,
 "moneyOdd": 1.41,
 "moneyDir": "flat",
-"totVol": 123171,
+"totVol": 123520,
 "pinnOdd": 1.38,
 "softOdd": 1.38,
 "softN": 49,
 "poly": {
-"vol": 36176,
+"vol": 36191,
 "odd": 1.42,
 "sharePct": 70,
 "shareSrc": "preis",
@@ -212,7 +213,7 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.6872,
+"home": 0.6871,
 "draw": 0.1936,
 "away": 0.1193,
 "fav": "home",
@@ -231,81 +232,6 @@
 "pinnTotals": null
 },
 {
-"matchId": "36142383",
-"home": "Gangwon",
-"away": "Bucheon FC 1995",
-"league": "South Korean K1 League",
-"country": "KR",
-"kickoff": "2026-10-09T07:30:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Gangwon",
-"moneySharePct": 59,
-"moneyOdd": 1.01,
-"moneyDir": "in",
-"totVol": 108411,
-"pinnOdd": null,
-"softOdd": 1.0,
-"softN": 18,
-"poly": {
-"vol": 48102,
-"odd": 1.18,
-"sharePct": 99,
-"shareSrc": "geld",
-"key": "kor-gwo-bch-2026-10-09",
-"sideKey": "Gangwon FC",
-"whales": [
-{
-"wallet": "0xb52e8b3afd9f0f0d502a5a76494b42816d67285c",
-"usd": 8673
-},
-{
-"wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
-"usd": 5933
-},
-{
-"wallet": "0xbe7ef1907a730226453814dedeee3995c0656d00",
-"usd": 5100
-},
-{
-"wallet": "0x8efa1ea8ee2d456a051ae2985079a1e3c9aa894c",
-"usd": 3101
-},
-{
-"wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-"usd": 984
-},
-{
-"wallet": "0xc7ff72c4e9bcb104faaffe1cb19fdf968c698a60",
-"usd": 850
-}
-],
-"whaleUsd": 27237
-},
-"pinn": null,
-"soft": {
-"home": 0.9036,
-"draw": 0.0736,
-"away": 0.0229,
-"fav": "home",
-"n": 18
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Gangwon v Bucheon FC 1995",
-"grund": "kein_pinnacle",
-"kandidat": "Gangwon FC v Bucheon FC 1995",
-"key": "soccer_korea_kleague1",
-"nSoft": 18,
-"pinnacleImEvent": false,
-"nBuecher": 18
-}
-},
-{
 "matchId": "36065329",
 "home": "Liverpool",
 "away": "Man City",
@@ -316,14 +242,14 @@
 "moneySide": "away",
 "moneyName": "Man City",
 "moneySharePct": 46,
-"moneyOdd": 2.56,
-"moneyDir": "in",
-"totVol": 100285,
+"moneyOdd": 2.58,
+"moneyDir": "out",
+"totVol": 100447,
 "pinnOdd": 2.52,
 "softOdd": 2.45,
 "softN": 49,
 "poly": {
-"vol": 31937,
+"vol": 31939,
 "odd": 2.6,
 "sharePct": 38,
 "shareSrc": "preis",
@@ -368,11 +294,11 @@
 "moneySide": "home",
 "moneyName": "Lens",
 "moneySharePct": 49,
-"moneyOdd": 2.66,
-"moneyDir": "flat",
-"totVol": 66322,
+"moneyOdd": 2.64,
+"moneyDir": "in",
+"totVol": 68346,
 "pinnOdd": 2.57,
-"softOdd": 2.46,
+"softOdd": 2.48,
 "softN": 46,
 "poly": null,
 "pinn": {
@@ -382,9 +308,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.3837,
-"draw": 0.2573,
-"away": 0.3589,
+"home": 0.3835,
+"draw": 0.2577,
+"away": 0.3588,
 "fav": "home",
 "n": 46
 },
@@ -413,12 +339,12 @@
 "moneySharePct": 62,
 "moneyOdd": 2.42,
 "moneyDir": "flat",
-"totVol": 65658,
+"totVol": 65834,
 "pinnOdd": 2.37,
 "softOdd": 2.3,
 "softN": 49,
 "poly": {
-"vol": 216606,
+"vol": 216789,
 "odd": 2.41,
 "sharePct": 42,
 "shareSrc": "preis",
@@ -434,9 +360,9 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.3177,
+"home": 0.3176,
 "draw": 0.2721,
-"away": 0.4102,
+"away": 0.4103,
 "fav": "away",
 "n": 49
 },
@@ -453,81 +379,6 @@
 "pinnTotals": null
 },
 {
-"matchId": "36142384",
-"home": "Incheon Utd",
-"away": "Pohang Steelers",
-"league": "South Korean K1 League",
-"country": "KR",
-"kickoff": "2026-10-09T07:30:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Incheon Utd",
-"moneySharePct": 77,
-"moneyOdd": 1.01,
-"moneyDir": "flat",
-"totVol": 64018,
-"pinnOdd": null,
-"softOdd": 1.0,
-"softN": 9,
-"poly": {
-"vol": 34378,
-"odd": 1.0,
-"sharePct": 98,
-"shareSrc": "geld",
-"key": "kor-inc-poh-2026-10-09",
-"sideKey": "Incheon United FC",
-"whales": [
-{
-"wallet": "0x8efa1ea8ee2d456a051ae2985079a1e3c9aa894c",
-"usd": 2035
-},
-{
-"wallet": "0xb21e12023fb0e7bdc5cd6a9372d6de4ba32499bb",
-"usd": 1030
-},
-{
-"wallet": "0x2cc8cc54f50dbb45fe346612821ca93b6e93262b",
-"usd": 909
-},
-{
-"wallet": "0x2505abe22aae9c41c445f51df35977a4c2958e76",
-"usd": 679
-},
-{
-"wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
-"usd": 517
-},
-{
-"wallet": "0x8a8d3fa969102aeb887e310644634e31635272f8",
-"usd": 507
-}
-],
-"whaleUsd": 7558
-},
-"pinn": null,
-"soft": {
-"home": 0.8461,
-"draw": 0.0343,
-"away": 0.1196,
-"fav": "home",
-"n": 9
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Incheon Utd v Pohang Steelers",
-"grund": "kein_pinnacle",
-"kandidat": "Incheon United v Pohang Steelers",
-"key": "soccer_korea_kleague1",
-"nSoft": 9,
-"pinnacleImEvent": false,
-"nBuecher": 9
-}
-},
-{
 "matchId": "36065343",
 "home": "Man Utd",
 "away": "Tottenham",
@@ -538,14 +389,14 @@
 "moneySide": "home",
 "moneyName": "Man Utd",
 "moneySharePct": 70,
-"moneyOdd": 1.78,
-"moneyDir": "flat",
-"totVol": 57689,
+"moneyOdd": 1.77,
+"moneyDir": "in",
+"totVol": 58170,
 "pinnOdd": 1.72,
 "softOdd": 1.7,
 "softN": 49,
 "poly": {
-"vol": 85882,
+"vol": 86303,
 "odd": 1.74,
 "sharePct": 57,
 "shareSrc": "preis",
@@ -561,9 +412,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.5602,
-"draw": 0.2257,
-"away": 0.2141,
+"home": 0.5603,
+"draw": 0.2256,
+"away": 0.214,
 "fav": "home",
 "n": 49
 },
@@ -642,14 +493,14 @@
 "moneySide": "home",
 "moneyName": "Chelsea",
 "moneySharePct": 69,
-"moneyOdd": 1.76,
-"moneyDir": "out",
-"totVol": 45661,
+"moneyOdd": 1.75,
+"moneyDir": "in",
+"totVol": 45766,
 "pinnOdd": 1.7,
 "softOdd": 1.67,
 "softN": 49,
 "poly": {
-"vol": 13486,
+"vol": 13487,
 "odd": 1.74,
 "sharePct": 57,
 "shareSrc": "preis",
@@ -665,9 +516,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.5642,
-"draw": 0.2275,
-"away": 0.2084,
+"home": 0.5641,
+"draw": 0.2277,
+"away": 0.2083,
 "fav": "home",
 "n": 49
 },
@@ -696,12 +547,12 @@
 "moneySharePct": 40,
 "moneyOdd": 3.3,
 "moneyDir": "flat",
-"totVol": 33393,
+"totVol": 38184,
 "pinnOdd": 3.18,
-"softOdd": 3.17,
-"softN": 44,
+"softOdd": 3.15,
+"softN": 43,
 "poly": {
-"vol": 5117,
+"vol": 5936,
 "odd": null,
 "sharePct": null,
 "shareSrc": null,
@@ -711,17 +562,17 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.3266,
-"draw": 0.3061,
-"away": 0.3673,
+"home": 0.3254,
+"draw": 0.306,
+"away": 0.3686,
 "fav": "away"
 },
 "soft": {
-"home": 0.3327,
-"draw": 0.2998,
-"away": 0.3675,
+"home": 0.3315,
+"draw": 0.2999,
+"away": 0.3687,
 "fav": "away",
-"n": 44
+"n": 43
 },
 "pinnMovePP": -0.1,
 "pinnMove": {
@@ -747,13 +598,13 @@
 "moneyName": "Real Madrid",
 "moneySharePct": 84,
 "moneyOdd": 1.39,
-"moneyDir": "out",
-"totVol": 32147,
+"moneyDir": "flat",
+"totVol": 32184,
 "pinnOdd": 1.37,
 "softOdd": 1.36,
 "softN": 44,
 "poly": {
-"vol": 39962,
+"vol": 39978,
 "odd": 1.38,
 "sharePct": 72,
 "shareSrc": "preis",
@@ -800,12 +651,12 @@
 "moneySharePct": 47,
 "moneyOdd": 2.7,
 "moneyDir": "flat",
-"totVol": 29950,
+"totVol": 30073,
 "pinnOdd": 2.61,
 "softOdd": 2.58,
 "softN": 49,
 "poly": {
-"vol": 16757,
+"vol": 16773,
 "odd": 2.67,
 "sharePct": 38,
 "shareSrc": "preis",
@@ -823,7 +674,7 @@
 "soft": {
 "home": 0.3619,
 "draw": 0.2686,
-"away": 0.3695,
+"away": 0.3694,
 "fav": "away",
 "n": 49
 },
@@ -851,8 +702,8 @@
 "moneyName": "Ipswich",
 "moneySharePct": 50,
 "moneyOdd": 3.0,
-"moneyDir": "out",
-"totVol": 26519,
+"moneyDir": "flat",
+"totVol": 26535,
 "pinnOdd": 2.89,
 "softOdd": 2.8,
 "softN": 49,
@@ -902,9 +753,9 @@
 "moneySide": "home",
 "moneyName": "Napoli",
 "moneySharePct": 58,
-"moneyOdd": 1.5,
-"moneyDir": "flat",
-"totVol": 20706,
+"moneyOdd": 1.49,
+"moneyDir": "in",
+"totVol": 20817,
 "pinnOdd": 1.48,
 "softOdd": 1.44,
 "softN": 48,
@@ -925,8 +776,8 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.6559,
-"draw": 0.196,
+"home": 0.6561,
+"draw": 0.1958,
 "away": 0.1481,
 "fav": "home",
 "n": 48
@@ -944,6 +795,77 @@
 "pinnTotals": null
 },
 {
+"matchId": "36142785",
+"home": "Kashiwa",
+"away": "Kobe",
+"league": "Japanese J League",
+"country": "JP",
+"kickoff": "2026-10-09T10:00:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Kashiwa",
+"moneySharePct": 48,
+"moneyOdd": 2.26,
+"moneyDir": "flat",
+"totVol": 16207,
+"pinnOdd": 2.24,
+"softOdd": 2.2,
+"softN": 38,
+"poly": {
+"vol": 53587,
+"odd": 2.3,
+"sharePct": 56,
+"shareSrc": "geld",
+"key": "jap-rey-vis-2026-10-09",
+"sideKey": "Kashiwa Reysol",
+"whales": [
+{
+"wallet": "0xd29312e2446a746bbd94408e1c475f1ec6d7d683",
+"usd": 5907
+},
+{
+"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+"usd": 1117
+},
+{
+"wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+"usd": 1039
+},
+{
+"wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
+"usd": 282
+},
+{
+"wallet": "0xbb6418f9db6d1c765965dc4c9d48cd5b4d2bdb86",
+"usd": 198
+},
+{
+"wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+"usd": 197
+}
+],
+"whaleUsd": 9276
+},
+"pinn": {
+"home": 0.4322,
+"draw": 0.2735,
+"away": 0.2943,
+"fav": "home"
+},
+"soft": {
+"home": 0.4231,
+"draw": 0.2741,
+"away": 0.3029,
+"fav": "home",
+"n": 38
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
 "matchId": "36142581",
 "home": "Persik Kediri",
 "away": "Madura Utd",
@@ -953,10 +875,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Persik Kediri",
-"moneySharePct": 73,
+"moneySharePct": 74,
 "moneyOdd": 1.03,
-"moneyDir": "in",
-"totVol": 37733,
+"moneyDir": "flat",
+"totVol": 39750,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -1004,40 +926,8 @@
 "pinnTotals": null,
 "ankerGrund": {
 "spiel": "Persik Kediri v Madura Utd",
-"kandidat": "Incheon United v Pohang Steelers",
-"key": "soccer_korea_kleague1",
-"score": 0.5,
-"grund": "name"
-}
-},
-{
-"matchId": "36142454",
-"home": "Cheongju FC",
-"away": "Seongnam FC",
-"league": "South Korean K2 League",
-"country": "KR",
-"kickoff": "2026-10-09T07:30:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Cheongju FC",
-"moneySharePct": 66,
-"moneyOdd": 1.01,
-"moneyDir": "in",
-"totVol": 19108,
-"pinnOdd": null,
-"softOdd": null,
-"softN": null,
-"poly": null,
-"pinn": null,
-"soft": null,
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "no_anchor",
-"agree": null,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Cheongju FC v Seongnam FC",
-"grund": "kein_kandidat"
+"grund": "kein_kandidat",
+"naechster": "Arsenal v Leeds United"
 }
 },
 {
@@ -1051,14 +941,14 @@
 "moneySide": "home",
 "moneyName": "MOIK Baku",
 "moneySharePct": 97,
-"moneyOdd": 1.87,
+"moneyOdd": 1.9,
 "moneyDir": "out",
-"totVol": 16679,
+"totVol": 17070,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
 "poly": {
-"vol": 20793,
+"vol": 20845,
 "odd": 1.83,
 "sharePct": 99,
 "shareSrc": "geld",
@@ -1090,7 +980,7 @@
 "usd": 180
 }
 ],
-"whaleUsd": 8679
+"whaleUsd": 8698
 },
 "pinn": null,
 "soft": null,
@@ -1105,19 +995,19 @@
 }
 },
 {
-"matchId": "36142456",
-"home": "Gimpo Citizen",
-"away": "Seoul E-Land FC",
-"league": "South Korean K2 League",
-"country": "KR",
-"kickoff": "2026-10-09T07:30:00Z",
+"matchId": "36166627",
+"home": "Johor Darul Ta'zim",
+"away": "Pulau Pinang",
+"league": "Malaysian FA Cup",
+"country": "MY",
+"kickoff": "2026-10-09T09:00:00Z",
 "live": true,
-"moneySide": "away",
-"moneyName": "Seoul E-Land FC",
-"moneySharePct": 62,
-"moneyOdd": 1.07,
+"moneySide": "home",
+"moneyName": "Johor Darul Ta'zim",
+"moneySharePct": 91,
+"moneyOdd": 1.01,
 "moneyDir": "in",
-"totVol": 9076,
+"totVol": 15016,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -1130,9 +1020,8 @@
 "agree": null,
 "pinnTotals": null,
 "ankerGrund": {
-"spiel": "Gimpo Citizen v Seoul E-Land FC",
-"grund": "kein_kandidat",
-"naechster": "FC Seoul v Jeju United FC"
+"spiel": "Johor Darul Ta'zim v Pulau Pinang",
+"grund": "kein_kandidat"
 }
 },
 {
@@ -1145,10 +1034,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "United City FSA",
-"moneySharePct": 61,
-"moneyOdd": 2.52,
+"moneySharePct": 43,
+"moneyOdd": 21.0,
 "moneyDir": "out",
-"totVol": 5309,
+"totVol": 7731,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -1162,10 +1051,8 @@
 "pinnTotals": null,
 "ankerGrund": {
 "spiel": "United City FSA v Bombay Gymkhana",
-"kandidat": "Incheon United v Pohang Steelers",
-"key": "soccer_korea_kleague1",
-"score": 0.33,
-"grund": "name"
+"grund": "kein_kandidat",
+"naechster": "Arsenal v Leeds United"
 }
 },
 {
@@ -1178,10 +1065,10 @@
 "live": true,
 "moneySide": "away",
 "moneyName": "Dagon FC",
-"moneySharePct": 88,
-"moneyOdd": 1.32,
+"moneySharePct": 91,
+"moneyOdd": 1.22,
 "moneyDir": "in",
-"totVol": 1410,
+"totVol": 1889,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -1197,36 +1084,48 @@
 "spiel": "Ispe FC v Dagon FC",
 "grund": "kein_kandidat"
 }
+},
+{
+"matchId": "36166560",
+"home": "Sagaing United FC",
+"away": "ChinLand",
+"league": "Myanmar National League",
+"country": "MM",
+"kickoff": "2026-10-09T09:00:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Sagaing United FC",
+"moneySharePct": 76,
+"moneyOdd": 1.41,
+"moneyDir": "out",
+"totVol": 572,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": null,
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Sagaing United FC v ChinLand",
+"grund": "kein_kandidat",
+"naechster": "Arsenal v Leeds United"
+}
 }
 ],
-"ankerN": 75,
+"ankerN": 73,
 "ankerNOffen": 150,
 "ankerMit": 71,
 "ankerDiagnose": {
 "nach": {
-"kein_kandidat": 68,
-"name": 9,
-"kein_pinnacle": 2
+"kein_kandidat": 74,
+"name": 5
 },
 "beispiele": [
-{
-"spiel": "Sagaing United FC v ChinLand",
-"kandidat": "Incheon United v Pohang Steelers",
-"key": "soccer_korea_kleague1",
-"score": 0.5,
-"grund": "name",
-"matchId": "36166560",
-"liga": "Myanmar National League"
-},
-{
-"spiel": "Rebels FC v Bangalore Dream United",
-"kandidat": "Incheon United v Pohang Steelers",
-"key": "soccer_korea_kleague1",
-"score": 0.33,
-"grund": "name",
-"matchId": "36165893",
-"liga": "Bangalore Super Division League"
-},
 {
 "spiel": "St Pauli v Karlsruhe",
 "kandidat": "FC St. Pauli v Karlsruher SC",
@@ -1271,46 +1170,6 @@
 "grund": "name",
 "matchId": "36167625",
 "liga": "Lebanese Premier League"
-},
-{
-"spiel": "Gangwon v Bucheon FC 1995",
-"grund": "kein_pinnacle",
-"kandidat": "Gangwon FC v Bucheon FC 1995",
-"key": "soccer_korea_kleague1",
-"nSoft": 18,
-"pinnacleImEvent": false,
-"nBuecher": 18,
-"matchId": "36142383",
-"liga": "South Korean K1 League"
-},
-{
-"spiel": "Incheon Utd v Pohang Steelers",
-"grund": "kein_pinnacle",
-"kandidat": "Incheon United v Pohang Steelers",
-"key": "soccer_korea_kleague1",
-"nSoft": 9,
-"pinnacleImEvent": false,
-"nBuecher": 9,
-"matchId": "36142384",
-"liga": "South Korean K1 League"
-},
-{
-"spiel": "Persik Kediri v Madura Utd",
-"kandidat": "Incheon United v Pohang Steelers",
-"key": "soccer_korea_kleague1",
-"score": 0.5,
-"grund": "name",
-"matchId": "36142581",
-"liga": "Indonesian Super League"
-},
-{
-"spiel": "United City FSA v Bombay Gymkhana",
-"kandidat": "Incheon United v Pohang Steelers",
-"key": "soccer_korea_kleague1",
-"score": 0.33,
-"grund": "name",
-"matchId": "36167685",
-"liga": "Indian Mumbai Super Division"
 }
 ]
 }
