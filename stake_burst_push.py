@@ -1516,7 +1516,12 @@ STUMM_LIVE_KATS = tuple(k.strip() for k in (os.environ.get("STAKE_BURST_STUMM_LI
                         if k.strip())
 
 
-_TOUR_RX = __import__("re").compile(r"\b(atp|wta)\b", __import__("re").I)
+# 08.10.2026: das Muster lebt beim Sammler (eine Quelle fuer Push und Uebersicht).
+try:
+    from stake_highroller_fetch import GESPERRT_LIGEN_MUSTER as _TOUR_MUSTER
+except Exception:                                            # pragma: no cover
+    _TOUR_MUSTER = r"\b(atp|wta)\b"
+_TOUR_RX = __import__("re").compile(_TOUR_MUSTER, __import__("re").I)
 
 
 def _phase(g) -> str:

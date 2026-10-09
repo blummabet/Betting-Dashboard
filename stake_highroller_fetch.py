@@ -129,6 +129,11 @@ STABLE = {"usdt", "usdc", "busd", "dai", "usd", "tusd", "usdp"}
 # (Inoue – Nasukawa stand in „Stake · größtes Geld"), Poly genau umgekehrt. Ab jetzt EINE Liste
 # fuer beide Plattformen; tests/test_sperrliste_eine_fuer_alle.py haelt alle Kopien gleich.
 GESPERRT = {"US-Sport", "Kampfsport", "Cricket"}
+# Gesperrte LIGEN innerhalb einer erlaubten Sportart — als Muster ueber den Liganamen.
+# 04.10.2026 (Lucas: „ATP auch, was keiner braucht") fuer die Pushes; 08.10.2026 („ATP und WTA
+# können wir da draus nehmen") auch fuer die Stake-Kacheln der Uebersicht. ITF bleibt.
+# EINE Quelle: stake_burst_push liest sie, das Frontend liest `gesperrtLigenMuster` im Artefakt.
+GESPERRT_LIGEN_MUSTER = r"\b(atp|wta)\b"
 
 _KAT_SLUG = {
     "soccer": "Fußball", "football": "Fußball",
@@ -1050,6 +1055,7 @@ def sicht_bauen(ledger: dict, jetzt: datetime, status: str, endpunkt: str,
         "kurse": {k: v for k, v in (kurse or {}).items() if k != "usd"},
         # Eine Quelle fuer Tab und Auswertung — der Filter wird nicht zweimal definiert.
         "gesperrt": sorted(GESPERRT),
+        "gesperrtLigenMuster": GESPERRT_LIGEN_MUSTER,
         "luecke": ledger.get("luecke") or {},
         # 🔴 17.09.2026 (Lucas schickt einen Fremd-Radar-Post: „Kasachstan Pervaya Liga, 6 Wetten
         # in 3 Minuten — sowas findest du nicht? Gab's nicht in unserem Feed?").

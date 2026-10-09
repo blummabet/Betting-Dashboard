@@ -72,3 +72,29 @@ test('Wette ohne Anpfiff zählt nicht als offen — fehlende Zeit ist keine Zuku
   assert.match(html, /Rückblick/,
     'Ohne Anpfiff ist unbekannt, nicht offen — sonst rutscht jedes zeitlose Spiel nach vorn');
 });
+
+// 🔴 08.10.2026 (Lucas, nach dem Übersicht-Check: „Ben Shelton - Daniel Altmaier · ATP Shanghai ·
+// $76.4K" oben in „Stake · größtes Geld" — „ATP und WTA können wir da draus nehmen"). Die Sperre
+// galt seit dem 04.10. nur in den Pushes. ITF bleibt sichtbar.
+function tennis(event, liga, usd) {
+  return Object.assign(wette(event, +30, usd, 1), { liga, kat: 'Tennis' });
+}
+test('ATP/WTA fliegen aus der Stake-Kachel, ITF bleibt — Muster aus dem Artefakt', () => {
+  const w = load();
+  w._mdState.data = { stake: { gesperrt: ['US-Sport'], gesperrtLigenMuster: '\\b(atp|wta)\\b', wetten: [
+    tennis('Shelton - Altmaier', 'ATP Shanghai, China Men Singles', 76400),
+    tennis('Sabalenka - Gauff', 'WTA Wuhan, China Women Singles', 50000),
+    tennis('Sanchez - Moyano', 'ITF W15 Trelew', 19700),
+  ] } };
+  const html = w._mdStakeGeldTest();
+  assert.doesNotMatch(html, /Shelton|Sabalenka/);
+  assert.match(html, /Sanchez - Moyano/);
+});
+test('fehlt das Muster im Artefakt, greift der Rückfall — nicht „alles erlaubt"', () => {
+  const w = load();
+  w._mdState.data = { stake: { gesperrt: ['US-Sport'], wetten: [
+    tennis('Shelton - Altmaier', 'ATP Shanghai, China Men Singles', 76400),
+    tennis('Sanchez - Moyano', 'ITF W15 Trelew', 19700),
+  ] } };
+  assert.doesNotMatch(w._mdStakeGeldTest(), /Shelton/);
+});
