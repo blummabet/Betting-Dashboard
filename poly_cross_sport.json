@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-09T01:39:40.937942+00:00",
+ "generatedAt": "2026-10-09T02:09:33.504285+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,17 +10,17 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 724,
- "pinnKeys": 322,
+ "polyRowsSeen": 716,
+ "pinnKeys": 316,
  "matched": 198,
  "footballRows": 192,
- "crossRows": 532,
+ "crossRows": 524,
  "footballSkippedStale": 124,
  "seenBySport": {
-  "basketball_nba": 66,
+  "basketball_nba": 64,
   "americanfootball_nfl": 80,
   "baseball_mlb": 14,
-  "icehockey_nhl": 346,
+  "icehockey_nhl": 340,
   "boxing_boxing": 26,
   "soccer_mls": 48,
   "soccer_liga": 144
@@ -35,5 +35,34 @@
   "tracked": 141,
   "converged": 51
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|chicagowhitesox-clevelandguardians|clevelandguardians",
+   "sport": "baseball_mlb",
+   "event": "Cleveland Guardians vs Chicago White Sox",
+   "market": "Moneyline",
+   "outcome": "Cleveland Guardians",
+   "polyPP": 25.5,
+   "pinnPP": 56.3,
+   "gapPP": -30.8,
+   "vol": 717462,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -23.87,
+   "firstSeen": "2026-09-14T22:17:02.394203+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagowhitesox-clevelandguardians|chicagowhitesox",
+   "sport": "baseball_mlb",
+   "event": "Cleveland Guardians vs Chicago White Sox",
+   "market": "Moneyline",
+   "outcome": "Chicago White Sox",
+   "polyPP": 74.5,
+   "pinnPP": 43.7,
+   "gapPP": 30.8,
+   "vol": 717462,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -23.87,
+   "firstSeen": "2026-09-14T22:17:02.394203+00:00"
+  }
+ ]
 }
