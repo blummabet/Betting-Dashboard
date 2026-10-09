@@ -79,22 +79,23 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 160974 verbraucht, 4839026 uebrig"
+      "note": "Kontingent: 161124 verbraucht, 4838876 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 5,
+      "nFail": 6,
       "failures": [
         "Arsenal U21 v Sunderland U21 (English Premier League 2 - Div 1): name — bester Kandidat „Arsenal v Leeds United“",
         "St Pauli v Karlsruhe (German Bundesliga 2): name — bester Kandidat „FC St. Pauli v Karlsruher SC“",
         "FC Koln v Mgladbach (German Bundesliga): name — bester Kandidat „1. FC Köln v Borussia Monchengladbach“",
         "Yokohama FC v Oita (Japanese J League 2): name — bester Kandidat „Cerezo Osaka v Yokohama F Marinos“",
+        "South Melbourne v Melbourne Victory (Australia Cup): zeit — bester Kandidat „Melbourne Victory v Melbourne City“ · 336.1h Anpfiff-Abstand",
         "West Ham v QPR (English Sky Bet Championship): name — bester Kandidat „West Ham United v Queens Park Rangers“"
       ],
-      "note": "ohne Anker: kein_kandidat 58 · kein_pinnacle 2 · name 5. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 64 · name 5 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -103,7 +104,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 2 — Waasland-Beveren v Lommel (23 Buecher, ohne Pinnacle); Shelbourne v Sligo Rovers (6 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 0"
     },
     {
       "id": "totals_vollstaendig",
@@ -112,7 +113,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 10 gewollt, 10 abgerufen, 0 mit Daten"
+      "note": "Totals: 7 gewollt, 7 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -179,5 +180,5 @@
     }
   ],
   "nFail": 1,
-  "generatedAt": "2026-10-09T20:37:27.121367+00:00"
+  "generatedAt": "2026-10-09T20:52:36.927013+00:00"
 }
