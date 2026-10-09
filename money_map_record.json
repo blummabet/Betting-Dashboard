@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-10-09T21:52:14.454217+00:00",
+"generatedAt": "2026-10-09T22:06:59.108570+00:00",
 "byVerdict": {
 "uneinig": {
-"n": 6,
-"wins": 1,
-"hitRate": 0.1667,
-"polyN": 6,
+"n": 7,
+"wins": 2,
+"hitRate": 0.2857,
+"polyN": 7,
 "polyWins": 3,
-"polyHitRate": 0.5,
-"pinnN": 2,
-"pinnHitRate": 1.0,
-"nRoi": 6,
-"roi": -0.475,
-"roiLb": -1.3386,
-"nClv": 6,
-"clv": -0.33,
-"clvLb": -1.3292
+"polyHitRate": 0.4286,
+"pinnN": 3,
+"pinnHitRate": 0.6667,
+"nRoi": 7,
+"roi": -0.0714,
+"roiLb": -1.0581,
+"nClv": 7,
+"clv": -0.35,
+"clvLb": -1.1906
 },
 "konsens": {
 "n": 73,
@@ -60,6 +60,11 @@
 "wins": 5,
 "hitRate": 1.0
 },
+"Spanish La Liga": {
+"n": 4,
+"wins": 2,
+"hitRate": 0.5
+},
 "Spanish Segunda Division": {
 "n": 4,
 "wins": 1,
@@ -69,11 +74,6 @@
 "n": 4,
 "wins": 2,
 "hitRate": 0.5
-},
-"Spanish La Liga": {
-"n": 3,
-"wins": 1,
-"hitRate": 0.3333
 },
 "Brazilian Serie B": {
 "n": 2,
@@ -214,26 +214,45 @@
 "clvLb": -0.3095
 },
 "weak": {
-"n": 19,
-"wins": 8,
-"hitRate": 0.4211,
-"nRoi": 19,
-"roi": 0.06,
-"roiLb": -0.4311,
-"nClv": 19,
+"n": 20,
+"wins": 9,
+"hitRate": 0.45,
+"nRoi": 20,
+"roi": 0.1745,
+"roiLb": -0.328,
+"nClv": 20,
 "clv": -0.46,
-"clvLb": -1.2505
+"clvLb": -1.2089
 }
 },
 "divergence": {
-"n": 6,
-"betfairWins": 1,
-"betfairRate": 0.1667,
-"polyN": 6,
+"n": 7,
+"betfairWins": 2,
+"betfairRate": 0.2857,
+"polyN": 7,
 "polyWins": 3,
-"polyRate": 0.5
+"polyRate": 0.4286
 },
 "recent": [
+{
+"matchId": "36100474",
+"home": "Malaga",
+"away": "Espanyol",
+"league": "Spanish La Liga",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-10-09T19:00:00Z",
+"settledAt": "2026-10-09T22:06:58.884183+00:00"
+},
 {
 "matchId": "36100446",
 "home": "Lens",
@@ -974,38 +993,19 @@
 ],
 "kickoff": "2026-10-06T17:00:00Z",
 "settledAt": "2026-10-06T20:14:03.885564+00:00"
-},
-{
-"matchId": "36152589",
-"home": "India",
-"away": "Uruguay",
-"league": "Friendlies International",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Uruguay",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-6
-],
-"kickoff": "2026-10-06T14:00:00Z",
-"settledAt": "2026-10-06T17:13:27.380964+00:00"
 }
 ],
 "global": {
-"n": 79,
-"wins": 43,
-"hitRate": 0.5443,
-"nRoi": 79,
-"roi": -0.0424,
-"roiLb": -0.22,
-"nClv": 79,
-"clv": 0.07,
-"clvLb": -0.3891
+"n": 80,
+"wins": 44,
+"hitRate": 0.55,
+"nRoi": 80,
+"roi": -0.0125,
+"roiLb": -0.1946,
+"nClv": 80,
+"clv": 0.06,
+"clvLb": -0.3899
 },
-"pending": 23,
+"pending": 22,
 "ausgeschlossenLive": 1898
 }
