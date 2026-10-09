@@ -25,7 +25,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "36159259: zuletzt 28.053 € und Anpfiff erst in 13.7 h — trotzdem nicht mehr im Feed"
+        "36159259: zuletzt 28.053 € und Anpfiff erst in 13.4 h — trotzdem nicht mehr im Feed"
       ],
       "note": "Der Detail-Deckel darf nicht das teuerste Spiel schneiden — genau das ist am 08.09. passiert (alle vier CL-Spiele, Real Madrid mit 102.861 €)."
     },
@@ -81,21 +81,22 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 146083 verbraucht, 4853917 uebrig"
+      "note": "Kontingent: 146265 verbraucht, 4853735 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 4,
+      "nFail": 5,
       "failures": [
         "St Pauli v Karlsruhe (German Bundesliga 2): name — bester Kandidat „FC St. Pauli v Karlsruher SC“",
         "FC Koln v Mgladbach (German Bundesliga): name — bester Kandidat „1. FC Köln v Borussia Monchengladbach“",
         "Yangpyeong FC v Ulsan Citizen FC (South Korean K3 League): name — bester Kandidat „Daejeon Citizen v Jeonbuk Hyundai Motors“",
-        "FC Osaka v Kanazawa (Japanese J League 3): name — bester Kandidat „Kashima Antlers v Gamba Osaka“"
+        "FC Osaka v Kanazawa (Japanese J League 3): name — bester Kandidat „Kashima Antlers v Gamba Osaka“",
+        "Tripoli SC v Al-Ahed (Lebanese Premier League): name — bester Kandidat „Al-Kholood v Al-Qadsiah“"
       ],
-      "note": "ohne Anker: kein_kandidat 70 · kein_pinnacle 2 · name 4. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 71 · name 5. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -104,7 +105,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 2 — SE Palmeiras v Bahia (32 Buecher, ohne Pinnacle); Fluminense v Coritiba (8 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 0"
     },
     {
       "id": "totals_vollstaendig",
@@ -113,7 +114,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 6 gewollt, 6 abgerufen, 0 mit Daten"
+      "note": "Totals: 5 gewollt, 5 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -180,5 +181,5 @@
     }
   ],
   "nFail": 2,
-  "generatedAt": "2026-10-09T02:20:34.845023+00:00"
+  "generatedAt": "2026-10-09T02:35:24.515613+00:00"
 }
