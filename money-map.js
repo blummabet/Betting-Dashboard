@@ -237,7 +237,15 @@
     var rows=['tore/over05','tore/over15','heim/heim'].map(function(k){
       var x=b[k]; if(!x) return '';
       var ok=x.n?(x.trefferPct+' %'):'–', erw=x.n?(x.erwartetPct+' %'):'–', roi=x.n?((x.roi>=0?'+':'')+x.roi+' %'+(x.ug!=null?' <span class="hz-off">['+x.ug+' … '+x.og+']</span>':'')):'–';
-      return '<tr><td>'+(x.gruppe==='tore'?'Tore erwartet':'Heimfavorit')+' · '+_esc(x.text)+'</td><td class="mm-cn">'+x.n+'</td><td class="mm-cn">'+ok+'</td><td class="mm-cn">'+erw+'</td><td class="mm-cn">'+roi+'</td><td class="mm-cn">'+(urt[x.urteil]||_esc(x.urteil))+'</td></tr>';
+      // 09.10.2026 (Lucas lässt Nationalteams aus): dieselbe Wette, getrennt. Kein eigenes Urteil —
+      // die Zahlen und der Bereich kommen aus hz_finder.py (bericht → vereine/nationalteams).
+      var teil=function(lab,t){
+        if(!t||!t.n) return '';
+        var r=(t.roi>=0?'+':'')+t.roi+' %'+(t.ug!=null?' <span class="hz-off">['+t.ug+' … '+t.og+']</span>':'');
+        return '<tr class="hz-sub"><td style="padding-left:18px;color:var(--mi2,#8b949e)">↳ '+lab+'</td><td class="mm-cn">'+t.n+'</td><td class="mm-cn">'+t.trefferPct+' %</td><td class="mm-cn">'+t.erwartetPct+' %</td><td class="mm-cn">'+r+'</td><td></td></tr>';
+      };
+      return '<tr><td>'+(x.gruppe==='tore'?'Tore erwartet':'Heimfavorit')+' · '+_esc(x.text)+'</td><td class="mm-cn">'+x.n+'</td><td class="mm-cn">'+ok+'</td><td class="mm-cn">'+erw+'</td><td class="mm-cn">'+roi+'</td><td class="mm-cn">'+(urt[x.urteil]||_esc(x.urteil))+'</td></tr>'
+        +teil('nur Vereine',x.vereine)+teil('nur Nationalteams',x.nationalteams);
     }).join('');
     var liste=(d.zuletzt||[]);
     return '<div class="hz-intro">Spiele mit <b>0:0 zur Pause</b>, die vor dem Anpfiff Tore (Betfair-Geld auf Over 2.5, Quote ≤ 1,75) oder einen Heimsieg (Heimquote ≤ 1,60) erwarten ließen. Jeder Fund wird zur Quote <b>der Pause</b> gebucht und am Endstand abgerechnet. Rückblick: Tor in der 2. HZ in 85 % solcher Spiele — ob das mehr ist, als die Pausenquote sagt, misst diese Tabelle (Urteil ab n='+((d.regel||{}).mindestN||100)+').</div>'

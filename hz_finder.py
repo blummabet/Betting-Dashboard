@@ -31,6 +31,7 @@ from __future__ import annotations
 import json
 import math
 import os
+import re
 from datetime import datetime, timedelta, timezone
 
 BASE = os.path.dirname(os.path.abspath(__file__))
@@ -266,6 +267,21 @@ def urteil(k) -> str:
     return "offen"
 
 
+# 09.10.2026 (Lucas: „hab die Spiele der Nationalteams ausgelassen, weil die nicht gut als Streak
+# messbar sind mmn — und hab da echt viele Winner mitgenommen"). Die Tabelle mass bisher das
+# ganze Feature, nicht das, was er spielt. Ab jetzt je Wette auch Vereine / Nationalteams
+# getrennt — ob sein Filter messbar etwas bringt, sagt dann die Tabelle, nicht das Gefuehl.
+# Am Wettbewerbsnamen erkannt (Betfair), nicht am Team: eine Positivliste, im Zweifel „Verein".
+_NATIONAL_RX = re.compile(
+    r"international|nations league|euro qualif|world cup|wc qualif|copa america|"
+    r"africa cup|nations cup|afcon|asian cup|gold cup|olympic", re.I)
+
+
+def ist_nationalteam(league) -> bool:
+    """Laenderspiel (A-Team oder Auswahl U15–U23, Frauen wie Maenner)? REIN."""
+    return bool(_NATIONAL_RX.search(str(league or "")))
+
+
 def bericht(eintraege) -> dict:
     aus = {}
     for g, wetten in WETTEN.items():
@@ -276,15 +292,18 @@ def bericht(eintraege) -> dict:
             k = kennzahlen(paare)
             # 04.10.2026: dieselbe Wette, aufgeteilt nach frischem Geld auf Over 1.5 rund um die
             # Pause (s. zufluss). Kein eigenes Urteil — nur der Vergleich, ob das Signal etwas traegt.
-            mit, ohne = [], []
+            mit, ohne, verein, national = [], [], [], []
             for e in eintraege:
                 x = (e.get("wetten") or {}).get(w)
                 if e.get("status") != "abgerechnet" or g not in (e.get("gruppen") or ()) \
                         or not x or x.get("r") is None:
                     continue
                 (mit if over_zufluss(e.get("zufluss")) else ohne).append((x["win"], x["quote"], x["r"]))
+                (national if ist_nationalteam(e.get("league")) else verein).append(
+                    (x["win"], x["quote"], x["r"]))
             aus["%s/%s" % (g, w)] = {"gruppe": g, "wette": w, "text": WETT_TEXT[w], **k, "urteil": urteil(k),
-                                     "mitOverZufluss": kennzahlen(mit), "ohneOverZufluss": kennzahlen(ohne)}
+                                     "mitOverZufluss": kennzahlen(mit), "ohneOverZufluss": kennzahlen(ohne),
+                                     "vereine": kennzahlen(verein), "nationalteams": kennzahlen(national)}
     return aus
 
 
