@@ -22,11 +22,9 @@
       "id": "grosses_geld_bleibt_im_feed",
       "label": "Grosses Geld faellt nicht aus dem Feed",
       "severity": "error",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "36159259: zuletzt 28.053 € und Anpfiff erst in 0.1 h — trotzdem nicht mehr im Feed"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Der Detail-Deckel darf nicht das teuerste Spiel schneiden — genau das ist am 08.09. passiert (alle vier CL-Spiele, Real Madrid mit 102.861 €)."
     },
     {
@@ -81,7 +79,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 156289 verbraucht, 4843711 uebrig"
+      "note": "Kontingent: 156433 verbraucht, 4843567 uebrig"
     },
     {
       "id": "anker_namensabgleich",
@@ -90,20 +88,20 @@
       "ok": false,
       "nFail": 12,
       "failures": [
-        "Al Sharjah v Al Jazira (UAE League Cup): unerklaert — bester Kandidat „Al-Kholood v Al-Qadsiah“",
-        "Al Msnaa v Sohar (Omani Professional League): name — bester Kandidat „Al-Kholood v Al-Qadsiah“",
-        "Al Nasar (KUW) v Kuwait SC (Kuwaiti Premier League): name — bester Kandidat „Al-Kholood v Al-Qadsiah“",
-        "Qatar SC v Al Rayyan (Qatari Stars League): name — bester Kandidat „Al-Kholood v Al-Qadsiah“",
-        "Samma v Al Ahli Amman (Jordanian Cup): name — bester Kandidat „Al-Fateh v Al-Ahli“",
-        "Al Hussein v Al Arabi (Jor) (Jordanian Premier League): unerklaert — bester Kandidat „Al-Kholood v Al-Qadsiah“",
+        "Al Khalidiyah v Al-Muharraq (Bahraini Premier): unerklaert — bester Kandidat „Al-Fateh v Al-Ahli“",
+        "Malkiya v Al Riffa (Bahraini Premier): name — bester Kandidat „Al-Fateh v Al-Ahli“",
+        "Wieczysta Krakow v Wisla Plock (Polish Ekstraklasa): name — bester Kandidat „Wieczysta Kraków v Wisła Płock“",
+        "Al Sharjah v Al Jazira (UAE League Cup): unerklaert — bester Kandidat „Al-Fateh v Al-Ahli“",
+        "Al Msnaa v Sohar (Omani Professional League): name — bester Kandidat „Al-Fateh v Al-Ahli“",
+        "Al Nasar (KUW) v Kuwait SC (Kuwaiti Premier League): name — bester Kandidat „Al-Fateh v Al-Ahli“",
+        "Qatar SC v Al Rayyan (Qatari Stars League): name — bester Kandidat „Al-Fateh v Al-Ahli“",
         "Arsenal U21 v Sunderland U21 (English Premier League 2 - Div 1): name — bester Kandidat „Arsenal v Leeds United“",
         "St Pauli v Karlsruhe (German Bundesliga 2): name — bester Kandidat „FC St. Pauli v Karlsruher SC“",
         "FC Koln v Mgladbach (German Bundesliga): name — bester Kandidat „1. FC Köln v Borussia Monchengladbach“",
-        "Wieczysta Krakow v Wisla Plock (Polish Ekstraklasa): name — bester Kandidat „Wieczysta Kraków v Wisła Płock“",
-        "Al Khalidiyah v Al-Muharraq (Bahraini Premier): zeit — bester Kandidat „Al-Kholood v Al-Qadsiah“ · 2.1h Anpfiff-Abstand",
-        "Al-Jazeera v Al Wehdat (Jordanian Premier League): zeit — bester Kandidat „Al-Kholood v Al-Qadsiah“ · 2.6h Anpfiff-Abstand"
+        "Al-Jazeera v Al Wehdat (Jordanian Premier League): unerklaert — bester Kandidat „Al-Fateh v Al-Ahli“",
+        "Al-Sadd v Al Arabi (QAT) (Qatari Stars League): zeit — bester Kandidat „Al-Fateh v Al-Ahli“ · 2.1h Anpfiff-Abstand"
       ],
-      "note": "ohne Anker: kein_kandidat 69 · name 8 · unerklaert 2 · zeit 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 63 · name 8 · unerklaert 3 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -121,7 +119,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 8 gewollt, 8 abgerufen, 0 mit Daten"
+      "note": "Totals: 10 gewollt, 10 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -187,6 +185,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-10-09T15:52:05.244620+00:00"
+  "nFail": 1,
+  "generatedAt": "2026-10-09T16:07:05.513906+00:00"
 }
