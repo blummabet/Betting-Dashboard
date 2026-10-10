@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-10-10T20:24:31.706963+00:00",
+"generatedAt": "2026-10-10T20:39:14.138844+00:00",
 "byVerdict": {
 "uneinig": {
 "n": 12,
@@ -18,20 +18,20 @@
 "clvLb": -0.8483
 },
 "konsens": {
-"n": 99,
-"wins": 57,
-"hitRate": 0.5758,
-"polyN": 97,
-"polyWins": 56,
-"polyHitRate": 0.5773,
-"pinnN": 69,
-"pinnHitRate": 0.6232,
-"nRoi": 99,
-"roi": 0.0094,
-"roiLb": -0.1462,
-"nClv": 99,
-"clv": -0.02,
-"clvLb": -0.4118
+"n": 102,
+"wins": 58,
+"hitRate": 0.5686,
+"polyN": 100,
+"polyWins": 57,
+"polyHitRate": 0.57,
+"pinnN": 72,
+"pinnHitRate": 0.6111,
+"nRoi": 102,
+"roi": -0.0056,
+"roiLb": -0.1586,
+"nClv": 102,
+"clv": -0.07,
+"clvLb": -0.458
 }
 },
 "byLeague": {
@@ -70,17 +70,17 @@
 "wins": 3,
 "hitRate": 0.6
 },
+"Italian Serie A": {
+"n": 5,
+"wins": 4,
+"hitRate": 0.8
+},
 "UEFA Nations League A": {
 "n": 5,
 "wins": 5,
 "hitRate": 1.0
 },
 "English Sky Bet Championship": {
-"n": 4,
-"wins": 3,
-"hitRate": 0.75
-},
-"Italian Serie A": {
 "n": 4,
 "wins": 3,
 "hitRate": 0.75
@@ -105,6 +105,11 @@
 "wins": 1,
 "hitRate": 0.3333
 },
+"French Ligue 1": {
+"n": 3,
+"wins": 2,
+"hitRate": 0.6667
+},
 "German Bundesliga 2": {
 "n": 3,
 "wins": 1,
@@ -125,10 +130,10 @@
 "wins": 0,
 "hitRate": 0.0
 },
-"French Ligue 1": {
+"Italian Serie B": {
 "n": 2,
-"wins": 2,
-"hitRate": 1.0
+"wins": 1,
+"hitRate": 0.5
 },
 "Japanese J League": {
 "n": 2,
@@ -200,11 +205,6 @@
 "wins": 1,
 "hitRate": 1.0
 },
-"Italian Serie B": {
-"n": 1,
-"wins": 1,
-"hitRate": 1.0
-},
 "Japanese J League 2": {
 "n": 1,
 "wins": 0,
@@ -228,26 +228,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 81,
-"wins": 48,
-"hitRate": 0.5926,
-"nRoi": 81,
-"roi": -0.0309,
-"roiLb": -0.1889,
-"nClv": 81,
-"clv": 0.01,
-"clvLb": -0.4333
+"n": 83,
+"wins": 49,
+"hitRate": 0.5904,
+"nRoi": 83,
+"roi": -0.0361,
+"roiLb": -0.1919,
+"nClv": 83,
+"clv": -0.02,
+"clvLb": -0.4663
 },
 "weak": {
-"n": 30,
+"n": 31,
 "wins": 13,
-"hitRate": 0.4333,
-"nRoi": 30,
-"roi": 0.1327,
-"roiLb": -0.2725,
-"nClv": 30,
-"clv": -0.22,
-"clvLb": -0.7513
+"hitRate": 0.4194,
+"nRoi": 31,
+"roi": 0.0961,
+"roiLb": -0.3004,
+"nClv": 31,
+"clv": -0.28,
+"clvLb": -0.8097
 }
 },
 "divergence": {
@@ -259,6 +259,63 @@
 "polyRate": 0.3333
 },
 "recent": [
+{
+"matchId": "36099822",
+"home": "Napoli",
+"away": "Frosinone",
+"league": "Italian Serie A",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Napoli",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+0
+],
+"kickoff": "2026-10-10T18:45:00Z",
+"settledAt": "2026-10-10T20:39:13.959673+00:00"
+},
+{
+"matchId": "36100451",
+"home": "Lorient",
+"away": "Paris FC",
+"league": "French Ligue 1",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Paris FC",
+"polySide": "away",
+"winner": "home",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-10-10T18:45:00Z",
+"settledAt": "2026-10-10T20:39:13.959673+00:00"
+},
+{
+"matchId": "36100385",
+"home": "Arezzo",
+"away": "US Cremonese",
+"league": "Italian Serie B",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "US Cremonese",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-10-10T17:30:00Z",
+"settledAt": "2026-10-10T20:39:13.959673+00:00"
+},
 {
 "matchId": "36103106",
 "home": "Maritimo",
@@ -961,76 +1018,19 @@
 ],
 "kickoff": "2026-10-09T17:45:00Z",
 "settledAt": "2026-10-09T20:52:10.307546+00:00"
-},
-{
-"matchId": "36100873",
-"home": "Brann",
-"away": "Viking",
-"league": "Norwegian Eliteserien",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Viking",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-2
-],
-"kickoff": "2026-10-09T17:00:00Z",
-"settledAt": "2026-10-09T20:07:00.195207+00:00"
-},
-{
-"matchId": "36103247",
-"home": "FC Heidenheim",
-"away": "Kaiserslautern",
-"league": "German Bundesliga 2",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "FC Heidenheim",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-10-09T16:30:00Z",
-"settledAt": "2026-10-09T19:37:16.928286+00:00"
-},
-{
-"matchId": "36103259",
-"home": "Braunschweig",
-"away": "Holstein Kiel",
-"league": "German Bundesliga 2",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Holstein Kiel",
-"polySide": "home",
-"winner": "home",
-"moneyWin": false,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-10-09T16:30:00Z",
-"settledAt": "2026-10-09T19:37:16.928286+00:00"
 }
 ],
 "global": {
-"n": 111,
-"wins": 61,
-"hitRate": 0.5495,
-"nRoi": 111,
-"roi": 0.0133,
-"roiLb": -0.145,
-"nClv": 111,
-"clv": -0.05,
-"clvLb": -0.4048
+"n": 114,
+"wins": 62,
+"hitRate": 0.5439,
+"nRoi": 114,
+"roi": -0.0002,
+"roiLb": -0.1559,
+"nClv": 114,
+"clv": -0.09,
+"clvLb": -0.4461
 },
-"pending": 20,
-"ausgeschlossenLive": 1869
+"pending": 19,
+"ausgeschlossenLive": 1867
 }
