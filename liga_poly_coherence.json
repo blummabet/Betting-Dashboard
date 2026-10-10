@@ -1,10 +1,10 @@
 {
  "dataset": "liga",
- "generatedAt": "2026-10-10T14:30:49.651639+00:00",
+ "generatedAt": "2026-10-10T21:43:26.513668+00:00",
  "stale": false,
  "pricesAgeH": 0.0,
  "arbCount": 1,
- "inversions": 0,
+ "inversions": 1,
  "warnings": 0,
  "findings": [
   {
@@ -12,9 +12,18 @@
    "match": "Levante UD vs. Athletic Club",
    "typ": "underround",
    "markt": "1X2",
-   "summe": 0.96,
-   "edgePP": 4.0,
+   "summe": 0.965,
+   "edgePP": 3.5,
    "hinweis": "Alle drei Ergebnisse zusammen < 1.0 → garantierter Ertrag"
+  },
+  {
+   "key": "728-531",
+   "match": "Rayo Vallecano de Madrid vs. Athletic Club",
+   "typ": "ladder_inversion",
+   "markt": "Über 2.5 vs Über 3.5",
+   "summe": null,
+   "edgePP": 4.5,
+   "hinweis": "Über 3.5 (0.36) > Über 2.5 (0.32) — unmöglich, eine Linie ist falsch"
   }
  ]
 }
