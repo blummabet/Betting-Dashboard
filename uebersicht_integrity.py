@@ -439,6 +439,36 @@ def check_stake_kachel_zeigt_das_gemessene_urteil(ctx):
     return _c("Stake-Auffaelligkeiten tragen ihr gemessenes Urteil", "error", fails[:8])
 
 
+def check_stake_norm_kachel_ohne_gesperrte(ctx):
+    """10.10.2026 — „Buse I / Vallejo D - Andreozzi G / Guinard M · ATP Shanghai, China Men
+    Doubles · $70.6K … ×28.2" stand in „Stake · über der Norm", zwei Tage nachdem ATP/WTA aus
+    der Uebersicht genommen war. Die Liga-Sperre galt nur im Frontend-Filter der Geld-Kacheln;
+    `auffaellige` aus stake_analyse kannte nur die Sportarten-Sperre.
+
+    Der Guard liest dieselbe Sperre wie der Produzent (stake_highroller_fetch.sperr_grund) und
+    meldet jede gesperrte Zeile, die trotzdem im Artefakt steht.
+    """
+    import stake_highroller_fetch as SH
+    fails = []
+    for r in ((ctx.get("stakeAus") or {}).get("auffaellige") or []):
+        g = SH.sperr_grund(r)
+        if g:
+            fails.append(f"{r.get('event')} · {r.get('liga')}: {g}")
+    return _c("Stake-Norm-Kachel zeigt keine gesperrten Ligen", "error", fails[:8])
+
+
+def check_stake_wette_sagt_ob_spiel(ctx):
+    """10.10.2026 — „Ballon dor 2026 ⏱ 378 h" in „Stake · größtes Geld". Die Kacheln blenden
+    Langzeitwetten ueber das Feld `langzeit` aus, das ledger_mischen() setzt. Fehlt es, rutscht
+    ein Outright wieder als Spiel durch — fehlende Information als harmloser Default.
+    """
+    w = (ctx.get("stake") or {}).get("wetten") or []
+    ohne = [x for x in w if "langzeit" not in x]
+    fails = [f"{len(ohne)}/{len(w)} Stake-Wetten ohne `langzeit` — ein Outright kaeme als Spiel "
+             f"in die Kacheln"] if ohne else []
+    return _c("Jede Stake-Wette sagt, ob sie ein Spiel ist", "warn", fails)
+
+
 def check_stake_spielklasse(ctx):
     """07.09.2026 — Lucas: „ne 50k Wette auf Arsenal sagt 0 / Eine 50k Wette auf ein
     2-3. Liga Team ist zumindest jemand der mehr dran glaubt."
@@ -1865,6 +1895,8 @@ UEBERSICHT_CHECKS = [
     check_freigabe_grund,
     check_poly_kachel_ist_keine_kanalbilanz,
     check_stake_kategorien,
+    check_stake_norm_kachel_ohne_gesperrte,
+    check_stake_wette_sagt_ob_spiel,
     check_betfair_urteil,
     check_quellen_haben_zeitstempel,
     check_serie_seltenheit_nennt_ihren_nenner,

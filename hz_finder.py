@@ -315,7 +315,14 @@ def _esc(s):
 def _serie_txt(s):
     if not s:
         return "noch keine Spiele"
-    txt = "%s · Ø %.1f Tore · O2.5 %d/%d" % (" ".join(s["form"]), s["toreSchnitt"], s["over25"], s["n"])
+    # 10.10.2026 (Lucas: „sind die 4.1 und 4.6 Tore gesamt, wenn jeweils ein Team spielt?"): ja —
+    # und genau das sagte „Ø 4.1 Tore" nicht. Geschossen:kassiert ist eindeutig und zeigt, ob die
+    # Tore vorne oder hinten fallen. Alte Serien ohne die Felder behalten die Summe.
+    if s.get("toreFuer") is not None and s.get("toreGegen") is not None:
+        tore = "Ø %.1f:%.1f Tore" % (s["toreFuer"], s["toreGegen"])
+    else:
+        tore = "Ø %.1f Tore" % s["toreSchnitt"]
+    txt = "%s · %s · O2.5 %d/%d" % (" ".join(s["form"]), tore, s["over25"], s["n"])
     if s.get("nHz"):
         txt += " · Tor in 2. HZ %d/%d" % (s["torIn2hz"], s["nHz"])
     return txt

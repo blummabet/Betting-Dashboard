@@ -2220,7 +2220,7 @@ function _pwOverNormTop(limit){
       var oc=Object.entries(m.shares||{}).map(function(e){return {n:e[0],u:Number(e[1])||0};}).sort(function(a,b){return b.u-a.u;});
       var tot=oc.reduce(function(su,o){return su+o.u;},0)||1, fav=oc[0]||{n:'-',u:0};
       return {key:it.k, league:m.league, sport:m.sport, name:_pwEventLabel(it.k,oc.map(function(o){return o.n;}),m.league),
-              fav:fav.n, favPct:Math.round(fav.u/tot*100), usd:m.totalUsd||0, ratio:it.ratio,
+              fav:fav.n, favPct:Math.round(fav.u/tot*100), usd:m.totalUsd||0, ratio:it.ratio, frage:m.frage||null,
               url: it.k?('https://polymarket.com/event/'+encodeURIComponent(it.k)):null};
     });
 }
@@ -2786,8 +2786,9 @@ function _pwSharpInfoForKey(key){
                                pnlKnown:(typeof raw.pnl==='number' && isFinite(raw.pnl)),
                                fenster7:raw.fenster7||null, fenster30:raw.fenster30||null});
     if(grade<=0) continue;
-    const b=bySide[pos.side]||(bySide[pos.side]={usd:0,n:0,wins:0,pnl:0,clvUsd:0,count:0,gradeUsd:0});
+    const b=bySide[pos.side]||(bySide[pos.side]={usd:0,n:0,wins:0,pnl:0,clvUsd:0,count:0,gradeUsd:0,sport30:0,nSport30:0});
     b.usd+=usd; b.n+=raw.n; b.wins+=(raw.wins||0); b.pnl+=(Number(raw.pnl)||0);
+    const _sp=_pwSportProfit(raw); if(_sp!==null){ b.sport30+=_sp; b.nSport30++; }
     b.clvUsd+=avgClv*usd; b.gradeUsd+=grade*usd; b.count++;
   }
   let side=null,smax=0; for(const sd in bySide) if(bySide[sd].usd>smax){smax=bySide[sd].usd;side=sd;}
@@ -2795,6 +2796,7 @@ function _pwSharpInfoForKey(key){
   const b=bySide[side];
   return {side, usd:b.usd, n:b.n, wins:b.wins, hit:b.n?b.wins/b.n:0,
           clv:b.usd?b.clvUsd/b.usd:0, pnl:b.pnl, count:b.count,
+          sport30:b.nSport30?b.sport30:null, nSport30:b.nSport30,
           // usd-gewichteter Beleggrad der Seite: 1 = alle bewiesen, <1 = vielversprechend
           grade:b.usd?Math.max(0,Math.min(1,b.gradeUsd/b.usd)):0};
 }
@@ -3066,7 +3068,15 @@ function _pwShortlistScore(key,m){
     w *= _gr;
     // 10.08.2026 (Lucas): Lebenszeit-P&L der Wallet über _pwUsd formatieren → rollt ab 1M sauber auf "M"
     // (z.B. +$3.44M statt des hässlichen "3440K"). _pwUsd trägt das '$', Vorzeichen kommt davor.
-    const pnlTxt=(sh.pnl>=0?'+':'-')+_pwUsd(Math.abs(sh.pnl));
+    // 🔴 10.10.2026 (Übersicht-Check): „🔎 vielversprechende Wallets (4 Wallets, zusammen 72/101,
+    // 71% · -$48K)" ueber Arsenal. Die -$48K waren die Poly-LEBENSBILANZ ueber Wahlen, Krypto,
+    // alles — die Zahl, die der Kommentar oben seit dem 29.08. ausdruecklich NICHT als Beleg gelten
+    // laesst. Das Gate urteilt nach dem 30-Tage-SPORT-Profit, und der stand bei denselben vier
+    // Wallets bei +$42,8K (eine allein: -$42K Lebenszeit, +$39,9K Sport, ROI +18 %, 32 Geld-Plays).
+    // Ein Satz neben einer Zahl, die das Gegenteil sagt. Jetzt steht die Zahl, nach der entschieden wird.
+    const pnlTxt=(sh.sport30==null)?'Sport-Bilanz ungemessen'
+      :'30 T Sport '+(sh.sport30>=0?'+':'-')+_pwUsd(Math.abs(sh.sport30))
+        +(sh.nSport30<(sh.count||1)?' ('+sh.nSport30+' von '+(sh.count||1)+' gemessen)':'');
     // Der Text sagt, was die Zahl sagt: „scharf" nur bei bewiesenen Wallets, sonst ehrlich
     // „vielversprechend". Ein halber Beleg darf nicht wie ein ganzer klingen.
     // 01.09.2026 (Lucas-Checkup): der Satz war in drei Punkten irrefuehrend.

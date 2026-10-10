@@ -203,7 +203,9 @@
   // ⏸️ HZ 0:0 (04.10.2026, Lucas: „such ich die Spiele immer manuell"). Reine Anzeige von
   // hz_finder.json — Urteil, Treffer und Rendite rechnet hz_finder.py, nicht diese Datei.
   function _hzQ(q){ return (typeof q==='number'&&q>1)?q.toFixed(2):'–'; }
-  function _hzSer(s){ return s?(_esc(s.form)+' · O2.5 '+s.over25+'/'+s.n+' · Ø '+s.toreSchnitt+' Tore'+(s.nHz?' · Tor in 2. HZ '+s.torIn2hz+'/'+s.nHz:'')):'noch keine Spiele im Archiv'; }
+  // 10.10.2026: geschossen:kassiert statt Summe (s. hz_finder._serie_txt); alte Serien behalten die Summe.
+  function _hzTore(s){ return (s.toreFuer!=null&&s.toreGegen!=null)?(s.toreFuer.toFixed(1)+':'+s.toreGegen.toFixed(1)):s.toreSchnitt; }
+  function _hzSer(s){ return s?(_esc(s.form)+' · O2.5 '+s.over25+'/'+s.n+' · Ø '+_hzTore(s)+' Tore'+(s.nHz?' · Tor in 2. HZ '+s.torIn2hz+'/'+s.nHz:'')):'noch keine Spiele im Archiv'; }
   // 04.10.2026: Live-Statistik zur Pause aus API-Football (apif_live.py), wenn die Liga sie fuehrt.
   function _hzStat(e){
     var st=((e.apif||{}).statistik)||null; if(!st||!st.heim||!st.gast) return '';

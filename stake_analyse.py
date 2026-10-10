@@ -118,7 +118,8 @@ def _ls_faktor(w: dict, norm: dict, ebmed: dict):
 
 
 def _erlaubt(w: dict) -> bool:
-    return _kat(w) not in SH.GESPERRT
+    # Kategorie UND Liga-Muster (ATP/WTA) — eine Quelle, siehe SH.sperr_grund.
+    return SH.sperr_grund(w) is None
 
 
 def _phase(w: dict) -> str:
@@ -701,7 +702,7 @@ def auswerten(led: dict, jetzt: str) -> dict:
 
     je_gesperrt = defaultdict(list)
     for w in gesperrt:
-        je_gesperrt[_kat(w)].append(w)
+        je_gesperrt[SH.sperr_grund(w) or _kat(w)].append(w)
 
     b = led.get("bilanz") or {}
     return {

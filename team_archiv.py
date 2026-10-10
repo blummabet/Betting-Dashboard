@@ -80,6 +80,10 @@ def serie(spiele, team, n=6) -> dict | None:
             "ht00": sum(1 for s in letzte if s["ht"] == [0, 0]),
             "siege": sum(1 for s in letzte if s["tore"] > s["gegen"]),
             "toreSchnitt": round(sum(s["tore"] + s["gegen"] for s in letzte) / k, 1),
+            # 10.10.2026 (Lucas: „sind die 4.1 und 4.6 Tore gesamt?"): „Ø 4.1 Tore" las sich wie
+            # eigene Tore. Geschossen und kassiert getrennt — der Push zeigt „Ø 2.6:1.5".
+            "toreFuer": round(sum(s["tore"] for s in letzte) / k, 1),
+            "toreGegen": round(sum(s["gegen"] for s in letzte) / k, 1),
             "form": "".join("S" if s["tore"] > s["gegen"] else "U" if s["tore"] == s["gegen"] else "N"
                             for s in letzte)}
 

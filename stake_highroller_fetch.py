@@ -134,6 +134,36 @@ GESPERRT = {"US-Sport", "Kampfsport", "Cricket"}
 # können wir da draus nehmen") auch fuer die Stake-Kacheln der Uebersicht. ITF bleibt.
 # EINE Quelle: stake_burst_push liest sie, das Frontend liest `gesperrtLigenMuster` im Artefakt.
 GESPERRT_LIGEN_MUSTER = r"\b(atp|wta)\b"
+_LIGEN_RX = re.compile(GESPERRT_LIGEN_MUSTER, re.I)
+
+
+def ist_langzeit(w: dict) -> bool:
+    """Langzeitwette (Outright) statt Spiel — erkennbar an der fehlenden Paarung „A - B".
+
+    10.10.2026 (Übersicht-Check, Lucas: „ja"): „Ballon dor 2026 ⏱ 378 h · Ballon d`Or - Winner:
+    Harry Kane $51.5K" stand in „Stake · größtes Geld" und „noch spielbar". Diese Kacheln
+    zeigen Spiele; eine Wette, die in 16 Tagen entschieden wird, gehoert nicht dazu. Im
+    Bestand am 10.10.: 6 von 1.500 Zeilen (Ballon d'Or, Nippon Series, Pro Wrestling).
+    Gesammelt wird weiter — das Feld sagt nur, was es ist.
+    """
+    return " - " not in str(w.get("event") or "")
+
+
+def sperr_grund(w: dict):
+    """Warum eine Wette nicht angezeigt/gewertet wird — None, wenn sie erlaubt ist.
+
+    10.10.2026 (Übersicht-Check): „Buse I / Vallejo D - Andreozzi G / Guinard M · ATP
+    Shanghai, China Men Doubles · $70.6K … ×28.2" stand oben in „Stake · über der Norm",
+    zwei Tage nachdem ATP/WTA aus der Übersicht genommen war. Die Liga-Sperre lebte nur im
+    Frontend-Filter `_mdStakeWetten`; die Norm-Kachel liest `auffaellige` aus stake_analyse,
+    und das kannte nur die Kategorien. Seitdem EINE Prüfung für Kategorie UND Liga hier.
+    """
+    kat = w.get("kat") or sport_kategorie(w.get("sport"), w.get("liga"))
+    if kat in GESPERRT:
+        return kat
+    if _LIGEN_RX.search(str(w.get("liga") or "")):
+        return "Liga gesperrt (ATP/WTA)"
+    return None
 
 _KAT_SLUG = {
     "soccer": "Fußball", "football": "Fußball",
@@ -1005,6 +1035,8 @@ def ledger_mischen(alt: dict, neu: list, jetzt: str) -> dict:
         if not w.get("kat"):
             w["kat"] = sport_kategorie(w.get("sport"), w.get("liga"))
             nachgetragen += 1
+        # Immer neu gesetzt (billig, und eine Regelaenderung wirkt sofort auf den Bestand).
+        w["langzeit"] = ist_langzeit(w)
     wetten.sort(key=lambda w: (w.get("ts") or ""), reverse=True)
     if len(wetten) > LEDGER_KEEP:
         wetten = wetten[:LEDGER_KEEP]

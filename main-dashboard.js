@@ -1190,13 +1190,24 @@
       if (_mdPolyGesperrt(mk.league, mk.sport)) continue;                        // 07.10.: Sperrliste
       mk.whales.forEach(function (wh) {
         if ((+wh.usd || 0) < MD_WHALE_MIN_USD) return;   // kein Kleinvieh als „Whale"
-        all.push({ usd: +wh.usd || 0, side: wh.side, league: mk.league, hrs: rh, key: k, wallet: wh.wallet });
+        all.push({ usd: +wh.usd || 0, side: wh.side, league: mk.league, hrs: rh, key: k, wallet: wh.wallet,
+                   frage: mk.frage || null, preis: wh.avgPrice != null ? +wh.avgPrice : null });
       });
     }
     all.sort(function (a, b) { return b.usd - a.usd; });
     return all;
   }
   function bestWhales() { return allWhales().slice(0, 5); }
+  /** „Arsenal FC vs. Leeds United FC: O/U 0.5" → {spiel, linie}. Nur Torlinien/Spreads werden
+      abgetrennt; „Shanghai Rolex Masters: A vs B" bleibt ganz (da ist der Teil hinter dem
+      Doppelpunkt das Spiel, nicht der Markt). */
+  function _mdWhaleFrage(f) {
+    f = String(f || '');
+    var m = f.match(/^(.*?):\s*((?:O\/U|Spread|Handicap|Total)[^:]*)$/i);
+    if (m) return { spiel: m[1], linie: m[2].replace(/^O\/U\s*/i, '') };
+    return { spiel: f || null, linie: null };
+  }
+  window._mdWhaleFrage = _mdWhaleFrage;
   // 29.08.2026 (Lucas-Checkup, „B"): Betfair-Steam wirft seit 13.08. alles ueber 25pp als
   // Opening-/Platzhalter-Artefakt raus, die Pinnacle-Kachel hatte diesen Deckel nie. Deshalb
   // standen dort +48,9pp auf @6.05 und +44,3pp auf @4.55 ganz oben — bei @6.05 sind 16,5%
@@ -1422,6 +1433,9 @@
       var t = Date.parse(w.ts); if (!t || t < ab) return false;
       // Ohne Quote wird nicht gefiltert — unbekannt ist nicht dasselbe wie niedrig.
       if (w.quote != null && w.quote < MD_STAKE_MIN_QUOTE) return false;
+      // 10.10.2026: Langzeitwetten („Ballon dor 2026 ⏱ 378 h") sind keine Spiele. Das Urteil
+      // setzt der Produzent (stake_highroller_fetch.ist_langzeit), hier wird nur gelesen.
+      if (w.langzeit === true) return false;
       var k = _mdStakeKat(w);
       if (!k) return false;                 // unbekannt ist keine Erlaubnis
       if (sperr.indexOf(k) >= 0) return false;
@@ -1738,7 +1752,11 @@
         ? '<a href="' + r.url + '" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">' + r.name + ' ↗</a>'
         : r.name);
       // 08.08.2026 (Lucas): bei ~50/50 ist „Geld auf X" sinnlos (könnte genauso die Gegenseite sein) — dann neutral labeln.
-      var _side = (r.favPct != null && r.favPct >= 55) ? ('Geld auf ' + esc(r.fav) + ' ' + r.favPct + '%') : ('kein klarer Favorit · ' + (r.favPct != null ? r.favPct + '%' : '~50/50'));
+      // 10.10.2026 (Übersicht-Check): „Arsenal FC vs Leeds United FC · Geld auf Over 95% ·
+      // $85.3K ×6.9" — das war O/U 0.5, ein Markt, in dem Over fast sicher ist. Ohne Linie las es
+      // sich wie ein Tor-Signal. Die Linie kommt aus derselben Quelle wie in den Whale-Bets.
+      var _lin = _mdWhaleFrage(r.frage).linie;
+      var _side = (r.favPct != null && r.favPct >= 55) ? ('Geld auf ' + esc(r.fav) + (_lin ? ' ' + esc(_lin) : '') + ' ' + r.favPct + '%') : ('kein klarer Favorit · ' + (r.favPct != null ? r.favPct + '%' : '~50/50'));
       var sub = _side + ' · ' + usd(r.usd);
       return rowEl(label, '×' + (+r.ratio).toFixed(1), col, sub, meter(mx ? (r.ratio / mx * 100) : 0, col));
     }).join('');
@@ -2072,8 +2090,16 @@
       // 16.08.2026 (Lucas): Spielkontext statt nur "Over"/"Under" — Spiel aus dem Basis-Event aufloesen.
       var _gm = (typeof _pwCache !== 'undefined' && _pwCache) ? ((_pwCache.broadLiveNow && _pwCache.broadLiveNow[w.key]) || (_pwCache.broadLive && _pwCache.broadLive[w.key])) : null;
       var _gn = (_gm && typeof _pwPlayLabel === 'function') ? _pwPlayLabel(w.key, Object.keys(_gm.shares || {}).map(function (s) { return { s: s }; })) : '';
-      return rowEl(fl(_flagFrom(w.country, w.league, w.league)) + _mdPolyLink(w.key, esc((_gn || w.side || '?').slice(0, 34))) + live, usd(w.usd), A.poly,
-        '\u2192 ' + esc(String(w.side || '?')) + ' \u00b7 ' + esc(String(w.league || '')) + (hrs ? ' \u00b7 in ' + hrs : ''), meter(whMax ? (w.usd / whMax) * 100 : 0, A.poly));
+      // 10.10.2026 (Übersicht-Check): „Over ↗ → Over · EPL · in 2h $49.3K" — kein Spiel, keine
+      // Linie. Dahinter: Arsenal - Leeds, O/U 0.5, gekauft zu 96 ¢. Der Spielname kam nur aus
+      // dem Poly-Tab-Cache (ohne geöffneten Tab leer), die Linie nirgends. Beides steht im
+      // Artefakt (`frage`, `avgPrice`) — gelesen wird es jetzt dort.
+      var _fr = _mdWhaleFrage(w.frage);
+      var _titel = _gn || _fr.spiel || w.side || '?';
+      return rowEl(fl(_flagFrom(w.country, w.league, w.league)) + _mdPolyLink(w.key, esc(String(_titel).slice(0, 34))) + live, usd(w.usd), A.poly,
+        '\u2192 ' + esc(String(w.side || '?')) + (_fr.linie ? ' ' + esc(_fr.linie) : '') +
+          (w.preis != null ? ' @' + Math.round(w.preis * 100) + '\u00a2' : '') +
+          ' \u00b7 ' + esc(String(w.league || '')) + (hrs ? ' \u00b7 in ' + hrs : ''), meter(whMax ? (w.usd / whMax) * 100 : 0, A.poly));
     }).join('') : empty('Keine großen Whale-Bets gerade (ab ' + usd(MD_WHALE_MIN_USD) + ') — ruhiger Slate.');
 
     // Sharp — Divergenzbalken (Steam-Richtung)
