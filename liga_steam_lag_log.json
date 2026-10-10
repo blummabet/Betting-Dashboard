@@ -2032,6 +2032,13 @@
           "polyPrice": 0.265,
           "pinnFair": 0.2759,
           "steamLag": false
+        },
+        {
+          "ts": "2026-10-10T14:29:02Z",
+          "edgePp": 1.1,
+          "polyPrice": 0.265,
+          "pinnFair": 0.2759,
+          "steamLag": false
         }
       ],
       "currentEdgePp": 1.1,
@@ -2524,12 +2531,19 @@
           "polyPrice": 0.355,
           "pinnFair": 0.3759,
           "steamLag": false
+        },
+        {
+          "ts": "2026-10-10T14:29:02Z",
+          "edgePp": 1.1,
+          "polyPrice": 0.365,
+          "pinnFair": 0.3759,
+          "steamLag": false
         }
       ],
-      "currentEdgePp": 2.1,
-      "currentPolyPrice": 0.355,
+      "currentEdgePp": 1.1,
+      "currentPolyPrice": 0.365,
       "edgeVelocityPPH": 0.073,
-      "convergencePct": 19.2,
+      "convergencePct": 57.7,
       "convergenceTs": null,
       "convergenceHours": null,
       "status": "OPEN",
@@ -2593,9 +2607,11 @@
       "convergencePct": 70.0,
       "convergenceTs": null,
       "convergenceHours": null,
-      "status": "OPEN",
+      "status": "RESOLVED",
       "outcome": null,
-      "pendingConvergenceConfirm": true
+      "pendingConvergenceConfirm": true,
+      "resolvedAt": "2026-10-10T14:29:02Z",
+      "resolveReason": "kickoff_passed"
     },
     {
       "id": "157-173_hw",
@@ -2626,19 +2642,26 @@
           "polyPrice": 0.775,
           "pinnFair": 0.7955,
           "steamLag": true
+        },
+        {
+          "ts": "2026-10-10T14:29:02Z",
+          "edgePp": 0.7,
+          "polyPrice": 0.79,
+          "pinnFair": 0.7972,
+          "steamLag": false
         }
       ],
-      "currentEdgePp": 2.0,
-      "currentPolyPrice": 0.775,
+      "currentEdgePp": 0.7,
+      "currentPolyPrice": 0.79,
       "edgeVelocityPPH": null,
-      "convergencePct": 0.0,
-      "convergenceTs": null,
-      "convergenceHours": null,
-      "status": "OPEN",
+      "convergencePct": 65.0,
+      "convergenceTs": "2026-10-10T14:29:02Z",
+      "convergenceHours": 2.0,
+      "status": "CONVERGED",
       "outcome": null
     }
   ],
-  "updatedAt": "2026-10-10T12:28:49Z",
-  "runCount": 176,
+  "updatedAt": "2026-10-10T14:29:02Z",
+  "runCount": 177,
   "lastError": "no_poly_prices"
 }
