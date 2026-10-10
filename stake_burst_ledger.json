@@ -16018,9 +16018,12 @@
    1.45
   ],
   "sentAt": "2026-10-07T07:29:07.548464+00:00",
-  "status": "pending",
+  "status": "abgerechnet",
   "push": false,
-  "pushGrund": "Tennis live stumm (Geld folgt dem Spielstand)"
+  "pushGrund": "Tennis live stumm (Geld folgt dem Spielstand)",
+  "rendite": 0.45,
+  "win": true,
+  "settledAt": "2026-10-10T11:37:31.948564+00:00"
  },
  {
   "k": "spiel:7d8640ff-93b4-487e-af58-7c911e49e2fd",
@@ -16049,8 +16052,11 @@
    "sport:665368933"
   ],
   "sentAt": "2026-10-07T07:29:07.548464+00:00",
-  "status": "pending",
-  "push": true
+  "status": "abgerechnet",
+  "push": true,
+  "rendite": 0.2661,
+  "win": true,
+  "settledAt": "2026-10-10T11:37:31.948564+00:00"
  },
  {
   "k": "spiel:608f253f-214d-4b41-bcf0-0a70308c7e20",
@@ -20458,6 +20464,41 @@
    1.46
   ],
   "sentAt": "2026-10-10T11:22:37.825210+00:00",
+  "status": "pending",
+  "push": true
+ },
+ {
+  "k": "spiel:3cc3db50-3d0a-4142-9c64-868267815544",
+  "art": "spiel",
+  "eventId": "3cc3db50-3d0a-4142-9c64-868267815544",
+  "event": "Arsenal - Leeds United",
+  "liga": "Premier League",
+  "ligaSlug": "premier-league",
+  "kat": "Fußball",
+  "seite": "Arsenal",
+  "nGerichtet": 3,
+  "maerkte": [
+   "Anytime Goalscorer",
+   "Arsenal Total Goals",
+   "Half Time Arsenal Total Goals",
+   "Match Result",
+   "Total Goals"
+  ],
+  "summeUsd": 30204.0,
+  "faktor": 1.66,
+  "nWetten": 7,
+  "sekunden": 362.0,
+  "phase": "live",
+  "betIds": [
+   "sport:667042991",
+   "sport:667044601",
+   "sport:667044903",
+   "sport:667045409",
+   "sport:667045903",
+   "sport:667045927",
+   "sport:667046470"
+  ],
+  "sentAt": "2026-10-10T11:37:31.948564+00:00",
   "status": "pending",
   "push": true
  }
