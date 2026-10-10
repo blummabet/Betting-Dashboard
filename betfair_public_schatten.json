@@ -20226,7 +20226,10 @@ null
 "value": 236240.18,
 "sentAt": "2026-10-10T15:39:24.828978+00:00",
 "status": "pending",
-"htScore": null,
+"htScore": [
+0,
+0
+],
 "leadShare": 0.9134779697509543,
 "leadDir": "flat",
 "onLeader": null,
@@ -20389,7 +20392,7 @@ null
 "leadOdd": 1.46,
 "value": 16482.97,
 "sentAt": "2026-10-10T16:54:17.545913+00:00",
-"status": "pending",
+"status": "lost",
 "htScore": [
 0,
 2
@@ -20410,7 +20413,14 @@ null
 0,
 1
 ]
-}
+},
+"settledAt": "2026-10-10T19:54:31.662458+00:00",
+"ftScore": [
+1,
+4
+],
+"profit": -1.0,
+"resChk": true
 },
 {
 "k": "fresh:36103106:Match Odds",
@@ -20574,7 +20584,7 @@ null
 "leadOdd": 11.0,
 "value": 125634.57,
 "sentAt": "2026-10-10T19:09:19.574276+00:00",
-"status": "pending",
+"status": "lost",
 "htScore": null,
 "leadShare": 0.4288152536360016,
 "leadDir": "out",
@@ -20592,7 +20602,17 @@ null
 0,
 0
 ]
-}
+},
+"clvBf": 32.93,
+"clvPinn": 35.16,
+"settledAt": "2026-10-10T19:54:31.648726+00:00",
+"ftScore": [
+0,
+0
+],
+"profit": -1.0,
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36103658:Over/Under 2.5 Goals",
@@ -20626,6 +20646,38 @@ null
 "score": [
 0,
 1
+]
+}
+},
+{
+"k": "fresh:36103272:Match Odds",
+"matchId": "36103272",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "German Bundesliga 2",
+"home": "Nurnberg",
+"away": "Wolfsburg",
+"leadName": "Wolfsburg",
+"leadOdd": 13.0,
+"value": 151441.85,
+"sentAt": "2026-10-10T19:54:23.531169+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.6093249653249746,
+"leadDir": "out",
+"onLeader": false,
+"tier": "rest",
+"magnitude": 57255.0,
+"schwelle": 30000.0,
+"anteilSchwelle": 1.909,
+"raus": "einseitig",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 64,
+"score": [
+3,
+2
 ]
 }
 }
