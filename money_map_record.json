@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-10-10T15:32:34.662877+00:00",
+"generatedAt": "2026-10-10T16:08:50.453040+00:00",
 "byVerdict": {
 "uneinig": {
-"n": 9,
-"wins": 3,
+"n": 12,
+"wins": 4,
 "hitRate": 0.3333,
-"polyN": 9,
+"polyN": 12,
 "polyWins": 4,
-"polyHitRate": 0.4444,
-"pinnN": 5,
-"pinnHitRate": 0.6,
-"nRoi": 9,
-"roi": 0.0556,
-"roiLb": -0.814,
-"nClv": 9,
-"clv": -0.25,
-"clvLb": -0.8984
+"polyHitRate": 0.3333,
+"pinnN": 8,
+"pinnHitRate": 0.375,
+"nRoi": 12,
+"roi": 0.0458,
+"roiLb": -0.6887,
+"nClv": 12,
+"clv": -0.3,
+"clvLb": -0.8483
 },
 "konsens": {
-"n": 86,
+"n": 87,
 "wins": 47,
-"hitRate": 0.5465,
-"polyN": 84,
+"hitRate": 0.5402,
+"polyN": 85,
 "polyWins": 46,
-"polyHitRate": 0.5476,
-"pinnN": 56,
-"pinnHitRate": 0.5893,
-"nRoi": 86,
-"roi": -0.0407,
-"roiLb": -0.2085,
-"nClv": 86,
-"clv": 0.12,
-"clvLb": -0.3087
+"polyHitRate": 0.5412,
+"pinnN": 57,
+"pinnHitRate": 0.5789,
+"nRoi": 87,
+"roi": -0.0517,
+"roiLb": -0.2186,
+"nClv": 87,
+"clv": 0.13,
+"clvLb": -0.2972
 }
 },
 "byLeague": {
@@ -55,6 +55,11 @@
 "wins": 3,
 "hitRate": 0.6
 },
+"German Bundesliga": {
+"n": 5,
+"wins": 1,
+"hitRate": 0.2
+},
 "Spanish La Liga": {
 "n": 5,
 "wins": 2,
@@ -64,11 +69,6 @@
 "n": 5,
 "wins": 5,
 "hitRate": 1.0
-},
-"German Bundesliga": {
-"n": 4,
-"wins": 1,
-"hitRate": 0.25
 },
 "Spanish Segunda Division": {
 "n": 4,
@@ -100,20 +100,25 @@
 "wins": 1,
 "hitRate": 0.3333
 },
+"Italian Serie A": {
+"n": 3,
+"wins": 2,
+"hitRate": 0.6667
+},
 "Brazilian Serie B": {
 "n": 2,
 "wins": 2,
 "hitRate": 1.0
 },
+"English Premier League": {
+"n": 2,
+"wins": 1,
+"hitRate": 0.5
+},
 "Estonian Premier League": {
 "n": 2,
 "wins": 0,
 "hitRate": 0.0
-},
-"Italian Serie A": {
-"n": 2,
-"wins": 2,
-"hitRate": 1.0
 },
 "Japanese J League": {
 "n": 2,
@@ -170,11 +175,6 @@
 "wins": 1,
 "hitRate": 1.0
 },
-"English Premier League": {
-"n": 1,
-"wins": 1,
-"hitRate": 1.0
-},
 "English Sky Bet League 1": {
 "n": 1,
 "wins": 0,
@@ -219,41 +219,122 @@
 "n": 1,
 "wins": 1,
 "hitRate": 1.0
+},
+"Swedish Allsvenskan": {
+"n": 1,
+"wins": 1,
+"hitRate": 1.0
 }
 },
 "byStrength": {
 "strong": {
-"n": 70,
+"n": 71,
 "wins": 39,
-"hitRate": 0.5571,
-"nRoi": 70,
-"roi": -0.0933,
-"roiLb": -0.2633,
-"nClv": 70,
-"clv": 0.22,
-"clvLb": -0.2608
+"hitRate": 0.5493,
+"nRoi": 71,
+"roi": -0.1061,
+"roiLb": -0.2749,
+"nClv": 71,
+"clv": 0.23,
+"clvLb": -0.2473
 },
 "weak": {
-"n": 25,
-"wins": 11,
-"hitRate": 0.44,
-"nRoi": 25,
-"roi": 0.1412,
-"roiLb": -0.3025,
-"nClv": 25,
-"clv": -0.31,
-"clvLb": -0.9142
+"n": 28,
+"wins": 12,
+"hitRate": 0.4286,
+"nRoi": 28,
+"roi": 0.1279,
+"roiLb": -0.2948,
+"nClv": 28,
+"clv": -0.32,
+"clvLb": -0.8765
 }
 },
 "divergence": {
-"n": 9,
-"betfairWins": 3,
+"n": 12,
+"betfairWins": 4,
 "betfairRate": 0.3333,
-"polyN": 9,
+"polyN": 12,
 "polyWins": 4,
-"polyRate": 0.4444
+"polyRate": 0.3333
 },
 "recent": [
+{
+"matchId": "36065341",
+"home": "Aston Villa",
+"away": "Brentford",
+"league": "English Premier League",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Brentford",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-10-10T14:00:00Z",
+"settledAt": "2026-10-10T16:08:50.250062+00:00"
+},
+{
+"matchId": "36099810",
+"home": "Genoa",
+"away": "Fiorentina",
+"league": "Italian Serie A",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "away",
+"winner": "home",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-10-10T13:00:00Z",
+"settledAt": "2026-10-10T16:08:50.250062+00:00"
+},
+{
+"matchId": "36103231",
+"home": "GAIS",
+"away": "Sirius",
+"league": "Swedish Allsvenskan",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Sirius",
+"polySide": "home",
+"winner": "away",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-10-10T13:00:00Z",
+"settledAt": "2026-10-10T16:08:50.250062+00:00"
+},
+{
+"matchId": "36099840",
+"home": "Augsburg",
+"away": "Bayern Munich",
+"league": "German Bundesliga",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Bayern Munich",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-10-10T13:30:00Z",
+"settledAt": "2026-10-10T15:39:12.034843+00:00"
+},
 {
 "matchId": "36099836",
 "home": "Hoffenheim",
@@ -937,95 +1018,19 @@
 ],
 "kickoff": "2026-10-08T19:00:00Z",
 "settledAt": "2026-10-08T22:04:42.452404+00:00"
-},
-{
-"matchId": "36072063",
-"home": "Cruzeiro MG",
-"away": "Sao Paulo",
-"league": "Brazilian Serie A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Cruzeiro MG",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-10-08T00:30:00Z",
-"settledAt": "2026-10-08T03:32:28.575981+00:00"
-},
-{
-"matchId": "36072077",
-"home": "EC Vitoria Salvador",
-"away": "Chapecoense",
-"league": "Brazilian Serie A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "EC Vitoria Salvador",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-4,
-0
-],
-"kickoff": "2026-10-07T23:00:00Z",
-"settledAt": "2026-10-08T02:02:18.012760+00:00"
-},
-{
-"matchId": "36072081",
-"home": "Botafogo FR",
-"away": "Vasco Da Gama",
-"league": "Brazilian Serie A",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Vasco Da Gama",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-10-07T23:30:00Z",
-"settledAt": "2026-10-08T01:35:21.772389+00:00"
-},
-{
-"matchId": "36072048",
-"home": "Remo",
-"away": "Gremio",
-"league": "Brazilian Serie A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Remo",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-10-07T22:30:00Z",
-"settledAt": "2026-10-08T01:32:15.432790+00:00"
 }
 ],
 "global": {
-"n": 95,
-"wins": 50,
-"hitRate": 0.5263,
-"nRoi": 95,
-"roi": -0.0316,
-"roiLb": -0.2024,
-"nClv": 95,
-"clv": 0.09,
-"clvLb": -0.3073
+"n": 99,
+"wins": 51,
+"hitRate": 0.5152,
+"nRoi": 99,
+"roi": -0.0399,
+"roiLb": -0.2097,
+"nClv": 99,
+"clv": 0.07,
+"clvLb": -0.3039
 },
-"pending": 28,
-"ausgeschlossenLive": 1877
+"pending": 26,
+"ausgeschlossenLive": 1875
 }
