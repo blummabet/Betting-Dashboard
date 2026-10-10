@@ -2,14 +2,14 @@
  "n": 550,
  "minOdds": 1.35,
  "moneyHitRate": 0.396,
- "priceHitRate": 0.438,
- "brierMoney": 0.8332,
- "brierPrice": 0.6712,
+ "priceHitRate": 0.435,
+ "brierMoney": 0.8334,
+ "brierPrice": 0.6709,
  "disagree": {
-  "n": 162,
+  "n": 158,
   "moneyWon": 29,
-  "priceWon": 52,
-  "neither": 81
+  "priceWon": 50,
+  "neither": 79
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -63,14 +63,6 @@
    "verdict": "preis_besser"
   },
   {
-   "league": "LIGUE-1",
-   "n": 27,
-   "moneyHitRate": 0.37,
-   "brierMoney": 0.7888,
-   "brierPrice": 0.6366,
-   "verdict": "preis_besser"
-  },
-  {
    "league": "BUNDESLIGA",
    "n": 38,
    "moneyHitRate": 0.316,
@@ -93,12 +85,20 @@
    "brierMoney": 0.6689,
    "brierPrice": 0.5052,
    "verdict": "preis_besser"
+  },
+  {
+   "league": "LIGUE-1",
+   "n": 28,
+   "moneyHitRate": 0.357,
+   "brierMoney": 0.8281,
+   "brierPrice": 0.6491,
+   "verdict": "preis_besser"
   }
  ],
  "guete": {
   "belastbar": 550,
-  "preis_echo": 291,
-  "abgeschnitten": 62,
+  "preis_echo": 290,
+  "abgeschnitten": 63,
   "unbekannt": 0,
   "leer": 0
  },
@@ -420,7 +420,7 @@
    "league": "EPL",
    "winner": "Draw (Aston Villa FC vs. Brentford FC)",
    "moneyFav": "Brentford FC",
-   "priceFav": "Aston Villa FC",
+   "priceFav": "Brentford FC",
    "moneyShare": 0.803,
    "priceProb": 0.367,
    "moneyOK": false,
@@ -584,7 +584,7 @@
    "totalUsd": 247604
   }
  ],
- "generatedAt": "2026-10-10T21:18:10.957205+00:00",
+ "generatedAt": "2026-10-10T21:46:27.683564+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -592,15 +592,15 @@
   "nfl": 800,
   "mlb": 469,
   "nhl": 624,
-  "mls": 773,
-  "epl": 578,
+  "mls": 767,
+  "epl": 577,
   "soccer": 800,
   "tennis": 800,
   "ucl": 669,
-  "la-liga": 597,
+  "la-liga": 596,
   "bundesliga": 501,
   "serie-a": 52,
-  "ligue-1": 581,
+  "ligue-1": 568,
   "primeira-liga": 466,
   "brazil-serie-a": 542,
   "brasileirao": 0,
@@ -637,24 +637,24 @@
   "indian-super-league": 222,
   "israel-premier-league": 280,
   "japan-j-league": 565,
-  "japan-j2-league": 516,
+  "japan-j2-league": 522,
   "k-league": 473,
-  "la-liga-2": 538,
+  "la-liga-2": 537,
   "liga-mx-apertura": 2,
   "ligue-2": 498,
   "naitons-league": 1,
   "national-league": 410,
   "nations-league": 25,
   "norway-eliteserien": 500,
-  "poland-ekstraklasa": 441,
+  "poland-ekstraklasa": 435,
   "premier-league": 552,
   "saudi-professional-league": 596,
   "scotland-league-cup": 193,
   "scottish-premiership": 455,
   "serbian-superliga": 429,
-  "serie-b": 495,
-  "slovenia-prvaliga": 310,
-  "sweden-allsvenskan": 442,
+  "serie-b": 489,
+  "slovenia-prvaliga": 304,
+  "sweden-allsvenskan": 436,
   "switzerland-super-league": 417,
   "uefa-champions-league": 28,
   "uefa-conference-league": 29,
@@ -667,116 +667,116 @@
  "sweepStats": {
   "sweepOpen": 500,
   "sweepClosed": 500,
-  "sweepAdded": 412
+  "sweepAdded": 414
  },
  "vorStats": {
-  "kandidaten": 12,
+  "kandidaten": 9,
   "budgetLeer": 0,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
-  "mitAnteilen": 12,
-  "calls": 12
+  "mitAnteilen": 9,
+  "calls": 9
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 2101,
-   "usd": 27468632,
+   "n": 2113,
+   "usd": 29238932,
    "beispiel": "fifwc-jpn-swe-2026-06-25"
   },
   "world": {
-   "n": 116,
-   "usd": 8153537,
+   "n": 112,
+   "usd": 8110977,
    "beispiel": "world-cup-winner"
-  },
-  "uefa": {
-   "n": 50,
-   "usd": 4971974,
-   "beispiel": "uefa-champions-league-winner"
-  },
-  "cbb": {
-   "n": 194,
-   "usd": 1228646,
-   "beispiel": "cbb-ind-rutger-2026-01-23"
   },
   "presidential": {
    "n": 23,
-   "usd": 1222662,
+   "usd": 6163236,
    "beispiel": "presidential-election-winner-2028"
   },
-  "btc": {
-   "n": 188,
-   "usd": 1101281,
-   "beispiel": "btc-updown-15m-1790900100"
+  "uefa": {
+   "n": 50,
+   "usd": 4963304,
+   "beispiel": "uefa-champions-league-winner"
   },
   "will": {
-   "n": 27,
-   "usd": 643518,
+   "n": 49,
+   "usd": 1597045,
    "beispiel": "will-china-invade-taiwan-before-2027"
   },
+  "cbb": {
+   "n": 103,
+   "usd": 1226807,
+   "beispiel": "cbb-ind-rutger-2026-01-23"
+  },
   "which": {
-   "n": 33,
-   "usd": 600217,
+   "n": 31,
+   "usd": 771471,
    "beispiel": "which-movie-has-best-opening-weekend-in-2025"
   },
   "fed": {
-   "n": 31,
-   "usd": 598418,
+   "n": 27,
+   "usd": 590508,
    "beispiel": "fed-decision-in-july"
   },
   "super": {
-   "n": 29,
-   "usd": 551800,
+   "n": 30,
+   "usd": 555180,
    "beispiel": "super-bowl-champion-2026-731"
   },
-  "ballon": {
-   "n": 16,
-   "usd": 199008,
-   "beispiel": "ballon-dor-winner-2026"
+  "trump": {
+   "n": 3,
+   "usd": 359747,
+   "beispiel": "trump-renames-ai-by-september-30"
   },
   "pro": {
-   "n": 17,
-   "usd": 198611,
+   "n": 18,
+   "usd": 201242,
    "beispiel": "pro-football-2027-champion-20260729185915366"
   },
+  "ballon": {
+   "n": 15,
+   "usd": 195327,
+   "beispiel": "ballon-dor-winner-2026"
+  },
   "uef": {
-   "n": 14,
-   "usd": 183187,
+   "n": 11,
+   "usd": 163989,
    "beispiel": "uef-kvx-tur-2026-03-31"
   },
   "us": {
-   "n": 19,
-   "usd": 166902,
+   "n": 17,
+   "usd": 150961,
    "beispiel": "us-strike-on-cuba-by"
   },
-  "cdr": {
-   "n": 13,
-   "usd": 139134,
-   "beispiel": "cdr-atm-fcb-2026-02-12"
+  "btc": {
+   "n": 61,
+   "usd": 149830,
+   "beispiel": "btc-updown-15m-1790900100"
+  },
+  "xi": {
+   "n": 2,
+   "usd": 140895,
+   "beispiel": "xi-jinping-out-before-2027"
   },
   "lec": {
-   "n": 25,
-   "usd": 128984,
+   "n": 21,
+   "usd": 121836,
    "beispiel": "lec-caz-phi-2026-08-06"
   },
   "brazil": {
-   "n": 12,
-   "usd": 120660,
+   "n": 10,
+   "usd": 121680,
    "beispiel": "brazil-presidential-election"
   },
-  "next": {
-   "n": 15,
-   "usd": 98096,
-   "beispiel": "next-prime-minister-of-sweden"
-  },
-  "nbasl": {
+  "new": {
    "n": 1,
-   "usd": 97044,
-   "beispiel": "nbasl-cle-nop-2026-07-15"
+   "usd": 119991,
+   "beispiel": "new-stranger-things-episode-released-by-wednesday"
   },
-  "2026": {
-   "n": 20,
-   "usd": 76639,
-   "beispiel": "2026-f1-drivers-champion"
+  "cdr": {
+   "n": 6,
+   "usd": 113304,
+   "beispiel": "cdr-atm-fcb-2026-02-12"
   }
  }
 }
