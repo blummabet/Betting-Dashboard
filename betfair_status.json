@@ -22,14 +22,9 @@
       "id": "grosses_geld_bleibt_im_feed",
       "label": "Grosses Geld faellt nicht aus dem Feed",
       "severity": "error",
-      "ok": false,
-      "nFail": 4,
-      "failures": [
-        "36100483: zuletzt 30.753 € und Anpfiff erst in 22.1 h — trotzdem nicht mehr im Feed",
-        "36065329: zuletzt 240.847 € und Anpfiff erst in 23.3 h — trotzdem nicht mehr im Feed",
-        "36100481: zuletzt 76.425 € und Anpfiff erst in 24.3 h — trotzdem nicht mehr im Feed",
-        "36065583: zuletzt 23.736 € und Anpfiff erst in 50.8 h — trotzdem nicht mehr im Feed"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Der Detail-Deckel darf nicht das teuerste Spiel schneiden — genau das ist am 08.09. passiert (alle vier CL-Spiele, Real Madrid mit 102.861 €)."
     },
     {
@@ -84,21 +79,27 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 178070 verbraucht, 4821930 uebrig"
+      "note": "Kontingent: 178220 verbraucht, 4821780 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 4,
+      "nFail": 10,
       "failures": [
         "Al Hidd v Al-Ittifaq Maqaba (Bahraini Premier): unerklaert — bester Kandidat „Al-Ettifaq v Al-Khaleej“",
         "Al Tadhamon v Al-Qadsia (Kuwaiti Premier League): unerklaert — bester Kandidat „Al-Ettifaq v Al-Khaleej“",
         "Al Shahaniya v Lusail (Qatari Stars League): name — bester Kandidat „Al-Ettifaq v Al-Khaleej“",
-        "St Pauli v Karlsruhe (German Bundesliga 2): name — bester Kandidat „FC St. Pauli v Karlsruher SC“"
+        "St Pauli v Karlsruhe (German Bundesliga 2): name — bester Kandidat „FC St. Pauli v Karlsruher SC“",
+        "FC Koln v Mgladbach (German Bundesliga): name — bester Kandidat „1. FC Köln v Borussia Monchengladbach“",
+        "Al Wasl v Al Ahli (AFC Champions League): zeit — bester Kandidat „Al-Ahli v Al-Nassr“ · 74.0h Anpfiff-Abstand",
+        "AF Elbasani v FK Vora (Albanian Superliga): name — bester Kandidat „Saint Etienne v Rodez AF“",
+        "Al Salt v Al Faisaly SC (Jordanian Premier League): zeit — bester Kandidat „Al-Faisaly KSA FC v Al-Kholood“ · 117.2h Anpfiff-Abstand",
+        "Real Jaen v Villarreal B (Spanish Primera Federación - Group 2): zeit — bester Kandidat „Real Madrid v Villarreal“ · 2.2h Anpfiff-Abstand",
+        "Al Salmiyah v Al-Shabab (Kuwaiti Premier League): zeit — bester Kandidat „Al-Shabab v Al-Taawoun“ · 24.9h Anpfiff-Abstand"
       ],
-      "note": "ohne Anker: kein_kandidat 39 · kein_pinnacle 1 · name 2 · unerklaert 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 58 · kein_pinnacle 4 · name 4 · unerklaert 2 · zeit 4. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -107,7 +108,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 1 — Oddevold v United IK Nordic (21 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 3 — Inter v Parma (33 Buecher, ohne Pinnacle); Oddevold v United IK Nordic (23 Buecher, ohne Pinnacle); Duisburg v Hoffenheim II (20 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -116,7 +117,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 16 gewollt, 16 abgerufen, 0 mit Daten"
+      "note": "Totals: 19 gewollt, 19 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -182,6 +183,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-10-10T16:09:13.209674+00:00"
+  "nFail": 1,
+  "generatedAt": "2026-10-10T16:24:20.499295+00:00"
 }
