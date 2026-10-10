@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-10T14:12:35.102408+00:00",
+ "generatedAt": "2026-10-10T14:42:49.097850+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,12 +10,12 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 760,
- "pinnKeys": 360,
- "matched": 234,
- "footballRows": 228,
+ "polyRowsSeen": 757,
+ "pinnKeys": 357,
+ "matched": 231,
+ "footballRows": 225,
  "crossRows": 532,
- "footballSkippedStale": 109,
+ "footballSkippedStale": 115,
  "seenBySport": {
   "basketball_nba": 74,
   "americanfootball_nfl": 74,
@@ -23,17 +23,46 @@
   "icehockey_nhl": 348,
   "boxing_boxing": 24,
   "soccer_mls": 48,
-  "soccer_liga": 180
+  "soccer_liga": 177
  },
  "matchedBySport": {
   "baseball_mlb": 2,
   "boxing_boxing": 4,
   "soccer_mls": 48,
-  "soccer_liga": 180
+  "soccer_liga": 177
  },
  "trackRecord": {
-  "tracked": 136,
+  "tracked": 138,
   "converged": 51
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "soccer_liga|1899hoffenheim-hamburgersv|hw",
+   "sport": "soccer_liga",
+   "event": "1899 Hoffenheim vs Hamburger SV",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 57.5,
+   "pinnPP": 34.8,
+   "gapPP": 22.71,
+   "vol": 138449,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-10T14:42:49.097677+00:00"
+  },
+  {
+   "id": "soccer_liga|1899hoffenheim-hamburgersv|aw",
+   "sport": "soccer_liga",
+   "event": "1899 Hoffenheim vs Hamburger SV",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 13.5,
+   "pinnPP": 35.0,
+   "gapPP": -21.55,
+   "vol": 138449,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-10T14:42:49.097677+00:00"
+  }
+ ]
 }
