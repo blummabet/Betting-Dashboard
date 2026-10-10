@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-10-10T14:30:56Z",
-    "total_records": 200,
+    "updated_at": "2026-10-10T21:43:47Z",
+    "total_records": 213,
     "oddsBackfilled": "2026-09-06 — Quote/entryOdd aus den Pick-Dateien nachgetragen; der Ledger trug sie nie (0 von 318)."
   },
   "records": [
@@ -1580,6 +1580,43 @@
       "clvBasis": "fair"
     },
     {
+      "key": "ENG-6-33-47|Heimsieg",
+      "matchKey": "ENG-6-33-47",
+      "market": "Heimsieg",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 1.47
+        },
+        {
+          "name": "h2h_pattern",
+          "score": -0.6
+        },
+        {
+          "name": "apif_predictions",
+          "score": -1.81
+        },
+        {
+          "name": "chance_creation",
+          "score": 2.66
+        }
+      ],
+      "resolvedAt": "2026-10-10T21:43:31Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -4.75,
+      "clvResolved": true,
+      "odds": 1.62,
+      "entryOdd": 1.62,
+      "entryBook": "soft",
+      "processVerdict": "DESERVED_LOSS",
+      "clvFairPP": -2.18,
+      "clvBasis": "fair"
+    },
+    {
       "key": "ENG-6-42-63|Unter 3.5 Tore",
       "matchKey": "ENG-6-42-63",
       "market": "Unter 3.5 Tore",
@@ -1630,6 +1667,120 @@
       "entryBook": "soft",
       "processVerdict": "JUSTIFIED",
       "clvFairPP": -0.83,
+      "clvBasis": "fair"
+    },
+    {
+      "key": "ENG-6-49-35|Unter 3.5 Tore",
+      "matchKey": "ENG-6-49-35",
+      "market": "Unter 3.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "lead_lag_bias",
+          "score": 4.98
+        },
+        {
+          "name": "injury",
+          "score": 4.75
+        },
+        {
+          "name": "form_trend",
+          "score": -2.27
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 2.0
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.85
+        },
+        {
+          "name": "chance_creation",
+          "score": -5.18
+        },
+        {
+          "name": "transfer_shift",
+          "score": 0.6
+        },
+        {
+          "name": "streak_momentum",
+          "score": -0.22
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        },
+        {
+          "name": "betfair_money",
+          "score": -1.81
+        }
+      ],
+      "resolvedAt": "2026-10-10T21:43:31Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 1.73,
+      "clvResolved": true,
+      "odds": 1.67,
+      "entryOdd": 1.67,
+      "entryBook": "soft",
+      "processVerdict": "UNLUCKY",
+      "clvFairPP": 5.03,
+      "clvBasis": "fair"
+    },
+    {
+      "key": "ENG-6-746-51|Auswärtssieg",
+      "matchKey": "ENG-6-746-51",
+      "market": "Auswärtssieg",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 2.33
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 0.6
+        },
+        {
+          "name": "xg_strength",
+          "score": -1.79
+        },
+        {
+          "name": "apif_predictions",
+          "score": 1.49
+        },
+        {
+          "name": "chance_creation",
+          "score": 1.57
+        },
+        {
+          "name": "smart_money",
+          "score": 1.5
+        },
+        {
+          "name": "transfer_shift",
+          "score": 0.48
+        },
+        {
+          "name": "betfair_money",
+          "score": 4.0
+        }
+      ],
+      "resolvedAt": "2026-10-10T21:43:31Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": false,
+      "engineVersion": "v1",
+      "clvPP": -1.53,
+      "clvResolved": true,
+      "odds": 2.3,
+      "entryOdd": 2.3,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED",
+      "clvFairPP": 1.16,
       "clvBasis": "fair"
     },
     {
@@ -4660,6 +4811,71 @@
       "clvBasis": "roh"
     },
     {
+      "key": "ESP-8-542-530|Auswärtssieg",
+      "matchKey": "ESP-8-542-530",
+      "market": "Auswärtssieg",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "injury",
+          "score": -1.6
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 0.8
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.31
+        },
+        {
+          "name": "apif_predictions",
+          "score": -1.5
+        },
+        {
+          "name": "chance_creation",
+          "score": 3.02
+        },
+        {
+          "name": "form_rating",
+          "score": 1.43
+        },
+        {
+          "name": "transfer_shift",
+          "score": 1.2
+        },
+        {
+          "name": "opener_move",
+          "score": 1.12
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        },
+        {
+          "name": "venue_form",
+          "score": -1.33
+        },
+        {
+          "name": "betfair_money",
+          "score": -3.47
+        }
+      ],
+      "resolvedAt": "2026-10-10T21:43:31Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -1.61,
+      "clvResolved": true,
+      "odds": 1.8,
+      "entryOdd": 1.8,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED",
+      "clvFairPP": 0.38,
+      "clvBasis": "fair"
+    },
+    {
       "key": "FRA-1-1298-106|Unter 3.5 Tore",
       "matchKey": "FRA-1-1298-106",
       "market": "Unter 3.5 Tore",
@@ -5972,6 +6188,331 @@
       "clvBasis": "roh"
     },
     {
+      "key": "FRA-6-85-1298|Unter 3.5 Tore",
+      "matchKey": "FRA-6-85-1298",
+      "market": "Unter 3.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "lead_lag_bias",
+          "score": 6.0
+        },
+        {
+          "name": "form_trend",
+          "score": 2.53
+        },
+        {
+          "name": "chance_creation",
+          "score": -4.53
+        },
+        {
+          "name": "transfer_shift",
+          "score": 0.6
+        }
+      ],
+      "resolvedAt": "2026-10-10T21:43:31Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 2.03,
+      "clvResolved": true,
+      "odds": 2.25,
+      "entryOdd": 2.25,
+      "entryBook": "soft",
+      "processVerdict": "DESERVED_LOSS",
+      "clvFairPP": 6.75,
+      "clvBasis": "fair"
+    },
+    {
+      "key": "FRA-6-91-96|Heimsieg",
+      "matchKey": "FRA-6-91-96",
+      "market": "Heimsieg",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "lead_lag_bias",
+          "score": -1.96
+        },
+        {
+          "name": "form_trend",
+          "score": 3.67
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 0.8
+        },
+        {
+          "name": "xg_strength",
+          "score": -1.71
+        },
+        {
+          "name": "apif_predictions",
+          "score": -2.24
+        },
+        {
+          "name": "chance_creation",
+          "score": -2.45
+        },
+        {
+          "name": "form_rating",
+          "score": 2.85
+        },
+        {
+          "name": "streak_momentum",
+          "score": 0.08
+        },
+        {
+          "name": "opener_move",
+          "score": 1.29
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        },
+        {
+          "name": "venue_form",
+          "score": 1.71
+        },
+        {
+          "name": "betfair_money",
+          "score": 4.0
+        }
+      ],
+      "resolvedAt": "2026-10-10T21:43:31Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -3.35,
+      "clvResolved": true,
+      "odds": 1.6,
+      "entryOdd": 1.6,
+      "entryBook": "soft",
+      "processVerdict": "DESERVED_LOSS",
+      "clvFairPP": -1.18,
+      "clvBasis": "fair"
+    },
+    {
+      "key": "FRA-6-97-114|Auswärtssieg",
+      "matchKey": "FRA-6-97-114",
+      "market": "Auswärtssieg",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "lead_lag_bias",
+          "score": 5.58
+        },
+        {
+          "name": "injury",
+          "score": 2.2
+        },
+        {
+          "name": "h2h_pattern",
+          "score": -0.8
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.74
+        },
+        {
+          "name": "chance_creation",
+          "score": 1.37
+        },
+        {
+          "name": "form_rating",
+          "score": 2.11
+        },
+        {
+          "name": "transfer_shift",
+          "score": 1.2
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        },
+        {
+          "name": "betfair_money",
+          "score": 3.53
+        }
+      ],
+      "resolvedAt": "2026-10-10T21:43:31Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 1.7,
+      "clvResolved": true,
+      "odds": 2.19,
+      "entryOdd": 2.19,
+      "entryBook": "soft",
+      "processVerdict": "UNLUCKY",
+      "clvFairPP": 3.87,
+      "clvBasis": "fair"
+    },
+    {
+      "key": "FRA-6-97-114|Doppelte Chance — X2",
+      "matchKey": "FRA-6-97-114",
+      "market": "Doppelte Chance — X2",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "injury",
+          "score": 2.2
+        },
+        {
+          "name": "h2h_pattern",
+          "score": -0.8
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.74
+        },
+        {
+          "name": "chance_creation",
+          "score": 1.37
+        },
+        {
+          "name": "form_rating",
+          "score": 2.11
+        },
+        {
+          "name": "transfer_shift",
+          "score": 1.2
+        },
+        {
+          "name": "streak_momentum",
+          "score": 0.07
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        },
+        {
+          "name": "betfair_money",
+          "score": 3.53
+        }
+      ],
+      "resolvedAt": "2026-10-10T21:43:31Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 2.99,
+      "clvResolved": true,
+      "odds": 1.35,
+      "entryOdd": 1.35,
+      "entryBook": "soft",
+      "processVerdict": "UNLUCKY",
+      "clvBasis": "roh"
+    },
+    {
+      "key": "FRA-6-97-114|Unter 2.5 Tore",
+      "matchKey": "FRA-6-97-114",
+      "market": "Unter 2.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "lead_lag_bias",
+          "score": 3.53
+        },
+        {
+          "name": "injury",
+          "score": -1.5
+        },
+        {
+          "name": "form_trend",
+          "score": -2.0
+        },
+        {
+          "name": "chance_creation",
+          "score": -0.99
+        },
+        {
+          "name": "transfer_shift",
+          "score": 0.6
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        },
+        {
+          "name": "betfair_money",
+          "score": 2.51
+        }
+      ],
+      "resolvedAt": "2026-10-10T21:43:31Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -0.18,
+      "clvResolved": true,
+      "odds": 1.83,
+      "entryOdd": 1.83,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED",
+      "clvFairPP": 3.28,
+      "clvBasis": "fair"
+    },
+    {
+      "key": "FRA-6-97-114|Unter 3.5 Tore",
+      "matchKey": "FRA-6-97-114",
+      "market": "Unter 3.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "lead_lag_bias",
+          "score": 3.23
+        },
+        {
+          "name": "injury",
+          "score": -1.5
+        },
+        {
+          "name": "form_trend",
+          "score": 2.0
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 1.4
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.98
+        },
+        {
+          "name": "chance_creation",
+          "score": -0.99
+        },
+        {
+          "name": "transfer_shift",
+          "score": 0.6
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        },
+        {
+          "name": "betfair_money",
+          "score": 1.34
+        }
+      ],
+      "resolvedAt": "2026-10-10T21:43:31Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 2.0,
+      "clvResolved": true,
+      "odds": 1.36,
+      "entryOdd": 1.36,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED",
+      "clvFairPP": 1.88,
+      "clvBasis": "fair"
+    },
+    {
       "key": "GER-1-157-172|Über 3.5 Tore",
       "matchKey": "GER-1-157-172",
       "market": "Über 3.5 Tore",
@@ -7108,6 +7649,97 @@
       "odds": 1.87,
       "entryOdd": 1.87,
       "entryBook": "pini",
+      "processVerdict": "DESERVED_LOSS",
+      "clvBasis": "roh"
+    },
+    {
+      "key": "GER-5-173-169|Über 3.5 Tore",
+      "matchKey": "GER-5-173-169",
+      "market": "Über 3.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "injury",
+          "score": -7.75
+        },
+        {
+          "name": "form_trend",
+          "score": 3.87
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.37
+        },
+        {
+          "name": "chance_creation",
+          "score": 5.39
+        },
+        {
+          "name": "streak_momentum",
+          "score": 0.29
+        },
+        {
+          "name": "betfair_money",
+          "score": 4.0
+        }
+      ],
+      "resolvedAt": "2026-10-10T21:43:31Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 0.0,
+      "clvResolved": false,
+      "odds": 1.73,
+      "entryOdd": 1.73,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "GER-5-182-1660|Doppelte Chance — X2",
+      "matchKey": "GER-5-182-1660",
+      "market": "Doppelte Chance — X2",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 3.24
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.87
+        },
+        {
+          "name": "chance_creation",
+          "score": -1.06
+        },
+        {
+          "name": "form_rating",
+          "score": 2.48
+        },
+        {
+          "name": "transfer_shift",
+          "score": 0.48
+        },
+        {
+          "name": "opener_move",
+          "score": 0.43
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        }
+      ],
+      "resolvedAt": "2026-10-10T21:43:31Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 1.16,
+      "clvResolved": true,
+      "odds": 1.64,
+      "entryOdd": 1.64,
+      "entryBook": "soft",
       "processVerdict": "DESERVED_LOSS",
       "clvBasis": "roh"
     },
@@ -9359,7 +9991,7 @@
           "score": 2.05
         }
       ],
-      "resolvedAt": "2026-10-10T14:30:56Z",
+      "resolvedAt": "2026-10-10T21:43:47Z",
       "source": "steam",
       "convictionScore": 5,
       "lateEntry": true,
@@ -9369,6 +10001,51 @@
       "odds": 1.45,
       "entryOdd": 1.45,
       "entryBook": "soft"
+    },
+    {
+      "key": "ITA-6-495-502|Unter 2.5 Tore",
+      "matchKey": "ITA-6-495-502",
+      "market": "Unter 2.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "injury",
+          "score": 5.25
+        },
+        {
+          "name": "form_trend",
+          "score": -2.93
+        },
+        {
+          "name": "chance_creation",
+          "score": -4.0
+        },
+        {
+          "name": "transfer_shift",
+          "score": 0.6
+        },
+        {
+          "name": "move_following",
+          "score": 1.2
+        },
+        {
+          "name": "betfair_money",
+          "score": 1.54
+        }
+      ],
+      "resolvedAt": "2026-10-10T21:43:31Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": false,
+      "engineVersion": "v1",
+      "clvPP": -0.16,
+      "clvResolved": true,
+      "odds": 1.82,
+      "entryOdd": 1.82,
+      "entryBook": "soft",
+      "processVerdict": "UNLUCKY",
+      "clvFairPP": 3.17,
+      "clvBasis": "fair"
     }
   ]
 }
