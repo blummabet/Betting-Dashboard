@@ -22,9 +22,16 @@
       "id": "grosses_geld_bleibt_im_feed",
       "label": "Grosses Geld faellt nicht aus dem Feed",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 6,
+      "failures": [
+        "36100463: zuletzt 38.207 € und Anpfiff erst in 1.0 h — trotzdem nicht mehr im Feed",
+        "36099829: zuletzt 108.274 € und Anpfiff erst in 1.8 h — trotzdem nicht mehr im Feed",
+        "36099839: zuletzt 60.556 € und Anpfiff erst in 2.3 h — trotzdem nicht mehr im Feed",
+        "36065343: zuletzt 278.263 € und Anpfiff erst in 2.3 h — trotzdem nicht mehr im Feed",
+        "36100904: zuletzt 717.018 € und Anpfiff erst in 2.3 h — trotzdem nicht mehr im Feed",
+        "36100451: zuletzt 30.397 € und Anpfiff erst in 4.5 h — trotzdem nicht mehr im Feed"
+      ],
       "note": "Der Detail-Deckel darf nicht das teuerste Spiel schneiden — genau das ist am 08.09. passiert (alle vier CL-Spiele, Real Madrid mit 102.861 €)."
     },
     {
@@ -79,26 +86,32 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 175269 verbraucht, 4824731 uebrig"
+      "note": "Kontingent: 175419 verbraucht, 4824581 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 9,
+      "nFail": 15,
       "failures": [
-        "SV Austria Salzburg v Floridsdorfer AC (Austrian Erste Liga): name — bester Kandidat „TSG Hoffenheim v Hamburger SV“",
-        "Muang Loei United F.C. v Esan Pattaya (Thai League 2): name — bester Kandidat „Falkirk F.C. v Dundee FC“",
-        "St Pauli v Karlsruhe (German Bundesliga 2): name — bester Kandidat „FC St. Pauli v Karlsruher SC“",
-        "FC Koln v Mgladbach (German Bundesliga): name — bester Kandidat „1. FC Köln v Borussia Monchengladbach“",
-        "FC Halifax Town v Gateshead (English National League): name — bester Kandidat „Ipswich Town v Fulham“",
         "Harborough Town v Southport (English National League North): name — bester Kandidat „Ipswich Town v Fulham“",
+        "Dover v Dorking Wanderers (English National League South): name — bester Kandidat „Wycombe Wanderers v Luton“",
+        "Darlington v Merthyr Town (English National League North): name — bester Kandidat „Ipswich Town v Fulham“",
+        "FC Halifax Town v Gateshead (English National League): name — bester Kandidat „Ipswich Town v Fulham“",
+        "Radcliffe Borough v Scarborough Athletic (English National League North): name — bester Kandidat „Stevenage v Wigan Athletic“",
+        "Worksop Town v Morecambe (English National League North): name — bester Kandidat „Ipswich Town v Fulham“",
+        "Galway Utd v Derry City (Irish FAI Cup): zeit — bester Kandidat „Drogheda United v Derry City“ · 148.8h Anpfiff-Abstand",
+        "Torquay v Slough Town (English National League South): name — bester Kandidat „Ipswich Town v Fulham“",
+        "Woking v Harrogate Town (English National League): name — bester Kandidat „Ipswich Town v Fulham“",
+        "Billericay Town v Farnborough FC (English National League South): name — bester Kandidat „Ipswich Town v Fulham“",
+        "Farnham Town v Salisbury City (English National League South): zeit — bester Kandidat „Manchester City v Ipswich Town“ · 168.0h Anpfiff-Abstand",
+        "Hebburn Town v Oxford City (English National League North): zeit — bester Kandidat „Manchester City v Ipswich Town“ · 168.0h Anpfiff-Abstand",
         "Brackley Town v Spennymoor Town (English National League North): name — bester Kandidat „Ipswich Town v Fulham“",
         "Hereford FC v Hednesford Town (English National League North): name — bester Kandidat „Ipswich Town v Fulham“",
-        "Arsenal U21 v Sunderland U21 (English Premier League 2 - Div 1): name — bester Kandidat „Sunderland v Brighton and Hove Albion“"
+        "Cove Rangers v East Fife (Scottish League One): name — bester Kandidat „Rangers v Kilmarnock“"
       ],
-      "note": "ohne Anker: kein_kandidat 51 · kein_pinnacle 3 · name 9. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 76 · kein_pinnacle 1 · name 12 · zeit 3. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -107,7 +120,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 2 — Samsunspor v Trabzonspor (28 Buecher, ohne Pinnacle); Clermont v Red Star (27 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 1 — Samsunspor v Trabzonspor (25 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -116,7 +129,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 12 gewollt, 12 abgerufen, 0 mit Daten"
+      "note": "Totals: 14 gewollt, 14 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -182,6 +195,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 1,
-  "generatedAt": "2026-10-10T13:54:12.317189+00:00"
+  "nFail": 2,
+  "generatedAt": "2026-10-10T14:13:25.317530+00:00"
 }
