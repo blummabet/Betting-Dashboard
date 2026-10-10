@@ -292,6 +292,8 @@ EBENE = {
     # 14.09.2026 (CI-Wachhund): Brasileiro Serie C ist die DRITTE brasilianische Klasse
     # (unter Serie A und B). Beleg: Brusque FC gegen AA Internacional Limeira.
     "brasileiro-serie-c": 3,
+    # 10.10.2026 (CI-Wachhund): zweite Liga der Staatsmeisterschaft von Paraíba — regional.
+    "paraibano-2-divisao": 3,
     # 14.09.2026 (CI-Wachhund): „Calcutta Premier Div." ist eine indische STADT-Liga —
     # wie „mizoram-premier-league" trotz „Premier" weit unter der obersten Klasse (ISL).
     # Beleg aus der Paarung: United SC gegen „Mohun Bagan SG Reserves" — die erste Elf
@@ -336,7 +338,10 @@ ART = {
     "caf-confederations-cup": "kontinental", "copa-libertadores": "kontinental",
     "copa-sudamericana": "kontinental", "leagues-cup": "kontinental",
     "copa-do-brasil": "pokal", "fa-cup": "pokal", "efl-cup": "pokal", "ofb-cup": "pokal",
-    "coppa-italia": "pokal", "coppa-italia-serie-d": "pokal",  # 07.10.: Nocerina - Turris "greece-cup": "pokal", "copa-uruguay": "pokal",
+    # 10.10.2026: hier standen „greece-cup" und „copa-uruguay" HINTER dem Kommentar zur
+    # Serie-D-Coppa (07.10.) — mein Einfuegen hatte sie auskommentiert. Eigene Zeile seitdem.
+    "coppa-italia": "pokal", "coppa-italia-serie-d": "pokal",  # 07.10.: Nocerina - Turris
+    "greece-cup": "pokal", "copa-uruguay": "pokal",
     "copa-paulista": "pokal", "dfb-pokal": "pokal", "copa-del-rey": "pokal",
     # 14.09.2026 (CI-Wachhund): die AFC Champions League ist das asiatische Gegenstueck zu UEFA-
     # und CAF-Champions-League — Vereine aus verschiedenen Verbaenden, also keine Spielklasse.
@@ -555,6 +560,9 @@ TURNIER_EBENE = {
         # 06.10.2026 (Wachhund): beide oberste Klasse.
         "47043c57-9221-4bce-86bb-ed83826a230e": ("Ukraine (Veres Rivne - FK Kudrivka)", 1),
         "5dbb8017-40fc-496e-9b05-352444d232b1": ("Bangladesch (Fortis FC - City Club)", 1),
+        # 10.10.2026 (Wachhund), eingestuft ueber die Vereine — beide oberste Klasse.
+        "7b267538-cdcd-4328-9d42-c3f566d0116a": ("Libanon (Nejmeh, Al Ansar, Safa SC)", 1),
+        "f560ca90-38a3-4f92-9eb3-49097ad163dd": ("Israel (Ironi Tiberias - Hapoel Be'er Sheva)", 1),
     },
     "primera-division": {
         "118c993d-1294-4f73-9afb-c97213bcfab0": ("Uruguay", 1),
@@ -565,6 +573,8 @@ TURNIER_EBENE = {
         "16c027b0-893a-40de-b829-63d5ea863a64": ("Guatemala, Primera Division (2. Liga)", 2),
         # 06.10.2026 (Wachhund): „Universidad de Concepcion - Huachipato" — Chiles oberste Liga.
         "4b9f9ae2-1d49-4296-9d87-bc4e84dc0d31": ("Chile (U. de Concepcion - Huachipato)", 1),
+        # 10.10.2026 (Wachhund): „Unan Managua - Real Esteli FC" — Nicaraguas oberste Liga.
+        "42bb04f7-0ad1-48fb-a031-4d8eaee6f0ee": ("Nicaragua (UNAN Managua - Real Esteli)", 1),
     },
     # 06.10.2026 (Wachhund): Venezuela (Urena SC, Barinas, Deportivo Lara, Real Frontera) ist die
     # ZWEITE Klasse. Paraguay (b072c9f7…, „Sportivo Carapegua - Deportivo Capiata"): eingestuft
@@ -574,6 +584,8 @@ TURNIER_EBENE = {
     "segunda-division": {
         "7e76a474-ef1d-4b36-9ff8-7e0b34ac9054": ("Venezuela, Segunda Division", 2),
         "b072c9f7-4707-4bb4-be98-0ac3db79b1a0": ("Paraguay, Division Intermedia (ueber die Vereine)", 2),
+        # 10.10.2026 (Wachhund): Bentin Tacna, Carlos Mannucci, ADA Jaen — Perus Liga 2.
+        "496047b8-b9ae-4ae1-ad95-d8640c25b022": ("Peru, Liga 2 (Bentin Tacna - Mannucci)", 2),
     },
     # 29.09.2026: drei Laender unter einem Slug — alle oberste Klasse, das Urteil stimmt fuer alle.
     "primera-division-apertura": {
@@ -586,6 +598,10 @@ TURNIER_EBENE = {
         "180b07b7-4b3a-45c4-a1a6-3e56b1f68d78": ("Argentinien, Primera B Metropolitana", 3),
         "ec7f8cc8-357f-46c9-9350-182662cb8487": ("Chile", 2),
         "f5da1103-437b-4567-a484-e41513e26725": ("Kolumbien", 2),
+        # 10.10.2026 (Wachhund): zweite kolumbianische ID — Tigres FC, Real Cartagena,
+        # Atletico FC Cali, Barranquilla FC sind alle Primera-B-Vereine (vermutlich die
+        # Finalrunde als eigenes Turnier). Ueber die Vereine eingestuft.
+        "451881c2-8c79-44e9-91fe-af1921b3dcc1": ("Kolumbien (Tigres FC, Real Cartagena)", 2),
     },
 }
 

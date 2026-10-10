@@ -206,6 +206,8 @@ GEPRUEFT_KEIN_GELD = {
     "jede stake-wette traegt ihre sportart",              # Zuordnung, kein Ausgang
     "buecher-punktestand: die zahl stimmt mit ihrer begruendung ueberein",
     "stake-auffaelligkeiten tragen ihr gemessenes urteil",
+    "stake-norm-kachel zeigt keine gesperrten ligen",       # 10.10.: Anzeige-Sperre, kein Ausgang
+    "jede stake-wette sagt, ob sie ein spiel ist",          # 10.10.: Anzeige, kein Ausgang
     "signal-bilanz: schadet ein signal belegt?",          # Messung ueber Messungen
     "fade-unter: haelt die kontrollgruppe?",              # laeuft mit, sendet nie
     "clv-urteil passt zur clv-zahl",

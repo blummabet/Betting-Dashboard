@@ -867,3 +867,11 @@ def test_wales_tschechien_und_supercups():
     assert LS.stufe("1-cfl") == "1"                          # Montenegro bleibt oben
     for s in ("supercopa-internacional", "supercoppa-italiana", "dfl-supercup"):
         assert LS.stufe(s) == "pokal", s
+
+
+def test_pokale_hinter_einem_kommentar_bleiben_eingestuft():
+    """10.10.2026: „greece-cup" und „copa-uruguay" standen seit dem 07.10. hinter einem
+    Zeilenkommentar und waren still aus ART gefallen. Die Stufe stimmte trotzdem — die
+    Namensregel („cup") fing es auf; deshalb prueft der Test die Tabelle, nicht die Stufe."""
+    assert LS.ART.get("greece-cup") == "pokal"
+    assert LS.ART.get("copa-uruguay") == "pokal"

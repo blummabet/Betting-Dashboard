@@ -144,6 +144,11 @@ def test_keine_zeile_des_ledgers_verliert_ihre_seite():
         # Tipp nicht hat. Hier ist die neue Antwort (keine Seite) richtig, der Vergleich nicht.
         if "/" in a:
             return None
+        # 10.10.2026: „AL Wakrah or Al Gharafa SC" (Doppelte Chance ohne Remis) nennt ebenfalls
+        # ZWEI Seiten. Das alte Verfahren fand nur „al gharafa sc" voll ausgeschrieben (der
+        # Ledger schreibt „AL Wakrah SC") und nannte die halbe Wette als Seite.
+        if " or " in a:
+            return None
         tr = [t for t in SB._teams((x or {}).get("event")) if t and t.lower() in a]
         return tr[0] if len(tr) == 1 else None
 

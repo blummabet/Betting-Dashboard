@@ -90,7 +90,9 @@ test('#69 Sharp-Qualität: bewiesene Wallet hebt Conviction + Warum zeigt Record
     const r = w._pwShortlistScore('mlb-braves-padres', BROAD['mlb-braves-padres']);
     assert.strictEqual(r.verdict, 'BET');
     assert.strictEqual(r.side, 'Atlanta Braves');
-    assert.ok(r.reasons.some(x => /scharfe Wallet \(42\/60, 70% · \+\$150K\)/.test(x)),
+    // 10.10.2026: im Grund steht der 30-Tage-SPORT-Profit statt der Poly-Lebensbilanz (+$150K
+    // ueber alle Maerkte). Diese Wallet hat kein fenster30 → das steht ehrlich als ungemessen da.
+    assert.ok(r.reasons.some(x => /scharfe Wallet \(42\/60, 70% · Sport-Bilanz ungemessen\)/.test(x)),
       'Warum zeigt den Wallet-Record: ' + JSON.stringify(r.reasons));
     assert.ok(r.sharp && r.sharp.n === 60, 'Sharp-Record am Play angehängt');
   });

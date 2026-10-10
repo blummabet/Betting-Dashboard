@@ -105,7 +105,8 @@ def test_serie_aus_sicht_des_teams():
                          z("2", "C", "A", [1, 1], [0, 0], "2026-09-27"),
                          z("3", "A", "D", [0, 2], [0, 0], "2026-10-02")], JETZT)
     r = T.serie(s, "A")
-    assert r == {"n": 3, "over25": 1, "btts": 2, "ht00": 2, "siege": 1, "toreSchnitt": 2.7, "form": "NUS"}
+    assert r == {"n": 3, "over25": 1, "btts": 2, "ht00": 2, "siege": 1, "toreSchnitt": 2.7, "form": "NUS",
+                 "toreFuer": 1.3, "toreGegen": 1.3}
     assert T.serie(s, "Unbekannt") is None
 
 
@@ -198,3 +199,12 @@ def test_bericht_teilt_jede_wette_auf():
     assert b["n"] == 5
     assert b["vereine"]["n"] == 3 and b["vereine"]["trefferPct"] == 66.7
     assert b["nationalteams"]["n"] == 2 and b["nationalteams"]["trefferPct"] == 0.0
+
+
+def test_serie_zeigt_geschossen_zu_kassiert():
+    """10.10.2026 (Lucas: „sind die 4.1 und 4.6 Tore gesamt?"). „Ø 4.1 Tore" las sich wie eigene
+    Tore; es war die Summe aus beiden Seiten."""
+    s = {"form": "SUN", "toreSchnitt": 4.1, "toreFuer": 2.6, "toreGegen": 1.5, "over25": 6, "n": 7}
+    assert "Ø 2.6:1.5 Tore" in H._serie_txt(s)
+    alt = {"form": "SUN", "toreSchnitt": 4.1, "over25": 6, "n": 7}
+    assert "Ø 4.1 Tore" in H._serie_txt(alt), "alte Serie ohne Felder bleibt lesbar"

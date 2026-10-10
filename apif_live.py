@@ -124,6 +124,8 @@ def serie_aus_fixtures(fixtures, team_id):
             "torIn2hz": sum(1 for s in mit_h if s["h2"] > 0), "nHz": len(mit_h),
             "siege": sum(1 for s in spiele if s["tore"] > s["gegen"]),
             "toreSchnitt": round(sum(s["tore"] + s["gegen"] for s in spiele) / n, 1),
+            "toreFuer": round(sum(s["tore"] for s in spiele) / n, 1),      # 10.10.2026, s. team_archiv
+            "toreGegen": round(sum(s["gegen"] for s in spiele) / n, 1),
             "form": "".join("S" if s["tore"] > s["gegen"] else "U" if s["tore"] == s["gegen"] else "N"
                             for s in spiele)}
 

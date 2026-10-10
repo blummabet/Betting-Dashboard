@@ -98,3 +98,13 @@ test('fehlt das Muster im Artefakt, greift der Rückfall — nicht „alles erla
   ] } };
   assert.doesNotMatch(w._mdStakeGeldTest(), /Shelton/);
 });
+
+// 10.10.2026: „Ballon dor 2026 ⏱ 378 h · $51.5K" stand in „größtes Geld" — keine Spielwette.
+test('Langzeitwetten (Feld langzeit vom Produzenten) stehen nicht in der Spiel-Kachel', () => {
+  const w = load();
+  const ballon = { ...wette('Ballon dor 2026', 378, 51500, 1), markt: 'Ballon d`Or - Winner', langzeit: true };
+  const spiel = { ...wette('Arsenal - Leeds United', 1, 20000, 1), langzeit: false };
+  const html = kachel(w, [ballon, spiel]);
+  assert.doesNotMatch(html, /Ballon/);
+  assert.match(html, /Arsenal - Leeds United/);
+});
