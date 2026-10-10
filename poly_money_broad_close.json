@@ -703425,7 +703425,13 @@
     "usd": 313,
     "ts": 1791556446
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Over": 1.0,
+   "Under": 0.0
+  },
+  "resolvedAt": "2026-10-10T01:15:30.120012+00:00"
  },
  "cfb-iowa-wash-2026-10-09": {
   "shares": {
@@ -704426,101 +704432,24 @@
     "usd": 1
    }
   ],
-  "hoursToKickoff": 2.24,
-  "capturedAt": "2026-10-10T00:45:29.313078+00:00",
+  "hoursToKickoff": 1.74,
+  "capturedAt": "2026-10-10T01:15:30.120012+00:00",
   "koTs": "2026-10-10T03:00:00+00:00",
   "cond": "0x526c568119077cc25cfd2e72e28484ec3c13ec58459f5e63d46fb805b81cf0d9",
   "frage": "Wuhan Tennis Open, Qualification: Aoi Ito vs Alycia Parks",
   "tokens": {
    "Aoi Ito": "55123078484764448459322695466857939974885468205589545995093928396984337362005",
    "Alycia Parks": "1321652012941518537710388182406594916306538801146078570586658110055614238798"
-  },
-  "book": {
-   "side": "Alycia Parks",
-   "bid": 0.6,
-   "ask": 0.61,
-   "spreadC": 1.0,
-   "spreadPct": 1.64,
-   "bids": [
-    [
-     0.6,
-     16063
-    ],
-    [
-     0.59,
-     4140
-    ],
-    [
-     0.58,
-     5786
-    ],
-    [
-     0.57,
-     2060
-    ],
-    [
-     0.56,
-     58
-    ],
-    [
-     0.55,
-     10
-    ]
-   ],
-   "asks": [
-    [
-     0.61,
-     6169
-    ],
-    [
-     0.62,
-     16570
-    ],
-    [
-     0.63,
-     20536
-    ],
-    [
-     0.64,
-     9490
-    ],
-    [
-     0.65,
-     7615
-    ],
-    [
-     0.66,
-     6307
-    ]
-   ]
-  },
-  "trades": [
-   {
-    "wallet": "0xd9dde44ddeababae222bf7aec96c85cbdab6b525",
-    "action": "BUY",
-    "side": "Alycia Parks",
-    "price": 0.6067,
-    "usd": 2844,
-    "ts": 1791585023
-   },
-   {
-    "wallet": "0xd9dde44ddeababae222bf7aec96c85cbdab6b525",
-    "action": "BUY",
-    "side": "Alycia Parks",
-    "price": 0.6088,
-    "usd": 9314,
-    "ts": 1791583750
-   }
-  ]
+  }
  },
  "mex-tig-tol-2026-10-09": {
   "shares": {
-   "Tigres de la UANL": 101.20587008000003,
-   "Draw (Tigres de la UANL vs. Deportivo Toluca FC)": 43.149083715,
-   "Deportivo Toluca FC": 6282.480229039999
+   "Tigres de la UANL": 102.78721180000002,
+   "Draw (Tigres de la UANL vs. Deportivo Toluca FC)": 77.50093566500001,
+   "Deportivo Toluca FC": 9922.862996259993
   },
   "prices": {
-   "Tigres de la UANL": 0.32,
+   "Tigres de la UANL": 0.325,
    "Draw (Tigres de la UANL vs. Deportivo Toluca FC)": 0.265,
    "Deportivo Toluca FC": 0.415
   },
@@ -704530,12 +704459,18 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 16710,
+  "totalUsd": 25633,
   "whales": [
    {
     "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
     "side": "Deportivo Toluca FC",
     "usd": 5261
+   },
+   {
+    "wallet": "0x6c46547cb49269ecfe0e1ffa6e73f5131efece2b",
+    "side": "Deportivo Toluca FC",
+    "usd": 3564,
+    "avgPrice": 0.4199
    },
    {
     "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
@@ -704558,6 +704493,11 @@
     "usd": 62
    },
    {
+    "wallet": "0x3bc64a49737c8e017f38d74f64f13db166b7fb63",
+    "side": "Deportivo Toluca FC",
+    "usd": 50
+   },
+   {
     "wallet": "0xd20f32681f5c84c6cffb2f4dbc7abea2030b7b6c",
     "side": "Deportivo Toluca FC",
     "usd": 49
@@ -704565,12 +704505,22 @@
    {
     "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
     "side": "Tigres de la UANL",
-    "usd": 47
+    "usd": 48
+   },
+   {
+    "wallet": "0x3bc64a49737c8e017f38d74f64f13db166b7fb63",
+    "side": "Draw (Tigres de la UANL vs. Deportivo Toluca FC)",
+    "usd": 48
    },
    {
     "wallet": "0xdd5ef115f801999575b03d78d0115ad8b2d59040",
     "side": "Deportivo Toluca FC",
     "usd": 42
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Deportivo Toluca FC",
+    "usd": 39
    },
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
@@ -704586,12 +704536,7 @@
    {
     "wallet": "0xdd287fd025c76163eeb23345c3a8595f728a374a",
     "side": "Tigres de la UANL",
-    "usd": 19
-   },
-   {
-    "wallet": "0x076e5a5ec198a512c6b4dc839eb5fc9f1b7ba6a4",
-    "side": "Deportivo Toluca FC",
-    "usd": 16
+    "usd": 20
    },
    {
     "wallet": "0xe266f576482ec2617f7ceea1b782dcfd174d25b6",
@@ -704639,8 +704584,8 @@
     "usd": 1
    }
   ],
-  "hoursToKickoff": 2.24,
-  "capturedAt": "2026-10-10T00:45:29.313078+00:00",
+  "hoursToKickoff": 1.74,
+  "capturedAt": "2026-10-10T01:15:30.120012+00:00",
   "koTs": "2026-10-10T03:00:00+00:00",
   "tokens": {
    "Tigres de la UANL": "76326088900451014450545560314882710445626833280394511816470086098207633976452",
@@ -704656,19 +704601,19 @@
    "bids": [
     [
      0.41,
-     18665
+     18057
     ],
     [
      0.4,
-     22081
+     24186
     ],
     [
      0.39,
-     35513
+     37005
     ],
     [
      0.38,
-     25020
+     26446
     ],
     [
      0.37,
@@ -704676,36 +704621,46 @@
     ],
     [
      0.36,
-     7683
+     7733
     ]
    ],
    "asks": [
     [
      0.42,
-     12034
+     7630
     ],
     [
      0.43,
-     41486
+     67802
     ],
     [
      0.44,
-     35277
+     36600
     ],
     [
      0.45,
-     23659
+     28266
     ],
     [
      0.46,
-     24099
+     24330
     ],
     [
      0.47,
-     37520
+     32570
     ]
    ]
-  }
+  },
+  "trades": [
+   {
+    "wallet": "0x6c46547cb49269ecfe0e1ffa6e73f5131efece2b",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.42,
+    "usd": 3607,
+    "ts": 1791593968
+   }
+  ]
  },
  "mex-pue-leo-2026-10-09": {
   "shares": {
@@ -705179,6 +705134,1154 @@
    "CD Garcilaso": "46319296034456447073081218271029963075084454489438969329838598043268446557843",
    "Draw (CD Garcilaso vs. CS Huancayo)": "85057390992380886039696122652963886361814941772731954946109373224967395557659",
    "CS Huancayo": "28345533383790734313091713219397914734163957762607066650958706537218506422136"
+  }
+ },
+ "atp-medvede-struff-2026-10-09": {
+  "shares": {
+   "Daniil Medvedev": 33525.23251743,
+   "Jan-Lennard Struff": 5685.56574857
+  },
+  "prices": {
+   "Daniil Medvedev": 0.855,
+   "Jan-Lennard Struff": 0.145
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 41873,
+  "whales": [
+   {
+    "wallet": "0xe8d78397160e13edc306a63b1d88c9c1f3dd1252",
+    "side": "Daniil Medvedev",
+    "usd": 19264
+   },
+   {
+    "wallet": "0x45e40dbee6f546c7b318498f8c9778560f5a7e20",
+    "side": "Daniil Medvedev",
+    "usd": 6852
+   },
+   {
+    "wallet": "0xf4ea1eb4d1fa4d46d3d185361fd335904cd772c2",
+    "side": "Daniil Medvedev",
+    "usd": 3161
+   },
+   {
+    "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
+    "side": "Jan-Lennard Struff",
+    "usd": 1524
+   },
+   {
+    "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
+    "side": "Jan-Lennard Struff",
+    "usd": 1212
+   },
+   {
+    "wallet": "0x755ab1b66743ec425157ef91e8b5b52f3e8c82c4",
+    "side": "Daniil Medvedev",
+    "usd": 994
+   },
+   {
+    "wallet": "0x33c96d86e23e971777e9a0b59f4e21cc9e546f9a",
+    "side": "Daniil Medvedev",
+    "usd": 746
+   },
+   {
+    "wallet": "0x2c8d4bed2950e9238137a6ec3dc1ad486a4165e7",
+    "side": "Daniil Medvedev",
+    "usd": 727
+   },
+   {
+    "wallet": "0x8713130d4610e7c931ca729f07fc27b41089196b",
+    "side": "Jan-Lennard Struff",
+    "usd": 725
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Jan-Lennard Struff",
+    "usd": 507,
+    "avgPrice": 0.14
+   },
+   {
+    "wallet": "0xb5407cd056488322bc8df0eb529bc7621b7a9ca8",
+    "side": "Daniil Medvedev",
+    "usd": 496
+   },
+   {
+    "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
+    "side": "Jan-Lennard Struff",
+    "usd": 433
+   },
+   {
+    "wallet": "0x0554c046fa6fa1022d753344d13cfa3025221880",
+    "side": "Daniil Medvedev",
+    "usd": 424
+   },
+   {
+    "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
+    "side": "Jan-Lennard Struff",
+    "usd": 254
+   },
+   {
+    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
+    "side": "Jan-Lennard Struff",
+    "usd": 254
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Jan-Lennard Struff",
+    "usd": 172,
+    "avgPrice": 0.1499
+   },
+   {
+    "wallet": "0x04641b57f332c15ecaa497799c55026d521967da",
+    "side": "Jan-Lennard Struff",
+    "usd": 108
+   },
+   {
+    "wallet": "0xb34769f50149d5a367b60ed5a7c33800cbbb5166",
+    "side": "Daniil Medvedev",
+    "usd": 101
+   },
+   {
+    "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
+    "side": "Jan-Lennard Struff",
+    "usd": 51
+   },
+   {
+    "wallet": "0xc46e1b1753ef0adf35483e042cecc0b743679ed8",
+    "side": "Jan-Lennard Struff",
+    "usd": 48
+   },
+   {
+    "wallet": "0xec6d625b58f205a224d4700ec55be068c3335050",
+    "side": "Daniil Medvedev",
+    "usd": 43
+   },
+   {
+    "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
+    "side": "Daniil Medvedev",
+    "usd": 34
+   },
+   {
+    "wallet": "0xfa686b1486c0622c54164d86b1d6f784d0bbba5d",
+    "side": "Daniil Medvedev",
+    "usd": 34
+   },
+   {
+    "wallet": "0x5e020e19bc4cc2cd24ab9b406604ee9df02ab178",
+    "side": "Jan-Lennard Struff",
+    "usd": 34
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Jan-Lennard Struff",
+    "usd": 30
+   },
+   {
+    "wallet": "0x18617ddf82e34b96963a9afc8fdae202dd88408d",
+    "side": "Jan-Lennard Struff",
+    "usd": 23
+   },
+   {
+    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
+    "side": "Jan-Lennard Struff",
+    "usd": 15
+   },
+   {
+    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
+    "side": "Jan-Lennard Struff",
+    "usd": 14
+   },
+   {
+    "wallet": "0x0fc50c15e6ffd6f4061ca51d8a70cb0563d8e3b9",
+    "side": "Daniil Medvedev",
+    "usd": 13
+   },
+   {
+    "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
+    "side": "Jan-Lennard Struff",
+    "usd": 12
+   },
+   {
+    "wallet": "0xf10299cf1fff507cff45e1a906800e5b44bf1348",
+    "side": "Jan-Lennard Struff",
+    "usd": 10
+   },
+   {
+    "wallet": "0x0a7c46489299331559598ab0412f46bda8ce8964",
+    "side": "Daniil Medvedev",
+    "usd": 9
+   },
+   {
+    "wallet": "0x489d3df3601288940f89d56b5642b0951129f6e3",
+    "side": "Jan-Lennard Struff",
+    "usd": 9
+   },
+   {
+    "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
+    "side": "Jan-Lennard Struff",
+    "usd": 6
+   },
+   {
+    "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
+    "side": "Jan-Lennard Struff",
+    "usd": 5
+   },
+   {
+    "wallet": "0x398bfa0a96b8d6984182cc323f78358941d897ee",
+    "side": "Jan-Lennard Struff",
+    "usd": 4
+   },
+   {
+    "wallet": "0x147c2760baa011fdcd0d02ea0f610ffb0fd92540",
+    "side": "Jan-Lennard Struff",
+    "usd": 4
+   },
+   {
+    "wallet": "0x35e701f088b6ef25fff6b902769c1cd8b85f8331",
+    "side": "Jan-Lennard Struff",
+    "usd": 4
+   },
+   {
+    "wallet": "0x64c6369df26ea4ab6010b3a35b4c26e9d747e917",
+    "side": "Jan-Lennard Struff",
+    "usd": 3
+   },
+   {
+    "wallet": "0x604a2b8ef97c90928c6917769289ad65140cea22",
+    "side": "Daniil Medvedev",
+    "usd": 2
+   }
+  ],
+  "hoursToKickoff": 2.74,
+  "capturedAt": "2026-10-10T01:15:30.120012+00:00",
+  "koTs": "2026-10-10T04:00:00+00:00",
+  "cond": "0x839e7d351b0dae6ded379be31a4dfec459589bbbbbc44022f360d8ba8d77ac5a",
+  "frage": "Shanghai Rolex Masters: Daniil Medvedev vs Jan-Lennard Struff",
+  "tokens": {
+   "Daniil Medvedev": "29816812219737781861050963356511683515292444057341418552902288955768288090087",
+   "Jan-Lennard Struff": "109936111236476739124278209144647596472454444762138090426692845207777452573810"
+  },
+  "book": {
+   "side": "Daniil Medvedev",
+   "bid": 0.85,
+   "ask": 0.86,
+   "spreadC": 1.0,
+   "spreadPct": 1.16,
+   "bids": [
+    [
+     0.85,
+     24098
+    ],
+    [
+     0.84,
+     7655
+    ],
+    [
+     0.83,
+     4764
+    ],
+    [
+     0.82,
+     582
+    ],
+    [
+     0.81,
+     45
+    ],
+    [
+     0.8,
+     5
+    ]
+   ],
+   "asks": [
+    [
+     0.86,
+     7344
+    ],
+    [
+     0.87,
+     44136
+    ],
+    [
+     0.88,
+     71287
+    ],
+    [
+     0.89,
+     38797
+    ],
+    [
+     0.9,
+     42990
+    ],
+    [
+     0.91,
+     17234
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xf4ea1eb4d1fa4d46d3d185361fd335904cd772c2",
+    "action": "BUY",
+    "side": "Daniil Medvedev",
+    "price": 0.86,
+    "usd": 3175,
+    "ts": 1791588070
+   },
+   {
+    "wallet": "0xe8d78397160e13edc306a63b1d88c9c1f3dd1252",
+    "action": "BUY",
+    "side": "Daniil Medvedev",
+    "price": 0.86,
+    "usd": 19377,
+    "ts": 1791585994
+   },
+   {
+    "wallet": "0x755ab1b66743ec425157ef91e8b5b52f3e8c82c4",
+    "action": "BUY",
+    "side": "Daniil Medvedev",
+    "price": 0.86,
+    "usd": 1000,
+    "ts": 1791572027
+   }
+  ]
+ },
+ "atp-carabel-augeral-2026-10-09": {
+  "shares": {
+   "Camilo Ugo Carabelli": 2548.5960343450015,
+   "Felix Auger-Aliassime": 27434.886722655003
+  },
+  "prices": {
+   "Camilo Ugo Carabelli": 0.085,
+   "Felix Auger-Aliassime": 0.915
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 31442,
+  "whales": [
+   {
+    "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
+    "side": "Felix Auger-Aliassime",
+    "usd": 10980
+   },
+   {
+    "wallet": "0xd619b68e64f256f8ddd185b261c8679eacf0c461",
+    "side": "Felix Auger-Aliassime",
+    "usd": 2745
+   },
+   {
+    "wallet": "0x18617ddf82e34b96963a9afc8fdae202dd88408d",
+    "side": "Felix Auger-Aliassime",
+    "usd": 2231
+   },
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Felix Auger-Aliassime",
+    "usd": 1822,
+    "avgPrice": 0.92
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Felix Auger-Aliassime",
+    "usd": 1457,
+    "avgPrice": 0.9304
+   },
+   {
+    "wallet": "0xffd4964aa4ca70e51e2354c99b6380cfbb2eb60f",
+    "side": "Felix Auger-Aliassime",
+    "usd": 1357
+   },
+   {
+    "wallet": "0x56acab44cfca2e88bb9b3406890aea7bfa0cd77e",
+    "side": "Camilo Ugo Carabelli",
+    "usd": 1345
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Felix Auger-Aliassime",
+    "usd": 1320
+   },
+   {
+    "wallet": "0x0eb32f4c1a8672b61b48d9f1493b6dd5a6b1f766",
+    "side": "Felix Auger-Aliassime",
+    "usd": 915
+   },
+   {
+    "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
+    "side": "Felix Auger-Aliassime",
+    "usd": 686
+   },
+   {
+    "wallet": "0x1e3a86ef98030e7e0519e127d8178e9b45389e14",
+    "side": "Felix Auger-Aliassime",
+    "usd": 661,
+    "avgPrice": 0.92
+   },
+   {
+    "wallet": "0x924379a79c64b77ad5816ad362122a5f6228658e",
+    "side": "Camilo Ugo Carabelli",
+    "usd": 595
+   },
+   {
+    "wallet": "0x3ca9089f59d506a6773a4d68227a1ac97806424a",
+    "side": "Felix Auger-Aliassime",
+    "usd": 283
+   },
+   {
+    "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
+    "side": "Felix Auger-Aliassime",
+    "usd": 274
+   },
+   {
+    "wallet": "0x162ca4c5249987872fea1e15c846d7fe80316c47",
+    "side": "Felix Auger-Aliassime",
+    "usd": 261
+   },
+   {
+    "wallet": "0xf6f7e573b3739242e7b162cf5adc0474abb2c7a2",
+    "side": "Felix Auger-Aliassime",
+    "usd": 199
+   },
+   {
+    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
+    "side": "Felix Auger-Aliassime",
+    "usd": 183
+   },
+   {
+    "wallet": "0x8f41129e43ebfbfe6075d0804f3b2bb763b3260e",
+    "side": "Felix Auger-Aliassime",
+    "usd": 172,
+    "avgPrice": 0.92
+   },
+   {
+    "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
+    "side": "Felix Auger-Aliassime",
+    "usd": 169
+   },
+   {
+    "wallet": "0xdc4f58a48ed4467743609fdce11eea483c759804",
+    "side": "Felix Auger-Aliassime",
+    "usd": 157
+   },
+   {
+    "wallet": "0x21ffd2b7a212a6f277ed3eca1a9f8efcbca90d71",
+    "side": "Felix Auger-Aliassime",
+    "usd": 140
+   },
+   {
+    "wallet": "0x3e69375f65f77f2923b5fa3b1f7c9e1367b77a30",
+    "side": "Felix Auger-Aliassime",
+    "usd": 116
+   },
+   {
+    "wallet": "0x01c78f8873c0c86d6b6b92ff627e3802237ee995",
+    "side": "Camilo Ugo Carabelli",
+    "usd": 101
+   },
+   {
+    "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
+    "side": "Felix Auger-Aliassime",
+    "usd": 91
+   },
+   {
+    "wallet": "0x9d39bcdc1cf42d9d0e0623527c75a023b8bd5408",
+    "side": "Camilo Ugo Carabelli",
+    "usd": 89
+   },
+   {
+    "wallet": "0x45e40dbee6f546c7b318498f8c9778560f5a7e20",
+    "side": "Camilo Ugo Carabelli",
+    "usd": 85
+   },
+   {
+    "wallet": "0x5d40576be2e9c61d283f4fd80d7a5ccf2331ba95",
+    "side": "Felix Auger-Aliassime",
+    "usd": 55
+   },
+   {
+    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+    "side": "Felix Auger-Aliassime",
+    "usd": 50
+   },
+   {
+    "wallet": "0x90508f69744e73d6811972a5fdb56047b0333a19",
+    "side": "Felix Auger-Aliassime",
+    "usd": 46
+   },
+   {
+    "wallet": "0x98db8cca55c32b24cfb414b5b43d273f4e1fdd17",
+    "side": "Felix Auger-Aliassime",
+    "usd": 46
+   },
+   {
+    "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
+    "side": "Camilo Ugo Carabelli",
+    "usd": 43
+   },
+   {
+    "wallet": "0xfa686b1486c0622c54164d86b1d6f784d0bbba5d",
+    "side": "Felix Auger-Aliassime",
+    "usd": 37
+   },
+   {
+    "wallet": "0xac4c55b85a1dcacb638bd63ea4eeb8d8a9352200",
+    "side": "Felix Auger-Aliassime",
+    "usd": 36
+   },
+   {
+    "wallet": "0x2da325618fff9b2ffe64a49253fbcae8c7b9f258",
+    "side": "Felix Auger-Aliassime",
+    "usd": 27
+   },
+   {
+    "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
+    "side": "Camilo Ugo Carabelli",
+    "usd": 23
+   },
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "side": "Camilo Ugo Carabelli",
+    "usd": 21
+   },
+   {
+    "wallet": "0x207702d39743b9e76595fb2982dccdb300fb8161",
+    "side": "Felix Auger-Aliassime",
+    "usd": 20
+   },
+   {
+    "wallet": "0xc846f5368ab49a854d2280b7ecff92669824c413",
+    "side": "Felix Auger-Aliassime",
+    "usd": 18
+   },
+   {
+    "wallet": "0xb2da92d3584c60037dc9cc8942a9f9677bbcce6a",
+    "side": "Felix Auger-Aliassime",
+    "usd": 15
+   },
+   {
+    "wallet": "0x5cdc4e820fe30f22f3cf2581796d6e5abedc1f6b",
+    "side": "Felix Auger-Aliassime",
+    "usd": 13
+   }
+  ],
+  "hoursToKickoff": 2.74,
+  "capturedAt": "2026-10-10T01:15:30.120012+00:00",
+  "koTs": "2026-10-10T04:00:00+00:00",
+  "cond": "0x6b6f54830cea099bfa2b0357fe65c96a74caccf53acce8261aff367f1e791c39",
+  "frage": "Shanghai Rolex Masters: Camilo Ugo Carabelli vs Felix Auger-Aliassime",
+  "tokens": {
+   "Camilo Ugo Carabelli": "14612353220115514279118615395650018292810211206591609479502540861177846779217",
+   "Felix Auger-Aliassime": "80275418038661750151777845152608909073227377590414015573976788940301771256984"
+  },
+  "book": {
+   "side": "Felix Auger-Aliassime",
+   "bid": 0.91,
+   "ask": 0.92,
+   "spreadC": 1.0,
+   "spreadPct": 1.09,
+   "bids": [
+    [
+     0.91,
+     322
+    ],
+    [
+     0.9,
+     19209
+    ],
+    [
+     0.89,
+     192
+    ],
+    [
+     0.88,
+     80
+    ],
+    [
+     0.85,
+     5
+    ],
+    [
+     0.81,
+     600
+    ]
+   ],
+   "asks": [
+    [
+     0.92,
+     35406
+    ],
+    [
+     0.93,
+     30762
+    ],
+    [
+     0.94,
+     34109
+    ],
+    [
+     0.95,
+     13895
+    ],
+    [
+     0.96,
+     17186
+    ],
+    [
+     0.97,
+     20903
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x56acab44cfca2e88bb9b3406890aea7bfa0cd77e",
+    "action": "BUY",
+    "side": "Camilo Ugo Carabelli",
+    "price": 0.09,
+    "usd": 1424,
+    "ts": 1791594082
+   },
+   {
+    "wallet": "0xffd4964aa4ca70e51e2354c99b6380cfbb2eb60f",
+    "action": "BUY",
+    "side": "Felix Auger-Aliassime",
+    "price": 0.92,
+    "usd": 324,
+    "ts": 1791561016
+   }
+  ]
+ },
+ "atp-tirante-jodar-2026-10-09": {
+  "shares": {
+   "Thiago Agustin Tirante": 6595.568813295001,
+   "Rafael Jodar": 14342.744381025004
+  },
+  "prices": {
+   "Thiago Agustin Tirante": 0.315,
+   "Rafael Jodar": 0.685
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 29089,
+  "whales": [
+   {
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "side": "Rafael Jodar",
+    "usd": 10134
+   },
+   {
+    "wallet": "0x9c3ce009c9b039956665cecc4cd14de862b5e8c9",
+    "side": "Thiago Agustin Tirante",
+    "usd": 3545
+   },
+   {
+    "wallet": "0xf5a3504ad3a8b079974620b3aa4fcca3f7579e12",
+    "side": "Thiago Agustin Tirante",
+    "usd": 1969
+   },
+   {
+    "wallet": "0x33c96d86e23e971777e9a0b59f4e21cc9e546f9a",
+    "side": "Rafael Jodar",
+    "usd": 1174
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Rafael Jodar",
+    "usd": 822,
+    "avgPrice": 0.68
+   },
+   {
+    "wallet": "0x8713130d4610e7c931ca729f07fc27b41089196b",
+    "side": "Thiago Agustin Tirante",
+    "usd": 551
+   },
+   {
+    "wallet": "0xe3bcf32c8ecad255b847ffe36cb5f8b4f82fec8e",
+    "side": "Rafael Jodar",
+    "usd": 496
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Rafael Jodar",
+    "usd": 323
+   },
+   {
+    "wallet": "0xecc558e1dd2164b451766c89d2a28b35d8405fde",
+    "side": "Rafael Jodar",
+    "usd": 206
+   },
+   {
+    "wallet": "0x9a571dc7e699ffd8613a8212a54f2631478dd7e4",
+    "side": "Rafael Jodar",
+    "usd": 179
+   },
+   {
+    "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
+    "side": "Thiago Agustin Tirante",
+    "usd": 145
+   },
+   {
+    "wallet": "0xb17d4706e45bf0935acc338162bd40af837e59ae",
+    "side": "Rafael Jodar",
+    "usd": 137
+   },
+   {
+    "wallet": "0x69448d9d3ae6c6c62d94ab9c1ea696532fa47275",
+    "side": "Rafael Jodar",
+    "usd": 137
+   },
+   {
+    "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
+    "side": "Rafael Jodar",
+    "usd": 105,
+    "avgPrice": 0.5
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Thiago Agustin Tirante",
+    "usd": 76,
+    "avgPrice": 0.3099
+   },
+   {
+    "wallet": "0xa772e2ca9f119162d03330f3e66c0556a2068686",
+    "side": "Rafael Jodar",
+    "usd": 75
+   },
+   {
+    "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
+    "side": "Thiago Agustin Tirante",
+    "usd": 71
+   },
+   {
+    "wallet": "0x0ebbb3e9fde570bb7f6c452e9f9eee4ec6eacb1a",
+    "side": "Rafael Jodar",
+    "usd": 69
+   },
+   {
+    "wallet": "0x10ff111022291d97966b415a779698312293ff77",
+    "side": "Rafael Jodar",
+    "usd": 58
+   },
+   {
+    "wallet": "0xd7eff32775e8a29761ac5d8cb6c19f9c65855de1",
+    "side": "Rafael Jodar",
+    "usd": 41
+   },
+   {
+    "wallet": "0xfa686b1486c0622c54164d86b1d6f784d0bbba5d",
+    "side": "Rafael Jodar",
+    "usd": 41
+   },
+   {
+    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
+    "side": "Rafael Jodar",
+    "usd": 36
+   },
+   {
+    "wallet": "0x3ca9089f59d506a6773a4d68227a1ac97806424a",
+    "side": "Rafael Jodar",
+    "usd": 34
+   },
+   {
+    "wallet": "0x5e020e19bc4cc2cd24ab9b406604ee9df02ab178",
+    "side": "Thiago Agustin Tirante",
+    "usd": 25
+   },
+   {
+    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
+    "side": "Thiago Agustin Tirante",
+    "usd": 22
+   },
+   {
+    "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
+    "side": "Rafael Jodar",
+    "usd": 22
+   },
+   {
+    "wallet": "0x3e6b98d9dac15f285a18a02644a8c900aab58a98",
+    "side": "Thiago Agustin Tirante",
+    "usd": 16
+   },
+   {
+    "wallet": "0xc46e1b1753ef0adf35483e042cecc0b743679ed8",
+    "side": "Thiago Agustin Tirante",
+    "usd": 9
+   },
+   {
+    "wallet": "0x0ac5faecf8d623a4a074758aedfea9339b24f963",
+    "side": "Rafael Jodar",
+    "usd": 9
+   },
+   {
+    "wallet": "0x147c2760baa011fdcd0d02ea0f610ffb0fd92540",
+    "side": "Thiago Agustin Tirante",
+    "usd": 8
+   },
+   {
+    "wallet": "0x35e701f088b6ef25fff6b902769c1cd8b85f8331",
+    "side": "Thiago Agustin Tirante",
+    "usd": 8
+   },
+   {
+    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+    "side": "Rafael Jodar",
+    "usd": 5
+   },
+   {
+    "wallet": "0x3da80ca893666957475095ac1504094df93dbe26",
+    "side": "Thiago Agustin Tirante",
+    "usd": 4
+   },
+   {
+    "wallet": "0x341d4f882c093e978ce8174147bace7d47402995",
+    "side": "Rafael Jodar",
+    "usd": 4
+   },
+   {
+    "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
+    "side": "Thiago Agustin Tirante",
+    "usd": 3
+   },
+   {
+    "wallet": "0x2da325618fff9b2ffe64a49253fbcae8c7b9f258",
+    "side": "Rafael Jodar",
+    "usd": 3
+   },
+   {
+    "wallet": "0xc846f5368ab49a854d2280b7ecff92669824c413",
+    "side": "Rafael Jodar",
+    "usd": 3
+   },
+   {
+    "wallet": "0xe5a25a5fda2487292ef951b63b69d73ed2d15f4c",
+    "side": "Thiago Agustin Tirante",
+    "usd": 2
+   },
+   {
+    "wallet": "0xca3f77cb090cf7cbcf48bcf865e8f27364418078",
+    "side": "Rafael Jodar",
+    "usd": 2
+   },
+   {
+    "wallet": "0xd9c9651bfd445b2cddf750662ee79a755f216686",
+    "side": "Rafael Jodar",
+    "usd": 2
+   }
+  ],
+  "hoursToKickoff": 2.74,
+  "capturedAt": "2026-10-10T01:15:30.120012+00:00",
+  "koTs": "2026-10-10T04:00:00+00:00",
+  "cond": "0xb1893db5c25ead48e52e45c81446bce3004436a8eaaf565bf95451db0a647896",
+  "frage": "Shanghai Rolex Masters: Thiago Agustin Tirante vs Rafael Jodar",
+  "tokens": {
+   "Thiago Agustin Tirante": "94096919055436758304042256313325457137485157845882764617301478976903756403539",
+   "Rafael Jodar": "102789653540181395785034691390790662647651084785809336683371836837963058787030"
+  },
+  "book": {
+   "side": "Rafael Jodar",
+   "bid": 0.68,
+   "ask": 0.69,
+   "spreadC": 1.0,
+   "spreadPct": 1.45,
+   "bids": [
+    [
+     0.68,
+     1988
+    ],
+    [
+     0.67,
+     26336
+    ],
+    [
+     0.66,
+     1808
+    ],
+    [
+     0.65,
+     866
+    ],
+    [
+     0.64,
+     3338
+    ],
+    [
+     0.63,
+     15
+    ]
+   ],
+   "asks": [
+    [
+     0.69,
+     43576
+    ],
+    [
+     0.7,
+     35897
+    ],
+    [
+     0.71,
+     48375
+    ],
+    [
+     0.72,
+     35340
+    ],
+    [
+     0.73,
+     40149
+    ],
+    [
+     0.74,
+     12473
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "action": "BUY",
+    "side": "Rafael Jodar",
+    "price": 0.68,
+    "usd": 13450,
+    "ts": 1791583840
+   },
+   {
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "action": "BUY",
+    "side": "Thiago Agustin Tirante",
+    "price": 0.32,
+    "usd": 1463,
+    "ts": 1791581009
+   },
+   {
+    "wallet": "0xe3bcf32c8ecad255b847ffe36cb5f8b4f82fec8e",
+    "action": "BUY",
+    "side": "Rafael Jodar",
+    "price": 0.69,
+    "usd": 500,
+    "ts": 1791580843
+   },
+   {
+    "wallet": "0x33c96d86e23e971777e9a0b59f4e21cc9e546f9a",
+    "action": "BUY",
+    "side": "Rafael Jodar",
+    "price": 0.7,
+    "usd": 1200,
+    "ts": 1791566180
+   }
+  ]
+ },
+ "atp-lehecka-borges-2026-10-09": {
+  "shares": {
+   "Jiri Lehecka": 5903.1130831349965,
+   "Nuno Borges": 2470.0960272400002
+  },
+  "prices": {
+   "Jiri Lehecka": 0.705,
+   "Nuno Borges": 0.295
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 10676,
+  "whales": [
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Jiri Lehecka",
+    "usd": 2309,
+    "avgPrice": 0.7042
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Nuno Borges",
+    "usd": 786,
+    "avgPrice": 0.2899
+   },
+   {
+    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+    "side": "Jiri Lehecka",
+    "usd": 771
+   },
+   {
+    "wallet": "0xbee74161057f6095ebf6424dc29d79cb7a6225d7",
+    "side": "Jiri Lehecka",
+    "usd": 758
+   },
+   {
+    "wallet": "0x21801da197fabf39eea52f64f70544574b9508f0",
+    "side": "Nuno Borges",
+    "usd": 675
+   },
+   {
+    "wallet": "0x9b11866433281ade9f2811dbde8acdefc45f5375",
+    "side": "Jiri Lehecka",
+    "usd": 507
+   },
+   {
+    "wallet": "0xff550d8a09de2b6b54c7909f99a67cd86c0dc7f4",
+    "side": "Nuno Borges",
+    "usd": 398
+   },
+   {
+    "wallet": "0xb5407cd056488322bc8df0eb529bc7621b7a9ca8",
+    "side": "Jiri Lehecka",
+    "usd": 352
+   },
+   {
+    "wallet": "0x0b5ef9690ce702f75a2a0eaa604ce783224361b4",
+    "side": "Jiri Lehecka",
+    "usd": 274
+   },
+   {
+    "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
+    "side": "Jiri Lehecka",
+    "usd": 176
+   },
+   {
+    "wallet": "0x01c78f8873c0c86d6b6b92ff627e3802237ee995",
+    "side": "Nuno Borges",
+    "usd": 161
+   },
+   {
+    "wallet": "0xecc558e1dd2164b451766c89d2a28b35d8405fde",
+    "side": "Jiri Lehecka",
+    "usd": 142
+   },
+   {
+    "wallet": "0x8713130d4610e7c931ca729f07fc27b41089196b",
+    "side": "Nuno Borges",
+    "usd": 141
+   },
+   {
+    "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
+    "side": "Nuno Borges",
+    "usd": 94
+   },
+   {
+    "wallet": "0x7547479d43f4b52d892a6f2254050eea50edd158",
+    "side": "Nuno Borges",
+    "usd": 61
+   },
+   {
+    "wallet": "0xfa686b1486c0622c54164d86b1d6f784d0bbba5d",
+    "side": "Jiri Lehecka",
+    "usd": 42
+   },
+   {
+    "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
+    "side": "Nuno Borges",
+    "usd": 29
+   },
+   {
+    "wallet": "0x49c5845733fd0b83d2ae67bfc1baf9d2e3093de7",
+    "side": "Jiri Lehecka",
+    "usd": 28
+   },
+   {
+    "wallet": "0x3ca9089f59d506a6773a4d68227a1ac97806424a",
+    "side": "Jiri Lehecka",
+    "usd": 22
+   },
+   {
+    "wallet": "0xe004d275622e574842cfa9f31427f213e387d87c",
+    "side": "Jiri Lehecka",
+    "usd": 20
+   },
+   {
+    "wallet": "0x0fc50c15e6ffd6f4061ca51d8a70cb0563d8e3b9",
+    "side": "Jiri Lehecka",
+    "usd": 13
+   },
+   {
+    "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
+    "side": "Jiri Lehecka",
+    "usd": 11
+   },
+   {
+    "wallet": "0xf9706baa6dd084f1f0c3b88602a543d0c313f7f6",
+    "side": "Jiri Lehecka",
+    "usd": 11
+   },
+   {
+    "wallet": "0x1549ae307a974fdbbb65ed56532dcc45edf62956",
+    "side": "Jiri Lehecka",
+    "usd": 10
+   },
+   {
+    "wallet": "0xb2da92d3584c60037dc9cc8942a9f9677bbcce6a",
+    "side": "Jiri Lehecka",
+    "usd": 9
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Jiri Lehecka",
+    "usd": 9
+   },
+   {
+    "wallet": "0x35e701f088b6ef25fff6b902769c1cd8b85f8331",
+    "side": "Nuno Borges",
+    "usd": 7
+   },
+   {
+    "wallet": "0x96d61a3a181c250f89875e1ae0e349c609ef5892",
+    "side": "Jiri Lehecka",
+    "usd": 6
+   },
+   {
+    "wallet": "0x341d4f882c093e978ce8174147bace7d47402995",
+    "side": "Jiri Lehecka",
+    "usd": 5
+   },
+   {
+    "wallet": "0x2da325618fff9b2ffe64a49253fbcae8c7b9f258",
+    "side": "Jiri Lehecka",
+    "usd": 4
+   },
+   {
+    "wallet": "0xc846f5368ab49a854d2280b7ecff92669824c413",
+    "side": "Jiri Lehecka",
+    "usd": 4
+   },
+   {
+    "wallet": "0x240b12dca07edc6cd369afe448791df0e7a7c32a",
+    "side": "Jiri Lehecka",
+    "usd": 2
+   },
+   {
+    "wallet": "0x604a2b8ef97c90928c6917769289ad65140cea22",
+    "side": "Jiri Lehecka",
+    "usd": 2
+   },
+   {
+    "wallet": "0xe5a25a5fda2487292ef951b63b69d73ed2d15f4c",
+    "side": "Nuno Borges",
+    "usd": 1
+   }
+  ],
+  "hoursToKickoff": 2.74,
+  "capturedAt": "2026-10-10T01:15:30.120012+00:00",
+  "koTs": "2026-10-10T04:00:00+00:00",
+  "cond": "0x4dd77570d07be4f7376bb0e0551f90ef78c9baeb7209abac09194d7eabdbf54e",
+  "frage": "Shanghai Rolex Masters: Jiri Lehecka vs Nuno Borges",
+  "tokens": {
+   "Jiri Lehecka": "47700478931115033879104269035723969866177535005650216307901007534907615765459",
+   "Nuno Borges": "89369440168267629395392099744330040846936472172095726865011065868407614740900"
   }
  }
 }
