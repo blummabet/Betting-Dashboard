@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-10T18:12:54.044850+00:00",
+ "generatedAt": "2026-10-10T18:42:54.740363+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,12 +10,12 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 743,
- "pinnKeys": 341,
- "matched": 215,
- "footballRows": 207,
+ "polyRowsSeen": 734,
+ "pinnKeys": 332,
+ "matched": 206,
+ "footballRows": 198,
  "crossRows": 536,
- "footballSkippedStale": 121,
+ "footballSkippedStale": 104,
  "seenBySport": {
   "basketball_nba": 74,
   "americanfootball_nfl": 74,
@@ -23,17 +23,60 @@
   "icehockey_nhl": 352,
   "boxing_boxing": 24,
   "soccer_mls": 48,
-  "soccer_liga": 159
+  "soccer_liga": 150
  },
  "matchedBySport": {
   "baseball_mlb": 4,
   "boxing_boxing": 4,
   "soccer_mls": 48,
-  "soccer_liga": 159
+  "soccer_liga": 150
  },
  "trackRecord": {
-  "tracked": 141,
+  "tracked": 144,
   "converged": 51
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "soccer_liga|manchesterunited-tottenham|hw",
+   "sport": "soccer_liga",
+   "event": "Manchester United vs Tottenham",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 56.5,
+   "pinnPP": 88.3,
+   "gapPP": -31.8,
+   "vol": 241589,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-10T18:42:54.740008+00:00"
+  },
+  {
+   "id": "soccer_liga|manchesterunited-tottenham|aw",
+   "sport": "soccer_liga",
+   "event": "Manchester United vs Tottenham",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 21.5,
+   "pinnPP": 1.1,
+   "gapPP": 20.38,
+   "vol": 241589,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-10T18:42:54.740008+00:00"
+  },
+  {
+   "id": "soccer_liga|manchesterunited-tottenham|dr",
+   "sport": "soccer_liga",
+   "event": "Manchester United vs Tottenham",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 22.5,
+   "pinnPP": 10.6,
+   "gapPP": 11.92,
+   "vol": 241589,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-10T18:42:54.740008+00:00"
+  }
+ ]
 }
