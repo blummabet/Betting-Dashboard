@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-10-10T16:54:04.921841+00:00",
+"generatedAt": "2026-10-10T17:09:07.590299+00:00",
 "byVerdict": {
 "uneinig": {
 "n": 12,
@@ -18,20 +18,20 @@
 "clvLb": -0.8483
 },
 "konsens": {
-"n": 88,
-"wins": 48,
-"hitRate": 0.5455,
-"polyN": 86,
-"polyWins": 47,
-"polyHitRate": 0.5465,
-"pinnN": 58,
-"pinnHitRate": 0.5862,
-"nRoi": 88,
-"roi": -0.0368,
-"roiLb": -0.2036,
-"nClv": 88,
-"clv": 0.12,
-"clvLb": -0.3029
+"n": 92,
+"wins": 51,
+"hitRate": 0.5543,
+"polyN": 90,
+"polyWins": 50,
+"polyHitRate": 0.5556,
+"pinnN": 62,
+"pinnHitRate": 0.5968,
+"nRoi": 92,
+"roi": -0.0074,
+"roiLb": -0.1725,
+"nClv": 92,
+"clv": 0.09,
+"clvLb": -0.3214
 }
 },
 "byLeague": {
@@ -55,6 +55,11 @@
 "wins": 2,
 "hitRate": 0.3333
 },
+"English Premier League": {
+"n": 5,
+"wins": 3,
+"hitRate": 0.6
+},
 "Friendlies International": {
 "n": 5,
 "wins": 3,
@@ -70,6 +75,11 @@
 "wins": 5,
 "hitRate": 1.0
 },
+"English Sky Bet Championship": {
+"n": 4,
+"wins": 3,
+"hitRate": 0.75
+},
 "Spanish Segunda Division": {
 "n": 4,
 "wins": 1,
@@ -84,11 +94,6 @@
 "n": 3,
 "wins": 1,
 "hitRate": 0.3333
-},
-"English Sky Bet Championship": {
-"n": 3,
-"wins": 2,
-"hitRate": 0.6667
 },
 "English Sky Bet League 2": {
 "n": 3,
@@ -109,11 +114,6 @@
 "n": 2,
 "wins": 2,
 "hitRate": 1.0
-},
-"English Premier League": {
-"n": 2,
-"wins": 1,
-"hitRate": 0.5
 },
 "Estonian Premier League": {
 "n": 2,
@@ -228,26 +228,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 72,
-"wins": 40,
-"hitRate": 0.5556,
-"nRoi": 72,
-"roi": -0.0871,
-"roiLb": -0.2565,
-"nClv": 72,
-"clv": 0.22,
-"clvLb": -0.2551
+"n": 74,
+"wins": 42,
+"hitRate": 0.5676,
+"nRoi": 74,
+"roi": -0.0555,
+"roiLb": -0.2247,
+"nClv": 74,
+"clv": 0.15,
+"clvLb": -0.3214
 },
 "weak": {
-"n": 28,
-"wins": 12,
-"hitRate": 0.4286,
-"nRoi": 28,
-"roi": 0.1279,
-"roiLb": -0.2948,
-"nClv": 28,
-"clv": -0.32,
-"clvLb": -0.8765
+"n": 30,
+"wins": 13,
+"hitRate": 0.4333,
+"nRoi": 30,
+"roi": 0.1327,
+"roiLb": -0.2725,
+"nClv": 30,
+"clv": -0.22,
+"clvLb": -0.7513
 }
 },
 "divergence": {
@@ -259,6 +259,82 @@
 "polyRate": 0.3333
 },
 "recent": [
+{
+"matchId": "36065331",
+"home": "Sunderland",
+"away": "Brighton",
+"league": "English Premier League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Brighton",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+2
+],
+"kickoff": "2026-10-10T14:00:00Z",
+"settledAt": "2026-10-10T17:09:07.349743+00:00"
+},
+{
+"matchId": "36065354",
+"home": "Chelsea",
+"away": "Bournemouth",
+"league": "English Premier League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Chelsea",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+5,
+1
+],
+"kickoff": "2026-10-10T14:00:00Z",
+"settledAt": "2026-10-10T17:09:07.349743+00:00"
+},
+{
+"matchId": "36065335",
+"home": "Ipswich",
+"away": "Fulham",
+"league": "English Premier League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Fulham",
+"polySide": "away",
+"winner": "home",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-10-10T14:00:00Z",
+"settledAt": "2026-10-10T17:09:07.349743+00:00"
+},
+{
+"matchId": "36092386",
+"home": "Watford",
+"away": "Burnley",
+"league": "English Sky Bet Championship",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Burnley",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+4
+],
+"kickoff": "2026-10-10T14:00:00Z",
+"settledAt": "2026-10-10T17:09:07.349743+00:00"
+},
 {
 "matchId": "36099851",
 "home": "Mainz",
@@ -942,95 +1018,19 @@
 ],
 "kickoff": "2026-10-09T00:30:00Z",
 "settledAt": "2026-10-09T03:35:01.050310+00:00"
-},
-{
-"matchId": "36072070",
-"home": "Fluminense",
-"away": "Coritiba",
-"league": "Brazilian Serie A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Fluminense",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-4,
-0
-],
-"kickoff": "2026-10-09T00:30:00Z",
-"settledAt": "2026-10-09T03:35:01.050310+00:00"
-},
-{
-"matchId": "36072069",
-"home": "Santos",
-"away": "Flamengo",
-"league": "Brazilian Serie A",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Flamengo",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-10-08T22:30:00Z",
-"settledAt": "2026-10-09T01:34:58.057719+00:00"
-},
-{
-"matchId": "36149908",
-"home": "Atletico Nacional Medellin",
-"away": "Tolima",
-"league": "Colombian Primera A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Atletico Nacional Medellin",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-10-08T23:05:00Z",
-"settledAt": "2026-10-09T01:00:27.997229+00:00"
-},
-{
-"matchId": "36145540",
-"home": "Nautico PE",
-"away": "Novorizontino",
-"league": "Brazilian Serie B",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Novorizontino",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-2
-],
-"kickoff": "2026-10-08T22:30:00Z",
-"settledAt": "2026-10-09T00:35:10.977606+00:00"
 }
 ],
 "global": {
-"n": 100,
-"wins": 52,
-"hitRate": 0.52,
-"nRoi": 100,
-"roi": -0.0269,
-"roiLb": -0.1964,
-"nClv": 100,
-"clv": 0.07,
-"clvLb": -0.3088
+"n": 104,
+"wins": 55,
+"hitRate": 0.5288,
+"nRoi": 104,
+"roi": -0.0013,
+"roiLb": -0.1684,
+"nClv": 104,
+"clv": 0.04,
+"clvLb": -0.3248
 },
-"pending": 27,
-"ausgeschlossenLive": 1873
+"pending": 24,
+"ausgeschlossenLive": 1872
 }
