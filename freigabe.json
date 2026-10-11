@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-11T15:26:25.989540+00:00",
+ "generatedAt": "2026-10-11T15:41:20.019864+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -35,7 +35,7 @@
     "nieAnteil": 0.048,
     "schaetzbar": false
    },
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "vorangemeldet",
    "angemeldet": "2026-09-07T08:15:48.444033+00:00",
    "zielN": 120,
@@ -552,8 +552,8 @@
    "gruppen": 7,
    "basis": null,
    "n": 40000,
-   "pl": -474.78,
-   "roi": -0.0119,
+   "pl": -473.31,
+   "roi": -0.0118,
    "clv": null,
    "belegte": 11
   }
@@ -2217,18 +2217,6 @@
    "belegt": false
   },
   {
-   "liga": "Croatian Prva NL",
-   "n": 152,
-   "wins": 76,
-   "hit": 0.5,
-   "hitLb": 0.4339,
-   "roi": -0.0312,
-   "roiLb": -0.1734,
-   "pl": -4.75,
-   "clv": 0.054,
-   "belegt": false
-  },
-  {
    "liga": "Mexican Liga MX Femenil",
    "n": 76,
    "wins": 45,
@@ -2562,6 +2550,18 @@
    "roiLb": -0.1998,
    "pl": -3.1,
    "clv": 0.069,
+   "belegt": false
+  },
+  {
+   "liga": "Croatian Prva NL",
+   "n": 145,
+   "wins": 71,
+   "hit": 0.4897,
+   "hitLb": 0.4222,
+   "roi": -0.0581,
+   "roiLb": -0.2028,
+   "pl": -8.43,
+   "clv": 0.087,
    "belegt": false
   },
   {
@@ -3093,6 +3093,18 @@
    "belegt": false
   },
   {
+   "liga": "Austrian Bundesliga",
+   "n": 90,
+   "wins": 44,
+   "hit": 0.4889,
+   "hitLb": 0.4038,
+   "roi": -0.062,
+   "roiLb": -0.2447,
+   "pl": -5.58,
+   "clv": 0.151,
+   "belegt": false
+  },
+  {
    "liga": "Egyptian 2nd Division",
    "n": 304,
    "wins": 137,
@@ -3462,18 +3474,6 @@
    "roiLb": -0.3059,
    "pl": -4.27,
    "clv": 1.483,
-   "belegt": false
-  },
-  {
-   "liga": "Austrian Bundesliga",
-   "n": 83,
-   "wins": 39,
-   "hit": 0.4699,
-   "hitLb": 0.3821,
-   "roi": -0.1246,
-   "roiLb": -0.3086,
-   "pl": -10.34,
-   "clv": 0.129,
    "belegt": false
   },
   {
@@ -4124,7 +4124,7 @@
     "nieAnteil": 0.048,
     "schaetzbar": false
    },
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "vorangemeldet",
    "angemeldet": "2026-09-07T08:15:48.444033+00:00",
    "zielN": 120,
@@ -4697,7 +4697,7 @@
     "nieAnteil": 0.107,
     "schaetzbar": false
    },
-   "alterTage": 0.1,
+   "alterTage": 0.2,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "Liga"
@@ -4730,9 +4730,31 @@
    "n": 5538,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0017,
-   "pl": -9.41,
-   "roiLb": -0.0227,
+   "roi": -0.0019,
+   "pl": -10.52,
+   "roiLb": -0.0229,
+   "clv": null,
+   "clvLb": null,
+   "clvUrteil": "nicht erhoben",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "keine_einzelwerte",
+   "entfernung": null,
+   "alterTage": null,
+   "art": "markt",
+   "naeherung": false
+  },
+  {
+   "schublade": "Over/Under 3.5 Goals",
+   "strom": "betfair",
+   "n": 6046,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.006,
+   "pl": -36.28,
+   "roiLb": -0.0269,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -4773,28 +4795,6 @@
    "alterTage": 0.0,
    "art": "konjunktion_gehalten",
    "quelle": "killer_ledger.json"
-  },
-  {
-   "schublade": "Over/Under 3.5 Goals",
-   "strom": "betfair",
-   "n": 6046,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0065,
-   "pl": -39.3,
-   "roiLb": -0.0274,
-   "clv": null,
-   "clvLb": null,
-   "clvUrteil": "nicht erhoben",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "keine_einzelwerte",
-   "entfernung": null,
-   "alterTage": null,
-   "art": "markt",
-   "naeherung": false
   },
   {
    "schublade": "Mix money+sharp+steam",
@@ -4943,6 +4943,28 @@
    "engineAlt": true
   },
   {
+   "schublade": "First Half Goals 1.5",
+   "strom": "betfair",
+   "n": 5148,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.0192,
+   "pl": -98.84,
+   "roiLb": -0.0427,
+   "clv": null,
+   "clvLb": null,
+   "clvUrteil": "nicht erhoben",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "keine_einzelwerte",
+   "entfernung": null,
+   "alterTage": null,
+   "art": "markt",
+   "naeherung": false
+  },
+  {
    "schublade": "Spanish La Liga · First Half Goals 1.5",
    "strom": "betfair",
    "n": 37,
@@ -4984,28 +5006,6 @@
    "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
-   "naeherung": false
-  },
-  {
-   "schublade": "First Half Goals 1.5",
-   "strom": "betfair",
-   "n": 5148,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0197,
-   "pl": -101.42,
-   "roiLb": -0.0432,
-   "clv": null,
-   "clvLb": null,
-   "clvUrteil": "nicht erhoben",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "keine_einzelwerte",
-   "entfernung": null,
-   "alterTage": null,
-   "art": "markt",
    "naeherung": false
   },
   {
@@ -5162,28 +5162,6 @@
    "engineAlt": true
   },
   {
-   "schublade": "Half Time",
-   "strom": "betfair",
-   "n": 4800,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0238,
-   "pl": -114.24,
-   "roiLb": -0.0561,
-   "clv": null,
-   "clvLb": null,
-   "clvUrteil": "nicht erhoben",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "keine_einzelwerte",
-   "entfernung": null,
-   "alterTage": null,
-   "art": "markt",
-   "naeherung": false
-  },
-  {
    "schublade": "Brazilian Serie B · Over/Under 3.5 Goals",
    "strom": "betfair",
    "n": 62,
@@ -5203,6 +5181,28 @@
    "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
+   "naeherung": false
+  },
+  {
+   "schublade": "Half Time",
+   "strom": "betfair",
+   "n": 4800,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.0243,
+   "pl": -116.64,
+   "roiLb": -0.0566,
+   "clv": null,
+   "clvLb": null,
+   "clvUrteil": "nicht erhoben",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "keine_einzelwerte",
+   "entfernung": null,
+   "alterTage": null,
+   "art": "markt",
    "naeherung": false
   },
   {
@@ -5233,8 +5233,8 @@
    "n": 6218,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0372,
-   "pl": -231.31,
+   "roi": -0.0373,
+   "pl": -231.93,
    "roiLb": -0.0571,
    "clv": null,
    "clvLb": null,
@@ -5432,7 +5432,7 @@
     "nieAnteil": 0.79,
     "schaetzbar": false
    },
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "mix",
    "wert": "money+sharp",
    "nAlt": 140,
@@ -5846,7 +5846,7 @@
     "nieAnteil": 0.483,
     "schaetzbar": false
    },
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "rest"
@@ -6087,7 +6087,7 @@
     "nieAnteil": 0.373,
     "schaetzbar": false
    },
-   "alterTage": 0.1,
+   "alterTage": 0.2,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "MLS"
@@ -7651,7 +7651,7 @@
     "nieAnteil": 0.777,
     "schaetzbar": false
    },
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "vorangemeldet",
    "angemeldet": "2026-09-01T20:41:52.601081+00:00",
    "zielN": 40,
@@ -11670,7 +11670,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 12.5,
+   "alterTage": 12.6,
    "art": "conviction",
    "wert": 9,
    "nAlt": 11,
@@ -11840,7 +11840,7 @@
    "noetigNClv": null,
    "noetigGrund": "nicht_positiv",
    "fehltN": 0,
-   "alterTage": 84.1,
+   "alterTage": 84.2,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "WM"
@@ -11862,7 +11862,7 @@
    "noetigNClv": null,
    "noetigGrund": null,
    "fehltN": 0,
-   "alterTage": 99.1,
+   "alterTage": 99.2,
    "art": "verdict",
    "wert": "BET",
    "datensatz": "WM"
@@ -11884,7 +11884,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "fehltN": 0,
-   "alterTage": 21.1,
+   "alterTage": 21.2,
    "art": "verdict",
    "wert": "BET",
    "datensatz": "MLS"
