@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-10-11T22:41:50.618708+00:00",
+"generatedAt": "2026-10-11T22:56:42.582346+00:00",
 "count": 20,
 "covered": 14,
 "leaguesKuratiert": [
@@ -49,7 +49,6 @@
 ],
 "leaguesMitAnker": [
 "Argentinian Primera Division",
-"Brazilian Serie A",
 "Brazilian Serie B",
 "English Premier League",
 "Italian Serie A",
@@ -68,14 +67,89 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 202263,
-"remaining": 4797737,
+"used": 202413,
+"remaining": 4797587,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
 },
-"ankerQuote": 1.0,
+"ankerQuote": 0.963,
 "games": [
+{
+"matchId": "36151847",
+"home": "Bahia",
+"away": "Mirassol",
+"league": "Brazilian Serie A",
+"country": "BR",
+"kickoff": "2026-10-11T22:30:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Bahia",
+"moneySharePct": 87,
+"moneyOdd": 1.8,
+"moneyDir": "out",
+"totVol": 83997,
+"pinnOdd": null,
+"softOdd": 1.67,
+"softN": 36,
+"poly": {
+"vol": 15868,
+"odd": 1.65,
+"sharePct": 85,
+"shareSrc": "geld",
+"key": "bra-bah-mir-2026-10-11",
+"sideKey": "EC Bahia",
+"whales": [
+{
+"wallet": "0x071cf644c603b43e352e52bec668b82b7b44bab9",
+"usd": 1538
+},
+{
+"wallet": "0x298b2f52482ddd9fb6f4002bd96ba94e5511f406",
+"usd": 1512
+},
+{
+"wallet": "0xe91171f655be1568e4c63f29663c0028649e3d4e",
+"usd": 1159
+},
+{
+"wallet": "0xa466841143753310fa0f4448526595fa65641c77",
+"usd": 700
+},
+{
+"wallet": "0x824978ad8f2aa87ec22da2df99ffbb7d58e0b23a",
+"usd": 641
+},
+{
+"wallet": "0xa4d31e385aac44219a14d2ae61af85a4f3b5bb24",
+"usd": 522
+}
+],
+"whaleUsd": 9325
+},
+"pinn": null,
+"soft": {
+"home": 0.5512,
+"draw": 0.2612,
+"away": 0.1876,
+"fav": "home",
+"n": 36
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Bahia v Mirassol",
+"grund": "kein_pinnacle",
+"kandidat": "Bahia v Mirassol",
+"key": "soccer_brazil_campeonato",
+"nSoft": 36,
+"pinnacleImEvent": false,
+"nBuecher": 36
+}
+},
 {
 "matchId": "36099821",
 "home": "Atalanta",
@@ -86,13 +160,13 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Atalanta",
-"moneySharePct": 85,
+"moneySharePct": 84,
 "moneyOdd": 1.61,
 "moneyDir": "flat",
-"totVol": 76653,
+"totVol": 77816,
 "pinnOdd": 1.55,
 "softOdd": 1.53,
-"softN": 49,
+"softN": 50,
 "poly": {
 "vol": 14053,
 "odd": 1.6,
@@ -110,17 +184,17 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.6156,
-"draw": 0.2185,
-"away": 0.1659,
+"home": 0.6153,
+"draw": 0.2182,
+"away": 0.1666,
 "fav": "home",
-"n": 49
+"n": 50
 },
 "pinnMovePP": 0.8,
 "pinnMove": {
 "movePP": 0.8,
 "stepPP": -0.0,
-"n": 17,
+"n": 18,
 "move": false,
 "laeuft": false
 },
@@ -138,15 +212,15 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "Newcastle",
-"moneySharePct": 54,
-"moneyOdd": 2.26,
-"moneyDir": "in",
-"totVol": 70038,
+"moneySharePct": 55,
+"moneyOdd": 2.28,
+"moneyDir": "out",
+"totVol": 70716,
 "pinnOdd": 2.25,
-"softOdd": 2.2,
-"softN": 50,
+"softOdd": 2.19,
+"softN": 51,
 "poly": {
-"vol": 16507,
+"vol": 16708,
 "odd": 2.3,
 "sharePct": 44,
 "shareSrc": "preis",
@@ -163,10 +237,10 @@
 },
 "soft": {
 "home": 0.2964,
-"draw": 0.2667,
-"away": 0.4369,
+"draw": 0.2666,
+"away": 0.437,
 "fav": "away",
-"n": 50
+"n": 51
 },
 "pinnMovePP": -0.1,
 "pinnMove": {
@@ -190,15 +264,15 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Atletico Madrid",
-"moneySharePct": 89,
+"moneySharePct": 88,
 "moneyOdd": 2.02,
 "moneyDir": "flat",
-"totVol": 60045,
+"totVol": 60076,
 "pinnOdd": 1.93,
 "softOdd": 1.92,
 "softN": 46,
 "poly": {
-"vol": 38942,
+"vol": 39008,
 "odd": 1.98,
 "sharePct": 50,
 "shareSrc": "preis",
@@ -214,9 +288,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.4904,
+"home": 0.4903,
 "draw": 0.2417,
-"away": 0.2679,
+"away": 0.268,
 "fav": "home",
 "n": 46
 },
@@ -227,6 +301,120 @@
 "n": 25,
 "move": true,
 "laeuft": false
+},
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36164644",
+"home": "Operario PR",
+"away": "Goias",
+"league": "Brazilian Serie B",
+"country": "BR",
+"kickoff": "2026-10-11T21:30:00Z",
+"live": true,
+"moneySide": "away",
+"moneyName": "Goias",
+"moneySharePct": 68,
+"moneyOdd": 1.1,
+"moneyDir": "in",
+"totVol": 52392,
+"pinnOdd": 1.11,
+"softOdd": 1.05,
+"softN": 31,
+"poly": null,
+"pinn": {
+"home": 0.0352,
+"draw": 0.1085,
+"away": 0.8563,
+"fav": "away"
+},
+"soft": {
+"home": 0.0297,
+"draw": 0.0928,
+"away": 0.8775,
+"fav": "away",
+"n": 31
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36098955",
+"home": "St Louis City SC",
+"away": "LA Galaxy",
+"league": "US MLS",
+"country": "US",
+"kickoff": "2026-10-11T23:00:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "St Louis City SC",
+"moneySharePct": 71,
+"moneyOdd": 1.56,
+"moneyDir": "out",
+"totVol": 50970,
+"pinnOdd": 1.5,
+"softOdd": 1.48,
+"softN": 47,
+"poly": {
+"vol": 79909,
+"odd": 1.55,
+"sharePct": 95,
+"shareSrc": "geld",
+"key": "mls-stl-lag-2026-10-11",
+"sideKey": "St. Louis City SC",
+"whales": [
+{
+"wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+"usd": 6966
+},
+{
+"wallet": "0x7ea571c40408f340c1c8fc8eaacebab53c1bde7b",
+"usd": 3868
+},
+{
+"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+"usd": 3479
+},
+{
+"wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
+"usd": 3473
+},
+{
+"wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
+"usd": 2565
+},
+{
+"wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
+"usd": 2490
+}
+],
+"whaleUsd": 38488
+},
+"pinn": {
+"home": 0.6418,
+"draw": 0.1965,
+"away": 0.1618,
+"fav": "home"
+},
+"soft": {
+"home": 0.6323,
+"draw": 0.1973,
+"away": 0.1704,
+"fav": "home",
+"n": 47
+},
+"pinnMovePP": -0.5,
+"pinnMove": {
+"movePP": -0.5,
+"stepPP": -0.6,
+"n": 3,
+"move": false,
+"laeuft": true
 },
 "verdict": "konsens",
 "agree": true,
@@ -250,7 +438,7 @@
 "softOdd": 1.87,
 "softN": 45,
 "poly": {
-"vol": 28655,
+"vol": 28713,
 "odd": 1.98,
 "sharePct": 50,
 "shareSrc": "preis",
@@ -276,47 +464,10 @@
 "pinnMove": {
 "movePP": 0.1,
 "stepPP": -0.0,
-"n": 8,
+"n": 9,
 "move": false,
 "laeuft": false
 },
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36164644",
-"home": "Operario PR",
-"away": "Goias",
-"league": "Brazilian Serie B",
-"country": "BR",
-"kickoff": "2026-10-11T21:30:00Z",
-"live": true,
-"moneySide": "away",
-"moneyName": "Goias",
-"moneySharePct": 61,
-"moneyOdd": 1.17,
-"moneyDir": "out",
-"totVol": 43029,
-"pinnOdd": 1.15,
-"softOdd": 1.11,
-"softN": 31,
-"poly": null,
-"pinn": {
-"home": 0.048,
-"draw": 0.1272,
-"away": 0.8248,
-"fav": "away"
-},
-"soft": {
-"home": 0.0467,
-"draw": 0.1249,
-"away": 0.8285,
-"fav": "away",
-"n": 31
-},
-"pinnMovePP": null,
-"pinnMove": null,
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
@@ -334,14 +485,14 @@
 "moneySharePct": 96,
 "moneyOdd": 1.27,
 "moneyDir": "flat",
-"totVol": 41704,
+"totVol": 41736,
 "pinnOdd": 1.24,
 "softOdd": 1.24,
 "softN": 46,
 "poly": {
-"vol": 9409,
-"odd": 1.26,
-"sharePct": 80,
+"vol": 15453,
+"odd": 1.27,
+"sharePct": 78,
 "shareSrc": "preis",
 "key": "ucl-ars-lil-2026-10-13",
 "sideKey": "Arsenal FC",
@@ -374,104 +525,6 @@
 "pinnTotals": null
 },
 {
-"matchId": "36098955",
-"home": "St Louis City SC",
-"away": "LA Galaxy",
-"league": "US MLS",
-"country": "US",
-"kickoff": "2026-10-11T23:00:00Z",
-"live": false,
-"moneySide": "home",
-"moneyName": "St Louis City SC",
-"moneySharePct": 76,
-"moneyOdd": 1.55,
-"moneyDir": "in",
-"totVol": 40578,
-"pinnOdd": 1.5,
-"softOdd": 1.47,
-"softN": 47,
-"poly": {
-"vol": 4185,
-"odd": 1.53,
-"sharePct": 66,
-"shareSrc": "preis",
-"key": "mls-stl-lag-2026-10-11",
-"sideKey": "St. Louis City SC",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.6439,
-"draw": 0.1887,
-"away": 0.1674,
-"fav": "home"
-},
-"soft": {
-"home": 0.6338,
-"draw": 0.1953,
-"away": 0.1709,
-"fav": "home",
-"n": 47
-},
-"pinnMovePP": -0.3,
-"pinnMove": {
-"movePP": -0.3,
-"stepPP": -0.4,
-"n": 3,
-"move": false,
-"laeuft": true
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36151847",
-"home": "Bahia",
-"away": "Mirassol",
-"league": "Brazilian Serie A",
-"country": "BR",
-"kickoff": "2026-10-11T22:30:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Bahia",
-"moneySharePct": 82,
-"moneyOdd": 1.28,
-"moneyDir": "in",
-"totVol": 39754,
-"pinnOdd": 1.69,
-"softOdd": 1.64,
-"softN": 45,
-"poly": {
-"vol": 876,
-"odd": 1.71,
-"sharePct": 58,
-"shareSrc": "preis",
-"key": "bra-bah-mir-2026-10-11",
-"sideKey": "EC Bahia",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.5702,
-"draw": 0.2339,
-"away": 0.1959,
-"fav": "home"
-},
-"soft": {
-"home": 0.6056,
-"draw": 0.2227,
-"away": 0.1716,
-"fav": "home",
-"n": 45
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
 "matchId": "36057759",
 "home": "Lask Linz",
 "away": "Liverpool",
@@ -482,14 +535,14 @@
 "moneySide": "away",
 "moneyName": "Liverpool",
 "moneySharePct": 88,
-"moneyOdd": 1.32,
-"moneyDir": "flat",
-"totVol": 30095,
+"moneyOdd": 1.31,
+"moneyDir": "in",
+"totVol": 30112,
 "pinnOdd": 1.26,
 "softOdd": 1.25,
 "softN": 45,
 "poly": {
-"vol": 16981,
+"vol": 16983,
 "odd": 1.31,
 "sharePct": 76,
 "shareSrc": "preis",
@@ -534,14 +587,14 @@
 "moneySide": "home",
 "moneyName": "RB Leipzig",
 "moneySharePct": 92,
-"moneyOdd": 1.79,
-"moneyDir": "in",
-"totVol": 28432,
+"moneyOdd": 1.8,
+"moneyDir": "out",
+"totVol": 29167,
 "pinnOdd": 1.76,
 "softOdd": 1.76,
 "softN": 46,
 "poly": {
-"vol": 6744,
+"vol": 6751,
 "odd": 1.8,
 "sharePct": 56,
 "shareSrc": "preis",
@@ -571,6 +624,77 @@
 "move": true,
 "laeuft": false
 },
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36164637",
+"home": "Cuiaba",
+"away": "Avai",
+"league": "Brazilian Serie B",
+"country": "BR",
+"kickoff": "2026-10-11T21:30:00Z",
+"live": true,
+"moneySide": "away",
+"moneyName": "Avai",
+"moneySharePct": 62,
+"moneyOdd": 1.76,
+"moneyDir": "in",
+"totVol": 26342,
+"pinnOdd": 1.85,
+"softOdd": 1.67,
+"softN": 30,
+"poly": {
+"vol": 8780,
+"odd": 1.9,
+"sharePct": 55,
+"shareSrc": "geld",
+"key": "bra2-cui-ava-2026-10-11",
+"sideKey": "Avaí FC",
+"whales": [
+{
+"wallet": "0xdbdd45150249e229eb4ca8aa48a30dca21faa5de",
+"usd": 262
+},
+{
+"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+"usd": 259
+},
+{
+"wallet": "0x592997c2d8119d82d71f21119957c6434d244684",
+"usd": 88
+},
+{
+"wallet": "0xbfd770b7ff07fb2ece41b0e7c593db65a84cf0bf",
+"usd": 66
+},
+{
+"wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
+"usd": 54
+},
+{
+"wallet": "0x33d17848aac0c11641e6fd89634c26f4375249e3",
+"usd": 44
+}
+],
+"whaleUsd": 892
+},
+"pinn": {
+"home": 0.1655,
+"draw": 0.3264,
+"away": 0.5081,
+"fav": "away"
+},
+"soft": {
+"home": 0.1359,
+"draw": 0.3138,
+"away": 0.5503,
+"fav": "away",
+"n": 30
+},
+"pinnMovePP": null,
+"pinnMove": null,
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
@@ -645,7 +769,7 @@
 "softOdd": 2.2,
 "softN": 45,
 "poly": {
-"vol": 9551,
+"vol": 9663,
 "odd": 2.25,
 "sharePct": 44,
 "shareSrc": "preis",
@@ -671,47 +795,10 @@
 "pinnMove": {
 "movePP": 0.0,
 "stepPP": 0.0,
-"n": 8,
+"n": 9,
 "move": false,
 "laeuft": false
 },
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36164637",
-"home": "Cuiaba",
-"away": "Avai",
-"league": "Brazilian Serie B",
-"country": "BR",
-"kickoff": "2026-10-11T21:30:00Z",
-"live": true,
-"moneySide": "away",
-"moneyName": "Avai",
-"moneySharePct": 62,
-"moneyOdd": 2.18,
-"moneyDir": "in",
-"totVol": 22000,
-"pinnOdd": 2.18,
-"softOdd": 2.05,
-"softN": 30,
-"poly": null,
-"pinn": {
-"home": 0.2212,
-"draw": 0.3486,
-"away": 0.4302,
-"fav": "away"
-},
-"soft": {
-"home": 0.2225,
-"draw": 0.3332,
-"away": 0.4443,
-"fav": "away",
-"n": 30
-},
-"pinnMovePP": null,
-"pinnMove": null,
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
@@ -726,12 +813,12 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Racing Club",
-"moneySharePct": 38,
-"moneyOdd": 2.36,
-"moneyDir": "in",
-"totVol": 6887,
+"moneySharePct": 46,
+"moneyOdd": 2.52,
+"moneyDir": "out",
+"totVol": 14775,
 "pinnOdd": 2.5,
-"softOdd": 2.3,
+"softOdd": 2.38,
 "softN": 23,
 "poly": null,
 "pinn": {
@@ -741,9 +828,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.3924,
-"draw": 0.3426,
-"away": 0.265,
+"home": 0.3835,
+"draw": 0.3725,
+"away": 0.244,
 "fav": "home",
 "n": 23
 },
@@ -761,41 +848,49 @@
 "country": "CO",
 "kickoff": "2026-10-11T21:05:00Z",
 "live": true,
-"moneySide": "away",
-"moneyName": "Tolima",
-"moneySharePct": 55,
-"moneyOdd": 60.0,
+"moneySide": "home",
+"moneyName": "Jaguares de Cordoba",
+"moneySharePct": 59,
+"moneyOdd": 1.25,
 "moneyDir": "out",
-"totVol": 34630,
+"totVol": 54189,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
 "poly": {
-"vol": 9704,
-"odd": 5.13,
-"sharePct": 34,
+"vol": 22829,
+"odd": 1.08,
+"sharePct": 99,
 "shareSrc": "geld",
 "key": "col1-jdc-cdt-2026-10-11",
-"sideKey": "CD Tolima",
+"sideKey": "Jaguares de Córdoba FC",
 "whales": [
 {
+"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+"usd": 14386
+},
+{
 "wallet": "0x65503c7f9e142ac88b1ce09df3363ff77f188451",
-"usd": 174
+"usd": 3733
 },
 {
-"wallet": "0x6a8330e931f629c400f7f6c7d7e7a019ce68920d",
-"usd": 150
+"wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
+"usd": 1473
 },
 {
-"wallet": "0xb29dd21fe1cf6d5548f9b9c215cb3b933f2e0d26",
-"usd": 81
+"wallet": "0x55b9e6a1dcca2defb01636ba41e9f76a0883a814",
+"usd": 1443
 },
 {
-"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
-"usd": 53
+"wallet": "0x52d93dcf81444f793dda7fedc370f7a35101fb1a",
+"usd": 1131
+},
+{
+"wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+"usd": 645
 }
 ],
-"whaleUsd": 458
+"whaleUsd": 24812
 },
 "pinn": null,
 "soft": null,
@@ -813,6 +908,70 @@
 }
 },
 {
+"matchId": "36157854",
+"home": "Aurora",
+"away": "Nacional Potosi",
+"league": "Bolivian Liga de Futbol Profesional",
+"country": "BO",
+"kickoff": "2026-10-11T21:15:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Aurora",
+"moneySharePct": 49,
+"moneyOdd": 7.2,
+"moneyDir": "out",
+"totVol": 33741,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": {
+"vol": 12079,
+"odd": 5.71,
+"sharePct": 13,
+"shareSrc": "geld",
+"key": "bol1-aur-nap-2026-10-11",
+"sideKey": "Club Aurora",
+"whales": [
+{
+"wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
+"usd": 125
+},
+{
+"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+"usd": 114
+},
+{
+"wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
+"usd": 15
+},
+{
+"wallet": "0xbfd770b7ff07fb2ece41b0e7c593db65a84cf0bf",
+"usd": 13
+},
+{
+"wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
+"usd": 10
+},
+{
+"wallet": "0xd619b68e64f256f8ddd185b261c8679eacf0c461",
+"usd": 8
+}
+],
+"whaleUsd": 310
+},
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Aurora v Nacional Potosi",
+"grund": "kein_kandidat"
+}
+},
+{
 "matchId": "36100828",
 "home": "LDU",
 "away": "Barcelona (Ecu)",
@@ -822,43 +981,47 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "LDU",
-"moneySharePct": 68,
-"moneyOdd": 4.1,
-"moneyDir": "out",
-"totVol": 24520,
+"moneySharePct": 65,
+"moneyOdd": 2.24,
+"moneyDir": "in",
+"totVol": 27019,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
 "poly": {
-"vol": 26001,
-"odd": 3.77,
-"sharePct": 11,
+"vol": 27362,
+"odd": 2.0,
+"sharePct": 41,
 "shareSrc": "geld",
 "key": "ecu1-ldu-bsc-2026-10-11",
 "sideKey": "LDU Quito",
 "whales": [
 {
 "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-"usd": 510
+"usd": 918
 },
 {
 "wallet": "0x06a9865f05e5f379840e6df4feadc98892571a49",
-"usd": 250
+"usd": 473
 },
 {
 "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
-"usd": 77
+"usd": 145
+},
+{
+"wallet": "0x26d61145a64b1b5036c82a147dfeb7d56fa0cacc",
+"usd": 130
 },
 {
 "wallet": "0x3f59e1848adb16ac57616d120eac48219ace81cd",
-"usd": 42
+"usd": 79
 },
 {
 "wallet": "0x49b68438ae7db43a03d7ddaaceaef5581ac7d152",
-"usd": 42
+"usd": 79
 }
 ],
-"whaleUsd": 921
+"whaleUsd": 2075
 },
 "pinn": null,
 "soft": null,
@@ -874,40 +1037,56 @@
 }
 },
 {
-"matchId": "36157854",
-"home": "Aurora",
-"away": "Nacional Potosi",
-"league": "Bolivian Liga de Futbol Profesional",
-"country": "BO",
-"kickoff": "2026-10-11T21:15:00Z",
+"matchId": "36161334",
+"home": "Libertad",
+"away": "Guarani (Par)",
+"league": "Paraguayan Primera Division",
+"country": "PY",
+"kickoff": "2026-10-11T22:20:00Z",
 "live": true,
 "moneySide": "home",
-"moneyName": "Aurora",
-"moneySharePct": 63,
-"moneyOdd": 4.7,
-"moneyDir": "in",
-"totVol": 24093,
+"moneyName": "Libertad",
+"moneySharePct": 86,
+"moneyOdd": 2.42,
+"moneyDir": "out",
+"totVol": 19737,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
 "poly": {
-"vol": 11254,
-"odd": 5.13,
-"sharePct": 20,
+"vol": 12698,
+"odd": 2.78,
+"sharePct": 77,
 "shareSrc": "geld",
-"key": "bol1-aur-nap-2026-10-11",
-"sideKey": "Club Aurora",
+"key": "par1-lib-gua-2026-10-11",
+"sideKey": "Libertad Asuncion",
 "whales": [
 {
-"wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
-"usd": 139
+"wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
+"usd": 898
 },
 {
-"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
-"usd": 113
+"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+"usd": 595
+},
+{
+"wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+"usd": 143
+},
+{
+"wallet": "0xbc5613462ce3902eea10874a11cf74191f4a8f28",
+"usd": 43
+},
+{
+"wallet": "0xd863b5bfae9eebc41f7b88cf0e400a44573bb7e2",
+"usd": 42
+},
+{
+"wallet": "0x33cc8802c64e8694506177c1d2d42c0bffe422eb",
+"usd": 38
 }
 ],
-"whaleUsd": 252
+"whaleUsd": 1827
 },
 "pinn": null,
 "soft": null,
@@ -917,7 +1096,7 @@
 "agree": null,
 "pinnTotals": null,
 "ankerGrund": {
-"spiel": "Aurora v Nacional Potosi",
+"spiel": "Libertad v Guarani (Par)",
 "grund": "kein_kandidat"
 }
 },
@@ -933,8 +1112,8 @@
 "moneyName": "Caracas",
 "moneySharePct": 84,
 "moneyOdd": 1.01,
-"moneyDir": "in",
-"totVol": 6497,
+"moneyDir": "flat",
+"totVol": 6596,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -961,14 +1140,48 @@
 "live": true,
 "moneySide": "away",
 "moneyName": "Nacional (Uru)",
-"moneySharePct": 91,
-"moneyOdd": 1.21,
-"moneyDir": "out",
-"totVol": 4082,
+"moneySharePct": 87,
+"moneyOdd": 1.2,
+"moneyDir": "in",
+"totVol": 4294,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
-"poly": null,
+"poly": {
+"vol": 7658,
+"odd": 1.43,
+"sharePct": 91,
+"shareSrc": "geld",
+"key": "uru1-esp-nac-2026-10-11",
+"sideKey": "Club Nacional de Football",
+"whales": [
+{
+"wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
+"usd": 147
+},
+{
+"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+"usd": 122
+},
+{
+"wallet": "0x2f5057a272d5d2daecc622055037c21879d163a7",
+"usd": 111
+},
+{
+"wallet": "0x37ed2923169668f5f1a0644f0dec43f334f36c1d",
+"usd": 84
+},
+{
+"wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+"usd": 72
+},
+{
+"wallet": "0xdd287fd025c76163eeb23345c3a8595f728a374a",
+"usd": 70
+}
+],
+"whaleUsd": 834
+},
 "pinn": null,
 "soft": null,
 "pinnMovePP": null,
@@ -981,47 +1194,17 @@
 "grund": "kein_kandidat",
 "naechster": "Atlético Tucuman v Rosario Central"
 }
-},
-{
-"matchId": "36169349",
-"home": "Estrella Roja",
-"away": "Real Espana",
-"league": "Honduras Liga Nacional",
-"country": "HN",
-"kickoff": "2026-10-11T21:00:00Z",
-"live": true,
-"moneySide": "away",
-"moneyName": "Real Espana",
-"moneySharePct": 51,
-"moneyOdd": 1.22,
-"moneyDir": "in",
-"totVol": 1854,
-"pinnOdd": null,
-"softOdd": null,
-"softN": null,
-"poly": null,
-"pinn": null,
-"soft": null,
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "no_anchor",
-"agree": null,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Estrella Roja v Real Espana",
-"grund": "kein_kandidat",
-"naechster": "Real Betis v Barcelona"
-}
 }
 ],
 "ankerN": 27,
-"ankerNOffen": 150,
-"ankerMit": 27,
+"ankerNOffen": 149,
+"ankerMit": 26,
 "ankerDiagnose": {
 "nach": {
-"kein_kandidat": 94,
+"kein_kandidat": 93,
 "zeit": 9,
-"name": 2
+"name": 2,
+"kein_pinnacle": 1
 },
 "beispiele": [
 {
@@ -1074,6 +1257,16 @@
 "liga": "Honduras Liga Nacional"
 },
 {
+"spiel": "Al-Wahda (KSA) v Al Taee",
+"kandidat": "Al-Faisaly KSA FC v Al-Kholood",
+"key": "soccer_saudi_arabia_pro_league",
+"score": 1.17,
+"grund": "zeit",
+"abstandH": 68.7,
+"matchId": "36180188",
+"liga": "Saudi 1st Division"
+},
+{
 "spiel": "Cagliari U20 v Monza U20",
 "kandidat": "Monza v Cagliari",
 "key": "soccer_italy_serie_a",
@@ -1114,14 +1307,15 @@
 "liga": "Saudi 1st Division"
 },
 {
-"spiel": "Al-Wahda (KSA) v Al Taee",
-"kandidat": "Al-Faisaly KSA FC v Al-Kholood",
-"key": "soccer_saudi_arabia_pro_league",
-"score": 1.17,
-"grund": "zeit",
-"abstandH": 68.7,
-"matchId": "36180188",
-"liga": "Saudi 1st Division"
+"spiel": "Bahia v Mirassol",
+"grund": "kein_pinnacle",
+"kandidat": "Bahia v Mirassol",
+"key": "soccer_brazil_campeonato",
+"nSoft": 36,
+"pinnacleImEvent": false,
+"nBuecher": 36,
+"matchId": "36151847",
+"liga": "Brazilian Serie A"
 },
 {
 "spiel": "Jaguares de Cordoba v Tolima",
