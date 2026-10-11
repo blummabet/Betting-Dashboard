@@ -51,47 +51,47 @@
       "buch": "BF",
       "name": "Betfair",
       "status": "ja",
-      "punkte": 3,
+      "punkte": 2,
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 85% auf der Seite"
+       "text": "Geld 86% auf der Seite"
       },
       "tiefe": {
-       "ok": true,
+       "ok": false,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.851,
-       "betrag": 246245,
-       "gesamt": 289359,
+       "anteil": 0.859,
+       "betrag": 296444,
+       "gesamt": 345104,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 85% auf der Seite"
+      "text": "Geld 86% auf der Seite"
      },
      {
       "buch": "POLY",
       "name": "Polymarket",
       "status": "ja",
-      "punkte": 2,
+      "punkte": 3,
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Poly-Geld 90% auf derselben Seite"
+       "text": "Poly-Geld 91% auf derselben Seite"
       },
       "tiefe": {
-       "ok": false,
-       "text": "kein bewiesenes Wallet auf der Seite"
+       "ok": true,
+       "text": "1 bewiesene Wallet drauf"
       },
       "geld": {
-       "anteil": 0.9,
-       "betrag": 74981,
-       "gesamt": 83312,
+       "anteil": 0.91,
+       "betrag": 83318,
+       "gesamt": 91558,
        "waehrung": "USD",
        "quelle": "geld"
       },
-      "text": "Poly-Geld 90% auf derselben Seite"
+      "text": "Poly-Geld 91% auf derselben Seite"
      },
      {
       "buch": "PIN",
@@ -105,7 +105,7 @@
       },
       "tiefe": {
        "ok": false,
-       "text": "Move -1.7pp in unsere Richtung"
+       "text": "kein Move gemessen"
       },
       "geld": null,
       "text": "hat dieselbe Seite als Favorit"
@@ -118,20 +118,20 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "$3.008 Highroller-Geld auf derselben Seite"
+       "text": "$8.008 Highroller-Geld auf derselben Seite"
       },
       "tiefe": {
        "ok": true,
-       "text": "9 Wetten, nicht eine einzelne"
+       "text": "12 Wetten, nicht eine einzelne"
       },
       "geld": {
-       "anteil": 0.1776,
-       "betrag": 3008,
-       "gesamt": 16941,
+       "anteil": 0.2887,
+       "betrag": 8008,
+       "gesamt": 27742,
        "waehrung": "USD",
        "quelle": "geld"
       },
-      "text": "$3.008 Highroller-Geld auf derselben Seite"
+      "text": "$8.008 Highroller-Geld auf derselben Seite"
      },
      {
       "buch": "ZEIT",
@@ -163,27 +163,36 @@
    "markt": "Match Odds",
    "seite": "away",
    "name": "Marseille",
-   "odd": 2.04,
+   "odd": 2.12,
    "entryOdd": 2.02,
    "anteilPct": 87,
-   "stufe": 2,
+   "stufe": 1,
    "verstaerker": [
+    {
+     "art": "poly",
+     "text": "Poly Geld 76%",
+     "gewicht": 12
+    },
     {
      "art": "pinn",
      "text": "Pinnacle stimmt zu",
      "gewicht": 10
     }
    ],
-   "rang": 68.7,
+   "rang": 79.6,
    "track": null,
    "streak": null,
-   "poly": null,
+   "poly": {
+    "anteilPct": 76,
+    "usd": 24461,
+    "odd": 2.15
+   },
    "polyStatus": "nein",
    "polyKey": "fl1-tro-olm-2026-10-11",
    "polySide": "Olympique de Marseille",
    "pinnMovePP": 0.4,
    "punkte": {
-    "punkte": 8,
+    "punkte": 9,
     "moeglich": 10,
     "dauerH": 13.08,
     "teile": [
@@ -191,20 +200,20 @@
       "buch": "BF",
       "name": "Betfair",
       "status": "ja",
-      "punkte": 2,
+      "punkte": 3,
       "moeglich": 3,
       "grund": {
        "ok": true,
        "text": "Geld 76% auf der Seite"
       },
       "tiefe": {
-       "ok": false,
+       "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.762,
-       "betrag": 53849,
-       "gesamt": 70668,
+       "anteil": 0.759,
+       "betrag": 55936,
+       "gesamt": 73697,
        "waehrung": "EUR",
        "quelle": "geld"
       },
@@ -226,8 +235,8 @@
       },
       "geld": {
        "anteil": 0.76,
-       "betrag": 18344,
-       "gesamt": 24137,
+       "betrag": 18590,
+       "gesamt": 24461,
        "waehrung": "USD",
        "quelle": "geld"
       },
@@ -245,7 +254,7 @@
       },
       "tiefe": {
        "ok": false,
-       "text": "Move -2.5pp in unsere Richtung"
+       "text": "Move -1.8pp in unsere Richtung"
       },
       "geld": null,
       "text": "hat dieselbe Seite als Favorit"
@@ -278,9 +287,9 @@
    },
    "wertVsPinn": 0.01,
    "gehaltenSeit": "2026-10-11T05:40:14.297630+00:00",
-   "zuletztAktiv": "2026-10-11T05:40:14.297630+00:00",
+   "zuletztAktiv": "2026-10-11T15:26:24.676355+00:00",
    "haltePreis": 2.04,
-   "aktiv": false
+   "aktiv": true
   },
   "36099831|Match Odds": {
    "matchId": "36099831",
@@ -333,20 +342,20 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 76% auf der Seite"
+       "text": "Geld 75% auf der Seite"
       },
       "tiefe": {
        "ok": false,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.759,
-       "betrag": 93548,
-       "gesamt": 123251,
+       "anteil": 0.75,
+       "betrag": 113540,
+       "gesamt": 151386,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 76% auf der Seite"
+      "text": "Geld 75% auf der Seite"
      },
      {
       "buch": "POLY",
@@ -383,7 +392,7 @@
       },
       "tiefe": {
        "ok": false,
-       "text": "Move -2.4pp in unsere Richtung"
+       "text": "Move -2.9pp in unsere Richtung"
       },
       "geld": null,
       "text": "hat dieselbe Seite als Favorit"
@@ -477,9 +486,9 @@
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.772,
-       "betrag": 73658,
-       "gesamt": 95412,
+       "anteil": 0.769,
+       "betrag": 74882,
+       "gesamt": 97376,
        "waehrung": "EUR",
        "quelle": "geld"
       },
@@ -520,7 +529,7 @@
       },
       "tiefe": {
        "ok": false,
-       "text": "Move -2.5pp in unsere Richtung"
+       "text": "Move -3.1pp in unsere Richtung"
       },
       "geld": null,
       "text": "hat dieselbe Seite als Favorit"
@@ -578,7 +587,7 @@
    "markt": "Match Odds",
    "seite": "away",
    "name": "Man City",
-   "odd": 2.12,
+   "odd": 2.08,
    "entryOdd": 2.56,
    "anteilPct": 66,
    "stufe": 1,
@@ -612,7 +621,7 @@
    "polySide": "Manchester City FC",
    "pinnMovePP": 2.1,
    "punkte": {
-    "punkte": 10,
+    "punkte": 9,
     "moeglich": 13,
     "dauerH": 4.07,
     "teile": [
@@ -624,43 +633,43 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 74% auf der Seite"
+       "text": "Geld 75% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.738,
-       "betrag": 1373260,
-       "gesamt": 1860786,
+       "anteil": 0.753,
+       "betrag": 1630823,
+       "gesamt": 2165768,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 74% auf der Seite"
+      "text": "Geld 75% auf der Seite"
      },
      {
       "buch": "POLY",
       "name": "Polymarket",
       "status": "ja",
-      "punkte": 3,
+      "punkte": 2,
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Poly-Geld 89% auf derselben Seite"
+       "text": "Poly-Geld 92% auf derselben Seite"
       },
       "tiefe": {
-       "ok": true,
-       "text": "1 bewiesene Wallet drauf"
+       "ok": false,
+       "text": "kein bewiesenes Wallet auf der Seite"
       },
       "geld": {
-       "anteil": 0.89,
-       "betrag": 792130,
-       "gesamt": 890034,
+       "anteil": 0.92,
+       "betrag": 977974,
+       "gesamt": 1063015,
        "waehrung": "USD",
        "quelle": "geld"
       },
-      "text": "Poly-Geld 89% auf derselben Seite"
+      "text": "Poly-Geld 92% auf derselben Seite"
      },
      {
       "buch": "PIN",
@@ -674,7 +683,7 @@
       },
       "tiefe": {
        "ok": true,
-       "text": "Move +3.3pp in unsere Richtung"
+       "text": "Move +4.1pp in unsere Richtung"
       },
       "geld": null,
       "text": "hat dieselbe Seite als Favorit"
@@ -691,12 +700,12 @@
       },
       "tiefe": {
        "ok": false,
-       "text": "26 Wetten, nicht eine einzelne"
+       "text": "38 Wetten, nicht eine einzelne"
       },
       "geld": {
-       "anteil": 0.295,
+       "anteil": 0.2263,
        "betrag": 51333,
-       "gesamt": 174000,
+       "gesamt": 226812,
        "waehrung": "USD",
        "quelle": "geld"
       },
@@ -719,157 +728,8 @@
    },
    "wertVsPinn": -0.0089,
    "gehaltenSeit": "2026-10-11T11:25:48.093417+00:00",
-   "zuletztAktiv": "2026-10-11T15:11:09.111748+00:00",
+   "zuletztAktiv": "2026-10-11T15:26:24.676355+00:00",
    "haltePreis": 2.2,
-   "aktiv": true
-  },
-  "36100466|Match Odds": {
-   "matchId": "36100466",
-   "home": "Rennes",
-   "away": "Auxerre",
-   "league": "French Ligue 1",
-   "kickoff": "2026-10-11T15:15:00Z",
-   "markt": "Match Odds",
-   "seite": "home",
-   "name": "Rennes",
-   "odd": 1.45,
-   "entryOdd": 1.46,
-   "anteilPct": 78,
-   "stufe": 1,
-   "verstaerker": [
-    {
-     "art": "poly",
-     "text": "Poly Preis 68%",
-     "gewicht": 12
-    },
-    {
-     "art": "pinn",
-     "text": "Pinnacle stimmt zu",
-     "gewicht": 10
-    }
-   ],
-   "rang": 79.8,
-   "track": null,
-   "streak": null,
-   "poly": {
-    "anteilPct": 68,
-    "usd": 3941,
-    "odd": 1.48
-   },
-   "polyStatus": "ja",
-   "polyKey": "fl1-ren-aja-2026-10-11",
-   "polySide": "Stade Rennais FC 1901",
-   "pinnMovePP": -0.7,
-   "punkte": {
-    "punkte": 10,
-    "moeglich": 13,
-    "dauerH": 0.57,
-    "teile": [
-     {
-      "buch": "BF",
-      "name": "Betfair",
-      "status": "ja",
-      "punkte": 2,
-      "moeglich": 3,
-      "grund": {
-       "ok": true,
-       "text": "Geld 84% auf der Seite"
-      },
-      "tiefe": {
-       "ok": false,
-       "text": "frischer Zufluss und Quote zieht mit"
-      },
-      "geld": {
-       "anteil": 0.835,
-       "betrag": 123136,
-       "gesamt": 147468,
-       "waehrung": "EUR",
-       "quelle": "geld"
-      },
-      "text": "Geld 84% auf der Seite"
-     },
-     {
-      "buch": "POLY",
-      "name": "Polymarket",
-      "status": "ja",
-      "punkte": 3,
-      "moeglich": 3,
-      "grund": {
-       "ok": true,
-       "text": "Poly-Geld 99% auf derselben Seite"
-      },
-      "tiefe": {
-       "ok": true,
-       "text": "2 bewiesene Wallets drauf"
-      },
-      "geld": {
-       "anteil": 0.99,
-       "betrag": 14003,
-       "gesamt": 14144,
-       "waehrung": "USD",
-       "quelle": "geld"
-      },
-      "text": "Poly-Geld 99% auf derselben Seite"
-     },
-     {
-      "buch": "PIN",
-      "name": "Pinnacle",
-      "status": "ja",
-      "punkte": 2,
-      "moeglich": 3,
-      "grund": {
-       "ok": true,
-       "text": "hat dieselbe Seite als Favorit"
-      },
-      "tiefe": {
-       "ok": false,
-       "text": "kein Move gemessen"
-      },
-      "geld": null,
-      "text": "hat dieselbe Seite als Favorit"
-     },
-     {
-      "buch": "STAKE",
-      "name": "Stake-Highroller",
-      "status": "ja",
-      "punkte": 3,
-      "moeglich": 3,
-      "grund": {
-       "ok": true,
-       "text": "$179.926 Highroller-Geld auf derselben Seite"
-      },
-      "tiefe": {
-       "ok": true,
-       "text": "44 Wetten, nicht eine einzelne"
-      },
-      "geld": {
-       "anteil": 0.5695,
-       "betrag": 179926,
-       "gesamt": 315926,
-       "waehrung": "USD",
-       "quelle": "geld"
-      },
-      "text": "$179.926 Highroller-Geld auf derselben Seite"
-     },
-     {
-      "buch": "ZEIT",
-      "name": "Dauer",
-      "status": "nein",
-      "punkte": 0,
-      "moeglich": 1,
-      "grund": {
-       "ok": false,
-       "text": "steht seit 0.6h vor Anpfiff"
-      },
-      "tiefe": null,
-      "text": "steht seit 0.6h vor Anpfiff"
-     }
-    ]
-   },
-   "wertVsPinn": -0.0164,
-   "gehaltenSeit": "2026-10-11T14:41:04.912847+00:00",
-   "zuletztAktiv": "2026-10-11T14:56:19.191935+00:00",
-   "haltePreis": 1.48,
    "aktiv": true
   },
   "36098264|Match Odds": {
@@ -881,7 +741,7 @@
    "markt": "Match Odds",
    "seite": "home",
    "name": "Everton De Vina",
-   "odd": 1.76,
+   "odd": 1.71,
    "entryOdd": 1.79,
    "anteilPct": 82,
    "stufe": 2,
@@ -913,20 +773,20 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 82% auf der Seite"
+       "text": "Geld 83% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.822,
-       "betrag": 4598,
-       "gesamt": 5594,
+       "anteil": 0.832,
+       "betrag": 13916,
+       "gesamt": 16726,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 82% auf der Seite"
+      "text": "Geld 83% auf der Seite"
      },
      {
       "buch": "POLY",
@@ -984,7 +844,7 @@
    },
    "wertVsPinn": null,
    "gehaltenSeit": "2026-10-11T15:11:09.111748+00:00",
-   "zuletztAktiv": "2026-10-11T15:11:09.111748+00:00",
+   "zuletztAktiv": "2026-10-11T15:26:24.676355+00:00",
    "haltePreis": 1.76,
    "aktiv": true
   },
@@ -1017,7 +877,7 @@
    "polySide": null,
    "pinnMovePP": null,
    "punkte": {
-    "punkte": 5,
+    "punkte": 4,
     "moeglich": 7,
     "dauerH": 0.81,
     "teile": [
@@ -1025,24 +885,24 @@
       "buch": "BF",
       "name": "Betfair",
       "status": "ja",
-      "punkte": 3,
+      "punkte": 2,
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 94% auf der Seite"
+       "text": "Geld 92% auf der Seite"
       },
       "tiefe": {
-       "ok": true,
+       "ok": false,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.935,
-       "betrag": 8601,
-       "gesamt": 9199,
+       "anteil": 0.917,
+       "betrag": 12397,
+       "gesamt": 13519,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 94% auf der Seite"
+      "text": "Geld 92% auf der Seite"
      },
      {
       "buch": "POLY",
