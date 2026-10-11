@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-11T10:20:03.989224+00:00",
+ "updatedAt": "2026-10-11T10:49:54.882856+00:00",
  "stake": 10.0,
  "expired": 0,
  "condDrift": 0,
@@ -344,7 +344,7 @@
    "entryPrice": 0.695,
    "firstTs": "2026-10-11T06:19:56.448768+00:00",
    "lastPrice": 0.745,
-   "lastTs": "2026-10-11T10:20:03.989224+00:00",
+   "lastTs": "2026-10-11T10:49:54.882856+00:00",
    "htkAtEntry": 2.6676966666666666,
    "public": false,
    "ohneWallet": false,
@@ -375,7 +375,7 @@
    "entryPrice": 0.335,
    "firstTs": "2026-10-11T08:59:02.186628+00:00",
    "lastPrice": 0.335,
-   "lastTs": "2026-10-11T10:20:03.989224+00:00",
+   "lastTs": "2026-10-11T10:49:54.882856+00:00",
    "htkAtEntry": 1.5161155555555557,
    "public": false,
    "ohneWallet": false,
@@ -403,8 +403,8 @@
    "cat": "Motorsport",
    "entryPrice": 0.175,
    "firstTs": "2026-10-11T09:19:44.422053+00:00",
-   "lastPrice": 0.185,
-   "lastTs": "2026-10-11T10:20:03.989224+00:00",
+   "lastPrice": 0.19,
+   "lastTs": "2026-10-11T10:49:54.882856+00:00",
    "htkAtEntry": 2.671051388888889,
    "public": false,
    "ohneWallet": false,
@@ -419,8 +419,8 @@
    "stake": 10.0,
    "ev": "2026-09-01",
    "movePreEntryPP": 5.0,
-   "closeRef": 0.185,
-   "closeRefTs": "2026-10-11T10:19:08.370319+00:00",
+   "closeRef": 0.19,
+   "closeRefTs": "2026-10-11T10:49:17.520066+00:00",
    "closeQuelle": "close"
   },
   "sea-laz-mon-2026-10-11|SS Lazio": {
@@ -433,7 +433,7 @@
    "entryPrice": 0.555,
    "firstTs": "2026-10-11T10:20:03.989224+00:00",
    "lastPrice": 0.555,
-   "lastTs": "2026-10-11T10:20:03.989224+00:00",
+   "lastTs": "2026-10-11T10:49:54.882856+00:00",
    "htkAtEntry": 2.6656280555555556,
    "public": false,
    "ohneWallet": false,
@@ -450,7 +450,9 @@
    "stake": 10.0,
    "ev": "2026-09-01",
    "movePreEntryPP": -1.0,
-   "clvGrund": "schluss_vor_einstieg"
+   "closeRef": 0.555,
+   "closeRefTs": "2026-10-11T10:49:17.520066+00:00",
+   "closeQuelle": "close"
   },
   "epl-hul-eve-2026-10-11|Everton FC": {
    "key": "epl-hul-eve-2026-10-11",
@@ -462,13 +464,99 @@
    "entryPrice": 0.465,
    "firstTs": "2026-10-11T10:20:03.989224+00:00",
    "lastPrice": 0.465,
-   "lastTs": "2026-10-11T10:20:03.989224+00:00",
+   "lastTs": "2026-10-11T10:49:54.882856+00:00",
    "htkAtEntry": 2.665628611111111,
    "public": false,
    "ohneWallet": false,
    "reasons": [
     "großes Geld auf Everton FC (96%) → $381K",
     "💷 Betfair-Geld bestätigt: 63% · €178K"
+   ],
+   "signals": [
+    "money",
+    "bf"
+   ],
+   "stake": 10.0,
+   "ev": "2026-09-01",
+   "movePreEntryPP": -1.0,
+   "closeRef": 0.465,
+   "closeRefTs": "2026-10-11T10:49:17.520066+00:00",
+   "closeQuelle": "close"
+  },
+  "elc-sot-por-2026-10-11|Southampton FC": {
+   "key": "elc-sot-por-2026-10-11",
+   "side": "Southampton FC",
+   "verdict": "BET",
+   "conv": 7,
+   "league": "SOCCER",
+   "cat": "Fußball",
+   "entryPrice": 0.635,
+   "firstTs": "2026-10-11T10:49:54.882856+00:00",
+   "lastPrice": 0.635,
+   "lastTs": "2026-10-11T10:49:54.882856+00:00",
+   "htkAtEntry": 0.16816583333333332,
+   "public": true,
+   "ohneWallet": false,
+   "reasons": [
+    "großes Geld auf Southampton FC (81%) → $16K",
+    "🔥 scharfe Wallet (12/17, 71% · 30 T Sport +$2.5K)",
+    "💷 Betfair-Geld bestätigt: 76% · €76K"
+   ],
+   "signals": [
+    "money",
+    "sharp",
+    "bf"
+   ],
+   "stake": 10.0,
+   "ev": "2026-09-01",
+   "movePreEntryPP": 2.0,
+   "clvGrund": "schluss_vor_einstieg"
+  },
+  "cze1-fsl-fcs-2026-10-11|FC Slovan Liberec": {
+   "key": "cze1-fsl-fcs-2026-10-11",
+   "side": "FC Slovan Liberec",
+   "verdict": "BET",
+   "conv": 5,
+   "league": "SOCCER",
+   "cat": "Fußball",
+   "entryPrice": 0.655,
+   "firstTs": "2026-10-11T10:49:54.882856+00:00",
+   "lastPrice": 0.655,
+   "lastTs": "2026-10-11T10:49:54.882856+00:00",
+   "htkAtEntry": 0.16816944444444445,
+   "public": false,
+   "ohneWallet": false,
+   "reasons": [
+    "großes Geld auf FC Slovan Liberec (74%) → $17K",
+    "Steam läuft rein (+2.0pp)"
+   ],
+   "signals": [
+    "money",
+    "steam"
+   ],
+   "stake": 10.0,
+   "ev": "2026-09-01",
+   "movePreEntryPP": 2.0,
+   "clvGrund": "schluss_vor_einstieg"
+  },
+  "sea-lec-bol-2026-10-11|Bologna FC 1909": {
+   "key": "sea-lec-bol-2026-10-11",
+   "side": "Bologna FC 1909",
+   "verdict": "BET",
+   "conv": 5,
+   "league": "SOCCER",
+   "cat": "Fußball",
+   "entryPrice": 0.475,
+   "firstTs": "2026-10-11T10:49:54.882856+00:00",
+   "lastPrice": 0.475,
+   "lastTs": "2026-10-11T10:49:54.882856+00:00",
+   "htkAtEntry": 2.168161388888889,
+   "public": false,
+   "ohneWallet": false,
+   "reasons": [
+    "großes Geld auf Bologna FC 1909 (79%) → $27K",
+    "🔎 vielversprechende Wallet (noch nicht belegt) (72/152, 47% · 30 T Sport +$2.4K) · zählt 8%",
+    "💷 Betfair-Geld bestätigt: 55% · €76K"
    ],
    "signals": [
     "money",
