@@ -22883,8 +22883,16 @@
 "whaleEntry": 0.595,
 "htkMess": 2.42,
 "sentAt": "2026-10-11T11:51:30Z",
-"status": "pending",
-"nurBeobachtung": true
+"status": "settled",
+"nurBeobachtung": true,
+"result": "win",
+"winner": "Real Sociedad de Fútbol",
+"closePrice": 0.575,
+"stake": 10.0,
+"pnl": 6.81,
+"clvPP": -2.0,
+"settledTs": "2026-10-11T16:49:25.994084+00:00",
+"resolvedTs": "2026-10-11T16:49:10.552157+00:00"
 },
 {
 "k": "epl-cry-not-2026-10-11-more-markets|Over",
@@ -22904,18 +22912,18 @@
 "whaleEntry": 0.505,
 "htkMess": 0.67,
 "sentAt": "2026-10-11T12:21:20Z",
-"status": "settled",
+"status": "unaufloesbar",
 "nurBeobachtung": true,
 "cond": "0x9f2113c945b5b43ddabc8dc93b78930f4a1604a61d0d72e6d76e365a27336562",
 "condQuelle": "erfassung+wallet",
-"result": "win",
-"winner": "Over",
 "closePrice": 0.505,
-"stake": 10.0,
-"pnl": 9.8,
-"clvPP": 0.0,
 "settledTs": "2026-10-11T16:22:03.763527+00:00",
-"resolvedTs": "2026-10-11T16:21:49.618625+00:00"
+"resolvedTs": "2026-10-11T16:21:49.618625+00:00",
+"zurueckgenommen": {
+"war": "win",
+"am": "2026-10-11T16:49:25.994084+00:00",
+"grund": "Buendel-Slug ohne Linie — Ausgang nie ableitbar"
+}
 },
 {
 "k": "cs2-imp11-nrg-2026-10-11|Imperial",
@@ -23206,6 +23214,28 @@
 "whaleEntry": 0.465,
 "htkMess": 2.66,
 "sentAt": "2026-10-11T16:22:03Z",
+"status": "pending",
+"nurBeobachtung": true
+},
+{
+"k": "por-ben-gui-2026-10-11|Sport Lisboa e Benfica",
+"key": "por-ben-gui-2026-10-11",
+"side": "Sport Lisboa e Benfica",
+"wallet": "0x413f29bc7f5ce2a2d8d28fb3a8b5d75199d247f3",
+"wallets": [
+"0x413f29bc7f5ce2a2d8d28fb3a8b5d75199d247f3",
+"0x594edb9112f526fa6a80b8f858a6379c8a2c1c11",
+"0xac4c55b85a1dcacb638bd63ea4eeb8d8a9352200"
+],
+"nWallets": 3,
+"league": "PRIMEIRA-LIGA",
+"cat": "Fußball",
+"usd": 24223.0,
+"maxEinzel": 23960.0,
+"pushPrice": 0.795,
+"whaleEntry": 0.795,
+"htkMess": 0.19,
+"sentAt": "2026-10-11T16:49:25Z",
 "status": "pending",
 "nurBeobachtung": true
 }
