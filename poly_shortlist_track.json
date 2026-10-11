@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-11T05:19:54.245984+00:00",
+ "updatedAt": "2026-10-11T05:47:46.174101+00:00",
  "stake": 10.0,
  "expired": 0,
  "condDrift": 0,
@@ -36,16 +36,16 @@
    "needClvN": 20
   },
   "US-Sport": {
-   "n": 93,
-   "clvN": 12,
-   "clvAvg": -0.17,
-   "roi": -0.2413,
-   "hit": 0.4839,
-   "roiUg": -0.3784,
+   "n": 94,
+   "clvN": 13,
+   "clvAvg": -0.46,
+   "roi": -0.2494,
+   "hit": 0.4787,
+   "roiUg": -0.3856,
    "eligible": false,
    "kriterium": "Rendite-Untergrenze über null (der CLV wird angezeigt, entscheidet aber nicht)",
    "needN": 0,
-   "needClvN": 13
+   "needClvN": 12
   }
  },
  "unaufloesbar": [
@@ -334,39 +334,6 @@
    "frage": "Rayo Vallecano de Madrid vs. Athletic Club: O/U 2.5",
    "clvGrund": "live_eingestiegen"
   },
-  "nba-sas-phx-2026-10-10|Spurs": {
-   "key": "nba-sas-phx-2026-10-10",
-   "side": "Spurs",
-   "verdict": "BET",
-   "conv": 9,
-   "league": "NBA",
-   "cat": "US-Sport",
-   "entryPrice": 0.735,
-   "firstTs": "2026-10-11T01:17:28.645636+00:00",
-   "lastPrice": 0.695,
-   "lastTs": "2026-10-11T05:19:54.245984+00:00",
-   "htkAtEntry": 1.2087613888888888,
-   "public": false,
-   "ohneWallet": false,
-   "reasons": [
-    "großes Geld auf Spurs (73%) → $50K",
-    "Steam läuft rein (+6.0pp)",
-    "🔥 scharfe Wallet (32/42, 76% · 30 T Sport +$63K)"
-   ],
-   "signals": [
-    "money",
-    "steam",
-    "sharp"
-   ],
-   "stake": 10.0,
-   "ev": "2026-09-01",
-   "movePreEntryPP": 5.0,
-   "cond": "0x6c7d29bab1fbe6911f5cca291d033cbad6765d4e1d892caddb25a59ee2a8e4ad",
-   "frage": "Spurs vs. Suns",
-   "closeRef": 0.695,
-   "closeRefTs": "2026-10-11T02:16:09.191379+00:00",
-   "closeQuelle": "close"
-  },
   "wta-shi-rakhimo-2026-10-10|Kamilla Rakhimova": {
    "key": "wta-shi-rakhimo-2026-10-10",
    "side": "Kamilla Rakhimova",
@@ -377,7 +344,7 @@
    "entryPrice": 0.725,
    "firstTs": "2026-10-11T01:48:11.778098+00:00",
    "lastPrice": 0.735,
-   "lastTs": "2026-10-11T05:19:54.245984+00:00",
+   "lastTs": "2026-10-11T05:47:46.174101+00:00",
    "htkAtEntry": 2.6967797222222223,
    "public": false,
    "ohneWallet": false,
@@ -397,6 +364,33 @@
    "closeRef": 0.735,
    "closeRefTs": "2026-10-11T04:16:24.388809+00:00",
    "closeQuelle": "close"
+  },
+  "jap-fct1-san-2026-10-11|Sanfrecce Hiroshima": {
+   "key": "jap-fct1-san-2026-10-11",
+   "side": "Sanfrecce Hiroshima",
+   "verdict": "BET",
+   "conv": 6,
+   "league": "SOCCER",
+   "cat": "Fußball",
+   "entryPrice": 0.615,
+   "firstTs": "2026-10-11T05:47:46.174101+00:00",
+   "lastPrice": 0.615,
+   "lastTs": "2026-10-11T05:47:46.174101+00:00",
+   "htkAtEntry": 0.20388305555555555,
+   "public": true,
+   "ohneWallet": false,
+   "reasons": [
+    "großes Geld auf Sanfrecce Hiroshima (97%) → $19K",
+    "🔥 scharfe Wallet (29/40, 73% · 30 T Sport +$6.5K)"
+   ],
+   "signals": [
+    "money",
+    "sharp"
+   ],
+   "stake": 10.0,
+   "ev": "2026-09-01",
+   "movePreEntryPP": -6.0,
+   "clvGrund": "schluss_vor_einstieg"
   }
  },
  "settled": [
@@ -48537,20 +48531,50 @@
    "settledTs": "2026-10-11T04:17:40.316464+00:00",
    "resolvedTs": "2026-10-11T04:17:37.288241+00:00",
    "ausEndstand": null
+  },
+  {
+   "key": "nba-sas-phx-2026-10-10",
+   "side": "Spurs",
+   "verdict": "BET",
+   "conv": 9,
+   "league": "NBA",
+   "cat": "US-Sport",
+   "entryPrice": 0.735,
+   "closePrice": 0.695,
+   "closeRefTs": "2026-10-11T02:16:09.191379+00:00",
+   "closeQuelle": "close",
+   "result": "loss",
+   "winner": "Suns",
+   "pnl": -10.0,
+   "clvPP": -4.0,
+   "stake": 10.0,
+   "public": false,
+   "ohneWallet": false,
+   "signals": [
+    "money",
+    "steam",
+    "sharp"
+   ],
+   "firstTs": "2026-10-11T01:17:28.645636+00:00",
+   "ev": "2026-09-01",
+   "htkAtEntry": 1.2087613888888888,
+   "settledTs": "2026-10-11T05:47:46.174101+00:00",
+   "resolvedTs": "2026-10-11T05:47:43.345672+00:00",
+   "ausEndstand": null
   }
  ],
  "agg": {
   "all": {
-   "n": 1738,
+   "n": 1739,
    "wins": 1139,
-   "hit": 0.6554,
-   "pnl": -51.5,
-   "stake": 17380.0,
-   "roi": -0.003,
-   "roiUg": -0.0341,
+   "hit": 0.655,
+   "pnl": -61.5,
+   "stake": 17390.0,
+   "roi": -0.0035,
+   "roiUg": -0.0347,
    "belegt": false,
    "clvAvg": -0.16,
-   "clvN": 846,
+   "clvN": 847,
    "clvUg": -0.37
   },
   "public": {
@@ -48615,17 +48639,17 @@
    "clvUg": -0.35
   },
   "blocked": {
-   "n": 128,
+   "n": 129,
    "wins": 68,
-   "hit": 0.5312,
-   "pnl": -284.23,
-   "stake": 1280.0,
-   "roi": -0.2221,
-   "roiUg": -0.331,
+   "hit": 0.5271,
+   "pnl": -294.23,
+   "stake": 1290.0,
+   "roi": -0.2281,
+   "roiUg": -0.3366,
    "belegt": false,
-   "clvAvg": -0.59,
-   "clvN": 38,
-   "clvUg": -1.43
+   "clvAvg": -0.68,
+   "clvN": 39,
+   "clvUg": -1.51
   },
   "byCat": {
    "Cricket": {
@@ -48707,16 +48731,16 @@
     "clvUg": -0.89
    },
    "US-Sport": {
-    "n": 93,
+    "n": 94,
     "wins": 45,
-    "hit": 0.4839,
-    "pnl": -224.45,
-    "stake": 930.0,
-    "roi": -0.2413,
-    "roiUg": -0.3784,
+    "hit": 0.4787,
+    "pnl": -234.45,
+    "stake": 940.0,
+    "roi": -0.2494,
+    "roiUg": -0.3856,
     "belegt": false,
-    "clvAvg": -0.11,
-    "clvN": 19,
+    "clvAvg": -0.3,
+    "clvN": 20,
     "clvUg": null
    }
   },
@@ -48962,16 +48986,16 @@
     "clvUg": null
    },
    "9": {
-    "n": 15,
+    "n": 16,
     "wins": 11,
-    "hit": 0.7333,
-    "pnl": 9.64,
-    "stake": 150.0,
-    "roi": 0.0643,
+    "hit": 0.6875,
+    "pnl": -0.36,
+    "stake": 160.0,
+    "roi": -0.0023,
     "roiUg": null,
     "belegt": false,
-    "clvAvg": 0.12,
-    "clvN": 4,
+    "clvAvg": -0.7,
+    "clvN": 5,
     "clvUg": null
    },
    "10": {
@@ -48990,16 +49014,16 @@
   },
   "byVerdict": {
    "BET": {
-    "n": 1738,
+    "n": 1739,
     "wins": 1139,
-    "hit": 0.6554,
-    "pnl": -51.5,
-    "stake": 17380.0,
-    "roi": -0.003,
-    "roiUg": -0.0341,
+    "hit": 0.655,
+    "pnl": -61.5,
+    "stake": 17390.0,
+    "roi": -0.0035,
+    "roiUg": -0.0347,
     "belegt": false,
     "clvAvg": -0.16,
-    "clvN": 846,
+    "clvN": 847,
     "clvUg": -0.37
    }
   },
@@ -49018,16 +49042,16 @@
     "clvUg": -0.42
    },
    "money": {
-    "n": 1587,
+    "n": 1588,
     "wins": 1060,
-    "hit": 0.6679,
-    "pnl": -47.95,
-    "stake": 15870.0,
-    "roi": -0.003,
-    "roiUg": -0.0339,
+    "hit": 0.6675,
+    "pnl": -57.95,
+    "stake": 15880.0,
+    "roi": -0.0036,
+    "roiUg": -0.0345,
     "belegt": false,
-    "clvAvg": -0.15,
-    "clvN": 816,
+    "clvAvg": -0.16,
+    "clvN": 817,
     "clvUg": -0.37
    },
    "pinn": {
@@ -49044,30 +49068,30 @@
     "clvUg": null
    },
    "sharp": {
-    "n": 1019,
+    "n": 1020,
     "wins": 684,
-    "hit": 0.6712,
-    "pnl": -89.54,
-    "stake": 10190.0,
-    "roi": -0.0088,
-    "roiUg": -0.0485,
+    "hit": 0.6706,
+    "pnl": -99.54,
+    "stake": 10200.0,
+    "roi": -0.0098,
+    "roiUg": -0.0494,
     "belegt": false,
-    "clvAvg": -0.23,
-    "clvN": 519,
-    "clvUg": -0.46
+    "clvAvg": -0.24,
+    "clvN": 520,
+    "clvUg": -0.47
    },
    "steam": {
-    "n": 557,
+    "n": 558,
     "wins": 370,
-    "hit": 0.6643,
-    "pnl": 75.06,
-    "stake": 5570.0,
-    "roi": 0.0135,
-    "roiUg": -0.0392,
+    "hit": 0.6631,
+    "pnl": 65.06,
+    "stake": 5580.0,
+    "roi": 0.0117,
+    "roiUg": -0.041,
     "belegt": false,
-    "clvAvg": -0.09,
-    "clvN": 248,
-    "clvUg": -0.59
+    "clvAvg": -0.11,
+    "clvN": 249,
+    "clvUg": -0.61
    }
   },
   "byKalibrierung": {
