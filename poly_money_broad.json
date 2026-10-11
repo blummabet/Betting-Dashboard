@@ -1,15 +1,15 @@
 {
- "n": 567,
+ "n": 569,
  "minOdds": 1.35,
- "moneyHitRate": 0.407,
- "priceHitRate": 0.441,
- "brierMoney": 0.8203,
+ "moneyHitRate": 0.408,
+ "priceHitRate": 0.443,
+ "brierMoney": 0.8204,
  "brierPrice": 0.6604,
  "disagree": {
-  "n": 158,
+  "n": 157,
   "moneyWon": 29,
-  "priceWon": 48,
-  "neither": 81
+  "priceWon": 49,
+  "neither": 79
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -47,14 +47,6 @@
    "verdict": "preis_besser"
   },
   {
-   "league": "LA-LIGA-2",
-   "n": 25,
-   "moneyHitRate": 0.56,
-   "brierMoney": 0.7051,
-   "brierPrice": 0.6042,
-   "verdict": "preis_besser"
-  },
-  {
    "league": "BUNDESLIGA",
    "n": 38,
    "moneyHitRate": 0.368,
@@ -68,6 +60,14 @@
    "moneyHitRate": 0.56,
    "brierMoney": 0.6509,
    "brierPrice": 0.5355,
+   "verdict": "preis_besser"
+  },
+  {
+   "league": "LA-LIGA-2",
+   "n": 26,
+   "moneyHitRate": 0.538,
+   "brierMoney": 0.7435,
+   "brierPrice": 0.6144,
    "verdict": "preis_besser"
   },
   {
@@ -104,8 +104,8 @@
   }
  ],
  "guete": {
-  "belastbar": 567,
-  "preis_echo": 289,
+  "belastbar": 569,
+  "preis_echo": 290,
   "abgeschnitten": 65,
   "unbekannt": 0,
   "leer": 0
@@ -436,11 +436,23 @@
    "totalUsd": 404573
   },
   {
+   "key": "por-aro-ama-2026-10-11",
+   "league": "PRIMEIRA-LIGA",
+   "winner": "FC Arouca",
+   "moneyFav": "FC Arouca",
+   "priceFav": "FC Arouca",
+   "moneyShare": 0.974,
+   "priceProb": 0.453,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 399480
+  },
+  {
    "key": "epl-ast-bre-2026-10-10",
    "league": "EPL",
    "winner": "Draw (Aston Villa FC vs. Brentford FC)",
    "moneyFav": "Brentford FC",
-   "priceFav": "Aston Villa FC",
+   "priceFav": "Brentford FC",
    "moneyShare": 0.803,
    "priceProb": 0.367,
    "moneyOK": false,
@@ -578,21 +590,9 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 251373
-  },
-  {
-   "key": "epl-lee-new-2026-09-14-exact-score",
-   "league": "EPL",
-   "winner": "Any Other Score",
-   "moneyFav": "Leeds United FC 1 - 1 Newcastle United FC",
-   "priceFav": "Leeds United FC 1 - 1 Newcastle United FC",
-   "moneyShare": 0.126,
-   "priceProb": 0.129,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 247604
   }
  ],
- "generatedAt": "2026-10-11T22:50:42.891066+00:00",
+ "generatedAt": "2026-10-11T23:42:43.620559+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -609,13 +609,13 @@
   "bundesliga": 527,
   "serie-a": 52,
   "ligue-1": 528,
-  "primeira-liga": 456,
+  "primeira-liga": 448,
   "brazil-serie-a": 561,
   "brasileirao": 0,
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 619,
+  "esports": 632,
   "cs2": 422,
   "lol": 440,
   "dota": 21,
@@ -625,12 +625,12 @@
   "boxing": 296,
   "golf": 407,
   "f1": 445,
-  "cricket": 550,
+  "cricket": 549,
   "afc-champions-league-elite": 184,
   "allsvenskan": 1,
   "austria-bundesliga": 378,
   "brazil-serie-b": 4,
-  "bulgaria-parva-liga": 411,
+  "bulgaria-parva-liga": 410,
   "bundesliga-2": 488,
   "champions-league": 311,
   "champions-league-final": 12,
@@ -647,20 +647,20 @@
   "japan-j-league": 562,
   "japan-j2-league": 534,
   "k-league": 472,
-  "la-liga-2": 533,
+  "la-liga-2": 527,
   "liga-mx-apertura": 2,
   "ligue-2": 505,
   "naitons-league": 1,
   "national-league": 449,
   "nations-league": 25,
-  "norway-eliteserien": 498,
+  "norway-eliteserien": 496,
   "poland-ekstraklasa": 421,
   "premier-league": 552,
   "saudi-professional-league": 572,
   "scotland-league-cup": 193,
-  "scottish-premiership": 457,
+  "scottish-premiership": 461,
   "serbian-superliga": 411,
-  "serie-b": 503,
+  "serie-b": 501,
   "slovenia-prvaliga": 330,
   "sweden-allsvenskan": 429,
   "switzerland-super-league": 406,
@@ -678,113 +678,113 @@
   "sweepAdded": 409
  },
  "vorStats": {
-  "kandidaten": 9,
+  "kandidaten": 11,
   "budgetLeer": 0,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
-  "mitAnteilen": 9,
-  "calls": 9
+  "mitAnteilen": 11,
+  "calls": 11
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 2929,
-   "usd": 62413072,
-   "beispiel": "fifwc-can-qat-2026-06-18"
+   "n": 2093,
+   "usd": 29803315,
+   "beispiel": "fifwc-eng-arg-2026-07-15-more-markets"
+  },
+  "presidential": {
+   "n": 20,
+   "usd": 1116050,
+   "beispiel": "presidential-election-winner-2028"
+  },
+  "btc": {
+   "n": 188,
+   "usd": 1088094,
+   "beispiel": "btc-updown-5m-1784322000"
   },
   "world": {
-   "n": 126,
-   "usd": 9131302,
-   "beispiel": "world-cup-winner"
-  },
-  "uefa": {
-   "n": 57,
-   "usd": 5188363,
-   "beispiel": "uefa-champions-league-2027-champion-20260701202025549"
-  },
-  "us": {
-   "n": 64,
-   "usd": 1548038,
-   "beispiel": "us-x-iran-permanent-peace-deal-by"
-  },
-  "ecs": {
-   "n": 7,
-   "usd": 1005663,
-   "beispiel": "ecs-ars-mci-2026-08-16"
-  },
-  "cbb": {
-   "n": 90,
-   "usd": 916894,
-   "beispiel": "cbb-uconn-mich-2026-04-06"
-  },
-  "fed": {
    "n": 30,
-   "usd": 804727,
-   "beispiel": "fed-decision-in-october-20260617190323537"
-  },
-  "which": {
-   "n": 37,
-   "usd": 796077,
-   "beispiel": "which-party-will-win-the-house-in-2026"
-  },
-  "will": {
-   "n": 35,
-   "usd": 715260,
-   "beispiel": "will-trump-visit-china-by"
+   "usd": 537819,
+   "beispiel": "world-cup-winner"
   },
   "super": {
    "n": 29,
-   "usd": 535263,
+   "usd": 532909,
    "beispiel": "super-bowl-champion-2026-731"
   },
-  "2026": {
-   "n": 38,
-   "usd": 483145,
-   "beispiel": "2026-mens-us-open-winner-tennis"
+  "cbb": {
+   "n": 31,
+   "usd": 407902,
+   "beispiel": "cbb-uconn-mich-2026-04-06"
   },
-  "strait": {
-   "n": 8,
-   "usd": 362012,
-   "beispiel": "strait-of-hormuz-traffic-returns-to-normal-by-end-of-june"
+  "fed": {
+   "n": 22,
+   "usd": 307112,
+   "beispiel": "fed-decision-in-december"
   },
-  "balance": {
-   "n": 8,
-   "usd": 338616,
-   "beispiel": "balance-of-power-2026-midterms"
-  },
-  "presidential": {
-   "n": 16,
-   "usd": 335850,
-   "beispiel": "presidential-election-winner-2028"
-  },
-  "usc": {
-   "n": 4,
-   "usd": 335318,
-   "beispiel": "usc-psg-av-2026-08-12"
-  },
-  "who": {
-   "n": 11,
-   "usd": 315538,
-   "beispiel": "who-will-be-the-next-prime-minister-of-israel-after-the-next-election"
-  },
-  "texas": {
-   "n": 13,
-   "usd": 300961,
-   "beispiel": "texas-senate-election-winner"
-  },
-  "what": {
-   "n": 18,
-   "usd": 274175,
-   "beispiel": "what-price-will-bitcoin-hit-before-2027"
+  "uefa": {
+   "n": 12,
+   "usd": 253884,
+   "beispiel": "uefa-champions-league-winner"
   },
   "pro": {
-   "n": 33,
-   "usd": 235845,
-   "beispiel": "pro-football-2027-champion-20260729185915366"
+   "n": 29,
+   "usd": 206170,
+   "beispiel": "pro-football-2026-mvp-winner"
   },
-  "ballon": {
+  "lec": {
+   "n": 65,
+   "usd": 183052,
+   "beispiel": "lec-mon-nas-2026-08-12"
+  },
+  "uef": {
+   "n": 11,
+   "usd": 163989,
+   "beispiel": "uef-kvx-tur-2026-03-31"
+  },
+  "which": {
+   "n": 29,
+   "usd": 162561,
+   "beispiel": "which-party-will-win-the-house-in-2026"
+  },
+  "us": {
+   "n": 25,
+   "usd": 151651,
+   "beispiel": "us-x-iran-ceasefire-by"
+  },
+  "2026": {
+   "n": 32,
+   "usd": 129288,
+   "beispiel": "2026-nba-champion"
+  },
+  "will": {
+   "n": 29,
+   "usd": 124691,
+   "beispiel": "will-mitch-mcconnell-resign-from-the-senate-before-his-term-ends"
+  },
+  "nbasl": {
+   "n": 4,
+   "usd": 108891,
+   "beispiel": "nbasl-cle-nop-2026-07-15"
+  },
+  "democratic": {
+   "n": 19,
+   "usd": 105452,
+   "beispiel": "democratic-presidential-nominee-2028"
+  },
+  "cdr": {
+   "n": 5,
+   "usd": 92289,
+   "beispiel": "cdr-atm-fcb-2026-02-12"
+  },
+  "who": {
    "n": 7,
-   "usd": 176773,
-   "beispiel": "ballon-dor-winner-2026"
+   "usd": 76597,
+   "beispiel": "who-will-be-the-next-prime-minister-of-israel-after-the-next-election"
+  },
+  "how": {
+   "n": 12,
+   "usd": 73287,
+   "beispiel": "how-many-scotus-justices-rule-in-favor-of-trumps-tarriffs"
   }
  }
 }
