@@ -21182,7 +21182,7 @@ null
 "leadOdd": 2.46,
 "value": 213941.89,
 "sentAt": "2026-10-11T09:55:50.608469+00:00",
-"status": "pending",
+"status": "lost",
 "htScore": [
 0,
 0
@@ -21203,7 +21203,17 @@ null
 null,
 null
 ]
-}
+},
+"clvBf": 1.02,
+"clvPinn": 2.83,
+"settledAt": "2026-10-11T12:56:21.330735+00:00",
+"ftScore": [
+0,
+0
+],
+"profit": -1.0,
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36159071:Match Odds",
@@ -21332,7 +21342,7 @@ null
 "leadOdd": 1.72,
 "value": 224747.65,
 "sentAt": "2026-10-11T12:11:00.836041+00:00",
-"status": "pending",
+"status": "won",
 "htScore": [
 1,
 0
@@ -21353,7 +21363,16 @@ null
 1,
 0
 ]
-}
+},
+"clvBf": 5.55,
+"clvPinn": 7.22,
+"settledAt": "2026-10-11T12:56:21.330735+00:00",
+"ftScore": [
+1,
+0
+],
+"profit": 0.72,
+"via": "track"
 },
 {
 "k": "fresh:36065349:Match Odds",
@@ -21410,6 +21429,70 @@ null
 "anteilSchwelle": 0.514,
 "raus": "unter_geldschwelle",
 "quelle": "trades",
+"gesendet": false,
+"live": {
+"time": null,
+"score": [
+null,
+null
+]
+}
+},
+{
+"k": "fix:36152459:First Half Goals 0.5",
+"matchId": "36152459",
+"scenario": "fix",
+"market": "First Half Goals 0.5",
+"league": "Polish I Liga",
+"home": "LKS Lodz",
+"away": "Ruch Chorzow",
+"leadName": "Under 0.5 Goals",
+"leadOdd": 2.0,
+"value": 12407.23,
+"sentAt": "2026-10-11T12:56:12.056097+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.6983234775207682,
+"leadDir": "in",
+"onLeader": null,
+"tier": "rest",
+"magnitude": 0.0,
+"schwelle": 30000.0,
+"anteilSchwelle": 0.0,
+"raus": "fix",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 22,
+"score": [
+0,
+0
+]
+}
+},
+{
+"k": "fresh:36099857:Match Odds",
+"matchId": "36099857",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "German Bundesliga",
+"home": "FC Koln",
+"away": "Mgladbach",
+"leadName": "FC Koln",
+"leadOdd": 2.0,
+"value": 148258.09,
+"sentAt": "2026-10-11T12:56:12.056113+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.7869105827547084,
+"leadDir": "in",
+"onLeader": null,
+"tier": "top",
+"magnitude": 100558.4,
+"schwelle": 100000.0,
+"anteilSchwelle": 1.006,
+"raus": "einseitig",
+"quelle": "public",
 "gesendet": false,
 "live": {
 "time": null,
