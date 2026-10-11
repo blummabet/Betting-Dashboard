@@ -1,11 +1,11 @@
-# 🟡 Picks Validator — 10.10.2026 21:48
+# 🟡 Picks Validator — 11.10.2026 08:58
 
 **51 Spiele geprüft** · 🔴 0 Fehler · 🟡 33 Warnungen · 🔵 161 Hinweise
 
 ```
 =================================================================
   🐕 CocoBet — Picks Logik-Check
-  10.10.2026 21:48
+  11.10.2026 08:58
   Filter: nächste 3 Tag(e)
 =================================================================
 
@@ -67,6 +67,9 @@
   🔵 HINWEIS [TEAM_OVER_AWAY_LOW_FV]
      📅 11.10.2026  Union St. Gilloise vs OH Leuven
      OH Leuven expA≈0.50 (statischer Proxy) → FV über 1.5 = 9.0%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
+  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
+     📅 11.10.2026  KVC Westerlo vs Antwerp
+     KVC Westerlo: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 11.10.2026  KVC Westerlo vs Antwerp
      Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
@@ -76,12 +79,6 @@
   🟡 WARNUNG [U25_H2H_HARD_BLOCK_MISS]
      📅 11.10.2026  KVC Westerlo vs Antwerp
      H2H Schnitt=3.5 Tore (≥3.5) — HARD BLOCK sollte Under 2.5 komplett blocken. Python kann Picks nicht prüfen — JS-Inline-Validator zeigt ERROR falls Pick trotzdem erscheint.
-  🔵 HINWEIS [LOW_SCORING_PROFILE]
-     📅 11.10.2026  KVC Westerlo vs Antwerp
-     Ø gpg=1.50, H2H Ø=3.5 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt
-  🔵 HINWEIS [OVER35_LOW_FV]
-     📅 11.10.2026  KVC Westerlo vs Antwerp
-     Ø gpg=1.50 (statischer Proxy) → Poisson FV für Over 3.5 = 6.6%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
   🟡 WARNUNG [HOME_POOR_FORM_HIGH_SCORE]
      📅 11.10.2026  KV Mechelen vs St. Truiden
      KV Mechelen: formScore=0.11 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet.
@@ -248,6 +245,9 @@
   🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
      📅 11.10.2026  Nice vs Strasbourg
      Nice expH≈1.15 (statischer Proxy) → FV über 1.5 = 31.9%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
+  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
+     📅 11.10.2026  Rennes vs Auxerre
+     Auxerre: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 11.10.2026  Rennes vs Auxerre
      Liga-Baserate=3.6 → Poisson FV für Über 3.5 Karten = 48.5% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+7.1%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
