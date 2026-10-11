@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-11T19:20:31.779034+00:00",
+ "updatedAt": "2026-10-11T19:48:49.543903+00:00",
  "stake": 10.0,
  "regel": {
   "minN": 20,
@@ -7,9 +7,9 @@
   "frischMin": 90.0
  },
  "zaehler": {
-  "ohneEinstieg": 28,
-  "gesperrt": 103,
-  "alt": 278
+  "ohneEinstieg": 9,
+  "gesperrt": 119,
+  "alt": 356
  },
  "open": {
   "unl-mac-sco-2026-10-03-more-markets|Under": {
@@ -5072,28 +5072,6 @@
    "firstTs": "2026-10-11T12:21:11.724174+00:00",
    "stake": 10.0
   },
-  "nor-ik-ham-2026-10-11|IK Start": {
-   "key": "nor-ik-ham-2026-10-11",
-   "side": "IK Start",
-   "cat": "Fußball",
-   "league": "NORWAY-ELITESERIEN",
-   "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-   "belegt": true,
-   "heiss": false,
-   "walletN": 1454,
-   "walletClv": 0.299,
-   "walletUg": 0.155,
-   "clv7": null,
-   "n7": null,
-   "walletEntry": 0.5029,
-   "entryPrice": 0.535,
-   "abstandPP": 3.21,
-   "arm": "zu_spaet",
-   "lastPrice": 0.565,
-   "htkAtEntry": 2.76,
-   "firstTs": "2026-10-11T12:21:11.724174+00:00",
-   "stake": 10.0
-  },
   "ere-tel-ado-2026-10-11-more-markets|Under": {
    "key": "ere-tel-ado-2026-10-11-more-markets",
    "side": "Under",
@@ -5749,7 +5727,7 @@
    "entryPrice": 0.325,
    "abstandPP": 0.5,
    "arm": "nehmbar",
-   "lastPrice": 0.325,
+   "lastPrice": 0.345,
    "htkAtEntry": 2.75,
    "firstTs": "2026-10-11T17:50:51.655387+00:00",
    "stake": 10.0
@@ -5950,6 +5928,28 @@
    "lastPrice": 0.225,
    "htkAtEntry": 1.25,
    "firstTs": "2026-10-11T19:20:31.779034+00:00",
+   "stake": 10.0
+  },
+  "bra-bah-mir-2026-10-11-more-markets|Over": {
+   "key": "bra-bah-mir-2026-10-11-more-markets",
+   "side": "Over",
+   "cat": "Fußball",
+   "league": "BRAZIL-SERIE-A",
+   "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+   "belegt": true,
+   "heiss": false,
+   "walletN": 1484,
+   "walletClv": 0.298,
+   "walletUg": 0.157,
+   "clv7": null,
+   "n7": null,
+   "walletEntry": 0.5799,
+   "entryPrice": 0.59,
+   "abstandPP": 1.01,
+   "arm": "zu_spaet",
+   "lastPrice": 0.59,
+   "htkAtEntry": 2.77,
+   "firstTs": "2026-10-11T19:48:49.543903+00:00",
    "stake": 10.0
   }
  },
@@ -25581,6 +25581,34 @@
    "closePrice": 0.0235,
    "clvPP": 0.0,
    "settledTs": "2026-10-11T19:20:31.779034+00:00"
+  },
+  {
+   "key": "nor-ik-ham-2026-10-11",
+   "side": "IK Start",
+   "cat": "Fußball",
+   "league": "NORWAY-ELITESERIEN",
+   "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+   "belegt": true,
+   "heiss": false,
+   "walletN": 1454,
+   "walletClv": 0.299,
+   "walletUg": 0.155,
+   "clv7": null,
+   "n7": null,
+   "walletEntry": 0.5029,
+   "entryPrice": 0.535,
+   "abstandPP": 3.21,
+   "arm": "zu_spaet",
+   "lastPrice": 0.565,
+   "htkAtEntry": 2.76,
+   "firstTs": "2026-10-11T12:21:11.724174+00:00",
+   "stake": 10.0,
+   "result": "loss",
+   "winner": "Hamarkameratene",
+   "pnl": -10.0,
+   "closePrice": 0.565,
+   "clvPP": 3.0,
+   "settledTs": "2026-10-11T19:48:49.543903+00:00"
   }
  ],
  "gesehen": [
@@ -25703,6 +25731,7 @@
   "bl2-hei-fck-2026-10-09-more-markets|Over",
   "bl2-hei-fck-2026-10-09|1. FC Kaiserslautern",
   "bl2-svd-fce-2026-10-10-more-markets|Under",
+  "bra-bah-mir-2026-10-11-more-markets|Over",
   "bra-bot-vas-2026-10-07-more-markets|Under",
   "bra-bra-mir-2026-10-07|Red Bull Bragantino",
   "bra-cam-bra-2026-10-03|CA Mineiro",
@@ -26571,17 +26600,17 @@
    "clvUg": -0.18
   },
   "belegt_zu_spaet": {
-   "n": 200,
+   "n": 201,
    "wins": 57,
-   "hit": 0.285,
-   "pnl": -173.75,
-   "stake": 2000.0,
-   "roi": -0.0869,
-   "roiUg": -0.3739,
+   "hit": 0.2836,
+   "pnl": -183.75,
+   "stake": 2010.0,
+   "roi": -0.0914,
+   "roiUg": -0.3771,
    "belegt": false,
-   "clvAvg": -0.14,
-   "clvN": 200,
-   "clvUg": -0.3
+   "clvAvg": -0.12,
+   "clvN": 201,
+   "clvUg": -0.29
   },
   "heiss_nehmbar": {
    "n": 86,
@@ -26677,17 +26706,17 @@
    }
   },
   "zu_spaet": {
-   "n": 227,
+   "n": 228,
    "wins": 74,
-   "hit": 0.326,
-   "pnl": -187.76,
-   "stake": 2270.0,
-   "roi": -0.0827,
-   "roiUg": -0.3372,
+   "hit": 0.3246,
+   "pnl": -197.76,
+   "stake": 2280.0,
+   "roi": -0.0867,
+   "roiUg": -0.3402,
    "belegt": false,
-   "clvAvg": -0.1,
-   "clvN": 227,
-   "clvUg": -0.31,
+   "clvAvg": -0.09,
+   "clvN": 228,
+   "clvUg": -0.3,
    "byCat": {
     "E-Sport": {
      "n": 36,
@@ -26703,17 +26732,17 @@
      "clvUg": -1.4
     },
     "Fußball": {
-     "n": 152,
+     "n": 153,
      "wins": 33,
-     "hit": 0.2171,
-     "pnl": -227.17,
-     "stake": 1520.0,
-     "roi": -0.1495,
-     "roiUg": -0.5143,
+     "hit": 0.2157,
+     "pnl": -237.17,
+     "stake": 1530.0,
+     "roi": -0.155,
+     "roiUg": -0.5176,
      "belegt": false,
-     "clvAvg": -0.03,
-     "clvN": 152,
-     "clvUg": -0.2
+     "clvAvg": -0.01,
+     "clvN": 153,
+     "clvUg": -0.18
     },
     "Motorsport": {
      "n": 1,
