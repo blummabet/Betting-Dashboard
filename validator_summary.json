@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-10T21:48:36.325848+00:00",
+  "timestamp": "2026-10-11T08:58:48.036849+00:00",
   "checked": 51,
   "errors": 0,
   "warnings": 33,
@@ -164,6 +164,15 @@
       "away": "Antwerp",
       "league": "Jupiler Pro League",
       "severity": "INFO",
+      "code": "LOW_MOTIV_CARDS_CHECK",
+      "msg": "KVC Westerlo: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen."
+    },
+    {
+      "date": "11.10.2026",
+      "home": "KVC Westerlo",
+      "away": "Antwerp",
+      "league": "Jupiler Pro League",
+      "severity": "INFO",
       "code": "CARDS35_LOW_FV",
       "msg": "Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen."
     },
@@ -184,24 +193,6 @@
       "severity": "WARN",
       "code": "U25_H2H_HARD_BLOCK_MISS",
       "msg": "H2H Schnitt=3.5 Tore (≥3.5) — HARD BLOCK sollte Under 2.5 komplett blocken. Python kann Picks nicht prüfen — JS-Inline-Validator zeigt ERROR falls Pick trotzdem erscheint."
-    },
-    {
-      "date": "11.10.2026",
-      "home": "KVC Westerlo",
-      "away": "Antwerp",
-      "league": "Jupiler Pro League",
-      "severity": "INFO",
-      "code": "LOW_SCORING_PROFILE",
-      "msg": "Ø gpg=1.50, H2H Ø=3.5 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt"
-    },
-    {
-      "date": "11.10.2026",
-      "home": "KVC Westerlo",
-      "away": "Antwerp",
-      "league": "Jupiler Pro League",
-      "severity": "INFO",
-      "code": "OVER35_LOW_FV",
-      "msg": "Ø gpg=1.50 (statischer Proxy) → Poisson FV für Over 3.5 = 6.6%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy."
     },
     {
       "date": "11.10.2026",
@@ -652,6 +643,15 @@
       "severity": "INFO",
       "code": "TEAM_OVER_HOME_LOW_FV",
       "msg": "Nice expH≈1.15 (statischer Proxy) → FV über 1.5 = 31.9%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger."
+    },
+    {
+      "date": "11.10.2026",
+      "home": "Rennes",
+      "away": "Auxerre",
+      "league": "Ligue 1",
+      "severity": "INFO",
+      "code": "LOW_MOTIV_CARDS_CHECK",
+      "msg": "Auxerre: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen."
     },
     {
       "date": "11.10.2026",
