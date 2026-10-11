@@ -79,18 +79,17 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 200334 verbraucht, 4799666 uebrig"
+      "note": "Kontingent: 200475 verbraucht, 4799525 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 15,
+      "nFail": 14,
       "failures": [
-        "Sport Boys (Per) v Alianza Atletico (Peruvian Primera Division): unerklaert — bester Kandidat „Atletico Goianiense v Sport Recife“",
-        "CA Central Norte v Ferro Carril Oeste (Argentinian Primera Nacional): name — bester Kandidat „Rosario Central v Independiente Rivadavia“",
         "Envigado v Internacional de Palmira (Colombian Primera B): name — bester Kandidat „Grêmio v Internacional“",
+        "CA Central Norte v Ferro Carril Oeste (Argentinian Primera Nacional): name — bester Kandidat „Rosario Central v Independiente Rivadavia“",
         "Al Wasl v Al Ahli (AFC Champions League): zeit — bester Kandidat „Al-Ahli v Al-Nassr“ · 74.0h Anpfiff-Abstand",
         "Al Quwa Al Jawiya v Al Ain (AFC Champions League): zeit — bester Kandidat „Al-Faisaly KSA FC v Al-Kholood“ · 67.4h Anpfiff-Abstand",
         "Al-Sadd v Al-Hilal (AFC Champions League): zeit — bester Kandidat „Al-Riyadh v Al-Hilal“ · 71.0h Anpfiff-Abstand",
@@ -102,9 +101,9 @@
         "Eyupspor U19 v Goztepe U19 (Turkish U19): zeit — bester Kandidat „Eyüpspor v Goztepe“ · 5.0h Anpfiff-Abstand",
         "HK Rangers U22 v Kowloon City U22 (Hong Kong U22): zeit — bester Kandidat „Birmingham City v Queens Park Rangers“ · 121.5h Anpfiff-Abstand",
         "Al-Adalh v Al-Anwar Club (Saudi 1st Division): zeit — bester Kandidat „Al-Khaleej v Al-Fayha“ · 71.9h Anpfiff-Abstand",
-        "Club Atletico Mitre v Colon (Argentinian Primera Nacional): name — bester Kandidat „Atletico Mineiro v Santos“"
+        "Sport Boys (Per) v Alianza Atletico (Peruvian Primera Division): unerklaert — bester Kandidat „Atletico Goianiense v Sport Recife“"
       ],
-      "note": "ohne Anker: kein_kandidat 84 · name 6 · unerklaert 1 · zeit 8. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 84 · kein_pinnacle 1 · name 5 · unerklaert 1 · zeit 8. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -113,7 +112,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 0"
+      "note": "Quelle ohne Pinnacle: 1 — Atletico GO v Sport Recife (26 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -122,7 +121,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 9 gewollt, 9 abgerufen, 0 mit Daten"
+      "note": "Totals: 8 gewollt, 8 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -189,5 +188,5 @@
     }
   ],
   "nFail": 1,
-  "generatedAt": "2026-10-11T20:42:07.061390+00:00"
+  "generatedAt": "2026-10-11T20:56:59.226683+00:00"
 }
