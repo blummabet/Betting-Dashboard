@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-11T12:14:15.666295+00:00",
+ "generatedAt": "2026-10-11T13:14:29.045611+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,30 +10,73 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 668,
- "pinnKeys": 288,
- "matched": 194,
- "footballRows": 186,
- "crossRows": 482,
- "footballSkippedStale": 100,
+ "polyRowsSeen": 682,
+ "pinnKeys": 300,
+ "matched": 208,
+ "footballRows": 198,
+ "crossRows": 484,
+ "footballSkippedStale": 95,
  "seenBySport": {
   "basketball_nba": 64,
   "americanfootball_nfl": 64,
-  "baseball_mlb": 8,
+  "baseball_mlb": 10,
   "icehockey_nhl": 326,
   "boxing_boxing": 20,
   "soccer_mls": 42,
-  "soccer_liga": 144
+  "soccer_liga": 156
  },
  "matchedBySport": {
-  "baseball_mlb": 2,
+  "baseball_mlb": 4,
   "boxing_boxing": 6,
   "soccer_mls": 42,
-  "soccer_liga": 144
+  "soccer_liga": 156
  },
  "trackRecord": {
-  "tracked": 108,
+  "tracked": 111,
   "converged": 45
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "soccer_liga|celtavigo-elche|dr",
+   "sport": "soccer_liga",
+   "event": "Elche vs Celta Vigo",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 28.5,
+   "pinnPP": 41.3,
+   "gapPP": -12.81,
+   "vol": 11858,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-11T13:14:29.045353+00:00"
+  },
+  {
+   "id": "soccer_liga|celtavigo-elche|hw",
+   "sport": "soccer_liga",
+   "event": "Elche vs Celta Vigo",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 33.5,
+   "pinnPP": 27.2,
+   "gapPP": 6.27,
+   "vol": 11858,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-11T13:14:29.045353+00:00"
+  },
+  {
+   "id": "soccer_liga|celtavigo-elche|aw",
+   "sport": "soccer_liga",
+   "event": "Elche vs Celta Vigo",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 37.5,
+   "pinnPP": 31.5,
+   "gapPP": 6.04,
+   "vol": 11858,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-11T13:14:29.045353+00:00"
+  }
+ ]
 }
