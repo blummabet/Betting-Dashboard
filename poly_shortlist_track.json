@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-11T23:42:46.627293+00:00",
+ "updatedAt": "2026-10-11T23:50:08.267940+00:00",
  "stake": 10.0,
  "expired": 0,
  "condDrift": 0,
@@ -36,12 +36,12 @@
    "needClvN": 20
   },
   "US-Sport": {
-   "n": 96,
+   "n": 97,
    "clvN": 13,
    "clvAvg": -0.46,
-   "roi": -0.2391,
-   "hit": 0.4896,
-   "roiUg": -0.373,
+   "roi": -0.2307,
+   "hit": 0.4948,
+   "roiUg": -0.3639,
    "eligible": false,
    "kriterium": "Rendite-Untergrenze über null (der CLV wird angezeigt, entscheidet aber nicht)",
    "needN": 0,
@@ -344,7 +344,7 @@
    "entryPrice": 0.595,
    "firstTs": "2026-10-11T18:50:54.520043+00:00",
    "lastPrice": 0.615,
-   "lastTs": "2026-10-11T23:42:46.627293+00:00",
+   "lastTs": "2026-10-11T23:50:08.267940+00:00",
    "htkAtEntry": 1.6515841666666666,
    "public": false,
    "ohneWallet": false,
@@ -363,37 +363,6 @@
    "closeRefTs": "2026-10-11T20:19:54.778992+00:00",
    "closeQuelle": "close"
   },
-  "nfl-den-lac-2026-10-11|Broncos": {
-   "key": "nfl-den-lac-2026-10-11",
-   "side": "Broncos",
-   "verdict": "BET",
-   "conv": 5,
-   "league": "NFL",
-   "cat": "US-Sport",
-   "entryPrice": 0.635,
-   "firstTs": "2026-10-11T19:20:30.292068+00:00",
-   "lastPrice": 0.635,
-   "lastTs": "2026-10-11T23:42:46.627293+00:00",
-   "htkAtEntry": 0.7416427777777778,
-   "public": false,
-   "ohneWallet": false,
-   "reasons": [
-    "großes Geld auf Broncos (64%) → $31K",
-    "🔥 scharfe Wallet (201/333, 60% · 30 T Sport +$4.9K)"
-   ],
-   "signals": [
-    "money",
-    "sharp"
-   ],
-   "stake": 10.0,
-   "ev": "2026-09-01",
-   "movePreEntryPP": 0.0,
-   "cond": "0x95532ccb25b8f75736a52837bc964b4326f4e27b45eef12d52521890207bbc78",
-   "frage": "Broncos vs. Chargers",
-   "closeRef": 0.635,
-   "closeRefTs": "2026-10-11T19:54:50.698757+00:00",
-   "closeQuelle": "close"
-  },
   "bra-fla-flu-2026-10-11|CR Flamengo": {
    "key": "bra-fla-flu-2026-10-11",
    "side": "CR Flamengo",
@@ -404,7 +373,7 @@
    "entryPrice": 0.605,
    "firstTs": "2026-10-11T20:49:47.450468+00:00",
    "lastPrice": 0.63,
-   "lastTs": "2026-10-11T23:42:46.627293+00:00",
+   "lastTs": "2026-10-11T23:50:08.267940+00:00",
    "htkAtEntry": -0.32979194444444443,
    "public": false,
    "ohneWallet": true,
@@ -433,7 +402,7 @@
    "entryPrice": 0.645,
    "firstTs": "2026-10-11T22:20:12.191708+00:00",
    "lastPrice": 0.645,
-   "lastTs": "2026-10-11T23:42:46.627293+00:00",
+   "lastTs": "2026-10-11T23:50:08.267940+00:00",
    "htkAtEntry": 0.16334166666666666,
    "public": false,
    "ohneWallet": false,
@@ -49429,21 +49398,50 @@
    "settledTs": "2026-10-11T23:42:46.627293+00:00",
    "resolvedTs": "2026-10-11T23:42:43.473525+00:00",
    "ausEndstand": null
+  },
+  {
+   "key": "nfl-den-lac-2026-10-11",
+   "side": "Broncos",
+   "verdict": "BET",
+   "conv": 5,
+   "league": "NFL",
+   "cat": "US-Sport",
+   "entryPrice": 0.635,
+   "closePrice": 0.635,
+   "closeRefTs": "2026-10-11T19:54:50.698757+00:00",
+   "closeQuelle": "close",
+   "result": "win",
+   "winner": "Broncos",
+   "pnl": 5.75,
+   "clvPP": 0.0,
+   "stake": 10.0,
+   "public": false,
+   "ohneWallet": false,
+   "signals": [
+    "money",
+    "sharp"
+   ],
+   "firstTs": "2026-10-11T19:20:30.292068+00:00",
+   "ev": "2026-09-01",
+   "htkAtEntry": 0.7416427777777778,
+   "settledTs": "2026-10-11T23:50:08.267940+00:00",
+   "resolvedTs": "2026-10-11T23:50:05.218018+00:00",
+   "ausEndstand": null
   }
  ],
  "agg": {
   "all": {
-   "n": 1767,
-   "wins": 1157,
-   "hit": 0.6548,
-   "pnl": -48.81,
-   "stake": 17670.0,
-   "roi": -0.0028,
-   "roiUg": -0.0337,
+   "n": 1768,
+   "wins": 1158,
+   "hit": 0.655,
+   "pnl": -43.06,
+   "stake": 17680.0,
+   "roi": -0.0024,
+   "roiUg": -0.0334,
    "belegt": false,
    "clvAvg": -0.15,
-   "clvN": 862,
-   "clvUg": -0.36
+   "clvN": 863,
+   "clvUg": -0.35
   },
   "public": {
    "n": 388,
@@ -49507,17 +49505,17 @@
    "clvUg": -0.34
   },
   "blocked": {
-   "n": 132,
-   "wins": 71,
-   "hit": 0.5379,
-   "pnl": -285.49,
-   "stake": 1320.0,
-   "roi": -0.2163,
-   "roiUg": -0.3229,
+   "n": 133,
+   "wins": 72,
+   "hit": 0.5414,
+   "pnl": -279.74,
+   "stake": 1330.0,
+   "roi": -0.2103,
+   "roiUg": -0.3166,
    "belegt": false,
-   "clvAvg": -0.65,
-   "clvN": 41,
-   "clvUg": -1.43
+   "clvAvg": -0.63,
+   "clvN": 42,
+   "clvUg": -1.4
   },
   "byCat": {
    "Cricket": {
@@ -49599,16 +49597,16 @@
     "clvUg": -0.88
    },
    "US-Sport": {
-    "n": 96,
-    "wins": 47,
-    "hit": 0.4896,
-    "pnl": -229.5,
-    "stake": 960.0,
-    "roi": -0.2391,
-    "roiUg": -0.373,
+    "n": 97,
+    "wins": 48,
+    "hit": 0.4948,
+    "pnl": -223.75,
+    "stake": 970.0,
+    "roi": -0.2307,
+    "roiUg": -0.3639,
     "belegt": false,
-    "clvAvg": -0.27,
-    "clvN": 22,
+    "clvAvg": -0.26,
+    "clvN": 23,
     "clvUg": null
    }
   },
@@ -49802,16 +49800,16 @@
     "clvUg": null
    },
    "5": {
-    "n": 763,
-    "wins": 486,
-    "hit": 0.637,
-    "pnl": -139.56,
-    "stake": 7630.0,
-    "roi": -0.0183,
-    "roiUg": -0.0681,
+    "n": 764,
+    "wins": 487,
+    "hit": 0.6374,
+    "pnl": -133.81,
+    "stake": 7640.0,
+    "roi": -0.0175,
+    "roiUg": -0.0672,
     "belegt": false,
     "clvAvg": -0.14,
-    "clvN": 371,
+    "clvN": 372,
     "clvUg": -0.45
    },
    "6": {
@@ -49882,17 +49880,17 @@
   },
   "byVerdict": {
    "BET": {
-    "n": 1767,
-    "wins": 1157,
-    "hit": 0.6548,
-    "pnl": -48.81,
-    "stake": 17670.0,
-    "roi": -0.0028,
-    "roiUg": -0.0337,
+    "n": 1768,
+    "wins": 1158,
+    "hit": 0.655,
+    "pnl": -43.06,
+    "stake": 17680.0,
+    "roi": -0.0024,
+    "roiUg": -0.0334,
     "belegt": false,
     "clvAvg": -0.15,
-    "clvN": 862,
-    "clvUg": -0.36
+    "clvN": 863,
+    "clvUg": -0.35
    }
   },
   "bySignal": {
@@ -49910,16 +49908,16 @@
     "clvUg": -0.4
    },
    "money": {
-    "n": 1615,
-    "wins": 1078,
-    "hit": 0.6675,
-    "pnl": -35.26,
-    "stake": 16150.0,
-    "roi": -0.0022,
-    "roiUg": -0.0329,
+    "n": 1616,
+    "wins": 1079,
+    "hit": 0.6677,
+    "pnl": -29.51,
+    "stake": 16160.0,
+    "roi": -0.0018,
+    "roiUg": -0.0325,
     "belegt": false,
     "clvAvg": -0.15,
-    "clvN": 831,
+    "clvN": 832,
     "clvUg": -0.36
    },
    "pinn": {
@@ -49936,16 +49934,16 @@
     "clvUg": null
    },
    "sharp": {
-    "n": 1040,
-    "wins": 699,
-    "hit": 0.6721,
-    "pnl": -67.76,
-    "stake": 10400.0,
-    "roi": -0.0065,
-    "roiUg": -0.0458,
+    "n": 1041,
+    "wins": 700,
+    "hit": 0.6724,
+    "pnl": -62.01,
+    "stake": 10410.0,
+    "roi": -0.006,
+    "roiUg": -0.0452,
     "belegt": false,
     "clvAvg": -0.22,
-    "clvN": 532,
+    "clvN": 533,
     "clvUg": -0.44
    },
    "steam": {
