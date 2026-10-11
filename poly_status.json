@@ -58,11 +58,9 @@
       "id": "ruhende_order_ist_keine_position",
       "label": "Eine ruhende Order ist keine Position",
       "severity": "error",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "shortlist_auto_bets_placed.json: 1 offene Zeile(n) sind RUHENDE Orders, keine Positionen (cs2-fly-kzg-2026-10-10|FlyQuest) — sie binden Guthaben und werden von niemandem bewacht"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "`method` aus der Order-Schicht unterscheidet market (gekauft) von maker_limit/limit_gtc (liegt im Buch). Fehlt es, ist eine offene Zeile nicht als Position belegt."
     },
     {
@@ -117,7 +115,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "844 von 1733 abgerechneten Plays haben einen Schluss nach dem Einstieg; der Rest traegt clvGrund statt einer erfundenen 0,0."
+      "note": "846 von 1736 abgerechneten Plays haben einen Schluss nach dem Einstieg; der Rest traegt clvGrund statt einer erfundenen 0,0."
     },
     {
       "id": "anpfiff_eine_uhr",
@@ -126,7 +124,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "1341 Close-Zeilen mit absolutem Anpfiff geprueft."
+      "note": "1340 Close-Zeilen mit absolutem Anpfiff geprueft."
     },
     {
       "id": "resolutions_match_open_keys",
@@ -144,8 +142,8 @@
       "ok": false,
       "nFail": 5,
       "failures": [
-        "382/816 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (47%) — Trefferquote allein trügt",
-        "   0xc3c3b3ef30… n=338 Treffer 51% P&L $-3,996,183",
+        "383/818 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (47%) — Trefferquote allein trügt",
+        "   0xc3c3b3ef30… n=338 Treffer 51% P&L $-3,996,095",
         "   0xa0f21e6d35… n=231 Treffer 55% P&L $-2,635,720",
         "   0xabb89972b2… n=63 Treffer 54% P&L $-2,563,982",
         "   0x6ac5bb06a9… n=177 Treffer 54% P&L $-1,555,775"
@@ -198,6 +196,6 @@
       "note": "poly_direct_bets.py rechnet über poly_resolutions.json ab. Hängt ein Bet, kennt Poly den Ausgang nicht (Markt noch offen/obskur) oder der Slug passt nicht — dann fehlt echtes Geld in der Bilanz."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-10-11T02:47:54.298296+00:00"
+  "nFail": 1,
+  "generatedAt": "2026-10-11T03:19:21.922703+00:00"
 }
