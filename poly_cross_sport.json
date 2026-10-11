@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-11T00:13:21.066156+00:00",
+ "generatedAt": "2026-10-11T00:43:26.762673+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,17 +10,17 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 741,
- "pinnKeys": 313,
+ "polyRowsSeen": 739,
+ "pinnKeys": 307,
  "matched": 211,
  "footballRows": 201,
- "crossRows": 540,
+ "crossRows": 538,
  "footballSkippedStale": 102,
  "seenBySport": {
   "basketball_nba": 74,
   "americanfootball_nfl": 72,
   "baseball_mlb": 12,
-  "icehockey_nhl": 348,
+  "icehockey_nhl": 346,
   "boxing_boxing": 34,
   "soccer_mls": 63,
   "soccer_liga": 138
@@ -35,5 +35,34 @@
   "tracked": 124,
   "converged": 49
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "soccer_mls|newyorkredbulls-sandiego|hw",
+   "sport": "soccer_mls",
+   "event": "New York Red Bulls vs San Diego",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 95.5,
+   "pinnPP": 39.0,
+   "gapPP": 56.5,
+   "vol": 58710,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-11T00:43:26.762432+00:00"
+  },
+  {
+   "id": "soccer_mls|newyorkredbulls-sandiego|dr",
+   "sport": "soccer_mls",
+   "event": "New York Red Bulls vs San Diego",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 3.5,
+   "pinnPP": 24.8,
+   "gapPP": -21.29,
+   "vol": 58710,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-11T00:43:26.762432+00:00"
+  }
+ ]
 }
