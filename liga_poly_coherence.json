@@ -1,19 +1,19 @@
 {
  "dataset": "liga",
- "generatedAt": "2026-10-10T21:43:26.513668+00:00",
+ "generatedAt": "2026-10-11T13:45:16.739455+00:00",
  "stale": false,
  "pricesAgeH": 0.0,
  "arbCount": 1,
  "inversions": 1,
- "warnings": 0,
+ "warnings": 1,
  "findings": [
   {
    "key": "539-531",
    "match": "Levante UD vs. Athletic Club",
    "typ": "underround",
    "markt": "1X2",
-   "summe": 0.965,
-   "edgePP": 3.5,
+   "summe": 0.97,
+   "edgePP": 3.0,
    "hinweis": "Alle drei Ergebnisse zusammen < 1.0 → garantierter Ertrag"
   },
   {
@@ -22,8 +22,17 @@
    "typ": "ladder_inversion",
    "markt": "Über 2.5 vs Über 3.5",
    "summe": null,
-   "edgePP": 4.5,
-   "hinweis": "Über 3.5 (0.36) > Über 2.5 (0.32) — unmöglich, eine Linie ist falsch"
+   "edgePP": 17.0,
+   "hinweis": "Über 3.5 (0.46) > Über 2.5 (0.29) — unmöglich, eine Linie ist falsch"
+  },
+  {
+   "key": "84-95",
+   "match": "OGC Nice vs. RC Strasbourg Alsace",
+   "typ": "overround",
+   "markt": "1X2",
+   "summe": 1.16,
+   "edgePP": 16.0,
+   "hinweis": "Fetter Spread — nicht als Taker rein"
   }
  ]
 }

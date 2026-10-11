@@ -115,9 +115,11 @@
     {
       "label": "Money Map: die Poly-Seite gehoert zum Spiel",
       "severity": "error",
-      "failures": [],
-      "nFail": 0,
-      "ok": true,
+      "failures": [
+        "Rennes v Auxerre (French Ligue 1): Poly-Seite heisst „Stade Rennais FC 1901“ und gehoert zu keinem der beiden Teams — $3941 fremdes Geld in einer Konsens-Zeile"
+      ],
+      "nFail": 1,
+      "ok": false,
       "hinweis": ""
     },
     {
@@ -159,9 +161,11 @@
       "label": "Poly-Deckung: Money-Scan gegen Liga-Fetcher",
       "severity": "error",
       "failures": [
-        "Buch: 2 Markt/Maerkte wurden bis zum Anpfiff nie erfasst (sea-int-par-2026-10-10 (0.0h); sea-nap-fro-2026-10-10 (0.4h)) — dort entstanden Picks blind zum Geld"
+        "sea-sas-mil-2026-10-11 (US Sassuolo Calcio v AC Milan, Anpfiff in 2.2h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
+        "sea-cag-juv-2026-10-11 (Cagliari Calcio v Juventus FC, Anpfiff in 5.0h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
+        "Buch: 4 Markt/Maerkte wurden bis zum Anpfiff nie erfasst (sea-int-par-2026-10-10 (0.0h); sea-nap-fro-2026-10-10 (0.4h); sea-sas-mil-2026-10-11 (3.6h); sea-cag-juv-2026-10-11 (6.4h)) — dort entstanden Picks blind zum Geld"
       ],
-      "nFail": 1,
+      "nFail": 3,
       "ok": false,
       "hinweis": ""
     },
@@ -171,37 +175,39 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "63 Picks im Fenster, 21 % ohne Preis-Signal."
+      "hinweis": "47 Picks im Fenster, 19 % ohne Preis-Signal."
     },
     {
       "label": "Stumme Signale: wer hat nie gefeuert?",
       "severity": "warn",
       "failures": [
-        "polymarket_sharp: 0 Feuerungen in 332 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
+        "polymarket_sharp: 0 Feuerungen in 333 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
         "betfair_coherence: stumm, aber erklaert — 07.09.2026 gemessen: seit der Fit-Schranke (MAX_RMSE 0,02 + Leave-one-out, 06.09.) feuert es fast nie — richtigerweise. Ueber 633 Sprossen aus 150 Spielen blieben 8 echte Kanten >= 4 pp, alle in duennen Ligen (Kasachstan, Litauen, Norwegen 2, Estland), keine einzige in den Top 5. Die Betfair-Tormarkt-Leiter ist auf unserer Aufloesung arbitragefrei.",
         "game_state_openness: stumm, aber erklaert — 07.09.2026 gemessen: braucht asymmetrische Verzweiflung spaet in der Saison. Aktuell Spieltag 3-4 von 34-38, also 34 Runden offen — der Tabellendruck ist per Konstruktion nahe null. Vor dem Winter ist Stille hier der richtige Zustand."
       ],
       "nFail": 3,
       "ok": false,
-      "hinweis": "9 von 33 Signalen schweigen ueber 332 Picks — davon 6 bewusst abgeschaltet (altitude_signal, incentive_signal, pressure_index, steam_lag, travel_burden, weather_signal), 3 an und trotzdem stumm."
+      "hinweis": "9 von 33 Signalen schweigen ueber 333 Picks — davon 6 bewusst abgeschaltet (altitude_signal, incentive_signal, pressure_index, steam_lag, travel_burden, weather_signal), 3 an und trotzdem stumm."
     },
     {
       "label": "Signal-Bilanz: schadet ein Signal belegt?",
       "severity": "warn",
-      "failures": [],
-      "nFail": 0,
-      "ok": true,
-      "hinweis": "8 Signale belegt beitragend, 0 belegt schaedlich. ~30 Signale gleichzeitig geprueft — 1-2 falsche Treffer sind zu erwarten. Nur was ueber mehrere Wochen haelt, ist ein Befund."
+      "failures": [
+        "injury schadet belegt: Ausgang -0.044 schlechter als ohne (OG -0.001, n=116/97) — abwerten oder nur noch beobachten"
+      ],
+      "nFail": 1,
+      "ok": false,
+      "hinweis": "8 Signale belegt beitragend, 1 belegt schaedlich. ~30 Signale gleichzeitig geprueft — 1-2 falsche Treffer sind zu erwarten. Nur was ueber mehrere Wochen haelt, ist ein Befund."
     },
     {
       "label": "Fade-Unter: haelt die Kontrollgruppe?",
       "severity": "error",
       "failures": [
-        "Match Odds H: der Fade gewinnt hier BELEGT (+7.5 %, UG +1.5 %, Geldseite +1.7 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
+        "Match Odds H: der Fade gewinnt hier BELEGT (+7.7 %, UG +1.7 %, Geldseite +1.6 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
       ],
       "nFail": 1,
       "ok": false,
-      "hinweis": "seit Vorregistrierung n=6023 (UG -4.6 %) · Rueckblick n=413, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=6108 (UG -5.0 %) · Rueckblick n=315, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -250,9 +256,11 @@
     {
       "label": "Positionswert ist frisch",
       "severity": "warn",
-      "failures": [],
-      "nFail": 0,
-      "ok": true,
+      "failures": [
+        "liga_poly_balance.json: Positionswert $10.28 stammt aus einem Lauf vor 14 h — die Datei selbst ist 14 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
+      ],
+      "nFail": 1,
+      "ok": false,
       "hinweis": ""
     },
     {
@@ -269,7 +277,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "477 Zeilen · 469 abgerechnet · 1 offen"
+      "hinweis": "487 Zeilen · 474 abgerechnet · 6 offen"
     },
     {
       "label": "Artefakte sind lesbar",
@@ -307,7 +315,7 @@
       "label": "Ergebnisse kommen an",
       "severity": "error",
       "failures": [
-        "liga_ergebnis_nachlauf.json: 1 Spiele mit vergangenem Anpfiff ohne Ergebnis (Rayo Vallecano–Athletic Club seit 8 h, API-Status INT) — der Resolver kann sie nicht abrechnen, sie fallen aus jeder Bilanz heraus"
+        "liga_ergebnis_nachlauf.json: 1 Spiele mit vergangenem Anpfiff ohne Ergebnis (Rayo Vallecano–Athletic Club seit 18 h, API-Status INT) — der Resolver kann sie nicht abrechnen, sie fallen aus jeder Bilanz heraus"
       ],
       "nFail": 1,
       "ok": false,
@@ -325,13 +333,13 @@
       "label": "Serien-Buch zeigt beide Buecher",
       "severity": "warn",
       "failures": [
-        "die beiden Serien-Buecher sind 8.0 h auseinander (Liga 0.8 h, MLS 8.8 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+        "die beiden Serien-Buecher sind 8.0 h auseinander (Liga 16.0 h, MLS 24.0 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
       ],
       "nFail": 1,
       "ok": false,
       "hinweis": "Liga n=86 · MLS n=78 · Urteil beide 'Erwartung zu duenn'"
     }
   ],
-  "nFail": 7,
-  "generatedAt": "2026-10-10T22:33:01.262882+00:00"
+  "nFail": 10,
+  "generatedAt": "2026-10-11T13:45:27.074500+00:00"
 }

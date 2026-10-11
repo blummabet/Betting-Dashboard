@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-10-10T21:43:47Z",
-    "total_records": 213,
+    "updated_at": "2026-10-11T13:45:24Z",
+    "total_records": 214,
     "oddsBackfilled": "2026-09-06 — Quote/entryOdd aus den Pick-Dateien nachgetragen; der Ledger trug sie nie (0 von 318)."
   },
   "records": [
@@ -9991,7 +9991,7 @@
           "score": 2.05
         }
       ],
-      "resolvedAt": "2026-10-10T21:43:47Z",
+      "resolvedAt": "2026-10-11T13:45:23Z",
       "source": "steam",
       "convictionScore": 5,
       "lateEntry": true,
@@ -10045,6 +10045,51 @@
       "entryBook": "soft",
       "processVerdict": "UNLUCKY",
       "clvFairPP": 3.17,
+      "clvBasis": "fair"
+    },
+    {
+      "key": "ITA-6-895-497|Über 2.5 Tore",
+      "matchKey": "ITA-6-895-497",
+      "market": "Über 2.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "injury",
+          "score": 4.25
+        },
+        {
+          "name": "form_trend",
+          "score": 2.93
+        },
+        {
+          "name": "xg_strength",
+          "score": 3.6
+        },
+        {
+          "name": "chance_creation",
+          "score": 6.0
+        },
+        {
+          "name": "move_following",
+          "score": 1.2
+        },
+        {
+          "name": "betfair_money",
+          "score": 3.39
+        }
+      ],
+      "resolvedAt": "2026-10-11T13:45:22Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -4.24,
+      "clvResolved": true,
+      "odds": 1.61,
+      "entryOdd": 1.61,
+      "entryBook": "soft",
+      "processVerdict": "UNLUCKY",
+      "clvFairPP": -1.26,
       "clvBasis": "fair"
     }
   ]
