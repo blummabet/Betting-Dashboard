@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-10-11T16:56:17.087648+00:00",
+"generatedAt": "2026-10-11T17:11:24.383533+00:00",
 "byVerdict": {
 "uneinig": {
 "n": 12,
@@ -18,20 +18,20 @@
 "clvLb": -0.8483
 },
 "konsens": {
-"n": 128,
-"wins": 73,
-"hitRate": 0.5703,
-"polyN": 125,
-"polyWins": 71,
-"polyHitRate": 0.568,
-"pinnN": 97,
-"pinnHitRate": 0.5979,
-"nRoi": 128,
-"roi": -0.0047,
-"roiLb": -0.14,
-"nClv": 128,
-"clv": -0.07,
-"clvLb": -0.4137
+"n": 130,
+"wins": 74,
+"hitRate": 0.5692,
+"polyN": 127,
+"polyWins": 72,
+"polyHitRate": 0.5669,
+"pinnN": 99,
+"pinnHitRate": 0.596,
+"nRoi": 130,
+"roi": -0.0087,
+"roiLb": -0.1427,
+"nClv": 130,
+"clv": -0.08,
+"clvLb": -0.4109
 }
 },
 "byLeague": {
@@ -60,6 +60,11 @@
 "wins": 4,
 "hitRate": 0.5
 },
+"French Ligue 1": {
+"n": 7,
+"wins": 5,
+"hitRate": 0.7143
+},
 "German Bundesliga": {
 "n": 7,
 "wins": 3,
@@ -69,11 +74,6 @@
 "n": 7,
 "wins": 2,
 "hitRate": 0.2857
-},
-"French Ligue 1": {
-"n": 6,
-"wins": 4,
-"hitRate": 0.6667
 },
 "English Sky Bet Championship": {
 "n": 5,
@@ -120,6 +120,11 @@
 "wins": 1,
 "hitRate": 0.3333
 },
+"Italian Serie B": {
+"n": 3,
+"wins": 1,
+"hitRate": 0.3333
+},
 "Turkish Super League": {
 "n": 3,
 "wins": 0,
@@ -144,11 +149,6 @@
 "n": 2,
 "wins": 0,
 "hitRate": 0.0
-},
-"Italian Serie B": {
-"n": 2,
-"wins": 1,
-"hitRate": 0.5
 },
 "Japanese J League": {
 "n": 2,
@@ -243,15 +243,15 @@
 },
 "byStrength": {
 "strong": {
-"n": 103,
-"wins": 62,
-"hitRate": 0.6019,
-"nRoi": 103,
-"roi": -0.0112,
-"roiLb": -0.1507,
-"nClv": 103,
-"clv": -0.06,
-"clvLb": -0.4537
+"n": 105,
+"wins": 63,
+"hitRate": 0.6,
+"nRoi": 105,
+"roi": -0.016,
+"roiLb": -0.154,
+"nClv": 105,
+"clv": -0.07,
+"clvLb": -0.4495
 },
 "weak": {
 "n": 37,
@@ -274,6 +274,44 @@
 "polyRate": 0.3333
 },
 "recent": [
+{
+"matchId": "36100466",
+"home": "Rennes",
+"away": "Auxerre",
+"league": "French Ligue 1",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Rennes",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+4,
+1
+],
+"kickoff": "2026-10-11T15:15:00Z",
+"settledAt": "2026-10-11T17:11:24.178555+00:00"
+},
+{
+"matchId": "36100387",
+"home": "Padova",
+"away": "Carrarese",
+"league": "Italian Serie B",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Padova",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+2
+],
+"kickoff": "2026-10-11T15:15:00Z",
+"settledAt": "2026-10-11T17:11:24.178555+00:00"
+},
 {
 "matchId": "36100483",
 "home": "Real Sociedad",
@@ -995,57 +1033,19 @@
 ],
 "kickoff": "2026-10-10T14:00:00Z",
 "settledAt": "2026-10-10T17:09:07.349743+00:00"
-},
-{
-"matchId": "36065335",
-"home": "Ipswich",
-"away": "Fulham",
-"league": "English Premier League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Fulham",
-"polySide": "away",
-"winner": "home",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-10-10T14:00:00Z",
-"settledAt": "2026-10-10T17:09:07.349743+00:00"
-},
-{
-"matchId": "36092386",
-"home": "Watford",
-"away": "Burnley",
-"league": "English Sky Bet Championship",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Burnley",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-4
-],
-"kickoff": "2026-10-10T14:00:00Z",
-"settledAt": "2026-10-10T17:09:07.349743+00:00"
 }
 ],
 "global": {
-"n": 140,
-"wins": 77,
-"hitRate": 0.55,
-"nRoi": 140,
-"roi": -0.0004,
-"roiLb": -0.1381,
-"nClv": 140,
-"clv": -0.09,
-"clvLb": -0.4075
+"n": 142,
+"wins": 78,
+"hitRate": 0.5493,
+"nRoi": 142,
+"roi": -0.0041,
+"roiLb": -0.1404,
+"nClv": 142,
+"clv": -0.1,
+"clvLb": -0.4051
 },
-"pending": 18,
-"ausgeschlossenLive": 1842
+"pending": 17,
+"ausgeschlossenLive": 1841
 }
