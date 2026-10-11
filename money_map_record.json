@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-10-11T17:11:24.383533+00:00",
+"generatedAt": "2026-10-11T17:26:25.601028+00:00",
 "byVerdict": {
 "uneinig": {
 "n": 12,
@@ -18,20 +18,20 @@
 "clvLb": -0.8483
 },
 "konsens": {
-"n": 130,
-"wins": 74,
-"hitRate": 0.5692,
-"polyN": 127,
-"polyWins": 72,
-"polyHitRate": 0.5669,
-"pinnN": 99,
-"pinnHitRate": 0.596,
-"nRoi": 130,
-"roi": -0.0087,
-"roiLb": -0.1427,
-"nClv": 130,
-"clv": -0.08,
-"clvLb": -0.4109
+"n": 132,
+"wins": 76,
+"hitRate": 0.5758,
+"polyN": 129,
+"polyWins": 74,
+"polyHitRate": 0.5736,
+"pinnN": 101,
+"pinnHitRate": 0.604,
+"nRoi": 132,
+"roi": 0.0085,
+"roiLb": -0.1252,
+"nClv": 132,
+"clv": -0.01,
+"clvLb": -0.358
 }
 },
 "byLeague": {
@@ -46,9 +46,14 @@
 "hitRate": 0.6
 },
 "English Premier League": {
+"n": 9,
+"wins": 4,
+"hitRate": 0.4444
+},
+"German Bundesliga": {
 "n": 8,
-"wins": 3,
-"hitRate": 0.375
+"wins": 4,
+"hitRate": 0.5
 },
 "Italian Serie A": {
 "n": 8,
@@ -64,11 +69,6 @@
 "n": 7,
 "wins": 5,
 "hitRate": 0.7143
-},
-"German Bundesliga": {
-"n": 7,
-"wins": 3,
-"hitRate": 0.4286
 },
 "UEFA Nations League B": {
 "n": 7,
@@ -243,15 +243,15 @@
 },
 "byStrength": {
 "strong": {
-"n": 105,
-"wins": 63,
-"hitRate": 0.6,
-"nRoi": 105,
-"roi": -0.016,
-"roiLb": -0.154,
-"nClv": 105,
-"clv": -0.07,
-"clvLb": -0.4495
+"n": 107,
+"wins": 65,
+"hitRate": 0.6075,
+"nRoi": 107,
+"roi": 0.0053,
+"roiLb": -0.1326,
+"nClv": 107,
+"clv": 0.02,
+"clvLb": -0.3852
 },
 "weak": {
 "n": 37,
@@ -274,6 +274,44 @@
 "polyRate": 0.3333
 },
 "recent": [
+{
+"matchId": "36065329",
+"home": "Liverpool",
+"away": "Man City",
+"league": "English Premier League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Man City",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+3
+],
+"kickoff": "2026-10-11T15:30:00Z",
+"settledAt": "2026-10-11T17:26:25.404727+00:00"
+},
+{
+"matchId": "36099838",
+"home": "Freiburg",
+"away": "Schalke 04",
+"league": "German Bundesliga",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Freiburg",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-10-11T15:30:00Z",
+"settledAt": "2026-10-11T17:26:25.404727+00:00"
+},
 {
 "matchId": "36100466",
 "home": "Rennes",
@@ -995,57 +1033,19 @@
 ],
 "kickoff": "2026-10-10T14:15:00Z",
 "settledAt": "2026-10-10T17:24:09.414461+00:00"
-},
-{
-"matchId": "36065331",
-"home": "Sunderland",
-"away": "Brighton",
-"league": "English Premier League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Brighton",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-2
-],
-"kickoff": "2026-10-10T14:00:00Z",
-"settledAt": "2026-10-10T17:09:07.349743+00:00"
-},
-{
-"matchId": "36065354",
-"home": "Chelsea",
-"away": "Bournemouth",
-"league": "English Premier League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Chelsea",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-5,
-1
-],
-"kickoff": "2026-10-10T14:00:00Z",
-"settledAt": "2026-10-10T17:09:07.349743+00:00"
 }
 ],
 "global": {
-"n": 142,
-"wins": 78,
-"hitRate": 0.5493,
-"nRoi": 142,
-"roi": -0.0041,
-"roiLb": -0.1404,
-"nClv": 142,
-"clv": -0.1,
-"clvLb": -0.4051
+"n": 144,
+"wins": 80,
+"hitRate": 0.5556,
+"nRoi": 144,
+"roi": 0.0116,
+"roiLb": -0.1243,
+"nClv": 144,
+"clv": -0.03,
+"clvLb": -0.3566
 },
-"pending": 17,
-"ausgeschlossenLive": 1841
+"pending": 16,
+"ausgeschlossenLive": 1840
 }
