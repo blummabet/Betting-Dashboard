@@ -1,7 +1,7 @@
 {
   "slug": "betfair",
   "workflow": "🟡 Betfair Radar (Betwatch)",
-  "updatedAt": "2026-10-12T12:28:49.692282+00:00",
+  "updatedAt": "2026-10-12T12:43:51.360686+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
@@ -15,8 +15,30 @@
     "fensterMin": null,
     "fensterUrteil": null
   },
-  "erzeugung": null,
+  "erzeugung": {
+    "erzeugt": 100,
+    "gelaufen": 100,
+    "verdraengt": 0,
+    "spanneH": 469.1,
+    "erzeugtProTag": 5.1,
+    "widerspruch": "erzeugtProTag 5.1 gegen eine gemessene Kadenz von 101.1/Tag (Faktor 19.8) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
+  },
   "runs": [
+    {
+      "ts": "2026-10-12T12:43:51.360686+00:00",
+      "workflow": "🟡 Betfair Radar (Betwatch)",
+      "runId": "38250674560",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/38250674560",
+      "nSteps": 40,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-10-12T12:42:07Z",
+      "startedAt": "2026-10-12T12:42:07Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 104.4,
+      "event": "workflow_dispatch"
+    },
     {
       "ts": "2026-10-12T12:28:49.692282+00:00",
       "workflow": "🟡 Betfair Radar (Betwatch)",
@@ -300,21 +322,6 @@
       "startedAt": "2026-10-12T08:11:38Z",
       "wartetS": 0.0,
       "laeuftSeitS": 93.0,
-      "event": "workflow_dispatch"
-    },
-    {
-      "ts": "2026-10-12T07:58:16.383311+00:00",
-      "workflow": "🟡 Betfair Radar (Betwatch)",
-      "runId": "38220595668",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/38220595668",
-      "nSteps": 40,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-10-12T07:56:37Z",
-      "startedAt": "2026-10-12T07:56:37Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 99.4,
       "event": "workflow_dispatch"
     }
   ]
