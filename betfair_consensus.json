@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-10-12T02:42:07.355695+00:00",
+"generatedAt": "2026-10-12T02:57:14.972814+00:00",
 "count": 11,
 "covered": 10,
 "leaguesKuratiert": [
@@ -50,13 +50,12 @@
 "leaguesMitAnker": [
 "English Premier League",
 "Italian Serie A",
-"Mexican Liga MX",
 "UEFA Champions League"
 ],
 "leaguesMitTotals": [],
 "oddsKeysFetched": 45,
 "oddsKeysMitDaten": 45,
-"oddsEvents": 562,
+"oddsEvents": 563,
 "oddsTotals": {
 "versucht": 4,
 "mitDaten": 0,
@@ -65,13 +64,13 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 205134,
-"remaining": 4794866,
+"used": 205275,
+"remaining": 4794725,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
 },
-"ankerQuote": 1.0,
+"ankerQuote": 0.971,
 "games": [
 {
 "matchId": "36099821",
@@ -85,11 +84,11 @@
 "moneyName": "Atalanta",
 "moneySharePct": 85,
 "moneyOdd": 1.59,
-"moneyDir": "out",
-"totVol": 94445,
+"moneyDir": "flat",
+"totVol": 94486,
 "pinnOdd": 1.54,
 "softOdd": 1.53,
-"softN": 49,
+"softN": 50,
 "poly": {
 "vol": 19263,
 "odd": 1.57,
@@ -111,7 +110,7 @@
 "draw": 0.2164,
 "away": 0.1651,
 "fav": "home",
-"n": 49
+"n": 50
 },
 "pinnMovePP": 1.2,
 "pinnMove": {
@@ -138,7 +137,7 @@
 "moneySharePct": 52,
 "moneyOdd": 2.26,
 "moneyDir": "flat",
-"totVol": 78323,
+"totVol": 78326,
 "pinnOdd": 2.23,
 "softOdd": 2.16,
 "softN": 51,
@@ -178,58 +177,6 @@
 "pinnTotals": null
 },
 {
-"matchId": "36057653",
-"home": "Atletico Madrid",
-"away": "Man Utd",
-"league": "UEFA Champions League",
-"country": "International",
-"kickoff": "2026-10-13T19:00:00Z",
-"live": false,
-"moneySide": "home",
-"moneyName": "Atletico Madrid",
-"moneySharePct": 88,
-"moneyOdd": 2.02,
-"moneyDir": "flat",
-"totVol": 61347,
-"pinnOdd": 1.93,
-"softOdd": 1.91,
-"softN": 47,
-"poly": {
-"vol": 41482,
-"odd": 1.98,
-"sharePct": 50,
-"shareSrc": "preis",
-"key": "ucl-atm-mnu-2026-10-13",
-"sideKey": "Club Atlético de Madrid",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.5012,
-"draw": 0.2394,
-"away": 0.2593,
-"fav": "home"
-},
-"soft": {
-"home": 0.4933,
-"draw": 0.2412,
-"away": 0.2655,
-"fav": "home",
-"n": 47
-},
-"pinnMovePP": -0.5,
-"pinnMove": {
-"movePP": -0.5,
-"stepPP": 0.0,
-"n": 25,
-"move": false,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
 "matchId": "36128226",
 "home": "Pumas UNAM",
 "away": "Cruz Azul",
@@ -239,12 +186,12 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Pumas UNAM",
-"moneySharePct": 63,
-"moneyOdd": 1.37,
-"moneyDir": "in",
-"totVol": 55523,
-"pinnOdd": 3.05,
-"softOdd": 1.3,
+"moneySharePct": 62,
+"moneyOdd": 2.2,
+"moneyDir": "out",
+"totVol": 62879,
+"pinnOdd": null,
+"softOdd": 1.98,
 "softN": 31,
 "poly": {
 "vol": 414117,
@@ -269,23 +216,79 @@
 ],
 "whaleUsd": 32277
 },
-"pinn": {
-"home": 0.3048,
-"draw": 0.3173,
-"away": 0.3779,
-"fav": "away"
-},
+"pinn": null,
 "soft": {
-"home": 0.6899,
-"draw": 0.1987,
-"away": 0.1114,
+"home": 0.4561,
+"draw": 0.3521,
+"away": 0.1918,
 "fav": "home",
 "n": 31
 },
 "pinnMovePP": null,
 "pinnMove": null,
-"verdict": "uneinig",
-"agree": false,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Pumas UNAM v Cruz Azul",
+"grund": "kein_pinnacle",
+"kandidat": "Pumas v Cruz Azul",
+"key": "soccer_mexico_ligamx",
+"nSoft": 31,
+"pinnacleImEvent": false,
+"nBuecher": 31
+}
+},
+{
+"matchId": "36057653",
+"home": "Atletico Madrid",
+"away": "Man Utd",
+"league": "UEFA Champions League",
+"country": "International",
+"kickoff": "2026-10-13T19:00:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Atletico Madrid",
+"moneySharePct": 88,
+"moneyOdd": 2.02,
+"moneyDir": "flat",
+"totVol": 61347,
+"pinnOdd": 1.97,
+"softOdd": 1.91,
+"softN": 47,
+"poly": {
+"vol": 41482,
+"odd": 1.98,
+"sharePct": 50,
+"shareSrc": "preis",
+"key": "ucl-atm-mnu-2026-10-13",
+"sideKey": "Club Atlético de Madrid",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.491,
+"draw": 0.2418,
+"away": 0.2672,
+"fav": "home"
+},
+"soft": {
+"home": 0.4934,
+"draw": 0.2412,
+"away": 0.2655,
+"fav": "home",
+"n": 47
+},
+"pinnMovePP": -1.5,
+"pinnMove": {
+"movePP": -1.5,
+"stepPP": -1.0,
+"n": 25,
+"move": true,
+"laeuft": true
+},
+"verdict": "konsens",
+"agree": true,
 "pinnTotals": null
 },
 {
@@ -332,7 +335,7 @@
 "pinnMove": {
 "movePP": 0.1,
 "stepPP": -0.0,
-"n": 16,
+"n": 17,
 "move": false,
 "laeuft": false
 },
@@ -478,9 +481,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.5387,
-"draw": 0.2144,
-"away": 0.2468,
+"home": 0.539,
+"draw": 0.2145,
+"away": 0.2464,
 "fav": "home",
 "n": 47
 },
@@ -509,7 +512,7 @@
 "moneySharePct": 78,
 "moneyOdd": 2.2,
 "moneyDir": "flat",
-"totVol": 29239,
+"totVol": 29248,
 "pinnOdd": 2.18,
 "softOdd": 2.19,
 "softN": 46,
@@ -540,7 +543,7 @@
 "pinnMove": {
 "movePP": 0.0,
 "stepPP": 0.0,
-"n": 16,
+"n": 17,
 "move": false,
 "laeuft": false
 },
@@ -610,10 +613,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "America de Cali S.A",
-"moneySharePct": 76,
-"moneyOdd": 5.5,
+"moneySharePct": 61,
+"moneyOdd": 8.0,
 "moneyDir": "out",
-"totVol": 66697,
+"totVol": 84798,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -668,11 +671,12 @@
 ],
 "ankerN": 35,
 "ankerNOffen": 150,
-"ankerMit": 35,
+"ankerMit": 34,
 "ankerDiagnose": {
 "nach": {
 "kein_kandidat": 88,
-"zeit": 9
+"zeit": 9,
+"kein_pinnacle": 1
 },
 "beispiele": [
 {
@@ -764,6 +768,17 @@
 "abstandH": 71.9,
 "matchId": "36179814",
 "liga": "Saudi 1st Division"
+},
+{
+"spiel": "Pumas UNAM v Cruz Azul",
+"grund": "kein_pinnacle",
+"kandidat": "Pumas v Cruz Azul",
+"key": "soccer_mexico_ligamx",
+"nSoft": 31,
+"pinnacleImEvent": false,
+"nBuecher": 31,
+"matchId": "36128226",
+"liga": "Mexican Liga MX"
 }
 ]
 }
