@@ -1,6 +1,6 @@
 {
- "generatedAt": "2026-10-11T23:50:24.772032+00:00",
- "heute": "2026-10-11",
+ "generatedAt": "2026-10-12T00:48:43.622275+00:00",
+ "heute": "2026-10-12",
  "messungen": [
   {
    "id": "sharp-radar-drift-pushes",
@@ -16,9 +16,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": null,
    "zustand": "faellig",
-   "stand": "Entscheidung faellig (seit 19 Tagen)",
+   "stand": "Entscheidung faellig (seit 20 Tagen)",
    "fortschritt": null,
-   "tageBisFaellig": -19
+   "tageBisFaellig": -20
   },
   {
    "id": "echte-fills",
@@ -37,7 +37,7 @@
    "zustand": "faellig",
    "stand": "181 von 25 Beobachtungen · Entscheidung faellig",
    "fortschritt": 1.0,
-   "tageBisFaellig": -12
+   "tageBisFaellig": -13
   },
   {
    "id": "sharp-z-1282",
@@ -51,11 +51,30 @@
    "mindestN": 150,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 487,
+   "standN": 489,
    "zustand": "faellig",
-   "stand": "487 von 150 Beobachtungen · Entscheidung faellig",
+   "stand": "489 von 150 Beobachtungen · Entscheidung faellig",
    "fortschritt": 1.0,
-   "tageBisFaellig": -2
+   "tageBisFaellig": -3
+  },
+  {
+   "id": "torlinien-13-ligen",
+   "titel": "Kommen die Pinnacle-Torlinien der 13 neuen Anker-Ligen an?",
+   "frage": "Stehen die 13 am 25.09. ergaenzten Ligen (J League, Segunda, Superettan, Liga MX, Serie B, Ligue 2, K1, Greek SL, Swiss SL, Chinese SL, Frauen-Bundesliga, Sky Bet League 1/2) nach dem ersten Liga-Wochenende in betfair_consensus.json unter `leaguesMitTotals` — und meldet `oddsTotals.ausgelassen` 0?",
+   "warum": "25.09.2026: LEAGUE_ODDS_KEY von 31 auf 44 Eintraege erweitert, damit diese Ligen Pinnacle-TORLINIEN bekommen (die Match Odds findet der globale Pool seit 01.09. auch ohne Eintrag). Alle 13 Eintraege passen auf einen echten Ligastring im Ledger — ob wirklich Torlinien ankommen, war am 25.09. nicht pruefbar: Laenderspielpause, keine der 13 Ligen hatte ein offenes Spiel im Fenster. Zweites Risiko: 13 zusaetzliche Totals-Calls gegen das Zeitbudget BF_ODDS_GESAMT_S (240 s); reisst es, fallen die hinteren Ligen still weg — dafuer seit 25.09. der Waechter `check_totals_vollstaendig`.\nWenn NEIN: Budget erhoehen oder Totals nur in jedem n-ten Lauf holen; bei einzelnen Ligen ohne Totals den Key gegen /sports pruefen (odds_anker_luecke.py von Hand ausloesen).",
+   "gestartet": "2026-09-25",
+   "faellig": "2026-10-12",
+   "quelle": "betfair_consensus.json -> leaguesMitTotals, oddsTotals",
+   "nachtrag": "27.09.2026: Totals werden jetzt ZUSAETZLICH fuer jeden entdeckten Key mit Pinnacle-Anker geholt (totals_keys, Anlass: Denmark v Wales ohne Torlinien). Die Handliste steht in der Reihenfolge vorn, die Frage bleibt gueltig — aber `oddsTotals.gewollt` ist ab jetzt groesser als die Handliste, und `ausgelassen` > 0 kann auch entdeckte Keys meinen.",
+   "messer": null,
+   "mindestN": null,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "standN": null,
+   "zustand": "faellig",
+   "stand": "Entscheidung faellig",
+   "fortschritt": null,
+   "tageBisFaellig": 0
   },
   {
    "id": "poly-preisband",
@@ -73,7 +92,7 @@
    "zustand": "quelle unlesbar",
    "stand": "Quelle nicht lesbar — Stand unbekannt",
    "fortschritt": null,
-   "tageBisFaellig": 35
+   "tageBisFaellig": 34
   },
   {
    "id": "einigkeit-statt-geld",
@@ -88,11 +107,11 @@
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "nachtrag": "27.09.2026: Zwischenstand n=152 (Mindestzahl 40 erreicht). Treffer 66,5 %, ROI -4,5 % (UG -14,3 %), CLV -0,04 pp. Die Rueckschau (77,1 % / +19,9 %) haelt vorwaerts nicht. Heutige Public-Regel seit 03.09.: n=47, ROI +14,2 % (UG -10,0 %).",
-   "standN": 695,
+   "standN": 697,
    "zustand": "bereit",
-   "stand": "695 von 40 Beobachtungen · faellig in 19 Tag(en)",
+   "stand": "697 von 40 Beobachtungen · faellig in 18 Tag(en)",
    "fortschritt": 1.0,
-   "tageBisFaellig": 19
+   "tageBisFaellig": 18
   },
   {
    "id": "hz-null-null",
@@ -108,9 +127,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 104,
    "zustand": "bereit",
-   "stand": "104 von 100 Beobachtungen · faellig in 21 Tag(en)",
+   "stand": "104 von 100 Beobachtungen · faellig in 20 Tag(en)",
    "fortschritt": 1.0,
-   "tageBisFaellig": 21
+   "tageBisFaellig": 20
   },
   {
    "id": "betfair-quote-muss-sinken",
@@ -124,11 +143,11 @@
    "mindestN": 20000,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 24608,
+   "standN": 24670,
    "zustand": "bereit",
-   "stand": "24608 von 20000 Beobachtungen · faellig in 35 Tag(en)",
+   "stand": "24670 von 20000 Beobachtungen · faellig in 34 Tag(en)",
    "fortschritt": 1.0,
-   "tageBisFaellig": 35
+   "tageBisFaellig": 34
   },
   {
    "id": "betfair-zeit-vor-anpfiff",
@@ -142,11 +161,11 @@
    "mindestN": 20000,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 24608,
+   "standN": 24670,
    "zustand": "bereit",
-   "stand": "24608 von 20000 Beobachtungen · faellig in 35 Tag(en)",
+   "stand": "24670 von 20000 Beobachtungen · faellig in 34 Tag(en)",
    "fortschritt": 1.0,
-   "tageBisFaellig": 35
+   "tageBisFaellig": 34
   },
   {
    "id": "poly-wallet-clv",
@@ -160,11 +179,11 @@
    "mindestN": 150,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 419,
+   "standN": 422,
    "zustand": "bereit",
-   "stand": "419 von 150 Beobachtungen · faellig in 65 Tag(en)",
+   "stand": "422 von 150 Beobachtungen · faellig in 64 Tag(en)",
    "fortschritt": 1.0,
-   "tageBisFaellig": 65
+   "tageBisFaellig": 64
   },
   {
    "id": "betfair-ou35",
@@ -178,30 +197,11 @@
    "mindestN": 200,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 681,
+   "standN": 683,
    "zustand": "bereit",
-   "stand": "681 von 200 Beobachtungen · faellig in 81 Tag(en)",
+   "stand": "683 von 200 Beobachtungen · faellig in 80 Tag(en)",
    "fortschritt": 1.0,
-   "tageBisFaellig": 81
-  },
-  {
-   "id": "torlinien-13-ligen",
-   "titel": "Kommen die Pinnacle-Torlinien der 13 neuen Anker-Ligen an?",
-   "frage": "Stehen die 13 am 25.09. ergaenzten Ligen (J League, Segunda, Superettan, Liga MX, Serie B, Ligue 2, K1, Greek SL, Swiss SL, Chinese SL, Frauen-Bundesliga, Sky Bet League 1/2) nach dem ersten Liga-Wochenende in betfair_consensus.json unter `leaguesMitTotals` — und meldet `oddsTotals.ausgelassen` 0?",
-   "warum": "25.09.2026: LEAGUE_ODDS_KEY von 31 auf 44 Eintraege erweitert, damit diese Ligen Pinnacle-TORLINIEN bekommen (die Match Odds findet der globale Pool seit 01.09. auch ohne Eintrag). Alle 13 Eintraege passen auf einen echten Ligastring im Ledger — ob wirklich Torlinien ankommen, war am 25.09. nicht pruefbar: Laenderspielpause, keine der 13 Ligen hatte ein offenes Spiel im Fenster. Zweites Risiko: 13 zusaetzliche Totals-Calls gegen das Zeitbudget BF_ODDS_GESAMT_S (240 s); reisst es, fallen die hinteren Ligen still weg — dafuer seit 25.09. der Waechter `check_totals_vollstaendig`.\nWenn NEIN: Budget erhoehen oder Totals nur in jedem n-ten Lauf holen; bei einzelnen Ligen ohne Totals den Key gegen /sports pruefen (odds_anker_luecke.py von Hand ausloesen).",
-   "gestartet": "2026-09-25",
-   "faellig": "2026-10-12",
-   "quelle": "betfair_consensus.json -> leaguesMitTotals, oddsTotals",
-   "nachtrag": "27.09.2026: Totals werden jetzt ZUSAETZLICH fuer jeden entdeckten Key mit Pinnacle-Anker geholt (totals_keys, Anlass: Denmark v Wales ohne Torlinien). Die Handliste steht in der Reihenfolge vorn, die Frage bleibt gueltig — aber `oddsTotals.gewollt` ist ab jetzt groesser als die Handliste, und `ausgelassen` > 0 kann auch entdeckte Keys meinen.",
-   "messer": null,
-   "mindestN": null,
-   "entscheidung": null,
-   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": null,
-   "zustand": "sammelt",
-   "stand": "Entscheidung offen · in 1 Tag(en) faellig",
-   "fortschritt": null,
-   "tageBisFaellig": 1
+   "tageBisFaellig": 80
   },
   {
    "id": "entschiedene-ausgaenge",
@@ -217,9 +217,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 3,
    "zustand": "sammelt",
-   "stand": "3 von 20 Beobachtungen · faellig in 2 Tag(en)",
+   "stand": "3 von 20 Beobachtungen · faellig in 1 Tag(en)",
    "fortschritt": 0.15,
-   "tageBisFaellig": 2
+   "tageBisFaellig": 1
   },
   {
    "id": "serie-a-btts-schublade",
@@ -235,9 +235,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": null,
    "zustand": "sammelt",
-   "stand": "Entscheidung offen · in 4 Tag(en) faellig",
+   "stand": "Entscheidung offen · in 3 Tag(en) faellig",
    "fortschritt": null,
-   "tageBisFaellig": 4
+   "tageBisFaellig": 3
   },
   {
    "id": "horizont-trader",
@@ -254,9 +254,9 @@
    "nachtrag": "28.09.2026 (Lucas: „das Paper Trading … Pinnacle-Drops und ob Polymarket anpasst — das will ich weiter messen\"): Frist vom 29.09. auf 20.10. verlaengert, Stand 5 von 20.",
    "standN": 5,
    "zustand": "sammelt",
-   "stand": "5 von 20 Beobachtungen · faellig in 9 Tag(en)",
+   "stand": "5 von 20 Beobachtungen · faellig in 8 Tag(en)",
    "fortschritt": 0.25,
-   "tageBisFaellig": 9
+   "tageBisFaellig": 8
   },
   {
    "id": "betfair-einseitigkeit-unterseite",
@@ -270,11 +270,11 @@
    "mindestN": 1200,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 513,
+   "standN": 516,
    "zustand": "sammelt",
-   "stand": "513 von 1200 Beobachtungen · faellig in 21 Tag(en)",
-   "fortschritt": 0.4275,
-   "tageBisFaellig": 21
+   "stand": "516 von 1200 Beobachtungen · faellig in 20 Tag(en)",
+   "fortschritt": 0.43,
+   "tageBisFaellig": 20
   },
   {
    "id": "betfair-geldschwelle",
@@ -288,11 +288,11 @@
    "mindestN": 1200,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 513,
+   "standN": 516,
    "zustand": "sammelt",
-   "stand": "513 von 1200 Beobachtungen · faellig in 21 Tag(en)",
-   "fortschritt": 0.4275,
-   "tageBisFaellig": 21
+   "stand": "516 von 1200 Beobachtungen · faellig in 20 Tag(en)",
+   "fortschritt": 0.43,
+   "tageBisFaellig": 20
   },
   {
    "id": "poly-autobet-oktober",
@@ -308,9 +308,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 62,
    "zustand": "sammelt",
-   "stand": "62 von 100 Beobachtungen · faellig in 21 Tag(en)",
+   "stand": "62 von 100 Beobachtungen · faellig in 20 Tag(en)",
    "fortschritt": 0.62,
-   "tageBisFaellig": 21
+   "tageBisFaellig": 20
   },
   {
    "id": "ligen-watch-betfair",
@@ -326,9 +326,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 262,
    "zustand": "sammelt",
-   "stand": "262 von 300 Beobachtungen · faellig in 21 Tag(en)",
+   "stand": "262 von 300 Beobachtungen · faellig in 20 Tag(en)",
    "fortschritt": 0.8733333333333333,
-   "tageBisFaellig": 21
+   "tageBisFaellig": 20
   },
   {
    "id": "ligen-watch-poly",
@@ -344,9 +344,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 50,
    "zustand": "sammelt",
-   "stand": "50 von 150 Beobachtungen · faellig in 21 Tag(en)",
+   "stand": "50 von 150 Beobachtungen · faellig in 20 Tag(en)",
    "fortschritt": 0.3333333333333333,
-   "tageBisFaellig": 21
+   "tageBisFaellig": 20
   },
   {
    "id": "reihenfolge-signale",
@@ -362,9 +362,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 41,
    "zustand": "sammelt",
-   "stand": "41 von 60 Beobachtungen · faellig in 21 Tag(en)",
+   "stand": "41 von 60 Beobachtungen · faellig in 20 Tag(en)",
    "fortschritt": 0.6833333333333333,
-   "tageBisFaellig": 21
+   "tageBisFaellig": 20
   },
   {
    "id": "betfair-einseitigkeit-schwelle",
@@ -380,9 +380,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 84,
    "zustand": "sammelt",
-   "stand": "84 von 90 Beobachtungen · faellig in 34 Tag(en)",
+   "stand": "84 von 90 Beobachtungen · faellig in 33 Tag(en)",
    "fortschritt": 0.9333333333333333,
-   "tageBisFaellig": 34
+   "tageBisFaellig": 33
   },
   {
    "id": "betfair-kursrutsch",
@@ -398,9 +398,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 89,
    "zustand": "sammelt",
-   "stand": "89 von 400 Beobachtungen · faellig in 35 Tag(en)",
+   "stand": "89 von 400 Beobachtungen · faellig in 34 Tag(en)",
    "fortschritt": 0.2225,
-   "tageBisFaellig": 35
+   "tageBisFaellig": 34
   },
   {
    "id": "serien-wetten",
@@ -416,9 +416,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 88,
    "zustand": "sammelt",
-   "stand": "88 von 150 Beobachtungen · faellig in 50 Tag(en)",
+   "stand": "88 von 150 Beobachtungen · faellig in 49 Tag(en)",
    "fortschritt": 0.5866666666666667,
-   "tageBisFaellig": 50
+   "tageBisFaellig": 49
   },
   {
    "id": "stake-kleine-liga",
@@ -434,9 +434,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 27,
    "zustand": "sammelt",
-   "stand": "27 von 100 Beobachtungen · faellig in 73 Tag(en)",
+   "stand": "27 von 100 Beobachtungen · faellig in 72 Tag(en)",
    "fortschritt": 0.27,
-   "tageBisFaellig": 73
+   "tageBisFaellig": 72
   },
   {
    "id": "poly-public-klasse",
@@ -452,9 +452,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 0,
    "zustand": "sammelt",
-   "stand": "0 von 30 Beobachtungen · faellig in 81 Tag(en)",
+   "stand": "0 von 30 Beobachtungen · faellig in 80 Tag(en)",
    "fortschritt": 0.0,
-   "tageBisFaellig": 81
+   "tageBisFaellig": 80
   },
   {
    "id": "stake-torlinien-burst",
@@ -470,9 +470,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 0,
    "zustand": "sammelt",
-   "stand": "0 von 100 Beobachtungen · faellig in 112 Tag(en)",
+   "stand": "0 von 100 Beobachtungen · faellig in 111 Tag(en)",
    "fortschritt": 0.0,
-   "tageBisFaellig": 112
+   "tageBisFaellig": 111
   },
   {
    "id": "horizont-shortlist",
@@ -491,7 +491,7 @@
    "zustand": "entschieden",
    "stand": "28.09.2026 beendet (Lucas: „fuer den fruehen Einstieg kannst du auslassen\"). Mit dem heutigen Zuschnitt nicht beantwortbar — die Shortlist steigt nie frueher als 3 h vor Anpfiff ein.",
    "fortschritt": 0.0,
-   "tageBisFaellig": -12
+   "tageBisFaellig": -13
   },
   {
    "id": "devig-proportional-vs-power",
@@ -509,10 +509,10 @@
    "zustand": "entschieden",
    "stand": "04.10.2026 auf POWER umgestellt (Lucas: „ja stell um“). Gemessen am Poly-Schlusskurs, 68 Spiele / 339 Ausgaenge seit 14.09., mittlerer Abstand proportional minus power: alle +0,12pp [90 %: +0,03 … +0,22] zum Einstieg, +0,16pp [+0,08 … +0,25] am Schluss; O/U-Seite unter 40 Cent +0,57pp [+0,23 … +0,88]; 1X2 unter 40 Cent -0,03pp [-0,09 … +0,04], kein Unterschied. Schwellen 4,0pp bleiben. Proportional laeuft als fairProp_* weiter; DEVIG_METHODE=proportional stellt zurueck. BTTS unveraendert (keine Messung).",
    "fortschritt": null,
-   "tageBisFaellig": -7
+   "tageBisFaellig": -8
   }
  ],
  "n": 28,
  "nOffen": 26,
- "nHandlung": 4
+ "nHandlung": 5
 }
