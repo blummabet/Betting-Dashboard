@@ -123,9 +123,11 @@
     {
       "label": "Poly-Markt gehoert zur selben Mannschaft",
       "severity": "error",
-      "failures": [],
-      "nFail": 0,
-      "ok": true,
+      "failures": [
+        "Poly-Markt acle-alw-aas-2026-10-12 haengt an 2 Betfair-Spielen: AFC Champions League/Al Ahli, AFC Champions League/Al Ahli (UAE)"
+      ],
+      "nFail": 1,
+      "ok": false,
       "hinweis": "Nachwuchs- und Frauenteams teilen fast alle Tokens mit der ersten Mannschaft — der Namens-Score kann sie nicht trennen, der Marker schon."
     },
     {
@@ -148,8 +150,8 @@
       "label": "Stake-Spielklasse: Tabelle vollstaendig, Richtungen getrennt",
       "severity": "error",
       "failures": [
-        "2 Fussball-Ligen ohne Eintrag in stake_liga_stufe.py (campionato-sammarinese, indian-super-league) — sie fallen aus jeder Zeile der Ansicht, statt aufzufallen",
-        "8 Liga-Schluessel bezeichnen mehrere Turniere und tragen trotzdem eine Spielklasse (allsvenskan, bundesliga, ligue-1, premier-league, premiership, primera-division) — eine Zahl davon ist fuer die Haelfte der Spiele falsch"
+        "3 Fussball-Ligen ohne Eintrag in stake_liga_stufe.py (1-mfl, campionato-sammarinese, indian-super-league) — sie fallen aus jeder Zeile der Ansicht, statt aufzufallen",
+        "9 Liga-Schluessel bezeichnen mehrere Turniere und tragen trotzdem eine Spielklasse (allsvenskan, bundesliga, division-1, ligue-1, premier-league, premiership) — eine Zahl davon ist fuer die Haelfte der Spiele falsch"
       ],
       "nFail": 2,
       "ok": false,
@@ -199,11 +201,11 @@
       "label": "Fade-Unter: haelt die Kontrollgruppe?",
       "severity": "error",
       "failures": [
-        "Match Odds H: der Fade gewinnt hier BELEGT (+8.1 %, UG +2.1 %, Geldseite +1.5 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
+        "Match Odds H: der Fade gewinnt hier BELEGT (+9.3 %, UG +3.3 %, Geldseite +1.2 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
       ],
       "nFail": 1,
       "ok": false,
-      "hinweis": "seit Vorregistrierung n=6341 (UG -5.3 %) · Rueckblick n=42, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=6369 (UG -5.3 %) · Rueckblick n=0, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -226,7 +228,7 @@
       "severity": "warn",
       "failures": [
         "capture-closing-liga.yml: Cron sagt alle 15 Min, gemessen alle 257 Min (closing-liga, im Zeitfenster gemessen) — die Schedule-Bilanz rechnet mit 52 Laeufen/Tag, geliefert werden eher 3. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit.",
-        "manage-liga-poly.yml: Cron sagt alle 30 Min, gemessen alle 99 Min (liga-poly, im Zeitfenster gemessen) — die Schedule-Bilanz rechnet mit 24 Laeufen/Tag, geliefert werden eher 7. Dieser Workflow hat ein 40-Minuten-Fenster zu treffen — bei einem gemessenen Abstand von 99 Min kann er es nicht sicher treffen. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit.",
+        "manage-liga-poly.yml: Cron sagt alle 30 Min, gemessen alle 104 Min (liga-poly, im Zeitfenster gemessen) — die Schedule-Bilanz rechnet mit 24 Laeufen/Tag, geliefert werden eher 7. Dieser Workflow hat ein 40-Minuten-Fenster zu treffen — bei einem gemessenen Abstand von 104 Min kann er es nicht sicher treffen. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit.",
         "poly-live-scan.yml: Cron sagt alle 15 Min, gemessen alle 45 Min (poly-live-scan) — die Schedule-Bilanz rechnet mit 96 Laeufen/Tag, geliefert werden eher 32. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit."
       ],
       "nFail": 3,
@@ -236,11 +238,9 @@
     {
       "label": "Der Deckel hat Luft",
       "severity": "warn",
-      "failures": [
-        "poly-live-scan.yml: laengster Lauf 17.0 Min (Median 4.1) bei einem Deckel von 12 Min — 142 % ausgelastet. Ein Abbruch trifft den letzten Schritt, und das ist der, der die Belege sichert."
-      ],
-      "nFail": 1,
-      "ok": false,
+      "failures": [],
+      "nFail": 0,
+      "ok": true,
       "hinweis": ""
     },
     {
@@ -254,9 +254,11 @@
     {
       "label": "Positionswert ist frisch",
       "severity": "warn",
-      "failures": [],
-      "nFail": 0,
-      "ok": true,
+      "failures": [
+        "liga_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 16 h — die Datei selbst ist 16 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
+      ],
+      "nFail": 1,
+      "ok": false,
       "hinweis": ""
     },
     {
@@ -273,7 +275,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "523 Zeilen · 507 abgerechnet · 9 offen"
+      "hinweis": "527 Zeilen · 520 abgerechnet · 0 offen"
     },
     {
       "label": "Artefakte sind lesbar",
@@ -311,7 +313,7 @@
       "label": "Ergebnisse kommen an",
       "severity": "error",
       "failures": [
-        "liga_ergebnis_nachlauf.json: 1 Spiele mit vergangenem Anpfiff ohne Ergebnis (Rayo Vallecano–Athletic Club seit 32 h, API-Status INT) — der Resolver kann sie nicht abrechnen, sie fallen aus jeder Bilanz heraus"
+        "liga_ergebnis_nachlauf.json: 1 Spiele mit vergangenem Anpfiff ohne Ergebnis (Rayo Vallecano–Athletic Club seit 42 h, API-Status INT) — der Resolver kann sie nicht abrechnen, sie fallen aus jeder Bilanz heraus"
       ],
       "nFail": 1,
       "ok": false,
@@ -329,13 +331,13 @@
       "label": "Serien-Buch zeigt beide Buecher",
       "severity": "warn",
       "failures": [
-        "die beiden Serien-Buecher sind 7.9 h auseinander (Liga 0.9 h, MLS 8.8 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+        "die beiden Serien-Buecher sind 7.9 h auseinander (Liga 17.6 h, MLS 25.5 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
       ],
       "nFail": 1,
       "ok": false,
       "hinweis": "Liga n=91 · MLS n=80 · Urteil beide 'Erwartung zu duenn'"
     }
   ],
-  "nFail": 9,
-  "generatedAt": "2026-10-11T22:55:15.309407+00:00"
+  "nFail": 10,
+  "generatedAt": "2026-10-12T15:34:43.936731+00:00"
 }
