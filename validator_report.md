@@ -1,11 +1,11 @@
-# 🟡 Picks Validator — 11.10.2026 22:09
+# 🟡 Picks Validator — 12.10.2026 09:18
 
 **8 Spiele geprüft** · 🔴 0 Fehler · 🟡 4 Warnungen · 🔵 27 Hinweise
 
 ```
 =================================================================
   🐕 CocoBet — Picks Logik-Check
-  11.10.2026 22:09
+  12.10.2026 09:18
   Filter: nächste 3 Tag(e)
 =================================================================
 
@@ -100,15 +100,15 @@
 ─────────────────────────────────────────────────────────────────
   🇵🇹 Primeira Liga  (rl=26)
 ─────────────────────────────────────────────────────────────────
-  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
-     📅 12.10.2026  Famalicao vs Alverca
-     Famalicao: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
   🔵 HINWEIS [CARDS45_LOW_FV]
      📅 12.10.2026  Famalicao vs Alverca
      Liga-Baserate=3.8 → Poisson FV für Über 4.5 Karten = 33.2%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🔵 HINWEIS [TEAM_OVER_AWAY_LOW_FV]
+  🔵 HINWEIS [LOW_SCORING_PROFILE]
      📅 12.10.2026  Famalicao vs Alverca
-     Alverca expA≈1.25 (statischer Proxy) → FV über 1.5 = 35.5%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
+     Ø gpg=1.30, H2H Ø=1.7 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt
+  🔵 HINWEIS [OVER35_LOW_FV]
+     📅 12.10.2026  Famalicao vs Alverca
+     Ø gpg=1.30 (statischer Proxy) → Poisson FV für Over 3.5 = 4.3%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
 
 ─────────────────────────────────────────────────────────────────
   🇹🇷 Süper Lig  (rl=31)

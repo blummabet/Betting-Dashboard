@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-11T22:09:29.857909+00:00",
+  "timestamp": "2026-10-12T09:18:22.414238+00:00",
   "checked": 8,
   "errors": 0,
   "warnings": 4,
@@ -227,15 +227,6 @@
       "away": "Alverca",
       "league": "Primeira Liga",
       "severity": "INFO",
-      "code": "LOW_MOTIV_CARDS_CHECK",
-      "msg": "Famalicao: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen."
-    },
-    {
-      "date": "12.10.2026",
-      "home": "Famalicao",
-      "away": "Alverca",
-      "league": "Primeira Liga",
-      "severity": "INFO",
       "code": "CARDS45_LOW_FV",
       "msg": "Liga-Baserate=3.8 → Poisson FV für Über 4.5 Karten = 33.2%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis."
     },
@@ -245,8 +236,17 @@
       "away": "Alverca",
       "league": "Primeira Liga",
       "severity": "INFO",
-      "code": "TEAM_OVER_AWAY_LOW_FV",
-      "msg": "Alverca expA≈1.25 (statischer Proxy) → FV über 1.5 = 35.5%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger."
+      "code": "LOW_SCORING_PROFILE",
+      "msg": "Ø gpg=1.30, H2H Ø=1.7 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt"
+    },
+    {
+      "date": "12.10.2026",
+      "home": "Famalicao",
+      "away": "Alverca",
+      "league": "Primeira Liga",
+      "severity": "INFO",
+      "code": "OVER35_LOW_FV",
+      "msg": "Ø gpg=1.30 (statischer Proxy) → Poisson FV für Over 3.5 = 4.3%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy."
     },
     {
       "date": "12.10.2026",
