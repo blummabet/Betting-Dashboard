@@ -82,6 +82,26 @@ PRIORITY_RX = re.compile(r"(german bundesliga|english premier league|spanish la 
 #     KENNEN (betfair_prices.json), dann nach Anpfiff. Ein Spiel mit 100k faellt damit nicht
 #     mehr aus dem Fenster, nur weil es spaeter beginnt — und das gilt auch fuer Wettbewerbe,
 #     die auf keiner Liste stehen (Libertadores, Sudamericana …).
+# 12.10.2026 (Lucas: „Orsomarso – Boca Juniors de Cali … Half Time 11.904 € auf Boca, 96 % …
+# Wieso finden wir dieses Spiel nicht? Kein Push in Trades, nichts in der HT-Kachel, nichts im
+# Radar. Das Geld schon min. 30 min oben").
+#
+# Es lag wieder am Deckel, diesmal im PRIORITAETS-Topf. Lauf 19:05 UTC: 150 Detail-Calls =
+# 40 live + 110 vor Anpfiff — und von den 110 pfiff KEINES in den naechsten 6 Stunden an. Das
+# fruehste war 02:00 UTC morgen. Laenderspielpause: `ist_prioritaet` zaehlt Land „INT" und alles
+# mit „Champions League" — also Frauen-Freundschaftsspiele, Olympia-Quali der Frauen, UEFA U19,
+# AFC Champions League Two, bis zu drei Tage im Voraus, 21 davon ohne einen Euro Volumen. Dieser
+# 72h-Topf kam VOR dem 26h-Topf, also bekam der heutige Abend (Kolumbien, Argentinien, Brasilien
+# …) keinen einzigen Platz. Orsomarso (Anpfiff 20:30 UTC, Primera B) war nie im Feed — und ein
+# Spiel, das nie im Feed war, hat auch kein „bekanntes Geld", mit dem es sich nach vorn sortieren
+# koennte. Der Guard vom 08.09. sah es nicht: er vermisst nur Spiele, die schon einmal drin waren.
+#
+# Fix: was BALD anpfeift, kommt vor die Vorschau. Reihenfolge jetzt live → bekannt grosses Geld
+# (>= 20.000 €, der Fall vom 08.09.) → alles mit Anpfiff in NAH_H Stunden (jede Liga) →
+# Prioritaet im 72h-Fenster → Rest im 26h-Fenster; jeder Topf nach bekanntem Geld, dann Anpfiff. Und der Lauf schreibt `nahGesamt`/`nahDrin` ins _meta, damit ein
+# Guard die Luecke sieht, auch wenn das Spiel nie im Feed war.
+NAH_H = float(os.environ.get("BETWATCH_NAH_H") or 6)
+GROSS_BEKANNT_EUR = 20000.0      # = GROSSGELD_EUR im Guard (Radar-Schwelle Top/Intl)
 UEFA_RX = re.compile(r"(champions league|europa league|europa conference|conference league|uefa)", re.I)
 INTL_COUNTRY_RX = re.compile(r"^(int|international|eu|europe)$", re.I)
 
@@ -209,7 +229,7 @@ def dedup_matchups(snaps):
 
 
 def select_ids(parsed, now=None, window_h=WINDOW_H, cap=MAX_DETAIL, prio_window_h=PRIORITY_WINDOW_H,
-               vol_bekannt=None):
+               vol_bekannt=None, nah_h=NAH_H):
     """Welche Matches bekommen einen (teuren) Detail-Call: alle LIVE zuerst, dann die
     Prioritaets-Wettbewerbe im WEITEN Fenster (prio_window_h, ~3 Tage), dann alle anderen im
     Standard-Fenster (window_h, 26h) — die aber nach BEKANNTEM GELD sortiert, nicht nach Anpfiff.
@@ -229,24 +249,36 @@ def select_ids(parsed, now=None, window_h=WINDOW_H, cap=MAX_DETAIL, prio_window_
             return None
 
     live = [e for e in parsed if e.get("live")]
-    prio, pre = [], []
+    nah_horizon = now + timedelta(hours=nah_h)
+    nah, prio, pre = [], [], []
     for e in parsed:
         if e.get("live"):
             continue
         k = _ko(e)
-        if k is None:
+        if k is None or k < now:
             continue
-        if ist_prioritaet(e) and now <= k <= prio_horizon:
+        if k <= nah_horizon:                       # 12.10.: der heutige Abend vor der Vorschau
+            nah.append((k, e))
+        elif ist_prioritaet(e) and k <= prio_horizon:
             prio.append((k, e))
-        elif now <= k <= horizon:
+        elif k <= horizon:
             pre.append((k, e))
-    prio.sort(key=lambda x: x[0])
-    # Der Rest-Topf: erst das Geld, das wir schon kennen, dann der Anpfiff. Ohne bekanntes
+    # Jeder Topf: erst das Geld, das wir schon kennen, dann der Anpfiff. Ohne bekanntes
     # Volumen ist der Schluessel 0 — die Reihenfolge faellt dann auf Anpfiff zurueck.
     vb = vol_bekannt or {}
-    pre.sort(key=lambda x: (-float(vb.get(x[1].get("matchId")) or 0), x[0]))
-    ordered = ([e["matchId"] for e in live] + [e["matchId"] for _, e in prio]
-               + [e["matchId"] for _, e in pre])
+
+    def _geld(x):
+        return float(vb.get(x[1].get("matchId")) or 0)
+    # Spiele mit schon bekanntem grossen Geld (08.09.: Real Madrid 102.861 €) behalten ihren Platz
+    # vor dem Nah-Topf — sonst wuerden 40 fruehe Pokalspiele ohne Geld sie wieder verdraengen.
+    gross = [x for x in prio + pre if _geld(x) >= GROSS_BEKANNT_EUR]
+    prio = [x for x in prio if _geld(x) < GROSS_BEKANNT_EUR]
+    pre = [x for x in pre if _geld(x) < GROSS_BEKANNT_EUR]
+    for topf in (gross, nah, prio, pre):
+        topf.sort(key=lambda x: (-_geld(x), x[0]))
+    ordered = ([e["matchId"] for e in live] + [e["matchId"] for _, e in gross]
+               + [e["matchId"] for _, e in nah]
+               + [e["matchId"] for _, e in prio] + [e["matchId"] for _, e in pre])
     # dedup, Reihenfolge erhalten
     seen, out = set(), []
     for mid in ordered:
@@ -254,6 +286,29 @@ def select_ids(parsed, now=None, window_h=WINDOW_H, cap=MAX_DETAIL, prio_window_
             seen.add(mid)
             out.append(mid)
     return out[:cap]
+
+
+def nah_abdeckung(parsed, ids, now=None, nah_h=NAH_H) -> dict:
+    """Wie viele der Spiele, die in nah_h Stunden anpfeifen, bekamen einen Detail-Call? REIN.
+
+    Die Gegenprobe zum Deckel, gemessen an der LISTE (alle Events), nicht am Feed — ein Spiel,
+    das nie im Feed war, sieht man nur so (Orsomarso, 12.10.)."""
+    now = now or _now()
+    drin = set(ids or [])
+    nah = []
+    for e in parsed or []:
+        if e.get("live"):
+            continue
+        try:
+            k = datetime.fromisoformat(str(e.get("kickoff")).replace("Z", "+00:00"))
+        except (ValueError, TypeError):
+            continue
+        if now <= k <= now + timedelta(hours=nah_h):
+            nah.append(e)
+    fehlt = [e for e in nah if e.get("matchId") not in drin]
+    return {"nahH": nah_h, "nahGesamt": len(nah), "nahDrin": len(nah) - len(fehlt),
+            "nahFehlt": ["%s v %s (%s)" % (e.get("home"), e.get("away"), e.get("league"))
+                         for e in fehlt[:10]]}
 
 
 def append_history(hist, snap, now=None, keep_h=HIST_KEEP_H, max_points=HIST_MAX_POINTS):
@@ -466,7 +521,8 @@ def main():
         return 1
 
     PRICES_FILE.write_text(json.dumps(
-        {"_meta": {"generatedAt": now.isoformat(), "n": len(snaps),
+        {"_meta": {"generatedAt": now.isoformat(), "n": len(snaps), **nah_abdeckung(
+                       list(by_id.values()), ids, now=now),
                    "live": sum(1 for s in snaps if s.get("liveInfo"))},
          "matches": snaps}, ensure_ascii=False, indent=1), encoding="utf-8")
     hist.setdefault("_meta", {})["updatedAt"] = now.isoformat()

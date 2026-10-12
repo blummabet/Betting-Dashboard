@@ -39,7 +39,7 @@ def test_aufstocken_zeigt_auch_die_quote_von_jetzt():
     pos = {"key": "val-fut1-t1-2026-10-04", "side": "T1", "usd": 254679, "league": "ESPORTS",
            "firstPrice": 0.525, "entryPrice": 0.524, "lastPrice": 0.515, "wallet": "0xw"}
     card = W.build_public_card(pos, {}, True, BROAD)
-    assert "Einstieg @1.91 · jetzt @1.94" in card
+    assert "@1.91 · jetzt @1.94" in card     # 12.10.2026: hinter dem Betrag, ohne „Einstieg"
     assert "jetzt" not in W.build_public_card(pos, {}, False, BROAD)
 
 

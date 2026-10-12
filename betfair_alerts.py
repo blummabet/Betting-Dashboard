@@ -1606,6 +1606,15 @@ def build_public_message(a, trades=False) -> str:
     inflow = a.get("inflow") or 0.0
     pct = (" (%.0f%% frisch)" % (inflow / total * 100)) if total else ""
     lead = a.get("leadName") or "—"
+    if not trades:
+        # 12.10.2026 (Lucas: „wir müssen im Public Channel die Nachrichten etwas einfacher
+        # gestalten"). Public zeigt Spiel, Status und die eine Zeile, um die es geht. Zufluss,
+        # Richtung und Zweitmeinung bleiben im Trades-Push und im Ledger — dort wird gemessen.
+        # Vor Anpfiff steht „Pick:" darueber, live nicht (so in Lucas' Vorlage).
+        return (live_badge + "🟡 <b>Betfair Moneyflow</b>\n\n" + teams + "\n\n"
+                + ("" if _is_live(a) else "<b>Pick:</b>\n")
+                + "📊 <b>%s</b>  %s %.0f%%%s" % (_esc(lead), _bar(share), share * 100, odd)
+                + altbestand_note(a))
     return (live_badge + "🟡 <b>Betfair Moneyflow</b>\n\n" + teams + "\n\n"
             + "💶 <b>%s</b> — frischer Zufluss%s\n+<b>%s</b> → Markt <b>%s</b>%s\n\n"
               % (_esc(_short_mk(a["market"])), _window_txt(a), _euro(inflow), _euro(total), pct)
@@ -2356,7 +2365,8 @@ def main():
             continue   # 22.08.2026 (Lucas): kein zweiter Fresh-Push binnen FRESH_COOLDOWN_MIN
         if should_send_public(pub_seen, key, _lead_magnitude(a)):   # 16.08.2026 (Lucas): Zufluss, nicht das wachsende Gesamtvolumen
             # 13.08.2026 (Lucas): Zweitmeinung (Pinnacle/Soft/Poly) auch im Public — wie im Trades-Push (nur fresh).
-            pub_msg = build_public_message(a) + (_consensus_block(a, cidx) if a["scenario"] == "fresh" else "")
+            # 12.10.2026 (Lucas): Public schlanker — die Zweitmeinung steht nur noch im Trades-Push.
+            pub_msg = build_public_message(a)
             if _tg_public(pub_msg):
                 _pub_seen_put(pub_seen, key, _lead_magnitude(a))
                 if a["scenario"] == "fresh":

@@ -39,4 +39,5 @@ def test_main_filtert_vor_dem_deckel_und_bucht_trotzdem():
     assert "zu_senden(neu_laut)" in src
     assert "sp_laut[:SPIEL_MAX_PUSH]" in src
     # 07.10.2026: drei Buecher mit Stumm-Grund — Auswahl, Spiel und Torlinie (art=tore).
-    assert src.count("stumm_grund(b) or (") == 3, "der Grund steht im Buch (push=false, pushGrund)"
+    # 12.10.2026: vier — Kleine Liga kam mit dem Remis-Filter dazu.
+    assert src.count("stumm_grund(b) or (") == 4, "der Grund steht im Buch (push=false, pushGrund)"

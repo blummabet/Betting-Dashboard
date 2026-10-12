@@ -1548,7 +1548,22 @@ def stumm_grund(b, kats=None) -> str | None:
     # Gebucht wird weiter (push=false), ITF bleibt laut.
     if kat == "Tennis" and _TOUR_RX.search(str(g[0].get("liga") or "")):
         return "ATP/WTA stumm (Lucas 04.10.)"
+    # 12.10.2026 (Lucas, zur Karte „🎯 1x2 — Draw · Coventry - Newcastle · $17.8K · alle @3.90":
+    # „aus dem Burst nimm bitte Draw wetten raus … sowas wertlos"). Im Buch standen 10 Remis-
+    # Bursts, 5 abgerechnet, alle verloren — n zu klein fuer ein Urteil, das hier ist eine
+    # Entscheidung, keine Messung. Nur das reine Remis: „Draw No Bet" und „X or Draw" (Doppelte
+    # Chance) bleiben laut. Gebucht wird weiter (push=false, pushGrund).
+    if all(ist_remis(x) for x in g):
+        return "Remis stumm (Lucas 12.10.)"
     return None
+
+
+_REMIS = {"draw", "x", "remis", "unentschieden", "tie"}
+
+
+def ist_remis(w) -> bool:
+    """Reine Remis-Wette (Auswahl „Draw"/„X"/…). REIN."""
+    return str((w or {}).get("auswahl") or "").strip().lower() in _REMIS
 
 
 def zu_senden(neu, push_an=None, max_push=None) -> list:
@@ -1685,7 +1700,7 @@ def main() -> int:
     # ── Die dritte Einheit: kleine Ligen (30.09.2026, Lucas) ─────────────────────────────
     kl_alle = kleine_liga(wetten, norm=liga_norm(), ebene_median=ebenen_median(), now=now)
     kl_neu = [b for b in kl_alle if klein_key(b) not in seen and klein_key(b) not in schon]
-    kl_senden = kl_neu[:KLEIN_MAX_PUSH] if (KLEIN_AN and PUSH_AN) else []
+    kl_senden = [b for b in kl_neu if not stumm_grund(b)][:KLEIN_MAX_PUSH] if (KLEIN_AN and PUSH_AN) else []
     print("🔎 Kleine Liga: %d Treffer, %d neu (Fussball Ebene %s, vor Anpfiff + live, >=%.1fx Norm, "
           "Quote ab %.2f)" % (len(kl_alle), len(kl_neu), "/".join(KLEIN_EBENEN),
                               KLEIN_MIN_FAKTOR, MIN_QUOTE))
@@ -1700,7 +1715,7 @@ def main() -> int:
         z = klein_buch_zeile(b, now_iso)
         z["push"] = k in seen
         if not z["push"]:
-            z["pushGrund"] = ("Push abgeschaltet" if not (PUSH_AN and KLEIN_AN)
+            z["pushGrund"] = stumm_grund(b) or ("Push abgeschaltet" if not (PUSH_AN and KLEIN_AN)
                               else "Deckel des Laufs erreicht" if k not in {klein_key(x) for x in kl_senden}
                               else "Senden fehlgeschlagen")
         led.append(z)

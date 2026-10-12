@@ -802,10 +802,10 @@ def baue(now=None) -> dict:
          serien_wetten_plays("modell"),
          "Serien ohne Quote im Feed (z. B. Team trifft, zu null). Keine Rendite — gemessen wird, "
          "ob die angezeigte Chance trifft. Steht nur auf der Tafel, wird NICHT gesendet.")
-    _add("claude-picks", "Claudes Picks", "🤖", "Eigene Engine", claude_plays(),
+    _add("claude-picks", "Claudes Picks", "🤖", "Push-Kanäle", claude_plays(),
          "Claudes eigene Einschätzung aus Pinnacle-Bewegung, Betfair-Geld und Polymarket, mit "
          "Begründung vor Anpfiff festgehalten. Gerechnet zum genannten Mindestkurs; das eigentliche "
-         "Maß ist der CLV gegen den Pinnacle-Schlusskurs.")
+         "Maß ist der CLV gegen den Pinnacle-Schlusskurs.", kanal="Trades")
     _add("betfair", "Betfair · alle Signale", "💷", "Marktdaten", betfair_plays(),
          "Der Ledger hält ein rollierendes Fenster — ältere Perioden sind unvollständig, "
          "nicht schwach.")

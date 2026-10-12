@@ -210,7 +210,7 @@ class TestPublicWhale(unittest.TestCase):
         self.assertIn("Polymarket Whale", msg)
         self.assertIn("Flamengo v Palmeiras", msg)      # Paarung aus broad
         self.assertIn("$150K", msg)
-        self.assertIn("Einstieg @1.61", msg)            # Quote statt 62¢
+        self.assertIn("auf <b>Flamengo</b> @1.61", msg)   # Quote statt 62¢; seit 12.10. direkt hinter dem Betrag
         trades = P.build_card(pos, scores, False, broad)
         self.assertIn("bewiesen scharf", trades)
         self.assertIn("15/20 · 75 %", trades)
@@ -1030,8 +1030,9 @@ class TestPublicKarteNeu(unittest.TestCase):
         spricht (Betfair, Cards, alles @x.xx). Zwei Einheiten fuer dieselbe Sache kosten bei
         jedem Blick eine Umrechnung."""
         t = P.build_public_card(self._pos(), {}, False, self.BROAD)
-        self.assertIn("Einstieg @1.41", t)
+        self.assertIn("</b> @1.41", t)          # 12.10.2026: direkt hinter dem Betrag
         self.assertNotIn("71¢", t)
+        self.assertNotIn("des Marktvolumens", t)   # 12.10.2026: Marktanteil raus (Lucas)
 
     def test_der_geldbetrag_ist_fett(self):
         t = P.build_public_card(self._pos(), {}, False, self.BROAD)

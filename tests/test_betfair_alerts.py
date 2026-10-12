@@ -155,7 +155,9 @@ class TestFreshWindow(unittest.TestCase):
     def test_window_text_in_public_message(self):
         a = self._alert({"mkv": {"Match Odds": 10000}, "ts": "2026-08-09T20:00:00+00:00", "min": 55},
                         {"mkv": {"Match Odds": 45000}, "ts": "2026-08-09T20:12:00+00:00", "min": 66})
-        self.assertIn("55'→66'", BA.build_public_message(a))
+        # 12.10.2026: das Zeitfenster steht nur noch im Trades-Push (Public schlank).
+        self.assertIn("55'→66'", BA.build_public_message(a, trades=True))
+        self.assertNotIn("55'→66'", BA.build_public_message(a))
 
 
 class TestLeadOddTxt(unittest.TestCase):
@@ -353,12 +355,15 @@ class TestPublicMoneyflow(unittest.TestCase):
              "leadShare": 0.74, "leadOdd": 2.0}
         msg = BA.build_public_message(a)
         self.assertIn("🟡 <b>Betfair Moneyflow</b>", msg)
-        self.assertIn("Over/Under 3.5", msg)          # ausgeschrieben, nicht „Ü/U"
         self.assertNotIn("Ü/U", msg)
-        # 05.08.2026 (Lucas): neues Format — Zufluss-Anteil am Markt + Geld-Leiste + Quote
-        self.assertIn("+<b>€27.9K</b> → Markt <b>€28.6K</b>", msg)
-        self.assertIn("(98% frisch)", msg)            # 27.9/28.6
-        self.assertIn("📊 <b>Over 3.5 Goals</b>", msg)
+        # 12.10.2026 (Lucas: „im Public Channel einfacher"): Zufluss-Block nur noch im Trades-Push;
+        # Public: Spiel, „Pick:", Geld-Leiste mit Quote.
+        self.assertNotIn("frisch", msg)
+        self.assertIn("<b>Pick:</b>\n📊 <b>Over 3.5 Goals</b>", msg)
+        t = BA.build_public_message(a, trades=True)
+        self.assertIn("Over/Under 3.5", t)
+        self.assertIn("+<b>€27.9K</b> → Markt <b>€28.6K</b>", t)
+        self.assertIn("(98% frisch)", t)
         self.assertIn("74% @2.00", msg)
         self.assertRegex(msg, r"[▓]+[░]*")            # visuelle Geld-Leiste
         self.assertNotIn("Check:", msg)
@@ -532,7 +537,8 @@ class TestDirection(unittest.TestCase):
              "tier": "top", "leadName": "Osasuna", "leadShare": 0.62, "leadOdd": 2.4,
              "leadDir": "in", "leadPrev": 2.55}
         self.assertIn("Back", BA.build_message(a))
-        self.assertIn("Back", BA.build_public_message(a))
+        self.assertIn("Back", BA.build_public_message(a, trades=True))
+        self.assertNotIn("Back", BA.build_public_message(a))   # 12.10.2026: Public ohne Richtungszeile
 
 
 class TestConsensusBlock(unittest.TestCase):
