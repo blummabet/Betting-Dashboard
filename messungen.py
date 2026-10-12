@@ -289,6 +289,19 @@ def zaehler_stake_tore(base_dir):
                and e.get("status") == "abgerechnet")
 
 
+def zaehler_hz_heim_130(base_dir):
+    """Abgerechnete HZ-0:0-Heimsieg-Funde unter der Regel vom 12.10.2026
+    (Vorab-Heimquote 1.30-1.60, keine Nationalteams) — erkannt am Feld `heimRegel`."""
+    d = _laden(os.path.join(base_dir, "hz_finder.json"))
+    if d is None:
+        return 0
+    if not isinstance(d, dict):
+        return None
+    return sum(1 for e in (d.get("eintraege") or [])
+               if isinstance(e, dict) and e.get("heimRegel") and e.get("status") == "abgerechnet"
+               and "heim" in (e.get("wetten") or {}))
+
+
 def zaehler_poly_public_klasse(base_dir):
     """Abgerechnete Trades-Karten, die NUR an der Public-Klassen-Schwelle scheiterten
     (poly_whale_trades_ledger.json, `publicKlasseGesperrt: true`, status=settled).
@@ -413,6 +426,7 @@ ZAEHLER = {
     "stake_klein": zaehler_stake_klein,
     "poly_public_klasse": zaehler_poly_public_klasse,
     "stake_tore": zaehler_stake_tore,
+    "hz_heim_130": zaehler_hz_heim_130,
     "sharp_z": zaehler_sharp_z,
     "bf_leadshare": zaehler_bf_leadshare,
     "bf_rutsch": zaehler_bf_rutsch,

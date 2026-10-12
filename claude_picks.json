@@ -1,0 +1,44 @@
+{
+ "_doc": "EINGABE: Claudes eigene Picks (ab 12.10.2026, Lucas: 'mich wuerde wirklich interessieren, wie du es siehst'). Diese Datei schreibt nur Claude. Abgerechnet, versendet und bewertet wird in claude_picks.py -> claude_picks_buch.json. Schema je Pick: id, gesetztAm, matchId (Betfair), spiel, liga, anpfiff (UTC), markt (1x2|dnb), seite (home|draw|away), auswahl (Text), kurs (lohnt ab, gerechnet wird mit ihm), pinnBeimPick [heim, remis, gast] fair, grund.",
+ "picks": [
+  {
+   "id": "2026-10-12-oviedo-eibar",
+   "gesetztAm": "2026-10-12T15:15:00Z",
+   "matchId": "36155874",
+   "spiel": "Oviedo – Eibar",
+   "liga": "Spanish Segunda Division",
+   "anpfiff": "2026-10-12T16:30:00Z",
+   "markt": "dnb",
+   "seite": "away",
+   "auswahl": "Eibar (Draw No Bet)",
+   "kurs": 2.25,
+   "pinnBeimPick": [
+    0.3764,
+    0.3214,
+    0.3023
+   ],
+   "grund": "Pinnacle läuft seit dem Morgen stetig auf Eibar (28,0 → 30,2 %), Oviedo fällt (40,6 → 37,6 %), letzter Schritt noch in dieselbe Richtung. Auf Betfair liegen 85 % des Geldes auf Oviedo, Polymarket nur 19 % – scharfes Buch und breites Geld laufen auseinander. Draw No Bet, weil das Remis bei Pinnacle stabil hoch steht."
+  },
+  {
+   "id": "2026-10-12-coventry-newcastle",
+   "gesetztAm": "2026-10-12T15:15:00Z",
+   "matchId": "36065583",
+   "spiel": "Coventry – Newcastle",
+   "liga": "English Premier League",
+   "anpfiff": "2026-10-12T19:00:00Z",
+   "markt": "1x2",
+   "seite": "away",
+   "auswahl": "Newcastle",
+   "kurs": 2.19,
+   "pinnBeimPick": [
+    0.2802,
+    0.2634,
+    0.4564
+   ],
+   "grund": "Pinnacle seit dem Morgen stetig auf Newcastle (43,4 → 45,6 %). Betfair-Geld 59 % mit Zufluss, Polymarket 65 % – alle drei Quellen auf derselben Seite. Top-Liga, deshalb nur, weil Pinnacle selbst läuft; die Wette ist, dass der Kurs bis Anpfiff weiter fällt."
+  }
+ ],
+ "ausgelassen": {
+  "2026-10-12": "Atalanta–Venezia, Torino–Udinese, Levante–Sevilla, Eyüpspor–Göztepe: Betfair = Pinnacle-fair, Pinnacle ruhig — kein Preis-Argument."
+ }
+}

@@ -59,20 +59,40 @@ def _zeit(s):
 
 def zuordnen(spiel, live_fixtures):
     """Betfair-Spiel -> API-Football-Fixture (oder None). REIN.
-    Beide Teams muessen passen (in einer Richtung) UND der Anpfiff +-20 Min."""
-    from betfair_name_bridge import pair_matches
+
+    Erst streng: beide Teams passen (in einer Richtung) UND der Anpfiff +-20 Min.
+
+    12.10.2026 (Lucas: „schau, ob wir bei Football-API die richtigen Ligen haben"). 53 von 138
+    HZ-Funden blieben ohne API-Football — darunter „Man Utd – Tottenham", „Liverpool – Man City",
+    „FC Nordsjaelland – OB". API-Football fuehrt diese Ligen; gescheitert ist der Namensabgleich
+    an EINER Seite („Man Utd"/„Manchester United", „OB"/„Odense", „Skovde"/„Skövde AIK").
+    Deshalb zweite Stufe: EIN Team passt, der Anpfiff passt, und unter allen gerade laufenden
+    Spielen ist es das EINZIGE solche. Ein Team spielt nicht zweimal zur selben Zeit — die
+    Eindeutigkeit ist der Schutz, nicht die Schreibweise.
+    """
+    from betfair_name_bridge import pair_matches, compatible
     ko = _zeit(spiel.get("kickoff"))
-    treffer = []
+    streng, locker = [], []
     for fx in live_fixtures or []:
         t = fx.get("teams") or {}
         h, a = (t.get("home") or {}).get("name"), (t.get("away") or {}).get("name")
-        if not (h and a) or not pair_matches(spiel.get("home"), spiel.get("away"), h, a):
+        if not (h and a):
             continue
         fko = _zeit((fx.get("fixture") or {}).get("date"))
-        if ko and fko and abs((fko - ko).total_seconds()) > ANPFIFF_TOLERANZ_MIN * 60:
+        if not (ko and fko) or abs((fko - ko).total_seconds()) > ANPFIFF_TOLERANZ_MIN * 60:
+            # ohne beide Anpfiffzeiten nur die strenge Stufe (wie bisher)
+            if ko and fko:
+                continue
+            if pair_matches(spiel.get("home"), spiel.get("away"), h, a):
+                streng.append(fx)
             continue
-        treffer.append(fx)
-    return treffer[0] if len(treffer) == 1 else None      # zwei Kandidaten = nicht raten
+        if pair_matches(spiel.get("home"), spiel.get("away"), h, a):
+            streng.append(fx)
+        elif any(compatible(x, y) for x in (spiel.get("home"), spiel.get("away")) for y in (h, a)):
+            locker.append(fx)
+    if streng:
+        return streng[0] if len(streng) == 1 else None    # zwei Kandidaten = nicht raten
+    return locker[0] if len(locker) == 1 else None
 
 
 def statistik(stat_response, heim_id):

@@ -101,7 +101,9 @@
              // wenn eine bewachte Serie abgerechnet wird, also alle paar Tage. `updatedAt` wird
              // deshalb bei JEDEM Recap-Lauf neu gesetzt, auch ohne neue Zeile — sonst meldete die
              // Uebersicht dauerhaft „aelteste Quelle: Serien-Buch, 3 Tage", obwohl nichts fehlt.
-             ['Serien-Buch', d.ligaStreakRec], ['Serien-Buch MLS', d.mlsStreakRec]];
+             ['Serien-Buch', d.ligaStreakRec], ['Serien-Buch MLS', d.mlsStreakRec],
+             // 12.10.2026: Claudes Picks — `generatedAt` setzt claude_picks.py in jedem Lauf.
+             ['Claude-Picks', d.claude]];
     var out = [];
     q.forEach(function (x) { var a = _ageMin(x[1]); if (a != null) out.push({ n: x[0], min: a }); });
     // Poly-LIVE fuehrt seine eigene Rechnung (dieselbe, die die Kachel unten anzeigt).
@@ -791,7 +793,10 @@
       // 09.09.2026 (Lucas: wurde die Serie erfuellt, ja oder nein). Das Serien-Buch.
       // Es darf fehlen (es beginnt erst); dann sagt die Kachel genau das, statt so zu
       // tun, als sei nichts gemessen worden.
-      jf('liga_streak_record.json'), jf('mls_streak_record.json')]);
+      jf('liga_streak_record.json'), jf('mls_streak_record.json'),
+      // 12.10.2026 (Lucas: „das mit dir und den Picks ist mir wichtiger"): Claudes eigene Picks.
+      // Urteil, CLV und Ergebnis rechnet claude_picks.py — hier wird nur gezeigt.
+      jf('claude_picks_buch.json')]);
   }
   function _mdLoad(force, hart) {
     if (_md.loading) return;
@@ -805,7 +810,7 @@
     var p = document.getElementById('mainDashPanel');
     if (p && !_md.data) { p.classList.add('mdash'); p.innerHTML = _head() + '<div class="md-empty" style="text-align:center;padding:52px 0;">⏳ Übersicht wird geladen …</div>'; }
     _mdFetch(!!hart).then(function (a) {
-      _md.data = { liga: a[0], mls: a[1], ligaStreaks: a[2], mlsStreaks: a[3], betfair: a[4], whales: a[5], pulse: a[6], bfOverview: a[7], bfDir: a[8], moneyMap: a[9], bfTrack: a[10], killer: a[11], freigabe: a[12], stake: a[13], stakeAus: a[14], ligaStreakRec: a[15], mlsStreakRec: a[16] };
+      _md.data = { liga: a[0], mls: a[1], ligaStreaks: a[2], mlsStreaks: a[3], betfair: a[4], whales: a[5], pulse: a[6], bfOverview: a[7], bfDir: a[8], moneyMap: a[9], bfTrack: a[10], killer: a[11], freigabe: a[12], stake: a[13], stakeAus: a[14], ligaStreakRec: a[15], mlsStreakRec: a[16], claude: a[17] };
       _md.loading = false; _mdRender();
     });
   }
@@ -2146,7 +2151,7 @@
       '<div id="md-cell-live" class="md-cell">' + _mdLiveWidePlaceholder() + '</div>' +
       '</div>';
 
-    p.innerHTML = _head() + _mdPulse() + _mdSpielbar() + _mdSignalBoard() + _mdNobetBoard() + _kpis() + grid +
+    p.innerHTML = _head() + _mdPulse() + _mdSpielbar() + _mdClaudePicks() + _mdSignalBoard() + _mdNobetBoard() + _kpis() + grid +
       '<div class="md-foot">Kuratierter Überblick · tippe „alle →" für den vollen Bereich</div>';
     _mdFillPlays();
     _mdFillPubPreview();
@@ -4294,6 +4299,48 @@
     }
     return '<div id="mdBlick" class="md-blick">' + k1 + k2 + k3 + '</div>';
   }
+
+  // ── 🤖 Claudes Picks (12.10.2026) ─────────────────────────────────────────────────────
+  // Lucas: „Mich würde wirklich nur interessieren, wie du es siehst." Eigene Einschätzung mit
+  // Begründung, gemessen am Pinnacle-Schlusskurs (CLV). Die Bilanz und ihr Urteil kommen aus
+  // claude_picks_buch.json — keine Schwelle in dieser Datei.
+  function _mdClaudePicks() {
+    var d = _md.data && _md.data.claude;
+    if (!d || !Array.isArray(d.zeilen) || !d.zeilen.length) return '';
+    var b = d.bilanz || {};
+    var uhr = function (iso) {
+      var t = Date.parse(iso); if (isNaN(t)) return '';
+      return new Date(t).toLocaleTimeString('de-AT', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Vienna' });
+    };
+    var pp = function (v) { return (v > 0 ? '+' : '') + (+v).toFixed(1) + ' pp'; };
+    var kopf = b.n + (b.n === 1 ? ' Pick' : ' Picks')
+      + (b.nClv ? ' · CLV Ø ' + pp(b.clvSchnittPP) + ' (' + b.clvPositivPct + ' % positiv)' : '')
+      + (b.abgerechnet ? ' · ' + b.gewonnen + '–' + b.verloren + (b.push ? '–' + b.push : '')
+         + ' · ROI ' + (b.roi > 0 ? '+' : '') + b.roi + ' %' : '')
+      + ' · <b>' + esc(b.urteil || '') + '</b>';
+    var offen = d.zeilen.filter(function (z) { return z.status !== 'abgerechnet'; });
+    var fertig = d.zeilen.filter(function (z) { return z.status === 'abgerechnet'; }).slice(0, 5);
+    var zOffen = offen.map(function (z) {
+      return rowEl(esc(z.spiel) + ' <span class="md-badge">⏱ ' + uhr(z.anpfiff) + '</span>',
+        '@' + (+z.kurs).toFixed(2), A.blue,
+        '<b>' + esc(z.auswahl) + '</b> · ' + esc(z.liga) + '<br>' + esc(z.grund));
+    }).join('');
+    var zeichen = { win: '✅', push: '↔️', loss: '❌' };
+    var zFertig = fertig.map(function (z) {
+      return rowEl(esc(z.spiel), (zeichen[z.ergebnis] || '') + (z.clvPP != null ? ' ' + pp(z.clvPP) : ''),
+        z.clvPP > 0 ? A.good : (z.clvPP < 0 ? A.red : 'var(--mi)'),
+        esc(z.auswahl) + ' @' + (+z.kurs).toFixed(2) + (z.ft ? ' · ' + z.ft[0] + ':' + z.ft[1] : ''));
+    }).join('');
+    return '<section class="md-sp md-rise" id="mdClaudePicks">'
+      + '<div class="md-sp-h"><span style="font-size:16px">🤖</span>'
+      + '<span class="md-sp-t">Claudes Picks</span>'
+      + '<span class="md-sp-s">Eigene Einschätzung aus Pinnacle-Bewegung, Betfair-Geld und Polymarket — '
+      + 'gemessen daran, ob der Pinnacle-Kurs bis Anpfiff in Richtung des Picks läuft. ' + kopf + '</span></div>'
+      + (zOffen || '<div class="md-r-s" style="padding:6px 0">Gerade kein offener Pick.</div>')
+      + (zFertig ? '<div class="md-r-s" style="padding:8px 0 2px">Zuletzt abgerechnet</div>' + zFertig : '')
+      + '</section>';
+  }
+  window._mdClaudePicksTest = _mdClaudePicks;   // Test-Hook
 
   function _mdSpielbar(polyPlays) {
     // Erst die Ebenen bauen: sie setzen die Spitzen, aus denen der Kopf liest.

@@ -39,6 +39,15 @@ AUSGABE_FILE = "hz_finder.json"
 SEEN_FILE = "hz_finder_seen.json"
 TORE_MAX_QUOTE = 1.75
 HEIM_MAX_QUOTE = 1.60
+# 12.10.2026 (Lucas: „probieren wir es mal und zaehl mit, koennen wir immer wieder umstellen").
+# Rueckblick 05.09.-11.10. (Betfair-Stand zur Pause, 2 % Kommission):
+#   Vorab-Heimquote bis 1.30          n= 60  ROI  -7,0 %  (beide Zeithaelften negativ)
+#   Nationalteams bis 1.60            n= 33  ROI -16,5 %
+#   1.30-1.60, nur Vereine            n=160  ROI +20,3 %
+# Die Grenze 1.30 ist NACHTRAEGLICH aus den Daten gezogen — deshalb im Messregister
+# (hz-heim-130) vorwaerts gemessen. Die Tore-Gruppe ist davon unberuehrt.
+HEIM_MIN_QUOTE = 1.30
+HEIM_REGEL = "1.30-1.60 ohne Nationalteams"
 SPAET_MIN, SPAET_MAX = 46, 55          # 2. HZ laeuft schon, steht aber noch 0:0 (Lauf hat die Pause verpasst)
 KOMMISSION = 0.02
 VERFALL_TAGE = 3
@@ -102,7 +111,8 @@ def kandidat(m, state_pend, hist_punkte, archiv=None):
         gruppen.append("tore")
         vor["over25"] = sig["odd"]
     hw = vor_heimquote(hist_punkte)
-    if hw is not None and hw <= HEIM_MAX_QUOTE:
+    if (hw is not None and HEIM_MIN_QUOTE < hw <= HEIM_MAX_QUOTE
+            and not ist_nationalteam(m.get("league"))):
         gruppen.append("heim")
         vor["heim"] = hw
     if not gruppen:
@@ -118,7 +128,8 @@ def kandidat(m, state_pend, hist_punkte, archiv=None):
     return {"k": "hz:%s" % m.get("matchId"), "matchId": str(m.get("matchId")), "home": home,
             "away": m.get("away"), "league": m.get("league"), "country": m.get("country"),
             "kickoff": m.get("kickoff"), "phase": ph, "minute": li.get("time"),
-            "gruppen": gruppen, "vor": vor, "quoten": quoten, "serie": serie}
+            "gruppen": gruppen, "vor": vor, "quoten": quoten, "serie": serie,
+            **({"heimRegel": HEIM_REGEL} if "heim" in gruppen else {})}
 
 
 # ── Frisches Geld rund um die Pause (04.10.2026) ──────────────────────────────────────────
@@ -481,6 +492,7 @@ def main(base_dir=BASE, jetzt=None, senden=None) -> int:
     grenze = (jetzt - timedelta(hours=36)).isoformat()
     aus = {"updatedAt": jetzt.isoformat(),
            "regel": {"toreMaxQuote": TORE_MAX_QUOTE, "heimMaxQuote": HEIM_MAX_QUOTE,
+                     "heimMinQuote": HEIM_MIN_QUOTE, "heimRegel": HEIM_REGEL,
                      "kommission": KOMMISSION, "mindestN": MINDEST_N},
            "bericht": ber,
            "apif": apif_sum,

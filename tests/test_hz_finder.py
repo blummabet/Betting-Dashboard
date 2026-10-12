@@ -208,3 +208,37 @@ def test_serie_zeigt_geschossen_zu_kassiert():
     assert "Ø 2.6:1.5 Tore" in H._serie_txt(s)
     alt = {"form": "SUN", "toreSchnitt": 4.1, "over25": 6, "n": 7}
     assert "Ø 4.1 Tore" in H._serie_txt(alt), "alte Serie ohne Felder bleibt lesbar"
+
+
+# ── 12.10.2026: Heimsieg nur 1.30-1.60, ohne Nationalteams (Register hz-heim-130) ──────────
+def _hist(hw):
+    return [{"ts": "2026-10-04T13:50", "min": None, "mo": {"hw": hw}}]
+
+
+def test_klarer_favorit_bis_130_ist_kein_heim_fund():
+    # Rueckblick: n=60, ROI -7,0 %, beide Haelften negativ. Auf dem alten Code: Heim-Fund.
+    assert H.kandidat(spiel(), {}, _hist(1.25)) is None
+    assert H.kandidat(spiel(), {}, _hist(1.30)) is None, "1.30 selbst gehoert nicht dazu"
+
+
+def test_band_130_bis_160_bleibt_und_traegt_die_regel():
+    f = H.kandidat(spiel(), {}, _hist(1.48))
+    assert f["gruppen"] == ["heim"] and f["heimRegel"] == H.HEIM_REGEL
+    assert H.kandidat(spiel(), {}, _hist(1.60))["gruppen"] == ["heim"]
+
+
+def test_nationalteam_ist_kein_heim_fund_tore_bleiben():
+    s = spiel()
+    s["league"] = "Friendlies International"
+    assert H.kandidat(s, {}, _hist(1.48)) is None
+    f = H.kandidat(s, PEND_TORE, _hist(1.48))
+    assert f["gruppen"] == ["tore"] and "heimRegel" not in f, "Tore-Gruppe unberuehrt"
+
+
+def test_messer_zaehlt_nur_funde_unter_der_neuen_regel(tmp_path):
+    import messungen as M
+    (tmp_path / "hz_finder.json").write_text(json.dumps({"eintraege": [
+        {"status": "abgerechnet", "heimRegel": "x", "wetten": {"heim": {"win": True}}},
+        {"status": "abgerechnet", "wetten": {"heim": {"win": True}}},           # alte Regel
+        {"status": "pending", "heimRegel": "x"}]}))
+    assert M.zaehler_hz_heim_130(str(tmp_path)) == 1

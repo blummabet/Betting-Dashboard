@@ -143,6 +143,7 @@ GELD = {
     "positionswert ist frisch",
     # was nicht abgerechnet werden kann, faellt aus jeder Bilanz
     "ergebnisse kommen an",
+    "stake-abrechnung kommt an",                            # 12.10.: vier Tage keine Abrechnung
     "settlement_alive",
     "resolutions_match_open_keys",
     "direct_bets_settling",
