@@ -469,6 +469,45 @@ def check_stake_wette_sagt_ob_spiel(ctx):
     return _c("Jede Stake-Wette sagt, ob sie ein Spiel ist", "warn", fails)
 
 
+STAKE_ABRECHNUNG_MIN_ANTEIL = 0.5
+
+
+def check_stake_abrechnung_laeuft(ctx, jetzt=None):
+    """12.10.2026 — seit dem 08.10. ~01:43 UTC wurde keine einzige Stake-Wette mehr
+    abgerechnet: 17.015 reife Wetten offen, die Burst-Bilanz der Woche 41 stand bei 8 von 41.
+    stake_settle fragte „aelteste zuerst" mit Deckel 300; 298 Wetten ohne Antwort blieben vorn
+    und fuellten jeden Lauf. Die Abrechnung lief, schrieb und meldete nichts — vier Tage lang.
+
+    Gemessen wird die Wirkung, nicht der Lauf: von den Wetten, deren Spiel 12 bis 72 Stunden
+    her ist, muss mindestens die Haelfte einen Endstand tragen.
+    """
+    from datetime import datetime as _dt, timedelta as _td, timezone as _tz
+    jetzt = jetzt or _dt.now(_tz.utc)
+    w = (ctx.get("stakeLedger") or {}).get("wetten") or []
+
+    def _t(x):
+        try:
+            d = _dt.fromisoformat(str(x).replace("Z", "+00:00"))
+            return d if d.tzinfo else d.replace(tzinfo=_tz.utc)
+        except Exception:
+            return None
+    fenster = []
+    for x in w:
+        a = _t(x.get("anpfiff")) or _t(x.get("ts"))
+        if a and jetzt - _td(hours=72) <= a <= jetzt - _td(hours=12):
+            fenster.append(x)
+    if not fenster:
+        return _c("Stake-Abrechnung kommt an", "error", [],
+                  hinweis="keine Wette im Fenster 12-72 h nach Anpfiff")
+    fertig = sum(1 for x in fenster if (x.get("abrechnung") or {}).get("endstand"))
+    anteil = fertig / len(fenster)
+    fails = []
+    if anteil < STAKE_ABRECHNUNG_MIN_ANTEIL:
+        fails.append("nur %d von %d Wetten (%.0f %%) 12-72 h nach Anpfiff abgerechnet — "
+                     "Burst-Bilanz und Stake-Auswertung stehen" % (fertig, len(fenster), anteil * 100))
+    return _c("Stake-Abrechnung kommt an", "error", fails)
+
+
 def check_stake_spielklasse(ctx):
     """07.09.2026 — Lucas: „ne 50k Wette auf Arsenal sagt 0 / Eine 50k Wette auf ein
     2-3. Liga Team ist zumindest jemand der mehr dran glaubt."
@@ -1897,6 +1936,7 @@ UEBERSICHT_CHECKS = [
     check_stake_kategorien,
     check_stake_norm_kachel_ohne_gesperrte,
     check_stake_wette_sagt_ob_spiel,
+    check_stake_abrechnung_laeuft,
     check_betfair_urteil,
     check_quellen_haben_zeitstempel,
     check_serie_seltenheit_nennt_ihren_nenner,
@@ -1956,6 +1996,7 @@ def build_ctx_from_disk() -> dict:
         "mlsStreaks": _lade("mls_streaks.json", {}),
         "stake": _lade("stake_highroller.json", {}),
         "stakeAus": _lade("stake_auswertung.json", {}),
+        "stakeLedger": _lade("stake_bet_ledger.json", {}),
         "polyClose": _lade("poly_money_broad_close.json", {}),
         "polyUpcoming": _lade("poly_money_upcoming.json", {}),
         "polyHistory": _lade("poly_money_broad_history.json", {}),

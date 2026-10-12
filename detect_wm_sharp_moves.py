@@ -793,6 +793,17 @@ def main():
             skipped += 1
             continue
 
+        # 12.10.2026 (Lucas: „diesen Push kann man auch abdrehen im Trades … unnötig für mich",
+        # Anlass: „Kumulativer Drift · FC Dallas vs Seattle · Heimsieg 2.00 → 2.04 (-1.0pp)
+        # [kumulativ: -10.9pp] · 8 Tage"). Die Drift-Meldung ist stumm; erkannt und ins Log
+        # geschrieben wird weiter (wm_sharp_moves_log.json), nur gesendet wird nicht mehr.
+        # Steam- und Sharp-Meldungen sind davon unberuehrt. Wieder an: DRIFT_PUSH=1.
+        if alert_type == "cumul" and os.environ.get("DRIFT_PUSH", "0") != "1":
+            dedup[dkey] = {"shift": eff, "ts": now_iso, "type": alert_type, "stumm": True}
+            _log_move(m, alert_type)
+            skipped += 1
+            continue
+
         card = build_alert_card(m, wm)
         ok   = tg_send(card)
 

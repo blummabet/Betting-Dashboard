@@ -69,3 +69,39 @@ def test_nachricht_zeigt_statistik_und_laengere_serie():
     t = H.nachricht([f])
     assert "📊 <b>1. HZ:</b> aufs Tor 5–1 · Schüsse 12–4 · Ecken 6–2 · Ballbesitz 64–36 % · xG 1.10–0.20" in t
     assert "Tor in 2. HZ 2/3" in t
+
+
+# ── 12.10.2026: eine Seite heisst anders ──────────────────────────────────────────────────
+# 53 von 138 HZ-Funden ohne API-Football, darunter „Man Utd – Tottenham" und „Liverpool –
+# Man City". Gescheitert ist der Namensabgleich an EINER Seite, nicht die Liga-Abdeckung.
+def _live(fid, h, a, datum):
+    return {"fixture": {"id": fid, "date": datum}, "league": {"name": "Premier League"},
+            "teams": {"home": {"id": 1, "name": h}, "away": {"id": 2, "name": a}},
+            "goals": {"home": 0, "away": 0}}
+
+
+MANU = {"matchId": "1", "home": "Man Utd", "away": "Tottenham", "kickoff": "2026-10-10T16:30:00Z"}
+
+
+def test_eine_seite_reicht_wenn_anpfiff_und_eindeutig():
+    live = [_live(7, "Manchester United", "Tottenham", "2026-10-10T16:30:00+00:00"),
+            _live(8, "Arsenal", "Leeds", "2026-10-10T16:30:00+00:00")]
+    # Auf dem alten Code: None — „Man Utd" passt nicht zu „Manchester United".
+    assert A.zuordnen(MANU, live)["fixture"]["id"] == 7
+
+
+def test_eine_seite_mit_falschem_anpfiff_bleibt_draussen():
+    live = [_live(7, "Manchester United", "Tottenham", "2026-10-10T19:00:00+00:00")]
+    assert A.zuordnen(MANU, live) is None
+
+
+def test_zwei_lockere_kandidaten_heisst_nicht_raten():
+    live = [_live(7, "Manchester United", "Tottenham", "2026-10-10T16:30:00+00:00"),
+            _live(9, "Tottenham U21", "Chelsea U21", "2026-10-10T16:30:00+00:00")]
+    assert A.zuordnen(MANU, live) is None
+
+
+def test_strenger_treffer_schlaegt_lockeren():
+    live = [_live(7, "Man Utd", "Tottenham", "2026-10-10T16:30:00+00:00"),
+            _live(9, "Tottenham U21", "Chelsea U21", "2026-10-10T16:30:00+00:00")]
+    assert A.zuordnen(MANU, live)["fixture"]["id"] == 7

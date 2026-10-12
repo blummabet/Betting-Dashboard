@@ -295,3 +295,38 @@ class TestCardsUndKanalSindAuseinanderzuhalten(unittest.TestCase):
         if "cards-liga" in n and "push-liga-picks" in n:
             self.assertGreater(n["cards-liga"], n["push-liga-picks"],
                                "die Engine-Zahl muss größer sein als die Kanal-Zahl")
+
+
+# ── 12.10.2026: jede Burst-Art und das HZ-Buch haben einen Block ───────────────────────────
+def test_jede_burst_art_hat_einen_stats_block():
+    """Die Torlinien-Bursts (art "tore", seit 07.10.) fielen aus jedem Block heraus. Gegen das
+    Muster: jede Art, die stake_burst_push schreibt, muss die Stats-Seite lesen."""
+    import re
+    from pathlib import Path
+    root = Path(__file__).resolve().parent.parent
+    quelle = (root / "stake_burst_push.py").read_text(encoding="utf-8")
+    arten = set(re.findall(r'"art":\s*"(\w+)"', quelle)) | {"auswahl"}
+    stats = (root / "stats_perioden.py").read_text(encoding="utf-8")
+    fehlt = [a for a in arten if a != "auswahl" and 'art="%s"' % a not in stats]
+    assert not fehlt, fehlt
+
+
+def test_hz_plays_rechnet_mit_dem_buch():
+    import stats_perioden as SP
+    e = [{"status": "abgerechnet", "gebuchtAt": "2026-10-11T14:00:00+00:00", "heimRegel": "x",
+          "wetten": {"over05": {"win": True, "quote": 1.3, "r": 0.294},
+                     "heim": {"win": False, "quote": 1.9, "r": -1.0}}},
+         {"status": "pending", "gebuchtAt": "2026-10-12T14:00:00+00:00", "wetten": {}}]
+    o = SP.hz_plays("over05", eintraege=e)
+    assert o == [{"tag": "2026-10-11", "gewonnen": True, "rendite": 0.294, "clv": None}]
+    assert len(SP.hz_plays("heim", nur_regel="heimRegel", eintraege=e)) == 1
+    assert SP.hz_plays("over15", eintraege=e) == []
+
+
+def test_claude_plays_aus_dem_buch():
+    import stats_perioden as SP
+    b = {"zeilen": [{"anpfiff": "2026-10-12T16:30:00Z", "ergebnis": "push", "rendite": 0.0, "clvPP": 1.4},
+                    {"anpfiff": "2026-10-12T19:00:00Z", "ergebnis": None, "rendite": None, "clvPP": None}]}
+    o = SP.claude_plays(b)
+    assert o[0] == {"tag": "2026-10-12", "gewonnen": None, "rendite": 0.0, "clv": 1.4}
+    assert o[1]["rendite"] is None

@@ -56,7 +56,10 @@ LEDGER_FILE = BASE / "stake_bet_ledger.json"
 KURS_FILE = BASE / "stake_kurse.json"
 QUERY_FILE = BASE / "stake_query.json"
 
-MAX_JE_LAUF = int(os.environ.get("STAKE_SETTLE_MAX") or 300)
+# 12.10.2026: 300 -> 1000. Seit dem 08.10. kommen ~4.500 Wetten am Tag statt ~1.200, und nach
+# dem Stillstand (s. reihenfolge) stehen 17.000 offen. Mit 300 je Lauf haette der Rueckstand
+# laenger gebraucht, als das Ledger (20.000 Zeilen, jetzt ~4,5 Tage) die Wetten haelt.
+MAX_JE_LAUF = int(os.environ.get("STAKE_SETTLE_MAX") or 1000)
 BATCH = int(os.environ.get("STAKE_SETTLE_BATCH") or 25)
 REIF_H = float(os.environ.get("STAKE_SETTLE_REIF_H") or 3)
 AUFGEBEN_D = float(os.environ.get("STAKE_SETTLE_AUFGEBEN_D") or 5)
@@ -98,12 +101,35 @@ def faellig(w: dict, jetzt: datetime) -> bool:
     Wette plus eine grosszuegige Frist — lieber einmal zu frueh gefragt (kostet eine Anfrage)
     als eine Wette nie abgerechnet (kostet die Messung).
     """
-    if (w.get("abrechnung") or {}).get("endstand"):
+    a = w.get("abrechnung") or {}
+    if a.get("endstand"):
+        return False
+    # 12.10.2026: aufgegebene Wetten fragen wir nicht mehr — s. reihenfolge().
+    if a.get("unaufloesbar"):
         return False
     anker = _parse(w.get("anpfiff")) or _parse(w.get("ts"))
     if not anker:
         return False
     return jetzt >= anker + timedelta(hours=REIF_H)
+
+
+def reihenfolge(w: dict):
+    """Sortierschluessel fuer die Nachfrage. REIN.
+
+    🔴 12.10.2026 (Lucas fragte nach den Stake-Bursts in den Stats; dabei aufgefallen): seit
+    dem 08.10. ~01:43 UTC wurde KEINE Stake-Wette mehr abgerechnet — 17.015 reife Wetten offen,
+    W41 der Burst-Bilanz 8 von 41 abgerechnet. Hier stand „aelteste zuerst", gedeckelt auf 300
+    je Lauf. Fuer 298 Wetten vom 08.10. kam von Stake keine Antwort (bet(iid) leer). Sie blieben
+    damit reif, standen als aelteste immer vorn und fuellten jeden Lauf allein — alles danach
+    wurde nie gefragt. Fehlerklasse: eine Warteschlange, deren Kopf nie fertig wird.
+
+    Jetzt: nie gefragte Wetten zuerst (aelteste zuerst), danach die schon gefragten nach dem
+    Zeitpunkt der letzten Frage. Eine Wette ohne Antwort rutscht so nach jedem Versuch nach
+    hinten, statt den Kopf zu blockieren.
+    """
+    a = w.get("abrechnung") or {}
+    g = a.get("geprueft")
+    return (1, str(g)) if g else (0, str(w.get("ts") or ""))
 
 
 def aufgegeben(w: dict, jetzt: datetime) -> bool:
@@ -227,12 +253,12 @@ def main() -> int:
     kurse = SH._lade(KURS_FILE, {})
 
     dran = [w for w in wetten if faellig(w, jetzt) and w.get("id")]
-    dran.sort(key=lambda w: w.get("ts") or "")        # aelteste zuerst
+    dran.sort(key=reihenfolge)                         # nie gefragt zuerst, s. reihenfolge()
     dran = dran[:MAX_JE_LAUF]
     print("  %d von %d Wetten sind reif (>= %.0fh nach Anpfiff)." % (len(dran), len(wetten), REIF_H))
 
     nach_id = {w["id"]: w for w in wetten if w.get("id")}
-    geholt = fehler = 0
+    geholt = fehler = ohne_antwort = 0
     for i in range(0, len(dran), BATCH):
         stapel = [w["id"] for w in dran[i:i + BATCH]]
         antw, err = frage_batch(url, stapel)
@@ -246,6 +272,16 @@ def main() -> int:
                 continue
             w["abrechnung"] = lies_abrechnung(knoten, kurse)
             geholt += 1
+        # Gefragt, aber keine Antwort: festhalten, damit die Wette nach hinten rutscht.
+        _jetzt_s = jetzt.isoformat().replace("+00:00", "Z")
+        for iid in stapel:
+            if iid in antw or iid not in nach_id:
+                continue
+            a = dict(nach_id[iid].get("abrechnung") or {})
+            a["geprueft"] = _jetzt_s
+            a["ohneAntwort"] = int(a.get("ohneAntwort") or 0) + 1
+            nach_id[iid]["abrechnung"] = a
+            ohne_antwort += 1
 
     # Wer nach der Frist immer noch offen ist, wird als unaufloesbar MARKIERT — nicht
     # geloescht. Eine Wette, die verschwindet, faelscht jede Quote nach oben.
@@ -264,7 +300,8 @@ def main() -> int:
     SH._schreibe(LEDGER_FILE, led)
 
     b = led["bilanz"]
-    print("  %d nachgefragt, %d als unaufloesbar markiert, %d Stapel mit Fehler." % (geholt, aufgeg, fehler))
+    print("  %d nachgefragt, %d ohne Antwort, %d als unaufloesbar markiert, %d Stapel mit Fehler."
+          % (geholt, ohne_antwort, aufgeg, fehler))
     print("  Beine: %d gewertet (%d Treffer, %d daneben, %d neutral) · offen %d · unaufloesbar %d"
           % (b["gewertet"], b["treffer"], b["daneben"], b["neutral"], b["offen"], b["unaufloesbar"]))
     if b["quote"] is not None:

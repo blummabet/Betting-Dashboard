@@ -289,6 +289,21 @@ jobs:
         run: bash scripts/ci_sichern.sh "Beleg der HZ-0:0-Pushes" hz_finder.json hz_finder_seen.json
         continue-on-error: true
 
+      # 12.10.2026 (Lucas: „das mit dir und den Picks ist mir wichtiger"). Claude schreibt
+      # claude_picks.json von Hand; dieser Schritt sendet neue Picks VOR Anpfiff einmal in den
+      # Trades-Channel und rechnet ab (CLV gegen den Pinnacle-Schlussstand, Ergebnis).
+      # Liest betfair_consensus_history.json und die Endstaende — steht deshalb hinter beiden.
+      - name: 🤖 Claude-Picks (senden vor Anpfiff + abrechnen)
+        run: ${{ env.BETFAIR_PY }} claude_picks.py
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+
+      - name: 🔐 Beleg der Claude-Picks sofort sichern
+        run: bash scripts/ci_sichern.sh "Beleg der Claude-Picks" claude_picks_buch.json
+        continue-on-error: true
+
 
       # 20.09.2026 (Vorfall Toulouse–Le Havre, 19.09.): eine Poly-Position lief ins Spiel,
       # weil der Hard-Close des Positions-Managers ausfiel und nichts davon ins Buch kam.
@@ -430,6 +445,7 @@ jobs:
           git add reihenfolge_protokoll.json 2>/dev/null || true   # 03.10.2026: wer zeigt zuerst
           git add ligen_watch.json 2>/dev/null || true             # 03.10.2026: eingefrorene Ligen-Listen
           git add hz_finder.json 2>/dev/null || true               # 04.10.2026: HZ 0:0 — Buch zur Pausenquote
+          git add claude_picks_buch.json 2>/dev/null || true       # 12.10.2026: Claudes Picks — Versand + Abrechnung
           git add hz_finder_seen.json 2>/dev/null || true
           git add team_archiv.json 2>/dev/null || true             # 04.10.2026: Team-Ergebnisse auch kleiner Ligen
           git add betfair_league_norm.json 2>/dev/null || true

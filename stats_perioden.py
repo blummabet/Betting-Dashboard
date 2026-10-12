@@ -640,6 +640,53 @@ def burst_plays(phase=None, gesendet=True, art="auswahl", quoten_art=None) -> li
     return aus
 
 
+def hz_plays(wette: str, nur_regel: str | None = None, eintraege=None) -> list:
+    """HZ-0:0-Funde als Plays je Wette (12.10.2026, Lucas: „kannst du die Spiele auch ins
+    Stats-File reinnehmen, damit ich sehe, wie gut das performt").
+
+    Gerechnet wird zur Quote DER PAUSE, netto 2 % Kommission — genau die Zahl `r`, die
+    hz_finder.abrechnen ins Buch schreibt. Keine zweite Rechnung hier.
+    `nur_regel`: nur Funde mit diesem Feld (z. B. `heimRegel` seit 12.10.)."""
+    if eintraege is None:
+        eintraege = (_load("hz_finder.json", {}) or {}).get("eintraege") or []
+    aus = []
+    for e in eintraege:
+        if not isinstance(e, dict) or e.get("status") != "abgerechnet":
+            continue
+        if nur_regel and not e.get(nur_regel):
+            continue
+        w = (e.get("wetten") or {}).get(wette)
+        if not isinstance(w, dict):
+            continue
+        t = _tag(e.get("gebuchtAt"))
+        if not t:
+            continue
+        r = w.get("r")
+        aus.append({"tag": t, "gewonnen": w.get("win") if isinstance(w.get("win"), bool) else None,
+                    "rendite": float(r) if isinstance(r, (int, float)) else None, "clv": None})
+    return aus
+
+
+def claude_plays(buch=None) -> list:
+    """Claudes eigene Picks (12.10.2026) aus claude_picks_buch.json — gebucht am Anpfifftag.
+    `clv` ist der CLV in Prozentpunkten gegen den Pinnacle-Schlussstand, wie ihn claude_picks.py
+    rechnet. Ein Push (Draw No Bet beim Remis) ist Rendite 0, kein Treffer und kein Fehlschlag."""
+    if buch is None:
+        buch = _load("claude_picks_buch.json", {}) or {}
+    aus = []
+    for z in buch.get("zeilen") or []:
+        if not isinstance(z, dict):
+            continue
+        t = _tag(z.get("anpfiff"))
+        if not t:
+            continue
+        e = z.get("ergebnis")
+        aus.append({"tag": t, "gewonnen": True if e == "win" else (False if e == "loss" else None),
+                    "rendite": float(z["rendite"]) if isinstance(z.get("rendite"), (int, float)) else None,
+                    "clv": float(z["clvPP"]) if isinstance(z.get("clvPP"), (int, float)) else None})
+    return aus
+
+
 def filter_vergleich(zeilen=None, boot: int = FILTER_BOOT) -> dict | None:
     """Beide Arme und der UNTERSCHIED zwischen ihnen, mit Band. REIN (fester Seed).
 
@@ -755,6 +802,10 @@ def baue(now=None) -> dict:
          serien_wetten_plays("modell"),
          "Serien ohne Quote im Feed (z. B. Team trifft, zu null). Keine Rendite — gemessen wird, "
          "ob die angezeigte Chance trifft. Steht nur auf der Tafel, wird NICHT gesendet.")
+    _add("claude-picks", "Claudes Picks", "🤖", "Eigene Engine", claude_plays(),
+         "Claudes eigene Einschätzung aus Pinnacle-Bewegung, Betfair-Geld und Polymarket, mit "
+         "Begründung vor Anpfiff festgehalten. Gerechnet zum genannten Mindestkurs; das eigentliche "
+         "Maß ist der CLV gegen den Pinnacle-Schlusskurs.")
     _add("betfair", "Betfair · alle Signale", "💷", "Marktdaten", betfair_plays(),
          "Der Ledger hält ein rollierendes Fenster — ältere Perioden sind unvollständig, "
          "nicht schwach.")
@@ -787,6 +838,11 @@ def baue(now=None) -> dict:
          "Eine große Einzelwette in der dritten Fußball-Klasse oder einer Reserve-Liga, vor Anpfiff "
          "oder live bis Minute 75 (ab 1,5× Norm der Liga). Kein Burst — dort kommen die Wetten einzeln an. Vorregistriert, "
          "Urteil ab n=100.", "Trades")
+    # 12.10.2026: die Torlinien-Bursts (seit 07.10., art "tore") hatten keinen Block — sie
+    # fielen aus jedem der Filter oben heraus. Eigene Einheit, eigene Zahl.
+    _add("stake-tore", "Stake-Bursts · Torlinien", "📈", "Push-Kanäle", burst_plays(art="tore"),
+         "Mehrere Wetten auf Spieltor-Linien desselben Spiels, alle Over oder alle Under. "
+         "Vorregistriert (stake-torlinien-burst), Urteil ab n=100.", "Trades")
     _add("stake-burst-live", "Stake-Bursts · live", "⚡", "Push-Kanäle", burst_plays("live"),
          None, "Trades")
     _add("stake-burst-vor", "Stake-Bursts · vor Anpfiff", "⚡", "Push-Kanäle", burst_plays("vor"),
@@ -798,6 +854,21 @@ def baue(now=None) -> dict:
          burst_plays(gesendet=False),
          "Erkannt, aber nicht rausgegangen — Deckel des Laufs erreicht oder Push abgeschaltet. "
          "Wird trotzdem abgerechnet: sonst wüsste niemand, was der Deckel kostet.", "—")
+    # 12.10.2026 (Lucas): der HZ-0:0-Push. Je Wette ein Block — Tor in 2. HZ, 2+ Tore und
+    # Heimsieg sind drei Fragen, keine. Gebucht nach dem Fund (= Push), zur Quote der Pause.
+    _add("hz-over05", "HZ 0:0 · Tor in 2. HZ", "⏸️", "Push-Kanäle", hz_plays("over05"),
+         "Over 0.5 zur Betfair-Quote der Pause, netto 2 % Kommission. Nur Spiele der Tore-Gruppe "
+         "(vorab Over 2.5 Geld-Favorit bis 1.75).", "Trades")
+    _add("hz-over15", "HZ 0:0 · 2+ Tore", "⏸️", "Push-Kanäle", hz_plays("over15"),
+         "Over 1.5 zur Betfair-Quote der Pause, netto 2 % Kommission.", "Trades")
+    _add("hz-heim", "HZ 0:0 · Heimsieg", "⏸️", "Push-Kanäle", hz_plays("heim"),
+         "Heimsieg zur Betfair-Quote der Pause. Bis 11.10. galt Vorab-Heimquote bis 1.60; seit "
+         "12.10. 1.30–1.60 ohne Nationalteams — die neue Regel steht im Block darunter getrennt.",
+         "Trades")
+    _add("hz-heim-130", "HZ 0:0 · Heimsieg (Regel ab 12.10.)", "⏸️", "Push-Kanäle",
+         hz_plays("heim", nur_regel="heimRegel"),
+         "Vorab-Heimquote 1.30–1.60, ohne Nationalteams. Vorregistriert (hz-heim-130), Urteil ab "
+         "n=100.", "Trades")
     # 13.09.2026 (Lucas): der Gegensignal-Filter als eigene Gruppe — BEIDE Arme, damit die
     # Gegenprobe auf derselben Seite steht wie das Ergebnis. Nur den gesendeten Arm zu zeigen
     # waere die Selbstbestaetigung, die das Schattenbuch gerade verhindern soll.

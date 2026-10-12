@@ -369,6 +369,19 @@
    "mindestN": 150,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist"
+  },
+  {
+   "id": "hz-heim-130",
+   "titel": "HZ 0:0: trägt der Heimsieg mit Vorab-Quote 1.30–1.60 (ohne Nationalteams)?",
+   "frage": "ROI des Heimsiegs zur Betfair-Quote beim Fund (2 % Kommission), nur Funde mit `heimRegel` (ab 12.10.2026). Urteil über die Untergrenze bei n >= 100, nicht über den Punktschätzer.",
+   "warum": "12.10.2026 (Lucas: „probieren wir es mal und zählt halt mit, können wir immer wieder noch umstellen“). Rückblick 05.09.–11.10.: bis 1.30 n=60 ROI −7,0 % (beide Hälften negativ), Nationalteams n=33 −16,5 %, 1.30–1.60 Vereine n=160 +20,3 %. Die Grenze 1.30 wurde NACHTRÄGLICH aus diesen Daten gezogen (rund 30 Schnitte getestet) — deshalb vorwärts gemessen. Wenn die Untergrenze bei n=100 unter null liegt: zurück auf die alte Regel (bis 1.60, alle).",
+   "gestartet": "2026-10-12",
+   "faellig": "2027-01-31",
+   "quelle": "hz_finder.json -> eintraege mit heimRegel, status=abgerechnet, wetten.heim",
+   "messer": "hz_heim_130",
+   "mindestN": 100,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist"
   }
  ]
 }
