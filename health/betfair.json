@@ -1,13 +1,13 @@
 {
   "slug": "betfair",
   "workflow": "🟡 Betfair Radar (Betwatch)",
-  "updatedAt": "2026-10-12T13:58:53.257610+00:00",
+  "updatedAt": "2026-10-12T14:14:08.750633+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
-    "spanneH": 4.7,
-    "proTag": 96.5,
-    "lueckeMinMin": 13.0,
+    "spanneH": 4.8,
+    "proTag": 95.7,
+    "lueckeMinMin": 14.9,
     "lueckeMedianMin": 15.0,
     "lueckeMaxMin": 15.3,
     "sollProTag": null,
@@ -21,9 +21,24 @@
     "verdraengt": 0,
     "spanneH": 469.1,
     "erzeugtProTag": 5.1,
-    "widerspruch": "erzeugtProTag 5.1 gegen eine gemessene Kadenz von 96.5/Tag (Faktor 18.9) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
+    "widerspruch": "erzeugtProTag 5.1 gegen eine gemessene Kadenz von 95.7/Tag (Faktor 18.8) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
   },
   "runs": [
+    {
+      "ts": "2026-10-12T14:14:08.750633+00:00",
+      "workflow": "🟡 Betfair Radar (Betwatch)",
+      "runId": "38261201158",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/38261201158",
+      "nSteps": 40,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-10-12T14:12:18Z",
+      "startedAt": "2026-10-12T14:12:18Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 110.8,
+      "event": "workflow_dispatch"
+    },
     {
       "ts": "2026-10-12T13:58:53.257610+00:00",
       "workflow": "🟡 Betfair Radar (Betwatch)",
@@ -308,21 +323,6 @@
       "wartetS": 0.0,
       "laeuftSeitS": 93.0,
       "event": "workflow_dispatch"
-    },
-    {
-      "ts": "2026-10-12T09:15:22.698139+00:00",
-      "workflow": "🟡 Betfair Radar (Betwatch)",
-      "runId": "38228340566",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/38228340566",
-      "nSteps": 40,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-10-12T09:12:03Z",
-      "startedAt": "2026-10-12T09:12:03Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 199.7,
-      "event": "schedule"
     }
   ]
 }
