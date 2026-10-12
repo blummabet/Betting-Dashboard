@@ -36,7 +36,9 @@ class TestPushWiring(unittest.TestCase):
                   live={"time": 40, "goal_v1": 0, "goal_v2": 0})
         s = BA.build_public_message(a, trades=False)
         self.assertNotIn("gelayt", s)
-        self.assertIn("im Spiel normal", s)
+        # 12.10.2026: Public ohne Richtungszeile; live ohne „Pick:" (Lucas' Vorlage).
+        self.assertNotIn("Pick:", s)
+        self.assertNotIn("driftet", s)            # Richtungszeile steht nur noch im Trades-Push
 
     def test_default_is_public(self):
         # ohne trades-Arg = Public-Verhalten (kein Note)

@@ -1744,33 +1744,27 @@ def build_public_card(pos: dict, scores: dict, restock: bool, broad: dict) -> st
 
     # Sportart zuerst, dann das Spiel: die Sportart ist der Filter, mit dem ein Leser entscheidet,
     # ob ihn die Zeile ueberhaupt angeht.
+    # 12.10.2026 (Lucas: „im Public Channel die Nachrichten etwas einfacher gestalten").
+    # Anpfiff in eigener Zeile, Einstieg direkt hinter den Betrag, Marktanteil raus.
     zeile_spiel = "%s <b>%s</b>" % (emoji, _esc(matchup or side))
-    if ko:
-        zeile_spiel += " · %s" % ko
     lines = [header, "", "<i>%s</i>" % _esc(sport), zeile_spiel]
+    if ko:
+        lines.append(" %s" % ko)
     _r = _pub_rang_zeile(scores, pos.get("wallet"))
     if _r:
         lines.append(_r)
 
     _label = ausgang_label(side, _markt_frage(key, broad)) or side
-    lines += ["", "💰 <b>%s</b> auf <b>%s</b>" % (_usd(pos.get("usd") or 0), _esc(_label))]
-
-    # Einordnung: Marktanteil und Einstieg. Beide duerfen fehlen — dann steht dort nichts,
-    # keine Null und kein Platzhalter.
-    _unten = []
-    a = markt_anteil(pos, broad)
-    if a is not None:
-        _unten.append("📊 <b>%d %%</b> des Marktvolumens" % round(a * 100))
+    geld = "💰 <b>%s</b> auf <b>%s</b>" % (_usd(pos.get("usd") or 0), _esc(_label))
     _e = _pub_einstieg(pos)
     if _e:
-        # 04.10.2026: beim Aufstocken auch, wo der Preis JETZT steht — sonst zeigt die zweite
-        # Karte nur den ersten Einstieg, und dass der Markt inzwischen gegen ihn lief, fehlt.
+        q = _e.replace("Einstieg ", "")
+        geld += " %s" % q
+        # 04.10.2026: beim Aufstocken auch, wo der Preis JETZT steht.
         _jetzt = _quote(pos.get("lastPrice")) if restock else None
-        if _jetzt and _jetzt != _e.replace("Einstieg ", ""):
-            _e += " · jetzt %s" % _jetzt
-        _unten.append(_e)
-    if _unten:
-        lines += [""] + _unten
+        if _jetzt and _jetzt != q:
+            geld += " · jetzt %s" % _jetzt
+    lines += ["", geld]
 
     # 10.09.2026 (Lucas: „bitte wieder den Markt rein, das hab ich vergessen … ist
     # userfreundlicher"). Beim Kuerzen der Karte heute frueh ist der Markt-Link mit rausgeflogen.

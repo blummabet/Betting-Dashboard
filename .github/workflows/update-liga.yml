@@ -393,8 +393,10 @@ jobs:
         run: python pick_push_ledger.py || true
 
       # Serien-Watch pre-match (PRE-Lauf 06:00) + Recap post-match (POST-Lauf 18:00).
+      # 12.10.2026 (Lucas: „Serien Watch – heute nehmen wir raus"): aus dem Public-Kanal genommen.
+      # Wieder an: Repo-Variable SERIEN_WATCH_PUBLIC=true. Der Recap darunter bleibt.
       - name: 🔥 Liga Serien-Watch (PRE-Match)
-        if: github.event.schedule == '7 6 * * *' || github.event.schedule == '37 7 * * *' || github.event_name == 'workflow_dispatch'
+        if: vars.SERIEN_WATCH_PUBLIC == 'true' && (github.event.schedule == '7 6 * * *' || github.event.schedule == '37 7 * * *' || github.event_name == 'workflow_dispatch')
         env:
           TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
