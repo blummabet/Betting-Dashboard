@@ -123,11 +123,9 @@
     {
       "label": "Poly-Markt gehoert zur selben Mannschaft",
       "severity": "error",
-      "failures": [
-        "Poly-Markt acle-alw-aas-2026-10-12 haengt an 2 Betfair-Spielen: AFC Champions League/Al Ahli, AFC Champions League/Al Ahli (UAE)"
-      ],
-      "nFail": 1,
-      "ok": false,
+      "failures": [],
+      "nFail": 0,
+      "ok": true,
       "hinweis": "Nachwuchs- und Frauenteams teilen fast alle Tokens mit der ersten Mannschaft — der Namens-Score kann sie nicht trennen, der Marker schon."
     },
     {
@@ -151,7 +149,7 @@
       "severity": "error",
       "failures": [
         "3 Fussball-Ligen ohne Eintrag in stake_liga_stufe.py (1-mfl, campionato-sammarinese, indian-super-league) — sie fallen aus jeder Zeile der Ansicht, statt aufzufallen",
-        "9 Liga-Schluessel bezeichnen mehrere Turniere und tragen trotzdem eine Spielklasse (allsvenskan, bundesliga, division-1, ligue-1, premier-league, premiership) — eine Zahl davon ist fuer die Haelfte der Spiele falsch"
+        "10 Liga-Schluessel bezeichnen mehrere Turniere und tragen trotzdem eine Spielklasse (allsvenskan, bundesliga, division-1, ligue-1, premier-league, premiership) — eine Zahl davon ist fuer die Haelfte der Spiele falsch"
       ],
       "nFail": 2,
       "ok": false,
@@ -201,11 +199,11 @@
       "label": "Fade-Unter: haelt die Kontrollgruppe?",
       "severity": "error",
       "failures": [
-        "Match Odds H: der Fade gewinnt hier BELEGT (+9.3 %, UG +3.3 %, Geldseite +1.2 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
+        "Match Odds H: der Fade gewinnt hier BELEGT (+8.8 %, UG +2.7 %, Geldseite +1.4 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
       ],
       "nFail": 1,
       "ok": false,
-      "hinweis": "seit Vorregistrierung n=6369 (UG -5.3 %) · Rueckblick n=0, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=6364 (UG -5.2 %) · Rueckblick n=0, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -255,7 +253,7 @@
       "label": "Positionswert ist frisch",
       "severity": "warn",
       "failures": [
-        "liga_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 16 h — die Datei selbst ist 16 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
+        "liga_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 17 h — die Datei selbst ist 17 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
       ],
       "nFail": 1,
       "ok": false,
@@ -275,7 +273,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "527 Zeilen · 520 abgerechnet · 0 offen"
+      "hinweis": "530 Zeilen · 520 abgerechnet · 3 offen"
     },
     {
       "label": "Artefakte sind lesbar",
@@ -313,7 +311,7 @@
       "label": "Ergebnisse kommen an",
       "severity": "error",
       "failures": [
-        "liga_ergebnis_nachlauf.json: 1 Spiele mit vergangenem Anpfiff ohne Ergebnis (Rayo Vallecano–Athletic Club seit 42 h, API-Status INT) — der Resolver kann sie nicht abrechnen, sie fallen aus jeder Bilanz heraus"
+        "liga_ergebnis_nachlauf.json: 1 abgesagtes/verlegtes Spiel (Rayo Vallecano–Athletic Club (ABD)) — es kommt an diesem Termin zu keinem Ergebnis; offene Wetten darauf brauchen eine Entscheidung"
       ],
       "nFail": 1,
       "ok": false,
@@ -322,16 +320,18 @@
     {
       "label": "Datenbau ist nicht stehengeblieben",
       "severity": "error",
-      "failures": [],
-      "nFail": 0,
-      "ok": true,
+      "failures": [
+        "liga-data.json: der Datenbau hat zuletzt vor 19 h geschrieben — entweder ist der Cron ausgefallen oder ein anderer Workflow hat einen aelteren Stand darueber committet"
+      ],
+      "nFail": 1,
+      "ok": false,
       "hinweis": ""
     },
     {
       "label": "Serien-Buch zeigt beide Buecher",
       "severity": "warn",
       "failures": [
-        "die beiden Serien-Buecher sind 7.9 h auseinander (Liga 17.6 h, MLS 25.5 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+        "die beiden Serien-Buecher sind 7.9 h auseinander (Liga 19.1 h, MLS 27.0 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
       ],
       "nFail": 1,
       "ok": false,
@@ -339,5 +339,5 @@
     }
   ],
   "nFail": 10,
-  "generatedAt": "2026-10-12T15:34:43.936731+00:00"
+  "generatedAt": "2026-10-12T17:06:50.661958+00:00"
 }
