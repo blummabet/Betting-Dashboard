@@ -1,13 +1,13 @@
 {
   "slug": "poly-global",
   "workflow": "🐋 Poly Global-Scan (alle Sportarten, häufig)",
-  "updatedAt": "2026-10-12T19:23:59.943205+00:00",
+  "updatedAt": "2026-10-12T19:54:17.315287+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
-    "spanneH": 9.6,
-    "proTag": 47.7,
-    "lueckeMinMin": 6.5,
+    "spanneH": 10.0,
+    "proTag": 45.8,
+    "lueckeMinMin": 25.3,
     "lueckeMedianMin": 30.2,
     "lueckeMaxMin": 58.6,
     "sollProTag": null,
@@ -19,11 +19,26 @@
     "erzeugt": 100,
     "gelaufen": 100,
     "verdraengt": 0,
-    "spanneH": 479.8,
-    "erzeugtProTag": 5.0,
-    "widerspruch": "erzeugtProTag 5.0 gegen eine gemessene Kadenz von 47.7/Tag (Faktor 9.5) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
+    "spanneH": 484.9,
+    "erzeugtProTag": 4.9,
+    "widerspruch": "erzeugtProTag 4.9 gegen eine gemessene Kadenz von 45.8/Tag (Faktor 9.3) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
   },
   "runs": [
+    {
+      "ts": "2026-10-12T19:54:17.315287+00:00",
+      "workflow": "🐋 Poly Global-Scan (alle Sportarten, häufig)",
+      "runId": "38300001858",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/38300001858",
+      "nSteps": 28,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-10-12T19:47:48Z",
+      "startedAt": "2026-10-12T19:47:48Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 389.3,
+      "event": "schedule"
+    },
     {
       "ts": "2026-10-12T19:23:59.943205+00:00",
       "workflow": "🐋 Poly Global-Scan (alle Sportarten, häufig)",
@@ -308,21 +323,6 @@
       "wartetS": 0.0,
       "laeuftSeitS": 631.6,
       "event": "schedule"
-    },
-    {
-      "ts": "2026-10-12T09:49:52.390881+00:00",
-      "workflow": "🐋 Poly Global-Scan (alle Sportarten, häufig)",
-      "runId": "38231954177",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/38231954177",
-      "nSteps": 28,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-10-12T09:45:37Z",
-      "startedAt": "2026-10-12T09:45:37Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 255.4,
-      "event": "workflow_dispatch"
     }
   ]
 }
