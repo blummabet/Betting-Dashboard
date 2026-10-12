@@ -1,7 +1,7 @@
 {
- "updatedAt": "2026-10-12T12:50:16.616535+00:00",
+ "updatedAt": "2026-10-12T13:21:59.551221+00:00",
  "stake": 10.0,
- "expired": 1,
+ "expired": 0,
  "condDrift": 0,
  "clvNachgetragen": 0,
  "katNachgetragen": 0,
@@ -310,7 +310,7 @@
    "entryPrice": 0.755,
    "firstTs": "2026-10-12T09:21:52.191133+00:00",
    "lastPrice": 0.755,
-   "lastTs": "2026-10-12T12:50:16.616535+00:00",
+   "lastTs": "2026-10-12T13:21:59.551221+00:00",
    "htkAtEntry": 0.6355666666666666,
    "public": true,
    "ohneWallet": false,
@@ -331,37 +331,6 @@
    "closeRefTs": "2026-10-12T09:54:43.331743+00:00",
    "closeQuelle": "close"
   },
-  "atp-fils-zandsch-2026-10-11|Arthur Fils": {
-   "key": "atp-fils-zandsch-2026-10-11",
-   "side": "Arthur Fils",
-   "verdict": "BET",
-   "conv": 6,
-   "league": "TENNIS",
-   "cat": "Tennis",
-   "entryPrice": 0.785,
-   "firstTs": "2026-10-12T09:21:52.191133+00:00",
-   "lastPrice": 0.795,
-   "lastTs": "2026-10-12T12:50:16.616535+00:00",
-   "htkAtEntry": 1.385565,
-   "public": true,
-   "ohneWallet": false,
-   "reasons": [
-    "großes Geld auf Arthur Fils (79%) → $18K",
-    "🔥 scharfe Wallets (3 Wallets, zusammen 65/83, 78% · 30 T Sport +$6.4K)"
-   ],
-   "signals": [
-    "money",
-    "sharp"
-   ],
-   "stake": 10.0,
-   "ev": "2026-09-01",
-   "movePreEntryPP": -1.0,
-   "cond": "0xf7d659d799e45cde220fb8d4f04f9603a37ff32a0ea237ac39ae73d2dd5ab4fe",
-   "frage": "Shanghai Rolex Masters: Arthur Fils vs Botic van de Zandschulp",
-   "closeRef": 0.795,
-   "closeRefTs": "2026-10-12T10:50:34.998206+00:00",
-   "closeQuelle": "close"
-  },
   "cs2-lvg-js-2026-10-12|Lynn Vision": {
    "key": "cs2-lvg-js-2026-10-12",
    "side": "Lynn Vision",
@@ -372,7 +341,7 @@
    "entryPrice": 0.875,
    "firstTs": "2026-10-12T11:19:58.725274+00:00",
    "lastPrice": 0.805,
-   "lastTs": "2026-10-12T12:50:16.616535+00:00",
+   "lastTs": "2026-10-12T13:21:59.551221+00:00",
    "htkAtEntry": 1.6670847222222223,
    "public": true,
    "ohneWallet": false,
@@ -403,7 +372,7 @@
    "entryPrice": 0.505,
    "firstTs": "2026-10-12T11:51:41.486482+00:00",
    "lastPrice": 0.505,
-   "lastTs": "2026-10-12T12:50:16.616535+00:00",
+   "lastTs": "2026-10-12T13:21:59.551221+00:00",
    "htkAtEntry": 0.13854166666666667,
    "public": false,
    "ohneWallet": false,
@@ -418,6 +387,35 @@
    "stake": 10.0,
    "ev": "2026-09-01",
    "movePreEntryPP": 1.0,
+   "clvGrund": "schluss_vor_einstieg"
+  },
+  "dota2-menawa-dawnbu-2026-10-12|Dawn Bulls": {
+   "key": "dota2-menawa-dawnbu-2026-10-12",
+   "side": "Dawn Bulls",
+   "verdict": "BET",
+   "conv": 6,
+   "league": "ESPORTS",
+   "cat": "E-Sport",
+   "entryPrice": 0.915,
+   "firstTs": "2026-10-12T13:21:59.551221+00:00",
+   "lastPrice": 0.915,
+   "lastTs": "2026-10-12T13:21:59.551221+00:00",
+   "htkAtEntry": 0.6335219444444444,
+   "public": false,
+   "ohneWallet": false,
+   "reasons": [
+    "großes Geld auf Dawn Bulls (91%) → $29K",
+    "Steam läuft rein (+6.5pp)"
+   ],
+   "signals": [
+    "money",
+    "steam"
+   ],
+   "stake": 10.0,
+   "ev": "2026-09-01",
+   "movePreEntryPP": 12.0,
+   "cond": "0x2cdb6f8a9568983fd3d06c84343d2f55f58eb7bcb125de447df779ab1800d5d4",
+   "frage": "Dota 2: Mena Warriors vs Dawn Bulls (BO3) - DreamLeague Western Europe Open Qualifier 2 Playoffs",
    "clvGrund": "schluss_vor_einstieg"
   }
  },
@@ -49685,34 +49683,63 @@
    "settledTs": "2026-10-12T12:50:16.616535+00:00",
    "resolvedTs": "2026-10-12T12:50:13.333844+00:00",
    "ausEndstand": null
+  },
+  {
+   "key": "atp-fils-zandsch-2026-10-11",
+   "side": "Arthur Fils",
+   "verdict": "BET",
+   "conv": 6,
+   "league": "TENNIS",
+   "cat": "Tennis",
+   "entryPrice": 0.785,
+   "closePrice": 0.795,
+   "closeRefTs": "2026-10-12T10:50:34.998206+00:00",
+   "closeQuelle": "close",
+   "result": "loss",
+   "winner": "Botic van de Zandschulp",
+   "pnl": -10.0,
+   "clvPP": 1.0,
+   "stake": 10.0,
+   "public": true,
+   "ohneWallet": false,
+   "signals": [
+    "money",
+    "sharp"
+   ],
+   "firstTs": "2026-10-12T09:21:52.191133+00:00",
+   "ev": "2026-09-01",
+   "htkAtEntry": 1.385565,
+   "settledTs": "2026-10-12T13:21:59.551221+00:00",
+   "resolvedTs": "2026-10-12T13:21:56.372310+00:00",
+   "ausEndstand": null
   }
  ],
  "agg": {
   "all": {
-   "n": 1777,
+   "n": 1778,
    "wins": 1165,
-   "hit": 0.6556,
-   "pnl": -33.17,
-   "stake": 17770.0,
-   "roi": -0.0019,
-   "roiUg": -0.0327,
+   "hit": 0.6552,
+   "pnl": -43.17,
+   "stake": 17780.0,
+   "roi": -0.0024,
+   "roiUg": -0.0333,
    "belegt": false,
    "clvAvg": -0.15,
-   "clvN": 870,
+   "clvN": 871,
    "clvUg": -0.35
   },
   "public": {
-   "n": 391,
+   "n": 392,
    "wins": 283,
-   "hit": 0.7238,
-   "pnl": 71.74,
-   "stake": 3910.0,
-   "roi": 0.0183,
-   "roiUg": -0.0368,
+   "hit": 0.7219,
+   "pnl": 61.74,
+   "stake": 3920.0,
+   "roi": 0.0158,
+   "roiUg": -0.0394,
    "belegt": false,
    "clvAvg": -0.08,
-   "clvN": 186,
-   "clvUg": -0.41
+   "clvN": 187,
+   "clvUg": -0.4
   },
   "publicBlocked": {
    "n": 6,
@@ -49741,25 +49768,25 @@
    "clvUg": -0.79
   },
   "walletTor": {
-   "nMit": 391,
+   "nMit": 392,
    "nOhne": 333,
-   "diffPP": -0.34,
-   "lo": -9.19,
-   "hi": 8.44,
+   "diffPP": -0.6,
+   "lo": -9.35,
+   "hi": 8.48,
    "urteil": "nicht entschieden",
    "grund": "das Band schliesst die Null ein"
   },
   "bettable": {
-   "n": 1643,
+   "n": 1644,
    "wins": 1092,
-   "hit": 0.6646,
-   "pnl": 241.07,
-   "stake": 16430.0,
-   "roi": 0.0147,
-   "roiUg": -0.0175,
+   "hit": 0.6642,
+   "pnl": 231.07,
+   "stake": 16440.0,
+   "roi": 0.0141,
+   "roiUg": -0.0181,
    "belegt": false,
    "clvAvg": -0.12,
-   "clvN": 828,
+   "clvN": 829,
    "clvUg": -0.33
   },
   "blocked": {
@@ -49842,17 +49869,17 @@
     "clvUg": null
    },
    "Tennis": {
-    "n": 284,
+    "n": 285,
     "wins": 203,
-    "hit": 0.7148,
-    "pnl": -99.31,
-    "stake": 2840.0,
-    "roi": -0.035,
-    "roiUg": -0.0962,
+    "hit": 0.7123,
+    "pnl": -109.31,
+    "stake": 2850.0,
+    "roi": -0.0384,
+    "roiUg": -0.0996,
     "belegt": false,
-    "clvAvg": -0.16,
-    "clvN": 138,
-    "clvUg": -0.86
+    "clvAvg": -0.15,
+    "clvN": 139,
+    "clvUg": -0.84
    },
    "US-Sport": {
     "n": 98,
@@ -49896,17 +49923,17 @@
     "clvUg": -0.28
    },
    "Tennis": {
-    "n": 284,
+    "n": 285,
     "wins": 203,
-    "hit": 0.7148,
-    "pnl": -99.31,
-    "stake": 2840.0,
-    "roi": -0.035,
-    "roiUg": -0.0962,
+    "hit": 0.7123,
+    "pnl": -109.31,
+    "stake": 2850.0,
+    "roi": -0.0384,
+    "roiUg": -0.0996,
     "belegt": false,
-    "clvAvg": -0.16,
-    "clvN": 138,
-    "clvUg": -0.86
+    "clvAvg": -0.15,
+    "clvN": 139,
+    "clvUg": -0.84
    },
    "Motorsport": {
     "n": 4,
@@ -49950,17 +49977,17 @@
     "clvUg": null
    },
    "Tennis": {
-    "n": 90,
+    "n": 91,
     "wins": 69,
-    "hit": 0.7667,
-    "pnl": 6.39,
-    "stake": 900.0,
-    "roi": 0.0071,
-    "roiUg": -0.0931,
+    "hit": 0.7582,
+    "pnl": -3.61,
+    "stake": 910.0,
+    "roi": -0.004,
+    "roiUg": -0.1047,
     "belegt": false,
-    "clvAvg": 0.35,
-    "clvN": 55,
-    "clvUg": -0.16
+    "clvAvg": 0.36,
+    "clvN": 56,
+    "clvUg": -0.14
    },
    "Motorsport": {
     "n": 1,
@@ -50071,16 +50098,16 @@
     "clvUg": -0.44
    },
    "6": {
-    "n": 701,
+    "n": 702,
     "wins": 472,
-    "hit": 0.6733,
-    "pnl": 45.7,
-    "stake": 7010.0,
-    "roi": 0.0065,
-    "roiUg": -0.0398,
+    "hit": 0.6724,
+    "pnl": 35.7,
+    "stake": 7020.0,
+    "roi": 0.0051,
+    "roiUg": -0.0412,
     "belegt": false,
-    "clvAvg": -0.09,
-    "clvN": 389,
+    "clvAvg": -0.08,
+    "clvN": 390,
     "clvUg": -0.41
    },
    "7": {
@@ -50138,16 +50165,16 @@
   },
   "byVerdict": {
    "BET": {
-    "n": 1777,
+    "n": 1778,
     "wins": 1165,
-    "hit": 0.6556,
-    "pnl": -33.17,
-    "stake": 17770.0,
-    "roi": -0.0019,
-    "roiUg": -0.0327,
+    "hit": 0.6552,
+    "pnl": -43.17,
+    "stake": 17780.0,
+    "roi": -0.0024,
+    "roiUg": -0.0333,
     "belegt": false,
     "clvAvg": -0.15,
-    "clvN": 870,
+    "clvN": 871,
     "clvUg": -0.35
    }
   },
@@ -50166,16 +50193,16 @@
     "clvUg": -0.4
    },
    "money": {
-    "n": 1625,
+    "n": 1626,
     "wins": 1086,
-    "hit": 0.6683,
-    "pnl": -19.62,
-    "stake": 16250.0,
-    "roi": -0.0012,
-    "roiUg": -0.0318,
+    "hit": 0.6679,
+    "pnl": -29.62,
+    "stake": 16260.0,
+    "roi": -0.0018,
+    "roiUg": -0.0324,
     "belegt": false,
     "clvAvg": -0.14,
-    "clvN": 839,
+    "clvN": 840,
     "clvUg": -0.35
    },
    "pinn": {
@@ -50192,16 +50219,16 @@
     "clvUg": null
    },
    "sharp": {
-    "n": 1050,
+    "n": 1051,
     "wins": 707,
-    "hit": 0.6733,
-    "pnl": -52.12,
-    "stake": 10500.0,
-    "roi": -0.005,
-    "roiUg": -0.044,
+    "hit": 0.6727,
+    "pnl": -62.12,
+    "stake": 10510.0,
+    "roi": -0.0059,
+    "roiUg": -0.0449,
     "belegt": false,
     "clvAvg": -0.21,
-    "clvN": 540,
+    "clvN": 541,
     "clvUg": -0.43
    },
    "steam": {

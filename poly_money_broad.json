@@ -1,15 +1,15 @@
 {
- "n": 546,
+ "n": 537,
  "minOdds": 1.35,
- "moneyHitRate": 0.408,
- "priceHitRate": 0.449,
- "brierMoney": 0.8109,
- "brierPrice": 0.6578,
+ "moneyHitRate": 0.41,
+ "priceHitRate": 0.451,
+ "brierMoney": 0.8087,
+ "brierPrice": 0.6554,
  "disagree": {
-  "n": 156,
+  "n": 154,
   "moneyWon": 27,
   "priceWon": 49,
-  "neither": 80
+  "neither": 78
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -48,10 +48,10 @@
   },
   {
    "league": "BUNDESLIGA",
-   "n": 38,
-   "moneyHitRate": 0.368,
-   "brierMoney": 0.8312,
-   "brierPrice": 0.7223,
+   "n": 29,
+   "moneyHitRate": 0.379,
+   "brierMoney": 0.7963,
+   "brierPrice": 0.6979,
    "verdict": "preis_besser"
   },
   {
@@ -96,8 +96,8 @@
   }
  ],
  "guete": {
-  "belastbar": 546,
-  "preis_echo": 301,
+  "belastbar": 537,
+  "preis_echo": 299,
   "abgeschnitten": 64,
   "unbekannt": 0,
   "leer": 0
@@ -444,7 +444,7 @@
    "league": "EPL",
    "winner": "Draw (Aston Villa FC vs. Brentford FC)",
    "moneyFav": "Brentford FC",
-   "priceFav": "Brentford FC",
+   "priceFav": "Aston Villa FC",
    "moneyShare": 0.803,
    "priceProb": 0.367,
    "moneyOK": false,
@@ -512,18 +512,6 @@
    "totalUsd": 292839
   },
   {
-   "key": "bun-mai-ein-2026-09-12",
-   "league": "BUNDESLIGA",
-   "winner": "Eintracht Frankfurt",
-   "moneyFav": "1. FSV Mainz 05",
-   "priceFav": "1. FSV Mainz 05",
-   "moneyShare": 0.964,
-   "priceProb": 0.552,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 285416
-  },
-  {
    "key": "nor-ik-bra-2026-09-13",
    "league": "NORWAY-ELITESERIEN",
    "winner": "IK Start",
@@ -582,15 +570,27 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 251637
+  },
+  {
+   "key": "fl1-pfc-str-2026-09-19",
+   "league": "LIGUE-1",
+   "winner": "Paris FC",
+   "moneyFav": "Paris FC",
+   "priceFav": "Paris FC",
+   "moneyShare": 0.945,
+   "priceProb": 0.538,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 251373
   }
  ],
- "generatedAt": "2026-10-12T12:50:13.511989+00:00",
+ "generatedAt": "2026-10-12T13:21:56.635319+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 454,
   "nfl": 800,
-  "mlb": 469,
+  "mlb": 470,
   "nhl": 620,
   "mls": 733,
   "epl": 612,
@@ -607,7 +607,7 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 625,
+  "esports": 642,
   "cs2": 422,
   "lol": 440,
   "dota": 21,
@@ -617,7 +617,7 @@
   "boxing": 296,
   "golf": 403,
   "f1": 445,
-  "cricket": 549,
+  "cricket": 548,
   "afc-champions-league-elite": 204,
   "allsvenskan": 1,
   "austria-bundesliga": 378,
@@ -667,116 +667,116 @@
  "sweepStats": {
   "sweepOpen": 500,
   "sweepClosed": 500,
-  "sweepAdded": 410
+  "sweepAdded": 409
  },
  "vorStats": {
-  "kandidaten": 18,
+  "kandidaten": 19,
   "budgetLeer": 0,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
-  "mitAnteilen": 18,
-  "calls": 18
+  "mitAnteilen": 19,
+  "calls": 19
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1218,
-   "usd": 21849809,
-   "beispiel": "fifwc-nor-eng-2026-07-11-total-corners"
+   "n": 1228,
+   "usd": 17341336,
+   "beispiel": "fifwc-fra-eng-2026-07-18-more-markets"
   },
   "world": {
-   "n": 123,
-   "usd": 8105572,
+   "n": 116,
+   "usd": 8557989,
    "beispiel": "world-cup-3rd-place-finish-20260713190252671"
   },
   "uefa": {
-   "n": 51,
-   "usd": 4978325,
+   "n": 43,
+   "usd": 4775386,
    "beispiel": "uefa-champions-league-winner"
   },
-  "presidential": {
-   "n": 16,
-   "usd": 1087008,
-   "beispiel": "presidential-election-winner-2028"
-  },
-  "super": {
-   "n": 29,
-   "usd": 536883,
-   "beispiel": "super-bowl-lx-coin-toss"
+  "fed": {
+   "n": 24,
+   "usd": 539413,
+   "beispiel": "fed-decision-in-january-20260729233815502"
   },
   "will": {
-   "n": 13,
-   "usd": 505574,
-   "beispiel": "will-china-invade-taiwan-before-2027"
-  },
-  "fed": {
    "n": 14,
-   "usd": 472494,
-   "beispiel": "fed-decision-in-july"
+   "usd": 526065,
+   "beispiel": "will-predictfun-launch-a-token-by"
   },
   "which": {
-   "n": 16,
-   "usd": 447779,
-   "beispiel": "which-movie-has-best-opening-weekend-in-2025"
-  },
-  "cbb": {
-   "n": 46,
-   "usd": 429141,
-   "beispiel": "cbb-ind-rutger-2026-01-23"
+   "n": 20,
+   "usd": 472475,
+   "beispiel": "which-company-has-the-best-ai-model-end-of-october"
   },
   "btc": {
-   "n": 67,
-   "usd": 237187,
-   "beispiel": "btc-updown-5m-1780020300"
+   "n": 46,
+   "usd": 208200,
+   "beispiel": "btc-updown-5m-1784322000"
   },
   "2026": {
-   "n": 24,
-   "usd": 151116,
-   "beispiel": "2026-soccer-brazil-srie-a-winner"
-  },
-  "us": {
-   "n": 14,
-   "usd": 127188,
-   "beispiel": "us-strike-on-cuba-by"
-  },
-  "nbasl": {
-   "n": 3,
-   "usd": 118983,
-   "beispiel": "nbasl-bos-cha-2026-07-12"
+   "n": 52,
+   "usd": 208028,
+   "beispiel": "2026-f1-drivers-champion"
   },
   "pro": {
    "n": 13,
-   "usd": 102435,
-   "beispiel": "pro-football-2027-champion-20260729185915366"
+   "usd": 163583,
+   "beispiel": "pro-football-nfc-east-champion"
   },
-  "lec": {
-   "n": 17,
-   "usd": 74061,
-   "beispiel": "lec-orl-asl-2026-08-12"
+  "presidential": {
+   "n": 4,
+   "usd": 158000,
+   "beispiel": "presidential-election-winner-2028"
   },
   "ncaa": {
-   "n": 9,
-   "usd": 72556,
+   "n": 7,
+   "usd": 130840,
    "beispiel": "ncaa-football-2026-heisman-award-winner-20260731185656435"
   },
-  "ballon": {
-   "n": 10,
-   "usd": 72191,
-   "beispiel": "ballon-dor-winner-2026"
+  "lec": {
+   "n": 40,
+   "usd": 122029,
+   "beispiel": "lec-mon-nas-2026-08-12"
   },
   "what": {
-   "n": 8,
-   "usd": 67013,
+   "n": 13,
+   "usd": 109047,
    "beispiel": "what-price-will-bitcoin-hit-before-2027"
   },
-  "euroleague": {
-   "n": 6,
-   "usd": 60608,
-   "beispiel": "euroleague-munchen-bologna-2026-10-08"
+  "us": {
+   "n": 11,
+   "usd": 108471,
+   "beispiel": "us-announces-end-of-iranian-blockade-byptptpt-20260713152715080"
   },
-  "democratic": {
-   "n": 14,
-   "usd": 60405,
-   "beispiel": "democratic-presidential-nominee-2028"
+  "brazil": {
+   "n": 7,
+   "usd": 86109,
+   "beispiel": "brazil-presidential-election"
+  },
+  "ballon": {
+   "n": 9,
+   "usd": 86071,
+   "beispiel": "ballon-dor-winner-2026"
+  },
+  "next": {
+   "n": 4,
+   "usd": 85901,
+   "beispiel": "next-prime-minister-of-serbia-20260629223938642"
+  },
+  "noche": {
+   "n": 2,
+   "usd": 62974,
+   "beispiel": "noche-ufc-lopes-vs-silva"
+  },
+  "boxing": {
+   "n": 2,
+   "usd": 51162,
+   "beispiel": "boxing-itauma-hrgovi-2026-08-29"
+  },
+  "avatar": {
+   "n": 1,
+   "usd": 50260,
+   "beispiel": "avatar-fire-and-ash-opening-weekend-box-office"
   }
  }
 }
