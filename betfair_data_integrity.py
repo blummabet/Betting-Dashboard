@@ -268,6 +268,28 @@ def check_grosses_geld_faellt_nicht_aus_dem_feed(ctx):
 
 
 @betfair_check
+def check_nahe_spiele_im_feed(ctx):
+    """12.10.2026 (Lucas: „Orsomarso – Boca Juniors de Cali … 11.904 € auf Boca … Wieso finden
+    wir dieses Spiel nicht?").
+
+    Im Lauf 19:05 UTC hatten 0 von 110 Vor-Anpfiff-Plaetzen ein Spiel in den naechsten 6 h — der
+    72h-Prioritaets-Topf (Frauen-Laenderspiele, U19, AFC) hatte den Deckel gefuellt. Der Guard
+    vom 08.09. (`grosses_geld_bleibt_im_feed`) sah das nicht, weil er nur Spiele vermisst, die
+    schon einmal drin waren. Dieser misst gegen die Event-LISTE: der Fetcher schreibt, wie viele
+    der bald anpfeifenden Spiele einen Detail-Call bekamen (`_meta.nahGesamt/nahDrin`).
+    Fehlt das Feld (alter Fetcher), schweigt der Guard — keine Zahl ist hier kein Befund."""
+    meta = ctx.prices.get("_meta") or {}
+    ges, drin = meta.get("nahGesamt"), meta.get("nahDrin")
+    fails = []
+    if isinstance(ges, int) and isinstance(drin, int) and ges >= 10 and drin < 0.8 * ges:
+        fails.append("nur %d von %d Spielen mit Anpfiff in %s h im Feed — fehlt u. a.: %s"
+                     % (drin, ges, meta.get("nahH"), "; ".join((meta.get("nahFehlt") or [])[:3])))
+    return _chk("nahe_spiele_im_feed", "Bald anpfeifende Spiele sind im Feed", "error", fails,
+                "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — "
+                "am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ).")
+
+
+@betfair_check
 def check_history_mkv_present(ctx):
     """Der 'Frisches Geld'-Push berechnet den Zufluss als Delta der letzten ZWEI mkv-Snapshots
     (per-Markt-Volumen). Fehlt mkv auf den letzten beiden History-Punkten eines Geld-Spiels, liefert

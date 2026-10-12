@@ -235,6 +235,8 @@ GEPRUEFT_KEIN_GELD = {
     # abgerechnet, aber jeder Countdown und jede Live-Erkennung.
     "anpfiff_eine_uhr",
     "grosses_geld_bleibt_im_feed",
+    # 12.10.2026: dieselbe Klasse wie oben, gemessen an der Event-Liste (Orsomarso nie im Feed).
+    "nahe_spiele_im_feed",
     "direction_covers_money",
 
     # ── 21.09.2026: angesehen und BEWUSST nicht als Geld eingestuft ────────────────────
