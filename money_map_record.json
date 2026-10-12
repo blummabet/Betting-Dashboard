@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-10-12T20:15:03.522201+00:00",
+"generatedAt": "2026-10-12T21:00:24.165560+00:00",
 "byVerdict": {
 "uneinig": {
-"n": 13,
+"n": 14,
 "wins": 4,
-"hitRate": 0.3077,
-"polyN": 13,
-"polyWins": 4,
-"polyHitRate": 0.3077,
+"hitRate": 0.2857,
+"polyN": 14,
+"polyWins": 5,
+"polyHitRate": 0.3571,
 "pinnN": 8,
 "pinnHitRate": 0.375,
-"nRoi": 13,
-"roi": -0.0346,
-"roiLb": -0.7232,
-"nClv": 13,
-"clv": -0.28,
-"clvLb": -0.7828
+"nRoi": 14,
+"roi": -0.1036,
+"roiLb": -0.7511,
+"nClv": 14,
+"clv": -0.32,
+"clvLb": -0.7927
 },
 "konsens": {
-"n": 153,
+"n": 155,
 "wins": 92,
-"hitRate": 0.6013,
-"polyN": 150,
+"hitRate": 0.5935,
+"polyN": 152,
 "polyWins": 89,
-"polyHitRate": 0.5933,
-"pinnN": 122,
-"pinnHitRate": 0.6311,
-"nRoi": 153,
-"roi": 0.0561,
-"roiLb": -0.0668,
-"nClv": 153,
-"clv": -0.07,
-"clvLb": -0.3823
+"polyHitRate": 0.5855,
+"pinnN": 124,
+"pinnHitRate": 0.621,
+"nRoi": 155,
+"roi": 0.0425,
+"roiLb": -0.0799,
+"nClv": 155,
+"clv": -0.05,
+"clvLb": -0.3536
 }
 },
 "byLeague": {
@@ -51,9 +51,14 @@
 "hitRate": 0.6364
 },
 "English Premier League": {
-"n": 9,
+"n": 10,
 "wins": 4,
-"hitRate": 0.4444
+"hitRate": 0.4
+},
+"Spanish Segunda Division": {
+"n": 9,
+"wins": 5,
+"hitRate": 0.5556
 },
 "French Ligue 1": {
 "n": 8,
@@ -64,11 +69,6 @@
 "n": 8,
 "wins": 4,
 "hitRate": 0.5
-},
-"Spanish Segunda Division": {
-"n": 8,
-"wins": 5,
-"hitRate": 0.625
 },
 "UEFA Nations League C": {
 "n": 8,
@@ -160,6 +160,11 @@
 "wins": 2,
 "hitRate": 1.0
 },
+"Romanian Liga I": {
+"n": 2,
+"wins": 0,
+"hitRate": 0.0
+},
 "Saudi Professional League": {
 "n": 2,
 "wins": 1,
@@ -249,46 +254,98 @@
 "n": 1,
 "wins": 1,
 "hitRate": 1.0
-},
-"Romanian Liga I": {
-"n": 1,
-"wins": 0,
-"hitRate": 0.0
 }
 },
 "byStrength": {
 "strong": {
-"n": 124,
+"n": 125,
 "wins": 80,
-"hitRate": 0.6452,
-"nRoi": 124,
-"roi": 0.0815,
-"roiLb": -0.0457,
-"nClv": 124,
-"clv": -0.05,
-"clvLb": -0.4048
+"hitRate": 0.64,
+"nRoi": 125,
+"roi": 0.0728,
+"roiLb": -0.0542,
+"nClv": 125,
+"clv": -0.02,
+"clvLb": -0.3723
 },
 "weak": {
-"n": 42,
+"n": 44,
 "wins": 16,
-"hitRate": 0.381,
-"nRoi": 42,
-"roi": -0.0469,
-"roiLb": -0.3678,
-"nClv": 42,
-"clv": -0.21,
-"clvLb": -0.6455
+"hitRate": 0.3636,
+"nRoi": 44,
+"roi": -0.0902,
+"roiLb": -0.4004,
+"nClv": 44,
+"clv": -0.22,
+"clvLb": -0.6365
 }
 },
 "divergence": {
-"n": 13,
+"n": 14,
 "betfairWins": 4,
-"betfairRate": 0.3077,
-"polyN": 13,
-"polyWins": 4,
-"polyRate": 0.3077
+"betfairRate": 0.2857,
+"polyN": 14,
+"polyWins": 5,
+"polyRate": 0.3571
 },
 "recent": [
+{
+"matchId": "36065583",
+"home": "Coventry",
+"away": "Newcastle",
+"league": "English Premier League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Newcastle",
+"polySide": "away",
+"winner": "home",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+4,
+1
+],
+"kickoff": "2026-10-12T19:00:00Z",
+"settledAt": "2026-10-12T21:00:23.957571+00:00"
+},
+{
+"matchId": "36106731",
+"home": "Universitatea Cluj",
+"away": "Rapid Bucharest",
+"league": "Romanian Liga I",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "away",
+"winner": "away",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+3,
+4
+],
+"kickoff": "2026-10-12T18:00:00Z",
+"settledAt": "2026-10-12T21:00:23.957571+00:00"
+},
+{
+"matchId": "36155886",
+"home": "Tenerife",
+"away": "Girona",
+"league": "Spanish Segunda Division",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Girona",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-10-12T19:00:00Z",
+"settledAt": "2026-10-12T21:00:23.957571+00:00"
+},
 {
 "matchId": "36103179",
 "home": "Eyupspor",
@@ -991,76 +1048,19 @@
 ],
 "kickoff": "2026-10-11T13:00:00Z",
 "settledAt": "2026-10-11T14:56:14.895120+00:00"
-},
-{
-"matchId": "36100484",
-"home": "Elche",
-"away": "Celta Vigo",
-"league": "Spanish La Liga",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Celta Vigo",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-10-11T12:00:00Z",
-"settledAt": "2026-10-11T13:56:01.689613+00:00"
-},
-{
-"matchId": "36099818",
-"home": "Como",
-"away": "Roma",
-"league": "Italian Serie A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Como",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-10-11T10:30:00Z",
-"settledAt": "2026-10-11T13:41:03.117276+00:00"
-},
-{
-"matchId": "36103201",
-"home": "Konyaspor",
-"away": "Basaksehir",
-"league": "Turkish Super League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Konyaspor",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-10-11T10:30:00Z",
-"settledAt": "2026-10-11T13:41:03.117276+00:00"
 }
 ],
 "global": {
-"n": 166,
+"n": 169,
 "wins": 96,
-"hitRate": 0.5783,
-"nRoi": 166,
-"roi": 0.049,
-"roiLb": -0.0757,
-"nClv": 166,
-"clv": -0.09,
-"clvLb": -0.3769
+"hitRate": 0.568,
+"nRoi": 169,
+"roi": 0.0304,
+"roiLb": -0.0933,
+"nClv": 169,
+"clv": -0.07,
+"clvLb": -0.3536
 },
-"pending": 26,
-"ausgeschlossenLive": 1808
+"pending": 24,
+"ausgeschlossenLive": 1807
 }
