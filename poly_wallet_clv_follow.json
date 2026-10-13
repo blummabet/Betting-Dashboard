@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-13T10:24:04.249380+00:00",
+ "updatedAt": "2026-10-13T10:53:28.545017+00:00",
  "stake": 10.0,
  "regel": {
   "minN": 20,
@@ -7,9 +7,9 @@
   "frischMin": 90.0
  },
  "zaehler": {
-  "ohneEinstieg": 4,
+  "ohneEinstieg": 1,
   "gesperrt": 0,
-  "alt": 286
+  "alt": 289
  },
  "open": {
   "unl-mac-sco-2026-10-03-more-markets|Under": {
@@ -6216,28 +6216,6 @@
    "firstTs": "2026-10-12T21:52:08.901769+00:00",
    "stake": 10.0
   },
-  "wta-boulter-shnaide-2026-10-11|Diana Shnaider": {
-   "key": "wta-boulter-shnaide-2026-10-11",
-   "side": "Diana Shnaider",
-   "cat": "Tennis",
-   "league": "TENNIS",
-   "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
-   "belegt": true,
-   "heiss": false,
-   "walletN": 2072,
-   "walletClv": 0.259,
-   "walletUg": 0.074,
-   "clv7": null,
-   "n7": null,
-   "walletEntry": 0.78,
-   "entryPrice": 0.785,
-   "abstandPP": 0.5,
-   "arm": "nehmbar",
-   "lastPrice": 0.795,
-   "htkAtEntry": 2.19,
-   "firstTs": "2026-10-13T03:22:08.641937+00:00",
-   "stake": 10.0
-  },
   "lol-we-fly-2026-10-13|Team WE": {
    "key": "lol-we-fly-2026-10-13",
    "side": "Team WE",
@@ -6673,7 +6651,7 @@
    "entryPrice": 0.465,
    "abstandPP": -0.03,
    "arm": "nehmbar",
-   "lastPrice": 0.475,
+   "lastPrice": 0.465,
    "htkAtEntry": 2.93,
    "firstTs": "2026-10-13T09:25:09.704185+00:00",
    "stake": 10.0
@@ -6695,7 +6673,7 @@
    "entryPrice": 0.285,
    "abstandPP": 1.51,
    "arm": "zu_spaet",
-   "lastPrice": 0.275,
+   "lastPrice": 0.295,
    "htkAtEntry": 2.93,
    "firstTs": "2026-10-13T09:25:09.704185+00:00",
    "stake": 10.0
@@ -6786,6 +6764,28 @@
    "lastPrice": 0.505,
    "htkAtEntry": 2.06,
    "firstTs": "2026-10-13T09:31:11.998363+00:00",
+   "stake": 10.0
+  },
+  "cs2-bw-ill4-2026-10-13|Bushido Wildcats": {
+   "key": "cs2-bw-ill4-2026-10-13",
+   "side": "Bushido Wildcats",
+   "cat": "E-Sport",
+   "league": "ESPORTS",
+   "wallet": "0xa951006f1ce68498c1aef9b013880459e6e08a2f",
+   "belegt": true,
+   "heiss": true,
+   "walletN": 297,
+   "walletClv": 0.715,
+   "walletUg": 0.154,
+   "clv7": 1.63,
+   "n7": 66,
+   "walletEntry": 0.58,
+   "entryPrice": 0.635,
+   "abstandPP": 5.5,
+   "arm": "zu_spaet",
+   "lastPrice": 0.635,
+   "htkAtEntry": 0.68,
+   "firstTs": "2026-10-13T10:53:28.545017+00:00",
    "stake": 10.0
   }
  },
@@ -30449,6 +30449,34 @@
    "closePrice": 0.435,
    "clvPP": -1.0,
    "settledTs": "2026-10-13T10:24:04.249380+00:00"
+  },
+  {
+   "key": "wta-boulter-shnaide-2026-10-11",
+   "side": "Diana Shnaider",
+   "cat": "Tennis",
+   "league": "TENNIS",
+   "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+   "belegt": true,
+   "heiss": false,
+   "walletN": 2072,
+   "walletClv": 0.259,
+   "walletUg": 0.074,
+   "clv7": null,
+   "n7": null,
+   "walletEntry": 0.78,
+   "entryPrice": 0.785,
+   "abstandPP": 0.5,
+   "arm": "nehmbar",
+   "lastPrice": 0.795,
+   "htkAtEntry": 2.19,
+   "firstTs": "2026-10-13T03:22:08.641937+00:00",
+   "stake": 10.0,
+   "result": "win",
+   "winner": "Diana Shnaider",
+   "pnl": 2.74,
+   "closePrice": 0.795,
+   "clvPP": 1.0,
+   "settledTs": "2026-10-13T10:53:28.545017+00:00"
   }
  ],
  "gesehen": [
@@ -30753,6 +30781,7 @@
   "cs2-bca-priv-2026-10-08|Betclic Apogee Esports",
   "cs2-bca-priv-2026-10-08|PRIVATE",
   "cs2-bhe-pcy-2026-10-07|Bounty Hunters Esports",
+  "cs2-bw-ill4-2026-10-13|Bushido Wildcats",
   "cs2-cce-zomb-2026-10-12|Zomblers",
   "cs2-cs1-nxs1-2026-10-08|CYBERSHOKE Esports",
   "cs2-cs1-nxs1-2026-10-08|Nexus",
@@ -31608,17 +31637,17 @@
  ],
  "agg": {
   "belegt_nehmbar": {
-   "n": 480,
-   "wins": 136,
-   "hit": 0.2833,
-   "pnl": -903.13,
-   "stake": 4800.0,
-   "roi": -0.1882,
-   "roiUg": -0.38,
+   "n": 481,
+   "wins": 137,
+   "hit": 0.2848,
+   "pnl": -900.39,
+   "stake": 4810.0,
+   "roi": -0.1872,
+   "roiUg": -0.3787,
    "belegt": false,
-   "clvAvg": -0.11,
-   "clvN": 480,
-   "clvUg": -0.23
+   "clvAvg": -0.1,
+   "clvN": 481,
+   "clvUg": -0.22
   },
   "belegt_zu_spaet": {
    "n": 254,
@@ -31660,17 +31689,17 @@
    "clvUg": -0.77
   },
   "nehmbar": {
-   "n": 558,
-   "wins": 173,
-   "hit": 0.31,
-   "pnl": -1011.05,
-   "stake": 5580.0,
-   "roi": -0.1812,
-   "roiUg": -0.3482,
+   "n": 559,
+   "wins": 174,
+   "hit": 0.3113,
+   "pnl": -1008.31,
+   "stake": 5590.0,
+   "roi": -0.1804,
+   "roiUg": -0.3471,
    "belegt": false,
    "clvAvg": -0.1,
-   "clvN": 558,
-   "clvUg": -0.21,
+   "clvN": 559,
+   "clvUg": -0.2,
    "byCat": {
     "E-Sport": {
      "n": 122,
@@ -31712,17 +31741,17 @@
      "clvUg": null
     },
     "Tennis": {
-     "n": 122,
-     "wins": 51,
-     "hit": 0.418,
-     "pnl": -14.19,
-     "stake": 1220.0,
-     "roi": -0.0116,
-     "roiUg": -0.2555,
+     "n": 123,
+     "wins": 52,
+     "hit": 0.4228,
+     "pnl": -11.45,
+     "stake": 1230.0,
+     "roi": -0.0093,
+     "roiUg": -0.2513,
      "belegt": false,
-     "clvAvg": -0.12,
-     "clvN": 122,
-     "clvUg": -0.28
+     "clvAvg": -0.11,
+     "clvN": 123,
+     "clvUg": -0.27
     }
    }
   },
