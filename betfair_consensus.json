@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-10-13T00:00:44.008443+00:00",
-"count": 20,
-"covered": 17,
+"generatedAt": "2026-10-13T00:30:22.242833+00:00",
+"count": 18,
+"covered": 18,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -48,13 +48,13 @@
 "soccer_usa_mls"
 ],
 "leaguesMitAnker": [
-"Brazilian Serie A",
+"Brazilian Serie B",
 "UEFA Champions League"
 ],
 "leaguesMitTotals": [],
 "oddsKeysFetched": 46,
-"oddsKeysMitDaten": 44,
-"oddsEvents": 541,
+"oddsKeysMitDaten": 46,
+"oddsEvents": 566,
 "oddsTotals": {
 "versucht": 3,
 "mitDaten": 0,
@@ -63,13 +63,13 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 219651,
-"remaining": 4780349,
+"used": 220707,
+"remaining": 4779293,
 "letzterFehler": null,
-"netzFehler": 2,
-"letzterNetzfehler": "The read operation timed out"
+"netzFehler": 0,
+"letzterNetzfehler": null
 },
-"ankerQuote": 0.857,
+"ankerQuote": 0.9,
 "games": [
 {
 "matchId": "36057653",
@@ -82,12 +82,12 @@
 "moneySide": "home",
 "moneyName": "Atletico Madrid",
 "moneySharePct": 82,
-"moneyOdd": 1.99,
-"moneyDir": "out",
-"totVol": 189264,
-"pinnOdd": 1.93,
+"moneyOdd": 1.98,
+"moneyDir": "flat",
+"totVol": 189951,
+"pinnOdd": 1.91,
 "softOdd": 1.91,
-"softN": 45,
+"softN": 46,
 "poly": {
 "vol": 171747,
 "odd": 1.98,
@@ -99,29 +99,104 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.5004,
-"draw": 0.2414,
-"away": 0.2582,
+"home": 0.5056,
+"draw": 0.2402,
+"away": 0.2541,
 "fav": "home"
 },
 "soft": {
-"home": 0.4981,
-"draw": 0.2433,
-"away": 0.2586,
+"home": 0.4988,
+"draw": 0.2431,
+"away": 0.2581,
 "fav": "home",
-"n": 45
+"n": 46
 },
-"pinnMovePP": 0.0,
+"pinnMovePP": 0.5,
 "pinnMove": {
-"movePP": 0.0,
-"stepPP": -0.0,
+"movePP": 0.5,
+"stepPP": 0.5,
 "n": 25,
 "move": false,
-"laeuft": false
+"laeuft": true
 },
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
+},
+{
+"matchId": "36152227",
+"home": "Red Bull Bragantino",
+"away": "Cruzeiro MG",
+"league": "Brazilian Serie A",
+"country": "BR",
+"kickoff": "2026-10-13T00:00:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Red Bull Bragantino",
+"moneySharePct": 51,
+"moneyOdd": 1.24,
+"moneyDir": "in",
+"totVol": 142237,
+"pinnOdd": null,
+"softOdd": 1.17,
+"softN": 37,
+"poly": {
+"vol": 62855,
+"odd": 2.35,
+"sharePct": 75,
+"shareSrc": "geld",
+"key": "bra-bra-cru-2026-10-12",
+"sideKey": "Red Bull Bragantino",
+"whales": [
+{
+"wallet": "0x20b80ebb96e2051540e1d475e4ce122fc282aa04",
+"usd": 9988
+},
+{
+"wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+"usd": 2314
+},
+{
+"wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
+"usd": 1338
+},
+{
+"wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
+"usd": 981
+},
+{
+"wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+"usd": 973
+},
+{
+"wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
+"usd": 700
+}
+],
+"whaleUsd": 18842
+},
+"pinn": null,
+"soft": {
+"home": 0.7694,
+"draw": 0.1474,
+"away": 0.0832,
+"fav": "home",
+"n": 37
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Red Bull Bragantino v Cruzeiro MG",
+"grund": "kein_pinnacle",
+"kandidat": "Bragantino-SP v Cruzeiro",
+"key": "soccer_brazil_campeonato",
+"nSoft": 37,
+"pinnacleImEvent": false,
+"nBuecher": 37
+}
 },
 {
 "matchId": "36057644",
@@ -134,12 +209,12 @@
 "moneySide": "home",
 "moneyName": "RB Leipzig",
 "moneySharePct": 89,
-"moneyOdd": 1.81,
-"moneyDir": "flat",
-"totVol": 132068,
-"pinnOdd": 1.75,
+"moneyOdd": 1.82,
+"moneyDir": "out",
+"totVol": 132386,
+"pinnOdd": 1.74,
 "softOdd": 1.73,
-"softN": 45,
+"softN": 46,
 "poly": {
 "vol": 12470,
 "odd": 1.8,
@@ -151,25 +226,25 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.5521,
-"draw": 0.2051,
-"away": 0.2428,
+"home": 0.5542,
+"draw": 0.2035,
+"away": 0.2423,
 "fav": "home"
 },
 "soft": {
-"home": 0.5484,
+"home": 0.5483,
 "draw": 0.211,
-"away": 0.2406,
+"away": 0.2407,
 "fav": "home",
-"n": 45
+"n": 46
 },
-"pinnMovePP": 0.1,
+"pinnMovePP": 0.3,
 "pinnMove": {
-"movePP": 0.1,
-"stepPP": 0.0,
+"movePP": 0.3,
+"stepPP": 0.2,
 "n": 25,
 "move": false,
-"laeuft": false
+"laeuft": true
 },
 "verdict": "konsens",
 "agree": true,
@@ -187,11 +262,11 @@
 "moneyName": "Arsenal",
 "moneySharePct": 91,
 "moneyOdd": 1.25,
-"moneyDir": "flat",
-"totVol": 113214,
+"moneyDir": "out",
+"totVol": 113376,
 "pinnOdd": 1.21,
 "softOdd": 1.21,
-"softN": 45,
+"softN": 46,
 "poly": {
 "vol": 26811,
 "odd": 1.26,
@@ -209,11 +284,11 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.7818,
-"draw": 0.1475,
+"home": 0.7823,
+"draw": 0.1471,
 "away": 0.0707,
 "fav": "home",
-"n": 45
+"n": 46
 },
 "pinnMovePP": 1.0,
 "pinnMove": {
@@ -237,17 +312,17 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Criciuma",
-"moneySharePct": 91,
-"moneyOdd": 1.14,
+"moneySharePct": 92,
+"moneyOdd": 1.06,
 "moneyDir": "in",
-"totVol": 95342,
+"totVol": 111077,
 "pinnOdd": null,
-"softOdd": 1.07,
-"softN": 31,
+"softOdd": 1.02,
+"softN": 23,
 "poly": {
-"vol": 62343,
+"vol": 72538,
 "odd": 1.13,
-"sharePct": 96,
+"sharePct": 97,
 "shareSrc": "geld",
 "key": "bra2-cri-afc-2026-10-12",
 "sideKey": "Criciúma EC",
@@ -277,15 +352,15 @@
 "usd": 400
 }
 ],
-"whaleUsd": 18746
+"whaleUsd": 18336
 },
 "pinn": null,
 "soft": {
-"home": 0.8352,
-"draw": 0.1356,
-"away": 0.0292,
+"home": 0.9122,
+"draw": 0.0788,
+"away": 0.009,
 "fav": "home",
-"n": 31
+"n": 23
 },
 "pinnMovePP": null,
 "pinnMove": null,
@@ -297,62 +372,10 @@
 "grund": "kein_pinnacle",
 "kandidat": "Criciuma v América Mineiro",
 "key": "soccer_brazil_serie_b",
-"nSoft": 31,
+"nSoft": 23,
 "pinnacleImEvent": false,
-"nBuecher": 31
+"nBuecher": 23
 }
-},
-{
-"matchId": "36057635",
-"home": "Roma",
-"away": "Real Madrid",
-"league": "UEFA Champions League",
-"country": "International",
-"kickoff": "2026-10-14T19:00:00Z",
-"live": false,
-"moneySide": "away",
-"moneyName": "Real Madrid",
-"moneySharePct": 73,
-"moneyOdd": 1.98,
-"moneyDir": "flat",
-"totVol": 74824,
-"pinnOdd": 1.94,
-"softOdd": 1.88,
-"softN": 44,
-"poly": {
-"vol": 38377,
-"odd": 1.98,
-"sharePct": 50,
-"shareSrc": "preis",
-"key": "ucl-rom-rma-2026-10-14",
-"sideKey": "Real Madrid CF",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.2637,
-"draw": 0.2389,
-"away": 0.4974,
-"fav": "away"
-},
-"soft": {
-"home": 0.2608,
-"draw": 0.2376,
-"away": 0.5016,
-"fav": "away",
-"n": 44
-},
-"pinnMovePP": -0.6,
-"pinnMove": {
-"movePP": -0.6,
-"stepPP": 0.0,
-"n": 25,
-"move": false,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
 },
 {
 "matchId": "36057650",
@@ -365,12 +388,12 @@
 "moneySide": "away",
 "moneyName": "Bayern Munich",
 "moneySharePct": 89,
-"moneyOdd": 1.13,
-"moneyDir": "flat",
-"totVol": 74684,
+"moneyOdd": 1.12,
+"moneyDir": "in",
+"totVol": 74915,
 "pinnOdd": 1.09,
 "softOdd": 1.09,
-"softN": 45,
+"softN": 46,
 "poly": {
 "vol": 108363,
 "odd": 1.13,
@@ -388,15 +411,67 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.0488,
-"draw": 0.0775,
-"away": 0.8737,
+"home": 0.0487,
+"draw": 0.077,
+"away": 0.8743,
 "fav": "away",
-"n": 45
+"n": 46
 },
 "pinnMovePP": 0.1,
 "pinnMove": {
 "movePP": 0.1,
+"stepPP": 0.0,
+"n": 25,
+"move": false,
+"laeuft": false
+},
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36057635",
+"home": "Roma",
+"away": "Real Madrid",
+"league": "UEFA Champions League",
+"country": "International",
+"kickoff": "2026-10-14T19:00:00Z",
+"live": false,
+"moneySide": "away",
+"moneyName": "Real Madrid",
+"moneySharePct": 73,
+"moneyOdd": 1.98,
+"moneyDir": "flat",
+"totVol": 74828,
+"pinnOdd": 1.94,
+"softOdd": 1.88,
+"softN": 45,
+"poly": {
+"vol": 38377,
+"odd": 1.98,
+"sharePct": 50,
+"shareSrc": "preis",
+"key": "ucl-rom-rma-2026-10-14",
+"sideKey": "Real Madrid CF",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.2637,
+"draw": 0.2389,
+"away": 0.4974,
+"fav": "away"
+},
+"soft": {
+"home": 0.2607,
+"draw": 0.2377,
+"away": 0.5016,
+"fav": "away",
+"n": 45
+},
+"pinnMovePP": -0.6,
+"pinnMove": {
+"movePP": -0.6,
 "stepPP": 0.0,
 "n": 25,
 "move": false,
@@ -417,12 +492,12 @@
 "moneySide": "away",
 "moneyName": "Barcelona",
 "moneySharePct": 88,
-"moneyOdd": 1.31,
-"moneyDir": "flat",
-"totVol": 70580,
+"moneyOdd": 1.3,
+"moneyDir": "in",
+"totVol": 70633,
 "pinnOdd": 1.27,
-"softOdd": 1.26,
-"softN": 44,
+"softOdd": 1.27,
+"softN": 45,
 "poly": {
 "vol": 133173,
 "odd": 1.31,
@@ -440,11 +515,11 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.1086,
-"draw": 0.1421,
-"away": 0.7493,
+"home": 0.1096,
+"draw": 0.1425,
+"away": 0.7479,
 "fav": "away",
-"n": 44
+"n": 45
 },
 "pinnMovePP": -0.2,
 "pinnMove": {
@@ -474,7 +549,7 @@
 "totVol": 60508,
 "pinnOdd": 1.28,
 "softOdd": 1.28,
-"softN": 44,
+"softN": 45,
 "poly": {
 "vol": 44978,
 "odd": 1.32,
@@ -492,11 +567,11 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.102,
-"draw": 0.1561,
+"home": 0.1023,
+"draw": 0.156,
 "away": 0.7418,
 "fav": "away",
-"n": 44
+"n": 45
 },
 "pinnMovePP": -0.4,
 "pinnMove": {
@@ -523,10 +598,10 @@
 "moneySharePct": 74,
 "moneyOdd": 2.22,
 "moneyDir": "flat",
-"totVol": 51064,
+"totVol": 51269,
 "pinnOdd": 2.19,
 "softOdd": 2.15,
-"softN": 44,
+"softN": 45,
 "poly": {
 "vol": 31328,
 "odd": 2.25,
@@ -544,11 +619,11 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.4412,
-"draw": 0.2382,
+"home": 0.4415,
+"draw": 0.238,
 "away": 0.3206,
 "fav": "home",
-"n": 44
+"n": 45
 },
 "pinnMovePP": -0.8,
 "pinnMove": {
@@ -563,83 +638,6 @@
 "pinnTotals": null
 },
 {
-"matchId": "36152227",
-"home": "Red Bull Bragantino",
-"away": "Cruzeiro MG",
-"league": "Brazilian Serie A",
-"country": "BR",
-"kickoff": "2026-10-13T00:00:00Z",
-"live": false,
-"moneySide": "away",
-"moneyName": "Cruzeiro MG",
-"moneySharePct": 40,
-"moneyOdd": 3.2,
-"moneyDir": "out",
-"totVol": 44714,
-"pinnOdd": 3.11,
-"softOdd": 3.0,
-"softN": 47,
-"poly": {
-"vol": 57758,
-"odd": 3.17,
-"sharePct": 22,
-"shareSrc": "geld",
-"key": "bra-bra-cru-2026-10-12",
-"sideKey": "Cruzeiro EC",
-"whales": [
-{
-"wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-"usd": 779
-},
-{
-"wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
-"usd": 710
-},
-{
-"wallet": "0x422c44b991bcb56bb16b789e840f015333ef9840",
-"usd": 205
-},
-{
-"wallet": "0x9f41b736a8d04891178df2495921a5a3e88b8f27",
-"usd": 129
-},
-{
-"wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
-"usd": 108
-},
-{
-"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-"usd": 86
-}
-],
-"whaleUsd": 2285
-},
-"pinn": {
-"home": 0.4261,
-"draw": 0.2629,
-"away": 0.311,
-"fav": "home"
-},
-"soft": {
-"home": 0.4263,
-"draw": 0.2613,
-"away": 0.3123,
-"fav": "home",
-"n": 47
-},
-"pinnMovePP": 0.5,
-"pinnMove": {
-"movePP": 0.5,
-"stepPP": -0.1,
-"n": 6,
-"move": false,
-"laeuft": false
-},
-"verdict": "uneinig",
-"agree": false,
-"pinnTotals": null
-},
-{
 "matchId": "36057670",
 "home": "Inter",
 "away": "Club Brugge",
@@ -651,11 +649,11 @@
 "moneyName": "Inter",
 "moneySharePct": 82,
 "moneyOdd": 1.28,
-"moneyDir": "flat",
-"totVol": 37447,
+"moneyDir": "in",
+"totVol": 37570,
 "pinnOdd": 1.26,
 "softOdd": 1.25,
-"softN": 45,
+"softN": 46,
 "poly": {
 "vol": 90049,
 "odd": 1.29,
@@ -673,17 +671,17 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.763,
-"draw": 0.1518,
-"away": 0.0852,
+"home": 0.7639,
+"draw": 0.1516,
+"away": 0.0844,
 "fav": "home",
-"n": 45
+"n": 46
 },
 "pinnMovePP": -0.7,
 "pinnMove": {
 "movePP": -0.7,
 "stepPP": 0.0,
-"n": 24,
+"n": 25,
 "move": false,
 "laeuft": false
 },
@@ -701,13 +699,13 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Villarreal",
-"moneySharePct": 73,
+"moneySharePct": 74,
 "moneyOdd": 2.2,
 "moneyDir": "flat",
-"totVol": 35080,
+"totVol": 35382,
 "pinnOdd": 2.16,
-"softOdd": 2.1,
-"softN": 45,
+"softOdd": 2.11,
+"softN": 46,
 "poly": {
 "vol": 11454,
 "odd": 2.2,
@@ -725,17 +723,17 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.4471,
-"draw": 0.2593,
-"away": 0.2936,
+"home": 0.447,
+"draw": 0.2592,
+"away": 0.2938,
 "fav": "home",
-"n": 45
+"n": 46
 },
 "pinnMovePP": 0.0,
 "pinnMove": {
 "movePP": 0.0,
 "stepPP": 0.0,
-"n": 16,
+"n": 17,
 "move": false,
 "laeuft": false
 },
@@ -759,7 +757,7 @@
 "totVol": 34833,
 "pinnOdd": 2.04,
 "softOdd": 2.05,
-"softN": 44,
+"softN": 45,
 "poly": {
 "vol": 3805,
 "odd": 2.11,
@@ -777,18 +775,70 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.4618,
-"draw": 0.2574,
-"away": 0.2807,
+"home": 0.4617,
+"draw": 0.2575,
+"away": 0.2808,
 "fav": "home",
-"n": 44
+"n": 45
 },
-"pinnMovePP": 1.7,
+"pinnMovePP": 1.5,
 "pinnMove": {
-"movePP": 1.7,
+"movePP": 1.5,
 "stepPP": 0.0,
 "n": 25,
 "move": true,
+"laeuft": false
+},
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36057638",
+"home": "Lens",
+"away": "Sporting Lisbon",
+"league": "UEFA Champions League",
+"country": "International",
+"kickoff": "2026-10-13T16:45:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Lens",
+"moneySharePct": 48,
+"moneyOdd": 2.66,
+"moneyDir": "out",
+"totVol": 22191,
+"pinnOdd": 2.56,
+"softOdd": 2.5,
+"softN": 46,
+"poly": {
+"vol": 14644,
+"odd": 2.67,
+"sharePct": 38,
+"shareSrc": "preis",
+"key": "ucl-rcl-spo-2026-10-13",
+"sideKey": "Racing Club de Lens",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.3778,
+"draw": 0.2559,
+"away": 0.3663,
+"fav": "home"
+},
+"soft": {
+"home": 0.3781,
+"draw": 0.2556,
+"away": 0.3663,
+"fav": "home",
+"n": 46
+},
+"pinnMovePP": -0.2,
+"pinnMove": {
+"movePP": -0.2,
+"stepPP": -0.2,
+"n": 4,
+"move": false,
 "laeuft": false
 },
 "verdict": "konsens",
@@ -806,12 +856,12 @@
 "moneySide": "away",
 "moneyName": "Slavia Prague",
 "moneySharePct": 76,
-"moneyOdd": 2.1,
-"moneyDir": "in",
-"totVol": 22094,
-"pinnOdd": 2.07,
+"moneyOdd": 2.12,
+"moneyDir": "out",
+"totVol": 22096,
+"pinnOdd": 2.06,
 "softOdd": 2.04,
-"softN": 45,
+"softN": 46,
 "poly": {
 "vol": 12303,
 "odd": 2.11,
@@ -823,23 +873,23 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.2755,
-"draw": 0.2572,
-"away": 0.4672,
+"home": 0.2761,
+"draw": 0.2549,
+"away": 0.469,
 "fav": "away"
 },
 "soft": {
-"home": 0.2761,
-"draw": 0.2555,
-"away": 0.4684,
+"home": 0.2754,
+"draw": 0.2559,
+"away": 0.4687,
 "fav": "away",
-"n": 45
+"n": 46
 },
-"pinnMovePP": -0.1,
+"pinnMovePP": 0.0,
 "pinnMove": {
-"movePP": -0.1,
-"stepPP": 0.0,
-"n": 6,
+"movePP": 0.0,
+"stepPP": 0.2,
+"n": 7,
 "move": false,
 "laeuft": false
 },
@@ -862,8 +912,8 @@
 "moneyDir": "flat",
 "totVol": 22010,
 "pinnOdd": 1.66,
-"softOdd": 1.63,
-"softN": 42,
+"softOdd": 1.64,
+"softN": 43,
 "poly": {
 "vol": 6152,
 "odd": 1.68,
@@ -885,13 +935,13 @@
 "draw": 0.2323,
 "away": 0.1895,
 "fav": "home",
-"n": 42
+"n": 43
 },
 "pinnMovePP": -0.3,
 "pinnMove": {
 "movePP": -0.3,
 "stepPP": 0.0,
-"n": 11,
+"n": 12,
 "move": false,
 "laeuft": false
 },
@@ -912,10 +962,10 @@
 "moneySharePct": 84,
 "moneyOdd": 2.02,
 "moneyDir": "flat",
-"totVol": 21778,
+"totVol": 21938,
 "pinnOdd": 1.96,
 "softOdd": 1.91,
-"softN": 44,
+"softN": 45,
 "poly": {
 "vol": 3176,
 "odd": 2.02,
@@ -933,69 +983,17 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.2723,
+"home": 0.2725,
 "draw": 0.2327,
-"away": 0.495,
+"away": 0.4949,
 "fav": "away",
-"n": 44
-},
-"pinnMovePP": -0.0,
-"pinnMove": {
-"movePP": -0.0,
-"stepPP": -0.0,
-"n": 7,
-"move": false,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36057638",
-"home": "Lens",
-"away": "Sporting Lisbon",
-"league": "UEFA Champions League",
-"country": "International",
-"kickoff": "2026-10-13T16:45:00Z",
-"live": false,
-"moneySide": "home",
-"moneyName": "Lens",
-"moneySharePct": 48,
-"moneyOdd": 2.68,
-"moneyDir": "flat",
-"totVol": 21280,
-"pinnOdd": 2.55,
-"softOdd": 2.5,
-"softN": 45,
-"poly": {
-"vol": 14644,
-"odd": 2.67,
-"sharePct": 38,
-"shareSrc": "preis",
-"key": "ucl-rcl-spo-2026-10-13",
-"sideKey": "Racing Club de Lens",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.3795,
-"draw": 0.2553,
-"away": 0.3652,
-"fav": "home"
-},
-"soft": {
-"home": 0.3782,
-"draw": 0.2558,
-"away": 0.366,
-"fav": "home",
 "n": 45
 },
 "pinnMovePP": -0.0,
 "pinnMove": {
 "movePP": -0.0,
 "stepPP": -0.0,
-"n": 3,
+"n": 8,
 "move": false,
 "laeuft": false
 },
@@ -1004,144 +1002,61 @@
 "pinnTotals": null
 },
 {
-"matchId": "36161265",
-"home": "Nacional (Par)",
-"away": "Deportivo Recoleta",
-"league": "Paraguayan Primera Division",
-"country": "PY",
-"kickoff": "2026-10-12T22:20:00Z",
+"matchId": "36164661",
+"home": "Botafogo SP",
+"away": "Ceara SC Fortaleza",
+"league": "Brazilian Serie B",
+"country": "BR",
+"kickoff": "2026-10-13T00:00:00Z",
 "live": true,
 "moneySide": "home",
-"moneyName": "Nacional (Par)",
-"moneySharePct": 89,
-"moneyOdd": 1.2,
-"moneyDir": "in",
-"totVol": 53234,
-"pinnOdd": null,
-"softOdd": null,
-"softN": null,
-"poly": {
-"vol": 16851,
-"odd": 1.27,
-"sharePct": 94,
-"shareSrc": "geld",
-"key": "par1-nac-rec-2026-10-12",
-"sideKey": "Nacional Asuncion",
-"whales": [
-{
-"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
-"usd": 5031
-},
-{
-"wallet": "0x65503c7f9e142ac88b1ce09df3363ff77f188451",
-"usd": 4104
-},
-{
-"wallet": "0x02b18dfde01fd53b456cabda7d6ec2403322c764",
-"usd": 1040
-},
-{
-"wallet": "0xbca82ff9891c5358b33d565c4f4739e4d812b680",
-"usd": 237
-},
-{
-"wallet": "0xaa6fc72915776598fd7f6b45b04f03f9c26a1dfe",
-"usd": 158
-},
-{
-"wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
-"usd": 152
-}
-],
-"whaleUsd": 11302
-},
-"pinn": null,
-"soft": null,
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "no_anchor",
-"agree": null,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Nacional (Par) v Deportivo Recoleta",
-"grund": "kein_kandidat",
-"naechster": "Deportivo Riestra v Union Santa Fe"
-}
-},
-{
-"matchId": "36152222",
-"home": "Chapecoense",
-"away": "Athletico-PR",
-"league": "Brazilian Serie A",
-"country": "BR",
-"kickoff": "2026-10-12T22:30:00Z",
-"live": true,
-"moneySide": "away",
-"moneyName": "Athletico-PR",
-"moneySharePct": 78,
-"moneyOdd": 1.01,
-"moneyDir": "in",
-"totVol": 48597,
-"pinnOdd": null,
-"softOdd": null,
-"softN": null,
-"poly": null,
-"pinn": null,
-"soft": null,
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "no_anchor",
-"agree": null,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Chapecoense v Athletico-PR",
-"kandidat": "Chapecoense v Atletico Paranaense",
-"key": "soccer_brazil_campeonato",
-"score": 1.0,
-"grund": "name"
-}
-},
-{
-"matchId": "36170931",
-"home": "Tivoli Gardens",
-"away": "Racing United FC",
-"league": "Jamaican Premier League",
-"country": "JM",
-"kickoff": "2026-10-12T22:05:00Z",
-"live": true,
-"moneySide": "away",
-"moneyName": "Racing United FC",
-"moneySharePct": 69,
-"moneyOdd": 1.07,
+"moneyName": "Botafogo SP",
+"moneySharePct": 57,
+"moneyOdd": 2.66,
 "moneyDir": "out",
-"totVol": 7769,
-"pinnOdd": null,
-"softOdd": null,
-"softN": null,
-"poly": null,
-"pinn": null,
-"soft": null,
+"totVol": 4133,
+"pinnOdd": 2.56,
+"softOdd": 2.4,
+"softN": 25,
+"poly": {
+"vol": 384,
+"odd": 2.2,
+"sharePct": 46,
+"shareSrc": "preis",
+"key": "bra2-bot-csc-2026-10-12",
+"sideKey": "Botafogo FC",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.3668,
+"draw": 0.388,
+"away": 0.2452,
+"fav": "draw"
+},
+"soft": {
+"home": 0.3802,
+"draw": 0.366,
+"away": 0.2538,
+"fav": "home",
+"n": 25
+},
 "pinnMovePP": null,
 "pinnMove": null,
-"verdict": "no_anchor",
-"agree": null,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Tivoli Gardens v Racing United FC",
-"grund": "kein_kandidat",
-"naechster": "Racing Club v Independiente"
-}
+"verdict": "uneinig",
+"agree": false,
+"pinnTotals": null
 }
 ],
-"ankerN": 21,
-"ankerNOffen": 149,
+"ankerN": 20,
+"ankerNOffen": 150,
 "ankerMit": 18,
 "ankerDiagnose": {
 "nach": {
-"kein_kandidat": 63,
-"kein_pinnacle": 2,
+"kein_kandidat": 64,
+"kein_pinnacle": 3,
 "zeit": 13,
-"name": 2
+"name": 1
 },
 "beispiele": [
 {
@@ -1149,9 +1064,9 @@
 "grund": "kein_pinnacle",
 "kandidat": "Brighton and Hove Albion v FK Kauno Žalgiris",
 "key": "soccer_uefa_europa_conference_league",
-"nSoft": 23,
+"nSoft": 25,
 "pinnacleImEvent": false,
-"nBuecher": 23,
+"nBuecher": 25,
 "matchId": "36018034",
 "liga": "UEFA Conference League"
 },
@@ -1295,24 +1210,26 @@
 "liga": "Thai League 2"
 },
 {
+"spiel": "Red Bull Bragantino v Cruzeiro MG",
+"grund": "kein_pinnacle",
+"kandidat": "Bragantino-SP v Cruzeiro",
+"key": "soccer_brazil_campeonato",
+"nSoft": 37,
+"pinnacleImEvent": false,
+"nBuecher": 37,
+"matchId": "36152227",
+"liga": "Brazilian Serie A"
+},
+{
 "spiel": "Criciuma v America MG",
 "grund": "kein_pinnacle",
 "kandidat": "Criciuma v América Mineiro",
 "key": "soccer_brazil_serie_b",
-"nSoft": 31,
+"nSoft": 23,
 "pinnacleImEvent": false,
-"nBuecher": 31,
+"nBuecher": 23,
 "matchId": "36164673",
 "liga": "Brazilian Serie B"
-},
-{
-"spiel": "Chapecoense v Athletico-PR",
-"kandidat": "Chapecoense v Atletico Paranaense",
-"key": "soccer_brazil_campeonato",
-"score": 1.0,
-"grund": "name",
-"matchId": "36152222",
-"liga": "Brazilian Serie A"
 }
 ]
 }
