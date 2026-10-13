@@ -17921,9 +17921,11 @@
    "sport:665979037"
   ],
   "sentAt": "2026-10-08T16:17:56.947881+00:00",
-  "status": "pending",
+  "status": "nicht_abrechenbar",
   "push": false,
-  "pushGrund": "Tennis live stumm (Geld folgt dem Spielstand)"
+  "pushGrund": "Tennis live stumm (Geld folgt dem Spielstand)",
+  "grund": "mindestens eine Wette ist aus dem rollierenden Stake-Ledger gefallen",
+  "settledAt": "2026-10-13T12:02:14.860273+00:00"
  },
  {
   "k": "spiel:321e75dc-280a-40e0-bf4e-743a112b8de1",
@@ -25426,5 +25428,97 @@
   "status": "pending",
   "push": false,
   "pushGrund": "Tennis live stumm (Geld folgt dem Spielstand)"
+ },
+ {
+  "k": "d71ff3df-6e99-497a-94c6-995ae363a2c0",
+  "auswahlId": "d71ff3df-6e99-497a-94c6-995ae363a2c0",
+  "eventId": "4c464b6a-de70-47dc-b3ec-7ff05931f97a",
+  "event": "BRION - LGD Gaming",
+  "liga": "Demacia Cup Global Invitational 2026",
+  "kat": "E-Sport",
+  "markt": "Map 2 Winner - Twoway",
+  "auswahl": "LGD Gaming",
+  "quote": 1.65,
+  "summeUsd": 11997.77,
+  "nWetten": 4,
+  "sekunden": 126.0,
+  "phase": "live",
+  "betIds": [
+   "sport:669200228",
+   "sport:669201312",
+   "sport:669201594",
+   "sport:669201779"
+  ],
+  "quotenArt": "fallend",
+  "quotenVerlauf": [
+   1.65,
+   1.62,
+   1.62,
+   1.62
+  ],
+  "sentAt": "2026-10-13T12:00:56.186375+00:00",
+  "status": "pending",
+  "push": true
+ },
+ {
+  "k": "spiel:4c464b6a-de70-47dc-b3ec-7ff05931f97a",
+  "art": "spiel",
+  "eventId": "4c464b6a-de70-47dc-b3ec-7ff05931f97a",
+  "event": "BRION - LGD Gaming",
+  "liga": "Demacia Cup Global Invitational 2026",
+  "ligaSlug": "demacia-cup-global-invitational-2026-t4",
+  "kat": "E-Sport",
+  "seite": "BRION",
+  "nGerichtet": 4,
+  "maerkte": [
+   "Map 1 Winner - Twoway",
+   "Map 2 - home Total Kills",
+   "Map 2 Winner - Twoway"
+  ],
+  "summeUsd": 17283.32,
+  "faktor": 2.16,
+  "nWetten": 4,
+  "sekunden": 1689.0,
+  "phase": "live",
+  "betIds": [
+   "sport:669181634",
+   "sport:669192046",
+   "sport:669192176",
+   "sport:669198580"
+  ],
+  "sentAt": "2026-10-13T12:00:56.186375+00:00",
+  "status": "pending",
+  "push": true
+ },
+ {
+  "k": "spiel:30821903-a245-4712-bd8c-9b87089549ab",
+  "art": "spiel",
+  "eventId": "30821903-a245-4712-bd8c-9b87089549ab",
+  "event": "Bandirmaspor - Sivasspor",
+  "liga": "1. Lig",
+  "ligaSlug": "1-lig",
+  "kat": "Fußball",
+  "seite": "Bandirmaspor",
+  "nGerichtet": 2,
+  "maerkte": [
+   "Half Time Result",
+   "Half Time Total Goals",
+   "Match Result",
+   "Sivasspor Total Goals"
+  ],
+  "summeUsd": 148697.75,
+  "faktor": 17.99,
+  "nWetten": 4,
+  "sekunden": 351.0,
+  "phase": "live",
+  "betIds": [
+   "sport:669199510",
+   "sport:669201730",
+   "sport:669202049",
+   "sport:669203360"
+  ],
+  "sentAt": "2026-10-13T12:02:14.860273+00:00",
+  "status": "pending",
+  "push": true
  }
 ]
