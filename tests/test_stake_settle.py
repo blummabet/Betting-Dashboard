@@ -371,3 +371,44 @@ def test_highroller_abruf_behaelt_die_abrechnungs_felder():
     """Der Sammler schreibt das Ledger neu — die Felder der Abrechnung muessen mit."""
     src = (ROOT / "stake_highroller_fetch.py").read_text(encoding="utf-8")
     assert '"abrechnungLauf"' in src and '"bilanz"' in src
+
+
+ECHTE_DROSSEL = {"path": ["b1"], "message": "Request limit reached.",
+                 "errorType": "rateLimitHandler",
+                 "extensions": {"code": "UNCLASSIFIED", "retryable": False}}
+
+
+def test_einzeln_gedrosselte_wette_ist_kein_befund(monkeypatch):
+    """Echter Fehlertext vom 13.10.2026 17:46 UTC (stake_bet_ledger.abrechnungLauf)."""
+    monkeypatch.setattr(S.SH, "_post", lambda u, b, timeout=25:
+                        (200, {"data": {"b0": {"iid": "a", "bet": {"status": "settled",
+                                                                   "outcomes": []}},
+                                        "b1": None, "b2": None},
+                               "errors": [ECHTE_DROSSEL]}, None))
+    out, err = S.frage_batch("http://test", ["a", "b", "c"])
+    assert err is None
+    assert out["b"] is None, "gedrosselt: gefragt, aber nicht beantwortet"
+    assert "c" not in out, "ohne Drossel-Fehler bleibt eine leere Antwort ein Befund"
+
+
+def test_nur_gedrosselt_ist_ein_leerer_stapel(monkeypatch):
+    e0 = dict(ECHTE_DROSSEL, path=["b0"])
+    monkeypatch.setattr(S.SH, "_post", lambda u, b, timeout=25:
+                        (200, {"data": {"b0": None}, "errors": [e0]}, None))
+    out, err = S.frage_batch("http://test", ["a"])
+    assert err.startswith("leerer Stapel") and "Request limit" in err
+
+
+def test_main_zaehlt_einzeln_gedrosselte_nicht_als_ohne_antwort(tmp_path, monkeypatch):
+    def antw(n, body):
+        ids = list(body["variables"].values())
+        data = {"b0": {"iid": ids[0], "bet": {"status": "settled", "payout": 0,
+                                              "outcomes": [{"status": "lost"}]}}}
+        errs = []
+        for i in range(1, len(ids)):
+            data["b%d" % i] = None
+            errs.append(dict(ECHTE_DROSSEL, path=["b%d" % i]))
+        return 200, {"data": data, "errors": errs}, None
+    led, _ = _lauf(tmp_path, monkeypatch, antw)
+    assert not any((w.get("abrechnung") or {}).get("ohneAntwort") for w in led["wetten"])
+    assert led["abrechnungLauf"]["einzelnGedrosselt"] == 3
