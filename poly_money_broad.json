@@ -2,14 +2,14 @@
  "n": 512,
  "minOdds": 1.35,
  "moneyHitRate": 0.416,
- "priceHitRate": 0.469,
+ "priceHitRate": 0.463,
  "brierMoney": 0.7994,
  "brierPrice": 0.6466,
  "disagree": {
-  "n": 144,
+  "n": 146,
   "moneyWon": 24,
-  "priceWon": 51,
-  "neither": 69
+  "priceWon": 48,
+  "neither": 74
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -97,7 +97,7 @@
  ],
  "guete": {
   "belastbar": 512,
-  "preis_echo": 286,
+  "preis_echo": 287,
   "abgeschnitten": 63,
   "unbekannt": 0,
   "leer": 0
@@ -584,13 +584,13 @@
    "totalUsd": 247604
   }
  ],
- "generatedAt": "2026-10-13T04:53:03.689050+00:00",
+ "generatedAt": "2026-10-13T05:23:57.535483+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 450,
   "nfl": 800,
-  "mlb": 479,
+  "mlb": 478,
   "nhl": 623,
   "mls": 740,
   "epl": 602,
@@ -602,12 +602,12 @@
   "serie-a": 52,
   "ligue-1": 568,
   "primeira-liga": 453,
-  "brazil-serie-a": 510,
+  "brazil-serie-a": 509,
   "brasileirao": 0,
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 653,
+  "esports": 652,
   "cs2": 423,
   "lol": 439,
   "dota": 21,
@@ -679,48 +679,38 @@
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1542,
-   "usd": 26532144,
+   "n": 1533,
+   "usd": 26181248,
    "beispiel": "fifwc-col-prt-2026-06-27"
   },
-  "world": {
-   "n": 35,
-   "usd": 556041,
-   "beispiel": "world-cup-winner"
+  "presidential": {
+   "n": 13,
+   "usd": 932355,
+   "beispiel": "presidential-election-winner-2028"
   },
   "super": {
-   "n": 28,
-   "usd": 516966,
+   "n": 27,
+   "usd": 511966,
    "beispiel": "super-bowl-champion-2026-731"
   },
+  "world": {
+   "n": 28,
+   "usd": 498583,
+   "beispiel": "world-cup-winner"
+  },
   "fed": {
-   "n": 20,
-   "usd": 310810,
+   "n": 14,
+   "usd": 300455,
    "beispiel": "fed-decision-in-october-20260617190323537"
   },
-  "2026": {
-   "n": 62,
-   "usd": 264453,
-   "beispiel": "2026-f1-drivers-champion"
-  },
   "uefa": {
-   "n": 11,
-   "usd": 236934,
+   "n": 9,
+   "usd": 223004,
    "beispiel": "uefa-champions-league-winner"
   },
-  "cbb": {
-   "n": 25,
-   "usd": 233290,
-   "beispiel": "cbb-uconn-mich-2026-04-06"
-  },
-  "btc": {
-   "n": 44,
-   "usd": 203248,
-   "beispiel": "btc-updown-4h-1767862800"
-  },
   "will": {
-   "n": 12,
-   "usd": 191776,
+   "n": 11,
+   "usd": 190697,
    "beispiel": "will-trump-declare-a-national-emergency-on-his-first-day"
   },
   "nbasl": {
@@ -728,29 +718,39 @@
    "usd": 99968,
    "beispiel": "nbasl-uta-lac-2026-07-12"
   },
-  "lec": {
-   "n": 30,
-   "usd": 99795,
-   "beispiel": "lec-mon-nas-2026-08-12"
-  },
-  "brazil": {
-   "n": 7,
-   "usd": 91854,
-   "beispiel": "brazil-presidential-election"
+  "btc": {
+   "n": 33,
+   "usd": 88978,
+   "beispiel": "btc-updown-4h-1767862800"
   },
   "us": {
-   "n": 10,
-   "usd": 87570,
+   "n": 11,
+   "usd": 88874,
    "beispiel": "us-x-iran-effective-ceasefire-begins-byptptpt-2-week-pause"
   },
   "ballon": {
-   "n": 19,
-   "usd": 85028,
+   "n": 20,
+   "usd": 83330,
    "beispiel": "ballon-dor-winner-2026"
+  },
+  "lec": {
+   "n": 22,
+   "usd": 83290,
+   "beispiel": "lec-mon-nas-2026-08-12"
+  },
+  "cbb": {
+   "n": 7,
+   "usd": 74372,
+   "beispiel": "cbb-uconn-mich-2026-04-06"
+  },
+  "pro": {
+   "n": 1,
+   "usd": 72334,
+   "beispiel": "pro-football-nfc-east-champion"
   },
   "nato": {
    "n": 2,
-   "usd": 72715,
+   "usd": 72290,
    "beispiel": "nato-x-russia-military-clash-in-2025"
   },
   "ncaa": {
@@ -758,25 +758,25 @@
    "usd": 69777,
    "beispiel": "ncaa-football-2026-sec-conference-winner-20260731205008158"
   },
-  "pro": {
-   "n": 2,
-   "usd": 69397,
-   "beispiel": "pro-football-2027-champion-20260729185915366"
-  },
   "democratic": {
-   "n": 16,
-   "usd": 61849,
+   "n": 14,
+   "usd": 58863,
    "beispiel": "democratic-presidential-nominee-2028"
   },
-  "what": {
-   "n": 12,
-   "usd": 60190,
-   "beispiel": "what-price-will-bitcoin-hit-on-june-3"
+  "2026": {
+   "n": 11,
+   "usd": 57811,
+   "beispiel": "2026-f1-drivers-champion"
   },
-  "next": {
-   "n": 6,
-   "usd": 58823,
-   "beispiel": "next-french-presidential-election"
+  "brazil": {
+   "n": 2,
+   "usd": 49569,
+   "beispiel": "brazil-presidential-election"
+  },
+  "balance": {
+   "n": 3,
+   "usd": 41810,
+   "beispiel": "balance-of-power-2026-midterms"
   }
  }
 }
