@@ -180,12 +180,23 @@ def frage_batch(url: str, iids: list):
     st, d, err = SH._post(url, {"query": q, "variables": werte}, timeout=40)
     if not d or not d.get("data"):
         return {}, err or json.dumps((d or {}).get("errors"))[:200]
+    # 13.10.2026: Stake drosselt auch EINZELNE Aliase in einem sonst beantworteten Stapel —
+    # mit einem Fehler je Pfad: {"path": ["b0"], "message": "Request limit reached.",
+    # "errorType": "rateLimitHandler"}. Solche Wetten kommen als None in `out`: gefragt, aber
+    # nicht beantwortet, und KEIN Befund ueber die Wette (main zaehlt sie nicht als ohneAntwort).
+    gedrosselt = set()
+    for e in (d.get("errors") or []):
+        if isinstance(e, dict) and _ist_drossel(e):
+            for p in (e.get("path") or [])[:1]:
+                gedrosselt.add(p)
     out = {}
     for i, iid in enumerate(iids):
         knoten = (d["data"] or {}).get(_alias(i))
         if knoten:
             out[iid] = knoten
-    if not out:
+        elif _alias(i) in gedrosselt:
+            out[iid] = None
+    if not any(out.values()):
         # 🔴 13.10.2026 — GEDROSSELT. Seit dem 08./09.10. beantwortete Stake je Lauf nur den
         # ersten (selten zweiten) Stapel; jeder weitere kam mit `data` zurueck, aber ALLE
         # Aliase leer. Hier wurde das als „diese 25 Wetten haben keine Antwort" verbucht,
@@ -197,6 +208,11 @@ def frage_batch(url: str, iids: list):
         # Fehler des Stapels, nicht 25 Befunde ueber Wetten.
         return {}, "leerer Stapel (gedrosselt?) " + json.dumps((d or {}).get("errors"))[:200]
     return out, None
+
+
+def _ist_drossel(e: dict) -> bool:
+    txt = (str(e.get("errorType") or "") + " " + str(e.get("message") or "")).lower()
+    return "ratelimit" in txt or "rate limit" in txt or "request limit" in txt
 
 
 def lies_abrechnung(knoten: dict, kurse: dict = None) -> dict:
@@ -300,6 +316,7 @@ def main() -> int:
     geholt = fehler = ohne_antwort = 0
     stapel_ok = stapel_leer = 0
     beantwortet = set()
+    gedrosselt_n = 0
     abbruch, letzter_fehler = None, None
     start = time.monotonic()
     for i in range(0, len(dran), BATCH):
@@ -328,9 +345,10 @@ def main() -> int:
             print("  ⚠️  Stapel %d: %s" % (i // BATCH + 1, err[:120]))
             continue
         stapel_ok += 1
+        gedrosselt_n += sum(1 for v in antw.values() if v is None)
         for iid, knoten in antw.items():
             w = nach_id.get(iid)
-            if not w:
+            if not w or knoten is None:      # None = gedrosselt, s. frage_batch
                 continue
             w["abrechnung"] = lies_abrechnung(knoten, kurse)
             beantwortet.add(iid)
@@ -365,7 +383,7 @@ def main() -> int:
         "am": jetzt.isoformat().replace("+00:00", "Z"),
         "reif": len(dran), "vorrang": n_vor,
         "vorrangBeantwortet": len(beantwortet & vorrang),
-        "beantwortet": geholt, "ohneAntwort": ohne_antwort,
+        "beantwortet": geholt, "ohneAntwort": ohne_antwort, "einzelnGedrosselt": gedrosselt_n,
         "stapelOk": stapel_ok, "stapelLeer": stapel_leer, "stapelFehler": fehler,
         "abbruch": abbruch, "letzterFehler": (letzter_fehler or None) and letzter_fehler[:200],
     }
