@@ -1,15 +1,15 @@
 {
- "n": 488,
+ "n": 486,
  "minOdds": 1.35,
- "moneyHitRate": 0.42,
- "priceHitRate": 0.463,
- "brierMoney": 0.7923,
- "brierPrice": 0.6438,
+ "moneyHitRate": 0.422,
+ "priceHitRate": 0.467,
+ "brierMoney": 0.7864,
+ "brierPrice": 0.6413,
  "disagree": {
-  "n": 141,
-  "moneyWon": 24,
+  "n": 132,
+  "moneyWon": 23,
   "priceWon": 45,
-  "neither": 72
+  "neither": 64
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -24,10 +24,18 @@
   },
   {
    "league": "LA-LIGA",
-   "n": 55,
-   "moneyHitRate": 0.364,
-   "brierMoney": 0.7963,
-   "brierPrice": 0.7257,
+   "n": 54,
+   "moneyHitRate": 0.37,
+   "brierMoney": 0.7919,
+   "brierPrice": 0.7206,
+   "verdict": "preis_besser"
+  },
+  {
+   "league": "LA-LIGA-2",
+   "n": 27,
+   "moneyHitRate": 0.556,
+   "brierMoney": 0.6964,
+   "brierPrice": 0.6198,
    "verdict": "preis_besser"
   },
   {
@@ -47,11 +55,11 @@
    "verdict": "preis_besser"
   },
   {
-   "league": "LA-LIGA-2",
-   "n": 28,
-   "moneyHitRate": 0.536,
-   "brierMoney": 0.7342,
-   "brierPrice": 0.6169,
+   "league": "BRAZIL-SERIE-A",
+   "n": 31,
+   "moneyHitRate": 0.484,
+   "brierMoney": 0.7006,
+   "brierPrice": 0.5791,
    "verdict": "preis_besser"
   },
   {
@@ -60,14 +68,6 @@
    "moneyHitRate": 0.216,
    "brierMoney": 0.921,
    "brierPrice": 0.7882,
-   "verdict": "preis_besser"
-  },
-  {
-   "league": "BRAZIL-SERIE-A",
-   "n": 32,
-   "moneyHitRate": 0.469,
-   "brierMoney": 0.7338,
-   "brierPrice": 0.587,
    "verdict": "preis_besser"
   },
   {
@@ -88,7 +88,7 @@
   }
  ],
  "guete": {
-  "belastbar": 488,
+  "belastbar": 486,
   "preis_echo": 278,
   "abgeschnitten": 50,
   "unbekannt": 0,
@@ -420,18 +420,6 @@
    "totalUsd": 379436
   },
   {
-   "key": "por-fam-spo-2026-09-13",
-   "league": "PRIMEIRA-LIGA",
-   "winner": "Draw (FC Famalicão vs. Sporting CP)",
-   "moneyFav": "Sporting CP",
-   "priceFav": "Sporting CP",
-   "moneyShare": 0.955,
-   "priceProb": 0.628,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 374990
-  },
-  {
    "key": "bra-cam-san-2026-10-11",
    "league": "BRAZIL-SERIE-A",
    "winner": "CA Mineiro",
@@ -574,9 +562,21 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 225354
+  },
+  {
+   "key": "bun-koe-moe-2026-10-11",
+   "league": "BUNDESLIGA",
+   "winner": "1. FC Köln",
+   "moneyFav": "1. FC Köln",
+   "priceFav": "1. FC Köln",
+   "moneyShare": 0.945,
+   "priceProb": 0.497,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 225039
   }
  ],
- "generatedAt": "2026-10-13T19:03:11.434163+00:00",
+ "generatedAt": "2026-10-13T19:26:23.464021+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -587,19 +587,19 @@
   "mls": 740,
   "epl": 604,
   "soccer": 800,
-  "tennis": 800,
-  "ucl": 679,
+  "tennis": 788,
+  "ucl": 676,
   "la-liga": 600,
   "bundesliga": 541,
   "serie-a": 52,
   "ligue-1": 568,
   "primeira-liga": 460,
-  "brazil-serie-a": 507,
+  "brazil-serie-a": 515,
   "brasileirao": 0,
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 696,
+  "esports": 700,
   "cs2": 423,
   "lol": 437,
   "dota": 21,
@@ -609,7 +609,7 @@
   "boxing": 313,
   "golf": 421,
   "f1": 446,
-  "cricket": 539,
+  "cricket": 535,
   "afc-champions-league-elite": 214,
   "allsvenskan": 1,
   "austria-bundesliga": 378,
@@ -631,7 +631,7 @@
   "japan-j-league": 567,
   "japan-j2-league": 534,
   "k-league": 472,
-  "la-liga-2": 521,
+  "la-liga-2": 522,
   "liga-mx-apertura": 2,
   "ligue-2": 502,
   "naitons-league": 1,
@@ -659,7 +659,7 @@
  "sweepStats": {
   "sweepOpen": 500,
   "sweepClosed": 500,
-  "sweepAdded": 410
+  "sweepAdded": 411
  },
  "vorStats": {
   "kandidaten": 25,
@@ -671,18 +671,28 @@
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1889,
-   "usd": 53006361,
+   "n": 2108,
+   "usd": 56324713,
    "beispiel": "fifwc-can-qat-2026-06-18"
   },
+  "world": {
+   "n": 118,
+   "usd": 8676805,
+   "beispiel": "world-cup-winner"
+  },
+  "uefa": {
+   "n": 49,
+   "usd": 4970005,
+   "beispiel": "uefa-champions-league-team-to-advance-to-2027-quarters"
+  },
   "ecs": {
-   "n": 9,
-   "usd": 1044424,
+   "n": 8,
+   "usd": 1043155,
    "beispiel": "ecs-ars-mci-2026-08-16"
   },
   "euroleague": {
-   "n": 43,
-   "usd": 902481,
+   "n": 46,
+   "usd": 949135,
    "beispiel": "euroleague-baskonia-dubai-2026-10-13"
   },
   "republican": {
@@ -690,24 +700,29 @@
    "usd": 766868,
    "beispiel": "republican-presidential-nominee-2028"
   },
-  "world": {
-   "n": 41,
-   "usd": 741390,
-   "beispiel": "world-cup-winner"
-  },
   "fed": {
-   "n": 24,
-   "usd": 516414,
+   "n": 31,
+   "usd": 752397,
    "beispiel": "fed-decision-in-october-20260617190323537"
   },
+  "will": {
+   "n": 26,
+   "usd": 665725,
+   "beispiel": "will-the-us-confirm-that-aliens-exist-before-2027"
+  },
+  "which": {
+   "n": 28,
+   "usd": 609563,
+   "beispiel": "which-party-will-win-the-senate-in-2026"
+  },
   "presidential": {
-   "n": 17,
-   "usd": 363431,
+   "n": 19,
+   "usd": 533431,
    "beispiel": "presidential-election-winner-2028"
   },
   "what": {
-   "n": 27,
-   "usd": 357481,
+   "n": 29,
+   "usd": 409402,
    "beispiel": "what-price-will-solana-hit-in-july-2026"
   },
   "super": {
@@ -721,48 +736,33 @@
    "beispiel": "usc-psg-av-2026-08-12"
   },
   "balance": {
-   "n": 7,
-   "usd": 280960,
+   "n": 8,
+   "usd": 294627,
    "beispiel": "balance-of-power-2026-midterms"
   },
-  "uefa": {
-   "n": 13,
-   "usd": 244894,
-   "beispiel": "uefa-champions-league-team-to-advance-to-2027-quarters"
-  },
-  "lec": {
-   "n": 52,
-   "usd": 233618,
-   "beispiel": "lec-mia-asl-2026-08-05"
+  "cbb": {
+   "n": 20,
+   "usd": 243426,
+   "beispiel": "cbb-uconn-mich-2026-04-06"
   },
   "pro": {
    "n": 20,
-   "usd": 229526,
+   "usd": 229097,
    "beispiel": "pro-football-2027-champion-20260729185915366"
   },
-  "cbb": {
-   "n": 19,
-   "usd": 226805,
-   "beispiel": "cbb-uconn-mich-2026-04-06"
-  },
-  "will": {
-   "n": 22,
-   "usd": 186265,
-   "beispiel": "will-the-us-confirm-that-aliens-exist-before-2027"
-  },
-  "which": {
-   "n": 18,
-   "usd": 179353,
-   "beispiel": "which-party-will-win-the-senate-in-2026"
+  "lec": {
+   "n": 45,
+   "usd": 222647,
+   "beispiel": "lec-mia-asl-2026-08-05"
   },
   "us": {
-   "n": 14,
-   "usd": 178496,
+   "n": 15,
+   "usd": 207564,
    "beispiel": "us-iran-ceasefire-continues-throughptptpt"
   },
   "ncaa": {
-   "n": 13,
-   "usd": 147493,
+   "n": 15,
+   "usd": 154659,
    "beispiel": "ncaa-football-2026-acc-conference-winner-20260731203241253"
   },
   "btc": {
