@@ -44,6 +44,7 @@ from __future__ import annotations
 import json
 import os
 import sys
+import time
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
@@ -63,6 +64,11 @@ MAX_JE_LAUF = int(os.environ.get("STAKE_SETTLE_MAX") or 1000)
 BATCH = int(os.environ.get("STAKE_SETTLE_BATCH") or 25)
 REIF_H = float(os.environ.get("STAKE_SETTLE_REIF_H") or 3)
 AUFGEBEN_D = float(os.environ.get("STAKE_SETTLE_AUFGEBEN_D") or 5)
+# 13.10.2026: Tempo und Drosselung, s. GEDROSSELT unten.
+PAUSE_S = float(os.environ.get("STAKE_SETTLE_PAUSE_S") or 2)        # zwischen zwei Stapeln
+RUHE_S = float(os.environ.get("STAKE_SETTLE_RUHE_S") or 20)         # nach einem leeren Stapel
+BUDGET_S = float(os.environ.get("STAKE_SETTLE_BUDGET_S") or 180)    # je Lauf hoechstens
+BURST_FILE = BASE / "stake_burst_ledger.json"
 
 # Was NICHT abgerechnet ist. Am echten Endpunkt gepruefte Zustaende (03.09.2026):
 #   "settled"   → fertig, payout steht, Beine tragen won/lost
@@ -113,7 +119,7 @@ def faellig(w: dict, jetzt: datetime) -> bool:
     return jetzt >= anker + timedelta(hours=REIF_H)
 
 
-def reihenfolge(w: dict):
+def reihenfolge(w: dict, vorrang: set | None = None):
     """Sortierschluessel fuer die Nachfrage. REIN.
 
     🔴 12.10.2026 (Lucas fragte nach den Stake-Bursts in den Stats; dabei aufgefallen): seit
@@ -129,7 +135,23 @@ def reihenfolge(w: dict):
     """
     a = w.get("abrechnung") or {}
     g = a.get("geprueft")
-    return (1, str(g)) if g else (0, str(w.get("ts") or ""))
+    # 13.10.2026: Wetten hinter einer gesendeten Meldung (Burst-/Kleine-Liga-/Torlinien-Push)
+    # kommen VOR allem anderen dran. Sie sind die Messung; der Rest ist Statistik. Und sie
+    # haben eine Frist: nach ~5 Tagen fallen sie aus dem rollierenden Ledger und die Meldung
+    # wird als „nicht abrechenbar" abgeschrieben (stake_burst_push.abrechnen).
+    stufe = 0 if (vorrang and w.get("id") in vorrang) else 1
+    return (stufe, 1, str(g)) if g else (stufe, 0, str(w.get("ts") or ""))
+
+
+def vorrang_ids(burst_ledger) -> set:
+    """Wett-IDs hinter noch offenen gesendeten Meldungen (alle Arten). REIN."""
+    zeilen = burst_ledger if isinstance(burst_ledger, list) else \
+        ((burst_ledger or {}).get("zeilen") or [])
+    out = set()
+    for z in zeilen:
+        if isinstance(z, dict) and z.get("status") == "pending":
+            out.update(i for i in (z.get("betIds") or []) if i)
+    return out
 
 
 def aufgegeben(w: dict, jetzt: datetime) -> bool:
@@ -160,6 +182,17 @@ def frage_batch(url: str, iids: list):
         knoten = (d["data"] or {}).get(_alias(i))
         if knoten:
             out[iid] = knoten
+    if not out:
+        # 🔴 13.10.2026 — GEDROSSELT. Seit dem 08./09.10. beantwortete Stake je Lauf nur den
+        # ersten (selten zweiten) Stapel; jeder weitere kam mit `data` zurueck, aber ALLE
+        # Aliase leer. Hier wurde das als „diese 25 Wetten haben keine Antwort" verbucht,
+        # weitergefragt und die Wetten nach hinten geschoben: ~970 von ~1.000 Fragen je Lauf
+        # ins Leere, 16.344 von 20.000 Wetten mit `ohneAntwort`, und die Kleine-Liga-Meldungen
+        # seit dem 09.10. blieben offen. Belege aus dem Ledger: frische Wetten (<12 h) scheiterten
+        # genauso (165), alte (>48 h) wurden beantwortet (145) — nicht das Alter, die Position
+        # im Lauf entschied. Ein Stapel, in dem KEINE Wette eine Antwort hat, ist deshalb ein
+        # Fehler des Stapels, nicht 25 Befunde ueber Wetten.
+        return {}, "leerer Stapel (gedrosselt?) " + json.dumps((d or {}).get("errors"))[:200]
     return out, None
 
 
@@ -252,25 +285,52 @@ def main() -> int:
     url = (SH._lade(QUERY_FILE, {}) or {}).get("url") or SH.ENDPUNKTE[0]
     kurse = SH._lade(KURS_FILE, {})
 
+    vorrang = vorrang_ids(SH._lade(BURST_FILE, []))
     dran = [w for w in wetten if faellig(w, jetzt) and w.get("id")]
-    dran.sort(key=reihenfolge)                         # nie gefragt zuerst, s. reihenfolge()
+    dran.sort(key=lambda w: reihenfolge(w, vorrang))   # Meldungen, dann nie gefragt, s. reihenfolge()
     dran = dran[:MAX_JE_LAUF]
-    print("  %d von %d Wetten sind reif (>= %.0fh nach Anpfiff)." % (len(dran), len(wetten), REIF_H))
+    n_vor = sum(1 for w in dran if w["id"] in vorrang)
+    print("  %d von %d Wetten sind reif (>= %.0fh nach Anpfiff), davon %d hinter einer Meldung."
+          % (len(dran), len(wetten), REIF_H, n_vor))
 
     nach_id = {w["id"]: w for w in wetten if w.get("id")}
     geholt = fehler = ohne_antwort = 0
+    stapel_ok = stapel_leer = 0
+    beantwortet = set()
+    abbruch, letzter_fehler = None, None
+    start = time.monotonic()
     for i in range(0, len(dran), BATCH):
+        if time.monotonic() - start > BUDGET_S:
+            abbruch = "Zeitbudget %.0fs" % BUDGET_S
+            break
+        if i:
+            time.sleep(PAUSE_S)
         stapel = [w["id"] for w in dran[i:i + BATCH]]
         antw, err = frage_batch(url, stapel)
+        if err and err.startswith("leerer Stapel"):
+            # Einmal durchatmen und denselben Stapel nochmal. Bleibt er leer, ist fuer diesen
+            # Lauf Schluss — die uebrigen Wetten werden NICHT als „ohne Antwort" verbucht.
+            stapel_leer += 1
+            letzter_fehler = err
+            time.sleep(RUHE_S)
+            antw, err = frage_batch(url, stapel)
+            if err:
+                abbruch = "gedrosselt nach %d beantworteten Stapeln" % stapel_ok
+                print("  ⏸️  Stapel %d leer, auch nach %.0fs Pause — Rest beim naechsten Lauf. %s"
+                      % (i // BATCH + 1, RUHE_S, err[:120]))
+                break
         if err:
             fehler += 1
+            letzter_fehler = err
             print("  ⚠️  Stapel %d: %s" % (i // BATCH + 1, err[:120]))
             continue
+        stapel_ok += 1
         for iid, knoten in antw.items():
             w = nach_id.get(iid)
             if not w:
                 continue
             w["abrechnung"] = lies_abrechnung(knoten, kurse)
+            beantwortet.add(iid)
             geholt += 1
         # Gefragt, aber keine Antwort: festhalten, damit die Wette nach hinten rutscht.
         _jetzt_s = jetzt.isoformat().replace("+00:00", "Z")
@@ -296,12 +356,24 @@ def main() -> int:
 
     led["wetten"] = wetten
     led["bilanz"] = bilanz(wetten)
+    # Was dieser Lauf geschafft hat — damit eine Drosselung im Ledger steht und nicht nur
+    # in einem Log, das niemand liest (13.10.2026: so blieb der Fehler fuenf Tage unentdeckt).
+    led["abrechnungLauf"] = {
+        "am": jetzt.isoformat().replace("+00:00", "Z"),
+        "reif": len(dran), "vorrang": n_vor,
+        "vorrangBeantwortet": len(beantwortet & vorrang),
+        "beantwortet": geholt, "ohneAntwort": ohne_antwort,
+        "stapelOk": stapel_ok, "stapelLeer": stapel_leer, "stapelFehler": fehler,
+        "abbruch": abbruch, "letzterFehler": (letzter_fehler or None) and letzter_fehler[:200],
+    }
     led["abgerechnet"] = jetzt.isoformat().replace("+00:00", "Z")
     SH._schreibe(LEDGER_FILE, led)
 
     b = led["bilanz"]
-    print("  %d nachgefragt, %d ohne Antwort, %d als unaufloesbar markiert, %d Stapel mit Fehler."
-          % (geholt, ohne_antwort, aufgeg, fehler))
+    print("  %d nachgefragt, %d ohne Antwort, %d als unaufloesbar markiert, %d Stapel mit Fehler, "
+          "%d Stapel beantwortet%s."
+          % (geholt, ohne_antwort, aufgeg, fehler, stapel_ok,
+             (" · Abbruch: " + abbruch) if abbruch else ""))
     print("  Beine: %d gewertet (%d Treffer, %d daneben, %d neutral) · offen %d · unaufloesbar %d"
           % (b["gewertet"], b["treffer"], b["daneben"], b["neutral"], b["offen"], b["unaufloesbar"]))
     if b["quote"] is not None:

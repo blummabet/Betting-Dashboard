@@ -92,6 +92,11 @@ EBENE = {
     # Montenegros. Beleg aus der Paarung: FK Sutjeska Niksic gegen FK Decic Tuzi, beides
     # montenegrinische Erstligisten (Sutjeska ist Rekordmeister). Der Slug sagt es nicht.
     "1-cfl": 1,
+    # 13.10.2026 (CI-Wachhund, beim Settle-Fix mitgefunden): drei oberste Klassen kleiner Laender.
+    # „1. MFL" = Prva Makedonska Fudbalska Liga (Nordmazedonien) — Beleg: FC Struga Trim Lum
+    # gegen KF Bashkimi Kumanovo. „Campionato Sammarinese" = die einzige Liga San Marinos (Tre
+    # Fiori, Virtus). „Indian Super League" = oberste Klasse Indiens (Mohun Bagan, Bengaluru FC).
+    "1-mfl": 1, "campionato-sammarinese": 1, "indian-super-league": 1,
     # 27.09.2026 (CI-Wachhund): „cymru-championship-south" — Wales' ZWEITE Klasse unter der
     # Cymru Premier (regional geteilt, Nord und Sued). Beleg: „Caerphilly Athletic FC -
     # Pontypridd Town". Die Nord-Staffel gleich mit, sonst faellt sie beim ersten Spiel auf.
