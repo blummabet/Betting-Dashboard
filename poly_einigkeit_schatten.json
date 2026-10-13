@@ -1,34 +1,5 @@
 [
 {
-"k": "atp-shimabu-gaston-2026-09-22|Hugo Gaston",
-"key": "atp-shimabu-gaston-2026-09-22",
-"side": "Hugo Gaston",
-"wallet": "0x04641b57f332c15ecaa497799c55026d521967da",
-"wallets": [
-"0x04641b57f332c15ecaa497799c55026d521967da",
-"0x076daa87c4fe1a85402a9b6b8e0a866224388d4c"
-],
-"nWallets": 2,
-"league": "TENNIS",
-"cat": "Tennis",
-"usd": 87.0,
-"maxEinzel": 50.0,
-"pushPrice": 0.545,
-"whaleEntry": 0.545,
-"htkMess": 2.91,
-"sentAt": "2026-09-24T02:08:56Z",
-"status": "settled",
-"nurBeobachtung": true,
-"result": "win",
-"winner": "Hugo Gaston",
-"closePrice": 0.565,
-"stake": 10.0,
-"pnl": 8.35,
-"clvPP": 2.0,
-"settledTs": "2026-09-24T07:39:31.474753+00:00",
-"resolvedTs": "2026-09-24T07:39:16.885321+00:00"
-},
-{
 "k": "atp-grieksp-shapova-2026-09-22|Tallon Griekspoor",
 "key": "atp-grieksp-shapova-2026-09-22",
 "side": "Tallon Griekspoor",
@@ -12228,8 +12199,9 @@
 "whaleEntry": 0.745,
 "htkMess": 1.0,
 "sentAt": "2026-10-03T22:30:31Z",
-"status": "pending",
-"nurBeobachtung": true
+"status": "unaufloesbar",
+"nurBeobachtung": true,
+"ageDays": 10.04
 },
 {
 "k": "ufc-robsol-kha6-2026-10-03|Roberto Soldic",
@@ -12279,8 +12251,9 @@
 "whaleEntry": 0.655,
 "htkMess": 0.49,
 "sentAt": "2026-10-03T23:03:19Z",
-"status": "pending",
-"nurBeobachtung": true
+"status": "unaufloesbar",
+"nurBeobachtung": true,
+"ageDays": 10.02
 },
 {
 "k": "ufc-and28-dam11-2026-10-03|Damian Pinas",
@@ -23515,8 +23488,16 @@
 "whaleEntry": 0.705,
 "htkMess": 2.31,
 "sentAt": "2026-10-13T16:28:17Z",
-"status": "pending",
-"nurBeobachtung": true
+"status": "settled",
+"nurBeobachtung": true,
+"result": "loss",
+"winner": "Bolton Wanderers FC",
+"closePrice": 0.705,
+"stake": 10.0,
+"pnl": -10.0,
+"clvPP": 0.0,
+"settledTs": "2026-10-13T23:25:33.398534+00:00",
+"resolvedTs": "2026-10-13T23:25:16.348639+00:00"
 },
 {
 "k": "ucl-atm-mnu-2026-10-13|Club Atlético de Madrid",
@@ -23701,18 +23682,18 @@
 "whaleEntry": 0.575,
 "htkMess": 2.56,
 "sentAt": "2026-10-13T16:28:17Z",
-"status": "settled",
+"status": "unaufloesbar",
 "nurBeobachtung": true,
 "cond": "0x32cf5999734a6e184faf208cf9fe61dab24b17d98bc49e10e0cf978b05be6dd5",
 "condQuelle": "erfassung+wallet",
-"result": "loss",
-"winner": "Under",
 "closePrice": 0.575,
-"stake": 10.0,
-"pnl": -10.0,
-"clvPP": 0.0,
 "settledTs": "2026-10-13T22:26:00.667165+00:00",
-"resolvedTs": "2026-10-13T22:25:43.633374+00:00"
+"resolvedTs": "2026-10-13T22:25:43.633374+00:00",
+"zurueckgenommen": {
+"war": "loss",
+"am": "2026-10-13T23:25:33.398534+00:00",
+"grund": "Buendel-Slug ohne Linie — Ausgang nie ableitbar"
+}
 },
 {
 "k": "ucl-atm-mnu-2026-10-13-total-corners|Under",
@@ -23733,8 +23714,18 @@
 "whaleEntry": 0.525,
 "htkMess": 2.56,
 "sentAt": "2026-10-13T16:28:17Z",
-"status": "pending",
-"nurBeobachtung": true
+"status": "settled",
+"nurBeobachtung": true,
+"cond": "0x6c40543ed2e74aa20aedf124fa8a507a48e4ed9262431b4d85e00a1ed238a5b8",
+"condQuelle": "erfassung+wallet",
+"result": "win",
+"winner": "Under",
+"closePrice": 0.525,
+"stake": 10.0,
+"pnl": 9.05,
+"clvPP": 0.0,
+"settledTs": "2026-10-13T23:25:33.398534+00:00",
+"resolvedTs": "2026-10-13T23:25:16.348639+00:00"
 },
 {
 "k": "swe2-nkp-sun-2026-10-13|IFK Norrkoping FK",
@@ -23814,18 +23805,18 @@
 "whaleEntry": 0.525,
 "htkMess": 0.07,
 "sentAt": "2026-10-13T19:03:29Z",
-"status": "settled",
+"status": "unaufloesbar",
 "nurBeobachtung": true,
 "cond": "0xb3313aa295144e3af11bd4331da483f3f2ce039151e5a0ab28d30380657d992a",
 "condQuelle": "erfassung+wallet",
-"result": "win",
-"winner": "Over",
 "closePrice": 0.525,
-"stake": 10.0,
-"pnl": 9.05,
-"clvPP": 0.0,
 "settledTs": "2026-10-13T22:26:00.667165+00:00",
-"resolvedTs": "2026-10-13T22:25:43.633374+00:00"
+"resolvedTs": "2026-10-13T22:25:43.633374+00:00",
+"zurueckgenommen": {
+"war": "win",
+"am": "2026-10-13T23:25:33.398534+00:00",
+"grund": "Buendel-Slug ohne Linie — Ausgang nie ableitbar"
+}
 },
 {
 "k": "elc-bir-pne-2026-10-13|Birmingham City FC",
@@ -23846,8 +23837,16 @@
 "whaleEntry": 0.655,
 "htkMess": 0.07,
 "sentAt": "2026-10-13T19:03:29Z",
-"status": "pending",
-"nurBeobachtung": true
+"status": "settled",
+"nurBeobachtung": true,
+"result": "win",
+"winner": "Birmingham City FC",
+"closePrice": 0.655,
+"stake": 10.0,
+"pnl": 5.27,
+"clvPP": 0.0,
+"settledTs": "2026-10-13T23:25:33.398534+00:00",
+"resolvedTs": "2026-10-13T23:25:16.348639+00:00"
 },
 {
 "k": "ufc-aliper-smisun-2026-10-13|Smilla Sundell",
@@ -24044,6 +24043,27 @@
 "whaleEntry": 0.595,
 "htkMess": 2.59,
 "sentAt": "2026-10-13T22:26:00Z",
+"status": "pending",
+"nurBeobachtung": true
+},
+{
+"k": "sud-boc-vas-2026-10-13|CA Boca Juniors",
+"key": "sud-boc-vas-2026-10-13",
+"side": "CA Boca Juniors",
+"wallet": "0x16839f56f60e81f6534e0dc8c98f28888ff23cc1",
+"wallets": [
+"0x16839f56f60e81f6534e0dc8c98f28888ff23cc1",
+"0x7d3b7ff761d046f5dc1d972e8a755dc1eccf55b8"
+],
+"nWallets": 2,
+"league": "SOCCER",
+"cat": "Fußball",
+"usd": 455.0,
+"maxEinzel": 299.0,
+"pushPrice": 0.435,
+"whaleEntry": 0.435,
+"htkMess": 1.09,
+"sentAt": "2026-10-13T23:25:33Z",
 "status": "pending",
 "nurBeobachtung": true
 }
