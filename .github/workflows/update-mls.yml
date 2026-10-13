@@ -380,7 +380,7 @@ jobs:
 
       # Serien-Watch pre-match (PRE-Lauf, vor den US-Abendspielen) + Recap post-match (POST-Lauf).
       # 12.10.2026 (Lucas: „Serien Watch – heute nehmen wir raus"): aus dem Public-Kanal genommen.
-      # Wieder an: Repo-Variable SERIEN_WATCH_PUBLIC=true. Der Recap darunter bleibt.
+      # Wieder an: Repo-Variable SERIEN_WATCH_PUBLIC=true. Seit 13.10. haengt der Recap daran mit.
       - name: 🔥 MLS Serien-Watch (PRE-Match)
         if: vars.SERIEN_WATCH_PUBLIC == 'true' && (github.event.schedule == '11 19 * * *' || github.event_name == 'workflow_dispatch')
         env:
@@ -390,7 +390,9 @@ jobs:
         run: python telegram_streak_watch.py || true
 
       - name: 📊 MLS Serien-Recap (POST-Match)
-        if: github.event.schedule == '11 7 * * *'
+        # 13.10.2026 (Lucas, zur „📒 Serien-Abrechnung … Auxerre 16× … Sevilla 13×“: „Das auch
+        # bitte aus public Push entfernen“). Gleiche Variable wie der Watch — beide oder keiner.
+        if: vars.SERIEN_WATCH_PUBLIC == 'true' && github.event.schedule == '11 7 * * *'
         env:
           TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
