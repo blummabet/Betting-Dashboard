@@ -17987,9 +17987,11 @@
    "sport:666036332"
   ],
   "sentAt": "2026-10-08T18:33:13.890186+00:00",
-  "status": "pending",
+  "status": "nicht_abrechenbar",
   "push": false,
-  "pushGrund": "Tennis live stumm (Geld folgt dem Spielstand)"
+  "pushGrund": "Tennis live stumm (Geld folgt dem Spielstand)",
+  "grund": "mindestens eine Wette ist aus dem rollierenden Stake-Ledger gefallen",
+  "settledAt": "2026-10-13T14:00:56.834013+00:00"
  },
  {
   "k": "77610b5a-e7e0-42ad-b7ca-7449ef58740c",
@@ -25749,5 +25751,39 @@
   "sentAt": "2026-10-13T13:32:30.716516+00:00",
   "status": "pending",
   "push": true
+ },
+ {
+  "k": "spiel:535a91ee-5128-4a56-8194-15ec03e8b161",
+  "art": "spiel",
+  "eventId": "535a91ee-5128-4a56-8194-15ec03e8b161",
+  "event": "Hubert Hurkacz - Alejandro Davidovich Fokina",
+  "liga": "ATP Shanghai, China Men Singles",
+  "ligaSlug": "atp-shanghai-china-men-singles",
+  "kat": "Tennis",
+  "seite": "Alejandro Davidovich Fokina",
+  "nGerichtet": 5,
+  "maerkte": [
+   "Total Games",
+   "Winner"
+  ],
+  "summeUsd": 25600.41,
+  "faktor": 1.6,
+  "nWetten": 8,
+  "sekunden": 366.0,
+  "phase": "live",
+  "betIds": [
+   "sport:669280983",
+   "sport:669281667",
+   "sport:669282180",
+   "sport:669282234",
+   "sport:669282821",
+   "sport:669283220",
+   "sport:669283912",
+   "sport:669285379"
+  ],
+  "sentAt": "2026-10-13T14:00:56.834013+00:00",
+  "status": "pending",
+  "push": false,
+  "pushGrund": "Tennis live stumm (Geld folgt dem Spielstand)"
  }
 ]
