@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-10-13T00:30:22.242833+00:00",
-"count": 18,
-"covered": 18,
+"generatedAt": "2026-10-13T01:15:38.235109+00:00",
+"count": 17,
+"covered": 17,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -48,13 +48,14 @@
 "soccer_usa_mls"
 ],
 "leaguesMitAnker": [
+"Brazilian Serie A",
 "Brazilian Serie B",
 "UEFA Champions League"
 ],
 "leaguesMitTotals": [],
 "oddsKeysFetched": 46,
 "oddsKeysMitDaten": 46,
-"oddsEvents": 566,
+"oddsEvents": 564,
 "oddsTotals": {
 "versucht": 3,
 "mitDaten": 0,
@@ -63,14 +64,85 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 220707,
-"remaining": 4779293,
+"used": 221172,
+"remaining": 4778828,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
 },
-"ankerQuote": 0.9,
+"ankerQuote": 1.0,
 "games": [
+{
+"matchId": "36152227",
+"home": "Red Bull Bragantino",
+"away": "Cruzeiro MG",
+"league": "Brazilian Serie A",
+"country": "BR",
+"kickoff": "2026-10-13T00:00:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Red Bull Bragantino",
+"moneySharePct": 70,
+"moneyOdd": 1.18,
+"moneyDir": "in",
+"totVol": 246502,
+"pinnOdd": 1.16,
+"softOdd": 1.14,
+"softN": 38,
+"poly": {
+"vol": 232450,
+"odd": 1.2,
+"sharePct": 90,
+"shareSrc": "geld",
+"key": "bra-bra-cru-2026-10-12",
+"sideKey": "Red Bull Bragantino",
+"whales": [
+{
+"wallet": "0x20b80ebb96e2051540e1d475e4ce122fc282aa04",
+"usd": 19622
+},
+{
+"wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+"usd": 4547
+},
+{
+"wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+"usd": 3044
+},
+{
+"wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
+"usd": 2628
+},
+{
+"wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
+"usd": 1927
+},
+{
+"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+"usd": 1907
+}
+],
+"whaleUsd": 40589
+},
+"pinn": {
+"home": 0.8243,
+"draw": 0.1255,
+"away": 0.0502,
+"fav": "home"
+},
+"soft": {
+"home": 0.8137,
+"draw": 0.1295,
+"away": 0.0569,
+"fav": "home",
+"n": 38
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
 {
 "matchId": "36057653",
 "home": "Atletico Madrid",
@@ -82,14 +154,14 @@
 "moneySide": "home",
 "moneyName": "Atletico Madrid",
 "moneySharePct": 82,
-"moneyOdd": 1.98,
-"moneyDir": "flat",
-"totVol": 189951,
-"pinnOdd": 1.91,
+"moneyOdd": 1.97,
+"moneyDir": "in",
+"totVol": 193887,
+"pinnOdd": 1.92,
 "softOdd": 1.91,
-"softN": 46,
+"softN": 47,
 "poly": {
-"vol": 171747,
+"vol": 174624,
 "odd": 1.98,
 "sharePct": 50,
 "shareSrc": "preis",
@@ -99,104 +171,29 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.5056,
-"draw": 0.2402,
-"away": 0.2541,
+"home": 0.5033,
+"draw": 0.241,
+"away": 0.2557,
 "fav": "home"
 },
 "soft": {
-"home": 0.4988,
-"draw": 0.2431,
-"away": 0.2581,
+"home": 0.5001,
+"draw": 0.2427,
+"away": 0.2572,
 "fav": "home",
-"n": 46
+"n": 47
 },
-"pinnMovePP": 0.5,
+"pinnMovePP": 0.3,
 "pinnMove": {
-"movePP": 0.5,
-"stepPP": 0.5,
+"movePP": 0.3,
+"stepPP": -0.2,
 "n": 25,
 "move": false,
-"laeuft": true
+"laeuft": false
 },
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
-},
-{
-"matchId": "36152227",
-"home": "Red Bull Bragantino",
-"away": "Cruzeiro MG",
-"league": "Brazilian Serie A",
-"country": "BR",
-"kickoff": "2026-10-13T00:00:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Red Bull Bragantino",
-"moneySharePct": 51,
-"moneyOdd": 1.24,
-"moneyDir": "in",
-"totVol": 142237,
-"pinnOdd": null,
-"softOdd": 1.17,
-"softN": 37,
-"poly": {
-"vol": 62855,
-"odd": 2.35,
-"sharePct": 75,
-"shareSrc": "geld",
-"key": "bra-bra-cru-2026-10-12",
-"sideKey": "Red Bull Bragantino",
-"whales": [
-{
-"wallet": "0x20b80ebb96e2051540e1d475e4ce122fc282aa04",
-"usd": 9988
-},
-{
-"wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-"usd": 2314
-},
-{
-"wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
-"usd": 1338
-},
-{
-"wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
-"usd": 981
-},
-{
-"wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
-"usd": 973
-},
-{
-"wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
-"usd": 700
-}
-],
-"whaleUsd": 18842
-},
-"pinn": null,
-"soft": {
-"home": 0.7694,
-"draw": 0.1474,
-"away": 0.0832,
-"fav": "home",
-"n": 37
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Red Bull Bragantino v Cruzeiro MG",
-"grund": "kein_pinnacle",
-"kandidat": "Bragantino-SP v Cruzeiro",
-"key": "soccer_brazil_campeonato",
-"nSoft": 37,
-"pinnacleImEvent": false,
-"nBuecher": 37
-}
 },
 {
 "matchId": "36057644",
@@ -208,15 +205,15 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "RB Leipzig",
-"moneySharePct": 89,
+"moneySharePct": 88,
 "moneyOdd": 1.82,
-"moneyDir": "out",
-"totVol": 132386,
+"moneyDir": "flat",
+"totVol": 132597,
 "pinnOdd": 1.74,
 "softOdd": 1.73,
-"softN": 46,
+"softN": 47,
 "poly": {
-"vol": 12470,
+"vol": 12627,
 "odd": 1.8,
 "sharePct": 56,
 "shareSrc": "preis",
@@ -232,19 +229,19 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.5483,
-"draw": 0.211,
-"away": 0.2407,
+"home": 0.5484,
+"draw": 0.2109,
+"away": 0.2408,
 "fav": "home",
-"n": 46
+"n": 47
 },
 "pinnMovePP": 0.3,
 "pinnMove": {
 "movePP": 0.3,
-"stepPP": 0.2,
+"stepPP": 0.0,
 "n": 25,
 "move": false,
-"laeuft": true
+"laeuft": false
 },
 "verdict": "konsens",
 "agree": true,
@@ -262,13 +259,13 @@
 "moneyName": "Arsenal",
 "moneySharePct": 91,
 "moneyOdd": 1.25,
-"moneyDir": "out",
-"totVol": 113376,
+"moneyDir": "flat",
+"totVol": 113912,
 "pinnOdd": 1.21,
 "softOdd": 1.21,
-"softN": 46,
+"softN": 47,
 "poly": {
-"vol": 26811,
+"vol": 26963,
 "odd": 1.26,
 "sharePct": 80,
 "shareSrc": "preis",
@@ -284,11 +281,11 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.7823,
-"draw": 0.1471,
-"away": 0.0707,
+"home": 0.7826,
+"draw": 0.1466,
+"away": 0.0708,
 "fav": "home",
-"n": 46
+"n": 47
 },
 "pinnMovePP": 1.0,
 "pinnMove": {
@@ -303,81 +300,6 @@
 "pinnTotals": null
 },
 {
-"matchId": "36164673",
-"home": "Criciuma",
-"away": "America MG",
-"league": "Brazilian Serie B",
-"country": "BR",
-"kickoff": "2026-10-12T22:30:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Criciuma",
-"moneySharePct": 92,
-"moneyOdd": 1.06,
-"moneyDir": "in",
-"totVol": 111077,
-"pinnOdd": null,
-"softOdd": 1.02,
-"softN": 23,
-"poly": {
-"vol": 72538,
-"odd": 1.13,
-"sharePct": 97,
-"shareSrc": "geld",
-"key": "bra2-cri-afc-2026-10-12",
-"sideKey": "Criciúma EC",
-"whales": [
-{
-"wallet": "0xf828681ac93e8e54f8fa1e8f7b020e8d17fc6129",
-"usd": 8734
-},
-{
-"wallet": "0xe5241830e8876c115d7dc8311ad9f43d85fdd34f",
-"usd": 5310
-},
-{
-"wallet": "0x9ee62dddf2e4ca337b465a38b39ad5b693778892",
-"usd": 1030
-},
-{
-"wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
-"usd": 672
-},
-{
-"wallet": "0x52d93dcf81444f793dda7fedc370f7a35101fb1a",
-"usd": 579
-},
-{
-"wallet": "0x11bc9a8d87103fd2a95f87733dd41362fc2c9e66",
-"usd": 400
-}
-],
-"whaleUsd": 18336
-},
-"pinn": null,
-"soft": {
-"home": 0.9122,
-"draw": 0.0788,
-"away": 0.009,
-"fav": "home",
-"n": 23
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Criciuma v America MG",
-"grund": "kein_pinnacle",
-"kandidat": "Criciuma v América Mineiro",
-"key": "soccer_brazil_serie_b",
-"nSoft": 23,
-"pinnacleImEvent": false,
-"nBuecher": 23
-}
-},
-{
 "matchId": "36057650",
 "home": "Viking",
 "away": "Bayern Munich",
@@ -387,15 +309,15 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "Bayern Munich",
-"moneySharePct": 89,
+"moneySharePct": 88,
 "moneyOdd": 1.12,
-"moneyDir": "in",
-"totVol": 74915,
+"moneyDir": "flat",
+"totVol": 75149,
 "pinnOdd": 1.09,
 "softOdd": 1.09,
-"softN": 46,
+"softN": 47,
 "poly": {
-"vol": 108363,
+"vol": 110162,
 "odd": 1.13,
 "sharePct": 88,
 "shareSrc": "preis",
@@ -411,11 +333,11 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.0487,
-"draw": 0.077,
-"away": 0.8743,
+"home": 0.0488,
+"draw": 0.0768,
+"away": 0.8744,
 "fav": "away",
-"n": 46
+"n": 47
 },
 "pinnMovePP": 0.1,
 "pinnMove": {
@@ -440,14 +362,14 @@
 "moneySide": "away",
 "moneyName": "Real Madrid",
 "moneySharePct": 73,
-"moneyOdd": 1.98,
-"moneyDir": "flat",
-"totVol": 74828,
+"moneyOdd": 2.0,
+"moneyDir": "out",
+"totVol": 75082,
 "pinnOdd": 1.94,
 "softOdd": 1.88,
-"softN": 45,
+"softN": 46,
 "poly": {
-"vol": 38377,
+"vol": 38443,
 "odd": 1.98,
 "sharePct": 50,
 "shareSrc": "preis",
@@ -463,11 +385,11 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.2607,
+"home": 0.2609,
 "draw": 0.2377,
-"away": 0.5016,
+"away": 0.5015,
 "fav": "away",
-"n": 45
+"n": 46
 },
 "pinnMovePP": -0.6,
 "pinnMove": {
@@ -493,13 +415,13 @@
 "moneyName": "Barcelona",
 "moneySharePct": 88,
 "moneyOdd": 1.3,
-"moneyDir": "in",
-"totVol": 70633,
+"moneyDir": "flat",
+"totVol": 71023,
 "pinnOdd": 1.27,
 "softOdd": 1.27,
-"softN": 45,
+"softN": 46,
 "poly": {
-"vol": 133173,
+"vol": 140054,
 "odd": 1.31,
 "sharePct": 76,
 "shareSrc": "preis",
@@ -515,11 +437,11 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.1096,
-"draw": 0.1425,
-"away": 0.7479,
+"home": 0.1099,
+"draw": 0.1403,
+"away": 0.7498,
 "fav": "away",
-"n": 45
+"n": 46
 },
 "pinnMovePP": -0.2,
 "pinnMove": {
@@ -546,12 +468,12 @@
 "moneySharePct": 85,
 "moneyOdd": 1.32,
 "moneyDir": "flat",
-"totVol": 60508,
+"totVol": 60509,
 "pinnOdd": 1.28,
 "softOdd": 1.28,
-"softN": 45,
+"softN": 46,
 "poly": {
-"vol": 44978,
+"vol": 44979,
 "odd": 1.32,
 "sharePct": 76,
 "shareSrc": "preis",
@@ -567,11 +489,11 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.1023,
+"home": 0.1022,
 "draw": 0.156,
 "away": 0.7418,
 "fav": "away",
-"n": 45
+"n": 46
 },
 "pinnMovePP": -0.4,
 "pinnMove": {
@@ -596,14 +518,14 @@
 "moneySide": "home",
 "moneyName": "Man City",
 "moneySharePct": 74,
-"moneyOdd": 2.22,
-"moneyDir": "flat",
-"totVol": 51269,
+"moneyOdd": 2.2,
+"moneyDir": "in",
+"totVol": 51272,
 "pinnOdd": 2.19,
 "softOdd": 2.15,
-"softN": 45,
+"softN": 46,
 "poly": {
-"vol": 31328,
+"vol": 31504,
 "odd": 2.25,
 "sharePct": 44,
 "shareSrc": "preis",
@@ -619,11 +541,11 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.4415,
-"draw": 0.238,
-"away": 0.3206,
+"home": 0.4416,
+"draw": 0.2379,
+"away": 0.3205,
 "fav": "home",
-"n": 45
+"n": 46
 },
 "pinnMovePP": -0.8,
 "pinnMove": {
@@ -648,14 +570,14 @@
 "moneySide": "home",
 "moneyName": "Inter",
 "moneySharePct": 82,
-"moneyOdd": 1.28,
-"moneyDir": "in",
-"totVol": 37570,
+"moneyOdd": 1.29,
+"moneyDir": "out",
+"totVol": 39027,
 "pinnOdd": 1.26,
 "softOdd": 1.25,
-"softN": 46,
+"softN": 47,
 "poly": {
-"vol": 90049,
+"vol": 91104,
 "odd": 1.29,
 "sharePct": 78,
 "shareSrc": "preis",
@@ -671,11 +593,11 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.7639,
-"draw": 0.1516,
-"away": 0.0844,
+"home": 0.7633,
+"draw": 0.1518,
+"away": 0.0849,
 "fav": "home",
-"n": 46
+"n": 47
 },
 "pinnMovePP": -0.7,
 "pinnMove": {
@@ -700,14 +622,14 @@
 "moneySide": "home",
 "moneyName": "Villarreal",
 "moneySharePct": 74,
-"moneyOdd": 2.2,
-"moneyDir": "flat",
-"totVol": 35382,
+"moneyOdd": 2.22,
+"moneyDir": "out",
+"totVol": 35646,
 "pinnOdd": 2.16,
-"softOdd": 2.11,
-"softN": 46,
+"softOdd": 2.12,
+"softN": 47,
 "poly": {
-"vol": 11454,
+"vol": 11469,
 "odd": 2.2,
 "sharePct": 46,
 "shareSrc": "preis",
@@ -723,17 +645,17 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.447,
-"draw": 0.2592,
-"away": 0.2938,
+"home": 0.4462,
+"draw": 0.2593,
+"away": 0.2945,
 "fav": "home",
-"n": 46
+"n": 47
 },
 "pinnMovePP": 0.0,
 "pinnMove": {
 "movePP": 0.0,
 "stepPP": 0.0,
-"n": 17,
+"n": 18,
 "move": false,
 "laeuft": false
 },
@@ -754,10 +676,10 @@
 "moneySharePct": 79,
 "moneyOdd": 2.14,
 "moneyDir": "flat",
-"totVol": 34833,
+"totVol": 34850,
 "pinnOdd": 2.04,
 "softOdd": 2.05,
-"softN": 45,
+"softN": 46,
 "poly": {
 "vol": 3805,
 "odd": 2.11,
@@ -779,7 +701,7 @@
 "draw": 0.2575,
 "away": 0.2808,
 "fav": "home",
-"n": 45
+"n": 46
 },
 "pinnMovePP": 1.5,
 "pinnMove": {
@@ -805,13 +727,13 @@
 "moneyName": "Lens",
 "moneySharePct": 48,
 "moneyOdd": 2.66,
-"moneyDir": "out",
-"totVol": 22191,
+"moneyDir": "flat",
+"totVol": 22741,
 "pinnOdd": 2.56,
 "softOdd": 2.5,
-"softN": 46,
+"softN": 47,
 "poly": {
-"vol": 14644,
+"vol": 16209,
 "odd": 2.67,
 "sharePct": 38,
 "shareSrc": "preis",
@@ -827,69 +749,17 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.3781,
-"draw": 0.2556,
-"away": 0.3663,
+"home": 0.3777,
+"draw": 0.2558,
+"away": 0.3666,
 "fav": "home",
-"n": 46
+"n": 47
 },
 "pinnMovePP": -0.2,
 "pinnMove": {
 "movePP": -0.2,
-"stepPP": -0.2,
-"n": 4,
-"move": false,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36057634",
-"home": "FC Sabah",
-"away": "Slavia Prague",
-"league": "UEFA Champions League",
-"country": "International",
-"kickoff": "2026-10-13T16:45:00Z",
-"live": false,
-"moneySide": "away",
-"moneyName": "Slavia Prague",
-"moneySharePct": 76,
-"moneyOdd": 2.12,
-"moneyDir": "out",
-"totVol": 22096,
-"pinnOdd": 2.06,
-"softOdd": 2.04,
-"softN": 46,
-"poly": {
-"vol": 12303,
-"odd": 2.11,
-"sharePct": 48,
-"shareSrc": "preis",
-"key": "ucl-sf-slp-2026-10-13",
-"sideKey": "SK Slavia Praha",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.2761,
-"draw": 0.2549,
-"away": 0.469,
-"fav": "away"
-},
-"soft": {
-"home": 0.2754,
-"draw": 0.2559,
-"away": 0.4687,
-"fav": "away",
-"n": 46
-},
-"pinnMovePP": 0.0,
-"pinnMove": {
-"movePP": 0.0,
-"stepPP": 0.2,
-"n": 7,
+"stepPP": -0.0,
+"n": 5,
 "move": false,
 "laeuft": false
 },
@@ -910,10 +780,10 @@
 "moneySharePct": 77,
 "moneyOdd": 1.7,
 "moneyDir": "flat",
-"totVol": 22010,
+"totVol": 22113,
 "pinnOdd": 1.66,
-"softOdd": 1.64,
-"softN": 43,
+"softOdd": 1.63,
+"softN": 44,
 "poly": {
 "vol": 6152,
 "odd": 1.68,
@@ -931,17 +801,69 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.5782,
+"home": 0.5783,
 "draw": 0.2323,
-"away": 0.1895,
+"away": 0.1893,
 "fav": "home",
-"n": 43
+"n": 44
 },
 "pinnMovePP": -0.3,
 "pinnMove": {
 "movePP": -0.3,
 "stepPP": 0.0,
-"n": 12,
+"n": 13,
+"move": false,
+"laeuft": false
+},
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36057634",
+"home": "FC Sabah",
+"away": "Slavia Prague",
+"league": "UEFA Champions League",
+"country": "International",
+"kickoff": "2026-10-13T16:45:00Z",
+"live": false,
+"moneySide": "away",
+"moneyName": "Slavia Prague",
+"moneySharePct": 76,
+"moneyOdd": 2.12,
+"moneyDir": "flat",
+"totVol": 22096,
+"pinnOdd": 2.06,
+"softOdd": 2.04,
+"softN": 47,
+"poly": {
+"vol": 12430,
+"odd": 2.11,
+"sharePct": 48,
+"shareSrc": "preis",
+"key": "ucl-sf-slp-2026-10-13",
+"sideKey": "SK Slavia Praha",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.2761,
+"draw": 0.2549,
+"away": 0.469,
+"fav": "away"
+},
+"soft": {
+"home": 0.2753,
+"draw": 0.2562,
+"away": 0.4685,
+"fav": "away",
+"n": 47
+},
+"pinnMovePP": 0.0,
+"pinnMove": {
+"movePP": 0.0,
+"stepPP": 0.0,
+"n": 8,
 "move": false,
 "laeuft": false
 },
@@ -959,15 +881,15 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "Como",
-"moneySharePct": 84,
+"moneySharePct": 83,
 "moneyOdd": 2.02,
 "moneyDir": "flat",
-"totVol": 21938,
+"totVol": 21986,
 "pinnOdd": 1.96,
 "softOdd": 1.91,
-"softN": 45,
+"softN": 46,
 "poly": {
-"vol": 3176,
+"vol": 4008,
 "odd": 2.02,
 "sharePct": 50,
 "shareSrc": "preis",
@@ -983,17 +905,17 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.2725,
-"draw": 0.2327,
+"home": 0.2724,
+"draw": 0.2326,
 "away": 0.4949,
 "fav": "away",
-"n": 45
+"n": 46
 },
 "pinnMovePP": -0.0,
 "pinnMove": {
 "movePP": -0.0,
 "stepPP": -0.0,
-"n": 8,
+"n": 9,
 "move": false,
 "laeuft": false
 },
@@ -1011,35 +933,40 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Botafogo SP",
-"moneySharePct": 57,
-"moneyOdd": 2.66,
+"moneySharePct": 47,
+"moneyOdd": 3.3,
 "moneyDir": "out",
-"totVol": 4133,
-"pinnOdd": 2.56,
-"softOdd": 2.4,
-"softN": 25,
+"totVol": 8583,
+"pinnOdd": 3.15,
+"softOdd": 3.1,
+"softN": 28,
 "poly": {
-"vol": 384,
-"odd": 2.2,
-"sharePct": 46,
-"shareSrc": "preis",
+"vol": 14075,
+"odd": 2.9,
+"sharePct": 33,
+"shareSrc": "geld",
 "key": "bra2-bot-csc-2026-10-12",
 "sideKey": "Botafogo FC",
-"whales": null,
-"whaleUsd": null
+"whales": [
+{
+"wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+"usd": 759
+}
+],
+"whaleUsd": 759
 },
 "pinn": {
-"home": 0.3668,
-"draw": 0.388,
-"away": 0.2452,
+"home": 0.2983,
+"draw": 0.4795,
+"away": 0.2222,
 "fav": "draw"
 },
 "soft": {
-"home": 0.3802,
-"draw": 0.366,
-"away": 0.2538,
-"fav": "home",
-"n": 25
+"home": 0.2945,
+"draw": 0.4904,
+"away": 0.2151,
+"fav": "draw",
+"n": 28
 },
 "pinnMovePP": null,
 "pinnMove": null,
@@ -1050,12 +977,12 @@
 ],
 "ankerN": 20,
 "ankerNOffen": 150,
-"ankerMit": 18,
+"ankerMit": 20,
 "ankerDiagnose": {
 "nach": {
-"kein_kandidat": 64,
-"kein_pinnacle": 3,
-"zeit": 13,
+"kein_kandidat": 62,
+"kein_pinnacle": 1,
+"zeit": 15,
 "name": 1
 },
 "beispiele": [
@@ -1130,6 +1057,16 @@
 "liga": "UEFA Youth League"
 },
 {
+"spiel": "Arsenal U19 v OSC Lille U19",
+"kandidat": "Arsenal v Lille",
+"key": "soccer_uefa_champs_league",
+"score": 0.83,
+"grund": "zeit",
+"abstandH": 7.0,
+"matchId": "36184227",
+"liga": "UEFA Youth League"
+},
+{
 "spiel": "Al-Ittihad v Al Ahli (UAE)",
 "kandidat": "Al-Ittihad v Al-Shabab",
 "key": "soccer_saudi_arabia_pro_league",
@@ -1148,16 +1085,6 @@
 "abstandH": 71.0,
 "matchId": "36167166",
 "liga": "AFC Champions League"
-},
-{
-"spiel": "Arsenal U19 v OSC Lille U19",
-"kandidat": "Arsenal v Lille",
-"key": "soccer_uefa_champs_league",
-"score": 0.83,
-"grund": "zeit",
-"abstandH": 7.0,
-"matchId": "36184227",
-"liga": "UEFA Youth League"
 },
 {
 "spiel": "Viking FK U19 v Bayern Munich U19",
@@ -1200,6 +1127,16 @@
 "liga": "UEFA Youth League"
 },
 {
+"spiel": "Al-Taawoun Buraidah v Al Rayyan",
+"kandidat": "Al-Faisaly KSA FC v Al-Kholood",
+"key": "soccer_saudi_arabia_pro_league",
+"score": 0.83,
+"grund": "zeit",
+"abstandH": 21.7,
+"matchId": "36186829",
+"liga": "AFC Champions League Two"
+},
+{
 "spiel": "Muangthong Utd v Phrae United",
 "kandidat": "Leeds United v Manchester United",
 "key": "soccer_epl",
@@ -1210,26 +1147,14 @@
 "liga": "Thai League 2"
 },
 {
-"spiel": "Red Bull Bragantino v Cruzeiro MG",
-"grund": "kein_pinnacle",
-"kandidat": "Bragantino-SP v Cruzeiro",
-"key": "soccer_brazil_campeonato",
-"nSoft": 37,
-"pinnacleImEvent": false,
-"nBuecher": 37,
-"matchId": "36152227",
-"liga": "Brazilian Serie A"
-},
-{
-"spiel": "Criciuma v America MG",
-"grund": "kein_pinnacle",
-"kandidat": "Criciuma v América Mineiro",
-"key": "soccer_brazil_serie_b",
-"nSoft": 23,
-"pinnacleImEvent": false,
-"nBuecher": 23,
-"matchId": "36164673",
-"liga": "Brazilian Serie B"
+"spiel": "Queens Park Rangers U21 v Cardiff City U21",
+"kandidat": "Birmingham City v Queens Park Rangers",
+"key": "soccer_efl_champ",
+"score": 1.08,
+"grund": "zeit",
+"abstandH": 97.0,
+"matchId": "36184220",
+"liga": "English U21 Pro Development League"
 }
 ]
 }
