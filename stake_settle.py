@@ -139,8 +139,11 @@ def reihenfolge(w: dict, vorrang: set | None = None):
     # kommen VOR allem anderen dran. Sie sind die Messung; der Rest ist Statistik. Und sie
     # haben eine Frist: nach ~5 Tagen fallen sie aus dem rollierenden Ledger und die Meldung
     # wird als „nicht abrechenbar" abgeschrieben (stake_burst_push.abrechnen).
-    stufe = 0 if (vorrang and w.get("id") in vorrang) else 1
-    return (stufe, 1, str(g)) if g else (stufe, 0, str(w.get("ts") or ""))
+    # Unter den Meldungs-Wetten zuerst die AELTESTEN — sie fallen als erste aus dem Fenster.
+    # (Hinter den offenen Meldungen standen am 13.10. 1.267 Wetten, nicht elf: mehr als ein Lauf.)
+    if vorrang and w.get("id") in vorrang:
+        return (0, 0, str(w.get("ts") or ""))
+    return (1, 1, str(g)) if g else (1, 0, str(w.get("ts") or ""))
 
 
 def vorrang_ids(burst_ledger) -> set:

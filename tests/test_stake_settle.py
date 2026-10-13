@@ -357,3 +357,17 @@ def test_kurze_pause_rettet_den_stapel(tmp_path, monkeypatch):
     led, gefragt = _lauf(tmp_path, monkeypatch, antw)
     assert all(w["abrechnung"]["endstand"] for w in led["wetten"])
     assert led["abrechnungLauf"]["abbruch"] is None
+
+
+def test_unter_den_meldungen_die_aeltesten_zuerst():
+    alt = {"id": "alt", "ts": "2026-10-09T10:00:00Z",
+           "abrechnung": {"geprueft": "2026-10-13T17:00:00Z", "ohneAntwort": 5}}
+    neu = {"id": "neu", "ts": "2026-10-12T10:00:00Z"}
+    reihe = sorted([neu, alt], key=lambda w: S.reihenfolge(w, {"alt", "neu"}))
+    assert [w["id"] for w in reihe] == ["alt", "neu"]
+
+
+def test_highroller_abruf_behaelt_die_abrechnungs_felder():
+    """Der Sammler schreibt das Ledger neu — die Felder der Abrechnung muessen mit."""
+    src = (ROOT / "stake_highroller_fetch.py").read_text(encoding="utf-8")
+    assert '"abrechnungLauf"' in src and '"bilanz"' in src
