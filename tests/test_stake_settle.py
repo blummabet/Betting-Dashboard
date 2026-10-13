@@ -252,3 +252,122 @@ def test_roi_nur_aus_einzelwetten():
     assert b["einzelEinsatzUsd"] == 1000.0
     assert b["einzelRoi"] == 0.5
     assert b["gewertet"] == 3, "die Trefferquote nimmt die Kombi-Beine trotzdem mit"
+
+
+# ── 13.10.2026: Drosselung ist ein Fehler des Stapels, nicht 25 Befunde ─────────
+# Seit dem 08./09.10. beantwortete Stake je Lauf nur den ersten Stapel; alle weiteren kamen mit
+# `data`, aber jedem Alias leer. Verbucht wurde das als „ohne Antwort" je Wette — 16.344 von
+# 20.000 Wetten, und keine Kleine-Liga-Meldung seit dem 09.10. wurde abgerechnet.
+def test_ganz_leerer_stapel_ist_ein_fehler(monkeypatch):
+    monkeypatch.setattr(S.SH, "_post", lambda u, b, timeout=25:
+                        (200, {"data": {"b0": None, "b1": None}}, None))
+    out, err = S.frage_batch("http://test", ["a", "b"])
+    assert out == {}
+    assert err and err.startswith("leerer Stapel")
+
+
+def test_teilweise_leerer_stapel_bleibt_ein_befund(monkeypatch):
+    monkeypatch.setattr(S.SH, "_post", lambda u, b, timeout=25:
+                        (200, {"data": {"b0": {"iid": "a", "bet": {"status": "settled",
+                                                                   "outcomes": []}},
+                                        "b1": None}}, None))
+    out, err = S.frage_batch("http://test", ["a", "b"])
+    assert err is None and set(out) == {"a"}
+
+
+def test_meldungen_kommen_vor_allem_anderen():
+    nie = {"id": "nie", "ts": "2026-10-09T10:00:00Z"}
+    gefragt_meldung = {"id": "m", "ts": "2026-10-13T10:00:00Z",
+                       "abrechnung": {"geprueft": "2026-10-13T16:00:00Z", "ohneAntwort": 5}}
+    reihe = sorted([nie, gefragt_meldung], key=lambda w: S.reihenfolge(w, {"m"}))
+    assert [w["id"] for w in reihe] == ["m", "nie"]
+    # ohne Vorrang bleibt alles wie bisher: nie gefragt zuerst
+    reihe = sorted([gefragt_meldung, nie], key=lambda w: S.reihenfolge(w))
+    assert [w["id"] for w in reihe] == ["nie", "m"]
+
+
+def test_vorrang_nur_aus_offenen_meldungen():
+    led = [{"status": "pending", "betIds": ["a", "b"]},
+           {"status": "abgerechnet", "betIds": ["c"]},
+           {"status": "nicht_abrechenbar", "betIds": ["d"]}, "kaputt"]
+    assert S.vorrang_ids(led) == {"a", "b"}
+    assert S.vorrang_ids({"zeilen": led}) == {"a", "b"}
+    assert S.vorrang_ids(None) == set()
+
+
+def _lauf(tmp_path, monkeypatch, antworten):
+    """main() gegen ein Mini-Ledger; `antworten` liefert je Aufruf von _post die Antwort."""
+    import json as _j
+    jetzt = datetime.now(timezone.utc)
+    alt = (jetzt - timedelta(hours=10)).isoformat().replace("+00:00", "Z")
+    wetten = [{"id": "w%d" % i, "ts": alt, "anpfiff": alt} for i in range(6)]
+    (tmp_path / "led.json").write_text(_j.dumps({"wetten": wetten}))
+    (tmp_path / "burst.json").write_text(_j.dumps([{"status": "pending", "betIds": ["w5"]}]))
+    monkeypatch.setattr(S, "LEDGER_FILE", tmp_path / "led.json")
+    monkeypatch.setattr(S, "BURST_FILE", tmp_path / "burst.json")
+    monkeypatch.setattr(S, "QUERY_FILE", tmp_path / "fehlt.json")
+    monkeypatch.setattr(S, "KURS_FILE", tmp_path / "fehlt2.json")
+    monkeypatch.setattr(S, "BATCH", 2)
+    monkeypatch.setattr(S, "PAUSE_S", 0)
+    monkeypatch.setattr(S, "RUHE_S", 0)
+    gefragt = []
+
+    def fake(url, body, timeout=25):
+        gefragt.append(dict(body["variables"]))
+        return antworten(len(gefragt), body)
+    monkeypatch.setattr(S.SH, "_post", fake)
+    S.main()
+    return _j.loads((tmp_path / "led.json").read_text()), gefragt
+
+
+def _alle_beantwortet(body):
+    return 200, {"data": {"b%d" % i: {"iid": v, "bet": {"status": "settled", "payout": 0,
+                                                       "outcomes": [{"status": "lost"}]}}
+                          for i, v in enumerate(body["variables"].values())}}, None
+
+
+def test_drosselung_bricht_ab_ohne_wetten_zu_bestrafen(tmp_path, monkeypatch):
+    def antw(n, body):
+        if n == 1:
+            return _alle_beantwortet(body)
+        return 200, {"data": {k.replace("i", "b"): None for k in body["variables"]}}, None
+    led, gefragt = _lauf(tmp_path, monkeypatch, antw)
+    # Stapel 1 beantwortet, Stapel 2 leer, derselbe Stapel nochmal leer -> Schluss
+    assert len(gefragt) == 3
+    assert gefragt[1] == gefragt[2], "nach der Pause wird DERSELBE Stapel nochmal gefragt"
+    assert not any((w.get("abrechnung") or {}).get("ohneAntwort") for w in led["wetten"]), \
+        "eine Drosselung ist kein Befund ueber die Wette"
+    lauf = led["abrechnungLauf"]
+    assert lauf["stapelOk"] == 1 and lauf["stapelLeer"] == 1
+    assert lauf["abbruch"].startswith("gedrosselt")
+
+
+def test_meldung_wird_im_ersten_stapel_gefragt(tmp_path, monkeypatch):
+    led, gefragt = _lauf(tmp_path, monkeypatch, lambda n, b: _alle_beantwortet(b))
+    assert "w5" in gefragt[0].values(), "die Wette hinter der Meldung kommt zuerst"
+    assert led["abrechnungLauf"]["vorrangBeantwortet"] == 1
+    assert all(w["abrechnung"]["endstand"] for w in led["wetten"])
+
+
+def test_kurze_pause_rettet_den_stapel(tmp_path, monkeypatch):
+    def antw(n, body):
+        if n == 2:
+            return 200, {"data": {k.replace("i", "b"): None for k in body["variables"]}}, None
+        return _alle_beantwortet(body)
+    led, gefragt = _lauf(tmp_path, monkeypatch, antw)
+    assert all(w["abrechnung"]["endstand"] for w in led["wetten"])
+    assert led["abrechnungLauf"]["abbruch"] is None
+
+
+def test_unter_den_meldungen_die_aeltesten_zuerst():
+    alt = {"id": "alt", "ts": "2026-10-09T10:00:00Z",
+           "abrechnung": {"geprueft": "2026-10-13T17:00:00Z", "ohneAntwort": 5}}
+    neu = {"id": "neu", "ts": "2026-10-12T10:00:00Z"}
+    reihe = sorted([neu, alt], key=lambda w: S.reihenfolge(w, {"alt", "neu"}))
+    assert [w["id"] for w in reihe] == ["alt", "neu"]
+
+
+def test_highroller_abruf_behaelt_die_abrechnungs_felder():
+    """Der Sammler schreibt das Ledger neu — die Felder der Abrechnung muessen mit."""
+    src = (ROOT / "stake_highroller_fetch.py").read_text(encoding="utf-8")
+    assert '"abrechnungLauf"' in src and '"bilanz"' in src

@@ -1217,6 +1217,11 @@ def holen(sonde: bool = False):
     ledger = ledger_mischen(vorher, neu, jetzt_s)
     ledger["luecke"] = luecke
     ledger["luecken"] = luecken_bilanz(vorher.get("luecken"), luecke, jetzt_s)
+    # 13.10.2026: was stake_settle.py oben ins Ledger schreibt (Bilanz, Zeitpunkt, Laufdiagnose),
+    # ging hier bei jedem Abruf verloren — ledger_mischen baut das Dict neu. Mitnehmen.
+    for k in ("bilanz", "abgerechnet", "abrechnungLauf"):
+        if k in (vorher or {}) and k not in ledger:
+            ledger[k] = vorher[k]
     _schreibe(LEDGER_FILE, ledger)
     status = "ok" if roh else ("leer" if not err else "fehler")
     _schreibe(VIEW_FILE, sicht_bauen(ledger, jetzt, status, url_ok, feld, err or "", kurse))
