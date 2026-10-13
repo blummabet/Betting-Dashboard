@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-10-13T12:46:48.902016+00:00",
+"generatedAt": "2026-10-13T13:01:53.664376+00:00",
 "byVerdict": {
 "uneinig": {
-"n": 15,
+"n": 16,
 "wins": 5,
-"hitRate": 0.3333,
-"polyN": 15,
-"polyWins": 5,
-"polyHitRate": 0.3333,
+"hitRate": 0.3125,
+"polyN": 16,
+"polyWins": 6,
+"polyHitRate": 0.375,
 "pinnN": 8,
 "pinnHitRate": 0.375,
-"nRoi": 15,
-"roi": -0.0047,
-"roiLb": -0.629,
-"nClv": 15,
-"clv": -0.13,
-"clvLb": -0.6703
+"nRoi": 16,
+"roi": -0.0669,
+"roiLb": -0.6598,
+"nClv": 16,
+"clv": -0.19,
+"clvLb": -0.7041
 },
 "konsens": {
-"n": 162,
-"wins": 96,
-"hitRate": 0.5926,
-"polyN": 159,
-"polyWins": 93,
-"polyHitRate": 0.5849,
+"n": 163,
+"wins": 97,
+"hitRate": 0.5951,
+"polyN": 160,
+"polyWins": 94,
+"polyHitRate": 0.5875,
 "pinnN": 130,
 "pinnHitRate": 0.6154,
-"nRoi": 162,
-"roi": 0.0529,
-"roiLb": -0.0682,
-"nClv": 162,
+"nRoi": 163,
+"roi": 0.0552,
+"roiLb": -0.0652,
+"nClv": 163,
 "clv": -0.05,
-"clvLb": -0.3478
+"clvLb": -0.3456
 }
 },
 "byLeague": {
@@ -135,6 +135,11 @@
 "wins": 3,
 "hitRate": 0.75
 },
+"AFC Champions League": {
+"n": 3,
+"wins": 2,
+"hitRate": 0.6667
+},
 "English Sky Bet League 2": {
 "n": 3,
 "wins": 1,
@@ -189,11 +194,6 @@
 "n": 2,
 "wins": 1,
 "hitRate": 0.5
-},
-"AFC Champions League": {
-"n": 1,
-"wins": 1,
-"hitRate": 1.0
 },
 "Azerbaijan 1st Division": {
 "n": 1,
@@ -268,37 +268,75 @@
 },
 "byStrength": {
 "strong": {
-"n": 130,
-"wins": 83,
-"hitRate": 0.6385,
-"nRoi": 130,
-"roi": 0.083,
-"roiLb": -0.0434,
-"nClv": 130,
+"n": 131,
+"wins": 84,
+"hitRate": 0.6412,
+"nRoi": 131,
+"roi": 0.0856,
+"roiLb": -0.0398,
+"nClv": 131,
 "clv": -0.0,
-"clvLb": -0.3453
+"clvLb": -0.3426
 },
 "weak": {
-"n": 47,
+"n": 48,
 "wins": 18,
-"hitRate": 0.383,
-"nRoi": 47,
-"roi": -0.0487,
-"roiLb": -0.3491,
-"nClv": 47,
-"clv": -0.22,
-"clvLb": -0.6124
+"hitRate": 0.375,
+"nRoi": 48,
+"roi": -0.0685,
+"roiLb": -0.3644,
+"nClv": 48,
+"clv": -0.24,
+"clvLb": -0.6232
 }
 },
 "divergence": {
-"n": 15,
+"n": 16,
 "betfairWins": 5,
-"betfairRate": 0.3333,
-"polyN": 15,
-"polyWins": 5,
-"polyRate": 0.3333
+"betfairRate": 0.3125,
+"polyN": 16,
+"polyWins": 6,
+"polyRate": 0.375
 },
 "recent": [
+{
+"matchId": "36183266",
+"home": "Pohang Steelers",
+"away": "Johor Darul Ta'zim",
+"league": "AFC Champions League",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Pohang Steelers",
+"polySide": "away",
+"winner": "away",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+0,
+2
+],
+"kickoff": "2026-10-13T10:00:00Z",
+"settledAt": "2026-10-13T13:01:53.434415+00:00"
+},
+{
+"matchId": "36161577",
+"home": "Kyoto",
+"away": "Ratchaburi",
+"league": "AFC Champions League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Kyoto",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-10-13T10:00:00Z",
+"settledAt": "2026-10-13T13:01:53.434415+00:00"
+},
 {
 "matchId": "36167142",
 "home": "Newcastle Jets",
@@ -1020,57 +1058,19 @@
 ],
 "kickoff": "2026-10-11T14:15:00Z",
 "settledAt": "2026-10-11T16:26:20.902624+00:00"
-},
-{
-"matchId": "36127919",
-"home": "Cherno More",
-"away": "PFC Levski Sofia",
-"league": "Bulgarian A League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "PFC Levski Sofia",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-2
-],
-"kickoff": "2026-10-11T14:30:00Z",
-"settledAt": "2026-10-11T16:26:20.902624+00:00"
-},
-{
-"matchId": "36065349",
-"home": "Hull",
-"away": "Everton",
-"league": "English Premier League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Everton",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-10-11T13:00:00Z",
-"settledAt": "2026-10-11T16:11:19.543252+00:00"
 }
 ],
 "global": {
-"n": 177,
-"wins": 101,
-"hitRate": 0.5706,
-"nRoi": 177,
-"roi": 0.048,
-"roiLb": -0.0741,
-"nClv": 177,
+"n": 179,
+"wins": 102,
+"hitRate": 0.5698,
+"nRoi": 179,
+"roi": 0.0443,
+"roiLb": -0.0769,
+"nClv": 179,
 "clv": -0.06,
-"clvLb": -0.3326
+"clvLb": -0.3351
 },
-"pending": 23,
-"ausgeschlossenLive": 1800
+"pending": 22,
+"ausgeschlossenLive": 1799
 }
