@@ -1,11 +1,11 @@
-# 🟡 Picks Validator — 14.10.2026 15:21
+# 🟡 Picks Validator — 14.10.2026 21:53
 
-**52 Spiele geprüft** · 🔴 0 Fehler · 🟡 41 Warnungen · 🔵 151 Hinweise
+**52 Spiele geprüft** · 🔴 0 Fehler · 🟡 41 Warnungen · 🔵 149 Hinweise
 
 ```
 =================================================================
   🐕 CocoBet — Picks Logik-Check
-  14.10.2026 15:21
+  14.10.2026 21:53
   Filter: nächste 3 Tag(e)
 =================================================================
 
@@ -103,19 +103,13 @@
      H2H Schnitt=5.5 Tore (≥3.5) — HARD BLOCK sollte Under 2.5 komplett blocken. Python kann Picks nicht prüfen — JS-Inline-Validator zeigt ERROR falls Pick trotzdem erscheint.
   🔵 HINWEIS [TEAM_OVER_AWAY_LOW_FV]
      📅 17.10.2026  Manchester City vs Ipswich
-     Ipswich expA≈1.00 (statischer Proxy) → FV über 1.5 = 26.4%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
+     Ipswich expA≈1.35 (statischer Proxy) → FV über 1.5 = 39.1%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🔵 HINWEIS [CARDS45_LOW_FV]
      📅 17.10.2026  Brentford vs Liverpool
      Liga-Baserate=3.8 → Poisson FV für Über 4.5 Karten = 33.2%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
   🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
      📅 17.10.2026  Brentford vs Liverpool
      H2H Schnitt=3.3 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
-  🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
-     📅 17.10.2026  Brentford vs Liverpool
-     Brentford expH≈1.30 (statischer Proxy) → FV über 1.5 = 37.3%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
-  🔵 HINWEIS [TEAM_OVER_AWAY_LOW_FV]
-     📅 17.10.2026  Brentford vs Liverpool
-     Liverpool expA≈1.25 (statischer Proxy) → FV über 1.5 = 35.5%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
      📅 17.10.2026  Newcastle vs Aston Villa
      Aston Villa: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
@@ -280,7 +274,7 @@
      H2H Schnitt=3.5 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
   🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
      📅 17.10.2026  Hamburger SV vs VfB Stuttgart
-     Hamburger SV expH≈0.95 (statischer Proxy) → FV über 1.5 = 24.6%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
+     Hamburger SV expH≈0.85 (statischer Proxy) → FV über 1.5 = 20.9%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🟡 WARNUNG [H2H_DOMINATED_HIGH_SCORE]
      📅 17.10.2026  Union Berlin vs Borussia Dortmund
      Borussia Dortmund dominiert H2H 12W/0X/4L in 16 Spielen. matchScore=7.5 — Pick-Richtung sollte klar sein, Angle-Text darf den Underdog nicht überbewerten.
@@ -301,7 +295,7 @@
      H2H Schnitt=3.8 Tore (≥3.5) — HARD BLOCK sollte Under 2.5 komplett blocken. Python kann Picks nicht prüfen — JS-Inline-Validator zeigt ERROR falls Pick trotzdem erscheint.
   🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
      📅 17.10.2026  Union Berlin vs Borussia Dortmund
-     Union Berlin expH≈1.00 (statischer Proxy) → FV über 1.5 = 26.4%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
+     Union Berlin expH≈1.10 (statischer Proxy) → FV über 1.5 = 30.1%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 17.10.2026  SV Elversberg vs FC Augsburg
      Liga-Baserate=3.6 → Poisson FV für Über 3.5 Karten = 48.5% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+7.1%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
@@ -399,7 +393,7 @@
      H2H Schnitt=3.0 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
   🔵 HINWEIS [TEAM_OVER_AWAY_LOW_FV]
      📅 17.10.2026  AS Roma vs Genoa
-     Genoa expA≈0.85 (statischer Proxy) → FV über 1.5 = 20.9%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
+     Genoa expA≈1.15 (statischer Proxy) → FV über 1.5 = 31.9%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
 
 ─────────────────────────────────────────────────────────────────
   🇳🇱 Eredivisie  (rl=26)
@@ -631,12 +625,12 @@
      H2H Schnitt=3.3 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
   🔵 HINWEIS [TEAM_OVER_AWAY_LOW_FV]
      📅 17.10.2026  Fenerbahçe vs Alanyaspor
-     Alanyaspor expA≈0.85 (statischer Proxy) → FV über 1.5 = 20.9%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
+     Alanyaspor expA≈1.20 (statischer Proxy) → FV über 1.5 = 33.7%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
 
 ═════════════════════════════════════════════════════════════════
   Geprüft: 52 Spiele
   🟡 41 Warnungen — manuelle Prüfung empfohlen
-  🔵 151 Hinweise — Pick-Richtung kontrollieren
+  🔵 149 Hinweise — Pick-Richtung kontrollieren
 ═════════════════════════════════════════════════════════════════
 
 ```
