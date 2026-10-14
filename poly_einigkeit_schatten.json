@@ -1,63 +1,5 @@
 [
 {
-"k": "wta-bondar-ruse-2026-09-25|Gabriela Ruse",
-"key": "wta-bondar-ruse-2026-09-25",
-"side": "Gabriela Ruse",
-"wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
-"wallets": [
-"0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
-"0xa68e82763af3ef85188a44fce175145b084787d5"
-],
-"nWallets": 2,
-"league": "TENNIS",
-"cat": "Tennis",
-"usd": 403.0,
-"maxEinzel": 396.0,
-"pushPrice": 0.605,
-"whaleEntry": 0.605,
-"htkMess": 2.87,
-"sentAt": "2026-09-25T01:43:58Z",
-"status": "settled",
-"nurBeobachtung": true,
-"result": "loss",
-"winner": "Anna Bondar",
-"closePrice": null,
-"stake": 10.0,
-"pnl": -10.0,
-"clvPP": 0.0,
-"settledTs": "2026-09-26T14:15:46.893257+00:00",
-"resolvedTs": "2026-09-26T14:15:29.273054+00:00"
-},
-{
-"k": "mlb-sd-lad-2026-09-24|Los Angeles Dodgers",
-"key": "mlb-sd-lad-2026-09-24",
-"side": "Los Angeles Dodgers",
-"wallet": "0xa0f21e6d351baa9185716b5c00c2925ed9621848",
-"wallets": [
-"0xa0f21e6d351baa9185716b5c00c2925ed9621848",
-"0xae817ddfed1c3b37ad23b5e9397cd270ae94f04b"
-],
-"nWallets": 2,
-"league": "MLB",
-"cat": "US-Sport",
-"usd": 841.0,
-"maxEinzel": 748.0,
-"pushPrice": 0.605,
-"whaleEntry": 0.605,
-"htkMess": 0.03,
-"sentAt": "2026-09-25T02:16:33Z",
-"status": "settled",
-"nurBeobachtung": true,
-"result": "loss",
-"winner": "San Diego Padres",
-"closePrice": 0.605,
-"stake": 10.0,
-"pnl": -10.0,
-"clvPP": 0.0,
-"settledTs": "2026-09-25T05:42:54.682037+00:00",
-"resolvedTs": "2026-09-25T05:42:41.398904+00:00"
-},
-{
 "k": "wta-mertens-chwalin-2026-09-24|Elise Mertens",
 "key": "wta-mertens-chwalin-2026-09-24",
 "side": "Elise Mertens",
@@ -23733,7 +23675,8 @@
 "htkMess": 2.53,
 "sentAt": "2026-10-14T16:28:40Z",
 "status": "pending",
-"nurBeobachtung": true
+"nurBeobachtung": true,
+"nichtAufloesbarGrund": "Buendel-Slug ohne Linie (Under)"
 },
 {
 "k": "ucl-bog-bvb-2026-10-14|BV Borussia 09 Dortmund",
@@ -23775,8 +23718,16 @@
 "whaleEntry": 0.715,
 "htkMess": 2.53,
 "sentAt": "2026-10-14T16:28:40Z",
-"status": "pending",
-"nurBeobachtung": true
+"status": "settled",
+"nurBeobachtung": true,
+"result": "win",
+"winner": "VfB Stuttgart",
+"closePrice": 0.705,
+"stake": 10.0,
+"pnl": 3.99,
+"clvPP": -1.0,
+"settledTs": "2026-10-14T21:28:03.327328+00:00",
+"resolvedTs": "2026-10-14T21:27:44.805760+00:00"
 },
 {
 "k": "ucl-ast-fen-2026-10-14|Aston Villa FC",
@@ -23886,8 +23837,16 @@
 "whaleEntry": 0.495,
 "htkMess": 2.53,
 "sentAt": "2026-10-14T16:28:40Z",
-"status": "pending",
-"nurBeobachtung": true
+"status": "settled",
+"nurBeobachtung": true,
+"result": "win",
+"winner": "Over",
+"closePrice": 0.555,
+"stake": 10.0,
+"pnl": 10.2,
+"clvPP": 6.0,
+"settledTs": "2026-10-14T21:28:03.327328+00:00",
+"resolvedTs": "2026-10-14T21:27:47.055545+00:00"
 },
 {
 "k": "nor2-sif-kil-2026-10-14|Stroemsgodset IF",
@@ -23936,8 +23895,18 @@
 "whaleEntry": 0.495,
 "htkMess": 2.03,
 "sentAt": "2026-10-14T16:59:02Z",
-"status": "pending",
-"nurBeobachtung": true
+"status": "settled",
+"nurBeobachtung": true,
+"cond": "0xbc455bbb0a49803ec94f5afcb97f231e6876b63d6328a838240e4223f32f30f9",
+"condQuelle": "erfassung+wallet",
+"result": "win",
+"winner": "Over",
+"closePrice": 0.455,
+"stake": 10.0,
+"pnl": 10.2,
+"clvPP": -4.0,
+"settledTs": "2026-10-14T21:28:03.327328+00:00",
+"resolvedTs": "2026-10-14T21:27:47.055545+00:00"
 },
 {
 "k": "ucl-mnc-psg-2026-10-14|Manchester City FC",
@@ -24044,6 +24013,49 @@
 "whaleEntry": 0.745,
 "htkMess": 2.73,
 "sentAt": "2026-10-14T20:47:03Z",
+"status": "pending",
+"nurBeobachtung": true
+},
+{
+"k": "mlb-mil-lad-2026-10-14|Los Angeles Dodgers",
+"key": "mlb-mil-lad-2026-10-14",
+"side": "Los Angeles Dodgers",
+"wallet": "0x4f0eaecdea458c5ec4a248ce6a8443975bae0200",
+"wallets": [
+"0x4f0eaecdea458c5ec4a248ce6a8443975bae0200",
+"0x66b23cd8bcb651e11b70f6f340ce154864870fdf",
+"0xabf543512f33e2d754ada028a689610139cccfeb"
+],
+"nWallets": 3,
+"league": "MLB",
+"cat": "US-Sport",
+"usd": 11640.0,
+"maxEinzel": 8394.0,
+"pushPrice": 0.615,
+"whaleEntry": 0.615,
+"htkMess": 2.54,
+"sentAt": "2026-10-14T21:28:02Z",
+"status": "pending",
+"nurBeobachtung": true
+},
+{
+"k": "sud-cam-tor-2026-10-14|CA Mineiro",
+"key": "sud-cam-tor-2026-10-14",
+"side": "CA Mineiro",
+"wallet": "0x152be3ddbcacec3d07fa9cc44243d9a06a29fbe1",
+"wallets": [
+"0x152be3ddbcacec3d07fa9cc44243d9a06a29fbe1",
+"0xa278b41b5afda5d18da683eb7f851a7b2dc13369"
+],
+"nWallets": 2,
+"league": "SOCCER",
+"cat": "Fußball",
+"usd": 1035.0,
+"maxEinzel": 993.0,
+"pushPrice": 0.675,
+"whaleEntry": 0.675,
+"htkMess": 0.54,
+"sentAt": "2026-10-14T21:28:02Z",
 "status": "pending",
 "nurBeobachtung": true
 }
