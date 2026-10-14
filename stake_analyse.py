@@ -647,23 +647,23 @@ def auswerten(led: dict, jetzt: str) -> dict:
         # diesen Unterschied weg — das ist die Dilutions-Klasse aus CAPABILITIES §7.
         "randliga_hoher_einsatz": _schublade(filt(
             lambda w: _ls_faktor(w, norm, ebmed)[0] is not None
-            and LS.randliga(w.get("ligaSlug"), w.get("sport"))
+            and LS.randliga(w.get("ligaSlug"), w.get("sport"), w.get("ligaId"))
             and _ls_faktor(w, norm, ebmed)[0] >= LS.KAND_AB)),
         "topliga_hoher_einsatz": _schublade(filt(
             lambda w: _ls_faktor(w, norm, ebmed)[0] is not None
-            and LS.stufe(w.get("ligaSlug"), w.get("sport")) == "1"
+            and LS.stufe(w.get("ligaSlug"), w.get("sport"), w.get("ligaId")) == "1"
             and _ls_faktor(w, norm, ebmed)[0] >= LS.TOP_AB)),
         # 13.09.2026 — die ZWEITE Achse: Marktgroesse statt Spielklasse (s. Vorregistrierung).
         # `basis == "ebene"` heisst: diese Liga hat keine eigene Norm, weil sie zu duenn ist —
         # genau die Linie, die stake_league_norm.py schon zieht. Keine neue Zahl erfunden.
         "kleinmarkt_hoher_einsatz": _schublade(filt(
             lambda w: _ls_faktor(w, norm, ebmed)[0] is not None
-            and LS.stufe(w.get("ligaSlug"), w.get("sport")) is not None
+            and LS.stufe(w.get("ligaSlug"), w.get("sport"), w.get("ligaId")) is not None
             and _ls_faktor(w, norm, ebmed)[1] == "ebene"
             and _ls_faktor(w, norm, ebmed)[0] >= LS.KAND_AB)),
         "grossmarkt_hoher_einsatz": _schublade(filt(
             lambda w: _ls_faktor(w, norm, ebmed)[0] is not None
-            and LS.stufe(w.get("ligaSlug"), w.get("sport")) is not None
+            and LS.stufe(w.get("ligaSlug"), w.get("sport"), w.get("ligaId")) is not None
             and _ls_faktor(w, norm, ebmed)[1] == "liga"
             and _ls_faktor(w, norm, ebmed)[0] >= LS.KAND_AB)),
     }

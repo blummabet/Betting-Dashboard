@@ -875,3 +875,24 @@ def test_pokale_hinter_einem_kommentar_bleiben_eingestuft():
     Namensregel („cup") fing es auf; deshalb prueft der Test die Tabelle, nicht die Stufe."""
     assert LS.ART.get("greece-cup") == "pokal"
     assert LS.ART.get("copa-uruguay") == "pokal"
+
+
+# ── 14.10.2026: die Turnier-ID muss auch in der Auswertung ankommen ──────────────
+def test_randliga_liest_die_turnier_id():
+    """Guatemalas „Primera Division" ist die 2. Liga — ueber den Slug allein waere sie Ebene 1."""
+    gua = "16c027b0-893a-40de-b829-63d5ea863a64"
+    assert LS.randliga("primera-division", "soccer") is False
+    assert LS.randliga("primera-division", "soccer", gua) is True
+
+
+def test_stake_analyse_reicht_die_turnier_id_durch():
+    src = (ROOT / "stake_analyse.py").read_text(encoding="utf-8")
+    assert 'LS.stufe(w.get("ligaSlug"), w.get("sport"))' not in src
+    assert 'LS.randliga(w.get("ligaSlug"), w.get("sport"))' not in src
+
+
+def test_alle_mehrdeutigen_slugs_vom_14_10_sind_je_id_eingestuft():
+    for sl in ("championship", "bundesliga", "superliga", "superligaen", "premiership"):
+        assert sl in LS.TURNIER_EBENE, sl
+    assert LS.stufe("championship", "soccer", "cccf9635-e69f-4d1a-a0e3-27d5c332a579") == "2"
+    assert LS.stufe("bundesliga", "soccer", "62699282-5557-4952-875c-f9f48b5a8827") == "1"

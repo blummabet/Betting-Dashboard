@@ -610,6 +610,67 @@ TURNIER_EBENE = {
     },
 }
 
+# 🟡 14.10.2026 (Stoerungsmeldung „11 Liga-Schluessel bezeichnen mehrere Turniere"): 26 offene
+# Turnier-IDs unter 11 Slugs, jede an ihren Paarungen nachgesehen. Ergebnis vorweg: KEINE traegt
+# eine andere Klasse als ihr Slug — die Laufzeit-Einstufung (`stufe()` faellt fuer unbekannte IDs
+# auf den Slug zurueck) war in allen Faellen richtig. Eingetragen wird trotzdem jede ID: erst dann
+# meldet der Wachhund nur noch WIRKLICH neue, und eine abweichende Klasse (wie Guatemalas
+# „Primera Division" = 2. Liga am 01.10.) faellt sofort auf statt in einer Liste von 26 unterzugehen.
+# Wo die Einstufung nur ueber Vereine laeuft und unsicher ist, steht es dabei.
+TURNIER_EBENE["premier-league"].update({
+    "f2458771-8cd7-4321-95d4-c8c0213a2420": ("England, zweite ID (Arsenal - Leeds, Liverpool - Man City)", 1),
+    "4d9ff4d8-b060-496a-8c44-28490952674e": ("Russland (CSKA - Rodina, Fakel - Lokomotiv)", 1),
+    "5142bb72-422a-4e1f-a0d9-6741798761e4": ("Kasachstan (Kairat - Zhetysu, Ulytau - Okzhetpes)", 1),
+    "5cba677c-fbd4-4667-b5cc-c94e4177f29c": ("Singapur (Hougang - Balestier, Lion City Sailors)", 1),
+    "9187248c-2c09-4e43-91a9-95535b68d407": ("Singapur, zweite ID (Lion City Sailors - Young Lions)", 1),
+    "652c995d-3fbe-4e85-bae0-20fe321f50d0": ("Israel, zweite ID (Hapoel Jerusalem - Maccabi Haifa)", 1),
+    "720d2e1f-39e3-4f63-985a-d9b1b097b341": ("Hongkong (Rangers - Lee Man, Southern - Eastern)", 1),
+    "134f0a60-a7d1-40b1-b006-b89583cf27fb": ("Bahrain (Manama Club - Al-Ahli Manama)", 1),
+    "9369d46f-d399-4eee-b18e-6e8463cd9306": ("St. Kitts und Nevis (Cayon Rockets - St. Pauls)", 1),
+    "e65fda02-bd78-475d-b1ef-9203f22043be": ("Aegypten (Pyramids - Ceramica Cleopatra)", 1),
+    "f00175c1-2b09-4300-98e1-9454be395358": ("Armenien (Pyunik - BKMA, Ararat-Armenia - Alashkert)", 1),
+})
+TURNIER_EBENE["ligue-1"]["0e41fdea-749a-445f-ab8c-aee7fccd3410"] = ("Frankreich, zweite ID (PSG - Le Mans)", 1)
+TURNIER_EBENE["primera-division"].update({
+    "08169963-97d9-4273-85e0-9e0e7f8c3b47": ("Chile, zweite ID (U. de Chile - Nublense)", 1),
+    "6dfb1fe4-0297-4160-a4e9-6a5375d67f60": ("Venezuela, Liga FUTVE (Tachira - UCV, Portuguesa - La Guaira)", 1),
+})
+TURNIER_EBENE["primera-division-apertura"].update({
+    "bb16eb31-5e92-4c0f-8c33-ab2dd5de9ac5": ("El Salvador, zweite ID (CD Inca - Platense)", 1),
+    # Ueber die Vereine: Saprissa, Cartagines, Puntarenas, Perez Zeledon, AD San Carlos sind
+    # Costa Ricas oberste Liga. Escorpiones Belen und Inter San Carlos sind NICHT sicher erste
+    # Klasse — tauchen dort weitere Zweitligisten auf, gehoert die ID nach MEHRDEUTIG.
+    "e8debc1b-037b-45dd-b81b-2442587bf61f": ("Costa Rica (Saprissa, Cartagines, Puntarenas) — ueber die Vereine", 1),
+})
+# Unsicher, nur ueber die Vereine: Orion FC spielt in Costa Ricas Liga de Ascenso (2. Klasse).
+TURNIER_EBENE["segunda-division"]["13692592-cf35-478b-bf52-2ecf9450e3d9"] = (
+    "Costa Rica, Liga de Ascenso (Orion FC - Independiente) — ueber die Vereine", 2)
+TURNIER_EBENE.update({
+    "championship": {
+        "3b662c1a-f26b-4463-9fa0-9ff957b706ee": ("England (West Ham - QPR, Southampton - Portsmouth)", 2),
+        "e53bf7a3-35e5-4549-9cae-d48af0964180": ("England, zweite ID (Wolves - Bolton)", 2),
+        "cccf9635-e69f-4d1a-a0e3-27d5c332a579": ("Schottland (Queen's Park - Inverness CT)", 2),
+    },
+    "bundesliga": {
+        "1add4a75-3be9-4f08-b8f8-b33d903faf74": ("Deutschland (Augsburg - Bayern, Dortmund - Bremen)", 1),
+        "62699282-5557-4952-875c-f9f48b5a8827": ("Oesterreich (LASK - Rapid, GAK - Salzburg)", 1),
+    },
+    "superliga": {
+        "75075ee8-c5fe-49b4-a87a-8da3ab4e028b": ("Argentinien, Liga Profesional (Instituto - Boca)", 1),
+        "a8e8f99d-40ee-4b18-80f7-bd7658c906cd": ("Argentinien, zweite ID (River - Estudiantes RC)", 1),
+        "e0a854b2-d8a5-4990-8a85-81d7565dd403": ("Serbien (Partizan - Novi Pazar, Zemun - Zeleznicar)", 1),
+    },
+    "superligaen": {
+        "90ae85a9-3f06-47e9-bb15-8fbf8380cba0": ("Daenemark (Silkeborg - Horsens, Randers - Viborg)", 1),
+        "d725499a-e368-4852-8fc7-512e69c87561": ("Daenemark, zweite ID (Midtjylland - Kopenhagen)", 1),
+    },
+    "premiership": {
+        "b3e8923b-3afa-48b1-b39b-bb4a92d76e3f": ("Schottland (Motherwell - Celtic)", 1),
+        "c8e1d9f6-82a4-4588-967b-897fa2f82bd1": ("Schottland, zweite ID (Rangers - Kilmarnock)", 1),
+        "425e9e11-1e7e-440f-afde-338219a4c5aa": ("Nordirland, NIFL Premiership (Linfield - Bangor)", 1),
+    },
+})
+
 _MUSTER = (
     ("srl", lambda s: s.endswith("-srl") or "-srl-" in s),          # Simulated Reality League
     ("freundschaft", lambda s: bool(_FREUNDSCHAFT_RX.search(s))),
@@ -836,9 +897,12 @@ def mehrdeutige_kandidaten(zeilen, sport: str = SPORT) -> dict:
     return {"nMitId": mit_id, "kandidaten": treffer}
 
 
-def randliga(slug: str, sport: str = SPORT) -> bool:
-    """Ebene 2 oder tiefer — das, was Lucas „2.-3. Liga" nennt."""
-    return stufe(slug, sport) in ("2", "3")
+def randliga(slug: str, sport: str = SPORT, liga_id=None) -> bool:
+    """Ebene 2 oder tiefer — das, was Lucas „2.-3. Liga" nennt.
+
+    14.10.2026: mit Turnier-ID, sonst liest die Funktion am Slug vorbei, wo TURNIER_EBENE die
+    Klasse je ID kennt (Guatemalas „Primera Division" = 2. Liga, Argentiniens Primera B = 3.)."""
+    return stufe(slug, sport, liga_id) in ("2", "3")
 
 
 # ── Referenzeinsatz ──────────────────────────────────────────────────────────
