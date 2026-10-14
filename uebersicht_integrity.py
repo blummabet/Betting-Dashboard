@@ -598,6 +598,29 @@ def check_poly_deckung(ctx):
         bis_anpfiff = [z for z in (buch.get("slugs") or {}).values()
                        if isinstance(z, dict) and not z.get("nachgeholt")
                        and (z.get("minHtk") is not None and z["minHtk"] <= PD.NAH_H)]
+        # 🔴 14.10.2026: das Buch haelt einen verpassten Markt bis zu 400 Slugs lang. Rot hiess
+        # damit „irgendwann in den letzten Wochen" — die vier Serie-A-Spiele vom 10./11.10.
+        # haetten die Batterie noch wochenlang rot gehalten, obwohl die Ursache (Tag statt
+        # series_id, s. poly_money_broad._series_ids) behoben war. Rot ist fuer JETZT: nur was
+        # in den letzten 72 h zuletzt gesehen wurde. Aeltere Faelle bleiben als Zahl sichtbar.
+        # Bezugspunkt ist der letzte Lauf des Buchs, nicht die Uhr: ein Buch, das stehen bleibt,
+        # soll seine Funde nicht still „verjaehren" lassen.
+        try:
+            _bezug = datetime.fromisoformat(str(buch.get("updatedAt")).replace("Z", "+00:00"))
+        except Exception:
+            _bezug = datetime.now(timezone.utc)
+        _grenze = _bezug - timedelta(hours=72)
+        def _frisch(z):
+            try:
+                return datetime.fromisoformat(str(z.get("zuletztGesehen")).replace("Z", "+00:00")) >= _grenze
+            except Exception:
+                return True
+        alt_blind = [z for z in bis_anpfiff if not _frisch(z)]
+        bis_anpfiff = [z for z in bis_anpfiff if _frisch(z)]
+        if alt_blind and not bis_anpfiff:
+            fails.append("Buch: %d Markt/Maerkte frueher bis zum Anpfiff nie erfasst (aelter als 72 h, "
+                         "zuletzt %s) — in den letzten 72 h keiner"
+                         % (len(alt_blind), max(str(z.get("zuletztGesehen"))[:10] for z in alt_blind)))
         if bis_anpfiff:
             blind = True
             fails.append("Buch: %d Markt/Maerkte wurden bis zum Anpfiff nie erfasst (%s) — dort "
@@ -606,7 +629,7 @@ def check_poly_deckung(ctx):
                             "; ".join("%s (%.1fh)" % (z.get("slug"), z.get("minHtk"))
                                       for z in sorted(bis_anpfiff,
                                                       key=lambda x: x.get("minHtk") or 0)[:4])))
-        elif b["quotePct"] is not None and b["nLaeufeMitLuecke"]:
+        elif b["quotePct"] is not None and b["nLaeufeMitLuecke"] and not alt_blind:
             fails.append("Buch: in %d von %d Laeufen (%d %%) war eine Deckungsluecke offen — "
                          "alle wurden noch vor dem Anpfiff nachgeholt (%s)"
                          % (b["nLaeufeMitLuecke"], b["nLaeufe"], b["quotePct"], b["urteil"]))

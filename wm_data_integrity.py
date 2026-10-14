@@ -2169,6 +2169,13 @@ def check_played_games_resolved(ctx):
             continue
         if (ctx.now - kt).total_seconds() < 5 * 3600:
             continue   # zu frisch — Result-Fetch (4×/Tag) hatte evtl. noch keinen Lauf
+        # 14.10.2026 (Stoerungsmeldung „728-531 … Ergebnis-Status 'leer'"): Rayo–Athletic am
+        # 10.10. wurde ABGEBROCHEN. fetch_liga_ergebnisse vermerkt das bewusst als `absage` am
+        # Fixture und NICHT als `result` (s. absage_eintragen) — dieser Waechter las das Feld
+        # nicht und meldete eine Abruf-Luecke, die keine ist. Ein abgesagtes Spiel hat keinen
+        # Endstand zu haben.
+        if (fx.get("absage") or {}).get("status"):
+            continue
         st = str((fx.get("result") or {}).get("status") or "").upper()
         if st not in ("FT", "AET", "PEN", "AWD", "WO"):
             fails.append(f"{fx.get('home')}-{fx.get('away')}: Anpfiff {str(ko)[:16]} vorbei, "

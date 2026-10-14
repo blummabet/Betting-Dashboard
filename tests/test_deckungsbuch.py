@@ -147,3 +147,18 @@ class TestDerScannerSchreibtDasBuchUeberhaupt(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_alte_blinde_luecke_ist_nicht_mehr_rot():
+    """14.10.2026: vier Serie-A-Spiele vom 10./11.10. hielten die Batterie rot, obwohl die
+    Ursache behoben war. Rot gilt fuer die letzten 72 h des Buchs."""
+    import uebersicht_integrity as UI
+    buch = {"updatedAt": "2026-10-14T06:00:00+00:00",
+            "laeufe": [{"ts": "2026-10-14T06:00:00+00:00", "nLigaMaerkte": 98, "nLuecken": 0, "nNah": 0}],
+            "slugs": {"sea-int-par-2026-10-10": {"slug": "sea-int-par-2026-10-10", "minHtk": 0.0,
+                                                 "nachgeholt": False,
+                                                 "zuletztGesehen": "2026-10-10T15:58:00+00:00"}}}
+    ctx = {"ligaPoly": {"prices": {"x": {}}}, "polyClose": {"x": {}}, "polyDeckungBuch": buch}
+    c = UI.check_poly_deckung(ctx)
+    assert "aelter als 72 h" in " ".join(c["failures"])
+    assert c["severity"] == "warn"

@@ -68,6 +68,13 @@ class TestPlayedGamesGuard(unittest.TestCase):
                         "result": {"status": "FT", "home_score": 1, "away_score": 0}}])
         self.assertTrue(c["ok"])
 
+    def test_abgesagtes_spiel_braucht_keinen_endstand(self):
+        """14.10.2026: Rayo–Athletic (10.10.) abgebrochen, vermerkt als `absage`, nicht als
+        `result` — das ist kein Abruf-Loch."""
+        c = self._run([{"home": "728", "away": "531", "kickoff": "2026-06-25T01:00:00Z",
+                        "result": None, "absage": {"status": "ABD"}}])
+        self.assertTrue(c["ok"])
+
 
 if __name__ == "__main__":
     unittest.main()
