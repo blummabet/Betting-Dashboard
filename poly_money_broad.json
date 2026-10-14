@@ -1,15 +1,15 @@
 {
- "n": 509,
+ "n": 535,
  "minOdds": 1.35,
- "moneyHitRate": 0.415,
- "priceHitRate": 0.456,
- "brierMoney": 0.7926,
- "brierPrice": 0.6469,
+ "moneyHitRate": 0.409,
+ "priceHitRate": 0.452,
+ "brierMoney": 0.8001,
+ "brierPrice": 0.6505,
  "disagree": {
-  "n": 142,
-  "moneyWon": 24,
-  "priceWon": 45,
-  "neither": 73
+  "n": 155,
+  "moneyWon": 27,
+  "priceWon": 50,
+  "neither": 78
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -79,6 +79,14 @@
    "verdict": "preis_besser"
   },
   {
+   "league": "SOCCER:SEA",
+   "n": 25,
+   "moneyHitRate": 0.32,
+   "brierMoney": 0.9295,
+   "brierPrice": 0.7195,
+   "verdict": "preis_besser"
+  },
+  {
    "league": "EFL-CHAMPIONSHIP",
    "n": 26,
    "moneyHitRate": 0.5,
@@ -88,9 +96,9 @@
   }
  ],
  "guete": {
-  "belastbar": 509,
-  "preis_echo": 299,
-  "abgeschnitten": 51,
+  "belastbar": 535,
+  "preis_echo": 301,
+  "abgeschnitten": 53,
   "unbekannt": 0,
   "leer": 0
  },
@@ -130,6 +138,18 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 3775748
+  },
+  {
+   "key": "sea-tor-rom-2026-09-14",
+   "league": "SOCCER:SEA",
+   "winner": "AS Roma",
+   "moneyFav": "AS Roma",
+   "priceFav": "AS Roma",
+   "moneyShare": 0.958,
+   "priceProb": 0.638,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 2167366
   },
   {
    "key": "lal-mala-vil-2026-09-17",
@@ -396,6 +416,18 @@
    "totalUsd": 409150
   },
   {
+   "key": "sea-com-rom-2026-10-11",
+   "league": "SOCCER:SEA",
+   "winner": "Draw (Como 1907 vs. AS Roma)",
+   "moneyFav": "Como 1907",
+   "priceFav": "Como 1907",
+   "moneyShare": 0.457,
+   "priceProb": 0.413,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 406430
+  },
+  {
    "key": "fl1-olm-psg-2026-09-20",
    "league": "LIGUE-1",
    "winner": "Paris Saint-Germain FC",
@@ -430,6 +462,18 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 379436
+  },
+  {
+   "key": "sea-rom-int-2026-09-19",
+   "league": "SEA",
+   "winner": "Draw (AS Roma vs. FC Internazionale Milano)",
+   "moneyFav": "AS Roma",
+   "priceFav": "FC Internazionale Milano",
+   "moneyShare": 0.676,
+   "priceProb": 0.373,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 368908
   },
   {
    "key": "bra-cam-san-2026-10-11",
@@ -538,49 +582,13 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 251373
-  },
-  {
-   "key": "epl-lee-new-2026-09-14-exact-score",
-   "league": "EPL",
-   "winner": "Any Other Score",
-   "moneyFav": "Leeds United FC 1 - 1 Newcastle United FC",
-   "priceFav": "Leeds United FC 1 - 1 Newcastle United FC",
-   "moneyShare": 0.126,
-   "priceProb": 0.129,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 247604
-  },
-  {
-   "key": "mls-aus-nas-2026-10-10",
-   "league": "MLS",
-   "winner": "Nashville SC",
-   "moneyFav": "Nashville SC",
-   "priceFav": "Nashville SC",
-   "moneyShare": 0.974,
-   "priceProb": 0.572,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 235051
-  },
-  {
-   "key": "ucl-rbl-psv-2026-10-13",
-   "league": "SOCCER:UCL",
-   "winner": "RB Leipzig",
-   "moneyFav": "RB Leipzig",
-   "priceFav": "RB Leipzig",
-   "moneyShare": 0.743,
-   "priceProb": 0.612,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 228044
   }
  ],
- "generatedAt": "2026-10-14T06:55:14.703760+00:00",
+ "generatedAt": "2026-10-14T07:25:53.704645+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
-  "nba": 479,
+  "nba": 480,
   "nfl": 800,
   "mlb": 480,
   "nhl": 612,
@@ -599,7 +607,7 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 694,
+  "esports": 692,
   "cs2": 425,
   "lol": 446,
   "dota": 21,
@@ -609,7 +617,7 @@
   "boxing": 313,
   "golf": 421,
   "f1": 448,
-  "cricket": 524,
+  "cricket": 517,
   "afc-champions-league-elite": 214,
   "allsvenskan": 1,
   "austria-bundesliga": 378,
@@ -656,53 +664,60 @@
   "ukraine-premier-liha": 485,
   "womens-champions-league": 400
  },
+ "rawBySeries": {
+  "10188": 570,
+  "10193": 581,
+  "10194": 526,
+  "10195": 553,
+  "10203": 591
+ },
  "sweepStats": {
   "sweepOpen": 500,
   "sweepClosed": 500,
   "sweepAdded": 409
  },
  "vorStats": {
-  "kandidaten": 13,
+  "kandidaten": 7,
   "budgetLeer": 0,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
-  "mitAnteilen": 13,
-  "calls": 13
+  "mitAnteilen": 7,
+  "calls": 7
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1152,
-   "usd": 22328579,
-   "beispiel": "fifwc-gha-pan-2026-06-17"
+   "n": 1283,
+   "usd": 22913526,
+   "beispiel": "fifwc-fra-eng-2026-07-18-more-markets"
   },
   "world": {
-   "n": 125,
-   "usd": 8589606,
-   "beispiel": "world-cup-winner"
+   "n": 128,
+   "usd": 8602897,
+   "beispiel": "world-cup-3rd-place-finish-20260713190252671"
   },
   "uefa": {
-   "n": 39,
-   "usd": 4755601,
-   "beispiel": "uefa-champions-league-2027-champion-20260701202025549"
+   "n": 38,
+   "usd": 4743703,
+   "beispiel": "uefa-champions-league-winner"
   },
   "balance": {
    "n": 7,
    "usd": 1336547,
    "beispiel": "balance-of-power-2026-midterms"
   },
-  "fed": {
-   "n": 30,
-   "usd": 608527,
-   "beispiel": "fed-decision-in-september-762"
-  },
   "will": {
-   "n": 16,
-   "usd": 592353,
+   "n": 19,
+   "usd": 598951,
    "beispiel": "will-trump-declare-a-national-emergency-on-his-first-day"
+  },
+  "fed": {
+   "n": 27,
+   "usd": 589875,
+   "beispiel": "fed-decision-in-october-20260617190323537"
   },
   "which": {
    "n": 21,
-   "usd": 518995,
+   "usd": 518992,
    "beispiel": "which-crypto-company-will-zachxbt-expose-for-insider-trading"
   },
   "presidential": {
@@ -716,59 +731,59 @@
    "beispiel": "cbb-ind-rutger-2026-01-23"
   },
   "btc": {
-   "n": 33,
-   "usd": 171260,
+   "n": 34,
+   "usd": 173857,
    "beispiel": "btc-updown-4h-1767862800"
   },
-  "elon": {
-   "n": 35,
-   "usd": 162107,
-   "beispiel": "elon-musk-of-tweets-april-10-april-17"
+  "brazil": {
+   "n": 13,
+   "usd": 118930,
+   "beispiel": "brazil-presidential-election"
   },
   "us": {
    "n": 11,
-   "usd": 120241,
-   "beispiel": "us-x-iran-effective-ceasefire-begins-byptptpt-2-week-pause"
+   "usd": 114434,
+   "beispiel": "us-iran-ceasefire-continues-throughptptpt"
   },
-  "next": {
-   "n": 9,
-   "usd": 100421,
-   "beispiel": "next-french-presidential-election"
+  "what": {
+   "n": 15,
+   "usd": 111770,
+   "beispiel": "what-price-will-bitcoin-hit-on-june-3"
   },
   "nbasl": {
    "n": 2,
    "usd": 100143,
    "beispiel": "nbasl-cle-nop-2026-07-15"
   },
-  "what": {
-   "n": 16,
-   "usd": 94362,
-   "beispiel": "what-price-will-bitcoin-hit-on-june-3"
+  "lec": {
+   "n": 23,
+   "usd": 88139,
+   "beispiel": "lec-rsl-jua-2026-08-11-more-markets"
+  },
+  "pro": {
+   "n": 7,
+   "usd": 83762,
+   "beispiel": "pro-football-atlanta-falcons-2026-win-total"
   },
   "euroleague": {
-   "n": 11,
-   "usd": 74768,
+   "n": 12,
+   "usd": 77712,
    "beispiel": "euroleague-paris-bologna-2026-10-14"
   },
-  "ballon": {
+  "ncaa": {
+   "n": 3,
+   "usd": 76010,
+   "beispiel": "ncaa-football-team-win-totals-20260731193847013"
+  },
+  "next": {
    "n": 10,
-   "usd": 73742,
+   "usd": 65690,
+   "beispiel": "next-french-presidential-election"
+  },
+  "ballon": {
+   "n": 9,
+   "usd": 62097,
    "beispiel": "ballon-dor-winner-2026"
-  },
-  "lec": {
-   "n": 16,
-   "usd": 71973,
-   "beispiel": "lec-orl-asl-2026-08-12"
-  },
-  "brazil": {
-   "n": 12,
-   "usd": 70791,
-   "beispiel": "brazil-presidential-election"
-  },
-  "avatar": {
-   "n": 1,
-   "usd": 50260,
-   "beispiel": "avatar-fire-and-ash-opening-weekend-box-office"
   }
  }
 }
