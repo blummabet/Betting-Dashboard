@@ -108,3 +108,26 @@ class TestGuard(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+# ── 14.10.2026: Top-Ligen ueber dieselbe Serien-ID wie der Liga-Fetcher ─────────
+def test_money_scan_liest_die_serien_ids_aus_derselben_konfig():
+    """Inter–Parma ($106k) u. a. fehlten im Money-Scan, weil er Serie A ueber den Tag `serie-a`
+    suchte (52 Events) statt ueber series_id 10203 wie der Liga-Fetcher."""
+    import json as _j
+    from pathlib import Path as _P
+    import poly_money_broad as PMB
+    cfg = _j.loads((_P(PMB.BASE) / "cocobet_config.json").read_text(encoding="utf-8"))
+    soll = cfg["profiles"]["liga_default"]["poly"]["series_id"].split(",")
+    assert PMB._series_ids() == [x.strip() for x in soll]
+    assert "10203" in PMB._series_ids(), "Serie A"
+
+
+def test_serien_abfrage_baut_den_richtigen_filter(monkeypatch):
+    import poly_money_broad as PMB
+    urls = []
+    monkeypatch.setattr(PMB, "_get", lambda u, *a, **k: urls.append(u) or [])
+    PMB._gamma_events("series_id=10203", closed=False)
+    PMB._gamma_events("la-liga", closed=False)
+    assert "series_id=10203" in urls[0] and "tag_slug" not in urls[0]
+    assert "tag_slug=la-liga" in urls[1]

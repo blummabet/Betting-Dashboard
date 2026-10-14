@@ -418,6 +418,26 @@ def _enrich_book_trades(m_row, oc, get, budget):
 
 
 
+def _series_ids():
+    """Numerische Gamma-Serien der Top-Ligen — EINE Quelle mit dem Liga-Fetcher.
+
+    🔴 14.10.2026 (Stoerungsmeldung „Poly-Deckung: 4 Maerkte bis zum Anpfiff nie erfasst"):
+    Inter–Parma ($106.533), Cagliari–Juventus, Sassuolo–Milan, Napoli–Frosinone (10./11.10.)
+    hatte der Liga-Fetcher, der Money-Scan nie. Der Liga-Fetcher holt die Top-5 ueber
+    `series_id` (cocobet_config profiles.liga_default.poly.series_id, Serie A = 10203), der
+    Money-Scan ueber den TAG `serie-a` — und der lieferte 52 Events gegen 600 bei `la-liga`.
+    Serie A kam damit nur ueber den tag-losen Volumen-Sweep herein, und dort reichen $100k
+    nicht fuer die Top-500 aller Polymarket-Events. Fehlerklasse: zwei Fetcher, zwei Wege zur
+    selben Liga, und nur einer davon ist der richtige.
+    """
+    try:
+        raw = _json.loads((BASE / "cocobet_config.json").read_text(encoding="utf-8"))
+        v = (((raw.get("profiles") or {}).get("liga_default") or {}).get("poly") or {}).get("series_id")
+        return [x.strip() for x in str(v or "").split(",") if x.strip()]
+    except Exception:
+        return []
+
+
 def _tags():
     try:
         raw = _json.loads((BASE / "cocobet_config.json").read_text(encoding="utf-8"))
@@ -526,7 +546,9 @@ def _gamma_events(tag, closed, now=None):
         floor = (now or _now()) - timedelta(hours=LIVE_KEEP_H)
         qorder = "&order=endDate&ascending=true&end_date_min=" + floor.strftime("%Y-%m-%dT%H:%M:%SZ")
     for _ in range(4):   # bis 400 Events je Tag
-        url = (f"{GAMMA}?tag_slug={tag}&limit=100&offset={offset}"
+        # 14.10.2026: ein „tag" mit Gleichheitszeichen ist ein fertiger Filter (series_id=…).
+        flt = str(tag) if "=" in str(tag) else "tag_slug=%s" % tag
+        url = (f"{GAMMA}?{flt}&limit=100&offset={offset}"
                f"&active=true&closed={'true' if closed else 'false'}{qorder}")
         page = _get(url)
         if not isinstance(page, list) or not page:
@@ -1642,6 +1664,7 @@ def fetch_markets(live_only=False, pin=None):
     tags = list(dict.fromkeys(list(tags) + sorted(_load_league_registry())))
     markets = []
     raw_by_tag = {}                      # je Tag: wie viele ROH-Events kamen (offen+aufgelöst)
+    raw_by_series = {}                   # 14.10.2026: dasselbe je Gamma-Serie (Top-Ligen, s. _series_ids)
     seen = set()                         # Dedup: ein Markt kann unter mehreren Tags liegen (cs2 ⊂ esports)
     candidates = []                      # near-kickoff 2-Wege-Kandidaten, VOR den Holders-Calls
     klein_candidates = []                # 11.09.2026: Maerkte UNTER MIN_VOL_USD, eigene Spur
@@ -1759,6 +1782,17 @@ def fetch_markets(live_only=False, pin=None):
         raw_by_tag[tag] = len(open_evs) + len(closed_evs)
         _ingest(open_evs, closed_evs, lambda ev, key, _t=tag: _t.upper(), lambda ev, key, _t=tag: _tag_category(_t, _foot_reg))
         _discovered |= _discover_football_tags(open_evs) | _discover_football_tags(closed_evs)
+
+    # A2) Top-Ligen ueber ihre numerische Serie (s. _series_ids) — je ID EINE Anfrage, weil Gamma
+    # `offset` ignoriert, sobald mehrere series_id in einem Request stehen (fetch_wm_poly_prices).
+    # Liga-Label aus dem Slug wie im Sweep (sea-… → SEA), damit dieselben Keys dasselbe Label tragen.
+    for sid in _series_ids():
+        flt = "series_id=%s" % sid
+        open_evs = _gamma_events(flt, closed=False)
+        closed_evs = _gamma_events(flt, closed=True)
+        raw_by_series[sid] = len(open_evs) + len(closed_evs)
+        _ingest(open_evs, closed_evs, lambda ev, key: _league_from_slug(key),
+                lambda ev, key: "Fußball")
 
     # B) Tag-LOSER Volumen-Sweep — fängt JEDE Sportart mit Volumen ein, auch ohne kuratierten Tag
     # (nimmt der „Liga fehlt still"-Klasse die Grundlage). Dedup gegen A über `seen`; Liga aus Slug.
@@ -1963,6 +1997,7 @@ def fetch_markets(live_only=False, pin=None):
             print(f"  Resolution-Backfill übersprungen (nicht fatal): {_e}")
     _save_league_registry(_discovered)   # 16.08.2026 (Lucas): neu entdeckte Fussball-Ligen persistieren -> naechster Lauf fetcht sie voll
     fetch_markets.discovered = sorted(_discovered)   # Diagnose
+    fetch_markets.raw_by_series = raw_by_series
     fetch_markets.raw_by_tag = raw_by_tag   # 21.07.2026: für die Diagnose im Output
     return markets
 
@@ -2635,6 +2670,7 @@ def main() -> int:
     rep["scope"] = "broad_all_leagues"
     # 21.07.2026: welche Sport-Tags liefern überhaupt Events (statt zu raten, welche Poly hat)?
     rep["rawByTag"] = getattr(fetch_markets, "raw_by_tag", {})
+    rep["rawBySeries"] = getattr(fetch_markets, "raw_by_series", {})
     rep["sweepStats"] = getattr(fetch_markets, "sweep_stats", {})
     # 01.09.2026: die Vor-Fenster-Bilanz gehoert IN die Datei, nicht ins Log — ein Log, das niemand
     # liest, hat die tote Poly-Bedingung monatelang gedeckt. Der Waechter liest sie hier.
