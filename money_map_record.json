@@ -1,54 +1,54 @@
 {
-"generatedAt": "2026-10-14T21:51:06.615958+00:00",
+"generatedAt": "2026-10-14T22:23:39.987924+00:00",
 "byVerdict": {
 "uneinig": {
-"n": 17,
+"n": 18,
 "wins": 6,
-"hitRate": 0.3529,
-"polyN": 17,
-"polyWins": 6,
-"polyHitRate": 0.3529,
-"pinnN": 9,
-"pinnHitRate": 0.3333,
-"nRoi": 17,
-"roi": 0.0347,
-"roiLb": -0.5468,
-"nClv": 17,
-"clv": -0.33,
-"clvLb": -0.8708
+"hitRate": 0.3333,
+"polyN": 18,
+"polyWins": 7,
+"polyHitRate": 0.3889,
+"pinnN": 10,
+"pinnHitRate": 0.3,
+"nRoi": 18,
+"roi": -0.0228,
+"roiLb": -0.5791,
+"nClv": 18,
+"clv": -0.26,
+"clvLb": -0.786
 },
 "konsens": {
-"n": 192,
-"wins": 110,
-"hitRate": 0.5729,
-"polyN": 189,
-"polyWins": 108,
-"polyHitRate": 0.5714,
-"pinnN": 155,
-"pinnHitRate": 0.5935,
-"nRoi": 192,
-"roi": 0.0149,
-"roiLb": -0.0962,
-"nClv": 192,
-"clv": -0.1,
-"clvLb": -0.3938
+"n": 196,
+"wins": 113,
+"hitRate": 0.5765,
+"polyN": 193,
+"polyWins": 110,
+"polyHitRate": 0.5699,
+"pinnN": 159,
+"pinnHitRate": 0.5975,
+"nRoi": 196,
+"roi": 0.0204,
+"roiLb": -0.0893,
+"nClv": 196,
+"clv": -0.11,
+"clvLb": -0.4092
 }
 },
 "byLeague": {
+"UEFA Champions League": {
+"n": 18,
+"wins": 11,
+"hitRate": 0.6111
+},
+"English Sky Bet Championship": {
+"n": 16,
+"wins": 9,
+"hitRate": 0.5625
+},
 "Brazilian Serie A": {
 "n": 15,
 "wins": 10,
 "hitRate": 0.6667
-},
-"English Sky Bet Championship": {
-"n": 15,
-"wins": 8,
-"hitRate": 0.5333
-},
-"UEFA Champions League": {
-"n": 14,
-"wins": 9,
-"hitRate": 0.6429
 },
 "Italian Serie A": {
 "n": 12,
@@ -283,37 +283,132 @@
 },
 "byStrength": {
 "strong": {
-"n": 155,
-"wins": 95,
-"hitRate": 0.6129,
-"nRoi": 155,
-"roi": 0.0361,
-"roiLb": -0.08,
-"nClv": 155,
-"clv": -0.02,
-"clvLb": -0.3651
+"n": 159,
+"wins": 98,
+"hitRate": 0.6164,
+"nRoi": 159,
+"roi": 0.0423,
+"roiLb": -0.0721,
+"nClv": 159,
+"clv": -0.04,
+"clvLb": -0.3856
 },
 "weak": {
-"n": 54,
+"n": 55,
 "wins": 21,
-"hitRate": 0.3889,
-"nRoi": 54,
-"roi": -0.0398,
-"roiLb": -0.3183,
-"nClv": 54,
-"clv": -0.38,
-"clvLb": -0.8012
+"hitRate": 0.3818,
+"nRoi": 55,
+"roi": -0.0573,
+"roiLb": -0.3321,
+"nClv": 55,
+"clv": -0.36,
+"clvLb": -0.7729
 }
 },
 "divergence": {
-"n": 17,
+"n": 18,
 "betfairWins": 6,
-"betfairRate": 0.3529,
-"polyN": 17,
-"polyWins": 6,
-"polyRate": 0.3529
+"betfairRate": 0.3333,
+"polyN": 18,
+"polyWins": 7,
+"polyRate": 0.3889
 },
 "recent": [
+{
+"matchId": "36057649",
+"home": "Man City",
+"away": "Paris St-G",
+"league": "UEFA Champions League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Man City",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+4
+],
+"kickoff": "2026-10-14T19:00:00Z",
+"settledAt": "2026-10-14T22:23:39.767257+00:00"
+},
+{
+"matchId": "36057639",
+"home": "Betis",
+"away": "Porto",
+"league": "UEFA Champions League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Betis",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+2
+],
+"kickoff": "2026-10-14T19:00:00Z",
+"settledAt": "2026-10-14T22:23:39.767257+00:00"
+},
+{
+"matchId": "36057656",
+"home": "Slovan Bratislava",
+"away": "Stuttgart",
+"league": "UEFA Champions League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Stuttgart",
+"polySide": "home",
+"winner": "away",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+0,
+3
+],
+"kickoff": "2026-10-14T19:00:00Z",
+"settledAt": "2026-10-14T22:23:39.767257+00:00"
+},
+{
+"matchId": "36175564",
+"home": "Lincoln",
+"away": "West Ham",
+"league": "English Sky Bet Championship",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "West Ham",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+6
+],
+"kickoff": "2026-10-14T19:00:00Z",
+"settledAt": "2026-10-14T22:23:39.767257+00:00"
+},
+{
+"matchId": "36057626",
+"home": "Shakhtar",
+"away": "AEK Athens",
+"league": "UEFA Champions League",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "home",
+"winner": "home",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+3,
+1
+],
+"kickoff": "2026-10-14T19:00:00Z",
+"settledAt": "2026-10-14T22:23:39.767257+00:00"
+},
 {
 "matchId": "36176674",
 "home": "Portsmouth",
@@ -978,114 +1073,19 @@
 ],
 "kickoff": "2026-10-12T20:30:00Z",
 "settledAt": "2026-10-12T23:30:16.356895+00:00"
-},
-{
-"matchId": "36103211",
-"home": "Famalicao",
-"away": "Alverca",
-"league": "Portuguese Primeira Liga",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Famalicao",
-"polySide": "home",
-"winner": "away",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-4
-],
-"kickoff": "2026-10-12T19:15:00Z",
-"settledAt": "2026-10-12T22:15:04.791208+00:00"
-},
-{
-"matchId": "36099815",
-"home": "Torino",
-"away": "Udinese",
-"league": "Italian Serie A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Torino",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-10-12T18:45:00Z",
-"settledAt": "2026-10-12T22:00:29.206364+00:00"
-},
-{
-"matchId": "36100476",
-"home": "Levante",
-"away": "Sevilla",
-"league": "Spanish La Liga",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Sevilla",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-3,
-3
-],
-"kickoff": "2026-10-12T19:00:00Z",
-"settledAt": "2026-10-12T22:00:29.206364+00:00"
-},
-{
-"matchId": "36103462",
-"home": "Dijon",
-"away": "Metz",
-"league": "French Ligue 2",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Metz",
-"polySide": "away",
-"winner": "home",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-4,
-2
-],
-"kickoff": "2026-10-12T18:45:00Z",
-"settledAt": "2026-10-12T22:00:29.206364+00:00"
-},
-{
-"matchId": "36100580",
-"home": "Shamrock Rovers",
-"away": "Bohemians",
-"league": "Irish Premier Division",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Shamrock Rovers",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-10-12T19:00:00Z",
-"settledAt": "2026-10-12T22:00:29.206364+00:00"
 }
 ],
 "global": {
-"n": 209,
-"wins": 116,
-"hitRate": 0.555,
-"nRoi": 209,
-"roi": 0.0165,
-"roiLb": -0.0954,
-"nClv": 209,
+"n": 214,
+"wins": 119,
+"hitRate": 0.5561,
+"nRoi": 214,
+"roi": 0.0167,
+"roiLb": -0.0936,
+"nClv": 214,
 "clv": -0.12,
-"clvLb": -0.392
+"clvLb": -0.4004
 },
-"pending": 17,
+"pending": 12,
 "ausgeschlossenLive": 1774
 }

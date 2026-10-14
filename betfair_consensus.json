@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-10-14T21:51:03.825146+00:00",
-"count": 13,
-"covered": 10,
+"generatedAt": "2026-10-14T22:23:37.407212+00:00",
+"count": 15,
+"covered": 14,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -48,7 +48,9 @@
 "soccer_usa_mls"
 ],
 "leaguesMitAnker": [
+"Argentinian Primera Division",
 "CONMEBOL Copa Libertadores",
+"CONMEBOL Copa Sudamericana",
 "English Premier League",
 "Italian Serie A",
 "Spanish La Liga",
@@ -59,17 +61,17 @@
 "leaguesMitTotals": [],
 "oddsKeysFetched": 47,
 "oddsKeysMitDaten": 47,
-"oddsEvents": 574,
+"oddsEvents": 588,
 "oddsTotals": {
-"versucht": 7,
+"versucht": 9,
 "mitDaten": 0,
 "events": 0,
-"gewollt": 7,
+"gewollt": 9,
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 257631,
-"remaining": 4742369,
+"used": 257934,
+"remaining": 4742066,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
@@ -87,9 +89,9 @@
 "moneySide": "away",
 "moneyName": "AC Milan",
 "moneySharePct": 85,
-"moneyOdd": 2.2,
-"moneyDir": "out",
-"totVol": 89684,
+"moneyOdd": 2.18,
+"moneyDir": "in",
+"totVol": 90465,
 "pinnOdd": 2.11,
 "softOdd": 2.05,
 "softN": 44,
@@ -101,9 +103,9 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.2807,
-"draw": 0.2601,
-"away": 0.4592,
+"home": 0.2811,
+"draw": 0.2588,
+"away": 0.4601,
 "fav": "away",
 "n": 44
 },
@@ -115,6 +117,43 @@
 "move": true,
 "laeuft": false
 },
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36086303",
+"home": "Atletico MG",
+"away": "Torque",
+"league": "CONMEBOL Copa Sudamericana",
+"country": "International",
+"kickoff": "2026-10-14T22:00:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Atletico MG",
+"moneySharePct": 86,
+"moneyOdd": 1.33,
+"moneyDir": "in",
+"totVol": 65107,
+"pinnOdd": 1.56,
+"softOdd": 1.53,
+"softN": 19,
+"poly": null,
+"pinn": {
+"home": 0.6027,
+"draw": 0.2765,
+"away": 0.1208,
+"fav": "home"
+},
+"soft": {
+"home": 0.6125,
+"draw": 0.2756,
+"away": 0.1119,
+"fav": "home",
+"n": 19
+},
+"pinnMovePP": null,
+"pinnMove": null,
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
@@ -137,7 +176,7 @@
 "softOdd": 1.22,
 "softN": 51,
 "poly": {
-"vol": 23877,
+"vol": 30509,
 "odd": 1.24,
 "sharePct": 80,
 "shareSrc": "preis",
@@ -181,10 +220,10 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Hoffenheim",
-"moneySharePct": 79,
-"moneyOdd": 2.04,
-"moneyDir": "flat",
-"totVol": 42460,
+"moneySharePct": 80,
+"moneyOdd": 2.02,
+"moneyDir": "in",
+"totVol": 44415,
 "pinnOdd": 1.97,
 "softOdd": 1.94,
 "softN": 43,
@@ -196,9 +235,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.4833,
-"draw": 0.2378,
-"away": 0.2789,
+"home": 0.4842,
+"draw": 0.2377,
+"away": 0.2781,
 "fav": "home",
 "n": 43
 },
@@ -215,106 +254,75 @@
 "pinnTotals": null
 },
 {
-"matchId": "36100453",
-"home": "Betis",
-"away": "Barcelona",
-"league": "Spanish La Liga",
-"country": "ES",
-"kickoff": "2026-10-17T16:30:00Z",
-"live": false,
+"matchId": "36150223",
+"home": "Sarmiento de Junin",
+"away": "River Plate",
+"league": "Argentinian Primera Division",
+"country": "AR",
+"kickoff": "2026-10-14T22:00:00Z",
+"live": true,
 "moneySide": "away",
-"moneyName": "Barcelona",
-"moneySharePct": 93,
-"moneyOdd": 1.43,
-"moneyDir": "flat",
-"totVol": 27621,
-"pinnOdd": 1.43,
-"softOdd": 1.4,
-"softN": 46,
+"moneyName": "River Plate",
+"moneySharePct": 79,
+"moneyOdd": 2.98,
+"moneyDir": "out",
+"totVol": 43842,
+"pinnOdd": 1.56,
+"softOdd": 2.7,
+"softN": 24,
 "poly": {
-"vol": 18401,
-"odd": 1.44,
-"sharePct": 70,
-"shareSrc": "preis",
-"key": "lal-bet-bar-2026-10-17",
-"sideKey": "FC Barcelona",
-"whales": null,
-"whaleUsd": null
+"vol": 20384,
+"odd": 1.57,
+"sharePct": 67,
+"shareSrc": "geld",
+"key": "arg-cas-riv-2026-10-07",
+"sideKey": "CA River Plate",
+"whales": [
+{
+"wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+"usd": 1306
+},
+{
+"wallet": "0xfec2354068ceed5766379c53180449e9070c08af",
+"usd": 1142
+},
+{
+"wallet": "0xe361500f7644245559c48a3199f6d8ca7cf7bf48",
+"usd": 164
+},
+{
+"wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+"usd": 80
+},
+{
+"wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+"usd": 76
+},
+{
+"wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
+"usd": 58
+}
+],
+"whaleUsd": 2951
 },
 "pinn": {
-"home": 0.1552,
-"draw": 0.1697,
-"away": 0.6751,
+"home": 0.1417,
+"draw": 0.2526,
+"away": 0.6057,
 "fav": "away"
 },
 "soft": {
-"home": 0.1594,
-"draw": 0.1719,
-"away": 0.6687,
-"fav": "away",
-"n": 46
-},
-"pinnMovePP": 0.2,
-"pinnMove": {
-"movePP": 0.2,
-"stepPP": 0.0,
-"n": 9,
-"move": false,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36018034",
-"home": "Brighton",
-"away": "FK Kauno Zalgiris",
-"league": "UEFA Conference League",
-"country": "International",
-"kickoff": "2026-10-15T19:00:00Z",
-"live": false,
-"moneySide": "home",
-"moneyName": "Brighton",
-"moneySharePct": 98,
-"moneyOdd": 1.05,
-"moneyDir": "flat",
-"totVol": 27194,
-"pinnOdd": null,
-"softOdd": 1.02,
-"softN": 31,
-"poly": {
-"vol": 7268,
-"odd": 1.06,
-"sharePct": 94,
-"shareSrc": "preis",
-"key": "col-bha-kau-2026-10-15",
-"sideKey": "Brighton & Hove Albion FC",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": null,
-"soft": {
-"home": 0.9269,
-"draw": 0.0523,
-"away": 0.0208,
+"home": 0.3548,
+"draw": 0.2922,
+"away": 0.353,
 "fav": "home",
-"n": 31
+"n": 24
 },
 "pinnMovePP": null,
 "pinnMove": null,
-"verdict": "konsens",
+"verdict": "teil",
 "agree": true,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Brighton v FK Kauno Zalgiris",
-"grund": "kein_pinnacle",
-"kandidat": "Brighton and Hove Albion v FK Kauno Žalgiris",
-"key": "soccer_uefa_europa_conference_league",
-"nSoft": 31,
-"pinnacleImEvent": false,
-"nBuecher": 31
-}
+"pinnTotals": null
 },
 {
 "matchId": "36152149",
@@ -326,15 +334,15 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "FC Cincinnati",
-"moneySharePct": 88,
-"moneyOdd": 1.94,
+"moneySharePct": 79,
+"moneyOdd": 1.98,
 "moneyDir": "out",
-"totVol": 24574,
-"pinnOdd": 1.87,
+"totVol": 28754,
+"pinnOdd": 1.88,
 "softOdd": 1.83,
 "softN": 48,
 "poly": {
-"vol": 19620,
+"vol": 19846,
 "odd": 1.94,
 "sharePct": 95,
 "shareSrc": "geld",
@@ -366,30 +374,184 @@
 "usd": 299
 }
 ],
-"whaleUsd": 6766
+"whaleUsd": 6769
 },
 "pinn": {
-"home": 0.5162,
-"draw": 0.2214,
-"away": 0.2623,
+"home": 0.5137,
+"draw": 0.2246,
+"away": 0.2617,
 "fav": "home"
 },
 "soft": {
-"home": 0.5141,
-"draw": 0.2237,
-"away": 0.2622,
+"home": 0.5113,
+"draw": 0.224,
+"away": 0.2647,
 "fav": "home",
 "n": 48
 },
-"pinnMovePP": -0.0,
+"pinnMovePP": -0.3,
 "pinnMove": {
-"movePP": -0.0,
-"stepPP": -0.0,
+"movePP": -0.3,
+"stepPP": -0.3,
+"n": 3,
+"move": false,
+"laeuft": true
+},
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36100453",
+"home": "Betis",
+"away": "Barcelona",
+"league": "Spanish La Liga",
+"country": "ES",
+"kickoff": "2026-10-17T16:30:00Z",
+"live": false,
+"moneySide": "away",
+"moneyName": "Barcelona",
+"moneySharePct": 93,
+"moneyOdd": 1.42,
+"moneyDir": "in",
+"totVol": 27697,
+"pinnOdd": 1.42,
+"softOdd": 1.41,
+"softN": 45,
+"poly": {
+"vol": 21056,
+"odd": 1.44,
+"sharePct": 70,
+"shareSrc": "preis",
+"key": "lal-bet-bar-2026-10-17",
+"sideKey": "FC Barcelona",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.1533,
+"draw": 0.1686,
+"away": 0.6781,
+"fav": "away"
+},
+"soft": {
+"home": 0.158,
+"draw": 0.172,
+"away": 0.67,
+"fav": "away",
+"n": 45
+},
+"pinnMovePP": 0.5,
+"pinnMove": {
+"movePP": 0.5,
+"stepPP": 0.3,
+"n": 9,
+"move": false,
+"laeuft": true
+},
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36018034",
+"home": "Brighton",
+"away": "FK Kauno Zalgiris",
+"league": "UEFA Conference League",
+"country": "International",
+"kickoff": "2026-10-15T19:00:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Brighton",
+"moneySharePct": 98,
+"moneyOdd": 1.05,
+"moneyDir": "flat",
+"totVol": 27355,
+"pinnOdd": null,
+"softOdd": 1.02,
+"softN": 31,
+"poly": {
+"vol": 9250,
+"odd": 1.06,
+"sharePct": 94,
+"shareSrc": "preis",
+"key": "col-bha-kau-2026-10-15",
+"sideKey": "Brighton & Hove Albion FC",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": null,
+"soft": {
+"home": 0.9273,
+"draw": 0.0523,
+"away": 0.0205,
+"fav": "home",
+"n": 31
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Brighton v FK Kauno Zalgiris",
+"grund": "kein_pinnacle",
+"kandidat": "Brighton and Hove Albion v FK Kauno Žalgiris",
+"key": "soccer_uefa_europa_conference_league",
+"nSoft": 31,
+"pinnacleImEvent": false,
+"nBuecher": 31
+}
+},
+{
+"matchId": "36083226",
+"home": "Fluminense",
+"away": "SE Palmeiras",
+"league": "CONMEBOL Copa Libertadores",
+"country": "International",
+"kickoff": "2026-10-15T00:30:00Z",
+"live": false,
+"moneySide": "draw",
+"moneyName": "The Draw",
+"moneySharePct": 82,
+"moneyOdd": 3.0,
+"moneyDir": "in",
+"totVol": 24123,
+"pinnOdd": 2.73,
+"softOdd": 2.8,
+"softN": 37,
+"poly": {
+"vol": 10534,
+"odd": null,
+"sharePct": null,
+"shareSrc": null,
+"key": "lib-flu-pal-2026-10-14",
+"sideKey": null,
+"whales": [],
+"whaleUsd": 0
+},
+"pinn": {
+"home": 0.312,
+"draw": 0.3532,
+"away": 0.3348,
+"fav": "draw"
+},
+"soft": {
+"home": 0.3242,
+"draw": 0.3281,
+"away": 0.3476,
+"fav": "away",
+"n": 37
+},
+"pinnMovePP": 0.0,
+"pinnMove": {
+"movePP": 0.0,
+"stepPP": 0.0,
 "n": 2,
 "move": false,
 "laeuft": false
 },
-"verdict": "konsens",
+"verdict": "teil",
 "agree": true,
 "pinnTotals": null
 },
@@ -404,14 +566,14 @@
 "moneySide": "home",
 "moneyName": "Roma",
 "moneySharePct": 91,
-"moneyOdd": 1.49,
-"moneyDir": "flat",
-"totVol": 23924,
+"moneyOdd": 1.48,
+"moneyDir": "in",
+"totVol": 23968,
 "pinnOdd": 1.44,
 "softOdd": 1.4,
 "softN": 50,
 "poly": {
-"vol": 13871,
+"vol": 13972,
 "odd": 1.5,
 "sharePct": 66,
 "shareSrc": "preis",
@@ -427,9 +589,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.6681,
-"draw": 0.2006,
-"away": 0.1313,
+"home": 0.6687,
+"draw": 0.2005,
+"away": 0.1308,
 "fav": "home",
 "n": 50
 },
@@ -446,58 +608,6 @@
 "pinnTotals": null
 },
 {
-"matchId": "36083226",
-"home": "Fluminense",
-"away": "SE Palmeiras",
-"league": "CONMEBOL Copa Libertadores",
-"country": "International",
-"kickoff": "2026-10-15T00:30:00Z",
-"live": false,
-"moneySide": "draw",
-"moneyName": "The Draw",
-"moneySharePct": 85,
-"moneyOdd": 3.05,
-"moneyDir": "out",
-"totVol": 22830,
-"pinnOdd": 2.73,
-"softOdd": 2.8,
-"softN": 37,
-"poly": {
-"vol": 9578,
-"odd": null,
-"sharePct": null,
-"shareSrc": null,
-"key": "lib-flu-pal-2026-10-14",
-"sideKey": null,
-"whales": [],
-"whaleUsd": 0
-},
-"pinn": {
-"home": 0.3057,
-"draw": 0.3528,
-"away": 0.3415,
-"fav": "draw"
-},
-"soft": {
-"home": 0.3248,
-"draw": 0.3281,
-"away": 0.347,
-"fav": "away",
-"n": 37
-},
-"pinnMovePP": -0.0,
-"pinnMove": {
-"movePP": -0.0,
-"stepPP": -0.0,
-"n": 2,
-"move": false,
-"laeuft": false
-},
-"verdict": "teil",
-"agree": true,
-"pinnTotals": null
-},
-{
 "matchId": "36017292",
 "home": "KuPS",
 "away": "Trabzonspor",
@@ -509,8 +619,8 @@
 "moneyName": "Trabzonspor",
 "moneySharePct": 98,
 "moneyOdd": 1.55,
-"moneyDir": "out",
-"totVol": 22543,
+"moneyDir": "flat",
+"totVol": 22800,
 "pinnOdd": 1.48,
 "softOdd": 1.47,
 "softN": 32,
@@ -522,9 +632,9 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.1526,
-"draw": 0.2118,
-"away": 0.6356,
+"home": 0.1523,
+"draw": 0.2119,
+"away": 0.6359,
 "fav": "away",
 "n": 32
 },
@@ -541,6 +651,80 @@
 "pinnTotals": null
 },
 {
+"matchId": "36104417",
+"home": "Lech Poznan",
+"away": "Leverkusen",
+"league": "UEFA Europa League",
+"country": "International",
+"kickoff": "2026-10-15T16:45:00Z",
+"live": false,
+"moneySide": "away",
+"moneyName": "Leverkusen",
+"moneySharePct": 92,
+"moneyOdd": 1.72,
+"moneyDir": "out",
+"totVol": 22014,
+"pinnOdd": 1.63,
+"softOdd": 1.62,
+"softN": 44,
+"poly": null,
+"pinn": {
+"home": 0.2027,
+"draw": 0.2103,
+"away": 0.587,
+"fav": "away"
+},
+"soft": {
+"home": 0.2036,
+"draw": 0.2175,
+"away": 0.5789,
+"fav": "away",
+"n": 44
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36104457",
+"home": "Celta Vigo",
+"away": "Juventus",
+"league": "UEFA Europa League",
+"country": "International",
+"kickoff": "2026-10-15T19:00:00Z",
+"live": false,
+"moneySide": "away",
+"moneyName": "Juventus",
+"moneySharePct": 81,
+"moneyOdd": 2.32,
+"moneyDir": "out",
+"totVol": 21341,
+"pinnOdd": 2.2,
+"softOdd": 2.15,
+"softN": 44,
+"poly": null,
+"pinn": {
+"home": 0.2707,
+"draw": 0.2902,
+"away": 0.4392,
+"fav": "away"
+},
+"soft": {
+"home": 0.2754,
+"draw": 0.287,
+"away": 0.4376,
+"fav": "away",
+"n": 44
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
 "matchId": "36017323",
 "home": "Atalanta",
 "away": "Pafos FC",
@@ -551,14 +735,14 @@
 "moneySide": "home",
 "moneyName": "Atalanta",
 "moneySharePct": 98,
-"moneyOdd": 1.4,
-"moneyDir": "out",
-"totVol": 21120,
+"moneyOdd": 1.38,
+"moneyDir": "in",
+"totVol": 21216,
 "pinnOdd": 1.37,
 "softOdd": 1.33,
 "softN": 32,
 "poly": {
-"vol": 4568,
+"vol": 4854,
 "odd": 1.38,
 "sharePct": 72,
 "shareSrc": "preis",
@@ -574,9 +758,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.702,
-"draw": 0.1843,
-"away": 0.1136,
+"home": 0.7025,
+"draw": 0.1845,
+"away": 0.1131,
 "fav": "home",
 "n": 32
 },
@@ -593,76 +777,6 @@
 "pinnTotals": null
 },
 {
-"matchId": "36184374",
-"home": "IRT Tanger",
-"away": "MAS Maghrib A Fes",
-"league": "Moroccan Botola Pro 1",
-"country": "MA",
-"kickoff": "2026-10-14T20:00:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "IRT Tanger",
-"moneySharePct": 47,
-"moneyOdd": 1.21,
-"moneyDir": "in",
-"totVol": 59841,
-"pinnOdd": null,
-"softOdd": null,
-"softN": null,
-"poly": {
-"vol": 12103,
-"odd": 10.36,
-"sharePct": 10,
-"shareSrc": "preis",
-"key": "mar1-irt-mad-2026-10-14",
-"sideKey": "IR Tanger",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": null,
-"soft": null,
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "no_anchor",
-"agree": null,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "IRT Tanger v MAS Maghrib A Fes",
-"grund": "kein_kandidat"
-}
-},
-{
-"matchId": "36188510",
-"home": "Club Atletico Tembetary",
-"away": "Sol de America",
-"league": "Paraguayan Cup",
-"country": "PY",
-"kickoff": "2026-10-14T20:00:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Club Atletico Tembetary",
-"moneySharePct": 57,
-"moneyOdd": 14.5,
-"moneyDir": "out",
-"totVol": 40450,
-"pinnOdd": null,
-"softOdd": null,
-"softN": null,
-"poly": null,
-"pinn": null,
-"soft": null,
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "no_anchor",
-"agree": null,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Club Atletico Tembetary v Sol de America",
-"grund": "kein_kandidat",
-"naechster": "Espanyol v Atlético Madrid"
-}
-},
-{
 "matchId": "36178219",
 "home": "Junior FC Barranquilla",
 "away": "Deportivo Pereira",
@@ -672,10 +786,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Junior FC Barranquilla",
-"moneySharePct": 87,
-"moneyOdd": 1.18,
-"moneyDir": "in",
-"totVol": 33593,
+"moneySharePct": 88,
+"moneyOdd": 1.23,
+"moneyDir": "out",
+"totVol": 48763,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -699,12 +813,23 @@
 "ankerMit": 53,
 "ankerDiagnose": {
 "nach": {
-"kein_kandidat": 53,
+"kein_kandidat": 52,
+"kein_pinnacle": 4,
 "name": 6,
-"kein_pinnacle": 3,
 "zeit": 1
 },
 "beispiele": [
+{
+"spiel": "Rennes v OFI",
+"grund": "kein_pinnacle",
+"kandidat": "Rennes v OFI Crete",
+"key": "soccer_uefa_europa_league",
+"nSoft": 41,
+"pinnacleImEvent": false,
+"nBuecher": 41,
+"matchId": "36104451",
+"liga": "UEFA Europa League"
+},
 {
 "spiel": "NK Celje v Omonia",
 "kandidat": "NK Celje v Omonoia FC",
@@ -774,21 +899,21 @@
 "liga": "Egyptian Second Division B"
 },
 {
-"spiel": "Alhashemyya v Al Aqaba",
-"kandidat": "Al-Faisaly KSA FC v Al-Kholood",
-"key": "soccer_saudi_arabia_pro_league",
-"score": 0.5,
-"grund": "name",
-"matchId": "36190613",
-"liga": "Jordan 1st Division"
-},
-{
 "spiel": "Sahl Houran v Etihad Al Ramtha",
 "kandidat": "Al-Faisaly KSA FC v Al-Kholood",
 "key": "soccer_saudi_arabia_pro_league",
 "score": 0.33,
 "grund": "name",
 "matchId": "36191144",
+"liga": "Jordan 1st Division"
+},
+{
+"spiel": "Alhashemyya v Al Aqaba",
+"kandidat": "Al-Faisaly KSA FC v Al-Kholood",
+"key": "soccer_saudi_arabia_pro_league",
+"score": 0.5,
+"grund": "name",
+"matchId": "36190613",
 "liga": "Jordan 1st Division"
 },
 {
