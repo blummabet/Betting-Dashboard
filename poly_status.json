@@ -88,17 +88,15 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "1311 geprueft, davon 117 abgeschnitten"
+      "note": "1312 geprueft, davon 117 abgeschnitten"
     },
     {
       "id": "settlement_alive",
       "label": "Settlement lebt (keine ewig offenen Positionen)",
       "severity": "error",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "col1-cjf-dep-2026-08-10: seit 66.1 Tagen offen — keine Auflösung gefunden"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen. Der Grund steht an jeder Zeile — er ist bei jeder ein anderer."
     },
     {
@@ -117,7 +115,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "909 von 1858 abgerechneten Plays haben einen Schluss nach dem Einstieg; der Rest traegt clvGrund statt einer erfundenen 0,0."
+      "note": "912 von 1862 abgerechneten Plays haben einen Schluss nach dem Einstieg; der Rest traegt clvGrund statt einer erfundenen 0,0."
     },
     {
       "id": "anpfiff_eine_uhr",
@@ -126,7 +124,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "1795 Close-Zeilen mit absolutem Anpfiff geprueft."
+      "note": "1799 Close-Zeilen mit absolutem Anpfiff geprueft."
     },
     {
       "id": "resolutions_match_open_keys",
@@ -135,7 +133,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Fällige Märkte je Liga, die ihre Auflösung finden — nur ab dem Beginn des Auflösungsbuchs (2026-10-01); 1948 ältere Märkte bleiben draussen, fuer sie kann es keine geben. < 60% = Settlement läuft wirklich ins Leere."
+      "note": "Fällige Märkte je Liga, die ihre Auflösung finden — nur ab dem Beginn des Auflösungsbuchs (2026-10-01); 1954 ältere Märkte bleiben draussen, fuer sie kann es keine geben. < 60% = Settlement läuft wirklich ins Leere."
     },
     {
       "id": "proven_wallets_profitable",
@@ -144,10 +142,10 @@
       "ok": false,
       "nFail": 5,
       "failures": [
-        "430/900 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (48%) — Trefferquote allein trügt",
-        "   0xc3c3b3ef30… n=338 Treffer 51% P&L $-3,994,872",
+        "429/898 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (48%) — Trefferquote allein trügt",
+        "   0xc3c3b3ef30… n=339 Treffer 51% P&L $-3,994,872",
         "   0xa0f21e6d35… n=243 Treffer 53% P&L $-2,635,720",
-        "   0xabb89972b2… n=65 Treffer 54% P&L $-2,563,982",
+        "   0xabb89972b2… n=66 Treffer 55% P&L $-2,563,982",
         "   0x6ac5bb06a9… n=188 Treffer 53% P&L $-1,555,775"
       ],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
@@ -198,6 +196,6 @@
       "note": "poly_direct_bets.py rechnet über poly_resolutions.json ab. Hängt ein Bet, kennt Poly den Ausgang nicht (Markt noch offen/obskur) oder der Slug passt nicht — dann fehlt echtes Geld in der Bilanz."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-10-15T01:29:35.532026+00:00"
+  "nFail": 1,
+  "generatedAt": "2026-10-15T02:30:00.624826+00:00"
 }
