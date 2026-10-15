@@ -62,5 +62,11 @@ for versuch in 1 2 3; do
   echo "⚠️  Push $versuch fehlgeschlagen — retry…"
   sleep $((versuch * 3))
 done
+# 🔴 15.10.2026 (Sparta Prag 2x gesetzt): genau hier endete der Lauf um 15:23 — drei Versuche,
+# jeder an der 150-s-fetch-Frist des Mac-Runners, dann diese Zeile und Exit 0. Der Schritt stand
+# GRUEN in der Liste, der End-Commit fiel danach dem 25-Minuten-Timeout zum Opfer, und niemand
+# sah, dass eine Wirkung ohne Beleg im Raum stand. Weiterlaufen ist richtig (der Lauf hat noch
+# anderes zu tun) — still sein nicht: eine Annotation macht den Lauf in der Uebersicht sichtbar.
 echo "⚠️  Beleg nicht gepusht — der Lauf laeuft weiter, der End-Commit versucht es erneut."
+echo "::error title=Beleg nicht gesichert::${GRUND} — nach 3 Versuchen nicht gepusht. Wirkung (Push/Order) steht, Gedaechtnis nur lokal."
 exit 0

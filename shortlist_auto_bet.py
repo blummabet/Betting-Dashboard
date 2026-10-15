@@ -938,6 +938,22 @@ def main() -> int:
                            "Lauf war schneller, es wird nicht doppelt gesetzt", z)
             continue
 
+        # 🔴 15.10.2026 (Lucas: „Wurde 2x gesetzt", Sparta Prag 15:31 + 16:01): dritte Schranke,
+        # und die einzige, die nicht an unserem Buch oder der data-api haengt — die Boerse
+        # selbst (s. polymarket_bet.eigene_aktivitaet). Anders als die Wallet-Schranke ist
+        # diese FAIL-CLOSED: ist die Boerse nicht befragbar, kaeme auch die Order nicht sicher
+        # an. Eine ausgelassene $5-Wette ist billiger als eine doppelte — und sie steht im Buch.
+        from polymarket_bet import eigene_aktivitaet
+        schon = eigene_aktivitaet(tok, key)
+        if schon is True:
+            _liegen(titel, "die Boerse kennt bereits einen Handel/eine offene Order unseres "
+                           "Kontos auf diesen Token — es wird nicht doppelt gesetzt", z)
+            continue
+        if schon is None:
+            _liegen(titel, "eigene Handelshistorie an der Boerse nicht abrufbar — ohne diesen "
+                           "Blick wird nicht gesetzt (fail-closed)", z)
+            continue
+
         from polymarket_bet import place_market_order
         # 20.09.2026: `pfad` ist Pflicht. Dieses Skript ist der Pfad, der am 20.09. vier echte
         # Orders setzte, waehrend „Auto-Trading ist aus" gemeldet war — nicht weil es falsch
