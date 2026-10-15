@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-15T18:32:01.131095+00:00",
+ "generatedAt": "2026-10-15T19:02:19.383056+00:00",
  "heute": "2026-10-15",
  "messungen": [
   {
@@ -69,9 +69,9 @@
    "mindestN": 150,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 570,
+   "standN": 572,
    "zustand": "faellig",
-   "stand": "570 von 150 Beobachtungen · Entscheidung faellig",
+   "stand": "572 von 150 Beobachtungen · Entscheidung faellig",
    "fortschritt": 1.0,
    "tageBisFaellig": -6
   },
@@ -168,6 +168,24 @@
    "tageBisFaellig": 17
   },
   {
+   "id": "reihenfolge-signale",
+   "titel": "Macht es einen Unterschied, wer zuerst zeigt — Poly, Betfair oder Pinnacle?",
+   "frage": "Je Spiel und Seite vor Anpfiff: erster Zeitpunkt von Betfair-Geld >= 65 %, Poly-Geld >= 65 %, Pinnacle +3 pp. ROI je Muster (z. B. poly>betfair) und je allein-erster Quelle, gewertet zur Quote des Signals, das das Muster komplett macht. Gezaehlt: Seiten mit >= 2 Signalen und eindeutigem Ersten.",
+   "warum": "03.10.2026 (Lucas: „wer war zuerst pini/betfair/poly … dickes Wallet … danach Betfair-Push“). Die Money Map kennt nur den Endstand, nicht die Reihenfolge — nachtraeglich nicht rekonstruierbar, also ab jetzt mitschreiben (reihenfolge_protokoll.py). Entscheidung vorab: zeigt ein Erster (z. B. poly) bei n >= 60 eine Untergrenze > 0 und die anderen nicht -> eigener Push „X zuerst, Y folgt“; sonst ist die Reihenfolge kein Signal.",
+   "gestartet": "2026-10-03",
+   "faellig": "2026-11-01",
+   "quelle": "reihenfolge_protokoll.json -> settled",
+   "messer": "reihenfolge",
+   "mindestN": 60,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "standN": 60,
+   "zustand": "bereit",
+   "stand": "60 von 60 Beobachtungen · faellig in 17 Tag(en)",
+   "fortschritt": 1.0,
+   "tageBisFaellig": 17
+  },
+  {
    "id": "hz-null-null",
    "titel": "HZ 0:0 in einem Over-Spiel: ist das Tor in der 2. Halbzeit besser als die Quote zur Pause?",
    "frage": "Spiele mit 0:0 zur Pause, in denen vor dem Anpfiff das Betfair-Geld auf Over 2.5 lag (Quote <= 1,75). Gebucht zur Over-0.5-Quote IM MOMENT DER PAUSE, abgerechnet am Endstand, minus 2 % Kommission. Daneben (ohne eigenes Urteil): Over 1.5 zur Pause und Heimsieg zur Pause bei Heimfavorit <= 1,60.",
@@ -179,9 +197,9 @@
    "mindestN": 100,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 149,
+   "standN": 150,
    "zustand": "bereit",
-   "stand": "149 von 100 Beobachtungen · faellig in 17 Tag(en)",
+   "stand": "150 von 100 Beobachtungen · faellig in 17 Tag(en)",
    "fortschritt": 1.0,
    "tageBisFaellig": 17
   },
@@ -197,9 +215,9 @@
    "mindestN": 90,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 90,
+   "standN": 91,
    "zustand": "bereit",
-   "stand": "90 von 90 Beobachtungen · faellig in 30 Tag(en)",
+   "stand": "91 von 90 Beobachtungen · faellig in 30 Tag(en)",
    "fortschritt": 1.0,
    "tageBisFaellig": 30
   },
@@ -215,9 +233,9 @@
    "mindestN": 20000,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 28160,
+   "standN": 28226,
    "zustand": "bereit",
-   "stand": "28160 von 20000 Beobachtungen · faellig in 31 Tag(en)",
+   "stand": "28226 von 20000 Beobachtungen · faellig in 31 Tag(en)",
    "fortschritt": 1.0,
    "tageBisFaellig": 31
   },
@@ -233,9 +251,9 @@
    "mindestN": 20000,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 28160,
+   "standN": 28226,
    "zustand": "bereit",
-   "stand": "28160 von 20000 Beobachtungen · faellig in 31 Tag(en)",
+   "stand": "28226 von 20000 Beobachtungen · faellig in 31 Tag(en)",
    "fortschritt": 1.0,
    "tageBisFaellig": 31
   },
@@ -251,9 +269,9 @@
    "mindestN": 150,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 654,
+   "standN": 656,
    "zustand": "bereit",
-   "stand": "654 von 150 Beobachtungen · faellig in 61 Tag(en)",
+   "stand": "656 von 150 Beobachtungen · faellig in 61 Tag(en)",
    "fortschritt": 1.0,
    "tageBisFaellig": 61
   },
@@ -269,9 +287,9 @@
    "mindestN": 200,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 928,
+   "standN": 936,
    "zustand": "bereit",
-   "stand": "928 von 200 Beobachtungen · faellig in 77 Tag(en)",
+   "stand": "936 von 200 Beobachtungen · faellig in 77 Tag(en)",
    "fortschritt": 1.0,
    "tageBisFaellig": 77
   },
@@ -306,10 +324,10 @@
    "mindestN": 1200,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 587,
+   "standN": 593,
    "zustand": "sammelt",
-   "stand": "587 von 1200 Beobachtungen · faellig in 17 Tag(en)",
-   "fortschritt": 0.4891666666666667,
+   "stand": "593 von 1200 Beobachtungen · faellig in 17 Tag(en)",
+   "fortschritt": 0.49416666666666664,
    "tageBisFaellig": 17
   },
   {
@@ -324,10 +342,10 @@
    "mindestN": 1200,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 587,
+   "standN": 593,
    "zustand": "sammelt",
-   "stand": "587 von 1200 Beobachtungen · faellig in 17 Tag(en)",
-   "fortschritt": 0.4891666666666667,
+   "stand": "593 von 1200 Beobachtungen · faellig in 17 Tag(en)",
+   "fortschritt": 0.49416666666666664,
    "tageBisFaellig": 17
   },
   {
@@ -367,24 +385,6 @@
    "tageBisFaellig": 17
   },
   {
-   "id": "reihenfolge-signale",
-   "titel": "Macht es einen Unterschied, wer zuerst zeigt — Poly, Betfair oder Pinnacle?",
-   "frage": "Je Spiel und Seite vor Anpfiff: erster Zeitpunkt von Betfair-Geld >= 65 %, Poly-Geld >= 65 %, Pinnacle +3 pp. ROI je Muster (z. B. poly>betfair) und je allein-erster Quelle, gewertet zur Quote des Signals, das das Muster komplett macht. Gezaehlt: Seiten mit >= 2 Signalen und eindeutigem Ersten.",
-   "warum": "03.10.2026 (Lucas: „wer war zuerst pini/betfair/poly … dickes Wallet … danach Betfair-Push“). Die Money Map kennt nur den Endstand, nicht die Reihenfolge — nachtraeglich nicht rekonstruierbar, also ab jetzt mitschreiben (reihenfolge_protokoll.py). Entscheidung vorab: zeigt ein Erster (z. B. poly) bei n >= 60 eine Untergrenze > 0 und die anderen nicht -> eigener Push „X zuerst, Y folgt“; sonst ist die Reihenfolge kein Signal.",
-   "gestartet": "2026-10-03",
-   "faellig": "2026-11-01",
-   "quelle": "reihenfolge_protokoll.json -> settled",
-   "messer": "reihenfolge",
-   "mindestN": 60,
-   "entscheidung": null,
-   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 58,
-   "zustand": "sammelt",
-   "stand": "58 von 60 Beobachtungen · faellig in 17 Tag(en)",
-   "fortschritt": 0.9666666666666667,
-   "tageBisFaellig": 17
-  },
-  {
    "id": "betfair-kursrutsch",
    "titel": "Traegt ein Kursrutsch ohne nachkommendes Geld — in den Tor-/HZ-Maerkten, vor Anpfiff?",
    "frage": "Trefferquote und ROI der gesendeten Kursrutsch-Alarme — NUR VOR ANPFIFF und NUR in den Tor-/Halbzeit-Maerkten (Quote >=10 % gefallen seit dem ersten Sehen, Geld NICHT einseitig). Urteil ueber die Renditegrenzen, nicht ueber den Punktschaetzer. Zusaetzlich aufgeteilt nach Rutsch-Hoehe (10-15 / >=15 %) und nach Quotenband.",
@@ -396,10 +396,10 @@
    "mindestN": 400,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 134,
+   "standN": 136,
    "zustand": "sammelt",
-   "stand": "134 von 400 Beobachtungen · faellig in 31 Tag(en)",
-   "fortschritt": 0.335,
+   "stand": "136 von 400 Beobachtungen · faellig in 31 Tag(en)",
+   "fortschritt": 0.34,
    "tageBisFaellig": 31
   },
   {
@@ -486,10 +486,10 @@
    "mindestN": 100,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 11,
+   "standN": 13,
    "zustand": "sammelt",
-   "stand": "11 von 100 Beobachtungen · faellig in 108 Tag(en)",
-   "fortschritt": 0.11,
+   "stand": "13 von 100 Beobachtungen · faellig in 108 Tag(en)",
+   "fortschritt": 0.13,
    "tageBisFaellig": 108
   },
   {
