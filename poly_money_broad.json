@@ -1,27 +1,19 @@
 {
- "n": 543,
+ "n": 545,
  "minOdds": 1.35,
- "moneyHitRate": 0.414,
- "priceHitRate": 0.457,
- "brierMoney": 0.7876,
- "brierPrice": 0.651,
+ "moneyHitRate": 0.413,
+ "priceHitRate": 0.453,
+ "brierMoney": 0.7896,
+ "brierPrice": 0.6518,
  "disagree": {
-  "n": 149,
-  "moneyWon": 25,
+  "n": 152,
+  "moneyWon": 26,
   "priceWon": 48,
-  "neither": 76
+  "neither": 78
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
  "byLeague": [
-  {
-   "league": "MLS",
-   "n": 21,
-   "moneyHitRate": 0.619,
-   "brierMoney": 0.5746,
-   "brierPrice": 0.5249,
-   "verdict": "preis_besser"
-  },
   {
    "league": "SOCCER:UCL",
    "n": 32,
@@ -52,6 +44,14 @@
    "moneyHitRate": 0.353,
    "brierMoney": 0.7917,
    "brierPrice": 0.7109,
+   "verdict": "preis_besser"
+  },
+  {
+   "league": "MLS",
+   "n": 23,
+   "moneyHitRate": 0.565,
+   "brierMoney": 0.6407,
+   "brierPrice": 0.5546,
    "verdict": "preis_besser"
   },
   {
@@ -112,8 +112,8 @@
   }
  ],
  "guete": {
-  "belastbar": 543,
-  "preis_echo": 307,
+  "belastbar": 545,
+  "preis_echo": 310,
   "abgeschnitten": 56,
   "unbekannt": 0,
   "leer": 0
@@ -160,11 +160,11 @@
    "league": "SOCCER:UCL",
    "winner": "FK Bodø/Glimt",
    "moneyFav": "FK Bodø/Glimt",
-   "priceFav": "FK Bodø/Glimt",
+   "priceFav": "BV Borussia 09 Dortmund",
    "moneyShare": 0.533,
    "priceProb": 0.377,
    "moneyOK": true,
-   "priceOK": true,
+   "priceOK": false,
    "totalUsd": 2624846
   },
   {
@@ -508,7 +508,7 @@
    "league": "EPL",
    "winner": "Draw (Aston Villa FC vs. Brentford FC)",
    "moneyFav": "Brentford FC",
-   "priceFav": "Brentford FC",
+   "priceFav": "Aston Villa FC",
    "moneyShare": 0.803,
    "priceProb": 0.367,
    "moneyOK": false,
@@ -552,6 +552,18 @@
    "totalUsd": 359607
   },
   {
+   "key": "mls-fcc-ner-2026-10-14",
+   "league": "MLS",
+   "winner": "New England Revolution",
+   "moneyFav": "FC Cincinnati",
+   "priceFav": "FC Cincinnati",
+   "moneyShare": 0.892,
+   "priceProb": 0.441,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 341543
+  },
+  {
    "key": "fl1-asm-rcl-2026-09-18",
    "league": "LIGUE-1",
    "winner": "AS Monaco FC",
@@ -586,32 +598,20 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 299148
-  },
-  {
-   "key": "epl-mun-tot-2026-10-10",
-   "league": "EPL",
-   "winner": "Draw (Manchester United FC vs. Tottenham Hotspur FC)",
-   "moneyFav": "Manchester United FC",
-   "priceFav": "Manchester United FC",
-   "moneyShare": 0.955,
-   "priceProb": 0.562,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 292839
   }
  ],
- "generatedAt": "2026-10-15T03:57:28.983224+00:00",
+ "generatedAt": "2026-10-15T04:27:23.776020+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 482,
   "nfl": 800,
-  "mlb": 484,
+  "mlb": 485,
   "nhl": 617,
-  "mls": 755,
+  "mls": 740,
   "epl": 604,
   "soccer": 800,
-  "tennis": 734,
+  "tennis": 736,
   "ucl": 544,
   "la-liga": 600,
   "bundesliga": 541,
@@ -702,64 +702,74 @@
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 2008,
-   "usd": 29177540,
-   "beispiel": "fifwc-arg-che-2026-07-11"
+   "n": 1848,
+   "usd": 27874630,
+   "beispiel": "fifwc-esp-cvi-2026-06-15-more-markets"
   },
   "presidential": {
-   "n": 17,
-   "usd": 992430,
+   "n": 18,
+   "usd": 997471,
    "beispiel": "presidential-election-winner-2028"
   },
-  "fed": {
-   "n": 29,
-   "usd": 599848,
-   "beispiel": "fed-decision-in-january-20260729233815502"
-  },
   "world": {
-   "n": 39,
-   "usd": 569739,
+   "n": 48,
+   "usd": 629975,
    "beispiel": "world-cup-winner"
+  },
+  "fed": {
+   "n": 31,
+   "usd": 604637,
+   "beispiel": "fed-decision-in-october-20260617190323537"
   },
   "super": {
    "n": 25,
    "usd": 457215,
    "beispiel": "super-bowl-champion-2026-731"
   },
-  "2026": {
-   "n": 71,
-   "usd": 307440,
-   "beispiel": "2026-rocket-classic-winner"
-  },
-  "lec": {
-   "n": 72,
-   "usd": 244174,
-   "beispiel": "lec-mia-mon-2026-08-08"
-  },
-  "uefa": {
-   "n": 11,
-   "usd": 228094,
-   "beispiel": "uefa-champions-league-winner"
-  },
-  "cbb": {
-   "n": 19,
-   "usd": 226805,
-   "beispiel": "cbb-uconn-mich-2026-04-06"
-  },
   "btc": {
-   "n": 74,
-   "usd": 190912,
+   "n": 92,
+   "usd": 324870,
    "beispiel": "btc-updown-4h-1767862800"
   },
+  "uefa": {
+   "n": 12,
+   "usd": 248218,
+   "beispiel": "uefa-champions-league-team-to-advance-to-2027-quarters"
+  },
+  "cbb": {
+   "n": 24,
+   "usd": 232077,
+   "beispiel": "cbb-uconn-mich-2026-04-06"
+  },
+  "lec": {
+   "n": 60,
+   "usd": 218327,
+   "beispiel": "lec-rsl-jua-2026-08-11-more-markets"
+  },
   "chi1": {
-   "n": 13,
-   "usd": 163624,
-   "beispiel": "chi1-cdu-edv-2026-09-12"
+   "n": 11,
+   "usd": 160185,
+   "beispiel": "chi1-cdl-ccu-2026-05-31-more-markets"
   },
   "cricipl": {
    "n": 18,
    "usd": 141625,
    "beispiel": "cricipl-kol-luc-2026-04-09"
+  },
+  "2026": {
+   "n": 28,
+   "usd": 129609,
+   "beispiel": "2026-f1-drivers-champion"
+  },
+  "brazil": {
+   "n": 12,
+   "usd": 125509,
+   "beispiel": "brazil-presidential-election"
+  },
+  "next": {
+   "n": 8,
+   "usd": 103118,
+   "beispiel": "next-prime-minister-of-hungary"
   },
   "nbasl": {
    "n": 1,
@@ -767,39 +777,29 @@
    "beispiel": "nbasl-cle-nop-2026-07-15"
   },
   "us": {
-   "n": 11,
-   "usd": 93050,
+   "n": 10,
+   "usd": 87318,
    "beispiel": "us-announces-end-of-iranian-blockade-byptptpt-20260713152715080"
-  },
-  "brazil": {
-   "n": 8,
-   "usd": 92083,
-   "beispiel": "brazil-presidential-election"
-  },
-  "pro": {
-   "n": 3,
-   "usd": 78481,
-   "beispiel": "pro-football-nfc-east-champion"
-  },
-  "ncaa": {
-   "n": 4,
-   "usd": 74722,
-   "beispiel": "ncaa-football-2026-heisman-award-winner-20260731185656435"
-  },
-  "ecs": {
-   "n": 9,
-   "usd": 70296,
-   "beispiel": "ecs-ars-mci-2026-08-16-more-markets"
   },
   "which": {
    "n": 16,
-   "usd": 67412,
-   "beispiel": "which-company-has-the-best-ai-model-end-of-october"
+   "usd": 83073,
+   "beispiel": "which-crypto-company-will-zachxbt-expose-for-insider-trading"
   },
-  "brco": {
-   "n": 14,
-   "usd": 66590,
-   "beispiel": "brco-cre-san-2026-08-04"
+  "ballon": {
+   "n": 16,
+   "usd": 82522,
+   "beispiel": "ballon-dor-winner-2026"
+  },
+  "pro": {
+   "n": 4,
+   "usd": 79603,
+   "beispiel": "pro-football-nfc-east-champion"
+  },
+  "ncaa": {
+   "n": 2,
+   "usd": 67587,
+   "beispiel": "ncaa-football-2026-heisman-award-winner-20260731185656435"
   }
  }
 }
