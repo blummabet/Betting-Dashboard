@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-10-15T03:22:54.947648+00:00",
+"generatedAt": "2026-10-15T03:38:32.291025+00:00",
 "byVerdict": {
 "uneinig": {
-"n": 18,
+"n": 19,
 "wins": 6,
-"hitRate": 0.3333,
-"polyN": 18,
-"polyWins": 7,
-"polyHitRate": 0.3889,
-"pinnN": 10,
-"pinnHitRate": 0.3,
-"nRoi": 18,
-"roi": -0.0228,
-"roiLb": -0.5791,
-"nClv": 18,
-"clv": -0.26,
-"clvLb": -0.786
+"hitRate": 0.3158,
+"polyN": 19,
+"polyWins": 8,
+"polyHitRate": 0.4211,
+"pinnN": 11,
+"pinnHitRate": 0.3636,
+"nRoi": 19,
+"roi": -0.0742,
+"roiLb": -0.6072,
+"nClv": 19,
+"clv": -0.34,
+"clvLb": -0.8532
 },
 "konsens": {
-"n": 199,
-"wins": 115,
-"hitRate": 0.5779,
-"polyN": 196,
+"n": 201,
+"wins": 116,
+"hitRate": 0.5771,
+"polyN": 198,
 "polyWins": 112,
-"polyHitRate": 0.5714,
-"pinnN": 162,
-"pinnHitRate": 0.5988,
-"nRoi": 199,
-"roi": 0.0218,
-"roiLb": -0.0868,
-"nClv": 199,
-"clv": -0.15,
-"clvLb": -0.4486
+"polyHitRate": 0.5657,
+"pinnN": 164,
+"pinnHitRate": 0.5976,
+"nRoi": 201,
+"roi": 0.0222,
+"roiLb": -0.086,
+"nClv": 201,
+"clv": -0.14,
+"clvLb": -0.4376
 }
 },
 "byLeague": {
@@ -70,6 +70,11 @@
 "wins": 5,
 "hitRate": 0.5556
 },
+"US MLS": {
+"n": 9,
+"wins": 6,
+"hitRate": 0.6667
+},
 "French Ligue 1": {
 "n": 8,
 "wins": 6,
@@ -89,11 +94,6 @@
 "n": 7,
 "wins": 2,
 "hitRate": 0.2857
-},
-"US MLS": {
-"n": 7,
-"wins": 5,
-"hitRate": 0.7143
 },
 "Portuguese Primeira Liga": {
 "n": 6,
@@ -215,6 +215,11 @@
 "wins": 1,
 "hitRate": 1.0
 },
+"CONMEBOL Copa Libertadores": {
+"n": 1,
+"wins": 0,
+"hitRate": 0.0
+},
 "CONMEBOL Copa Sudamericana": {
 "n": 1,
 "wins": 0,
@@ -283,37 +288,94 @@
 },
 "byStrength": {
 "strong": {
-"n": 162,
+"n": 163,
 "wins": 100,
-"hitRate": 0.6173,
-"nRoi": 162,
-"roi": 0.0437,
-"roiLb": -0.0695,
-"nClv": 162,
+"hitRate": 0.6135,
+"nRoi": 163,
+"roi": 0.0373,
+"roiLb": -0.0757,
+"nClv": 163,
 "clv": -0.09,
-"clvLb": -0.435
+"clvLb": -0.4324
 },
 "weak": {
-"n": 55,
-"wins": 21,
-"hitRate": 0.3818,
-"nRoi": 55,
-"roi": -0.0573,
-"roiLb": -0.3321,
-"nClv": 55,
+"n": 57,
+"wins": 22,
+"hitRate": 0.386,
+"nRoi": 57,
+"roi": -0.0532,
+"roiLb": -0.3219,
+"nClv": 57,
 "clv": -0.36,
-"clvLb": -0.7729
+"clvLb": -0.7577
 }
 },
 "divergence": {
-"n": 18,
+"n": 19,
 "betfairWins": 6,
-"betfairRate": 0.3333,
-"polyN": 18,
-"polyWins": 7,
-"polyRate": 0.3889
+"betfairRate": 0.3158,
+"polyN": 19,
+"polyWins": 8,
+"polyRate": 0.4211
 },
 "recent": [
+{
+"matchId": "36083226",
+"home": "Fluminense",
+"away": "SE Palmeiras",
+"league": "CONMEBOL Copa Libertadores",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "away",
+"winner": "away",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-10-15T00:30:00Z",
+"settledAt": "2026-10-15T03:38:32.117845+00:00"
+},
+{
+"matchId": "36152166",
+"home": "FC Dallas",
+"away": "Seattle Sounders",
+"league": "US MLS",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "FC Dallas",
+"polySide": "away",
+"winner": "home",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-10-15T00:30:00Z",
+"settledAt": "2026-10-15T03:38:32.117845+00:00"
+},
+{
+"matchId": "36152194",
+"home": "St Louis City SC",
+"away": "Vancouver Whitecaps",
+"league": "US MLS",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "St Louis City SC",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-10-15T00:30:00Z",
+"settledAt": "2026-10-15T03:38:32.117845+00:00"
+},
 {
 "matchId": "36152149",
 "home": "FC Cincinnati",
@@ -1016,76 +1078,19 @@
 ],
 "kickoff": "2026-10-13T16:45:00Z",
 "settledAt": "2026-10-13T19:50:46.215458+00:00"
-},
-{
-"matchId": "36183261",
-"home": "Buriram Utd",
-"away": "Beijing Guoan",
-"league": "AFC Champions League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Buriram Utd",
-"polySide": "home",
-"winner": "away",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-10-13T12:15:00Z",
-"settledAt": "2026-10-13T15:17:00.680305+00:00"
-},
-{
-"matchId": "36183266",
-"home": "Pohang Steelers",
-"away": "Johor Darul Ta'zim",
-"league": "AFC Champions League",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Pohang Steelers",
-"polySide": "away",
-"winner": "away",
-"moneyWin": false,
-"polyWin": true,
-"ftScore": [
-0,
-2
-],
-"kickoff": "2026-10-13T10:00:00Z",
-"settledAt": "2026-10-13T13:01:53.434415+00:00"
-},
-{
-"matchId": "36161577",
-"home": "Kyoto",
-"away": "Ratchaburi",
-"league": "AFC Champions League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Kyoto",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-10-13T10:00:00Z",
-"settledAt": "2026-10-13T13:01:53.434415+00:00"
 }
 ],
 "global": {
-"n": 217,
-"wins": 121,
-"hitRate": 0.5576,
-"nRoi": 217,
-"roi": 0.0181,
-"roiLb": -0.0912,
-"nClv": 217,
+"n": 220,
+"wins": 122,
+"hitRate": 0.5545,
+"nRoi": 220,
+"roi": 0.0139,
+"roiLb": -0.0948,
+"nClv": 220,
 "clv": -0.16,
-"clvLb": -0.4365
+"clvLb": -0.4328
 },
-"pending": 20,
+"pending": 17,
 "ausgeschlossenLive": 1763
 }
