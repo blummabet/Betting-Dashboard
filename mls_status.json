@@ -591,7 +591,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "22 von 53 Vor-Kandidaten mit Anteilen (22 Calls) · 0 ohne Geld-Split · 31 ueber Budget · 0 nachgelegt. Leeres Fenster ist kein Fehler; Kandidaten ohne einen einzigen Anteil schon."
+      "note": "3 von 3 Vor-Kandidaten mit Anteilen (3 Calls) · 0 ohne Geld-Split · 0 ueber Budget · 0 nachgelegt. Leeres Fenster ist kein Fehler; Kandidaten ohne einen einzigen Anteil schon."
     },
     {
       "id": "betfair_ledger",
@@ -600,7 +600,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "40000/40000 Zeilen · 34.7 Tage Fenster (2026-09-10 bis 2026-10-15). Kurzes Fenster bei freiem Deckel ist normal (der Track fuellt sich); kurzes Fenster AM Deckel ist der Fehler."
+      "note": "40000/40000 Zeilen · 34.2 Tage Fenster (2026-09-11 bis 2026-10-15). Kurzes Fenster bei freiem Deckel ist normal (der Track fuellt sich); kurzes Fenster AM Deckel ist der Fehler."
     },
     {
       "id": "betfair_liefert",
@@ -609,7 +609,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Job vor 0.3h · jüngste Daten vor 0.4h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
+      "note": "Job vor 0.8h · jüngste Daten vor 0.8h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
     },
     {
       "id": "poly_global_liefert",
@@ -618,7 +618,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Job vor 0.2h · jüngste Daten vor 0.2h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
+      "note": "Job vor 0.7h · jüngste Daten vor 0.7h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
     },
     {
       "id": "pinn_anker",
@@ -627,7 +627,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "43 von 43 Ankern der Handliste treffen den Feed · 411 Ligastrings gesehen · Anker liegt auf 98% von 55 offenen Spielen (aus 49 geholten Wettbewerben). Eine niedrige Abdeckung der HANDLISTE ist kein Fehler mehr (der globale Pool faengt den Rest); ein toter Eintrag schon."
+      "note": "43 von 43 Ankern der Handliste treffen den Feed · 414 Ligastrings gesehen · Anker liegt auf 97% von 72 offenen Spielen (aus 48 geholten Wettbewerben). Eine niedrige Abdeckung der HANDLISTE ist kein Fehler mehr (der globale Pool faengt den Rest); ein toter Eintrag schon."
     },
     {
       "id": "buecher_punkte",
@@ -636,7 +636,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "108 Spiele bewertet · 72 mit mindestens einem fremden Buch · beste Punktzahl 12. Ein leeres Fenster ist kein Fehler; ein dauerhaft einsamer Betfair-Score schon."
+      "note": "97 Spiele bewertet · 65 mit mindestens einem fremden Buch · beste Punktzahl 7. Ein leeres Fenster ist kein Fehler; ein dauerhaft einsamer Betfair-Score schon."
     },
     {
       "id": "vorregistrierung",
@@ -645,7 +645,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "🔒 E-Sport ohne Wallet-Nachweis: 349/120 seit 38d · 🔒 Poly-Auswahl · von Betfair bestätigt: 434/60 seit 44d · 🔒 Fade-Unter · Ganzspiel-Torlinie: 6335/200 seit 38d · 🔒 Liga · Conviction ab 5: 110/80 seit 34d · 🔒 Bücher-Score ≥7 von 10: 94/40 seit 44d"
+      "note": "🔒 E-Sport ohne Wallet-Nachweis: 350/120 seit 39d · 🔒 Poly-Auswahl · von Betfair bestätigt: 440/60 seit 44d · 🔒 Fade-Unter · Ganzspiel-Torlinie: 6317/200 seit 39d · 🔒 Liga · Conviction ab 5: 110/80 seit 34d · 🔒 Bücher-Score ≥7 von 10: 96/40 seit 44d"
     },
     {
       "id": "killer_push_buch",
@@ -660,14 +660,12 @@
       "id": "card_link_alive",
       "label": "Terminal-Kartenlink kommt an",
       "severity": "error",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "3 Boersen-Spiele hatten eine Mannschaft aus unseren Partien desselben Tages, verlinkt wurde KEINES — Namens-Bruecke oder Fixture-Index gebrochen."
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "0 von 0 ist ein ruhiger Tag (oder eine Laenderspielpause, in der wir gar keine passenden Partien haben). 0 von N ist ein Bruch."
     }
   ],
-  "nFail": 5,
-  "generatedAt": "2026-10-15T12:45:49.417764+00:00"
+  "nFail": 4,
+  "generatedAt": "2026-10-15T22:40:52.977880+00:00"
 }
