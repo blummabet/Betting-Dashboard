@@ -796721,7 +796721,10 @@
     "usd": 601,
     "ts": 1792016685
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedWinner": "Under",
+  "resolvedAt": "2026-10-15T02:57:38.121285+00:00"
  },
  "mls-fcc-ner-2026-10-14-more-markets": {
   "shares": {
@@ -797709,7 +797712,13 @@
     "usd": 1000,
     "ts": 1792018248
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Nets": 0.0,
+   "Heat": 1.0
+  },
+  "resolvedAt": "2026-10-15T02:57:38.121285+00:00"
  },
  "nba-cha-bos-2026-10-14": {
   "shares": {
@@ -798058,7 +798067,13 @@
     "usd": 350,
     "ts": 1792016116
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Hornets": 0.0,
+   "Celtics": 1.0
+  },
+  "resolvedAt": "2026-10-15T02:57:38.121285+00:00"
  },
  "mls-tor-orl-2026-10-14-more-markets": {
   "shares": {
@@ -798299,7 +798314,13 @@
   "tokens": {
    "Over": "57441547880950360201598747944346197542640204673183191290900248533299296837614",
    "Under": "34502115880690350115352106290674525811900496761114754426068859638064557480647"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Over": 1.0,
+   "Under": 0.0
+  },
+  "resolvedAt": "2026-10-15T02:57:38.121285+00:00"
  },
  "nhl-mon-wsh-2026-10-14": {
   "shares": {
@@ -798633,7 +798654,13 @@
     "usd": 1653,
     "ts": 1792016929
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Canadiens": 0.0,
+   "Capitals": 1.0
+  },
+  "resolvedAt": "2026-10-15T02:57:38.121285+00:00"
  },
  "mls-fcc-ner-2026-10-14": {
   "shares": {
@@ -807794,12 +807821,12 @@
  },
  "wta-pohanko-sakkari-2026-10-14": {
   "shares": {
-   "Mia Pohankova": 2320.3865363249997,
-   "Maria Sakkari": 4819.255339499999
+   "Mia Pohankova": 6295.441270670005,
+   "Maria Sakkari": 12496.911859565005
   },
   "prices": {
-   "Mia Pohankova": 0.325,
-   "Maria Sakkari": 0.675
+   "Mia Pohankova": 0.335,
+   "Maria Sakkari": 0.665
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -807807,119 +807834,190 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 9386,
+  "totalUsd": 20482,
   "whales": [
+   {
+    "wallet": "0xe7870d0e1bfc65a23e3d66caf00ca1b9129e5034",
+    "side": "Mia Pohankova",
+    "usd": 4029
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Maria Sakkari",
+    "usd": 3325,
+    "avgPrice": 0.67
+   },
    {
     "wallet": "0x48eb25e4eef92260c718758301bb80220152e9db",
     "side": "Maria Sakkari",
-    "usd": 3254
+    "usd": 3206
+   },
+   {
+    "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
+    "side": "Maria Sakkari",
+    "usd": 1330
    },
    {
     "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
     "side": "Mia Pohankova",
-    "usd": 792
+    "usd": 817
    },
    {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-    "side": "Mia Pohankova",
-    "usd": 390,
-    "avgPrice": 0.31
+    "wallet": "0xd3f9a532aaf64bd250e3b84b132b2c83152645a7",
+    "side": "Maria Sakkari",
+    "usd": 547
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Maria Sakkari",
+    "usd": 366,
+    "avgPrice": 0.664
+   },
+   {
+    "wallet": "0x28e0e82bc770c3c153b92ff6ad863f12b8132e6b",
+    "side": "Maria Sakkari",
+    "usd": 332
+   },
+   {
+    "wallet": "0x0eb32f4c1a8672b61b48d9f1493b6dd5a6b1f766",
+    "side": "Maria Sakkari",
+    "usd": 332
+   },
+   {
+    "wallet": "0xc34b4901be324718c176100e350211d97b199296",
+    "side": "Maria Sakkari",
+    "usd": 302
    },
    {
     "wallet": "0x185056a052c5e0ab1c866c9b57fb9e9508898903",
     "side": "Maria Sakkari",
-    "usd": 298
+    "usd": 293
    },
    {
     "wallet": "0x7cfc323ece0130044a84dce68374607ee92c32cd",
     "side": "Maria Sakkari",
-    "usd": 293
+    "usd": 289
+   },
+   {
+    "wallet": "0x04641b57f332c15ecaa497799c55026d521967da",
+    "side": "Maria Sakkari",
+    "usd": 228
    },
    {
     "wallet": "0x38f1cfeceedc974a52e8e9d554f5e0beb4fe9ff1",
     "side": "Maria Sakkari",
-    "usd": 225
+    "usd": 221
+   },
+   {
+    "wallet": "0xcad22bcc3c5f2e35f12313d968fd413f376bf315",
+    "side": "Maria Sakkari",
+    "usd": 208
    },
    {
     "wallet": "0x7547479d43f4b52d892a6f2254050eea50edd158",
     "side": "Mia Pohankova",
-    "usd": 195
+    "usd": 201
    },
    {
-    "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
+    "wallet": "0x909066977a1959bdf63982cab8fd054904a44855",
     "side": "Maria Sakkari",
-    "usd": 130
-   },
-   {
-    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
-    "side": "Mia Pohankova",
-    "usd": 127
-   },
-   {
-    "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
-    "side": "Mia Pohankova",
-    "usd": 117
-   },
-   {
-    "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
-    "side": "Mia Pohankova",
-    "usd": 116
-   },
-   {
-    "wallet": "0x9c3ce009c9b039956665cecc4cd14de862b5e8c9",
-    "side": "Mia Pohankova",
-    "usd": 114
-   },
-   {
-    "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
-    "side": "Mia Pohankova",
-    "usd": 104,
-    "avgPrice": 0.3
+    "usd": 200
    },
    {
     "wallet": "0x66b102468892d00a90c98ed8aec1d2b24904340f",
     "side": "Maria Sakkari",
-    "usd": 67
+    "usd": 133
    },
    {
-    "wallet": "0xecf944010441ad74b89a050f0e0042a00dd9cbf5",
+    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
     "side": "Mia Pohankova",
-    "usd": 62
+    "usd": 131
+   },
+   {
+    "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
+    "side": "Maria Sakkari",
+    "usd": 128
+   },
+   {
+    "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
+    "side": "Mia Pohankova",
+    "usd": 120
+   },
+   {
+    "wallet": "0x9c3ce009c9b039956665cecc4cd14de862b5e8c9",
+    "side": "Mia Pohankova",
+    "usd": 119
+   },
+   {
+    "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
+    "side": "Mia Pohankova",
+    "usd": 108,
+    "avgPrice": 0.3
+   },
+   {
+    "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
+    "side": "Mia Pohankova",
+    "usd": 87
    },
    {
     "wallet": "0x98db8cca55c32b24cfb414b5b43d273f4e1fdd17",
     "side": "Maria Sakkari",
-    "usd": 50
+    "usd": 85
    },
    {
-    "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
-    "side": "Mia Pohankova",
-    "usd": 39
+    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
+    "side": "Maria Sakkari",
+    "usd": 66
    },
    {
     "wallet": "0xdc4f58a48ed4467743609fdce11eea483c759804",
     "side": "Maria Sakkari",
-    "usd": 34
+    "usd": 66
+   },
+   {
+    "wallet": "0xecf944010441ad74b89a050f0e0042a00dd9cbf5",
+    "side": "Mia Pohankova",
+    "usd": 64
+   },
+   {
+    "wallet": "0x49c5845733fd0b83d2ae67bfc1baf9d2e3093de7",
+    "side": "Maria Sakkari",
+    "usd": 46
+   },
+   {
+    "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
+    "side": "Mia Pohankova",
+    "usd": 40
+   },
+   {
+    "wallet": "0x84f65d5589b3fd2807c5fa5e6a67490388b12e01",
+    "side": "Maria Sakkari",
+    "usd": 40
+   },
+   {
+    "wallet": "0xa697d0b3fff7d285a0f92d6ee03a7f97809e59d5",
+    "side": "Maria Sakkari",
+    "usd": 33
    },
    {
     "wallet": "0xec6d625b58f205a224d4700ec55be068c3335050",
     "side": "Maria Sakkari",
-    "usd": 34
-   },
-   {
-    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
-    "side": "Mia Pohankova",
-    "usd": 32
-   },
-   {
-    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
-    "side": "Maria Sakkari",
-    "usd": 32
+    "usd": 33
    },
    {
     "wallet": "0x0b5ef9690ce702f75a2a0eaa604ce783224361b4",
     "side": "Mia Pohankova",
-    "usd": 30
+    "usd": 31
+   },
+   {
+    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+    "side": "Maria Sakkari",
+    "usd": 31
+   },
+   {
+    "wallet": "0x3ca9089f59d506a6773a4d68227a1ac97806424a",
+    "side": "Maria Sakkari",
+    "usd": 27
    },
    {
     "wallet": "0xfa686b1486c0622c54164d86b1d6f784d0bbba5d",
@@ -807927,93 +808025,24 @@
     "usd": 27
    },
    {
+    "wallet": "0xcc78f214546322601325a84dec77b7eea784d202",
+    "side": "Mia Pohankova",
+    "usd": 20,
+    "avgPrice": 0.3299
+   },
+   {
     "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
     "side": "Maria Sakkari",
     "usd": 20
    },
    {
-    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
-    "side": "Mia Pohankova",
-    "usd": 19
-   },
-   {
-    "wallet": "0xcc78f214546322601325a84dec77b7eea784d202",
-    "side": "Mia Pohankova",
-    "usd": 19
-   },
-   {
     "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
     "side": "Mia Pohankova",
-    "usd": 16
-   },
-   {
-    "wallet": "0xcfaa77e8c04bfb48016896da941677afee3b28f7",
-    "side": "Mia Pohankova",
-    "usd": 16
-   },
-   {
-    "wallet": "0x301fcd4e6bc88232f7138fcaf252e1dba67ae84c",
-    "side": "Maria Sakkari",
-    "usd": 15
-   },
-   {
-    "wallet": "0x3ca9089f59d506a6773a4d68227a1ac97806424a",
-    "side": "Maria Sakkari",
-    "usd": 14
-   },
-   {
-    "wallet": "0x1549ae307a974fdbbb65ed56532dcc45edf62956",
-    "side": "Maria Sakkari",
-    "usd": 12
-   },
-   {
-    "wallet": "0xd3f9a532aaf64bd250e3b84b132b2c83152645a7",
-    "side": "Maria Sakkari",
-    "usd": 11
-   },
-   {
-    "wallet": "0xf9706baa6dd084f1f0c3b88602a543d0c313f7f6",
-    "side": "Mia Pohankova",
-    "usd": 10
-   },
-   {
-    "wallet": "0xe004d275622e574842cfa9f31427f213e387d87c",
-    "side": "Maria Sakkari",
-    "usd": 10
-   },
-   {
-    "wallet": "0x3e6b98d9dac15f285a18a02644a8c900aab58a98",
-    "side": "Mia Pohankova",
-    "usd": 8
-   },
-   {
-    "wallet": "0x35e701f088b6ef25fff6b902769c1cd8b85f8331",
-    "side": "Mia Pohankova",
-    "usd": 8
-   },
-   {
-    "wallet": "0x1bfb6053af6856aa0e0015899d588e432d238bea",
-    "side": "Mia Pohankova",
-    "usd": 6
-   },
-   {
-    "wallet": "0xa70a523c726929d4566c636e5dacbd4b72ec5772",
-    "side": "Mia Pohankova",
-    "usd": 5
-   },
-   {
-    "wallet": "0x3e3af3d2d06858b6948f3ec5f6fcdca1d94d6aa0",
-    "side": "Mia Pohankova",
-    "usd": 2
-   },
-   {
-    "wallet": "0x521070c99db06e54af5e8e4a91d6858decdfbd53",
-    "side": "Mia Pohankova",
-    "usd": 2
+    "usd": 17
    }
   ],
-  "hoursToKickoff": 0.51,
-  "capturedAt": "2026-10-15T02:29:16.970493+00:00",
+  "hoursToKickoff": 0.04,
+  "capturedAt": "2026-10-15T02:57:38.121285+00:00",
   "koTs": "2026-10-15T03:00:00+00:00",
   "cond": "0xa504db7c98c90ad1e39d12a3209513efd955a540e6975851d126627b3affaa84",
   "frage": "Wuhan Tennis Open: Mia Pohankova vs Maria Sakkari",
@@ -808024,8 +808053,8 @@
  },
  "wta-muchova-shnaide-2026-10-14": {
   "shares": {
-   "Karolina Muchova": 15430.317988459998,
-   "Diana Shnaider": 16384.817791155005
+   "Karolina Muchova": 33014.52888581499,
+   "Diana Shnaider": 35056.71961381497
   },
   "prices": {
    "Karolina Muchova": 0.485,
@@ -808037,17 +808066,22 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 36294,
+  "totalUsd": 64176,
   "whales": [
    {
-    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
-    "side": "Karolina Muchova",
-    "usd": 9515
+    "wallet": "0xe7870d0e1bfc65a23e3d66caf00ca1b9129e5034",
+    "side": "Diana Shnaider",
+    "usd": 12875
    },
    {
     "wallet": "0x2ce8505aa641791eb8460f6ac6bf5c0511e34527",
     "side": "Diana Shnaider",
-    "usd": 8712
+    "usd": 11194
+   },
+   {
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "side": "Karolina Muchova",
+    "usd": 9515
    },
    {
     "wallet": "0xe8c4d68aff65b38cac46987b9b65e01eb47d395d",
@@ -808055,20 +808089,57 @@
     "usd": 4547
    },
    {
+    "wallet": "0x9f15613ebf1f36d4bc679e1211d1fc567cf9bdb3",
+    "side": "Karolina Muchova",
+    "usd": 3986,
+    "avgPrice": 0.48
+   },
+   {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "Karolina Muchova",
-    "usd": 1034,
-    "avgPrice": 0.48
+    "usd": 3787,
+    "avgPrice": 0.4796
+   },
+   {
+    "wallet": "0xe146d4569db3c975e0d08d94a559e6ea2a2283ee",
+    "side": "Diana Shnaider",
+    "usd": 2353
+   },
+   {
+    "wallet": "0x224f7ef690d952cf551a471846d5afb4892e514a",
+    "side": "Karolina Muchova",
+    "usd": 1940
+   },
+   {
+    "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
+    "side": "Karolina Muchova",
+    "usd": 1805
    },
    {
     "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
     "side": "Karolina Muchova",
-    "usd": 808
+    "usd": 1657
    },
    {
     "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
     "side": "Karolina Muchova",
-    "usd": 647
+    "usd": 1495
+   },
+   {
+    "wallet": "0xba76808965f5ef9927d16b84ea2c20677817e0d7",
+    "side": "Karolina Muchova",
+    "usd": 970
+   },
+   {
+    "wallet": "0x081e14554b92ee3dc53a21bd5b01f306692ef76e",
+    "side": "Karolina Muchova",
+    "usd": 792
+   },
+   {
+    "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
+    "side": "Karolina Muchova",
+    "usd": 760,
+    "avgPrice": 0.4756
    },
    {
     "wallet": "0xdc16718af9f04590b38a8e8aa32dedcd034740a5",
@@ -808086,15 +808157,20 @@
     "usd": 495
    },
    {
-    "wallet": "0x9b97ec329ba5848c16cec724a5dd72e18df0ca3e",
-    "side": "Diana Shnaider",
-    "usd": 495
+    "wallet": "0xd619b68e64f256f8ddd185b261c8679eacf0c461",
+    "side": "Karolina Muchova",
+    "usd": 485
    },
    {
-    "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
+    "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
     "side": "Karolina Muchova",
-    "usd": 370,
-    "avgPrice": 0.48
+    "usd": 364
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "Karolina Muchova",
+    "usd": 362,
+    "avgPrice": 0.4899
    },
    {
     "wallet": "0x8f41129e43ebfbfe6075d0804f3b2bb763b3260e",
@@ -808108,6 +808184,11 @@
     "usd": 302
    },
    {
+    "wallet": "0x7547479d43f4b52d892a6f2254050eea50edd158",
+    "side": "Karolina Muchova",
+    "usd": 291
+   },
+   {
     "wallet": "0x2f0bec54f4f26f749af2db20e52729427a7a5577",
     "side": "Karolina Muchova",
     "usd": 280
@@ -808118,14 +808199,44 @@
     "usd": 279
    },
    {
+    "wallet": "0x0eb32f4c1a8672b61b48d9f1493b6dd5a6b1f766",
+    "side": "Karolina Muchova",
+    "usd": 242
+   },
+   {
     "wallet": "0x4042a8ef98b5abf2a1cf2423f8475c91ee150bda",
     "side": "Karolina Muchova",
     "usd": 242
    },
    {
+    "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
+    "side": "Karolina Muchova",
+    "usd": 242
+   },
+   {
+    "wallet": "0x73e5cd209c144497b2fe399ab6698bffb62ce3d8",
+    "side": "Karolina Muchova",
+    "usd": 242
+   },
+   {
+    "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
+    "side": "Karolina Muchova",
+    "usd": 210
+   },
+   {
     "wallet": "0x2de6c361ec7c5a23a2cf2c61e85e8f349858fb10",
     "side": "Diana Shnaider",
     "usd": 202
+   },
+   {
+    "wallet": "0x84f65d5589b3fd2807c5fa5e6a67490388b12e01",
+    "side": "Karolina Muchova",
+    "usd": 199
+   },
+   {
+    "wallet": "0x01c78f8873c0c86d6b6b92ff627e3802237ee995",
+    "side": "Karolina Muchova",
+    "usd": 184
    },
    {
     "wallet": "0x38f1cfeceedc974a52e8e9d554f5e0beb4fe9ff1",
@@ -808139,9 +808250,9 @@
     "avgPrice": 0.5058
    },
    {
-    "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
+    "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
     "side": "Karolina Muchova",
-    "usd": 159
+    "usd": 162
    },
    {
     "wallet": "0xb86c9cc67f54e5f5d8a5d6f2a68a1a716c40b76f",
@@ -808154,99 +808265,18 @@
     "usd": 101
    },
    {
-    "wallet": "0x3e6b98d9dac15f285a18a02644a8c900aab58a98",
+    "wallet": "0xabb89972b21b304c1bed2bf26f35c8741ac9bba3",
     "side": "Karolina Muchova",
     "usd": 99
    },
    {
-    "wallet": "0x0b5ef9690ce702f75a2a0eaa604ce783224361b4",
+    "wallet": "0x3e6b98d9dac15f285a18a02644a8c900aab58a98",
     "side": "Karolina Muchova",
-    "usd": 78
-   },
-   {
-    "wallet": "0x01c78f8873c0c86d6b6b92ff627e3802237ee995",
-    "side": "Diana Shnaider",
-    "usd": 75
-   },
-   {
-    "wallet": "0x67e2bb04749ca589ac8028c62dc0c1378b5322c5",
-    "side": "Karolina Muchova",
-    "usd": 59
-   },
-   {
-    "wallet": "0x5d40576be2e9c61d283f4fd80d7a5ccf2331ba95",
-    "side": "Karolina Muchova",
-    "usd": 48
-   },
-   {
-    "wallet": "0x17d97684d80863e07bc95d1e9f7c1c1dbec884af",
-    "side": "Karolina Muchova",
-    "usd": 46
-   },
-   {
-    "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
-    "side": "Karolina Muchova",
-    "usd": 37
-   },
-   {
-    "wallet": "0xbfd770b7ff07fb2ece41b0e7c593db65a84cf0bf",
-    "side": "Karolina Muchova",
-    "usd": 35
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "side": "Diana Shnaider",
-    "usd": 33,
-    "avgPrice": 0.49
-   },
-   {
-    "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
-    "side": "Diana Shnaider",
-    "usd": 30
-   },
-   {
-    "wallet": "0x3ca9089f59d506a6773a4d68227a1ac97806424a",
-    "side": "Karolina Muchova",
-    "usd": 21
-   },
-   {
-    "wallet": "0x5e020e19bc4cc2cd24ab9b406604ee9df02ab178",
-    "side": "Karolina Muchova",
-    "usd": 21
-   },
-   {
-    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
-    "side": "Karolina Muchova",
-    "usd": 18
-   },
-   {
-    "wallet": "0x976ec5e37e6541ca7dcfee7ff31aa7f685f48453",
-    "side": "Karolina Muchova",
-    "usd": 15
-   },
-   {
-    "wallet": "0xef67e8cdb002807bb125d0191a29f71dc970c87e",
-    "side": "Karolina Muchova",
-    "usd": 15
-   },
-   {
-    "wallet": "0x7ca69d966666ba5a6646c7f4136f0d1d8cab9da8",
-    "side": "Diana Shnaider",
-    "usd": 15
-   },
-   {
-    "wallet": "0xa772e2ca9f119162d03330f3e66c0556a2068686",
-    "side": "Karolina Muchova",
-    "usd": 14
-   },
-   {
-    "wallet": "0x96d61a3a181c250f89875e1ae0e349c609ef5892",
-    "side": "Karolina Muchova",
-    "usd": 14
+    "usd": 99
    }
   ],
-  "hoursToKickoff": 0.51,
-  "capturedAt": "2026-10-15T02:29:16.970493+00:00",
+  "hoursToKickoff": 0.04,
+  "capturedAt": "2026-10-15T02:57:38.121285+00:00",
   "koTs": "2026-10-15T03:00:00+00:00",
   "cond": "0x9854549027687eec13342f628cbd3fbf307db19322f503b6cc99aa19ce3ba6a7",
   "frage": "Wuhan Tennis Open: Karolina Muchova vs Diana Shnaider",
@@ -808591,12 +808621,12 @@
  },
  "atp-mochizu-sweeny-2026-10-14": {
   "shares": {
-   "Shintaro Mochizuki": 4623.1174631250005,
-   "Dane Sweeny": 3706.748849275
+   "Shintaro Mochizuki": 4885.679073435001,
+   "Dane Sweeny": 3761.467149764999
   },
   "prices": {
-   "Shintaro Mochizuki": 0.555,
-   "Dane Sweeny": 0.445
+   "Shintaro Mochizuki": 0.565,
+   "Dane Sweeny": 0.435
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -808604,58 +808634,64 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 8501,
+  "totalUsd": 9001,
   "whales": [
    {
     "wallet": "0x3f985e3a68f88e6ed8da1a22e1a5eda81c8e0aa1",
     "side": "Shintaro Mochizuki",
-    "usd": 4282
+    "usd": 4359
    },
    {
     "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
     "side": "Dane Sweeny",
-    "usd": 2615
+    "usd": 2556
    },
    {
     "wallet": "0x7547479d43f4b52d892a6f2254050eea50edd158",
     "side": "Dane Sweeny",
-    "usd": 267
+    "usd": 261
    },
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
     "side": "Shintaro Mochizuki",
-    "usd": 244
+    "usd": 248
    },
    {
     "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
     "side": "Dane Sweeny",
-    "usd": 203
+    "usd": 199
+   },
+   {
+    "wallet": "0x0d0efde748a217f3985ef32ecc7d005f83e50570",
+    "side": "Dane Sweeny",
+    "usd": 195,
+    "avgPrice": 0.445
+   },
+   {
+    "wallet": "0x78f4dc76a15a640cb2b47183fe64eff5874938ee",
+    "side": "Shintaro Mochizuki",
+    "usd": 132
    },
    {
     "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
     "side": "Dane Sweeny",
-    "usd": 89
+    "usd": 87
    },
    {
     "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
     "side": "Dane Sweeny",
-    "usd": 77
+    "usd": 76
    },
    {
     "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
     "side": "Dane Sweeny",
-    "usd": 76,
+    "usd": 74,
     "avgPrice": 0.43
-   },
-   {
-    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
-    "side": "Dane Sweeny",
-    "usd": 75
    },
    {
     "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
     "side": "Dane Sweeny",
-    "usd": 63
+    "usd": 61
    },
    {
     "wallet": "0x6a80869c6561210db35da8e7e306a1095275d472",
@@ -808663,19 +808699,25 @@
     "usd": 41
    },
    {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Shintaro Mochizuki",
+    "usd": 39,
+    "avgPrice": 0.55
+   },
+   {
     "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
     "side": "Dane Sweeny",
-    "usd": 31
+    "usd": 30
    },
    {
     "wallet": "0x3ca9089f59d506a6773a4d68227a1ac97806424a",
     "side": "Dane Sweeny",
-    "usd": 28
+    "usd": 27
    },
    {
     "wallet": "0x6a86dc13222b01e29650035b2ce9c8930c1db39e",
     "side": "Shintaro Mochizuki",
-    "usd": 25
+    "usd": 26
    },
    {
     "wallet": "0xa697d0b3fff7d285a0f92d6ee03a7f97809e59d5",
@@ -808690,7 +808732,7 @@
    {
     "wallet": "0x3e1ac4bede0a559fc47e78e8a74adeeb6f704d5c",
     "side": "Dane Sweeny",
-    "usd": 17
+    "usd": 16
    },
    {
     "wallet": "0x5e020e19bc4cc2cd24ab9b406604ee9df02ab178",
@@ -808708,6 +808750,11 @@
     "usd": 10
    },
    {
+    "wallet": "0x3e6b98d9dac15f285a18a02644a8c900aab58a98",
+    "side": "Dane Sweeny",
+    "usd": 8
+   },
+   {
     "wallet": "0x01c78f8873c0c86d6b6b92ff627e3802237ee995",
     "side": "Dane Sweeny",
     "usd": 8
@@ -808715,7 +808762,7 @@
    {
     "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
     "side": "Dane Sweeny",
-    "usd": 8
+    "usd": 7
    },
    {
     "wallet": "0x216050de6080fac3926226b2b8ce3d5544784c78",
@@ -808748,8 +808795,8 @@
     "usd": 1
    }
   ],
-  "hoursToKickoff": 1.51,
-  "capturedAt": "2026-10-15T02:29:16.970493+00:00",
+  "hoursToKickoff": 1.04,
+  "capturedAt": "2026-10-15T02:57:38.121285+00:00",
   "koTs": "2026-10-15T04:00:00+00:00",
   "cond": "0xc8a479ba3e11084acc08e82e0b97d140f1c9d96552a13a5bdd737fee58676ea4",
   "frage": "Jinan: Shintaro Mochizuki vs Dane Sweeny",
@@ -808951,7 +808998,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 48690,
+  "totalUsd": 48737,
   "whales": [
    {
     "wallet": "0x49e0265d1a3636870df298e2ef5e681e246e9af1",
@@ -809025,8 +809072,7 @@
    {
     "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
     "side": "Elina Svitolina",
-    "usd": 198,
-    "avgPrice": 0.8703
+    "usd": 198
    },
    {
     "wallet": "0xa6ded03ba993d58d265dc8fa3f6ddda3d926256c",
@@ -809090,11 +809136,6 @@
     "usd": 39
    },
    {
-    "wallet": "0x49c5845733fd0b83d2ae67bfc1baf9d2e3093de7",
-    "side": "Elina Svitolina",
-    "usd": 38
-   },
-   {
     "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
     "side": "Hanyu Guo",
     "usd": 38
@@ -809112,7 +809153,8 @@
    {
     "wallet": "0x2da325618fff9b2ffe64a49253fbcae8c7b9f258",
     "side": "Elina Svitolina",
-    "usd": 22
+    "usd": 22,
+    "avgPrice": 0.8979
    },
    {
     "wallet": "0x35e701f088b6ef25fff6b902769c1cd8b85f8331",
@@ -809122,12 +809164,18 @@
    {
     "wallet": "0xcc78f214546322601325a84dec77b7eea784d202",
     "side": "Hanyu Guo",
-    "usd": 20
+    "usd": 20,
+    "avgPrice": 0.1199
    },
    {
     "wallet": "0x3e1ac4bede0a559fc47e78e8a74adeeb6f704d5c",
     "side": "Hanyu Guo",
     "usd": 16
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Elina Svitolina",
+    "usd": 12
    },
    {
     "wallet": "0xa278b41b5afda5d18da683eb7f851a7b2dc13369",
@@ -809160,8 +809208,8 @@
     "usd": 4
    }
   ],
-  "hoursToKickoff": 2.01,
-  "capturedAt": "2026-10-15T02:29:16.970493+00:00",
+  "hoursToKickoff": 1.54,
+  "capturedAt": "2026-10-15T02:57:38.121285+00:00",
   "koTs": "2026-10-15T04:30:00+00:00",
   "cond": "0xebd27b2a70d87186c2342f8dd5c5895c06180c3830ac19184990f83faf328c4c",
   "frage": "Wuhan Tennis Open: Elina Svitolina vs Hanyu Guo",
@@ -809411,8 +809459,8 @@
  },
  "wta-jovic-chwalin-2026-10-14": {
   "shares": {
-   "Iva Jovic": 9744.191419620003,
-   "Maja Chwalinska": 3513.2118628399994
+   "Iva Jovic": 9802.310865480005,
+   "Maja Chwalinska": 3534.16649298
   },
   "prices": {
    "Iva Jovic": 0.735,
@@ -809424,12 +809472,12 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 13543,
+  "totalUsd": 13740,
   "whales": [
    {
     "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
     "side": "Iva Jovic",
-    "usd": 5635,
+    "usd": 5549,
     "avgPrice": 0.73
    },
    {
@@ -809473,6 +809521,16 @@
     "usd": 98
    },
    {
+    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
+    "side": "Iva Jovic",
+    "usd": 87
+   },
+   {
+    "wallet": "0xebfe15f24117751dc4b04c2fafb0113b4883c8c3",
+    "side": "Iva Jovic",
+    "usd": 86
+   },
+   {
     "wallet": "0x333f291ea158f13e4f60c9f0ba88044bf2483cd6",
     "side": "Iva Jovic",
     "usd": 75
@@ -809488,14 +809546,10 @@
     "usd": 69
    },
    {
-    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
-    "side": "Iva Jovic",
-    "usd": 63
-   },
-   {
     "wallet": "0x67e2bb04749ca589ac8028c62dc0c1378b5322c5",
     "side": "Iva Jovic",
-    "usd": 60
+    "usd": 60,
+    "avgPrice": 0.7399
    },
    {
     "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
@@ -809516,6 +809570,11 @@
     "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
     "side": "Maja Chwalinska",
     "usd": 35
+   },
+   {
+    "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
+    "side": "Iva Jovic",
+    "usd": 30
    },
    {
     "wallet": "0xfa686b1486c0622c54164d86b1d6f784d0bbba5d",
@@ -809555,7 +809614,8 @@
    {
     "wallet": "0x1549ae307a974fdbbb65ed56532dcc45edf62956",
     "side": "Iva Jovic",
-    "usd": 12
+    "usd": 12,
+    "avgPrice": 0.7399
    },
    {
     "wallet": "0x96d61a3a181c250f89875e1ae0e349c609ef5892",
@@ -809593,6 +809653,11 @@
     "usd": 1
    },
    {
+    "wallet": "0x3e3af3d2d06858b6948f3ec5f6fcdca1d94d6aa0",
+    "side": "Maja Chwalinska",
+    "usd": 1
+   },
+   {
     "wallet": "0x521070c99db06e54af5e8e4a91d6858decdfbd53",
     "side": "Maja Chwalinska",
     "usd": 1
@@ -809613,14 +809678,218 @@
     "usd": 0
    }
   ],
-  "hoursToKickoff": 2.01,
-  "capturedAt": "2026-10-15T02:29:16.970493+00:00",
+  "hoursToKickoff": 1.54,
+  "capturedAt": "2026-10-15T02:57:38.121285+00:00",
   "koTs": "2026-10-15T04:30:00+00:00",
   "cond": "0xebc8c8abb05720ff23becfa758ea03d3e13d1d568b1d597d7a6bc13a6018b161",
   "frage": "Wuhan Tennis Open: Iva Jovic vs Maja Chwalinska",
   "tokens": {
    "Iva Jovic": "16571870397624565424934229572020362511386987953296375178175303124362054560849",
    "Maja Chwalinska": "73448888682466207561044737841311378912892864975914145303906335138111641257502"
+  }
+ },
+ "dota2-xctn-rb1-2026-10-15": {
+  "shares": {
+   "Execration": 2165.5386176100005,
+   "Royal Bear": 3767.189697635001
+  },
+  "prices": {
+   "Execration": 0.365,
+   "Royal Bear": 0.635
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 7606,
+  "whales": [
+   {
+    "wallet": "0x25f905e879a9742681828e14e47048e8ba08eba6",
+    "side": "Royal Bear",
+    "usd": 978
+   },
+   {
+    "wallet": "0xa032d2358fa08860ba30ba8e8d828b7738202090",
+    "side": "Royal Bear",
+    "usd": 635
+   },
+   {
+    "wallet": "0xc104db0d325238b721c407b44f14f70bb6b1e684",
+    "side": "Royal Bear",
+    "usd": 634
+   },
+   {
+    "wallet": "0xb57f1bff876e70181b50ccb16e0de3d036520c96",
+    "side": "Execration",
+    "usd": 340
+   },
+   {
+    "wallet": "0xa01b04b734a5de365985024735bad8e0731f7da1",
+    "side": "Royal Bear",
+    "usd": 318
+   },
+   {
+    "wallet": "0x4a1e0b5eb14359e8f66d46da9fe7a64e8ec1fd05",
+    "side": "Royal Bear",
+    "usd": 307
+   },
+   {
+    "wallet": "0xccdf43b7ca89ed0f22ff5ac535644482a8fd17ba",
+    "side": "Royal Bear",
+    "usd": 285
+   },
+   {
+    "wallet": "0x39098d0b472930be81ffddc04bdd6223d7368ce6",
+    "side": "Execration",
+    "usd": 277
+   },
+   {
+    "wallet": "0x14ca946e75d59b8b7ebe21110512f7b885d78f43",
+    "side": "Execration",
+    "usd": 157
+   },
+   {
+    "wallet": "0x012087fe15aebfbaf5ecf675faec1d8e28579156",
+    "side": "Royal Bear",
+    "usd": 147
+   },
+   {
+    "wallet": "0xde4b34ef9127875def1152cef2ff5c7ef7031222",
+    "side": "Execration",
+    "usd": 135
+   },
+   {
+    "wallet": "0x87256d0406f876184a66cc158415903bb242eb10",
+    "side": "Execration",
+    "usd": 124
+   },
+   {
+    "wallet": "0x3e83c4873b1092e7834eff23de71d0b3c1f700aa",
+    "side": "Execration",
+    "usd": 109
+   },
+   {
+    "wallet": "0xeebb46fe81e5195f4b34f207a44d4d2b7a890b96",
+    "side": "Execration",
+    "usd": 96
+   },
+   {
+    "wallet": "0xc4fe817476491890086330a639ac417d51bf601f",
+    "side": "Execration",
+    "usd": 80
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Execration",
+    "usd": 69
+   },
+   {
+    "wallet": "0x028602e5b0909dd7864f884f899ff287a72cf61d",
+    "side": "Execration",
+    "usd": 50
+   },
+   {
+    "wallet": "0x0ac5faecf8d623a4a074758aedfea9339b24f963",
+    "side": "Execration",
+    "usd": 41
+   },
+   {
+    "wallet": "0x3e9f9ef866c4f864a1e8e4cc386b948e7eb63988",
+    "side": "Execration",
+    "usd": 36
+   },
+   {
+    "wallet": "0x885ffdf360e5b0b6e6acb963fb3f8ba2344c8ed9",
+    "side": "Execration",
+    "usd": 34
+   },
+   {
+    "wallet": "0xefe98f8e81b31206ecf1236d21394ff035a3b8ec",
+    "side": "Execration",
+    "usd": 32
+   },
+   {
+    "wallet": "0xa951006f1ce68498c1aef9b013880459e6e08a2f",
+    "side": "Royal Bear",
+    "usd": 30
+   },
+   {
+    "wallet": "0xd2e77bfacb05f4e9763377852cd1f2da7aaa08e9",
+    "side": "Execration",
+    "usd": 29
+   },
+   {
+    "wallet": "0xb4d250f58c26840e09723a83ce9c8149aa32ce99",
+    "side": "Execration",
+    "usd": 27
+   },
+   {
+    "wallet": "0x758dac51ba3cc9a246a79787da9df11c5f425d9e",
+    "side": "Royal Bear",
+    "usd": 24
+   },
+   {
+    "wallet": "0xce0f9e043db5dffacb8782b799baf23bbedc7fc7",
+    "side": "Execration",
+    "usd": 18,
+    "avgPrice": 0.4
+   },
+   {
+    "wallet": "0xa28dfe5480855a064d9cfee2aa9354e67ac883bf",
+    "side": "Royal Bear",
+    "usd": 15
+   },
+   {
+    "wallet": "0xcb478cba19de920f9f7e359c9a8609d7f41c4737",
+    "side": "Royal Bear",
+    "usd": 13
+   },
+   {
+    "wallet": "0x35e701f088b6ef25fff6b902769c1cd8b85f8331",
+    "side": "Execration",
+    "usd": 9
+   },
+   {
+    "wallet": "0x1eea2ca273d688b83b4bafd625a085b065a2af80",
+    "side": "Royal Bear",
+    "usd": 9
+   },
+   {
+    "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
+    "side": "Execration",
+    "usd": 7
+   },
+   {
+    "wallet": "0xcc78f214546322601325a84dec77b7eea784d202",
+    "side": "Execration",
+    "usd": 7
+   },
+   {
+    "wallet": "0x521070c99db06e54af5e8e4a91d6858decdfbd53",
+    "side": "Execration",
+    "usd": 5
+   },
+   {
+    "wallet": "0xbfd770b7ff07fb2ece41b0e7c593db65a84cf0bf",
+    "side": "Execration",
+    "usd": 4
+   },
+   {
+    "wallet": "0x0cf18b4294b05509c44a6a0172eff7e97b20d7fe",
+    "side": "Execration",
+    "usd": 4
+   }
+  ],
+  "hoursToKickoff": 1.04,
+  "capturedAt": "2026-10-15T02:57:38.121285+00:00",
+  "koTs": "2026-10-15T04:00:00+00:00",
+  "cond": "0x056552db5c9d7720461146a45c03a73d229785c7f6cb5ab6284a0e803318f3b8",
+  "frage": "Dota 2: Execration vs Royal Bear (BO3) - DreamLeague Southeast Asia Closed Qualifier Playoffs",
+  "tokens": {
+   "Execration": "111327304535885907684069463378979790051537322410989437449433447879086349434828",
+   "Royal Bear": "93222957328531650237588952804430861016927096131633217231339211066837154328570"
   }
  }
 }
