@@ -742,6 +742,68 @@ def place_market_order(token_id: str, amount_usdc: float, private_key: str,
                 "error": f"Limit fallback Exception: {e} (ursprüngl: {market_err})"}
 
 
+def eigene_aktivitaet(token_id: str, private_key: str, seit_h: float = 72.0,
+                      client=None):
+    """Hat UNSER Konto auf diesen Token schon gehandelt oder liegt eine Order offen?
+
+    -> True (ja), False (nein) oder None (Boerse nicht befragbar).
+
+    🔴 15.10.2026 (Lucas: „Wurde 2x gesetzt" — Sparta Prag vs Lillestroem, 15:31 und 16:01
+    UTC, zwei Orders zu je $5). Der dritte Fall derselben Klasse nach dem 19.09. und 24.09.:
+    der Lauf um 15:23 setzte, sein Sicherungsschritt fand in 6,5 Minuten keinen Weg nach
+    GitHub (drei Mal `git fetch` an der 150-s-Frist auf dem Mac-Runner, danach „Beleg nicht
+    gepusht" und Exit 0), das 25-Minuten-Timeout riss den End-Commit ab. Unser Buch wusste
+    nichts. Die zweite Schranke — die Wallet-Positionen der data-api — sah die Position eine
+    halbe Stunde spaeter auch nicht; die Quelle ist gemessen unzuverlaessig und blockiert
+    deshalb bewusst nicht, wenn sie schweigt.
+
+    Beide Schranken hingen an Quellen, die NICHT die Boerse sind. Diese hier fragt die Boerse
+    selbst, mit demselben Schluessel, mit dem die Order gesetzt wird: unsere Trades auf diesen
+    Token (`/data/trades`, Level-2-authentifiziert) und unsere offenen Orders darauf. Was dort
+    steht, ist passiert — egal, was ein Commit, ein Timeout oder eine Positions-API sagt.
+    """
+    try:
+        if client is None:
+            from py_clob_client_v2.client import ClobClient
+            from py_clob_client_v2.clob_types import ApiCreds
+            from py_clob_client_v2 import SignatureTypeV2
+            kw = dict(host=CLOB_HOST, key=private_key, chain_id=CHAIN_ID,
+                      signature_type=SignatureTypeV2.POLY_PROXY)
+            fa = os.environ.get("POLY_FUNDER_ADDRESS", "").strip()
+            if fa:
+                kw["funder"] = fa
+            client = ClobClient(**kw)
+            ak = os.environ.get("POLY_API_KEY", "").strip()
+            if ak:
+                creds = ApiCreds(api_key=ak,
+                                 api_secret=os.environ.get("POLY_API_SECRET", "").strip(),
+                                 api_passphrase=os.environ.get("POLY_API_PASSPHRASE", "").strip())
+            else:
+                raw = client.derive_api_key()
+                creds = raw if isinstance(raw, ApiCreds) else ApiCreds(
+                    api_key=raw.get("key", raw.get("apiKey", "")),
+                    api_secret=raw.get("secret", ""), api_passphrase=raw.get("passphrase", ""))
+            client.set_api_creds(creds)
+        from py_clob_client_v2.clob_types import TradeParams
+        nach = int(time.time() - float(seit_h) * 3600)
+        trades = client.get_trades(TradeParams(asset_id=str(token_id), after=nach),
+                                   only_first_page=True) or []
+        if any(isinstance(t, dict) for t in trades):
+            return True
+        try:
+            from py_clob_client_v2.clob_types import OpenOrderParams
+            offen = client.get_open_orders(OpenOrderParams(asset_id=str(token_id)),
+                                           only_first_page=True) or []
+        except ImportError:
+            offen = client.get_open_orders() or []
+            offen = [o for o in offen if isinstance(o, dict)
+                     and str(o.get("asset_id") or o.get("assetId")) == str(token_id)]
+        return bool(offen)
+    except Exception as exc:                                        # noqa: BLE001
+        print(f"  ⚠️  Boerse nicht befragbar ({str(exc)[:120]})")
+        return None
+
+
 def place_sell_order(token_id: str, size: float, private_key: str,
                      price_hint: float = None) -> dict:
     """

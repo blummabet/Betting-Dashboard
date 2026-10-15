@@ -970,3 +970,52 @@ class TestDerBelegWirdSofortDauerhaft(unittest.TestCase):
         sh = open(os.path.join(w, "scripts/ci_sichern.sh"), encoding="utf-8").read()
         self.assertIn("exit 0", sh)
         self.assertNotIn("exit 1", sh)
+
+
+# ── 15.10.2026: dritte Schranke — die Boerse selbst (Sparta Prag 2x gesetzt) ────────
+class _FakeClob:
+    def __init__(self, trades=(), offen=(), fehler=None):
+        self.trades, self.offen, self.fehler, self.gefragt = list(trades), list(offen), fehler, []
+
+    def get_trades(self, params=None, only_first_page=False):
+        if self.fehler:
+            raise self.fehler
+        self.gefragt.append(("trades", params.asset_id, params.after))
+        return self.trades
+
+    def get_open_orders(self, params=None, only_first_page=False):
+        self.gefragt.append(("offen", params.asset_id))
+        return self.offen
+
+
+def test_boerse_kennt_den_handel_schon():
+    import polymarket_bet as PB
+    c = _FakeClob(trades=[{"id": "t1", "asset_id": "TOK", "side": "BUY"}])
+    assert PB.eigene_aktivitaet("TOK", "k", client=c) is True
+    assert c.gefragt[0][1] == "TOK" and c.gefragt[0][2] > 0, "nur dieser Token, nur ein Zeitfenster"
+
+
+def test_offene_order_zaehlt_wie_ein_handel():
+    import polymarket_bet as PB
+    assert PB.eigene_aktivitaet("TOK", "k", client=_FakeClob(offen=[{"id": "o1"}])) is True
+
+
+def test_nichts_an_der_boerse_heisst_frei():
+    import polymarket_bet as PB
+    assert PB.eigene_aktivitaet("TOK", "k", client=_FakeClob()) is False
+
+
+def test_stumme_boerse_ist_none_nicht_frei():
+    import polymarket_bet as PB
+    assert PB.eigene_aktivitaet("TOK", "k", client=_FakeClob(fehler=RuntimeError("503"))) is None
+
+
+def test_boersen_schranke_steht_vor_der_order_und_ist_fail_closed():
+    from pathlib import Path
+    src = Path(SAB.__file__).read_text(encoding="utf-8")
+    i_frage = src.index("eigene_aktivitaet(tok, key)")
+    i_order = src.index("place_market_order(tok,")
+    assert i_frage < i_order
+    zwischen = src[i_frage:i_order]
+    assert "if schon is True" in zwischen and "if schon is None" in zwischen
+    assert zwischen.count("continue") >= 2, "beide Faelle muessen das Setzen ueberspringen"
