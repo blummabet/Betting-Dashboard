@@ -27393,7 +27393,8 @@ null
 2
 ],
 "profit": 1.5,
-"via": "track"
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36099855:Match Odds",
@@ -27542,7 +27543,7 @@ null
 "leadOdd": 2.2,
 "value": 397905.31,
 "sentAt": "2026-10-16T19:11:42.660014+00:00",
-"status": "pending",
+"status": "lost",
 "htScore": [
 0,
 0
@@ -27563,7 +27564,17 @@ null
 0,
 0
 ]
-}
+},
+"clvBf": 1.72,
+"clvPinn": 3.81,
+"settledAt": "2026-10-16T21:30:29.027830+00:00",
+"ftScore": [
+1,
+1
+],
+"profit": -1.0,
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36181831:Match Odds",
@@ -27648,5 +27659,37 @@ null
 "profit": -1.0,
 "via": "track",
 "resChk": true
+},
+{
+"k": "fresh:36196606:Match Odds",
+"matchId": "36196606",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Chilean Primera B",
+"home": "Santiago Wanderers",
+"away": "CSD Rangers",
+"leadName": "The Draw",
+"leadOdd": 3.1,
+"value": 182488.18,
+"sentAt": "2026-10-16T21:29:58.388045+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.942263383853135,
+"leadDir": "in",
+"onLeader": false,
+"tier": "rest",
+"magnitude": 180447.8,
+"schwelle": 30000.0,
+"anteilSchwelle": 6.015,
+"raus": "mo_remis",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 23,
+"score": [
+0,
+0
+]
+}
 }
 ]
