@@ -1,14 +1,14 @@
 {
   "slug": "poly-global",
   "workflow": "🐋 Poly Global-Scan (alle Sportarten, häufig)",
-  "updatedAt": "2026-10-16T08:30:23.314594+00:00",
+  "updatedAt": "2026-10-16T09:00:37.739710+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
-    "spanneH": 9.0,
-    "proTag": 50.6,
+    "spanneH": 9.1,
+    "proTag": 50.4,
     "lueckeMinMin": 5.4,
-    "lueckeMedianMin": 29.9,
+    "lueckeMedianMin": 30.0,
     "lueckeMaxMin": 60.3,
     "sollProTag": null,
     "liefergradPct": null,
@@ -21,9 +21,24 @@
     "verdraengt": 0,
     "spanneH": 494.7,
     "erzeugtProTag": 4.9,
-    "widerspruch": "erzeugtProTag 4.9 gegen eine gemessene Kadenz von 50.6/Tag (Faktor 10.3) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
+    "widerspruch": "erzeugtProTag 4.9 gegen eine gemessene Kadenz von 50.4/Tag (Faktor 10.3) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
   },
   "runs": [
+    {
+      "ts": "2026-10-16T09:00:37.739710+00:00",
+      "workflow": "🐋 Poly Global-Scan (alle Sportarten, häufig)",
+      "runId": "38876889933",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/38876889933",
+      "nSteps": 28,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-10-16T08:55:04Z",
+      "startedAt": "2026-10-16T08:55:04Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 333.7,
+      "event": "workflow_dispatch"
+    },
     {
       "ts": "2026-10-16T08:30:23.314594+00:00",
       "workflow": "🐋 Poly Global-Scan (alle Sportarten, häufig)",
@@ -308,21 +323,6 @@
       "wartetS": 0.0,
       "laeuftSeitS": 306.9,
       "event": "schedule"
-    },
-    {
-      "ts": "2026-10-15T23:29:41.485839+00:00",
-      "workflow": "🐋 Poly Global-Scan (alle Sportarten, häufig)",
-      "runId": "38823366926",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/38823366926",
-      "nSteps": 28,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-10-15T23:24:20Z",
-      "startedAt": "2026-10-15T23:24:20Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 321.5,
-      "event": "workflow_dispatch"
     }
   ]
 }
