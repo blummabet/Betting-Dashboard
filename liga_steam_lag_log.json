@@ -2169,16 +2169,24 @@
           "polyPrice": 0.565,
           "pinnFair": 0.5768,
           "steamLag": false
+        },
+        {
+          "ts": "2026-10-16T21:07:00Z",
+          "edgePp": -0.2,
+          "polyPrice": 0.565,
+          "pinnFair": 0.5632,
+          "steamLag": false
         }
       ],
-      "currentEdgePp": 1.2,
+      "currentEdgePp": -0.2,
       "currentPolyPrice": 0.565,
       "edgeVelocityPPH": -0.192,
-      "convergencePct": 50.0,
+      "convergencePct": 100.0,
       "convergenceTs": null,
       "convergenceHours": null,
       "status": "OPEN",
-      "outcome": null
+      "outcome": null,
+      "pendingConvergenceConfirm": true
     },
     {
       "id": "530-544_hw",
@@ -2223,19 +2231,66 @@
           "polyPrice": 0.78,
           "pinnFair": 0.7965,
           "steamLag": false
+        },
+        {
+          "ts": "2026-10-16T21:07:00Z",
+          "edgePp": 1.6,
+          "polyPrice": 0.78,
+          "pinnFair": 0.7963,
+          "steamLag": false
         }
       ],
       "currentEdgePp": 1.6,
       "currentPolyPrice": 0.78,
-      "edgeVelocityPPH": -0.32,
+      "edgeVelocityPPH": 0.0,
       "convergencePct": 38.5,
+      "convergenceTs": null,
+      "convergenceHours": null,
+      "status": "OPEN",
+      "outcome": null
+    },
+    {
+      "id": "173-1660_hw",
+      "matchKey": "173-1660",
+      "homeId": "173",
+      "awayId": "1660",
+      "home": "RB Leipzig",
+      "away": "SV 07 Elversberg",
+      "homeFlag": "🏳",
+      "awayFlag": "🏳",
+      "matchDate": "2026-10-24",
+      "market": "hw",
+      "marketLabel": "Heimsieg",
+      "signalTs": "2026-10-16T21:07:00Z",
+      "entryEdgePp": 2.0,
+      "entryPolyPrice": 0.715,
+      "entryPinnFair": 0.7352,
+      "entryVol": 25.0,
+      "steamLagAtSignal": false,
+      "pinnMoveAtSignal": 0.2,
+      "edgeTrendAtSignal": "stable",
+      "highConfidence": false,
+      "entryTier": "track",
+      "snapshots": [
+        {
+          "ts": "2026-10-16T21:07:00Z",
+          "edgePp": 2.0,
+          "polyPrice": 0.715,
+          "pinnFair": 0.7352,
+          "steamLag": false
+        }
+      ],
+      "currentEdgePp": 2.0,
+      "currentPolyPrice": 0.715,
+      "edgeVelocityPPH": null,
+      "convergencePct": 0.0,
       "convergenceTs": null,
       "convergenceHours": null,
       "status": "OPEN",
       "outcome": null
     }
   ],
-  "updatedAt": "2026-10-16T13:07:40Z",
-  "runCount": 195,
+  "updatedAt": "2026-10-16T21:07:00Z",
+  "runCount": 196,
   "lastError": "no_poly_prices"
 }
