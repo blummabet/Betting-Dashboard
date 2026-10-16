@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-10-16T00:24:38.722986+00:00",
+"generatedAt": "2026-10-16T00:35:56.496836+00:00",
 "count": 13,
 "covered": 12,
 "leaguesKuratiert": [
@@ -66,8 +66,8 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 281386,
-"remaining": 4718614,
+"used": 281899,
+"remaining": 4718101,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
@@ -84,56 +84,60 @@
 "live": true,
 "moneySide": "away",
 "moneyName": "Gimnasia La Plata",
-"moneySharePct": 47,
-"moneyOdd": 1.58,
+"moneySharePct": 51,
+"moneyOdd": 1.47,
 "moneyDir": "in",
-"totVol": 172689,
-"pinnOdd": 1.64,
-"softOdd": 1.51,
-"softN": 25,
+"totVol": 190330,
+"pinnOdd": 1.49,
+"softOdd": 1.38,
+"softN": 24,
 "poly": {
-"vol": 184711,
-"odd": 1.8,
-"sharePct": 23,
+"vol": 191150,
+"odd": 1.65,
+"sharePct": 32,
 "shareSrc": "geld",
 "key": "arg-cah-gim-2026-10-15",
 "sideKey": "Gimnasia y Esgrima de La Plata",
 "whales": [
 {
 "wallet": "0x54ce7dd357766fc3255645e55ef41edd51cc9f80",
-"usd": 2664
+"usd": 2904
 },
 {
 "wallet": "0x17d81f8299a2d694f98b813ebcf1ca42ac41b4a6",
-"usd": 1495
+"usd": 1630
 },
 {
 "wallet": "0xf7f67ecde5cfb6fd4e30edadb19a7c53f9e8e517",
-"usd": 682
-},
-{
-"wallet": "0x824978ad8f2aa87ec22da2df99ffbb7d58e0b23a",
-"usd": 560
+"usd": 743
 },
 {
 "wallet": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
-"usd": 514
+"usd": 451
+},
+{
+"wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
+"usd": 371
+},
+{
+"wallet": "0x824978ad8f2aa87ec22da2df99ffbb7d58e0b23a",
+"usd": 366
 }
 ],
-"whaleUsd": 5915
+"whaleUsd": 6763
 },
 "pinn": {
-"home": 0.1446,
-"draw": 0.2789,
-"away": 0.5765,
+"home": 0.101,
+"draw": 0.2637,
+"away": 0.6353,
 "fav": "away"
 },
 "soft": {
-"home": 0.1156,
-"draw": 0.2803,
-"away": 0.6041,
+"home": 0.0809,
+"draw": 0.2615,
+"away": 0.6576,
 "fav": "away",
-"n": 25
+"n": 24
 },
 "pinnMovePP": null,
 "pinnMove": null,
@@ -157,9 +161,9 @@
 "totVol": 107564,
 "pinnOdd": 1.24,
 "softOdd": 1.23,
-"softN": 51,
+"softN": 49,
 "poly": {
-"vol": 51741,
+"vol": 52066,
 "odd": 1.26,
 "sharePct": 80,
 "shareSrc": "preis",
@@ -175,11 +179,11 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.7687,
-"draw": 0.1403,
+"home": 0.7688,
+"draw": 0.1402,
 "away": 0.091,
 "fav": "home",
-"n": 51
+"n": 49
 },
 "pinnMovePP": -0.2,
 "pinnMove": {
@@ -189,6 +193,77 @@
 "move": false,
 "laeuft": false
 },
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36086272",
+"home": "Estudiantes",
+"away": "Flamengo",
+"league": "CONMEBOL Copa Libertadores",
+"country": "International",
+"kickoff": "2026-10-16T00:30:00Z",
+"live": true,
+"moneySide": "away",
+"moneyName": "Flamengo",
+"moneySharePct": 75,
+"moneyOdd": 2.32,
+"moneyDir": "out",
+"totVol": 59881,
+"pinnOdd": 2.17,
+"softOdd": 2.1,
+"softN": 35,
+"poly": {
+"vol": 334230,
+"odd": 2.25,
+"sharePct": 97,
+"shareSrc": "geld",
+"key": "lib-est-fla-2026-10-15",
+"sideKey": "CR Flamengo",
+"whales": [
+{
+"wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+"usd": 27502
+},
+{
+"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+"usd": 9964
+},
+{
+"wallet": "0x64e93f87d8a0c1b2cde6f20d71f211372a95eb4c",
+"usd": 9190
+},
+{
+"wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+"usd": 9093
+},
+{
+"wallet": "0x8488ef25f79c0cf2ffdff307973b2ac10464588c",
+"usd": 8010
+},
+{
+"wallet": "0xa3fec54e1310fb6a05191420c9d44df4087caac5",
+"usd": 6092
+}
+],
+"whaleUsd": 111927
+},
+"pinn": {
+"home": 0.2473,
+"draw": 0.3093,
+"away": 0.4433,
+"fav": "away"
+},
+"soft": {
+"home": 0.2483,
+"draw": 0.3158,
+"away": 0.436,
+"fav": "away",
+"n": 35
+},
+"pinnMovePP": null,
+"pinnMove": null,
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
@@ -206,12 +281,12 @@
 "moneySharePct": 84,
 "moneyOdd": 1.53,
 "moneyDir": "flat",
-"totVol": 57812,
+"totVol": 57833,
 "pinnOdd": 1.48,
 "softOdd": 1.44,
-"softN": 50,
+"softN": 49,
 "poly": {
-"vol": 27543,
+"vol": 27578,
 "odd": 1.53,
 "sharePct": 66,
 "shareSrc": "preis",
@@ -231,7 +306,7 @@
 "draw": 0.209,
 "away": 0.1371,
 "fav": "home",
-"n": 50
+"n": 49
 },
 "pinnMovePP": 0.4,
 "pinnMove": {
@@ -261,9 +336,9 @@
 "totVol": 53035,
 "pinnOdd": 1.41,
 "softOdd": 1.4,
-"softN": 46,
+"softN": 45,
 "poly": {
-"vol": 55004,
+"vol": 55523,
 "odd": 1.44,
 "sharePct": 70,
 "shareSrc": "preis",
@@ -279,11 +354,11 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.1567,
-"draw": 0.1698,
-"away": 0.6736,
+"home": 0.1569,
+"draw": 0.1697,
+"away": 0.6734,
 "fav": "away",
-"n": 46
+"n": 45
 },
 "pinnMovePP": 0.3,
 "pinnMove": {
@@ -291,83 +366,6 @@
 "stepPP": -0.0,
 "n": 25,
 "move": false,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36086272",
-"home": "Estudiantes",
-"away": "Flamengo",
-"league": "CONMEBOL Copa Libertadores",
-"country": "International",
-"kickoff": "2026-10-16T00:30:00Z",
-"live": false,
-"moneySide": "away",
-"moneyName": "Flamengo",
-"moneySharePct": 72,
-"moneyOdd": 2.22,
-"moneyDir": "flat",
-"totVol": 42841,
-"pinnOdd": 2.17,
-"softOdd": 2.05,
-"softN": 37,
-"poly": {
-"vol": 285354,
-"odd": 2.2,
-"sharePct": 98,
-"shareSrc": "geld",
-"key": "lib-est-fla-2026-10-15",
-"sideKey": "CR Flamengo",
-"whales": [
-{
-"wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-"usd": 23585
-},
-{
-"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-"usd": 10187
-},
-{
-"wallet": "0x64e93f87d8a0c1b2cde6f20d71f211372a95eb4c",
-"usd": 9397
-},
-{
-"wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
-"usd": 9297
-},
-{
-"wallet": "0x8488ef25f79c0cf2ffdff307973b2ac10464588c",
-"usd": 8190
-},
-{
-"wallet": "0xa3fec54e1310fb6a05191420c9d44df4087caac5",
-"usd": 6228
-}
-],
-"whaleUsd": 115104
-},
-"pinn": {
-"home": 0.2473,
-"draw": 0.3093,
-"away": 0.4433,
-"fav": "away"
-},
-"soft": {
-"home": 0.2409,
-"draw": 0.3121,
-"away": 0.447,
-"fav": "away",
-"n": 37
-},
-"pinnMovePP": -3.7,
-"pinnMove": {
-"movePP": -3.7,
-"stepPP": -0.0,
-"n": 4,
-"move": true,
 "laeuft": false
 },
 "verdict": "konsens",
@@ -390,9 +388,9 @@
 "totVol": 40188,
 "pinnOdd": 2.38,
 "softOdd": 2.34,
-"softN": 51,
+"softN": 49,
 "poly": {
-"vol": 15854,
+"vol": 15866,
 "odd": 2.47,
 "sharePct": 40,
 "shareSrc": "preis",
@@ -412,13 +410,13 @@
 "draw": 0.2645,
 "away": 0.3309,
 "fav": "home",
-"n": 51
+"n": 49
 },
 "pinnMovePP": -0.0,
 "pinnMove": {
 "movePP": -0.0,
 "stepPP": -0.0,
-"n": 24,
+"n": 25,
 "move": false,
 "laeuft": false
 },
@@ -442,9 +440,9 @@
 "totVol": 34773,
 "pinnOdd": 1.71,
 "softOdd": 1.7,
-"softN": 51,
+"softN": 49,
 "poly": {
-"vol": 27503,
+"vol": 27528,
 "odd": 1.8,
 "sharePct": 56,
 "shareSrc": "preis",
@@ -460,17 +458,17 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.5545,
-"draw": 0.2411,
+"home": 0.5546,
+"draw": 0.241,
 "away": 0.2044,
 "fav": "home",
-"n": 51
+"n": 49
 },
 "pinnMovePP": 0.6,
 "pinnMove": {
 "movePP": 0.6,
 "stepPP": -0.0,
-"n": 22,
+"n": 23,
 "move": false,
 "laeuft": false
 },
@@ -493,10 +491,10 @@
 "moneyDir": "flat",
 "totVol": 28759,
 "pinnOdd": 1.72,
-"softOdd": 1.7,
-"softN": 43,
+"softOdd": 1.71,
+"softN": 42,
 "poly": {
-"vol": 27336,
+"vol": 35829,
 "odd": 1.77,
 "sharePct": 56,
 "shareSrc": "preis",
@@ -512,17 +510,17 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.1999,
-"draw": 0.2457,
-"away": 0.5544,
+"home": 0.2001,
+"draw": 0.2459,
+"away": 0.554,
 "fav": "away",
-"n": 43
+"n": 42
 },
 "pinnMovePP": -0.0,
 "pinnMove": {
 "movePP": -0.0,
 "stepPP": -0.0,
-"n": 8,
+"n": 9,
 "move": false,
 "laeuft": false
 },
@@ -546,7 +544,7 @@
 "totVol": 27833,
 "pinnOdd": 2.37,
 "softOdd": 2.35,
-"softN": 51,
+"softN": 49,
 "poly": {
 "vol": 16003,
 "odd": 2.47,
@@ -565,10 +563,10 @@
 },
 "soft": {
 "home": 0.4008,
-"draw": 0.2618,
-"away": 0.3374,
+"draw": 0.2617,
+"away": 0.3375,
 "fav": "home",
-"n": 51
+"n": 49
 },
 "pinnMovePP": 0.0,
 "pinnMove": {
@@ -593,14 +591,14 @@
 "moneySide": "away",
 "moneyName": "Chelsea",
 "moneySharePct": 66,
-"moneyOdd": 2.24,
-"moneyDir": "flat",
-"totVol": 25422,
+"moneyOdd": 2.22,
+"moneyDir": "in",
+"totVol": 25436,
 "pinnOdd": 2.18,
 "softOdd": 2.15,
-"softN": 51,
+"softN": 49,
 "poly": {
-"vol": 22731,
+"vol": 22917,
 "odd": 2.25,
 "sharePct": 44,
 "shareSrc": "preis",
@@ -616,17 +614,17 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.2987,
-"draw": 0.2592,
-"away": 0.442,
+"home": 0.2988,
+"draw": 0.2594,
+"away": 0.4419,
 "fav": "away",
-"n": 51
+"n": 49
 },
 "pinnMovePP": -0.0,
 "pinnMove": {
 "movePP": -0.0,
 "stepPP": -0.0,
-"n": 18,
+"n": 19,
 "move": false,
 "laeuft": false
 },
@@ -650,9 +648,9 @@
 "totVol": 22475,
 "pinnOdd": 1.64,
 "softOdd": 1.61,
-"softN": 51,
+"softN": 49,
 "poly": {
-"vol": 15958,
+"vol": 15991,
 "odd": 1.65,
 "sharePct": 60,
 "shareSrc": "preis",
@@ -668,17 +666,17 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.1657,
+"home": 0.1655,
 "draw": 0.2457,
-"away": 0.5886,
+"away": 0.5888,
 "fav": "away",
-"n": 51
+"n": 49
 },
 "pinnMovePP": -0.0,
 "pinnMove": {
 "movePP": -0.0,
 "stepPP": -0.0,
-"n": 7,
+"n": 8,
 "move": false,
 "laeuft": false
 },
@@ -701,10 +699,10 @@
 "moneyDir": "flat",
 "totVol": 20664,
 "pinnOdd": 3.76,
-"softOdd": 3.65,
-"softN": 50,
+"softOdd": 3.67,
+"softN": 48,
 "poly": {
-"vol": 7624,
+"vol": 7639,
 "odd": null,
 "sharePct": null,
 "shareSrc": null,
@@ -720,17 +718,17 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.4224,
+"home": 0.4225,
 "draw": 0.2582,
-"away": 0.3194,
+"away": 0.3193,
 "fav": "home",
-"n": 50
+"n": 48
 },
 "pinnMovePP": -0.0,
 "pinnMove": {
 "movePP": -0.0,
 "stepPP": -0.0,
-"n": 3,
+"n": 4,
 "move": false,
 "laeuft": false
 },
@@ -748,10 +746,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Internacional de Bogotá",
-"moneySharePct": 54,
-"moneyOdd": 1.08,
+"moneySharePct": 62,
+"moneyOdd": 1.05,
 "moneyDir": "in",
-"totVol": 20703,
+"totVol": 25619,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
