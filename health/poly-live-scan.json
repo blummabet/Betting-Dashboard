@@ -1,14 +1,14 @@
 {
   "slug": "poly-live-scan",
   "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
-  "updatedAt": "2026-10-16T02:28:41.492509+00:00",
+  "updatedAt": "2026-10-16T03:14:30.061816+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
-    "spanneH": 15.1,
-    "proTag": 30.2,
+    "spanneH": 15.0,
+    "proTag": 30.4,
     "lueckeMinMin": 3.2,
-    "lueckeMedianMin": 47.1,
+    "lueckeMedianMin": 47.0,
     "lueckeMaxMin": 93.2,
     "sollProTag": null,
     "liefergradPct": null,
@@ -21,9 +21,24 @@
     "verdraengt": 0,
     "spanneH": 489.3,
     "erzeugtProTag": 4.9,
-    "widerspruch": "erzeugtProTag 4.9 gegen eine gemessene Kadenz von 30.2/Tag (Faktor 6.2) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
+    "widerspruch": "erzeugtProTag 4.9 gegen eine gemessene Kadenz von 30.4/Tag (Faktor 6.2) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
   },
   "runs": [
+    {
+      "ts": "2026-10-16T03:14:30.061816+00:00",
+      "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
+      "runId": "38844207357",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/38844207357",
+      "nSteps": 7,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-10-16T03:10:43Z",
+      "startedAt": "2026-10-16T03:10:43Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 227.1,
+      "event": "workflow_dispatch"
+    },
     {
       "ts": "2026-10-16T02:28:41.492509+00:00",
       "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
@@ -308,21 +323,6 @@
       "wartetS": 0.0,
       "laeuftSeitS": 259.4,
       "event": "workflow_dispatch"
-    },
-    {
-      "ts": "2026-10-15T11:23:43.894275+00:00",
-      "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
-      "runId": "38726454452",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/38726454452",
-      "nSteps": 7,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-10-15T11:19:00Z",
-      "startedAt": "2026-10-15T11:19:00Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 283.9,
-      "event": "schedule"
     }
   ]
 }
