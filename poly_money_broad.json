@@ -1,15 +1,15 @@
 {
- "n": 549,
+ "n": 544,
  "minOdds": 1.35,
- "moneyHitRate": 0.412,
- "priceHitRate": 0.45,
- "brierMoney": 0.7954,
- "brierPrice": 0.6514,
+ "moneyHitRate": 0.41,
+ "priceHitRate": 0.452,
+ "brierMoney": 0.7986,
+ "brierPrice": 0.6524,
  "disagree": {
-  "n": 147,
-  "moneyWon": 25,
-  "priceWon": 46,
-  "neither": 76
+  "n": 143,
+  "moneyWon": 24,
+  "priceWon": 47,
+  "neither": 72
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -39,19 +39,19 @@
    "verdict": "preis_besser"
   },
   {
-   "league": "LA-LIGA",
-   "n": 45,
-   "moneyHitRate": 0.333,
-   "brierMoney": 0.7924,
-   "brierPrice": 0.7004,
-   "verdict": "preis_besser"
-  },
-  {
    "league": "BUNDESLIGA",
    "n": 26,
    "moneyHitRate": 0.385,
    "brierMoney": 0.7928,
    "brierPrice": 0.6959,
+   "verdict": "preis_besser"
+  },
+  {
+   "league": "LA-LIGA",
+   "n": 41,
+   "moneyHitRate": 0.317,
+   "brierMoney": 0.8099,
+   "brierPrice": 0.7109,
    "verdict": "preis_besser"
   },
   {
@@ -112,8 +112,8 @@
   }
  ],
  "guete": {
-  "belastbar": 549,
-  "preis_echo": 328,
+  "belastbar": 544,
+  "preis_echo": 329,
   "abgeschnitten": 60,
   "unbekannt": 0,
   "leer": 0
@@ -274,18 +274,6 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 732138
-  },
-  {
-   "key": "lal-mad-osa-2026-09-16",
-   "league": "LA-LIGA",
-   "winner": "Club Atlético de Madrid",
-   "moneyFav": "Club Atlético de Madrid",
-   "priceFav": "Club Atlético de Madrid",
-   "moneyShare": 0.925,
-   "priceProb": 0.739,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 724068
   },
   {
    "key": "epl-bou-liv-2026-09-20",
@@ -598,9 +586,21 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 292839
+  },
+  {
+   "key": "lal-val-rso-2026-09-20",
+   "league": "LA-LIGA",
+   "winner": "Real Sociedad de Fútbol",
+   "moneyFav": "Valencia CF",
+   "priceFav": "Real Sociedad de Fútbol",
+   "moneyShare": 0.536,
+   "priceProb": 0.393,
+   "moneyOK": false,
+   "priceOK": true,
+   "totalUsd": 270108
   }
  ],
- "generatedAt": "2026-10-16T16:32:48.013030+00:00",
+ "generatedAt": "2026-10-16T17:02:09.567632+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -611,7 +611,7 @@
   "mls": 733,
   "epl": 607,
   "soccer": 800,
-  "tennis": 535,
+  "tennis": 531,
   "ucl": 544,
   "la-liga": 600,
   "bundesliga": 541,
@@ -623,7 +623,7 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 670,
+  "esports": 666,
   "cs2": 425,
   "lol": 445,
   "dota": 21,
@@ -643,7 +643,7 @@
   "bundesliga-2": 505,
   "champions-league": 312,
   "champions-league-final": 12,
-  "chinese-super-league": 493,
+  "chinese-super-league": 491,
   "concacaf-nations-league": 401,
   "czechia-fortuna-liga": 97,
   "denmark-superliga": 473,
@@ -696,77 +696,102 @@
   "sweepAdded": 409
  },
  "vorStats": {
-  "kandidaten": 8,
+  "kandidaten": 10,
   "budgetLeer": 0,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
-  "mitAnteilen": 8,
-  "calls": 8
+  "mitAnteilen": 10,
+  "calls": 10
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1005,
-   "usd": 11184774,
-   "beispiel": "fifwc-mex-eng-2026-07-05-more-markets"
+   "n": 1229,
+   "usd": 23531412,
+   "beispiel": "fifwc-esp-arg-2026-07-19"
   },
   "world": {
-   "n": 89,
-   "usd": 8023508,
+   "n": 102,
+   "usd": 8521874,
    "beispiel": "world-cup-3rd-place-finish-20260713190252671"
   },
   "uefa": {
-   "n": 38,
-   "usd": 4735996,
+   "n": 39,
+   "usd": 4745966,
    "beispiel": "uefa-champions-league-winner"
   },
+  "will": {
+   "n": 25,
+   "usd": 699867,
+   "beispiel": "will-the-us-confirm-that-aliens-exist-before-2027"
+  },
   "fed": {
-   "n": 20,
-   "usd": 698972,
+   "n": 18,
+   "usd": 670977,
    "beispiel": "fed-decision-in-october-20260617190323537"
   },
-  "will": {
-   "n": 22,
-   "usd": 695720,
-   "beispiel": "will-predictfun-launch-a-token-by"
-  },
   "cbb": {
-   "n": 2,
-   "usd": 519867,
+   "n": 3,
+   "usd": 587754,
    "beispiel": "cbb-tx-byu-2026-03-19"
   },
   "which": {
-   "n": 22,
-   "usd": 475333,
-   "beispiel": "which-company-has-the-best-ai-model-end-of-october"
+   "n": 20,
+   "usd": 485857,
+   "beispiel": "which-party-will-win-the-house-in-2026"
   },
   "presidential": {
-   "n": 4,
-   "usd": 202054,
+   "n": 5,
+   "usd": 203061,
    "beispiel": "presidential-election-winner-2028"
   },
-  "elon": {
-   "n": 34,
-   "usd": 159883,
-   "beispiel": "elon-musk-of-tweets-april-10-april-17"
+  "btc": {
+   "n": 41,
+   "usd": 193760,
+   "beispiel": "btc-updown-5m-1787706900"
   },
   "russia": {
    "n": 7,
    "usd": 114931,
-   "beispiel": "russia-parliamentary-election-2nd-place"
+   "beispiel": "russia-x-ukraine-ceasefire-by-june-30-2026"
+  },
+  "nbasl": {
+   "n": 3,
+   "usd": 105792,
+   "beispiel": "nbasl-tor-bos-2026-07-10"
   },
   "euroleague": {
-   "n": 18,
-   "usd": 86181,
+   "n": 24,
+   "usd": 98079,
    "beispiel": "euroleague-besiktas-munchen-2026-10-16"
   },
+  "brazil": {
+   "n": 7,
+   "usd": 85394,
+   "beispiel": "brazil-presidential-election-second-round-margin-of-victory"
+  },
   "lec": {
-   "n": 15,
-   "usd": 68990,
+   "n": 22,
+   "usd": 83303,
    "beispiel": "lec-orl-asl-2026-08-12"
   },
-  "ballon": {
+  "texas": {
    "n": 4,
-   "usd": 51032,
+   "usd": 68865,
+   "beispiel": "texas-senate-election-winner"
+  },
+  "ncaa": {
+   "n": 1,
+   "usd": 68612,
+   "beispiel": "ncaa-football-2026-heisman-award-winner-20260731185656435"
+  },
+  "pro": {
+   "n": 3,
+   "usd": 66013,
+   "beispiel": "pro-football-2027-champion-20260729185915366"
+  },
+  "ballon": {
+   "n": 6,
+   "usd": 62221,
    "beispiel": "ballon-dor-winner-2026"
   },
   "avatar": {
@@ -774,35 +799,10 @@
    "usd": 50260,
    "beispiel": "avatar-fire-and-ash-opening-weekend-box-office"
   },
-  "us": {
-   "n": 5,
-   "usd": 44818,
-   "beispiel": "us-x-iran-effective-ceasefire-begins-byptptpt-2-week-pause"
-  },
-  "nato": {
-   "n": 1,
-   "usd": 43474,
-   "beispiel": "nato-x-russia-military-clash-in-2025"
-  },
   "next": {
-   "n": 7,
-   "usd": 36301,
-   "beispiel": "next-prime-minister-of-sweden"
-  },
-  "khl": {
-   "n": 8,
-   "usd": 31827,
-   "beispiel": "khl-spa-met-2026-10-02"
-  },
-  "balance": {
    "n": 5,
-   "usd": 31714,
-   "beispiel": "balance-of-power-2026-midterms"
-  },
-  "highest": {
-   "n": 10,
-   "usd": 28697,
-   "beispiel": "highest-grossing-movie-in-2025"
+   "usd": 42374,
+   "beispiel": "next-french-presidential-election"
   }
  }
 }
