@@ -38,7 +38,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "Fall liegt aktuell vor: 🔒 E-Sport ohne Wallet-Nachweis, Brazilian Serie A · Match Odds, Brazilian Serie B · First Half Goals 0.5 nehmen die ROI-Huerde und scheitern an CLV — der Satz auf Ebene 1 muss das sagen"
+      "hinweis": "Fall liegt aktuell vor: 🔒 E-Sport ohne Wallet-Nachweis, Conviction 7, Mix bf+money+sharp nehmen die ROI-Huerde und scheitern an CLV — der Satz auf Ebene 1 muss das sagen"
     },
     {
       "label": "Poly-Kachel gibt sich nicht als Kanal-Bilanz aus",
@@ -115,11 +115,9 @@
     {
       "label": "Money Map meldet ihre Luecken",
       "severity": "error",
-      "failures": [
-        "Deportivo v Levante: Money Map ohne Poly, aber ein Poly-Markt mit BEIDEN Teams existiert — stille Luecke, nicht Abwesenheit"
-      ],
-      "nFail": 1,
-      "ok": false,
+      "failures": [],
+      "nFail": 0,
+      "ok": true,
       "hinweis": ""
     },
     {
@@ -209,11 +207,11 @@
       "label": "Fade-Unter: haelt die Kontrollgruppe?",
       "severity": "error",
       "failures": [
-        "Match Odds H: der Fade gewinnt hier BELEGT (+8.1 %, UG +2.1 %, Geldseite +1.2 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
+        "Match Odds H: der Fade gewinnt hier BELEGT (+8.2 %, UG +2.2 %, Geldseite +1.2 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
       ],
       "nFail": 1,
       "ok": false,
-      "hinweis": "seit Vorregistrierung n=6344 (UG -5.5 %) · Rueckblick n=0, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=6349 (UG -5.7 %) · Rueckblick n=0, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -246,9 +244,11 @@
     {
       "label": "Der Deckel hat Luft",
       "severity": "warn",
-      "failures": [],
-      "nFail": 0,
-      "ok": true,
+      "failures": [
+        "betfair.yml: laengster Lauf 12.7 Min (Median 4.6) bei einem Deckel von 14 Min — 91 % ausgelastet. Ein Abbruch trifft den letzten Schritt, und das ist der, der die Belege sichert."
+      ],
+      "nFail": 1,
+      "ok": false,
       "hinweis": ""
     },
     {
@@ -281,7 +281,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "628 Zeilen · 620 abgerechnet · 1 offen"
+      "hinweis": "629 Zeilen · 621 abgerechnet · 1 offen"
     },
     {
       "label": "Artefakte sind lesbar",
@@ -320,9 +320,11 @@
     {
       "label": "Ergebnisse kommen an",
       "severity": "error",
-      "failures": [],
-      "nFail": 0,
-      "ok": true,
+      "failures": [
+        "liga_ergebnis_nachlauf.json: 1 abgesagtes/verlegtes Spiel (Rayo Vallecano–Athletic Club (ABD)) — es kommt an diesem Termin zu keinem Ergebnis; offene Wetten darauf brauchen eine Entscheidung"
+      ],
+      "nFail": 1,
+      "ok": false,
       "hinweis": ""
     },
     {
@@ -337,13 +339,13 @@
       "label": "Serien-Buch zeigt beide Buecher",
       "severity": "warn",
       "failures": [
-        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 92.4 h, MLS 100.0 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 93.4 h, MLS 101.0 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
       ],
       "nFail": 1,
       "ok": false,
       "hinweis": "Liga n=95 · MLS n=82 · Urteil beide 'Erwartung zu duenn'"
     }
   ],
-  "nFail": 9,
-  "generatedAt": "2026-10-16T21:09:21.084462+00:00"
+  "nFail": 10,
+  "generatedAt": "2026-10-16T22:05:37.987267+00:00"
 }
