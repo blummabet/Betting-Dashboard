@@ -156,8 +156,8 @@
       "label": "Stake-Spielklasse: Tabelle vollstaendig, Richtungen getrennt",
       "severity": "error",
       "failures": [
-        "1 Fussball-Ligen ohne Eintrag in stake_liga_stufe.py (australian-championship) — sie fallen aus jeder Zeile der Ansicht, statt aufzufallen",
-        "2 Liga-Schluessel bezeichnen mehrere Turniere und tragen trotzdem eine Spielklasse (primera-division-apertura, serie-b) — eine Zahl davon ist fuer die Haelfte der Spiele falsch"
+        "2 Fussball-Ligen ohne Eintrag in stake_liga_stufe.py (a-league, australian-championship) — sie fallen aus jeder Zeile der Ansicht, statt aufzufallen",
+        "4 Liga-Schluessel bezeichnen mehrere Turniere und tragen trotzdem eine Spielklasse (1-liga, chinese-super-league, premier-league, primera-division-apertura) — eine Zahl davon ist fuer die Haelfte der Spiele falsch"
       ],
       "nFail": 2,
       "ok": false,
@@ -207,11 +207,11 @@
       "label": "Fade-Unter: haelt die Kontrollgruppe?",
       "severity": "error",
       "failures": [
-        "Match Odds H: der Fade gewinnt hier BELEGT (+8.3 %, UG +2.4 %, Geldseite +1.1 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
+        "Match Odds H: der Fade gewinnt hier BELEGT (+8.1 %, UG +2.1 %, Geldseite +1.2 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
       ],
       "nFail": 1,
       "ok": false,
-      "hinweis": "seit Vorregistrierung n=6317 (UG -4.5 %) · Rueckblick n=0, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=6328 (UG -4.9 %) · Rueckblick n=0, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -244,11 +244,9 @@
     {
       "label": "Der Deckel hat Luft",
       "severity": "warn",
-      "failures": [
-        "poly-global-scan.yml: laengster Lauf 31.0 Min (Median 8.0) bei einem Deckel von 25 Min — 124 % ausgelastet. Ein Abbruch trifft den letzten Schritt, und das ist der, der die Belege sichert."
-      ],
-      "nFail": 1,
-      "ok": false,
+      "failures": [],
+      "nFail": 0,
+      "ok": true,
       "hinweis": ""
     },
     {
@@ -262,9 +260,11 @@
     {
       "label": "Positionswert ist frisch",
       "severity": "warn",
-      "failures": [],
-      "nFail": 0,
-      "ok": true,
+      "failures": [
+        "liga_poly_balance.json: Positionswert $33.62 stammt aus einem Lauf vor 13 h — die Datei selbst ist 13 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
+      ],
+      "nFail": 1,
+      "ok": false,
       "hinweis": ""
     },
     {
@@ -281,7 +281,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "613 Zeilen · 605 abgerechnet · 1 offen"
+      "hinweis": "616 Zeilen · 608 abgerechnet · 1 offen"
     },
     {
       "label": "Artefakte sind lesbar",
@@ -328,22 +328,24 @@
     {
       "label": "Datenbau ist nicht stehengeblieben",
       "severity": "error",
-      "failures": [],
-      "nFail": 0,
-      "ok": true,
+      "failures": [
+        "liga-data.json: der Datenbau hat zuletzt vor 22 h geschrieben — entweder ist der Cron ausgefallen oder ein anderer Workflow hat einen aelteren Stand darueber committet"
+      ],
+      "nFail": 1,
+      "ok": false,
       "hinweis": ""
     },
     {
       "label": "Serien-Buch zeigt beide Buecher",
       "severity": "warn",
       "failures": [
-        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 70.0 h, MLS 77.6 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 82.9 h, MLS 90.5 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
       ],
       "nFail": 1,
       "ok": false,
       "hinweis": "Liga n=95 · MLS n=82 · Urteil beide 'Erwartung zu duenn'"
     }
   ],
-  "nFail": 9,
-  "generatedAt": "2026-10-15T22:40:53.768899+00:00"
+  "nFail": 10,
+  "generatedAt": "2026-10-16T11:35:55.061929+00:00"
 }
