@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-16T12:30:57.979976+00:00",
+ "updatedAt": "2026-10-16T13:01:06.241244+00:00",
  "stake": 10.0,
  "regel": {
   "minN": 20,
@@ -7,9 +7,9 @@
   "frischMin": 90.0
  },
  "zaehler": {
-  "ohneEinstieg": 12,
+  "ohneEinstieg": 7,
   "gesperrt": 18,
-  "alt": 183
+  "alt": 190
  },
  "open": {
   "unl-mac-sco-2026-10-03-more-markets|Under": {
@@ -9340,28 +9340,6 @@
    "firstTs": "2026-10-16T06:29:39.748631+00:00",
    "stake": 10.0
   },
-  "atp-medvede-paul-2026-10-15|Tommy Paul": {
-   "key": "atp-medvede-paul-2026-10-15",
-   "side": "Tommy Paul",
-   "cat": "Tennis",
-   "league": "TENNIS",
-   "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
-   "belegt": true,
-   "heiss": false,
-   "walletN": 2735,
-   "walletClv": 0.348,
-   "walletUg": 0.199,
-   "clv7": null,
-   "n7": null,
-   "walletEntry": 0.32,
-   "entryPrice": 0.325,
-   "abstandPP": 0.5,
-   "arm": "nehmbar",
-   "lastPrice": 0.315,
-   "htkAtEntry": 2.58,
-   "firstTs": "2026-10-16T07:29:58.448530+00:00",
-   "stake": 10.0
-  },
   "itf-buchni1-bertea1-2026-10-16|Mika Buchnik": {
    "key": "itf-buchni1-bertea1-2026-10-16",
    "side": "Mika Buchnik",
@@ -9819,7 +9797,7 @@
    "entryPrice": 0.545,
    "abstandPP": 3.96,
    "arm": "zu_spaet",
-   "lastPrice": 0.555,
+   "lastPrice": 0.545,
    "htkAtEntry": 2.57,
    "firstTs": "2026-10-16T11:30:28.667697+00:00",
    "stake": 10.0
@@ -9841,7 +9819,7 @@
    "entryPrice": 0.315,
    "abstandPP": 0.5,
    "arm": "nehmbar",
-   "lastPrice": 0.315,
+   "lastPrice": 0.305,
    "htkAtEntry": 2.57,
    "firstTs": "2026-10-16T11:30:28.667697+00:00",
    "stake": 10.0
@@ -9976,6 +9954,28 @@
    "lastPrice": 0.545,
    "htkAtEntry": 0.07,
    "firstTs": "2026-10-16T12:00:56.013099+00:00",
+   "stake": 10.0
+  },
+  "cs2-jdt-youren-2026-10-16|your end": {
+   "key": "cs2-jdt-youren-2026-10-16",
+   "side": "your end",
+   "cat": "E-Sport",
+   "league": "ESPORTS",
+   "wallet": "0xa951006f1ce68498c1aef9b013880459e6e08a2f",
+   "belegt": true,
+   "heiss": true,
+   "walletN": 326,
+   "walletClv": 0.63,
+   "walletUg": 0.102,
+   "clv7": 1.01,
+   "n7": 59,
+   "walletEntry": 0.53,
+   "entryPrice": 0.355,
+   "abstandPP": -17.5,
+   "arm": "nehmbar",
+   "lastPrice": 0.355,
+   "htkAtEntry": 0.07,
+   "firstTs": "2026-10-16T13:01:06.241244+00:00",
    "stake": 10.0
   }
  },
@@ -45007,6 +45007,34 @@
    "closePrice": 0.11,
    "clvPP": 0.5,
    "settledTs": "2026-10-16T12:30:57.979976+00:00"
+  },
+  {
+   "key": "atp-medvede-paul-2026-10-15",
+   "side": "Tommy Paul",
+   "cat": "Tennis",
+   "league": "TENNIS",
+   "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+   "belegt": true,
+   "heiss": false,
+   "walletN": 2735,
+   "walletClv": 0.348,
+   "walletUg": 0.199,
+   "clv7": null,
+   "n7": null,
+   "walletEntry": 0.32,
+   "entryPrice": 0.325,
+   "abstandPP": 0.5,
+   "arm": "nehmbar",
+   "lastPrice": 0.315,
+   "htkAtEntry": 2.58,
+   "firstTs": "2026-10-16T07:29:58.448530+00:00",
+   "stake": 10.0,
+   "result": "loss",
+   "winner": "Daniil Medvedev",
+   "pnl": -10.0,
+   "closePrice": 0.315,
+   "clvPP": -1.0,
+   "settledTs": "2026-10-16T13:01:06.241244+00:00"
   }
  ],
  "gesehen": [
@@ -45464,6 +45492,7 @@
   "cs2-is-nemi1-2026-10-10|Iberian Soul",
   "cs2-isg-meiano-2026-10-07|Isurus",
   "cs2-isg-meiano-2026-10-07|MEIA NOITE",
+  "cs2-jdt-youren-2026-10-16|your end",
   "cs2-k271-mzp-2026-10-07|K27",
   "cs2-k271-mzp-2026-10-07|Metizport",
   "cs2-keydst-gls1-2026-10-13|ex-Keyd Stars",
@@ -46717,16 +46746,16 @@
  ],
  "agg": {
   "belegt_nehmbar": {
-   "n": 694,
+   "n": 695,
    "wins": 192,
-   "hit": 0.2767,
-   "pnl": -1384.49,
-   "stake": 6940.0,
-   "roi": -0.1995,
-   "roiUg": -0.3588,
+   "hit": 0.2763,
+   "pnl": -1394.49,
+   "stake": 6950.0,
+   "roi": -0.2006,
+   "roiUg": -0.3597,
    "belegt": false,
    "clvAvg": -0.06,
-   "clvN": 694,
+   "clvN": 695,
    "clvUg": -0.16
   },
   "belegt_zu_spaet": {
@@ -46769,17 +46798,17 @@
    "clvUg": -0.51
   },
   "nehmbar": {
-   "n": 797,
+   "n": 798,
    "wins": 240,
-   "hit": 0.3011,
-   "pnl": -1499.86,
-   "stake": 7970.0,
-   "roi": -0.1882,
-   "roiUg": -0.3286,
+   "hit": 0.3008,
+   "pnl": -1509.86,
+   "stake": 7980.0,
+   "roi": -0.1892,
+   "roiUg": -0.3294,
    "belegt": false,
    "clvAvg": -0.06,
-   "clvN": 797,
-   "clvUg": -0.15,
+   "clvN": 798,
+   "clvUg": -0.16,
    "byCat": {
     "E-Sport": {
      "n": 156,
@@ -46821,17 +46850,17 @@
      "clvUg": null
     },
     "Tennis": {
-     "n": 175,
+     "n": 176,
      "wins": 73,
-     "hit": 0.4171,
-     "pnl": -78.86,
-     "stake": 1750.0,
-     "roi": -0.0451,
-     "roiUg": -0.2316,
+     "hit": 0.4148,
+     "pnl": -88.86,
+     "stake": 1760.0,
+     "roi": -0.0505,
+     "roiUg": -0.2362,
      "belegt": false,
-     "clvAvg": -0.06,
-     "clvN": 175,
-     "clvUg": -0.19
+     "clvAvg": -0.07,
+     "clvN": 176,
+     "clvUg": -0.2
     }
    }
   },
