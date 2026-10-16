@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-16T04:00:01.110184+00:00",
+ "updatedAt": "2026-10-16T04:29:17.516504+00:00",
  "stake": 10.0,
  "expired": 0,
  "condDrift": 0,
@@ -299,38 +299,7 @@
    "Bündel: Auflösung nennt einen anderen Markt": 1
   }
  },
- "open": {
-  "lib-est-fla-2026-10-15|CR Flamengo": {
-   "key": "lib-est-fla-2026-10-15",
-   "side": "CR Flamengo",
-   "verdict": "BET",
-   "conv": 6,
-   "league": "SOCCER",
-   "cat": "Fußball",
-   "entryPrice": 0.455,
-   "firstTs": "2026-10-15T23:29:12.347817+00:00",
-   "lastPrice": 0.445,
-   "lastTs": "2026-10-16T04:00:01.110184+00:00",
-   "htkAtEntry": 1.0133002777777778,
-   "public": false,
-   "ohneWallet": false,
-   "reasons": [
-    "großes Geld auf CR Flamengo (98%) → $210K",
-    "🔎 vielversprechende Wallets (noch nicht belegt) (2 Wallets, zusammen 113/234, 48% · 30 T Sport +$25K) · zählt 46%",
-    "💷 Betfair-Geld bestätigt: 70% · €29K"
-   ],
-   "signals": [
-    "money",
-    "bf"
-   ],
-   "stake": 10.0,
-   "ev": "2026-09-01",
-   "movePreEntryPP": 0.0,
-   "closeRef": 0.445,
-   "closeRefTs": "2026-10-16T00:28:58.600105+00:00",
-   "closeQuelle": "close"
-  }
- },
+ "open": {},
  "settled": [
   {
    "key": "cs2-bmb-inox-2026-08-16",
@@ -53470,20 +53439,49 @@
    "settledTs": "2026-10-16T02:59:22.943636+00:00",
    "resolvedTs": "2026-10-16T02:59:20.012885+00:00",
    "ausEndstand": null
+  },
+  {
+   "key": "lib-est-fla-2026-10-15",
+   "side": "CR Flamengo",
+   "verdict": "BET",
+   "conv": 6,
+   "league": "SOCCER",
+   "cat": "Fußball",
+   "entryPrice": 0.455,
+   "closePrice": 0.445,
+   "closeRefTs": "2026-10-16T00:28:58.600105+00:00",
+   "closeQuelle": "close",
+   "result": "loss",
+   "winner": "Draw (Estudiantes de La Plata vs. CR Flamengo)",
+   "pnl": -10.0,
+   "clvPP": -1.0,
+   "stake": 10.0,
+   "public": false,
+   "ohneWallet": false,
+   "signals": [
+    "money",
+    "bf"
+   ],
+   "firstTs": "2026-10-15T23:29:12.347817+00:00",
+   "ev": "2026-09-01",
+   "htkAtEntry": 1.0133002777777778,
+   "settledTs": "2026-10-16T04:29:17.516504+00:00",
+   "resolvedTs": "2026-10-16T04:29:14.669056+00:00",
+   "ausEndstand": null
   }
  ],
  "agg": {
   "all": {
-   "n": 1911,
+   "n": 1912,
    "wins": 1256,
-   "hit": 0.6572,
-   "pnl": 51.13,
-   "stake": 19110.0,
-   "roi": 0.0027,
-   "roiUg": -0.0271,
+   "hit": 0.6569,
+   "pnl": 41.13,
+   "stake": 19120.0,
+   "roi": 0.0022,
+   "roiUg": -0.0276,
    "belegt": false,
    "clvAvg": -0.17,
-   "clvN": 941,
+   "clvN": 942,
    "clvUg": -0.37
   },
   "public": {
@@ -53535,16 +53533,16 @@
    "grund": "das Band schliesst die Null ein"
   },
   "bettable": {
-   "n": 1763,
+   "n": 1764,
    "wins": 1173,
-   "hit": 0.6653,
-   "pnl": 313.2,
-   "stake": 17630.0,
-   "roi": 0.0178,
-   "roiUg": -0.0133,
+   "hit": 0.665,
+   "pnl": 303.2,
+   "stake": 17640.0,
+   "roi": 0.0172,
+   "roiUg": -0.0139,
    "belegt": false,
    "clvAvg": -0.17,
-   "clvN": 891,
+   "clvN": 892,
    "clvUg": -0.37
   },
   "blocked": {
@@ -53588,16 +53586,16 @@
     "clvUg": -0.39
    },
    "Fußball": {
-    "n": 933,
+    "n": 934,
     "wins": 557,
-    "hit": 0.597,
-    "pnl": 92.92,
-    "stake": 9330.0,
-    "roi": 0.01,
-    "roiUg": -0.0395,
+    "hit": 0.5964,
+    "pnl": 82.92,
+    "stake": 9340.0,
+    "roi": 0.0089,
+    "roiUg": -0.0406,
     "belegt": false,
-    "clvAvg": -0.21,
-    "clvN": 470,
+    "clvAvg": -0.22,
+    "clvN": 471,
     "clvUg": -0.48
    },
    "Kampfsport": {
@@ -53655,16 +53653,16 @@
   },
   "bettableByCat": {
    "Fußball": {
-    "n": 933,
+    "n": 934,
     "wins": 557,
-    "hit": 0.597,
-    "pnl": 92.92,
-    "stake": 9330.0,
-    "roi": 0.01,
-    "roiUg": -0.0395,
+    "hit": 0.5964,
+    "pnl": 82.92,
+    "stake": 9340.0,
+    "roi": 0.0089,
+    "roiUg": -0.0406,
     "belegt": false,
-    "clvAvg": -0.21,
-    "clvN": 470,
+    "clvAvg": -0.22,
+    "clvN": 471,
     "clvUg": -0.48
    },
    "E-Sport": {
@@ -53856,16 +53854,16 @@
     "clvUg": -0.35
    },
    "6": {
-    "n": 765,
+    "n": 766,
     "wins": 514,
-    "hit": 0.6719,
-    "pnl": 74.2,
-    "stake": 7650.0,
-    "roi": 0.0097,
-    "roiUg": -0.0352,
+    "hit": 0.671,
+    "pnl": 64.2,
+    "stake": 7660.0,
+    "roi": 0.0084,
+    "roiUg": -0.0365,
     "belegt": false,
-    "clvAvg": -0.14,
-    "clvN": 424,
+    "clvAvg": -0.15,
+    "clvN": 425,
     "clvUg": -0.45
    },
    "7": {
@@ -53923,44 +53921,44 @@
   },
   "byVerdict": {
    "BET": {
-    "n": 1911,
+    "n": 1912,
     "wins": 1256,
-    "hit": 0.6572,
-    "pnl": 51.13,
-    "stake": 19110.0,
-    "roi": 0.0027,
-    "roiUg": -0.0271,
+    "hit": 0.6569,
+    "pnl": 41.13,
+    "stake": 19120.0,
+    "roi": 0.0022,
+    "roiUg": -0.0276,
     "belegt": false,
     "clvAvg": -0.17,
-    "clvN": 941,
+    "clvN": 942,
     "clvUg": -0.37
    }
   },
   "bySignal": {
    "bf": {
-    "n": 520,
+    "n": 521,
     "wins": 325,
-    "hit": 0.625,
-    "pnl": 318.74,
-    "stake": 5200.0,
-    "roi": 0.0613,
-    "roiUg": -0.0024,
+    "hit": 0.6238,
+    "pnl": 308.74,
+    "stake": 5210.0,
+    "roi": 0.0593,
+    "roiUg": -0.0044,
     "belegt": false,
     "clvAvg": -0.23,
-    "clvN": 276,
+    "clvN": 277,
     "clvUg": -0.45
    },
    "money": {
-    "n": 1754,
+    "n": 1755,
     "wins": 1175,
-    "hit": 0.6699,
-    "pnl": 81.39,
-    "stake": 17540.0,
-    "roi": 0.0046,
-    "roiUg": -0.0249,
+    "hit": 0.6695,
+    "pnl": 71.39,
+    "stake": 17550.0,
+    "roi": 0.0041,
+    "roiUg": -0.0255,
     "belegt": false,
     "clvAvg": -0.17,
-    "clvN": 908,
+    "clvN": 909,
     "clvUg": -0.37
    },
    "pinn": {
