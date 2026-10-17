@@ -22,9 +22,15 @@
       "id": "grosses_geld_bleibt_im_feed",
       "label": "Grosses Geld faellt nicht aus dem Feed",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 5,
+      "failures": [
+        "36100460: zuletzt 78.057 € und Anpfiff erst in 1.0 h — trotzdem nicht mehr im Feed",
+        "36099813: zuletzt 185.146 € und Anpfiff erst in 1.8 h — trotzdem nicht mehr im Feed",
+        "36099842: zuletzt 102.499 € und Anpfiff erst in 2.3 h — trotzdem nicht mehr im Feed",
+        "36092010: zuletzt 196.718 € und Anpfiff erst in 2.3 h — trotzdem nicht mehr im Feed",
+        "36100462: zuletzt 52.591 € und Anpfiff erst in 4.5 h — trotzdem nicht mehr im Feed"
+      ],
       "note": "Der Detail-Deckel darf nicht das teuerste Spiel schneiden — genau das ist am 08.09. passiert (alle vier CL-Spiele, Real Madrid mit 102.861 €)."
     },
     {
@@ -34,7 +40,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "nur 53 von 193 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Ceara SC Fortaleza v Juventude (Brazilian Serie B); Tristan Suarez v Patronato (Argentinian Primera Nacional); Academica v Amarante (Portuguese Cup)"
+        "nur 3 von 127 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Consultants Desamparados v Uruguay de Coronado (Costa Rican Liga de Ascenso); Tacuarembo v La Luz FC (Uruguayan Segunda Division); DHJ El Jadida v Moghreb Tetouan (Moroccan Botola Pro 1)"
       ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
@@ -90,24 +96,33 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 315837 verbraucht, 4684163 uebrig"
+      "note": "Kontingent: 316293 verbraucht, 4683707 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 7,
+      "nFail": 16,
       "failures": [
-        "Al Hikma v Al-Ahed (Lebanese Premier League): zeit — bester Kandidat „Al-Fateh v Al-Khaleej“ · 28.5h Anpfiff-Abstand",
-        "Liverpool U21 v Reading U21 (English Premier League 2 - Div 1): name — bester Kandidat „Brentford v Liverpool“",
+        "Elgin City FC v Edinburgh City (Scottish League Two): zeit — bester Kandidat „Cardiff City v Birmingham City“ · 168.0h Anpfiff-Abstand",
         "Southport v Radcliffe Borough (English National League North): name — bester Kandidat „Salisbury FC v Eastbourne Borough FC“",
-        "Peterhead v Cove Rangers (Scottish League One): name — bester Kandidat „Gateshead FC v Stafford Rangers FC“",
-        "Slough Town v Horsham FC (English National League South): name — bester Kandidat „Manchester City v Ipswich Town“",
-        "Ham-Kam v Bodo Glimt (Norwegian Eliteserien): name — bester Kandidat „HamKam v Bodø/Glimt“",
+        "Ebbsfleet Utd v Weston-super-Mare (English National League South): name — bester Kandidat „Barnsley v Cambridge United“",
+        "Maidstone Utd v Maidenhead (English National League South): name — bester Kandidat „Barnsley v Cambridge United“",
+        "Merthyr Town v Kings Lynn (English National League North): name — bester Kandidat „Plymouth Argyle v Huddersfield Town“",
+        "Buxton v Worksop Town (English National League North): name — bester Kandidat „Plymouth Argyle v Huddersfield Town“",
+        "Slough Town v Horsham FC (English National League South): name — bester Kandidat „Plymouth Argyle v Huddersfield Town“",
+        "Farnborough FC v Dag and Red (English National League South): name — bester Kandidat „AFC Rushden and Diamonds v Morecambe“",
+        "Hebburn Town v Scarborough Athletic (English National League North): zeit — bester Kandidat „Huddersfield Town v Wigan Athletic“ · 165.5h Anpfiff-Abstand",
+        "Al Faisaly SC v Al Ramtha (Jordanian Premier League): zeit — bester Kandidat „Al-Shabab v Al-Faisaly KSA FC“ · 52.0h Anpfiff-Abstand",
+        "Morton v Queens Park (Scottish Championship): name — bester Kandidat „Birmingham City v Queens Park Rangers“",
+        "Kristiansund v Aalesunds (Norwegian Eliteserien): name — bester Kandidat „Kristiansund BK v Aalesund“",
+        "Queen of South v Ross Co (Scottish League One): name — bester Kandidat „Altrincham FC v FC United of Manchester“",
+        "Al Hikma v Al-Ahed (Lebanese Premier League): zeit — bester Kandidat „Al-Fateh v Al-Khaleej“ · 28.5h Anpfiff-Abstand",
+        "Liverpool U21 v Reading U21 (English Premier League 2 - Div 1): name — bester Kandidat „Wigan Athletic v Reading“",
         "Birmingham v QPR (English Sky Bet Championship): name — bester Kandidat „Birmingham City v Queens Park Rangers“"
       ],
-      "note": "ohne Anker: kein_kandidat 73 · kein_pinnacle 6 · name 6 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 71 · kein_pinnacle 4 · name 12 · zeit 4. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -116,7 +131,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 4 — Benevento v LR Vicenza Virtus (31 Buecher, ohne Pinnacle); Sociedad B v Almeria (25 Buecher, ohne Pinnacle); Nantes v Dunkerque (30 Buecher, ohne Pinnacle); Shandong Taishan v Zhejiang Greentown (6 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 2 — Werder Bremen v Paderborn (36 Buecher, ohne Pinnacle); Benevento v LR Vicenza Virtus (27 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -125,7 +140,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 15 gewollt, 15 abgerufen, 0 mit Daten"
+      "note": "Totals: 13 gewollt, 13 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -191,6 +206,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-10-17T13:43:52.027603+00:00"
+  "nFail": 3,
+  "generatedAt": "2026-10-17T14:14:51.785301+00:00"
 }
