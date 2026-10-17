@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-17T20:33:57.100678+00:00",
+ "generatedAt": "2026-10-17T22:23:58.722311+00:00",
  "heute": "2026-10-17",
  "messungen": [
   {
@@ -69,9 +69,9 @@
    "mindestN": 150,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 640,
+   "standN": 641,
    "zustand": "faellig",
-   "stand": "640 von 150 Beobachtungen · Entscheidung faellig",
+   "stand": "641 von 150 Beobachtungen · Entscheidung faellig",
    "fortschritt": 1.0,
    "tageBisFaellig": -8
   },
@@ -143,9 +143,9 @@
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "nachtrag": "27.09.2026: Zwischenstand n=152 (Mindestzahl 40 erreicht). Treffer 66,5 %, ROI -4,5 % (UG -14,3 %), CLV -0,04 pp. Die Rueckschau (77,1 % / +19,9 %) haelt vorwaerts nicht. Heutige Public-Regel seit 03.09.: n=47, ROI +14,2 % (UG -10,0 %).",
-   "standN": 688,
+   "standN": 697,
    "zustand": "bereit",
-   "stand": "688 von 40 Beobachtungen · faellig in 13 Tag(en)",
+   "stand": "697 von 40 Beobachtungen · faellig in 13 Tag(en)",
    "fortschritt": 1.0,
    "tageBisFaellig": 13
   },
@@ -179,9 +179,9 @@
    "mindestN": 60,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 84,
+   "standN": 85,
    "zustand": "bereit",
-   "stand": "84 von 60 Beobachtungen · faellig in 15 Tag(en)",
+   "stand": "85 von 60 Beobachtungen · faellig in 15 Tag(en)",
    "fortschritt": 1.0,
    "tageBisFaellig": 15
   },
@@ -197,9 +197,9 @@
    "mindestN": 100,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 191,
+   "standN": 192,
    "zustand": "bereit",
-   "stand": "191 von 100 Beobachtungen · faellig in 15 Tag(en)",
+   "stand": "192 von 100 Beobachtungen · faellig in 15 Tag(en)",
    "fortschritt": 1.0,
    "tageBisFaellig": 15
   },
@@ -233,9 +233,9 @@
    "mindestN": 20000,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 31928,
+   "standN": 32127,
    "zustand": "bereit",
-   "stand": "31928 von 20000 Beobachtungen · faellig in 29 Tag(en)",
+   "stand": "32127 von 20000 Beobachtungen · faellig in 29 Tag(en)",
    "fortschritt": 1.0,
    "tageBisFaellig": 29
   },
@@ -251,11 +251,29 @@
    "mindestN": 20000,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 31928,
+   "standN": 32127,
    "zustand": "bereit",
-   "stand": "31928 von 20000 Beobachtungen · faellig in 29 Tag(en)",
+   "stand": "32127 von 20000 Beobachtungen · faellig in 29 Tag(en)",
    "fortschritt": 1.0,
    "tageBisFaellig": 29
+  },
+  {
+   "id": "serien-wetten",
+   "titel": "Treffen die Serien-Wetten so oft wie angezeigt — und was bringen sie zur angezeigten Quote?",
+   "frage": "Je Zeile der Serien-Wetten-Tafel (Liga + MLS, nächste 7 Tage) beim ERSTEN Erscheinen festgeschrieben: angezeigte Trefferchance und Quote. Nach Spielende: Trefferquote gegen die mittlere angezeigte Chance (Wilson-Band) und ROI zur ersten Quote (Mittelwert-Band) — getrennt nach Markt- und Modell-Chance.",
+   "warum": "01.10.2026 (Lucas): „ich will die Wette ja gewinnen, egal ob gepreist oder nicht“. Die Tafel sortiert nach Trefferchance; Markt-Chance = entmargte Quote, ohne Markt die Modell-Chance aus Eigen- und Gegnerrate. Erwartung vorab aus dem Backtest Top-5 (7.156 Spiele, football-data): Serien treffen so oft, wie der Markt sagt, ROI ≈ minus Marge, auch zu frühen Quoten. Entscheidung vorab: (1) liegt die Markt-Chance im Band, bleibt sie die Anzeige; (2) trifft die Modell-Chance außerhalb des Bands, wird sie korrigiert oder nicht mehr gezeigt; (3) nur wenn die ROI-Untergrenze bei n >= 150 über null liegt, wird ein Teilstück als Signal geprüft.",
+   "gestartet": "2026-10-01",
+   "faellig": "2026-11-30",
+   "quelle": "liga_serien_wetten_buch.json + mls_serien_wetten_buch.json -> Zeilen mit status=abgerechnet",
+   "messer": "serien_wetten",
+   "mindestN": 150,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "standN": 164,
+   "zustand": "bereit",
+   "stand": "164 von 150 Beobachtungen · faellig in 44 Tag(en)",
+   "fortschritt": 1.0,
+   "tageBisFaellig": 44
   },
   {
    "id": "poly-wallet-clv",
@@ -269,9 +287,9 @@
    "mindestN": 150,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 825,
+   "standN": 833,
    "zustand": "bereit",
-   "stand": "825 von 150 Beobachtungen · faellig in 59 Tag(en)",
+   "stand": "833 von 150 Beobachtungen · faellig in 59 Tag(en)",
    "fortschritt": 1.0,
    "tageBisFaellig": 59
   },
@@ -287,9 +305,9 @@
    "mindestN": 200,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 1192,
+   "standN": 1204,
    "zustand": "bereit",
-   "stand": "1192 von 200 Beobachtungen · faellig in 75 Tag(en)",
+   "stand": "1204 von 200 Beobachtungen · faellig in 75 Tag(en)",
    "fortschritt": 1.0,
    "tageBisFaellig": 75
   },
@@ -324,10 +342,10 @@
    "mindestN": 1200,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 669,
+   "standN": 678,
    "zustand": "sammelt",
-   "stand": "669 von 1200 Beobachtungen · faellig in 15 Tag(en)",
-   "fortschritt": 0.5575,
+   "stand": "678 von 1200 Beobachtungen · faellig in 15 Tag(en)",
+   "fortschritt": 0.565,
    "tageBisFaellig": 15
   },
   {
@@ -342,10 +360,10 @@
    "mindestN": 1200,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 669,
+   "standN": 678,
    "zustand": "sammelt",
-   "stand": "669 von 1200 Beobachtungen · faellig in 15 Tag(en)",
-   "fortschritt": 0.5575,
+   "stand": "678 von 1200 Beobachtungen · faellig in 15 Tag(en)",
+   "fortschritt": 0.565,
    "tageBisFaellig": 15
   },
   {
@@ -403,24 +421,6 @@
    "tageBisFaellig": 29
   },
   {
-   "id": "serien-wetten",
-   "titel": "Treffen die Serien-Wetten so oft wie angezeigt — und was bringen sie zur angezeigten Quote?",
-   "frage": "Je Zeile der Serien-Wetten-Tafel (Liga + MLS, nächste 7 Tage) beim ERSTEN Erscheinen festgeschrieben: angezeigte Trefferchance und Quote. Nach Spielende: Trefferquote gegen die mittlere angezeigte Chance (Wilson-Band) und ROI zur ersten Quote (Mittelwert-Band) — getrennt nach Markt- und Modell-Chance.",
-   "warum": "01.10.2026 (Lucas): „ich will die Wette ja gewinnen, egal ob gepreist oder nicht“. Die Tafel sortiert nach Trefferchance; Markt-Chance = entmargte Quote, ohne Markt die Modell-Chance aus Eigen- und Gegnerrate. Erwartung vorab aus dem Backtest Top-5 (7.156 Spiele, football-data): Serien treffen so oft, wie der Markt sagt, ROI ≈ minus Marge, auch zu frühen Quoten. Entscheidung vorab: (1) liegt die Markt-Chance im Band, bleibt sie die Anzeige; (2) trifft die Modell-Chance außerhalb des Bands, wird sie korrigiert oder nicht mehr gezeigt; (3) nur wenn die ROI-Untergrenze bei n >= 150 über null liegt, wird ein Teilstück als Signal geprüft.",
-   "gestartet": "2026-10-01",
-   "faellig": "2026-11-30",
-   "quelle": "liga_serien_wetten_buch.json + mls_serien_wetten_buch.json -> Zeilen mit status=abgerechnet",
-   "messer": "serien_wetten",
-   "mindestN": 150,
-   "entscheidung": null,
-   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 137,
-   "zustand": "sammelt",
-   "stand": "137 von 150 Beobachtungen · faellig in 44 Tag(en)",
-   "fortschritt": 0.9133333333333333,
-   "tageBisFaellig": 44
-  },
-  {
    "id": "stake-kleine-liga",
    "titel": "Trägt eine große Einzelwette vor Anpfiff in einer kleinen Fußball-Liga?",
    "frage": "ROI (geldgewichtet je Meldung) der Kleine-Liga-Meldungen: Fußball, Ebene 3 oder Reserve-Liga (stake_liga_stufe), Einzelwette, Quote ab 1,35, Einsatz >= 1,5x Norm der Liga (sonst Median der Ebene), vor Anpfiff ODER live bis Minute 75. Live und vor Anpfiff getrennt ausgewertet. Urteil über die Rendite-Untergrenze, nicht über den Punktschätzer.",
@@ -450,10 +450,10 @@
    "mindestN": 30,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 3,
+   "standN": 4,
    "zustand": "sammelt",
-   "stand": "3 von 30 Beobachtungen · faellig in 75 Tag(en)",
-   "fortschritt": 0.1,
+   "stand": "4 von 30 Beobachtungen · faellig in 75 Tag(en)",
+   "fortschritt": 0.13333333333333333,
    "tageBisFaellig": 75
   },
   {
@@ -468,10 +468,10 @@
    "mindestN": 100,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 36,
+   "standN": 38,
    "zustand": "sammelt",
-   "stand": "36 von 100 Beobachtungen · faellig in 106 Tag(en)",
-   "fortschritt": 0.36,
+   "stand": "38 von 100 Beobachtungen · faellig in 106 Tag(en)",
+   "fortschritt": 0.38,
    "tageBisFaellig": 106
   },
   {
@@ -486,10 +486,10 @@
    "mindestN": 100,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 27,
+   "standN": 28,
    "zustand": "sammelt",
-   "stand": "27 von 100 Beobachtungen · faellig in 106 Tag(en)",
-   "fortschritt": 0.27,
+   "stand": "28 von 100 Beobachtungen · faellig in 106 Tag(en)",
+   "fortschritt": 0.28,
    "tageBisFaellig": 106
   },
   {
