@@ -1,15 +1,15 @@
 {
- "n": 561,
+ "n": 562,
  "minOdds": 1.35,
- "moneyHitRate": 0.414,
- "priceHitRate": 0.453,
- "brierMoney": 0.7991,
- "brierPrice": 0.6534,
+ "moneyHitRate": 0.415,
+ "priceHitRate": 0.452,
+ "brierMoney": 0.7977,
+ "brierPrice": 0.6526,
  "disagree": {
-  "n": 153,
-  "moneyWon": 25,
+  "n": 150,
+  "moneyWon": 26,
   "priceWon": 47,
-  "neither": 81
+  "neither": 77
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -39,19 +39,19 @@
    "verdict": "preis_besser"
   },
   {
+   "league": "SOCCER:JAP",
+   "n": 22,
+   "moneyHitRate": 0.5,
+   "brierMoney": 0.6519,
+   "brierPrice": 0.5835,
+   "verdict": "preis_besser"
+  },
+  {
    "league": "EFL-CHAMPIONSHIP",
    "n": 30,
    "moneyHitRate": 0.567,
    "brierMoney": 0.6921,
    "brierPrice": 0.613,
-   "verdict": "preis_besser"
-  },
-  {
-   "league": "SOCCER:JAP",
-   "n": 21,
-   "moneyHitRate": 0.476,
-   "brierMoney": 0.6829,
-   "brierPrice": 0.602,
    "verdict": "preis_besser"
   },
   {
@@ -120,7 +120,7 @@
   }
  ],
  "guete": {
-  "belastbar": 561,
+  "belastbar": 562,
   "preis_echo": 343,
   "abgeschnitten": 62,
   "unbekannt": 0,
@@ -156,11 +156,11 @@
    "league": "SOCCER:UCL",
    "winner": "FK Bodø/Glimt",
    "moneyFav": "FK Bodø/Glimt",
-   "priceFav": "FK Bodø/Glimt",
+   "priceFav": "BV Borussia 09 Dortmund",
    "moneyShare": 0.533,
    "priceProb": 0.377,
    "moneyOK": true,
-   "priceOK": true,
+   "priceOK": false,
    "totalUsd": 2624846
   },
   {
@@ -608,7 +608,7 @@
    "totalUsd": 292839
   }
  ],
- "generatedAt": "2026-10-17T08:03:59.519639+00:00",
+ "generatedAt": "2026-10-17T08:33:33.864667+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -619,7 +619,7 @@
   "mls": 733,
   "epl": 607,
   "soccer": 800,
-  "tennis": 534,
+  "tennis": 568,
   "ucl": 544,
   "la-liga": 597,
   "bundesliga": 541,
@@ -641,12 +641,12 @@
   "boxing": 318,
   "golf": 418,
   "f1": 452,
-  "cricket": 546,
+  "cricket": 571,
   "afc-champions-league-elite": 214,
   "allsvenskan": 1,
-  "australian-a-league": 347,
+  "australian-a-league": 348,
   "austria-bundesliga": 378,
-  "brazil-serie-b": 92,
+  "brazil-serie-b": 93,
   "bulgaria-parva-liga": 409,
   "bundesliga-2": 499,
   "champions-league": 312,
@@ -661,7 +661,7 @@
   "europa-league": 187,
   "indian-super-league": 247,
   "israel-premier-league": 288,
-  "japan-j-league": 548,
+  "japan-j-league": 538,
   "japan-j2-league": 534,
   "k-league": 473,
   "la-liga-2": 516,
@@ -713,49 +713,44 @@
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1751,
-   "usd": 28926035,
+   "n": 1656,
+   "usd": 26662699,
    "beispiel": "fifwc-usa-bel-2026-07-06-more-markets"
   },
   "world": {
-   "n": 139,
-   "usd": 8578571,
+   "n": 126,
+   "usd": 8610383,
    "beispiel": "world-cup-winner"
   },
   "uefa": {
-   "n": 49,
-   "usd": 4969346,
+   "n": 41,
+   "usd": 4748502,
    "beispiel": "uefa-champions-league-2027-champion-20260701202025549"
   },
   "presidential": {
-   "n": 19,
-   "usd": 1143245,
+   "n": 9,
+   "usd": 1113000,
    "beispiel": "presidential-election-winner-2028"
   },
   "fed": {
-   "n": 26,
-   "usd": 801026,
+   "n": 25,
+   "usd": 794727,
    "beispiel": "fed-decision-in-july"
   },
   "will": {
-   "n": 21,
-   "usd": 633837,
+   "n": 20,
+   "usd": 629373,
    "beispiel": "will-trump-declare-a-national-emergency-on-his-first-day"
   },
   "republican": {
-   "n": 8,
-   "usd": 617901,
+   "n": 5,
+   "usd": 606609,
    "beispiel": "republican-presidential-nominee-2028"
   },
   "which": {
-   "n": 24,
-   "usd": 552699,
+   "n": 22,
+   "usd": 549230,
    "beispiel": "which-teams-will-make-the-nhl-playoffs-2026-27"
-  },
-  "super": {
-   "n": 20,
-   "usd": 372547,
-   "beispiel": "super-bowl-champion-2026-731"
   },
   "cbb": {
    "n": 47,
@@ -763,14 +758,9 @@
    "beispiel": "cbb-stbr-neast-2026-01-22"
   },
   "btc": {
-   "n": 26,
-   "usd": 154474,
+   "n": 27,
+   "usd": 156376,
    "beispiel": "btc-updown-4h-1767862800"
-  },
-  "2026": {
-   "n": 23,
-   "usd": 136010,
-   "beispiel": "2026-nba-champion"
   },
   "nbasl": {
    "n": 3,
@@ -778,39 +768,49 @@
    "beispiel": "nbasl-cle-nop-2026-07-15"
   },
   "texas": {
-   "n": 6,
-   "usd": 109498,
+   "n": 7,
+   "usd": 111373,
    "beispiel": "texas-senate-election-winner"
   },
   "pro": {
-   "n": 12,
-   "usd": 94815,
+   "n": 13,
+   "usd": 95983,
    "beispiel": "pro-football-2027-champion-20260729185915366"
   },
   "brazil": {
    "n": 14,
-   "usd": 93961,
+   "usd": 93550,
    "beispiel": "brazil-presidential-election"
   },
   "lec": {
-   "n": 30,
-   "usd": 92265,
+   "n": 23,
+   "usd": 83941,
    "beispiel": "lec-clb-pum-2026-08-11"
   },
   "ballon": {
-   "n": 13,
-   "usd": 87183,
+   "n": 10,
+   "usd": 79483,
    "beispiel": "ballon-dor-2026-kylian-mbappe-or-lamine-yamal-to-finish-higher"
   },
+  "2026": {
+   "n": 11,
+   "usd": 79430,
+   "beispiel": "2026-nba-champion"
+  },
   "us": {
-   "n": 13,
-   "usd": 75711,
+   "n": 12,
+   "usd": 74402,
    "beispiel": "us-obtains-iranian-enriched-uranium-by"
   },
   "ncaa": {
    "n": 6,
-   "usd": 62960,
+   "usd": 62959,
    "beispiel": "ncaa-football-2026-heisman-award-winner-20260731185656435"
+  },
+  "nato": {
+   "n": 3,
+   "usd": 58824,
+   "beispiel": "nato-x-russia-military-clash-in-2025"
   }
  }
 }
