@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-10-17T13:13:39.417377+00:00",
+"generatedAt": "2026-10-17T13:43:21.135901+00:00",
 "byVerdict": {
 "uneinig": {
 "n": 20,
@@ -18,20 +18,20 @@
 "clvLb": -0.8371
 },
 "konsens": {
-"n": 258,
-"wins": 149,
-"hitRate": 0.5775,
-"polyN": 253,
-"polyWins": 145,
-"polyHitRate": 0.5731,
-"pinnN": 215,
-"pinnHitRate": 0.5953,
-"nRoi": 258,
-"roi": 0.0226,
-"roiLb": -0.0732,
-"nClv": 258,
+"n": 261,
+"wins": 151,
+"hitRate": 0.5785,
+"polyN": 256,
+"polyWins": 147,
+"polyHitRate": 0.5742,
+"pinnN": 218,
+"pinnHitRate": 0.5963,
+"nRoi": 261,
+"roi": 0.0252,
+"roiLb": -0.0701,
+"nClv": 261,
 "clv": 0.07,
-"clvLb": -0.2036
+"clvLb": -0.1985
 },
 "teil": {
 "n": 1,
@@ -51,15 +51,15 @@
 }
 },
 "byLeague": {
-"UEFA Champions League": {
+"English Sky Bet Championship": {
 "n": 18,
 "wins": 11,
 "hitRate": 0.6111
 },
-"English Sky Bet Championship": {
-"n": 17,
-"wins": 10,
-"hitRate": 0.5882
+"UEFA Champions League": {
+"n": 18,
+"wins": 11,
+"hitRate": 0.6111
 },
 "Brazilian Serie A": {
 "n": 15,
@@ -186,6 +186,11 @@
 "wins": 2,
 "hitRate": 0.5
 },
+"English Sky Bet League 1": {
+"n": 3,
+"wins": 0,
+"hitRate": 0.0
+},
 "English Sky Bet League 2": {
 "n": 3,
 "wins": 1,
@@ -221,6 +226,11 @@
 "wins": 0,
 "hitRate": 0.0
 },
+"Chinese Super League": {
+"n": 2,
+"wins": 1,
+"hitRate": 0.5
+},
 "Colombian Primera A": {
 "n": 2,
 "wins": 0,
@@ -235,11 +245,6 @@
 "n": 2,
 "wins": 1,
 "hitRate": 0.5
-},
-"English Sky Bet League 1": {
-"n": 2,
-"wins": 0,
-"hitRate": 0.0
 },
 "Estonian Premier League": {
 "n": 2,
@@ -272,11 +277,6 @@
 "hitRate": 1.0
 },
 "CONMEBOL Copa Sudamericana": {
-"n": 1,
-"wins": 0,
-"hitRate": 0.0
-},
-"Chinese Super League": {
 "n": 1,
 "wins": 0,
 "hitRate": 0.0
@@ -339,26 +339,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 205,
-"wins": 126,
-"hitRate": 0.6146,
-"nRoi": 205,
-"roi": 0.0314,
-"roiLb": -0.0687,
-"nClv": 205,
-"clv": 0.15,
-"clvLb": -0.171
+"n": 206,
+"wins": 127,
+"hitRate": 0.6165,
+"nRoi": 206,
+"roi": 0.0328,
+"roiLb": -0.0668,
+"nClv": 206,
+"clv": 0.16,
+"clvLb": -0.1619
 },
 "weak": {
-"n": 74,
-"wins": 29,
-"hitRate": 0.3919,
-"nRoi": 74,
-"roi": -0.0543,
-"roiLb": -0.2865,
-"nClv": 74,
+"n": 76,
+"wins": 30,
+"hitRate": 0.3947,
+"nRoi": 76,
+"roi": -0.0471,
+"roiLb": -0.2763,
+"nClv": 76,
 "clv": -0.28,
-"clvLb": -0.6008
+"clvLb": -0.598
 }
 },
 "divergence": {
@@ -370,6 +370,63 @@
 "polyRate": 0.4211
 },
 "recent": [
+{
+"matchId": "36188508",
+"home": "Watford",
+"away": "Charlton",
+"league": "English Sky Bet Championship",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Watford",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-10-17T11:30:00Z",
+"settledAt": "2026-10-17T13:28:18.696753+00:00"
+},
+{
+"matchId": "36180370",
+"home": "Qingdao Hainiu",
+"away": "Liaoning Tieren FC",
+"league": "Chinese Super League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Liaoning Tieren FC",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+4
+],
+"kickoff": "2026-10-17T11:35:00Z",
+"settledAt": "2026-10-17T13:28:18.696753+00:00"
+},
+{
+"matchId": "36175581",
+"home": "MK Dons",
+"away": "Luton",
+"league": "English Sky Bet League 1",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Luton",
+"polySide": "away",
+"winner": "home",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-10-17T11:30:00Z",
+"settledAt": "2026-10-17T13:28:18.696753+00:00"
+},
 {
 "matchId": "36179377",
 "home": "Kashiwa",
@@ -1072,76 +1129,19 @@
 ],
 "kickoff": "2026-10-15T19:00:00Z",
 "settledAt": "2026-10-15T20:54:31.859565+00:00"
-},
-{
-"matchId": "36104423",
-"home": "Marseille",
-"away": "Olympiakos",
-"league": "UEFA Europa League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Olympiakos",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-10-15T19:00:00Z",
-"settledAt": "2026-10-15T20:54:31.859565+00:00"
-},
-{
-"matchId": "36104451",
-"home": "Rennes",
-"away": "OFI",
-"league": "UEFA Europa League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Rennes",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-10-15T19:00:00Z",
-"settledAt": "2026-10-15T20:54:31.859565+00:00"
-},
-{
-"matchId": "36018384",
-"home": "Freiburg",
-"away": "FK Jablonec",
-"league": "UEFA Conference League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Freiburg",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-2
-],
-"kickoff": "2026-10-15T19:00:00Z",
-"settledAt": "2026-10-15T20:54:31.859565+00:00"
 }
 ],
 "global": {
-"n": 279,
-"wins": 155,
-"hitRate": 0.5556,
-"nRoi": 279,
-"roi": 0.0086,
-"roiLb": -0.0871,
-"nClv": 279,
+"n": 282,
+"wins": 157,
+"hitRate": 0.5567,
+"nRoi": 282,
+"roi": 0.0112,
+"roiLb": -0.084,
+"nClv": 282,
 "clv": 0.04,
-"clvLb": -0.2142
+"clvLb": -0.2094
 },
-"pending": 43,
-"ausgeschlossenLive": 1678
+"pending": 44,
+"ausgeschlossenLive": 1674
 }
