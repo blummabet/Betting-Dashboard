@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-10-17T20:45:06.767837+00:00",
+"generatedAt": "2026-10-17T20:59:59.890615+00:00",
 "byVerdict": {
 "uneinig": {
 "n": 23,
@@ -18,20 +18,20 @@
 "clvLb": -0.7286
 },
 "konsens": {
-"n": 297,
+"n": 299,
 "wins": 176,
-"hitRate": 0.5926,
-"polyN": 291,
+"hitRate": 0.5886,
+"polyN": 293,
 "polyWins": 170,
-"polyHitRate": 0.5842,
-"pinnN": 254,
-"pinnHitRate": 0.6102,
-"nRoi": 297,
-"roi": 0.0626,
-"roiLb": -0.0275,
-"nClv": 297,
-"clv": 0.09,
-"clvLb": -0.1502
+"polyHitRate": 0.5802,
+"pinnN": 256,
+"pinnHitRate": 0.6055,
+"nRoi": 299,
+"roi": 0.0555,
+"roiLb": -0.0343,
+"nClv": 299,
+"clv": 0.1,
+"clvLb": -0.1396
 },
 "teil": {
 "n": 1,
@@ -62,9 +62,9 @@
 "hitRate": 0.6111
 },
 "Spanish La Liga": {
-"n": 16,
+"n": 17,
 "wins": 9,
-"hitRate": 0.5625
+"hitRate": 0.5294
 },
 "Brazilian Serie A": {
 "n": 15,
@@ -201,6 +201,11 @@
 "wins": 3,
 "hitRate": 1.0
 },
+"Scottish Premiership": {
+"n": 3,
+"wins": 1,
+"hitRate": 0.3333
+},
 "AFC Champions League Two": {
 "n": 2,
 "wins": 0,
@@ -262,11 +267,6 @@
 "hitRate": 0.0
 },
 "Saudi Professional League": {
-"n": 2,
-"wins": 1,
-"hitRate": 0.5
-},
-"Scottish Premiership": {
 "n": 2,
 "wins": 1,
 "hitRate": 0.5
@@ -344,26 +344,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 232,
+"n": 233,
 "wins": 143,
-"hitRate": 0.6164,
-"nRoi": 232,
-"roi": 0.0415,
-"roiLb": -0.053,
-"nClv": 232,
+"hitRate": 0.6137,
+"nRoi": 233,
+"roi": 0.037,
+"roiLb": -0.0574,
+"nClv": 233,
 "clv": 0.19,
-"clvLb": -0.1088
+"clvLb": -0.1001
 },
 "weak": {
-"n": 89,
+"n": 90,
 "wins": 40,
-"hitRate": 0.4494,
-"nRoi": 89,
-"roi": 0.0597,
-"roiLb": -0.1523,
-"nClv": 89,
-"clv": -0.25,
-"clvLb": -0.5241
+"hitRate": 0.4444,
+"nRoi": 90,
+"roi": 0.0479,
+"roiLb": -0.1626,
+"nClv": 90,
+"clv": -0.24,
+"clvLb": -0.5083
 }
 },
 "divergence": {
@@ -375,6 +375,44 @@
 "polyRate": 0.3636
 },
 "recent": [
+{
+"matchId": "36100480",
+"home": "Valencia",
+"away": "Athletic Bilbao",
+"league": "Spanish La Liga",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Athletic Bilbao",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-10-17T19:00:00Z",
+"settledAt": "2026-10-17T20:59:59.682817+00:00"
+},
+{
+"matchId": "36183552",
+"home": "Dundee",
+"away": "Rangers",
+"league": "Scottish Premiership",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Rangers",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-10-17T19:00:00Z",
+"settledAt": "2026-10-17T20:59:59.682817+00:00"
+},
 {
 "matchId": "36100438",
 "home": "ESTAC Troyes",
@@ -1096,57 +1134,19 @@
 ],
 "kickoff": "2026-10-17T11:00:00Z",
 "settledAt": "2026-10-17T14:14:18.606761+00:00"
-},
-{
-"matchId": "36180360",
-"home": "Greuther Furth",
-"away": "Braunschweig",
-"league": "German Bundesliga 2",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Greuther Furth",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-10-17T11:00:00Z",
-"settledAt": "2026-10-17T14:14:18.606761+00:00"
-},
-{
-"matchId": "36188508",
-"home": "Watford",
-"away": "Charlton",
-"league": "English Sky Bet Championship",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Watford",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-10-17T11:30:00Z",
-"settledAt": "2026-10-17T13:28:18.696753+00:00"
 }
 ],
 "global": {
-"n": 321,
+"n": 323,
 "wins": 183,
-"hitRate": 0.5701,
-"nRoi": 321,
-"roi": 0.0465,
-"roiLb": -0.0434,
-"nClv": 321,
+"hitRate": 0.5666,
+"nRoi": 323,
+"roi": 0.04,
+"roiLb": -0.0496,
+"nClv": 323,
 "clv": 0.07,
-"clvLb": -0.1615
+"clvLb": -0.1516
 },
 "pending": 26,
-"ausgeschlossenLive": 1653
+"ausgeschlossenLive": 1651
 }
