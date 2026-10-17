@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-10-17T18:15:06.723373+00:00",
+"generatedAt": "2026-10-17T18:30:56.421213+00:00",
 "byVerdict": {
 "uneinig": {
-"n": 22,
+"n": 23,
 "wins": 7,
-"hitRate": 0.3182,
-"polyN": 21,
+"hitRate": 0.3043,
+"polyN": 22,
 "polyWins": 8,
-"polyHitRate": 0.381,
-"pinnN": 13,
-"pinnHitRate": 0.3846,
-"nRoi": 22,
-"roi": -0.075,
-"roiLb": -0.5649,
-"nClv": 22,
-"clv": -0.32,
-"clvLb": -0.7615
+"polyHitRate": 0.3636,
+"pinnN": 14,
+"pinnHitRate": 0.3571,
+"nRoi": 23,
+"roi": -0.1152,
+"roiLb": -0.588,
+"nClv": 23,
+"clv": -0.31,
+"clvLb": -0.7286
 },
 "konsens": {
-"n": 290,
-"wins": 171,
-"hitRate": 0.5897,
-"polyN": 284,
-"polyWins": 165,
-"polyHitRate": 0.581,
-"pinnN": 247,
-"pinnHitRate": 0.6073,
-"nRoi": 290,
-"roi": 0.0578,
-"roiLb": -0.0334,
-"nClv": 290,
-"clv": 0.08,
-"clvLb": -0.1641
+"n": 293,
+"wins": 173,
+"hitRate": 0.5904,
+"polyN": 287,
+"polyWins": 167,
+"polyHitRate": 0.5819,
+"pinnN": 250,
+"pinnHitRate": 0.608,
+"nRoi": 293,
+"roi": 0.0582,
+"roiLb": -0.0325,
+"nClv": 293,
+"clv": 0.09,
+"clvLb": -0.161
 },
 "teil": {
 "n": 1,
@@ -66,6 +66,16 @@
 "wins": 10,
 "hitRate": 0.6667
 },
+"English Premier League": {
+"n": 15,
+"wins": 8,
+"hitRate": 0.5333
+},
+"German Bundesliga": {
+"n": 15,
+"wins": 8,
+"hitRate": 0.5333
+},
 "Italian Serie A": {
 "n": 15,
 "wins": 10,
@@ -76,25 +86,15 @@
 "wins": 8,
 "hitRate": 0.5333
 },
-"English Premier League": {
-"n": 14,
-"wins": 8,
-"hitRate": 0.5714
-},
-"German Bundesliga": {
-"n": 14,
-"wins": 7,
-"hitRate": 0.5
-},
 "UEFA Europa League": {
 "n": 14,
 "wins": 10,
 "hitRate": 0.7143
 },
 "Spanish Segunda Division": {
-"n": 11,
-"wins": 6,
-"hitRate": 0.5455
+"n": 12,
+"wins": 7,
+"hitRate": 0.5833
 },
 "UEFA Conference League": {
 "n": 11,
@@ -126,6 +126,11 @@
 "wins": 4,
 "hitRate": 0.5
 },
+"Swedish Allsvenskan": {
+"n": 7,
+"wins": 5,
+"hitRate": 0.7143
+},
 "Turkish Super League": {
 "n": 7,
 "wins": 4,
@@ -145,11 +150,6 @@
 "n": 6,
 "wins": 4,
 "hitRate": 0.6667
-},
-"Swedish Allsvenskan": {
-"n": 6,
-"wins": 5,
-"hitRate": 0.8333
 },
 "AFC Champions League": {
 "n": 5,
@@ -344,37 +344,113 @@
 },
 "byStrength": {
 "strong": {
-"n": 227,
+"n": 228,
 "wins": 140,
-"hitRate": 0.6167,
-"nRoi": 227,
-"roi": 0.04,
-"roiLb": -0.0553,
-"nClv": 227,
-"clv": 0.16,
-"clvLb": -0.1364
+"hitRate": 0.614,
+"nRoi": 228,
+"roi": 0.0355,
+"roiLb": -0.0598,
+"nClv": 228,
+"clv": 0.18,
+"clvLb": -0.1219
 },
 "weak": {
-"n": 86,
-"wins": 38,
-"hitRate": 0.4419,
-"nRoi": 86,
-"roi": 0.0585,
-"roiLb": -0.1591,
-"nClv": 86,
-"clv": -0.23,
-"clvLb": -0.5097
+"n": 89,
+"wins": 40,
+"hitRate": 0.4494,
+"nRoi": 89,
+"roi": 0.0597,
+"roiLb": -0.1523,
+"nClv": 89,
+"clv": -0.25,
+"clvLb": -0.5241
 }
 },
 "divergence": {
-"n": 22,
+"n": 23,
 "betfairWins": 7,
-"betfairRate": 0.3182,
-"polyN": 21,
+"betfairRate": 0.3043,
+"polyN": 22,
 "polyWins": 8,
-"polyRate": 0.381
+"polyRate": 0.3636
 },
 "recent": [
+{
+"matchId": "36092010",
+"home": "Newcastle",
+"away": "Aston Villa",
+"league": "English Premier League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Newcastle",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-10-17T16:30:00Z",
+"settledAt": "2026-10-17T18:30:56.222758+00:00"
+},
+{
+"matchId": "36099842",
+"home": "Bayern Munich",
+"away": "RB Leipzig",
+"league": "German Bundesliga",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Bayern Munich",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+6,
+1
+],
+"kickoff": "2026-10-17T16:30:00Z",
+"settledAt": "2026-10-17T18:30:56.222758+00:00"
+},
+{
+"matchId": "36176791",
+"home": "AIK",
+"away": "IFK Goteborg",
+"league": "Swedish Allsvenskan",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "AIK",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-10-17T15:30:00Z",
+"settledAt": "2026-10-17T18:30:56.222758+00:00"
+},
+{
+"matchId": "36184155",
+"home": "Sporting Gijon",
+"away": "Albacete",
+"league": "Spanish Segunda Division",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Sporting Gijon",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-10-17T16:30:00Z",
+"settledAt": "2026-10-17T18:30:56.222758+00:00"
+},
 {
 "matchId": "36180774",
 "home": "Mantova",
@@ -1058,95 +1134,19 @@
 ],
 "kickoff": "2026-10-17T11:00:00Z",
 "settledAt": "2026-10-17T12:58:18.096653+00:00"
-},
-{
-"matchId": "36179181",
-"home": "Ulsan Hyundai Horang-i",
-"away": "Bucheon FC 1995",
-"league": "South Korean K1 League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Ulsan Hyundai Horang-i",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-10-17T07:30:00Z",
-"settledAt": "2026-10-17T10:43:29.434130+00:00"
-},
-{
-"matchId": "36179195",
-"home": "Kashima",
-"away": "Nagasaki",
-"league": "Japanese J League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Kashima",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-10-17T06:00:00Z",
-"settledAt": "2026-10-17T07:58:19.090569+00:00"
-},
-{
-"matchId": "36107250",
-"home": "Auckland FC",
-"away": "Melbourne City",
-"league": "Australian A-League Men",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Auckland FC",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-10-17T04:00:00Z",
-"settledAt": "2026-10-17T07:13:39.701293+00:00"
-},
-{
-"matchId": "36150260",
-"home": "Boca Juniors",
-"away": "Talleres",
-"league": "Argentinian Primera Division",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Boca Juniors",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-10-17T00:30:00Z",
-"settledAt": "2026-10-17T03:30:00.294458+00:00"
 }
 ],
 "global": {
-"n": 313,
-"wins": 178,
-"hitRate": 0.5687,
-"nRoi": 313,
-"roi": 0.0451,
-"roiLb": -0.0461,
-"nClv": 313,
+"n": 317,
+"wins": 180,
+"hitRate": 0.5678,
+"nRoi": 317,
+"roi": 0.0423,
+"roiLb": -0.0483,
+"nClv": 317,
 "clv": 0.06,
-"clvLb": -0.1751
+"clvLb": -0.1715
 },
-"pending": 30,
+"pending": 26,
 "ausgeschlossenLive": 1657
 }
