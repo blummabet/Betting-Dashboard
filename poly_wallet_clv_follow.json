@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-17T05:02:42.327610+00:00",
+ "updatedAt": "2026-10-17T05:32:47.899553+00:00",
  "stake": 10.0,
  "regel": {
   "minN": 20,
@@ -7,9 +7,9 @@
   "frischMin": 90.0
  },
  "zaehler": {
-  "ohneEinstieg": 11,
-  "gesperrt": 77,
-  "alt": 207
+  "ohneEinstieg": 21,
+  "gesperrt": 43,
+  "alt": 200
  },
  "open": {
   "unl-mac-sco-2026-10-03-more-markets|Under": {
@@ -10110,28 +10110,6 @@
    "firstTs": "2026-10-16T23:32:23.924407+00:00",
    "stake": 10.0
   },
-  "mex-nec-atl-2026-10-16|Atlas FC": {
-   "key": "mex-nec-atl-2026-10-16",
-   "side": "Atlas FC",
-   "cat": "Fußball",
-   "league": "SOCCER",
-   "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-   "belegt": true,
-   "heiss": false,
-   "walletN": 1853,
-   "walletClv": 0.276,
-   "walletUg": 0.151,
-   "clv7": null,
-   "n7": null,
-   "walletEntry": 0.4306,
-   "entryPrice": 0.435,
-   "abstandPP": 0.44,
-   "arm": "nehmbar",
-   "lastPrice": 0.435,
-   "htkAtEntry": 0.54,
-   "firstTs": "2026-10-17T00:31:50.713650+00:00",
-   "stake": 10.0
-  },
   "mex-nec-atl-2026-10-16-more-markets|Under": {
    "key": "mex-nec-atl-2026-10-16-more-markets",
    "side": "Under",
@@ -10501,7 +10479,7 @@
    "entryPrice": 0.645,
    "abstandPP": 0.96,
    "arm": "nehmbar",
-   "lastPrice": 0.655,
+   "lastPrice": 0.645,
    "htkAtEntry": 1.58,
    "firstTs": "2026-10-17T04:30:15.287297+00:00",
    "stake": 10.0
@@ -10614,6 +10592,28 @@
    "lastPrice": 0.535,
    "htkAtEntry": 0.05,
    "firstTs": "2026-10-17T05:02:42.327610+00:00",
+   "stake": 10.0
+  },
+  "jap-kas-vva-2026-10-17|V-Varen Nagasaki": {
+   "key": "jap-kas-vva-2026-10-17",
+   "side": "V-Varen Nagasaki",
+   "cat": "Fußball",
+   "league": "SOCCER",
+   "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
+   "belegt": true,
+   "heiss": false,
+   "walletN": 932,
+   "walletClv": 0.385,
+   "walletUg": 0.228,
+   "clv7": null,
+   "n7": null,
+   "walletEntry": 0.14,
+   "entryPrice": 0.145,
+   "abstandPP": 0.5,
+   "arm": "nehmbar",
+   "lastPrice": 0.145,
+   "htkAtEntry": 0.54,
+   "firstTs": "2026-10-17T05:32:47.899553+00:00",
    "stake": 10.0
   }
  },
@@ -48025,6 +48025,34 @@
    "closePrice": 0.906,
    "clvPP": -0.35,
    "settledTs": "2026-10-17T04:02:35.650385+00:00"
+  },
+  {
+   "key": "mex-nec-atl-2026-10-16",
+   "side": "Atlas FC",
+   "cat": "Fußball",
+   "league": "SOCCER",
+   "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+   "belegt": true,
+   "heiss": false,
+   "walletN": 1853,
+   "walletClv": 0.276,
+   "walletUg": 0.151,
+   "clv7": null,
+   "n7": null,
+   "walletEntry": 0.4306,
+   "entryPrice": 0.435,
+   "abstandPP": 0.44,
+   "arm": "nehmbar",
+   "lastPrice": 0.435,
+   "htkAtEntry": 0.54,
+   "firstTs": "2026-10-17T00:31:50.713650+00:00",
+   "stake": 10.0,
+   "result": "win",
+   "winner": "Atlas FC",
+   "pnl": 12.99,
+   "closePrice": 0.435,
+   "clvPP": 0.0,
+   "settledTs": "2026-10-17T05:32:47.899553+00:00"
   }
  ],
  "gesehen": [
@@ -48947,6 +48975,7 @@
   "jap-kas-gam-2026-10-09-more-markets|Under",
   "jap-kas-gam-2026-10-09|Gamba Ōsaka",
   "jap-kas-vva-2026-10-17|Kashima Antlers",
+  "jap-kas-vva-2026-10-17|V-Varen Nagasaki",
   "jap-kaw-ngr-2026-10-11-more-markets|Over",
   "jap-kaw-ngr-2026-10-11|Kawasaki Frontale",
   "jap-kyo-zel-2026-10-10-more-markets|Over",
@@ -49849,16 +49878,16 @@
  ],
  "agg": {
   "belegt_nehmbar": {
-   "n": 746,
-   "wins": 213,
-   "hit": 0.2855,
-   "pnl": -1399.8,
-   "stake": 7460.0,
-   "roi": -0.1876,
-   "roiUg": -0.3375,
+   "n": 747,
+   "wins": 214,
+   "hit": 0.2865,
+   "pnl": -1386.81,
+   "stake": 7470.0,
+   "roi": -0.1857,
+   "roiUg": -0.3353,
    "belegt": false,
    "clvAvg": -0.04,
-   "clvN": 746,
+   "clvN": 747,
    "clvUg": -0.14
   },
   "belegt_zu_spaet": {
@@ -49901,16 +49930,16 @@
    "clvUg": -0.47
   },
   "nehmbar": {
-   "n": 856,
-   "wins": 264,
-   "hit": 0.3084,
-   "pnl": -1528.44,
-   "stake": 8560.0,
-   "roi": -0.1786,
-   "roiUg": -0.3108,
+   "n": 857,
+   "wins": 265,
+   "hit": 0.3092,
+   "pnl": -1515.45,
+   "stake": 8570.0,
+   "roi": -0.1768,
+   "roiUg": -0.3089,
    "belegt": false,
    "clvAvg": -0.04,
-   "clvN": 856,
+   "clvN": 857,
    "clvUg": -0.14,
    "byCat": {
     "E-Sport": {
@@ -49927,16 +49956,16 @@
      "clvUg": -0.26
     },
     "Fußball": {
-     "n": 494,
-     "wins": 100,
-     "hit": 0.2024,
-     "pnl": -1420.57,
-     "stake": 4940.0,
-     "roi": -0.2876,
-     "roiUg": -0.4979,
+     "n": 495,
+     "wins": 101,
+     "hit": 0.204,
+     "pnl": -1407.58,
+     "stake": 4950.0,
+     "roi": -0.2844,
+     "roiUg": -0.4944,
      "belegt": false,
      "clvAvg": -0.07,
-     "clvN": 494,
+     "clvN": 495,
      "clvUg": -0.17
     },
     "None": {
