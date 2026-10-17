@@ -25,11 +25,11 @@
       "ok": false,
       "nFail": 5,
       "failures": [
-        "36100460: zuletzt 78.057 € und Anpfiff erst in 0.8 h — trotzdem nicht mehr im Feed",
-        "36099813: zuletzt 185.146 € und Anpfiff erst in 1.5 h — trotzdem nicht mehr im Feed",
-        "36099842: zuletzt 102.499 € und Anpfiff erst in 2.0 h — trotzdem nicht mehr im Feed",
-        "36092010: zuletzt 196.718 € und Anpfiff erst in 2.0 h — trotzdem nicht mehr im Feed",
-        "36100462: zuletzt 52.591 € und Anpfiff erst in 4.3 h — trotzdem nicht mehr im Feed"
+        "36100460: zuletzt 78.057 € und Anpfiff erst in 0.5 h — trotzdem nicht mehr im Feed",
+        "36099813: zuletzt 185.146 € und Anpfiff erst in 1.2 h — trotzdem nicht mehr im Feed",
+        "36099842: zuletzt 102.499 € und Anpfiff erst in 1.7 h — trotzdem nicht mehr im Feed",
+        "36092010: zuletzt 196.718 € und Anpfiff erst in 1.7 h — trotzdem nicht mehr im Feed",
+        "36100462: zuletzt 52.591 € und Anpfiff erst in 4.0 h — trotzdem nicht mehr im Feed"
       ],
       "note": "Der Detail-Deckel darf nicht das teuerste Spiel schneiden — genau das ist am 08.09. passiert (alle vier CL-Spiele, Real Madrid mit 102.861 €)."
     },
@@ -40,7 +40,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "nur 7 von 124 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Cavalry v Pacific (Canadian Premier League); Boyaca Chico v Atletico Nacional Medellin (Colombian Primera A); Tacuarembo v La Luz FC (Uruguayan Segunda Division)"
+        "nur 6 von 118 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Minnesota Utd v St Louis City SC (US MLS); Independiente Rivadavia v Tigre (Argentinian Primera Division); CA Platense v Lanus (Argentinian Primera Division)"
       ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
@@ -96,33 +96,36 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 317237 verbraucht, 4682763 uebrig"
+      "note": "Kontingent: 317837 verbraucht, 4682163 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 16,
+      "nFail": 19,
       "failures": [
+        "Emmen v Almere City (Dutch Eerste Divisie): name — bester Kandidat „Birmingham City v Queens Park Rangers“",
+        "Athletic Bilbao (W) v Valencia (W) (Spanish Liga F): zeit — bester Kandidat „Valencia v Athletic Bilbao“ · 4.5h Anpfiff-Abstand",
+        "Al Sailiya v Qatar SC (Qatari Stars League): name — bester Kandidat „Neom v Al-Ettifaq“",
         "Buxton v Worksop Town (English National League North): name — bester Kandidat „Plymouth Argyle v Huddersfield Town“",
-        "Merthyr Town v Kings Lynn (English National League North): name — bester Kandidat „Plymouth Argyle v Huddersfield Town“",
-        "Maidstone Utd v Maidenhead (English National League South): name — bester Kandidat „St Johnstone v Dundee United“",
-        "Ebbsfleet Utd v Weston-super-Mare (English National League South): name — bester Kandidat „St Johnstone v Dundee United“",
-        "Morton v Queens Park (Scottish Championship): name — bester Kandidat „Birmingham City v Queens Park Rangers“",
-        "Elgin City FC v Edinburgh City (Scottish League Two): zeit — bester Kandidat „Cardiff City v Birmingham City“ · 168.0h Anpfiff-Abstand",
-        "Kristiansund v Aalesunds (Norwegian Eliteserien): name — bester Kandidat „Kristiansund BK v Aalesund“",
-        "Al Faisaly SC v Al Ramtha (Jordanian Premier League): zeit — bester Kandidat „Al-Shabab v Al-Faisaly KSA FC“ · 52.0h Anpfiff-Abstand",
-        "Slough Town v Horsham FC (English National League South): name — bester Kandidat „Plymouth Argyle v Huddersfield Town“",
         "Queen of South v Ross Co (Scottish League One): name — bester Kandidat „Altrincham FC v FC United of Manchester“",
         "Farnborough FC v Dag and Red (English National League South): name — bester Kandidat „AFC Rushden and Diamonds v Morecambe“",
         "Hebburn Town v Scarborough Athletic (English National League North): zeit — bester Kandidat „Huddersfield Town v Wigan Athletic“ · 165.5h Anpfiff-Abstand",
+        "Elgin City FC v Edinburgh City (Scottish League Two): zeit — bester Kandidat „Cardiff City v Birmingham City“ · 168.0h Anpfiff-Abstand",
+        "Kristiansund v Aalesunds (Norwegian Eliteserien): name — bester Kandidat „Kristiansund BK v Aalesund“",
+        "Ebbsfleet Utd v Weston-super-Mare (English National League South): name — bester Kandidat „Bristol City v Sheffield United“",
+        "Morton v Queens Park (Scottish Championship): name — bester Kandidat „Birmingham City v Queens Park Rangers“",
+        "Maidstone Utd v Maidenhead (English National League South): name — bester Kandidat „Bristol City v Sheffield United“",
+        "Merthyr Town v Kings Lynn (English National League North): name — bester Kandidat „Plymouth Argyle v Huddersfield Town“",
+        "Al Faisaly SC v Al Ramtha (Jordanian Premier League): zeit — bester Kandidat „Al-Shabab v Al-Faisaly KSA FC“ · 52.0h Anpfiff-Abstand",
+        "Slough Town v Horsham FC (English National League South): name — bester Kandidat „Plymouth Argyle v Huddersfield Town“",
         "Al Hikma v Al-Ahed (Lebanese Premier League): zeit — bester Kandidat „Al-Fateh v Al-Khaleej“ · 28.5h Anpfiff-Abstand",
-        "Liverpool U21 v Reading U21 (English Premier League 2 - Div 1): name — bester Kandidat „Wigan Athletic v Reading“",
-        "Athletic Bilbao (W) v Valencia (W) (Spanish Liga F): zeit — bester Kandidat „Valencia v Athletic Bilbao“ · 4.5h Anpfiff-Abstand",
-        "Birmingham v QPR (English Sky Bet Championship): name — bester Kandidat „Birmingham City v Queens Park Rangers“"
+        "Al-Ansar v Al-Ittihad Aleppo U21 (AFC Challenge League): zeit — bester Kandidat „Al-Ettifaq v Al-Ittihad“ · 75.0h Anpfiff-Abstand",
+        "Birmingham v QPR (English Sky Bet Championship): name — bester Kandidat „Birmingham City v Queens Park Rangers“",
+        "Liverpool U21 v Reading U21 (English Premier League 2 - Div 1): name — bester Kandidat „Wigan Athletic v Reading“"
       ],
-      "note": "ohne Anker: kein_kandidat 61 · kein_pinnacle 5 · name 11 · zeit 5. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 63 · kein_pinnacle 5 · name 13 · zeit 6. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -131,7 +134,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 4 — Benevento v LR Vicenza Virtus (35 Buecher, ohne Pinnacle); Hibernian v Falkirk (31 Buecher, ohne Pinnacle); LKP Motor Lublin v Slask Wroclaw (35 Buecher, ohne Pinnacle); HJK Helsinki v Gnistan (16 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 3 — Benevento v LR Vicenza Virtus (35 Buecher, ohne Pinnacle); Carrarese v Modena (34 Buecher, ohne Pinnacle); HJK Helsinki v Gnistan (6 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -140,7 +143,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 15 gewollt, 15 abgerufen, 0 mit Daten"
+      "note": "Totals: 16 gewollt, 16 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -207,5 +210,5 @@
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-10-17T14:29:04.527419+00:00"
+  "generatedAt": "2026-10-17T14:45:59.275707+00:00"
 }
