@@ -2272,16 +2272,24 @@
           "polyPrice": 0.78,
           "pinnFair": 0.7963,
           "steamLag": false
+        },
+        {
+          "ts": "2026-10-17T21:28:43Z",
+          "edgePp": 0.8,
+          "polyPrice": 0.775,
+          "pinnFair": 0.7829,
+          "steamLag": false
         }
       ],
-      "currentEdgePp": 1.6,
-      "currentPolyPrice": 0.78,
+      "currentEdgePp": 0.8,
+      "currentPolyPrice": 0.775,
       "edgeVelocityPPH": 0.0,
-      "convergencePct": 38.5,
+      "convergencePct": 69.2,
       "convergenceTs": null,
       "convergenceHours": null,
       "status": "OPEN",
-      "outcome": null
+      "outcome": null,
+      "pendingConvergenceConfirm": true
     },
     {
       "id": "173-1660_hw",
@@ -2336,9 +2344,49 @@
       "convergenceHours": 15.0,
       "status": "CONVERGED",
       "outcome": null
+    },
+    {
+      "id": "91-79_dr",
+      "matchKey": "91-79",
+      "homeId": "91",
+      "awayId": "79",
+      "home": "AS Monaco FC",
+      "away": "Lille OSC",
+      "homeFlag": "🏳",
+      "awayFlag": "🏳",
+      "matchDate": "2026-10-25",
+      "market": "dr",
+      "marketLabel": "Unentschieden",
+      "signalTs": "2026-10-17T21:28:43Z",
+      "entryEdgePp": 2.2,
+      "entryPolyPrice": 0.27,
+      "entryPinnFair": 0.2924,
+      "entryVol": 83.0,
+      "steamLagAtSignal": false,
+      "pinnMoveAtSignal": 0.4,
+      "edgeTrendAtSignal": "stable",
+      "highConfidence": false,
+      "entryTier": "track",
+      "snapshots": [
+        {
+          "ts": "2026-10-17T21:28:43Z",
+          "edgePp": 2.2,
+          "polyPrice": 0.27,
+          "pinnFair": 0.2924,
+          "steamLag": false
+        }
+      ],
+      "currentEdgePp": 2.2,
+      "currentPolyPrice": 0.27,
+      "edgeVelocityPPH": null,
+      "convergencePct": 0.0,
+      "convergenceTs": null,
+      "convergenceHours": null,
+      "status": "OPEN",
+      "outcome": null
     }
   ],
-  "updatedAt": "2026-10-17T12:08:08Z",
-  "runCount": 198,
+  "updatedAt": "2026-10-17T21:28:43Z",
+  "runCount": 199,
   "lastError": "no_poly_prices"
 }
