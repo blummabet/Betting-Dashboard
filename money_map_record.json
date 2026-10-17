@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-10-17T21:14:05.131805+00:00",
+"generatedAt": "2026-10-17T21:45:11.620285+00:00",
 "byVerdict": {
 "uneinig": {
-"n": 23,
+"n": 24,
 "wins": 7,
-"hitRate": 0.3043,
-"polyN": 22,
+"hitRate": 0.2917,
+"polyN": 23,
 "polyWins": 8,
-"polyHitRate": 0.3636,
-"pinnN": 14,
-"pinnHitRate": 0.3571,
-"nRoi": 23,
-"roi": -0.1152,
-"roiLb": -0.588,
-"nClv": 23,
-"clv": -0.31,
-"clvLb": -0.7286
+"polyHitRate": 0.3478,
+"pinnN": 15,
+"pinnHitRate": 0.3333,
+"nRoi": 24,
+"roi": -0.1521,
+"roiLb": -0.6088,
+"nClv": 24,
+"clv": -0.26,
+"clvLb": -0.6724
 },
 "konsens": {
-"n": 299,
-"wins": 176,
-"hitRate": 0.5886,
-"polyN": 293,
-"polyWins": 170,
-"polyHitRate": 0.5802,
-"pinnN": 256,
-"pinnHitRate": 0.6055,
-"nRoi": 299,
-"roi": 0.0555,
-"roiLb": -0.0343,
-"nClv": 299,
-"clv": 0.1,
-"clvLb": -0.1396
+"n": 301,
+"wins": 177,
+"hitRate": 0.588,
+"polyN": 294,
+"polyWins": 171,
+"polyHitRate": 0.5816,
+"pinnN": 258,
+"pinnHitRate": 0.6047,
+"nRoi": 301,
+"roi": 0.0534,
+"roiLb": -0.0361,
+"nClv": 301,
+"clv": 0.07,
+"clvLb": -0.1707
 },
 "teil": {
 "n": 1,
@@ -66,6 +66,11 @@
 "wins": 9,
 "hitRate": 0.5294
 },
+"Italian Serie A": {
+"n": 16,
+"wins": 11,
+"hitRate": 0.6875
+},
 "Brazilian Serie A": {
 "n": 15,
 "wins": 10,
@@ -81,15 +86,15 @@
 "wins": 8,
 "hitRate": 0.5333
 },
-"Italian Serie A": {
-"n": 15,
-"wins": 10,
-"hitRate": 0.6667
-},
 "UEFA Europa League": {
 "n": 14,
 "wins": 10,
 "hitRate": 0.7143
+},
+"French Ligue 1": {
+"n": 12,
+"wins": 9,
+"hitRate": 0.75
 },
 "Spanish Segunda Division": {
 "n": 12,
@@ -101,20 +106,15 @@
 "wins": 6,
 "hitRate": 0.5
 },
-"French Ligue 1": {
-"n": 11,
-"wins": 9,
-"hitRate": 0.8182
-},
 "UEFA Conference League": {
 "n": 11,
 "wins": 8,
 "hitRate": 0.7273
 },
 "German Bundesliga 2": {
-"n": 9,
+"n": 10,
 "wins": 5,
-"hitRate": 0.5556
+"hitRate": 0.5
 },
 "Italian Serie B": {
 "n": 9,
@@ -344,37 +344,94 @@
 },
 "byStrength": {
 "strong": {
-"n": 233,
-"wins": 143,
-"hitRate": 0.6137,
-"nRoi": 233,
-"roi": 0.037,
-"roiLb": -0.0574,
-"nClv": 233,
-"clv": 0.19,
-"clvLb": -0.1001
+"n": 234,
+"wins": 144,
+"hitRate": 0.6154,
+"nRoi": 234,
+"roi": 0.0389,
+"roiLb": -0.0551,
+"nClv": 234,
+"clv": 0.16,
+"clvLb": -0.1358
 },
 "weak": {
-"n": 90,
+"n": 92,
 "wins": 40,
-"hitRate": 0.4444,
-"nRoi": 90,
-"roi": 0.0479,
-"roiLb": -0.1626,
-"nClv": 90,
+"hitRate": 0.4348,
+"nRoi": 92,
+"roi": 0.0251,
+"roiLb": -0.1824,
+"nClv": 92,
 "clv": -0.24,
-"clvLb": -0.5083
+"clvLb": -0.5037
 }
 },
 "divergence": {
-"n": 23,
+"n": 24,
 "betfairWins": 7,
-"betfairRate": 0.3043,
-"polyN": 22,
+"betfairRate": 0.2917,
+"polyN": 23,
 "polyWins": 8,
-"polyRate": 0.3636
+"polyRate": 0.3478
 },
 "recent": [
+{
+"matchId": "36099819",
+"home": "Roma",
+"away": "Genoa",
+"league": "Italian Serie A",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Roma",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-10-17T18:45:00Z",
+"settledAt": "2026-10-17T21:45:11.415353+00:00"
+},
+{
+"matchId": "36100462",
+"home": "Lille",
+"away": "Brest",
+"league": "French Ligue 1",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Lille",
+"polySide": null,
+"winner": "draw",
+"moneyWin": false,
+"polyWin": null,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-10-17T18:45:00Z",
+"settledAt": "2026-10-17T21:45:11.415353+00:00"
+},
+{
+"matchId": "36178278",
+"home": "Hannover",
+"away": "St Pauli",
+"league": "German Bundesliga 2",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "St Pauli",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-10-17T18:30:00Z",
+"settledAt": "2026-10-17T21:30:41.092469+00:00"
+},
 {
 "matchId": "36100480",
 "home": "Valencia",
@@ -1077,76 +1134,19 @@
 ],
 "kickoff": "2026-10-17T11:30:00Z",
 "settledAt": "2026-10-17T14:45:31.314036+00:00"
-},
-{
-"matchId": "36188509",
-"home": "Millwall",
-"away": "Lincoln",
-"league": "English Sky Bet Championship",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Millwall",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-10-17T11:30:00Z",
-"settledAt": "2026-10-17T14:45:31.314036+00:00"
-},
-{
-"matchId": "36188478",
-"home": "Middlesbrough",
-"away": "Cardiff",
-"league": "English Sky Bet Championship",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Middlesbrough",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-10-17T11:30:00Z",
-"settledAt": "2026-10-17T14:45:31.314036+00:00"
-},
-{
-"matchId": "36177548",
-"home": "Wolfsburg",
-"away": "FC Heidenheim",
-"league": "German Bundesliga 2",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Wolfsburg",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-10-17T11:00:00Z",
-"settledAt": "2026-10-17T14:14:18.606761+00:00"
 }
 ],
 "global": {
-"n": 323,
-"wins": 183,
-"hitRate": 0.5666,
-"nRoi": 323,
-"roi": 0.04,
-"roiLb": -0.0496,
-"nClv": 323,
-"clv": 0.07,
-"clvLb": -0.1516
+"n": 326,
+"wins": 184,
+"hitRate": 0.5644,
+"nRoi": 326,
+"roi": 0.035,
+"roiLb": -0.0542,
+"nClv": 326,
+"clv": 0.05,
+"clvLb": -0.1774
 },
-"pending": 26,
+"pending": 23,
 "ausgeschlossenLive": 1651
 }
