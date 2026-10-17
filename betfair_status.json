@@ -23,12 +23,9 @@
       "label": "Grosses Geld faellt nicht aus dem Feed",
       "severity": "error",
       "ok": false,
-      "nFail": 4,
+      "nFail": 1,
       "failures": [
-        "36099813: zuletzt 185.146 € und Anpfiff erst in 0.5 h — trotzdem nicht mehr im Feed",
-        "36099842: zuletzt 102.499 € und Anpfiff erst in 1.0 h — trotzdem nicht mehr im Feed",
-        "36092010: zuletzt 196.718 € und Anpfiff erst in 1.0 h — trotzdem nicht mehr im Feed",
-        "36100462: zuletzt 52.591 € und Anpfiff erst in 3.3 h — trotzdem nicht mehr im Feed"
+        "36100462: zuletzt 52.591 € und Anpfiff erst in 3.2 h — trotzdem nicht mehr im Feed"
       ],
       "note": "Der Detail-Deckel darf nicht das teuerste Spiel schneiden — genau das ist am 08.09. passiert (alle vier CL-Spiele, Real Madrid mit 102.861 €)."
     },
@@ -39,7 +36,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "nur 29 von 112 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Universitario de Vinto v San Antonio Bulo Bulo (Bolivian Liga de Futbol Profesional); Colon v Almirante Brown (Argentinian Primera Nacional); CD Cacahuatique v Alianza FC (SLV) (Salvadoran Primera Division)"
+        "nur 32 von 104 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Aucas v LDU (Ecuadorian Serie A); Atletico MG v Coritiba (Brazilian Serie A); America MG v Operario PR (Brazilian Serie B)"
       ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
@@ -95,40 +92,39 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 319742 verbraucht, 4680258 uebrig"
+      "note": "Kontingent: 319898 verbraucht, 4680102 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 23,
+      "nFail": 22,
       "failures": [
         "Al-Ansar v Al-Ittihad Aleppo U21 (AFC Challenge League): zeit — bester Kandidat „Al-Ettifaq v Al-Ittihad“ · 75.0h Anpfiff-Abstand",
+        "Emmen v Almere City (Dutch Eerste Divisie): name — bester Kandidat „Colchester United v Exeter City“",
         "Athletic Bilbao (W) v Valencia (W) (Spanish Liga F): zeit — bester Kandidat „Valencia v Athletic Bilbao“ · 4.5h Anpfiff-Abstand",
-        "Emmen v Almere City (Dutch Eerste Divisie): name — bester Kandidat „Bradford City v Stevenage“",
         "Al Sailiya v Qatar SC (Qatari Stars League): name — bester Kandidat „Neom v Al-Ettifaq“",
-        "Maidstone Utd v Maidenhead (English National League South): name — bester Kandidat „Barnsley v Cambridge United“",
-        "Merthyr Town v Kings Lynn (English National League North): name — bester Kandidat „Plymouth Argyle v Huddersfield Town“",
-        "Kristiansund v Aalesunds (Norwegian Eliteserien): name — bester Kandidat „Kristiansund BK v Aalesund“",
-        "Morton v Queens Park (Scottish Championship): name — bester Kandidat „Birmingham City v Queens Park Rangers“",
-        "Buxton v Worksop Town (English National League North): name — bester Kandidat „Plymouth Argyle v Huddersfield Town“",
         "Al Faisaly SC v Al Ramtha (Jordanian Premier League): zeit — bester Kandidat „Al-Shabab v Al-Faisaly KSA FC“ · 52.0h Anpfiff-Abstand",
-        "Queen of South v Ross Co (Scottish League One): name — bester Kandidat „Altrincham FC v FC United of Manchester“",
-        "Slough Town v Horsham FC (English National League South): name — bester Kandidat „Plymouth Argyle v Huddersfield Town“",
+        "Buxton v Worksop Town (English National League North): name — bester Kandidat „Oldham Athletic v Cheltenham Town“",
+        "Maidstone Utd v Maidenhead (English National League South): name — bester Kandidat „Colchester United v Exeter City“",
         "Farnborough FC v Dag and Red (English National League South): name — bester Kandidat „AFC Rushden and Diamonds v Morecambe“",
-        "Hebburn Town v Scarborough Athletic (English National League North): zeit — bester Kandidat „Huddersfield Town v Wigan Athletic“ · 165.5h Anpfiff-Abstand",
-        "Ebbsfleet Utd v Weston-super-Mare (English National League South): name — bester Kandidat „Barnsley v Cambridge United“",
         "Elgin City FC v Edinburgh City (Scottish League Two): zeit — bester Kandidat „Cardiff City v Birmingham City“ · 168.0h Anpfiff-Abstand",
-        "Al Hikma v Al-Ahed (Lebanese Premier League): zeit — bester Kandidat „Al-Fateh v Al-Khaleej“ · 28.5h Anpfiff-Abstand",
+        "Morton v Queens Park (Scottish Championship): name — bester Kandidat „Birmingham City v Queens Park Rangers“",
+        "Ebbsfleet Utd v Weston-super-Mare (English National League South): name — bester Kandidat „Colchester United v Exeter City“",
+        "Merthyr Town v Kings Lynn (English National League North): name — bester Kandidat „Oldham Athletic v Cheltenham Town“",
+        "Kristiansund v Aalesunds (Norwegian Eliteserien): name — bester Kandidat „Kristiansund BK v Aalesund“",
+        "Hebburn Town v Scarborough Athletic (English National League North): unerklaert — bester Kandidat „Oldham Athletic v Cheltenham Town“",
+        "Slough Town v Horsham FC (English National League South): name — bester Kandidat „Oldham Athletic v Cheltenham Town“",
+        "Queen of South v Ross Co (Scottish League One): name — bester Kandidat „Altrincham FC v FC United of Manchester“",
         "Al Ahli (UAE) v Al Ain (UAE Arabian Gulf League): zeit — bester Kandidat „Al-Fayha v Al-Ahli“ · 47.3h Anpfiff-Abstand",
-        "Racing Club (Uru) v Wanderers (Uru) (Uruguayan Primera Division): name — bester Kandidat „Wycombe Wanderers v Notts County“",
-        "Sekhukhune United v Marumo Gallants FC (South African Premier Division): name — bester Kandidat „Barnsley v Cambridge United“",
-        "Al Riffa v East Riffa (Bahraini Premier): name — bester Kandidat „Neom v Al-Ettifaq“",
         "Al Najma (BRN) v Al Hidd (Bahraini Premier): zeit — bester Kandidat „Al-Fateh v Al-Khaleej“ · 26.0h Anpfiff-Abstand",
+        "Al Riffa v East Riffa (Bahraini Premier): name — bester Kandidat „Neom v Al-Ettifaq“",
+        "Racing Club (Uru) v Wanderers (Uru) (Uruguayan Primera Division): name — bester Kandidat „Wycombe Wanderers v Notts County“",
+        "Sekhukhune United v Marumo Gallants FC (South African Premier Division): name — bester Kandidat „Colchester United v Exeter City“",
         "Birmingham v QPR (English Sky Bet Championship): name — bester Kandidat „Birmingham City v Queens Park Rangers“"
       ],
-      "note": "ohne Anker: kein_kandidat 56 · kein_pinnacle 8 · name 15 · zeit 8. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 58 · kein_pinnacle 7 · name 15 · unerklaert 1 · zeit 6. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -137,7 +133,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 5 — Wrexham v Preston (25 Buecher, ohne Pinnacle); Leicester v Doncaster (24 Buecher, ohne Pinnacle); Plymouth v Huddersfield (27 Buecher, ohne Pinnacle); Stockport v Bromley (31 Buecher, ohne Pinnacle); Sheff Wed v AFC Wimbledon (9 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 5 — Wrexham v Preston (25 Buecher, ohne Pinnacle); Leicester v Doncaster (23 Buecher, ohne Pinnacle); Plymouth v Huddersfield (25 Buecher, ohne Pinnacle); Stockport v Bromley (30 Buecher, ohne Pinnacle); Sheff Wed v AFC Wimbledon (8 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -146,7 +142,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 16 gewollt, 16 abgerufen, 0 mit Daten"
+      "note": "Totals: 15 gewollt, 15 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -213,5 +209,5 @@
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-10-17T15:28:53.873773+00:00"
+  "generatedAt": "2026-10-17T15:32:33.834467+00:00"
 }
