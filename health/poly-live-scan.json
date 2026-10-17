@@ -1,12 +1,12 @@
 {
   "slug": "poly-live-scan",
   "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
-  "updatedAt": "2026-10-17T15:19:54.968397+00:00",
+  "updatedAt": "2026-10-17T15:57:52.509588+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
-    "spanneH": 14.0,
-    "proTag": 32.5,
+    "spanneH": 13.9,
+    "proTag": 32.7,
     "lueckeMinMin": 4.8,
     "lueckeMedianMin": 45.5,
     "lueckeMaxMin": 58.1,
@@ -19,11 +19,26 @@
     "erzeugt": 100,
     "gelaufen": 100,
     "verdraengt": 0,
-    "spanneH": 492.5,
+    "spanneH": 490.7,
     "erzeugtProTag": 4.9,
-    "widerspruch": "erzeugtProTag 4.9 gegen eine gemessene Kadenz von 32.5/Tag (Faktor 6.6) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
+    "widerspruch": "erzeugtProTag 4.9 gegen eine gemessene Kadenz von 32.7/Tag (Faktor 6.7) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
   },
   "runs": [
+    {
+      "ts": "2026-10-17T15:57:52.509588+00:00",
+      "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
+      "runId": "39047044394",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/39047044394",
+      "nSteps": 7,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-10-17T15:53:44Z",
+      "startedAt": "2026-10-17T15:53:44Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 248.5,
+      "event": "schedule"
+    },
     {
       "ts": "2026-10-17T15:19:54.968397+00:00",
       "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
@@ -307,21 +322,6 @@
       "startedAt": "2026-10-17T01:59:27Z",
       "wartetS": 0.0,
       "laeuftSeitS": 179.2,
-      "event": "workflow_dispatch"
-    },
-    {
-      "ts": "2026-10-17T01:17:59.584106+00:00",
-      "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
-      "runId": "38989940908",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/38989940908",
-      "nSteps": 7,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-10-17T01:13:36Z",
-      "startedAt": "2026-10-17T01:13:36Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 263.6,
       "event": "workflow_dispatch"
     }
   ]
