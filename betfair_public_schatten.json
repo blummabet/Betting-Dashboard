@@ -28736,7 +28736,10 @@ null
 "value": 120011.79,
 "sentAt": "2026-10-17T12:58:37.488469+00:00",
 "status": "pending",
-"htScore": null,
+"htScore": [
+0,
+0
+],
 "leadShare": 0.8215414502191826,
 "leadDir": "in",
 "onLeader": null,
@@ -28880,7 +28883,10 @@ null
 "value": 228800.04,
 "sentAt": "2026-10-17T13:43:35.863929+00:00",
 "status": "pending",
-"htScore": null,
+"htScore": [
+0,
+0
+],
 "leadShare": 0.7908316799245315,
 "leadDir": "out",
 "onLeader": false,
@@ -29040,7 +29046,10 @@ null
 "value": 894798.81,
 "sentAt": "2026-10-17T14:14:34.897874+00:00",
 "status": "pending",
-"htScore": null,
+"htScore": [
+0,
+2
+],
 "leadShare": 0.8155400430181617,
 "leadDir": "in",
 "onLeader": true,
@@ -29056,6 +29065,70 @@ null
 "score": [
 0,
 2
+]
+}
+},
+{
+"k": "fresh:36091953:Match Odds",
+"matchId": "36091953",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "English Premier League",
+"home": "Man City",
+"away": "Ipswich",
+"leadName": "Man City",
+"leadOdd": 1.31,
+"value": 2280419.23,
+"sentAt": "2026-10-17T14:28:47.774216+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.9277728025473632,
+"leadDir": "out",
+"onLeader": false,
+"tier": "top",
+"magnitude": 482352.4,
+"schwelle": 100000.0,
+"anteilSchwelle": 4.824,
+"raus": "ereignis_sprung",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 24,
+"score": [
+1,
+1
+]
+}
+},
+{
+"k": "ht:36091953:Half Time",
+"matchId": "36091953",
+"scenario": "ht",
+"market": "Half Time",
+"league": "English Premier League",
+"home": "Man City",
+"away": "Ipswich",
+"leadName": "Man City",
+"leadOdd": 2.14,
+"value": 25771.76,
+"sentAt": "2026-10-17T14:28:47.774281+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.9344530602488926,
+"leadDir": "out",
+"onLeader": false,
+"tier": "top",
+"magnitude": 25771.8,
+"schwelle": 50000.0,
+"anteilSchwelle": 0.515,
+"raus": "unter_geldschwelle",
+"quelle": "trades",
+"gesendet": false,
+"live": {
+"time": 24,
+"score": [
+1,
+1
 ]
 }
 }
