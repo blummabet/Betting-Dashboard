@@ -40,8 +40,8 @@
 "newest": "2026-10-17T21:30:25Z",
 "betfair": {
 "n": 40000,
-"hitPct": 52.9,
-"roiPct": -0.7
+"hitPct": 53.0,
+"roiPct": -0.6
 },
 "poly": {
 "n": 426,
@@ -115,7 +115,7 @@
 "clvUrteil": "kein Urteil",
 "ausgangDiff": 0.0344,
 "ausgangUrteil": "kein Urteil",
-"clvAvg": -1.46
+"clvAvg": -1.45
 },
 {
 "name": "chance_creation",
@@ -172,6 +172,20 @@
 "ausgangDiff": -0.0097,
 "ausgangUrteil": "kein Urteil",
 "clvAvg": -1.8
+},
+{
+"name": "transfer_shift",
+"fire": 144,
+"supp": 74,
+"suppWinPct": 57,
+"opp": 25,
+"oppWinPct": 72,
+"clvDiff": 1.252,
+"clvDiffUG": 0.49,
+"clvUrteil": "traegt bei",
+"ausgangDiff": -0.0346,
+"ausgangUrteil": "kein Urteil",
+"clvAvg": -1.86
 },
 {
 "name": "move_following",
@@ -245,9 +259,9 @@
 },
 {
 "name": "lead_lag_bias",
-"fire": 95,
-"supp": 75,
-"suppWinPct": 56,
+"fire": 96,
+"supp": 76,
+"suppWinPct": 55,
 "opp": 20,
 "oppWinPct": 45,
 "clvDiff": 3.375,
@@ -255,7 +269,7 @@
 "clvUrteil": "traegt bei",
 "ausgangDiff": 0.0515,
 "ausgangUrteil": "traegt bei",
-"clvAvg": -0.76
+"clvAvg": -0.75
 },
 {
 "name": "opener_move",
@@ -301,7 +315,7 @@
 },
 {
 "name": "fixture_congestion",
-"fire": 45,
+"fire": 46,
 "supp": 20,
 "suppWinPct": 60,
 "opp": 11,
@@ -311,7 +325,7 @@
 "clvUrteil": "kein Urteil",
 "ausgangDiff": 0.0099,
 "ausgangUrteil": "kein Urteil",
-"clvAvg": -2.24
+"clvAvg": -2.18
 },
 {
 "name": "league_pressure",
@@ -385,17 +399,17 @@
 },
 {
 "name": "public_static_bias",
-"fire": 7,
+"fire": 8,
 "supp": 2,
 "suppWinPct": 50,
-"opp": 5,
-"oppWinPct": 80,
+"opp": 6,
+"oppWinPct": 83,
 "clvDiff": null,
 "clvDiffUG": null,
 "clvUrteil": "kein Urteil",
 "ausgangDiff": null,
 "ausgangUrteil": "kein Urteil",
-"clvAvg": 0.41
+"clvAvg": -0.03
 },
 {
 "name": "coach_change",
