@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-10-17T10:58:20.398951+00:00",
-"count": 41,
-"covered": 36,
+"generatedAt": "2026-10-17T11:13:50.214084+00:00",
+"count": 42,
+"covered": 38,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -54,33 +54,112 @@
 "English Sky Bet League 1",
 "Finnish Veikkausliiga",
 "French Ligue 1",
+"French Ligue 2",
 "German Bundesliga",
 "German Bundesliga 2",
 "Italian Serie A",
 "Japanese J League",
 "Spanish La Liga",
+"Swedish Superettan",
 "Turkish Super League"
 ],
 "leaguesMitTotals": [],
 "oddsKeysFetched": 50,
 "oddsKeysMitDaten": 50,
-"oddsEvents": 620,
+"oddsEvents": 624,
 "oddsTotals": {
-"versucht": 13,
+"versucht": 15,
 "mitDaten": 0,
 "events": 0,
-"gewollt": 13,
+"gewollt": 15,
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 312098,
-"remaining": 4687902,
+"used": 312286,
+"remaining": 4687714,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
 },
 "ankerQuote": 0.984,
 "games": [
+{
+"matchId": "36091939",
+"home": "Everton",
+"away": "Chelsea",
+"league": "English Premier League",
+"country": "GB",
+"kickoff": "2026-10-17T11:30:00Z",
+"live": false,
+"moneySide": "away",
+"moneyName": "Chelsea",
+"moneySharePct": 60,
+"moneyOdd": 2.46,
+"moneyDir": "in",
+"totVol": 560408,
+"pinnOdd": 2.4,
+"softOdd": 2.35,
+"softN": 51,
+"poly": {
+"vol": 792810,
+"odd": 2.47,
+"sharePct": 71,
+"shareSrc": "geld",
+"key": "epl-eve-che-2026-10-17",
+"sideKey": "Chelsea FC",
+"whales": [
+{
+"wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+"usd": 29405
+},
+{
+"wallet": "0xd3911bd5e070c9ad9a9519c966347802d8f3b109",
+"usd": 24695
+},
+{
+"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+"usd": 17728
+},
+{
+"wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
+"usd": 12661
+},
+{
+"wallet": "0xa2b5bafa01d0f81926a2a88e5628a95b59fc4582",
+"usd": 9231
+},
+{
+"wallet": "0x3f985e3a68f88e6ed8da1a22e1a5eda81c8e0aa1",
+"usd": 7509
+}
+],
+"whaleUsd": 162847
+},
+"pinn": {
+"home": 0.3297,
+"draw": 0.265,
+"away": 0.4053,
+"fav": "away"
+},
+"soft": {
+"home": 0.3285,
+"draw": 0.2671,
+"away": 0.4044,
+"fav": "away",
+"n": 51
+},
+"pinnMovePP": -2.8,
+"pinnMove": {
+"movePP": -2.8,
+"stepPP": -0.0,
+"n": 25,
+"move": true,
+"laeuft": false
+},
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
 {
 "matchId": "36091953",
 "home": "Man City",
@@ -92,143 +171,143 @@
 "moneySide": "home",
 "moneyName": "Man City",
 "moneySharePct": 89,
-"moneyOdd": 1.28,
-"moneyDir": "out",
-"totVol": 542200,
-"pinnOdd": 1.24,
+"moneyOdd": 1.26,
+"moneyDir": "in",
+"totVol": 547235,
+"pinnOdd": 1.25,
 "softOdd": 1.24,
 "softN": 51,
 "poly": {
-"vol": 182866,
-"odd": 1.26,
-"sharePct": 94,
+"vol": 203656,
+"odd": 1.27,
+"sharePct": 95,
 "shareSrc": "geld",
 "key": "epl-mac-ips-2026-10-17",
 "sideKey": "Manchester City FC",
 "whales": [
 {
 "wallet": "0x0235dc24b38772bf3339a9e5ec5db3d3a05fcee5",
-"usd": 24268
+"usd": 26611
 },
 {
 "wallet": "0xbc1dacd4b84582fc310e4213421bca24e82da53c",
-"usd": 7950
+"usd": 7850
+},
+{
+"wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+"usd": 6309
+},
+{
+"wallet": "0xecc558e1dd2164b451766c89d2a28b35d8405fde",
+"usd": 5405
 },
 {
 "wallet": "0xdb06587a02ed4c451107313c7128fafb5165d9ac",
-"usd": 5230
+"usd": 5164
 },
 {
 "wallet": "0x606d65fca4f80b75926c106d0ac8d3ce90bf1aaf",
-"usd": 4937
-},
-{
-"wallet": "0xf9e7477955a374354f6864db1841e19ceeb50a87",
-"usd": 3975
-},
-{
-"wallet": "0x4944507ab714a5549d4f8da9c4a67b0cac0be4c7",
-"usd": 2981
+"usd": 4875
 }
 ],
-"whaleUsd": 57016
+"whaleUsd": 70656
 },
 "pinn": {
-"home": 0.7783,
-"draw": 0.1361,
-"away": 0.0856,
+"home": 0.7697,
+"draw": 0.1398,
+"away": 0.0904,
 "fav": "home"
 },
 "soft": {
-"home": 0.7684,
-"draw": 0.1388,
-"away": 0.0928,
+"home": 0.7682,
+"draw": 0.1383,
+"away": 0.0935,
 "fav": "home",
 "n": 51
 },
-"pinnMovePP": 0.2,
+"pinnMovePP": -0.7,
 "pinnMove": {
-"movePP": 0.2,
-"stepPP": -0.0,
+"movePP": -0.7,
+"stepPP": -0.9,
 "n": 25,
 "move": false,
-"laeuft": false
+"laeuft": true
 },
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
 },
 {
-"matchId": "36091939",
-"home": "Everton",
-"away": "Chelsea",
-"league": "English Premier League",
-"country": "GB",
-"kickoff": "2026-10-17T11:30:00Z",
+"matchId": "36100482",
+"home": "Espanyol",
+"away": "Atletico Madrid",
+"league": "Spanish La Liga",
+"country": "ES",
+"kickoff": "2026-10-17T12:00:00Z",
 "live": false,
 "moneySide": "away",
-"moneyName": "Chelsea",
-"moneySharePct": 59,
-"moneyOdd": 2.5,
-"moneyDir": "out",
-"totVol": 507017,
-"pinnOdd": 2.4,
-"softOdd": 2.35,
-"softN": 51,
+"moneyName": "Atletico Madrid",
+"moneySharePct": 87,
+"moneyOdd": 1.73,
+"moneyDir": "in",
+"totVol": 303418,
+"pinnOdd": 1.71,
+"softOdd": 1.67,
+"softN": 42,
 "poly": {
-"vol": 699496,
-"odd": 2.47,
-"sharePct": 69,
+"vol": 121017,
+"odd": 1.74,
+"sharePct": 85,
 "shareSrc": "geld",
-"key": "epl-eve-che-2026-10-17",
-"sideKey": "Chelsea FC",
+"key": "lal-esp-mad-2026-10-17",
+"sideKey": "Club Atlético de Madrid",
 "whales": [
 {
-"wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-"usd": 29405
+"wallet": "0x0a39b3b29ab3b7dd753aa96fde4ecab3f2dbb0b9",
+"usd": 17250
 },
 {
-"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-"usd": 17728
+"wallet": "0xec5c8d5ba82458ae5c02d886f090d71f5985ce46",
+"usd": 3289
 },
 {
-"wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
-"usd": 12481
+"wallet": "0x89308cc76c6de0ee1dd7dd69dd4438f234a1db72",
+"usd": 2974
 },
 {
-"wallet": "0xa2b5bafa01d0f81926a2a88e5628a95b59fc4582",
-"usd": 9231
+"wallet": "0x53a1a7bbd8c025157adfac80c7c7b2ba630d76b7",
+"usd": 1631
 },
 {
-"wallet": "0x3f985e3a68f88e6ed8da1a22e1a5eda81c8e0aa1",
-"usd": 7509
+"wallet": "0x0f3433d8b7596000bf1046aa822308d93cf67684",
+"usd": 1551
 },
 {
-"wallet": "0x73bcd24d510ff4e4d5feac6aec763c5511e246ce",
-"usd": 6480
+"wallet": "0x5fc7fc92cee6a83dbb4e780f9e057abaf90d443f",
+"usd": 1103
 }
 ],
-"whaleUsd": 141012
+"whaleUsd": 35182
 },
 "pinn": {
-"home": 0.3275,
-"draw": 0.2672,
-"away": 0.4053,
+"home": 0.1849,
+"draw": 0.2476,
+"away": 0.5676,
 "fav": "away"
 },
 "soft": {
-"home": 0.327,
-"draw": 0.269,
-"away": 0.404,
+"home": 0.1909,
+"draw": 0.2426,
+"away": 0.5665,
 "fav": "away",
-"n": 51
+"n": 42
 },
-"pinnMovePP": -2.8,
+"pinnMovePP": 0.0,
 "pinnMove": {
-"movePP": -2.8,
-"stepPP": -0.0,
+"movePP": 0.0,
+"stepPP": -0.9,
 "n": 25,
-"move": true,
+"move": false,
 "laeuft": false
 },
 "verdict": "konsens",
@@ -246,15 +325,15 @@
 "moneySide": "home",
 "moneyName": "Fulham",
 "moneySharePct": 79,
-"moneyOdd": 1.7,
-"moneyDir": "in",
-"totVol": 293048,
+"moneyOdd": 1.71,
+"moneyDir": "out",
+"totVol": 296349,
 "pinnOdd": 1.68,
 "softOdd": 1.65,
 "softN": 51,
 "poly": {
-"vol": 623289,
-"odd": 1.68,
+"vol": 651756,
+"odd": 1.71,
 "sharePct": 98,
 "shareSrc": "geld",
 "key": "epl-ful-hul-2026-10-17",
@@ -262,128 +341,51 @@
 "whales": [
 {
 "wallet": "0x4d3079bd4c73bc0e8f7d9f64a9f64fadbd17a42d",
-"usd": 141015
+"usd": 138645
 },
 {
 "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
-"usd": 27805
-},
-{
-"wallet": "0x0b099e55ca6cc2878d7a4cbdc6ae5f069fda7ce7",
-"usd": 23800
-},
-{
-"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-"usd": 12434
+"usd": 27338
 },
 {
 "wallet": "0xd29312e2446a746bbd94408e1c475f1ec6d7d683",
-"usd": 12245
+"usd": 26534
+},
+{
+"wallet": "0x0b099e55ca6cc2878d7a4cbdc6ae5f069fda7ce7",
+"usd": 23400
+},
+{
+"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+"usd": 12225
 },
 {
 "wallet": "0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
-"usd": 11818
+"usd": 11620
 }
 ],
-"whaleUsd": 240938
+"whaleUsd": 251385
 },
 "pinn": {
-"home": 0.5771,
-"draw": 0.2424,
-"away": 0.1805,
+"home": 0.5767,
+"draw": 0.2422,
+"away": 0.1811,
 "fav": "home"
 },
 "soft": {
 "home": 0.5761,
-"draw": 0.2376,
-"away": 0.1863,
+"draw": 0.2374,
+"away": 0.1864,
 "fav": "home",
 "n": 51
 },
-"pinnMovePP": 1.4,
+"pinnMovePP": 1.3,
 "pinnMove": {
-"movePP": 1.4,
+"movePP": 1.3,
 "stepPP": -0.0,
 "n": 25,
 "move": true,
 "laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36100482",
-"home": "Espanyol",
-"away": "Atletico Madrid",
-"league": "Spanish La Liga",
-"country": "ES",
-"kickoff": "2026-10-17T12:00:00Z",
-"live": false,
-"moneySide": "away",
-"moneyName": "Atletico Madrid",
-"moneySharePct": 87,
-"moneyOdd": 1.74,
-"moneyDir": "flat",
-"totVol": 276124,
-"pinnOdd": 1.72,
-"softOdd": 1.67,
-"softN": 42,
-"poly": {
-"vol": 75976,
-"odd": 1.71,
-"sharePct": 92,
-"shareSrc": "geld",
-"key": "lal-esp-mad-2026-10-17",
-"sideKey": "Club Atlético de Madrid",
-"whales": [
-{
-"wallet": "0x89308cc76c6de0ee1dd7dd69dd4438f234a1db72",
-"usd": 3026
-},
-{
-"wallet": "0x53a1a7bbd8c025157adfac80c7c7b2ba630d76b7",
-"usd": 1659
-},
-{
-"wallet": "0x0f3433d8b7596000bf1046aa822308d93cf67684",
-"usd": 1578
-},
-{
-"wallet": "0x0a39b3b29ab3b7dd753aa96fde4ecab3f2dbb0b9",
-"usd": 1445
-},
-{
-"wallet": "0x5fc7fc92cee6a83dbb4e780f9e057abaf90d443f",
-"usd": 1122
-},
-{
-"wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-"usd": 1027
-}
-],
-"whaleUsd": 15778
-},
-"pinn": {
-"home": 0.1907,
-"draw": 0.2451,
-"away": 0.5643,
-"fav": "away"
-},
-"soft": {
-"home": 0.1937,
-"draw": 0.2414,
-"away": 0.5648,
-"fav": "away",
-"n": 42
-},
-"pinnMovePP": -0.3,
-"pinnMove": {
-"movePP": -0.3,
-"stepPP": -1.3,
-"n": 25,
-"move": false,
-"laeuft": true
 },
 "verdict": "konsens",
 "agree": true,
@@ -402,12 +404,12 @@
 "moneySharePct": 53,
 "moneyOdd": 2.54,
 "moneyDir": "flat",
-"totVol": 239453,
+"totVol": 240435,
 "pinnOdd": 2.44,
 "softOdd": 2.4,
 "softN": 51,
 "poly": {
-"vol": 45538,
+"vol": 46016,
 "odd": 2.53,
 "sharePct": 21,
 "shareSrc": "geld",
@@ -432,9 +434,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.3968,
-"draw": 0.2628,
-"away": 0.3404,
+"home": 0.3964,
+"draw": 0.2631,
+"away": 0.3406,
 "fav": "home",
 "n": 51
 },
@@ -461,14 +463,14 @@
 "moneySide": "home",
 "moneyName": "Roma",
 "moneySharePct": 85,
-"moneyOdd": 1.63,
+"moneyOdd": 1.62,
 "moneyDir": "in",
-"totVol": 236339,
-"pinnOdd": 1.61,
-"softOdd": 1.57,
-"softN": 49,
+"totVol": 237681,
+"pinnOdd": 1.58,
+"softOdd": 1.56,
+"softN": 50,
 "poly": {
-"vol": 147745,
+"vol": 147872,
 "odd": 1.63,
 "sharePct": 62,
 "shareSrc": "preis",
@@ -478,24 +480,24 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.6006,
-"draw": 0.2411,
-"away": 0.1583,
+"home": 0.6106,
+"draw": 0.237,
+"away": 0.1524,
 "fav": "home"
 },
 "soft": {
-"home": 0.604,
-"draw": 0.2357,
-"away": 0.1603,
+"home": 0.606,
+"draw": 0.235,
+"away": 0.159,
 "fav": "home",
-"n": 49
+"n": 50
 },
-"pinnMovePP": -1.2,
+"pinnMovePP": -0.2,
 "pinnMove": {
-"movePP": -1.2,
-"stepPP": 0.0,
+"movePP": -0.2,
+"stepPP": 1.0,
 "n": 25,
-"move": true,
+"move": false,
 "laeuft": false
 },
 "verdict": "konsens",
@@ -513,14 +515,14 @@
 "moneySide": "away",
 "moneyName": "Barcelona",
 "moneySharePct": 88,
-"moneyOdd": 1.48,
-"moneyDir": "flat",
-"totVol": 197738,
-"pinnOdd": 1.46,
-"softOdd": 1.43,
+"moneyOdd": 1.47,
+"moneyDir": "in",
+"totVol": 201514,
+"pinnOdd": 1.47,
+"softOdd": 1.44,
 "softN": 45,
 "poly": {
-"vol": 202764,
+"vol": 204718,
 "odd": 1.48,
 "sharePct": 96,
 "shareSrc": "geld",
@@ -529,7 +531,7 @@
 "whales": [
 {
 "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-"usd": 16477
+"usd": 16488
 },
 {
 "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
@@ -552,28 +554,28 @@
 "usd": 6263
 }
 ],
-"whaleUsd": 85510
+"whaleUsd": 85521
 },
 "pinn": {
-"home": 0.1666,
-"draw": 0.1695,
-"away": 0.664,
+"home": 0.1689,
+"draw": 0.1706,
+"away": 0.6605,
 "fav": "away"
 },
 "soft": {
-"home": 0.1642,
-"draw": 0.1722,
-"away": 0.6636,
+"home": 0.1646,
+"draw": 0.1726,
+"away": 0.6628,
 "fav": "away",
 "n": 45
 },
-"pinnMovePP": -2.0,
+"pinnMovePP": -2.3,
 "pinnMove": {
-"movePP": -2.0,
-"stepPP": -0.0,
+"movePP": -2.3,
+"stepPP": -0.4,
 "n": 25,
 "move": true,
-"laeuft": false
+"laeuft": true
 },
 "verdict": "konsens",
 "agree": true,
@@ -590,15 +592,15 @@
 "moneySide": "away",
 "moneyName": "Napoli",
 "moneySharePct": 81,
-"moneyOdd": 1.79,
-"moneyDir": "flat",
-"totVol": 162755,
+"moneyOdd": 1.78,
+"moneyDir": "in",
+"totVol": 164321,
 "pinnOdd": 1.75,
 "softOdd": 1.7,
-"softN": 49,
+"softN": 50,
 "poly": {
-"vol": 161178,
-"odd": 1.77,
+"vol": 162393,
+"odd": 1.8,
 "sharePct": 98,
 "shareSrc": "geld",
 "key": "sea-ven-nap-2026-10-17",
@@ -606,48 +608,48 @@
 "whales": [
 {
 "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-"usd": 14035
+"usd": 13786
 },
 {
 "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-"usd": 8416
+"usd": 8267
 },
 {
 "wallet": "0x7ea571c40408f340c1c8fc8eaacebab53c1bde7b",
-"usd": 5665
+"usd": 5565
 },
 {
 "wallet": "0x89308cc76c6de0ee1dd7dd69dd4438f234a1db72",
-"usd": 4956
+"usd": 4868
 },
 {
 "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
-"usd": 3476
+"usd": 3414
 },
 {
 "wallet": "0xc6e20729b591f61f81b72b5f6c2be16cbf0f9f16",
-"usd": 2669
+"usd": 2622
 }
 ],
-"whaleUsd": 66367
+"whaleUsd": 65448
 },
 "pinn": {
-"home": 0.2063,
-"draw": 0.2407,
-"away": 0.553,
+"home": 0.2058,
+"draw": 0.2405,
+"away": 0.5538,
 "fav": "away"
 },
 "soft": {
-"home": 0.2053,
-"draw": 0.2418,
-"away": 0.553,
+"home": 0.2057,
+"draw": 0.2414,
+"away": 0.5529,
 "fav": "away",
-"n": 49
+"n": 50
 },
-"pinnMovePP": -1.4,
+"pinnMovePP": -1.3,
 "pinnMove": {
-"movePP": -1.4,
-"stepPP": 0.6,
+"movePP": -1.3,
+"stepPP": 0.7,
 "n": 25,
 "move": true,
 "laeuft": false
@@ -667,23 +669,23 @@
 "moneySide": "home",
 "moneyName": "Erzurum BB",
 "moneySharePct": 93,
-"moneyOdd": 1.23,
-"moneyDir": "in",
-"totVol": 128294,
-"pinnOdd": 1.54,
-"softOdd": 1.17,
+"moneyOdd": 1.25,
+"moneyDir": "out",
+"totVol": 141728,
+"pinnOdd": 1.2,
+"softOdd": 1.2,
 "softN": 33,
 "poly": null,
 "pinn": {
-"home": 0.6124,
-"draw": 0.2591,
-"away": 0.1285,
+"home": 0.7916,
+"draw": 0.1605,
+"away": 0.0479,
 "fav": "home"
 },
 "soft": {
-"home": 0.788,
-"draw": 0.1527,
-"away": 0.0593,
+"home": 0.7736,
+"draw": 0.1637,
+"away": 0.0628,
 "fav": "home",
 "n": 33
 },
@@ -703,60 +705,60 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Kashiwa",
-"moneySharePct": 54,
-"moneyOdd": 4.3,
+"moneySharePct": 51,
+"moneyOdd": 4.4,
 "moneyDir": "out",
-"totVol": 109976,
-"pinnOdd": 4.17,
-"softOdd": 3.65,
-"softN": 33,
+"totVol": 120534,
+"pinnOdd": 3.96,
+"softOdd": 3.6,
+"softN": 32,
 "poly": {
-"vol": 33790,
-"odd": 1.98,
-"sharePct": 85,
+"vol": 47963,
+"odd": 4.26,
+"sharePct": 60,
 "shareSrc": "geld",
 "key": "jap-rey-ngr-2026-10-17",
 "sideKey": "Kashiwa Reysol",
 "whales": [
 {
 "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
-"usd": 2604
+"usd": 1307
 },
 {
 "wallet": "0xf4362f4784eec9e5e3ba93b0b90da08017624591",
-"usd": 1515
-},
-{
-"wallet": "0x52d8da46bcc56e3d9f9b2099ad16904fb0b599ae",
-"usd": 1101
+"usd": 987
 },
 {
 "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
-"usd": 986
+"usd": 537
+},
+{
+"wallet": "0x52d8da46bcc56e3d9f9b2099ad16904fb0b599ae",
+"usd": 512
+},
+{
+"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+"usd": 482
 },
 {
 "wallet": "0x79975d5e2db7641cc5eea0acbaf48570044d5e4b",
-"usd": 818
-},
-{
-"wallet": "0xb5527654d309c6617addabbb64e47931cf35b70c",
-"usd": 802
+"usd": 381
 }
 ],
-"whaleUsd": 9528
+"whaleUsd": 6225
 },
 "pinn": {
-"home": 0.226,
-"draw": 0.2805,
-"away": 0.4935,
+"home": 0.2383,
+"draw": 0.2826,
+"away": 0.4791,
 "fav": "away"
 },
 "soft": {
-"home": 0.2504,
-"draw": 0.2913,
-"away": 0.4583,
+"home": 0.2511,
+"draw": 0.2894,
+"away": 0.4595,
 "fav": "away",
-"n": 33
+"n": 32
 },
 "pinnMovePP": null,
 "pinnMove": null,
@@ -775,14 +777,14 @@
 "moneySide": "home",
 "moneyName": "Newcastle",
 "moneySharePct": 48,
-"moneyOdd": 2.38,
-"moneyDir": "flat",
-"totVol": 107614,
+"moneyOdd": 2.4,
+"moneyDir": "out",
+"totVol": 108135,
 "pinnOdd": 2.33,
 "softOdd": 2.28,
 "softN": 50,
 "poly": {
-"vol": 47428,
+"vol": 47505,
 "odd": 2.35,
 "sharePct": 12,
 "shareSrc": "geld",
@@ -799,7 +801,7 @@
 },
 {
 "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
-"usd": 161
+"usd": 156
 },
 {
 "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
@@ -810,7 +812,7 @@
 "usd": 88
 }
 ],
-"whaleUsd": 1069
+"whaleUsd": 1064
 },
 "pinn": {
 "home": 0.4173,
@@ -819,9 +821,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.4179,
-"draw": 0.2581,
-"away": 0.3241,
+"home": 0.4168,
+"draw": 0.258,
+"away": 0.3253,
 "fav": "home",
 "n": 50
 },
@@ -847,15 +849,15 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "Inter",
-"moneySharePct": 75,
+"moneySharePct": 74,
 "moneyOdd": 1.62,
 "moneyDir": "flat",
-"totVol": 70648,
+"totVol": 73880,
 "pinnOdd": 1.58,
 "softOdd": 1.55,
-"softN": 49,
+"softN": 50,
 "poly": {
-"vol": 31407,
+"vol": 31480,
 "odd": 1.63,
 "sharePct": 62,
 "shareSrc": "preis",
@@ -871,17 +873,69 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.1648,
-"draw": 0.2271,
-"away": 0.6081,
+"home": 0.164,
+"draw": 0.2273,
+"away": 0.6087,
 "fav": "away",
-"n": 49
+"n": 50
 },
 "pinnMovePP": -0.3,
 "pinnMove": {
 "movePP": -0.3,
 "stepPP": 0.0,
 "n": 25,
+"move": false,
+"laeuft": false
+},
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36188478",
+"home": "Middlesbrough",
+"away": "Cardiff",
+"league": "English Sky Bet Championship",
+"country": "GB",
+"kickoff": "2026-10-17T11:30:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Middlesbrough",
+"moneySharePct": 79,
+"moneyOdd": 1.52,
+"moneyDir": "in",
+"totVol": 68504,
+"pinnOdd": 1.53,
+"softOdd": 1.48,
+"softN": 47,
+"poly": {
+"vol": 4400,
+"odd": 1.53,
+"sharePct": 66,
+"shareSrc": "preis",
+"key": "elc-mid-car-2026-10-17",
+"sideKey": "Middlesbrough FC",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.6305,
+"draw": 0.1918,
+"away": 0.1777,
+"fav": "home"
+},
+"soft": {
+"home": 0.633,
+"draw": 0.1946,
+"away": 0.1724,
+"fav": "home",
+"n": 47
+},
+"pinnMovePP": 0.1,
+"pinnMove": {
+"movePP": 0.1,
+"stepPP": -0.7,
+"n": 12,
 "move": false,
 "laeuft": false
 },
@@ -900,14 +954,14 @@
 "moneySide": "home",
 "moneyName": "Leeds",
 "moneySharePct": 44,
-"moneyOdd": 2.46,
-"moneyDir": "out",
-"totVol": 64719,
+"moneyOdd": 2.42,
+"moneyDir": "in",
+"totVol": 64948,
 "pinnOdd": 2.37,
 "softOdd": 2.32,
 "softN": 51,
 "poly": {
-"vol": 21739,
+"vol": 21869,
 "odd": 2.41,
 "sharePct": 42,
 "shareSrc": "preis",
@@ -923,7 +977,7 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.4063,
+"home": 0.4061,
 "draw": 0.2659,
 "away": 0.3279,
 "fav": "home",
@@ -951,28 +1005,32 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "Dortmund",
-"moneySharePct": 68,
-"moneyOdd": 1.6,
-"moneyDir": "flat",
-"totVol": 61144,
+"moneySharePct": 69,
+"moneyOdd": 1.58,
+"moneyDir": "in",
+"totVol": 61893,
 "pinnOdd": 1.56,
 "softOdd": 1.54,
 "softN": 49,
 "poly": {
-"vol": 19377,
+"vol": 25036,
 "odd": 1.6,
-"sharePct": 97,
+"sharePct": 98,
 "shareSrc": "geld",
 "key": "bun-uni-dor-2026-10-17",
 "sideKey": "BV Borussia 09 Dortmund",
 "whales": [
 {
 "wallet": "0x0f3433d8b7596000bf1046aa822308d93cf67684",
-"usd": 1217
+"usd": 2012
 },
 {
 "wallet": "0xce9e8e2faa6cc5dc5d5403174d9de1cd00c310be",
 "usd": 1025
+},
+{
+"wallet": "0xe544dd76d1dfe34bbe6350f3cd38055bdae8e7ff",
+"usd": 992
 },
 {
 "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
@@ -985,13 +1043,9 @@
 {
 "wallet": "0x1ec79c0932ecb281fc830210f046624ab05f12f7",
 "usd": 459
-},
-{
-"wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
-"usd": 428
 }
 ],
-"whaleUsd": 5995
+"whaleUsd": 8681
 },
 "pinn": {
 "home": 0.1692,
@@ -1000,9 +1054,9 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.174,
+"home": 0.1741,
 "draw": 0.2132,
-"away": 0.6128,
+"away": 0.6127,
 "fav": "away",
 "n": 49
 },
@@ -1019,101 +1073,6 @@
 "pinnTotals": null
 },
 {
-"matchId": "36188478",
-"home": "Middlesbrough",
-"away": "Cardiff",
-"league": "English Sky Bet Championship",
-"country": "GB",
-"kickoff": "2026-10-17T11:30:00Z",
-"live": false,
-"moneySide": "home",
-"moneyName": "Middlesbrough",
-"moneySharePct": 77,
-"moneyOdd": 1.54,
-"moneyDir": "out",
-"totVol": 58195,
-"pinnOdd": 1.52,
-"softOdd": 1.47,
-"softN": 47,
-"poly": {
-"vol": 4400,
-"odd": 1.53,
-"sharePct": 66,
-"shareSrc": "preis",
-"key": "elc-mid-car-2026-10-17",
-"sideKey": "Middlesbrough FC",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.634,
-"draw": 0.1875,
-"away": 0.1785,
-"fav": "home"
-},
-"soft": {
-"home": 0.6356,
-"draw": 0.1939,
-"away": 0.1706,
-"fav": "home",
-"n": 47
-},
-"pinnMovePP": 0.5,
-"pinnMove": {
-"movePP": 0.5,
-"stepPP": -0.3,
-"n": 12,
-"move": false,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36100460",
-"home": "Strasbourg",
-"away": "Paris St-G",
-"league": "French Ligue 1",
-"country": "FR",
-"kickoff": "2026-10-17T15:15:00Z",
-"live": false,
-"moneySide": "away",
-"moneyName": "Paris St-G",
-"moneySharePct": 83,
-"moneyOdd": 1.45,
-"moneyDir": "out",
-"totVol": 53457,
-"pinnOdd": 1.41,
-"softOdd": 1.37,
-"softN": 46,
-"poly": null,
-"pinn": {
-"home": 0.1416,
-"draw": 0.1702,
-"away": 0.6881,
-"fav": "away"
-},
-"soft": {
-"home": 0.1428,
-"draw": 0.1748,
-"away": 0.6823,
-"fav": "away",
-"n": 46
-},
-"pinnMovePP": 0.5,
-"pinnMove": {
-"movePP": 0.5,
-"stepPP": 0.0,
-"n": 20,
-"move": false,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
 "matchId": "36188509",
 "home": "Millwall",
 "away": "Lincoln",
@@ -1123,15 +1082,15 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Millwall",
-"moneySharePct": 80,
-"moneyOdd": 1.79,
-"moneyDir": "flat",
-"totVol": 53298,
-"pinnOdd": 1.75,
+"moneySharePct": 79,
+"moneyOdd": 1.81,
+"moneyDir": "out",
+"totVol": 56396,
+"pinnOdd": 1.76,
 "softOdd": 1.71,
 "softN": 47,
 "poly": {
-"vol": 8563,
+"vol": 8710,
 "odd": 1.8,
 "sharePct": 89,
 "shareSrc": "geld",
@@ -1159,33 +1118,147 @@
 "usd": 143
 },
 {
-"wallet": "0xebe6d42fbbd15b89ef9af70e459dd05e20679278",
-"usd": 100
+"wallet": "0x037305f4c448ab309469116141f13ae0c8013e8c",
+"usd": 99
 }
 ],
-"whaleUsd": 2787
+"whaleUsd": 2882
 },
 "pinn": {
-"home": 0.5514,
-"draw": 0.2553,
-"away": 0.1934,
+"home": 0.5476,
+"draw": 0.2577,
+"away": 0.1947,
 "fav": "home"
 },
 "soft": {
-"home": 0.5477,
-"draw": 0.2552,
+"home": 0.5478,
+"draw": 0.2551,
 "away": 0.1971,
 "fav": "home",
 "n": 47
 },
-"pinnMovePP": -2.2,
+"pinnMovePP": -2.6,
 "pinnMove": {
-"movePP": -2.2,
-"stepPP": 0.3,
+"movePP": -2.6,
+"stepPP": -0.0,
 "n": 12,
 "move": true,
 "laeuft": false
 },
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36100460",
+"home": "Strasbourg",
+"away": "Paris St-G",
+"league": "French Ligue 1",
+"country": "FR",
+"kickoff": "2026-10-17T15:15:00Z",
+"live": false,
+"moneySide": "away",
+"moneyName": "Paris St-G",
+"moneySharePct": 83,
+"moneyOdd": 1.45,
+"moneyDir": "flat",
+"totVol": 53895,
+"pinnOdd": 1.41,
+"softOdd": 1.38,
+"softN": 46,
+"poly": null,
+"pinn": {
+"home": 0.1424,
+"draw": 0.1708,
+"away": 0.6868,
+"fav": "away"
+},
+"soft": {
+"home": 0.1431,
+"draw": 0.1748,
+"away": 0.6822,
+"fav": "away",
+"n": 46
+},
+"pinnMovePP": 0.3,
+"pinnMove": {
+"movePP": 0.3,
+"stepPP": -0.1,
+"n": 20,
+"move": false,
+"laeuft": false
+},
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36177548",
+"home": "Wolfsburg",
+"away": "FC Heidenheim",
+"league": "German Bundesliga 2",
+"country": "DE",
+"kickoff": "2026-10-17T11:00:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Wolfsburg",
+"moneySharePct": 80,
+"moneyOdd": 1.6,
+"moneyDir": "in",
+"totVol": 53496,
+"pinnOdd": 1.65,
+"softOdd": 1.3,
+"softN": 42,
+"poly": {
+"vol": 13370,
+"odd": 1.74,
+"sharePct": 87,
+"shareSrc": "geld",
+"key": "bl2-wob-hei-2026-10-17",
+"sideKey": "VfL Wolfsburg",
+"whales": [
+{
+"wallet": "0x59911710f01a9a8fb3470e3c9be8f5b78f6cee89",
+"usd": 3254
+},
+{
+"wallet": "0x29705e5c09678a97e54e03282b8ee5b4bbabe1c9",
+"usd": 500
+},
+{
+"wallet": "0x340ea8b2e6634b7555a61187d1ea443785cd385b",
+"usd": 101
+},
+{
+"wallet": "0xfe70195eec4fe84cea4b9fe759413f0079cf7533",
+"usd": 57
+},
+{
+"wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
+"usd": 43
+},
+{
+"wallet": "0x042d8526350dd13dc836201e6acfbab5981f0b81",
+"usd": 39
+}
+],
+"whaleUsd": 4068
+},
+"pinn": {
+"home": 0.5865,
+"draw": 0.2245,
+"away": 0.189,
+"fav": "home"
+},
+"soft": {
+"home": 0.6764,
+"draw": 0.1824,
+"away": 0.1412,
+"fav": "home",
+"n": 42
+},
+"pinnMovePP": null,
+"pinnMove": null,
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
@@ -1201,14 +1274,14 @@
 "moneySide": "away",
 "moneyName": "Arsenal",
 "moneySharePct": 85,
-"moneyOdd": 1.69,
-"moneyDir": "flat",
-"totVol": 51753,
+"moneyOdd": 1.7,
+"moneyDir": "out",
+"totVol": 51822,
 "pinnOdd": 1.65,
 "softOdd": 1.62,
 "softN": 51,
 "poly": {
-"vol": 21932,
+"vol": 21972,
 "odd": 1.68,
 "sharePct": 60,
 "shareSrc": "preis",
@@ -1254,13 +1327,13 @@
 "moneyName": "Bayern Munich",
 "moneySharePct": 83,
 "moneyOdd": 1.22,
-"moneyDir": "in",
-"totVol": 48812,
+"moneyDir": "flat",
+"totVol": 50788,
 "pinnOdd": 1.2,
 "softOdd": 1.18,
 "softN": 49,
 "poly": {
-"vol": 18413,
+"vol": 18791,
 "odd": 1.23,
 "sharePct": 83,
 "shareSrc": "geld",
@@ -1295,15 +1368,15 @@
 "whaleUsd": 3387
 },
 "pinn": {
-"home": 0.8049,
-"draw": 0.1118,
+"home": 0.805,
+"draw": 0.1117,
 "away": 0.0833,
 "fav": "home"
 },
 "soft": {
 "home": 0.795,
-"draw": 0.1171,
-"away": 0.0878,
+"draw": 0.117,
+"away": 0.088,
 "fav": "home",
 "n": 49
 },
@@ -1330,14 +1403,14 @@
 "moneySide": "home",
 "moneyName": "Brighton",
 "moneySharePct": 82,
-"moneyOdd": 1.56,
-"moneyDir": "out",
-"totVol": 48329,
+"moneyOdd": 1.55,
+"moneyDir": "in",
+"totVol": 48600,
 "pinnOdd": 1.53,
 "softOdd": 1.51,
 "softN": 51,
 "poly": {
-"vol": 20505,
+"vol": 76361,
 "odd": 1.55,
 "sharePct": 64,
 "shareSrc": "preis",
@@ -1353,8 +1426,8 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.6247,
-"draw": 0.2081,
+"home": 0.6248,
+"draw": 0.208,
 "away": 0.1672,
 "fav": "home",
 "n": 51
@@ -1381,22 +1454,47 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Villarreal",
-"moneySharePct": 80,
-"moneyOdd": 1.45,
-"moneyDir": "out",
-"totVol": 46335,
+"moneySharePct": 79,
+"moneyOdd": 1.44,
+"moneyDir": "in",
+"totVol": 47740,
 "pinnOdd": 1.43,
 "softOdd": 1.41,
 "softN": 45,
 "poly": {
-"vol": 15317,
-"odd": 1.46,
-"sharePct": 68,
-"shareSrc": "preis",
+"vol": 19632,
+"odd": 1.44,
+"sharePct": 82,
+"shareSrc": "geld",
 "key": "lal-vil-elc-2026-10-17",
 "sideKey": "Villarreal CF",
-"whales": null,
-"whaleUsd": null
+"whales": [
+{
+"wallet": "0x8bd6ff6899da49ea7fe0dbcf7d36a80e0b205e82",
+"usd": 1007
+},
+{
+"wallet": "0xcc37dfa0597c3a7706d2ad184e77a2040191c4ea",
+"usd": 1007
+},
+{
+"wallet": "0x5fc7fc92cee6a83dbb4e780f9e057abaf90d443f",
+"usd": 755
+},
+{
+"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+"usd": 575
+},
+{
+"wallet": "0x52eda6bae1e88b9db88767975ef8049155496af7",
+"usd": 517
+},
+{
+"wallet": "0x3ac26fbc537af4c2e4f023d4f3ffa06366e4f949",
+"usd": 224
+}
+],
+"whaleUsd": 4981
 },
 "pinn": {
 "home": 0.6768,
@@ -1405,9 +1503,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.6729,
-"draw": 0.1851,
-"away": 0.142,
+"home": 0.6727,
+"draw": 0.1848,
+"away": 0.1425,
 "fav": "home",
 "n": 45
 },
@@ -1434,9 +1532,9 @@
 "moneySide": "home",
 "moneyName": "Lille",
 "moneySharePct": 70,
-"moneyOdd": 2.08,
-"moneyDir": "out",
-"totVol": 43570,
+"moneyOdd": 2.06,
+"moneyDir": "in",
+"totVol": 43829,
 "pinnOdd": 2.03,
 "softOdd": 1.95,
 "softN": 48,
@@ -1448,9 +1546,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.4836,
-"draw": 0.2567,
-"away": 0.2598,
+"home": 0.4834,
+"draw": 0.2565,
+"away": 0.2601,
 "fav": "home",
 "n": 48
 },
@@ -1478,13 +1576,13 @@
 "moneyName": "Real Madrid",
 "moneySharePct": 89,
 "moneyOdd": 1.26,
-"moneyDir": "in",
-"totVol": 43040,
+"moneyDir": "flat",
+"totVol": 43065,
 "pinnOdd": 1.24,
 "softOdd": 1.22,
 "softN": 45,
 "poly": {
-"vol": 18072,
+"vol": 18091,
 "odd": 1.26,
 "sharePct": 80,
 "shareSrc": "preis",
@@ -1500,9 +1598,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.7716,
+"home": 0.7717,
 "draw": 0.1443,
-"away": 0.0841,
+"away": 0.084,
 "fav": "home",
 "n": 45
 },
@@ -1519,6 +1617,120 @@
 "pinnTotals": null
 },
 {
+"matchId": "36175188",
+"home": "Kaiserslautern",
+"away": "Bochum",
+"league": "German Bundesliga 2",
+"country": "DE",
+"kickoff": "2026-10-17T11:00:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Kaiserslautern",
+"moneySharePct": 51,
+"moneyOdd": 2.26,
+"moneyDir": "in",
+"totVol": 40236,
+"pinnOdd": 2.3,
+"softOdd": 2.15,
+"softN": 42,
+"poly": null,
+"pinn": {
+"home": 0.4209,
+"draw": 0.2638,
+"away": 0.3153,
+"fav": "home"
+},
+"soft": {
+"home": 0.4263,
+"draw": 0.2702,
+"away": 0.3036,
+"fav": "home",
+"n": 42
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36188508",
+"home": "Watford",
+"away": "Charlton",
+"league": "English Sky Bet Championship",
+"country": "GB",
+"kickoff": "2026-10-17T11:30:00Z",
+"live": false,
+"moneySide": "away",
+"moneyName": "Charlton",
+"moneySharePct": 43,
+"moneyOdd": 3.25,
+"moneyDir": "out",
+"totVol": 40012,
+"pinnOdd": 3.07,
+"softOdd": 3.0,
+"softN": 44,
+"poly": {
+"vol": 107577,
+"odd": 3.17,
+"sharePct": 3,
+"shareSrc": "geld",
+"key": "elc-wat-cha-2026-10-17",
+"sideKey": "Charlton Athletic FC",
+"whales": [
+{
+"wallet": "0x4a0eecbf4d18cb6b868f30a7b6e75b7905b9a4b1",
+"usd": 275
+},
+{
+"wallet": "0xebe6d42fbbd15b89ef9af70e459dd05e20679278",
+"usd": 225
+},
+{
+"wallet": "0x4408cc367a713840d92693acd35cc205e59e1b6a",
+"usd": 199
+},
+{
+"wallet": "0xf7f0b0b1e9c0fe02ccad926916ee31aef74b912c",
+"usd": 81
+},
+{
+"wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
+"usd": 69
+},
+{
+"wallet": "0x340ea8b2e6634b7555a61187d1ea443785cd385b",
+"usd": 63
+}
+],
+"whaleUsd": 1101
+},
+"pinn": {
+"home": 0.4086,
+"draw": 0.2759,
+"away": 0.3155,
+"fav": "home"
+},
+"soft": {
+"home": 0.4037,
+"draw": 0.2815,
+"away": 0.3147,
+"fav": "home",
+"n": 44
+},
+"pinnMovePP": -3.4,
+"pinnMove": {
+"movePP": -3.4,
+"stepPP": 0.7,
+"n": 12,
+"move": true,
+"laeuft": false
+},
+"verdict": "uneinig",
+"agree": false,
+"pinnTotals": null
+},
+{
 "matchId": "36099847",
 "home": "Werder Bremen",
 "away": "Paderborn",
@@ -1528,10 +1740,10 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Werder Bremen",
-"moneySharePct": 69,
-"moneyOdd": 1.8,
-"moneyDir": "flat",
-"totVol": 38707,
+"moneySharePct": 70,
+"moneyOdd": 1.81,
+"moneyDir": "out",
+"totVol": 39383,
 "pinnOdd": 1.77,
 "softOdd": 1.73,
 "softN": 48,
@@ -1552,9 +1764,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.5423,
-"draw": 0.2311,
-"away": 0.2265,
+"home": 0.5424,
+"draw": 0.2313,
+"away": 0.2263,
 "fav": "home",
 "n": 48
 },
@@ -1563,58 +1775,6 @@
 "movePP": 1.2,
 "stepPP": -0.0,
 "n": 25,
-"move": true,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36188508",
-"home": "Watford",
-"away": "Charlton",
-"league": "English Sky Bet Championship",
-"country": "GB",
-"kickoff": "2026-10-17T11:30:00Z",
-"live": false,
-"moneySide": "home",
-"moneyName": "Watford",
-"moneySharePct": 42,
-"moneyOdd": 2.46,
-"moneyDir": "out",
-"totVol": 33990,
-"pinnOdd": 2.41,
-"softOdd": 2.37,
-"softN": 44,
-"poly": {
-"vol": 4417,
-"odd": 2.67,
-"sharePct": 38,
-"shareSrc": "preis",
-"key": "elc-wat-cha-2026-10-17",
-"sideKey": "Watford FC",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.4017,
-"draw": 0.2798,
-"away": 0.3185,
-"fav": "home"
-},
-"soft": {
-"home": 0.3985,
-"draw": 0.2802,
-"away": 0.3213,
-"fav": "home",
-"n": 44
-},
-"pinnMovePP": 3.5,
-"pinnMove": {
-"movePP": 3.5,
-"stepPP": -1.0,
-"n": 12,
 "move": true,
 "laeuft": false
 },
@@ -1633,68 +1793,105 @@
 "moneySide": "away",
 "moneyName": "Liaoning Tieren FC",
 "moneySharePct": 95,
-"moneyOdd": 1.28,
-"moneyDir": "in",
-"totVol": 31798,
-"pinnOdd": 1.26,
+"moneyOdd": 1.29,
+"moneyDir": "out",
+"totVol": 34341,
+"pinnOdd": 1.27,
 "softOdd": 1.21,
 "softN": 38,
 "poly": {
-"vol": 31658,
-"odd": 1.31,
-"sharePct": 89,
+"vol": 44538,
+"odd": 1.29,
+"sharePct": 90,
 "shareSrc": "geld",
 "key": "chi-hai-tie-2026-10-17",
 "sideKey": "Liaoning Tieren FC",
 "whales": [
 {
 "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-"usd": 3374
+"usd": 3263
 },
 {
 "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
-"usd": 1163
+"usd": 1178
 },
 {
 "wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
-"usd": 760
+"usd": 770
 },
 {
 "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-"usd": 676
+"usd": 685
 },
 {
 "wallet": "0x033af694b9419168d1c8171457d9538ab778fc42",
-"usd": 446
+"usd": 452
 },
 {
-"wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
-"usd": 375
+"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+"usd": 303
 }
 ],
-"whaleUsd": 8574
+"whaleUsd": 8687
 },
 "pinn": {
-"home": 0.0885,
-"draw": 0.1533,
-"away": 0.7581,
+"home": 0.0966,
+"draw": 0.1516,
+"away": 0.7519,
 "fav": "away"
 },
 "soft": {
-"home": 0.0895,
-"draw": 0.1504,
-"away": 0.7602,
+"home": 0.0898,
+"draw": 0.1509,
+"away": 0.7593,
 "fav": "away",
 "n": 38
 },
-"pinnMovePP": -2.0,
+"pinnMovePP": -2.7,
 "pinnMove": {
-"movePP": -2.0,
-"stepPP": -2.0,
-"n": 2,
+"movePP": -2.7,
+"stepPP": -0.6,
+"n": 3,
 "move": true,
 "laeuft": true
 },
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36175572",
+"home": "Lahti",
+"away": "TPS",
+"league": "Finnish Veikkausliiga",
+"country": "FI",
+"kickoff": "2026-10-17T11:00:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Lahti",
+"moneySharePct": 86,
+"moneyOdd": 1.76,
+"moneyDir": "in",
+"totVol": 31879,
+"pinnOdd": 1.78,
+"softOdd": 1.67,
+"softN": 40,
+"poly": null,
+"pinn": {
+"home": 0.543,
+"draw": 0.2393,
+"away": 0.2177,
+"fav": "home"
+},
+"soft": {
+"home": 0.5463,
+"draw": 0.2421,
+"away": 0.2117,
+"fav": "home",
+"n": 40
+},
+"pinnMovePP": null,
+"pinnMove": null,
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
@@ -1710,14 +1907,14 @@
 "moneySide": "home",
 "moneyName": "Tottenham",
 "moneySharePct": 70,
-"moneyOdd": 1.52,
-"moneyDir": "in",
-"totVol": 31747,
+"moneyOdd": 1.53,
+"moneyDir": "out",
+"totVol": 31860,
 "pinnOdd": 1.49,
 "softOdd": 1.46,
 "softN": 50,
 "poly": {
-"vol": 10225,
+"vol": 10244,
 "odd": 1.53,
 "sharePct": 66,
 "shareSrc": "preis",
@@ -1733,8 +1930,8 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.6441,
-"draw": 0.2052,
+"home": 0.644,
+"draw": 0.2053,
 "away": 0.1507,
 "fav": "home",
 "n": 50
@@ -1761,10 +1958,10 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "Stuttgart",
-"moneySharePct": 57,
+"moneySharePct": 56,
 "moneyOdd": 1.87,
-"moneyDir": "out",
-"totVol": 30595,
+"moneyDir": "flat",
+"totVol": 31048,
 "pinnOdd": 1.82,
 "softOdd": 1.78,
 "softN": 49,
@@ -1786,7 +1983,7 @@
 },
 "soft": {
 "home": 0.2395,
-"draw": 0.2308,
+"draw": 0.2307,
 "away": 0.5298,
 "fav": "away",
 "n": 49
@@ -1821,7 +2018,7 @@
 "softOdd": 2.1,
 "softN": 51,
 "poly": {
-"vol": 28887,
+"vol": 28901,
 "odd": 2.2,
 "sharePct": 46,
 "shareSrc": "preis",
@@ -1856,49 +2053,6 @@
 "pinnTotals": null
 },
 {
-"matchId": "36175572",
-"home": "Lahti",
-"away": "TPS",
-"league": "Finnish Veikkausliiga",
-"country": "FI",
-"kickoff": "2026-10-17T11:00:00Z",
-"live": false,
-"moneySide": "home",
-"moneyName": "Lahti",
-"moneySharePct": 91,
-"moneyOdd": 1.79,
-"moneyDir": "out",
-"totVol": 25568,
-"pinnOdd": 1.78,
-"softOdd": 1.7,
-"softN": 41,
-"poly": null,
-"pinn": {
-"home": 0.543,
-"draw": 0.2393,
-"away": 0.2177,
-"fav": "home"
-},
-"soft": {
-"home": 0.5424,
-"draw": 0.2385,
-"away": 0.2191,
-"fav": "home",
-"n": 41
-},
-"pinnMovePP": -0.6,
-"pinnMove": {
-"movePP": -0.6,
-"stepPP": -0.6,
-"n": 2,
-"move": false,
-"laeuft": true
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
 "matchId": "36100459",
 "home": "Osasuna",
 "away": "Racing Santander",
@@ -1910,10 +2064,10 @@
 "moneyName": "Osasuna",
 "moneySharePct": 81,
 "moneyOdd": 2.04,
-"moneyDir": "in",
+"moneyDir": "flat",
 "totVol": 24379,
 "pinnOdd": 2.01,
-"softOdd": 2.0,
+"softOdd": 1.99,
 "softN": 45,
 "poly": {
 "vol": 13459,
@@ -1932,9 +2086,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.4785,
-"draw": 0.2573,
-"away": 0.2642,
+"home": 0.4787,
+"draw": 0.2574,
+"away": 0.2639,
 "fav": "home",
 "n": 45
 },
@@ -1951,113 +2105,33 @@
 "pinnTotals": null
 },
 {
-"matchId": "36177548",
-"home": "Wolfsburg",
-"away": "FC Heidenheim",
+"matchId": "36180360",
+"home": "Greuther Furth",
+"away": "Braunschweig",
 "league": "German Bundesliga 2",
 "country": "DE",
 "kickoff": "2026-10-17T11:00:00Z",
-"live": false,
+"live": true,
 "moneySide": "home",
-"moneyName": "Wolfsburg",
-"moneySharePct": 68,
-"moneyOdd": 1.69,
-"moneyDir": "flat",
-"totVol": 21608,
-"pinnOdd": 1.65,
-"softOdd": 1.62,
-"softN": 43,
-"poly": {
-"vol": 13370,
-"odd": 1.74,
-"sharePct": 87,
-"shareSrc": "geld",
-"key": "bl2-wob-hei-2026-10-17",
-"sideKey": "VfL Wolfsburg",
-"whales": [
-{
-"wallet": "0x59911710f01a9a8fb3470e3c9be8f5b78f6cee89",
-"usd": 3254
-},
-{
-"wallet": "0x29705e5c09678a97e54e03282b8ee5b4bbabe1c9",
-"usd": 500
-},
-{
-"wallet": "0x340ea8b2e6634b7555a61187d1ea443785cd385b",
-"usd": 101
-},
-{
-"wallet": "0xfe70195eec4fe84cea4b9fe759413f0079cf7533",
-"usd": 57
-},
-{
-"wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
-"usd": 43
-},
-{
-"wallet": "0x042d8526350dd13dc836201e6acfbab5981f0b81",
-"usd": 39
-}
-],
-"whaleUsd": 4068
-},
-"pinn": {
-"home": 0.5853,
-"draw": 0.2257,
-"away": 0.189,
-"fav": "home"
-},
-"soft": {
-"home": 0.5711,
-"draw": 0.2181,
-"away": 0.2108,
-"fav": "home",
-"n": 43
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36175188",
-"home": "Kaiserslautern",
-"away": "Bochum",
-"league": "German Bundesliga 2",
-"country": "DE",
-"kickoff": "2026-10-17T11:00:00Z",
-"live": false,
-"moneySide": "home",
-"moneyName": "Kaiserslautern",
-"moneySharePct": 43,
-"moneyOdd": 2.36,
-"moneyDir": "flat",
-"totVol": 20439,
-"pinnOdd": 2.31,
-"softOdd": 2.2,
+"moneyName": "Greuther Furth",
+"moneySharePct": 61,
+"moneyOdd": 2.38,
+"moneyDir": "out",
+"totVol": 20889,
+"pinnOdd": 2.11,
+"softOdd": 2.15,
 "softN": 42,
-"poly": {
-"vol": 5425,
-"odd": 2.41,
-"sharePct": 42,
-"shareSrc": "preis",
-"key": "bl2-fck-boc-2026-10-17",
-"sideKey": "1. FC Kaiserslautern",
-"whales": null,
-"whaleUsd": null
-},
+"poly": null,
 "pinn": {
-"home": 0.4189,
-"draw": 0.2659,
-"away": 0.3152,
+"home": 0.4581,
+"draw": 0.2453,
+"away": 0.2965,
 "fav": "home"
 },
 "soft": {
-"home": 0.4194,
-"draw": 0.2617,
-"away": 0.319,
+"home": 0.4245,
+"draw": 0.2571,
+"away": 0.3183,
 "fav": "home",
 "n": 42
 },
@@ -2077,12 +2151,12 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "Luton",
-"moneySharePct": 78,
-"moneyOdd": 2.02,
-"moneyDir": "flat",
-"totVol": 17179,
-"pinnOdd": 1.92,
-"softOdd": 1.91,
+"moneySharePct": 72,
+"moneyOdd": 2.06,
+"moneyDir": "out",
+"totVol": 20686,
+"pinnOdd": 1.97,
+"softOdd": 1.95,
 "softN": 40,
 "poly": {
 "vol": 1207,
@@ -2095,69 +2169,60 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.2556,
-"draw": 0.2439,
-"away": 0.5005,
+"home": 0.2668,
+"draw": 0.2456,
+"away": 0.4876,
 "fav": "away"
 },
 "soft": {
-"home": 0.2644,
-"draw": 0.2504,
-"away": 0.4851,
+"home": 0.2726,
+"draw": 0.2488,
+"away": 0.4786,
 "fav": "away",
 "n": 40
 },
-"pinnMovePP": 0.0,
+"pinnMovePP": -1.3,
 "pinnMove": {
-"movePP": 0.0,
-"stepPP": 0.0,
+"movePP": -1.3,
+"stepPP": -1.3,
 "n": 2,
-"move": false,
-"laeuft": false
+"move": true,
+"laeuft": true
 },
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
 },
 {
-"matchId": "36180360",
-"home": "Greuther Furth",
-"away": "Braunschweig",
-"league": "German Bundesliga 2",
-"country": "DE",
+"matchId": "36181098",
+"home": "Ljungskile",
+"away": "IK Brage",
+"league": "Swedish Superettan",
+"country": "SE",
 "kickoff": "2026-10-17T11:00:00Z",
-"live": false,
+"live": true,
 "moneySide": "home",
-"moneyName": "Greuther Furth",
-"moneySharePct": 49,
-"moneyOdd": 2.22,
-"moneyDir": "out",
-"totVol": 8912,
-"pinnOdd": 2.12,
-"softOdd": 2.05,
-"softN": 43,
-"poly": {
-"vol": 5773,
-"odd": 2.2,
-"sharePct": 46,
-"shareSrc": "preis",
-"key": "bl2-fur-bra-2026-10-17",
-"sideKey": "SpVgg Greuther Fürth",
-"whales": null,
-"whaleUsd": null
-},
+"moneyName": "Ljungskile",
+"moneySharePct": 59,
+"moneyOdd": 2.1,
+"moneyDir": "in",
+"totVol": 15527,
+"pinnOdd": 2.17,
+"softOdd": 2.01,
+"softN": 38,
+"poly": null,
 "pinn": {
-"home": 0.4561,
-"draw": 0.2473,
-"away": 0.2966,
+"home": 0.4291,
+"draw": 0.2771,
+"away": 0.2937,
 "fav": "home"
 },
 "soft": {
-"home": 0.4481,
-"draw": 0.2486,
-"away": 0.3033,
+"home": 0.4509,
+"draw": 0.2691,
+"away": 0.2799,
 "fav": "home",
-"n": 43
+"n": 38
 },
 "pinnMovePP": null,
 "pinnMove": null,
@@ -2177,13 +2242,13 @@
 "moneyName": "Galatasaray",
 "moneySharePct": 81,
 "moneyOdd": 1.41,
-"moneyDir": "in",
-"totVol": 8103,
+"moneyDir": "flat",
+"totVol": 8118,
 "pinnOdd": 1.39,
 "softOdd": 1.36,
 "softN": 42,
 "poly": {
-"vol": 16822,
+"vol": 17623,
 "odd": 1.44,
 "sharePct": 99,
 "shareSrc": "geld",
@@ -2215,29 +2280,75 @@
 "usd": 388
 }
 ],
-"whaleUsd": 9930
+"whaleUsd": 10088
 },
 "pinn": {
-"home": 0.1275,
-"draw": 0.1802,
-"away": 0.6923,
+"home": 0.1265,
+"draw": 0.1794,
+"away": 0.6942,
 "fav": "away"
 },
 "soft": {
-"home": 0.1315,
+"home": 0.131,
 "draw": 0.1832,
-"away": 0.6853,
+"away": 0.6858,
 "fav": "away",
 "n": 42
 },
-"pinnMovePP": -0.1,
+"pinnMovePP": 0.1,
 "pinnMove": {
-"movePP": -0.1,
-"stepPP": -0.0,
+"movePP": 0.1,
+"stepPP": 0.1,
 "n": 3,
 "move": false,
 "laeuft": false
 },
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36184046",
+"home": "Metz",
+"away": "Sochaux",
+"league": "French Ligue 2",
+"country": "FR",
+"kickoff": "2026-10-17T12:00:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Metz",
+"moneySharePct": 80,
+"moneyOdd": 1.85,
+"moneyDir": "out",
+"totVol": 1169,
+"pinnOdd": 1.8,
+"softOdd": 1.75,
+"softN": 45,
+"poly": {
+"vol": 1703,
+"odd": 1.83,
+"sharePct": 55,
+"shareSrc": "preis",
+"key": "fr2-met-fcs-2026-10-17",
+"sideKey": "FC Metz",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.5334,
+"draw": 0.2588,
+"away": 0.2078,
+"fav": "home"
+},
+"soft": {
+"home": 0.5277,
+"draw": 0.261,
+"away": 0.2114,
+"fav": "home",
+"n": 45
+},
+"pinnMovePP": null,
+"pinnMove": null,
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
@@ -2252,10 +2363,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Nomme Utd",
-"moneySharePct": 93,
-"moneyOdd": 1.02,
+"moneySharePct": 95,
+"moneyOdd": 1.01,
 "moneyDir": "in",
-"totVol": 31477,
+"totVol": 42331,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -2270,7 +2381,7 @@
 "ankerGrund": {
 "spiel": "Nomme Utd v Nomme Kalju",
 "grund": "kein_kandidat",
-"naechster": "Newcastle United v Aston Villa"
+"naechster": "Nordic United FC v Norrby IF"
 }
 },
 {
@@ -2284,15 +2395,15 @@
 "moneySide": "home",
 "moneyName": "Tegevajaro Miyazaki",
 "moneySharePct": 53,
-"moneyOdd": 2.42,
+"moneyOdd": 2.44,
 "moneyDir": "out",
-"totVol": 25935,
+"totVol": 28557,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
 "poly": {
-"vol": 58069,
-"odd": 2.27,
+"vol": 59386,
+"odd": 2.41,
 "sharePct": 95,
 "shareSrc": "geld",
 "key": "ja2-teg-jub-2026-10-17",
@@ -2300,30 +2411,30 @@
 "whales": [
 {
 "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
-"usd": 7484
+"usd": 7061
 },
 {
 "wallet": "0x10a6fadcbacd66330862206f6199b197e3ad4d8b",
-"usd": 5225
+"usd": 4928
 },
 {
 "wallet": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
-"usd": 2324
+"usd": 2192
 },
 {
 "wallet": "0xd29312e2446a746bbd94408e1c475f1ec6d7d683",
-"usd": 2061
+"usd": 1944
 },
 {
 "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-"usd": 1031
+"usd": 973
 },
 {
 "wallet": "0xa6ded03ba993d58d265dc8fa3f6ddda3d926256c",
-"usd": 808
+"usd": 762
 }
 ],
-"whaleUsd": 19432
+"whaleUsd": 18703
 },
 "pinn": null,
 "soft": null,
@@ -2348,9 +2459,9 @@
 "moneySide": "away",
 "moneyName": "Bodo Glimt",
 "moneySharePct": 91,
-"moneyOdd": 1.29,
+"moneyOdd": 1.3,
 "moneyDir": "out",
-"totVol": 23157,
+"totVol": 25532,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -2377,13 +2488,13 @@
 "league": "Vietnamese V-League",
 "country": "VN",
 "kickoff": "2026-10-17T11:00:00Z",
-"live": false,
+"live": true,
 "moneySide": "draw",
 "moneyName": "The Draw",
-"moneySharePct": 93,
-"moneyOdd": 2.88,
-"moneyDir": "out",
-"totVol": 16764,
+"moneySharePct": 91,
+"moneyOdd": 2.56,
+"moneyDir": "in",
+"totVol": 23002,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -2399,59 +2510,19 @@
 "spiel": "Hong Linh Ha Tinh v Song Lam Nghe An",
 "grund": "kein_kandidat"
 }
-},
-{
-"matchId": "36198946",
-"home": "Kagoshima Utd",
-"away": "Ehime",
-"league": "Japanese J League 3",
-"country": "JP",
-"kickoff": "2026-10-17T09:00:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Kagoshima Utd",
-"moneySharePct": 85,
-"moneyOdd": 1.01,
-"moneyDir": "in",
-"totVol": 16442,
-"pinnOdd": null,
-"softOdd": null,
-"softN": null,
-"poly": null,
-"pinn": null,
-"soft": null,
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "no_anchor",
-"agree": null,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Kagoshima Utd v Ehime",
-"grund": "kein_kandidat",
-"naechster": "Newcastle United v Aston Villa"
-}
 }
 ],
 "ankerN": 64,
-"ankerNOffen": 146,
+"ankerNOffen": 150,
 "ankerMit": 63,
 "ankerDiagnose": {
 "nach": {
-"kein_kandidat": 78,
-"unerklaert": 1,
+"kein_kandidat": 81,
 "zeit": 1,
-"name": 3
+"unerklaert": 1,
+"name": 4
 },
 "beispiele": [
-{
-"spiel": "Shenzhen Juniors FC v Dalian Kun City FC",
-"kandidat": "Dalian Yingbo v Shenzhen Peng City FC",
-"key": "soccer_china_superleague",
-"score": 0.67,
-"grund": "unerklaert",
-"matchId": "36198989",
-"liga": "Chinese League 1"
-},
 {
 "spiel": "Al Arabi Kuwait v Homs Al Fidaa SC",
 "kandidat": "Al-Fateh v Al-Khaleej",
@@ -2461,6 +2532,15 @@
 "abstandH": 31.0,
 "matchId": "36196593",
 "liga": "AFC Challenge League"
+},
+{
+"spiel": "Shenzhen Juniors FC v Dalian Kun City FC",
+"kandidat": "Dalian Yingbo v Shenzhen Peng City FC",
+"key": "soccer_china_superleague",
+"score": 0.67,
+"grund": "unerklaert",
+"matchId": "36198989",
+"liga": "Chinese League 1"
 },
 {
 "spiel": "Hangzhou Linping Wuyue v Shandong Taishan B",
@@ -2479,6 +2559,15 @@
 "grund": "name",
 "matchId": "36199404",
 "liga": "English Premier League 2 - Div 1"
+},
+{
+"spiel": "PK-35 RY v SJK 2",
+"kandidat": "Ilves Tampere v SJK Seinäjoki",
+"key": "soccer_finland_veikkausliiga",
+"score": 0.5,
+"grund": "name",
+"matchId": "36180811",
+"liga": "Finnish Ykkosliiga"
 },
 {
 "spiel": "Ham-Kam v Bodo Glimt",
