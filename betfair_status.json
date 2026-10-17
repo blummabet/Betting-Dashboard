@@ -34,7 +34,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "nur 116 von 270 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Louletano v Rio Ave (Portuguese Cup); Fenerbahce v Alanyaspor (Turkish Super League); Al Riffa v East Riffa (Bahraini Premier)"
+        "nur 118 von 272 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Maccabi Netanya v Hapoel Kiryat Shmona (Israeli Premier League); Bnei Sakhnin v Hapoel Petach Tikva (Israeli Premier League); Apollon Limassol v Nea Salamis (Cypriot 1st Division)"
       ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
@@ -90,21 +90,22 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 311591 verbraucht, 4688409 uebrig"
+      "note": "Kontingent: 311747 verbraucht, 4688253 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 4,
+      "nFail": 5,
       "failures": [
         "Ham-Kam v Bodo Glimt (Norwegian Eliteserien): name — bester Kandidat „HamKam v Bodø/Glimt“",
         "Al Arabi Kuwait v Homs Al Fidaa SC (AFC Challenge League): zeit — bester Kandidat „Al-Fateh v Al-Khaleej“ · 31.0h Anpfiff-Abstand",
+        "Shenzhen Juniors FC v Dalian Kun City FC (Chinese League 1): unerklaert — bester Kandidat „Dalian Yingbo v Shenzhen Peng City FC“",
         "Hangzhou Linping Wuyue v Shandong Taishan B (Chinese League 2): name — bester Kandidat „Shandong Luneng Taishan FC v Zhejiang“",
         "Liverpool U21 v Reading U21 (English Premier League 2 - Div 1): name — bester Kandidat „Brentford v Liverpool“"
       ],
-      "note": "ohne Anker: kein_kandidat 84 · name 3 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 83 · kein_pinnacle 1 · name 3 · unerklaert 1 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -113,7 +114,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 0"
+      "note": "Quelle ohne Pinnacle: 1 — Kashiwa v Nagoya (33 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -122,7 +123,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 9 gewollt, 9 abgerufen, 0 mit Daten"
+      "note": "Totals: 10 gewollt, 10 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -189,5 +190,5 @@
     }
   ],
   "nFail": 2,
-  "generatedAt": "2026-10-17T10:13:44.951708+00:00"
+  "generatedAt": "2026-10-17T10:29:26.218103+00:00"
 }
