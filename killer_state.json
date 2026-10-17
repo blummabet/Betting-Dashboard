@@ -258,8 +258,8 @@
    "polySide": "AS Roma",
    "pinnMovePP": -0.9,
    "punkte": {
-    "punkte": 8,
-    "moeglich": 10,
+    "punkte": 11,
+    "moeglich": 13,
     "dauerH": 5.78,
     "teile": [
      {
@@ -278,8 +278,8 @@
       },
       "geld": {
        "anteil": 0.883,
-       "betrag": 297477,
-       "gesamt": 336893,
+       "betrag": 303292,
+       "gesamt": 343479,
        "waehrung": "EUR",
        "quelle": "geld"
       },
@@ -328,13 +328,25 @@
      {
       "buch": "STAKE",
       "name": "Stake-Highroller",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "geld": null,
-      "text": "Stake-Highroller nicht erhoben"
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "$1.200 Highroller-Geld auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "3 Wetten, nicht eine einzelne"
+      },
+      "geld": {
+       "anteil": 0.2002,
+       "betrag": 1200,
+       "gesamt": 5995,
+       "waehrung": "USD",
+       "quelle": "geld"
+      },
+      "text": "$1.200 Highroller-Geld auf derselben Seite"
      },
      {
       "buch": "ZEIT",
@@ -395,32 +407,32 @@
    "polySide": "FC Internazionale Milano",
    "pinnMovePP": 0.3,
    "punkte": {
-    "punkte": 8,
-    "moeglich": 10,
+    "punkte": 7,
+    "moeglich": 13,
     "dauerH": 0.26,
     "teile": [
      {
       "buch": "BF",
       "name": "Betfair",
       "status": "ja",
-      "punkte": 3,
+      "punkte": 2,
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 86% auf der Seite"
+       "text": "Geld 84% auf der Seite"
       },
       "tiefe": {
-       "ok": true,
+       "ok": false,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.856,
-       "betrag": 261111,
-       "gesamt": 305036,
+       "anteil": 0.84,
+       "betrag": 294648,
+       "gesamt": 350771,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 86% auf der Seite"
+      "text": "Geld 84% auf der Seite"
      },
      {
       "buch": "POLY",
@@ -465,13 +477,25 @@
      {
       "buch": "STAKE",
       "name": "Stake-Highroller",
-      "status": "unbekannt",
+      "status": "nein",
       "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "geld": null,
-      "text": "Stake-Highroller nicht erhoben"
+      "moeglich": 3,
+      "grund": {
+       "ok": false,
+       "text": "$5.000 Highroller-Geld auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "5 Wetten, nicht eine einzelne"
+      },
+      "geld": {
+       "anteil": 0.3462,
+       "betrag": 5000,
+       "gesamt": 14443,
+       "waehrung": "USD",
+       "quelle": "geld"
+      },
+      "text": "$5.000 Highroller-Geld auf derselben Seite"
      },
      {
       "buch": "ZEIT",
@@ -492,6 +516,380 @@
    "gehaltenSeit": "2026-10-17T15:44:13.721484+00:00",
    "zuletztAktiv": "2026-10-17T15:44:13.721484+00:00",
    "haltePreis": 1.62,
+   "aktiv": true
+  },
+  "36180545|Match Odds": {
+   "matchId": "36180545",
+   "home": "Viking",
+   "away": "Fredrikstad",
+   "league": "Norwegian Eliteserien",
+   "kickoff": "2026-10-17T16:00:00Z",
+   "markt": "Match Odds",
+   "seite": "home",
+   "name": "Viking",
+   "odd": 1.43,
+   "entryOdd": 1.45,
+   "anteilPct": 80,
+   "stufe": 1,
+   "verstaerker": [
+    {
+     "art": "poly",
+     "text": "Poly Preis 72%",
+     "gewicht": 12
+    },
+    {
+     "art": "pinn",
+     "text": "Pinnacle stimmt zu",
+     "gewicht": 10
+    }
+   ],
+   "rang": 80.0,
+   "track": null,
+   "streak": null,
+   "poly": {
+    "anteilPct": 72,
+    "usd": 3529,
+    "odd": 1.4
+   },
+   "polyStatus": "ja",
+   "polyKey": "nor-vik-ffk-2026-10-17",
+   "polySide": "Viking FK",
+   "pinnMovePP": null,
+   "punkte": {
+    "punkte": 7,
+    "moeglich": 10,
+    "dauerH": 0.02,
+    "teile": [
+     {
+      "buch": "BF",
+      "name": "Betfair",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Geld 80% auf der Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "frischer Zufluss und Quote zieht mit"
+      },
+      "geld": {
+       "anteil": 0.802,
+       "betrag": 11762,
+       "gesamt": 14666,
+       "waehrung": "EUR",
+       "quelle": "geld"
+      },
+      "text": "Geld 80% auf der Seite"
+     },
+     {
+      "buch": "POLY",
+      "name": "Polymarket",
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Poly-Preis 72% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein bewiesenes Wallet auf der Seite"
+      },
+      "geld": {
+       "anteil": 0.72,
+       "betrag": null,
+       "gesamt": 3529,
+       "waehrung": "USD",
+       "quelle": "preis"
+      },
+      "text": "Poly-Preis 72% auf derselben Seite"
+     },
+     {
+      "buch": "PIN",
+      "name": "Pinnacle",
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "hat dieselbe Seite als Favorit"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein Move gemessen"
+      },
+      "geld": null,
+      "text": "hat dieselbe Seite als Favorit"
+     },
+     {
+      "buch": "STAKE",
+      "name": "Stake-Highroller",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Stake-Highroller nicht erhoben"
+     },
+     {
+      "buch": "ZEIT",
+      "name": "Dauer",
+      "status": "nein",
+      "punkte": 0,
+      "moeglich": 1,
+      "grund": {
+       "ok": false,
+       "text": "steht seit 0.0h vor Anpfiff"
+      },
+      "tiefe": null,
+      "text": "steht seit 0.0h vor Anpfiff"
+     }
+    ]
+   },
+   "wertVsPinn": null,
+   "gehaltenSeit": "2026-10-17T15:58:32.238110+00:00",
+   "zuletztAktiv": "2026-10-17T15:58:32.238110+00:00",
+   "haltePreis": 1.43,
+   "aktiv": true
+  },
+  "36199087|Match Odds": {
+   "matchId": "36199087",
+   "home": "Sekhukhune United",
+   "away": "Marumo Gallants FC",
+   "league": "South African Premier Division",
+   "kickoff": "2026-10-17T16:00:00Z",
+   "markt": "Match Odds",
+   "seite": "home",
+   "name": "Sekhukhune United",
+   "odd": 1.8,
+   "entryOdd": 1.91,
+   "anteilPct": 80,
+   "stufe": 2,
+   "verstaerker": [],
+   "rang": 58.0,
+   "track": null,
+   "streak": null,
+   "poly": null,
+   "polyStatus": "unbekannt",
+   "polyKey": null,
+   "polySide": null,
+   "pinnMovePP": null,
+   "punkte": {
+    "punkte": 3,
+    "moeglich": 4,
+    "dauerH": 0.02,
+    "teile": [
+     {
+      "buch": "BF",
+      "name": "Betfair",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Geld 80% auf der Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "frischer Zufluss und Quote zieht mit"
+      },
+      "geld": {
+       "anteil": 0.798,
+       "betrag": 2415,
+       "gesamt": 3026,
+       "waehrung": "EUR",
+       "quelle": "geld"
+      },
+      "text": "Geld 80% auf der Seite"
+     },
+     {
+      "buch": "POLY",
+      "name": "Polymarket",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Polymarket nicht erhoben"
+     },
+     {
+      "buch": "PIN",
+      "name": "Pinnacle",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Pinnacle nicht erhoben"
+     },
+     {
+      "buch": "STAKE",
+      "name": "Stake-Highroller",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Stake-Highroller nicht erhoben"
+     },
+     {
+      "buch": "ZEIT",
+      "name": "Dauer",
+      "status": "nein",
+      "punkte": 0,
+      "moeglich": 1,
+      "grund": {
+       "ok": false,
+       "text": "steht seit 0.0h vor Anpfiff"
+      },
+      "tiefe": null,
+      "text": "steht seit 0.0h vor Anpfiff"
+     }
+    ]
+   },
+   "wertVsPinn": null,
+   "gehaltenSeit": "2026-10-17T15:58:32.238110+00:00",
+   "zuletztAktiv": "2026-10-17T15:58:32.238110+00:00",
+   "haltePreis": 1.8,
+   "aktiv": true
+  },
+  "36176794|Match Odds": {
+   "matchId": "36176794",
+   "home": "Fenerbahce",
+   "away": "Alanyaspor",
+   "league": "Turkish Super League",
+   "kickoff": "2026-10-17T16:00:00Z",
+   "markt": "Match Odds",
+   "seite": "home",
+   "name": "Fenerbahce",
+   "odd": 1.3,
+   "entryOdd": 1.32,
+   "anteilPct": 87,
+   "stufe": 2,
+   "verstaerker": [
+    {
+     "art": "pinn",
+     "text": "Pinnacle stimmt zu",
+     "gewicht": 10
+    },
+    {
+     "art": "pinnMove",
+     "text": "Pinnacle zieht mit +1.1pp",
+     "gewicht": 14
+    }
+   ],
+   "rang": 82.7,
+   "track": null,
+   "streak": null,
+   "poly": null,
+   "polyStatus": "unbekannt",
+   "polyKey": null,
+   "polySide": null,
+   "pinnMovePP": 1.1,
+   "punkte": {
+    "punkte": 8,
+    "moeglich": 10,
+    "dauerH": 0.02,
+    "teile": [
+     {
+      "buch": "BF",
+      "name": "Betfair",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Geld 87% auf der Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "frischer Zufluss und Quote zieht mit"
+      },
+      "geld": {
+       "anteil": 0.868,
+       "betrag": 30650,
+       "gesamt": 35311,
+       "waehrung": "EUR",
+       "quelle": "geld"
+      },
+      "text": "Geld 87% auf der Seite"
+     },
+     {
+      "buch": "POLY",
+      "name": "Polymarket",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Polymarket nicht erhoben"
+     },
+     {
+      "buch": "PIN",
+      "name": "Pinnacle",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "hat dieselbe Seite als Favorit"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "Move +1.1pp in unsere Richtung"
+      },
+      "geld": null,
+      "text": "hat dieselbe Seite als Favorit"
+     },
+     {
+      "buch": "STAKE",
+      "name": "Stake-Highroller",
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "$1.822 Highroller-Geld auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "2 Wetten, nicht eine einzelne"
+      },
+      "geld": {
+       "anteil": 0.481,
+       "betrag": 1822,
+       "gesamt": 3788,
+       "waehrung": "USD",
+       "quelle": "geld"
+      },
+      "text": "$1.822 Highroller-Geld auf derselben Seite"
+     },
+     {
+      "buch": "ZEIT",
+      "name": "Dauer",
+      "status": "nein",
+      "punkte": 0,
+      "moeglich": 1,
+      "grund": {
+       "ok": false,
+       "text": "steht seit 0.0h vor Anpfiff"
+      },
+      "tiefe": null,
+      "text": "steht seit 0.0h vor Anpfiff"
+     }
+    ]
+   },
+   "wertVsPinn": -0.0205,
+   "gehaltenSeit": "2026-10-17T15:58:32.238110+00:00",
+   "zuletztAktiv": "2026-10-17T15:58:32.238110+00:00",
+   "haltePreis": 1.3,
    "aktiv": true
   }
  }
