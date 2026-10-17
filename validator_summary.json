@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-10-16T21:10:07.514461+00:00",
-  "checked": 84,
+  "timestamp": "2026-10-17T07:16:43.837632+00:00",
+  "checked": 85,
   "errors": 0,
   "warnings": 66,
-  "infos": 258,
+  "infos": 263,
   "issues": [
     {
       "date": "17.10.2026",
@@ -615,7 +615,7 @@
       "league": "La Liga",
       "severity": "INFO",
       "code": "ASYMMETRIC_STAKE_SCORES",
-      "msg": "Score-Differenz 4.5 Punkte: Atletico Madrid (9.0) vs Espanyol (4.5). Pick-Richtung sehr klar — Favoritenpflicht prüfen."
+      "msg": "Score-Differenz 4.6 Punkte: Atletico Madrid (9.1) vs Espanyol (4.5). Pick-Richtung sehr klar — Favoritenpflicht prüfen."
     },
     {
       "date": "17.10.2026",
@@ -643,15 +643,6 @@
       "severity": "INFO",
       "code": "TEAM_OVER_HOME_LOW_FV",
       "msg": "Espanyol expH≈0.95 (statischer Proxy) → FV über 1.5 = 24.6%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger."
-    },
-    {
-      "date": "17.10.2026",
-      "home": "Villarreal",
-      "away": "Elche",
-      "league": "La Liga",
-      "severity": "INFO",
-      "code": "LOW_MOTIV_CARDS_CHECK",
-      "msg": "Elche: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen."
     },
     {
       "date": "17.10.2026",
@@ -1065,7 +1056,7 @@
       "league": "Ligue 1",
       "severity": "INFO",
       "code": "LOW_MOTIV_CARDS_CHECK",
-      "msg": "Marseille: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen."
+      "msg": "Angers, Marseille: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen."
     },
     {
       "date": "18.10.2026",
@@ -1091,8 +1082,8 @@
       "away": "Marseille",
       "league": "Ligue 1",
       "severity": "INFO",
-      "code": "LOW_SCORING_PROFILE",
-      "msg": "Ø gpg=1.00, H2H Ø=2.9 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt"
+      "code": "OVER35_LOW_FV",
+      "msg": "Ø gpg=2.20 (statischer Proxy) → Poisson FV für Over 3.5 = 18.1%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy."
     },
     {
       "date": "18.10.2026",
@@ -1100,8 +1091,8 @@
       "away": "Marseille",
       "league": "Ligue 1",
       "severity": "INFO",
-      "code": "OVER35_LOW_FV",
-      "msg": "Ø gpg=1.00 (statischer Proxy) → Poisson FV für Over 3.5 = 2.0%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy."
+      "code": "TEAM_OVER_AWAY_LOW_FV",
+      "msg": "Marseille expA≈1.35 (statischer Proxy) → FV über 1.5 = 39.1%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger."
     },
     {
       "date": "18.10.2026",
@@ -1300,6 +1291,15 @@
       "severity": "INFO",
       "code": "CARDS45_LOW_FV",
       "msg": "Liga-Baserate=3.6 → Poisson FV für Über 4.5 Karten = 29.4%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis."
+    },
+    {
+      "date": "17.10.2026",
+      "home": "Hamburger SV",
+      "away": "VfB Stuttgart",
+      "league": "Bundesliga",
+      "severity": "INFO",
+      "code": "LOW_MOTIV_CARDS_CHECK",
+      "msg": "Hamburger SV: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen."
     },
     {
       "date": "17.10.2026",
@@ -2497,6 +2497,51 @@
       "severity": "INFO",
       "code": "CARDS45_LOW_FV",
       "msg": "Liga-Baserate=3.6 → Poisson FV für Über 4.5 Karten = 29.4%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis."
+    },
+    {
+      "date": "19.10.2026",
+      "home": "SC Braga",
+      "away": "GIL Vicente",
+      "league": "Primeira Liga",
+      "severity": "INFO",
+      "code": "CARDS45_LOW_FV",
+      "msg": "Liga-Baserate=3.8 → Poisson FV für Über 4.5 Karten = 33.2%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis."
+    },
+    {
+      "date": "19.10.2026",
+      "home": "SC Braga",
+      "away": "GIL Vicente",
+      "league": "Primeira Liga",
+      "severity": "INFO",
+      "code": "LOW_SCORING_PROFILE",
+      "msg": "Ø gpg=1.80, H2H Ø=2.1 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt"
+    },
+    {
+      "date": "19.10.2026",
+      "home": "SC Braga",
+      "away": "GIL Vicente",
+      "league": "Primeira Liga",
+      "severity": "INFO",
+      "code": "OVER35_LOW_FV",
+      "msg": "Ø gpg=1.80 (statischer Proxy) → Poisson FV für Over 3.5 = 10.9%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy."
+    },
+    {
+      "date": "19.10.2026",
+      "home": "SC Braga",
+      "away": "GIL Vicente",
+      "league": "Primeira Liga",
+      "severity": "INFO",
+      "code": "TEAM_OVER_HOME_LOW_FV",
+      "msg": "SC Braga expH≈1.00 (statischer Proxy) → FV über 1.5 = 26.4%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger."
+    },
+    {
+      "date": "19.10.2026",
+      "home": "SC Braga",
+      "away": "GIL Vicente",
+      "league": "Primeira Liga",
+      "severity": "INFO",
+      "code": "TEAM_OVER_AWAY_LOW_FV",
+      "msg": "GIL Vicente expA≈1.25 (statischer Proxy) → FV über 1.5 = 35.5%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger."
     },
     {
       "date": "17.10.2026",
