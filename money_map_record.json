@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-10-17T14:59:09.153152+00:00",
+"generatedAt": "2026-10-17T15:14:46.976889+00:00",
 "byVerdict": {
 "uneinig": {
 "n": 21,
@@ -18,20 +18,20 @@
 "clvLb": -0.7975
 },
 "konsens": {
-"n": 269,
-"wins": 156,
-"hitRate": 0.5799,
-"polyN": 264,
-"polyWins": 152,
-"polyHitRate": 0.5758,
-"pinnN": 226,
-"pinnHitRate": 0.5973,
-"nRoi": 269,
-"roi": 0.0301,
-"roiLb": -0.0639,
-"nClv": 269,
-"clv": 0.05,
-"clvLb": -0.2084
+"n": 272,
+"wins": 159,
+"hitRate": 0.5846,
+"polyN": 267,
+"polyWins": 155,
+"polyHitRate": 0.5805,
+"pinnN": 229,
+"pinnHitRate": 0.6026,
+"nRoi": 272,
+"roi": 0.0393,
+"roiLb": -0.054,
+"nClv": 272,
+"clv": 0.04,
+"clvLb": -0.2218
 },
 "teil": {
 "n": 1,
@@ -71,20 +71,25 @@
 "wins": 9,
 "hitRate": 0.6429
 },
+"Spanish La Liga": {
+"n": 14,
+"wins": 8,
+"hitRate": 0.5714
+},
 "UEFA Europa League": {
 "n": 14,
 "wins": 10,
 "hitRate": 0.7143
 },
-"Spanish La Liga": {
-"n": 13,
-"wins": 7,
-"hitRate": 0.5385
-},
 "English Premier League": {
 "n": 11,
 "wins": 5,
 "hitRate": 0.4545
+},
+"Spanish Segunda Division": {
+"n": 11,
+"wins": 6,
+"hitRate": 0.5455
 },
 "UEFA Conference League": {
 "n": 11,
@@ -95,11 +100,6 @@
 "n": 11,
 "wins": 6,
 "hitRate": 0.5455
-},
-"Spanish Segunda Division": {
-"n": 10,
-"wins": 5,
-"hitRate": 0.5
 },
 "French Ligue 1": {
 "n": 9,
@@ -156,6 +156,11 @@
 "wins": 3,
 "hitRate": 0.6
 },
+"French Ligue 2": {
+"n": 5,
+"wins": 3,
+"hitRate": 0.6
+},
 "Friendlies International": {
 "n": 5,
 "wins": 3,
@@ -167,11 +172,6 @@
 "hitRate": 1.0
 },
 "Brazilian Serie B": {
-"n": 4,
-"wins": 2,
-"hitRate": 0.5
-},
-"French Ligue 2": {
 "n": 4,
 "wins": 2,
 "hitRate": 0.5
@@ -339,26 +339,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 213,
-"wins": 131,
-"hitRate": 0.615,
-"nRoi": 213,
-"roi": 0.0331,
-"roiLb": -0.0651,
-"nClv": 213,
-"clv": 0.14,
-"clvLb": -0.1767
+"n": 215,
+"wins": 133,
+"hitRate": 0.6186,
+"nRoi": 215,
+"roi": 0.0401,
+"roiLb": -0.0575,
+"nClv": 215,
+"clv": 0.12,
+"clvLb": -0.1952
 },
 "weak": {
-"n": 78,
-"wins": 31,
-"hitRate": 0.3974,
-"nRoi": 78,
-"roi": -0.0431,
-"roiLb": -0.2689,
-"nClv": 78,
+"n": 79,
+"wins": 32,
+"hitRate": 0.4051,
+"nRoi": 79,
+"roi": -0.0296,
+"roiLb": -0.2537,
+"nClv": 79,
 "clv": -0.27,
-"clvLb": -0.5827
+"clvLb": -0.5754
 }
 },
 "divergence": {
@@ -370,6 +370,63 @@
 "polyRate": 0.4
 },
 "recent": [
+{
+"matchId": "36100482",
+"home": "Espanyol",
+"away": "Atletico Madrid",
+"league": "Spanish La Liga",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Atletico Madrid",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-10-17T12:00:00Z",
+"settledAt": "2026-10-17T15:14:46.775240+00:00"
+},
+{
+"matchId": "36184046",
+"home": "Metz",
+"away": "Sochaux",
+"league": "French Ligue 2",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Metz",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+2
+],
+"kickoff": "2026-10-17T12:00:00Z",
+"settledAt": "2026-10-17T15:14:46.775240+00:00"
+},
+{
+"matchId": "36180956",
+"home": "Sociedad B",
+"away": "Almeria",
+"league": "Spanish Segunda Division",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Almeria",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+4
+],
+"kickoff": "2026-10-17T12:00:00Z",
+"settledAt": "2026-10-17T15:14:46.775240+00:00"
+},
 {
 "matchId": "36099828",
 "home": "Venezia",
@@ -1072,76 +1129,19 @@
 ],
 "kickoff": "2026-10-16T11:35:00Z",
 "settledAt": "2026-10-16T14:36:10.315585+00:00"
-},
-{
-"matchId": "36107311",
-"home": "Sydney FC",
-"away": "Western Sydney Wanderers",
-"league": "Australian A-League Men",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Sydney FC",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-10-16T09:00:00Z",
-"settledAt": "2026-10-16T12:10:48.924567+00:00"
-},
-{
-"matchId": "36086272",
-"home": "Estudiantes",
-"away": "Flamengo",
-"league": "CONMEBOL Copa Libertadores",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Flamengo",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-10-16T00:30:00Z",
-"settledAt": "2026-10-16T02:25:00.062038+00:00"
-},
-{
-"matchId": "36150242",
-"home": "CA Huracan",
-"away": "Gimnasia La Plata",
-"league": "Argentinian Primera Division",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "CA Huracan",
-"polySide": "home",
-"winner": "away",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-10-15T23:00:00Z",
-"settledAt": "2026-10-16T02:10:34.292571+00:00"
 }
 ],
 "global": {
-"n": 291,
-"wins": 162,
-"hitRate": 0.5567,
-"nRoi": 291,
-"roi": 0.0126,
-"roiLb": -0.0812,
-"nClv": 291,
-"clv": 0.03,
-"clvLb": -0.2174
+"n": 294,
+"wins": 165,
+"hitRate": 0.5612,
+"nRoi": 294,
+"roi": 0.0214,
+"roiLb": -0.0718,
+"nClv": 294,
+"clv": 0.01,
+"clvLb": -0.2298
 },
-"pending": 37,
-"ausgeschlossenLive": 1672
+"pending": 35,
+"ausgeschlossenLive": 1671
 }
