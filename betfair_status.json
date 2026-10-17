@@ -34,7 +34,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "nur 52 von 208 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Academica v Amarante (Portuguese Cup); Las Palmas v CD Castellon (Spanish Segunda Division); Valencia v Athletic Bilbao (Spanish La Liga)"
+        "nur 53 von 193 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Ceara SC Fortaleza v Juventude (Brazilian Serie B); Tristan Suarez v Patronato (Argentinian Primera Nacional); Academica v Amarante (Portuguese Cup)"
       ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
@@ -90,22 +90,24 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 315426 verbraucht, 4684574 uebrig"
+      "note": "Kontingent: 315837 verbraucht, 4684163 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 5,
+      "nFail": 7,
       "failures": [
+        "Al Hikma v Al-Ahed (Lebanese Premier League): zeit — bester Kandidat „Al-Fateh v Al-Khaleej“ · 28.5h Anpfiff-Abstand",
         "Liverpool U21 v Reading U21 (English Premier League 2 - Div 1): name — bester Kandidat „Brentford v Liverpool“",
         "Southport v Radcliffe Borough (English National League North): name — bester Kandidat „Salisbury FC v Eastbourne Borough FC“",
-        "Al Hikma v Al-Ahed (Lebanese Premier League): zeit — bester Kandidat „Al-Fateh v Al-Khaleej“ · 28.5h Anpfiff-Abstand",
         "Peterhead v Cove Rangers (Scottish League One): name — bester Kandidat „Gateshead FC v Stafford Rangers FC“",
-        "Ham-Kam v Bodo Glimt (Norwegian Eliteserien): name — bester Kandidat „HamKam v Bodø/Glimt“"
+        "Slough Town v Horsham FC (English National League South): name — bester Kandidat „Manchester City v Ipswich Town“",
+        "Ham-Kam v Bodo Glimt (Norwegian Eliteserien): name — bester Kandidat „HamKam v Bodø/Glimt“",
+        "Birmingham v QPR (English Sky Bet Championship): name — bester Kandidat „Birmingham City v Queens Park Rangers“"
       ],
-      "note": "ohne Anker: kein_kandidat 71 · kein_pinnacle 3 · name 4 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 73 · kein_pinnacle 6 · name 6 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -114,7 +116,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 2 — Sociedad B v Almeria (29 Buecher, ohne Pinnacle); Shandong Taishan v Zhejiang Greentown (12 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 4 — Benevento v LR Vicenza Virtus (31 Buecher, ohne Pinnacle); Sociedad B v Almeria (25 Buecher, ohne Pinnacle); Nantes v Dunkerque (30 Buecher, ohne Pinnacle); Shandong Taishan v Zhejiang Greentown (6 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -123,7 +125,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 12 gewollt, 12 abgerufen, 0 mit Daten"
+      "note": "Totals: 15 gewollt, 15 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -190,5 +192,5 @@
     }
   ],
   "nFail": 2,
-  "generatedAt": "2026-10-17T13:28:50.508789+00:00"
+  "generatedAt": "2026-10-17T13:43:52.027603+00:00"
 }
