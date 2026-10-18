@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-10-18T17:02:23.691066+00:00",
+"generatedAt": "2026-10-18T17:17:36.214253+00:00",
 "byVerdict": {
 "uneinig": {
 "n": 25,
@@ -18,20 +18,20 @@
 "clvLb": -0.6456
 },
 "konsens": {
-"n": 324,
-"wins": 194,
-"hitRate": 0.5988,
-"polyN": 317,
-"polyWins": 185,
-"polyHitRate": 0.5836,
-"pinnN": 280,
-"pinnHitRate": 0.6143,
-"nRoi": 324,
-"roi": 0.0802,
-"roiLb": -0.0063,
-"nClv": 324,
+"n": 326,
+"wins": 196,
+"hitRate": 0.6012,
+"polyN": 319,
+"polyWins": 187,
+"polyHitRate": 0.5862,
+"pinnN": 282,
+"pinnHitRate": 0.617,
+"nRoi": 326,
+"roi": 0.0866,
+"roiLb": 0.0004,
+"nClv": 326,
 "clv": 0.06,
-"clvLb": -0.1711
+"clvLb": -0.1698
 },
 "teil": {
 "n": 1,
@@ -56,6 +56,11 @@
 "wins": 14,
 "hitRate": 0.5833
 },
+"Spanish La Liga": {
+"n": 19,
+"wins": 11,
+"hitRate": 0.5789
+},
 "English Premier League": {
 "n": 18,
 "wins": 10,
@@ -65,11 +70,6 @@
 "n": 18,
 "wins": 12,
 "hitRate": 0.6667
-},
-"Spanish La Liga": {
-"n": 18,
-"wins": 10,
-"hitRate": 0.5556
 },
 "UEFA Champions League": {
 "n": 18,
@@ -91,6 +91,11 @@
 "wins": 9,
 "hitRate": 0.5625
 },
+"Spanish Segunda Division": {
+"n": 14,
+"wins": 9,
+"hitRate": 0.6429
+},
 "UEFA Europa League": {
 "n": 14,
 "wins": 10,
@@ -100,11 +105,6 @@
 "n": 13,
 "wins": 10,
 "hitRate": 0.7692
-},
-"Spanish Segunda Division": {
-"n": 13,
-"wins": 8,
-"hitRate": 0.6154
 },
 "UEFA Conference League": {
 "n": 11,
@@ -355,15 +355,15 @@
 "clvLb": -0.0984
 },
 "weak": {
-"n": 97,
-"wins": 43,
-"hitRate": 0.4433,
-"nRoi": 97,
-"roi": 0.0405,
-"roiLb": -0.1609,
-"nClv": 97,
-"clv": -0.33,
-"clvLb": -0.609
+"n": 99,
+"wins": 45,
+"hitRate": 0.4545,
+"nRoi": 99,
+"roi": 0.0626,
+"roiLb": -0.1364,
+"nClv": 99,
+"clv": -0.32,
+"clvLb": -0.5959
 }
 },
 "divergence": {
@@ -375,6 +375,44 @@
 "polyRate": 0.375
 },
 "recent": [
+{
+"matchId": "36100469",
+"home": "Celta Vigo",
+"away": "Alaves",
+"league": "Spanish La Liga",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Celta Vigo",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-10-18T14:15:00Z",
+"settledAt": "2026-10-18T17:17:35.962312+00:00"
+},
+{
+"matchId": "36185006",
+"home": "Granada",
+"away": "Cadiz",
+"league": "Spanish Segunda Division",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Granada",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-10-18T14:15:00Z",
+"settledAt": "2026-10-18T17:17:35.962312+00:00"
+},
 {
 "matchId": "36092108",
 "home": "Leeds",
@@ -1096,57 +1134,19 @@
 ],
 "kickoff": "2026-10-17T15:15:00Z",
 "settledAt": "2026-10-17T18:15:06.530016+00:00"
-},
-{
-"matchId": "36097594",
-"home": "SC Austria Lustenau",
-"away": "Lask Linz",
-"league": "Austrian Bundesliga",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "LASK Linz",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-4
-],
-"kickoff": "2026-10-17T15:00:00Z",
-"settledAt": "2026-10-17T18:02:34.219748+00:00"
-},
-{
-"matchId": "36099813",
-"home": "Bologna",
-"away": "Inter",
-"league": "Italian Serie A",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Inter",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-3
-],
-"kickoff": "2026-10-17T16:00:00Z",
-"settledAt": "2026-10-17T17:58:21.864495+00:00"
 }
 ],
 "global": {
-"n": 350,
-"wins": 201,
-"hitRate": 0.5743,
-"nRoi": 350,
-"roi": 0.0581,
-"roiLb": -0.0281,
-"nClv": 350,
+"n": 352,
+"wins": 203,
+"hitRate": 0.5767,
+"nRoi": 352,
+"roi": 0.0642,
+"roiLb": -0.0218,
+"nClv": 352,
 "clv": 0.04,
-"clvLb": -0.1768
+"clvLb": -0.1755
 },
-"pending": 24,
+"pending": 22,
 "ausgeschlossenLive": 1626
 }
