@@ -874527,7 +874527,13 @@
     "usd": 316,
     "ts": 1792280022
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Tampa Bay Rays": 1.0,
+   "Cleveland Guardians": 0.0
+  },
+  "resolvedAt": "2026-10-18T06:03:36.696255+00:00"
  },
  "mls-nyr-tor-2026-10-17": {
   "shares": {
@@ -879441,7 +879447,13 @@
   "tokens": {
    "Taylah Preston": "18881049803240422603899962914286111879063521149651143128108736283387924707145",
    "Emerson Jones": "28487673802410057770703087127836847962236736664233631894248501496615250176305"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Taylah Preston": 0.0,
+   "Emerson Jones": 1.0
+  },
+  "resolvedAt": "2026-10-18T06:03:36.696255+00:00"
  },
  "mls-sje-nas-2026-10-17": {
   "shares": {
@@ -880953,8 +880965,8 @@
  },
  "atp-diallo-sakamot-2026-10-18": {
   "shares": {
-   "Gabriel Diallo": 5364.623654985,
-   "Rei Sakamoto": 5696.1615592299995
+   "Gabriel Diallo": 7146.7607105900015,
+   "Rei Sakamoto": 7588.533896624999
   },
   "prices": {
    "Gabriel Diallo": 0.485,
@@ -880966,22 +880978,33 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 14543,
+  "totalUsd": 14651,
   "whales": [
+   {
+    "wallet": "0x73d4c819f03d5f0a346d521ebc28002af611dbd6",
+    "side": "Rei Sakamoto",
+    "usd": 1854
+   },
    {
     "wallet": "0x33c96d86e23e971777e9a0b59f4e21cc9e546f9a",
     "side": "Rei Sakamoto",
-    "usd": 1212
+    "usd": 1212,
+    "avgPrice": 0.5099
+   },
+   {
+    "wallet": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
+    "side": "Gabriel Diallo",
+    "usd": 1191
+   },
+   {
+    "wallet": "0xdd9d902e3cdaf7ee29eff1dd2902dcb40741b730",
+    "side": "Rei Sakamoto",
+    "usd": 1175
    },
    {
     "wallet": "0x1b8ffdb4ff99b4622f099465c486e4f75751cca7",
     "side": "Gabriel Diallo",
     "usd": 1067
-   },
-   {
-    "wallet": "0xdd9d902e3cdaf7ee29eff1dd2902dcb40741b730",
-    "side": "Rei Sakamoto",
-    "usd": 753
    },
    {
     "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
@@ -880992,11 +881015,6 @@
     "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
     "side": "Gabriel Diallo",
     "usd": 674
-   },
-   {
-    "wallet": "0x9a01eab1e0079ccbf898104be414eac4a8db24d0",
-    "side": "Rei Sakamoto",
-    "usd": 544
    },
    {
     "wallet": "0xce9f3af3f26b23fde285e82471e03dd90038130c",
@@ -881020,6 +881038,11 @@
     "usd": 343
    },
    {
+    "wallet": "0xc6ae4cdece4be7f21b747eb11f6eaaa37972afe9",
+    "side": "Gabriel Diallo",
+    "usd": 324
+   },
+   {
     "wallet": "0xedecbb52fe0f21578961ef0422eda61040243b5f",
     "side": "Rei Sakamoto",
     "usd": 315
@@ -881033,6 +881056,11 @@
     "wallet": "0x2f0bec54f4f26f749af2db20e52729427a7a5577",
     "side": "Rei Sakamoto",
     "usd": 297
+   },
+   {
+    "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
+    "side": "Gabriel Diallo",
+    "usd": 283
    },
    {
     "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
@@ -881068,13 +881096,7 @@
    {
     "wallet": "0xda54dd8ea1cc0ed2aac38144f880fc63e89a3b74",
     "side": "Gabriel Diallo",
-    "usd": 173,
-    "avgPrice": 0.49
-   },
-   {
-    "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
-    "side": "Gabriel Diallo",
-    "usd": 138
+    "usd": 173
    },
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
@@ -881088,6 +881110,11 @@
     "avgPrice": 0.5049
    },
    {
+    "wallet": "0x1e814bedfdb7bde5434791a927777deeeac5ae48",
+    "side": "Rei Sakamoto",
+    "usd": 112
+   },
+   {
     "wallet": "0xa772e2ca9f119162d03330f3e66c0556a2068686",
     "side": "Gabriel Diallo",
     "usd": 89
@@ -881095,7 +881122,8 @@
    {
     "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
     "side": "Gabriel Diallo",
-    "usd": 66
+    "usd": 66,
+    "avgPrice": 0.49
    },
    {
     "wallet": "0x17d97684d80863e07bc95d1e9f7c1c1dbec884af",
@@ -881109,6 +881137,11 @@
    },
    {
     "wallet": "0xecc558e1dd2164b451766c89d2a28b35d8405fde",
+    "side": "Gabriel Diallo",
+    "usd": 48
+   },
+   {
+    "wallet": "0x5cc82304fd1a7ae5669029dd83262892574fa0e4",
     "side": "Gabriel Diallo",
     "usd": 48
    },
@@ -881139,7 +881172,7 @@
     "usd": 25
    },
    {
-    "wallet": "0x5cc82304fd1a7ae5669029dd83262892574fa0e4",
+    "wallet": "0xa697d0b3fff7d285a0f92d6ee03a7f97809e59d5",
     "side": "Gabriel Diallo",
     "usd": 24
    },
@@ -881152,32 +881185,11 @@
     "wallet": "0x3ca9089f59d506a6773a4d68227a1ac97806424a",
     "side": "Gabriel Diallo",
     "usd": 19
-   },
-   {
-    "wallet": "0x49b68438ae7db43a03d7ddaaceaef5581ac7d152",
-    "side": "Rei Sakamoto",
-    "usd": 17
-   },
-   {
-    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
-    "side": "Rei Sakamoto",
-    "usd": 15
-   },
-   {
-    "wallet": "0x3e6b98d9dac15f285a18a02644a8c900aab58a98",
-    "side": "Rei Sakamoto",
-    "usd": 15
-   },
-   {
-    "wallet": "0x35e701f088b6ef25fff6b902769c1cd8b85f8331",
-    "side": "Rei Sakamoto",
-    "usd": 13,
-    "avgPrice": 0.495
    }
   ],
-  "hoursToKickoff": 0.44,
-  "capturedAt": "2026-10-18T05:33:23.660829+00:00",
-  "koTs": "2026-10-18T06:00:00+00:00",
+  "hoursToKickoff": 0.11,
+  "capturedAt": "2026-10-18T06:03:36.696255+00:00",
+  "koTs": "2026-10-18T06:10:00+00:00",
   "cond": "0xebf0b6a3334ef80add72db5745f642cb1bea9802424958a5b754994dc1ad44de",
   "frage": "Almaty Open, Qualification: Gabriel Diallo vs Rei Sakamoto",
   "tokens": {
@@ -881187,13 +881199,13 @@
  },
  "jap-zel-avi-2026-10-18": {
   "shares": {
-   "FC Machida Zelvia": 6638.153493899999,
-   "Draw (FC Machida Zelvia vs. Avispa Fukuoka)": 45.926654745,
-   "Avispa Fukuoka": 516.928748895
+   "FC Machida Zelvia": 7770.594803914998,
+   "Draw (FC Machida Zelvia vs. Avispa Fukuoka)": 271.67403065,
+   "Avispa Fukuoka": 524.3555998200001
   },
   "prices": {
    "FC Machida Zelvia": 0.535,
-   "Draw (FC Machida Zelvia vs. Avispa Fukuoka)": 0.285,
+   "Draw (FC Machida Zelvia vs. Avispa Fukuoka)": 0.275,
    "Avispa Fukuoka": 0.195
   },
   "splitGuete": {
@@ -881202,18 +881214,19 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 16900,
+  "totalUsd": 18172,
   "whales": [
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "FC Machida Zelvia",
-    "usd": 2505,
+    "usd": 2466,
     "avgPrice": 0.5104
    },
    {
     "wallet": "0xfb07f48542d2b655e9d0bf1cc92a8a6feee8e2cc",
     "side": "FC Machida Zelvia",
-    "usd": 1605
+    "usd": 1605,
+    "avgPrice": 0.51
    },
    {
     "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
@@ -881223,7 +881236,7 @@
    {
     "wallet": "0xb751e1238417cc67077d73fae939c03763008d99",
     "side": "FC Machida Zelvia",
-    "usd": 367
+    "usd": 544
    },
    {
     "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
@@ -881231,10 +881244,21 @@
     "usd": 349
    },
    {
-    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
     "side": "FC Machida Zelvia",
-    "usd": 287,
-    "avgPrice": 0.5304
+    "usd": 323,
+    "avgPrice": 0.538
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "FC Machida Zelvia",
+    "usd": 248,
+    "avgPrice": 0.54
+   },
+   {
+    "wallet": "0x5cffebfb811570eec311cca655e47198d89e83c4",
+    "side": "FC Machida Zelvia",
+    "usd": 222
    },
    {
     "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
@@ -881242,10 +881266,26 @@
     "usd": 207
    },
    {
+    "wallet": "0x38f1cfeceedc974a52e8e9d554f5e0beb4fe9ff1",
+    "side": "FC Machida Zelvia",
+    "usd": 178
+   },
+   {
     "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
     "side": "FC Machida Zelvia",
     "usd": 133,
     "avgPrice": 0.5116
+   },
+   {
+    "wallet": "0x5025daf63af816c630fd91ebc163fb64882a2312",
+    "side": "FC Machida Zelvia",
+    "usd": 129
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "FC Machida Zelvia",
+    "usd": 120,
+    "avgPrice": 0.5323
    },
    {
     "wallet": "0x340ea8b2e6634b7555a61187d1ea443785cd385b",
@@ -881258,10 +881298,9 @@
     "usd": 107
    },
    {
-    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
-    "side": "FC Machida Zelvia",
-    "usd": 68,
-    "avgPrice": 0.5307
+    "wallet": "0x69e3edc42a5b0eb2ab905e71700c9b63461b0078",
+    "side": "Draw (FC Machida Zelvia vs. Avispa Fukuoka)",
+    "usd": 98
    },
    {
     "wallet": "0x2ff2d69ce0e5741cd0634a6ebf38b2573a87c175",
@@ -881284,6 +881323,11 @@
     "usd": 54
    },
    {
+    "wallet": "0x6daae04265d65cb2aae7fe6db4210568de7d954a",
+    "side": "FC Machida Zelvia",
+    "usd": 50
+   },
+   {
     "wallet": "0xd19c399d2804faf6797565a08991fd9159ad160f",
     "side": "FC Machida Zelvia",
     "usd": 50
@@ -881291,7 +881335,8 @@
    {
     "wallet": "0xf545bd981d2b6bdbbd32a7a4b2b072726255305b",
     "side": "FC Machida Zelvia",
-    "usd": 24
+    "usd": 24,
+    "avgPrice": 0.5
    },
    {
     "wallet": "0x00d011c81490302079e8f73465d0077b00567534",
@@ -881324,6 +881369,11 @@
     "usd": 18
    },
    {
+    "wallet": "0x99302f8beaefd9e337c3a263bc2ac9dc52c8696e",
+    "side": "Draw (FC Machida Zelvia vs. Avispa Fukuoka)",
+    "usd": 17
+   },
+   {
     "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
     "side": "Avispa Fukuoka",
     "usd": 14
@@ -881334,13 +881384,18 @@
     "usd": 10
    },
    {
-    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-    "side": "Draw (FC Machida Zelvia vs. Avispa Fukuoka)",
+    "wallet": "0xd29312e2446a746bbd94408e1c475f1ec6d7d683",
+    "side": "Avispa Fukuoka",
     "usd": 8
    },
    {
     "wallet": "0x6137f9f49c72422bdd7a0eb5c01206dc1c337203",
     "side": "FC Machida Zelvia",
+    "usd": 7
+   },
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Draw (FC Machida Zelvia vs. Avispa Fukuoka)",
     "usd": 7
    },
    {
@@ -881359,58 +881414,18 @@
     "usd": 5
    },
    {
-    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
-    "side": "Draw (FC Machida Zelvia vs. Avispa Fukuoka)",
+    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
+    "side": "FC Machida Zelvia",
     "usd": 4
    },
    {
     "wallet": "0xc846f5368ab49a854d2280b7ecff92669824c413",
     "side": "FC Machida Zelvia",
     "usd": 3
-   },
-   {
-    "wallet": "0x2da325618fff9b2ffe64a49253fbcae8c7b9f258",
-    "side": "Avispa Fukuoka",
-    "usd": 3
-   },
-   {
-    "wallet": "0xd619b68e64f256f8ddd185b261c8679eacf0c461",
-    "side": "Avispa Fukuoka",
-    "usd": 3
-   },
-   {
-    "wallet": "0xfe67df6e0c585e50cbe8bdcad804d980c6b8a2e8",
-    "side": "Draw (FC Machida Zelvia vs. Avispa Fukuoka)",
-    "usd": 2
-   },
-   {
-    "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
-    "side": "Avispa Fukuoka",
-    "usd": 2
-   },
-   {
-    "wallet": "0x2bd3004bba261b8d8bfcccc9a05fed5a66e1c3a1",
-    "side": "Avispa Fukuoka",
-    "usd": 2
-   },
-   {
-    "wallet": "0x86d021495fbfb33cdb4761100f4d0d184174904e",
-    "side": "Avispa Fukuoka",
-    "usd": 2
-   },
-   {
-    "wallet": "0x8182a7354c99f8338eeb3112b09db6dafa2eb13c",
-    "side": "FC Machida Zelvia",
-    "usd": 1
-   },
-   {
-    "wallet": "0x99302f8beaefd9e337c3a263bc2ac9dc52c8696e",
-    "side": "Draw (FC Machida Zelvia vs. Avispa Fukuoka)",
-    "usd": 1
    }
   ],
-  "hoursToKickoff": 1.44,
-  "capturedAt": "2026-10-18T05:33:23.660829+00:00",
+  "hoursToKickoff": 0.94,
+  "capturedAt": "2026-10-18T06:03:36.696255+00:00",
   "koTs": "2026-10-18T07:00:00+00:00",
   "tokens": {
    "FC Machida Zelvia": "2547071817051905187977449924933295698212692927235739043069937065867114582315",
@@ -881982,8 +881997,8 @@
     "usd": 1
    }
   ],
-  "hoursToKickoff": 2.44,
-  "capturedAt": "2026-10-18T05:33:23.660829+00:00",
+  "hoursToKickoff": 1.94,
+  "capturedAt": "2026-10-18T06:03:36.696255+00:00",
   "koTs": "2026-10-18T08:00:00+00:00",
   "cond": "0xbdce9cd5a5163bf992447dfa1f5c58ac0795a5f2375ea9239e057589189d6d4e",
   "frage": "Counter-Strike: Elite Klan vs Passion Academy (BO3) - United21 Group D",
@@ -882000,53 +882015,53 @@
    "bids": [
     [
      0.51,
-     82
+     97
     ],
     [
      0.5,
-     4576
+     4466
     ],
     [
      0.49,
      4209
     ],
     [
+     0.48,
+     240
+    ],
+    [
      0.47,
-     653
+     800
     ],
     [
      0.46,
-     367
-    ],
-    [
-     0.45,
-     787
+     772
     ]
    ],
    "asks": [
     [
      0.52,
-     187
+     177
     ],
     [
      0.53,
-     501
+     401
     ],
     [
      0.54,
-     780
+     656
     ],
     [
      0.55,
-     349
+     476
     ],
     [
      0.56,
-     79
+     47
     ],
     [
      0.57,
-     792
+     367
     ]
    ]
   },
@@ -882063,8 +882078,8 @@
  },
  "crint-ausw-nzlw-2026-10-18": {
   "shares": {
-   "Australia Women": 11635.76431325,
-   "New Zealand Women": 1662.2520447499994
+   "Australia Women": 11891.86806325,
+   "New Zealand Women": 1698.8382947499995
   },
   "prices": {
    "Australia Women": 0.875,
@@ -882076,7 +882091,7 @@
   },
   "league": "CRICKET",
   "sport": "Cricket",
-  "totalUsd": 13798,
+  "totalUsd": 14399,
   "whales": [
    {
     "wallet": "0x4df332e27f9ee3224f52ce30e3ce15c1075e788f",
@@ -882105,14 +882120,14 @@
     "usd": 861
    },
    {
+    "wallet": "0x0e28123123012868719229c3419d62c91eda07c3",
+    "side": "Australia Women",
+    "usd": 651
+   },
+   {
     "wallet": "0xa6ded03ba993d58d265dc8fa3f6ddda3d926256c",
     "side": "Australia Women",
     "usd": 594
-   },
-   {
-    "wallet": "0x0e28123123012868719229c3419d62c91eda07c3",
-    "side": "Australia Women",
-    "usd": 486
    },
    {
     "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
@@ -882128,6 +882143,11 @@
     "wallet": "0x972bf37cae72a169e17ae0e6179821d5778b78ba",
     "side": "Australia Women",
     "usd": 237
+   },
+   {
+    "wallet": "0x64a8f371e602fc3ddeb4942f01c356caf3fa7719",
+    "side": "Australia Women",
+    "usd": 116
    },
    {
     "wallet": "0x75177693e4ecdd01a33cb43ba3fe606dcf750353",
@@ -882157,7 +882177,8 @@
    {
     "wallet": "0x5d40576be2e9c61d283f4fd80d7a5ccf2331ba95",
     "side": "New Zealand Women",
-    "usd": 51
+    "usd": 64,
+    "avgPrice": 0.1236
    },
    {
     "wallet": "0x0ac5faecf8d623a4a074758aedfea9339b24f963",
@@ -882187,8 +882208,7 @@
    {
     "wallet": "0x35e701f088b6ef25fff6b902769c1cd8b85f8331",
     "side": "Australia Women",
-    "usd": 22,
-    "avgPrice": 0.875
+    "usd": 22
    },
    {
     "wallet": "0xa5e8bdf5346d0e40d58aa8c070fc11acb2b916eb",
@@ -882217,8 +882237,8 @@
     "avgPrice": 0.85
    }
   ],
-  "hoursToKickoff": 2.69,
-  "capturedAt": "2026-10-18T05:33:23.660829+00:00",
+  "hoursToKickoff": 2.19,
+  "capturedAt": "2026-10-18T06:03:36.696255+00:00",
   "koTs": "2026-10-18T08:15:00+00:00",
   "cond": "0x59fd3b22693e27ab5ed63475b201ac8b96b32b14f24de84283aa49d5abf77a20",
   "frage": "New Zealand Women Tour of Australia T20s: Australia Women vs New Zealand Women",
@@ -882229,8 +882249,8 @@
  },
  "crint-pak-lka-2026-10-18": {
   "shares": {
-   "Pakistan": 6258.616090195001,
-   "Sri Lanka": 3296.431332314999
+   "Pakistan": 6305.833528455001,
+   "Sri Lanka": 3321.3920823149992
   },
   "prices": {
    "Pakistan": 0.655,
@@ -882298,7 +882318,8 @@
    {
     "wallet": "0x147c2760baa011fdcd0d02ea0f610ffb0fd92540",
     "side": "Pakistan",
-    "usd": 33
+    "usd": 33,
+    "avgPrice": 0.6649
    },
    {
     "wallet": "0x14f27a08b70b7a25c7d2293b8292c7ed350d2cb0",
@@ -882326,14 +882347,617 @@
     "usd": 1
    }
   ],
-  "hoursToKickoff": 2.44,
-  "capturedAt": "2026-10-18T05:33:23.660829+00:00",
+  "hoursToKickoff": 1.94,
+  "capturedAt": "2026-10-18T06:03:36.696255+00:00",
   "koTs": "2026-10-18T08:00:00+00:00",
   "cond": "0x7d63c29c0d4479b35146e5b74cfb52633ba6088820056cc2099f86c083e0111a",
   "frage": "England and Sri Lanka Tour of Pakistan ODIs: Pakistan vs Sri Lanka",
   "tokens": {
    "Pakistan": "31932539274019944232876637512115299047838959248693308853557412045483261199894",
    "Sri Lanka": "107956533719638667204416714183207943100385321849889655444239586225644229711936"
+  }
+ },
+ "atp-fokina-jodar-2026-10-18": {
+  "shares": {
+   "Alejandro Davidovich Fokina": 29811.64242550501,
+   "Rafael Jodar": 38720.87354462002
+  },
+  "prices": {
+   "Alejandro Davidovich Fokina": 0.435,
+   "Rafael Jodar": 0.565
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 67084,
+  "whales": [
+   {
+    "wallet": "0x797255f4701331610041687268d246071343594f",
+    "side": "Rafael Jodar",
+    "usd": 14966,
+    "avgPrice": 0.5662
+   },
+   {
+    "wallet": "0xf9246288181d348e5e0741a52b315ee7821ba0cc",
+    "side": "Rafael Jodar",
+    "usd": 10228,
+    "avgPrice": 0.5699
+   },
+   {
+    "wallet": "0xfb07f48542d2b655e9d0bf1cc92a8a6feee8e2cc",
+    "side": "Alejandro Davidovich Fokina",
+    "usd": 4830,
+    "avgPrice": 0.43
+   },
+   {
+    "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
+    "side": "Alejandro Davidovich Fokina",
+    "usd": 3484,
+    "avgPrice": 0.4314
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Alejandro Davidovich Fokina",
+    "usd": 3354,
+    "avgPrice": 0.4338
+   },
+   {
+    "wallet": "0x241adda58ed48866f0deec7867731dd84c5ba9c8",
+    "side": "Alejandro Davidovich Fokina",
+    "usd": 3045,
+    "avgPrice": 0.4399
+   },
+   {
+    "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
+    "side": "Alejandro Davidovich Fokina",
+    "usd": 3019
+   },
+   {
+    "wallet": "0x33c96d86e23e971777e9a0b59f4e21cc9e546f9a",
+    "side": "Rafael Jodar",
+    "usd": 2522,
+    "avgPrice": 0.5599
+   },
+   {
+    "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
+    "side": "Rafael Jodar",
+    "usd": 1973,
+    "avgPrice": 0.5
+   },
+   {
+    "wallet": "0x3206ba8131af98c69247607e40bf3793cf1d969b",
+    "side": "Rafael Jodar",
+    "usd": 1946,
+    "avgPrice": 0.5699
+   },
+   {
+    "wallet": "0xe954ddb021c19495f1c556f59dadbd1494821ef1",
+    "side": "Alejandro Davidovich Fokina",
+    "usd": 1049,
+    "avgPrice": 0.43
+   },
+   {
+    "wallet": "0xf7dbb3d567fea98e1bf59538e1461f741eb0d23a",
+    "side": "Rafael Jodar",
+    "usd": 991,
+    "avgPrice": 0.5699
+   },
+   {
+    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
+    "side": "Alejandro Davidovich Fokina",
+    "usd": 926,
+    "avgPrice": 0.435
+   },
+   {
+    "wallet": "0x5b624e3e0426f7aa2ca57f7451fbcea4b125d87f",
+    "side": "Alejandro Davidovich Fokina",
+    "usd": 874
+   },
+   {
+    "wallet": "0x01c78f8873c0c86d6b6b92ff627e3802237ee995",
+    "side": "Alejandro Davidovich Fokina",
+    "usd": 854
+   },
+   {
+    "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
+    "side": "Alejandro Davidovich Fokina",
+    "usd": 786
+   },
+   {
+    "wallet": "0x43781287e47ca4c6976ab33233154fdc3b021bde",
+    "side": "Rafael Jodar",
+    "usd": 734
+   },
+   {
+    "wallet": "0x4696f667129d3eabf431efb986d1ce0f995ce741",
+    "side": "Rafael Jodar",
+    "usd": 496
+   },
+   {
+    "wallet": "0xdeff55f3132a313985035c34539e94da7b9178f8",
+    "side": "Alejandro Davidovich Fokina",
+    "usd": 483
+   },
+   {
+    "wallet": "0x1e3a86ef98030e7e0519e127d8178e9b45389e14",
+    "side": "Alejandro Davidovich Fokina",
+    "usd": 328
+   },
+   {
+    "wallet": "0x521c0f496be19476a885ae380f18652bb9cef4aa",
+    "side": "Rafael Jodar",
+    "usd": 303
+   },
+   {
+    "wallet": "0xd619b68e64f256f8ddd185b261c8679eacf0c461",
+    "side": "Alejandro Davidovich Fokina",
+    "usd": 282
+   },
+   {
+    "wallet": "0x7547479d43f4b52d892a6f2254050eea50edd158",
+    "side": "Alejandro Davidovich Fokina",
+    "usd": 261
+   },
+   {
+    "wallet": "0x398bfa0a96b8d6984182cc323f78358941d897ee",
+    "side": "Alejandro Davidovich Fokina",
+    "usd": 257
+   },
+   {
+    "wallet": "0x306e06d4457dc86d88671a788c77b17e8c213a7c",
+    "side": "Rafael Jodar",
+    "usd": 172
+   },
+   {
+    "wallet": "0xdc81f14a6e9af07af6ca443f63de558c7612e889",
+    "side": "Alejandro Davidovich Fokina",
+    "usd": 159
+   },
+   {
+    "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
+    "side": "Alejandro Davidovich Fokina",
+    "usd": 159
+   },
+   {
+    "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
+    "side": "Alejandro Davidovich Fokina",
+    "usd": 128
+   },
+   {
+    "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
+    "side": "Alejandro Davidovich Fokina",
+    "usd": 117,
+    "avgPrice": 0.4359
+   },
+   {
+    "wallet": "0xf9dcbb0a9b740625738cdd7cf83db99c7deaaba7",
+    "side": "Rafael Jodar",
+    "usd": 113,
+    "avgPrice": 0.535
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "Rafael Jodar",
+    "usd": 95,
+    "avgPrice": 0.5699
+   },
+   {
+    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
+    "side": "Alejandro Davidovich Fokina",
+    "usd": 44
+   },
+   {
+    "wallet": "0x1d6d6b39a4ee425ebc511d1dbafe5098a2aef2b4",
+    "side": "Alejandro Davidovich Fokina",
+    "usd": 39
+   },
+   {
+    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+    "side": "Rafael Jodar",
+    "usd": 38
+   },
+   {
+    "wallet": "0x8b8992eb0d7dc4ef87f5efb45154de4787c598d6",
+    "side": "Rafael Jodar",
+    "usd": 32
+   },
+   {
+    "wallet": "0x98db8cca55c32b24cfb414b5b43d273f4e1fdd17",
+    "side": "Alejandro Davidovich Fokina",
+    "usd": 30,
+    "avgPrice": 0.43
+   },
+   {
+    "wallet": "0x5e020e19bc4cc2cd24ab9b406604ee9df02ab178",
+    "side": "Alejandro Davidovich Fokina",
+    "usd": 26
+   },
+   {
+    "wallet": "0xa697d0b3fff7d285a0f92d6ee03a7f97809e59d5",
+    "side": "Alejandro Davidovich Fokina",
+    "usd": 22
+   },
+   {
+    "wallet": "0x042d8526350dd13dc836201e6acfbab5981f0b81",
+    "side": "Rafael Jodar",
+    "usd": 17
+   },
+   {
+    "wallet": "0x240b12dca07edc6cd369afe448791df0e7a7c32a",
+    "side": "Alejandro Davidovich Fokina",
+    "usd": 15
+   }
+  ],
+  "hoursToKickoff": 2.44,
+  "capturedAt": "2026-10-18T06:03:36.696255+00:00",
+  "koTs": "2026-10-18T08:30:00+00:00",
+  "cond": "0x8f25a41e19d8347078fd2917f826958a5ba1721aa4f417ef6f5f475b6f196a0c",
+  "frage": "Shanghai Rolex Masters: Alejandro Davidovich Fokina vs Rafael Jodar",
+  "tokens": {
+   "Alejandro Davidovich Fokina": "106448868825612452254152479424741985744229567647353000179590710816248334277513",
+   "Rafael Jodar": "47614633964313413448903086358919860953149968545813178305352134032954149140117"
+  },
+  "book": {
+   "side": "Rafael Jodar",
+   "bid": 0.56,
+   "ask": 0.57,
+   "spreadC": 1.0,
+   "spreadPct": 1.75,
+   "bids": [
+    [
+     0.56,
+     43272
+    ],
+    [
+     0.55,
+     32429
+    ],
+    [
+     0.54,
+     13546
+    ],
+    [
+     0.53,
+     12952
+    ],
+    [
+     0.52,
+     701
+    ],
+    [
+     0.51,
+     12012
+    ]
+   ],
+   "asks": [
+    [
+     0.57,
+     33338
+    ],
+    [
+     0.58,
+     78939
+    ],
+    [
+     0.59,
+     25624
+    ],
+    [
+     0.6,
+     16445
+    ],
+    [
+     0.61,
+     10687
+    ],
+    [
+     0.62,
+     681
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xc9ce867853e97f6a58d5befb7464369910251533",
+    "action": "BUY",
+    "side": "Rafael Jodar",
+    "price": 0.57,
+    "usd": 395,
+    "ts": 1792301087
+   },
+   {
+    "wallet": "0xc60bb547dbdf59c8d1746bc8a754accc3809d9f7",
+    "action": "BUY",
+    "side": "Alejandro Davidovich Fokina",
+    "price": 0.44,
+    "usd": 453,
+    "ts": 1792300124
+   },
+   {
+    "wallet": "0x3206ba8131af98c69247607e40bf3793cf1d969b",
+    "action": "BUY",
+    "side": "Rafael Jodar",
+    "price": 0.57,
+    "usd": 1955,
+    "ts": 1792299329
+   },
+   {
+    "wallet": "0xe0b01fa337f48b3792ae9e76f3665bfc4f3a5294",
+    "action": "BUY",
+    "side": "Alejandro Davidovich Fokina",
+    "price": 0.44,
+    "usd": 308,
+    "ts": 1792297850
+   },
+   {
+    "wallet": "0x556a78ef768757985ea9a90e6f9e3082f2585f0f",
+    "action": "BUY",
+    "side": "Rafael Jodar",
+    "price": 0.57,
+    "usd": 306,
+    "ts": 1792296534
+   },
+   {
+    "wallet": "0xf7dbb3d567fea98e1bf59538e1461f741eb0d23a",
+    "action": "BUY",
+    "side": "Rafael Jodar",
+    "price": 0.57,
+    "usd": 1000,
+    "ts": 1792295799
+   },
+   {
+    "wallet": "0x4696f667129d3eabf431efb986d1ce0f995ce741",
+    "action": "BUY",
+    "side": "Rafael Jodar",
+    "price": 0.57,
+    "usd": 500,
+    "ts": 1792295630
+   },
+   {
+    "wallet": "0x5cd3a63ad643af2c6b00386407399547880ee427",
+    "action": "BUY",
+    "side": "Alejandro Davidovich Fokina",
+    "price": 0.44,
+    "usd": 500,
+    "ts": 1792292447
+   }
+  ]
+ },
+ "atp-walton-basilas-2026-10-18": {
+  "shares": {
+   "Adam Walton": 5180.214996399999,
+   "Nikoloz Basilashvili": 7008.529571575
+  },
+  "prices": {
+   "Adam Walton": 0.425,
+   "Nikoloz Basilashvili": 0.575
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 12765,
+  "whales": [
+   {
+    "wallet": "0xe7870d0e1bfc65a23e3d66caf00ca1b9129e5034",
+    "side": "Nikoloz Basilashvili",
+    "usd": 4600,
+    "avgPrice": 0.58
+   },
+   {
+    "wallet": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
+    "side": "Adam Walton",
+    "usd": 2071
+   },
+   {
+    "wallet": "0xd619b68e64f256f8ddd185b261c8679eacf0c461",
+    "side": "Adam Walton",
+    "usd": 759
+   },
+   {
+    "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
+    "side": "Adam Walton",
+    "usd": 635
+   },
+   {
+    "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
+    "side": "Nikoloz Basilashvili",
+    "usd": 531
+   },
+   {
+    "wallet": "0xe8c4d68aff65b38cac46987b9b65e01eb47d395d",
+    "side": "Nikoloz Basilashvili",
+    "usd": 522
+   },
+   {
+    "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
+    "side": "Adam Walton",
+    "usd": 319
+   },
+   {
+    "wallet": "0xbedbfed921367b21a2fb20f9e214d1c109d1c818",
+    "side": "Nikoloz Basilashvili",
+    "usd": 257
+   },
+   {
+    "wallet": "0x7547479d43f4b52d892a6f2254050eea50edd158",
+    "side": "Adam Walton",
+    "usd": 255
+   },
+   {
+    "wallet": "0x3d42e45cbf1c671733fbb8470924ec1bef165bf3",
+    "side": "Nikoloz Basilashvili",
+    "usd": 254
+   },
+   {
+    "wallet": "0xb75e43021a865d5a931f851fd8abfd7f4d341737",
+    "side": "Nikoloz Basilashvili",
+    "usd": 184
+   },
+   {
+    "wallet": "0xd3048b6915182e2f6e133f08d3095c2ba07b3ed2",
+    "side": "Nikoloz Basilashvili",
+    "usd": 161
+   },
+   {
+    "wallet": "0x38f1cfeceedc974a52e8e9d554f5e0beb4fe9ff1",
+    "side": "Adam Walton",
+    "usd": 142
+   },
+   {
+    "wallet": "0x5811c8ad5dc5990528357ecf1a6d03311d6c0976",
+    "side": "Adam Walton",
+    "usd": 128
+   },
+   {
+    "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
+    "side": "Adam Walton",
+    "usd": 106,
+    "avgPrice": 0.5
+   },
+   {
+    "wallet": "0xa697d0b3fff7d285a0f92d6ee03a7f97809e59d5",
+    "side": "Adam Walton",
+    "usd": 85
+   },
+   {
+    "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
+    "side": "Adam Walton",
+    "usd": 85
+   },
+   {
+    "wallet": "0x2095d1d2d6f2026a58475c67e35f296301f08521",
+    "side": "Adam Walton",
+    "usd": 76
+   },
+   {
+    "wallet": "0x037305f4c448ab309469116141f13ae0c8013e8c",
+    "side": "Adam Walton",
+    "usd": 73
+   },
+   {
+    "wallet": "0xc9c36d3afb757d75fd54feafab1b1f04419d079f",
+    "side": "Adam Walton",
+    "usd": 54
+   },
+   {
+    "wallet": "0xda770326bd091d26f816917aa83a6baff668683f",
+    "side": "Nikoloz Basilashvili",
+    "usd": 51
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Adam Walton",
+    "usd": 50
+   },
+   {
+    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
+    "side": "Nikoloz Basilashvili",
+    "usd": 44
+   },
+   {
+    "wallet": "0x1d6d6b39a4ee425ebc511d1dbafe5098a2aef2b4",
+    "side": "Adam Walton",
+    "usd": 40
+   },
+   {
+    "wallet": "0x6a80869c6561210db35da8e7e306a1095275d472",
+    "side": "Adam Walton",
+    "usd": 35
+   },
+   {
+    "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
+    "side": "Adam Walton",
+    "usd": 35,
+    "avgPrice": 0.4217
+   },
+   {
+    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+    "side": "Nikoloz Basilashvili",
+    "usd": 33
+   },
+   {
+    "wallet": "0x301fcd4e6bc88232f7138fcaf252e1dba67ae84c",
+    "side": "Nikoloz Basilashvili",
+    "usd": 25
+   },
+   {
+    "wallet": "0x60ec17443af511a21945f01430e61c803465f7b0",
+    "side": "Nikoloz Basilashvili",
+    "usd": 22
+   },
+   {
+    "wallet": "0x216050de6080fac3926226b2b8ce3d5544784c78",
+    "side": "Nikoloz Basilashvili",
+    "usd": 21,
+    "avgPrice": 0.5427
+   },
+   {
+    "wallet": "0x5e020e19bc4cc2cd24ab9b406604ee9df02ab178",
+    "side": "Adam Walton",
+    "usd": 19
+   },
+   {
+    "wallet": "0x49c5845733fd0b83d2ae67bfc1baf9d2e3093de7",
+    "side": "Adam Walton",
+    "usd": 13
+   },
+   {
+    "wallet": "0x53d2bc9d1ef6007a7251c830224398280f3e512f",
+    "side": "Adam Walton",
+    "usd": 12
+   },
+   {
+    "wallet": "0x35e701f088b6ef25fff6b902769c1cd8b85f8331",
+    "side": "Adam Walton",
+    "usd": 11
+   },
+   {
+    "wallet": "0xf9706baa6dd084f1f0c3b88602a543d0c313f7f6",
+    "side": "Nikoloz Basilashvili",
+    "usd": 10,
+    "avgPrice": 0.56
+   },
+   {
+    "wallet": "0x489d3df3601288940f89d56b5642b0951129f6e3",
+    "side": "Adam Walton",
+    "usd": 6
+   },
+   {
+    "wallet": "0x01c78f8873c0c86d6b6b92ff627e3802237ee995",
+    "side": "Adam Walton",
+    "usd": 6
+   },
+   {
+    "wallet": "0x1eea2ca273d688b83b4bafd625a085b065a2af80",
+    "side": "Adam Walton",
+    "usd": 4
+   },
+   {
+    "wallet": "0x2da325618fff9b2ffe64a49253fbcae8c7b9f258",
+    "side": "Adam Walton",
+    "usd": 4,
+    "avgPrice": 0.425
+   },
+   {
+    "wallet": "0xd93d79aa6f3859873c2c6d0e0e66a9dd112427a0",
+    "side": "Adam Walton",
+    "usd": 4
+   }
+  ],
+  "hoursToKickoff": 0.11,
+  "capturedAt": "2026-10-18T06:03:36.696255+00:00",
+  "koTs": "2026-10-18T06:10:00+00:00",
+  "cond": "0x4d122b4c84dbe1a453eefb7f4e49769ad3825398da6cce00efe718e959c777a5",
+  "frage": "Almaty Open, Qualification: Adam Walton vs Nikoloz Basilashvili",
+  "tokens": {
+   "Adam Walton": "35794804180951200646566371767615211596333869544845400339973953322559340431116",
+   "Nikoloz Basilashvili": "52735907468535916515663221534836269351845469185988505622807141388798547378377"
   }
  }
 }
