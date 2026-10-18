@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-10-18T20:33:20.747035+00:00",
+"generatedAt": "2026-10-18T20:45:30.191059+00:00",
 "byVerdict": {
 "uneinig": {
 "n": 25,
@@ -18,20 +18,20 @@
 "clvLb": -0.6456
 },
 "konsens": {
-"n": 335,
-"wins": 202,
-"hitRate": 0.603,
-"polyN": 328,
+"n": 337,
+"wins": 203,
+"hitRate": 0.6024,
+"polyN": 329,
 "polyWins": 192,
-"polyHitRate": 0.5854,
-"pinnN": 291,
-"pinnHitRate": 0.6186,
-"nRoi": 335,
-"roi": 0.0929,
-"roiLb": 0.0077,
-"nClv": 335,
-"clv": 0.1,
-"clvLb": -0.1275
+"polyHitRate": 0.5836,
+"pinnN": 293,
+"pinnHitRate": 0.6177,
+"nRoi": 337,
+"roi": 0.092,
+"roiLb": 0.007,
+"nClv": 337,
+"clv": 0.09,
+"clvLb": -0.1381
 },
 "teil": {
 "n": 1,
@@ -56,6 +56,11 @@
 "wins": 14,
 "hitRate": 0.5833
 },
+"Italian Serie A": {
+"n": 20,
+"wins": 13,
+"hitRate": 0.65
+},
 "Spanish La Liga": {
 "n": 20,
 "wins": 12,
@@ -65,11 +70,6 @@
 "n": 19,
 "wins": 11,
 "hitRate": 0.5789
-},
-"Italian Serie A": {
-"n": 19,
-"wins": 13,
-"hitRate": 0.6842
 },
 "UEFA Champions League": {
 "n": 18,
@@ -81,15 +81,15 @@
 "wins": 12,
 "hitRate": 0.7059
 },
+"French Ligue 1": {
+"n": 17,
+"wins": 12,
+"hitRate": 0.7059
+},
 "US MLS": {
 "n": 17,
 "wins": 9,
 "hitRate": 0.5294
-},
-"French Ligue 1": {
-"n": 16,
-"wins": 11,
-"hitRate": 0.6875
 },
 "German Bundesliga": {
 "n": 16,
@@ -344,26 +344,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 261,
+"n": 262,
 "wins": 163,
-"hitRate": 0.6245,
-"nRoi": 261,
-"roi": 0.068,
-"roiLb": -0.0219,
-"nClv": 261,
+"hitRate": 0.6221,
+"nRoi": 262,
+"roi": 0.0639,
+"roiLb": -0.0259,
+"nClv": 262,
 "clv": 0.23,
-"clvLb": -0.047
+"clvLb": -0.0429
 },
 "weak": {
-"n": 100,
-"wins": 46,
-"hitRate": 0.46,
-"nRoi": 100,
-"roi": 0.0774,
-"roiLb": -0.1211,
-"nClv": 100,
-"clv": -0.31,
-"clvLb": -0.5899
+"n": 101,
+"wins": 47,
+"hitRate": 0.4653,
+"nRoi": 101,
+"roi": 0.0852,
+"roiLb": -0.1117,
+"nClv": 101,
+"clv": -0.36,
+"clvLb": -0.6365
 }
 },
 "divergence": {
@@ -375,6 +375,44 @@
 "polyRate": 0.375
 },
 "recent": [
+{
+"matchId": "36099808",
+"home": "Juventus",
+"away": "Lazio",
+"league": "Italian Serie A",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Juventus",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+3
+],
+"kickoff": "2026-10-18T18:45:00Z",
+"settledAt": "2026-10-18T20:45:29.966621+00:00"
+},
+{
+"matchId": "36100440",
+"home": "Lyon",
+"away": "Nice",
+"league": "French Ligue 1",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Lyon",
+"polySide": null,
+"winner": "home",
+"moneyWin": true,
+"polyWin": null,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-10-18T18:45:00Z",
+"settledAt": "2026-10-18T20:45:29.966621+00:00"
+},
 {
 "matchId": "36100477",
 "home": "Malaga",
@@ -1096,57 +1134,19 @@
 ],
 "kickoff": "2026-10-17T18:30:00Z",
 "settledAt": "2026-10-17T21:30:41.092469+00:00"
-},
-{
-"matchId": "36100480",
-"home": "Valencia",
-"away": "Athletic Bilbao",
-"league": "Spanish La Liga",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Athletic Bilbao",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-10-17T19:00:00Z",
-"settledAt": "2026-10-17T20:59:59.682817+00:00"
-},
-{
-"matchId": "36183552",
-"home": "Dundee",
-"away": "Rangers",
-"league": "Scottish Premiership",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Rangers",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-10-17T19:00:00Z",
-"settledAt": "2026-10-17T20:59:59.682817+00:00"
 }
 ],
 "global": {
-"n": 361,
-"wins": 209,
-"hitRate": 0.5789,
-"nRoi": 361,
-"roi": 0.0706,
-"roiLb": -0.0144,
-"nClv": 361,
-"clv": 0.08,
-"clvLb": -0.1361
+"n": 363,
+"wins": 210,
+"hitRate": 0.5785,
+"nRoi": 363,
+"roi": 0.0698,
+"roiLb": -0.0149,
+"nClv": 363,
+"clv": 0.07,
+"clvLb": -0.1458
 },
-"pending": 22,
-"ausgeschlossenLive": 1617
+"pending": 21,
+"ausgeschlossenLive": 1616
 }
