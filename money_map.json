@@ -1,6 +1,6 @@
 {
-"generatedAt": "2026-10-18T17:32:27.687361+00:00",
-"count": 15,
+"generatedAt": "2026-10-18T17:46:58.344198+00:00",
+"count": 17,
 "rows": [
 {
 "matchId": "36099807",
@@ -13,21 +13,26 @@
 "betfair": {
 "side": "home",
 "name": "AC Milan",
-"sharePct": 89,
-"eur": 1013851,
-"odd": 1.04
+"sharePct": 90,
+"eur": 1172173,
+"odd": 1.2
 },
 "poly": {
 "side": "home",
 "name": "AC Milan",
-"sharePct": 100,
-"usd": 366387,
+"sharePct": 99,
+"usd": 397379,
 "src": "live"
 },
-"pinn": null,
+"pinn": {
+"fav": "home",
+"home": 0.829,
+"draw": 0.1506,
+"away": 0.0204
+},
 "mmStrong": true,
 "polyGeld": true,
-"nSources": 2
+"nSources": 3
 },
 {
 "matchId": "36100458",
@@ -41,53 +46,21 @@
 "side": "home",
 "name": "Real Madrid",
 "sharePct": 85,
-"eur": 539553,
-"odd": 1.26
+"eur": 601793,
+"odd": 1.25
 },
 "poly": {
 "side": "home",
 "name": "Real Madrid CF",
-"sharePct": 42,
-"usd": 2108327,
+"sharePct": 68,
+"usd": 2187890,
 "src": "close"
 },
 "pinn": {
 "fav": "home",
-"home": 0.7904,
-"draw": 0.1328,
-"away": 0.0768
-},
-"mmStrong": false,
-"polyGeld": true,
-"nSources": 3
-},
-{
-"matchId": "36099808",
-"home": "Juventus",
-"away": "Lazio",
-"league": "Italian Serie A",
-"live": false,
-"kickoff": "2026-10-18T18:45:00Z",
-"verdict": "konsens",
-"betfair": {
-"side": "home",
-"name": "Juventus",
-"sharePct": 80,
-"eur": 447994,
-"odd": 1.67
-},
-"poly": {
-"side": "home",
-"name": "Juventus FC",
-"sharePct": 56,
-"usd": 271490,
-"src": "close"
-},
-"pinn": {
-"fav": "home",
-"home": 0.5972,
-"draw": 0.2343,
-"away": 0.1685
+"home": 0.789,
+"draw": 0.1313,
+"away": 0.0796
 },
 "mmStrong": true,
 "polyGeld": true,
@@ -104,15 +77,15 @@
 "betfair": {
 "side": "away",
 "name": "Real Sociedad",
-"sharePct": 76,
-"eur": 438817,
-"odd": 1.1
+"sharePct": 81,
+"eur": 566539,
+"odd": 1.36
 },
 "poly": {
-"side": "home",
-"name": "Málaga CF",
-"sharePct": 83,
-"usd": 485034,
+"side": "away",
+"name": "Real Sociedad de Fútbol",
+"sharePct": 94,
+"usd": 512284,
 "src": "live"
 },
 "pinn": {
@@ -126,26 +99,58 @@
 "nSources": 3
 },
 {
+"matchId": "36099808",
+"home": "Juventus",
+"away": "Lazio",
+"league": "Italian Serie A",
+"live": false,
+"kickoff": "2026-10-18T18:45:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "home",
+"name": "Juventus",
+"sharePct": 79,
+"eur": 498732,
+"odd": 1.69
+},
+"poly": {
+"side": "home",
+"name": "Juventus FC",
+"sharePct": 55,
+"usd": 422256,
+"src": "close"
+},
+"pinn": {
+"fav": "home",
+"home": 0.5858,
+"draw": 0.2369,
+"away": 0.1773
+},
+"mmStrong": true,
+"polyGeld": true,
+"nSources": 3
+},
+{
 "matchId": "36181588",
 "home": "FC Copenhagen",
 "away": "AGF",
 "league": "Danish Superliga",
 "live": true,
 "kickoff": "2026-10-18T16:00:00Z",
-"verdict": "teil",
+"verdict": "uneinig",
 "betfair": {
 "side": "home",
 "name": "FC Copenhagen",
-"sharePct": 66,
-"eur": 234690,
-"odd": 2.86
+"sharePct": 55,
+"eur": 330017,
+"odd": 4.9
 },
 "poly": null,
 "pinn": {
-"fav": "home",
-"home": 0.793,
-"draw": 0.1658,
-"away": 0.0412
+"fav": "draw",
+"home": 0.3463,
+"draw": 0.5194,
+"away": 0.1343
 },
 "mmStrong": false,
 "polyGeld": false,
@@ -162,16 +167,16 @@
 "betfair": {
 "side": "home",
 "name": "Lyon",
-"sharePct": 84,
-"eur": 208546,
-"odd": 1.87
+"sharePct": 85,
+"eur": 250138,
+"odd": 1.88
 },
 "poly": null,
 "pinn": {
 "fav": "home",
-"home": 0.53,
-"draw": 0.2455,
-"away": 0.2245
+"home": 0.5338,
+"draw": 0.2453,
+"away": 0.2208
 },
 "mmStrong": false,
 "polyGeld": false,
@@ -189,7 +194,7 @@
 "side": "home",
 "name": "Man City",
 "sharePct": 98,
-"eur": 170186,
+"eur": 170213,
 "odd": 1.14
 },
 "poly": {
@@ -210,6 +215,32 @@
 "nSources": 3
 },
 {
+"matchId": "36181564",
+"home": "Basaksehir",
+"away": "Gaziantep FK",
+"league": "Turkish Super League",
+"live": true,
+"kickoff": "2026-10-18T16:00:00Z",
+"verdict": "uneinig",
+"betfair": {
+"side": "home",
+"name": "Basaksehir",
+"sharePct": 72,
+"eur": 161025,
+"odd": 1.1
+},
+"poly": null,
+"pinn": {
+"fav": "draw",
+"home": 0.285,
+"draw": 0.5734,
+"away": 0.1416
+},
+"mmStrong": false,
+"polyGeld": false,
+"nSources": 2
+},
+{
 "matchId": "36184158",
 "home": "Valladolid",
 "away": "Eldense",
@@ -220,21 +251,26 @@
 "betfair": {
 "side": "home",
 "name": "Valladolid",
-"sharePct": 54,
-"eur": 84913,
-"odd": 5.0
+"sharePct": 49,
+"eur": 98014,
+"odd": 6.4
 },
 "poly": {
 "side": "away",
 "name": "CD Eldense",
-"sharePct": 52,
-"usd": 25184,
+"sharePct": 50,
+"usd": 26143,
 "src": "live"
 },
-"pinn": null,
+"pinn": {
+"fav": "away",
+"home": 0.192,
+"draw": 0.3124,
+"away": 0.4956
+},
 "mmStrong": false,
 "polyGeld": true,
-"nSources": 2
+"nSources": 3
 },
 {
 "matchId": "36092208",
@@ -248,14 +284,14 @@
 "side": "home",
 "name": "Tottenham",
 "sharePct": 71,
-"eur": 83459,
+"eur": 90650,
 "odd": 1.55
 },
 "poly": {
 "side": "home",
 "name": "Tottenham Hotspur FC",
 "sharePct": 66,
-"usd": 49990,
+"usd": 50048,
 "src": "upcoming"
 },
 "pinn": {
@@ -265,38 +301,6 @@
 "away": 0.1558
 },
 "mmStrong": true,
-"polyGeld": true,
-"nSources": 3
-},
-{
-"matchId": "36194569",
-"home": "Paris St-G",
-"away": "Barcelona",
-"league": "UEFA Champions League",
-"live": false,
-"kickoff": "2026-10-20T19:00:00Z",
-"verdict": "konsens",
-"betfair": {
-"side": "home",
-"name": "Paris St-G",
-"sharePct": 55,
-"eur": 36460,
-"odd": 2.48
-},
-"poly": {
-"side": "home",
-"name": "Paris Saint-Germain FC",
-"sharePct": 40,
-"usd": 122191,
-"src": "upcoming"
-},
-"pinn": {
-"fav": "home",
-"home": 0.4094,
-"draw": 0.2056,
-"away": 0.385
-},
-"mmStrong": false,
 "polyGeld": true,
 "nSources": 3
 },
@@ -311,15 +315,74 @@
 "betfair": {
 "side": "home",
 "name": "Girona",
-"sharePct": 79,
-"eur": 29388,
+"sharePct": 84,
+"eur": 40012,
 "odd": 1.08
 },
 "poly": {
 "side": "home",
 "name": "Girona FC",
-"sharePct": 90,
-"usd": 13467,
+"sharePct": 92,
+"usd": 17920,
+"src": "live"
+},
+"pinn": null,
+"mmStrong": true,
+"polyGeld": true,
+"nSources": 2
+},
+{
+"matchId": "36194569",
+"home": "Paris St-G",
+"away": "Barcelona",
+"league": "UEFA Champions League",
+"live": false,
+"kickoff": "2026-10-20T19:00:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "home",
+"name": "Paris St-G",
+"sharePct": 54,
+"eur": 37220,
+"odd": 2.46
+},
+"poly": {
+"side": "home",
+"name": "Paris Saint-Germain FC",
+"sharePct": 40,
+"usd": 122208,
+"src": "upcoming"
+},
+"pinn": {
+"fav": "home",
+"home": 0.4094,
+"draw": 0.2056,
+"away": 0.385
+},
+"mmStrong": false,
+"polyGeld": true,
+"nSources": 3
+},
+{
+"matchId": "36181567",
+"home": "FK Jablonec",
+"away": "Plzen",
+"league": "Czech 1 Liga",
+"live": true,
+"kickoff": "2026-10-18T16:00:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "away",
+"name": "Plzen",
+"sharePct": 84,
+"eur": 32170,
+"odd": 1.19
+},
+"poly": {
+"side": "away",
+"name": "FC Viktoria Plzeň",
+"sharePct": 93,
+"usd": 13935,
 "src": "live"
 },
 "pinn": null,
@@ -339,14 +402,14 @@
 "side": "home",
 "name": "Roma",
 "sharePct": 92,
-"eur": 28030,
-"odd": 1.2
+"eur": 28265,
+"odd": 1.19
 },
 "poly": {
 "side": "home",
 "name": "AS Roma",
 "sharePct": 84,
-"usd": 10188,
+"usd": 10308,
 "src": "upcoming"
 },
 "pinn": {
@@ -370,48 +433,48 @@
 "betfair": {
 "side": "home",
 "name": "Fluminense",
-"sharePct": 66,
-"eur": 23670,
-"odd": 2.22
+"sharePct": 67,
+"eur": 24060,
+"odd": 2.24
 },
 "poly": {
 "side": "home",
 "name": "Fluminense FC",
 "sharePct": 83,
-"usd": 23664,
+"usd": 24143,
 "src": "close"
 },
 "pinn": {
 "fav": "home",
-"home": 0.4441,
-"draw": 0.2727,
-"away": 0.2831
+"home": 0.4438,
+"draw": 0.2725,
+"away": 0.2837
 },
 "mmStrong": true,
 "polyGeld": true,
 "nSources": 3
 },
 {
-"matchId": "36181567",
-"home": "FK Jablonec",
-"away": "Plzen",
-"league": "Czech 1 Liga",
-"live": true,
-"kickoff": "2026-10-18T16:00:00Z",
+"matchId": "36147349",
+"home": "Universitatea Craiova",
+"away": "Farul Constanta",
+"league": "Romanian Liga I",
+"live": false,
+"kickoff": "2026-10-18T18:00:00Z",
 "verdict": "konsens",
 "betfair": {
-"side": "away",
-"name": "Plzen",
-"sharePct": 79,
-"eur": 21355,
-"odd": 1.07
+"side": "home",
+"name": "Universitatea Craiova",
+"sharePct": 89,
+"eur": 19052,
+"odd": 1.45
 },
 "poly": {
-"side": "away",
-"name": "FC Viktoria Plzeň",
-"sharePct": 97,
-"usd": 13814,
-"src": "live"
+"side": "home",
+"name": "Universitatea Craiova CS",
+"sharePct": 68,
+"usd": 4991,
+"src": "upcoming"
 },
 "pinn": null,
 "mmStrong": true,
@@ -429,30 +492,36 @@
 "betfair": {
 "side": "home",
 "name": "Al-Fateh (KSA)",
-"sharePct": 81,
-"eur": 15355,
-"odd": 2.02
+"sharePct": 82,
+"eur": 16386,
+"odd": 1.96
 },
 "poly": {
 "side": "home",
 "name": "Al Fateh Saudi Club",
-"sharePct": 42,
-"usd": 279,
-"src": "upcoming"
+"sharePct": 91,
+"usd": 20119,
+"src": "close"
 },
 "pinn": {
 "fav": "home",
-"home": 0.4799,
-"draw": 0.2462,
-"away": 0.2739
+"home": 0.5023,
+"draw": 0.2397,
+"away": 0.258
 },
-"mmStrong": false,
+"mmStrong": true,
 "polyGeld": true,
 "nSources": 3
 }
 ],
-"nameMatchMisses": 12,
+"nameMatchMisses": 14,
 "nameMatchMissList": [
+{
+"matchId": "36181837",
+"home": "Sampdoria",
+"away": "Arezzo",
+"league": "Italian Serie B"
+},
 {
 "matchId": "36184500",
 "home": "Tromso",
@@ -472,28 +541,22 @@
 "league": "Belgian Cup"
 },
 {
-"matchId": "36191419",
-"home": "Istanbulspor",
-"away": "Antalyaspor",
-"league": "Turkish 1 Lig"
-},
-{
-"matchId": "36181588",
-"home": "FC Copenhagen",
-"away": "AGF",
-"league": "Danish Superliga"
-},
-{
 "matchId": "36181582",
 "home": "Slaven Belupo",
 "away": "Dinamo Zagreb",
 "league": "Croatian HNL"
 },
 {
-"matchId": "36181745",
-"home": "NK Maribor",
-"away": "NK Celje",
-"league": "Slovenian Premier League"
+"matchId": "36191419",
+"home": "Istanbulspor",
+"away": "Antalyaspor",
+"league": "Turkish 1 Lig"
+},
+{
+"matchId": "36202732",
+"home": "KFCO Beerschot Wilrijk",
+"away": "Anderlecht",
+"league": "Belgian Cup"
 },
 {
 "matchId": "36181564",
@@ -502,16 +565,28 @@
 "league": "Turkish Super League"
 },
 {
+"matchId": "36181588",
+"home": "FC Copenhagen",
+"away": "AGF",
+"league": "Danish Superliga"
+},
+{
+"matchId": "36181745",
+"home": "NK Maribor",
+"away": "NK Celje",
+"league": "Slovenian Premier League"
+},
+{
 "matchId": "36181904",
 "home": "Sporting Cristal",
 "away": "Comerciantes Unidos",
 "league": "Peruvian Primera Division"
 },
 {
-"matchId": "36202732",
-"home": "KFCO Beerschot Wilrijk",
-"away": "Anderlecht",
-"league": "Belgian Cup"
+"matchId": "36187643",
+"home": "Ajman Club",
+"away": "Al Sharjah",
+"league": "UAE Arabian Gulf League"
 },
 {
 "matchId": "36100440",
