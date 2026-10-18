@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-10-18T21:47:17.460703+00:00",
+"generatedAt": "2026-10-18T22:03:24.407472+00:00",
 "byVerdict": {
 "uneinig": {
 "n": 25,
@@ -18,20 +18,20 @@
 "clvLb": -0.6456
 },
 "konsens": {
-"n": 339,
-"wins": 204,
-"hitRate": 0.6018,
-"polyN": 331,
-"polyWins": 193,
-"polyHitRate": 0.5831,
-"pinnN": 294,
-"pinnHitRate": 0.6156,
-"nRoi": 339,
-"roi": 0.0898,
-"roiLb": 0.0052,
-"nClv": 339,
-"clv": 0.09,
-"clvLb": -0.1329
+"n": 343,
+"wins": 206,
+"hitRate": 0.6006,
+"polyN": 335,
+"polyWins": 196,
+"polyHitRate": 0.5851,
+"pinnN": 298,
+"pinnHitRate": 0.6141,
+"nRoi": 343,
+"roi": 0.0872,
+"roiLb": 0.0031,
+"nClv": 343,
+"clv": 0.1,
+"clvLb": -0.126
 },
 "teil": {
 "n": 1,
@@ -56,15 +56,20 @@
 "wins": 14,
 "hitRate": 0.5833
 },
+"Spanish La Liga": {
+"n": 21,
+"wins": 13,
+"hitRate": 0.619
+},
 "Italian Serie A": {
 "n": 20,
 "wins": 13,
 "hitRate": 0.65
 },
-"Spanish La Liga": {
-"n": 20,
-"wins": 12,
-"hitRate": 0.6
+"Brazilian Serie A": {
+"n": 19,
+"wins": 13,
+"hitRate": 0.6842
 },
 "English Premier League": {
 "n": 19,
@@ -75,11 +80,6 @@
 "n": 18,
 "wins": 11,
 "hitRate": 0.6111
-},
-"Brazilian Serie A": {
-"n": 17,
-"wins": 12,
-"hitRate": 0.7059
 },
 "French Ligue 1": {
 "n": 17,
@@ -97,9 +97,9 @@
 "hitRate": 0.5625
 },
 "Spanish Segunda Division": {
-"n": 15,
+"n": 16,
 "wins": 9,
-"hitRate": 0.6
+"hitRate": 0.5625
 },
 "UEFA Europa League": {
 "n": 14,
@@ -344,15 +344,15 @@
 },
 "byStrength": {
 "strong": {
-"n": 264,
-"wins": 164,
-"hitRate": 0.6212,
-"nRoi": 264,
-"roi": 0.0613,
-"roiLb": -0.028,
-"nClv": 264,
+"n": 268,
+"wins": 166,
+"hitRate": 0.6194,
+"nRoi": 268,
+"roi": 0.0584,
+"roiLb": -0.0303,
+"nClv": 268,
 "clv": 0.24,
-"clvLb": -0.037
+"clvLb": -0.0297
 },
 "weak": {
 "n": 101,
@@ -375,6 +375,82 @@
 "polyRate": 0.375
 },
 "recent": [
+{
+"matchId": "36100458",
+"home": "Real Madrid",
+"away": "Sevilla",
+"league": "Spanish La Liga",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Real Madrid",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+4,
+1
+],
+"kickoff": "2026-10-18T19:00:00Z",
+"settledAt": "2026-10-18T22:03:24.169566+00:00"
+},
+{
+"matchId": "36172145",
+"home": "Fluminense",
+"away": "Santos",
+"league": "Brazilian Serie A",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Fluminense",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-10-18T19:00:00Z",
+"settledAt": "2026-10-18T22:03:24.169566+00:00"
+},
+{
+"matchId": "36172101",
+"home": "Gremio",
+"away": "Cruzeiro MG",
+"league": "Brazilian Serie A",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Cruzeiro MG",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+4
+],
+"kickoff": "2026-10-18T19:00:00Z",
+"settledAt": "2026-10-18T22:03:24.169566+00:00"
+},
+{
+"matchId": "36185007",
+"home": "Burgos",
+"away": "Sabadell",
+"league": "Spanish Segunda Division",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Sabadell",
+"polySide": "home",
+"winner": "home",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-10-18T19:00:00Z",
+"settledAt": "2026-10-18T22:03:24.169566+00:00"
+},
 {
 "matchId": "36196837",
 "home": "Al-Fateh (KSA)",
@@ -1058,95 +1134,19 @@
 ],
 "kickoff": "2026-10-17T23:30:00Z",
 "settledAt": "2026-10-18T01:45:16.878444+00:00"
-},
-{
-"matchId": "36181690",
-"home": "Minnesota Utd",
-"away": "St Louis City SC",
-"league": "US MLS",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Minnesota Utd",
-"polySide": "away",
-"winner": "home",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-3,
-2
-],
-"kickoff": "2026-10-17T20:30:00Z",
-"settledAt": "2026-10-17T23:30:27.462183+00:00"
-},
-{
-"matchId": "36172036",
-"home": "Botafogo FR",
-"away": "Chapecoense",
-"league": "Brazilian Serie A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Botafogo FR",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-10-17T21:00:00Z",
-"settledAt": "2026-10-17T23:00:52.153828+00:00"
-},
-{
-"matchId": "36181685",
-"home": "Las Palmas",
-"away": "CD Castellon",
-"league": "Spanish Segunda Division",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "CD Castellon",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-3
-],
-"kickoff": "2026-10-17T19:00:00Z",
-"settledAt": "2026-10-17T22:01:35.850760+00:00"
-},
-{
-"matchId": "36099819",
-"home": "Roma",
-"away": "Genoa",
-"league": "Italian Serie A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Roma",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-10-17T18:45:00Z",
-"settledAt": "2026-10-17T21:45:11.415353+00:00"
 }
 ],
 "global": {
-"n": 365,
-"wins": 211,
-"hitRate": 0.5781,
-"nRoi": 365,
-"roi": 0.0679,
-"roiLb": -0.0164,
-"nClv": 365,
-"clv": 0.07,
-"clvLb": -0.141
+"n": 369,
+"wins": 213,
+"hitRate": 0.5772,
+"nRoi": 369,
+"roi": 0.0658,
+"roiLb": -0.0181,
+"nClv": 369,
+"clv": 0.08,
+"clvLb": -0.1346
 },
-"pending": 22,
-"ausgeschlossenLive": 1613
+"pending": 19,
+"ausgeschlossenLive": 1612
 }
