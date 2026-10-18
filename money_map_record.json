@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-10-18T17:47:00.848380+00:00",
+"generatedAt": "2026-10-18T18:02:02.640941+00:00",
 "byVerdict": {
 "uneinig": {
 "n": 25,
@@ -18,20 +18,20 @@
 "clvLb": -0.6456
 },
 "konsens": {
-"n": 327,
-"wins": 197,
-"hitRate": 0.6024,
-"polyN": 320,
-"polyWins": 188,
-"polyHitRate": 0.5875,
-"pinnN": 283,
-"pinnHitRate": 0.6184,
-"nRoi": 327,
-"roi": 0.0884,
-"roiLb": 0.0024,
-"nClv": 327,
-"clv": 0.08,
-"clvLb": -0.1553
+"n": 330,
+"wins": 200,
+"hitRate": 0.6061,
+"polyN": 323,
+"polyWins": 191,
+"polyHitRate": 0.5913,
+"pinnN": 286,
+"pinnHitRate": 0.6224,
+"nRoi": 330,
+"roi": 0.0961,
+"roiLb": 0.0105,
+"nClv": 330,
+"clv": 0.09,
+"clvLb": -0.1424
 },
 "teil": {
 "n": 1,
@@ -61,15 +61,15 @@
 "wins": 11,
 "hitRate": 0.5789
 },
+"Italian Serie A": {
+"n": 19,
+"wins": 13,
+"hitRate": 0.6842
+},
 "Spanish La Liga": {
 "n": 19,
 "wins": 11,
 "hitRate": 0.5789
-},
-"Italian Serie A": {
-"n": 18,
-"wins": 12,
-"hitRate": 0.6667
 },
 "UEFA Champions League": {
 "n": 18,
@@ -181,6 +181,11 @@
 "wins": 3,
 "hitRate": 0.75
 },
+"Norwegian Eliteserien": {
+"n": 4,
+"wins": 3,
+"hitRate": 0.75
+},
 "UEFA Nations League": {
 "n": 4,
 "wins": 2,
@@ -271,11 +276,6 @@
 "wins": 1,
 "hitRate": 0.5
 },
-"Norwegian Eliteserien": {
-"n": 2,
-"wins": 1,
-"hitRate": 0.5
-},
 "Romanian Liga I": {
 "n": 2,
 "wins": 0,
@@ -344,26 +344,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 254,
-"wins": 159,
-"hitRate": 0.626,
-"nRoi": 254,
-"roi": 0.0672,
-"roiLb": -0.0236,
-"nClv": 254,
-"clv": 0.2,
-"clvLb": -0.0801
+"n": 256,
+"wins": 161,
+"hitRate": 0.6289,
+"nRoi": 256,
+"roi": 0.0716,
+"roiLb": -0.0187,
+"nClv": 256,
+"clv": 0.22,
+"clvLb": -0.0647
 },
 "weak": {
-"n": 99,
-"wins": 45,
-"hitRate": 0.4545,
-"nRoi": 99,
-"roi": 0.0626,
-"roiLb": -0.1364,
-"nClv": 99,
-"clv": -0.32,
-"clvLb": -0.5959
+"n": 100,
+"wins": 46,
+"hitRate": 0.46,
+"nRoi": 100,
+"roi": 0.0774,
+"roiLb": -0.1211,
+"nClv": 100,
+"clv": -0.31,
+"clvLb": -0.5899
 }
 },
 "divergence": {
@@ -375,6 +375,63 @@
 "polyRate": 0.375
 },
 "recent": [
+{
+"matchId": "36099807",
+"home": "AC Milan",
+"away": "Atalanta",
+"league": "Italian Serie A",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "AC Milan",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+2
+],
+"kickoff": "2026-10-18T16:00:00Z",
+"settledAt": "2026-10-18T18:02:02.391030+00:00"
+},
+{
+"matchId": "36181812",
+"home": "Molde",
+"away": "Start",
+"league": "Norwegian Eliteserien",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Molde",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+6,
+1
+],
+"kickoff": "2026-10-18T15:00:00Z",
+"settledAt": "2026-10-18T18:02:02.391030+00:00"
+},
+{
+"matchId": "36184493",
+"home": "Valerenga",
+"away": "Brann",
+"league": "Norwegian Eliteserien",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Valerenga",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+1
+],
+"kickoff": "2026-10-18T15:00:00Z",
+"settledAt": "2026-10-18T18:02:02.391030+00:00"
+},
 {
 "matchId": "36092085",
 "home": "Nottm Forest",
@@ -1077,76 +1134,19 @@
 ],
 "kickoff": "2026-10-17T16:30:00Z",
 "settledAt": "2026-10-17T18:30:56.222758+00:00"
-},
-{
-"matchId": "36099842",
-"home": "Bayern Munich",
-"away": "RB Leipzig",
-"league": "German Bundesliga",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Bayern Munich",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-6,
-1
-],
-"kickoff": "2026-10-17T16:30:00Z",
-"settledAt": "2026-10-17T18:30:56.222758+00:00"
-},
-{
-"matchId": "36176791",
-"home": "AIK",
-"away": "IFK Goteborg",
-"league": "Swedish Allsvenskan",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "AIK",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-10-17T15:30:00Z",
-"settledAt": "2026-10-17T18:30:56.222758+00:00"
-},
-{
-"matchId": "36184155",
-"home": "Sporting Gijon",
-"away": "Albacete",
-"league": "Spanish Segunda Division",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Sporting Gijon",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-10-17T16:30:00Z",
-"settledAt": "2026-10-17T18:30:56.222758+00:00"
 }
 ],
 "global": {
-"n": 353,
-"wins": 204,
-"hitRate": 0.5779,
-"nRoi": 353,
-"roi": 0.0659,
-"roiLb": -0.0198,
-"nClv": 353,
-"clv": 0.06,
-"clvLb": -0.1621
+"n": 356,
+"wins": 207,
+"hitRate": 0.5815,
+"nRoi": 356,
+"roi": 0.0732,
+"roiLb": -0.0122,
+"nClv": 356,
+"clv": 0.07,
+"clvLb": -0.15
 },
-"pending": 23,
+"pending": 20,
 "ausgeschlossenLive": 1624
 }
