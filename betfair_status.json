@@ -22,9 +22,11 @@
       "id": "grosses_geld_bleibt_im_feed",
       "label": "Grosses Geld faellt nicht aus dem Feed",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "36099807: zuletzt 220.860 € und Anpfiff erst in 2.0 h — trotzdem nicht mehr im Feed"
+      ],
       "note": "Der Detail-Deckel darf nicht das teuerste Spiel schneiden — genau das ist am 08.09. passiert (alle vier CL-Spiele, Real Madrid mit 102.861 €)."
     },
     {
@@ -34,7 +36,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "nur 51 von 154 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Puerto Cabello v Monagas (Venezuelan Primera Division); Estudiantes de Merida v Metropolitanos (Venezuelan Primera Division); Rayo Zuliano v Caracas (Venezuelan Primera Division)"
+        "nur 59 von 136 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Montego Bay United v Arnett Gardens FC (Jamaican Premier League); Chaco For Ever v CA Central Norte (Argentinian Primera Nacional); Club Deportes Santa Cruz v Antofagasta (Chilean Primera B)"
       ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
@@ -90,37 +92,32 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 375947 verbraucht, 4624053 uebrig"
+      "note": "Kontingent: 376681 verbraucht, 4623319 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 20,
+      "nFail": 15,
       "failures": [
+        "Hammarby TFF v IF Karlstad (Swedish Division 1): name — bester Kandidat „Halmstads BK v Hammarby IF“",
+        "Lusitania Futebol Clube v AD Limianos (Portuguese Cup): name — bester Kandidat „AD Ceuta FC v Oviedo“",
         "SK Kladno v Arsenal Ceska Lipa (Czech 2 Liga): name — bester Kandidat „Nottingham Forest v Arsenal“",
         "Man City (W) v Brighton (W) (English WSL): zeit — bester Kandidat „Manchester City v Brighton and Hove Albion“ · 313.5h Anpfiff-Abstand",
         "Al-Ittihad Kalba v Al Jazira (UAE Arabian Gulf League): zeit — bester Kandidat „Al-Ettifaq v Al-Ittihad“ · 52.9h Anpfiff-Abstand",
         "Al-Khaleej Khor Fakkan v Al Wahda (Abu Dhabi) (UAE Arabian Gulf League): zeit — bester Kandidat „Al-Fateh v Al-Khaleej“ · 4.9h Anpfiff-Abstand",
         "Newcastle Utd (W) v Sunderland (W) (English Ladies League Cup): zeit — bester Kandidat „Sunderland v Leeds United“ · 171.5h Anpfiff-Abstand",
-        "Charlton (W) v Man Utd (W) (English WSL): name — bester Kandidat „Leeds United v Manchester United“",
         "Dinamo Tbilisi v FC Spaeri (Georgian Umaglesi Liga): name — bester Kandidat „Dinamo Moscow v CSKA Moscow“",
+        "Charlton (W) v Man Utd (W) (English WSL): name — bester Kandidat „Leeds United v Manchester United“",
         "Brighton U21 v Bournemouth U21 (English Premier League 2 - Div 1): name — bester Kandidat „Bournemouth v Sunderland“",
-        "Pattani FC v Buriram Utd (Thai League 1): name — bester Kandidat „Leeds United v Manchester United“",
-        "FC Jazz v KuPS Akatemia (Finnish Ykkonen): name — bester Kandidat „KuPS Kuopio v VPS Vaasa“",
-        "Shabana v Nairobi United (Kenyan Premier League): name — bester Kandidat „Leeds United v Manchester United“",
-        "Panaitolikos v Olympiakos (Greek Super League): name — bester Kandidat „Panetolikos Agrinio v Olympiakos Piraeus“",
-        "Northeast United v Kerala Blasters FC (Indian Super League): name — bester Kandidat „Leeds United v Manchester United“",
         "Al-Sadd v Al-Duhail SC (Qatari Stars League): zeit — bester Kandidat „Al-Fateh v Al-Khaleej“ · 3.5h Anpfiff-Abstand",
-        "Lusitania Futebol Clube v AD Limianos (Portuguese Cup): name — bester Kandidat „AD Ceuta FC v Oviedo“",
         "Al Fahaheel FC v Al-Shabab (Kuwaiti Premier League): zeit — bester Kandidat „Al-Fateh v Al-Shabab“ · 96.1h Anpfiff-Abstand",
-        "Hammarby TFF v IF Karlstad (Swedish Division 1): name — bester Kandidat „Halmstads BK v Hammarby IF“",
         "Mgladbach v Hoffenheim (German Bundesliga): name — bester Kandidat „Borussia Monchengladbach v TSG Hoffenheim“",
-        "Tampere Utd v RoPS (Finnish Ykkonen): name — bester Kandidat „Leeds United v Manchester United“",
+        "Panaitolikos v Olympiakos (Greek Super League): name — bester Kandidat „Panetolikos Agrinio v Olympiakos Piraeus“",
         "RZ Pellets WAC v WSG Wattens (Austrian Bundesliga): name — bester Kandidat „Wolfsberger AC v WSG Tirol“"
       ],
-      "note": "ohne Anker: kein_kandidat 84 · kein_pinnacle 6 · name 14 · zeit 6. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 85 · kein_pinnacle 3 · name 9 · zeit 6. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -129,7 +126,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 4 — Brighton v Crystal Palace (20 Buecher, ohne Pinnacle); Shanghai Port FC v Chengdu Rongcheng (16 Buecher, ohne Pinnacle); AD Ceuta FC v Oviedo (23 Buecher, ohne Pinnacle); Vasteras SK v Mjallby (34 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 3 — Brighton v Crystal Palace (17 Buecher, ohne Pinnacle); Sarpsborg v Rosenborg (29 Buecher, ohne Pinnacle); AD Ceuta FC v Oviedo (23 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -138,7 +135,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 18 gewollt, 18 abgerufen, 0 mit Daten"
+      "note": "Totals: 16 gewollt, 16 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -204,6 +201,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-10-18T13:47:56.884510+00:00"
+  "nFail": 3,
+  "generatedAt": "2026-10-18T14:02:35.934744+00:00"
 }
