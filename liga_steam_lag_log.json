@@ -2279,17 +2279,23 @@
           "polyPrice": 0.775,
           "pinnFair": 0.7829,
           "steamLag": false
+        },
+        {
+          "ts": "2026-10-18T11:01:19Z",
+          "edgePp": 0.3,
+          "polyPrice": 0.78,
+          "pinnFair": 0.7829,
+          "steamLag": false
         }
       ],
-      "currentEdgePp": 0.8,
-      "currentPolyPrice": 0.775,
+      "currentEdgePp": 0.3,
+      "currentPolyPrice": 0.78,
       "edgeVelocityPPH": 0.0,
-      "convergencePct": 69.2,
-      "convergenceTs": null,
-      "convergenceHours": null,
-      "status": "OPEN",
-      "outcome": null,
-      "pendingConvergenceConfirm": true
+      "convergencePct": 88.5,
+      "convergenceTs": "2026-10-18T11:01:19Z",
+      "convergenceHours": 61.4,
+      "status": "CONVERGED",
+      "outcome": null
     },
     {
       "id": "173-1660_hw",
@@ -2374,10 +2380,57 @@
           "polyPrice": 0.27,
           "pinnFair": 0.2924,
           "steamLag": false
+        },
+        {
+          "ts": "2026-10-18T11:01:19Z",
+          "edgePp": 1.2,
+          "polyPrice": 0.28,
+          "pinnFair": 0.2924,
+          "steamLag": false
         }
       ],
-      "currentEdgePp": 2.2,
-      "currentPolyPrice": 0.27,
+      "currentEdgePp": 1.2,
+      "currentPolyPrice": 0.28,
+      "edgeVelocityPPH": -0.074,
+      "convergencePct": 45.5,
+      "convergenceTs": null,
+      "convergenceHours": null,
+      "status": "OPEN",
+      "outcome": null
+    },
+    {
+      "id": "55-65_hw",
+      "matchKey": "55-65",
+      "homeId": "55",
+      "awayId": "65",
+      "home": "Brentford FC",
+      "away": "Nottingham Forest FC",
+      "homeFlag": "🏳",
+      "awayFlag": "🏳",
+      "matchDate": "2026-10-31",
+      "market": "hw",
+      "marketLabel": "Heimsieg",
+      "signalTs": "2026-10-18T11:01:19Z",
+      "entryEdgePp": 2.1,
+      "entryPolyPrice": 0.485,
+      "entryPinnFair": 0.5056,
+      "entryVol": 0,
+      "steamLagAtSignal": false,
+      "pinnMoveAtSignal": 0.2,
+      "edgeTrendAtSignal": "new",
+      "highConfidence": false,
+      "entryTier": "track",
+      "snapshots": [
+        {
+          "ts": "2026-10-18T11:01:19Z",
+          "edgePp": 2.1,
+          "polyPrice": 0.485,
+          "pinnFair": 0.5056,
+          "steamLag": false
+        }
+      ],
+      "currentEdgePp": 2.1,
+      "currentPolyPrice": 0.485,
       "edgeVelocityPPH": null,
       "convergencePct": 0.0,
       "convergenceTs": null,
@@ -2386,7 +2439,7 @@
       "outcome": null
     }
   ],
-  "updatedAt": "2026-10-17T21:28:43Z",
-  "runCount": 199,
+  "updatedAt": "2026-10-18T11:01:19Z",
+  "runCount": 200,
   "lastError": "no_poly_prices"
 }
