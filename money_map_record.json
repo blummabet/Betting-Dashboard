@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-10-18T18:02:02.640941+00:00",
+"generatedAt": "2026-10-18T18:17:10.484163+00:00",
 "byVerdict": {
 "uneinig": {
 "n": 25,
@@ -18,20 +18,20 @@
 "clvLb": -0.6456
 },
 "konsens": {
-"n": 330,
-"wins": 200,
-"hitRate": 0.6061,
-"polyN": 323,
-"polyWins": 191,
-"polyHitRate": 0.5913,
-"pinnN": 286,
-"pinnHitRate": 0.6224,
-"nRoi": 330,
-"roi": 0.0961,
-"roiLb": 0.0105,
-"nClv": 330,
-"clv": 0.09,
-"clvLb": -0.1424
+"n": 333,
+"wins": 201,
+"hitRate": 0.6036,
+"polyN": 326,
+"polyWins": 192,
+"polyHitRate": 0.589,
+"pinnN": 289,
+"pinnHitRate": 0.6194,
+"nRoi": 333,
+"roi": 0.0928,
+"roiLb": 0.0074,
+"nClv": 333,
+"clv": 0.1,
+"clvLb": -0.1342
 },
 "teil": {
 "n": 1,
@@ -86,6 +86,11 @@
 "wins": 9,
 "hitRate": 0.5294
 },
+"French Ligue 1": {
+"n": 16,
+"wins": 11,
+"hitRate": 0.6875
+},
 "German Bundesliga": {
 "n": 16,
 "wins": 9,
@@ -100,11 +105,6 @@
 "n": 14,
 "wins": 10,
 "hitRate": 0.7143
-},
-"French Ligue 1": {
-"n": 13,
-"wins": 10,
-"hitRate": 0.7692
 },
 "UEFA Conference League": {
 "n": 11,
@@ -344,15 +344,15 @@
 },
 "byStrength": {
 "strong": {
-"n": 256,
-"wins": 161,
-"hitRate": 0.6289,
-"nRoi": 256,
-"roi": 0.0716,
-"roiLb": -0.0187,
-"nClv": 256,
+"n": 259,
+"wins": 162,
+"hitRate": 0.6255,
+"nRoi": 259,
+"roi": 0.0676,
+"roiLb": -0.0224,
+"nClv": 259,
 "clv": 0.22,
-"clvLb": -0.0647
+"clvLb": -0.055
 },
 "weak": {
 "n": 100,
@@ -375,6 +375,63 @@
 "polyRate": 0.375
 },
 "recent": [
+{
+"matchId": "36100447",
+"home": "Paris FC",
+"away": "Rennes",
+"league": "French Ligue 1",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Paris FC",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+4,
+3
+],
+"kickoff": "2026-10-18T15:15:00Z",
+"settledAt": "2026-10-18T18:17:10.227747+00:00"
+},
+{
+"matchId": "36100450",
+"home": "Lorient",
+"away": "Monaco",
+"league": "French Ligue 1",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Monaco",
+"polySide": "away",
+"winner": "home",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-10-18T15:15:00Z",
+"settledAt": "2026-10-18T18:17:10.227747+00:00"
+},
+{
+"matchId": "36100464",
+"home": "Le Havre",
+"away": "Auxerre",
+"league": "French Ligue 1",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Le Havre",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+3
+],
+"kickoff": "2026-10-18T15:15:00Z",
+"settledAt": "2026-10-18T18:17:10.227747+00:00"
+},
 {
 "matchId": "36099807",
 "home": "AC Milan",
@@ -1077,76 +1134,19 @@
 ],
 "kickoff": "2026-10-17T18:30:00Z",
 "settledAt": "2026-10-17T20:45:06.568148+00:00"
-},
-{
-"matchId": "36177516",
-"home": "Pisa",
-"away": "US Cremonese",
-"league": "Italian Serie B",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Pisa",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-10-17T17:30:00Z",
-"settledAt": "2026-10-17T20:30:00.677044+00:00"
-},
-{
-"matchId": "36100453",
-"home": "Betis",
-"away": "Barcelona",
-"league": "Spanish La Liga",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Barcelona",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-5
-],
-"kickoff": "2026-10-17T16:30:00Z",
-"settledAt": "2026-10-17T19:30:55.907123+00:00"
-},
-{
-"matchId": "36092010",
-"home": "Newcastle",
-"away": "Aston Villa",
-"league": "English Premier League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Newcastle",
-"polySide": "home",
-"winner": "away",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-10-17T16:30:00Z",
-"settledAt": "2026-10-17T18:30:56.222758+00:00"
 }
 ],
 "global": {
-"n": 356,
-"wins": 207,
-"hitRate": 0.5815,
-"nRoi": 356,
-"roi": 0.0732,
-"roiLb": -0.0122,
-"nClv": 356,
+"n": 359,
+"wins": 208,
+"hitRate": 0.5794,
+"nRoi": 359,
+"roi": 0.0703,
+"roiLb": -0.0148,
+"nClv": 359,
 "clv": 0.07,
-"clvLb": -0.15
+"clvLb": -0.1424
 },
-"pending": 20,
-"ausgeschlossenLive": 1624
+"pending": 18,
+"ausgeschlossenLive": 1623
 }
