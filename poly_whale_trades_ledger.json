@@ -26025,7 +26025,7 @@
 "walletRank": 155,
 "restock": false,
 "sentAt": "2026-10-18T11:50:49Z",
-"status": "pending",
+"status": "settled",
 "kanal": "trades",
 "public": null,
 "totalUsd": 72739.0,
@@ -26033,7 +26033,17 @@
 "seitenAnteil": 0.0524,
 "seiteUsd": 51518.93,
 "htkMess": 2.16,
-"htkFirst": 2.26
+"htkFirst": 2.26,
+"cond": "0xa2e72d3d8314fe0e2f9baa56703b114c0a03efcba944da7c5a8a448d29ff7486",
+"condQuelle": "erfassung+wallet",
+"result": "win",
+"winner": "Team Nemesis",
+"closePrice": 0.675,
+"stake": 10.0,
+"pnl": 4.81,
+"clvPP": 0.0,
+"settledTs": "2026-10-18T18:13:55.756581+00:00",
+"resolvedTs": "2026-10-18T18:13:38.237586+00:00"
 },
 {
 "k": "0xa96274cc1b321afc8cbdc1ba07f7e2d471e6f7c8|epl-bou-sun-2026-10-18|AFC Bournemouth",
@@ -26487,7 +26497,7 @@
 "walletRank": 129,
 "restock": false,
 "sentAt": "2026-10-18T14:57:28Z",
-"status": "settled",
+"status": "unaufloesbar",
 "kanal": "trades",
 "public": null,
 "totalUsd": 26754.0,
@@ -26498,14 +26508,14 @@
 "htkFirst": 0.38,
 "cond": "0x714c4374f34261526604c47ec838ffabf76fb6d3bd1f2b05ff02ea63b43921bf",
 "condQuelle": "erfassung+wallet",
-"result": "loss",
-"winner": "Under",
 "closePrice": 0.495,
-"stake": 10.0,
-"pnl": -10.0,
-"clvPP": 0.0,
 "settledTs": "2026-10-18T18:06:40.554367+00:00",
-"resolvedTs": "2026-10-18T18:06:19.331467+00:00"
+"resolvedTs": "2026-10-18T18:06:19.331467+00:00",
+"zurueckgenommen": {
+"war": "loss",
+"am": "2026-10-18T18:13:55.756581+00:00",
+"grund": "Buendel-Slug ohne Linie — Ausgang nie ableitbar"
+}
 },
 {
 "k": "0x69ddcbd8237d53ed081dc586a184b27464931964|fl1-lor-asm-2026-10-18|AS Monaco FC",
@@ -26775,5 +26785,27 @@
 "seiteUsd": 169817.8,
 "htkMess": 2.41,
 "htkFirst": 2.5
+},
+{
+"k": "0x1f3a646ce5cbe2c70270e7a46161d89b7c7b895d|fl1-lyo-ogc-2026-10-18|Olympique Lyonnais",
+"key": "fl1-lyo-ogc-2026-10-18",
+"side": "Olympique Lyonnais",
+"wallet": "0x1f3a646ce5cbe2c70270e7a46161d89b7c7b895d",
+"league": "LIGUE-1",
+"cat": "Fußball",
+"usd": 464057.0,
+"pushPrice": 0.515,
+"whaleEntry": 0.515,
+"walletRank": 11,
+"restock": false,
+"sentAt": "2026-10-18T18:13:54Z",
+"status": "pending",
+"kanal": "trades",
+"public": true,
+"totalUsd": 241993.0,
+"seitenAnteil": 0.77,
+"seiteUsd": 602679.75,
+"htkMess": 0.52,
+"htkFirst": 0.74
 }
 ]
