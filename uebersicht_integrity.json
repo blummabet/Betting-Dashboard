@@ -38,7 +38,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "Fall liegt aktuell vor: 🔒 E-Sport ohne Wallet-Nachweis, Brazilian Serie A · Match Odds, Brazilian Serie B · First Half Goals 0.5 nehmen die ROI-Huerde und scheitern an CLV — der Satz auf Ebene 1 muss das sagen"
+      "hinweis": "Fall liegt aktuell vor: 🔒 E-Sport ohne Wallet-Nachweis, Brazilian Serie A · Match Odds, English National League · Over/Under 3.5 Goals nehmen die ROI-Huerde und scheitern an CLV — der Satz auf Ebene 1 muss das sagen"
     },
     {
       "label": "Poly-Kachel gibt sich nicht als Kanal-Bilanz aus",
@@ -115,19 +115,19 @@
     {
       "label": "Money Map meldet ihre Luecken",
       "severity": "error",
-      "failures": [],
-      "nFail": 0,
-      "ok": true,
+      "failures": [
+        "Lyon v Nice: Money Map ohne Poly, aber ein Poly-Markt mit BEIDEN Teams existiert — stille Luecke, nicht Abwesenheit"
+      ],
+      "nFail": 1,
+      "ok": false,
       "hinweis": ""
     },
     {
       "label": "Money Map: die Poly-Seite gehoert zum Spiel",
       "severity": "error",
-      "failures": [
-        "Leeds v Man Utd (English Premier League): Poly-Seite heisst „Manchester United FC“ und gehoert zu keinem der beiden Teams — $80272 fremdes Geld in einer Konsens-Zeile"
-      ],
-      "nFail": 1,
-      "ok": false,
+      "failures": [],
+      "nFail": 0,
+      "ok": true,
       "hinweis": ""
     },
     {
@@ -159,7 +159,7 @@
       "severity": "error",
       "failures": [
         "5 Fussball-Ligen ohne Eintrag in stake_liga_stufe.py (a-league, afc-challenge-league, australian-championship, syrian-league, w-league) — sie fallen aus jeder Zeile der Ansicht, statt aufzufallen",
-        "9 Liga-Schluessel bezeichnen mehrere Turniere und tragen trotzdem eine Spielklasse (1-liga, allsvenskan, division-1, eerste-divisie, league-one, premier-division) — eine Zahl davon ist fuer die Haelfte der Spiele falsch"
+        "8 Liga-Schluessel bezeichnen mehrere Turniere und tragen trotzdem eine Spielklasse (allsvenskan, division-1, eerste-divisie, league-one, premier-division, premier-league) — eine Zahl davon ist fuer die Haelfte der Spiele falsch"
       ],
       "nFail": 2,
       "ok": false,
@@ -181,40 +181,40 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "72 Picks im Fenster, 24 % ohne Preis-Signal."
+      "hinweis": "76 Picks im Fenster, 20 % ohne Preis-Signal."
     },
     {
       "label": "Stumme Signale: wer hat nie gefeuert?",
       "severity": "warn",
       "failures": [
-        "polymarket_sharp: 0 Feuerungen in 379 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
+        "polymarket_sharp: 0 Feuerungen in 387 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
         "betfair_coherence: stumm, aber erklaert — 07.09.2026 gemessen: seit der Fit-Schranke (MAX_RMSE 0,02 + Leave-one-out, 06.09.) feuert es fast nie — richtigerweise. Ueber 633 Sprossen aus 150 Spielen blieben 8 echte Kanten >= 4 pp, alle in duennen Ligen (Kasachstan, Litauen, Norwegen 2, Estland), keine einzige in den Top 5. Die Betfair-Tormarkt-Leiter ist auf unserer Aufloesung arbitragefrei.",
         "game_state_openness: stumm, aber erklaert — 07.09.2026 gemessen: braucht asymmetrische Verzweiflung spaet in der Saison. Aktuell Spieltag 3-4 von 34-38, also 34 Runden offen — der Tabellendruck ist per Konstruktion nahe null. Vor dem Winter ist Stille hier der richtige Zustand."
       ],
       "nFail": 3,
       "ok": false,
-      "hinweis": "9 von 33 Signalen schweigen ueber 379 Picks — davon 6 bewusst abgeschaltet (altitude_signal, incentive_signal, pressure_index, steam_lag, travel_burden, weather_signal), 3 an und trotzdem stumm."
+      "hinweis": "9 von 33 Signalen schweigen ueber 387 Picks — davon 6 bewusst abgeschaltet (altitude_signal, incentive_signal, pressure_index, steam_lag, travel_burden, weather_signal), 3 an und trotzdem stumm."
     },
     {
       "label": "Signal-Bilanz: schadet ein Signal belegt?",
       "severity": "warn",
       "failures": [
-        "injury schadet belegt: Ausgang -0.052 schlechter als ohne (OG -0.009, n=127/106) — abwerten oder nur noch beobachten",
+        "injury schadet belegt: Ausgang -0.043 schlechter als ohne (OG -0.001, n=133/108) — abwerten oder nur noch beobachten",
         "league_pressure schadet belegt: Ausgang -0.066 schlechter als ohne (OG -0.003, n=41/103) — abwerten oder nur noch beobachten"
       ],
       "nFail": 2,
       "ok": false,
-      "hinweis": "7 Signale belegt beitragend, 2 belegt schaedlich. ~30 Signale gleichzeitig geprueft — 1-2 falsche Treffer sind zu erwarten. Nur was ueber mehrere Wochen haelt, ist ein Befund."
+      "hinweis": "8 Signale belegt beitragend, 2 belegt schaedlich. ~30 Signale gleichzeitig geprueft — 1-2 falsche Treffer sind zu erwarten. Nur was ueber mehrere Wochen haelt, ist ein Befund."
     },
     {
       "label": "Fade-Unter: haelt die Kontrollgruppe?",
       "severity": "error",
       "failures": [
-        "Match Odds H: der Fade gewinnt hier BELEGT (+7.0 %, UG +1.1 %, Geldseite +1.9 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
+        "Match Odds H: der Fade gewinnt hier BELEGT (+6.1 %, UG +0.1 %, Geldseite +2.3 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
       ],
       "nFail": 1,
       "ok": false,
-      "hinweis": "seit Vorregistrierung n=6393 (UG -5.6 %) · Rueckblick n=0, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=6420 (UG -5.0 %) · Rueckblick n=0, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -236,9 +236,9 @@
       "label": "Takt: Cron gegen gemessene Laeufe",
       "severity": "warn",
       "failures": [
-        "capture-closing-liga.yml: Cron sagt alle 15 Min, gemessen alle 166 Min (closing-liga, im Zeitfenster gemessen) — die Schedule-Bilanz rechnet mit 52 Laeufen/Tag, geliefert werden eher 5. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit.",
-        "manage-liga-poly.yml: Cron sagt alle 30 Min, gemessen alle 99 Min (liga-poly, im Zeitfenster gemessen) — die Schedule-Bilanz rechnet mit 24 Laeufen/Tag, geliefert werden eher 7. Dieser Workflow hat ein 40-Minuten-Fenster zu treffen — bei einem gemessenen Abstand von 99 Min kann er es nicht sicher treffen. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit.",
-        "poly-live-scan.yml: Cron sagt alle 15 Min, gemessen alle 43 Min (poly-live-scan) — die Schedule-Bilanz rechnet mit 96 Laeufen/Tag, geliefert werden eher 33. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit."
+        "capture-closing-liga.yml: Cron sagt alle 15 Min, gemessen alle 148 Min (closing-liga, im Zeitfenster gemessen) — die Schedule-Bilanz rechnet mit 52 Laeufen/Tag, geliefert werden eher 5. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit.",
+        "manage-liga-poly.yml: Cron sagt alle 30 Min, gemessen alle 93 Min (liga-poly, im Zeitfenster gemessen) — die Schedule-Bilanz rechnet mit 24 Laeufen/Tag, geliefert werden eher 8. Dieser Workflow hat ein 40-Minuten-Fenster zu treffen — bei einem gemessenen Abstand von 93 Min kann er es nicht sicher treffen. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit.",
+        "poly-live-scan.yml: Cron sagt alle 15 Min, gemessen alle 23 Min (poly-live-scan) — die Schedule-Bilanz rechnet mit 96 Laeufen/Tag, geliefert werden eher 63. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit."
       ],
       "nFail": 3,
       "ok": false,
@@ -263,11 +263,9 @@
     {
       "label": "Positionswert ist frisch",
       "severity": "warn",
-      "failures": [
-        "liga_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 15 h — die Datei selbst ist 15 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
-      ],
-      "nFail": 1,
-      "ok": false,
+      "failures": [],
+      "nFail": 0,
+      "ok": true,
       "hinweis": ""
     },
     {
@@ -284,7 +282,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "705 Zeilen · 686 abgerechnet · 11 offen"
+      "hinweis": "736 Zeilen · 720 abgerechnet · 8 offen"
     },
     {
       "label": "Artefakte sind lesbar",
@@ -323,11 +321,9 @@
     {
       "label": "Ergebnisse kommen an",
       "severity": "error",
-      "failures": [
-        "liga_ergebnis_nachlauf.json: 1 abgesagtes/verlegtes Spiel (Rayo Vallecano–Athletic Club (ABD)) — es kommt an diesem Termin zu keinem Ergebnis; offene Wetten darauf brauchen eine Entscheidung"
-      ],
-      "nFail": 1,
-      "ok": false,
+      "failures": [],
+      "nFail": 0,
+      "ok": true,
       "hinweis": ""
     },
     {
@@ -342,13 +338,13 @@
       "label": "Serien-Buch zeigt beide Buecher",
       "severity": "warn",
       "failures": [
-        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 131.5 h, MLS 139.1 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 140.0 h, MLS 147.6 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
       ],
       "nFail": 1,
       "ok": false,
       "hinweis": "Liga n=95 · MLS n=82 · Urteil beide 'Erwartung zu duenn'"
     }
   ],
-  "nFail": 11,
-  "generatedAt": "2026-10-18T12:10:51.957548+00:00"
+  "nFail": 9,
+  "generatedAt": "2026-10-18T20:44:15.387312+00:00"
 }
