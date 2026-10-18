@@ -34549,9 +34549,12 @@
    1.65
   ],
   "sentAt": "2026-10-18T03:45:20.777987+00:00",
-  "status": "pending",
+  "status": "abgerechnet",
   "push": false,
-  "pushGrund": "Tennis live stumm (Geld folgt dem Spielstand)"
+  "pushGrund": "Tennis live stumm (Geld folgt dem Spielstand)",
+  "rendite": 0.0148,
+  "win": true,
+  "settledAt": "2026-10-18T06:15:00.173474+00:00"
  },
  {
   "k": "tore:edc6a4a0-490e-447c-b5c6-5fc94cea5222",
@@ -34586,5 +34589,63 @@
   "rendite": -0.25,
   "win": false,
   "settledAt": "2026-10-18T05:45:28.752242+00:00"
+ },
+ {
+  "k": "spiel:4472dbc5-a2a7-4b44-a4fa-0ed42559e476",
+  "art": "spiel",
+  "eventId": "4472dbc5-a2a7-4b44-a4fa-0ed42559e476",
+  "event": "LOUD - Team Vitality",
+  "liga": "VALORANT Champions 2026",
+  "ligaSlug": "valorant-champions-2026-t2",
+  "kat": "E-Sport",
+  "seite": "LOUD",
+  "nGerichtet": 5,
+  "maerkte": [
+   "Map 1 Winner - Threeway",
+   "Map 1 Winner - Twoway",
+   "Match Winner - Twoway"
+  ],
+  "summeUsd": 19518.0,
+  "faktor": 1.78,
+  "nWetten": 5,
+  "sekunden": 364.0,
+  "phase": "vor",
+  "betIds": [
+   "sport:672637103",
+   "sport:672637184",
+   "sport:672638616",
+   "sport:672639133",
+   "sport:672639132"
+  ],
+  "sentAt": "2026-10-18T06:15:00.173474+00:00",
+  "status": "pending",
+  "push": true
+ },
+ {
+  "k": "klein:f435fced-542a-4580-b0dd-6c6ce7b182ed",
+  "art": "klein",
+  "auswahlId": "f435fced-542a-4580-b0dd-6c6ce7b182ed",
+  "eventId": "fdbeca4f-dd62-4afe-82ae-5dc83a23f54e",
+  "event": "WSE - Citizen AA",
+  "liga": "Division 1",
+  "ligaSlug": "division-1",
+  "kat": "Fußball",
+  "ebene": "3",
+  "markt": "Asian Total",
+  "auswahl": "Under 2.5",
+  "quote": 2,
+  "summeUsd": 3000.0,
+  "faktor": 1.54,
+  "refBasis": "liga",
+  "nWetten": 1,
+  "phase": "live",
+  "anpfiff": "2026-10-18T05:30:00Z",
+  "spielminute": 35,
+  "betIds": [
+   "sport:672639077"
+  ],
+  "sentAt": "2026-10-18T06:15:00.173474+00:00",
+  "status": "pending",
+  "push": true
  }
 ]
