@@ -38,7 +38,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "Fall liegt aktuell vor: 🔒 E-Sport ohne Wallet-Nachweis, Brazilian Serie A · Match Odds, English National League · Over/Under 3.5 Goals nehmen die ROI-Huerde und scheitern an CLV — der Satz auf Ebene 1 muss das sagen"
+      "hinweis": "Fall liegt aktuell vor: 🔒 E-Sport ohne Wallet-Nachweis, ABWÄGEN · gepusht, Brazilian Serie A · Match Odds nehmen die ROI-Huerde und scheitern an CLV — der Satz auf Ebene 1 muss das sagen"
     },
     {
       "label": "Poly-Kachel gibt sich nicht als Kanal-Bilanz aus",
@@ -115,11 +115,9 @@
     {
       "label": "Money Map meldet ihre Luecken",
       "severity": "error",
-      "failures": [
-        "Lyon v Nice: Money Map ohne Poly, aber ein Poly-Markt mit BEIDEN Teams existiert — stille Luecke, nicht Abwesenheit"
-      ],
-      "nFail": 1,
-      "ok": false,
+      "failures": [],
+      "nFail": 0,
+      "ok": true,
       "hinweis": ""
     },
     {
@@ -210,11 +208,11 @@
       "label": "Fade-Unter: haelt die Kontrollgruppe?",
       "severity": "error",
       "failures": [
-        "Match Odds H: der Fade gewinnt hier BELEGT (+6.1 %, UG +0.1 %, Geldseite +2.3 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
+        "Match Odds H: der Fade gewinnt hier BELEGT (+6.2 %, UG +0.3 %, Geldseite +2.3 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
       ],
       "nFail": 1,
       "ok": false,
-      "hinweis": "seit Vorregistrierung n=6420 (UG -5.0 %) · Rueckblick n=0, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=6420 (UG -5.1 %) · Rueckblick n=0, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -236,7 +234,7 @@
       "label": "Takt: Cron gegen gemessene Laeufe",
       "severity": "warn",
       "failures": [
-        "capture-closing-liga.yml: Cron sagt alle 15 Min, gemessen alle 148 Min (closing-liga, im Zeitfenster gemessen) — die Schedule-Bilanz rechnet mit 52 Laeufen/Tag, geliefert werden eher 5. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit.",
+        "capture-closing-liga.yml: Cron sagt alle 15 Min, gemessen alle 144 Min (closing-liga, im Zeitfenster gemessen) — die Schedule-Bilanz rechnet mit 52 Laeufen/Tag, geliefert werden eher 5. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit.",
         "manage-liga-poly.yml: Cron sagt alle 30 Min, gemessen alle 93 Min (liga-poly, im Zeitfenster gemessen) — die Schedule-Bilanz rechnet mit 24 Laeufen/Tag, geliefert werden eher 8. Dieser Workflow hat ein 40-Minuten-Fenster zu treffen — bei einem gemessenen Abstand von 93 Min kann er es nicht sicher treffen. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit.",
         "poly-live-scan.yml: Cron sagt alle 15 Min, gemessen alle 23 Min (poly-live-scan) — die Schedule-Bilanz rechnet mit 96 Laeufen/Tag, geliefert werden eher 63. Gesundheits-Eintraege koennen bei gescheitertem Push fehlen, die Zahl ist also eine Obergrenze der Haeufigkeit."
       ],
@@ -247,9 +245,11 @@
     {
       "label": "Der Deckel hat Luft",
       "severity": "warn",
-      "failures": [],
-      "nFail": 0,
-      "ok": true,
+      "failures": [
+        "poly-live-scan.yml: laengster Lauf 9.5 Min (Median 4.2) bei einem Deckel von 12 Min — 79 % ausgelastet. Ein Abbruch trifft den letzten Schritt, und das ist der, der die Belege sichert."
+      ],
+      "nFail": 1,
+      "ok": false,
       "hinweis": ""
     },
     {
@@ -282,7 +282,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "736 Zeilen · 720 abgerechnet · 8 offen"
+      "hinweis": "736 Zeilen · 722 abgerechnet · 6 offen"
     },
     {
       "label": "Artefakte sind lesbar",
@@ -338,7 +338,7 @@
       "label": "Serien-Buch zeigt beide Buecher",
       "severity": "warn",
       "failures": [
-        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 140.0 h, MLS 147.6 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 140.8 h, MLS 148.4 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
       ],
       "nFail": 1,
       "ok": false,
@@ -346,5 +346,5 @@
     }
   ],
   "nFail": 9,
-  "generatedAt": "2026-10-18T20:44:15.387312+00:00"
+  "generatedAt": "2026-10-18T21:29:12.251062+00:00"
 }
