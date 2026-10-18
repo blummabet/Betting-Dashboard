@@ -1,47 +1,17 @@
-# 🟡 Picks Validator — 18.10.2026 07:58
+# 🟡 Picks Validator — 18.10.2026 14:15
 
-**44 Spiele geprüft** · 🔴 0 Fehler · 🟡 30 Warnungen · 🔵 148 Hinweise
+**27 Spiele geprüft** · 🔴 0 Fehler · 🟡 20 Warnungen · 🔵 92 Hinweise
 
 ```
 =================================================================
   🐕 CocoBet — Picks Logik-Check
-  18.10.2026 07:58
+  18.10.2026 14:15
   Filter: nächste 3 Tag(e)
 =================================================================
 
 ─────────────────────────────────────────────────────────────────
   🇦🇹 Österreich BL  (rl=23)
 ─────────────────────────────────────────────────────────────────
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 18.10.2026  Red Bull Salzburg vs SCR Altach
-     Liga-Baserate=3.7 → Poisson FV für Über 3.5 Karten = 50.6% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+5.0%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 18.10.2026  Red Bull Salzburg vs SCR Altach
-     Liga-Baserate=3.7 → Poisson FV für Über 4.5 Karten = 31.3%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
-     📅 18.10.2026  Red Bull Salzburg vs SCR Altach
-     H2H Schnitt=3.0 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
-  🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
-     📅 18.10.2026  Red Bull Salzburg vs SCR Altach
-     Red Bull Salzburg expH≈1.10 (statischer Proxy) → FV über 1.5 = 30.1%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
-  🟡 WARNUNG [HOME_POOR_FORM_HIGH_SCORE]
-     📅 18.10.2026  Wolfsberger AC vs WSG Wattens
-     Wolfsberger AC: formScore=0.22 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet.
-  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
-     📅 18.10.2026  Wolfsberger AC vs WSG Wattens
-     WSG Wattens: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 18.10.2026  Wolfsberger AC vs WSG Wattens
-     Liga-Baserate=3.7 → Poisson FV für Über 3.5 Karten = 50.6% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+5.0%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 18.10.2026  Wolfsberger AC vs WSG Wattens
-     Liga-Baserate=3.7 → Poisson FV für Über 4.5 Karten = 31.3%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🟡 WARNUNG [U25_H2H_HARD_BLOCK_MISS]
-     📅 18.10.2026  Wolfsberger AC vs WSG Wattens
-     H2H Schnitt=3.8 Tore (≥3.5) — HARD BLOCK sollte Under 2.5 komplett blocken. Python kann Picks nicht prüfen — JS-Inline-Validator zeigt ERROR falls Pick trotzdem erscheint.
-  🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
-     📅 18.10.2026  Wolfsberger AC vs WSG Wattens
-     Wolfsberger AC expH≈1.10 (statischer Proxy) → FV über 1.5 = 30.1%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🔵 HINWEIS [STRONG_H2H_LOW_SCORE]
      📅 18.10.2026  Sturm Graz vs Grazer AK
      Sturm Graz dominiert H2H mit ≥80% bei 6 Spielen, aber matchScore=6.6 ist niedrig. Pick-Richtung trotzdem prüfen — H2H-Signal nicht ausreichend im Score reflektiert?
@@ -64,18 +34,6 @@
 ─────────────────────────────────────────────────────────────────
   🇭🇷 HNL  (rl=26)
 ─────────────────────────────────────────────────────────────────
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 18.10.2026  HNK Hajduk Split vs NK Varazdin
-     Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 18.10.2026  HNK Hajduk Split vs NK Varazdin
-     Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
-     📅 18.10.2026  HNK Hajduk Split vs NK Varazdin
-     HNK Hajduk Split expH≈1.05 (statischer Proxy) → FV über 1.5 = 28.3%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
-  🔵 HINWEIS [TEAM_OVER_AWAY_LOW_FV]
-     📅 18.10.2026  HNK Hajduk Split vs NK Varazdin
-     NK Varazdin expA≈1.00 (statischer Proxy) → FV über 1.5 = 26.4%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🟡 WARNUNG [H2H_DOMINATED_HIGH_SCORE]
      📅 18.10.2026  NK Slaven Belupo vs Dinamo Zagreb
      Dinamo Zagreb dominiert H2H 17W/2X/1L in 20 Spielen. matchScore=7.5 — Pick-Richtung sollte klar sein, Angle-Text darf den Underdog nicht überbewerten.
@@ -95,30 +53,6 @@
 ─────────────────────────────────────────────────────────────────
   🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League  (rl=31)
 ─────────────────────────────────────────────────────────────────
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 18.10.2026  Bournemouth vs Sunderland
-     Liga-Baserate=3.8 → Poisson FV für Über 4.5 Karten = 33.2%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🔵 HINWEIS [TEAM_OVER_AWAY_LOW_FV]
-     📅 18.10.2026  Bournemouth vs Sunderland
-     Sunderland expA≈1.35 (statischer Proxy) → FV über 1.5 = 39.1%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 18.10.2026  Brighton vs Crystal Palace
-     Liga-Baserate=3.8 → Poisson FV für Über 4.5 Karten = 33.2%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🔵 HINWEIS [TEAM_OVER_AWAY_LOW_FV]
-     📅 18.10.2026  Brighton vs Crystal Palace
-     Crystal Palace expA≈1.15 (statischer Proxy) → FV über 1.5 = 31.9%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 18.10.2026  Leeds vs Manchester United
-     Liga-Baserate=3.8 → Poisson FV für Über 4.5 Karten = 33.2%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
-     📅 18.10.2026  Leeds vs Manchester United
-     H2H Schnitt=3.2 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
-  🔵 HINWEIS [LOW_SCORING_PROFILE]
-     📅 18.10.2026  Leeds vs Manchester United
-     Ø gpg=1.70, H2H Ø=3.2 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt
-  🔵 HINWEIS [OVER35_LOW_FV]
-     📅 18.10.2026  Leeds vs Manchester United
-     Ø gpg=1.70 (statischer Proxy) → Poisson FV für Over 3.5 = 9.3%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
   🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
      📅 18.10.2026  Nottingham Forest vs Arsenal
      Nottingham Forest: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
@@ -159,21 +93,6 @@
 ─────────────────────────────────────────────────────────────────
   🇪🇸 La Liga  (rl=29)
 ─────────────────────────────────────────────────────────────────
-  🟡 WARNUNG [HOME_POOR_FORM_HIGH_SCORE]
-     📅 18.10.2026  Osasuna vs Racing Santander
-     Osasuna: formScore=0.22 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet.
-  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
-     📅 18.10.2026  Osasuna vs Racing Santander
-     Osasuna, Racing Santander: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 18.10.2026  Osasuna vs Racing Santander
-     Liga-Baserate=3.4 → Poisson FV für Über 3.5 Karten = 44.2% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+11.4%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 18.10.2026  Osasuna vs Racing Santander
-     Liga-Baserate=3.4 → Poisson FV für Über 4.5 Karten = 25.6%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
-     📅 18.10.2026  Osasuna vs Racing Santander
-     H2H Schnitt=3.3 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 18.10.2026  Celta Vigo vs Alaves
      Liga-Baserate=3.4 → Poisson FV für Über 3.5 Karten = 44.2% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+11.4%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
@@ -244,21 +163,6 @@
 ─────────────────────────────────────────────────────────────────
   🇫🇷 Ligue 1  (rl=27)
 ─────────────────────────────────────────────────────────────────
-  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
-     📅 18.10.2026  Angers vs Marseille
-     Angers, Marseille: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 18.10.2026  Angers vs Marseille
-     Liga-Baserate=3.6 → Poisson FV für Über 3.5 Karten = 48.5% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+7.1%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 18.10.2026  Angers vs Marseille
-     Liga-Baserate=3.6 → Poisson FV für Über 4.5 Karten = 29.4%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🔵 HINWEIS [OVER35_LOW_FV]
-     📅 18.10.2026  Angers vs Marseille
-     Ø gpg=2.20 (statischer Proxy) → Poisson FV für Over 3.5 = 18.1%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
-  🔵 HINWEIS [TEAM_OVER_AWAY_LOW_FV]
-     📅 18.10.2026  Angers vs Marseille
-     Marseille expA≈1.35 (statischer Proxy) → FV über 1.5 = 39.1%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 18.10.2026  Lorient vs Monaco
      Liga-Baserate=3.6 → Poisson FV für Über 3.5 Karten = 48.5% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+7.1%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
@@ -308,15 +212,6 @@
 ─────────────────────────────────────────────────────────────────
   🇩🇪 Bundesliga  (rl=28)
 ─────────────────────────────────────────────────────────────────
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 18.10.2026  Bayer Leverkusen vs SC Freiburg
-     Liga-Baserate=3.6 → Poisson FV für Über 3.5 Karten = 48.5% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+7.1%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 18.10.2026  Bayer Leverkusen vs SC Freiburg
-     Liga-Baserate=3.6 → Poisson FV für Über 4.5 Karten = 29.4%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
-     📅 18.10.2026  Bayer Leverkusen vs SC Freiburg
-     H2H Schnitt=3.0 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
   🟡 WARNUNG [HOME_POOR_FORM_HIGH_SCORE]
      📅 18.10.2026  Borussia Mönchengladbach vs 1899 Hoffenheim
      Borussia Mönchengladbach: formScore=0.22 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet.
@@ -334,18 +229,6 @@
   🇭🇺 NB I  (rl=23)
 ─────────────────────────────────────────────────────────────────
   🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
-     📅 18.10.2026  Debreceni VSC vs Zalaegerszegi TE
-     Debreceni VSC: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 18.10.2026  Debreceni VSC vs Zalaegerszegi TE
-     Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 18.10.2026  Debreceni VSC vs Zalaegerszegi TE
-     Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🟡 WARNUNG [U25_H2H_HARD_BLOCK_MISS]
-     📅 18.10.2026  Debreceni VSC vs Zalaegerszegi TE
-     H2H Schnitt=3.5 Tore (≥3.5) — HARD BLOCK sollte Under 2.5 komplett blocken. Python kann Picks nicht prüfen — JS-Inline-Validator zeigt ERROR falls Pick trotzdem erscheint.
-  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
      📅 18.10.2026  Kisvarda FC vs Ferencvarosi TC
      Kisvarda FC: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
   🔵 HINWEIS [CARDS35_LOW_FV]
@@ -358,33 +241,6 @@
 ─────────────────────────────────────────────────────────────────
   🇮🇹 Serie A  (rl=31)
 ─────────────────────────────────────────────────────────────────
-  🟡 WARNUNG [HOME_POOR_FORM_HIGH_SCORE]
-     📅 18.10.2026  Udinese vs Lecce
-     Udinese: formScore=0.22 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet.
-  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
-     📅 18.10.2026  Udinese vs Lecce
-     Udinese: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 18.10.2026  Udinese vs Lecce
-     Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 18.10.2026  Udinese vs Lecce
-     Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🔵 HINWEIS [LOW_SCORING_PROFILE]
-     📅 18.10.2026  Udinese vs Lecce
-     Ø gpg=1.30, H2H Ø=2.3 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt
-  🔵 HINWEIS [OVER35_LOW_FV]
-     📅 18.10.2026  Udinese vs Lecce
-     Ø gpg=1.30 (statischer Proxy) → Poisson FV für Over 3.5 = 4.3%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
-  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
-     📅 18.10.2026  Fiorentina vs Como
-     Fiorentina: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 18.10.2026  Fiorentina vs Como
-     Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 18.10.2026  Fiorentina vs Como
-     Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 18.10.2026  AC Milan vs Atalanta
      Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
@@ -434,30 +290,6 @@
 ─────────────────────────────────────────────────────────────────
   🇳🇱 Eredivisie  (rl=25)
 ─────────────────────────────────────────────────────────────────
-  🟡 WARNUNG [HOME_POOR_FORM_HIGH_SCORE]
-     📅 18.10.2026  PEC Zwolle vs GO Ahead Eagles
-     PEC Zwolle: formScore=0.22 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet.
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 18.10.2026  PEC Zwolle vs GO Ahead Eagles
-     Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 18.10.2026  PEC Zwolle vs GO Ahead Eagles
-     Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🔵 HINWEIS [LOW_SCORING_PROFILE]
-     📅 18.10.2026  PEC Zwolle vs GO Ahead Eagles
-     Ø gpg=0.80, H2H Ø=2.9 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt
-  🔵 HINWEIS [OVER35_LOW_FV]
-     📅 18.10.2026  PEC Zwolle vs GO Ahead Eagles
-     Ø gpg=0.80 (statischer Proxy) → Poisson FV für Over 3.5 = 2.0%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
-  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
-     📅 18.10.2026  Cambuur vs AZ Alkmaar
-     Cambuur: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 18.10.2026  Cambuur vs AZ Alkmaar
-     Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 18.10.2026  Cambuur vs AZ Alkmaar
-     Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
   🟡 WARNUNG [H2H_DOMINATED_HIGH_SCORE]
      📅 18.10.2026  Groningen vs Ajax
      Ajax dominiert H2H 15W/2X/3L in 20 Spielen. matchScore=7.5 — Pick-Richtung sollte klar sein, Angle-Text darf den Underdog nicht überbewerten.
@@ -501,18 +333,6 @@
 ─────────────────────────────────────────────────────────────────
   🇵🇱 Ekstraklasa  (rl=23)
 ─────────────────────────────────────────────────────────────────
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 18.10.2026  Gornik Zabrze vs Piast Gliwice
-     Liga-Baserate=3.6 → Poisson FV für Über 3.5 Karten = 48.5% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+7.1%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 18.10.2026  Gornik Zabrze vs Piast Gliwice
-     Liga-Baserate=3.6 → Poisson FV für Über 4.5 Karten = 29.4%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🔵 HINWEIS [LOW_SCORING_PROFILE]
-     📅 18.10.2026  Gornik Zabrze vs Piast Gliwice
-     Ø gpg=1.30, H2H Ø=1.7 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt
-  🔵 HINWEIS [OVER35_LOW_FV]
-     📅 18.10.2026  Gornik Zabrze vs Piast Gliwice
-     Ø gpg=1.30 (statischer Proxy) → Poisson FV für Over 3.5 = 4.3%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 18.10.2026  Lech Poznan vs Korona Kielce
      Liga-Baserate=3.6 → Poisson FV für Über 3.5 Karten = 48.5% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+7.1%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
@@ -573,32 +393,14 @@
 ─────────────────────────────────────────────────────────────────
   🇹🇷 Süper Lig  (rl=30)
 ─────────────────────────────────────────────────────────────────
-  🔵 HINWEIS [ASYMMETRIC_STAKE_SCORES]
-     📅 18.10.2026  Kasımpaşa vs Samsunspor
-     Score-Differenz 5.0 Punkte: Samsunspor (9.5) vs Kasımpaşa (4.5). Pick-Richtung sehr klar — Favoritenpflicht prüfen.
-  🔵 HINWEIS [LOW_SCORING_PROFILE]
-     📅 18.10.2026  Kasımpaşa vs Samsunspor
-     Ø gpg=1.80, H2H Ø=2.6 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt
-  🔵 HINWEIS [OVER35_LOW_FV]
-     📅 18.10.2026  Kasımpaşa vs Samsunspor
-     Ø gpg=1.80 (statischer Proxy) → Poisson FV für Over 3.5 = 10.9%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
-  🔵 HINWEIS [TEAM_OVER_AWAY_LOW_FV]
-     📅 18.10.2026  Kasımpaşa vs Samsunspor
-     Samsunspor expA≈0.90 (statischer Proxy) → FV über 1.5 = 22.8%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
-  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
-     📅 18.10.2026  Kocaelispor vs Göztepe
-     Göztepe: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
-  🔵 HINWEIS [TEAM_OVER_AWAY_LOW_FV]
-     📅 18.10.2026  Kocaelispor vs Göztepe
-     Göztepe expA≈1.35 (statischer Proxy) → FV über 1.5 = 39.1%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
      📅 19.10.2026  Trabzonspor vs Beşiktaş
      H2H Schnitt=3.5 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
 
 ═════════════════════════════════════════════════════════════════
-  Geprüft: 44 Spiele
-  🟡 30 Warnungen — manuelle Prüfung empfohlen
-  🔵 148 Hinweise — Pick-Richtung kontrollieren
+  Geprüft: 27 Spiele
+  🟡 20 Warnungen — manuelle Prüfung empfohlen
+  🔵 92 Hinweise — Pick-Richtung kontrollieren
 ═════════════════════════════════════════════════════════════════
 
 ```
