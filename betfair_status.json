@@ -88,15 +88,16 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 390215 verbraucht, 4609785 uebrig"
+      "note": "Kontingent: 390734 verbraucht, 4609266 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 10,
+      "nFail": 11,
       "failures": [
+        "Estudiantes de Merida v Metropolitanos (Venezuelan Primera Division): name — bester Kandidat „Estudiantes v San Lorenzo“",
         "CD Leones del Norte v Emelec (Ecuadorian Serie A): name — bester Kandidat „Estudiantes de Río Cuarto v Aldosivi Mar del Plata“",
         "Deportivo Moron v Club Atletico Mitre (Argentinian Primera Nacional): zeit — bester Kandidat „Atlético Madrid v Deportivo La Coruña“ · 145.0h Anpfiff-Abstand",
         "Godoy Cruz v Estudiantes de Caseros (Argentinian Primera Nacional): name — bester Kandidat „Estudiantes v San Lorenzo“",
@@ -108,7 +109,7 @@
         "Al Fateh U21 v Al Akhdoud U21 (Saudi U21 Elite League): zeit — bester Kandidat „Al-Fateh v Al-Khaleej“ · 20.8h Anpfiff-Abstand",
         "CRB v Botafogo SP (Brazilian Serie B): name — bester Kandidat „Clube de Regatas Brasil v Botafogo-SP“"
       ],
-      "note": "ohne Anker: kein_kandidat 95 · name 5 · zeit 5. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 95 · kein_pinnacle 2 · name 6 · zeit 5. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -117,7 +118,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 0"
+      "note": "Quelle ohne Pinnacle: 2 — Real Madrid v Sevilla (29 Buecher, ohne Pinnacle); Al-Fateh (KSA) v Al-Khaleej Saihat (21 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -126,7 +127,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 12 gewollt, 12 abgerufen, 0 mit Daten"
+      "note": "Totals: 11 gewollt, 11 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -193,5 +194,5 @@
     }
   ],
   "nFail": 1,
-  "generatedAt": "2026-10-18T19:33:26.676470+00:00"
+  "generatedAt": "2026-10-18T19:48:45.370810+00:00"
 }
