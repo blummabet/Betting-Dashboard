@@ -1,33 +1,33 @@
 {
- "n": 627,
+ "n": 626,
  "minOdds": 1.35,
- "moneyHitRate": 0.418,
- "priceHitRate": 0.442,
- "brierMoney": 0.8075,
- "brierPrice": 0.6591,
+ "moneyHitRate": 0.415,
+ "priceHitRate": 0.444,
+ "brierMoney": 0.8096,
+ "brierPrice": 0.6606,
  "disagree": {
   "n": 160,
-  "moneyWon": 31,
-  "priceWon": 46,
-  "neither": 83
+  "moneyWon": 29,
+  "priceWon": 47,
+  "neither": 84
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
  "byLeague": [
-  {
-   "league": "LIGUE-1",
-   "n": 27,
-   "moneyHitRate": 0.593,
-   "brierMoney": 0.5668,
-   "brierPrice": 0.5234,
-   "verdict": "preis_besser"
-  },
   {
    "league": "LA-LIGA-2",
    "n": 29,
    "moneyHitRate": 0.586,
    "brierMoney": 0.6583,
    "brierPrice": 0.6134,
+   "verdict": "preis_besser"
+  },
+  {
+   "league": "LIGUE-1",
+   "n": 28,
+   "moneyHitRate": 0.571,
+   "brierMoney": 0.5786,
+   "brierPrice": 0.5308,
    "verdict": "preis_besser"
   },
   {
@@ -120,7 +120,7 @@
   }
  ],
  "guete": {
-  "belastbar": 627,
+  "belastbar": 626,
   "preis_echo": 378,
   "abgeschnitten": 62,
   "unbekannt": 0,
@@ -156,11 +156,11 @@
    "league": "SOCCER:UCL",
    "winner": "FK Bodø/Glimt",
    "moneyFav": "FK Bodø/Glimt",
-   "priceFav": "BV Borussia 09 Dortmund",
+   "priceFav": "FK Bodø/Glimt",
    "moneyShare": 0.533,
    "priceProb": 0.377,
    "moneyOK": true,
-   "priceOK": false,
+   "priceOK": true,
    "totalUsd": 2624846
   },
   {
@@ -528,7 +528,7 @@
    "league": "EPL",
    "winner": "Draw (Aston Villa FC vs. Brentford FC)",
    "moneyFav": "Brentford FC",
-   "priceFav": "Brentford FC",
+   "priceFav": "Aston Villa FC",
    "moneyShare": 0.803,
    "priceProb": 0.367,
    "moneyOK": false,
@@ -608,7 +608,7 @@
    "totalUsd": 323979
   }
  ],
- "generatedAt": "2026-10-18T17:06:05.248254+00:00",
+ "generatedAt": "2026-10-18T17:35:46.347705+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -616,7 +616,7 @@
   "nfl": 800,
   "mlb": 444,
   "nhl": 623,
-  "mls": 689,
+  "mls": 698,
   "epl": 588,
   "soccer": 800,
   "tennis": 800,
@@ -624,14 +624,14 @@
   "la-liga": 571,
   "bundesliga": 537,
   "serie-a": 52,
-  "ligue-1": 567,
+  "ligue-1": 565,
   "primeira-liga": 471,
   "brazil-serie-a": 537,
   "brasileirao": 0,
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 614,
+  "esports": 619,
   "cs2": 425,
   "lol": 440,
   "dota": 21,
@@ -651,10 +651,10 @@
   "bundesliga-2": 479,
   "champions-league": 312,
   "champions-league-final": 12,
-  "chinese-super-league": 450,
+  "chinese-super-league": 448,
   "concacaf-nations-league": 401,
   "czechia-fortuna-liga": 119,
-  "denmark-superliga": 462,
+  "denmark-superliga": 461,
   "efl-championship": 528,
   "english-premier-league": 2,
   "europa-conference-league": 501,
@@ -672,17 +672,17 @@
   "nations-league": 25,
   "norway-eliteserien": 490,
   "peru-liga-1": 103,
-  "poland-ekstraklasa": 430,
+  "poland-ekstraklasa": 431,
   "premier-league": 561,
   "romania-superliga": 110,
-  "saudi-professional-league": 582,
+  "saudi-professional-league": 583,
   "scotland-league-cup": 193,
   "scottish-premiership": 488,
   "serbian-superliga": 416,
   "serie-b": 536,
   "slovenia-prvaliga": 335,
   "sweden-allsvenskan": 459,
-  "switzerland-super-league": 433,
+  "switzerland-super-league": 436,
   "uefa-champions-league": 28,
   "uefa-conference-league": 29,
   "uefa-europa-league": 18,
@@ -695,8 +695,8 @@
   "10188": 554,
   "10193": 552,
   "10194": 522,
-  "10195": 552,
-  "10203": 606
+  "10195": 548,
+  "10203": 604
  },
  "sweepStats": {
   "sweepOpen": 500,
@@ -704,32 +704,37 @@
   "sweepAdded": 410
  },
  "vorStats": {
-  "kandidaten": 9,
+  "kandidaten": 5,
   "budgetLeer": 0,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
-  "mitAnteilen": 9,
-  "calls": 9
+  "mitAnteilen": 5,
+  "calls": 5
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 2196,
-   "usd": 53442753,
+   "n": 1744,
+   "usd": 51005532,
    "beispiel": "fifwc-usa-bel-2026-07-06-more-markets"
   },
   "world": {
-   "n": 165,
-   "usd": 9524627,
+   "n": 159,
+   "usd": 9505034,
    "beispiel": "world-cup-winner"
   },
   "uefa": {
-   "n": 47,
-   "usd": 4966595,
+   "n": 51,
+   "usd": 4974451,
    "beispiel": "uefa-champions-league-winner"
   },
+  "cbb": {
+   "n": 109,
+   "usd": 1628187,
+   "beispiel": "cbb-ind-rutger-2026-01-23"
+  },
   "us": {
-   "n": 52,
-   "usd": 1442100,
+   "n": 53,
+   "usd": 1463829,
    "beispiel": "us-strike-on-colombia-by-january-31"
   },
   "stanley": {
@@ -737,80 +742,75 @@
    "usd": 1282084,
    "beispiel": "stanley-cup-winner"
   },
+  "btc": {
+   "n": 195,
+   "usd": 1234317,
+   "beispiel": "btc-updown-5m-1791548700"
+  },
   "superbowl": {
    "n": 24,
    "usd": 1205640,
    "beispiel": "superbowl-champion-2025"
   },
-  "cbb": {
-   "n": 58,
-   "usd": 1070040,
-   "beispiel": "cbb-ind-rutger-2026-01-23"
-  },
   "ecs": {
    "n": 6,
-   "usd": 1053385,
+   "usd": 1047259,
    "beispiel": "ecs-ars-mci-2026-08-16"
   },
+  "fed": {
+   "n": 43,
+   "usd": 990435,
+   "beispiel": "fed-decision-in-september-762"
+  },
   "will": {
-   "n": 48,
-   "usd": 986683,
+   "n": 47,
+   "usd": 985574,
    "beispiel": "will-predictfun-launch-a-token-by"
   },
-  "fed": {
-   "n": 37,
-   "usd": 964639,
-   "beispiel": "fed-decision-in-october-20260617190323537"
-  },
   "which": {
-   "n": 36,
-   "usd": 710702,
+   "n": 37,
+   "usd": 703303,
    "beispiel": "which-company-has-the-best-ai-model-end-of-october"
   },
   "next": {
-   "n": 32,
-   "usd": 465314,
+   "n": 31,
+   "usd": 464582,
    "beispiel": "next-prime-minister-of-serbia-20260629223938642"
   },
   "texas": {
    "n": 13,
-   "usd": 382271,
+   "usd": 393582,
    "beispiel": "texas-senate-election-winner"
   },
   "balance": {
-   "n": 15,
-   "usd": 370110,
+   "n": 14,
+   "usd": 366450,
    "beispiel": "balance-of-power-2026-midterms"
+  },
+  "who": {
+   "n": 15,
+   "usd": 361072,
+   "beispiel": "who-will-be-the-next-prime-minister-of-israel-after-the-next-election"
   },
   "strait": {
    "n": 7,
    "usd": 359262,
    "beispiel": "strait-of-hormuz-traffic-returns-to-normal-by-end-of-june"
   },
-  "who": {
-   "n": 12,
-   "usd": 349655,
-   "beispiel": "who-will-be-the-next-prime-minister-of-israel-after-the-next-election"
-  },
   "usc": {
    "n": 5,
    "usd": 337986,
    "beispiel": "usc-psg-av-2026-08-12"
   },
+  "ballon": {
+   "n": 31,
+   "usd": 323560,
+   "beispiel": "ballon-dor-winner-2026"
+  },
   "super": {
-   "n": 16,
-   "usd": 311522,
+   "n": 17,
+   "usd": 312796,
    "beispiel": "super-bowl-champion-2026-731"
-  },
-  "efl": {
-   "n": 20,
-   "usd": 309965,
-   "beispiel": "efl-ips-ars-2026-09-15"
-  },
-  "2026": {
-   "n": 22,
-   "usd": 292069,
-   "beispiel": "2026-f1-drivers-champion"
   }
  }
 }
