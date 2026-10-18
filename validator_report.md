@@ -1,11 +1,11 @@
-# 🟡 Picks Validator — 17.10.2026 20:47
+# 🟡 Picks Validator — 18.10.2026 07:58
 
-**43 Spiele geprüft** · 🔴 0 Fehler · 🟡 30 Warnungen · 🔵 145 Hinweise
+**44 Spiele geprüft** · 🔴 0 Fehler · 🟡 30 Warnungen · 🔵 148 Hinweise
 
 ```
 =================================================================
   🐕 CocoBet — Picks Logik-Check
-  17.10.2026 20:47
+  18.10.2026 07:58
   Filter: nächste 3 Tag(e)
 =================================================================
 
@@ -228,6 +228,18 @@
   🔵 HINWEIS [CARDS45_LOW_FV]
      📅 19.10.2026  Getafe vs Rayo Vallecano
      Liga-Baserate=3.4 → Poisson FV für Über 4.5 Karten = 25.6%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
+  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
+     📅 21.10.2026  Levante vs Athletic Club
+     Levante: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
+  🔵 HINWEIS [CARDS35_LOW_FV]
+     📅 21.10.2026  Levante vs Athletic Club
+     Liga-Baserate=3.4 → Poisson FV für Über 3.5 Karten = 44.2% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+11.4%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
+  🔵 HINWEIS [CARDS45_LOW_FV]
+     📅 21.10.2026  Levante vs Athletic Club
+     Liga-Baserate=3.4 → Poisson FV für Über 4.5 Karten = 25.6%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
+  🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
+     📅 21.10.2026  Levante vs Athletic Club
+     Levante expH≈1.10 (statischer Proxy) → FV über 1.5 = 30.1%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
 
 ─────────────────────────────────────────────────────────────────
   🇫🇷 Ligue 1  (rl=27)
@@ -437,18 +449,15 @@
   🔵 HINWEIS [OVER35_LOW_FV]
      📅 18.10.2026  PEC Zwolle vs GO Ahead Eagles
      Ø gpg=0.80 (statischer Proxy) → Poisson FV für Over 3.5 = 2.0%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
+  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
+     📅 18.10.2026  Cambuur vs AZ Alkmaar
+     Cambuur: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 18.10.2026  Cambuur vs AZ Alkmaar
      Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
   🔵 HINWEIS [CARDS45_LOW_FV]
      📅 18.10.2026  Cambuur vs AZ Alkmaar
      Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🔵 HINWEIS [LOW_SCORING_PROFILE]
-     📅 18.10.2026  Cambuur vs AZ Alkmaar
-     Ø gpg=1.20, H2H Ø=2.1 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt
-  🔵 HINWEIS [OVER35_LOW_FV]
-     📅 18.10.2026  Cambuur vs AZ Alkmaar
-     Ø gpg=1.20 (statischer Proxy) → Poisson FV für Over 3.5 = 3.4%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
   🟡 WARNUNG [H2H_DOMINATED_HIGH_SCORE]
      📅 18.10.2026  Groningen vs Ajax
      Ajax dominiert H2H 15W/2X/3L in 20 Spielen. matchScore=7.5 — Pick-Richtung sollte klar sein, Angle-Text darf den Underdog nicht überbewerten.
@@ -587,9 +596,9 @@
      H2H Schnitt=3.5 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
 
 ═════════════════════════════════════════════════════════════════
-  Geprüft: 43 Spiele
+  Geprüft: 44 Spiele
   🟡 30 Warnungen — manuelle Prüfung empfohlen
-  🔵 145 Hinweise — Pick-Richtung kontrollieren
+  🔵 148 Hinweise — Pick-Richtung kontrollieren
 ═════════════════════════════════════════════════════════════════
 
 ```
