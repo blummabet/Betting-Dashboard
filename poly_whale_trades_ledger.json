@@ -25993,7 +25993,7 @@
 "walletRank": 19,
 "restock": false,
 "sentAt": "2026-10-18T11:50:49Z",
-"status": "settled",
+"status": "unaufloesbar",
 "kanal": "trades",
 "public": null,
 "totalUsd": 51757.0,
@@ -26003,14 +26003,14 @@
 "htkFirst": 0.26,
 "cond": "0x70fda006efe4d8735a180efa3b65628100267660c4f2633b1cfccb487dc7155e",
 "condQuelle": "erfassung+wallet",
-"result": "loss",
-"winner": "Under",
 "closePrice": 0.525,
-"stake": 10.0,
-"pnl": -10.0,
-"clvPP": 0.0,
 "settledTs": "2026-10-18T16:06:21.670514+00:00",
-"resolvedTs": "2026-10-18T16:06:00.932199+00:00"
+"resolvedTs": "2026-10-18T16:06:00.932199+00:00",
+"zurueckgenommen": {
+"war": "loss",
+"am": "2026-10-18T16:36:03.303616+00:00",
+"grund": "Buendel-Slug ohne Linie — Ausgang nie ableitbar"
+}
 },
 {
 "k": "0x9b963178d3b8765cfc5af94c00550d6ec6c54389|cs2-eye-nem-2026-10-18|Team Nemesis",
@@ -26678,5 +26678,28 @@
 "seiteUsd": 274118.88,
 "htkMess": 0.4,
 "htkFirst": 2.0
+},
+{
+"k": "0x9a933a2a83188b28efaf1d07d45228ea6ee82793|lal-rea-sev-2026-10-18|Draw (Real Madrid CF vs. Sevilla FC)",
+"key": "lal-rea-sev-2026-10-18",
+"side": "Draw (Real Madrid CF vs. Sevilla FC)",
+"wallet": "0x9a933a2a83188b28efaf1d07d45228ea6ee82793",
+"league": "LA-LIGA",
+"cat": "Fußball",
+"usd": 168735.0,
+"pushPrice": 0.135,
+"whaleEntry": 0.135,
+"walletRank": null,
+"restock": false,
+"sentAt": "2026-10-18T16:36:02Z",
+"status": "pending",
+"kanal": "trades",
+"public": null,
+"totalUsd": 2001226.0,
+"anteil": 0.0843,
+"seitenAnteil": 0.9936,
+"seiteUsd": 169817.8,
+"htkMess": 2.41,
+"htkFirst": 2.5
 }
 ]
