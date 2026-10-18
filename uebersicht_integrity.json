@@ -124,7 +124,7 @@
       "label": "Money Map: die Poly-Seite gehoert zum Spiel",
       "severity": "error",
       "failures": [
-        "Leeds v Man Utd (English Premier League): Poly-Seite heisst „Manchester United FC“ und gehoert zu keinem der beiden Teams — $71296 fremdes Geld in einer Konsens-Zeile"
+        "Leeds v Man Utd (English Premier League): Poly-Seite heisst „Manchester United FC“ und gehoert zu keinem der beiden Teams — $80272 fremdes Geld in einer Konsens-Zeile"
       ],
       "nFail": 1,
       "ok": false,
@@ -158,8 +158,8 @@
       "label": "Stake-Spielklasse: Tabelle vollstaendig, Richtungen getrennt",
       "severity": "error",
       "failures": [
-        "4 Fussball-Ligen ohne Eintrag in stake_liga_stufe.py (a-league, australian-championship, syrian-league, w-league) — sie fallen aus jeder Zeile der Ansicht, statt aufzufallen",
-        "7 Liga-Schluessel bezeichnen mehrere Turniere und tragen trotzdem eine Spielklasse (allsvenskan, division-1, league-one, premier-division, premier-league, primera-division-apertura) — eine Zahl davon ist fuer die Haelfte der Spiele falsch"
+        "5 Fussball-Ligen ohne Eintrag in stake_liga_stufe.py (a-league, afc-challenge-league, australian-championship, syrian-league, w-league) — sie fallen aus jeder Zeile der Ansicht, statt aufzufallen",
+        "9 Liga-Schluessel bezeichnen mehrere Turniere und tragen trotzdem eine Spielklasse (1-liga, allsvenskan, division-1, eerste-divisie, league-one, premier-division) — eine Zahl davon ist fuer die Haelfte der Spiele falsch"
       ],
       "nFail": 2,
       "ok": false,
@@ -209,11 +209,11 @@
       "label": "Fade-Unter: haelt die Kontrollgruppe?",
       "severity": "error",
       "failures": [
-        "Match Odds H: der Fade gewinnt hier BELEGT (+7.1 %, UG +1.1 %, Geldseite +1.9 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
+        "Match Odds H: der Fade gewinnt hier BELEGT (+7.0 %, UG +1.1 %, Geldseite +1.9 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
       ],
       "nFail": 1,
       "ok": false,
-      "hinweis": "seit Vorregistrierung n=6389 (UG -5.6 %) · Rueckblick n=0, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=6393 (UG -5.6 %) · Rueckblick n=0, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -263,7 +263,7 @@
       "label": "Positionswert ist frisch",
       "severity": "warn",
       "failures": [
-        "liga_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 13 h — die Datei selbst ist 13 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
+        "liga_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 15 h — die Datei selbst ist 15 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
       ],
       "nFail": 1,
       "ok": false,
@@ -283,7 +283,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "698 Zeilen · 685 abgerechnet · 5 offen"
+      "hinweis": "705 Zeilen · 686 abgerechnet · 11 offen"
     },
     {
       "label": "Artefakte sind lesbar",
@@ -322,9 +322,11 @@
     {
       "label": "Ergebnisse kommen an",
       "severity": "error",
-      "failures": [],
-      "nFail": 0,
-      "ok": true,
+      "failures": [
+        "liga_ergebnis_nachlauf.json: 1 abgesagtes/verlegtes Spiel (Rayo Vallecano–Athletic Club (ABD)) — es kommt an diesem Termin zu keinem Ergebnis; offene Wetten darauf brauchen eine Entscheidung"
+      ],
+      "nFail": 1,
+      "ok": false,
       "hinweis": ""
     },
     {
@@ -339,13 +341,13 @@
       "label": "Serien-Buch zeigt beide Buecher",
       "severity": "warn",
       "failures": [
-        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 130.3 h, MLS 137.9 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 131.6 h, MLS 139.2 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
       ],
       "nFail": 1,
       "ok": false,
       "hinweis": "Liga n=95 · MLS n=82 · Urteil beide 'Erwartung zu duenn'"
     }
   ],
-  "nFail": 10,
-  "generatedAt": "2026-10-18T11:03:19.301910+00:00"
+  "nFail": 11,
+  "generatedAt": "2026-10-18T12:22:02.780197+00:00"
 }
