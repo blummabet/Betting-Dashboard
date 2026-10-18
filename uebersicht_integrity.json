@@ -181,29 +181,30 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "62 Picks im Fenster, 23 % ohne Preis-Signal."
+      "hinweis": "72 Picks im Fenster, 24 % ohne Preis-Signal."
     },
     {
       "label": "Stumme Signale: wer hat nie gefeuert?",
       "severity": "warn",
       "failures": [
-        "polymarket_sharp: 0 Feuerungen in 369 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
+        "polymarket_sharp: 0 Feuerungen in 379 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
         "betfair_coherence: stumm, aber erklaert — 07.09.2026 gemessen: seit der Fit-Schranke (MAX_RMSE 0,02 + Leave-one-out, 06.09.) feuert es fast nie — richtigerweise. Ueber 633 Sprossen aus 150 Spielen blieben 8 echte Kanten >= 4 pp, alle in duennen Ligen (Kasachstan, Litauen, Norwegen 2, Estland), keine einzige in den Top 5. Die Betfair-Tormarkt-Leiter ist auf unserer Aufloesung arbitragefrei.",
         "game_state_openness: stumm, aber erklaert — 07.09.2026 gemessen: braucht asymmetrische Verzweiflung spaet in der Saison. Aktuell Spieltag 3-4 von 34-38, also 34 Runden offen — der Tabellendruck ist per Konstruktion nahe null. Vor dem Winter ist Stille hier der richtige Zustand."
       ],
       "nFail": 3,
       "ok": false,
-      "hinweis": "9 von 33 Signalen schweigen ueber 369 Picks — davon 6 bewusst abgeschaltet (altitude_signal, incentive_signal, pressure_index, steam_lag, travel_burden, weather_signal), 3 an und trotzdem stumm."
+      "hinweis": "9 von 33 Signalen schweigen ueber 379 Picks — davon 6 bewusst abgeschaltet (altitude_signal, incentive_signal, pressure_index, steam_lag, travel_burden, weather_signal), 3 an und trotzdem stumm."
     },
     {
       "label": "Signal-Bilanz: schadet ein Signal belegt?",
       "severity": "warn",
       "failures": [
-        "injury schadet belegt: Ausgang -0.052 schlechter als ohne (OG -0.009, n=127/106) — abwerten oder nur noch beobachten"
+        "injury schadet belegt: Ausgang -0.052 schlechter als ohne (OG -0.009, n=127/106) — abwerten oder nur noch beobachten",
+        "league_pressure schadet belegt: Ausgang -0.066 schlechter als ohne (OG -0.003, n=41/103) — abwerten oder nur noch beobachten"
       ],
-      "nFail": 1,
+      "nFail": 2,
       "ok": false,
-      "hinweis": "7 Signale belegt beitragend, 1 belegt schaedlich. ~30 Signale gleichzeitig geprueft — 1-2 falsche Treffer sind zu erwarten. Nur was ueber mehrere Wochen haelt, ist ein Befund."
+      "hinweis": "7 Signale belegt beitragend, 2 belegt schaedlich. ~30 Signale gleichzeitig geprueft — 1-2 falsche Treffer sind zu erwarten. Nur was ueber mehrere Wochen haelt, ist ein Befund."
     },
     {
       "label": "Fade-Unter: haelt die Kontrollgruppe?",
@@ -341,7 +342,7 @@
       "label": "Serien-Buch zeigt beide Buecher",
       "severity": "warn",
       "failures": [
-        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 131.6 h, MLS 139.2 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 131.5 h, MLS 139.1 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
       ],
       "nFail": 1,
       "ok": false,
@@ -349,5 +350,5 @@
     }
   ],
   "nFail": 11,
-  "generatedAt": "2026-10-18T12:22:02.780197+00:00"
+  "generatedAt": "2026-10-18T12:10:51.957548+00:00"
 }
