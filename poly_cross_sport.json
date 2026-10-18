@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-18T20:30:15.582339+00:00",
+ "generatedAt": "2026-10-18T21:08:01.447599+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,15 +10,15 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 664,
- "pinnKeys": 275,
+ "polyRowsSeen": 662,
+ "pinnKeys": 269,
  "matched": 194,
  "footballRows": 192,
- "crossRows": 472,
+ "crossRows": 470,
  "footballSkippedStale": 143,
  "seenBySport": {
   "basketball_nba": 72,
-  "americanfootball_nfl": 46,
+  "americanfootball_nfl": 44,
   "baseball_mlb": 6,
   "icehockey_nhl": 338,
   "boxing_boxing": 10,
@@ -31,10 +31,24 @@
   "soccer_liga": 165
  },
  "trackRecord": {
-  "tracked": 110,
+  "tracked": 112,
   "converged": 20
  },
  "discrepancies": [
+  {
+   "id": "soccer_liga|lyon-nice|hw",
+   "sport": "soccer_liga",
+   "event": "Lyon vs Nice",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 94.5,
+   "pinnPP": 76.2,
+   "gapPP": 18.3,
+   "vol": 2035204,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-18T21:08:01.447360+00:00"
+  },
   {
    "id": "soccer_mls|dcunited-fccincinnati|hw",
    "sport": "soccer_mls",
@@ -48,6 +62,20 @@
    "richtung": "Poly zu hoch → faden",
    "convergePP": -10.18,
    "firstSeen": "2026-10-15T17:24:15.909939+00:00"
+  },
+  {
+   "id": "soccer_liga|lyon-nice|dr",
+   "sport": "soccer_liga",
+   "event": "Lyon vs Nice",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 4.5,
+   "pinnPP": 20.5,
+   "gapPP": -16.0,
+   "vol": 2035204,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-18T21:08:01.447360+00:00"
   },
   {
    "id": "soccer_mls|dcunited-fccincinnati|aw",
