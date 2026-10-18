@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-18T13:29:49.043207+00:00",
+ "generatedAt": "2026-10-18T14:00:15.361331+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,30 +10,100 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 630,
- "pinnKeys": 261,
- "matched": 180,
- "footballRows": 180,
+ "polyRowsSeen": 648,
+ "pinnKeys": 255,
+ "matched": 198,
+ "footballRows": 198,
  "crossRows": 450,
- "footballSkippedStale": 155,
+ "footballSkippedStale": 148,
  "seenBySport": {
-  "basketball_nba": 70,
-  "americanfootball_nfl": 42,
+  "basketball_nba": 68,
+  "americanfootball_nfl": 44,
   "baseball_mlb": 6,
   "icehockey_nhl": 322,
   "boxing_boxing": 10,
   "soccer_mls": 27,
-  "soccer_liga": 153
+  "soccer_liga": 171
  },
  "matchedBySport": {
   "soccer_mls": 27,
-  "soccer_liga": 153
+  "soccer_liga": 171
  },
  "trackRecord": {
-  "tracked": 99,
+  "tracked": 105,
   "converged": 28
  },
  "discrepancies": [
+  {
+   "id": "soccer_liga|angers-marseille|aw",
+   "sport": "soccer_liga",
+   "event": "Angers vs Marseille",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 74.5,
+   "pinnPP": 28.0,
+   "gapPP": 46.49,
+   "vol": 84574,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-18T14:00:15.360888+00:00"
+  },
+  {
+   "id": "soccer_liga|como-fiorentina|aw",
+   "sport": "soccer_liga",
+   "event": "Fiorentina vs Como",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 45.0,
+   "pinnPP": 84.9,
+   "gapPP": -39.86,
+   "vol": 1805889,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-18T14:00:15.360888+00:00"
+  },
+  {
+   "id": "soccer_liga|angers-marseille|hw",
+   "sport": "soccer_liga",
+   "event": "Angers vs Marseille",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 7.5,
+   "pinnPP": 43.6,
+   "gapPP": -36.06,
+   "vol": 84574,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-18T14:00:15.360888+00:00"
+  },
+  {
+   "id": "soccer_liga|como-fiorentina|hw",
+   "sport": "soccer_liga",
+   "event": "Fiorentina vs Como",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 25.9,
+   "pinnPP": 4.2,
+   "gapPP": 21.79,
+   "vol": 1805889,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-18T14:00:15.360888+00:00"
+  },
+  {
+   "id": "soccer_liga|como-fiorentina|dr",
+   "sport": "soccer_liga",
+   "event": "Fiorentina vs Como",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 32.0,
+   "pinnPP": 11.0,
+   "gapPP": 21.02,
+   "vol": 1805889,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-18T14:00:15.360888+00:00"
+  },
   {
    "id": "soccer_mls|dcunited-fccincinnati|hw",
    "sport": "soccer_mls",
@@ -61,6 +131,20 @@
    "richtung": "Poly zu niedrig → backen",
    "convergePP": -6.14,
    "firstSeen": "2026-10-14T23:22:49.206773+00:00"
+  },
+  {
+   "id": "soccer_liga|angers-marseille|dr",
+   "sport": "soccer_liga",
+   "event": "Angers vs Marseille",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 18.5,
+   "pinnPP": 28.4,
+   "gapPP": -9.93,
+   "vol": 84574,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-18T14:00:15.360888+00:00"
   }
  ]
 }
