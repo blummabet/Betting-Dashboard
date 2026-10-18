@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-10-18T15:47:02.387235+00:00",
+"generatedAt": "2026-10-18T16:01:40.250603+00:00",
 "byVerdict": {
 "uneinig": {
-"n": 24,
+"n": 25,
 "wins": 7,
-"hitRate": 0.2917,
-"polyN": 23,
-"polyWins": 8,
-"polyHitRate": 0.3478,
-"pinnN": 15,
-"pinnHitRate": 0.3333,
-"nRoi": 24,
-"roi": -0.1521,
-"roiLb": -0.6088,
-"nClv": 24,
-"clv": -0.26,
-"clvLb": -0.6724
+"hitRate": 0.28,
+"polyN": 24,
+"polyWins": 9,
+"polyHitRate": 0.375,
+"pinnN": 16,
+"pinnHitRate": 0.375,
+"nRoi": 25,
+"roi": -0.186,
+"roiLb": -0.6276,
+"nClv": 25,
+"clv": -0.25,
+"clvLb": -0.6456
 },
 "konsens": {
-"n": 322,
-"wins": 193,
-"hitRate": 0.5994,
-"polyN": 315,
-"polyWins": 184,
-"polyHitRate": 0.5841,
-"pinnN": 278,
-"pinnHitRate": 0.6151,
-"nRoi": 322,
+"n": 324,
+"wins": 194,
+"hitRate": 0.5988,
+"polyN": 317,
+"polyWins": 185,
+"polyHitRate": 0.5836,
+"pinnN": 280,
+"pinnHitRate": 0.6143,
+"nRoi": 324,
 "roi": 0.0802,
-"roiLb": -0.0064,
-"nClv": 322,
-"clv": 0.08,
-"clvLb": -0.1508
+"roiLb": -0.0063,
+"nClv": 324,
+"clv": 0.06,
+"clvLb": -0.1711
 },
 "teil": {
 "n": 1,
@@ -56,6 +56,16 @@
 "wins": 14,
 "hitRate": 0.5833
 },
+"English Premier League": {
+"n": 18,
+"wins": 10,
+"hitRate": 0.5556
+},
+"Italian Serie A": {
+"n": 18,
+"wins": 12,
+"hitRate": 0.6667
+},
 "Spanish La Liga": {
 "n": 18,
 "wins": 10,
@@ -70,16 +80,6 @@
 "n": 17,
 "wins": 12,
 "hitRate": 0.7059
-},
-"English Premier League": {
-"n": 17,
-"wins": 10,
-"hitRate": 0.5882
-},
-"Italian Serie A": {
-"n": 17,
-"wins": 11,
-"hitRate": 0.6471
 },
 "US MLS": {
 "n": 17,
@@ -121,6 +121,11 @@
 "wins": 4,
 "hitRate": 0.4444
 },
+"Turkish Super League": {
+"n": 8,
+"wins": 4,
+"hitRate": 0.5
+},
 "UEFA Nations League C": {
 "n": 8,
 "wins": 4,
@@ -135,11 +140,6 @@
 "n": 7,
 "wins": 5,
 "hitRate": 0.7143
-},
-"Turkish Super League": {
-"n": 7,
-"wins": 4,
-"hitRate": 0.5714
 },
 "UEFA Nations League B": {
 "n": 7,
@@ -344,37 +344,94 @@
 },
 "byStrength": {
 "strong": {
-"n": 252,
-"wins": 157,
-"hitRate": 0.623,
-"nRoi": 252,
-"roi": 0.0605,
-"roiLb": -0.0306,
-"nClv": 252,
-"clv": 0.2,
-"clvLb": -0.0817
+"n": 253,
+"wins": 158,
+"hitRate": 0.6245,
+"nRoi": 253,
+"roi": 0.0648,
+"roiLb": -0.0263,
+"nClv": 253,
+"clv": 0.18,
+"clvLb": -0.0984
 },
 "weak": {
-"n": 95,
+"n": 97,
 "wins": 43,
-"hitRate": 0.4526,
-"nRoi": 95,
-"roi": 0.0624,
-"roiLb": -0.1416,
-"nClv": 95,
-"clv": -0.31,
-"clvLb": -0.5932
+"hitRate": 0.4433,
+"nRoi": 97,
+"roi": 0.0405,
+"roiLb": -0.1609,
+"nClv": 97,
+"clv": -0.33,
+"clvLb": -0.609
 }
 },
 "divergence": {
-"n": 24,
+"n": 25,
 "betfairWins": 7,
-"betfairRate": 0.2917,
-"polyN": 23,
-"polyWins": 8,
-"polyRate": 0.3478
+"betfairRate": 0.28,
+"polyN": 24,
+"polyWins": 9,
+"polyRate": 0.375
 },
 "recent": [
+{
+"matchId": "36092108",
+"home": "Leeds",
+"away": "Man Utd",
+"league": "English Premier League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Leeds",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-10-18T13:00:00Z",
+"settledAt": "2026-10-18T16:01:40.052710+00:00"
+},
+{
+"matchId": "36099811",
+"home": "Fiorentina",
+"away": "Como",
+"league": "Italian Serie A",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Como",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+3
+],
+"kickoff": "2026-10-18T13:00:00Z",
+"settledAt": "2026-10-18T16:01:40.052710+00:00"
+},
+{
+"matchId": "36183558",
+"home": "Kocaelispor",
+"away": "Goztepe",
+"league": "Turkish Super League",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "away",
+"winner": "away",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-10-18T13:00:00Z",
+"settledAt": "2026-10-18T16:01:40.052710+00:00"
+},
 {
 "matchId": "36099844",
 "home": "Leverkusen",
@@ -1077,76 +1134,19 @@
 ],
 "kickoff": "2026-10-17T16:00:00Z",
 "settledAt": "2026-10-17T17:58:21.864495+00:00"
-},
-{
-"matchId": "36178631",
-"home": "Sigma Olomouc",
-"away": "Slovan Liberec",
-"league": "Czech 1 Liga",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Sigma Olomouc",
-"polySide": "away",
-"winner": "home",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-10-17T16:00:00Z",
-"settledAt": "2026-10-17T17:58:21.864495+00:00"
-},
-{
-"matchId": "36091953",
-"home": "Man City",
-"away": "Ipswich",
-"league": "English Premier League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Man City",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-2
-],
-"kickoff": "2026-10-17T14:00:00Z",
-"settledAt": "2026-10-17T17:16:16.438589+00:00"
-},
-{
-"matchId": "36091931",
-"home": "Brentford",
-"away": "Liverpool",
-"league": "English Premier League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Liverpool",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-10-17T14:00:00Z",
-"settledAt": "2026-10-17T17:16:16.438589+00:00"
 }
 ],
 "global": {
-"n": 347,
-"wins": 200,
-"hitRate": 0.5764,
-"nRoi": 347,
-"roi": 0.061,
-"roiLb": -0.0254,
-"nClv": 347,
-"clv": 0.06,
-"clvLb": -0.1585
+"n": 350,
+"wins": 201,
+"hitRate": 0.5743,
+"nRoi": 350,
+"roi": 0.0581,
+"roiLb": -0.0281,
+"nClv": 350,
+"clv": 0.04,
+"clvLb": -0.1768
 },
-"pending": 25,
+"pending": 22,
 "ausgeschlossenLive": 1628
 }
