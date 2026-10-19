@@ -1,11 +1,11 @@
-# 🟡 Picks Validator — 19.10.2026 07:59
+# 🟡 Picks Validator — 19.10.2026 17:18
 
-**8 Spiele geprüft** · 🔴 0 Fehler · 🟡 5 Warnungen · 🔵 30 Hinweise
+**7 Spiele geprüft** · 🔴 0 Fehler · 🟡 5 Warnungen · 🔵 26 Hinweise
 
 ```
 =================================================================
   🐕 CocoBet — Picks Logik-Check
-  19.10.2026 07:59
+  19.10.2026 17:18
   Filter: nächste 3 Tag(e)
 =================================================================
 
@@ -68,18 +68,6 @@
 ─────────────────────────────────────────────────────────────────
   🇮🇹 Serie A  (rl=31)
 ─────────────────────────────────────────────────────────────────
-  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
-     📅 19.10.2026  Monza vs Cagliari
-     Monza: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 19.10.2026  Monza vs Cagliari
-     Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 19.10.2026  Monza vs Cagliari
-     Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
-     📅 19.10.2026  Monza vs Cagliari
-     Monza expH≈1.25 (statischer Proxy) → FV über 1.5 = 35.5%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🟡 WARNUNG [HOME_POOR_FORM_HIGH_SCORE]
      📅 19.10.2026  Parma vs Torino
      Parma: formScore=0.22 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet.
@@ -139,9 +127,9 @@
      H2H Schnitt=3.5 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
 
 ═════════════════════════════════════════════════════════════════
-  Geprüft: 8 Spiele
+  Geprüft: 7 Spiele
   🟡 5 Warnungen — manuelle Prüfung empfohlen
-  🔵 30 Hinweise — Pick-Richtung kontrollieren
+  🔵 26 Hinweise — Pick-Richtung kontrollieren
 ═════════════════════════════════════════════════════════════════
 
 ```
