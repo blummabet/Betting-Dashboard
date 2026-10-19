@@ -1,15 +1,15 @@
 {
- "n": 578,
+ "n": 574,
  "minOdds": 1.35,
- "moneyHitRate": 0.419,
- "priceHitRate": 0.452,
- "brierMoney": 0.8044,
- "brierPrice": 0.659,
+ "moneyHitRate": 0.42,
+ "priceHitRate": 0.455,
+ "brierMoney": 0.801,
+ "brierPrice": 0.6579,
  "disagree": {
-  "n": 143,
+  "n": 142,
   "moneyWon": 26,
-  "priceWon": 45,
-  "neither": 72
+  "priceWon": 46,
+  "neither": 70
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -87,19 +87,19 @@
    "verdict": "preis_besser"
   },
   {
+   "league": "SEA",
+   "n": 23,
+   "moneyHitRate": 0.478,
+   "brierMoney": 0.8487,
+   "brierPrice": 0.6918,
+   "verdict": "preis_besser"
+  },
+  {
    "league": "SOCCER:CONL",
    "n": 31,
    "moneyHitRate": 0.452,
    "brierMoney": 0.6689,
    "brierPrice": 0.5052,
-   "verdict": "preis_besser"
-  },
-  {
-   "league": "SEA",
-   "n": 24,
-   "moneyHitRate": 0.458,
-   "brierMoney": 0.8709,
-   "brierPrice": 0.696,
    "verdict": "preis_besser"
   },
   {
@@ -112,8 +112,8 @@
   }
  ],
  "guete": {
-  "belastbar": 578,
-  "preis_echo": 354,
+  "belastbar": 574,
+  "preis_echo": 353,
   "abgeschnitten": 65,
   "unbekannt": 0,
   "leer": 0
@@ -148,11 +148,11 @@
    "league": "SOCCER:UCL",
    "winner": "FK Bodø/Glimt",
    "moneyFav": "FK Bodø/Glimt",
-   "priceFav": "FK Bodø/Glimt",
+   "priceFav": "BV Borussia 09 Dortmund",
    "moneyShare": 0.533,
    "priceProb": 0.377,
    "moneyOK": true,
-   "priceOK": true,
+   "priceOK": false,
    "totalUsd": 2624846
   },
   {
@@ -516,18 +516,6 @@
    "totalUsd": 379436
   },
   {
-   "key": "sea-rom-int-2026-09-19",
-   "league": "SEA",
-   "winner": "Draw (AS Roma vs. FC Internazionale Milano)",
-   "moneyFav": "AS Roma",
-   "priceFav": "FC Internazionale Milano",
-   "moneyShare": 0.676,
-   "priceProb": 0.373,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 368908
-  },
-  {
    "key": "mls-stl-vwh-2026-10-14",
    "league": "MLS",
    "winner": "Draw (St. Louis City SC vs. Vancouver Whitecaps FC)",
@@ -598,9 +586,21 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 317553
+  },
+  {
+   "key": "mls-rsl-sje-2026-10-14",
+   "league": "MLS",
+   "winner": "Draw (Real Salt Lake vs. San Jose Earthquakes)",
+   "moneyFav": "Real Salt Lake",
+   "priceFav": "Real Salt Lake",
+   "moneyShare": 0.972,
+   "priceProb": 0.558,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 303012
   }
  ],
- "generatedAt": "2026-10-19T15:38:12.974042+00:00",
+ "generatedAt": "2026-10-19T16:09:09.782661+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -608,7 +608,7 @@
   "nfl": 800,
   "mlb": 444,
   "nhl": 626,
-  "mls": 691,
+  "mls": 721,
   "epl": 580,
   "soccer": 800,
   "tennis": 800,
@@ -623,23 +623,23 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 614,
-  "cs2": 424,
+  "esports": 618,
+  "cs2": 425,
   "lol": 439,
   "dota": 22,
-  "valorant": 428,
+  "valorant": 432,
   "ufc": 453,
   "mma": 60,
   "boxing": 316,
   "golf": 431,
   "f1": 450,
-  "cricket": 563,
+  "cricket": 562,
   "afc-champions-league-elite": 214,
   "allsvenskan": 1,
   "australian-a-league": 373,
   "austria-bundesliga": 408,
   "brazil-serie-b": 113,
-  "bulgaria-parva-liga": 420,
+  "bulgaria-parva-liga": 421,
   "bundesliga-2": 494,
   "champions-league": 312,
   "champions-league-final": 12,
@@ -663,7 +663,7 @@
   "naitons-league": 1,
   "national-league": 545,
   "nations-league": 25,
-  "norway-eliteserien": 482,
+  "norway-eliteserien": 487,
   "peru-liga-1": 115,
   "poland-ekstraklasa": 430,
   "premier-league": 553,
@@ -689,7 +689,7 @@
   "10193": 554,
   "10194": 526,
   "10195": 529,
-  "10203": 616
+  "10203": 617
  },
  "sweepStats": {
   "sweepOpen": 500,
@@ -697,32 +697,32 @@
   "sweepAdded": 412
  },
  "vorStats": {
-  "kandidaten": 21,
+  "kandidaten": 9,
   "budgetLeer": 0,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
-  "mitAnteilen": 21,
-  "calls": 21
+  "mitAnteilen": 9,
+  "calls": 9
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1616,
-   "usd": 28939817,
+   "n": 1298,
+   "usd": 24045789,
    "beispiel": "fifwc-aus-egy-2026-07-03"
   },
   "cbb": {
-   "n": 20,
-   "usd": 730051,
+   "n": 25,
+   "usd": 735323,
    "beispiel": "cbb-tx-byu-2026-03-19"
   },
   "world": {
-   "n": 70,
-   "usd": 689274,
+   "n": 59,
+   "usd": 606929,
    "beispiel": "world-cup-winner"
   },
   "fed": {
-   "n": 21,
-   "usd": 547212,
+   "n": 9,
+   "usd": 439666,
    "beispiel": "fed-decision-in-january-20260729233815502"
   },
   "super": {
@@ -731,79 +731,79 @@
    "beispiel": "super-bowl-champion-2026-731"
   },
   "uefa": {
-   "n": 12,
-   "usd": 236348,
-   "beispiel": "uefa-champions-league-2027-champion-20260701202025549"
-  },
-  "btc": {
-   "n": 46,
-   "usd": 183373,
-   "beispiel": "btc-updown-15m-1777649400"
-  },
-  "will": {
-   "n": 26,
-   "usd": 169296,
-   "beispiel": "will-predictfun-launch-a-token-by"
+   "n": 11,
+   "usd": 226378,
+   "beispiel": "uefa-champions-league-winner"
   },
   "pro": {
-   "n": 14,
-   "usd": 159290,
+   "n": 12,
+   "usd": 157594,
    "beispiel": "pro-football-nfc-east-champion"
   },
+  "will": {
+   "n": 23,
+   "usd": 154409,
+   "beispiel": "will-predictfun-launch-a-token-by"
+  },
   "who": {
-   "n": 5,
-   "usd": 154464,
+   "n": 3,
+   "usd": 147907,
    "beispiel": "who-will-be-the-next-prime-minister-of-israel-after-the-next-election"
   },
-  "which": {
-   "n": 18,
-   "usd": 147816,
-   "beispiel": "which-company-has-the-best-ai-model-end-of-october"
-  },
   "ncaa": {
-   "n": 10,
-   "usd": 144709,
+   "n": 7,
+   "usd": 141928,
    "beispiel": "ncaa-football-2026-heisman-award-winner-20260731185656435"
   },
-  "brazil": {
-   "n": 18,
-   "usd": 141003,
-   "beispiel": "brazil-presidential-election"
-  },
-  "texas": {
-   "n": 6,
-   "usd": 110417,
-   "beispiel": "texas-senate-election-winner"
+  "which": {
+   "n": 17,
+   "usd": 108089,
+   "beispiel": "which-company-has-the-best-ai-model-end-of-october"
   },
   "russia": {
    "n": 3,
    "usd": 107868,
    "beispiel": "russia-x-ukraine-ceasefire-by-june-30-2026"
   },
-  "grc": {
-   "n": 9,
-   "usd": 99274,
-   "beispiel": "grc-aek-ofi-2026-09-02-halftime-result"
-  },
   "nbasl": {
    "n": 1,
    "usd": 97044,
    "beispiel": "nbasl-cle-nop-2026-07-15"
   },
-  "next": {
-   "n": 8,
-   "usd": 74644,
-   "beispiel": "next-prime-minister-of-serbia-20260629223938642"
+  "brazil": {
+   "n": 11,
+   "usd": 92596,
+   "beispiel": "brazil-presidential-election"
+  },
+  "nato": {
+   "n": 3,
+   "usd": 82821,
+   "beispiel": "nato-x-russia-military-clash-in-2025"
+  },
+  "2026": {
+   "n": 17,
+   "usd": 69344,
+   "beispiel": "2026-f1-drivers-champion"
   },
   "lec": {
-   "n": 13,
-   "usd": 69967,
-   "beispiel": "lec-clb-pum-2026-08-11"
+   "n": 11,
+   "usd": 61868,
+   "beispiel": "lec-mia-asl-2026-08-05"
+  },
+  "democratic": {
+   "n": 12,
+   "usd": 55632,
+   "beispiel": "democratic-presidential-nominee-2028"
+  },
+  "ecs": {
+   "n": 4,
+   "usd": 53615,
+   "beispiel": "ecs-ars-mci-2026-08-16-more-markets"
   },
   "ballon": {
-   "n": 13,
-   "usd": 68934,
-   "beispiel": "ballon-dor-2026-kylian-mbappe-or-lamine-yamal-to-finish-higher"
+   "n": 11,
+   "usd": 50820,
+   "beispiel": "ballon-dor-winner-2026"
   }
  }
 }
