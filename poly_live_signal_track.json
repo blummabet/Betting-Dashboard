@@ -1,15 +1,15 @@
 {
-"updatedAt": "2026-10-19T01:55:32.344309+00:00",
+"updatedAt": "2026-10-19T02:51:28.895644+00:00",
 "record": {
-"updatedAt": "2026-10-19T01:55:32.344309+00:00",
-"settled": 2831,
-"open": 169,
+"updatedAt": "2026-10-19T02:51:28.895644+00:00",
+"settled": 2843,
+"open": 157,
 "buckets": {
 "alle": {
-"n": 2831,
-"posRate": 0.35,
-"avgClv": 0.35,
-"avgClv30": 0.75
+"n": 2843,
+"posRate": 0.351,
+"avgClv": 0.36,
+"avgClv30": 0.8
 },
 "sharp": {
 "n": 84,
@@ -18,448 +18,58 @@
 "avgClv30": -2.64
 },
 "valueZone": {
-"n": 1457,
-"posRate": 0.463,
-"avgClv": 2.25,
-"avgClv30": 2.21
+"n": 1477,
+"posRate": 0.462,
+"avgClv": 2.27,
+"avgClv30": 2.28
 },
 "mature": {
-"n": 2214,
-"posRate": 0.342,
+"n": 2223,
+"posRate": 0.343,
 "avgClv": 0.39,
-"avgClv30": 1.16
+"avgClv30": 1.21
 },
 "notChasing": {
 "n": 1659,
-"posRate": 0.376,
-"avgClv": -0.22,
-"avgClv30": -0.19
+"posRate": 0.38,
+"avgClv": -0.21,
+"avgClv30": -0.11
 },
 "chasing": {
-"n": 1172,
-"posRate": 0.312,
-"avgClv": 1.15,
+"n": 1184,
+"posRate": 0.31,
+"avgClv": 1.16,
 "avgClv30": 2.07
 },
 "bySize": {
+"2-5k": {
+"n": 1468,
+"posRate": 0.321,
+"avgClv": 0.77,
+"avgClv30": 1.04
+},
+"25k+": {
+"n": 314,
+"posRate": 0.439,
+"avgClv": 0.61,
+"avgClv30": 0.94
+},
 "10-25k": {
-"n": 428,
-"posRate": 0.418,
-"avgClv": 1.0,
+"n": 430,
+"posRate": 0.419,
+"avgClv": 1.06,
 "avgClv30": 1.29
 },
 "5-10k": {
 "n": 631,
 "posRate": 0.33,
-"avgClv": -1.03,
-"avgClv30": -0.16
-},
-"2-5k": {
-"n": 1458,
-"posRate": 0.319,
-"avgClv": 0.72,
-"avgClv30": 0.94
-},
-"25k+": {
-"n": 314,
-"posRate": 0.439,
-"avgClv": 0.51,
-"avgClv30": 0.93
+"avgClv": -1.2,
+"avgClv30": -0.17
 }
 }
 }
 },
 "ledger": [
-{
-"sig": "cfb-fl-tx-2026-10-17|0x164a3337857657b1f7fad456a5d0a6b18b6fc126",
-"key": "cfb-fl-tx-2026-10-17",
-"side": "Florida",
-"wallet": "0x164a3337857657b1f7fad456a5d0a6b18b6fc126",
-"usd": 11115,
-"league": "CFB",
-"entryPrice": 0.8515,
-"totalUsd": 522622,
-"movePP": null,
-"flags": {
-"valueZone": false,
-"mature": true,
-"notChasing": true,
-"sharp": false,
-"sizeBand": "10-25k"
-},
-"firstTs": "2026-10-17T19:21:11.610025+00:00",
-"status": "settled",
-"latestPrice": 0.8515,
-"clvPP": 0.0,
-"clv30": 0.0,
-"updatedAt": "2026-10-17T19:21:11.610025+00:00",
-"finalClvPP": 0.0,
-"settledAt": "2026-10-17T19:21:11.610025+00:00"
-},
-{
-"sig": "cfb-fl-tx-2026-10-17|0x5268527977f700f9bf9b6d5cd843859e4e70135d",
-"key": "cfb-fl-tx-2026-10-17",
-"side": "Florida",
-"wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
-"usd": 8808,
-"league": "CFB",
-"entryPrice": 0.8515,
-"totalUsd": 522622,
-"movePP": null,
-"flags": {
-"valueZone": false,
-"mature": true,
-"notChasing": true,
-"sharp": false,
-"sizeBand": "5-10k"
-},
-"firstTs": "2026-10-17T19:21:11.610025+00:00",
-"status": "settled",
-"latestPrice": 0.8515,
-"clvPP": 0.0,
-"clv30": 0.0,
-"updatedAt": "2026-10-17T19:21:11.610025+00:00",
-"finalClvPP": 0.0,
-"settledAt": "2026-10-17T19:21:11.610025+00:00"
-},
-{
-"sig": "cfb-fl-tx-2026-10-17|0x9703676286b93c2eca71ca96e8757104519a69c2",
-"key": "cfb-fl-tx-2026-10-17",
-"side": "Florida",
-"wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
-"usd": 8331,
-"league": "CFB",
-"entryPrice": 0.8515,
-"totalUsd": 522622,
-"movePP": null,
-"flags": {
-"valueZone": false,
-"mature": true,
-"notChasing": true,
-"sharp": false,
-"sizeBand": "5-10k"
-},
-"firstTs": "2026-10-17T19:21:11.610025+00:00",
-"status": "settled",
-"latestPrice": 0.8515,
-"clvPP": 0.0,
-"clv30": 0.0,
-"updatedAt": "2026-10-17T19:21:11.610025+00:00",
-"finalClvPP": 0.0,
-"settledAt": "2026-10-17T19:21:11.610025+00:00"
-},
-{
-"sig": "cfb-fl-tx-2026-10-17|0xa38a455bbdd4b68486548b7e19da99903f4f821d",
-"key": "cfb-fl-tx-2026-10-17",
-"side": "Texas",
-"wallet": "0xa38a455bbdd4b68486548b7e19da99903f4f821d",
-"usd": 7745,
-"league": "CFB",
-"entryPrice": 0.1485,
-"totalUsd": 522622,
-"movePP": null,
-"flags": {
-"valueZone": false,
-"mature": true,
-"notChasing": true,
-"sharp": false,
-"sizeBand": "5-10k"
-},
-"firstTs": "2026-10-17T19:21:11.610025+00:00",
-"status": "settled",
-"latestPrice": 0.1485,
-"clvPP": 0.0,
-"clv30": 0.0,
-"updatedAt": "2026-10-17T19:21:11.610025+00:00",
-"finalClvPP": 0.0,
-"settledAt": "2026-10-17T19:21:11.610025+00:00"
-},
-{
-"sig": "cfb-fl-tx-2026-10-17|0x67542c3219b37fd1610aad290676ff91cdbfe3bc",
-"key": "cfb-fl-tx-2026-10-17",
-"side": "Texas",
-"wallet": "0x67542c3219b37fd1610aad290676ff91cdbfe3bc",
-"usd": 6318,
-"league": "CFB",
-"entryPrice": 0.1485,
-"totalUsd": 522622,
-"movePP": null,
-"flags": {
-"valueZone": false,
-"mature": true,
-"notChasing": true,
-"sharp": false,
-"sizeBand": "5-10k"
-},
-"firstTs": "2026-10-17T19:21:11.610025+00:00",
-"status": "settled",
-"latestPrice": 0.1485,
-"clvPP": 0.0,
-"clv30": 0.0,
-"updatedAt": "2026-10-17T19:21:11.610025+00:00",
-"finalClvPP": 0.0,
-"settledAt": "2026-10-17T19:21:11.610025+00:00"
-},
-{
-"sig": "cfb-fl-tx-2026-10-17|0x8efa1ea8ee2d456a051ae2985079a1e3c9aa894c",
-"key": "cfb-fl-tx-2026-10-17",
-"side": "Florida",
-"wallet": "0x8efa1ea8ee2d456a051ae2985079a1e3c9aa894c",
-"usd": 5374,
-"league": "CFB",
-"entryPrice": 0.8515,
-"totalUsd": 522622,
-"movePP": null,
-"flags": {
-"valueZone": false,
-"mature": true,
-"notChasing": true,
-"sharp": false,
-"sizeBand": "5-10k"
-},
-"firstTs": "2026-10-17T19:21:11.610025+00:00",
-"status": "settled",
-"latestPrice": 0.8515,
-"clvPP": 0.0,
-"clv30": 0.0,
-"updatedAt": "2026-10-17T19:21:11.610025+00:00",
-"finalClvPP": 0.0,
-"settledAt": "2026-10-17T19:21:11.610025+00:00"
-},
-{
-"sig": "cfb-fl-tx-2026-10-17|0x796fc6fda8f8e03c03e2a2d012155989960300f6",
-"key": "cfb-fl-tx-2026-10-17",
-"side": "Florida",
-"wallet": "0x796fc6fda8f8e03c03e2a2d012155989960300f6",
-"usd": 4599,
-"league": "CFB",
-"entryPrice": 0.8515,
-"totalUsd": 522622,
-"movePP": null,
-"flags": {
-"valueZone": false,
-"mature": true,
-"notChasing": true,
-"sharp": false,
-"sizeBand": "2-5k"
-},
-"firstTs": "2026-10-17T19:21:11.610025+00:00",
-"status": "settled",
-"latestPrice": 0.8515,
-"clvPP": 0.0,
-"clv30": 0.0,
-"updatedAt": "2026-10-17T19:21:11.610025+00:00",
-"finalClvPP": 0.0,
-"settledAt": "2026-10-17T19:21:11.610025+00:00"
-},
-{
-"sig": "cfb-fl-tx-2026-10-17|0xf5a3504ad3a8b079974620b3aa4fcca3f7579e12",
-"key": "cfb-fl-tx-2026-10-17",
-"side": "Florida",
-"wallet": "0xf5a3504ad3a8b079974620b3aa4fcca3f7579e12",
-"usd": 4482,
-"league": "CFB",
-"entryPrice": 0.8515,
-"totalUsd": 522622,
-"movePP": null,
-"flags": {
-"valueZone": false,
-"mature": true,
-"notChasing": true,
-"sharp": false,
-"sizeBand": "2-5k"
-},
-"firstTs": "2026-10-17T19:21:11.610025+00:00",
-"status": "settled",
-"latestPrice": 0.8515,
-"clvPP": 0.0,
-"clv30": 0.0,
-"updatedAt": "2026-10-17T19:21:11.610025+00:00",
-"finalClvPP": 0.0,
-"settledAt": "2026-10-17T19:21:11.610025+00:00"
-},
-{
-"sig": "cfb-fl-tx-2026-10-17|0x9f2fe025f84839ca81dd8e0338892605702d2ca8",
-"key": "cfb-fl-tx-2026-10-17",
-"side": "Texas",
-"wallet": "0x9f2fe025f84839ca81dd8e0338892605702d2ca8",
-"usd": 3713,
-"league": "CFB",
-"entryPrice": 0.1485,
-"totalUsd": 522622,
-"movePP": null,
-"flags": {
-"valueZone": false,
-"mature": true,
-"notChasing": true,
-"sharp": false,
-"sizeBand": "2-5k"
-},
-"firstTs": "2026-10-17T19:21:11.610025+00:00",
-"status": "settled",
-"latestPrice": 0.1485,
-"clvPP": 0.0,
-"clv30": 0.0,
-"updatedAt": "2026-10-17T19:21:11.610025+00:00",
-"finalClvPP": 0.0,
-"settledAt": "2026-10-17T19:21:11.610025+00:00"
-},
-{
-"sig": "cfb-fl-tx-2026-10-17|0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-"key": "cfb-fl-tx-2026-10-17",
-"side": "Florida",
-"wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-"usd": 3597,
-"league": "CFB",
-"entryPrice": 0.8515,
-"totalUsd": 522622,
-"movePP": null,
-"flags": {
-"valueZone": false,
-"mature": true,
-"notChasing": true,
-"sharp": false,
-"sizeBand": "2-5k"
-},
-"firstTs": "2026-10-17T19:21:11.610025+00:00",
-"status": "settled",
-"latestPrice": 0.8515,
-"clvPP": 0.0,
-"clv30": 0.0,
-"updatedAt": "2026-10-17T19:21:11.610025+00:00",
-"finalClvPP": 0.0,
-"settledAt": "2026-10-17T19:21:11.610025+00:00"
-},
-{
-"sig": "cfb-fl-tx-2026-10-17|0x21b70de5fa3532afbf51a5d177e76b1e7e17c861",
-"key": "cfb-fl-tx-2026-10-17",
-"side": "Florida",
-"wallet": "0x21b70de5fa3532afbf51a5d177e76b1e7e17c861",
-"usd": 2554,
-"league": "CFB",
-"entryPrice": 0.8515,
-"totalUsd": 522622,
-"movePP": null,
-"flags": {
-"valueZone": false,
-"mature": true,
-"notChasing": true,
-"sharp": false,
-"sizeBand": "2-5k"
-},
-"firstTs": "2026-10-17T19:21:11.610025+00:00",
-"status": "settled",
-"latestPrice": 0.8515,
-"clvPP": 0.0,
-"clv30": 0.0,
-"updatedAt": "2026-10-17T19:21:11.610025+00:00",
-"finalClvPP": 0.0,
-"settledAt": "2026-10-17T19:21:11.610025+00:00"
-},
-{
-"sig": "cfb-fl-tx-2026-10-17|0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
-"key": "cfb-fl-tx-2026-10-17",
-"side": "Florida",
-"wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
-"usd": 2197,
-"league": "CFB",
-"entryPrice": 0.8515,
-"totalUsd": 522622,
-"movePP": null,
-"flags": {
-"valueZone": false,
-"mature": true,
-"notChasing": true,
-"sharp": false,
-"sizeBand": "2-5k"
-},
-"firstTs": "2026-10-17T19:21:11.610025+00:00",
-"status": "settled",
-"latestPrice": 0.8515,
-"clvPP": 0.0,
-"clv30": 0.0,
-"updatedAt": "2026-10-17T19:21:11.610025+00:00",
-"finalClvPP": 0.0,
-"settledAt": "2026-10-17T19:21:11.610025+00:00"
-},
-{
-"sig": "lal-esp-mad-2026-10-17|0xd3911bd5e070c9ad9a9519c966347802d8f3b109",
-"key": "lal-esp-mad-2026-10-17",
-"side": "Club Atlético de Madrid",
-"wallet": "0xd3911bd5e070c9ad9a9519c966347802d8f3b109",
-"usd": 29348,
-"league": "SOCCER",
-"entryPrice": 0.575,
-"totalUsd": 158952,
-"movePP": null,
-"flags": {
-"valueZone": true,
-"mature": true,
-"notChasing": true,
-"sharp": false,
-"sizeBand": "25k+"
-},
-"firstTs": "2026-10-17T12:07:31.179967+00:00",
-"status": "settled",
-"latestPrice": 0.275,
-"clvPP": -30.0,
-"clv30": -3.0,
-"updatedAt": "2026-10-17T19:21:11.610025+00:00",
-"finalClvPP": -30.0,
-"settledAt": "2026-10-17T20:04:28.702321+00:00"
-},
-{
-"sig": "lal-esp-mad-2026-10-17|0x0a39b3b29ab3b7dd753aa96fde4ecab3f2dbb0b9",
-"key": "lal-esp-mad-2026-10-17",
-"side": "Club Atlético de Madrid",
-"wallet": "0x0a39b3b29ab3b7dd753aa96fde4ecab3f2dbb0b9",
-"usd": 17250,
-"league": "SOCCER",
-"entryPrice": 0.575,
-"totalUsd": 158952,
-"movePP": null,
-"flags": {
-"valueZone": true,
-"mature": true,
-"notChasing": true,
-"sharp": false,
-"sizeBand": "10-25k"
-},
-"firstTs": "2026-10-17T12:07:31.179967+00:00",
-"status": "settled",
-"latestPrice": 0.275,
-"clvPP": -30.0,
-"clv30": -3.0,
-"updatedAt": "2026-10-17T19:21:11.610025+00:00",
-"finalClvPP": -30.0,
-"settledAt": "2026-10-17T20:04:28.702321+00:00"
-},
-{
-"sig": "lal-esp-mad-2026-10-17|0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
-"key": "lal-esp-mad-2026-10-17",
-"side": "Draw (RCD Espanyol de Barcelona vs. Club Atlético de Madrid)",
-"wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
-"usd": 5421,
-"league": "SOCCER",
-"entryPrice": 0.245,
-"totalUsd": 158952,
-"movePP": null,
-"flags": {
-"valueZone": false,
-"mature": true,
-"notChasing": true,
-"sharp": false,
-"sizeBand": "5-10k"
-},
-"firstTs": "2026-10-17T12:07:31.179967+00:00",
-"status": "settled",
-"latestPrice": 0.665,
-"clvPP": 42.0,
-"clv30": 7.0,
-"updatedAt": "2026-10-17T19:21:11.610025+00:00",
-"finalClvPP": 42.0,
-"settledAt": "2026-10-17T20:04:28.702321+00:00"
-},
 {
 "sig": "lal-esp-mad-2026-10-17|0xec5c8d5ba82458ae5c02d886f090d71f5985ce46",
 "key": "lal-esp-mad-2026-10-17",
@@ -73698,7 +73308,7 @@
 "latestPrice": 0.65,
 "clvPP": -0.5,
 "clv30": -1.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "atp-mitsui-zahraj-2026-10-18|0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
@@ -73722,7 +73332,7 @@
 "latestPrice": 0.35,
 "clvPP": 0.5,
 "clv30": 1.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "atp-mitsui-zahraj-2026-10-18|0xb4d250f58c26840e09723a83ce9c8149aa32ce99",
@@ -73746,7 +73356,7 @@
 "latestPrice": 0.35,
 "clvPP": 0.5,
 "clv30": 1.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "atp-ferra-chan-2026-10-18|0xebfdb8164f0e0748818d6c7a9ac85a323267fd63",
@@ -73766,11 +73376,13 @@
 "sizeBand": "10-25k"
 },
 "firstTs": "2026-10-18T20:55:46.160016+00:00",
-"status": "open",
+"status": "settled",
 "latestPrice": 0.275,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T01:55:32.344309+00:00",
+"finalClvPP": 0.0,
+"settledAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "atp-ferra-chan-2026-10-18|0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
@@ -73790,11 +73402,13 @@
 "sizeBand": "10-25k"
 },
 "firstTs": "2026-10-18T20:55:46.160016+00:00",
-"status": "open",
+"status": "settled",
 "latestPrice": 0.725,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T01:55:32.344309+00:00",
+"finalClvPP": 0.0,
+"settledAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "atp-ferra-chan-2026-10-18|0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
@@ -73814,11 +73428,13 @@
 "sizeBand": "5-10k"
 },
 "firstTs": "2026-10-18T20:55:46.160016+00:00",
-"status": "open",
+"status": "settled",
 "latestPrice": 0.725,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T01:55:32.344309+00:00",
+"finalClvPP": 0.0,
+"settledAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "atp-ferra-chan-2026-10-18|0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
@@ -73838,11 +73454,13 @@
 "sizeBand": "5-10k"
 },
 "firstTs": "2026-10-18T20:55:46.160016+00:00",
-"status": "open",
+"status": "settled",
 "latestPrice": 0.725,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T01:55:32.344309+00:00",
+"finalClvPP": 0.0,
+"settledAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "atp-ferra-chan-2026-10-18|0x124524c2fbaa57cecad01f9ae8402941a54de0af",
@@ -73862,11 +73480,13 @@
 "sizeBand": "2-5k"
 },
 "firstTs": "2026-10-18T20:55:46.160016+00:00",
-"status": "open",
+"status": "settled",
 "latestPrice": 0.725,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T01:55:32.344309+00:00",
+"finalClvPP": 0.0,
+"settledAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "atp-ferra-chan-2026-10-18|0xf12f7688a0bc8cc744ef871f70b74c16a976b30f",
@@ -73886,11 +73506,13 @@
 "sizeBand": "2-5k"
 },
 "firstTs": "2026-10-18T20:55:46.160016+00:00",
-"status": "open",
+"status": "settled",
 "latestPrice": 0.725,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T01:55:32.344309+00:00",
+"finalClvPP": 0.0,
+"settledAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "atp-woesten-artnak-2026-10-18|0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
@@ -73910,11 +73532,13 @@
 "sizeBand": "2-5k"
 },
 "firstTs": "2026-10-18T20:55:46.160016+00:00",
-"status": "open",
+"status": "settled",
 "latestPrice": 0.455,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T01:55:32.344309+00:00",
+"finalClvPP": 0.0,
+"settledAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0xf4c95b636c71243531dfc82a97565a94c106f88c",
@@ -73938,7 +73562,7 @@
 "latestPrice": 0.195,
 "clvPP": -60.0,
 "clv30": -14.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0xf0318c32136c2db7fec88b84869aee6a1106c80c",
@@ -73962,7 +73586,7 @@
 "latestPrice": 0.195,
 "clvPP": -60.0,
 "clv30": -14.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
@@ -73986,7 +73610,7 @@
 "latestPrice": 0.805,
 "clvPP": 60.0,
 "clv30": 14.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0x1f3a646ce5cbe2c70270e7a46161d89b7c7b895d",
@@ -74010,7 +73634,7 @@
 "latestPrice": 0.805,
 "clvPP": 60.0,
 "clv30": 14.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0x418d51e13d019913bb027db22ecc723fe1ad88a3",
@@ -74034,7 +73658,7 @@
 "latestPrice": 0.195,
 "clvPP": -60.0,
 "clv30": -14.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0xccd81fbd3395dc43a0531f8484b21c2462daf4de",
@@ -74058,7 +73682,7 @@
 "latestPrice": 0.195,
 "clvPP": -60.0,
 "clv30": -14.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0xfea31bc088000ff909be1dfd8d0e3f2c7ef2d227",
@@ -74082,7 +73706,7 @@
 "latestPrice": 0.195,
 "clvPP": -60.0,
 "clv30": -14.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0xf68a281980f8c13828e84e147e3822381d6e5b1b",
@@ -74106,7 +73730,7 @@
 "latestPrice": 0.195,
 "clvPP": -60.0,
 "clv30": -14.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0x9db82de5a71ae539bc82f4d9ac3a007c7d742eff",
@@ -74130,7 +73754,7 @@
 "latestPrice": 0.805,
 "clvPP": 60.0,
 "clv30": 14.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0xde7be6d489bce070a959e0cb813128ae659b5f4b",
@@ -74154,7 +73778,7 @@
 "latestPrice": 0.805,
 "clvPP": 60.0,
 "clv30": 14.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0xa49becb692927d455924583b5e3e5788246f4c40",
@@ -74178,7 +73802,7 @@
 "latestPrice": 0.195,
 "clvPP": -60.0,
 "clv30": -14.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0x5268527977f700f9bf9b6d5cd843859e4e70135d",
@@ -74202,7 +73826,7 @@
 "latestPrice": 0.195,
 "clvPP": -60.0,
 "clv30": -14.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-lac-kc-2026-10-18|0x9f2fe025f84839ca81dd8e0338892605702d2ca8",
@@ -74226,7 +73850,7 @@
 "latestPrice": 0.9635,
 "clvPP": 13.9,
 "clv30": 13.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-lac-kc-2026-10-18|0xccd81fbd3395dc43a0531f8484b21c2462daf4de",
@@ -74250,7 +73874,7 @@
 "latestPrice": 0.9635,
 "clvPP": 13.9,
 "clv30": 13.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-lac-kc-2026-10-18|0x9703676286b93c2eca71ca96e8757104519a69c2",
@@ -74274,7 +73898,7 @@
 "latestPrice": 0.9635,
 "clvPP": 13.9,
 "clv30": 13.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-lac-kc-2026-10-18|0xd106952ebf30a3125affd8a23b6c1f30c35fc79c",
@@ -74298,7 +73922,7 @@
 "latestPrice": 0.9635,
 "clvPP": 13.9,
 "clv30": 13.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-lac-kc-2026-10-18|0xd47107e357c4688bffc76504541f5280760bedf8",
@@ -74322,7 +73946,7 @@
 "latestPrice": 0.9635,
 "clvPP": 13.9,
 "clv30": 13.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-lac-kc-2026-10-18|0xf0318c32136c2db7fec88b84869aee6a1106c80c",
@@ -74346,7 +73970,7 @@
 "latestPrice": 0.0365,
 "clvPP": -13.8,
 "clv30": -13.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-lac-kc-2026-10-18|0xde7be6d489bce070a959e0cb813128ae659b5f4b",
@@ -74370,7 +73994,7 @@
 "latestPrice": 0.0365,
 "clvPP": -13.8,
 "clv30": -13.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-lac-kc-2026-10-18|0x1f3a646ce5cbe2c70270e7a46161d89b7c7b895d",
@@ -74394,7 +74018,7 @@
 "latestPrice": 0.0365,
 "clvPP": -13.8,
 "clv30": -13.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-lac-kc-2026-10-18|0xd798b9f7a3b1ae2c92657e71ac5a00088d2259c6",
@@ -74418,7 +74042,7 @@
 "latestPrice": 0.9635,
 "clvPP": 13.9,
 "clv30": 13.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-lac-kc-2026-10-18|0xf68a281980f8c13828e84e147e3822381d6e5b1b",
@@ -74442,7 +74066,7 @@
 "latestPrice": 0.9635,
 "clvPP": 13.9,
 "clv30": 13.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-lac-kc-2026-10-18|0xbc43c8bfbc4d77c2fc9011adad38ba43b88996d3",
@@ -74466,7 +74090,7 @@
 "latestPrice": 0.0365,
 "clvPP": -13.8,
 "clv30": -13.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-lac-kc-2026-10-18|0x56c9fbdeccf198f1f5ad95ace39b24f5f7fb0d9e",
@@ -74490,7 +74114,7 @@
 "latestPrice": 0.9635,
 "clvPP": 13.9,
 "clv30": 13.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0xf0318c32136c2db7fec88b84869aee6a1106c80c",
@@ -74514,7 +74138,7 @@
 "latestPrice": 0.745,
 "clvPP": 10.0,
 "clv30": -5.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0xa38a455bbdd4b68486548b7e19da99903f4f821d",
@@ -74538,7 +74162,7 @@
 "latestPrice": 0.255,
 "clvPP": -10.0,
 "clv30": 5.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0x684baa57c338c2549aec0aa3f034f695d72a8409",
@@ -74562,7 +74186,7 @@
 "latestPrice": 0.745,
 "clvPP": 10.0,
 "clv30": -5.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0x1f3a646ce5cbe2c70270e7a46161d89b7c7b895d",
@@ -74586,7 +74210,7 @@
 "latestPrice": 0.255,
 "clvPP": -10.0,
 "clv30": 5.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0x9f2fe025f84839ca81dd8e0338892605702d2ca8",
@@ -74610,7 +74234,7 @@
 "latestPrice": 0.255,
 "clvPP": -10.0,
 "clv30": 5.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
@@ -74634,7 +74258,7 @@
 "latestPrice": 0.745,
 "clvPP": 10.0,
 "clv30": -5.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0xe5b70fd855af9258d9463992e4f1ed7987905ee3",
@@ -74658,7 +74282,7 @@
 "latestPrice": 0.255,
 "clvPP": -10.0,
 "clv30": 5.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0xd47107e357c4688bffc76504541f5280760bedf8",
@@ -74682,7 +74306,7 @@
 "latestPrice": 0.745,
 "clvPP": 10.0,
 "clv30": -5.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0xf68a281980f8c13828e84e147e3822381d6e5b1b",
@@ -74706,7 +74330,7 @@
 "latestPrice": 0.745,
 "clvPP": 10.0,
 "clv30": -5.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0xe015b5a2a299167be835a2fd1e86f09c49e06ffd",
@@ -74730,7 +74354,7 @@
 "latestPrice": 0.745,
 "clvPP": 10.0,
 "clv30": -5.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0xde7be6d489bce070a959e0cb813128ae659b5f4b",
@@ -74754,7 +74378,7 @@
 "latestPrice": 0.255,
 "clvPP": -10.0,
 "clv30": 5.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0x92b5f14c68ccae0cd7d0ba52b098ffaab990fec6",
@@ -74778,7 +74402,7 @@
 "latestPrice": 0.745,
 "clvPP": 10.0,
 "clv30": -5.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0x9ee49c02ae1ade698bf9e06d4ca271f236b8697b",
@@ -74802,7 +74426,7 @@
 "latestPrice": 0.195,
 "clvPP": -46.0,
 "clv30": -4.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0x2759769cd371bee44ec5bfc5e72c7f1f092b2b38",
@@ -74826,7 +74450,7 @@
 "latestPrice": 0.195,
 "clvPP": -46.0,
 "clv30": -4.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
@@ -74850,7 +74474,7 @@
 "latestPrice": 0.805,
 "clvPP": 46.0,
 "clv30": 4.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0xa38a455bbdd4b68486548b7e19da99903f4f821d",
@@ -74874,7 +74498,7 @@
 "latestPrice": 0.805,
 "clvPP": 46.0,
 "clv30": 4.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-lac-kc-2026-10-18|0x3682205f93964f923d1cc2b100907268f300df75",
@@ -74898,7 +74522,7 @@
 "latestPrice": 0.9635,
 "clvPP": 0.9,
 "clv30": 0.2,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-lac-kc-2026-10-18|0x22ca77bf27acc009f92697e5768fec9ede459d1b",
@@ -74922,7 +74546,7 @@
 "latestPrice": 0.9635,
 "clvPP": 0.9,
 "clv30": 0.2,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-lac-kc-2026-10-18|0xa2c908ce8b8386bc8c5471120c5a662551332c23",
@@ -74946,7 +74570,7 @@
 "latestPrice": 0.9635,
 "clvPP": 0.9,
 "clv30": 0.2,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-lac-kc-2026-10-18|0x9b11866433281ade9f2811dbde8acdefc45f5375",
@@ -74970,7 +74594,7 @@
 "latestPrice": 0.9635,
 "clvPP": 0.9,
 "clv30": 0.2,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
@@ -74994,7 +74618,7 @@
 "latestPrice": 0.255,
 "clvPP": -15.0,
 "clv30": -27.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "dota2-salami-pr1-2026-10-18|0x82d2e4dbb0a849ff8e2f5380719769145648beea",
@@ -75018,7 +74642,7 @@
 "latestPrice": 0.59,
 "clvPP": 8.5,
 "clv30": 8.5,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "dota2-salami-pr1-2026-10-18|0xb077e7482c6bea18f75e33bf823cbbe59cda8fe8",
@@ -75042,7 +74666,7 @@
 "latestPrice": 0.41,
 "clvPP": -8.5,
 "clv30": -8.5,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0x7e3a1f95c558f39a51ff334d789e3e039b553246",
@@ -75066,7 +74690,7 @@
 "latestPrice": 0.805,
 "clvPP": 42.0,
 "clv30": 42.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0xf28e42d20e4826f2b10a24bc952001697947cab2",
@@ -75090,7 +74714,7 @@
 "latestPrice": 0.745,
 "clvPP": -12.0,
 "clv30": -12.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0x9b11866433281ade9f2811dbde8acdefc45f5375",
@@ -75114,7 +74738,7 @@
 "latestPrice": 0.745,
 "clvPP": -12.0,
 "clv30": -12.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "dota2-salami-pr1-2026-10-18|0xd3b034d7bfb2473fb252d0414646d9786bac329e",
@@ -75138,7 +74762,7 @@
 "latestPrice": 0.59,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0x15a681d447124c90dbd85be526af18ca1611bf5d",
@@ -75162,7 +74786,7 @@
 "latestPrice": 0.805,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0x20d6436849f930584892730c7f96ebb2ac763856",
@@ -75186,7 +74810,7 @@
 "latestPrice": 0.805,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0xae7ffba3fd102de1a4f795853ad3de06ad666f49",
@@ -75210,7 +74834,7 @@
 "latestPrice": 0.805,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0x684baa57c338c2549aec0aa3f034f695d72a8409",
@@ -75234,7 +74858,7 @@
 "latestPrice": 0.805,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0x9b89ef1f344d3e17b37ccdff3bccf62d04f04244",
@@ -75258,7 +74882,7 @@
 "latestPrice": 0.805,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0x924379a79c64b77ad5816ad362122a5f6228658e",
@@ -75282,7 +74906,7 @@
 "latestPrice": 0.805,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0xdc41c39b95453c943174f369926018f6963bdd7e",
@@ -75306,7 +74930,7 @@
 "latestPrice": 0.805,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0x496121ba250d47b62c2d84b3414a99aeeacade13",
@@ -75330,7 +74954,7 @@
 "latestPrice": 0.195,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0x796fc6fda8f8e03c03e2a2d012155989960300f6",
@@ -75354,7 +74978,7 @@
 "latestPrice": 0.805,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0xe015b5a2a299167be835a2fd1e86f09c49e06ffd",
@@ -75378,7 +75002,7 @@
 "latestPrice": 0.195,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0x821dab0565ebf5b327f51db06223fdcfe01acf16",
@@ -75402,7 +75026,7 @@
 "latestPrice": 0.805,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0x8c0b024c17831a0dde038547b7e791ae6a0d7aa5",
@@ -75426,7 +75050,7 @@
 "latestPrice": 0.805,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0x9aeb534c42b58b21673d5e03e9da14fbd15b2729",
@@ -75450,7 +75074,7 @@
 "latestPrice": 0.805,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0x3dfb153c197d4c19d3b31c1ecd2c7b6860eeabaf",
@@ -75474,7 +75098,7 @@
 "latestPrice": 0.195,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0xd1ed12197b7dc22dede923727e9b714024dbd7cb",
@@ -75498,7 +75122,7 @@
 "latestPrice": 0.195,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0x9b11866433281ade9f2811dbde8acdefc45f5375",
@@ -75522,7 +75146,7 @@
 "latestPrice": 0.805,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0xf64745161e46cbd2143f021edd92cf6bed850ccb",
@@ -75546,7 +75170,7 @@
 "latestPrice": 0.805,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0xe7870d0e1bfc65a23e3d66caf00ca1b9129e5034",
@@ -75570,7 +75194,7 @@
 "latestPrice": 0.195,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0xb4f978be63cdf75554b0b46a4262a6db597cc9a7",
@@ -75594,7 +75218,7 @@
 "latestPrice": 0.805,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0xdaef2be2a19ad331737d06545f85615b094554e9",
@@ -75618,7 +75242,7 @@
 "latestPrice": 0.195,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0x21b70de5fa3532afbf51a5d177e76b1e7e17c861",
@@ -75642,7 +75266,7 @@
 "latestPrice": 0.805,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
@@ -75666,7 +75290,7 @@
 "latestPrice": 0.195,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0x55b9e6a1dcca2defb01636ba41e9f76a0883a814",
@@ -75690,7 +75314,7 @@
 "latestPrice": 0.805,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0xf93f33cc7d962e9286ca08c285fb4c7508b8f94b",
@@ -75714,7 +75338,7 @@
 "latestPrice": 0.805,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-ari-la-2026-10-18|0xddb993dbaee76440dbb42408a1925e38b7aaedcd",
@@ -75738,7 +75362,7 @@
 "latestPrice": 0.805,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-lac-kc-2026-10-18|0xa466841143753310fa0f4448526595fa65641c77",
@@ -75762,7 +75386,7 @@
 "latestPrice": 0.9635,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-lac-kc-2026-10-18|0x72e2c237e76b4ffada94ff347cdad511559b6610",
@@ -75786,7 +75410,7 @@
 "latestPrice": 0.9635,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-lac-kc-2026-10-18|0xf5198df69e13937a40d1c76d6f72d9aa067d906b",
@@ -75810,7 +75434,7 @@
 "latestPrice": 0.9635,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-lac-kc-2026-10-18|0x821dab0565ebf5b327f51db06223fdcfe01acf16",
@@ -75834,7 +75458,7 @@
 "latestPrice": 0.9635,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-lac-kc-2026-10-18|0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
@@ -75858,7 +75482,7 @@
 "latestPrice": 0.9635,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-lac-kc-2026-10-18|0x2759769cd371bee44ec5bfc5e72c7f1f092b2b38",
@@ -75882,7 +75506,7 @@
 "latestPrice": 0.9635,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-lac-kc-2026-10-18|0x8efa1ea8ee2d456a051ae2985079a1e3c9aa894c",
@@ -75906,7 +75530,7 @@
 "latestPrice": 0.9635,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-lac-kc-2026-10-18|0x9b559c039873cd794668492af33b748b6b0a1167",
@@ -75930,7 +75554,7 @@
 "latestPrice": 0.9635,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-lac-kc-2026-10-18|0xa278b41b5afda5d18da683eb7f851a7b2dc13369",
@@ -75954,7 +75578,7 @@
 "latestPrice": 0.9635,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-lac-kc-2026-10-18|0xec5a3852788958a1448fc349a971a82e39012e90",
@@ -75978,7 +75602,7 @@
 "latestPrice": 0.9635,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-lac-kc-2026-10-18|0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
@@ -76002,7 +75626,7 @@
 "latestPrice": 0.9635,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-lac-kc-2026-10-18|0xc785252b25901a591e9d962e09f4342468444ef2",
@@ -76026,7 +75650,7 @@
 "latestPrice": 0.9635,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-lac-kc-2026-10-18|0x9c76cdb43fb46454da005fbc82047a64a18ec926",
@@ -76050,7 +75674,7 @@
 "latestPrice": 0.9635,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-lac-kc-2026-10-18|0x5c5454940c679b99513a67bf08af752b2011f1d2",
@@ -76074,7 +75698,7 @@
 "latestPrice": 0.9635,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0xb7fffe75ad88a55987cd8c60ad6a53640e80aa79",
@@ -76098,7 +75722,7 @@
 "latestPrice": 0.745,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0x81804300d6b3f3a59424ca86b3d461b9a1b7f4da",
@@ -76122,7 +75746,7 @@
 "latestPrice": 0.745,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0xc5d8d3722f46f43d58d144c2e2772a9c30b2a00b",
@@ -76146,7 +75770,7 @@
 "latestPrice": 0.745,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0x796fc6fda8f8e03c03e2a2d012155989960300f6",
@@ -76170,7 +75794,7 @@
 "latestPrice": 0.255,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0x496121ba250d47b62c2d84b3414a99aeeacade13",
@@ -76194,7 +75818,7 @@
 "latestPrice": 0.255,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0xd38ad20037839959d89165cf448568d584b28d26",
@@ -76218,7 +75842,7 @@
 "latestPrice": 0.745,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0xb0e3fcbe0d7f17168fdce93f89c0168d3fa329eb",
@@ -76242,7 +75866,7 @@
 "latestPrice": 0.745,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0x457f2814dac53a0a9951b5c2ea5a9db20896aa1a",
@@ -76266,7 +75890,7 @@
 "latestPrice": 0.745,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0xe7870d0e1bfc65a23e3d66caf00ca1b9129e5034",
@@ -76290,7 +75914,7 @@
 "latestPrice": 0.255,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0x241adda58ed48866f0deec7867731dd84c5ba9c8",
@@ -76314,7 +75938,7 @@
 "latestPrice": 0.745,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0xec5a3852788958a1448fc349a971a82e39012e90",
@@ -76338,7 +75962,7 @@
 "latestPrice": 0.745,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0xa278b41b5afda5d18da683eb7f851a7b2dc13369",
@@ -76362,7 +75986,7 @@
 "latestPrice": 0.745,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0xf7dbb3d567fea98e1bf59538e1461f741eb0d23a",
@@ -76386,7 +76010,7 @@
 "latestPrice": 0.255,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0x28ea3ec52d81664470663c8b17b84046a1e41fbe",
@@ -76410,7 +76034,7 @@
 "latestPrice": 0.745,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0x0267ebb4a7371037b79e2b062c766b03ee2e7f7e",
@@ -76434,7 +76058,7 @@
 "latestPrice": 0.255,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0x1c0cfba742eedcf6993a785ed1f76a175c257c83",
@@ -76458,7 +76082,7 @@
 "latestPrice": 0.745,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0x9703676286b93c2eca71ca96e8757104519a69c2",
@@ -76482,7 +76106,7 @@
 "latestPrice": 0.255,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0x33bcb6e9bd44be709122b2940c55e34f1a7e37dc",
@@ -76506,7 +76130,7 @@
 "latestPrice": 0.255,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0x35d47b5b96b2dadd09fcac5bd4c8b40088a05169",
@@ -76530,7 +76154,7 @@
 "latestPrice": 0.745,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0x9aeb534c42b58b21673d5e03e9da14fbd15b2729",
@@ -76554,7 +76178,7 @@
 "latestPrice": 0.255,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0x66b23cd8bcb651e11b70f6f340ce154864870fdf",
@@ -76578,7 +76202,7 @@
 "latestPrice": 0.745,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0x5c5454940c679b99513a67bf08af752b2011f1d2",
@@ -76602,7 +76226,7 @@
 "latestPrice": 0.745,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
@@ -76626,7 +76250,7 @@
 "latestPrice": 0.255,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0xa080dadd87036ad01dbf5e9c254b0c3dbdba234f",
@@ -76650,7 +76274,7 @@
 "latestPrice": 0.255,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-buf-lv-2026-10-18|0xf5e15d3344c35890f1aa716dca88e13eb9065ad0",
@@ -76674,7 +76298,7 @@
 "latestPrice": 0.255,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nhl-car-cal-2026-10-18|0xec5a3852788958a1448fc349a971a82e39012e90",
@@ -76694,11 +76318,13 @@
 "sizeBand": "10-25k"
 },
 "firstTs": "2026-10-19T00:51:52.253391+00:00",
-"status": "open",
-"latestPrice": 0.595,
-"clvPP": -4.0,
+"status": "settled",
+"latestPrice": 0.0005,
+"clvPP": -63.5,
 "clv30": -1.5,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00",
+"finalClvPP": -63.5,
+"settledAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nhl-car-cal-2026-10-18|0xe4a57385a34b0b32fd86be72efd25cda41003cad",
@@ -76718,11 +76344,13 @@
 "sizeBand": "10-25k"
 },
 "firstTs": "2026-10-19T00:51:52.253391+00:00",
-"status": "open",
-"latestPrice": 0.405,
-"clvPP": 4.0,
+"status": "settled",
+"latestPrice": 0.9995,
+"clvPP": 63.5,
 "clv30": 1.5,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00",
+"finalClvPP": 63.5,
+"settledAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nhl-car-cal-2026-10-18|0x26f8af9d49328e5fdae2c24e62e5c523bebd3452",
@@ -76742,11 +76370,13 @@
 "sizeBand": "5-10k"
 },
 "firstTs": "2026-10-19T00:51:52.253391+00:00",
-"status": "open",
-"latestPrice": 0.595,
-"clvPP": -4.0,
+"status": "settled",
+"latestPrice": 0.0005,
+"clvPP": -63.5,
 "clv30": -1.5,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00",
+"finalClvPP": -63.5,
+"settledAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nhl-car-cal-2026-10-18|0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
@@ -76766,11 +76396,13 @@
 "sizeBand": "5-10k"
 },
 "firstTs": "2026-10-19T00:51:52.253391+00:00",
-"status": "open",
-"latestPrice": 0.405,
-"clvPP": 4.0,
+"status": "settled",
+"latestPrice": 0.9995,
+"clvPP": 63.5,
 "clv30": 1.5,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00",
+"finalClvPP": 63.5,
+"settledAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nhl-car-cal-2026-10-18|0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
@@ -76790,11 +76422,13 @@
 "sizeBand": "5-10k"
 },
 "firstTs": "2026-10-19T00:51:52.253391+00:00",
-"status": "open",
-"latestPrice": 0.595,
-"clvPP": -4.0,
+"status": "settled",
+"latestPrice": 0.0005,
+"clvPP": -63.5,
 "clv30": -1.5,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00",
+"finalClvPP": -63.5,
+"settledAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nhl-car-cal-2026-10-18|0xebfdb8164f0e0748818d6c7a9ac85a323267fd63",
@@ -76814,11 +76448,13 @@
 "sizeBand": "2-5k"
 },
 "firstTs": "2026-10-19T00:51:52.253391+00:00",
-"status": "open",
-"latestPrice": 0.595,
-"clvPP": -4.0,
+"status": "settled",
+"latestPrice": 0.0005,
+"clvPP": -63.5,
 "clv30": -1.5,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00",
+"finalClvPP": -63.5,
+"settledAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nhl-car-cal-2026-10-18|0x0432c2fb0e3d45002d71b3ee9229118184b99659",
@@ -76838,11 +76474,13 @@
 "sizeBand": "2-5k"
 },
 "firstTs": "2026-10-19T00:51:52.253391+00:00",
-"status": "open",
-"latestPrice": 0.595,
-"clvPP": -4.0,
+"status": "settled",
+"latestPrice": 0.0005,
+"clvPP": -63.5,
 "clv30": -1.5,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00",
+"finalClvPP": -63.5,
+"settledAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nhl-car-cal-2026-10-18|0x4924c71c054637d76d0a96d6d097a0d95f77f328",
@@ -76862,11 +76500,13 @@
 "sizeBand": "2-5k"
 },
 "firstTs": "2026-10-19T00:51:52.253391+00:00",
-"status": "open",
-"latestPrice": 0.405,
-"clvPP": 4.0,
+"status": "settled",
+"latestPrice": 0.9995,
+"clvPP": 63.5,
 "clv30": 1.5,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00",
+"finalClvPP": 63.5,
+"settledAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nhl-car-cal-2026-10-18|0x1f3a646ce5cbe2c70270e7a46161d89b7c7b895d",
@@ -76886,11 +76526,13 @@
 "sizeBand": "2-5k"
 },
 "firstTs": "2026-10-19T00:51:52.253391+00:00",
-"status": "open",
-"latestPrice": 0.405,
-"clvPP": 4.0,
+"status": "settled",
+"latestPrice": 0.9995,
+"clvPP": 63.5,
 "clv30": 1.5,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00",
+"finalClvPP": 63.5,
+"settledAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nhl-car-cal-2026-10-18|0x9703676286b93c2eca71ca96e8757104519a69c2",
@@ -76910,11 +76552,13 @@
 "sizeBand": "2-5k"
 },
 "firstTs": "2026-10-19T00:51:52.253391+00:00",
-"status": "open",
-"latestPrice": 0.595,
-"clvPP": -4.0,
+"status": "settled",
+"latestPrice": 0.0005,
+"clvPP": -63.5,
 "clv30": -1.5,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00",
+"finalClvPP": -63.5,
+"settledAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nhl-car-cal-2026-10-18|0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
@@ -76934,11 +76578,13 @@
 "sizeBand": "2-5k"
 },
 "firstTs": "2026-10-19T00:51:52.253391+00:00",
-"status": "open",
-"latestPrice": 0.405,
-"clvPP": 4.0,
+"status": "settled",
+"latestPrice": 0.9995,
+"clvPP": 63.5,
 "clv30": 1.5,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00",
+"finalClvPP": 63.5,
+"settledAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nhl-car-cal-2026-10-18|0x3e04fbc51adb75418129f6ce2091ae633070564d",
@@ -76958,11 +76604,13 @@
 "sizeBand": "2-5k"
 },
 "firstTs": "2026-10-19T00:51:52.253391+00:00",
-"status": "open",
-"latestPrice": 0.595,
-"clvPP": -4.0,
+"status": "settled",
+"latestPrice": 0.0005,
+"clvPP": -63.5,
 "clv30": -1.5,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00",
+"finalClvPP": -63.5,
+"settledAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-dal-gb-2026-10-19|0x4bff30af91642dc7d2b19a8664378fe55c45fc26",
@@ -76983,10 +76631,10 @@
 },
 "firstTs": "2026-10-19T00:51:52.253391+00:00",
 "status": "open",
-"latestPrice": 0.905,
-"clvPP": 25.0,
+"latestPrice": 0.825,
+"clvPP": 17.0,
 "clv30": 15.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-dal-gb-2026-10-19|0xf0318c32136c2db7fec88b84869aee6a1106c80c",
@@ -77007,10 +76655,10 @@
 },
 "firstTs": "2026-10-19T00:51:52.253391+00:00",
 "status": "open",
-"latestPrice": 0.095,
-"clvPP": -25.0,
+"latestPrice": 0.175,
+"clvPP": -17.0,
 "clv30": -15.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-dal-gb-2026-10-19|0xb9c7d35d1f04d08624fabcfd3b6cee2d3c9baade",
@@ -77031,10 +76679,10 @@
 },
 "firstTs": "2026-10-19T00:51:52.253391+00:00",
 "status": "open",
-"latestPrice": 0.095,
-"clvPP": -25.0,
+"latestPrice": 0.175,
+"clvPP": -17.0,
 "clv30": -15.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-dal-gb-2026-10-19|0xa38a455bbdd4b68486548b7e19da99903f4f821d",
@@ -77055,10 +76703,10 @@
 },
 "firstTs": "2026-10-19T00:51:52.253391+00:00",
 "status": "open",
-"latestPrice": 0.905,
-"clvPP": 25.0,
+"latestPrice": 0.825,
+"clvPP": 17.0,
 "clv30": 15.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-dal-gb-2026-10-19|0xf4c95b636c71243531dfc82a97565a94c106f88c",
@@ -77079,10 +76727,10 @@
 },
 "firstTs": "2026-10-19T00:51:52.253391+00:00",
 "status": "open",
-"latestPrice": 0.905,
-"clvPP": 25.0,
+"latestPrice": 0.825,
+"clvPP": 17.0,
 "clv30": 15.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-dal-gb-2026-10-19|0x9703676286b93c2eca71ca96e8757104519a69c2",
@@ -77103,10 +76751,10 @@
 },
 "firstTs": "2026-10-19T00:51:52.253391+00:00",
 "status": "open",
-"latestPrice": 0.905,
-"clvPP": 25.0,
+"latestPrice": 0.825,
+"clvPP": 17.0,
 "clv30": 15.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-dal-gb-2026-10-19|0x9b89ef1f344d3e17b37ccdff3bccf62d04f04244",
@@ -77127,10 +76775,10 @@
 },
 "firstTs": "2026-10-19T00:51:52.253391+00:00",
 "status": "open",
-"latestPrice": 0.095,
-"clvPP": -25.0,
+"latestPrice": 0.175,
+"clvPP": -17.0,
 "clv30": -15.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-dal-gb-2026-10-19|0x8a8685a792c184e5c2ee8c7d4d4baba7c2c94998",
@@ -77151,10 +76799,10 @@
 },
 "firstTs": "2026-10-19T00:51:52.253391+00:00",
 "status": "open",
-"latestPrice": 0.905,
-"clvPP": 25.0,
+"latestPrice": 0.825,
+"clvPP": 17.0,
 "clv30": 15.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-dal-gb-2026-10-19|0xbc43c8bfbc4d77c2fc9011adad38ba43b88996d3",
@@ -77175,10 +76823,10 @@
 },
 "firstTs": "2026-10-19T00:51:52.253391+00:00",
 "status": "open",
-"latestPrice": 0.905,
-"clvPP": 25.0,
+"latestPrice": 0.825,
+"clvPP": 17.0,
 "clv30": 15.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-dal-gb-2026-10-19|0x418d51e13d019913bb027db22ecc723fe1ad88a3",
@@ -77199,10 +76847,10 @@
 },
 "firstTs": "2026-10-19T00:51:52.253391+00:00",
 "status": "open",
-"latestPrice": 0.905,
-"clvPP": 25.0,
+"latestPrice": 0.825,
+"clvPP": 17.0,
 "clv30": 15.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-dal-gb-2026-10-19|0x92b5f14c68ccae0cd7d0ba52b098ffaab990fec6",
@@ -77223,10 +76871,10 @@
 },
 "firstTs": "2026-10-19T00:51:52.253391+00:00",
 "status": "open",
-"latestPrice": 0.905,
-"clvPP": 25.0,
+"latestPrice": 0.825,
+"clvPP": 17.0,
 "clv30": 15.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-dal-gb-2026-10-19|0x0dc607c5b65025dcb443c10fdcbaed4256bb9889",
@@ -77247,10 +76895,10 @@
 },
 "firstTs": "2026-10-19T00:51:52.253391+00:00",
 "status": "open",
-"latestPrice": 0.905,
-"clvPP": 25.0,
+"latestPrice": 0.825,
+"clvPP": 17.0,
 "clv30": 15.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-dal-gb-2026-10-19-player-props|0xabea08725590a4c6ae7c8e63214c9628bbc772ae",
@@ -77271,10 +76919,10 @@
 },
 "firstTs": "2026-10-19T00:51:52.253391+00:00",
 "status": "open",
-"latestPrice": 0.705,
-"clvPP": -7.5,
+"latestPrice": 0.585,
+"clvPP": -19.5,
 "clv30": 0.0,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nhl-car-cal-2026-10-18|0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
@@ -77294,11 +76942,13 @@
 "sizeBand": "2-5k"
 },
 "firstTs": "2026-10-19T01:41:17.970488+00:00",
-"status": "open",
-"latestPrice": 0.405,
-"clvPP": 2.5,
-"clv30": null,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"status": "settled",
+"latestPrice": 0.9995,
+"clvPP": 62.0,
+"clv30": 62.0,
+"updatedAt": "2026-10-19T02:51:28.895644+00:00",
+"finalClvPP": 62.0,
+"settledAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nhl-car-cal-2026-10-18|0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
@@ -77318,11 +76968,13 @@
 "sizeBand": "2-5k"
 },
 "firstTs": "2026-10-19T01:41:17.970488+00:00",
-"status": "open",
-"latestPrice": 0.405,
-"clvPP": 2.5,
-"clv30": null,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"status": "settled",
+"latestPrice": 0.9995,
+"clvPP": 62.0,
+"clv30": 62.0,
+"updatedAt": "2026-10-19T02:51:28.895644+00:00",
+"finalClvPP": 62.0,
+"settledAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-dal-gb-2026-10-19|0x9db82de5a71ae539bc82f4d9ac3a007c7d742eff",
@@ -77343,10 +76995,10 @@
 },
 "firstTs": "2026-10-19T01:41:17.970488+00:00",
 "status": "open",
-"latestPrice": 0.905,
-"clvPP": 10.0,
-"clv30": null,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"latestPrice": 0.825,
+"clvPP": 2.0,
+"clv30": 2.0,
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-dal-gb-2026-10-19|0xe015b5a2a299167be835a2fd1e86f09c49e06ffd",
@@ -77367,10 +77019,10 @@
 },
 "firstTs": "2026-10-19T01:41:17.970488+00:00",
 "status": "open",
-"latestPrice": 0.905,
-"clvPP": 10.0,
-"clv30": null,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"latestPrice": 0.825,
+"clvPP": 2.0,
+"clv30": 2.0,
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-dal-gb-2026-10-19|0x9b11866433281ade9f2811dbde8acdefc45f5375",
@@ -77391,10 +77043,10 @@
 },
 "firstTs": "2026-10-19T01:41:17.970488+00:00",
 "status": "open",
-"latestPrice": 0.905,
-"clvPP": 10.0,
-"clv30": null,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"latestPrice": 0.825,
+"clvPP": 2.0,
+"clv30": 2.0,
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "mex-mon1-pac-2026-10-18|0xdc41c39b95453c943174f369926018f6963bdd7e",
@@ -77415,10 +77067,10 @@
 },
 "firstTs": "2026-10-19T01:41:17.970488+00:00",
 "status": "open",
-"latestPrice": 0.935,
-"clvPP": 1.0,
-"clv30": null,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"latestPrice": 0.8125,
+"clvPP": -11.3,
+"clv30": -11.3,
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "mex-mon1-pac-2026-10-18|0x032eb1bc893940263ad0b01889f262fc232f2a9e",
@@ -77439,10 +77091,10 @@
 },
 "firstTs": "2026-10-19T01:41:17.970488+00:00",
 "status": "open",
-"latestPrice": 0.935,
-"clvPP": 1.0,
-"clv30": null,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"latestPrice": 0.8125,
+"clvPP": -11.3,
+"clv30": -11.3,
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "mex-mon1-pac-2026-10-18|0x91feec8af2b517f024d91564ee108d707cc0c1c6",
@@ -77463,10 +77115,10 @@
 },
 "firstTs": "2026-10-19T01:41:17.970488+00:00",
 "status": "open",
-"latestPrice": 0.935,
-"clvPP": 1.0,
-"clv30": null,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"latestPrice": 0.8125,
+"clvPP": -11.3,
+"clv30": -11.3,
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "mex-mon1-pac-2026-10-18|0xdd5ef115f801999575b03d78d0115ad8b2d59040",
@@ -77487,10 +77139,10 @@
 },
 "firstTs": "2026-10-19T01:41:17.970488+00:00",
 "status": "open",
-"latestPrice": 0.935,
-"clvPP": 1.0,
-"clv30": null,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"latestPrice": 0.8125,
+"clvPP": -11.3,
+"clv30": -11.3,
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "col1-adc-cjf-2026-10-18|0x918b42a06ff25eaaa4a79eca9da6a9de46f4ea63",
@@ -77511,10 +77163,10 @@
 },
 "firstTs": "2026-10-19T01:41:17.970488+00:00",
 "status": "open",
-"latestPrice": 0.595,
-"clvPP": 2.0,
-"clv30": null,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"latestPrice": 0.515,
+"clvPP": -6.0,
+"clv30": -6.0,
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "col1-adc-cjf-2026-10-18|0x0d23fc6838433dbff11e4667ef5991e9dd9d2d56",
@@ -77535,10 +77187,10 @@
 },
 "firstTs": "2026-10-19T01:41:17.970488+00:00",
 "status": "open",
-"latestPrice": 0.595,
-"clvPP": 2.0,
-"clv30": null,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"latestPrice": 0.515,
+"clvPP": -6.0,
+"clv30": -6.0,
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "col1-adc-cjf-2026-10-18|0x3d42e45cbf1c671733fbb8470924ec1bef165bf3",
@@ -77559,10 +77211,10 @@
 },
 "firstTs": "2026-10-19T01:41:17.970488+00:00",
 "status": "open",
-"latestPrice": 0.595,
-"clvPP": 2.0,
-"clv30": null,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"latestPrice": 0.515,
+"clvPP": -6.0,
+"clv30": -6.0,
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "col1-adc-cjf-2026-10-18|0x074a3a0ffc6e1077a9d7fcbd774029e0cc6ef0e0",
@@ -77583,10 +77235,10 @@
 },
 "firstTs": "2026-10-19T01:41:17.970488+00:00",
 "status": "open",
-"latestPrice": 0.595,
-"clvPP": 2.0,
-"clv30": null,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"latestPrice": 0.515,
+"clvPP": -6.0,
+"clv30": -6.0,
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "col1-adc-cjf-2026-10-18|0xcf0c70317fd5e4e4429758b3d80a7b7f3762f2bb",
@@ -77607,10 +77259,10 @@
 },
 "firstTs": "2026-10-19T01:41:17.970488+00:00",
 "status": "open",
-"latestPrice": 0.595,
-"clvPP": 2.0,
-"clv30": null,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"latestPrice": 0.515,
+"clvPP": -6.0,
+"clv30": -6.0,
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "col1-adc-cjf-2026-10-18|0xa3566f3411369de654e2c83e9fa10392b83bcb94",
@@ -77631,10 +77283,10 @@
 },
 "firstTs": "2026-10-19T01:41:17.970488+00:00",
 "status": "open",
-"latestPrice": 0.595,
-"clvPP": 2.0,
-"clv30": null,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"latestPrice": 0.515,
+"clvPP": -6.0,
+"clv30": -6.0,
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "col1-adc-cjf-2026-10-18|0x154ca10dfee317dcfb9337788db7da858cba658e",
@@ -77655,10 +77307,10 @@
 },
 "firstTs": "2026-10-19T01:41:17.970488+00:00",
 "status": "open",
-"latestPrice": 0.595,
-"clvPP": 2.0,
-"clv30": null,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"latestPrice": 0.515,
+"clvPP": -6.0,
+"clv30": -6.0,
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-dal-gb-2026-10-19|0xb7fffe75ad88a55987cd8c60ad6a53640e80aa79",
@@ -77679,10 +77331,10 @@
 },
 "firstTs": "2026-10-19T01:55:32.344309+00:00",
 "status": "open",
-"latestPrice": 0.905,
-"clvPP": 0.0,
-"clv30": null,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"latestPrice": 0.825,
+"clvPP": -8.0,
+"clv30": -8.0,
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "nfl-dal-gb-2026-10-19-player-props|0x9f15613ebf1f36d4bc679e1211d1fc567cf9bdb3",
@@ -77703,10 +77355,10 @@
 },
 "firstTs": "2026-10-19T01:55:32.344309+00:00",
 "status": "open",
-"latestPrice": 0.295,
-"clvPP": 0.0,
-"clv30": null,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"latestPrice": 0.415,
+"clvPP": 12.0,
+"clv30": 12.0,
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 },
 {
 "sig": "mex-mon1-pac-2026-10-18-more-markets|0x9387dc8f6279273f5a842c50c27d69360813ce77",
@@ -77726,11 +77378,383 @@
 "sizeBand": "2-5k"
 },
 "firstTs": "2026-10-19T01:55:32.344309+00:00",
+"status": "settled",
+"latestPrice": 0.998,
+"clvPP": 24.8,
+"clv30": 24.8,
+"updatedAt": "2026-10-19T02:51:28.895644+00:00",
+"finalClvPP": 24.8,
+"settledAt": "2026-10-19T02:51:28.895644+00:00"
+},
+{
+"sig": "nhl-car-cal-2026-10-18|0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+"key": "nhl-car-cal-2026-10-18",
+"side": "Flames",
+"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+"usd": 5161,
+"league": "NHL",
+"entryPrice": 0.9995,
+"totalUsd": 208088,
+"movePP": 60.5,
+"flags": {
+"valueZone": false,
+"mature": true,
+"notChasing": false,
+"sharp": false,
+"sizeBand": "5-10k"
+},
+"firstTs": "2026-10-19T02:51:28.895644+00:00",
+"status": "settled",
+"latestPrice": 0.9995,
+"clvPP": 0.0,
+"clv30": 0.0,
+"updatedAt": "2026-10-19T02:51:28.895644+00:00",
+"finalClvPP": 0.0,
+"settledAt": "2026-10-19T02:51:28.895644+00:00"
+},
+{
+"sig": "nhl-car-cal-2026-10-18|0x9bd317354b5efb916f6a854bbda9f1d6aa9841f8",
+"key": "nhl-car-cal-2026-10-18",
+"side": "Flames",
+"wallet": "0x9bd317354b5efb916f6a854bbda9f1d6aa9841f8",
+"usd": 4256,
+"league": "NHL",
+"entryPrice": 0.9995,
+"totalUsd": 208088,
+"movePP": 60.5,
+"flags": {
+"valueZone": false,
+"mature": true,
+"notChasing": false,
+"sharp": false,
+"sizeBand": "2-5k"
+},
+"firstTs": "2026-10-19T02:51:28.895644+00:00",
+"status": "settled",
+"latestPrice": 0.9995,
+"clvPP": 0.0,
+"clv30": 0.0,
+"updatedAt": "2026-10-19T02:51:28.895644+00:00",
+"finalClvPP": 0.0,
+"settledAt": "2026-10-19T02:51:28.895644+00:00"
+},
+{
+"sig": "nhl-car-cal-2026-10-18|0x55b9e6a1dcca2defb01636ba41e9f76a0883a814",
+"key": "nhl-car-cal-2026-10-18",
+"side": "Flames",
+"wallet": "0x55b9e6a1dcca2defb01636ba41e9f76a0883a814",
+"usd": 3894,
+"league": "NHL",
+"entryPrice": 0.9995,
+"totalUsd": 208088,
+"movePP": 60.5,
+"flags": {
+"valueZone": false,
+"mature": true,
+"notChasing": false,
+"sharp": false,
+"sizeBand": "2-5k"
+},
+"firstTs": "2026-10-19T02:51:28.895644+00:00",
+"status": "settled",
+"latestPrice": 0.9995,
+"clvPP": 0.0,
+"clv30": 0.0,
+"updatedAt": "2026-10-19T02:51:28.895644+00:00",
+"finalClvPP": 0.0,
+"settledAt": "2026-10-19T02:51:28.895644+00:00"
+},
+{
+"sig": "nhl-car-cal-2026-10-18|0x54ea83215ca31e3a83917cfca359f0014187f74a",
+"key": "nhl-car-cal-2026-10-18",
+"side": "Flames",
+"wallet": "0x54ea83215ca31e3a83917cfca359f0014187f74a",
+"usd": 2547,
+"league": "NHL",
+"entryPrice": 0.9995,
+"totalUsd": 208088,
+"movePP": 60.5,
+"flags": {
+"valueZone": false,
+"mature": true,
+"notChasing": false,
+"sharp": false,
+"sizeBand": "2-5k"
+},
+"firstTs": "2026-10-19T02:51:28.895644+00:00",
+"status": "settled",
+"latestPrice": 0.9995,
+"clvPP": 0.0,
+"clv30": 0.0,
+"updatedAt": "2026-10-19T02:51:28.895644+00:00",
+"finalClvPP": 0.0,
+"settledAt": "2026-10-19T02:51:28.895644+00:00"
+},
+{
+"sig": "nfl-dal-gb-2026-10-19|0x1f3a646ce5cbe2c70270e7a46161d89b7c7b895d",
+"key": "nfl-dal-gb-2026-10-19",
+"side": "Packers",
+"wallet": "0x1f3a646ce5cbe2c70270e7a46161d89b7c7b895d",
+"usd": 78199,
+"league": "NFL",
+"entryPrice": 0.825,
+"totalUsd": 2812762,
+"movePP": -7.0,
+"flags": {
+"valueZone": false,
+"mature": true,
+"notChasing": true,
+"sharp": false,
+"sizeBand": "25k+"
+},
+"firstTs": "2026-10-19T02:51:28.895644+00:00",
 "status": "open",
-"latestPrice": 0.75,
+"latestPrice": 0.825,
 "clvPP": 0.0,
 "clv30": null,
-"updatedAt": "2026-10-19T01:55:32.344309+00:00"
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
+},
+{
+"sig": "mex-mon1-pac-2026-10-18|0x4f29e103339919c4baaea2a60195cf1c8bb27a7e",
+"key": "mex-mon1-pac-2026-10-18",
+"side": "Draw (CF Monterrey vs. CF Pachuca)",
+"wallet": "0x4f29e103339919c4baaea2a60195cf1c8bb27a7e",
+"usd": 2560,
+"league": "SOCCER",
+"entryPrice": 0.1615,
+"totalUsd": 131502,
+"movePP": 10.7,
+"flags": {
+"valueZone": false,
+"mature": true,
+"notChasing": false,
+"sharp": false,
+"sizeBand": "2-5k"
+},
+"firstTs": "2026-10-19T02:51:28.895644+00:00",
+"status": "open",
+"latestPrice": 0.1615,
+"clvPP": 0.0,
+"clv30": null,
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
+},
+{
+"sig": "col1-adc-cjf-2026-10-18|0x3f0fa8e4825c87361c0d0f15ae2777ffd1640e48",
+"key": "col1-adc-cjf-2026-10-18",
+"side": "AD Cali",
+"wallet": "0x3f0fa8e4825c87361c0d0f15ae2777ffd1640e48",
+"usd": 4013,
+"league": "SOCCER",
+"entryPrice": 0.515,
+"totalUsd": 164263,
+"movePP": -1.0,
+"flags": {
+"valueZone": true,
+"mature": true,
+"notChasing": true,
+"sharp": false,
+"sizeBand": "2-5k"
+},
+"firstTs": "2026-10-19T02:51:28.895644+00:00",
+"status": "open",
+"latestPrice": 0.515,
+"clvPP": 0.0,
+"clv30": null,
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
+},
+{
+"sig": "col1-adc-cjf-2026-10-18|0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+"key": "col1-adc-cjf-2026-10-18",
+"side": "Draw (AD Cali vs. CDP Junior FC)",
+"wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+"usd": 2142,
+"league": "SOCCER",
+"entryPrice": 0.415,
+"totalUsd": 164263,
+"movePP": 10.0,
+"flags": {
+"valueZone": true,
+"mature": true,
+"notChasing": false,
+"sharp": false,
+"sizeBand": "2-5k"
+},
+"firstTs": "2026-10-19T02:51:28.895644+00:00",
+"status": "open",
+"latestPrice": 0.415,
+"clvPP": 0.0,
+"clv30": null,
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
+},
+{
+"sig": "mex-mon1-pac-2026-10-18-more-markets|0x02b4401ae7ead14477e944f79e9db07ce9ab7092",
+"key": "mex-mon1-pac-2026-10-18-more-markets",
+"side": "Under",
+"wallet": "0x02b4401ae7ead14477e944f79e9db07ce9ab7092",
+"usd": 29940,
+"league": "SOCCER",
+"entryPrice": 0.998,
+"totalUsd": 30512,
+"movePP": 23.8,
+"flags": {
+"valueZone": false,
+"mature": false,
+"notChasing": false,
+"sharp": false,
+"sizeBand": "25k+"
+},
+"firstTs": "2026-10-19T02:51:28.895644+00:00",
+"status": "settled",
+"latestPrice": 0.998,
+"clvPP": 0.0,
+"clv30": 0.0,
+"updatedAt": "2026-10-19T02:51:28.895644+00:00",
+"finalClvPP": 0.0,
+"settledAt": "2026-10-19T02:51:28.895644+00:00"
+},
+{
+"sig": "wta-tagger-samsono-2026-10-18|0xe7870d0e1bfc65a23e3d66caf00ca1b9129e5034",
+"key": "wta-tagger-samsono-2026-10-18",
+"side": "Lilli Tagger",
+"wallet": "0xe7870d0e1bfc65a23e3d66caf00ca1b9129e5034",
+"usd": 12567,
+"league": "TENNIS",
+"entryPrice": 0.405,
+"totalUsd": 39073,
+"movePP": -4.0,
+"flags": {
+"valueZone": true,
+"mature": false,
+"notChasing": true,
+"sharp": false,
+"sizeBand": "10-25k"
+},
+"firstTs": "2026-10-19T02:51:28.895644+00:00",
+"status": "open",
+"latestPrice": 0.405,
+"clvPP": 0.0,
+"clv30": null,
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
+},
+{
+"sig": "wta-tagger-samsono-2026-10-18|0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+"key": "wta-tagger-samsono-2026-10-18",
+"side": "Liudmila Samsonova",
+"wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+"usd": 7135,
+"league": "TENNIS",
+"entryPrice": 0.595,
+"totalUsd": 39073,
+"movePP": 4.0,
+"flags": {
+"valueZone": true,
+"mature": false,
+"notChasing": true,
+"sharp": false,
+"sizeBand": "5-10k"
+},
+"firstTs": "2026-10-19T02:51:28.895644+00:00",
+"status": "open",
+"latestPrice": 0.595,
+"clvPP": 0.0,
+"clv30": null,
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
+},
+{
+"sig": "wta-tagger-samsono-2026-10-18|0x56acab44cfca2e88bb9b3406890aea7bfa0cd77e",
+"key": "wta-tagger-samsono-2026-10-18",
+"side": "Liudmila Samsonova",
+"wallet": "0x56acab44cfca2e88bb9b3406890aea7bfa0cd77e",
+"usd": 2369,
+"league": "TENNIS",
+"entryPrice": 0.595,
+"totalUsd": 39073,
+"movePP": 4.0,
+"flags": {
+"valueZone": true,
+"mature": false,
+"notChasing": true,
+"sharp": false,
+"sizeBand": "2-5k"
+},
+"firstTs": "2026-10-19T02:51:28.895644+00:00",
+"status": "open",
+"latestPrice": 0.595,
+"clvPP": 0.0,
+"clv30": null,
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
+},
+{
+"sig": "col1-adc-cjf-2026-10-18-more-markets|0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+"key": "col1-adc-cjf-2026-10-18-more-markets",
+"side": "Under",
+"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+"usd": 3982,
+"league": "SOCCER",
+"entryPrice": 0.925,
+"totalUsd": 11161,
+"movePP": 8.0,
+"flags": {
+"valueZone": false,
+"mature": false,
+"notChasing": false,
+"sharp": false,
+"sizeBand": "2-5k"
+},
+"firstTs": "2026-10-19T02:51:28.895644+00:00",
+"status": "open",
+"latestPrice": 0.925,
+"clvPP": 0.0,
+"clv30": null,
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
+},
+{
+"sig": "col1-adc-cjf-2026-10-18-more-markets|0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+"key": "col1-adc-cjf-2026-10-18-more-markets",
+"side": "Under",
+"wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+"usd": 2050,
+"league": "SOCCER",
+"entryPrice": 0.925,
+"totalUsd": 11161,
+"movePP": 8.0,
+"flags": {
+"valueZone": false,
+"mature": false,
+"notChasing": false,
+"sharp": false,
+"sizeBand": "2-5k"
+},
+"firstTs": "2026-10-19T02:51:28.895644+00:00",
+"status": "open",
+"latestPrice": 0.925,
+"clvPP": 0.0,
+"clv30": null,
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
+},
+{
+"sig": "col1-adc-cjf-2026-10-18-more-markets|0xca43a3788795a7aaa868af4e034dd31107fbb369",
+"key": "col1-adc-cjf-2026-10-18-more-markets",
+"side": "Under",
+"wallet": "0xca43a3788795a7aaa868af4e034dd31107fbb369",
+"usd": 2015,
+"league": "SOCCER",
+"entryPrice": 0.925,
+"totalUsd": 11161,
+"movePP": 8.0,
+"flags": {
+"valueZone": false,
+"mature": false,
+"notChasing": false,
+"sharp": false,
+"sizeBand": "2-5k"
+},
+"firstTs": "2026-10-19T02:51:28.895644+00:00",
+"status": "open",
+"latestPrice": 0.925,
+"clvPP": 0.0,
+"clv30": null,
+"updatedAt": "2026-10-19T02:51:28.895644+00:00"
 }
 ]
 }
