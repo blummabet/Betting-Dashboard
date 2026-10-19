@@ -1,15 +1,15 @@
 {
- "n": 589,
+ "n": 580,
  "minOdds": 1.35,
- "moneyHitRate": 0.418,
- "priceHitRate": 0.445,
- "brierMoney": 0.8068,
- "brierPrice": 0.6599,
+ "moneyHitRate": 0.419,
+ "priceHitRate": 0.448,
+ "brierMoney": 0.8046,
+ "brierPrice": 0.6586,
  "disagree": {
-  "n": 146,
-  "moneyWon": 27,
+  "n": 142,
+  "moneyWon": 26,
   "priceWon": 43,
-  "neither": 76
+  "neither": 73
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -39,19 +39,27 @@
    "verdict": "preis_besser"
   },
   {
+   "league": "EFL-CHAMPIONSHIP",
+   "n": 29,
+   "moneyHitRate": 0.552,
+   "brierMoney": 0.7041,
+   "brierPrice": 0.6298,
+   "verdict": "preis_besser"
+  },
+  {
    "league": "EPL",
-   "n": 47,
-   "moneyHitRate": 0.298,
-   "brierMoney": 0.82,
-   "brierPrice": 0.7654,
+   "n": 42,
+   "moneyHitRate": 0.262,
+   "brierMoney": 0.8547,
+   "brierPrice": 0.7764,
    "verdict": "preis_besser"
   },
   {
    "league": "LA-LIGA",
-   "n": 47,
-   "moneyHitRate": 0.362,
-   "brierMoney": 0.8064,
-   "brierPrice": 0.7046,
+   "n": 45,
+   "moneyHitRate": 0.378,
+   "brierMoney": 0.7792,
+   "brierPrice": 0.6939,
    "verdict": "preis_besser"
   },
   {
@@ -76,14 +84,6 @@
    "moneyHitRate": 0.423,
    "brierMoney": 0.8183,
    "brierPrice": 0.7053,
-   "verdict": "preis_besser"
-  },
-  {
-   "league": "EFL-CHAMPIONSHIP",
-   "n": 31,
-   "moneyHitRate": 0.516,
-   "brierMoney": 0.7565,
-   "brierPrice": 0.6346,
    "verdict": "preis_besser"
   },
   {
@@ -112,9 +112,9 @@
   }
  ],
  "guete": {
-  "belastbar": 589,
+  "belastbar": 580,
   "preis_echo": 358,
-  "abgeschnitten": 66,
+  "abgeschnitten": 65,
   "unbekannt": 0,
   "leer": 0
  },
@@ -148,11 +148,11 @@
    "league": "SOCCER:UCL",
    "winner": "FK Bodø/Glimt",
    "moneyFav": "FK Bodø/Glimt",
-   "priceFav": "FK Bodø/Glimt",
+   "priceFav": "BV Borussia 09 Dortmund",
    "moneyShare": 0.533,
    "priceProb": 0.377,
    "moneyOK": true,
-   "priceOK": true,
+   "priceOK": false,
    "totalUsd": 2624846
   },
   {
@@ -190,18 +190,6 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 1139361
-  },
-  {
-   "key": "epl-new-hul-2026-09-19",
-   "league": "EPL",
-   "winner": "Newcastle United FC",
-   "moneyFav": "Newcastle United FC",
-   "priceFav": "Newcastle United FC",
-   "moneyShare": 0.965,
-   "priceProb": 0.606,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 1102701
   },
   {
    "key": "epl-new-ast-2026-10-17",
@@ -520,7 +508,7 @@
    "league": "EPL",
    "winner": "Draw (Aston Villa FC vs. Brentford FC)",
    "moneyFav": "Brentford FC",
-   "priceFav": "Aston Villa FC",
+   "priceFav": "Brentford FC",
    "moneyShare": 0.803,
    "priceProb": 0.367,
    "moneyOK": false,
@@ -598,9 +586,21 @@
    "moneyOK": false,
    "priceOK": true,
    "totalUsd": 321284
+  },
+  {
+   "key": "bun-hsv-stu-2026-10-17",
+   "league": "BUNDESLIGA",
+   "winner": "Hamburger SV",
+   "moneyFav": "VfB Stuttgart",
+   "priceFav": "VfB Stuttgart",
+   "moneyShare": 0.992,
+   "priceProb": 0.558,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 317553
   }
  ],
- "generatedAt": "2026-10-19T13:37:46.208597+00:00",
+ "generatedAt": "2026-10-19T14:08:15.697356+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -623,7 +623,7 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 623,
+  "esports": 621,
   "cs2": 423,
   "lol": 439,
   "dota": 21,
@@ -697,8 +697,8 @@
   "sweepAdded": 412
  },
  "vorStats": {
-  "kandidaten": 28,
-  "budgetLeer": 6,
+  "kandidaten": 22,
+  "budgetLeer": 0,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
   "mitAnteilen": 22,
@@ -706,94 +706,79 @@
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1295,
-   "usd": 22443254,
+   "n": 1248,
+   "usd": 23218439,
    "beispiel": "fifwc-esp-cvi-2026-06-15-more-markets"
   },
+  "world": {
+   "n": 21,
+   "usd": 546888,
+   "beispiel": "world-cup-nation-to-reach-final"
+  },
   "fed": {
-   "n": 23,
-   "usd": 559431,
+   "n": 20,
+   "usd": 532993,
    "beispiel": "fed-decision-in-october-20260617190323537"
   },
-  "world": {
-   "n": 22,
-   "usd": 540826,
-   "beispiel": "world-cup-winner"
-  },
-  "who": {
-   "n": 5,
-   "usd": 145287,
-   "beispiel": "who-will-trump-nominate-as-fed-chair"
-  },
   "btc": {
-   "n": 19,
-   "usd": 135558,
-   "beispiel": "btc-updown-15m-1777649400"
+   "n": 42,
+   "usd": 177740,
+   "beispiel": "btc-updown-15m-1790394300"
   },
-  "next": {
-   "n": 7,
-   "usd": 109300,
-   "beispiel": "next-french-presidential-election"
+  "cbb": {
+   "n": 12,
+   "usd": 171296,
+   "beispiel": "cbb-uconn-mich-2026-04-06"
   },
   "texas": {
    "n": 5,
-   "usd": 106806,
+   "usd": 106983,
    "beispiel": "texas-senate-election-winner"
-  },
-  "brazil": {
-   "n": 12,
-   "usd": 101203,
-   "beispiel": "brazil-presidential-election"
   },
   "nbasl": {
    "n": 1,
    "usd": 97044,
    "beispiel": "nbasl-cle-nop-2026-07-15"
   },
-  "ncaa": {
-   "n": 4,
-   "usd": 79435,
-   "beispiel": "ncaa-football-2026-heisman-award-winner-20260731185656435"
-  },
   "lec": {
    "n": 14,
    "usd": 74420,
    "beispiel": "lec-mia-asl-2026-08-05"
   },
-  "cbb": {
-   "n": 2,
-   "usd": 69189,
-   "beispiel": "cbb-uconn-mich-2026-04-06"
-  },
-  "pro": {
-   "n": 2,
-   "usd": 66233,
-   "beispiel": "pro-football-2027-champion-20260729185915366"
+  "brazil": {
+   "n": 11,
+   "usd": 57993,
+   "beispiel": "brazil-presidential-election-second-round-margin-of-victory"
   },
   "which": {
-   "n": 9,
-   "usd": 59602,
+   "n": 8,
+   "usd": 55799,
    "beispiel": "which-party-will-win-the-house-in-2026"
   },
-  "ballon": {
+  "efl": {
+   "n": 14,
+   "usd": 54927,
+   "beispiel": "efl-cfc-lut-2026-08-27"
+  },
+  "euroleague": {
+   "n": 10,
+   "usd": 52509,
+   "beispiel": "euroleague-munchen-bologna-2026-10-08"
+  },
+  "next": {
+   "n": 4,
+   "usd": 48508,
+   "beispiel": "next-prime-minister-of-sweden"
+  },
+  "itc": {
    "n": 8,
-   "usd": 54357,
-   "beispiel": "ballon-dor-winner-2026"
-  },
-  "what": {
-   "n": 9,
-   "usd": 50156,
-   "beispiel": "what-price-will-solana-hit-in-july-2026"
-  },
-  "nato": {
-   "n": 1,
-   "usd": 47307,
-   "beispiel": "nato-x-russia-military-clash-in-2025"
+   "usd": 47758,
+   "beispiel": "itc-ata-juv-2026-02-05"
   },
   "will": {
-   "n": 13,
-   "usd": 46464,
-   "beispiel": "will-ronaldo-cry-at-the-world-cup-20260604013616610"
+   "n": 12,
+   "usd": 43410,
+   "beispiel": "will-trump-be-in-the-wc-champions-photo-20260608152527021"
   },
   "grc": {
    "n": 3,
@@ -804,6 +789,21 @@
    "n": 1,
    "usd": 34564,
    "beispiel": "south-carolina-senate-election-winner"
+  },
+  "ballon": {
+   "n": 5,
+   "usd": 33503,
+   "beispiel": "ballon-dor-winner-2026"
+  },
+  "uef": {
+   "n": 4,
+   "usd": 32850,
+   "beispiel": "uef-pol-alb-2026-03-26"
+  },
+  "khl": {
+   "n": 5,
+   "usd": 31444,
+   "beispiel": "khl-spa-met-2026-10-02"
   }
  }
 }
