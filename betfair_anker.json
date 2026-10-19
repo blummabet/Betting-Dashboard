@@ -1,8 +1,55 @@
 {
-"generatedAt": "2026-10-19T14:39:06.407167+00:00",
-"n": 127,
+"generatedAt": "2026-10-19T14:49:10.854800+00:00",
+"n": 126,
 "hinweis": "Zweitmeinungen OHNE die Radar-Volumenschwelle — Quelle fuer den Buecher-Punktestand. `games` in betfair_consensus.json bleibt die Radar-Liste.",
 "anker": {
+"36209079": {
+"moneySide": "away",
+"moneyName": "Al Hazm U21",
+"poly": null,
+"pinn": {
+"home": 0.1198,
+"draw": 0.1792,
+"away": 0.701,
+"fav": "away"
+},
+"pinnMove": null,
+"league": "Saudi U21 Elite League",
+"kickoff": "2026-10-19T14:45:00Z",
+"verdict": "konsens",
+"totVol": 175
+},
+"36212233": {
+"moneySide": "away",
+"moneyName": "WA Mostaganem",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Algerian Ligue 2",
+"kickoff": "2026-10-19T14:00:00Z",
+"verdict": "no_anchor",
+"totVol": 3135,
+"ankerGrund": {
+"spiel": "RC Arba v WA Mostaganem",
+"grund": "kein_kandidat",
+"naechster": "RC Lens v Paris FC"
+}
+},
+"36208264": {
+"moneySide": "home",
+"moneyName": "Beni Oualbane",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Algerian Ligue 2",
+"kickoff": "2026-10-19T14:00:00Z",
+"verdict": "no_anchor",
+"totVol": 553,
+"ankerGrund": {
+"spiel": "Beni Oualbane v MO Constantine",
+"grund": "kein_kandidat"
+}
+},
 "36208186": {
 "moneySide": "home",
 "moneyName": "JS Azazga",
@@ -12,7 +59,7 @@
 "league": "Algerian Ligue 2",
 "kickoff": "2026-10-19T14:00:00Z",
 "verdict": "no_anchor",
-"totVol": 1447,
+"totVol": 1741,
 "ankerGrund": {
 "spiel": "JS Azazga v CR Beni Thour",
 "grund": "kein_kandidat"
@@ -27,7 +74,7 @@
 "league": "Algerian Ligue 2",
 "kickoff": "2026-10-19T14:00:00Z",
 "verdict": "no_anchor",
-"totVol": 259,
+"totVol": 323,
 "ankerGrund": {
 "spiel": "GC Mascara v USM El Harrach",
 "grund": "kein_kandidat"
@@ -42,57 +89,52 @@
 "league": "Algerian Ligue 2",
 "kickoff": "2026-10-19T14:00:00Z",
 "verdict": "no_anchor",
-"totVol": 1860,
+"totVol": 1977,
 "ankerGrund": {
 "spiel": "Msp Batna v Mo Bejaia",
-"grund": "kein_kandidat"
-}
-},
-"36208264": {
-"moneySide": "home",
-"moneyName": "Beni Oualbane",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Algerian Ligue 2",
-"kickoff": "2026-10-19T14:00:00Z",
-"verdict": "no_anchor",
-"totVol": 351,
-"ankerGrund": {
-"spiel": "Beni Oualbane v MO Constantine",
 "grund": "kein_kandidat"
 }
 },
 "36198013": {
 "moneySide": "home",
 "moneyName": "Punjab FC",
-"poly": null,
+"poly": {
+"vol": 7938,
+"odd": 3.33,
+"sharePct": 43,
+"shareSrc": "geld",
+"key": "isp-pun-muc-2026-10-19",
+"sideKey": "Punjab FC",
+"whales": [
+{
+"wallet": "0x198fa74120438fb7cabccb61aa824c6720dfc419",
+"usd": 171
+},
+{
+"wallet": "0xf6f7e573b3739242e7b162cf5adc0474abb2c7a2",
+"usd": 158
+},
+{
+"wallet": "0x8ae599cc1fdeb17c95e2af00bd75a38034bd4f22",
+"usd": 129
+},
+{
+"wallet": "0xf622e3f4b8b7a28da76078c46f205e6197170848",
+"usd": 46
+}
+],
+"whaleUsd": 504
+},
 "pinn": null,
 "pinnMove": null,
 "league": "Indian Super League",
 "kickoff": "2026-10-19T14:00:00Z",
 "verdict": "no_anchor",
-"totVol": 5711,
+"totVol": 6234,
 "ankerGrund": {
 "spiel": "Punjab FC v Mumbai City FC",
 "grund": "kein_kandidat",
 "naechster": "Tottenham Hotspur v Coventry City"
-}
-},
-"36212233": {
-"moneySide": "away",
-"moneyName": "WA Mostaganem",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Algerian Ligue 2",
-"kickoff": "2026-10-19T14:00:00Z",
-"verdict": "no_anchor",
-"totVol": 2963,
-"ankerGrund": {
-"spiel": "RC Arba v WA Mostaganem",
-"grund": "kein_kandidat",
-"naechster": "RC Lens v Paris FC"
 }
 },
 "36209076": {
@@ -104,7 +146,7 @@
 "league": "Saudi U21 Elite League",
 "kickoff": "2026-10-19T13:45:00Z",
 "verdict": "no_anchor",
-"totVol": 3092,
+"totVol": 3112,
 "ankerGrund": {
 "spiel": "Al Kholood U21 v Al Khaleej Saihat U21",
 "kandidat": "Al-Kholood v Al-Ettifaq",
@@ -112,6 +154,22 @@
 "score": 0.92,
 "grund": "zeit",
 "abstandH": 121.3
+}
+},
+"36210102": {
+"moneySide": "home",
+"moneyName": "Kalaa Sport",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Tunisian Ligue 2",
+"kickoff": "2026-10-19T13:30:00Z",
+"verdict": "no_anchor",
+"totVol": 1715,
+"ankerGrund": {
+"spiel": "Kalaa Sport v SC Moknine",
+"grund": "kein_kandidat",
+"naechster": "Sport Recife v Criciuma"
 }
 },
 "36213089": {
@@ -123,7 +181,7 @@
 "league": "Tunisian Ligue 2",
 "kickoff": "2026-10-19T13:30:00Z",
 "verdict": "no_anchor",
-"totVol": 798,
+"totVol": 830,
 "ankerGrund": {
 "spiel": "CS Korba v Olympique Du Kef",
 "grund": "kein_kandidat",
@@ -139,39 +197,23 @@
 "league": "Tunisian Ligue 2",
 "kickoff": "2026-10-19T13:30:00Z",
 "verdict": "no_anchor",
-"totVol": 3236,
+"totVol": 3458,
 "ankerGrund": {
 "spiel": "Ksour Essef v AS Ariana",
 "grund": "kein_kandidat",
 "naechster": "Napoli v AS Roma"
 }
 },
-"36210102": {
-"moneySide": "home",
-"moneyName": "Kalaa Sport",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Tunisian Ligue 2",
-"kickoff": "2026-10-19T13:30:00Z",
-"verdict": "no_anchor",
-"totVol": 1011,
-"ankerGrund": {
-"spiel": "Kalaa Sport v SC Moknine",
-"grund": "kein_kandidat",
-"naechster": "Sport Recife v Criciuma"
-}
-},
 "36213092": {
-"moneySide": "away",
-"moneyName": "CS Redeyef",
+"moneySide": "home",
+"moneyName": "Stade Gabesien",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
 "league": "Tunisian Ligue 2",
 "kickoff": "2026-10-19T13:30:00Z",
 "verdict": "no_anchor",
-"totVol": 743,
+"totVol": 792,
 "ankerGrund": {
 "spiel": "Stade Gabesien v CS Redeyef",
 "grund": "kein_kandidat",
@@ -187,24 +229,9 @@
 "league": "Kenyan Premier League",
 "kickoff": "2026-10-19T13:15:00Z",
 "verdict": "no_anchor",
-"totVol": 3089,
+"totVol": 4356,
 "ankerGrund": {
 "spiel": "Bandari FC (Kenya) v 3K Football Club",
-"grund": "kein_kandidat"
-}
-},
-"36210113": {
-"moneySide": "home",
-"moneyName": "Sharjah U23",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "UAE U23",
-"kickoff": "2026-10-19T13:05:00Z",
-"verdict": "no_anchor",
-"totVol": 1931,
-"ankerGrund": {
-"spiel": "Sharjah U23 v Ajman U23",
 "grund": "kein_kandidat"
 }
 },
@@ -217,7 +244,7 @@
 "league": "UAE U23",
 "kickoff": "2026-10-19T13:05:00Z",
 "verdict": "no_anchor",
-"totVol": 2777,
+"totVol": 3132,
 "ankerGrund": {
 "spiel": "Al Wahda U23 v Khorfakkan U23",
 "kandidat": "Al-Fayha v Al-Ahli",
@@ -235,13 +262,28 @@
 "league": "UAE U23",
 "kickoff": "2026-10-19T13:05:00Z",
 "verdict": "no_anchor",
-"totVol": 2356,
+"totVol": 2543,
 "ankerGrund": {
 "spiel": "Al Jazira U23 v Kalba U23",
 "kandidat": "Al-Fayha v Al-Ahli",
 "key": "soccer_saudi_arabia_pro_league",
 "score": 0.33,
 "grund": "name"
+}
+},
+"36210113": {
+"moneySide": "away",
+"moneyName": "Ajman U23",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "UAE U23",
+"kickoff": "2026-10-19T13:05:00Z",
+"verdict": "no_anchor",
+"totVol": 3456,
+"ankerGrund": {
+"spiel": "Sharjah U23 v Ajman U23",
+"grund": "kein_kandidat"
 }
 },
 "36199921": {
@@ -253,7 +295,7 @@
 "league": "Montenegrin 1st League",
 "kickoff": "2026-10-19T13:00:00Z",
 "verdict": "no_anchor",
-"totVol": 5013,
+"totVol": 5612,
 "ankerGrund": {
 "spiel": "OFK Petrovac v FK Otrant",
 "grund": "kein_kandidat"
@@ -268,7 +310,7 @@
 "league": "Omani Professional League",
 "kickoff": "2026-10-19T13:00:00Z",
 "verdict": "no_anchor",
-"totVol": 6428,
+"totVol": 6431,
 "ankerGrund": {
 "spiel": "Al Nahdha v Sur Club",
 "grund": "kein_kandidat",
@@ -289,7 +331,7 @@
 "league": "Saudi Professional League",
 "kickoff": "2026-10-19T15:05:00Z",
 "verdict": "konsens",
-"totVol": 8822
+"totVol": 11468
 },
 "36184243": {
 "moneySide": "away",
@@ -314,7 +356,32 @@
 "league": "Danish Superliga",
 "kickoff": "2026-10-19T17:00:00Z",
 "verdict": "konsens",
-"totVol": 9688
+"totVol": 9770
+},
+"36182183": {
+"moneySide": "draw",
+"moneyName": "The Draw",
+"poly": {
+"vol": 14587,
+"odd": null,
+"sharePct": null,
+"shareSrc": null,
+"key": "argpn-ste-ddb-2026-10-17",
+"sideKey": null,
+"whales": [],
+"whaleUsd": 0
+},
+"pinn": null,
+"pinnMove": null,
+"league": "Argentinian Primera Nacional",
+"kickoff": "2026-10-19T18:30:00Z",
+"verdict": "no_anchor",
+"totVol": 11293,
+"ankerGrund": {
+"spiel": "San Telmo v Defensores de Belgrano",
+"grund": "kein_kandidat",
+"naechster": "San Lorenzo v Newells Old Boys"
+}
 },
 "36196839": {
 "moneySide": "home",
@@ -330,95 +397,45 @@
 "league": "Saudi Professional League",
 "kickoff": "2026-10-19T18:00:00Z",
 "verdict": "konsens",
-"totVol": 8468
-},
-"36163367": {
-"moneySide": "home",
-"moneyName": "Universitatea Cluj",
-"poly": {
-"vol": 1111,
-"odd": 1.68,
-"sharePct": 60,
-"shareSrc": "preis",
-"key": "rou1-fuc-fap-2026-10-19",
-"sideKey": "FC Universitatea Cluj",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": null,
-"pinnMove": null,
-"league": "Romanian Liga I",
-"kickoff": "2026-10-19T15:00:00Z",
-"verdict": "no_anchor",
-"totVol": 12251,
-"ankerGrund": {
-"spiel": "Universitatea Cluj v Arges Pitesti",
-"grund": "kein_kandidat",
-"naechster": "Inter Club d'Escaldes v Universitatea Craiova"
-}
-},
-"36182183": {
-"moneySide": "draw",
-"moneyName": "The Draw",
-"poly": {
-"vol": 14574,
-"odd": null,
-"sharePct": null,
-"shareSrc": null,
-"key": "argpn-ste-ddb-2026-10-17",
-"sideKey": null,
-"whales": [],
-"whaleUsd": 0
-},
-"pinn": null,
-"pinnMove": null,
-"league": "Argentinian Primera Nacional",
-"kickoff": "2026-10-19T18:30:00Z",
-"verdict": "no_anchor",
-"totVol": 11141,
-"ankerGrund": {
-"spiel": "San Telmo v Defensores de Belgrano",
-"grund": "kein_kandidat",
-"naechster": "San Lorenzo v Newells Old Boys"
-}
+"totVol": 8739
 },
 "36145583": {
 "moneySide": "home",
 "moneyName": "Waterford",
 "poly": {
-"vol": 12702,
-"odd": 1.98,
-"sharePct": 94,
+"vol": 13119,
+"odd": 1.9,
+"sharePct": 95,
 "shareSrc": "geld",
 "key": "irl1-wat-gal-2026-10-19",
 "sideKey": "Waterford FC",
 "whales": [
 {
-"wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
-"usd": 1174
+"wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
+"usd": 1379
 },
 {
-"wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
-"usd": 1122
+"wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
+"usd": 1220
 },
 {
 "wallet": "0x10a6fadcbacd66330862206f6199b197e3ad4d8b",
-"usd": 717
+"usd": 745
 },
 {
 "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
-"usd": 202
+"usd": 210
 },
 {
 "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
-"usd": 101
+"usd": 105
 },
 {
-"wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
-"usd": 99
+"wallet": "0xbc5613462ce3902eea10874a11cf74191f4a8f28",
+"usd": 82
 }
 ],
-"whaleUsd": 3679
+"whaleUsd": 3895
 },
 "pinn": {
 "home": 0.5079,
@@ -430,7 +447,7 @@
 "league": "Irish Premier Division",
 "kickoff": "2026-10-19T18:45:00Z",
 "verdict": "konsens",
-"totVol": 7782
+"totVol": 8321
 },
 "36184369": {
 "moneySide": "away",
@@ -466,7 +483,7 @@
 "league": "Latvian Virsliga",
 "kickoff": "2026-10-19T16:00:00Z",
 "verdict": "no_anchor",
-"totVol": 8040,
+"totVol": 8215,
 "ankerGrund": {
 "spiel": "Rigas Futbola Skola v FK Tukums 2000",
 "grund": "kein_kandidat"
@@ -476,7 +493,7 @@
 "moneySide": "draw",
 "moneyName": "The Draw",
 "poly": {
-"vol": 4653,
+"vol": 4831,
 "odd": null,
 "sharePct": null,
 "shareSrc": null,
@@ -495,30 +512,22 @@
 "league": "French Ligue 2",
 "kickoff": "2026-10-19T18:45:00Z",
 "verdict": "uneinig",
-"totVol": 3854
+"totVol": 3959
 },
-"36155524": {
-"moneySide": "away",
-"moneyName": "FCSB",
-"poly": {
-"vol": 2106,
-"odd": 1.63,
-"sharePct": 62,
-"shareSrc": "preis",
-"key": "rou1-vol-fcs-2026-10-19",
-"sideKey": "FCSB",
-"whales": null,
-"whaleUsd": null
-},
+"36184422": {
+"moneySide": "home",
+"moneyName": "Pafos FC",
+"poly": null,
 "pinn": null,
 "pinnMove": null,
-"league": "Romanian Liga I",
-"kickoff": "2026-10-19T18:00:00Z",
+"league": "Cypriot 1st Division",
+"kickoff": "2026-10-19T15:00:00Z",
 "verdict": "no_anchor",
-"totVol": 4387,
+"totVol": 3693,
 "ankerGrund": {
-"spiel": "FC Voluntari v FCSB",
-"grund": "kein_kandidat"
+"spiel": "Pafos FC v APOEL",
+"grund": "kein_kandidat",
+"naechster": "Pafos FC v Riga FC"
 }
 },
 "36189440": {
@@ -539,10 +548,59 @@
 "league": "Latvian Virsliga",
 "kickoff": "2026-10-19T15:00:00Z",
 "verdict": "no_anchor",
-"totVol": 4587,
+"totVol": 6597,
 "ankerGrund": {
 "spiel": "BFC Daugavpils v FK Auda",
 "grund": "kein_kandidat"
+}
+},
+"36155524": {
+"moneySide": "away",
+"moneyName": "FCSB",
+"poly": {
+"vol": 2106,
+"odd": 1.63,
+"sharePct": 62,
+"shareSrc": "preis",
+"key": "rou1-vol-fcs-2026-10-19",
+"sideKey": "FCSB",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": null,
+"pinnMove": null,
+"league": "Romanian Liga I",
+"kickoff": "2026-10-19T18:00:00Z",
+"verdict": "no_anchor",
+"totVol": 7925,
+"ankerGrund": {
+"spiel": "FC Voluntari v FCSB",
+"grund": "kein_kandidat"
+}
+},
+"36184128": {
+"moneySide": "home",
+"moneyName": "Jong PSV Eindhoven",
+"poly": {
+"vol": 913,
+"odd": 2.38,
+"sharePct": 42,
+"shareSrc": "preis",
+"key": "ned2-psv-dor-2026-10-19",
+"sideKey": "Jong PSV Eindhoven",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": null,
+"pinnMove": null,
+"league": "Dutch Eerste Divisie",
+"kickoff": "2026-10-19T18:00:00Z",
+"verdict": "no_anchor",
+"totVol": 1479,
+"ankerGrund": {
+"spiel": "Jong PSV Eindhoven v FC Dordrecht",
+"grund": "kein_kandidat",
+"naechster": "PSV Eindhoven v Feyenoord"
 }
 },
 "36192349": {
@@ -563,7 +621,7 @@
 "league": "Turkish 1 Lig",
 "kickoff": "2026-10-19T17:00:00Z",
 "verdict": "no_anchor",
-"totVol": 4096,
+"totVol": 4146,
 "ankerGrund": {
 "spiel": "Bursaspor v Pendikspor",
 "grund": "kein_kandidat"
@@ -596,29 +654,19 @@
 "grund": "name"
 }
 },
-"36184128": {
-"moneySide": "home",
-"moneyName": "Jong PSV Eindhoven",
-"poly": {
-"vol": 913,
-"odd": 2.2,
-"sharePct": 46,
-"shareSrc": "preis",
-"key": "ned2-psv-dor-2026-10-19",
-"sideKey": "Jong PSV Eindhoven",
-"whales": null,
-"whaleUsd": null
-},
+"36209516": {
+"moneySide": "away",
+"moneyName": "Montana",
+"poly": null,
 "pinn": null,
 "pinnMove": null,
-"league": "Dutch Eerste Divisie",
-"kickoff": "2026-10-19T18:00:00Z",
+"league": "Bulgarian Cup",
+"kickoff": "2026-10-19T15:00:00Z",
 "verdict": "no_anchor",
-"totVol": 1479,
+"totVol": 147,
 "ankerGrund": {
-"spiel": "Jong PSV Eindhoven v FC Dordrecht",
-"grund": "kein_kandidat",
-"naechster": "PSV Eindhoven v Feyenoord"
+"spiel": "Dobrudzha v Montana",
+"grund": "kein_kandidat"
 }
 },
 "36185248": {
@@ -637,21 +685,6 @@
 "verdict": "uneinig",
 "totVol": 1341
 },
-"36209516": {
-"moneySide": "away",
-"moneyName": "Montana",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Bulgarian Cup",
-"kickoff": "2026-10-19T15:00:00Z",
-"verdict": "no_anchor",
-"totVol": 147,
-"ankerGrund": {
-"spiel": "Dobrudzha v Montana",
-"grund": "kein_kandidat"
-}
-},
 "36203566": {
 "moneySide": "away",
 "moneyName": "Levadia Tallinn II",
@@ -661,12 +694,28 @@
 "league": "Estonian Esiliiga",
 "kickoff": "2026-10-19T15:00:00Z",
 "verdict": "no_anchor",
-"totVol": 876,
+"totVol": 914,
 "ankerGrund": {
 "spiel": "Tallinna Kalev v Levadia Tallinn II",
 "grund": "kein_kandidat",
 "naechster": "VfB Stuttgart II v Alemannia Aachen"
 }
+},
+"36146297": {
+"moneySide": "away",
+"moneyName": "St Patricks",
+"poly": null,
+"pinn": {
+"home": 0.2714,
+"draw": 0.2867,
+"away": 0.4419,
+"fav": "away"
+},
+"pinnMove": null,
+"league": "Irish Premier Division",
+"kickoff": "2026-10-19T19:00:00Z",
+"verdict": "konsens",
+"totVol": 905
 },
 "36186174": {
 "moneySide": "draw",
@@ -686,21 +735,54 @@
 "grund": "name"
 }
 },
-"36146297": {
+"36184314": {
 "moneySide": "away",
-"moneyName": "St Patricks",
-"poly": null,
-"pinn": {
-"home": 0.2714,
-"draw": 0.2867,
-"away": 0.4419,
-"fav": "away"
+"moneyName": "Roda JC",
+"poly": {
+"vol": 2073,
+"odd": 1.9,
+"sharePct": 52,
+"shareSrc": "preis",
+"key": "ned2-utr-rod-2026-10-19",
+"sideKey": "Roda JC Kerkrade",
+"whales": null,
+"whaleUsd": null
 },
+"pinn": null,
 "pinnMove": null,
-"league": "Irish Premier Division",
-"kickoff": "2026-10-19T19:00:00Z",
-"verdict": "konsens",
-"totVol": 882
+"league": "Dutch Eerste Divisie",
+"kickoff": "2026-10-19T18:00:00Z",
+"verdict": "no_anchor",
+"totVol": 1170,
+"ankerGrund": {
+"spiel": "Jong FC Utrecht v Roda JC",
+"grund": "kein_kandidat",
+"naechster": "FC Utrecht v FC Zwolle"
+}
+},
+"36188555": {
+"moneySide": "home",
+"moneyName": "Fram",
+"poly": {
+"vol": 301,
+"odd": 1.9,
+"sharePct": 52,
+"shareSrc": "preis",
+"key": "isl1-frr-akr-2026-10-18",
+"sideKey": "Fram Reykjavik",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": null,
+"pinnMove": null,
+"league": "Icelandic Urvalsdeild",
+"kickoff": "2026-10-19T19:15:00Z",
+"verdict": "no_anchor",
+"totVol": 551,
+"ankerGrund": {
+"spiel": "Fram v IA Akranes",
+"grund": "kein_kandidat"
+}
 },
 "36187900": {
 "moneySide": "home",
@@ -720,75 +802,10 @@
 "league": "Israeli Premier League",
 "kickoff": "2026-10-19T17:30:00Z",
 "verdict": "no_anchor",
-"totVol": 1027,
+"totVol": 1031,
 "ankerGrund": {
 "spiel": "Beitar Jerusalem v Maccabi Tel Aviv",
 "grund": "kein_kandidat"
-}
-},
-"36184314": {
-"moneySide": "away",
-"moneyName": "Roda JC",
-"poly": {
-"vol": 833,
-"odd": 1.87,
-"sharePct": 54,
-"shareSrc": "preis",
-"key": "ned2-utr-rod-2026-10-19",
-"sideKey": "Roda JC Kerkrade",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": null,
-"pinnMove": null,
-"league": "Dutch Eerste Divisie",
-"kickoff": "2026-10-19T18:00:00Z",
-"verdict": "no_anchor",
-"totVol": 1083,
-"ankerGrund": {
-"spiel": "Jong FC Utrecht v Roda JC",
-"grund": "kein_kandidat",
-"naechster": "FC Utrecht v FC Zwolle"
-}
-},
-"36188555": {
-"moneySide": "away",
-"moneyName": "IA Akranes",
-"poly": {
-"vol": 301,
-"odd": 3.77,
-"sharePct": 26,
-"shareSrc": "preis",
-"key": "isl1-frr-akr-2026-10-18",
-"sideKey": "IA Akranes",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": null,
-"pinnMove": null,
-"league": "Icelandic Urvalsdeild",
-"kickoff": "2026-10-19T19:15:00Z",
-"verdict": "no_anchor",
-"totVol": 267,
-"ankerGrund": {
-"spiel": "Fram v IA Akranes",
-"grund": "kein_kandidat"
-}
-},
-"36184422": {
-"moneySide": "home",
-"moneyName": "Pafos FC",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Cypriot 1st Division",
-"kickoff": "2026-10-19T15:00:00Z",
-"verdict": "no_anchor",
-"totVol": 3141,
-"ankerGrund": {
-"spiel": "Pafos FC v APOEL",
-"grund": "kein_kandidat",
-"naechster": "Pafos FC v Riga FC"
 }
 },
 "36212733": {
@@ -811,9 +828,9 @@
 "moneySide": "home",
 "moneyName": "Jong Ajax Amsterdam",
 "poly": {
-"vol": 270,
-"odd": 2.6,
-"sharePct": 38,
+"vol": 419,
+"odd": 2.56,
+"sharePct": 39,
 "shareSrc": "preis",
 "key": "ned2-aja-gra-2026-10-19",
 "sideKey": "Jong Ajax Amsterdam",
@@ -825,11 +842,52 @@
 "league": "Dutch Eerste Divisie",
 "kickoff": "2026-10-19T18:00:00Z",
 "verdict": "no_anchor",
-"totVol": 437,
+"totVol": 461,
 "ankerGrund": {
 "spiel": "Jong Ajax Amsterdam v De Graafschap",
 "grund": "kein_kandidat",
 "naechster": "Sparta Rotterdam v Ajax"
+}
+},
+"36198821": {
+"moneySide": "home",
+"moneyName": "Dila Gori",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Georgian Umaglesi Liga",
+"kickoff": "2026-10-19T15:00:00Z",
+"verdict": "no_anchor",
+"totVol": 1195,
+"ankerGrund": {
+"spiel": "Dila Gori v FC Iberia 1999",
+"grund": "kein_kandidat",
+"naechster": "FC Iberia 1999 v Mjällby AIF"
+}
+},
+"36188732": {
+"moneySide": "home",
+"moneyName": "FK Suduva",
+"poly": {
+"vol": 1183,
+"odd": 4.26,
+"sharePct": 24,
+"shareSrc": "preis",
+"key": "ltu1-sud-kaz-2026-10-19",
+"sideKey": "FK Suduva Marijampole",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": null,
+"pinnMove": null,
+"league": "Lithuanian A Lyga",
+"kickoff": "2026-10-19T15:45:00Z",
+"verdict": "no_anchor",
+"totVol": 744,
+"ankerGrund": {
+"spiel": "FK Suduva v FK Kauno Zalgiris",
+"grund": "kein_kandidat",
+"naechster": "FK Kauno Žalgiris v SK Brann"
 }
 },
 "36188881": {
@@ -850,7 +908,7 @@
 "league": "Egyptian Premier",
 "kickoff": "2026-10-19T17:00:00Z",
 "verdict": "no_anchor",
-"totVol": 925,
+"totVol": 942,
 "ankerGrund": {
 "spiel": "Al-Masry v Abo Qair Semads",
 "kandidat": "Al-Fayha v Al-Ahli",
@@ -876,6 +934,31 @@
 "score": 0.92,
 "grund": "zeit",
 "abstandH": 122.9
+}
+},
+"36182295": {
+"moneySide": "home",
+"moneyName": "Mushuc Runa",
+"poly": {
+"vol": 1662,
+"odd": 1.94,
+"sharePct": 52,
+"shareSrc": "preis",
+"key": "ecu1-mur-ore-2026-10-18",
+"sideKey": "Mushuc Runa SC",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": null,
+"pinnMove": null,
+"league": "Ecuadorian Serie A",
+"kickoff": "2026-10-19T20:30:00Z",
+"verdict": "no_anchor",
+"totVol": 1357,
+"ankerGrund": {
+"spiel": "Mushuc Runa v Orense Sporting Club",
+"grund": "kein_kandidat",
+"naechster": "Sporting Lisbon v Académico de Viseu"
 }
 },
 "36186327": {
@@ -912,7 +995,7 @@
 "league": "Slovakian 2 Liga",
 "kickoff": "2026-10-19T15:00:00Z",
 "verdict": "no_anchor",
-"totVol": 1195,
+"totVol": 1239,
 "ankerGrund": {
 "spiel": "Tatran Presov v MSK Zilina II",
 "grund": "kein_kandidat",
@@ -928,12 +1011,37 @@
 "league": "Cypriot 1st Division",
 "kickoff": "2026-10-19T16:00:00Z",
 "verdict": "no_anchor",
-"totVol": 751,
+"totVol": 753,
 "ankerGrund": {
 "spiel": "Omonia v Olympiakos Nicosia FC",
 "grund": "kein_kandidat",
 "naechster": "Olympiakos Piraeus v Kalamata FC"
 }
+},
+"36196549": {
+"moneySide": "home",
+"moneyName": "Al-Shabab (KSA)",
+"poly": {
+"vol": 1234,
+"odd": 1.71,
+"sharePct": 58,
+"shareSrc": "preis",
+"key": "spl-sha-fai-2026-10-19",
+"sideKey": "Al Shabab Saudi Club",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.5808,
+"draw": 0.2181,
+"away": 0.201,
+"fav": "home"
+},
+"pinnMove": null,
+"league": "Saudi Professional League",
+"kickoff": "2026-10-19T18:00:00Z",
+"verdict": "konsens",
+"totVol": 454
 },
 "36209174": {
 "moneySide": "away",
@@ -944,11 +1052,26 @@
 "league": "Serbian First League",
 "kickoff": "2026-10-19T16:00:00Z",
 "verdict": "no_anchor",
-"totVol": 247,
+"totVol": 264,
 "ankerGrund": {
 "spiel": "FK Spartak v FK Borac Cacak",
 "grund": "kein_kandidat",
 "naechster": "CSKA Moscow v Spartak Moscow"
+}
+},
+"36193400": {
+"moneySide": "home",
+"moneyName": "Nieciecza",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Polish I Liga",
+"kickoff": "2026-10-19T16:00:00Z",
+"verdict": "no_anchor",
+"totVol": 501,
+"ankerGrund": {
+"spiel": "Nieciecza v Puszcza Niepolomice",
+"grund": "kein_kandidat"
 }
 },
 "36208233": {
@@ -969,61 +1092,21 @@
 "grund": "name"
 }
 },
-"36198821": {
+"36192353": {
 "moneySide": "home",
-"moneyName": "Dila Gori",
+"moneyName": "Erokspor A.S",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
-"league": "Georgian Umaglesi Liga",
-"kickoff": "2026-10-19T15:00:00Z",
+"league": "Turkish 1 Lig",
+"kickoff": "2026-10-19T17:00:00Z",
 "verdict": "no_anchor",
-"totVol": 794,
+"totVol": 761,
 "ankerGrund": {
-"spiel": "Dila Gori v FC Iberia 1999",
+"spiel": "Erokspor A.S v Mardin Buyuksehir Belediyespor",
 "grund": "kein_kandidat",
-"naechster": "FC Iberia 1999 v Mjällby AIF"
+"naechster": "Shimizu S Pulse v FC Machida Zelvia"
 }
-},
-"36193400": {
-"moneySide": "home",
-"moneyName": "Nieciecza",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Polish I Liga",
-"kickoff": "2026-10-19T16:00:00Z",
-"verdict": "no_anchor",
-"totVol": 378,
-"ankerGrund": {
-"spiel": "Nieciecza v Puszcza Niepolomice",
-"grund": "kein_kandidat"
-}
-},
-"36196549": {
-"moneySide": "home",
-"moneyName": "Al-Shabab (KSA)",
-"poly": {
-"vol": 1232,
-"odd": 1.64,
-"sharePct": 61,
-"shareSrc": "preis",
-"key": "spl-sha-fai-2026-10-19",
-"sideKey": "Al Shabab Saudi Club",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.5808,
-"draw": 0.2181,
-"away": 0.201,
-"fav": "home"
-},
-"pinnMove": null,
-"league": "Saudi Professional League",
-"kickoff": "2026-10-19T18:00:00Z",
-"verdict": "konsens",
-"totVol": 452
 },
 "36209138": {
 "moneySide": "home",
@@ -1034,52 +1117,11 @@
 "league": "Portuguese U23",
 "kickoff": "2026-10-19T18:00:00Z",
 "verdict": "no_anchor",
-"totVol": 811,
+"totVol": 831,
 "ankerGrund": {
 "spiel": "Leixoes U23 v GD Estoril Praia U23",
 "grund": "kein_kandidat",
 "naechster": "Estoril v Moreirense FC"
-}
-},
-"36192353": {
-"moneySide": "home",
-"moneyName": "Erokspor A.S",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Turkish 1 Lig",
-"kickoff": "2026-10-19T17:00:00Z",
-"verdict": "no_anchor",
-"totVol": 737,
-"ankerGrund": {
-"spiel": "Erokspor A.S v Mardin Buyuksehir Belediyespor",
-"grund": "kein_kandidat",
-"naechster": "Shimizu S Pulse v FC Machida Zelvia"
-}
-},
-"36188732": {
-"moneySide": "home",
-"moneyName": "FK Suduva",
-"poly": {
-"vol": 1183,
-"odd": 4.26,
-"sharePct": 24,
-"shareSrc": "preis",
-"key": "ltu1-sud-kaz-2026-10-19",
-"sideKey": "FK Suduva Marijampole",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": null,
-"pinnMove": null,
-"league": "Lithuanian A Lyga",
-"kickoff": "2026-10-19T15:45:00Z",
-"verdict": "no_anchor",
-"totVol": 718,
-"ankerGrund": {
-"spiel": "FK Suduva v FK Kauno Zalgiris",
-"grund": "kein_kandidat",
-"naechster": "FK Kauno Žalgiris v SK Brann"
 }
 },
 "36209483": {
@@ -1091,11 +1133,41 @@
 "league": "Bulgarian Cup",
 "kickoff": "2026-10-19T16:00:00Z",
 "verdict": "no_anchor",
-"totVol": 317,
+"totVol": 319,
 "ankerGrund": {
 "spiel": "Etar v Spartak Varna",
 "grund": "kein_kandidat",
 "naechster": "CSKA Moscow v Spartak Moscow"
+}
+},
+"36212734": {
+"moneySide": "away",
+"moneyName": "Ranheim 2",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Norwegian 3rd Division",
+"kickoff": "2026-10-19T17:00:00Z",
+"verdict": "no_anchor",
+"totVol": 536,
+"ankerGrund": {
+"spiel": "Melhus IL v Ranheim 2",
+"grund": "kein_kandidat"
+}
+},
+"36212670": {
+"moneySide": "away",
+"moneyName": "Orn Horten",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Norwegian 3rd Division",
+"kickoff": "2026-10-19T16:00:00Z",
+"verdict": "no_anchor",
+"totVol": 868,
+"ankerGrund": {
+"spiel": "Lyn 2 v Orn Horten",
+"grund": "kein_kandidat"
 }
 },
 "36197780": {
@@ -1132,21 +1204,6 @@
 "grund": "name"
 }
 },
-"36212670": {
-"moneySide": "away",
-"moneyName": "Orn Horten",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Norwegian 3rd Division",
-"kickoff": "2026-10-19T16:00:00Z",
-"verdict": "no_anchor",
-"totVol": 581,
-"ankerGrund": {
-"spiel": "Lyn 2 v Orn Horten",
-"grund": "kein_kandidat"
-}
-},
 "36209148": {
 "moneySide": "away",
 "moneyName": "Leones FC",
@@ -1163,6 +1220,22 @@
 "naechster": "Real Racing Club de Santander v Espanyol"
 }
 },
+"36209728": {
+"moneySide": "away",
+"moneyName": "Sp. San Lorenzo (Res)",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Paraguayan Reserves",
+"kickoff": "2026-10-19T19:30:00Z",
+"verdict": "no_anchor",
+"totVol": 48,
+"ankerGrund": {
+"spiel": "CS Luqueno (Res) v Sp. San Lorenzo (Res)",
+"grund": "kein_kandidat",
+"naechster": "San Lorenzo v Newells Old Boys"
+}
+},
 "36213120": {
 "moneySide": "away",
 "moneyName": "Sierra Leone U20",
@@ -1172,24 +1245,9 @@
 "league": "CAF U20 AFCON Qualifiers",
 "kickoff": "2026-10-19T16:00:00Z",
 "verdict": "no_anchor",
-"totVol": 9,
+"totVol": 10,
 "ankerGrund": {
 "spiel": "Mauritania U20 v Sierra Leone U20",
-"grund": "kein_kandidat"
-}
-},
-"36212734": {
-"moneySide": "away",
-"moneyName": "Ranheim 2",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Norwegian 3rd Division",
-"kickoff": "2026-10-19T17:00:00Z",
-"verdict": "no_anchor",
-"totVol": 514,
-"ankerGrund": {
-"spiel": "Melhus IL v Ranheim 2",
 "grund": "kein_kandidat"
 }
 },
@@ -1202,9 +1260,27 @@
 "league": "Estonian Esiliiga",
 "kickoff": "2026-10-19T16:00:00Z",
 "verdict": "no_anchor",
-"totVol": 323,
+"totVol": 326,
 "ankerGrund": {
 "spiel": "FC Tallinn v Viimsi JK",
+"kandidat": "Trabzonspor v Besiktas JK",
+"key": "soccer_turkey_super_league",
+"score": 0.5,
+"grund": "name"
+}
+},
+"36212674": {
+"moneySide": "away",
+"moneyName": "Narva Trans II",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Estonian Esiliiga B",
+"kickoff": "2026-10-19T16:00:00Z",
+"verdict": "no_anchor",
+"totVol": 67,
+"ankerGrund": {
+"spiel": "Tabasalu JK v Narva Trans II",
 "kandidat": "Trabzonspor v Besiktas JK",
 "key": "soccer_turkey_super_league",
 "score": 0.5,
@@ -1220,77 +1296,11 @@
 "league": "English Premier League 2 - Div 1",
 "kickoff": "2026-10-19T18:00:00Z",
 "verdict": "no_anchor",
-"totVol": 37,
+"totVol": 81,
 "ankerGrund": {
 "spiel": "Wolves U21 v West Brom U21",
 "grund": "kein_kandidat",
 "naechster": "Wolverhampton Wanderers v Portsmouth"
-}
-},
-"36208174": {
-"moneySide": "away",
-"moneyName": "Bnei Yehuda",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Israeli National League",
-"kickoff": "2026-10-19T16:00:00Z",
-"verdict": "no_anchor",
-"totVol": 250,
-"ankerGrund": {
-"spiel": "Hapoel Raanana v Bnei Yehuda",
-"grund": "kein_kandidat",
-"naechster": "Union Saint-Gilloise v Hapoel Be'er Sheva"
-}
-},
-"36209038": {
-"moneySide": "home",
-"moneyName": "Dhamk",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Saudi 1st Division",
-"kickoff": "2026-10-19T15:20:00Z",
-"verdict": "no_anchor",
-"totVol": 318,
-"ankerGrund": {
-"spiel": "Dhamk v Al Taee",
-"kandidat": "Al-Fayha v Al-Ahli",
-"key": "soccer_saudi_arabia_pro_league",
-"score": 0.5,
-"grund": "name"
-}
-},
-"36209079": {
-"moneySide": "away",
-"moneyName": "Al Hazm U21",
-"poly": null,
-"pinn": {
-"home": 0.1198,
-"draw": 0.1792,
-"away": 0.701,
-"fav": "away"
-},
-"pinnMove": null,
-"league": "Saudi U21 Elite League",
-"kickoff": "2026-10-19T14:45:00Z",
-"verdict": "konsens",
-"totVol": 90
-},
-"36188866": {
-"moneySide": "away",
-"moneyName": "Union Brescia",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Italian Serie C",
-"kickoff": "2026-10-19T18:30:00Z",
-"verdict": "no_anchor",
-"totVol": 239,
-"ankerGrund": {
-"spiel": "Giana Erminio v Union Brescia",
-"grund": "kein_kandidat",
-"naechster": "Augsburg v Union Berlin"
 }
 },
 "36209028": {
@@ -1309,20 +1319,70 @@
 "verdict": "konsens",
 "totVol": 239
 },
-"36209728": {
-"moneySide": "away",
-"moneyName": "Sp. San Lorenzo (Res)",
+"36209038": {
+"moneySide": "home",
+"moneyName": "Dhamk",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
-"league": "Paraguayan Reserves",
+"league": "Saudi 1st Division",
+"kickoff": "2026-10-19T15:20:00Z",
+"verdict": "no_anchor",
+"totVol": 338,
+"ankerGrund": {
+"spiel": "Dhamk v Al Taee",
+"kandidat": "Al-Fayha v Al-Ahli",
+"key": "soccer_saudi_arabia_pro_league",
+"score": 0.5,
+"grund": "name"
+}
+},
+"36208174": {
+"moneySide": "away",
+"moneyName": "Bnei Yehuda",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Israeli National League",
+"kickoff": "2026-10-19T16:00:00Z",
+"verdict": "no_anchor",
+"totVol": 251,
+"ankerGrund": {
+"spiel": "Hapoel Raanana v Bnei Yehuda",
+"grund": "kein_kandidat",
+"naechster": "Union Saint-Gilloise v Hapoel Be'er Sheva"
+}
+},
+"36188866": {
+"moneySide": "away",
+"moneyName": "Union Brescia",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Italian Serie C",
+"kickoff": "2026-10-19T18:30:00Z",
+"verdict": "no_anchor",
+"totVol": 248,
+"ankerGrund": {
+"spiel": "Giana Erminio v Union Brescia",
+"grund": "kein_kandidat",
+"naechster": "Augsburg v Union Berlin"
+}
+},
+"36197607": {
+"moneySide": "home",
+"moneyName": "Deportivo Santani",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Paraguayan Division Intermedia",
 "kickoff": "2026-10-19T19:30:00Z",
 "verdict": "no_anchor",
-"totVol": 44,
+"totVol": 60,
 "ankerGrund": {
-"spiel": "CS Luqueno (Res) v Sp. San Lorenzo (Res)",
+"spiel": "Deportivo Santani v 3 de Noviembre",
 "grund": "kein_kandidat",
-"naechster": "San Lorenzo v Newells Old Boys"
+"naechster": "Deportivo Riestra v Union Santa Fe"
 }
 },
 "36208172": {
@@ -1334,7 +1394,7 @@
 "league": "Israeli National League",
 "kickoff": "2026-10-19T16:00:00Z",
 "verdict": "no_anchor",
-"totVol": 229,
+"totVol": 249,
 "ankerGrund": {
 "spiel": "Hapoel Kfar Shelem v Hapoel Akko",
 "grund": "kein_kandidat",
@@ -1381,7 +1441,7 @@
 "league": "Montenegrin 1st League",
 "kickoff": "2026-10-19T16:00:00Z",
 "verdict": "no_anchor",
-"totVol": 140,
+"totVol": 142,
 "ankerGrund": {
 "spiel": "FK Sutjeska v FK Bokelj",
 "grund": "kein_kandidat"
@@ -1402,6 +1462,22 @@
 "grund": "kein_kandidat"
 }
 },
+"36208173": {
+"moneySide": "away",
+"moneyName": "Hapoel Rishon Lezion",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Israeli National League",
+"kickoff": "2026-10-19T16:00:00Z",
+"verdict": "no_anchor",
+"totVol": 159,
+"ankerGrund": {
+"spiel": "Maccabi Bnei Raina v Hapoel Rishon Lezion",
+"grund": "kein_kandidat",
+"naechster": "Union Saint-Gilloise v Hapoel Be'er Sheva"
+}
+},
 "36188987": {
 "moneySide": "home",
 "moneyName": "Juventus B",
@@ -1418,6 +1494,22 @@
 "naechster": "Lecce v Juventus"
 }
 },
+"36211557": {
+"moneySide": "home",
+"moneyName": "Defensor Sporting (Res)",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Uruguayan Reserves",
+"kickoff": "2026-10-19T18:00:00Z",
+"verdict": "no_anchor",
+"totVol": 216,
+"ankerGrund": {
+"spiel": "Defensor Sporting (Res) v Club Oriental DLP (Res)",
+"grund": "kein_kandidat",
+"naechster": "Sporting Lisbon v Académico de Viseu"
+}
+},
 "36188867": {
 "moneySide": "away",
 "moneyName": "A.C. Trento S.C.S.D.",
@@ -1427,7 +1519,7 @@
 "league": "Italian Serie C",
 "kickoff": "2026-10-19T18:30:00Z",
 "verdict": "no_anchor",
-"totVol": 126,
+"totVol": 140,
 "ankerGrund": {
 "spiel": "SSD Dolomiti Bellunesi v A.C. Trento S.C.S.D.",
 "grund": "kein_kandidat",
@@ -1450,22 +1542,6 @@
 "naechster": "Estoril v Moreirense FC"
 }
 },
-"36197607": {
-"moneySide": "home",
-"moneyName": "Deportivo Santani",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Paraguayan Division Intermedia",
-"kickoff": "2026-10-19T19:30:00Z",
-"verdict": "no_anchor",
-"totVol": 60,
-"ankerGrund": {
-"spiel": "Deportivo Santani v 3 de Noviembre",
-"grund": "kein_kandidat",
-"naechster": "Deportivo Riestra v Union Santa Fe"
-}
-},
 "36204505": {
 "moneySide": "away",
 "moneyName": "Kazma SC",
@@ -1485,53 +1561,19 @@
 }
 },
 "36209588": {
-"moneySide": "draw",
-"moneyName": "The Draw",
+"moneySide": "away",
+"moneyName": "Al Shabab",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
 "league": "Omani Professional League",
 "kickoff": "2026-10-19T15:30:00Z",
 "verdict": "no_anchor",
-"totVol": 96,
+"totVol": 234,
 "ankerGrund": {
 "spiel": "Sohar v Al Shabab",
 "grund": "kein_kandidat",
 "naechster": "Al-Shabab v Al-Faisaly KSA FC"
-}
-},
-"36212674": {
-"moneySide": "away",
-"moneyName": "Narva Trans II",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Estonian Esiliiga B",
-"kickoff": "2026-10-19T16:00:00Z",
-"verdict": "no_anchor",
-"totVol": 67,
-"ankerGrund": {
-"spiel": "Tabasalu JK v Narva Trans II",
-"kandidat": "Trabzonspor v Besiktas JK",
-"key": "soccer_turkey_super_league",
-"score": 0.5,
-"grund": "name"
-}
-},
-"36208173": {
-"moneySide": "away",
-"moneyName": "Hapoel Rishon Lezion",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Israeli National League",
-"kickoff": "2026-10-19T16:00:00Z",
-"verdict": "no_anchor",
-"totVol": 136,
-"ankerGrund": {
-"spiel": "Maccabi Bnei Raina v Hapoel Rishon Lezion",
-"grund": "kein_kandidat",
-"naechster": "Union Saint-Gilloise v Hapoel Be'er Sheva"
 }
 },
 "36213590": {
@@ -1550,20 +1592,20 @@
 "naechster": "VfB Stuttgart II v Alemannia Aachen"
 }
 },
-"36211557": {
-"moneySide": "home",
-"moneyName": "Defensor Sporting (Res)",
+"36211750": {
+"moneySide": "away",
+"moneyName": "Hapoel Marmorek",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
-"league": "Uruguayan Reserves",
-"kickoff": "2026-10-19T18:00:00Z",
+"league": "Israeli Liga Alef",
+"kickoff": "2026-10-19T15:30:00Z",
 "verdict": "no_anchor",
-"totVol": 216,
+"totVol": 15,
 "ankerGrund": {
-"spiel": "Defensor Sporting (Res) v Club Oriental DLP (Res)",
+"spiel": "AS Nordia Jerusalem v Hapoel Marmorek",
 "grund": "kein_kandidat",
-"naechster": "Sporting Lisbon v Académico de Viseu"
+"naechster": "Napoli v AS Roma"
 }
 },
 "36208195": {
@@ -1641,26 +1683,10 @@
 "league": "Israeli Liga Alef",
 "kickoff": "2026-10-19T16:00:00Z",
 "verdict": "no_anchor",
-"totVol": 79,
+"totVol": 84,
 "ankerGrund": {
 "spiel": "MK Kfar Saba 1928 v Ironi Ramat Hasharon",
 "grund": "kein_kandidat"
-}
-},
-"36211750": {
-"moneySide": "away",
-"moneyName": "Hapoel Marmorek",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Israeli Liga Alef",
-"kickoff": "2026-10-19T15:30:00Z",
-"verdict": "no_anchor",
-"totVol": 15,
-"ankerGrund": {
-"spiel": "AS Nordia Jerusalem v Hapoel Marmorek",
-"grund": "kein_kandidat",
-"naechster": "Napoli v AS Roma"
 }
 },
 "36209035": {
@@ -1695,6 +1721,21 @@
 "naechster": "Union Saint-Gilloise v Hapoel Be'er Sheva"
 }
 },
+"36196390": {
+"moneySide": "home",
+"moneyName": "Diosgyori",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Hungarian NB II",
+"kickoff": "2026-10-19T17:30:00Z",
+"verdict": "no_anchor",
+"totVol": 36,
+"ankerGrund": {
+"spiel": "Diosgyori v Kazincbarcika",
+"grund": "kein_kandidat"
+}
+},
 "36209068": {
 "moneySide": "home",
 "moneyName": "KF Dukagjini",
@@ -1704,7 +1745,7 @@
 "league": "Kosovan Superliga",
 "kickoff": "2026-10-19T16:00:00Z",
 "verdict": "no_anchor",
-"totVol": 40,
+"totVol": 41,
 "ankerGrund": {
 "spiel": "KF Dukagjini v Drenica Skenderaj",
 "grund": "kein_kandidat",
@@ -1750,25 +1791,34 @@
 "league": "English Premier League 2 - Div 1",
 "kickoff": "2026-10-19T18:00:00Z",
 "verdict": "no_anchor",
-"totVol": 25,
+"totVol": 85,
 "ankerGrund": {
 "spiel": "Birmingham U21 v Derby U21",
 "grund": "kein_kandidat",
 "naechster": "Sheffield United v Derby County"
 }
 },
-"36196390": {
-"moneySide": "home",
-"moneyName": "Diosgyori",
-"poly": null,
+"36189289": {
+"moneySide": "draw",
+"moneyName": "The Draw",
+"poly": {
+"vol": 605,
+"odd": null,
+"sharePct": null,
+"shareSrc": null,
+"key": "serc-giu-caf-2026-10-19",
+"sideKey": null,
+"whales": null,
+"whaleUsd": null
+},
 "pinn": null,
 "pinnMove": null,
-"league": "Hungarian NB II",
-"kickoff": "2026-10-19T17:30:00Z",
+"league": "Italian Serie C",
+"kickoff": "2026-10-19T18:30:00Z",
 "verdict": "no_anchor",
-"totVol": 36,
+"totVol": 9,
 "ankerGrund": {
-"spiel": "Diosgyori v Kazincbarcika",
+"spiel": "FC Giugliano v Foggia",
 "grund": "kein_kandidat"
 }
 },
@@ -1871,55 +1921,6 @@
 "naechster": "River Plate v Racing Club"
 }
 },
-"36189289": {
-"moneySide": "draw",
-"moneyName": "The Draw",
-"poly": {
-"vol": 605,
-"odd": null,
-"sharePct": null,
-"shareSrc": null,
-"key": "serc-giu-caf-2026-10-19",
-"sideKey": null,
-"whales": null,
-"whaleUsd": null
-},
-"pinn": null,
-"pinnMove": null,
-"league": "Italian Serie C",
-"kickoff": "2026-10-19T18:30:00Z",
-"verdict": "no_anchor",
-"totVol": 9,
-"ankerGrund": {
-"spiel": "FC Giugliano v Foggia",
-"grund": "kein_kandidat"
-}
-},
-"36182295": {
-"moneySide": "home",
-"moneyName": "Mushuc Runa",
-"poly": {
-"vol": 1662,
-"odd": 1.94,
-"sharePct": 52,
-"shareSrc": "preis",
-"key": "ecu1-mur-ore-2026-10-18",
-"sideKey": "Mushuc Runa SC",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": null,
-"pinnMove": null,
-"league": "Ecuadorian Serie A",
-"kickoff": "2026-10-19T20:30:00Z",
-"verdict": "no_anchor",
-"totVol": 1357,
-"ankerGrund": {
-"spiel": "Mushuc Runa v Orense Sporting Club",
-"grund": "kein_kandidat",
-"naechster": "Sporting Lisbon v Académico de Viseu"
-}
-},
 "36194604": {
 "moneySide": "home",
 "moneyName": "Sporting Lisbon",
@@ -1943,7 +1944,7 @@
 "league": "UEFA Champions League",
 "kickoff": "2026-10-21T19:00:00Z",
 "verdict": "konsens",
-"totVol": 14671
+"totVol": 14725
 },
 "36194594": {
 "moneySide": "home",
@@ -1968,7 +1969,7 @@
 "league": "UEFA Champions League",
 "kickoff": "2026-10-21T19:00:00Z",
 "verdict": "konsens",
-"totVol": 7013
+"totVol": 7015
 },
 "36194617": {
 "moneySide": "home",
@@ -1999,7 +2000,7 @@
 "moneySide": "home",
 "moneyName": "Fenerbahce",
 "poly": {
-"vol": 9303,
+"vol": 9307,
 "odd": 1.71,
 "sharePct": 58,
 "shareSrc": "preis",
@@ -2018,7 +2019,7 @@
 "league": "UEFA Champions League",
 "kickoff": "2026-10-20T16:45:00Z",
 "verdict": "konsens",
-"totVol": 4429
+"totVol": 4465
 },
 "36213084": {
 "moneySide": "away",
@@ -2043,7 +2044,7 @@
 "moneySide": "home",
 "moneyName": "Napoli",
 "poly": {
-"vol": 3833,
+"vol": 3936,
 "odd": 1.65,
 "sharePct": 60,
 "shareSrc": "preis",
@@ -2062,13 +2063,13 @@
 "league": "UEFA Champions League",
 "kickoff": "2026-10-20T19:00:00Z",
 "verdict": "konsens",
-"totVol": 3930
+"totVol": 3976
 },
 "36194627": {
 "moneySide": "home",
 "moneyName": "Betis",
 "poly": {
-"vol": 3023,
+"vol": 3028,
 "odd": 1.6,
 "sharePct": 62,
 "shareSrc": "preis",
@@ -2112,13 +2113,13 @@
 "league": "UEFA Champions League",
 "kickoff": "2026-10-21T16:45:00Z",
 "verdict": "konsens",
-"totVol": 2621
+"totVol": 2679
 },
 "36180895": {
 "moneySide": "draw",
 "moneyName": "The Draw",
 "poly": {
-"vol": 221007,
+"vol": 221009,
 "odd": null,
 "sharePct": null,
 "shareSrc": null,
@@ -2137,7 +2138,7 @@
 "league": "Spanish La Liga",
 "kickoff": "2026-10-21T18:00:00Z",
 "verdict": "uneinig",
-"totVol": 804
+"totVol": 821
 },
 "36213498": {
 "moneySide": "home",
@@ -2225,6 +2226,22 @@
 "naechster": "Al-Fayha v Al-Ahli"
 }
 },
+"36190703": {
+"moneySide": "draw",
+"moneyName": "The Draw",
+"poly": null,
+"pinn": {
+"home": 0.3676,
+"draw": 0.2973,
+"away": 0.3351,
+"fav": "home"
+},
+"pinnMove": null,
+"league": "CONMEBOL Copa Sudamericana",
+"kickoff": "2026-10-21T00:30:00Z",
+"verdict": "uneinig",
+"totVol": 97
+},
 "36194783": {
 "moneySide": "draw",
 "moneyName": "The Draw",
@@ -2260,21 +2277,24 @@
 "abstandH": 8.0
 }
 },
-"36190703": {
-"moneySide": "draw",
-"moneyName": "The Draw",
+"36213569": {
+"moneySide": "home",
+"moneyName": "Napoli U19",
 "poly": null,
-"pinn": {
-"home": 0.3676,
-"draw": 0.2973,
-"away": 0.3351,
-"fav": "home"
-},
+"pinn": null,
 "pinnMove": null,
-"league": "CONMEBOL Copa Sudamericana",
-"kickoff": "2026-10-21T00:30:00Z",
-"verdict": "uneinig",
-"totVol": 97
+"league": "UEFA Youth League",
+"kickoff": "2026-10-20T12:00:00Z",
+"verdict": "no_anchor",
+"totVol": 1,
+"ankerGrund": {
+"spiel": "Napoli U19 v Bodo/Glimt U19",
+"kandidat": "Napoli v Bodø/Glimt",
+"key": "soccer_uefa_champs_league",
+"score": 0.83,
+"grund": "zeit",
+"abstandH": 7.0
+}
 },
 "36213022": {
 "moneySide": "home",
@@ -2293,25 +2313,6 @@
 "score": 1.0,
 "grund": "zeit",
 "abstandH": 5.0
-}
-},
-"36213569": {
-"moneySide": "home",
-"moneyName": "Napoli U19",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "UEFA Youth League",
-"kickoff": "2026-10-20T12:00:00Z",
-"verdict": "no_anchor",
-"totVol": 1,
-"ankerGrund": {
-"spiel": "Napoli U19 v Bodo/Glimt U19",
-"kandidat": "Napoli v Bodø/Glimt",
-"key": "soccer_uefa_champs_league",
-"score": 0.83,
-"grund": "zeit",
-"abstandH": 7.0
 }
 },
 "36213020": {
