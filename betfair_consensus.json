@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-10-19T13:03:33.374067+00:00",
-"count": 16,
-"covered": 14,
+"generatedAt": "2026-10-19T13:33:39.114139+00:00",
+"count": 22,
+"covered": 16,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -47,26 +47,33 @@
 "soccer_turkey_super_league",
 "soccer_usa_mls"
 ],
-"leaguesMitAnker": [],
+"leaguesMitAnker": [
+"English Premier League",
+"Italian Serie A",
+"Portuguese Primeira Liga",
+"Spanish La Liga",
+"Turkish Super League",
+"UEFA Champions League"
+],
 "leaguesMitTotals": [],
-"oddsKeysFetched": 48,
-"oddsKeysMitDaten": 48,
-"oddsEvents": 574,
+"oddsKeysFetched": 49,
+"oddsKeysMitDaten": 49,
+"oddsEvents": 594,
 "oddsTotals": {
-"versucht": 4,
+"versucht": 6,
 "mitDaten": 0,
 "events": 0,
-"gewollt": 4,
+"gewollt": 6,
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 433028,
-"remaining": 4566972,
+"used": 434315,
+"remaining": 4565685,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
 },
-"ankerQuote": 0.0,
+"ankerQuote": 0.955,
 "games": [
 {
 "matchId": "36092208",
@@ -78,17 +85,17 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Tottenham",
-"moneySharePct": 79,
-"moneyOdd": 1.58,
-"moneyDir": "in",
-"totVol": 413013,
-"pinnOdd": null,
+"moneySharePct": 80,
+"moneyOdd": 1.59,
+"moneyDir": "out",
+"totVol": 427498,
+"pinnOdd": 1.56,
 "softOdd": 1.53,
 "softN": 51,
 "poly": {
-"vol": 158325,
+"vol": 162839,
 "odd": 1.57,
-"sharePct": 81,
+"sharePct": 82,
 "shareSrc": "geld",
 "key": "epl-tot-cov-2026-10-19",
 "sideKey": "Tottenham Hotspur FC",
@@ -107,7 +114,7 @@
 },
 {
 "wallet": "0xbba460a0d0fa3205986acf64a70499b3e5e5ef69",
-"usd": 2626
+"usd": 2679
 },
 {
 "wallet": "0x6be049212477c106df53248dcd5c7ec338539ac7",
@@ -118,30 +125,32 @@
 "usd": 1844
 }
 ],
-"whaleUsd": 36989
+"whaleUsd": 38590
 },
-"pinn": null,
+"pinn": {
+"home": 0.6195,
+"draw": 0.211,
+"away": 0.1695,
+"fav": "home"
+},
 "soft": {
-"home": 0.6191,
-"draw": 0.2126,
-"away": 0.1683,
+"home": 0.6194,
+"draw": 0.2122,
+"away": 0.1684,
 "fav": "home",
 "n": 51
 },
-"pinnMovePP": null,
-"pinnMove": null,
+"pinnMovePP": -1.6,
+"pinnMove": {
+"movePP": -1.6,
+"stepPP": -0.0,
+"n": 22,
+"move": true,
+"laeuft": false
+},
 "verdict": "konsens",
 "agree": true,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Tottenham v Coventry",
-"grund": "kein_pinnacle",
-"kandidat": "Tottenham Hotspur v Coventry City",
-"key": "soccer_epl",
-"nSoft": 51,
-"pinnacleImEvent": false,
-"nBuecher": 51
-}
+"pinnTotals": null
 },
 {
 "matchId": "36194579",
@@ -156,8 +165,8 @@
 "moneySharePct": 96,
 "moneyOdd": 1.13,
 "moneyDir": "flat",
-"totVol": 260676,
-"pinnOdd": null,
+"totVol": 260992,
+"pinnOdd": 1.1,
 "softOdd": 1.09,
 "softN": 47,
 "poly": {
@@ -170,28 +179,30 @@
 "whales": null,
 "whaleUsd": null
 },
-"pinn": null,
+"pinn": {
+"home": 0.8749,
+"draw": 0.0803,
+"away": 0.0447,
+"fav": "home"
+},
 "soft": {
-"home": 0.8722,
-"draw": 0.0867,
-"away": 0.0412,
+"home": 0.8726,
+"draw": 0.0864,
+"away": 0.041,
 "fav": "home",
 "n": 47
 },
-"pinnMovePP": null,
-"pinnMove": null,
+"pinnMovePP": 0.2,
+"pinnMove": {
+"movePP": 0.2,
+"stepPP": 0.0,
+"n": 22,
+"move": false,
+"laeuft": false
+},
 "verdict": "konsens",
 "agree": true,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Man City v AEK Athens",
-"grund": "kein_pinnacle",
-"kandidat": "Manchester City v AEK Athens",
-"key": "soccer_uefa_champs_league",
-"nSoft": 47,
-"pinnacleImEvent": false,
-"nBuecher": 47
-}
+"pinnTotals": null
 },
 {
 "matchId": "36099825",
@@ -204,14 +215,14 @@
 "moneySide": "home",
 "moneyName": "AC Monza",
 "moneySharePct": 54,
-"moneyOdd": 2.44,
-"moneyDir": "flat",
-"totVol": 182156,
-"pinnOdd": null,
+"moneyOdd": 2.46,
+"moneyDir": "out",
+"totVol": 187441,
+"pinnOdd": 2.36,
 "softOdd": 2.3,
 "softN": 50,
 "poly": {
-"vol": 190518,
+"vol": 191741,
 "odd": 2.41,
 "sharePct": 79,
 "shareSrc": "geld",
@@ -231,42 +242,44 @@
 "usd": 1063
 },
 {
-"wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
-"usd": 507
-},
-{
 "wallet": "0xd31dbdd92ba14cf25d5756ab04c1c07a302c4567",
 "usd": 415
+},
+{
+"wallet": "0xeddf63c15ceb54cb8f6d1c7617f1afa59886a953",
+"usd": 350
 },
 {
 "wallet": "0x3fa7b137757d8d4b032bc4227ccb77e2aa5aeb68",
 "usd": 300
 }
 ],
-"whaleUsd": 51323
+"whaleUsd": 51166
 },
-"pinn": null,
+"pinn": {
+"home": 0.4107,
+"draw": 0.2928,
+"away": 0.2964,
+"fav": "home"
+},
 "soft": {
-"home": 0.41,
-"draw": 0.2939,
-"away": 0.2961,
+"home": 0.4079,
+"draw": 0.2943,
+"away": 0.2978,
 "fav": "home",
 "n": 50
 },
-"pinnMovePP": null,
-"pinnMove": null,
+"pinnMovePP": 2.5,
+"pinnMove": {
+"movePP": 2.5,
+"stepPP": -1.0,
+"n": 22,
+"move": true,
+"laeuft": false
+},
 "verdict": "konsens",
 "agree": true,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "AC Monza v Cagliari",
-"grund": "kein_pinnacle",
-"kandidat": "Monza v Cagliari",
-"key": "soccer_italy_serie_a",
-"nSoft": 50,
-"pinnacleImEvent": false,
-"nBuecher": 50
-}
+"pinnTotals": null
 },
 {
 "matchId": "36194562",
@@ -280,13 +293,13 @@
 "moneyName": "Liverpool",
 "moneySharePct": 85,
 "moneyOdd": 1.59,
-"moneyDir": "out",
-"totVol": 66024,
-"pinnOdd": null,
-"softOdd": 1.48,
+"moneyDir": "flat",
+"totVol": 81503,
+"pinnOdd": 1.51,
+"softOdd": 1.5,
 "softN": 47,
 "poly": {
-"vol": 23808,
+"vol": 23869,
 "odd": 1.55,
 "sharePct": 64,
 "shareSrc": "preis",
@@ -295,28 +308,30 @@
 "whales": null,
 "whaleUsd": null
 },
-"pinn": null,
+"pinn": {
+"home": 0.6381,
+"draw": 0.2007,
+"away": 0.1611,
+"fav": "home"
+},
 "soft": {
-"home": 0.6391,
-"draw": 0.2016,
-"away": 0.1593,
+"home": 0.6337,
+"draw": 0.2034,
+"away": 0.1629,
 "fav": "home",
 "n": 47
 },
-"pinnMovePP": null,
-"pinnMove": null,
+"pinnMovePP": -0.9,
+"pinnMove": {
+"movePP": -0.9,
+"stepPP": -1.3,
+"n": 22,
+"move": false,
+"laeuft": true
+},
 "verdict": "konsens",
 "agree": true,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Liverpool v Villarreal",
-"grund": "kein_pinnacle",
-"kandidat": "Liverpool v Villarreal",
-"key": "soccer_uefa_champs_league",
-"nSoft": 47,
-"pinnacleImEvent": false,
-"nBuecher": 47
-}
+"pinnTotals": null
 },
 {
 "matchId": "36194585",
@@ -328,15 +343,15 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "Atletico Madrid",
-"moneySharePct": 84,
+"moneySharePct": 83,
 "moneyOdd": 2.22,
 "moneyDir": "flat",
-"totVol": 64000,
-"pinnOdd": null,
+"totVol": 64473,
+"pinnOdd": 2.13,
 "softOdd": 2.1,
 "softN": 47,
 "poly": {
-"vol": 43503,
+"vol": 43961,
 "odd": 2.2,
 "sharePct": 46,
 "shareSrc": "preis",
@@ -345,28 +360,30 @@
 "whales": null,
 "whaleUsd": null
 },
-"pinn": null,
+"pinn": {
+"home": 0.2958,
+"draw": 0.25,
+"away": 0.4542,
+"fav": "away"
+},
 "soft": {
-"home": 0.2973,
-"draw": 0.2534,
-"away": 0.4493,
+"home": 0.2956,
+"draw": 0.2539,
+"away": 0.4505,
 "fav": "away",
 "n": 47
 },
-"pinnMovePP": null,
-"pinnMove": null,
+"pinnMovePP": -0.5,
+"pinnMove": {
+"movePP": -0.5,
+"stepPP": 0.2,
+"n": 22,
+"move": false,
+"laeuft": false
+},
 "verdict": "konsens",
 "agree": true,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Stuttgart v Atletico Madrid",
-"grund": "kein_pinnacle",
-"kandidat": "VfB Stuttgart v Atlético Madrid",
-"key": "soccer_uefa_champs_league",
-"nSoft": 47,
-"pinnacleImEvent": false,
-"nBuecher": 47
-}
+"pinnTotals": null
 },
 {
 "matchId": "36194569",
@@ -378,15 +395,15 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Paris St-G",
-"moneySharePct": 51,
-"moneyOdd": 2.5,
-"moneyDir": "in",
-"totVol": 56586,
-"pinnOdd": null,
+"moneySharePct": 50,
+"moneyOdd": 2.52,
+"moneyDir": "out",
+"totVol": 57764,
+"pinnOdd": 2.42,
 "softOdd": 2.4,
 "softN": 47,
 "poly": {
-"vol": 164247,
+"vol": 166599,
 "odd": 2.53,
 "sharePct": 40,
 "shareSrc": "preis",
@@ -395,28 +412,30 @@
 "whales": null,
 "whaleUsd": null
 },
-"pinn": null,
+"pinn": {
+"home": 0.399,
+"draw": 0.2037,
+"away": 0.3973,
+"fav": "home"
+},
 "soft": {
-"home": 0.3958,
-"draw": 0.2109,
-"away": 0.3934,
-"fav": "home",
+"home": 0.3944,
+"draw": 0.2111,
+"away": 0.3945,
+"fav": "away",
 "n": 47
 },
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "konsens",
+"pinnMovePP": 0.4,
+"pinnMove": {
+"movePP": 0.4,
+"stepPP": -0.0,
+"n": 22,
+"move": false,
+"laeuft": false
+},
+"verdict": "teil",
 "agree": true,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Paris St-G v Barcelona",
-"grund": "kein_pinnacle",
-"kandidat": "Paris Saint Germain v Barcelona",
-"key": "soccer_uefa_champs_league",
-"nSoft": 47,
-"pinnacleImEvent": false,
-"nBuecher": 47
-}
+"pinnTotals": null
 },
 {
 "matchId": "36194564",
@@ -429,14 +448,14 @@
 "moneySide": "home",
 "moneyName": "Porto",
 "moneySharePct": 84,
-"moneyOdd": 1.65,
-"moneyDir": "out",
-"totVol": 54224,
-"pinnOdd": null,
-"softOdd": 1.57,
+"moneyOdd": 1.64,
+"moneyDir": "in",
+"totVol": 56731,
+"pinnOdd": 1.59,
+"softOdd": 1.58,
 "softN": 47,
 "poly": {
-"vol": 11779,
+"vol": 11786,
 "odd": 1.65,
 "sharePct": 60,
 "shareSrc": "preis",
@@ -445,28 +464,30 @@
 "whales": null,
 "whaleUsd": null
 },
-"pinn": null,
+"pinn": {
+"home": 0.6058,
+"draw": 0.2049,
+"away": 0.1892,
+"fav": "home"
+},
 "soft": {
-"home": 0.6002,
-"draw": 0.2122,
-"away": 0.1876,
+"home": 0.6006,
+"draw": 0.2114,
+"away": 0.188,
 "fav": "home",
 "n": 47
 },
-"pinnMovePP": null,
-"pinnMove": null,
+"pinnMovePP": 1.7,
+"pinnMove": {
+"movePP": 1.7,
+"stepPP": -0.4,
+"n": 22,
+"move": true,
+"laeuft": false
+},
 "verdict": "konsens",
 "agree": true,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Porto v PSV",
-"grund": "kein_pinnacle",
-"kandidat": "Porto v PSV Eindhoven",
-"key": "soccer_uefa_champs_league",
-"nSoft": 47,
-"pinnacleImEvent": false,
-"nBuecher": 47
-}
+"pinnTotals": null
 },
 {
 "matchId": "36194529",
@@ -478,15 +499,15 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "Dortmund",
-"moneySharePct": 87,
-"moneyOdd": 1.34,
-"moneyDir": "flat",
-"totVol": 51307,
-"pinnOdd": null,
+"moneySharePct": 85,
+"moneyOdd": 1.35,
+"moneyDir": "out",
+"totVol": 52629,
+"pinnOdd": 1.3,
 "softOdd": 1.29,
 "softN": 47,
 "poly": {
-"vol": 11876,
+"vol": 13024,
 "odd": 1.34,
 "sharePct": 74,
 "shareSrc": "preis",
@@ -495,28 +516,30 @@
 "whales": null,
 "whaleUsd": null
 },
-"pinn": null,
+"pinn": {
+"home": 0.1037,
+"draw": 0.1541,
+"away": 0.7421,
+"fav": "away"
+},
 "soft": {
-"home": 0.1036,
-"draw": 0.1588,
+"home": 0.1035,
+"draw": 0.1589,
 "away": 0.7376,
 "fav": "away",
 "n": 47
 },
-"pinnMovePP": null,
-"pinnMove": null,
+"pinnMovePP": 0.1,
+"pinnMove": {
+"movePP": 0.1,
+"stepPP": 0.0,
+"n": 6,
+"move": false,
+"laeuft": false
+},
 "verdict": "konsens",
 "agree": true,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "FC Sabah v Dortmund",
-"grund": "kein_pinnacle",
-"kandidat": "Sabah FK v Borussia Dortmund",
-"key": "soccer_uefa_champs_league",
-"nSoft": 47,
-"pinnacleImEvent": false,
-"nBuecher": 47
-}
+"pinnTotals": null
 },
 {
 "matchId": "36100468",
@@ -528,45 +551,47 @@
 "live": false,
 "moneySide": "draw",
 "moneyName": "The Draw",
-"moneySharePct": 42,
+"moneySharePct": 43,
 "moneyOdd": 3.05,
 "moneyDir": "flat",
-"totVol": 44424,
-"pinnOdd": null,
-"softOdd": 2.9,
+"totVol": 45844,
+"pinnOdd": 2.94,
+"softOdd": 2.88,
 "softN": 46,
 "poly": {
-"vol": 12033,
+"vol": 12293,
 "odd": null,
 "sharePct": null,
 "shareSrc": null,
 "key": "lal-get-ray-2026-10-19",
 "sideKey": null,
-"whales": [],
-"whaleUsd": 0
+"whales": null,
+"whaleUsd": null
 },
-"pinn": null,
+"pinn": {
+"home": 0.3049,
+"draw": 0.3308,
+"away": 0.3643,
+"fav": "away"
+},
 "soft": {
-"home": 0.3113,
-"draw": 0.3256,
+"home": 0.3099,
+"draw": 0.327,
 "away": 0.3631,
 "fav": "away",
 "n": 46
 },
-"pinnMovePP": null,
-"pinnMove": null,
+"pinnMovePP": 0.5,
+"pinnMove": {
+"movePP": 0.5,
+"stepPP": -0.0,
+"n": 22,
+"move": false,
+"laeuft": false
+},
 "verdict": "uneinig",
 "agree": false,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Getafe v Rayo Vallecano",
-"grund": "kein_pinnacle",
-"kandidat": "Getafe v Rayo Vallecano",
-"key": "soccer_spain_la_liga",
-"nSoft": 46,
-"pinnacleImEvent": false,
-"nBuecher": 46
-}
+"pinnTotals": null
 },
 {
 "matchId": "36194540",
@@ -580,9 +605,9 @@
 "moneyName": "Roma",
 "moneySharePct": 92,
 "moneyOdd": 1.2,
-"moneyDir": "out",
-"totVol": 39571,
-"pinnOdd": null,
+"moneyDir": "flat",
+"totVol": 39706,
+"pinnOdd": 1.18,
 "softOdd": 1.16,
 "softN": 47,
 "poly": {
@@ -595,28 +620,30 @@
 "whales": null,
 "whaleUsd": null
 },
-"pinn": null,
+"pinn": {
+"home": 0.8149,
+"draw": 0.1205,
+"away": 0.0646,
+"fav": "home"
+},
 "soft": {
-"home": 0.8204,
-"draw": 0.1178,
-"away": 0.0618,
+"home": 0.8215,
+"draw": 0.1176,
+"away": 0.0609,
 "fav": "home",
 "n": 47
 },
-"pinnMovePP": null,
-"pinnMove": null,
+"pinnMovePP": 1.6,
+"pinnMove": {
+"movePP": 1.6,
+"stepPP": 0.1,
+"n": 22,
+"move": true,
+"laeuft": false
+},
 "verdict": "konsens",
 "agree": true,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Roma v Slovan Bratislava",
-"grund": "kein_pinnacle",
-"kandidat": "AS Roma v ŠK Slovan Bratislava",
-"key": "soccer_uefa_champs_league",
-"nSoft": 47,
-"pinnacleImEvent": false,
-"nBuecher": 47
-}
+"pinnTotals": null
 },
 {
 "matchId": "36099830",
@@ -628,15 +655,15 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "Torino",
-"moneySharePct": 52,
+"moneySharePct": 51,
 "moneyOdd": 2.58,
 "moneyDir": "flat",
-"totVol": 35977,
-"pinnOdd": null,
+"totVol": 36792,
+"pinnOdd": 2.5,
 "softOdd": 2.4,
 "softN": 50,
 "poly": {
-"vol": 6270,
+"vol": 7577,
 "odd": 2.53,
 "sharePct": 40,
 "shareSrc": "preis",
@@ -645,28 +672,30 @@
 "whales": null,
 "whaleUsd": null
 },
-"pinn": null,
+"pinn": {
+"home": 0.2977,
+"draw": 0.313,
+"away": 0.3893,
+"fav": "away"
+},
 "soft": {
-"home": 0.299,
-"draw": 0.3102,
-"away": 0.3908,
+"home": 0.298,
+"draw": 0.3113,
+"away": 0.3907,
 "fav": "away",
 "n": 50
 },
-"pinnMovePP": null,
-"pinnMove": null,
+"pinnMovePP": -1.2,
+"pinnMove": {
+"movePP": -1.2,
+"stepPP": 0.0,
+"n": 14,
+"move": true,
+"laeuft": false
+},
 "verdict": "konsens",
 "agree": true,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Parma v Torino",
-"grund": "kein_pinnacle",
-"kandidat": "Parma v Torino",
-"key": "soccer_italy_serie_a",
-"nSoft": 50,
-"pinnacleImEvent": false,
-"nBuecher": 50
-}
+"pinnTotals": null
 },
 {
 "matchId": "36194588",
@@ -680,13 +709,13 @@
 "moneyName": "Bayern Munich",
 "moneySharePct": 82,
 "moneyOdd": 2.12,
-"moneyDir": "out",
-"totVol": 26169,
-"pinnOdd": null,
+"moneyDir": "flat",
+"totVol": 26212,
+"pinnOdd": 2.05,
 "softOdd": 2.05,
 "softN": 46,
 "poly": {
-"vol": 42160,
+"vol": 42290,
 "odd": 2.11,
 "sharePct": 48,
 "shareSrc": "preis",
@@ -695,28 +724,30 @@
 "whales": null,
 "whaleUsd": null
 },
-"pinn": null,
+"pinn": {
+"home": 0.4717,
+"draw": 0.2388,
+"away": 0.2895,
+"fav": "home"
+},
 "soft": {
-"home": 0.463,
-"draw": 0.2482,
-"away": 0.2888,
+"home": 0.4633,
+"draw": 0.248,
+"away": 0.2887,
 "fav": "home",
 "n": 46
 },
-"pinnMovePP": null,
-"pinnMove": null,
+"pinnMovePP": 1.6,
+"pinnMove": {
+"movePP": 1.6,
+"stepPP": 0.0,
+"n": 18,
+"move": true,
+"laeuft": false
+},
 "verdict": "konsens",
 "agree": true,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Bayern Munich v Arsenal",
-"grund": "kein_pinnacle",
-"kandidat": "Bayern Munich v Arsenal",
-"key": "soccer_uefa_champs_league",
-"nSoft": 46,
-"pinnacleImEvent": false,
-"nBuecher": 46
-}
+"pinnTotals": null
 },
 {
 "matchId": "36194623",
@@ -731,8 +762,8 @@
 "moneySharePct": 75,
 "moneyOdd": 1.26,
 "moneyDir": "flat",
-"totVol": 24990,
-"pinnOdd": null,
+"totVol": 25045,
+"pinnOdd": 1.24,
 "softOdd": 1.23,
 "softN": 46,
 "poly": {
@@ -745,11 +776,68 @@
 "whales": null,
 "whaleUsd": null
 },
-"pinn": null,
+"pinn": {
+"home": 0.7743,
+"draw": 0.1442,
+"away": 0.0815,
+"fav": "home"
+},
 "soft": {
-"home": 0.7684,
-"draw": 0.1454,
+"home": 0.769,
+"draw": 0.1448,
 "away": 0.0862,
+"fav": "home",
+"n": 46
+},
+"pinnMovePP": 0.3,
+"pinnMove": {
+"movePP": 0.3,
+"stepPP": 0.0,
+"n": 22,
+"move": false,
+"laeuft": false
+},
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36194583",
+"home": "Como",
+"away": "Man Utd",
+"league": "UEFA Champions League",
+"country": "International",
+"kickoff": "2026-10-21T16:45:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Como",
+"moneySharePct": 39,
+"moneyOdd": 2.38,
+"moneyDir": "in",
+"totVol": 20225,
+"pinnOdd": 2.28,
+"softOdd": 2.28,
+"softN": 46,
+"poly": {
+"vol": 6061,
+"odd": 2.35,
+"sharePct": 42,
+"shareSrc": "preis",
+"key": "ucl-com-mnu-2026-10-21",
+"sideKey": "Como 1907",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.4246,
+"draw": 0.2527,
+"away": 0.3227,
+"fav": "home"
+},
+"soft": {
+"home": 0.4165,
+"draw": 0.2583,
+"away": 0.3252,
 "fav": "home",
 "n": 46
 },
@@ -757,16 +845,7 @@
 "pinnMove": null,
 "verdict": "konsens",
 "agree": true,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Aston Villa v Viking",
-"grund": "kein_pinnacle",
-"kandidat": "Aston Villa v Viking FK",
-"key": "soccer_uefa_champs_league",
-"nSoft": 46,
-"pinnacleImEvent": false,
-"nBuecher": 46
-}
+"pinnTotals": null
 },
 {
 "matchId": "36183590",
@@ -778,15 +857,15 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "Besiktas",
-"moneySharePct": 46,
-"moneyOdd": 2.82,
-"moneyDir": "out",
-"totVol": 17279,
-"pinnOdd": null,
-"softOdd": 2.5,
+"moneySharePct": 47,
+"moneyOdd": 2.72,
+"moneyDir": "in",
+"totVol": 17826,
+"pinnOdd": 2.65,
+"softOdd": 2.52,
 "softN": 42,
 "poly": {
-"vol": 14887,
+"vol": 15542,
 "odd": 2.74,
 "sharePct": 10,
 "shareSrc": "geld",
@@ -804,11 +883,16 @@
 ],
 "whaleUsd": 161
 },
-"pinn": null,
+"pinn": {
+"home": 0.3867,
+"draw": 0.2485,
+"away": 0.3648,
+"fav": "home"
+},
 "soft": {
-"home": 0.3806,
+"home": 0.3802,
 "draw": 0.253,
-"away": 0.3665,
+"away": 0.3668,
 "fav": "home",
 "n": 42
 },
@@ -816,15 +900,138 @@
 "pinnMove": null,
 "verdict": "uneinig",
 "agree": false,
+"pinnTotals": null
+},
+{
+"matchId": "36186438",
+"home": "Braga",
+"away": "Gil Vicente",
+"league": "Portuguese Primeira Liga",
+"country": "PT",
+"kickoff": "2026-10-19T19:15:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Braga",
+"moneySharePct": 72,
+"moneyOdd": 1.59,
+"moneyDir": "flat",
+"totVol": 15122,
+"pinnOdd": 1.53,
+"softOdd": 1.5,
+"softN": 44,
+"poly": {
+"vol": 18687,
+"odd": 1.57,
+"sharePct": 74,
+"shareSrc": "geld",
+"key": "por-scb-gil-2026-08-16",
+"sideKey": "SC Braga",
+"whales": [
+{
+"wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+"usd": 875
+},
+{
+"wallet": "0xf5b287bbb1a8d2db5dc0b63a87d73988e024ee5b",
+"usd": 666
+},
+{
+"wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+"usd": 362
+},
+{
+"wallet": "0x59911710f01a9a8fb3470e3c9be8f5b78f6cee89",
+"usd": 296
+},
+{
+"wallet": "0xaa0e2d9e050184ae1f85667ecb3f1c0af5222a0e",
+"usd": 139
+},
+{
+"wallet": "0x7e649fadc66af46f8633c3f5f99d96fd59717308",
+"usd": 127
+}
+],
+"whaleUsd": 2759
+},
+"pinn": {
+"home": 0.6303,
+"draw": 0.2291,
+"away": 0.1406,
+"fav": "home"
+},
+"soft": {
+"home": 0.6215,
+"draw": 0.2313,
+"away": 0.1472,
+"fav": "home",
+"n": 44
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36185623",
+"home": "Niki Volou",
+"away": "Panionios",
+"league": "Greek Super League 2",
+"country": "GR",
+"kickoff": "2026-10-19T11:45:00Z",
+"live": true,
+"moneySide": "draw",
+"moneyName": "The Draw",
+"moneySharePct": 73,
+"moneyOdd": 1.3,
+"moneyDir": "in",
+"totVol": 19343,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": null,
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
 "pinnTotals": null,
 "ankerGrund": {
-"spiel": "Trabzonspor v Besiktas",
-"grund": "kein_pinnacle",
-"kandidat": "Trabzonspor v Besiktas JK",
-"key": "soccer_turkey_super_league",
-"nSoft": 42,
-"pinnacleImEvent": false,
-"nBuecher": 42
+"spiel": "Niki Volou v Panionios",
+"grund": "kein_kandidat"
+}
+},
+{
+"matchId": "36209749",
+"home": "KF Arsimi 1973",
+"away": "Tikves Kavadarci",
+"league": "Republic of North Macedonian Soccer",
+"country": "MK",
+"kickoff": "2026-10-19T12:00:00Z",
+"live": true,
+"moneySide": "away",
+"moneyName": "Tikves Kavadarci",
+"moneySharePct": 71,
+"moneyOdd": 2.76,
+"moneyDir": "out",
+"totVol": 16704,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": null,
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "KF Arsimi 1973 v Tikves Kavadarci",
+"grund": "kein_kandidat",
+"naechster": "AGF Aarhus v KF Egnatia"
 }
 },
 {
@@ -837,10 +1044,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Phnom Penh",
-"moneySharePct": 90,
-"moneyOdd": 2.0,
-"moneyDir": "in",
-"totVol": 10660,
+"moneySharePct": 76,
+"moneyOdd": 36.0,
+"moneyDir": "out",
+"totVol": 14083,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -867,10 +1074,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "PAOK B",
-"moneySharePct": 71,
-"moneyOdd": 1.06,
+"moneySharePct": 80,
+"moneyOdd": 1.04,
 "moneyDir": "in",
-"totVol": 6044,
+"totVol": 8824,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -887,95 +1094,96 @@
 "grund": "kein_kandidat",
 "naechster": "OFI Crete v PAOK Thessaloniki"
 }
+},
+{
+"matchId": "36210087",
+"home": "NK Celje U19",
+"away": "NK Maribor U19",
+"league": "Slovenian U19",
+"country": "SI",
+"kickoff": "2026-10-19T13:00:00Z",
+"live": true,
+"moneySide": "away",
+"moneyName": "NK Maribor U19",
+"moneySharePct": 61,
+"moneyOdd": 1.17,
+"moneyDir": "in",
+"totVol": 1445,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": null,
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "NK Celje U19 v NK Maribor U19",
+"grund": "kein_kandidat",
+"naechster": "NK Celje v Salzburg"
+}
+},
+{
+"matchId": "36192344",
+"home": "Manisa FK",
+"away": "Muglaspor",
+"league": "Turkish 1 Lig",
+"country": "TR",
+"kickoff": "2026-10-19T14:00:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Manisa FK",
+"moneySharePct": 42,
+"moneyOdd": 2.6,
+"moneyDir": "out",
+"totVol": 250,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": null,
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Manisa FK v Muglaspor",
+"grund": "kein_kandidat"
+}
 }
 ],
 "ankerN": 22,
 "ankerNOffen": 149,
-"ankerMit": 0,
+"ankerMit": 21,
 "ankerDiagnose": {
 "nach": {
-"kein_kandidat": 86,
-"kein_pinnacle": 43,
+"kein_kandidat": 87,
 "name": 13,
-"zeit": 7
+"zeit": 6
 },
 "beispiele": [
 {
-"spiel": "Como v Man Utd",
-"grund": "kein_pinnacle",
-"kandidat": "Como v Manchester United",
-"key": "soccer_uefa_champs_league",
-"nSoft": 46,
-"pinnacleImEvent": false,
-"nBuecher": 46,
-"matchId": "36194583",
-"liga": "UEFA Champions League"
-},
-{
-"spiel": "Braga v Gil Vicente",
-"grund": "kein_pinnacle",
-"kandidat": "Braga v Gil Vicente",
-"key": "soccer_portugal_primeira_liga",
-"nSoft": 44,
-"pinnacleImEvent": false,
-"nBuecher": 44,
-"matchId": "36186438",
-"liga": "Portuguese Primeira Liga"
-},
-{
-"spiel": "Viborg v Midtjylland",
-"grund": "kein_pinnacle",
-"kandidat": "Viborg FF v FC Midtjylland",
-"key": "soccer_denmark_superliga",
-"nSoft": 48,
-"pinnacleImEvent": false,
-"nBuecher": 48,
-"matchId": "36184243",
-"liga": "Danish Superliga"
-},
-{
-"spiel": "Al-Hilal v Al-Hazm (KSA)",
-"grund": "kein_pinnacle",
-"kandidat": "Al-Hilal v Al-Hazem",
-"key": "soccer_saudi_arabia_pro_league",
-"nSoft": 24,
-"pinnacleImEvent": false,
-"nBuecher": 24,
-"matchId": "36196839",
-"liga": "Saudi Professional League"
-},
-{
-"spiel": "Waterford v Galway Utd",
-"grund": "kein_pinnacle",
-"kandidat": "Waterford FC v Galway United",
-"key": "soccer_league_of_ireland",
-"nSoft": 38,
-"pinnacleImEvent": false,
-"nBuecher": 38,
-"matchId": "36145583",
-"liga": "Irish Premier Division"
-},
-{
-"spiel": "Al-Feiha v Al Ahli",
-"grund": "kein_pinnacle",
+"spiel": "Al Jazira U23 v Kalba U23",
 "kandidat": "Al-Fayha v Al-Ahli",
 "key": "soccer_saudi_arabia_pro_league",
-"nSoft": 25,
-"pinnacleImEvent": false,
-"nBuecher": 25,
-"matchId": "36196809",
-"liga": "Saudi Professional League"
+"score": 0.33,
+"grund": "name",
+"matchId": "36210109",
+"liga": "UAE U23"
 },
 {
-"spiel": "Degerfors v Kalmar FF",
-"grund": "kein_pinnacle",
-"kandidat": "Degerfors IF v Kalmar FF",
-"key": "soccer_sweden_allsvenskan",
-"nSoft": 45,
-"pinnacleImEvent": false,
-"nBuecher": 45,
-"matchId": "36184369",
-"liga": "Swedish Allsvenskan"
+"spiel": "Al Wahda U23 v Khorfakkan U23",
+"kandidat": "Al-Fayha v Al-Ahli",
+"key": "soccer_saudi_arabia_pro_league",
+"score": 0.33,
+"grund": "name",
+"matchId": "36209390",
+"liga": "UAE U23"
 },
 {
 "spiel": "ENPPI v Al Mokawloon",
@@ -985,28 +1193,6 @@
 "grund": "name",
 "matchId": "36186193",
 "liga": "Egyptian Premier"
-},
-{
-"spiel": "Rodez v Montpellier",
-"grund": "kein_pinnacle",
-"kandidat": "Rodez AF v Montpellier",
-"key": "soccer_france_ligue_two",
-"nSoft": 44,
-"pinnacleImEvent": false,
-"nBuecher": 44,
-"matchId": "36184056",
-"liga": "French Ligue 2"
-},
-{
-"spiel": "Celta Vigo B v Tenerife",
-"grund": "kein_pinnacle",
-"kandidat": "Celta Fortuna v Tenerife",
-"key": "soccer_spain_segunda_division",
-"nSoft": 40,
-"pinnacleImEvent": false,
-"nBuecher": 40,
-"matchId": "36185248",
-"liga": "Spanish Segunda Division"
 },
 {
 "spiel": "Wisla Plock v Radomiak Radom",
@@ -1028,17 +1214,6 @@
 "liga": "Saudi U21 Elite League"
 },
 {
-"spiel": "Varbergs BoIS v Helsingborgs",
-"grund": "kein_pinnacle",
-"kandidat": "Varbergs BoIS v Helsingborgs IF",
-"key": "soccer_sweden_superettan",
-"nSoft": 39,
-"pinnacleImEvent": false,
-"nBuecher": 39,
-"matchId": "36186327",
-"liga": "Swedish Superettan"
-},
-{
 "spiel": "Busaiteen Club v Etihad Al Reef",
 "kandidat": "Al-Fayha v Al-Ahli",
 "key": "soccer_saudi_arabia_pro_league",
@@ -1046,17 +1221,6 @@
 "grund": "name",
 "matchId": "36208233",
 "liga": "Bahraini 2nd Division"
-},
-{
-"spiel": "Al-Shabab (KSA) v Al Faisaly ( KSA )",
-"grund": "kein_pinnacle",
-"kandidat": "Al-Shabab v Al-Faisaly KSA FC",
-"key": "soccer_saudi_arabia_pro_league",
-"nSoft": 25,
-"pinnacleImEvent": false,
-"nBuecher": 25,
-"matchId": "36196549",
-"liga": "Saudi Professional League"
 },
 {
 "spiel": "Al Kholood U21 v Al Khaleej Saihat U21",
@@ -1087,24 +1251,6 @@
 "liga": "Estonian Esiliiga"
 },
 {
-"spiel": "Al Jazira U23 v Kalba U23",
-"kandidat": "Al-Fayha v Al-Ahli",
-"key": "soccer_saudi_arabia_pro_league",
-"score": 0.33,
-"grund": "name",
-"matchId": "36210109",
-"liga": "UAE U23"
-},
-{
-"spiel": "Al Wahda U23 v Khorfakkan U23",
-"kandidat": "Al-Fayha v Al-Ahli",
-"key": "soccer_saudi_arabia_pro_league",
-"score": 0.33,
-"grund": "name",
-"matchId": "36209390",
-"liga": "UAE U23"
-},
-{
 "spiel": "Buri FC v Al Tadamun Buri",
 "kandidat": "Al-Fayha v Al-Ahli",
 "key": "soccer_saudi_arabia_pro_league",
@@ -1121,28 +1267,6 @@
 "grund": "name",
 "matchId": "36204502",
 "liga": "Kuwaiti Premier League"
-},
-{
-"spiel": "Al Fateh U21 v Al Akhdoud U21",
-"grund": "kein_pinnacle",
-"kandidat": "Al-Fayha v Al-Ahli",
-"key": "soccer_saudi_arabia_pro_league",
-"nSoft": 25,
-"pinnacleImEvent": false,
-"nBuecher": 25,
-"matchId": "36209081",
-"liga": "Saudi U21 Elite League"
-},
-{
-"spiel": "Al-Zulfi SC v Al-Ula FC",
-"grund": "kein_pinnacle",
-"kandidat": "Al-Fayha v Al-Ahli",
-"key": "soccer_saudi_arabia_pro_league",
-"nSoft": 25,
-"pinnacleImEvent": false,
-"nBuecher": 25,
-"matchId": "36209028",
-"liga": "Saudi 1st Division"
 },
 {
 "spiel": "Dhamk v Al Taee",
@@ -1163,17 +1287,6 @@
 "liga": "Kuwaiti Premier League"
 },
 {
-"spiel": "Al-Qadisiyah U21 v Al Hazm U21",
-"grund": "kein_pinnacle",
-"kandidat": "Al-Fayha v Al-Ahli",
-"key": "soccer_saudi_arabia_pro_league",
-"nSoft": 25,
-"pinnacleImEvent": false,
-"nBuecher": 25,
-"matchId": "36209079",
-"liga": "Saudi U21 Elite League"
-},
-{
 "spiel": "Tabasalu JK v Narva Trans II",
 "kandidat": "Trabzonspor v Besiktas JK",
 "key": "soccer_turkey_super_league",
@@ -1192,17 +1305,6 @@
 "liga": "Bahraini 2nd Division"
 },
 {
-"spiel": "Al-Raed (KSA) v Al-Saqer FC",
-"grund": "kein_pinnacle",
-"kandidat": "Al-Faisaly KSA FC v Al-Shabab",
-"key": "soccer_saudi_arabia_pro_league",
-"nSoft": 25,
-"pinnacleImEvent": false,
-"nBuecher": 25,
-"matchId": "36209035",
-"liga": "Saudi 1st Division"
-},
-{
 "spiel": "La Luz FC (Res) v CA Penarol (Res)",
 "kandidat": "Deportivo La Coruña v CA Osasuna",
 "key": "soccer_spain_la_liga",
@@ -1211,61 +1313,6 @@
 "abstandH": 338.0,
 "matchId": "36211521",
 "liga": "Uruguayan Reserves"
-},
-{
-"spiel": "Derry City v St Patricks",
-"grund": "kein_pinnacle",
-"kandidat": "Derry City v St Patricks Athletic",
-"key": "soccer_league_of_ireland",
-"nSoft": 37,
-"pinnacleImEvent": false,
-"nBuecher": 37,
-"matchId": "36146297",
-"liga": "Irish Premier Division"
-},
-{
-"spiel": "Real Madrid v RB Leipzig",
-"grund": "kein_pinnacle",
-"kandidat": "Real Madrid v RB Leipzig",
-"key": "soccer_uefa_champs_league",
-"nSoft": 46,
-"pinnacleImEvent": false,
-"nBuecher": 46,
-"matchId": "36194600",
-"liga": "UEFA Champions League"
-},
-{
-"spiel": "Sporting Lisbon v Lask Linz",
-"grund": "kein_pinnacle",
-"kandidat": "Sporting Lisbon v LASK",
-"key": "soccer_uefa_champs_league",
-"nSoft": 46,
-"pinnacleImEvent": false,
-"nBuecher": 46,
-"matchId": "36194604",
-"liga": "UEFA Champions League"
-},
-{
-"spiel": "Club Brugge v Lens",
-"grund": "kein_pinnacle",
-"kandidat": "Club Brugge v RC Lens",
-"key": "soccer_uefa_champs_league",
-"nSoft": 46,
-"pinnacleImEvent": false,
-"nBuecher": 46,
-"matchId": "36194594",
-"liga": "UEFA Champions League"
-},
-{
-"spiel": "Inter v Shakhtar",
-"grund": "kein_pinnacle",
-"kandidat": "Inter Milan v Shakhtar Donetsk",
-"key": "soccer_uefa_champs_league",
-"nSoft": 46,
-"pinnacleImEvent": false,
-"nBuecher": 46,
-"matchId": "36194617",
-"liga": "UEFA Champions League"
 },
 {
 "spiel": "Sabah U19 v Dortmund U19",
@@ -1278,37 +1325,24 @@
 "liga": "UEFA Youth League"
 },
 {
-"spiel": "Fenerbahce v Slavia Prague",
-"grund": "kein_pinnacle",
+"spiel": "Fenerbahce SK U19 v SK Slavia Praha U19",
 "kandidat": "Fenerbahce v Slavia Praha",
 "key": "soccer_uefa_champs_league",
-"nSoft": 46,
-"pinnacleImEvent": false,
-"nBuecher": 46,
-"matchId": "36194496",
-"liga": "UEFA Champions League"
+"score": 1.17,
+"grund": "zeit",
+"abstandH": 5.8,
+"matchId": "36212962",
+"liga": "UEFA Youth League"
 },
 {
-"spiel": "Napoli v Bodo Glimt",
-"grund": "kein_pinnacle",
-"kandidat": "Napoli v Bodø/Glimt",
+"spiel": "Porto U19 v PSV Eindhoven U19",
+"kandidat": "Porto v PSV Eindhoven",
 "key": "soccer_uefa_champs_league",
-"nSoft": 47,
-"pinnacleImEvent": false,
-"nBuecher": 47,
-"matchId": "36194557",
-"liga": "UEFA Champions League"
-},
-{
-"spiel": "Lille v Galatasaray",
-"grund": "kein_pinnacle",
-"kandidat": "Lille v Galatasaray",
-"key": "soccer_uefa_champs_league",
-"nSoft": 45,
-"pinnacleImEvent": false,
-"nBuecher": 45,
-"matchId": "36194616",
-"liga": "UEFA Champions League"
+"score": 1.17,
+"grund": "zeit",
+"abstandH": 8.0,
+"matchId": "36212966",
+"liga": "UEFA Youth League"
 }
 ]
 }
