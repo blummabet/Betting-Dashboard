@@ -1,15 +1,15 @@
 {
   "slug": "poly-live-scan",
   "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
-  "updatedAt": "2026-10-19T21:24:16.174632+00:00",
+  "updatedAt": "2026-10-19T22:09:42.281405+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
-    "spanneH": 13.7,
-    "proTag": 33.3,
+    "spanneH": 13.3,
+    "proTag": 34.4,
     "lueckeMinMin": 3.9,
     "lueckeMedianMin": 45.1,
-    "lueckeMaxMin": 70.8,
+    "lueckeMaxMin": 58.2,
     "sollProTag": null,
     "liefergradPct": null,
     "fensterMin": null,
@@ -21,9 +21,24 @@
     "verdraengt": 0,
     "spanneH": 467.8,
     "erzeugtProTag": 5.1,
-    "widerspruch": "erzeugtProTag 5.1 gegen eine gemessene Kadenz von 33.3/Tag (Faktor 6.5) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
+    "widerspruch": "erzeugtProTag 5.1 gegen eine gemessene Kadenz von 34.4/Tag (Faktor 6.7) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
   },
   "runs": [
+    {
+      "ts": "2026-10-19T22:09:42.281405+00:00",
+      "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
+      "runId": "39332654968",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/39332654968",
+      "nSteps": 7,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-10-19T22:07:12Z",
+      "startedAt": "2026-10-19T22:07:12Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 150.3,
+      "event": "workflow_dispatch"
+    },
     {
       "ts": "2026-10-19T21:24:16.174632+00:00",
       "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
@@ -308,21 +323,6 @@
       "wartetS": 0.0,
       "laeuftSeitS": 361.5,
       "event": "workflow_dispatch"
-    },
-    {
-      "ts": "2026-10-19T07:43:37.038779+00:00",
-      "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
-      "runId": "39217445330",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/39217445330",
-      "nSteps": 7,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-10-19T07:39:58Z",
-      "startedAt": "2026-10-19T07:39:58Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 219.0,
-      "event": "schedule"
     }
   ]
 }
