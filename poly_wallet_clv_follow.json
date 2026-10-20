@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-20T03:37:14.624777+00:00",
+ "updatedAt": "2026-10-20T04:07:17.226736+00:00",
  "stake": 10.0,
  "regel": {
   "minN": 20,
@@ -7,9 +7,9 @@
   "frischMin": 90.0
  },
  "zaehler": {
-  "ohneEinstieg": 9,
-  "gesperrt": 55,
-  "alt": 199
+  "ohneEinstieg": 10,
+  "gesperrt": 44,
+  "alt": 197
  },
  "open": {
   "unl-kaz-far-2026-10-06-more-markets|Under": {
@@ -12222,28 +12222,6 @@
    "firstTs": "2026-10-18T13:06:31.128718+00:00",
    "stake": 10.0
   },
-  "epl-not-ars-2026-10-18-total-corners|Under": {
-   "key": "epl-not-ars-2026-10-18-total-corners",
-   "side": "Under",
-   "cat": "Fußball",
-   "league": "EPL",
-   "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
-   "belegt": true,
-   "heiss": false,
-   "walletN": 3014,
-   "walletClv": 0.398,
-   "walletUg": 0.257,
-   "clv7": null,
-   "n7": null,
-   "walletEntry": 0.5381,
-   "entryPrice": 0.545,
-   "abstandPP": 0.69,
-   "arm": "nehmbar",
-   "lastPrice": 0.545,
-   "htkAtEntry": 2.5,
-   "firstTs": "2026-10-18T13:06:31.128718+00:00",
-   "stake": 10.0
-  },
   "bun-moe-hof-2026-10-18-more-markets|Under": {
    "key": "bun-moe-hof-2026-10-18-more-markets",
    "side": "Under",
@@ -13251,7 +13229,7 @@
    "entryPrice": 0.935,
    "abstandPP": 1.5,
    "arm": "zu_spaet",
-   "lastPrice": 0.925,
+   "lastPrice": 0.935,
    "htkAtEntry": 2.95,
    "firstTs": "2026-10-20T01:07:23.047217+00:00",
    "stake": 10.0
@@ -13405,9 +13383,31 @@
    "entryPrice": 0.525,
    "abstandPP": 2.5,
    "arm": "zu_spaet",
-   "lastPrice": 0.525,
+   "lastPrice": 0.515,
    "htkAtEntry": 2.95,
    "firstTs": "2026-10-20T03:37:14.624777+00:00",
+   "stake": 10.0
+  },
+  "wta-day-birrell-2026-10-20|Kimberly Birrell": {
+   "key": "wta-day-birrell-2026-10-20",
+   "side": "Kimberly Birrell",
+   "cat": "Tennis",
+   "league": "TENNIS",
+   "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+   "belegt": true,
+   "heiss": false,
+   "walletN": 2077,
+   "walletClv": 0.29,
+   "walletUg": 0.175,
+   "clv7": null,
+   "n7": null,
+   "walletEntry": 0.5671,
+   "entryPrice": 0.505,
+   "abstandPP": -6.21,
+   "arm": "nehmbar",
+   "lastPrice": 0.505,
+   "htkAtEntry": 1.61,
+   "firstTs": "2026-10-20T04:07:17.226736+00:00",
    "stake": 10.0
   }
  },
@@ -63587,6 +63587,34 @@
    "closePrice": 0.595,
    "clvPP": -4.0,
    "settledTs": "2026-10-20T03:37:14.624777+00:00"
+  },
+  {
+   "key": "epl-not-ars-2026-10-18-total-corners",
+   "side": "Under",
+   "cat": "Fußball",
+   "league": "EPL",
+   "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+   "belegt": true,
+   "heiss": false,
+   "walletN": 3014,
+   "walletClv": 0.398,
+   "walletUg": 0.257,
+   "clv7": null,
+   "n7": null,
+   "walletEntry": 0.5381,
+   "entryPrice": 0.545,
+   "abstandPP": 0.69,
+   "arm": "nehmbar",
+   "lastPrice": 0.545,
+   "htkAtEntry": 2.5,
+   "firstTs": "2026-10-18T13:06:31.128718+00:00",
+   "stake": 10.0,
+   "result": "loss",
+   "winner": "Over",
+   "pnl": -10.0,
+   "closePrice": 0.545,
+   "clvPP": 0.0,
+   "settledTs": "2026-10-20T04:07:17.226736+00:00"
   }
  ],
  "gesehen": [
@@ -65890,6 +65918,7 @@
   "wta-chwalin-sakkari-2026-10-15|Maria Sakkari",
   "wta-cirstea-shi-2026-10-19|Han Shi",
   "wta-cirstea-shi-2026-10-19|Sorana Cirstea",
+  "wta-day-birrell-2026-10-20|Kimberly Birrell",
   "wta-eala-parry-2026-10-18|Alexandra Eala",
   "wta-egribel-werner-2026-10-06|Caroline Werner",
   "wta-egribel-werner-2026-10-06|Elvin Egribel",
@@ -66020,16 +66049,16 @@
  ],
  "agg": {
   "belegt_nehmbar": {
-   "n": 975,
+   "n": 976,
    "wins": 289,
-   "hit": 0.2964,
-   "pnl": -1730.07,
-   "stake": 9750.0,
-   "roi": -0.1774,
-   "roiUg": -0.3005,
+   "hit": 0.2961,
+   "pnl": -1740.07,
+   "stake": 9760.0,
+   "roi": -0.1783,
+   "roiUg": -0.3012,
    "belegt": false,
    "clvAvg": -0.06,
-   "clvN": 975,
+   "clvN": 976,
    "clvUg": -0.14
   },
   "belegt_zu_spaet": {
@@ -66072,16 +66101,16 @@
    "clvUg": -0.45
   },
   "nehmbar": {
-   "n": 1103,
+   "n": 1104,
    "wins": 349,
-   "hit": 0.3164,
-   "pnl": -1815.68,
-   "stake": 11030.0,
-   "roi": -0.1646,
-   "roiUg": -0.2749,
+   "hit": 0.3161,
+   "pnl": -1825.68,
+   "stake": 11040.0,
+   "roi": -0.1654,
+   "roiUg": -0.2756,
    "belegt": false,
    "clvAvg": -0.06,
-   "clvN": 1103,
+   "clvN": 1104,
    "clvUg": -0.14,
    "byCat": {
     "E-Sport": {
@@ -66098,16 +66127,16 @@
      "clvUg": -0.3
     },
     "Fußball": {
-     "n": 666,
+     "n": 667,
      "wins": 145,
-     "hit": 0.2177,
-     "pnl": -1853.84,
-     "stake": 6660.0,
-     "roi": -0.2784,
-     "roiUg": -0.4456,
+     "hit": 0.2174,
+     "pnl": -1863.84,
+     "stake": 6670.0,
+     "roi": -0.2794,
+     "roiUg": -0.4464,
      "belegt": false,
      "clvAvg": -0.08,
-     "clvN": 666,
+     "clvN": 667,
      "clvUg": -0.17
     },
     "None": {
