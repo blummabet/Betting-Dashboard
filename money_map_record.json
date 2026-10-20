@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-10-20T20:36:22.577755+00:00",
+"generatedAt": "2026-10-20T20:53:52.061189+00:00",
 "byVerdict": {
 "uneinig": {
 "n": 26,
@@ -18,20 +18,20 @@
 "clvLb": -0.5531
 },
 "konsens": {
-"n": 364,
-"wins": 216,
-"hitRate": 0.5934,
-"polyN": 356,
-"polyWins": 208,
-"polyHitRate": 0.5843,
-"pinnN": 316,
-"pinnHitRate": 0.6044,
-"nRoi": 364,
-"roi": 0.0784,
-"roiLb": -0.0037,
-"nClv": 364,
-"clv": 0.1,
-"clvLb": -0.1237
+"n": 370,
+"wins": 219,
+"hitRate": 0.5919,
+"polyN": 362,
+"polyWins": 211,
+"polyHitRate": 0.5829,
+"pinnN": 322,
+"pinnHitRate": 0.6025,
+"nRoi": 370,
+"roi": 0.0714,
+"roiLb": -0.0099,
+"nClv": 370,
+"clv": 0.11,
+"clvLb": -0.1166
 },
 "teil": {
 "n": 1,
@@ -51,6 +51,11 @@
 }
 },
 "byLeague": {
+"UEFA Champions League": {
+"n": 25,
+"wins": 15,
+"hitRate": 0.6
+},
 "English Sky Bet Championship": {
 "n": 24,
 "wins": 14,
@@ -72,11 +77,6 @@
 "hitRate": 0.5909
 },
 "English Premier League": {
-"n": 20,
-"wins": 12,
-"hitRate": 0.6
-},
-"UEFA Champions League": {
 "n": 20,
 "wins": 12,
 "hitRate": 0.6
@@ -181,6 +181,11 @@
 "wins": 5,
 "hitRate": 1.0
 },
+"English Sky Bet League 2": {
+"n": 4,
+"wins": 1,
+"hitRate": 0.25
+},
 "Irish Premier Division": {
 "n": 4,
 "wins": 4,
@@ -215,11 +220,6 @@
 "n": 3,
 "wins": 0,
 "hitRate": 0.0
-},
-"English Sky Bet League 2": {
-"n": 3,
-"wins": 1,
-"hitRate": 0.3333
 },
 "Saudi Professional League": {
 "n": 3,
@@ -359,26 +359,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 282,
-"wins": 171,
-"hitRate": 0.6064,
-"nRoi": 282,
-"roi": 0.0335,
-"roiLb": -0.0531,
-"nClv": 282,
-"clv": 0.22,
-"clvLb": -0.0491
+"n": 287,
+"wins": 174,
+"hitRate": 0.6063,
+"nRoi": 287,
+"roi": 0.029,
+"roiLb": -0.0565,
+"nClv": 287,
+"clv": 0.23,
+"clvLb": -0.0418
 },
 "weak": {
-"n": 109,
+"n": 110,
 "wins": 53,
-"hitRate": 0.4862,
-"nRoi": 109,
-"roi": 0.131,
-"roiLb": -0.0582,
-"nClv": 109,
+"hitRate": 0.4818,
+"nRoi": 110,
+"roi": 0.1207,
+"roiLb": -0.0675,
+"nClv": 110,
 "clv": -0.25,
-"clvLb": -0.539
+"clvLb": -0.5341
 }
 },
 "divergence": {
@@ -390,6 +390,120 @@
 "polyRate": 0.36
 },
 "recent": [
+{
+"matchId": "36194579",
+"home": "Man City",
+"away": "AEK Athens",
+"league": "UEFA Champions League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Man City",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+5,
+1
+],
+"kickoff": "2026-10-20T19:00:00Z",
+"settledAt": "2026-10-20T20:53:51.878292+00:00"
+},
+{
+"matchId": "36194540",
+"home": "Roma",
+"away": "Slovan Bratislava",
+"league": "UEFA Champions League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Roma",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+4,
+0
+],
+"kickoff": "2026-10-20T19:00:00Z",
+"settledAt": "2026-10-20T20:53:51.878292+00:00"
+},
+{
+"matchId": "36194562",
+"home": "Liverpool",
+"away": "Villarreal",
+"league": "UEFA Champions League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Liverpool",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+4,
+3
+],
+"kickoff": "2026-10-20T19:00:00Z",
+"settledAt": "2026-10-20T20:53:51.878292+00:00"
+},
+{
+"matchId": "36194564",
+"home": "Porto",
+"away": "PSV",
+"league": "UEFA Champions League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Porto",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-10-20T19:00:00Z",
+"settledAt": "2026-10-20T20:53:51.878292+00:00"
+},
+{
+"matchId": "36194585",
+"home": "Stuttgart",
+"away": "Atletico Madrid",
+"league": "UEFA Champions League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Atletico Madrid",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-10-20T19:00:00Z",
+"settledAt": "2026-10-20T20:53:51.878292+00:00"
+},
+{
+"matchId": "36199992",
+"home": "Gillingham",
+"away": "Port Vale",
+"league": "English Sky Bet League 2",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Port Vale",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-10-20T19:00:00Z",
+"settledAt": "2026-10-20T20:53:51.878292+00:00"
+},
 {
 "matchId": "36194496",
 "home": "Fenerbahce",
@@ -1035,133 +1149,19 @@
 ],
 "kickoff": "2026-10-18T15:15:00Z",
 "settledAt": "2026-10-18T18:17:10.227747+00:00"
-},
-{
-"matchId": "36100464",
-"home": "Le Havre",
-"away": "Auxerre",
-"league": "French Ligue 1",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Le Havre",
-"polySide": "home",
-"winner": "away",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-3
-],
-"kickoff": "2026-10-18T15:15:00Z",
-"settledAt": "2026-10-18T18:17:10.227747+00:00"
-},
-{
-"matchId": "36099807",
-"home": "AC Milan",
-"away": "Atalanta",
-"league": "Italian Serie A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "AC Milan",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-2
-],
-"kickoff": "2026-10-18T16:00:00Z",
-"settledAt": "2026-10-18T18:02:02.391030+00:00"
-},
-{
-"matchId": "36181812",
-"home": "Molde",
-"away": "Start",
-"league": "Norwegian Eliteserien",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Molde",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-6,
-1
-],
-"kickoff": "2026-10-18T15:00:00Z",
-"settledAt": "2026-10-18T18:02:02.391030+00:00"
-},
-{
-"matchId": "36184493",
-"home": "Valerenga",
-"away": "Brann",
-"league": "Norwegian Eliteserien",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Valerenga",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-10-18T15:00:00Z",
-"settledAt": "2026-10-18T18:02:02.391030+00:00"
-},
-{
-"matchId": "36092085",
-"home": "Nottm Forest",
-"away": "Arsenal",
-"league": "English Premier League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Arsenal",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-10-18T15:30:00Z",
-"settledAt": "2026-10-18T17:32:29.887872+00:00"
-},
-{
-"matchId": "36100469",
-"home": "Celta Vigo",
-"away": "Alaves",
-"league": "Spanish La Liga",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Celta Vigo",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-10-18T14:15:00Z",
-"settledAt": "2026-10-18T17:17:35.962312+00:00"
 }
 ],
 "global": {
-"n": 391,
-"wins": 224,
-"hitRate": 0.5729,
-"nRoi": 391,
-"roi": 0.0607,
-"roiLb": -0.021,
-"nClv": 391,
+"n": 397,
+"wins": 227,
+"hitRate": 0.5718,
+"nRoi": 397,
+"roi": 0.0544,
+"roiLb": -0.0264,
+"nClv": 397,
 "clv": 0.09,
-"clvLb": -0.1225
+"clvLb": -0.1158
 },
-"pending": 29,
+"pending": 23,
 "ausgeschlossenLive": 1580
 }
