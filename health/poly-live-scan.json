@@ -1,12 +1,12 @@
 {
   "slug": "poly-live-scan",
   "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
-  "updatedAt": "2026-10-20T14:09:33.454519+00:00",
+  "updatedAt": "2026-10-20T14:35:23.914380+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
-    "spanneH": 15.3,
-    "proTag": 29.9,
+    "spanneH": 15.0,
+    "proTag": 30.5,
     "lueckeMinMin": 19.4,
     "lueckeMedianMin": 46.4,
     "lueckeMaxMin": 72.8,
@@ -19,11 +19,26 @@
     "erzeugt": 100,
     "gelaufen": 100,
     "verdraengt": 0,
-    "spanneH": 465.7,
+    "spanneH": 464.8,
     "erzeugtProTag": 5.2,
-    "widerspruch": "erzeugtProTag 5.2 gegen eine gemessene Kadenz von 29.9/Tag (Faktor 5.7) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
+    "widerspruch": "erzeugtProTag 5.2 gegen eine gemessene Kadenz von 30.5/Tag (Faktor 5.9) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
   },
   "runs": [
+    {
+      "ts": "2026-10-20T14:35:23.914380+00:00",
+      "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
+      "runId": "39439951481",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/39439951481",
+      "nSteps": 7,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-10-20T14:31:08Z",
+      "startedAt": "2026-10-20T14:31:08Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 255.9,
+      "event": "schedule"
+    },
     {
       "ts": "2026-10-20T14:09:33.454519+00:00",
       "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
@@ -307,21 +322,6 @@
       "startedAt": "2026-10-19T23:34:37Z",
       "wartetS": 0.0,
       "laeuftSeitS": 152.9,
-      "event": "workflow_dispatch"
-    },
-    {
-      "ts": "2026-10-19T22:54:33.290103+00:00",
-      "workflow": "⚡ Poly Live-Scan (nur laufende Spiele, schnell)",
-      "runId": "39337759799",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/39337759799",
-      "nSteps": 7,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-10-19T22:50:55Z",
-      "startedAt": "2026-10-19T22:50:55Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 218.3,
       "event": "workflow_dispatch"
     }
   ]
