@@ -1,12 +1,12 @@
 {
   "slug": "liga-odds-dense",
   "workflow": "📈 Liga Odds Refresh (dicht)",
-  "updatedAt": "2026-10-20T17:15:01.761491+00:00",
+  "updatedAt": "2026-10-20T21:56:04.734561+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
-    "spanneH": 95.1,
-    "proTag": 4.8,
+    "spanneH": 96.7,
+    "proTag": 4.7,
     "lueckeMinMin": 166.0,
     "lueckeMedianMin": 310.9,
     "lueckeMaxMin": 517.8,
@@ -15,8 +15,29 @@
     "fensterMin": null,
     "fensterUrteil": null
   },
-  "erzeugung": null,
+  "erzeugung": {
+    "erzeugt": 100,
+    "gelaufen": 100,
+    "verdraengt": 0,
+    "spanneH": 586.2,
+    "erzeugtProTag": 4.1
+  },
   "runs": [
+    {
+      "ts": "2026-10-20T21:56:04.734561+00:00",
+      "workflow": "📈 Liga Odds Refresh (dicht)",
+      "runId": "39502116622",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/39502116622",
+      "nSteps": 18,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-10-20T21:39:24Z",
+      "startedAt": "2026-10-20T21:39:24Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 1000.7,
+      "event": "schedule"
+    },
     {
       "ts": "2026-10-20T17:15:01.761491+00:00",
       "workflow": "📈 Liga Odds Refresh (dicht)",
@@ -300,21 +321,6 @@
       "startedAt": "2026-10-16T21:12:47Z",
       "wartetS": 0.0,
       "laeuftSeitS": 152.7,
-      "event": "schedule"
-    },
-    {
-      "ts": "2026-10-16T18:08:00.282031+00:00",
-      "workflow": "📈 Liga Odds Refresh (dicht)",
-      "runId": "38944605921",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/38944605921",
-      "nSteps": 18,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-10-16T18:05:10Z",
-      "startedAt": "2026-10-16T18:05:10Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 170.3,
       "event": "schedule"
     }
   ]
