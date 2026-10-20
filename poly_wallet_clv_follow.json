@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-20T09:08:06.251144+00:00",
+ "updatedAt": "2026-10-20T09:38:22.379025+00:00",
  "stake": 10.0,
  "regel": {
   "minN": 20,
@@ -7,9 +7,9 @@
   "frischMin": 90.0
  },
  "zaehler": {
-  "ohneEinstieg": 21,
+  "ohneEinstieg": 12,
   "gesperrt": 27,
-  "alt": 194
+  "alt": 192
  },
  "open": {
   "unl-kaz-far-2026-10-06-more-markets|Under": {
@@ -13300,28 +13300,6 @@
    "firstTs": "2026-10-20T05:07:20.494455+00:00",
    "stake": 10.0
   },
-  "wta-joint-sonmez-2026-10-19|Zeynep Sonmez": {
-   "key": "wta-joint-sonmez-2026-10-19",
-   "side": "Zeynep Sonmez",
-   "cat": "Tennis",
-   "league": "TENNIS",
-   "wallet": "0x8b8992eb0d7dc4ef87f5efb45154de4787c598d6",
-   "belegt": true,
-   "heiss": true,
-   "walletN": 85,
-   "walletClv": 2.629,
-   "walletUg": 1.183,
-   "clv7": 2.27,
-   "n7": 24,
-   "walletEntry": 0.5,
-   "entryPrice": 0.515,
-   "abstandPP": 1.5,
-   "arm": "zu_spaet",
-   "lastPrice": 0.515,
-   "htkAtEntry": 1.2,
-   "firstTs": "2026-10-20T05:07:20.494455+00:00",
-   "stake": 10.0
-  },
   "atp-ribecai-vasami-2026-10-19|Jacopo Vasami": {
    "key": "atp-ribecai-vasami-2026-10-19",
    "side": "Jacopo Vasami",
@@ -13581,7 +13559,7 @@
    "entryPrice": 0.245,
    "abstandPP": -0.58,
    "arm": "nehmbar",
-   "lastPrice": 0.255,
+   "lastPrice": 0.26,
    "htkAtEntry": 2.44,
    "firstTs": "2026-10-20T08:38:01.526110+00:00",
    "stake": 10.0
@@ -13603,7 +13581,7 @@
    "entryPrice": 0.715,
    "abstandPP": -0.76,
    "arm": "nehmbar",
-   "lastPrice": 0.715,
+   "lastPrice": 0.71,
    "htkAtEntry": 2.44,
    "firstTs": "2026-10-20T08:38:01.526110+00:00",
    "stake": 10.0
@@ -13826,6 +13804,28 @@
    "lastPrice": 0.275,
    "htkAtEntry": 2.94,
    "firstTs": "2026-10-20T09:08:06.251144+00:00",
+   "stake": 10.0
+  },
+  "cs2-ef1-inf6-2026-10-20|Eternal Fire": {
+   "key": "cs2-ef1-inf6-2026-10-20",
+   "side": "Eternal Fire",
+   "cat": "E-Sport",
+   "league": "ESPORTS",
+   "wallet": "0x5c6d237b7420a8d1b3d86e867a88bbf9ee2bab76",
+   "belegt": true,
+   "heiss": false,
+   "walletN": 167,
+   "walletClv": 0.54,
+   "walletUg": 0.183,
+   "clv7": null,
+   "n7": null,
+   "walletEntry": 0.68,
+   "entryPrice": 0.74,
+   "abstandPP": 6.0,
+   "arm": "zu_spaet",
+   "lastPrice": 0.74,
+   "htkAtEntry": 2.44,
+   "firstTs": "2026-10-20T09:38:22.379025+00:00",
    "stake": 10.0
   }
  },
@@ -64313,6 +64313,34 @@
    "closePrice": 0.525,
    "clvPP": 0.0,
    "settledTs": "2026-10-20T09:08:06.251144+00:00"
+  },
+  {
+   "key": "wta-joint-sonmez-2026-10-19",
+   "side": "Zeynep Sonmez",
+   "cat": "Tennis",
+   "league": "TENNIS",
+   "wallet": "0x8b8992eb0d7dc4ef87f5efb45154de4787c598d6",
+   "belegt": true,
+   "heiss": true,
+   "walletN": 85,
+   "walletClv": 2.629,
+   "walletUg": 1.183,
+   "clv7": 2.27,
+   "n7": 24,
+   "walletEntry": 0.5,
+   "entryPrice": 0.515,
+   "abstandPP": 1.5,
+   "arm": "zu_spaet",
+   "lastPrice": 0.515,
+   "htkAtEntry": 1.2,
+   "firstTs": "2026-10-20T05:07:20.494455+00:00",
+   "stake": 10.0,
+   "result": "win",
+   "winner": "Zeynep Sonmez",
+   "pnl": 9.42,
+   "closePrice": 0.515,
+   "clvPP": 0.0,
+   "settledTs": "2026-10-20T09:38:22.379025+00:00"
   }
  ],
  "gesehen": [
@@ -64920,6 +64948,7 @@
   "cs2-dep5-lph-2026-10-09|Dynamo Eclot Phoenix",
   "cs2-eac-pure-2026-10-08|Esport Academy Copenhagen",
   "cs2-eac-pure-2026-10-08|PURE",
+  "cs2-ef1-inf6-2026-10-20|Eternal Fire",
   "cs2-ef1-inf6-2026-10-20|Infinite",
   "cs2-ef1-ntr-2026-10-17|Nuclear TigeRES",
   "cs2-ek-psna-2026-10-18|Passion Academy",
@@ -66789,16 +66818,16 @@
    "clvUg": -0.14
   },
   "belegt_zu_spaet": {
-   "n": 644,
-   "wins": 161,
-   "hit": 0.25,
-   "pnl": -821.25,
-   "stake": 6440.0,
-   "roi": -0.1275,
-   "roiUg": -0.3015,
+   "n": 645,
+   "wins": 162,
+   "hit": 0.2512,
+   "pnl": -811.83,
+   "stake": 6450.0,
+   "roi": -0.1259,
+   "roiUg": -0.2996,
    "belegt": false,
    "clvAvg": -0.26,
-   "clvN": 644,
+   "clvN": 645,
    "clvUg": -0.43
   },
   "heiss_nehmbar": {
@@ -66815,16 +66844,16 @@
    "clvUg": -0.4
   },
   "heiss_zu_spaet": {
-   "n": 106,
-   "wins": 46,
-   "hit": 0.434,
-   "pnl": -128.86,
-   "stake": 1060.0,
-   "roi": -0.1216,
-   "roiUg": -0.4052,
+   "n": 107,
+   "wins": 47,
+   "hit": 0.4393,
+   "pnl": -119.44,
+   "stake": 1070.0,
+   "roi": -0.1116,
+   "roiUg": -0.393,
    "belegt": false,
    "clvAvg": -0.07,
-   "clvN": 106,
+   "clvN": 107,
    "clvUg": -0.44
   },
   "nehmbar": {
@@ -66895,16 +66924,16 @@
    }
   },
   "zu_spaet": {
-   "n": 693,
-   "wins": 187,
-   "hit": 0.2698,
-   "pnl": -909.3,
-   "stake": 6930.0,
-   "roi": -0.1312,
-   "roiUg": -0.2934,
+   "n": 694,
+   "wins": 188,
+   "hit": 0.2709,
+   "pnl": -899.88,
+   "stake": 6940.0,
+   "roi": -0.1297,
+   "roiUg": -0.2916,
    "belegt": false,
    "clvAvg": -0.24,
-   "clvN": 693,
+   "clvN": 694,
    "clvUg": -0.41,
    "byCat": {
     "E-Sport": {
@@ -66960,16 +66989,16 @@
      "clvUg": null
     },
     "Tennis": {
-     "n": 89,
-     "wins": 39,
-     "hit": 0.4382,
-     "pnl": -129.84,
-     "stake": 890.0,
-     "roi": -0.1459,
-     "roiUg": -0.3765,
+     "n": 90,
+     "wins": 40,
+     "hit": 0.4444,
+     "pnl": -120.42,
+     "stake": 900.0,
+     "roi": -0.1338,
+     "roiUg": -0.3627,
      "belegt": false,
      "clvAvg": -0.12,
-     "clvN": 89,
+     "clvN": 90,
      "clvUg": -0.32
     }
    }
