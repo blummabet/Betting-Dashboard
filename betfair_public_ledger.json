@@ -12640,7 +12640,7 @@ null
 "leadOdd": 1.53,
 "value": 384797.58,
 "sentAt": "2026-10-20T15:51:14.381736+00:00",
-"status": "pending",
+"status": "lost",
 "htScore": [
 2,
 1
@@ -12662,7 +12662,14 @@ null
 },
 "onLeader": null,
 "leadDir": "in",
-"leadShare": 0.910632520090173
+"leadShare": 0.910632520090173,
+"settledAt": "2026-10-20T18:52:03.648607+00:00",
+"ftScore": [
+2,
+2
+],
+"profit": -1.0,
+"resChk": true
 },
 {
 "k": "ht:36194529:Half Time",
@@ -12704,7 +12711,8 @@ null
 2
 ],
 "profit": -1.0,
-"via": "track"
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36194529:Match Odds",
@@ -12749,7 +12757,8 @@ null
 2
 ],
 "profit": 0.47,
-"via": "track"
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36194562:Match Odds",
@@ -12830,7 +12839,10 @@ null
 "value": 86365.14,
 "sentAt": "2026-10-20T18:51:49.040742+00:00",
 "status": "pending",
-"htScore": null,
+"htScore": [
+0,
+0
+],
 "consensus": {
 "verdict": "konsens",
 "agree": true
