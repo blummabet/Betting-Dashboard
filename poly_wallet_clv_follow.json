@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-20T03:07:01.354959+00:00",
+ "updatedAt": "2026-10-20T03:37:14.624777+00:00",
  "stake": 10.0,
  "regel": {
   "minN": 20,
@@ -7,9 +7,9 @@
   "frischMin": 90.0
  },
  "zaehler": {
-  "ohneEinstieg": 2,
+  "ohneEinstieg": 9,
   "gesperrt": 55,
-  "alt": 201
+  "alt": 199
  },
  "open": {
   "unl-kaz-far-2026-10-06-more-markets|Under": {
@@ -13124,28 +13124,6 @@
    "firstTs": "2026-10-19T21:07:40.855350+00:00",
    "stake": 10.0
   },
-  "bra-cor1-vit-2026-10-19|SC Corinthians Paulista": {
-   "key": "bra-cor1-vit-2026-10-19",
-   "side": "SC Corinthians Paulista",
-   "cat": "Fußball",
-   "league": "SOCCER",
-   "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
-   "belegt": true,
-   "heiss": false,
-   "walletN": 1038,
-   "walletClv": 0.384,
-   "walletUg": 0.241,
-   "clv7": null,
-   "n7": null,
-   "walletEntry": 0.62,
-   "entryPrice": 0.635,
-   "abstandPP": 1.5,
-   "arm": "zu_spaet",
-   "lastPrice": 0.595,
-   "htkAtEntry": 0.96,
-   "firstTs": "2026-10-19T22:07:13.203429+00:00",
-   "stake": 10.0
-  },
   "bra-cor1-vit-2026-10-19-more-markets|Over": {
    "key": "bra-cor1-vit-2026-10-19-more-markets",
    "side": "Over",
@@ -13273,7 +13251,7 @@
    "entryPrice": 0.935,
    "abstandPP": 1.5,
    "arm": "zu_spaet",
-   "lastPrice": 0.93,
+   "lastPrice": 0.925,
    "htkAtEntry": 2.95,
    "firstTs": "2026-10-20T01:07:23.047217+00:00",
    "stake": 10.0
@@ -13405,9 +13383,31 @@
    "entryPrice": 0.535,
    "abstandPP": -0.24,
    "arm": "nehmbar",
-   "lastPrice": 0.535,
+   "lastPrice": 0.505,
    "htkAtEntry": 1.95,
    "firstTs": "2026-10-20T03:07:01.354959+00:00",
+   "stake": 10.0
+  },
+  "atp-atmane-hijikat-2026-10-19|Rinky Hijikata": {
+   "key": "atp-atmane-hijikat-2026-10-19",
+   "side": "Rinky Hijikata",
+   "cat": "Tennis",
+   "league": "TENNIS",
+   "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
+   "belegt": false,
+   "heiss": true,
+   "walletN": null,
+   "walletClv": null,
+   "walletUg": null,
+   "clv7": 1.08,
+   "n7": 169,
+   "walletEntry": 0.5,
+   "entryPrice": 0.525,
+   "abstandPP": 2.5,
+   "arm": "zu_spaet",
+   "lastPrice": 0.525,
+   "htkAtEntry": 2.95,
+   "firstTs": "2026-10-20T03:37:14.624777+00:00",
    "stake": 10.0
   }
  },
@@ -63559,6 +63559,34 @@
    "closePrice": 0.235,
    "clvPP": -3.0,
    "settledTs": "2026-10-20T03:07:01.354959+00:00"
+  },
+  {
+   "key": "bra-cor1-vit-2026-10-19",
+   "side": "SC Corinthians Paulista",
+   "cat": "Fußball",
+   "league": "SOCCER",
+   "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
+   "belegt": true,
+   "heiss": false,
+   "walletN": 1038,
+   "walletClv": 0.384,
+   "walletUg": 0.241,
+   "clv7": null,
+   "n7": null,
+   "walletEntry": 0.62,
+   "entryPrice": 0.635,
+   "abstandPP": 1.5,
+   "arm": "zu_spaet",
+   "lastPrice": 0.595,
+   "htkAtEntry": 0.96,
+   "firstTs": "2026-10-19T22:07:13.203429+00:00",
+   "stake": 10.0,
+   "result": "loss",
+   "winner": "Draw (SC Corinthians Paulista vs. EC Vitória)",
+   "pnl": -10.0,
+   "closePrice": 0.595,
+   "clvPP": -4.0,
+   "settledTs": "2026-10-20T03:37:14.624777+00:00"
   }
  ],
  "gesehen": [
@@ -63627,6 +63655,7 @@
   "atp-ambrogi-maloney-2026-10-19|Luciano Emanuel Ambrogi",
   "atp-ambrogi-maloney-2026-10-19|Patrick Maloney",
   "atp-assche-bu-2026-10-06|Yunchaokete Bu",
+  "atp-atmane-hijikat-2026-10-19|Rinky Hijikata",
   "atp-baez-vachero-2026-10-09|Sebastian Baez",
   "atp-baez-vachero-2026-10-09|Valentin Vacherot",
   "atp-barrena-almeida-2026-10-05|Alex Barrena",
@@ -66004,17 +66033,17 @@
    "clvUg": -0.14
   },
   "belegt_zu_spaet": {
-   "n": 640,
+   "n": 641,
    "wins": 159,
-   "hit": 0.2484,
-   "pnl": -806.13,
-   "stake": 6400.0,
-   "roi": -0.126,
-   "roiUg": -0.301,
+   "hit": 0.248,
+   "pnl": -816.13,
+   "stake": 6410.0,
+   "roi": -0.1273,
+   "roiUg": -0.3021,
    "belegt": false,
-   "clvAvg": -0.25,
-   "clvN": 640,
-   "clvUg": -0.42
+   "clvAvg": -0.26,
+   "clvN": 641,
+   "clvUg": -0.43
   },
   "heiss_nehmbar": {
    "n": 207,
@@ -66110,17 +66139,17 @@
    }
   },
   "zu_spaet": {
-   "n": 688,
+   "n": 689,
    "wins": 185,
-   "hit": 0.2689,
-   "pnl": -884.18,
-   "stake": 6880.0,
-   "roi": -0.1285,
-   "roiUg": -0.2918,
+   "hit": 0.2685,
+   "pnl": -894.18,
+   "stake": 6890.0,
+   "roi": -0.1298,
+   "roiUg": -0.2929,
    "belegt": false,
-   "clvAvg": -0.23,
-   "clvN": 688,
-   "clvUg": -0.4,
+   "clvAvg": -0.24,
+   "clvN": 689,
+   "clvUg": -0.41,
    "byCat": {
     "E-Sport": {
      "n": 94,
@@ -66136,16 +66165,16 @@
      "clvUg": -0.49
     },
     "Fußball": {
-     "n": 506,
+     "n": 507,
      "wins": 96,
-     "hit": 0.1897,
-     "pnl": -770.63,
-     "stake": 5060.0,
-     "roi": -0.1523,
-     "roiUg": -0.3679,
+     "hit": 0.1893,
+     "pnl": -780.63,
+     "stake": 5070.0,
+     "roi": -0.154,
+     "roiUg": -0.3692,
      "belegt": false,
-     "clvAvg": -0.3,
-     "clvN": 506,
+     "clvAvg": -0.31,
+     "clvN": 507,
      "clvUg": -0.51
     },
     "Motorsport": {
