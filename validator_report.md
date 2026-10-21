@@ -1,11 +1,11 @@
-# 🟡 Picks Validator — 21.10.2026 15:29
+# 🟡 Picks Validator — 21.10.2026 21:57
 
-**66 Spiele geprüft** · 🔴 0 Fehler · 🟡 32 Warnungen · 🔵 216 Hinweise
+**65 Spiele geprüft** · 🔴 0 Fehler · 🟡 32 Warnungen · 🔵 213 Hinweise
 
 ```
 =================================================================
   🐕 CocoBet — Picks Logik-Check
-  21.10.2026 15:29
+  21.10.2026 21:57
   Filter: nächste 3 Tag(e)
 =================================================================
 
@@ -197,7 +197,7 @@
      Liga-Baserate=3.8 → Poisson FV für Über 4.5 Karten = 33.2%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
   🔵 HINWEIS [TEAM_OVER_AWAY_LOW_FV]
      📅 24.10.2026  Arsenal vs Everton
-     Everton expA≈1.00 (statischer Proxy) → FV über 1.5 = 26.4%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
+     Everton expA≈1.15 (statischer Proxy) → FV über 1.5 = 31.9%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
      📅 24.10.2026  Coventry vs Fulham
      Coventry: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
@@ -220,18 +220,6 @@
 ─────────────────────────────────────────────────────────────────
   🇪🇸 La Liga  (rl=29)
 ─────────────────────────────────────────────────────────────────
-  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
-     📅 21.10.2026  Levante vs Athletic Club
-     Levante: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 21.10.2026  Levante vs Athletic Club
-     Liga-Baserate=3.4 → Poisson FV für Über 3.5 Karten = 44.2% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+11.4%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 21.10.2026  Levante vs Athletic Club
-     Liga-Baserate=3.4 → Poisson FV für Über 4.5 Karten = 25.6%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
-     📅 21.10.2026  Levante vs Athletic Club
-     Levante expH≈1.10 (statischer Proxy) → FV über 1.5 = 30.1%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🟡 WARNUNG [HOME_POOR_FORM_HIGH_SCORE]
      📅 23.10.2026  Alaves vs Malaga
      Alaves: formScore=0.22 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet.
@@ -329,6 +317,9 @@
   🔵 HINWEIS [CARDS45_LOW_FV]
      📅 24.10.2026  Lens vs Paris FC
      Liga-Baserate=3.6 → Poisson FV für Über 4.5 Karten = 29.4%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
+  🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
+     📅 24.10.2026  Lens vs Paris FC
+     Lens expH≈1.25 (statischer Proxy) → FV über 1.5 = 35.5%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
 
 ─────────────────────────────────────────────────────────────────
   🇩🇪 Bundesliga  (rl=28)
@@ -814,9 +805,9 @@
      Samsunspor expH≈0.75 (statischer Proxy) → FV über 1.5 = 17.3%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
 
 ═════════════════════════════════════════════════════════════════
-  Geprüft: 66 Spiele
+  Geprüft: 65 Spiele
   🟡 32 Warnungen — manuelle Prüfung empfohlen
-  🔵 216 Hinweise — Pick-Richtung kontrollieren
+  🔵 213 Hinweise — Pick-Richtung kontrollieren
 ═════════════════════════════════════════════════════════════════
 
 ```
