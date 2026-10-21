@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-21T19:25:06.343059+00:00",
+ "generatedAt": "2026-10-21T19:40:02.268138+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -35,7 +35,7 @@
     "nieAnteil": 0.043,
     "schaetzbar": false
    },
-   "alterTage": 2.9,
+   "alterTage": 3.0,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py",
    "seitFreigabe": {
@@ -620,8 +620,8 @@
    "gruppen": 7,
    "basis": null,
    "n": 40000,
-   "pl": -58.39,
-   "roi": -0.0015,
+   "pl": -57.93,
+   "roi": -0.0014,
    "clv": 0.56,
    "belegte": 12
   }
@@ -3112,18 +3112,6 @@
    "belegt": false
   },
   {
-   "liga": "UEFA Europa League",
-   "n": 151,
-   "wins": 77,
-   "hit": 0.5099,
-   "hitLb": 0.4434,
-   "roi": -0.1164,
-   "roiLb": -0.2398,
-   "pl": -17.58,
-   "clv": 0.802,
-   "belegt": false
-  },
-  {
    "liga": "Turkish Cup",
    "n": 99,
    "wins": 48,
@@ -3145,6 +3133,18 @@
    "roiLb": -0.2402,
    "pl": -8.81,
    "clv": -0.006,
+   "belegt": false
+  },
+  {
+   "liga": "UEFA Europa League",
+   "n": 146,
+   "wins": 74,
+   "hit": 0.5068,
+   "hitLb": 0.4393,
+   "roi": -0.1225,
+   "roiLb": -0.2478,
+   "pl": -17.88,
+   "clv": 0.903,
    "belegt": false
   },
   {
@@ -4184,7 +4184,7 @@
     "nieAnteil": 0.043,
     "schaetzbar": false
    },
-   "alterTage": 2.9,
+   "alterTage": 3.0,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py",
    "seitFreigabe": {
@@ -4769,7 +4769,7 @@
    "grund": "ROI nicht belegt über null",
    "roi": 0.0081,
    "pl": 45.13,
-   "roiLb": -0.013,
+   "roiLb": -0.0129,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -4807,7 +4807,7 @@
     "nieAnteil": 0.073,
     "schaetzbar": false
    },
-   "alterTage": 0.3,
+   "alterTage": 0.4,
    "art": "mix",
    "wert": "money+sharp+steam",
    "nAlt": 9,
@@ -4870,28 +4870,6 @@
    "engineAlt": true
   },
   {
-   "schublade": "Over/Under 3.5 Goals",
-   "strom": "betfair",
-   "n": 6054,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0018,
-   "pl": -10.9,
-   "roiLb": -0.0228,
-   "clv": null,
-   "clvLb": null,
-   "clvUrteil": "nicht erhoben",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "keine_einzelwerte",
-   "entfernung": null,
-   "alterTage": null,
-   "art": "markt",
-   "naeherung": false
-  },
-  {
    "schublade": "Norwegian 1st Division · Match Odds",
    "strom": "betfair",
    "n": 39,
@@ -4911,6 +4889,28 @@
    "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
+   "naeherung": false
+  },
+  {
+   "schublade": "Over/Under 3.5 Goals",
+   "strom": "betfair",
+   "n": 6054,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.0021,
+   "pl": -12.71,
+   "roiLb": -0.0232,
+   "clv": null,
+   "clvLb": null,
+   "clvUrteil": "nicht erhoben",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "keine_einzelwerte",
+   "entfernung": null,
+   "alterTage": null,
+   "art": "markt",
    "naeherung": false
   },
   {
@@ -5106,12 +5106,12 @@
   {
    "schublade": "Over/Under 2.5 Goals",
    "strom": "betfair",
-   "n": 6191,
+   "n": 6192,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0172,
-   "pl": -106.49,
-   "roiLb": -0.0376,
+   "roi": -0.017,
+   "pl": -105.26,
+   "roiLb": -0.0375,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5128,12 +5128,12 @@
   {
    "schublade": "First Half Goals 1.5",
    "strom": "betfair",
-   "n": 5137,
+   "n": 5136,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0146,
-   "pl": -75.0,
-   "roiLb": -0.0385,
+   "roi": -0.0144,
+   "pl": -73.96,
+   "roiLb": -0.0383,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5352,12 +5352,12 @@
   {
    "schublade": "🔒 Fade-Unter · Ganzspiel-Torlinie",
    "strom": "betfair",
-   "n": 6458,
+   "n": 6459,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0253,
-   "pl": -163.38,
-   "roiLb": -0.053,
+   "roi": -0.025,
+   "pl": -161.51,
+   "roiLb": -0.0527,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5367,10 +5367,10 @@
    "noetigNClv": null,
    "noetigGrund": "nicht_positiv",
    "entfernung": {
-    "median": 100733,
-    "lo": 8043,
-    "hi": 7933383,
-    "nieAnteil": 0.937,
+    "median": 71681,
+    "lo": 7826,
+    "hi": 17054609,
+    "nieAnteil": 0.935,
     "schaetzbar": false
    },
    "alterTage": 0.0,
@@ -8932,7 +8932,7 @@
     "nieAnteil": 0.778,
     "schaetzbar": false
    },
-   "alterTage": 0.8,
+   "alterTage": 0.9,
    "art": "conviction",
    "wert": 8,
    "nAlt": 10,
@@ -12751,7 +12751,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 1.8,
+   "alterTage": 1.9,
    "art": "mix",
    "wert": "steam",
    "nAlt": 5,
