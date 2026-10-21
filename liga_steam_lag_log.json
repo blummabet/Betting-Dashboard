@@ -2450,12 +2450,19 @@
           "polyPrice": 0.285,
           "pinnFair": 0.3019,
           "steamLag": false
+        },
+        {
+          "ts": "2026-10-21T11:46:14Z",
+          "edgePp": 1.4,
+          "polyPrice": 0.285,
+          "pinnFair": 0.2988,
+          "steamLag": false
         }
       ],
-      "currentEdgePp": 1.7,
+      "currentEdgePp": 1.4,
       "currentPolyPrice": 0.285,
-      "edgeVelocityPPH": 0.0,
-      "convergencePct": 22.7,
+      "edgeVelocityPPH": -0.023,
+      "convergencePct": 36.4,
       "convergenceTs": null,
       "convergenceHours": null,
       "status": "OPEN",
@@ -2646,16 +2653,24 @@
           "polyPrice": 0.48,
           "pinnFair": 0.5043,
           "steamLag": false
+        },
+        {
+          "ts": "2026-10-21T11:46:14Z",
+          "edgePp": 0.7,
+          "polyPrice": 0.495,
+          "pinnFair": 0.5016,
+          "steamLag": false
         }
       ],
-      "currentEdgePp": 2.4,
-      "currentPolyPrice": 0.48,
+      "currentEdgePp": 0.7,
+      "currentPolyPrice": 0.495,
       "edgeVelocityPPH": null,
-      "convergencePct": 0.0,
+      "convergencePct": 70.8,
       "convergenceTs": null,
       "convergenceHours": null,
       "status": "OPEN",
-      "outcome": null
+      "outcome": null,
+      "pendingConvergenceConfirm": true
     },
     {
       "id": "529-542_dr",
@@ -2686,10 +2701,57 @@
           "polyPrice": 0.105,
           "pinnFair": 0.1271,
           "steamLag": false
+        },
+        {
+          "ts": "2026-10-21T11:46:14Z",
+          "edgePp": 1.7,
+          "polyPrice": 0.11,
+          "pinnFair": 0.1271,
+          "steamLag": false
         }
       ],
-      "currentEdgePp": 2.2,
-      "currentPolyPrice": 0.105,
+      "currentEdgePp": 1.7,
+      "currentPolyPrice": 0.11,
+      "edgeVelocityPPH": -0.038,
+      "convergencePct": 22.7,
+      "convergenceTs": null,
+      "convergenceHours": null,
+      "status": "OPEN",
+      "outcome": null
+    },
+    {
+      "id": "544-727_dr",
+      "matchKey": "544-727",
+      "homeId": "544",
+      "awayId": "727",
+      "home": "RC Deportivo A Coruña",
+      "away": "CA Osasuna",
+      "homeFlag": "🏳",
+      "awayFlag": "🏳",
+      "matchDate": "2026-11-02",
+      "market": "dr",
+      "marketLabel": "Unentschieden",
+      "signalTs": "2026-10-21T11:46:14Z",
+      "entryEdgePp": 2.5,
+      "entryPolyPrice": 0.305,
+      "entryPinnFair": 0.3299,
+      "entryVol": 0,
+      "steamLagAtSignal": true,
+      "pinnMoveAtSignal": 5.5,
+      "edgeTrendAtSignal": "new",
+      "highConfidence": true,
+      "entryTier": "track",
+      "snapshots": [
+        {
+          "ts": "2026-10-21T11:46:14Z",
+          "edgePp": 2.5,
+          "polyPrice": 0.305,
+          "pinnFair": 0.3299,
+          "steamLag": true
+        }
+      ],
+      "currentEdgePp": 2.5,
+      "currentPolyPrice": 0.305,
       "edgeVelocityPPH": null,
       "convergencePct": 0.0,
       "convergenceTs": null,
@@ -2698,7 +2760,7 @@
       "outcome": null
     }
   ],
-  "updatedAt": "2026-10-20T22:37:34Z",
-  "runCount": 208,
+  "updatedAt": "2026-10-21T11:46:14Z",
+  "runCount": 209,
   "lastError": "no_poly_prices"
 }
