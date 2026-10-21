@@ -24038,8 +24038,16 @@
 "whaleEntry": 0.745,
 "htkMess": 2.8,
 "sentAt": "2026-10-21T16:12:34Z",
-"status": "pending",
-"nurBeobachtung": true
+"status": "settled",
+"nurBeobachtung": true,
+"result": "loss",
+"winner": "LASK Linz",
+"closePrice": 0.745,
+"stake": 10.0,
+"pnl": -10.0,
+"clvPP": 0.0,
+"settledTs": "2026-10-21T22:13:45.536455+00:00",
+"resolvedTs": "2026-10-21T22:13:24.779557+00:00"
 },
 {
 "k": "ucl-int-shd-2026-10-21|FC Internazionale Milano",
@@ -24183,8 +24191,18 @@
 "whaleEntry": 0.485,
 "htkMess": 1.8,
 "sentAt": "2026-10-21T17:12:24Z",
-"status": "pending",
-"nurBeobachtung": true
+"status": "settled",
+"nurBeobachtung": true,
+"cond": "0x6a19de3e3a2a55c7b5a367b3aa237d205c5cc0a385aaf972aa343c30db753af0",
+"condQuelle": "erfassung+wallet",
+"result": "win",
+"winner": "Under",
+"closePrice": 0.515,
+"stake": 10.0,
+"pnl": 10.62,
+"clvPP": 3.0,
+"settledTs": "2026-10-21T22:13:45.536455+00:00",
+"resolvedTs": "2026-10-21T22:13:24.779557+00:00"
 },
 {
 "k": "ucl-bru-rcl-2026-10-21-more-markets|Over",
@@ -24204,18 +24222,18 @@
 "whaleEntry": 0.475,
 "htkMess": 1.31,
 "sentAt": "2026-10-21T17:42:01Z",
-"status": "settled",
+"status": "unaufloesbar",
 "nurBeobachtung": true,
 "cond": "0x9245d482e017ae4861c745e8eb20c3ce72a23277efef158a48d768f8580930d1",
 "condQuelle": "erfassung+wallet",
-"result": "loss",
-"winner": "Under",
 "closePrice": 0.475,
-"stake": 10.0,
-"pnl": -10.0,
-"clvPP": 0.0,
 "settledTs": "2026-10-21T21:42:03.312556+00:00",
-"resolvedTs": "2026-10-21T21:41:43.751340+00:00"
+"resolvedTs": "2026-10-21T21:41:43.751340+00:00",
+"zurueckgenommen": {
+"war": "loss",
+"am": "2026-10-21T22:13:45.536455+00:00",
+"grund": "Buendel-Slug ohne Linie — Ausgang nie ableitbar"
+}
 },
 {
 "k": "cs2-ef1-bcg-2026-10-21|BC.Game Esports",
