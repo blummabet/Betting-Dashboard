@@ -23942,8 +23942,18 @@
 "whaleEntry": 0.545,
 "htkMess": 2.8,
 "sentAt": "2026-10-21T16:12:34Z",
-"status": "pending",
-"nurBeobachtung": true
+"status": "settled",
+"nurBeobachtung": true,
+"cond": "0xb497a530e92d5ad70c6cd5c08b192844e24f6f7c8f70d53438aa8ebe124dabf8",
+"condQuelle": "erfassung+wallet",
+"result": "loss",
+"winner": "Over",
+"closePrice": 0.545,
+"stake": 10.0,
+"pnl": -10.0,
+"clvPP": 0.0,
+"settledTs": "2026-10-21T22:41:39.770903+00:00",
+"resolvedTs": "2026-10-21T22:41:21.292766+00:00"
 },
 {
 "k": "ucl-bay-ars-2026-10-21-more-markets|Under",
@@ -24191,18 +24201,18 @@
 "whaleEntry": 0.485,
 "htkMess": 1.8,
 "sentAt": "2026-10-21T17:12:24Z",
-"status": "settled",
+"status": "unaufloesbar",
 "nurBeobachtung": true,
 "cond": "0x6a19de3e3a2a55c7b5a367b3aa237d205c5cc0a385aaf972aa343c30db753af0",
 "condQuelle": "erfassung+wallet",
-"result": "win",
-"winner": "Under",
 "closePrice": 0.515,
-"stake": 10.0,
-"pnl": 10.62,
-"clvPP": 3.0,
 "settledTs": "2026-10-21T22:13:45.536455+00:00",
-"resolvedTs": "2026-10-21T22:13:24.779557+00:00"
+"resolvedTs": "2026-10-21T22:13:24.779557+00:00",
+"zurueckgenommen": {
+"war": "win",
+"am": "2026-10-21T22:41:39.770903+00:00",
+"grund": "Buendel-Slug ohne Linie — Ausgang nie ableitbar"
+}
 },
 {
 "k": "ucl-bru-rcl-2026-10-21-more-markets|Over",
