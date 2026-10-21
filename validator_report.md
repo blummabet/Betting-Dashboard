@@ -1,11 +1,11 @@
-# 🟡 Picks Validator — 21.10.2026 07:45
+# 🟡 Picks Validator — 21.10.2026 15:29
 
-**65 Spiele geprüft** · 🔴 0 Fehler · 🟡 30 Warnungen · 🔵 212 Hinweise
+**66 Spiele geprüft** · 🔴 0 Fehler · 🟡 32 Warnungen · 🔵 216 Hinweise
 
 ```
 =================================================================
   🐕 CocoBet — Picks Logik-Check
-  21.10.2026 07:45
+  21.10.2026 15:29
   Filter: nächste 3 Tag(e)
 =================================================================
 
@@ -18,6 +18,24 @@
   🔵 HINWEIS [CARDS45_LOW_FV]
      📅 23.10.2026  SCR Altach vs Austria Vienna
      Liga-Baserate=3.7 → Poisson FV für Über 4.5 Karten = 31.3%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
+  🟡 WARNUNG [BOTRED_ASYMMETRIC_PRESSURE]
+     📅 24.10.2026  TSV Hartberg vs Wolfsberger AC
+     Kellerduell-Narrativ aber asymmetrischer Druck: Wolfsberger AC pressureRatio=0.35 vs TSV Hartberg pressureRatio=0.26. Nur eine Mannschaft kämpft wirklich — Angle zu vereinfacht.
+  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
+     📅 24.10.2026  TSV Hartberg vs Wolfsberger AC
+     TSV Hartberg: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
+  🔵 HINWEIS [CARDS35_LOW_FV]
+     📅 24.10.2026  TSV Hartberg vs Wolfsberger AC
+     Liga-Baserate=3.7 → Poisson FV für Über 3.5 Karten = 50.6% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+5.0%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
+  🔵 HINWEIS [CARDS45_LOW_FV]
+     📅 24.10.2026  TSV Hartberg vs Wolfsberger AC
+     Liga-Baserate=3.7 → Poisson FV für Über 4.5 Karten = 31.3%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
+  🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
+     📅 24.10.2026  TSV Hartberg vs Wolfsberger AC
+     H2H Schnitt=3.1 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
+  🔵 HINWEIS [TEAM_OVER_AWAY_LOW_FV]
+     📅 24.10.2026  TSV Hartberg vs Wolfsberger AC
+     Wolfsberger AC expA≈1.30 (statischer Proxy) → FV über 1.5 = 37.3%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 24.10.2026  WSG Wattens vs Grazer AK
      Liga-Baserate=3.7 → Poisson FV für Über 3.5 Karten = 50.6% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+5.0%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
@@ -125,18 +143,6 @@
 ─────────────────────────────────────────────────────────────────
   🇭🇷 HNL  (rl=26)
 ─────────────────────────────────────────────────────────────────
-  🟡 WARNUNG [H2H_DOMINATED_HIGH_SCORE]
-     📅 24.10.2026  NK Osijek vs Rudes
-     NK Osijek dominiert H2H 11W/2X/1L in 14 Spielen. matchScore=7.5 — Pick-Richtung sollte klar sein, Angle-Text darf den Underdog nicht überbewerten.
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 24.10.2026  NK Osijek vs Rudes
-     Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 24.10.2026  NK Osijek vs Rudes
-     Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
-     📅 24.10.2026  NK Osijek vs Rudes
-     H2H Schnitt=3.4 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
   🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
      📅 24.10.2026  HNK Gorica vs NK Lokomotiva Zagreb
      NK Lokomotiva Zagreb: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
@@ -149,6 +155,18 @@
   🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
      📅 24.10.2026  HNK Gorica vs NK Lokomotiva Zagreb
      HNK Gorica expH≈1.35 (statischer Proxy) → FV über 1.5 = 39.1%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
+  🟡 WARNUNG [H2H_DOMINATED_HIGH_SCORE]
+     📅 24.10.2026  NK Osijek vs Rudes
+     NK Osijek dominiert H2H 11W/2X/1L in 14 Spielen. matchScore=7.5 — Pick-Richtung sollte klar sein, Angle-Text darf den Underdog nicht überbewerten.
+  🔵 HINWEIS [CARDS35_LOW_FV]
+     📅 24.10.2026  NK Osijek vs Rudes
+     Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
+  🔵 HINWEIS [CARDS45_LOW_FV]
+     📅 24.10.2026  NK Osijek vs Rudes
+     Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
+  🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
+     📅 24.10.2026  NK Osijek vs Rudes
+     H2H Schnitt=3.4 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
   🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
      📅 24.10.2026  NK Varazdin vs NK Slaven Belupo
      NK Slaven Belupo: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
@@ -651,9 +669,6 @@
      📅 23.10.2026  Vitória SC vs Maritimo
      Ø gpg=0.70 (statischer Proxy) → Poisson FV für Over 3.5 = 2.0%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
   🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 24.10.2026  Alverca vs Arouca
-     Liga-Baserate=3.8 → Poisson FV für Über 4.5 Karten = 33.2%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🔵 HINWEIS [CARDS45_LOW_FV]
      📅 24.10.2026  Estrela vs Casa Pia
      Liga-Baserate=3.8 → Poisson FV für Über 4.5 Karten = 33.2%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
   🔵 HINWEIS [LOW_SCORING_PROFILE]
@@ -662,6 +677,9 @@
   🔵 HINWEIS [OVER35_LOW_FV]
      📅 24.10.2026  Estrela vs Casa Pia
      Ø gpg=0.70 (statischer Proxy) → Poisson FV für Over 3.5 = 2.0%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
+  🔵 HINWEIS [CARDS45_LOW_FV]
+     📅 24.10.2026  Alverca vs Arouca
+     Liga-Baserate=3.8 → Poisson FV für Über 4.5 Karten = 33.2%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
   🔵 HINWEIS [CARDS45_LOW_FV]
      📅 24.10.2026  GIL Vicente vs FC Porto
      Liga-Baserate=3.8 → Poisson FV für Über 4.5 Karten = 33.2%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
@@ -796,9 +814,9 @@
      Samsunspor expH≈0.75 (statischer Proxy) → FV über 1.5 = 17.3%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
 
 ═════════════════════════════════════════════════════════════════
-  Geprüft: 65 Spiele
-  🟡 30 Warnungen — manuelle Prüfung empfohlen
-  🔵 212 Hinweise — Pick-Richtung kontrollieren
+  Geprüft: 66 Spiele
+  🟡 32 Warnungen — manuelle Prüfung empfohlen
+  🔵 216 Hinweise — Pick-Richtung kontrollieren
 ═════════════════════════════════════════════════════════════════
 
 ```
