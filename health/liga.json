@@ -1,22 +1,43 @@
 {
   "slug": "liga",
   "workflow": "⚽ Liga aktualisieren (Top 5)",
-  "updatedAt": "2026-10-22T12:09:53.075355+00:00",
+  "updatedAt": "2026-10-22T13:19:10.379092+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
-    "spanneH": 158.5,
-    "proTag": 2.9,
-    "lueckeMinMin": 78.2,
-    "lueckeMedianMin": 509.5,
+    "spanneH": 145.7,
+    "proTag": 3.1,
+    "lueckeMinMin": 69.3,
+    "lueckeMedianMin": 502.2,
     "lueckeMaxMin": 994.3,
     "sollProTag": null,
     "liefergradPct": null,
     "fensterMin": null,
     "fensterUrteil": null
   },
-  "erzeugung": null,
+  "erzeugung": {
+    "erzeugt": 100,
+    "gelaufen": 100,
+    "verdraengt": 0,
+    "spanneH": 793.1,
+    "erzeugtProTag": 3.0
+  },
   "runs": [
+    {
+      "ts": "2026-10-22T13:19:10.379092+00:00",
+      "workflow": "⚽ Liga aktualisieren (Top 5)",
+      "runId": "39784285523",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/39784285523",
+      "nSteps": 56,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-10-22T13:08:43Z",
+      "startedAt": "2026-10-22T13:08:43Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 627.4,
+      "event": "schedule"
+    },
     {
       "ts": "2026-10-22T12:09:53.075355+00:00",
       "workflow": "⚽ Liga aktualisieren (Top 5)",
@@ -300,21 +321,6 @@
       "startedAt": "2026-10-16T11:12:51Z",
       "wartetS": 0.0,
       "laeuftSeitS": 1395.8,
-      "event": "schedule"
-    },
-    {
-      "ts": "2026-10-15T21:37:30.406721+00:00",
-      "workflow": "⚽ Liga aktualisieren (Top 5)",
-      "runId": "38808712620",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/38808712620",
-      "nSteps": 56,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-10-15T21:17:19Z",
-      "startedAt": "2026-10-15T21:17:19Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 1211.4,
       "event": "schedule"
     }
   ]

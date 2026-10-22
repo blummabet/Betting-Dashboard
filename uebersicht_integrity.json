@@ -124,7 +124,7 @@
       "label": "Money Map: die Poly-Seite gehoert zum Spiel",
       "severity": "error",
       "failures": [
-        "Ararat Armenia v Az Alkmaar (UEFA Europa League): Poly-Seite heisst „AZ“ und gehoert zu keinem der beiden Teams — $7721 fremdes Geld in einer Konsens-Zeile"
+        "Ararat Armenia v Az Alkmaar (UEFA Europa League): Poly-Seite heisst „AZ“ und gehoert zu keinem der beiden Teams — $9049 fremdes Geld in einer Konsens-Zeile"
       ],
       "nFail": 1,
       "ok": false,
@@ -134,7 +134,7 @@
       "label": "Poly-Markt gehoert zur selben Mannschaft",
       "severity": "error",
       "failures": [
-        "Poly-Markt qat1-alg-ahl-2026-10-22 haengt an 2 Betfair-Spielen: UAE Presidents Cup/Al Ain, Qatari Stars League/Al Ahli (QAT)"
+        "Poly-Markt qat1-alg-ahl-2026-10-22 haengt an 2 Betfair-Spielen: UAE Presidents Cup/Al Ain, Qatari Stars League/Al Gharafa"
       ],
       "nFail": 1,
       "ok": false,
@@ -216,7 +216,7 @@
       ],
       "nFail": 1,
       "ok": false,
-      "hinweis": "seit Vorregistrierung n=6443 (UG -5.1 %) · Rueckblick n=0, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=6443 (UG -5.0 %) · Rueckblick n=0, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -249,9 +249,11 @@
     {
       "label": "Der Deckel hat Luft",
       "severity": "warn",
-      "failures": [],
-      "nFail": 0,
-      "ok": true,
+      "failures": [
+        "poly-live-scan.yml: laengster Lauf 9.1 Min (Median 4.0) bei einem Deckel von 12 Min — 76 % ausgelastet. Ein Abbruch trifft den letzten Schritt, und das ist der, der die Belege sichert."
+      ],
+      "nFail": 1,
+      "ok": false,
       "hinweis": ""
     },
     {
@@ -266,7 +268,7 @@
       "label": "Positionswert ist frisch",
       "severity": "warn",
       "failures": [
-        "liga_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 14 h — die Datei selbst ist 14 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
+        "liga_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 15 h — die Datei selbst ist 15 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
       ],
       "nFail": 1,
       "ok": false,
@@ -286,7 +288,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "795 Zeilen · 786 abgerechnet · 1 offen"
+      "hinweis": "796 Zeilen · 787 abgerechnet · 1 offen"
     },
     {
       "label": "Artefakte sind lesbar",
@@ -342,13 +344,13 @@
       "label": "Serien-Buch zeigt beide Buecher",
       "severity": "warn",
       "failures": [
-        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 227.4 h, MLS 235.0 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 228.6 h, MLS 236.2 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
       ],
       "nFail": 1,
       "ok": false,
       "hinweis": "Liga n=95 · MLS n=82 · Urteil beide 'Erwartung zu duenn'"
     }
   ],
-  "nFail": 11,
-  "generatedAt": "2026-10-22T12:09:38.116531+00:00"
+  "nFail": 12,
+  "generatedAt": "2026-10-22T13:19:07.067399+00:00"
 }
