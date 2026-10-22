@@ -1,12 +1,12 @@
 {
   "slug": "betfair",
   "workflow": "🟡 Betfair Radar (Betwatch)",
-  "updatedAt": "2026-10-22T14:58:00.151041+00:00",
+  "updatedAt": "2026-10-22T15:13:27.047063+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
     "spanneH": 4.7,
-    "proTag": 96.2,
+    "proTag": 96.1,
     "lueckeMinMin": 4.9,
     "lueckeMedianMin": 14.9,
     "lueckeMaxMin": 29.8,
@@ -15,15 +15,23 @@
     "fensterMin": null,
     "fensterUrteil": null
   },
-  "erzeugung": {
-    "erzeugt": 100,
-    "gelaufen": 100,
-    "verdraengt": 0,
-    "spanneH": 450.5,
-    "erzeugtProTag": 5.3,
-    "widerspruch": "erzeugtProTag 5.3 gegen eine gemessene Kadenz von 96.2/Tag (Faktor 18.2) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
-  },
+  "erzeugung": null,
   "runs": [
+    {
+      "ts": "2026-10-22T15:13:27.047063+00:00",
+      "workflow": "🟡 Betfair Radar (Betwatch)",
+      "runId": "39802154707",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/39802154707",
+      "nSteps": 42,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-10-22T15:09:31Z",
+      "startedAt": "2026-10-22T15:09:31Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 236.0,
+      "event": "workflow_dispatch"
+    },
     {
       "ts": "2026-10-22T14:58:00.151041+00:00",
       "workflow": "🟡 Betfair Radar (Betwatch)",
@@ -307,21 +315,6 @@
       "startedAt": "2026-10-22T10:23:55Z",
       "wartetS": 0.0,
       "laeuftSeitS": 281.6,
-      "event": "workflow_dispatch"
-    },
-    {
-      "ts": "2026-10-22T10:13:37.181395+00:00",
-      "workflow": "🟡 Betfair Radar (Betwatch)",
-      "runId": "39760893473",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/39760893473",
-      "nSteps": 42,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-10-22T10:08:53Z",
-      "startedAt": "2026-10-22T10:08:53Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 284.2,
       "event": "workflow_dispatch"
     }
   ]
