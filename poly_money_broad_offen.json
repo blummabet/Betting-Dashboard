@@ -6382,8 +6382,8 @@
  },
  "wta-linette-siniako-2026-10-21": {
   "shares": {
-   "Magda Linette": 3018.825578804999,
-   "Katerina Siniakova": 5731.390942245
+   "Magda Linette": 3047.1290200049993,
+   "Katerina Siniakova": 5785.126461045
   },
   "prices": {
    "Magda Linette": 0.345,
@@ -6395,7 +6395,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 9250,
+  "totalUsd": 9265,
   "whales": [
    {
     "wallet": "0xbc43c8bfbc4d77c2fc9011adad38ba43b88996d3",
@@ -6447,7 +6447,8 @@
    {
     "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
     "side": "Magda Linette",
-    "usd": 115
+    "usd": 115,
+    "avgPrice": 0.3328
    },
    {
     "wallet": "0x01c78f8873c0c86d6b6b92ff627e3802237ee995",
@@ -6478,6 +6479,11 @@
     "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
     "side": "Magda Linette",
     "usd": 34
+   },
+   {
+    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
+    "side": "Magda Linette",
+    "usd": 28
    },
    {
     "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
@@ -6565,31 +6571,111 @@
     "wallet": "0x604a2b8ef97c90928c6917769289ad65140cea22",
     "side": "Magda Linette",
     "usd": 1
-   },
-   {
-    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
-    "side": "Magda Linette",
-    "usd": 1
    }
   ],
-  "hoursToKickoff": 1.8,
-  "capturedAt": "2026-10-22T03:41:54.208687+00:00",
+  "hoursToKickoff": 1.31,
+  "capturedAt": "2026-10-22T04:11:21.220678+00:00",
   "koTs": "2026-10-22T05:30:00+00:00",
   "cond": "0x9ab949014c796390e10912d782619eccdfbbca4059c25d53b3ae1dfc13013952",
   "frage": "Japan Women's Open: Magda Linette vs Katerina Siniakova",
   "tokens": {
    "Magda Linette": "16876941202273430750348401567549134341106819645900502288242172353671290373469",
    "Katerina Siniakova": "11511228949674068071601569197448168102595910663691399187778194189349636554196"
-  }
+  },
+  "book": {
+   "side": "Katerina Siniakova",
+   "bid": 0.65,
+   "ask": 0.66,
+   "spreadC": 1.0,
+   "spreadPct": 1.52,
+   "bids": [
+    [
+     0.65,
+     2279
+    ],
+    [
+     0.64,
+     4451
+    ],
+    [
+     0.63,
+     4333
+    ],
+    [
+     0.62,
+     548
+    ],
+    [
+     0.6,
+     5
+    ],
+    [
+     0.52,
+     500
+    ]
+   ],
+   "asks": [
+    [
+     0.66,
+     523
+    ],
+    [
+     0.67,
+     12090
+    ],
+    [
+     0.68,
+     42580
+    ],
+    [
+     0.69,
+     22983
+    ],
+    [
+     0.7,
+     14325
+    ],
+    [
+     0.71,
+     4903
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xed2f6ba44a3fac9908a51b4f65c1df7b72105e19",
+    "action": "BUY",
+    "side": "Katerina Siniakova",
+    "price": 0.65,
+    "usd": 490,
+    "ts": 1792638924
+   },
+   {
+    "wallet": "0xbc43c8bfbc4d77c2fc9011adad38ba43b88996d3",
+    "action": "BUY",
+    "side": "Katerina Siniakova",
+    "price": 0.67,
+    "usd": 4491,
+    "ts": 1792515527
+   },
+   {
+    "wallet": "0xbc43c8bfbc4d77c2fc9011adad38ba43b88996d3",
+    "action": "BUY",
+    "side": "Katerina Siniakova",
+    "price": 0.66,
+    "usd": 511,
+    "ts": 1792515363
+   }
+  ]
  },
  "wta-jovic-paolini-2026-10-20": {
   "shares": {
-   "Iva Jovic": 6516.742263165003,
-   "Jasmine Paolini": 3586.7338983499994
+   "Iva Jovic": 9904.112273535005,
+   "Jasmine Paolini": 5216.66961405
   },
   "prices": {
-   "Iva Jovic": 0.645,
-   "Jasmine Paolini": 0.355
+   "Iva Jovic": 0.655,
+   "Jasmine Paolini": 0.345
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -6597,88 +6683,125 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 10122,
+  "totalUsd": 13126,
   "whales": [
    {
     "wallet": "0x171e4da2e1f0e4baaf02b0fdf92d71e3f412b48f",
     "side": "Iva Jovic",
-    "usd": 3313
+    "usd": 3364
    },
    {
     "wallet": "0xe8c4d68aff65b38cac46987b9b65e01eb47d395d",
     "side": "Jasmine Paolini",
-    "usd": 3208
+    "usd": 3312
+   },
+   {
+    "wallet": "0xe5241830e8876c115d7dc8311ad9f43d85fdd34f",
+    "side": "Iva Jovic",
+    "usd": 1114
+   },
+   {
+    "wallet": "0xb2292a9487e48b3146e074bf9b86d530c9a87298",
+    "side": "Jasmine Paolini",
+    "usd": 1044
+   },
+   {
+    "wallet": "0xe3bcf32c8ecad255b847ffe36cb5f8b4f82fec8e",
+    "side": "Iva Jovic",
+    "usd": 992
    },
    {
     "wallet": "0x56acab44cfca2e88bb9b3406890aea7bfa0cd77e",
     "side": "Iva Jovic",
-    "usd": 698
+    "usd": 709
+   },
+   {
+    "wallet": "0x0d0efde748a217f3985ef32ecc7d005f83e50570",
+    "side": "Iva Jovic",
+    "usd": 595,
+    "avgPrice": 0.6599
    },
    {
     "wallet": "0xc1519e026778e01d2482b9759d4294b560f82501",
     "side": "Iva Jovic",
-    "usd": 517
+    "usd": 525
+   },
+   {
+    "wallet": "0xa9fa87198f31c8a0a144e6ffac6e6e6f5a195fa9",
+    "side": "Iva Jovic",
+    "usd": 456
    },
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "Iva Jovic",
-    "usd": 419,
-    "avgPrice": 0.65
+    "usd": 355,
+    "avgPrice": 0.6485
    },
    {
     "wallet": "0xd619b68e64f256f8ddd185b261c8679eacf0c461",
     "side": "Iva Jovic",
-    "usd": 322
+    "usd": 328
    },
    {
     "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
     "side": "Iva Jovic",
-    "usd": 224
+    "usd": 227
+   },
+   {
+    "wallet": "0x1e3a86ef98030e7e0519e127d8178e9b45389e14",
+    "side": "Jasmine Paolini",
+    "usd": 195
+   },
+   {
+    "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
+    "side": "Jasmine Paolini",
+    "usd": 138
    },
    {
     "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
     "side": "Iva Jovic",
-    "usd": 129
-   },
-   {
-    "wallet": "0x18617ddf82e34b96963a9afc8fdae202dd88408d",
-    "side": "Iva Jovic",
-    "usd": 102
-   },
-   {
-    "wallet": "0x0235dc24b38772bf3339a9e5ec5db3d3a05fcee5",
-    "side": "Iva Jovic",
-    "usd": 101
-   },
-   {
-    "wallet": "0x5ecc2515553172867adb31374d13c5f1a1b6f99a",
-    "side": "Iva Jovic",
-    "usd": 99
-   },
-   {
-    "wallet": "0xa772e2ca9f119162d03330f3e66c0556a2068686",
-    "side": "Jasmine Paolini",
-    "usd": 96
-   },
-   {
-    "wallet": "0x69448d9d3ae6c6c62d94ab9c1ea696532fa47275",
-    "side": "Iva Jovic",
-    "usd": 64
+    "usd": 131,
+    "avgPrice": 0.65
    },
    {
     "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
     "side": "Jasmine Paolini",
-    "usd": 55
+    "usd": 112
+   },
+   {
+    "wallet": "0x18617ddf82e34b96963a9afc8fdae202dd88408d",
+    "side": "Iva Jovic",
+    "usd": 104
+   },
+   {
+    "wallet": "0x0235dc24b38772bf3339a9e5ec5db3d3a05fcee5",
+    "side": "Iva Jovic",
+    "usd": 103
+   },
+   {
+    "wallet": "0xa772e2ca9f119162d03330f3e66c0556a2068686",
+    "side": "Jasmine Paolini",
+    "usd": 93
+   },
+   {
+    "wallet": "0x69448d9d3ae6c6c62d94ab9c1ea696532fa47275",
+    "side": "Iva Jovic",
+    "usd": 66
+   },
+   {
+    "wallet": "0x8082b5033b12f15f601f4d3e41e69d1a3af470f0",
+    "side": "Iva Jovic",
+    "usd": 56
+   },
+   {
+    "wallet": "0x9d8c906108696d3e207a8ad378e613624c942799",
+    "side": "Iva Jovic",
+    "usd": 52
    },
    {
     "wallet": "0x02571ed3bfa4162c80b288310745503275a822b2",
     "side": "Jasmine Paolini",
-    "usd": 53
-   },
-   {
-    "wallet": "0x95c52e00752a462608ee1e72d0685fc26973d5d3",
-    "side": "Jasmine Paolini",
-    "usd": 51
+    "usd": 52
    },
    {
     "wallet": "0x2db8f5b0fc0ebc26e309321843492a1a62a9e042",
@@ -6688,29 +6811,44 @@
    {
     "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
     "side": "Iva Jovic",
-    "usd": 48,
+    "usd": 49,
     "avgPrice": 0.65
+   },
+   {
+    "wallet": "0x95c52e00752a462608ee1e72d0685fc26973d5d3",
+    "side": "Jasmine Paolini",
+    "usd": 49
    },
    {
     "wallet": "0x305bc4b3239d3064566dc71531737c65bc56cd21",
     "side": "Iva Jovic",
-    "usd": 39
+    "usd": 40
+   },
+   {
+    "wallet": "0x042d8526350dd13dc836201e6acfbab5981f0b81",
+    "side": "Jasmine Paolini",
+    "usd": 36
+   },
+   {
+    "wallet": "0x17d97684d80863e07bc95d1e9f7c1c1dbec884af",
+    "side": "Jasmine Paolini",
+    "usd": 34
    },
    {
     "wallet": "0x1d6d6b39a4ee425ebc511d1dbafe5098a2aef2b4",
     "side": "Jasmine Paolini",
-    "usd": 28
+    "usd": 27
    },
    {
     "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
     "side": "Jasmine Paolini",
-    "usd": 26,
+    "usd": 25,
     "avgPrice": 0.34
    },
    {
     "wallet": "0x49c5845733fd0b83d2ae67bfc1baf9d2e3093de7",
     "side": "Iva Jovic",
-    "usd": 23
+    "usd": 24
    },
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
@@ -6718,14 +6856,25 @@
     "usd": 22
    },
    {
+    "wallet": "0xbfd770b7ff07fb2ece41b0e7c593db65a84cf0bf",
+    "side": "Iva Jovic",
+    "usd": 20,
+    "avgPrice": 0.64
+   },
+   {
     "wallet": "0x98db8cca55c32b24cfb414b5b43d273f4e1fdd17",
     "side": "Iva Jovic",
-    "usd": 19
+    "usd": 20
    },
    {
     "wallet": "0x8b8992eb0d7dc4ef87f5efb45154de4787c598d6",
     "side": "Iva Jovic",
-    "usd": 19
+    "usd": 20
+   },
+   {
+    "wallet": "0x147c2760baa011fdcd0d02ea0f610ffb0fd92540",
+    "side": "Iva Jovic",
+    "usd": 16
    },
    {
     "wallet": "0x3ca9089f59d506a6773a4d68227a1ac97806424a",
@@ -6735,84 +6884,153 @@
    {
     "wallet": "0x04641b57f332c15ecaa497799c55026d521967da",
     "side": "Iva Jovic",
-    "usd": 11
+    "usd": 12
    },
    {
     "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
     "side": "Jasmine Paolini",
-    "usd": 11
-   },
-   {
-    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
-    "side": "Iva Jovic",
-    "usd": 9
-   },
-   {
-    "wallet": "0x5e020e19bc4cc2cd24ab9b406604ee9df02ab178",
-    "side": "Jasmine Paolini",
-    "usd": 6
-   },
-   {
-    "wallet": "0xcc37dfa0597c3a7706d2ad184e77a2040191c4ea",
-    "side": "Iva Jovic",
-    "usd": 3
-   },
-   {
-    "wallet": "0x1eea2ca273d688b83b4bafd625a085b065a2af80",
-    "side": "Iva Jovic",
-    "usd": 3
-   },
-   {
-    "wallet": "0x216050de6080fac3926226b2b8ce3d5544784c78",
-    "side": "Iva Jovic",
-    "usd": 3,
-    "avgPrice": 0.65
-   },
-   {
-    "wallet": "0x2da325618fff9b2ffe64a49253fbcae8c7b9f258",
-    "side": "Iva Jovic",
-    "usd": 3
-   },
-   {
-    "wallet": "0xd9c9651bfd445b2cddf750662ee79a755f216686",
-    "side": "Iva Jovic",
-    "usd": 2
-   },
-   {
-    "wallet": "0xe5a25a5fda2487292ef951b63b69d73ed2d15f4c",
-    "side": "Jasmine Paolini",
-    "usd": 2
-   },
-   {
-    "wallet": "0x604a2b8ef97c90928c6917769289ad65140cea22",
-    "side": "Iva Jovic",
-    "usd": 1
-   },
-   {
-    "wallet": "0x64c6369df26ea4ab6010b3a35b4c26e9d747e917",
-    "side": "Jasmine Paolini",
-    "usd": 1
-   },
-   {
-    "wallet": "0x521070c99db06e54af5e8e4a91d6858decdfbd53",
-    "side": "Jasmine Paolini",
-    "usd": 1
+    "usd": 10
    }
   ],
-  "hoursToKickoff": 1.3,
-  "capturedAt": "2026-10-22T03:41:54.208687+00:00",
+  "hoursToKickoff": 0.81,
+  "capturedAt": "2026-10-22T04:11:21.220678+00:00",
   "koTs": "2026-10-22T05:00:00+00:00",
   "cond": "0x82a1bb5cf0767798c18d8b01ad1c79cabde8f1ffe1ab8144d69672d52232480f",
   "frage": "Ningbo Open: Iva Jovic vs Jasmine Paolini",
   "tokens": {
    "Iva Jovic": "52222719054250383878252014286555672198324056029537307649738347686474597344058",
    "Jasmine Paolini": "69737843077578348559189397652666605354371692061253131251707753764696050116890"
-  }
+  },
+  "book": {
+   "side": "Iva Jovic",
+   "bid": 0.65,
+   "ask": 0.66,
+   "spreadC": 1.0,
+   "spreadPct": 1.52,
+   "bids": [
+    [
+     0.65,
+     1498
+    ],
+    [
+     0.64,
+     5770
+    ],
+    [
+     0.63,
+     920
+    ],
+    [
+     0.62,
+     2989
+    ],
+    [
+     0.61,
+     93
+    ],
+    [
+     0.6,
+     35
+    ]
+   ],
+   "asks": [
+    [
+     0.66,
+     8723
+    ],
+    [
+     0.67,
+     42105
+    ],
+    [
+     0.68,
+     33724
+    ],
+    [
+     0.69,
+     25771
+    ],
+    [
+     0.7,
+     35004
+    ],
+    [
+     0.71,
+     13129
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x0d0efde748a217f3985ef32ecc7d005f83e50570",
+    "action": "BUY",
+    "side": "Iva Jovic",
+    "price": 0.66,
+    "usd": 400,
+    "ts": 1792641807
+   },
+   {
+    "wallet": "0xe3bcf32c8ecad255b847ffe36cb5f8b4f82fec8e",
+    "action": "BUY",
+    "side": "Iva Jovic",
+    "price": 0.66,
+    "usd": 1000,
+    "ts": 1792641803
+   },
+   {
+    "wallet": "0xa9fa87198f31c8a0a144e6ffac6e6e6f5a195fa9",
+    "action": "BUY",
+    "side": "Iva Jovic",
+    "price": 0.66,
+    "usd": 459,
+    "ts": 1792640883
+   },
+   {
+    "wallet": "0xe5241830e8876c115d7dc8311ad9f43d85fdd34f",
+    "action": "BUY",
+    "side": "Iva Jovic",
+    "price": 0.65,
+    "usd": 1105,
+    "ts": 1792640730
+   },
+   {
+    "wallet": "0x171e4da2e1f0e4baaf02b0fdf92d71e3f412b48f",
+    "action": "BUY",
+    "side": "Iva Jovic",
+    "price": 0.65,
+    "usd": 3339,
+    "ts": 1792636226
+   },
+   {
+    "wallet": "0xc1519e026778e01d2482b9759d4294b560f82501",
+    "action": "BUY",
+    "side": "Iva Jovic",
+    "price": 0.65,
+    "usd": 521,
+    "ts": 1792625508
+   },
+   {
+    "wallet": "0x56acab44cfca2e88bb9b3406890aea7bfa0cd77e",
+    "action": "BUY",
+    "side": "Iva Jovic",
+    "price": 0.65,
+    "usd": 703,
+    "ts": 1792621665
+   },
+   {
+    "wallet": "0xe8c4d68aff65b38cac46987b9b65e01eb47d395d",
+    "action": "BUY",
+    "side": "Jasmine Paolini",
+    "price": 0.35,
+    "usd": 574,
+    "ts": 1792621047
+   }
+  ]
  },
  "atp-atmane-bellucc-2026-10-22": {
   "shares": {
-   "Terence Atmane": 12681.870714390001,
-   "Mattia Bellucci": 14590.968738740004
+   "Terence Atmane": 14487.347249595003,
+   "Mattia Bellucci": 16668.237479055006
   },
   "prices": {
    "Terence Atmane": 0.465,
@@ -6824,12 +7042,18 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 42656,
+  "totalUsd": 42876,
   "whales": [
    {
     "wallet": "0x9b11866433281ade9f2811dbde8acdefc45f5375",
     "side": "Mattia Bellucci",
     "usd": 7197
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Terence Atmane",
+    "usd": 3406,
+    "avgPrice": 0.4702
    },
    {
     "wallet": "0xf5a3504ad3a8b079974620b3aa4fcca3f7579e12",
@@ -6847,6 +7071,11 @@
     "usd": 1769
    },
    {
+    "wallet": "0xbfdfe31978b9ba79056b884ccf3bbc9225718e02",
+    "side": "Mattia Bellucci",
+    "usd": 1605
+   },
+   {
     "wallet": "0x3f985e3a68f88e6ed8da1a22e1a5eda81c8e0aa1",
     "side": "Mattia Bellucci",
     "usd": 1384
@@ -6855,12 +7084,6 @@
     "wallet": "0x5b624e3e0426f7aa2ca57f7451fbcea4b125d87f",
     "side": "Terence Atmane",
     "usd": 1124
-   },
-   {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-    "side": "Terence Atmane",
-    "usd": 768,
-    "avgPrice": 0.47
    },
    {
     "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
@@ -6885,12 +7108,6 @@
     "usd": 714
    },
    {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "side": "Terence Atmane",
-    "usd": 703,
-    "avgPrice": 0.471
-   },
-   {
     "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
     "side": "Mattia Bellucci",
     "usd": 626
@@ -6904,6 +7121,12 @@
     "wallet": "0x5213eb85fcd465c8927a8382f95dd2dc22306a35",
     "side": "Terence Atmane",
     "usd": 535
+   },
+   {
+    "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
+    "side": "Mattia Bellucci",
+    "usd": 401,
+    "avgPrice": 0.53
    },
    {
     "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
@@ -6921,6 +7144,12 @@
     "usd": 331
    },
    {
+    "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
+    "side": "Mattia Bellucci",
+    "usd": 321,
+    "avgPrice": 0.5
+   },
+   {
     "wallet": "0x69448d9d3ae6c6c62d94ab9c1ea696532fa47275",
     "side": "Terence Atmane",
     "usd": 283
@@ -6934,12 +7163,6 @@
     "wallet": "0xedecbb52fe0f21578961ef0422eda61040243b5f",
     "side": "Terence Atmane",
     "usd": 279
-   },
-   {
-    "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
-    "side": "Mattia Bellucci",
-    "usd": 271,
-    "avgPrice": 0.5
    },
    {
     "wallet": "0xca3f77cb090cf7cbcf48bcf865e8f27364418078",
@@ -6997,6 +7220,11 @@
     "usd": 103
    },
    {
+    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+    "side": "Terence Atmane",
+    "usd": 101
+   },
+   {
     "wallet": "0xbc5613462ce3902eea10874a11cf74191f4a8f28",
     "side": "Mattia Bellucci",
     "usd": 98
@@ -7008,20 +7236,9 @@
     "avgPrice": 0.485
    },
    {
-    "wallet": "0x5cc82304fd1a7ae5669029dd83262892574fa0e4",
-    "side": "Terence Atmane",
-    "usd": 93
-   },
-   {
     "wallet": "0xe5502f3b033ebcd64233b5ffc43c44c24170be3f",
     "side": "Mattia Bellucci",
     "usd": 78,
-    "avgPrice": 0.5
-   },
-   {
-    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
-    "side": "Terence Atmane",
-    "usd": 70,
     "avgPrice": 0.5
    },
    {
@@ -7035,8 +7252,8 @@
     "usd": 54
    }
   ],
-  "hoursToKickoff": 2.8,
-  "capturedAt": "2026-10-22T03:41:54.208687+00:00",
+  "hoursToKickoff": 2.31,
+  "capturedAt": "2026-10-22T04:11:21.220678+00:00",
   "koTs": "2026-10-22T06:30:00+00:00",
   "cond": "0x4aa4952b25c75717516e531555fba4c7487c378d68079a9f70f7b14f956865c2",
   "frage": "Almaty Open: Terence Atmane vs Mattia Bellucci",
@@ -7053,45 +7270,45 @@
    "bids": [
     [
      0.53,
-     11467
+     108
     ],
     [
      0.52,
-     12255
+     9601
     ],
     [
      0.51,
-     10704
+     13230
     ],
     [
      0.5,
-     17354
+     23827
     ],
     [
      0.49,
-     7695
+     6765
     ],
     [
      0.48,
-     7026
+     7056
     ]
    ],
    "asks": [
     [
      0.54,
-     10855
+     18040
     ],
     [
      0.55,
-     20736
+     15158
     ],
     [
      0.56,
-     38011
+     38962
     ],
     [
      0.57,
-     10465
+     7420
     ],
     [
      0.58,
@@ -7104,6 +7321,38 @@
    ]
   },
   "trades": [
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Terence Atmane",
+    "price": 0.47,
+    "usd": 454,
+    "ts": 1792641605
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Terence Atmane",
+    "price": 0.47,
+    "usd": 833,
+    "ts": 1792641590
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Terence Atmane",
+    "price": 0.47,
+    "usd": 325,
+    "ts": 1792641590
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Terence Atmane",
+    "price": 0.47,
+    "usd": 548,
+    "ts": 1792641590
+   },
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "action": "BUY",
@@ -7135,38 +7384,327 @@
     "price": 0.53,
     "usd": 901,
     "ts": 1792633842
+   }
+  ]
+ },
+ "crint-nzl-ind-2026-10-22": {
+  "shares": {
+   "New Zealand": 16733.434852680002,
+   "India": 21733.976713994994
+  },
+  "prices": {
+   "New Zealand": 0.435,
+   "India": 0.565
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "CRICKET",
+  "sport": "Cricket",
+  "totalUsd": 46616,
+  "whales": [
+   {
+    "wallet": "0xa4b7b1814b0da33f2b61be4939976898aa476008",
+    "side": "New Zealand",
+    "usd": 6245
    },
    {
-    "wallet": "0x9b11866433281ade9f2811dbde8acdefc45f5375",
-    "action": "BUY",
-    "side": "Mattia Bellucci",
-    "price": 0.52,
-    "usd": 304,
-    "ts": 1792633833
+    "wallet": "0x77bdad5ae102156a08284742fc0082f1bf13a9fe",
+    "side": "India",
+    "usd": 5246
    },
    {
-    "wallet": "0x9b11866433281ade9f2811dbde8acdefc45f5375",
-    "action": "BUY",
-    "side": "Mattia Bellucci",
-    "price": 0.52,
-    "usd": 1066,
-    "ts": 1792633823
+    "wallet": "0x9c76cdb43fb46454da005fbc82047a64a18ec926",
+    "side": "India",
+    "usd": 4067
    },
    {
-    "wallet": "0x9b11866433281ade9f2811dbde8acdefc45f5375",
-    "action": "BUY",
-    "side": "Mattia Bellucci",
-    "price": 0.52,
-    "usd": 1066,
-    "ts": 1792633823
+    "wallet": "0x8488ef25f79c0cf2ffdff307973b2ac10464588c",
+    "side": "India",
+    "usd": 3898
    },
    {
-    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "wallet": "0x198fa74120438fb7cabccb61aa824c6720dfc419",
+    "side": "New Zealand",
+    "usd": 3634
+   },
+   {
+    "wallet": "0x9b94258c6f55317d0623f9aed5c259a6a27119a7",
+    "side": "India",
+    "usd": 3446
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "New Zealand",
+    "usd": 2762,
+    "avgPrice": 0.4342
+   },
+   {
+    "wallet": "0x0235dc24b38772bf3339a9e5ec5db3d3a05fcee5",
+    "side": "India",
+    "usd": 1835
+   },
+   {
+    "wallet": "0xeaac36f714563e13d88db7a4f0a0898388f2d71d",
+    "side": "New Zealand",
+    "usd": 749
+   },
+   {
+    "wallet": "0x7e5972bfc25819775ee5a9d4f191919375487b8b",
+    "side": "New Zealand",
+    "usd": 748
+   },
+   {
+    "wallet": "0x5c68723a64177c7b14125a5d0c01e1870216c9b3",
+    "side": "India",
+    "usd": 565
+   },
+   {
+    "wallet": "0x43fe17cf68eb58be1d40514be0e52674b71d26ee",
+    "side": "New Zealand",
+    "usd": 435
+   },
+   {
+    "wallet": "0x1e3a86ef98030e7e0519e127d8178e9b45389e14",
+    "side": "India",
+    "usd": 370
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "India",
+    "usd": 246,
+    "avgPrice": 0.5984
+   },
+   {
+    "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
+    "side": "India",
+    "usd": 226
+   },
+   {
+    "wallet": "0x5213eb85fcd465c8927a8382f95dd2dc22306a35",
+    "side": "India",
+    "usd": 222
+   },
+   {
+    "wallet": "0xfb07f48542d2b655e9d0bf1cc92a8a6feee8e2cc",
+    "side": "India",
+    "usd": 198
+   },
+   {
+    "wallet": "0x662ae1662139394746b11b80d48414585560150e",
+    "side": "India",
+    "usd": 93
+   },
+   {
+    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
+    "side": "New Zealand",
+    "usd": 73,
+    "avgPrice": 0.43
+   },
+   {
+    "wallet": "0x5ea8343bf0c91b8dec32b35e6cd281cd4e069e5f",
+    "side": "India",
+    "usd": 56
+   },
+   {
+    "wallet": "0x96960b52e99274179f2f3f33e4a9e74540282bc3",
+    "side": "India",
+    "usd": 56
+   },
+   {
+    "wallet": "0xad5353afe30c2da57709e2704ef3ccdcf67eef24",
+    "side": "India",
+    "usd": 56
+   },
+   {
+    "wallet": "0x93118ca14040b05c7a7d7c71cd4c2d6304a67c73",
+    "side": "India",
+    "usd": 50
+   },
+   {
+    "wallet": "0x9663a1bc594a019693631f39ed50e03496185b70",
+    "side": "India",
+    "usd": 34,
+    "avgPrice": 0.6083
+   },
+   {
+    "wallet": "0x972bf37cae72a169e17ae0e6179821d5778b78ba",
+    "side": "New Zealand",
+    "usd": 19,
+    "avgPrice": 0.4
+   },
+   {
+    "wallet": "0x35e701f088b6ef25fff6b902769c1cd8b85f8331",
+    "side": "India",
+    "usd": 14
+   },
+   {
+    "wallet": "0x890e22f535cddba750269d4837327936ea537ec1",
+    "side": "India",
+    "usd": 11
+   },
+   {
+    "wallet": "0x49b68438ae7db43a03d7ddaaceaef5581ac7d152",
+    "side": "India",
+    "usd": 10
+   },
+   {
+    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+    "side": "India",
+    "usd": 4
+   },
+   {
+    "wallet": "0xa58f84122535fbe42cec75d70e24ba0dd7e7cec8",
+    "side": "New Zealand",
+    "usd": 3
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "India",
+    "usd": 3
+   },
+   {
+    "wallet": "0xa81aff34f8d19eb7434a655ec6aad2821bedb5a3",
+    "side": "India",
+    "usd": 3
+   },
+   {
+    "wallet": "0xd93d79aa6f3859873c2c6d0e0e66a9dd112427a0",
+    "side": "India",
+    "usd": 3
+   },
+   {
+    "wallet": "0x521070c99db06e54af5e8e4a91d6858decdfbd53",
+    "side": "New Zealand",
+    "usd": 2
+   },
+   {
+    "wallet": "0x5cdc4e820fe30f22f3cf2581796d6e5abedc1f6b",
+    "side": "New Zealand",
+    "usd": 2
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "New Zealand",
+    "usd": 1
+   },
+   {
+    "wallet": "0x6891589732cf8beaaf424b117d5c5c20919f6bb9",
+    "side": "New Zealand",
+    "usd": 1
+   },
+   {
+    "wallet": "0xa278b41b5afda5d18da683eb7f851a7b2dc13369",
+    "side": "India",
+    "usd": 1
+   },
+   {
+    "wallet": "0xaff389b0c6e066057c44c25fae7277880b276ecc",
+    "side": "India",
+    "usd": 1
+   }
+  ],
+  "hoursToKickoff": 2.81,
+  "capturedAt": "2026-10-22T04:11:21.220678+00:00",
+  "koTs": "2026-10-22T07:00:00+00:00",
+  "cond": "0xd9f7c9cf8b97b58b0832257a4a4cf44e230ef0c2c54f8acfb98a3b5c16ce7389",
+  "frage": "India Tour of New Zealand T20s: New Zealand vs India",
+  "tokens": {
+   "New Zealand": "27434227642058136136522542241820006331644051276689427542901275863247238383760",
+   "India": "69837270449695553708851862866981792075985691265800984282555755459337200804211"
+  },
+  "book": {
+   "side": "India",
+   "bid": 0.56,
+   "ask": 0.57,
+   "spreadC": 1.0,
+   "spreadPct": 1.75,
+   "bids": [
+    [
+     0.56,
+     2293
+    ],
+    [
+     0.55,
+     15271
+    ],
+    [
+     0.54,
+     3435
+    ],
+    [
+     0.53,
+     3459
+    ],
+    [
+     0.52,
+     5593
+    ],
+    [
+     0.51,
+     5163
+    ]
+   ],
+   "asks": [
+    [
+     0.57,
+     22984
+    ],
+    [
+     0.58,
+     14627
+    ],
+    [
+     0.59,
+     2743
+    ],
+    [
+     0.6,
+     2893
+    ],
+    [
+     0.61,
+     6156
+    ],
+    [
+     0.62,
+     2115
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "action": "BUY",
-    "side": "Mattia Bellucci",
-    "price": 0.51,
-    "usd": 2274,
-    "ts": 1792633800
+    "side": "New Zealand",
+    "price": 0.44,
+    "usd": 1153,
+    "ts": 1792638764
+   },
+   {
+    "wallet": "0x8488ef25f79c0cf2ffdff307973b2ac10464588c",
+    "action": "BUY",
+    "side": "India",
+    "price": 0.57,
+    "usd": 3933,
+    "ts": 1792625717
+   },
+   {
+    "wallet": "0x198fa74120438fb7cabccb61aa824c6720dfc419",
+    "action": "BUY",
+    "side": "New Zealand",
+    "price": 0.43,
+    "usd": 702,
+    "ts": 1792621403
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "New Zealand",
+    "price": 0.43,
+    "usd": 747,
+    "ts": 1792619346
    }
   ]
  }
