@@ -214,7 +214,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "96/96 mit AH · 96/96 mit Public-O/U."
+      "note": "97/97 mit AH · 97/97 mit Public-O/U."
     },
     {
       "id": "odds_freshness",
@@ -381,8 +381,8 @@
       "nFail": 3,
       "failures": [
         "91-79 Unter 2.5 Tore @1.96: sichere Linie Unter 3.5 Tore @1.41 verfügbar (≥1.35), nicht abgeleitet",
-        "532-533 Auswärtssieg @1.96: sichere Linie Doppelte Chance — X2 @1.373 verfügbar (≥1.35), nicht abgeleitet",
-        "548-539 Unter 2.5 Tore @2.32: sichere Linie Unter 3.5 Tore @1.55 verfügbar (≥1.35), nicht abgeleitet"
+        "532-533 Auswärtssieg @1.96: sichere Linie Doppelte Chance — X2 @1.368 verfügbar (≥1.35), nicht abgeleitet",
+        "548-539 Unter 2.5 Tore @2.32: sichere Linie Unter 3.5 Tore @1.57 verfügbar (≥1.35), nicht abgeleitet"
       ],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
     },
@@ -465,11 +465,9 @@
       "label": "Soft-Eröffnung echt erfasst",
       "severity": "warn",
       "ok": false,
-      "nFail": 3,
+      "nFail": 1,
       "failures": [
-        "34-45: Soft bewegte sich 2.095→2.15, aber Opening==Jetzt (2.15) — nicht eingefroren",
-        "157-165: Soft bewegte sich 1.25→1.32, aber Opening==Jetzt (1.32) — nicht eingefroren",
-        "182-192: Soft bewegte sich 2.2→2.45, aber Opening==Jetzt (2.45) — nicht eingefroren"
+        "157-165: Soft bewegte sich 1.25→1.32, aber Opening==Jetzt (1.32) — nicht eingefroren"
       ],
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
     },
@@ -588,7 +586,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "22 von 67 Vor-Kandidaten mit Anteilen (22 Calls) · 0 ohne Geld-Split · 45 ueber Budget · 0 nachgelegt. Leeres Fenster ist kein Fehler; Kandidaten ohne einen einzigen Anteil schon."
+      "note": "13 von 13 Vor-Kandidaten mit Anteilen (13 Calls) · 0 ohne Geld-Split · 0 ueber Budget · 0 nachgelegt. Leeres Fenster ist kein Fehler; Kandidaten ohne einen einzigen Anteil schon."
     },
     {
       "id": "betfair_ledger",
@@ -597,7 +595,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "40000/40000 Zeilen · 33.9 Tage Fenster (2026-09-18 bis 2026-10-22). Kurzes Fenster bei freiem Deckel ist normal (der Track fuellt sich); kurzes Fenster AM Deckel ist der Fehler."
+      "note": "40000/40000 Zeilen · 34.1 Tage Fenster (2026-09-18 bis 2026-10-22). Kurzes Fenster bei freiem Deckel ist normal (der Track fuellt sich); kurzes Fenster AM Deckel ist der Fehler."
     },
     {
       "id": "betfair_liefert",
@@ -606,7 +604,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Job vor 0.4h · jüngste Daten vor 0.4h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
+      "note": "Job vor 0.2h · jüngste Daten vor 0.2h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
     },
     {
       "id": "poly_global_liefert",
@@ -615,7 +613,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Job vor 0.6h · jüngste Daten vor 0.6h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
+      "note": "Job vor 0.4h · jüngste Daten vor 0.4h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
     },
     {
       "id": "pinn_anker",
@@ -627,7 +625,7 @@
         "Anker `soccer_italy_coppa_italia` trifft keinen Ligastring im Feed (eingetragen als 'Italian Coppa Italia'). Zwei Ursachen sehen von hier identisch aus — falsche Schreibweise (dann ist der Anker tot, wie MLS bis zum 01.09.) oder Liga ausser Saison (dann ist alles in Ordnung). Einmal gegen den echten Feed pruefen, dann ist es entschieden.",
         "Anker `soccer_england_efl_cup` trifft keinen Ligastring im Feed (eingetragen als 'English Football League Cup'). Zwei Ursachen sehen von hier identisch aus — falsche Schreibweise (dann ist der Anker tot, wie MLS bis zum 01.09.) oder Liga ausser Saison (dann ist alles in Ordnung). Einmal gegen den echten Feed pruefen, dann ist es entschieden."
       ],
-      "note": "41 von 43 Ankern der Handliste treffen den Feed · 415 Ligastrings gesehen · Anker liegt auf 94% von 47 offenen Spielen (aus 49 geholten Wettbewerben). Eine niedrige Abdeckung der HANDLISTE ist kein Fehler mehr (der globale Pool faengt den Rest); ein toter Eintrag schon."
+      "note": "41 von 43 Ankern der Handliste treffen den Feed · 415 Ligastrings gesehen · Anker liegt auf 97% von 71 offenen Spielen (aus 47 geholten Wettbewerben). Eine niedrige Abdeckung der HANDLISTE ist kein Fehler mehr (der globale Pool faengt den Rest); ein toter Eintrag schon."
     },
     {
       "id": "buecher_punkte",
@@ -636,7 +634,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "114 Spiele bewertet · 79 mit mindestens einem fremden Buch · beste Punktzahl 13. Ein leeres Fenster ist kein Fehler; ein dauerhaft einsamer Betfair-Score schon."
+      "note": "98 Spiele bewertet · 68 mit mindestens einem fremden Buch · beste Punktzahl 7. Ein leeres Fenster ist kein Fehler; ein dauerhaft einsamer Betfair-Score schon."
     },
     {
       "id": "vorregistrierung",
@@ -645,7 +643,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "🔒 E-Sport ohne Wallet-Nachweis: 374/120 seit 45d · 🔒 Poly-Auswahl · von Betfair bestätigt: 519/60 seit 51d · 🔒 Fade-Unter · Ganzspiel-Torlinie: 6443/200 seit 45d · 🔒 Liga · Conviction ab 5: 122/80 seit 41d · 🔒 Bücher-Score ≥7 von 10: 115/40 seit 51d"
+      "note": "🔒 E-Sport ohne Wallet-Nachweis: 378/120 seit 46d · 🔒 Fade-Unter · Ganzspiel-Torlinie: 6446/200 seit 46d · 🔒 Poly-Auswahl · von Betfair bestätigt: 525/60 seit 51d · 🔒 Liga · Conviction ab 5: 122/80 seit 41d · 🔒 Bücher-Score ≥7 von 10: 124/40 seit 51d"
     },
     {
       "id": "killer_push_buch",
@@ -667,5 +665,5 @@
     }
   ],
   "nFail": 5,
-  "generatedAt": "2026-10-22T13:19:06.282206+00:00"
+  "generatedAt": "2026-10-22T21:38:16.551603+00:00"
 }
