@@ -30472,7 +30472,7 @@
 "walletRank": 113,
 "restock": false,
 "sentAt": "2026-10-22T14:45:37Z",
-"status": "pending",
+"status": "settled",
 "kanal": "trades",
 "public": null,
 "totalUsd": 9751.0,
@@ -30480,7 +30480,17 @@
 "seitenAnteil": 0.2773,
 "seiteUsd": 7789.59,
 "htkMess": 2.0,
-"htkFirst": 2.11
+"htkFirst": 2.11,
+"cond": "0x1a9346544f554363376a8a75bc33c5e77f586cbcadf36285bf2c2a8b9afce02b",
+"condQuelle": "erfassung+wallet",
+"result": "loss",
+"winner": "Over",
+"closePrice": 0.615,
+"stake": 10.0,
+"pnl": -10.0,
+"clvPP": -1.0,
+"settledTs": "2026-10-22T21:44:14.855786+00:00",
+"resolvedTs": "2026-10-22T21:43:50.058924+00:00"
 },
 {
 "k": "0x60e30101f81028d16ac06b982728b085bfc457b5|atp-bublik-marozsa-2026-10-22|Alexander Bublik",
@@ -30545,20 +30555,20 @@
 "walletRank": 67,
 "restock": false,
 "sentAt": "2026-10-22T15:48:12Z",
-"status": "settled",
+"status": "unaufloesbar",
 "kanal": "trades",
 "public": null,
 "htkFirst": 1.11,
 "cond": "0x715a3febe9f32bb225b69a5867095c9a25735411ae348a2ea3b68a3d98285342",
 "condQuelle": "erfassung+wallet",
-"result": "win",
-"winner": "Over",
 "closePrice": 0.68,
-"stake": 10.0,
-"pnl": 4.39,
-"clvPP": -1.5,
 "settledTs": "2026-10-22T21:13:44.856736+00:00",
-"resolvedTs": "2026-10-22T21:13:21.549297+00:00"
+"resolvedTs": "2026-10-22T21:13:21.549297+00:00",
+"zurueckgenommen": {
+"war": "win",
+"am": "2026-10-22T21:44:14.855786+00:00",
+"grund": "Buendel-Slug ohne Linie — Ausgang nie ableitbar"
+}
 },
 {
 "k": "0x689f7d0a49d2646dc199848ffbdb4757242e259c|uel-stu1-olm-2026-10-22-more-markets|Under",
