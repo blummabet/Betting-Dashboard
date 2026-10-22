@@ -124,7 +124,7 @@
       "label": "Money Map: die Poly-Seite gehoert zum Spiel",
       "severity": "error",
       "failures": [
-        "Ararat Armenia v Az Alkmaar (UEFA Europa League): Poly-Seite heisst „AZ“ und gehoert zu keinem der beiden Teams — $7721 fremdes Geld in einer Konsens-Zeile"
+        "Ararat Armenia v Az Alkmaar (UEFA Europa League): Poly-Seite heisst „AZ“ und gehoert zu keinem der beiden Teams — $8418 fremdes Geld in einer Konsens-Zeile"
       ],
       "nFail": 1,
       "ok": false,
@@ -183,30 +183,29 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "80 Picks im Fenster, 20 % ohne Preis-Signal."
+      "hinweis": "81 Picks im Fenster, 20 % ohne Preis-Signal."
     },
     {
       "label": "Stumme Signale: wer hat nie gefeuert?",
       "severity": "warn",
       "failures": [
-        "polymarket_sharp: 0 Feuerungen in 391 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
+        "polymarket_sharp: 0 Feuerungen in 392 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
         "betfair_coherence: stumm, aber erklaert — 07.09.2026 gemessen: seit der Fit-Schranke (MAX_RMSE 0,02 + Leave-one-out, 06.09.) feuert es fast nie — richtigerweise. Ueber 633 Sprossen aus 150 Spielen blieben 8 echte Kanten >= 4 pp, alle in duennen Ligen (Kasachstan, Litauen, Norwegen 2, Estland), keine einzige in den Top 5. Die Betfair-Tormarkt-Leiter ist auf unserer Aufloesung arbitragefrei.",
         "game_state_openness: stumm, aber erklaert — 07.09.2026 gemessen: braucht asymmetrische Verzweiflung spaet in der Saison. Aktuell Spieltag 3-4 von 34-38, also 34 Runden offen — der Tabellendruck ist per Konstruktion nahe null. Vor dem Winter ist Stille hier der richtige Zustand."
       ],
       "nFail": 3,
       "ok": false,
-      "hinweis": "9 von 33 Signalen schweigen ueber 391 Picks — davon 6 bewusst abgeschaltet (altitude_signal, incentive_signal, pressure_index, steam_lag, travel_burden, weather_signal), 3 an und trotzdem stumm."
+      "hinweis": "9 von 33 Signalen schweigen ueber 392 Picks — davon 6 bewusst abgeschaltet (altitude_signal, incentive_signal, pressure_index, steam_lag, travel_burden, weather_signal), 3 an und trotzdem stumm."
     },
     {
       "label": "Signal-Bilanz: schadet ein Signal belegt?",
       "severity": "warn",
       "failures": [
-        "injury schadet belegt: Ausgang -0.043 schlechter als ohne (OG -0.001, n=135/110) — abwerten oder nur noch beobachten",
-        "league_pressure schadet belegt: Ausgang -0.066 schlechter als ohne (OG -0.003, n=41/103) — abwerten oder nur noch beobachten"
+        "injury schadet belegt: Ausgang -0.043 schlechter als ohne (OG -0.001, n=135/110) — abwerten oder nur noch beobachten"
       ],
-      "nFail": 2,
+      "nFail": 1,
       "ok": false,
-      "hinweis": "8 Signale belegt beitragend, 2 belegt schaedlich. ~30 Signale gleichzeitig geprueft — 1-2 falsche Treffer sind zu erwarten. Nur was ueber mehrere Wochen haelt, ist ein Befund."
+      "hinweis": "8 Signale belegt beitragend, 1 belegt schaedlich. ~30 Signale gleichzeitig geprueft — 1-2 falsche Treffer sind zu erwarten. Nur was ueber mehrere Wochen haelt, ist ein Befund."
     },
     {
       "label": "Fade-Unter: haelt die Kontrollgruppe?",
@@ -216,7 +215,7 @@
       ],
       "nFail": 1,
       "ok": false,
-      "hinweis": "seit Vorregistrierung n=6443 (UG -5.1 %) · Rueckblick n=0, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=6443 (UG -5.0 %) · Rueckblick n=0, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -249,9 +248,11 @@
     {
       "label": "Der Deckel hat Luft",
       "severity": "warn",
-      "failures": [],
-      "nFail": 0,
-      "ok": true,
+      "failures": [
+        "poly-live-scan.yml: laengster Lauf 9.1 Min (Median 4.0) bei einem Deckel von 12 Min — 76 % ausgelastet. Ein Abbruch trifft den letzten Schritt, und das ist der, der die Belege sichert."
+      ],
+      "nFail": 1,
+      "ok": false,
       "hinweis": ""
     },
     {
@@ -266,7 +267,7 @@
       "label": "Positionswert ist frisch",
       "severity": "warn",
       "failures": [
-        "liga_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 14 h — die Datei selbst ist 14 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
+        "liga_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 15 h — die Datei selbst ist 15 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
       ],
       "nFail": 1,
       "ok": false,
@@ -286,7 +287,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "795 Zeilen · 786 abgerechnet · 1 offen"
+      "hinweis": "796 Zeilen · 786 abgerechnet · 2 offen"
     },
     {
       "label": "Artefakte sind lesbar",
@@ -342,13 +343,13 @@
       "label": "Serien-Buch zeigt beide Buecher",
       "severity": "warn",
       "failures": [
-        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 227.4 h, MLS 235.0 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 228.4 h, MLS 236.1 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
       ],
       "nFail": 1,
       "ok": false,
       "hinweis": "Liga n=95 · MLS n=82 · Urteil beide 'Erwartung zu duenn'"
     }
   ],
-  "nFail": 11,
-  "generatedAt": "2026-10-22T12:09:38.116531+00:00"
+  "nFail": 12,
+  "generatedAt": "2026-10-22T13:10:40.993282+00:00"
 }

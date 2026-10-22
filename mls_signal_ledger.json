@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-10-21T22:24:47Z",
-    "total_records": 145,
+    "updated_at": "2026-10-22T13:10:37Z",
+    "total_records": 146,
     "oddsBackfilled": "2026-09-06 — Quote/entryOdd aus den Pick-Dateien nachgetragen; der Ledger trug sie nie (0 von 318)."
   },
   "records": [
@@ -1445,7 +1445,7 @@
           "score": 4.0
         }
       ],
-      "resolvedAt": "2026-10-21T22:24:47Z",
+      "resolvedAt": "2026-10-22T13:10:37Z",
       "source": "steam",
       "convictionScore": 5,
       "lateEntry": true,
@@ -3341,6 +3341,47 @@
       "entryOdd": 1.46,
       "entryBook": "soft",
       "clvFairPP": -1.41,
+      "clvBasis": "fair"
+    },
+    {
+      "key": "MLS-23-2242-1615|Über 3.5 Tore",
+      "matchKey": "MLS-23-2242-1615",
+      "market": "Über 3.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "injury",
+          "score": -1.0
+        },
+        {
+          "name": "h2h_pattern",
+          "score": -1.2
+        },
+        {
+          "name": "chance_creation",
+          "score": 6.0
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": 0.78
+        },
+        {
+          "name": "betfair_money",
+          "score": -3.92
+        }
+      ],
+      "resolvedAt": "2026-10-22T13:10:35Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -11.1,
+      "clvResolved": true,
+      "odds": 1.7,
+      "entryOdd": 1.7,
+      "entryBook": "soft",
+      "processVerdict": "DESERVED_LOSS",
+      "clvFairPP": -7.73,
       "clvBasis": "fair"
     },
     {
