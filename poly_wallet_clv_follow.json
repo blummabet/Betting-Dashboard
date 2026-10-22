@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-22T19:14:38.096453+00:00",
+ "updatedAt": "2026-10-22T19:36:01.455003+00:00",
  "stake": 10.0,
  "regel": {
   "minN": 20,
@@ -7,9 +7,9 @@
   "frischMin": 90.0
  },
  "zaehler": {
-  "ohneEinstieg": 91,
+  "ohneEinstieg": 41,
   "gesperrt": 1,
-  "alt": 639
+  "alt": 693
  },
  "open": {
   "bra-san-fla-2026-10-08-more-markets|Under": {
@@ -14444,50 +14444,6 @@
    "firstTs": "2026-10-22T14:45:16.198542+00:00",
    "stake": 10.0
   },
-  "atp-aboian-soto-2026-10-22|Matias Soto": {
-   "key": "atp-aboian-soto-2026-10-22",
-   "side": "Matias Soto",
-   "cat": "Tennis",
-   "league": "TENNIS",
-   "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
-   "belegt": true,
-   "heiss": true,
-   "walletN": 3548,
-   "walletClv": 0.729,
-   "walletUg": 0.589,
-   "clv7": 1.95,
-   "n7": 841,
-   "walletEntry": 0.54,
-   "entryPrice": 0.535,
-   "abstandPP": -0.5,
-   "arm": "nehmbar",
-   "lastPrice": 0.535,
-   "htkAtEntry": 2.61,
-   "firstTs": "2026-10-22T14:45:16.198542+00:00",
-   "stake": 10.0
-  },
-  "atp-aboian-soto-2026-10-22|Valerio Aboian": {
-   "key": "atp-aboian-soto-2026-10-22",
-   "side": "Valerio Aboian",
-   "cat": "Tennis",
-   "league": "TENNIS",
-   "wallet": "0x3d5a9e66f15e6719927972135501c61efc53a0be",
-   "belegt": true,
-   "heiss": true,
-   "walletN": 24,
-   "walletClv": 1.208,
-   "walletUg": 0.116,
-   "clv7": 1.67,
-   "n7": 15,
-   "walletEntry": 0.4617,
-   "entryPrice": 0.465,
-   "abstandPP": 0.33,
-   "arm": "nehmbar",
-   "lastPrice": 0.465,
-   "htkAtEntry": 2.61,
-   "firstTs": "2026-10-22T14:45:16.198542+00:00",
-   "stake": 10.0
-  },
   "uel-aa-az-2026-10-22-more-markets|Under": {
    "key": "uel-aa-az-2026-10-22-more-markets",
    "side": "Under",
@@ -17365,7 +17321,7 @@
    "entryPrice": 0.325,
    "abstandPP": 2.51,
    "arm": "zu_spaet",
-   "lastPrice": 0.33,
+   "lastPrice": 0.325,
    "htkAtEntry": 2.86,
    "firstTs": "2026-10-22T17:44:59.882797+00:00",
    "stake": 10.0
@@ -81547,6 +81503,62 @@
    "closePrice": 0.85,
    "clvPP": -1.0,
    "settledTs": "2026-10-22T19:14:38.096453+00:00"
+  },
+  {
+   "key": "atp-aboian-soto-2026-10-22",
+   "side": "Matias Soto",
+   "cat": "Tennis",
+   "league": "TENNIS",
+   "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+   "belegt": true,
+   "heiss": true,
+   "walletN": 3548,
+   "walletClv": 0.729,
+   "walletUg": 0.589,
+   "clv7": 1.95,
+   "n7": 841,
+   "walletEntry": 0.54,
+   "entryPrice": 0.535,
+   "abstandPP": -0.5,
+   "arm": "nehmbar",
+   "lastPrice": 0.535,
+   "htkAtEntry": 2.61,
+   "firstTs": "2026-10-22T14:45:16.198542+00:00",
+   "stake": 10.0,
+   "result": "loss",
+   "winner": "Valerio Aboian",
+   "pnl": -10.0,
+   "closePrice": 0.535,
+   "clvPP": 0.0,
+   "settledTs": "2026-10-22T19:36:01.455003+00:00"
+  },
+  {
+   "key": "atp-aboian-soto-2026-10-22",
+   "side": "Valerio Aboian",
+   "cat": "Tennis",
+   "league": "TENNIS",
+   "wallet": "0x3d5a9e66f15e6719927972135501c61efc53a0be",
+   "belegt": true,
+   "heiss": true,
+   "walletN": 24,
+   "walletClv": 1.208,
+   "walletUg": 0.116,
+   "clv7": 1.67,
+   "n7": 15,
+   "walletEntry": 0.4617,
+   "entryPrice": 0.465,
+   "abstandPP": 0.33,
+   "arm": "nehmbar",
+   "lastPrice": 0.465,
+   "htkAtEntry": 2.61,
+   "firstTs": "2026-10-22T14:45:16.198542+00:00",
+   "stake": 10.0,
+   "result": "win",
+   "winner": "Valerio Aboian",
+   "pnl": 11.51,
+   "closePrice": 0.465,
+   "clvPP": 0.0,
+   "settledTs": "2026-10-22T19:36:01.455003+00:00"
   }
  ],
  "gesehen": [
@@ -84725,16 +84737,16 @@
  ],
  "agg": {
   "belegt_nehmbar": {
-   "n": 1186,
-   "wins": 356,
-   "hit": 0.3002,
-   "pnl": -1798.75,
-   "stake": 11860.0,
-   "roi": -0.1517,
-   "roiUg": -0.2663,
+   "n": 1188,
+   "wins": 357,
+   "hit": 0.3005,
+   "pnl": -1797.24,
+   "stake": 11880.0,
+   "roi": -0.1513,
+   "roiUg": -0.2658,
    "belegt": false,
    "clvAvg": -0.03,
-   "clvN": 1186,
+   "clvN": 1188,
    "clvUg": -0.11
   },
   "belegt_zu_spaet": {
@@ -84751,16 +84763,16 @@
    "clvUg": -0.46
   },
   "heiss_nehmbar": {
-   "n": 271,
-   "wins": 120,
-   "hit": 0.4428,
-   "pnl": 47.47,
-   "stake": 2710.0,
-   "roi": 0.0175,
-   "roiUg": -0.2043,
+   "n": 273,
+   "wins": 121,
+   "hit": 0.4432,
+   "pnl": 48.98,
+   "stake": 2730.0,
+   "roi": 0.0179,
+   "roiUg": -0.2024,
    "belegt": false,
    "clvAvg": 0.04,
-   "clvN": 271,
+   "clvN": 273,
    "clvUg": -0.25
   },
   "heiss_zu_spaet": {
@@ -84777,16 +84789,16 @@
    "clvUg": -0.31
   },
   "nehmbar": {
-   "n": 1330,
-   "wins": 420,
-   "hit": 0.3158,
-   "pnl": -1964.37,
-   "stake": 13300.0,
-   "roi": -0.1477,
-   "roiUg": -0.2512,
+   "n": 1332,
+   "wins": 421,
+   "hit": 0.3161,
+   "pnl": -1962.86,
+   "stake": 13320.0,
+   "roi": -0.1474,
+   "roiUg": -0.2507,
    "belegt": false,
    "clvAvg": -0.01,
-   "clvN": 1330,
+   "clvN": 1332,
    "clvUg": -0.09,
    "byCat": {
     "E-Sport": {
@@ -84829,16 +84841,16 @@
      "clvUg": null
     },
     "Tennis": {
-     "n": 291,
-     "wins": 127,
-     "hit": 0.4364,
-     "pnl": -117.27,
-     "stake": 2910.0,
-     "roi": -0.0403,
-     "roiUg": -0.1729,
+     "n": 293,
+     "wins": 128,
+     "hit": 0.4369,
+     "pnl": -115.76,
+     "stake": 2930.0,
+     "roi": -0.0395,
+     "roiUg": -0.1715,
      "belegt": false,
      "clvAvg": 0.02,
-     "clvN": 291,
+     "clvN": 293,
      "clvUg": -0.09
     }
    }
