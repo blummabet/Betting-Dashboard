@@ -1,15 +1,15 @@
 {
- "n": 562,
+ "n": 581,
  "minOdds": 1.35,
- "moneyHitRate": 0.429,
- "priceHitRate": 0.45,
- "brierMoney": 0.7981,
- "brierPrice": 0.6609,
+ "moneyHitRate": 0.432,
+ "priceHitRate": 0.453,
+ "brierMoney": 0.7934,
+ "brierPrice": 0.66,
  "disagree": {
-  "n": 148,
-  "moneyWon": 27,
-  "priceWon": 39,
-  "neither": 82
+  "n": 149,
+  "moneyWon": 28,
+  "priceWon": 40,
+  "neither": 81
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -63,6 +63,14 @@
    "verdict": "preis_besser"
   },
   {
+   "league": "SOCCER:COL",
+   "n": 33,
+   "moneyHitRate": 0.515,
+   "brierMoney": 0.7451,
+   "brierPrice": 0.6505,
+   "verdict": "preis_besser"
+  },
+  {
    "league": "UEFA-NATIONS-LEAGUE",
    "n": 39,
    "moneyHitRate": 0.282,
@@ -76,14 +84,6 @@
    "moneyHitRate": 0.486,
    "brierMoney": 0.6965,
    "brierPrice": 0.5968,
-   "verdict": "preis_besser"
-  },
-  {
-   "league": "SOCCER:COL",
-   "n": 24,
-   "moneyHitRate": 0.458,
-   "brierMoney": 0.8144,
-   "brierPrice": 0.6527,
    "verdict": "preis_besser"
   },
   {
@@ -104,9 +104,9 @@
   }
  ],
  "guete": {
-  "belastbar": 562,
-  "preis_echo": 384,
-  "abgeschnitten": 78,
+  "belastbar": 581,
+  "preis_echo": 387,
+  "abgeschnitten": 84,
   "unbekannt": 0,
   "leer": 0
  },
@@ -244,6 +244,18 @@
    "totalUsd": 879738
   },
   {
+   "key": "uel-hof-lyo-2026-10-22",
+   "league": "SOCCER:UEL",
+   "winner": "TSG 1899 Hoffenheim",
+   "moneyFav": "TSG 1899 Hoffenheim",
+   "priceFav": "TSG 1899 Hoffenheim",
+   "moneyShare": 0.95,
+   "priceProb": 0.568,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 844380
+  },
+  {
    "key": "epl-hul-eve-2026-10-11",
    "league": "EPL",
    "winner": "Draw (Hull City AFC vs. Everton FC)",
@@ -314,6 +326,18 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 688374
+  },
+  {
+   "key": "uel-bou-mil1-2026-10-22",
+   "league": "SOCCER:UEL",
+   "winner": "AFC Bournemouth",
+   "moneyFav": "AFC Bournemouth",
+   "priceFav": "AFC Bournemouth",
+   "moneyShare": 0.844,
+   "priceProb": 0.532,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 647519
   },
   {
    "key": "ucl-fey-com-2026-10-14",
@@ -566,44 +590,20 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 341543
-  },
-  {
-   "key": "ucl-psg-fcb-2026-10-20-exact-score",
-   "league": "SOCCER:UCL",
-   "winner": "Paris Saint-Germain FC 4 - 2 FC Barcelona",
-   "moneyFav": "Paris Saint-Germain FC 3 - 2 FC Barcelona",
-   "priceFav": "Any Other Score",
-   "moneyShare": 0.071,
-   "priceProb": 0.072,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 339034
-  },
-  {
-   "key": "mls-clb-clt-2026-10-14",
-   "league": "MLS",
-   "winner": "Columbus Crew",
-   "moneyFav": "Columbus Crew",
-   "priceFav": "Columbus Crew",
-   "moneyShare": 0.887,
-   "priceProb": 0.547,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 323979
   }
  ],
- "generatedAt": "2026-10-22T22:43:32.225998+00:00",
+ "generatedAt": "2026-10-22T23:16:09.765147+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
-  "nba": 534,
+  "nba": 563,
   "nfl": 800,
   "mlb": 453,
   "nhl": 625,
   "mls": 722,
   "epl": 604,
   "soccer": 800,
-  "tennis": 616,
+  "tennis": 620,
   "ucl": 544,
   "la-liga": 592,
   "bundesliga": 541,
@@ -642,7 +642,7 @@
   "efl-championship": 581,
   "egypt-premier-league": 113,
   "english-premier-league": 2,
-  "europa-conference-league": 504,
+  "europa-conference-league": 464,
   "europa-league": 187,
   "indian-super-league": 280,
   "israel-premier-league": 316,
@@ -689,72 +689,72 @@
   "sweepAdded": 412
  },
  "vorStats": {
-  "kandidaten": 6,
+  "kandidaten": 4,
   "budgetLeer": 0,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
-  "mitAnteilen": 6,
-  "calls": 6
+  "mitAnteilen": 4,
+  "calls": 4
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1796,
-   "usd": 44971863,
+   "n": 1981,
+   "usd": 48045662,
    "beispiel": "fifwc-can-qat-2026-06-18"
   },
-  "balance": {
-   "n": 17,
-   "usd": 1381551,
-   "beispiel": "balance-of-power-2026-midterms"
-  },
   "us": {
-   "n": 46,
-   "usd": 1349376,
+   "n": 52,
+   "usd": 1380331,
    "beispiel": "us-x-iran-permanent-peace-deal-by"
   },
+  "balance": {
+   "n": 15,
+   "usd": 1361776,
+   "beispiel": "balance-of-power-2026-midterms"
+  },
   "world": {
-   "n": 56,
-   "usd": 1212788,
+   "n": 66,
+   "usd": 1253587,
    "beispiel": "world-cup-winner"
   },
   "which": {
-   "n": 34,
-   "usd": 1034922,
+   "n": 35,
+   "usd": 1061003,
    "beispiel": "which-party-will-win-the-house-in-2026"
   },
   "ecs": {
-   "n": 8,
-   "usd": 1027214,
+   "n": 7,
+   "usd": 1022943,
    "beispiel": "ecs-ars-mci-2026-08-16"
+  },
+  "cbb": {
+   "n": 88,
+   "usd": 1016054,
+   "beispiel": "cbb-uconn-ill-2026-04-04"
   },
   "republican": {
    "n": 11,
-   "usd": 559576,
+   "usd": 559754,
    "beispiel": "republican-senate-seats-after-the-2026-midterm-elections-927"
   },
-  "cbb": {
-   "n": 50,
-   "usd": 553609,
-   "beispiel": "cbb-hofst-ala-2026-03-20"
+  "texas": {
+   "n": 20,
+   "usd": 452682,
+   "beispiel": "texas-senate-election-winner"
   },
   "uefa": {
    "n": 19,
-   "usd": 443342,
+   "usd": 443747,
    "beispiel": "uefa-champions-league-2027-champion-20260701202025549"
   },
-  "texas": {
-   "n": 17,
-   "usd": 442868,
-   "beispiel": "texas-senate-election-winner"
-  },
   "2026": {
-   "n": 37,
-   "usd": 406942,
+   "n": 41,
+   "usd": 431523,
    "beispiel": "2026-nba-champion"
   },
   "strait": {
-   "n": 8,
-   "usd": 360412,
+   "n": 9,
+   "usd": 363162,
    "beispiel": "strait-of-hormuz-traffic-returns-to-normal-by-end-of-june"
   },
   "usc": {
@@ -767,35 +767,35 @@
    "usd": 311522,
    "beispiel": "super-bowl-champion-2026-731"
   },
-  "fed": {
-   "n": 32,
-   "usd": 299155,
-   "beispiel": "fed-decision-in-december-20260729232808632"
+  "will": {
+   "n": 33,
+   "usd": 260756,
+   "beispiel": "will-trump-be-in-the-wc-champions-photo-20260608152527021"
   },
   "what": {
-   "n": 21,
-   "usd": 246972,
-   "beispiel": "what-iranian-demands-will-trump-agree-to-by-may-31"
+   "n": 19,
+   "usd": 242787,
+   "beispiel": "what-price-will-bitcoin-hit-before-2027"
   },
-  "will": {
-   "n": 31,
-   "usd": 241934,
-   "beispiel": "will-trump-be-in-the-wc-champions-photo-20260608152527021"
+  "fed": {
+   "n": 25,
+   "usd": 234281,
+   "beispiel": "fed-decision-in-december-20260729232808632"
+  },
+  "pro": {
+   "n": 25,
+   "usd": 208887,
+   "beispiel": "pro-football-2027-champion-20260729185915366"
   },
   "btc": {
    "n": 44,
    "usd": 186498,
    "beispiel": "btc-updown-5m-1791281700"
   },
-  "uef": {
-   "n": 13,
-   "usd": 180481,
-   "beispiel": "uef-kvx-tur-2026-03-31"
-  },
-  "ballon": {
-   "n": 16,
-   "usd": 179283,
-   "beispiel": "ballon-dor-winner-2026"
+  "lec": {
+   "n": 49,
+   "usd": 182792,
+   "beispiel": "lec-sea-gua-2026-08-12"
   }
  }
 }
