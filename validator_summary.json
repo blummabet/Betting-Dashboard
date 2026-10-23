@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-10-22T21:51:52.320706+00:00",
-  "checked": 110,
+  "timestamp": "2026-10-23T07:47:37.292215+00:00",
+  "checked": 115,
   "errors": 0,
-  "warnings": 67,
-  "infos": 345,
+  "warnings": 70,
+  "infos": 350,
   "issues": [
     {
       "date": "23.10.2026",
@@ -1156,6 +1156,24 @@
       "severity": "WARN",
       "code": "U25_H2H_HARD_BLOCK_MISS",
       "msg": "H2H Schnitt=3.8 Tore (≥3.5) — HARD BLOCK sollte Under 2.5 komplett blocken. Python kann Picks nicht prüfen — JS-Inline-Validator zeigt ERROR falls Pick trotzdem erscheint."
+    },
+    {
+      "date": "26.10.2026",
+      "home": "Sevilla",
+      "away": "Osasuna",
+      "league": "La Liga",
+      "severity": "INFO",
+      "code": "CARDS35_LOW_FV",
+      "msg": "Liga-Baserate=3.4 → Poisson FV für Über 3.5 Karten = 44.2% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+11.4%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen."
+    },
+    {
+      "date": "26.10.2026",
+      "home": "Sevilla",
+      "away": "Osasuna",
+      "league": "La Liga",
+      "severity": "INFO",
+      "code": "CARDS45_LOW_FV",
+      "msg": "Liga-Baserate=3.4 → Poisson FV für Über 4.5 Karten = 25.6%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis."
     },
     {
       "date": "23.10.2026",
@@ -3183,6 +3201,42 @@
       "msg": "Academico Viseu expA≈1.25 (statischer Proxy) → FV über 1.5 = 35.5%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger."
     },
     {
+      "date": "26.10.2026",
+      "home": "Santa Clara",
+      "away": "Benfica",
+      "league": "Primeira Liga",
+      "severity": "WARN",
+      "code": "H2H_DOMINATED_HIGH_SCORE",
+      "msg": "Benfica dominiert H2H 12W/2X/1L in 15 Spielen. matchScore=7.5 — Pick-Richtung sollte klar sein, Angle-Text darf den Underdog nicht überbewerten."
+    },
+    {
+      "date": "26.10.2026",
+      "home": "Santa Clara",
+      "away": "Benfica",
+      "league": "Primeira Liga",
+      "severity": "INFO",
+      "code": "CARDS45_LOW_FV",
+      "msg": "Liga-Baserate=3.8 → Poisson FV für Über 4.5 Karten = 33.2%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis."
+    },
+    {
+      "date": "26.10.2026",
+      "home": "Santa Clara",
+      "away": "Benfica",
+      "league": "Primeira Liga",
+      "severity": "WARN",
+      "code": "H2H_HIGH_AVG_UNDER_RISK",
+      "msg": "H2H Schnitt=3.3 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug."
+    },
+    {
+      "date": "26.10.2026",
+      "home": "Santa Clara",
+      "away": "Benfica",
+      "league": "Primeira Liga",
+      "severity": "INFO",
+      "code": "TEAM_OVER_HOME_LOW_FV",
+      "msg": "Santa Clara expH≈1.35 (statischer Proxy) → FV über 1.5 = 39.1%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger."
+    },
+    {
       "date": "24.10.2026",
       "home": "ST Mirren",
       "away": "Dundee",
@@ -3712,6 +3766,24 @@
       "severity": "INFO",
       "code": "CORNER_LOW_ATTACK_PROFILE",
       "msg": "Konyaspor (0.5 T/Sp) + Gençlerbirliği S.K. (0.5 T/Sp): Beide Teams sehr angriffsschwach — Corner-Over-Pick hat schwaches Fundament. FV-Gate (CORN_EST=0.10 bei geschätzten Quoten) sollte Corner-Pick blocken."
+    },
+    {
+      "date": "26.10.2026",
+      "home": "Beşiktaş",
+      "away": "Başakşehir",
+      "league": "Süper Lig",
+      "severity": "INFO",
+      "code": "OVER35_LOW_FV",
+      "msg": "Ø gpg=2.20 (statischer Proxy) → Poisson FV für Over 3.5 = 18.1%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy."
+    },
+    {
+      "date": "26.10.2026",
+      "home": "Rizespor",
+      "away": "Trabzonspor",
+      "league": "Süper Lig",
+      "severity": "WARN",
+      "code": "U25_H2H_HARD_BLOCK_MISS",
+      "msg": "H2H Schnitt=3.5 Tore (≥3.5) — HARD BLOCK sollte Under 2.5 komplett blocken. Python kann Picks nicht prüfen — JS-Inline-Validator zeigt ERROR falls Pick trotzdem erscheint."
     }
   ]
 }
