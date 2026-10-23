@@ -1,11 +1,11 @@
-# 🟡 Picks Validator — 23.10.2026 07:47
+# 🟡 Picks Validator — 23.10.2026 15:15
 
-**115 Spiele geprüft** · 🔴 0 Fehler · 🟡 70 Warnungen · 🔵 350 Hinweise
+**114 Spiele geprüft** · 🔴 0 Fehler · 🟡 68 Warnungen · 🔵 347 Hinweise
 
 ```
 =================================================================
   🐕 CocoBet — Picks Logik-Check
-  23.10.2026 07:47
+  23.10.2026 15:15
   Filter: nächste 3 Tag(e)
 =================================================================
 
@@ -85,21 +85,6 @@
 ─────────────────────────────────────────────────────────────────
   🇧🇪 Jupiler Pro League  (rl=32)
 ─────────────────────────────────────────────────────────────────
-  🟡 WARNUNG [HOME_POOR_FORM_HIGH_SCORE]
-     📅 23.10.2026  Kortrijk vs KV Mechelen
-     Kortrijk: formScore=0.22 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet.
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 23.10.2026  Kortrijk vs KV Mechelen
-     Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 23.10.2026  Kortrijk vs KV Mechelen
-     Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
-     📅 23.10.2026  Kortrijk vs KV Mechelen
-     H2H Schnitt=3.0 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
-  🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
-     📅 23.10.2026  Kortrijk vs KV Mechelen
-     Kortrijk expH≈1.25 (statischer Proxy) → FV über 1.5 = 35.5%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🟡 WARNUNG [HOME_POOR_FORM_HIGH_SCORE]
      📅 24.10.2026  Antwerp vs Charleroi
      Antwerp: formScore=0.17 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet.
@@ -1330,9 +1315,9 @@
      H2H Schnitt=3.5 Tore (≥3.5) — HARD BLOCK sollte Under 2.5 komplett blocken. Python kann Picks nicht prüfen — JS-Inline-Validator zeigt ERROR falls Pick trotzdem erscheint.
 
 ═════════════════════════════════════════════════════════════════
-  Geprüft: 115 Spiele
-  🟡 70 Warnungen — manuelle Prüfung empfohlen
-  🔵 350 Hinweise — Pick-Richtung kontrollieren
+  Geprüft: 114 Spiele
+  🟡 68 Warnungen — manuelle Prüfung empfohlen
+  🔵 347 Hinweise — Pick-Richtung kontrollieren
 ═════════════════════════════════════════════════════════════════
 
 ```

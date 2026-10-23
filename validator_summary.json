@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-10-23T07:47:37.292215+00:00",
-  "checked": 115,
+  "timestamp": "2026-10-23T15:15:59.060422+00:00",
+  "checked": 114,
   "errors": 0,
-  "warnings": 70,
-  "infos": 350,
+  "warnings": 68,
+  "infos": 347,
   "issues": [
     {
       "date": "23.10.2026",
@@ -211,51 +211,6 @@
       "severity": "WARN",
       "code": "H2H_HIGH_AVG_UNDER_RISK",
       "msg": "H2H Schnitt=3.1 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug."
-    },
-    {
-      "date": "23.10.2026",
-      "home": "Kortrijk",
-      "away": "KV Mechelen",
-      "league": "Jupiler Pro League",
-      "severity": "WARN",
-      "code": "HOME_POOR_FORM_HIGH_SCORE",
-      "msg": "Kortrijk: formScore=0.22 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet."
-    },
-    {
-      "date": "23.10.2026",
-      "home": "Kortrijk",
-      "away": "KV Mechelen",
-      "league": "Jupiler Pro League",
-      "severity": "INFO",
-      "code": "CARDS35_LOW_FV",
-      "msg": "Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen."
-    },
-    {
-      "date": "23.10.2026",
-      "home": "Kortrijk",
-      "away": "KV Mechelen",
-      "league": "Jupiler Pro League",
-      "severity": "INFO",
-      "code": "CARDS45_LOW_FV",
-      "msg": "Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis."
-    },
-    {
-      "date": "23.10.2026",
-      "home": "Kortrijk",
-      "away": "KV Mechelen",
-      "league": "Jupiler Pro League",
-      "severity": "WARN",
-      "code": "H2H_HIGH_AVG_UNDER_RISK",
-      "msg": "H2H Schnitt=3.0 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug."
-    },
-    {
-      "date": "23.10.2026",
-      "home": "Kortrijk",
-      "away": "KV Mechelen",
-      "league": "Jupiler Pro League",
-      "severity": "INFO",
-      "code": "TEAM_OVER_HOME_LOW_FV",
-      "msg": "Kortrijk expH≈1.25 (statischer Proxy) → FV über 1.5 = 35.5%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger."
     },
     {
       "date": "24.10.2026",
