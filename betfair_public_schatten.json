@@ -36456,7 +36456,7 @@ null
 "leadOdd": 2.38,
 "value": 355504.97,
 "sentAt": "2026-10-23T18:02:15.382355+00:00",
-"status": "pending",
+"status": "lost",
 "htScore": null,
 "leadShare": 0.580550730415949,
 "leadDir": "flat",
@@ -36474,7 +36474,17 @@ null
 null,
 null
 ]
-}
+},
+"clvBf": 1.46,
+"clvPinn": 1.65,
+"settledAt": "2026-10-23T21:17:21.477318+00:00",
+"ftScore": [
+1,
+1
+],
+"profit": -1.0,
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36205157:Match Odds",
@@ -36488,7 +36498,7 @@ null
 "leadOdd": 1.53,
 "value": 126826.16,
 "sentAt": "2026-10-23T18:45:44.291909+00:00",
-"status": "pending",
+"status": "won",
 "htScore": [
 0,
 3
@@ -36509,7 +36519,17 @@ null
 null,
 null
 ]
-}
+},
+"clvBf": 0.0,
+"clvPinn": -1.26,
+"settledAt": "2026-10-23T21:17:21.477318+00:00",
+"ftScore": [
+1,
+5
+],
+"profit": 0.53,
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36180826:Match Odds",
@@ -36632,5 +36652,39 @@ null
 0
 ]
 }
+},
+{
+"k": "fresh:36184092:Over/Under 2.5 Goals",
+"matchId": "36184092",
+"scenario": "fresh",
+"market": "Over/Under 2.5 Goals",
+"league": "Portuguese Primeira Liga",
+"home": "Guimaraes",
+"away": "Maritimo",
+"leadName": "Over 2.5 Goals",
+"leadOdd": 1.42,
+"value": 115043.08,
+"sentAt": "2026-10-23T21:17:04.033765+00:00",
+"status": "void",
+"htScore": null,
+"leadShare": 0.6446156518062625,
+"leadDir": "out",
+"onLeader": false,
+"tier": "rest",
+"magnitude": 62203.8,
+"schwelle": 30000.0,
+"anteilSchwelle": 2.073,
+"raus": "einseitig",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 66,
+"score": [
+3,
+0
+]
+},
+"profit": 0.0,
+"voidGrund": "Ausgang beim Senden bereits entschieden"
 }
 ]
