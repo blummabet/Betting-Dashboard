@@ -22,11 +22,9 @@
       "id": "grosses_geld_bleibt_im_feed",
       "label": "Grosses Geld faellt nicht aus dem Feed",
       "severity": "error",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "36180829: zuletzt 72.702 € und Anpfiff erst in 48.2 h — trotzdem nicht mehr im Feed"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Der Detail-Deckel darf nicht das teuerste Spiel schneiden — genau das ist am 08.09. passiert (alle vier CL-Spiele, Real Madrid mit 102.861 €)."
     },
     {
@@ -90,27 +88,26 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 688588 verbraucht, 4311412 uebrig"
+      "note": "Kontingent: 689170 verbraucht, 4310830 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 10,
+      "nFail": 9,
       "failures": [
-        "Almere City v Roda JC (Dutch Eerste Divisie): name — bester Kandidat „Derry City v Dundalk“",
         "FC Magdeburg v Karlsruhe (German Bundesliga 2): name — bester Kandidat „1. FC Magdeburg v Karlsruher SC“",
         "Chelsea U21 v Liverpool U21 (English Premier League 2 - Div 1): zeit — bester Kandidat „Liverpool v Chelsea“ · 103.0h Anpfiff-Abstand",
         "Leicester U21 v Arsenal U21 (English Premier League 2 - Div 1): name — bester Kandidat „Arsenal v Everton“",
         "AS Real Bamako v Esperance Sportive Zarzis (CAF Confederation Cup Qualifiers): name — bester Kandidat „Real Racing Club de Santander v Espanyol“",
         "Stuttgart v Mgladbach (German Bundesliga): name — bester Kandidat „VfB Stuttgart v Borussia Monchengladbach“",
         "Nancy v Laval (French Ligue 2): name — bester Kandidat „Nancy v Stade Lavallois“",
-        "Winterthur v Stade Nyonnais (Swiss Challenge League): name — bester Kandidat „Nancy v Stade Lavallois“",
         "Guimaraes v Maritimo (Portuguese Primeira Liga): name — bester Kandidat „Vitória SC v CS Maritimo“",
+        "Winterthur v Stade Nyonnais (Swiss Challenge League): name — bester Kandidat „Nancy v Stade Lavallois“",
         "Man City U21 v Stoke U21 (English Premier League 2 - Div 1): zeit — bester Kandidat „Stoke City v Bristol City“ · 20.0h Anpfiff-Abstand"
       ],
-      "note": "ohne Anker: kein_kandidat 48 · kein_pinnacle 3 · name 8 · zeit 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 49 · kein_pinnacle 4 · name 7 · zeit 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -119,7 +116,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 1 — Clermont v Guingamp (30 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 3 — Go Ahead Eagles v SC Telstar (22 Buecher, ohne Pinnacle); Clermont v Guingamp (25 Buecher, ohne Pinnacle); Sochaux v Annecy (30 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -194,6 +191,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-10-23T19:31:11.801804+00:00"
+  "nFail": 1,
+  "generatedAt": "2026-10-23T19:46:18.160189+00:00"
 }
