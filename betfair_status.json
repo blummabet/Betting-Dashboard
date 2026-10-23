@@ -25,7 +25,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "36180829: zuletzt 72.702 € und Anpfiff erst in 49.2 h — trotzdem nicht mehr im Feed"
+        "36180829: zuletzt 72.702 € und Anpfiff erst in 49.0 h — trotzdem nicht mehr im Feed"
       ],
       "note": "Der Detail-Deckel darf nicht das teuerste Spiel schneiden — genau das ist am 08.09. passiert (alle vier CL-Spiele, Real Madrid mit 102.861 €)."
     },
@@ -90,31 +90,29 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 685814 verbraucht, 4314186 uebrig"
+      "note": "Kontingent: 686533 verbraucht, 4313467 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 14,
+      "nFail": 12,
       "failures": [
-        "Man City U21 v Stoke U21 (English Premier League 2 - Div 1): zeit — bester Kandidat „Stoke City v Bristol City“ · 20.0h Anpfiff-Abstand",
-        "Stade Lausanne-Ouchy v Neuchatel Xamax (Swiss Challenge League): name — bester Kandidat „Nancy v Stade Lavallois“",
         "FC Goa v Al-Qadsia (AFC Challenge League): name — bester Kandidat „Al-Qadsiah v Al-Hilal“",
+        "Stade Lausanne-Ouchy v Neuchatel Xamax (Swiss Challenge League): name — bester Kandidat „Nancy v Stade Lavallois“",
         "Fc Dornbirn v SCR Altach (Am) (Austrian Regionalliga): name — bester Kandidat „Rheindorf Altach v Austria Wien“",
-        "Al Tadhamon v Kuwait SC (Kuwaiti Premier League): name — bester Kandidat „Al-Qadsiah v Al-Hilal“",
         "Guimaraes v Maritimo (Portuguese Primeira Liga): name — bester Kandidat „Vitória SC v CS Maritimo“",
         "FC Magdeburg v Karlsruhe (German Bundesliga 2): name — bester Kandidat „1. FC Magdeburg v Karlsruher SC“",
         "Chelsea U21 v Liverpool U21 (English Premier League 2 - Div 1): zeit — bester Kandidat „Liverpool v Chelsea“ · 103.0h Anpfiff-Abstand",
         "Leicester U21 v Arsenal U21 (English Premier League 2 - Div 1): name — bester Kandidat „Arsenal v Everton“",
-        "AS Real Bamako v Esperance Sportive Zarzis (CAF Confederation Cup Qualifiers): name — bester Kandidat „Real Racing Club de Santander v Espanyol“",
         "Stuttgart v Mgladbach (German Bundesliga): name — bester Kandidat „VfB Stuttgart v Borussia Monchengladbach“",
         "Nancy v Laval (French Ligue 2): name — bester Kandidat „Nancy v Stade Lavallois“",
         "Al Sailiya v Al Rayyan (Qatari Stars League): unerklaert — bester Kandidat „Al-Qadsiah v Al-Hilal“",
-        "Winterthur v Stade Nyonnais (Swiss Challenge League): name — bester Kandidat „Nancy v Stade Lavallois“"
+        "Winterthur v Stade Nyonnais (Swiss Challenge League): name — bester Kandidat „Nancy v Stade Lavallois“",
+        "Man City U21 v Stoke U21 (English Premier League 2 - Div 1): zeit — bester Kandidat „Stoke City v Bristol City“ · 20.0h Anpfiff-Abstand"
       ],
-      "note": "ohne Anker: kein_kandidat 55 · kein_pinnacle 2 · name 11 · unerklaert 1 · zeit 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 55 · kein_pinnacle 7 · name 9 · unerklaert 1 · zeit 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -123,7 +121,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 0"
+      "note": "Quelle ohne Pinnacle: 6 — Randers v Brondby (24 Buecher, ohne Pinnacle); Vasteras SK v Halmstads (36 Buecher, ohne Pinnacle); Granada v Valladolid (38 Buecher, ohne Pinnacle); Empoli v LR Vicenza Virtus (40 Buecher, ohne Pinnacle); Rot-Weiss Essen v Jahn Regensburg (28 Buecher, ohne Pinnacle); Oddevold v Sundsvall (6 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -132,7 +130,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 17 gewollt, 17 abgerufen, 0 mit Daten"
+      "note": "Totals: 19 gewollt, 19 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -199,5 +197,5 @@
     }
   ],
   "nFail": 2,
-  "generatedAt": "2026-10-23T18:30:34.772696+00:00"
+  "generatedAt": "2026-10-23T18:46:00.611932+00:00"
 }
