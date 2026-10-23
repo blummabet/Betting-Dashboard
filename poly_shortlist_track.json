@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-23T04:43:32.984976+00:00",
+ "updatedAt": "2026-10-23T05:14:02.552595+00:00",
  "stake": 10.0,
  "expired": 0,
  "condDrift": 0,
@@ -300,39 +300,6 @@
   }
  },
  "open": {
-  "lib-fla-est-2026-10-22-more-markets|CR Flamengo": {
-   "key": "lib-fla-est-2026-10-22-more-markets",
-   "side": "CR Flamengo",
-   "verdict": "BET",
-   "conv": 7,
-   "league": "SOCCER",
-   "cat": "Fußball",
-   "entryPrice": 0.785,
-   "firstTs": "2026-10-22T22:43:35.652547+00:00",
-   "lastPrice": 0.79,
-   "lastTs": "2026-10-23T04:43:32.984976+00:00",
-   "htkAtEntry": 1.7735077777777777,
-   "public": true,
-   "ohneWallet": false,
-   "reasons": [
-    "großes Geld auf CR Flamengo (79%) → $16K",
-    "🔥 scharfe Wallet (14/18, 78% · 30 T Sport +$245)",
-    "💷 Betfair-Geld bestätigt: 72% · €27K"
-   ],
-   "signals": [
-    "money",
-    "sharp",
-    "bf"
-   ],
-   "stake": 10.0,
-   "ev": "2026-09-01",
-   "movePreEntryPP": 0.0,
-   "cond": "0x22ac5b1c5a2fc3eb858a48701157021690128669b0f6aa9f2b3672e2061788ba",
-   "frage": "CR Flamengo vs. Estudiantes de La Plata: Team to Advance",
-   "closeRef": 0.79,
-   "closeRefTs": "2026-10-23T00:14:24.280352+00:00",
-   "closeQuelle": "close"
-  },
   "wta-annli-tagger-2026-10-22|Ann Li": {
    "key": "wta-annli-tagger-2026-10-22",
    "side": "Ann Li",
@@ -343,7 +310,7 @@
    "entryPrice": 0.765,
    "firstTs": "2026-10-23T03:13:41.240840+00:00",
    "lastPrice": 0.585,
-   "lastTs": "2026-10-23T04:43:32.984976+00:00",
+   "lastTs": "2026-10-23T05:14:02.552595+00:00",
    "htkAtEntry": -0.728055,
    "public": false,
    "ohneWallet": true,
@@ -363,34 +330,38 @@
    "cond": "0xd738ce3d7b1baf9b0b0bbf989092b066e54365d518b9a220cd694d3431a65d27",
    "frage": "Japan Women's Open: Ann Li vs Lilli Tagger",
    "clvGrund": "live_eingestiegen"
-  }
- },
- "settled": [
-  {
-   "key": "cs2-furia-fut-2026-08-22",
-   "side": "FURIA",
+  },
+  "dota2-1win-og-2026-10-23|1win": {
+   "key": "dota2-1win-og-2026-10-23",
+   "side": "1win",
    "verdict": "BET",
-   "conv": 6,
+   "conv": 5,
    "league": "ESPORTS",
+   "cat": "E-Sport",
    "entryPrice": 0.615,
-   "closePrice": null,
-   "result": "loss",
-   "winner": "FUT Esports",
-   "pnl": -10.0,
-   "clvPP": null,
-   "stake": 10.0,
+   "firstTs": "2026-10-23T05:14:02.552595+00:00",
+   "lastPrice": 0.615,
+   "lastTs": "2026-10-23T05:14:02.552595+00:00",
+   "htkAtEntry": 2.7660163888888887,
    "public": false,
+   "ohneWallet": false,
+   "reasons": [
+    "großes Geld auf 1win (61%) → $26K",
+    "🔥 scharfe Wallet (49/71, 69% · 30 T Sport +$22K)"
+   ],
    "signals": [
     "money",
     "sharp"
    ],
-   "firstTs": "2026-08-22T11:03:54.440789+00:00",
-   "settledTs": "2026-08-22T18:02:22.859971+00:00",
-   "resolvedTs": "2026-08-22T18:02:21.837338+00:00",
-   "cat": "E-Sport",
-   "clvPPalt": -1.0,
-   "clvGrund": "alt_ungeprueft"
-  },
+   "stake": 10.0,
+   "ev": "2026-09-01",
+   "movePreEntryPP": 1.0,
+   "cond": "0x9841d7465ecf327897f14e0a3dd3eeb924608e396e5c98d9d402be58c9dfae49",
+   "frage": "Dota 2: 1win vs OG (BO3) - PARI Universe Group A",
+   "clvGrund": "schluss_vor_einstieg"
+  }
+ },
+ "settled": [
   {
    "key": "sea-int-mon-2026-08-22",
    "side": "FC Internazionale Milano",
@@ -56663,6 +56634,36 @@
    "settledTs": "2026-10-23T04:43:32.984976+00:00",
    "resolvedTs": "2026-10-23T04:43:31.692931+00:00",
    "ausEndstand": null
+  },
+  {
+   "key": "lib-fla-est-2026-10-22-more-markets",
+   "side": "CR Flamengo",
+   "verdict": "BET",
+   "conv": 7,
+   "league": "SOCCER",
+   "cat": "Fußball",
+   "entryPrice": 0.785,
+   "closePrice": 0.79,
+   "closeRefTs": "2026-10-23T00:14:24.280352+00:00",
+   "closeQuelle": "close",
+   "result": "loss",
+   "winner": "Estudiantes de La Plata",
+   "pnl": -10.0,
+   "clvPP": 0.5,
+   "stake": 10.0,
+   "public": true,
+   "ohneWallet": false,
+   "signals": [
+    "money",
+    "sharp",
+    "bf"
+   ],
+   "firstTs": "2026-10-22T22:43:35.652547+00:00",
+   "ev": "2026-09-01",
+   "htkAtEntry": 1.7735077777777777,
+   "settledTs": "2026-10-23T05:14:02.552595+00:00",
+   "resolvedTs": "2026-10-23T05:13:59.145223+00:00",
+   "ausEndstand": null
   }
  ],
  "agg": {
@@ -56676,20 +56677,20 @@
    "roiUg": -0.0258,
    "belegt": false,
    "clvAvg": -0.18,
-   "clvN": 1064,
+   "clvN": 1065,
    "clvUg": -0.36
   },
   "public": {
-   "n": 404,
+   "n": 405,
    "wins": 295,
-   "hit": 0.7302,
-   "pnl": 15.26,
-   "stake": 4040.0,
-   "roi": 0.0038,
-   "roiUg": -0.0483,
+   "hit": 0.7284,
+   "pnl": 5.26,
+   "stake": 4050.0,
+   "roi": 0.0013,
+   "roiUg": -0.0508,
    "belegt": false,
    "clvAvg": -0.27,
-   "clvN": 225,
+   "clvN": 226,
    "clvUg": -0.59
   },
   "publicBlocked": {
@@ -56719,11 +56720,11 @@
    "clvUg": -0.74
   },
   "walletTor": {
-   "nMit": 404,
+   "nMit": 405,
    "nOhne": 404,
-   "diffPP": -2.59,
-   "lo": -10.76,
-   "hi": 5.42,
+   "diffPP": -2.84,
+   "lo": -11.04,
+   "hi": 5.06,
    "urteil": "nicht entschieden",
    "grund": "das Band schliesst die Null ein"
   },
@@ -56737,7 +56738,7 @@
    "roiUg": -0.0189,
    "belegt": false,
    "clvAvg": -0.18,
-   "clvN": 1006,
+   "clvN": 1007,
    "clvUg": -0.36
   },
   "blocked": {
@@ -56768,29 +56769,29 @@
     "clvUg": null
    },
    "E-Sport": {
-    "n": 530,
+    "n": 529,
     "wins": 408,
-    "hit": 0.7698,
-    "pnl": 385.0,
-    "stake": 5300.0,
-    "roi": 0.0726,
-    "roiUg": 0.0297,
+    "hit": 0.7713,
+    "pnl": 395.0,
+    "stake": 5290.0,
+    "roi": 0.0747,
+    "roiUg": 0.0317,
     "belegt": true,
     "clvAvg": -0.07,
     "clvN": 296,
     "clvUg": -0.35
    },
    "Fußball": {
-    "n": 1030,
+    "n": 1031,
     "wins": 611,
-    "hit": 0.5932,
-    "pnl": -40.77,
-    "stake": 10300.0,
-    "roi": -0.004,
-    "roiUg": -0.0491,
+    "hit": 0.5926,
+    "pnl": -50.77,
+    "stake": 10310.0,
+    "roi": -0.0049,
+    "roiUg": -0.0501,
     "belegt": false,
     "clvAvg": -0.23,
-    "clvN": 560,
+    "clvN": 561,
     "clvUg": -0.47
    },
    "Kampfsport": {
@@ -56848,26 +56849,26 @@
   },
   "bettableByCat": {
    "Fußball": {
-    "n": 1030,
+    "n": 1031,
     "wins": 611,
-    "hit": 0.5932,
-    "pnl": -40.77,
-    "stake": 10300.0,
-    "roi": -0.004,
-    "roiUg": -0.0491,
+    "hit": 0.5926,
+    "pnl": -50.77,
+    "stake": 10310.0,
+    "roi": -0.0049,
+    "roiUg": -0.0501,
     "belegt": false,
     "clvAvg": -0.23,
-    "clvN": 560,
+    "clvN": 561,
     "clvUg": -0.47
    },
    "E-Sport": {
-    "n": 530,
+    "n": 529,
     "wins": 408,
-    "hit": 0.7698,
-    "pnl": 385.0,
-    "stake": 5300.0,
-    "roi": 0.0726,
-    "roiUg": 0.0297,
+    "hit": 0.7713,
+    "pnl": 395.0,
+    "stake": 5290.0,
+    "roi": 0.0747,
+    "roiUg": 0.0317,
     "belegt": true,
     "clvAvg": -0.07,
     "clvN": 296,
@@ -56915,17 +56916,17 @@
     "clvUg": -0.94
    },
    "Fußball": {
-    "n": 102,
+    "n": 103,
     "wins": 62,
-    "hit": 0.6078,
-    "pnl": -85.61,
-    "stake": 1020.0,
-    "roi": -0.0839,
-    "roiUg": -0.2127,
+    "hit": 0.6019,
+    "pnl": -95.61,
+    "stake": 1030.0,
+    "roi": -0.0928,
+    "roiUg": -0.2212,
     "belegt": false,
-    "clvAvg": -0.6,
-    "clvN": 48,
-    "clvUg": -1.05
+    "clvAvg": -0.58,
+    "clvN": 49,
+    "clvUg": -1.02
    },
    "Tennis": {
     "n": 95,
@@ -57049,30 +57050,30 @@
     "clvUg": -0.32
    },
    "6": {
-    "n": 824,
+    "n": 823,
     "wins": 560,
-    "hit": 0.6796,
-    "pnl": 205.88,
-    "stake": 8240.0,
-    "roi": 0.025,
-    "roiUg": -0.0183,
+    "hit": 0.6804,
+    "pnl": 215.88,
+    "stake": 8230.0,
+    "roi": 0.0262,
+    "roiUg": -0.0171,
     "belegt": false,
     "clvAvg": -0.14,
     "clvN": 475,
     "clvUg": -0.42
    },
    "7": {
-    "n": 249,
+    "n": 250,
     "wins": 167,
-    "hit": 0.6707,
-    "pnl": 137.09,
-    "stake": 2490.0,
-    "roi": 0.0551,
-    "roiUg": -0.0265,
+    "hit": 0.668,
+    "pnl": 127.09,
+    "stake": 2500.0,
+    "roi": 0.0508,
+    "roiUg": -0.0307,
     "belegt": false,
-    "clvAvg": -0.66,
-    "clvN": 114,
-    "clvUg": -1.14
+    "clvAvg": -0.65,
+    "clvN": 115,
+    "clvUg": -1.12
    },
    "8": {
     "n": 66,
@@ -57125,22 +57126,22 @@
     "roiUg": -0.0258,
     "belegt": false,
     "clvAvg": -0.18,
-    "clvN": 1064,
+    "clvN": 1065,
     "clvUg": -0.36
    }
   },
   "bySignal": {
    "bf": {
-    "n": 601,
+    "n": 602,
     "wins": 364,
-    "hit": 0.6057,
-    "pnl": 193.77,
-    "stake": 6010.0,
-    "roi": 0.0322,
-    "roiUg": -0.0277,
+    "hit": 0.6047,
+    "pnl": 183.77,
+    "stake": 6020.0,
+    "roi": 0.0305,
+    "roiUg": -0.0294,
     "belegt": false,
     "clvAvg": -0.25,
-    "clvN": 332,
+    "clvN": 333,
     "clvUg": -0.47
    },
    "money": {
@@ -57153,7 +57154,7 @@
     "roiUg": -0.0296,
     "belegt": false,
     "clvAvg": -0.18,
-    "clvN": 1025,
+    "clvN": 1026,
     "clvUg": -0.36
    },
    "pinn": {
@@ -57179,7 +57180,7 @@
     "roiUg": -0.0273,
     "belegt": false,
     "clvAvg": -0.28,
-    "clvN": 699,
+    "clvN": 700,
     "clvUg": -0.47
    },
    "steam": {
