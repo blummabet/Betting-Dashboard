@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-10-23T21:16:44.577188+00:00",
+"generatedAt": "2026-10-23T21:48:07.553730+00:00",
 "byVerdict": {
 "uneinig": {
 "n": 30,
@@ -18,20 +18,20 @@
 "clvLb": -1.1516
 },
 "konsens": {
-"n": 442,
-"wins": 260,
-"hitRate": 0.5882,
-"polyN": 432,
-"polyWins": 248,
-"polyHitRate": 0.5741,
-"pinnN": 390,
-"pinnHitRate": 0.5949,
-"nRoi": 442,
-"roi": 0.0648,
-"roiLb": -0.0096,
-"nClv": 442,
+"n": 445,
+"wins": 262,
+"hitRate": 0.5888,
+"polyN": 434,
+"polyWins": 250,
+"polyHitRate": 0.576,
+"pinnN": 393,
+"pinnHitRate": 0.5954,
+"nRoi": 445,
+"roi": 0.0678,
+"roiLb": -0.0065,
+"nClv": 445,
 "clv": 0.08,
-"clvLb": -0.1405
+"clvLb": -0.1376
 },
 "teil": {
 "n": 1,
@@ -66,6 +66,11 @@
 "wins": 14,
 "hitRate": 0.56
 },
+"Italian Serie A": {
+"n": 23,
+"wins": 16,
+"hitRate": 0.6957
+},
 "Spanish La Liga": {
 "n": 23,
 "wins": 13,
@@ -81,32 +86,27 @@
 "wins": 14,
 "hitRate": 0.6364
 },
-"Italian Serie A": {
-"n": 22,
-"wins": 15,
-"hitRate": 0.6818
-},
 "English Premier League": {
 "n": 20,
 "wins": 12,
 "hitRate": 0.6
+},
+"French Ligue 1": {
+"n": 18,
+"wins": 12,
+"hitRate": 0.6667
 },
 "US MLS": {
 "n": 18,
 "wins": 9,
 "hitRate": 0.5
 },
-"French Ligue 1": {
+"Spanish Segunda Division": {
 "n": 17,
-"wins": 12,
-"hitRate": 0.7059
+"wins": 10,
+"hitRate": 0.5882
 },
 "German Bundesliga": {
-"n": 16,
-"wins": 9,
-"hitRate": 0.5625
-},
-"Spanish Segunda Division": {
 "n": 16,
 "wins": 9,
 "hitRate": 0.5625
@@ -364,26 +364,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 343,
-"wins": 206,
-"hitRate": 0.6006,
-"nRoi": 343,
-"roi": 0.0214,
-"roiLb": -0.0571,
-"nClv": 343,
+"n": 344,
+"wins": 207,
+"hitRate": 0.6017,
+"nRoi": 344,
+"roi": 0.0249,
+"roiLb": -0.0535,
+"nClv": 344,
 "clv": 0.14,
-"clvLb": -0.1193
+"clvLb": -0.1142
 },
 "weak": {
-"n": 130,
-"wins": 63,
-"hitRate": 0.4846,
-"nRoi": 130,
-"roi": 0.119,
-"roiLb": -0.0534,
-"nClv": 130,
+"n": 132,
+"wins": 64,
+"hitRate": 0.4848,
+"nRoi": 132,
+"roi": 0.1195,
+"roiLb": -0.0516,
+"nClv": 132,
 "clv": -0.19,
-"clvLb": -0.5154
+"clvLb": -0.5132
 }
 },
 "divergence": {
@@ -395,6 +395,63 @@
 "polyRate": 0.3448
 },
 "recent": [
+{
+"matchId": "36209441",
+"home": "Torino",
+"away": "AC Monza",
+"league": "Italian Serie A",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Torino",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+2
+],
+"kickoff": "2026-10-23T18:45:00Z",
+"settledAt": "2026-10-23T21:48:07.180960+00:00"
+},
+{
+"matchId": "36211099",
+"home": "Granada",
+"away": "Valladolid",
+"league": "Spanish Segunda Division",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Granada",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-10-23T18:30:00Z",
+"settledAt": "2026-10-23T21:48:07.180960+00:00"
+},
+{
+"matchId": "36180826",
+"home": "Brest",
+"away": "Nice",
+"league": "French Ligue 1",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Brest",
+"polySide": null,
+"winner": "away",
+"moneyWin": false,
+"polyWin": null,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-10-23T18:45:00Z",
+"settledAt": "2026-10-23T21:48:07.180960+00:00"
+},
 {
 "matchId": "36180415",
 "home": "Go Ahead Eagles",
@@ -1097,76 +1154,19 @@
 ],
 "kickoff": "2026-10-22T16:45:00Z",
 "settledAt": "2026-10-22T18:42:09.651598+00:00"
-},
-{
-"matchId": "36209051",
-"home": "FC Iberia 1999",
-"away": "Mjallby",
-"league": "UEFA Conference League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Mjallby",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-10-22T16:45:00Z",
-"settledAt": "2026-10-22T18:42:09.651598+00:00"
-},
-{
-"matchId": "36207070",
-"home": "Santos Laguna",
-"away": "Pumas UNAM",
-"league": "Mexican Liga MX",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Santos Laguna",
-"polySide": "away",
-"winner": "home",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-10-22T03:10:00Z",
-"settledAt": "2026-10-22T06:10:50.155094+00:00"
-},
-{
-"matchId": "36209880",
-"home": "Pachuca",
-"away": "Cruz Azul",
-"league": "Mexican Liga MX",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Cruz Azul",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-10-22T03:10:00Z",
-"settledAt": "2026-10-22T06:10:50.155094+00:00"
 }
 ],
 "global": {
-"n": 473,
-"wins": 269,
-"hitRate": 0.5687,
-"nRoi": 473,
-"roi": 0.0482,
-"roiLb": -0.0258,
-"nClv": 473,
+"n": 476,
+"wins": 271,
+"hitRate": 0.5693,
+"nRoi": 476,
+"roi": 0.0511,
+"roiLb": -0.0228,
+"nClv": 476,
 "clv": 0.05,
-"clvLb": -0.1587
+"clvLb": -0.1558
 },
-"pending": 32,
-"ausgeschlossenLive": 1495
+"pending": 31,
+"ausgeschlossenLive": 1493
 }
