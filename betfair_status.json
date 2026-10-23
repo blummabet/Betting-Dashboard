@@ -31,9 +31,11 @@
       "id": "nahe_spiele_im_feed",
       "label": "Bald anpfeifende Spiele sind im Feed",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "nur 113 von 144 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Go Ahead Eagles v SC Telstar (Dutch Eredivisie); Dunkerque v Metz (French Ligue 2); Zrinjski v Radnik Bijeljina (Bosnian Premier League)"
+      ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
     {
@@ -88,23 +90,25 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 668558 verbraucht, 4331442 uebrig"
+      "note": "Kontingent: 669140 verbraucht, 4330860 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 23,
+      "nFail": 24,
       "failures": [
+        "Ahal FC v Al-Ansar (AFC Challenge League): name — bester Kandidat „Al-Faisaly KSA FC v Al-Nassr“",
+        "Alanyaspor U19 v Kocaelispor U19 (Turkish U19): zeit — bester Kandidat „Alanyaspor v Kocaelispor“ · 5.0h Anpfiff-Abstand",
         "Al Ittihad Aleppo v Paro FC (AFC Challenge League): name — bester Kandidat „Al-Ittihad v Diriyah Club“",
         "East Riffa v Al-Muharraq (Bahraini Premier): name — bester Kandidat „Al-Faisaly KSA FC v Al-Nassr“",
         "Al-Fujairah FC v Al Wahda (Abu Dhabi) (UAE Presidents Cup): unerklaert — bester Kandidat „Al-Faisaly KSA FC v Al-Nassr“",
         "Charlton U21 v Cardiff City U21 (English U21 Pro Development League): zeit — bester Kandidat „Charlton Athletic v Norwich City“ · 23.0h Anpfiff-Abstand",
         "Kazma Sc v AL-Salibikhaet (Kuwaiti Premier League): name — bester Kandidat „Al-Faisaly KSA FC v Al-Nassr“",
         "Istiqlol v Homs Al Fidaa SC (AFC Challenge League): name — bester Kandidat „Al-Faisaly KSA FC v Al-Nassr“",
-        "Ahal FC v Al-Ansar (AFC Challenge League): name — bester Kandidat „Al-Faisaly KSA FC v Al-Nassr“",
         "Austria Wien (A) v SK Sturm Graz II (Austrian Erste Liga): name — bester Kandidat „Rheindorf Altach v Austria Wien“",
+        "Al Shabab v Samail (Omani Professional League): name — bester Kandidat „Al-Faisaly KSA FC v Al-Nassr“",
         "Al Khalidiyah v Al-Ittifaq Maqaba (Bahraini Premier): zeit — bester Kandidat „Al-Faisaly KSA FC v Al-Nassr“ · 2.5h Anpfiff-Abstand",
         "Al Salt v Al Ramtha (Jordanian Premier League): zeit — bester Kandidat „Al-Ahli v Al-Khaleej“ · 4.0h Anpfiff-Abstand",
         "Al Aqaba v Al Ahli Amman (Jordan 1st Division): zeit — bester Kandidat „Al-Ahli v Al-Khaleej“ · 3.0h Anpfiff-Abstand",
@@ -113,15 +117,14 @@
         "Hayy Al-Amir Hassan v Ma'an (Jordan 1st Division): name — bester Kandidat „Al-Faisaly KSA FC v Al-Nassr“",
         "Al Sailiya v Al Rayyan (Qatari Stars League): unerklaert — bester Kandidat „Al-Ahli v Al-Khaleej“",
         "Etihad Al Ramtha v Alhashemyya (Jordan 1st Division): name — bester Kandidat „Al-Faisaly KSA FC v Al-Nassr“",
-        "Al Msnaa v Ibri (Omani Professional League): name — bester Kandidat „Al-Faisaly KSA FC v Al-Nassr“",
-        "Alanyaspor U19 v Kocaelispor U19 (Turkish U19): zeit — bester Kandidat „Alanyaspor v Kocaelispor“ · 5.0h Anpfiff-Abstand",
-        "Saham v Al Nahdha (Omani Professional League): name — bester Kandidat „Al-Faisaly KSA FC v Al-Nassr“",
-        "Al Shabab v Samail (Omani Professional League): name — bester Kandidat „Al-Faisaly KSA FC v Al-Nassr“",
-        "Fc Dornbirn v SCR Altach (Am) (Austrian Regionalliga): name — bester Kandidat „Rheindorf Altach v Austria Wien“",
         "Al-Jazeera v Al Faisaly SC (Jordanian Premier League): zeit — bester Kandidat „Al-Faisaly KSA FC v Al-Nassr“ · 3.0h Anpfiff-Abstand",
+        "Al Msnaa v Ibri (Omani Professional League): name — bester Kandidat „Al-Faisaly KSA FC v Al-Nassr“",
+        "Saham v Al Nahdha (Omani Professional League): name — bester Kandidat „Al-Faisaly KSA FC v Al-Nassr“",
+        "Fc Dornbirn v SCR Altach (Am) (Austrian Regionalliga): name — bester Kandidat „Rheindorf Altach v Austria Wien“",
+        "Al-Ahed v Al Riyadi Al Abassiya (Lebanese Premier League): unerklaert — bester Kandidat „Al-Faisaly KSA FC v Al-Nassr“",
         "Stuttgart v Mgladbach (German Bundesliga): name — bester Kandidat „VfB Stuttgart v Borussia Monchengladbach“"
       ],
-      "note": "ohne Anker: kein_kandidat 101 · name 15 · unerklaert 2 · zeit 6. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 100 · name 15 · unerklaert 3 · zeit 6. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -205,6 +208,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 1,
-  "generatedAt": "2026-10-23T11:59:07.758224+00:00"
+  "nFail": 2,
+  "generatedAt": "2026-10-23T12:15:12.899062+00:00"
 }
