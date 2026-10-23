@@ -966846,7 +966846,13 @@
     "usd": 21350,
     "ts": 1792708356
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Cavaliers": 0.0,
+   "76ers": 1.0
+  },
+  "resolvedAt": "2026-10-23T03:13:33.195471+00:00"
  },
  "nhl-sj-ott-2026-10-22": {
   "shares": {
@@ -969331,7 +969337,13 @@
     "usd": 662,
     "ts": 1792711790
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Golden Knights": 0.0,
+   "Blues": 1.0
+  },
+  "resolvedAt": "2026-10-23T03:13:33.195471+00:00"
  },
  "nhl-wpg-dal-2026-10-22": {
   "shares": {
@@ -969691,7 +969703,13 @@
     "usd": 915,
     "ts": 1792667306
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Jets": 0.0,
+   "Stars": 1.0
+  },
+  "resolvedAt": "2026-10-23T03:13:33.195471+00:00"
  },
  "nfl-ne-chi-2026-10-23": {
   "shares": {
@@ -973794,8 +973812,8 @@
  },
  "wta-gibson-krueger-2026-10-22": {
   "shares": {
-   "Talia Gibson": 3565.7343102199993,
-   "Ashlyn Krueger": 5026.402459259998
+   "Talia Gibson": 3602.634459765,
+   "Ashlyn Krueger": 5078.414960775
   },
   "prices": {
    "Talia Gibson": 0.415,
@@ -973874,7 +973892,7 @@
    {
     "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
     "side": "Ashlyn Krueger",
-    "usd": 74
+    "usd": 91
    },
    {
     "wallet": "0xd2e77bfacb05f4e9763377852cd1f2da7aaa08e9",
@@ -973908,6 +973926,12 @@
     "usd": 29
    },
    {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Talia Gibson",
+    "usd": 28,
+    "avgPrice": 0.4199
+   },
+   {
     "wallet": "0xcc37dfa0597c3a7706d2ad184e77a2040191c4ea",
     "side": "Ashlyn Krueger",
     "usd": 20
@@ -973916,11 +973940,6 @@
     "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
     "side": "Ashlyn Krueger",
     "usd": 19
-   },
-   {
-    "wallet": "0x890e22f535cddba750269d4837327936ea537ec1",
-    "side": "Ashlyn Krueger",
-    "usd": 16
    },
    {
     "wallet": "0xea54aa79516cbdbb5f758bccd0da69edbba4524a",
@@ -973983,11 +974002,6 @@
     "usd": 3
    },
    {
-    "wallet": "0x1eea2ca273d688b83b4bafd625a085b065a2af80",
-    "side": "Ashlyn Krueger",
-    "usd": 3
-   },
-   {
     "wallet": "0xc846f5368ab49a854d2280b7ecff92669824c413",
     "side": "Ashlyn Krueger",
     "usd": 3
@@ -974003,6 +974017,11 @@
     "usd": 2
    },
    {
+    "wallet": "0x890e22f535cddba750269d4837327936ea537ec1",
+    "side": "Talia Gibson",
+    "usd": 2
+   },
+   {
     "wallet": "0x604a2b8ef97c90928c6917769289ad65140cea22",
     "side": "Ashlyn Krueger",
     "usd": 1
@@ -974013,15 +974032,100 @@
     "usd": 0
    }
   ],
-  "hoursToKickoff": 1.27,
-  "capturedAt": "2026-10-23T02:43:45.140452+00:00",
+  "hoursToKickoff": 0.77,
+  "capturedAt": "2026-10-23T03:13:33.195471+00:00",
   "koTs": "2026-10-23T04:00:00+00:00",
   "cond": "0x64012a6533405a66464fb0a496dd5beda84f27ddba1019a66bf3ad686a7b412c",
   "frage": "Japan Women's Open: Talia Gibson vs Ashlyn Krueger",
   "tokens": {
    "Talia Gibson": "69963777490261898836208136313609871022909870203681042943716414080528133832586",
    "Ashlyn Krueger": "111531670371297361055400857679673799763738476273505769663076838729150765735396"
-  }
+  },
+  "book": {
+   "side": "Ashlyn Krueger",
+   "bid": 0.58,
+   "ask": 0.59,
+   "spreadC": 1.0,
+   "spreadPct": 1.69,
+   "bids": [
+    [
+     0.58,
+     2930
+    ],
+    [
+     0.57,
+     6247
+    ],
+    [
+     0.56,
+     10343
+    ],
+    [
+     0.55,
+     581
+    ],
+    [
+     0.54,
+     93
+    ],
+    [
+     0.51,
+     245
+    ]
+   ],
+   "asks": [
+    [
+     0.59,
+     4851
+    ],
+    [
+     0.6,
+     24724
+    ],
+    [
+     0.61,
+     38724
+    ],
+    [
+     0.62,
+     7825
+    ],
+    [
+     0.63,
+     5155
+    ],
+    [
+     0.64,
+     6500
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x8ce7eb8a3ad1d6907b24368865c8487a68fb3150",
+    "action": "BUY",
+    "side": "Talia Gibson",
+    "price": 0.4124,
+    "usd": 500,
+    "ts": 1792719929
+   },
+   {
+    "wallet": "0x8ce7eb8a3ad1d6907b24368865c8487a68fb3150",
+    "action": "BUY",
+    "side": "Talia Gibson",
+    "price": 0.42,
+    "usd": 2500,
+    "ts": 1792701494
+   },
+   {
+    "wallet": "0x95c52e00752a462608ee1e72d0685fc26973d5d3",
+    "action": "BUY",
+    "side": "Talia Gibson",
+    "price": 0.41,
+    "usd": 300,
+    "ts": 1792695357
+   }
+  ]
  },
  "wta-bejlek-bouzkov-2026-10-22": {
   "shares": {
@@ -974038,7 +974142,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 16190,
+  "totalUsd": 16198,
   "whales": [
    {
     "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
@@ -974090,13 +974194,12 @@
    {
     "wallet": "0x1e3a86ef98030e7e0519e127d8178e9b45389e14",
     "side": "Sara Bejlek",
-    "usd": 274,
-    "avgPrice": 0.3999
+    "usd": 274
    },
    {
     "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
     "side": "Sara Bejlek",
-    "usd": 273
+    "usd": 271
    },
    {
     "wallet": "0x01c78f8873c0c86d6b6b92ff627e3802237ee995",
@@ -974231,6 +974334,11 @@
     "usd": 2
    },
    {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "Sara Bejlek",
+    "usd": 1
+   },
+   {
     "wallet": "0x604a2b8ef97c90928c6917769289ad65140cea22",
     "side": "Sara Bejlek",
     "usd": 1
@@ -974239,15 +974347,10 @@
     "wallet": "0x49c5845733fd0b83d2ae67bfc1baf9d2e3093de7",
     "side": "Sara Bejlek",
     "usd": 1
-   },
-   {
-    "wallet": "0x521070c99db06e54af5e8e4a91d6858decdfbd53",
-    "side": "Marie Bouzkova",
-    "usd": 1
    }
   ],
-  "hoursToKickoff": 1.77,
-  "capturedAt": "2026-10-23T02:43:45.140452+00:00",
+  "hoursToKickoff": 1.27,
+  "capturedAt": "2026-10-23T03:13:33.195471+00:00",
   "koTs": "2026-10-23T04:30:00+00:00",
   "cond": "0xf2bfc5c85b8cf1777c45d41fd7e2a1113f2b45fbb812e530d3a87bc7e3413b27",
   "frage": "Ningbo Open: Sara Bejlek vs Marie Bouzkova",
@@ -974264,19 +974367,19 @@
    "bids": [
     [
      0.59,
-     9441
+     8429
     ],
     [
      0.58,
-     8367
+     8373
     ],
     [
      0.57,
-     8421
+     8496
     ],
     [
      0.56,
-     588
+     1217
     ],
     [
      0.55,
@@ -974290,23 +974393,23 @@
    "asks": [
     [
      0.6,
-     14376
+     14553
     ],
     [
      0.61,
-     22323
+     22292
     ],
     [
      0.62,
-     43799
+     43980
     ],
     [
      0.63,
-     8472
+     5433
     ],
     [
      0.64,
-     7805
+     9804
     ],
     [
      0.65,
