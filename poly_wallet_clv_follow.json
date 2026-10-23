@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-23T22:17:47.130042+00:00",
+ "updatedAt": "2026-10-23T22:44:23.453198+00:00",
  "stake": 10.0,
  "regel": {
   "minN": 20,
@@ -7,9 +7,9 @@
   "frischMin": 90.0
  },
  "zaehler": {
-  "ohneEinstieg": 6,
-  "gesperrt": 73,
-  "alt": 194
+  "ohneEinstieg": 15,
+  "gesperrt": 88,
+  "alt": 171
  },
  "open": {
   "arg-uni-def-2026-10-09-more-markets|Over": {
@@ -13916,28 +13916,6 @@
    "firstTs": "2026-10-23T16:17:02.045772+00:00",
    "stake": 10.0
   },
-  "spl-ahl-kha-2026-10-22|Al Khaleej Saudi Club": {
-   "key": "spl-ahl-kha-2026-10-22",
-   "side": "Al Khaleej Saudi Club",
-   "cat": "Fußball",
-   "league": "SOCCER",
-   "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
-   "belegt": true,
-   "heiss": false,
-   "walletN": 1134,
-   "walletClv": 0.419,
-   "walletUg": 0.282,
-   "clv7": null,
-   "n7": null,
-   "walletEntry": 0.12,
-   "entryPrice": 0.125,
-   "abstandPP": 0.5,
-   "arm": "nehmbar",
-   "lastPrice": 0.1,
-   "htkAtEntry": 1.83,
-   "firstTs": "2026-10-23T16:17:02.045772+00:00",
-   "stake": 10.0
-  },
   "tur-ala-koc-2026-10-23-more-markets|Over": {
    "key": "tur-ala-koc-2026-10-23-more-markets",
    "side": "Over",
@@ -14307,7 +14285,7 @@
    "entryPrice": 0.465,
    "abstandPP": 7.23,
    "arm": "zu_spaet",
-   "lastPrice": 0.485,
+   "lastPrice": 0.48,
    "htkAtEntry": 2.81,
    "firstTs": "2026-10-23T20:20:15.533341+00:00",
    "stake": 10.0
@@ -14329,7 +14307,7 @@
    "entryPrice": 0.105,
    "abstandPP": 0.5,
    "arm": "nehmbar",
-   "lastPrice": 0.095,
+   "lastPrice": 0.085,
    "htkAtEntry": 2.81,
    "firstTs": "2026-10-23T20:20:15.533341+00:00",
    "stake": 10.0
@@ -14483,7 +14461,7 @@
    "entryPrice": 0.415,
    "abstandPP": 0.5,
    "arm": "nehmbar",
-   "lastPrice": 0.415,
+   "lastPrice": 0.425,
    "htkAtEntry": 2.82,
    "firstTs": "2026-10-23T21:16:27.587237+00:00",
    "stake": 10.0
@@ -14530,6 +14508,28 @@
    "lastPrice": 0.475,
    "htkAtEntry": 2.99,
    "firstTs": "2026-10-23T22:17:47.130042+00:00",
+   "stake": 10.0
+  },
+  "mex-nec-jua-2026-10-23-more-markets|Over": {
+   "key": "mex-nec-jua-2026-10-23-more-markets",
+   "side": "Over",
+   "cat": "Fußball",
+   "league": "SOCCER",
+   "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+   "belegt": true,
+   "heiss": false,
+   "walletN": 2323,
+   "walletClv": 0.269,
+   "walletUg": 0.162,
+   "clv7": null,
+   "n7": null,
+   "walletEntry": 0.5638,
+   "entryPrice": 0.555,
+   "abstandPP": -0.88,
+   "arm": "nehmbar",
+   "lastPrice": 0.555,
+   "htkAtEntry": 2.32,
+   "firstTs": "2026-10-23T22:44:23.453198+00:00",
    "stake": 10.0
   }
  },
@@ -84225,6 +84225,34 @@
    "closePrice": 0.595,
    "clvPP": 0.0,
    "settledTs": "2026-10-23T22:17:47.130042+00:00"
+  },
+  {
+   "key": "spl-ahl-kha-2026-10-22",
+   "side": "Al Khaleej Saudi Club",
+   "cat": "Fußball",
+   "league": "SOCCER",
+   "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
+   "belegt": true,
+   "heiss": false,
+   "walletN": 1134,
+   "walletClv": 0.419,
+   "walletUg": 0.282,
+   "clv7": null,
+   "n7": null,
+   "walletEntry": 0.12,
+   "entryPrice": 0.125,
+   "abstandPP": 0.5,
+   "arm": "nehmbar",
+   "lastPrice": 0.1,
+   "htkAtEntry": 1.83,
+   "firstTs": "2026-10-23T16:17:02.045772+00:00",
+   "stake": 10.0,
+   "result": "loss",
+   "winner": "Al Ahli Saudi Club",
+   "pnl": -10.0,
+   "closePrice": 0.1,
+   "clvPP": -2.5,
+   "settledTs": "2026-10-23T22:44:23.453198+00:00"
   }
  ],
  "gesehen": [
@@ -86136,6 +86164,7 @@
   "mex-mon1-pac-2026-10-18|CF Monterrey",
   "mex-nec-atl-2026-10-16-more-markets|Under",
   "mex-nec-atl-2026-10-16|Atlas FC",
+  "mex-nec-jua-2026-10-23-more-markets|Over",
   "mex-pac-caz-2026-10-21-more-markets|Over",
   "mex-pac-caz-2026-10-21-more-markets|Under",
   "mex-pac-caz-2026-10-21|CF Pachuca",
@@ -87515,16 +87544,16 @@
  ],
  "agg": {
   "belegt_nehmbar": {
-   "n": 1326,
+   "n": 1327,
    "wins": 390,
-   "hit": 0.2941,
-   "pnl": -2445.84,
-   "stake": 13260.0,
-   "roi": -0.1845,
-   "roiUg": -0.2882,
+   "hit": 0.2939,
+   "pnl": -2455.84,
+   "stake": 13270.0,
+   "roi": -0.1851,
+   "roiUg": -0.2888,
    "belegt": false,
    "clvAvg": 0.02,
-   "clvN": 1326,
+   "clvN": 1327,
    "clvUg": -0.06
   },
   "belegt_zu_spaet": {
@@ -87567,16 +87596,16 @@
    "clvUg": -1.16
   },
   "nehmbar": {
-   "n": 1472,
+   "n": 1473,
    "wins": 454,
-   "hit": 0.3084,
-   "pnl": -2631.46,
-   "stake": 14720.0,
-   "roi": -0.1788,
-   "roiUg": -0.2734,
+   "hit": 0.3082,
+   "pnl": -2641.46,
+   "stake": 14730.0,
+   "roi": -0.1793,
+   "roiUg": -0.2739,
    "belegt": false,
    "clvAvg": 0.03,
-   "clvN": 1472,
+   "clvN": 1473,
    "clvUg": -0.05,
    "byCat": {
     "E-Sport": {
@@ -87593,16 +87622,16 @@
      "clvUg": -0.28
     },
     "Fußball": {
-     "n": 897,
+     "n": 898,
      "wins": 185,
-     "hit": 0.2062,
-     "pnl": -2574.14,
-     "stake": 8970.0,
-     "roi": -0.287,
-     "roiUg": -0.4303,
+     "hit": 0.206,
+     "pnl": -2584.14,
+     "stake": 8980.0,
+     "roi": -0.2878,
+     "roiUg": -0.431,
      "belegt": false,
      "clvAvg": 0.05,
-     "clvN": 897,
+     "clvN": 898,
      "clvUg": -0.06
     },
     "None": {
