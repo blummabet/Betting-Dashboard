@@ -25,7 +25,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "36180829: zuletzt 72.702 € und Anpfiff erst in 50.7 h — trotzdem nicht mehr im Feed"
+        "36180829: zuletzt 72.702 € und Anpfiff erst in 50.5 h — trotzdem nicht mehr im Feed"
       ],
       "note": "Der Detail-Deckel darf nicht das teuerste Spiel schneiden — genau das ist am 08.09. passiert (alle vier CL-Spiele, Real Madrid mit 102.861 €)."
     },
@@ -90,39 +90,35 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 682127 verbraucht, 4317873 uebrig"
+      "note": "Kontingent: 682715 verbraucht, 4317285 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 22,
+      "nFail": 18,
       "failures": [
+        "Fc Dornbirn v SCR Altach (Am) (Austrian Regionalliga): name — bester Kandidat „Rheindorf Altach v Austria Wien“",
         "Al Tadhamon v Kuwait SC (Kuwaiti Premier League): name — bester Kandidat „Al-Ittihad v Diriyah Club“",
-        "KSV 1919 v St Polten (Austrian Erste Liga): name — bester Kandidat „SV Darmstadt 98 v FC St. Pauli“",
         "Al-Jazeera v Al Faisaly SC (Jordanian Premier League): unerklaert — bester Kandidat „Al-Ahli v Al-Khaleej“",
         "Al Khalidiyah v Al-Ittifaq Maqaba (Bahraini Premier): unerklaert — bester Kandidat „Al-Ahli v Al-Khaleej“",
         "Al Nasr (UAE) v Bani Yas (UAE Presidents Cup): name — bester Kandidat „Al-Ittihad v Diriyah Club“",
         "Al Seeb v Sohar (Omani Professional League): name — bester Kandidat „Al-Ittihad v Diriyah Club“",
         "Saham v Al Nahdha (Omani Professional League): name — bester Kandidat „Al-Ittihad v Diriyah Club“",
-        "Etihad Al Ramtha v Alhashemyya (Jordan 1st Division): name — bester Kandidat „Al-Ittihad v Diriyah Club“",
-        "Al-Ahed v Al Riyadi Al Abassiya (Lebanese Premier League): zeit — bester Kandidat „Al-Ahli v Al-Khaleej“ · 3.0h Anpfiff-Abstand",
-        "Nancy v Laval (French Ligue 2): name — bester Kandidat „Nancy v Stade Lavallois“",
         "Guimaraes v Maritimo (Portuguese Primeira Liga): name — bester Kandidat „Vitória SC v CS Maritimo“",
+        "Nancy v Laval (French Ligue 2): name — bester Kandidat „Nancy v Stade Lavallois“",
         "Stade Lausanne-Ouchy v Neuchatel Xamax (Swiss Challenge League): name — bester Kandidat „Nancy v Stade Lavallois“",
         "Winterthur v Stade Nyonnais (Swiss Challenge League): name — bester Kandidat „Nancy v Stade Lavallois“",
-        "Fc Dornbirn v SCR Altach (Am) (Austrian Regionalliga): name — bester Kandidat „Rheindorf Altach v Austria Wien“",
         "FC Goa v Al-Qadsia (AFC Challenge League): name — bester Kandidat „Al-Ittihad v Diriyah Club“",
         "Man City U21 v Stoke U21 (English Premier League 2 - Div 1): zeit — bester Kandidat „Stoke City v Bristol City“ · 20.0h Anpfiff-Abstand",
         "Waasland-Beveren (Res) v Kortrijk (Res) (Belgian Beloften Pro League Reserve): name — bester Kandidat „KV Kortrijk v KV Mechelen“",
-        "FC Magdeburg v Karlsruhe (German Bundesliga 2): name — bester Kandidat „1. FC Magdeburg v Karlsruher SC“",
-        "Chelsea U21 v Liverpool U21 (English Premier League 2 - Div 1): zeit — bester Kandidat „Liverpool v Chelsea“ · 103.0h Anpfiff-Abstand",
         "Stuttgart v Mgladbach (German Bundesliga): name — bester Kandidat „VfB Stuttgart v Borussia Monchengladbach“",
         "Al Sailiya v Al Rayyan (Qatari Stars League): unerklaert — bester Kandidat „Al-Ahli v Al-Khaleej“",
+        "KSV 1919 v St Polten (Austrian Erste Liga): name — bester Kandidat „SV Darmstadt 98 v FC St. Pauli“",
         "Austria Wien (A) v SK Sturm Graz II (Austrian Erste Liga): name — bester Kandidat „Rheindorf Altach v Austria Wien“"
       ],
-      "note": "ohne Anker: kein_kandidat 74 · name 16 · unerklaert 3 · zeit 3. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 76 · kein_pinnacle 2 · name 14 · unerklaert 3 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -131,7 +127,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 0"
+      "note": "Quelle ohne Pinnacle: 2 — Randers v Brondby (36 Buecher, ohne Pinnacle); Alanyaspor v Kocaelispor (36 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -140,7 +136,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 12 gewollt, 12 abgerufen, 0 mit Daten"
+      "note": "Totals: 13 gewollt, 13 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -207,5 +203,5 @@
     }
   ],
   "nFail": 2,
-  "generatedAt": "2026-10-23T17:01:01.897696+00:00"
+  "generatedAt": "2026-10-23T17:16:56.667838+00:00"
 }
