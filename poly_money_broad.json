@@ -1,15 +1,15 @@
 {
- "n": 575,
+ "n": 579,
  "minOdds": 1.35,
- "moneyHitRate": 0.433,
- "priceHitRate": 0.454,
- "brierMoney": 0.7949,
- "brierPrice": 0.6615,
+ "moneyHitRate": 0.43,
+ "priceHitRate": 0.449,
+ "brierMoney": 0.7976,
+ "brierPrice": 0.6627,
  "disagree": {
-  "n": 147,
-  "moneyWon": 27,
+  "n": 151,
+  "moneyWon": 28,
   "priceWon": 39,
-  "neither": 81
+  "neither": 84
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -23,19 +23,19 @@
    "verdict": "preis_besser"
   },
   {
-   "league": "EPL",
-   "n": 35,
-   "moneyHitRate": 0.314,
-   "brierMoney": 0.7894,
-   "brierPrice": 0.7398,
-   "verdict": "preis_besser"
-  },
-  {
    "league": "LA-LIGA-2",
    "n": 28,
    "moneyHitRate": 0.571,
    "brierMoney": 0.6779,
    "brierPrice": 0.6263,
+   "verdict": "preis_besser"
+  },
+  {
+   "league": "EPL",
+   "n": 37,
+   "moneyHitRate": 0.297,
+   "brierMoney": 0.8088,
+   "brierPrice": 0.7432,
    "verdict": "preis_besser"
   },
   {
@@ -47,19 +47,19 @@
    "verdict": "preis_besser"
   },
   {
-   "league": "LA-LIGA",
-   "n": 33,
-   "moneyHitRate": 0.455,
-   "brierMoney": 0.7574,
-   "brierPrice": 0.6767,
-   "verdict": "preis_besser"
-  },
-  {
    "league": "SOCCER:UCL",
    "n": 59,
    "moneyHitRate": 0.237,
    "brierMoney": 0.896,
    "brierPrice": 0.8091,
+   "verdict": "preis_besser"
+  },
+  {
+   "league": "LA-LIGA",
+   "n": 35,
+   "moneyHitRate": 0.429,
+   "brierMoney": 0.7831,
+   "brierPrice": 0.689,
    "verdict": "preis_besser"
   },
   {
@@ -104,9 +104,9 @@
   }
  ],
  "guete": {
-  "belastbar": 575,
-  "preis_echo": 404,
-  "abgeschnitten": 90,
+  "belastbar": 579,
+  "preis_echo": 408,
+  "abgeschnitten": 89,
   "unbekannt": 0,
   "leer": 0
  },
@@ -524,7 +524,7 @@
    "league": "EPL",
    "winner": "Draw (Aston Villa FC vs. Brentford FC)",
    "moneyFav": "Brentford FC",
-   "priceFav": "Brentford FC",
+   "priceFav": "Aston Villa FC",
    "moneyShare": 0.803,
    "priceProb": 0.367,
    "moneyOK": false,
@@ -572,7 +572,7 @@
    "league": "SOCCER:UCL",
    "winner": "Paris Saint-Germain FC 4 - 2 FC Barcelona",
    "moneyFav": "Paris Saint-Germain FC 3 - 2 FC Barcelona",
-   "priceFav": "Paris Saint-Germain FC 2 - 2 FC Barcelona",
+   "priceFav": "Any Other Score",
    "moneyShare": 0.071,
    "priceProb": 0.072,
    "moneyOK": false,
@@ -592,7 +592,7 @@
    "totalUsd": 323979
   }
  ],
- "generatedAt": "2026-10-23T21:16:22.056535+00:00",
+ "generatedAt": "2026-10-23T21:46:39.220723+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -601,21 +601,21 @@
   "mlb": 452,
   "nhl": 625,
   "mls": 728,
-  "epl": 629,
+  "epl": 620,
   "soccer": 800,
-  "tennis": 525,
+  "tennis": 522,
   "ucl": 544,
-  "la-liga": 604,
+  "la-liga": 595,
   "bundesliga": 536,
   "serie-a": 52,
-  "ligue-1": 580,
+  "ligue-1": 578,
   "primeira-liga": 499,
   "brazil-serie-a": 550,
   "brasileirao": 0,
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 687,
+  "esports": 685,
   "cs2": 425,
   "lol": 439,
   "dota": 29,
@@ -638,7 +638,7 @@
   "chinese-super-league": 446,
   "concacaf-nations-league": 401,
   "czechia-fortuna-liga": 134,
-  "denmark-superliga": 466,
+  "denmark-superliga": 465,
   "efl-championship": 582,
   "egypt-premier-league": 113,
   "english-premier-league": 2,
@@ -658,7 +658,7 @@
   "norway-eliteserien": 487,
   "peru-liga-1": 143,
   "poland-ekstraklasa": 440,
-  "premier-league": 602,
+  "premier-league": 593,
   "romania-superliga": 138,
   "saudi-professional-league": 516,
   "scotland-league-cup": 193,
@@ -677,11 +677,11 @@
   "womens-champions-league": 445
  },
  "rawBySeries": {
-  "10188": 595,
-  "10193": 585,
+  "10188": 586,
+  "10193": 576,
   "10194": 521,
-  "10195": 565,
-  "10203": 677
+  "10195": 563,
+  "10203": 671
  },
  "sweepStats": {
   "sweepOpen": 500,
@@ -689,98 +689,93 @@
   "sweepAdded": 412
  },
  "vorStats": {
-  "kandidaten": 8,
+  "kandidaten": 9,
   "budgetLeer": 0,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
-  "mitAnteilen": 8,
-  "calls": 8
+  "mitAnteilen": 9,
+  "calls": 9
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1856,
-   "usd": 50418660,
-   "beispiel": "fifwc-jor-arg-2026-06-27"
+   "n": 2000,
+   "usd": 53103750,
+   "beispiel": "fifwc-fra-mar-2026-07-09"
   },
   "world": {
-   "n": 131,
-   "usd": 9093472,
+   "n": 111,
+   "usd": 9045199,
    "beispiel": "world-cup-winner"
   },
   "uefa": {
-   "n": 44,
-   "usd": 4775434,
-   "beispiel": "uefa-champions-league-winner"
-  },
-  "fed": {
-   "n": 40,
-   "usd": 1298592,
-   "beispiel": "fed-decision-in-october-20260617190323537"
+   "n": 43,
+   "usd": 4773073,
+   "beispiel": "uefa-champions-league-2027-champion-20260701202025549"
   },
   "which": {
-   "n": 41,
-   "usd": 1091664,
-   "beispiel": "which-party-will-win-the-senate-in-2026"
-  },
-  "presidential": {
-   "n": 13,
-   "usd": 1090430,
-   "beispiel": "presidential-election-winner-2028"
+   "n": 44,
+   "usd": 1235691,
+   "beispiel": "which-party-will-win-the-house-in-2026"
   },
   "ecs": {
    "n": 8,
-   "usd": 1071078,
+   "usd": 1078909,
    "beispiel": "ecs-ars-mci-2026-08-16"
   },
   "will": {
-   "n": 22,
-   "usd": 825877,
-   "beispiel": "will-mitch-mcconnell-resign-from-the-senate-before-his-term-ends"
+   "n": 24,
+   "usd": 779394,
+   "beispiel": "will-predictfun-launch-a-token-by"
+  },
+  "cbb": {
+   "n": 89,
+   "usd": 767831,
+   "beispiel": "cbb-uconn-mich-2026-04-06"
   },
   "balance": {
-   "n": 15,
-   "usd": 745177,
+   "n": 14,
+   "usd": 739022,
    "beispiel": "balance-of-power-2026-midterms"
   },
   "republican": {
    "n": 11,
-   "usd": 525740,
+   "usd": 529089,
    "beispiel": "republican-senate-seats-after-the-2026-midterm-elections-927"
   },
+  "fed": {
+   "n": 35,
+   "usd": 474832,
+   "beispiel": "fed-decision-in-october-20260617190323537"
+  },
   "btc": {
-   "n": 115,
-   "usd": 379136,
+   "n": 114,
+   "usd": 374136,
    "beispiel": "btc-updown-5m-1791493500"
   },
-  "cbb": {
-   "n": 26,
-   "usd": 346426,
-   "beispiel": "cbb-ind-rutger-2026-01-23"
-  },
   "usc": {
-   "n": 6,
-   "usd": 346340,
+   "n": 7,
+   "usd": 351760,
    "beispiel": "usc-psg-av-2026-08-12"
   },
   "pro": {
    "n": 44,
-   "usd": 336639,
-   "beispiel": "pro-football-atlanta-falcons-2026-win-total"
+   "usd": 333982,
+   "beispiel": "pro-football-2027-champion-20260729185915366"
   },
-  "ballon": {
-   "n": 42,
-   "usd": 232397,
-   "beispiel": "ballon-dor-winner-2026"
+  "ncaa": {
+   "n": 22,
+   "usd": 203525,
+   "beispiel": "ncaa-football-2026-heisman-award-winner-20260731185656435"
   },
   "us": {
    "n": 26,
-   "usd": 204249,
-   "beispiel": "us-x-iran-ceasefire-by"
+   "usd": 188484,
+   "beispiel": "us-recession-by-end-of-2026"
   },
-  "ncaa": {
-   "n": 18,
-   "usd": 192228,
-   "beispiel": "ncaa-football-team-win-totals-20260731193847013"
+  "presidential": {
+   "n": 9,
+   "usd": 184701,
+   "beispiel": "presidential-election-winner-2028"
   },
   "uef": {
    "n": 12,
@@ -788,13 +783,18 @@
    "beispiel": "uef-kvx-tur-2026-03-31"
   },
   "texas": {
-   "n": 11,
-   "usd": 161282,
-   "beispiel": "texas-republican-senate-primary-winner"
+   "n": 13,
+   "usd": 176460,
+   "beispiel": "texas-senate-election-winner"
+  },
+  "ballon": {
+   "n": 30,
+   "usd": 167652,
+   "beispiel": "ballon-dor-winner-2026"
   },
   "2026": {
-   "n": 24,
-   "usd": 155946,
+   "n": 26,
+   "usd": 167301,
    "beispiel": "2026-nba-champion"
   }
  }
