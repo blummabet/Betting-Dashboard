@@ -37238,7 +37238,10 @@ null
 "value": 115027.41,
 "sentAt": "2026-10-24T11:02:57.047214+00:00",
 "status": "pending",
-"htScore": null,
+"htScore": [
+0,
+0
+],
 "leadShare": 0.837224101629342,
 "leadDir": "flat",
 "onLeader": null,
@@ -37349,7 +37352,7 @@ null
 "leadOdd": 1.49,
 "value": 34623.13,
 "sentAt": "2026-10-24T12:18:23.354228+00:00",
-"status": "pending",
+"status": "won",
 "htScore": [
 0,
 0
@@ -37370,7 +37373,17 @@ null
 0,
 0
 ]
-}
+},
+"clvBf": -9.97,
+"clvPinn": null,
+"settledAt": "2026-10-24T14:18:27.841537+00:00",
+"ftScore": [
+0,
+2
+],
+"profit": 0.49,
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36206196:Match Odds",
@@ -37475,7 +37488,10 @@ null
 "value": 127458.6,
 "sentAt": "2026-10-24T12:51:08.032085+00:00",
 "status": "pending",
-"htScore": null,
+"htScore": [
+0,
+0
+],
 "leadShare": 0.6367849639020042,
 "leadDir": "in",
 "onLeader": null,
@@ -37506,7 +37522,7 @@ null
 "leadOdd": 2.06,
 "value": 63115.53,
 "sentAt": "2026-10-24T13:18:06.403229+00:00",
-"status": "pending",
+"status": "won",
 "htScore": [
 1,
 1
@@ -37527,7 +37543,17 @@ null
 1,
 1
 ]
-}
+},
+"clvBf": 0.96,
+"clvPinn": null,
+"settledAt": "2026-10-24T14:18:27.841537+00:00",
+"ftScore": [
+1,
+3
+],
+"profit": 1.06,
+"via": "track",
+"resChk": true
 },
 {
 "k": "fresh:36209520:Match Odds",
@@ -37542,7 +37568,10 @@ null
 "value": 139440.17,
 "sentAt": "2026-10-24T13:18:06.403336+00:00",
 "status": "pending",
-"htScore": null,
+"htScore": [
+0,
+0
+],
 "leadShare": 0.6615081579432956,
 "leadDir": "out",
 "onLeader": null,
@@ -37622,6 +37651,70 @@ null
 "score": [
 null,
 null
+]
+}
+},
+{
+"k": "ht:36177339:First Half Goals 1.5",
+"matchId": "36177339",
+"scenario": "ht",
+"market": "First Half Goals 1.5",
+"league": "English Premier League",
+"home": "Arsenal",
+"away": "Everton",
+"leadName": "Over 1.5 Goals",
+"leadOdd": 1.55,
+"value": 192983.28,
+"sentAt": "2026-10-24T14:18:13.131367+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.9292311230278603,
+"leadDir": "in",
+"onLeader": false,
+"tier": "top",
+"magnitude": 192983.3,
+"schwelle": 50000.0,
+"anteilSchwelle": 3.86,
+"raus": "ereignis_sprung",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 16,
+"score": [
+1,
+0
+]
+}
+},
+{
+"k": "fresh:36205151:Match Odds",
+"matchId": "36205151",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "English Sky Bet Championship",
+"home": "West Ham",
+"away": "Southampton",
+"leadName": "Southampton",
+"leadOdd": 1.54,
+"value": 125247.73,
+"sentAt": "2026-10-24T14:18:13.131398+00:00",
+"status": "pending",
+"htScore": null,
+"leadShare": 0.5112918214166436,
+"leadDir": "in",
+"onLeader": true,
+"tier": "rest",
+"magnitude": 68138.6,
+"schwelle": 30000.0,
+"anteilSchwelle": 2.271,
+"raus": "leader",
+"quelle": "public",
+"gesendet": false,
+"live": {
+"time": 14,
+"score": [
+0,
+2
 ]
 }
 }
