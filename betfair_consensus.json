@@ -1,6 +1,6 @@
 {
-"generatedAt": "2026-10-24T08:31:26.370986+00:00",
-"count": 40,
+"generatedAt": "2026-10-24T09:18:11.546839+00:00",
+"count": 42,
 "covered": 37,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
@@ -55,14 +55,14 @@
 "French Ligue 1",
 "German Bundesliga",
 "Italian Serie A",
-"Japanese J League",
 "Spanish La Liga",
+"Spanish Segunda Division",
 "Turkish Super League"
 ],
 "leaguesMitTotals": [],
 "oddsKeysFetched": 47,
 "oddsKeysMitDaten": 47,
-"oddsEvents": 564,
+"oddsEvents": 563,
 "oddsTotals": {
 "versucht": 10,
 "mitDaten": 0,
@@ -71,14 +71,91 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 721443,
-"remaining": 4278557,
+"used": 723147,
+"remaining": 4276853,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
 },
-"ankerQuote": 0.95,
+"ankerQuote": 0.966,
 "games": [
+{
+"matchId": "36177359",
+"home": "Aston Villa",
+"away": "Man City",
+"league": "English Premier League",
+"country": "GB",
+"kickoff": "2026-10-24T11:30:00Z",
+"live": false,
+"moneySide": "away",
+"moneyName": "Man City",
+"moneySharePct": 73,
+"moneyOdd": 1.66,
+"moneyDir": "flat",
+"totVol": 671513,
+"pinnOdd": 1.63,
+"softOdd": 1.62,
+"softN": 49,
+"poly": {
+"vol": 466796,
+"odd": 1.68,
+"sharePct": 98,
+"shareSrc": "geld",
+"key": "epl-ast-mac-2026-10-24",
+"sideKey": "Manchester City FC",
+"whales": [
+{
+"wallet": "0x85f031d069de300055900c4055c1baeb6bde3f67",
+"usd": 179632
+},
+{
+"wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
+"usd": 12773
+},
+{
+"wallet": "0x3435519d1d620440c7dab8b5c9ec5d79c1a5a1ed",
+"usd": 9153
+},
+{
+"wallet": "0xf4362f4784eec9e5e3ba93b0b90da08017624591",
+"usd": 7613
+},
+{
+"wallet": "0x16602a38e8fb4498ffee0ea81e08d2b421825598",
+"usd": 5950
+},
+{
+"wallet": "0x5d0c2108a8d50bafc16a4f8200281a0e822dbceb",
+"usd": 2975
+}
+],
+"whaleUsd": 234731
+},
+"pinn": {
+"home": 0.1883,
+"draw": 0.218,
+"away": 0.5937,
+"fav": "away"
+},
+"soft": {
+"home": 0.1968,
+"draw": 0.216,
+"away": 0.5873,
+"fav": "away",
+"n": 49
+},
+"pinnMovePP": -0.1,
+"pinnMove": {
+"movePP": -0.1,
+"stepPP": 0.4,
+"n": 25,
+"move": false,
+"laeuft": false
+},
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
 {
 "matchId": "36177339",
 "home": "Arsenal",
@@ -89,17 +166,17 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Arsenal",
-"moneySharePct": 84,
+"moneySharePct": 83,
 "moneyOdd": 1.47,
 "moneyDir": "flat",
-"totVol": 426253,
-"pinnOdd": 1.45,
+"totVol": 464501,
+"pinnOdd": 1.44,
 "softOdd": 1.44,
-"softN": 51,
+"softN": 50,
 "poly": {
-"vol": 266214,
+"vol": 279697,
 "odd": 1.48,
-"sharePct": 85,
+"sharePct": 80,
 "shareSrc": "geld",
 "key": "epl-ars-eve-2026-10-24",
 "sideKey": "Arsenal FC",
@@ -132,25 +209,25 @@
 "whaleUsd": 46419
 },
 "pinn": {
-"home": 0.6646,
-"draw": 0.2113,
-"away": 0.124,
+"home": 0.67,
+"draw": 0.2088,
+"away": 0.1212,
 "fav": "home"
 },
 "soft": {
-"home": 0.6596,
-"draw": 0.2111,
-"away": 0.1293,
+"home": 0.6615,
+"draw": 0.2081,
+"away": 0.1304,
 "fav": "home",
-"n": 51
+"n": 50
 },
-"pinnMovePP": 1.4,
+"pinnMovePP": 2.0,
 "pinnMove": {
-"movePP": 1.4,
-"stepPP": 0.0,
+"movePP": 2.0,
+"stepPP": 0.4,
 "n": 25,
 "move": true,
-"laeuft": false
+"laeuft": true
 },
 "verdict": "konsens",
 "agree": true,
@@ -168,118 +245,66 @@
 "moneyName": "Chelsea",
 "moneySharePct": 80,
 "moneyOdd": 2.0,
-"moneyDir": "flat",
-"totVol": 324594,
-"pinnOdd": 1.95,
+"moneyDir": "out",
+"totVol": 347190,
+"pinnOdd": 1.98,
 "softOdd": 1.91,
-"softN": 51,
-"poly": {
-"vol": 729874,
-"odd": 2.02,
-"sharePct": 50,
-"shareSrc": "preis",
-"key": "epl-che-tot-2026-10-24",
-"sideKey": "Chelsea FC",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.4981,
-"draw": 0.2497,
-"away": 0.2523,
-"fav": "home"
-},
-"soft": {
-"home": 0.4989,
-"draw": 0.2446,
-"away": 0.2565,
-"fav": "home",
-"n": 51
-},
-"pinnMovePP": -2.6,
-"pinnMove": {
-"movePP": -2.6,
-"stepPP": 0.0,
-"n": 25,
-"move": true,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36177359",
-"home": "Aston Villa",
-"away": "Man City",
-"league": "English Premier League",
-"country": "GB",
-"kickoff": "2026-10-24T11:30:00Z",
-"live": false,
-"moneySide": "away",
-"moneyName": "Man City",
-"moneySharePct": 74,
-"moneyOdd": 1.68,
-"moneyDir": "in",
-"totVol": 308733,
-"pinnOdd": 1.64,
-"softOdd": 1.62,
 "softN": 50,
 "poly": {
-"vol": 459014,
-"odd": 1.68,
+"vol": 731924,
+"odd": 2.02,
 "sharePct": 99,
 "shareSrc": "geld",
-"key": "epl-ast-mac-2026-10-24",
-"sideKey": "Manchester City FC",
+"key": "epl-che-tot-2026-10-24",
+"sideKey": "Chelsea FC",
 "whales": [
 {
 "wallet": "0x85f031d069de300055900c4055c1baeb6bde3f67",
-"usd": 179632
+"usd": 128700
 },
 {
-"wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
-"usd": 11004
+"wallet": "0x52d93dcf81444f793dda7fedc370f7a35101fb1a",
+"usd": 11816
 },
 {
-"wallet": "0x3435519d1d620440c7dab8b5c9ec5d79c1a5a1ed",
-"usd": 9153
+"wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
+"usd": 10151
 },
 {
-"wallet": "0xf4362f4784eec9e5e3ba93b0b90da08017624591",
-"usd": 7613
+"wallet": "0x46072f22bc5624f7ff43489d570fdc7e745ad542",
+"usd": 9167
 },
 {
-"wallet": "0x16602a38e8fb4498ffee0ea81e08d2b421825598",
-"usd": 5950
+"wallet": "0xfb07f48542d2b655e9d0bf1cc92a8a6feee8e2cc",
+"usd": 7796
 },
 {
-"wallet": "0x5d0c2108a8d50bafc16a4f8200281a0e822dbceb",
-"usd": 2975
+"wallet": "0x0235dc24b38772bf3339a9e5ec5db3d3a05fcee5",
+"usd": 7614
 }
 ],
-"whaleUsd": 224281
+"whaleUsd": 206917
 },
 "pinn": {
-"home": 0.1907,
-"draw": 0.2197,
-"away": 0.5896,
-"fav": "away"
+"home": 0.491,
+"draw": 0.2538,
+"away": 0.2552,
+"fav": "home"
 },
 "soft": {
-"home": 0.198,
-"draw": 0.2168,
-"away": 0.5851,
-"fav": "away",
+"home": 0.4987,
+"draw": 0.2455,
+"away": 0.2558,
+"fav": "home",
 "n": 50
 },
-"pinnMovePP": -0.5,
+"pinnMovePP": -3.6,
 "pinnMove": {
-"movePP": -0.5,
-"stepPP": -0.0,
+"movePP": -3.6,
+"stepPP": -0.7,
 "n": 25,
-"move": false,
-"laeuft": false
+"move": true,
+"laeuft": true
 },
 "verdict": "konsens",
 "agree": true,
@@ -296,14 +321,14 @@
 "moneySide": "away",
 "moneyName": "Real Madrid",
 "moneySharePct": 52,
-"moneyOdd": 4.1,
+"moneyOdd": 4.2,
 "moneyDir": "out",
-"totVol": 176399,
+"totVol": 178905,
 "pinnOdd": 3.81,
-"softOdd": 3.85,
+"softOdd": 3.9,
 "softN": 45,
 "poly": {
-"vol": 411602,
+"vol": 413600,
 "odd": 4.08,
 "sharePct": 24,
 "shareSrc": "preis",
@@ -319,18 +344,18 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.5861,
-"draw": 0.17,
-"away": 0.2439,
+"home": 0.5865,
+"draw": 0.1701,
+"away": 0.2434,
 "fav": "home",
 "n": 45
 },
-"pinnMovePP": 1.0,
+"pinnMovePP": 0.7,
 "pinnMove": {
-"movePP": 1.0,
+"movePP": 0.7,
 "stepPP": 0.0,
 "n": 25,
-"move": true,
+"move": false,
 "laeuft": false
 },
 "verdict": "uneinig",
@@ -349,13 +374,13 @@
 "moneyName": "Como",
 "moneySharePct": 87,
 "moneyOdd": 1.5,
-"moneyDir": "in",
-"totVol": 117184,
-"pinnOdd": 1.48,
+"moneyDir": "out",
+"totVol": 126886,
+"pinnOdd": 1.47,
 "softOdd": 1.45,
 "softN": 49,
 "poly": {
-"vol": 61657,
+"vol": 62400,
 "odd": 1.5,
 "sharePct": 66,
 "shareSrc": "preis",
@@ -365,28 +390,91 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.6535,
-"draw": 0.1966,
-"away": 0.1499,
+"home": 0.6559,
+"draw": 0.196,
+"away": 0.1481,
 "fav": "home"
 },
 "soft": {
-"home": 0.6445,
-"draw": 0.1935,
-"away": 0.162,
+"home": 0.6478,
+"draw": 0.1924,
+"away": 0.1598,
 "fav": "home",
 "n": 49
 },
-"pinnMovePP": 1.1,
+"pinnMovePP": 1.3,
 "pinnMove": {
-"movePP": 1.1,
-"stepPP": 0.0,
+"movePP": 1.3,
+"stepPP": -0.0,
 "n": 25,
 "move": true,
 "laeuft": false
 },
 "verdict": "konsens",
 "agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36209444",
+"home": "Henan Songshan Longmen",
+"away": "Beijing Guoan",
+"league": "Chinese Super League",
+"country": "CN",
+"kickoff": "2026-10-24T07:30:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Henan Songshan Longmen",
+"moneySharePct": 46,
+"moneyOdd": 75.0,
+"moneyDir": "out",
+"totVol": 91757,
+"pinnOdd": 25.27,
+"softOdd": 50.5,
+"softN": 26,
+"poly": {
+"vol": 23314,
+"odd": 3.85,
+"sharePct": 28,
+"shareSrc": "geld",
+"key": "chi-hen-bgu-2026-10-24",
+"sideKey": "Henan FC",
+"whales": [
+{
+"wallet": "0x824978ad8f2aa87ec22da2df99ffbb7d58e0b23a",
+"usd": 377
+},
+{
+"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+"usd": 218
+},
+{
+"wallet": "0x882c2e9d90d28e02a15be0d7f8d3636994305d07",
+"usd": 188
+},
+{
+"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+"usd": 85
+}
+],
+"whaleUsd": 868
+},
+"pinn": {
+"home": 0.0373,
+"draw": 0.1843,
+"away": 0.7784,
+"fav": "away"
+},
+"soft": {
+"home": 0.0198,
+"draw": 0.1514,
+"away": 0.8288,
+"fav": "away",
+"n": 26
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "uneinig",
+"agree": false,
 "pinnTotals": null
 },
 {
@@ -399,106 +487,35 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Atletico Madrid",
-"moneySharePct": 91,
+"moneySharePct": 90,
 "moneyOdd": 1.3,
 "moneyDir": "flat",
-"totVol": 82453,
+"totVol": 85306,
 "pinnOdd": 1.28,
 "softOdd": 1.26,
 "softN": 42,
 "poly": null,
 "pinn": {
-"home": 0.7524,
-"draw": 0.1605,
-"away": 0.0871,
+"home": 0.7522,
+"draw": 0.161,
+"away": 0.0867,
 "fav": "home"
 },
 "soft": {
-"home": 0.7478,
-"draw": 0.1612,
-"away": 0.091,
+"home": 0.7479,
+"draw": 0.1609,
+"away": 0.0913,
 "fav": "home",
 "n": 42
 },
-"pinnMovePP": 0.6,
+"pinnMovePP": 0.9,
 "pinnMove": {
-"movePP": 0.6,
+"movePP": 0.9,
 "stepPP": 0.0,
 "n": 25,
 "move": false,
 "laeuft": false
 },
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36221215",
-"home": "G-Osaka",
-"away": "Kyoto",
-"league": "Japanese J League",
-"country": "JP",
-"kickoff": "2026-10-24T07:00:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "G-Osaka",
-"moneySharePct": 69,
-"moneyOdd": 1.63,
-"moneyDir": "in",
-"totVol": 81145,
-"pinnOdd": 2.14,
-"softOdd": 1.52,
-"softN": 33,
-"poly": {
-"vol": 40984,
-"odd": 2.06,
-"sharePct": 96,
-"shareSrc": "geld",
-"key": "jap-gam-kyo-2026-10-24",
-"sideKey": "Gamba Ōsaka",
-"whales": [
-{
-"wallet": "0xb52e8b3afd9f0f0d502a5a76494b42816d67285c",
-"usd": 12963
-},
-{
-"wallet": "0x02b18dfde01fd53b456cabda7d6ec2403322c764",
-"usd": 242
-},
-{
-"wallet": "0xfa507b50d977e1c3ec3318e5712d127411c5e6e3",
-"usd": 154
-},
-{
-"wallet": "0x48aa08dba99e10b56885fac4334afd8b0a917479",
-"usd": 150
-},
-{
-"wallet": "0x80606c54b1f484542ded2f5b227cc848d3f2ba9f",
-"usd": 136
-},
-{
-"wallet": "0x87eee23290be50ea73f14b4b32aafe3feb813e5a",
-"usd": 115
-}
-],
-"whaleUsd": 14519
-},
-"pinn": {
-"home": 0.4406,
-"draw": 0.3712,
-"away": 0.1882,
-"fav": "home"
-},
-"soft": {
-"home": 0.5826,
-"draw": 0.2932,
-"away": 0.1242,
-"fav": "home",
-"n": 33
-},
-"pinnMovePP": null,
-"pinnMove": null,
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
@@ -514,11 +531,11 @@
 "moneySide": "home",
 "moneyName": "Paris St-G",
 "moneySharePct": 96,
-"moneyOdd": 1.44,
-"moneyDir": "flat",
-"totVol": 80803,
+"moneyOdd": 1.45,
+"moneyDir": "out",
+"totVol": 81269,
 "pinnOdd": 1.43,
-"softOdd": 1.41,
+"softOdd": 1.42,
 "softN": 47,
 "poly": null,
 "pinn": {
@@ -528,20 +545,91 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.6654,
+"home": 0.6651,
 "draw": 0.1828,
-"away": 0.1518,
+"away": 0.1521,
 "fav": "home",
 "n": 47
 },
 "pinnMovePP": -0.6,
 "pinnMove": {
 "movePP": -0.6,
-"stepPP": -0.6,
+"stepPP": -0.0,
 "n": 25,
 "move": false,
-"laeuft": true
+"laeuft": false
 },
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36124455",
+"home": "Melbourne Victory",
+"away": "Melbourne City",
+"league": "Australian A-League Men",
+"country": "AU",
+"kickoff": "2026-10-24T08:40:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Melbourne Victory",
+"moneySharePct": 70,
+"moneyOdd": 1.52,
+"moneyDir": "in",
+"totVol": 80886,
+"pinnOdd": 1.48,
+"softOdd": 1.44,
+"softN": 29,
+"poly": {
+"vol": 10223,
+"odd": 1.53,
+"sharePct": 92,
+"shareSrc": "geld",
+"key": "aus-vic-mct-2026-10-24",
+"sideKey": "Melbourne Victory FC",
+"whales": [
+{
+"wallet": "0x34a1eed3f6bb10dd2f99b79cb4e8ca8749ae7622",
+"usd": 13094
+},
+{
+"wallet": "0xae53e52363ff16a948a9ac7ab6ac1bb05e565940",
+"usd": 1672
+},
+{
+"wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
+"usd": 261
+},
+{
+"wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+"usd": 246
+},
+{
+"wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
+"usd": 197
+},
+{
+"wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+"usd": 118
+}
+],
+"whaleUsd": 15724
+},
+"pinn": {
+"home": 0.6377,
+"draw": 0.2342,
+"away": 0.1281,
+"fav": "home"
+},
+"soft": {
+"home": 0.6357,
+"draw": 0.2287,
+"away": 0.1356,
+"fav": "home",
+"n": 29
+},
+"pinnMovePP": null,
+"pinnMove": null,
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
@@ -558,13 +646,13 @@
 "moneyName": "Man Utd",
 "moneySharePct": 53,
 "moneyOdd": 2.34,
-"moneyDir": "flat",
-"totVol": 76332,
+"moneyDir": "out",
+"totVol": 77355,
 "pinnOdd": 2.2,
 "softOdd": 2.16,
-"softN": 51,
+"softN": 50,
 "poly": {
-"vol": 20380,
+"vol": 20507,
 "odd": 2.3,
 "sharePct": 44,
 "shareSrc": "preis",
@@ -574,25 +662,77 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.4394,
-"draw": 0.2613,
-"away": 0.2993,
+"home": 0.4397,
+"draw": 0.2608,
+"away": 0.2995,
 "fav": "home"
 },
 "soft": {
-"home": 0.4358,
+"home": 0.4359,
 "draw": 0.2611,
 "away": 0.3031,
 "fav": "home",
-"n": 51
+"n": 50
 },
-"pinnMovePP": 0.3,
+"pinnMovePP": 0.4,
 "pinnMove": {
-"movePP": 0.3,
+"movePP": 0.4,
 "stepPP": 0.0,
 "n": 25,
 "move": false,
 "laeuft": false
+},
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36209511",
+"home": "Cagliari",
+"away": "Bologna",
+"league": "Italian Serie A",
+"country": "IT",
+"kickoff": "2026-10-24T13:00:00Z",
+"live": false,
+"moneySide": "away",
+"moneyName": "Bologna",
+"moneySharePct": 37,
+"moneyOdd": 2.72,
+"moneyDir": "out",
+"totVol": 69970,
+"pinnOdd": 2.62,
+"softOdd": 2.59,
+"softN": 49,
+"poly": {
+"vol": 10212,
+"odd": 2.74,
+"sharePct": 36,
+"shareSrc": "preis",
+"key": "sea-cag-bol-2026-10-24",
+"sideKey": "Bologna FC 1909",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.3068,
+"draw": 0.322,
+"away": 0.3712,
+"fav": "away"
+},
+"soft": {
+"home": 0.3141,
+"draw": 0.3197,
+"away": 0.3662,
+"fav": "away",
+"n": 49
+},
+"pinnMovePP": 0.1,
+"pinnMove": {
+"movePP": 0.1,
+"stepPP": 1.2,
+"n": 24,
+"move": false,
+"laeuft": true
 },
 "verdict": "konsens",
 "agree": true,
@@ -608,15 +748,15 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Napoli",
-"moneySharePct": 39,
+"moneySharePct": 38,
 "moneyOdd": 2.8,
 "moneyDir": "flat",
-"totVol": 64147,
-"pinnOdd": 2.7,
+"totVol": 67464,
+"pinnOdd": 2.75,
 "softOdd": 2.62,
 "softN": 49,
 "poly": {
-"vol": 31631,
+"vol": 31643,
 "odd": 2.74,
 "sharePct": 36,
 "shareSrc": "preis",
@@ -626,132 +766,28 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.3604,
-"draw": 0.2845,
-"away": 0.3551,
+"home": 0.3542,
+"draw": 0.2916,
+"away": 0.3542,
 "fav": "home"
 },
 "soft": {
-"home": 0.358,
-"draw": 0.2853,
+"home": 0.3577,
+"draw": 0.2855,
 "away": 0.3567,
 "fav": "home",
 "n": 49
 },
-"pinnMovePP": 1.6,
+"pinnMovePP": 1.0,
 "pinnMove": {
-"movePP": 1.6,
-"stepPP": -0.0,
+"movePP": 1.0,
+"stepPP": -0.4,
 "n": 25,
-"move": true,
+"move": false,
 "laeuft": false
 },
 "verdict": "konsens",
 "agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36209511",
-"home": "Cagliari",
-"away": "Bologna",
-"league": "Italian Serie A",
-"country": "IT",
-"kickoff": "2026-10-24T13:00:00Z",
-"live": false,
-"moneySide": "home",
-"moneyName": "Cagliari",
-"moneySharePct": 39,
-"moneyOdd": 3.2,
-"moneyDir": "flat",
-"totVol": 58244,
-"pinnOdd": 3.04,
-"softOdd": 2.9,
-"softN": 49,
-"poly": {
-"vol": 6666,
-"odd": 3.17,
-"sharePct": 32,
-"shareSrc": "preis",
-"key": "sea-cag-bol-2026-10-24",
-"sideKey": "Cagliari Calcio",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.3202,
-"draw": 0.3245,
-"away": 0.3553,
-"fav": "away"
-},
-"soft": {
-"home": 0.3237,
-"draw": 0.3179,
-"away": 0.3585,
-"fav": "away",
-"n": 49
-},
-"pinnMovePP": 0.9,
-"pinnMove": {
-"movePP": 0.9,
-"stepPP": -0.1,
-"n": 23,
-"move": false,
-"laeuft": false
-},
-"verdict": "uneinig",
-"agree": false,
-"pinnTotals": null
-},
-{
-"matchId": "36177487",
-"home": "Liverpool",
-"away": "Brighton",
-"league": "English Premier League",
-"country": "GB",
-"kickoff": "2026-10-25T14:00:00Z",
-"live": false,
-"moneySide": "away",
-"moneyName": "Brighton",
-"moneySharePct": 49,
-"moneyOdd": 3.4,
-"moneyDir": "flat",
-"totVol": 55810,
-"pinnOdd": 3.2,
-"softOdd": 3.2,
-"softN": 51,
-"poly": {
-"vol": 442051,
-"odd": 3.28,
-"sharePct": 30,
-"shareSrc": "preis",
-"key": "epl-liv-bri-2026-10-25",
-"sideKey": "Brighton & Hove Albion FC",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.4558,
-"draw": 0.2422,
-"away": 0.302,
-"fav": "home"
-},
-"soft": {
-"home": 0.455,
-"draw": 0.2484,
-"away": 0.2966,
-"fav": "home",
-"n": 51
-},
-"pinnMovePP": 0.1,
-"pinnMove": {
-"movePP": 0.1,
-"stepPP": -0.0,
-"n": 25,
-"move": false,
-"laeuft": false
-},
-"verdict": "uneinig",
-"agree": false,
 "pinnTotals": null
 },
 {
@@ -764,15 +800,15 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Lazio",
-"moneySharePct": 78,
-"moneyOdd": 1.5,
-"moneyDir": "in",
-"totVol": 52860,
+"moneySharePct": 77,
+"moneyOdd": 1.53,
+"moneyDir": "out",
+"totVol": 62214,
 "pinnOdd": 1.49,
-"softOdd": 1.45,
+"softOdd": 1.46,
 "softN": 49,
 "poly": {
-"vol": 37782,
+"vol": 37823,
 "odd": 1.5,
 "sharePct": 66,
 "shareSrc": "preis",
@@ -788,9 +824,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.6501,
-"draw": 0.2167,
-"away": 0.1333,
+"home": 0.6466,
+"draw": 0.2186,
+"away": 0.1349,
 "fav": "home",
 "n": 49
 },
@@ -798,6 +834,307 @@
 "pinnMove": {
 "movePP": -2.9,
 "stepPP": -0.0,
+"n": 25,
+"move": true,
+"laeuft": false
+},
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36209595",
+"home": "Tianjin Jinmen Tiger FC",
+"away": "Shanghai Port FC",
+"league": "Chinese Super League",
+"country": "CN",
+"kickoff": "2026-10-24T07:30:00Z",
+"live": true,
+"moneySide": "away",
+"moneyName": "Shanghai Port FC",
+"moneySharePct": 86,
+"moneyOdd": 1.03,
+"moneyDir": "in",
+"totVol": 59167,
+"pinnOdd": 1.26,
+"softOdd": 1.02,
+"softN": 18,
+"poly": {
+"vol": 14797,
+"odd": 1.48,
+"sharePct": 91,
+"shareSrc": "geld",
+"key": "chi-jin-shp-2026-10-24",
+"sideKey": "Shanghai Haigang FC",
+"whales": [
+{
+"wallet": "0x824978ad8f2aa87ec22da2df99ffbb7d58e0b23a",
+"usd": 542
+},
+{
+"wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+"usd": 318
+},
+{
+"wallet": "0xad0be253358a44cefbee8ab5edfb9a85790da514",
+"usd": 253
+},
+{
+"wallet": "0x65503c7f9e142ac88b1ce09df3363ff77f188451",
+"usd": 214
+},
+{
+"wallet": "0x40ca38c18ef099ed9e05ae65ea8ca401e8c3a96d",
+"usd": 208
+},
+{
+"wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
+"usd": 176
+}
+],
+"whaleUsd": 2497
+},
+"pinn": {
+"home": 0.042,
+"draw": 0.2152,
+"away": 0.7428,
+"fav": "away"
+},
+"soft": {
+"home": 0.0365,
+"draw": 0.1233,
+"away": 0.8402,
+"fav": "away",
+"n": 18
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36177487",
+"home": "Liverpool",
+"away": "Brighton",
+"league": "English Premier League",
+"country": "GB",
+"kickoff": "2026-10-25T14:00:00Z",
+"live": false,
+"moneySide": "away",
+"moneyName": "Brighton",
+"moneySharePct": 50,
+"moneyOdd": 3.4,
+"moneyDir": "flat",
+"totVol": 57613,
+"pinnOdd": 3.21,
+"softOdd": 3.2,
+"softN": 50,
+"poly": {
+"vol": 442207,
+"odd": 3.28,
+"sharePct": 30,
+"shareSrc": "preis",
+"key": "epl-liv-bri-2026-10-25",
+"sideKey": "Brighton & Hove Albion FC",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.4563,
+"draw": 0.2424,
+"away": 0.3013,
+"fav": "home"
+},
+"soft": {
+"home": 0.4539,
+"draw": 0.2486,
+"away": 0.2974,
+"fav": "home",
+"n": 50
+},
+"pinnMovePP": -0.0,
+"pinnMove": {
+"movePP": -0.0,
+"stepPP": -0.1,
+"n": 25,
+"move": false,
+"laeuft": false
+},
+"verdict": "uneinig",
+"agree": false,
+"pinnTotals": null
+},
+{
+"matchId": "36204731",
+"home": "Liaoning Tieren FC",
+"away": "Zhejiang Greentown",
+"league": "Chinese Super League",
+"country": "CN",
+"kickoff": "2026-10-24T07:30:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Liaoning Tieren FC",
+"moneySharePct": 52,
+"moneyOdd": 27.0,
+"moneyDir": "in",
+"totVol": 55159,
+"pinnOdd": 14.14,
+"softOdd": 21.0,
+"softN": 27,
+"poly": {
+"vol": 21326,
+"odd": 20.0,
+"sharePct": 7,
+"shareSrc": "geld",
+"key": "chi-tie-zhe-2026-10-24",
+"sideKey": "Liaoning Tieren FC",
+"whales": [
+{
+"wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+"usd": 56
+},
+{
+"wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+"usd": 33
+}
+],
+"whaleUsd": 89
+},
+"pinn": {
+"home": 0.0665,
+"draw": 0.2208,
+"away": 0.7127,
+"fav": "away"
+},
+"soft": {
+"home": 0.0449,
+"draw": 0.2112,
+"away": 0.744,
+"fav": "away",
+"n": 27
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "uneinig",
+"agree": false,
+"pinnTotals": null
+},
+{
+"matchId": "36209596",
+"home": "Chengdu Rongcheng",
+"away": "Dalian Yingbo",
+"league": "Chinese Super League",
+"country": "CN",
+"kickoff": "2026-10-24T07:30:00Z",
+"live": true,
+"moneySide": "away",
+"moneyName": "Dalian Yingbo",
+"moneySharePct": 54,
+"moneyOdd": 1.21,
+"moneyDir": "in",
+"totVol": 53803,
+"pinnOdd": 1.3,
+"softOdd": 1.17,
+"softN": 27,
+"poly": {
+"vol": 66194,
+"odd": 1.56,
+"sharePct": 86,
+"shareSrc": "geld",
+"key": "chi-ron-ygb-2026-10-24",
+"sideKey": "Dalian Yingbo FC",
+"whales": [
+{
+"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+"usd": 2957
+},
+{
+"wallet": "0xcf8a8956dc705a8a135134a463299010b9932d3c",
+"usd": 2686
+},
+{
+"wallet": "0x824978ad8f2aa87ec22da2df99ffbb7d58e0b23a",
+"usd": 1595
+},
+{
+"wallet": "0x621e2746c245a4d9c097398da88f770d97fc923b",
+"usd": 640
+},
+{
+"wallet": "0x02d48659fcbaec0218eada605e6fc95cf988d26c",
+"usd": 640
+},
+{
+"wallet": "0xc801d5b67ed33f3b1bbb65fff300e39229ee289d",
+"usd": 480
+}
+],
+"whaleUsd": 10966
+},
+"pinn": {
+"home": 0.0417,
+"draw": 0.232,
+"away": 0.7263,
+"fav": "away"
+},
+"soft": {
+"home": 0.023,
+"draw": 0.173,
+"away": 0.804,
+"fav": "away",
+"n": 27
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36209524",
+"home": "Paderborn",
+"away": "Hamburger SV",
+"league": "German Bundesliga",
+"country": "DE",
+"kickoff": "2026-10-24T13:30:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Paderborn",
+"moneySharePct": 64,
+"moneyOdd": 2.5,
+"moneyDir": "in",
+"totVol": 50310,
+"pinnOdd": 2.45,
+"softOdd": 2.35,
+"softN": 48,
+"poly": {
+"vol": 2999,
+"odd": 2.47,
+"sharePct": 40,
+"shareSrc": "preis",
+"key": "bun-scp-hsv-2026-10-24",
+"sideKey": "SC Paderborn 07",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.3975,
+"draw": 0.2713,
+"away": 0.3312,
+"fav": "home"
+},
+"soft": {
+"home": 0.4005,
+"draw": 0.2644,
+"away": 0.335,
+"fav": "home",
+"n": 48
+},
+"pinnMovePP": -3.0,
+"pinnMove": {
+"movePP": -3.0,
+"stepPP": 0.3,
 "n": 25,
 "move": true,
 "laeuft": false
@@ -819,7 +1156,7 @@
 "moneySharePct": 65,
 "moneyOdd": 2.36,
 "moneyDir": "flat",
-"totVol": 48666,
+"totVol": 48733,
 "pinnOdd": 2.27,
 "softOdd": 2.25,
 "softN": 45,
@@ -840,70 +1177,18 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.3097,
-"draw": 0.2723,
-"away": 0.418,
+"home": 0.3081,
+"draw": 0.2708,
+"away": 0.4211,
 "fav": "away",
 "n": 45
 },
-"pinnMovePP": 0.7,
+"pinnMovePP": 0.6,
 "pinnMove": {
-"movePP": 0.7,
+"movePP": 0.6,
 "stepPP": -0.0,
 "n": 25,
 "move": false,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36209524",
-"home": "Paderborn",
-"away": "Hamburger SV",
-"league": "German Bundesliga",
-"country": "DE",
-"kickoff": "2026-10-24T13:30:00Z",
-"live": false,
-"moneySide": "home",
-"moneyName": "Paderborn",
-"moneySharePct": 67,
-"moneyOdd": 2.48,
-"moneyDir": "flat",
-"totVol": 47381,
-"pinnOdd": 2.47,
-"softOdd": 2.35,
-"softN": 48,
-"poly": {
-"vol": 2984,
-"odd": 2.47,
-"sharePct": 40,
-"shareSrc": "preis",
-"key": "bun-scp-hsv-2026-10-24",
-"sideKey": "SC Paderborn 07",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.394,
-"draw": 0.2726,
-"away": 0.3333,
-"fav": "home"
-},
-"soft": {
-"home": 0.4014,
-"draw": 0.2639,
-"away": 0.3348,
-"fav": "home",
-"n": 48
-},
-"pinnMovePP": -3.4,
-"pinnMove": {
-"movePP": -3.4,
-"stepPP": 0.0,
-"n": 25,
-"move": true,
 "laeuft": false
 },
 "verdict": "konsens",
@@ -920,10 +1205,10 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "Frosinone",
-"moneySharePct": 68,
+"moneySharePct": 67,
 "moneyOdd": 4.1,
-"moneyDir": "out",
-"totVol": 46449,
+"moneyDir": "flat",
+"totVol": 46843,
 "pinnOdd": 3.93,
 "softOdd": 3.75,
 "softN": 49,
@@ -944,9 +1229,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.5199,
-"draw": 0.2304,
-"away": 0.2497,
+"home": 0.5196,
+"draw": 0.2305,
+"away": 0.2498,
 "fav": "home",
 "n": 49
 },
@@ -975,12 +1260,12 @@
 "moneySharePct": 59,
 "moneyOdd": 2.6,
 "moneyDir": "flat",
-"totVol": 44464,
+"totVol": 44640,
 "pinnOdd": 2.55,
 "softOdd": 2.5,
-"softN": 51,
+"softN": 50,
 "poly": {
-"vol": 18194,
+"vol": 18271,
 "odd": 2.6,
 "sharePct": 38,
 "shareSrc": "preis",
@@ -997,10 +1282,10 @@
 },
 "soft": {
 "home": 0.3237,
-"draw": 0.2954,
-"away": 0.3808,
+"draw": 0.2953,
+"away": 0.381,
 "fav": "away",
-"n": 51
+"n": 50
 },
 "pinnMovePP": 0.0,
 "pinnMove": {
@@ -1015,6 +1300,129 @@
 "pinnTotals": null
 },
 {
+"matchId": "36209523",
+"home": "RB Leipzig",
+"away": "Elversberg",
+"league": "German Bundesliga",
+"country": "DE",
+"kickoff": "2026-10-24T13:30:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "RB Leipzig",
+"moneySharePct": 69,
+"moneyOdd": 1.45,
+"moneyDir": "flat",
+"totVol": 44154,
+"pinnOdd": 1.42,
+"softOdd": 1.4,
+"softN": 48,
+"poly": {
+"vol": 12706,
+"odd": 1.46,
+"sharePct": 68,
+"shareSrc": "preis",
+"key": "bun-lei-elv-2026-10-24",
+"sideKey": "RB Leipzig",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.6834,
+"draw": 0.1745,
+"away": 0.1421,
+"fav": "home"
+},
+"soft": {
+"home": 0.6737,
+"draw": 0.1782,
+"away": 0.1481,
+"fav": "home",
+"n": 48
+},
+"pinnMovePP": 1.5,
+"pinnMove": {
+"movePP": 1.5,
+"stepPP": 0.6,
+"n": 25,
+"move": true,
+"laeuft": true
+},
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36209112",
+"home": "Wuhan Three Towns",
+"away": "Shandong Taishan",
+"league": "Chinese Super League",
+"country": "CN",
+"kickoff": "2026-10-24T07:30:00Z",
+"live": true,
+"moneySide": "away",
+"moneyName": "Shandong Taishan",
+"moneySharePct": 78,
+"moneyOdd": 1.21,
+"moneyDir": "in",
+"totVol": 44147,
+"pinnOdd": 1.28,
+"softOdd": 1.12,
+"softN": 27,
+"poly": {
+"vol": 27220,
+"odd": 1.31,
+"sharePct": 84,
+"shareSrc": "geld",
+"key": "chi-wsz-sha-2026-10-24",
+"sideKey": "Shandong Taishan FC",
+"whales": [
+{
+"wallet": "0x9abbdf321694eec4028e9b3be0d2a07a662f3f96",
+"usd": 1486
+},
+{
+"wallet": "0x824978ad8f2aa87ec22da2df99ffbb7d58e0b23a",
+"usd": 1085
+},
+{
+"wallet": "0x3801bcfa49d07b56aa8f152babb36c14b16d7013",
+"usd": 600
+},
+{
+"wallet": "0x65503c7f9e142ac88b1ce09df3363ff77f188451",
+"usd": 415
+},
+{
+"wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
+"usd": 297
+},
+{
+"wallet": "0x882c2e9d90d28e02a15be0d7f8d3636994305d07",
+"usd": 284
+}
+],
+"whaleUsd": 4592
+},
+"pinn": {
+"home": 0.0664,
+"draw": 0.205,
+"away": 0.7286,
+"fav": "away"
+},
+"soft": {
+"home": 0.0211,
+"draw": 0.1567,
+"away": 0.8221,
+"fav": "away",
+"n": 27
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
 "matchId": "36177321",
 "home": "Coventry",
 "away": "Fulham",
@@ -1024,15 +1432,15 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "Fulham",
-"moneySharePct": 41,
+"moneySharePct": 42,
 "moneyOdd": 2.34,
-"moneyDir": "out",
-"totVol": 41311,
-"pinnOdd": 2.29,
+"moneyDir": "flat",
+"totVol": 43744,
+"pinnOdd": 2.3,
 "softOdd": 2.25,
-"softN": 51,
+"softN": 50,
 "poly": {
-"vol": 8015,
+"vol": 8400,
 "odd": 2.35,
 "sharePct": 42,
 "shareSrc": "preis",
@@ -1042,99 +1450,28 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.2968,
+"home": 0.2986,
 "draw": 0.2781,
-"away": 0.4251,
+"away": 0.4233,
 "fav": "away"
 },
 "soft": {
-"home": 0.3033,
-"draw": 0.2737,
-"away": 0.423,
+"home": 0.3031,
+"draw": 0.2735,
+"away": 0.4234,
 "fav": "away",
-"n": 51
+"n": 50
 },
-"pinnMovePP": 0.1,
+"pinnMovePP": -0.1,
 "pinnMove": {
-"movePP": 0.1,
-"stepPP": -0.0,
+"movePP": -0.1,
+"stepPP": 0.0,
 "n": 25,
 "move": false,
 "laeuft": false
 },
 "verdict": "konsens",
 "agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36204731",
-"home": "Liaoning Tieren FC",
-"away": "Zhejiang Greentown",
-"league": "Chinese Super League",
-"country": "CN",
-"kickoff": "2026-10-24T07:30:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Liaoning Tieren FC",
-"moneySharePct": 68,
-"moneyOdd": 7.0,
-"moneyDir": "out",
-"totVol": 41020,
-"pinnOdd": 6.22,
-"softOdd": 6.0,
-"softN": 28,
-"poly": {
-"vol": 15770,
-"odd": 2.3,
-"sharePct": 53,
-"shareSrc": "geld",
-"key": "chi-tie-zhe-2026-10-24",
-"sideKey": "Liaoning Tieren FC",
-"whales": [
-{
-"wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-"usd": 484
-},
-{
-"wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
-"usd": 256
-},
-{
-"wallet": "0x65503c7f9e142ac88b1ce09df3363ff77f188451",
-"usd": 241
-},
-{
-"wallet": "0x52d93dcf81444f793dda7fedc370f7a35101fb1a",
-"usd": 199
-},
-{
-"wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
-"usd": 179
-},
-{
-"wallet": "0xc8d9c0df291315f2184ecdab4ed8247618acdf36",
-"usd": 174
-}
-],
-"whaleUsd": 1737
-},
-"pinn": {
-"home": 0.1496,
-"draw": 0.2343,
-"away": 0.6161,
-"fav": "away"
-},
-"soft": {
-"home": 0.1554,
-"draw": 0.2339,
-"away": 0.6107,
-"fav": "away",
-"n": 28
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "uneinig",
-"agree": false,
 "pinnTotals": null
 },
 {
@@ -1148,54 +1485,54 @@
 "moneySide": "home",
 "moneyName": "Chongqing Tonglianglong",
 "moneySharePct": 92,
-"moneyOdd": 1.04,
-"moneyDir": "flat",
-"totVol": 40490,
+"moneyOdd": 1.01,
+"moneyDir": "in",
+"totVol": 43600,
 "pinnOdd": null,
-"softOdd": 1.01,
-"softN": 19,
+"softOdd": 1.0,
+"softN": 15,
 "poly": {
-"vol": 39896,
-"odd": 1.05,
-"sharePct": 95,
+"vol": 54546,
+"odd": 1.02,
+"sharePct": 99,
 "shareSrc": "geld",
 "key": "chi-ton-hai-2026-10-24",
 "sideKey": "Chongqing Tonglianglong FC",
 "whales": [
 {
 "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
-"usd": 2527
+"usd": 4015
 },
 {
 "wallet": "0x9b559c039873cd794668492af33b748b6b0a1167",
-"usd": 1368
+"usd": 1639
 },
 {
 "wallet": "0x824978ad8f2aa87ec22da2df99ffbb7d58e0b23a",
-"usd": 509
+"usd": 895
 },
 {
-"wallet": "0x7c87940edb391c53c542eb77174ed4f1bf7ce96e",
-"usd": 244
+"wallet": "0xc785252b25901a591e9d962e09f4342468444ef2",
+"usd": 756
 },
 {
-"wallet": "0x2c46ffe86ee500875db3c679e52f6e64854cdac9",
-"usd": 237
+"wallet": "0xa466841143753310fa0f4448526595fa65641c77",
+"usd": 723
 },
 {
-"wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
-"usd": 166
+"wallet": "0x0be34ffafafa7f3a2998b15b05e04d36cb2835fe",
+"usd": 556
 }
 ],
-"whaleUsd": 5668
+"whaleUsd": 10028
 },
 "pinn": null,
 "soft": {
-"home": 0.9332,
-"draw": 0.0514,
-"away": 0.0154,
+"home": 0.957,
+"draw": 0.0312,
+"away": 0.0117,
 "fav": "home",
-"n": 19
+"n": 15
 },
 "pinnMovePP": null,
 "pinnMove": null,
@@ -1207,62 +1544,10 @@
 "grund": "kein_pinnacle",
 "kandidat": "Chongqing Tonglianglong FC v Qingdao Hainiu FC",
 "key": "soccer_china_superleague",
-"nSoft": 19,
+"nSoft": 15,
 "pinnacleImEvent": false,
-"nBuecher": 19
+"nBuecher": 15
 }
-},
-{
-"matchId": "36209523",
-"home": "RB Leipzig",
-"away": "Elversberg",
-"league": "German Bundesliga",
-"country": "DE",
-"kickoff": "2026-10-24T13:30:00Z",
-"live": false,
-"moneySide": "home",
-"moneyName": "RB Leipzig",
-"moneySharePct": 68,
-"moneyOdd": 1.45,
-"moneyDir": "in",
-"totVol": 39422,
-"pinnOdd": 1.43,
-"softOdd": 1.4,
-"softN": 48,
-"poly": {
-"vol": 12417,
-"odd": 1.46,
-"sharePct": 68,
-"shareSrc": "preis",
-"key": "bun-lei-elv-2026-10-24",
-"sideKey": "RB Leipzig",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.6778,
-"draw": 0.1769,
-"away": 0.1453,
-"fav": "home"
-},
-"soft": {
-"home": 0.6693,
-"draw": 0.1799,
-"away": 0.1509,
-"fav": "home",
-"n": 48
-},
-"pinnMovePP": 1.0,
-"pinnMove": {
-"movePP": 1.0,
-"stepPP": 0.0,
-"n": 25,
-"move": false,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
 },
 {
 "matchId": "36180884",
@@ -1275,11 +1560,11 @@
 "moneySide": "home",
 "moneyName": "Racing Santander",
 "moneySharePct": 73,
-"moneyOdd": 2.42,
-"moneyDir": "flat",
-"totVol": 38742,
-"pinnOdd": 2.34,
-"softOdd": 2.3,
+"moneyOdd": 2.4,
+"moneyDir": "in",
+"totVol": 40649,
+"pinnOdd": 2.33,
+"softOdd": 2.25,
 "softN": 44,
 "poly": {
 "vol": 97678,
@@ -1313,104 +1598,29 @@
 "whaleUsd": 36492
 },
 "pinn": {
-"home": 0.416,
-"draw": 0.2638,
-"away": 0.3202,
+"home": 0.4178,
+"draw": 0.261,
+"away": 0.3213,
 "fav": "home"
 },
 "soft": {
-"home": 0.4131,
-"draw": 0.2623,
-"away": 0.3246,
+"home": 0.4168,
+"draw": 0.2619,
+"away": 0.3213,
 "fav": "home",
 "n": 44
 },
-"pinnMovePP": 0.0,
+"pinnMovePP": 0.2,
 "pinnMove": {
-"movePP": 0.0,
+"movePP": 0.2,
 "stepPP": -0.0,
-"n": 9,
+"n": 10,
 "move": false,
 "laeuft": false
 },
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
-},
-{
-"matchId": "36209444",
-"home": "Henan Songshan Longmen",
-"away": "Beijing Guoan",
-"league": "Chinese Super League",
-"country": "CN",
-"kickoff": "2026-10-24T07:30:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Henan Songshan Longmen",
-"moneySharePct": 76,
-"moneyOdd": 1.04,
-"moneyDir": "out",
-"totVol": 37827,
-"pinnOdd": null,
-"softOdd": 1.01,
-"softN": 20,
-"poly": {
-"vol": 14172,
-"odd": 1.16,
-"sharePct": 86,
-"shareSrc": "geld",
-"key": "chi-hen-bgu-2026-10-24",
-"sideKey": "Henan FC",
-"whales": [
-{
-"wallet": "0x824978ad8f2aa87ec22da2df99ffbb7d58e0b23a",
-"usd": 288
-},
-{
-"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
-"usd": 283
-},
-{
-"wallet": "0xa24e51e917d3f844b972e9bccfa6bc2e04621be8",
-"usd": 173
-},
-{
-"wallet": "0xf8e4943df102da8d5271cf5bb9e4a439739b3b32",
-"usd": 162
-},
-{
-"wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
-"usd": 125
-},
-{
-"wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
-"usd": 116
-}
-],
-"whaleUsd": 1845
-},
-"pinn": null,
-"soft": {
-"home": 0.9342,
-"draw": 0.0482,
-"away": 0.0176,
-"fav": "home",
-"n": 20
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Henan Songshan Longmen v Beijing Guoan",
-"grund": "kein_pinnacle",
-"kandidat": "Henan FC v Beijing FC",
-"key": "soccer_china_superleague",
-"nSoft": 20,
-"pinnacleImEvent": false,
-"nBuecher": 20
-}
 },
 {
 "matchId": "36209522",
@@ -1422,17 +1632,17 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Augsburg",
-"moneySharePct": 72,
-"moneyOdd": 1.87,
-"moneyDir": "out",
-"totVol": 37290,
-"pinnOdd": 1.83,
+"moneySharePct": 73,
+"moneyOdd": 1.85,
+"moneyDir": "in",
+"totVol": 39188,
+"pinnOdd": 1.81,
 "softOdd": 1.8,
 "softN": 48,
 "poly": {
-"vol": 27856,
+"vol": 28904,
 "odd": 1.87,
-"sharePct": 99,
+"sharePct": 97,
 "shareSrc": "geld",
 "key": "bun-aug-uni-2026-10-24",
 "sideKey": "FC Augsburg",
@@ -1462,31 +1672,68 @@
 "usd": 212
 }
 ],
-"whaleUsd": 13340
+"whaleUsd": 13284
 },
 "pinn": {
-"home": 0.5299,
-"draw": 0.2342,
-"away": 0.2359,
+"home": 0.5356,
+"draw": 0.2319,
+"away": 0.2325,
 "fav": "home"
 },
 "soft": {
-"home": 0.5243,
-"draw": 0.2354,
-"away": 0.2402,
+"home": 0.5265,
+"draw": 0.2345,
+"away": 0.2389,
 "fav": "home",
 "n": 48
 },
-"pinnMovePP": 0.7,
+"pinnMovePP": 1.3,
 "pinnMove": {
-"movePP": 0.7,
-"stepPP": 0.2,
-"n": 20,
-"move": false,
+"movePP": 1.3,
+"stepPP": 0.6,
+"n": 21,
+"move": true,
 "laeuft": true
 },
 "verdict": "konsens",
 "agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36209447",
+"home": "Qingdao Youth Island",
+"away": "Yunnan Yukun",
+"league": "Chinese Super League",
+"country": "CN",
+"kickoff": "2026-10-24T07:30:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Qingdao Youth Island",
+"moneySharePct": 72,
+"moneyOdd": 5.4,
+"moneyDir": "out",
+"totVol": 38088,
+"pinnOdd": 3.76,
+"softOdd": 4.45,
+"softN": 28,
+"poly": null,
+"pinn": {
+"home": 0.2488,
+"draw": 0.5996,
+"away": 0.1516,
+"fav": "draw"
+},
+"soft": {
+"home": 0.2268,
+"draw": 0.6385,
+"away": 0.1347,
+"fav": "draw",
+"n": 28
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "uneinig",
+"agree": false,
 "pinnTotals": null
 },
 {
@@ -1500,14 +1747,14 @@
 "moneySide": "away",
 "moneyName": "Brentford",
 "moneySharePct": 83,
-"moneyOdd": 1.76,
-"moneyDir": "flat",
-"totVol": 31990,
-"pinnOdd": 1.7,
-"softOdd": 1.69,
-"softN": 51,
+"moneyOdd": 1.77,
+"moneyDir": "out",
+"totVol": 32709,
+"pinnOdd": 1.71,
+"softOdd": 1.7,
+"softN": 50,
 "poly": {
-"vol": 21516,
+"vol": 21518,
 "odd": 1.74,
 "sharePct": 57,
 "shareSrc": "preis",
@@ -1517,168 +1764,26 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.2004,
-"draw": 0.2328,
-"away": 0.5669,
+"home": 0.2002,
+"draw": 0.2354,
+"away": 0.5644,
 "fav": "away"
 },
 "soft": {
-"home": 0.2006,
-"draw": 0.2372,
-"away": 0.5623,
+"home": 0.2028,
+"draw": 0.2377,
+"away": 0.5595,
 "fav": "away",
-"n": 51
+"n": 50
 },
-"pinnMovePP": -0.0,
+"pinnMovePP": -0.3,
 "pinnMove": {
-"movePP": -0.0,
-"stepPP": -0.0,
+"movePP": -0.3,
+"stepPP": -0.3,
 "n": 25,
 "move": false,
-"laeuft": false
+"laeuft": true
 },
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36209595",
-"home": "Tianjin Jinmen Tiger FC",
-"away": "Shanghai Port FC",
-"league": "Chinese Super League",
-"country": "CN",
-"kickoff": "2026-10-24T07:30:00Z",
-"live": true,
-"moneySide": "away",
-"moneyName": "Shanghai Port FC",
-"moneySharePct": 79,
-"moneyOdd": 1.31,
-"moneyDir": "in",
-"totVol": 30910,
-"pinnOdd": 2.19,
-"softOdd": 1.25,
-"softN": 28,
-"poly": {
-"vol": 11245,
-"odd": 2.25,
-"sharePct": 78,
-"shareSrc": "geld",
-"key": "chi-jin-shp-2026-10-24",
-"sideKey": "Shanghai Haigang FC",
-"whales": [
-{
-"wallet": "0x824978ad8f2aa87ec22da2df99ffbb7d58e0b23a",
-"usd": 358
-},
-{
-"wallet": "0xad0be253358a44cefbee8ab5edfb9a85790da514",
-"usd": 167
-},
-{
-"wallet": "0x40ca38c18ef099ed9e05ae65ea8ca401e8c3a96d",
-"usd": 137
-},
-{
-"wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
-"usd": 116
-},
-{
-"wallet": "0xf8e4943df102da8d5271cf5bb9e4a439739b3b32",
-"usd": 112
-},
-{
-"wallet": "0x65503c7f9e142ac88b1ce09df3363ff77f188451",
-"usd": 104
-}
-],
-"whaleUsd": 1907
-},
-"pinn": {
-"home": 0.2202,
-"draw": 0.3514,
-"away": 0.4284,
-"fav": "away"
-},
-"soft": {
-"home": 0.0741,
-"draw": 0.1899,
-"away": 0.7361,
-"fav": "away",
-"n": 28
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36209596",
-"home": "Chengdu Rongcheng",
-"away": "Dalian Yingbo",
-"league": "Chinese Super League",
-"country": "CN",
-"kickoff": "2026-10-24T07:30:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Chengdu Rongcheng",
-"moneySharePct": 63,
-"moneyOdd": 2.18,
-"moneyDir": "out",
-"totVol": 29975,
-"pinnOdd": 2.08,
-"softOdd": 1.96,
-"softN": 28,
-"poly": {
-"vol": 32471,
-"odd": 1.82,
-"sharePct": 67,
-"shareSrc": "geld",
-"key": "chi-ron-ygb-2026-10-24",
-"sideKey": "Chengdu Rongcheng FC",
-"whales": [
-{
-"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-"usd": 1413
-},
-{
-"wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
-"usd": 555
-},
-{
-"wallet": "0x760907c8840491c8c86fddb843d3f1d801786c4e",
-"usd": 550
-},
-{
-"wallet": "0x40ca38c18ef099ed9e05ae65ea8ca401e8c3a96d",
-"usd": 413
-},
-{
-"wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
-"usd": 323
-},
-{
-"wallet": "0x943b6126b2eb92564032cd64472720e73260e35e",
-"usd": 167
-}
-],
-"whaleUsd": 4373
-},
-"pinn": {
-"home": 0.4513,
-"draw": 0.361,
-"away": 0.1877,
-"fav": "home"
-},
-"soft": {
-"home": 0.461,
-"draw": 0.3567,
-"away": 0.1824,
-"fav": "home",
-"n": 28
-},
-"pinnMovePP": null,
-"pinnMove": null,
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
@@ -1693,11 +1798,11 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Charlton",
-"moneySharePct": 49,
+"moneySharePct": 48,
 "moneyOdd": 3.7,
-"moneyDir": "flat",
-"totVol": 27424,
-"pinnOdd": 3.52,
+"moneyDir": "in",
+"totVol": 28213,
+"pinnOdd": 3.54,
 "softOdd": 3.3,
 "softN": 47,
 "poly": {
@@ -1711,28 +1816,71 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.2746,
-"draw": 0.2778,
-"away": 0.4476,
+"home": 0.2732,
+"draw": 0.2771,
+"away": 0.4498,
 "fav": "away"
 },
 "soft": {
-"home": 0.2851,
-"draw": 0.2738,
-"away": 0.4412,
+"home": 0.2852,
+"draw": 0.2739,
+"away": 0.4409,
 "fav": "away",
 "n": 47
 },
-"pinnMovePP": -0.1,
+"pinnMovePP": -0.2,
 "pinnMove": {
-"movePP": -0.1,
+"movePP": -0.2,
 "stepPP": -0.1,
-"n": 7,
+"n": 9,
 "move": false,
 "laeuft": false
 },
 "verdict": "uneinig",
 "agree": false,
+"pinnTotals": null
+},
+{
+"matchId": "36209355",
+"home": "Eyupspor",
+"away": "Kasimpasa",
+"league": "Turkish Super League",
+"country": "TR",
+"kickoff": "2026-10-24T10:30:00Z",
+"live": false,
+"moneySide": "away",
+"moneyName": "Kasimpasa",
+"moneySharePct": 88,
+"moneyOdd": 1.78,
+"moneyDir": "out",
+"totVol": 28148,
+"pinnOdd": 1.72,
+"softOdd": 1.67,
+"softN": 42,
+"poly": null,
+"pinn": {
+"home": 0.1868,
+"draw": 0.2529,
+"away": 0.5603,
+"fav": "away"
+},
+"soft": {
+"home": 0.1858,
+"draw": 0.2532,
+"away": 0.561,
+"fav": "away",
+"n": 42
+},
+"pinnMovePP": -3.4,
+"pinnMove": {
+"movePP": -3.4,
+"stepPP": -0.3,
+"n": 11,
+"move": true,
+"laeuft": true
+},
+"verdict": "konsens",
+"agree": true,
 "pinnTotals": null
 },
 {
@@ -1748,7 +1896,7 @@
 "moneySharePct": 88,
 "moneyOdd": 1.51,
 "moneyDir": "flat",
-"totVol": 26246,
+"totVol": 26262,
 "pinnOdd": 1.49,
 "softOdd": 1.44,
 "softN": 49,
@@ -1769,9 +1917,9 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.1286,
+"home": 0.1285,
 "draw": 0.2194,
-"away": 0.652,
+"away": 0.6521,
 "fav": "away",
 "n": 49
 },
@@ -1779,212 +1927,9 @@
 "pinnMove": {
 "movePP": 0.0,
 "stepPP": 0.0,
-"n": 19,
+"n": 20,
 "move": false,
 "laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36209355",
-"home": "Eyupspor",
-"away": "Kasimpasa",
-"league": "Turkish Super League",
-"country": "TR",
-"kickoff": "2026-10-24T10:30:00Z",
-"live": false,
-"moneySide": "away",
-"moneyName": "Kasimpasa",
-"moneySharePct": 90,
-"moneyOdd": 1.77,
-"moneyDir": "out",
-"totVol": 24788,
-"pinnOdd": 1.71,
-"softOdd": 1.65,
-"softN": 42,
-"poly": null,
-"pinn": {
-"home": 0.1875,
-"draw": 0.249,
-"away": 0.5635,
-"fav": "away"
-},
-"soft": {
-"home": 0.1855,
-"draw": 0.2514,
-"away": 0.5631,
-"fav": "away",
-"n": 42
-},
-"pinnMovePP": -3.1,
-"pinnMove": {
-"movePP": -3.1,
-"stepPP": -0.4,
-"n": 9,
-"move": true,
-"laeuft": true
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36209447",
-"home": "Qingdao Youth Island",
-"away": "Yunnan Yukun",
-"league": "Chinese Super League",
-"country": "CN",
-"kickoff": "2026-10-24T07:30:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Qingdao Youth Island",
-"moneySharePct": 66,
-"moneyOdd": 1.36,
-"moneyDir": "in",
-"totVol": 24571,
-"pinnOdd": 1.34,
-"softOdd": 1.31,
-"softN": 29,
-"poly": null,
-"pinn": {
-"home": 0.7023,
-"draw": 0.1973,
-"away": 0.1004,
-"fav": "home"
-},
-"soft": {
-"home": 0.6828,
-"draw": 0.2038,
-"away": 0.1134,
-"fav": "home",
-"n": 29
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36209112",
-"home": "Wuhan Three Towns",
-"away": "Shandong Taishan",
-"league": "Chinese Super League",
-"country": "CN",
-"kickoff": "2026-10-24T07:30:00Z",
-"live": true,
-"moneySide": "away",
-"moneyName": "Shandong Taishan",
-"moneySharePct": 77,
-"moneyOdd": 1.14,
-"moneyDir": "flat",
-"totVol": 24278,
-"pinnOdd": 1.1,
-"softOdd": 1.08,
-"softN": 28,
-"poly": {
-"vol": 8003,
-"odd": 1.16,
-"sharePct": 86,
-"shareSrc": "geld",
-"key": "chi-wsz-sha-2026-10-24",
-"sideKey": "Shandong Taishan FC",
-"whales": [
-{
-"wallet": "0x824978ad8f2aa87ec22da2df99ffbb7d58e0b23a",
-"usd": 1227
-},
-{
-"wallet": "0x3801bcfa49d07b56aa8f152babb36c14b16d7013",
-"usd": 678
-},
-{
-"wallet": "0x65503c7f9e142ac88b1ce09df3363ff77f188451",
-"usd": 525
-},
-{
-"wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
-"usd": 336
-},
-{
-"wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
-"usd": 176
-},
-{
-"wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
-"usd": 175
-}
-],
-"whaleUsd": 3910
-},
-"pinn": {
-"home": 0.0326,
-"draw": 0.1,
-"away": 0.8674,
-"fav": "away"
-},
-"soft": {
-"home": 0.0439,
-"draw": 0.1042,
-"away": 0.8519,
-"fav": "away",
-"n": 28
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36124455",
-"home": "Melbourne Victory",
-"away": "Melbourne City",
-"league": "Australian A-League Men",
-"country": "AU",
-"kickoff": "2026-10-24T08:40:00Z",
-"live": false,
-"moneySide": "home",
-"moneyName": "Melbourne Victory",
-"moneySharePct": 51,
-"moneyOdd": 2.34,
-"moneyDir": "out",
-"totVol": 22947,
-"pinnOdd": 2.32,
-"softOdd": 2.2,
-"softN": 35,
-"poly": {
-"vol": 3799,
-"odd": 2.67,
-"sharePct": 38,
-"shareSrc": "preis",
-"key": "aus-vic-mct-2026-10-24",
-"sideKey": "Melbourne Victory FC",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.4168,
-"draw": 0.262,
-"away": 0.3212,
-"fav": "home"
-},
-"soft": {
-"home": 0.4201,
-"draw": 0.2658,
-"away": 0.3142,
-"fav": "home",
-"n": 35
-},
-"pinnMovePP": -2.5,
-"pinnMove": {
-"movePP": -2.5,
-"stepPP": -2.5,
-"n": 2,
-"move": true,
-"laeuft": true
 },
 "verdict": "konsens",
 "agree": true,
@@ -2000,10 +1945,10 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Sheff Utd",
-"moneySharePct": 66,
-"moneyOdd": 1.81,
+"moneySharePct": 67,
+"moneyOdd": 1.82,
 "moneyDir": "flat",
-"totVol": 22927,
+"totVol": 26152,
 "pinnOdd": 1.79,
 "softOdd": 1.77,
 "softN": 47,
@@ -2018,23 +1963,23 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.5384,
-"draw": 0.2421,
-"away": 0.2195,
+"home": 0.5389,
+"draw": 0.2424,
+"away": 0.2187,
 "fav": "home"
 },
 "soft": {
-"home": 0.5317,
-"draw": 0.2476,
-"away": 0.2207,
+"home": 0.5326,
+"draw": 0.2475,
+"away": 0.2199,
 "fav": "home",
 "n": 47
 },
-"pinnMovePP": 0.4,
+"pinnMovePP": 0.5,
 "pinnMove": {
-"movePP": 0.4,
+"movePP": 0.5,
 "stepPP": -0.0,
-"n": 7,
+"n": 9,
 "move": false,
 "laeuft": false
 },
@@ -2055,7 +2000,7 @@
 "moneySharePct": 85,
 "moneyOdd": 1.72,
 "moneyDir": "flat",
-"totVol": 22143,
+"totVol": 22190,
 "pinnOdd": 1.68,
 "softOdd": 1.67,
 "softN": 49,
@@ -2107,7 +2052,7 @@
 "moneySharePct": 92,
 "moneyOdd": 1.64,
 "moneyDir": "flat",
-"totVol": 21160,
+"totVol": 21198,
 "pinnOdd": 1.61,
 "softOdd": 1.6,
 "softN": 45,
@@ -2128,9 +2073,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.5936,
-"draw": 0.2181,
-"away": 0.1883,
+"home": 0.5937,
+"draw": 0.2182,
+"away": 0.1882,
 "fav": "home",
 "n": 45
 },
@@ -2138,7 +2083,59 @@
 "pinnMove": {
 "movePP": -0.6,
 "stepPP": -0.0,
-"n": 22,
+"n": 23,
+"move": false,
+"laeuft": false
+},
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36205224",
+"home": "Cordoba",
+"away": "Eibar",
+"league": "Spanish Segunda Division",
+"country": "ES",
+"kickoff": "2026-10-24T12:00:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Cordoba",
+"moneySharePct": 77,
+"moneyOdd": 1.99,
+"moneyDir": "out",
+"totVol": 15501,
+"pinnOdd": 1.93,
+"softOdd": 1.88,
+"softN": 42,
+"poly": {
+"vol": 12272,
+"odd": 1.98,
+"sharePct": 50,
+"shareSrc": "preis",
+"key": "es2-cor-eib-2026-10-24",
+"sideKey": "Córdoba CF",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.5009,
+"draw": 0.2524,
+"away": 0.2466,
+"fav": "home"
+},
+"soft": {
+"home": 0.4873,
+"draw": 0.2525,
+"away": 0.2603,
+"fav": "home",
+"n": 42
+},
+"pinnMovePP": -0.1,
+"pinnMove": {
+"movePP": -0.1,
+"stepPP": -0.1,
+"n": 2,
 "move": false,
 "laeuft": false
 },
@@ -2156,99 +2153,58 @@
 "live": true,
 "moneySide": "away",
 "moneyName": "Shanghai Shenhua",
-"moneySharePct": 58,
-"moneyOdd": 2.5,
+"moneySharePct": 42,
+"moneyOdd": 4.1,
 "moneyDir": "out",
-"totVol": 5462,
-"pinnOdd": 2.47,
-"softOdd": 2.3,
-"softN": 27,
+"totVol": 11954,
+"pinnOdd": 4.1,
+"softOdd": 4.25,
+"softN": 26,
 "poly": {
-"vol": 8299,
-"odd": 2.3,
-"sharePct": 39,
+"vol": 12397,
+"odd": 3.39,
+"sharePct": 38,
 "shareSrc": "geld",
 "key": "chi-xin-sgr-2026-10-24",
 "sideKey": "Shanghai Shenhua FC",
 "whales": [
 {
-"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-"usd": 237
+"wallet": "0xe23cd5fb6bee7b1c9f60f5d9969ac7ba52cc5ae7",
+"usd": 590
 },
 {
 "wallet": "0x824978ad8f2aa87ec22da2df99ffbb7d58e0b23a",
-"usd": 213
+"usd": 327
 },
 {
 "wallet": "0x7a496671c81b436111eab24ceddf8eb680d9d9f5",
-"usd": 93
+"usd": 59
 },
 {
-"wallet": "0x26f247002a32c8c95dd8f767b68dac218fc21761",
-"usd": 93
-},
-{
-"wallet": "0x08cb41224831809291cb178575e78df929397043",
-"usd": 88
-},
-{
-"wallet": "0x87f77b172872179f34c78dc80316e59cdb3c8f45",
-"usd": 45
+"wallet": "0x39f24857178d75d051efddb6b1ebb2c5f9690c26",
+"usd": 41
 }
 ],
-"whaleUsd": 864
+"whaleUsd": 1017
 },
 "pinn": {
-"home": 0.2896,
-"draw": 0.3304,
-"away": 0.3799,
-"fav": "away"
+"home": 0.1663,
+"draw": 0.605,
+"away": 0.2287,
+"fav": "draw"
 },
 "soft": {
-"home": 0.2781,
-"draw": 0.3305,
-"away": 0.3914,
-"fav": "away",
-"n": 27
+"home": 0.3241,
+"draw": 0.5058,
+"away": 0.1701,
+"fav": "draw",
+"n": 26
 },
 "pinnMovePP": null,
 "pinnMove": null,
-"verdict": "konsens",
-"agree": true,
+"verdict": "uneinig",
+"agree": false,
 "pinnTotals": null
-},
-{
-"matchId": "36226960",
-"home": "Dalian Kun City FC",
-"away": "Guangxi Hengchen",
-"league": "Chinese League 1",
-"country": "CN",
-"kickoff": "2026-10-24T07:00:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Dalian Kun City FC",
-"moneySharePct": 78,
-"moneyOdd": 1.1,
-"moneyDir": "out",
-"totVol": 26279,
-"pinnOdd": null,
-"softOdd": null,
-"softN": null,
-"poly": null,
-"pinn": null,
-"soft": null,
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "no_anchor",
-"agree": null,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Dalian Kun City FC v Guangxi Hengchen",
-"kandidat": "Chengdu Rongcheng FC v Dalian Yingbo",
-"key": "soccer_china_superleague",
-"score": 0.33,
-"grund": "name"
-}
 },
 {
 "matchId": "36227206",
@@ -2260,14 +2216,48 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Changchun Yatai",
-"moneySharePct": 89,
-"moneyOdd": 1.06,
-"moneyDir": "flat",
-"totVol": 20641,
+"moneySharePct": 92,
+"moneyOdd": 1.01,
+"moneyDir": "in",
+"totVol": 35140,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
-"poly": null,
+"poly": {
+"vol": 9404,
+"odd": 1.16,
+"sharePct": 98,
+"shareSrc": "geld",
+"key": "chi2-cha-mei-2026-10-24",
+"sideKey": "Changchun Yatai",
+"whales": [
+{
+"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+"usd": 1310
+},
+{
+"wallet": "0x882c2e9d90d28e02a15be0d7f8d3636994305d07",
+"usd": 692
+},
+{
+"wallet": "0x65503c7f9e142ac88b1ce09df3363ff77f188451",
+"usd": 380
+},
+{
+"wallet": "0x711536378e547e670b56c713d8136a7dbd715566",
+"usd": 148
+},
+{
+"wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+"usd": 61
+},
+{
+"wallet": "0x406af7ff72351f6a3de85d81c30fd349b5d4a293",
+"usd": 52
+}
+],
+"whaleUsd": 2861
+},
 "pinn": null,
 "soft": null,
 "pinnMovePP": null,
@@ -2291,9 +2281,9 @@
 "moneySide": "away",
 "moneyName": "Niki Volou",
 "moneySharePct": 97,
-"moneyOdd": 1.24,
+"moneyOdd": 1.19,
 "moneyDir": "flat",
-"totVol": 15379,
+"totVol": 17907,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -2309,27 +2299,119 @@
 "spiel": "Apollon Kalamarias v Niki Volou",
 "grund": "kein_kandidat"
 }
+},
+{
+"matchId": "36213525",
+"home": "FK Kyzyl-Zhar",
+"away": "FK Ulytau Zhezkazgan",
+"league": "Kazakhstan Premier League",
+"country": "KZ",
+"kickoff": "2026-10-24T11:00:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "FK Kyzyl-Zhar",
+"moneySharePct": 97,
+"moneyOdd": 1.64,
+"moneyDir": "flat",
+"totVol": 15347,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": null,
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "FK Kyzyl-Zhar v FK Ulytau Zhezkazgan",
+"grund": "kein_kandidat"
+}
+},
+{
+"matchId": "36207614",
+"home": "Gimpo Citizen",
+"away": "Gimhae City",
+"league": "South Korean K2 League",
+"country": "KR",
+"kickoff": "2026-10-24T07:30:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Gimpo Citizen",
+"moneySharePct": 56,
+"moneyOdd": 38.0,
+"moneyDir": "out",
+"totVol": 15296,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": null,
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Gimpo Citizen v Gimhae City",
+"grund": "kein_kandidat",
+"naechster": "Aston Villa v Manchester City"
+}
+},
+{
+"matchId": "36228286",
+"home": "Mohammedan Dhaka",
+"away": "Dhaka Wanderers Club",
+"league": "Bangladesh Premier League",
+"country": "BD",
+"kickoff": "2026-10-24T08:45:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Mohammedan Dhaka",
+"moneySharePct": 99,
+"moneyOdd": 1.08,
+"moneyDir": "out",
+"totVol": 15203,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": null,
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Mohammedan Dhaka v Dhaka Wanderers Club",
+"grund": "kein_kandidat",
+"naechster": "Wolverhampton Wanderers v Watford"
+}
 }
 ],
-"ankerN": 60,
+"ankerN": 59,
 "ankerNOffen": 150,
 "ankerMit": 57,
 "ankerDiagnose": {
 "nach": {
-"kein_kandidat": 79,
+"kein_kandidat": 80,
 "name": 8,
 "zeit": 2,
-"kein_pinnacle": 2
+"kein_pinnacle": 1
 },
 "beispiele": [
 {
-"spiel": "Guangzhou Alpha v Dalian Yingbo II",
-"kandidat": "Chengdu Rongcheng FC v Dalian Yingbo",
+"spiel": "Hue FC v Ho Chi Minh City FC",
+"kandidat": "Shenzhen Peng City FC v Shanghai Shenhua FC",
 "key": "soccer_china_superleague",
-"score": 0.67,
+"score": 0.25,
 "grund": "name",
-"matchId": "36226991",
-"liga": "Chinese League 2"
+"matchId": "36230466",
+"liga": "Vietnamese V-League 2"
 },
 {
 "spiel": "Taian Tiankuang v Chengdu Rongcheng II",
@@ -2338,6 +2420,15 @@
 "score": 0.67,
 "grund": "name",
 "matchId": "36227025",
+"liga": "Chinese League 2"
+},
+{
+"spiel": "Guangzhou Alpha v Dalian Yingbo II",
+"kandidat": "Chengdu Rongcheng FC v Dalian Yingbo",
+"key": "soccer_china_superleague",
+"score": 0.67,
+"grund": "name",
+"matchId": "36226991",
 "liga": "Chinese League 2"
 },
 {
@@ -2386,16 +2477,6 @@
 "liga": "Chinese League 1"
 },
 {
-"spiel": "BG Pathumthani United v Chiangrai Utd",
-"kandidat": "Drogheda United v Galway United",
-"key": "soccer_league_of_ireland",
-"score": 0.83,
-"grund": "zeit",
-"abstandH": 151.8,
-"matchId": "36228061",
-"liga": "Thai League 1"
-},
-{
 "spiel": "Buriram Utd v Sisaket United",
 "kandidat": "Drogheda United v Galway United",
 "key": "soccer_league_of_ireland",
@@ -2406,35 +2487,25 @@
 "liga": "Thai League 1"
 },
 {
+"spiel": "BG Pathumthani United v Chiangrai Utd",
+"kandidat": "Drogheda United v Galway United",
+"key": "soccer_league_of_ireland",
+"score": 0.83,
+"grund": "zeit",
+"abstandH": 151.8,
+"matchId": "36228061",
+"liga": "Thai League 1"
+},
+{
 "spiel": "Chongqing Tonglianglong v Qingdao Hainiu",
 "grund": "kein_pinnacle",
 "kandidat": "Chongqing Tonglianglong FC v Qingdao Hainiu FC",
 "key": "soccer_china_superleague",
-"nSoft": 19,
+"nSoft": 15,
 "pinnacleImEvent": false,
-"nBuecher": 19,
+"nBuecher": 15,
 "matchId": "36204621",
 "liga": "Chinese Super League"
-},
-{
-"spiel": "Henan Songshan Longmen v Beijing Guoan",
-"grund": "kein_pinnacle",
-"kandidat": "Henan FC v Beijing FC",
-"key": "soccer_china_superleague",
-"nSoft": 20,
-"pinnacleImEvent": false,
-"nBuecher": 20,
-"matchId": "36209444",
-"liga": "Chinese Super League"
-},
-{
-"spiel": "Dalian Kun City FC v Guangxi Hengchen",
-"kandidat": "Chengdu Rongcheng FC v Dalian Yingbo",
-"key": "soccer_china_superleague",
-"score": 0.33,
-"grund": "name",
-"matchId": "36226960",
-"liga": "Chinese League 1"
 }
 ]
 }
