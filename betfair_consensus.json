@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-10-24T01:45:26.037045+00:00",
+"generatedAt": "2026-10-24T02:00:46.013735+00:00",
 "count": 27,
 "covered": 26,
 "leaguesKuratiert": [
@@ -59,8 +59,8 @@
 ],
 "leaguesMitTotals": [],
 "oddsKeysFetched": 48,
-"oddsKeysMitDaten": 48,
-"oddsEvents": 578,
+"oddsKeysMitDaten": 47,
+"oddsEvents": 569,
 "oddsTotals": {
 "versucht": 8,
 "mitDaten": 0,
@@ -69,11 +69,11 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 704667,
-"remaining": 4295333,
+"used": 705287,
+"remaining": 4294713,
 "letzterFehler": null,
-"netzFehler": 0,
-"letzterNetzfehler": null
+"netzFehler": 1,
+"letzterNetzfehler": "The read operation timed out"
 },
 "ankerQuote": 0.989,
 "games": [
@@ -89,13 +89,13 @@
 "moneyName": "Arsenal",
 "moneySharePct": 82,
 "moneyOdd": 1.5,
-"moneyDir": "in",
-"totVol": 243433,
+"moneyDir": "flat",
+"totVol": 243707,
 "pinnOdd": 1.48,
 "softOdd": 1.44,
 "softN": 50,
 "poly": {
-"vol": 122390,
+"vol": 122431,
 "odd": 1.5,
 "sharePct": 66,
 "shareSrc": "preis",
@@ -130,6 +130,69 @@
 "pinnTotals": null
 },
 {
+"matchId": "36182229",
+"home": "Tigre",
+"away": "Atl Tucuman",
+"league": "Argentinian Primera Division",
+"country": "AR",
+"kickoff": "2026-10-24T00:15:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Tigre",
+"moneySharePct": 73,
+"moneyOdd": 26.0,
+"moneyDir": "out",
+"totVol": 206167,
+"pinnOdd": 12.41,
+"softOdd": 19.0,
+"softN": 25,
+"poly": {
+"vol": 123402,
+"odd": 3.33,
+"sharePct": 77,
+"shareSrc": "geld",
+"key": "arg-tig-cat-2026-10-23",
+"sideKey": "CA Tigre",
+"whales": [
+{
+"wallet": "0x95c6c9a6727ed203e97230dda61ab19a020e1508",
+"usd": 26100
+},
+{
+"wallet": "0x824978ad8f2aa87ec22da2df99ffbb7d58e0b23a",
+"usd": 655
+},
+{
+"wallet": "0x6bc742cc8c377ae2e323700fb9eabb9fede7c4a9",
+"usd": 283
+},
+{
+"wallet": "0x48b0900dc31ac1aadf4777ba76eb72d35048a348",
+"usd": 267
+}
+],
+"whaleUsd": 27305
+},
+"pinn": {
+"home": 0.0758,
+"draw": 0.2799,
+"away": 0.6443,
+"fav": "away"
+},
+"soft": {
+"home": 0.0487,
+"draw": 0.247,
+"away": 0.7043,
+"fav": "away",
+"n": 25
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "uneinig",
+"agree": false,
+"pinnTotals": null
+},
+{
 "matchId": "36177359",
 "home": "Aston Villa",
 "away": "Man City",
@@ -142,12 +205,12 @@
 "moneySharePct": 74,
 "moneyOdd": 1.67,
 "moneyDir": "flat",
-"totVol": 191347,
+"totVol": 192776,
 "pinnOdd": 1.62,
 "softOdd": 1.61,
 "softN": 49,
 "poly": {
-"vol": 187745,
+"vol": 187881,
 "odd": 1.65,
 "sharePct": 60,
 "shareSrc": "preis",
@@ -163,16 +226,16 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.1939,
-"draw": 0.2156,
-"away": 0.5905,
+"home": 0.1935,
+"draw": 0.2153,
+"away": 0.5912,
 "fav": "away",
 "n": 49
 },
 "pinnMovePP": 0.8,
 "pinnMove": {
 "movePP": 0.8,
-"stepPP": 0.1,
+"stepPP": 0.0,
 "n": 25,
 "move": false,
 "laeuft": false
@@ -182,74 +245,55 @@
 "pinnTotals": null
 },
 {
-"matchId": "36182229",
-"home": "Tigre",
-"away": "Atl Tucuman",
-"league": "Argentinian Primera Division",
-"country": "AR",
-"kickoff": "2026-10-24T00:15:00Z",
-"live": true,
+"matchId": "36177320",
+"home": "Chelsea",
+"away": "Tottenham",
+"league": "English Premier League",
+"country": "GB",
+"kickoff": "2026-10-24T16:30:00Z",
+"live": false,
 "moneySide": "home",
-"moneyName": "Tigre",
-"moneySharePct": 83,
-"moneyOdd": 3.4,
-"moneyDir": "out",
-"totVol": 180947,
-"pinnOdd": 2.41,
-"softOdd": 3.15,
-"softN": 26,
+"moneyName": "Chelsea",
+"moneySharePct": 80,
+"moneyOdd": 1.88,
+"moneyDir": "flat",
+"totVol": 170210,
+"pinnOdd": 1.83,
+"softOdd": 1.79,
+"softN": 50,
 "poly": {
-"vol": 119609,
-"odd": 2.3,
-"sharePct": 89,
-"shareSrc": "geld",
-"key": "arg-tig-cat-2026-10-23",
-"sideKey": "CA Tigre",
-"whales": [
-{
-"wallet": "0x95c6c9a6727ed203e97230dda61ab19a020e1508",
-"usd": 37845
-},
-{
-"wallet": "0x824978ad8f2aa87ec22da2df99ffbb7d58e0b23a",
-"usd": 571
-},
-{
-"wallet": "0x6bc742cc8c377ae2e323700fb9eabb9fede7c4a9",
-"usd": 410
-},
-{
-"wallet": "0x48b0900dc31ac1aadf4777ba76eb72d35048a348",
-"usd": 387
-},
-{
-"wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
-"usd": 230
-},
-{
-"wallet": "0x734ebc2a09ff296d07490f55b5fe9d0e18d9edbd",
-"usd": 213
-}
-],
-"whaleUsd": 40635
+"vol": 338466,
+"odd": 1.9,
+"sharePct": 52,
+"shareSrc": "preis",
+"key": "epl-che-tot-2026-10-24",
+"sideKey": "Chelsea FC",
+"whales": null,
+"whaleUsd": null
 },
 "pinn": {
-"home": 0.3916,
-"draw": 0.431,
-"away": 0.1774,
-"fav": "draw"
+"home": 0.5287,
+"draw": 0.2365,
+"away": 0.2348,
+"fav": "home"
 },
 "soft": {
-"home": 0.2945,
-"draw": 0.5467,
-"away": 0.1588,
-"fav": "draw",
-"n": 26
+"home": 0.5312,
+"draw": 0.2334,
+"away": 0.2354,
+"fav": "home",
+"n": 50
 },
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "uneinig",
-"agree": false,
+"pinnMovePP": -2.3,
+"pinnMove": {
+"movePP": -2.3,
+"stepPP": -0.0,
+"n": 25,
+"move": true,
+"laeuft": false
+},
+"verdict": "konsens",
+"agree": true,
 "pinnTotals": null
 },
 {
@@ -264,13 +308,13 @@
 "moneyName": "Real Madrid",
 "moneySharePct": 51,
 "moneyOdd": 4.1,
-"moneyDir": "out",
+"moneyDir": "flat",
 "totVol": 169557,
 "pinnOdd": 3.84,
 "softOdd": 3.9,
 "softN": 45,
 "poly": {
-"vol": 388324,
+"vol": 388529,
 "odd": 4.08,
 "sharePct": 24,
 "shareSrc": "preis",
@@ -302,58 +346,6 @@
 },
 "verdict": "uneinig",
 "agree": false,
-"pinnTotals": null
-},
-{
-"matchId": "36177320",
-"home": "Chelsea",
-"away": "Tottenham",
-"league": "English Premier League",
-"country": "GB",
-"kickoff": "2026-10-24T16:30:00Z",
-"live": false,
-"moneySide": "home",
-"moneyName": "Chelsea",
-"moneySharePct": 79,
-"moneyOdd": 1.88,
-"moneyDir": "flat",
-"totVol": 169221,
-"pinnOdd": 1.83,
-"softOdd": 1.79,
-"softN": 50,
-"poly": {
-"vol": 338406,
-"odd": 1.9,
-"sharePct": 52,
-"shareSrc": "preis",
-"key": "epl-che-tot-2026-10-24",
-"sideKey": "Chelsea FC",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.5287,
-"draw": 0.2365,
-"away": 0.2348,
-"fav": "home"
-},
-"soft": {
-"home": 0.5311,
-"draw": 0.2334,
-"away": 0.2355,
-"fav": "home",
-"n": 50
-},
-"pinnMovePP": -1.9,
-"pinnMove": {
-"movePP": -1.9,
-"stepPP": -0.0,
-"n": 25,
-"move": true,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
 "pinnTotals": null
 },
 {
@@ -391,11 +383,82 @@
 "pinnMove": {
 "movePP": -0.0,
 "stepPP": -0.0,
-"n": 12,
+"n": 13,
 "move": false,
 "laeuft": false
 },
 "verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36211767",
+"home": "Sport Recife",
+"away": "Criciuma",
+"league": "Brazilian Serie B",
+"country": "BR",
+"kickoff": "2026-10-24T00:00:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Sport Recife",
+"moneySharePct": 56,
+"moneyOdd": 28.0,
+"moneyDir": "out",
+"totVol": 76049,
+"pinnOdd": 1.3,
+"softOdd": 13.0,
+"softN": 31,
+"poly": {
+"vol": 27307,
+"odd": 1.26,
+"sharePct": 64,
+"shareSrc": "geld",
+"key": "bra2-rec-cri-2026-10-23",
+"sideKey": "SC Recife",
+"whales": [
+{
+"wallet": "0x5feb07299b2a0a07730ef35cd4781ec76a19c408",
+"usd": 480
+},
+{
+"wallet": "0x4f29e103339919c4baaea2a60195cf1c8bb27a7e",
+"usd": 405
+},
+{
+"wallet": "0xe02066958cfd02ee1fc8a4cdb51b56a1ca50f39b",
+"usd": 346
+},
+{
+"wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
+"usd": 238
+},
+{
+"wallet": "0x81a74518bc7a5743c21baa758c8651bcc2b67042",
+"usd": 136
+},
+{
+"wallet": "0x325f0e5b5afc66ff54102d850f67f0c621304511",
+"usd": 105
+}
+],
+"whaleUsd": 1982
+},
+"pinn": {
+"home": 0.721,
+"draw": 0.2269,
+"away": 0.0521,
+"fav": "home"
+},
+"soft": {
+"home": 0.1188,
+"draw": 0.7984,
+"away": 0.0827,
+"fav": "draw",
+"n": 31
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "teil",
 "agree": true,
 "pinnTotals": null
 },
@@ -412,12 +475,12 @@
 "moneySharePct": 53,
 "moneyOdd": 2.32,
 "moneyDir": "flat",
-"totVol": 74503,
+"totVol": 74915,
 "pinnOdd": 2.22,
 "softOdd": 2.15,
 "softN": 50,
 "poly": {
-"vol": 19837,
+"vol": 19841,
 "odd": 2.3,
 "sharePct": 44,
 "shareSrc": "preis",
@@ -433,15 +496,15 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.4388,
-"draw": 0.2607,
-"away": 0.3005,
+"home": 0.4378,
+"draw": 0.2616,
+"away": 0.3006,
 "fav": "home",
 "n": 50
 },
-"pinnMovePP": -1.2,
+"pinnMovePP": -1.0,
 "pinnMove": {
-"movePP": -1.2,
+"movePP": -1.0,
 "stepPP": -0.0,
 "n": 25,
 "move": true,
@@ -462,9 +525,9 @@
 "moneySide": "home",
 "moneyName": "Atletico Madrid",
 "moneySharePct": 92,
-"moneyOdd": 1.3,
-"moneyDir": "flat",
-"totVol": 70509,
+"moneyOdd": 1.31,
+"moneyDir": "out",
+"totVol": 70603,
 "pinnOdd": 1.29,
 "softOdd": 1.27,
 "softN": 42,
@@ -505,14 +568,14 @@
 "moneySide": "home",
 "moneyName": "Como",
 "moneySharePct": 82,
-"moneyOdd": 1.54,
-"moneyDir": "out",
-"totVol": 57550,
+"moneyOdd": 1.53,
+"moneyDir": "in",
+"totVol": 57601,
 "pinnOdd": 1.5,
 "softOdd": 1.45,
 "softN": 49,
 "poly": {
-"vol": 7053,
+"vol": 7138,
 "odd": 1.53,
 "sharePct": 66,
 "shareSrc": "preis",
@@ -564,7 +627,7 @@
 "softOdd": 3.2,
 "softN": 50,
 "poly": {
-"vol": 440400,
+"vol": 440407,
 "odd": 3.28,
 "sharePct": 30,
 "shareSrc": "preis",
@@ -586,9 +649,9 @@
 "fav": "home",
 "n": 50
 },
-"pinnMovePP": 0.1,
+"pinnMovePP": -0.0,
 "pinnMove": {
-"movePP": 0.1,
+"movePP": -0.0,
 "stepPP": -0.0,
 "n": 25,
 "move": false,
@@ -596,77 +659,6 @@
 },
 "verdict": "uneinig",
 "agree": false,
-"pinnTotals": null
-},
-{
-"matchId": "36211767",
-"home": "Sport Recife",
-"away": "Criciuma",
-"league": "Brazilian Serie B",
-"country": "BR",
-"kickoff": "2026-10-24T00:00:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Sport Recife",
-"moneySharePct": 52,
-"moneyOdd": 1.32,
-"moneyDir": "in",
-"totVol": 52918,
-"pinnOdd": 1.3,
-"softOdd": 1.2,
-"softN": 31,
-"poly": {
-"vol": 25348,
-"odd": 4.08,
-"sharePct": 15,
-"shareSrc": "geld",
-"key": "bra2-rec-cri-2026-10-23",
-"sideKey": "SC Recife",
-"whales": [
-{
-"wallet": "0x5feb07299b2a0a07730ef35cd4781ec76a19c408",
-"usd": 148
-},
-{
-"wallet": "0x4f29e103339919c4baaea2a60195cf1c8bb27a7e",
-"usd": 125
-},
-{
-"wallet": "0x7b4adc02358b2c10fcc26c20403e386444e2318a",
-"usd": 113
-},
-{
-"wallet": "0xe02066958cfd02ee1fc8a4cdb51b56a1ca50f39b",
-"usd": 107
-},
-{
-"wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
-"usd": 73
-},
-{
-"wallet": "0xf8e4943df102da8d5271cf5bb9e4a439739b3b32",
-"usd": 73
-}
-],
-"whaleUsd": 810
-},
-"pinn": {
-"home": 0.721,
-"draw": 0.2269,
-"away": 0.0521,
-"fav": "home"
-},
-"soft": {
-"home": 0.7493,
-"draw": 0.2085,
-"away": 0.0422,
-"fav": "home",
-"n": 31
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "konsens",
-"agree": true,
 "pinnTotals": null
 },
 {
@@ -680,9 +672,9 @@
 "moneySide": "away",
 "moneyName": "Betis",
 "moneySharePct": 68,
-"moneyOdd": 2.36,
-"moneyDir": "flat",
-"totVol": 45468,
+"moneyOdd": 2.34,
+"moneyDir": "in",
+"totVol": 45699,
 "pinnOdd": 2.29,
 "softOdd": 2.3,
 "softN": 45,
@@ -703,7 +695,7 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.3096,
+"home": 0.3095,
 "draw": 0.2764,
 "away": 0.414,
 "fav": "away",
@@ -713,7 +705,7 @@
 "pinnMove": {
 "movePP": 1.9,
 "stepPP": 0.0,
-"n": 22,
+"n": 23,
 "move": true,
 "laeuft": false
 },
@@ -734,12 +726,12 @@
 "moneySharePct": 45,
 "moneyOdd": 2.92,
 "moneyDir": "flat",
-"totVol": 43975,
+"totVol": 44125,
 "pinnOdd": 2.79,
 "softOdd": 2.75,
 "softN": 49,
 "poly": {
-"vol": 7800,
+"vol": 7808,
 "odd": 2.9,
 "sharePct": 34,
 "shareSrc": "preis",
@@ -755,9 +747,9 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.3419,
-"draw": 0.2861,
-"away": 0.372,
+"home": 0.3422,
+"draw": 0.2859,
+"away": 0.3718,
 "fav": "away",
 "n": 49
 },
@@ -765,7 +757,7 @@
 "pinnMove": {
 "movePP": 0.1,
 "stepPP": -0.0,
-"n": 15,
+"n": 16,
 "move": false,
 "laeuft": false
 },
@@ -786,7 +778,7 @@
 "moneySharePct": 58,
 "moneyOdd": 2.6,
 "moneyDir": "flat",
-"totVol": 43566,
+"totVol": 43624,
 "pinnOdd": 2.55,
 "softOdd": 2.5,
 "softN": 50,
@@ -817,7 +809,7 @@
 "pinnMove": {
 "movePP": 0.2,
 "stepPP": 0.0,
-"n": 13,
+"n": 14,
 "move": false,
 "laeuft": false
 },
@@ -837,7 +829,7 @@
 "moneyName": "Frosinone",
 "moneySharePct": 66,
 "moneyOdd": 4.0,
-"moneyDir": "in",
+"moneyDir": "flat",
 "totVol": 43369,
 "pinnOdd": 3.93,
 "softOdd": 3.8,
@@ -889,11 +881,11 @@
 "moneyName": "Paderborn",
 "moneySharePct": 70,
 "moneyOdd": 2.42,
-"moneyDir": "out",
+"moneyDir": "flat",
 "totVol": 31214,
 "pinnOdd": 2.31,
 "softOdd": 2.23,
-"softN": 48,
+"softN": 49,
 "poly": {
 "vol": 1710,
 "odd": 2.41,
@@ -911,17 +903,17 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.4209,
-"draw": 0.2599,
+"home": 0.4208,
+"draw": 0.2601,
 "away": 0.3191,
 "fav": "home",
-"n": 48
+"n": 49
 },
 "pinnMovePP": -1.5,
 "pinnMove": {
 "movePP": -1.5,
 "stepPP": 0.0,
-"n": 17,
+"n": 18,
 "move": true,
 "laeuft": false
 },
@@ -963,9 +955,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.6753,
-"draw": 0.2055,
-"away": 0.1193,
+"home": 0.6756,
+"draw": 0.2053,
+"away": 0.1191,
 "fav": "home",
 "n": 49
 },
@@ -973,7 +965,7 @@
 "pinnMove": {
 "movePP": 0.1,
 "stepPP": 0.0,
-"n": 15,
+"n": 16,
 "move": false,
 "laeuft": false
 },
@@ -994,12 +986,12 @@
 "moneySharePct": 46,
 "moneyOdd": 3.6,
 "moneyDir": "flat",
-"totVol": 29954,
+"totVol": 30054,
 "pinnOdd": 3.53,
 "softOdd": 3.48,
 "softN": 50,
 "poly": {
-"vol": 4549,
+"vol": 4553,
 "odd": null,
 "sharePct": null,
 "shareSrc": null,
@@ -1025,7 +1017,7 @@
 "pinnMove": {
 "movePP": 0.0,
 "stepPP": 0.0,
-"n": 16,
+"n": 17,
 "move": false,
 "laeuft": false
 },
@@ -1067,9 +1059,9 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.1999,
+"home": 0.1997,
 "draw": 0.2372,
-"away": 0.563,
+"away": 0.5631,
 "fav": "away",
 "n": 50
 },
@@ -1077,7 +1069,7 @@
 "pinnMove": {
 "movePP": -0.0,
 "stepPP": -0.0,
-"n": 13,
+"n": 14,
 "move": false,
 "laeuft": false
 },
@@ -1098,12 +1090,12 @@
 "moneySharePct": 45,
 "moneyOdd": 2.74,
 "moneyDir": "flat",
-"totVol": 28853,
-"pinnOdd": 2.68,
+"totVol": 28864,
+"pinnOdd": 2.67,
 "softOdd": 2.55,
 "softN": 49,
 "poly": {
-"vol": 1779,
+"vol": 2019,
 "odd": 2.74,
 "sharePct": 36,
 "shareSrc": "preis",
@@ -1113,9 +1105,9 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.3251,
-"draw": 0.3135,
-"away": 0.3614,
+"home": 0.3239,
+"draw": 0.3134,
+"away": 0.3627,
 "fav": "away"
 },
 "soft": {
@@ -1125,11 +1117,11 @@
 "fav": "away",
 "n": 49
 },
-"pinnMovePP": -0.8,
+"pinnMovePP": -0.7,
 "pinnMove": {
-"movePP": -0.8,
-"stepPP": 0.0,
-"n": 9,
+"movePP": -0.7,
+"stepPP": 0.1,
+"n": 10,
 "move": false,
 "laeuft": false
 },
@@ -1150,10 +1142,10 @@
 "moneySharePct": 74,
 "moneyOdd": 1.48,
 "moneyDir": "flat",
-"totVol": 26149,
+"totVol": 26177,
 "pinnOdd": 1.44,
 "softOdd": 1.42,
-"softN": 48,
+"softN": 49,
 "poly": {
 "vol": 11533,
 "odd": 1.48,
@@ -1171,17 +1163,17 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.6626,
-"draw": 0.1829,
+"home": 0.6623,
+"draw": 0.1831,
 "away": 0.1545,
 "fav": "home",
-"n": 48
+"n": 49
 },
 "pinnMovePP": 0.0,
 "pinnMove": {
 "movePP": 0.0,
 "stepPP": 0.0,
-"n": 11,
+"n": 12,
 "move": false,
 "laeuft": false
 },
@@ -1233,7 +1225,7 @@
 "pinnMove": {
 "movePP": 0.0,
 "stepPP": 0.0,
-"n": 5,
+"n": 6,
 "move": false,
 "laeuft": false
 },
@@ -1252,12 +1244,12 @@
 "moneySide": "home",
 "moneyName": "Augsburg",
 "moneySharePct": 62,
-"moneyOdd": 1.86,
-"moneyDir": "flat",
-"totVol": 22949,
+"moneyOdd": 1.85,
+"moneyDir": "in",
+"totVol": 22966,
 "pinnOdd": 1.84,
 "softOdd": 1.81,
-"softN": 48,
+"softN": 49,
 "poly": {
 "vol": 24811,
 "odd": 1.87,
@@ -1276,16 +1268,16 @@
 },
 "soft": {
 "home": 0.521,
-"draw": 0.2364,
+"draw": 0.2363,
 "away": 0.2426,
 "fav": "home",
-"n": 48
+"n": 49
 },
 "pinnMovePP": 0.2,
 "pinnMove": {
 "movePP": 0.2,
 "stepPP": 0.0,
-"n": 6,
+"n": 7,
 "move": false,
 "laeuft": false
 },
@@ -1337,7 +1329,7 @@
 "pinnMove": {
 "movePP": -0.1,
 "stepPP": 0.0,
-"n": 13,
+"n": 14,
 "move": false,
 "laeuft": false
 },
@@ -1357,7 +1349,7 @@
 "moneyName": "Real Sociedad",
 "moneySharePct": 92,
 "moneyOdd": 1.64,
-"moneyDir": "out",
+"moneyDir": "flat",
 "totVol": 20582,
 "pinnOdd": 1.6,
 "softOdd": 1.6,
@@ -1389,7 +1381,7 @@
 "pinnMove": {
 "movePP": -0.0,
 "stepPP": -0.0,
-"n": 8,
+"n": 9,
 "move": false,
 "laeuft": false
 },
@@ -1407,24 +1399,58 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Necaxa",
-"moneySharePct": 76,
-"moneyOdd": 1.38,
-"moneyDir": "in",
-"totVol": 14497,
-"pinnOdd": 1.82,
-"softOdd": 1.29,
+"moneySharePct": 75,
+"moneyOdd": 1.42,
+"moneyDir": "out",
+"totVol": 14912,
+"pinnOdd": 1.36,
+"softOdd": 1.3,
 "softN": 31,
-"poly": null,
+"poly": {
+"vol": 10721,
+"odd": 1.4,
+"sharePct": 93,
+"shareSrc": "geld",
+"key": "mex-nec-jua-2026-10-23",
+"sideKey": "Club Necaxa",
+"whales": [
+{
+"wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+"usd": 1220
+},
+{
+"wallet": "0x824978ad8f2aa87ec22da2df99ffbb7d58e0b23a",
+"usd": 688
+},
+{
+"wallet": "0x65503c7f9e142ac88b1ce09df3363ff77f188451",
+"usd": 650
+},
+{
+"wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
+"usd": 349
+},
+{
+"wallet": "0xa24e51e917d3f844b972e9bccfa6bc2e04621be8",
+"usd": 259
+},
+{
+"wallet": "0xa1783e4d22e10afee1b9828c1d1e73f33e2211a2",
+"usd": 194
+}
+],
+"whaleUsd": 4096
+},
 "pinn": {
-"home": 0.519,
-"draw": 0.2706,
-"away": 0.2104,
+"home": 0.6954,
+"draw": 0.2189,
+"away": 0.0857,
 "fav": "home"
 },
 "soft": {
-"home": 0.7041,
-"draw": 0.2003,
-"away": 0.0955,
+"home": 0.6969,
+"draw": 0.2103,
+"away": 0.0928,
 "fav": "home",
 "n": 31
 },
@@ -1444,47 +1470,47 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Junior FC Barranquilla",
-"moneySharePct": 78,
-"moneyOdd": 2.5,
-"moneyDir": "out",
-"totVol": 37695,
+"moneySharePct": 77,
+"moneyOdd": 1.4,
+"moneyDir": "in",
+"totVol": 41444,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
 "poly": {
-"vol": 11831,
-"odd": 2.15,
-"sharePct": 89,
+"vol": 15589,
+"odd": 2.82,
+"sharePct": 58,
 "shareSrc": "geld",
 "key": "col1-cjf-gdr-2026-10-23",
 "sideKey": "CDP Junior FC",
 "whales": [
 {
 "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
-"usd": 1950
+"usd": 1421
 },
 {
 "wallet": "0x52d93dcf81444f793dda7fedc370f7a35101fb1a",
-"usd": 904
+"usd": 690
+},
+{
+"wallet": "0x65503c7f9e142ac88b1ce09df3363ff77f188451",
+"usd": 478
+},
+{
+"wallet": "0x824978ad8f2aa87ec22da2df99ffbb7d58e0b23a",
+"usd": 271
 },
 {
 "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
-"usd": 253
+"usd": 193
 },
 {
 "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
-"usd": 252
-},
-{
-"wallet": "0xe5502f3b033ebcd64233b5ffc43c44c24170be3f",
-"usd": 241
-},
-{
-"wallet": "0x7ea571c40408f340c1c8fc8eaacebab53c1bde7b",
-"usd": 161
+"usd": 192
 }
 ],
-"whaleUsd": 4188
+"whaleUsd": 3540
 },
 "pinn": null,
 "soft": null,
@@ -1500,11 +1526,11 @@
 }
 ],
 "ankerN": 88,
-"ankerNOffen": 149,
+"ankerNOffen": 148,
 "ankerMit": 87,
 "ankerDiagnose": {
 "nach": {
-"kein_kandidat": 47,
+"kein_kandidat": 46,
 "zeit": 3,
 "name": 10
 },
