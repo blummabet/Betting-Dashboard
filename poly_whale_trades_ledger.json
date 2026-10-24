@@ -31869,7 +31869,7 @@
 "walletRank": null,
 "restock": false,
 "sentAt": "2026-10-24T11:18:43Z",
-"status": "settled",
+"status": "unaufloesbar",
 "kanal": "trades",
 "public": null,
 "totalUsd": 730562.0,
@@ -31880,14 +31880,14 @@
 "htkFirst": 2.8,
 "cond": "0x1a89417472dcc0f6c729b82f283652a883d9a1318d43d5e0da3321d973b74ead",
 "condQuelle": "erfassung+wallet",
-"result": "loss",
-"winner": "Under",
 "closePrice": 0.565,
-"stake": 10.0,
-"pnl": -10.0,
-"clvPP": 2.0,
 "settledTs": "2026-10-24T18:18:56.586556+00:00",
-"resolvedTs": "2026-10-24T18:18:30.348527+00:00"
+"resolvedTs": "2026-10-24T18:18:30.348527+00:00",
+"zurueckgenommen": {
+"war": "loss",
+"am": "2026-10-24T18:51:02.879467+00:00",
+"grund": "Buendel-Slug ohne Linie — Ausgang nie ableitbar"
+}
 },
 {
 "k": "0xe221be3b45dfe5ed562ee9dc16f47205728e06f6|sea-com-sas-2026-10-24-more-markets|Over",
@@ -32503,7 +32503,7 @@
 "walletRank": null,
 "restock": false,
 "sentAt": "2026-10-24T17:21:38Z",
-"status": "pending",
+"status": "settled",
 "kanal": "trades",
 "public": null,
 "totalUsd": 36098.0,
@@ -32511,7 +32511,15 @@
 "seitenAnteil": 0.165,
 "seiteUsd": 18028.53,
 "htkMess": 0.18,
-"htkFirst": 2.8
+"htkFirst": 2.8,
+"result": "loss",
+"winner": "Over",
+"closePrice": 0.505,
+"stake": 10.0,
+"pnl": -10.0,
+"clvPP": -12.5,
+"settledTs": "2026-10-24T18:51:02.879467+00:00",
+"resolvedTs": "2026-10-24T18:50:08.074090+00:00"
 },
 {
 "k": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b|cs2-bst-imp11-2026-10-24|Imperial",
@@ -32581,5 +32589,28 @@
 "seiteUsd": 41801.74,
 "htkMess": 0.44,
 "htkFirst": 0.54
+},
+{
+"k": "0xde5d9a7dce9faf8df086c066b698375c1d2d9192|fl1-rcl-pfc-2026-10-24|Racing Club de Lens",
+"key": "fl1-rcl-pfc-2026-10-24",
+"side": "Racing Club de Lens",
+"wallet": "0xde5d9a7dce9faf8df086c066b698375c1d2d9192",
+"league": "LIGUE-1",
+"cat": "Fußball",
+"usd": 2024.0,
+"pushPrice": 0.415,
+"whaleEntry": 0.415,
+"walletRank": null,
+"restock": false,
+"sentAt": "2026-10-24T18:51:01Z",
+"status": "pending",
+"kanal": "trades",
+"public": null,
+"totalUsd": 116210.0,
+"anteil": 0.0136,
+"seitenAnteil": 0.2596,
+"seiteUsd": 7795.9,
+"htkMess": 0.44,
+"htkFirst": 0.03
 }
 ]
