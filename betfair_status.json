@@ -34,7 +34,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "nur 55 von 236 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Orense Sporting Club v Delfin (Ecuadorian Serie A); ADO Den Haag v Heerenveen (Dutch Eredivisie); Almeria v Oviedo (Spanish Segunda Division)"
+        "nur 55 von 235 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Defensor Sporting v Racing Club (Uru) (Uruguayan Primera Division); Leonesa v Pontevedra CF (Spanish Primera Federación - Group 1); Avai v Botafogo SP (Brazilian Serie B)"
       ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
@@ -50,10 +50,12 @@
     {
       "id": "live_minute_sane",
       "label": "Live-Minute plausibel (Zufluss-Fenster)",
-      "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "severity": "error",
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "36230510: min=131 ausserhalb 0–130"
+      ],
       "note": "Feld 'min' speist die Spielminuten-Spanne der Frisch-Push. Korrupte Werte verfaelschen sie, fehlende degradieren still auf die Zeit-Dauer."
     },
     {
@@ -90,27 +92,31 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 732219 verbraucht, 4267781 uebrig"
+      "note": "Kontingent: 732822 verbraucht, 4267178 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 10,
+      "nFail": 14,
       "failures": [
+        "Tabora United FC v Young Africans (Tanzanian Premier League): name — bester Kandidat „Oxford United v Bradford City“",
         "Al Sharjah v Al Oruba (UAE Presidents Cup): zeit — bester Kandidat „Al-Kholood v Al-Ettifaq“ · 2.1h Anpfiff-Abstand",
         "Central Espanol v Albion FC (Uruguayan Primera Division): name — bester Kandidat „Burton Albion v Leyton Orient“",
         "Chelsea U21 v Liverpool U21 (English Premier League 2 - Div 1): zeit — bester Kandidat „Liverpool v Chelsea“ · 103.0h Anpfiff-Abstand",
         "Al-Khaleej Khor Fakkan v Al Dhafra (UAE Presidents Cup): zeit — bester Kandidat „Al-Khaleej v Al-Hazem“ · 121.7h Anpfiff-Abstand",
+        "Persijap Jepara v Malut United (Indonesian Super League): name — bester Kandidat „Oxford United v Bradford City“",
         "BG Pathumthani United v Chiangrai Utd (Thai League 1): zeit — bester Kandidat „Drogheda United v Galway United“ · 151.8h Anpfiff-Abstand",
-        "Buriram Utd v Sisaket United (Thai League 1): zeit — bester Kandidat „Drogheda United v Galway United“ · 152.2h Anpfiff-Abstand",
-        "Foshan Nanshi FC v Nanjing City (Chinese League 1): name — bester Kandidat „Aston Villa v Manchester City“",
-        "Sliema Wanderers FC v Marsaxlokk FC (Maltese Premier League): name — bester Kandidat „Wolverhampton Wanderers v Watford“",
+        "Foshan Nanshi FC v Nanjing City (Chinese League 1): name — bester Kandidat „Luton v Leicester City“",
+        "Torquay v Maidstone Utd (English National League South): name — bester Kandidat „Oxford United v Bradford City“",
+        "Sliema Wanderers FC v Marsaxlokk FC (Maltese Premier League): name — bester Kandidat „Wimbledon v Wycombe Wanderers“",
         "Brora Rangers v Cowdenbeath (Scottish FA Cup): name — bester Kandidat „Rangers v St Johnstone“",
-        "Harrogate Town v Sutton Utd (English National League): unerklaert — bester Kandidat „Northampton Town v Colchester United“"
+        "Dag and Red v Chesham Utd (English National League South): name — bester Kandidat „Oxford United v Bradford City“",
+        "Harrogate Town v Sutton Utd (English National League): unerklaert — bester Kandidat „Northampton Town v Colchester United“",
+        "Buriram Utd v Sisaket United (Thai League 1): zeit — bester Kandidat „Drogheda United v Galway United“ · 152.2h Anpfiff-Abstand"
       ],
-      "note": "ohne Anker: kein_kandidat 74 · kein_pinnacle 4 · name 4 · unerklaert 1 · zeit 5. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 70 · kein_pinnacle 6 · name 8 · unerklaert 1 · zeit 5. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -119,7 +125,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 3 — Huddersfield v Wigan (31 Buecher, ohne Pinnacle); VPS v FC Inter Turku (18 Buecher, ohne Pinnacle); Northampton v Colchester (23 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 5 — Charlton v Norwich (27 Buecher, ohne Pinnacle); Luton v Leicester (31 Buecher, ohne Pinnacle); Huddersfield v Wigan (18 Buecher, ohne Pinnacle); Hacken v Degerfors (31 Buecher, ohne Pinnacle); Northampton v Colchester (17 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -194,6 +200,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-10-24T13:03:40.605607+00:00"
+  "nFail": 3,
+  "generatedAt": "2026-10-24T13:18:24.940173+00:00"
 }
