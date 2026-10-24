@@ -39,8 +39,8 @@
    "polySide": "AS Monaco FC",
    "pinnMovePP": null,
    "punkte": {
-    "punkte": 3,
-    "moeglich": 4,
+    "punkte": 5,
+    "moeglich": 10,
     "dauerH": 53.51,
     "teile": [
      {
@@ -58,9 +58,9 @@
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.87,
-       "betrag": null,
-       "gesamt": null,
+       "anteil": 0.866,
+       "betrag": 15856,
+       "gesamt": 18310,
        "waehrung": "EUR",
        "quelle": "geld"
       },
@@ -69,24 +69,42 @@
      {
       "buch": "POLY",
       "name": "Polymarket",
-      "status": "unbekannt",
+      "status": "nein",
       "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "geld": null,
-      "text": "Polymarket nicht erhoben"
+      "moeglich": 3,
+      "grund": {
+       "ok": false,
+       "text": "Poly-Preis 48% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein bewiesenes Wallet auf der Seite"
+      },
+      "geld": {
+       "anteil": 0.48,
+       "betrag": null,
+       "gesamt": 13063,
+       "waehrung": "USD",
+       "quelle": "preis"
+      },
+      "text": "Poly-Preis 48% auf derselben Seite"
      },
      {
       "buch": "PIN",
       "name": "Pinnacle",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "hat dieselbe Seite als Favorit"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein Move gemessen"
+      },
       "geld": null,
-      "text": "Pinnacle nicht erhoben"
+      "text": "hat dieselbe Seite als Favorit"
      },
      {
       "buch": "STAKE",
@@ -174,8 +192,8 @@
       },
       "geld": {
        "anteil": 0.684,
-       "betrag": 42542,
-       "gesamt": 62196,
+       "betrag": 42550,
+       "gesamt": 62208,
        "waehrung": "EUR",
        "quelle": "geld"
       },
@@ -546,9 +564,9 @@
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.846,
-       "betrag": 71998,
-       "gesamt": 85104,
+       "anteil": 0.847,
+       "betrag": 72225,
+       "gesamt": 85272,
        "waehrung": "EUR",
        "quelle": "geld"
       },
@@ -676,20 +694,20 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 79% auf der Seite"
+       "text": "Geld 80% auf der Seite"
       },
       "tiefe": {
        "ok": false,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.791,
-       "betrag": 12162,
-       "gesamt": 15376,
+       "anteil": 0.801,
+       "betrag": 13299,
+       "gesamt": 16603,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 79% auf der Seite"
+      "text": "Geld 80% auf der Seite"
      },
      {
       "buch": "POLY",
@@ -816,7 +834,7 @@
    "polySide": "SS Lazio",
    "pinnMovePP": 0.0,
    "punkte": {
-    "punkte": 8,
+    "punkte": 7,
     "moeglich": 10,
     "dauerH": 1.95,
     "teile": [
@@ -835,9 +853,9 @@
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.856,
-       "betrag": 266958,
-       "gesamt": 311867,
+       "anteil": 0.859,
+       "betrag": 310662,
+       "gesamt": 361655,
        "waehrung": "EUR",
        "quelle": "geld"
       },
@@ -870,15 +888,15 @@
       "buch": "PIN",
       "name": "Pinnacle",
       "status": "ja",
-      "punkte": 3,
+      "punkte": 2,
       "moeglich": 3,
       "grund": {
        "ok": true,
        "text": "hat dieselbe Seite als Favorit"
       },
       "tiefe": {
-       "ok": true,
-       "text": "Move +1.3pp in unsere Richtung"
+       "ok": false,
+       "text": "kein Move gemessen"
       },
       "geld": null,
       "text": "hat dieselbe Seite als Favorit"
@@ -913,7 +931,7 @@
    "gehaltenSeit": "2026-10-24T16:48:13.898402+00:00",
    "zuletztAktiv": "2026-10-24T17:48:25.006581+00:00",
    "haltePreis": 1.49,
-   "aktiv": true
+   "aktiv": false
   }
  }
 }
