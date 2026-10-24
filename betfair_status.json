@@ -34,7 +34,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "nur 65 von 229 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Sao Bernardo v Vila Nova (Brazilian Serie B); Columbus v Toronto FC (US MLS); EC Vitoria Salvador v Athletico-PR (Brazilian Serie A)"
+        "nur 20 von 145 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Moghreb Tetouan v Widad Temara (Moroccan Botola Pro 1); Xelaju v CSD Municipal (Guatemalan Liga Nacional); Ferroviaria v Maringa (Brazilian Serie C)"
       ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
@@ -92,29 +92,26 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 734715 verbraucht, 4265285 uebrig"
+      "note": "Kontingent: 735396 verbraucht, 4264604 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 12,
+      "nFail": 9,
       "failures": [
-        "Sliema Wanderers FC v Marsaxlokk FC (Maltese Premier League): name — bester Kandidat „Wolverhampton Wanderers v Watford“",
+        "Cove Rangers v East Kilbride (Scottish League One): name — bester Kandidat „Rangers v St Johnstone“",
+        "Marine FC v Oxford City (English National League North): name — bester Kandidat „Coventry City v Fulham“",
+        "Hampton and Richmond v Truro City (English National League South): zeit — bester Kandidat „Manchester City v Brighton and Hove Albion“ · 169.0h Anpfiff-Abstand",
+        "Sliema Wanderers FC v Marsaxlokk FC (Maltese Premier League): name — bester Kandidat „Wimbledon v Wycombe Wanderers“",
+        "Central Espanol v Albion FC (Uruguayan Primera Division): name — bester Kandidat „Burton Albion v Leyton Orient“",
         "Chelsea U21 v Liverpool U21 (English Premier League 2 - Div 1): zeit — bester Kandidat „Liverpool v Chelsea“ · 103.0h Anpfiff-Abstand",
         "Al Sharjah v Al Oruba (UAE Presidents Cup): zeit — bester Kandidat „Al-Kholood v Al-Ettifaq“ · 2.1h Anpfiff-Abstand",
-        "Central Espanol v Albion FC (Uruguayan Primera Division): name — bester Kandidat „Burton Albion v Leyton Orient“",
         "Al-Khaleej Khor Fakkan v Al Dhafra (UAE Presidents Cup): zeit — bester Kandidat „Al-Khaleej v Al-Hazem“ · 121.7h Anpfiff-Abstand",
-        "BG Pathumthani United v Chiangrai Utd (Thai League 1): zeit — bester Kandidat „Drogheda United v Galway United“ · 151.8h Anpfiff-Abstand",
-        "Queens Park v Dunfermline (Scottish Championship): name — bester Kandidat „Queens Park Rangers v Swansea City“",
-        "Cove Rangers v East Kilbride (Scottish League One): name — bester Kandidat „Rangers v St Johnstone“",
-        "Brora Rangers v Cowdenbeath (Scottish FA Cup): name — bester Kandidat „Rangers v St Johnstone“",
-        "CF Rayo Majadahonda v UE Sant Andreu (Spanish Primera Federación - Group 2): name — bester Kandidat „Rayo Vallecano v Elche CF“",
-        "Salisbury City v Dover (English National League South): name — bester Kandidat „Coventry City v Fulham“",
-        "Edinburgh City v Kelty Hearts (Scottish FA Cup): name — bester Kandidat „Coventry City v Fulham“"
+        "QPR v Swansea (English Sky Bet Championship): name — bester Kandidat „Queens Park Rangers v Swansea City“"
       ],
-      "note": "ohne Anker: kein_kandidat 71 · kein_pinnacle 6 · name 8 · zeit 4. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 71 · kein_pinnacle 3 · name 5 · zeit 4. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -123,7 +120,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 3 — Rayo Vallecano v Elche (22 Buecher, ohne Pinnacle); Cordoba v Eibar (24 Buecher, ohne Pinnacle); Hacken v Degerfors (10 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 2 — Cordoba v Eibar (19 Buecher, ohne Pinnacle); Hacken v Degerfors (8 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -132,7 +129,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 15 gewollt, 15 abgerufen, 0 mit Daten"
+      "note": "Totals: 14 gewollt, 14 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -199,5 +196,5 @@
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-10-24T13:48:39.891784+00:00"
+  "generatedAt": "2026-10-24T14:02:53.303312+00:00"
 }
