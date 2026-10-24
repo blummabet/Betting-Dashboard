@@ -34,7 +34,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "nur 119 von 162 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Dhufar v Fanja (Omani Professional League); FC Zbrojovka Brno v Bohemians 1905 (Czech 1 Liga); Sirius v AIK (Swedish Allsvenskan)"
+        "nur 116 von 163 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Zemplin v Podbrezova (Slovakian Super League); Slovan Bratislava v Dukla Banska Bystrica (Slovakian Super League); Unia Skierniewice v Polonia Bytom (Polish I Liga)"
       ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
@@ -90,27 +90,29 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 718470 verbraucht, 4281530 uebrig"
+      "note": "Kontingent: 719076 verbraucht, 4280924 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 10,
+      "nFail": 12,
       "failures": [
+        "Qingdao Red Lions v Ganzhou Ruishi FC (Chinese League 2): name — bester Kandidat „Chongqing Tonglianglong FC v Qingdao Hainiu FC“",
+        "Dalian Kun City FC v Guangxi Hengchen (Chinese League 1): name — bester Kandidat „Chengdu Rongcheng FC v Dalian Yingbo“",
         "FC Magdeburg v Karlsruhe (German Bundesliga 2): name — bester Kandidat „1. FC Magdeburg v Karlsruher SC“",
-        "Beijing Tech FC v Xiamen Feilu (Chinese League 2): name — bester Kandidat „Henan FC v Beijing FC“",
-        "Guangzhou Alpha v Dalian Yingbo II (Chinese League 2): name — bester Kandidat „Chengdu Rongcheng FC v Dalian Yingbo“",
         "Khovd Western v WARD FC (Mongolian Premier League): name — bester Kandidat „Western Sydney Wanderers v Auckland FC“",
+        "Guangzhou Alpha v Dalian Yingbo II (Chinese League 2): name — bester Kandidat „Chengdu Rongcheng FC v Dalian Yingbo“",
         "Taian Tiankuang v Chengdu Rongcheng II (Chinese League 2): name — bester Kandidat „Chengdu Rongcheng FC v Dalian Yingbo“",
         "Foshan Nanshi FC v Nanjing City (Chinese League 1): name — bester Kandidat „Aston Villa v Manchester City“",
         "CS FC Dinamo Bucuresti v Gloria Popesti-Leordeni (Romanian Liga II): name — bester Kandidat „FC Akron Tolyatti v Dinamo Moscow“",
         "Buriram Utd v Sisaket United (Thai League 1): zeit — bester Kandidat „Drogheda United v Galway United“ · 152.2h Anpfiff-Abstand",
+        "Hue FC v Ho Chi Minh City FC (Vietnamese V-League 2): name — bester Kandidat „Shenzhen Peng City FC v Shanghai Shenhua FC“",
         "BG Pathumthani United v Chiangrai Utd (Thai League 1): zeit — bester Kandidat „Drogheda United v Galway United“ · 151.8h Anpfiff-Abstand",
         "Adelaide United (W) v Perth Glory (W) (Australian A-League Women): zeit — bester Kandidat „Perth Glory v Adelaide United“ · 194.0h Anpfiff-Abstand"
       ],
-      "note": "ohne Anker: kein_kandidat 78 · name 7 · zeit 3. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 79 · kein_pinnacle 1 · name 9 · zeit 3. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -119,7 +121,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 0"
+      "note": "Quelle ohne Pinnacle: 1 — Kashima v Kashiwa (32 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -195,5 +197,5 @@
     }
   ],
   "nFail": 2,
-  "generatedAt": "2026-10-24T07:18:35.692449+00:00"
+  "generatedAt": "2026-10-24T07:31:37.216062+00:00"
 }
