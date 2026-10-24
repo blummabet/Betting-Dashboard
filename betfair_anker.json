@@ -1,8 +1,45 @@
 {
-"generatedAt": "2026-10-24T22:35:23.412813+00:00",
+"generatedAt": "2026-10-24T23:05:42.830736+00:00",
 "n": 122,
 "hinweis": "Zweitmeinungen OHNE die Radar-Volumenschwelle — Quelle fuer den Buecher-Punktestand. `games` in betfair_consensus.json bleibt die Radar-Liste.",
 "anker": {
+"36211875": {
+"moneySide": "home",
+"moneyName": "CA Colegiales",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Argentinian Primera Nacional",
+"kickoff": "2026-10-24T23:00:00Z",
+"verdict": "no_anchor",
+"totVol": 1438,
+"ankerGrund": {
+"spiel": "CA Colegiales v Atletico Rafaela",
+"kandidat": "Atlético Huracán v CA Tigre BA",
+"key": "soccer_argentina_primera_division",
+"score": 0.83,
+"grund": "zeit",
+"abstandH": 143.0
+}
+},
+"36182168": {
+"moneySide": "home",
+"moneyName": "OHiggins",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Chilean Primera Division",
+"kickoff": "2026-10-24T23:00:00Z",
+"verdict": "no_anchor",
+"totVol": 3253,
+"ankerGrund": {
+"spiel": "OHiggins v Cobresal",
+"kandidat": "O'Higgins v Cobresal",
+"key": "soccer_chile_campeonato",
+"score": 1.0,
+"grund": "name"
+}
+},
 "36219386": {
 "moneySide": "home",
 "moneyName": "Club 2 de Mayo",
@@ -12,28 +49,12 @@
 "league": "Paraguayan Primera Division",
 "kickoff": "2026-10-24T22:20:00Z",
 "verdict": "no_anchor",
-"totVol": 3202,
+"totVol": 5214,
 "ankerGrund": {
 "spiel": "Club 2 de Mayo v Deportivo Recoleta",
 "grund": "kein_kandidat",
 "naechster": "Instituto de Córdoba v Deportivo Riestra"
 }
-},
-"36182218": {
-"moneySide": "draw",
-"moneyName": "The Draw",
-"poly": null,
-"pinn": {
-"home": 0.3312,
-"draw": 0.3775,
-"away": 0.2913,
-"fav": "draw"
-},
-"pinnMove": null,
-"league": "Argentinian Primera Division",
-"kickoff": "2026-10-24T22:15:00Z",
-"verdict": "konsens",
-"totVol": 11555
 },
 "36214206": {
 "moneySide": "home",
@@ -44,9 +65,25 @@
 "league": "Uruguayan Primera Division",
 "kickoff": "2026-10-24T22:00:00Z",
 "verdict": "no_anchor",
-"totVol": 6172,
+"totVol": 6984,
 "ankerGrund": {
 "spiel": "Deportivo Maldonado v Danubio",
+"grund": "kein_kandidat",
+"naechster": "Instituto de Córdoba v Deportivo Riestra"
+}
+},
+"36222958": {
+"moneySide": "home",
+"moneyName": "Caracas",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Venezuelan Primera Division",
+"kickoff": "2026-10-24T22:00:00Z",
+"verdict": "no_anchor",
+"totVol": 6463,
+"ankerGrund": {
+"spiel": "Caracas v Deportivo Tachira",
 "grund": "kein_kandidat",
 "naechster": "Instituto de Córdoba v Deportivo Riestra"
 }
@@ -60,39 +97,25 @@
 "league": "Argentinian Primera Nacional",
 "kickoff": "2026-10-24T22:00:00Z",
 "verdict": "no_anchor",
-"totVol": 3516,
+"totVol": 5210,
 "ankerGrund": {
 "spiel": "Deportivo Madryn v San Telmo",
-"grund": "kein_kandidat",
-"naechster": "San Diego FC v Seattle Sounders FC"
-}
-},
-"36222958": {
-"moneySide": "home",
-"moneyName": "Caracas",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Venezuelan Primera Division",
-"kickoff": "2026-10-24T22:00:00Z",
-"verdict": "no_anchor",
-"totVol": 5721,
-"ankerGrund": {
-"spiel": "Caracas v Deportivo Tachira",
-"grund": "kein_kandidat",
-"naechster": "Instituto de Córdoba v Deportivo Riestra"
+"kandidat": "San Lorenzo v Newells Old Boys",
+"key": "soccer_argentina_primera_division",
+"score": 0.5,
+"grund": "name"
 }
 },
 "36223123": {
-"moneySide": "draw",
-"moneyName": "The Draw",
+"moneySide": "home",
+"moneyName": "Plaza Colonia",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
 "league": "Uruguayan Segunda Division",
 "kickoff": "2026-10-24T22:00:00Z",
 "verdict": "no_anchor",
-"totVol": 522,
+"totVol": 1210,
 "ankerGrund": {
 "spiel": "Plaza Colonia v Tacuarembo",
 "grund": "kein_kandidat"
@@ -107,7 +130,7 @@
 "league": "Venezuelan Primera Division",
 "kickoff": "2026-10-24T21:30:00Z",
 "verdict": "no_anchor",
-"totVol": 2002,
+"totVol": 2832,
 "ankerGrund": {
 "spiel": "Monagas v Puerto Cabello",
 "grund": "kein_kandidat"
@@ -116,13 +139,47 @@
 "36206980": {
 "moneySide": "home",
 "moneyName": "LDU",
-"poly": null,
+"poly": {
+"vol": 11062,
+"odd": 4.88,
+"sharePct": 51,
+"shareSrc": "geld",
+"key": "ecu1-ldu-mac-2026-10-24",
+"sideKey": "LDU Quito",
+"whales": [
+{
+"wallet": "0xe1e292a578d07497363048d9ec69e2be36b00d29",
+"usd": 256
+},
+{
+"wallet": "0x06a9865f05e5f379840e6df4feadc98892571a49",
+"usd": 174
+},
+{
+"wallet": "0xbc5613462ce3902eea10874a11cf74191f4a8f28",
+"usd": 168
+},
+{
+"wallet": "0xafc92e7c42c98fa8a3dd8b7103f080600d63be26",
+"usd": 66
+},
+{
+"wallet": "0x1d6d6b39a4ee425ebc511d1dbafe5098a2aef2b4",
+"usd": 23
+},
+{
+"wallet": "0x5f962be8a9805477f98d2a2a35396e34f241ba93",
+"usd": 22
+}
+],
+"whaleUsd": 755
+},
 "pinn": null,
 "pinnMove": null,
 "league": "Ecuadorian Serie A",
 "kickoff": "2026-10-24T21:30:00Z",
 "verdict": "no_anchor",
-"totVol": 8837,
+"totVol": 10546,
 "ankerGrund": {
 "spiel": "LDU v Macara",
 "grund": "kein_kandidat"
@@ -137,7 +194,7 @@
 "league": "Bolivian Liga de Futbol Profesional",
 "kickoff": "2026-10-24T21:15:00Z",
 "verdict": "no_anchor",
-"totVol": 5198,
+"totVol": 10137,
 "ankerGrund": {
 "spiel": "San Antonio Bulo Bulo v Real Potosi",
 "kandidat": "San Jose Earthquakes v Real Salt Lake",
@@ -156,50 +213,68 @@
 "league": "Salvadoran Primera Division",
 "kickoff": "2026-10-24T21:00:00Z",
 "verdict": "no_anchor",
-"totVol": 1232,
+"totVol": 7810,
 "ankerGrund": {
 "spiel": "CD Aguila v CD Fas",
 "grund": "kein_kandidat"
 }
 },
-"36229977": {
+"36207107": {
 "moneySide": "home",
-"moneyName": "Alianza FC (SLV)",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Salvadoran Primera Division",
-"kickoff": "2026-10-24T21:00:00Z",
-"verdict": "no_anchor",
-"totVol": 783,
-"ankerGrund": {
-"spiel": "Alianza FC (SLV) v AD Isidro Metapan",
-"grund": "kein_kandidat",
-"naechster": "Cádiz CF v AD Ceuta FC"
-}
+"moneyName": "Orlando City",
+"poly": {
+"vol": 7848,
+"odd": 2.41,
+"sharePct": 62,
+"shareSrc": "geld",
+"key": "mls-orl-nyc-2026-10-24",
+"sideKey": "Orlando City SC",
+"whales": [
+{
+"wallet": "0x715b82a4baefe3f4c93828661603ffbf2ce9920f",
+"usd": 547
 },
-"36229514": {
-"moneySide": "away",
-"moneyName": "Guadalupe F.C",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Costa Rican Liga de Ascenso",
-"kickoff": "2026-10-24T20:00:00Z",
-"verdict": "no_anchor",
-"totVol": 3762,
-"ankerGrund": {
-"spiel": "Uruguay de Coronado v Guadalupe F.C",
-"grund": "kein_kandidat",
-"naechster": "Aberdeen v Falkirk F.C."
+{
+"wallet": "0xb88a7733e9abb384f64579970ae17cecb8588cce",
+"usd": 451
+},
+{
+"wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
+"usd": 282
+},
+{
+"wallet": "0xf1404010a21a61c1f5693beee65285273be47cd8",
+"usd": 104
+},
+{
+"wallet": "0xce6d7b5b42bf5eed4fc41870fa5f0816e18628b5",
+"usd": 104
+},
+{
+"wallet": "0x3e6b98d9dac15f285a18a02644a8c900aab58a98",
+"usd": 92
 }
+],
+"whaleUsd": 1722
+},
+"pinn": {
+"home": 0.4083,
+"draw": 0.245,
+"away": 0.3468,
+"fav": "home"
+},
+"pinnMove": null,
+"league": "US MLS",
+"kickoff": "2026-10-24T23:30:00Z",
+"verdict": "konsens",
+"totVol": 13287
 },
 "36207396": {
 "moneySide": "home",
 "moneyName": "Portland Timbers",
 "poly": {
-"vol": 36985,
-"odd": 1.94,
+"vol": 44426,
+"odd": 1.98,
 "sharePct": 92,
 "shareSrc": "geld",
 "key": "mls-por-clt-2026-10-24",
@@ -207,30 +282,30 @@
 "whales": [
 {
 "wallet": "0x10a6fadcbacd66330862206f6199b197e3ad4d8b",
-"usd": 7660
+"usd": 7512
 },
 {
 "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
-"usd": 4498
+"usd": 4411
 },
 {
 "wallet": "0xbc5613462ce3902eea10874a11cf74191f4a8f28",
-"usd": 290
+"usd": 284
 },
 {
 "wallet": "0x216050de6080fac3926226b2b8ce3d5544784c78",
-"usd": 265
+"usd": 260
 },
 {
 "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
-"usd": 206
+"usd": 202
 },
 {
 "wallet": "0xf65e5c379c826e8bbe3f6f4922907b9a643ec9ba",
-"usd": 134
+"usd": 131
 }
 ],
-"whaleUsd": 13073
+"whaleUsd": 12848
 },
 "pinn": {
 "home": 0.5088,
@@ -242,7 +317,7 @@
 "league": "US MLS",
 "kickoff": "2026-10-25T02:30:00Z",
 "verdict": "konsens",
-"totVol": 16876
+"totVol": 17043
 },
 "36207244": {
 "moneySide": "away",
@@ -267,65 +342,15 @@
 "league": "US MLS",
 "kickoff": "2026-10-25T00:30:00Z",
 "verdict": "uneinig",
-"totVol": 872
-},
-"36207109": {
-"moneySide": "home",
-"moneyName": "Philadelphia",
-"poly": {
-"vol": 2061,
-"odd": 1.53,
-"sharePct": 66,
-"shareSrc": "preis",
-"key": "mls-phi-ner-2026-10-24",
-"sideKey": "Philadelphia Union",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.614,
-"draw": 0.2038,
-"away": 0.1822,
-"fav": "home"
-},
-"pinnMove": null,
-"league": "US MLS",
-"kickoff": "2026-10-24T23:30:00Z",
-"verdict": "konsens",
-"totVol": 15841
-},
-"36207107": {
-"moneySide": "home",
-"moneyName": "Orlando City",
-"poly": {
-"vol": 2172,
-"odd": 2.2,
-"sharePct": 46,
-"shareSrc": "preis",
-"key": "mls-orl-nyc-2026-10-24",
-"sideKey": "Orlando City SC",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.408,
-"draw": 0.2454,
-"away": 0.3466,
-"fav": "home"
-},
-"pinnMove": null,
-"league": "US MLS",
-"kickoff": "2026-10-24T23:30:00Z",
-"verdict": "konsens",
-"totVol": 11746
+"totVol": 925
 },
 "36207247": {
 "moneySide": "home",
 "moneyName": "Real Salt Lake",
 "poly": {
-"vol": 14565,
+"vol": 14581,
 "odd": 2.11,
-"sharePct": 83,
+"sharePct": 84,
 "shareSrc": "geld",
 "key": "mls-rsl-stl-2026-10-24",
 "sideKey": "Real Salt Lake",
@@ -340,22 +365,22 @@
 },
 {
 "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
-"usd": 560
+"usd": 625
+},
+{
+"wallet": "0x715b82a4baefe3f4c93828661603ffbf2ce9920f",
+"usd": 607
 },
 {
 "wallet": "0x7e5972bfc25819775ee5a9d4f191919375487b8b",
 "usd": 538
 },
 {
-"wallet": "0x715b82a4baefe3f4c93828661603ffbf2ce9920f",
-"usd": 310
-},
-{
 "wallet": "0xbc5613462ce3902eea10874a11cf74191f4a8f28",
 "usd": 74
 }
 ],
-"whaleUsd": 4109
+"whaleUsd": 4554
 },
 "pinn": {
 "home": 0.4789,
@@ -367,7 +392,7 @@
 "league": "US MLS",
 "kickoff": "2026-10-25T01:30:00Z",
 "verdict": "konsens",
-"totVol": 12158
+"totVol": 12413
 },
 "36189083": {
 "moneySide": "home",
@@ -383,48 +408,48 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.5278,
-"draw": 0.2294,
-"away": 0.2427,
+"home": 0.5275,
+"draw": 0.2293,
+"away": 0.2432,
 "fav": "home"
 },
 "pinnMove": null,
 "league": "Brazilian Serie A",
 "kickoff": "2026-10-25T00:00:00Z",
 "verdict": "konsens",
-"totVol": 8250
+"totVol": 10178
 },
-"36214154": {
+"36223375": {
 "moneySide": "draw",
 "moneyName": "The Draw",
 "poly": null,
 "pinn": {
-"home": 0.4068,
-"draw": 0.2925,
-"away": 0.3007,
-"fav": "home"
-},
-"pinnMove": null,
-"league": "Mexican Liga MX",
-"kickoff": "2026-10-25T01:00:00Z",
-"verdict": "uneinig",
-"totVol": 2878
-},
-"36223375": {
-"moneySide": "away",
-"moneyName": "FC Cincinnati",
-"poly": null,
-"pinn": {
-"home": 0.3384,
-"draw": 0.2426,
+"home": 0.3396,
+"draw": 0.2414,
 "away": 0.419,
 "fav": "away"
 },
 "pinnMove": null,
 "league": "US MLS",
 "kickoff": "2026-10-24T23:30:00Z",
-"verdict": "konsens",
-"totVol": 862
+"verdict": "uneinig",
+"totVol": 1333
+},
+"36214154": {
+"moneySide": "draw",
+"moneyName": "The Draw",
+"poly": null,
+"pinn": {
+"home": 0.4153,
+"draw": 0.2906,
+"away": 0.2941,
+"fav": "home"
+},
+"pinnMove": null,
+"league": "Mexican Liga MX",
+"kickoff": "2026-10-25T01:00:00Z",
+"verdict": "uneinig",
+"totVol": 3309
 },
 "36207402": {
 "moneySide": "away",
@@ -440,16 +465,16 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.2994,
-"draw": 0.265,
-"away": 0.4356,
+"home": 0.3001,
+"draw": 0.2647,
+"away": 0.4352,
 "fav": "away"
 },
 "pinnMove": null,
 "league": "US MLS",
 "kickoff": "2026-10-25T01:30:00Z",
 "verdict": "konsens",
-"totVol": 399
+"totVol": 449
 },
 "36124456": {
 "moneySide": "home",
@@ -474,7 +499,7 @@
 "league": "Australian A-League Men",
 "kickoff": "2026-10-25T02:00:00Z",
 "verdict": "konsens",
-"totVol": 3693
+"totVol": 3764
 },
 "36207397": {
 "moneySide": "home",
@@ -490,16 +515,48 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.5225,
-"draw": 0.234,
-"away": 0.2435,
+"home": 0.5219,
+"draw": 0.2349,
+"away": 0.2432,
 "fav": "home"
 },
 "pinnMove": null,
 "league": "US MLS",
 "kickoff": "2026-10-25T00:30:00Z",
 "verdict": "konsens",
-"totVol": 5420
+"totVol": 6074
+},
+"36207245": {
+"moneySide": "away",
+"moneyName": "Minnesota Utd",
+"poly": null,
+"pinn": {
+"home": 0.426,
+"draw": 0.2621,
+"away": 0.3119,
+"fav": "home"
+},
+"pinnMove": null,
+"league": "US MLS",
+"kickoff": "2026-10-25T00:30:00Z",
+"verdict": "uneinig",
+"totVol": 2180
+},
+"36182251": {
+"moneySide": "home",
+"moneyName": "Rosario Central",
+"poly": null,
+"pinn": {
+"home": 0.5265,
+"draw": 0.2842,
+"away": 0.1893,
+"fav": "home"
+},
+"pinnMove": null,
+"league": "Argentinian Primera Division",
+"kickoff": "2026-10-25T00:30:00Z",
+"verdict": "konsens",
+"totVol": 5660
 },
 "36207403": {
 "moneySide": "home",
@@ -524,64 +581,7 @@
 "league": "US MLS",
 "kickoff": "2026-10-25T02:30:00Z",
 "verdict": "konsens",
-"totVol": 3623
-},
-"36182251": {
-"moneySide": "home",
-"moneyName": "Rosario Central",
-"poly": null,
-"pinn": {
-"home": 0.5265,
-"draw": 0.2842,
-"away": 0.1893,
-"fav": "home"
-},
-"pinnMove": null,
-"league": "Argentinian Primera Division",
-"kickoff": "2026-10-25T00:30:00Z",
-"verdict": "konsens",
-"totVol": 5651
-},
-"36207245": {
-"moneySide": "away",
-"moneyName": "Minnesota Utd",
-"poly": null,
-"pinn": {
-"home": 0.426,
-"draw": 0.2621,
-"away": 0.3119,
-"fav": "home"
-},
-"pinnMove": null,
-"league": "US MLS",
-"kickoff": "2026-10-25T00:30:00Z",
-"verdict": "uneinig",
-"totVol": 1935
-},
-"36124425": {
-"moneySide": "home",
-"moneyName": "Sydney FC",
-"poly": {
-"vol": 4966,
-"odd": 2.3,
-"sharePct": 44,
-"shareSrc": "preis",
-"key": "aus-syd-ade-2026-10-25",
-"sideKey": "Sydney FC",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.4321,
-"draw": 0.2674,
-"away": 0.3006,
-"fav": "home"
-},
-"pinnMove": null,
-"league": "Australian A-League Men",
-"kickoff": "2026-10-25T04:00:00Z",
-"verdict": "konsens",
-"totVol": 784
+"totVol": 3637
 },
 "36207102": {
 "moneySide": "away",
@@ -597,16 +597,57 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.3496,
-"draw": 0.2502,
-"away": 0.4002,
+"home": 0.3453,
+"draw": 0.2518,
+"away": 0.4029,
 "fav": "away"
 },
 "pinnMove": null,
 "league": "US MLS",
 "kickoff": "2026-10-24T23:30:00Z",
 "verdict": "konsens",
-"totVol": 2158
+"totVol": 4100
+},
+"36124425": {
+"moneySide": "home",
+"moneyName": "Sydney FC",
+"poly": {
+"vol": 4966,
+"odd": 2.3,
+"sharePct": 44,
+"shareSrc": "preis",
+"key": "aus-syd-ade-2026-10-25",
+"sideKey": "Sydney FC",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.4298,
+"draw": 0.2671,
+"away": 0.3031,
+"fav": "home"
+},
+"pinnMove": null,
+"league": "Australian A-League Men",
+"kickoff": "2026-10-25T04:00:00Z",
+"verdict": "konsens",
+"totVol": 906
+},
+"36207125": {
+"moneySide": "home",
+"moneyName": "Wellington Phoenix (W)",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Australian A-League Women",
+"kickoff": "2026-10-24T23:15:00Z",
+"verdict": "no_anchor",
+"totVol": 3628,
+"ankerGrund": {
+"spiel": "Wellington Phoenix (W) v Melbourne Victory (W)",
+"grund": "kein_kandidat",
+"naechster": "Wellington Phoenix FC v Central Coast Mariners"
+}
 },
 "36214141": {
 "moneySide": "home",
@@ -623,24 +664,6 @@
 "kickoff": "2026-10-25T03:10:00Z",
 "verdict": "konsens",
 "totVol": 1893
-},
-"36182168": {
-"moneySide": "home",
-"moneyName": "OHiggins",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Chilean Primera Division",
-"kickoff": "2026-10-24T23:00:00Z",
-"verdict": "no_anchor",
-"totVol": 2198,
-"ankerGrund": {
-"spiel": "OHiggins v Cobresal",
-"kandidat": "O'Higgins v Cobresal",
-"key": "soccer_chile_campeonato",
-"score": 1.0,
-"grund": "name"
-}
 },
 "36211979": {
 "moneySide": "home",
@@ -666,7 +689,7 @@
 "league": "Colombian Primera A",
 "kickoff": "2026-10-24T23:05:00Z",
 "verdict": "no_anchor",
-"totVol": 1119,
+"totVol": 7730,
 "ankerGrund": {
 "spiel": "America de Cali S.A v Cucuta Deportivo",
 "grund": "kein_kandidat",
@@ -682,26 +705,10 @@
 "league": "Argentinian Primera Nacional",
 "kickoff": "2026-10-25T00:00:00Z",
 "verdict": "no_anchor",
-"totVol": 1010,
+"totVol": 1062,
 "ankerGrund": {
 "spiel": "Ciudad de Bolivar v Colon",
 "grund": "kein_kandidat"
-}
-},
-"36207125": {
-"moneySide": "home",
-"moneyName": "Wellington Phoenix (W)",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Australian A-League Women",
-"kickoff": "2026-10-24T23:15:00Z",
-"verdict": "no_anchor",
-"totVol": 825,
-"ankerGrund": {
-"spiel": "Wellington Phoenix (W) v Melbourne Victory (W)",
-"grund": "kein_kandidat",
-"naechster": "Wellington Phoenix FC v Central Coast Mariners"
 }
 },
 "36220154": {
@@ -713,11 +720,26 @@
 "league": "Colombian Primera A",
 "kickoff": "2026-10-25T01:15:00Z",
 "verdict": "no_anchor",
-"totVol": 1160,
+"totVol": 1184,
 "ankerGrund": {
 "spiel": "Once Caldas v Deportivo Pereira",
 "grund": "kein_kandidat",
 "naechster": "Instituto de Córdoba v Deportivo Riestra"
+}
+},
+"36207901": {
+"moneySide": "home",
+"moneyName": "Suwon FC",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "South Korean K2 League",
+"kickoff": "2026-10-25T05:00:00Z",
+"verdict": "no_anchor",
+"totVol": 70,
+"ankerGrund": {
+"spiel": "Suwon FC v Chungnam Asan",
+"grund": "kein_kandidat"
 }
 },
 "36211835": {
@@ -738,31 +760,28 @@
 "league": "Peruvian Primera Division",
 "kickoff": "2026-10-25T00:30:00Z",
 "verdict": "no_anchor",
-"totVol": 599,
+"totVol": 710,
 "ankerGrund": {
 "spiel": "Universitario de Deportes v Juan Pablo II College",
 "grund": "kein_kandidat",
 "naechster": "Universidad de Concepción v Deportes Limache"
 }
 },
-"36211875": {
-"moneySide": "home",
-"moneyName": "CA Colegiales",
+"36221194": {
+"moneySide": "away",
+"moneyName": "Yokohama FM",
 "poly": null,
-"pinn": null,
+"pinn": {
+"home": 0.4016,
+"draw": 0.2623,
+"away": 0.3361,
+"fav": "home"
+},
 "pinnMove": null,
-"league": "Argentinian Primera Nacional",
-"kickoff": "2026-10-24T23:00:00Z",
-"verdict": "no_anchor",
-"totVol": 614,
-"ankerGrund": {
-"spiel": "CA Colegiales v Atletico Rafaela",
-"kandidat": "Atlético Huracán v CA Tigre BA",
-"key": "soccer_argentina_primera_division",
-"score": 0.83,
-"grund": "zeit",
-"abstandH": 143.0
-}
+"league": "Japanese J League",
+"kickoff": "2026-10-25T05:00:00Z",
+"verdict": "uneinig",
+"totVol": 260
 },
 "36229322": {
 "moneySide": "home",
@@ -773,24 +792,40 @@
 "league": "Panamanian Premier League",
 "kickoff": "2026-10-25T01:30:00Z",
 "verdict": "no_anchor",
-"totVol": 410,
+"totVol": 415,
 "ankerGrund": {
 "spiel": "Tauro FC v Plaza Amador",
 "grund": "kein_kandidat"
 }
 },
-"36219740": {
-"moneySide": "home",
-"moneyName": "Comunicaciones",
+"36230499": {
+"moneySide": "away",
+"moneyName": "Platense FC",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
-"league": "Guatemalan Liga Nacional",
-"kickoff": "2026-10-25T00:00:00Z",
+"league": "Honduras Liga Nacional",
+"kickoff": "2026-10-24T23:15:00Z",
 "verdict": "no_anchor",
-"totVol": 421,
+"totVol": 450,
 "ankerGrund": {
-"spiel": "Comunicaciones v Antigua GFC",
+"spiel": "Real Espana v Platense FC",
+"grund": "kein_kandidat",
+"naechster": "Platense v Central Córdoba"
+}
+},
+"36231232": {
+"moneySide": "home",
+"moneyName": "Ehime FC (W)",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Japanese Ladies Nadeshiko League",
+"kickoff": "2026-10-25T04:00:00Z",
+"verdict": "no_anchor",
+"totVol": 116,
+"ankerGrund": {
+"spiel": "Ehime FC (W) v Setagaya Sfida (W)",
 "grund": "kein_kandidat"
 }
 },
@@ -803,11 +838,59 @@
 "league": "Japanese J League 3",
 "kickoff": "2026-10-25T04:00:00Z",
 "verdict": "no_anchor",
-"totVol": 197,
+"totVol": 198,
 "ankerGrund": {
 "spiel": "Tottori v Kochi United",
 "grund": "kein_kandidat",
 "naechster": "Atlanta United FC v Chicago Fire"
+}
+},
+"36219740": {
+"moneySide": "home",
+"moneyName": "Comunicaciones",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Guatemalan Liga Nacional",
+"kickoff": "2026-10-25T00:00:00Z",
+"verdict": "no_anchor",
+"totVol": 464,
+"ankerGrund": {
+"spiel": "Comunicaciones v Antigua GFC",
+"grund": "kein_kandidat"
+}
+},
+"36229264": {
+"moneySide": "draw",
+"moneyName": "The Draw",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Japanese Football League",
+"kickoff": "2026-10-25T04:00:00Z",
+"verdict": "no_anchor",
+"totVol": 10,
+"ankerGrund": {
+"spiel": "Yokogawa Musashino v Vonds Ichihara",
+"grund": "kein_kandidat"
+}
+},
+"36231231": {
+"moneySide": "away",
+"moneyName": "Yokohama FC Seagull (W)",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Japanese Ladies Nadeshiko League",
+"kickoff": "2026-10-25T04:00:00Z",
+"verdict": "no_anchor",
+"totVol": 138,
+"ankerGrund": {
+"spiel": "Harima (W) v Yokohama FC Seagull (W)",
+"kandidat": "Nagoya Grampus v Yokohama F Marinos",
+"key": "soccer_japan_j_league",
+"score": 0.33,
+"grund": "name"
 }
 },
 "36215658": {
@@ -826,22 +909,6 @@
 "naechster": "Aberdeen v Falkirk F.C."
 }
 },
-"36230499": {
-"moneySide": "away",
-"moneyName": "Platense FC",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Honduras Liga Nacional",
-"kickoff": "2026-10-24T23:15:00Z",
-"verdict": "no_anchor",
-"totVol": 388,
-"ankerGrund": {
-"spiel": "Real Espana v Platense FC",
-"grund": "kein_kandidat",
-"naechster": "Platense v Central Córdoba"
-}
-},
 "36228837": {
 "moneySide": "home",
 "moneyName": "Club Independiente Petr",
@@ -851,58 +918,40 @@
 "league": "Bolivian Liga de Futbol Profesional",
 "kickoff": "2026-10-24T23:30:00Z",
 "verdict": "no_anchor",
-"totVol": 49,
+"totVol": 178,
 "ankerGrund": {
 "spiel": "Club Independiente Petr v Academia de Balompie Bo",
 "grund": "kein_kandidat",
 "naechster": "Independiente v Boca Juniors"
 }
 },
-"36231232": {
-"moneySide": "home",
-"moneyName": "Ehime FC (W)",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Japanese Ladies Nadeshiko League",
-"kickoff": "2026-10-25T04:00:00Z",
-"verdict": "no_anchor",
-"totVol": 56,
-"ankerGrund": {
-"spiel": "Ehime FC (W) v Setagaya Sfida (W)",
-"grund": "kein_kandidat"
-}
-},
-"36231231": {
-"moneySide": "away",
-"moneyName": "Yokohama FC Seagull (W)",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Japanese Ladies Nadeshiko League",
-"kickoff": "2026-10-25T04:00:00Z",
-"verdict": "no_anchor",
-"totVol": 82,
-"ankerGrund": {
-"spiel": "Harima (W) v Yokohama FC Seagull (W)",
-"kandidat": "Nagoya Grampus v Yokohama F Marinos",
-"key": "soccer_japan_j_league",
-"score": 0.33,
-"grund": "name"
-}
-},
-"36229264": {
+"36207956": {
 "moneySide": "draw",
 "moneyName": "The Draw",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
-"league": "Japanese Football League",
-"kickoff": "2026-10-25T04:00:00Z",
+"league": "South Korean K2 League",
+"kickoff": "2026-10-25T05:00:00Z",
 "verdict": "no_anchor",
-"totVol": 10,
+"totVol": 83,
 "ankerGrund": {
-"spiel": "Yokogawa Musashino v Vonds Ichihara",
+"spiel": "Seongnam FC v Suwon Bluewings",
+"grund": "kein_kandidat"
+}
+},
+"36221201": {
+"moneySide": "draw",
+"moneyName": "The Draw",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Japanese J League 2",
+"kickoff": "2026-10-25T05:00:00Z",
+"verdict": "no_anchor",
+"totVol": 52,
+"ankerGrund": {
+"spiel": "Albirex Niigata v Sendai",
 "grund": "kein_kandidat"
 }
 },
@@ -915,9 +964,54 @@
 "league": "Honduras Liga Nacional",
 "kickoff": "2026-10-25T01:30:00Z",
 "verdict": "no_anchor",
-"totVol": 121,
+"totVol": 146,
 "ankerGrund": {
 "spiel": "Siguatepeque v CD Marathon",
+"grund": "kein_kandidat"
+}
+},
+"36221220": {
+"moneySide": "away",
+"moneyName": "Kofu",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Japanese J League 2",
+"kickoff": "2026-10-25T05:00:00Z",
+"verdict": "no_anchor",
+"totVol": 102,
+"ankerGrund": {
+"spiel": "Oita v Kofu",
+"grund": "kein_kandidat"
+}
+},
+"36221198": {
+"moneySide": "away",
+"moneyName": "Sapporo",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Japanese J League 2",
+"kickoff": "2026-10-25T05:00:00Z",
+"verdict": "no_anchor",
+"totVol": 90,
+"ankerGrund": {
+"spiel": "Toyama v Sapporo",
+"grund": "kein_kandidat"
+}
+},
+"36231308": {
+"moneySide": "home",
+"moneyName": "Shizuoka SSU Asregina (W)",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Japanese Ladies Nadeshiko League",
+"kickoff": "2026-10-25T04:00:00Z",
+"verdict": "no_anchor",
+"totVol": 7,
+"ankerGrund": {
+"spiel": "Shizuoka SSU Asregina (W) v Vonds Ichihara FC (W)",
 "grund": "kein_kandidat"
 }
 },
@@ -930,7 +1024,7 @@
 "league": "Japanese J League 3",
 "kickoff": "2026-10-25T04:00:00Z",
 "verdict": "no_anchor",
-"totVol": 55,
+"totVol": 63,
 "ankerGrund": {
 "spiel": "Kumamoto v FC Gifu",
 "grund": "kein_kandidat"
@@ -952,6 +1046,21 @@
 "naechster": "Cádiz CF v AD Ceuta FC"
 }
 },
+"36221200": {
+"moneySide": "draw",
+"moneyName": "The Draw",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Japanese J League 2",
+"kickoff": "2026-10-25T05:00:00Z",
+"verdict": "no_anchor",
+"totVol": 36,
+"ankerGrund": {
+"spiel": "Tosu v Vanraure Hachinohe",
+"grund": "kein_kandidat"
+}
+},
 "36229192": {
 "moneySide": "draw",
 "moneyName": "The Draw",
@@ -961,26 +1070,11 @@
 "league": "Panamanian Premier League",
 "kickoff": "2026-10-24T23:15:00Z",
 "verdict": "no_anchor",
-"totVol": 73,
+"totVol": 95,
 "ankerGrund": {
 "spiel": "CD Universitario v Atletico Independiente",
 "grund": "kein_kandidat",
 "naechster": "Flamengo v Atletico Mineiro"
-}
-},
-"36231308": {
-"moneySide": "home",
-"moneyName": "Shizuoka SSU Asregina (W)",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Japanese Ladies Nadeshiko League",
-"kickoff": "2026-10-25T04:00:00Z",
-"verdict": "no_anchor",
-"totVol": 7,
-"ankerGrund": {
-"spiel": "Shizuoka SSU Asregina (W) v Vonds Ichihara FC (W)",
-"grund": "kein_kandidat"
 }
 },
 "36219709": {
@@ -999,6 +1093,30 @@
 "naechster": "Instituto de Córdoba v Deportivo Riestra"
 }
 },
+"36221202": {
+"moneySide": "away",
+"moneyName": "Tegevajaro Miyazaki",
+"poly": {
+"vol": 383,
+"odd": 2.35,
+"sharePct": 42,
+"shareSrc": "preis",
+"key": "ja2-mon-teg-2026-10-25",
+"sideKey": "Tegevajaro Miyazaki",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": null,
+"pinnMove": null,
+"league": "Japanese J League 2",
+"kickoff": "2026-10-25T05:00:00Z",
+"verdict": "no_anchor",
+"totVol": 72,
+"ankerGrund": {
+"spiel": "Yamagata v Tegevajaro Miyazaki",
+"grund": "kein_kandidat"
+}
+},
 "36230693": {
 "moneySide": "home",
 "moneyName": "CD Municipal Limeno",
@@ -1012,6 +1130,67 @@
 "ankerGrund": {
 "spiel": "CD Municipal Limeno v CD Cacahuatique",
 "grund": "kein_kandidat"
+}
+},
+"36221186": {
+"moneySide": "away",
+"moneyName": "FC Imabari",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Japanese J League 2",
+"kickoff": "2026-10-25T05:00:00Z",
+"verdict": "no_anchor",
+"totVol": 15,
+"ankerGrund": {
+"spiel": "Blaublitz Akita v FC Imabari",
+"grund": "kein_kandidat"
+}
+},
+"36228927": {
+"moneySide": "home",
+"moneyName": "Kitakyushu",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Japanese J League 3",
+"kickoff": "2026-10-25T05:00:00Z",
+"verdict": "no_anchor",
+"totVol": 17,
+"ankerGrund": {
+"spiel": "Kitakyushu v Nagano Parceiro",
+"grund": "kein_kandidat"
+}
+},
+"36208331": {
+"moneySide": "draw",
+"moneyName": "The Draw",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "South Korean K2 League",
+"kickoff": "2026-10-25T05:00:00Z",
+"verdict": "no_anchor",
+"totVol": 12,
+"ankerGrund": {
+"spiel": "Busan IPark v Gyeongnam",
+"grund": "kein_kandidat"
+}
+},
+"36228987": {
+"moneySide": "away",
+"moneyName": "FC Tiamo Hirakata",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Japanese Football League",
+"kickoff": "2026-10-25T05:00:00Z",
+"verdict": "no_anchor",
+"totVol": 40,
+"ankerGrund": {
+"spiel": "Azul Claro Numazu v FC Tiamo Hirakata",
+"grund": "kein_kandidat",
+"naechster": "Querétaro v Cruz Azul"
 }
 },
 "36231311": {
@@ -1048,6 +1227,36 @@
 "key": "soccer_usa_mls",
 "score": 0.33,
 "grund": "name"
+}
+},
+"36228921": {
+"moneySide": "away",
+"moneyName": "Kanazawa",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Japanese J League 3",
+"kickoff": "2026-10-25T05:00:00Z",
+"verdict": "no_anchor",
+"totVol": 1,
+"ankerGrund": {
+"spiel": "Mio Biwako Shiga v Kanazawa",
+"grund": "kein_kandidat"
+}
+},
+"36228924": {
+"moneySide": "home",
+"moneyName": "Matsumoto",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Japanese J League 3",
+"kickoff": "2026-10-25T05:00:00Z",
+"verdict": "no_anchor",
+"totVol": 1,
+"ankerGrund": {
+"spiel": "Matsumoto v Renofa Yamaguchi",
+"grund": "kein_kandidat"
 }
 },
 "36231219": {
@@ -1106,7 +1315,7 @@
 "league": "French Ligue 1",
 "kickoff": "2026-10-25T16:15:00Z",
 "verdict": "konsens",
-"totVol": 16688
+"totVol": 16766
 },
 "36180858": {
 "moneySide": "home",
@@ -1156,13 +1365,13 @@
 "league": "French Ligue 1",
 "kickoff": "2026-10-25T16:15:00Z",
 "verdict": "konsens",
-"totVol": 9722
+"totVol": 10839
 },
 "36180761": {
 "moneySide": "home",
 "moneyName": "Rennes",
 "poly": {
-"vol": 1024,
+"vol": 1854,
 "odd": 1.87,
 "sharePct": 54,
 "shareSrc": "preis",
@@ -1206,13 +1415,13 @@
 "league": "French Ligue 1",
 "kickoff": "2026-10-25T16:15:00Z",
 "verdict": "konsens",
-"totVol": 3609
+"totVol": 3611
 },
 "36221180": {
 "moneySide": "draw",
 "moneyName": "The Draw",
 "poly": {
-"vol": 873,
+"vol": 954,
 "odd": null,
 "sharePct": null,
 "shareSrc": null,
@@ -1256,7 +1465,7 @@
 "league": "German Bundesliga 2",
 "kickoff": "2026-10-25T12:30:00Z",
 "verdict": "konsens",
-"totVol": 1923
+"totVol": 2052
 },
 "36209656": {
 "moneySide": "draw",
@@ -1283,6 +1492,22 @@
 "verdict": "uneinig",
 "totVol": 371
 },
+"36209669": {
+"moneySide": "home",
+"moneyName": "Holstein Kiel",
+"poly": null,
+"pinn": {
+"home": 0.4097,
+"draw": 0.2488,
+"away": 0.3415,
+"fav": "home"
+},
+"pinnMove": null,
+"league": "German Bundesliga 2",
+"kickoff": "2026-10-25T12:30:00Z",
+"verdict": "konsens",
+"totVol": 317
+},
 "36212159": {
 "moneySide": "away",
 "moneyName": "LA Galaxy",
@@ -1306,23 +1531,7 @@
 "league": "US MLS",
 "kickoff": "2026-10-26T01:00:00Z",
 "verdict": "uneinig",
-"totVol": 286
-},
-"36209669": {
-"moneySide": "home",
-"moneyName": "Holstein Kiel",
-"poly": null,
-"pinn": {
-"home": 0.4097,
-"draw": 0.2488,
-"away": 0.3415,
-"fav": "home"
-},
-"pinnMove": null,
-"league": "German Bundesliga 2",
-"kickoff": "2026-10-25T12:30:00Z",
-"verdict": "konsens",
-"totVol": 248
+"totVol": 293
 },
 "36221190": {
 "moneySide": "away",
@@ -1354,7 +1563,7 @@
 "league": "Italian Serie A",
 "kickoff": "2026-10-27T19:45:00Z",
 "verdict": "konsens",
-"totVol": 6
+"totVol": 51
 },
 "36230558": {
 "moneySide": "home",
@@ -1402,6 +1611,21 @@
 "grund": "kein_kandidat"
 }
 },
+"36230873": {
+"moneySide": "home",
+"moneyName": "Singida Black Stars SC",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "CAF Confederation Cup Qualifiers",
+"kickoff": "2026-10-25T16:00:00Z",
+"verdict": "no_anchor",
+"totVol": 1,
+"ankerGrund": {
+"spiel": "Singida Black Stars SC v Tusker FC",
+"grund": "kein_kandidat"
+}
+},
 "36229502": {
 "moneySide": "home",
 "moneyName": "Al Ahly Cairo",
@@ -1416,21 +1640,6 @@
 "spiel": "Al Ahly Cairo v Airtel Kitara FC",
 "grund": "kein_kandidat",
 "naechster": "Al-Khaleej v Al-Hazem"
-}
-},
-"36230873": {
-"moneySide": "home",
-"moneyName": "Singida Black Stars SC",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "CAF Confederation Cup Qualifiers",
-"kickoff": "2026-10-25T16:00:00Z",
-"verdict": "no_anchor",
-"totVol": 1,
-"ankerGrund": {
-"spiel": "Singida Black Stars SC v Tusker FC",
-"grund": "kein_kandidat"
 }
 },
 "36232444": {
@@ -1488,13 +1697,13 @@
 "league": "Japanese J League",
 "kickoff": "2026-10-25T07:00:00Z",
 "verdict": "konsens",
-"totVol": 4254
+"totVol": 4271
 },
 "36221214": {
 "moneySide": "home",
 "moneyName": "FC Tokyo",
 "poly": {
-"vol": 909,
+"vol": 7227,
 "odd": 1.31,
 "sharePct": 76,
 "shareSrc": "preis",
@@ -1504,47 +1713,16 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.7407,
-"draw": 0.1689,
-"away": 0.0903,
+"home": 0.7392,
+"draw": 0.1698,
+"away": 0.0911,
 "fav": "home"
 },
 "pinnMove": null,
 "league": "Japanese J League",
 "kickoff": "2026-10-25T07:00:00Z",
 "verdict": "konsens",
-"totVol": 1865
-},
-"36207901": {
-"moneySide": "home",
-"moneyName": "Suwon FC",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "South Korean K2 League",
-"kickoff": "2026-10-25T05:00:00Z",
-"verdict": "no_anchor",
-"totVol": 70,
-"ankerGrund": {
-"spiel": "Suwon FC v Chungnam Asan",
-"grund": "kein_kandidat"
-}
-},
-"36221194": {
-"moneySide": "away",
-"moneyName": "Yokohama FM",
-"poly": null,
-"pinn": {
-"home": 0.4016,
-"draw": 0.2623,
-"away": 0.3361,
-"fav": "home"
-},
-"pinnMove": null,
-"league": "Japanese J League",
-"kickoff": "2026-10-25T05:00:00Z",
-"verdict": "uneinig",
-"totVol": 252
+"totVol": 2139
 },
 "36208418": {
 "moneySide": "away",
@@ -1575,7 +1753,38 @@
 "league": "Japanese J League",
 "kickoff": "2026-10-25T06:00:00Z",
 "verdict": "konsens",
-"totVol": 214
+"totVol": 259
+},
+"36221213": {
+"moneySide": "away",
+"moneyName": "Tochigi UVA FC",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Japanese J League 2",
+"kickoff": "2026-10-25T09:00:00Z",
+"verdict": "no_anchor",
+"totVol": 31,
+"ankerGrund": {
+"spiel": "Shonan v Tochigi Uva FC",
+"grund": "kein_kandidat"
+}
+},
+"36221248": {
+"moneySide": "home",
+"moneyName": "Urawa",
+"poly": null,
+"pinn": {
+"home": 0.5915,
+"draw": 0.229,
+"away": 0.1795,
+"fav": "home"
+},
+"pinnMove": null,
+"league": "Japanese J League",
+"kickoff": "2026-10-25T06:00:00Z",
+"verdict": "konsens",
+"totVol": 173
 },
 "36208333": {
 "moneySide": "home",
@@ -1596,22 +1805,6 @@
 "abstandH": 143.2
 }
 },
-"36221248": {
-"moneySide": "home",
-"moneyName": "Urawa",
-"poly": null,
-"pinn": {
-"home": 0.5915,
-"draw": 0.229,
-"away": 0.1795,
-"fav": "home"
-},
-"pinnMove": null,
-"league": "Japanese J League",
-"kickoff": "2026-10-25T06:00:00Z",
-"verdict": "konsens",
-"totVol": 173
-},
 "36208417": {
 "moneySide": "home",
 "moneyName": "Cheonan City",
@@ -1621,7 +1814,7 @@
 "league": "South Korean K2 League",
 "kickoff": "2026-10-25T07:30:00Z",
 "verdict": "no_anchor",
-"totVol": 175,
+"totVol": 201,
 "ankerGrund": {
 "spiel": "Cheonan City v Ansan Greeners FC",
 "grund": "kein_kandidat",
@@ -1644,21 +1837,6 @@
 "naechster": "Manchester United v Bournemouth"
 }
 },
-"36221201": {
-"moneySide": "draw",
-"moneyName": "The Draw",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Japanese J League 2",
-"kickoff": "2026-10-25T05:00:00Z",
-"verdict": "no_anchor",
-"totVol": 52,
-"ankerGrund": {
-"spiel": "Albirex Niigata v Sendai",
-"grund": "kein_kandidat"
-}
-},
 "36228910": {
 "moneySide": "home",
 "moneyName": "Ehime",
@@ -1675,87 +1853,33 @@
 "naechster": "Atlanta United FC v Chicago Fire"
 }
 },
-"36221198": {
+"36215503": {
+"moneySide": "home",
+"moneyName": "CSC 1599 Selimbar",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Romanian Liga II",
+"kickoff": "2026-10-25T09:00:00Z",
+"verdict": "no_anchor",
+"totVol": 1,
+"ankerGrund": {
+"spiel": "CSC 1599 Selimbar v ASA Targu Mures",
+"grund": "kein_kandidat"
+}
+},
+"36213122": {
 "moneySide": "away",
-"moneyName": "Sapporo",
+"moneyName": "CSA Steaua Bucuresti",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
-"league": "Japanese J League 2",
-"kickoff": "2026-10-25T05:00:00Z",
+"league": "Romanian Liga II",
+"kickoff": "2026-10-25T09:00:00Z",
 "verdict": "no_anchor",
-"totVol": 90,
+"totVol": 80,
 "ankerGrund": {
-"spiel": "Toyama v Sapporo",
-"grund": "kein_kandidat"
-}
-},
-"36207956": {
-"moneySide": "draw",
-"moneyName": "The Draw",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "South Korean K2 League",
-"kickoff": "2026-10-25T05:00:00Z",
-"verdict": "no_anchor",
-"totVol": 76,
-"ankerGrund": {
-"spiel": "Seongnam FC v Suwon Bluewings",
-"grund": "kein_kandidat"
-}
-},
-"36221220": {
-"moneySide": "away",
-"moneyName": "Kofu",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Japanese J League 2",
-"kickoff": "2026-10-25T05:00:00Z",
-"verdict": "no_anchor",
-"totVol": 79,
-"ankerGrund": {
-"spiel": "Oita v Kofu",
-"grund": "kein_kandidat"
-}
-},
-"36221200": {
-"moneySide": "draw",
-"moneyName": "The Draw",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Japanese J League 2",
-"kickoff": "2026-10-25T05:00:00Z",
-"verdict": "no_anchor",
-"totVol": 18,
-"ankerGrund": {
-"spiel": "Tosu v Vanraure Hachinohe",
-"grund": "kein_kandidat"
-}
-},
-"36221202": {
-"moneySide": "away",
-"moneyName": "Tegevajaro Miyazaki",
-"poly": {
-"vol": 383,
-"odd": 2.35,
-"sharePct": 42,
-"shareSrc": "preis",
-"key": "ja2-mon-teg-2026-10-25",
-"sideKey": "Tegevajaro Miyazaki",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": null,
-"pinnMove": null,
-"league": "Japanese J League 2",
-"kickoff": "2026-10-25T05:00:00Z",
-"verdict": "no_anchor",
-"totVol": 72,
-"ankerGrund": {
-"spiel": "Yamagata v Tegevajaro Miyazaki",
+"spiel": "CS Afumati v CSA Steaua Bucuresti",
 "grund": "kein_kandidat"
 }
 },
@@ -1791,36 +1915,6 @@
 "naechster": "Atlanta United FC v Chicago Fire"
 }
 },
-"36228927": {
-"moneySide": "home",
-"moneyName": "Kitakyushu",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Japanese J League 3",
-"kickoff": "2026-10-25T05:00:00Z",
-"verdict": "no_anchor",
-"totVol": 17,
-"ankerGrund": {
-"spiel": "Kitakyushu v Nagano Parceiro",
-"grund": "kein_kandidat"
-}
-},
-"36221186": {
-"moneySide": "away",
-"moneyName": "FC Imabari",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Japanese J League 2",
-"kickoff": "2026-10-25T05:00:00Z",
-"verdict": "no_anchor",
-"totVol": 15,
-"ankerGrund": {
-"spiel": "Blaublitz Akita v FC Imabari",
-"grund": "kein_kandidat"
-}
-},
 "36229367": {
 "moneySide": "home",
 "moneyName": "Hoi King SA",
@@ -1836,35 +1930,19 @@
 "grund": "kein_kandidat"
 }
 },
-"36208331": {
-"moneySide": "draw",
-"moneyName": "The Draw",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "South Korean K2 League",
-"kickoff": "2026-10-25T05:00:00Z",
-"verdict": "no_anchor",
-"totVol": 12,
-"ankerGrund": {
-"spiel": "Busan IPark v Gyeongnam",
-"grund": "kein_kandidat"
-}
-},
-"36228987": {
+"36229462": {
 "moneySide": "away",
-"moneyName": "FC Tiamo Hirakata",
+"moneyName": "Resources Capital FC",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
-"league": "Japanese Football League",
-"kickoff": "2026-10-25T05:00:00Z",
+"league": "Hong Kong 1st Division League",
+"kickoff": "2026-10-25T09:30:00Z",
 "verdict": "no_anchor",
-"totVol": 32,
+"totVol": 36,
 "ankerGrund": {
-"spiel": "Azul Claro Numazu v FC Tiamo Hirakata",
-"grund": "kein_kandidat",
-"naechster": "Querétaro v Cruz Azul"
+"spiel": "Kui Tan SC v Resources Capital FC",
+"grund": "kein_kandidat"
 }
 },
 "36221210": {
@@ -1880,6 +1958,22 @@
 "ankerGrund": {
 "spiel": "Iwaki SC v Iwata",
 "grund": "kein_kandidat"
+}
+},
+"36219562": {
+"moneySide": "home",
+"moneyName": "MSK Zilina II",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Slovakian 2 Liga",
+"kickoff": "2026-10-25T09:30:00Z",
+"verdict": "no_anchor",
+"totVol": 35,
+"ankerGrund": {
+"spiel": "MSK Zilina II v Lokomotiva Zvolen",
+"grund": "kein_kandidat",
+"naechster": "Waldhof Mannheim v TSG Hoffenheim II"
 }
 },
 "36234245": {
@@ -1928,6 +2022,21 @@
 "grund": "kein_kandidat"
 }
 },
+"36226985": {
+"moneySide": "draw",
+"moneyName": "The Draw",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Chinese League 2",
+"kickoff": "2026-10-25T09:00:00Z",
+"verdict": "no_anchor",
+"totVol": 4,
+"ankerGrund": {
+"spiel": "Hubei Istar v Shanghai Second",
+"grund": "kein_kandidat"
+}
+},
 "36234100": {
 "moneySide": "home",
 "moneyName": "Deren FC",
@@ -1943,34 +2052,82 @@
 "grund": "kein_kandidat"
 }
 },
-"36228921": {
-"moneySide": "away",
-"moneyName": "Kanazawa",
+"36215490": {
+"moneySide": "home",
+"moneyName": "Chindia Targoviste",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
-"league": "Japanese J League 3",
-"kickoff": "2026-10-25T05:00:00Z",
+"league": "Romanian Liga II",
+"kickoff": "2026-10-25T09:00:00Z",
 "verdict": "no_anchor",
-"totVol": 1,
+"totVol": 16,
 "ankerGrund": {
-"spiel": "Mio Biwako Shiga v Kanazawa",
+"spiel": "Chindia Targoviste v CSM Satu Mare",
 "grund": "kein_kandidat"
 }
 },
-"36228924": {
+"36219530": {
 "moneySide": "home",
-"moneyName": "Matsumoto",
+"moneyName": "Slavia Praha B",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
-"league": "Japanese J League 3",
-"kickoff": "2026-10-25T05:00:00Z",
+"league": "Czech 2 Liga",
+"kickoff": "2026-10-25T09:15:00Z",
 "verdict": "no_anchor",
-"totVol": 1,
+"totVol": 5,
 "ankerGrund": {
-"spiel": "Matsumoto v Renofa Yamaguchi",
+"spiel": "Slavia Praha B v Prostejov",
+"grund": "kein_kandidat",
+"naechster": "Slavia Praha v Arsenal"
+}
+},
+"36219486": {
+"moneySide": "draw",
+"moneyName": "The Draw",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Slovakian 2 Liga",
+"kickoff": "2026-10-25T09:30:00Z",
+"verdict": "no_anchor",
+"totVol": 3,
+"ankerGrund": {
+"spiel": "Malzenice v Zlate Moravce",
 "grund": "kein_kandidat"
+}
+},
+"36227372": {
+"moneySide": "draw",
+"moneyName": "The Draw",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Czech 3 Liga",
+"kickoff": "2026-10-25T09:15:00Z",
+"verdict": "no_anchor",
+"totVol": 5,
+"ankerGrund": {
+"spiel": "FK Jablonec B v FK Teplice B",
+"grund": "kein_kandidat",
+"naechster": "Real Sociedad B v Girona FC"
+}
+},
+"36227877": {
+"moneySide": "away",
+"moneyName": "Pisek",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Czech 3 Liga",
+"kickoff": "2026-10-25T09:15:00Z",
+"verdict": "no_anchor",
+"totVol": 2,
+"ankerGrund": {
+"spiel": "Sparta Prague B v Pisek",
+"grund": "kein_kandidat",
+"naechster": "Sparta Prague v Bournemouth"
 }
 },
 "36229027": {
@@ -2004,21 +2161,6 @@
 "naechster": "Rosario Central v Atlético Huracán"
 }
 },
-"36229422": {
-"moneySide": "home",
-"moneyName": "Tung Sing",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Hong Kong 1st Division League",
-"kickoff": "2026-10-25T07:30:00Z",
-"verdict": "no_anchor",
-"totVol": 1,
-"ankerGrund": {
-"spiel": "Tung Sing v Citizen AA",
-"grund": "kein_kandidat"
-}
-},
 "36229415": {
 "moneySide": "home",
 "moneyName": "Dreams Metro Gallery",
@@ -2031,6 +2173,21 @@
 "totVol": 1,
 "ankerGrund": {
 "spiel": "Dreams Metro Gallery v Supreme FC",
+"grund": "kein_kandidat"
+}
+},
+"36229422": {
+"moneySide": "home",
+"moneyName": "Tung Sing",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Hong Kong 1st Division League",
+"kickoff": "2026-10-25T07:30:00Z",
+"verdict": "no_anchor",
+"totVol": 1,
+"ankerGrund": {
+"spiel": "Tung Sing v Citizen AA",
 "grund": "kein_kandidat"
 }
 },
@@ -2049,113 +2206,6 @@
 "grund": "kein_kandidat"
 }
 },
-"36215503": {
-"moneySide": "home",
-"moneyName": "CSC 1599 Selimbar",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Romanian Liga II",
-"kickoff": "2026-10-25T09:00:00Z",
-"verdict": "no_anchor",
-"totVol": 1,
-"ankerGrund": {
-"spiel": "CSC 1599 Selimbar v ASA Targu Mures",
-"grund": "kein_kandidat"
-}
-},
-"36215490": {
-"moneySide": "home",
-"moneyName": "Chindia Targoviste",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Romanian Liga II",
-"kickoff": "2026-10-25T09:00:00Z",
-"verdict": "no_anchor",
-"totVol": 16,
-"ankerGrund": {
-"spiel": "Chindia Targoviste v CSM Satu Mare",
-"grund": "kein_kandidat"
-}
-},
-"36226985": {
-"moneySide": "draw",
-"moneyName": "The Draw",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Chinese League 2",
-"kickoff": "2026-10-25T09:00:00Z",
-"verdict": "no_anchor",
-"totVol": 0,
-"ankerGrund": {
-"spiel": "Hubei Istar v Shanghai Second",
-"grund": "kein_kandidat"
-}
-},
-"36213122": {
-"moneySide": "away",
-"moneyName": "CSA Steaua Bucuresti",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Romanian Liga II",
-"kickoff": "2026-10-25T09:00:00Z",
-"verdict": "no_anchor",
-"totVol": 80,
-"ankerGrund": {
-"spiel": "CS Afumati v CSA Steaua Bucuresti",
-"grund": "kein_kandidat"
-}
-},
-"36221213": {
-"moneySide": "away",
-"moneyName": "Tochigi UVA FC",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Japanese J League 2",
-"kickoff": "2026-10-25T09:00:00Z",
-"verdict": "no_anchor",
-"totVol": 31,
-"ankerGrund": {
-"spiel": "Shonan v Tochigi Uva FC",
-"grund": "kein_kandidat"
-}
-},
-"36227877": {
-"moneySide": "away",
-"moneyName": "Pisek",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Czech 3 Liga",
-"kickoff": "2026-10-25T09:15:00Z",
-"verdict": "no_anchor",
-"totVol": 2,
-"ankerGrund": {
-"spiel": "Sparta Prague B v Pisek",
-"grund": "kein_kandidat",
-"naechster": "Sparta Prague v Bournemouth"
-}
-},
-"36219530": {
-"moneySide": "home",
-"moneyName": "Slavia Praha B",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Czech 2 Liga",
-"kickoff": "2026-10-25T09:15:00Z",
-"verdict": "no_anchor",
-"totVol": 5,
-"ankerGrund": {
-"spiel": "Slavia Praha B v Prostejov",
-"grund": "kein_kandidat",
-"naechster": "Slavia Praha v Arsenal"
-}
-},
 "36227482": {
 "moneySide": "home",
 "moneyName": "Hradec Kralove B",
@@ -2172,35 +2222,35 @@
 "naechster": "Real Sociedad B v Girona FC"
 }
 },
-"36227372": {
-"moneySide": "draw",
-"moneyName": "The Draw",
+"36233359": {
+"moneySide": "home",
+"moneyName": "Azkals Development Team",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
-"league": "Czech 3 Liga",
-"kickoff": "2026-10-25T09:15:00Z",
+"league": "Philippines PFL",
+"kickoff": "2026-10-25T09:45:00Z",
 "verdict": "no_anchor",
-"totVol": 5,
+"totVol": 1,
 "ankerGrund": {
-"spiel": "FK Jablonec B v FK Teplice B",
-"grund": "kein_kandidat",
-"naechster": "Real Sociedad B v Girona FC"
+"spiel": "Azkals Development Team v Davao Aguilas FC",
+"grund": "kein_kandidat"
 }
 },
-"36229462": {
-"moneySide": "away",
-"moneyName": "Resources Capital FC",
+"36228091": {
+"moneySide": "home",
+"moneyName": "Penya Encarnada",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
-"league": "Hong Kong 1st Division League",
-"kickoff": "2026-10-25T09:30:00Z",
+"league": "Andorran Primera Divisio",
+"kickoff": "2026-10-25T10:00:00Z",
 "verdict": "no_anchor",
-"totVol": 36,
+"totVol": 26,
 "ankerGrund": {
-"spiel": "Kui Tan SC v Resources Capital FC",
-"grund": "kein_kandidat"
+"spiel": "Penya Encarnada v CF Esperanca d'Andorra",
+"grund": "kein_kandidat",
+"naechster": "D.C. United v FC Cincinnati"
 }
 }
 }
