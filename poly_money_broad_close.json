@@ -975345,7 +975345,13 @@
     "usd": 381,
     "ts": 1792800690
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Pelicans": 0.0,
+   "Jazz": 1.0
+  },
+  "resolvedAt": "2026-10-24T06:19:00.739666+00:00"
  },
  "nba-hou-sas-2026-10-23": {
   "shares": {
@@ -976516,7 +976522,13 @@
     "usd": 8888,
     "ts": 1792802589
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Trail Blazers": 1.0,
+   "Kings": 0.0
+  },
+  "resolvedAt": "2026-10-24T06:19:00.739666+00:00"
  },
  "nba-mem-gsw-2026-10-23": {
   "shares": {
@@ -976896,7 +976908,13 @@
     "usd": 1729,
     "ts": 1792806269
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Grizzlies": 1.0,
+   "Warriors": 0.0
+  },
+  "resolvedAt": "2026-10-24T06:19:00.739666+00:00"
  },
  "nba-lac-lal-2026-10-23": {
   "shares": {
@@ -979669,8 +979687,8 @@
  },
  "cs2-aur1-mglz-2026-10-24": {
   "shares": {
-   "Aurora Gaming": 55688.85482564999,
-   "TheMongolz": 24438.99439182499
+   "Aurora Gaming": 60888.22001648001,
+   "TheMongolz": 26720.729699674994
   },
   "prices": {
    "Aurora Gaming": 0.695,
@@ -979682,47 +979700,55 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 81762,
+  "totalUsd": 92381,
   "whales": [
    {
     "wallet": "0x994ec8e910b433265f3a46eaf666bfa28b1a6136",
     "side": "Aurora Gaming",
-    "usd": 6950
+    "usd": 6950,
+    "avgPrice": 0.72
    },
    {
     "wallet": "0xaebf3acc7c9add4928bd218f96de5cf64987e1ca",
     "side": "TheMongolz",
-    "usd": 6376
+    "usd": 6376,
+    "avgPrice": 0.2799
    },
    {
     "wallet": "0xd27cc742d023d06ef633a4c880cf1ff1836ec081",
     "side": "Aurora Gaming",
-    "usd": 5946
-   },
-   {
-    "wallet": "0xc9bfc7986767173b4f1c3fc9b2c6b255fc7381c0",
-    "side": "TheMongolz",
-    "usd": 5440
-   },
-   {
-    "wallet": "0x9b963178d3b8765cfc5af94c00550d6ec6c54389",
-    "side": "Aurora Gaming",
-    "usd": 3475
-   },
-   {
-    "wallet": "0xdc40c985063d50aa00cc5f637f7e83203b3b89cf",
-    "side": "Aurora Gaming",
-    "usd": 3475
+    "usd": 5946,
+    "avgPrice": 0.7
    },
    {
     "wallet": "0xb2088bb79ba9b217a1d261ab95c8e1c6e25ec095",
     "side": "TheMongolz",
-    "usd": 3465
+    "usd": 5468,
+    "avgPrice": 0.2999
+   },
+   {
+    "wallet": "0xc9bfc7986767173b4f1c3fc9b2c6b255fc7381c0",
+    "side": "TheMongolz",
+    "usd": 5440,
+    "avgPrice": 0.2957
    },
    {
     "wallet": "0x446884aa55e3dcf7123d9a3d6243c4e34b70b165",
     "side": "Aurora Gaming",
-    "usd": 3072
+    "usd": 3848,
+    "avgPrice": 0.69
+   },
+   {
+    "wallet": "0x9b963178d3b8765cfc5af94c00550d6ec6c54389",
+    "side": "Aurora Gaming",
+    "usd": 3475,
+    "avgPrice": 0.72
+   },
+   {
+    "wallet": "0xdc40c985063d50aa00cc5f637f7e83203b3b89cf",
+    "side": "Aurora Gaming",
+    "usd": 3475,
+    "avgPrice": 0.7
    },
    {
     "wallet": "0xdfc983d8c361103661167a59df7bb1e8059e7552",
@@ -979753,6 +979779,11 @@
     "wallet": "0x3e0ba8c4853c66a049cb548932d3aac3fe84253c",
     "side": "Aurora Gaming",
     "usd": 1968
+   },
+   {
+    "wallet": "0x84000951e537b38cbe481ca993ca9ed08691274c",
+    "side": "Aurora Gaming",
+    "usd": 1767
    },
    {
     "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
@@ -979798,6 +979829,18 @@
     "wallet": "0x0c222dcb83281bc74ca03dffad2edf4006e22449",
     "side": "Aurora Gaming",
     "usd": 649
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Aurora Gaming",
+    "usd": 589,
+    "avgPrice": 0.701
+   },
+   {
+    "wallet": "0x0be34ffafafa7f3a2998b15b05e04d36cb2835fe",
+    "side": "Aurora Gaming",
+    "usd": 551,
+    "avgPrice": 0.6999
    },
    {
     "wallet": "0xf1404010a21a61c1f5693beee65285273be47cd8",
@@ -979862,32 +979905,16 @@
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "side": "TheMongolz",
-    "usd": 294,
-    "avgPrice": 0.2794
+    "usd": 294
    },
    {
-    "wallet": "0xfb07f48542d2b655e9d0bf1cc92a8a6feee8e2cc",
+    "wallet": "0x48183e17a92b51605fe8e96c60b9a491f06afde0",
     "side": "Aurora Gaming",
-    "usd": 281
-   },
-   {
-    "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
-    "side": "Aurora Gaming",
-    "usd": 278
-   },
-   {
-    "wallet": "0x45592af1af9344ed91df47789c8d47dcf0d20442",
-    "side": "Aurora Gaming",
-    "usd": 272
-   },
-   {
-    "wallet": "0xf7f0b0b1e9c0fe02ccad926916ee31aef74b912c",
-    "side": "Aurora Gaming",
-    "usd": 267
+    "usd": 282
    }
   ],
-  "hoursToKickoff": 1.19,
-  "capturedAt": "2026-10-24T05:48:36.212422+00:00",
+  "hoursToKickoff": 0.68,
+  "capturedAt": "2026-10-24T06:19:00.739666+00:00",
   "koTs": "2026-10-24T07:00:00+00:00",
   "cond": "0xa5e25bf22808cd6db18d9f45cc76341ad001964785f9c4f75e685636a1202248",
   "frage": "Counter-Strike: Aurora Gaming vs TheMongolz (BO3) - PGL Masters Bucharest Group Stage",
@@ -979904,19 +979931,19 @@
    "bids": [
     [
      0.69,
-     48286
+     50056
     ],
     [
      0.68,
-     21338
+     24717
     ],
     [
      0.67,
-     19657
+     19507
     ],
     [
      0.66,
-     1811
+     1869
     ],
     [
      0.65,
@@ -979924,17 +979951,17 @@
     ],
     [
      0.64,
-     1460
+     1455
     ]
    ],
    "asks": [
     [
      0.7,
-     247337
+     230825
     ],
     [
      0.71,
-     1255
+     958
     ],
     [
      0.72,
@@ -979946,15 +979973,55 @@
     ],
     [
      0.74,
-     22913
+     21785
     ],
     [
      0.75,
-     15734
+     16026
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x6b97ebe911d7f2e5e3e8c4a0faad4a5c7c0b8d30",
+    "action": "BUY",
+    "side": "Aurora Gaming",
+    "price": 0.7,
+    "usd": 6751,
+    "ts": 1792822550
+   },
+   {
+    "wallet": "0xd4f90db3fe7a658e744d3711779a37773c31f4ad",
+    "action": "BUY",
+    "side": "Aurora Gaming",
+    "price": 0.7,
+    "usd": 1000,
+    "ts": 1792822208
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "action": "BUY",
+    "side": "Aurora Gaming",
+    "price": 0.7,
+    "usd": 387,
+    "ts": 1792821884
+   },
+   {
+    "wallet": "0x0be34ffafafa7f3a2998b15b05e04d36cb2835fe",
+    "action": "BUY",
+    "side": "Aurora Gaming",
+    "price": 0.7,
+    "usd": 555,
+    "ts": 1792821606
+   },
+   {
+    "wallet": "0x84000951e537b38cbe481ca993ca9ed08691274c",
+    "action": "BUY",
+    "side": "Aurora Gaming",
+    "price": 0.7,
+    "usd": 1780,
+    "ts": 1792821269
+   },
    {
     "wallet": "0x1583c5d3f2b55b3ec71c599c6b90d328d49cbdde",
     "action": "BUY",
@@ -979978,45 +980045,13 @@
     "price": 0.7,
     "usd": 2000,
     "ts": 1792819740
-   },
-   {
-    "wallet": "0xb2088bb79ba9b217a1d261ab95c8e1c6e25ec095",
-    "action": "BUY",
-    "side": "TheMongolz",
-    "price": 0.3,
-    "usd": 2483,
-    "ts": 1792817003
-   },
-   {
-    "wallet": "0xc9bfc7986767173b4f1c3fc9b2c6b255fc7381c0",
-    "action": "BUY",
-    "side": "TheMongolz",
-    "price": 0.3,
-    "usd": 544,
-    "ts": 1792816686
-   },
-   {
-    "wallet": "0xc9bfc7986767173b4f1c3fc9b2c6b255fc7381c0",
-    "action": "BUY",
-    "side": "TheMongolz",
-    "price": 0.3,
-    "usd": 506,
-    "ts": 1792814760
-   },
-   {
-    "wallet": "0xc9bfc7986767173b4f1c3fc9b2c6b255fc7381c0",
-    "action": "BUY",
-    "side": "TheMongolz",
-    "price": 0.3,
-    "usd": 476,
-    "ts": 1792812998
    }
   ]
  },
  "cs2-fut-tyloo-2026-10-24": {
   "shares": {
-   "FUT Esports": 28813.785727125007,
-   "TYLOO": 7891.677340859996
+   "FUT Esports": 49692.301543600006,
+   "TYLOO": 13609.996959384995
   },
   "prices": {
    "FUT Esports": 0.785,
@@ -980028,12 +980063,24 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 35220,
+  "totalUsd": 39496,
   "whales": [
+   {
+    "wallet": "0xdad3251e1639eb14da805365f56bf389575961cf",
+    "side": "FUT Esports",
+    "usd": 20263
+   },
+   {
+    "wallet": "0xb2088bb79ba9b217a1d261ab95c8e1c6e25ec095",
+    "side": "TYLOO",
+    "usd": 8406,
+    "avgPrice": 0.2099
+   },
    {
     "wallet": "0x994ec8e910b433265f3a46eaf666bfa28b1a6136",
     "side": "FUT Esports",
-    "usd": 7850
+    "usd": 7850,
+    "avgPrice": 0.77
    },
    {
     "wallet": "0x9697b2aca70df21056088d7094f8d7dfb5bd18e9",
@@ -980046,24 +980093,19 @@
     "usd": 3455
    },
    {
-    "wallet": "0xb2088bb79ba9b217a1d261ab95c8e1c6e25ec095",
-    "side": "TYLOO",
-    "usd": 2701
-   },
-   {
     "wallet": "0xfb07f48542d2b655e9d0bf1cc92a8a6feee8e2cc",
     "side": "FUT Esports",
     "usd": 2355
    },
    {
+    "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
+    "side": "FUT Esports",
+    "usd": 2286
+   },
+   {
     "wallet": "0xf6f2dc0dc941ee5440a017b03b8f1a37de6fb422",
     "side": "FUT Esports",
     "usd": 2186
-   },
-   {
-    "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
-    "side": "FUT Esports",
-    "usd": 1868
    },
    {
     "wallet": "0x57681c950a478bd0b5076e954a26e7364cd5d072",
@@ -980108,7 +980150,8 @@
    {
     "wallet": "0x03333873d9bf65a51946d2adda1c57702283f234",
     "side": "FUT Esports",
-    "usd": 314
+    "usd": 314,
+    "avgPrice": 0.78
    },
    {
     "wallet": "0x52b7fc8a97df5f18974c06a83909f60c81010aa1",
@@ -980154,12 +980197,14 @@
    {
     "wallet": "0x1b47e9b128e6b671edebfb2cac23dd3efc40d814",
     "side": "FUT Esports",
-    "usd": 137
+    "usd": 137,
+    "avgPrice": 0.7699
    },
    {
     "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
     "side": "FUT Esports",
-    "usd": 121
+    "usd": 121,
+    "avgPrice": 0.8171
    },
    {
     "wallet": "0xc104db0d325238b721c407b44f14f70bb6b1e684",
@@ -980226,15 +980271,10 @@
     "wallet": "0xe1f4cb724c2063a20d5a493db520d5295cc3f5a0",
     "side": "FUT Esports",
     "usd": 47
-   },
-   {
-    "wallet": "0xd443a2ba4725b4fb0bd3e23bf80d95baf0c05f71",
-    "side": "FUT Esports",
-    "usd": 45
    }
   ],
-  "hoursToKickoff": 1.19,
-  "capturedAt": "2026-10-24T05:48:36.212422+00:00",
+  "hoursToKickoff": 0.68,
+  "capturedAt": "2026-10-24T06:19:00.739666+00:00",
   "koTs": "2026-10-24T07:00:00+00:00",
   "cond": "0x1df367d69f6e2941d17b45486ef15b1c7da8ceb1d3d794b0a7775f7f016fa614",
   "frage": "Counter-Strike: FUT Esports vs TYLOO (BO3) - PGL Masters Bucharest Group Stage",
@@ -980251,45 +980291,45 @@
    "bids": [
     [
      0.78,
-     3182
+     5291
     ],
     [
      0.77,
-     20821
+     12260
     ],
     [
      0.76,
-     9063
+     9827
     ],
     [
      0.75,
-     7262
+     523
     ],
     [
      0.74,
-     638
+     13420
     ],
     [
      0.73,
-     18
+     6667
     ]
    ],
    "asks": [
     [
      0.79,
-     238774
+     211905
     ],
     [
      0.8,
-     8296
+     2986
     ],
     [
      0.81,
-     1880
+     1948
     ],
     [
      0.82,
-     2470
+     2337
     ],
     [
      0.83,
@@ -980297,11 +980337,27 @@
     ],
     [
      0.84,
-     13675
+     21248
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0xdad3251e1639eb14da805365f56bf389575961cf",
+    "action": "BUY",
+    "side": "FUT Esports",
+    "price": 0.79,
+    "usd": 20392,
+    "ts": 1792822449
+   },
+   {
+    "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
+    "action": "BUY",
+    "side": "FUT Esports",
+    "price": 0.79,
+    "usd": 421,
+    "ts": 1792820913
+   },
    {
     "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
     "action": "BUY",
@@ -980349,25 +980405,17 @@
     "price": 0.21,
     "usd": 1340,
     "ts": 1792817202
-   },
-   {
-    "wallet": "0xa5210526a589221769501fa0a7ca4e7b4278d609",
-    "action": "BUY",
-    "side": "FUT Esports",
-    "price": 0.8,
-    "usd": 500,
-    "ts": 1792811972
    }
   ]
  },
  "crint-nzl-ind-2026-10-24": {
   "shares": {
-   "New Zealand": 8430.762375034998,
-   "India": 10098.016846509998
+   "New Zealand": 8806.717242224999,
+   "India": 10132.097535309998
   },
   "prices": {
-   "New Zealand": 0.455,
-   "India": 0.545
+   "New Zealand": 0.465,
+   "India": 0.535
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -980375,116 +980423,124 @@
   },
   "league": "CRICKET",
   "sport": "Cricket",
-  "totalUsd": 19857,
+  "totalUsd": 19906,
   "whales": [
    {
     "wallet": "0x9b94258c6f55317d0623f9aed5c259a6a27119a7",
     "side": "India",
-    "usd": 3288
+    "usd": 3392
    },
    {
     "wallet": "0xa4b7b1814b0da33f2b61be4939976898aa476008",
     "side": "New Zealand",
-    "usd": 2957
+    "usd": 2930
    },
    {
     "wallet": "0x77bdad5ae102156a08284742fc0082f1bf13a9fe",
     "side": "India",
-    "usd": 2725
+    "usd": 2675
    },
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "side": "New Zealand",
-    "usd": 1742,
-    "avgPrice": 0.441
+    "usd": 1780
    },
    {
     "wallet": "0x9c76cdb43fb46454da005fbc82047a64a18ec926",
     "side": "India",
-    "usd": 1350
+    "usd": 1325
    },
    {
     "wallet": "0x4df332e27f9ee3224f52ce30e3ce15c1075e788f",
     "side": "India",
-    "usd": 877
+    "usd": 861
    },
    {
     "wallet": "0x4340186c5f64a6ab26838173dfec2b47a7e0363d",
     "side": "India",
-    "usd": 717
+    "usd": 704
    },
    {
     "wallet": "0x156dc8263884ca0c8c2ca74febda55e8ea101fdf",
     "side": "New Zealand",
-    "usd": 531
+    "usd": 542
    },
    {
     "wallet": "0x5183ba68fa6df5abebb405f1240ee292d5513a8d",
     "side": "New Zealand",
-    "usd": 501
+    "usd": 512
    },
    {
     "wallet": "0xf4f88a1e25ff5dfae68326eb62049d6a1b7c5bf1",
     "side": "New Zealand",
-    "usd": 368
+    "usd": 376,
+    "avgPrice": 0.4501
    },
    {
     "wallet": "0x7a3fb8c5ad2af4c621b2138d9579410343976712",
     "side": "New Zealand",
-    "usd": 364
+    "usd": 372
    },
    {
     "wallet": "0xc311a66668fdc623555ce31fce380a351f83bdf6",
     "side": "New Zealand",
-    "usd": 276
+    "usd": 283
+   },
+   {
+    "wallet": "0x7ed6a54cc511ea222822a746b8ec4aee97ff98ba",
+    "side": "New Zealand",
+    "usd": 253
    },
    {
     "wallet": "0x361b16e3ddfe1d415d41008daac2631d94ab74fe",
     "side": "New Zealand",
-    "usd": 226
+    "usd": 231
    },
    {
     "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
     "side": "India",
-    "usd": 218
+    "usd": 214
    },
    {
     "wallet": "0x30f67d821c57a54e25e5e521dbd3b5b18309004f",
     "side": "New Zealand",
-    "usd": 182,
-    "avgPrice": 0.46
+    "usd": 186
    },
    {
     "wallet": "0x87650b9f63563f7c456d9bbcceee5f9faf06ed81",
     "side": "New Zealand",
-    "usd": 114
+    "usd": 116
    },
    {
     "wallet": "0x7e5972bfc25819775ee5a9d4f191919375487b8b",
     "side": "New Zealand",
-    "usd": 82,
+    "usd": 84,
     "avgPrice": 0.4301
-   },
-   {
-    "wallet": "0xf0bee07f0127bdae6891e1c434dde57ff9878d08",
-    "side": "New Zealand",
-    "usd": 68
    },
    {
     "wallet": "0x9663a1bc594a019693631f39ed50e03496185b70",
     "side": "New Zealand",
-    "usd": 59
+    "usd": 60
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "India",
+    "usd": 54
+   },
+   {
+    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
+    "side": "New Zealand",
+    "usd": 44
    },
    {
     "wallet": "0xc785252b25901a591e9d962e09f4342468444ef2",
     "side": "New Zealand",
-    "usd": 43,
-    "avgPrice": 0.4
+    "usd": 44
    },
    {
     "wallet": "0xda770326bd091d26f816917aa83a6baff668683f",
     "side": "New Zealand",
-    "usd": 42,
+    "usd": 43,
     "avgPrice": 0.3078
    },
    {
@@ -980495,12 +980551,23 @@
    {
     "wallet": "0xad5353afe30c2da57709e2704ef3ccdcf67eef24",
     "side": "New Zealand",
-    "usd": 23
+    "usd": 24
    },
    {
     "wallet": "0xfb07f48542d2b655e9d0bf1cc92a8a6feee8e2cc",
     "side": "India",
     "usd": 18
+   },
+   {
+    "wallet": "0x890e22f535cddba750269d4837327936ea537ec1",
+    "side": "New Zealand",
+    "usd": 14
+   },
+   {
+    "wallet": "0xde9f7f4e77a1595623ceb58e469f776257ccd43c",
+    "side": "New Zealand",
+    "usd": 13,
+    "avgPrice": 0.4299
    },
    {
     "wallet": "0x67af214764bd6eda61fadb25cdcbea6d13d761ee",
@@ -980509,21 +980576,14 @@
     "avgPrice": 0.55
    },
    {
-    "wallet": "0xde9f7f4e77a1595623ceb58e469f776257ccd43c",
-    "side": "New Zealand",
-    "usd": 12,
-    "avgPrice": 0.4299
-   },
-   {
     "wallet": "0x49b68438ae7db43a03d7ddaaceaef5581ac7d152",
     "side": "New Zealand",
     "usd": 10
    },
    {
-    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
+    "wallet": "0x6891589732cf8beaaf424b117d5c5c20919f6bb9",
     "side": "New Zealand",
-    "usd": 9,
-    "avgPrice": 0.46
+    "usd": 8
    },
    {
     "wallet": "0x75177693e4ecdd01a33cb43ba3fe606dcf750353",
@@ -980531,19 +980591,9 @@
     "usd": 7
    },
    {
-    "wallet": "0x890e22f535cddba750269d4837327936ea537ec1",
-    "side": "New Zealand",
-    "usd": 7
-   },
-   {
-    "wallet": "0x6891589732cf8beaaf424b117d5c5c20919f6bb9",
-    "side": "India",
-    "usd": 7
-   },
-   {
     "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
     "side": "New Zealand",
-    "usd": 6
+    "usd": 7
    },
    {
     "wallet": "0x521070c99db06e54af5e8e4a91d6858decdfbd53",
@@ -980561,18 +980611,13 @@
     "usd": 3
    },
    {
-    "wallet": "0xc5cf6458f5f09beec05ed6630be86a70607ac503",
-    "side": "New Zealand",
-    "usd": 2
-   },
-   {
     "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
     "side": "New Zealand",
     "usd": 2
    }
   ],
-  "hoursToKickoff": 1.19,
-  "capturedAt": "2026-10-24T05:48:36.212422+00:00",
+  "hoursToKickoff": 0.68,
+  "capturedAt": "2026-10-24T06:19:00.739666+00:00",
   "koTs": "2026-10-24T07:00:00+00:00",
   "cond": "0x1b69fc4fab997c3b33b9b791b3619aff0e5440b9ec19b1998181f1e475b2c346",
   "frage": "India Tour of New Zealand T20s: New Zealand vs India",
@@ -980589,49 +980634,49 @@
    "bids": [
     [
      0.54,
-     19099
+     5109
     ],
     [
      0.53,
-     11697
+     408
     ],
     [
      0.52,
-     255
+     3921
     ],
     [
      0.51,
-     2798
+     2910
     ],
     [
      0.5,
-     180
+     2080
     ],
     [
-     0.48,
-     300
+     0.49,
+     100
     ]
    ],
    "asks": [
     [
      0.55,
-     587
+     2371
     ],
     [
      0.56,
-     18146
+     11207
     ],
     [
      0.57,
-     1384
+     6393
     ],
     [
      0.58,
-     925
+     2597
     ],
     [
      0.59,
-     2860
+     310
     ],
     [
      0.6,
@@ -980647,21 +980692,13 @@
     "price": 0.55,
     "usd": 1100,
     "ts": 1792805022
-   },
-   {
-    "wallet": "0x5183ba68fa6df5abebb405f1240ee292d5513a8d",
-    "action": "BUY",
-    "side": "New Zealand",
-    "price": 0.4539,
-    "usd": 500,
-    "ts": 1792781691
    }
   ]
  },
  "wta-fernand-bouzkov-2026-10-24": {
   "shares": {
-   "Leylah Fernandez": 3772.314534805,
-   "Marie Bouzkova": 4005.5369399650003
+   "Leylah Fernandez": 3924.149230385,
+   "Marie Bouzkova": 4166.763472385001
   },
   "prices": {
    "Leylah Fernandez": 0.485,
@@ -980673,7 +980710,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 8171,
+  "totalUsd": 8316,
   "whales": [
    {
     "wallet": "0x9b11866433281ade9f2811dbde8acdefc45f5375",
@@ -980684,13 +980721,7 @@
    {
     "wallet": "0x49e0265d1a3636870df298e2ef5e681e246e9af1",
     "side": "Leylah Fernandez",
-    "usd": 1750,
-    "avgPrice": 0.4899
-   },
-   {
-    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
-    "side": "Marie Bouzkova",
-    "usd": 532
+    "usd": 1750
    },
    {
     "wallet": "0xa2fc0448a1dce9258ebb91b2f3abcddb98a0b1b4",
@@ -980698,14 +980729,25 @@
     "usd": 524
    },
    {
+    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
+    "side": "Marie Bouzkova",
+    "usd": 522
+   },
+   {
     "wallet": "0x684baa57c338c2549aec0aa3f034f695d72a8409",
     "side": "Marie Bouzkova",
     "usd": 444
    },
    {
+    "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
+    "side": "Marie Bouzkova",
+    "usd": 362
+   },
+   {
     "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
     "side": "Marie Bouzkova",
-    "usd": 356
+    "usd": 356,
+    "avgPrice": 0.5
    },
    {
     "wallet": "0x0dae0fd966005cd3eb2e8e9b901f24fca34a72fe",
@@ -980715,12 +980757,8 @@
    {
     "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
     "side": "Leylah Fernandez",
-    "usd": 260
-   },
-   {
-    "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
-    "side": "Marie Bouzkova",
-    "usd": 201
+    "usd": 260,
+    "avgPrice": 0.4899
    },
    {
     "wallet": "0xc1519e026778e01d2482b9759d4294b560f82501",
@@ -980760,6 +980798,11 @@
     "usd": 49
    },
    {
+    "wallet": "0xe0964ef9026a30bbb28f6413b7bdaaf555848d1b",
+    "side": "Leylah Fernandez",
+    "usd": 40
+   },
+   {
     "wallet": "0x8b8992eb0d7dc4ef87f5efb45154de4787c598d6",
     "side": "Leylah Fernandez",
     "usd": 14
@@ -980767,7 +980810,8 @@
    {
     "wallet": "0xa772e2ca9f119162d03330f3e66c0556a2068686",
     "side": "Leylah Fernandez",
-    "usd": 13
+    "usd": 13,
+    "avgPrice": 0.5
    },
    {
     "wallet": "0x147c2760baa011fdcd0d02ea0f610ffb0fd92540",
@@ -980777,6 +980821,11 @@
    {
     "wallet": "0xef67e8cdb002807bb125d0191a29f71dc970c87e",
     "side": "Leylah Fernandez",
+    "usd": 10
+   },
+   {
+    "wallet": "0x02c6460b69d7e2b3698e1f4c105c2ceca60fb512",
+    "side": "Marie Bouzkova",
     "usd": 10
    },
    {
@@ -980791,6 +980840,11 @@
    },
    {
     "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Leylah Fernandez",
+    "usd": 2
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
     "side": "Leylah Fernandez",
     "usd": 2
    },
@@ -980815,8 +980869,8 @@
     "usd": 0
    }
   ],
-  "hoursToKickoff": 1.19,
-  "capturedAt": "2026-10-24T05:48:36.212422+00:00",
+  "hoursToKickoff": 0.68,
+  "capturedAt": "2026-10-24T06:19:00.739666+00:00",
   "koTs": "2026-10-24T07:00:00+00:00",
   "cond": "0xec7a05ab0c50171e4ffd4399e5540c631b5eff60d508e3e1ed9251c2f8f832f1",
   "frage": "Ningbo Open: Leylah Fernandez vs Marie Bouzkova",
@@ -980827,14 +980881,14 @@
  },
  "chi-ron-ygb-2026-10-24": {
   "shares": {
-   "Chengdu Rongcheng FC": 674.5609133399998,
-   "Draw (Chengdu Rongcheng FC vs. Dalian Yingbo FC)": 246.54324152499998,
-   "Dalian Yingbo FC": 1785.9136935450006
+   "Chengdu Rongcheng FC": 1868.33288335,
+   "Draw (Chengdu Rongcheng FC vs. Dalian Yingbo FC)": 369.043241525,
+   "Dalian Yingbo FC": 2427.1708400799994
   },
   "prices": {
-   "Chengdu Rongcheng FC": 0.485,
+   "Chengdu Rongcheng FC": 0.475,
    "Draw (Chengdu Rongcheng FC vs. Dalian Yingbo FC)": 0.245,
-   "Dalian Yingbo FC": 0.285
+   "Dalian Yingbo FC": 0.28
   },
   "splitGuete": {
    "art": "belastbar",
@@ -980842,27 +980896,42 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 11832,
+  "totalUsd": 13690,
   "whales": [
+   {
+    "wallet": "0xcf8a8956dc705a8a135134a463299010b9932d3c",
+    "side": "Dalian Yingbo FC",
+    "usd": 715
+   },
+   {
+    "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+    "side": "Chengdu Rongcheng FC",
+    "usd": 637
+   },
+   {
+    "wallet": "0x40ca38c18ef099ed9e05ae65ea8ca401e8c3a96d",
+    "side": "Chengdu Rongcheng FC",
+    "usd": 356
+   },
    {
     "wallet": "0x621e2746c245a4d9c097398da88f770d97fc923b",
     "side": "Dalian Yingbo FC",
-    "usd": 356
+    "usd": 350
    },
    {
     "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
     "side": "Chengdu Rongcheng FC",
-    "usd": 285
+    "usd": 279
    },
    {
     "wallet": "0xc801d5b67ed33f3b1bbb65fff300e39229ee289d",
     "side": "Dalian Yingbo FC",
-    "usd": 214
+    "usd": 210
    },
    {
     "wallet": "0x08cb41224831809291cb178575e78df929397043",
     "side": "Dalian Yingbo FC",
-    "usd": 152
+    "usd": 150
    },
    {
     "wallet": "0x1c436947f3cd1e4a9cc0fd86b532083a959d1608",
@@ -980872,61 +980941,72 @@
    {
     "wallet": "0x1c436947f3cd1e4a9cc0fd86b532083a959d1608",
     "side": "Dalian Yingbo FC",
-    "usd": 143
+    "usd": 140
+   },
+   {
+    "wallet": "0xaab17f4345220a8e26086b921ce2d3fe0434ca7a",
+    "side": "Draw (Chengdu Rongcheng FC vs. Dalian Yingbo FC)",
+    "usd": 122
    },
    {
     "wallet": "0xe5502f3b033ebcd64233b5ffc43c44c24170be3f",
     "side": "Dalian Yingbo FC",
-    "usd": 122,
+    "usd": 120,
     "avgPrice": 0.2899
-   },
-   {
-    "wallet": "0xcf8a8956dc705a8a135134a463299010b9932d3c",
-    "side": "Dalian Yingbo FC",
-    "usd": 101
    },
    {
     "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
     "side": "Chengdu Rongcheng FC",
-    "usd": 97,
+    "usd": 95,
     "avgPrice": 0.4612
-   },
-   {
-    "wallet": "0x6bef81828c45fa6595ba127cf6855e645fa6fc67",
-    "side": "Dalian Yingbo FC",
-    "usd": 95
    },
    {
     "wallet": "0xb4b83d9e7a8c5163152b6e3e30ad2e8d3203cc7f",
     "side": "Dalian Yingbo FC",
-    "usd": 93
-   },
-   {
-    "wallet": "0x2b5f1cc489c7b9ed74e47bc3bf5bc808e59f7750",
-    "side": "Dalian Yingbo FC",
-    "usd": 74
-   },
-   {
-    "wallet": "0xfe70195eec4fe84cea4b9fe759413f0079cf7533",
-    "side": "Chengdu Rongcheng FC",
-    "usd": 48,
-    "avgPrice": 0.53
-   },
-   {
-    "wallet": "0x836960eba14bb3dec013fc50d2be66808db2f584",
-    "side": "Chengdu Rongcheng FC",
-    "usd": 34
-   },
-   {
-    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
-    "side": "Dalian Yingbo FC",
-    "usd": 33,
-    "avgPrice": 0.2995
+    "usd": 91
    },
    {
     "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
     "side": "Dalian Yingbo FC",
-    "usd": 32
+    "usd": 78,
+    "avgPrice": 0.2906
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Chengdu Rongcheng FC",
+    "usd": 61
+   },
+   {
+    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
+    "side": "Chengdu Rongcheng FC",
+    "usd": 60
+   },
+   {
+    "wallet": "0xfe70195eec4fe84cea4b9fe759413f0079cf7533",
+    "side": "Chengdu Rongcheng FC",
+    "usd": 48
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Chengdu Rongcheng FC",
+    "usd": 45
+   },
+   {
+    "wallet": "0x836960eba14bb3dec013fc50d2be66808db2f584",
+    "side": "Chengdu Rongcheng FC",
+    "usd": 33
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "Dalian Yingbo FC",
+    "usd": 32,
+    "avgPrice": 0.2991
+   },
+   {
+    "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
+    "side": "Chengdu Rongcheng FC",
+    "usd": 30,
+    "avgPrice": 0.47
    },
    {
     "wallet": "0x340ea8b2e6634b7555a61187d1ea443785cd385b",
@@ -980944,13 +981024,17 @@
     "usd": 19
    },
    {
-    "wallet": "0xb5527654d309c6617addabbb64e47931cf35b70c",
+    "wallet": "0x6daae04265d65cb2aae7fe6db4210568de7d954a",
     "side": "Chengdu Rongcheng FC",
-    "usd": 14,
-    "avgPrice": 0.4899
+    "usd": 14
    },
    {
-    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "wallet": "0xb5527654d309c6617addabbb64e47931cf35b70c",
+    "side": "Chengdu Rongcheng FC",
+    "usd": 14
+   },
+   {
+    "wallet": "0x7ea571c40408f340c1c8fc8eaacebab53c1bde7b",
     "side": "Chengdu Rongcheng FC",
     "usd": 13
    },
@@ -980967,12 +981051,12 @@
    {
     "wallet": "0x758dac51ba3cc9a246a79787da9df11c5f425d9e",
     "side": "Chengdu Rongcheng FC",
-    "usd": 9
+    "usd": 8
    },
    {
     "wallet": "0x9944031856b66a7420c52e757fe26c431ad6ad00",
     "side": "Dalian Yingbo FC",
-    "usd": 9
+    "usd": 8
    },
    {
     "wallet": "0xa8ebbb8b517ccc4affe38c0ab6f2e9ed1e4b0acb",
@@ -980980,10 +981064,14 @@
     "usd": 7
    },
    {
-    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
+    "wallet": "0x86d021495fbfb33cdb4761100f4d0d184174904e",
     "side": "Chengdu Rongcheng FC",
-    "usd": 5,
-    "avgPrice": 0.48
+    "usd": 5
+   },
+   {
+    "wallet": "0xdc4f58a48ed4467743609fdce11eea483c759804",
+    "side": "Chengdu Rongcheng FC",
+    "usd": 5
    },
    {
     "wallet": "0x893575c7d99542163c6b6e8a0fe5af0b6d217daa",
@@ -981004,10 +981092,15 @@
     "wallet": "0x63ff86b0729d6fe8d3462476edc968452468a9bb",
     "side": "Dalian Yingbo FC",
     "usd": 1
+   },
+   {
+    "wallet": "0xef67e8cdb002807bb125d0191a29f71dc970c87e",
+    "side": "Chengdu Rongcheng FC",
+    "usd": 0
    }
   ],
-  "hoursToKickoff": 1.69,
-  "capturedAt": "2026-10-24T05:48:36.212422+00:00",
+  "hoursToKickoff": 1.18,
+  "capturedAt": "2026-10-24T06:19:00.739666+00:00",
   "koTs": "2026-10-24T07:30:00+00:00",
   "tokens": {
    "Chengdu Rongcheng FC": "42892960298145485639335321496180471733591744348899979243687014184380433619298",
@@ -981238,8 +981331,8 @@
  },
  "dota2-1win-gl-2026-10-24": {
   "shares": {
-   "1win": 12879.802131840002,
-   "GamerLegion": 8766.923275485
+   "1win": 13945.769303515,
+   "GamerLegion": 9492.498918269997
   },
   "prices": {
    "1win": 0.595,
@@ -981251,7 +981344,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 24359,
+  "totalUsd": 25518,
   "whales": [
    {
     "wallet": "0x6b97ebe911d7f2e5e3e8c4a0faad4a5c7c0b8d30",
@@ -981259,20 +981352,20 @@
     "usd": 4760
    },
    {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "side": "GamerLegion",
-    "usd": 3067,
-    "avgPrice": 0.4099
-   },
-   {
     "wallet": "0xdc40c985063d50aa00cc5f637f7e83203b3b89cf",
     "side": "1win",
-    "usd": 2255
+    "usd": 3303,
+    "avgPrice": 0.59
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "GamerLegion",
+    "usd": 3067
    },
    {
     "wallet": "0xc19211ddb9a00b176b85f9f92d10497b8476086c",
     "side": "GamerLegion",
-    "usd": 2157
+    "usd": 2172
    },
    {
     "wallet": "0x7e4d382fc3526c53a6195a716257b0d1d1bab4ca",
@@ -981305,6 +981398,11 @@
     "usd": 595
    },
    {
+    "wallet": "0x309ccb4b7f963ad7757ac6ab7b62d7d8dc51e6fb",
+    "side": "GamerLegion",
+    "usd": 494
+   },
+   {
     "wallet": "0x07f93c2bff5b43e6307c7c4521e9dd3a3f6c1513",
     "side": "1win",
     "usd": 467
@@ -981328,6 +981426,12 @@
     "wallet": "0xf6ee24b8d8c7c899894ddb8ce6f620a609c10e41",
     "side": "1win",
     "usd": 238
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "GamerLegion",
+    "usd": 162,
+    "avgPrice": 0.4099
    },
    {
     "wallet": "0xa01b04b734a5de365985024735bad8e0731f7da1",
@@ -981375,6 +981479,11 @@
     "usd": 54
    },
    {
+    "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
+    "side": "GamerLegion",
+    "usd": 48
+   },
+   {
     "wallet": "0x099306d309fa27716447d033438308a1e528b350",
     "side": "GamerLegion",
     "usd": 41
@@ -981388,6 +981497,11 @@
     "wallet": "0xa951006f1ce68498c1aef9b013880459e6e08a2f",
     "side": "1win",
     "usd": 29
+   },
+   {
+    "wallet": "0xc9166aa01758d8f4de141f3cb8ba9a56e0476371",
+    "side": "1win",
+    "usd": 20
    },
    {
     "wallet": "0xec340ed6773dce7fb281ed3238be534b41879bb2",
@@ -981433,20 +981547,10 @@
     "wallet": "0x207702d39743b9e76595fb2982dccdb300fb8161",
     "side": "GamerLegion",
     "usd": 5
-   },
-   {
-    "wallet": "0x6891589732cf8beaaf424b117d5c5c20919f6bb9",
-    "side": "1win",
-    "usd": 1
-   },
-   {
-    "wallet": "0x521070c99db06e54af5e8e4a91d6858decdfbd53",
-    "side": "GamerLegion",
-    "usd": 1
    }
   ],
-  "hoursToKickoff": 2.19,
-  "capturedAt": "2026-10-24T05:48:36.212422+00:00",
+  "hoursToKickoff": 1.68,
+  "capturedAt": "2026-10-24T06:19:00.739666+00:00",
   "koTs": "2026-10-24T08:00:00+00:00",
   "cond": "0x2ced77c5fdcc809c9e808aa66decf3dd4e3754dbb4f69ca0865b14d1eb297f8b",
   "frage": "Dota 2: 1win vs GamerLegion (BO3) - PARI Universe Group A",
@@ -981463,57 +981567,65 @@
    "bids": [
     [
      0.59,
-     23636
+     23510
     ],
     [
      0.58,
-     197
+     462
     ],
     [
      0.57,
-     3625
+     2719
     ],
     [
      0.56,
-     3377
+     10600
     ],
     [
      0.55,
-     4911
+     7449
     ],
     [
      0.54,
-     3631
+     8655
     ]
    ],
    "asks": [
     [
      0.6,
-     7615
+     8049
     ],
     [
      0.61,
-     11709
+     4280
     ],
     [
      0.62,
-     9301
+     4596
     ],
     [
      0.63,
-     6698
+     910
     ],
     [
      0.64,
-     274
+     677
     ],
     [
-     0.67,
-     113
+     0.65,
+     8090
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x309ccb4b7f963ad7757ac6ab7b62d7d8dc51e6fb",
+    "action": "BUY",
+    "side": "GamerLegion",
+    "price": 0.41,
+    "usd": 500,
+    "ts": 1792821674
+   },
    {
     "wallet": "0x723e73abb3d469f8740dfe0da6eb361da4aaf37e",
     "action": "BUY",
@@ -981560,7 +981672,7 @@
   "shares": {
    "Gamba Ōsaka": 14265.487849725001,
    "Draw (Gamba Ōsaka vs. Kyōto Sanga FC)": 119.56,
-   "Kyōto Sanga FC": 280.60875810000005
+   "Kyōto Sanga FC": 255.78001327500004
   },
   "prices": {
    "Gamba Ōsaka": 0.525,
@@ -981573,7 +981685,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 28147,
+  "totalUsd": 30502,
   "whales": [
    {
     "wallet": "0xb52e8b3afd9f0f0d502a5a76494b42816d67285c",
@@ -981599,25 +981711,18 @@
    {
     "wallet": "0x82fb3693ecbf880d6aef073ad55bd0642fb70b6e",
     "side": "Gamba Ōsaka",
-    "usd": 94,
-    "avgPrice": 0.5
+    "usd": 94
    },
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "Kyōto Sanga FC",
-    "usd": 67,
+    "usd": 58,
     "avgPrice": 0.24
    },
    {
     "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
     "side": "Kyōto Sanga FC",
     "usd": 34
-   },
-   {
-    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
-    "side": "Kyōto Sanga FC",
-    "usd": 31,
-    "avgPrice": 0.24
    },
    {
     "wallet": "0xa8ebbb8b517ccc4affe38c0ab6f2e9ed1e4b0acb",
@@ -981628,6 +981733,11 @@
     "wallet": "0x7ea571c40408f340c1c8fc8eaacebab53c1bde7b",
     "side": "Kyōto Sanga FC",
     "usd": 22
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Kyōto Sanga FC",
+    "usd": 15
    },
    {
     "wallet": "0x3e1ac4bede0a559fc47e78e8a74adeeb6f704d5c",
@@ -981675,8 +981785,8 @@
     "usd": 1
    }
   ],
-  "hoursToKickoff": 1.19,
-  "capturedAt": "2026-10-24T05:48:36.212422+00:00",
+  "hoursToKickoff": 0.68,
+  "capturedAt": "2026-10-24T06:19:00.739666+00:00",
   "koTs": "2026-10-24T07:00:00+00:00",
   "tokens": {
    "Gamba Ōsaka": "66387907542364169334831229670126048244625668992724717046401746211428323675127",
@@ -981692,19 +981802,19 @@
    "bids": [
     [
      0.52,
-     16514
+     17188
     ],
     [
      0.51,
-     22187
+     23675
     ],
     [
      0.5,
-     4468
+     7778
     ],
     [
      0.49,
-     5305
+     4405
     ],
     [
      0.48,
@@ -981712,7 +981822,7 @@
     ],
     [
      0.47,
-     1530
+     530
     ]
    ],
    "asks": [
@@ -981722,23 +981832,23 @@
     ],
     [
      0.54,
-     5264
+     5943
     ],
     [
      0.55,
-     16124
+     15890
     ],
     [
      0.56,
-     7039
+     7111
     ],
     [
      0.57,
-     7380
+     5183
     ],
     [
      0.58,
-     992
+     3168
     ]
    ]
   },
@@ -981787,12 +981897,12 @@
  },
  "crint-uga-moz-2026-10-24": {
   "shares": {
-   "Uganda": 13789.892015878,
-   "Mozambique": 217.108508122
+   "Uganda": 14937.525516139998,
+   "Mozambique": 227.47500785999998
   },
   "prices": {
-   "Uganda": 0.9845,
-   "Mozambique": 0.0155
+   "Uganda": 0.985,
+   "Mozambique": 0.015
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -981800,33 +981910,32 @@
   },
   "league": "CRICKET",
   "sport": "Cricket",
-  "totalUsd": 14825,
+  "totalUsd": 15545,
   "whales": [
    {
     "wallet": "0xd34881fce61c3ef3ece1745f238818eedea20265",
     "side": "Uganda",
-    "usd": 10541
+    "usd": 11569
    },
    {
     "wallet": "0x0e6be957dc8f4ff72d26ca6d1e750fece6013a4c",
     "side": "Uganda",
-    "usd": 1946
+    "usd": 2065
    },
    {
     "wallet": "0xd2811f7fc0ceffc0d5b347e6e918efaaede59433",
     "side": "Uganda",
-    "usd": 1048
+    "usd": 1049
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Mozambique",
+    "usd": 106
    },
    {
     "wallet": "0x2d2d2b32e5199edf833594a99b9c54e5668ab69d",
     "side": "Uganda",
     "usd": 98
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "side": "Mozambique",
-    "usd": 91,
-    "avgPrice": 0.022
    },
    {
     "wallet": "0xeab61f1c7168138db3e0bb87acadfb77ce8dd4c6",
@@ -981836,8 +981945,7 @@
    {
     "wallet": "0xc785252b25901a591e9d962e09f4342468444ef2",
     "side": "Mozambique",
-    "usd": 63,
-    "avgPrice": 0.0253
+    "usd": 61
    },
    {
     "wallet": "0x6891589732cf8beaaf424b117d5c5c20919f6bb9",
@@ -981867,23 +981975,23 @@
    {
     "wallet": "0x12e321c11e950ce18a226f453750bb8964b67982",
     "side": "Mozambique",
-    "usd": 7
+    "usd": 6
    },
    {
     "wallet": "0x5d40576be2e9c61d283f4fd80d7a5ccf2331ba95",
     "side": "Mozambique",
-    "usd": 5
+    "usd": 4
    },
    {
     "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
     "side": "Mozambique",
-    "usd": 5,
+    "usd": 4,
     "avgPrice": 0.0199
    },
    {
     "wallet": "0x9663a1bc594a019693631f39ed50e03496185b70",
     "side": "Mozambique",
-    "usd": 5
+    "usd": 4
    },
    {
     "wallet": "0x7b12a67285f4abe780a376323b9a3953080b1a7b",
@@ -981898,7 +982006,8 @@
    {
     "wallet": "0xf4f88a1e25ff5dfae68326eb62049d6a1b7c5bf1",
     "side": "Mozambique",
-    "usd": 2
+    "usd": 2,
+    "avgPrice": 0.03
    },
    {
     "wallet": "0x7e5972bfc25819775ee5a9d4f191919375487b8b",
@@ -981922,14 +982031,566 @@
     "avgPrice": 0.026
    }
   ],
-  "hoursToKickoff": 2.69,
-  "capturedAt": "2026-10-24T05:48:36.212422+00:00",
+  "hoursToKickoff": 2.18,
+  "capturedAt": "2026-10-24T06:19:00.739666+00:00",
   "koTs": "2026-10-24T08:30:00+00:00",
   "cond": "0x159621ad1325fa763f9e3ce8aefd1c5f2b05c40a9e159a88f5fd84f653dafbeb",
   "frage": "ICC Men's T20 World Cup Africa Sub Regional Qualifier C: Uganda vs Mozambique",
   "tokens": {
    "Uganda": "73270134959557599793885185673969815023172496371171557415886680510617967289356",
    "Mozambique": "74110926975144215012012259876399851733441382107208285446884643537321652241650"
+  }
+ },
+ "atp-forti-batalla-2026-10-23": {
+  "shares": {
+   "Francesco Forti": 19773.570707775005,
+   "Oriol Roca Batalla": 68108.84708075001
+  },
+  "prices": {
+   "Francesco Forti": 0.225,
+   "Oriol Roca Batalla": 0.775
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 142105,
+  "whales": [
+   {
+    "wallet": "0xebfdb8164f0e0748818d6c7a9ac85a323267fd63",
+    "side": "Francesco Forti",
+    "usd": 14219
+   },
+   {
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "side": "Oriol Roca Batalla",
+    "usd": 11644
+   },
+   {
+    "wallet": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
+    "side": "Oriol Roca Batalla",
+    "usd": 11510,
+    "avgPrice": 0.7832
+   },
+   {
+    "wallet": "0xa31c26cb45331da8389bece7a1250fceb5d6bdf7",
+    "side": "Oriol Roca Batalla",
+    "usd": 8248,
+    "avgPrice": 0.8039
+   },
+   {
+    "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
+    "side": "Oriol Roca Batalla",
+    "usd": 6007,
+    "avgPrice": 0.8037
+   },
+   {
+    "wallet": "0xd9e0aaca471f489be338fd0f91a26e8669a805f2",
+    "side": "Oriol Roca Batalla",
+    "usd": 3455,
+    "avgPrice": 0.779
+   },
+   {
+    "wallet": "0x7c1ee865a785de4c00ee90ed86a38489fb8bbab3",
+    "side": "Oriol Roca Batalla",
+    "usd": 3359,
+    "avgPrice": 0.7733
+   },
+   {
+    "wallet": "0xf12f7688a0bc8cc744ef871f70b74c16a976b30f",
+    "side": "Francesco Forti",
+    "usd": 2668,
+    "avgPrice": 0.3794
+   },
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Oriol Roca Batalla",
+    "usd": 2312,
+    "avgPrice": 0.7978
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Oriol Roca Batalla",
+    "usd": 2010,
+    "avgPrice": 0.7058
+   },
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "side": "Oriol Roca Batalla",
+    "usd": 1941
+   },
+   {
+    "wallet": "0x1ef2932c7c332bdb5aa4c76ea4efd042fd1feec1",
+    "side": "Oriol Roca Batalla",
+    "usd": 1844,
+    "avgPrice": 0.7699
+   },
+   {
+    "wallet": "0x796fc6fda8f8e03c03e2a2d012155989960300f6",
+    "side": "Oriol Roca Batalla",
+    "usd": 1439,
+    "avgPrice": 0.7888
+   },
+   {
+    "wallet": "0xcd3fe2f02819b8a9dc435a892251d3f226ef8e2b",
+    "side": "Oriol Roca Batalla",
+    "usd": 1226,
+    "avgPrice": 0.79
+   },
+   {
+    "wallet": "0x5c035da7d3df55a0458706830c542eda097a31bb",
+    "side": "Francesco Forti",
+    "usd": 1047,
+    "avgPrice": 0.2204
+   },
+   {
+    "wallet": "0x2759769cd371bee44ec5bfc5e72c7f1f092b2b38",
+    "side": "Oriol Roca Batalla",
+    "usd": 545,
+    "avgPrice": 0.7699
+   },
+   {
+    "wallet": "0xcb9f5c1b3dc335f6f4740be193062271b759a6c0",
+    "side": "Oriol Roca Batalla",
+    "usd": 519,
+    "avgPrice": 0.5435
+   },
+   {
+    "wallet": "0x1b47e9b128e6b671edebfb2cac23dd3efc40d814",
+    "side": "Oriol Roca Batalla",
+    "usd": 422,
+    "avgPrice": 0.7799
+   },
+   {
+    "wallet": "0x98db8cca55c32b24cfb414b5b43d273f4e1fdd17",
+    "side": "Oriol Roca Batalla",
+    "usd": 410,
+    "avgPrice": 0.7245
+   },
+   {
+    "wallet": "0x7e5972bfc25819775ee5a9d4f191919375487b8b",
+    "side": "Oriol Roca Batalla",
+    "usd": 388,
+    "avgPrice": 0.775
+   },
+   {
+    "wallet": "0x1e814bedfdb7bde5434791a927777deeeac5ae48",
+    "side": "Francesco Forti",
+    "usd": 379
+   },
+   {
+    "wallet": "0xb4d250f58c26840e09723a83ce9c8149aa32ce99",
+    "side": "Oriol Roca Batalla",
+    "usd": 374,
+    "avgPrice": 0.6892
+   },
+   {
+    "wallet": "0xe5502f3b033ebcd64233b5ffc43c44c24170be3f",
+    "side": "Oriol Roca Batalla",
+    "usd": 358,
+    "avgPrice": 0.8035
+   },
+   {
+    "wallet": "0xe91171f655be1568e4c63f29663c0028649e3d4e",
+    "side": "Oriol Roca Batalla",
+    "usd": 318,
+    "avgPrice": 0.7
+   },
+   {
+    "wallet": "0x7547479d43f4b52d892a6f2254050eea50edd158",
+    "side": "Oriol Roca Batalla",
+    "usd": 309
+   },
+   {
+    "wallet": "0x92c89d98c71fa68d2c32cdfa9426b56ab07c45f6",
+    "side": "Oriol Roca Batalla",
+    "usd": 308,
+    "avgPrice": 0.786
+   },
+   {
+    "wallet": "0x365f951dc281322d83f6fcda884c7f66a938706a",
+    "side": "Francesco Forti",
+    "usd": 304,
+    "avgPrice": 0.2367
+   },
+   {
+    "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
+    "side": "Oriol Roca Batalla",
+    "usd": 263
+   },
+   {
+    "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
+    "side": "Oriol Roca Batalla",
+    "usd": 246
+   },
+   {
+    "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
+    "side": "Oriol Roca Batalla",
+    "usd": 229
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Oriol Roca Batalla",
+    "usd": 209,
+    "avgPrice": 0.7679
+   },
+   {
+    "wallet": "0x0f17aacbaa5e2382b44fddc45a3ed42f84d70724",
+    "side": "Francesco Forti",
+    "usd": 158,
+    "avgPrice": 0.2
+   },
+   {
+    "wallet": "0xc22e256c5abbcad011aed7a2963d16a4f886eab8",
+    "side": "Oriol Roca Batalla",
+    "usd": 132,
+    "avgPrice": 0.7676
+   },
+   {
+    "wallet": "0x1d6d6b39a4ee425ebc511d1dbafe5098a2aef2b4",
+    "side": "Oriol Roca Batalla",
+    "usd": 124,
+    "avgPrice": 0.5
+   },
+   {
+    "wallet": "0xbfd770b7ff07fb2ece41b0e7c593db65a84cf0bf",
+    "side": "Oriol Roca Batalla",
+    "usd": 123,
+    "avgPrice": 0.7709
+   },
+   {
+    "wallet": "0xa278b41b5afda5d18da683eb7f851a7b2dc13369",
+    "side": "Francesco Forti",
+    "usd": 118,
+    "avgPrice": 0.2599
+   },
+   {
+    "wallet": "0x125a399cc5cb7cf7cbe8f010a05f0ed673374f02",
+    "side": "Oriol Roca Batalla",
+    "usd": 103,
+    "avgPrice": 0.7499
+   },
+   {
+    "wallet": "0x3e1ac4bede0a559fc47e78e8a74adeeb6f704d5c",
+    "side": "Oriol Roca Batalla",
+    "usd": 91
+   },
+   {
+    "wallet": "0x5d40576be2e9c61d283f4fd80d7a5ccf2331ba95",
+    "side": "Francesco Forti",
+    "usd": 89,
+    "avgPrice": 0.2683
+   },
+   {
+    "wallet": "0xda770326bd091d26f816917aa83a6baff668683f",
+    "side": "Oriol Roca Batalla",
+    "usd": 85,
+    "avgPrice": 0.754
+   }
+  ],
+  "hoursToKickoff": 2.68,
+  "capturedAt": "2026-10-24T06:19:00.739666+00:00",
+  "koTs": "2026-10-24T09:00:00+00:00",
+  "cond": "0x4c85551adaee3c390ce909887210afef62ce0bea8b66d65d325bb1c309c122f0",
+  "frage": "Florence: Francesco Forti vs Oriol Roca Batalla",
+  "tokens": {
+   "Francesco Forti": "15368211788446104637834274555950426922891013768283891600891754555028493231475",
+   "Oriol Roca Batalla": "7623075789345546213029167498043091445621503311010871017484953966701111245647"
+  },
+  "book": {
+   "side": "Oriol Roca Batalla",
+   "bid": 0.77,
+   "ask": 0.78,
+   "spreadC": 1.0,
+   "spreadPct": 1.28,
+   "bids": [
+    [
+     0.77,
+     103
+    ],
+    [
+     0.75,
+     200
+    ],
+    [
+     0.74,
+     534
+    ],
+    [
+     0.73,
+     391
+    ],
+    [
+     0.72,
+     148
+    ],
+    [
+     0.69,
+     1687
+    ]
+   ],
+   "asks": [
+    [
+     0.78,
+     352
+    ],
+    [
+     0.79,
+     466
+    ],
+    [
+     0.8,
+     755
+    ],
+    [
+     0.81,
+     1324
+    ],
+    [
+     0.82,
+     517
+    ],
+    [
+     0.83,
+     263
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x1ef2932c7c332bdb5aa4c76ea4efd042fd1feec1",
+    "action": "BUY",
+    "side": "Oriol Roca Batalla",
+    "price": 0.77,
+    "usd": 1513,
+    "ts": 1792811342
+   }
+  ]
+ },
+ "chi-hen-bgu-2026-10-24-more-markets": {
+  "shares": {
+   "Over": 4791.914644335,
+   "Under": 2999.816484665
+  },
+  "prices": {
+   "Over": 0.615,
+   "Under": 0.385
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 8718,
+  "whales": [
+   {
+    "wallet": "0x94e4c271a84d72f9efc8326606cee80b6e7c87e0",
+    "side": "Under",
+    "usd": 2974
+   },
+   {
+    "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+    "side": "Over",
+    "usd": 1655
+   },
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Over",
+    "usd": 1528,
+    "avgPrice": 0.6207
+   },
+   {
+    "wallet": "0x40ca38c18ef099ed9e05ae65ea8ca401e8c3a96d",
+    "side": "Over",
+    "usd": 397
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Over",
+    "usd": 277,
+    "avgPrice": 0.6266
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Over",
+    "usd": 203,
+    "avgPrice": 0.6299
+   },
+   {
+    "wallet": "0x7ea571c40408f340c1c8fc8eaacebab53c1bde7b",
+    "side": "Over",
+    "usd": 195
+   },
+   {
+    "wallet": "0xe88f0e123e908ac33734fc78c971a768ffbf6566",
+    "side": "Over",
+    "usd": 139,
+    "avgPrice": 0.62
+   },
+   {
+    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
+    "side": "Over",
+    "usd": 92
+   },
+   {
+    "wallet": "0x340ea8b2e6634b7555a61187d1ea443785cd385b",
+    "side": "Over",
+    "usd": 62
+   },
+   {
+    "wallet": "0x5d40576be2e9c61d283f4fd80d7a5ccf2331ba95",
+    "side": "Over",
+    "usd": 62
+   },
+   {
+    "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
+    "side": "Over",
+    "usd": 41,
+    "avgPrice": 0.62
+   },
+   {
+    "wallet": "0x3e1ac4bede0a559fc47e78e8a74adeeb6f704d5c",
+    "side": "Under",
+    "usd": 20
+   },
+   {
+    "wallet": "0x63ff86b0729d6fe8d3462476edc968452468a9bb",
+    "side": "Over",
+    "usd": 18,
+    "avgPrice": 0.62
+   },
+   {
+    "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
+    "side": "Over",
+    "usd": 18,
+    "avgPrice": 0.62
+   },
+   {
+    "wallet": "0x86d021495fbfb33cdb4761100f4d0d184174904e",
+    "side": "Over",
+    "usd": 15
+   },
+   {
+    "wallet": "0xd619b68e64f256f8ddd185b261c8679eacf0c461",
+    "side": "Over",
+    "usd": 11
+   },
+   {
+    "wallet": "0xf545bd981d2b6bdbbd32a7a4b2b072726255305b",
+    "side": "Over",
+    "usd": 7
+   },
+   {
+    "wallet": "0x2bd3004bba261b8d8bfcccc9a05fed5a66e1c3a1",
+    "side": "Over",
+    "usd": 6
+   },
+   {
+    "wallet": "0xc3a7bca628ccd2fd4bfc72f86c1f257e96e43172",
+    "side": "Over",
+    "usd": 5
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "Over",
+    "usd": 5
+   },
+   {
+    "wallet": "0x1eea2ca273d688b83b4bafd625a085b065a2af80",
+    "side": "Over",
+    "usd": 3
+   },
+   {
+    "wallet": "0x78b33b7403ce421279da40fd098ae7420d6a65a1",
+    "side": "Over",
+    "usd": 3
+   },
+   {
+    "wallet": "0xc846f5368ab49a854d2280b7ecff92669824c413",
+    "side": "Over",
+    "usd": 3
+   },
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "side": "Under",
+    "usd": 2
+   },
+   {
+    "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
+    "side": "Under",
+    "usd": 2
+   }
+  ],
+  "hoursToKickoff": 1.18,
+  "capturedAt": "2026-10-24T06:19:00.739666+00:00",
+  "koTs": "2026-10-24T07:30:00+00:00",
+  "cond": "0xcf2de654e2d749cb46c86028219d1a828b0c5550c4d6095f0f6a49f3215a3e29",
+  "frage": "Henan FC vs. Beijing Guoan FC: O/U 2.5",
+  "tokens": {
+   "Over": "90934463104153704367302570805847963454815824483278705221064912263593770275705",
+   "Under": "115419131692831934664712410946270664091400844881604688086176884375546859368309"
+  },
+  "book": {
+   "side": "Over",
+   "bid": 0.61,
+   "ask": 0.62,
+   "spreadC": 1.0,
+   "spreadPct": 1.61,
+   "bids": [
+    [
+     0.61,
+     1379
+    ],
+    [
+     0.6,
+     4249
+    ],
+    [
+     0.59,
+     3673
+    ],
+    [
+     0.58,
+     1056
+    ],
+    [
+     0.57,
+     2475
+    ],
+    [
+     0.56,
+     10
+    ]
+   ],
+   "asks": [
+    [
+     0.62,
+     2517
+    ],
+    [
+     0.63,
+     4087
+    ],
+    [
+     0.64,
+     3957
+    ],
+    [
+     0.65,
+     9137
+    ],
+    [
+     0.66,
+     144
+    ],
+    [
+     0.67,
+     3672
+    ]
+   ]
   }
  }
 }
