@@ -1,34 +1,5 @@
 [
 {
-"k": "wta-bouzkov-zhen-2026-10-04|Qinwen Zheng",
-"key": "wta-bouzkov-zhen-2026-10-04",
-"side": "Qinwen Zheng",
-"wallet": "0xa278b41b5afda5d18da683eb7f851a7b2dc13369",
-"wallets": [
-"0xa278b41b5afda5d18da683eb7f851a7b2dc13369",
-"0xa772e2ca9f119162d03330f3e66c0556a2068686"
-],
-"nWallets": 2,
-"league": "TENNIS",
-"cat": "Tennis",
-"usd": 113.0,
-"maxEinzel": 102.0,
-"pushPrice": 0.575,
-"whaleEntry": 0.575,
-"htkMess": 2.45,
-"sentAt": "2026-10-05T02:03:19Z",
-"status": "settled",
-"nurBeobachtung": true,
-"result": "win",
-"winner": "Qinwen Zheng",
-"closePrice": 0.635,
-"stake": 10.0,
-"pnl": 7.39,
-"clvPP": 6.0,
-"settledTs": "2026-10-05T10:03:55.732574+00:00",
-"resolvedTs": "2026-10-05T10:03:41.800626+00:00"
-},
-{
 "k": "wta-charaev-kartal-2026-10-03|Sonay Kartal",
 "key": "wta-charaev-kartal-2026-10-03",
 "side": "Sonay Kartal",
@@ -11078,9 +11049,10 @@
 "whaleEntry": 0.485,
 "htkMess": 2.53,
 "sentAt": "2026-10-14T16:28:40Z",
-"status": "pending",
+"status": "unaufloesbar",
 "nurBeobachtung": true,
-"nichtAufloesbarGrund": "Buendel-Slug ohne Linie (Under)"
+"nichtAufloesbarGrund": "Buendel-Slug ohne Linie (Under)",
+"ageDays": 10.02
 },
 {
 "k": "ucl-bog-bvb-2026-10-14|BV Borussia 09 Dortmund",
@@ -11219,9 +11191,10 @@
 "whaleEntry": 0.505,
 "htkMess": 2.53,
 "sentAt": "2026-10-14T16:28:40Z",
-"status": "pending",
+"status": "unaufloesbar",
 "nurBeobachtung": true,
-"nichtAufloesbarGrund": "Buendel-Slug ohne Linie (Under)"
+"nichtAufloesbarGrund": "Buendel-Slug ohne Linie (Under)",
+"ageDays": 10.02
 },
 {
 "k": "ucl-bet-por-2026-10-14-total-corners|Under",
@@ -23811,8 +23784,18 @@
 "whaleEntry": 0.475,
 "htkMess": 2.7,
 "sentAt": "2026-10-24T11:18:43Z",
-"status": "pending",
-"nurBeobachtung": true
+"status": "settled",
+"nurBeobachtung": true,
+"cond": "0x8b903fd72a8f09f16d4be29fb66b91e4ac214367ee0331706e2aed4f3e8e715c",
+"condQuelle": "erfassung+wallet",
+"result": "loss",
+"winner": "Over",
+"closePrice": 0.505,
+"stake": 10.0,
+"pnl": -10.0,
+"clvPP": 3.0,
+"settledTs": "2026-10-24T16:50:34.553082+00:00",
+"resolvedTs": "2026-10-24T16:50:07.654726+00:00"
 },
 {
 "k": "ufc-nik2-abd8-2026-10-24|Abdul-Rakhman Yakhyaev",
@@ -24257,6 +24240,29 @@
 "whaleEntry": 0.9575,
 "htkMess": 0.17,
 "sentAt": "2026-10-24T16:19:58Z",
+"status": "pending",
+"nurBeobachtung": true
+},
+{
+"k": "por-gil-por-2026-10-24|FC Porto",
+"key": "por-gil-por-2026-10-24",
+"side": "FC Porto",
+"wallet": "0x413f29bc7f5ce2a2d8d28fb3a8b5d75199d247f3",
+"wallets": [
+"0x413f29bc7f5ce2a2d8d28fb3a8b5d75199d247f3",
+"0x594edb9112f526fa6a80b8f858a6379c8a2c1c11",
+"0x5af3203a38e5f7deb356dc05aea613936c231534",
+"0xb881159f9ae3adf227eb19fd4473b7dc789a20a1"
+],
+"nWallets": 4,
+"league": "PRIMEIRA-LIGA",
+"cat": "Fußball",
+"usd": 18285.0,
+"maxEinzel": 16875.0,
+"pushPrice": 0.675,
+"whaleEntry": 0.675,
+"htkMess": 2.67,
+"sentAt": "2026-10-24T16:50:32Z",
 "status": "pending",
 "nurBeobachtung": true
 }
