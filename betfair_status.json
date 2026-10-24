@@ -25,11 +25,11 @@
       "ok": false,
       "nFail": 5,
       "failures": [
-        "36180881: zuletzt 28.043 € und Anpfiff erst in 20.7 h — trotzdem nicht mehr im Feed",
-        "36177340: zuletzt 42.658 € und Anpfiff erst in 21.7 h — trotzdem nicht mehr im Feed",
-        "36177333: zuletzt 31.535 € und Anpfiff erst in 21.7 h — trotzdem nicht mehr im Feed",
-        "36209508: zuletzt 29.570 € und Anpfiff erst in 24.7 h — trotzdem nicht mehr im Feed",
-        "36180861: zuletzt 22.961 € und Anpfiff erst in 25.2 h — trotzdem nicht mehr im Feed"
+        "36180881: zuletzt 28.043 € und Anpfiff erst in 20.4 h — trotzdem nicht mehr im Feed",
+        "36177340: zuletzt 42.658 € und Anpfiff erst in 21.4 h — trotzdem nicht mehr im Feed",
+        "36177333: zuletzt 31.535 € und Anpfiff erst in 21.4 h — trotzdem nicht mehr im Feed",
+        "36209508: zuletzt 29.570 € und Anpfiff erst in 24.4 h — trotzdem nicht mehr im Feed",
+        "36180861: zuletzt 22.961 € und Anpfiff erst in 24.9 h — trotzdem nicht mehr im Feed"
       ],
       "note": "Der Detail-Deckel darf nicht das teuerste Spiel schneiden — genau das ist am 08.09. passiert (alle vier CL-Spiele, Real Madrid mit 102.861 €)."
     },
@@ -40,7 +40,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "nur 80 von 109 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: San Lorenzo v Newells (Argentinian Primera Division); Plaza Colonia v Tacuarembo (Uruguayan Segunda Division); Deportivo Madryn v San Telmo (Argentinian Primera Nacional)"
+        "nur 72 von 99 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Chapecoense v Fluminense (Brazilian Serie A); Club 2 de Mayo v Deportivo Recoleta (Paraguayan Primera Division); San Lorenzo v Newells (Argentinian Primera Division)"
       ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
@@ -98,30 +98,31 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 740952 verbraucht, 4259048 uebrig"
+      "note": "Kontingent: 741534 verbraucht, 4258466 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 13,
+      "nFail": 14,
       "failures": [
-        "US Amal Tiznit v CODM Meknes (Moroccan Botola Pro 1): name — bester Kandidat „US Catanzaro 1929 v Ascoli“",
         "Al Hidd v Manama Club (Bahraini Premier): name — bester Kandidat „Al-Kholood v Al-Ettifaq“",
-        "AS Real Bamako v Esperance Sportive Zarzis (CAF Confederation Cup Qualifiers): name — bester Kandidat „Napoli v AS Roma“",
+        "US Amal Tiznit v CODM Meknes (Moroccan Botola Pro 1): name — bester Kandidat „US Catanzaro 1929 v Ascoli“",
         "US Savoia 1908 v Cosenza (Italian Serie C): name — bester Kandidat „US Catanzaro 1929 v Ascoli“",
         "Bahla v Al-Nasr (Omani Professional League): name — bester Kandidat „Al-Kholood v Al-Ettifaq“",
-        "Al-Duhail SC v Lusail (Qatari Stars League): name — bester Kandidat „Al-Kholood v Al-Ettifaq“",
-        "Al Merreikh v Horoya AC (CAF Champions League Qualifiers): name — bester Kandidat „Al-Kholood v Al-Ettifaq“",
         "FCSB v Rapid Bucharest (Romanian Liga I): name — bester Kandidat „Rapid Wien v Austria Lustenau“",
-        "Sporting Club d'Escaldes v Casa De Portugal (Andorran Primera Divisio): zeit — bester Kandidat „Casa Pia v Sporting Lisbon“ · 145.8h Anpfiff-Abstand",
+        "Al-Duhail SC v Lusail (Qatari Stars League): name — bester Kandidat „Al-Kholood v Al-Ettifaq“",
+        "Sport Huancayo v Alianza Atletico (Peruvian Primera Division): name — bester Kandidat „Atlético Madrid v Deportivo La Coruña“",
         "EC Vitoria Salvador v Athletico-PR (Brazilian Serie A): name — bester Kandidat „Vitoria v Atletico Paranaense“",
-        "Hartberg v RZ Pellets WAC (Austrian Bundesliga): name — bester Kandidat „Hartberg v Wolfsberger AC“",
+        "Al Merreikh v Horoya AC (CAF Champions League Qualifiers): name — bester Kandidat „Al-Kholood v Al-Ettifaq“",
+        "Sporting Club d'Escaldes v Casa De Portugal (Andorran Primera Divisio): zeit — bester Kandidat „Casa Pia v Sporting Lisbon“ · 145.8h Anpfiff-Abstand",
+        "Union Magdalena v Atletico FC Cali (Colombian Primera B): name — bester Kandidat „Atlético Madrid v Deportivo La Coruña“",
         "AEK Athens v Panaitolikos (Greek Super League): name — bester Kandidat „AEK Athens v Panetolikos Agrinio“",
-        "Ham-Kam v Rosenborg (Norwegian Eliteserien): name — bester Kandidat „HamKam v Rosenborg“"
+        "Ham-Kam v Rosenborg (Norwegian Eliteserien): name — bester Kandidat „HamKam v Rosenborg“",
+        "Hartberg v RZ Pellets WAC (Austrian Bundesliga): name — bester Kandidat „Hartberg v Wolfsberger AC“"
       ],
-      "note": "ohne Anker: kein_kandidat 76 · kein_pinnacle 3 · name 12 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 78 · kein_pinnacle 5 · name 13 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -130,7 +131,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 1 — Djurgardens v Orgryte (35 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 3 — Catanzaro v Ascoli (23 Buecher, ohne Pinnacle); Al-Wakra v Al Arabi (QAT) (22 Buecher, ohne Pinnacle); Djurgardens v Orgryte (35 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -206,5 +207,5 @@
     }
   ],
   "nFail": 4,
-  "generatedAt": "2026-10-24T16:17:32.828258+00:00"
+  "generatedAt": "2026-10-24T16:34:22.745497+00:00"
 }
