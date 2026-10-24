@@ -25,11 +25,11 @@
       "ok": false,
       "nFail": 5,
       "failures": [
-        "36180881: zuletzt 28.043 € und Anpfiff erst in 19.2 h — trotzdem nicht mehr im Feed",
-        "36177340: zuletzt 42.658 € und Anpfiff erst in 20.2 h — trotzdem nicht mehr im Feed",
-        "36177333: zuletzt 31.535 € und Anpfiff erst in 20.2 h — trotzdem nicht mehr im Feed",
-        "36209508: zuletzt 29.570 € und Anpfiff erst in 23.2 h — trotzdem nicht mehr im Feed",
-        "36180861: zuletzt 22.961 € und Anpfiff erst in 23.7 h — trotzdem nicht mehr im Feed"
+        "36180881: zuletzt 28.043 € und Anpfiff erst in 18.9 h — trotzdem nicht mehr im Feed",
+        "36177340: zuletzt 42.658 € und Anpfiff erst in 19.9 h — trotzdem nicht mehr im Feed",
+        "36177333: zuletzt 31.535 € und Anpfiff erst in 19.9 h — trotzdem nicht mehr im Feed",
+        "36209508: zuletzt 29.570 € und Anpfiff erst in 22.9 h — trotzdem nicht mehr im Feed",
+        "36180861: zuletzt 22.961 € und Anpfiff erst in 23.4 h — trotzdem nicht mehr im Feed"
       ],
       "note": "Der Detail-Deckel darf nicht das teuerste Spiel schneiden — genau das ist am 08.09. passiert (alle vier CL-Spiele, Real Madrid mit 102.861 €)."
     },
@@ -96,29 +96,30 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 744678 verbraucht, 4255322 uebrig"
+      "note": "Kontingent: 745239 verbraucht, 4254761 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 12,
+      "nFail": 13,
       "failures": [
+        "FCSB v Rapid Bucharest (Romanian Liga I): name — bester Kandidat „Rapid Wien v Austria Lustenau“",
         "Al Merreikh v Horoya AC (CAF Champions League Qualifiers): name — bester Kandidat „Al-Riyadh v Al-Taawoun“",
         "Al-Duhail SC v Lusail (Qatari Stars League): name — bester Kandidat „Al-Riyadh v Al-Taawoun“",
-        "Al Hidd v Manama Club (Bahraini Premier): name — bester Kandidat „Al-Riyadh v Al-Taawoun“",
-        "FCSB v Rapid Bucharest (Romanian Liga I): name — bester Kandidat „Rapid Wien v Austria Lustenau“",
         "EC Vitoria Salvador v Athletico-PR (Brazilian Serie A): name — bester Kandidat „Vitoria v Atletico Paranaense“",
         "CRB v Londrina (Brazilian Serie B): name — bester Kandidat „Clube de Regatas Brasil v Londrina“",
         "Sporting Club d'Escaldes v Casa De Portugal (Andorran Primera Divisio): zeit — bester Kandidat „Casa Pia v Sporting Lisbon“ · 145.8h Anpfiff-Abstand",
+        "Puerto Montt v Union San Felipe (Chilean Primera B): name — bester Kandidat „San Lorenzo v Newells Old Boys“",
         "CA Colegiales v Atletico Rafaela (Argentinian Primera Nacional): zeit — bester Kandidat „Atlético Huracán v CA Tigre BA“ · 143.0h Anpfiff-Abstand",
         "OHiggins v Cobresal (Chilean Primera Division): name — bester Kandidat „O'Higgins v Cobresal“",
-        "AEK Athens v Panaitolikos (Greek Super League): name — bester Kandidat „AEK Athens v Panetolikos Agrinio“",
-        "Ham-Kam v Rosenborg (Norwegian Eliteserien): name — bester Kandidat „HamKam v Rosenborg“",
-        "Sport Huancayo v Alianza Atletico (Peruvian Primera Division): name — bester Kandidat „Atlético Madrid v Deportivo La Coruña“"
+        "Deportivo Madryn v San Telmo (Argentinian Primera Nacional): name — bester Kandidat „San Lorenzo v Newells Old Boys“",
+        "CD Universitario v Atletico Independiente (Panamanian Premier League): name — bester Kandidat „Rosario Central v Atlético Huracán“",
+        "Municipal Grecia v A.D. Cofutpa (Costa Rican Liga de Ascenso): name — bester Kandidat „D.C. United v FC Cincinnati“",
+        "AEK Athens v Panaitolikos (Greek Super League): name — bester Kandidat „AEK Athens v Panetolikos Agrinio“"
       ],
-      "note": "ohne Anker: kein_kandidat 84 · kein_pinnacle 4 · name 10 · zeit 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 72 · kein_pinnacle 3 · name 11 · zeit 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -127,7 +128,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 4 — Samsunspor v Amed Sportif Faaliyetler (25 Buecher, ohne Pinnacle); Servette v FC Vaduz (36 Buecher, ohne Pinnacle); Willem II v Cambuur Leeuwarden (28 Buecher, ohne Pinnacle); Girona v Celta Vigo B (7 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 3 — Rapid Vienna v SC Austria Lustenau (19 Buecher, ohne Pinnacle); Willem II v Cambuur Leeuwarden (23 Buecher, ohne Pinnacle); Girona v Celta Vigo B (7 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -136,7 +137,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 17 gewollt, 17 abgerufen, 0 mit Daten"
+      "note": "Totals: 15 gewollt, 15 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -203,5 +204,5 @@
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-10-24T17:49:00.107450+00:00"
+  "generatedAt": "2026-10-24T18:04:15.775898+00:00"
 }
