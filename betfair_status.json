@@ -23,10 +23,9 @@
       "label": "Grosses Geld faellt nicht aus dem Feed",
       "severity": "error",
       "ok": false,
-      "nFail": 2,
+      "nFail": 1,
       "failures": [
-        "36209508: zuletzt 29.570 € und Anpfiff erst in 22.4 h — trotzdem nicht mehr im Feed",
-        "36180861: zuletzt 22.961 € und Anpfiff erst in 22.9 h — trotzdem nicht mehr im Feed"
+        "36180861: zuletzt 22.961 € und Anpfiff erst in 22.7 h — trotzdem nicht mehr im Feed"
       ],
       "note": "Der Detail-Deckel darf nicht das teuerste Spiel schneiden — genau das ist am 08.09. passiert (alle vier CL-Spiele, Real Madrid mit 102.861 €)."
     },
@@ -93,22 +92,20 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 746373 verbraucht, 4253627 uebrig"
+      "note": "Kontingent: 746952 verbraucht, 4253048 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 13,
+      "nFail": 11,
       "failures": [
+        "Sporting Club d'Escaldes v Casa De Portugal (Andorran Primera Divisio): zeit — bester Kandidat „Casa Pia v Sporting Lisbon“ · 145.8h Anpfiff-Abstand",
         "Al Merreikh v Horoya AC (CAF Champions League Qualifiers): name — bester Kandidat „Al-Riyadh v Al-Taawoun“",
-        "Al-Duhail SC v Lusail (Qatari Stars League): name — bester Kandidat „Al-Riyadh v Al-Taawoun“",
-        "Shabab Al Ordon v Al Wehdat (Jordanian Premier League): zeit — bester Kandidat „Al-Shabab v Al-Ahli“ · 145.5h Anpfiff-Abstand",
         "EC Vitoria Salvador v Athletico-PR (Brazilian Serie A): name — bester Kandidat „Vitoria v Atletico Paranaense“",
         "CRB v Londrina (Brazilian Serie B): name — bester Kandidat „Clube de Regatas Brasil v Londrina“",
         "CA Colegiales v Atletico Rafaela (Argentinian Primera Nacional): zeit — bester Kandidat „Atlético Huracán v CA Tigre BA“ · 143.0h Anpfiff-Abstand",
-        "Puerto Montt v Union San Felipe (Chilean Primera B): name — bester Kandidat „San Lorenzo v Newells Old Boys“",
         "OHiggins v Cobresal (Chilean Primera Division): name — bester Kandidat „O'Higgins v Cobresal“",
         "Deportivo Madryn v San Telmo (Argentinian Primera Nacional): name — bester Kandidat „San Lorenzo v Newells Old Boys“",
         "CD Universitario v Atletico Independiente (Panamanian Premier League): name — bester Kandidat „Rosario Central v Atlético Huracán“",
@@ -116,7 +113,7 @@
         "AEK Athens v Panaitolikos (Greek Super League): name — bester Kandidat „AEK Athens v Panetolikos Agrinio“",
         "FCSB v Rapid Bucharest (Romanian Liga I): name — bester Kandidat „Rapid Wien v Austria Lustenau“"
       ],
-      "note": "ohne Anker: kein_kandidat 69 · kein_pinnacle 2 · name 11 · zeit 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 66 · kein_pinnacle 2 · name 9 · zeit 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -125,7 +122,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 2 — Rapid Vienna v SC Austria Lustenau (7 Buecher, ohne Pinnacle); Willem II v Cambuur Leeuwarden (6 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 2 — Alverca v Arouca (35 Buecher, ohne Pinnacle); Rapid Vienna v SC Austria Lustenau (7 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -134,7 +131,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 17 gewollt, 17 abgerufen, 0 mit Daten"
+      "note": "Totals: 19 gewollt, 19 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -201,5 +198,5 @@
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-10-24T18:33:33.514375+00:00"
+  "generatedAt": "2026-10-24T18:49:50.865456+00:00"
 }
