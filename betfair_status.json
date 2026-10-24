@@ -31,9 +31,11 @@
       "id": "nahe_spiele_im_feed",
       "label": "Bald anpfeifende Spiele sind im Feed",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "nur 105 von 138 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Shafa Baku FC v Kapaz Ganja (Azerbaijan Premier League); Csikszereda v FC Voluntari (Romanian Liga I); Kraluv Dvur v Ceske Budejovice (Czech 3 Liga)"
+      ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
     {
@@ -88,7 +90,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 715508 verbraucht, 4284492 uebrig"
+      "note": "Kontingent: 716084 verbraucht, 4283916 uebrig"
     },
     {
       "id": "anker_namensabgleich",
@@ -98,18 +100,18 @@
       "nFail": 11,
       "failures": [
         "Adelaide United (W) v Perth Glory (W) (Australian A-League Women): zeit — bester Kandidat „Perth Glory v Adelaide United“ · 194.0h Anpfiff-Abstand",
-        "FC Osaka v Kagoshima Utd (Japanese J League 3): zeit — bester Kandidat „Cerezo Osaka v JEF United Chiba“ · 25.0h Anpfiff-Abstand",
         "FC Magdeburg v Karlsruhe (German Bundesliga 2): name — bester Kandidat „1. FC Magdeburg v Karlsruher SC“",
-        "Beijing Tech FC v Xiamen Feilu (Chinese League 2): name — bester Kandidat „Henan FC v Beijing FC“",
         "Guangzhou Alpha v Dalian Yingbo II (Chinese League 2): name — bester Kandidat „Chengdu Rongcheng FC v Dalian Yingbo“",
+        "Beijing Tech FC v Xiamen Feilu (Chinese League 2): name — bester Kandidat „Henan FC v Beijing FC“",
         "Khovd Western v WARD FC (Mongolian Premier League): name — bester Kandidat „Western Sydney Wanderers v Auckland FC“",
         "Taian Tiankuang v Chengdu Rongcheng II (Chinese League 2): name — bester Kandidat „Chengdu Rongcheng FC v Dalian Yingbo“",
         "Foshan Nanshi FC v Nanjing City (Chinese League 1): name — bester Kandidat „Aston Villa v Manchester City“",
         "Buriram Utd v Sisaket United (Thai League 1): zeit — bester Kandidat „Incheon United v Jeju United FC“ · 6.5h Anpfiff-Abstand",
         "CS FC Dinamo Bucuresti v Gloria Popesti-Leordeni (Romanian Liga II): name — bester Kandidat „FC Akron Tolyatti v Dinamo Moscow“",
-        "BG Pathumthani United v Chiangrai Utd (Thai League 1): zeit — bester Kandidat „Incheon United v Jeju United FC“ · 7.0h Anpfiff-Abstand"
+        "BG Pathumthani United v Chiangrai Utd (Thai League 1): zeit — bester Kandidat „Incheon United v Jeju United FC“ · 7.0h Anpfiff-Abstand",
+        "FC Osaka v Kagoshima Utd (Japanese J League 3): zeit — bester Kandidat „Cerezo Osaka v JEF United Chiba“ · 25.0h Anpfiff-Abstand"
       ],
-      "note": "ohne Anker: kein_kandidat 73 · name 7 · zeit 4. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 73 · kein_pinnacle 2 · name 7 · zeit 4. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -118,7 +120,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 0"
+      "note": "Quelle ohne Pinnacle: 1 — Hiroshima v Shimizu (25 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -193,6 +195,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 1,
-  "generatedAt": "2026-10-24T06:22:19.424086+00:00"
+  "nFail": 2,
+  "generatedAt": "2026-10-24T06:31:30.814436+00:00"
 }
