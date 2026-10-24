@@ -191,9 +191,9 @@
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.684,
-       "betrag": 42584,
-       "gesamt": 62258,
+       "anteil": 0.681,
+       "betrag": 42761,
+       "gesamt": 62792,
        "waehrung": "EUR",
        "quelle": "geld"
       },
@@ -309,8 +309,8 @@
    "polySide": "Juventus FC",
    "pinnMovePP": null,
    "punkte": {
-    "punkte": 3,
-    "moeglich": 4,
+    "punkte": 7,
+    "moeglich": 10,
     "dauerH": 41.47,
     "teile": [
      {
@@ -321,42 +321,60 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 86% auf der Seite"
+       "text": "Geld 78% auf der Seite"
       },
       "tiefe": {
        "ok": false,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.862,
-       "betrag": null,
-       "gesamt": null,
+       "anteil": 0.777,
+       "betrag": 28906,
+       "gesamt": 37202,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 86% auf der Seite"
+      "text": "Geld 78% auf der Seite"
      },
      {
       "buch": "POLY",
       "name": "Polymarket",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "geld": null,
-      "text": "Polymarket nicht erhoben"
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Poly-Preis 64% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein bewiesenes Wallet auf der Seite"
+      },
+      "geld": {
+       "anteil": 0.64,
+       "betrag": null,
+       "gesamt": 1233,
+       "waehrung": "USD",
+       "quelle": "preis"
+      },
+      "text": "Poly-Preis 64% auf derselben Seite"
      },
      {
       "buch": "PIN",
       "name": "Pinnacle",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "hat dieselbe Seite als Favorit"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein Move gemessen"
+      },
       "geld": null,
-      "text": "Pinnacle nicht erhoben"
+      "text": "hat dieselbe Seite als Favorit"
      },
      {
       "buch": "STAKE",
@@ -564,9 +582,9 @@
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.848,
-       "betrag": 72783,
-       "gesamt": 85829,
+       "anteil": 0.847,
+       "betrag": 72988,
+       "gesamt": 86172,
        "waehrung": "EUR",
        "quelle": "geld"
       },
@@ -682,7 +700,7 @@
    "polySide": "FC Porto",
    "pinnMovePP": null,
    "punkte": {
-    "punkte": 8,
+    "punkte": 7,
     "moeglich": 10,
     "dauerH": 2.93,
     "teile": [
@@ -690,20 +708,20 @@
       "buch": "BF",
       "name": "Betfair",
       "status": "ja",
-      "punkte": 3,
+      "punkte": 2,
       "moeglich": 3,
       "grund": {
        "ok": true,
        "text": "Geld 82% auf der Seite"
       },
       "tiefe": {
-       "ok": true,
+       "ok": false,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.819,
-       "betrag": 16646,
-       "gesamt": 20325,
+       "anteil": 0.825,
+       "betrag": 19333,
+       "gesamt": 23434,
        "waehrung": "EUR",
        "quelle": "geld"
       },
@@ -781,108 +799,97 @@
    "haltePreis": 1.49,
    "aktiv": true
   },
-  "36209515|Match Odds": {
-   "matchId": "36209515",
-   "home": "Lazio",
-   "away": "Parma",
-   "league": "Italian Serie A",
-   "kickoff": "2026-10-24T18:45:00Z",
+  "36188893|Match Odds": {
+   "matchId": "36188893",
+   "home": "Mirassol",
+   "away": "Sao Paulo",
+   "league": "Brazilian Serie A",
+   "kickoff": "2026-10-24T19:30:00Z",
    "markt": "Match Odds",
    "seite": "home",
-   "name": "Lazio",
-   "odd": 1.46,
-   "entryOdd": 1.44,
-   "anteilPct": 86,
-   "stufe": 1,
+   "name": "Mirassol",
+   "odd": 2.26,
+   "entryOdd": 2.36,
+   "anteilPct": 67,
+   "stufe": 2,
    "verstaerker": [
-    {
-     "art": "poly",
-     "text": "Poly Geld 91%",
-     "gewicht": 12
-    },
     {
      "art": "pinn",
      "text": "Pinnacle stimmt zu",
      "gewicht": 10
     },
     {
-     "art": "pinnMove",
-     "text": "Pinnacle zieht mit +2.2pp",
-     "gewicht": 14
-    },
-    {
-     "art": "streak",
-     "text": "Ungeschlagen ×9",
-     "gewicht": 8
+     "art": "track",
+     "text": "Liga trägt (+44% · n37)",
+     "gewicht": 10
     }
    ],
-   "rang": 102.5,
-   "track": null,
-   "streak": {
-    "art": "Ungeschlagen",
-    "laenge": 9,
-    "quote": 83,
-    "liga": "Serie A"
+   "rang": 76.7,
+   "track": {
+    "n": 37,
+    "roi": 0.4373,
+    "roiUg": 0.1544,
+    "roiOg": 0.7202,
+    "traegt": true,
+    "verliert": false,
+    "fade": false
    },
-   "poly": {
-    "anteilPct": 91,
-    "usd": 82834,
-    "odd": 1.5
-   },
-   "polyStatus": "ja",
-   "polyKey": "sea-laz-par-2026-10-24",
-   "polySide": "SS Lazio",
-   "pinnMovePP": 0.0,
+   "streak": null,
+   "poly": null,
+   "polyStatus": "nein",
+   "polyKey": "bra-mir-sao-2026-10-24",
+   "polySide": "Mirassol FC",
+   "pinnMovePP": null,
    "punkte": {
-    "punkte": 7,
-    "moeglich": 13,
-    "dauerH": 1.95,
+    "punkte": 5,
+    "moeglich": 10,
+    "dauerH": 0.68,
     "teile": [
      {
       "buch": "BF",
       "name": "Betfair",
       "status": "ja",
-      "punkte": 2,
-      "moeglich": 3,
-      "grund": {
-       "ok": true,
-       "text": "Geld 88% auf der Seite"
-      },
-      "tiefe": {
-       "ok": false,
-       "text": "frischer Zufluss und Quote zieht mit"
-      },
-      "geld": {
-       "anteil": 0.878,
-       "betrag": 455177,
-       "gesamt": 518425,
-       "waehrung": "EUR",
-       "quelle": "geld"
-      },
-      "text": "Geld 88% auf der Seite"
-     },
-     {
-      "buch": "POLY",
-      "name": "Polymarket",
-      "status": "ja",
       "punkte": 3,
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Poly-Geld 82% auf derselben Seite"
+       "text": "Geld 67% auf der Seite"
       },
       "tiefe": {
        "ok": true,
-       "text": "5 bewiesene Wallets drauf"
+       "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.82,
-       "betrag": 94942,
-       "gesamt": 115783,
-       "waehrung": "USD",
+       "anteil": 0.673,
+       "betrag": 4228,
+       "gesamt": 6283,
+       "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Poly-Geld 82% auf derselben Seite"
+      "text": "Geld 67% auf der Seite"
+     },
+     {
+      "buch": "POLY",
+      "name": "Polymarket",
+      "status": "nein",
+      "punkte": 0,
+      "moeglich": 3,
+      "grund": {
+       "ok": false,
+       "text": "Poly-Preis 42% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein bewiesenes Wallet auf der Seite"
+      },
+      "geld": {
+       "anteil": 0.42,
+       "betrag": null,
+       "gesamt": 2705,
+       "waehrung": "USD",
+       "quelle": "preis"
+      },
+      "text": "Poly-Preis 42% auf derselben Seite"
      },
      {
       "buch": "PIN",
@@ -904,25 +911,13 @@
      {
       "buch": "STAKE",
       "name": "Stake-Highroller",
-      "status": "nein",
+      "status": "unbekannt",
       "punkte": 0,
-      "moeglich": 3,
-      "grund": {
-       "ok": false,
-       "text": "$1.300 Highroller-Geld auf derselben Seite"
-      },
-      "tiefe": {
-       "ok": false,
-       "text": "25 Wetten, nicht eine einzelne"
-      },
-      "geld": {
-       "anteil": 0.0113,
-       "betrag": 1300,
-       "gesamt": 114683,
-       "waehrung": "USD",
-       "quelle": "geld"
-      },
-      "text": "$1.300 Highroller-Geld auf derselben Seite"
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Stake-Highroller nicht erhoben"
      },
      {
       "buch": "ZEIT",
@@ -932,18 +927,154 @@
       "moeglich": 1,
       "grund": {
        "ok": false,
-       "text": "steht seit 1.9h vor Anpfiff"
+       "text": "steht seit 0.7h vor Anpfiff"
       },
       "tiefe": null,
-      "text": "steht seit 1.9h vor Anpfiff"
+      "text": "steht seit 0.7h vor Anpfiff"
      }
     ]
    },
-   "wertVsPinn": -0.0255,
-   "gehaltenSeit": "2026-10-24T16:48:13.898402+00:00",
-   "zuletztAktiv": "2026-10-24T17:48:25.006581+00:00",
-   "haltePreis": 1.49,
-   "aktiv": false
+   "wertVsPinn": null,
+   "gehaltenSeit": "2026-10-24T18:48:56.153332+00:00",
+   "zuletztAktiv": "2026-10-24T18:48:56.153332+00:00",
+   "haltePreis": 2.26,
+   "aktiv": true
+  },
+  "36211888|Match Odds": {
+   "matchId": "36211888",
+   "home": "Sao Bernardo",
+   "away": "Vila Nova",
+   "league": "Brazilian Serie B",
+   "kickoff": "2026-10-24T19:30:00Z",
+   "markt": "Match Odds",
+   "seite": "away",
+   "name": "Vila Nova",
+   "odd": 2.6,
+   "entryOdd": 2.6,
+   "anteilPct": 71,
+   "stufe": 2,
+   "verstaerker": [
+    {
+     "art": "pinn",
+     "text": "Pinnacle stimmt zu",
+     "gewicht": 10
+    }
+   ],
+   "rang": 67.1,
+   "track": {
+    "n": 56,
+    "roi": 0.2071,
+    "roiUg": -0.0496,
+    "roiOg": 0.4639,
+    "traegt": false,
+    "verliert": false,
+    "fade": false
+   },
+   "streak": null,
+   "poly": null,
+   "polyStatus": "nein",
+   "polyKey": "bra2-ber-vln-2026-10-24",
+   "polySide": "Vila Nova FC",
+   "pinnMovePP": null,
+   "punkte": {
+    "punkte": 5,
+    "moeglich": 10,
+    "dauerH": 0.68,
+    "teile": [
+     {
+      "buch": "BF",
+      "name": "Betfair",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Geld 71% auf der Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "frischer Zufluss und Quote zieht mit"
+      },
+      "geld": {
+       "anteil": 0.71,
+       "betrag": 2543,
+       "gesamt": 3581,
+       "waehrung": "EUR",
+       "quelle": "geld"
+      },
+      "text": "Geld 71% auf der Seite"
+     },
+     {
+      "buch": "POLY",
+      "name": "Polymarket",
+      "status": "nein",
+      "punkte": 0,
+      "moeglich": 3,
+      "grund": {
+       "ok": false,
+       "text": "Poly-Preis 38% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein bewiesenes Wallet auf der Seite"
+      },
+      "geld": {
+       "anteil": 0.38,
+       "betrag": null,
+       "gesamt": 868,
+       "waehrung": "USD",
+       "quelle": "preis"
+      },
+      "text": "Poly-Preis 38% auf derselben Seite"
+     },
+     {
+      "buch": "PIN",
+      "name": "Pinnacle",
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "hat dieselbe Seite als Favorit"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein Move gemessen"
+      },
+      "geld": null,
+      "text": "hat dieselbe Seite als Favorit"
+     },
+     {
+      "buch": "STAKE",
+      "name": "Stake-Highroller",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "geld": null,
+      "text": "Stake-Highroller nicht erhoben"
+     },
+     {
+      "buch": "ZEIT",
+      "name": "Dauer",
+      "status": "nein",
+      "punkte": 0,
+      "moeglich": 1,
+      "grund": {
+       "ok": false,
+       "text": "steht seit 0.7h vor Anpfiff"
+      },
+      "tiefe": null,
+      "text": "steht seit 0.7h vor Anpfiff"
+     }
+    ]
+   },
+   "wertVsPinn": null,
+   "gehaltenSeit": "2026-10-24T18:48:56.153332+00:00",
+   "zuletztAktiv": "2026-10-24T18:48:56.153332+00:00",
+   "haltePreis": 2.6,
+   "aktiv": true
   }
  }
 }
