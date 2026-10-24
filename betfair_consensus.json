@@ -1,6 +1,6 @@
 {
-"generatedAt": "2026-10-24T21:50:23.626659+00:00",
-"count": 30,
+"generatedAt": "2026-10-24T22:05:32.886179+00:00",
+"count": 29,
 "covered": 25,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
@@ -48,20 +48,20 @@
 "soccer_usa_mls"
 ],
 "leaguesMitAnker": [
-"Argentinian Primera Division",
 "Brazilian Serie A",
 "Brazilian Serie B",
 "English Premier League",
 "French Ligue 1",
 "German Bundesliga",
 "Italian Serie A",
+"Mexican Liga MX",
 "Spanish La Liga",
 "US MLS"
 ],
 "leaguesMitTotals": [],
 "oddsKeysFetched": 47,
 "oddsKeysMitDaten": 47,
-"oddsEvents": 529,
+"oddsEvents": 528,
 "oddsTotals": {
 "versucht": 9,
 "mitDaten": 0,
@@ -70,14 +70,85 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 755127,
-"remaining": 4244873,
+"used": 755697,
+"remaining": 4244303,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
 },
 "ankerQuote": 0.967,
 "games": [
+{
+"matchId": "36207105",
+"home": "New York Red Bulls",
+"away": "Inter Miami CF",
+"league": "US MLS",
+"country": "US",
+"kickoff": "2026-10-24T21:30:00Z",
+"live": true,
+"moneySide": "away",
+"moneyName": "Inter Miami CF",
+"moneySharePct": 63,
+"moneyOdd": 3.85,
+"moneyDir": "out",
+"totVol": 334006,
+"pinnOdd": 3.23,
+"softOdd": 3.6,
+"softN": 37,
+"poly": {
+"vol": 258144,
+"odd": 2.9,
+"sharePct": 87,
+"shareSrc": "geld",
+"key": "mls-nyr-mia-2026-10-24",
+"sideKey": "Inter Miami CF",
+"whales": [
+{
+"wallet": "0x5fdd66ffd0325d4e8d1d86fbec50caa31770a747",
+"usd": 19672
+},
+{
+"wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+"usd": 13189
+},
+{
+"wallet": "0xe5f0ae9cc9aef77ae3c2a64c9e69caa3f335dc1d",
+"usd": 6280
+},
+{
+"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+"usd": 4765
+},
+{
+"wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
+"usd": 4256
+},
+{
+"wallet": "0xb3cfe7615d64db8dfa743a1b1a2b976911460ebd",
+"usd": 3637
+}
+],
+"whaleUsd": 63404
+},
+"pinn": {
+"home": 0.4745,
+"draw": 0.2332,
+"away": 0.2923,
+"fav": "home"
+},
+"soft": {
+"home": 0.5047,
+"draw": 0.2393,
+"away": 0.256,
+"fav": "home",
+"n": 37
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "uneinig",
+"agree": false,
+"pinnTotals": null
+},
 {
 "matchId": "36180771",
 "home": "Barcelona",
@@ -91,10 +162,10 @@
 "moneySharePct": 56,
 "moneyOdd": 4.0,
 "moneyDir": "flat",
-"totVol": 299237,
+"totVol": 300253,
 "pinnOdd": 3.81,
-"softOdd": 3.78,
-"softN": 45,
+"softOdd": 3.76,
+"softN": 44,
 "poly": {
 "vol": 595785,
 "odd": 3.92,
@@ -112,93 +183,22 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.5803,
-"draw": 0.1687,
-"away": 0.2511,
+"home": 0.5796,
+"draw": 0.1691,
+"away": 0.2513,
 "fav": "home",
-"n": 45
+"n": 44
 },
 "pinnMovePP": -0.1,
 "pinnMove": {
 "movePP": -0.1,
-"stepPP": -1.3,
+"stepPP": -0.0,
 "n": 25,
 "move": false,
-"laeuft": true
+"laeuft": false
 },
 "verdict": "uneinig",
 "agree": false,
-"pinnTotals": null
-},
-{
-"matchId": "36207105",
-"home": "New York Red Bulls",
-"away": "Inter Miami CF",
-"league": "US MLS",
-"country": "US",
-"kickoff": "2026-10-24T21:30:00Z",
-"live": true,
-"moneySide": "away",
-"moneyName": "Inter Miami CF",
-"moneySharePct": 76,
-"moneyOdd": 3.1,
-"moneyDir": "flat",
-"totVol": 244342,
-"pinnOdd": 2.01,
-"softOdd": 2.85,
-"softN": 39,
-"poly": {
-"vol": 258144,
-"odd": 2.02,
-"sharePct": 95,
-"shareSrc": "geld",
-"key": "mls-nyr-mia-2026-10-24",
-"sideKey": "Inter Miami CF",
-"whales": [
-{
-"wallet": "0x5fdd66ffd0325d4e8d1d86fbec50caa31770a747",
-"usd": 28225
-},
-{
-"wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-"usd": 18923
-},
-{
-"wallet": "0xe5f0ae9cc9aef77ae3c2a64c9e69caa3f335dc1d",
-"usd": 9010
-},
-{
-"wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
-"usd": 6107
-},
-{
-"wallet": "0x0df2c9deeb278ade65454023eca05cdcaa025d51",
-"usd": 4750
-},
-{
-"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
-"usd": 4359
-}
-],
-"whaleUsd": 88364
-},
-"pinn": {
-"home": 0.2914,
-"draw": 0.239,
-"away": 0.4697,
-"fav": "away"
-},
-"soft": {
-"home": 0.4284,
-"draw": 0.2328,
-"away": 0.3387,
-"fav": "home",
-"n": 39
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "teil",
-"agree": true,
 "pinnTotals": null
 },
 {
@@ -212,12 +212,12 @@
 "moneySide": "home",
 "moneyName": "Man Utd",
 "moneySharePct": 58,
-"moneyOdd": 2.34,
-"moneyDir": "flat",
-"totVol": 115717,
+"moneyOdd": 2.32,
+"moneyDir": "in",
+"totVol": 116246,
 "pinnOdd": 2.26,
 "softOdd": 2.2,
-"softN": 48,
+"softN": 49,
 "poly": {
 "vol": 43671,
 "odd": 2.3,
@@ -236,19 +236,90 @@
 },
 "soft": {
 "home": 0.4293,
-"draw": 0.2618,
-"away": 0.3089,
+"draw": 0.2622,
+"away": 0.3085,
 "fav": "home",
-"n": 48
+"n": 49
 },
 "pinnMovePP": -1.1,
 "pinnMove": {
 "movePP": -1.1,
-"stepPP": -0.5,
+"stepPP": 0.0,
 "n": 25,
 "move": true,
-"laeuft": true
+"laeuft": false
 },
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36188879",
+"home": "SE Palmeiras",
+"away": "Red Bull Bragantino",
+"league": "Brazilian Serie A",
+"country": "BR",
+"kickoff": "2026-10-24T21:30:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "SE Palmeiras",
+"moneySharePct": 82,
+"moneyOdd": 1.63,
+"moneyDir": "out",
+"totVol": 112007,
+"pinnOdd": 1.62,
+"softOdd": 1.59,
+"softN": 37,
+"poly": {
+"vol": 22606,
+"odd": 1.55,
+"sharePct": 85,
+"shareSrc": "geld",
+"key": "bra-pal-bra-2026-10-24",
+"sideKey": "SE Palmeiras",
+"whales": [
+{
+"wallet": "0xe8b0982b27d9664754dea25103d013bfb4fecc4b",
+"usd": 2090
+},
+{
+"wallet": "0x9ef9406884d0056b356e811e05cf497008de2052",
+"usd": 2016
+},
+{
+"wallet": "0x04e39fb018bfbc273b65c98a8f55e50aed60606b",
+"usd": 1469
+},
+{
+"wallet": "0xa466841143753310fa0f4448526595fa65641c77",
+"usd": 818
+},
+{
+"wallet": "0x724924919b3d684ce0400bc307788521d5cef5da",
+"usd": 755
+},
+{
+"wallet": "0x760907c8840491c8c86fddb843d3f1d801786c4e",
+"usd": 650
+}
+],
+"whaleUsd": 10177
+},
+"pinn": {
+"home": 0.5849,
+"draw": 0.2639,
+"away": 0.1511,
+"fav": "home"
+},
+"soft": {
+"home": 0.5752,
+"draw": 0.2639,
+"away": 0.1609,
+"fav": "home",
+"n": 37
+},
+"pinnMovePP": null,
+"pinnMove": null,
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
@@ -266,10 +337,10 @@
 "moneySharePct": 51,
 "moneyOdd": 2.18,
 "moneyDir": "flat",
-"totVol": 100655,
+"totVol": 100734,
 "pinnOdd": 2.09,
 "softOdd": 2.1,
-"softN": 48,
+"softN": 49,
 "poly": {
 "vol": 476196,
 "odd": 2.2,
@@ -287,11 +358,11 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.4546,
-"draw": 0.247,
-"away": 0.2984,
+"home": 0.4547,
+"draw": 0.2473,
+"away": 0.298,
 "fav": "home",
-"n": 48
+"n": 49
 },
 "pinnMovePP": 0.6,
 "pinnMove": {
@@ -316,12 +387,12 @@
 "moneySide": "away",
 "moneyName": "Betis",
 "moneySharePct": 72,
-"moneyOdd": 2.32,
-"moneyDir": "out",
-"totVol": 91560,
+"moneyOdd": 2.3,
+"moneyDir": "in",
+"totVol": 92018,
 "pinnOdd": 2.24,
-"softOdd": 2.2,
-"softN": 45,
+"softOdd": 2.23,
+"softN": 44,
 "poly": {
 "vol": 5216,
 "odd": 2.35,
@@ -339,11 +410,11 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.3031,
-"draw": 0.2714,
-"away": 0.4254,
+"home": 0.3016,
+"draw": 0.2719,
+"away": 0.4265,
 "fav": "away",
-"n": 45
+"n": 44
 },
 "pinnMovePP": 0.6,
 "pinnMove": {
@@ -368,9 +439,9 @@
 "moneySide": "away",
 "moneyName": "AC Milan",
 "moneySharePct": 85,
-"moneyOdd": 1.8,
-"moneyDir": "flat",
-"totVol": 88617,
+"moneyOdd": 1.81,
+"moneyDir": "out",
+"totVol": 90088,
 "pinnOdd": 1.76,
 "softOdd": 1.73,
 "softN": 48,
@@ -391,8 +462,8 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.2011,
-"draw": 0.2545,
+"home": 0.2,
+"draw": 0.2556,
 "away": 0.5444,
 "fav": "away",
 "n": 48
@@ -410,52 +481,6 @@
 "pinnTotals": null
 },
 {
-"matchId": "36188879",
-"home": "SE Palmeiras",
-"away": "Red Bull Bragantino",
-"league": "Brazilian Serie A",
-"country": "BR",
-"kickoff": "2026-10-24T21:30:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "SE Palmeiras",
-"moneySharePct": 81,
-"moneyOdd": 1.25,
-"moneyDir": "in",
-"totVol": 87728,
-"pinnOdd": 1.5,
-"softOdd": 1.5,
-"softN": 36,
-"poly": {
-"vol": 22606,
-"odd": 1.57,
-"sharePct": 64,
-"shareSrc": "preis",
-"key": "bra-pal-bra-2026-10-24",
-"sideKey": "SE Palmeiras",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.6327,
-"draw": 0.2265,
-"away": 0.1408,
-"fav": "home"
-},
-"soft": {
-"home": 0.6258,
-"draw": 0.2235,
-"away": 0.1507,
-"fav": "home",
-"n": 36
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
 "matchId": "36180829",
 "home": "Paris St-G",
 "away": "Lyon",
@@ -468,7 +493,7 @@
 "moneySharePct": 96,
 "moneyOdd": 1.44,
 "moneyDir": "flat",
-"totVol": 86624,
+"totVol": 87907,
 "pinnOdd": 1.43,
 "softOdd": 1.41,
 "softN": 46,
@@ -480,9 +505,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.6676,
-"draw": 0.1816,
-"away": 0.1507,
+"home": 0.668,
+"draw": 0.1814,
+"away": 0.1506,
 "fav": "home",
 "n": 46
 },
@@ -510,11 +535,11 @@
 "moneyName": "Brentford",
 "moneySharePct": 80,
 "moneyOdd": 1.76,
-"moneyDir": "in",
-"totVol": 77334,
+"moneyDir": "flat",
+"totVol": 78371,
 "pinnOdd": 1.74,
 "softOdd": 1.7,
-"softN": 48,
+"softN": 49,
 "poly": {
 "vol": 53861,
 "odd": 1.77,
@@ -532,17 +557,17 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.2027,
-"draw": 0.238,
-"away": 0.5593,
+"home": 0.201,
+"draw": 0.2388,
+"away": 0.5601,
 "fav": "away",
-"n": 48
+"n": 49
 },
 "pinnMovePP": -0.0,
 "pinnMove": {
 "movePP": -0.0,
 "stepPP": 0.0,
-"n": 7,
+"n": 8,
 "move": false,
 "laeuft": false
 },
@@ -562,7 +587,7 @@
 "moneyName": "Frosinone",
 "moneySharePct": 54,
 "moneyOdd": 4.1,
-"moneyDir": "out",
+"moneyDir": "flat",
 "totVol": 74596,
 "pinnOdd": 3.94,
 "softOdd": 3.75,
@@ -584,16 +609,16 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.5199,
-"draw": 0.231,
-"away": 0.249,
+"home": 0.5198,
+"draw": 0.2311,
+"away": 0.2491,
 "fav": "home",
 "n": 48
 },
 "pinnMovePP": -0.0,
 "pinnMove": {
 "movePP": -0.0,
-"stepPP": 0.1,
+"stepPP": -0.0,
 "n": 25,
 "move": false,
 "laeuft": false
@@ -603,48 +628,73 @@
 "pinnTotals": null
 },
 {
-"matchId": "36182213",
-"home": "Talleres",
-"away": "Defensa y Justicia",
-"league": "Argentinian Primera Division",
-"country": "AR",
-"kickoff": "2026-10-24T20:00:00Z",
+"matchId": "36189088",
+"home": "Vasco da Gama",
+"away": "Corinthians",
+"league": "Brazilian Serie A",
+"country": "BR",
+"kickoff": "2026-10-24T21:30:00Z",
 "live": true,
-"moneySide": "draw",
-"moneyName": "The Draw",
-"moneySharePct": 46,
-"moneyOdd": 15.5,
+"moneySide": "home",
+"moneyName": "Vasco Da Gama",
+"moneySharePct": 79,
+"moneyOdd": 1.89,
 "moneyDir": "out",
-"totVol": 65283,
-"pinnOdd": 1.62,
-"softOdd": 9.75,
-"softN": 24,
+"totVol": 66264,
+"pinnOdd": 1.79,
+"softOdd": 1.75,
+"softN": 35,
 "poly": {
-"vol": 18677,
-"odd": null,
-"sharePct": null,
-"shareSrc": null,
-"key": "arg-tal-def-2026-10-24",
-"sideKey": null,
-"whales": null,
-"whaleUsd": null
+"vol": 25189,
+"odd": 1.8,
+"sharePct": 76,
+"shareSrc": "geld",
+"key": "bra-vas-cor1-2026-10-24",
+"sideKey": "CR Vasco da Gama",
+"whales": [
+{
+"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+"usd": 1178
+},
+{
+"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+"usd": 1059
+},
+{
+"wallet": "0xcc37dfa0597c3a7706d2ad184e77a2040191c4ea",
+"usd": 957
+},
+{
+"wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+"usd": 551
+},
+{
+"wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+"usd": 336
+},
+{
+"wallet": "0xc8bc925cb646c24ac257a204a1c607e595f62956",
+"usd": 319
+}
+],
+"whaleUsd": 5563
 },
 "pinn": {
-"home": 0.2411,
-"draw": 0.582,
-"away": 0.1769,
-"fav": "draw"
+"home": 0.53,
+"draw": 0.3012,
+"away": 0.1688,
+"fav": "home"
 },
 "soft": {
-"home": 0.0263,
-"draw": 0.1181,
-"away": 0.8557,
-"fav": "away",
-"n": 24
+"home": 0.5551,
+"draw": 0.2861,
+"away": 0.1588,
+"fav": "home",
+"n": 35
 },
 "pinnMovePP": null,
 "pinnMove": null,
-"verdict": "teil",
+"verdict": "konsens",
 "agree": true,
 "pinnTotals": null
 },
@@ -658,13 +708,13 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "Leeds",
-"moneySharePct": 59,
+"moneySharePct": 58,
 "moneyOdd": 2.6,
 "moneyDir": "flat",
-"totVol": 58565,
+"totVol": 58779,
 "pinnOdd": 2.55,
 "softOdd": 2.45,
-"softN": 48,
+"softN": 49,
 "poly": {
 "vol": 19046,
 "odd": 2.6,
@@ -682,11 +732,11 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.321,
-"draw": 0.2945,
-"away": 0.3845,
+"home": 0.32,
+"draw": 0.2946,
+"away": 0.3854,
 "fav": "away",
-"n": 48
+"n": 49
 },
 "pinnMovePP": 0.0,
 "pinnMove": {
@@ -712,11 +762,11 @@
 "moneyName": "Bayern Munich",
 "moneySharePct": 80,
 "moneyOdd": 1.47,
-"moneyDir": "out",
+"moneyDir": "flat",
 "totVol": 56643,
 "pinnOdd": 1.41,
 "softOdd": 1.4,
-"softN": 46,
+"softN": 47,
 "poly": {
 "vol": 13467,
 "odd": 1.46,
@@ -734,17 +784,17 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.1501,
-"draw": 0.1723,
-"away": 0.6775,
+"home": 0.1509,
+"draw": 0.1727,
+"away": 0.6764,
 "fav": "away",
-"n": 46
+"n": 47
 },
 "pinnMovePP": -0.1,
 "pinnMove": {
 "movePP": -0.1,
-"stepPP": -0.1,
-"n": 7,
+"stepPP": -0.0,
+"n": 8,
 "move": false,
 "laeuft": false
 },
@@ -765,9 +815,9 @@
 "moneySharePct": 82,
 "moneyOdd": 1.54,
 "moneyDir": "flat",
-"totVol": 49482,
+"totVol": 49514,
 "pinnOdd": 1.51,
-"softOdd": 1.45,
+"softOdd": 1.46,
 "softN": 48,
 "poly": {
 "vol": 1245,
@@ -786,9 +836,9 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.1325,
+"home": 0.1332,
 "draw": 0.2225,
-"away": 0.645,
+"away": 0.6443,
 "fav": "away",
 "n": 48
 },
@@ -796,7 +846,7 @@
 "pinnMove": {
 "movePP": 0.0,
 "stepPP": 0.0,
-"n": 7,
+"n": 8,
 "move": false,
 "laeuft": false
 },
@@ -814,13 +864,13 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "Newcastle",
-"moneySharePct": 46,
-"moneyOdd": 2.4,
-"moneyDir": "in",
-"totVol": 47862,
+"moneySharePct": 45,
+"moneyOdd": 2.44,
+"moneyDir": "out",
+"totVol": 48620,
 "pinnOdd": 2.36,
 "softOdd": 2.3,
-"softN": 48,
+"softN": 49,
 "poly": {
 "vol": 2743,
 "odd": 2.41,
@@ -838,17 +888,17 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.3298,
-"draw": 0.2608,
-"away": 0.4094,
+"home": 0.3293,
+"draw": 0.2612,
+"away": 0.4095,
 "fav": "away",
-"n": 48
+"n": 49
 },
 "pinnMovePP": 0.0,
 "pinnMove": {
 "movePP": 0.0,
 "stepPP": 0.0,
-"n": 8,
+"n": 9,
 "move": false,
 "laeuft": false
 },
@@ -869,10 +919,10 @@
 "moneySharePct": 87,
 "moneyOdd": 1.62,
 "moneyDir": "flat",
-"totVol": 41037,
+"totVol": 41292,
 "pinnOdd": 1.6,
 "softOdd": 1.57,
-"softN": 45,
+"softN": 44,
 "poly": {
 "vol": 4470,
 "odd": 1.63,
@@ -890,66 +940,20 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.604,
+"home": 0.6039,
 "draw": 0.2433,
-"away": 0.1527,
+"away": 0.1528,
 "fav": "home",
-"n": 45
+"n": 44
 },
 "pinnMovePP": 0.1,
 "pinnMove": {
 "movePP": 0.1,
-"stepPP": 0.1,
-"n": 8,
+"stepPP": 0.0,
+"n": 9,
 "move": false,
 "laeuft": false
 },
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36189088",
-"home": "Vasco da Gama",
-"away": "Corinthians",
-"league": "Brazilian Serie A",
-"country": "BR",
-"kickoff": "2026-10-24T21:30:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Vasco Da Gama",
-"moneySharePct": 87,
-"moneyOdd": 1.79,
-"moneyDir": "out",
-"totVol": 39260,
-"pinnOdd": 1.64,
-"softOdd": 1.67,
-"softN": 36,
-"poly": {
-"vol": 25189,
-"odd": 1.77,
-"sharePct": 56,
-"shareSrc": "preis",
-"key": "bra-vas-cor1-2026-10-24",
-"sideKey": "CR Vasco da Gama",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.5784,
-"draw": 0.2613,
-"away": 0.1602,
-"fav": "home"
-},
-"soft": {
-"home": 0.5492,
-"draw": 0.2715,
-"away": 0.1794,
-"fav": "home",
-"n": 36
-},
-"pinnMovePP": null,
-"pinnMove": null,
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
@@ -966,8 +970,8 @@
 "moneyName": "Marseille",
 "moneySharePct": 84,
 "moneyOdd": 1.58,
-"moneyDir": "out",
-"totVol": 36243,
+"moneyDir": "flat",
+"totVol": 36329,
 "pinnOdd": 1.55,
 "softOdd": 1.53,
 "softN": 46,
@@ -988,9 +992,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.6177,
+"home": 0.6179,
 "draw": 0.2054,
-"away": 0.1769,
+"away": 0.1767,
 "fav": "home",
 "n": 46
 },
@@ -998,61 +1002,9 @@
 "pinnMove": {
 "movePP": -0.0,
 "stepPP": -0.0,
-"n": 5,
+"n": 6,
 "move": false,
 "laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36180803",
-"home": "Monaco",
-"away": "Lille",
-"league": "French Ligue 1",
-"country": "FR",
-"kickoff": "2026-10-25T14:00:00Z",
-"live": false,
-"moneySide": "home",
-"moneyName": "Monaco",
-"moneySharePct": 87,
-"moneyOdd": 2.04,
-"moneyDir": "flat",
-"totVol": 34530,
-"pinnOdd": 1.98,
-"softOdd": 2.0,
-"softN": 46,
-"poly": {
-"vol": 25536,
-"odd": 2.06,
-"sharePct": 48,
-"shareSrc": "preis",
-"key": "fl1-asm-lil-2026-10-25",
-"sideKey": "AS Monaco FC",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.4882,
-"draw": 0.2794,
-"away": 0.2324,
-"fav": "home"
-},
-"soft": {
-"home": 0.4728,
-"draw": 0.2739,
-"away": 0.2533,
-"fav": "home",
-"n": 46
-},
-"pinnMovePP": 2.3,
-"pinnMove": {
-"movePP": 2.3,
-"stepPP": 1.3,
-"n": 6,
-"move": true,
-"laeuft": true
 },
 "verdict": "konsens",
 "agree": true,
@@ -1068,10 +1020,10 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Inter",
-"moneySharePct": 80,
-"moneyOdd": 1.38,
-"moneyDir": "flat",
-"totVol": 33264,
+"moneySharePct": 79,
+"moneyOdd": 1.37,
+"moneyDir": "in",
+"totVol": 34558,
 "pinnOdd": 1.35,
 "softOdd": 1.33,
 "softN": 48,
@@ -1092,9 +1044,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.7064,
-"draw": 0.1724,
-"away": 0.1212,
+"home": 0.7072,
+"draw": 0.1718,
+"away": 0.121,
 "fav": "home",
 "n": 48
 },
@@ -1102,8 +1054,60 @@
 "pinnMove": {
 "movePP": -0.3,
 "stepPP": -0.0,
-"n": 6,
+"n": 7,
 "move": false,
+"laeuft": false
+},
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36180803",
+"home": "Monaco",
+"away": "Lille",
+"league": "French Ligue 1",
+"country": "FR",
+"kickoff": "2026-10-25T14:00:00Z",
+"live": false,
+"moneySide": "home",
+"moneyName": "Monaco",
+"moneySharePct": 87,
+"moneyOdd": 2.04,
+"moneyDir": "flat",
+"totVol": 34554,
+"pinnOdd": 1.98,
+"softOdd": 1.98,
+"softN": 46,
+"poly": {
+"vol": 25536,
+"odd": 2.06,
+"sharePct": 48,
+"shareSrc": "preis",
+"key": "fl1-asm-lil-2026-10-25",
+"sideKey": "AS Monaco FC",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.4882,
+"draw": 0.2794,
+"away": 0.2324,
+"fav": "home"
+},
+"soft": {
+"home": 0.476,
+"draw": 0.2748,
+"away": 0.2493,
+"fav": "home",
+"n": 46
+},
+"pinnMovePP": 2.3,
+"pinnMove": {
+"movePP": 2.3,
+"stepPP": 0.0,
+"n": 7,
+"move": true,
 "laeuft": false
 },
 "verdict": "konsens",
@@ -1120,13 +1124,13 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Real Sociedad",
-"moneySharePct": 89,
+"moneySharePct": 88,
 "moneyOdd": 1.64,
 "moneyDir": "flat",
-"totVol": 32914,
+"totVol": 33366,
 "pinnOdd": 1.61,
-"softOdd": 1.59,
-"softN": 45,
+"softOdd": 1.58,
+"softN": 44,
 "poly": {
 "vol": 1082,
 "odd": 1.65,
@@ -1144,17 +1148,17 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.5965,
-"draw": 0.2181,
-"away": 0.1854,
+"home": 0.5975,
+"draw": 0.2173,
+"away": 0.1853,
 "fav": "home",
-"n": 45
+"n": 44
 },
 "pinnMovePP": -0.0,
 "pinnMove": {
 "movePP": -0.0,
 "stepPP": -0.0,
-"n": 6,
+"n": 7,
 "move": false,
 "laeuft": false
 },
@@ -1172,10 +1176,10 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Genoa",
-"moneySharePct": 56,
+"moneySharePct": 57,
 "moneyOdd": 2.24,
 "moneyDir": "flat",
-"totVol": 26492,
+"totVol": 27415,
 "pinnOdd": 2.18,
 "softOdd": 2.1,
 "softN": 48,
@@ -1196,9 +1200,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.4439,
-"draw": 0.2878,
-"away": 0.2684,
+"home": 0.4446,
+"draw": 0.2879,
+"away": 0.2675,
 "fav": "home",
 "n": 48
 },
@@ -1206,7 +1210,7 @@
 "pinnMove": {
 "movePP": 0.0,
 "stepPP": 0.0,
-"n": 7,
+"n": 8,
 "move": false,
 "laeuft": false
 },
@@ -1225,12 +1229,12 @@
 "moneySide": "away",
 "moneyName": "Leverkusen",
 "moneySharePct": 57,
-"moneyOdd": 2.38,
-"moneyDir": "out",
-"totVol": 22338,
+"moneyOdd": 2.36,
+"moneyDir": "in",
+"totVol": 22590,
 "pinnOdd": 2.3,
 "softOdd": 2.26,
-"softN": 46,
+"softN": 47,
 "poly": {
 "vol": 1887,
 "odd": 2.35,
@@ -1248,17 +1252,17 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.3437,
-"draw": 0.2398,
-"away": 0.4165,
+"home": 0.343,
+"draw": 0.24,
+"away": 0.417,
 "fav": "away",
-"n": 46
+"n": 47
 },
 "pinnMovePP": -0.0,
 "pinnMove": {
 "movePP": -0.0,
 "stepPP": -0.0,
-"n": 4,
+"n": 5,
 "move": false,
 "laeuft": false
 },
@@ -1276,13 +1280,13 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "Fluminense",
-"moneySharePct": 88,
-"moneyOdd": 1.94,
+"moneySharePct": 86,
+"moneyOdd": 2.02,
 "moneyDir": "out",
-"totVol": 16932,
-"pinnOdd": 1.84,
-"softOdd": 1.8,
-"softN": 46,
+"totVol": 22428,
+"pinnOdd": 1.86,
+"softOdd": 1.86,
+"softN": 47,
 "poly": {
 "vol": 2518,
 "odd": 1.83,
@@ -1294,20 +1298,26 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.2144,
-"draw": 0.26,
-"away": 0.5256,
+"home": 0.2184,
+"draw": 0.2615,
+"away": 0.5201,
 "fav": "away"
 },
 "soft": {
-"home": 0.2205,
-"draw": 0.2611,
-"away": 0.5184,
+"home": 0.2333,
+"draw": 0.2632,
+"away": 0.5035,
 "fav": "away",
-"n": 46
+"n": 47
 },
-"pinnMovePP": null,
-"pinnMove": null,
+"pinnMovePP": -0.5,
+"pinnMove": {
+"movePP": -0.5,
+"stepPP": -0.5,
+"n": 2,
+"move": false,
+"laeuft": true
+},
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
@@ -1323,12 +1333,12 @@
 "moneySide": "away",
 "moneyName": "Fortaleza EC",
 "moneySharePct": 91,
-"moneyOdd": 1.39,
-"moneyDir": "out",
-"totVol": 15194,
-"pinnOdd": 1.23,
-"softOdd": 1.3,
-"softN": 32,
+"moneyOdd": 1.14,
+"moneyDir": "in",
+"totVol": 16579,
+"pinnOdd": 1.36,
+"softOdd": 1.08,
+"softN": 30,
 "poly": {
 "vol": 502,
 "odd": 1.27,
@@ -1340,17 +1350,54 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.0576,
-"draw": 0.1751,
-"away": 0.7673,
+"home": 0.0752,
+"draw": 0.2342,
+"away": 0.6906,
 "fav": "away"
 },
 "soft": {
-"home": 0.0881,
-"draw": 0.2088,
-"away": 0.7031,
+"home": 0.0325,
+"draw": 0.1093,
+"away": 0.8582,
 "fav": "away",
-"n": 32
+"n": 30
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36214055",
+"home": "Leon",
+"away": "Toluca",
+"league": "Mexican Liga MX",
+"country": "MX",
+"kickoff": "2026-10-24T23:00:00Z",
+"live": false,
+"moneySide": "away",
+"moneyName": "Toluca",
+"moneySharePct": 91,
+"moneyOdd": 2.0,
+"moneyDir": "out",
+"totVol": 16304,
+"pinnOdd": 1.93,
+"softOdd": 1.87,
+"softN": 39,
+"poly": null,
+"pinn": {
+"home": 0.2458,
+"draw": 0.2536,
+"away": 0.5006,
+"fav": "away"
+},
+"soft": {
+"home": 0.2567,
+"draw": 0.2479,
+"away": 0.4954,
+"fav": "away",
+"n": 39
 },
 "pinnMovePP": null,
 "pinnMove": null,
@@ -1369,9 +1416,9 @@
 "moneySide": "home",
 "moneyName": "CD Gualberto Villarroel",
 "moneySharePct": 92,
-"moneyOdd": 1.96,
-"moneyDir": "out",
-"totVol": 43058,
+"moneyOdd": 1.31,
+"moneyDir": "in",
+"totVol": 45302,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -1386,7 +1433,7 @@
 "ankerGrund": {
 "spiel": "CD Gualberto Villarroel v Blooming Santa Cruz",
 "grund": "kein_kandidat",
-"naechster": "Union Santa Fe v Estudiantes"
+"naechster": "Querétaro v Cruz Azul"
 }
 },
 {
@@ -1399,10 +1446,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "CRB",
-"moneySharePct": 93,
-"moneyOdd": 1.45,
-"moneyDir": "out",
-"totVol": 22096,
+"moneySharePct": 95,
+"moneyOdd": 1.15,
+"moneyDir": "in",
+"totVol": 34991,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -1423,37 +1470,6 @@
 }
 },
 {
-"matchId": "36219380",
-"home": "Nacional (Par)",
-"away": "Sportivo Trinidense",
-"league": "Paraguayan Primera Division",
-"country": "PY",
-"kickoff": "2026-10-24T20:00:00Z",
-"live": true,
-"moneySide": "draw",
-"moneyName": "The Draw",
-"moneySharePct": 46,
-"moneyOdd": 10.5,
-"moneyDir": "out",
-"totVol": 19023,
-"pinnOdd": null,
-"softOdd": null,
-"softN": null,
-"poly": null,
-"pinn": null,
-"soft": null,
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "no_anchor",
-"agree": null,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Nacional (Par) v Sportivo Trinidense",
-"grund": "kein_kandidat",
-"naechster": "Nacional v Braga"
-}
-},
-{
 "matchId": "36215341",
 "home": "Ferroviaria",
 "away": "Maringa",
@@ -1463,10 +1479,10 @@
 "live": true,
 "moneySide": "away",
 "moneyName": "Maringa",
-"moneySharePct": 92,
-"moneyOdd": 1.26,
-"moneyDir": "out",
-"totVol": 19021,
+"moneySharePct": 93,
+"moneyOdd": 1.04,
+"moneyDir": "in",
+"totVol": 28230,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -1484,32 +1500,23 @@
 }
 },
 {
-"matchId": "36212049",
-"home": "Quilmes",
-"away": "San Martin de Tucuman",
-"league": "Argentinian Primera Nacional",
-"country": "AR",
-"kickoff": "2026-10-24T20:00:00Z",
+"matchId": "36222315",
+"home": "Barranquilla",
+"away": "Real Cartagena",
+"league": "Colombian Primera B",
+"country": "CO",
+"kickoff": "2026-10-24T20:30:00Z",
 "live": true,
-"moneySide": "home",
-"moneyName": "Quilmes",
-"moneySharePct": 54,
-"moneyOdd": 3.95,
+"moneySide": "away",
+"moneyName": "Real Cartagena",
+"moneySharePct": 77,
+"moneyOdd": 11.5,
 "moneyDir": "out",
-"totVol": 17436,
+"totVol": 17076,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
-"poly": {
-"vol": 9314,
-"odd": 2.6,
-"sharePct": 38,
-"shareSrc": "preis",
-"key": "argpn-qui-smt-2026-10-24",
-"sideKey": "Quilmes AC",
-"whales": null,
-"whaleUsd": null
-},
+"poly": null,
 "pinn": null,
 "soft": null,
 "pinnMovePP": null,
@@ -1518,18 +1525,18 @@
 "agree": null,
 "pinnTotals": null,
 "ankerGrund": {
-"spiel": "Quilmes v San Martin de Tucuman",
+"spiel": "Barranquilla v Real Cartagena",
 "grund": "kein_kandidat",
-"naechster": "FC Dallas v San Jose Earthquakes"
+"naechster": "Celta Vigo v Real Betis"
 }
 }
 ],
-"ankerN": 61,
-"ankerNOffen": 149,
-"ankerMit": 59,
+"ankerN": 60,
+"ankerNOffen": 150,
+"ankerMit": 58,
 "ankerDiagnose": {
 "nach": {
-"kein_kandidat": 79,
+"kein_kandidat": 81,
 "zeit": 3,
 "name": 6
 },
@@ -1545,16 +1552,6 @@
 "liga": "Bolivian Liga de Futbol Profesional"
 },
 {
-"spiel": "CA Colegiales v Atletico Rafaela",
-"kandidat": "Atlético Huracán v CA Tigre BA",
-"key": "soccer_argentina_primera_division",
-"score": 0.83,
-"grund": "zeit",
-"abstandH": 143.0,
-"matchId": "36211875",
-"liga": "Argentinian Primera Nacional"
-},
-{
 "spiel": "OHiggins v Cobresal",
 "kandidat": "O'Higgins v Cobresal",
 "key": "soccer_chile_campeonato",
@@ -1564,13 +1561,14 @@
 "liga": "Chilean Primera Division"
 },
 {
-"spiel": "Municipal Grecia v A.D. Cofutpa",
-"kandidat": "D.C. United v FC Cincinnati",
-"key": "soccer_usa_mls",
-"score": 0.33,
-"grund": "name",
-"matchId": "36229525",
-"liga": "Costa Rican Liga de Ascenso"
+"spiel": "CA Colegiales v Atletico Rafaela",
+"kandidat": "Atlético Huracán v CA Tigre BA",
+"key": "soccer_argentina_primera_division",
+"score": 0.83,
+"grund": "zeit",
+"abstandH": 143.0,
+"matchId": "36211875",
+"liga": "Argentinian Primera Nacional"
 },
 {
 "spiel": "Harima (W) v Yokohama FC Seagull (W)",
@@ -1591,14 +1589,13 @@
 "liga": "Japanese Ladies Nadeshiko League"
 },
 {
-"spiel": "Sydney FC (W) v Melbourne City (W)",
-"kandidat": "Melbourne City v Sydney FC",
-"key": "soccer_australia_aleague",
-"score": 1.17,
-"grund": "zeit",
-"abstandH": 143.2,
-"matchId": "36208333",
-"liga": "Australian A-League Women"
+"spiel": "Municipal Grecia v A.D. Cofutpa",
+"kandidat": "D.C. United v FC Cincinnati",
+"key": "soccer_usa_mls",
+"score": 0.33,
+"grund": "name",
+"matchId": "36229525",
+"liga": "Costa Rican Liga de Ascenso"
 },
 {
 "spiel": "Belle Yunogo (W) v Ngu Nagoya FC (W)",
@@ -1608,6 +1605,16 @@
 "grund": "name",
 "matchId": "36231307",
 "liga": "Japanese Ladies Nadeshiko League"
+},
+{
+"spiel": "Sydney FC (W) v Melbourne City (W)",
+"kandidat": "Melbourne City v Sydney FC",
+"key": "soccer_australia_aleague",
+"score": 1.17,
+"grund": "zeit",
+"abstandH": 143.2,
+"matchId": "36208333",
+"liga": "Australian A-League Women"
 },
 {
 "spiel": "CRB v Londrina",
