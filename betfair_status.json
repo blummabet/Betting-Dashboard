@@ -34,7 +34,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "nur 112 von 245 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Hartlepool v Hornchurch (English National League); Merthyr Town v Morecambe (English National League North); Chesterfield v Crewe (English Sky Bet League 2)"
+        "nur 103 von 239 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Leganes v Mallorca (Spanish Segunda Division); Ebbsfleet Utd v Maidenhead (English National League South); Rotherham v Shrewsbury (English Sky Bet League 2)"
       ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
@@ -90,26 +90,28 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 720210 verbraucht, 4279790 uebrig"
+      "note": "Kontingent: 720780 verbraucht, 4279220 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 9,
+      "nFail": 11,
       "failures": [
         "Guangzhou Alpha v Dalian Yingbo II (Chinese League 2): name — bester Kandidat „Chengdu Rongcheng FC v Dalian Yingbo“",
+        "CS FC Dinamo Bucuresti v Gloria Popesti-Leordeni (Romanian Liga II): name — bester Kandidat „FC Akron Tolyatti v Dinamo Moscow“",
+        "Taian Tiankuang v Chengdu Rongcheng II (Chinese League 2): name — bester Kandidat „Chengdu Rongcheng FC v Dalian Yingbo“",
         "Beijing Tech FC v Xiamen Feilu (Chinese League 2): name — bester Kandidat „Henan FC v Beijing FC“",
         "Qingdao Red Lions v Ganzhou Ruishi FC (Chinese League 2): name — bester Kandidat „Chongqing Tonglianglong FC v Qingdao Hainiu FC“",
-        "Dalian Kun City FC v Guangxi Hengchen (Chinese League 1): name — bester Kandidat „Chengdu Rongcheng FC v Dalian Yingbo“",
         "FC Magdeburg v Karlsruhe (German Bundesliga 2): name — bester Kandidat „1. FC Magdeburg v Karlsruher SC“",
         "Foshan Nanshi FC v Nanjing City (Chinese League 1): name — bester Kandidat „Aston Villa v Manchester City“",
         "Hue FC v Ho Chi Minh City FC (Vietnamese V-League 2): name — bester Kandidat „Shenzhen Peng City FC v Shanghai Shenhua FC“",
         "BG Pathumthani United v Chiangrai Utd (Thai League 1): zeit — bester Kandidat „Drogheda United v Galway United“ · 151.8h Anpfiff-Abstand",
-        "Buriram Utd v Sisaket United (Thai League 1): zeit — bester Kandidat „Drogheda United v Galway United“ · 152.2h Anpfiff-Abstand"
+        "Buriram Utd v Sisaket United (Thai League 1): zeit — bester Kandidat „Drogheda United v Galway United“ · 152.2h Anpfiff-Abstand",
+        "Dalian Kun City FC v Guangxi Hengchen (Chinese League 1): name — bester Kandidat „Chengdu Rongcheng FC v Dalian Yingbo“"
       ],
-      "note": "ohne Anker: kein_kandidat 77 · kein_pinnacle 2 · name 7 · zeit 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 78 · kein_pinnacle 1 · name 9 · zeit 2. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -118,7 +120,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 2 — Kashima v Kashiwa (25 Buecher, ohne Pinnacle); Chongqing Tonglianglong v Qingdao Hainiu (24 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 1 — Chongqing Tonglianglong v Qingdao Hainiu (20 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -127,7 +129,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 9 gewollt, 9 abgerufen, 0 mit Daten"
+      "note": "Totals: 10 gewollt, 10 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -194,5 +196,5 @@
     }
   ],
   "nFail": 2,
-  "generatedAt": "2026-10-24T08:01:32.240481+00:00"
+  "generatedAt": "2026-10-24T08:18:25.362342+00:00"
 }
