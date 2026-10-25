@@ -205,7 +205,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "75/75 mit AH · 75/75 mit Public-O/U."
+      "note": "101/101 mit AH · 100/101 mit Public-O/U."
     },
     {
       "id": "odds_freshness",
@@ -274,18 +274,9 @@
       "id": "lineup_present",
       "label": "Aufstellung da vor Anpfiff (T-90min)",
       "severity": "warn",
-      "ok": false,
-      "nFail": 8,
-      "failures": [
-        "33-35: Anpfiff in 53min, KEINE Aufstellung",
-        "40-51: Anpfiff in 53min, KEINE Aufstellung",
-        "52-34: Anpfiff in 53min, KEINE Aufstellung",
-        "64-55: Anpfiff in 53min, KEINE Aufstellung",
-        "167-168: Anpfiff in 83min, KEINE Aufstellung",
-        "495-517: Anpfiff in 53min, KEINE Aufstellung",
-        "499-512: Anpfiff in 53min, KEINE Aufstellung",
-        "91-79: Anpfiff in 53min, KEINE Aufstellung"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "lineup_signal braucht die Startelf. War leer wegen Namens-Match + Wien-Zeit-Bug."
     },
     {
@@ -378,13 +369,9 @@
       "id": "safer_line_applied",
       "label": "Safer-Line abgeleitet wo verfügbar (≥1.35)",
       "severity": "warn",
-      "ok": false,
-      "nFail": 3,
-      "failures": [
-        "108-1298 Heimsieg @2.04: sichere Linie Doppelte Chance — 1X @1.357 verfügbar (≥1.35), nicht abgeleitet",
-        "91-79 Unter 2.5 Tore @1.96: sichere Linie Unter 3.5 Tore @1.41 verfügbar (≥1.35), nicht abgeleitet",
-        "548-539 Unter 2.5 Tore @2.32: sichere Linie Unter 3.5 Tore @1.72 verfügbar (≥1.35), nicht abgeleitet"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
     },
     {
@@ -579,7 +566,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "22 von 51 Vor-Kandidaten mit Anteilen (22 Calls) · 0 ohne Geld-Split · 29 ueber Budget · 0 nachgelegt. Leeres Fenster ist kein Fehler; Kandidaten ohne einen einzigen Anteil schon."
+      "note": "6 von 6 Vor-Kandidaten mit Anteilen (6 Calls) · 0 ohne Geld-Split · 0 ueber Budget · 0 nachgelegt. Leeres Fenster ist kein Fehler; Kandidaten ohne einen einzigen Anteil schon."
     },
     {
       "id": "betfair_ledger",
@@ -597,7 +584,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Job vor 2.5h · jüngste Daten vor 2.5h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
+      "note": "Job vor 10.4h · jüngste Daten vor 10.4h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
     },
     {
       "id": "poly_global_liefert",
@@ -606,7 +593,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Job vor 0.7h · jüngste Daten vor 0.7h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
+      "note": "Job vor 0.6h · jüngste Daten vor 0.6h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
     },
     {
       "id": "pinn_anker",
@@ -636,7 +623,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "🔒 E-Sport ohne Wallet-Nachweis: 396/120 seit 48d · 🔒 Poly-Auswahl · von Betfair bestätigt: 563/60 seit 54d · 🔒 Fade-Unter · Ganzspiel-Torlinie: 6447/200 seit 48d · 🔒 Liga · Conviction ab 5: 129/80 seit 44d · 🔒 Bücher-Score ≥7 von 10: 137/40 seit 54d"
+      "note": "🔒 E-Sport ohne Wallet-Nachweis: 396/120 seit 49d · 🔒 Poly-Auswahl · von Betfair bestätigt: 563/60 seit 54d · 🔒 Fade-Unter · Ganzspiel-Torlinie: 6447/200 seit 49d · 🔒 Liga · Conviction ab 5: 129/80 seit 44d · 🔒 Bücher-Score ≥7 von 10: 137/40 seit 54d"
     },
     {
       "id": "killer_push_buch",
@@ -657,6 +644,6 @@
       "note": "0 von 0 ist ein ruhiger Tag (oder eine Laenderspielpause, in der wir gar keine passenden Partien haben). 0 von N ist ein Bruch."
     }
   ],
-  "nFail": 6,
-  "generatedAt": "2026-10-25T13:06:33.613802+00:00"
+  "nFail": 4,
+  "generatedAt": "2026-10-25T20:55:44.189766+00:00"
 }
