@@ -180,6 +180,7 @@ jobs:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
           TELEGRAM_CHAT_ID:        ${{ secrets.TELEGRAM_CHAT_ID }}
+          WHALE_NACHTRAG_MAX:      '0'   # 25.10.2026 (Lucas): „⚔️ Nachtrag: umkaempft" im Trades-Channel aus
 
       # 02.09.2026 (Lucas): „Schaffst du die Polymarket pushes auch auszuwerten?" — direkt NACH
       # dem Whale-Watch, damit ein soeben gesendeter Push im selben Lauf im Ledger landet und
