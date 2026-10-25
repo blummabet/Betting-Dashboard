@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-25T13:14:11.064056+00:00",
+ "generatedAt": "2026-10-25T13:44:17.286542+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,17 +10,17 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 734,
+ "polyRowsSeen": 736,
  "pinnKeys": 318,
  "matched": 224,
  "footballRows": 222,
- "crossRows": 512,
- "footballSkippedStale": 119,
+ "crossRows": 514,
+ "footballSkippedStale": 145,
  "seenBySport": {
   "basketball_nba": 100,
   "americanfootball_nfl": 70,
   "baseball_mlb": 8,
-  "icehockey_nhl": 320,
+  "icehockey_nhl": 322,
   "boxing_boxing": 14,
   "soccer_mls": 39,
   "soccer_liga": 183
@@ -31,8 +31,37 @@
   "soccer_liga": 183
  },
  "trackRecord": {
-  "tracked": 123,
+  "tracked": 125,
   "converged": 9
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "soccer_liga|fiorentina-inter|hw",
+   "sport": "soccer_liga",
+   "event": "Inter vs Fiorentina",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 18.5,
+   "pinnPP": 56.2,
+   "gapPP": -37.73,
+   "vol": 643675,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-25T13:44:17.286398+00:00"
+  },
+  {
+   "id": "soccer_liga|fiorentina-inter|aw",
+   "sport": "soccer_liga",
+   "event": "Inter vs Fiorentina",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 47.5,
+   "pinnPP": 10.9,
+   "gapPP": 36.61,
+   "vol": 643675,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-25T13:44:17.286398+00:00"
+  }
+ ]
 }
