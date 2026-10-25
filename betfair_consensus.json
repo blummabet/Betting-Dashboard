@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-10-25T04:06:00.706850+00:00",
-"count": 24,
-"covered": 24,
+"generatedAt": "2026-10-25T04:20:32.365735+00:00",
+"count": 25,
+"covered": 25,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -48,6 +48,7 @@
 "soccer_usa_mls"
 ],
 "leaguesMitAnker": [
+"Australian A-League Men",
 "English Premier League",
 "French Ligue 1",
 "German Bundesliga",
@@ -62,15 +63,15 @@
 "oddsKeysMitDaten": 47,
 "oddsEvents": 512,
 "oddsTotals": {
-"versucht": 8,
+"versucht": 9,
 "mitDaten": 0,
 "events": 0,
-"gewollt": 8,
+"gewollt": 9,
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 770007,
-"remaining": 4229993,
+"used": 770577,
+"remaining": 4229423,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
@@ -89,11 +90,11 @@
 "moneyName": "Real Madrid",
 "moneySharePct": 55,
 "moneyOdd": 4.0,
-"moneyDir": "in",
-"totVol": 329790,
-"pinnOdd": 3.77,
+"moneyDir": "flat",
+"totVol": 332639,
+"pinnOdd": 3.7,
 "softOdd": 3.8,
-"softN": 46,
+"softN": 45,
 "poly": {
 "vol": 841524,
 "odd": 4.08,
@@ -105,25 +106,25 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.5831,
-"draw": 0.1617,
-"away": 0.2552,
+"home": 0.5751,
+"draw": 0.1638,
+"away": 0.2611,
 "fav": "home"
 },
 "soft": {
-"home": 0.5812,
-"draw": 0.1692,
-"away": 0.2496,
+"home": 0.5799,
+"draw": 0.1701,
+"away": 0.25,
 "fav": "home",
-"n": 46
+"n": 45
 },
-"pinnMovePP": 0.4,
+"pinnMovePP": 0.9,
 "pinnMove": {
-"movePP": 0.4,
-"stepPP": 0.0,
+"movePP": 0.9,
+"stepPP": 0.6,
 "n": 25,
 "move": false,
-"laeuft": false
+"laeuft": true
 },
 "verdict": "uneinig",
 "agree": false,
@@ -142,10 +143,10 @@
 "moneySharePct": 59,
 "moneyOdd": 2.36,
 "moneyDir": "flat",
-"totVol": 135734,
-"pinnOdd": 2.28,
-"softOdd": 2.23,
-"softN": 51,
+"totVol": 135863,
+"pinnOdd": 2.29,
+"softOdd": 2.24,
+"softN": 50,
 "poly": {
 "vol": 50816,
 "odd": 2.3,
@@ -157,23 +158,75 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.4248,
-"draw": 0.2618,
-"away": 0.3134,
+"home": 0.4221,
+"draw": 0.262,
+"away": 0.3159,
 "fav": "home"
 },
 "soft": {
-"home": 0.4258,
-"draw": 0.2626,
-"away": 0.3116,
+"home": 0.425,
+"draw": 0.2631,
+"away": 0.3119,
 "fav": "home",
-"n": 51
+"n": 50
 },
-"pinnMovePP": -1.3,
+"pinnMovePP": -1.6,
 "pinnMove": {
-"movePP": -1.3,
-"stepPP": -0.4,
+"movePP": -1.6,
+"stepPP": -0.6,
 "n": 25,
+"move": true,
+"laeuft": true
+},
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36177340",
+"home": "Hull",
+"away": "Brentford",
+"league": "English Premier League",
+"country": "GB",
+"kickoff": "2026-10-25T14:00:00Z",
+"live": false,
+"moneySide": "away",
+"moneyName": "Brentford",
+"moneySharePct": 80,
+"moneyOdd": 1.73,
+"moneyDir": "in",
+"totVol": 132029,
+"pinnOdd": 1.69,
+"softOdd": 1.68,
+"softN": 50,
+"poly": {
+"vol": 127066,
+"odd": 1.74,
+"sharePct": 57,
+"shareSrc": "preis",
+"key": "epl-hul-bre-2026-10-25",
+"sideKey": "Brentford FC",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.1978,
+"draw": 0.2321,
+"away": 0.57,
+"fav": "away"
+},
+"soft": {
+"home": 0.1994,
+"draw": 0.2367,
+"away": 0.5638,
+"fav": "away",
+"n": 50
+},
+"pinnMovePP": 1.5,
+"pinnMove": {
+"movePP": 1.5,
+"stepPP": 0.3,
+"n": 20,
 "move": true,
 "laeuft": true
 },
@@ -191,13 +244,13 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Liverpool",
-"moneySharePct": 55,
-"moneyOdd": 2.18,
-"moneyDir": "flat",
-"totVol": 127184,
+"moneySharePct": 56,
+"moneyOdd": 2.2,
+"moneyDir": "out",
+"totVol": 127462,
 "pinnOdd": 2.13,
 "softOdd": 2.1,
-"softN": 51,
+"softN": 50,
 "poly": {
 "vol": 515637,
 "odd": 2.2,
@@ -216,68 +269,16 @@
 },
 "soft": {
 "home": 0.454,
-"draw": 0.2474,
-"away": 0.2986,
+"draw": 0.2473,
+"away": 0.2987,
 "fav": "home",
-"n": 51
+"n": 50
 },
 "pinnMovePP": -0.3,
 "pinnMove": {
 "movePP": -0.3,
 "stepPP": 0.0,
 "n": 25,
-"move": false,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36177340",
-"home": "Hull",
-"away": "Brentford",
-"league": "English Premier League",
-"country": "GB",
-"kickoff": "2026-10-25T14:00:00Z",
-"live": false,
-"moneySide": "away",
-"moneyName": "Brentford",
-"moneySharePct": 78,
-"moneyOdd": 1.75,
-"moneyDir": "flat",
-"totVol": 107643,
-"pinnOdd": 1.71,
-"softOdd": 1.69,
-"softN": 51,
-"poly": {
-"vol": 127066,
-"odd": 1.74,
-"sharePct": 57,
-"shareSrc": "preis",
-"key": "epl-hul-bre-2026-10-25",
-"sideKey": "Brentford FC",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.2007,
-"draw": 0.2361,
-"away": 0.5633,
-"fav": "away"
-},
-"soft": {
-"home": 0.2001,
-"draw": 0.2376,
-"away": 0.5623,
-"fav": "away",
-"n": 51
-},
-"pinnMovePP": 0.8,
-"pinnMove": {
-"movePP": 0.8,
-"stepPP": -0.4,
-"n": 20,
 "move": false,
 "laeuft": false
 },
@@ -296,12 +297,12 @@
 "moneySide": "away",
 "moneyName": "AC Milan",
 "moneySharePct": 86,
-"moneyOdd": 1.79,
-"moneyDir": "flat",
-"totVol": 105261,
+"moneyOdd": 1.83,
+"moneyDir": "out",
+"totVol": 112456,
 "pinnOdd": 1.75,
 "softOdd": 1.73,
-"softN": 50,
+"softN": 49,
 "poly": {
 "vol": 4876,
 "odd": 1.77,
@@ -313,22 +314,22 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.1964,
-"draw": 0.2525,
-"away": 0.5511,
+"home": 0.1963,
+"draw": 0.253,
+"away": 0.5507,
 "fav": "away"
 },
 "soft": {
-"home": 0.1979,
-"draw": 0.2547,
-"away": 0.5474,
+"home": 0.1994,
+"draw": 0.2546,
+"away": 0.5459,
 "fav": "away",
-"n": 50
+"n": 49
 },
 "pinnMovePP": 2.3,
 "pinnMove": {
 "movePP": 2.3,
-"stepPP": 0.0,
+"stepPP": -0.0,
 "n": 25,
 "move": true,
 "laeuft": false
@@ -353,7 +354,7 @@
 "totVol": 95607,
 "pinnOdd": 2.25,
 "softOdd": 2.21,
-"softN": 46,
+"softN": 45,
 "poly": {
 "vol": 6607,
 "odd": 2.3,
@@ -371,11 +372,11 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.3018,
-"draw": 0.2721,
-"away": 0.4261,
+"home": 0.3015,
+"draw": 0.2722,
+"away": 0.4263,
 "fav": "away",
-"n": 46
+"n": 45
 },
 "pinnMovePP": 0.3,
 "pinnMove": {
@@ -401,11 +402,11 @@
 "moneyName": "Paris St-G",
 "moneySharePct": 96,
 "moneyOdd": 1.44,
-"moneyDir": "out",
+"moneyDir": "flat",
 "totVol": 88380,
 "pinnOdd": 1.43,
 "softOdd": 1.4,
-"softN": 48,
+"softN": 47,
 "poly": null,
 "pinn": {
 "home": 0.6748,
@@ -414,11 +415,11 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.6686,
+"home": 0.6687,
 "draw": 0.1813,
 "away": 0.1501,
 "fav": "home",
-"n": 48
+"n": 47
 },
 "pinnMovePP": 0.6,
 "pinnMove": {
@@ -443,12 +444,12 @@
 "moneySide": "away",
 "moneyName": "Frosinone",
 "moneySharePct": 53,
-"moneyOdd": 4.1,
-"moneyDir": "out",
-"totVol": 80777,
+"moneyOdd": 4.0,
+"moneyDir": "in",
+"totVol": 80904,
 "pinnOdd": 3.92,
 "softOdd": 3.75,
-"softN": 50,
+"softN": 49,
 "poly": {
 "vol": 12477,
 "odd": 4.08,
@@ -466,11 +467,11 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.5194,
-"draw": 0.2308,
-"away": 0.2498,
+"home": 0.5186,
+"draw": 0.2312,
+"away": 0.2502,
 "fav": "home",
-"n": 50
+"n": 49
 },
 "pinnMovePP": 0.0,
 "pinnMove": {
@@ -485,58 +486,6 @@
 "pinnTotals": null
 },
 {
-"matchId": "36209528",
-"home": "Freiburg",
-"away": "Bayern Munich",
-"league": "German Bundesliga",
-"country": "DE",
-"kickoff": "2026-10-25T16:30:00Z",
-"live": false,
-"moneySide": "away",
-"moneyName": "Bayern Munich",
-"moneySharePct": 81,
-"moneyOdd": 1.46,
-"moneyDir": "flat",
-"totVol": 66861,
-"pinnOdd": 1.4,
-"softOdd": 1.4,
-"softN": 49,
-"poly": {
-"vol": 31738,
-"odd": 1.46,
-"sharePct": 68,
-"shareSrc": "preis",
-"key": "bun-fre-bay-2026-10-25",
-"sideKey": "FC Bayern München",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.1469,
-"draw": 0.1668,
-"away": 0.6863,
-"fav": "away"
-},
-"soft": {
-"home": 0.1515,
-"draw": 0.1737,
-"away": 0.6748,
-"fav": "away",
-"n": 49
-},
-"pinnMovePP": 0.2,
-"pinnMove": {
-"movePP": 0.2,
-"stepPP": -0.0,
-"n": 20,
-"move": false,
-"laeuft": false
-},
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
 "matchId": "36207396",
 "home": "Portland Timbers",
 "away": "Charlotte FC",
@@ -546,16 +495,16 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Portland Timbers",
-"moneySharePct": 71,
-"moneyOdd": 1.32,
-"moneyDir": "in",
-"totVol": 66700,
-"pinnOdd": 1.26,
-"softOdd": 1.25,
+"moneySharePct": 69,
+"moneyOdd": 3.25,
+"moneyDir": "out",
+"totVol": 76545,
+"pinnOdd": 2.84,
+"softOdd": 3.0,
 "softN": 38,
 "poly": {
-"vol": 56953,
-"odd": 1.36,
+"vol": 60095,
+"odd": 1.31,
 "sharePct": 96,
 "shareSrc": "geld",
 "key": "mls-por-clt-2026-10-24",
@@ -563,118 +512,118 @@
 "whales": [
 {
 "wallet": "0x10a6fadcbacd66330862206f6199b197e3ad4d8b",
-"usd": 10933
+"usd": 11379
 },
 {
 "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
-"usd": 6420
+"usd": 6682
 },
 {
 "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
-"usd": 535
+"usd": 557
 },
 {
 "wallet": "0xa4426cb49744a7b4ff4182e231e6a828fc1b3b25",
-"usd": 453
+"usd": 472
 },
 {
 "wallet": "0xbc5613462ce3902eea10874a11cf74191f4a8f28",
-"usd": 414
+"usd": 431
 },
 {
 "wallet": "0x216050de6080fac3926226b2b8ce3d5544784c78",
-"usd": 378
+"usd": 393
 }
 ],
-"whaleUsd": 20965
+"whaleUsd": 21347
 },
 "pinn": {
-"home": 0.7524,
-"draw": 0.1877,
-"away": 0.0599,
-"fav": "home"
+"home": 0.3331,
+"draw": 0.4877,
+"away": 0.1792,
+"fav": "draw"
 },
 "soft": {
-"home": 0.7399,
-"draw": 0.1962,
-"away": 0.0638,
-"fav": "home",
+"home": 0.318,
+"draw": 0.5172,
+"away": 0.1648,
+"fav": "draw",
 "n": 38
 },
 "pinnMovePP": null,
 "pinnMove": null,
-"verdict": "konsens",
-"agree": true,
+"verdict": "uneinig",
+"agree": false,
 "pinnTotals": null
 },
 {
-"matchId": "36214141",
-"home": "Pumas UNAM",
-"away": "Tigres",
-"league": "Mexican Liga MX",
-"country": "MX",
-"kickoff": "2026-10-25T03:10:00Z",
+"matchId": "36124425",
+"home": "Sydney FC",
+"away": "Adelaide United",
+"league": "Australian A-League Men",
+"country": "AU",
+"kickoff": "2026-10-25T04:00:00Z",
 "live": true,
 "moneySide": "home",
-"moneyName": "Pumas UNAM",
-"moneySharePct": 61,
-"moneyOdd": 2.6,
+"moneyName": "Sydney FC",
+"moneySharePct": 91,
+"moneyOdd": 4.0,
 "moneyDir": "out",
-"totVol": 62762,
-"pinnOdd": 2.53,
-"softOdd": 2.4,
-"softN": 31,
+"totVol": 71447,
+"pinnOdd": 2.13,
+"softOdd": 3.9,
+"softN": 28,
 "poly": {
-"vol": 287098,
-"odd": 2.25,
-"sharePct": 87,
+"vol": 12544,
+"odd": 2.3,
+"sharePct": 45,
 "shareSrc": "geld",
-"key": "mex-pum-tig-2026-10-24",
-"sideKey": "Pumas de la UNAM",
+"key": "aus-syd-ade-2026-10-25",
+"sideKey": "Sydney FC",
 "whales": [
 {
-"wallet": "0x918b42a06ff25eaaa4a79eca9da6a9de46f4ea63",
-"usd": 85170
+"wallet": "0x7ea571c40408f340c1c8fc8eaacebab53c1bde7b",
+"usd": 321
 },
 {
-"wallet": "0xdd5ef115f801999575b03d78d0115ad8b2d59040",
-"usd": 1521
+"wallet": "0xd29312e2446a746bbd94408e1c475f1ec6d7d683",
+"usd": 290
 },
 {
-"wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
-"usd": 1126
+"wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+"usd": 235
 },
 {
-"wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
-"usd": 160
+"wallet": "0xe954ddb021c19495f1c556f59dadbd1494821ef1",
+"usd": 189
 },
 {
-"wallet": "0x06a9865f05e5f379840e6df4feadc98892571a49",
-"usd": 111
+"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+"usd": 154
 },
 {
-"wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
-"usd": 96
+"wallet": "0xfa507b50d977e1c3ec3318e5712d127411c5e6e3",
+"usd": 106
 }
 ],
-"whaleUsd": 88528
+"whaleUsd": 1370
 },
 "pinn": {
-"home": 0.3734,
-"draw": 0.362,
-"away": 0.2646,
+"home": 0.4433,
+"draw": 0.2706,
+"away": 0.2861,
 "fav": "home"
 },
 "soft": {
-"home": 0.3802,
-"draw": 0.357,
-"away": 0.2628,
-"fav": "home",
-"n": 31
+"home": 0.2515,
+"draw": 0.2625,
+"away": 0.486,
+"fav": "away",
+"n": 28
 },
 "pinnMovePP": null,
 "pinnMove": null,
-"verdict": "konsens",
+"verdict": "teil",
 "agree": true,
 "pinnTotals": null
 },
@@ -688,13 +637,13 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "Leeds",
-"moneySharePct": 58,
-"moneyOdd": 2.6,
-"moneyDir": "flat",
-"totVol": 62216,
+"moneySharePct": 62,
+"moneyOdd": 2.58,
+"moneyDir": "in",
+"totVol": 67765,
 "pinnOdd": 2.53,
-"softOdd": 2.45,
-"softN": 51,
+"softOdd": 2.46,
+"softN": 50,
 "poly": {
 "vol": 21244,
 "odd": 2.6,
@@ -712,11 +661,11 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.319,
-"draw": 0.2954,
-"away": 0.3856,
+"home": 0.3198,
+"draw": 0.2959,
+"away": 0.3844,
 "fav": "away",
-"n": 51
+"n": 50
 },
 "pinnMovePP": 0.3,
 "pinnMove": {
@@ -731,49 +680,49 @@
 "pinnTotals": null
 },
 {
-"matchId": "36209508",
-"home": "Lecce",
-"away": "Juventus",
-"league": "Italian Serie A",
-"country": "IT",
-"kickoff": "2026-10-25T17:00:00Z",
+"matchId": "36209528",
+"home": "Freiburg",
+"away": "Bayern Munich",
+"league": "German Bundesliga",
+"country": "DE",
+"kickoff": "2026-10-25T16:30:00Z",
 "live": false,
 "moneySide": "away",
-"moneyName": "Juventus",
+"moneyName": "Bayern Munich",
 "moneySharePct": 80,
-"moneyOdd": 1.54,
+"moneyOdd": 1.46,
 "moneyDir": "flat",
-"totVol": 58207,
-"pinnOdd": 1.51,
-"softOdd": 1.47,
-"softN": 50,
+"totVol": 67583,
+"pinnOdd": 1.4,
+"softOdd": 1.39,
+"softN": 48,
 "poly": {
-"vol": 3898,
-"odd": 1.55,
-"sharePct": 64,
+"vol": 31738,
+"odd": 1.46,
+"sharePct": 68,
 "shareSrc": "preis",
-"key": "sea-lec-juv-2026-10-25",
-"sideKey": "Juventus FC",
+"key": "bun-fre-bay-2026-10-25",
+"sideKey": "FC Bayern München",
 "whales": null,
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.1288,
-"draw": 0.2316,
-"away": 0.6396,
+"home": 0.1469,
+"draw": 0.1668,
+"away": 0.6863,
 "fav": "away"
 },
 "soft": {
-"home": 0.1353,
-"draw": 0.2246,
-"away": 0.6401,
+"home": 0.1509,
+"draw": 0.1733,
+"away": 0.6758,
 "fav": "away",
-"n": 50
+"n": 48
 },
-"pinnMovePP": 0.0,
+"pinnMovePP": 0.2,
 "pinnMove": {
-"movePP": 0.0,
-"stepPP": 0.0,
+"movePP": 0.2,
+"stepPP": -0.0,
 "n": 20,
 "move": false,
 "laeuft": false
@@ -792,59 +741,174 @@
 "live": true,
 "moneySide": "away",
 "moneyName": "Seattle Sounders",
-"moneySharePct": 50,
-"moneyOdd": 1.57,
+"moneySharePct": 54,
+"moneyOdd": 1.31,
 "moneyDir": "in",
-"totVol": 58120,
-"pinnOdd": 1.58,
-"softOdd": 1.5,
+"totVol": 65824,
+"pinnOdd": 1.33,
+"softOdd": 1.26,
 "softN": 39,
 "poly": {
-"vol": 100459,
-"odd": 3.39,
-"sharePct": 31,
+"vol": 130950,
+"odd": 1.55,
+"sharePct": 79,
 "shareSrc": "geld",
 "key": "mls-sdg-sea-2026-10-24",
 "sideKey": "Seattle Sounders FC",
 "whales": [
 {
 "wallet": "0x95c6c9a6727ed203e97230dda61ab19a020e1508",
-"usd": 8811
+"usd": 19264
 },
 {
 "wallet": "0x7e2a8ff8da3a83b95588e1fadc0fc89ad827d25c",
-"usd": 470
+"usd": 1027
 },
 {
 "wallet": "0x228b8d11eba89bf1c554f8879a9293b7106daf4c",
-"usd": 165
+"usd": 901
 },
 {
-"wallet": "0xf5dc834a9a821c6d3f842f53ac608ecd4afedec3",
-"usd": 90
+"wallet": "0x5cfeed196e27ebc140a1412737cce001fa0b0593",
+"usd": 743
 },
 {
-"wallet": "0xa24e51e917d3f844b972e9bccfa6bc2e04621be8",
-"usd": 59
+"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+"usd": 694
+},
+{
+"wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+"usd": 658
 }
 ],
-"whaleUsd": 9595
+"whaleUsd": 23787
 },
 "pinn": {
-"home": 0.1279,
-"draw": 0.2745,
-"away": 0.5976,
+"home": 0.0595,
+"draw": 0.2283,
+"away": 0.7122,
 "fav": "away"
 },
 "soft": {
-"home": 0.1191,
-"draw": 0.2729,
-"away": 0.6079,
+"home": 0.051,
+"draw": 0.2247,
+"away": 0.7243,
 "fav": "away",
 "n": 39
 },
 "pinnMovePP": null,
 "pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36214141",
+"home": "Pumas UNAM",
+"away": "Tigres",
+"league": "Mexican Liga MX",
+"country": "MX",
+"kickoff": "2026-10-25T03:10:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Pumas UNAM",
+"moneySharePct": 61,
+"moneyOdd": 2.58,
+"moneyDir": "in",
+"totVol": 64709,
+"pinnOdd": 2.53,
+"softOdd": 2.38,
+"softN": 31,
+"poly": {
+"vol": 300898,
+"odd": 2.6,
+"sharePct": 84,
+"shareSrc": "geld",
+"key": "mex-pum-tig-2026-10-24",
+"sideKey": "Pumas de la UNAM",
+"whales": [
+{
+"wallet": "0x918b42a06ff25eaaa4a79eca9da6a9de46f4ea63",
+"usd": 73687
+},
+{
+"wallet": "0xdd5ef115f801999575b03d78d0115ad8b2d59040",
+"usd": 1316
+},
+{
+"wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
+"usd": 974
+}
+],
+"whaleUsd": 75977
+},
+"pinn": {
+"home": 0.3734,
+"draw": 0.3634,
+"away": 0.2632,
+"fav": "home"
+},
+"soft": {
+"home": 0.3871,
+"draw": 0.3653,
+"away": 0.2477,
+"fav": "home",
+"n": 31
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36209508",
+"home": "Lecce",
+"away": "Juventus",
+"league": "Italian Serie A",
+"country": "IT",
+"kickoff": "2026-10-25T17:00:00Z",
+"live": false,
+"moneySide": "away",
+"moneyName": "Juventus",
+"moneySharePct": 80,
+"moneyOdd": 1.54,
+"moneyDir": "flat",
+"totVol": 58290,
+"pinnOdd": 1.51,
+"softOdd": 1.47,
+"softN": 49,
+"poly": {
+"vol": 3898,
+"odd": 1.55,
+"sharePct": 64,
+"shareSrc": "preis",
+"key": "sea-lec-juv-2026-10-25",
+"sideKey": "Juventus FC",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.1292,
+"draw": 0.2319,
+"away": 0.6389,
+"fav": "away"
+},
+"soft": {
+"home": 0.1344,
+"draw": 0.2249,
+"away": 0.6407,
+"fav": "away",
+"n": 49
+},
+"pinnMovePP": -0.1,
+"pinnMove": {
+"movePP": -0.1,
+"stepPP": -0.1,
+"n": 20,
+"move": false,
+"laeuft": false
+},
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
@@ -859,13 +923,13 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Inter",
-"moneySharePct": 83,
+"moneySharePct": 82,
 "moneyOdd": 1.38,
-"moneyDir": "in",
-"totVol": 54256,
-"pinnOdd": 1.34,
+"moneyDir": "flat",
+"totVol": 54775,
+"pinnOdd": 1.35,
 "softOdd": 1.33,
-"softN": 50,
+"softN": 49,
 "poly": {
 "vol": 50829,
 "odd": 1.38,
@@ -902,22 +966,22 @@
 "whaleUsd": 24249
 },
 "pinn": {
-"home": 0.7166,
-"draw": 0.1658,
-"away": 0.1175,
+"home": 0.7135,
+"draw": 0.1675,
+"away": 0.1189,
 "fav": "home"
 },
 "soft": {
-"home": 0.7067,
-"draw": 0.1719,
-"away": 0.1214,
+"home": 0.7066,
+"draw": 0.172,
+"away": 0.1215,
 "fav": "home",
-"n": 50
+"n": 49
 },
-"pinnMovePP": -0.0,
+"pinnMovePP": -0.3,
 "pinnMove": {
-"movePP": -0.0,
-"stepPP": 0.2,
+"movePP": -0.3,
+"stepPP": -0.1,
 "n": 19,
 "move": false,
 "laeuft": false
@@ -936,13 +1000,13 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "Newcastle",
-"moneySharePct": 43,
-"moneyOdd": 2.42,
-"moneyDir": "flat",
-"totVol": 52975,
+"moneySharePct": 44,
+"moneyOdd": 2.44,
+"moneyDir": "out",
+"totVol": 54726,
 "pinnOdd": 2.36,
 "softOdd": 2.3,
-"softN": 51,
+"softN": 50,
 "poly": {
 "vol": 4811,
 "odd": 2.41,
@@ -960,11 +1024,11 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.329,
-"draw": 0.2618,
+"home": 0.3291,
+"draw": 0.2617,
 "away": 0.4092,
 "fav": "away",
-"n": 51
+"n": 50
 },
 "pinnMovePP": 0.0,
 "pinnMove": {
@@ -991,10 +1055,10 @@
 "moneySharePct": 87,
 "moneyOdd": 1.62,
 "moneyDir": "flat",
-"totVol": 46440,
+"totVol": 46466,
 "pinnOdd": 1.6,
 "softOdd": 1.57,
-"softN": 46,
+"softN": 45,
 "poly": {
 "vol": 25396,
 "odd": 1.63,
@@ -1006,22 +1070,22 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.6036,
-"draw": 0.235,
-"away": 0.1615,
+"home": 0.6026,
+"draw": 0.2351,
+"away": 0.1623,
 "fav": "home"
 },
 "soft": {
-"home": 0.6041,
-"draw": 0.2429,
-"away": 0.153,
+"home": 0.6039,
+"draw": 0.2434,
+"away": 0.1527,
 "fav": "home",
-"n": 46
+"n": 45
 },
-"pinnMovePP": 0.2,
+"pinnMovePP": 0.1,
 "pinnMove": {
-"movePP": 0.2,
-"stepPP": -0.0,
+"movePP": 0.1,
+"stepPP": -0.1,
 "n": 21,
 "move": false,
 "laeuft": false
@@ -1044,9 +1108,9 @@
 "moneyOdd": 1.57,
 "moneyDir": "flat",
 "totVol": 38445,
-"pinnOdd": 1.52,
-"softOdd": 1.52,
-"softN": 48,
+"pinnOdd": 1.53,
+"softOdd": 1.5,
+"softN": 47,
 "poly": {
 "vol": 6546,
 "odd": 1.57,
@@ -1058,22 +1122,22 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.6328,
-"draw": 0.1939,
-"away": 0.1733,
+"home": 0.6304,
+"draw": 0.1952,
+"away": 0.1744,
 "fav": "home"
 },
 "soft": {
-"home": 0.6207,
-"draw": 0.2044,
-"away": 0.1749,
+"home": 0.6228,
+"draw": 0.2041,
+"away": 0.1731,
 "fav": "home",
-"n": 48
+"n": 47
 },
-"pinnMovePP": 1.0,
+"pinnMovePP": 0.7,
 "pinnMove": {
-"movePP": 1.0,
-"stepPP": -0.0,
+"movePP": 0.7,
+"stepPP": -0.2,
 "n": 18,
 "move": false,
 "laeuft": false
@@ -1098,7 +1162,7 @@
 "totVol": 38159,
 "pinnOdd": 1.99,
 "softOdd": 1.98,
-"softN": 48,
+"softN": 47,
 "poly": {
 "vol": 26998,
 "odd": 2.06,
@@ -1116,11 +1180,11 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.4777,
+"home": 0.4774,
 "draw": 0.275,
-"away": 0.2473,
+"away": 0.2476,
 "fav": "home",
-"n": 48
+"n": 47
 },
 "pinnMovePP": 2.0,
 "pinnMove": {
@@ -1147,10 +1211,10 @@
 "moneySharePct": 64,
 "moneyOdd": 2.26,
 "moneyDir": "flat",
-"totVol": 36814,
+"totVol": 36816,
 "pinnOdd": 2.18,
 "softOdd": 2.15,
-"softN": 50,
+"softN": 49,
 "poly": {
 "vol": 4119,
 "odd": 2.25,
@@ -1162,17 +1226,17 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.4434,
-"draw": 0.2974,
-"away": 0.2592,
+"home": 0.4438,
+"draw": 0.2968,
+"away": 0.2594,
 "fav": "home"
 },
 "soft": {
-"home": 0.4417,
-"draw": 0.2874,
-"away": 0.2708,
+"home": 0.4415,
+"draw": 0.2873,
+"away": 0.2712,
 "fav": "home",
-"n": 50
+"n": 49
 },
 "pinnMovePP": 0.0,
 "pinnMove": {
@@ -1198,11 +1262,11 @@
 "moneyName": "Real Sociedad",
 "moneySharePct": 88,
 "moneyOdd": 1.64,
-"moneyDir": "out",
+"moneyDir": "flat",
 "totVol": 35743,
 "pinnOdd": 1.6,
 "softOdd": 1.58,
-"softN": 46,
+"softN": 45,
 "poly": {
 "vol": 4940,
 "odd": 1.63,
@@ -1214,22 +1278,22 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.6021,
-"draw": 0.2113,
-"away": 0.1867,
+"home": 0.6026,
+"draw": 0.211,
+"away": 0.1865,
 "fav": "home"
 },
 "soft": {
-"home": 0.599,
+"home": 0.5984,
 "draw": 0.2169,
-"away": 0.1841,
+"away": 0.1847,
 "fav": "home",
-"n": 46
+"n": 45
 },
 "pinnMovePP": 0.4,
 "pinnMove": {
 "movePP": 0.4,
-"stepPP": -0.0,
+"stepPP": 0.0,
 "n": 19,
 "move": false,
 "laeuft": false
@@ -1249,10 +1313,10 @@
 "moneySide": "away",
 "moneyName": "Celtic",
 "moneySharePct": 90,
-"moneyOdd": 1.6,
-"moneyDir": "flat",
-"totVol": 33733,
-"pinnOdd": 1.55,
+"moneyOdd": 1.59,
+"moneyDir": "in",
+"totVol": 33904,
+"pinnOdd": 1.56,
 "softOdd": 1.53,
 "softN": 42,
 "poly": {
@@ -1266,20 +1330,26 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.174,
-"draw": 0.2029,
-"away": 0.6231,
+"home": 0.1777,
+"draw": 0.2049,
+"away": 0.6174,
 "fav": "away"
 },
 "soft": {
-"home": 0.1797,
-"draw": 0.2126,
-"away": 0.6077,
+"home": 0.1788,
+"draw": 0.212,
+"away": 0.6092,
 "fav": "away",
 "n": 42
 },
-"pinnMovePP": null,
-"pinnMove": null,
+"pinnMovePP": -0.6,
+"pinnMove": {
+"movePP": -0.6,
+"stepPP": -0.6,
+"n": 2,
+"move": false,
+"laeuft": true
+},
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
@@ -1295,12 +1365,12 @@
 "moneySide": "away",
 "moneyName": "Leverkusen",
 "moneySharePct": 52,
-"moneyOdd": 2.34,
-"moneyDir": "flat",
-"totVol": 27241,
-"pinnOdd": 2.27,
-"softOdd": 2.23,
-"softN": 49,
+"moneyOdd": 2.32,
+"moneyDir": "in",
+"totVol": 27531,
+"pinnOdd": 2.24,
+"softOdd": 2.22,
+"softN": 48,
 "poly": {
 "vol": 6084,
 "odd": 2.35,
@@ -1312,25 +1382,25 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.3381,
-"draw": 0.2359,
-"away": 0.426,
+"home": 0.3325,
+"draw": 0.2354,
+"away": 0.432,
 "fav": "away"
 },
 "soft": {
-"home": 0.3396,
-"draw": 0.2395,
-"away": 0.4209,
+"home": 0.3392,
+"draw": 0.2385,
+"away": 0.4223,
 "fav": "away",
-"n": 49
+"n": 48
 },
-"pinnMovePP": 0.5,
+"pinnMovePP": 1.1,
 "pinnMove": {
-"movePP": 0.5,
-"stepPP": 0.0,
+"movePP": 1.1,
+"stepPP": 0.6,
 "n": 17,
-"move": false,
-"laeuft": false
+"move": true,
+"laeuft": true
 },
 "verdict": "konsens",
 "agree": true,
@@ -1346,12 +1416,12 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Toulouse",
-"moneySharePct": 90,
-"moneyOdd": 1.66,
-"moneyDir": "flat",
-"totVol": 21174,
-"pinnOdd": 1.61,
-"softOdd": 1.6,
+"moneySharePct": 89,
+"moneyOdd": 1.61,
+"moneyDir": "in",
+"totVol": 22305,
+"pinnOdd": 1.56,
+"softOdd": 1.57,
 "softN": 47,
 "poly": {
 "vol": 5162,
@@ -1364,48 +1434,48 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.5984,
-"draw": 0.2205,
-"away": 0.1811,
+"home": 0.6163,
+"draw": 0.2141,
+"away": 0.1696,
 "fav": "home"
 },
 "soft": {
-"home": 0.5919,
-"draw": 0.2234,
-"away": 0.1847,
+"home": 0.5985,
+"draw": 0.222,
+"away": 0.1796,
 "fav": "home",
 "n": 47
 },
-"pinnMovePP": 0.0,
+"pinnMovePP": 1.8,
 "pinnMove": {
-"movePP": 0.0,
-"stepPP": 0.0,
+"movePP": 1.8,
+"stepPP": 1.8,
 "n": 2,
-"move": false,
-"laeuft": false
+"move": true,
+"laeuft": true
 },
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
 }
 ],
-"ankerN": 42,
+"ankerN": 44,
 "ankerNOffen": 150,
-"ankerMit": 42,
+"ankerMit": 44,
 "ankerDiagnose": {
 "nach": {
-"kein_kandidat": 99,
 "name": 4,
+"kein_kandidat": 97,
 "zeit": 4
 },
 "beispiele": [
 {
-"spiel": "Harima (W) v Yokohama FC Seagull (W)",
+"spiel": "Iga FC Kunoichi (W) v Nittaidai SC Yokohama (W)",
 "kandidat": "Nagoya Grampus v Yokohama F Marinos",
 "key": "soccer_japan_j_league",
 "score": 0.33,
 "grund": "name",
-"matchId": "36231231",
+"matchId": "36231311",
 "liga": "Japanese Ladies Nadeshiko League"
 },
 {
@@ -1418,12 +1488,12 @@
 "liga": "Japanese Ladies Nadeshiko League"
 },
 {
-"spiel": "Iga FC Kunoichi (W) v Nittaidai SC Yokohama (W)",
+"spiel": "Harima (W) v Yokohama FC Seagull (W)",
 "kandidat": "Nagoya Grampus v Yokohama F Marinos",
 "key": "soccer_japan_j_league",
 "score": 0.33,
 "grund": "name",
-"matchId": "36231311",
+"matchId": "36231231",
 "liga": "Japanese Ladies Nadeshiko League"
 },
 {
