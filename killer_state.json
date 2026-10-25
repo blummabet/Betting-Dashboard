@@ -197,8 +197,8 @@
       },
       "geld": {
        "anteil": 0.713,
-       "betrag": 71197,
-       "gesamt": 99856,
+       "betrag": 71221,
+       "gesamt": 99889,
        "waehrung": "EUR",
        "quelle": "geld"
       },
@@ -334,8 +334,8 @@
       },
       "geld": {
        "anteil": 0.801,
-       "betrag": 48434,
-       "gesamt": 60467,
+       "betrag": 48438,
+       "gesamt": 60472,
        "waehrung": "EUR",
        "quelle": "geld"
       },
@@ -447,7 +447,7 @@
    "polySide": "AC Milan",
    "pinnMovePP": -4.6,
    "punkte": {
-    "punkte": 6,
+    "punkte": 5,
     "moeglich": 10,
     "dauerH": 28.21,
     "teile": [
@@ -455,20 +455,20 @@
       "buch": "BF",
       "name": "Betfair",
       "status": "ja",
-      "punkte": 3,
+      "punkte": 2,
       "moeglich": 3,
       "grund": {
        "ok": true,
        "text": "Geld 85% auf der Seite"
       },
       "tiefe": {
-       "ok": true,
+       "ok": false,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.849,
-       "betrag": 105053,
-       "gesamt": 123737,
+       "anteil": 0.853,
+       "betrag": 114040,
+       "gesamt": 133693,
        "waehrung": "EUR",
        "quelle": "geld"
       },
@@ -596,20 +596,20 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 82% auf der Seite"
+       "text": "Geld 81% auf der Seite"
       },
       "tiefe": {
        "ok": false,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.815,
-       "betrag": 51845,
-       "gesamt": 63613,
+       "anteil": 0.81,
+       "betrag": 51932,
+       "gesamt": 64114,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 82% auf der Seite"
+      "text": "Geld 81% auf der Seite"
      },
      {
       "buch": "POLY",
@@ -693,7 +693,7 @@
    "gehaltenSeit": "2026-10-24T19:21:12.598009+00:00",
    "zuletztAktiv": "2026-10-25T05:49:16.181178+00:00",
    "haltePreis": 1.38,
-   "aktiv": true
+   "aktiv": false
   },
   "36180881|Match Odds": {
    "matchId": "36180881",
@@ -704,28 +704,33 @@
    "markt": "Match Odds",
    "seite": "home",
    "name": "Athletic Bilbao",
-   "odd": 1.62,
+   "odd": 1.58,
    "entryOdd": 1.67,
    "anteilPct": 86,
    "stufe": 1,
    "verstaerker": [
     {
      "art": "poly",
-     "text": "Poly Preis 62%",
+     "text": "Poly Geld 88%",
      "gewicht": 12
     },
     {
      "art": "pinn",
      "text": "Pinnacle stimmt zu",
      "gewicht": 10
+    },
+    {
+     "art": "pinnMove",
+     "text": "Pinnacle zieht mit +2.3pp",
+     "gewicht": 14
     }
    ],
-   "rang": 80.7,
+   "rang": 94.7,
    "track": null,
    "streak": null,
    "poly": {
-    "anteilPct": 62,
-    "usd": 4399,
+    "anteilPct": 88,
+    "usd": 27127,
     "odd": 1.63
    },
    "polyStatus": "ja",
@@ -733,28 +738,28 @@
    "polySide": "Athletic Club",
    "pinnMovePP": 0.0,
    "punkte": {
-    "punkte": 9,
-    "moeglich": 10,
+    "punkte": 12,
+    "moeglich": 13,
     "dauerH": 15.67,
     "teile": [
      {
       "buch": "BF",
       "name": "Betfair",
       "status": "ja",
-      "punkte": 2,
+      "punkte": 3,
       "moeglich": 3,
       "grund": {
        "ok": true,
        "text": "Geld 87% auf der Seite"
       },
       "tiefe": {
-       "ok": false,
+       "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
        "anteil": 0.869,
-       "betrag": 44201,
-       "gesamt": 50864,
+       "betrag": 46620,
+       "gesamt": 53648,
        "waehrung": "EUR",
        "quelle": "geld"
       },
@@ -795,7 +800,7 @@
       },
       "tiefe": {
        "ok": true,
-       "text": "Move +1.5pp in unsere Richtung"
+       "text": "Move +2.3pp in unsere Richtung"
       },
       "geld": null,
       "text": "hat dieselbe Seite als Favorit"
@@ -803,13 +808,25 @@
      {
       "buch": "STAKE",
       "name": "Stake-Highroller",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "geld": null,
-      "text": "Stake-Highroller nicht erhoben"
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "$1.710 Highroller-Geld auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "1 Wetten, nicht eine einzelne"
+      },
+      "geld": {
+       "anteil": 1.0,
+       "betrag": 1710,
+       "gesamt": 1710,
+       "waehrung": "USD",
+       "quelle": "geld"
+      },
+      "text": "$1.710 Highroller-Geld auf derselben Seite"
      },
      {
       "buch": "ZEIT",
@@ -828,9 +845,9 @@
    },
    "wertVsPinn": -0.0252,
    "gehaltenSeit": "2026-10-24T21:20:04.146141+00:00",
-   "zuletztAktiv": "2026-10-24T21:20:04.146141+00:00",
+   "zuletztAktiv": "2026-10-25T06:19:27.846771+00:00",
    "haltePreis": 1.62,
-   "aktiv": false
+   "aktiv": true
   },
   "36180585|Match Odds": {
    "matchId": "36180585",
@@ -890,8 +907,8 @@
       },
       "geld": {
        "anteil": 0.789,
-       "betrag": 32817,
-       "gesamt": 41593,
+       "betrag": 32848,
+       "gesamt": 41632,
        "waehrung": "EUR",
        "quelle": "geld"
       },
@@ -1033,8 +1050,8 @@
       },
       "geld": {
        "anteil": 0.845,
-       "betrag": 161612,
-       "gesamt": 191257,
+       "betrag": 162471,
+       "gesamt": 192273,
        "waehrung": "EUR",
        "quelle": "geld"
       },
@@ -1110,7 +1127,7 @@
    "gehaltenSeit": "2026-10-24T21:50:30.019025+00:00",
    "zuletztAktiv": "2026-10-25T05:49:16.181178+00:00",
    "haltePreis": 1.76,
-   "aktiv": true
+   "aktiv": false
   }
  }
 }
