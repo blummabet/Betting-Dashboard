@@ -22,7 +22,7 @@ from pathlib import Path
 BASE      = Path(__file__).resolve().parent
 WM_FILE   = BASE / "wm2026-data.json"
 APIF_HOST = "v3.football.api-sports.io"
-APIF_KEY  = os.environ.get("APISPORTS_KEY", "9f36726c1bdc9957b4a49f89277b80db")
+APIF_KEY  = os.environ.get("APISPORTS_KEY", "")
 WC_LEAGUE_ID = int(os.environ.get("WC_LEAGUE_ID", "1"))
 WC_SEASON    = int(os.environ.get("WC_SEASON", "2026"))
 

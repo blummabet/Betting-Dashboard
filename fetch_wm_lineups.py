@@ -57,7 +57,7 @@ WM_FILE       = D.data_file()
 OUTPUT_FILE   = D.file("wm_lineups.json", "liga_lineups.json")
 ALERT_DEDUP   = D.file("wm_lineup_alerts.json", "liga_lineup_alerts.json")
 APIF_HOST     = "v3.football.api-sports.io"
-APIF_KEY      = os.environ.get("APISPORTS_KEY", "9f36726c1bdc9957b4a49f89277b80db")
+APIF_KEY      = os.environ.get("APISPORTS_KEY", "")
 
 # Telegram (Trades-Channel, NIEMALS Public)
 TELEGRAM_TOKEN          = os.environ.get("TELEGRAM_TOKEN", "")

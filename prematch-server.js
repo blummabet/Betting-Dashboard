@@ -28,7 +28,7 @@ const WRITE_MODE = process.argv.includes('--write');
 
 // ── Config ──────────────────────────────────────────────────────────────────
 // API-Football key (injuries, H2H, referee stats, fixtures, bookings)
-const API_KEY   = process.env.APISPORTS_KEY || '9f36726c1bdc9957b4a49f89277b80db';
+const API_KEY   = process.env.APISPORTS_KEY || '';
 const API_HOST  = 'v3.football.api-sports.io';
 // The Odds API key (all pre-match odds incl. same-day — replaces API-Football /odds)
 // 🔴 21.09.2026: hier stand der Schluessel im Klartext als Rueckfall. Lief die

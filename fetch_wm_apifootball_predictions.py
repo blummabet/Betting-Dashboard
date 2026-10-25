@@ -59,7 +59,7 @@ _IS_LIGA      = D.is_liga()
 WM_FILE       = D.data_file()
 OUTPUT_FILE   = D.file("wm_apif_predictions.json", "liga_apif_predictions.json")
 APIF_HOST     = "v3.football.api-sports.io"
-APIF_KEY      = os.environ.get("APISPORTS_KEY", "9f36726c1bdc9957b4a49f89277b80db")
+APIF_KEY      = os.environ.get("APISPORTS_KEY", "")
 
 DEFAULT_CFG = {
     "lookahead_days":         7,    # nur Spiele in den nächsten N Tagen
