@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-24T23:50:39.549408+00:00",
+ "generatedAt": "2026-10-25T00:12:54.608207+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,29 +10,114 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 758,
- "pinnKeys": 336,
- "matched": 236,
- "footballRows": 234,
+ "polyRowsSeen": 755,
+ "pinnKeys": 345,
+ "matched": 233,
+ "footballRows": 231,
  "crossRows": 524,
- "footballSkippedStale": 115,
+ "footballSkippedStale": 116,
  "seenBySport": {
   "basketball_nba": 100,
   "americanfootball_nfl": 66,
   "baseball_mlb": 8,
   "icehockey_nhl": 336,
   "boxing_boxing": 14,
-  "soccer_mls": 54,
+  "soccer_mls": 51,
   "soccer_liga": 180
  },
  "matchedBySport": {
   "baseball_mlb": 2,
-  "soccer_mls": 54,
+  "soccer_mls": 51,
   "soccer_liga": 180
  },
  "trackRecord": {
-  "tracked": 119,
-  "converged": 9
+  "tracked": 123,
+  "converged": 11
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "soccer_mls|newyorkcityfc-orlandocitysc|aw",
+   "sport": "soccer_mls",
+   "event": "Orlando City SC vs New York City FC",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 58.0,
+   "pinnPP": 34.4,
+   "gapPP": 23.57,
+   "vol": 12561,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-25T00:12:54.607959+00:00"
+  },
+  {
+   "id": "soccer_mls|atlantaunitedfc-chicagofire|hw",
+   "sport": "soccer_mls",
+   "event": "Atlanta United FC vs Chicago Fire",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 55.5,
+   "pinnPP": 35.6,
+   "gapPP": 19.86,
+   "vol": 20024,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-25T00:12:54.607959+00:00"
+  },
+  {
+   "id": "soccer_mls|newyorkcityfc-orlandocitysc|hw",
+   "sport": "soccer_mls",
+   "event": "Orlando City SC vs New York City FC",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 20.5,
+   "pinnPP": 39.8,
+   "gapPP": -19.3,
+   "vol": 12561,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-25T00:12:54.607959+00:00"
+  },
+  {
+   "id": "soccer_mls|atlantaunitedfc-chicagofire|aw",
+   "sport": "soccer_mls",
+   "event": "Atlanta United FC vs Chicago Fire",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 22.5,
+   "pinnPP": 38.6,
+   "gapPP": -16.05,
+   "vol": 20024,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-25T00:12:54.607959+00:00"
+  },
+  {
+   "id": "baseball_mlb|milwaukeebrewers-tampabayrays|tampabayrays",
+   "sport": "baseball_mlb",
+   "event": "Tampa Bay Rays vs Milwaukee Brewers",
+   "market": "Moneyline",
+   "outcome": "Tampa Bay Rays",
+   "polyPP": 54.5,
+   "pinnPP": 47.7,
+   "gapPP": 6.82,
+   "vol": 403568,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 1.5,
+   "firstSeen": "2026-10-24T02:41:04.453532+00:00"
+  },
+  {
+   "id": "baseball_mlb|milwaukeebrewers-tampabayrays|milwaukeebrewers",
+   "sport": "baseball_mlb",
+   "event": "Tampa Bay Rays vs Milwaukee Brewers",
+   "market": "Moneyline",
+   "outcome": "Milwaukee Brewers",
+   "polyPP": 45.5,
+   "pinnPP": 52.3,
+   "gapPP": -6.82,
+   "vol": 403568,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 1.5,
+   "firstSeen": "2026-10-24T02:41:04.453532+00:00"
+  }
+ ]
 }
