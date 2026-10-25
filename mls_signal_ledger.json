@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-10-24T21:35:49Z",
-    "total_records": 147,
+    "updated_at": "2026-10-25T12:41:23Z",
+    "total_records": 149,
     "oddsBackfilled": "2026-09-06 — Quote/entryOdd aus den Pick-Dateien nachgetragen; der Ledger trug sie nie (0 von 318)."
   },
   "records": [
@@ -1445,7 +1445,7 @@
           "score": 4.0
         }
       ],
-      "resolvedAt": "2026-10-24T21:35:49Z",
+      "resolvedAt": "2026-10-25T12:41:23Z",
       "source": "steam",
       "convictionScore": 5,
       "lateEntry": true,
@@ -7094,6 +7094,116 @@
       "entryBook": "soft",
       "processVerdict": "DESERVED_LOSS",
       "clvFairPP": 0.8,
+      "clvBasis": "fair"
+    },
+    {
+      "key": "MLS-31-1599-1609|Heimsieg",
+      "matchKey": "MLS-31-1599-1609",
+      "market": "Heimsieg",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "lead_lag_bias",
+          "score": 2.04
+        },
+        {
+          "name": "form_trend",
+          "score": 3.07
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 1.0
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.86
+        },
+        {
+          "name": "chance_creation",
+          "score": 3.22
+        },
+        {
+          "name": "form_rating",
+          "score": 1.48
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": 0.3
+        },
+        {
+          "name": "transfer_shift",
+          "score": 0.72
+        },
+        {
+          "name": "mls_travel",
+          "score": 0.63
+        },
+        {
+          "name": "betfair_money",
+          "score": -4.0
+        }
+      ],
+      "resolvedAt": "2026-10-25T12:41:13Z",
+      "source": "steam",
+      "convictionScore": 7,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -3.02,
+      "clvResolved": true,
+      "odds": 1.47,
+      "entryOdd": 1.47,
+      "entryBook": "soft",
+      "processVerdict": "UNLUCKY",
+      "clvFairPP": -0.83,
+      "clvBasis": "fair"
+    },
+    {
+      "key": "MLS-31-1613-1601|Heimsieg",
+      "matchKey": "MLS-31-1613-1601",
+      "market": "Heimsieg",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "h2h_pattern",
+          "score": 1.0
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.45
+        },
+        {
+          "name": "chance_creation",
+          "score": 2.48
+        },
+        {
+          "name": "form_rating",
+          "score": 4.78
+        },
+        {
+          "name": "league_pressure",
+          "score": -1.01
+        },
+        {
+          "name": "transfer_shift",
+          "score": -1.2
+        },
+        {
+          "name": "betfair_money",
+          "score": -3.48
+        }
+      ],
+      "resolvedAt": "2026-10-25T12:41:13Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -3.37,
+      "clvResolved": true,
+      "odds": 1.62,
+      "entryOdd": 1.62,
+      "entryBook": "soft",
+      "processVerdict": "LUCKY",
+      "clvFairPP": -1.1,
       "clvBasis": "fair"
     },
     {
