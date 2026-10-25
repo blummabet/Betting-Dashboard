@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-10-24T20:53:10Z",
-    "total_records": 255,
+    "updated_at": "2026-10-25T11:25:13Z",
+    "total_records": 258,
     "oddsBackfilled": "2026-09-06 — Quote/entryOdd aus den Pick-Dateien nachgetragen; der Ledger trug sie nie (0 von 318)."
   },
   "records": [
@@ -2646,6 +2646,123 @@
       "entryOdd": 1.38,
       "entryBook": "soft",
       "clvFairPP": 3.94,
+      "clvBasis": "fair"
+    },
+    {
+      "key": "ESP-10-530-544|AH Heim −1.75",
+      "matchKey": "ESP-10-530-544",
+      "market": "AH Heim −1.75",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 2.07
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 1.4
+        },
+        {
+          "name": "xg_strength",
+          "score": 0.88
+        },
+        {
+          "name": "chance_creation",
+          "score": 1.69
+        },
+        {
+          "name": "form_rating",
+          "score": 2.95
+        },
+        {
+          "name": "smart_money",
+          "score": 1.5
+        },
+        {
+          "name": "transfer_shift",
+          "score": 0.72
+        },
+        {
+          "name": "opener_move",
+          "score": 1.07
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        },
+        {
+          "name": "venue_form",
+          "score": 1.9
+        },
+        {
+          "name": "betfair_money",
+          "score": 3.02
+        }
+      ],
+      "resolvedAt": "2026-10-25T11:25:09Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": false,
+      "engineVersion": "v1",
+      "clvPP": -1.33,
+      "clvResolved": true,
+      "odds": 1.91,
+      "entryOdd": 1.91,
+      "entryBook": "pini",
+      "processVerdict": "DESERVED_LOSS",
+      "clvBasis": "roh"
+    },
+    {
+      "key": "ESP-10-530-544|Unter 3.5 Tore",
+      "matchKey": "ESP-10-530-544",
+      "market": "Unter 3.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "lead_lag_bias",
+          "score": -3.15
+        },
+        {
+          "name": "injury",
+          "score": 6.0
+        },
+        {
+          "name": "form_trend",
+          "score": 2.67
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 3.8
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.63
+        },
+        {
+          "name": "chance_creation",
+          "score": -5.06
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": -0.75
+        },
+        {
+          "name": "transfer_shift",
+          "score": 0.36
+        }
+      ],
+      "resolvedAt": "2026-10-25T11:25:09Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -9.15,
+      "clvResolved": true,
+      "odds": 1.52,
+      "entryOdd": 1.52,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED",
+      "clvFairPP": -5.89,
       "clvBasis": "fair"
     },
     {
@@ -7829,6 +7946,58 @@
       "clvBasis": "fair"
     },
     {
+      "key": "FRA-8-116-114|Doppelte Chance — X2",
+      "matchKey": "FRA-8-116-114",
+      "market": "Doppelte Chance — X2",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "injury",
+          "score": 1.6
+        },
+        {
+          "name": "h2h_pattern",
+          "score": -0.6
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.83
+        },
+        {
+          "name": "chance_creation",
+          "score": -0.81
+        },
+        {
+          "name": "form_rating",
+          "score": 2.52
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": 0.47
+        },
+        {
+          "name": "transfer_shift",
+          "score": 1.2
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        }
+      ],
+      "resolvedAt": "2026-10-25T11:25:09Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -0.95,
+      "clvResolved": true,
+      "odds": 1.57,
+      "entryOdd": 1.57,
+      "entryBook": "soft",
+      "processVerdict": "DESERVED_LOSS",
+      "clvBasis": "roh"
+    },
+    {
       "key": "GER-1-157-172|Über 3.5 Tore",
       "matchKey": "GER-1-157-172",
       "market": "Über 3.5 Tore",
@@ -11526,7 +11695,7 @@
           "score": 2.05
         }
       ],
-      "resolvedAt": "2026-10-24T20:53:10Z",
+      "resolvedAt": "2026-10-25T11:25:13Z",
       "source": "steam",
       "convictionScore": 5,
       "lateEntry": true,
