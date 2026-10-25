@@ -1,15 +1,15 @@
 {
- "n": 630,
+ "n": 634,
  "minOdds": 1.35,
- "moneyHitRate": 0.43,
+ "moneyHitRate": 0.431,
  "priceHitRate": 0.446,
- "brierMoney": 0.7986,
- "brierPrice": 0.6614,
+ "brierMoney": 0.7991,
+ "brierPrice": 0.6611,
  "disagree": {
-  "n": 162,
+  "n": 159,
   "moneyWon": 31,
   "priceWon": 41,
-  "neither": 90
+  "neither": 87
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -31,6 +31,14 @@
    "verdict": "preis_besser"
   },
   {
+   "league": "BRAZIL-SERIE-A",
+   "n": 38,
+   "moneyHitRate": 0.526,
+   "brierMoney": 0.6455,
+   "brierPrice": 0.5746,
+   "verdict": "preis_besser"
+  },
+  {
    "league": "LIGUE-1",
    "n": 20,
    "moneyHitRate": 0.6,
@@ -44,14 +52,6 @@
    "moneyHitRate": 0.425,
    "brierMoney": 0.7815,
    "brierPrice": 0.6988,
-   "verdict": "preis_besser"
-  },
-  {
-   "league": "BRAZIL-SERIE-A",
-   "n": 36,
-   "moneyHitRate": 0.5,
-   "brierMoney": 0.6785,
-   "brierPrice": 0.5937,
    "verdict": "preis_besser"
   },
   {
@@ -120,17 +120,17 @@
   },
   {
    "league": "MLS",
-   "n": 31,
-   "moneyHitRate": 0.419,
-   "brierMoney": 0.9785,
-   "brierPrice": 0.6725,
+   "n": 33,
+   "moneyHitRate": 0.394,
+   "brierMoney": 1.0237,
+   "brierPrice": 0.6924,
    "verdict": "preis_besser"
   }
  ],
  "guete": {
-  "belastbar": 630,
-  "preis_echo": 432,
-  "abgeschnitten": 111,
+  "belastbar": 634,
+  "preis_echo": 437,
+  "abgeschnitten": 112,
   "unbekannt": 0,
   "leer": 0
  },
@@ -572,7 +572,7 @@
    "league": "EPL",
    "winner": "Draw (Aston Villa FC vs. Brentford FC)",
    "moneyFav": "Brentford FC",
-   "priceFav": "Aston Villa FC",
+   "priceFav": "Brentford FC",
    "moneyShare": 0.803,
    "priceProb": 0.367,
    "moneyOK": false,
@@ -616,15 +616,15 @@
    "totalUsd": 341543
   }
  ],
- "generatedAt": "2026-10-25T01:20:28.093296+00:00",
+ "generatedAt": "2026-10-25T02:23:04.439861+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
-  "nba": 566,
+  "nba": 572,
   "nfl": 800,
-  "mlb": 452,
-  "nhl": 621,
-  "mls": 744,
+  "mlb": 448,
+  "nhl": 616,
+  "mls": 718,
   "epl": 588,
   "soccer": 800,
   "tennis": 800,
@@ -633,13 +633,13 @@
   "bundesliga": 499,
   "serie-a": 52,
   "ligue-1": 582,
-  "primeira-liga": 489,
-  "brazil-serie-a": 543,
+  "primeira-liga": 487,
+  "brazil-serie-a": 531,
   "brasileirao": 0,
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 677,
+  "esports": 679,
   "cs2": 424,
   "lol": 439,
   "dota": 29,
@@ -683,7 +683,7 @@
   "peru-liga-1": 149,
   "poland-ekstraklasa": 420,
   "premier-league": 561,
-  "romania-superliga": 138,
+  "romania-superliga": 139,
   "saudi-professional-league": 489,
   "scotland-league-cup": 193,
   "scottish-premiership": 470,
@@ -710,7 +710,7 @@
  "sweepStats": {
   "sweepOpen": 500,
   "sweepClosed": 500,
-  "sweepAdded": 417
+  "sweepAdded": 414
  },
  "vorStats": {
   "kandidaten": 5,
@@ -722,64 +722,49 @@
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1904,
-   "usd": 46926409,
-   "beispiel": "fifwc-can-qat-2026-06-18"
-  },
-  "world": {
-   "n": 120,
-   "usd": 8616069,
-   "beispiel": "world-cup-winner"
-  },
-  "uefa": {
-   "n": 48,
-   "usd": 4959420,
-   "beispiel": "uefa-champions-league-winner"
-  },
-  "wnba": {
-   "n": 230,
-   "usd": 1558945,
-   "beispiel": "wnba-gsv-atl-2026-10-24"
-  },
-  "btc": {
-   "n": 178,
-   "usd": 1262580,
-   "beispiel": "btc-updown-5m-1792867200"
-  },
-  "presidential": {
-   "n": 23,
-   "usd": 1213696,
-   "beispiel": "presidential-election-winner-2028"
-  },
-  "which": {
-   "n": 41,
-   "usd": 1071229,
-   "beispiel": "which-party-will-win-the-house-in-2026"
-  },
-  "ecs": {
-   "n": 7,
-   "usd": 999471,
-   "beispiel": "ecs-ars-mci-2026-08-16"
-  },
-  "fed": {
-   "n": 31,
-   "usd": 801707,
-   "beispiel": "fed-decision-in-october-20260617190323537"
+   "n": 1405,
+   "usd": 41789700,
+   "beispiel": "fifwc-civ-ecu-2026-06-14"
   },
   "balance": {
    "n": 13,
-   "usd": 704131,
+   "usd": 1894465,
    "beispiel": "balance-of-power-2026-midterms"
   },
-  "will": {
-   "n": 31,
-   "usd": 674419,
-   "beispiel": "will-vivek-ramaswamy-pull-the-amy-acton-mother-ad"
+  "wnba": {
+   "n": 254,
+   "usd": 1592119,
+   "beispiel": "wnba-wsh-min-2026-06-21"
   },
-  "cbb": {
-   "n": 60,
-   "usd": 470148,
-   "beispiel": "cbb-uconn-mich-2026-04-06"
+  "btc": {
+   "n": 203,
+   "usd": 1395021,
+   "beispiel": "btc-updown-15m-1792788300"
+  },
+  "presidential": {
+   "n": 16,
+   "usd": 1005400,
+   "beispiel": "presidential-election-winner-2028"
+  },
+  "ecs": {
+   "n": 6,
+   "usd": 985884,
+   "beispiel": "ecs-ars-mci-2026-08-16"
+  },
+  "world": {
+   "n": 51,
+   "usd": 689273,
+   "beispiel": "world-cup-winner"
+  },
+  "fed": {
+   "n": 22,
+   "usd": 653122,
+   "beispiel": "fed-decision-in-october-20260617190323537"
+  },
+  "which": {
+   "n": 29,
+   "usd": 578553,
+   "beispiel": "which-teams-will-make-the-nhl-playoffs-2026-27"
   },
   "usc": {
    "n": 5,
@@ -787,39 +772,54 @@
    "beispiel": "usc-psg-av-2026-08-12"
   },
   "super": {
-   "n": 16,
-   "usd": 311522,
+   "n": 17,
+   "usd": 314902,
    "beispiel": "super-bowl-champion-2026-731"
   },
+  "uefa": {
+   "n": 16,
+   "usd": 245941,
+   "beispiel": "uefa-champions-league-2027-champion-20260701202025549"
+  },
+  "cbb": {
+   "n": 19,
+   "usd": 229223,
+   "beispiel": "cbb-uconn-mich-2026-04-06"
+  },
   "pro": {
-   "n": 39,
-   "usd": 309862,
+   "n": 28,
+   "usd": 202152,
    "beispiel": "pro-football-2027-champion-20260729185915366"
   },
   "ncaa": {
-   "n": 21,
-   "usd": 201374,
+   "n": 22,
+   "usd": 197645,
    "beispiel": "ncaa-football-2026-heisman-award-winner-20260731185656435"
   },
-  "cricipl": {
-   "n": 17,
-   "usd": 140372,
-   "beispiel": "cricipl-mum-sun-2026-04-29"
+  "texas": {
+   "n": 10,
+   "usd": 181126,
+   "beispiel": "texas-senate-election-winner"
   },
-  "what": {
-   "n": 22,
-   "usd": 137058,
-   "beispiel": "what-price-will-bitcoin-hit-before-2027"
+  "uef": {
+   "n": 11,
+   "usd": 163989,
+   "beispiel": "uef-kvx-tur-2026-03-31"
   },
-  "us": {
-   "n": 23,
-   "usd": 129119,
-   "beispiel": "us-imports-russian-diesel-by-october-31"
+  "brazil": {
+   "n": 19,
+   "usd": 131187,
+   "beispiel": "brazil-presidential-election"
+  },
+  "ballon": {
+   "n": 21,
+   "usd": 126796,
+   "beispiel": "ballon-dor-winner-2026"
   },
   "nbasl": {
    "n": 9,
    "usd": 126396,
-   "beispiel": "nbasl-cle-nop-2026-07-15"
+   "beispiel": "nbasl-cha-sac-2026-07-17"
   }
  }
 }
