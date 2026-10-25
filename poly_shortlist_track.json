@@ -1,8 +1,8 @@
 {
- "updatedAt": "2026-10-25T22:21:51.567826+00:00",
+ "updatedAt": "2026-10-25T22:51:52.332470+00:00",
  "stake": 10.0,
  "expired": 0,
- "condDrift": 0,
+ "condDrift": 1,
  "clvNachgetragen": 0,
  "katNachgetragen": 0,
  "blockedCats": [
@@ -310,7 +310,7 @@
    "entryPrice": 0.515,
    "firstTs": "2026-10-25T17:51:33.469315+00:00",
    "lastPrice": 0.535,
-   "lastTs": "2026-10-25T22:21:51.567826+00:00",
+   "lastTs": "2026-10-25T22:51:52.332470+00:00",
    "htkAtEntry": 2.140816666666667,
    "public": false,
    "ohneWallet": false,
@@ -339,7 +339,7 @@
    "entryPrice": 0.805,
    "firstTs": "2026-10-25T17:51:33.469315+00:00",
    "lastPrice": 0.785,
-   "lastTs": "2026-10-25T22:21:51.567826+00:00",
+   "lastTs": "2026-10-25T22:51:52.332470+00:00",
    "htkAtEntry": 2.6408122222222223,
    "public": true,
    "ohneWallet": false,
@@ -368,7 +368,7 @@
    "entryPrice": 0.915,
    "firstTs": "2026-10-25T19:21:21.570028+00:00",
    "lastPrice": 0.915,
-   "lastTs": "2026-10-25T22:21:51.567826+00:00",
+   "lastTs": "2026-10-25T22:51:52.332470+00:00",
    "htkAtEntry": 2.644076666666667,
    "public": false,
    "ohneWallet": false,
@@ -399,7 +399,7 @@
    "entryPrice": 0.715,
    "firstTs": "2026-10-25T20:21:07.418698+00:00",
    "lastPrice": 0.695,
-   "lastTs": "2026-10-25T22:21:51.567826+00:00",
+   "lastTs": "2026-10-25T22:51:52.332470+00:00",
    "htkAtEntry": 2.648006666666667,
    "public": false,
    "ohneWallet": false,
@@ -417,7 +417,7 @@
    "cond": "0x9d55797ec1884be19515b4b61d2a8cd4a9d32ba1ceabddf6edff088c22135d51",
    "frage": "Magic vs. Knicks",
    "closeRef": 0.695,
-   "closeRefTs": "2026-10-25T22:21:43.446760+00:00",
+   "closeRefTs": "2026-10-25T22:51:44.246321+00:00",
    "closeQuelle": "close"
   },
   "nba-lac-okc-2026-10-25|Thunder": {
@@ -449,7 +449,8 @@
    "frage": "Clippers vs. Thunder",
    "closeRef": 0.905,
    "closeRefTs": "2026-10-25T22:21:43.446760+00:00",
-   "closeQuelle": "close"
+   "closeQuelle": "close",
+   "clvGrund": "kein_schluss_nach_einstieg"
   },
   "por-spo-acv-2026-10-25-more-markets|Under": {
    "key": "por-spo-acv-2026-10-25-more-markets",
@@ -461,7 +462,7 @@
    "entryPrice": 0.63,
    "firstTs": "2026-10-25T20:52:19.659658+00:00",
    "lastPrice": 0.535,
-   "lastTs": "2026-10-25T22:21:51.567826+00:00",
+   "lastTs": "2026-10-25T22:51:52.332470+00:00",
    "htkAtEntry": -0.37206055555555556,
    "public": false,
    "ohneWallet": false,
@@ -479,6 +480,35 @@
    "movePreEntryPP": 2.0,
    "cond": "0xf1740113c0664d0891c65d851bf5e430c2d79475b86a50011e9f890b59319fb4",
    "frage": "Sporting CP vs. Académico de Viseu FC: O/U 3.5",
+   "clvGrund": "live_eingestiegen"
+  },
+  "nba-lal-uta-2026-10-25|Lakers": {
+   "key": "nba-lal-uta-2026-10-25",
+   "side": "Lakers",
+   "verdict": "BET",
+   "conv": 5,
+   "league": "NBA",
+   "cat": "US-Sport",
+   "entryPrice": 0.725,
+   "firstTs": "2026-10-25T22:51:52.332470+00:00",
+   "lastPrice": 0.685,
+   "lastTs": "2026-10-25T22:51:52.332470+00:00",
+   "htkAtEntry": -1.8644722222222223,
+   "public": false,
+   "ohneWallet": false,
+   "reasons": [
+    "großes Geld auf Lakers (72%) → $2.08M",
+    "🔎 vielversprechende Wallets (noch nicht belegt) (8 Wallets, zusammen 740/1389, 53% · 30 T Sport +$1.80M) · zählt 86%"
+   ],
+   "signals": [
+    "money",
+    "sharp"
+   ],
+   "stake": 10.0,
+   "ev": "2026-09-01",
+   "movePreEntryPP": -1.0,
+   "cond": "0x88b7e613ec70694ceca726fc74705903ca62548f4920ece7ea4ee5697e8ce988",
+   "frage": "Lakers vs. Jazz",
    "clvGrund": "live_eingestiegen"
   }
  },
