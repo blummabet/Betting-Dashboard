@@ -1959,7 +1959,7 @@ UEBERSICHT_CHECKS = [
     check_stake_kategorien,
     check_stake_norm_kachel_ohne_gesperrte,
     check_stake_wette_sagt_ob_spiel,
-    check_stake_abrechnung_laeuft,
+    # check_stake_abrechnung_laeuft — 25.10.2026 (Lucas): Stake hier abgedreht, läuft nur noch im Geldradar
     check_betfair_urteil,
     check_quellen_haben_zeitstempel,
     check_serie_seltenheit_nennt_ihren_nenner,

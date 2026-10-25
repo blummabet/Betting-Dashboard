@@ -441,7 +441,7 @@ def check_run_health(ctx):
 STAKE_STALE_H = float(os.environ.get("STAKE_STALE_H") or 1.5)
 
 
-@integrity_check
+# 25.10.2026 (Lucas): Stake ist hier abgedreht (läuft nur noch im Geldradar) — Wächter nicht mehr registriert
 def check_stake_sammelt(ctx):
     """Kommen Stake-Daten an? Gemessen am Artefakt, nicht am Workflow.
 
