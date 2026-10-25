@@ -259,7 +259,7 @@
       "severity": "warn",
       "failures": [
         "liga_poly_balance.json: Positionswert $14.81 stammt aus einem Lauf vor 23 h — die Datei selbst ist 23 h alt — der Produzent laeuft nicht, das ist kein API-Problem",
-        "mls_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 12 h — die Datei selbst ist 12 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
+        "mls_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 13 h — die Datei selbst ist 13 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
       ],
       "nFail": 2,
       "ok": false,
@@ -318,11 +318,9 @@
     {
       "label": "Ergebnisse kommen an",
       "severity": "error",
-      "failures": [
-        "liga_ergebnis_nachlauf.json: 1 abgesagtes/verlegtes Spiel (Rayo Vallecano–Athletic Club (ABD)) — es kommt an diesem Termin zu keinem Ergebnis; offene Wetten darauf brauchen eine Entscheidung"
-      ],
-      "nFail": 1,
-      "ok": false,
+      "failures": [],
+      "nFail": 0,
+      "ok": true,
       "hinweis": ""
     },
     {
@@ -337,13 +335,13 @@
       "label": "Serien-Buch zeigt beide Buecher",
       "severity": "warn",
       "failures": [
-        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 308.2 h, MLS 315.8 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 309.0 h, MLS 316.6 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
       ],
       "nFail": 1,
       "ok": false,
       "hinweis": "Liga n=95 · MLS n=82 · Urteil beide 'Erwartung zu duenn'"
     }
   ],
-  "nFail": 12,
-  "generatedAt": "2026-10-25T20:55:45.198926+00:00"
+  "nFail": 11,
+  "generatedAt": "2026-10-25T21:44:01.357962+00:00"
 }
