@@ -336,8 +336,7 @@ def alter_h(wert, jetzt=None):
 DATENQUELLEN = (
     ("poly_money_broad.json", "generatedAt", 3.0, "Poly-Whale-Scan",
      "Whale-Pushes, Heute spielenswert, Wallet-Lernen, Auflösungen"),
-    ("poly_live_signal_track.json", "updatedAt", 3.0, "Poly-Live-Scan",
-     "Live-Pushes, Live-Signal-Buch"),
+    # 25.10.2026 (Lucas): Poly-Live-Scan abgeschaltet (Geldradar übernimmt) — keine Quelle mehr
     # 25.10.2026 (Lucas): Stake ist hier abgedreht und läuft nur noch im Geldradar — kein Alarm mehr dafür
 )
 ERINNERUNG_H = 12.0
