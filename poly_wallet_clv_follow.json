@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-25T02:23:08.829284+00:00",
+ "updatedAt": "2026-10-25T02:49:51.524412+00:00",
  "stake": 10.0,
  "regel": {
   "minN": 20,
@@ -8,8 +8,8 @@
  },
  "zaehler": {
   "ohneEinstieg": 32,
-  "gesperrt": 104,
-  "alt": 247
+  "gesperrt": 64,
+  "alt": 244
  },
  "open": {
   "jap-jef-vva-2026-10-11-more-markets|Under": {
@@ -14290,28 +14290,6 @@
    "firstTs": "2026-10-24T22:08:41.705060+00:00",
    "stake": 10.0
   },
-  "bra-cha-flu-2026-10-24|Fluminense FC": {
-   "key": "bra-cha-flu-2026-10-24",
-   "side": "Fluminense FC",
-   "cat": "Fußball",
-   "league": "BRAZIL-SERIE-A",
-   "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-   "belegt": true,
-   "heiss": false,
-   "walletN": 2398,
-   "walletClv": 0.268,
-   "walletUg": 0.163,
-   "clv7": null,
-   "n7": null,
-   "walletEntry": 0.513,
-   "entryPrice": 0.505,
-   "abstandPP": -0.8,
-   "arm": "nehmbar",
-   "lastPrice": 0.505,
-   "htkAtEntry": 0.46,
-   "firstTs": "2026-10-24T22:08:41.705060+00:00",
-   "stake": 10.0
-  },
   "mex-leo-tol-2026-10-24-more-markets|Under": {
    "key": "mex-leo-tol-2026-10-24-more-markets",
    "side": "Under",
@@ -14747,9 +14725,31 @@
    "entryPrice": 0.565,
    "abstandPP": 0.5,
    "arm": "nehmbar",
-   "lastPrice": 0.565,
+   "lastPrice": 0.575,
    "htkAtEntry": 2.22,
    "firstTs": "2026-10-25T02:23:08.829284+00:00",
+   "stake": 10.0
+  },
+  "mex-pum-tig-2026-10-24|Tigres de la UANL": {
+   "key": "mex-pum-tig-2026-10-24",
+   "side": "Tigres de la UANL",
+   "cat": "Fußball",
+   "league": "SOCCER",
+   "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+   "belegt": true,
+   "heiss": false,
+   "walletN": 2419,
+   "walletClv": 0.269,
+   "walletUg": 0.165,
+   "clv7": null,
+   "n7": null,
+   "walletEntry": 0.314,
+   "entryPrice": 0.325,
+   "abstandPP": 1.1,
+   "arm": "zu_spaet",
+   "lastPrice": 0.325,
+   "htkAtEntry": 1.95,
+   "firstTs": "2026-10-25T02:49:51.524412+00:00",
    "stake": 10.0
   }
  },
@@ -90045,6 +90045,34 @@
    "closePrice": 0.245,
    "clvPP": 0.0,
    "settledTs": "2026-10-25T02:23:08.829284+00:00"
+  },
+  {
+   "key": "bra-cha-flu-2026-10-24",
+   "side": "Fluminense FC",
+   "cat": "Fußball",
+   "league": "BRAZIL-SERIE-A",
+   "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+   "belegt": true,
+   "heiss": false,
+   "walletN": 2398,
+   "walletClv": 0.268,
+   "walletUg": 0.163,
+   "clv7": null,
+   "n7": null,
+   "walletEntry": 0.513,
+   "entryPrice": 0.505,
+   "abstandPP": -0.8,
+   "arm": "nehmbar",
+   "lastPrice": 0.505,
+   "htkAtEntry": 0.46,
+   "firstTs": "2026-10-24T22:08:41.705060+00:00",
+   "stake": 10.0,
+   "result": "loss",
+   "winner": "Associação Chapecoense de Futebol",
+   "pnl": -10.0,
+   "closePrice": 0.505,
+   "clvPP": 0.0,
+   "settledTs": "2026-10-25T02:49:51.524412+00:00"
   }
  ],
  "gesehen": [
@@ -92173,6 +92201,7 @@
   "mex-pue-mon1-2026-10-21|CF Monterrey",
   "mex-pue-mon1-2026-10-21|Club Puebla",
   "mex-pum-caz-2026-10-11|CF Cruz Azul",
+  "mex-pum-tig-2026-10-24|Tigres de la UANL",
   "mex-san-pum-2026-10-21-exact-score|Club Santos Laguna 0 - 0 Pumas de la UNAM",
   "mex-san-pum-2026-10-21|Club Santos Laguna",
   "mex-san-pum-2026-10-21|Draw (Club Santos Laguna vs. Pumas de la UNAM)",
@@ -93606,16 +93635,16 @@
  ],
  "agg": {
   "belegt_nehmbar": {
-   "n": 1441,
+   "n": 1442,
    "wins": 434,
-   "hit": 0.3012,
-   "pnl": -2265.12,
-   "stake": 14410.0,
-   "roi": -0.1572,
-   "roiUg": -0.2603,
+   "hit": 0.301,
+   "pnl": -2275.12,
+   "stake": 14420.0,
+   "roi": -0.1578,
+   "roiUg": -0.2608,
    "belegt": false,
    "clvAvg": 0.05,
-   "clvN": 1441,
+   "clvN": 1442,
    "clvUg": -0.03
   },
   "belegt_zu_spaet": {
@@ -93658,16 +93687,16 @@
    "clvUg": -1.07
   },
   "nehmbar": {
-   "n": 1593,
+   "n": 1594,
    "wins": 500,
-   "hit": 0.3139,
-   "pnl": -2462.95,
-   "stake": 15930.0,
-   "roi": -0.1546,
-   "roiUg": -0.2488,
+   "hit": 0.3137,
+   "pnl": -2472.95,
+   "stake": 15940.0,
+   "roi": -0.1551,
+   "roiUg": -0.2493,
    "belegt": false,
    "clvAvg": 0.05,
-   "clvN": 1593,
+   "clvN": 1594,
    "clvUg": -0.03,
    "byCat": {
     "E-Sport": {
@@ -93684,16 +93713,16 @@
      "clvUg": -0.23
     },
     "Fußball": {
-     "n": 974,
+     "n": 975,
      "wins": 209,
-     "hit": 0.2146,
-     "pnl": -2380.62,
-     "stake": 9740.0,
-     "roi": -0.2444,
-     "roiUg": -0.3881,
+     "hit": 0.2144,
+     "pnl": -2390.62,
+     "stake": 9750.0,
+     "roi": -0.2452,
+     "roiUg": -0.3887,
      "belegt": false,
      "clvAvg": 0.08,
-     "clvN": 974,
+     "clvN": 975,
      "clvUg": -0.03
     },
     "None": {
