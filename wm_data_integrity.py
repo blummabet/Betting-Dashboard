@@ -2636,7 +2636,7 @@ def check_streaks_fresh(ctx):
 LIVE_SCAN_STALE_MIN = 90
 
 
-@integrity_check
+# 25.10.2026 (Lucas): Poly-Live-Scan abgeschaltet — Wächter nicht mehr registriert
 def check_live_scan_laeuft(ctx):
     """NEU 31.08.2026: laeuft der Poly-Live-Scan ueberhaupt?
 

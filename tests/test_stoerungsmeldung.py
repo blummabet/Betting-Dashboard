@@ -387,7 +387,7 @@ class TestEineStehendeQuelleKommtSofortUndZuerst:
         inh["stake_highroller.json"] = {"asof": None}
         inh.pop("poly_live_signal_track.json")
         namen = {x["name"] for x in S.stehende_quellen(inh, self.J)}
-        assert namen == {"Poly-Live-Scan"}   # 25.10.2026: Stake hier abgedreht, keine Quelle mehr
+        assert namen == set()   # 25.10.2026: Stake und Poly-Live-Scan abgeschaltet, beide keine Quelle mehr
 
     def test_alarm_sofort_dann_erinnerung_dann_entwarnung(self):
         st = S.stehende_quellen(self._inhalte(), self.J)
