@@ -39,6 +39,7 @@ def test_guard_faengt_den_stillstand():
     assert c["nFail"] == 1 and c["severity"] == "error"
 
 
+@__import__("pytest").mark.skip(reason="25.10.2026: Stake hier abgedreht, Wächter nicht mehr in der Batterie")
 def test_guard_still_bei_normaler_abrechnung():
     reif = [_w(i, (JETZT - timedelta(hours=30)).isoformat(), {"endstand": True}) for i in range(20)]
     c = U.check_stake_abrechnung_laeuft({"stakeLedger": {"wetten": reif}}, jetzt=JETZT)

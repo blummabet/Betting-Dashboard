@@ -102,6 +102,7 @@ jobs:
       # Was dann noch fehlt, sagt der Sammler selbst: er misst die Luecke und schreibt sie
       # ins Ledger, statt sie als ruhigen Abend durchgehen zu lassen.
       - name: 🎰 Stake Highroller sammeln
+        if: ${{ false }}   # 25.10.2026 (Lucas): Stake läuft nur noch im Geldradar (money-radar) — hier abgedreht
         continue-on-error: true
         env:
           STAKE_MIN_USD: '1000'
@@ -111,16 +112,19 @@ jobs:
       # settle fragt nur Wetten nach, die reif und noch nicht abgerechnet sind (jede genau
       # einmal), analyse rechnet lokal. Beide duerfen scheitern, ohne Betfair mitzureissen.
       - name: 🧾 Stake-Wetten abrechnen
+        if: ${{ false }}   # 25.10.2026 (Lucas): Stake läuft nur noch im Geldradar (money-radar) — hier abgedreht
         continue-on-error: true
         run: ${{ env.BETFAIR_PY }} stake_settle.py || echo "  ⚠️ Stake-Abrechnung fehlgeschlagen"
 
       # Die Norm MUSS vor der Auswertung laufen — sie waechst ueber die Zeit und wird von
       # stake_analyse.py nur noch gelesen (das Ledger reicht nur ~3 Tage zurueck).
       - name: 📊 Liga-Norm nachtragen (waechst mit)
+        if: ${{ false }}   # 25.10.2026 (Lucas): Stake läuft nur noch im Geldradar (money-radar) — hier abgedreht
         continue-on-error: true
         run: ${{ env.BETFAIR_PY }} stake_league_norm.py || echo "  ⚠️ Stake-Norm fehlgeschlagen"
 
       - name: 📐 Stake auswerten (Schubladen, Auffaellige)
+        if: ${{ false }}   # 25.10.2026 (Lucas): Stake läuft nur noch im Geldradar (money-radar) — hier abgedreht
         continue-on-error: true
         run: ${{ env.BETFAIR_PY }} stake_analyse.py || echo "  ⚠️ Stake-Auswertung fehlgeschlagen"
 
@@ -135,6 +139,7 @@ jobs:
       # … der Code war da, der Produzent nicht neu gelaufen") — ich habe den Kommentar gelesen
       # und den Push trotzdem daneben gehaengt.
       - name: ⚡ Stake-Bursts in den Trades-Channel
+        if: ${{ false }}   # 25.10.2026 (Lucas): Stake läuft nur noch im Geldradar (money-radar) — hier abgedreht
         continue-on-error: true
         env:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
@@ -346,12 +351,14 @@ jobs:
       # einem 15-Minuten-Takt knapp genug. Der Deckel je Aufruf (4) bleibt, der Dedup ueber
       # `stake_burst_seen.json` verhindert Wiederholungen aus dem ersten Abruf.
       - name: 🎰 Stake Highroller nachfassen (zweites Sample, ~12 Min nach dem ersten)
+        if: ${{ false }}   # 25.10.2026 (Lucas): Stake läuft nur noch im Geldradar (money-radar) — hier abgedreht
         env:
           STAKE_MIN_USD: "1000"
         run: ${{ env.BETFAIR_PY }} stake_highroller_fetch.py || echo "  ⚠️ Stake-Nachfass fehlgeschlagen"
         continue-on-error: true
 
       - name: ⚡ Stake-Bursts aus dem zweiten Sample
+        if: ${{ false }}   # 25.10.2026 (Lucas): Stake läuft nur noch im Geldradar (money-radar) — hier abgedreht
         env:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}

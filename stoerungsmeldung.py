@@ -338,8 +338,7 @@ DATENQUELLEN = (
      "Whale-Pushes, Heute spielenswert, Wallet-Lernen, Auflösungen"),
     ("poly_live_signal_track.json", "updatedAt", 3.0, "Poly-Live-Scan",
      "Live-Pushes, Live-Signal-Buch"),
-    ("stake_highroller.json", "asof", 3.0, "Stake-Highroller",
-     "Stake-Bursts, Über der Norm"),
+    # 25.10.2026 (Lucas): Stake ist hier abgedreht und läuft nur noch im Geldradar — kein Alarm mehr dafür
 )
 ERINNERUNG_H = 12.0
 
