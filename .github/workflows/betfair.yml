@@ -284,6 +284,7 @@ jobs:
       # tests/test_push_beleg.py verbietet (CI rot seit 04.10.). Jetzt direkt dahinter, mit
       # eigener Sofort-Sicherung: Buch zur Pausenquote, Push, Beleg — ohne Schritt dazwischen.
       - name: ⏸️ HZ-0:0-Finder (Team-Archiv + Buch + Trades-Push)
+        if: ${{ false }}   # 25.10.2026 (Lucas): HZ-0:0 läuft nur noch im Geldradar — hier abgedreht (gibt das API-Football-Kontingent frei)
         run: ${{ env.BETFAIR_PY }} hz_finder.py
         continue-on-error: true
         env:
@@ -292,6 +293,7 @@ jobs:
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
 
       - name: 🔐 Beleg des HZ-0:0-Pushs sofort sichern
+        if: ${{ false }}   # 25.10.2026 (Lucas): HZ-0:0 läuft nur noch im Geldradar — hier abgedreht (gibt das API-Football-Kontingent frei)
         run: bash scripts/ci_sichern.sh "Beleg der HZ-0:0-Pushes" hz_finder.json hz_finder_seen.json
         continue-on-error: true
 
