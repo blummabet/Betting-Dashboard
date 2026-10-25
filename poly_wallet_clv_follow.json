@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-25T02:49:51.524412+00:00",
+ "updatedAt": "2026-10-25T03:19:16.949551+00:00",
  "stake": 10.0,
  "regel": {
   "minN": 20,
@@ -7,9 +7,9 @@
   "frischMin": 90.0
  },
  "zaehler": {
-  "ohneEinstieg": 32,
-  "gesperrt": 64,
-  "alt": 244
+  "ohneEinstieg": 12,
+  "gesperrt": 63,
+  "alt": 236
  },
  "open": {
   "jap-jef-vva-2026-10-11-more-markets|Under": {
@@ -14466,28 +14466,6 @@
    "firstTs": "2026-10-25T00:20:45.916522+00:00",
    "stake": 10.0
   },
-  "mls-hou-min-2026-10-24|Houston Dynamo": {
-   "key": "mls-hou-min-2026-10-24",
-   "side": "Houston Dynamo",
-   "cat": "Fußball",
-   "league": "MLS",
-   "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-   "belegt": true,
-   "heiss": false,
-   "walletN": 2408,
-   "walletClv": 0.266,
-   "walletUg": 0.162,
-   "clv7": null,
-   "n7": null,
-   "walletEntry": 0.4299,
-   "entryPrice": 0.435,
-   "abstandPP": 0.51,
-   "arm": "nehmbar",
-   "lastPrice": 0.435,
-   "htkAtEntry": 0.28,
-   "firstTs": "2026-10-25T00:20:45.916522+00:00",
-   "stake": 10.0
-  },
   "bra-san-bah-2026-10-24|Draw (Santos FC vs. EC Bahia)": {
    "key": "bra-san-bah-2026-10-24",
    "side": "Draw (Santos FC vs. EC Bahia)",
@@ -14596,28 +14574,6 @@
    "lastPrice": 0.285,
    "htkAtEntry": 0.28,
    "firstTs": "2026-10-25T00:49:38.531084+00:00",
-   "stake": 10.0
-  },
-  "arg-ros-cah-2026-10-24|CA Rosario Central": {
-   "key": "arg-ros-cah-2026-10-24",
-   "side": "CA Rosario Central",
-   "cat": "Fußball",
-   "league": "SOCCER",
-   "wallet": "0xe5502f3b033ebcd64233b5ffc43c44c24170be3f",
-   "belegt": true,
-   "heiss": false,
-   "walletN": 251,
-   "walletClv": 0.586,
-   "walletUg": 0.163,
-   "clv7": null,
-   "n7": null,
-   "walletEntry": 0.7699,
-   "entryPrice": 0.665,
-   "abstandPP": -10.49,
-   "arm": "nehmbar",
-   "lastPrice": 0.665,
-   "htkAtEntry": 0.28,
-   "firstTs": "2026-10-25T01:20:32.440313+00:00",
    "stake": 10.0
   },
   "arg-ros-cah-2026-10-24-more-markets|Over": {
@@ -90073,6 +90029,62 @@
    "closePrice": 0.505,
    "clvPP": 0.0,
    "settledTs": "2026-10-25T02:49:51.524412+00:00"
+  },
+  {
+   "key": "mls-hou-min-2026-10-24",
+   "side": "Houston Dynamo",
+   "cat": "Fußball",
+   "league": "MLS",
+   "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+   "belegt": true,
+   "heiss": false,
+   "walletN": 2408,
+   "walletClv": 0.266,
+   "walletUg": 0.162,
+   "clv7": null,
+   "n7": null,
+   "walletEntry": 0.4299,
+   "entryPrice": 0.435,
+   "abstandPP": 0.51,
+   "arm": "nehmbar",
+   "lastPrice": 0.435,
+   "htkAtEntry": 0.28,
+   "firstTs": "2026-10-25T00:20:45.916522+00:00",
+   "stake": 10.0,
+   "result": "loss",
+   "winner": "Draw (Houston Dynamo vs. Minnesota United FC)",
+   "pnl": -10.0,
+   "closePrice": 0.435,
+   "clvPP": 0.0,
+   "settledTs": "2026-10-25T03:19:16.949551+00:00"
+  },
+  {
+   "key": "arg-ros-cah-2026-10-24",
+   "side": "CA Rosario Central",
+   "cat": "Fußball",
+   "league": "SOCCER",
+   "wallet": "0xe5502f3b033ebcd64233b5ffc43c44c24170be3f",
+   "belegt": true,
+   "heiss": false,
+   "walletN": 251,
+   "walletClv": 0.586,
+   "walletUg": 0.163,
+   "clv7": null,
+   "n7": null,
+   "walletEntry": 0.7699,
+   "entryPrice": 0.665,
+   "abstandPP": -10.49,
+   "arm": "nehmbar",
+   "lastPrice": 0.665,
+   "htkAtEntry": 0.28,
+   "firstTs": "2026-10-25T01:20:32.440313+00:00",
+   "stake": 10.0,
+   "result": "win",
+   "winner": "CA Rosario Central",
+   "pnl": 5.04,
+   "closePrice": 0.665,
+   "clvPP": 0.0,
+   "settledTs": "2026-10-25T03:19:16.949551+00:00"
   }
  ],
  "gesehen": [
@@ -93635,16 +93647,16 @@
  ],
  "agg": {
   "belegt_nehmbar": {
-   "n": 1442,
-   "wins": 434,
-   "hit": 0.301,
-   "pnl": -2275.12,
-   "stake": 14420.0,
-   "roi": -0.1578,
+   "n": 1444,
+   "wins": 435,
+   "hit": 0.3012,
+   "pnl": -2280.08,
+   "stake": 14440.0,
+   "roi": -0.1579,
    "roiUg": -0.2608,
    "belegt": false,
    "clvAvg": 0.05,
-   "clvN": 1442,
+   "clvN": 1444,
    "clvUg": -0.03
   },
   "belegt_zu_spaet": {
@@ -93687,16 +93699,16 @@
    "clvUg": -1.07
   },
   "nehmbar": {
-   "n": 1594,
-   "wins": 500,
-   "hit": 0.3137,
-   "pnl": -2472.95,
-   "stake": 15940.0,
-   "roi": -0.1551,
+   "n": 1596,
+   "wins": 501,
+   "hit": 0.3139,
+   "pnl": -2477.91,
+   "stake": 15960.0,
+   "roi": -0.1553,
    "roiUg": -0.2493,
    "belegt": false,
    "clvAvg": 0.05,
-   "clvN": 1594,
+   "clvN": 1596,
    "clvUg": -0.03,
    "byCat": {
     "E-Sport": {
@@ -93713,16 +93725,16 @@
      "clvUg": -0.23
     },
     "Fußball": {
-     "n": 975,
-     "wins": 209,
-     "hit": 0.2144,
-     "pnl": -2390.62,
-     "stake": 9750.0,
+     "n": 977,
+     "wins": 210,
+     "hit": 0.2149,
+     "pnl": -2395.58,
+     "stake": 9770.0,
      "roi": -0.2452,
-     "roiUg": -0.3887,
+     "roiUg": -0.3884,
      "belegt": false,
      "clvAvg": 0.08,
-     "clvN": 975,
+     "clvN": 977,
      "clvUg": -0.03
     },
     "None": {
