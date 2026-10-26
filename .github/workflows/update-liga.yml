@@ -75,6 +75,7 @@ jobs:
       # 15.07.2026: Liga rendert seit Wochen 0 TikTok-Cards, weil Playwright/Chromium fehlte
       # (render_to_png fing den ImportError still ab). Analog update-mls + daily-tiktok.yml.
       - name: 🎭 Playwright + Chromium (für TikTok-Card-Rendering)
+        if: false   # 26.10.2026 Lucas: TikTok-Bilder im Trades-Kanal abgedreht
         run: |
           pip install playwright
           playwright install chromium --with-deps
@@ -313,7 +314,8 @@ jobs:
           echo "  Digest-Zustand konnte nicht gepusht werden — der Jobende-Commit versucht es erneut."
 
       - name: 🎬 Liga TikTok Preview-Cards (PRE-Match)
-        if: github.event.schedule == '7 6 * * *' || github.event.schedule == '37 7 * * *' || github.event_name == 'workflow_dispatch'
+        # vorher if: github.event.schedule == '7 6 * * *' || github.event.schedule == '37 7 * * *' || github.event_name == 'workflow_dispatch'
+        if: false   # 26.10.2026 Lucas: TikTok-Bilder im Trades-Kanal abgedreht
         env:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
@@ -371,7 +373,8 @@ jobs:
           echo "  Digest-Zustand konnte nicht gepusht werden — der Jobende-Commit versucht es erneut."
 
       - name: 🎬 Liga TikTok Review-Cards (POST-Match)
-        if: github.event.schedule == '7 18 * * *'
+        # vorher if: github.event.schedule == '7 18 * * *'
+        if: false   # 26.10.2026 Lucas: TikTok-Bilder im Trades-Kanal abgedreht
         env:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
