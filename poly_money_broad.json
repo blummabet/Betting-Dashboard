@@ -2,14 +2,14 @@
  "n": 675,
  "minOdds": 1.35,
  "moneyHitRate": 0.422,
- "priceHitRate": 0.443,
+ "priceHitRate": 0.441,
  "brierMoney": 0.8084,
  "brierPrice": 0.6631,
  "disagree": {
-  "n": 170,
-  "moneyWon": 29,
+  "n": 168,
+  "moneyWon": 30,
   "priceWon": 43,
-  "neither": 98
+  "neither": 95
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -129,7 +129,7 @@
  ],
  "guete": {
   "belastbar": 675,
-  "preis_echo": 432,
+  "preis_echo": 431,
   "abgeschnitten": 118,
   "unbekannt": 0,
   "leer": 0
@@ -164,11 +164,11 @@
    "league": "SOCCER:UCL",
    "winner": "FK Bodø/Glimt",
    "moneyFav": "FK Bodø/Glimt",
-   "priceFav": "FK Bodø/Glimt",
+   "priceFav": "BV Borussia 09 Dortmund",
    "moneyShare": 0.533,
    "priceProb": 0.377,
    "moneyOK": true,
-   "priceOK": true,
+   "priceOK": false,
    "totalUsd": 2624846
   },
   {
@@ -616,7 +616,7 @@
    "totalUsd": 394428
   }
  ],
- "generatedAt": "2026-10-26T08:19:56.412770+00:00",
+ "generatedAt": "2026-10-26T08:50:20.018177+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -713,58 +713,48 @@
   "sweepAdded": 415
  },
  "vorStats": {
-  "kandidaten": 9,
+  "kandidaten": 10,
   "budgetLeer": 0,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
-  "mitAnteilen": 9,
-  "calls": 9
+  "mitAnteilen": 10,
+  "calls": 10
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1046,
-   "usd": 16145508,
+   "n": 853,
+   "usd": 14063686,
    "beispiel": "fifwc-mex-ecu-2026-06-30"
   },
   "balance": {
-   "n": 9,
-   "usd": 2453554,
+   "n": 10,
+   "usd": 2455404,
    "beispiel": "balance-of-power-2026-midterms"
+  },
+  "presidential": {
+   "n": 5,
+   "usd": 1001269,
+   "beispiel": "presidential-election-winner-2028"
   },
   "fed": {
    "n": 18,
    "usd": 634868,
    "beispiel": "fed-decision-in-october-20260617190323537"
   },
-  "elon": {
-   "n": 169,
-   "usd": 315870,
-   "beispiel": "elon-musk-of-tweets-june-5-june-12"
-  },
   "wnba": {
-   "n": 48,
-   "usd": 251901,
+   "n": 36,
+   "usd": 207294,
    "beispiel": "wnba-las-chi-2026-08-01"
   },
   "cbb": {
-   "n": 11,
-   "usd": 169994,
-   "beispiel": "cbb-nebr-iowa-2026-03-26"
+   "n": 6,
+   "usd": 164722,
+   "beispiel": "cbb-uconn-mich-2026-04-06"
   },
   "which": {
-   "n": 14,
-   "usd": 167513,
+   "n": 12,
+   "usd": 136992,
    "beispiel": "which-crypto-company-will-zachxbt-expose-for-insider-trading"
-  },
-  "presidential": {
-   "n": 3,
-   "usd": 101269,
-   "beispiel": "presidential-election-winner-2028"
-  },
-  "texas": {
-   "n": 7,
-   "usd": 98470,
-   "beispiel": "texas-senate-election-winner"
   },
   "nbasl": {
    "n": 1,
@@ -772,54 +762,64 @@
    "beispiel": "nbasl-cle-nop-2026-07-15"
   },
   "ballon": {
-   "n": 17,
-   "usd": 90545,
+   "n": 18,
+   "usd": 92254,
    "beispiel": "ballon-dor-winner-2026"
   },
-  "ncaa": {
-   "n": 1,
-   "usd": 85765,
-   "beispiel": "ncaa-football-2026-heisman-award-winner-20260731185656435"
+  "texas": {
+   "n": 6,
+   "usd": 85579,
+   "beispiel": "texas-senate-election-winner"
   },
   "will": {
    "n": 11,
-   "usd": 79479,
+   "usd": 62973,
    "beispiel": "will-trump-declare-a-national-emergency-on-his-first-day"
-  },
-  "pro": {
-   "n": 4,
-   "usd": 76412,
-   "beispiel": "pro-football-2026-mvp-winner"
-  },
-  "brazil": {
-   "n": 18,
-   "usd": 65987,
-   "beispiel": "brazil-presidential-election"
   },
   "michigan": {
    "n": 4,
    "usd": 62447,
    "beispiel": "michigan-senate-election-winner"
   },
-  "lec": {
-   "n": 10,
-   "usd": 58609,
-   "beispiel": "lec-mia-asl-2026-08-05"
-  },
-  "worlds": {
-   "n": 9,
-   "usd": 53127,
-   "beispiel": "worlds-2026-winner"
-  },
-  "world": {
-   "n": 9,
-   "usd": 53033,
-   "beispiel": "world-cup-golden-boot-winner"
-  },
   "nato": {
    "n": 1,
-   "usd": 51827,
+   "usd": 51880,
    "beispiel": "nato-x-russia-military-clash-in-2025"
+  },
+  "world": {
+   "n": 6,
+   "usd": 45174,
+   "beispiel": "world-cup-golden-boot-winner"
+  },
+  "worlds": {
+   "n": 11,
+   "usd": 42886,
+   "beispiel": "worlds-2026-winner"
+  },
+  "khl": {
+   "n": 6,
+   "usd": 40396,
+   "beispiel": "khl-spa-met-2026-10-02"
+  },
+  "predictfun": {
+   "n": 14,
+   "usd": 38389,
+   "beispiel": "predictfun-fdv-above-one-day-after-launch"
+  },
+  "us": {
+   "n": 6,
+   "usd": 35281,
+   "beispiel": "us-announces-end-of-iranian-blockade-byptptpt-20260713152715080"
+  },
+  "south": {
+   "n": 1,
+   "usd": 34657,
+   "beispiel": "south-carolina-senate-election-winner"
+  },
+  "uefa": {
+   "n": 4,
+   "usd": 33137,
+   "beispiel": "uefa-champions-league-2027-champion-20260701202025549"
   }
  }
 }
