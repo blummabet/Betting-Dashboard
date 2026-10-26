@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-10-26T08:10:09.688626+00:00",
-  "checked": 24,
+  "timestamp": "2026-10-26T16:57:27.621592+00:00",
+  "checked": 22,
   "errors": 0,
-  "warnings": 16,
-  "infos": 68,
+  "warnings": 15,
+  "infos": 67,
   "issues": [
     {
       "date": "26.10.2026",
@@ -664,33 +664,6 @@
     },
     {
       "date": "28.10.2026",
-      "home": "Heart Of Midlothian",
-      "away": "Rangers",
-      "league": "Scottish Prem",
-      "severity": "INFO",
-      "code": "CARDS45_LOW_FV",
-      "msg": "Liga-Baserate=4.0 → Poisson FV für Über 4.5 Karten = 37.1%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis."
-    },
-    {
-      "date": "28.10.2026",
-      "home": "Heart Of Midlothian",
-      "away": "Rangers",
-      "league": "Scottish Prem",
-      "severity": "WARN",
-      "code": "H2H_HIGH_AVG_UNDER_RISK",
-      "msg": "H2H Schnitt=3.1 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug."
-    },
-    {
-      "date": "28.10.2026",
-      "home": "Heart Of Midlothian",
-      "away": "Rangers",
-      "league": "Scottish Prem",
-      "severity": "INFO",
-      "code": "TEAM_OVER_HOME_LOW_FV",
-      "msg": "Heart Of Midlothian expH≈1.10 (statischer Proxy) → FV über 1.5 = 30.1%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger."
-    },
-    {
-      "date": "28.10.2026",
       "home": "ST Johnstone",
       "away": "Motherwell",
       "league": "Scottish Prem",
@@ -744,22 +717,31 @@
       "msg": "Motherwell expA≈0.90 (statischer Proxy) → FV über 1.5 = 22.8%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger."
     },
     {
-      "date": "26.10.2026",
-      "home": "Beşiktaş",
-      "away": "Başakşehir",
-      "league": "Süper Lig",
+      "date": "28.10.2026",
+      "home": "Heart Of Midlothian",
+      "away": "Rangers",
+      "league": "Scottish Prem",
       "severity": "INFO",
-      "code": "OVER35_LOW_FV",
-      "msg": "Ø gpg=2.20 (statischer Proxy) → Poisson FV für Over 3.5 = 18.1%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy."
+      "code": "CARDS45_LOW_FV",
+      "msg": "Liga-Baserate=4.0 → Poisson FV für Über 4.5 Karten = 37.1%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis."
     },
     {
-      "date": "26.10.2026",
-      "home": "Rizespor",
-      "away": "Trabzonspor",
-      "league": "Süper Lig",
+      "date": "28.10.2026",
+      "home": "Heart Of Midlothian",
+      "away": "Rangers",
+      "league": "Scottish Prem",
       "severity": "WARN",
-      "code": "U25_H2H_HARD_BLOCK_MISS",
-      "msg": "H2H Schnitt=3.5 Tore (≥3.5) — HARD BLOCK sollte Under 2.5 komplett blocken. Python kann Picks nicht prüfen — JS-Inline-Validator zeigt ERROR falls Pick trotzdem erscheint."
+      "code": "H2H_HIGH_AVG_UNDER_RISK",
+      "msg": "H2H Schnitt=3.1 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug."
+    },
+    {
+      "date": "28.10.2026",
+      "home": "Heart Of Midlothian",
+      "away": "Rangers",
+      "league": "Scottish Prem",
+      "severity": "INFO",
+      "code": "TEAM_OVER_HOME_LOW_FV",
+      "msg": "Heart Of Midlothian expH≈1.10 (statischer Proxy) → FV über 1.5 = 30.1%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger."
     }
   ]
 }

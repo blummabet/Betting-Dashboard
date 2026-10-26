@@ -1,11 +1,11 @@
-# 🟡 Picks Validator — 26.10.2026 08:10
+# 🟡 Picks Validator — 26.10.2026 16:57
 
-**24 Spiele geprüft** · 🔴 0 Fehler · 🟡 16 Warnungen · 🔵 68 Hinweise
+**22 Spiele geprüft** · 🔴 0 Fehler · 🟡 15 Warnungen · 🔵 67 Hinweise
 
 ```
 =================================================================
   🐕 CocoBet — Picks Logik-Check
-  26.10.2026 08:10
+  26.10.2026 16:57
   Filter: nächste 3 Tag(e)
 =================================================================
 
@@ -251,15 +251,6 @@
   🔵 HINWEIS [TEAM_OVER_AWAY_LOW_FV]
      📅 28.10.2026  Dundee vs Kilmarnock
      Kilmarnock expA≈1.35 (statischer Proxy) → FV über 1.5 = 39.1%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 28.10.2026  Heart Of Midlothian vs Rangers
-     Liga-Baserate=4.0 → Poisson FV für Über 4.5 Karten = 37.1%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
-     📅 28.10.2026  Heart Of Midlothian vs Rangers
-     H2H Schnitt=3.1 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
-  🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
-     📅 28.10.2026  Heart Of Midlothian vs Rangers
-     Heart Of Midlothian expH≈1.10 (statischer Proxy) → FV über 1.5 = 30.1%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🟡 WARNUNG [BOTH_DEFENSIVE_OVER_RISK]
      📅 28.10.2026  ST Johnstone vs Motherwell
      ST Johnstone (0.8 Tore/Sp) + Motherwell (0.5 Tore/Sp): kombiniert nur ~1.1 erwartete Tore. Over 2.5 Pick wäre kontraindiziert — Modell prüfen.
@@ -278,21 +269,20 @@
   🔵 HINWEIS [TEAM_OVER_AWAY_LOW_FV]
      📅 28.10.2026  ST Johnstone vs Motherwell
      Motherwell expA≈0.90 (statischer Proxy) → FV über 1.5 = 22.8%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
-
-─────────────────────────────────────────────────────────────────
-  🇹🇷 Süper Lig  (rl=29)
-─────────────────────────────────────────────────────────────────
-  🔵 HINWEIS [OVER35_LOW_FV]
-     📅 26.10.2026  Beşiktaş vs Başakşehir
-     Ø gpg=2.20 (statischer Proxy) → Poisson FV für Over 3.5 = 18.1%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
-  🟡 WARNUNG [U25_H2H_HARD_BLOCK_MISS]
-     📅 26.10.2026  Rizespor vs Trabzonspor
-     H2H Schnitt=3.5 Tore (≥3.5) — HARD BLOCK sollte Under 2.5 komplett blocken. Python kann Picks nicht prüfen — JS-Inline-Validator zeigt ERROR falls Pick trotzdem erscheint.
+  🔵 HINWEIS [CARDS45_LOW_FV]
+     📅 28.10.2026  Heart Of Midlothian vs Rangers
+     Liga-Baserate=4.0 → Poisson FV für Über 4.5 Karten = 37.1%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
+  🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
+     📅 28.10.2026  Heart Of Midlothian vs Rangers
+     H2H Schnitt=3.1 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
+  🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
+     📅 28.10.2026  Heart Of Midlothian vs Rangers
+     Heart Of Midlothian expH≈1.10 (statischer Proxy) → FV über 1.5 = 30.1%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
 
 ═════════════════════════════════════════════════════════════════
-  Geprüft: 24 Spiele
-  🟡 16 Warnungen — manuelle Prüfung empfohlen
-  🔵 68 Hinweise — Pick-Richtung kontrollieren
+  Geprüft: 22 Spiele
+  🟡 15 Warnungen — manuelle Prüfung empfohlen
+  🔵 67 Hinweise — Pick-Richtung kontrollieren
 ═════════════════════════════════════════════════════════════════
 
 ```
