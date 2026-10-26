@@ -31,9 +31,13 @@
       "id": "run_health",
       "label": "Workflow-Laeufe fehlerfrei",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 3,
+      "failures": [
+        "🟡 Betfair Radar (Betwatch): seit 27 h kein Lauf mehr verzeichnet",
+        "💹 Liga (Top-5) Poly Positionen überwachen: seit 39 h kein Lauf mehr verzeichnet",
+        "⚡ Poly Live-Scan (nur laufende Spiele, schnell): seit 27 h kein Lauf mehr verzeichnet"
+      ],
       "note": "Quelle: health/*.json (run_health.py). Leere Liste heisst hier wirklich 'nichts gescheitert' — ein nicht abfragbarer Lauf steht oben als UNBEKANNT."
     },
     {
@@ -205,7 +209,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "101/101 mit AH · 100/101 mit Public-O/U."
+      "note": "99/99 mit AH · 99/99 mit Public-O/U."
     },
     {
       "id": "odds_freshness",
@@ -369,9 +373,11 @@
       "id": "safer_line_applied",
       "label": "Safer-Line abgeleitet wo verfügbar (≥1.35)",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "488-487 Auswärtssieg @2.1: sichere Linie Doppelte Chance — X2 @1.368 verfügbar (≥1.35), nicht abgeleitet"
+      ],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
     },
     {
@@ -566,7 +572,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "6 von 6 Vor-Kandidaten mit Anteilen (6 Calls) · 0 ohne Geld-Split · 0 ueber Budget · 0 nachgelegt. Leeres Fenster ist kein Fehler; Kandidaten ohne einen einzigen Anteil schon."
+      "note": "22 von 23 Vor-Kandidaten mit Anteilen (22 Calls) · 0 ohne Geld-Split · 1 ueber Budget · 0 nachgelegt. Leeres Fenster ist kein Fehler; Kandidaten ohne einen einzigen Anteil schon."
     },
     {
       "id": "betfair_ledger",
@@ -584,7 +590,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Job vor 10.4h · jüngste Daten vor 10.4h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
+      "note": "Job vor 26.6h · jüngste Daten vor 26.6h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
     },
     {
       "id": "poly_global_liefert",
@@ -593,7 +599,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Job vor 0.6h · jüngste Daten vor 0.6h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
+      "note": "Job vor 0.8h · jüngste Daten vor 0.8h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
     },
     {
       "id": "pinn_anker",
@@ -623,7 +629,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "🔒 E-Sport ohne Wallet-Nachweis: 396/120 seit 49d · 🔒 Poly-Auswahl · von Betfair bestätigt: 563/60 seit 54d · 🔒 Fade-Unter · Ganzspiel-Torlinie: 6447/200 seit 49d · 🔒 Liga · Conviction ab 5: 129/80 seit 44d · 🔒 Bücher-Score ≥7 von 10: 137/40 seit 54d"
+      "note": "🔒 E-Sport ohne Wallet-Nachweis: 396/120 seit 49d · 🔒 Poly-Auswahl · von Betfair bestätigt: 563/60 seit 55d · 🔒 Fade-Unter · Ganzspiel-Torlinie: 6447/200 seit 49d · 🔒 Liga · Conviction ab 5: 129/80 seit 45d · 🔒 Bücher-Score ≥7 von 10: 137/40 seit 55d"
     },
     {
       "id": "killer_push_buch",
@@ -644,6 +650,6 @@
       "note": "0 von 0 ist ein ruhiger Tag (oder eine Laenderspielpause, in der wir gar keine passenden Partien haben). 0 von N ist ein Bruch."
     }
   ],
-  "nFail": 4,
-  "generatedAt": "2026-10-25T20:55:44.189766+00:00"
+  "nFail": 6,
+  "generatedAt": "2026-10-26T13:09:30.651671+00:00"
 }
