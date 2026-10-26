@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-10-26T14:40:14Z",
-    "total_records": 276,
+    "updated_at": "2026-10-26T22:45:55Z",
+    "total_records": 280,
     "oddsBackfilled": "2026-09-06 — Quote/entryOdd aus den Pick-Dateien nachgetragen; der Ledger trug sie nie (0 von 318)."
   },
   "records": [
@@ -3062,6 +3062,63 @@
       "entryBook": "soft",
       "processVerdict": "JUSTIFIED",
       "clvFairPP": -3.56,
+      "clvBasis": "fair"
+    },
+    {
+      "key": "ESP-10-536-727|Unter 2.5 Tore",
+      "matchKey": "ESP-10-536-727",
+      "market": "Unter 2.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "injury",
+          "score": 4.25
+        },
+        {
+          "name": "form_trend",
+          "score": -1.6
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 2.0
+        },
+        {
+          "name": "xg_strength",
+          "score": -1.6
+        },
+        {
+          "name": "chance_creation",
+          "score": -0.88
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": -0.42
+        },
+        {
+          "name": "transfer_shift",
+          "score": 0.6
+        },
+        {
+          "name": "streak_momentum",
+          "score": -0.17
+        },
+        {
+          "name": "move_following",
+          "score": 1.2
+        }
+      ],
+      "resolvedAt": "2026-10-26T22:45:52Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -1.3,
+      "clvResolved": true,
+      "odds": 1.68,
+      "entryOdd": 1.68,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED",
+      "clvFairPP": 1.84,
       "clvBasis": "fair"
     },
     {
@@ -8643,6 +8700,179 @@
       "processVerdict": "JUSTIFIED"
     },
     {
+      "key": "FRA-8-85-80|AH Heim −1",
+      "matchKey": "FRA-8-85-80",
+      "market": "AH Heim −1",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 1.26
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 1.0
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.2
+        },
+        {
+          "name": "chance_creation",
+          "score": 3.36
+        },
+        {
+          "name": "form_rating",
+          "score": 1.26
+        },
+        {
+          "name": "smart_money",
+          "score": 0.95
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": 0.98
+        },
+        {
+          "name": "opener_move",
+          "score": 2.5
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        }
+      ],
+      "resolvedAt": "2026-10-26T22:45:52Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 0.0,
+      "clvResolved": false,
+      "odds": 1.77,
+      "entryOdd": 1.77,
+      "entryBook": "pini",
+      "processVerdict": "LUCKY"
+    },
+    {
+      "key": "FRA-8-85-80|Heimsieg",
+      "matchKey": "FRA-8-85-80",
+      "market": "Heimsieg",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "lead_lag_bias",
+          "score": 3.96
+        },
+        {
+          "name": "form_trend",
+          "score": 1.26
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 1.0
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.2
+        },
+        {
+          "name": "chance_creation",
+          "score": 3.36
+        },
+        {
+          "name": "form_rating",
+          "score": 1.26
+        },
+        {
+          "name": "smart_money",
+          "score": 0.11
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": 0.98
+        },
+        {
+          "name": "opener_move",
+          "score": 2.5
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        }
+      ],
+      "resolvedAt": "2026-10-26T22:45:52Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 2.25,
+      "clvResolved": true,
+      "odds": 1.4,
+      "entryOdd": 1.4,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED",
+      "clvFairPP": 4.45,
+      "clvBasis": "fair"
+    },
+    {
+      "key": "FRA-8-85-80|Über 2.5 Tore",
+      "matchKey": "FRA-8-85-80",
+      "market": "Über 2.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "injury",
+          "score": -2.25
+        },
+        {
+          "name": "form_trend",
+          "score": 3.07
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 2.6
+        },
+        {
+          "name": "xg_strength",
+          "score": 5.33
+        },
+        {
+          "name": "chance_creation",
+          "score": 4.77
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": 0.34
+        },
+        {
+          "name": "streak_momentum",
+          "score": 0.07
+        },
+        {
+          "name": "move_following",
+          "score": 1.2
+        },
+        {
+          "name": "venue_form",
+          "score": 1.07
+        }
+      ],
+      "resolvedAt": "2026-10-26T22:45:52Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -3.35,
+      "clvResolved": true,
+      "odds": 1.36,
+      "entryOdd": 1.36,
+      "entryBook": "soft",
+      "processVerdict": "DESERVED_LOSS",
+      "clvFairPP": -1.08,
+      "clvBasis": "fair"
+    },
+    {
       "key": "FRA-8-91-79|Unter 3.5 Tore",
       "matchKey": "FRA-8-91-79",
       "market": "Unter 3.5 Tore",
@@ -12495,7 +12725,7 @@
           "score": 2.05
         }
       ],
-      "resolvedAt": "2026-10-26T14:40:14Z",
+      "resolvedAt": "2026-10-26T22:45:55Z",
       "source": "steam",
       "convictionScore": 5,
       "lateEntry": true,
