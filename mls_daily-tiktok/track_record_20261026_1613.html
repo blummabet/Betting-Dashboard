@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="de">
+<head><meta charset="UTF-8"><title>Track-Record</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#0a0e18; display:flex; align-items:center; justify-content:center;
+       min-height:100vh; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+.card {
+  width:360px; height:640px;
+  background:
+    radial-gradient(circle at 50% 26%, rgba(63,185,80,0.14) 0%, transparent 55%),
+    linear-gradient(180deg, #0a0e18 0%, #080d18 100%);
+  background-image:
+    radial-gradient(circle at 50% 26%, rgba(63,185,80,0.14) 0%, transparent 55%),
+    linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
+  background-size: auto, 24px 24px, 24px 24px;
+  border-radius:24px; padding:22px 22px 18px;
+  position:relative; overflow:hidden;
+  display:flex; flex-direction:column;
+  border:1px solid rgba(255,255,255,0.04);
+}
+.top { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.brand-top { font-size:11px; font-weight:800; letter-spacing:3px; color:#f5c518; }
+.badge-top { font-size:10px; font-weight:700; letter-spacing:1px; color:#3fb950;
+  background:rgba(63,185,80,0.10); border:1px solid rgba(63,185,80,0.40); border-radius:18px; padding:5px 12px; }
+
+.period { font-size:10px; color:rgba(255,255,255,.40); text-align:center;
+  letter-spacing:1.8px; text-transform:uppercase; font-weight:700; margin-bottom:10px; }
+
+.hero { text-align:center; margin-bottom:14px; }
+.hero-label { font-size:10px; color:rgba(255,255,255,.45); letter-spacing:2.2px;
+  text-transform:uppercase; font-weight:800; margin-bottom:2px; }
+.hero-num { font-size:76px; font-weight:900; color:#3fb950; line-height:1;
+  letter-spacing:-3.5px; text-shadow: 0 0 38px rgba(63,185,80,0.50); }
+.hero-num .unit { font-size:32px; font-weight:700; vertical-align:top; margin-left:3px; }
+.hero-sub { font-size:13px; color:#fff; margin-top:6px; letter-spacing:.3px; font-weight:800; }
+.hero-sub .g { color:#3fb950; }
+.hero-sub2 { font-size:10px; color:rgba(255,255,255,.45); margin-top:3px; letter-spacing:.4px; }
+
+.section-lbl { font-size:9px; color:rgba(255,255,255,.45); letter-spacing:1.6px;
+  text-transform:uppercase; font-weight:800; margin:0 2px 7px; }
+.rounds { padding:13px 4px 5px; border-top:1px solid rgba(255,255,255,0.06); }
+.rrow { display:grid; grid-template-columns:96px 1fr 34px 38px; align-items:center;
+  gap:8px; margin-bottom:9px; }
+.rname { font-size:11px; font-weight:700; letter-spacing:.2px; white-space:nowrap; }
+.rbar { height:6px; background:rgba(255,255,255,0.06); border-radius:4px; overflow:hidden; }
+.rbar-fill { height:100%; border-radius:4px; }
+.rrec { font-size:10px; color:rgba(255,255,255,.50); text-align:right; font-weight:600; }
+.rpct { font-size:14px; font-weight:900; text-align:right; letter-spacing:-.5px; }
+
+.form { margin-top:auto; padding:12px 4px 4px; border-top:1px solid rgba(255,255,255,0.06); }
+.form-head { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px; }
+.form-val { font-size:11px; font-weight:800; color:#3fb950; letter-spacing:.3px; }
+.dots { display:flex; gap:5px; margin-bottom:12px; }
+.dot { width:20px; height:6px; border-radius:3px; }
+.curve-label { font-size:9px; color:rgba(255,255,255,.42); letter-spacing:1.5px;
+  text-transform:uppercase; font-weight:800; margin-bottom:3px; padding:0 2px; }
+
+.footer { display:flex; justify-content:space-between; align-items:center;
+  border-top:1px solid rgba(255,255,255,0.05); padding-top:9px; margin-top:10px; }
+.footer .ft { font-size:9px; color:rgba(255,255,255,.30); letter-spacing:.5px; }
+.footer .ft-stand { color:rgba(255,255,255,.55); font-weight:700; }
+</style></head>
+<body>
+<div class="card">
+  <div class="top">
+    <div class="brand-top">COCOBET</div>
+    <div class="badge-top">📊 TRACK-RECORD</div>
+  </div>
+
+  <div class="period">MLS · Gruppenphase</div>
+
+  <div class="hero">
+    <div class="hero-label">Prognose-Genauigkeit</div>
+    <div class="hero-num">55<span class="unit">%</span></div>
+    <div class="hero-sub"><span class="g">82 richtig</span> · 66 daneben</div>
+    <div class="hero-sub2">149 von 262 Prognosen ausgewertet</div>
+  </div>
+
+  <div class="rounds">
+    <div class="section-lbl">Genauigkeit pro Runde</div>
+    
+      <div class="rrow">
+        <div class="rname" style="color:#3fb950;">Gruppenphase 🔥</div>
+        <div class="rbar"><div class="rbar-fill" style="width:55%;background:#3fb950;"></div></div>
+        <div class="rrec">82-66</div>
+        <div class="rpct" style="color:#3fb950;">55%</div>
+      </div>
+  </div>
+
+  <div class="form">
+    <div class="form-head">
+      <div class="section-lbl" style="margin:0;">Aktuelle Form · letzte 10</div>
+      <div class="form-val">3 von 10 richtig</div>
+    </div>
+    <div class="dots"><span class="dot" style="background:rgba(255,90,95,0.85);"></span><span class="dot" style="background:rgba(255,90,95,0.85);"></span><span class="dot" style="background:rgba(255,90,95,0.85);"></span><span class="dot" style="background:#3fb950;"></span><span class="dot" style="background:rgba(255,90,95,0.85);"></span><span class="dot" style="background:rgba(255,90,95,0.85);"></span><span class="dot" style="background:rgba(255,90,95,0.85);"></span><span class="dot" style="background:#3fb950;"></span><span class="dot" style="background:#3fb950;"></span><span class="dot" style="background:rgba(255,90,95,0.85);"></span></div>
+    <div class="curve-label">Netto-Treffer-Verlauf</div>
+    
+        <svg viewBox="0 0 312 58" preserveAspectRatio="none" style="width:100%;height:58px;">
+          <defs><linearGradient id="trkg" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stop-color="#3fb950" stop-opacity="0.35"/>
+            <stop offset="100%" stop-color="#3fb950" stop-opacity="0"/>
+          </linearGradient></defs>
+          <line x1="4" y1="44.3" x2="308" y2="44.3"
+                stroke="rgba(255,255,255,0.10)" stroke-dasharray="3,3" stroke-width="1"/>
+          <path d="M 4.0 44.3 L 6.0 45.9 L 8.1 47.5 L 10.1 49.2 L 12.2 47.5 L 14.2 49.2 L 16.2 47.5 L 18.3 49.2 L 20.3 50.8 L 22.4 52.4 L 24.4 50.8 L 26.4 52.4 L 28.5 54.0 L 30.5 52.4 L 32.6 50.8 L 34.6 49.2 L 36.6 50.8 L 38.7 52.4 L 40.7 50.8 L 42.8 49.2 L 44.8 47.5 L 46.8 49.2 L 48.9 47.5 L 50.9 49.2 L 53.0 47.5 L 55.0 45.9 L 57.0 44.3 L 59.1 44.3 L 61.1 45.9 L 63.2 47.5 L 65.2 45.9 L 67.2 47.5 L 69.3 45.9 L 71.3 47.5 L 73.4 49.2 L 75.4 47.5 L 77.4 49.2 L 79.5 47.5 L 81.5 45.9 L 83.6 44.3 L 85.6 42.7 L 87.7 41.1 L 89.7 39.5 L 91.7 37.9 L 93.8 39.5 L 95.8 37.9 L 97.9 36.3 L 99.9 37.9 L 101.9 36.3 L 104.0 37.9 L 106.0 36.3 L 108.1 37.9 L 110.1 36.3 L 112.1 34.6 L 114.2 33.0 L 116.2 31.4 L 118.3 33.0 L 120.3 34.6 L 122.3 36.3 L 124.4 34.6 L 126.4 36.3 L 128.5 34.6 L 130.5 33.0 L 132.5 31.4 L 134.6 33.0 L 136.6 31.4 L 138.7 33.0 L 140.7 31.4 L 142.7 29.8 L 144.8 28.2 L 146.8 29.8 L 148.9 28.2 L 150.9 26.6 L 152.9 25.0 L 155.0 26.6 L 157.0 25.0 L 159.1 26.6 L 161.1 28.2 L 163.1 26.6 L 165.2 28.2 L 167.2 26.6 L 169.3 25.0 L 171.3 26.6 L 173.3 28.2 L 175.4 26.6 L 177.4 25.0 L 179.5 26.6 L 181.5 25.0 L 183.5 23.4 L 185.6 25.0 L 187.6 23.4 L 189.7 21.7 L 191.7 20.1 L 193.7 21.7 L 195.8 20.1 L 197.8 21.7 L 199.9 20.1 L 201.9 18.5 L 203.9 16.9 L 206.0 18.5 L 208.0 16.9 L 210.1 15.3 L 212.1 13.7 L 214.1 15.3 L 216.2 13.7 L 218.2 12.1 L 220.3 10.5 L 222.3 12.1 L 224.3 10.5 L 226.4 8.8 L 228.4 10.5 L 230.5 12.1 L 232.5 10.5 L 234.6 8.8 L 236.6 10.5 L 238.6 8.8 L 240.7 10.5 L 242.7 8.8 L 244.8 7.2 L 246.8 8.8 L 248.8 10.5 L 250.9 8.8 L 252.9 7.2 L 255.0 5.6 L 257.0 7.2 L 259.0 8.8 L 261.1 7.2 L 263.1 5.6 L 265.2 4.0 L 267.2 5.6 L 269.2 7.2 L 271.3 5.6 L 273.3 7.2 L 275.4 5.6 L 277.4 4.0 L 279.4 5.6 L 281.5 7.2 L 283.5 8.8 L 285.6 10.5 L 287.6 12.1 L 289.6 13.7 L 291.7 15.3 L 293.7 16.9 L 295.8 15.3 L 297.8 16.9 L 299.8 18.5 L 301.9 20.1 L 303.9 18.5 L 306.0 16.9 L 308.0 18.5 L 308.0 44.3 L 4.0 44.3 Z" fill="url(#trkg)"/>
+          <path d="M 4.0 44.3 L 6.0 45.9 L 8.1 47.5 L 10.1 49.2 L 12.2 47.5 L 14.2 49.2 L 16.2 47.5 L 18.3 49.2 L 20.3 50.8 L 22.4 52.4 L 24.4 50.8 L 26.4 52.4 L 28.5 54.0 L 30.5 52.4 L 32.6 50.8 L 34.6 49.2 L 36.6 50.8 L 38.7 52.4 L 40.7 50.8 L 42.8 49.2 L 44.8 47.5 L 46.8 49.2 L 48.9 47.5 L 50.9 49.2 L 53.0 47.5 L 55.0 45.9 L 57.0 44.3 L 59.1 44.3 L 61.1 45.9 L 63.2 47.5 L 65.2 45.9 L 67.2 47.5 L 69.3 45.9 L 71.3 47.5 L 73.4 49.2 L 75.4 47.5 L 77.4 49.2 L 79.5 47.5 L 81.5 45.9 L 83.6 44.3 L 85.6 42.7 L 87.7 41.1 L 89.7 39.5 L 91.7 37.9 L 93.8 39.5 L 95.8 37.9 L 97.9 36.3 L 99.9 37.9 L 101.9 36.3 L 104.0 37.9 L 106.0 36.3 L 108.1 37.9 L 110.1 36.3 L 112.1 34.6 L 114.2 33.0 L 116.2 31.4 L 118.3 33.0 L 120.3 34.6 L 122.3 36.3 L 124.4 34.6 L 126.4 36.3 L 128.5 34.6 L 130.5 33.0 L 132.5 31.4 L 134.6 33.0 L 136.6 31.4 L 138.7 33.0 L 140.7 31.4 L 142.7 29.8 L 144.8 28.2 L 146.8 29.8 L 148.9 28.2 L 150.9 26.6 L 152.9 25.0 L 155.0 26.6 L 157.0 25.0 L 159.1 26.6 L 161.1 28.2 L 163.1 26.6 L 165.2 28.2 L 167.2 26.6 L 169.3 25.0 L 171.3 26.6 L 173.3 28.2 L 175.4 26.6 L 177.4 25.0 L 179.5 26.6 L 181.5 25.0 L 183.5 23.4 L 185.6 25.0 L 187.6 23.4 L 189.7 21.7 L 191.7 20.1 L 193.7 21.7 L 195.8 20.1 L 197.8 21.7 L 199.9 20.1 L 201.9 18.5 L 203.9 16.9 L 206.0 18.5 L 208.0 16.9 L 210.1 15.3 L 212.1 13.7 L 214.1 15.3 L 216.2 13.7 L 218.2 12.1 L 220.3 10.5 L 222.3 12.1 L 224.3 10.5 L 226.4 8.8 L 228.4 10.5 L 230.5 12.1 L 232.5 10.5 L 234.6 8.8 L 236.6 10.5 L 238.6 8.8 L 240.7 10.5 L 242.7 8.8 L 244.8 7.2 L 246.8 8.8 L 248.8 10.5 L 250.9 8.8 L 252.9 7.2 L 255.0 5.6 L 257.0 7.2 L 259.0 8.8 L 261.1 7.2 L 263.1 5.6 L 265.2 4.0 L 267.2 5.6 L 269.2 7.2 L 271.3 5.6 L 273.3 7.2 L 275.4 5.6 L 277.4 4.0 L 279.4 5.6 L 281.5 7.2 L 283.5 8.8 L 285.6 10.5 L 287.6 12.1 L 289.6 13.7 L 291.7 15.3 L 293.7 16.9 L 295.8 15.3 L 297.8 16.9 L 299.8 18.5 L 301.9 20.1 L 303.9 18.5 L 306.0 16.9 L 308.0 18.5" stroke="#3fb950" stroke-width="2" fill="none"
+                stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="308.0" cy="18.5" r="3.5" fill="#3fb950"/>
+        </svg>
+  </div>
+
+  <div class="footer">
+    <div class="ft ft-stand">Stand: 26.10.26 · 16:13</div>
+    <div class="ft">cocobet · transparent</div>
+  </div>
+</div>
+</body>
+</html>
