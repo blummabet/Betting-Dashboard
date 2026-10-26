@@ -1,11 +1,11 @@
-# 🟡 Picks Validator — 25.10.2026 21:06
+# 🟡 Picks Validator — 26.10.2026 08:10
 
-**22 Spiele geprüft** · 🔴 0 Fehler · 🟡 14 Warnungen · 🔵 61 Hinweise
+**24 Spiele geprüft** · 🔴 0 Fehler · 🟡 16 Warnungen · 🔵 68 Hinweise
 
 ```
 =================================================================
   🐕 CocoBet — Picks Logik-Check
-  25.10.2026 21:06
+  26.10.2026 08:10
   Filter: nächste 3 Tag(e)
 =================================================================
 
@@ -90,12 +90,9 @@
   🔵 HINWEIS [CARDS45_LOW_FV]
      📅 28.10.2026  AC Milan vs Bologna
      Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🔵 HINWEIS [LOW_SCORING_PROFILE]
-     📅 28.10.2026  AC Milan vs Bologna
-     Ø gpg=1.80, H2H Ø=2.8 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt
   🔵 HINWEIS [OVER35_LOW_FV]
      📅 28.10.2026  AC Milan vs Bologna
-     Ø gpg=1.80 (statischer Proxy) → Poisson FV für Over 3.5 = 10.9%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
+     Ø gpg=2.20 (statischer Proxy) → Poisson FV für Over 3.5 = 18.1%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
   🟡 WARNUNG [H2H_DOMINATED_HIGH_SCORE]
      📅 28.10.2026  Venezia vs Inter
      Inter dominiert H2H 5W/0X/0L in 5 Spielen. matchScore=7.5 — Pick-Richtung sollte klar sein, Angle-Text darf den Underdog nicht überbewerten.
@@ -117,6 +114,9 @@
   🟡 WARNUNG [HOME_POOR_FORM_HIGH_SCORE]
      📅 28.10.2026  Parma vs Udinese
      Parma: formScore=0.22 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet.
+  🟡 WARNUNG [BOTH_DEFENSIVE_OVER_RISK]
+     📅 28.10.2026  Parma vs Udinese
+     Parma (0.8 Tore/Sp) + Udinese (0.8 Tore/Sp): kombiniert nur ~1.4 erwartete Tore. Over 2.5 Pick wäre kontraindiziert — Modell prüfen.
   🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
      📅 28.10.2026  Parma vs Udinese
      Parma, Udinese: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
@@ -131,10 +131,10 @@
      H2H Schnitt=3.0 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
   🔵 HINWEIS [LOW_SCORING_PROFILE]
      📅 28.10.2026  Parma vs Udinese
-     Ø gpg=1.80, H2H Ø=3.0 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt
+     Ø gpg=1.60, H2H Ø=3.0 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt
   🔵 HINWEIS [OVER35_LOW_FV]
      📅 28.10.2026  Parma vs Udinese
-     Ø gpg=1.80 (statischer Proxy) → Poisson FV für Over 3.5 = 10.9%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
+     Ø gpg=1.60 (statischer Proxy) → Poisson FV für Over 3.5 = 7.9%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
   🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
      📅 28.10.2026  Genoa vs Juventus
      Genoa: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
@@ -165,6 +165,33 @@
   🔵 HINWEIS [CARDS45_LOW_FV]
      📅 28.10.2026  Monza vs Napoli
      Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
+  🔵 HINWEIS [CARDS35_LOW_FV]
+     📅 29.10.2026  Frosinone vs Lecce
+     Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
+  🔵 HINWEIS [CARDS45_LOW_FV]
+     📅 29.10.2026  Frosinone vs Lecce
+     Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
+  🔵 HINWEIS [OVER35_LOW_FV]
+     📅 29.10.2026  Frosinone vs Lecce
+     Ø gpg=2.20 (statischer Proxy) → Poisson FV für Over 3.5 = 18.1%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
+  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
+     📅 29.10.2026  Fiorentina vs Atalanta
+     Fiorentina: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
+  🔵 HINWEIS [CARDS35_LOW_FV]
+     📅 29.10.2026  Fiorentina vs Atalanta
+     Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
+  🔵 HINWEIS [CARDS45_LOW_FV]
+     📅 29.10.2026  Fiorentina vs Atalanta
+     Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
+  🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
+     📅 29.10.2026  Fiorentina vs Atalanta
+     H2H Schnitt=3.1 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
+  🔵 HINWEIS [LOW_SCORING_PROFILE]
+     📅 29.10.2026  Fiorentina vs Atalanta
+     Ø gpg=1.80, H2H Ø=3.1 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt
+  🔵 HINWEIS [OVER35_LOW_FV]
+     📅 29.10.2026  Fiorentina vs Atalanta
+     Ø gpg=1.80 (statischer Proxy) → Poisson FV für Over 3.5 = 10.9%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
 
 ─────────────────────────────────────────────────────────────────
   🇵🇹 Primeira Liga  (rl=25)
@@ -263,9 +290,9 @@
      H2H Schnitt=3.5 Tore (≥3.5) — HARD BLOCK sollte Under 2.5 komplett blocken. Python kann Picks nicht prüfen — JS-Inline-Validator zeigt ERROR falls Pick trotzdem erscheint.
 
 ═════════════════════════════════════════════════════════════════
-  Geprüft: 22 Spiele
-  🟡 14 Warnungen — manuelle Prüfung empfohlen
-  🔵 61 Hinweise — Pick-Richtung kontrollieren
+  Geprüft: 24 Spiele
+  🟡 16 Warnungen — manuelle Prüfung empfohlen
+  🔵 68 Hinweise — Pick-Richtung kontrollieren
 ═════════════════════════════════════════════════════════════════
 
 ```
