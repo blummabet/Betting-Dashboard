@@ -34,9 +34,9 @@
       "ok": false,
       "nFail": 3,
       "failures": [
-        "🟡 Betfair Radar (Betwatch): seit 28 h kein Lauf mehr verzeichnet",
-        "💹 Liga (Top-5) Poly Positionen überwachen: seit 40 h kein Lauf mehr verzeichnet",
-        "⚡ Poly Live-Scan (nur laufende Spiele, schnell): seit 29 h kein Lauf mehr verzeichnet"
+        "🟡 Betfair Radar (Betwatch): seit 36 h kein Lauf mehr verzeichnet",
+        "💹 Liga (Top-5) Poly Positionen überwachen: seit 48 h kein Lauf mehr verzeichnet",
+        "⚡ Poly Live-Scan (nur laufende Spiele, schnell): seit 37 h kein Lauf mehr verzeichnet"
       ],
       "note": "Quelle: health/*.json (run_health.py). Leere Liste heisst hier wirklich 'nichts gescheitert' — ein nicht abfragbarer Lauf steht oben als UNBEKANNT."
     },
@@ -209,7 +209,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "99/99 mit AH · 99/99 mit Public-O/U."
+      "note": "97/97 mit AH · 97/97 mit Public-O/U."
     },
     {
       "id": "odds_freshness",
@@ -376,7 +376,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "488-487 Auswärtssieg @2.1: sichere Linie Doppelte Chance — X2 @1.368 verfügbar (≥1.35), nicht abgeleitet"
+        "488-487 Auswärtssieg @2.1: sichere Linie Doppelte Chance — X2 @1.37 verfügbar (≥1.35), nicht abgeleitet"
       ],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
     },
@@ -461,7 +461,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "168-172: Soft bewegte sich 1.65→1.75, aber Opening==Jetzt (1.75) — nicht eingefroren"
+        "182-192: Soft bewegte sich 2.2→2.45, aber Opening==Jetzt (2.45) — nicht eingefroren"
       ],
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
     },
@@ -571,7 +571,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "22 von 23 Vor-Kandidaten mit Anteilen (22 Calls) · 0 ohne Geld-Split · 1 ueber Budget · 0 nachgelegt. Leeres Fenster ist kein Fehler; Kandidaten ohne einen einzigen Anteil schon."
+      "note": "7 von 7 Vor-Kandidaten mit Anteilen (7 Calls) · 0 ohne Geld-Split · 0 ueber Budget · 0 nachgelegt. Leeres Fenster ist kein Fehler; Kandidaten ohne einen einzigen Anteil schon."
     },
     {
       "id": "betfair_ledger",
@@ -589,7 +589,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Job vor 28.1h · jüngste Daten vor 28.1h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
+      "note": "Job vor 36.2h · jüngste Daten vor 36.2h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
     },
     {
       "id": "poly_global_liefert",
@@ -598,7 +598,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Job vor 0.3h · jüngste Daten vor 0.3h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
+      "note": "Job vor 0.4h · jüngste Daten vor 0.4h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
     },
     {
       "id": "pinn_anker",
@@ -628,7 +628,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "🔒 E-Sport ohne Wallet-Nachweis: 396/120 seit 49d · 🔒 Poly-Auswahl · von Betfair bestätigt: 563/60 seit 55d · 🔒 Fade-Unter · Ganzspiel-Torlinie: 6447/200 seit 49d · 🔒 Liga · Conviction ab 5: 129/80 seit 45d · 🔒 Bücher-Score ≥7 von 10: 137/40 seit 55d"
+      "note": "🔒 E-Sport ohne Wallet-Nachweis: 396/120 seit 50d · 🔒 Poly-Auswahl · von Betfair bestätigt: 563/60 seit 55d · 🔒 Fade-Unter · Ganzspiel-Torlinie: 6447/200 seit 50d · 🔒 Liga · Conviction ab 5: 129/80 seit 45d · 🔒 Bücher-Score ≥7 von 10: 137/40 seit 55d"
     },
     {
       "id": "killer_push_buch",
@@ -650,5 +650,5 @@
     }
   ],
   "nFail": 6,
-  "generatedAt": "2026-10-26T14:40:17.703017+00:00"
+  "generatedAt": "2026-10-26T22:45:58.580198+00:00"
 }
