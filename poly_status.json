@@ -88,7 +88,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "1474 geprueft, davon 176 abgeschnitten"
+      "note": "1472 geprueft, davon 175 abgeschnitten"
     },
     {
       "id": "settlement_alive",
@@ -103,12 +103,10 @@
       "id": "buendel_cond_stabil",
       "label": "Bündel-Marktkennung bleibt, was sie war",
       "severity": "error",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "1 offene(r) Buendel-Eintrag/-Eintraege zeigen auf einen anderen Markt als ihre Close-Zeile. Die Annahme hinter dem Stempel-Nachtrag (eine Buendel-`cond` bleibt) gilt nicht mehr — der Nachtrag gehoert geprueft."
-      ],
-      "note": ""
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "condDrift = 0 heisst: jede offene Bündel-Zeile meint noch denselben Markt wie beim Einstieg."
     },
     {
       "id": "shortlist_clv_nach_einstieg",
@@ -117,7 +115,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "1127 von 2000 abgerechneten Plays haben einen Schluss nach dem Einstieg; der Rest traegt clvGrund statt einer erfundenen 0,0."
+      "note": "1128 von 2000 abgerechneten Plays haben einen Schluss nach dem Einstieg; der Rest traegt clvGrund statt einer erfundenen 0,0."
     },
     {
       "id": "anpfiff_eine_uhr",
@@ -126,7 +124,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "3253 Close-Zeilen mit absolutem Anpfiff geprueft."
+      "note": "3251 Close-Zeilen mit absolutem Anpfiff geprueft."
     },
     {
       "id": "resolutions_match_open_keys",
@@ -135,7 +133,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Fällige Märkte je Liga, die ihre Auflösung finden — nur ab dem Beginn des Auflösungsbuchs (2026-10-12); 1951 ältere Märkte bleiben draussen, fuer sie kann es keine geben. < 60% = Settlement läuft wirklich ins Leere."
+      "note": "Fällige Märkte je Liga, die ihre Auflösung finden — nur ab dem Beginn des Auflösungsbuchs (2026-10-12); 1949 ältere Märkte bleiben draussen, fuer sie kann es keine geben. < 60% = Settlement läuft wirklich ins Leere."
     },
     {
       "id": "proven_wallets_profitable",
@@ -198,6 +196,6 @@
       "note": "poly_direct_bets.py rechnet über poly_resolutions.json ab. Hängt ein Bet, kennt Poly den Ausgang nicht (Markt noch offen/obskur) oder der Slug passt nicht — dann fehlt echtes Geld in der Bilanz."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-10-26T01:50:09.911013+00:00"
+  "nFail": 1,
+  "generatedAt": "2026-10-26T02:20:11.699845+00:00"
 }
