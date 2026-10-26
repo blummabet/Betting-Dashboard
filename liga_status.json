@@ -34,9 +34,9 @@
       "ok": false,
       "nFail": 3,
       "failures": [
-        "🟡 Betfair Radar (Betwatch): seit 27 h kein Lauf mehr verzeichnet",
-        "💹 Liga (Top-5) Poly Positionen überwachen: seit 39 h kein Lauf mehr verzeichnet",
-        "⚡ Poly Live-Scan (nur laufende Spiele, schnell): seit 27 h kein Lauf mehr verzeichnet"
+        "🟡 Betfair Radar (Betwatch): seit 28 h kein Lauf mehr verzeichnet",
+        "💹 Liga (Top-5) Poly Positionen überwachen: seit 40 h kein Lauf mehr verzeichnet",
+        "⚡ Poly Live-Scan (nur laufende Spiele, schnell): seit 29 h kein Lauf mehr verzeichnet"
       ],
       "note": "Quelle: health/*.json (run_health.py). Leere Liste heisst hier wirklich 'nichts gescheitert' — ein nicht abfragbarer Lauf steht oben als UNBEKANNT."
     },
@@ -459,10 +459,9 @@
       "label": "Soft-Eröffnung echt erfasst",
       "severity": "warn",
       "ok": false,
-      "nFail": 2,
+      "nFail": 1,
       "failures": [
-        "168-172: Soft bewegte sich 1.65→1.75, aber Opening==Jetzt (1.75) — nicht eingefroren",
-        "170-160: Soft bewegte sich 2.81→2.9, aber Opening==Jetzt (2.9) — nicht eingefroren"
+        "168-172: Soft bewegte sich 1.65→1.75, aber Opening==Jetzt (1.75) — nicht eingefroren"
       ],
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
     },
@@ -590,7 +589,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Job vor 26.6h · jüngste Daten vor 26.6h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
+      "note": "Job vor 28.1h · jüngste Daten vor 28.1h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
     },
     {
       "id": "poly_global_liefert",
@@ -599,7 +598,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Job vor 0.8h · jüngste Daten vor 0.8h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
+      "note": "Job vor 0.3h · jüngste Daten vor 0.3h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
     },
     {
       "id": "pinn_anker",
@@ -651,5 +650,5 @@
     }
   ],
   "nFail": 6,
-  "generatedAt": "2026-10-26T13:09:30.651671+00:00"
+  "generatedAt": "2026-10-26T14:40:17.703017+00:00"
 }
