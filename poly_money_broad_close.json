@@ -992282,7 +992282,13 @@
     "usd": 7537,
     "ts": 1793058515
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Pacers": 0.0,
+   "Bucks": 1.0
+  },
+  "resolvedAt": "2026-10-27T04:21:20.033279+00:00"
  },
  "mlb-mil-tb-2026-10-26": {
   "shares": {
@@ -992846,7 +992852,13 @@
   "tokens": {
    "Over": "111689974360035706472527901473351994036979718237131802210468077636376811231521",
    "Under": "26302745377169095335331401287438997948086923179051518060675163457931575410153"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Over": 1.0,
+   "Under": 0.0
+  },
+  "resolvedAt": "2026-10-27T04:21:20.033279+00:00"
  },
  "nba-atl-hou-2026-10-26": {
   "shares": {
@@ -994203,7 +994215,10 @@
     "usd": 240818,
     "ts": 1793062163
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedWinner": "Grizzlies",
+  "resolvedAt": "2026-10-27T04:21:20.033279+00:00"
  },
  "bra2-afc-cui-2026-10-26": {
   "shares": {
@@ -995602,7 +995617,13 @@
   "tokens": {
    "Dylan Dietrich": "66679812611589871580483221238870894296619105513079162352686195868979984058831",
    "Colton Smith": "69804164587589680572691800408896465623329228816198901123305150767265653355503"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Dylan Dietrich": 1.0,
+   "Colton Smith": 0.0
+  },
+  "resolvedAt": "2026-10-27T04:21:20.033279+00:00"
  },
  "bol1-bol-uvi-2026-10-26": {
   "shares": {
@@ -997167,12 +997188,18 @@
   "tokens": {
    "Ann Li": "105364910921670420350984759534676469491457633175902208294114754749781228478468",
    "Ekaterina Alexandrova": "59082352668193273765091217344170722393988488507879063351254423244401243639562"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Ann Li": 0.0,
+   "Ekaterina Alexandrova": 1.0
+  },
+  "resolvedAt": "2026-10-27T04:21:20.033279+00:00"
  },
  "wta-sasnovi-bartunk-2026-10-25": {
   "shares": {
-   "Aliaksandra Sasnovich": 3619.847006580001,
-   "Nikola Bartunkova": 6871.953429215004
+   "Aliaksandra Sasnovich": 3609.901679160001,
+   "Nikola Bartunkova": 6853.427058790005
   },
   "prices": {
    "Aliaksandra Sasnovich": 0.345,
@@ -997184,7 +997211,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 24596,
+  "totalUsd": 25316,
   "whales": [
    {
     "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
@@ -997228,7 +997255,8 @@
    {
     "wallet": "0x1fb7053bb490c6ec05a78fe2ed383af48526fb66",
     "side": "Aliaksandra Sasnovich",
-    "usd": 321
+    "usd": 321,
+    "avgPrice": 0.3599
    },
    {
     "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
@@ -997238,8 +997266,7 @@
    {
     "wallet": "0xcbf32c6d8268ba87eed33e44b1f8477a826180ab",
     "side": "Nikola Bartunkova",
-    "usd": 301,
-    "avgPrice": 0.65
+    "usd": 301
    },
    {
     "wallet": "0x47384d7aef2ac6daa9a459a9261668d7e4f79cfb",
@@ -997247,24 +997274,26 @@
     "usd": 301
    },
    {
-    "wallet": "0x5213eb85fcd465c8927a8382f95dd2dc22306a35",
-    "side": "Nikola Bartunkova",
-    "usd": 265
-   },
-   {
     "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
     "side": "Aliaksandra Sasnovich",
     "usd": 225
    },
    {
+    "wallet": "0x5213eb85fcd465c8927a8382f95dd2dc22306a35",
+    "side": "Nikola Bartunkova",
+    "usd": 218
+   },
+   {
     "wallet": "0xae817ddfed1c3b37ad23b5e9397cd270ae94f04b",
     "side": "Nikola Bartunkova",
-    "usd": 198
+    "usd": 198,
+    "avgPrice": 0.6599
    },
    {
     "wallet": "0xf1f2b3c6c5bea42a6664fe3a8395addc1ab28c8d",
     "side": "Aliaksandra Sasnovich",
-    "usd": 172
+    "usd": 172,
+    "avgPrice": 0.35
    },
    {
     "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
@@ -997284,7 +997313,8 @@
    {
     "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
     "side": "Aliaksandra Sasnovich",
-    "usd": 141
+    "usd": 141,
+    "avgPrice": 0.35
    },
    {
     "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
@@ -997297,14 +997327,10 @@
     "usd": 117
    },
    {
-    "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
-    "side": "Aliaksandra Sasnovich",
-    "usd": 113
-   },
-   {
     "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
     "side": "Aliaksandra Sasnovich",
-    "usd": 109
+    "usd": 109,
+    "avgPrice": 0.35
    },
    {
     "wallet": "0xf8e4943df102da8d5271cf5bb9e4a439739b3b32",
@@ -997315,13 +997341,19 @@
    {
     "wallet": "0xec981ed70ae69c5cbcac08c1ba063e734f6bafcd",
     "side": "Nikola Bartunkova",
-    "usd": 85,
-    "avgPrice": 0.6541
+    "usd": 90,
+    "avgPrice": 0.6538
+   },
+   {
+    "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
+    "side": "Aliaksandra Sasnovich",
+    "usd": 87
    },
    {
     "wallet": "0xf9dcbb0a9b740625738cdd7cf83db99c7deaaba7",
     "side": "Aliaksandra Sasnovich",
-    "usd": 69
+    "usd": 69,
+    "avgPrice": 0.35
    },
    {
     "wallet": "0x5cc82304fd1a7ae5669029dd83262892574fa0e4",
@@ -997336,7 +997368,8 @@
    {
     "wallet": "0xd3f9a532aaf64bd250e3b84b132b2c83152645a7",
     "side": "Nikola Bartunkova",
-    "usd": 61
+    "usd": 61,
+    "avgPrice": 0.6501
    },
    {
     "wallet": "0x3ca9089f59d506a6773a4d68227a1ac97806424a",
@@ -997386,18 +997419,18 @@
     "usd": 40
    },
    {
-    "wallet": "0xa697d0b3fff7d285a0f92d6ee03a7f97809e59d5",
+    "wallet": "0x5e020e19bc4cc2cd24ab9b406604ee9df02ab178",
     "side": "Aliaksandra Sasnovich",
     "usd": 35
    },
    {
-    "wallet": "0x216050de6080fac3926226b2b8ce3d5544784c78",
-    "side": "Nikola Bartunkova",
-    "usd": 33
+    "wallet": "0xa697d0b3fff7d285a0f92d6ee03a7f97809e59d5",
+    "side": "Aliaksandra Sasnovich",
+    "usd": 35
    }
   ],
-  "hoursToKickoff": 1.15,
-  "capturedAt": "2026-10-27T03:51:17.769063+00:00",
+  "hoursToKickoff": 0.64,
+  "capturedAt": "2026-10-27T04:21:20.033279+00:00",
   "koTs": "2026-10-27T05:00:00+00:00",
   "cond": "0x72aeacd50a9a5365ea08d15dc9e83a0f1264768a6913bcd1a135aef7e4246eb1",
   "frage": "Pan Pacific Open: Aliaksandra Sasnovich vs Nikola Bartunkova",
@@ -997414,23 +997447,23 @@
    "bids": [
     [
      0.65,
-     318
+     180
     ],
     [
      0.64,
-     2395
+     2574
     ],
     [
      0.63,
-     918
+     734
     ],
     [
      0.62,
-     783
+     701
     ],
     [
-     0.61,
-     239
+     0.6,
+     2000
     ],
     [
      0.57,
@@ -997440,49 +997473,39 @@
    "asks": [
     [
      0.66,
-     2034
+     10167
     ],
     [
      0.67,
-     14652
+     18766
     ],
     [
      0.68,
-     24178
+     20275
     ],
     [
      0.69,
-     28262
+     23189
     ],
     [
      0.7,
-     8848
+     8656
     ],
     [
      0.71,
-     15358
+     14856
     ]
    ]
-  },
-  "trades": [
-   {
-    "wallet": "0xaeb50a7e23d833da8be30e69b55172d1f52858e2",
-    "action": "SELL",
-    "side": "Nikola Bartunkova",
-    "price": 0.6269,
-    "usd": 627,
-    "ts": 1793006226
-   }
-  ]
+  }
  },
  "wta-fernand-sakatsu-2026-10-26": {
   "shares": {
-   "Leylah Fernandez": 26458.820512075,
-   "Himeno Sakatsume": 6409.27838304
+   "Leylah Fernandez": 26787.501512224997,
+   "Himeno Sakatsume": 6080.597440320001
   },
   "prices": {
-   "Leylah Fernandez": 0.805,
-   "Himeno Sakatsume": 0.195
+   "Leylah Fernandez": 0.815,
+   "Himeno Sakatsume": 0.185
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -997490,197 +997513,199 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 43329,
+  "totalUsd": 44155,
   "whales": [
    {
     "wallet": "0x38337de21ff0bb0a11a40761507d51e318d633d1",
     "side": "Leylah Fernandez",
-    "usd": 9757
+    "usd": 9878
    },
    {
     "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
     "side": "Leylah Fernandez",
-    "usd": 5307,
+    "usd": 5372,
     "avgPrice": 0.786
    },
    {
     "wallet": "0xddb993dbaee76440dbb42408a1925e38b7aaedcd",
     "side": "Leylah Fernandez",
-    "usd": 2584,
-    "avgPrice": 0.7997
+    "usd": 2616
    },
    {
     "wallet": "0x3ce6631ed915ab00f60f938b241edcf0f1768e94",
     "side": "Himeno Sakatsume",
-    "usd": 1950
+    "usd": 1850
    },
    {
     "wallet": "0x6bfd62982f6f8f30e17736c70dbc9f66857b44b4",
     "side": "Leylah Fernandez",
-    "usd": 1755
+    "usd": 1777
    },
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "Leylah Fernandez",
-    "usd": 1328,
+    "usd": 1337,
     "avgPrice": 0.7918
    },
    {
     "wallet": "0x09b63d4273c88d6621abe7cf7dfdfa58f888f48d",
     "side": "Himeno Sakatsume",
-    "usd": 1108
-   },
-   {
-    "wallet": "0x5d7639ed5fd3c5ebf0fc69d548e1046acd0f9168",
-    "side": "Himeno Sakatsume",
-    "usd": 878
+    "usd": 1051
    },
    {
     "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
     "side": "Leylah Fernandez",
-    "usd": 853,
+    "usd": 864,
     "avgPrice": 0.7849
    },
    {
-    "wallet": "0x332e652e3b86434a9feead1ea1e18c67dc9ddf71",
+    "wallet": "0x5d7639ed5fd3c5ebf0fc69d548e1046acd0f9168",
     "side": "Himeno Sakatsume",
-    "usd": 535
+    "usd": 833
    },
    {
     "wallet": "0x1f64aefec94b99491def6bc0adfa061ba3f23633",
     "side": "Leylah Fernandez",
-    "usd": 528
+    "usd": 534
+   },
+   {
+    "wallet": "0x332e652e3b86434a9feead1ea1e18c67dc9ddf71",
+    "side": "Himeno Sakatsume",
+    "usd": 507
    },
    {
     "wallet": "0x93cbab239cf3f50c6fa67fb32fdfdb7df9843485",
     "side": "Himeno Sakatsume",
-    "usd": 509
+    "usd": 483
    },
    {
     "wallet": "0x30f67d821c57a54e25e5e521dbd3b5b18309004f",
     "side": "Leylah Fernandez",
-    "usd": 402
+    "usd": 408
    },
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
     "side": "Leylah Fernandez",
-    "usd": 377
+    "usd": 382
    },
    {
     "wallet": "0x3d4c523c750f61be22695b27e4117b3d256f67bc",
     "side": "Leylah Fernandez",
-    "usd": 343
+    "usd": 348
    },
    {
     "wallet": "0x3e856790872025b26922999651992ea70bfe788b",
     "side": "Himeno Sakatsume",
-    "usd": 291
+    "usd": 276
    },
    {
     "wallet": "0xdc4f58a48ed4467743609fdce11eea483c759804",
     "side": "Leylah Fernandez",
-    "usd": 271
+    "usd": 275
    },
    {
     "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
     "side": "Himeno Sakatsume",
-    "usd": 268
+    "usd": 255
    },
    {
     "wallet": "0x5ba3a7a502103c9ef676f74db134d39d28f924b4",
     "side": "Leylah Fernandez",
-    "usd": 244
+    "usd": 247
    },
    {
     "wallet": "0x04641b57f332c15ecaa497799c55026d521967da",
     "side": "Leylah Fernandez",
-    "usd": 242
+    "usd": 245
    },
    {
     "wallet": "0xb34769f50149d5a367b60ed5a7c33800cbbb5166",
     "side": "Leylah Fernandez",
-    "usd": 201
+    "usd": 204
    },
    {
     "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
     "side": "Himeno Sakatsume",
-    "usd": 198
+    "usd": 188
    },
    {
     "wallet": "0x01c78f8873c0c86d6b6b92ff627e3802237ee995",
     "side": "Himeno Sakatsume",
-    "usd": 182
+    "usd": 173
    },
    {
     "wallet": "0x9cb48ddd4185f3e947edf596589e40e574588285",
     "side": "Leylah Fernandez",
-    "usd": 153
+    "usd": 155
    },
    {
     "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
     "side": "Himeno Sakatsume",
-    "usd": 134
-   },
-   {
-    "wallet": "0x5cfeed196e27ebc140a1412737cce001fa0b0593",
-    "side": "Himeno Sakatsume",
-    "usd": 97
+    "usd": 127,
+    "avgPrice": 0.19
    },
    {
     "wallet": "0x49b68438ae7db43a03d7ddaaceaef5581ac7d152",
     "side": "Leylah Fernandez",
-    "usd": 94
+    "usd": 95
+   },
+   {
+    "wallet": "0x5cfeed196e27ebc140a1412737cce001fa0b0593",
+    "side": "Himeno Sakatsume",
+    "usd": 92,
+    "avgPrice": 0.19
    },
    {
     "wallet": "0x3ca9089f59d506a6773a4d68227a1ac97806424a",
     "side": "Leylah Fernandez",
-    "usd": 89
+    "usd": 90
    },
    {
     "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
     "side": "Himeno Sakatsume",
-    "usd": 88
+    "usd": 84
    },
    {
     "wallet": "0xc9c36d3afb757d75fd54feafab1b1f04419d079f",
     "side": "Leylah Fernandez",
-    "usd": 70
+    "usd": 71
    },
    {
     "wallet": "0xd2e77bfacb05f4e9763377852cd1f2da7aaa08e9",
     "side": "Leylah Fernandez",
-    "usd": 64
+    "usd": 65
    },
    {
     "wallet": "0x28f7c2dbcc6b561d7612e3219ca6e0278ebb404d",
     "side": "Leylah Fernandez",
-    "usd": 62
+    "usd": 63
    },
    {
     "wallet": "0x56acab44cfca2e88bb9b3406890aea7bfa0cd77e",
     "side": "Leylah Fernandez",
-    "usd": 60,
+    "usd": 61,
     "avgPrice": 0.78
    },
    {
     "wallet": "0x98db8cca55c32b24cfb414b5b43d273f4e1fdd17",
     "side": "Leylah Fernandez",
-    "usd": 52
+    "usd": 52,
+    "avgPrice": 0.78
    },
    {
     "wallet": "0x5cdc4e820fe30f22f3cf2581796d6e5abedc1f6b",
     "side": "Leylah Fernandez",
-    "usd": 42
+    "usd": 43
    },
    {
     "wallet": "0xeb76f82d4443c35028c662eebf001cd52c8c7ffe",
     "side": "Leylah Fernandez",
-    "usd": 41
+    "usd": 42
    },
    {
     "wallet": "0x90508f69744e73d6811972a5fdb56047b0333a19",
     "side": "Leylah Fernandez",
-    "usd": 40
+    "usd": 41
    },
    {
     "wallet": "0x1c6cd5095c3b120c78dfd0e6e139195f6f2ec7a4",
@@ -997695,11 +997720,11 @@
    {
     "wallet": "0x216050de6080fac3926226b2b8ce3d5544784c78",
     "side": "Leylah Fernandez",
-    "usd": 22
+    "usd": 23
    }
   ],
-  "hoursToKickoff": 2.15,
-  "capturedAt": "2026-10-27T03:51:17.769063+00:00",
+  "hoursToKickoff": 1.64,
+  "capturedAt": "2026-10-27T04:21:20.033279+00:00",
   "koTs": "2026-10-27T06:00:00+00:00",
   "cond": "0xceda8c8f8146af473965486b728c9f7c3cbda1248143615de1c913cb04a9820f",
   "frage": "Pan Pacific Open: Leylah Fernandez vs Himeno Sakatsume",
@@ -997716,23 +997741,23 @@
    "bids": [
     [
      0.81,
-     3625
+     3659
     ],
     [
      0.8,
-     11449
+     7379
     ],
     [
      0.79,
-     2138
+     2104
     ],
     [
      0.78,
-     536
+     513
     ],
     [
      0.77,
-     500
+     599
     ],
     [
      0.76,
@@ -997742,19 +997767,19 @@
    "asks": [
     [
      0.82,
-     11187
+     11522
     ],
     [
      0.83,
-     41017
+     40991
     ],
     [
      0.84,
-     20495
+     20397
     ],
     [
      0.85,
-     41893
+     40894
     ],
     [
      0.86,
@@ -997811,8 +997836,8 @@
  },
  "atp-zhukaye-wong-2026-10-27": {
   "shares": {
-   "Beibit Zhukayev": 2498.27721719,
-   "Coleman Wong": 11005.923956809997
+   "Beibit Zhukayev": 3141.0687409349994,
+   "Coleman Wong": 13837.681210065
   },
   "prices": {
    "Beibit Zhukayev": 0.185,
@@ -997824,28 +997849,28 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 13502,
+  "totalUsd": 15499,
   "whales": [
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Coleman Wong",
+    "usd": 5515,
+    "avgPrice": 0.8192
+   },
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
     "side": "Coleman Wong",
     "usd": 2906
    },
    {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-    "side": "Coleman Wong",
-    "usd": 2866,
-    "avgPrice": 0.8185
+    "wallet": "0x8e83fae02e603cc2860638315f1c161fde5ab22f",
+    "side": "Beibit Zhukayev",
+    "usd": 2361
    },
    {
     "wallet": "0x6bfd62982f6f8f30e17736c70dbc9f66857b44b4",
     "side": "Coleman Wong",
     "usd": 1895
-   },
-   {
-    "wallet": "0x8e83fae02e603cc2860638315f1c161fde5ab22f",
-    "side": "Beibit Zhukayev",
-    "usd": 1718
    },
    {
     "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
@@ -997879,14 +997904,14 @@
     "usd": 172
    },
    {
+    "wallet": "0x9d909c3387585033b37e2842cb8827a5261742be",
+    "side": "Coleman Wong",
+    "usd": 151
+   },
+   {
     "wallet": "0x34042ee8073b0e30c58c29808e193f90eab03a93",
     "side": "Beibit Zhukayev",
     "usd": 136
-   },
-   {
-    "wallet": "0xeb55a0047296306cf0a2fead7ed8ae79cd4afb0e",
-    "side": "Coleman Wong",
-    "usd": 134
    },
    {
     "wallet": "0x1d6d6b39a4ee425ebc511d1dbafe5098a2aef2b4",
@@ -997902,8 +997927,7 @@
    {
     "wallet": "0xddb993dbaee76440dbb42408a1925e38b7aaedcd",
     "side": "Coleman Wong",
-    "usd": 97,
-    "avgPrice": 0.8199
+    "usd": 97
    },
    {
     "wallet": "0x489d3df3601288940f89d56b5642b0951129f6e3",
@@ -997916,6 +997940,11 @@
     "usd": 82
    },
    {
+    "wallet": "0x5cdc4e820fe30f22f3cf2581796d6e5abedc1f6b",
+    "side": "Coleman Wong",
+    "usd": 79
+   },
+   {
     "wallet": "0xbc5613462ce3902eea10874a11cf74191f4a8f28",
     "side": "Coleman Wong",
     "usd": 77
@@ -997924,11 +997953,6 @@
     "wallet": "0x6a86dc13222b01e29650035b2ce9c8930c1db39e",
     "side": "Coleman Wong",
     "usd": 73
-   },
-   {
-    "wallet": "0x5cdc4e820fe30f22f3cf2581796d6e5abedc1f6b",
-    "side": "Coleman Wong",
-    "usd": 59
    },
    {
     "wallet": "0xa81aff34f8d19eb7434a655ec6aad2821bedb5a3",
@@ -997944,6 +997968,11 @@
     "wallet": "0x04641b57f332c15ecaa497799c55026d521967da",
     "side": "Coleman Wong",
     "usd": 17
+   },
+   {
+    "wallet": "0x775efa2139f4c4706d56f077f2393b590411e94a",
+    "side": "Coleman Wong",
+    "usd": 12
    },
    {
     "wallet": "0x6891589732cf8beaaf424b117d5c5c20919f6bb9",
@@ -998006,8 +998035,8 @@
     "usd": 1
    }
   ],
-  "hoursToKickoff": 2.65,
-  "capturedAt": "2026-10-27T03:51:17.769063+00:00",
+  "hoursToKickoff": 2.14,
+  "capturedAt": "2026-10-27T04:21:20.033279+00:00",
   "koTs": "2026-10-27T06:30:00+00:00",
   "cond": "0xabe1cd9e9659aa657921ba217365b17f44c912778994e55ed17f7b1b4e61d7bd",
   "frage": "Seoul: Beibit Zhukayev vs Coleman Wong",
@@ -998024,7 +998053,7 @@
    "bids": [
     [
      0.81,
-     2872
+     2621
     ],
     [
      0.8,
@@ -998050,7 +998079,7 @@
    "asks": [
     [
      0.82,
-     8152
+     4598
     ],
     [
      0.83,
@@ -998058,23 +998087,63 @@
     ],
     [
      0.84,
-     780
+     860
     ],
     [
      0.85,
-     3436
+     3430
     ],
     [
      0.86,
-     30863
+     30524
     ],
     [
      0.87,
-     8916
+     9615
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "action": "BUY",
+    "side": "Coleman Wong",
+    "price": 0.82,
+    "usd": 533,
+    "ts": 1793073536
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "action": "BUY",
+    "side": "Coleman Wong",
+    "price": 0.82,
+    "usd": 533,
+    "ts": 1793073480
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "action": "BUY",
+    "side": "Coleman Wong",
+    "price": 0.82,
+    "usd": 533,
+    "ts": 1793073420
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "action": "BUY",
+    "side": "Coleman Wong",
+    "price": 0.82,
+    "usd": 533,
+    "ts": 1793073347
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "action": "BUY",
+    "side": "Coleman Wong",
+    "price": 0.82,
+    "usd": 533,
+    "ts": 1793073297
+   },
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "action": "BUY",
@@ -998098,46 +998167,272 @@
     "price": 0.82,
     "usd": 410,
     "ts": 1793070648
+   }
+  ]
+ },
+ "crint-nzl-ind-2026-10-27": {
+  "shares": {
+   "New Zealand": 9422.02543737,
+   "India": 11285.694976724997
+  },
+  "prices": {
+   "New Zealand": 0.455,
+   "India": 0.545
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "CRICKET",
+  "sport": "Cricket",
+  "totalUsd": 30015,
+  "whales": [
+   {
+    "wallet": "0xd8efeae86236372071b567e7d5f08f188b88772f",
+    "side": "India",
+    "usd": 4751
    },
    {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-    "action": "BUY",
-    "side": "Coleman Wong",
-    "price": 0.82,
-    "usd": 410,
-    "ts": 1793070585
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "New Zealand",
+    "usd": 4297,
+    "avgPrice": 0.4523
    },
    {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-    "action": "BUY",
-    "side": "Coleman Wong",
-    "price": 0.82,
-    "usd": 820,
-    "ts": 1793070540
+    "wallet": "0xa4b7b1814b0da33f2b61be4939976898aa476008",
+    "side": "New Zealand",
+    "usd": 2860
    },
    {
-    "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
-    "action": "BUY",
-    "side": "Coleman Wong",
-    "price": 0.82,
-    "usd": 2637,
-    "ts": 1793069892
+    "wallet": "0x7e5972bfc25819775ee5a9d4f191919375487b8b",
+    "side": "India",
+    "usd": 1107
    },
    {
-    "wallet": "0x3d4c523c750f61be22695b27e4117b3d256f67bc",
-    "action": "BUY",
-    "side": "Coleman Wong",
-    "price": 0.82,
-    "usd": 334,
-    "ts": 1793028975
+    "wallet": "0xb5db6abf19904c4f18daa9bcd753edb99b1f5800",
+    "side": "New Zealand",
+    "usd": 989
    },
    {
-    "wallet": "0x6bfd62982f6f8f30e17736c70dbc9f66857b44b4",
+    "wallet": "0x169f081eef45118cc38a44942c6e55b3f3f95e6c",
+    "side": "India",
+    "usd": 808
+   },
+   {
+    "wallet": "0x77bdad5ae102156a08284742fc0082f1bf13a9fe",
+    "side": "India",
+    "usd": 756
+   },
+   {
+    "wallet": "0x5213eb85fcd465c8927a8382f95dd2dc22306a35",
+    "side": "India",
+    "usd": 610
+   },
+   {
+    "wallet": "0x9c76cdb43fb46454da005fbc82047a64a18ec926",
+    "side": "India",
+    "usd": 545
+   },
+   {
+    "wallet": "0x877a6ae46338f13ba9bb2db3af771e6d7abae7d2",
+    "side": "India",
+    "usd": 384
+   },
+   {
+    "wallet": "0x1e3a86ef98030e7e0519e127d8178e9b45389e14",
+    "side": "India",
+    "usd": 369
+   },
+   {
+    "wallet": "0x8f41129e43ebfbfe6075d0804f3b2bb763b3260e",
+    "side": "India",
+    "usd": 351,
+    "avgPrice": 0.54
+   },
+   {
+    "wallet": "0xc785252b25901a591e9d962e09f4342468444ef2",
+    "side": "India",
+    "usd": 217
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "India",
+    "usd": 176,
+    "avgPrice": 0.5662
+   },
+   {
+    "wallet": "0xfb07f48542d2b655e9d0bf1cc92a8a6feee8e2cc",
+    "side": "India",
+    "usd": 164
+   },
+   {
+    "wallet": "0xbebc1d6b68637138aa50933ee99b593871acec02",
+    "side": "New Zealand",
+    "usd": 99
+   },
+   {
+    "wallet": "0x49b68438ae7db43a03d7ddaaceaef5581ac7d152",
+    "side": "India",
+    "usd": 64
+   },
+   {
+    "wallet": "0x35e701f088b6ef25fff6b902769c1cd8b85f8331",
+    "side": "India",
+    "usd": 27
+   },
+   {
+    "wallet": "0xa6db8383b756f1e58c504ff4179e19427dd73155",
+    "side": "India",
+    "usd": 23
+   },
+   {
+    "wallet": "0x890e22f535cddba750269d4837327936ea537ec1",
+    "side": "New Zealand",
+    "usd": 18
+   },
+   {
+    "wallet": "0x489d3df3601288940f89d56b5642b0951129f6e3",
+    "side": "India",
+    "usd": 14
+   },
+   {
+    "wallet": "0x9663a1bc594a019693631f39ed50e03496185b70",
+    "side": "New Zealand",
+    "usd": 10
+   },
+   {
+    "wallet": "0x7b12a67285f4abe780a376323b9a3953080b1a7b",
+    "side": "India",
+    "usd": 9
+   },
+   {
+    "wallet": "0xd93d79aa6f3859873c2c6d0e0e66a9dd112427a0",
+    "side": "India",
+    "usd": 5
+   },
+   {
+    "wallet": "0xa81aff34f8d19eb7434a655ec6aad2821bedb5a3",
+    "side": "India",
+    "usd": 3
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "New Zealand",
+    "usd": 2
+   },
+   {
+    "wallet": "0x521070c99db06e54af5e8e4a91d6858decdfbd53",
+    "side": "India",
+    "usd": 2
+   },
+   {
+    "wallet": "0x62090f59cb5980cd22efcf910128aa77c54c6767",
+    "side": "India",
+    "usd": 2
+   },
+   {
+    "wallet": "0x6b36973dcfbb4a1e4c6fadfe35b755eee99c0d4b",
+    "side": "New Zealand",
+    "usd": 1
+   },
+   {
+    "wallet": "0xc8bc925cb646c24ac257a204a1c607e595f62956",
+    "side": "New Zealand",
+    "usd": 0
+   }
+  ],
+  "hoursToKickoff": 2.64,
+  "capturedAt": "2026-10-27T04:21:20.033279+00:00",
+  "koTs": "2026-10-27T07:00:00+00:00",
+  "cond": "0x59f52905070746d6133f398566d257e2b763e884df17c7133a2ddba47e56e962",
+  "frage": "India Tour of New Zealand T20s: New Zealand vs India",
+  "tokens": {
+   "New Zealand": "90853115562258839860777625181165040053183207775836093665687644483885371401551",
+   "India": "59600494931564053820519350829767590063508784918442972239046261652512502435206"
+  },
+  "book": {
+   "side": "India",
+   "bid": 0.54,
+   "ask": 0.55,
+   "spreadC": 1.0,
+   "spreadPct": 1.82,
+   "bids": [
+    [
+     0.54,
+     23587
+    ],
+    [
+     0.53,
+     11133
+    ],
+    [
+     0.52,
+     8884
+    ],
+    [
+     0.51,
+     900
+    ],
+    [
+     0.5,
+     5300
+    ],
+    [
+     0.48,
+     300
+    ]
+   ],
+   "asks": [
+    [
+     0.55,
+     26
+    ],
+    [
+     0.56,
+     3884
+    ],
+    [
+     0.57,
+     20185
+    ],
+    [
+     0.58,
+     7596
+    ],
+    [
+     0.59,
+     4690
+    ],
+    [
+     0.6,
+     342
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xb5db6abf19904c4f18daa9bcd753edb99b1f5800",
     "action": "BUY",
-    "side": "Coleman Wong",
-    "price": 0.81,
-    "usd": 1154,
-    "ts": 1793027642
+    "side": "New Zealand",
+    "price": 0.46,
+    "usd": 1000,
+    "ts": 1793074394
+   },
+   {
+    "wallet": "0xd8efeae86236372071b567e7d5f08f188b88772f",
+    "action": "BUY",
+    "side": "India",
+    "price": 0.56,
+    "usd": 3686,
+    "ts": 1793046396
+   },
+   {
+    "wallet": "0xd8efeae86236372071b567e7d5f08f188b88772f",
+    "action": "BUY",
+    "side": "India",
+    "price": 0.56,
+    "usd": 1000,
+    "ts": 1793046288
    }
   ]
  }
