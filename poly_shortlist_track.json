@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-27T04:21:27.305223+00:00",
+ "updatedAt": "2026-10-27T04:51:28.559626+00:00",
  "stake": 10.0,
  "expired": 0,
  "condDrift": 0,
@@ -36,12 +36,12 @@
    "needClvN": 20
   },
   "US-Sport": {
-   "n": 94,
+   "n": 95,
    "clvN": 24,
    "clvAvg": 0.15,
-   "roi": 0.0037,
-   "hit": 0.6702,
-   "roiUg": -0.1202,
+   "roi": -0.0069,
+   "hit": 0.6632,
+   "roiUg": -0.1307,
    "eligible": false,
    "kriterium": "Rendite-Untergrenze über null (der CLV wird angezeigt, entscheidet aber nicht)",
    "needN": 0,
@@ -300,37 +300,6 @@
   }
  },
  "open": {
-  "nba-gsw-den-2026-10-26|Nuggets": {
-   "key": "nba-gsw-den-2026-10-26",
-   "side": "Nuggets",
-   "verdict": "BET",
-   "conv": 5,
-   "league": "NBA",
-   "cat": "US-Sport",
-   "entryPrice": 0.705,
-   "firstTs": "2026-10-26T23:21:11.084056+00:00",
-   "lastPrice": 0.705,
-   "lastTs": "2026-10-27T04:21:27.305223+00:00",
-   "htkAtEntry": 2.6469805555555554,
-   "public": false,
-   "ohneWallet": false,
-   "reasons": [
-    "großes Geld auf Nuggets (71%) → $311K",
-    "🔎 vielversprechende Wallets (noch nicht belegt) (5 Wallets, zusammen 1128/2210, 51% · 30 T Sport +$1.80M) · zählt 90%"
-   ],
-   "signals": [
-    "money",
-    "sharp"
-   ],
-   "stake": 10.0,
-   "ev": "2026-09-01",
-   "movePreEntryPP": 0.0,
-   "cond": "0x601a35941bf6970372c036efd9a00767c7a722932cf0614a88ed0e44dc54bc1b",
-   "frage": "Warriors vs. Nuggets",
-   "closeRef": 0.705,
-   "closeRefTs": "2026-10-27T01:51:03.340510+00:00",
-   "closeQuelle": "close"
-  },
   "wta-fernand-sakatsu-2026-10-26|Leylah Fernandez": {
    "key": "wta-fernand-sakatsu-2026-10-26",
    "side": "Leylah Fernandez",
@@ -341,7 +310,7 @@
    "entryPrice": 0.805,
    "firstTs": "2026-10-27T03:21:29.044122+00:00",
    "lastPrice": 0.815,
-   "lastTs": "2026-10-27T04:21:27.305223+00:00",
+   "lastTs": "2026-10-27T04:51:28.559626+00:00",
    "htkAtEntry": 2.6419888888888887,
    "public": false,
    "ohneWallet": false,
@@ -359,7 +328,7 @@
    "cond": "0xceda8c8f8146af473965486b728c9f7c3cbda1248143615de1c913cb04a9820f",
    "frage": "Pan Pacific Open: Leylah Fernandez vs Himeno Sakatsume",
    "closeRef": 0.815,
-   "closeRefTs": "2026-10-27T04:21:20.033279+00:00",
+   "closeRefTs": "2026-10-27T04:51:21.091840+00:00",
    "closeQuelle": "close"
   },
   "atp-biryuko-pankin-2026-10-26|Semen Pankin": {
@@ -372,7 +341,7 @@
    "entryPrice": 0.755,
    "firstTs": "2026-10-27T04:21:27.305223+00:00",
    "lastPrice": 0.455,
-   "lastTs": "2026-10-27T04:21:27.305223+00:00",
+   "lastTs": "2026-10-27T04:51:28.559626+00:00",
    "htkAtEntry": -1.1908597222222221,
    "public": false,
    "ohneWallet": false,
@@ -393,31 +362,6 @@
   }
  },
  "settled": [
-  {
-   "key": "wta-valdman-sasnovi-2026-08-26",
-   "side": "Aliaksandra Sasnovich",
-   "verdict": "BET",
-   "conv": 6,
-   "league": "TENNIS",
-   "cat": "Tennis",
-   "entryPrice": 0.605,
-   "closePrice": null,
-   "result": "loss",
-   "winner": "Vendula Valdmannova",
-   "pnl": -10.0,
-   "clvPP": null,
-   "stake": 10.0,
-   "public": false,
-   "signals": [
-    "money",
-    "sharp"
-   ],
-   "firstTs": "2026-08-26T19:22:03.775202+00:00",
-   "settledTs": "2026-08-27T03:37:23.163257+00:00",
-   "resolvedTs": "2026-08-27T03:37:22.395809+00:00",
-   "clvPPalt": -1.0,
-   "clvGrund": "alt_ungeprueft"
-  },
   {
    "key": "atp-nishiko-antoniu-2026-08-26",
    "side": "Kei Nishikori",
@@ -57271,6 +57215,35 @@
    "settledTs": "2026-10-27T04:21:27.305223+00:00",
    "resolvedTs": "2026-10-27T04:21:24.355579+00:00",
    "ausEndstand": null
+  },
+  {
+   "key": "nba-gsw-den-2026-10-26",
+   "side": "Nuggets",
+   "verdict": "BET",
+   "conv": 5,
+   "league": "NBA",
+   "cat": "US-Sport",
+   "entryPrice": 0.705,
+   "closePrice": 0.705,
+   "closeRefTs": "2026-10-27T01:51:03.340510+00:00",
+   "closeQuelle": "close",
+   "result": "loss",
+   "winner": "Warriors",
+   "pnl": -10.0,
+   "clvPP": 0.0,
+   "stake": 10.0,
+   "public": false,
+   "ohneWallet": false,
+   "signals": [
+    "money",
+    "sharp"
+   ],
+   "firstTs": "2026-10-26T23:21:11.084056+00:00",
+   "ev": "2026-09-01",
+   "htkAtEntry": 2.6469805555555554,
+   "settledTs": "2026-10-27T04:51:28.559626+00:00",
+   "resolvedTs": "2026-10-27T04:51:27.405981+00:00",
+   "ausEndstand": null
   }
  ],
  "agg": {
@@ -57284,7 +57257,7 @@
    "roiUg": -0.0283,
    "belegt": false,
    "clvAvg": -0.18,
-   "clvN": 1143,
+   "clvN": 1144,
    "clvUg": -0.34
   },
   "public": {
@@ -57336,30 +57309,30 @@
    "grund": "das Band schliesst die Null ein"
   },
   "bettable": {
-   "n": 1862,
+   "n": 1861,
    "wins": 1223,
-   "hit": 0.6568,
-   "pnl": 68.38,
-   "stake": 18620.0,
-   "roi": 0.0037,
-   "roiUg": -0.026,
+   "hit": 0.6572,
+   "pnl": 78.38,
+   "stake": 18610.0,
+   "roi": 0.0042,
+   "roiUg": -0.0255,
    "belegt": false,
    "clvAvg": -0.18,
    "clvN": 1076,
    "clvUg": -0.35
   },
   "blocked": {
-   "n": 138,
+   "n": 139,
    "wins": 93,
-   "hit": 0.6739,
-   "pnl": -66.09,
-   "stake": 1380.0,
-   "roi": -0.0479,
-   "roiUg": -0.144,
+   "hit": 0.6691,
+   "pnl": -76.09,
+   "stake": 1390.0,
+   "roi": -0.0547,
+   "roiUg": -0.1508,
    "belegt": false,
    "clvAvg": -0.19,
-   "clvN": 67,
-   "clvUg": -0.79
+   "clvN": 68,
+   "clvUg": -0.77
   },
   "byCat": {
    "Cricket": {
@@ -57428,30 +57401,30 @@
     "clvUg": null
    },
    "Tennis": {
-    "n": 291,
+    "n": 290,
     "wins": 203,
-    "hit": 0.6976,
-    "pnl": -203.45,
-    "stake": 2910.0,
-    "roi": -0.0699,
-    "roiUg": -0.1302,
+    "hit": 0.7,
+    "pnl": -193.45,
+    "stake": 2900.0,
+    "roi": -0.0667,
+    "roiUg": -0.1269,
     "belegt": false,
     "clvAvg": -0.2,
     "clvN": 157,
     "clvUg": -0.82
    },
    "US-Sport": {
-    "n": 94,
+    "n": 95,
     "wins": 63,
-    "hit": 0.6702,
-    "pnl": 3.47,
-    "stake": 940.0,
-    "roi": 0.0037,
-    "roiUg": -0.1202,
+    "hit": 0.6632,
+    "pnl": -6.53,
+    "stake": 950.0,
+    "roi": -0.0069,
+    "roiUg": -0.1307,
     "belegt": false,
     "clvAvg": 0.09,
-    "clvN": 39,
-    "clvUg": -0.51
+    "clvN": 40,
+    "clvUg": -0.5
    }
   },
   "bettableByCat": {
@@ -57482,13 +57455,13 @@
     "clvUg": -0.35
    },
    "Tennis": {
-    "n": 291,
+    "n": 290,
     "wins": 203,
-    "hit": 0.6976,
-    "pnl": -203.45,
-    "stake": 2910.0,
-    "roi": -0.0699,
-    "roiUg": -0.1302,
+    "hit": 0.7,
+    "pnl": -193.45,
+    "stake": 2900.0,
+    "roi": -0.0667,
+    "roiUg": -0.1269,
     "belegt": false,
     "clvAvg": -0.2,
     "clvN": 157,
@@ -57644,26 +57617,26 @@
     "clvUg": null
    },
    "5": {
-    "n": 840,
+    "n": 841,
     "wins": 539,
-    "hit": 0.6417,
-    "pnl": -282.82,
-    "stake": 8400.0,
-    "roi": -0.0337,
-    "roiUg": -0.0773,
+    "hit": 0.6409,
+    "pnl": -292.82,
+    "stake": 8410.0,
+    "roi": -0.0348,
+    "roiUg": -0.0784,
     "belegt": false,
     "clvAvg": -0.04,
-    "clvN": 455,
+    "clvN": 456,
     "clvUg": -0.3
    },
    "6": {
-    "n": 858,
+    "n": 857,
     "wins": 581,
-    "hit": 0.6772,
-    "pnl": 191.36,
-    "stake": 8580.0,
-    "roi": 0.0223,
-    "roiUg": -0.0205,
+    "hit": 0.6779,
+    "pnl": 201.36,
+    "stake": 8570.0,
+    "roi": 0.0235,
+    "roiUg": -0.0193,
     "belegt": false,
     "clvAvg": -0.15,
     "clvN": 507,
@@ -57733,7 +57706,7 @@
     "roiUg": -0.0283,
     "belegt": false,
     "clvAvg": -0.18,
-    "clvN": 1143,
+    "clvN": 1144,
     "clvUg": -0.34
    }
   },
@@ -57761,7 +57734,7 @@
     "roiUg": -0.0302,
     "belegt": false,
     "clvAvg": -0.18,
-    "clvN": 1102,
+    "clvN": 1103,
     "clvUg": -0.35
    },
    "pinn": {
@@ -57787,7 +57760,7 @@
     "roiUg": -0.0295,
     "belegt": false,
     "clvAvg": -0.26,
-    "clvN": 767,
+    "clvN": 768,
     "clvUg": -0.44
    },
    "steam": {
