@@ -1,15 +1,15 @@
 {
- "n": 681,
+ "n": 683,
  "minOdds": 1.35,
- "moneyHitRate": 0.423,
- "priceHitRate": 0.442,
- "brierMoney": 0.8073,
- "brierPrice": 0.6628,
+ "moneyHitRate": 0.42,
+ "priceHitRate": 0.441,
+ "brierMoney": 0.8114,
+ "brierPrice": 0.6651,
  "disagree": {
-  "n": 172,
-  "moneyWon": 31,
+  "n": 170,
+  "moneyWon": 30,
   "priceWon": 44,
-  "neither": 97
+  "neither": 96
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -80,10 +80,10 @@
   },
   {
    "league": "LA-LIGA-2",
-   "n": 27,
-   "moneyHitRate": 0.519,
-   "brierMoney": 0.7364,
-   "brierPrice": 0.6311,
+   "n": 25,
+   "moneyHitRate": 0.48,
+   "brierMoney": 0.7876,
+   "brierPrice": 0.6479,
    "verdict": "preis_besser"
   },
   {
@@ -128,9 +128,9 @@
   }
  ],
  "guete": {
-  "belastbar": 681,
-  "preis_echo": 458,
-  "abgeschnitten": 122,
+  "belastbar": 683,
+  "preis_echo": 454,
+  "abgeschnitten": 123,
   "unbekannt": 0,
   "leer": 0
  },
@@ -164,11 +164,11 @@
    "league": "SOCCER:UCL",
    "winner": "FK Bodø/Glimt",
    "moneyFav": "FK Bodø/Glimt",
-   "priceFav": "BV Borussia 09 Dortmund",
+   "priceFav": "FK Bodø/Glimt",
    "moneyShare": 0.533,
    "priceProb": 0.377,
    "moneyOK": true,
-   "priceOK": false,
+   "priceOK": true,
    "totalUsd": 2624846
   },
   {
@@ -536,7 +536,7 @@
    "league": "EPL",
    "winner": "Draw (Sunderland AFC vs. Leeds United FC)",
    "moneyFav": "Leeds United FC",
-   "priceFav": "Sunderland AFC",
+   "priceFav": "Leeds United FC",
    "moneyShare": 0.654,
    "priceProb": 0.347,
    "moneyOK": false,
@@ -616,7 +616,7 @@
    "totalUsd": 394428
   }
  ],
- "generatedAt": "2026-10-27T15:43:55.562405+00:00",
+ "generatedAt": "2026-10-27T17:11:06.355108+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -639,7 +639,7 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 678,
+  "esports": 672,
   "cs2": 424,
   "lol": 438,
   "dota": 29,
@@ -649,7 +649,7 @@
   "boxing": 322,
   "golf": 422,
   "f1": 453,
-  "cricket": 533,
+  "cricket": 524,
   "afc-champions-league-elite": 289,
   "allsvenskan": 1,
   "australian-a-league": 410,
@@ -681,10 +681,10 @@
   "nations-league": 25,
   "norway-eliteserien": 487,
   "peru-liga-1": 179,
-  "poland-ekstraklasa": 425,
+  "poland-ekstraklasa": 441,
   "premier-league": 577,
   "romania-superliga": 179,
-  "saudi-professional-league": 490,
+  "saudi-professional-league": 484,
   "scotland-league-cup": 193,
   "scottish-premiership": 490,
   "serbian-superliga": 415,
@@ -705,7 +705,7 @@
   "10193": 570,
   "10194": 526,
   "10195": 553,
-  "10203": 670
+  "10203": 671
  },
  "sweepStats": {
   "sweepOpen": 500,
@@ -713,53 +713,63 @@
   "sweepAdded": 415
  },
  "vorStats": {
-  "kandidaten": 23,
-  "budgetLeer": 1,
+  "kandidaten": 13,
+  "budgetLeer": 0,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
-  "mitAnteilen": 22,
-  "calls": 22
+  "mitAnteilen": 13,
+  "calls": 13
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 706,
-   "usd": 16503157,
-   "beispiel": "fifwc-civ-ecu-2026-06-14"
+   "n": 731,
+   "usd": 17375144,
+   "beispiel": "fifwc-mex-ecu-2026-06-30"
   },
   "balance": {
-   "n": 10,
-   "usd": 1272181,
+   "n": 11,
+   "usd": 1282194,
    "beispiel": "balance-of-power-2026-midterms"
+  },
+  "world": {
+   "n": 50,
+   "usd": 623763,
+   "beispiel": "world-cup-golden-boot-winner"
   },
   "cbb": {
    "n": 9,
    "usd": 583643,
    "beispiel": "cbb-tx-byu-2026-03-19"
   },
-  "world": {
-   "n": 32,
-   "usd": 578122,
-   "beispiel": "world-cup-golden-boot-winner"
-  },
   "presidential": {
-   "n": 3,
-   "usd": 267294,
+   "n": 6,
+   "usd": 345771,
    "beispiel": "presidential-election-winner-2028"
   },
+  "btc": {
+   "n": 78,
+   "usd": 297617,
+   "beispiel": "btc-updown-15m-1773681300"
+  },
+  "fed": {
+   "n": 18,
+   "usd": 218561,
+   "beispiel": "fed-decision-in-september-762"
+  },
   "wnba": {
-   "n": 82,
-   "usd": 240223,
+   "n": 74,
+   "usd": 210995,
    "beispiel": "wnba-wsh-min-2026-06-21"
   },
-  "which": {
-   "n": 18,
-   "usd": 160316,
-   "beispiel": "which-party-will-win-the-senate-in-2026"
-  },
-  "btc": {
+  "will": {
    "n": 30,
-   "usd": 151278,
-   "beispiel": "btc-updown-15m-1792195200"
+   "usd": 175246,
+   "beispiel": "will-trump-meet-with-zelenskyy-by"
+  },
+  "which": {
+   "n": 21,
+   "usd": 170146,
+   "beispiel": "which-party-will-win-the-senate-in-2026"
   },
   "texas": {
    "n": 8,
@@ -767,28 +777,33 @@
    "beispiel": "texas-senate-election-winner"
   },
   "worlds": {
-   "n": 14,
-   "usd": 134871,
+   "n": 13,
+   "usd": 132673,
    "beispiel": "worlds-2026-winner"
   },
-  "fed": {
-   "n": 15,
-   "usd": 103256,
-   "beispiel": "fed-decision-in-october-20260617190323537"
+  "us": {
+   "n": 13,
+   "usd": 125370,
+   "beispiel": "us-iran-ceasefire-continues-throughptptpt"
+  },
+  "russia": {
+   "n": 5,
+   "usd": 119984,
+   "beispiel": "russia-x-ukraine-ceasefire-by-june-30-2026"
+  },
+  "next": {
+   "n": 7,
+   "usd": 110375,
+   "beispiel": "next-french-presidential-election"
   },
   "nbasl": {
    "n": 1,
    "usd": 97044,
    "beispiel": "nbasl-cle-nop-2026-07-15"
   },
-  "will": {
-   "n": 16,
-   "usd": 96484,
-   "beispiel": "will-the-us-confirm-that-aliens-exist-before-2027"
-  },
   "iran": {
-   "n": 3,
-   "usd": 87014,
+   "n": 4,
+   "usd": 94891,
    "beispiel": "iran-agrees-to-end-enrichment-of-uranium-by-december-31"
   },
   "michigan": {
@@ -796,30 +811,15 @@
    "usd": 83691,
    "beispiel": "michigan-senate-election-winner"
   },
+  "ballon": {
+   "n": 7,
+   "usd": 82455,
+   "beispiel": "ballon-dor-winner-2026"
+  },
   "nato": {
    "n": 3,
-   "usd": 67324,
+   "usd": 67359,
    "beispiel": "nato-x-russia-military-clash-in-2025"
-  },
-  "next": {
-   "n": 5,
-   "usd": 65930,
-   "beispiel": "next-prime-minister-of-sweden"
-  },
-  "brazil": {
-   "n": 9,
-   "usd": 52680,
-   "beispiel": "brazil-presidential-election"
-  },
-  "uefa": {
-   "n": 4,
-   "usd": 42472,
-   "beispiel": "uefa-champions-league-2027-champion-20260701202025549"
-  },
-  "democratic": {
-   "n": 9,
-   "usd": 40677,
-   "beispiel": "democratic-presidential-nominee-2028"
   }
  }
 }
