@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-27T17:11:09.526766+00:00",
+ "updatedAt": "2026-10-27T17:39:24.854722+00:00",
  "stake": 10.0,
  "expired": 0,
  "condDrift": 0,
@@ -310,7 +310,7 @@
    "entryPrice": 0.905,
    "firstTs": "2026-10-27T15:43:58.423836+00:00",
    "lastPrice": 0.905,
-   "lastTs": "2026-10-27T17:11:09.526766+00:00",
+   "lastTs": "2026-10-27T17:39:24.854722+00:00",
    "htkAtEntry": 0.26717416666666666,
    "public": false,
    "ohneWallet": false,
@@ -339,7 +339,7 @@
    "entryPrice": 0.795,
    "firstTs": "2026-10-27T15:43:58.423836+00:00",
    "lastPrice": 0.815,
-   "lastTs": "2026-10-27T17:11:09.526766+00:00",
+   "lastTs": "2026-10-27T17:39:24.854722+00:00",
    "htkAtEntry": 1.7671736111111112,
    "public": true,
    "ohneWallet": false,
@@ -370,7 +370,7 @@
    "entryPrice": 0.755,
    "firstTs": "2026-10-27T17:11:09.526766+00:00",
    "lastPrice": 0.755,
-   "lastTs": "2026-10-27T17:11:09.526766+00:00",
+   "lastTs": "2026-10-27T17:39:24.854722+00:00",
    "htkAtEntry": 2.564109722222222,
    "public": false,
    "ohneWallet": false,
@@ -385,7 +385,9 @@
    "stake": 10.0,
    "ev": "2026-09-01",
    "movePreEntryPP": 1.0,
-   "clvGrund": "schluss_vor_einstieg"
+   "closeRef": 0.755,
+   "closeRefTs": "2026-10-27T17:39:15.693638+00:00",
+   "closeQuelle": "close"
   },
   "sea-tor-com-2026-10-27|Como 1907": {
    "key": "sea-tor-com-2026-10-27",
@@ -397,7 +399,7 @@
    "entryPrice": 0.555,
    "firstTs": "2026-10-27T17:11:09.526766+00:00",
    "lastPrice": 0.555,
-   "lastTs": "2026-10-27T17:11:09.526766+00:00",
+   "lastTs": "2026-10-27T17:39:24.854722+00:00",
    "htkAtEntry": 2.5641094444444446,
    "public": false,
    "ohneWallet": false,
@@ -412,6 +414,151 @@
    "stake": 10.0,
    "ev": "2026-09-01",
    "movePreEntryPP": 0.0,
+   "closeRef": 0.555,
+   "closeRefTs": "2026-10-27T17:39:15.693638+00:00",
+   "closeQuelle": "close"
+  },
+  "sea-sas-laz-2026-10-27|SS Lazio": {
+   "key": "sea-sas-laz-2026-10-27",
+   "side": "SS Lazio",
+   "verdict": "BET",
+   "conv": 7,
+   "league": "SOCCER",
+   "cat": "Fußball",
+   "entryPrice": 0.495,
+   "firstTs": "2026-10-27T17:39:24.854722+00:00",
+   "lastPrice": 0.485,
+   "lastTs": "2026-10-27T17:39:24.854722+00:00",
+   "htkAtEntry": -0.15681055555555556,
+   "public": false,
+   "ohneWallet": false,
+   "reasons": [
+    "großes Geld auf SS Lazio (86%) → $171K",
+    "🔎 vielversprechende Wallets (noch nicht belegt) (3 Wallets, zusammen 486/952, 51% · 30 T Sport +$34K) · zählt 69%",
+    "💷 Betfair-Geld bestätigt: 77% · €500K"
+   ],
+   "signals": [
+    "money",
+    "sharp",
+    "bf"
+   ],
+   "stake": 10.0,
+   "ev": "2026-09-01",
+   "movePreEntryPP": 3.0,
+   "clvGrund": "live_eingestiegen"
+  },
+  "dfb-hsv-fra-2026-10-27|Eintracht Frankfurt": {
+   "key": "dfb-hsv-fra-2026-10-27",
+   "side": "Eintracht Frankfurt",
+   "verdict": "BET",
+   "conv": 7,
+   "league": "SOCCER",
+   "cat": "Fußball",
+   "entryPrice": 0.415,
+   "firstTs": "2026-10-27T17:39:24.854722+00:00",
+   "lastPrice": 0.455,
+   "lastTs": "2026-10-27T17:39:24.854722+00:00",
+   "htkAtEntry": -0.6568147222222223,
+   "public": false,
+   "ohneWallet": false,
+   "reasons": [
+    "großes Geld auf Eintracht Frankfurt (81%) → $60K",
+    "🔥 scharfe Wallet drin (ohne Bilanz)",
+    "💷 Betfair-Geld bestätigt: 79% · €106K"
+   ],
+   "signals": [
+    "money",
+    "sharp",
+    "bf"
+   ],
+   "stake": 10.0,
+   "ev": "2026-09-01",
+   "movePreEntryPP": -2.0,
+   "clvGrund": "live_eingestiegen"
+  },
+  "dfb-rot-rbl-2026-10-27-more-markets|RB Leipzig": {
+   "key": "dfb-rot-rbl-2026-10-27-more-markets",
+   "side": "RB Leipzig",
+   "verdict": "BET",
+   "conv": 6,
+   "league": "SOCCER",
+   "cat": "Fußball",
+   "entryPrice": 0.75,
+   "firstTs": "2026-10-27T17:39:24.854722+00:00",
+   "lastPrice": 0.925,
+   "lastTs": "2026-10-27T17:39:24.854722+00:00",
+   "htkAtEntry": -0.6568119444444445,
+   "public": false,
+   "ohneWallet": true,
+   "reasons": [
+    "großes Geld auf RB Leipzig (75%) → $18K",
+    "💷 Betfair-Geld bestätigt: 87% · €107K"
+   ],
+   "signals": [
+    "money",
+    "bf"
+   ],
+   "stake": 10.0,
+   "ev": "2026-09-01",
+   "movePreEntryPP": 0.0,
+   "cond": "0xd4f1e1d65037162c4e20279a12bcdf9180001627b150ae27db6ef77c70c1dbad",
+   "frage": "Rot-Weiss Essen vs. RB Leipzig: Team to Advance",
+   "clvGrund": "live_eingestiegen"
+  },
+  "dfb-boc-mai-2026-10-27|1. FSV Mainz 05": {
+   "key": "dfb-boc-mai-2026-10-27",
+   "side": "1. FSV Mainz 05",
+   "verdict": "BET",
+   "conv": 6,
+   "league": "SOCCER",
+   "cat": "Fußball",
+   "entryPrice": 0.4,
+   "firstTs": "2026-10-27T17:39:24.854722+00:00",
+   "lastPrice": 0.605,
+   "lastTs": "2026-10-27T17:39:24.854722+00:00",
+   "htkAtEntry": -0.6568127777777778,
+   "public": false,
+   "ohneWallet": false,
+   "reasons": [
+    "großes Geld auf 1. FSV Mainz 05 (93%) → $63K",
+    "💷 Betfair-Geld bestätigt: 72% · €54K"
+   ],
+   "signals": [
+    "money",
+    "bf"
+   ],
+   "stake": 10.0,
+   "ev": "2026-09-01",
+   "movePreEntryPP": 1.0,
+   "clvGrund": "live_eingestiegen"
+  },
+  "cs2-vit-navi-2026-10-27|Vitality": {
+   "key": "cs2-vit-navi-2026-10-27",
+   "side": "Vitality",
+   "verdict": "BET",
+   "conv": 5,
+   "league": "ESPORTS",
+   "cat": "E-Sport",
+   "entryPrice": 0.705,
+   "firstTs": "2026-10-27T17:39:24.854722+00:00",
+   "lastPrice": 0.705,
+   "lastTs": "2026-10-27T17:39:24.854722+00:00",
+   "htkAtEntry": 0.09318972222222222,
+   "public": false,
+   "ohneWallet": false,
+   "reasons": [
+    "großes Geld auf Vitality (70%) → $178K",
+    "🔎 vielversprechende Wallets (noch nicht belegt) (10 Wallets, zusammen 2718/5317, 51% · 30 T Sport +$204K) · zählt 85%"
+   ],
+   "signals": [
+    "money",
+    "sharp"
+   ],
+   "stake": 10.0,
+   "ev": "2026-09-01",
+   "movePreEntryPP": 1.0,
+   "cond": "0xb3c19de9454d2e75d734bc6e801d64300a22e4ca618850de24e087b47ebafe5a",
+   "frage": "Counter-Strike: Vitality vs Natus Vincere (BO3) - PGL Masters Bucharest Group Stage",
    "clvGrund": "schluss_vor_einstieg"
   }
  },
