@@ -1,25 +1,25 @@
 {
- "n": 685,
+ "n": 686,
  "minOdds": 1.35,
- "moneyHitRate": 0.42,
- "priceHitRate": 0.444,
- "brierMoney": 0.8107,
- "brierPrice": 0.6651,
+ "moneyHitRate": 0.421,
+ "priceHitRate": 0.436,
+ "brierMoney": 0.8096,
+ "brierPrice": 0.6644,
  "disagree": {
-  "n": 171,
-  "moneyWon": 30,
-  "priceWon": 46,
-  "neither": 95
+  "n": 172,
+  "moneyWon": 33,
+  "priceWon": 43,
+  "neither": 96
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
  "byLeague": [
   {
    "league": "SEA",
-   "n": 41,
-   "moneyHitRate": 0.537,
-   "brierMoney": 0.6502,
-   "brierPrice": 0.6549,
+   "n": 42,
+   "moneyHitRate": 0.548,
+   "brierMoney": 0.6358,
+   "brierPrice": 0.6426,
    "verdict": "gleichauf"
   },
   {
@@ -128,8 +128,8 @@
   }
  ],
  "guete": {
-  "belastbar": 685,
-  "preis_echo": 459,
+  "belastbar": 686,
+  "preis_echo": 460,
   "abgeschnitten": 124,
   "unbekannt": 0,
   "leer": 0
@@ -164,11 +164,11 @@
    "league": "SOCCER:UCL",
    "winner": "FK Bodø/Glimt",
    "moneyFav": "FK Bodø/Glimt",
-   "priceFav": "FK Bodø/Glimt",
+   "priceFav": "BV Borussia 09 Dortmund",
    "moneyShare": 0.533,
    "priceProb": 0.377,
    "moneyOK": true,
-   "priceOK": true,
+   "priceOK": false,
    "totalUsd": 2624846
   },
   {
@@ -242,6 +242,18 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 1063015
+  },
+  {
+   "key": "sea-rom-cag-2026-10-27",
+   "league": "SEA",
+   "winner": "AS Roma",
+   "moneyFav": "AS Roma",
+   "priceFav": "AS Roma",
+   "moneyShare": 0.827,
+   "priceProb": 0.698,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 1048280
   },
   {
    "key": "epl-ast-mac-2026-10-24",
@@ -536,7 +548,7 @@
    "league": "EPL",
    "winner": "Draw (Sunderland AFC vs. Leeds United FC)",
    "moneyFav": "Leeds United FC",
-   "priceFav": "Sunderland AFC",
+   "priceFav": "Leeds United FC",
    "moneyShare": 0.654,
    "priceProb": 0.347,
    "moneyOK": false,
@@ -602,21 +614,9 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 399480
-  },
-  {
-   "key": "epl-mun-bou-2026-10-25",
-   "league": "EPL",
-   "winner": "AFC Bournemouth",
-   "moneyFav": "Manchester United FC",
-   "priceFav": "Manchester United FC",
-   "moneyShare": 0.766,
-   "priceProb": 0.397,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 394428
   }
  ],
- "generatedAt": "2026-10-27T21:36:45.690160+00:00",
+ "generatedAt": "2026-10-27T22:06:43.546645+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -639,14 +639,14 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 675,
+  "esports": 677,
   "cs2": 424,
   "lol": 438,
   "dota": 29,
-  "valorant": 441,
+  "valorant": 442,
   "ufc": 458,
   "mma": 62,
-  "boxing": 322,
+  "boxing": 325,
   "golf": 422,
   "f1": 453,
   "cricket": 600,
@@ -655,7 +655,7 @@
   "australian-a-league": 410,
   "austria-bundesliga": 435,
   "brazil-serie-b": 173,
-  "bulgaria-parva-liga": 428,
+  "bulgaria-parva-liga": 425,
   "bundesliga-2": 494,
   "champions-league": 312,
   "champions-league-final": 12,
@@ -690,7 +690,7 @@
   "serbian-superliga": 415,
   "serie-b": 558,
   "slovenia-prvaliga": 360,
-  "sweden-allsvenskan": 482,
+  "sweden-allsvenskan": 477,
   "switzerland-super-league": 436,
   "uefa-champions-league": 28,
   "uefa-conference-league": 29,
@@ -705,7 +705,7 @@
   "10193": 570,
   "10194": 526,
   "10195": 553,
-  "10203": 662
+  "10203": 661
  },
  "sweepStats": {
   "sweepOpen": 500,
@@ -713,68 +713,73 @@
   "sweepAdded": 416
  },
  "vorStats": {
-  "kandidaten": 8,
+  "kandidaten": 7,
   "budgetLeer": 0,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
-  "mitAnteilen": 8,
-  "calls": 8
+  "mitAnteilen": 7,
+  "calls": 7
  },
  "whaleAusserhalb": {
   "brazil": {
-   "n": 58,
-   "usd": 16723534,
+   "n": 55,
+   "usd": 16667823,
    "beispiel": "brazil-presidential-election"
   },
   "fifwc": {
-   "n": 860,
-   "usd": 14572093,
+   "n": 626,
+   "usd": 12252676,
    "beispiel": "fifwc-esp-arg-2026-07-19-more-markets"
   },
   "wnba": {
-   "n": 210,
-   "usd": 1403098,
-   "beispiel": "wnba-gsv-atl-2026-10-21"
+   "n": 208,
+   "usd": 1389053,
+   "beispiel": "wnba-atl-wsh-2026-08-07"
   },
   "balance": {
-   "n": 20,
-   "usd": 1314133,
+   "n": 21,
+   "usd": 1329438,
    "beispiel": "balance-of-power-2026-midterms"
   },
   "fed": {
-   "n": 48,
-   "usd": 1191225,
+   "n": 40,
+   "usd": 1145383,
    "beispiel": "fed-decision-in-september-762"
   },
   "who": {
-   "n": 31,
-   "usd": 755113,
+   "n": 33,
+   "usd": 743353,
    "beispiel": "who-will-be-the-next-prime-minister-of-israel-after-the-next-election"
   },
   "which": {
-   "n": 44,
-   "usd": 692500,
+   "n": 45,
+   "usd": 695138,
    "beispiel": "which-party-will-gain-most-seats-in-russian-parliamentary-election"
   },
   "world": {
-   "n": 41,
-   "usd": 633541,
+   "n": 38,
+   "usd": 622510,
    "beispiel": "world-cup-winner"
   },
+  "presidential": {
+   "n": 14,
+   "usd": 432310,
+   "beispiel": "presidential-election-winner-2028"
+  },
   "texas": {
-   "n": 28,
-   "usd": 303217,
+   "n": 27,
+   "usd": 300107,
    "beispiel": "texas-senate-election-winner"
   },
-  "israel": {
+  "will": {
    "n": 37,
-   "usd": 251110,
-   "beispiel": "israel-strikes-iran-by-january-31-2026"
+   "usd": 259880,
+   "beispiel": "will-kanye-west-visit-israel-by-june-30"
   },
-  "ballon": {
-   "n": 5,
-   "usd": 221608,
-   "beispiel": "ballon-dor-winner-2026"
+  "israel": {
+   "n": 36,
+   "usd": 238733,
+   "beispiel": "israel-strikes-iran-by-january-31-2026"
   },
   "pro": {
    "n": 31,
@@ -782,44 +787,39 @@
    "beispiel": "pro-football-2027-champion-20260729185915366"
   },
   "next": {
-   "n": 24,
-   "usd": 198101,
-   "beispiel": "next-prime-minister-of-serbia-20260629223938642"
+   "n": 25,
+   "usd": 199044,
+   "beispiel": "next-prime-minister-of-spain-20260625005215443"
   },
   "cbb": {
    "n": 21,
    "usd": 193645,
    "beispiel": "cbb-uconn-ill-2026-04-04"
   },
-  "will": {
-   "n": 35,
-   "usd": 166870,
-   "beispiel": "will-laptop-flip-trump-by"
+  "ballon": {
+   "n": 3,
+   "usd": 188797,
+   "beispiel": "ballon-dor-winner-2026"
   },
   "btc": {
-   "n": 33,
-   "usd": 155268,
+   "n": 48,
+   "usd": 187430,
    "beispiel": "btc-updown-15m-1777649400"
+  },
+  "uef": {
+   "n": 11,
+   "usd": 163989,
+   "beispiel": "uef-kvx-tur-2026-03-31"
   },
   "what": {
    "n": 42,
-   "usd": 153797,
-   "beispiel": "what-price-will-bitcoin-hit-in-august-2026"
+   "usd": 153814,
+   "beispiel": "what-price-will-bitcoin-hit-in-april-2026"
   },
   "michigan": {
-   "n": 15,
-   "usd": 146046,
+   "n": 14,
+   "usd": 143886,
    "beispiel": "michigan-senate-election-winner"
-  },
-  "ncaa": {
-   "n": 16,
-   "usd": 140687,
-   "beispiel": "ncaa-football-2026-heisman-award-winner-20260731185656435"
-  },
-  "worlds": {
-   "n": 10,
-   "usd": 138589,
-   "beispiel": "worlds-2026-winner"
   }
  }
 }
