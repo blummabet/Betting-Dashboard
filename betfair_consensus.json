@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-10-27T23:02:57.726186+00:00",
+"generatedAt": "2026-10-27T23:17:45.343619+00:00",
 "count": 8,
-"covered": 5,
+"covered": 6,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -49,22 +49,23 @@
 ],
 "leaguesMitAnker": [
 "Argentinian Primera Division",
+"Brazilian Serie B",
 "Italian Serie A"
 ],
 "leaguesMitTotals": [],
-"oddsKeysFetched": 50,
-"oddsKeysMitDaten": 50,
-"oddsEvents": 582,
+"oddsKeysFetched": 51,
+"oddsKeysMitDaten": 51,
+"oddsEvents": 591,
 "oddsTotals": {
-"versucht": 2,
+"versucht": 3,
 "mitDaten": 0,
 "events": 0,
-"gewollt": 2,
+"gewollt": 3,
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 892297,
-"remaining": 4107703,
+"used": 892903,
+"remaining": 4107097,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
@@ -83,13 +84,13 @@
 "moneyName": "Inter Milan",
 "moneySharePct": 83,
 "moneyOdd": 1.39,
-"moneyDir": "in",
-"totVol": 134187,
+"moneyDir": "flat",
+"totVol": 134448,
 "pinnOdd": 1.36,
 "softOdd": 1.33,
 "softN": 49,
 "poly": {
-"vol": 32943,
+"vol": 35346,
 "odd": 1.38,
 "sharePct": 72,
 "shareSrc": "preis",
@@ -107,7 +108,7 @@
 "soft": {
 "home": 0.1224,
 "draw": 0.1684,
-"away": 0.7093,
+"away": 0.7092,
 "fav": "away",
 "n": 49
 },
@@ -115,7 +116,7 @@
 "pinnMove": {
 "movePP": 0.2,
 "stepPP": -0.0,
-"n": 11,
+"n": 12,
 "move": false,
 "laeuft": false
 },
@@ -136,12 +137,12 @@
 "moneySharePct": 81,
 "moneyOdd": 1.78,
 "moneyDir": "flat",
-"totVol": 98293,
+"totVol": 98955,
 "pinnOdd": 1.71,
 "softOdd": 1.67,
 "softN": 49,
 "poly": {
-"vol": 33781,
+"vol": 33917,
 "odd": 1.77,
 "sharePct": 56,
 "shareSrc": "preis",
@@ -157,8 +158,8 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.5641,
-"draw": 0.2444,
+"home": 0.5639,
+"draw": 0.2446,
 "away": 0.1915,
 "fav": "home",
 "n": 49
@@ -167,7 +168,7 @@
 "pinnMove": {
 "movePP": -1.1,
 "stepPP": 0.0,
-"n": 11,
+"n": 12,
 "move": true,
 "laeuft": false
 },
@@ -186,9 +187,9 @@
 "moneySide": "draw",
 "moneyName": "The Draw",
 "moneySharePct": 48,
-"moneyOdd": 3.2,
-"moneyDir": "flat",
-"totVol": 81038,
+"moneyOdd": 3.15,
+"moneyDir": "in",
+"totVol": 81042,
 "pinnOdd": 3.12,
 "softOdd": 3.1,
 "softN": 49,
@@ -211,7 +212,7 @@
 "soft": {
 "home": 0.3347,
 "draw": 0.3048,
-"away": 0.3605,
+"away": 0.3606,
 "fav": "away",
 "n": 49
 },
@@ -219,10 +220,81 @@
 "pinnMove": {
 "movePP": -0.0,
 "stepPP": -0.0,
-"n": 11,
+"n": 12,
 "move": false,
 "laeuft": false
 },
+"verdict": "uneinig",
+"agree": false,
+"pinnTotals": null
+},
+{
+"matchId": "36182208",
+"home": "Argentinos Juniors",
+"away": "Independiente Rivadavia",
+"league": "Argentinian Primera Division",
+"country": "AR",
+"kickoff": "2026-10-27T22:00:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Argentinos Juniors",
+"moneySharePct": 58,
+"moneyOdd": 2.96,
+"moneyDir": "out",
+"totVol": 54065,
+"pinnOdd": 2.88,
+"softOdd": 2.8,
+"softN": 26,
+"poly": {
+"vol": 44416,
+"odd": 2.9,
+"sharePct": 75,
+"shareSrc": "geld",
+"key": "arg-aaj-riv1-2026-10-27",
+"sideKey": "AA Argentinos Juniors",
+"whales": [
+{
+"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+"usd": 2592
+},
+{
+"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+"usd": 1652
+},
+{
+"wallet": "0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
+"usd": 1136
+},
+{
+"wallet": "0x4a6d4967aefa4b8469f6738265e6a886438452a6",
+"usd": 290
+},
+{
+"wallet": "0xa24e51e917d3f844b972e9bccfa6bc2e04621be8",
+"usd": 198
+},
+{
+"wallet": "0xbf8b8ba819c321b39ac4fe3fe6fe8d3ec35ccb2c",
+"usd": 145
+}
+],
+"whaleUsd": 6696
+},
+"pinn": {
+"home": 0.3278,
+"draw": 0.435,
+"away": 0.2372,
+"fav": "draw"
+},
+"soft": {
+"home": 0.3273,
+"draw": 0.4502,
+"away": 0.2225,
+"fav": "draw",
+"n": 26
+},
+"pinnMovePP": null,
+"pinnMove": null,
 "verdict": "uneinig",
 "agree": false,
 "pinnTotals": null
@@ -238,14 +310,14 @@
 "moneySide": "away",
 "moneyName": "Napoli",
 "moneySharePct": 71,
-"moneyOdd": 1.83,
-"moneyDir": "out",
-"totVol": 51304,
+"moneyOdd": 1.82,
+"moneyDir": "in",
+"totVol": 51458,
 "pinnOdd": 1.76,
 "softOdd": 1.75,
 "softN": 49,
 "poly": {
-"vol": 16237,
+"vol": 16263,
 "odd": 1.8,
 "sharePct": 56,
 "shareSrc": "preis",
@@ -271,7 +343,7 @@
 "pinnMove": {
 "movePP": -0.0,
 "stepPP": 0.0,
-"n": 10,
+"n": 11,
 "move": false,
 "laeuft": false
 },
@@ -280,74 +352,40 @@
 "pinnTotals": null
 },
 {
-"matchId": "36182208",
-"home": "Argentinos Juniors",
-"away": "Independiente Rivadavia",
-"league": "Argentinian Primera Division",
-"country": "AR",
-"kickoff": "2026-10-27T22:00:00Z",
+"matchId": "36220054",
+"home": "Ceara SC Fortaleza",
+"away": "Goias",
+"league": "Brazilian Serie B",
+"country": "BR",
+"kickoff": "2026-10-27T23:00:00Z",
 "live": true,
 "moneySide": "home",
-"moneyName": "Argentinos Juniors",
-"moneySharePct": 58,
-"moneyOdd": 2.9,
+"moneyName": "Ceara SC Fortaleza",
+"moneySharePct": 53,
+"moneyOdd": 2.78,
 "moneyDir": "out",
-"totVol": 49279,
-"pinnOdd": 2.89,
-"softOdd": 2.73,
-"softN": 26,
-"poly": {
-"vol": 40675,
-"odd": 2.33,
-"sharePct": 82,
-"shareSrc": "geld",
-"key": "arg-aaj-riv1-2026-10-27",
-"sideKey": "AA Argentinos Juniors",
-"whales": [
-{
-"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-"usd": 3312
-},
-{
-"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
-"usd": 2049
-},
-{
-"wallet": "0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
-"usd": 1416
-},
-{
-"wallet": "0xa24e51e917d3f844b972e9bccfa6bc2e04621be8",
-"usd": 627
-},
-{
-"wallet": "0xf41581357961193addd2d682b38b7a1e607f24e6",
-"usd": 172
-},
-{
-"wallet": "0x3c7fe3a7f601280cb0784e26676dbb0b6ea64c60",
-"usd": 150
-}
-],
-"whaleUsd": 8520
-},
+"totVol": 29314,
+"pinnOdd": 2.26,
+"softOdd": 2.5,
+"softN": 29,
+"poly": null,
 "pinn": {
-"home": 0.3264,
-"draw": 0.4347,
-"away": 0.2388,
-"fav": "draw"
+"home": 0.4153,
+"draw": 0.2942,
+"away": 0.2906,
+"fav": "home"
 },
 "soft": {
-"home": 0.3405,
-"draw": 0.4154,
-"away": 0.2441,
-"fav": "draw",
-"n": 26
+"home": 0.3793,
+"draw": 0.2995,
+"away": 0.3212,
+"fav": "home",
+"n": 29
 },
 "pinnMovePP": null,
 "pinnMove": null,
-"verdict": "uneinig",
-"agree": false,
+"verdict": "konsens",
+"agree": true,
 "pinnTotals": null
 },
 {
@@ -358,12 +396,12 @@
 "country": "VE",
 "kickoff": "2026-10-27T21:30:00Z",
 "live": true,
-"moneySide": "home",
-"moneyName": "Puerto Cabello",
-"moneySharePct": 41,
-"moneyOdd": 5.9,
-"moneyDir": "out",
-"totVol": 22032,
+"moneySide": "away",
+"moneyName": "Caracas",
+"moneySharePct": 58,
+"moneyOdd": 1.17,
+"moneyDir": "in",
+"totVol": 39822,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -390,10 +428,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Penarol",
-"moneySharePct": 82,
-"moneyOdd": 2.48,
+"moneySharePct": 81,
+"moneyOdd": 3.2,
 "moneyDir": "out",
-"totVol": 17072,
+"totVol": 20493,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -409,39 +447,6 @@
 "spiel": "Penarol v Torque",
 "grund": "kein_kandidat"
 }
-},
-{
-"matchId": "36243526",
-"home": "Libertad",
-"away": "Independiente FBC",
-"league": "Paraguayan Cup",
-"country": "PY",
-"kickoff": "2026-10-27T22:30:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Libertad",
-"moneySharePct": 82,
-"moneyOdd": 1.93,
-"moneyDir": "out",
-"totVol": 9039,
-"pinnOdd": null,
-"softOdd": null,
-"softN": null,
-"poly": null,
-"pinn": null,
-"soft": null,
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "no_anchor",
-"agree": null,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "Libertad v Independiente FBC",
-"kandidat": "Argentinos Juniors v Independiente Rivadavia",
-"key": "soccer_argentina_primera_division",
-"score": 0.5,
-"grund": "name"
-}
 }
 ],
 "ankerN": 30,
@@ -449,11 +454,20 @@
 "ankerMit": 30,
 "ankerDiagnose": {
 "nach": {
+"name": 1,
 "kein_kandidat": 106,
-"zeit": 5,
-"name": 1
+"zeit": 5
 },
 "beispiele": [
+{
+"spiel": "Libertad v Independiente FBC",
+"kandidat": "Argentinos Juniors v Independiente Rivadavia",
+"key": "soccer_argentina_primera_division",
+"score": 0.5,
+"grund": "name",
+"matchId": "36243526",
+"liga": "Paraguayan Cup"
+},
 {
 "spiel": "Al Jazira v Al-Muharraq",
 "kandidat": "Al-Khaleej v Al-Hazem",
@@ -503,15 +517,6 @@
 "abstandH": 57.2,
 "matchId": "36246144",
 "liga": "Bangalore Super Division League"
-},
-{
-"spiel": "Libertad v Independiente FBC",
-"kandidat": "Argentinos Juniors v Independiente Rivadavia",
-"key": "soccer_argentina_primera_division",
-"score": 0.5,
-"grund": "name",
-"matchId": "36243526",
-"liga": "Paraguayan Cup"
 }
 ]
 }
