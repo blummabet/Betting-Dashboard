@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-10-27T17:31:58.975958+00:00",
-"count": 19,
-"covered": 11,
+"generatedAt": "2026-10-27T17:46:59.947265+00:00",
+"count": 23,
+"covered": 12,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -51,27 +51,28 @@
 "English Football League Cup",
 "German Cup",
 "Italian Serie A",
-"Italian Serie B"
+"Italian Serie B",
+"Swedish Allsvenskan"
 ],
 "leaguesMitTotals": [],
 "oddsKeysFetched": 50,
 "oddsKeysMitDaten": 50,
-"oddsEvents": 610,
+"oddsEvents": 611,
 "oddsTotals": {
-"versucht": 4,
+"versucht": 5,
 "mitDaten": 0,
 "events": 0,
-"gewollt": 4,
+"gewollt": 5,
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 878371,
-"remaining": 4121629,
+"used": 878821,
+"remaining": 4121179,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
 },
-"ankerQuote": 1.0,
+"ankerQuote": 0.955,
 "games": [
 {
 "matchId": "36221180",
@@ -80,75 +81,73 @@
 "league": "Italian Serie A",
 "country": "IT",
 "kickoff": "2026-10-27T17:30:00Z",
-"live": false,
+"live": true,
 "moneySide": "away",
 "moneyName": "Lazio",
-"moneySharePct": 81,
-"moneyOdd": 1.98,
+"moneySharePct": 82,
+"moneyOdd": 1.42,
 "moneyDir": "in",
-"totVol": 757167,
-"pinnOdd": 1.99,
-"softOdd": 1.95,
-"softN": 49,
+"totVol": 913928,
+"pinnOdd": null,
+"softOdd": 1.36,
+"softN": 38,
 "poly": {
-"vol": 146832,
-"odd": 2.06,
-"sharePct": 85,
+"vol": 171267,
+"odd": 2.02,
+"sharePct": 86,
 "shareSrc": "geld",
 "key": "sea-sas-laz-2026-10-27",
 "sideKey": "SS Lazio",
 "whales": [
 {
-"wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
-"usd": 9177
+"wallet": "0xa975581a2876e6c25e47dee8e6a0f3bda0a378a3",
+"usd": 19800
 },
 {
 "wallet": "0xfa257198aff8511f2c6584b90b930c50deab05e8",
-"usd": 6415
+"usd": 10096
+},
+{
+"wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+"usd": 9553
 },
 {
 "wallet": "0xdc9fcc42094233f28de5d7a54b563db7ed72905b",
-"usd": 4764
+"usd": 4862
 },
 {
 "wallet": "0xa278b41b5afda5d18da683eb7f851a7b2dc13369",
-"usd": 4709
-},
-{
-"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
-"usd": 3222
+"usd": 4807
 },
 {
 "wallet": "0xc289082ddba5a95e95efa216adbed7cc8ab4ab37",
-"usd": 3070
+"usd": 3134
 }
 ],
-"whaleUsd": 52371
+"whaleUsd": 85572
 },
-"pinn": {
-"home": 0.2493,
-"draw": 0.2621,
-"away": 0.4886,
-"fav": "away"
-},
+"pinn": null,
 "soft": {
-"home": 0.2602,
-"draw": 0.2586,
-"away": 0.4812,
+"home": 0.1323,
+"draw": 0.1972,
+"away": 0.6705,
 "fav": "away",
-"n": 49
+"n": 38
 },
-"pinnMovePP": 0.9,
-"pinnMove": {
-"movePP": 0.9,
-"stepPP": 0.9,
-"n": 2,
-"move": false,
-"laeuft": true
-},
+"pinnMovePP": null,
+"pinnMove": null,
 "verdict": "konsens",
 "agree": true,
-"pinnTotals": null
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Sassuolo v Lazio",
+"grund": "kein_pinnacle",
+"kandidat": "Sassuolo v Lazio",
+"key": "soccer_italy_serie_a",
+"nSoft": 38,
+"pinnacleImEvent": false,
+"nBuecher": 38
+}
 },
 {
 "matchId": "36221184",
@@ -162,13 +161,13 @@
 "moneyName": "Roma",
 "moneySharePct": 78,
 "moneyOdd": 1.34,
-"moneyDir": "out",
-"totVol": 304632,
+"moneyDir": "flat",
+"totVol": 310940,
 "pinnOdd": 1.32,
 "softOdd": 1.29,
-"softN": 50,
+"softN": 49,
 "poly": {
-"vol": 329154,
+"vol": 377974,
 "odd": 1.32,
 "sharePct": 97,
 "shareSrc": "geld",
@@ -178,6 +177,10 @@
 {
 "wallet": "0xe4d7564e11f21aaa6fe68d02cde549994b7ace04",
 "usd": 38849
+},
+{
+"wallet": "0xa975581a2876e6c25e47dee8e6a0f3bda0a378a3",
+"usd": 34730
 },
 {
 "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
@@ -192,36 +195,32 @@
 "usd": 18788
 },
 {
-"wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-"usd": 4260
-},
-{
-"wallet": "0x12e7efd4f1a03c51d4f9417b12bc3749b44239a0",
-"usd": 4212
+"wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
+"usd": 6627
 }
 ],
-"whaleUsd": 142675
+"whaleUsd": 176601
 },
 "pinn": {
-"home": 0.7332,
-"draw": 0.1802,
-"away": 0.0866,
+"home": 0.734,
+"draw": 0.1762,
+"away": 0.0899,
 "fav": "home"
 },
 "soft": {
-"home": 0.7332,
-"draw": 0.1773,
+"home": 0.7331,
+"draw": 0.1772,
 "away": 0.0896,
 "fav": "home",
-"n": 50
+"n": 49
 },
-"pinnMovePP": -0.3,
+"pinnMovePP": -0.2,
 "pinnMove": {
-"movePP": -0.3,
-"stepPP": -0.3,
-"n": 2,
+"movePP": -0.2,
+"stepPP": 0.1,
+"n": 3,
 "move": false,
-"laeuft": true
+"laeuft": false
 },
 "verdict": "konsens",
 "agree": true,
@@ -238,64 +237,135 @@
 "moneySide": "away",
 "moneyName": "Eintracht Frankfurt",
 "moneySharePct": 86,
-"moneyOdd": 2.42,
+"moneyOdd": 2.54,
 "moneyDir": "out",
-"totVol": 200648,
-"pinnOdd": 2.32,
-"softOdd": 2.15,
-"softN": 17,
+"totVol": 299881,
+"pinnOdd": 2.33,
+"softOdd": 2.2,
+"softN": 18,
 "poly": {
-"vol": 44442,
-"odd": 2.02,
-"sharePct": 86,
+"vol": 60064,
+"odd": 2.41,
+"sharePct": 81,
 "shareSrc": "geld",
 "key": "dfb-hsv-fra-2026-10-27",
 "sideKey": "Eintracht Frankfurt",
 "whales": [
 {
 "wallet": "0xb52e8b3afd9f0f0d502a5a76494b42816d67285c",
-"usd": 14437
-},
-{
-"wallet": "0xad0be253358a44cefbee8ab5edfb9a85790da514",
-"usd": 792
+"usd": 12104
 },
 {
 "wallet": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
-"usd": 787
+"usd": 2751
 },
 {
-"wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
-"usd": 462
+"wallet": "0xad0be253358a44cefbee8ab5edfb9a85790da514",
+"usd": 664
 },
 {
-"wallet": "0x0c84d454825e9f42619497f6158b4753cd43a8ed",
-"usd": 198
+"wallet": "0x7c1ee865a785de4c00ee90ed86a38489fb8bbab3",
+"usd": 283
 },
 {
-"wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
-"usd": 189
+"wallet": "0x824978ad8f2aa87ec22da2df99ffbb7d58e0b23a",
+"usd": 267
+},
+{
+"wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+"usd": 187
 }
 ],
-"whaleUsd": 17189
+"whaleUsd": 16973
 },
 "pinn": {
-"home": 0.2848,
-"draw": 0.3113,
-"away": 0.4039,
+"home": 0.2573,
+"draw": 0.3406,
+"away": 0.402,
 "fav": "away"
 },
 "soft": {
-"home": 0.2784,
-"draw": 0.2977,
-"away": 0.4238,
+"home": 0.2659,
+"draw": 0.3326,
+"away": 0.4014,
 "fav": "away",
-"n": 17
+"n": 18
 },
 "pinnMovePP": null,
 "pinnMove": null,
 "verdict": "konsens",
 "agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36142441",
+"home": "Rot-Weiss Essen",
+"away": "RB Leipzig",
+"league": "German Cup",
+"country": "DE",
+"kickoff": "2026-10-27T17:00:00Z",
+"live": true,
+"moneySide": "away",
+"moneyName": "RB Leipzig",
+"moneySharePct": 80,
+"moneyOdd": 7.0,
+"moneyDir": "out",
+"totVol": 204031,
+"pinnOdd": 2.73,
+"softOdd": 5.15,
+"softN": 18,
+"poly": {
+"vol": 48128,
+"odd": 2.86,
+"sharePct": 46,
+"shareSrc": "geld",
+"key": "dfb-rot-rbl-2026-10-27",
+"sideKey": "RB Leipzig",
+"whales": [
+{
+"wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+"usd": 1293
+},
+{
+"wallet": "0x72d7d09901f00ba306e53b46483dc75ac2d01b97",
+"usd": 717
+},
+{
+"wallet": "0xe6bf45da92f7d318f2d7ee28f6d5dd02038016b9",
+"usd": 700
+},
+{
+"wallet": "0xa24e51e917d3f844b972e9bccfa6bc2e04621be8",
+"usd": 469
+},
+{
+"wallet": "0x841d0592649582290f850546ec76618f12e114ac",
+"usd": 385
+},
+{
+"wallet": "0x8ae599cc1fdeb17c95e2af00bd75a38034bd4f22",
+"usd": 350
+}
+],
+"whaleUsd": 4711
+},
+"pinn": {
+"home": 0.3476,
+"draw": 0.3087,
+"away": 0.3437,
+"fav": "home"
+},
+"soft": {
+"home": 0.5469,
+"draw": 0.2734,
+"away": 0.1797,
+"fav": "home",
+"n": 18
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "uneinig",
+"agree": false,
 "pinnTotals": null
 },
 {
@@ -309,34 +379,105 @@
 "moneySide": "away",
 "moneyName": "Arsenal",
 "moneySharePct": 95,
-"moneyOdd": 1.1,
-"moneyDir": "flat",
-"totVol": 184463,
-"pinnOdd": 1.07,
+"moneyOdd": 1.09,
+"moneyDir": "in",
+"totVol": 185964,
+"pinnOdd": 1.06,
 "softOdd": 1.06,
 "softN": 38,
 "poly": null,
 "pinn": {
-"home": 0.0284,
-"draw": 0.0762,
-"away": 0.8954,
+"home": 0.0258,
+"draw": 0.0716,
+"away": 0.9027,
 "fav": "away"
 },
 "soft": {
-"home": 0.0331,
-"draw": 0.0778,
-"away": 0.8892,
+"home": 0.0329,
+"draw": 0.0772,
+"away": 0.8899,
 "fav": "away",
 "n": 38
 },
-"pinnMovePP": 0.1,
+"pinnMovePP": 0.8,
 "pinnMove": {
-"movePP": 0.1,
-"stepPP": 0.1,
-"n": 2,
+"movePP": 0.8,
+"stepPP": 0.7,
+"n": 3,
 "move": false,
-"laeuft": false
+"laeuft": true
 },
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36142438",
+"home": "SG Sonnenhof",
+"away": "Augsburg",
+"league": "German Cup",
+"country": "DE",
+"kickoff": "2026-10-27T17:00:00Z",
+"live": true,
+"moneySide": "away",
+"moneyName": "Augsburg",
+"moneySharePct": 95,
+"moneyOdd": 1.19,
+"moneyDir": "out",
+"totVol": 185528,
+"pinnOdd": 1.13,
+"softOdd": 1.12,
+"softN": 18,
+"poly": {
+"vol": 35064,
+"odd": 1.16,
+"sharePct": 99,
+"shareSrc": "geld",
+"key": "dfb-sg-aug-2026-10-27",
+"sideKey": "FC Augsburg",
+"whales": [
+{
+"wallet": "0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
+"usd": 7373
+},
+{
+"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+"usd": 6035
+},
+{
+"wallet": "0x2cc8cc54f50dbb45fe346612821ca93b6e93262b",
+"usd": 4325
+},
+{
+"wallet": "0x760907c8840491c8c86fddb843d3f1d801786c4e",
+"usd": 1298
+},
+{
+"wallet": "0x325f0e5b5afc66ff54102d850f67f0c621304511",
+"usd": 710
+},
+{
+"wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+"usd": 642
+}
+],
+"whaleUsd": 22595
+},
+"pinn": {
+"home": 0.0366,
+"draw": 0.1261,
+"away": 0.8373,
+"fav": "away"
+},
+"soft": {
+"home": 0.0554,
+"draw": 0.1333,
+"away": 0.8113,
+"fav": "away",
+"n": 18
+},
+"pinnMovePP": null,
+"pinnMove": null,
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
@@ -352,14 +493,14 @@
 "moneySide": "away",
 "moneyName": "Como",
 "moneySharePct": 74,
-"moneyOdd": 1.8,
+"moneyOdd": 1.79,
 "moneyDir": "in",
-"totVol": 171311,
-"pinnOdd": 1.76,
+"totVol": 175830,
+"pinnOdd": 1.75,
 "softOdd": 1.73,
-"softN": 50,
+"softN": 49,
 "poly": {
-"vol": 116285,
+"vol": 119295,
 "odd": 1.8,
 "sharePct": 93,
 "shareSrc": "geld",
@@ -376,7 +517,7 @@
 },
 {
 "wallet": "0x0235dc24b38772bf3339a9e5ec5db3d3a05fcee5",
-"usd": 2344
+"usd": 2379
 },
 {
 "wallet": "0x04e39fb018bfbc273b65c98a8f55e50aed60606b",
@@ -384,153 +525,36 @@
 },
 {
 "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
-"usd": 1105
+"usd": 1108
 },
 {
 "wallet": "0xcc37dfa0597c3a7706d2ad184e77a2040191c4ea",
 "usd": 931
 }
 ],
-"whaleUsd": 48029
+"whaleUsd": 48600
 },
 "pinn": {
-"home": 0.201,
-"draw": 0.2484,
-"away": 0.5505,
+"home": 0.1995,
+"draw": 0.2475,
+"away": 0.553,
 "fav": "away"
 },
 "soft": {
-"home": 0.2046,
-"draw": 0.2496,
-"away": 0.5457,
+"home": 0.2042,
+"draw": 0.2495,
+"away": 0.5464,
 "fav": "away",
-"n": 50
+"n": 49
 },
-"pinnMovePP": 0.0,
+"pinnMovePP": 0.2,
 "pinnMove": {
-"movePP": 0.0,
-"stepPP": 0.0,
-"n": 2,
+"movePP": 0.2,
+"stepPP": 0.2,
+"n": 3,
 "move": false,
-"laeuft": false
+"laeuft": true
 },
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36142441",
-"home": "Rot-Weiss Essen",
-"away": "RB Leipzig",
-"league": "German Cup",
-"country": "DE",
-"kickoff": "2026-10-27T17:00:00Z",
-"live": true,
-"moneySide": "away",
-"moneyName": "RB Leipzig",
-"moneySharePct": 86,
-"moneyOdd": 2.8,
-"moneyDir": "out",
-"totVol": 167833,
-"pinnOdd": 2.14,
-"softOdd": 2.4,
-"softN": 17,
-"poly": {
-"vol": 8159,
-"odd": 1.22,
-"sharePct": 82,
-"shareSrc": "preis",
-"key": "dfb-rot-rbl-2026-10-27",
-"sideKey": "RB Leipzig",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.2767,
-"draw": 0.2851,
-"away": 0.4383,
-"fav": "away"
-},
-"soft": {
-"home": 0.3533,
-"draw": 0.2831,
-"away": 0.3637,
-"fav": "away",
-"n": 17
-},
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "konsens",
-"agree": true,
-"pinnTotals": null
-},
-{
-"matchId": "36142438",
-"home": "SG Sonnenhof",
-"away": "Augsburg",
-"league": "German Cup",
-"country": "DE",
-"kickoff": "2026-10-27T17:00:00Z",
-"live": true,
-"moneySide": "away",
-"moneyName": "Augsburg",
-"moneySharePct": 95,
-"moneyOdd": 1.16,
-"moneyDir": "in",
-"totVol": 145131,
-"pinnOdd": 1.22,
-"softOdd": 1.1,
-"softN": 17,
-"poly": {
-"vol": 16364,
-"odd": 1.3,
-"sharePct": 98,
-"shareSrc": "geld",
-"key": "dfb-sg-aug-2026-10-27",
-"sideKey": "FC Augsburg",
-"whales": [
-{
-"wallet": "0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
-"usd": 6563
-},
-{
-"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
-"usd": 5592
-},
-{
-"wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-"usd": 1962
-},
-{
-"wallet": "0x760907c8840491c8c86fddb843d3f1d801786c4e",
-"usd": 1155
-},
-{
-"wallet": "0x825445fb21cf48fb7009d0ab3b85a81bd8e98a97",
-"usd": 494
-},
-{
-"wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
-"usd": 360
-}
-],
-"whaleUsd": 17726
-},
-"pinn": {
-"home": 0.0758,
-"draw": 0.1543,
-"away": 0.77,
-"fav": "away"
-},
-"soft": {
-"home": 0.0574,
-"draw": 0.1264,
-"away": 0.8162,
-"fav": "away",
-"n": 17
-},
-"pinnMovePP": null,
-"pinnMove": null,
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
@@ -545,58 +569,58 @@
 "live": true,
 "moneySide": "away",
 "moneyName": "Mainz",
-"moneySharePct": 71,
-"moneyOdd": 2.34,
-"moneyDir": "in",
-"totVol": 71360,
-"pinnOdd": 2.09,
-"softOdd": 2.1,
+"moneySharePct": 70,
+"moneyOdd": 2.6,
+"moneyDir": "out",
+"totVol": 94713,
+"pinnOdd": 2.42,
+"softOdd": 2.23,
 "softN": 17,
 "poly": {
-"vol": 45681,
-"odd": 1.94,
-"sharePct": 95,
+"vol": 63049,
+"odd": 2.5,
+"sharePct": 93,
 "shareSrc": "geld",
 "key": "dfb-boc-mai-2026-10-27",
 "sideKey": "1. FSV Mainz 05",
 "whales": [
 {
 "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
-"usd": 5618
+"usd": 4364
 },
 {
 "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-"usd": 4022
+"usd": 2555
 },
 {
 "wallet": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
-"usd": 2277
+"usd": 1570
 },
 {
 "wallet": "0x32be1c720021648644b25b7347653df28be96da7",
-"usd": 1681
+"usd": 1306
 },
 {
 "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
-"usd": 1229
+"usd": 1035
 },
 {
 "wallet": "0x7ea571c40408f340c1c8fc8eaacebab53c1bde7b",
-"usd": 1129
+"usd": 877
 }
 ],
-"whaleUsd": 21274
+"whaleUsd": 17293
 },
 "pinn": {
-"home": 0.241,
-"draw": 0.3104,
-"away": 0.4486,
+"home": 0.2374,
+"draw": 0.3751,
+"away": 0.3875,
 "fav": "away"
 },
 "soft": {
-"home": 0.2598,
-"draw": 0.3192,
-"away": 0.421,
+"home": 0.2453,
+"draw": 0.3548,
+"away": 0.3999,
 "fav": "away",
 "n": 17
 },
@@ -616,68 +640,68 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Benevento",
-"moneySharePct": 84,
+"moneySharePct": 86,
 "moneyOdd": 1.62,
-"moneyDir": "out",
-"totVol": 33909,
-"pinnOdd": 1.57,
+"moneyDir": "flat",
+"totVol": 45274,
+"pinnOdd": 1.59,
 "softOdd": 1.55,
 "softN": 45,
 "poly": {
-"vol": 9691,
-"odd": 1.6,
-"sharePct": 92,
+"vol": 9748,
+"odd": 1.63,
+"sharePct": 91,
 "shareSrc": "geld",
 "key": "itsb-ben-cat-2026-10-27",
 "sideKey": "Benevento Calcio",
 "whales": [
 {
-"wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
-"usd": 2269
+"wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+"usd": 738
 },
 {
-"wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
-"usd": 259
+"wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
+"usd": 550
+},
+{
+"wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
+"usd": 488
+},
+{
+"wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
+"usd": 181
+},
+{
+"wallet": "0x972bf37cae72a169e17ae0e6179821d5778b78ba",
+"usd": 165
 },
 {
 "wallet": "0x5025daf63af816c630fd91ebc163fb64882a2312",
-"usd": 157
-},
-{
-"wallet": "0x216050de6080fac3926226b2b8ce3d5544784c78",
-"usd": 134
-},
-{
-"wallet": "0x6868ca66c74a6a1a7eaf7976bda53895260a24f0",
-"usd": 125
-},
-{
-"wallet": "0xbe3c36d8fa9a85f5e1564085bc6fbd14a222a835",
-"usd": 125
+"usd": 154
 }
 ],
-"whaleUsd": 3383
+"whaleUsd": 3103
 },
 "pinn": {
-"home": 0.6142,
-"draw": 0.2092,
-"away": 0.1766,
+"home": 0.6064,
+"draw": 0.2124,
+"away": 0.1812,
 "fav": "home"
 },
 "soft": {
-"home": 0.5931,
-"draw": 0.2231,
-"away": 0.1838,
+"home": 0.5926,
+"draw": 0.224,
+"away": 0.1833,
 "fav": "home",
 "n": 45
 },
-"pinnMovePP": 0.0,
+"pinnMovePP": -0.8,
 "pinnMove": {
-"movePP": 0.0,
-"stepPP": 0.0,
-"n": 2,
+"movePP": -0.8,
+"stepPP": -0.8,
+"n": 3,
 "move": false,
-"laeuft": false
+"laeuft": true
 },
 "verdict": "konsens",
 "agree": true,
@@ -693,10 +717,10 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Bradford",
-"moneySharePct": 77,
-"moneyOdd": 1.68,
-"moneyDir": "flat",
-"totVol": 21271,
+"moneySharePct": 80,
+"moneyOdd": 1.65,
+"moneyDir": "in",
+"totVol": 25471,
 "pinnOdd": 1.64,
 "softOdd": 1.61,
 "softN": 38,
@@ -717,20 +741,66 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.5774,
-"draw": 0.2315,
-"away": 0.1911,
+"home": 0.579,
+"draw": 0.2309,
+"away": 0.1902,
 "fav": "home",
 "n": 38
 },
 "pinnMovePP": 0.1,
 "pinnMove": {
 "movePP": 0.1,
-"stepPP": 0.1,
-"n": 2,
+"stepPP": 0.0,
+"n": 3,
 "move": false,
 "laeuft": false
 },
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
+},
+{
+"matchId": "36233271",
+"home": "AIK",
+"away": "Elfsborg",
+"league": "Swedish Allsvenskan",
+"country": "SE",
+"kickoff": "2026-10-27T18:00:00Z",
+"live": false,
+"moneySide": "away",
+"moneyName": "Elfsborg",
+"moneySharePct": 67,
+"moneyOdd": 2.22,
+"moneyDir": "out",
+"totVol": 17530,
+"pinnOdd": 2.07,
+"softOdd": 2.01,
+"softN": 45,
+"poly": {
+"vol": 5314,
+"odd": 2.06,
+"sharePct": 48,
+"shareSrc": "preis",
+"key": "swe-aik-elf-2026-10-27",
+"sideKey": "IF Elfsborg",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.2871,
+"draw": 0.2497,
+"away": 0.4632,
+"fav": "away"
+},
+"soft": {
+"home": 0.284,
+"draw": 0.2539,
+"away": 0.4621,
+"fav": "away",
+"n": 45
+},
+"pinnMovePP": null,
+"pinnMove": null,
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
@@ -745,24 +815,24 @@
 "live": false,
 "moneySide": "home",
 "moneyName": "Dortmund",
-"moneySharePct": 60,
-"moneyOdd": 1.42,
-"moneyDir": "flat",
-"totVol": 8313,
+"moneySharePct": 59,
+"moneyOdd": 1.43,
+"moneyDir": "out",
+"totVol": 9010,
 "pinnOdd": 1.4,
 "softOdd": 1.36,
-"softN": 20,
+"softN": 21,
 "poly": {
-"vol": 10459,
+"vol": 10997,
 "odd": 1.42,
-"sharePct": 88,
+"sharePct": 89,
 "shareSrc": "geld",
 "key": "dfb-bvb-bre-2026-10-27",
 "sideKey": "BV Borussia 09 Dortmund",
 "whales": [
 {
 "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
-"usd": 1041
+"usd": 992
 },
 {
 "wallet": "0xc34cd27593243598c66a9a2820f37bcfb87c2e29",
@@ -785,26 +855,26 @@
 "usd": 197
 }
 ],
-"whaleUsd": 3004
+"whaleUsd": 2996
 },
 "pinn": {
-"home": 0.6847,
-"draw": 0.1756,
-"away": 0.1397,
+"home": 0.6841,
+"draw": 0.1761,
+"away": 0.1398,
 "fav": "home"
 },
 "soft": {
-"home": 0.6803,
-"draw": 0.1787,
-"away": 0.141,
+"home": 0.681,
+"draw": 0.1782,
+"away": 0.1408,
 "fav": "home",
-"n": 20
+"n": 21
 },
-"pinnMovePP": 0.2,
+"pinnMovePP": 0.1,
 "pinnMove": {
-"movePP": 0.2,
-"stepPP": 0.2,
-"n": 2,
+"movePP": 0.1,
+"stepPP": -0.1,
+"n": 3,
 "move": false,
 "laeuft": false
 },
@@ -822,47 +892,47 @@
 "live": false,
 "moneySide": "away",
 "moneyName": "Al-Hilal",
-"moneySharePct": 95,
-"moneyOdd": 1.95,
+"moneySharePct": 94,
+"moneyOdd": 1.97,
 "moneyDir": "out",
-"totVol": 175412,
+"totVol": 184570,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
 "poly": {
-"vol": 29529,
-"odd": 1.94,
-"sharePct": 84,
+"vol": 41498,
+"odd": 1.98,
+"sharePct": 92,
 "shareSrc": "geld",
 "key": "acle-shm-hil-2026-10-27",
 "sideKey": "Al Hilal SFC",
 "whales": [
 {
-"wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-"usd": 1581
-},
-{
-"wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
-"usd": 1261
-},
-{
-"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
-"usd": 564
+"wallet": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
+"usd": 6131
 },
 {
 "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-"usd": 496
+"usd": 1605
+},
+{
+"wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+"usd": 1550
+},
+{
+"wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
+"usd": 1395
+},
+{
+"wallet": "0xca6465345246f543b7cb3152d5f5f54096f84f43",
+"usd": 505
 },
 {
 "wallet": "0x5d40576be2e9c61d283f4fd80d7a5ccf2331ba95",
-"usd": 480
-},
-{
-"wallet": "0xffe7bc0ace62133defaab3133f436034115e471d",
-"usd": 372
+"usd": 471
 }
 ],
-"whaleUsd": 6669
+"whaleUsd": 15672
 },
 "pinn": null,
 "soft": null,
@@ -881,6 +951,45 @@
 }
 },
 {
+"matchId": "36216974",
+"home": "FCI Tallinn",
+"away": "Tammeka Tartu",
+"league": "Estonian Premier League",
+"country": "EE",
+"kickoff": "2026-10-27T16:00:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Fci Tallinn",
+"moneySharePct": 74,
+"moneyOdd": 1.07,
+"moneyDir": "in",
+"totVol": 42221,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": {
+"vol": 11636,
+"odd": 1.16,
+"sharePct": 86,
+"shareSrc": "preis",
+"key": "est1-lev-tar-2026-10-27",
+"sideKey": "FCI Levadia Tallinn",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "FCI Tallinn v Tammeka Tartu",
+"grund": "kein_kandidat"
+}
+},
+{
 "matchId": "36217435",
 "home": "Trans Narva",
 "away": "Nomme Utd",
@@ -890,10 +999,10 @@
 "live": true,
 "moneySide": "away",
 "moneyName": "Nomme Utd",
-"moneySharePct": 75,
-"moneyOdd": 1.22,
+"moneySharePct": 74,
+"moneyOdd": 1.03,
 "moneyDir": "in",
-"totVol": 37690,
+"totVol": 38928,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -921,10 +1030,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Slovan Liberec",
-"moneySharePct": 93,
-"moneyOdd": 1.12,
+"moneySharePct": 92,
+"moneyOdd": 1.08,
 "moneyDir": "in",
-"totVol": 34161,
+"totVol": 36654,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -943,45 +1052,6 @@
 }
 },
 {
-"matchId": "36216974",
-"home": "FCI Tallinn",
-"away": "Tammeka Tartu",
-"league": "Estonian Premier League",
-"country": "EE",
-"kickoff": "2026-10-27T16:00:00Z",
-"live": true,
-"moneySide": "home",
-"moneyName": "Fci Tallinn",
-"moneySharePct": 68,
-"moneyOdd": 1.1,
-"moneyDir": "in",
-"totVol": 32685,
-"pinnOdd": null,
-"softOdd": null,
-"softN": null,
-"poly": {
-"vol": 10959,
-"odd": 2.63,
-"sharePct": 38,
-"shareSrc": "preis",
-"key": "est1-lev-tar-2026-10-27",
-"sideKey": "FCI Levadia Tallinn",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": null,
-"soft": null,
-"pinnMovePP": null,
-"pinnMove": null,
-"verdict": "no_anchor",
-"agree": null,
-"pinnTotals": null,
-"ankerGrund": {
-"spiel": "FCI Tallinn v Tammeka Tartu",
-"grund": "kein_kandidat"
-}
-},
-{
 "matchId": "36240102",
 "home": "UTA Arad",
 "away": "Botosani",
@@ -991,10 +1061,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "UTA Arad",
-"moneySharePct": 70,
-"moneyOdd": 3.45,
+"moneySharePct": 65,
+"moneyOdd": 4.0,
 "moneyDir": "out",
-"totVol": 17658,
+"totVol": 19483,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -1021,10 +1091,10 @@
 "live": true,
 "moneySide": "away",
 "moneyName": "Rapid Vienna",
-"moneySharePct": 55,
-"moneyOdd": 1.13,
-"moneyDir": "in",
-"totVol": 17180,
+"moneySharePct": 56,
+"moneyOdd": 1.15,
+"moneyDir": "out",
+"totVol": 17372,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -1043,6 +1113,68 @@
 }
 },
 {
+"matchId": "36241410",
+"home": "WSC Hertha Wels",
+"away": "RZ Pellets WAC",
+"league": "Austrian Cup",
+"country": "AT",
+"kickoff": "2026-10-27T17:30:00Z",
+"live": true,
+"moneySide": "away",
+"moneyName": "RZ Pellets WAC",
+"moneySharePct": 88,
+"moneyOdd": 2.56,
+"moneyDir": "out",
+"totVol": 16164,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": null,
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "WSC Hertha Wels v RZ Pellets WAC",
+"grund": "kein_kandidat",
+"naechster": "1. FC Kaiserslautern v Hertha Berlin"
+}
+},
+{
+"matchId": "36184241",
+"home": "Arda",
+"away": "PFC Levski Sofia",
+"league": "Bulgarian A League",
+"country": "BG",
+"kickoff": "2026-10-27T17:30:00Z",
+"live": true,
+"moneySide": "away",
+"moneyName": "PFC Levski Sofia",
+"moneySharePct": 76,
+"moneyOdd": 2.16,
+"moneyDir": "out",
+"totVol": 15786,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": null,
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Arda v PFC Levski Sofia",
+"grund": "kein_kandidat",
+"naechster": "PFC Levski Sofia v Jagiellonia Białystok"
+}
+},
+{
 "matchId": "36217407",
 "home": "Dinamo Zagreb",
 "away": "Rijeka",
@@ -1052,10 +1184,10 @@
 "live": true,
 "moneySide": "home",
 "moneyName": "Dinamo Zagreb",
-"moneySharePct": 79,
-"moneyOdd": 1.73,
-"moneyDir": "out",
-"totVol": 11307,
+"moneySharePct": 81,
+"moneyOdd": 1.22,
+"moneyDir": "in",
+"totVol": 13943,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -1074,6 +1206,46 @@
 }
 },
 {
+"matchId": "36241407",
+"home": "Austria Wien",
+"away": "Hartberg",
+"league": "Austrian Cup",
+"country": "AT",
+"kickoff": "2026-10-27T17:00:00Z",
+"live": true,
+"moneySide": "home",
+"moneyName": "Austria Wien",
+"moneySharePct": 90,
+"moneyOdd": 2.46,
+"moneyDir": "out",
+"totVol": 13815,
+"pinnOdd": null,
+"softOdd": null,
+"softN": null,
+"poly": {
+"vol": 10287,
+"odd": 1.25,
+"sharePct": 80,
+"shareSrc": "preis",
+"key": "atc-aus-har-2026-10-27",
+"sideKey": "FK Austria Wien",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": null,
+"soft": null,
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "no_anchor",
+"agree": null,
+"pinnTotals": null,
+"ankerGrund": {
+"spiel": "Austria Wien v Hartberg",
+"grund": "kein_kandidat",
+"naechster": "Grazer AK v Hartberg"
+}
+},
+{
 "matchId": "36233529",
 "home": "AFC Wimbledon",
 "away": "Arsenal U21",
@@ -1084,9 +1256,9 @@
 "moneySide": "home",
 "moneyName": "AFC Wimbledon",
 "moneySharePct": 84,
-"moneyOdd": 1.62,
-"moneyDir": "flat",
-"totVol": 1950,
+"moneyOdd": 1.66,
+"moneyDir": "out",
+"totVol": 1989,
 "pinnOdd": null,
 "softOdd": null,
 "softN": null,
@@ -1107,12 +1279,12 @@
 ],
 "ankerN": 22,
 "ankerNOffen": 150,
-"ankerMit": 22,
+"ankerMit": 21,
 "ankerDiagnose": {
 "nach": {
 "kein_kandidat": 83,
 "zeit": 10,
-"kein_pinnacle": 4,
+"kein_pinnacle": 5,
 "name": 10
 },
 "beispiele": [
@@ -1127,25 +1299,25 @@
 "liga": "Saudi 1st Division"
 },
 {
-"spiel": "Sporting Alcazar v Malaga",
-"grund": "kein_pinnacle",
-"kandidat": "Sporting de Alcázar v Málaga",
-"key": "soccer_spain_copa_del_rey",
-"nSoft": 3,
-"pinnacleImEvent": false,
-"nBuecher": 3,
-"matchId": "36242555",
-"liga": "Spanish Copa del Rey"
-},
-{
 "spiel": "Pinatar v Elche",
 "grund": "kein_pinnacle",
 "kandidat": "UD Pinatar v Elche CF",
 "key": "soccer_spain_copa_del_rey",
-"nSoft": 2,
+"nSoft": 3,
 "pinnacleImEvent": false,
-"nBuecher": 2,
+"nBuecher": 3,
 "matchId": "36245187",
+"liga": "Spanish Copa del Rey"
+},
+{
+"spiel": "Sporting Alcazar v Malaga",
+"grund": "kein_pinnacle",
+"kandidat": "Sporting de Alcázar v Málaga",
+"key": "soccer_spain_copa_del_rey",
+"nSoft": 4,
+"pinnacleImEvent": false,
+"nBuecher": 4,
+"matchId": "36242555",
 "liga": "Spanish Copa del Rey"
 },
 {
@@ -1172,9 +1344,9 @@
 "grund": "kein_pinnacle",
 "kandidat": "Manacor v Villarreal",
 "key": "soccer_spain_copa_del_rey",
-"nSoft": 3,
+"nSoft": 4,
 "pinnacleImEvent": false,
-"nBuecher": 3,
+"nBuecher": 4,
 "matchId": "36242489",
 "liga": "Spanish Copa del Rey"
 },
@@ -1217,16 +1389,6 @@
 "liga": "English National League North"
 },
 {
-"spiel": "Spalding Utd v Brackley Town",
-"kandidat": "Swindon Town v Rotherham United",
-"key": "soccer_england_league2",
-"score": 1.0,
-"grund": "zeit",
-"abstandH": 91.2,
-"matchId": "36238260",
-"liga": "English National League North"
-},
-{
 "spiel": "Truro City v Slough Town",
 "kandidat": "Bradford City v Huddersfield Town",
 "key": "soccer_england_league1",
@@ -1235,6 +1397,16 @@
 "abstandH": 88.8,
 "matchId": "36237840",
 "liga": "English National League South"
+},
+{
+"spiel": "Spalding Utd v Brackley Town",
+"kandidat": "Swindon Town v Rotherham United",
+"key": "soccer_england_league2",
+"score": 1.0,
+"grund": "zeit",
+"abstandH": 91.2,
+"matchId": "36238260",
+"liga": "English National League North"
 },
 {
 "spiel": "FC Halifax Town v Barrow",
@@ -1250,9 +1422,9 @@
 "grund": "kein_pinnacle",
 "kandidat": "Ciudad de Lucena v Rayo Majadahonda",
 "key": "soccer_spain_copa_del_rey",
-"nSoft": 3,
+"nSoft": 4,
 "pinnacleImEvent": false,
-"nBuecher": 3,
+"nBuecher": 4,
 "matchId": "36242533",
 "liga": "Spanish Copa del Rey"
 },
@@ -1321,6 +1493,16 @@
 "liga": "Italian Serie C Cup"
 },
 {
+"spiel": "Al Jazira v Al-Muharraq",
+"kandidat": "Al-Khaleej v Al-Hazem",
+"key": "soccer_saudi_arabia_pro_league",
+"score": 1.0,
+"grund": "zeit",
+"abstandH": 22.6,
+"matchId": "36244926",
+"liga": "AFC Champions League Two"
+},
+{
 "spiel": "Al Nahdha v Al Rayyan",
 "kandidat": "Al-Khaleej v Al-Hazem",
 "key": "soccer_saudi_arabia_pro_league",
@@ -1331,14 +1513,15 @@
 "liga": "AFC Champions League Two"
 },
 {
-"spiel": "Al Jazira v Al-Muharraq",
-"kandidat": "Al-Khaleej v Al-Hazem",
-"key": "soccer_saudi_arabia_pro_league",
-"score": 1.0,
-"grund": "zeit",
-"abstandH": 22.6,
-"matchId": "36244926",
-"liga": "AFC Champions League Two"
+"spiel": "Sassuolo v Lazio",
+"grund": "kein_pinnacle",
+"kandidat": "Sassuolo v Lazio",
+"key": "soccer_italy_serie_a",
+"nSoft": 38,
+"pinnacleImEvent": false,
+"nBuecher": 38,
+"matchId": "36221180",
+"liga": "Italian Serie A"
 },
 {
 "spiel": "Al Shamal v Al-Hilal",
