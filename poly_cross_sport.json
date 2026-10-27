@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-27T21:01:41.032683+00:00",
+ "generatedAt": "2026-10-27T21:31:55.965763+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -11,11 +11,11 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 775,
- "pinnKeys": 319,
+ "pinnKeys": 323,
  "matched": 221,
  "footballRows": 219,
  "crossRows": 556,
- "footballSkippedStale": 149,
+ "footballSkippedStale": 148,
  "seenBySport": {
   "basketball_nba": 108,
   "americanfootball_nfl": 76,
@@ -31,8 +31,65 @@
   "soccer_liga": 171
  },
  "trackRecord": {
-  "tracked": 137,
+  "tracked": 141,
   "converged": 9
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "soccer_liga|como-torino|aw",
+   "sport": "soccer_liga",
+   "event": "Torino vs Como",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 55.5,
+   "pinnPP": 24.6,
+   "gapPP": 30.91,
+   "vol": 99341,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-27T21:31:55.965528+00:00"
+  },
+  {
+   "id": "soccer_liga|como-torino|hw",
+   "sport": "soccer_liga",
+   "event": "Torino vs Como",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 19.5,
+   "pinnPP": 43.3,
+   "gapPP": -23.84,
+   "vol": 99341,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-27T21:31:55.965528+00:00"
+  },
+  {
+   "id": "soccer_liga|asroma-cagliari|hw",
+   "sport": "soccer_liga",
+   "event": "AS Roma vs Cagliari",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 73.5,
+   "pinnPP": 82.9,
+   "gapPP": -9.4,
+   "vol": 161136,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-27T21:31:55.965528+00:00"
+  },
+  {
+   "id": "soccer_liga|como-torino|dr",
+   "sport": "soccer_liga",
+   "event": "Torino vs Como",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 24.5,
+   "pinnPP": 32.1,
+   "gapPP": -7.57,
+   "vol": 99341,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-10-27T21:31:55.965528+00:00"
+  }
+ ]
 }
