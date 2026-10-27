@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-10-27T13:43:06Z",
-    "total_records": 280,
+    "updated_at": "2026-10-27T22:15:25Z",
+    "total_records": 283,
     "oddsBackfilled": "2026-09-06 — Quote/entryOdd aus den Pick-Dateien nachgetragen; der Ledger trug sie nie (0 von 318)."
   },
   "records": [
@@ -12725,7 +12725,7 @@
           "score": 2.05
         }
       ],
-      "resolvedAt": "2026-10-27T13:43:06Z",
+      "resolvedAt": "2026-10-27T22:15:25Z",
       "source": "steam",
       "convictionScore": 5,
       "lateEntry": true,
@@ -13425,6 +13425,144 @@
       "entryBook": "soft",
       "processVerdict": "LUCKY",
       "clvBasis": "roh"
+    },
+    {
+      "key": "ITA-9-488-487|Auswärtssieg",
+      "matchKey": "ITA-9-488-487",
+      "market": "Auswärtssieg",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "lead_lag_bias",
+          "score": 3.47
+        },
+        {
+          "name": "form_trend",
+          "score": 4.6
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.0
+        },
+        {
+          "name": "form_rating",
+          "score": 4.35
+        },
+        {
+          "name": "streak_momentum",
+          "score": 0.13
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        },
+        {
+          "name": "venue_form",
+          "score": 1.43
+        }
+      ],
+      "resolvedAt": "2026-10-27T22:15:22Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -0.69,
+      "clvResolved": true,
+      "odds": 2.1,
+      "entryOdd": 2.1,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED",
+      "clvFairPP": 1.49,
+      "clvBasis": "fair"
+    },
+    {
+      "key": "ITA-9-488-487|Doppelte Chance — X2",
+      "matchKey": "ITA-9-488-487",
+      "market": "Doppelte Chance — X2",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 4.6
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.0
+        },
+        {
+          "name": "form_rating",
+          "score": 4.35
+        },
+        {
+          "name": "streak_momentum",
+          "score": 0.08
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        },
+        {
+          "name": "venue_form",
+          "score": 1.43
+        }
+      ],
+      "resolvedAt": "2026-10-27T22:15:22Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 0.96,
+      "clvResolved": true,
+      "odds": 1.37,
+      "entryOdd": 1.37,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED",
+      "clvBasis": "roh"
+    },
+    {
+      "key": "ITA-9-488-487|Über 2.5 Tore",
+      "matchKey": "ITA-9-488-487",
+      "market": "Über 2.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "injury",
+          "score": 3.25
+        },
+        {
+          "name": "form_trend",
+          "score": 3.2
+        },
+        {
+          "name": "h2h_pattern",
+          "score": -1.4
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.96
+        },
+        {
+          "name": "chance_creation",
+          "score": 2.0
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": 0.48
+        }
+      ],
+      "resolvedAt": "2026-10-27T22:15:22Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -4.8,
+      "clvResolved": true,
+      "odds": 1.66,
+      "entryOdd": 1.66,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED",
+      "clvFairPP": -1.66,
+      "clvBasis": "fair"
     }
   ]
 }
