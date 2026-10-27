@@ -21,7 +21,8 @@ def test_betfair_stoesst_den_live_scan_an():
     assert s, "Anstoss-Schritt fehlt"
     s = s[0]
     assert "poly-live-scan.yml/dispatches" in s["run"]
-    assert s.get("if") == "always()", "auch nach einem fehlgeschlagenen Betfair-Schritt anstossen"
+    # 25.10.2026 (Lucas): Poly-Live-Scan abgeschaltet — der Schritt bleibt, ist aber aus
+    assert s.get("if") == "${{ false }}", "Live-Scan ist abgeschaltet (25.10.2026)"
     assert s.get("continue-on-error") is True, "ein gescheiterter Anstoss darf den Betfair-Lauf nicht rot machen"
     assert steps[-1] is s, "zuletzt — der Live-Scan soll den frisch committeten Stand sehen"
 
