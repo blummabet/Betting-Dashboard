@@ -67,11 +67,9 @@
       "id": "direction_present",
       "label": "Richtungs-Datei lebt",
       "severity": "error",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "4824 Runner, aber KEINER mit Vor-Quote — Direction sieht aus wie First-Run (Referenz-Datei verloren?)"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "betfair_direction.json ist die Referenz fuer Back/Lay UND die Vor-Quote. Leer / ueberall prev=null bedeutet: der Direction-Schritt schreibt nicht mehr sauber fort."
     },
     {
@@ -90,7 +88,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 877171 verbraucht, 4122829 uebrig"
+      "note": "Kontingent: 877765 verbraucht, 4122235 uebrig"
     },
     {
       "id": "anker_namensabgleich",
@@ -100,26 +98,26 @@
       "nFail": 19,
       "failures": [
         "Al-Adalh v Al Jeel (Saudi 1st Division): zeit — bester Kandidat „Al-Khaleej v Al-Hazem“ · 46.1h Anpfiff-Abstand",
+        "Spennymoor Town v South Shields (English National League North): name — bester Kandidat „Fleetwood Town v Arsenal“",
+        "Chesham Utd v Farnham Town (English National League South): zeit — bester Kandidat „Swindon Town v Rotherham United“ · 91.2h Anpfiff-Abstand",
         "Cardiff City U21 v Coventry City U21 (English U21 Pro Development League): zeit — bester Kandidat „Lincoln City v Birmingham City“ · 89.5h Anpfiff-Abstand",
         "Oxford City v Merthyr Town (English National League North): zeit — bester Kandidat „Bradford City v Huddersfield Town“ · 88.8h Anpfiff-Abstand",
-        "Boston Utd v Gateshead (English National League): name — bester Kandidat „Bradford City v Peterborough United“",
-        "Spalding Utd v Brackley Town (English National League North): zeit — bester Kandidat „Swindon Town v Rotherham United“ · 91.2h Anpfiff-Abstand",
-        "Chesham Utd v Farnham Town (English National League South): zeit — bester Kandidat „Swindon Town v Rotherham United“ · 91.2h Anpfiff-Abstand",
-        "FC Halifax Town v Barrow (English National League): name — bester Kandidat „Fleetwood Town v Arsenal“",
-        "Spennymoor Town v South Shields (English National League North): name — bester Kandidat „Fleetwood Town v Arsenal“",
-        "Bedford Town v Hednesford Town (English National League North): name — bester Kandidat „Fleetwood Town v Arsenal“",
         "Worksop Town v Kings Lynn (English National League North): name — bester Kandidat „Fleetwood Town v Arsenal“",
-        "Truro City v Slough Town (English National League South): zeit — bester Kandidat „Bradford City v Huddersfield Town“ · 88.8h Anpfiff-Abstand",
-        "Walton & Hersham v Salisbury City (English National League South): name — bester Kandidat „Bradford City v Peterborough United“",
         "Buxton v Harborough Town (English National League North): name — bester Kandidat „Fleetwood Town v Arsenal“",
+        "Spalding Utd v Brackley Town (English National League North): zeit — bester Kandidat „Swindon Town v Rotherham United“ · 91.2h Anpfiff-Abstand",
+        "Truro City v Slough Town (English National League South): zeit — bester Kandidat „Bradford City v Huddersfield Town“ · 88.8h Anpfiff-Abstand",
+        "FC Halifax Town v Barrow (English National League): name — bester Kandidat „Fleetwood Town v Arsenal“",
+        "Walton & Hersham v Salisbury City (English National League South): name — bester Kandidat „Bradford City v Peterborough United“",
+        "Boston Utd v Gateshead (English National League): name — bester Kandidat „Bradford City v Peterborough United“",
         "Billericay Town v Hampton and Richmond (English National League South): name — bester Kandidat „Fleetwood Town v Arsenal“",
+        "Bedford Town v Hednesford Town (English National League North): name — bester Kandidat „Fleetwood Town v Arsenal“",
         "Maidstone Utd v Ebbsfleet Utd (English National League South): zeit — bester Kandidat „Drogheda United v Galway United“ · 72.0h Anpfiff-Abstand",
-        "US Savoia 1908 v Sorrento (Italian Serie C Cup): name — bester Kandidat „Benevento v US Catanzaro 1929“",
         "Libertad v Independiente FBC (Paraguayan Cup): name — bester Kandidat „Argentinos Juniors v Independiente Rivadavia“",
+        "US Savoia 1908 v Sorrento (Italian Serie C Cup): name — bester Kandidat „Benevento v US Catanzaro 1929“",
         "Al Shamal v Al-Hilal (AFC Champions League): zeit — bester Kandidat „Al-Hilal v Al-Fateh“ · 95.8h Anpfiff-Abstand",
         "Al-Wahda (KSA) v Al-Saqer FC (Saudi 1st Division): zeit — bester Kandidat „Al-Fayha v Al-Faisaly KSA FC“ · 95.5h Anpfiff-Abstand"
       ],
-      "note": "ohne Anker: kein_kandidat 102 · name 10 · zeit 9. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 84 · kein_pinnacle 5 · name 10 · zeit 9. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -128,7 +126,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 0"
+      "note": "Quelle ohne Pinnacle: 1 — Rot-Weiss Essen v RB Leipzig (17 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -203,6 +201,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-10-27T17:05:20.594610+00:00"
+  "nFail": 1,
+  "generatedAt": "2026-10-27T17:17:43.278381+00:00"
 }
