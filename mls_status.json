@@ -34,9 +34,9 @@
       "ok": false,
       "nFail": 3,
       "failures": [
-        "🟡 Betfair Radar (Betwatch): seit 37 h kein Lauf mehr verzeichnet",
-        "💹 Liga (Top-5) Poly Positionen überwachen: seit 49 h kein Lauf mehr verzeichnet",
-        "⚡ Poly Live-Scan (nur laufende Spiele, schnell): seit 37 h kein Lauf mehr verzeichnet"
+        "🟡 Betfair Radar (Betwatch): seit 51 h kein Lauf mehr verzeichnet",
+        "💹 Liga (Top-5) Poly Positionen überwachen: seit 63 h kein Lauf mehr verzeichnet",
+        "⚡ Poly Live-Scan (nur laufende Spiele, schnell): seit 51 h kein Lauf mehr verzeichnet"
       ],
       "note": "Quelle: health/*.json (run_health.py). Leere Liste heisst hier wirklich 'nichts gescheitert' — ein nicht abfragbarer Lauf steht oben als UNBEKANNT."
     },
@@ -517,7 +517,7 @@
       "label": "AH-Leiter bei nahen bepreisten Spielen",
       "severity": "warn",
       "ok": false,
-      "nFail": 8,
+      "nFail": 9,
       "failures": [
         "18310-1598: bepreist + Anpfiff nah, aber keine ahLadder",
         "1604-1614: bepreist + Anpfiff nah, aber keine ahLadder",
@@ -526,7 +526,8 @@
         "1611-1597: bepreist + Anpfiff nah, aber keine ahLadder",
         "20787-25484: bepreist + Anpfiff nah, aber keine ahLadder",
         "1596-1606: bepreist + Anpfiff nah, aber keine ahLadder",
-        "1605-16489: bepreist + Anpfiff nah, aber keine ahLadder"
+        "1605-16489: bepreist + Anpfiff nah, aber keine ahLadder",
+        "1610-1607: bepreist + Anpfiff nah, aber keine ahLadder"
       ],
       "note": "ahLadder fehlte → AH-Picks fielen durchs Raster (Mismatches ohne AH)."
     },
@@ -582,7 +583,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "6 von 6 Vor-Kandidaten mit Anteilen (6 Calls) · 0 ohne Geld-Split · 0 ueber Budget · 0 nachgelegt. Leeres Fenster ist kein Fehler; Kandidaten ohne einen einzigen Anteil schon."
+      "note": "22 von 40 Vor-Kandidaten mit Anteilen (22 Calls) · 0 ohne Geld-Split · 18 ueber Budget · 0 nachgelegt. Leeres Fenster ist kein Fehler; Kandidaten ohne einen einzigen Anteil schon."
     },
     {
       "id": "betfair_ledger",
@@ -600,7 +601,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Job vor 36.6h · jüngste Daten vor 36.6h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
+      "note": "Job vor 50.7h · jüngste Daten vor 50.7h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
     },
     {
       "id": "poly_global_liefert",
@@ -639,15 +640,17 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "🔒 E-Sport ohne Wallet-Nachweis: 396/120 seit 50d · 🔒 Poly-Auswahl · von Betfair bestätigt: 563/60 seit 55d · 🔒 Fade-Unter · Ganzspiel-Torlinie: 6447/200 seit 50d · 🔒 Liga · Conviction ab 5: 129/80 seit 45d · 🔒 Bücher-Score ≥7 von 10: 137/40 seit 55d"
+      "note": "🔒 E-Sport ohne Wallet-Nachweis: 396/120 seit 50d · 🔒 Poly-Auswahl · von Betfair bestätigt: 563/60 seit 56d · 🔒 Fade-Unter · Ganzspiel-Torlinie: 6447/200 seit 50d · 🔒 Liga · Conviction ab 5: 129/80 seit 46d · 🔒 Bücher-Score ≥7 von 10: 137/40 seit 56d"
     },
     {
       "id": "killer_push_buch",
       "label": "Trades-Push fuehrt sein Buch",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "3 gepushte Zeile(n) seit ueber 48h angepfiffen und immer noch 'offen' (z.B. 36209506|Match Odds) — die Abrechnung findet sie nicht in betfair_track_results."
+      ],
       "note": "Was gepusht wurde, muss abgerechnet werden — sonst weiss niemand, ob der Channel traegt. Gerechnet wird zum pushPreis, nicht zum Haltepreis."
     },
     {
@@ -660,6 +663,6 @@
       "note": "0 von 0 ist ein ruhiger Tag (oder eine Laenderspielpause, in der wir gar keine passenden Partien haben). 0 von N ist ein Bruch."
     }
   ],
-  "nFail": 5,
-  "generatedAt": "2026-10-26T23:08:57.714657+00:00"
+  "nFail": 6,
+  "generatedAt": "2026-10-27T13:14:02.542827+00:00"
 }
