@@ -544,8 +544,7 @@ jobs:
       # Scheitert der Anstoss, scheitert NUR dieser Schritt — der Betfair-Lauf ist durch.
       # Waechter: tests/test_live_scan_anstoss.py
       - name: ⚡ Live-Scan anstossen (statt gedrosseltem Zeitplan)
-        if: ${{ false }}   # 25.10.2026 (Lucas): Poly-Live-Scan abgeschaltet
-        if: always()
+        if: ${{ false }}   # 25.10.2026 (Lucas): Poly-Live-Scan abgeschaltet (vorher: always())
         continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}

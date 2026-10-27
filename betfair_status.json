@@ -31,11 +31,9 @@
       "id": "nahe_spiele_im_feed",
       "label": "Bald anpfeifende Spiele sind im Feed",
       "severity": "error",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "nur 124 von 177 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Borac Banja Luka v Sloga Doboj (Bosnian Premier League); CD Leones del Norte v Libertad FC (Ecuadorian Serie A); Legia Warsaw v Lech Poznan (Polish Ekstraklasa)"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
     {
@@ -50,12 +48,10 @@
     {
       "id": "live_minute_sane",
       "label": "Live-Minute plausibel (Zufluss-Fenster)",
-      "severity": "error",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "36230510: min=131 ausserhalb 0–130"
-      ],
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Feld 'min' speist die Spielminuten-Spanne der Frisch-Push. Korrupte Werte verfaelschen sie, fehlende degradieren still auf die Zeit-Dauer."
     },
     {
@@ -71,9 +67,11 @@
       "id": "direction_present",
       "label": "Richtungs-Datei lebt",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "4824 Runner, aber KEINER mit Vor-Quote — Direction sieht aus wie First-Run (Referenz-Datei verloren?)"
+      ],
       "note": "betfair_direction.json ist die Referenz fuer Back/Lay UND die Vor-Quote. Leer / ueberall prev=null bedeutet: der Direction-Schritt schreibt nicht mehr sauber fort."
     },
     {
@@ -92,25 +90,36 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 785740 verbraucht, 4214260 uebrig"
+      "note": "Kontingent: 877171 verbraucht, 4122829 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 8,
+      "nFail": 19,
       "failures": [
-        "Crystal Palace (W) v Chelsea (W) (English WSL): name — bester Kandidat „Crystal Palace v Newcastle United“",
-        "Jagiellonia Bialystock v Wisla Plock (Polish Ekstraklasa): name — bester Kandidat „Jagiellonia Białystok v Wisła Płock“",
-        "Lion City Sailors FC v Tanjong Pagar United (Singapore Premier League): zeit — bester Kandidat „Bradford City v Peterborough United“ · 56.2h Anpfiff-Abstand",
-        "North District v Kowloon City FC (Hong Kong Senior Shield): zeit — bester Kandidat „Stoke City v Preston North End“ · 145.5h Anpfiff-Abstand",
-        "Liverpool (W) v London City Lionesses (English WSL): name — bester Kandidat „Liverpool v Brighton and Hove Albion“",
-        "Rasi Salai United FC v Ayutthaya United (Thai League 1): zeit — bester Kandidat „Drogheda United v Galway United“ · 128.8h Anpfiff-Abstand",
-        "Nairobi United v Adm Police Service Bomet (Kenyan Premier League): name — bester Kandidat „Manchester United v Bournemouth“",
-        "Kerala Blasters FC v Mumbai City FC (Indian Super League): name — bester Kandidat „Hull City v Brentford“"
+        "Al-Adalh v Al Jeel (Saudi 1st Division): zeit — bester Kandidat „Al-Khaleej v Al-Hazem“ · 46.1h Anpfiff-Abstand",
+        "Cardiff City U21 v Coventry City U21 (English U21 Pro Development League): zeit — bester Kandidat „Lincoln City v Birmingham City“ · 89.5h Anpfiff-Abstand",
+        "Oxford City v Merthyr Town (English National League North): zeit — bester Kandidat „Bradford City v Huddersfield Town“ · 88.8h Anpfiff-Abstand",
+        "Boston Utd v Gateshead (English National League): name — bester Kandidat „Bradford City v Peterborough United“",
+        "Spalding Utd v Brackley Town (English National League North): zeit — bester Kandidat „Swindon Town v Rotherham United“ · 91.2h Anpfiff-Abstand",
+        "Chesham Utd v Farnham Town (English National League South): zeit — bester Kandidat „Swindon Town v Rotherham United“ · 91.2h Anpfiff-Abstand",
+        "FC Halifax Town v Barrow (English National League): name — bester Kandidat „Fleetwood Town v Arsenal“",
+        "Spennymoor Town v South Shields (English National League North): name — bester Kandidat „Fleetwood Town v Arsenal“",
+        "Bedford Town v Hednesford Town (English National League North): name — bester Kandidat „Fleetwood Town v Arsenal“",
+        "Worksop Town v Kings Lynn (English National League North): name — bester Kandidat „Fleetwood Town v Arsenal“",
+        "Truro City v Slough Town (English National League South): zeit — bester Kandidat „Bradford City v Huddersfield Town“ · 88.8h Anpfiff-Abstand",
+        "Walton & Hersham v Salisbury City (English National League South): name — bester Kandidat „Bradford City v Peterborough United“",
+        "Buxton v Harborough Town (English National League North): name — bester Kandidat „Fleetwood Town v Arsenal“",
+        "Billericay Town v Hampton and Richmond (English National League South): name — bester Kandidat „Fleetwood Town v Arsenal“",
+        "Maidstone Utd v Ebbsfleet Utd (English National League South): zeit — bester Kandidat „Drogheda United v Galway United“ · 72.0h Anpfiff-Abstand",
+        "US Savoia 1908 v Sorrento (Italian Serie C Cup): name — bester Kandidat „Benevento v US Catanzaro 1929“",
+        "Libertad v Independiente FBC (Paraguayan Cup): name — bester Kandidat „Argentinos Juniors v Independiente Rivadavia“",
+        "Al Shamal v Al-Hilal (AFC Champions League): zeit — bester Kandidat „Al-Hilal v Al-Fateh“ · 95.8h Anpfiff-Abstand",
+        "Al-Wahda (KSA) v Al-Saqer FC (Saudi 1st Division): zeit — bester Kandidat „Al-Fayha v Al-Faisaly KSA FC“ · 95.5h Anpfiff-Abstand"
       ],
-      "note": "ohne Anker: kein_kandidat 97 · name 5 · zeit 3. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 102 · name 10 · zeit 9. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -128,7 +137,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 7 gewollt, 7 abgerufen, 0 mit Daten"
+      "note": "Totals: 4 gewollt, 4 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -194,6 +203,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 3,
-  "generatedAt": "2026-10-25T10:34:08.252982+00:00"
+  "nFail": 2,
+  "generatedAt": "2026-10-27T17:05:20.594610+00:00"
 }
