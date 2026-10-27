@@ -1,15 +1,15 @@
 {
- "n": 685,
+ "n": 687,
  "minOdds": 1.35,
- "moneyHitRate": 0.42,
- "priceHitRate": 0.435,
- "brierMoney": 0.8107,
- "brierPrice": 0.6651,
+ "moneyHitRate": 0.419,
+ "priceHitRate": 0.437,
+ "brierMoney": 0.812,
+ "brierPrice": 0.6654,
  "disagree": {
-  "n": 172,
+  "n": 173,
   "moneyWon": 32,
-  "priceWon": 42,
-  "neither": 98
+  "priceWon": 44,
+  "neither": 97
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -128,8 +128,8 @@
   }
  ],
  "guete": {
-  "belastbar": 685,
-  "preis_echo": 459,
+  "belastbar": 687,
+  "preis_echo": 458,
   "abgeschnitten": 123,
   "unbekannt": 0,
   "leer": 0
@@ -164,11 +164,11 @@
    "league": "SOCCER:UCL",
    "winner": "FK Bodø/Glimt",
    "moneyFav": "FK Bodø/Glimt",
-   "priceFav": "FK Bodø/Glimt",
+   "priceFav": "BV Borussia 09 Dortmund",
    "moneyShare": 0.533,
    "priceProb": 0.377,
    "moneyOK": true,
-   "priceOK": true,
+   "priceOK": false,
    "totalUsd": 2624846
   },
   {
@@ -536,7 +536,7 @@
    "league": "EPL",
    "winner": "Draw (Sunderland AFC vs. Leeds United FC)",
    "moneyFav": "Leeds United FC",
-   "priceFav": "Sunderland AFC",
+   "priceFav": "Leeds United FC",
    "moneyShare": 0.654,
    "priceProb": 0.347,
    "moneyOK": false,
@@ -616,7 +616,7 @@
    "totalUsd": 394428
   }
  ],
- "generatedAt": "2026-10-27T20:36:29.459851+00:00",
+ "generatedAt": "2026-10-27T21:06:38.207503+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -639,7 +639,7 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 672,
+  "esports": 677,
   "cs2": 424,
   "lol": 438,
   "dota": 29,
@@ -649,7 +649,7 @@
   "boxing": 322,
   "golf": 422,
   "f1": 453,
-  "cricket": 524,
+  "cricket": 600,
   "afc-champions-league-elite": 289,
   "allsvenskan": 1,
   "australian-a-league": 410,
@@ -710,66 +710,76 @@
  "sweepStats": {
   "sweepOpen": 500,
   "sweepClosed": 500,
-  "sweepAdded": 415
+  "sweepAdded": 416
  },
  "vorStats": {
-  "kandidaten": 14,
+  "kandidaten": 8,
   "budgetLeer": 0,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
-  "mitAnteilen": 14,
-  "calls": 14
+  "mitAnteilen": 8,
+  "calls": 8
  },
  "whaleAusserhalb": {
   "brazil": {
-   "n": 54,
-   "usd": 16665578,
+   "n": 57,
+   "usd": 16678293,
    "beispiel": "brazil-presidential-election"
   },
   "fifwc": {
-   "n": 1020,
-   "usd": 13293884,
-   "beispiel": "fifwc-esp-arg-2026-07-19"
+   "n": 824,
+   "usd": 14446311,
+   "beispiel": "fifwc-esp-arg-2026-07-19-more-markets"
+  },
+  "wnba": {
+   "n": 209,
+   "usd": 1399466,
+   "beispiel": "wnba-gsv-atl-2026-10-21"
   },
   "balance": {
    "n": 19,
-   "usd": 1335607,
+   "usd": 1326693,
    "beispiel": "balance-of-power-2026-midterms"
   },
   "fed": {
-   "n": 32,
-   "usd": 1094357,
+   "n": 38,
+   "usd": 1134611,
    "beispiel": "fed-decision-in-september-762"
   },
-  "which": {
-   "n": 37,
-   "usd": 713870,
-   "beispiel": "which-party-wins-2028-us-presidential-election"
-  },
   "who": {
-   "n": 31,
-   "usd": 697817,
+   "n": 30,
+   "usd": 819652,
    "beispiel": "who-will-be-the-next-prime-minister-of-israel-after-the-next-election"
   },
+  "which": {
+   "n": 41,
+   "usd": 682786,
+   "beispiel": "which-party-will-gain-most-seats-in-russian-parliamentary-election"
+  },
+  "world": {
+   "n": 38,
+   "usd": 631400,
+   "beispiel": "world-cup-winner"
+  },
   "presidential": {
-   "n": 15,
-   "usd": 430140,
+   "n": 13,
+   "usd": 427159,
    "beispiel": "presidential-election-winner-2028"
   },
-  "wnba": {
-   "n": 60,
-   "usd": 268717,
-   "beispiel": "wnba-atl-wsh-2026-08-07"
-  },
   "texas": {
-   "n": 23,
-   "usd": 239285,
+   "n": 26,
+   "usd": 298583,
    "beispiel": "texas-senate-election-winner"
   },
   "israel": {
-   "n": 30,
-   "usd": 225128,
-   "beispiel": "israel-x-iran-ceasefire-continues-throughptptpt-20260716224448963"
+   "n": 31,
+   "usd": 238041,
+   "beispiel": "israel-strikes-iran-by-january-31-2026"
+  },
+  "next": {
+   "n": 24,
+   "usd": 223336,
+   "beispiel": "next-prime-minister-of-spain-20260625005215443"
   },
   "ballon": {
    "n": 4,
@@ -778,48 +788,38 @@
   },
   "pro": {
    "n": 30,
-   "usd": 216189,
+   "usd": 213428,
    "beispiel": "pro-football-2027-champion-20260729185915366"
   },
-  "will": {
-   "n": 40,
-   "usd": 214000,
-   "beispiel": "will-kanye-west-visit-israel-by-june-30"
-  },
-  "next": {
-   "n": 20,
-   "usd": 208282,
-   "beispiel": "next-prime-minister-of-serbia-20260629223938642"
-  },
-  "btc": {
-   "n": 45,
-   "usd": 192546,
-   "beispiel": "btc-updown-15m-1777649400"
-  },
-  "world": {
-   "n": 52,
-   "usd": 185822,
-   "beispiel": "world-cup-winner"
-  },
   "cbb": {
-   "n": 18,
-   "usd": 161336,
+   "n": 23,
+   "usd": 200668,
    "beispiel": "cbb-utahst-arz-2026-03-22"
   },
+  "will": {
+   "n": 38,
+   "usd": 171934,
+   "beispiel": "will-laptop-flip-trump-by"
+  },
+  "uef": {
+   "n": 11,
+   "usd": 163989,
+   "beispiel": "uef-kvx-tur-2026-03-31"
+  },
+  "btc": {
+   "n": 33,
+   "usd": 155268,
+   "beispiel": "btc-updown-15m-1777649400"
+  },
+  "what": {
+   "n": 41,
+   "usd": 152757,
+   "beispiel": "what-price-will-bitcoin-hit-in-august-2026"
+  },
   "worlds": {
-   "n": 10,
-   "usd": 143726,
+   "n": 9,
+   "usd": 141438,
    "beispiel": "worlds-2026-winner"
-  },
-  "ncaa": {
-   "n": 15,
-   "usd": 138645,
-   "beispiel": "ncaa-football-2026-national-champion"
-  },
-  "iran": {
-   "n": 13,
-   "usd": 128938,
-   "beispiel": "iran-leadership-change-by"
   }
  }
 }
