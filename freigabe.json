@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-27T19:02:29.016775+00:00",
+ "generatedAt": "2026-10-27T19:17:35.400518+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -72,7 +72,7 @@
     "nieAnteil": 0.022,
     "schaetzbar": false
    },
-   "alterTage": 0.8,
+   "alterTage": 0.9,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py",
    "seitFreigabe": {
@@ -4469,7 +4469,7 @@
     "nieAnteil": 0.022,
     "schaetzbar": false
    },
-   "alterTage": 0.8,
+   "alterTage": 0.9,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py",
    "seitFreigabe": {
@@ -6012,7 +6012,7 @@
     "nieAnteil": 0.598,
     "schaetzbar": false
    },
-   "alterTage": 0.8,
+   "alterTage": 0.9,
    "art": "gate",
    "nAlt": 23,
    "roiAlt": 0.1145,
@@ -6084,6 +6084,32 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
+  },
+  {
+   "schublade": "Public · frisches Signal",
+   "strom": "betfair",
+   "n": 302,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt ueber null",
+   "roi": 0.0112,
+   "pl": 3.38,
+   "roiLb": -0.0686,
+   "clv": -1.22,
+   "clvLb": null,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "zu_wenige",
+   "entfernung": null,
+   "alterTage": null,
+   "art": "public_szenario",
+   "quelle": "betfair_public_eval.py",
+   "kanal": "public",
+   "hit": 0.6093,
+   "hitLb": 0.5623,
+   "avgOdd": 1.74
   },
   {
    "schublade": "Other Competitions Soccer · Match Odds",
@@ -6160,32 +6186,6 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
-  },
-  {
-   "schublade": "Public · frisches Signal",
-   "strom": "betfair",
-   "n": 301,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt ueber null",
-   "roi": 0.0063,
-   "pl": 1.9,
-   "roiLb": -0.0734,
-   "clv": -1.22,
-   "clvLb": null,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "zu_wenige",
-   "entfernung": null,
-   "alterTage": null,
-   "art": "public_szenario",
-   "quelle": "betfair_public_eval.py",
-   "kanal": "public",
-   "hit": 0.608,
-   "hitLb": 0.5609,
-   "avgOdd": 1.73
   },
   {
    "schublade": "Brazilian Serie A · First Half Goals 1.5",
@@ -6322,12 +6322,12 @@
   {
    "schublade": "Public-Pushes",
    "strom": "betfair",
-   "n": 333,
+   "n": 334,
    "status": "geprueft",
-   "grund": "333 Pushes, 59.8 % Treffer — und trotzdem -1.0 % ROI: die Treffer liegen bei kleineren Quoten als die Fehlschuesse",
-   "roi": -0.0099,
-   "pl": -3.3,
-   "roiLb": -0.086,
+   "grund": "334 Pushes, 59.9 % Treffer — und trotzdem -0.5 % ROI: die Treffer liegen bei kleineren Quoten als die Fehlschuesse",
+   "roi": -0.0054,
+   "pl": -1.8,
+   "roiLb": -0.0816,
    "clv": -2.2,
    "clvLb": null,
    "clvUrteil": "gemessen, nicht belegt",
@@ -6341,8 +6341,8 @@
    "art": "public",
    "quelle": "betfair_public_eval.py",
    "kanal": "public",
-   "hit": 0.5976,
-   "hitLb": 0.5528,
+   "hit": 0.5988,
+   "hitLb": 0.5541,
    "avgOdd": 1.77
   },
   {
@@ -7005,7 +7005,7 @@
     "nieAnteil": 0.855,
     "schaetzbar": false
    },
-   "alterTage": 0.8,
+   "alterTage": 0.9,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py"
   },
@@ -13461,7 +13461,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 9.1,
+   "alterTage": 9.2,
    "art": "conviction",
    "wert": 10
   },
