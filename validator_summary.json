@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-10-28T08:41:38.255973+00:00",
+  "timestamp": "2026-10-28T16:58:35.014349+00:00",
   "checked": 73,
   "errors": 0,
   "warnings": 53,
-  "infos": 235,
+  "infos": 234,
   "issues": [
     {
       "date": "30.10.2026",
@@ -736,6 +736,24 @@
     },
     {
       "date": "30.10.2026",
+      "home": "Nice",
+      "away": "Rennes",
+      "league": "Ligue 1",
+      "severity": "INFO",
+      "code": "CARDS35_LOW_FV",
+      "msg": "Liga-Baserate=3.6 → Poisson FV für Über 3.5 Karten = 48.5% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+7.1%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen."
+    },
+    {
+      "date": "30.10.2026",
+      "home": "Nice",
+      "away": "Rennes",
+      "league": "Ligue 1",
+      "severity": "INFO",
+      "code": "CARDS45_LOW_FV",
+      "msg": "Liga-Baserate=3.6 → Poisson FV für Über 4.5 Karten = 29.4%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis."
+    },
+    {
+      "date": "30.10.2026",
       "home": "Le Havre",
       "away": "Paris Saint Germain",
       "league": "Ligue 1",
@@ -814,24 +832,6 @@
       "severity": "INFO",
       "code": "TEAM_OVER_HOME_LOW_FV",
       "msg": "Lille expH≈1.25 (statischer Proxy) → FV über 1.5 = 35.5%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger."
-    },
-    {
-      "date": "31.10.2026",
-      "home": "Nice",
-      "away": "Rennes",
-      "league": "Ligue 1",
-      "severity": "INFO",
-      "code": "CARDS35_LOW_FV",
-      "msg": "Liga-Baserate=3.6 → Poisson FV für Über 3.5 Karten = 48.5% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+7.1%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen."
-    },
-    {
-      "date": "31.10.2026",
-      "home": "Nice",
-      "away": "Rennes",
-      "league": "Ligue 1",
-      "severity": "INFO",
-      "code": "CARDS45_LOW_FV",
-      "msg": "Liga-Baserate=3.6 → Poisson FV für Über 4.5 Karten = 29.4%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis."
     },
     {
       "date": "31.10.2026",
@@ -1285,21 +1285,12 @@
     },
     {
       "date": "31.10.2026",
-      "home": "Zalaegerszegi TE",
-      "away": "MTK Budapest",
-      "league": "NB I",
-      "severity": "INFO",
-      "code": "TEAM_OVER_AWAY_LOW_FV",
-      "msg": "MTK Budapest expA≈1.05 (statischer Proxy) → FV über 1.5 = 28.3%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger."
-    },
-    {
-      "date": "31.10.2026",
       "home": "Gyori ETO FC",
       "away": "Vasas",
       "league": "NB I",
       "severity": "INFO",
       "code": "ASYMMETRIC_STAKE_SCORES",
-      "msg": "Score-Differenz 4.6 Punkte: Gyori ETO FC (8.8) vs Vasas (4.2). Pick-Richtung sehr klar — Favoritenpflicht prüfen."
+      "msg": "Score-Differenz 4.3 Punkte: Gyori ETO FC (8.8) vs Vasas (4.5). Pick-Richtung sehr klar — Favoritenpflicht prüfen."
     },
     {
       "date": "31.10.2026",

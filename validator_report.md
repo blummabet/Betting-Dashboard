@@ -1,11 +1,11 @@
-# 🟡 Picks Validator — 28.10.2026 08:41
+# 🟡 Picks Validator — 28.10.2026 16:58
 
-**73 Spiele geprüft** · 🔴 0 Fehler · 🟡 53 Warnungen · 🔵 235 Hinweise
+**73 Spiele geprüft** · 🔴 0 Fehler · 🟡 53 Warnungen · 🔵 234 Hinweise
 
 ```
 =================================================================
   🐕 CocoBet — Picks Logik-Check
-  28.10.2026 08:41
+  28.10.2026 16:58
   Filter: nächste 3 Tag(e)
 =================================================================
 
@@ -275,6 +275,12 @@
 ─────────────────────────────────────────────────────────────────
   🇫🇷 Ligue 1  (rl=26)
 ─────────────────────────────────────────────────────────────────
+  🔵 HINWEIS [CARDS35_LOW_FV]
+     📅 30.10.2026  Nice vs Rennes
+     Liga-Baserate=3.6 → Poisson FV für Über 3.5 Karten = 48.5% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+7.1%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
+  🔵 HINWEIS [CARDS45_LOW_FV]
+     📅 30.10.2026  Nice vs Rennes
+     Liga-Baserate=3.6 → Poisson FV für Über 4.5 Karten = 29.4%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
   🟡 WARNUNG [H2H_DOMINATED_HIGH_SCORE]
      📅 30.10.2026  Le Havre vs Paris Saint Germain
      Paris Saint Germain dominiert H2H 7W/1X/0L in 8 Spielen. matchScore=7.5 — Pick-Richtung sollte klar sein, Angle-Text darf den Underdog nicht überbewerten.
@@ -302,12 +308,6 @@
   🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
      📅 30.10.2026  Lille vs Lens
      Lille expH≈1.25 (statischer Proxy) → FV über 1.5 = 35.5%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 31.10.2026  Nice vs Rennes
-     Liga-Baserate=3.6 → Poisson FV für Über 3.5 Karten = 48.5% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+7.1%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 31.10.2026  Nice vs Rennes
-     Liga-Baserate=3.6 → Poisson FV für Über 4.5 Karten = 29.4%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
   🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
      📅 31.10.2026  Lyon vs Angers
      Angers: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
@@ -466,12 +466,9 @@
   🔵 HINWEIS [CARDS45_LOW_FV]
      📅 31.10.2026  Zalaegerszegi TE vs MTK Budapest
      Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🔵 HINWEIS [TEAM_OVER_AWAY_LOW_FV]
-     📅 31.10.2026  Zalaegerszegi TE vs MTK Budapest
-     MTK Budapest expA≈1.05 (statischer Proxy) → FV über 1.5 = 28.3%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🔵 HINWEIS [ASYMMETRIC_STAKE_SCORES]
      📅 31.10.2026  Gyori ETO FC vs Vasas
-     Score-Differenz 4.6 Punkte: Gyori ETO FC (8.8) vs Vasas (4.2). Pick-Richtung sehr klar — Favoritenpflicht prüfen.
+     Score-Differenz 4.3 Punkte: Gyori ETO FC (8.8) vs Vasas (4.5). Pick-Richtung sehr klar — Favoritenpflicht prüfen.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 31.10.2026  Gyori ETO FC vs Vasas
      Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
@@ -936,7 +933,7 @@
 ═════════════════════════════════════════════════════════════════
   Geprüft: 73 Spiele
   🟡 53 Warnungen — manuelle Prüfung empfohlen
-  🔵 235 Hinweise — Pick-Richtung kontrollieren
+  🔵 234 Hinweise — Pick-Richtung kontrollieren
 ═════════════════════════════════════════════════════════════════
 
 ```
