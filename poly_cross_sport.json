@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-28T03:32:15.105620+00:00",
+ "generatedAt": "2026-10-28T04:02:29.088148+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,17 +10,17 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 767,
- "pinnKeys": 319,
+ "polyRowsSeen": 769,
+ "pinnKeys": 315,
  "matched": 215,
  "footballRows": 213,
- "crossRows": 554,
+ "crossRows": 556,
  "footballSkippedStale": 150,
  "seenBySport": {
-  "basketball_nba": 108,
+  "basketball_nba": 106,
   "americanfootball_nfl": 78,
   "baseball_mlb": 8,
-  "icehockey_nhl": 340,
+  "icehockey_nhl": 344,
   "boxing_boxing": 20,
   "soccer_mls": 48,
   "soccer_liga": 165
@@ -32,7 +32,36 @@
  },
  "trackRecord": {
   "tracked": 141,
-  "converged": 9
+  "converged": 7
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|milwaukeebrewers-tampabayrays|milwaukeebrewers",
+   "sport": "baseball_mlb",
+   "event": "Milwaukee Brewers vs Tampa Bay Rays",
+   "market": "Moneyline",
+   "outcome": "Milwaukee Brewers",
+   "polyPP": 87.0,
+   "pinnPP": 48.6,
+   "gapPP": 38.43,
+   "vol": 1552836,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -30.11,
+   "firstSeen": "2026-10-24T02:41:04.453532+00:00"
+  },
+  {
+   "id": "baseball_mlb|milwaukeebrewers-tampabayrays|tampabayrays",
+   "sport": "baseball_mlb",
+   "event": "Milwaukee Brewers vs Tampa Bay Rays",
+   "market": "Moneyline",
+   "outcome": "Tampa Bay Rays",
+   "polyPP": 13.0,
+   "pinnPP": 51.4,
+   "gapPP": -38.43,
+   "vol": 1552836,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -30.11,
+   "firstSeen": "2026-10-24T02:41:04.453532+00:00"
+  }
+ ]
 }
