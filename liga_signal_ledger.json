@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-10-28T14:49:26Z",
-    "total_records": 283,
+    "updated_at": "2026-10-28T22:38:32Z",
+    "total_records": 285,
     "oddsBackfilled": "2026-09-06 — Quote/entryOdd aus den Pick-Dateien nachgetragen; der Ledger trug sie nie (0 von 318)."
   },
   "records": [
@@ -12725,7 +12725,7 @@
           "score": 2.05
         }
       ],
-      "resolvedAt": "2026-10-28T14:49:26Z",
+      "resolvedAt": "2026-10-28T22:38:32Z",
       "source": "steam",
       "convictionScore": 5,
       "lateEntry": true,
@@ -13427,6 +13427,67 @@
       "clvBasis": "roh"
     },
     {
+      "key": "ITA-9-1579-492|Auswärtssieg",
+      "matchKey": "ITA-9-1579-492",
+      "market": "Auswärtssieg",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 1.33
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 1.0
+        },
+        {
+          "name": "apif_predictions",
+          "score": -1.76
+        },
+        {
+          "name": "chance_creation",
+          "score": 2.51
+        },
+        {
+          "name": "form_rating",
+          "score": 1.45
+        },
+        {
+          "name": "fixture_congestion",
+          "score": -0.38
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": -0.56
+        },
+        {
+          "name": "move_following",
+          "score": 1.2
+        },
+        {
+          "name": "venue_form",
+          "score": -1.14
+        },
+        {
+          "name": "betfair_money",
+          "score": 3.43
+        }
+      ],
+      "resolvedAt": "2026-10-28T22:38:27Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": false,
+      "engineVersion": "v1",
+      "clvPP": -1.36,
+      "clvResolved": true,
+      "odds": 1.75,
+      "entryOdd": 1.75,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED",
+      "clvFairPP": 0.81,
+      "clvBasis": "fair"
+    },
+    {
       "key": "ITA-9-488-487|Auswärtssieg",
       "matchKey": "ITA-9-488-487",
       "market": "Auswärtssieg",
@@ -13563,6 +13624,54 @@
       "processVerdict": "JUSTIFIED",
       "clvFairPP": -1.66,
       "clvBasis": "fair"
+    },
+    {
+      "key": "ITA-9-523-494|Doppelte Chance — 1X",
+      "matchKey": "ITA-9-523-494",
+      "market": "Doppelte Chance — 1X",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": -1.27
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.62
+        },
+        {
+          "name": "form_rating",
+          "score": 1.27
+        },
+        {
+          "name": "fixture_congestion",
+          "score": 0.52
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": -0.64
+        },
+        {
+          "name": "opener_move",
+          "score": 0.65
+        },
+        {
+          "name": "move_following",
+          "score": 1.2
+        }
+      ],
+      "resolvedAt": "2026-10-28T22:38:27Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -2.8,
+      "clvResolved": true,
+      "odds": 1.5,
+      "entryOdd": 1.5,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED",
+      "clvBasis": "roh"
     }
   ]
 }
