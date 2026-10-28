@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-10-28T20:20:13.169865+00:00",
+"generatedAt": "2026-10-28T20:35:30.669988+00:00",
 "byVerdict": {
 "uneinig": {
-"n": 32,
-"wins": 10,
-"hitRate": 0.3125,
-"polyN": 31,
+"n": 33,
+"wins": 11,
+"hitRate": 0.3333,
+"polyN": 32,
 "polyWins": 10,
-"polyHitRate": 0.3226,
-"pinnN": 21,
-"pinnHitRate": 0.2857,
-"nRoi": 32,
-"roi": -0.12,
-"roiLb": -0.5116,
-"nClv": 32,
-"clv": -0.3,
-"clvLb": -1.0533
+"polyHitRate": 0.3125,
+"pinnN": 22,
+"pinnHitRate": 0.2727,
+"nRoi": 33,
+"roi": -0.0482,
+"roiLb": -0.4457,
+"nClv": 33,
+"clv": -0.29,
+"clvLb": -1.0212
 },
 "konsens": {
-"n": 560,
-"wins": 328,
-"hitRate": 0.5857,
-"polyN": 547,
-"polyWins": 313,
-"polyHitRate": 0.5722,
-"pinnN": 500,
-"pinnHitRate": 0.588,
-"nRoi": 560,
-"roi": 0.0589,
-"roiLb": -0.0071,
-"nClv": 560,
+"n": 562,
+"wins": 329,
+"hitRate": 0.5854,
+"polyN": 549,
+"polyWins": 314,
+"polyHitRate": 0.5719,
+"pinnN": 502,
+"pinnHitRate": 0.5876,
+"nRoi": 562,
+"roi": 0.0576,
+"roiLb": -0.0082,
+"nClv": 562,
 "clv": 0.06,
-"clvLb": -0.1224
+"clvLb": -0.1198
 },
 "teil": {
 "n": 1,
@@ -51,15 +51,15 @@
 }
 },
 "byLeague": {
+"Italian Serie A": {
+"n": 38,
+"wins": 28,
+"hitRate": 0.7368
+},
 "UEFA Champions League": {
 "n": 36,
 "wins": 23,
 "hitRate": 0.6389
-},
-"Italian Serie A": {
-"n": 35,
-"wins": 26,
-"hitRate": 0.7429
 },
 "English Sky Bet Championship": {
 "n": 33,
@@ -394,37 +394,94 @@
 },
 "byStrength": {
 "strong": {
-"n": 417,
-"wins": 251,
-"hitRate": 0.6019,
-"nRoi": 417,
-"roi": 0.0169,
-"roiLb": -0.0535,
-"nClv": 417,
-"clv": 0.13,
-"clvLb": -0.0891
+"n": 419,
+"wins": 252,
+"hitRate": 0.6014,
+"nRoi": 419,
+"roi": 0.0154,
+"roiLb": -0.0548,
+"nClv": 419,
+"clv": 0.14,
+"clvLb": -0.0859
 },
 "weak": {
-"n": 176,
-"wins": 87,
-"hitRate": 0.4943,
-"nRoi": 176,
-"roi": 0.1197,
-"roiLb": -0.0261,
-"nClv": 176,
+"n": 177,
+"wins": 88,
+"hitRate": 0.4972,
+"nRoi": 177,
+"roi": 0.1317,
+"roiLb": -0.0145,
+"nClv": 177,
 "clv": -0.18,
-"clvLb": -0.446
+"clvLb": -0.4435
 }
 },
 "divergence": {
-"n": 32,
-"betfairWins": 10,
-"betfairRate": 0.3125,
-"polyN": 31,
+"n": 33,
+"betfairWins": 11,
+"betfairRate": 0.3333,
+"polyN": 32,
 "polyWins": 10,
-"polyRate": 0.3226
+"polyRate": 0.3125
 },
 "recent": [
+{
+"matchId": "36221211",
+"home": "Venezia",
+"away": "Inter Milan",
+"league": "Italian Serie A",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Inter Milan",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+2
+],
+"kickoff": "2026-10-28T17:30:00Z",
+"settledAt": "2026-10-28T20:35:30.465636+00:00"
+},
+{
+"matchId": "36221196",
+"home": "AC Milan",
+"away": "Bologna",
+"league": "Italian Serie A",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "AC Milan",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+4
+],
+"kickoff": "2026-10-28T17:30:00Z",
+"settledAt": "2026-10-28T20:35:30.465636+00:00"
+},
+{
+"matchId": "36221206",
+"home": "Parma",
+"away": "Udinese",
+"league": "Italian Serie A",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-10-28T17:30:00Z",
+"settledAt": "2026-10-28T20:35:30.465636+00:00"
+},
 {
 "matchId": "36142417",
 "home": "Paderborn",
@@ -1127,76 +1184,19 @@
 ],
 "kickoff": "2026-10-25T14:00:00Z",
 "settledAt": "2026-10-27T17:04:42.232034+00:00"
-},
-{
-"matchId": "36209528",
-"home": "Freiburg",
-"away": "Bayern Munich",
-"league": "German Bundesliga",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Bayern Munich",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-3
-],
-"kickoff": "2026-10-25T16:30:00Z",
-"settledAt": "2026-10-27T17:04:42.232034+00:00"
-},
-{
-"matchId": "36209506",
-"home": "Inter",
-"away": "Fiorentina",
-"league": "Italian Serie A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Inter",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-10-25T11:30:00Z",
-"settledAt": "2026-10-27T17:04:42.232034+00:00"
-},
-{
-"matchId": "36180803",
-"home": "Monaco",
-"away": "Lille",
-"league": "French Ligue 1",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Monaco",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-10-25T14:00:00Z",
-"settledAt": "2026-10-27T17:04:42.232034+00:00"
 }
 ],
 "global": {
-"n": 593,
-"wins": 338,
-"hitRate": 0.57,
-"nRoi": 593,
-"roi": 0.0474,
-"roiLb": -0.0184,
-"nClv": 593,
+"n": 596,
+"wins": 340,
+"hitRate": 0.5705,
+"nRoi": 596,
+"roi": 0.0499,
+"roiLb": -0.0158,
+"nClv": 596,
 "clv": 0.04,
-"clvLb": -0.1356
+"clvLb": -0.1329
 },
-"pending": 28,
+"pending": 25,
 "ausgeschlossenLive": 1379
 }
