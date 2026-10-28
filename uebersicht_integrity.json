@@ -115,9 +115,11 @@
     {
       "label": "Money Map: die Poly-Seite gehoert zum Spiel",
       "severity": "error",
-      "failures": [],
-      "nFail": 0,
-      "ok": true,
+      "failures": [
+        "Nestos Chrysoupoli FC v Kalamata (Greek Cup): Poly-Seite heisst „Draw“ und gehoert zu keinem der beiden Teams — $7864 fremdes Geld in einer Konsens-Zeile"
+      ],
+      "nFail": 1,
+      "ok": false,
       "hinweis": ""
     },
     {
@@ -171,7 +173,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "119 Picks im Fenster, 18 % ohne Preis-Signal."
+      "hinweis": "118 Picks im Fenster, 18 % ohne Preis-Signal."
     },
     {
       "label": "Stumme Signale: wer hat nie gefeuert?",
@@ -200,11 +202,11 @@
       "label": "Fade-Unter: haelt die Kontrollgruppe?",
       "severity": "error",
       "failures": [
-        "Match Odds H: der Fade gewinnt hier BELEGT (+8.2 %, UG +2.2 %, Geldseite +1.8 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
+        "Match Odds H: der Fade gewinnt hier BELEGT (+8.1 %, UG +2.1 %, Geldseite +1.8 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
       ],
       "nFail": 1,
       "ok": false,
-      "hinweis": "seit Vorregistrierung n=6515 (UG -5.5 %) · Rueckblick n=0, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=6518 (UG -5.6 %) · Rueckblick n=0, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -259,7 +261,7 @@
       "severity": "warn",
       "failures": [
         "liga_poly_balance.json: Positionswert $14.81 stammt aus einem Lauf vor 88 h — die Datei selbst ist 88 h alt — der Produzent laeuft nicht, das ist kein API-Problem",
-        "mls_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 77 h — die Datei selbst ist 77 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
+        "mls_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 78 h — die Datei selbst ist 78 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
       ],
       "nFail": 2,
       "ok": false,
@@ -279,7 +281,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "914 Zeilen · 904 abgerechnet · 1 offen"
+      "hinweis": "915 Zeilen · 904 abgerechnet · 2 offen"
     },
     {
       "label": "Artefakte sind lesbar",
@@ -335,13 +337,13 @@
       "label": "Serien-Buch zeigt beide Buecher",
       "severity": "warn",
       "failures": [
-        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 373.3 h, MLS 380.9 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 374.1 h, MLS 381.7 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
       ],
       "nFail": 1,
       "ok": false,
       "hinweis": "Liga n=95 · MLS n=82 · Urteil beide 'Erwartung zu duenn'"
     }
   ],
-  "nFail": 10,
-  "generatedAt": "2026-10-28T14:03:22.275993+00:00"
+  "nFail": 11,
+  "generatedAt": "2026-10-28T14:49:29.310270+00:00"
 }
