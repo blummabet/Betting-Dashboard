@@ -31,9 +31,11 @@
       "id": "nahe_spiele_im_feed",
       "label": "Bald anpfeifende Spiele sind im Feed",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "nur 117 von 149 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Farnborough FC v Weston-super-Mare (English National League South); Bournemouth v Aston Villa (English Football League Cup); St Johnstone v Motherwell (Scottish Premiership)"
+      ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
     {
@@ -88,7 +90,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 928312 verbraucht, 4071688 uebrig"
+      "note": "Kontingent: 928912 verbraucht, 4071088 uebrig"
     },
     {
       "id": "anker_namensabgleich",
@@ -101,11 +103,11 @@
         "Al Khalidiyah v Al Wahda (Abu Dhabi) (AFC Champions League Two): zeit — bester Kandidat „Al-Khaleej v Al-Hazem“ · 20.3h Anpfiff-Abstand",
         "Al Arabi Kuwait v Al Fahaheel FC (Kuwaiti Premier League): zeit — bester Kandidat „Al-Khaleej v Al-Hazem“ · 24.1h Anpfiff-Abstand",
         "Al Nahdha v Al Rayyan (AFC Champions League Two): zeit — bester Kandidat „Al-Khaleej v Al-Hazem“ · 22.6h Anpfiff-Abstand",
+        "London City Lionesses v Crystal Palace (W) (English Ladies League Cup): name — bester Kandidat „Fulham v Crystal Palace“",
         "Sheffield United (W) v Everton (W) (English Ladies League Cup): zeit — bester Kandidat „Everton v Newcastle United“ · 24.8h Anpfiff-Abstand",
-        "Al-Shabab v Al-Qadsia (Kuwaiti Premier League): zeit — bester Kandidat „Al-Shabab v Al-Ahli“ · 49.2h Anpfiff-Abstand",
-        "London City Lionesses v Crystal Palace (W) (English Ladies League Cup): name — bester Kandidat „Fulham v Crystal Palace“"
+        "Al-Shabab v Al-Qadsia (Kuwaiti Premier League): zeit — bester Kandidat „Al-Shabab v Al-Ahli“ · 49.2h Anpfiff-Abstand"
       ],
-      "note": "ohne Anker: kein_kandidat 122 · name 1 · zeit 6. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 121 · name 1 · zeit 6. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -189,6 +191,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 1,
-  "generatedAt": "2026-10-28T13:34:50.379652+00:00"
+  "nFail": 2,
+  "generatedAt": "2026-10-28T13:49:53.154934+00:00"
 }
