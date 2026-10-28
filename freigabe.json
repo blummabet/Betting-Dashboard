@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-28T23:06:45.770645+00:00",
+ "generatedAt": "2026-10-28T23:35:29.724827+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -35,7 +35,7 @@
     "nieAnteil": 0.013,
     "schaetzbar": false
    },
-   "alterTage": 1.0,
+   "alterTage": 1.1,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py",
    "seitFreigabe": {
@@ -71,7 +71,7 @@
     "nieAnteil": 0.042,
     "schaetzbar": false
    },
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "top5",
@@ -911,10 +911,10 @@
    "zerlegung": "nach Conviction",
    "art": "conviction",
    "gruppen": 9,
-   "basis": "1791 von 2000 abgerechneten Plays · nur Engine 2026-09-01 · ohne Cricket, Kampfsport, US-Sport",
-   "n": 1791,
-   "pl": 10.93,
-   "roi": 0.0061,
+   "basis": "1792 von 2000 abgerechneten Plays · nur Engine 2026-09-01 · ohne Cricket, Kampfsport, US-Sport",
+   "n": 1792,
+   "pl": 9.93,
+   "roi": 0.0055,
    "clv": -0.206,
    "belegte": 0
   },
@@ -4636,7 +4636,7 @@
     "nieAnteil": 0.013,
     "schaetzbar": false
    },
-   "alterTage": 1.0,
+   "alterTage": 1.1,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py",
    "seitFreigabe": {
@@ -4672,7 +4672,7 @@
     "nieAnteil": 0.042,
     "schaetzbar": false
    },
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "top5",
@@ -5971,8 +5971,8 @@
    "alterTage": 0.0,
    "art": "conviction",
    "wert": 7,
-   "nAlt": 11,
-   "roiAlt": 0.3875,
+   "nAlt": 10,
+   "roiAlt": 0.5262,
    "clvAlt": 0.8,
    "engineAlt": true
   },
@@ -6000,13 +6000,13 @@
     "nieAnteil": 0.347,
     "schaetzbar": false
    },
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "vorangemeldet",
    "angemeldet": "2026-09-01T18:59:52.671883+00:00",
    "zielN": 60,
    "warum": "Die einzige Untergruppe der Rangliste mit einer ROI-Untergrenze ueber null. Traegt nicht die Menge der Poly-Signale, sondern die eine FREMDE Stimme: ohne Betfair liegen dieselben Plays bei -5,1% (n=425).",
    "quelle": "poly_shortlist_track.json → settled",
-   "nDavor": 23,
+   "nDavor": 22,
    "rueckblick": {
     "n": 75,
     "roi": 0.1811,
@@ -6038,38 +6038,6 @@
    "naeherung": false
   },
   {
-   "schublade": "Mix money+sharp",
-   "strom": "poly",
-   "n": 695,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0098,
-   "pl": -6.83,
-   "roiLb": -0.0514,
-   "clv": -0.196,
-   "clvLb": -0.447,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.054,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "nicht_positiv",
-   "entfernung": {
-    "median": 6459,
-    "lo": 564,
-    "hi": 306797,
-    "nieAnteil": 0.647,
-    "schaetzbar": false
-   },
-   "alterTage": 0.0,
-   "art": "mix",
-   "wert": "money+sharp",
-   "nAlt": 21,
-   "roiAlt": -0.0358,
-   "clvAlt": 0.0,
-   "engineAlt": true
-  },
-  {
    "schublade": "Argentinian Primera Nacional · Over/Under 2.5 Goals",
    "strom": "betfair",
    "n": 74,
@@ -6090,6 +6058,38 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
+  },
+  {
+   "schublade": "Mix money+sharp",
+   "strom": "poly",
+   "n": 696,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.0113,
+   "pl": -7.83,
+   "roiLb": -0.0528,
+   "clv": -0.194,
+   "clvLb": -0.444,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.056,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "nicht_positiv",
+   "entfernung": {
+    "median": 6996,
+    "lo": 597,
+    "hi": 1425236,
+    "nieAnteil": 0.665,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "mix",
+   "wert": "money+sharp",
+   "nAlt": 21,
+   "roiAlt": -0.0358,
+   "clvAlt": 0.0,
+   "engineAlt": true
   },
   {
    "schublade": "Mix bf+money+sharp",
@@ -6115,7 +6115,7 @@
     "nieAnteil": 0.197,
     "schaetzbar": false
    },
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "mix",
    "wert": "bf+money+sharp"
   },
@@ -6204,7 +6204,7 @@
     "nieAnteil": 0.11,
     "schaetzbar": false
    },
-   "alterTage": 2.8,
+   "alterTage": 2.9,
    "art": "mix",
    "wert": "sharp+steam",
    "nAlt": 2,
@@ -6290,25 +6290,25 @@
   {
    "schublade": "Conviction 5",
    "strom": "poly",
-   "n": 733,
+   "n": 734,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0189,
-   "pl": -13.86,
-   "roiLb": -0.0658,
-   "clv": -0.143,
-   "clvLb": -0.409,
+   "roi": -0.0203,
+   "pl": -14.86,
+   "roiLb": -0.0671,
+   "clv": -0.141,
+   "clvLb": -0.405,
    "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.122,
+   "clvOg": 0.124,
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
    "noetigGrund": "nicht_positiv",
    "entfernung": {
-    "median": 10316,
-    "lo": 883,
-    "hi": 956984,
-    "nieAnteil": 0.748,
+    "median": 8951,
+    "lo": 844,
+    "hi": 883644,
+    "nieAnteil": 0.77,
     "schaetzbar": false
    },
    "alterTage": 0.0,
@@ -7097,8 +7097,8 @@
    "alterTage": 0.1,
    "art": "mix",
    "wert": "bf+money",
-   "nAlt": 21,
-   "roiAlt": 0.355,
+   "nAlt": 20,
+   "roiAlt": 0.4227,
    "clvAlt": 1.0,
    "engineAlt": true
   },
@@ -7484,7 +7484,7 @@
     "nieAnteil": 0.61,
     "schaetzbar": false
    },
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "vorangemeldet",
    "angemeldet": "2026-09-01T20:41:52.601081+00:00",
    "zielN": 40,
