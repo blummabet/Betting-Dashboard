@@ -987892,7 +987892,13 @@
   "tokens": {
    "Over": "45077646289324520659116333034492786790075903491481059970412123380651417910276",
    "Under": "42818236743508202397685833627159671338361348980887487611870956728835561357160"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Blue Jackets": 1.0,
+   "Flyers": 0.0
+  },
+  "resolvedAt": "2026-10-28T02:07:37.270549+00:00"
  },
  "nba-bkn-bos-2026-10-27": {
   "shares": {
@@ -993025,8 +993031,8 @@
  },
  "nhl-buf-sj-2026-10-27": {
   "shares": {
-   "Sabres": 17627.729978075,
-   "Sharks": 13029.255269774994
+   "Sabres": 17639.441038150002,
+   "Sharks": 13037.911270699997
   },
   "prices": {
    "Sabres": 0.575,
@@ -993038,12 +993044,13 @@
   },
   "league": "NHL",
   "sport": "US-Sport",
-  "totalUsd": 30568,
+  "totalUsd": 33581,
   "whales": [
    {
     "wallet": "0x0d6a1ada6d7ff785ab4b7263d9ce8e2baa85aa98",
     "side": "Sabres",
-    "usd": 8626
+    "usd": 8626,
+    "avgPrice": 0.5799
    },
    {
     "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
@@ -993063,7 +993070,8 @@
    {
     "wallet": "0xf5e15d3344c35890f1aa716dca88e13eb9065ad0",
     "side": "Sharks",
-    "usd": 1291
+    "usd": 1291,
+    "avgPrice": 0.4199
    },
    {
     "wallet": "0xbad26fe5458e6219cec3e40272760e275e835296",
@@ -993100,7 +993108,7 @@
    {
     "wallet": "0xf1404010a21a61c1f5693beee65285273be47cd8",
     "side": "Sharks",
-    "usd": 425
+    "usd": 423
    },
    {
     "wallet": "0xd619b68e64f256f8ddd185b261c8679eacf0c461",
@@ -993229,14 +993237,14 @@
     "usd": 3
    },
    {
-    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
-    "side": "Sharks",
+    "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
+    "side": "Sabres",
     "usd": 3
    },
    {
-    "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
-    "side": "Sabres",
-    "usd": 1
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Sharks",
+    "usd": 3
    },
    {
     "wallet": "0xb4cd4d6fe596f360137e5a0441fecc4e1ec9c041",
@@ -993244,20 +993252,105 @@
     "usd": 1
    }
   ],
-  "hoursToKickoff": 0.7,
-  "capturedAt": "2026-10-28T01:48:14.666205+00:00",
+  "hoursToKickoff": 0.37,
+  "capturedAt": "2026-10-28T02:07:37.270549+00:00",
   "koTs": "2026-10-28T02:30:00+00:00",
   "cond": "0xb2dd741ba1666066f7e4ddd0e998ff2b5f6eacae5085c18e3d649675e67b1423",
   "frage": "Sabres vs. Sharks",
   "tokens": {
    "Sabres": "85597479456605250217963077497327662451729291210212411694698790002314944971610",
    "Sharks": "13814013429700520696024396428127590483357198108772203620655361981319896276809"
-  }
+  },
+  "book": {
+   "side": "Sabres",
+   "bid": 0.57,
+   "ask": 0.58,
+   "spreadC": 1.0,
+   "spreadPct": 1.72,
+   "bids": [
+    [
+     0.57,
+     42672
+    ],
+    [
+     0.56,
+     164859
+    ],
+    [
+     0.55,
+     96370
+    ],
+    [
+     0.54,
+     25679
+    ],
+    [
+     0.53,
+     10180
+    ],
+    [
+     0.52,
+     10420
+    ]
+   ],
+   "asks": [
+    [
+     0.58,
+     3691
+    ],
+    [
+     0.59,
+     72065
+    ],
+    [
+     0.6,
+     111243
+    ],
+    [
+     0.61,
+     60445
+    ],
+    [
+     0.62,
+     34753
+    ],
+    [
+     0.63,
+     10105
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xf5e15d3344c35890f1aa716dca88e13eb9065ad0",
+    "action": "BUY",
+    "side": "Sharks",
+    "price": 0.42,
+    "usd": 1256,
+    "ts": 1793151590
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Sharks",
+    "price": 0.42,
+    "usd": 850,
+    "ts": 1793142734
+   },
+   {
+    "wallet": "0x0d6a1ada6d7ff785ab4b7263d9ce8e2baa85aa98",
+    "action": "BUY",
+    "side": "Sabres",
+    "price": 0.58,
+    "usd": 8701,
+    "ts": 1793139417
+   }
+  ]
  },
  "nba-por-lal-2026-10-27": {
   "shares": {
-   "Trail Blazers": 297341.400373745,
-   "Lakers": 356161.5778736654
+   "Trail Blazers": 392909.64559255494,
+   "Lakers": 470628.4671702405
   },
   "prices": {
    "Trail Blazers": 0.455,
@@ -993269,7 +993362,7 @@
   },
   "league": "NBA",
   "sport": "US-Sport",
-  "totalUsd": 749639,
+  "totalUsd": 815422,
   "whales": [
    {
     "wallet": "0x684baa57c338c2549aec0aa3f034f695d72a8409",
@@ -993280,14 +993373,20 @@
    {
     "wallet": "0xf72f81c7449f1c87f7131aaebeed13bcaf75a115",
     "side": "Lakers",
-    "usd": 57488,
-    "avgPrice": 0.5371
+    "usd": 106012,
+    "avgPrice": 0.5384
+   },
+   {
+    "wallet": "0xf0318c32136c2db7fec88b84869aee6a1106c80c",
+    "side": "Lakers",
+    "usd": 77459,
+    "avgPrice": 0.5399
    },
    {
     "wallet": "0x6ac5bb06a9eb05641fd5e82640268b92f3ab4b6e",
     "side": "Trail Blazers",
-    "usd": 56285,
-    "avgPrice": 0.4654
+    "usd": 59650,
+    "avgPrice": 0.4645
    },
    {
     "wallet": "0xa2cced8bfae7d645f7f437fb76becf2fcbb70cbc",
@@ -993298,8 +993397,8 @@
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "side": "Trail Blazers",
-    "usd": 36182,
-    "avgPrice": 0.4239
+    "usd": 36445,
+    "avgPrice": 0.4242
    },
    {
     "wallet": "0x1f3a646ce5cbe2c70270e7a46161d89b7c7b895d",
@@ -993308,10 +993407,22 @@
     "avgPrice": 0.41
    },
    {
+    "wallet": "0xb4f978be63cdf75554b0b46a4262a6db597cc9a7",
+    "side": "Trail Blazers",
+    "usd": 27696,
+    "avgPrice": 0.4599
+   },
+   {
     "wallet": "0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
     "side": "Lakers",
     "usd": 24101,
     "avgPrice": 0.53
+   },
+   {
+    "wallet": "0xd106952ebf30a3125affd8a23b6c1f30c35fc79c",
+    "side": "Trail Blazers",
+    "usd": 23289,
+    "avgPrice": 0.4574
    },
    {
     "wallet": "0x84ec4b5b2dbf75d07041b7b89f0a82647e3a72c1",
@@ -993329,12 +993440,6 @@
     "wallet": "0x1610db79f753a80207e1d66716be9e91e627ae49",
     "side": "Lakers",
     "usd": 18184,
-    "avgPrice": 0.54
-   },
-   {
-    "wallet": "0xf0318c32136c2db7fec88b84869aee6a1106c80c",
-    "side": "Lakers",
-    "usd": 17392,
     "avgPrice": 0.54
    },
    {
@@ -993356,6 +993461,18 @@
     "avgPrice": 0.46
    },
    {
+    "wallet": "0xd3faf1906cc31e75d1dfa0d7b57e8f97d33da26c",
+    "side": "Trail Blazers",
+    "usd": 10010,
+    "avgPrice": 0.46
+   },
+   {
+    "wallet": "0x9f15613ebf1f36d4bc679e1211d1fc567cf9bdb3",
+    "side": "Trail Blazers",
+    "usd": 9740,
+    "avgPrice": 0.46
+   },
+   {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "Trail Blazers",
     "usd": 8451,
@@ -993368,16 +993485,16 @@
     "avgPrice": 0.46
    },
    {
+    "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
+    "side": "Trail Blazers",
+    "usd": 7117,
+    "avgPrice": 0.4608
+   },
+   {
     "wallet": "0x4df332e27f9ee3224f52ce30e3ce15c1075e788f",
     "side": "Lakers",
     "usd": 5852,
     "avgPrice": 0.5748
-   },
-   {
-    "wallet": "0xd106952ebf30a3125affd8a23b6c1f30c35fc79c",
-    "side": "Trail Blazers",
-    "usd": 5707,
-    "avgPrice": 0.454
    },
    {
     "wallet": "0x2d1ffae8d41b181d1b1734016e07bd1a903a5246",
@@ -993396,12 +993513,6 @@
     "side": "Lakers",
     "usd": 5450,
     "avgPrice": 0.53
-   },
-   {
-    "wallet": "0xb4f978be63cdf75554b0b46a4262a6db597cc9a7",
-    "side": "Trail Blazers",
-    "usd": 4946,
-    "avgPrice": 0.4599
    },
    {
     "wallet": "0x1bc8b6519eb646dab62ac7be5b55920f5bb72f68",
@@ -993428,6 +993539,17 @@
     "avgPrice": 0.54
    },
    {
+    "wallet": "0x1000008dd9001b968442c1000017eae6e0da00ba",
+    "side": "Lakers",
+    "usd": 3136
+   },
+   {
+    "wallet": "0xf5e15d3344c35890f1aa716dca88e13eb9065ad0",
+    "side": "Trail Blazers",
+    "usd": 3134,
+    "avgPrice": 0.46
+   },
+   {
     "wallet": "0xe0dbdb7f005f233f4510e4ef7e53a2f76a8df44e",
     "side": "Trail Blazers",
     "usd": 2968,
@@ -993438,6 +993560,12 @@
     "side": "Lakers",
     "usd": 2725,
     "avgPrice": 0.54
+   },
+   {
+    "wallet": "0x36e1b9c69326f03d8d28bd89457f1e7ec5bf28eb",
+    "side": "Trail Blazers",
+    "usd": 2552,
+    "avgPrice": 0.46
    },
    {
     "wallet": "0x6bfd62982f6f8f30e17736c70dbc9f66857b44b4",
@@ -993458,11 +993586,6 @@
     "avgPrice": 0.5829
    },
    {
-    "wallet": "0x1000008dd9001b968442c1000017eae6e0da00ba",
-    "side": "Lakers",
-    "usd": 2205
-   },
-   {
     "wallet": "0xbfdfe31978b9ba79056b884ccf3bbc9225718e02",
     "side": "Lakers",
     "usd": 2180,
@@ -993479,38 +993602,10 @@
     "side": "Trail Blazers",
     "usd": 2126,
     "avgPrice": 0.42
-   },
-   {
-    "wallet": "0x21f333307ac6d2e65ac82f014b3dd2b64cbc35e3",
-    "side": "Lakers",
-    "usd": 1950
-   },
-   {
-    "wallet": "0xd48a81db62f742c4e42d86dfc23a7ee345366e90",
-    "side": "Trail Blazers",
-    "usd": 1902
-   },
-   {
-    "wallet": "0x4278f7e5cb5f2d68d204d7403270c79cb07e0e92",
-    "side": "Lakers",
-    "usd": 1690,
-    "avgPrice": 0.58
-   },
-   {
-    "wallet": "0x3f975d4186c87b3b4a39997cc37e71cc70ca4059",
-    "side": "Lakers",
-    "usd": 1635,
-    "avgPrice": 0.52
-   },
-   {
-    "wallet": "0x60e30101f81028d16ac06b982728b085bfc457b5",
-    "side": "Lakers",
-    "usd": 1635,
-    "avgPrice": 0.53
    }
   ],
-  "hoursToKickoff": 1.2,
-  "capturedAt": "2026-10-28T01:48:14.666205+00:00",
+  "hoursToKickoff": 0.87,
+  "capturedAt": "2026-10-28T02:07:37.270549+00:00",
   "koTs": "2026-10-28T03:00:00+00:00",
   "cond": "0xb5b924c7aac7e2d6fa01afd2a9b7e1504c648facbbf8fc6d9b3160ed9bce890c",
   "frage": "Trail Blazers vs. Lakers",
@@ -993520,128 +993615,358 @@
   },
   "book": {
    "side": "Lakers",
-   "bid": 0.54,
-   "ask": 0.55,
+   "bid": 0.53,
+   "ask": 0.54,
    "spreadC": 1.0,
-   "spreadPct": 1.82,
+   "spreadPct": 1.85,
    "bids": [
     [
-     0.54,
-     722086
-    ],
-    [
      0.53,
-     753196
+     645312
     ],
     [
      0.52,
-     175082
+     198625
     ],
     [
      0.51,
-     68339
+     92156
     ],
     [
      0.5,
-     25770
+     35555
     ],
     [
      0.49,
-     11768
+     12278
+    ],
+    [
+     0.48,
+     15161
     ]
    ],
    "asks": [
     [
+     0.54,
+     61
+    ],
+    [
      0.55,
-     551280
+     571605
     ],
     [
      0.56,
-     416539
+     394078
     ],
     [
      0.57,
-     15973
+     16575
     ],
     [
      0.58,
-     10375
+     12900
     ],
     [
      0.59,
-     15133
-    ],
-    [
-     0.6,
-     29671
+     14633
     ]
    ]
   },
   "trades": [
    {
-    "wallet": "0xb4f978be63cdf75554b0b46a4262a6db597cc9a7",
-    "action": "BUY",
-    "side": "Trail Blazers",
-    "price": 0.46,
-    "usd": 5000,
-    "ts": 1793151882
-   },
-   {
-    "wallet": "0x1bc8b6519eb646dab62ac7be5b55920f5bb72f68",
-    "action": "BUY",
-    "side": "Trail Blazers",
-    "price": 0.46,
-    "usd": 4270,
-    "ts": 1793151776
-   },
-   {
-    "wallet": "0xd106952ebf30a3125affd8a23b6c1f30c35fc79c",
-    "action": "BUY",
-    "side": "Trail Blazers",
-    "price": 0.46,
-    "usd": 2402,
-    "ts": 1793151749
-   },
-   {
-    "wallet": "0xd106952ebf30a3125affd8a23b6c1f30c35fc79c",
-    "action": "BUY",
-    "side": "Trail Blazers",
-    "price": 0.46,
-    "usd": 2029,
-    "ts": 1793151749
-   },
-   {
     "wallet": "0xa278b41b5afda5d18da683eb7f851a7b2dc13369",
     "action": "BUY",
     "side": "Lakers",
     "price": 0.55,
-    "usd": 939,
-    "ts": 1793151629
+    "usd": 1167,
+    "ts": 1793152910
    },
    {
-    "wallet": "0xcb6397371c0b38693827335385b848a501e8b3de",
+    "wallet": "0xf72f81c7449f1c87f7131aaebeed13bcaf75a115",
+    "action": "BUY",
+    "side": "Lakers",
+    "price": 0.54,
+    "usd": 4307,
+    "ts": 1793152872
+   },
+   {
+    "wallet": "0xf5e15d3344c35890f1aa716dca88e13eb9065ad0",
     "action": "BUY",
     "side": "Trail Blazers",
     "price": 0.46,
-    "usd": 301,
-    "ts": 1793151576
+    "usd": 596,
+    "ts": 1793152809
    },
    {
-    "wallet": "0xa5e3044fd953605f9407d58c76e48fd75a394d7e",
+    "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
+    "action": "SELL",
+    "side": "Lakers",
+    "price": 0.54,
+    "usd": 321,
+    "ts": 1793152763
+   },
+   {
+    "wallet": "0xd106952ebf30a3125affd8a23b6c1f30c35fc79c",
     "action": "BUY",
     "side": "Trail Blazers",
     "price": 0.46,
-    "usd": 8510,
-    "ts": 1793151380
+    "usd": 1385,
+    "ts": 1793152668
    },
    {
-    "wallet": "0x3e83678dade91faed495c8e07a940e7bcd0b5e31",
+    "wallet": "0xa682fb76c20422074af42f7ec3cb5eb21fb6af1f",
     "action": "BUY",
     "side": "Trail Blazers",
     "price": 0.46,
-    "usd": 2643,
-    "ts": 1793151300
+    "usd": 305,
+    "ts": 1793152659
+   },
+   {
+    "wallet": "0x1eb8b5d4edeebe6087c02e0cbad94cde72060782",
+    "action": "BUY",
+    "side": "Lakers",
+    "price": 0.55,
+    "usd": 1500,
+    "ts": 1793152623
+   },
+   {
+    "wallet": "0xd17abb0a321360e69a69a8fceccd5ace8fb69900",
+    "action": "BUY",
+    "side": "Trail Blazers",
+    "price": 0.46,
+    "usd": 3000,
+    "ts": 1793152556
    }
   ]
+ },
+ "wta-siniako-tararud-2026-10-26": {
+  "shares": {
+   "Katerina Siniakova": 5161.166069359999,
+   "Lanlana Tararudee": 2599.9851431350003
+  },
+  "prices": {
+   "Katerina Siniakova": 0.665,
+   "Lanlana Tararudee": 0.335
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 16546,
+  "whales": [
+   {
+    "wallet": "0xe71359d50ea42c73bff065ec47f418506a7ac9a0",
+    "side": "Katerina Siniakova",
+    "usd": 1384
+   },
+   {
+    "wallet": "0x49e0265d1a3636870df298e2ef5e681e246e9af1",
+    "side": "Lanlana Tararudee",
+    "usd": 910
+   },
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Katerina Siniakova",
+    "usd": 631,
+    "avgPrice": 0.65
+   },
+   {
+    "wallet": "0xddb993dbaee76440dbb42408a1925e38b7aaedcd",
+    "side": "Katerina Siniakova",
+    "usd": 614
+   },
+   {
+    "wallet": "0x1f64aefec94b99491def6bc0adfa061ba3f23633",
+    "side": "Katerina Siniakova",
+    "usd": 399
+   },
+   {
+    "wallet": "0x04641b57f332c15ecaa497799c55026d521967da",
+    "side": "Katerina Siniakova",
+    "usd": 352
+   },
+   {
+    "wallet": "0xfb07f48542d2b655e9d0bf1cc92a8a6feee8e2cc",
+    "side": "Lanlana Tararudee",
+    "usd": 335
+   },
+   {
+    "wallet": "0x21f333307ac6d2e65ac82f014b3dd2b64cbc35e3",
+    "side": "Lanlana Tararudee",
+    "usd": 286
+   },
+   {
+    "wallet": "0x7547479d43f4b52d892a6f2254050eea50edd158",
+    "side": "Lanlana Tararudee",
+    "usd": 201
+   },
+   {
+    "wallet": "0xdc4f58a48ed4467743609fdce11eea483c759804",
+    "side": "Katerina Siniakova",
+    "usd": 198
+   },
+   {
+    "wallet": "0x332e652e3b86434a9feead1ea1e18c67dc9ddf71",
+    "side": "Lanlana Tararudee",
+    "usd": 194
+   },
+   {
+    "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
+    "side": "Katerina Siniakova",
+    "usd": 156
+   },
+   {
+    "wallet": "0xfb571cef51fdd251152bceb666cd4857cf4f6719",
+    "side": "Katerina Siniakova",
+    "usd": 151
+   },
+   {
+    "wallet": "0x5b6331e7ff0831a3fe2ed12004747db1a9c911a4",
+    "side": "Katerina Siniakova",
+    "usd": 151
+   },
+   {
+    "wallet": "0x56280cd4cf8f902b3971338ddb04038e9dbfabbc",
+    "side": "Katerina Siniakova",
+    "usd": 133
+   },
+   {
+    "wallet": "0xc9c36d3afb757d75fd54feafab1b1f04419d079f",
+    "side": "Katerina Siniakova",
+    "usd": 127
+   },
+   {
+    "wallet": "0x200ffb575b936d297fcf39076ddf2b476ae07a96",
+    "side": "Lanlana Tararudee",
+    "usd": 109
+   },
+   {
+    "wallet": "0xd619b68e64f256f8ddd185b261c8679eacf0c461",
+    "side": "Lanlana Tararudee",
+    "usd": 98
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Katerina Siniakova",
+    "usd": 95
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Katerina Siniakova",
+    "usd": 84,
+    "avgPrice": 0.6451
+   },
+   {
+    "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
+    "side": "Lanlana Tararudee",
+    "usd": 83
+   },
+   {
+    "wallet": "0x1e3a86ef98030e7e0519e127d8178e9b45389e14",
+    "side": "Lanlana Tararudee",
+    "usd": 81
+   },
+   {
+    "wallet": "0x489d3df3601288940f89d56b5642b0951129f6e3",
+    "side": "Katerina Siniakova",
+    "usd": 66
+   },
+   {
+    "wallet": "0x49b68438ae7db43a03d7ddaaceaef5581ac7d152",
+    "side": "Katerina Siniakova",
+    "usd": 56
+   },
+   {
+    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
+    "side": "Lanlana Tararudee",
+    "usd": 50
+   },
+   {
+    "wallet": "0x419b3250256df94e1dbb2f11b981821272296ea1",
+    "side": "Lanlana Tararudee",
+    "usd": 49
+   },
+   {
+    "wallet": "0x5e020e19bc4cc2cd24ab9b406604ee9df02ab178",
+    "side": "Lanlana Tararudee",
+    "usd": 49
+   },
+   {
+    "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
+    "side": "Katerina Siniakova",
+    "usd": 31
+   },
+   {
+    "wallet": "0x042d8526350dd13dc836201e6acfbab5981f0b81",
+    "side": "Lanlana Tararudee",
+    "usd": 27
+   },
+   {
+    "wallet": "0x84ad9c5c547a82ec9a08547b94bd922446e5bfb7",
+    "side": "Katerina Siniakova",
+    "usd": 25
+   },
+   {
+    "wallet": "0x3ca9089f59d506a6773a4d68227a1ac97806424a",
+    "side": "Katerina Siniakova",
+    "usd": 23
+   },
+   {
+    "wallet": "0xb4b513bc48279ad795eefedf204aef3936ec1bd4",
+    "side": "Katerina Siniakova",
+    "usd": 20
+   },
+   {
+    "wallet": "0x147c2760baa011fdcd0d02ea0f610ffb0fd92540",
+    "side": "Katerina Siniakova",
+    "usd": 17
+   },
+   {
+    "wallet": "0x35e701f088b6ef25fff6b902769c1cd8b85f8331",
+    "side": "Lanlana Tararudee",
+    "usd": 17
+   },
+   {
+    "wallet": "0x6891589732cf8beaaf424b117d5c5c20919f6bb9",
+    "side": "Lanlana Tararudee",
+    "usd": 17
+   },
+   {
+    "wallet": "0x5c5454940c679b99513a67bf08af752b2011f1d2",
+    "side": "Katerina Siniakova",
+    "usd": 13
+   },
+   {
+    "wallet": "0x341d4f882c093e978ce8174147bace7d47402995",
+    "side": "Katerina Siniakova",
+    "usd": 10
+   },
+   {
+    "wallet": "0x8b8992eb0d7dc4ef87f5efb45154de4787c598d6",
+    "side": "Lanlana Tararudee",
+    "usd": 10
+   },
+   {
+    "wallet": "0xf9706baa6dd084f1f0c3b88602a543d0c313f7f6",
+    "side": "Lanlana Tararudee",
+    "usd": 9
+   },
+   {
+    "wallet": "0x2db8f5b0fc0ebc26e309321843492a1a62a9e042",
+    "side": "Lanlana Tararudee",
+    "usd": 8
+   }
+  ],
+  "hoursToKickoff": 2.87,
+  "capturedAt": "2026-10-28T02:07:37.270549+00:00",
+  "koTs": "2026-10-28T05:00:00+00:00",
+  "cond": "0xe7736f070cd62ed0d2d656552a77f1ad303492e742011a0cab869db5d1e4a5d8",
+  "frage": "Guangzhou Open: Katerina Siniakova vs Lanlana Tararudee",
+  "tokens": {
+   "Katerina Siniakova": "17372387140695023253234119215856879381471110022762558374041659102836339857501",
+   "Lanlana Tararudee": "15509251832371625451373321183559852096228723403408679576198403794191427878397"
+  }
  }
 }
