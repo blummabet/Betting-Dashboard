@@ -1,7 +1,7 @@
 {
-"generatedAt": "2026-10-28T04:18:31.811790+00:00",
-"count": 4,
-"covered": 4,
+"generatedAt": "2026-10-28T04:33:17.074868+00:00",
+"count": 5,
+"covered": 5,
 "leaguesKuratiert": [
 "soccer_argentina_primera_division",
 "soccer_austria_bundesliga",
@@ -62,8 +62,8 @@
 "ausgelassen": 0
 },
 "oddsKontingent": {
-"used": 905190,
-"remaining": 4094810,
+"used": 905808,
+"remaining": 4094192,
 "letzterFehler": null,
 "netzFehler": 0,
 "letzterNetzfehler": null
@@ -83,7 +83,7 @@
 "moneySharePct": 84,
 "moneyOdd": 1.38,
 "moneyDir": "flat",
-"totVol": 158740,
+"totVol": 159325,
 "pinnOdd": 1.35,
 "softOdd": 1.33,
 "softN": 50,
@@ -104,9 +104,9 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.1228,
-"draw": 0.1688,
-"away": 0.7084,
+"home": 0.1227,
+"draw": 0.1687,
+"away": 0.7085,
 "fav": "away",
 "n": 50
 },
@@ -133,9 +133,9 @@
 "moneySide": "home",
 "moneyName": "AC Milan",
 "moneySharePct": 81,
-"moneyOdd": 1.77,
-"moneyDir": "flat",
-"totVol": 104392,
+"moneyOdd": 1.76,
+"moneyDir": "in",
+"totVol": 104734,
 "pinnOdd": 1.72,
 "softOdd": 1.69,
 "softN": 50,
@@ -156,9 +156,9 @@
 "fav": "home"
 },
 "soft": {
-"home": 0.5596,
-"draw": 0.2465,
-"away": 0.1939,
+"home": 0.5595,
+"draw": 0.2464,
+"away": 0.1941,
 "fav": "home",
 "n": 50
 },
@@ -185,9 +185,9 @@
 "moneySide": "draw",
 "moneyName": "The Draw",
 "moneySharePct": 47,
-"moneyOdd": 3.15,
-"moneyDir": "flat",
-"totVol": 83888,
+"moneyOdd": 3.2,
+"moneyDir": "out",
+"totVol": 85977,
 "pinnOdd": 3.14,
 "softOdd": 3.1,
 "softN": 50,
@@ -208,9 +208,9 @@
 "fav": "away"
 },
 "soft": {
-"home": 0.3369,
-"draw": 0.3053,
-"away": 0.3579,
+"home": 0.3378,
+"draw": 0.3047,
+"away": 0.3574,
 "fav": "away",
 "n": 50
 },
@@ -237,9 +237,9 @@
 "moneySide": "away",
 "moneyName": "Napoli",
 "moneySharePct": 72,
-"moneyOdd": 1.8,
-"moneyDir": "in",
-"totVol": 62118,
+"moneyOdd": 1.82,
+"moneyDir": "out",
+"totVol": 62499,
 "pinnOdd": 1.77,
 "softOdd": 1.75,
 "softN": 50,
@@ -261,8 +261,8 @@
 },
 "soft": {
 "home": 0.218,
-"draw": 0.2413,
-"away": 0.5407,
+"draw": 0.2412,
+"away": 0.5408,
 "fav": "away",
 "n": 50
 },
@@ -277,6 +277,52 @@
 "verdict": "konsens",
 "agree": true,
 "pinnTotals": null
+},
+{
+"matchId": "36221216",
+"home": "Genoa",
+"away": "Juventus",
+"league": "Italian Serie A",
+"country": "IT",
+"kickoff": "2026-10-28T19:45:00Z",
+"live": false,
+"moneySide": "away",
+"moneyName": "Juventus",
+"moneySharePct": 61,
+"moneyOdd": 1.76,
+"moneyDir": "out",
+"totVol": 21402,
+"pinnOdd": 1.71,
+"softOdd": 1.67,
+"softN": 50,
+"poly": {
+"vol": 7388,
+"odd": 1.74,
+"sharePct": 57,
+"shareSrc": "preis",
+"key": "sea-gen-juv-2026-10-28",
+"sideKey": "Juventus FC",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.1805,
+"draw": 0.2557,
+"away": 0.5638,
+"fav": "away"
+},
+"soft": {
+"home": 0.1803,
+"draw": 0.2564,
+"away": 0.5633,
+"fav": "away",
+"n": 50
+},
+"pinnMovePP": null,
+"pinnMove": null,
+"verdict": "konsens",
+"agree": true,
+"pinnTotals": null
 }
 ],
 "ankerN": 29,
@@ -288,6 +334,16 @@
 "zeit": 5
 },
 "beispiele": [
+{
+"spiel": "South United v Bengaluru United",
+"kandidat": "Drogheda United v Galway United",
+"key": "soccer_league_of_ireland",
+"score": 1.0,
+"grund": "zeit",
+"abstandH": 57.2,
+"matchId": "36246144",
+"liga": "Bangalore Super Division League"
+},
 {
 "spiel": "Al Jazira v Al-Muharraq",
 "kandidat": "Al-Khaleej v Al-Hazem",
@@ -327,16 +383,6 @@
 "abstandH": 24.1,
 "matchId": "36246031",
 "liga": "Kuwaiti Premier League"
-},
-{
-"spiel": "South United v Bengaluru United",
-"kandidat": "Drogheda United v Galway United",
-"key": "soccer_league_of_ireland",
-"score": 1.0,
-"grund": "zeit",
-"abstandH": 57.2,
-"matchId": "36246144",
-"liga": "Bangalore Super Division League"
 }
 ]
 }
