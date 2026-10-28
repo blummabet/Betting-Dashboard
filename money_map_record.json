@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-10-28T20:50:34.912643+00:00",
+"generatedAt": "2026-10-28T21:05:20.806216+00:00",
 "byVerdict": {
 "uneinig": {
-"n": 33,
-"wins": 11,
-"hitRate": 0.3333,
-"polyN": 32,
+"n": 34,
+"wins": 12,
+"hitRate": 0.3529,
+"polyN": 33,
 "polyWins": 10,
-"polyHitRate": 0.3125,
-"pinnN": 22,
-"pinnHitRate": 0.2727,
-"nRoi": 33,
-"roi": -0.0482,
-"roiLb": -0.4457,
-"nClv": 33,
-"clv": -0.29,
-"clvLb": -1.0212
+"polyHitRate": 0.303,
+"pinnN": 23,
+"pinnHitRate": 0.2609,
+"nRoi": 34,
+"roi": 0.0268,
+"roiLb": -0.3781,
+"nClv": 34,
+"clv": -0.28,
+"clvLb": -0.9909
 },
 "konsens": {
-"n": 562,
+"n": 563,
 "wins": 329,
-"hitRate": 0.5854,
-"polyN": 549,
+"hitRate": 0.5844,
+"polyN": 550,
 "polyWins": 314,
-"polyHitRate": 0.5719,
-"pinnN": 502,
-"pinnHitRate": 0.5876,
-"nRoi": 562,
-"roi": 0.0576,
-"roiLb": -0.0082,
-"nClv": 562,
+"polyHitRate": 0.5709,
+"pinnN": 503,
+"pinnHitRate": 0.5865,
+"nRoi": 563,
+"roi": 0.0557,
+"roiLb": -0.01,
+"nClv": 563,
 "clv": 0.06,
-"clvLb": -0.1198
+"clvLb": -0.1232
 },
 "teil": {
 "n": 1,
@@ -111,15 +111,15 @@
 "wins": 12,
 "hitRate": 0.5714
 },
+"Italian Serie B": {
+"n": 17,
+"wins": 7,
+"hitRate": 0.4118
+},
 "English Sky Bet League 1": {
 "n": 16,
 "wins": 8,
 "hitRate": 0.5
-},
-"Italian Serie B": {
-"n": 16,
-"wins": 6,
-"hitRate": 0.375
 },
 "German Bundesliga 2": {
 "n": 15,
@@ -136,17 +136,17 @@
 "wins": 6,
 "hitRate": 0.6
 },
+"Swedish Allsvenskan": {
+"n": 10,
+"wins": 5,
+"hitRate": 0.5
+},
 "Turkish Super League": {
 "n": 10,
 "wins": 4,
 "hitRate": 0.4
 },
 "Portuguese Primeira Liga": {
-"n": 9,
-"wins": 5,
-"hitRate": 0.5556
-},
-"Swedish Allsvenskan": {
 "n": 9,
 "wins": 5,
 "hitRate": 0.5556
@@ -405,26 +405,64 @@
 "clvLb": -0.0859
 },
 "weak": {
-"n": 177,
-"wins": 88,
+"n": 179,
+"wins": 89,
 "hitRate": 0.4972,
-"nRoi": 177,
-"roi": 0.1317,
-"roiLb": -0.0145,
-"nClv": 177,
-"clv": -0.18,
-"clvLb": -0.4435
+"nRoi": 179,
+"roi": 0.1386,
+"roiLb": -0.008,
+"nClv": 179,
+"clv": -0.19,
+"clvLb": -0.45
 }
 },
 "divergence": {
-"n": 33,
-"betfairWins": 11,
-"betfairRate": 0.3333,
-"polyN": 32,
+"n": 34,
+"betfairWins": 12,
+"betfairRate": 0.3529,
+"polyN": 33,
 "polyWins": 10,
-"polyRate": 0.3125
+"polyRate": 0.303
 },
 "recent": [
+{
+"matchId": "36239202",
+"home": "Pisa",
+"away": "Palermo",
+"league": "Italian Serie B",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+3,
+3
+],
+"kickoff": "2026-10-28T18:00:00Z",
+"settledAt": "2026-10-28T21:05:20.576694+00:00"
+},
+{
+"matchId": "36245138",
+"home": "IFK Goteborg",
+"away": "Djurgardens",
+"league": "Swedish Allsvenskan",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Djurgardens",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-10-28T18:00:00Z",
+"settledAt": "2026-10-28T21:05:20.576694+00:00"
+},
 {
 "matchId": "36221211",
 "home": "Venezia",
@@ -1146,57 +1184,19 @@
 ],
 "kickoff": "2026-10-25T13:00:00Z",
 "settledAt": "2026-10-27T17:04:42.232034+00:00"
-},
-{
-"matchId": "36177333",
-"home": "Crystal Palace",
-"away": "Newcastle",
-"league": "English Premier League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Newcastle",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-2
-],
-"kickoff": "2026-10-25T14:00:00Z",
-"settledAt": "2026-10-27T17:04:42.232034+00:00"
-},
-{
-"matchId": "36209507",
-"home": "Genoa",
-"away": "Venezia",
-"league": "Italian Serie A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Genoa",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-10-25T14:00:00Z",
-"settledAt": "2026-10-27T17:04:42.232034+00:00"
 }
 ],
 "global": {
-"n": 596,
-"wins": 340,
-"hitRate": 0.5705,
-"nRoi": 596,
-"roi": 0.0499,
-"roiLb": -0.0158,
-"nClv": 596,
+"n": 598,
+"wins": 341,
+"hitRate": 0.5702,
+"nRoi": 598,
+"roi": 0.0523,
+"roiLb": -0.0137,
+"nClv": 598,
 "clv": 0.04,
-"clvLb": -0.1329
+"clvLb": -0.1358
 },
 "pending": 26,
-"ausgeschlossenLive": 1378
+"ausgeschlossenLive": 1376
 }
