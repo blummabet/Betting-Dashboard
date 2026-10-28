@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-28T17:10:02.650219+00:00",
+ "updatedAt": "2026-10-28T17:39:31.907279+00:00",
  "stake": 10.0,
  "expired": 0,
  "condDrift": 0,
@@ -310,7 +310,7 @@
    "entryPrice": 0.565,
    "firstTs": "2026-10-28T14:36:17.701375+00:00",
    "lastPrice": 0.575,
-   "lastTs": "2026-10-28T17:10:02.650219+00:00",
+   "lastTs": "2026-10-28T17:39:31.907279+00:00",
    "htkAtEntry": 2.8951558333333334,
    "public": false,
    "ohneWallet": false,
@@ -341,7 +341,7 @@
    "entryPrice": 0.715,
    "firstTs": "2026-10-28T14:36:17.701375+00:00",
    "lastPrice": 0.715,
-   "lastTs": "2026-10-28T17:10:02.650219+00:00",
+   "lastTs": "2026-10-28T17:39:31.907279+00:00",
    "htkAtEntry": 2.8951563888888887,
    "public": false,
    "ohneWallet": false,
@@ -370,7 +370,7 @@
    "entryPrice": 0.705,
    "firstTs": "2026-10-28T16:08:19.130263+00:00",
    "lastPrice": 0.685,
-   "lastTs": "2026-10-28T17:10:02.650219+00:00",
+   "lastTs": "2026-10-28T17:39:31.907279+00:00",
    "htkAtEntry": 0.8614405555555555,
    "public": false,
    "ohneWallet": true,
@@ -402,7 +402,7 @@
    "entryPrice": 0.575,
    "firstTs": "2026-10-28T16:38:41.467333+00:00",
    "lastPrice": 0.575,
-   "lastTs": "2026-10-28T17:10:02.650219+00:00",
+   "lastTs": "2026-10-28T17:39:31.907279+00:00",
    "htkAtEntry": 0.3552286111111111,
    "public": false,
    "ohneWallet": false,
@@ -429,8 +429,8 @@
    "cat": "Fußball",
    "entryPrice": 0.565,
    "firstTs": "2026-10-28T17:10:02.650219+00:00",
-   "lastPrice": 0.565,
-   "lastTs": "2026-10-28T17:10:02.650219+00:00",
+   "lastPrice": 0.575,
+   "lastTs": "2026-10-28T17:39:31.907279+00:00",
    "htkAtEntry": 2.5826941666666667,
    "public": false,
    "ohneWallet": false,
@@ -447,7 +447,9 @@
    "stake": 10.0,
    "ev": "2026-09-01",
    "movePreEntryPP": 1.0,
-   "clvGrund": "schluss_vor_einstieg"
+   "closeRef": 0.575,
+   "closeRefTs": "2026-10-28T17:39:23.768801+00:00",
+   "closeQuelle": "close"
   },
   "sea-gen-juv-2026-10-28|Juventus FC": {
    "key": "sea-gen-juv-2026-10-28",
@@ -459,7 +461,7 @@
    "entryPrice": 0.535,
    "firstTs": "2026-10-28T17:10:02.650219+00:00",
    "lastPrice": 0.535,
-   "lastTs": "2026-10-28T17:10:02.650219+00:00",
+   "lastTs": "2026-10-28T17:39:31.907279+00:00",
    "htkAtEntry": 2.5826944444444444,
    "public": false,
    "ohneWallet": false,
@@ -476,7 +478,9 @@
    "stake": 10.0,
    "ev": "2026-09-01",
    "movePreEntryPP": -1.0,
-   "clvGrund": "schluss_vor_einstieg"
+   "closeRef": 0.535,
+   "closeRefTs": "2026-10-28T17:39:23.768801+00:00",
+   "closeQuelle": "close"
   },
   "atp-hurkacz-rune-2026-10-28|Hubert Hurkacz": {
    "key": "atp-hurkacz-rune-2026-10-28",
@@ -488,7 +492,7 @@
    "entryPrice": 0.615,
    "firstTs": "2026-10-28T17:10:02.650219+00:00",
    "lastPrice": 0.615,
-   "lastTs": "2026-10-28T17:10:02.650219+00:00",
+   "lastTs": "2026-10-28T17:39:31.907279+00:00",
    "htkAtEntry": 1.4993663888888888,
    "public": false,
    "ohneWallet": false,
@@ -505,6 +509,33 @@
    "movePreEntryPP": -3.0,
    "cond": "0xc0b3f6cbcde9f86b75751b8252edef81aeb9d686c5afd531a8faa35c43b701d8",
    "frage": "Swiss Indoors Basel: Hubert Hurkacz vs Holger Rune",
+   "clvGrund": "schluss_vor_einstieg"
+  },
+  "swe-bro-hac-2026-10-28|BK Hacken": {
+   "key": "swe-bro-hac-2026-10-28",
+   "side": "BK Hacken",
+   "verdict": "BET",
+   "conv": 6,
+   "league": "SOCCER",
+   "cat": "Fußball",
+   "entryPrice": 0.585,
+   "firstTs": "2026-10-28T17:39:31.907279+00:00",
+   "lastPrice": 0.585,
+   "lastTs": "2026-10-28T17:39:31.907279+00:00",
+   "htkAtEntry": 0.3412297222222222,
+   "public": false,
+   "ohneWallet": false,
+   "reasons": [
+    "großes Geld auf BK Hacken (99%) → $46K",
+    "🔥 scharfe Wallet (63/96, 66% · 30 T Sport +$4.1K)"
+   ],
+   "signals": [
+    "money",
+    "sharp"
+   ],
+   "stake": 10.0,
+   "ev": "2026-09-01",
+   "movePreEntryPP": -5.0,
    "clvGrund": "schluss_vor_einstieg"
   }
  },
