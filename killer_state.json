@@ -51,7 +51,7 @@
    "polySide": "AC Milan",
    "pinnMovePP": -1.1,
    "punkte": {
-    "punkte": 9,
+    "punkte": 8,
     "moeglich": 10,
     "dauerH": 19.45,
     "teile": [
@@ -59,24 +59,24 @@
       "buch": "BF",
       "name": "Betfair",
       "status": "ja",
-      "punkte": 3,
+      "punkte": 2,
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 81% auf der Seite"
+       "text": "Geld 80% auf der Seite"
       },
       "tiefe": {
-       "ok": true,
+       "ok": false,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.806,
-       "betrag": 222266,
-       "gesamt": 275764,
+       "anteil": 0.8,
+       "betrag": 226166,
+       "gesamt": 282708,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 81% auf der Seite"
+      "text": "Geld 80% auf der Seite"
      },
      {
       "buch": "POLY",
@@ -94,8 +94,8 @@
       },
       "geld": {
        "anteil": 0.96,
-       "betrag": 222775,
-       "gesamt": 232057,
+       "betrag": 224757,
+       "gesamt": 234122,
        "waehrung": "USD",
        "quelle": "geld"
       },
@@ -113,7 +113,7 @@
       },
       "tiefe": {
        "ok": false,
-       "text": "kein Move gemessen"
+       "text": "Move -1.2pp in unsere Richtung"
       },
       "geld": null,
       "text": "hat dieselbe Seite als Favorit"
@@ -220,9 +220,9 @@
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.816,
-       "betrag": 311064,
-       "gesamt": 381206,
+       "anteil": 0.817,
+       "betrag": 317574,
+       "gesamt": 388708,
        "waehrung": "EUR",
        "quelle": "geld"
       },
@@ -244,8 +244,8 @@
       },
       "geld": {
        "anteil": 0.99,
-       "betrag": 339283,
-       "gesamt": 342710,
+       "betrag": 339927,
+       "gesamt": 343361,
        "waehrung": "USD",
        "quelle": "geld"
       },
@@ -309,11 +309,16 @@
    "markt": "Match Odds",
    "seite": "away",
    "name": "Napoli",
-   "odd": 1.82,
+   "odd": 1.79,
    "entryOdd": 1.81,
    "anteilPct": 72,
-   "stufe": 2,
+   "stufe": 1,
    "verstaerker": [
+    {
+     "art": "poly",
+     "text": "Poly Geld 94%",
+     "gewicht": 12
+    },
     {
      "art": "pinn",
      "text": "Pinnacle stimmt zu",
@@ -330,7 +335,7 @@
      "gewicht": 8
     }
    ],
-   "rang": 85.2,
+   "rang": 97.3,
    "track": {
     "n": 33,
     "roi": 0.3973,
@@ -346,13 +351,17 @@
     "quote": 67,
     "liga": "Serie A"
    },
-   "poly": null,
+   "poly": {
+    "anteilPct": 94,
+    "usd": 29830,
+    "odd": 1.8
+   },
    "polyStatus": "nein",
    "polyKey": "sea-mon-nap-2026-10-28",
    "polySide": "SSC Napoli",
    "pinnMovePP": -0.0,
    "punkte": {
-    "punkte": 8,
+    "punkte": 9,
     "moeglich": 10,
     "dauerH": 18.95,
     "teile": [
@@ -360,20 +369,20 @@
       "buch": "BF",
       "name": "Betfair",
       "status": "ja",
-      "punkte": 2,
+      "punkte": 3,
       "moeglich": 3,
       "grund": {
        "ok": true,
        "text": "Geld 73% auf der Seite"
       },
       "tiefe": {
-       "ok": false,
+       "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.729,
-       "betrag": 99879,
-       "gesamt": 137008,
+       "anteil": 0.73,
+       "betrag": 103267,
+       "gesamt": 141461,
        "waehrung": "EUR",
        "quelle": "geld"
       },
@@ -387,20 +396,20 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Poly-Geld 95% auf derselben Seite"
+       "text": "Poly-Geld 94% auf derselben Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "1 bewiesene Wallet drauf"
       },
       "geld": {
-       "anteil": 0.95,
-       "betrag": 27867,
-       "gesamt": 29334,
+       "anteil": 0.94,
+       "betrag": 28040,
+       "gesamt": 29830,
        "waehrung": "USD",
        "quelle": "geld"
       },
-      "text": "Poly-Geld 95% auf derselben Seite"
+      "text": "Poly-Geld 94% auf derselben Seite"
      },
      {
       "buch": "PIN",
@@ -447,9 +456,9 @@
    },
    "wertVsPinn": -0.0143,
    "gehaltenSeit": "2026-10-28T00:47:57.838353+00:00",
-   "zuletztAktiv": "2026-10-28T12:19:24.146548+00:00",
+   "zuletztAktiv": "2026-10-28T15:20:03.145348+00:00",
    "haltePreis": 1.8,
-   "aktiv": false
+   "aktiv": true
   },
   "36085134|Match Odds": {
    "matchId": "36085134",
@@ -460,7 +469,7 @@
    "markt": "Match Odds",
    "seite": "home",
    "name": "Man City",
-   "odd": 1.87,
+   "odd": 1.67,
    "entryOdd": 1.89,
    "anteilPct": 77,
    "stufe": 2,
@@ -469,9 +478,14 @@
      "art": "pinn",
      "text": "Pinnacle stimmt zu",
      "gewicht": 10
+    },
+    {
+     "art": "pinnMove",
+     "text": "Pinnacle zieht mit +3.2pp",
+     "gewicht": 14
     }
    ],
-   "rang": 67.7,
+   "rang": 82.0,
    "track": null,
    "streak": null,
    "poly": null,
@@ -480,7 +494,7 @@
    "polySide": "Manchester City FC",
    "pinnMovePP": 0.2,
    "punkte": {
-    "punkte": 5,
+    "punkte": 7,
     "moeglich": 10,
     "dauerH": 5.17,
     "teile": [
@@ -488,24 +502,24 @@
       "buch": "BF",
       "name": "Betfair",
       "status": "ja",
-      "punkte": 2,
+      "punkte": 3,
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 79% auf der Seite"
+       "text": "Geld 80% auf der Seite"
       },
       "tiefe": {
-       "ok": false,
+       "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.791,
-       "betrag": 74424,
-       "gesamt": 94088,
+       "anteil": 0.805,
+       "betrag": 179674,
+       "gesamt": 223197,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 79% auf der Seite"
+      "text": "Geld 80% auf der Seite"
      },
      {
       "buch": "POLY",
@@ -524,7 +538,7 @@
       "geld": {
        "anteil": 0.58,
        "betrag": null,
-       "gesamt": 3807,
+       "gesamt": 3816,
        "waehrung": "USD",
        "quelle": "preis"
       },
@@ -534,15 +548,15 @@
       "buch": "PIN",
       "name": "Pinnacle",
       "status": "ja",
-      "punkte": 2,
+      "punkte": 3,
       "moeglich": 3,
       "grund": {
        "ok": true,
        "text": "hat dieselbe Seite als Favorit"
       },
       "tiefe": {
-       "ok": false,
-       "text": "kein Move gemessen"
+       "ok": true,
+       "text": "Move +3.2pp in unsere Richtung"
       },
       "geld": null,
       "text": "hat dieselbe Seite als Favorit"
@@ -575,7 +589,7 @@
    },
    "wertVsPinn": -0.0037,
    "gehaltenSeit": "2026-10-28T14:19:53.029618+00:00",
-   "zuletztAktiv": "2026-10-28T14:49:43.228265+00:00",
+   "zuletztAktiv": "2026-10-28T15:20:03.145348+00:00",
    "haltePreis": 1.87,
    "aktiv": true
   },
@@ -614,20 +628,20 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 86% auf der Seite"
+       "text": "Geld 87% auf der Seite"
       },
       "tiefe": {
        "ok": false,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.863,
-       "betrag": 4343,
-       "gesamt": 5032,
+       "anteil": 0.869,
+       "betrag": 4602,
+       "gesamt": 5296,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 86% auf der Seite"
+      "text": "Geld 87% auf der Seite"
      },
      {
       "buch": "POLY",
@@ -692,7 +706,7 @@
    "markt": "Match Odds",
    "seite": "home",
    "name": "Panathinaikos",
-   "odd": 1.57,
+   "odd": 1.5,
    "entryOdd": 1.76,
    "anteilPct": 95,
    "stufe": 2,
@@ -735,9 +749,9 @@
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.953,
-       "betrag": 25867,
-       "gesamt": 27143,
+       "anteil": 0.951,
+       "betrag": 29115,
+       "gesamt": 30615,
        "waehrung": "EUR",
        "quelle": "geld"
       },
@@ -805,7 +819,7 @@
    },
    "wertVsPinn": null,
    "gehaltenSeit": "2026-10-28T14:49:43.228265+00:00",
-   "zuletztAktiv": "2026-10-28T15:05:03.433787+00:00",
+   "zuletztAktiv": "2026-10-28T15:20:03.145348+00:00",
    "haltePreis": 1.69,
    "aktiv": true
   },
@@ -818,7 +832,7 @@
    "markt": "Match Odds",
    "seite": "away",
    "name": "Djurgardens",
-   "odd": 2.04,
+   "odd": 1.99,
    "entryOdd": 2.04,
    "anteilPct": 86,
    "stufe": 2,
@@ -850,20 +864,20 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 86% auf der Seite"
+       "text": "Geld 85% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
       "geld": {
-       "anteil": 0.858,
-       "betrag": 4915,
-       "gesamt": 5728,
+       "anteil": 0.854,
+       "betrag": 11464,
+       "gesamt": 13424,
        "waehrung": "EUR",
        "quelle": "geld"
       },
-      "text": "Geld 86% auf der Seite"
+      "text": "Geld 85% auf der Seite"
      },
      {
       "buch": "POLY",
@@ -933,7 +947,7 @@
    },
    "wertVsPinn": null,
    "gehaltenSeit": "2026-10-28T15:05:03.433787+00:00",
-   "zuletztAktiv": "2026-10-28T15:05:03.433787+00:00",
+   "zuletztAktiv": "2026-10-28T15:20:03.145348+00:00",
    "haltePreis": 2.04,
    "aktiv": true
   }
