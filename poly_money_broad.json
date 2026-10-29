@@ -1,26 +1,26 @@
 {
- "n": 702,
+ "n": 703,
  "minOdds": 1.35,
  "moneyHitRate": 0.415,
- "priceHitRate": 0.43,
- "brierMoney": 0.819,
+ "priceHitRate": 0.431,
+ "brierMoney": 0.817,
  "brierPrice": 0.67,
  "disagree": {
-  "n": 172,
-  "moneyWon": 32,
-  "priceWon": 43,
-  "neither": 97
+  "n": 178,
+  "moneyWon": 33,
+  "priceWon": 44,
+  "neither": 101
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
  "byLeague": [
   {
    "league": "SEA",
-   "n": 52,
-   "moneyHitRate": 0.481,
-   "brierMoney": 0.7025,
-   "brierPrice": 0.6793,
-   "verdict": "preis_besser"
+   "n": 51,
+   "moneyHitRate": 0.49,
+   "brierMoney": 0.6856,
+   "brierPrice": 0.6775,
+   "verdict": "gleichauf"
   },
   {
    "league": "LA-LIGA",
@@ -128,7 +128,7 @@
   }
  ],
  "guete": {
-  "belastbar": 702,
+  "belastbar": 703,
   "preis_echo": 461,
   "abgeschnitten": 140,
   "unbekannt": 0,
@@ -424,6 +424,18 @@
    "totalUsd": 614922
   },
   {
+   "key": "efl-bor-ast-2026-10-28",
+   "league": "EFL",
+   "winner": "AFC Bournemouth",
+   "moneyFav": "AFC Bournemouth",
+   "priceFav": "AFC Bournemouth",
+   "moneyShare": 0.875,
+   "priceProb": 0.457,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 590739
+  },
+  {
    "key": "lal-rea-vil-2026-10-10",
    "league": "LA-LIGA",
    "winner": "Real Madrid CF",
@@ -548,7 +560,7 @@
    "league": "EPL",
    "winner": "Draw (Sunderland AFC vs. Leeds United FC)",
    "moneyFav": "Leeds United FC",
-   "priceFav": "Sunderland AFC",
+   "priceFav": "Leeds United FC",
    "moneyShare": 0.654,
    "priceProb": 0.347,
    "moneyOK": false,
@@ -602,21 +614,9 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 406430
-  },
-  {
-   "key": "por-aro-ama-2026-10-11",
-   "league": "PRIMEIRA-LIGA",
-   "winner": "FC Arouca",
-   "moneyFav": "FC Arouca",
-   "priceFav": "FC Arouca",
-   "moneyShare": 0.974,
-   "priceProb": 0.453,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 399480
   }
  ],
- "generatedAt": "2026-10-29T00:10:55.143136+00:00",
+ "generatedAt": "2026-10-29T00:38:19.243906+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -627,7 +627,7 @@
   "mls": 775,
   "epl": 604,
   "soccer": 800,
-  "tennis": 726,
+  "tennis": 718,
   "ucl": 544,
   "la-liga": 590,
   "bundesliga": 541,
@@ -639,11 +639,11 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 710,
+  "esports": 709,
   "cs2": 424,
   "lol": 438,
   "dota": 29,
-  "valorant": 442,
+  "valorant": 443,
   "ufc": 457,
   "mma": 62,
   "boxing": 325,
@@ -677,7 +677,7 @@
   "liga-mx-apertura": 2,
   "ligue-2": 494,
   "naitons-league": 1,
-  "national-league": 465,
+  "national-league": 464,
   "nations-league": 25,
   "norway-eliteserien": 487,
   "peru-liga-1": 179,
@@ -686,7 +686,7 @@
   "romania-superliga": 179,
   "saudi-professional-league": 482,
   "scotland-league-cup": 198,
-  "scottish-premiership": 470,
+  "scottish-premiership": 468,
   "serbian-superliga": 405,
   "serie-b": 501,
   "slovenia-prvaliga": 370,
@@ -698,14 +698,14 @@
   "uefa-nations-league": 419,
   "uefa-womens-champions-league": 2,
   "ukraine-premier-liha": 477,
-  "womens-champions-league": 459
+  "womens-champions-league": 457
  },
  "rawBySeries": {
   "10188": 570,
   "10193": 570,
   "10194": 526,
   "10195": 553,
-  "10203": 597
+  "10203": 596
  },
  "sweepStats": {
   "sweepOpen": 500,
@@ -722,63 +722,63 @@
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1728,
-   "usd": 50612119,
+   "n": 1418,
+   "usd": 49327381,
    "beispiel": "fifwc-irq-nor-2026-06-16-more-markets"
   },
   "wnba": {
-   "n": 365,
-   "usd": 2292095,
+   "n": 221,
+   "usd": 1820940,
    "beispiel": "wnba-conn-dal-2026-08-02"
   },
-  "presidential": {
-   "n": 25,
-   "usd": 1754044,
-   "beispiel": "presidential-election-winner-2028"
-  },
   "world": {
-   "n": 88,
-   "usd": 1751629,
+   "n": 71,
+   "usd": 1580319,
    "beispiel": "world-cup-3rd-place-finish-20260713190252671"
   },
   "balance": {
    "n": 16,
-   "usd": 1457493,
+   "usd": 1457494,
    "beispiel": "balance-of-power-2026-midterms"
+  },
+  "presidential": {
+   "n": 25,
+   "usd": 1154076,
+   "beispiel": "presidential-election-winner-2028"
   },
   "republican": {
    "n": 13,
-   "usd": 1051132,
+   "usd": 1051015,
    "beispiel": "republican-presidential-nominee-2028"
-  },
-  "ecs": {
-   "n": 7,
-   "usd": 1007626,
-   "beispiel": "ecs-ars-mci-2026-08-16"
   },
   "which": {
    "n": 44,
-   "usd": 812174,
+   "usd": 1009575,
    "beispiel": "which-crypto-company-will-zachxbt-expose-for-insider-trading"
   },
+  "ecs": {
+   "n": 4,
+   "usd": 996991,
+   "beispiel": "ecs-ars-mci-2026-08-16"
+  },
   "cbb": {
-   "n": 79,
-   "usd": 500880,
+   "n": 119,
+   "usd": 705414,
    "beispiel": "cbb-uconn-mich-2026-04-06"
   },
-  "2026": {
-   "n": 44,
-   "usd": 365373,
-   "beispiel": "2026-nba-champion"
-  },
   "usc": {
-   "n": 6,
-   "usd": 351013,
+   "n": 5,
+   "usd": 343320,
    "beispiel": "usc-psg-av-2026-08-12"
+  },
+  "who": {
+   "n": 15,
+   "usd": 340007,
+   "beispiel": "who-will-be-the-next-prime-minister-of-israel-after-the-next-election"
   },
   "pro": {
    "n": 49,
-   "usd": 333782,
+   "usd": 333838,
    "beispiel": "pro-football-2027-champion-20260729185915366"
   },
   "super": {
@@ -786,40 +786,40 @@
    "usd": 333266,
    "beispiel": "super-bowl-champion-2026-731"
   },
-  "who": {
-   "n": 14,
-   "usd": 329391,
-   "beispiel": "who-will-be-the-next-prime-minister-of-israel-after-the-next-election"
-  },
   "fed": {
-   "n": 16,
-   "usd": 291780,
+   "n": 19,
+   "usd": 312038,
    "beispiel": "fed-decision-in-october-20260617190323537"
   },
   "uefa": {
-   "n": 15,
-   "usd": 264130,
+   "n": 14,
+   "usd": 262098,
    "beispiel": "uefa-champions-league-2027-champion-20260701202025549"
   },
   "us": {
    "n": 25,
-   "usd": 241273,
+   "usd": 241276,
    "beispiel": "us-x-iran-ceasefire-by"
   },
   "worlds": {
-   "n": 15,
-   "usd": 224973,
+   "n": 16,
+   "usd": 240788,
    "beispiel": "worlds-2026-winner"
   },
+  "nbasl": {
+   "n": 7,
+   "usd": 227619,
+   "beispiel": "nbasl-bos-cha-2026-07-12"
+  },
   "ballon": {
-   "n": 8,
-   "usd": 224059,
+   "n": 9,
+   "usd": 226191,
    "beispiel": "ballon-dor-winner-2026"
   },
-  "ncaa": {
-   "n": 19,
-   "usd": 201098,
-   "beispiel": "ncaa-football-2026-heisman-award-winner-20260731185656435"
+  "2026": {
+   "n": 37,
+   "usd": 200047,
+   "beispiel": "2026-nba-champion"
   }
  }
 }
