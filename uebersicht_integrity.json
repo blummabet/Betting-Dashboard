@@ -38,7 +38,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "Fall liegt aktuell vor: ABWÄGEN · gepusht, Konjunktion · Top-5 + MLS, Italian Serie A · Over/Under 2.5 Goals nehmen die ROI-Huerde und scheitern an CLV — der Satz auf Ebene 1 muss das sagen"
+      "hinweis": "Fall liegt aktuell vor: ABWÄGEN · gepusht, Italian Serie A · Over/Under 2.5 Goals, German 3 Liga · Over/Under 3.5 Goals nehmen die ROI-Huerde und scheitern an CLV — der Satz auf Ebene 1 muss das sagen"
     },
     {
       "label": "Poly-Kachel gibt sich nicht als Kanal-Bilanz aus",
@@ -201,11 +201,11 @@
       "label": "Fade-Unter: haelt die Kontrollgruppe?",
       "severity": "error",
       "failures": [
-        "Match Odds H: der Fade gewinnt hier BELEGT (+8.3 %, UG +2.3 %, Geldseite +1.7 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
+        "Match Odds H: der Fade gewinnt hier BELEGT (+8.5 %, UG +2.5 %, Geldseite +1.5 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
       ],
       "nFail": 1,
       "ok": false,
-      "hinweis": "seit Vorregistrierung n=6498 (UG -6.0 %) · Rueckblick n=0, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=6496 (UG -6.1 %) · Rueckblick n=0, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -259,8 +259,8 @@
       "label": "Positionswert ist frisch",
       "severity": "warn",
       "failures": [
-        "liga_poly_balance.json: Positionswert $14.81 stammt aus einem Lauf vor 97 h — die Datei selbst ist 97 h alt — der Produzent laeuft nicht, das ist kein API-Problem",
-        "mls_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 87 h — die Datei selbst ist 87 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
+        "liga_poly_balance.json: Positionswert $14.81 stammt aus einem Lauf vor 111 h — die Datei selbst ist 111 h alt — der Produzent laeuft nicht, das ist kein API-Problem",
+        "mls_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 100 h — die Datei selbst ist 100 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
       ],
       "nFail": 2,
       "ok": false,
@@ -280,7 +280,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "941 Zeilen · 927 abgerechnet · 5 offen"
+      "hinweis": "944 Zeilen · 935 abgerechnet · 0 offen"
     },
     {
       "label": "Artefakte sind lesbar",
@@ -327,22 +327,24 @@
     {
       "label": "Datenbau ist nicht stehengeblieben",
       "severity": "error",
-      "failures": [],
-      "nFail": 0,
-      "ok": true,
+      "failures": [
+        "liga-data.json: der Datenbau hat zuletzt vor 22 h geschrieben — entweder ist der Cron ausgefallen oder ein anderer Workflow hat einen aelteren Stand darueber committet"
+      ],
+      "nFail": 1,
+      "ok": false,
       "hinweis": ""
     },
     {
       "label": "Serien-Buch zeigt beide Buecher",
       "severity": "warn",
       "failures": [
-        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 382.5 h, MLS 390.1 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 396.2 h, MLS 403.9 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
       ],
       "nFail": 1,
       "ok": false,
       "hinweis": "Liga n=95 · MLS n=82 · Urteil beide 'Erwartung zu duenn'"
     }
   ],
-  "nFail": 10,
-  "generatedAt": "2026-10-28T23:15:27.707664+00:00"
+  "nFail": 11,
+  "generatedAt": "2026-10-29T12:58:08.597965+00:00"
 }
