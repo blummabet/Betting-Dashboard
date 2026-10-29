@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-10-29T15:01:05Z",
-    "total_records": 285,
+    "updated_at": "2026-10-29T22:50:14Z",
+    "total_records": 289,
     "oddsBackfilled": "2026-09-06 — Quote/entryOdd aus den Pick-Dateien nachgetragen; der Ledger trug sie nie (0 von 318)."
   },
   "records": [
@@ -12725,7 +12725,7 @@
           "score": 2.05
         }
       ],
-      "resolvedAt": "2026-10-29T15:01:05Z",
+      "resolvedAt": "2026-10-29T22:50:14Z",
       "source": "steam",
       "convictionScore": 5,
       "lateEntry": true,
@@ -13624,6 +13624,191 @@
       "processVerdict": "JUSTIFIED",
       "clvFairPP": -1.66,
       "clvBasis": "fair"
+    },
+    {
+      "key": "ITA-9-502-499|Beide Teams treffen — Ja",
+      "matchKey": "ITA-9-502-499",
+      "market": "Beide Teams treffen — Ja",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 1.0
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 0.8
+        }
+      ],
+      "resolvedAt": "2026-10-29T22:50:10Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 1.92,
+      "clvResolved": true,
+      "odds": 1.5,
+      "entryOdd": 1.5,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED",
+      "clvBasis": "roh"
+    },
+    {
+      "key": "ITA-9-502-499|Über 2.5 Tore",
+      "matchKey": "ITA-9-502-499",
+      "market": "Über 2.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "lead_lag_bias",
+          "score": 6.0
+        },
+        {
+          "name": "injury",
+          "score": 2.25
+        },
+        {
+          "name": "form_trend",
+          "score": 2.26
+        },
+        {
+          "name": "xg_strength",
+          "score": 3.71
+        },
+        {
+          "name": "chance_creation",
+          "score": 4.99
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": 0.65
+        },
+        {
+          "name": "streak_momentum",
+          "score": 0.08
+        },
+        {
+          "name": "betfair_money",
+          "score": 2.05
+        }
+      ],
+      "resolvedAt": "2026-10-29T22:50:10Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 2.0,
+      "clvResolved": true,
+      "odds": 1.58,
+      "entryOdd": 1.58,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED",
+      "clvFairPP": 5.04,
+      "clvBasis": "fair"
+    },
+    {
+      "key": "ITA-9-512-867|Heimsieg",
+      "matchKey": "ITA-9-512-867",
+      "market": "Heimsieg",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "injury",
+          "score": 2.0
+        },
+        {
+          "name": "form_trend",
+          "score": 2.17
+        },
+        {
+          "name": "h2h_pattern",
+          "score": -1.0
+        },
+        {
+          "name": "chance_creation",
+          "score": 4.23
+        },
+        {
+          "name": "form_rating",
+          "score": -1.79
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": 1.2
+        },
+        {
+          "name": "transfer_shift",
+          "score": 0.48
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        },
+        {
+          "name": "betfair_money",
+          "score": 3.8
+        }
+      ],
+      "resolvedAt": "2026-10-29T22:50:10Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -2.8,
+      "clvResolved": true,
+      "odds": 1.65,
+      "entryOdd": 1.65,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED",
+      "clvFairPP": -0.9,
+      "clvBasis": "fair"
+    },
+    {
+      "key": "ITA-9-512-867|Über 2.5 Tore",
+      "matchKey": "ITA-9-512-867",
+      "market": "Über 2.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "injury",
+          "score": -7.25
+        },
+        {
+          "name": "form_trend",
+          "score": 1.87
+        },
+        {
+          "name": "h2h_pattern",
+          "score": -0.67
+        },
+        {
+          "name": "xg_strength",
+          "score": 4.16
+        },
+        {
+          "name": "chance_creation",
+          "score": 4.72
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": 0.42
+        },
+        {
+          "name": "betfair_money",
+          "score": 3.32
+        }
+      ],
+      "resolvedAt": "2026-10-29T22:50:10Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 0.0,
+      "clvResolved": false,
+      "odds": 1.39,
+      "entryOdd": 1.39,
+      "entryBook": "soft",
+      "processVerdict": "JUSTIFIED"
     },
     {
       "key": "ITA-9-523-494|Doppelte Chance — 1X",
