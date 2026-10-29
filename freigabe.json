@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-29T13:52:30.518862+00:00",
+ "generatedAt": "2026-10-29T14:07:50.789483+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -630,12 +630,12 @@
   {
    "schublade": "Match Odds",
    "strom": "betfair",
-   "n": 6464,
+   "n": 6465,
    "status": "kandidat",
    "grund": "ROI belegt (Untergrenze +0.5 %) — aber von 388 gleichzeitig geprüften Schubladen legt der Zufall allein 19.4 über diese Hürde, und drüber liegen 22. Freigabe erst nach Bestätigung nach vorn.",
-   "roi": 0.03,
-   "pl": 193.92,
-   "roiLb": 0.005,
+   "roi": 0.0298,
+   "pl": 192.66,
+   "roiLb": 0.0048,
    "clv": 0.43,
    "clvLb": null,
    "clvUrteil": "gemessen, nicht belegt",
@@ -658,7 +658,7 @@
    "seitKandidat": {
     "ab": "2026-10-18T01:30:25.357275+00:00",
     "nBei": 6337,
-    "nNeu": 127
+    "nNeu": 128
    }
   },
   {
@@ -883,8 +883,8 @@
    "gruppen": 7,
    "basis": null,
    "n": 40000,
-   "pl": -8.44,
-   "roi": -0.0002,
+   "pl": -10.22,
+   "roi": -0.0003,
    "clv": 0.43,
    "belegte": 21
   }
@@ -3988,18 +3988,6 @@
    "belegt": false
   },
   {
-   "liga": "CAF African Nations Champ' Qualifiers",
-   "n": 90,
-   "wins": 44,
-   "hit": 0.4889,
-   "hitLb": 0.4038,
-   "roi": -0.1628,
-   "roiLb": -0.3359,
-   "pl": -14.65,
-   "clv": 0.536,
-   "belegt": false
-  },
-  {
    "liga": "UEFA Women's Champions League",
    "n": 94,
    "wins": 46,
@@ -4081,6 +4069,18 @@
    "roiLb": -0.346,
    "pl": -11.16,
    "clv": -0.076,
+   "belegt": false
+  },
+  {
+   "liga": "CAF African Nations Champ' Qualifiers",
+   "n": 85,
+   "wins": 41,
+   "hit": 0.4824,
+   "hitLb": 0.3951,
+   "roi": -0.1661,
+   "roiLb": -0.3466,
+   "pl": -14.12,
+   "clv": 0.564,
    "belegt": false
   },
   {
@@ -5180,12 +5180,12 @@
   {
    "schublade": "Match Odds",
    "strom": "betfair",
-   "n": 6464,
+   "n": 6465,
    "status": "kandidat",
    "grund": "ROI belegt (Untergrenze +0.5 %) — aber von 388 gleichzeitig geprüften Schubladen legt der Zufall allein 19.4 über diese Hürde, und drüber liegen 22. Freigabe erst nach Bestätigung nach vorn.",
-   "roi": 0.03,
-   "pl": 193.92,
-   "roiLb": 0.005,
+   "roi": 0.0298,
+   "pl": 192.66,
+   "roiLb": 0.0048,
    "clv": 0.43,
    "clvLb": null,
    "clvUrteil": "gemessen, nicht belegt",
@@ -5208,7 +5208,7 @@
    "seitKandidat": {
     "ab": "2026-10-18T01:30:25.357275+00:00",
     "nBei": 6337,
-    "nNeu": 127
+    "nNeu": 128
    }
   },
   {
@@ -5415,7 +5415,7 @@
     "nieAnteil": 0.072,
     "schaetzbar": false
    },
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "konjunktion_gehalten",
    "quelle": "killer_ledger.json"
   },
@@ -5516,7 +5516,7 @@
     "nieAnteil": 0.14,
     "schaetzbar": false
    },
-   "alterTage": 0.4,
+   "alterTage": 0.5,
    "art": "vorangemeldet",
    "angemeldet": "2026-09-07T08:15:48.444033+00:00",
    "zielN": 120,
@@ -5559,9 +5559,9 @@
    "n": 6096,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0022,
-   "pl": 13.41,
-   "roiLb": -0.0187,
+   "roi": 0.002,
+   "pl": 12.19,
+   "roiLb": -0.0189,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5762,9 +5762,9 @@
    "n": 6231,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0095,
-   "pl": -59.19,
-   "roiLb": -0.03,
+   "roi": -0.0092,
+   "pl": -57.33,
+   "roiLb": -0.0297,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5802,7 +5802,7 @@
     "nieAnteil": 0.068,
     "schaetzbar": false
    },
-   "alterTage": 0.4,
+   "alterTage": 0.5,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "top5"
@@ -5810,12 +5810,12 @@
   {
    "schublade": "Both teams to Score?",
    "strom": "betfair",
-   "n": 5823,
+   "n": 5822,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0105,
-   "pl": -61.14,
-   "roiLb": -0.0326,
+   "roi": -0.0107,
+   "pl": -62.3,
+   "roiLb": -0.0328,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -6136,9 +6136,9 @@
    "n": 6493,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.035,
-   "pl": -227.53,
-   "roiLb": -0.0625,
+   "roi": -0.0346,
+   "pl": -224.35,
+   "roiLb": -0.062,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -6148,10 +6148,10 @@
    "noetigNClv": null,
    "noetigGrund": "nicht_positiv",
    "entfernung": {
-    "median": 173403,
-    "lo": 34768,
-    "hi": 359839,
-    "nieAnteil": 0.983,
+    "median": 269312,
+    "lo": 9980,
+    "hi": 2314825,
+    "nieAnteil": 0.977,
     "schaetzbar": false
    },
    "alterTage": 0.0,
@@ -6524,7 +6524,7 @@
     "nieAnteil": 0.427,
     "schaetzbar": false
    },
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "rest"
@@ -7822,7 +7822,7 @@
     "nieAnteil": 0.783,
     "schaetzbar": false
    },
-   "alterTage": 0.3,
+   "alterTage": 0.4,
    "art": "vorangemeldet",
    "angemeldet": "2026-09-01T20:41:52.601081+00:00",
    "zielN": 40,
@@ -13700,7 +13700,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 0.4,
+   "alterTage": 0.5,
    "art": "conviction",
    "wert": 3
   },
@@ -13744,7 +13744,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 9.6,
+   "alterTage": 9.7,
    "art": "mix",
    "wert": "bf+steam"
   },
