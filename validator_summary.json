@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-10-29T17:03:43.530192+00:00",
-  "checked": 103,
+  "timestamp": "2026-10-29T23:04:27.064241+00:00",
+  "checked": 101,
   "errors": 0,
-  "warnings": 71,
-  "infos": 316,
+  "warnings": 70,
+  "infos": 308,
   "issues": [
     {
       "date": "30.10.2026",
@@ -183,7 +183,7 @@
       "league": "Österreich BL",
       "severity": "INFO",
       "code": "TEAM_OVER_HOME_LOW_FV",
-      "msg": "Wolfsberger AC expH≈0.85 (statischer Proxy) → FV über 1.5 = 20.9%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger."
+      "msg": "Wolfsberger AC expH≈1.00 (statischer Proxy) → FV über 1.5 = 26.4%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger."
     },
     {
       "date": "01.11.2026",
@@ -1212,15 +1212,6 @@
       "msg": "Liga-Baserate=3.4 → Poisson FV für Über 4.5 Karten = 25.6%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis."
     },
     {
-      "date": "01.11.2026",
-      "home": "Athletic Club",
-      "away": "Real Sociedad",
-      "league": "La Liga",
-      "severity": "INFO",
-      "code": "TEAM_OVER_HOME_LOW_FV",
-      "msg": "Athletic Club expH≈1.20 (statischer Proxy) → FV über 1.5 = 33.7%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger."
-    },
-    {
       "date": "30.10.2026",
       "home": "Nice",
       "away": "Rennes",
@@ -2090,89 +2081,8 @@
       "away": "Nyiregyhaza",
       "league": "NB I",
       "severity": "INFO",
-      "code": "TEAM_OVER_HOME_LOW_FV",
-      "msg": "Ujpest expH≈1.35 (statischer Proxy) → FV über 1.5 = 39.1%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger."
-    },
-    {
-      "date": "01.11.2026",
-      "home": "Ujpest",
-      "away": "Nyiregyhaza",
-      "league": "NB I",
-      "severity": "INFO",
       "code": "TEAM_OVER_AWAY_LOW_FV",
-      "msg": "Nyiregyhaza expA≈1.05 (statischer Proxy) → FV über 1.5 = 28.3%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger."
-    },
-    {
-      "date": "29.10.2026",
-      "home": "Frosinone",
-      "away": "Lecce",
-      "league": "Serie A",
-      "severity": "INFO",
-      "code": "CARDS35_LOW_FV",
-      "msg": "Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen."
-    },
-    {
-      "date": "29.10.2026",
-      "home": "Frosinone",
-      "away": "Lecce",
-      "league": "Serie A",
-      "severity": "INFO",
-      "code": "CARDS45_LOW_FV",
-      "msg": "Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis."
-    },
-    {
-      "date": "29.10.2026",
-      "home": "Frosinone",
-      "away": "Lecce",
-      "league": "Serie A",
-      "severity": "INFO",
-      "code": "OVER35_LOW_FV",
-      "msg": "Ø gpg=2.20 (statischer Proxy) → Poisson FV für Over 3.5 = 18.1%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy."
-    },
-    {
-      "date": "29.10.2026",
-      "home": "Fiorentina",
-      "away": "Atalanta",
-      "league": "Serie A",
-      "severity": "INFO",
-      "code": "CARDS35_LOW_FV",
-      "msg": "Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen."
-    },
-    {
-      "date": "29.10.2026",
-      "home": "Fiorentina",
-      "away": "Atalanta",
-      "league": "Serie A",
-      "severity": "INFO",
-      "code": "CARDS45_LOW_FV",
-      "msg": "Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis."
-    },
-    {
-      "date": "29.10.2026",
-      "home": "Fiorentina",
-      "away": "Atalanta",
-      "league": "Serie A",
-      "severity": "WARN",
-      "code": "H2H_HIGH_AVG_UNDER_RISK",
-      "msg": "H2H Schnitt=3.1 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug."
-    },
-    {
-      "date": "29.10.2026",
-      "home": "Fiorentina",
-      "away": "Atalanta",
-      "league": "Serie A",
-      "severity": "INFO",
-      "code": "LOW_SCORING_PROFILE",
-      "msg": "Ø gpg=1.80, H2H Ø=3.1 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt"
-    },
-    {
-      "date": "29.10.2026",
-      "home": "Fiorentina",
-      "away": "Atalanta",
-      "league": "Serie A",
-      "severity": "INFO",
-      "code": "OVER35_LOW_FV",
-      "msg": "Ø gpg=1.80 (statischer Proxy) → Poisson FV für Over 3.5 = 10.9%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy."
+      "msg": "Nyiregyhaza expA≈1.15 (statischer Proxy) → FV über 1.5 = 31.9%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger."
     },
     {
       "date": "31.10.2026",
@@ -2326,6 +2236,15 @@
       "severity": "WARN",
       "code": "H2H_DOMINATED_HIGH_SCORE",
       "msg": "Lazio dominiert H2H 16W/4X/0L in 20 Spielen. matchScore=7.5 — Pick-Richtung sollte klar sein, Angle-Text darf den Underdog nicht überbewerten."
+    },
+    {
+      "date": "01.11.2026",
+      "home": "Lazio",
+      "away": "Cagliari",
+      "league": "Serie A",
+      "severity": "INFO",
+      "code": "ASYMMETRIC_STAKE_SCORES",
+      "msg": "Score-Differenz 4.5 Punkte: Lazio (8.7) vs Cagliari (4.2). Pick-Richtung sehr klar — Favoritenpflicht prüfen."
     },
     {
       "date": "01.11.2026",

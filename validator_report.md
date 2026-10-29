@@ -1,11 +1,11 @@
-# 🟡 Picks Validator — 29.10.2026 17:03
+# 🟡 Picks Validator — 29.10.2026 23:04
 
-**103 Spiele geprüft** · 🔴 0 Fehler · 🟡 71 Warnungen · 🔵 316 Hinweise
+**101 Spiele geprüft** · 🔴 0 Fehler · 🟡 70 Warnungen · 🔵 308 Hinweise
 
 ```
 =================================================================
   🐕 CocoBet — Picks Logik-Check
-  29.10.2026 17:03
+  29.10.2026 23:04
   Filter: nächste 3 Tag(e)
 =================================================================
 
@@ -71,7 +71,7 @@
      H2H Schnitt=3.0 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
   🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
      📅 01.11.2026  Wolfsberger AC vs Sturm Graz
-     Wolfsberger AC expH≈0.85 (statischer Proxy) → FV über 1.5 = 20.9%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
+     Wolfsberger AC expH≈1.00 (statischer Proxy) → FV über 1.5 = 26.4%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 01.11.2026  Austria Vienna vs Rapid Vienna
      Liga-Baserate=3.7 → Poisson FV für Über 3.5 Karten = 50.6% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+5.0%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
@@ -430,9 +430,6 @@
   🔵 HINWEIS [CARDS45_LOW_FV]
      📅 01.11.2026  Athletic Club vs Real Sociedad
      Liga-Baserate=3.4 → Poisson FV für Über 4.5 Karten = 25.6%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
-     📅 01.11.2026  Athletic Club vs Real Sociedad
-     Athletic Club expH≈1.20 (statischer Proxy) → FV über 1.5 = 33.7%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
 
 ─────────────────────────────────────────────────────────────────
   🇫🇷 Ligue 1  (rl=26)
@@ -733,40 +730,13 @@
   🟡 WARNUNG [U25_H2H_HARD_BLOCK_MISS]
      📅 01.11.2026  Ujpest vs Nyiregyhaza
      H2H Schnitt=3.8 Tore (≥3.5) — HARD BLOCK sollte Under 2.5 komplett blocken. Python kann Picks nicht prüfen — JS-Inline-Validator zeigt ERROR falls Pick trotzdem erscheint.
-  🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
-     📅 01.11.2026  Ujpest vs Nyiregyhaza
-     Ujpest expH≈1.35 (statischer Proxy) → FV über 1.5 = 39.1%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🔵 HINWEIS [TEAM_OVER_AWAY_LOW_FV]
      📅 01.11.2026  Ujpest vs Nyiregyhaza
-     Nyiregyhaza expA≈1.05 (statischer Proxy) → FV über 1.5 = 28.3%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
+     Nyiregyhaza expA≈1.15 (statischer Proxy) → FV über 1.5 = 31.9%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
 
 ─────────────────────────────────────────────────────────────────
   🇮🇹 Serie A  (rl=29)
 ─────────────────────────────────────────────────────────────────
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 29.10.2026  Frosinone vs Lecce
-     Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 29.10.2026  Frosinone vs Lecce
-     Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🔵 HINWEIS [OVER35_LOW_FV]
-     📅 29.10.2026  Frosinone vs Lecce
-     Ø gpg=2.20 (statischer Proxy) → Poisson FV für Over 3.5 = 18.1%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 29.10.2026  Fiorentina vs Atalanta
-     Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 29.10.2026  Fiorentina vs Atalanta
-     Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
-     📅 29.10.2026  Fiorentina vs Atalanta
-     H2H Schnitt=3.1 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
-  🔵 HINWEIS [LOW_SCORING_PROFILE]
-     📅 29.10.2026  Fiorentina vs Atalanta
-     Ø gpg=1.80, H2H Ø=3.1 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt
-  🔵 HINWEIS [OVER35_LOW_FV]
-     📅 29.10.2026  Fiorentina vs Atalanta
-     Ø gpg=1.80 (statischer Proxy) → Poisson FV für Over 3.5 = 10.9%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
   🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
      📅 31.10.2026  Bologna vs Monza
      Monza: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
@@ -818,6 +788,9 @@
   🟡 WARNUNG [H2H_DOMINATED_HIGH_SCORE]
      📅 01.11.2026  Lazio vs Cagliari
      Lazio dominiert H2H 16W/4X/0L in 20 Spielen. matchScore=7.5 — Pick-Richtung sollte klar sein, Angle-Text darf den Underdog nicht überbewerten.
+  🔵 HINWEIS [ASYMMETRIC_STAKE_SCORES]
+     📅 01.11.2026  Lazio vs Cagliari
+     Score-Differenz 4.5 Punkte: Lazio (8.7) vs Cagliari (4.2). Pick-Richtung sehr klar — Favoritenpflicht prüfen.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 01.11.2026  Lazio vs Cagliari
      Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
@@ -1231,9 +1204,9 @@
      H2H Schnitt=3.6 Tore (≥3.5) — HARD BLOCK sollte Under 2.5 komplett blocken. Python kann Picks nicht prüfen — JS-Inline-Validator zeigt ERROR falls Pick trotzdem erscheint.
 
 ═════════════════════════════════════════════════════════════════
-  Geprüft: 103 Spiele
-  🟡 71 Warnungen — manuelle Prüfung empfohlen
-  🔵 316 Hinweise — Pick-Richtung kontrollieren
+  Geprüft: 101 Spiele
+  🟡 70 Warnungen — manuelle Prüfung empfohlen
+  🔵 308 Hinweise — Pick-Richtung kontrollieren
 ═════════════════════════════════════════════════════════════════
 
 ```
