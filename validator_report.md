@@ -1,11 +1,11 @@
-# 🟡 Picks Validator — 29.10.2026 09:07
+# 🟡 Picks Validator — 29.10.2026 17:03
 
 **103 Spiele geprüft** · 🔴 0 Fehler · 🟡 71 Warnungen · 🔵 316 Hinweise
 
 ```
 =================================================================
   🐕 CocoBet — Picks Logik-Check
-  29.10.2026 09:07
+  29.10.2026 17:03
   Filter: nächste 3 Tag(e)
 =================================================================
 
@@ -471,21 +471,6 @@
      📅 30.10.2026  Lille vs Lens
      Lille expH≈1.25 (statischer Proxy) → FV über 1.5 = 35.5%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
-     📅 31.10.2026  Lyon vs Angers
-     Angers: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 31.10.2026  Lyon vs Angers
-     Liga-Baserate=3.6 → Poisson FV für Über 3.5 Karten = 48.5% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+7.1%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 31.10.2026  Lyon vs Angers
-     Liga-Baserate=3.6 → Poisson FV für Über 4.5 Karten = 29.4%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
-     📅 31.10.2026  Lyon vs Angers
-     H2H Schnitt=3.0 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
-  🔵 HINWEIS [TEAM_OVER_AWAY_LOW_FV]
-     📅 31.10.2026  Lyon vs Angers
-     Angers expA≈1.35 (statischer Proxy) → FV über 1.5 = 39.1%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
-  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
      📅 31.10.2026  Lorient vs Stade Brestois 29
      Stade Brestois 29: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
   🔵 HINWEIS [CARDS35_LOW_FV]
@@ -539,6 +524,21 @@
   🔵 HINWEIS [OVER35_LOW_FV]
      📅 01.11.2026  Strasbourg vs Auxerre
      Ø gpg=1.70 (statischer Proxy) → Poisson FV für Over 3.5 = 9.3%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
+  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
+     📅 01.11.2026  Lyon vs Angers
+     Angers: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
+  🔵 HINWEIS [CARDS35_LOW_FV]
+     📅 01.11.2026  Lyon vs Angers
+     Liga-Baserate=3.6 → Poisson FV für Über 3.5 Karten = 48.5% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+7.1%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
+  🔵 HINWEIS [CARDS45_LOW_FV]
+     📅 01.11.2026  Lyon vs Angers
+     Liga-Baserate=3.6 → Poisson FV für Über 4.5 Karten = 29.4%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
+  🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
+     📅 01.11.2026  Lyon vs Angers
+     H2H Schnitt=3.0 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.
+  🔵 HINWEIS [TEAM_OVER_AWAY_LOW_FV]
+     📅 01.11.2026  Lyon vs Angers
+     Angers expA≈1.35 (statischer Proxy) → FV über 1.5 = 39.1%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🔵 HINWEIS [CARDS35_LOW_FV]
      📅 01.11.2026  Paris FC vs Monaco
      Liga-Baserate=3.6 → Poisson FV für Über 3.5 Karten = 48.5% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+7.1%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
