@@ -1,46 +1,10 @@
 {
-  "timestamp": "2026-10-30T16:53:28.296727+00:00",
-  "checked": 110,
+  "timestamp": "2026-10-30T22:33:52.929167+00:00",
+  "checked": 99,
   "errors": 0,
-  "warnings": 76,
-  "infos": 331,
+  "warnings": 64,
+  "infos": 298,
   "issues": [
-    {
-      "date": "30.10.2026",
-      "home": "Grazer AK",
-      "away": "TSV Hartberg",
-      "league": "Österreich BL",
-      "severity": "INFO",
-      "code": "CARDS35_LOW_FV",
-      "msg": "Liga-Baserate=3.7 → Poisson FV für Über 3.5 Karten = 50.6% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+5.0%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Grazer AK",
-      "away": "TSV Hartberg",
-      "league": "Österreich BL",
-      "severity": "INFO",
-      "code": "CARDS45_LOW_FV",
-      "msg": "Liga-Baserate=3.7 → Poisson FV für Über 4.5 Karten = 31.3%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Grazer AK",
-      "away": "TSV Hartberg",
-      "league": "Österreich BL",
-      "severity": "INFO",
-      "code": "LOW_SCORING_PROFILE",
-      "msg": "Ø gpg=1.50, H2H Ø=1.6 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt"
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Grazer AK",
-      "away": "TSV Hartberg",
-      "league": "Österreich BL",
-      "severity": "INFO",
-      "code": "OVER35_LOW_FV",
-      "msg": "Ø gpg=1.50 (statischer Proxy) → Poisson FV für Over 3.5 = 6.6%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy."
-    },
     {
       "date": "31.10.2026",
       "home": "SCR Altach",
@@ -211,78 +175,6 @@
       "severity": "INFO",
       "code": "TEAM_OVER_HOME_LOW_FV",
       "msg": "Austria Vienna expH≈1.15 (statischer Proxy) → FV über 1.5 = 31.9%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Zulte Waregem",
-      "away": "Club Brugge KV",
-      "league": "Jupiler Pro League",
-      "severity": "WARN",
-      "code": "H2H_DOMINATED_HIGH_SCORE",
-      "msg": "Club Brugge KV dominiert H2H 16W/2X/2L in 20 Spielen. matchScore=7.5 — Pick-Richtung sollte klar sein, Angle-Text darf den Underdog nicht überbewerten."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Zulte Waregem",
-      "away": "Club Brugge KV",
-      "league": "Jupiler Pro League",
-      "severity": "INFO",
-      "code": "H2H_DOM_GOLD_RED",
-      "msg": "Club Brugge KV dominiert H2H 16W/2X/2L in 20 Spielen. Gold vs Rot, aber H2H-Favorit klar — Angle sollte Pick-Richtung bestätigen, nicht dramatisieren."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Zulte Waregem",
-      "away": "Club Brugge KV",
-      "league": "Jupiler Pro League",
-      "severity": "WARN",
-      "code": "HOME_POOR_FORM_HIGH_SCORE",
-      "msg": "Zulte Waregem: formScore=0.17 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Zulte Waregem",
-      "away": "Club Brugge KV",
-      "league": "Jupiler Pro League",
-      "severity": "INFO",
-      "code": "LOW_MOTIV_CARDS_CHECK",
-      "msg": "Zulte Waregem: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Zulte Waregem",
-      "away": "Club Brugge KV",
-      "league": "Jupiler Pro League",
-      "severity": "INFO",
-      "code": "CARDS35_LOW_FV",
-      "msg": "Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Zulte Waregem",
-      "away": "Club Brugge KV",
-      "league": "Jupiler Pro League",
-      "severity": "INFO",
-      "code": "CARDS45_LOW_FV",
-      "msg": "Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Zulte Waregem",
-      "away": "Club Brugge KV",
-      "league": "Jupiler Pro League",
-      "severity": "WARN",
-      "code": "U25_H2H_HARD_BLOCK_MISS",
-      "msg": "H2H Schnitt=3.5 Tore (≥3.5) — HARD BLOCK sollte Under 2.5 komplett blocken. Python kann Picks nicht prüfen — JS-Inline-Validator zeigt ERROR falls Pick trotzdem erscheint."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Zulte Waregem",
-      "away": "Club Brugge KV",
-      "league": "Jupiler Pro League",
-      "severity": "INFO",
-      "code": "TEAM_OVER_HOME_LOW_FV",
-      "msg": "Zulte Waregem expH≈0.85 (statischer Proxy) → FV über 1.5 = 20.9%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger."
     },
     {
       "date": "31.10.2026",
@@ -517,33 +409,6 @@
       "severity": "INFO",
       "code": "TEAM_OVER_HOME_LOW_FV",
       "msg": "Charleroi expH≈1.15 (statischer Proxy) → FV über 1.5 = 31.9%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "NK Slaven Belupo",
-      "away": "Istra 1961",
-      "league": "HNL",
-      "severity": "INFO",
-      "code": "LOW_MOTIV_CARDS_CHECK",
-      "msg": "NK Slaven Belupo, Istra 1961: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "NK Slaven Belupo",
-      "away": "Istra 1961",
-      "league": "HNL",
-      "severity": "INFO",
-      "code": "CARDS35_LOW_FV",
-      "msg": "Liga-Baserate=3.5 → Poisson FV für Über 3.5 Karten = 46.3% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+9.3%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "NK Slaven Belupo",
-      "away": "Istra 1961",
-      "league": "HNL",
-      "severity": "INFO",
-      "code": "CARDS45_LOW_FV",
-      "msg": "Liga-Baserate=3.5 → Poisson FV für Über 4.5 Karten = 27.5%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis."
     },
     {
       "date": "31.10.2026",
@@ -924,42 +789,6 @@
       "msg": "Newcastle expH≈1.20 (statischer Proxy) → FV über 1.5 = 33.7%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger."
     },
     {
-      "date": "30.10.2026",
-      "home": "Villarreal",
-      "away": "Espanyol",
-      "league": "La Liga",
-      "severity": "INFO",
-      "code": "ASYMMETRIC_STAKE_SCORES",
-      "msg": "Score-Differenz 4.1 Punkte: Espanyol (8.6) vs Villarreal (4.5). Pick-Richtung sehr klar — Favoritenpflicht prüfen."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Villarreal",
-      "away": "Espanyol",
-      "league": "La Liga",
-      "severity": "INFO",
-      "code": "CARDS35_LOW_FV",
-      "msg": "Liga-Baserate=3.4 → Poisson FV für Über 3.5 Karten = 44.2% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+11.4%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Villarreal",
-      "away": "Espanyol",
-      "league": "La Liga",
-      "severity": "INFO",
-      "code": "CARDS45_LOW_FV",
-      "msg": "Liga-Baserate=3.4 → Poisson FV für Über 4.5 Karten = 25.6%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Villarreal",
-      "away": "Espanyol",
-      "league": "La Liga",
-      "severity": "INFO",
-      "code": "TEAM_OVER_AWAY_LOW_FV",
-      "msg": "Espanyol expA≈1.20 (statischer Proxy) → FV über 1.5 = 33.7%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger."
-    },
-    {
       "date": "31.10.2026",
       "home": "Levante",
       "away": "Atletico Madrid",
@@ -1248,105 +1077,6 @@
       "msg": "Liga-Baserate=3.4 → Poisson FV für Über 4.5 Karten = 25.6%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis."
     },
     {
-      "date": "30.10.2026",
-      "home": "Nice",
-      "away": "Rennes",
-      "league": "Ligue 1",
-      "severity": "INFO",
-      "code": "CARDS35_LOW_FV",
-      "msg": "Liga-Baserate=3.6 → Poisson FV für Über 3.5 Karten = 48.5% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+7.1%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Nice",
-      "away": "Rennes",
-      "league": "Ligue 1",
-      "severity": "INFO",
-      "code": "CARDS45_LOW_FV",
-      "msg": "Liga-Baserate=3.6 → Poisson FV für Über 4.5 Karten = 29.4%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Le Havre",
-      "away": "Paris Saint Germain",
-      "league": "Ligue 1",
-      "severity": "WARN",
-      "code": "H2H_DOMINATED_HIGH_SCORE",
-      "msg": "Paris Saint Germain dominiert H2H 7W/1X/0L in 8 Spielen. matchScore=7.5 — Pick-Richtung sollte klar sein, Angle-Text darf den Underdog nicht überbewerten."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Le Havre",
-      "away": "Paris Saint Germain",
-      "league": "Ligue 1",
-      "severity": "INFO",
-      "code": "H2H_DOM_GOLD_RED",
-      "msg": "Paris Saint Germain dominiert H2H 7W/1X/0L in 8 Spielen. Gold vs Rot, aber H2H-Favorit klar — Angle sollte Pick-Richtung bestätigen, nicht dramatisieren."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Le Havre",
-      "away": "Paris Saint Germain",
-      "league": "Ligue 1",
-      "severity": "WARN",
-      "code": "HOME_POOR_FORM_HIGH_SCORE",
-      "msg": "Le Havre: formScore=0.22 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Le Havre",
-      "away": "Paris Saint Germain",
-      "league": "Ligue 1",
-      "severity": "INFO",
-      "code": "CARDS35_LOW_FV",
-      "msg": "Liga-Baserate=3.6 → Poisson FV für Über 3.5 Karten = 48.5% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+7.1%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Le Havre",
-      "away": "Paris Saint Germain",
-      "league": "Ligue 1",
-      "severity": "INFO",
-      "code": "CARDS45_LOW_FV",
-      "msg": "Liga-Baserate=3.6 → Poisson FV für Über 4.5 Karten = 29.4%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Le Havre",
-      "away": "Paris Saint Germain",
-      "league": "Ligue 1",
-      "severity": "WARN",
-      "code": "U25_H2H_HARD_BLOCK_MISS",
-      "msg": "H2H Schnitt=3.9 Tore (≥3.5) — HARD BLOCK sollte Under 2.5 komplett blocken. Python kann Picks nicht prüfen — JS-Inline-Validator zeigt ERROR falls Pick trotzdem erscheint."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Lille",
-      "away": "Lens",
-      "league": "Ligue 1",
-      "severity": "INFO",
-      "code": "CARDS35_LOW_FV",
-      "msg": "Liga-Baserate=3.6 → Poisson FV für Über 3.5 Karten = 48.5% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+7.1%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Lille",
-      "away": "Lens",
-      "league": "Ligue 1",
-      "severity": "INFO",
-      "code": "CARDS45_LOW_FV",
-      "msg": "Liga-Baserate=3.6 → Poisson FV für Über 4.5 Karten = 29.4%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Lille",
-      "away": "Lens",
-      "league": "Ligue 1",
-      "severity": "INFO",
-      "code": "TEAM_OVER_HOME_LOW_FV",
-      "msg": "Lille expH≈1.25 (statischer Proxy) → FV über 1.5 = 35.5%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger."
-    },
-    {
       "date": "31.10.2026",
       "home": "Estac Troyes",
       "away": "Le Mans",
@@ -1633,33 +1363,6 @@
       "severity": "INFO",
       "code": "TEAM_OVER_AWAY_LOW_FV",
       "msg": "Stade Brestois 29 expA≈1.20 (statischer Proxy) → FV über 1.5 = 33.7%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "SV Elversberg",
-      "away": "FSV Mainz 05",
-      "league": "Bundesliga",
-      "severity": "WARN",
-      "code": "HOME_POOR_FORM_HIGH_SCORE",
-      "msg": "SV Elversberg: formScore=0.22 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "SV Elversberg",
-      "away": "FSV Mainz 05",
-      "league": "Bundesliga",
-      "severity": "INFO",
-      "code": "CARDS35_LOW_FV",
-      "msg": "Liga-Baserate=3.6 → Poisson FV für Über 3.5 Karten = 48.5% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+7.1%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "SV Elversberg",
-      "away": "FSV Mainz 05",
-      "league": "Bundesliga",
-      "severity": "INFO",
-      "code": "CARDS45_LOW_FV",
-      "msg": "Liga-Baserate=3.6 → Poisson FV für Über 4.5 Karten = 29.4%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis."
     },
     {
       "date": "31.10.2026",
@@ -2733,85 +2436,40 @@
       "msg": "Ø gpg=1.70 (statischer Proxy) → Poisson FV für Over 3.5 = 9.3%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy."
     },
     {
-      "date": "30.10.2026",
-      "home": "Cracovia Krakow",
-      "away": "Motor Lublin",
-      "league": "Ekstraklasa",
-      "severity": "WARN",
-      "code": "HOME_POOR_FORM_HIGH_SCORE",
-      "msg": "Cracovia Krakow: formScore=0.22 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Cracovia Krakow",
-      "away": "Motor Lublin",
-      "league": "Ekstraklasa",
-      "severity": "INFO",
-      "code": "LOW_MOTIV_CARDS_CHECK",
-      "msg": "Cracovia Krakow, Motor Lublin: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Cracovia Krakow",
-      "away": "Motor Lublin",
+      "date": "31.10.2026",
+      "home": "Wisla Plock",
+      "away": "Piast Gliwice",
       "league": "Ekstraklasa",
       "severity": "INFO",
       "code": "CARDS35_LOW_FV",
       "msg": "Liga-Baserate=3.6 → Poisson FV für Über 3.5 Karten = 48.5% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+7.1%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen."
     },
     {
-      "date": "30.10.2026",
-      "home": "Cracovia Krakow",
-      "away": "Motor Lublin",
+      "date": "31.10.2026",
+      "home": "Wisla Plock",
+      "away": "Piast Gliwice",
       "league": "Ekstraklasa",
       "severity": "INFO",
       "code": "CARDS45_LOW_FV",
       "msg": "Liga-Baserate=3.6 → Poisson FV für Über 4.5 Karten = 29.4%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis."
     },
     {
-      "date": "30.10.2026",
-      "home": "Cracovia Krakow",
-      "away": "Motor Lublin",
-      "league": "Ekstraklasa",
-      "severity": "WARN",
-      "code": "U25_H2H_HARD_BLOCK_MISS",
-      "msg": "H2H Schnitt=4.5 Tore (≥3.5) — HARD BLOCK sollte Under 2.5 komplett blocken. Python kann Picks nicht prüfen — JS-Inline-Validator zeigt ERROR falls Pick trotzdem erscheint."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Gornik Zabrze",
-      "away": "Legia Warszawa",
+      "date": "31.10.2026",
+      "home": "Wisla Plock",
+      "away": "Piast Gliwice",
       "league": "Ekstraklasa",
       "severity": "INFO",
-      "code": "CARDS35_LOW_FV",
-      "msg": "Liga-Baserate=3.6 → Poisson FV für Über 3.5 Karten = 48.5% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+7.1%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen."
+      "code": "LOW_SCORING_PROFILE",
+      "msg": "Ø gpg=1.30, H2H Ø=2.2 Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt"
     },
     {
-      "date": "30.10.2026",
-      "home": "Gornik Zabrze",
-      "away": "Legia Warszawa",
+      "date": "31.10.2026",
+      "home": "Wisla Plock",
+      "away": "Piast Gliwice",
       "league": "Ekstraklasa",
       "severity": "INFO",
-      "code": "CARDS45_LOW_FV",
-      "msg": "Liga-Baserate=3.6 → Poisson FV für Über 4.5 Karten = 29.4%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Gornik Zabrze",
-      "away": "Legia Warszawa",
-      "league": "Ekstraklasa",
-      "severity": "WARN",
-      "code": "U25_H2H_HARD_BLOCK_MISS",
-      "msg": "H2H Schnitt=3.6 Tore (≥3.5) — HARD BLOCK sollte Under 2.5 komplett blocken. Python kann Picks nicht prüfen — JS-Inline-Validator zeigt ERROR falls Pick trotzdem erscheint."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Gornik Zabrze",
-      "away": "Legia Warszawa",
-      "league": "Ekstraklasa",
-      "severity": "INFO",
-      "code": "TEAM_OVER_HOME_LOW_FV",
-      "msg": "Gornik Zabrze expH≈1.00 (statischer Proxy) → FV über 1.5 = 26.4%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger."
+      "code": "OVER35_LOW_FV",
+      "msg": "Ø gpg=1.30 (statischer Proxy) → Poisson FV für Over 3.5 = 4.3%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy."
     },
     {
       "date": "31.10.2026",
@@ -2856,7 +2514,7 @@
       "league": "Ekstraklasa",
       "severity": "INFO",
       "code": "ASYMMETRIC_STAKE_SCORES",
-      "msg": "Score-Differenz 4.7 Punkte: Lech Poznan (9.2) vs Wisla Krakow (4.5). Pick-Richtung sehr klar — Favoritenpflicht prüfen."
+      "msg": "Score-Differenz 4.6 Punkte: Lech Poznan (9.1) vs Wisla Krakow (4.5). Pick-Richtung sehr klar — Favoritenpflicht prüfen."
     },
     {
       "date": "31.10.2026",
@@ -2974,51 +2632,6 @@
       "severity": "INFO",
       "code": "TEAM_OVER_HOME_LOW_FV",
       "msg": "Raków Częstochowa expH≈1.30 (statischer Proxy) → FV über 1.5 = 37.3%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Casa Pia",
-      "away": "Sporting CP",
-      "league": "Primeira Liga",
-      "severity": "WARN",
-      "code": "H2H_DOMINATED_HIGH_SCORE",
-      "msg": "Sporting CP dominiert H2H 9W/0X/0L in 9 Spielen. matchScore=7.5 — Pick-Richtung sollte klar sein, Angle-Text darf den Underdog nicht überbewerten."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Casa Pia",
-      "away": "Sporting CP",
-      "league": "Primeira Liga",
-      "severity": "INFO",
-      "code": "LOW_MOTIV_CARDS_CHECK",
-      "msg": "Casa Pia: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Casa Pia",
-      "away": "Sporting CP",
-      "league": "Primeira Liga",
-      "severity": "INFO",
-      "code": "CARDS45_LOW_FV",
-      "msg": "Liga-Baserate=3.8 → Poisson FV für Über 4.5 Karten = 33.2%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Casa Pia",
-      "away": "Sporting CP",
-      "league": "Primeira Liga",
-      "severity": "WARN",
-      "code": "U25_H2H_HARD_BLOCK_MISS",
-      "msg": "H2H Schnitt=4.0 Tore (≥3.5) — HARD BLOCK sollte Under 2.5 komplett blocken. Python kann Picks nicht prüfen — JS-Inline-Validator zeigt ERROR falls Pick trotzdem erscheint."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Casa Pia",
-      "away": "Sporting CP",
-      "league": "Primeira Liga",
-      "severity": "INFO",
-      "code": "TEAM_OVER_HOME_LOW_FV",
-      "msg": "Casa Pia expH≈1.25 (statischer Proxy) → FV über 1.5 = 35.5%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger."
     },
     {
       "date": "31.10.2026",
@@ -3514,24 +3127,6 @@
       "severity": "WARN",
       "code": "H2H_HIGH_AVG_UNDER_RISK",
       "msg": "H2H Schnitt=3.4 Tore (3.0–3.5). Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Konyaspor",
-      "away": "Galatasaray",
-      "league": "Süper Lig",
-      "severity": "INFO",
-      "code": "LOW_MOTIV_CARDS_CHECK",
-      "msg": "Konyaspor: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen."
-    },
-    {
-      "date": "30.10.2026",
-      "home": "Konyaspor",
-      "away": "Galatasaray",
-      "league": "Süper Lig",
-      "severity": "INFO",
-      "code": "TEAM_OVER_HOME_LOW_FV",
-      "msg": "Konyaspor expH≈1.30 (statischer Proxy) → FV über 1.5 = 37.3%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger."
     },
     {
       "date": "31.10.2026",
