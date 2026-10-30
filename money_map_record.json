@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-10-30T20:56:06.129411+00:00",
+"generatedAt": "2026-10-30T21:10:52.415518+00:00",
 "byVerdict": {
 "uneinig": {
 "n": 35,
@@ -18,20 +18,20 @@
 "clvLb": -0.949
 },
 "konsens": {
-"n": 599,
-"wins": 349,
-"hitRate": 0.5826,
-"polyN": 583,
-"polyWins": 330,
-"polyHitRate": 0.566,
-"pinnN": 534,
-"pinnHitRate": 0.5824,
-"nRoi": 599,
-"roi": 0.0556,
-"roiLb": -0.0084,
-"nClv": 599,
-"clv": 0.08,
-"clvLb": -0.0886
+"n": 603,
+"wins": 351,
+"hitRate": 0.5821,
+"polyN": 587,
+"polyWins": 333,
+"polyHitRate": 0.5673,
+"pinnN": 538,
+"pinnHitRate": 0.5818,
+"nRoi": 603,
+"roi": 0.0533,
+"roiLb": -0.0104,
+"nClv": 603,
+"clv": 0.09,
+"clvLb": -0.0853
 },
 "teil": {
 "n": 1,
@@ -91,6 +91,11 @@
 "wins": 18,
 "hitRate": 0.6207
 },
+"French Ligue 1": {
+"n": 24,
+"wins": 15,
+"hitRate": 0.625
+},
 "German Bundesliga": {
 "n": 24,
 "wins": 13,
@@ -100,11 +105,6 @@
 "n": 23,
 "wins": 16,
 "hitRate": 0.6957
-},
-"French Ligue 1": {
-"n": 22,
-"wins": 14,
-"hitRate": 0.6364
 },
 "Spanish Segunda Division": {
 "n": 21,
@@ -176,6 +176,11 @@
 "wins": 5,
 "hitRate": 0.7143
 },
+"Saudi Professional League": {
+"n": 7,
+"wins": 3,
+"hitRate": 0.4286
+},
 "UEFA Nations League B": {
 "n": 7,
 "wins": 2,
@@ -187,11 +192,6 @@
 "hitRate": 0.5
 },
 "Dutch Eredivisie": {
-"n": 6,
-"wins": 3,
-"hitRate": 0.5
-},
-"Saudi Professional League": {
 "n": 6,
 "wins": 3,
 "hitRate": 0.5
@@ -241,6 +241,11 @@
 "wins": 5,
 "hitRate": 1.0
 },
+"Norwegian Eliteserien": {
+"n": 5,
+"wins": 4,
+"hitRate": 0.8
+},
 "Romanian Liga I": {
 "n": 5,
 "wins": 2,
@@ -265,11 +270,6 @@
 "n": 4,
 "wins": 0,
 "hitRate": 0.0
-},
-"Norwegian Eliteserien": {
-"n": 4,
-"wins": 3,
-"hitRate": 0.75
 },
 "UEFA Nations League": {
 "n": 4,
@@ -404,26 +404,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 446,
-"wins": 266,
-"hitRate": 0.5964,
-"nRoi": 446,
-"roi": 0.0069,
-"roiLb": -0.0612,
-"nClv": 446,
-"clv": 0.17,
-"clvLb": -0.0432
+"n": 449,
+"wins": 268,
+"hitRate": 0.5969,
+"nRoi": 449,
+"roi": 0.0065,
+"roiLb": -0.0613,
+"nClv": 449,
+"clv": 0.18,
+"clvLb": -0.0388
 },
 "weak": {
-"n": 189,
+"n": 190,
 "wins": 95,
-"hitRate": 0.5026,
-"nRoi": 189,
-"roi": 0.1542,
-"roiLb": 0.0111,
-"nClv": 189,
+"hitRate": 0.5,
+"nRoi": 190,
+"roi": 0.1481,
+"roiLb": 0.0054,
+"nClv": 190,
 "clv": -0.18,
-"clvLb": -0.4273
+"clvLb": -0.4264
 }
 },
 "divergence": {
@@ -435,6 +435,82 @@
 "polyRate": 0.3235
 },
 "recent": [
+{
+"matchId": "36211774",
+"home": "Le Havre",
+"away": "Paris St-G",
+"league": "French Ligue 1",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Paris St-G",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+5
+],
+"kickoff": "2026-10-30T18:00:00Z",
+"settledAt": "2026-10-30T21:10:52.235649+00:00"
+},
+{
+"matchId": "36211717",
+"home": "Nice",
+"away": "Rennes",
+"league": "French Ligue 1",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Rennes",
+"polySide": "home",
+"winner": "home",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+5,
+2
+],
+"kickoff": "2026-10-30T18:00:00Z",
+"settledAt": "2026-10-30T21:10:52.235649+00:00"
+},
+{
+"matchId": "36238454",
+"home": "Bodo Glimt",
+"away": "Viking",
+"league": "Norwegian Eliteserien",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Bodo Glimt",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+2
+],
+"kickoff": "2026-10-30T18:00:00Z",
+"settledAt": "2026-10-30T21:10:52.235649+00:00"
+},
+{
+"matchId": "36246141",
+"home": "Al-Shabab (KSA)",
+"away": "Al Ahli",
+"league": "Saudi Professional League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Al Ahli",
+"polySide": "away",
+"winner": "home",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+6,
+1
+],
+"kickoff": "2026-10-30T18:00:00Z",
+"settledAt": "2026-10-30T21:10:52.235649+00:00"
+},
 {
 "matchId": "36242179",
 "home": "Arminia Bielefeld",
@@ -1118,95 +1194,19 @@
 ],
 "kickoff": "2026-10-28T19:00:00Z",
 "settledAt": "2026-10-28T22:05:37.966868+00:00"
-},
-{
-"matchId": "36238490",
-"home": "Carrarese",
-"away": "Arezzo",
-"league": "Italian Serie B",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Carrarese",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-10-28T19:00:00Z",
-"settledAt": "2026-10-28T22:05:37.966868+00:00"
-},
-{
-"matchId": "36239202",
-"home": "Pisa",
-"away": "Palermo",
-"league": "Italian Serie B",
-"verdict": "uneinig",
-"moneySide": "draw",
-"moneyName": "The Draw",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-3,
-3
-],
-"kickoff": "2026-10-28T18:00:00Z",
-"settledAt": "2026-10-28T21:05:20.576694+00:00"
-},
-{
-"matchId": "36245138",
-"home": "IFK Goteborg",
-"away": "Djurgardens",
-"league": "Swedish Allsvenskan",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Djurgardens",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-10-28T18:00:00Z",
-"settledAt": "2026-10-28T21:05:20.576694+00:00"
-},
-{
-"matchId": "36221211",
-"home": "Venezia",
-"away": "Inter Milan",
-"league": "Italian Serie A",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Inter Milan",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-2
-],
-"kickoff": "2026-10-28T17:30:00Z",
-"settledAt": "2026-10-28T20:35:30.465636+00:00"
 }
 ],
 "global": {
-"n": 635,
-"wins": 361,
-"hitRate": 0.5685,
-"nRoi": 635,
-"roi": 0.0508,
-"roiLb": -0.0134,
-"nClv": 635,
+"n": 639,
+"wins": 363,
+"hitRate": 0.5681,
+"nRoi": 639,
+"roi": 0.0486,
+"roiLb": -0.0153,
+"nClv": 639,
 "clv": 0.07,
-"clvLb": -0.1013
+"clvLb": -0.0982
 },
-"pending": 42,
+"pending": 38,
 "ausgeschlossenLive": 1323
 }
