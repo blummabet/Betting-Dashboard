@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-10-30T21:55:55.627508+00:00",
+"generatedAt": "2026-10-30T22:10:58.353187+00:00",
 "byVerdict": {
 "uneinig": {
 "n": 35,
@@ -18,20 +18,20 @@
 "clvLb": -0.949
 },
 "konsens": {
-"n": 605,
+"n": 607,
 "wins": 352,
-"hitRate": 0.5818,
-"polyN": 589,
+"hitRate": 0.5799,
+"polyN": 591,
 "polyWins": 334,
-"polyHitRate": 0.5671,
-"pinnN": 539,
-"pinnHitRate": 0.5807,
-"nRoi": 605,
-"roi": 0.0519,
-"roiLb": -0.0117,
-"nClv": 605,
+"polyHitRate": 0.5651,
+"pinnN": 540,
+"pinnHitRate": 0.5796,
+"nRoi": 607,
+"roi": 0.0485,
+"roiLb": -0.015,
+"nClv": 607,
 "clv": 0.09,
-"clvLb": -0.0829
+"clvLb": -0.0867
 },
 "teil": {
 "n": 1,
@@ -156,6 +156,11 @@
 "wins": 5,
 "hitRate": 0.5556
 },
+"French Ligue 2": {
+"n": 8,
+"wins": 5,
+"hitRate": 0.625
+},
 "UEFA Nations League C": {
 "n": 8,
 "wins": 4,
@@ -167,11 +172,6 @@
 "hitRate": 0.5714
 },
 "English Football League Cup": {
-"n": 7,
-"wins": 5,
-"hitRate": 0.7143
-},
-"French Ligue 2": {
 "n": 7,
 "wins": 5,
 "hitRate": 0.7143
@@ -276,6 +276,11 @@
 "wins": 2,
 "hitRate": 0.5
 },
+"Dutch Eerste Divisie": {
+"n": 3,
+"wins": 1,
+"hitRate": 0.3333
+},
 "Finnish Veikkausliiga": {
 "n": 3,
 "wins": 0,
@@ -300,11 +305,6 @@
 "n": 2,
 "wins": 2,
 "hitRate": 1.0
-},
-"Dutch Eerste Divisie": {
-"n": 2,
-"wins": 1,
-"hitRate": 0.5
 },
 "Estonian Premier League": {
 "n": 2,
@@ -404,26 +404,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 451,
+"n": 452,
 "wins": 269,
-"hitRate": 0.5965,
-"nRoi": 451,
-"roi": 0.0048,
-"roiLb": -0.0628,
-"nClv": 451,
-"clv": 0.18,
-"clvLb": -0.0359
+"hitRate": 0.5951,
+"nRoi": 452,
+"roi": 0.0026,
+"roiLb": -0.065,
+"nClv": 452,
+"clv": 0.17,
+"clvLb": -0.0413
 },
 "weak": {
-"n": 190,
+"n": 191,
 "wins": 95,
-"hitRate": 0.5,
-"nRoi": 190,
-"roi": 0.1481,
-"roiLb": 0.0054,
-"nClv": 190,
+"hitRate": 0.4974,
+"nRoi": 191,
+"roi": 0.1421,
+"roiLb": -0.0002,
+"nClv": 191,
 "clv": -0.18,
-"clvLb": -0.4264
+"clvLb": -0.4241
 }
 },
 "divergence": {
@@ -435,6 +435,44 @@
 "polyRate": 0.3235
 },
 "recent": [
+{
+"matchId": "36230685",
+"home": "Metz",
+"away": "Pau",
+"league": "French Ligue 2",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Metz",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+3
+],
+"kickoff": "2026-10-30T19:00:00Z",
+"settledAt": "2026-10-30T22:10:58.061401+00:00"
+},
+{
+"matchId": "36243670",
+"home": "FC Volendam",
+"away": "De Graafschap",
+"league": "Dutch Eerste Divisie",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "FC Volendam",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-10-30T19:00:00Z",
+"settledAt": "2026-10-30T22:10:58.061401+00:00"
+},
 {
 "matchId": "36212932",
 "home": "Rapid Bucharest",
@@ -1156,57 +1194,19 @@
 ],
 "kickoff": "2026-10-28T20:00:00Z",
 "settledAt": "2026-10-28T23:04:59.862926+00:00"
-},
-{
-"matchId": "36082701",
-"home": "Bournemouth",
-"away": "Aston Villa",
-"league": "English Football League Cup",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Bournemouth",
-"polySide": null,
-"winner": "home",
-"moneyWin": true,
-"polyWin": null,
-"ftScore": [
-3,
-0
-],
-"kickoff": "2026-10-28T19:45:00Z",
-"settledAt": "2026-10-28T23:04:59.862926+00:00"
-},
-{
-"matchId": "36082706",
-"home": "Sunderland",
-"away": "Brentford",
-"league": "English Football League Cup",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Brentford",
-"polySide": null,
-"winner": "home",
-"moneyWin": false,
-"polyWin": null,
-"ftScore": [
-3,
-2
-],
-"kickoff": "2026-10-28T19:45:00Z",
-"settledAt": "2026-10-28T23:04:59.862926+00:00"
 }
 ],
 "global": {
-"n": 641,
+"n": 643,
 "wins": 364,
-"hitRate": 0.5679,
-"nRoi": 641,
-"roi": 0.0473,
-"roiLb": -0.0164,
-"nClv": 641,
+"hitRate": 0.5661,
+"nRoi": 643,
+"roi": 0.044,
+"roiLb": -0.0196,
+"nClv": 643,
 "clv": 0.07,
-"clvLb": -0.0959
+"clvLb": -0.0994
 },
 "pending": 37,
-"ausgeschlossenLive": 1322
+"ausgeschlossenLive": 1320
 }
