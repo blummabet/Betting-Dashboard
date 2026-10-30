@@ -88,7 +88,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "1463 geprueft, davon 192 abgeschnitten"
+      "note": "1458 geprueft, davon 192 abgeschnitten"
     },
     {
       "id": "settlement_alive",
@@ -97,7 +97,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "col1-dep-jdc-2026-08-16: seit 75.9 Tagen offen — keine Auflösung gefunden"
+        "col1-dep-jdc-2026-08-16: seit 76.0 Tagen offen — keine Auflösung gefunden"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen. Der Grund steht an jeder Zeile — er ist bei jeder ein anderer."
     },
@@ -105,10 +105,12 @@
       "id": "buendel_cond_stabil",
       "label": "Bündel-Marktkennung bleibt, was sie war",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
-      "note": "condDrift = 0 heisst: jede offene Bündel-Zeile meint noch denselben Markt wie beim Einstieg."
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "1 offene(r) Buendel-Eintrag/-Eintraege zeigen auf einen anderen Markt als ihre Close-Zeile. Die Annahme hinter dem Stempel-Nachtrag (eine Buendel-`cond` bleibt) gilt nicht mehr — der Nachtrag gehoert geprueft."
+      ],
+      "note": ""
     },
     {
       "id": "shortlist_clv_nach_einstieg",
@@ -117,7 +119,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "1174 von 2000 abgerechneten Plays haben einen Schluss nach dem Einstieg; der Rest traegt clvGrund statt einer erfundenen 0,0."
+      "note": "1173 von 2000 abgerechneten Plays haben einen Schluss nach dem Einstieg; der Rest traegt clvGrund statt einer erfundenen 0,0."
     },
     {
       "id": "anpfiff_eine_uhr",
@@ -126,7 +128,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "3676 Close-Zeilen mit absolutem Anpfiff geprueft."
+      "note": "3672 Close-Zeilen mit absolutem Anpfiff geprueft."
     },
     {
       "id": "resolutions_match_open_keys",
@@ -135,7 +137,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Fällige Märkte je Liga, die ihre Auflösung finden — nur ab dem Beginn des Auflösungsbuchs (2026-10-16); 1921 ältere Märkte bleiben draussen, fuer sie kann es keine geben. < 60% = Settlement läuft wirklich ins Leere."
+      "note": "Fällige Märkte je Liga, die ihre Auflösung finden — nur ab dem Beginn des Auflösungsbuchs (2026-10-16); 1916 ältere Märkte bleiben draussen, fuer sie kann es keine geben. < 60% = Settlement läuft wirklich ins Leere."
     },
     {
       "id": "proven_wallets_profitable",
@@ -198,6 +200,6 @@
       "note": "poly_direct_bets.py rechnet über poly_resolutions.json ab. Hängt ein Bet, kennt Poly den Ausgang nicht (Markt noch offen/obskur) oder der Slug passt nicht — dann fehlt echtes Geld in der Bilanz."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-10-30T22:42:58.627611+00:00"
+  "nFail": 3,
+  "generatedAt": "2026-10-30T23:12:39.720790+00:00"
 }
