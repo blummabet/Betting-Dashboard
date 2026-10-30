@@ -1,11 +1,11 @@
-# 🟡 Picks Validator — 30.10.2026 09:11
+# 🟡 Picks Validator — 30.10.2026 16:53
 
 **110 Spiele geprüft** · 🔴 0 Fehler · 🟡 76 Warnungen · 🔵 331 Hinweise
 
 ```
 =================================================================
   🐕 CocoBet — Picks Logik-Check
-  30.10.2026 09:11
+  30.10.2026 16:53
   Filter: nächste 3 Tag(e)
 =================================================================
 
@@ -479,21 +479,6 @@
   🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
      📅 30.10.2026  Lille vs Lens
      Lille expH≈1.25 (statischer Proxy) → FV über 1.5 = 35.5%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
-  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
-     📅 31.10.2026  Lorient vs Stade Brestois 29
-     Stade Brestois 29: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
-  🔵 HINWEIS [CARDS35_LOW_FV]
-     📅 31.10.2026  Lorient vs Stade Brestois 29
-     Liga-Baserate=3.6 → Poisson FV für Über 3.5 Karten = 48.5% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+7.1%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
-  🔵 HINWEIS [CARDS45_LOW_FV]
-     📅 31.10.2026  Lorient vs Stade Brestois 29
-     Liga-Baserate=3.6 → Poisson FV für Über 4.5 Karten = 29.4%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
-  🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
-     📅 31.10.2026  Lorient vs Stade Brestois 29
-     Lorient expH≈1.25 (statischer Proxy) → FV über 1.5 = 35.5%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
-  🔵 HINWEIS [TEAM_OVER_AWAY_LOW_FV]
-     📅 31.10.2026  Lorient vs Stade Brestois 29
-     Stade Brestois 29 expA≈1.20 (statischer Proxy) → FV über 1.5 = 33.7%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
   🟡 WARNUNG [HOME_POOR_FORM_HIGH_SCORE]
      📅 31.10.2026  Estac Troyes vs Le Mans
      Estac Troyes: formScore=0.11 (sehr schwach) aber matchScore=7.5. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet.
@@ -575,6 +560,21 @@
   🔵 HINWEIS [OVER35_LOW_FV]
      📅 01.11.2026  Marseille vs Toulouse
      Ø gpg=2.00 (statischer Proxy) → Poisson FV für Over 3.5 = 14.3%. JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.
+  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
+     📅 02.11.2026  Lorient vs Stade Brestois 29
+     Stade Brestois 29: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
+  🔵 HINWEIS [CARDS35_LOW_FV]
+     📅 02.11.2026  Lorient vs Stade Brestois 29
+     Liga-Baserate=3.6 → Poisson FV für Über 3.5 Karten = 48.5% (typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~+7.1%). FV-Gate (GOALS_REAL=0.05 → flaggt unter 50.6%) sollte Karten-3.5-Pick blocken. Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.
+  🔵 HINWEIS [CARDS45_LOW_FV]
+     📅 02.11.2026  Lorient vs Stade Brestois 29
+     Liga-Baserate=3.6 → Poisson FV für Über 4.5 Karten = 29.4%. JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.
+  🔵 HINWEIS [TEAM_OVER_HOME_LOW_FV]
+     📅 02.11.2026  Lorient vs Stade Brestois 29
+     Lorient expH≈1.25 (statischer Proxy) → FV über 1.5 = 35.5%. JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
+  🔵 HINWEIS [TEAM_OVER_AWAY_LOW_FV]
+     📅 02.11.2026  Lorient vs Stade Brestois 29
+     Stade Brestois 29 expA≈1.20 (statischer Proxy) → FV über 1.5 = 33.7%. JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.
 
 ─────────────────────────────────────────────────────────────────
   🇩🇪 Bundesliga  (rl=27)
