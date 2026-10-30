@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-30T23:11:24.141692+00:00",
+ "generatedAt": "2026-10-30T23:26:21.345533+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -830,18 +830,6 @@
    "belegte": 1
   },
   {
-   "strom": "poly",
-   "zerlegung": "nach Conviction",
-   "art": "conviction",
-   "gruppen": 9,
-   "basis": "1845 von 2000 abgerechneten Plays · nur Engine 2026-09-01 · ohne Cricket, Kampfsport, US-Sport",
-   "n": 1845,
-   "pl": 3.05,
-   "roi": 0.0017,
-   "clv": -0.201,
-   "belegte": 0
-  },
-  {
    "strom": "betfair",
    "zerlegung": "nach Markt",
    "art": "markt",
@@ -852,6 +840,18 @@
    "roi": 0.0014,
    "clv": 0.38,
    "belegte": 20
+  },
+  {
+   "strom": "poly",
+   "zerlegung": "nach Conviction",
+   "art": "conviction",
+   "gruppen": 9,
+   "basis": "1846 von 2000 abgerechneten Plays · nur Engine 2026-09-01 · ohne Cricket, Kampfsport, US-Sport",
+   "n": 1846,
+   "pl": 2.05,
+   "roi": 0.0011,
+   "clv": -0.201,
+   "belegte": 0
   }
  ],
  "spiele": [
@@ -5594,38 +5594,6 @@
    "engineAlt": true
   },
   {
-   "schublade": "Conviction 6",
-   "strom": "poly",
-   "n": 797,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0155,
-   "pl": 12.35,
-   "roiLb": -0.0289,
-   "clv": -0.128,
-   "clvLb": -0.396,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.14,
-   "fehltN": 0,
-   "noetigNRoi": 6552,
-   "noetigNClv": null,
-   "noetigGrund": null,
-   "entfernung": {
-    "median": 2856,
-    "lo": 373,
-    "hi": 337335,
-    "nieAnteil": 0.287,
-    "schaetzbar": false
-   },
-   "alterTage": 0.1,
-   "art": "conviction",
-   "wert": 6,
-   "nAlt": 7,
-   "roiAlt": 0.0631,
-   "clvAlt": 0.167,
-   "engineAlt": true
-  },
-  {
    "schublade": "Both teams to Score?",
    "strom": "betfair",
    "n": 5826,
@@ -5646,6 +5614,38 @@
    "alterTage": null,
    "art": "markt",
    "naeherung": false
+  },
+  {
+   "schublade": "Conviction 6",
+   "strom": "poly",
+   "n": 798,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0142,
+   "pl": 11.35,
+   "roiLb": -0.0302,
+   "clv": -0.128,
+   "clvLb": -0.396,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.14,
+   "fehltN": 0,
+   "noetigNRoi": 7785,
+   "noetigNClv": null,
+   "noetigGrund": null,
+   "entfernung": {
+    "median": 2682,
+    "lo": 373,
+    "hi": 152658,
+    "nieAnteil": 0.31,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "conviction",
+   "wert": 6,
+   "nAlt": 7,
+   "roiAlt": 0.0631,
+   "clvAlt": 0.167,
+   "engineAlt": true
   },
   {
    "schublade": "Half Time",
@@ -5809,7 +5809,7 @@
     "nieAnteil": 0.16,
     "schaetzbar": false
    },
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "mix",
    "wert": "bf+money+sharp"
   },
@@ -5952,45 +5952,6 @@
    "naeherung": false
   },
   {
-   "schublade": "🔒 Poly-Auswahl · von Betfair bestätigt",
-   "strom": "poly",
-   "n": 607,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0087,
-   "pl": 5.26,
-   "roiLb": -0.0511,
-   "clv": -0.193,
-   "clvLb": -0.401,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.016,
-   "fehltN": 0,
-   "noetigNRoi": 28958,
-   "noetigNClv": null,
-   "noetigGrund": null,
-   "entfernung": {
-    "median": 2535,
-    "lo": 313,
-    "hi": 399113,
-    "nieAnteil": 0.377,
-    "schaetzbar": false
-   },
-   "alterTage": 0.0,
-   "art": "vorangemeldet",
-   "angemeldet": "2026-09-01T18:59:52.671883+00:00",
-   "zielN": 60,
-   "warum": "Die einzige Untergruppe der Rangliste mit einer ROI-Untergrenze ueber null. Traegt nicht die Menge der Poly-Signale, sondern die eine FREMDE Stimme: ohne Betfair liegen dieselben Plays bei -5,1% (n=425).",
-   "quelle": "poly_shortlist_track.json → settled",
-   "nDavor": 4,
-   "rueckblick": {
-    "n": 75,
-    "roi": 0.1811,
-    "roiLb": 0.0106,
-    "clv": 0.24,
-    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
-   }
-  },
-  {
    "schublade": "Other Competitions Soccer · Match Odds",
    "strom": "betfair",
    "n": 30,
@@ -6033,6 +5994,45 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
+  },
+  {
+   "schublade": "🔒 Poly-Auswahl · von Betfair bestätigt",
+   "strom": "poly",
+   "n": 608,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.007,
+   "pl": 4.26,
+   "roiLb": -0.0528,
+   "clv": -0.193,
+   "clvLb": -0.401,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.016,
+   "fehltN": 0,
+   "noetigNRoi": 44333,
+   "noetigNClv": null,
+   "noetigGrund": null,
+   "entfernung": {
+    "median": 2481,
+    "lo": 344,
+    "hi": 198695,
+    "nieAnteil": 0.408,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "vorangemeldet",
+   "angemeldet": "2026-09-01T18:59:52.671883+00:00",
+   "zielN": 60,
+   "warum": "Die einzige Untergruppe der Rangliste mit einer ROI-Untergrenze ueber null. Traegt nicht die Menge der Poly-Signale, sondern die eine FREMDE Stimme: ohne Betfair liegen dieselben Plays bei -5,1% (n=425).",
+   "quelle": "poly_shortlist_track.json → settled",
+   "nDavor": 4,
+   "rueckblick": {
+    "n": 75,
+    "roi": 0.1811,
+    "roiLb": 0.0106,
+    "clv": 0.24,
+    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
+   }
   },
   {
    "schublade": "UEFA U21 Euro Qualifiers · Both teams to Score?",
@@ -6361,9 +6361,9 @@
    "alterTage": 0.0,
    "art": "conviction",
    "wert": 5,
-   "nAlt": 5,
-   "roiAlt": -0.0582,
-   "clvAlt": 1.0,
+   "nAlt": 4,
+   "roiAlt": 0.1772,
+   "clvAlt": null,
    "engineAlt": true
   },
   {
@@ -6441,9 +6441,9 @@
    "alterTage": 0.2,
    "art": "mix",
    "wert": "money+steam",
-   "nAlt": 7,
-   "roiAlt": -0.279,
-   "clvAlt": 0.5,
+   "nAlt": 6,
+   "roiAlt": -0.1588,
+   "clvAlt": 0.25,
    "engineAlt": true
   },
   {
@@ -6970,38 +6970,6 @@
    "naeherung": false
   },
   {
-   "schublade": "Mix bf+money",
-   "strom": "poly",
-   "n": 343,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0434,
-   "pl": -14.87,
-   "roiLb": -0.1229,
-   "clv": -0.146,
-   "clvLb": -0.434,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.143,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "nicht_positiv",
-   "entfernung": {
-    "median": 3695,
-    "lo": 382,
-    "hi": 217465,
-    "nieAnteil": 0.833,
-    "schaetzbar": false
-   },
-   "alterTage": 0.0,
-   "art": "mix",
-   "wert": "bf+money",
-   "nAlt": 3,
-   "roiAlt": 0.575,
-   "clvAlt": 1.667,
-   "engineAlt": true
-  },
-  {
    "schublade": "Japanese J League 3 · Match Odds",
    "strom": "betfair",
    "n": 46,
@@ -7044,6 +7012,38 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
+  },
+  {
+   "schublade": "Mix bf+money",
+   "strom": "poly",
+   "n": 344,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.0461,
+   "pl": -15.87,
+   "roiLb": -0.1256,
+   "clv": -0.146,
+   "clvLb": -0.434,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.143,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "nicht_positiv",
+   "entfernung": {
+    "median": 4198,
+    "lo": 415,
+    "hi": 953657,
+    "nieAnteil": 0.858,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "mix",
+   "wert": "bf+money",
+   "nAlt": 3,
+   "roiAlt": 0.575,
+   "clvAlt": 1.667,
+   "engineAlt": true
   },
   {
    "schublade": "English Sky Bet League 1 · Half Time",
@@ -9249,7 +9249,7 @@
     "nieAnteil": 0.827,
     "schaetzbar": false
    },
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "conviction",
    "wert": 8
   },
@@ -13676,7 +13676,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "conviction",
    "wert": 3
   },
