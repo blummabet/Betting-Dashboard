@@ -1,6 +1,6 @@
 {
- "generatedAt": "2026-10-29T23:22:16.826679+00:00",
- "heute": "2026-10-29",
+ "generatedAt": "2026-10-30T00:10:38.600205+00:00",
+ "heute": "2026-10-30",
  "messungen": [
   {
    "id": "entschiedene-ausgaenge",
@@ -18,7 +18,7 @@
    "zustand": "ueberfaellig",
    "stand": "Termin erreicht, aber nur 4 von 20 Beobachtungen — die Frage ist NICHT beantwortet",
    "fortschritt": 0.2,
-   "tageBisFaellig": -16
+   "tageBisFaellig": -17
   },
   {
    "id": "horizont-trader",
@@ -37,7 +37,7 @@
    "zustand": "ueberfaellig",
    "stand": "Termin erreicht, aber nur 5 von 20 Beobachtungen — die Frage ist NICHT beantwortet",
    "fortschritt": 0.25,
-   "tageBisFaellig": -9
+   "tageBisFaellig": -10
   },
   {
    "id": "sharp-radar-drift-pushes",
@@ -53,9 +53,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": null,
    "zustand": "faellig",
-   "stand": "Entscheidung faellig (seit 37 Tagen)",
+   "stand": "Entscheidung faellig (seit 38 Tagen)",
    "fortschritt": null,
-   "tageBisFaellig": -37
+   "tageBisFaellig": -38
   },
   {
    "id": "echte-fills",
@@ -74,7 +74,7 @@
    "zustand": "faellig",
    "stand": "234 von 25 Beobachtungen · Entscheidung faellig",
    "fortschritt": 1.0,
-   "tageBisFaellig": -30
+   "tageBisFaellig": -31
   },
   {
    "id": "sharp-z-1282",
@@ -88,11 +88,11 @@
    "mindestN": 150,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 1095,
+   "standN": 1097,
    "zustand": "faellig",
-   "stand": "1095 von 150 Beobachtungen · Entscheidung faellig",
+   "stand": "1097 von 150 Beobachtungen · Entscheidung faellig",
    "fortschritt": 1.0,
-   "tageBisFaellig": -20
+   "tageBisFaellig": -21
   },
   {
    "id": "torlinien-13-ligen",
@@ -109,9 +109,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": null,
    "zustand": "faellig",
-   "stand": "Entscheidung faellig (seit 17 Tagen)",
+   "stand": "Entscheidung faellig (seit 18 Tagen)",
    "fortschritt": null,
-   "tageBisFaellig": -17
+   "tageBisFaellig": -18
   },
   {
    "id": "serie-a-btts-schublade",
@@ -127,9 +127,28 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": null,
    "zustand": "faellig",
-   "stand": "Entscheidung faellig (seit 14 Tagen)",
+   "stand": "Entscheidung faellig (seit 15 Tagen)",
    "fortschritt": null,
-   "tageBisFaellig": -14
+   "tageBisFaellig": -15
+  },
+  {
+   "id": "einigkeit-statt-geld",
+   "titel": "Traegt Einigkeit mehrerer bewiesener Wallets, wenn keine allein die Geldschwelle reisst?",
+   "frage": "Trefferquote und ROI der Schattenbuch-Kandidaten (>=2 bewiesene Wallets auf derselben Seite, keine allein >= $25K, kein bewiesener Gegner) — gegen die heutige Public-Regel (eine Wallet >= $25K).",
+   "warum": "18.09.2026 (Lucas): „Fuer Public wuerde es nur Sinn machen, wenn mehrere Top Wallets sich einig sind, aber wir die Schwelle von Geld einzeln nicht erreichen wuerden.“ Die Rueckschau sah glaenzend aus (82,9 %, ROI +26,9 %, UG +6,8 %) und war zirkulaer: „bewiesen“ haengt am heutigen Record, der genau diese Maerkte enthaelt. Leave-one-out bleibt: Einigkeit 77,1 % / ROI +19,9 % / UG -3,0 % gegen heutige Regel 67,2 % / +13,1 % / -4,9 %, Unterschied +6,9 pp mit Band [-28,6, +40,7]. Besser, aber unbelegt — und der Unterschied unentschieden. Also beobachten statt senden, und die Antwort aus der Zukunft holen.",
+   "gestartet": "2026-09-18",
+   "faellig": "2026-10-30",
+   "quelle": "poly_einigkeit_schatten.json (abgerechnet ueber poly_public_eval.settle)",
+   "messer": "einigkeit_schatten",
+   "mindestN": 40,
+   "entscheidung": null,
+   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
+   "nachtrag": "27.09.2026: Zwischenstand n=152 (Mindestzahl 40 erreicht). Treffer 66,5 %, ROI -4,5 % (UG -14,3 %), CLV -0,04 pp. Die Rueckschau (77,1 % / +19,9 %) haelt vorwaerts nicht. Heutige Public-Regel seit 03.09.: n=47, ROI +14,2 % (UG -10,0 %).",
+   "standN": 699,
+   "zustand": "faellig",
+   "stand": "699 von 40 Beobachtungen · Entscheidung faellig",
+   "fortschritt": 1.0,
+   "tageBisFaellig": 0
   },
   {
    "id": "poly-preisband",
@@ -147,26 +166,7 @@
    "zustand": "quelle unlesbar",
    "stand": "Quelle nicht lesbar — Stand unbekannt",
    "fortschritt": null,
-   "tageBisFaellig": 17
-  },
-  {
-   "id": "einigkeit-statt-geld",
-   "titel": "Traegt Einigkeit mehrerer bewiesener Wallets, wenn keine allein die Geldschwelle reisst?",
-   "frage": "Trefferquote und ROI der Schattenbuch-Kandidaten (>=2 bewiesene Wallets auf derselben Seite, keine allein >= $25K, kein bewiesener Gegner) — gegen die heutige Public-Regel (eine Wallet >= $25K).",
-   "warum": "18.09.2026 (Lucas): „Fuer Public wuerde es nur Sinn machen, wenn mehrere Top Wallets sich einig sind, aber wir die Schwelle von Geld einzeln nicht erreichen wuerden.“ Die Rueckschau sah glaenzend aus (82,9 %, ROI +26,9 %, UG +6,8 %) und war zirkulaer: „bewiesen“ haengt am heutigen Record, der genau diese Maerkte enthaelt. Leave-one-out bleibt: Einigkeit 77,1 % / ROI +19,9 % / UG -3,0 % gegen heutige Regel 67,2 % / +13,1 % / -4,9 %, Unterschied +6,9 pp mit Band [-28,6, +40,7]. Besser, aber unbelegt — und der Unterschied unentschieden. Also beobachten statt senden, und die Antwort aus der Zukunft holen.",
-   "gestartet": "2026-09-18",
-   "faellig": "2026-10-30",
-   "quelle": "poly_einigkeit_schatten.json (abgerechnet ueber poly_public_eval.settle)",
-   "messer": "einigkeit_schatten",
-   "mindestN": 40,
-   "entscheidung": null,
-   "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "nachtrag": "27.09.2026: Zwischenstand n=152 (Mindestzahl 40 erreicht). Treffer 66,5 %, ROI -4,5 % (UG -14,3 %), CLV -0,04 pp. Die Rueckschau (77,1 % / +19,9 %) haelt vorwaerts nicht. Heutige Public-Regel seit 03.09.: n=47, ROI +14,2 % (UG -10,0 %).",
-   "standN": 697,
-   "zustand": "bereit",
-   "stand": "697 von 40 Beobachtungen · faellig in 1 Tag(en)",
-   "fortschritt": 1.0,
-   "tageBisFaellig": 1
+   "tageBisFaellig": 16
   },
   {
    "id": "poly-autobet-oktober",
@@ -182,9 +182,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 114,
    "zustand": "bereit",
-   "stand": "114 von 100 Beobachtungen · faellig in 3 Tag(en)",
+   "stand": "114 von 100 Beobachtungen · faellig in 2 Tag(en)",
    "fortschritt": 1.0,
-   "tageBisFaellig": 3
+   "tageBisFaellig": 2
   },
   {
    "id": "ligen-watch-betfair",
@@ -200,9 +200,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 633,
    "zustand": "bereit",
-   "stand": "633 von 300 Beobachtungen · faellig in 3 Tag(en)",
+   "stand": "633 von 300 Beobachtungen · faellig in 2 Tag(en)",
    "fortschritt": 1.0,
-   "tageBisFaellig": 3
+   "tageBisFaellig": 2
   },
   {
    "id": "reihenfolge-signale",
@@ -218,9 +218,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 160,
    "zustand": "bereit",
-   "stand": "160 von 60 Beobachtungen · faellig in 3 Tag(en)",
+   "stand": "160 von 60 Beobachtungen · faellig in 2 Tag(en)",
    "fortschritt": 1.0,
-   "tageBisFaellig": 3
+   "tageBisFaellig": 2
   },
   {
    "id": "hz-null-null",
@@ -236,9 +236,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 305,
    "zustand": "bereit",
-   "stand": "305 von 100 Beobachtungen · faellig in 3 Tag(en)",
+   "stand": "305 von 100 Beobachtungen · faellig in 2 Tag(en)",
    "fortschritt": 1.0,
-   "tageBisFaellig": 3
+   "tageBisFaellig": 2
   },
   {
    "id": "betfair-einseitigkeit-schwelle",
@@ -254,9 +254,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 117,
    "zustand": "bereit",
-   "stand": "117 von 90 Beobachtungen · faellig in 16 Tag(en)",
+   "stand": "117 von 90 Beobachtungen · faellig in 15 Tag(en)",
    "fortschritt": 1.0,
-   "tageBisFaellig": 16
+   "tageBisFaellig": 15
   },
   {
    "id": "betfair-quote-muss-sinken",
@@ -272,9 +272,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 40000,
    "zustand": "bereit",
-   "stand": "40000 von 20000 Beobachtungen · faellig in 17 Tag(en)",
+   "stand": "40000 von 20000 Beobachtungen · faellig in 16 Tag(en)",
    "fortschritt": 1.0,
-   "tageBisFaellig": 17
+   "tageBisFaellig": 16
   },
   {
    "id": "betfair-zeit-vor-anpfiff",
@@ -290,9 +290,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 40000,
    "zustand": "bereit",
-   "stand": "40000 von 20000 Beobachtungen · faellig in 17 Tag(en)",
+   "stand": "40000 von 20000 Beobachtungen · faellig in 16 Tag(en)",
    "fortschritt": 1.0,
-   "tageBisFaellig": 17
+   "tageBisFaellig": 16
   },
   {
    "id": "serien-wetten",
@@ -308,9 +308,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 369,
    "zustand": "bereit",
-   "stand": "369 von 150 Beobachtungen · faellig in 32 Tag(en)",
+   "stand": "369 von 150 Beobachtungen · faellig in 31 Tag(en)",
    "fortschritt": 1.0,
-   "tageBisFaellig": 32
+   "tageBisFaellig": 31
   },
   {
    "id": "poly-wallet-clv",
@@ -324,11 +324,11 @@
    "mindestN": 150,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 1790,
+   "standN": 1795,
    "zustand": "bereit",
-   "stand": "1790 von 150 Beobachtungen · faellig in 47 Tag(en)",
+   "stand": "1795 von 150 Beobachtungen · faellig in 46 Tag(en)",
    "fortschritt": 1.0,
-   "tageBisFaellig": 47
+   "tageBisFaellig": 46
   },
   {
    "id": "betfair-ou35",
@@ -344,9 +344,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 2190,
    "zustand": "bereit",
-   "stand": "2190 von 200 Beobachtungen · faellig in 63 Tag(en)",
+   "stand": "2190 von 200 Beobachtungen · faellig in 62 Tag(en)",
    "fortschritt": 1.0,
-   "tageBisFaellig": 63
+   "tageBisFaellig": 62
   },
   {
    "id": "betfair-einseitigkeit-unterseite",
@@ -360,11 +360,11 @@
    "mindestN": 1200,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 944,
+   "standN": 945,
    "zustand": "sammelt",
-   "stand": "944 von 1200 Beobachtungen · faellig in 3 Tag(en)",
-   "fortschritt": 0.7866666666666666,
-   "tageBisFaellig": 3
+   "stand": "945 von 1200 Beobachtungen · faellig in 2 Tag(en)",
+   "fortschritt": 0.7875,
+   "tageBisFaellig": 2
   },
   {
    "id": "betfair-geldschwelle",
@@ -378,11 +378,11 @@
    "mindestN": 1200,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 944,
+   "standN": 945,
    "zustand": "sammelt",
-   "stand": "944 von 1200 Beobachtungen · faellig in 3 Tag(en)",
-   "fortschritt": 0.7866666666666666,
-   "tageBisFaellig": 3
+   "stand": "945 von 1200 Beobachtungen · faellig in 2 Tag(en)",
+   "fortschritt": 0.7875,
+   "tageBisFaellig": 2
   },
   {
    "id": "ligen-watch-poly",
@@ -396,11 +396,11 @@
    "mindestN": 150,
    "entscheidung": null,
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
-   "standN": 143,
+   "standN": 144,
    "zustand": "sammelt",
-   "stand": "143 von 150 Beobachtungen · faellig in 3 Tag(en)",
-   "fortschritt": 0.9533333333333334,
-   "tageBisFaellig": 3
+   "stand": "144 von 150 Beobachtungen · faellig in 2 Tag(en)",
+   "fortschritt": 0.96,
+   "tageBisFaellig": 2
   },
   {
    "id": "betfair-kursrutsch",
@@ -416,9 +416,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 278,
    "zustand": "sammelt",
-   "stand": "278 von 400 Beobachtungen · faellig in 17 Tag(en)",
+   "stand": "278 von 400 Beobachtungen · faellig in 16 Tag(en)",
    "fortschritt": 0.695,
-   "tageBisFaellig": 17
+   "tageBisFaellig": 16
   },
   {
    "id": "stake-kleine-liga",
@@ -434,9 +434,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 58,
    "zustand": "sammelt",
-   "stand": "58 von 100 Beobachtungen · faellig in 55 Tag(en)",
+   "stand": "58 von 100 Beobachtungen · faellig in 54 Tag(en)",
    "fortschritt": 0.58,
-   "tageBisFaellig": 55
+   "tageBisFaellig": 54
   },
   {
    "id": "poly-public-klasse",
@@ -452,9 +452,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 14,
    "zustand": "sammelt",
-   "stand": "14 von 30 Beobachtungen · faellig in 63 Tag(en)",
+   "stand": "14 von 30 Beobachtungen · faellig in 62 Tag(en)",
    "fortschritt": 0.4666666666666667,
-   "tageBisFaellig": 63
+   "tageBisFaellig": 62
   },
   {
    "id": "stake-torlinien-burst",
@@ -470,9 +470,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 71,
    "zustand": "sammelt",
-   "stand": "71 von 100 Beobachtungen · faellig in 94 Tag(en)",
+   "stand": "71 von 100 Beobachtungen · faellig in 93 Tag(en)",
    "fortschritt": 0.71,
-   "tageBisFaellig": 94
+   "tageBisFaellig": 93
   },
   {
    "id": "hz-heim-130",
@@ -488,9 +488,9 @@
    "wecker": "Wochen-Wecker, montags 08:00 UTC — meldet nur, wenn etwas faellig oder ueberfaellig ist",
    "standN": 81,
    "zustand": "sammelt",
-   "stand": "81 von 100 Beobachtungen · faellig in 94 Tag(en)",
+   "stand": "81 von 100 Beobachtungen · faellig in 93 Tag(en)",
    "fortschritt": 0.81,
-   "tageBisFaellig": 94
+   "tageBisFaellig": 93
   },
   {
    "id": "horizont-shortlist",
@@ -509,7 +509,7 @@
    "zustand": "entschieden",
    "stand": "28.09.2026 beendet (Lucas: „fuer den fruehen Einstieg kannst du auslassen\"). Mit dem heutigen Zuschnitt nicht beantwortbar — die Shortlist steigt nie frueher als 3 h vor Anpfiff ein.",
    "fortschritt": 0.0,
-   "tageBisFaellig": -30
+   "tageBisFaellig": -31
   },
   {
    "id": "devig-proportional-vs-power",
@@ -527,10 +527,10 @@
    "zustand": "entschieden",
    "stand": "04.10.2026 auf POWER umgestellt (Lucas: „ja stell um“). Gemessen am Poly-Schlusskurs, 68 Spiele / 339 Ausgaenge seit 14.09., mittlerer Abstand proportional minus power: alle +0,12pp [90 %: +0,03 … +0,22] zum Einstieg, +0,16pp [+0,08 … +0,25] am Schluss; O/U-Seite unter 40 Cent +0,57pp [+0,23 … +0,88]; 1X2 unter 40 Cent -0,03pp [-0,09 … +0,04], kein Unterschied. Schwellen 4,0pp bleiben. Proportional laeuft als fairProp_* weiter; DEVIG_METHODE=proportional stellt zurueck. BTTS unveraendert (keine Messung).",
    "fortschritt": null,
-   "tageBisFaellig": -25
+   "tageBisFaellig": -26
   }
  ],
  "n": 29,
  "nOffen": 27,
- "nHandlung": 8
+ "nHandlung": 9
 }
