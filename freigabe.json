@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-30T06:39:19.462838+00:00",
+ "generatedAt": "2026-10-30T06:54:17.120732+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -834,10 +834,10 @@
    "zerlegung": "nach Conviction",
    "art": "conviction",
    "gruppen": 9,
-   "basis": "1829 von 2000 abgerechneten Plays · nur Engine 2026-09-01 · ohne Cricket, Kampfsport, US-Sport",
-   "n": 1829,
-   "pl": 7.74,
-   "roi": 0.0042,
+   "basis": "1830 von 2000 abgerechneten Plays · nur Engine 2026-09-01 · ohne Cricket, Kampfsport, US-Sport",
+   "n": 1830,
+   "pl": 8.16,
+   "roi": 0.0045,
    "clv": -0.212,
    "belegte": 0
   },
@@ -5461,7 +5461,7 @@
     "nieAnteil": 0.072,
     "schaetzbar": false
    },
-   "alterTage": 0.4,
+   "alterTage": 0.5,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "top5"
@@ -5841,7 +5841,7 @@
     "nieAnteil": 0.18,
     "schaetzbar": false
    },
-   "alterTage": 0.2,
+   "alterTage": 0.3,
    "art": "mix",
    "wert": "money+sharp+steam"
   },
@@ -5981,12 +5981,12 @@
   {
    "schublade": "Mix money+sharp",
    "strom": "poly",
-   "n": 714,
+   "n": 715,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.018,
-   "pl": -12.88,
-   "roiLb": -0.0591,
+   "roi": -0.0174,
+   "pl": -12.47,
+   "roiLb": -0.0585,
    "clv": -0.17,
    "clvLb": -0.416,
    "clvUrteil": "gemessen, nicht belegt",
@@ -5996,18 +5996,18 @@
    "noetigNClv": null,
    "noetigGrund": "nicht_positiv",
    "entfernung": {
-    "median": 8623,
-    "lo": 824,
-    "hi": 708407,
-    "nieAnteil": 0.765,
+    "median": 8097,
+    "lo": 853,
+    "hi": 1644175,
+    "nieAnteil": 0.748,
     "schaetzbar": false
    },
-   "alterTage": 0.2,
+   "alterTage": 0.0,
    "art": "mix",
    "wert": "money+sharp",
-   "nAlt": 9,
-   "roiAlt": 0.1859,
-   "clvAlt": 0.25,
+   "nAlt": 8,
+   "roiAlt": 0.1887,
+   "clvAlt": 0.214,
    "engineAlt": true
   },
   {
@@ -6116,6 +6116,38 @@
    "naeherung": false
   },
   {
+   "schublade": "Conviction 5",
+   "strom": "poly",
+   "n": 752,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.0203,
+   "pl": -15.25,
+   "roiLb": -0.0666,
+   "clv": -0.122,
+   "clvLb": -0.383,
+   "clvUrteil": "gemessen, nicht belegt",
+   "clvOg": 0.138,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "nicht_positiv",
+   "entfernung": {
+    "median": 11401,
+    "lo": 988,
+    "hi": 442978,
+    "nieAnteil": 0.762,
+    "schaetzbar": false
+   },
+   "alterTage": 0.0,
+   "art": "conviction",
+   "wert": 5,
+   "nAlt": 9,
+   "roiAlt": 0.0087,
+   "clvAlt": 6.963,
+   "engineAlt": true
+  },
+  {
    "schublade": "Public-Kandidaten",
    "strom": "poly",
    "n": 358,
@@ -6144,38 +6176,6 @@
    "nAlt": 4,
    "roiAlt": 0.3397,
    "clvAlt": -0.625,
-   "engineAlt": true
-  },
-  {
-   "schublade": "Conviction 5",
-   "strom": "poly",
-   "n": 751,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0209,
-   "pl": -15.67,
-   "roiLb": -0.0672,
-   "clv": -0.122,
-   "clvLb": -0.383,
-   "clvUrteil": "gemessen, nicht belegt",
-   "clvOg": 0.138,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "nicht_positiv",
-   "entfernung": {
-    "median": 12019,
-    "lo": 944,
-    "hi": 707462,
-    "nieAnteil": 0.758,
-    "schaetzbar": false
-   },
-   "alterTage": 0.2,
-   "art": "conviction",
-   "wert": 5,
-   "nAlt": 10,
-   "roiAlt": 0.0241,
-   "clvAlt": 5.67,
    "engineAlt": true
   },
   {
@@ -6572,7 +6572,7 @@
     "nieAnteil": 0.488,
     "schaetzbar": false
    },
-   "alterTage": 0.3,
+   "alterTage": 0.4,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "rest"
@@ -13756,7 +13756,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 1.1,
+   "alterTage": 1.2,
    "art": "conviction",
    "wert": 3
   },
@@ -13800,7 +13800,7 @@
    "noetigNClv": null,
    "noetigGrund": "zu_wenige",
    "entfernung": null,
-   "alterTage": 10.3,
+   "alterTage": 10.4,
    "art": "mix",
    "wert": "bf+steam"
   },
