@@ -1,28 +1,5 @@
 [
 {
-"k": "ufc-mel1-ern2-2026-10-10|Melissa Gatto",
-"key": "ufc-mel1-ern2-2026-10-10",
-"side": "Melissa Gatto",
-"wallet": "0x2da325618fff9b2ffe64a49253fbcae8c7b9f258",
-"wallets": [
-"0x2da325618fff9b2ffe64a49253fbcae8c7b9f258",
-"0x49b68438ae7db43a03d7ddaaceaef5581ac7d152",
-"0xfa011919b3ce3222620052757ee0f0c66c41f0a7"
-],
-"nWallets": 3,
-"league": "UFC",
-"cat": "Kampfsport",
-"usd": 604.0,
-"maxEinzel": 525.0,
-"pushPrice": 0.525,
-"whaleEntry": 0.525,
-"htkMess": 0.2,
-"sentAt": "2026-10-10T23:18:31Z",
-"status": "unaufloesbar",
-"nurBeobachtung": true,
-"ageDays": 10.01
-},
-{
 "k": "ufc-ism1-fra10-2026-10-10|Francisco Prado",
 "key": "ufc-ism1-fra10-2026-10-10",
 "side": "Francisco Prado",
@@ -10721,8 +10698,9 @@
 "whaleEntry": 0.505,
 "htkMess": 1.55,
 "sentAt": "2026-10-20T04:07:33Z",
-"status": "pending",
-"nurBeobachtung": true
+"status": "unaufloesbar",
+"nurBeobachtung": true,
+"ageDays": 10.0
 },
 {
 "k": "crint-ausw-nzlw-2026-10-20|Australia Women",
@@ -24396,8 +24374,18 @@
 "whaleEntry": 0.635,
 "htkMess": 2.07,
 "sentAt": "2026-10-29T22:10:56Z",
-"status": "pending",
-"nurBeobachtung": true
+"status": "settled",
+"nurBeobachtung": true,
+"cond": "0x3e5dab364ce5d5be651c1e9afac62577be5d7680497606e401afd06f5ea068af",
+"condQuelle": "erfassung+wallet",
+"result": "win",
+"winner": "Packers",
+"closePrice": 0.635,
+"stake": 10.0,
+"pnl": 5.75,
+"clvPP": 0.0,
+"settledTs": "2026-10-30T04:10:12.313344+00:00",
+"resolvedTs": "2026-10-30T04:09:54.407315+00:00"
 },
 {
 "k": "bra-vas-fla-2026-10-29-more-markets|Under",
@@ -24417,18 +24405,18 @@
 "whaleEntry": 0.415,
 "htkMess": 0.32,
 "sentAt": "2026-10-29T22:40:56Z",
-"status": "settled",
+"status": "unaufloesbar",
 "nurBeobachtung": true,
 "cond": "0x053a64b77a0bd036fffb946c3cf48c79a94a580e35609262f9e587b363e1e7e2",
 "condQuelle": "erfassung+wallet",
-"result": "loss",
-"winner": "Over",
 "closePrice": 0.415,
-"stake": 10.0,
-"pnl": -10.0,
-"clvPP": 0.0,
 "settledTs": "2026-10-30T03:40:08.193127+00:00",
-"resolvedTs": "2026-10-30T03:39:50.009702+00:00"
+"resolvedTs": "2026-10-30T03:39:50.009702+00:00",
+"zurueckgenommen": {
+"war": "loss",
+"am": "2026-10-30T04:10:12.313344+00:00",
+"grund": "Buendel-Slug ohne Linie — Ausgang nie ableitbar"
+}
 },
 {
 "k": "nba-mem-por-2026-10-29|Trail Blazers",
@@ -24502,6 +24490,27 @@
 "whaleEntry": 0.605,
 "htkMess": 0.33,
 "sentAt": "2026-10-30T02:10:11Z",
+"status": "pending",
+"nurBeobachtung": true
+},
+{
+"k": "wta-pohanko-parks-2026-10-29|Mia Pohankova",
+"key": "wta-pohanko-parks-2026-10-29",
+"side": "Mia Pohankova",
+"wallet": "0x84ad9c5c547a82ec9a08547b94bd922446e5bfb7",
+"wallets": [
+"0x84ad9c5c547a82ec9a08547b94bd922446e5bfb7",
+"0x86eb13b20d774810b92a3be064718fec5a926566"
+],
+"nWallets": 2,
+"league": "TENNIS",
+"cat": "Tennis",
+"usd": 5154.0,
+"maxEinzel": 5130.0,
+"pushPrice": 0.655,
+"whaleEntry": 0.655,
+"htkMess": 0.09,
+"sentAt": "2026-10-30T04:10:11Z",
 "status": "pending",
 "nurBeobachtung": true
 }
