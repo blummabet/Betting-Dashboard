@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-30T02:23:58.734163+00:00",
+ "generatedAt": "2026-10-30T02:38:43.118938+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -35,7 +35,7 @@
     "nieAnteil": 0.008,
     "schaetzbar": false
    },
-   "alterTage": 0.1,
+   "alterTage": 0.2,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py",
    "seitFreigabe": {
@@ -602,7 +602,7 @@
    "roi": 0.0345,
    "pl": 223.04,
    "roiLb": 0.0085,
-   "clv": 0.4,
+   "clv": 0.39,
    "clvLb": null,
    "clvUrteil": "gemessen, nicht belegt",
    "clvOg": null,
@@ -753,7 +753,7 @@
     "nieAnteil": 0.07,
     "schaetzbar": false
    },
-   "alterTage": 12.7,
+   "alterTage": 12.8,
    "art": "mix",
    "wert": "bf+money+steam"
   },
@@ -848,9 +848,9 @@
    "gruppen": 7,
    "basis": null,
    "n": 40000,
-   "pl": 25.56,
+   "pl": 22.56,
    "roi": 0.0006,
-   "clv": 0.4,
+   "clv": 0.39,
    "belegte": 20
   }
  ],
@@ -2657,18 +2657,6 @@
    "belegt": false
   },
   {
-   "liga": "Danish 2nd Division",
-   "n": 96,
-   "wins": 49,
-   "hit": 0.5104,
-   "hitLb": 0.4274,
-   "roi": 0.034,
-   "roiLb": -0.1608,
-   "pl": 3.26,
-   "clv": -0.405,
-   "belegt": false
-  },
-  {
    "liga": "Portuguese U23",
    "n": 139,
    "wins": 69,
@@ -2786,6 +2774,18 @@
    "roiLb": -0.1677,
    "pl": 0.36,
    "clv": 0.722,
+   "belegt": false
+  },
+  {
+   "liga": "Danish 2nd Division",
+   "n": 90,
+   "wins": 46,
+   "hit": 0.5111,
+   "hitLb": 0.4254,
+   "roi": 0.0327,
+   "roiLb": -0.1689,
+   "pl": 2.94,
+   "clv": -0.425,
    "belegt": false
   },
   {
@@ -3485,6 +3485,18 @@
    "belegt": false
   },
   {
+   "liga": "Austrian Regionalliga",
+   "n": 48,
+   "wins": 23,
+   "hit": 0.4792,
+   "hitLb": 0.3649,
+   "roi": 0.0562,
+   "roiLb": -0.2523,
+   "pl": 2.7,
+   "clv": -0.175,
+   "belegt": false
+  },
+  {
    "liga": "Serbian First League",
    "n": 121,
    "wins": 57,
@@ -3578,18 +3590,6 @@
    "roiLb": -0.267,
    "pl": -13.91,
    "clv": 0.253,
-   "belegt": false
-  },
-  {
-   "liga": "Austrian Regionalliga",
-   "n": 49,
-   "wins": 23,
-   "hit": 0.4694,
-   "hitLb": 0.3568,
-   "roi": 0.0347,
-   "roiLb": -0.2695,
-   "pl": 1.7,
-   "clv": -0.23,
    "belegt": false
   },
   {
@@ -4527,7 +4527,7 @@
     "nieAnteil": 0.008,
     "schaetzbar": false
    },
-   "alterTage": 0.1,
+   "alterTage": 0.2,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py",
    "seitFreigabe": {
@@ -5092,7 +5092,7 @@
    "roi": 0.0345,
    "pl": 223.04,
    "roiLb": 0.0085,
-   "clv": 0.4,
+   "clv": 0.39,
    "clvLb": null,
    "clvUrteil": "gemessen, nicht belegt",
    "clvOg": null,
@@ -5243,7 +5243,7 @@
     "nieAnteil": 0.07,
     "schaetzbar": false
    },
-   "alterTage": 12.7,
+   "alterTage": 12.8,
    "art": "mix",
    "wert": "bf+money+steam"
   },
@@ -5372,7 +5372,7 @@
     "nieAnteil": 0.078,
     "schaetzbar": false
    },
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "konjunktion_gehalten",
    "quelle": "killer_ledger.json"
   },
@@ -5577,9 +5577,9 @@
    "n": 5538,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0003,
-   "pl": -1.66,
-   "roiLb": -0.0217,
+   "roi": -0.0,
+   "pl": -0.0,
+   "roiLb": -0.0214,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5653,31 +5653,9 @@
    "n": 5822,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0095,
-   "pl": -55.31,
-   "roiLb": -0.0316,
-   "clv": null,
-   "clvLb": null,
-   "clvUrteil": "nicht erhoben",
-   "clvOg": null,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "noetigGrund": "keine_einzelwerte",
-   "entfernung": null,
-   "alterTage": null,
-   "art": "markt",
-   "naeherung": false
-  },
-  {
-   "schublade": "Half Time",
-   "strom": "betfair",
-   "n": 4849,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0008,
-   "pl": 3.88,
-   "roiLb": -0.0321,
+   "roi": -0.0098,
+   "pl": -57.06,
+   "roiLb": -0.0319,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5700,6 +5678,28 @@
    "roi": -0.0117,
    "pl": -72.95,
    "roiLb": -0.0322,
+   "clv": null,
+   "clvLb": null,
+   "clvUrteil": "nicht erhoben",
+   "clvOg": null,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "noetigGrund": "keine_einzelwerte",
+   "entfernung": null,
+   "alterTage": null,
+   "art": "markt",
+   "naeherung": false
+  },
+  {
+   "schublade": "Half Time",
+   "strom": "betfair",
+   "n": 4849,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0002,
+   "pl": 0.97,
+   "roiLb": -0.0327,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -5803,7 +5803,7 @@
    "grund": "ROI nicht belegt über null",
    "roi": -0.0159,
    "pl": -79.37,
-   "roiLb": -0.0403,
+   "roiLb": -0.0404,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -6013,12 +6013,12 @@
   {
    "schublade": "🔒 Fade-Unter · Ganzspiel-Torlinie",
    "strom": "betfair",
-   "n": 6513,
+   "n": 6515,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0339,
-   "pl": -220.67,
-   "roiLb": -0.0613,
+   "roi": -0.0332,
+   "pl": -216.43,
+   "roiLb": -0.0606,
    "clv": null,
    "clvLb": null,
    "clvUrteil": "nicht erhoben",
@@ -6028,10 +6028,10 @@
    "noetigNClv": null,
    "noetigGrund": "nicht_positiv",
    "entfernung": {
-    "median": 228421,
-    "lo": 12339,
-    "hi": 1888084,
-    "nieAnteil": 0.977,
+    "median": 139448,
+    "lo": 11505,
+    "hi": 777928,
+    "nieAnteil": 0.978,
     "schaetzbar": false
    },
    "alterTage": 0.0,
@@ -6909,7 +6909,7 @@
     "nieAnteil": 0.825,
     "schaetzbar": false
    },
-   "alterTage": 0.1,
+   "alterTage": 0.2,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py"
   },
@@ -7592,7 +7592,7 @@
     "nieAnteil": 0.747,
     "schaetzbar": false
    },
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "vorangemeldet",
    "angemeldet": "2026-09-01T20:41:52.601081+00:00",
    "zielN": 40,
