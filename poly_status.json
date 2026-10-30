@@ -88,15 +88,17 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "1462 geprueft, davon 192 abgeschnitten"
+      "note": "1464 geprueft, davon 193 abgeschnitten"
     },
     {
       "id": "settlement_alive",
       "label": "Settlement lebt (keine ewig offenen Positionen)",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "col1-dep-jdc-2026-08-16: seit 75.8 Tagen offen — keine Auflösung gefunden"
+      ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen. Der Grund steht an jeder Zeile — er ist bei jeder ein anderer."
     },
     {
@@ -133,7 +135,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Fällige Märkte je Liga, die ihre Auflösung finden — nur ab dem Beginn des Auflösungsbuchs (2026-10-16); 1907 ältere Märkte bleiben draussen, fuer sie kann es keine geben. < 60% = Settlement läuft wirklich ins Leere."
+      "note": "Fällige Märkte je Liga, die ihre Auflösung finden — nur ab dem Beginn des Auflösungsbuchs (2026-10-16); 1905 ältere Märkte bleiben draussen, fuer sie kann es keine geben. < 60% = Settlement läuft wirklich ins Leere."
     },
     {
       "id": "proven_wallets_profitable",
@@ -145,7 +147,7 @@
         "446/956 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (47%) — Trefferquote allein trügt",
         "   0xc3c3b3ef30… n=339 Treffer 51% P&L $-3,994,872",
         "   0xabb89972b2… n=79 Treffer 53% P&L $-2,563,982",
-        "   0x5b6331e7ff… n=1742 Treffer 50% P&L $-2,058,779",
+        "   0x5b6331e7ff… n=1743 Treffer 50% P&L $-2,058,779",
         "   0x6ac5bb06a9… n=327 Treffer 54% P&L $-1,555,775"
       ],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
@@ -196,6 +198,6 @@
       "note": "poly_direct_bets.py rechnet über poly_resolutions.json ab. Hängt ein Bet, kennt Poly den Ausgang nicht (Markt noch offen/obskur) oder der Slug passt nicht — dann fehlt echtes Geld in der Bilanz."
     }
   ],
-  "nFail": 1,
-  "generatedAt": "2026-10-30T17:44:05.119148+00:00"
+  "nFail": 2,
+  "generatedAt": "2026-10-30T18:13:14.929637+00:00"
 }
