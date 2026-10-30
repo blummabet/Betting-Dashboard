@@ -1,15 +1,15 @@
 {
- "n": 703,
+ "n": 706,
  "minOdds": 1.35,
  "moneyHitRate": 0.418,
- "priceHitRate": 0.431,
- "brierMoney": 0.8148,
- "brierPrice": 0.6691,
+ "priceHitRate": 0.429,
+ "brierMoney": 0.8147,
+ "brierPrice": 0.6701,
  "disagree": {
-  "n": 175,
+  "n": 178,
   "moneyWon": 31,
-  "priceWon": 40,
-  "neither": 104
+  "priceWon": 39,
+  "neither": 108
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -103,6 +103,14 @@
    "verdict": "preis_besser"
   },
   {
+   "league": "LIGUE-1",
+   "n": 30,
+   "moneyHitRate": 0.467,
+   "brierMoney": 0.7951,
+   "brierPrice": 0.6298,
+   "verdict": "preis_besser"
+  },
+  {
    "league": "BUNDESLIGA",
    "n": 27,
    "moneyHitRate": 0.444,
@@ -119,14 +127,6 @@
    "verdict": "preis_besser"
   },
   {
-   "league": "LIGUE-1",
-   "n": 27,
-   "moneyHitRate": 0.481,
-   "brierMoney": 0.7958,
-   "brierPrice": 0.6014,
-   "verdict": "preis_besser"
-  },
-  {
    "league": "MLS",
    "n": 21,
    "moneyHitRate": 0.286,
@@ -136,8 +136,8 @@
   }
  ],
  "guete": {
-  "belastbar": 703,
-  "preis_echo": 489,
+  "belastbar": 706,
+  "preis_echo": 493,
   "abgeschnitten": 144,
   "unbekannt": 0,
   "leer": 0
@@ -172,11 +172,11 @@
    "league": "SOCCER:UCL",
    "winner": "FK Bodø/Glimt",
    "moneyFav": "FK Bodø/Glimt",
-   "priceFav": "BV Borussia 09 Dortmund",
+   "priceFav": "FK Bodø/Glimt",
    "moneyShare": 0.533,
    "priceProb": 0.377,
    "moneyOK": true,
-   "priceOK": false,
+   "priceOK": true,
    "totalUsd": 2624846
   },
   {
@@ -624,7 +624,7 @@
    "totalUsd": 399480
   }
  ],
- "generatedAt": "2026-10-30T20:12:28.754159+00:00",
+ "generatedAt": "2026-10-30T20:42:47.869009+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -635,12 +635,12 @@
   "mls": 642,
   "epl": 619,
   "soccer": 800,
-  "tennis": 534,
+  "tennis": 539,
   "ucl": 544,
   "la-liga": 602,
   "bundesliga": 542,
   "serie-a": 52,
-  "ligue-1": 577,
+  "ligue-1": 564,
   "primeira-liga": 500,
   "brazil-serie-a": 467,
   "brasileirao": 0,
@@ -712,7 +712,7 @@
   "10188": 585,
   "10193": 582,
   "10194": 527,
-  "10195": 562,
+  "10195": 549,
   "10203": 582
  },
  "sweepStats": {
@@ -721,113 +721,113 @@
   "sweepAdded": 415
  },
  "vorStats": {
-  "kandidaten": 13,
+  "kandidaten": 9,
   "budgetLeer": 0,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
-  "mitAnteilen": 13,
-  "calls": 13
+  "mitAnteilen": 9,
+  "calls": 9
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 2004,
-   "usd": 50085835,
-   "beispiel": "fifwc-esp-arg-2026-07-19-more-markets"
+   "n": 1768,
+   "usd": 48839614,
+   "beispiel": "fifwc-esp-arg-2026-07-19-exact-score"
   },
   "world": {
-   "n": 97,
-   "usd": 7084357,
+   "n": 101,
+   "usd": 7459396,
    "beispiel": "world-cup-winner"
   },
-  "presidential": {
-   "n": 15,
-   "usd": 2108936,
-   "beispiel": "presidential-election-winner-2028"
+  "wnba": {
+   "n": 328,
+   "usd": 1558702,
+   "beispiel": "wnba-tor-por-2026-08-06"
   },
   "ecs": {
-   "n": 5,
-   "usd": 993119,
-   "beispiel": "ecs-ars-mci-2026-08-16-more-markets"
+   "n": 8,
+   "usd": 999086,
+   "beispiel": "ecs-ars-mci-2026-08-16"
   },
-  "wnba": {
-   "n": 98,
-   "usd": 725299,
-   "beispiel": "wnba-gsv-atl-2026-10-24"
+  "presidential": {
+   "n": 17,
+   "usd": 394540,
+   "beispiel": "presidential-election-winner-2028"
   },
   "usc": {
-   "n": 4,
-   "usd": 334727,
+   "n": 5,
+   "usd": 344411,
    "beispiel": "usc-psg-av-2026-08-12"
   },
   "super": {
-   "n": 16,
-   "usd": 311522,
-   "beispiel": "super-bowl-champion-2026-731"
-  },
-  "ballon": {
-   "n": 8,
-   "usd": 288201,
-   "beispiel": "ballon-dor-winner-2026"
-  },
-  "texas": {
-   "n": 13,
-   "usd": 253698,
-   "beispiel": "texas-senate-election-winner"
-  },
-  "democratic": {
    "n": 23,
-   "usd": 251440,
-   "beispiel": "democratic-presidential-nominee-2028"
-  },
-  "uefa": {
-   "n": 11,
-   "usd": 247775,
-   "beispiel": "uefa-champions-league-winner"
-  },
-  "who": {
-   "n": 13,
-   "usd": 246598,
-   "beispiel": "who-will-be-the-next-prime-minister-of-israel-after-the-next-election"
-  },
-  "worlds": {
-   "n": 16,
-   "usd": 239351,
-   "beispiel": "worlds-2026-winner"
-  },
-  "btc": {
-   "n": 48,
-   "usd": 227238,
-   "beispiel": "btc-updown-15m-1779976800"
+   "usd": 329886,
+   "beispiel": "super-bowl-champion-2026-731"
   },
   "fed": {
    "n": 17,
-   "usd": 215590,
-   "beispiel": "fed-decision-in-december-20260729232808632"
+   "usd": 302981,
+   "beispiel": "fed-decision-in-september-762"
+  },
+  "ballon": {
+   "n": 7,
+   "usd": 266393,
+   "beispiel": "ballon-dor-winner-2026"
+  },
+  "democratic": {
+   "n": 22,
+   "usd": 257001,
+   "beispiel": "democratic-presidential-nominee-2028"
+  },
+  "cbb": {
+   "n": 28,
+   "usd": 242971,
+   "beispiel": "cbb-uconn-ill-2026-04-04"
+  },
+  "uefa": {
+   "n": 10,
+   "usd": 242509,
+   "beispiel": "uefa-champions-league-2027-champion-20260701202025549"
+  },
+  "worlds": {
+   "n": 18,
+   "usd": 234080,
+   "beispiel": "worlds-2026-winner"
   },
   "will": {
-   "n": 12,
-   "usd": 210964,
-   "beispiel": "will-the-us-invade-cuba-in-2026"
+   "n": 21,
+   "usd": 230403,
+   "beispiel": "will-the-us-invade-iran-before-2027"
+  },
+  "texas": {
+   "n": 18,
+   "usd": 219240,
+   "beispiel": "texas-senate-election-winner"
+  },
+  "who": {
+   "n": 10,
+   "usd": 195479,
+   "beispiel": "who-will-be-the-next-prime-minister-of-israel-after-the-next-election"
+  },
+  "us": {
+   "n": 20,
+   "usd": 188661,
+   "beispiel": "us-iran-ceasefire-continues-through-the-midterms"
   },
   "2026": {
-   "n": 16,
-   "usd": 186176,
-   "beispiel": "2026-mens-wimbledon-winner"
-  },
-  "lec": {
    "n": 30,
-   "usd": 145843,
-   "beispiel": "lec-clb-pum-2026-08-11"
+   "usd": 147051,
+   "beispiel": "2026-the-open-championship-winner"
   },
   "nebraska": {
-   "n": 4,
-   "usd": 135741,
+   "n": 5,
+   "usd": 138800,
    "beispiel": "nebraska-senate-election-winner"
   },
-  "nbasl": {
-   "n": 2,
-   "usd": 108983,
-   "beispiel": "nbasl-bos-cha-2026-07-12"
+  "cricipl": {
+   "n": 13,
+   "usd": 127962,
+   "beispiel": "cricipl-mum-sun-2026-04-29"
   }
  }
 }
