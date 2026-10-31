@@ -546,6 +546,7 @@ def main():
         pass
     alert_dedup = _load_alert_dedup()
 
+    protokoll = []      # 31.10.2026: je Spiel, warum es (k)eine Aufstellung gab → liga_lineups_status.json
     new_count = 0
     cached_count = 0
     fail_count = 0
@@ -556,6 +557,7 @@ def main():
         entry = existing.get(mk)
         if not force and _is_cache_fresh(entry):
             cached_count += 1
+            protokoll.append({"spiel": mk, "kickoff": fx.get("kickoff"), "grund": "cache"})
             print(f"   ✓ {mk}: Cache frisch ({entry.get('fetchedAt', '?')[:19]}) — skip")
             continue
 
@@ -579,6 +581,7 @@ def main():
             if not fixture_id:
                 print(f"   ⚠️  APIF fixture_id nicht gefunden — skip")
                 fail_count += 1
+                protokoll.append({"spiel": mk, "kickoff": fx.get("kickoff"), "grund": "fixture_id fehlt"})
                 continue
             print(f"   ↪ APIF fixture_id: {fixture_id}")
 
@@ -587,6 +590,7 @@ def main():
         if lineup is None:
             print(f"   ⚠️  Lineup noch nicht verfügbar (zu früh?)")
             fail_count += 1
+            protokoll.append({"spiel": mk, "kickoff": fx.get("kickoff"), "grund": "noch keine Aufstellung", "fixture_id": fixture_id})
             continue
 
         entry_new = {
@@ -598,6 +602,7 @@ def main():
         }
         existing[mk] = entry_new
         new_count += 1
+        protokoll.append({"spiel": mk, "kickoff": fx.get("kickoff"), "grund": "geholt", "fixture_id": fixture_id})
         print(f"   ✅ Lineups geholt: "
               f"{len(lineup['home']['starting'])}+{len(lineup['home']['subs'])} | "
               f"{len(lineup['away']['starting'])}+{len(lineup['away']['subs'])} "
@@ -614,6 +619,12 @@ def main():
         sent = 0 if no_alerts else _emit_lineup_alerts(mk, entry_new, squads, fixtures_meta, alert_dedup)
         alert_count += sent
 
+    try:
+        D.file("wm_lineups_status.json", "liga_lineups_status.json").write_text(json.dumps({
+            "zeit": datetime.now(timezone.utc).isoformat(), "faellig": len(due), "neu": new_count,
+            "cache": cached_count, "fehlt": fail_count, "spiele": protokoll}, ensure_ascii=False, indent=1), encoding="utf-8")
+    except Exception as exc:  # noqa: BLE001
+        print(f"   ⚠️ Status nicht geschrieben: {exc}")
     print(f"\n=== Done: {new_count} neu, {cached_count} cached, {fail_count} fail, "
           f"{alert_count} Telegram-Alerts gesendet ===")
     print(f"   → {OUTPUT_FILE.name}")
