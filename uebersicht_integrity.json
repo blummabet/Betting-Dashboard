@@ -38,7 +38,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "Fall liegt aktuell vor: ABWÄGEN · gepusht, Italian Serie A · Over/Under 2.5 Goals, UEFA U21 Euro Qualifiers · First Half Goals 0.5 nehmen die ROI-Huerde und scheitern an CLV — der Satz auf Ebene 1 muss das sagen"
+      "hinweis": "Fall liegt aktuell vor: ABWÄGEN · gepusht, Chinese League 2 · Match Odds, Italian Serie A · Over/Under 2.5 Goals nehmen die ROI-Huerde und scheitern an CLV — der Satz auf Ebene 1 muss das sagen"
     },
     {
       "label": "Poly-Kachel gibt sich nicht als Kanal-Bilanz aus",
@@ -171,7 +171,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "133 Picks im Fenster, 18 % ohne Preis-Signal."
+      "hinweis": "136 Picks im Fenster, 18 % ohne Preis-Signal."
     },
     {
       "label": "Stumme Signale: wer hat nie gefeuert?",
@@ -189,23 +189,22 @@
       "label": "Signal-Bilanz: schadet ein Signal belegt?",
       "severity": "warn",
       "failures": [
-        "apif_predictions schadet belegt: Ausgang -0.068 schlechter als ohne (OG -0.008, n=41/250) — abwerten oder nur noch beobachten",
-        "injury schadet belegt: Ausgang -0.046 schlechter als ohne (OG -0.007, n=155/136) — abwerten oder nur noch beobachten",
-        "topscorer_momentum schadet belegt: Ausgang -0.065 schlechter als ohne (OG -0.014, n=52/239) — abwerten oder nur noch beobachten"
+        "injury schadet belegt: Ausgang -0.047 schlechter als ohne (OG -0.007, n=155/136) — abwerten oder nur noch beobachten",
+        "topscorer_momentum schadet belegt: Ausgang -0.061 schlechter als ohne (OG -0.010, n=52/239) — abwerten oder nur noch beobachten"
       ],
-      "nFail": 3,
+      "nFail": 2,
       "ok": false,
-      "hinweis": "11 Signale belegt beitragend, 3 belegt schaedlich. ~30 Signale gleichzeitig geprueft — 1-2 falsche Treffer sind zu erwarten. Nur was ueber mehrere Wochen haelt, ist ein Befund."
+      "hinweis": "11 Signale belegt beitragend, 2 belegt schaedlich. ~30 Signale gleichzeitig geprueft — 1-2 falsche Treffer sind zu erwarten. Nur was ueber mehrere Wochen haelt, ist ein Befund."
     },
     {
       "label": "Fade-Unter: haelt die Kontrollgruppe?",
       "severity": "error",
       "failures": [
-        "Match Odds H: der Fade gewinnt hier BELEGT (+7.9 %, UG +1.9 %, Geldseite +1.8 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
+        "Match Odds H: der Fade gewinnt hier BELEGT (+8.0 %, UG +1.9 %, Geldseite +1.8 pp) — die Rechnung misst sich selbst, der Befund traegt nicht"
       ],
       "nFail": 1,
       "ok": false,
-      "hinweis": "seit Vorregistrierung n=6539 (UG -6.4 %) · Rueckblick n=0, nicht Teil des Urteils."
+      "hinweis": "seit Vorregistrierung n=6555 (UG -6.2 %) · Rueckblick n=0, nicht Teil des Urteils."
     },
     {
       "label": "CLV-Urteil passt zur CLV-Zahl",
@@ -258,8 +257,8 @@
       "label": "Positionswert ist frisch",
       "severity": "warn",
       "failures": [
-        "liga_poly_balance.json: Positionswert $14.81 stammt aus einem Lauf vor 145 h — die Datei selbst ist 145 h alt — der Produzent laeuft nicht, das ist kein API-Problem",
-        "mls_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 134 h — die Datei selbst ist 134 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
+        "liga_poly_balance.json: Positionswert $14.81 stammt aus einem Lauf vor 158 h — die Datei selbst ist 158 h alt — der Produzent laeuft nicht, das ist kein API-Problem",
+        "mls_poly_balance.json: Positionswert $0.00 stammt aus einem Lauf vor 148 h — die Datei selbst ist 148 h alt — der Produzent laeuft nicht, das ist kein API-Problem"
       ],
       "nFail": 2,
       "ok": false,
@@ -279,7 +278,7 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "980 Zeilen · 966 abgerechnet · 5 offen"
+      "hinweis": "987 Zeilen · 976 abgerechnet · 2 offen"
     },
     {
       "label": "Artefakte sind lesbar",
@@ -318,11 +317,9 @@
     {
       "label": "Ergebnisse kommen an",
       "severity": "error",
-      "failures": [
-        "liga_ergebnis_nachlauf.json: 1 abgesagtes/verlegtes Spiel (Rayo Vallecano–Athletic Club (ABD)) — es kommt an diesem Termin zu keinem Ergebnis; offene Wetten darauf brauchen eine Entscheidung"
-      ],
-      "nFail": 1,
-      "ok": false,
+      "failures": [],
+      "nFail": 0,
+      "ok": true,
       "hinweis": ""
     },
     {
@@ -337,13 +334,13 @@
       "label": "Serien-Buch zeigt beide Buecher",
       "severity": "warn",
       "failures": [
-        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 430.2 h, MLS 437.9 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
+        "die beiden Serien-Buecher sind 7.6 h auseinander (Liga 443.6 h, MLS 451.2 h) — ein gemeinsamer Stempel unterschlaegt den aelteren"
       ],
       "nFail": 1,
       "ok": false,
       "hinweis": "Liga n=95 · MLS n=82 · Urteil beide 'Erwartung zu duenn'"
     }
   ],
-  "nFail": 11,
-  "generatedAt": "2026-10-30T22:58:06.451438+00:00"
+  "nFail": 10,
+  "generatedAt": "2026-10-31T12:19:41.650474+00:00"
 }

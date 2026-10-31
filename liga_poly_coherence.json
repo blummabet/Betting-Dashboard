@@ -1,12 +1,21 @@
 {
  "dataset": "liga",
- "generatedAt": "2026-10-30T22:25:20.052358+00:00",
+ "generatedAt": "2026-10-31T12:19:29.187141+00:00",
  "stale": false,
  "pricesAgeH": 0.0,
  "arbCount": 0,
  "inversions": 2,
  "warnings": 1,
  "findings": [
+  {
+   "key": "728-531",
+   "match": "Rayo Vallecano de Madrid vs. Athletic Club",
+   "typ": "ladder_inversion",
+   "markt": "Über 1.5 vs Über 2.5",
+   "summe": null,
+   "edgePP": 3.5,
+   "hinweis": "Über 2.5 (0.38) > Über 1.5 (0.34) — unmöglich, eine Linie ist falsch"
+  },
   {
    "key": "728-531",
    "match": "Rayo Vallecano de Madrid vs. Athletic Club",
@@ -19,19 +28,10 @@
   {
    "key": "728-531",
    "match": "Rayo Vallecano de Madrid vs. Athletic Club",
-   "typ": "ladder_inversion",
-   "markt": "Über 1.5 vs Über 2.5",
-   "summe": null,
-   "edgePP": 2.0,
-   "hinweis": "Über 2.5 (0.38) > Über 1.5 (0.36) — unmöglich, eine Linie ist falsch"
-  },
-  {
-   "key": "728-531",
-   "match": "Rayo Vallecano de Madrid vs. Athletic Club",
    "typ": "overround",
    "markt": "1X2",
-   "summe": 1.1,
-   "edgePP": 10.0,
+   "summe": 1.085,
+   "edgePP": 8.5,
    "hinweis": "Fetter Spread — nicht als Taker rein"
   }
  ]
