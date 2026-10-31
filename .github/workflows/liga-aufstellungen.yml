@@ -1,0 +1,108 @@
+name: 📋 Liga Aufstellungen (T-1h)
+
+# 31.10.2026 (Lucas: „die Aufstellung sollte schon feuern, wir holen die ja 1 Stunde vorher").
+# Cards-Audit: seit August nur 26 Top-5-Aufstellungen. liga_lineups.json wurde nur im vollen
+# update-liga-Lauf gefüllt (3×/Tag, mit GitHub-Verspätung) — das Fenster ~60 Min vor Anpfiff traf
+# er fast nie. Der stündliche fetch-lineups.yml schreibt lineup_cache.json fürs alte Prematch-
+# Dashboard, nicht für die Cards. Dieser schlanke Lauf holt NUR die Liga-Aufstellungen (API-Football,
+# nur Spiele mit Anpfiff in den nächsten 3 h, Cache 45 Min) und rechnet die Picks neu, wenn neue kamen.
+on:
+  schedule:
+    - cron: '5,25,45 9-21 * * *'   # Top-5-Anpfiffe liegen ~11:30–21:00 UTC; GitHub liefert ohnehin lückenhaft
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+  checks: read
+
+# Teilt die Gruppe mit update-liga / fetch-liga-odds-dense → kein gleichzeitiges Schreiben von liga-data.json.
+concurrency:
+  group: update-liga
+  cancel-in-progress: false
+
+jobs:
+  liga-aufstellungen:
+    runs-on: ubuntu-latest
+    env:
+      COCOBET_DATASET: liga
+      COCOBET_PROFILE: liga_default
+    steps:
+      - name: 📥 Repo auschecken
+        uses: actions/checkout@v4
+
+      - name: 🔄 Auf den neuesten Stand (vor jeder Wirkung)
+        run: bash scripts/ci_pull.sh main || true
+
+      - name: 🐍 Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📦 Dependencies
+        run: pip install -r requirements.txt
+
+      - name: 📋 Liga Aufstellungen holen (T-3h bis Anpfiff)
+        id: lineups
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+        run: |
+          python fetch_wm_lineups.py --no-alerts || true
+          if git diff --quiet -- liga_lineups.json 2>/dev/null && [ -z "$(git status --porcelain liga_lineups.json)" ]; then
+            echo "neu=0" >> "$GITHUB_OUTPUT"; echo "Keine neuen Aufstellungen."
+          else
+            echo "neu=1" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: 🎯 Liga-Picks mit den neuen Aufstellungen neu rechnen
+        if: steps.lineups.outputs.neu == '1'
+        run: python generate_liga_picks.py || true
+
+      - name: 🆕 Liga Neuer-Pick-Noti (Intraday)
+        if: steps.lineups.outputs.neu == '1'
+        env:
+          TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python notify_new_picks.py || true
+
+      - name: 📓 Push-Schattenbuch fortschreiben
+        if: steps.lineups.outputs.neu == '1'
+        run: python pick_push_ledger.py || true
+
+      - name: 🩺 Lauf-Gesundheit (verschluckte Fehler sichtbar machen)
+        if: always()
+        continue-on-error: true
+        run: python3 run_health.py --slug liga-aufstellungen
+        env:
+          GITHUB_TOKEN:            ${{ secrets.GITHUB_TOKEN }}
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+
+      - name: 💾 Aufstellungen + Picks committen
+        run: |
+          git config user.name  "CocoBet Bot"
+          git config user.email "bot@cocobet.local"
+          git add health/liga-aufstellungen.json 2>/dev/null || true
+          git add liga_lineups.json 2>/dev/null || true
+          python3 scripts/json_kompakt.py liga-data.json || true
+          git add liga-data.json 2>/dev/null || true
+          git add liga_pick_announce_state.json 2>/dev/null || true
+          git add liga_pick_push_ledger.json 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "Keine Änderung — nichts zu committen."; exit 0
+          fi
+          git commit -m "liga: Aufstellungen T-1h [skip ci]"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          for attempt in 1 2 3 4 5; do
+            bash scripts/ci_pull.sh main || true
+            CONFLICTS=$(git diff --name-only --diff-filter=U 2>/dev/null)
+            if [ -n "$CONFLICTS" ]; then
+              echo "$CONFLICTS" | while read f; do git checkout --ours -- "$f"; git add "$f"; done
+              git diff --staged --quiet || git commit -m "🔧 auto-resolve merge conflicts"
+            fi
+            if git push 2>&1; then echo "✅ Push nach Versuch $attempt"; exit 0; fi
+            echo "⚠️ Push $attempt fehlgeschlagen — retry in $((attempt * 3))s…"; sleep $((attempt * 3))
+          done
+          echo "❌ Push fehlgeschlagen"; exit 1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

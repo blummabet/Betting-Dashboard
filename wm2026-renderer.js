@@ -3303,9 +3303,9 @@
     try {
       // Aus echtem kickoff (UTC) → Wien (CEST UTC+2); Fallback alte date+time-Felder.
       const _ko = fx.kickoff ? new Date(fx.kickoff) : new Date(`${fx.date}T${fx.time || '19:00'}:00Z`);
-      const _v  = new Date(_ko.getTime() + 2 * 3600 * 1000);
-      const wd  = ['So','Mo','Di','Mi','Do','Fr','Sa'][_v.getUTCDay()];
-      timeLabel = `${wd} ${String(_v.getUTCDate()).padStart(2,'0')}.${String(_v.getUTCMonth()+1).padStart(2,'0')}. · ${String(_v.getUTCHours()).padStart(2,'0')}:${String(_v.getUTCMinutes()).padStart(2,'0')}`;
+      const _v  = _tzTeile(_ko, 'Europe/Vienna');   // 31.10.2026: echte Wiener Zeit statt fest UTC+2
+      const wd  = ['So','Mo','Di','Mi','Do','Fr','Sa'][_v.wd];
+      timeLabel = `${wd} ${String(_v.tag).padStart(2,'0')}.${String(_v.monat).padStart(2,'0')}. · ${_v.h}:${_v.mi}`;
     } catch (e) {}
 
     // ── 1. MODELL-RECHNUNG ──
@@ -3759,28 +3759,37 @@
   // ─────────────────────────────────────────────────────
   // CEST = UTC+2 (Sommer) — fix für WM-Zeitraum Juni/Juli.
   // Liefert Offset in Stunden gegenüber UTC für jede Stadt.
+  // Uhrzeit-Teile in einer echten Zeitzone (inkl. Sommer-/Winterzeit) — 31.10.2026
+  function _tzTeile(d, tz) {
+    const t = {};
+    for (const p of new Intl.DateTimeFormat('en-GB', { timeZone: tz, weekday: 'short', day: 'numeric', month: 'numeric',
+      year: 'numeric', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(d)) t[p.type] = p.value;
+    return { wd: ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(t.weekday), tag: +t.day, monat: +t.month,
+             h: String(t.hour).padStart(2, '0'), mi: String(t.minute).padStart(2, '0') };
+  }
+
   function _venueTz(venue) {
     if (!venue) return null;
     const v = venue.toLowerCase();
     // EST/EDT = UTC-4 im Sommer (Boston, NY, Philly, Miami, Atlanta, Toronto)
-    if (v.includes('metlife') || v.includes('new york') || v.includes('east rutherford')) return { off: -4, city: 'NY', tzShort: 'EDT' };
-    if (v.includes('gillette') || v.includes('foxborough') || v.includes('boston'))    return { off: -4, city: 'Boston', tzShort: 'EDT' };
-    if (v.includes('hard rock') || v.includes('miami'))                                 return { off: -4, city: 'Miami', tzShort: 'EDT' };
-    if (v.includes('mercedes-benz') || v.includes('atlanta'))                           return { off: -4, city: 'Atlanta', tzShort: 'EDT' };
-    if (v.includes('bmo field') || v.includes('toronto'))                               return { off: -4, city: 'Toronto', tzShort: 'EDT' };
-    if (v.includes('philly') || v.includes('philadelphia') || v.includes('lincoln'))   return { off: -4, city: 'Philly', tzShort: 'EDT' };
+    if (v.includes('metlife') || v.includes('new york') || v.includes('east rutherford')) return { off: -4, city: 'NY', iana: 'America/New_York', tzShort: 'EDT' };
+    if (v.includes('gillette') || v.includes('foxborough') || v.includes('boston'))    return { off: -4, city: 'Boston', iana: 'America/New_York', tzShort: 'EDT' };
+    if (v.includes('hard rock') || v.includes('miami'))                                 return { off: -4, city: 'Miami', iana: 'America/New_York', tzShort: 'EDT' };
+    if (v.includes('mercedes-benz') || v.includes('atlanta'))                           return { off: -4, city: 'Atlanta', iana: 'America/New_York', tzShort: 'EDT' };
+    if (v.includes('bmo field') || v.includes('toronto'))                               return { off: -4, city: 'Toronto', iana: 'America/Toronto', tzShort: 'EDT' };
+    if (v.includes('philly') || v.includes('philadelphia') || v.includes('lincoln'))   return { off: -4, city: 'Philly', iana: 'America/New_York', tzShort: 'EDT' };
     // CST/CDT = UTC-5 (Dallas, Houston, KC, Mexiko-City, Guadalajara, Monterrey)
-    if (v.includes("at&t") || v.includes('dallas'))                                     return { off: -5, city: 'Dallas', tzShort: 'CDT' };
-    if (v.includes('nrg') || v.includes('houston'))                                     return { off: -5, city: 'Houston', tzShort: 'CDT' };
-    if (v.includes('arrowhead') || v.includes('kansas'))                                return { off: -5, city: 'KC', tzShort: 'CDT' };
-    if (v.includes('azteca') || v.includes('mexico city'))                              return { off: -6, city: 'Mexico City', tzShort: 'CST' }; // Mexico nicht DST
-    if (v.includes('akron') || v.includes('guadalajara'))                               return { off: -6, city: 'Guadalajara', tzShort: 'CST' };
-    if (v.includes('bbva') || v.includes('monterrey'))                                  return { off: -6, city: 'Monterrey', tzShort: 'CST' };
+    if (v.includes("at&t") || v.includes('dallas'))                                     return { off: -5, city: 'Dallas', iana: 'America/Chicago', tzShort: 'CDT' };
+    if (v.includes('nrg') || v.includes('houston'))                                     return { off: -5, city: 'Houston', iana: 'America/Chicago', tzShort: 'CDT' };
+    if (v.includes('arrowhead') || v.includes('kansas'))                                return { off: -5, city: 'KC', iana: 'America/Chicago', tzShort: 'CDT' };
+    if (v.includes('azteca') || v.includes('mexico city'))                              return { off: -6, city: 'Mexico City', iana: 'America/Mexico_City', tzShort: 'CST' }; // Mexico nicht DST
+    if (v.includes('akron') || v.includes('guadalajara'))                               return { off: -6, city: 'Guadalajara', iana: 'America/Mexico_City', tzShort: 'CST' };
+    if (v.includes('bbva') || v.includes('monterrey'))                                  return { off: -6, city: 'Monterrey', iana: 'America/Monterrey', tzShort: 'CST' };
     // PST/PDT = UTC-7 (Vancouver, LA, Seattle, SF)
-    if (v.includes('bc place') || v.includes('vancouver'))                              return { off: -7, city: 'Vancouver', tzShort: 'PDT' };
-    if (v.includes('sofi') || v.includes('los angeles') || v.includes('inglewood'))    return { off: -7, city: 'LA', tzShort: 'PDT' };
-    if (v.includes('seattle') || v.includes('lumen'))                                   return { off: -7, city: 'Seattle', tzShort: 'PDT' };
-    if (v.includes("levi's") || v.includes('santa clara') || v.includes('san francisco')) return { off: -7, city: 'SF', tzShort: 'PDT' };
+    if (v.includes('bc place') || v.includes('vancouver'))                              return { off: -7, city: 'Vancouver', iana: 'America/Vancouver', tzShort: 'PDT' };
+    if (v.includes('sofi') || v.includes('los angeles') || v.includes('inglewood'))    return { off: -7, city: 'LA', iana: 'America/Los_Angeles', tzShort: 'PDT' };
+    if (v.includes('seattle') || v.includes('lumen'))                                   return { off: -7, city: 'Seattle', iana: 'America/Los_Angeles', tzShort: 'PDT' };
+    if (v.includes("levi's") || v.includes('santa clara') || v.includes('san francisco')) return { off: -7, city: 'SF', iana: 'America/Los_Angeles', tzShort: 'PDT' };
     return null;
   }
 
@@ -3959,13 +3968,12 @@
   }
 
   // Hauptlabel in Wiener Zeit: "So, 14. Jun · 00:00 Uhr". Fallback alte Felder.
+  // 31.10.2026 (Cards-Audit): vorher fest UTC+2 — seit der Zeitumstellung 1 h zu spät.
   function _fmtKickoffMain(fx) {
     const d = _koDate(fx);
     if (!d) return _fmtDate(fx.date, fx.time);
-    const v  = new Date(d.getTime() + 2 * 3600 * 1000);   // UTC+2 (CEST)
-    const h  = String(v.getUTCHours()).padStart(2, '0');
-    const mi = String(v.getUTCMinutes()).padStart(2, '0');
-    return `${_DAYS[v.getUTCDay()]}, ${v.getUTCDate()}. ${_MONTHS[v.getUTCMonth()]} · ${h}:${mi} Uhr`;
+    const v = _tzTeile(d, 'Europe/Vienna');
+    return `${_DAYS[v.wd]}, ${v.tag}. ${_MONTHS[v.monat - 1]} · ${v.h}:${v.mi} Uhr`;
   }
 
   // Venue-Local aus kickoff: " · 18:00 NY". Fallback alte Felder.
@@ -3974,6 +3982,7 @@
     if (!d) return _venueLocalTime(fx.venue, fx.time);
     const tz = _venueTz(fx.venue);
     if (!tz) return '';
+    if (tz.iana) { const v = _tzTeile(d, tz.iana); return ` · ${v.h}:${v.mi} ${tz.city}`; }
     const loc = new Date(d.getTime() + tz.off * 3600 * 1000);
     const h   = String(loc.getUTCHours()).padStart(2, '0');
     const mi  = String(loc.getUTCMinutes()).padStart(2, '0');

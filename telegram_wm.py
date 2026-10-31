@@ -26,6 +26,7 @@ import os
 import re
 import urllib.request
 import urllib.error
+from zoneinfo import ZoneInfo
 from datetime import datetime, timezone, timedelta
 
 # ── Config ────────────────────────────────────────────────────────────────────
@@ -476,7 +477,7 @@ def build_morning_card(wm: dict, target_date: str, lang: str = "de") -> str | No
         _dt = _ko_dt(_m.get("kickoff"))
         if _dt is not None:
             _m["_sort"]    = _dt.timestamp()
-            _m["dispTime"] = (_dt + timedelta(hours=2)).strftime("%H:%M")  # Wien (CEST)
+            _m["dispTime"] = _dt.astimezone(ZoneInfo("Europe/Vienna")).strftime("%H:%M")  # Wien (31.10.: echte Zeitzone statt fest +2)
         else:
             _m["_sort"]    = _day_base + _ko_key(_m.get("time")) * 60
             _m["dispTime"] = _m.get("time", "")
