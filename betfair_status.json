@@ -22,25 +22,18 @@
       "id": "grosses_geld_bleibt_im_feed",
       "label": "Grosses Geld faellt nicht aus dem Feed",
       "severity": "error",
-      "ok": false,
-      "nFail": 4,
-      "failures": [
-        "36211734: zuletzt 49.980 € und Anpfiff erst in 0.5 h — trotzdem nicht mehr im Feed",
-        "36241096: zuletzt 160.265 € und Anpfiff erst in 0.5 h — trotzdem nicht mehr im Feed",
-        "36206168: zuletzt 276.905 € und Anpfiff erst in 0.5 h — trotzdem nicht mehr im Feed",
-        "36246856: zuletzt 112.173 € und Anpfiff erst in 2.8 h — trotzdem nicht mehr im Feed"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Der Detail-Deckel darf nicht das teuerste Spiel schneiden — genau das ist am 08.09. passiert (alle vier CL-Spiele, Real Madrid mit 102.861 €)."
     },
     {
       "id": "nahe_spiele_im_feed",
       "label": "Bald anpfeifende Spiele sind im Feed",
       "severity": "error",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "nur 18 von 98 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Sportivo San Lorenzo v Libertad (Paraguayan Primera Division); Sportivo Luqueno v Nacional (Par) (Paraguayan Primera Division); Velez Sarsfield v San Lorenzo (Argentinian Primera Division)"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
     {
@@ -95,22 +88,30 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 1110971 verbraucht, 3889029 uebrig"
+      "note": "Kontingent: 1111390 verbraucht, 3888610 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 5,
+      "nFail": 13,
       "failures": [
         "US Amal Tiznit v Kawkab Marrakech (Moroccan Botola Pro 1): name — bester Kandidat „US Catanzaro 1929 v Padova“",
-        "Truro City v Ebbsfleet Utd (English National League South): zeit — bester Kandidat „Cardiff City v West Ham United“ · 100.8h Anpfiff-Abstand",
-        "Billericay Town v Hemel Hempstead (English National League South): name — bester Kandidat „Accrington Stanley v Northampton Town“",
-        "Dorking Wanderers v Weston-super-Mare (English National League South): name — bester Kandidat „Wolverhampton Wanderers v Cardiff City“",
+        "Rangers v Aberdeen (Scottish League Cup): zeit — bester Kandidat „Rangers v Aberdeen“ · 578.5h Anpfiff-Abstand",
+        "Real Union v Real Aviles (Spanish Primera Federación - Group 1): zeit — bester Kandidat „Real Racing Club de Santander v Real Madrid“ · 21.5h Anpfiff-Abstand",
+        "San Telmo v CA Central Norte (Argentinian Primera Nacional): name — bester Kandidat „St. Louis City SC v San Diego FC“",
+        "Deportivo Moron v Ciudad de Bolivar (Argentinian Primera Nacional): name — bester Kandidat „Deportivo Riestra v Talleres“",
+        "Karlsruhe v FC Heidenheim (German Bundesliga 2): name — bester Kandidat „Karlsruher SC v 1. FC Heidenheim“",
+        "Deportivo Recoleta v Club Sportivo Ameliano (Paraguayan Primera Division): name — bester Kandidat „Deportivo Riestra v Talleres“",
+        "OHiggins v Nublense (Chilean Primera Division): name — bester Kandidat „O'Higgins v Ñublense“",
+        "Puerto Cabello v Deportivo Tachira (Venezuelan Primera Division): name — bester Kandidat „Deportivo Riestra v Talleres“",
+        "Macara v Barcelona (Ecu) (Ecuadorian Serie A): name — bester Kandidat „Barcelona v Alavés“",
+        "Sportivo San Lorenzo v Libertad (Paraguayan Primera Division): name — bester Kandidat „Velez Sarsfield BA v San Lorenzo“",
+        "CA San Miguel v Deportivo Madryn (Argentinian Primera Nacional): zeit — bester Kandidat „Deportivo La Coruña v CA Osasuna“ · 50.0h Anpfiff-Abstand",
         "Aalesunds v Sandefjord (Norwegian Eliteserien): name — bester Kandidat „Aalesund v Sandefjord“"
       ],
-      "note": "ohne Anker: kein_kandidat 43 · kein_pinnacle 2 · name 4 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 71 · kein_pinnacle 2 · name 10 · zeit 3. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -119,7 +120,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 2 — Fredrikstad v Rosenborg (17 Buecher, ohne Pinnacle); Swindon v Rotherham (18 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 2 — Rayo Vallecano v Celta Vigo (9 Buecher, ohne Pinnacle); Feyenoord v Fortuna Sittard (35 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -128,7 +129,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 16 gewollt, 16 abgerufen, 0 mit Daten"
+      "note": "Totals: 17 gewollt, 17 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -194,6 +195,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 3,
-  "generatedAt": "2026-10-31T16:58:36.303522+00:00"
+  "nFail": 1,
+  "generatedAt": "2026-10-31T17:13:32.201495+00:00"
 }
