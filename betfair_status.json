@@ -22,9 +22,14 @@
       "id": "grosses_geld_bleibt_im_feed",
       "label": "Grosses Geld faellt nicht aus dem Feed",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 4,
+      "failures": [
+        "36246853: zuletzt 85.216 € und Anpfiff erst in 1.8 h — trotzdem nicht mehr im Feed",
+        "36211734: zuletzt 49.980 € und Anpfiff erst in 2.3 h — trotzdem nicht mehr im Feed",
+        "36241096: zuletzt 160.265 € und Anpfiff erst in 2.3 h — trotzdem nicht mehr im Feed",
+        "36246856: zuletzt 112.173 € und Anpfiff erst in 4.5 h — trotzdem nicht mehr im Feed"
+      ],
       "note": "Der Detail-Deckel darf nicht das teuerste Spiel schneiden — genau das ist am 08.09. passiert (alle vier CL-Spiele, Real Madrid mit 102.861 €)."
     },
     {
@@ -34,7 +39,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "nur 84 von 210 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Porto v Estoril Praia (Portuguese Primeira Liga); Alianza Atletico v Juan Pablo II College (Peruvian Primera Division); Vila Nova v Juventude (Brazilian Serie B)"
+        "nur 4 von 129 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: CD Cacahuatique v CD Inca (Salvadoran Primera Division); Union Cocle v CD Universitario (Panamanian Premier League); San Jose Earthquakes v Real Salt Lake (US MLS)"
       ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
@@ -90,40 +95,42 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 1105795 verbraucht, 3894205 uebrig"
+      "note": "Kontingent: 1106397 verbraucht, 3893603 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 23,
+      "nFail": 25,
       "failures": [
+        "Radcliffe Borough v Merthyr Town (English National League North): name — bester Kandidat „Mansfield Town v Notts County“",
+        "Maidstone Utd v Slough Town (English National League South): unerklaert — bester Kandidat „Swindon Town v Rotherham United“",
+        "Bedford Town v Macclesfield (English National League North): name — bester Kandidat „Mansfield Town v Notts County“",
+        "Chester v Hednesford Town (English National League North): name — bester Kandidat „Mansfield Town v Notts County“",
+        "Spennymoor Town v Chorley (English National League North): name — bester Kandidat „Mansfield Town v Notts County“",
+        "Oxford City v South Shields (English National League North): name — bester Kandidat „Barnsley v Oxford United“",
+        "Dorking Wanderers v Weston-super-Mare (English National League South): name — bester Kandidat „Wycombe Wanderers v Burton Albion“",
+        "Ayr v Queens Park (Scottish Championship): name — bester Kandidat „Southampton v Queens Park Rangers“",
+        "Billericay Town v Hemel Hempstead (English National League South): name — bester Kandidat „Mansfield Town v Notts County“",
+        "Hebburn Town v Harborough Town (English National League North): name — bester Kandidat „Mansfield Town v Notts County“",
+        "Edinburgh City v Dumbarton (Scottish League Two): name — bester Kandidat „Leicester City v Stevenage“",
+        "Worthing v Sutton Utd (English National League): name — bester Kandidat „Barnsley v Oxford United“",
+        "Dover v Farnham Town (English National League South): name — bester Kandidat „Mansfield Town v Notts County“",
+        "Braintree v Hampton and Richmond (English National League South): name — bester Kandidat „Manchester City v Brighton and Hove Albion“",
+        "Truro City v Ebbsfleet Utd (English National League South): zeit — bester Kandidat „Cardiff City v West Ham United“ · 100.8h Anpfiff-Abstand",
+        "Chesham Utd v Folkestone Invicta (English National League South): name — bester Kandidat „Barnsley v Oxford United“",
+        "Tonbridge Angels v Salisbury City (English National League South): name — bester Kandidat „Leicester City v Stevenage“",
+        "Morecambe v Scarborough Athletic (English National League North): name — bester Kandidat „Wigan Athletic v Bromley FC“",
+        "Worksop Town v Brackley Town (English National League North): name — bester Kandidat „Mansfield Town v Notts County“",
+        "Spalding Utd v Darlington (English National League North): name — bester Kandidat „Barnsley v Oxford United“",
+        "Kelty Hearts v Elgin City FC (Scottish League Two): name — bester Kandidat „Leicester City v Stevenage“",
         "Podbeskidzie B-B v Warta Poznan (Polish I Liga): name — bester Kandidat „Lech Poznań v Wisła Kraków“",
         "Al Sailiya v Lusail (Qatari Stars League): name — bester Kandidat „Al-Taawoun v Al-Ettifaq“",
-        "FK Dukla Praha B v Domazlice (Czech 3 Liga): name — bester Kandidat „Real Sociedad B v Girona FC“",
-        "Ayr v Queens Park (Scottish Championship): name — bester Kandidat „Southampton v Queens Park Rangers“",
-        "Radcliffe Borough v Merthyr Town (English National League North): name — bester Kandidat „Hull City v Ipswich Town“",
-        "Edinburgh City v Dumbarton (Scottish League Two): name — bester Kandidat „Manchester City v Brighton and Hove Albion“",
-        "Oxford City v South Shields (English National League North): name — bester Kandidat „Manchester City v Brighton and Hove Albion“",
-        "Bedford Town v Macclesfield (English National League North): name — bester Kandidat „Hull City v Ipswich Town“",
-        "Spennymoor Town v Chorley (English National League North): name — bester Kandidat „Hull City v Ipswich Town“",
-        "Chester v Hednesford Town (English National League North): name — bester Kandidat „Hull City v Ipswich Town“",
-        "Hebburn Town v Harborough Town (English National League North): name — bester Kandidat „Hull City v Ipswich Town“",
-        "Braintree v Hampton and Richmond (English National League South): name — bester Kandidat „Manchester City v Brighton and Hove Albion“",
-        "Dorking Wanderers v Weston-super-Mare (English National League South): name — bester Kandidat „Bolton Wanderers v Bristol City“",
-        "Chesham Utd v Folkestone Invicta (English National League South): name — bester Kandidat „Nordic United FC v GIF Sundsvall“",
-        "Dover v Farnham Town (English National League South): name — bester Kandidat „Hull City v Ipswich Town“",
-        "Maidstone Utd v Slough Town (English National League South): unerklaert — bester Kandidat „Swindon Town v Rotherham United“",
-        "Tonbridge Angels v Salisbury City (English National League South): name — bester Kandidat „Manchester City v Brighton and Hove Albion“",
-        "Worksop Town v Brackley Town (English National League North): name — bester Kandidat „Hull City v Ipswich Town“",
-        "Worthing v Sutton Utd (English National League): name — bester Kandidat „Nordic United FC v GIF Sundsvall“",
-        "Billericay Town v Hemel Hempstead (English National League South): name — bester Kandidat „Hull City v Ipswich Town“",
-        "Kelty Hearts v Elgin City FC (Scottish League Two): name — bester Kandidat „Manchester City v Brighton and Hove Albion“",
         "Mgladbach v Paderborn (German Bundesliga): name — bester Kandidat „Borussia Monchengladbach v SC Paderborn“",
         "Southampton v QPR (English Sky Bet Championship): name — bester Kandidat „Southampton v Queens Park Rangers“"
       ],
-      "note": "ohne Anker: kein_kandidat 60 · kein_pinnacle 1 · name 22 · unerklaert 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 65 · kein_pinnacle 1 · name 23 · unerklaert 1 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -207,6 +214,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-10-31T14:58:41.894640+00:00"
+  "nFail": 3,
+  "generatedAt": "2026-10-31T15:13:18.612219+00:00"
 }
