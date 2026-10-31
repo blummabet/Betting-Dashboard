@@ -34,7 +34,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "nur 85 von 226 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Zaragoza v Villarreal B (Spanish Primera Federación - Group 2); Albacete v Sabadell (Spanish Segunda Division); Deportivo Riestra v Talleres (Argentinian Primera Division)"
+        "nur 77 von 212 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Vila Nova v Juventude (Brazilian Serie B); Alianza Atletico v Juan Pablo II College (Peruvian Primera Division); Porto v Estoril Praia (Portuguese Primeira Liga)"
       ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
@@ -90,34 +90,38 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 1104686 verbraucht, 3895314 uebrig"
+      "note": "Kontingent: 1105105 verbraucht, 3894895 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 17,
+      "nFail": 21,
       "failures": [
+        "Podbeskidzie B-B v Warta Poznan (Polish I Liga): name — bester Kandidat „Lech Poznań v Wisła Kraków“",
         "Al Sailiya v Lusail (Qatari Stars League): name — bester Kandidat „Al-Taawoun v Al-Ettifaq“",
         "FK Dukla Praha B v Domazlice (Czech 3 Liga): name — bester Kandidat „Real Sociedad B v Girona FC“",
-        "Podbeskidzie B-B v Warta Poznan (Polish I Liga): name — bester Kandidat „Lech Poznań v Wisła Kraków“",
         "Bedford Town v Macclesfield (English National League North): name — bester Kandidat „Hull City v Ipswich Town“",
         "Ayr v Queens Park (Scottish Championship): name — bester Kandidat „Southampton v Queens Park Rangers“",
         "Radcliffe Borough v Merthyr Town (English National League North): name — bester Kandidat „Hull City v Ipswich Town“",
         "Spennymoor Town v Chorley (English National League North): name — bester Kandidat „Hull City v Ipswich Town“",
         "Hebburn Town v Harborough Town (English National League North): name — bester Kandidat „Hull City v Ipswich Town“",
         "Edinburgh City v Dumbarton (Scottish League Two): name — bester Kandidat „Manchester City v Brighton and Hove Albion“",
-        "Dorking Wanderers v Weston-super-Mare (English National League South): name — bester Kandidat „Bolton Wanderers v Bristol City“",
-        "Tonbridge Angels v Salisbury City (English National League South): name — bester Kandidat „Manchester City v Brighton and Hove Albion“",
-        "Worksop Town v Brackley Town (English National League North): name — bester Kandidat „Hull City v Ipswich Town“",
         "Braintree v Hampton and Richmond (English National League South): name — bester Kandidat „Manchester City v Brighton and Hove Albion“",
+        "Dorking Wanderers v Weston-super-Mare (English National League South): name — bester Kandidat „Bolton Wanderers v Bristol City“",
+        "Chesham Utd v Folkestone Invicta (English National League South): name — bester Kandidat „Nordic United FC v GIF Sundsvall“",
+        "Tonbridge Angels v Salisbury City (English National League South): name — bester Kandidat „Manchester City v Brighton and Hove Albion“",
+        "Maidstone Utd v Slough Town (English National League South): unerklaert — bester Kandidat „Swindon Town v Rotherham United“",
+        "Worksop Town v Brackley Town (English National League North): name — bester Kandidat „Hull City v Ipswich Town“",
+        "Dover v Farnham Town (English National League South): name — bester Kandidat „Hull City v Ipswich Town“",
+        "Oxford City v South Shields (English National League North): name — bester Kandidat „Manchester City v Brighton and Hove Albion“",
+        "Chester v Hednesford Town (English National League North): name — bester Kandidat „Hull City v Ipswich Town“",
         "Mgladbach v Paderborn (German Bundesliga): name — bester Kandidat „Borussia Monchengladbach v SC Paderborn“",
         "Southampton v QPR (English Sky Bet Championship): name — bester Kandidat „Southampton v Queens Park Rangers“",
-        "Nomme Utd v FCI Tallinn (Estonian Premier League): name — bester Kandidat „Chelsea v Manchester United“",
-        "Everton (W) v Man Utd (W) (English WSL): zeit — bester Kandidat „Newcastle United v Everton“ · 55.2h Anpfiff-Abstand"
+        "Nomme Utd v FCI Tallinn (Estonian Premier League): name — bester Kandidat „Nordic United FC v GIF Sundsvall“"
       ],
-      "note": "ohne Anker: kein_kandidat 58 · kein_pinnacle 4 · name 16 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 62 · kein_pinnacle 4 · name 20 · unerklaert 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -126,7 +130,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 2 — Chelsea v Man Utd (17 Buecher, ohne Pinnacle); Lincoln v Birmingham (22 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 3 — Levante v Atletico Madrid (21 Buecher, ohne Pinnacle); Annecy v Montpellier (17 Buecher, ohne Pinnacle); Hoffenheim II v Viktoria Koln (24 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -135,7 +139,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 10 gewollt, 10 abgerufen, 0 mit Daten"
+      "note": "Totals: 15 gewollt, 15 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -202,5 +206,5 @@
     }
   ],
   "nFail": 2,
-  "generatedAt": "2026-10-31T14:28:10.786770+00:00"
+  "generatedAt": "2026-10-31T14:43:17.319192+00:00"
 }
