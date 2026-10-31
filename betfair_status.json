@@ -25,11 +25,11 @@
       "ok": false,
       "nFail": 5,
       "failures": [
-        "36246853: zuletzt 85.216 € und Anpfiff erst in 0.8 h — trotzdem nicht mehr im Feed",
-        "36211734: zuletzt 49.980 € und Anpfiff erst in 1.3 h — trotzdem nicht mehr im Feed",
-        "36241096: zuletzt 160.265 € und Anpfiff erst in 1.3 h — trotzdem nicht mehr im Feed",
-        "36206168: zuletzt 276.905 € und Anpfiff erst in 1.3 h — trotzdem nicht mehr im Feed",
-        "36246856: zuletzt 112.173 € und Anpfiff erst in 3.5 h — trotzdem nicht mehr im Feed"
+        "36246853: zuletzt 85.216 € und Anpfiff erst in 0.5 h — trotzdem nicht mehr im Feed",
+        "36211734: zuletzt 49.980 € und Anpfiff erst in 1.0 h — trotzdem nicht mehr im Feed",
+        "36241096: zuletzt 160.265 € und Anpfiff erst in 1.0 h — trotzdem nicht mehr im Feed",
+        "36206168: zuletzt 276.905 € und Anpfiff erst in 1.0 h — trotzdem nicht mehr im Feed",
+        "36246856: zuletzt 112.173 € und Anpfiff erst in 3.3 h — trotzdem nicht mehr im Feed"
       ],
       "note": "Der Detail-Deckel darf nicht das teuerste Spiel schneiden — genau das ist am 08.09. passiert (alle vier CL-Spiele, Real Madrid mit 102.861 €)."
     },
@@ -40,7 +40,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "nur 10 von 108 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Puerto Cabello v Deportivo Tachira (Venezuelan Primera Division); Macara v Barcelona (Ecu) (Ecuadorian Serie A); Academia de Balompie Boli v San Antonio Bulo Bulo (Bolivian Liga de Futbol Profesional)"
+        "nur 15 von 108 Spielen mit Anpfiff in 6.0 h im Feed — fehlt u. a.: Velez Sarsfield v San Lorenzo (Argentinian Primera Division); Puerto Cabello v Deportivo Tachira (Venezuelan Primera Division); Macara v Barcelona (Ecu) (Ecuadorian Serie A)"
       ],
       "note": "Der Detail-Deckel darf den heutigen Abend nicht fuer die Vorschau opfern — am 12.10. fehlten alle Spiele der naechsten 6 h (Orsomarso, 11.904 € HZ)."
     },
@@ -96,42 +96,36 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Kontingent: 1109172 verbraucht, 3890828 uebrig"
+      "note": "Kontingent: 1109748 verbraucht, 3890252 uebrig"
     },
     {
       "id": "anker_namensabgleich",
       "label": "Pinnacle-Anker scheitert nicht am eigenen Abgleich",
       "severity": "warn",
       "ok": false,
-      "nFail": 25,
+      "nFail": 19,
       "failures": [
         "US Amal Tiznit v Kawkab Marrakech (Moroccan Botola Pro 1): name — bester Kandidat „US Catanzaro 1929 v Padova“",
+        "Bedford Town v Macclesfield (English National League North): name — bester Kandidat „Accrington Stanley v Northampton Town“",
         "Maidstone Utd v Slough Town (English National League South): unerklaert — bester Kandidat „Swindon Town v Rotherham United“",
-        "Braintree v Hampton and Richmond (English National League South): name — bester Kandidat „Manchester City v Brighton and Hove Albion“",
-        "Bedford Town v Macclesfield (English National League North): name — bester Kandidat „Mansfield Town v Notts County“",
-        "Oxford City v South Shields (English National League North): name — bester Kandidat „Barnsley v Oxford United“",
-        "Billericay Town v Hemel Hempstead (English National League South): name — bester Kandidat „Mansfield Town v Notts County“",
-        "Spalding Utd v Darlington (English National League North): name — bester Kandidat „Barnsley v Oxford United“",
-        "Hebburn Town v Harborough Town (English National League North): name — bester Kandidat „Mansfield Town v Notts County“",
-        "Worksop Town v Brackley Town (English National League North): name — bester Kandidat „Mansfield Town v Notts County“",
-        "Truro City v Ebbsfleet Utd (English National League South): zeit — bester Kandidat „Cardiff City v West Ham United“ · 100.8h Anpfiff-Abstand",
-        "Chesham Utd v Folkestone Invicta (English National League South): name — bester Kandidat „Barnsley v Oxford United“",
-        "Chester v Hednesford Town (English National League North): name — bester Kandidat „Mansfield Town v Notts County“",
-        "Tonbridge Angels v Salisbury City (English National League South): name — bester Kandidat „Leicester City v Stevenage“",
-        "Radcliffe Borough v Merthyr Town (English National League North): name — bester Kandidat „Mansfield Town v Notts County“",
-        "Spennymoor Town v Chorley (English National League North): name — bester Kandidat „Mansfield Town v Notts County“",
-        "Kelty Hearts v Elgin City FC (Scottish League Two): name — bester Kandidat „Leicester City v Stevenage“",
-        "Edinburgh City v Dumbarton (Scottish League Two): name — bester Kandidat „Leicester City v Stevenage“",
-        "Dover v Farnham Town (English National League South): name — bester Kandidat „Mansfield Town v Notts County“",
-        "Dorking Wanderers v Weston-super-Mare (English National League South): name — bester Kandidat „Wycombe Wanderers v Burton Albion“",
-        "Worthing v Sutton Utd (English National League): name — bester Kandidat „Barnsley v Oxford United“",
         "Ayr v Queens Park (Scottish Championship): name — bester Kandidat „Southampton v Queens Park Rangers“",
-        "Podbeskidzie B-B v Warta Poznan (Polish I Liga): name — bester Kandidat „Lech Poznań v Wisła Kraków“",
-        "Al Sailiya v Lusail (Qatari Stars League): name — bester Kandidat „Al-Fayha v Al-Faisaly KSA FC“",
-        "Mgladbach v Paderborn (German Bundesliga): name — bester Kandidat „Borussia Monchengladbach v SC Paderborn“",
+        "Oxford City v South Shields (English National League North): name — bester Kandidat „Salford City v Exeter City“",
+        "Billericay Town v Hemel Hempstead (English National League South): name — bester Kandidat „Accrington Stanley v Northampton Town“",
+        "Kelty Hearts v Elgin City FC (Scottish League Two): name — bester Kandidat „Salford City v Exeter City“",
+        "Braintree v Hampton and Richmond (English National League South): name — bester Kandidat „Manchester City v Brighton and Hove Albion“",
+        "Edinburgh City v Dumbarton (Scottish League Two): name — bester Kandidat „Salford City v Exeter City“",
+        "Spennymoor Town v Chorley (English National League North): name — bester Kandidat „Accrington Stanley v Northampton Town“",
+        "Hebburn Town v Harborough Town (English National League North): name — bester Kandidat „Accrington Stanley v Northampton Town“",
+        "Truro City v Ebbsfleet Utd (English National League South): zeit — bester Kandidat „Cardiff City v West Ham United“ · 100.8h Anpfiff-Abstand",
+        "Dorking Wanderers v Weston-super-Mare (English National League South): name — bester Kandidat „Wolverhampton Wanderers v Cardiff City“",
+        "Dover v Farnham Town (English National League South): name — bester Kandidat „Accrington Stanley v Northampton Town“",
+        "Tonbridge Angels v Salisbury City (English National League South): name — bester Kandidat „Salford City v Exeter City“",
+        "Worksop Town v Brackley Town (English National League North): name — bester Kandidat „Accrington Stanley v Northampton Town“",
+        "Chester v Hednesford Town (English National League North): name — bester Kandidat „Accrington Stanley v Northampton Town“",
+        "Radcliffe Borough v Merthyr Town (English National League North): name — bester Kandidat „Accrington Stanley v Northampton Town“",
         "Southampton v QPR (English Sky Bet Championship): name — bester Kandidat „Southampton v Queens Park Rangers“"
       ],
-      "note": "ohne Anker: kein_kandidat 64 · kein_pinnacle 6 · name 23 · unerklaert 1 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
+      "note": "ohne Anker: kein_kandidat 62 · kein_pinnacle 10 · name 17 · unerklaert 1 · zeit 1. Loesung bei „name“: Alias in betfair_consensus._ALIAS."
     },
     {
       "id": "pinnacle_nicht_verworfen",
@@ -140,7 +134,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle ohne Pinnacle: 4 — Middlesbrough v Charlton (28 Buecher, ohne Pinnacle); Swansea v Blackburn (18 Buecher, ohne Pinnacle); Millwall v Derby (21 Buecher, ohne Pinnacle); MK Dons v Doncaster (28 Buecher, ohne Pinnacle)"
+      "note": "Quelle ohne Pinnacle: 9 — Coventry v Sunderland (40 Buecher, ohne Pinnacle); Middlesbrough v Charlton (24 Buecher, ohne Pinnacle); Swansea v Blackburn (14 Buecher, ohne Pinnacle); Wolves v Cardiff (22 Buecher, ohne Pinnacle); Millwall v Derby (17 Buecher, ohne Pinnacle); Oldham v Crawley Town (31 Buecher, ohne Pinnacle)"
     },
     {
       "id": "totals_vollstaendig",
@@ -149,7 +143,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Totals: 17 gewollt, 17 abgerufen, 0 mit Daten"
+      "note": "Totals: 16 gewollt, 16 abgerufen, 0 mit Daten"
     },
     {
       "id": "consensus_anchor_coverage",
@@ -216,5 +210,5 @@
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-10-31T16:13:33.449110+00:00"
+  "generatedAt": "2026-10-31T16:28:37.681840+00:00"
 }
