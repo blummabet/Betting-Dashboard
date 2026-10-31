@@ -88,7 +88,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "1454 geprueft, davon 191 abgeschnitten"
+      "note": "1457 geprueft, davon 191 abgeschnitten"
     },
     {
       "id": "settlement_alive",
@@ -103,12 +103,10 @@
       "id": "buendel_cond_stabil",
       "label": "Bündel-Marktkennung bleibt, was sie war",
       "severity": "error",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "1 offene(r) Buendel-Eintrag/-Eintraege zeigen auf einen anderen Markt als ihre Close-Zeile. Die Annahme hinter dem Stempel-Nachtrag (eine Buendel-`cond` bleibt) gilt nicht mehr — der Nachtrag gehoert geprueft."
-      ],
-      "note": ""
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "condDrift = 0 heisst: jede offene Bündel-Zeile meint noch denselben Markt wie beim Einstieg."
     },
     {
       "id": "shortlist_clv_nach_einstieg",
@@ -126,7 +124,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "3655 Close-Zeilen mit absolutem Anpfiff geprueft."
+      "note": "3658 Close-Zeilen mit absolutem Anpfiff geprueft."
     },
     {
       "id": "resolutions_match_open_keys",
@@ -135,7 +133,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Fällige Märkte je Liga, die ihre Auflösung finden — nur ab dem Beginn des Auflösungsbuchs (2026-10-17); 1911 ältere Märkte bleiben draussen, fuer sie kann es keine geben. < 60% = Settlement läuft wirklich ins Leere."
+      "note": "Fällige Märkte je Liga, die ihre Auflösung finden — nur ab dem Beginn des Auflösungsbuchs (2026-10-17); 1913 ältere Märkte bleiben draussen, fuer sie kann es keine geben. < 60% = Settlement läuft wirklich ins Leere."
     },
     {
       "id": "proven_wallets_profitable",
@@ -144,11 +142,11 @@
       "ok": false,
       "nFail": 5,
       "failures": [
-        "448/964 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (46%) — Trefferquote allein trügt",
+        "448/962 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (47%) — Trefferquote allein trügt",
         "   0xc3c3b3ef30… n=339 Treffer 51% P&L $-3,994,872",
         "   0xabb89972b2… n=79 Treffer 53% P&L $-2,563,982",
         "   0x5b6331e7ff… n=1764 Treffer 50% P&L $-2,058,779",
-        "   0x6ac5bb06a9… n=332 Treffer 54% P&L $-1,555,775"
+        "   0x6ac5bb06a9… n=333 Treffer 54% P&L $-1,555,775"
       ],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
     },
@@ -198,6 +196,6 @@
       "note": "poly_direct_bets.py rechnet über poly_resolutions.json ab. Hängt ein Bet, kennt Poly den Ausgang nicht (Markt noch offen/obskur) oder der Slug passt nicht — dann fehlt echtes Geld in der Bilanz."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-10-31T03:12:34.641450+00:00"
+  "nFail": 1,
+  "generatedAt": "2026-10-31T03:42:57.200165+00:00"
 }
