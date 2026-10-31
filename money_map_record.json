@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-10-31T15:57:52.535889+00:00",
+"generatedAt": "2026-10-31T16:13:10.392703+00:00",
 "byVerdict": {
 "uneinig": {
 "n": 37,
@@ -18,20 +18,20 @@
 "clvLb": -0.8932
 },
 "konsens": {
-"n": 625,
-"wins": 363,
-"hitRate": 0.5808,
-"polyN": 609,
-"polyWins": 345,
-"polyHitRate": 0.5665,
-"pinnN": 556,
-"pinnHitRate": 0.5809,
-"nRoi": 625,
-"roi": 0.0521,
-"roiLb": -0.0105,
-"nClv": 625,
-"clv": 0.06,
-"clvLb": -0.111
+"n": 628,
+"wins": 364,
+"hitRate": 0.5796,
+"polyN": 612,
+"polyWins": 346,
+"polyHitRate": 0.5654,
+"pinnN": 559,
+"pinnHitRate": 0.5796,
+"nRoi": 628,
+"roi": 0.0496,
+"roiLb": -0.0129,
+"nClv": 628,
+"clv": 0.07,
+"clvLb": -0.104
 },
 "teil": {
 "n": 1,
@@ -72,9 +72,9 @@
 "hitRate": 0.6364
 },
 "Spanish La Liga": {
-"n": 32,
-"wins": 18,
-"hitRate": 0.5625
+"n": 33,
+"wins": 19,
+"hitRate": 0.5758
 },
 "US MLS": {
 "n": 32,
@@ -107,9 +107,9 @@
 "hitRate": 0.6957
 },
 "Spanish Segunda Division": {
-"n": 21,
+"n": 22,
 "wins": 12,
-"hitRate": 0.5714
+"hitRate": 0.5455
 },
 "German Bundesliga 2": {
 "n": 19,
@@ -131,6 +131,11 @@
 "wins": 4,
 "hitRate": 0.3333
 },
+"Turkish Super League": {
+"n": 12,
+"wins": 5,
+"hitRate": 0.4167
+},
 "Japanese J League": {
 "n": 11,
 "wins": 7,
@@ -140,11 +145,6 @@
 "n": 11,
 "wins": 6,
 "hitRate": 0.5455
-},
-"Turkish Super League": {
-"n": 11,
-"wins": 5,
-"hitRate": 0.4545
 },
 "Portuguese Primeira Liga": {
 "n": 10,
@@ -414,26 +414,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 465,
-"wins": 277,
-"hitRate": 0.5957,
-"nRoi": 465,
-"roi": 0.007,
-"roiLb": -0.0599,
-"nClv": 465,
-"clv": 0.14,
-"clvLb": -0.076
+"n": 467,
+"wins": 278,
+"hitRate": 0.5953,
+"nRoi": 467,
+"roi": 0.0061,
+"roiLb": -0.0606,
+"nClv": 467,
+"clv": 0.15,
+"clvLb": -0.067
 },
 "weak": {
-"n": 198,
+"n": 199,
 "wins": 99,
-"hitRate": 0.5,
-"nRoi": 198,
-"roi": 0.147,
-"roiLb": 0.0072,
-"nClv": 198,
+"hitRate": 0.4975,
+"nRoi": 199,
+"roi": 0.1412,
+"roiLb": 0.0019,
+"nClv": 199,
 "clv": -0.17,
-"clvLb": -0.4104
+"clvLb": -0.4083
 }
 },
 "divergence": {
@@ -445,6 +445,63 @@
 "polyRate": 0.3611
 },
 "recent": [
+{
+"matchId": "36241481",
+"home": "Levante",
+"away": "Atletico Madrid",
+"league": "Spanish La Liga",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Atletico Madrid",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+2
+],
+"kickoff": "2026-10-31T13:00:00Z",
+"settledAt": "2026-10-31T16:13:10.113842+00:00"
+},
+{
+"matchId": "36234093",
+"home": "Kocaelispor",
+"away": "Rizespor",
+"league": "Turkish Super League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Kocaelispor",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-10-31T13:00:00Z",
+"settledAt": "2026-10-31T16:13:10.113842+00:00"
+},
+{
+"matchId": "36234731",
+"home": "Sociedad B",
+"away": "Girona",
+"league": "Spanish Segunda Division",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Girona",
+"polySide": "away",
+"winner": "home",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-10-31T13:00:00Z",
+"settledAt": "2026-10-31T16:13:10.113842+00:00"
+},
 {
 "matchId": "36206188",
 "home": "Chelsea",
@@ -1147,76 +1204,19 @@
 ],
 "kickoff": "2026-10-29T19:45:00Z",
 "settledAt": "2026-10-29T22:53:21.293521+00:00"
-},
-{
-"matchId": "36082674",
-"home": "Everton",
-"away": "Newcastle",
-"league": "English Football League Cup",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Everton",
-"polySide": "away",
-"winner": "home",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-10-29T19:45:00Z",
-"settledAt": "2026-10-29T22:53:21.293521+00:00"
-},
-{
-"matchId": "36241471",
-"home": "Braga",
-"away": "Famalicao",
-"league": "Portuguese League Cup",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Braga",
-"polySide": "home",
-"winner": "away",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-4
-],
-"kickoff": "2026-10-29T18:45:00Z",
-"settledAt": "2026-10-29T21:53:22.594409+00:00"
-},
-{
-"matchId": "36234089",
-"home": "Al Nassr",
-"away": "Al-Kholood Club",
-"league": "Saudi Professional League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Al Nassr",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-5,
-3
-],
-"kickoff": "2026-10-29T18:00:00Z",
-"settledAt": "2026-10-29T21:08:10.858856+00:00"
 }
 ],
 "global": {
-"n": 663,
-"wins": 376,
-"hitRate": 0.5671,
-"nRoi": 663,
-"roi": 0.0488,
-"roiLb": -0.0141,
-"nClv": 663,
-"clv": 0.04,
-"clvLb": -0.1213
+"n": 666,
+"wins": 377,
+"hitRate": 0.5661,
+"nRoi": 666,
+"roi": 0.0465,
+"roiLb": -0.0162,
+"nClv": 666,
+"clv": 0.05,
+"clvLb": -0.1146
 },
-"pending": 45,
+"pending": 42,
 "ausgeschlossenLive": 1292
 }
