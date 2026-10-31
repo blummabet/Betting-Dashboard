@@ -89,6 +89,23 @@ jobs:
           echo "✅ $PYTHON ($($PYTHON --version))"
           echo "BETFAIR_PY=$PYTHON" >> $GITHUB_ENV
 
+      # 31.10.2026: der Zeitplan von liga-aufstellungen.yml feuerte am ersten Tag nie (gedrosselter
+      # Scheduler). Dieser Lauf kommt verlässlich alle 15 Min → er stösst den Aufstellungs-Lauf an,
+      # aber nur wenn ein Top-5-Spiel in 5–75 Min anpfeift. Läuft auf ubuntu, nicht auf diesem Mac.
+      # Wächter: tests/test_aufstellung_anstoss.py
+      - name: 📋 Aufstellungs-Lauf anstossen (Top-5-Anpfiff in ≤75 Min)
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ${{ env.BETFAIR_PY }} scripts/aufstellung_faellig.py || exit 0
+          CODE=$(curl -sS -o /tmp/dispatch_aufst.out -w "%{http_code}" -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/liga-aufstellungen.yml/dispatches" \
+            -d '{"ref":"main"}')
+          echo "Aufstellungs-Anstoss: HTTP $CODE"
+          [ "$CODE" = "204" ] || { cat /tmp/dispatch_aufst.out; exit 1; }
+
       # 03.09.2026 — der Stake-Sammler reist hier mit, nicht mehr beim Poly-Live-Scan.
       # Grund: der erste echte Lauf zeigte, dass 50 Eintraege (Stakes Deckel) nur 12 Minuten
       # abdecken. Bei einem 15-Minuten-Takt fehlten damit rund 3 Minuten je Zyklus — und zwar
