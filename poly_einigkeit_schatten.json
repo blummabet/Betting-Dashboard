@@ -1,27 +1,5 @@
 [
 {
-"k": "ufc-aliper-smisun-2026-10-13|Smilla Sundell",
-"key": "ufc-aliper-smisun-2026-10-13",
-"side": "Smilla Sundell",
-"wallet": "0x042d8526350dd13dc836201e6acfbab5981f0b81",
-"wallets": [
-"0x042d8526350dd13dc836201e6acfbab5981f0b81",
-"0x0be34ffafafa7f3a2998b15b05e04d36cb2835fe"
-],
-"nWallets": 2,
-"league": "UFC",
-"cat": "Kampfsport",
-"usd": 88.0,
-"maxEinzel": 51.0,
-"pushPrice": 0.805,
-"whaleEntry": 0.805,
-"htkMess": 2.58,
-"sentAt": "2026-10-13T20:26:57Z",
-"status": "unaufloesbar",
-"nurBeobachtung": true,
-"ageDays": 10.0
-},
-{
 "k": "cs2-keydst-gls1-2026-10-13|Galorys",
 "key": "cs2-keydst-gls1-2026-10-13",
 "side": "Galorys",
@@ -24090,8 +24068,18 @@
 "whaleEntry": 0.745,
 "htkMess": 0.7,
 "sentAt": "2026-10-31T17:18:10Z",
-"status": "pending",
-"nurBeobachtung": true
+"status": "settled",
+"nurBeobachtung": true,
+"cond": "0x243733c6753f2f6f76894f7c8f21c60e4a457397c763884236bd5f9f45287ddb",
+"condQuelle": "erfassung+wallet",
+"result": "loss",
+"winner": "KRÜ Blaze",
+"closePrice": 0.735,
+"stake": 10.0,
+"pnl": -10.0,
+"clvPP": -1.0,
+"settledTs": "2026-10-31T22:45:33.891853+00:00",
+"resolvedTs": "2026-10-31T22:45:13.472261+00:00"
 },
 {
 "k": "cs2-og1-is-2026-10-31|Iberian Soul",
@@ -24145,8 +24133,16 @@
 "whaleEntry": 0.465,
 "htkMess": 2.7,
 "sentAt": "2026-10-31T17:18:10Z",
-"status": "pending",
-"nurBeobachtung": true
+"status": "settled",
+"nurBeobachtung": true,
+"result": "loss",
+"winner": "Draw (Aston Villa FC vs. Fulham FC)",
+"closePrice": 0.475,
+"stake": 10.0,
+"pnl": -10.0,
+"clvPP": 1.0,
+"settledTs": "2026-10-31T22:45:33.891853+00:00",
+"resolvedTs": "2026-10-31T22:45:13.472261+00:00"
 },
 {
 "k": "epl-ast-ful-2026-10-31-more-markets|Over",
@@ -24168,7 +24164,8 @@
 "htkMess": 2.7,
 "sentAt": "2026-10-31T17:18:10Z",
 "status": "pending",
-"nurBeobachtung": true
+"nurBeobachtung": true,
+"nichtAufloesbarGrund": "Buendel-Slug ohne Linie (Over)"
 },
 {
 "k": "lal-bar-ala-2026-10-31-total-corners|Under",
@@ -24264,18 +24261,18 @@
 "whaleEntry": 0.525,
 "htkMess": 0.98,
 "sentAt": "2026-10-31T18:46:47Z",
-"status": "settled",
+"status": "unaufloesbar",
 "nurBeobachtung": true,
 "cond": "0x04a6981c1fe5e6bbca88773ff1bdfd9545b0475d94dd03b2941d32fae9546d9e",
 "condQuelle": "erfassung+wallet",
-"result": "win",
-"winner": "Under",
 "closePrice": 0.505,
-"stake": 10.0,
-"pnl": 9.05,
-"clvPP": -2.0,
 "settledTs": "2026-10-31T22:14:53.494940+00:00",
-"resolvedTs": "2026-10-31T22:14:32.484886+00:00"
+"resolvedTs": "2026-10-31T22:14:32.484886+00:00",
+"zurueckgenommen": {
+"war": "win",
+"am": "2026-10-31T22:45:33.891853+00:00",
+"grund": "Buendel-Slug ohne Linie — Ausgang nie ableitbar"
+}
 },
 {
 "k": "ufc-ran3-jac21-2026-10-31|Randy Brown",
@@ -24504,6 +24501,31 @@
 "whaleEntry": 0.966,
 "htkMess": 0.63,
 "sentAt": "2026-10-31T21:37:36Z",
+"status": "pending",
+"nurBeobachtung": true
+},
+{
+"k": "nba-min-sas-2026-10-31|Spurs",
+"key": "nba-min-sas-2026-10-31",
+"side": "Spurs",
+"wallet": "0x0235dc24b38772bf3339a9e5ec5db3d3a05fcee5",
+"wallets": [
+"0x0235dc24b38772bf3339a9e5ec5db3d3a05fcee5",
+"0x04641b57f332c15ecaa497799c55026d521967da",
+"0x25e21e9c4e469d26aaa5701948ff8923d060db79",
+"0x50d07d6744afc48905e7c947e91d7f4bec54a6fc",
+"0x81f05026a47e781f35d5a1a3eeec8f8e1b82cbb1",
+"0xf52bbcbe721d8b4edce7edfff9bc6545db6dd547"
+],
+"nWallets": 6,
+"league": "NBA",
+"cat": "US-Sport",
+"usd": 5905.0,
+"maxEinzel": 2386.0,
+"pushPrice": 0.825,
+"whaleEntry": 0.825,
+"htkMess": 1.25,
+"sentAt": "2026-10-31T22:45:33Z",
 "status": "pending",
 "nurBeobachtung": true
 }
