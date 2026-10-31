@@ -1,12 +1,12 @@
 {
   "slug": "betfair",
   "workflow": "🟡 Betfair Radar (Betwatch)",
-  "updatedAt": "2026-10-31T03:57:10.740288+00:00",
+  "updatedAt": "2026-10-31T04:11:57.367111+00:00",
   "ok": true,
   "kadenz": {
     "nLaeufe": 20,
     "spanneH": 4.5,
-    "proTag": 101.1,
+    "proTag": 101.2,
     "lueckeMinMin": 6.5,
     "lueckeMedianMin": 15.0,
     "lueckeMaxMin": 15.4,
@@ -21,9 +21,24 @@
     "verdraengt": 0,
     "spanneH": 480.1,
     "erzeugtProTag": 5.0,
-    "widerspruch": "erzeugtProTag 5.0 gegen eine gemessene Kadenz von 101.1/Tag (Faktor 20.2) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
+    "widerspruch": "erzeugtProTag 5.0 gegen eine gemessene Kadenz von 101.2/Tag (Faktor 20.2) — die Kadenz ist gegen betfair und poly-global auf ein Prozent geprueft, diese Zahl nicht. NICHT als Beleg verwenden."
   },
   "runs": [
+    {
+      "ts": "2026-10-31T04:11:57.367111+00:00",
+      "workflow": "🟡 Betfair Radar (Betwatch)",
+      "runId": "41167460378",
+      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/41167460378",
+      "nSteps": 42,
+      "apiError": null,
+      "ok": true,
+      "failures": [],
+      "createdAt": "2026-10-31T04:10:31Z",
+      "startedAt": "2026-10-31T04:10:31Z",
+      "wartetS": 0.0,
+      "laeuftSeitS": 86.4,
+      "event": "workflow_dispatch"
+    },
     {
       "ts": "2026-10-31T03:57:10.740288+00:00",
       "workflow": "🟡 Betfair Radar (Betwatch)",
@@ -307,21 +322,6 @@
       "startedAt": "2026-10-30T23:40:02Z",
       "wartetS": 0.0,
       "laeuftSeitS": 89.0,
-      "event": "workflow_dispatch"
-    },
-    {
-      "ts": "2026-10-30T23:26:39.974566+00:00",
-      "workflow": "🟡 Betfair Radar (Betwatch)",
-      "runId": "41144339690",
-      "runUrl": "https://github.com/blummabet/Betting-Dashboard/actions/runs/41144339690",
-      "nSteps": 42,
-      "apiError": null,
-      "ok": true,
-      "failures": [],
-      "createdAt": "2026-10-30T23:25:01Z",
-      "startedAt": "2026-10-30T23:25:01Z",
-      "wartetS": 0.0,
-      "laeuftSeitS": 99.0,
       "event": "workflow_dispatch"
     }
   ]
