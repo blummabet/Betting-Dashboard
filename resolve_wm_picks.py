@@ -37,20 +37,26 @@ def _ah_result(market_lower: str, margin: int) -> tuple[str, float]:
     nums = re.findall(r"[-+]?\d+(?:\.\d+)?", mm)
     if side is None or not nums:
         return ("PENDING", 1.0)
-    L = abs(float(nums[-1]))
+    # 31.10.2026 (Cards-Audit): vorher abs(Linie) — „AH Auswärts −1.5" wurde wie „+1.5" gewertet
+    # (Schalke 0:0 Bayern als WIN). Jetzt mit Vorzeichen: Linie gilt für die genannte Seite,
+    # gedeckt wenn Tordifferenz aus Sicht dieser Seite + Linie > 0. Ohne Vorzeichen bleibt es wie
+    # bisher: Heim gibt die Linie, Auswärts bekommt sie.
+    raw = nums[-1]
+    S = float(raw) if raw[0] in "+-" else (-float(raw) if side == "heim" else float(raw))
+    eigen = margin if side == "heim" else -margin
 
     def leg(line: float) -> int:
-        cm = (margin - line) if side == "heim" else (-margin + line)
+        cm = eigen + line
         return 1 if cm > 0 else (-1 if cm < 0 else 0)
 
-    if round(L * 4) % 2 == 1:           # Viertel-Linie (0.75, 1.25, …) → 2 Halb-Wetten
-        s = leg(L - 0.25) + leg(L + 0.25)   # ∈ {-2,-1,0,1,2}
+    if round(abs(S) * 4) % 2 == 1:      # Viertel-Linie (0.75, 1.25, …) → 2 Halb-Wetten
+        s = leg(S - 0.25) + leg(S + 0.25)   # ∈ {-2,-1,0,1,2}
         if s == 2:  return ("WIN", 1.0)
         if s == 1:  return ("WIN", 0.5)     # Half-Win: halber Stake gewinnt, Rest Push
         if s == 0:  return ("VOID", 1.0)
         if s == -1: return ("LOSS", 0.5)    # Half-Loss: halber Stake verliert, Rest Push
         return ("LOSS", 1.0)
-    r = leg(L)                          # Halb-/Ganz-Linie
+    r = leg(S)                          # Halb-/Ganz-Linie
     return ("WIN", 1.0) if r > 0 else (("LOSS", 1.0) if r < 0 else ("VOID", 1.0))
 
 

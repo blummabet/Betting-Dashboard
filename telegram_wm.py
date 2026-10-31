@@ -424,6 +424,26 @@ def build_morning_card(wm: dict, target_date: str, lang: str = "de") -> str | No
     if not matches_today:
         return None  # Keine Spiele heute
 
+    # 31.10.2026 (Lucas, Cards-Audit): GitHub startet die Morgen-Läufe teils 4–6 h zu spät — Como–Roma
+    # (Anpfiff 10:30Z) ging um 13:45Z raus, als das Spiel schon 0:0 vorbei war, Montreal–Nashville 2 h nach
+    # Abpfiff. Was schon angepfiffen ist (oder in < 5 Min anpfeift), kommt nicht mehr in die Karte.
+    _jetzt = datetime.now(timezone.utc)
+
+    def _noch_offen(m) -> bool:
+        ko = m.get("kickoff")
+        if not ko:
+            return True
+        try:
+            return datetime.fromisoformat(str(ko).replace("Z", "+00:00")).astimezone(timezone.utc) > _jetzt + timedelta(minutes=5)
+        except Exception:
+            return True
+
+    # nur für die laufende Slate filtern — Karten für vergangene/künftige Tage (Tests, Nachbau) bleiben unberührt
+    if _win_start and _win_start <= _jetzt < _win_end:
+        matches_today = [m for m in matches_today if _noch_offen(m)]
+    if not matches_today:
+        return None  # alles schon angepfiffen → keine Karte
+
     # 21.08.2026 (Lucas): Spiele OHNE postbaren BET/ABWÄGEN-Pick gar nicht listen — „unnötig die
     # aufzulisten wenn da nichts ist". Betrifft Header-Zähler UND Liste (beide nutzen matches_today).
     matches_today = [m for m in matches_today
